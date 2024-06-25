@@ -1,197 +1,310 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E85C145FE8
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 08:02:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84FFA145A0B
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 08:04:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719302569; cv=none; b=j+5hqHrMMs10EPyofECgsSn7pBevWjJm7ig5hQWcNP2ns2p+jlVL3IuzmjA4QWFGHf6MjsHp4y6z9x4yPFnFl/QMuqWV8/3FPacg/wkrspopwHLze/bjMOdN9uI9+0pFToLO3PZ3HdcAHTImRYzjqHx3psjbieWMcm8NI5l68pk=
+	t=1719302676; cv=none; b=F4xRxT8D7ATY0RWtWha2H9hLXn65M9vYsL/b8qNi7DehGfD5NR/jOVQoPvShVfwf8UYOXpQJ2LrGMqF1LupTJboTtEJaewy6O52fx28NQvv6zR8U7lOFb3vXjNNCISH/Jk3MEP+VIrAo/XlpRT06Sn9VCJvTkgEhfcoqZz69Flc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719302569; c=relaxed/simple;
-	bh=UytvqOabhaGLpGa8QiaLZTx36kz60k54AUlZ1bFICE8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b3qe1UWjedCkM50AhraR2WmePt7IIvcuuWlrpFUtfhO/tx4dcZ9z5IdmcS7Foy3ciAMzq35hrXdNSUfW6teyaYZzvufzC8dBPEtGYfN9U7aLHn8lmhhiGkFNNCDbXbsnTEizFnSo9wfgUGmLkYC3ruq4x5rPaiNi+1Wj0I8U9c0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6AB5D339;
-	Tue, 25 Jun 2024 01:03:09 -0700 (PDT)
-Received: from [10.57.74.104] (unknown [10.57.74.104])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E7FC3F6A8;
-	Tue, 25 Jun 2024 01:02:43 -0700 (PDT)
-Message-ID: <1cb60685-3c34-4441-81e1-a60adc70d1f2@arm.com>
-Date: Tue, 25 Jun 2024 09:02:41 +0100
+	s=arc-20240116; t=1719302676; c=relaxed/simple;
+	bh=jdAl9hgOe+lm4QJHggd51ixmWg6oswKRPQGrQWVujIM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jQ1jdtI2pE0i/bztBnrmxxc4ZmtMjJo85zqgM8UwCX7HlTAGp1TWmxWysYi65mo8DiHNj2zHYXO6GIMQ6bxirGXxI0JdITzP5DLSp6ffTpbhWVBAyo4fh73lolmXXjKvnmYFIibG11L0WDseUyLo4KY1deEzaghaEPm6QZ2oiX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dC9EA9Lw; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dC9EA9Lw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719302673;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kSS73y9Kiy+O00pohzbPddbUXuAkYxpsCkdkEqZR1A8=;
+	b=dC9EA9LwTjOqWs4UHkf+PUWWPyEixclNhE30/oZlQ+vJUAa3zwu96l8ulgaWzmqF6zuf4l
+	h+9nspxYYIH90A9BAkHucCdSiBRecEva6Rn/NOGATYlS1Cqw4unQk4xy4UTllUBlHBOmoX
+	yPFDnZmNgkkQyxMF2OIU7pdhzZgjMU4=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-251-0KBMekiYP9qlTIjnIVJ1kg-1; Tue, 25 Jun 2024 04:04:27 -0400
+X-MC-Unique: 0KBMekiYP9qlTIjnIVJ1kg-1
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-57d702721e8so388051a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 01:04:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719302666; x=1719907466;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kSS73y9Kiy+O00pohzbPddbUXuAkYxpsCkdkEqZR1A8=;
+        b=ZnwVDyy5ThGqVOxve+z8f/TpUT4c1ss5RvijMLnXOGP+N0eEGc/PHpXGxMuSVBXssS
+         2U4c/GzJvWjMBl6aj6QLC4VQMaPgXSj2sim1/DE3SyQAiHgtPw/e6F15U+uUBLgM5e36
+         RAoW5wvNaR/SZvf/h83+/F9SiNYMAEG1amHH49LhMzsXjJqLT23o4X6ut2vFVa/UpMlC
+         7yCjd6BZmvxx8p/SnrFzTUZPy20+p2a6VEqNXN5WK8c/jyuNsHj+JXPJfagQKVHR/CyL
+         bddeHPkHH0HX5htJoq+7ckcwsDFG3GvQPlGuDhNKwWhPws6B/wc7Y0tU5k/qfONFoqoO
+         jtaA==
+X-Forwarded-Encrypted: i=1; AJvYcCWTldJmrOiVGyXjnGEGCZxx4vjvUDSpvfC9UjmouMX5fGbmxEsHfnnbSTNg61psSgXIFvmpsD7cuEP1gqkaNX03aVcVtYuQKCTnop09
+X-Gm-Message-State: AOJu0YxnzPi1zBCXE17Tu50IZGdm39OjKxWlnwQrdVBVS6kg/8qBN6bE
+	foOMfUGdujNHbEtjKGQ26vq/DeBQtSH9WXtwnM810fsM+A3SZFW3ZqwkT5H3VAq7aKMRJ4X+t+y
+	uilzPppxbLEwjhgZ39n4oDxeF0EAY4Gj2b1WEciU+mz+RMUTiB2zyniJwokn1zgy2U8B2QA==
+X-Received: by 2002:a50:aa9d:0:b0:57d:ef3:c3b7 with SMTP id 4fb4d7f45d1cf-57d4580ab11mr5326062a12.36.1719302665577;
+        Tue, 25 Jun 2024 01:04:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGoYzcue/Hrd6k4TsIo7q/NbJMBliNIcO2bdnok/sTeZ5hfgBoqKAK4z/dZ6sDP+eLnFv6wNA==
+X-Received: by 2002:a50:aa9d:0:b0:57d:ef3:c3b7 with SMTP id 4fb4d7f45d1cf-57d4580ab11mr5326012a12.36.1719302664647;
+        Tue, 25 Jun 2024 01:04:24 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc7:342:f1b5:a48c:a59a:c1d6:8d0a])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5827db501d9sm96342a12.7.2024.06.25.01.04.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jun 2024 01:04:24 -0700 (PDT)
+Date: Tue, 25 Jun 2024 04:04:19 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Jason Wang <jasowang@redhat.com>
+Cc: xuanzhuo@linux.alibaba.com, eperezma@redhat.com, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	virtualization@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, venkat.x.venkatsubra@oracle.com,
+	gia-khanh.nguyen@oracle.com
+Subject: Re: [PATCH V2 1/3] virtio: allow nested disabling of the configure
+ interrupt
+Message-ID: <20240625035746-mutt-send-email-mst@kernel.org>
+References: <20240624024523.34272-1-jasowang@redhat.com>
+ <20240624024523.34272-2-jasowang@redhat.com>
+ <20240624054403-mutt-send-email-mst@kernel.org>
+ <CACGkMEv1U7N-RRgQ=jbhBK1SWJ3EJz84qYaxC2kk6keM6J6MaQ@mail.gmail.com>
+ <20240625030259-mutt-send-email-mst@kernel.org>
+ <CACGkMEuP5GJTwcSoG6UP0xO6V7zeJynYyTDVRtF8R=PJ5z8aLg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1 0/5] Alternative mTHP swap allocator improvements
-Content-Language: en-GB
-To: Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
- Kairui Song <kasong@tencent.com>, "Huang, Ying" <ying.huang@intel.com>,
- Kalesh Singh <kaleshsingh@google.com>, Barry Song <baohua@kernel.org>,
- Hugh Dickins <hughd@google.com>, David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20240618232648.4090299-1-ryan.roberts@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20240618232648.4090299-1-ryan.roberts@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACGkMEuP5GJTwcSoG6UP0xO6V7zeJynYyTDVRtF8R=PJ5z8aLg@mail.gmail.com>
 
-On 19/06/2024 00:26, Ryan Roberts wrote:
-> Hi All,
+On Tue, Jun 25, 2024 at 03:50:30PM +0800, Jason Wang wrote:
+> On Tue, Jun 25, 2024 at 3:11 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> >
+> > On Tue, Jun 25, 2024 at 09:27:04AM +0800, Jason Wang wrote:
+> > > On Mon, Jun 24, 2024 at 5:59 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > >
+> > > > On Mon, Jun 24, 2024 at 10:45:21AM +0800, Jason Wang wrote:
+> > > > > Somtime driver may want to enable or disable the config callback. This
+> > > > > requires a synchronization with the core. So this patch change the
+> > > > > config_enabled to be a integer counter. This allows the toggling of
+> > > > > the config_enable to be synchronized between the virtio core and the
+> > > > > virtio driver.
+> > > > >
+> > > > > The counter is not allowed to be increased greater than one, this
+> > > > > simplifies the logic where the interrupt could be disabled immediately
+> > > > > without extra synchronization between driver and core.
+> > > > >
+> > > > > Signed-off-by: Jason Wang <jasowang@redhat.com>
+> > > > > ---
+> > > > >  drivers/virtio/virtio.c | 20 +++++++++++++-------
+> > > > >  include/linux/virtio.h  |  2 +-
+> > > > >  2 files changed, 14 insertions(+), 8 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
+> > > > > index b968b2aa5f4d..d3aa74b8ae5d 100644
+> > > > > --- a/drivers/virtio/virtio.c
+> > > > > +++ b/drivers/virtio/virtio.c
+> > > > > @@ -127,7 +127,7 @@ static void __virtio_config_changed(struct virtio_device *dev)
+> > > > >  {
+> > > > >       struct virtio_driver *drv = drv_to_virtio(dev->dev.driver);
+> > > > >
+> > > > > -     if (!dev->config_enabled)
+> > > > > +     if (dev->config_enabled < 1)
+> > > > >               dev->config_change_pending = true;
+> > > > >       else if (drv && drv->config_changed)
+> > > > >               drv->config_changed(dev);
+> > > > > @@ -146,17 +146,23 @@ EXPORT_SYMBOL_GPL(virtio_config_changed);
+> > > > >  static void virtio_config_disable(struct virtio_device *dev)
+> > > > >  {
+> > > > >       spin_lock_irq(&dev->config_lock);
+> > > > > -     dev->config_enabled = false;
+> > > > > +     --dev->config_enabled;
+> > > > >       spin_unlock_irq(&dev->config_lock);
+> > > > >  }
+> > > > >
+> > > > >  static void virtio_config_enable(struct virtio_device *dev)
+> > > > >  {
+> > > > >       spin_lock_irq(&dev->config_lock);
+> > > > > -     dev->config_enabled = true;
+> > > > > -     if (dev->config_change_pending)
+> > > > > -             __virtio_config_changed(dev);
+> > > > > -     dev->config_change_pending = false;
+> > > > > +
+> > > > > +     if (dev->config_enabled < 1) {
+> > > > > +             ++dev->config_enabled;
+> > > > > +             if (dev->config_enabled == 1 &&
+> > > > > +                 dev->config_change_pending) {
+> > > > > +                     __virtio_config_changed(dev);
+> > > > > +                     dev->config_change_pending = false;
+> > > > > +             }
+> > > > > +     }
+> > > > > +
+> > > > >       spin_unlock_irq(&dev->config_lock);
+> > > > >  }
+> > > > >
+> > > >
+> > > > So every disable decrements the counter. Enable only increments it up to 1.
+> > > > You seem to be making some very specific assumptions
+> > > > about how this API will be used. Any misuse will lead to under/overflow
+> > > > eventually ...
+> > > >
+> > >
+> > > Well, a counter gives us more information than a boolean. With
+> > > boolean, misuse is even harder to be noticed.
+> >
+> > With boolean we can prevent misuse easily because previous state
+> > is known exactly. E.g.:
+> >
+> > static void virtio_config_driver_disable(struct virtio_device *dev)
+> > {
+> >         BUG_ON(dev->config_driver_disabled);
+> >         dev->config_driver_disabled = true;
+> > }
+> >
+> >
+> >
+> > static void virtio_config_driver_enable(struct virtio_device *dev)
+> > {
+> >         BUG_ON(!dev->config_driver_disabled);
+> >         dev->config_driver_disabled = false;
+> > }
+> >
+> >
+> > Does not work with integer you simply have no idea what the value
+> > should be at point of call.
 > 
-> Chris has been doing great work at [1] to clean up my mess in the mTHP swap
-> entry allocator. But Barry posted a test program and results at [2] showing that
-> even with Chris's changes, there are still some fallbacks (around 5% - 25% in
-> some cases). I was interested in why that might be and ended up putting this PoC
-> patch set together to try to get a better understanding. This series ends up
-> achieving 0% fallback, even with small folios ("-s") enabled. I haven't done
-> much testing beyond that (yet) but thought it was worth posting on the strength
-> of that result alone.
+> Yes but I meant if we want the config could be disabled by different
+> parties (core, driver and others)
+
+For now, we don't have others ;)
+
+> >
+> >
+> > > >
+> > > >
+> > > > My suggestion would be to
+> > > > 1. rename config_enabled to config_core_enabled
+> > > > 2. rename virtio_config_enable/disable to virtio_config_core_enable/disable
+> > > > 3. add bool config_driver_disabled and make virtio_config_enable/disable
+> > > >    switch that.
+> > > > 4. Change logic from dev->config_enabled to
+> > > >    dev->config_core_enabled && !dev->config_driver_disabled
+> > >
+> > > If we make config_driver_disabled by default true,
+> >
+> > No, we make it false by default.
+> >
+> > > we need someone to
+> > > enable it explicitly. If it's core, it breaks the semantic that it is
+> > > under the control of the driver (or needs to synchronize with the
+> > > driver). If it's a driver, each driver needs to enable it at some time
+> > > which can be easily forgotten. And if we end up with workarounds like:
+> > >
+> > >         /* If probe didn't do it, mark device DRIVER_OK ourselves. */
+> > >         if (!(dev->config->get_status(dev) & VIRTIO_CONFIG_S_DRIVER_OK))
+> > >                 virtio_device_ready(dev);
+> > >
+> > > It's another break of the semantics. And actually the above is also racy.
+> > >
+> > > It seems the only choice is to make config_driver_disabled by default
+> > > false. But the driver needs to be aware of this and take extra care
+> > > when calling virtio_device_ready() which is also tricky.
+> >
+> >
+> > No, false by default simply means no change to semantics.
 > 
-> At a high level this works in a similar way to Chris's series; it marks a
-> cluster as being for a particular order and if a new cluster cannot be allocated
-> then it scans through the existing non-full clusters. But it does it by scanning
-> through the clusters rather than assembling them into a list. Cluster flags are
-> used to mark clusters that have been scanned and are known not to have enough
-> contiguous space, so the efficiency should be similar in practice.
+> No change to current semantics, probably. But we need to document
 > 
-> Because its not based around a linked list, there is less churn and I'm
-> wondering if this is perhaps easier to review and potentially even get into
-> v6.10-rcX to fix up what's already there, rather than having to wait until v6.11
-> for Chris's series? I know Chris has a larger roadmap of improvements, so at
-> best I see this as a tactical fix that will ultimately be superseeded by Chris's
-> work.
+> 1) driver config is enabled by default
+> 2) no nested enabling and disabling
 > 
-> There are a few differences to note vs Chris's series:
+> If you think they are all fine, I can go with that way.
+
+yes, a good idea to document this.
+
+
+> >
+> >
+> > >
+> > > So in conclusion, two booleans seems sut-optimal than a counter. For
+> > > example we can use different bits for the counter as preempt_count
+> > > did. With counter(s), core and driver don't need any implicit/explicit
+> > > synchronization.
+> > >
+> > > Thanks
+> > >
+> >
+> > We have a simple problem, we can solve it simply. reference counting
+> > is tricky to get right and hard to debug, if we don't need it let us
+> > not go there.
 > 
-> - order-0 fallback scanning is still allowed in any cluster; the argument in the
->   past was that swap should always use all the swap space, so I've left this
->   mechanism in. It is only a fallback though; first the the new per-order
->   scanner is invoked, even for order-0, so if there are free slots in clusters
->   already assigned for order-0, then the allocation will go there.
+> I fully agree, and that's why I limit the change to virtio-net driver
+> in the first version.
+
+I got that. I didn't like the code duplication though.
+
+> >
+> >
+> >
+> > But in conclusion ;) if you don't like my suggestion do something else
+> > but make the APIs make sense,
 > 
-> - CPUs can steal slots from other CPU's current clusters; those clusters remain
->   scannable while they are current for a CPU and are only made unscannable when
->   no more CPUs are scanning that particular cluster.
+> I don't say I don't like it:)
 > 
-> - I'm preferring to allocate a free cluster ahead of per-order scanning, since,
->   as I understand it, the original intent of a per-cpu current cluster was to
->   get pages for an application adjacent in the swap to speed up IO.
+> Limiting it to virtio-net seems to be the most easy way. And if we
+> want to do it in the core, I just want to make nesting to be supported
+> which might not be necessary now.
 
-[...]
+I feel limiting it to a single driver strikes the right balance ATM.
 
-I've been having a play, trying to extend this to actively free swap entries to make sufficient space for a new allcoation if the entries are already in swap cache. (To be clear, I'm not pursuing this series for inclusion, but was just trying to put some numbers to the idea, which could later be added to Chris's series if it makes sense).
-
-However, I'm running into an unexpected issue; It was my previous understanding that if the swap map for an entry is SWAP_HAS_CACHE, then there is a folio in the swap cache and nothing is referencing the swap entry, so the entry can be freed with __try_to_reclaim_swap() - that's the pattern that the existing oder-0 scanner uses.
-
-But I'm finding that __try_to_reclaim_swap() always returns 0, indicating that no folio was associated with the swap entry. How can that be, if swap_map[offset] == SWAP_HAS_CACHE ?
-
-Here is my code, for reference. Note that "evict" is always set true to be very agressive for now, but the eventual idea is that it would only be set to true when certain criteria are met (e.g. last attempt to allocate for order either failed or had to evict to succeed). 
-
-With logging added, every single call to __try_to_reclaim_swap() returns 0. (well it also live locks due to that with code as shown, but I hacked around that in experiments). Any ideas, before I dig deeper?
-
-
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index f6d78723f0fd..928d61e1d9d5 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -641,13 +641,25 @@ scan_swap_map_ssd_cluster_conflict(struct swap_info_struct *si,
- }
- 
- static inline bool swap_range_empty(char *swap_map, unsigned int start,
--                                   unsigned int nr_pages)
-+                                   unsigned int nr_pages, bool *inc_cached)
- {
-        unsigned int i;
--
--       for (i = 0; i < nr_pages; i++) {
--               if (swap_map[start + i])
--                       return false;
-+       bool hit_cache = false;
-+
-+       if (*inc_cached) {
-+               for (i = 0; i < nr_pages; i++) {
-+                       if (swap_map[start + i]) {
-+                               if (swap_map[start + i] != SWAP_HAS_CACHE)
-+                                       return false;
-+                               hit_cache = true;
-+                       }
-+               }
-+               *inc_cached = hit_cache;
-+       } else {
-+               for (i = 0; i < nr_pages; i++) {
-+                       if (swap_map[start + i])
-+                               return false;
-+               }
-        }
- 
-        return true;
-@@ -760,6 +772,7 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
-        struct swap_cluster_info *ci;
-        unsigned int tmp, max;
-        unsigned int stop = SWAP_NEXT_INVALID;
-+       bool evict = true;
- 
- new_cluster:
-        cluster = this_cpu_ptr(si->percpu_cluster);
-@@ -799,18 +812,48 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
-         * natural alignment.
-         */
-        max = ALIGN(tmp + 1, SWAPFILE_CLUSTER);
--       ci = lock_cluster(si, tmp);
--       while (tmp < max) {
--               if (swap_range_empty(si->swap_map, tmp, nr_pages))
--                       break;
--               tmp += nr_pages;
-+scan_cluster:
-+       if (tmp < max) {
-+               ci = lock_cluster(si, tmp);
-+               while (tmp < max) {
-+                       if (swap_range_empty(si->swap_map, tmp, nr_pages, &evict))
-+                               break;
-+                       tmp += nr_pages;
-+               }
-+               unlock_cluster(ci);
-        }
--       unlock_cluster(ci);
-        if (tmp >= max) {
-                cluster_dec_scanners(ci);
-                cluster->next[order] = SWAP_NEXT_INVALID;
-                goto new_cluster;
-        }
-+       if (evict) {
-+               unsigned int off;
-+               int nr;
-+
-+               spin_unlock(&si->lock);
-+
-+               for (off = tmp; off < tmp + nr_pages; off += nr) {
-+                       nr = 1;
-+                       if (READ_ONCE(si->swap_map[off]) == SWAP_HAS_CACHE) {
-+                               nr = __try_to_reclaim_swap(si, off, TTRS_ANYWAY);
-+                               if (nr < 0)
-+                                       break;
-+                               else if (nr == 0)
-+                                       nr = 1;
-+                               nr = ALIGN(off + 1, nr) - off;
-+                       }
-+               }
-+
-+               spin_lock(&si->lock);
-+               *scan_base = this_cpu_read(*si->cluster_next_cpu);
-+               *offset = *scan_base;
-+
-+               if (nr < 0)
-+                       tmp += nr_pages;
-+
-+               goto scan_cluster;
-+       }
-        *offset = tmp;
-        *scan_base = tmp;
-        tmp += nr_pages;
-
+> 
+> > at least do better than +5
+> > on Rusty's interface design scale.
+> >
+> > >
+> 
+> Thanks
+> 
+> 
+> > >
+> > >
+> > > >
+> > > >
+> > > >
+> > > >
+> > > > > @@ -455,7 +461,7 @@ int register_virtio_device(struct virtio_device *dev)
+> > > > >               goto out_ida_remove;
+> > > > >
+> > > > >       spin_lock_init(&dev->config_lock);
+> > > > > -     dev->config_enabled = false;
+> > > > > +     dev->config_enabled = 0;
+> > > > >       dev->config_change_pending = false;
+> > > > >
+> > > > >       INIT_LIST_HEAD(&dev->vqs);
+> > > > > diff --git a/include/linux/virtio.h b/include/linux/virtio.h
+> > > > > index 96fea920873b..4496f9ba5d82 100644
+> > > > > --- a/include/linux/virtio.h
+> > > > > +++ b/include/linux/virtio.h
+> > > > > @@ -132,7 +132,7 @@ struct virtio_admin_cmd {
+> > > > >  struct virtio_device {
+> > > > >       int index;
+> > > > >       bool failed;
+> > > > > -     bool config_enabled;
+> > > > > +     int config_enabled;
+> > > > >       bool config_change_pending;
+> > > > >       spinlock_t config_lock;
+> > > > >       spinlock_t vqs_list_lock;
+> > > > > --
+> > > > > 2.31.1
+> > > >
+> >
 
