@@ -1,159 +1,103 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0525917BB2B
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 17:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6FBA20;
+	Tue, 25 Jun 2024 17:34:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719336751; cv=none; b=eHqbIgG4MwL2hLX1dhSnSclOCCC53wcnasu7HDVsTk+pQ9wVPZ50G0ZLWdw2Uhx3pKHk5WwXpTeaJA8vEdF9UJ0cx2g9sLyRHRZTLZ9por7sbr3DLJj9OI9whQRKdwc6C1NloWdFec5jbhrQq4kynIIbhIYMBgm9oK2so5wd++w=
+	t=1719336852; cv=none; b=fVT29GWUzrc/nr+jEJ6hsRPW7jbDLJbNnhFRKZ9m4MU/dZeFfA9LcfjIy3zxS7fwROzTSgh6KuKAZ1u2UFBXMiJ0kzX0ob2fuyaEplUqRxw6UwPeFnlWzhsGBtIyHzZlF9XdG9juDOU7epr7aCZllPBHAk6gTvH1Eb1fesw4olM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719336751; c=relaxed/simple;
-	bh=wLKfgKs5ExOvrZU72L1+Jzkhl36RYtaZxK9rgVAE9kU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UWrS14pUPd34ixBi+pbS7IQguxNoeSj6VHGl/Kg9KrDHUHAYoX57QGvMzTNkLzPVa4AwuTVbVd8VDaCV7NFCL80I/wbG3IbsUd6eHpncn6E6V28BsxD5Ooxxvmk5WRS8hlp0PFqhTzACDPwsSgsmUggR0fjTgHCWKc14R/Ppwi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=sLl2IZxq; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1719336852; c=relaxed/simple;
+	bh=nvg2bDyu97UFY7UtAM4glGoAg2abvvoKxXSCMlGpmmg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D7AkRgf10KkaNhJNZlmuF4Z4LedkBYnkK93G4fySQFAbKI6jSqhZ0w8JCoaEg2XgdSl898jcPUvQnegLkpDnXMjOsC9QKIMEuZ7rtVgcG7xFBNEC3vC8o8NxS0DkV3w8+IOPOhdM4Lwp0IdoQFK1ZCa42OczDQh3gemm6h0jrDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=TqDlTECh; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="sLl2IZxq"
-Received: from [192.168.7.205] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 45PHVtji1707072
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 25 Jun 2024 10:31:56 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 45PHVtji1707072
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024061501; t=1719336717;
-	bh=jutrmtklCI4PriE/IIG4pCj+aMTqI1GvX3akzTXoN1c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sLl2IZxqgW8MhMminDmW6MIgriaLY+Pb/m4Z4fkvIzTODHIVtDaDSIKkVv3RUQBJj
-	 xQihRhKJyPLwIvGAaLJiRKVtryklnY5O6322VpJrVF9bUAG7gOGE/MyHAcAGI7ZQuC
-	 XmgiNFbB0Tuh+AdBUQifl5xzvQTH5oHZraKifrSuUb8OER9Yc8WSRiSDgTtsBEDIym
-	 2nBHrTXFJBTljtXs3SNFdzJh/2Hoqqr4uquzhZ3I6ojyPS7VEJ4wLsavMccS5Y4aZd
-	 FJVaKV/tyuEoPufi/IhMQV3Zcp65Jww1EYksvHlP5qauqt1iiXYAi5DbRZ8Ujkj1Gd
-	 RtMdGQlt10bkA==
-Message-ID: <0926bc9e-3d70-4ee1-b861-a8ab220ffec1@zytor.com>
-Date: Tue, 25 Jun 2024 10:31:54 -0700
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="TqDlTECh"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45P8sUvB006267;
+	Tue, 25 Jun 2024 10:34:04 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=B
+	s4dvTdVkjOQxvYbHqJg9rN6SsX5DycL0uN69uYr4MY=; b=TqDlTEChkegIDQO5D
+	gbqipLKtYtfqbEZqF1Pu6hhzy3f47z1feLeeILMhoKDkUEQCjv2hcYqr0hzuewfV
+	NQRyARtGlFWd3tjFhpEKSgO4ta/oEihWa3eklQurtqZFIdKG8o1SZ6SiT/3DrggJ
+	UC3idIQ3dLDfP3C0ms0Ltq3wasx+VCvEK83kmXHVS1IhloddOF9EP2/TkTsMD2p8
+	EKsP1ZuxGUvjynNneJX5hQejYru+pa2t+ajUZfuq0L2KRJhg9Vo/1ABGiVncKPhP
+	+cfwXcBaEwchYMDZG3N1Z6REevOzX9QOZMQvh0+P85ZVqoVfU0ztpbIPVEogYIB0
+	w3vaA==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3yytt0a2v0-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Jun 2024 10:34:04 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Tue, 25 Jun 2024 10:34:02 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Tue, 25 Jun 2024 10:34:02 -0700
+Received: from localhost.localdomain (unknown [10.28.36.166])
+	by maili.marvell.com (Postfix) with ESMTP id ECAF83F7063;
+	Tue, 25 Jun 2024 10:33:58 -0700 (PDT)
+From: Suman Ghosh <sumang@marvell.com>
+To: <sgoutham@marvell.com>, <gakula@marvell.com>, <sbhatta@marvell.com>,
+        <hkelam@marvell.com>, <davem@davemloft.net>, <edumazet@google.com>,
+        <kuba@kernel.org>, <pabeni@redhat.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lcherian@marvell.com>,
+        <jerinj@marvell.com>, <markus.elfring@web.de>
+CC: Suman Ghosh <sumang@marvell.com>
+Subject: [net PATCH v2 1/7] octeontx2-af: Fix klockwork issue in cgx.c
+Date: Tue, 25 Jun 2024 23:03:43 +0530
+Message-ID: <20240625173350.1181194-2-sumang@marvell.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240625173350.1181194-1-sumang@marvell.com>
+References: <20240625173350.1181194-1-sumang@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] x86/fred: Fix two problems during the FRED
- initialization
-To: "H. Peter Anvin" <hpa@zytor.com>,
-        Hou Wenlong <houwenlong.hwl@antgroup.com>
-Cc: linux-kernel@vger.kernel.org, Lai Jiangshan <jiangshan.ljs@antgroup.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Xin Li <xin3.li@intel.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <cover.1718972598.git.houwenlong.hwl@antgroup.com>
- <58ec98bf-b66c-4249-8a10-ff254cd405c2@zytor.com>
- <20240624062143.GA59245@k08j02272.eu95sqa>
- <f8ab27ff-d6cf-41c7-a033-9e578b1e51fb@zytor.com>
- <6D3EF8F0-9D70-438B-9B9C-9BC1A64E17E3@zytor.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <6D3EF8F0-9D70-438B-9B9C-9BC1A64E17E3@zytor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: vrbSNRk-xEbkxA1xGIQSZOGXwmtCCOSZ
+X-Proofpoint-GUID: vrbSNRk-xEbkxA1xGIQSZOGXwmtCCOSZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-25_12,2024-06-25_01,2024-05-17_01
 
-On 6/25/2024 10:24 AM, H. Peter Anvin wrote:
-> On June 25, 2024 2:09:29 AM PDT, Xin Li <xin@zytor.com> wrote:
->> On 6/23/2024 11:21 PM, Hou Wenlong wrote:
->>> I'm not sure if there will be a #PF during that gap; I just received the
->>> wrong fault address when I made a mistake in that gap and a #PF
->>> occurred. Before idt_setup_early_pf(), the registered page fault handler
->>> is do_early_exception(), which uses native_read_cr2(). However, after
->>> that, the page fault handler had been changed to exc_page_fault(), so if
->>> something bad happened and an unexpected #PF occurred, the fault address
->>> in the error output will be wrong, although the CR2 in __show_regs() is
->>> correct. I'm not sure if this matters or not since the kernel will panic
->>> at that time.
->>
->> So this doesn't sound a real problem, right?
->>
->> We could simply do:
->>
->> diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
->> index e6c469b323cc..e500777ed2b4 100644
->> --- a/arch/x86/mm/fault.c
->> +++ b/arch/x86/mm/fault.c
->> @@ -1495,7 +1495,7 @@ DEFINE_IDTENTRY_RAW_ERRORCODE(exc_page_fault)
->>            irqentry_state_t state;
->>            unsigned long address;
->>
->> -       address = cpu_feature_enabled(X86_FEATURE_FRED) ? fred_event_data(regs) : read_cr2();
->> +       address = native_read_cr4() & X86_CR4_FRED ? fred_event_data(regs) : read_cr2();
->>
->>            prefetchw(&current->mm->mmap_lock);
->>
->>
->> But the page fault handler is an extreme hot path, it's not worth it.
->>
->> Thanks!
->>        Xin
+Variable "cgx_dev" and "lmac" was getting accessed without NULL checks
+which can lead to pointer exception in some erroneous scenarios.
+This patch fixes the same by adding the required NULL checks.
 
+Fixes: 96be2e0da85e ("octeontx2-af: Support for MAC address filters in CGX")
+Signed-off-by: Suman Ghosh <sumang@marvell.com>
+---
+ drivers/net/ethernet/marvell/octeontx2/af/cgx.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-> Reading CR4 is insane from a performance perspective. Also, there is pretty much never a reason to, since CR4 is programmed by the OS.
-
-Agreed!
-
-> 
-> But this is basically insane. We should enable FRED from the point we cut over from the early exception vector. That is:
-> 
-> Early IDT → Final IDT
-> or
-> Early IDT → FRED
-> 
-> But not
-> 
-> Early IDT → Final IDT → FRED
-> 
-> Eventually we should enable FRED for early exceptions too (which ought to be quite trivial, but makes the whole CLI enable/disable a bit of a mess.)
-> 
-
-I think you and tglx are talking the same thing :)
-
-Thanks!
-     Xin
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/cgx.c b/drivers/net/ethernet/marvell/octeontx2/af/cgx.c
+index 27935c54b91b..e5e266608cfc 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/cgx.c
++++ b/drivers/net/ethernet/marvell/octeontx2/af/cgx.c
+@@ -465,6 +465,13 @@ u64 cgx_lmac_addr_get(u8 cgx_id, u8 lmac_id)
+ 	u64 cfg;
+ 	int id;
+ 
++	if (!cgx_dev)
++		return 0;
++
++	lmac = lmac_pdata(lmac_id, cgx_dev);
++	if (!lmac)
++		return 0;
++
+ 	mac_ops = cgx_dev->mac_ops;
+ 
+ 	id = get_sequence_id_of_lmac(cgx_dev, lmac_id);
+-- 
+2.25.1
 
