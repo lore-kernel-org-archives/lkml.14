@@ -1,188 +1,105 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CCBB178361
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 17:22:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64CB176AD8
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 17:22:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719336158; cv=none; b=DBfeOD3AwnCLVPfm7mqLu1EQS06tYFouSyAyuKjTg+nW36iwq3eN0x0Fzmi1VNevrr/f7VE2X5+REH9VuE0m827nvL81Ftld/N9bZt42bQ3P09d/Y5UUczKsAC/2qqD0LcMehcO58OWnYbfAUE24QBIoBvRwZoC0FfVi2GTxRx0=
+	t=1719336177; cv=none; b=AJvm4pFkIXMryBjKOkolJxy2W2bzBmviXwy2toJrPzV+P1zWZ0yDhXLT+73uw22pSIXajNnFoIJHfkxvBHOJlS4pqyKNldKL4usj+yugdZ0EqBqrMqizimpGlH3X/WXlGaGIpfBnWfTKpsVWHwykxnseKm2GJGJkl9JrUXM5XQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719336158; c=relaxed/simple;
-	bh=dqG7w43iPHnt0PDr2DMEYcCiCAJjt30o8hAILUS/iJg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oYRUVDkFxZdbH+lM0GTY7yiaEPNT8Fe5Iq4q4qWGrU0jwhQoBQpeTSSc2lnHkaBFWS7gC9APKvQqCfJCKkHKIEvIS4l/7WyGofA8S9nYx0YQd1sn+xuwAAunKdeo4fuZA6LpWnEYhH70NjfP40jKVsTRWcG+2LecA8hJjG2GhWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fPLB7Ol3; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719336177; c=relaxed/simple;
+	bh=p6Fup42Q2qtmGDl7fmJ+we4o36qNwmbpakx4nDSvKWs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UBEmboO27vnoHMEJ/BN/JNoLhtr6qFyl9unBDo7ugXVIS1wF2aDo8kb53j0Vf+KTmZE6xMcsc+HMs4pvFzlkK4Mat//9+Y3VXpgJaBh4UYqnFrgyqKjgWj0g8hauvV4Oh5QOmFCxrjEk8GfdM/npVdyYbbX7LNtD3Xa3pJ+oEoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dK7okR+J; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fPLB7Ol3"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2ebeefb9a7fso71536641fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 10:22:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719336155; x=1719940955; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U8+vxqtoku9WMxCA6PXoqwBfKDqGzEMaoj9vVLQWGmg=;
-        b=fPLB7Ol3vzGD74KsnaSC8WbN4C3U5sSAegZiFd/eezcBkdUEEBWY3hVeNyTZOMSe1b
-         C6Y4aCfQobfECCBjrQmbf2OUvIc7BQ4Alj9t5dYDyKOVgzQZeZCypfSzX7yJnDYon8Xq
-         44z5aNs3d3tFizLzsKoRDcB7sRipN5vgqCGCTAxo9p927+a+iCASWawSoyRDDbbhJhbV
-         +AxJTXlEB3YQqyK5Eu1gMd6YXh2A1jkWhleVjc6nuVIBdzJFlWfGxUVoDQd/tobpuhrp
-         uHWrtrwtdAQuPh/N9iar6GBGk5t9nqcMPmYfstHu8JCfx92VpbiMytgeZuQpPkpt9iMA
-         quNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719336155; x=1719940955;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=U8+vxqtoku9WMxCA6PXoqwBfKDqGzEMaoj9vVLQWGmg=;
-        b=JDz0WsM25/JcEx+Wyt+cUabrX1iVvSq6c211OGvvClxPei54sam9/21crjhTAHSKQL
-         vgX6G+Cn+uwq9kFPzrKjJ2JvR9aBKRtuXKwVJxlDyoZZfgmqSJKA/1UERnZ43w6I5Cti
-         otVc807rlu1UGxrHWYY+MscdiS1GBzRLlcMFy+w2gnqCZ16GZXTC4iFqF8WZtb6j+5zU
-         aR3PzPCSiojcdkyZ6ToxESOehtpmz03tVNNVii6viXD3obvrxca+ztDcFWcMfPb5x0YP
-         yVVNJFpOYZgM9pvoAMBxsFFIt3WsqU0bCQsYvRl/cCr+3maAx0+1jamccYhtXkGV57RV
-         iidQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJLQtMfyHFMYW1A65tDdISy4By4RL0m0wf0cfrB4Fv3o9oTNV7h4NrK5saQYzfJjbAy4lZj5w7WqwuzgzzVC+7lc3D8DLypOvlKxkg
-X-Gm-Message-State: AOJu0Yz2Mwl636tHKZrLIkgqLuGH8T2we5frSpBS4xGVxa54NfjctZgS
-	d8dHwrLxizncPUjLn2yAw9NXlDgh0ff13CvPwWV0r6yOYXAJ7/QXRLPhRpBFEWguLOe4tn6QQ4e
-	yDNHIYnzH2+f6aNroLnJDwKK4yyM=
-X-Google-Smtp-Source: AGHT+IENflu0IhOwnz3G7CoO5qIYDSrf3yQTxo4pN2s8oFrddW68LdZ70xyM8SUrG1NNxvukXAkxa3vCptR2WVA9VfU=
-X-Received: by 2002:a05:651c:b0d:b0:2ec:5f0d:8b08 with SMTP id
- 38308e7fff4ca-2ec5f0d8f83mr62208701fa.37.1719336154320; Tue, 25 Jun 2024
- 10:22:34 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dK7okR+J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719336174;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=DjjyquavlDzlhiW/KAeFuabyeroRLFzx9MMbHwtfmxM=;
+	b=dK7okR+JJhQwkgX8tT1m2kwEL4T5HGocTt3X4MYig/rvnba2JnWO891Q+XLka9HuTfq84t
+	7p93Wq3OpGAp1xO0DaAohRP6kDBZDB5loKS06mVd7l1NFhkfdMxywGR50hmLZWijuNMZjT
+	g10pHn1uEX5IqqnRNjppejMg0Q9UIPc=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-393-X3Annh6CPbOtGD-gCmp1dg-1; Tue,
+ 25 Jun 2024 13:22:51 -0400
+X-MC-Unique: X3Annh6CPbOtGD-gCmp1dg-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1975319560B4;
+	Tue, 25 Jun 2024 17:22:49 +0000 (UTC)
+Received: from RHTRH0061144.bos.redhat.com (dhcp-17-72.bos.redhat.com [10.18.17.72])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9A2A819560BF;
+	Tue, 25 Jun 2024 17:22:46 +0000 (UTC)
+From: Aaron Conole <aconole@redhat.com>
+To: netdev@vger.kernel.org
+Cc: dev@openvswitch.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Pravin B Shelar <pshelar@ovn.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Stefano Brivio <sbrivio@redhat.com>,
+	=?UTF-8?q?Adri=C3=A1n=20Moreno?= <amorenoz@redhat.com>,
+	Simon Horman <horms@kernel.org>
+Subject: [PATCH net-next v3 0/7] selftests: net: Switch pmtu.sh to use the internal ovs script.
+Date: Tue, 25 Jun 2024 13:22:38 -0400
+Message-ID: <20240625172245.233874-1-aconole@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240622071231.576056-1-21cnbao@gmail.com> <20240622071231.576056-2-21cnbao@gmail.com>
-In-Reply-To: <20240622071231.576056-2-21cnbao@gmail.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Wed, 26 Jun 2024 01:22:17 +0800
-Message-ID: <CAMgjq7BNC_O5zqh522rs78_SPiiq1KXxGyOCUstwQUgucTLgxA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] tools/mm: Introduce a tool to assess swap entry
- allocation for thp_swapout
-To: Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org, chrisl@kernel.org, linux-mm@kvack.org, 
-	ryan.roberts@arm.com, david@redhat.com, hughd@google.com, 
-	kaleshsingh@google.com, linux-kernel@vger.kernel.org, v-songbaohua@oppo.com, 
-	ying.huang@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Sat, Jun 22, 2024 at 3:13=E2=80=AFPM Barry Song <21cnbao@gmail.com> wrot=
-e:
->
-> From: Barry Song <v-songbaohua@oppo.com>
->
-> Both Ryan and Chris have been utilizing the small test program to aid
-> in debugging and identifying issues with swap entry allocation. While
-> a real or intricate workload might be more suitable for assessing the
-> correctness and effectiveness of the swap allocation policy, a small
-> test program presents a simpler means of understanding the problem and
-> initially verifying the improvements being made.
->
-> Let's endeavor to integrate it into tools/mm. Although it presently
-> only accommodates 64KB and 4KB, I'm optimistic that we can expand
-> its capabilities to support multiple sizes and simulate more
-> complex systems in the future as required.
->
-> Basically, we have
-> 1. Use MADV_PAGEPUT for rapid swap-out, putting the swap allocation code
-> under high exercise in a short time.
-> 2. Use MADV_DONTNEED to simulate the behavior of libc and Java heap in
-> freeing memory, as well as for munmap, app exits, or OOM killer scenarios=
-.
-> This ensures new mTHP is always generated, released or swapped out, simil=
-ar
-> to the behavior on a PC or Android phone where many applications are
-> frequently started and terminated.
-> 3. Swap in with or without the "-a" option to observe how fragments
-> due to swap-in and the incoming swap-in of large folios will impact
-> swap-out fallback.
->
-> Due to 2, we ensure a certain proportion of mTHP. Similarly, because
-> of 3, we maintain a certain proportion of small folios, as we don't
-> support large folios swap-in, meaning any swap-in will immediately
-> result in small folios. Therefore, with both 2 and 3, we automatically
-> achieve a system containing both mTHP and small folios. Additionally,
-> 1 provides the ability to continuously swap them out.
->
-> We can also use "-s" to add a dedicated small folios memory area.
->
-> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
-> ---
->  tools/mm/Makefile                  |   2 +-
->  tools/mm/thp_swap_allocator_test.c | 233 +++++++++++++++++++++++++++++
->  2 files changed, 234 insertions(+), 1 deletion(-)
->  create mode 100644 tools/mm/thp_swap_allocator_test.c
->
-> diff --git a/tools/mm/Makefile b/tools/mm/Makefile
-> index 7bb03606b9ea..15791c1c5b28 100644
-> --- a/tools/mm/Makefile
-> +++ b/tools/mm/Makefile
-> @@ -3,7 +3,7 @@
->  #
->  include ../scripts/Makefile.include
->
-> -BUILD_TARGETS=3Dpage-types slabinfo page_owner_sort
-> +BUILD_TARGETS=3Dpage-types slabinfo page_owner_sort thp_swap_allocator_t=
-est
->  INSTALL_TARGETS =3D $(BUILD_TARGETS) thpmaps
->
->  LIB_DIR =3D ../lib/api
-> diff --git a/tools/mm/thp_swap_allocator_test.c b/tools/mm/thp_swap_alloc=
-ator_test.c
-> new file mode 100644
-> index 000000000000..a363bdde55f0
-> --- /dev/null
-> +++ b/tools/mm/thp_swap_allocator_test.c
-> @@ -0,0 +1,233 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * thp_swap_allocator_test
-> + *
-> + * The purpose of this test program is helping check if THP swpout
-> + * can correctly get swap slots to swap out as a whole instead of
-> + * being split. It randomly releases swap entries through madvise
-> + * DONTNEED and swapin/out on two memory areas: a memory area for
-> + * 64KB THP and the other area for small folios. The second memory
-> + * can be enabled by "-s".
-> + * Before running the program, we need to setup a zRAM or similar
-> + * swap device by:
-> + *  echo lzo > /sys/block/zram0/comp_algorithm
-> + *  echo 64M > /sys/block/zram0/disksize
-> + *  echo never > /sys/kernel/mm/transparent_hugepage/hugepages-2048kB/en=
-abled
-> + *  echo always > /sys/kernel/mm/transparent_hugepage/hugepages-64kB/ena=
-bled
-> + *  mkswap /dev/zram0
-> + *  swapon /dev/zram0
-> + * The expected result should be 0% anon swpout fallback ratio w/ or
-> + * w/o "-s".
-> + *
-> + * Author(s): Barry Song <v-songbaohua@oppo.com>
-> + */
-> +
-> +#define _GNU_SOURCE
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <unistd.h>
-> +#include <string.h>
-> +#include <sys/mman.h>
+Currently, if a user wants to run pmtu.sh and cover all the provided test
+cases, they need to install the Open vSwitch userspace utilities.  This
+dependency is difficult for users as well as CI environments, because the
+userspace build and setup may require lots of support and devel packages
+to be installed, system setup to be correct, and things like permissions
+and selinux policies to be properly configured.
 
-Hi Barry,
+The kernel selftest suite includes an ovs-dpctl.py utility which can
+interact with the openvswitch module directly.  This lets developers and
+CI environments run without needing too many extra dependencies - just
+the pyroute2 python package.
 
-Found a small issue while testing your tool.. for better
-compatibility, I think you missed <linux/mman.h>, I'm getting
-following error without it (with glibc-headers-2.28-236 on el8
-system):
+This series enhances the ovs-dpctl utility to provide support for set()
+and tunnel() flow specifiers, better ipv6 handling support, and the
+ability to add tunnel vports, and LWT interfaces.  Finally, it modifies
+the pmtu.sh script to call the ovs-dpctl.py utility rather than the
+typical OVS userspace utilities.  The pmtu.sh can still fall back on
+the Open vSwitch userspace utilities if the ovs-dpctl.py script can't
+be used.
 
-thp_swap_allocator_test.c:161:30: error: =E2=80=98MADV_PAGEOUT=E2=80=99 und=
-eclared
-(first use in this function); did you mean =E2=80=98MADV_RANDOM=E2=80=99?
-  madvise(mem1, MEMSIZE_MTHP, MADV_PAGEOUT);
-                              ^~~~~~~~~~~~
+Aaron Conole (7):
+  selftests: openvswitch: Support explicit tunnel port creation.
+  selftests: openvswitch: Refactor actions parsing.
+  selftests: openvswitch: Add set() and set_masked() support.
+  selftests: openvswitch: Add support for tunnel() key.
+  selftests: openvswitch: Support implicit ipv6 arguments.
+  selftests: net: Use the provided dpctl rather than the vswitchd for
+    tests.
+  selftests: net: add config for openvswitch
 
-Other in-tree test tools using this flag also includes <linux/mman.h>.
+ tools/testing/selftests/net/config            |   5 +
+ .../selftests/net/openvswitch/ovs-dpctl.py    | 368 +++++++++++++++---
+ tools/testing/selftests/net/pmtu.sh           | 145 +++++--
+ 3 files changed, 451 insertions(+), 67 deletions(-)
+
+-- 
+2.45.1
+
