@@ -1,64 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F8717625C;
-	Tue, 25 Jun 2024 15:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910FB170820;
+	Tue, 25 Jun 2024 15:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719328139; cv=none; b=HRgYETYiiJScRAVcnCqDxT1KbItM6MiQDUBGoWAMNv++Oja19qsOCG1dZPUN8AyT7c90pqRYhc0i3RXEIKDIA9KoO5zgIpr6EEmkwQkBIrlbUeZ90DDWgN0T6O9alFB0hbhqxZI/hsGdxWsBtfE5YYEzAJmCHzAe063c3+HhupI=
+	t=1719328160; cv=none; b=tsVtbA67RlQ01wQBCXWPIdoFpOZ/GiaqXCdMJjkpwfBd90kIRA840cWcIpKXkZoenNVUbeLsWYjV0po+0jQQFcvzPeIOEfI/wXsawCmU0bSZM8ix58WHgRI9brraWJ4xlRsQGdrAE0ROL+2V/IJjkxQbLdI/2hNFP/vy9A1P6HM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719328139; c=relaxed/simple;
-	bh=4BM+dW7bN2QAVhvQz8b/NJBQ+zu2K+L+6llL+5996MI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kyNOrOgV9FQzsRWrlLIbb7eN3fO3T7YbrlUHr3p/0tioSirVHxn6hWfYC1NJx1z0qwSqQcIlp9gtRAyCVjxB7wA2Wdrb1b9xApJsnGKWw+xMTWCCOICxwUyGPAXE4ROkXDzkx6j8+wyhwHUER+BZkiVckqYogNH1eosGq1se3rE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VC0V27hb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719328160; c=relaxed/simple;
+	bh=5WDojB2x8hYrLSfa5970Ibbg3oMXxbS5W1+0qaDaHiI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=E4jlAx0Logh8ytadbMj7oy1Oj0+vlpoQvDgqRZUz2ntarT5uQ38pEKyKlbR3qWH1aWYO81RQF3w2yRE+oU+S6dHRPAEyDP46BaWQHqz2JxYYilgRf+Mo4RcguobiTb5i3mfZ2z5Z9tRyyLVfqyjnp+f1f631SwJX7vdJAi0MRzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=jNqiWMPx; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VC0V27hb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1EEEC32782;
-	Tue, 25 Jun 2024 15:08:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719328139;
-	bh=4BM+dW7bN2QAVhvQz8b/NJBQ+zu2K+L+6llL+5996MI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=VC0V27hba5xYtjw4FGzUNmoTcOR0ttg+ERozLjBI07fWZmH/j/lTelZCLvk0+8fo1
-	 wjLAoYyQwuXSqy5cfA90p8Wa6qGXT8Wj0TiHd1ToweuOB5FF6dmuvLij3BoTSk0UQj
-	 ERLGQZ9a5LFLj5xScESFzRn/NT4aSXxm6UQ7he/lGwcTm0ZLlVgpT4yPD1cWxoH9ij
-	 FeggCmJMMK0bfszESJvsD5VzBxo72sJaFZmfqzJfiJM8y4qMznAJq2RS7WvHynAdwu
-	 nbheXs6kl/W7fv4RxVigVVLosdIlFvBCIMSEzMBpzNFbn3hgpkQRJ5b2W6K+z6pLcS
-	 mKlBK9rS1wAdw==
-Date: Tue, 25 Jun 2024 08:08:57 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Alexandra Winter <wintera@linux.ibm.com>
-Cc: Yunseong Kim <yskelg@gmail.com>, Markus Elfring <Markus.Elfring@web.de>,
- linux-s390@vger.kernel.org, netdev@vger.kernel.org, Alexander Gordeev
- <agordeev@linux.ibm.com>, Christian =?UTF-8?B?Qm9ybnRyw6RnZXI=?=
- <borntraeger@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Sven
- Schnelle <svens@linux.ibm.com>, Thorsten Winkler <twinkler@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>, LKML <linux-kernel@vger.kernel.org>,
- MichelleJin <shjy180909@gmail.com>
-Subject: Re: [PATCH] s390/netiucv: handle memory allocation failure in
- conn_action_start()
-Message-ID: <20240625080857.46653437@kernel.org>
-In-Reply-To: <6a4b95aa-f3d1-4da1-9017-976420af988b@linux.ibm.com>
-References: <20240623131154.36458-2-yskelg@gmail.com>
-	<bb03a384-b2c4-438f-b36b-a4af33a95b60@web.de>
-	<880a70f0-89d6-4094-8a71-a9c331bab1ee@gmail.com>
-	<6a4b95aa-f3d1-4da1-9017-976420af988b@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="jNqiWMPx"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45PDtVaq015936;
+	Tue, 25 Jun 2024 17:09:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	Lvu8LvSrvYK3xmjKziEMtqoXx01wKO4QCeuXVQ8Jr/o=; b=jNqiWMPxXoiO/fKQ
+	cJI8fJRIHTa7gW3GRfm9FCkNujDvo1A70pfOHaLDQ0/M9uAE/OnKRUnfe/ZagsnD
+	Q46TE2mRRg52drHn1c+Ic945wcj/iPyrZ4cUD1+G+kW2O65xowFmrjnmCbejZ4NQ
+	mqDz4Z68NG9NwjadlS8jm2IGZZOv9joBXYIcwnGSyAU3w7J9bDdAcJbKjFuybafU
+	zu2Y5h0yQY4bpSX0zIqDi930Ea3nb3YHEaTYsfQzeXT7JahFFiHntwYo2n/21MgV
+	FafAOggHkb+AI53XkXANyOVKu4h+pXBWbWrklKUKKLpgTsd4/Hjir1Z5/+k8zIUd
+	ZHWqKA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ywkr5cbw7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Jun 2024 17:09:00 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A7F0740044;
+	Tue, 25 Jun 2024 17:08:50 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 43FC42207A7;
+	Tue, 25 Jun 2024 17:08:27 +0200 (CEST)
+Received: from localhost (10.252.26.63) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 25 Jun
+ 2024 17:08:26 +0200
+From: Olivier Moysan <olivier.moysan@foss.st.com>
+To: <fabrice.gasnier@foss.st.com>, Nuno Sa <nuno.sa@analog.com>,
+        Olivier
+ Moysan <olivier.moysan@foss.st.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>
+CC: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 1/8] iio: add read raw service to iio backend framework
+Date: Tue, 25 Jun 2024 17:07:09 +0200
+Message-ID: <20240625150717.1038212-2-olivier.moysan@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240625150717.1038212-1-olivier.moysan@foss.st.com>
+References: <20240625150717.1038212-1-olivier.moysan@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-25_10,2024-06-25_01,2024-05-17_01
 
-On Tue, 25 Jun 2024 11:08:49 +0200 Alexandra Winter wrote:
-> s390/netiucv is more or less in maintenance mode and we are not aware of any users.
-> The enterprise distros do not provide this module. Other iucv modules are more popular.
-> But afaiu we cannot remove the source code, unless we can prove that nobody is using it.
-> (Community advice is welcome).
+Add iio_backend_read_raw() service to support attributes read
+from an IIO backend.
 
-If you have strong reason to believe this driver is unused, and can't
-find any proof otherwise - let's remove it. We can always "revert it
-back in", if needed. We have done it in the past.
+Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+---
+ drivers/iio/industrialio-backend.c | 21 +++++++++++++++++++++
+ include/linux/iio/backend.h        |  6 +++++-
+ 2 files changed, 26 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industrialio-backend.c
+index 929aff4040ed..0e2653de1956 100644
+--- a/drivers/iio/industrialio-backend.c
++++ b/drivers/iio/industrialio-backend.c
+@@ -357,6 +357,27 @@ int devm_iio_backend_request_buffer(struct device *dev,
+ }
+ EXPORT_SYMBOL_NS_GPL(devm_iio_backend_request_buffer, IIO_BACKEND);
+ 
++/**
++ * iio_backend_read_raw - Request a channel attribute from the IIO backend.
++ * @back:	Backend device
++ * @chan:	IIO channel reference
++ * @val:	First element of the returned value
++ * @val2:	Second element of the returned value
++ * @mask:	Specify value to retrieve
++ *
++ * This callback replicates the read_raw callback of the IIO framework, and is intended to
++ * request miscellaneous channel attributes from the backend device.
++ *
++ * RETURNS:
++ * 0 on success, negative error number on failure.
++ */
++int iio_backend_read_raw(struct iio_backend *back, struct iio_chan_spec const *chan, int *val,
++			 int *val2, long mask)
++{
++	return iio_backend_op_call(back, read_raw, chan, val, val2, mask);
++}
++EXPORT_SYMBOL_NS_GPL(iio_backend_read_raw, IIO_BACKEND);
++
+ static struct iio_backend *iio_backend_from_indio_dev_parent(const struct device *dev)
+ {
+ 	struct iio_backend *back = ERR_PTR(-ENODEV), *iter;
+diff --git a/include/linux/iio/backend.h b/include/linux/iio/backend.h
+index 8099759d7242..24185718b20d 100644
+--- a/include/linux/iio/backend.h
++++ b/include/linux/iio/backend.h
+@@ -81,6 +81,7 @@ enum iio_backend_sample_trigger {
+  * @extend_chan_spec: Extend an IIO channel.
+  * @ext_info_set: Extended info setter.
+  * @ext_info_get: Extended info getter.
++ * @read_raw: Read value from a backend device
+  **/
+ struct iio_backend_ops {
+ 	int (*enable)(struct iio_backend *back);
+@@ -113,6 +114,8 @@ struct iio_backend_ops {
+ 			    const char *buf, size_t len);
+ 	int (*ext_info_get)(struct iio_backend *back, uintptr_t private,
+ 			    const struct iio_chan_spec *chan, char *buf);
++	int (*read_raw)(struct iio_backend *back, struct iio_chan_spec const *chan, int *val,
++			int *val2, long mask);
+ };
+ 
+ int iio_backend_chan_enable(struct iio_backend *back, unsigned int chan);
+@@ -141,7 +144,8 @@ ssize_t iio_backend_ext_info_set(struct iio_dev *indio_dev, uintptr_t private,
+ 				 const char *buf, size_t len);
+ ssize_t iio_backend_ext_info_get(struct iio_dev *indio_dev, uintptr_t private,
+ 				 const struct iio_chan_spec *chan, char *buf);
+-
++int iio_backend_read_raw(struct iio_backend *back, struct iio_chan_spec const *chan, int *val,
++			 int *val2, long mask);
+ int iio_backend_extend_chan_spec(struct iio_dev *indio_dev,
+ 				 struct iio_backend *back,
+ 				 struct iio_chan_spec *chan);
+-- 
+2.25.1
+
