@@ -1,129 +1,156 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27CD1148850;
-	Tue, 25 Jun 2024 08:31:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D50148857
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 08:31:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719304317; cv=none; b=kxYs/A893WE0J0sIzSd2MQyltLmec1WRxuHomrfuMHf6UJxmjh03gShX3hsGXZ6wVaywiLNE28YqSzXcSREU+d5QLkj3F8Ck1W0TUQcD66b7UmthsT/pWJ9m5iyCke0b2L78oC6Jg0evdnXdB8fzhwYACWxMLmNkr4B+WwCR7co=
+	t=1719304317; cv=none; b=G9WemO8LsgDG/PDR1DBCN49D2kuDtfzHjD4VoC3TnSoEIbYmJ94ynl20GWvxkDeC2LBqpR3ipqDGWUhRy1uFyxXeZjF8RaLUM2/6hsYrwYawV6ftiNll7TJv30XWd+q3I8IJc6FE2flXuZdLqNB0c2AQoRJadvUH7VBJ/TZx22c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719304317; c=relaxed/simple;
-	bh=LmfO5CUjX+AD6FODIFd4z8D5WgNrIle0Q9OSjKR7Cro=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h0+yhpntzDyr33PsUPo0DJ9F4d2jvqHabJ53tQl7NSU9n0YomfUUFN868ADbqiaqLA/5UOUKRuC52cKSskYAUsKKqac5U/OyY326C35uzGOdlbRkoVOhKX7RsVfcxZ9EOcunFhDtIPXfEWHvIk8sG9//n3oj9464hRYi3mB6QzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=f4RXLizk; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	bh=4GQMcGauM1sM2qcIuTQSJ5+jNSGplBUnYe9YXxdjt0A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Epfod/X6gjitZU3mgNg4mWa47sNbXIxoMOSdiv5ushLsEpjxmLyUNK+r9LVMse4gxL+yevCgYN9ekSGy06PyQAVSVvJWpTDEhqDxWGmviNcSVcgdPu8e5g8HfVmqvXU8TGry8Vmkd+CE8sFBsBiJijldysSQZa1YJ/BqZK+e/j0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dGPJ2bkq; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="f4RXLizk"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45P17H8a026443;
-	Tue, 25 Jun 2024 10:31:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	wtQG3ZhkBeytWTT2SWRn5kkG3sojPw2kyZipMCzkB1A=; b=f4RXLizkMMqsokZ0
-	fJ469SamxnH4Jj/0a8TWrebsNNKzBK3Uzp59YoKoCzZ5yxDNaz7e0ZqLKoi2svEY
-	rg+oZ8vhH2UeczJTb+bBYLLZsfy0Qx8nAF/yKD1hbhb7+9roqPTL7ios2ucDi4fu
-	sEb4OPr9n0DlLHHn40daEHfLOURtL4hhtOom46KVO2xnzCTE2qxdvvUSjNd9cYsg
-	i9UAbqnKnWdxB8XbMkhwEfbmx8YQZDEnSmvCR97ipu8FsiXQutQatRNkSZ4yZgtt
-	VKkeIX8rNDisddr/JdA9lRLlsQ7x9+HVxVnbYgRUj6yKHcVKkEBIGtgD0nawF/4L
-	FfyQkA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ywngdad2r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Jun 2024 10:31:44 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id AB0E04002D;
-	Tue, 25 Jun 2024 10:31:39 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7469C2105AA;
-	Tue, 25 Jun 2024 10:31:23 +0200 (CEST)
-Received: from localhost (10.129.178.213) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 25 Jun
- 2024 10:31:23 +0200
-From: Alain Volmat <alain.volmat@foss.st.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Alain Volmat
-	<alain.volmat@foss.st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/2] media: i2c: gc2145: use CCI_REG16_LE for little-endian registers
-Date: Tue, 25 Jun 2024 10:29:55 +0200
-Message-ID: <20240625082956.2556293-3-alain.volmat@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240625082956.2556293-1-alain.volmat@foss.st.com>
-References: <20240625082956.2556293-1-alain.volmat@foss.st.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dGPJ2bkq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719304314;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FtBka9f6WX8BkCVj0JZCuT7A8nh0ozt1KTXqJ+SkZZk=;
+	b=dGPJ2bkqK5Kl+9s4LpHaQ7JZf4B/U6W79V26iAnUrA0DiMgHTWHUOZrHM11dIG6Zn+MYiS
+	4Ooc0FB6jQwtY5kU3xK6CahdtYOFsHK5xTYMlD4ef0w966i87RpnhcDAjB7JXkVReW9IKH
+	AVHK1l4bRbIWuJDZ7nybI4mbLJ7p0oM=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-212-pnTwvopxMGGbv6AZxRkupA-1; Tue, 25 Jun 2024 04:31:49 -0400
+X-MC-Unique: pnTwvopxMGGbv6AZxRkupA-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a6c70438d0cso196303366b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 01:31:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719304308; x=1719909108;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FtBka9f6WX8BkCVj0JZCuT7A8nh0ozt1KTXqJ+SkZZk=;
+        b=ASHOrBEqzFGv9HAbSngRCAz2jDI/sFgG/JePz9anvbdbjOAF+/szK0HWMYmNU1UBXX
+         JSnoiUM1MIRj+Vv59aAVizDioURwcOmMtBC5b1ndDyqSPLdQE0gRjUpA/0JsBQOrJbxC
+         X1ckVWbkNNF7afN/HXdHbbQ216UudHPrYaeWzWLnfPVvdhobdGXVFA/FUFp2fBgUyEU/
+         cTQNN6YJAD1h1CNnu1CDy4WogEDerIzujegId4VxgmlWT/Og6Yoq//nhGSFkQIrNJuu+
+         tl+/YmYEtEmcwxk+Bcp8+iEKm6NV3sgTrzocIyHBSzCrNTaL2Ocemcb1MXwObuB+pWK5
+         31rQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX6sbP5/SPTq8JodzsK+qR33beX7PvNYg6/XZR2A1eazRPSgmuOTH47loLnuDnPNCgEcIT0o2CxmbT4oueyrAoQHhLhoKW3ufm9wkoj
+X-Gm-Message-State: AOJu0YwqXkqfIe7Nj7Z/YuJwuEN+vaRwuS393+tzJbcSmJgJuAz9et99
+	KuJhy7xoclibPz/CjdEDs6tLz4d+IywYKT6Q9aoZFhddBfs4/oFB4SmhTTmwaSFIXprdqxMwXRR
+	fm2T9c+Rnlv7l0zOiPR3WU/Hbqm7FemB2g34Lh06ZDbQjTAn2aZoeiwnZjLDMIA==
+X-Received: by 2002:a50:baa5:0:b0:57c:a7fe:b155 with SMTP id 4fb4d7f45d1cf-57d4bd74074mr5403365a12.15.1719304308210;
+        Tue, 25 Jun 2024 01:31:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGxhsR1+izX70xNnvyhK6UwUVonlEeFQMV9kch7eEfTNcHpuqfZ/z/U8gcxRPMmp8lA3q60mQ==
+X-Received: by 2002:a50:baa5:0:b0:57c:a7fe:b155 with SMTP id 4fb4d7f45d1cf-57d4bd74074mr5403333a12.15.1719304307535;
+        Tue, 25 Jun 2024 01:31:47 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc7:342:f1b5:a48c:a59a:c1d6:8d0a])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d30535232sm5638857a12.72.2024.06.25.01.31.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jun 2024 01:31:47 -0700 (PDT)
+Date: Tue, 25 Jun 2024 04:31:42 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Jason Wang <jasowang@redhat.com>
+Cc: xuanzhuo@linux.alibaba.com, eperezma@redhat.com, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	virtualization@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, venkat.x.venkatsubra@oracle.com,
+	gia-khanh.nguyen@oracle.com
+Subject: Re: [PATCH V2 1/3] virtio: allow nested disabling of the configure
+ interrupt
+Message-ID: <20240625043120-mutt-send-email-mst@kernel.org>
+References: <20240624024523.34272-1-jasowang@redhat.com>
+ <20240624024523.34272-2-jasowang@redhat.com>
+ <20240624054403-mutt-send-email-mst@kernel.org>
+ <CACGkMEv1U7N-RRgQ=jbhBK1SWJ3EJz84qYaxC2kk6keM6J6MaQ@mail.gmail.com>
+ <20240625030259-mutt-send-email-mst@kernel.org>
+ <CACGkMEuP5GJTwcSoG6UP0xO6V7zeJynYyTDVRtF8R=PJ5z8aLg@mail.gmail.com>
+ <20240625035746-mutt-send-email-mst@kernel.org>
+ <CACGkMEtA8_StbzicRA6aEST8e4SNHFutLmtPu-8zaOZH2zO3cA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-25_04,2024-06-24_01,2024-05-17_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACGkMEtA8_StbzicRA6aEST8e4SNHFutLmtPu-8zaOZH2zO3cA@mail.gmail.com>
 
-Use CCI_REG16_LE macro in order to access little-endian
-encoded registers of the P3 (CSI) section.
+On Tue, Jun 25, 2024 at 04:18:00PM +0800, Jason Wang wrote:
+> > > >
+> > > >
+> > > >
+> > > > But in conclusion ;) if you don't like my suggestion do something else
+> > > > but make the APIs make sense,
+> > >
+> > > I don't say I don't like it:)
+> > >
+> > > Limiting it to virtio-net seems to be the most easy way. And if we
+> > > want to do it in the core, I just want to make nesting to be supported
+> > > which might not be necessary now.
+> >
+> > I feel limiting it to a single driver strikes the right balance ATM.
+> 
+> Just to make sure I understand here, should we go back to v1 or go
+> with the config_driver_disabled?
+> 
+> Thanks
 
-Signed-off-by: Alain Volmat <alain.volmat@foss.st.com>
----
- drivers/media/i2c/gc2145.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/media/i2c/gc2145.c b/drivers/media/i2c/gc2145.c
-index bbab24f3eb57..b0737fc9366d 100644
---- a/drivers/media/i2c/gc2145.c
-+++ b/drivers/media/i2c/gc2145.c
-@@ -68,8 +68,7 @@
- #define GC2145_DPHY_CLK_DELAY		BIT(4)
- #define GC2145_DPHY_LANE0_DELAY		BIT(5)
- #define GC2145_DPHY_LANE1_DELAY		BIT(6)
--#define GC2145_REG_FIFO_FULL_LVL_LOW	CCI_REG8(0x04)
--#define GC2145_REG_FIFO_FULL_LVL_HIGH	CCI_REG8(0x05)
-+#define GC2145_REG_FIFO_FULL_LVL	CCI_REG16_LE(0x04)
- #define GC2145_REG_FIFO_MODE		CCI_REG8(0x06)
- #define GC2145_FIFO_MODE_READ_GATE	BIT(3)
- #define GC2145_FIFO_MODE_MIPI_CLK_MODULE	BIT(7)
-@@ -79,8 +78,7 @@
- #define GC2145_CSI2_MODE_MIPI_EN	BIT(4)
- #define GC2145_CSI2_MODE_EN		BIT(7)
- #define GC2145_REG_MIPI_DT	CCI_REG8(0x11)
--#define GC2145_REG_LWC_LOW	CCI_REG8(0x12)
--#define GC2145_REG_LWC_HIGH	CCI_REG8(0x13)
-+#define GC2145_REG_LWC		CCI_REG16_LE(0x12)
- #define GC2145_REG_DPHY_MODE	CCI_REG8(0x15)
- #define GC2145_DPHY_MODE_TRIGGER_PROG	BIT(4)
- #define GC2145_REG_FIFO_GATE_MODE	CCI_REG8(0x17)
-@@ -861,8 +859,7 @@ static int gc2145_config_mipi_mode(struct gc2145 *gc2145,
- 	else
- 		lwc = gc2145->mode->width;
- 
--	cci_write(gc2145->regmap, GC2145_REG_LWC_HIGH, lwc >> 8, &ret);
--	cci_write(gc2145->regmap, GC2145_REG_LWC_LOW, lwc & 0xff, &ret);
-+	cci_write(gc2145->regmap, GC2145_REG_LWC, lwc, &ret);
- 
- 	/*
- 	 * Adjust the MIPI FIFO Full Level
-@@ -879,10 +876,8 @@ static int gc2145_config_mipi_mode(struct gc2145 *gc2145,
- 		fifo_full_lvl = 0x0190;
- 	}
- 
--	cci_write(gc2145->regmap, GC2145_REG_FIFO_FULL_LVL_HIGH,
--		  fifo_full_lvl >> 8, &ret);
--	cci_write(gc2145->regmap, GC2145_REG_FIFO_FULL_LVL_LOW,
--		  fifo_full_lvl & 0xff, &ret);
-+	cci_write(gc2145->regmap, GC2145_REG_FIFO_FULL_LVL,
-+		  fifo_full_lvl, &ret);
- 
- 	/*
- 	 * Set the FIFO gate mode / MIPI wdiv set:
--- 
-2.25.1
+I still like config_driver_disabled.
+
+
+> >
+> > >
+> > > > at least do better than +5
+> > > > on Rusty's interface design scale.
+> > > >
+> > > > >
+> > >
+> > > Thanks
+> > >
+> > >
+> > > > >
+> > > > >
+> > > > > >
+> > > > > >
+> > > > > >
+> > > > > >
+> > > > > > > @@ -455,7 +461,7 @@ int register_virtio_device(struct virtio_device *dev)
+> > > > > > >               goto out_ida_remove;
+> > > > > > >
+> > > > > > >       spin_lock_init(&dev->config_lock);
+> > > > > > > -     dev->config_enabled = false;
+> > > > > > > +     dev->config_enabled = 0;
+> > > > > > >       dev->config_change_pending = false;
+> > > > > > >
+> > > > > > >       INIT_LIST_HEAD(&dev->vqs);
+> > > > > > > diff --git a/include/linux/virtio.h b/include/linux/virtio.h
+> > > > > > > index 96fea920873b..4496f9ba5d82 100644
+> > > > > > > --- a/include/linux/virtio.h
+> > > > > > > +++ b/include/linux/virtio.h
+> > > > > > > @@ -132,7 +132,7 @@ struct virtio_admin_cmd {
+> > > > > > >  struct virtio_device {
+> > > > > > >       int index;
+> > > > > > >       bool failed;
+> > > > > > > -     bool config_enabled;
+> > > > > > > +     int config_enabled;
+> > > > > > >       bool config_change_pending;
+> > > > > > >       spinlock_t config_lock;
+> > > > > > >       spinlock_t vqs_list_lock;
+> > > > > > > --
+> > > > > > > 2.31.1
+> > > > > >
+> > > >
+> >
 
