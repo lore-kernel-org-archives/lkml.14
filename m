@@ -1,57 +1,57 @@
 Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E9817D357
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 18:42:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F5E17D8A4
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 18:42:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719340960; cv=none; b=Yp0X8yBDkEW+Kx5Sad09V2n48ZgMjsyK/oHlAAo2QQiZl4WS9DaffPCdWTCwnYuMlNul2tLLyfHln7bf8zFxaIRLu09nKqLEfDJgXH1/V4Um3uxO16GjCtNBhuAu7BKNxxtIK/2k0BvGRYIbS5gWsOVmqzNpZcPDALLghCg4P4Y=
+	t=1719340966; cv=none; b=AkMeblF+SKI7ygv1uZe8vo3K2IULXCOfz6H0S+OzvpBv01PWw06/KejeM2/8VSmeHZ+MSlgX/VJZLB0iTAtmGSkovHkXka5MExFbIHod7UFnmbccKyXwvHkx332Sb3qu4Lrcph1zgtCKt4s+8jl7No2xNL/v/Ijjjhg/NRIA3ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719340960; c=relaxed/simple;
-	bh=bwtLI3Jcufku622sK4AUh1VaGsI4g/AsTLwYxdou9H8=;
+	s=arc-20240116; t=1719340966; c=relaxed/simple;
+	bh=2e1EB2J3C8Egr2O0Wpv7tQqwFPOyq60QZb+RTxrA24g=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=fuPi+OPlPhHROXeXKh2uzLrHEEXbzrcFvcYqUi8BwzSNdaVbs/1RvWPpIFtPpEvLR+Ph9nl7kWH2ZbNKCMmAQt8XRFy4xwEkHDd9hR4A4w1wqIOXM8vywuJMS/6Vi9lC/AzfJecEjZNImB3C0+EM3mpb2aLMR4oh5YU+eM3YuF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4KUxqcKg; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=rBDJNDbLs5FHXgjB9gt6iftPnw9s4OEhDOf8yjsLEL7mJS0yvjFFVHADOrMXhipilBVAt0F3womxdChLD05IltShn2awD8hjaEt/UBeCcnsrQlddvNq8NSok99mI1ZNkKAXbz4sNAzltabUpyDVuBX3MZnEY2q4KKgvKv90VZNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IIriMboB; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4KUxqcKg"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-645180f6a74so52516377b3.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 11:42:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IIriMboB"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-631b498f981so106574457b3.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 11:42:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719340958; x=1719945758; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1719340963; x=1719945763; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=9jtxp0mR0wazQJ0QHy8snlQ9f7IXPyviJrJGWoRkeF4=;
-        b=4KUxqcKg6P4bcyAUdySNkAnS0ZUAAQDTNrXANSl3XTdjkTrs0EKnsuS3Y+Saa/R530
-         YvMfsMQI0ESj5rKaovQDEUw2G/W6Xz2E2qHaYi511oVPwas38qgtdv4uTSZlk992IZqK
-         difuMWbkx0lmMsgV51heggiFZZojW2GSO4nRXqVTjBtgtun+5AftnWXSDEZnIYL7j0G/
-         9SEkPB25qpnh1kHcLUJKcucnuFvKDgNt8w6ASyDVRLXSq8KEdwoNDvhx4c/QCE4ni57Z
-         IjldeaEVvPO+/60mdMZgQqsqXmcQ8KBZ/WBCNOATD81y12Cx6bNWYzOYVa42FP8uHeMq
-         tGMw==
+        bh=9lVzQaHUCF35to8PiObGttFlDy1f8wM6DLCbP51DQFE=;
+        b=IIriMboB7IOammS2kDaLBITFLiJZrcvvUketZYp1yDGg8ng4AXXSkVViqvUIDmWuXk
+         BIwv60jsIZ9D19qeDwUgwosmjmZ7LGrnY0r0LroVJMUyAQcU63DyeALkCbTIFgLOWz4I
+         IarMay8aXH6AJ30LgW3pYgryXNyNYUAmkA/B98uVLXqPXmfe7WR3LCjClMEjTTj/ppBK
+         zfu7cWgXuQJChxXxZFzR8pO2vQYioBgcyKPx2BcL0KPvNWS8/r+JWd+PyZe/3BqIt989
+         rqhT0A9uclCSCaYKc4Y7zAYpSYDWSRD0Z9PwRoAnFFWubfs8J9afXxh73tQmN/EYvrDI
+         uu5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719340958; x=1719945758;
+        d=1e100.net; s=20230601; t=1719340963; x=1719945763;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9jtxp0mR0wazQJ0QHy8snlQ9f7IXPyviJrJGWoRkeF4=;
-        b=rtwRLjjER2D2Y4k5KqBc2UoNSgz6RNnutT+6zOWMljfdFyCz7ex5g2Xe6rNB9YgW3/
-         KqIXf2uzckTlWmoZXkfQTHrmCbee4DaXz98pEZossTb0QuxVQ/J78RrgqSdKLSq4tY9t
-         HIGdDxCtVIDsPP85GMM1dLANLuY9E/1QUpi8YB5nJPOJku5ev4333TjBQM5po00zACqw
-         eogVpf0XAwwE0A2rR5DD+jXbS+2gesJRoVZtMFFSO4v3dftORZfV08EXstZExWwNgCJ3
-         XDLI4UPEOaA/UrnEEDNBCJdnHOw+IgdKgyoOO/ILIrvpAO+Xe3RAw+bSt3f4ccdPAImj
-         IyjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXaHa4HFMFx3yflMnwADKNHYWuxNo6abwRBW+mPuNFENg4VDAWCvFvI0fqoWw31HVscmjRAPpibojMNerZeO5YDnBb8dw3ZmId/yYCT
-X-Gm-Message-State: AOJu0YzpLHzXLIT5dEFV4VjZ7xNaTuCMdbYsQ2iGUPBpHm/IYCYjIdhI
-	vCa59Suw6J24y8XUgcjZxiM2vEKMkCnsdtcCkAxfW8/AApN42ScewgY06ehqKFwzVuUak2jyxr2
-	aXUX42w==
-X-Google-Smtp-Source: AGHT+IGjuQZsjVspt/MHABb4YY4H60Ya3QAHqJAi+cDbppR5HkDLLag+kmSJL3BP67+xNJsE1rfFPw/a/cKu
+        bh=9lVzQaHUCF35to8PiObGttFlDy1f8wM6DLCbP51DQFE=;
+        b=obR5QregT5czOjz9WGvzmxcu1dTwE9djGCVAjGykUgm+ZOSRNOEN4dOaHWEEtiB/Xk
+         3tfYttu9YOaqJQZUFF5Z9pCt+eLfvGXLDwEIGsGL8HYNYCyjoLivwJ+u0/byCkkbOOfU
+         2WNbYqk95LIdkPEvvO90u5XkEDf0KHUhrNfvNbHAEMhokK3DFG/KkTxhoJa+mL22/bnO
+         7/Iy7GqVKEgvBm8bx9QmWnzcAgIky25CqpkhfX6xmUfCQdVw86tUc72XzhfLb0xlMZ3F
+         xVsRSpNL4MXHoGu0eigBMGoxnL+13CfzhuYGlRlfqWzFDBjogCSQ0dq3XQNCt8J4omwk
+         kG0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXV3W92ysgquTLGhNmsHn5xWsfFLeDOmf0S7gQzRyHAT7ysNnHkBHLSj9gLTLA/hB6J+9XUmoqn24tYVWVKENaDCpns5jt8tjl29Doq
+X-Gm-Message-State: AOJu0Yw7JH8MMMbbbUbLCEKWI1RGlOGqCZyuhCjulBk2zoO5y7mOOXJW
+	9PlAuLgIhqw5DM/hIKEvYFi0aovQWOnIS4jQOULTQv3rU1+gYq4hRWGHtmofnm4I22OcqJDcOjd
+	Qp8ls1Q==
+X-Google-Smtp-Source: AGHT+IGb4WvYG8oSQuAsDGDPIMZiRFgDGgnyHkXxbBpNxJfxsSnnlV4mi1wBu9EEjrP1vlTnC7YwXTJljkI+
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:b4cb:a52b:f9ea:8678])
- (user=irogers job=sendgmr) by 2002:a05:6902:1205:b0:dfa:8ed1:8f1b with SMTP
- id 3f1490d57ef6-e0303fd438amr464660276.1.1719340958246; Tue, 25 Jun 2024
- 11:42:38 -0700 (PDT)
-Date: Tue, 25 Jun 2024 11:42:20 -0700
+ (user=irogers job=sendgmr) by 2002:a05:690c:3506:b0:61b:e103:804d with SMTP
+ id 00721157ae682-645e60af794mr214947b3.0.1719340962575; Tue, 25 Jun 2024
+ 11:42:42 -0700 (PDT)
+Date: Tue, 25 Jun 2024 11:42:22 -0700
 In-Reply-To: <20240625184224.929018-1-irogers@google.com>
-Message-Id: <20240625184224.929018-4-irogers@google.com>
+Message-Id: <20240625184224.929018-6-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240625184224.929018-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.2.741.gdbec12cfda-goog
-Subject: [PATCH v4 3/7] perf pmu-events: Make pmu-events a library
+Subject: [PATCH v4 5/7] perf bench: Make bench its own library
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -82,69 +82,125 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Make pmu-events into a library so it may be linked against things like
-the python module and not built from source.
+Make the benchmark code into a library so it may be linked against
+things like the python module to avoid compiling code twice.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Reviewed-by: James Clark <james.clark@arm.com>
 ---
- tools/perf/Makefile.perf | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ tools/perf/Build         |  4 ++--
+ tools/perf/Makefile.perf | 11 +++++++++-
+ tools/perf/bench/Build   | 46 ++++++++++++++++++++--------------------
+ 3 files changed, 35 insertions(+), 26 deletions(-)
 
+diff --git a/tools/perf/Build b/tools/perf/Build
+index fddd45ab35b4..2787f5630ff7 100644
+--- a/tools/perf/Build
++++ b/tools/perf/Build
+@@ -1,4 +1,4 @@
+-perf-y += builtin-bench.o
++perf-bench-y += builtin-bench.o
+ perf-y += builtin-annotate.o
+ perf-y += builtin-config.o
+ perf-y += builtin-diff.o
+@@ -35,7 +35,7 @@ endif
+ 
+ perf-$(CONFIG_LIBELF) += builtin-probe.o
+ 
+-perf-y += bench/
++perf-bench-y += bench/
+ perf-test-y += tests/
+ 
+ perf-y += perf.o
 diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index c5a027381c55..9640c6ae1837 100644
+index 9fa69dd0b472..4a3c000b9845 100644
 --- a/tools/perf/Makefile.perf
 +++ b/tools/perf/Makefile.perf
-@@ -428,11 +428,14 @@ export PERL_PATH
- LIBPERF_UI_IN := $(OUTPUT)perf-ui-in.o
- LIBPERF_UI := $(OUTPUT)libperf-ui.a
+@@ -425,6 +425,9 @@ endif
  
-+LIBPMU_EVENTS_IN := $(OUTPUT)pmu-events/pmu-events-in.o
-+LIBPMU_EVENTS := $(OUTPUT)libpmu-events.a
+ export PERL_PATH
+ 
++LIBPERF_BENCH_IN := $(OUTPUT)perf-bench-in.o
++LIBPERF_BENCH := $(OUTPUT)libperf-bench.a
 +
- PERFLIBS = $(LIBAPI) $(LIBPERF) $(LIBSUBCMD) $(LIBSYMBOL)
+ LIBPERF_TEST_IN := $(OUTPUT)perf-test-in.o
+ LIBPERF_TEST := $(OUTPUT)libperf-test.a
+ 
+@@ -438,7 +441,7 @@ PERFLIBS = $(LIBAPI) $(LIBPERF) $(LIBSUBCMD) $(LIBSYMBOL)
  ifdef LIBBPF_STATIC
    PERFLIBS += $(LIBBPF)
  endif
--PERFLIBS += $(LIBPERF_UI)
-+PERFLIBS += $(LIBPERF_UI) $(LIBPMU_EVENTS)
+-PERFLIBS += $(LIBPERF_TEST) $(LIBPERF_UI) $(LIBPMU_EVENTS)
++PERFLIBS += $(LIBPERF_BENCH) $(LIBPERF_TEST) $(LIBPERF_UI) $(LIBPMU_EVENTS)
  
  # We choose to avoid "if .. else if .. else .. endif endif"
  # because maintaining the nesting to match is a pain.  If
-@@ -721,8 +724,6 @@ strip: $(PROGRAMS) $(OUTPUT)perf
- 	$(STRIP) $(STRIP_OPTS) $(PROGRAMS) $(OUTPUT)perf
- 
- PERF_IN := $(OUTPUT)perf-in.o
--
--PMU_EVENTS_IN := $(OUTPUT)pmu-events/pmu-events-in.o
- export NO_JEVENTS
- 
- build := -f $(srctree)/tools/build/Makefile.build dir=. obj
-@@ -730,18 +731,21 @@ build := -f $(srctree)/tools/build/Makefile.build dir=. obj
- $(PERF_IN): prepare FORCE
- 	$(Q)$(MAKE) $(build)=perf
- 
--$(PMU_EVENTS_IN): FORCE prepare
-+$(LIBPMU_EVENTS_IN): FORCE prepare
- 	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=pmu-events obj=pmu-events
- 
-+$(LIBPMU_EVENTS): $(LIBPMU_EVENTS_IN)
-+	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $<
-+
- $(LIBPERF_UI_IN): FORCE prepare
- 	$(Q)$(MAKE) $(build)=perf-ui
- 
- $(LIBPERF_UI): $(LIBPERF_UI_IN)
+@@ -740,6 +743,12 @@ $(LIBPMU_EVENTS_IN): FORCE prepare
+ $(LIBPMU_EVENTS): $(LIBPMU_EVENTS_IN)
  	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $<
  
--$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN)
-+$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN)
- 	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) \
--		$(PERF_IN) $(PMU_EVENTS_IN) $(LIBS) -o $@
-+		$(PERF_IN) $(LIBS) -o $@
++$(LIBPERF_BENCH_IN): FORCE prepare
++	$(Q)$(MAKE) $(build)=perf-bench
++
++$(LIBPERF_BENCH): $(LIBPERF_BENCH_IN)
++	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $<
++
+ $(LIBPERF_TEST_IN): FORCE prepare
+ 	$(Q)$(MAKE) $(build)=perf-test
  
- $(GTK_IN): FORCE prepare
- 	$(Q)$(MAKE) $(build)=gtk
+diff --git a/tools/perf/bench/Build b/tools/perf/bench/Build
+index c2ab30907ae7..279ab2ab4abe 100644
+--- a/tools/perf/bench/Build
++++ b/tools/perf/bench/Build
+@@ -1,25 +1,25 @@
+-perf-y += sched-messaging.o
+-perf-y += sched-pipe.o
+-perf-y += sched-seccomp-notify.o
+-perf-y += syscall.o
+-perf-y += mem-functions.o
+-perf-y += futex-hash.o
+-perf-y += futex-wake.o
+-perf-y += futex-wake-parallel.o
+-perf-y += futex-requeue.o
+-perf-y += futex-lock-pi.o
+-perf-y += epoll-wait.o
+-perf-y += epoll-ctl.o
+-perf-y += synthesize.o
+-perf-y += kallsyms-parse.o
+-perf-y += find-bit-bench.o
+-perf-y += inject-buildid.o
+-perf-y += evlist-open-close.o
+-perf-y += breakpoint.o
+-perf-y += pmu-scan.o
+-perf-y += uprobe.o
++perf-bench-y += sched-messaging.o
++perf-bench-y += sched-pipe.o
++perf-bench-y += sched-seccomp-notify.o
++perf-bench-y += syscall.o
++perf-bench-y += mem-functions.o
++perf-bench-y += futex-hash.o
++perf-bench-y += futex-wake.o
++perf-bench-y += futex-wake-parallel.o
++perf-bench-y += futex-requeue.o
++perf-bench-y += futex-lock-pi.o
++perf-bench-y += epoll-wait.o
++perf-bench-y += epoll-ctl.o
++perf-bench-y += synthesize.o
++perf-bench-y += kallsyms-parse.o
++perf-bench-y += find-bit-bench.o
++perf-bench-y += inject-buildid.o
++perf-bench-y += evlist-open-close.o
++perf-bench-y += breakpoint.o
++perf-bench-y += pmu-scan.o
++perf-bench-y += uprobe.o
+ 
+-perf-$(CONFIG_X86_64) += mem-memcpy-x86-64-asm.o
+-perf-$(CONFIG_X86_64) += mem-memset-x86-64-asm.o
++perf-bench-$(CONFIG_X86_64) += mem-memcpy-x86-64-asm.o
++perf-bench-$(CONFIG_X86_64) += mem-memset-x86-64-asm.o
+ 
+-perf-$(CONFIG_NUMA) += numa.o
++perf-bench-$(CONFIG_NUMA) += numa.o
 -- 
 2.45.2.741.gdbec12cfda-goog
 
