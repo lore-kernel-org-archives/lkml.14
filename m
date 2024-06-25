@@ -1,148 +1,202 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D7C14006
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 00:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DDC518030
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 00:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719276627; cv=none; b=ktGl4H8vfbtZcRhDCqXt5XC1tEDWFi2G6t/+KWbD/9gBNvhlBOQwLwitI+OAq4EgGvtm6O5W0V12iLoq7EBYUzUt9gjGENt8hpmqiq0I93DRv0oCS2N8GGkTfr3++su1D+KkNcdveJJce+AeSy5n7qgdS6k5lEMd6yzhRIE9xhs=
+	t=1719276636; cv=none; b=EyLpmEZddlSAD33egyjqhQBxIo8OW6rowGePKbuad6Todl1JmtWO4DqMtFYi87pgS5d1IkTJ8iPmqy3TMFMxhInjUNdRqnA42SFaQaebFFnm3xdpDLNcTLQU46k6ADrrKWKARD8Ap+XxQbk7CxCrYQTw/wrWtP0xf/vTP1+n1m4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719276627; c=relaxed/simple;
-	bh=rB2MbipxDzsiH1Hfswz8Ykw9O8jI2q01H75IMdchmOY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H1JrjJ10RDhISdGHu+c8WhHq7gL50ZHWy/6QvdndkUrdgMGm4HCsgffD0XiX2XNlXYLmVxIOUEfCChdDVhit0sSVKal/hBIR12Q6Q/LwOAX1wJDRwPetOPp7vu55ykuTI5+YeYefAoog4NcRowv3lKzu2l03BnPFQQE/HyefsL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EOPgn7Rn; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1719276636; c=relaxed/simple;
+	bh=/Bt9oE25lnWQdPa/YSCfxFpeXsIhjBhAIfx6hMvpw98=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fPOUQtltAyoOKdIRLfPll7tKkySRwNH4gm8MJP/k5mhJcMMyoCFT/WN93D36clhatnIW759zH+dGp//zlS/snRr8m+PkZse5MumwCgbbAbsdimFRT9+2fhR5ojv0fXCYJ0Bu3BP54Gg786eqOPG2pepqLfj/jun9oUFcn8VYMNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Uh9WPsCQ; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EOPgn7Rn"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1f70ec6ff8bso49015ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 17:50:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Uh9WPsCQ"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1f862f7c7edso37233895ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 17:50:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719276625; x=1719881425; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HuUUmuhyiaTVcKA0vONscsWMwteJeDj/FdD7FnMQHHk=;
-        b=EOPgn7RnRMisQgyTZwaJxGo47m/04av63u0D+kaSjDVUgxGG3Okellna5LIY0FuYCq
-         FLFexHNsL6EdWIIK7m4DRC/r9rdjIwxmNgNiiC45kFySzBPf99b7kwfVt87gbW/Bg1X0
-         wu5Z/Uz6cCwP9/IaG1qvHg4OLXg6+7hYjZ/CYRF9zcuf5Y0XidiPdGy1te/qdSCi45yL
-         POcMWkB5b5F4WLaNGwN+jkvfZfSv5fqg52LBk0d8fFNmgO/8v9V2Wm0/m+y2CgAIgfoa
-         GKsP7Jvr0sBdNSmNw+LJgqr+0tHvwXfGVENmlcDDtLttu7SKUkbhciQD2BTrSLGeKpkT
-         pMPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719276625; x=1719881425;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719276634; x=1719881434; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HuUUmuhyiaTVcKA0vONscsWMwteJeDj/FdD7FnMQHHk=;
-        b=gc9IGPNh+C+mQ6O2yChKHgi6JvLlan8j+x0BBkvsAxgiB/bOnN3h61dW09sSsAVZi2
-         UnLsAmyHG1kYYVCDAQv49moCBgvD/JbPGJ4YJM3gQnTLGniA+teNhvkS11sNtmZj5+63
-         nK201tUBmnXxqXq+cOb3GYfwwgxO/BGVA5Ma2WtwIrgVOOFxyJC9DvWT7XeHheMbDiX0
-         nMC2T/Z/omVLsqesKXs2Bz2dop+Btk9tlHsYLAKmI1fNTAQKrAs9YfP57uRUxFpm+oLc
-         L8CQVil8ps94SqGeL7imQhilqWxdZpfcbILkebeMMAl/od6lL4w+PHuD8eia5cpQ35tc
-         Xn3A==
-X-Forwarded-Encrypted: i=1; AJvYcCWMhYj9j6IZbSz6idnc9yDfJSpPfASA3swR+kMol+GmOKyIenDS6NtMf3+b2JJUZNdefCuh2wiZgJfr1FqBx9wj7YDlVjpfSYFrFk5c
-X-Gm-Message-State: AOJu0Yxz6ZoNTVIqmtnVrdzo/VixyYuCfAvyvlQnIu7Ah21jmQlh7LUm
-	0x6F86d/YTj05wgrTX81TrwNJtmzQnAbrDiLgY70sd1C6yErNck+DlwwsYJC+g==
-X-Google-Smtp-Source: AGHT+IGY3Bx4DM3ftR/tJGFuyc+1khlNaAKY6t6qe6ia5l6qoIh3a9h1jB0maMsux+9q1/QJ+kVtug==
-X-Received: by 2002:a17:902:b186:b0:1f6:b033:a4e with SMTP id d9443c01a7336-1fa68fb0a2fmr1524945ad.4.1719276624897;
-        Mon, 24 Jun 2024 17:50:24 -0700 (PDT)
-Received: from google.com (109.120.125.34.bc.googleusercontent.com. [34.125.120.109])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb2f058bsm68735405ad.13.2024.06.24.17.50.23
+        bh=qsFL4pVPRli+inXg9hiGEw7k4kBD3MX99ZHq/8uxkhA=;
+        b=Uh9WPsCQ6REABDjEsUOQcq9UzCLpgdcq55lVaebnpEbw2yiMXj2Bxhe8nq5WG35aOR
+         eO0+cSRjrKAD4l45+GAJvIJ942WMfKEaJ/Ca0R+9XQre4RH+Ovx3P+RxO2rf6zZWitet
+         ilWGudIjQ+LAnyESb0xP6Rg8eWn3/0bMeoaG6AkYMpS8hDkrBpCw7G6k/P7NzsCY2T+V
+         fwx1RiKy2PFk5o9GFTeVjlk9MFuTfcp7ErMCYPOZPqRrt412tn9oVjHlP51LhU9ynoLa
+         I52SM+ZwIrFuYeDjADcnA7c3FMbnyijTKmnmOQJ/Iqn/qs+gwYjh811YwCeG7KKW8PKF
+         U29Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719276634; x=1719881434;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qsFL4pVPRli+inXg9hiGEw7k4kBD3MX99ZHq/8uxkhA=;
+        b=p3vLBvfv9mlcRF9q9TQiuDlK2tnCKWwnuUYk4KEle9DT5vI0xidzRZfv6UrgqxO4cX
+         FJCj0YJE9pkwQ9gzSSd7F+uZ52qcCEWX0M3OFnVSTcPdh/4Q/5nkC1Doy3Nazs6U3T0l
+         ZqKLXyrLo+w40SYsTitoUWD3m7iIpX5j69yPhZSaXQ7bIvG7b5FXN+93syGGTdqWyz7J
+         FGYEhQZgnGfY6/XmDEwjoYMDurnQDqZVtBbXMybCLHAzfpKAhMgQuBgR07SHRsPbPpmw
+         8fBJJQEOxYcSmW5WvaurvvKq2xXi1Wq5khI7Lv2d+3ltt7HxOrnYpoaTwQtIEV4fLruP
+         bm2g==
+X-Forwarded-Encrypted: i=1; AJvYcCXW8Z5sMWUVXzEbFjLUV8VupxqsVN6PFEAyiezzRY5PrGvpuBwhiORrnNDnjikYgVN/QenKg6L0s05gx7ZVdvCDvqPiO8FJ/QzI4T2K
+X-Gm-Message-State: AOJu0Yyvn02kWIB9Bo62Up4gwOBmPIDbLlmdMM3wVco3Wg0iGvTYGheY
+	Zp6IPX7pFon+QJuecGeI+ybngyTvSx9HcBn6MVOFOWIv6k4srOQzT3QCtV8HuSo=
+X-Google-Smtp-Source: AGHT+IEpgOILuNHe0y3CrK2jbU7V6dFxD2gSind2RbvoHSr7ZIOp9rwdXozB4OgBe0a+9B3PWo9AGg==
+X-Received: by 2002:a17:902:f68f:b0:1fa:3f05:209d with SMTP id d9443c01a7336-1fa3f052432mr46261095ad.45.1719276634455;
+        Mon, 24 Jun 2024 17:50:34 -0700 (PDT)
+Received: from jesse-desktop.. (pool-108-26-179-17.bstnma.fios.verizon.net. [108.26.179.17])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9ebbb2a7csm68150235ad.256.2024.06.24.17.50.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jun 2024 17:50:23 -0700 (PDT)
-Date: Tue, 25 Jun 2024 00:50:19 +0000
-From: Benson Leung <bleung@google.com>
-To: Jameson Thies <jthies@google.com>
-Cc: heikki.krogerus@linux.intel.com, linux-usb@vger.kernel.org,
-	jonathanh@nvidia.com, abhishekpandit@chromium.org,
-	andersson@kernel.org, dmitry.baryshkov@linaro.org,
-	fabrice.gasnier@foss.st.com, gregkh@linuxfoundation.org,
-	hdegoede@redhat.com, neil.armstrong@linaro.org,
-	rajaram.regupathy@intel.com, saranya.gopal@intel.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] usb: typec: ucsi: Only set number of plug altmodes
- after registration
-Message-ID: <ZnoUS1kOL3aYar-Q@google.com>
-References: <20240625004607.3223757-1-jthies@google.com>
+        Mon, 24 Jun 2024 17:50:34 -0700 (PDT)
+From: Jesse Taube <jesse@rivosinc.com>
+To: linux-riscv@lists.infradead.org
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Evan Green <evan@rivosinc.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Jesse Taube <jesse@rivosinc.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Xiao Wang <xiao.w.wang@intel.com>,
+	Andy Chiu <andy.chiu@sifive.com>,
+	Eric Biggers <ebiggers@google.com>,
+	Greentime Hu <greentime.hu@sifive.com>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Zong Li <zong.li@sifive.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Ben Dooks <ben.dooks@codethink.co.uk>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Erick Archer <erick.archer@gmx.com>,
+	Joel Granados <j.granados@samsung.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v3 1/8] RISC-V: Add Zicclsm to cpufeature and hwprobe
+Date: Mon, 24 Jun 2024 20:49:54 -0400
+Message-ID: <20240625005001.37901-2-jesse@rivosinc.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240625005001.37901-1-jesse@rivosinc.com>
+References: <20240625005001.37901-1-jesse@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="XS2a0J9riWCr4B+Z"
-Content-Disposition: inline
-In-Reply-To: <20240625004607.3223757-1-jthies@google.com>
+Content-Transfer-Encoding: 8bit
 
+> Zicclsm Misaligned loads and stores to main memory regions with both
+> the cacheability and coherence PMAs must be supported.
+> Note:
+> This introduces a new extension name for this feature.
+> This requires misaligned support for all regular load and store
+> instructions (including scalar and vector) but not AMOs or other
+> specialized forms of memory access. Even though mandated, misaligned
+> loads and stores might execute extremely slowly. Standard software
+> distributions should assume their existence only for correctness,
+> not for performance.
 
---XS2a0J9riWCr4B+Z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Detecing zicclsm allows the kernel to report if the
+hardware supports misaligned accesses even if support wasn't probed.
 
-Hi Jameson,
+This is useful for usermode to know if vector misaligned accesses are
+supported.
 
-On Tue, Jun 25, 2024 at 12:46:07AM +0000, Jameson Thies wrote:
-> Move the setting of the plug's number of alternate modes into the
-> same condition as the plug's registration to prevent dereferencing the
-> connector's plug pointer while it is null.
->=20
-> Fixes: c313a44ac9cd ("usb: typec: ucsi: Always set number of alternate mo=
-des")
-> Suggested-by: Jon Hunter <jonathanh@nvidia.com>
-> Signed-off-by: Jameson Thies <jthies@google.com>
+Signed-off-by: Jesse Taube <jesse@rivosinc.com>
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Reviewed-by: Andy Chiu <andy.chiu@sifive.com>
+---
+V1 -> V2:
+ - Add documentation for Zicclsm
+ - Move Zicclsm to correct location
+V2 -> V3:
+ - No changes
+---
+ Documentation/arch/riscv/hwprobe.rst  | 3 +++
+ arch/riscv/include/asm/hwcap.h        | 1 +
+ arch/riscv/include/uapi/asm/hwprobe.h | 1 +
+ arch/riscv/kernel/cpufeature.c        | 1 +
+ arch/riscv/kernel/sys_hwprobe.c       | 1 +
+ 5 files changed, 7 insertions(+)
 
-Reviewed-by: Benson Leung <bleung@chromium.org>
+diff --git a/Documentation/arch/riscv/hwprobe.rst b/Documentation/arch/riscv/hwprobe.rst
+index df5045103e73..7085a694b801 100644
+--- a/Documentation/arch/riscv/hwprobe.rst
++++ b/Documentation/arch/riscv/hwprobe.rst
+@@ -207,6 +207,9 @@ The following keys are defined:
+   * :c:macro:`RISCV_HWPROBE_EXT_ZVE64D`: The Vector sub-extension Zve64d is
+     supported, as defined by version 1.0 of the RISC-V Vector extension manual.
+ 
++  * :c:macro:`RISCV_HWPROBE_EXT_ZICCLSM`: The Zicclsm extension is supported as
++       defined in the RISC-V RVA Profiles Specification.
++
+ * :c:macro:`RISCV_HWPROBE_KEY_CPUPERF_0`: Deprecated. Returns similar values to
+      :c:macro:`RISCV_HWPROBE_KEY_MISALIGNED_PERF`, but the key was mistakenly
+      classified as a bitmask rather than a value.
+diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
+index f64d4e98e67c..0b3bd8885a2b 100644
+--- a/arch/riscv/include/asm/hwcap.h
++++ b/arch/riscv/include/asm/hwcap.h
+@@ -86,6 +86,7 @@
+ #define RISCV_ISA_EXT_ZVE64X		77
+ #define RISCV_ISA_EXT_ZVE64F		78
+ #define RISCV_ISA_EXT_ZVE64D		79
++#define RISCV_ISA_EXT_ZICCLSM		80
+ 
+ #define RISCV_ISA_EXT_XLINUXENVCFG	127
+ 
+diff --git a/arch/riscv/include/uapi/asm/hwprobe.h b/arch/riscv/include/uapi/asm/hwprobe.h
+index 2fb8a8185e7a..023b7771d1b7 100644
+--- a/arch/riscv/include/uapi/asm/hwprobe.h
++++ b/arch/riscv/include/uapi/asm/hwprobe.h
+@@ -65,6 +65,7 @@ struct riscv_hwprobe {
+ #define		RISCV_HWPROBE_EXT_ZVE64X	(1ULL << 39)
+ #define		RISCV_HWPROBE_EXT_ZVE64F	(1ULL << 40)
+ #define		RISCV_HWPROBE_EXT_ZVE64D	(1ULL << 41)
++#define		RISCV_HWPROBE_EXT_ZICCLSM	(1ULL << 42)
+ #define RISCV_HWPROBE_KEY_CPUPERF_0	5
+ #define		RISCV_HWPROBE_MISALIGNED_UNKNOWN	(0 << 0)
+ #define		RISCV_HWPROBE_MISALIGNED_EMULATED	(1 << 0)
+diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+index 1d6e4fda00f8..83c5ae16ad5e 100644
+--- a/arch/riscv/kernel/cpufeature.c
++++ b/arch/riscv/kernel/cpufeature.c
+@@ -283,6 +283,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
+ 	__RISCV_ISA_EXT_DATA(h, RISCV_ISA_EXT_h),
+ 	__RISCV_ISA_EXT_SUPERSET(zicbom, RISCV_ISA_EXT_ZICBOM, riscv_xlinuxenvcfg_exts),
+ 	__RISCV_ISA_EXT_SUPERSET(zicboz, RISCV_ISA_EXT_ZICBOZ, riscv_xlinuxenvcfg_exts),
++	__RISCV_ISA_EXT_DATA(zicclsm, RISCV_ISA_EXT_ZICCLSM),
+ 	__RISCV_ISA_EXT_DATA(zicntr, RISCV_ISA_EXT_ZICNTR),
+ 	__RISCV_ISA_EXT_DATA(zicond, RISCV_ISA_EXT_ZICOND),
+ 	__RISCV_ISA_EXT_DATA(zicsr, RISCV_ISA_EXT_ZICSR),
+diff --git a/arch/riscv/kernel/sys_hwprobe.c b/arch/riscv/kernel/sys_hwprobe.c
+index e4ec9166339f..e910e2971984 100644
+--- a/arch/riscv/kernel/sys_hwprobe.c
++++ b/arch/riscv/kernel/sys_hwprobe.c
+@@ -96,6 +96,7 @@ static void hwprobe_isa_ext0(struct riscv_hwprobe *pair,
+ 		EXT_KEY(ZBB);
+ 		EXT_KEY(ZBS);
+ 		EXT_KEY(ZICBOZ);
++		EXT_KEY(ZICCLSM);
+ 		EXT_KEY(ZBC);
+ 
+ 		EXT_KEY(ZBKB);
+-- 
+2.45.2
 
-Thanks,
-Benson
-
-> ---
->  drivers/usb/typec/ucsi/ucsi.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
-> index 76c48d873b2a..77e46bf4a098 100644
-> --- a/drivers/usb/typec/ucsi/ucsi.c
-> +++ b/drivers/usb/typec/ucsi/ucsi.c
-> @@ -1180,13 +1180,13 @@ static int ucsi_check_cable(struct ucsi_connector=
- *con)
->  		ret =3D ucsi_register_altmodes(con, UCSI_RECIPIENT_SOP_P);
->  		if (ret < 0)
->  			return ret;
-> -	}
-> =20
-> -	if (con->plug_altmode[0]) {
-> -		num_plug_am =3D ucsi_get_num_altmode(con->plug_altmode);
-> -		typec_plug_set_num_altmodes(con->plug, num_plug_am);
-> -	} else {
-> -		typec_plug_set_num_altmodes(con->plug, 0);
-> +		if (con->plug_altmode[0]) {
-> +			num_plug_am =3D ucsi_get_num_altmode(con->plug_altmode);
-> +			typec_plug_set_num_altmodes(con->plug, num_plug_am);
-> +		} else {
-> +			typec_plug_set_num_altmodes(con->plug, 0);
-> +		}
->  	}
-> =20
->  	return 0;
->=20
-> base-commit: 819984a0dd3606b7c46fe156cd56a0dc0d604788
-> --=20
-> 2.45.2.741.gdbec12cfda-goog
->=20
-
---XS2a0J9riWCr4B+Z
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCZnoURwAKCRBzbaomhzOw
-wmZFAQCFp47heT1YN6FYLm2P3DWbSZj4vlnGqrr7kPehVyjGNAD9GQw4MJzKCCzu
-gO9WMGBnDcnudVrf3zovAhs8ESu4fAo=
-=y+Vr
------END PGP SIGNATURE-----
-
---XS2a0J9riWCr4B+Z--
