@@ -1,330 +1,154 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 018E715B562;
-	Tue, 25 Jun 2024 12:25:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 887D9154C0E
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 12:26:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719318322; cv=none; b=HGmQ0Hkw+MaBbUFz3l2uhRzAGQyk9PmbKU2LI9ofnPbt36IvCkcaWzHpwVxL59cGStkVYnWYwuT6U5KlwoqyqrAk458mwAkDNsylRBKGwY4auEj374H5u+I+KeIhpwXeqcKvvgedovVO1/S5jgEnyKBqb+JQRXN/+d5leYd8k3o=
+	t=1719318382; cv=none; b=F9mFclvzxGxEYtjKdS7JXpRwVVqWRn+nmphEYSBHBL/2jpco69ldZ65eoISZGJhA73TS1q2ysML21rVZzWzgO2rZFimSFn9yr3x16J5HFu7+tQq3wv/3kuGj+lQbQQUhAqdd7Hw7/bY3WkT6DVRyDD6FUN0F4Hhg/xi4CnQrn1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719318322; c=relaxed/simple;
-	bh=Pm58IP1DolRyMTmvoQUmXN2JDiAxDZ2mg7rtbhnilnQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fSPMsXRortXNShd58fImVtl4k54eeh9xt92fZhBoJ5J0PLc8Au4yaAXHLAj9OHSP/RubMvEm1k+lkg+gCBNaThAFSEOregsNHnYvB3hRMvyd7fMQXoK4bBrpvz3NuX/CeK76qqpExRiu1AOgQpCDwGu15q011G4WokV06xL3bdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85D00339;
-	Tue, 25 Jun 2024 05:25:45 -0700 (PDT)
-Received: from e116581.blr.arm.com (e116581.arm.com [10.162.41.12])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 27F0C3F766;
-	Tue, 25 Jun 2024 05:25:15 -0700 (PDT)
-From: Dev Jain <dev.jain@arm.com>
-To: shuah@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kselftest@vger.kernel.org,
-	Catalin.Marinas@arm.com,
-	will@kernel.org
-Cc: broonie@kernel.org,
-	ryan.roberts@arm.com,
-	rob.herring@arm.com,
-	mark.rutland@arm.com,
-	linux@armlinux.org.uk,
-	suzuki.poulose@arm.com,
-	Anshuman.Khandual@arm.com,
-	aneesh.kumar@kernel.org,
+	s=arc-20240116; t=1719318382; c=relaxed/simple;
+	bh=WCh/XkC0BXKeHRYFWnbZeYbOu3vCw2Nm+k3rqiKe95U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-type; b=Aity5LoTZVq0bVLpWamy2E6OdFGsWiVgRmzC3LBG7ShI18DXmzGerYxINZn7TTnTlhdKFASNNbgs67H6p80fq0xzssPc+ouwkVsTsPkB1TLpyaBSzjbiqVpJ+uZmFpH1OgmWrT47MYTKRHwyp+00euUF7goMykK778c0RAZC9ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hvBByc7a; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hvBByc7a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719318379;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=GtsFx4uLbIgCsY2Rbgjjg5IWwkj06XCQTC4QZBlv4OY=;
+	b=hvBByc7aU2SIJat/sYJLZd7NKUo45O5edChzqz9dsyZ8VXlICda5a/genIe/vgeL7bAqpn
+	e0tJojIeKd4FlyaYNFDSjtOVHPRSP7J9/9oosDISeQDIc+5HNiDzOht7q+hDin/aIq2evd
+	ohIpeoPftafYPmvbIvXrj0ftzmzqGpA=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-167-Md1ZfYzPO1mf-KiPEEKABA-1; Tue,
+ 25 Jun 2024 08:26:14 -0400
+X-MC-Unique: Md1ZfYzPO1mf-KiPEEKABA-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1DC3719560B0;
+	Tue, 25 Jun 2024 12:26:12 +0000 (UTC)
+Received: from jmeneghi-thinkpadp1gen3.rmtusnh.csb (unknown [10.22.34.111])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id ACA0D1956051;
+	Tue, 25 Jun 2024 12:26:09 +0000 (UTC)
+From: John Meneghini <jmeneghi@redhat.com>
+To: kbusch@kernel.org,
+	hch@lst.de,
+	sagi@grimberg.me
+Cc: linux-nvme@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH v3 9/9] selftests: Add build infrastructure along with README
-Date: Tue, 25 Jun 2024 17:54:08 +0530
-Message-Id: <20240625122408.1439097-10-dev.jain@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240625122408.1439097-1-dev.jain@arm.com>
-References: <20240625122408.1439097-1-dev.jain@arm.com>
+	emilne@redhat.com,
+	jmeneghi@redhat.com,
+	jrani@purestorage.com,
+	randyj@purestorage.com,
+	chaitanyak@nvidia.com,
+	hare@kernel.org
+Subject: [PATCH v8 0/2] nvme: queue-depth multipath iopolicy
+Date: Tue, 25 Jun 2024 08:26:03 -0400
+Message-ID: <20240625122605.857462-1-jmeneghi@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-type: text/plain
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Add arm target, individual Makefile targets, and instructions to build the
-tests, along with .gitignore files. All the Makefiles are similar to
-selftests/arm64, except abi: use TEST_CUSTOM_PROGS to override the make
-rule from lib.mk. Also, do not build ptrace_64 if we are running a
-32-bit kernel.
+I've addressed all of Christoph's review comments and rebased this to
+the latest nvme-6.11 branch. I also retested everything. The test
+results can be seen at: 
 
-Signed-off-by: Dev Jain <dev.jain@arm.com>
----
-v2->v3:
- - Add abi Makefile and .gitignore
- - Remove config file
+https://github.com/johnmeneghini/iopolicy/?tab=readme-ov-file#sample-data
 
-v1->v2:
- - Add config file
+Please add this to nvme-6.11.
 
- tools/testing/selftests/Makefile              |  1 +
- tools/testing/selftests/arm/Makefile          | 56 +++++++++++++++++++
- tools/testing/selftests/arm/README            | 32 +++++++++++
- tools/testing/selftests/arm/abi/.gitignore    |  4 ++
- tools/testing/selftests/arm/abi/Makefile      | 26 +++++++++
- tools/testing/selftests/arm/elf/.gitignore    |  2 +
- tools/testing/selftests/arm/elf/Makefile      |  6 ++
- tools/testing/selftests/arm/mm/.gitignore     |  2 +
- tools/testing/selftests/arm/mm/Makefile       |  6 ++
- tools/testing/selftests/arm/signal/.gitignore |  3 +
- tools/testing/selftests/arm/signal/Makefile   | 30 ++++++++++
- 11 files changed, 168 insertions(+)
- create mode 100644 tools/testing/selftests/arm/Makefile
- create mode 100644 tools/testing/selftests/arm/README
- create mode 100644 tools/testing/selftests/arm/abi/.gitignore
- create mode 100644 tools/testing/selftests/arm/abi/Makefile
- create mode 100644 tools/testing/selftests/arm/elf/.gitignore
- create mode 100644 tools/testing/selftests/arm/elf/Makefile
- create mode 100644 tools/testing/selftests/arm/mm/.gitignore
- create mode 100644 tools/testing/selftests/arm/mm/Makefile
- create mode 100644 tools/testing/selftests/arm/signal/.gitignore
- create mode 100644 tools/testing/selftests/arm/signal/Makefile
+Changes since V7
 
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index 9039f3709aff..d7420825f165 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- TARGETS += alsa
- TARGETS += amd-pstate
-+TARGETS += arm
- TARGETS += arm64
- TARGETS += bpf
- TARGETS += breakpoints
-diff --git a/tools/testing/selftests/arm/Makefile b/tools/testing/selftests/arm/Makefile
-new file mode 100644
-index 000000000000..54e44c4a62bf
---- /dev/null
-+++ b/tools/testing/selftests/arm/Makefile
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+ARCH ?= $(shell uname -m 2>/dev/null || echo not)
-+
-+ifneq (,$(filter $(ARCH),aarch64 arm64 arm armv7l armv8l))
-+ARM_SUBTARGETS ?= abi elf mm signal
-+else
-+ARM_SUBTARGETS :=
-+endif
-+
-+CFLAGS := -Wall -O2 -g -static
-+
-+# A proper top_srcdir is needed by KSFT(lib.mk)
-+top_srcdir = $(realpath ../../../../)
-+
-+# Additional include paths needed by kselftest.h and local headers
-+CFLAGS += -I$(top_srcdir)/tools/testing/selftests/
-+
-+CFLAGS += -I$(top_srcdir)/tools/include
-+
-+export CFLAGS
-+export top_srcdir
-+
-+all:
-+	@for DIR in $(ARM_SUBTARGETS); do				\
-+		BUILD_TARGET=$(OUTPUT)/$$DIR;			\
-+		mkdir -p $$BUILD_TARGET;			\
-+		make OUTPUT=$$BUILD_TARGET -C $$DIR $@;		\
-+	done
-+
-+install: all
-+	@for DIR in $(ARM_SUBTARGETS); do				\
-+		BUILD_TARGET=$(OUTPUT)/$$DIR;			\
-+		make OUTPUT=$$BUILD_TARGET -C $$DIR $@;		\
-+	done
-+
-+run_tests: all
-+	@for DIR in $(ARM_SUBTARGETS); do				\
-+		BUILD_TARGET=$(OUTPUT)/$$DIR;			\
-+		make OUTPUT=$$BUILD_TARGET -C $$DIR $@;		\
-+	done
-+
-+# Avoid any output on non arm on emit_tests
-+emit_tests:
-+	@for DIR in $(ARM_SUBTARGETS); do				\
-+		BUILD_TARGET=$(OUTPUT)/$$DIR;			\
-+		make OUTPUT=$$BUILD_TARGET -C $$DIR $@;		\
-+	done
-+
-+clean:
-+	@for DIR in $(ARM_SUBTARGETS); do				\
-+		BUILD_TARGET=$(OUTPUT)/$$DIR;			\
-+		make OUTPUT=$$BUILD_TARGET -C $$DIR $@;		\
-+	done
-+
-+.PHONY: all clean install run_tests emit_tests
-diff --git a/tools/testing/selftests/arm/README b/tools/testing/selftests/arm/README
-new file mode 100644
-index 000000000000..75b7cf4baec3
---- /dev/null
-+++ b/tools/testing/selftests/arm/README
-@@ -0,0 +1,32 @@
-+KSelfTest ARM
-+===============
-+
-+- This is a series of compatibility tests, wherein the source files are
-+  built statically into a 32 bit ELF; they should pass on both 32 and 64
-+  bit kernels. They are not built or run but just skipped completely when
-+  env-variable ARCH is found to be different than 'arm64' or 'arm' and
-+  `uname -m` reports other than 'aarch64', 'armv7l' or 'armv8l'.
-+
-+- If building the tests on a 64-bit kernel, please ensure that the kernel is
-+  built with CONFIG_COMPAT enabled.
-+
-+- Holding true the above, ARM KSFT tests can be run within the KSelfTest
-+  framework using standard Linux top-level-makefile targets. Please set
-+  $(CROSS_COMPILE) to 'arm-linux-gnueabi-' or 'arm-linux-gnueabihf-'.
-+
-+      $ make TARGETS=arm kselftest-clean
-+      $ make $(CROSS_COMPILE) TARGETS=arm kselftest
-+
-+      or
-+
-+      $ make $(CROSS_COMPILE) -C tools/testing/selftests TARGETS=arm \
-+		INSTALL_PATH=<your-installation-path> install
-+
-+      or, alternatively, only specific arm/ subtargets can be picked:
-+
-+      $ make $(CROSS_COMPILE) -C tools/testing/selftests TARGETS=arm \
-+		ARM_SUBTARGETS="signal" INSTALL_PATH=<your-installation-path> \
-+			install
-+
-+   Further details on building and running KFST can be found in:
-+     Documentation/dev-tools/kselftest.rst
-diff --git a/tools/testing/selftests/arm/abi/.gitignore b/tools/testing/selftests/arm/abi/.gitignore
-new file mode 100644
-index 000000000000..75af3c416fc3
---- /dev/null
-+++ b/tools/testing/selftests/arm/abi/.gitignore
-@@ -0,0 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+ptrace
-+ptrace_64
-+trivial_32bit_program
-diff --git a/tools/testing/selftests/arm/abi/Makefile b/tools/testing/selftests/arm/abi/Makefile
-new file mode 100644
-index 000000000000..160b6aadb064
---- /dev/null
-+++ b/tools/testing/selftests/arm/abi/Makefile
-@@ -0,0 +1,26 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+# Copyright (C) 2024 ARM Limited
-+
-+TEST_GEN_PROGS := ptrace
-+
-+include ../../lib.mk
-+
-+# Do not build 64-bit programs if running on a native 32-bit kernel
-+UNAME_M := $(shell uname -m)
-+ifneq (,$(filter $(UNAME_M),aarch64 arm64))
-+TEST_CUSTOM_PROGS := $(OUTPUT)/ptrace_64
-+
-+TRIVIAL_32BIT := $(OUTPUT)/trivial_32bit_program
-+
-+all: $(TEST_CUSTOM_PROGS) $(TRIVIAL_32BIT)
-+
-+
-+$(TRIVIAL_32BIT): $(OUTPUT)/%: %.c
-+	$(CC) -o $@ $^ -static
-+
-+$(OUTPUT)/ptrace_64: ptrace_64.c ptrace.h
-+	gcc -o $@ $^
-+
-+EXTRA_CLEAN := $(TEST_CUSTOM_PROGS) $(TRIVIAL_32BIT)
-+endif
-+
-diff --git a/tools/testing/selftests/arm/elf/.gitignore b/tools/testing/selftests/arm/elf/.gitignore
-new file mode 100644
-index 000000000000..41458ecbcd72
---- /dev/null
-+++ b/tools/testing/selftests/arm/elf/.gitignore
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+parse_elf
-diff --git a/tools/testing/selftests/arm/elf/Makefile b/tools/testing/selftests/arm/elf/Makefile
-new file mode 100644
-index 000000000000..86636fe02994
---- /dev/null
-+++ b/tools/testing/selftests/arm/elf/Makefile
-@@ -0,0 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2024 ARM Limited
-+
-+TEST_GEN_PROGS := parse_elf
-+
-+include ../../lib.mk
-diff --git a/tools/testing/selftests/arm/mm/.gitignore b/tools/testing/selftests/arm/mm/.gitignore
-new file mode 100644
-index 000000000000..eb28169bb1b5
---- /dev/null
-+++ b/tools/testing/selftests/arm/mm/.gitignore
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+compat_va
-diff --git a/tools/testing/selftests/arm/mm/Makefile b/tools/testing/selftests/arm/mm/Makefile
-new file mode 100644
-index 000000000000..d8bfa45df98c
---- /dev/null
-+++ b/tools/testing/selftests/arm/mm/Makefile
-@@ -0,0 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2024 ARM Limited
-+
-+TEST_GEN_PROGS := compat_va
-+
-+include ../../lib.mk
-diff --git a/tools/testing/selftests/arm/signal/.gitignore b/tools/testing/selftests/arm/signal/.gitignore
-new file mode 100644
-index 000000000000..85b81356bf41
---- /dev/null
-+++ b/tools/testing/selftests/arm/signal/.gitignore
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+mangle_cpsr_invalid_aif_bits
-+mangle_cpsr_invalid_compat_toggle
-diff --git a/tools/testing/selftests/arm/signal/Makefile b/tools/testing/selftests/arm/signal/Makefile
-new file mode 100644
-index 000000000000..3540a25de75a
---- /dev/null
-+++ b/tools/testing/selftests/arm/signal/Makefile
-@@ -0,0 +1,30 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2024 ARM Limited
-+
-+# Additional include paths needed by kselftest.h and local headers
-+CFLAGS += -D_GNU_SOURCE -std=gnu99 -I.
-+
-+SRCS := $(filter-out testcases/testcases.c,$(wildcard testcases/*.c))
-+PROGS := $(patsubst %.c,%,$(SRCS))
-+
-+# Generated binaries to be installed by top KSFT script
-+TEST_GEN_PROGS := $(notdir $(PROGS))
-+
-+# Get Kernel headers installed and use them.
-+
-+# Including KSFT lib.mk here will also mangle the TEST_GEN_PROGS list
-+# to account for any OUTPUT target-dirs optionally provided by
-+# the toplevel makefile
-+include ../../lib.mk
-+
-+$(TEST_GEN_PROGS): $(PROGS)
-+	cp $(PROGS) $(OUTPUT)/
-+
-+# Common test-unit targets to build common-layout test-cases executables
-+# Needs secondary expansion to properly include the testcase c-file in pre-reqs
-+COMMON_SOURCES := test_signals.c test_signals_utils.c
-+COMMON_HEADERS := test_signals.h test_signals_utils.h
-+
-+.SECONDEXPANSION:
-+$(PROGS): $$@.c ${COMMON_SOURCES} ${COMMON_HEADERS}
-+	$(CC) $(CFLAGS) ${@}.c ${COMMON_SOURCES} -o $@
+Broke the changes to nvme_find_path() into a prepare patch.
+This made the patch much more readable. Removed the WARN_ON_ONCE
+in nvme_mpath_end_request() and changed the pr_notice message
+in nvme_subsys_iopolicy_update().
+
+Changes since V6:
+
+Cleanup tab formatting in nvme.h and removed extra white lines.
+Removed the results variable from nvme_mpath_end_request(). 
+
+Changes since V5:
+
+Refactored nvme_find_path() to reduce the spaghetti code.
+Cleaned up all comments and reduced the total size of the 
+diff, and fixed the commit message. Thomas Song now 
+gets credit as the first author.
+
+Changes since V4:
+
+Removed atomic_set() from and return if (old_iopolicy == iopolicy)
+At the beginning of nvme_subsys_iopolicy_update().
+
+Changes since V3:
+
+Addresssed all review comments, fixed the commit log, and moved
+nr_counter initialization from nvme_mpath_init_ctlr() to
+nvme_mpath_init_identify().
+
+Changes since V2:
+
+Add the NVME_MPATH_CNT_ACTIVE flag to eliminate a READ_ONCE in the
+completion path and increment/decrement the active_nr count on all mpath
+IOs - including passthru commands.
+
+Send a pr_notice when ever the iopolicy on a subsystem is changed. This
+is important for support reasons. It is fully expected that users will
+be changing the iopolicy with active IO in progress.
+
+Squashed everything and rebased to nvme-v6.10
+
+Changes since V1:
+
+I'm re-issuing Ewan's queue-depth patches in preparation for LSFMM
+
+These patches were first show at ALPSS 2023 where I shared the following
+graphs which measure the IO distribution across 4 active-optimized
+controllers using the round-robin verses queue-depth iopolicy.
+
+ https://people.redhat.com/jmeneghi/ALPSS_2023/NVMe_QD_Multipathing.pdf
+
+Since that time we have continued testing these patches with a number of
+different nvme-of storage arrays and test bed configurations, and I've
+codified the tests and methods we use to measure IO distribution
+
+All of my test results, together with the scripts I used to generate these
+graphs, are available at:
+
+ https://github.com/johnmeneghini/iopolicy
+
+Please use the scripts in this repository to do your own testing.
+
+These patches are based on nvme-v6.9
+
+
+John Meneghini (1):
+  nvme-multipath: prepare for "queue-depth" iopolicy
+
+Thomas Song (1):
+  nvme-multipath: implement "queue-depth" iopolicy
+
+ drivers/nvme/host/core.c      |   2 +-
+ drivers/nvme/host/multipath.c | 102 +++++++++++++++++++++++++++++++---
+ drivers/nvme/host/nvme.h      |   4 ++
+ 3 files changed, 99 insertions(+), 9 deletions(-)
+
 -- 
-2.39.2
+2.45.2
 
