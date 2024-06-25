@@ -1,173 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F0E18C33A;
-	Tue, 25 Jun 2024 15:05:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 889B017D341
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 15:05:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719327946; cv=none; b=UIBeltFM7Ut5DrDMJQv9AYDmmNHs2UxQ/8cjJtv8puuh4stqa4RIpaKfNSOOM7Ff9n3Fdd1NyKpuctZaazM4RoF1jzG9CYD4bLZazpwg7JkWusHZL6Td9w4DD0fYvqEu1oZA5ANPNfkmKveQO75vAKrqcarZw8IRcO2cc048rTg=
+	t=1719327947; cv=none; b=Yddx4jTMsJCNILNpVcGbZ+1EbdloZScMk0Y4vvrDI97qqNCQZYutvsPr5o88K3Ekz0NQ7fPWwA5M2liKoAikuLnUpta8RIv++qgMpJQXAUo1NV+aKhX2e0pNgOlcQTtT9OD41kWJE5vwy9eI+qBTC1VzfBAmzfw4Le3Km+RR+jE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719327946; c=relaxed/simple;
-	bh=YYz6vJzvFivBjzQl/oYVfPbzMadH/24Qr7CyuKANnYA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qdTAlybQtuFOWrOGDeb0ebObvd7TIUDScvL77YxPKu7pNfgqjn6iGnrYYrK1DVA7A1/8YVaeY/j1zufyzczS0yf8HBPOuI2cf8SzAiAC9VVHmUPeuXpe/5uVuX0sRj+srYU/XQWkm6FhgiN6yX+5VMPuC31t4Jd/mJ1xGXs+HQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jVtyl15x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719327947; c=relaxed/simple;
+	bh=3LwE2V9f4tQOo23p5aFAX93ueL2Lgaphlhtznmc/PnI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J3NLENqGl1PD+lBiDaQ4wZlUKfpo+UU/yTfe+8dIniRM8D8I01VMy0Xvlrz/1MiAwd7pqOd5mf9iGSpm41R4JQZ+qc4g9E5hDKrRU8Kuri+fUQBl6MoSJ5rVGR8OU3/+QMBF16ncYWO/SK+56v+SWVI1g10m/YfQJ8A8uvv5Kq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cxe9x4mm; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jVtyl15x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82489C4AF0E;
-	Tue, 25 Jun 2024 15:05:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719327945;
-	bh=YYz6vJzvFivBjzQl/oYVfPbzMadH/24Qr7CyuKANnYA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=jVtyl15xNduiXHKLwIurGiHrq6v7QW9hCqMHsjmjHGlP0n43EqHxggFJBuOuA/T9S
-	 ZwwyUkiuwOsMntBpfak37kJinMzrQiuoJEu+eVqdpPl53d9qQaqzSTyXFPUSpfJI8S
-	 VAlaLDXxrgRW2SWZSmnpBWfuWWfW5qV7AInmNEmiSe/7w9njmux7n7MhF8Y4K9SFGu
-	 jfPg5aq3YLB85H2QbpRCUMv9AtenTAWoE2hZfhOu8HG6Az9/y3XS0hU1LsCINimGX+
-	 JyStWz5ytl/jDITq3/tfE0iCyB9uqOPd4C0JMEB3AKgxRqEQY6tVtdMfaO3zJH+kvI
-	 05DmIU8/cjAag==
-From: Mark Brown <broonie@kernel.org>
-Date: Tue, 25 Jun 2024 15:58:07 +0100
-Subject: [PATCH v9 39/39] kselftest/arm64: Enable GCS for the FP stress
- tests
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cxe9x4mm"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-630daaec9c7so51010217b3.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 08:05:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719327944; x=1719932744; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JunNWwGKBRTYr5Pcd5O5SWyjr+J71GISSn9v9GBzIls=;
+        b=cxe9x4mmBVDtN1iTTyYcOBgVOM5KL3sBiSf58NKGzXsmaNtzqvH8Cx4qLrEo2C9VZ+
+         XAVIvU20YSLCzmzvTcorkPhReEE7uEoucpofRhKXloFiiWwlLOQmtDY9BAyj421h4+yJ
+         2x2eC/rY5naHtdmcXgsHOvuHBHeRLeVJQBlKzoyZXaJb8KGkIfLfZNQWxKMyzKp812GC
+         1aq4NMbUxS3m0LYocI6rdNP76X/SjysWoX/uuz6/bdbEb/O0xlLzatoPxIvID2EFSMLf
+         obaIX2+I2KXeKn9/pj/t1pl0APQEz+0VYM3QW2Qu57sVx7CNCIXY/D4jUASD5R52cN8o
+         KXAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719327944; x=1719932744;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JunNWwGKBRTYr5Pcd5O5SWyjr+J71GISSn9v9GBzIls=;
+        b=Xo51Gk9JtTkVOJrEndvCZy6QrUBz9AS8TGbbMw986xlODSAAwRPIDhysWVGAS3ADyt
+         QSlqo01CpcDa3sF0mddQ8Yg7Gny3mYqNORebvgMXKlvPIX1zmOpjLEqGNtBVUN0lVHVl
+         SN1g8YL7OiIhTaIwMFgGaxFOc3QiMqHpCsjGfe5SQyzru74pMw0buvM5PT5fm3/izOoa
+         Pzh1C86edxM98KT8PKC5sL8vAjSSNxbD1HLqlDaGEy80gWqPsiMX7sAEgPvhfACKdqMJ
+         PrjG7Ttp2PmK0lPK1F9l32ahc6u7POpxZVDVOZ6n2+Acl+SbZx/Tawsjfb1TGGwaGcWI
+         jHLA==
+X-Forwarded-Encrypted: i=1; AJvYcCX4OdbYNpLGIpaZwuMj82cLQ7V+PEvs4CoP7UXmQg7MzvohXdwArooeg3sUGKqULwp2xjCtcHnSqYR23bec1sGkRSc+KVDQdqGtrZPq
+X-Gm-Message-State: AOJu0Yw+sivACBT76zkJeKlR6bYD+IETTHZzObn/Am5eythaTFFZX0du
+	fMnWKl1j4uCo8Z/NK7DiFPV7CG2qLDkVee5fQZCxKloepvEvbjugbFDaTXIG3EUDVkjZVRwg33B
+	UXVI9USybKaWre5BzDg9xLGei5JpqeMRHBm2R3Q==
+X-Google-Smtp-Source: AGHT+IFe9ebZjIjKe3yw6sqBV3bTmm2If8WOtZ4l30oH3MpOHUQh7AQDYHW3owX9fbwtm1v9DNf0ncg1El4NCsVswYw=
+X-Received: by 2002:a81:c313:0:b0:618:2381:2404 with SMTP id
+ 00721157ae682-643ac72278amr86606087b3.44.1719327944523; Tue, 25 Jun 2024
+ 08:05:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240625-arm64-gcs-v9-39-0f634469b8f0@kernel.org>
-References: <20240625-arm64-gcs-v9-0-0f634469b8f0@kernel.org>
-In-Reply-To: <20240625-arm64-gcs-v9-0-0f634469b8f0@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
- Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <maz@kernel.org>, 
- Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>, 
- Suzuki K Poulose <suzuki.poulose@arm.com>, Arnd Bergmann <arnd@arndb.de>, 
- Oleg Nesterov <oleg@redhat.com>, Eric Biederman <ebiederm@xmission.com>, 
- Shuah Khan <shuah@kernel.org>, 
- "Rick P. Edgecombe" <rick.p.edgecombe@intel.com>, 
- Deepak Gupta <debug@rivosinc.com>, Ard Biesheuvel <ardb@kernel.org>, 
- Szabolcs Nagy <Szabolcs.Nagy@arm.com>, Kees Cook <kees@kernel.org>
-Cc: "H.J. Lu" <hjl.tools@gmail.com>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Florian Weimer <fweimer@redhat.com>, Christian Brauner <brauner@kernel.org>, 
- Thiago Jung Bauermann <thiago.bauermann@linaro.org>, 
- Ross Burton <ross.burton@arm.com>, linux-arm-kernel@lists.infradead.org, 
- linux-doc@vger.kernel.org, kvmarm@lists.linux.dev, 
- linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
- linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
- Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.14-dev-d4707
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3151; i=broonie@kernel.org;
- h=from:subject:message-id; bh=YYz6vJzvFivBjzQl/oYVfPbzMadH/24Qr7CyuKANnYA=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBmetuR2t+0Cqlt/6leQmollofnPNO15qhZxsk4g6Rv
- IV0COeeJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZnrbkQAKCRAk1otyXVSH0KUEB/
- 92KBV+o4546rcXH4xXo2EWT+kE5N6xC2oDsBcr7IoWFKdn5b97y2WNrash+T59Yu1XOYrCFFrOrkgm
- RbmFAWHOBbuOXOc35IR+XCSSa2/XJZ7FXZF5j9xA8t5Jm1TA+oALCgCQ/r6V9BCHcym9F1WxusrRH2
- NmGZWONPJFdHa6wI/9n0Ormxp0MUcPFFWh0bQJwB1Ins6vJOcUUYcrUMGUZ83jjhnjAN+zkQ1GjB93
- iQmF3xpdVuac037z9gR/TjRKF03O0O2cYLS2kfLwjfhX3qk2c8+SM4699Wno6d0w34BZDduAiPh+cw
- MG2TnaMeA4ZtK8eaNL8Ppza/o33J+c
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+References: <20240623-drm-bridge-connector-fix-hdmi-reset-v2-0-8590d44912ce@linaro.org>
+ <20240623-drm-bridge-connector-fix-hdmi-reset-v2-1-8590d44912ce@linaro.org> <20240625-feathered-loon-of-health-ec7e6d@houat>
+In-Reply-To: <20240625-feathered-loon-of-health-ec7e6d@houat>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Tue, 25 Jun 2024 18:05:33 +0300
+Message-ID: <CAA8EJpq314tQFZpkXgL1cYDPfoFRukhB_KiaDvmsqdzHFD512g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] drm/bridge-connector: reset the HDMI connector state
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Dave Stevenson <dave.stevenson@raspberrypi.com>, Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, dri-devel@lists.freedesktop.org, 
+	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-While it's a bit off topic for them the floating point stress tests do give
-us some coverage of context thrashing cases, and also of active signal
-delivery separate to the relatively complicated framework in the actual
-signals tests. Have the tests enable GCS on startup, ignoring failures so
-they continue to work as before on systems without GCS.
+On Tue, 25 Jun 2024 at 18:02, Maxime Ripard <mripard@kernel.org> wrote:
+>
+> Hi,
+>
+> On Sun, Jun 23, 2024 at 08:40:12AM GMT, Dmitry Baryshkov wrote:
+> > On HDMI connectors which use drm_bridge_connector and DRM_BRIDGE_OP_HDMI
+> > IGT chokes on the max_bpc property in several kms_properties tests due
+> > to the the drm_bridge_connector failing to reset HDMI-related
+> > properties.
+> >
+> > Call __drm_atomic_helper_connector_hdmi_reset() if there is a
+> > the drm_bridge_connector has bridge_hdmi.
+> >
+> > Note, the __drm_atomic_helper_connector_hdmi_reset() is moved to
+> > drm_atomic_state_helper.c because drm_bridge_connector.c can not depend
+> > on DRM_DISPLAY_HDMI_STATE_HELPER. At the same time it is impossible to
+> > call this function from HDMI bridges, there is is no function that
+> > corresponds to the drm_connector_funcs::reset().
+>
+> Why can't it depend on DRM_DISPLAY_HDMI_STATE_HELPER?
 
-Reviewed-by: Thiago Jung Bauermann <thiago.bauermann@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- tools/testing/selftests/arm64/fp/assembler.h   | 15 +++++++++++++++
- tools/testing/selftests/arm64/fp/fpsimd-test.S |  2 ++
- tools/testing/selftests/arm64/fp/sve-test.S    |  2 ++
- tools/testing/selftests/arm64/fp/za-test.S     |  2 ++
- tools/testing/selftests/arm64/fp/zt-test.S     |  2 ++
- 5 files changed, 23 insertions(+)
-
-diff --git a/tools/testing/selftests/arm64/fp/assembler.h b/tools/testing/selftests/arm64/fp/assembler.h
-index 9b38a0da407d..1fc46a5642c2 100644
---- a/tools/testing/selftests/arm64/fp/assembler.h
-+++ b/tools/testing/selftests/arm64/fp/assembler.h
-@@ -65,4 +65,19 @@ endfunction
- 	bl	puts
- .endm
- 
-+#define PR_SET_SHADOW_STACK_STATUS      75
-+# define PR_SHADOW_STACK_ENABLE         (1UL << 0)
-+
-+.macro enable_gcs
-+	// Run with GCS
-+	mov	x0, PR_SET_SHADOW_STACK_STATUS
-+	mov	x1, PR_SHADOW_STACK_ENABLE
-+	mov	x2, xzr
-+	mov	x3, xzr
-+	mov	x4, xzr
-+	mov	x5, xzr
-+	mov	x8, #__NR_prctl
-+	svc	#0
-+.endm
-+
- #endif /* ! ASSEMBLER_H */
-diff --git a/tools/testing/selftests/arm64/fp/fpsimd-test.S b/tools/testing/selftests/arm64/fp/fpsimd-test.S
-index 8b960d01ed2e..b16fb7f42e3e 100644
---- a/tools/testing/selftests/arm64/fp/fpsimd-test.S
-+++ b/tools/testing/selftests/arm64/fp/fpsimd-test.S
-@@ -215,6 +215,8 @@ endfunction
- // Main program entry point
- .globl _start
- function _start
-+	enable_gcs
-+
- 	mov	x23, #0		// signal count
- 
- 	mov	w0, #SIGINT
-diff --git a/tools/testing/selftests/arm64/fp/sve-test.S b/tools/testing/selftests/arm64/fp/sve-test.S
-index fff60e2a25ad..2fb4f0b84476 100644
---- a/tools/testing/selftests/arm64/fp/sve-test.S
-+++ b/tools/testing/selftests/arm64/fp/sve-test.S
-@@ -378,6 +378,8 @@ endfunction
- // Main program entry point
- .globl _start
- function _start
-+	enable_gcs
-+
- 	mov	x23, #0		// Irritation signal count
- 
- 	mov	w0, #SIGINT
-diff --git a/tools/testing/selftests/arm64/fp/za-test.S b/tools/testing/selftests/arm64/fp/za-test.S
-index 095b45531640..b2603aba99de 100644
---- a/tools/testing/selftests/arm64/fp/za-test.S
-+++ b/tools/testing/selftests/arm64/fp/za-test.S
-@@ -231,6 +231,8 @@ endfunction
- // Main program entry point
- .globl _start
- function _start
-+	enable_gcs
-+
- 	mov	x23, #0		// signal count
- 
- 	mov	w0, #SIGINT
-diff --git a/tools/testing/selftests/arm64/fp/zt-test.S b/tools/testing/selftests/arm64/fp/zt-test.S
-index b5c81e81a379..8d9609a49008 100644
---- a/tools/testing/selftests/arm64/fp/zt-test.S
-+++ b/tools/testing/selftests/arm64/fp/zt-test.S
-@@ -200,6 +200,8 @@ endfunction
- // Main program entry point
- .globl _start
- function _start
-+	enable_gcs
-+
- 	mov	x23, #0		// signal count
- 
- 	mov	w0, #SIGINT
+Is it okay to have DRM_KMS_HELPER to depend unconditionally or select
+DRM_DISPLAY_HDMI_STATE_HELPER?
 
 -- 
-2.39.2
-
+With best wishes
+Dmitry
