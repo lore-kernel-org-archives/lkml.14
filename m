@@ -1,116 +1,131 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01CCA149DF7;
-	Tue, 25 Jun 2024 09:39:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A60B149C69;
+	Tue, 25 Jun 2024 09:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719308362; cv=none; b=oQOqgH37q3kQw+fW8iH9NsZxTpV0NtlC1AkyVev9dtNgtuZs7iaQQLubnGOctAXshXFzLrQ4mflFzBRKZhy1xost25Iwe2s5ST95GaPEJoat+YSNpWobMvVgn5aiQGooa87U0y5DnURQOUsoL9Q8q52qq3Z+O/ZlAmZniigNWIs=
+	t=1719308380; cv=none; b=BYNr+cAc6ikx+w94xHNDRvfWYvtPEsE/HtX9HiW0Q4Li94Aer3EP6PVvrNy/Ew8SrQDGoOuESlsma6xf5yf2LI0ZAeZLuIKe87KysIOzoLCmisVJhCci68REHt5VfbuIl6uhedXjQ0HdduKDGwpAfwAO2OfVyiZfOdP8bXLRypQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719308362; c=relaxed/simple;
-	bh=qSt8uxSH0xIE8XfLl8qKGnMneG5V2yXlT9AiL+782YE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ndaugy0jVt3Ka7KO8IFzI/jW8PErAG7Vqf0VndwUdy+KsKhk1NDyux6XReIFAo7eeYDJN4qm//IGq7oLoYFL/eINQV2FKsPPs464Bvy9C8QI3Ub7p3E5cJfzSmXgQSDnvKfnEPsO5rFo4dKhOf65xB4p2PVDqlYQoh0OgyqLoQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VktyD21u; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719308380; c=relaxed/simple;
+	bh=Uj+vX9vJhAkWlvIbiKewzFW3iCxu0HQgvtrD44a/DA8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dqPrF3YONwHq3MDyPxHXHNRJBIcMGrOjDEQMU3KDGT1fjWrl5eXOLaM+Dwxv/ivQ4fUoWXANpazxcq71ZqR11OIaIiAiMtPDem7PXiOBj3bMqKtkvy+fFSsSfVtLY6v4WqyXbRaSGHliLjBC0XlF1VfvH3FIjHWCSeC7JUjRV/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=e9zA65pR; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VktyD21u"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-706680d3a25so2019977b3a.0;
-        Tue, 25 Jun 2024 02:39:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719308360; x=1719913160; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OBEHgMYq3/MriOx4WCBxMBdBffUVzqTsY+wD/cCZLes=;
-        b=VktyD21ujomd27px4bFNjSoyszyXUwpJtL6d08fe8PPrPH0hvtiQaK6BvMUbv1XaFn
-         UAytSaSj9wS1B85PjGTiIXjBBGB19MOBZ8Q4XYtMGAnpJutqn+n9RuSjPzd1HfuUv1bm
-         6Q28cll5Ku/lb8beg6viSBWNmISXWy4BdV6VFNMoWpHe7x3SNXMPcROrcYpXUPu6b5G3
-         ABKPaozKOW+Xr62km6dBaA4RKozVv7yGwa8/j74uSkk8Sie+X+0gHn2605RDoUQoeFun
-         DwdmjN2gcyvFemABF/z0pawRP1OFatcyIXcvrpJ8J0nE/99EpgdBOe0SEOQf2ltwTVeb
-         H8hQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719308360; x=1719913160;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OBEHgMYq3/MriOx4WCBxMBdBffUVzqTsY+wD/cCZLes=;
-        b=ENwgGw6wzKYm/81jWaOxuWb7HobhmZis/InkMNT7MbImClDhp5177ixg7MS5dt+tjR
-         SU8ELZssOTt7MfiOPFhUv6M9/6X4i1nh5KQy6Fazt+gftwm6afgBtRGE+av+XVvTLTJ+
-         UkMPQGO//sF1lGOCNfhVwsZ1r5yRBGc94HQIYBpb3O0ku0AbzxbCcPW/rK+nyaD/Lcis
-         HL5Cdag2idOGKdxf6iR4KUY1q3NPdhsgpXz5sNxTZXcEpA1yxeYAD3VFZr52vT9zmVJO
-         lJ67CEU52QxQR29U2Sax/motqp2lXOyFtbkhezA131ojJsoK1VvytEsYBT8eJxEMYmfW
-         c/mg==
-X-Forwarded-Encrypted: i=1; AJvYcCUsrlgnAo9vhZGygB2fPidzTzABQxAWt03NJDmWFTs9Ny6ZkuummZQpjN2LkZVN7g46s3nix7+WdR5tASdnGr6CUngAMgMgH2QN3xW3kPdIQ0NGfikOEyG4y308m7ZXfFA4HRhx5oEv
-X-Gm-Message-State: AOJu0YyTsrl2UsavfkTx0i0fBx6N54M1cwbZir8FetVRG0MuN+vaGzJU
-	NCd1C1Z1MUCNCbMVKxVOYK1+ffvWXuEWkPFQoyBKsIauMmqVZDTp
-X-Google-Smtp-Source: AGHT+IHBIQ/jNCFsutzz2Km9gbzxtDowez1M80OZk71j438LwHlAL4TN5vGsgDhCvKPPmGh/MLiG8w==
-X-Received: by 2002:a05:6a21:6282:b0:1bd:260e:be97 with SMTP id adf61e73a8af0-1bd260ec538mr141746637.53.1719308360214;
-        Tue, 25 Jun 2024 02:39:20 -0700 (PDT)
-Received: from [100.90.230.39] ([45.32.86.188])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c819a7ec09sm8234396a91.16.2024.06.25.02.39.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Jun 2024 02:39:18 -0700 (PDT)
-Message-ID: <f6368aee-98fc-4159-b87e-bc42f0f660d1@gmail.com>
-Date: Tue, 25 Jun 2024 17:39:09 +0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="e9zA65pR"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45P9U82M011916;
+	Tue, 25 Jun 2024 09:39:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
+	:from:to:cc:subject:message-id:references:mime-version
+	:content-type:content-transfer-encoding:in-reply-to; s=pp1; bh=5
+	akyIZv32Wp7AeFyr6oY3tN9Qkc+jjwAa17BaZu/Up4=; b=e9zA65pRMo6ytDoVR
+	dUxxgwT6EqDKMCVKTL4kyoWeZp1IMQy0R0PNn7l4WRnabSTJgQhiRqewlOMGRCSR
+	0waVH6hibwvXHTv7Xb+4vTTja9D7C7GQ2Ckq5Me09JTJ2iG9TAfzz/5UujGlV/rD
+	afoASJwFbSvvjrEyMnoOHYFLd7jIofBpTj7xqX9iE2fY+qjiuPAeZOUrs24Y+F5G
+	JFy5Ffxs75mkpmG5B6hgiHj9Xgeo/QxehXAAYR/iBPogRlvYqWVxq/pit4fXawvZ
+	bTiwk0eQyhmsaavF0ggCickILyJAGxR2SLLyMcAErimbMD6DsxJZd5rX90HwJobb
+	pbpIg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yyua700ud-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Jun 2024 09:39:36 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45P9daQo025032;
+	Tue, 25 Jun 2024 09:39:36 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yyua700ua-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Jun 2024 09:39:36 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45P7d3qf019672;
+	Tue, 25 Jun 2024 09:39:35 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yx9xpwp0h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Jun 2024 09:39:35 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45P9dTuj20054294
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 25 Jun 2024 09:39:31 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BB7A02005A;
+	Tue, 25 Jun 2024 09:39:29 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 81A0120043;
+	Tue, 25 Jun 2024 09:39:29 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.60])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 25 Jun 2024 09:39:29 +0000 (GMT)
+Date: Tue, 25 Jun 2024 11:39:28 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Yunseong Kim <yskelg@gmail.com>
+Cc: Harald Freudenberger <freude@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        MichelleJin <shjy180909@gmail.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] s390/raw3270: Handle memory allocation failures in
+ raw3270_setup_console()
+Message-ID: <20240625093928.9210-F-hca@linux.ibm.com>
+References: <20240625013225.17076-2-yskelg@gmail.com>
+ <20240625063139.9210-B-hca@linux.ibm.com>
+ <c88ce35f-eca1-421a-a75b-e56fb6abfa06@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/3] dt-bindings: vendor-prefixes: add tyhx
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>, yasin.lee.x@outlook.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org
-References: <20240625-add-tyhx-hx9023s-sensor-driver-v7-0-b1d65b221811@gmail.com>
- <20240625-add-tyhx-hx9023s-sensor-driver-v7-1-b1d65b221811@gmail.com>
- <8ce23bc6-e742-4851-9a26-ca2ab947005d@kernel.org>
- <30600f33-71bf-4abd-9de6-1c7c07e94d77@gmail.com>
- <1a3e5503-8087-41de-84b4-8db533d0ad5f@linaro.org>
-Content-Language: en-US
-From: Yasin Lee <yasin.lee.x@gmail.com>
-In-Reply-To: <1a3e5503-8087-41de-84b4-8db533d0ad5f@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c88ce35f-eca1-421a-a75b-e56fb6abfa06@gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: ThOasYvWRY5EHeLv5l-LrQfjMVVh2ESo
+X-Proofpoint-ORIG-GUID: 98zifP1RSwvDGmoJ6zeCQQvhTrHtOWG3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-25_06,2024-06-24_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 mlxlogscore=340 clxscore=1015 suspectscore=0
+ impostorscore=0 mlxscore=0 adultscore=0 priorityscore=1501 malwarescore=0
+ phishscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406250068
 
+On Tue, Jun 25, 2024 at 04:44:47PM +0900, Yunseong Kim wrote:
+> Hi Heiko,
+> >> -	set_bit(RAW3270_FLAGS_CONSOLE, &rp->flags);
+> >> -
+> >> +	}
+> >>  	rc = ccw_device_enable_console(cdev);
+> >>  	if (rc) {
+> >>  		ccw_device_destroy_console(cdev);
+> >> +		kfree(ascebc);
+> >> +		kfree(rp);
+> >>  		return ERR_PTR(rc);
+> >>  	}
+> >> +	set_bit(RAW3270_FLAGS_CONSOLE, &rp->flags);
+> > 
+> > Why did you move the set_bit() call?
+> 
+> Thank you for the code review Heiko.
+> 
+> While writing patch version 2, I spent a lot of time thinking about this
+> part. Previously, even if function "ccw_device_enable_console" failed,
+> the flag was set to RAW3270_FLAGS_CONSOLE and returned.
+> 
+> I think it would be more appropriate to set the bit after everything
+> succeeded, so I included and submitted this code in v2 patch.
+> 
+> I’d appreciate hearing your thoughts on this!
 
-On 2024/6/25 17:15, Krzysztof Kozlowski wrote:
-> On 25/06/2024 10:31, Yasin Lee wrote:
->> On 2024/6/25 13:50, Krzysztof Kozlowski wrote:
->>> On 25/06/2024 04:15, Yasin Lee wrote:
->>>> Add vendor prefix for NanjingTianyihexin Electronics Ltd.
->>>> http://www.tianyihexin.com
->>>>
->>>> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>> This is the only one which could actually happen, but still after 15
->>> fake tags I don't trust you. Where was it given?
->>>
->>> Best regards,
->>> Krzysztof
->>
->> Sorry, I think I misunderstood the meaning of these tags. I will remove
->> all of them.
-> Hm, this one could actually happen, so did you receive it or not?
->
-> Best regards,
-> Krzysztof
-
-
-No, I didn't receive tags from others. I think I only received the one 
-explicit response from you.
-
-Thank you!
-
-
-Best regards,
-
-Yasin
-
->
+"More appropriate" is not a technical reason. Please don't mix
+different things into a single patch. If the set_bit() call needs to
+be moved then you need to provide a technical reason for it.
