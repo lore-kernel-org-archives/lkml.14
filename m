@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB6F2E62F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A6515F3E8;
 	Tue, 25 Jun 2024 15:27:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719329230; cv=none; b=RzfA6Gslj6mGlwEvv8sXAjZV71jZCvrhSxaGS4BsPD29FzZQEb9S5VdOy+vyU0dAVJnRHu08xI3jIn60pm34RSvUWyEKCYgTl9CQRBFF/Fs+krpRi/LYbrJWCMqZSpjhTbMipe0Z0y4rrnprr4ySuvll5RI4IfOO0MvD4f6GQk0=
+	t=1719329230; cv=none; b=qhnlMKClrTVRhRv89xGkUzLbbcjth9wUZTRmvRDh8ISXfLW5WfL073/Sx3+mekJZ51VKipUnAjSlAEcvN9+O/M3MlFqlDBDHa1qm8OiJjiIOvc7wpdnNO5KlRuqgDpiuG4lyxzfB3ZXCSIG7yOawFv/wkOF9wSGIJO17n0RqsDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719329230; c=relaxed/simple;
-	bh=CuUWmLNusNNXjCLhsaTHIqSDZDW05k03owEZLBOXes4=;
+	bh=8bisP0r3MDdbkFDFMndhD2ePnECreU6R2Dt0B4KH9L4=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=kFgdiTSxUgHPo7XT+ZBQYW73FJDKuc40ttkWH8MDkRM5rmLgmiWF3AEd+yQkFDyJzEJzsggXlgOqDRiw2hsjmVaI48DwDTAO0S5Q2qk7yj7MPmnlBMdURSVJH3Y1zWNYc0Dr4MO0cicpVq6ZtH+iKZvO6umoMiGvJyi+4Dq6rpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tg5fb84C; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lXb5Jfuc; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=Dn2FO4m1sCAxEKVuhyAJ9oiQtT7V5Xtmjv0raeY29Z36k1snrtBRNDAFymhbcT5z2bt8DysBWUPpMchUf0KjYJPunlhrUVCmIlft+N89yiPqnpJQbOSjyWfIAe7XLgMHhWpSe/exAbnE2etx+DAkH1etWYIe0Q+9FMdP3uMSBN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dYs4qNOr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pOuFNAy4; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tg5fb84C";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lXb5Jfuc"
-Date: Tue, 25 Jun 2024 15:27:06 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dYs4qNOr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pOuFNAy4"
+Date: Tue, 25 Jun 2024 15:27:07 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1719329227;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=yUOhF202hi2njEu/q0kPfULtfLuEvD2Kss8dNb/stek=;
-	b=tg5fb84CPekj2ZcHlkMBeS+hCanP1PNhDaCmvK66ZyhlhfAIRnGKVMhi+ohN9jOHJXupan
-	BEqUmvVtRMWoYY4GsBwU6TBn3vElGFu109LIg6KrJgVv2cLdXw0lTrnTMkWPTYkQUkfT5I
-	Do11ctuE5RVcQCmCIpqFTd7+sb2v8S17nFFoPe3PzveRO2XuaVVjHrKtj1WCCsqRJpxkqA
-	PqBuNRjnM3o+yaZIs37/+jZwDThL2x9d9pQB4hL1BG2koLcfaa2roZBQXMetjEPT+SQjCx
-	pyW+AUNv7H75rhlxYAnwacYqojsISbRXSL60Vr+BSdwbnrjKwJXVMtZL60j/rw==
+	bh=48KJWcopHhfzmZSKjpYdVo/SfdGFP94ggsHO/iG6SYw=;
+	b=dYs4qNOrBeCdmF4Q0bhVVvDpHoGG8UF4x/geCkvkIeQclmuIrl1xKpvoppQ0hZ3fUtr6Wb
+	oJEIvB+IwrDWHUnFlYB0qWXRIPNMxciWOTXC9GzvVeTFB5+wS94MdAdQmS57SZcIT7BENR
+	3qczxzqTmklyqNkGPN2v6Qlcaejrxtmi88avd+vgwNuo7pJz2j6Gx4Q9GY8xvBWih+r0ZL
+	8TPBQv7fUUZVRUeAXZIkHbS+v1iILnpVkcWi8OAZ2JsqCzMP+qDMwyb9XxE7pjAfOvfBhK
+	cDK0NOyFd0f2KBhG5BwfDmiWNdS54MkmR8M0LL+SaOfAp8VKVejYP1A4DwLggQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1719329227;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,26 +38,26 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=yUOhF202hi2njEu/q0kPfULtfLuEvD2Kss8dNb/stek=;
-	b=lXb5JfucZOQN1+3vEKE10ABm8mE6P0JDP98OQEvSrrTNpPTcTzPLuh9Uh3WpX+FhQlvZ2c
-	MrUXroYamUHIJJCQ==
+	bh=48KJWcopHhfzmZSKjpYdVo/SfdGFP94ggsHO/iG6SYw=;
+	b=pOuFNAy4tyeu8rIUjYMzugT0RICKg/QHaSmzx+Tk//pXEi+M3cdYGRc0b14lXunTUAFELR
+	z/R0u69PpXman6AA==
 From: "tip-bot2 for Alexey Makhalov" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/vmware] x86/vmware: Remove legacy VMWARE_HYPERCALL* macros
+Subject: [tip: x86/vmware] x86/vmware: Correct macro names
 Cc: Alexey Makhalov <alexey.makhalov@broadcom.com>,
  "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20240613191650.9913-8-alexey.makhalov@broadcom.com>
-References: <20240613191650.9913-8-alexey.makhalov@broadcom.com>
+In-Reply-To: <20240613191650.9913-7-alexey.makhalov@broadcom.com>
+References: <20240613191650.9913-7-alexey.makhalov@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171932922685.2215.6945909603120879149.tip-bot2@tip-bot2>
+Message-ID: <171932922715.2215.13368774215942312273.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,58 +67,51 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/vmware branch of tip:
 
-Commit-ID:     9dfb18031f0df2378b3d33a13fc485ef89caa285
-Gitweb:        https://git.kernel.org/tip/9dfb18031f0df2378b3d33a13fc485ef89caa285
+Commit-ID:     86cb65448d07fe516e18d9512ae5786cd90db9bf
+Gitweb:        https://git.kernel.org/tip/86cb65448d07fe516e18d9512ae5786cd90db9bf
 Author:        Alexey Makhalov <alexey.makhalov@broadcom.com>
-AuthorDate:    Thu, 13 Jun 2024 12:16:49 -07:00
+AuthorDate:    Thu, 13 Jun 2024 12:16:48 -07:00
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
 CommitterDate: Tue, 25 Jun 2024 17:15:48 +02:00
 
-x86/vmware: Remove legacy VMWARE_HYPERCALL* macros
+x86/vmware: Correct macro names
 
-No more direct use of these macros should be allowed. The vmware_hypercallX API
-still uses the new implementation of VMWARE_HYPERCALL macro internally, but it
-is not exposed outside of the vmware.h.
+VCPU_RESERVED and LEGACY_X2APIC are not VMware hypercall commands.  These are
+bits in the return value of the VMWARE_CMD_GETVCPU_INFO command.  Change
+VMWARE_CMD_ prefix to GETVCPU_INFO_ one. And move the bit-shift
+operation into the macro body.
 
+Fixes: 4cca6ea04d31c ("x86/apic: Allow x2apic without IR on VMware platform")
 Signed-off-by: Alexey Makhalov <alexey.makhalov@broadcom.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/r/20240613191650.9913-8-alexey.makhalov@broadcom.com
+Link: https://lore.kernel.org/r/20240613191650.9913-7-alexey.makhalov@broadcom.com
 ---
- arch/x86/include/asm/vmware.h | 26 --------------------------
- 1 file changed, 26 deletions(-)
+ arch/x86/kernel/cpu/vmware.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/vmware.h b/arch/x86/include/asm/vmware.h
-index 724c8b9..d83444f 100644
---- a/arch/x86/include/asm/vmware.h
-+++ b/arch/x86/include/asm/vmware.h
-@@ -279,30 +279,4 @@ unsigned long vmware_hypercall_hb_in(unsigned long cmd, unsigned long in2,
- #undef VMW_BP_CONSTRAINT
- #undef VMWARE_HYPERCALL
+diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
+index 24d6fd8..fc1b3f6 100644
+--- a/arch/x86/kernel/cpu/vmware.c
++++ b/arch/x86/kernel/cpu/vmware.c
+@@ -42,8 +42,8 @@
+ #define CPUID_VMWARE_INFO_LEAF               0x40000000
+ #define CPUID_VMWARE_FEATURES_LEAF           0x40000010
  
--/* The low bandwidth call. The low word of edx is presumed clear. */
--#define VMWARE_HYPERCALL						\
--	ALTERNATIVE_2("movw $" __stringify(VMWARE_HYPERVISOR_PORT) ", %%dx; " \
--		      "inl (%%dx), %%eax",				\
--		      "vmcall", X86_FEATURE_VMCALL,			\
--		      "vmmcall", X86_FEATURE_VMW_VMMCALL)
--
--/*
-- * The high bandwidth out call. The low word of edx is presumed to have the
-- * HB and OUT bits set.
-- */
--#define VMWARE_HYPERCALL_HB_OUT						\
--	ALTERNATIVE_2("movw $" __stringify(VMWARE_HYPERVISOR_PORT_HB) ", %%dx; " \
--		      "rep outsb",					\
--		      "vmcall", X86_FEATURE_VMCALL,			\
--		      "vmmcall", X86_FEATURE_VMW_VMMCALL)
--
--/*
-- * The high bandwidth in call. The low word of edx is presumed to have the
-- * HB bit set.
-- */
--#define VMWARE_HYPERCALL_HB_IN						\
--	ALTERNATIVE_2("movw $" __stringify(VMWARE_HYPERVISOR_PORT_HB) ", %%dx; " \
--		      "rep insb",					\
--		      "vmcall", X86_FEATURE_VMCALL,			\
--		      "vmmcall", X86_FEATURE_VMW_VMMCALL)
- #endif
+-#define VMWARE_CMD_LEGACY_X2APIC  3
+-#define VMWARE_CMD_VCPU_RESERVED 31
++#define GETVCPU_INFO_LEGACY_X2APIC           BIT(3)
++#define GETVCPU_INFO_VCPU_RESERVED           BIT(31)
+ 
+ #define STEALCLOCK_NOT_AVAILABLE (-1)
+ #define STEALCLOCK_DISABLED        0
+@@ -485,8 +485,8 @@ static bool __init vmware_legacy_x2apic_available(void)
+ 	u32 eax;
+ 
+ 	eax = vmware_hypercall1(VMWARE_CMD_GETVCPU_INFO, 0);
+-	return !(eax & BIT(VMWARE_CMD_VCPU_RESERVED)) &&
+-		(eax & BIT(VMWARE_CMD_LEGACY_X2APIC));
++	return !(eax & GETVCPU_INFO_VCPU_RESERVED) &&
++		(eax & GETVCPU_INFO_LEGACY_X2APIC);
+ }
+ 
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
