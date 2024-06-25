@@ -1,117 +1,79 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6969176241
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 16:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C17D176231;
+	Tue, 25 Jun 2024 16:59:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719334747; cv=none; b=HykjQBhy70aEK5p5FzfheM7RWrLLXa134D37olwIIlMGQ93FlUrKZsj9xjQ9RABgEJdaQD4GE9ifaPL8V3NPo/tpb1qzDA/UXRYB/2iwKhKtzxfGb+DeJwfL7LPm3apuPS5CWeLE8d0IsAU/kPB0zeTtx1BR2P65tqEmumo6ku4=
+	t=1719334748; cv=none; b=WvBV/hJ/LhbASsc6BPiwFSed1A9n9ZqT65RNhP3Lr79uVlzTkBxs7Ekjfu/LrDzGBfET3liiCcyP52/G+R7fZYkHbETP+zJVHEJBmOxFLeHxKTO4UaV3tx2c1/ys0BIpQPk8phaDLDu2LZ+dL5SXqTJE5I9E5WXLz5nykVg9qKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719334747; c=relaxed/simple;
-	bh=vF37Z0aZiJEeLWEKoNSeoRo+xDDMR/tNEztnp1b16K4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EAZZq50pqNqSxyHBeP5Vh8xbbfxBG6/zIODDGG8Rhhcu7TyOTnENyrA6+I5RtqH2rz3DVEFZRSae4kkEZAKqQStjEAZ69C0wyOjCdkO0ps3xF75Pu0D2dSmAkd5aj8oCiwL4lyUr8y32/r2pbjqGaPgl7+kl/b2lNA9vSsIAmg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dcZIrqfp; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719334748; c=relaxed/simple;
+	bh=5qIOOAHvfAeqOEqFJk5OafZk8hgaDep0cVZ3ujVYezs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VeQX0ayAtlGJPVlQvOPaKEW0A6WktGWa1/WcLfbdGazLZ1X5/gpyG2fNKCpwryxLRSpbJuJyBqNrRbfFtTo/Syx/aWK0v/tOW5h/xDi0g4LojLe34Ax3MHzSr3cqfDM6aZyR/L4Km6ZbKMoU6eEw4iQm5sKYxZ3bOGPWKYJyFPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=q8Sqjgkm; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dcZIrqfp"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52ce674da85so2545404e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 09:59:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719334743; x=1719939543; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=re76ACXG9OmJmqLT6FZEpdvG6nPrWdtBRKUnS+4yqic=;
-        b=dcZIrqfp8OrxErBKmBJFIzdyCS202Dt3ebWdcJIAgH9ojEptfEeBJoHFnuE2tD8tTo
-         n4hTO4tUkddJM/uk6P76P3k4grf+lh189wwYCfl152k8KNJOpmKOgB6IlG6I8jV+Iih1
-         CPwb5LSmjl8/fQkqBMgWHhTd4DBlIJva3FbW7SYvqSIaJKGG7JYMKHxzhob8AEqoXDHE
-         qfKR377sCGsYOn1qbvtMyMBNWxdjxta5bY2tb7RqadfwmMnqgB3cVwCOD6kllKi1PoON
-         e6Pxg63EtU6XjKmhGZet5zdEHhNgbuDPf/cdUmo1GT69oZAmTn/x5U+3jTF3rTJfTZk/
-         bZoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719334743; x=1719939543;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=re76ACXG9OmJmqLT6FZEpdvG6nPrWdtBRKUnS+4yqic=;
-        b=cEoW4ifBhtRcvW16jOaQwlZbh5B8JFMSkJPjwslcZh533Qw05zZfweEsbB5ZlQBNp6
-         wnfmnffH6cXb2xLuHRfpGs3IGDkCvUedtNqVhvHU+SQL2/yA+NqnFL6+Y4+Gd77PuLMw
-         HleLNk9c7jK2nrzSb7WGYthNtfPdrCdzufSItL3/iydvKTvKYsjlOcuE6AnUOUONM2qU
-         goDiVWu34sI8tvlozj8xhUS+1FULFaa/BGpl1OfOzjqIiDH8/zXBPxbjBjHun5bbJvy9
-         n3nTyIFzj+wrRXaJXzOtznjdfksBg24yk1rkYtiTl3uL08bK5CNnHhABpEdKIQdVAaHy
-         jCZA==
-X-Forwarded-Encrypted: i=1; AJvYcCVi5FbEMnqgsoKKiYXDlsWO4ddd++ywD0lnst+77hzPqI9eK4vz4ENw34+h7VEWryKUKuMcK1pwL84Qd1896ktRaYDQiliCc7ol+hQZ
-X-Gm-Message-State: AOJu0YwpdCQuEg71wpqKUqZLlUaqKxiM/lvAUjdWROMF/7LqgnOo/0Pl
-	18rdo7XMzfd/qUqu1LOrUlJPVU1ZgWhbRlc74+1k7S3BjHyXhnLiIRyBytYJ3kU=
-X-Google-Smtp-Source: AGHT+IGR7Qhyf8Y3HWNl1SPoUEbvvo2YHcOxUjAhBJioVQV9vrofLD/WBQj8YIQ9FREJo6iOttG1lg==
-X-Received: by 2002:ac2:515d:0:b0:52b:c233:113c with SMTP id 2adb3069b0e04-52ce1835167mr5952139e87.17.1719334743050;
-        Tue, 25 Jun 2024 09:59:03 -0700 (PDT)
-Received: from [127.0.1.1] ([178.197.219.137])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4247d211881sm217969785e9.46.2024.06.25.09.59.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 09:59:02 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Tue, 25 Jun 2024 18:58:45 +0200
-Subject: [PATCH 1/3] ASoC: codecs: lpass-wsa-macro: Drop unused define
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="q8Sqjgkm"
+Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 71CF81F929;
+	Tue, 25 Jun 2024 18:58:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1719334735;
+	bh=IJrbabNzzBhzaeJkC2PMJ7DZ5x3aT19bK8M4kEef8AY=; h=From:To:Subject;
+	b=q8SqjgkmfCwcsM+l5Y5mU8tNqLXP3CDky56Zt4Qzae/FiY4ek98/49rK3XoM4wyu2
+	 r4HI/vWIRvOwkdrrZPQPtz9dXDKD5meMaDUGH/0kg6Z8JYrM5YCrPvi1B4JZhtFNf7
+	 Kq49EXwBz16C4CmWreSdQkh5OylYFhzV2wwTKWL6E3IDx94K9eF/ATQtDMI0/atluN
+	 g5VdXNLNZI+WYLmp8KdnxX+noVF8i4k+2JvcfvY7fqdXnUIN3q6nZJPoRyyHUlwHCN
+	 YBikm+/4Vx1/lUsg17go1VzmlNKkVC8+VAtvuetwy609/MJfElcYyj93501y/cRGUs
+	 MJCq+Tl2NiDfw==
+Date: Tue, 25 Jun 2024 18:58:51 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
+Cc: Andrejs Cainikovs <andrejs.cainikovs@gmail.com>,
+	Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andrejs Cainikovs <andrejs.cainikovs@toradex.com>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] arm64: dts: k3-am625-verdin: enable nau8822 pll
+Message-ID: <20240625165851.GA26676@francesco-nb>
+References: <20240418105730.120913-1-andrejs.cainikovs@gmail.com>
+ <20240425135610.6c6ysoejefuazm63@privatize>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240625-qcom-audio-wsa-second-speaker-v1-1-f65ffdfc368c@linaro.org>
-References: <20240625-qcom-audio-wsa-second-speaker-v1-0-f65ffdfc368c@linaro.org>
-In-Reply-To: <20240625-qcom-audio-wsa-second-speaker-v1-0-f65ffdfc368c@linaro.org>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
- Banajit Goswami <bgoswami@quicinc.com>, Liam Girdwood <lgirdwood@gmail.com>, 
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>
-Cc: alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org, 
- linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=701;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=vF37Z0aZiJEeLWEKoNSeoRo+xDDMR/tNEztnp1b16K4=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmevdR2h79GggPHusd3v4VoaUckqX1xpQHoZro9
- O3/5py+BuSJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZnr3UQAKCRDBN2bmhouD
- 17waEACaU+lphVs4h28nyJ272D/X1VUo+55FfxobbeqYsSpPQ51epzL42gqR6bZv/EAhLTwpt9p
- tIis5PZNOFo84hb8oeOmO+BOQJ2mLXJlXxZqQIyKY5up0QeZVRjsPhiuKEfXgBEMCHNHfHFMN3+
- HphpHgIKzGKXUYKrhe9Ymyz9/idKlT7q+YbJ8kaIMSNGHAmxhnBio7z87BR0u4oepsPiMYb4XRk
- 6OwBj/p0uW9Ux2VOb7qn33XJvVRAxJXLVDQIsktfSKvVKaNQWBZouBalLkU7PpAXhxbZt85qgrA
- X2TgQkWpNalV4iUINTzg1xdLleD6++IOMBvrfyLtotLRV95YQwZjjqCgPXCjVJJJzZTUeVBpJgN
- M8F9oqkjDzJVvPd+85LopPzGg/LN7PeJwumRXczq8KZ6un/s+JJNOrYMadyjc39bULymJ7P/CxJ
- IUne9tVtpFoyvXGI6sivNZ0ZlWhPzMo4ysolyQZW6t/VAXU17mxWsZguBDEbwgNlZZSfbWd1Axu
- AgYjSR37ujOpePfPwL+Qw6/fnZxEtLxoGTvXQ6szdtfzkY7r4AaN3GdZ1IxXqOewTt5Lo8iaOi2
- zGCzV+jMP4w2wcumATat+vyR/pQ/kSw8Xd/n8tGi2foCCe6J3y3xQXqUt/Y3zKtvNRPwfDa0TN7
- KvinIJNSTw+speg==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240425135610.6c6ysoejefuazm63@privatize>
 
-WSA_MACRO_MUX_INP_MASK2 define is not used.
+Hello Nishanth, Vignesh,
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- sound/soc/codecs/lpass-wsa-macro.c | 1 -
- 1 file changed, 1 deletion(-)
+On Thu, Apr 25, 2024 at 08:56:10AM -0500, Nishanth Menon wrote:
+> On 12:57-20240418, Andrejs Cainikovs wrote:
+> [...]
+> 
+> > Signed-off-by: Andrejs Cainikovs <andrejs.cainikovs@toradex.com>
 
-diff --git a/sound/soc/codecs/lpass-wsa-macro.c b/sound/soc/codecs/lpass-wsa-macro.c
-index 6ce309980cd1..d12aff62a868 100644
---- a/sound/soc/codecs/lpass-wsa-macro.c
-+++ b/sound/soc/codecs/lpass-wsa-macro.c
-@@ -235,7 +235,6 @@
- #define NUM_INTERPOLATORS 2
- #define WSA_NUM_CLKS_MAX	5
- #define WSA_MACRO_MCLK_FREQ 19200000
--#define WSA_MACRO_MUX_INP_MASK2 0x38
- #define WSA_MACRO_MUX_CFG_OFFSET 0x8
- #define WSA_MACRO_MUX_CFG1_OFFSET 0x4
- #define WSA_MACRO_RX_COMP_OFFSET 0x40
+Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
 
--- 
-2.43.0
+> > ---
+> > This patch requires https://lore.kernel.org/all/20240409121719.337709-1-andrejs.cainikovs@gmail.com/ to be applied,
+> > if not the audio will just stop working because no code will ever enable the required clock to the codec.
+> 
+> Thanks. lets wait for the dependency patch to be merged to master, and
+> once done, please resubmit this patch. I am going to guess for the next
+> cycle.
+
+Would you mind picking up this patch? The dependency is now merged and
+this should apply cleanly. I can also resend if needed, just let me
+know.
+
+Francesco
+
 
