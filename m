@@ -1,71 +1,77 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E798517623D
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 16:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08062176230;
+	Tue, 25 Jun 2024 16:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719334166; cv=none; b=LJycb6hVHrXi8xP8uA4BKVgtewA3tHu9YCxIGqr7+Hiia1/++Gqnp/JmLiG9gubm29YoUPZy76yL2xjtPwYGQBW2drANB545vbSY98xVimw3TYlcZS1dSbCVIqESrNbzfkYf8ThMDc1M0Dll1W3qOeRw/ygx3lSqauMZ0deTO0g=
+	t=1719334183; cv=none; b=NmIv43yc7TdIhwcciA3Ssw+lKQYhVPTg+0aq7UKhO6vFTlrTxeW21TeZ5BfD6psxKPA7jnwjryZF39umbjbO9slFhOHTPpz6T9iRDuBtmj9vVuTQ1lfz3CCogMpemlTk4EpfLuiX1LmqoHMQr5AX3IUCWVP8pZCk45ww3TyVciM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719334166; c=relaxed/simple;
-	bh=7WBwALYGkHe0OssGLzpAe2cOmIQOzyhvr2ZnXwTvXk0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F+EEr3HsXKp2b4/W1rmky48T4SbhM1PKv/FNG9uLtDkxw0V0KVtkeyGP+H4Z4NqvEVwif38UQIYsriDNTsA/HIOvR57u5mkW4WK35t+Fl4dSQUn5fSZNbEQNYh684qLp39p2tLBwN/6V9lSRd7yaUwm31MM3UsjCzhy/N4Yat2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SKjk20om; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719334183; c=relaxed/simple;
+	bh=9/N/lZxSE7O6j9KicH3kaHG+FZylOMFwRNg/yBKCloI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t/v+lqG5yUddk2yf6ibfNHkxfcs+xwagH+jCvNhOWk0Eu51Px+1z0SOniKRi8RVyCl2zHhdwQ33L0AT00gT8IzpVjB4+GZzwmeZjk/hvatz5u2pP26HS4UP8ZE6rvJd0KQ83khBjagQeK7cL+tvv/DlFNN8VdhauwTjFb1j78gA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l2b0PcRb; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SKjk20om"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2ec58040f39so33624571fa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 09:49:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l2b0PcRb"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a6fe61793e2so217878866b.0;
+        Tue, 25 Jun 2024 09:49:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719334163; x=1719938963; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719334180; x=1719938980; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=REeWtAXLQdcK06O/ssyhbDKxgCQp9yFMmFuJINFQnRo=;
-        b=SKjk20omnXu1uC5jOaAaJx8rINLqi03Hl3X1vhuO8w5H0dNCzYZUn/WN/RnEsLVJbu
-         GnioiixttApQghhFxwhl12qZd+GZDQa6JWm2vkX3yUehX5WpiaqzMN+BN16v1VcGN+dl
-         uXmcwKWdQ0beXRCo7fpxA3OJnGKn8HcUoMK2w8AFd/vme1A7rpvJDEz2Pw/Ze/lbt7Ud
-         6zjZp3cJxRqYUc+Y/A2QGH4ohVF7+J5jzCcwYdxS+atkHX/II/6ixi+uLrmcpTVLtm/K
-         TTRHBNPec5YQ8A2iSWtGi5USbhNhNbcj14PQqMCPPg268U0EY7PKnXsnADelKSi8lhwf
-         bmmg==
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=i8tcHw7piGXCwRcIpKZBGAUeAPhX7LMHTxD2UwRCUME=;
+        b=l2b0PcRb9pwdu8s0K1Wudk7UbVyCyFBCU1+okSr2KCpKL57POsRtoStpFV4u93m3fU
+         grGZtHOSCGeI/ttPxZMWi1HWSaPFpB3OkJfFw5f8HkT1tld8f7OAmmL8pDsJwBEEnGeJ
+         JabNei1SPap9f0pWeTDh4ODB2F2LVOIfCDbUb4/X5Q7CkcURhZptN98nlosBJ/TsY1kU
+         ROT0cVNi1P59Ma68QGTVi/Lzioav4nXVowGH1dgC5MBi5QunkTSBQL+kEQy7BtQig5+e
+         pAqHmkmd8k6cg1e59y+WBmwEPrEhLhSl/ntcjoy9y2c+pnJrQxxoOkDAVbCbT+I1MXht
+         5PDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719334163; x=1719938963;
+        d=1e100.net; s=20230601; t=1719334180; x=1719938980;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=REeWtAXLQdcK06O/ssyhbDKxgCQp9yFMmFuJINFQnRo=;
-        b=qvJbzbTlX6Q5crN5j6ID7fSpZ23f1iT7XGPY9WtShXtNHh8y89uPz721O/kFwIEewj
-         lh/AYgGP4bSYeDKTzYLYqV6n699tmckpHrDrSTlFmkHLCortJOh9+rFd/uMnjMvCrlmI
-         9ZSs3eDUtdCEYk0SLBacm49J5bpOogz8GaPEyfGdyXrvSAr29IW4LiU1wmUrwQ9qopVm
-         7vqUPYK44Ij29y4OxkDKXi7e8tj6xUWTDH3uVsJrGWAOjBWOQoctU6zlPtPdfsEv+sKq
-         nx/2j9OOSwZZOEdlH6GAecTe569u0pJ4lElDeJfO70Wd0lHsP/Y2bsnfAVWeHBDmEiwL
-         D6kA==
-X-Forwarded-Encrypted: i=1; AJvYcCVdq9I78RZfkVDsR5VFQSnCdyU8+48jIlLlH8lWUkyApyfJLDXnFlx3j+3UOI+b845L4z+x/WAJ0vVQdx/uKGJ+MD9omRMhGVU1j9eK
-X-Gm-Message-State: AOJu0YweUeYw/V6SvVi3R/FSqw72I2orVoTFoMOBax3JT9NqYDgQ+QLY
-	8se21fJT2yu3jyDeGROcCuAQoIqwuaURp2k2OYWeKvKzIrGKyj057dccSLlI0xKKUTX1aZFMzua
-	YbfI=
-X-Google-Smtp-Source: AGHT+IGBuyLNjCbPQ995hC2wMffXdWuFAcAmTyiJzKbmrMEfh5HoCsgV31k/cina59eUth0JJHY0LA==
-X-Received: by 2002:a05:6512:46f:b0:52c:9f9e:d8e3 with SMTP id 2adb3069b0e04-52ce064e3d8mr5205362e87.31.1719334160965;
-        Tue, 25 Jun 2024 09:49:20 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52cd63b49e7sm1283003e87.34.2024.06.25.09.49.20
+        bh=i8tcHw7piGXCwRcIpKZBGAUeAPhX7LMHTxD2UwRCUME=;
+        b=Wo2o2ZJO3u9+SKunb6j2pPHGhmDYZSYrQWSDy1uytaW06GmyarOZ99uAjWqEZ/DVMZ
+         LtICOfxdZ8bkE7xIYv7OYvzle26YhtlfsCeVx3hUrZKmXQspl2k/GnNcPymXM8n/sTzP
+         0b5zYrHZVdNvw83AByCWmr7k73RmUGdczGoyFn6icm1XpkpcqIpUeqme0Y5COdRiiohC
+         tKPzocUTygPg374yCFEFbjei/Ml4NNS3OmT3QNpZHZsMfPFoX0L57HnGKRo8VsEeZd0m
+         KCl6XC/TpLu9+P6LOuOMwTU+vI7ZTj49Sd+HRNuSNj53El2WVkZN9gkt8pO3X5RbtT9M
+         3y7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXfYPbyG52hL+HASg9LDOoWTZQQbtNrQgdPOOH0GyCfRXbAkHKRJqDVOuuwiyfQMk1+8EV7x9YoLgq01x4ftYq/Pcr1u6s/PhqTZlAZvMmczNQ1PAkWcMRIyK1752IY8lOba4vKQJxfGg==
+X-Gm-Message-State: AOJu0YxFkWSsviM7MChopzObNuchAwgSotxIAUNlQ/2wUnN+p9DuwpAv
+	8G75Gp1/VnF3BT9gRuWQHzKuwBuAFN20vLHb9insC2cs/krosiHh
+X-Google-Smtp-Source: AGHT+IG1iYnAnB1dQfk+8aYmQF2ecfD43JBj0FrCqW8RDRv+XN+QynXr42cGTxWqNwxe8YLLOqAPmw==
+X-Received: by 2002:a50:ab5b:0:b0:57d:2659:9143 with SMTP id 4fb4d7f45d1cf-57d4bde078cmr6401540a12.37.1719334180082;
+        Tue, 25 Jun 2024 09:49:40 -0700 (PDT)
+Received: from pc638.lan (host-185-121-47-193.sydskane.nu. [185.121.47.193])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d30583e93sm6095989a12.96.2024.06.25.09.49.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 09:49:20 -0700 (PDT)
-Date: Tue, 25 Jun 2024 19:49:19 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Nikita Travkin <nikita@trvn.ru>, 
-	linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [Linux-stm32] [PATCH v2 6/7] usb: typec: ucsi: extract common
- code for command handling
-Message-ID: <k2q7g6ka34o2vgoy5s64nwixqa6qjaok72fuxgircwseyn2k7z@pm56aurq42n6>
-References: <20240621-ucsi-rework-interface-v2-0-a399ff96bf88@linaro.org>
- <20240621-ucsi-rework-interface-v2-6-a399ff96bf88@linaro.org>
- <160e7af5-29c8-49a6-ae4f-dbfc3dd608c1@foss.st.com>
+        Tue, 25 Jun 2024 09:49:39 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc638.lan>
+Date: Tue, 25 Jun 2024 18:49:37 +0200
+To: Nick Bowler <nbowler@draconx.ca>
+Cc: Uladzislau Rezki <urezki@gmail.com>, Hailong Liu <hailong.liu@oppo.com>,
+	Nick Bowler <nbowler@draconx.ca>, linux-kernel@vger.kernel.org,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	linux-mm@kvack.org, sparclinux@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: PROBLEM: kernel crashes when running xfsdump since ~6.4
+Message-ID: <Znr1IQ1mssdNNXbv@pc638.lan>
+References: <ZnVLbCCkvhf5GaTf@pc636>
+ <ZnWICsPgYuBlrWlt@MiWiFi-R3L-srv>
+ <Znljtv5n-6EBgpsF@pc636>
+ <Zno52QBG0g5Z+otD@MiWiFi-R3L-srv>
+ <ZnqcuKt2qrR-wmH3@pc636>
+ <ZnqspTVl/76jM9WD@MiWiFi-R3L-srv>
+ <Znq6tEtCgB6QnnJH@pc638.lan>
+ <Znq/8/HAc/0p6Ja0@MiWiFi-R3L-srv>
+ <ZnrjZRq5-_hemrbD@pc636>
+ <ZnrnADHvOiNcZv9t@MiWiFi-R3L-srv>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,202 +80,92 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <160e7af5-29c8-49a6-ae4f-dbfc3dd608c1@foss.st.com>
+In-Reply-To: <ZnrnADHvOiNcZv9t@MiWiFi-R3L-srv>
 
-On Tue, Jun 25, 2024 at 05:24:54PM GMT, Fabrice Gasnier wrote:
-> On 6/21/24 00:55, Dmitry Baryshkov wrote:
-> > Extract common functions to handle command sending and to handle events
-> > from UCSI. This ensures that all UCSI glue drivers handle the ACKs in
-> > the same way.
+> > > > /**
+> > > >  * cpumask_next - get the next cpu in a cpumask
+> > > >  * @n: the cpu prior to the place to search (i.e. return will be > @n)
+> > > >  * @srcp: the cpumask pointer
+> > > >  *
+> > > >  * Return: >= nr_cpu_ids if no further cpus set.
+> > > 
+> > > Ah, I got what you mean. In the vbq case, it may not have chance to get
+> > > a return number as nr_cpu_ids. Becuase the hashed index limits the
+> > > range to [0, nr_cpu_ids-1], and cpu_possible(index) will guarantee it
+> > > won't be the highest cpu number [nr_cpu_ids-1] since CPU[nr_cpu_ids-1] must
+> > > be possible CPU.
+> > > 
+> > > Do I miss some corner cases?
+> > > 
+> > Right. We guarantee that a highest CPU is available by doing: % nr_cpu_ids.
+> > So we do not need to use *next_wrap() variant. You do not miss anything :)
 > > 
-> > The CCG driver used DEV_CMD_PENDING both for internal
-> > firmware-related commands and for UCSI control handling. Leave the
-> > former use case intact.
+> > Hailong Liu has proposed more simpler version:
 > > 
-> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > ---
-> >  drivers/usb/typec/ucsi/ucsi.c           | 43 +++++++++++++++++++++++++++
-> >  drivers/usb/typec/ucsi/ucsi.h           |  7 +++++
-> >  drivers/usb/typec/ucsi/ucsi_acpi.c      | 46 ++---------------------------
-> >  drivers/usb/typec/ucsi/ucsi_ccg.c       | 21 ++-----------
-> >  drivers/usb/typec/ucsi/ucsi_glink.c     | 47 ++---------------------------
-> >  drivers/usb/typec/ucsi/ucsi_stm32g0.c   | 44 ++--------------------------
-> >  drivers/usb/typec/ucsi/ucsi_yoga_c630.c | 52 ++-------------------------------
-> >  7 files changed, 62 insertions(+), 198 deletions(-)
-> > 
-> > diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
-> > index 4ba22323dbf9..691ee0c4ef87 100644
-> > --- a/drivers/usb/typec/ucsi/ucsi.c
-> > +++ b/drivers/usb/typec/ucsi/ucsi.c
-> > @@ -36,6 +36,48 @@
-> >   */
-> >  #define UCSI_SWAP_TIMEOUT_MS	5000
-> >  
-> > +void ucsi_notify_common(struct ucsi *ucsi, u32 cci)
-> > +{
-> > +	if (UCSI_CCI_CONNECTOR(cci))
-> > +		ucsi_connector_change(ucsi, UCSI_CCI_CONNECTOR(cci));
-> > +
-> > +	if (cci & UCSI_CCI_ACK_COMPLETE &&
-> > +	    test_bit(ACK_PENDING, &ucsi->flags))
-> > +		complete(&ucsi->complete);
-> > +
-> > +	if (cci & UCSI_CCI_COMMAND_COMPLETE &&
-> > +	    test_bit(COMMAND_PENDING, &ucsi->flags))
-> > +		complete(&ucsi->complete);
-> 
-> Hi Dmitry,
-> 
-> I've recently faced some race with ucsi_stm32g0 driver, and have sent a
-> fix for it [1], as you've noticed in the cover letter.
-> 
-> To fix that, I've used test_and_clear_bit() in above two cases, instead
-> of test_bit().
-
-Could you possible describe, why do you need test_and_clear_bit()
-instead of just test_bit()? The bits are cleared at the end of the
-.sync_write(), also there can be no other command (or ACK_CC) submission
-before this one is fully processed.
-
-> 
-> https://lore.kernel.org/linux-usb/20240612124656.2305603-1-fabrice.gasnier@foss.st.com/
-> 
-> > +}
-> > +EXPORT_SYMBOL_GPL(ucsi_notify_common);
-> > +
-> > +int ucsi_sync_control_common(struct ucsi *ucsi, u64 command)
-> > +{
-> > +	bool ack = UCSI_COMMAND(command) == UCSI_ACK_CC_CI;
-> > +	int ret;
-> > +
-> > +	if (ack)
-> > +		set_bit(ACK_PENDING, &ucsi->flags);
-> > +	else
-> > +		set_bit(COMMAND_PENDING, &ucsi->flags);
-> > +
-> > +	ret = ucsi->ops->async_control(ucsi, command);
-> > +	if (ret)
-> > +		goto out_clear_bit;
-> > +
-> > +	if (!wait_for_completion_timeout(&ucsi->complete, 5 * HZ))
-> > +		ret = -ETIMEDOUT;
-> 
-> With test_and_clear_bit(), could return 0, in case of success here.
-
-Oh, I see. So your code returns earlier. I have a feeling that this
-approach is less logical and slightly harder to follow.
-
-Maybe it's easier if it is implemented as:
-
-if (wait_for_completion_timeout(...))
-	return 0;
-
-if (ack)
-	clear_bit(ACK_PENDING)
-else
-	clear_bit(COMMAND_PENDING)
-
-return -ETIMEDOUT;
-
-
-OR
-
-if (!wait_for_completion_timeout(...)) {
-	if (ack)
-		clear_bit(ACK_PENDING)
-	else
-		clear_bit(COMMAND_PENDING)
-
-	return -ETIMEDOUT;
-}
-
-return 0;
-
-But really, unless there is an actual issue with the current code, I'd
-prefer to keep it. It makes it clear that the bits are set and then are
-cleared properly.
-
-> I'd suggest to use similar approach here, unless you see some drawback?
-> 
-> Best Regards,
-> Fabrice
-> 
-> > +
-> > +out_clear_bit:
-> > +	if (ack)
-> > +		clear_bit(ACK_PENDING, &ucsi->flags);
-> > +	else
-> > +		clear_bit(COMMAND_PENDING, &ucsi->flags);
-> > +
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(ucsi_sync_control_common);
-> > +
-> >  static int ucsi_acknowledge(struct ucsi *ucsi, bool conn_ack)
+> > <snip>
+> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > index 11fe5ea208aa..e1e63ffb9c57 100644
+> > --- a/mm/vmalloc.c
+> > +++ b/mm/vmalloc.c
+> > @@ -1994,8 +1994,9 @@ static struct xarray *
+> >  addr_to_vb_xa(unsigned long addr)
 > >  {
-> >  	u64 ctrl;
-> > @@ -1883,6 +1925,7 @@ struct ucsi *ucsi_create(struct device *dev, const struct ucsi_operations *ops)
-> >  	INIT_WORK(&ucsi->resume_work, ucsi_resume_work);
-> >  	INIT_DELAYED_WORK(&ucsi->work, ucsi_init_work);
-> >  	mutex_init(&ucsi->ppm_lock);
-> > +	init_completion(&ucsi->complete);
-> >  	ucsi->dev = dev;
-> >  	ucsi->ops = ops;
+> >         int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
+> > +       int cpu = cpumask_nth(index, cpu_possible_mask);
+> > 
+> > -       return &per_cpu(vmap_block_queue, index).vmap_blocks;
+> > +       return &per_cpu(vmap_block_queue, cpu).vmap_blocks;
+> > <snip>
+> > 
+> > which just takes a next CPU if an index is not set in the cpu_possible_mask.
+> > 
+> > The only thing that can be updated in the patch is to replace num_possible_cpu()
+> > by the nr_cpu_ids.
+> > 
+> > Any thoughts? I think we need to fix it by a minor change so it is
+> > easier to back-port on stable kernels.
 > 
-> [snip]
+> Yeah, sounds good since the regresson commit is merged in v6.3.
+> Please feel free to post this and the hash array patch separately for
+> formal reviewing.
 > 
-> >  	ucsi->ucsi = ucsi_create(dev, &pmic_glink_ucsi_ops);
-> > diff --git a/drivers/usb/typec/ucsi/ucsi_stm32g0.c b/drivers/usb/typec/ucsi/ucsi_stm32g0.c
-> > index 14737ca3724c..d948c3f579e1 100644
-> > --- a/drivers/usb/typec/ucsi/ucsi_stm32g0.c
-> > +++ b/drivers/usb/typec/ucsi/ucsi_stm32g0.c
-> > @@ -61,11 +61,7 @@ struct ucsi_stm32g0 {
-> 
-> [snip]
-> 
-> > -
-> > -	ret = ucsi_stm32g0_async_control(ucsi, command);
-> > -	if (ret)
-> > -		goto out_clear_bit;
-> > -
-> > -	if (!wait_for_completion_timeout(&g0->complete, msecs_to_jiffies(5000)))
-> > -		ret = -ETIMEDOUT;
-> > -	else
-> > -		return 0;
-> > -
-> > -out_clear_bit:
-> > -	if (ack)
-> > -		clear_bit(ACK_PENDING, &g0->flags);
-> > -	else
-> > -		clear_bit(COMMAND_PENDING, &g0->flags);
-> > -
-> > -	return ret;
-> > -}
-> > -
-> >  static irqreturn_t ucsi_stm32g0_irq_handler(int irq, void *data)
-> >  {
-> >  	struct ucsi_stm32g0 *g0 = data;
-> > @@ -449,13 +416,7 @@ static irqreturn_t ucsi_stm32g0_irq_handler(int irq, void *data)
-> >  	if (ret)
-> >  		return IRQ_NONE;
-> >  
-> > -	if (UCSI_CCI_CONNECTOR(cci))
-> > -		ucsi_connector_change(g0->ucsi, UCSI_CCI_CONNECTOR(cci));
-> > -
-> > -	if (cci & UCSI_CCI_ACK_COMPLETE && test_and_clear_bit(ACK_PENDING, &g0->flags))
-> > -		complete(&g0->complete);
-> > -	if (cci & UCSI_CCI_COMMAND_COMPLETE && test_and_clear_bit(COMMAND_PENDING, &g0->flags))
-> > -		complete(&g0->complete);
-> > +	ucsi_notify_common(g0->ucsi, cci);
-> 
-> I can see the fix "test_and_clear_bit()" sent earlier is removed from here.
-> 
-> I'd suggest to use similar approach as here, unless you see some drawback?
-> 
-> Please advise,
-> Best Regards,
-> Fabrice
+Agreed! The patch about hash array i will post later.
 
--- 
-With best wishes
-Dmitry
+> By the way, when I am replying this mail, I check the cpumask_nth()
+> again. I doubt it may take more checking then cpu_possible(), given most
+> of systems don't have gaps in cpu_possible_mask. I could be dizzy at
+> this moment.
+> 
+> static inline unsigned int cpumask_nth(unsigned int cpu, const struct cpumask *srcp)
+> {
+>         return find_nth_bit(cpumask_bits(srcp), small_cpumask_bits, cpumask_check(cpu));
+> }
+> 
+Yep, i do not think it is a big problem based on your noted fact.
+
+Nick, could you please test your machine with below change?
+
+<snip>
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 45e1506d58c3..5458fd2290cf 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -2542,9 +2542,10 @@ static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
+ static struct xarray *
+ addr_to_vb_xa(unsigned long addr)
+ {
+-       int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
++       int index = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
++       int cpu = cpumask_nth(index, cpu_possible_mask);
+
+-       return &per_cpu(vmap_block_queue, index).vmap_blocks;
++       return &per_cpu(vmap_block_queue, cpu).vmap_blocks;
+ }
+
+ /*
+<snip>
+
+Thank you in advance!
+
+--
+Uladzislau Rezki
