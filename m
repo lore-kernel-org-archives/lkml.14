@@ -1,121 +1,169 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1072617D8BE
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 20:52:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 283F317E444
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 20:52:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719348742; cv=none; b=jQGScwgyzDfzqkQ4RccnOlC/5hkWKPNoQsBRev9olxAPzr1k2M2rAjKhKWA3Sgxqzx2WlZBP92v6GSwnOFkRkpuUlWk15bh9uWLi7VuwjMCQJZk4GXSYn+HajzVUucCPrWxMmCQ7V+A7RvtG8e++uMleWclD3Zv14EYdaCzdpKM=
+	t=1719348748; cv=none; b=LSSLJI8/Pp6A6SnH6BsifCGx58Yi7sJkoVvI0plVOydHVvOQXvZWr/QBuMVBV4YYix4NkCT8y6FS9Y25f9OUZ/ddmGcLceSVLflDPUgT3TaOyPB8aWNH8xQW7lnLW/DsXh7drif+8Fj4QHurZEq+fqGFNe77Ka4iCAgXSZep6rM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719348742; c=relaxed/simple;
-	bh=hiJgA6/DnnANN9qeLVXHvmiZDMqRcf+ipIv+ikZ+/GE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JbFW54Ut7s5V/Kvm8+IdqhzVcztyuIY7a2T+MfvbnkRACbu0d7B+jVYz8LWa5w6hT2HO7HojjdPAXvUSVDJ/ETDzUbkA7Ek6h4mSPEDRkJXoI1rm30YE0Fwi9hIxIf6IRkz18Qwn4hL0RGALCkyipVQOfLMmVCKP5ELcHdGzcjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MBKqwgtR; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719348748; c=relaxed/simple;
+	bh=uLpyspHsOJZpl8ujIBjIKTlFGOw88JhZ313fyg7H/vE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mAUHzAvdjv+8fZlRcVRD5ckQYwshj237quHZZnvORkswPd4r+zr/NdTidFbmad9HDRfIbkBbUu8A7hWR5NJdsTpS2CPzDLmxInw1hY9zuxyPdyw9rI9kvxnlkFwyoQXGbOD98BqgqeGqFYPJY3JNuUzMC1+mIVyvcgYpyqX8xSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SbhQ5+fi; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MBKqwgtR"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-57c74085d57so1010837a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 13:52:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719348739; x=1719953539; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PHRkc9t07SlstseLeIgt/BF9i+oxbwcefEU9UF9cIXw=;
-        b=MBKqwgtRlh4xGDMC+KaRYcaY/jJ63qL3Yg+uRb2LsuFHCA86iTN/8b4NJAh5tx+rvt
-         kBCNzwMTER5D/PH59slGsifCoIVaUzec/Qz9HXEy/CKm+ZIUNzQwsf97qOainu//LAg8
-         t4pccAR7kQwVIgd/SdFOwLvlw8fNqeNiWMbDYdcjLkqtNs8U3DA+demZaSsivA5BvGw0
-         g6IVTokAzXotcv4BlzP7ON7LzaphIHbSq7X0KuE59XDKbPZGlcckcWUQEtKmbboqqcN3
-         UMlUe4bF1+Qtr2Ant0r1sWQs7XEewIcJWVFj9GqqFqFQGPUgcWH9LJg3ld/KTW0iGRLO
-         Psiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719348739; x=1719953539;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PHRkc9t07SlstseLeIgt/BF9i+oxbwcefEU9UF9cIXw=;
-        b=tre4BbGa6iYPH1hCjp1UJ5DhgFKTxCJ+REed2wswmI/vsEEVc3q6anSoYOFLTco5Al
-         N3v0WHKBAEJRVXofOWkL3OaAXu0i01shC+WgEXyLBYj0AJKyaU2xBI3BWLtZeVAJA8Kk
-         tPOtRdpTOGGcW2wruoSX84M19dgyP3trcQ8aIseVMkAozb8fZPFk4kxiCtsUKEsQzz/I
-         0643ISQGFdWni6VCDSnnzjw0wHGeYMivjN+IhnCQEpn2OU8yVrYR6amFzwls0esViy0J
-         2rWnGL9Ej6ssF7unjSdf6TpxT+10mf4Ji53PRUP4jVyJ3MNSBksOY+w07qOhxyjxOULV
-         i/9A==
-X-Forwarded-Encrypted: i=1; AJvYcCWwihY2zXQaZ+J1rl0VtPkEZaQfE2vQlZJMmV8QvYRVZ1owPTU3KH2y2h7qEOd/eQu05GVCbkEIymergsKeg2lp0G2y+2cNVDlRCCy8
-X-Gm-Message-State: AOJu0YxCiRR/XauvswEAacJ4LenSuGMcBCB5hFtWgC3J9lxB8IjMtAS/
-	89LvELO7DuJ+3uxbz+n2y8x/dRPNdXmegmIbMk3x6dO3gCA/z8hQ
-X-Google-Smtp-Source: AGHT+IGJnMiPU6FZQ9JOoLfal1V/WdfxPP5gjVBj6ljb7cVv+CJoVMW8AM6Z0i7Q6QmMjOqdkU49BA==
-X-Received: by 2002:a05:6402:40d5:b0:57d:432a:582f with SMTP id 4fb4d7f45d1cf-57d432a5e3amr8476020a12.1.1719348739093;
-        Tue, 25 Jun 2024 13:52:19 -0700 (PDT)
-Received: from [192.168.0.104] (p57935a9b.dip0.t-ipconnect.de. [87.147.90.155])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d3056301bsm6349566a12.89.2024.06.25.13.52.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Jun 2024 13:52:18 -0700 (PDT)
-Message-ID: <9dc47763-1c44-4283-8692-5e7dce14a0e2@gmail.com>
-Date: Tue, 25 Jun 2024 22:52:18 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SbhQ5+fi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719348744;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Mmiz7N4bo+YXsTzfcC89n0DjJE2KKXEsJFR42MeBhh8=;
+	b=SbhQ5+fiaRzFxlS51nU+1kxdrcLoXVrA7yLwoR2cPa/grbQuj8xiDNVAxTxd/6MwaHhhnw
+	SjGOQIuTmbMFogw84NFkRN/nf5Bg46Vy9Am6zZYT0p5x58oNF/iBWwFsNkFatrGI4qUFMN
+	cz9ScsjMnOpsFF09jvdLJR+cMYEPqmY=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-97-_Kt5agcLPaaB9DvZuz1TyQ-1; Tue,
+ 25 Jun 2024 16:52:17 -0400
+X-MC-Unique: _Kt5agcLPaaB9DvZuz1TyQ-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9862819560A0;
+	Tue, 25 Jun 2024 20:52:16 +0000 (UTC)
+Received: from antares.redhat.com (unknown [10.39.193.93])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5E2281955E72;
+	Tue, 25 Jun 2024 20:52:13 +0000 (UTC)
+From: Adrian Moreno <amorenoz@redhat.com>
+To: netdev@vger.kernel.org
+Cc: aconole@redhat.com,
+	echaudro@redhat.com,
+	horms@kernel.org,
+	i.maximets@ovn.org,
+	dev@openvswitch.org,
+	Adrian Moreno <amorenoz@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH net-next v5 00/10] net: openvswitch: Add sample multicasting.
+Date: Tue, 25 Jun 2024 22:51:43 +0200
+Message-ID: <20240625205204.3199050-1-amorenoz@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] staging: rtl8192e: Fix conflicting types error with
- net_device.
-To: Teddy Engel <engel.teddy@gmail.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- oe-kbuild-all@lists.linux.dev, devel@driverdev.osuosl.org,
- linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Cc: kernel test robot <lkp@intel.com>
-References: <20240625163334.11117-1-engel.teddy@gmail.com>
-Content-Language: en-US
-From: Philipp Hortmann <philipp.g.hortmann@gmail.com>
-In-Reply-To: <20240625163334.11117-1-engel.teddy@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On 6/25/24 18:33, Teddy Engel wrote:
-> Add a pre-declaration of struct net_device so the compiler is able to
-> use rtl_pci.h / rtl_cam.h.
-> 
-> Signed-off-by: Teddy Engel <engel.teddy@gmail.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202406250858.L8rJMHQm-lkp@intel.com/
-> Fixes: 7dff0b27d9c8 ("staging: rtl8192e: Remove unnecessary pre-declaration of struct net_device")
-> ---
-> v3: Replace ad-hoc commit id / subject by expected Fixes tag.
-> v2: Add commit id / commit subject  under description.
-> 
->   drivers/staging/rtl8192e/rtl8192e/rtl_cam.h | 2 ++
->   drivers/staging/rtl8192e/rtl8192e/rtl_pci.h | 2 ++
->   2 files changed, 4 insertions(+)
-> 
-> diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_cam.h b/drivers/staging/rtl8192e/rtl8192e/rtl_cam.h
-> index 3a5635494385..9deffdf96072 100644
-> --- a/drivers/staging/rtl8192e/rtl8192e/rtl_cam.h
-> +++ b/drivers/staging/rtl8192e/rtl8192e/rtl_cam.h
-> @@ -12,6 +12,8 @@
->   
->   #include <linux/types.h>
->   
-> +struct net_device;
-> +
->   void rtl92e_cam_reset(struct net_device *dev);
->   void rtl92e_enable_hw_security_config(struct net_device *dev);
->   void rtl92e_set_key(struct net_device *dev, u8 EntryNo, u8 KeyIndex,
-> diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_pci.h b/drivers/staging/rtl8192e/rtl8192e/rtl_pci.h
-> index c645775b2150..3e39c4835ac8 100644
-> --- a/drivers/staging/rtl8192e/rtl8192e/rtl_pci.h
-> +++ b/drivers/staging/rtl8192e/rtl8192e/rtl_pci.h
-> @@ -13,6 +13,8 @@
->   #include <linux/types.h>
->   #include <linux/pci.h>
->   
-> +struct net_device;
-> +
->   bool rtl92e_check_adapter(struct pci_dev *pdev, struct net_device *dev);
->   
->   #endif
+** Background **
+Currently, OVS supports several packet sampling mechanisms (sFlow,
+per-bridge IPFIX, per-flow IPFIX). These end up being translated into a
+userspace action that needs to be handled by ovs-vswitchd's handler
+threads only to be forwarded to some third party application that
+will somehow process the sample and provide observability on the
+datapath.
 
-Tested-by: Philipp Hortmann <philipp.g.hortmann@gmail.com>
+A particularly interesting use-case is controller-driven
+per-flow IPFIX sampling where the OpenFlow controller can add metadata
+to samples (via two 32bit integers) and this metadata is then available
+to the sample-collecting system for correlation.
+
+** Problem **
+The fact that sampled traffic share netlink sockets and handler thread
+time with upcalls, apart from being a performance bottleneck in the
+sample extraction itself, can severely compromise the datapath,
+yielding this solution unfit for highly loaded production systems.
+
+Users are left with little options other than guessing what sampling
+rate will be OK for their traffic pattern and system load and dealing
+with the lost accuracy.
+
+Looking at available infrastructure, an obvious candidated would be
+to use psample. However, it's current state does not help with the
+use-case at stake because sampled packets do not contain user-defined
+metadata.
+
+** Proposal **
+This series is an attempt to fix this situation by extending the
+existing psample infrastructure to carry a variable length
+user-defined cookie.
+
+The main existing user of psample is tc's act_sample. It is also
+extended to forward the action's cookie to psample.
+
+Finally, a new OVS action (OVS_SAMPLE_ATTR_EMIT_SAMPLE) is created.
+It accepts a group and an optional cookie and uses psample to
+multicast the packet and the metadata.
+
+--
+v4 -> v5:
+- Rebased.
+- Removed lefover enum value and wrapped some long lines in selftests.
+
+v3 -> v4:
+- Rebased.
+- Addressed Jakub's comment on private and unused nla attributes.
+
+v2 -> v3:
+- Addressed comments from Simon, Aaron and Ilya.
+- Dropped probability propagation in nested sample actions.
+- Dropped patch v2's 7/9 in favor of a userspace implementation and
+consume skb if emit_sample is the last action, same as we do with
+userspace.
+- Split ovs-dpctl.py features in independent patches.
+
+v1 -> v2:
+- Create a new action ("emit_sample") rather than reuse existing
+  "sample" one.
+- Add probability semantics to psample's sampling rate.
+- Store sampling probability in skb's cb area and use it in emit_sample.
+- Test combining "emit_sample" with "trunc"
+- Drop group_id filtering and tracepoint in psample.
+
+rfc_v2 -> v1:
+- Accommodate Ilya's comments.
+- Split OVS's attribute in two attributes and simplify internal
+handling of psample arguments.
+- Extend psample and tc with a user-defined cookie.
+- Add a tracepoint to psample to facilitate troubleshooting.
+
+rfc_v1 -> rfc_v2:
+- Use psample instead of a new OVS-only multicast group.
+- Extend psample and tc with a user-defined cookie.
+
+Adrian Moreno (10):
+  net: psample: add user cookie
+  net: sched: act_sample: add action cookie to sample
+  net: psample: skip packet copy if no listeners
+  net: psample: allow using rate as probability
+  net: openvswitch: add emit_sample action
+  net: openvswitch: store sampling probability in cb.
+  selftests: openvswitch: add emit_sample action
+  selftests: openvswitch: add userspace parsing
+  selftests: openvswitch: parse trunc action
+  selftests: openvswitch: add emit_sample test
+
+ Documentation/netlink/specs/ovs_flow.yaml     |  17 ++
+ include/net/psample.h                         |   5 +-
+ include/uapi/linux/openvswitch.h              |  31 +-
+ include/uapi/linux/psample.h                  |  11 +-
+ net/openvswitch/Kconfig                       |   1 +
+ net/openvswitch/actions.c                     |  63 +++-
+ net/openvswitch/datapath.h                    |   3 +
+ net/openvswitch/flow_netlink.c                |  33 ++-
+ net/openvswitch/vport.c                       |   1 +
+ net/psample/psample.c                         |  16 +-
+ net/sched/act_sample.c                        |  12 +
+ .../selftests/net/openvswitch/openvswitch.sh  | 114 +++++++-
+ .../selftests/net/openvswitch/ovs-dpctl.py    | 272 +++++++++++++++++-
+ 13 files changed, 563 insertions(+), 16 deletions(-)
+
+-- 
+2.45.1
+
