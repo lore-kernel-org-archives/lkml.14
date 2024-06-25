@@ -1,79 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BA7171668;
-	Tue, 25 Jun 2024 15:04:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 063FA171668;
+	Tue, 25 Jun 2024 15:04:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719327853; cv=none; b=VO/n4UG6X7I64IbaLd0Zba9ykmkaoBpbx1Q8E372+kk0QHkDHG1xWtCjDA/Q+ve65VU/mP+G/cSBdxLJTP5C48+El9IEY7JRSwHyN71D7Wzpo4gVuVl0sDkTDr7k+Sdkf2OC4wsEKYuQPRMmwhAlOfKHemUj0o48wzw/UA+vVIk=
+	t=1719327858; cv=none; b=aK/DY2/6V1g8FqPY5hLY6uzTS3Zu972eYedBz/Y3Pd44p51lndScsGmBCR9yYkdI/daUKlUXJjf0YRBwL5aFBWWNuEz14Bz3AZDcep6t9MeHf6LdzBCQV/K04J4F4j/U0VGooS00ynC9Vlfe8vGvb0HjQKG8VaP6w44j8Bip3wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719327853; c=relaxed/simple;
-	bh=JCvd4rZMOaaN102kR77kI64aSz22B2UiXs5usMz1fmM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cpKzEXBDKlHGSBlHalmXbcJZBT1uvbMmfncchHT49CCJriKup+iu0BmvZ+RQirZqphSJ2nn+SIwiSZSehrUctdxZ5P+ldJ2DOnGLGFGoOlj8DdN7BKTrpMeq//ZQeel8HaDWhr8+4WTavofRxgvXtZAu2GLpVogiHtsR5hB8FkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=EC7JKyaV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719327858; c=relaxed/simple;
+	bh=daws7+gY8b6XFlV57O+J5ZaQ5dAS4S0GI4Vh7sgzmHk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=CngNFIctV38TYkLxSJAMMjONta2kW23XirQp14+dDN1XV43LUBchVVYYVoyZ5weaauDKvmme0BGU/ssgHD9HhEUcygjgfDClSiDWsVW8uCXziR8SPJD08IETomvk6RaNJ7fDO2A1CptfI7lI4fOoF/tyLzJuIDYkV04ynEgD2SU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ktyRcfaf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="EC7JKyaV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ECECC32781;
-	Tue, 25 Jun 2024 15:04:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1719327852;
-	bh=JCvd4rZMOaaN102kR77kI64aSz22B2UiXs5usMz1fmM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EC7JKyaV6zPO+6SOr+lxepS4w7pdtnBhuh4K7zl3YEa3Ni+Tbyu5JPN8BWCvf0CGg
-	 lCFDESG71WlabGvggULEKmMZl0tjSRejyMg0WquPCyn+BfwMGYggClqLLE0D4gqTTJ
-	 tyzMDr8xxE8DU8vH6R/PWy/HToCQTFhmN94XIHZI=
-Date: Tue, 25 Jun 2024 17:04:10 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Guenter Roeck <linux@roeck-us.net>, chuck.lever@oracle.com
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	allen.lkml@gmail.com, broonie@kernel.org
-Subject: Re: [PATCH 5.10 000/770] 5.10.220-rc1 review
-Message-ID: <2024062543-magnifier-licking-ab9e@gregkh>
-References: <20240618123407.280171066@linuxfoundation.org>
- <e8c38e1c-1f9a-47e2-bdf5-55a5c6a4d4ec@roeck-us.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ktyRcfaf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7E68C32782;
+	Tue, 25 Jun 2024 15:04:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719327857;
+	bh=daws7+gY8b6XFlV57O+J5ZaQ5dAS4S0GI4Vh7sgzmHk=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=ktyRcfafUUhIMsXf5oneBK+snSlpQeugkhVjZE2YRX5MacnN8eomwVmH/eXWYbndy
+	 Bbv+Hx2utIGhm+2Tgc3SusbwTiEYQ5OIXkZH3656sxcyd+0s7NNLxTJhvGUM5Oivq3
+	 eFn5Wm4YeM3x92jJgPhEjh1KSPLi3m6EFl7saSY8t8nlY+BcHMKrvLkYL8yM8HubqO
+	 dlq1aVbcRdejCvBPVb3yN4cYI2+bQc0sFxLY4+Iz9xIWFRaKdINYWnQ6eq6OTiuVDA
+	 yB8jD89Y9G58EIlWYbeIfvxaB9tWZ2L15ajbLt1ApY7RMP3ccjRVbPpYSRL5SK1mGe
+	 IVALtQ/PynU2w==
+From: Mark Brown <broonie@kernel.org>
+Date: Tue, 25 Jun 2024 15:57:58 +0100
+Subject: [PATCH v9 30/39] kselftest/arm64: Add GCS as a detected feature in
+ the signal tests
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e8c38e1c-1f9a-47e2-bdf5-55a5c6a4d4ec@roeck-us.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240625-arm64-gcs-v9-30-0f634469b8f0@kernel.org>
+References: <20240625-arm64-gcs-v9-0-0f634469b8f0@kernel.org>
+In-Reply-To: <20240625-arm64-gcs-v9-0-0f634469b8f0@kernel.org>
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+ Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <maz@kernel.org>, 
+ Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Arnd Bergmann <arnd@arndb.de>, 
+ Oleg Nesterov <oleg@redhat.com>, Eric Biederman <ebiederm@xmission.com>, 
+ Shuah Khan <shuah@kernel.org>, 
+ "Rick P. Edgecombe" <rick.p.edgecombe@intel.com>, 
+ Deepak Gupta <debug@rivosinc.com>, Ard Biesheuvel <ardb@kernel.org>, 
+ Szabolcs Nagy <Szabolcs.Nagy@arm.com>, Kees Cook <kees@kernel.org>
+Cc: "H.J. Lu" <hjl.tools@gmail.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Florian Weimer <fweimer@redhat.com>, Christian Brauner <brauner@kernel.org>, 
+ Thiago Jung Bauermann <thiago.bauermann@linaro.org>, 
+ Ross Burton <ross.burton@arm.com>, linux-arm-kernel@lists.infradead.org, 
+ linux-doc@vger.kernel.org, kvmarm@lists.linux.dev, 
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
+ linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.14-dev-d4707
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1894; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=daws7+gY8b6XFlV57O+J5ZaQ5dAS4S0GI4Vh7sgzmHk=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBmetuJcOEMNZAQtPlzVsJjV28kEQ6qOU+DbPTfCM+4
+ pCN9TQiJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZnrbiQAKCRAk1otyXVSH0Jr1B/
+ 4gvjE2wKXGGGApQ5q74/oKwz+A0wC0yMn4POTbhvg7vf+Qm5ARXSMnRyDI8WdzNGBJGoV4SDJEtRMo
+ m+xdUxOHHnBGSehO6j7cvyja0YabxZRMPHJIrwFQEajUFHFCesNSCQM2g8hwLPKxDKV6htRjzzxZY6
+ zE5BU0AX9RdoUt/E2ktOkhUk62fGSsj1mJaZShFKAMvUVmFPqj3bdQ2emXGVqbeZSGsQBxPEGWO/VI
+ m1m6GgTbIewLcBrlWRrLfb+Tf9xAKVBMfSRmNqFjnwB0eBpl4sLgC5szgoySN1GaJUUyvKgkiOYkBW
+ jy97koY53ucYwaAhvHv+wf/hhgJmJe
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On Tue, Jun 25, 2024 at 07:48:00AM -0700, Guenter Roeck wrote:
-> On 6/18/24 05:27, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.10.220 release.
-> > There are 770 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Thu, 20 Jun 2024 12:32:00 +0000.
-> > Anything received after that time might be too late.
-> > 
-> 
-> [ ... ]
-> > Chuck Lever <chuck.lever@oracle.com>
-> >      SUNRPC: Prepare for xdr_stream-style decoding on the server-side
-> > 
-> The ChromeOS patches robot reports a number of fixes for the patches
-> applied in 5.5.220. This is one example, later fixed with commit
-> 90bfc37b5ab9 ("SUNRPC: Fix svcxdr_init_decode's end-of-buffer
-> calculation"), but there are more. Are those fixes going to be
-> applied in a subsequent release of v5.10.y, was there a reason to
-> not include them, or did they get lost ?
+In preparation for testing GCS related signal handling add it as a feature
+we check for in the signal handling support code.
 
-I saw this as well, but when I tried to apply a few, they didn't, so I
-was guessing that Chuck had merged them together into the series.
+Reviewed-by: Thiago Jung Bauermann <thiago.bauermann@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ tools/testing/selftests/arm64/signal/test_signals.h       | 2 ++
+ tools/testing/selftests/arm64/signal/test_signals_utils.c | 3 +++
+ 2 files changed, 5 insertions(+)
 
-I'll defer to Chuck on this, this release was all his :)
+diff --git a/tools/testing/selftests/arm64/signal/test_signals.h b/tools/testing/selftests/arm64/signal/test_signals.h
+index 1e6273d81575..7ada43688c02 100644
+--- a/tools/testing/selftests/arm64/signal/test_signals.h
++++ b/tools/testing/selftests/arm64/signal/test_signals.h
+@@ -35,6 +35,7 @@ enum {
+ 	FSME_BIT,
+ 	FSME_FA64_BIT,
+ 	FSME2_BIT,
++	FGCS_BIT,
+ 	FMAX_END
+ };
+ 
+@@ -43,6 +44,7 @@ enum {
+ #define FEAT_SME		(1UL << FSME_BIT)
+ #define FEAT_SME_FA64		(1UL << FSME_FA64_BIT)
+ #define FEAT_SME2		(1UL << FSME2_BIT)
++#define FEAT_GCS		(1UL << FGCS_BIT)
+ 
+ /*
+  * A descriptor used to describe and configure a test case.
+diff --git a/tools/testing/selftests/arm64/signal/test_signals_utils.c b/tools/testing/selftests/arm64/signal/test_signals_utils.c
+index 0dc948db3a4a..89ef95c1af0e 100644
+--- a/tools/testing/selftests/arm64/signal/test_signals_utils.c
++++ b/tools/testing/selftests/arm64/signal/test_signals_utils.c
+@@ -30,6 +30,7 @@ static char const *const feats_names[FMAX_END] = {
+ 	" SME ",
+ 	" FA64 ",
+ 	" SME2 ",
++	" GCS ",
+ };
+ 
+ #define MAX_FEATS_SZ	128
+@@ -329,6 +330,8 @@ int test_init(struct tdescr *td)
+ 			td->feats_supported |= FEAT_SME_FA64;
+ 		if (getauxval(AT_HWCAP2) & HWCAP2_SME2)
+ 			td->feats_supported |= FEAT_SME2;
++		if (getauxval(AT_HWCAP2) & HWCAP2_GCS)
++			td->feats_supported |= FEAT_GCS;
+ 		if (feats_ok(td)) {
+ 			if (td->feats_required & td->feats_supported)
+ 				fprintf(stderr,
 
-thanks,
+-- 
+2.39.2
 
-greg k-h
