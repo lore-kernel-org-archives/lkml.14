@@ -1,149 +1,311 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88F4154C03
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 11:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B581494A0;
+	Tue, 25 Jun 2024 11:48:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719315926; cv=none; b=EoPliFbHrJkkRMhdICcs5yzOx0suZHURIavTgaOVbksX7OWmLfGHhHgVKaI243XAvhWtYJg+KTYs8zLH68wwxTWdSt4lTME83kRJDHLnwuNRSGxFDWcT/uKT4HHihL4UkWdXQgObPzNZKNClS7LnarRmPJpKYOQ7No0AnRyvKTw=
+	t=1719316129; cv=none; b=pCE6J6FeAOsjYsSozNfsX27lKtAiKbIANlHy0MfqSQsMyuNC++vKRaEc02EpeC/uHfqbJjqlGE46SLOp3Ic+im3InG27c0hqboBg5HGrM0NT2ZdcCl08LZ2kzgQr4Jk2WHmz3rUv6O8Kpxo6A/G/NimJ4cF87HDnCK6HnUnwEfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719315926; c=relaxed/simple;
-	bh=wu4prykytf2AM+/fQHl+GXpgJchAjyAXSdSuKMRSYNU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eiiIXGbQ1a8xik8eL6IGyVq6GqR0yNE477tVd1142hbIEsBv/dd9TA4aIybTwubLtdnY3m5V+NBUN8KhuhQk80TsH6pXBy1Ql1jUOZ9mBDwjcCKNSWiJSXsQgIxsXcV7coizxklipE2hA0vxNMOppI9xeYAS7hbNf9lJUKhvrcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=QWIe5at1; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1719316129; c=relaxed/simple;
+	bh=Q69OCz7ZRS/rC3enEzWLPTObmcriBlwPCJJnLNGLq/w=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=gFluu81NWM5D9fX2PAmp6xLYD8Gf6qhRtnS4NszyEbtfD9fhyQSURQr2gBa26ewvie613zfn9TSXpKyCWxPPNqpBc4t57cHInJNVPJ9WO9vO3BSQWHdEFlx/ziqsiT+uhpB9WrmJryJgIveMliyINvcXBf26XDB2HgAhrnuhfZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LfQ9I13T; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="QWIe5at1"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-57d20d89748so5193560a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 04:45:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719315922; x=1719920722; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DMUhzznUZed7QosruqCaiTofY87z0Rh5ZDjCpva9+sA=;
-        b=QWIe5at1o8RJK6o12ZQL8QWh5uGvNNWilbN+mHYodhQ0tFORZ4eZUkAGjkj5aQxSLW
-         SNgkKtlVfO9Gwj0hCOeSS1JXD34daCopjRpjM5FpF3SfMWwK7rvqAv+YitRXqc99xbR0
-         HWen3yWXn0/N/iNsftpRdAR84n/7emcALeaNu4cn+Z25i/nLFBWfKlwaqqlIy1/lAUf6
-         YuV5f8wrbZhG8wSRh+oqxi8fQCupQSkqiUmB2W60nObFUejpCWlm4Njd69iQegCvzPga
-         lFCpZSmfydofwgBo99BcJWOCpxnF1kxncJOzvvCYlVgOKfBpMS34h3CurmFGxbG+X6oV
-         h5NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719315922; x=1719920722;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DMUhzznUZed7QosruqCaiTofY87z0Rh5ZDjCpva9+sA=;
-        b=RnbhjZJyt/fy75+Z6LGGk/nWmjLjgcMP3h8/izMqTgWJBW3rD6j6chlvjjl+WnobOf
-         fHLghUjXiEzA8oiUViiwQu0pRb7dv/ksW7sFqQW83S5oaILkTtbyRqceVn1dA5r1Y7Ts
-         P0TEossWJxOd68FQlcqrvwRgFGuVOL1V0UHfTmvHZOqmZTBn2u+hVGPdWm5O1gXj2dmH
-         nr/TVasz40Zun9SX9IdttKt5SIoVy39CtX6cnoR/HB4u/f8pAZ0H4Ualyw4pB7WzhG6j
-         rOSR48F3HD7iWMbnGwIYizaGNJdVomO18ilMlj/A2bw4Wnk7UMBtFh76IiR3r4eeCYEU
-         PKzw==
-X-Forwarded-Encrypted: i=1; AJvYcCVmGCvypTNOsXYcv0qpVf9wPDLCR6/lOEv4b1E+bUTgV/chGgQLIii1jVKcFHFcOi7QBj817gU2Ek6/XCdmnSqVzkYPb0OlMJlttcKd
-X-Gm-Message-State: AOJu0YxqU5cAU6DOaphXmD2043NW1j26n8Wa0nVEojhreqjJhQ42YS3A
-	peYe4TR0PBpvnrd6skHKU61mbqdVwG/g6HyKZVGg47hAs1wMvQzm3DBgjb2lOyHYBfUF9V6NmqU
-	X5O0fXGBkjamGvBqaDc3pM9SuDwa+1OdalTz68g==
-X-Google-Smtp-Source: AGHT+IH9oE5avAcWE1dPfuPWXIMdR/bUBTzCledqBKIgAA1sscmeeXwl9hobU0kHO9Oj+2sOIr59kjUvaPz1Cy6Hh38=
-X-Received: by 2002:a17:907:c78e:b0:a6f:bc02:a008 with SMTP id
- a640c23a62f3a-a7242c4de49mr533457666b.4.1719315921872; Tue, 25 Jun 2024
- 04:45:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LfQ9I13T"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45PBaHn4000691;
+	Tue, 25 Jun 2024 11:48:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-type:mime-version:subject:from:in-reply-to:date:cc
+	:content-transfer-encoding:message-id:references:to; s=pp1; bh=W
+	ICUOPn6G8vaIEnI5sjdZgE7qeNqV5Cn8Hfz1bsE0NU=; b=LfQ9I13T3l0ZpsRrX
+	3Yf13itfYwyPr0MwnJK+JFnWz7iQ2C1HbZkNlMpGBoN9WmarIqrGPboQddClUyFE
+	tpoJEg8ShxUB1V5VoBKO109UOKMVbp4e2V1rnH9aAWnTSHDGLIpuuLTvDdtbor6I
+	akEtRToF5iROjzj9dxzKAjGFm5d8Y03Sm7yMit2JwwfOu8lKlnGcGFDFiXxb7E2q
+	2kSbF+udQD3pscvaebgjxNXaKMsMR+bnAgnn9okjrbduGurKF3KlBb0+0/C5zSd4
+	xuCOZZBXnXOqDExekPmHefJCc9KmbbyBTZ1WmfYao0zYDhAhW9X78kJDOomIvCYL
+	4cXvA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yyw22016v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Jun 2024 11:48:32 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45PBmVj3017340;
+	Tue, 25 Jun 2024 11:48:31 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yyw22016r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Jun 2024 11:48:31 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45PAWAdv018093;
+	Tue, 25 Jun 2024 11:48:31 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yx8xu6c73-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Jun 2024 11:48:30 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45PBmP2M46465520
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 25 Jun 2024 11:48:27 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 68B1B2004B;
+	Tue, 25 Jun 2024 11:48:25 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CA48420040;
+	Tue, 25 Jun 2024 11:48:22 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.30.249])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 25 Jun 2024 11:48:22 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <tencent_7721F6B72F58AA6154DFBDFF@qq.com>
-In-Reply-To: <tencent_7721F6B72F58AA6154DFBDFF@qq.com>
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-Date: Tue, 25 Jun 2024 13:45:10 +0200
-Message-ID: <CAHVXubhkrDv3Fx1KH-jjjWjo-LGKBMabvafAPsDZeSpGMEt-gg@mail.gmail.com>
-Subject: Re: [PATCH] riscv: Only flush the mm icache when setting an exec pte
-To: =?UTF-8?B?5qGC5YW1?= <guibing@nucleisys.com>
-Cc: aou <aou@eecs.berkeley.edu>, linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-riscv <linux-riscv@lists.infradead.org>, palmer <palmer@dabbelt.com>, 
-	"paul.walmsley" <paul.walmsley@sifive.com>, =?UTF-8?B?5pa55Y2O5ZCv?= <hqfang@nucleisys.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
+Subject: Re: [V4 01/16] tools/perf: Move the data structures related to
+ register type to header file
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <ZnpShR7zd9cVdxSj@google.com>
+Date: Tue, 25 Jun 2024 16:24:58 +0530
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
+        maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <0AF30B3F-AD13-4398-AC0F-AA6B5425D4AA@linux.vnet.ibm.com>
+References: <20240614172631.56803-1-atrajeev@linux.vnet.ibm.com>
+ <20240614172631.56803-2-atrajeev@linux.vnet.ibm.com>
+ <ZnpShR7zd9cVdxSj@google.com>
+To: Namhyung Kim <namhyung@kernel.org>
+X-Mailer: Apple Mail (2.3774.600.62)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Wx4xQ1HC-ykBn5uzAbPblL6G-qjztymv
+X-Proofpoint-ORIG-GUID: JwmN6Qul-YFYonxRwifTiBMGpHnaCfmb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-25_06,2024-06-25_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 spamscore=0 adultscore=0 mlxscore=0 clxscore=1015 phishscore=0
+ mlxlogscore=999 impostorscore=0 suspectscore=0 lowpriorityscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406250084
 
-Hi Guibing,
 
-You sent your email in html, so it got rejected by the ML, make sure
-you reply in plain text mode :)
 
-On Tue, Jun 25, 2024 at 10:45=E2=80=AFAM =E6=A1=82=E5=85=B5 <guibing@nuclei=
-sys.com> wrote:
->
-> Hi alex=EF=BC=8C
->
-> We have encountered a problem related to this patch and would like to ask=
- for your advice, thank you in advance!
->
-> Problem description:
-> When we use the v6.9 kernel, there is an illegal instruction problem when=
- executing a statically linked application on an SD card, and this problem =
-is not reproduced in v6.6/v6.1 kernel.
-> SD card driver uses PIO mode, and the SD card interrupt is bound to core0=
-. If the system schedule the apllication to execute on core1, core2, or cor=
-e3, it will report an illegal instruction, and if scheduled to execute on c=
-ore0, it will be executed successfully.
+> On 25 Jun 2024, at 10:45=E2=80=AFAM, Namhyung Kim =
+<namhyung@kernel.org> wrote:
+>=20
+> Hello,
+>=20
+> On Fri, Jun 14, 2024 at 10:56:16PM +0530, Athira Rajeev wrote:
+>> Data type profiling uses instruction tracking by checking each
+>> instruction and updating the register type state in some data
+>> structures. This is useful to find the data type in cases when the
+>> register state gets transferred from one reg to another. Example, in
+>> x86, "mov" instruction and in powerpc, "mr" instruction. Currently =
+these
+>> structures are defined in annotate-data.c and instruction tracking is
+>> implemented only for x86. Move these data structures to
+>> "annotate-data.h" header file so that other arch implementations can =
+use
+>> it in arch specific files as well.
+>>=20
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>> ---
+>> tools/perf/util/annotate-data.c | 53 +------------------------------
+>> tools/perf/util/annotate-data.h | 55 =
++++++++++++++++++++++++++++++++++
+>> 2 files changed, 56 insertions(+), 52 deletions(-)
+>>=20
+>> diff --git a/tools/perf/util/annotate-data.c =
+b/tools/perf/util/annotate-data.c
+>> index 965da6c0b542..a4c7f98a75e3 100644
+>> --- a/tools/perf/util/annotate-data.c
+>> +++ b/tools/perf/util/annotate-data.c
+>> @@ -31,15 +31,6 @@
+>>=20
+>> static void delete_var_types(struct die_var_type *var_types);
+>>=20
+>> -enum type_state_kind {
+>> - TSR_KIND_INVALID =3D 0,
+>> - TSR_KIND_TYPE,
+>> - TSR_KIND_PERCPU_BASE,
+>> - TSR_KIND_CONST,
+>> - TSR_KIND_POINTER,
+>> - TSR_KIND_CANARY,
+>> -};
+>> -
+>> #define pr_debug_dtp(fmt, ...) \
+>> do { \
+>> if (debug_type_profile) \
+>> @@ -140,49 +131,7 @@ static void pr_debug_location(Dwarf_Die *die, =
+u64 pc, int reg)
+>> }
+>> }
+>>=20
+>> -/*
+>> - * Type information in a register, valid when @ok is true.
+>> - * The @caller_saved registers are invalidated after a function =
+call.
+>> - */
+>> -struct type_state_reg {
+>> - Dwarf_Die type;
+>> - u32 imm_value;
+>> - bool ok;
+>> - bool caller_saved;
+>> - u8 kind;
+>> -};
+>> -
+>> -/* Type information in a stack location, dynamically allocated */
+>> -struct type_state_stack {
+>> - struct list_head list;
+>> - Dwarf_Die type;
+>> - int offset;
+>> - int size;
+>> - bool compound;
+>> - u8 kind;
+>> -};
+>> -
+>> -/* FIXME: This should be arch-dependent */
+>> -#define TYPE_STATE_MAX_REGS  16
+>> -
+>> -/*
+>> - * State table to maintain type info in each register and stack =
+location.
+>> - * It'll be updated when new variable is allocated or type info is =
+moved
+>> - * to a new location (register or stack).  As it'd be used with the
+>> - * shortest path of basic blocks, it only maintains a single table.
+>> - */
+>> -struct type_state {
+>> - /* state of general purpose registers */
+>> - struct type_state_reg regs[TYPE_STATE_MAX_REGS];
+>> - /* state of stack location */
+>> - struct list_head stack_vars;
+>> - /* return value register */
+>> - int ret_reg;
+>> - /* stack pointer register */
+>> - int stack_reg;
+>> -};
+>> -
+>> -static bool has_reg_type(struct type_state *state, int reg)
+>> +bool has_reg_type(struct type_state *state, int reg)
+>> {
+>> return (unsigned)reg < ARRAY_SIZE(state->regs);
+>> }
+>> diff --git a/tools/perf/util/annotate-data.h =
+b/tools/perf/util/annotate-data.h
+>> index 0a57d9f5ee78..ef235b1b15e1 100644
+>> --- a/tools/perf/util/annotate-data.h
+>> +++ b/tools/perf/util/annotate-data.h
+>> @@ -6,6 +6,9 @@
+>> #include <linux/compiler.h>
+>> #include <linux/rbtree.h>
+>> #include <linux/types.h>
+>> +#include "dwarf-aux.h"
+>> +#include "annotate.h"
+>> +#include "debuginfo.h"
+>>=20
+>> struct annotated_op_loc;
+>> struct debuginfo;
+>> @@ -15,6 +18,15 @@ struct hist_entry;
+>> struct map_symbol;
+>> struct thread;
+>>=20
+>> +enum type_state_kind {
+>> + TSR_KIND_INVALID =3D 0,
+>> + TSR_KIND_TYPE,
+>> + TSR_KIND_PERCPU_BASE,
+>> + TSR_KIND_CONST,
+>> + TSR_KIND_POINTER,
+>> + TSR_KIND_CANARY,
+>> +};
+>> +
+>> /**
+>> * struct annotated_member - Type of member field
+>> * @node: List entry in the parent list
+>> @@ -142,6 +154,48 @@ struct annotated_data_stat {
+>> };
+>> extern struct annotated_data_stat ann_data_stat;
+>>=20
+>> +/*
+>> + * Type information in a register, valid when @ok is true.
+>> + * The @caller_saved registers are invalidated after a function =
+call.
+>> + */
+>> +struct type_state_reg {
+>> + Dwarf_Die type;
+>> + u32 imm_value;
+>> + bool ok;
+>> + bool caller_saved;
+>> + u8 kind;
+>> +};
+>> +
+>> +/* Type information in a stack location, dynamically allocated */
+>> +struct type_state_stack {
+>> + struct list_head list;
+>> + Dwarf_Die type;
+>> + int offset;
+>> + int size;
+>> + bool compound;
+>> + u8 kind;
+>> +};
+>> +
+>> +/* FIXME: This should be arch-dependent */
+>> +#define TYPE_STATE_MAX_REGS  32
+>=20
+> Can you please define this for powerpc separately?  I think x86 should
+> remain in 16.
+>=20
+> Thanks,
+> Namhyung
 
-Is it a multithreaded application? You mean that if the application
-always runs on core1/2/3, you get an illegal instruction, but that
-does not happen when run on core0?
+Sure, I will have this change in V5
+>=20
+>> +
+>> +/*
+>> + * State table to maintain type info in each register and stack =
+location.
+>> + * It'll be updated when new variable is allocated or type info is =
+moved
+>> + * to a new location (register or stack).  As it'd be used with the
+>> + * shortest path of basic blocks, it only maintains a single table.
+>> + */
+>> +struct type_state {
+>> + /* state of general purpose registers */
+>> + struct type_state_reg regs[TYPE_STATE_MAX_REGS];
+>> + /* state of stack location */
+>> + struct list_head stack_vars;
+>> + /* return value register */
+>> + int ret_reg;
+>> + /* stack pointer register */
+>> + int stack_reg;
+>> +};
+>> +
+>> #ifdef HAVE_DWARF_SUPPORT
+>>=20
+>> /* Returns data type at the location (ip, reg, offset) */
+>> @@ -160,6 +214,7 @@ void global_var_type__tree_delete(struct rb_root =
+*root);
+>>=20
+>> int hist_entry__annotate_data_tty(struct hist_entry *he, struct evsel =
+*evsel);
+>>=20
+>> +bool has_reg_type(struct type_state *state, int reg);
+>> #else /* HAVE_DWARF_SUPPORT */
+>>=20
+>> static inline struct annotated_data_type *
+>> --=20
+>> 2.43.0
 
->
-> We track the source code, flush_icache_pte function patch leads to this i=
-ssue on our riscv hardware.
-> If you merge this patch into the v6.1 kernel, the same problem can be rep=
-roduced in v6.1 kernel.
-> If using flush_icache_all() not flush_icache_mm in v6.9 kernel ; this iss=
-ue can not be reproduced in v6.9 kernel.
->
-> +void flush_icache_pte(struct mm_struct *mm, pte_t pte)
->  {
->  struct folio *folio =3D page_folio(pte_page(pte));
->
->  if (!test_bit(PG_dcache_clean, &folio->flags)) {
-> -=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=
-=E2=80=82=E2=80=82=E2=80=82flush_icache_all();
-> +=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=
-=E2=80=82=E2=80=82=E2=80=82flush_icache_mm(mm, false);
->  set_bit(PG_dcache_clean, &folio->flags);
->  }
->  }
 
-Did you check if the instruction in badaddr is different from the
-expected instruction? The image you provided is not available here,
-but it indicated 0xf486 which corresponds to "c.sdsp  ra, 104(sp)", is
-that correct?
-
->
->
-> Our riscv cpu IP supports multi-core L1 dcache synchronization, but does =
-not support multi-core L1 icache synchronization. iCache synchronization re=
-quires software maintenance.
-> Does the RISCV architecture kernel in future have mandatory requirements =
-for multi-core iCache hardware consistency?
-
-No no, we try to introduce icache flushes whenever it is needed for such ua=
-rch.
-
->
-> Thank you for your reply!
->
->
-> Link=EF=BC=9A[PATCH] riscv: Only flush the mm icache when setting an exec=
- pte - Alexandre Ghiti (kernel.org)
->
-> ________________________________
-> =E5=8F=91=E8=87=AA=E6=88=91=E7=9A=84=E4=BC=81=E4=B8=9A=E5=BE=AE=E4=BF=A1
->
->
-
-Thanks for the report,
-
-Alex
