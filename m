@@ -1,94 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC8817C98;
-	Tue, 25 Jun 2024 13:48:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E30717C98
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 13:49:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719323332; cv=none; b=VgjesAvLSKbffQjOWh7yYL2dZ0t2+d0xel1R3ss+Eo7GJvwaFtBBMGPY2HyrtibwOPHhlyyYiL6oOZ6FyH5E0GdeIlgv3frCij4CzOoXaNf4ZHbSH77lLbR7fgbUUZO0sO2A08FRQFSOYE86EFUDEZNHDcJdz137SAcu7JutDVo=
+	t=1719323379; cv=none; b=CqQ/TvmwW56tYia9URznttLAzqsq1EBtOIzG+UEl4+6zmXjSs7gBkFvj6VKqJdtg41SpLfgNVBOKvNDDU2yhY2shnZVx9iGGuFKuvLaO7U/sP1gBRpGlYS8H92Xkhay9isodTI6WCykjV9kvrCKcJW4bFS6CEcVd2a5QeI7VsxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719323332; c=relaxed/simple;
-	bh=BQKvpt7Ba0OCOosSr+zAf6QCAcmlLu5zyssanXTWIdM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mRVvfwYWlvMPJ/mvRFMf3lCwVgJ4ghPjt5R3R6gPJyDfCt9Z3v20b1zK16q887dIE5K3HVI1hiKbOF+40Ix9/Zm53lwNWUOSglEO2I06CKEzETdy3lnkTn4l8tyJl7gLOG8NHw7cAEP/VQR9iHqpuj3aSVDx+6G0V16m4TyLrww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dvS84w6B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719323379; c=relaxed/simple;
+	bh=AW4Z2MAaP0388kJzC8lYJYVxSwvwAF4UeHLV/nHLRjU=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ij/iRSZ43HP91iHpaOQihsoCtuyMi5klxNhCVHStEaK1ppIBbdtig+bXPWxHedr3mwFM2QDdsWNcwhEbzJ9zVcRPA67q6SzIEdLnXZQW/XiyAbrpCj2THvSwBH3DlPtAuXWbSJGlEMcJnj2PbTl6b8FYeEbc09QdCB2tBv0iS3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=aKFkQwV8; arc=none smtp.client-ip=188.165.51.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dvS84w6B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41590C32781;
-	Tue, 25 Jun 2024 13:48:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719323331;
-	bh=BQKvpt7Ba0OCOosSr+zAf6QCAcmlLu5zyssanXTWIdM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dvS84w6BBHgfN0IoVqHqyPsRnEmSvIUtG0B6DL4jcCCyA0Ywjd6qBwlU0e4PK8W+O
-	 FEG27TXNPJHMCVLf0zWFSqGxwmj0Fvszu8D6DgQVHGOB7af1zz6Dk3ZnHfZhuKpixP
-	 LAG8qbrdQIpS3Cj6QXjtU1SwegC5U0XHJzELc2MHwS06XM9SglCv78/vrEj472/vM7
-	 KIUIVxjp1KibjvFVWDOyJasfCvKVihDKkNAZo8kJ6yXDP7vvHKUZjPNhc/GG6o9OaB
-	 k+C9amoAzKSvA1g1+jgQzyMbaazPofr8K452rL3smUrgatuPTCpl4FREa14JW5TAnV
-	 B0vjx3yQr2FKQ==
-Message-ID: <596649dc-0683-4083-aa6e-e83372ad2ad4@kernel.org>
-Date: Tue, 25 Jun 2024 16:48:45 +0300
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="aKFkQwV8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1719323362; x=1719582562;
+	bh=AW4Z2MAaP0388kJzC8lYJYVxSwvwAF4UeHLV/nHLRjU=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=aKFkQwV8KD/82Ay3UrQhAsSlkq8RM5sUGqV3+aA5mOC9VCw/oUULR9pco6hldXMNA
+	 2xt6vaTFmjLyTobH38nSkSA/zhZm0SrdYFrkjnKg9dXTHyGV1E8tHXo4ZJeBuHdl7s
+	 4uV3SeTj5mYgwj+B4hRmLzQlaFMX7rJjhwBw/nBCTx/aQNPE2EWYNDru2slcD9YbZv
+	 nguj3bfZyplXjewy3tabhgxpytO1/JgKwSUqMZusriNhWfjf2U8CDsDJ3/AspRHDeh
+	 S+MQLKrPKsqov+lFbt8tRmh+5sMVYf0DlLPE2GYPAenro71KfH0fkyouh6r2I9+8MX
+	 XRLlNlmeyninQ==
+Date: Tue, 25 Jun 2024 13:49:17 +0000
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+From: Jari Ruusu <jariruusu@protonmail.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: Stable linux-5.10.x regression triggered by MDS mitigation
+Message-ID: <yVXwe8gvgmPADpRB6lXlicS2fcHoV5OHHxyuFbB_MEleRPD7-KhGe5VtORejtPe-KCkT8Uhcg5d7-IBw4Ojb4H7z5LQxoZylSmJ8KNL3A8o=@protonmail.com>
+In-Reply-To: <20240624170921.mep2x6pg4aiui4wh@desk>
+References: <IdYcxU6x6xuUqUg8cliJUnucfwfTO29TrKIlLGCCYbbIr1EQnP0ZAtTxdAM2hp5e5Gny_acIN3OFDS6v0sazocnZZ1UBaINEJ0HoDnbasSI=@protonmail.com> <20240624170921.mep2x6pg4aiui4wh@desk>
+Feedback-ID: 22639318:user:proton
+X-Pm-Message-ID: 1cfee52ed1850eead40bef0099ac1ae016436350
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 2/4] dt-bindings: interconnect: qcom,msm8998-bwmon: Add
- X1E80100 BWMON instances
-To: Sibi Sankar <quic_sibis@quicinc.com>, andersson@kernel.org,
- konrad.dybcio@linaro.org, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, dmitry.baryshkov@linaro.org,
- srinivas.kandagatla@linaro.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
- quic_rgottimu@quicinc.com, quic_kshivnan@quicinc.com, conor+dt@kernel.org,
- abel.vesa@linaro.org, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20240624092214.146935-1-quic_sibis@quicinc.com>
- <20240624092214.146935-3-quic_sibis@quicinc.com>
-Content-Language: en-US
-From: Georgi Djakov <djakov@kernel.org>
-In-Reply-To: <20240624092214.146935-3-quic_sibis@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 24.06.24 12:22, Sibi Sankar wrote:
-> Document X1E80100 BWMONs, which has multiple (one per cluster) BWMONv4
-> instances for the CPU->LLCC path and one BWMONv5 instance for LLCC->DDR
-> path.
-> 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
+On Monday, June 24th, 2024 at 20:09, Pawan Gupta <pawan.kumar.gupta@linux.i=
+ntel.com> wrote:
+> Below patch (for v6.10-rc5) should fix this. I didn't send this patch
+> earlier because I havn't got a chance to make sure if it will work for
+> other cases like modify_ldt().
 
-Acked-by: Georgi Djakov <djakov@kernel.org>
+Thank you for fixing this regression.
 
-> ---
-> 
-> v3:
-> * Pickup Rb's and Tb's from the list.
-> 
->   .../devicetree/bindings/interconnect/qcom,msm8998-bwmon.yaml    | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,msm8998-bwmon.yaml b/Documentation/devicetree/bindings/interconnect/qcom,msm8998-bwmon.yaml
-> index 9c248e1eabe2..2cd1f5590fd9 100644
-> --- a/Documentation/devicetree/bindings/interconnect/qcom,msm8998-bwmon.yaml
-> +++ b/Documentation/devicetree/bindings/interconnect/qcom,msm8998-bwmon.yaml
-> @@ -35,6 +35,7 @@ properties:
->                 - qcom,sm8250-cpu-bwmon
->                 - qcom,sm8550-cpu-bwmon
->                 - qcom,sm8650-cpu-bwmon
-> +              - qcom,x1e80100-cpu-bwmon
->             - const: qcom,sdm845-bwmon    # BWMON v4, unified register space
->         - items:
->             - enum:
-> @@ -44,6 +45,7 @@ properties:
->                 - qcom,sm8250-llcc-bwmon
->                 - qcom,sm8550-llcc-bwmon
->                 - qcom,sm8650-llcc-bwmon
-> +              - qcom,x1e80100-llcc-bwmon
->             - const: qcom,sc7280-llcc-bwmon
->         - const: qcom,sc7280-llcc-bwmon   # BWMON v5
->         - const: qcom,sdm845-llcc-bwmon   # BWMON v5
+I tested your patch on 32-bit linux-5.10.220 inside VM, and now
+dosemu seems to work OK.
+
+I do have a related question:
+In SYSENTER code path (that is not used by virtual-8086 mode),
+there is CLEAR_CPU_BUFFERS just before STI and SYSEXIT, but that
+CLEAR_CPU_BUFFERS happens after flags are restored with POPFL.
+VERW opcode inside that CLEAR_CPU_BUFFERS modifies ZF flag.
+Is that ZF flag damage OK?
+
+--
+Jari Ruusu=C2=A0 4096R/8132F189 12D6 4C3A DCDA 0AA4 27BD=C2=A0 ACDF F073 3C=
+80 8132 F189
 
