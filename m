@@ -1,53 +1,49 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D9B16EC10;
-	Tue, 25 Jun 2024 15:50:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82ECF16C68B;
+	Tue, 25 Jun 2024 15:52:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719330651; cv=none; b=MIKfHyYLBwfIBnk6fxPSmrh1fmPctiuGWnsPqDkf7uuqAlpjGBQdYgzFfvlLx/lO8BCla9hZ8xtew0g+tz3FttPOk8XcJfzMEObmoz9sf5YlN4yuT2Lq0+Hh+wBOZiYNfqfHxLy4MNhjfnSrFp62xP0A8JRDPS4D/ST3UeDZIAg=
+	t=1719330733; cv=none; b=UwNVIVWbZny/au9OFApt1MwEeHP/7fGSjiZ2Y/pwSI9t4I8oXhD1/YbkIFBWZltFMf/eC0EoqfLWPqN/xSUq4LW2LECWfAgVlkBZTAkDttVhjlb7yWl+dIfUQlO9yLx+ioD6b1Qw0IcNosvkORwyPcRZQoNO/l+zm2dY5Fl3TMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719330651; c=relaxed/simple;
-	bh=ZaDeCopv0PJ1QwF2b0WCd5Id1ccH0b00NTXA6Ny1H0Q=;
+	s=arc-20240116; t=1719330733; c=relaxed/simple;
+	bh=X0jmIyIPh1W9m4kEceQUttmnpBYHpgQNokutD/esj/E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F4I7AH+0tvmYOMxe+9C32iWDJbudf4uPEBovQS5rEeZgfc9gPY59bWtucMkxPT1FVpN6PMgOq56VET0ElkS+GdZTz86DBsRtBwGZFfHoI5vFEQs4ttajLI5MRGsqIa5Q9+QguMAbhbkbp8oM934LudEwrfZ4gx/dtQHtK5jtFWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mXgl0tgF; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=fl43As/2x5DOIPupy/jyTUAd7JRxbdXu8yqU1nGcwwmtnJfHpEcVnhUCWSMHbfm9QZ5F+V/e++kBGFJ2sYe2K/Fh8fhEjPEwEMG2bitD01LituzukvvvttJwMjrjo+o9MAwQLG42TbDyxXmpxTXIlhuptTSIT7Q7FB7WYS7dh24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dsY/v5Sq; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mXgl0tgF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B4F7C32781;
-	Tue, 25 Jun 2024 15:50:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719330650;
-	bh=ZaDeCopv0PJ1QwF2b0WCd5Id1ccH0b00NTXA6Ny1H0Q=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=mXgl0tgF674ieLxrHGX9nw9jrSsq8mEVLOQBhUA69O1Oir11f0AiqcNg+PtLLiCkR
-	 hIJkoY3nhi/1JXPgcoCoOO+p7O28KjUbSpizAu78UDIePT95th/DJgvEEKLX5wgo67
-	 PNjAXOUJS9Qy3d9VzY75+nPbe+FbD4mox9lN+MtNMBoI57k+Ezhv1iTxeECfGDV8ku
-	 ZjXabwx/hLSXwgIas452xONwVYd7z6FPpvGeI5Kdev5Bl/IW+UmiQt5w/xOkjJxvTH
-	 22Gr0UZHcvx+ZSXc+SidA10pmrPz3KmZqIZmvM48w4nLRB0e8ArHaQ7dBA0u7VzF13
-	 Ce3eo9gO54T2w==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 7C774CE0760; Tue, 25 Jun 2024 08:50:49 -0700 (PDT)
-Date: Tue, 25 Jun 2024 08:50:49 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Akira Yokosawa <akiyks@gmail.com>
-Cc: Marco Elver <elver@google.com>, Andrea Parri <parri.andrea@gmail.com>,
-	Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	David Howells <dhowells@redhat.com>,
-	Jade Alglave <j.alglave@ucl.ac.uk>,
-	Luc Maranget <luc.maranget@inria.fr>,
-	Daniel Lustig <dlustig@nvidia.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: Re: [PATCH lkmm v2 0/2] tools/memory-model: Add locking.txt and
- glossary.txt to README
-Message-ID: <ab561ed0-51c9-4f17-a71a-5743735a2efa@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <a07d41c9-5236-44ad-8e89-f3be5da90e98@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dsY/v5Sq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=YLsgCo5mZCWyV+0LgwK8z9FDMC5L3Jf20O6mHZiQ8gQ=; b=dsY/v5Sq61qwbM7R6F+sukc/5F
+	s4pfkym86Ioii1ii/qPd5ZqDZkuY9WsN7UoMvQY4lfJ1lcZzBtW6itoMxdSn5Ub+HH/tx4xHNov6m
+	QGudwmzCdubFhgmb0f+BNB+nLfijhUGE5CX9l0G0wAK70y7f8/1WWveqep28w5Zu3ew/qt4OkvZC/
+	4T56yO2ivoaK2M419qqC/0vYp92diIr1H9nkDDhhBPQo0X9k2rwoFy02miSlQOzFYWPPtE+rgfVnm
+	0kIQUAZN8kOkQq6vmukUW0D/p13DhJ/Bzgwe3O0+9o65RwpCOeNUI6CI/y0C25q4GL0h9fJPjXjbO
+	OVf9HL6Q==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sM8Si-0000000BHaO-06Hw;
+	Tue, 25 Jun 2024 15:52:04 +0000
+Date: Tue, 25 Jun 2024 16:52:03 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+Cc: david@fromorbit.com, chandan.babu@oracle.com, djwong@kernel.org,
+	brauner@kernel.org, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org, yang@os.amperecomputing.com,
+	linux-mm@kvack.org, john.g.garry@oracle.com,
+	linux-fsdevel@vger.kernel.org, hare@suse.de, p.raghav@samsung.com,
+	mcgrof@kernel.org, gost.dev@samsung.com, cl@os.amperecomputing.com,
+	linux-xfs@vger.kernel.org, hch@lst.de, Zi Yan <zi.yan@sent.com>
+Subject: Re: [PATCH v8 02/10] filemap: allocate mapping_min_order folios in
+ the page cache
+Message-ID: <ZnrnozlE0EggQ_w3@casper.infradead.org>
+References: <20240625114420.719014-1-kernel@pankajraghav.com>
+ <20240625114420.719014-3-kernel@pankajraghav.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,36 +52,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a07d41c9-5236-44ad-8e89-f3be5da90e98@gmail.com>
+In-Reply-To: <20240625114420.719014-3-kernel@pankajraghav.com>
 
-On Tue, Jun 25, 2024 at 05:56:49PM +0900, Akira Yokosawa wrote:
-> Hi all,
-> 
-> Here is a v2 series with the trailing white space fixed and Acked-by's
-> from Andrea applied.
-> 
-> Please find v1 at [1] if you need to.
-> 
-> [1]: https://lore.kernel.org/ae2b0f62-a593-4e7c-ab51-06d4e8a21005@gmail.com/
-> 
->         Thanks, Akira
+On Tue, Jun 25, 2024 at 11:44:12AM +0000, Pankaj Raghav (Samsung) wrote:
+> Co-developed-by: Luis Chamberlain <mcgrof@kernel.org>
+> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+> Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
+> Reviewed-by: Hannes Reinecke <hare@suse.de>
+> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 
-Queued for further review, thank you all!
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-							Thanx, Paul
+after fixing the nits below
 
-> --
-> Akira Yokosawa (2):
->   tools/memory-model: Add locking.txt and glossary.txt to README
->   tools/memory-model: simple.txt: Fix stale reference to
->     recipes-pairs.txt
-> 
->  tools/memory-model/Documentation/README     | 17 +++++++++++++++++
->  tools/memory-model/Documentation/simple.txt |  2 +-
->  2 files changed, 18 insertions(+), 1 deletion(-)
-> 
-> 
-> base-commit: 5bdd17ab5a7259d2da562eab63abab3a6d95adcd
-> -- 
-> 2.34.1
-> 
+> +/**
+> + * mapping_align_index() - Align index based on the min
+> + * folio order of the page cache.
+
++ * mapping_align_index - Align index for this mapping.
+
+> @@ -1165,7 +1186,7 @@ static inline vm_fault_t folio_lock_or_retry(struct folio *folio,
+>  void folio_wait_bit(struct folio *folio, int bit_nr);
+>  int folio_wait_bit_killable(struct folio *folio, int bit_nr);
+>  
+> -/* 
+> +/*
+>   * Wait for a folio to be unlocked.
+>   *
+>   * This must be called with the caller "holding" the folio,
+
+Unnecessary whitespace change
+
