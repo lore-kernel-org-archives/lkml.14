@@ -1,354 +1,268 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2052.outbound.protection.outlook.com [40.107.113.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73FA8157E74;
-	Tue, 25 Jun 2024 12:39:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719319171; cv=none; b=tVJCLEP4ZbGUMHF333dYntfPsEE59IdpB08pPEIA5DQKASXBMWvL5achJU0Xwww0D7Do1qvieUE6gZotC8WSGjG2cDwwkv+mZbejk7ArYvDqV+JxjYDszKksanqxQMeI8gTEMUBtqheW37jqfCSAEsJCFCDDi1ifiNo6LpxSZcE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719319171; c=relaxed/simple;
-	bh=MZjLcKAK0U9G4BDHHC+9AaAu7a4co91ezazrOiCDWSI=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=uMsxlO1p9v5CgGZo5cYu52CJfxKRcEO3zJ4yBC6UbYaZUFHwNBrcPAjN22rehj6y8e1LkRHlxHK7GRhNbwE89MYrzeaVgWDwa+TfpTs/tik0Eq2b/m+seOiXQFxSidVhJdpUSzNFfvGPhXciXJB+Xkrsdt4lyUDm2P1g1Kh6K2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=YBi9HsPK; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9706A158D7C;
+	Tue, 25 Jun 2024 12:39:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.113.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719319178; cv=fail; b=YhjZ3e2T1rgF1o1sIuC8DxjFmNsjWDuGODCSjyMeXv/AokseAlMIL303VxnIaaPmsa2z4RSrgMhPrXy/5UAKXMp/wz6XFXxrG1l1o/FjmURcT/7YPQGaXW+j15ppxfcrDL+xZ1/HCHxILvgyvfI9eDooPl+6cmP2EWj28N04Rhk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719319178; c=relaxed/simple;
+	bh=vEHhA5DFBOmEi3t5TeKT8KsTDYlT7rYUcm2ld+lB4bU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Rc3G03/0zJtsJIo7cyLgVszh/CM3jledcJ7v/gbBWtXlkZXpO8UhoH2ktalWBIC6ilXrdwKTMsGeGIZ4EToJRQ18Hq+sY0a98JB82nufXA3Ahgd6nu4xAj8QBa8JPW9K3FsQQKvb8M35N6oARRFHSmYONP6lmyKf/MLvrz51XLQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=FuHTTNzW; arc=fail smtp.client-ip=40.107.113.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YBi9HsPK"
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45PCQwQ5002249;
-	Tue, 25 Jun 2024 12:39:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-type:mime-version:subject:from:in-reply-to:date:cc
-	:content-transfer-encoding:message-id:references:to; s=pp1; bh=Z
-	Nv6ASfku2ma1tXWeQNgZdAY+8xTVTAP6hp4KCSK4Io=; b=YBi9HsPKvcToXGveV
-	Dc8XCGZWc2OIW/3tyCKwcyzfIcb+/3L9JpQsEM/SO9YtVtqXcUq5aKexRVDQ0emb
-	GZlW9Du0kfsF6bPGFyZi9//IkQDUJ1au1j2I2mczsfEqagbWCrrRg85dEXK1BE+b
-	UCmDlZnVkh8zA7/GIeT1BuWhiSosNkyt5kLK7Yszn0bCBztpw0RkAPz8PNENcb0L
-	VrDy2wSOWP+5ZfhtoQpOTB2aKSQMLTqUKn5Z6yAXPJ9v/ziQ9hcdDZO+gjzw8tm8
-	MlPfRBbKJXi7ziG17OtOX4kX1LWGeGPowscrrCViiZstpXK7Ubfq9s5IX91SZSnG
-	B7wsQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yyua4gdkr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Jun 2024 12:39:11 +0000 (GMT)
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45PCdB1Z020705;
-	Tue, 25 Jun 2024 12:39:11 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yyua4gdkn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Jun 2024 12:39:11 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45PBFtMn019533;
-	Tue, 25 Jun 2024 12:39:10 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yx9xpxcf0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Jun 2024 12:39:09 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45PCd49x10354988
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 25 Jun 2024 12:39:06 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 274762006E;
-	Tue, 25 Jun 2024 12:39:04 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6EA522004D;
-	Tue, 25 Jun 2024 12:39:01 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.30.249])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 25 Jun 2024 12:39:01 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="FuHTTNzW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fwQaLE2gaN80iqpeLhWVMJRP/acN5ULBZPE20udq3RoiFOQr3xX2jc+TbXpXb3ajvFgfxj2fjP6zmM41Gv8wetisfX1U369r0Te2tmHVtu/iJcfUg66o8/8XXBIYCV3AFgosoiPbKlRWtkejB8WxG0cnmyVGGWHMp/wdYVpngWsokRRAK2oa7YxPvn4kZWz7LnpqPSyOlXrgOc9fH92SFAjGtVygGQaFKFwKEfOu9wbZQ8299cVNIgr/4JvPBxAMz+lyI28dMtx52/O4TRT5t1Lh2Hzgu4O3f9hGnv4O9wA0wg9dmJfoevNVO0BJbX0N8sxxck0wetcAilfQ0LX1rA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ypUPVq0fmbInMysEF8fF9meeqCnqRTdCiW7yE3ZxH4E=;
+ b=iBGoa5lEnKmuRUCFlpVgXOv77VY5FskIqatWsZRB4KNkc+1jJ6Chqisp6/y4KuabDEoKXuZLzHV14/XKMfa29N3LXJR8iSqHb3ucIl7g5zPrvA0YF2ZHBVURbrkclLRJNlMMTx5PXQpKocEoczV/Zxl4xVA7sC33fX6bksJRzYrwfjMnX4MqZU8KCQ6aBDTrmDnCOCY2x0i4mRRv4+ceFgRCLXLHaOCSnP+x0qggeil9XJtiKhaYQtymJm7EZLNsG3Z7U7vRLLwzaxEgJRBfygsYHBMt5eREf0i7GuVt7H2mrVNSY38qIgrtjmdpX77Fe0kXQzYDEeSnhhnr6qxjWw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ypUPVq0fmbInMysEF8fF9meeqCnqRTdCiW7yE3ZxH4E=;
+ b=FuHTTNzWUTjKHxiLjkiahkOOopuKo01OMzVh/qY3poNTSMMStORrObCgREwtNsQ37h/qSHTV+IiUzMopjUA0tU3c1uRYsTAPhnH83W62w2Yh2vIbWur7fSwM0B4xZeAPTm7v1XK7AqHhu4o1191jkFjRCaM3iGm6ekZcH7wtRGo=
+Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
+ by TYCPR01MB7364.jpnprd01.prod.outlook.com (2603:1096:400:f4::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.30; Tue, 25 Jun
+ 2024 12:39:31 +0000
+Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
+ ([fe80::86ef:ca98:234d:60e1]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
+ ([fe80::86ef:ca98:234d:60e1%4]) with mapi id 15.20.7698.025; Tue, 25 Jun 2024
+ 12:39:31 +0000
+From: Biju Das <biju.das.jz@bp.renesas.com>
+To: Prabhakar <prabhakar.csengg@gmail.com>, Laurent Pinchart
+	<laurent.pinchart@ideasonboard.com>, Kieran Bingham
+	<kieran.bingham+renesas@ideasonboard.com>, David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, Geert Uytterhoeven
+	<geert+renesas@glider.be>, "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>
+CC: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Fabrizio
+ Castro <fabrizio.castro.jz@renesas.com>, Prabhakar Mahadev Lad
+	<prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: RE: [PATCH] drm: renesas: Move RZ/G2L MIPI DSI driver to rz-du
+Thread-Topic: [PATCH] drm: renesas: Move RZ/G2L MIPI DSI driver to rz-du
+Thread-Index: AQHaxvvrCVUVLwgOH0e6KnciNkV+R7HYayTg
+Date: Tue, 25 Jun 2024 12:39:31 +0000
+Message-ID:
+ <TY3PR01MB113468719006B031B20997B0B86D52@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+References: <20240625123244.200533-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240625123244.200533-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|TYCPR01MB7364:EE_
+x-ms-office365-filtering-correlation-id: 8c89d83d-e6b8-4253-6fe8-08dc9513dca2
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230037|1800799021|366013|7416011|376011|38070700015|921017;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?3+/tX6/M2ZAqp/bpInGn9vC/bt30+ttBSijPZryrfrplgH17hFBeGC66yUF/?=
+ =?us-ascii?Q?/gl8GSnO5NIG9vEcV6w+EuDIwsiBM/sEBrdMl2/VdKXGX3TuNNkUD6lu894Y?=
+ =?us-ascii?Q?NqLeQZ39vg0rQIfXDwvzF3vPlp5SYh6JjV05LDWkZjnx+PlIsl2VMlJ7REsf?=
+ =?us-ascii?Q?Eo4229xNkEFC6Zqqth7w4Y4saOzP3mjtKq6GwDvShMp4xRf/FYFYo7SWuF5T?=
+ =?us-ascii?Q?0SqZiE55aD11+eImE9P+aDnISuKVuRjs+bErny1JmehxW/8AY+8AFdoASmMu?=
+ =?us-ascii?Q?H/17r86x4mgdTwRQCxBIR3Bf1g6eZCEld/nkpuNAO1aekrV/sK0mLRvWtC/n?=
+ =?us-ascii?Q?LaemDVG7dN1hoKh9JuvRjDoUS8mLTaLt2LFlmVCxTbQtvikLaLiQ10pxuCWi?=
+ =?us-ascii?Q?THHAulY7Vu3nxhnCSdYYKgO5dUV3WQOdbr7YsAZY9LdjHLIQAZemhkHOcvh7?=
+ =?us-ascii?Q?jgxhTZ9tG2YR7uksR/x5oT7XBvpuz0ubHl4UgOmQvz0U0cyBZ2pQDgVrVsmR?=
+ =?us-ascii?Q?2vIlh4RVcPyCr0PG7j6Wu60MWascqEa3m5hgclGBUmAVDvqfY+QtKxFNjJ1Y?=
+ =?us-ascii?Q?E+ot2a+sLBSdU+XVkrYnr1YJZavgM/zgsHAZ8hQUgdWGWVF/QyAJK9O5DyR/?=
+ =?us-ascii?Q?5RV6FOyPwjyHGCTHEo4iVmobKm7A1F9eVJWAIiZIs+hLpTjvYdbeFvqF/e/I?=
+ =?us-ascii?Q?PvRcZqPWwfLl0ApWPSWkk9F1ejLzvle36tYru1n6oB6f2KaP8Oc74iZ3bWFp?=
+ =?us-ascii?Q?uPxSUAS1OIxMnHInsgsaTvz5X8NrFVtVjNO9dkM7ac4f+pNNxd4OY9rZxNAA?=
+ =?us-ascii?Q?Cu0+AvuDmRL0tDJkDeOeN130W7zd8Wzk1DCCw9qSMhrB4DuTvIDRw4a/mz5g?=
+ =?us-ascii?Q?gtsGp2UgyRGQiNqmkzaNY9t86Zehdde0KbSY1ZQiMARdAasA9T3lzzDN0/bn?=
+ =?us-ascii?Q?te8cfnp9STIoMLINNzb1jVG2PRkxRPEyTFynS5uS26fIhicSO/ncR1Jds3gm?=
+ =?us-ascii?Q?n9eYYtVoIw5zK/7FZ5WWL3VG6n0lgs+prkFA6KVq7vG90k/xpv6x89i2ysxt?=
+ =?us-ascii?Q?5H1tmcBtAemMD9Q7J2I6WLpJUenB+9M1qfMMxdQV7n/6sA+nLX9G1L5zegJL?=
+ =?us-ascii?Q?mE6CMrxqDungHVTvmzzUoD+5/saA7DHBKPp3URblx+871qWbrPHc95XX1SQY?=
+ =?us-ascii?Q?hdcCBfCzv/xM59D2+WX0YqzOVYPsZ6r9NLasRFWT9ok5YlAqfmn/TO2S3/K5?=
+ =?us-ascii?Q?dOVDdJBPv/KEs71hnsVjwf3OwARWqh8oLH+YFx2sRgEmtTYxYLupM4Ih8R+D?=
+ =?us-ascii?Q?sOLXa7AOqcOQtxB5d/1TYHMbeD0tUyXXK3wkKaHbcJpUxc6oXWSmuXEAuMO1?=
+ =?us-ascii?Q?Dca8E36irj6cxK0jWpVBJ/zis2Gb?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(366013)(7416011)(376011)(38070700015)(921017);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?VXoYOHAKaCB92rk0n/UPw+BJcojnCOcYe4CC3R/OTjH544zimdb0kDwdnfGY?=
+ =?us-ascii?Q?BpsROIuWOMOqzT0dZIc3thuujkZ+I0Ds8ks+GGyOoX5rPEq71UL/G4kZPdwz?=
+ =?us-ascii?Q?bkSZqLZzyuaGZN92JQLx4bVx35xPLKNHcQT9+HXIGQL9+Rn5P9dcpCpTut2f?=
+ =?us-ascii?Q?1TNVTt+cSK20GVN8nEkO8tfJG/F3KIGI2P1gBJ227Z7ikpF4t7pRXH2uS6gX?=
+ =?us-ascii?Q?6Y/aaJJn7vMUE5FAYUxZTPEjoyzKaBsNwpXo6dk2Aa9izG+JaWBGiCr169Di?=
+ =?us-ascii?Q?VVqV9LfEcIfT+ZeOOOL8EHhdNkYB1gKSS3Cdc8NGIk2q3rDLIen0Y1mMjyjU?=
+ =?us-ascii?Q?yeYX5mJ/WdmK2sxeXQZsRCiO79M4D4o0gU+oiXqxXvFJAYkQOz2dCiyq0/f8?=
+ =?us-ascii?Q?yUDBDwprCnOdqddLDLsYKOAU6ZQu72Zgwi9ePD5jnYGfQWgqejqo2GID5DS7?=
+ =?us-ascii?Q?apX5fQ1Vf/TD1RX+ORHBy0B8qUKo3kkNSQeMp8h6t76ga/zfmwbF/+Vm8f+7?=
+ =?us-ascii?Q?YOXSZs8bsl5vOlvNT/XyugXPwORucqXfKWtfBScWlQ0LkcgMZUMnSZ+xVOph?=
+ =?us-ascii?Q?aRkLATdNzbZ+qVwG7Qbl5d04Lp6ttn9q66kII013K7EKBFeqcIgszCT5eOYe?=
+ =?us-ascii?Q?/5ij1o5HHswFlSQ6yoiUCiRZAnGacveTCzGlboYB06YAMttl5VBfEqLC2NHm?=
+ =?us-ascii?Q?ym4dZMaj7fq+ypmvhKLn8GHArqWHUcOiPTOoAymDagafVdArhFB4W/05hk4s?=
+ =?us-ascii?Q?n55VGrq4Mx4e56dfxr7NVuYM52E1dkek1SL+WGUB9k1Fk/hMdmUCRQzcqScP?=
+ =?us-ascii?Q?u/MTTBbTe6G0wU5+aPNaDV5UjeetPZI/Az0RmTgB0bp1xwDW6ECz1TCP2XgP?=
+ =?us-ascii?Q?1k6u8l87Kz5GNk3R03LsCQF05Q8CAOVhCDcZY/rGSCjt9z9eobdqYkszQcDM?=
+ =?us-ascii?Q?cZMH1RK2+9tHC+UCHTKvQC5/x0vR5xZCr4uRnoIyawFQwej4w4DwjQCLzAtQ?=
+ =?us-ascii?Q?AHRo7J1px9sxIurclP2fH4Zu7AuvssRZ9LHPC6gn9tVI3i5YvAow4YSewQhE?=
+ =?us-ascii?Q?MJvAD19T51I3UDuWjaukrPi7FOS3vFYvh38GUqcvQ9nhSehVJ7brywotCS9w?=
+ =?us-ascii?Q?9hgyzy6iBlWpHKCv+9NMyRfTk1uTIs9/8+pGbuCGMs//aSZfsXuVLzqtT30o?=
+ =?us-ascii?Q?tUejPxjY9gTKFWEq67nXFuwtl1ajlGr49ZIepaBDLoU3YRENXJ+RG+wFpDXB?=
+ =?us-ascii?Q?mbfTBireQRIxtIVz4fIFHU69MxidVqd6EcKvByHzsPm1sL1khxKiuCi9fK2U?=
+ =?us-ascii?Q?VqFyY/yIFv+jWtH31J54/EMVkp3uE/+iI8ODAbqvTLRpv4UYFiUGYH4FeIWf?=
+ =?us-ascii?Q?Vcvh8Pla9h5/TV7lkq2ZAd3F+Dg9ZoqfnnbFo7ngxK69ECP0u8wIwm2wYdHy?=
+ =?us-ascii?Q?sNOQMDM2f5SviPz5+sQeryGqlSGBuaKheGSYSQEHteQtztxKFoL0X7XQhZCv?=
+ =?us-ascii?Q?55xoX0H174Kl3a/AAYHaqlWV9d54hlYpE2P+4TSJM3XtDpB9RXi+g7QNhIb2?=
+ =?us-ascii?Q?bAcH4o9XQBWASHo21JKVUON1ujJ41NeSYxOzrt9KawnXS5B2tia2NDVchqyG?=
+ =?us-ascii?Q?uw=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: [V4 03/16] tools/perf: Add support to capture and parse raw
- instruction in powerpc using dso__data_read_offset utility
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <ZnpVn1yLtDnRnTBh@google.com>
-Date: Tue, 25 Jun 2024 18:08:49 +0530
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
-        maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B834FFD2-AC2E-4F7F-9B0B-15CBFB19A6A7@linux.vnet.ibm.com>
-References: <20240614172631.56803-1-atrajeev@linux.vnet.ibm.com>
- <20240614172631.56803-4-atrajeev@linux.vnet.ibm.com>
- <ZnpVn1yLtDnRnTBh@google.com>
-To: Namhyung Kim <namhyung@kernel.org>
-X-Mailer: Apple Mail (2.3774.600.62)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: P-irrnqpnHeDhbkJai-Q-NFK4xXiDxce
-X-Proofpoint-ORIG-GUID: OUmxz4vbXlb3CekdPxXLNlMBTvP4z9um
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-25_07,2024-06-25_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- impostorscore=0 lowpriorityscore=0 spamscore=0 adultscore=0
- mlxlogscore=999 priorityscore=1501 malwarescore=0 suspectscore=0
- phishscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406250091
+MIME-Version: 1.0
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c89d83d-e6b8-4253-6fe8-08dc9513dca2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2024 12:39:31.8095
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZGoOkmR7lnMSPnnUQC9rX7xfYTlh8+Rvv6MQ85mTkoZmt2IJu0JHpYMt/yz0qMmpKxeLLJXfOn/x+09Vehmstbx5SNOkjNzXkKNt0Wjrnt0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB7364
 
+Hi Prabhakar,
 
+Thanks for the patch.
 
-> On 25 Jun 2024, at 10:59=E2=80=AFAM, Namhyung Kim =
-<namhyung@kernel.org> wrote:
+> -----Original Message-----
+> From: Prabhakar <prabhakar.csengg@gmail.com>
+> Sent: Tuesday, June 25, 2024 1:33 PM
+> Subject: [PATCH] drm: renesas: Move RZ/G2L MIPI DSI driver to rz-du
 >=20
-> On Fri, Jun 14, 2024 at 10:56:18PM +0530, Athira Rajeev wrote:
->> Add support to capture and parse raw instruction in powerpc.
->> Currently, the perf tool infrastructure uses two ways to disassemble
->> and understand the instruction. One is objdump and other option is
->> via libcapstone.
->>=20
->> Currently, the perf tool infrastructure uses "--no-show-raw-insn" =
-option
->> with "objdump" while disassemble. Example from powerpc with this =
-option
->> for an instruction address is:
->>=20
->> Snippet from:
->> objdump  --start-address=3D<address> --stop-address=3D<address>  -d =
---no-show-raw-insn -C <vmlinux>
->>=20
->> c0000000010224b4: lwz     r10,0(r9)
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >=20
-> What about removing --no-show-raw-insn and parse the raw byte code in
-> the output for powerpc?  I think it's better to support normal
-> annotation together.
-Hi Namhyung,
-
-Yes, In the other patch in same series, I have added support for normal =
-annotation together.
-Patch 5 includes changes to work with binary code as well as mneumonic =
-representation.
-
-Example representation using --show-raw-insn in objdump gives result:
-
-38 01 81 e8 ld r4,312(r1)
-
-Patch5 has changes to use =E2=80=9Cobjdump=E2=80=9D with --show-raw-insn =
-to read the raw instruction and also support normal annotation.
-In case of data type profiling, with only sort keys, (type, typeoff) =
-there is no need to disassemble and then get raw byte code.
-Binary code can be read directly from the DSO. Compared to using =
-objdump, directly reading from DSO will be faster in this case.
-In summary, current patchset uses below approach:
-
-1. Read directly from DSO using dso__data_read_offset if only =E2=80=9Ctyp=
-e, typeoff=E2=80=9D is needed.
-2. If in any case reading directly from DSO fails, fallback to using =
-libcapstone. Using libcapstone to read is faster than objdump
-3. If libcapstone is not supported, approach will use objdump. Patchset =
-has changes to handle objdump result created with show-raw-ins in =
-powerpc.=20
-4. Also for normal perf report or perf annotate, approach will use =
-objdump
-
-NOTE:
-libcapstone is used currently only for reading raw binary code. =
-Disassemble is currently not enabled. While attempting to do cs_disasm, =
-observation is that some of the instructions were not identified (ex: =
-extswsli, maddld) and it had to fallback to use objdump. Hence enabling =
-"cs_disasm" is added in comment section as a TODO for powerpc. Patch =
-number 13.=20
-
-Thanks
-Athira
-
+> All the RZ/G2L DU specific components are located under the rz-du folder,=
+ so it makes sense to move
+> the RZ/G2L MIPI DSI driver there instead of keeping it in the rcar-du fol=
+der. This change improves
+> the organization and modularity of the driver configuration by grouping r=
+elated settings together.
 >=20
->>=20
->> This line "lwz r10,0(r9)" is parsed to extract instruction name,
->> registers names and offset. Also to find whether there is a memory
->> reference in the operands, "memory_ref_char" field of objdump is =
-used.
->> For x86, "(" is used as memory_ref_char to tackle instructions of the
->> form "mov  (%rax), %rcx".
->>=20
->> In case of powerpc, not all instructions using "(" are the only =
-memory
->> instructions. Example, above instruction can also be of extended form =
-(X
->> form) "lwzx r10,0,r19". Inorder to easy identify the instruction =
-category
->> and extract the source/target registers, patch adds support to use =
-raw
->> instruction for powerpc. Approach used is to read the raw instruction
->> directly from the DSO file using "dso__data_read_offset" utility =
-which
->> is already implemented in perf infrastructure in "util/dso.c".
->>=20
->> Example:
->>=20
->> 38 01 81 e8     ld      r4,312(r1)
->>=20
->> Here "38 01 81 e8" is the raw instruction representation. In powerpc,
->> this translates to instruction form: "ld RT,DS(RA)" and binary code
->> as:
->>=20
->>   | 58 |  RT  |  RA |      DS       | |
->>   -------------------------------------
->>   0    6     11    16              30 31
->>=20
->> Function "symbol__disassemble_dso" is updated to read raw instruction
->> directly from DSO using dso__data_read_offset utility. In case of
->> above example, this captures:
->> line:    38 01 81 e8
->>=20
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> ---
->> tools/perf/util/disasm.c | 98 =
-++++++++++++++++++++++++++++++++++++++++
->> 1 file changed, 98 insertions(+)
->>=20
->> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
->> index b5fe3a7508bb..f19496133bf0 100644
->> --- a/tools/perf/util/disasm.c
->> +++ b/tools/perf/util/disasm.c
->> @@ -1586,6 +1586,91 @@ static int symbol__disassemble_capstone(char =
-*filename, struct symbol *sym,
->> }
->> #endif
->>=20
->> +static int symbol__disassemble_dso(char *filename, struct symbol =
-*sym,
->=20
-> Maybe rename to symbol__disassemble_raw() ?
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-This is specifically using dso__data_read_offset. Hence using =
-symbol__disassemble_dso=20
->=20
->> + struct annotate_args *args)
->> +{
->> + struct annotation *notes =3D symbol__annotation(sym);
->> + struct map *map =3D args->ms.map;
->> + struct dso *dso =3D map__dso(map);
->> + u64 start =3D map__rip_2objdump(map, sym->start);
->> + u64 end =3D map__rip_2objdump(map, sym->end);
->> + u64 len =3D end - start;
->> + u64 offset;
->> + int i, count;
->> + u8 *buf =3D NULL;
->> + char disasm_buf[512];
->> + struct disasm_line *dl;
->> + u32 *line;
->> +
->> + /* Return if objdump is specified explicitly */
->> + if (args->options->objdump_path)
->> + return -1;
->> +
->> + pr_debug("Reading raw instruction from : %s using =
-dso__data_read_offset\n", filename);
->=20
-> You may want to print the actual offset and remove the "using
-> dso__data_read_offset" part.
 
-Ok Sure
->=20
-> Thanks,
-> Namhyung
->=20
->> +
->> + buf =3D malloc(len);
->> + if (buf =3D=3D NULL)
->> + goto err;
->> +
->> + count =3D dso__data_read_offset(dso, NULL, sym->start, buf, len);
->> +
->> + line =3D (u32 *)buf;
->> +
->> + if ((u64)count !=3D len)
->> + goto err;
->> +
->> + /* add the function address and name */
->> + scnprintf(disasm_buf, sizeof(disasm_buf), "%#"PRIx64" <%s>:",
->> +   start, sym->name);
->> +
->> + args->offset =3D -1;
->> + args->line =3D disasm_buf;
->> + args->line_nr =3D 0;
->> + args->fileloc =3D NULL;
->> + args->ms.sym =3D sym;
->> +
->> + dl =3D disasm_line__new(args);
->> + if (dl =3D=3D NULL)
->> + goto err;
->> +
->> + annotation_line__add(&dl->al, &notes->src->source);
->> +
->> + /* Each raw instruction is 4 byte */
->> + count =3D len/4;
->> +
->> + for (i =3D 0, offset =3D 0; i < count; i++) {
->> + args->offset =3D offset;
->> + sprintf(args->line, "%x", line[i]);
->> + dl =3D disasm_line__new(args);
->> + if (dl =3D=3D NULL)
->> + goto err;
->> +
->> + annotation_line__add(&dl->al, &notes->src->source);
->> + offset +=3D 4;
->> + }
->> +
->> + /* It failed in the middle */
->> + if (offset !=3D len) {
->> + struct list_head *list =3D &notes->src->source;
->> +
->> + /* Discard all lines and fallback to objdump */
->> + while (!list_empty(list)) {
->> + dl =3D list_first_entry(list, struct disasm_line, al.node);
->> +
->> + list_del_init(&dl->al.node);
->> + disasm_line__free(dl);
->> + }
->> + count =3D -1;
->> + }
->> +
->> +out:
->> + free(buf);
->> + return count < 0 ? count : 0;
->> +
->> +err:
->> + count =3D -1;
->> + goto out;
->> +}
->> /*
->>  * Possibly create a new version of line with tabs expanded. Returns =
-the
->>  * existing or new line, storage is updated if a new line is =
-allocated. If
->> @@ -1710,6 +1795,19 @@ int symbol__disassemble(struct symbol *sym, =
-struct annotate_args *args)
->> strcpy(symfs_filename, tmp);
->> }
->>=20
->> + /*
->> +  * For powerpc data type profiling, use the dso__data_read_offset
->> +  * to read raw instruction directly and interpret the binary code
->> +  * to understand instructions and register fields. For sort keys as
->> +  * type and typeoff, disassemble to mnemonic notation is
->> +  * not required in case of powerpc.
->> +  */
->> + if (arch__is(args->arch, "powerpc")) {
->> + err =3D symbol__disassemble_dso(symfs_filename, sym, args);
->> + if (err =3D=3D 0)
->> + goto out_remove_tmp;
->> + }
->> +
->> #ifdef HAVE_LIBCAPSTONE_SUPPORT
->> err =3D symbol__disassemble_capstone(symfs_filename, sym, args);
->> if (err =3D=3D 0)
->> --=20
->> 2.43.0
+Acked-by: Biju Das <biju.das.jz@bp.renesas.com>
 
+Cheers,
+Biju
+
+> ---
+>  drivers/gpu/drm/renesas/rcar-du/Kconfig                   | 8 --------
+>  drivers/gpu/drm/renesas/rcar-du/Makefile                  | 2 --
+>  drivers/gpu/drm/renesas/rz-du/Kconfig                     | 8 ++++++++
+>  drivers/gpu/drm/renesas/rz-du/Makefile                    | 2 ++
+>  .../gpu/drm/renesas/{rcar-du =3D> rz-du}/rzg2l_mipi_dsi.c   | 0
+>  .../drm/renesas/{rcar-du =3D> rz-du}/rzg2l_mipi_dsi_regs.h  | 0
+>  6 files changed, 10 insertions(+), 10 deletions(-)  rename drivers/gpu/d=
+rm/renesas/{rcar-du =3D> rz-
+> du}/rzg2l_mipi_dsi.c (100%)  rename drivers/gpu/drm/renesas/{rcar-du =3D>=
+ rz-
+> du}/rzg2l_mipi_dsi_regs.h (100%)
+>=20
+> diff --git a/drivers/gpu/drm/renesas/rcar-du/Kconfig b/drivers/gpu/drm/re=
+nesas/rcar-du/Kconfig
+> index 53c356aed5d5..39af73cf2092 100644
+> --- a/drivers/gpu/drm/renesas/rcar-du/Kconfig
+> +++ b/drivers/gpu/drm/renesas/rcar-du/Kconfig
+> @@ -60,14 +60,6 @@ config DRM_RCAR_MIPI_DSI
+>  	select DRM_MIPI_DSI
+>  	select RESET_CONTROLLER
+>=20
+> -config DRM_RZG2L_MIPI_DSI
+> -	tristate "RZ/G2L MIPI DSI Encoder Support"
+> -	depends on DRM && DRM_BRIDGE && OF
+> -	depends on ARCH_RENESAS || COMPILE_TEST
+> -	select DRM_MIPI_DSI
+> -	help
+> -	  Enable support for the RZ/G2L Display Unit embedded MIPI DSI encoders=
+.
+> -
+>  config DRM_RCAR_VSP
+>  	bool "R-Car DU VSP Compositor Support" if ARM
+>  	default y if ARM64
+> diff --git a/drivers/gpu/drm/renesas/rcar-du/Makefile b/drivers/gpu/drm/r=
+enesas/rcar-du/Makefile
+> index b8f2c82651d9..6f132325c8b7 100644
+> --- a/drivers/gpu/drm/renesas/rcar-du/Makefile
+> +++ b/drivers/gpu/drm/renesas/rcar-du/Makefile
+> @@ -14,5 +14,3 @@ obj-$(CONFIG_DRM_RCAR_DU)		+=3D rcar-du-drm.o
+>  obj-$(CONFIG_DRM_RCAR_DW_HDMI)		+=3D rcar_dw_hdmi.o
+>  obj-$(CONFIG_DRM_RCAR_LVDS)		+=3D rcar_lvds.o
+>  obj-$(CONFIG_DRM_RCAR_MIPI_DSI)		+=3D rcar_mipi_dsi.o
+> -
+> -obj-$(CONFIG_DRM_RZG2L_MIPI_DSI)	+=3D rzg2l_mipi_dsi.o
+> diff --git a/drivers/gpu/drm/renesas/rz-du/Kconfig b/drivers/gpu/drm/rene=
+sas/rz-du/Kconfig
+> index 5f0db2c5fee6..8ec14271ebba 100644
+> --- a/drivers/gpu/drm/renesas/rz-du/Kconfig
+> +++ b/drivers/gpu/drm/renesas/rz-du/Kconfig
+> @@ -10,3 +10,11 @@ config DRM_RZG2L_DU
+>  	help
+>  	  Choose this option if you have an RZ/G2L alike chipset.
+>  	  If M is selected the module will be called rzg2l-du-drm.
+> +
+> +config DRM_RZG2L_MIPI_DSI
+> +	tristate "RZ/G2L MIPI DSI Encoder Support"
+> +	depends on DRM && DRM_BRIDGE && OF
+> +	depends on ARCH_RENESAS || COMPILE_TEST
+> +	select DRM_MIPI_DSI
+> +	help
+> +	  Enable support for the RZ/G2L Display Unit embedded MIPI DSI encoders=
+.
+> diff --git a/drivers/gpu/drm/renesas/rz-du/Makefile b/drivers/gpu/drm/ren=
+esas/rz-du/Makefile
+> index 663b82a2577f..2987900ea6b6 100644
+> --- a/drivers/gpu/drm/renesas/rz-du/Makefile
+> +++ b/drivers/gpu/drm/renesas/rz-du/Makefile
+> @@ -6,3 +6,5 @@ rzg2l-du-drm-y :=3D rzg2l_du_crtc.o \
+>=20
+>  rzg2l-du-drm-$(CONFIG_VIDEO_RENESAS_VSP1)	+=3D rzg2l_du_vsp.o
+>  obj-$(CONFIG_DRM_RZG2L_DU)		+=3D rzg2l-du-drm.o
+> +
+> +obj-$(CONFIG_DRM_RZG2L_MIPI_DSI)	+=3D rzg2l_mipi_dsi.o
+> diff --git a/drivers/gpu/drm/renesas/rcar-du/rzg2l_mipi_dsi.c b/drivers/g=
+pu/drm/renesas/rz-
+> du/rzg2l_mipi_dsi.c
+> similarity index 100%
+> rename from drivers/gpu/drm/renesas/rcar-du/rzg2l_mipi_dsi.c
+> rename to drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> diff --git a/drivers/gpu/drm/renesas/rcar-du/rzg2l_mipi_dsi_regs.h b/driv=
+ers/gpu/drm/renesas/rz-
+> du/rzg2l_mipi_dsi_regs.h
+> similarity index 100%
+> rename from drivers/gpu/drm/renesas/rcar-du/rzg2l_mipi_dsi_regs.h
+> rename to drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h
+> --
+> 2.34.1
 
