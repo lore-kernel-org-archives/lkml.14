@@ -1,66 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42C574437A;
-	Tue, 25 Jun 2024 17:50:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ACCF4437A;
+	Tue, 25 Jun 2024 17:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719337843; cv=none; b=aCaTZc/QOvMHVtyfETMXDmEvQfcj8/E9z4QltyUaNaqGhJ/KYaSSZe8Uh7NSVbAaljH316rnqEjhxzrVh3G++WARumzM+srjr+ZOSqHE6MxpLQ3NUS8DRoS2Ljov6/eTwuDPFnD9UO212ov15eAm+fKG0quYCYyzKSsIhLZ/RfM=
+	t=1719337919; cv=none; b=TtD08h3Nt1UO5GlhZ+gdeLpUTb6gOcqzExO6P/HGydKpfywW6X7UBItRsl+YfgDev5zWx4SJELKDW4gTbW5rrveGaeu6JDtK9Ch+pnR/kLQDz7lDzX20htU0APdOa4QJnMx97jLmCHzbafpSMSQzoltqVoP/D1RNhE80GR6tkII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719337843; c=relaxed/simple;
-	bh=nKGtI5DQAQbPa7PCl4AKkwhGC8y1ysgMGXwp2yijK6A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ds6QckiEyqBT1VzC47DY/E4tPQtfXiv7GdEKfZYScbYLgxj4HUAvRgmlZQZjoijms89AvjWpVDlRBtLyxjrNGKsaf6D9E3/lbMimx0LCW8JnkqoiN2VRIJ12ue1ZpjJBC7NJQ4JAgJ+472zXMqO8Nl6g2/vF2Is7VkrF6SGqsXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=PHev+RdD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719337919; c=relaxed/simple;
+	bh=Q3I/DJtp9NDVkqs+20MrQgr7hwwyZDKKO8eL+lYNdlg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mgXchYAr+vMWjUIQRFze4Sez7C+m/JSrBFwlBVhDF5Hh2P0+pMbXlxanhIMMAAeyZeBNf27IOGaL5692waTeP4dtEfdMyQooZbBxGwPx9w0RMx0PkFGKlp6lnt1qQkMO3OTAM8vBF8rWd60fg00mNc+iVjnrxbODajIGzlHMET4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=AxyY+edZ; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="PHev+RdD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE7FAC32781;
-	Tue, 25 Jun 2024 17:50:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1719337843;
-	bh=nKGtI5DQAQbPa7PCl4AKkwhGC8y1ysgMGXwp2yijK6A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PHev+RdD5y9FD5ePcNmPMUlFhH4xKI8lpOzBLbm2gA73CtrfC6Vzc9Wnzwe6N+JP7
-	 QtfzqjK3HnX0l6YONdoILBiYCY/MisWejYm1mpH3QbwunWHiJhr1yC99OxX3LPLBM/
-	 BZtkVXvFqh8wNYlcA2rz0TiA1gVnXxYYqkncRRcw=
-Date: Tue, 25 Jun 2024 19:50:47 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Lizhe <sensor1010@163.com>
-Cc: stern@rowland.harvard.edu, hgajjar@de.adit-jv.com,
-	stanley_chang@realtek.com, ricardo.canuelo@collabora.com,
-	johan+linaro@kernel.org, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] USB: hub:no need to obtain usb device
-Message-ID: <2024062539-follow-drank-66b4@gregkh>
-References: <20240625164607.3367-1-sensor1010@163.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="AxyY+edZ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=mGekqOl4DEHyJGZJHQjAmkGp/lL8oAzm7NpLKvz5LoE=; b=AxyY+edZxqjYXu6wQusE3cnwut
+	RTtl+04ITa3JIfFfN44D+gLCIA83xgFVNzZ2gaPdU/D4dKFtv6e9dDoE6aD1K8Nnx+P4RcrJ4Lc8U
+	gZuf8q1uSsSscVef8hfmomKtzIF33AndgUbHB1RQEbV0UWUeBnHO35AoZkO0firMWgVzSiWiHjc2I
+	yCxXxPUcsbpcV7eSHVOrTGAYV0vI7IYKBqSE4DAZMUMc/vrphNQJXmll+bQR2rZ1dPR0BjododCpf
+	T6mFhx5GPBp9qSRuyHLzfz3ZQ3O/zVqcsNwC38TO1f0jULRGhb2r8LLqBeuEBy/iFHnkcEAJwHX40
+	I3kwm1xg==;
+Received: from 179-125-70-190-dinamico.pombonet.net.br ([179.125.70.190] helo=quatroqueijos.lan)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1sMAKa-007Oa3-Kq; Tue, 25 Jun 2024 19:51:49 +0200
+From: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+To: linux-fsdevel@vger.kernel.org
+Cc: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+	linux-kernel@vger.kernel.org,
+	Gwendal Grignou <gwendal@chromium.org>,
+	dlunev@chromium.org,
+	Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+Subject: [PATCH v2 0/2] fat: add support for directories without . and .. entries
+Date: Tue, 25 Jun 2024 14:51:31 -0300
+Message-Id: <20240625175133.922758-1-cascardo@igalia.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240625164607.3367-1-sensor1010@163.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 25, 2024 at 09:46:07AM -0700, Lizhe wrote:
-> the usb device connected to the port has obtained.
-> there is no need to obtain it again.
-> 
-> Signed-off-by: Lizhe <sensor1010@163.com>
-> ---
->  drivers/usb/core/hub.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-> index 4b93c0bd1d4b..f37b991fa86a 100644
-> --- a/drivers/usb/core/hub.c
-> +++ b/drivers/usb/core/hub.c
-> @@ -5358,7 +5358,7 @@ static void hub_port_connect(struct usb_hub *hub, int port1, u16 portstatus,
->  	if (udev) {
->  		if (hcd->usb_phy && !hdev->parent)
->  			usb_phy_notify_disconnect(hcd->usb_phy, udev->speed);
-> -		usb_disconnect(&port_dev->child);
-> +		usb_disconnect(&udev);
+Some FAT filesystems do not have . and .. entries in some directories.
+Currently, such filesystems are not mounted because such directories will
+have no links. They are also corrupted as inodes are evicted and that leads
+to such directories clusters being marked as freed. Later mounts will then
+error out when finding such clusters.
 
-How was this tested?
+These two commits allow those filesystems to be mounted and . and .. to
+still appear when listing such directories.
+
+v2:
+- Also ignore the absence of . directory and always have at least two links.
+- Add a second commit to always emit . and .. at readdir.
+
+Thadeu Lima de Souza Cascardo (2):
+  fat: ignore . and .. subdirs and always add links to dirs
+  fat: always use dir_emit_dots and ignore . and .. entries
+
+ fs/fat/dir.c   | 28 ++++++++++++----------------
+ fs/fat/inode.c |  2 +-
+ 2 files changed, 13 insertions(+), 17 deletions(-)
+
+-- 
+2.34.1
+
