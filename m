@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C3817B437;
-	Tue, 25 Jun 2024 18:05:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3945D17BB3C;
+	Tue, 25 Jun 2024 18:05:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719338746; cv=none; b=ncGnnF1hbTyLpUecEW78dphQpEngqe59A7OMeAa2KuIY4UuTcLxiP6mTni1bzy5qqe5nUTpRaBGsd8F36/IB0UTNp4qgpnp5g8u9JimBAA5TsURpzG7TWAzFHHWhlUEo18CJwP/NHyW7yC5LZSpuIAhqgAbITOD3bHyec8rbqUY=
+	t=1719338747; cv=none; b=MZ4YTCksAIvGreg1yE818O7hi2QZly4Lq5yrN/vBLPlRSUwayhCHxYBWIp0W5xUihRFXWDFzh+EOyJO8zGNt/4PMHYeQO0ISr2lCqtJncKnGzZlzzOm1knpWz2A5HZTn4okgmhVwLPBC/GelShZvZ1PQTRpnEAdb0syh8WR1lQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719338746; c=relaxed/simple;
-	bh=IqlT1IPKcASfwAbySeLSD/8umJwtipY7yMwxEMFH+lY=;
+	s=arc-20240116; t=1719338747; c=relaxed/simple;
+	bh=IuEbQPKkXzrPZK6YAlgDSnlBOl1pA1OTrf32W27fHRY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Mis8g+C3Tvz+ST65kdoOooTQLuT1QLZnCITtvx92Ox4b+8FS7Snn2jnopRyMWt82beoh1XFPL9igwIBGQ0N92iclMA2+++yCEVJC5aDBrXC0x1NZD9I9jiLxfIiGYda/LzaXKWBNuSJwMpD4IvnZxFIWAsZgQb6VvRBRJNubKok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=owYguYF0; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=YecqTQ9kijv8d1rAh+8Dl9vBUa/X5u5Mx7O+isIGAYGxnZL00jtjBlAtxcRcqqS/SZvO6XtEVpz1eAzkSqFcFi0Vyamz1hFAQDvPbC55GxlVnzmXW1xhdIb+zWeHPojge+ZbOTjxAsz+t3i+K9spSLHrq+WujtlZqpMj/vgE5fE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YZW6FvAs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="owYguYF0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20FCAC4AF11;
-	Tue, 25 Jun 2024 18:05:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YZW6FvAs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 934D2C32781;
+	Tue, 25 Jun 2024 18:05:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719338745;
-	bh=IqlT1IPKcASfwAbySeLSD/8umJwtipY7yMwxEMFH+lY=;
+	s=k20201202; t=1719338747;
+	bh=IuEbQPKkXzrPZK6YAlgDSnlBOl1pA1OTrf32W27fHRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=owYguYF08Cx4JYwOY6o1g0owoG2dsbNcaU/uOyKCAB27ayZjRretUhozMpE1EHQlu
-	 Aj/K7T8lVNM7nt8K2aJagUURVKGF67WC2KKzKvP+ndwQ3nlbi/8hIhtH4xJJwEwWMC
-	 ThpMW7G8krb7u9VhvABkwUTDXPcgKXz2DBHuNhgWEaVQl394tetaG8Ms9gUq5MH2sS
-	 aS+Rv3BrsQ4PHUfZhg9IkyG8wZvNHeeLcdD4K1a5CBmgnPIjFRZKzgHV9xNgresdvb
-	 aFOt+PLj2NZTMUdfPsJUIpGXnhZePKEGbStW8i8bxkRVLIiz5q1uhRGX2tOE6rOD9D
-	 bnZlZ4OaBptyQ==
+	b=YZW6FvAsRy1TtK+Ximbxp4cNzEldF+GHKTE6xKDuX6ScVnrZC1O8tsgfOX9GYoVHZ
+	 Eqm1ERLccOip5xxxXx6epCVzX+wTcpualFf28d5l4MKI4QRCrCSzencV60QSGuBLOi
+	 7Csl0c8aIY5TAC73Z4Wdb7lqxJ41hE6H1JselBoSUR8yntWrvIXHcjkXmwhX3V7zYr
+	 IunlcjQV6pwFuLTJyuegnSY1bux56hSnFNF7v7c2Au875//9QNeWKzB8v0JRYK+fzN
+	 il/nYtFa5C4OqrzlY9CqCeCB3aCOwpYpw7cRrZNshhmbRZISGsFW/9yCXEa7HUxtmM
+	 OIDlfa3WmwD9Q==
 From: SeongJae Park <sj@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: SeongJae Park <sj@kernel.org>,
@@ -34,9 +34,9 @@ Cc: SeongJae Park <sj@kernel.org>,
 	linux-mm@kvack.org,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/8] selftests/damon/_damon_sysfs: support schemes_update_tried_regions
-Date: Tue, 25 Jun 2024 11:05:32 -0700
-Message-Id: <20240625180538.73134-3-sj@kernel.org>
+Subject: [PATCH 4/8] selftests/damon: implement DAMOS tried regions test
+Date: Tue, 25 Jun 2024 11:05:34 -0700
+Message-Id: <20240625180538.73134-5-sj@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240625180538.73134-1-sj@kernel.org>
 References: <20240625180538.73134-1-sj@kernel.org>
@@ -48,77 +48,100 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Implement schemes_update_tried_regions DAMON sysfs command on
-_damon_sysfs.py, to use on implementations of future tests for the
-feature.
+Implement a test for DAMOS tried regions command of DAMON sysfs
+interface.  It ensures the expected number of monitoring regions are
+created using an artificial memory access pattern generator program.
 
 Signed-off-by: SeongJae Park <sj@kernel.org>
 ---
- tools/testing/selftests/damon/_damon_sysfs.py | 35 ++++++++++++++++++-
- 1 file changed, 34 insertions(+), 1 deletion(-)
+ tools/testing/selftests/damon/Makefile        |  1 +
+ .../selftests/damon/damos_tried_regions.py    | 65 +++++++++++++++++++
+ 2 files changed, 66 insertions(+)
+ create mode 100644 tools/testing/selftests/damon/damos_tried_regions.py
 
-diff --git a/tools/testing/selftests/damon/_damon_sysfs.py b/tools/testing/selftests/damon/_damon_sysfs.py
-index 2bd44c32be1b..f975742f29b3 100644
---- a/tools/testing/selftests/damon/_damon_sysfs.py
-+++ b/tools/testing/selftests/damon/_damon_sysfs.py
-@@ -175,16 +175,24 @@ class DamosStats:
-         self.sz_applied = sz_applied
-         self.qt_exceeds = qt_exceeds
+diff --git a/tools/testing/selftests/damon/Makefile b/tools/testing/selftests/damon/Makefile
+index 7b972b5cf487..356b4e9a515d 100644
+--- a/tools/testing/selftests/damon/Makefile
++++ b/tools/testing/selftests/damon/Makefile
+@@ -13,6 +13,7 @@ TEST_PROGS = debugfs_attrs.sh debugfs_schemes.sh debugfs_target_ids.sh
+ TEST_PROGS += sysfs.sh
+ TEST_PROGS += sysfs_update_schemes_tried_regions_wss_estimation.py
+ TEST_PROGS += damos_quota.py damos_quota_goal.py damos_apply_interval.py
++TEST_PROGS += damos_tried_regions.py
+ TEST_PROGS += reclaim.sh lru_sort.sh
  
-+class DamosTriedRegion:
-+    def __init__(self, start, end, nr_accesses, age):
-+        self.start = start
-+        self.end = end
-+        self.nr_accesses = nr_accesses
-+        self.age = age
+ # regression tests (reproducers of previously found bugs)
+diff --git a/tools/testing/selftests/damon/damos_tried_regions.py b/tools/testing/selftests/damon/damos_tried_regions.py
+new file mode 100644
+index 000000000000..3b347eb28bd2
+--- /dev/null
++++ b/tools/testing/selftests/damon/damos_tried_regions.py
+@@ -0,0 +1,65 @@
++#!/usr/bin/env python3
++# SPDX-License-Identifier: GPL-2.0
 +
- class Damos:
-     action = None
-     access_pattern = None
-     quota = None
-     apply_interval_us = None
--    # todo: Support watermarks, stats, tried_regions
-+    # todo: Support watermarks, stats
-     idx = None
-     context = None
-     tried_bytes = None
-     stats = None
-+    tried_regions = None
- 
-     def __init__(self, action='stat', access_pattern=DamosAccessPattern(),
-                  quota=DamosQuota(), apply_interval_us=0):
-@@ -398,6 +406,31 @@ class Kdamond:
-         err = write_file(os.path.join(self.sysfs_dir(), 'state'), 'on')
-         return err
- 
-+    def update_schemes_tried_regions(self):
-+        err = write_file(os.path.join(self.sysfs_dir(), 'state'),
-+                         'update_schemes_tried_regions')
++import subprocess
++import time
++
++import _damon_sysfs
++
++def main():
++    # repeatedly access even-numbered ones in 14 regions of 10 MiB size
++    sz_region = 10 * 1024 * 1024
++    proc = subprocess.Popen(['./access_memory_even', '14', '%d' % sz_region])
++
++    # stat every monitored regions
++    kdamonds = _damon_sysfs.Kdamonds([_damon_sysfs.Kdamond(
++            contexts=[_damon_sysfs.DamonCtx(
++                ops='vaddr',
++                targets=[_damon_sysfs.DamonTarget(pid=proc.pid)],
++                schemes=[_damon_sysfs.Damos(action='stat',
++                    )] # schemes
++                )] # contexts
++            )]) # kdamonds
++
++    err = kdamonds.start()
++    if err is not None:
++        proc.terminate()
++        print('kdamond start failed: %s' % err)
++        exit(1)
++
++    collected_nr_regions = []
++    while proc.poll() is None:
++        time.sleep(0.1)
++        err = kdamonds.kdamonds[0].update_schemes_tried_regions()
 +        if err is not None:
-+            return err
-+        for context in self.contexts:
-+            for scheme in context.schemes:
-+                tried_regions = []
-+                tried_regions_dir = os.path.join(
-+                        scheme.sysfs_dir(), 'tried_regions')
-+                for filename in os.listdir(
-+                        os.path.join(scheme.sysfs_dir(), 'tried_regions')):
-+                    tried_region_dir = os.path.join(tried_regions_dir, filename)
-+                    if not os.path.isdir(tried_region_dir):
-+                        continue
-+                    region_values = []
-+                    for f in ['start', 'end', 'nr_accesses', 'age']:
-+                        content, err = read_file(
-+                                os.path.join(tried_region_dir, f))
-+                        if err is not None:
-+                            return err
-+                        region_values.append(int(content))
-+                    tried_regions.append(DamosTriedRegion(*region_values))
-+                scheme.tried_regions = tried_regions
++            proc.terminate()
++            print('tried regions update failed: %s' % err)
++            exit(1)
 +
-     def update_schemes_tried_bytes(self):
-         err = write_file(os.path.join(self.sysfs_dir(), 'state'),
-                 'update_schemes_tried_bytes')
++        scheme = kdamonds.kdamonds[0].contexts[0].schemes[0]
++        if scheme.tried_regions is None:
++            proc.terminate()
++            print('tried regions is not collected')
++            exit(1)
++
++        nr_tried_regions = len(scheme.tried_regions)
++        if nr_tried_regions <= 0:
++            proc.terminate()
++            print('tried regions is not created')
++            exit(1)
++        collected_nr_regions.append(nr_tried_regions)
++        if len(collected_nr_regions) > 10:
++            break
++    proc.terminate()
++
++    collected_nr_regions.sort()
++    sample = collected_nr_regions[4]
++    print('50-th percentile nr_regions: %d' % sample)
++    print('expectation (>= 14) is %s' % 'met' if sample >= 14 else 'not met')
++    if collected_nr_regions[4] < 14:
++        print('full nr_regions:')
++        print('\n'.join(collected_nr_regions))
++        exit(1)
++
++if __name__ == '__main__':
++    main()
 -- 
 2.39.2
 
