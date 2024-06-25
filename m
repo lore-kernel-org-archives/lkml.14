@@ -1,197 +1,90 @@
-Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01olkn2017.outbound.protection.outlook.com [40.92.99.17])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F68218030;
-	Tue, 25 Jun 2024 01:47:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.99.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719280052; cv=fail; b=ECyl67UVJqTKrIbTkNoYbzgo5YT8plqbsZUDU/RyNtXmvkPz0MPGZENLdKDYlW/sFlA89xpQAZxlXTCmMxNI/ptRT27323GKowRM3W70DKDl3w0kaIY1i+rCoNkDKIUBXm6L5AK8hLsIqg9driqLA8OuErp+yxuiO9Hki+qOjgQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719280052; c=relaxed/simple;
-	bh=BXWjBWGgbhYOyQq8mlt9vPcJ0imFByAxJu59c7wDYuw=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Hx+lvdp5p5DhDiUX80yHcwVjrEbFeIps+yYYnbx2fm2fmVzuyXYHpZLpVdggVssrrebK45b8kH7X0H+c5JgjkWUY+GAm9e8AjGd8G9bqoKG4EkgxaoUQ9/6MqsBssd9eu7BRIxJSfSE8GKuqU1hWnxzkrHnmb3uaAVjWEENAXxA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=oPXwHAl+; arc=fail smtp.client-ip=40.92.99.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="oPXwHAl+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BIQtZCbyZ4bEYiP1nuyiG/MNT2UDjM8/361NjQ0dk+l8+Oqy2YBkOyFrQpf0dYRo69wdeY1IW9qWIvyxM0lvWx/ZwO3mU/Im1R8pKXPsdThrbSVqhFk8ExuNHAgoufJIM/qGdkc+v6jSQR67VDXeS/u8HRaV2lLv4/znaRIzUUlBJd651mZ8AJ5TORYzULkZCUMcyrngtaE7BxmF28T4OcSsUErh7ikSVbIHoym5UKIQeAxGqvZZUUBmR844F3LPVXGk34F14iBxuBGzlO4AXbXubTvWmE56glJQnV7tsPh7M4/uCeaTeJ8KkSWi4gMSZfp4CClqN6UuEHGqTg2N2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mSYeoKoxFit/GEJ5Ip/TrbcsZ8o5UanzV6RIYYmglpQ=;
- b=ZLp8I0munQtDffFbfll0qQF+V3Mn86Vb9DZJPrM2c7t1+Fi4Eiks5jcB5u05B0PDH3T6wmdC6fIKp63D8A9Mq6IXFGU2erM0XtC6/AzAevsSDxPn/+3EKgAdu6tHeuk6fLhd381gqe2TjhmpA7kDiyB2zsVtI8hf0up2ZAq5Z9ST/vrfJ0WiDKmixZMj+5aEAMjQl8DN1mI/ClgqPusUmW16auDPTwt9vlnCzvhv7XamD6HFkEDlEqFgKZO7kJyjAKY0SeVVNS+gpNUdqZIjw+NXlYrul8He0FlGozm8O0nwZ8Vb8KjrC4niihR7iXea+iNTB+VZzORxzrxx06UotQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mSYeoKoxFit/GEJ5Ip/TrbcsZ8o5UanzV6RIYYmglpQ=;
- b=oPXwHAl+XwEi9FzSkp7r1bg9Z5KKxVdwVLSPBjhRplEWwvCI8zlF13LTXNuNe9c2Ly4YZclQq+5V0W8vusK3Hd5d9M3tfGFp6br7+L6HAbwbMCht74jP4w95/jkSshYDwinCpl7g+jh4rfNncjAxEUoNPa0RsXYgkS8bIScFMRITzebiOG9CzDZjWx6+mM49fv5Ws/gVYs1MKHt/Q19UIeAXszvS56JYtg15UccavKa/8wEOFTb9gFsh86oJ9ag2jldc87K9hTtZ3oG4FUEBCO3xTEy8zGjNAIsOM5U+/iyvZR4YCArb8qzZX1arb28da/vDibHEb154yrsCVpa2LA==
-Received: from TYCP286MB0895.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:77::8) by
- TY1P286MB3358.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:2e2::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7698.28; Tue, 25 Jun 2024 01:47:27 +0000
-Received: from TYCP286MB0895.JPNP286.PROD.OUTLOOK.COM
- ([fe80::ad5c:3146:bd0d:f17c]) by TYCP286MB0895.JPNP286.PROD.OUTLOOK.COM
- ([fe80::ad5c:3146:bd0d:f17c%4]) with mapi id 15.20.7698.025; Tue, 25 Jun 2024
- 01:47:27 +0000
-From: Shiji Yang <yangshiji66@outlook.com>
-To: linux-mips@vger.kernel.org
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Khalid Aziz <khalid@gonehiking.org>,
-	Baoquan He <bhe@redhat.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	Shiji Yang <yangshiji66@outlook.com>,
-	Mieczyslaw Nalewaj <namiltd@yahoo.com>
-Subject: [PATCH V2] mips: kernel: fix detect_memory_region() function
-Date: Tue, 25 Jun 2024 09:44:44 +0800
-Message-ID:
- <TYCP286MB089598ABD1E2F66003D71EB8BCD52@TYCP286MB0895.JPNP286.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.39.2
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [NCiTcmbz88KS6xxY0GBCm75t+Nr48gvr]
-X-ClientProxiedBy: OS0PR01CA0167.jpnprd01.prod.outlook.com
- (2603:1096:604:26::18) To TYCP286MB0895.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:77::8)
-X-Microsoft-Original-Message-ID:
- <20240625014444.12421-1-yangshiji66@outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D754918030;
+	Tue, 25 Jun 2024 01:47:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719280078; cv=none; b=N/BFvuRnM5sq+fbdk4ePlZhuCBfvf6/apZ+kJYQU5SPE5kIvPMmAhLp9JRPI6sv9LDvPuNJ41cMdXt/KzjJUnGAarjVCPos8lrdSK97+LZrhvqQ8F0xP0cE4xFpRT8d6ACfI/GypUGQ89AHQ899ftWfI5z3MYD6l2HtGFjK7dUo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719280078; c=relaxed/simple;
+	bh=9Rsb31kwR8ngFnYt1tUrH4yXXEL3qfuG/Tay2QGDL1Y=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Xx20V8PL+1wz9sldP0PhKGU3jeY6g4xgA/vBe2u5rTPL6Z0uj1XOko09cgA6PXpvQ3asbUiiDZZRlVLjJYsYClyjOyDom3v24W5Rp3mhsqMlzt94iwLjZEM1/eW3AHPhhF4c8EPSingoKES87aWV4UkETXebNpNOw9naF7AWBH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4W7SKJ2fVBzZg0K;
+	Tue, 25 Jun 2024 09:43:32 +0800 (CST)
+Received: from kwepemd100011.china.huawei.com (unknown [7.221.188.204])
+	by mail.maildlp.com (Postfix) with ESMTPS id CB9C21401E0;
+	Tue, 25 Jun 2024 09:47:54 +0800 (CST)
+Received: from kwepemd100011.china.huawei.com (7.221.188.204) by
+ kwepemd100011.china.huawei.com (7.221.188.204) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Tue, 25 Jun 2024 09:47:54 +0800
+Received: from kwepemd100011.china.huawei.com ([7.221.188.204]) by
+ kwepemd100011.china.huawei.com ([7.221.188.204]) with mapi id 15.02.1258.034;
+ Tue, 25 Jun 2024 09:47:54 +0800
+From: duchangbin <changbin.du@huawei.com>
+To: Namhyung Kim <namhyung@kernel.org>
+CC: duchangbin <changbin.du@huawei.com>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, "Arnaldo Carvalho de
+ Melo" <acme@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Mark Rutland
+	<mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Ian
+ Rogers" <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>, Nick Desaulniers
+	<ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, Justin Stitt
+	<justinstitt@google.com>, "linux-perf-users@vger.kernel.org"
+	<linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "llvm@lists.linux.dev" <llvm@lists.linux.dev>
+Subject: Re: [PATCH v3 2/4] perf: disasm: use build_id_path if fallback failed
+Thread-Topic: [PATCH v3 2/4] perf: disasm: use build_id_path if fallback
+ failed
+Thread-Index: AQHawSK1ifvJzOPE3ES+2w16NY3J17HXHy4AgACh0oA=
+Date: Tue, 25 Jun 2024 01:47:54 +0000
+Message-ID: <bfdcb5d8f0664f48a3d6be93954ebdb2@huawei.com>
+References: <20240618015530.3699434-1-changbin.du@huawei.com>
+ <20240618015530.3699434-3-changbin.du@huawei.com>
+ <ZnoKcoHtjvJgjETL@google.com>
+In-Reply-To: <ZnoKcoHtjvJgjETL@google.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-exchange-imapappendstamp: kwepemd100011.china.huawei.com (15.02.1258.034)
+x-ms-exchange-messagesentrepresentingtype: 1
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1063B9E35DDEF04BBCEB437215F3D84E@huawei.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYCP286MB0895:EE_|TY1P286MB3358:EE_
-X-MS-Office365-Filtering-Correlation-Id: a247ef53-62b4-4ec0-8d79-08dc94b8c43d
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199025|4302099010|440099025|3412199022|1602099009|1710799023;
-X-Microsoft-Antispam-Message-Info:
-	Vx6A9RsvhG2RJiK5eWgnVVm8H0PpZ0WqVuCLtbl4SJzgi71gDXa0IGWY2anqqis4JHXRGaT6XMaK3dgkD/hIm6/+xkI21xSyiUjpKG7Tv4HC/+GItXz9J8GUWIqW0hHdCPqdmeRIw8RpDmavK6DO5kzsMNBB4QDY2C4rCtTsnPZbbG7ORpfDRWsCB8YSrdn/FVCXnaPy3akTEZaI9bEyTeGCi1I6nhRDgmgFEAe5oUwvIae9R8WAESuBApFMS/hjDS+LRqk1jBkVS/JpGM0cbjKjUDWNJskuJiqc49vzqQm3IQ+vE5wYkGAgMrbDBHFslmGlBZA7xv7sGXtCWTvoISf8BcYVQHjIYOUD5oHkHwCjf3EGtCZAxpmnGiE6CwKyBxIeTEkq6+UY/3wB5hpfTLpmk/QbBNyCyk0u0Rf+9C9no8YhbGkGiiy6eRt4mzjku/Z4eBHDEJCaqc8wc56SjOkZVX8dcZZ5L7wxoeKnSTWT8coZSpq4XtTG9elSjyiBiy2S2XdFJ2id9G2h5YEjUlXimFVCcCkZUojkaANcXShjjYgxjHq04Qjj8NveJ9lqps88WnNVNf51dyv8i6d98WdhmXUxnyKs6jiEw4b9mhuv1vNQRfCWukNzBJV89EsDUuNkebE8kmkvkF6MnozSd0mirOek9kuh72WIKNWnUOBfWjVgjOknwLcYzeZ1BMaJlPp69uFVo6ch/t/BDJEKg6KopNJRShxT63rP1iDN6lA=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?9448PIojvV9VDpH0rEN6qO6TikGd22y4dEusCHu2Gm32VChNkMnevLAWhGlv?=
- =?us-ascii?Q?LSLdN2XjdeSnzi0oJ0NvN5W5YRJrg28GeH/V+ktB/IpHkbbaplsvfXfgUi5S?=
- =?us-ascii?Q?zG9GyMSTqRGNkHtoMoofUqw24+Y8v65lKJYupZjqHfsT3WgWLIl4BuYmfn+f?=
- =?us-ascii?Q?RKIWBQokGGIc5XX04ExmIrjk+LybWMES7aJ5l0gF1YYqaA4mKwVwokWWBxye?=
- =?us-ascii?Q?8+nqpOpj+6U0tdRUstkOPwo1J1MDmXl+YfIS6BreikchfW5/tQTs6Xu2krjx?=
- =?us-ascii?Q?f3A2CH/Og9W+uUauHivHW4vK30uRFTg8UdgLNJEn993ep0xVBGYCejkwCkYp?=
- =?us-ascii?Q?hZQ2g09DcZWSmoL3/yIGtL4fKJQt+/RKld9xHPc02m1ATG+vaqro2/7s3KA+?=
- =?us-ascii?Q?BS5vAKRIjZdeCwlvQZh8wdWY53xvh/S3ccwo1EKpjHOvPmN80uGvnQp6Ye9A?=
- =?us-ascii?Q?BnBBzT22RDzXtBCOg8qMtqMCsCWN8l6U67jXC7oq+6kahnNdgIBkdl8We3gI?=
- =?us-ascii?Q?bGJRiGw/vHodlEYTqBeNWV5yyzc9hW9c07X/JEJ5jE+AgB7eVu3Juk8bji74?=
- =?us-ascii?Q?BsdrcXeTD4Yzzh20pRBVU6NGtaBf3aICsoq5gpEDX8DbZZujBHxP0sn6C3d7?=
- =?us-ascii?Q?2iWAMhdRhRYJ3B6nPN4D2hoMF7oPE0gNPfk8O1bxw/2vA+nYeSy4YzYjjFgz?=
- =?us-ascii?Q?4PPrOQqPOrmeGyCB3eGd8v3lJ22cPUNL+LntsR/MRXxvuv9PucAqSpajmByJ?=
- =?us-ascii?Q?9CguscB0yzQ3gH65MTjbq99qyakUi0INP6/KbSWCOmVnVeJV+vrWpIe2UePh?=
- =?us-ascii?Q?rIZJviAxEVFeubRUyBlptPtHIahCgyquUklALGDeu0vueiywd1YMTN0OTPlL?=
- =?us-ascii?Q?RUPlW6GySG9I7D1WGh5qi+wWSuIpFfIF6WsZF+bWJNOFcQypHpk9aN14A3q7?=
- =?us-ascii?Q?WT1fnJ0CQDmKQ06oTxnyHJlHp8RctwQNt817na3W1t5mificy3EJTpKOIgYh?=
- =?us-ascii?Q?dURtxCi9fsqhO5jvvN1a1ujA5xvnMjurrie+Exx8tkT0XOGDQqSJ14O4roA0?=
- =?us-ascii?Q?CAcRXcQVydIwYINtrSdbtL046YfaEY5AsZVaCkCfT25tkGF45c7UqIa7Fk3H?=
- =?us-ascii?Q?/BAIiB73EHGIvNUwwkSyluK7MllQWCSOwhtXvhOHhLX4W2AN6pVw0OIpsUgh?=
- =?us-ascii?Q?NkibJ0SzWztdEH0FMqA1urAIysu+zhTWUsGetdcY72APReXHpcXGY73b2cAj?=
- =?us-ascii?Q?N7zcCmwgg9z2i2cOwYnH?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a247ef53-62b4-4ec0-8d79-08dc94b8c43d
-X-MS-Exchange-CrossTenant-AuthSource: TYCP286MB0895.JPNP286.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2024 01:47:26.9909
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1P286MB3358
 
-The detect_memory_region() has been broken on 6.6 kernel[1]. This
-patch fixes it by:
-1. Do not use memcmp() on unallocated memory, as the new introduced
-   fortify dynamic object size check[2] will return unexpected result.
-2. Use a fixed pattern instead of a random function pointer as the
-   magic value.
-3. Flip magic value and double check it.
-4. Enable this feature only for 32-bit CPUs. Currently, only ath79 and
-   ralink CPUs are using it. And 64-bit CPU doesn't have the KSEG1ADDR
-   definition.
+On Mon, Jun 24, 2024 at 05:08:18PM -0700, Namhyung Kim wrote:
+> Hello,
+>=20
+> On Tue, Jun 18, 2024 at 09:55:28AM +0800, Changbin Du wrote:
+> > If we can not fallback for special dso (vmlinx and vdso), use the
+> > build_id_path found previously.
+> >=20
+> > To make change easy, this change first refactors the code by extracting
+> > two functions read_buildid_linkname() and fallback_filename().
+>=20
+> Can you please split the refactoring from the actual change?  It'd be
+> easier to review and to maintain the code.
+>=20
+Sure, I'll do it taday.
 
-[1] https://github.com/openwrt/openwrt/pull/14774#issuecomment-1989356746
-[2] commit 439a1bcac648 ("fortify: Use __builtin_dynamic_object_size() when available")
-Signed-off-by: Shiji Yang <yangshiji66@outlook.com>
-Tested-by: Mieczyslaw Nalewaj <namiltd@yahoo.com>
----
- arch/mips/include/asm/bootinfo.h |  2 ++
- arch/mips/kernel/setup.c         | 17 ++++++++++++-----
- 2 files changed, 14 insertions(+), 5 deletions(-)
+> Thanks,
+> Namhyung
+>=20
 
-diff --git a/arch/mips/include/asm/bootinfo.h b/arch/mips/include/asm/bootinfo.h
-index 2128ba903391..8516c11916a4 100644
---- a/arch/mips/include/asm/bootinfo.h
-+++ b/arch/mips/include/asm/bootinfo.h
-@@ -93,7 +93,9 @@ const char *get_system_type(void);
- 
- extern unsigned long mips_machtype;
- 
-+#ifndef CONFIG_64BIT
- extern void detect_memory_region(phys_addr_t start, phys_addr_t sz_min,  phys_addr_t sz_max);
-+#endif
- 
- extern void prom_init(void);
- extern void prom_free_prom_memory(void);
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 12a1a4ffb602..3a3bc1b7e62e 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -86,21 +86,27 @@ static struct resource bss_resource = { .name = "Kernel bss", };
- unsigned long __kaslr_offset __ro_after_init;
- EXPORT_SYMBOL(__kaslr_offset);
- 
--static void *detect_magic __initdata = detect_memory_region;
--
- #ifdef CONFIG_MIPS_AUTO_PFN_OFFSET
- unsigned long ARCH_PFN_OFFSET;
- EXPORT_SYMBOL(ARCH_PFN_OFFSET);
- #endif
- 
-+#ifndef CONFIG_64BIT
-+static u32 detect_magic __initdata;
-+#define MIPS_MEM_TEST_PATTERN		0xaa5555aa
-+
- void __init detect_memory_region(phys_addr_t start, phys_addr_t sz_min, phys_addr_t sz_max)
- {
--	void *dm = &detect_magic;
-+	void *dm = (void *)KSEG1ADDR(&detect_magic);
- 	phys_addr_t size;
- 
- 	for (size = sz_min; size < sz_max; size <<= 1) {
--		if (!memcmp(dm, dm + size, sizeof(detect_magic)))
--			break;
-+		__raw_writel(MIPS_MEM_TEST_PATTERN, dm);
-+		if (__raw_readl(dm) == __raw_readl(dm + size)) {
-+			__raw_writel(~MIPS_MEM_TEST_PATTERN, dm);
-+			if (__raw_readl(dm) == __raw_readl(dm + size))
-+				break;
-+		}
- 	}
- 
- 	pr_debug("Memory: %lluMB of RAM detected at 0x%llx (min: %lluMB, max: %lluMB)\n",
-@@ -111,6 +117,7 @@ void __init detect_memory_region(phys_addr_t start, phys_addr_t sz_min, phys_add
- 
- 	memblock_add(start, size);
- }
-+#endif /* CONFIG_64BIT */
- 
- /*
-  * Manage initrd
--- 
-2.45.1
-
+--=20
+Cheers,
+Changbin Du
