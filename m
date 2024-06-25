@@ -1,242 +1,108 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA75873463;
-	Tue, 25 Jun 2024 07:13:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1F91465B3
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 07:13:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719299602; cv=none; b=nA7JIn9YOn/j7Vdjo6g9w96u/GLA9R0OgrcWUzX1ZRWN5dFi4Z+OB9Q+nuxLAiAQDuGVldVVEqrcl9oBGE1ttlA4725y+B6zWmuQ7oJZ+arj+BS1VML0QsFoOvA8XIJxBOmpgNTM+hVYQrU1qjxouU/zLnSTxAlGENA9JWY6uQE=
+	t=1719299638; cv=none; b=fKz0oxbPlb/32WxOmjwmCPXZ5fO1l1hlGId1B7TDUQ5DICntmB/zXF3C3/+Jtek1PwPOfLMbmh9OyyGhMepTsaiYpGjMvE5Sq6aeYXZRBzswzU2k5bGg3fZ623JTL534RgEMojpDEqpjuDgYHUTfpjB0fzjpPdHLAbJ4Qvi1C4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719299602; c=relaxed/simple;
-	bh=eeHPwgkpAFO71TVTQMuDmcgFPFM0V9lv/vHn3xfW8PY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Vdcj/2S7XGi47kkb9uRD6Ba0JwpbTi8pz41jUHonvypabGW+SVmrgbNY/ICGeRBOybP4euWwhScD1LSIy17QjqURrfLNV7t0bFeGDATx/OUrQIHBCAIxKTnIg/zIt2gFwtx37zeVrLdWVSEd9PmdVi8yGGG8mF346jk9JnLBtGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ffzzuXD8; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719299638; c=relaxed/simple;
+	bh=M0PusBwUOnvIKi4gdlLdWjip9P0B6wyISd2JaNhue0E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sxSEcYkBZ8MTv61HNvjbCH/4uNvqje2Otlk4mwzSpP7EzuX/XOy/I2iy2D5W/DRVHK4IGDJWowsc9/uDCVWKHBTTSnZT1Y7S3ejmNhWsn2qphM4djxhRzYvYKYGKEbGubI4eAa1iPUXHJFeoiaI/VqLLpDv7YKDsvLM41onBfR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vXmifm8q; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ffzzuXD8"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2c70c08d98fso4092111a91.0;
-        Tue, 25 Jun 2024 00:13:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vXmifm8q"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52cd80e55efso6158666e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 00:13:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719299600; x=1719904400; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QqS5qkvxYIguDPc+6nwFBzR1BGeFxAODD+Dwe8rZa64=;
-        b=ffzzuXD8dbrZu+vV0vdWZTEpiw6fheI+yO2kgfyeTUBuDnJzlX2HuHTbiL3eKx/XF7
-         7Zk0bTj6zf84et0BKCMIUPp8ZWkVPlDcRoRFr7CQUAHrXKFtvPsUI1ATfTJ4jq+fkePI
-         MGJivUQeJpg/4loiJ2d/KkLC09Db6FSukDfWxtlWylvQSdCs+I80F0PBMbcJHUUoSWKc
-         wiBCJ+ehHDUctVY9riSWfuQkoXXel2oFR6pEG0Qe4wH0AtJVCT0SHdQzPkcia0MAa4DX
-         Zvyhwi53ZomYyduDIdyrqxzdoDtbXcY6eYlmrZwJEVgWXuh/A0sG0U6z5F1GppHkTi9F
-         Kbeg==
+        d=linaro.org; s=google; t=1719299635; x=1719904435; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=dzKPriaP/94IulqToxJJrPFAwt2XeR1A21mNIKltOqQ=;
+        b=vXmifm8q/8E5agcvZoJRFXS/zmOUa5QSFcvCZpOm3ZkFXx2PCkHMiAyn2BFChQP5Pu
+         BKSM3cUytxBEtk0/eMNWWvh20Yp8vEEBqVbXiAW2DZNTyneXlG5PBoUDZS6fdfUqylkR
+         aUwnPjqLNcPaN9Sva7E5zEpbGaoJTTXspyhdNedhwpjnE0Ag7i76kvLoP+7OYsU04IgA
+         qP9eaIYz0MslDR4eQhHs+Jmlg4TyBNm52LPYVyFBu+Eo2x1B9VU/yCsFIg1P5zCELiIC
+         eEK9ocgXWDclrGO/QAu1biEYJ0Fe3q+MFa8y8tEVlctxqzD59LFXGICjn5vOZfujkMr0
+         zHgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719299600; x=1719904400;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QqS5qkvxYIguDPc+6nwFBzR1BGeFxAODD+Dwe8rZa64=;
-        b=YVE1KtVFI4z3Q1mnZ2IJd8mazbieQlhrOfO6zViNVkC4stT0lvWBgivvCmdUeNK5oB
-         uzycviUWd+KC7x3QYj9iS8zZsgLW1k2zTuWRodcYaQEQfFRb3u7f2Yx9LCuR48naQVA5
-         FSZEK5APY99efM7nHHGxb2j0r4csBL3WxyYbncC00aNvIsOpAOr/OPcswXnArhx+CqI6
-         EHhuVdZDm5L4+q562Obq5US3XjgedgCQQU5tHJXjN427+MGLBDp9BO2Xx4urfu55/h+Z
-         6dNxuUouJ2cUc5qcyB/9arQCalGdVlH88zVMT4DNdFW3mf5ldjlfjwa1u8WiqwlmBrUi
-         PSnw==
-X-Forwarded-Encrypted: i=1; AJvYcCVBpM5uBnUi1UYbRSsHfcbvOUbab0CTEnY9Zr4qqaVwBEVreNSF8gOhvrRXSeD+xyd3n+qSKEc8gRlIEI4ECSSIrH6Q2doSM0kmJztrf0w978cMzOtYVQ8e5Nm846Kw1x7G76h0
-X-Gm-Message-State: AOJu0YwgUryn2XwAxHonitG9lhDs6qrqOHvkssT6w7NgLhb+wOSi+pLT
-	MLCT+SYJFhhyuD8E0oL4cm4W7RGs2uZTDI6rZyZucL+r0JTrF8qM
-X-Google-Smtp-Source: AGHT+IHwy8BVEfsToz9CtNaX3E5F7pOK9zAZozi3JW/gRbDDAmNqkArpx5hpW2LXxCI9HnkVh1L1ww==
-X-Received: by 2002:a17:90a:a40b:b0:2c8:87e:c4cf with SMTP id 98e67ed59e1d1-2c85819841bmr6033897a91.4.1719299600018;
-        Tue, 25 Jun 2024 00:13:20 -0700 (PDT)
-Received: from twhmp6px (mxsmtp211.mxic.com.tw. [211.75.127.162])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c819a8e466sm7941932a91.32.2024.06.25.00.13.19
+        d=1e100.net; s=20230601; t=1719299635; x=1719904435;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dzKPriaP/94IulqToxJJrPFAwt2XeR1A21mNIKltOqQ=;
+        b=Bhq+t/JpoYk/0wKCUk5J0fAOVHh/I/PP7/UI42R+wFMte6pxybVo8a583VZBEuRbte
+         t6BtWlR6xSKYX74fCPB7MGq85DY+dt2y51TmbnCyXvE0Vauv3x8wCjGChvRQ6/OFyHnb
+         I6e73w8meqg1kp9hNHBqhDoGY51Lcyk3tny6zMjFPv2SkBvaaijCmRaIlU0HZ1YW4ZDh
+         Mw7Wk3+Ss5lggpNqOQRnbkNw4q1ppasBeIP2oRlglIgw7s3xcYkDWniz1ypvTScdMGQL
+         Bt0OKRyTjSl1s/f7y2WkA7Mt5F8X0kcdBU1YPQzQeXkmlffDv0H87tfxOGGaSR3HBXHc
+         SNuA==
+X-Forwarded-Encrypted: i=1; AJvYcCWeOUdeVIYL1Zol3eTpVxMjk56rUERJDzVteW50veECPaIqT4HSs9Oqngqw+SO0EjIz/xRd6q4+QXpVZvgnWw6TxAfEdBEXUZ10AbS3
+X-Gm-Message-State: AOJu0YwkOPQJ9GYHhvXecaXTZgprA4PRjEKaNyQGkUwrEvbCzt1muCV8
+	sBgFilBb/h4rISf5/ShkHaRr9yt/AFjheXOrH/rUWGFZnIXhpxMaTLtY6I7H7zA=
+X-Google-Smtp-Source: AGHT+IG64J5RDl5yaNGvIky6EGoSsPTbRPhzUi9sDW1lxe4MxCOfYS/ESUmKFf0+XtJh628T1VqfDg==
+X-Received: by 2002:a05:6512:308c:b0:52c:c9e4:3291 with SMTP id 2adb3069b0e04-52ce185ce9amr6238633e87.60.1719299634940;
+        Tue, 25 Jun 2024 00:13:54 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52cdeafa562sm820431e87.154.2024.06.25.00.13.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 00:13:19 -0700 (PDT)
-Received: from hqs-appsw-a2o.mp600.macronix.com (linux-patcher [172.17.236.67])
-	by twhmp6px (Postfix) with ESMTPS id 24EFF800F4;
-	Tue, 25 Jun 2024 15:15:40 +0800 (CST)
-From: Cheng Ming Lin <linchengming884@gmail.com>
-To: miquel.raynal@bootlin.com,
-	dwmw2@infradead.org,
-	computersforpeace@gmail.com,
-	marek.vasut@gmail.com,
-	vigneshr@ti.com,
-	linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: richard@nod.at,
-	alvinzhou@mxic.com.tw,
-	leoyu@mxic.com.tw,
-	Cheng Ming Lin <chengminglin@mxic.com.tw>,
-	stable@vger.kernel.org,
-	Jaime Liao <jaimeliao@mxic.com.tw>
-Subject: [PATCH v5.4.y v4] mtd: spinand: macronix: Add support for serial NAND flash
-Date: Tue, 25 Jun 2024 15:12:51 +0800
-Message-Id: <20240625071251.62100-1-linchengming884@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 25 Jun 2024 00:13:54 -0700 (PDT)
+Date: Tue, 25 Jun 2024 10:13:52 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Gokul Sriram P <quic_gokulsri@quicinc.com>, sboyd@kernel.org, 
+	andersson@kernel.org, bjorn.andersson@linaro.org, david.brown@linaro.org, 
+	devicetree@vger.kernel.org, jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
+	mark.rutland@arm.com, mturquette@baylibre.com, ohad@wizery.com, robh@kernel.org, 
+	sricharan@codeaurora.org, gokulsri@codeaurora.org
+Subject: Re: [PATCH v9 4/8] remoteproc: qcom: Add ssr subdevice identifier
+Message-ID: <76mrajqeteocstj2akjtyk7rhfnqvksqw3fqsntlm6n3mqqaff@z343xmmunnzj>
+References: <20240621114659.2958170-1-quic_gokulsri@quicinc.com>
+ <20240621114659.2958170-5-quic_gokulsri@quicinc.com>
+ <d7923435-ba13-4aad-b3f1-67e3469ec7fc@kernel.org>
+ <8adae0a7-d496-4c9f-ab0c-f162c06e90c4@quicinc.com>
+ <87353911-b108-4b87-aa40-862acfc95aca@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <87353911-b108-4b87-aa40-862acfc95aca@kernel.org>
 
-From: Cheng Ming Lin <chengminglin@mxic.com.tw>
+On Tue, Jun 25, 2024 at 09:04:17AM GMT, Krzysztof Kozlowski wrote:
+> On 25/06/2024 08:28, Gokul Sriram P wrote:
+> > 
+> > On 6/21/2024 8:40 PM, Krzysztof Kozlowski wrote:
+> >> On 21/06/2024 13:46, Gokul Sriram Palanisamy wrote:
+> >>> Add name for ssr subdevice on IPQ8074 SoC.
+> >> Why?
+> >    Oops! Missed the change. Will add and update.
+> >>> Signed-off-by: Nikhil Prakash V<quic_nprakash@quicinc.com>
+> >>> Signed-off-by: Sricharan R<quic_srichara@quicinc.com>
+> >>> Signed-off-by: Gokul Sriram Palanisamy<quic_gokulsri@quicinc.com>
+> >> Three people developed that single line?
+> >>
+> >> Something is really odd with your DCO chain.
+> >   The change was originally authored by Nikhil and reviewed by 
+> > Sricharan. I'm just submitting the change to upstream so retained their 
+> > names.
+> >>
+> 
+> Then your DCO chain is not correct. Please carefully read submitting
+> patches, especially documents about authorship, DCO, reviewed tags.
 
-commit c374839f9b4475173e536d1eaddff45cb481dbdf upstream.
+Also there should be From: Nikhil header before the patch.
 
-Macronix NAND Flash devices are available in different configurations
-and densities.
-
-MX"35" means SPI NAND
-MX35"LF"/"UF" , LF means 3V and UF meands 1.8V
-MX35LF"2G" , 2G means 2Gbits
-MX35LF2G"E4"/"24"/"14",
-E4 means internal ECC and Quad I/O(x4)
-24 means 8-bit ecc requirement and Quad I/O(x4)
-14 means 4-bit ecc requirement and Quad I/O(x4)
-
-MX35LF2G14AC is 3V 2Gbit serial NAND flash device
-(without on-die ECC)
-https://www.mxic.com.tw/Lists/Datasheet/Attachments/7926/MX35LF2G14AC,%203V,%202Gb,%20v1.1.pdf
-
-MX35UF4G24AD/MX35UF2G24AD/MX35UF1G24AD is 1.8V 4Gbit serial NAND flash device
-(without on-die ECC)
-https://www.mxic.com.tw/Lists/Datasheet/Attachments/7980/MX35UF4G24AD,%201.8V,%204Gb,%20v0.00.pdf
-
-MX35UF4GE4AD/MX35UF2GE4AD/MX35UF1GE4AD are 1.8V 4G/2Gbit serial
-NAND flash device with 8-bit on-die ECC
-https://www.mxic.com.tw/Lists/Datasheet/Attachments/7983/MX35UF4GE4AD,%201.8V,%204Gb,%20v0.00.pdf
-
-MX35UF2GE4AC/MX35UF1GE4AC are 1.8V 2G/1Gbit serial
-NAND flash device with 8-bit on-die ECC
-https://www.mxic.com.tw/Lists/Datasheet/Attachments/7974/MX35UF2GE4AC,%201.8V,%202Gb,%20v1.0.pdf
-
-MX35UF2G14AC/MX35UF1G14AC are 1.8V 2G/1Gbit serial
-NAND flash device (without on-die ECC)
-https://www.mxic.com.tw/Lists/Datasheet/Attachments/7931/MX35UF2G14AC,%201.8V,%202Gb,%20v1.1.pdf
-
-Validated via normal(default) and QUAD mode by read, erase, read back,
-on Xilinx Zynq PicoZed FPGA board which included Macronix
-SPI Host(drivers/spi/spi-mxic.c).
-
-Cc: stable@vger.kernel.org # 5.4.y
-Signed-off-by: Cheng Ming Lin <chengminglin@mxic.com.tw>
-Signed-off-by: Jaime Liao <jaimeliao@mxic.com.tw>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/1621475108-22523-1-git-send-email-jaimeliao@mxic.com.tw
----
- drivers/mtd/nand/spi/macronix.c | 99 +++++++++++++++++++++++++++++++++
- 1 file changed, 99 insertions(+)
-
-diff --git a/drivers/mtd/nand/spi/macronix.c b/drivers/mtd/nand/spi/macronix.c
-index f18c6cfe8ff5..a38d0de5f765 100644
---- a/drivers/mtd/nand/spi/macronix.c
-+++ b/drivers/mtd/nand/spi/macronix.c
-@@ -132,6 +132,105 @@ static const struct spinand_info macronix_spinand_table[] = {
- 					      &update_cache_variants),
- 		     SPINAND_HAS_QE_BIT,
- 		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout, NULL)),
-+	SPINAND_INFO("MX35LF2G14AC", 0x20,
-+		     NAND_MEMORG(1, 2048, 64, 64, 2048, 40, 2, 1, 1),
-+		     NAND_ECCREQ(4, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
-+				     mx35lf1ge4ab_ecc_get_status)),
-+	SPINAND_INFO("MX35UF4G24AD", 0xb5,
-+		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 2, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
-+				     mx35lf1ge4ab_ecc_get_status)),
-+	SPINAND_INFO("MX35UF4GE4AD", 0xb7,
-+		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
-+				     mx35lf1ge4ab_ecc_get_status)),
-+	SPINAND_INFO("MX35UF2G14AC", 0xa0,
-+		     NAND_MEMORG(1, 2048, 64, 64, 2048, 40, 2, 1, 1),
-+		     NAND_ECCREQ(4, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
-+				     mx35lf1ge4ab_ecc_get_status)),
-+	SPINAND_INFO("MX35UF2G24AD", 0xa4,
-+		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 2, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
-+				     mx35lf1ge4ab_ecc_get_status)),
-+	SPINAND_INFO("MX35UF2GE4AD", 0xa6,
-+		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
-+				     mx35lf1ge4ab_ecc_get_status)),
-+	SPINAND_INFO("MX35UF2GE4AC", 0xa2,
-+		     NAND_MEMORG(1, 2048, 64, 64, 2048, 40, 1, 1, 1),
-+		     NAND_ECCREQ(4, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
-+				     mx35lf1ge4ab_ecc_get_status)),
-+	SPINAND_INFO("MX35UF1G14AC", 0x90,
-+		     NAND_MEMORG(1, 2048, 64, 64, 1024, 20, 1, 1, 1),
-+		     NAND_ECCREQ(4, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
-+				     mx35lf1ge4ab_ecc_get_status)),
-+	SPINAND_INFO("MX35UF1G24AD", 0x94,
-+		     NAND_MEMORG(1, 2048, 128, 64, 1024, 20, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
-+				     mx35lf1ge4ab_ecc_get_status)),
-+	SPINAND_INFO("MX35UF1GE4AD", 0x96,
-+		     NAND_MEMORG(1, 2048, 128, 64, 1024, 20, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
-+				     mx35lf1ge4ab_ecc_get_status)),
-+	SPINAND_INFO("MX35UF1GE4AC", 0x92,
-+		     NAND_MEMORG(1, 2048, 64, 64, 1024, 20, 1, 1, 1),
-+		     NAND_ECCREQ(4, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
-+				     mx35lf1ge4ab_ecc_get_status)),
- };
- 
- static int macronix_spinand_detect(struct spinand_device *spinand)
 -- 
-2.25.1
-
+With best wishes
+Dmitry
