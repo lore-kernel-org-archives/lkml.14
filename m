@@ -1,175 +1,163 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1322149015;
-	Tue, 25 Jun 2024 08:31:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032DC148848
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 08:31:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719304306; cv=none; b=hbhOX3EHVmVNLilM3KMSzQrNZTssY/3eDF4yhN3Ssy5xV3yJ13U6K6hYdN38c6/8DB8lYzdVQXcLIKi20a8kLkced2mg8uADbm0XqULMueOdKkugKzkFn9DqkBfnzJGgowP/5m0rI7qHZj7+4La1JFUV/LBvd8VdymObyy2z6k8=
+	t=1719304315; cv=none; b=JegfAdsvwyOjPH0c8hCwccypd/TG6C3MYKdPYONWNwOeIcHkArkHJEIX7+LP3CDuV6B2jrcaPmqyE90FRDuP87IB2M0JSFgrQZJFHg2Sab8o4AyhGL8I60AScALaOxcCHXk51mp9T/TBal6YaDaPhnYQI0cI70H7dYnlbxlYkBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719304306; c=relaxed/simple;
-	bh=+D48S5Vq0swdQkscBySnwczFMRaxSpZ8KHXgGGRiwsY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=U+jnQLIUpwByW/L95fRkWBRajcsNdOFxAyTin7M2HEmDGiEB3ad5cFXF3OzCwR6JwnXbk50qnJWR1ldyTLOq0ftbSqWrCwAd5V9sfBPo7OQNg7JI0xrC5kx4qXwgwbEeZncDU81OFf42v+f6wwz98qVNLhBaHA4neTfska/BsFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BjpjAbg5; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1719304315; c=relaxed/simple;
+	bh=1bUJ/s7vvwTZ73NCTa5DTXqVHc8wDMkrvmx1x4B0xZ0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=JQpDknQHUbqGiN0pxkXnvsZwnGfVO/cclohn22VYlX66hnsK56DCvccjU3ZHP9FewcnmQNdaXrjbmJWR6i6f+Xc0ezY57gKKTz/Fczi9+a4mJCw4s47vTMjhCi3DkEPwiWXq9vXJVTtdbQ/14D/SNStBG5DQ6GJ200rFOiKo4Do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=vOqFRB9/; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BjpjAbg5"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45P8VaP4087438;
-	Tue, 25 Jun 2024 03:31:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1719304296;
-	bh=LYGd2H7FTgR/FQpG/Ynu641/TDmOOv4Oh/6t57w2iwM=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=BjpjAbg5lgCI6Y9Avm0J6xbXMN1SjzcDaMd6qI9qwAbsh2Uxs3C62snLXhep0PTxs
-	 jjMAw7zxLYZpPg+YL4XuuSD1lnUKGUzQHFiUSN+9jmaK1pdyBJ8c8aLLv2o8gPcftg
-	 Y8BXYQlZhBQ9GTZ2Ggo0iWrvL8u0Y9h6hHKK+h0g=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45P8VaCY073116
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 25 Jun 2024 03:31:36 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 25
- Jun 2024 03:31:36 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 25 Jun 2024 03:31:36 -0500
-Received: from [172.24.227.94] (uda0132425.dhcp.ti.com [172.24.227.94])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45P8VVov086972;
-	Tue, 25 Jun 2024 03:31:32 -0500
-Message-ID: <f9f5178b-1e94-489b-8e71-43b814b7252a@ti.com>
-Date: Tue, 25 Jun 2024 14:01:30 +0530
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="vOqFRB9/"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-35f2c9e23d3so3840259f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 01:31:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719304312; x=1719909112; darn=vger.kernel.org;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6MGiV5QhyBIwfF0R22KIxg/x70JWWD4uGuZLiiLVcCo=;
+        b=vOqFRB9/PzYL1IM+qLYv8QSghjaflpCLS8cZ/b9f2KeY4t3MlQyadUCTHIfi3vAeoU
+         FttaeIDeDJ4fYLPJtNO5RhZJ2XxF+6NMjKvocB3DrvFyRfI/uM+qKQd7psHrJvowEvai
+         /o/YdjYgI/BNLTt4oWTnwHfiP6E6whKLf6+Ju0+r2ceFRMBPQRwXreeoDuNm7gKbhAXX
+         gSyCZmcoivNFnHnDU59eyTh9xfktjEX7tkAjsh86mTIctlu8OKdSVpFGJj+n8ZYTLH0P
+         UDKr9DKDj10fn2hMtbrKuvdAvIwIdMkcp2XlOkWwQorM/77y7sBMQKIMO4SoE58qDNnU
+         gZMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719304312; x=1719909112;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6MGiV5QhyBIwfF0R22KIxg/x70JWWD4uGuZLiiLVcCo=;
+        b=vjnXMRL2UrooIr7eUNJFgeoRLMS3f+KQ+PnKVwdnsKD1f8Ic4slIznw+xL4FjU1OBW
+         +QzxYDXB2cxk+qFzjVqTi3ZnMttjgLu73DqB5RK0TROZzKUw1l1qUu8jiCPh1kRQh/jx
+         NX6t9lnKiM93BvQzYdPpvV8FnRgSQktf2QoVu7C4tFQSuhLSZiWNwZLAqreYJhvikss5
+         8KdSOez/WJz0JmAupOdpxDIfk+lqSA5yj8+5DOq0wdMdhwjO1t3/Xji3iCUQ7H6g+V95
+         4epOTOWKGj9OrTpmfNguU3bQQGwPbOho3Si4VKZWXOGsGOfWlqY51Pa4wAmUeR/QYp24
+         RoiA==
+X-Forwarded-Encrypted: i=1; AJvYcCVtVAaPeogievbSwBi6hrG5r9936TidUReD0JP+Jlw3ecfHvKfGyaHnGLKk4d32DvySaV9vQsvH0405LCZR6y3qnZplEuUx+uJna2v5
+X-Gm-Message-State: AOJu0YwQrQIxWKnnwzzihKRzHGtkBhg/2GYnDfpRX2nXrBdZ7yGaJN4B
+	mlB1FSLw8Zi8jRQxWubAPXPoXMv6RguFEDWq2AQIQXebSy57J8KIi/3S9PRUzNc=
+X-Google-Smtp-Source: AGHT+IHXVO0K6EtgWIdnjCpVKEK7FGGlTzFiwp9mjcV6PfHRnKrDwThJVhKUFKQBIxHO02PjXcqiXg==
+X-Received: by 2002:a05:6000:1241:b0:366:e09c:56be with SMTP id ffacd0b85a97d-366e325c00amr6885391f8f.6.1719304312228;
+        Tue, 25 Jun 2024 01:31:52 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:1b57:b4a1:3d50:32a2])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-366388c401asm12286172f8f.45.2024.06.25.01.31.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jun 2024 01:31:51 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,  Lars-Peter Clausen
+ <lars@metafoo.de>,  Neil Armstrong <neil.armstrong@linaro.org>,  Kevin
+ Hilman <khilman@baylibre.com>,  linux-kernel@vger.kernel.org,
+  linux-amlogic@lists.infradead.org,  linux-iio@vger.kernel.org,  Rob
+ Herring <robh@kernel.org>,  Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>
+Subject: Re: [PATCH 2/2] iio: frequency: add amlogic clock measure support
+In-Reply-To: <04254d15-2f6e-435d-ba4c-8e2e87766b9b@baylibre.com> (David
+	Lechner's message of "Mon, 24 Jun 2024 17:51:05 -0500")
+References: <20240624173105.909554-1-jbrunet@baylibre.com>
+	<20240624173105.909554-3-jbrunet@baylibre.com>
+	<04254d15-2f6e-435d-ba4c-8e2e87766b9b@baylibre.com>
+Date: Tue, 25 Jun 2024 10:31:51 +0200
+Message-ID: <1j4j9hift4.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] arm64: dts: ti: k3-j784s4-main: Add McASP nodes
-To: Jayesh Choudhary <j-choudhary@ti.com>, <linux-kernel@vger.kernel.org>,
-        <nm@ti.com>, <j-luthra@ti.com>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <u-kumar1@ti.com>
-References: <20240619095253.290552-1-j-choudhary@ti.com>
- <20240619095253.290552-2-j-choudhary@ti.com>
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Content-Language: en-US
-In-Reply-To: <20240619095253.290552-2-j-choudhary@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
 
+On Mon 24 Jun 2024 at 17:51, David Lechner <dlechner@baylibre.com> wrote:
 
+> On 6/24/24 12:31 PM, Jerome Brunet wrote:
+>> Add support for the HW found in most Amlogic SoC dedicated to measure
+>> system clocks.
+>> 
+>
+>
+>
+>> +static int cmsr_read_raw(struct iio_dev *indio_dev,
+>> +			 struct iio_chan_spec const *chan,
+>> +			 int *val, int *val2, long mask)
+>> +{
+>> +	struct amlogic_cmsr *cm = iio_priv(indio_dev);
+>> +
+>> +	guard(mutex)(&cm->lock);
+>> +
+>> +	switch (mask) {
+>> +	case IIO_CHAN_INFO_RAW:
+>> +		*val = cmsr_measure_unlocked(cm, chan->channel);
+>
+> Is this actually returning an alternating voltage magnitutde?
+> Most frequency drivers don't have a raw value, only frequency.
 
-On 19/06/24 15:22, Jayesh Choudhary wrote:
-> Add McASP 0-4 instances and keep them disabled as several required
-> properties are missing as they are board specific.
-> 
-> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
-> ---
->  arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi | 80 ++++++++++++++++++++++
->  1 file changed, 80 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-> index fd3d3344efbe..96085dc7bc18 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-> @@ -2617,4 +2617,84 @@ dss_ports: ports {
->  			 */
->  		};
->  	};
-> +
-> +	mcasp0: mcasp@2b00000 {
-> +		compatible = "ti,am33xx-mcasp-audio";
-> +		reg = <0x0 0x02b00000 0x0 0x2000>,
-> +		      <0x0 0x02b08000 0x0 0x1000>;
+No it is not the magnitude, it is the clock rate (frequency) indeed.
+Maybe altvoltage was not the right pick for that but nothing obvious
+stands out for Hz measurements
 
-			^^ Should be 0x00 (elsewhere as well) to be inline with rest of the file
+>
+>> +		if (*val < 0)
+>> +			return *val;
+>> +		return IIO_VAL_INT;
+>> +
+>> +	case IIO_CHAN_INFO_PROCESSED: /* Result in Hz */
+>
+> Shouldn't this be IIO_CHAN_INFO_FREQUENCY?
 
+How would I get raw / processed / scale with IIO_CHAN_INFO_FREQUENCY ?
 
-> +		reg-names = "mpu","dat";
-> +		interrupts = <GIC_SPI 544 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 545 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "tx", "rx";
-> +		dmas = <&main_udmap 0xc400>, <&main_udmap 0x4400>;
-> +		dma-names = "tx", "rx";
-> +		clocks = <&k3_clks 265 1>;
-> +		clock-names = "fck";
-> +		power-domains = <&k3_pds 265 TI_SCI_PD_EXCLUSIVE>;
-> +		status = "disabled";
-> +	};
-> +
-> +	mcasp1: mcasp@2b10000 {
-> +		compatible = "ti,am33xx-mcasp-audio";
-> +		reg = <0x0 0x02b10000 0x0 0x2000>,
-> +		      <0x0 0x02b18000 0x0 0x1000>;
-> +		reg-names = "mpu","dat";
-> +		interrupts = <GIC_SPI 546 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 547 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "tx", "rx";
-> +		dmas = <&main_udmap 0xc401>, <&main_udmap 0x4401>;
-> +		dma-names = "tx", "rx";
-> +		clocks = <&k3_clks 266 1>;
-> +		clock-names = "fck";
-> +		power-domains = <&k3_pds 266 TI_SCI_PD_EXCLUSIVE>;
-> +		status = "disabled";
-> +	};
-> +
-> +	mcasp2: mcasp@2b20000 {
-> +		compatible = "ti,am33xx-mcasp-audio";
-> +		reg = <0x0 0x02b20000 0x0 0x2000>,
-> +		      <0x0 0x02b28000 0x0 0x1000>;
-> +		reg-names = "mpu","dat";
-> +		interrupts = <GIC_SPI 548 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 549 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "tx", "rx";
-> +		dmas = <&main_udmap 0xc402>, <&main_udmap 0x4402>;
-> +		dma-names = "tx", "rx";
-> +		clocks = <&k3_clks 267 1>;
-> +		clock-names = "fck";
-> +		power-domains = <&k3_pds 267 TI_SCI_PD_EXCLUSIVE>;
-> +		status = "disabled";
-> +	};
-> +
-> +	mcasp3: mcasp@2b30000 {
-> +		compatible = "ti,am33xx-mcasp-audio";
-> +		reg = <0x0 0x02b30000 0x0 0x2000>,
-> +		      <0x0 0x02b38000 0x0 0x1000>;
-> +		reg-names = "mpu","dat";
-> +		interrupts = <GIC_SPI 550 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 551 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "tx", "rx";
-> +		dmas = <&main_udmap 0xc500>, <&main_udmap 0x4500>;
-> +		dma-names = "tx", "rx";
-> +		clocks = <&k3_clks 268 1>;
-> +		clock-names = "fck";
-> +		power-domains = <&k3_pds 268 TI_SCI_PD_EXCLUSIVE>;
-> +		status = "disabled";
-> +	};
-> +
-> +	mcasp4: mcasp@2b40000 {
-> +		compatible = "ti,am33xx-mcasp-audio";
-> +		reg = <0x0 0x02b40000 0x0 0x2000>,
-> +		      <0x0 0x02b48000 0x0 0x1000>;
-> +		reg-names = "mpu","dat";
-> +		interrupts = <GIC_SPI 552 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 553 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "tx", "rx";
-> +		dmas = <&main_udmap 0xc501>, <&main_udmap 0x4501>;
-> +		dma-names = "tx", "rx";
-> +		clocks = <&k3_clks 269 1>;
-> +		clock-names = "fck";
-> +		power-domains = <&k3_pds 269 TI_SCI_PD_EXCLUSIVE>;
-> +		status = "disabled";
-> +	};
->  };
+>
+> Processed is just (raw + offset) * scale which would be a voltage
+> in this case since the channel type is IIO_ALTVOLTAGE.
+
+This is was Processed does here, along with selecting the most
+appropriate scale to perform the measurement.
+
+>
+>> +		*val = cmsr_measure_processed_unlocked(cm, chan->channel, val2);
+>> +		if (*val < 0)
+>> +			return *val;
+>> +		return IIO_VAL_INT_64;
+>> +
+>> +	case IIO_CHAN_INFO_SCALE:
+>
+> What is this attribute being used for?
+
+Hz
+
+>
+> (clearly not used to convert the raw value to millivolts :-) )
+>
+> Maybe IIO_CHAN_INFO_INT_TIME is the right one for this? Although
+> so far, that has only been used with light sensors.
+
+I think you are mixing up channel info and type here.
+I do want the info
+ * IIO_CHAN_INFO_RAW
+ * IIO_CHAN_INFO_PROCESSED
+ * IIO_CHAN_INFO_SCALE
+
+I want those info to represent an alternate voltage frequency in Hz.
+I thought type 'IIO_ALTVOLTAGE' was the right pick for that. Apparently
+it is not. What is the appropriate type then ? Should I add a new one ?
+
+>
+>> +		*val2 = cmsr_get_time_unlocked(cm);
+>> +		*val = 1000000;
+>> +		return IIO_VAL_FRACTIONAL;
+>> +
+>> +	default:
+>> +		return -EINVAL;
+>> +	}
+>> +}
+>> +
 
 -- 
-Regards
-Vignesh
+Jerome
