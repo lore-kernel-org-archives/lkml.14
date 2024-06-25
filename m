@@ -1,1057 +1,224 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F420517C7B4
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 18:42:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E9C34204E
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 18:43:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719340968; cv=none; b=nXlPBvYBFF710CLC6Jn8VqN/gaM9LBqF81P0SYQ9mWrulIXjkpSPLul1a5DVVoyiqJ+K5Fk80JHe+o5/tHTMFWJfIemgtiIolnwin0RvvVp+9n7t/8BMbDilt9RanGX52hC8PkQhHGkPT/d4g4gRhYtkwtbw2JlZQ6A9G10juxo=
+	t=1719341001; cv=none; b=WrfP1/Cwimf2ZbG1im/y24VRSoN98rMLPDyuHV5W6765FqtspJqEK/Q0PU4meG2bvvOHK+ETRwyHG9I8ydkJpXs7fQx2RwrMYvWVDEx+S/nRaKn6eRoW/DAXakoP6BuMf7cgk/URbeD3px3uYN1H1rRVhh+jLYBm/sO7rIJSNEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719340968; c=relaxed/simple;
-	bh=thwPGDljXgnRSWdDOL+t4VhcOZp8MvwzAbb/znOGi6I=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=fgA/rt+Kr0iDBzJghu7YS9TGzAAi7X0kPmeCkkNbzWGxrVoVWjzaN9oFyoyweC+iy+hcAh/fz0k/Ex5WFWhYnG7q0Hc4LgbQrw7pBdn7Kvyc1EDclg72UmfgDqUn2DkKsvI6Nz99ov9xvXMmIHz1OOd/Hho4oaOEX3KhcEHVtNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ety42ZIX; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1719341001; c=relaxed/simple;
+	bh=4T8zplSVDGP/25a2/9dQBVYyzCn7VHheFPmanqVzF7s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dZB/vJ+3u6Zxrqg33A0QtyTCtTIdrXR0eROgr7LsQ7JaaAcIxv/gs2F83XP/kEZQ4GfoCKD+8qncfeLIVx9NLZdmBM3b1TUHDaPruamfcx9eVJPYSile8kgeiKd+xIe2NcLKxdRPJViqn5xVyv1ZBChep2fO/LrCScPgEniC7l4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H2DCIAGW; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ety42ZIX"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dfa7a8147c3so12361020276.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 11:42:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719340965; x=1719945765; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RK3JzW9xM39N/w1V/oeqY/ONEk8wOZil6KLzX7W64sM=;
-        b=Ety42ZIX+bPLZi9sqbsjlwVkXXsl0CG1ExRt0MP8MpDjsIgbvEqEwgCKLXhZu8D5xL
-         kN2xwbS/OV+EWEuF6efp7bdaGMyO/7rNpC56ONENiA9x/ruhMnSlvlFqGMt1EeSRU8pn
-         xMchL/qsRNpu7e8jMDSAffBeAiMBHkXRecgwIWLDQPXeuekZ9CyQj14Lrljcrc/qzSOK
-         mqgL267RNwRaDcaTbhYypcWoWf2Zso2a4tMCAQzpMtCgafPVqL6yAQBn+1LBAwdCvhqP
-         7SVKaYjenf361SiL+iZzt9z8Aa23fhxt7+6waFm4z/DB2MxMC9b4OpjvMEd3NIl154T7
-         6ObA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H2DCIAGW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719340998;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=BKlZK3pNZ+wzGcnEvjLqIaoCKeBTm9H3YzmiNb6G+3g=;
+	b=H2DCIAGWsk6tCq1I3t0mVdWudM2s6qnzRkoco37+pt8BXSptjdUsKPkvlI1K8h0fwBRDTl
+	C7y+llhoI0B/Hztf8ZHmAlflIbb6LTe3Jkf2b+WnI2LClhx2khiOBgdZXmrRsTJuu3ozhw
+	YKwTyXEGYV36f5DF2BD+iw6pfnfQB38=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-79-SXSB9sEONRqod2PkkyAbww-1; Tue, 25 Jun 2024 14:43:15 -0400
+X-MC-Unique: SXSB9sEONRqod2PkkyAbww-1
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-36536118656so3011255f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 11:43:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719340965; x=1719945765;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RK3JzW9xM39N/w1V/oeqY/ONEk8wOZil6KLzX7W64sM=;
-        b=iEuw4G4SBHFnepD2sOf28IijBfxJ+69awDeZgSZ0N3QVGaVGOHU7Z46iLFJqZ3G4M0
-         sBCG9bQjhK1wjE4PwiY4gDWo1RRK1PRd0yM3vguwKoPKXE+Y0ENRFPkTMPt4c/saAlwG
-         3Fr3T7ode8fM4k3t6CRiYVFwrR+RoUYX6hnArckD/tMhVTz5nnb4JNw0v3EFdW5NTcUa
-         RcZw/qL1VIeQR+rrzxaFblGG0wZAHuGNRGiUTBaDAYNNB9KfzXRvYOv0Xqp6NUWqEvkT
-         /lLmewI6X01fgKN3DQ7fmM5hz7BtRDGwY/Wjtk8+JCXtuXsC0ZraBCYqPj1eoUx+2EQK
-         muTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVF9+z+WLO4lyYxQiKCTyxaUpUhrNjg0a1PGYKuqDR5xpbhG95QjPBUoyxjY24w4hJ/WgKFbCiaKz2Yu7q3oq+SjZP9lSVP7BKFiNBt
-X-Gm-Message-State: AOJu0YxfKF+Tvjl0gCH1I4HuA7a3UazzFhcxMTWuareiYmYcu7Ibycal
-	bvwccHt0T/9laEgj+Mw9qmiYpt96Osg+xxqKH2cugBs0fUl42OxY18uQLeyFOIk4COszMYYhSZM
-	jB1U+bg==
-X-Google-Smtp-Source: AGHT+IEu9Y/iIndDDKGcnyvhKDIotMepMmyq2b0vK1QhmUZkv+GzHI+Kx0rGYUcM3ktcOGcxnCCndjgPvBox
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:b4cb:a52b:f9ea:8678])
- (user=irogers job=sendgmr) by 2002:a05:6902:1082:b0:dda:c57c:b69b with SMTP
- id 3f1490d57ef6-e0303d3d277mr348521276.0.1719340965110; Tue, 25 Jun 2024
- 11:42:45 -0700 (PDT)
-Date: Tue, 25 Jun 2024 11:42:23 -0700
-In-Reply-To: <20240625184224.929018-1-irogers@google.com>
-Message-Id: <20240625184224.929018-7-irogers@google.com>
+        d=1e100.net; s=20230601; t=1719340993; x=1719945793;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=BKlZK3pNZ+wzGcnEvjLqIaoCKeBTm9H3YzmiNb6G+3g=;
+        b=OFUoq03dfdOIDNxUSkRXjxt6VLR8Nqd6CBJuSu40MXUzuW+zQWgNSHmamd7FXfuvrW
+         fVeu7ph/HeXhbvpZd6dEmETd600urFqgO53Bn7qwDqazQrXeK/LOk+2hBHThTc2L/7QW
+         M8Ji479TH0nUfsVAvZNvagq01XSBa9qrf447Qbic00hXvhOIsTxGbxGuTMQbiZTdss1Q
+         j6KnFG7hcvjy4nuhwiQCzLtYc7YdZ4vtSSpMDsRWFiUWNNP9YTVElgR0PGjIeFqdlemz
+         TiPnOGl8g6Z6xdDHBqBQGIOCvki/eu32qVCNCjUMsY14MQ1OLdnWqnSB1Qc/T4n0jMMY
+         JsgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX/KijaQGtIIREsTcn+S+/xcVNKrDf+Fn9JD0MQvVuC7HUvz19QB2yST2mJ+vW+/ortBYhxPr4DPgTNZem6hrw7chdJuh4AB8BVDiGG
+X-Gm-Message-State: AOJu0YxUe7852vajjg7KpX+ky3RLruehkR6sDoHvwlOYtaAWhkf5KQTr
+	uBlJfT4Aliu4aXwy2UqR2UzxY3+wo5AoZVb+6nN3I11DOik7866jbPL4VdrewU+jlptu9nmu9lX
+	MOEliBkIN3L9scQll/PRRDHYRdjnA4gnXADKdoW8ATzj3hOnYp8AzbMQn0o6xvw==
+X-Received: by 2002:a05:6000:184d:b0:366:ebc4:2574 with SMTP id ffacd0b85a97d-366ebc425fdmr6053847f8f.33.1719340993705;
+        Tue, 25 Jun 2024 11:43:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE40JIDmew9s1ZPwIzg7JyzT8Oeg/+C7vF7SC0rIHkvt7fva8hqcnM0roa+VTY43CmqAbnaTA==
+X-Received: by 2002:a05:6000:184d:b0:366:ebc4:2574 with SMTP id ffacd0b85a97d-366ebc425fdmr6053826f8f.33.1719340993195;
+        Tue, 25 Jun 2024 11:43:13 -0700 (PDT)
+Received: from [192.168.1.34] (p548825e3.dip0.t-ipconnect.de. [84.136.37.227])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3663ada00e7sm13679617f8f.112.2024.06.25.11.43.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Jun 2024 11:43:12 -0700 (PDT)
+Message-ID: <ca1d734c-e755-4730-bcaa-a439a9635c38@redhat.com>
+Date: Tue, 25 Jun 2024 20:43:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240625184224.929018-1-irogers@google.com>
-X-Mailer: git-send-email 2.45.2.741.gdbec12cfda-goog
-Subject: [PATCH v4 6/7] perf util: Make util its own library
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>, 
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, 
-	Nick Terrell <terrelln@fb.com>, Andrei Vagin <avagin@google.com>, Kees Cook <keescook@chromium.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Ze Gao <zegao2021@gmail.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] mm/filemap: Make MAX_PAGECACHE_ORDER acceptable to
+ xarray
+To: Gavin Shan <gshan@redhat.com>, linux-mm@kvack.org
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ djwong@kernel.org, willy@infradead.org, akpm@linux-foundation.org,
+ hughd@google.com, torvalds@linux-foundation.org, zhenyzha@redhat.com,
+ shan.gavin@gmail.com
+References: <20240625090646.1194644-1-gshan@redhat.com>
+ <20240625090646.1194644-2-gshan@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240625090646.1194644-2-gshan@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Make the util directory into its own library. This is done to avoid
-compiling code twice, once for the perf tool and once for the perf
-python module. For convenience:
-  arch/common.c
-  scripts/perl/Perf-Trace-Util/Context.c
-  scripts/python/Perf-Trace-Util/Context.c
-are made part of this library.
+On 25.06.24 11:06, Gavin Shan wrote:
+> The largest page cache order can be HPAGE_PMD_ORDER (13) on ARM64
+> with 64KB base page size. The xarray entry with this order can't
+> be split as the following error messages indicate.
+> 
+> ------------[ cut here ]------------
+> WARNING: CPU: 35 PID: 7484 at lib/xarray.c:1025 xas_split_alloc+0xf8/0x128
+> Modules linked in: nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib  \
+> nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct    \
+> nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4    \
+> ip_set rfkill nf_tables nfnetlink vfat fat virtio_balloon drm      \
+> fuse xfs libcrc32c crct10dif_ce ghash_ce sha2_ce sha256_arm64      \
+> sha1_ce virtio_net net_failover virtio_console virtio_blk failover \
+> dimlib virtio_mmio
+> CPU: 35 PID: 7484 Comm: test Kdump: loaded Tainted: G W 6.10.0-rc5-gavin+ #9
+> Hardware name: QEMU KVM Virtual Machine, BIOS edk2-20240524-1.el9 05/24/2024
+> pstate: 83400005 (Nzcv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
+> pc : xas_split_alloc+0xf8/0x128
+> lr : split_huge_page_to_list_to_order+0x1c4/0x720
+> sp : ffff800087a4f6c0
+> x29: ffff800087a4f6c0 x28: ffff800087a4f720 x27: 000000001fffffff
+> x26: 0000000000000c40 x25: 000000000000000d x24: ffff00010625b858
+> x23: ffff800087a4f720 x22: ffffffdfc0780000 x21: 0000000000000000
+> x20: 0000000000000000 x19: ffffffdfc0780000 x18: 000000001ff40000
+> x17: 00000000ffffffff x16: 0000018000000000 x15: 51ec004000000000
+> x14: 0000e00000000000 x13: 0000000000002000 x12: 0000000000000020
+> x11: 51ec000000000000 x10: 51ece1c0ffff8000 x9 : ffffbeb961a44d28
+> x8 : 0000000000000003 x7 : ffffffdfc0456420 x6 : ffff0000e1aa6eb8
+> x5 : 20bf08b4fe778fca x4 : ffffffdfc0456420 x3 : 0000000000000c40
+> x2 : 000000000000000d x1 : 000000000000000c x0 : 0000000000000000
+> Call trace:
+>   xas_split_alloc+0xf8/0x128
+>   split_huge_page_to_list_to_order+0x1c4/0x720
+>   truncate_inode_partial_folio+0xdc/0x160
+>   truncate_inode_pages_range+0x1b4/0x4a8
+>   truncate_pagecache_range+0x84/0xa0
+>   xfs_flush_unmap_range+0x70/0x90 [xfs]
+>   xfs_file_fallocate+0xfc/0x4d8 [xfs]
+>   vfs_fallocate+0x124/0x2e8
+>   ksys_fallocate+0x4c/0xa0
+>   __arm64_sys_fallocate+0x24/0x38
+>   invoke_syscall.constprop.0+0x7c/0xd8
+>   do_el0_svc+0xb4/0xd0
+>   el0_svc+0x44/0x1d8
+>   el0t_64_sync_handler+0x134/0x150
+>   el0t_64_sync+0x17c/0x180
+> 
+> Fix it by decreasing MAX_PAGECACHE_ORDER to the largest supported order
+> by xarray. For this specific case, MAX_PAGECACHE_ORDER is dropped from
+> 13 to 11 when CONFIG_BASE_SMALL is disabled.
+> 
+> Fixes: 4f6617011910 ("filemap: Allow __filemap_get_folio to allocate large folios")
+> Cc: stable@kernel.org # v6.6+
+> Suggested-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Gavin Shan <gshan@redhat.com>
+> ---
+>   include/linux/pagemap.h | 11 +++++++++--
+>   1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+> index 59f1df0cde5a..a0a026d2d244 100644
+> --- a/include/linux/pagemap.h
+> +++ b/include/linux/pagemap.h
+> @@ -354,11 +354,18 @@ static inline void mapping_set_gfp_mask(struct address_space *m, gfp_t mask)
+>    * a good order (that's 1MB if you're using 4kB pages)
+>    */
+>   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> -#define MAX_PAGECACHE_ORDER	HPAGE_PMD_ORDER
+> +#define PREFERRED_MAX_PAGECACHE_ORDER	HPAGE_PMD_ORDER
+>   #else
+> -#define MAX_PAGECACHE_ORDER	8
+> +#define PREFERRED_MAX_PAGECACHE_ORDER	8
+>   #endif
+>   
+> +/*
+> + * xas_split_alloc() does not support arbitrary orders. This implies no
+> + * 512MB THP on ARM64 with 64KB base page size.
+> + */
+> +#define MAX_XAS_ORDER		(XA_CHUNK_SHIFT * 2 - 1)
+> +#define MAX_PAGECACHE_ORDER	min(MAX_XAS_ORDER, PREFERRED_MAX_PAGECACHE_ORDER)
+> +
+>   /**
+>    * mapping_set_large_folios() - Indicate the file supports large folios.
+>    * @mapping: The file.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Reviewed-by: James Clark <james.clark@arm.com>
----
- tools/perf/Build                              |   5 +-
- tools/perf/Makefile.perf                      |  12 +-
- tools/perf/arch/Build                         |   4 +-
- tools/perf/arch/arm/Build                     |   2 +-
- tools/perf/arch/arm/util/Build                |  10 +-
- tools/perf/arch/arm64/Build                   |   2 +-
- tools/perf/arch/arm64/util/Build              |  20 +-
- tools/perf/arch/csky/Build                    |   2 +-
- tools/perf/arch/csky/util/Build               |   6 +-
- tools/perf/arch/loongarch/Build               |   2 +-
- tools/perf/arch/loongarch/util/Build          |   8 +-
- tools/perf/arch/mips/Build                    |   2 +-
- tools/perf/arch/mips/util/Build               |   6 +-
- tools/perf/arch/powerpc/Build                 |   2 +-
- tools/perf/arch/powerpc/util/Build            |  24 +-
- tools/perf/arch/riscv/Build                   |   2 +-
- tools/perf/arch/riscv/util/Build              |   8 +-
- tools/perf/arch/s390/Build                    |   2 +-
- tools/perf/arch/s390/util/Build               |  16 +-
- tools/perf/arch/sh/Build                      |   2 +-
- tools/perf/arch/sh/util/Build                 |   2 +-
- tools/perf/arch/sparc/Build                   |   2 +-
- tools/perf/arch/sparc/util/Build              |   2 +-
- tools/perf/arch/x86/Build                     |   2 +-
- tools/perf/arch/x86/util/Build                |  42 +-
- tools/perf/arch/xtensa/Build                  |   2 +-
- tools/perf/scripts/Build                      |   4 +-
- tools/perf/scripts/perl/Perf-Trace-Util/Build |   2 +-
- .../perf/scripts/python/Perf-Trace-Util/Build |   2 +-
- tools/perf/util/Build                         | 394 +++++++++---------
- tools/perf/util/arm-spe-decoder/Build         |   2 +-
- tools/perf/util/cs-etm-decoder/Build          |   2 +-
- tools/perf/util/hisi-ptt-decoder/Build        |   2 +-
- tools/perf/util/intel-pt-decoder/Build        |   2 +-
- tools/perf/util/perf-regs-arch/Build          |  18 +-
- tools/perf/util/scripting-engines/Build       |   4 +-
- 36 files changed, 316 insertions(+), 305 deletions(-)
+Thanks!
 
-diff --git a/tools/perf/Build b/tools/perf/Build
-index 2787f5630ff7..1d4957957d75 100644
---- a/tools/perf/Build
-+++ b/tools/perf/Build
-@@ -53,11 +53,12 @@ CFLAGS_builtin-trace.o	   += -DSTRACE_GROUPS_DIR="BUILD_STR($(STRACE_GROUPS_DIR_
- CFLAGS_builtin-report.o	   += -DTIPDIR="BUILD_STR($(tipdir_SQ))"
- CFLAGS_builtin-report.o	   += -DDOCDIR="BUILD_STR($(srcdir_SQ)/Documentation)"
- 
--perf-y += util/
-+perf-util-y += util/
-+perf-util-y += arch/
- perf-y += arch/
- perf-test-y += arch/
- perf-ui-y += ui/
--perf-y += scripts/
-+perf-util-y += scripts/
- 
- gtk-y += ui/gtk/
- 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 4a3c000b9845..ff03f0431013 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -434,6 +434,9 @@ LIBPERF_TEST := $(OUTPUT)libperf-test.a
- LIBPERF_UI_IN := $(OUTPUT)perf-ui-in.o
- LIBPERF_UI := $(OUTPUT)libperf-ui.a
- 
-+LIBPERF_UTIL_IN := $(OUTPUT)perf-util-in.o
-+LIBPERF_UTIL := $(OUTPUT)libperf-util.a
-+
- LIBPMU_EVENTS_IN := $(OUTPUT)pmu-events/pmu-events-in.o
- LIBPMU_EVENTS := $(OUTPUT)libpmu-events.a
- 
-@@ -441,7 +444,8 @@ PERFLIBS = $(LIBAPI) $(LIBPERF) $(LIBSUBCMD) $(LIBSYMBOL)
- ifdef LIBBPF_STATIC
-   PERFLIBS += $(LIBBPF)
- endif
--PERFLIBS += $(LIBPERF_BENCH) $(LIBPERF_TEST) $(LIBPERF_UI) $(LIBPMU_EVENTS)
-+PERFLIBS += $(LIBPERF_BENCH) $(LIBPERF_TEST) $(LIBPERF_UI) $(LIBPERF_UTIL)
-+PERFLIBS += $(LIBPMU_EVENTS)
- 
- # We choose to avoid "if .. else if .. else .. endif endif"
- # because maintaining the nesting to match is a pain.  If
-@@ -761,6 +765,12 @@ $(LIBPERF_UI_IN): FORCE prepare
- $(LIBPERF_UI): $(LIBPERF_UI_IN)
- 	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $<
- 
-+$(LIBPERF_UTIL_IN): FORCE prepare
-+	$(Q)$(MAKE) $(build)=perf-util
-+
-+$(LIBPERF_UTIL): $(LIBPERF_UTIL_IN)
-+	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $<
-+
- $(OUTPUT)perf: $(PERFLIBS) $(PERF_IN)
- 	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) \
- 		$(PERF_IN) $(LIBS) -o $@
-diff --git a/tools/perf/arch/Build b/tools/perf/arch/Build
-index 6dd68c17924c..f0d96a13445c 100644
---- a/tools/perf/arch/Build
-+++ b/tools/perf/arch/Build
-@@ -1,3 +1,3 @@
--perf-y += common.o
--perf-y += $(SRCARCH)/
-+perf-util-y += common.o
- perf-test-y += $(SRCARCH)/
-+perf-util-y += $(SRCARCH)/
-diff --git a/tools/perf/arch/arm/Build b/tools/perf/arch/arm/Build
-index 6b4fdec52122..317425aa3712 100644
---- a/tools/perf/arch/arm/Build
-+++ b/tools/perf/arch/arm/Build
-@@ -1,2 +1,2 @@
--perf-y += util/
-+perf-util-y += util/
- perf-test-$(CONFIG_DWARF_UNWIND) += tests/
-diff --git a/tools/perf/arch/arm/util/Build b/tools/perf/arch/arm/util/Build
-index 37fc63708966..e6dd7cd79ebd 100644
---- a/tools/perf/arch/arm/util/Build
-+++ b/tools/perf/arch/arm/util/Build
-@@ -1,8 +1,8 @@
--perf-y += perf_regs.o
-+perf-util-y += perf_regs.o
- 
--perf-$(CONFIG_DWARF) += dwarf-regs.o
-+perf-util-$(CONFIG_DWARF) += dwarf-regs.o
- 
--perf-$(CONFIG_LOCAL_LIBUNWIND)    += unwind-libunwind.o
--perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-+perf-util-$(CONFIG_LOCAL_LIBUNWIND)    += unwind-libunwind.o
-+perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
- 
--perf-$(CONFIG_AUXTRACE) += pmu.o auxtrace.o cs-etm.o
-+perf-util-$(CONFIG_AUXTRACE) += pmu.o auxtrace.o cs-etm.o
-diff --git a/tools/perf/arch/arm64/Build b/tools/perf/arch/arm64/Build
-index 58b2d965ed86..12ebc65ea7a3 100644
---- a/tools/perf/arch/arm64/Build
-+++ b/tools/perf/arch/arm64/Build
-@@ -1,2 +1,2 @@
--perf-y += util/
-+perf-util-y += util/
- perf-test-y += tests/
-diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
-index 78ef7115be3d..343ef7589a77 100644
---- a/tools/perf/arch/arm64/util/Build
-+++ b/tools/perf/arch/arm64/util/Build
-@@ -1,14 +1,14 @@
--perf-y += header.o
--perf-y += machine.o
--perf-y += perf_regs.o
--perf-y += tsc.o
--perf-y += pmu.o
--perf-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
--perf-$(CONFIG_DWARF)     += dwarf-regs.o
--perf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
--perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-+perf-util-y += header.o
-+perf-util-y += machine.o
-+perf-util-y += perf_regs.o
-+perf-util-y += tsc.o
-+perf-util-y += pmu.o
-+perf-util-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
-+perf-util-$(CONFIG_DWARF)     += dwarf-regs.o
-+perf-util-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
-+perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
- 
--perf-$(CONFIG_AUXTRACE) += ../../arm/util/pmu.o \
-+perf-util-$(CONFIG_AUXTRACE) += ../../arm/util/pmu.o \
- 			      ../../arm/util/auxtrace.o \
- 			      ../../arm/util/cs-etm.o \
- 			      arm-spe.o mem-events.o hisi-ptt.o
-diff --git a/tools/perf/arch/csky/Build b/tools/perf/arch/csky/Build
-index e4e5f33c84d8..e63eabc2c8f4 100644
---- a/tools/perf/arch/csky/Build
-+++ b/tools/perf/arch/csky/Build
-@@ -1 +1 @@
--perf-y += util/
-+perf-util-y += util/
-diff --git a/tools/perf/arch/csky/util/Build b/tools/perf/arch/csky/util/Build
-index 7d3050134ae0..99d83f41bf43 100644
---- a/tools/perf/arch/csky/util/Build
-+++ b/tools/perf/arch/csky/util/Build
-@@ -1,4 +1,4 @@
--perf-y += perf_regs.o
-+perf-util-y += perf_regs.o
- 
--perf-$(CONFIG_DWARF) += dwarf-regs.o
--perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-+perf-util-$(CONFIG_DWARF) += dwarf-regs.o
-+perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-diff --git a/tools/perf/arch/loongarch/Build b/tools/perf/arch/loongarch/Build
-index e4e5f33c84d8..e63eabc2c8f4 100644
---- a/tools/perf/arch/loongarch/Build
-+++ b/tools/perf/arch/loongarch/Build
-@@ -1 +1 @@
--perf-y += util/
-+perf-util-y += util/
-diff --git a/tools/perf/arch/loongarch/util/Build b/tools/perf/arch/loongarch/util/Build
-index d776125a2d06..2386ebbf6dd4 100644
---- a/tools/perf/arch/loongarch/util/Build
-+++ b/tools/perf/arch/loongarch/util/Build
-@@ -1,5 +1,5 @@
--perf-y += perf_regs.o
-+perf-util-y += perf_regs.o
- 
--perf-$(CONFIG_DWARF)     += dwarf-regs.o
--perf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
--perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-+perf-util-$(CONFIG_DWARF)     += dwarf-regs.o
-+perf-util-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
-+perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-diff --git a/tools/perf/arch/mips/Build b/tools/perf/arch/mips/Build
-index e4e5f33c84d8..e63eabc2c8f4 100644
---- a/tools/perf/arch/mips/Build
-+++ b/tools/perf/arch/mips/Build
-@@ -1 +1 @@
--perf-y += util/
-+perf-util-y += util/
-diff --git a/tools/perf/arch/mips/util/Build b/tools/perf/arch/mips/util/Build
-index 51c8900a9a10..e4644f1e68a0 100644
---- a/tools/perf/arch/mips/util/Build
-+++ b/tools/perf/arch/mips/util/Build
-@@ -1,3 +1,3 @@
--perf-y += perf_regs.o
--perf-$(CONFIG_DWARF) += dwarf-regs.o
--perf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
-+perf-util-y += perf_regs.o
-+perf-util-$(CONFIG_DWARF) += dwarf-regs.o
-+perf-util-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
-diff --git a/tools/perf/arch/powerpc/Build b/tools/perf/arch/powerpc/Build
-index 58b2d965ed86..12ebc65ea7a3 100644
---- a/tools/perf/arch/powerpc/Build
-+++ b/tools/perf/arch/powerpc/Build
-@@ -1,2 +1,2 @@
--perf-y += util/
-+perf-util-y += util/
- perf-test-y += tests/
-diff --git a/tools/perf/arch/powerpc/util/Build b/tools/perf/arch/powerpc/util/Build
-index 1d323f3a3322..6c588ecdf3bd 100644
---- a/tools/perf/arch/powerpc/util/Build
-+++ b/tools/perf/arch/powerpc/util/Build
-@@ -1,14 +1,14 @@
--perf-y += header.o
--perf-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
--perf-y += perf_regs.o
--perf-y += mem-events.o
--perf-y += pmu.o
--perf-y += sym-handling.o
--perf-y += evsel.o
--perf-y += event.o
-+perf-util-y += header.o
-+perf-util-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
-+perf-util-y += perf_regs.o
-+perf-util-y += mem-events.o
-+perf-util-y += pmu.o
-+perf-util-y += sym-handling.o
-+perf-util-y += evsel.o
-+perf-util-y += event.o
- 
--perf-$(CONFIG_DWARF) += dwarf-regs.o
--perf-$(CONFIG_DWARF) += skip-callchain-idx.o
-+perf-util-$(CONFIG_DWARF) += dwarf-regs.o
-+perf-util-$(CONFIG_DWARF) += skip-callchain-idx.o
- 
--perf-$(CONFIG_LIBUNWIND) += unwind-libunwind.o
--perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-+perf-util-$(CONFIG_LIBUNWIND) += unwind-libunwind.o
-+perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-diff --git a/tools/perf/arch/riscv/Build b/tools/perf/arch/riscv/Build
-index e4e5f33c84d8..e63eabc2c8f4 100644
---- a/tools/perf/arch/riscv/Build
-+++ b/tools/perf/arch/riscv/Build
-@@ -1 +1 @@
--perf-y += util/
-+perf-util-y += util/
-diff --git a/tools/perf/arch/riscv/util/Build b/tools/perf/arch/riscv/util/Build
-index 603dbb5ae4dc..65ec3c66a375 100644
---- a/tools/perf/arch/riscv/util/Build
-+++ b/tools/perf/arch/riscv/util/Build
-@@ -1,5 +1,5 @@
--perf-y += perf_regs.o
--perf-y += header.o
-+perf-util-y += perf_regs.o
-+perf-util-y += header.o
- 
--perf-$(CONFIG_DWARF) += dwarf-regs.o
--perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-+perf-util-$(CONFIG_DWARF) += dwarf-regs.o
-+perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-diff --git a/tools/perf/arch/s390/Build b/tools/perf/arch/s390/Build
-index e4e5f33c84d8..e63eabc2c8f4 100644
---- a/tools/perf/arch/s390/Build
-+++ b/tools/perf/arch/s390/Build
-@@ -1 +1 @@
--perf-y += util/
-+perf-util-y += util/
-diff --git a/tools/perf/arch/s390/util/Build b/tools/perf/arch/s390/util/Build
-index fa66f15a14ec..1ac830030ff3 100644
---- a/tools/perf/arch/s390/util/Build
-+++ b/tools/perf/arch/s390/util/Build
-@@ -1,11 +1,11 @@
--perf-y += header.o
--perf-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
--perf-y += perf_regs.o
-+perf-util-y += header.o
-+perf-util-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
-+perf-util-y += perf_regs.o
- 
--perf-$(CONFIG_DWARF) += dwarf-regs.o
--perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-+perf-util-$(CONFIG_DWARF) += dwarf-regs.o
-+perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
- 
--perf-y += machine.o
--perf-y += pmu.o
-+perf-util-y += machine.o
-+perf-util-y += pmu.o
- 
--perf-$(CONFIG_AUXTRACE) += auxtrace.o
-+perf-util-$(CONFIG_AUXTRACE) += auxtrace.o
-diff --git a/tools/perf/arch/sh/Build b/tools/perf/arch/sh/Build
-index e4e5f33c84d8..e63eabc2c8f4 100644
---- a/tools/perf/arch/sh/Build
-+++ b/tools/perf/arch/sh/Build
-@@ -1 +1 @@
--perf-y += util/
-+perf-util-y += util/
-diff --git a/tools/perf/arch/sh/util/Build b/tools/perf/arch/sh/util/Build
-index e813e618954b..32f44fc4ab98 100644
---- a/tools/perf/arch/sh/util/Build
-+++ b/tools/perf/arch/sh/util/Build
-@@ -1 +1 @@
--perf-$(CONFIG_DWARF) += dwarf-regs.o
-+perf-util-$(CONFIG_DWARF) += dwarf-regs.o
-diff --git a/tools/perf/arch/sparc/Build b/tools/perf/arch/sparc/Build
-index e4e5f33c84d8..e63eabc2c8f4 100644
---- a/tools/perf/arch/sparc/Build
-+++ b/tools/perf/arch/sparc/Build
-@@ -1 +1 @@
--perf-y += util/
-+perf-util-y += util/
-diff --git a/tools/perf/arch/sparc/util/Build b/tools/perf/arch/sparc/util/Build
-index e813e618954b..32f44fc4ab98 100644
---- a/tools/perf/arch/sparc/util/Build
-+++ b/tools/perf/arch/sparc/util/Build
-@@ -1 +1 @@
--perf-$(CONFIG_DWARF) += dwarf-regs.o
-+perf-util-$(CONFIG_DWARF) += dwarf-regs.o
-diff --git a/tools/perf/arch/x86/Build b/tools/perf/arch/x86/Build
-index 132cf8beaca2..87d057491343 100644
---- a/tools/perf/arch/x86/Build
-+++ b/tools/perf/arch/x86/Build
-@@ -1,4 +1,4 @@
--perf-y += util/
-+perf-util-y += util/
- perf-test-y += tests/
- 
- ifdef SHELLCHECK
-diff --git a/tools/perf/arch/x86/util/Build b/tools/perf/arch/x86/util/Build
-index 005907cb97d8..2607ed5c4296 100644
---- a/tools/perf/arch/x86/util/Build
-+++ b/tools/perf/arch/x86/util/Build
-@@ -1,24 +1,24 @@
--perf-y += header.o
--perf-y += tsc.o
--perf-y += pmu.o
--perf-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
--perf-y += perf_regs.o
--perf-y += topdown.o
--perf-y += machine.o
--perf-y += event.o
--perf-y += evlist.o
--perf-y += mem-events.o
--perf-y += evsel.o
--perf-y += iostat.o
--perf-y += env.o
-+perf-util-y += header.o
-+perf-util-y += tsc.o
-+perf-util-y += pmu.o
-+perf-util-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
-+perf-util-y += perf_regs.o
-+perf-util-y += topdown.o
-+perf-util-y += machine.o
-+perf-util-y += event.o
-+perf-util-y += evlist.o
-+perf-util-y += mem-events.o
-+perf-util-y += evsel.o
-+perf-util-y += iostat.o
-+perf-util-y += env.o
- 
--perf-$(CONFIG_DWARF) += dwarf-regs.o
--perf-$(CONFIG_BPF_PROLOGUE) += dwarf-regs.o
-+perf-util-$(CONFIG_DWARF) += dwarf-regs.o
-+perf-util-$(CONFIG_BPF_PROLOGUE) += dwarf-regs.o
- 
--perf-$(CONFIG_LOCAL_LIBUNWIND)    += unwind-libunwind.o
--perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-+perf-util-$(CONFIG_LOCAL_LIBUNWIND)    += unwind-libunwind.o
-+perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
- 
--perf-$(CONFIG_AUXTRACE) += auxtrace.o
--perf-$(CONFIG_AUXTRACE) += archinsn.o
--perf-$(CONFIG_AUXTRACE) += intel-pt.o
--perf-$(CONFIG_AUXTRACE) += intel-bts.o
-+perf-util-$(CONFIG_AUXTRACE) += auxtrace.o
-+perf-util-$(CONFIG_AUXTRACE) += archinsn.o
-+perf-util-$(CONFIG_AUXTRACE) += intel-pt.o
-+perf-util-$(CONFIG_AUXTRACE) += intel-bts.o
-diff --git a/tools/perf/arch/xtensa/Build b/tools/perf/arch/xtensa/Build
-index e4e5f33c84d8..e63eabc2c8f4 100644
---- a/tools/perf/arch/xtensa/Build
-+++ b/tools/perf/arch/xtensa/Build
-@@ -1 +1 @@
--perf-y += util/
-+perf-util-y += util/
-diff --git a/tools/perf/scripts/Build b/tools/perf/scripts/Build
-index 7d8e2e57faac..46f0c6f76dbf 100644
---- a/tools/perf/scripts/Build
-+++ b/tools/perf/scripts/Build
-@@ -1,4 +1,4 @@
- ifeq ($(CONFIG_LIBTRACEEVENT),y)
--  perf-$(CONFIG_LIBPERL)   += perl/Perf-Trace-Util/
-+  perf-util-$(CONFIG_LIBPERL)   += perl/Perf-Trace-Util/
- endif
--perf-$(CONFIG_LIBPYTHON) += python/Perf-Trace-Util/
-+perf-util-$(CONFIG_LIBPYTHON) += python/Perf-Trace-Util/
-diff --git a/tools/perf/scripts/perl/Perf-Trace-Util/Build b/tools/perf/scripts/perl/Perf-Trace-Util/Build
-index cc76be005d5e..9b0e5a8b5070 100644
---- a/tools/perf/scripts/perl/Perf-Trace-Util/Build
-+++ b/tools/perf/scripts/perl/Perf-Trace-Util/Build
-@@ -1,4 +1,4 @@
--perf-y += Context.o
-+perf-util-y += Context.o
- 
- CFLAGS_Context.o += $(PERL_EMBED_CCOPTS) -Wno-redundant-decls -Wno-strict-prototypes -Wno-bad-function-cast -Wno-declaration-after-statement -Wno-switch-enum
- CFLAGS_Context.o += -Wno-unused-parameter -Wno-nested-externs -Wno-undef
-diff --git a/tools/perf/scripts/python/Perf-Trace-Util/Build b/tools/perf/scripts/python/Perf-Trace-Util/Build
-index 5b0b5ff7e14a..be3710c61320 100644
---- a/tools/perf/scripts/python/Perf-Trace-Util/Build
-+++ b/tools/perf/scripts/python/Perf-Trace-Util/Build
-@@ -1,4 +1,4 @@
--perf-y += Context.o
-+perf-util-y += Context.o
- 
- # -Wno-declaration-after-statement: The python headers have mixed code with declarations (decls after asserts, for instance)
- CFLAGS_Context.o += $(PYTHON_EMBED_CCOPTS) -Wno-redundant-decls -Wno-strict-prototypes -Wno-unused-parameter -Wno-nested-externs -Wno-declaration-after-statement
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index da64efd8718f..0f18fe81ef0b 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -1,181 +1,181 @@
- include $(srctree)/tools/scripts/Makefile.include
- include $(srctree)/tools/scripts/utilities.mak
- 
--perf-y += arm64-frame-pointer-unwind-support.o
--perf-y += addr_location.o
--perf-y += annotate.o
--perf-y += block-info.o
--perf-y += block-range.o
--perf-y += build-id.o
--perf-y += cacheline.o
--perf-y += config.o
--perf-y += copyfile.o
--perf-y += ctype.o
--perf-y += db-export.o
--perf-y += disasm.o
--perf-y += env.o
--perf-y += event.o
--perf-y += evlist.o
--perf-y += sideband_evlist.o
--perf-y += evsel.o
--perf-y += evsel_fprintf.o
--perf-y += perf_event_attr_fprintf.o
--perf-y += evswitch.o
--perf-y += find_bit.o
--perf-y += get_current_dir_name.o
--perf-y += levenshtein.o
--perf-y += mmap.o
--perf-y += memswap.o
--perf-y += parse-events.o
--perf-y += print-events.o
--perf-y += tracepoint.o
--perf-y += perf_regs.o
--perf-y += perf-regs-arch/
--perf-y += path.o
--perf-y += print_binary.o
--perf-y += print_insn.o
--perf-y += rlimit.o
--perf-y += argv_split.o
--perf-y += rbtree.o
--perf-y += libstring.o
--perf-y += bitmap.o
--perf-y += hweight.o
--perf-y += smt.o
--perf-y += strbuf.o
--perf-y += string.o
--perf-y += strlist.o
--perf-y += strfilter.o
--perf-y += top.o
--perf-y += usage.o
--perf-y += dso.o
--perf-y += dsos.o
--perf-y += symbol.o
--perf-y += symbol_fprintf.o
--perf-y += map_symbol.o
--perf-y += color.o
--perf-y += color_config.o
--perf-y += metricgroup.o
--perf-y += header.o
--perf-y += callchain.o
--perf-y += values.o
--perf-y += debug.o
--perf-y += fncache.o
--perf-y += machine.o
--perf-y += map.o
--perf-y += maps.o
--perf-y += pstack.o
--perf-y += session.o
--perf-y += sample-raw.o
--perf-y += s390-sample-raw.o
--perf-y += amd-sample-raw.o
--perf-$(CONFIG_TRACE) += syscalltbl.o
--perf-y += ordered-events.o
--perf-y += namespaces.o
--perf-y += comm.o
--perf-y += thread.o
--perf-y += threads.o
--perf-y += thread_map.o
--perf-y += parse-events-flex.o
--perf-y += parse-events-bison.o
--perf-y += pmu.o
--perf-y += pmus.o
--perf-y += pmu-flex.o
--perf-y += pmu-bison.o
--perf-y += svghelper.o
--perf-$(CONFIG_LIBTRACEEVENT) += trace-event-info.o
--perf-y += trace-event-scripting.o
--perf-$(CONFIG_LIBTRACEEVENT) += trace-event.o
--perf-$(CONFIG_LIBTRACEEVENT) += trace-event-parse.o
--perf-$(CONFIG_LIBTRACEEVENT) += trace-event-read.o
--perf-y += sort.o
--perf-y += hist.o
--perf-y += util.o
--perf-y += cpumap.o
--perf-y += affinity.o
--perf-y += cputopo.o
--perf-y += cgroup.o
--perf-y += target.o
--perf-y += rblist.o
--perf-y += intlist.o
--perf-y += vdso.o
--perf-y += counts.o
--perf-y += stat.o
--perf-y += stat-shadow.o
--perf-y += stat-display.o
--perf-y += perf_api_probe.o
--perf-y += record.o
--perf-y += srcline.o
--perf-y += srccode.o
--perf-y += synthetic-events.o
--perf-y += data.o
--perf-y += tsc.o
--perf-y += cloexec.o
--perf-y += call-path.o
--perf-y += rwsem.o
--perf-y += thread-stack.o
--perf-y += spark.o
--perf-y += topdown.o
--perf-y += iostat.o
--perf-y += stream.o
--perf-$(CONFIG_AUXTRACE) += auxtrace.o
--perf-$(CONFIG_AUXTRACE) += intel-pt-decoder/
--perf-$(CONFIG_AUXTRACE) += intel-pt.o
--perf-$(CONFIG_AUXTRACE) += intel-bts.o
--perf-$(CONFIG_AUXTRACE) += arm-spe.o
--perf-$(CONFIG_AUXTRACE) += arm-spe-decoder/
--perf-$(CONFIG_AUXTRACE) += hisi-ptt.o
--perf-$(CONFIG_AUXTRACE) += hisi-ptt-decoder/
--perf-$(CONFIG_AUXTRACE) += s390-cpumsf.o
-+perf-util-y += arm64-frame-pointer-unwind-support.o
-+perf-util-y += addr_location.o
-+perf-util-y += annotate.o
-+perf-util-y += block-info.o
-+perf-util-y += block-range.o
-+perf-util-y += build-id.o
-+perf-util-y += cacheline.o
-+perf-util-y += config.o
-+perf-util-y += copyfile.o
-+perf-util-y += ctype.o
-+perf-util-y += db-export.o
-+perf-util-y += disasm.o
-+perf-util-y += env.o
-+perf-util-y += event.o
-+perf-util-y += evlist.o
-+perf-util-y += sideband_evlist.o
-+perf-util-y += evsel.o
-+perf-util-y += evsel_fprintf.o
-+perf-util-y += perf_event_attr_fprintf.o
-+perf-util-y += evswitch.o
-+perf-util-y += find_bit.o
-+perf-util-y += get_current_dir_name.o
-+perf-util-y += levenshtein.o
-+perf-util-y += mmap.o
-+perf-util-y += memswap.o
-+perf-util-y += parse-events.o
-+perf-util-y += print-events.o
-+perf-util-y += tracepoint.o
-+perf-util-y += perf_regs.o
-+perf-util-y += perf-regs-arch/
-+perf-util-y += path.o
-+perf-util-y += print_binary.o
-+perf-util-y += print_insn.o
-+perf-util-y += rlimit.o
-+perf-util-y += argv_split.o
-+perf-util-y += rbtree.o
-+perf-util-y += libstring.o
-+perf-util-y += bitmap.o
-+perf-util-y += hweight.o
-+perf-util-y += smt.o
-+perf-util-y += strbuf.o
-+perf-util-y += string.o
-+perf-util-y += strlist.o
-+perf-util-y += strfilter.o
-+perf-util-y += top.o
-+perf-util-y += usage.o
-+perf-util-y += dso.o
-+perf-util-y += dsos.o
-+perf-util-y += symbol.o
-+perf-util-y += symbol_fprintf.o
-+perf-util-y += map_symbol.o
-+perf-util-y += color.o
-+perf-util-y += color_config.o
-+perf-util-y += metricgroup.o
-+perf-util-y += header.o
-+perf-util-y += callchain.o
-+perf-util-y += values.o
-+perf-util-y += debug.o
-+perf-util-y += fncache.o
-+perf-util-y += machine.o
-+perf-util-y += map.o
-+perf-util-y += maps.o
-+perf-util-y += pstack.o
-+perf-util-y += session.o
-+perf-util-y += sample-raw.o
-+perf-util-y += s390-sample-raw.o
-+perf-util-y += amd-sample-raw.o
-+perf-util-$(CONFIG_TRACE) += syscalltbl.o
-+perf-util-y += ordered-events.o
-+perf-util-y += namespaces.o
-+perf-util-y += comm.o
-+perf-util-y += thread.o
-+perf-util-y += threads.o
-+perf-util-y += thread_map.o
-+perf-util-y += parse-events-flex.o
-+perf-util-y += parse-events-bison.o
-+perf-util-y += pmu.o
-+perf-util-y += pmus.o
-+perf-util-y += pmu-flex.o
-+perf-util-y += pmu-bison.o
-+perf-util-y += svghelper.o
-+perf-util-$(CONFIG_LIBTRACEEVENT) += trace-event-info.o
-+perf-util-y += trace-event-scripting.o
-+perf-util-$(CONFIG_LIBTRACEEVENT) += trace-event.o
-+perf-util-$(CONFIG_LIBTRACEEVENT) += trace-event-parse.o
-+perf-util-$(CONFIG_LIBTRACEEVENT) += trace-event-read.o
-+perf-util-y += sort.o
-+perf-util-y += hist.o
-+perf-util-y += util.o
-+perf-util-y += cpumap.o
-+perf-util-y += affinity.o
-+perf-util-y += cputopo.o
-+perf-util-y += cgroup.o
-+perf-util-y += target.o
-+perf-util-y += rblist.o
-+perf-util-y += intlist.o
-+perf-util-y += vdso.o
-+perf-util-y += counts.o
-+perf-util-y += stat.o
-+perf-util-y += stat-shadow.o
-+perf-util-y += stat-display.o
-+perf-util-y += perf_api_probe.o
-+perf-util-y += record.o
-+perf-util-y += srcline.o
-+perf-util-y += srccode.o
-+perf-util-y += synthetic-events.o
-+perf-util-y += data.o
-+perf-util-y += tsc.o
-+perf-util-y += cloexec.o
-+perf-util-y += call-path.o
-+perf-util-y += rwsem.o
-+perf-util-y += thread-stack.o
-+perf-util-y += spark.o
-+perf-util-y += topdown.o
-+perf-util-y += iostat.o
-+perf-util-y += stream.o
-+perf-util-$(CONFIG_AUXTRACE) += auxtrace.o
-+perf-util-$(CONFIG_AUXTRACE) += intel-pt-decoder/
-+perf-util-$(CONFIG_AUXTRACE) += intel-pt.o
-+perf-util-$(CONFIG_AUXTRACE) += intel-bts.o
-+perf-util-$(CONFIG_AUXTRACE) += arm-spe.o
-+perf-util-$(CONFIG_AUXTRACE) += arm-spe-decoder/
-+perf-util-$(CONFIG_AUXTRACE) += hisi-ptt.o
-+perf-util-$(CONFIG_AUXTRACE) += hisi-ptt-decoder/
-+perf-util-$(CONFIG_AUXTRACE) += s390-cpumsf.o
- 
- ifdef CONFIG_LIBOPENCSD
--perf-$(CONFIG_AUXTRACE) += cs-etm.o
--perf-$(CONFIG_AUXTRACE) += cs-etm-decoder/
-+perf-util-$(CONFIG_AUXTRACE) += cs-etm.o
-+perf-util-$(CONFIG_AUXTRACE) += cs-etm-decoder/
- endif
--perf-$(CONFIG_AUXTRACE) += cs-etm-base.o
--
--perf-y += parse-branch-options.o
--perf-y += dump-insn.o
--perf-y += parse-regs-options.o
--perf-y += parse-sublevel-options.o
--perf-y += term.o
--perf-y += help-unknown-cmd.o
--perf-y += dlfilter.o
--perf-y += mem-events.o
--perf-y += mem-info.o
--perf-y += vsprintf.o
--perf-y += units.o
--perf-y += time-utils.o
--perf-y += expr-flex.o
--perf-y += expr-bison.o
--perf-y += expr.o
--perf-y += branch.o
--perf-y += mem2node.o
--perf-y += clockid.o
--perf-y += list_sort.o
--perf-y += mutex.o
--perf-y += sharded_mutex.o
--
--perf-$(CONFIG_LIBBPF) += bpf_map.o
--perf-$(CONFIG_PERF_BPF_SKEL) += bpf_counter.o
--perf-$(CONFIG_PERF_BPF_SKEL) += bpf_counter_cgroup.o
--perf-$(CONFIG_PERF_BPF_SKEL) += bpf_ftrace.o
--perf-$(CONFIG_PERF_BPF_SKEL) += bpf_off_cpu.o
--perf-$(CONFIG_PERF_BPF_SKEL) += bpf-filter.o
--perf-$(CONFIG_PERF_BPF_SKEL) += bpf-filter-flex.o
--perf-$(CONFIG_PERF_BPF_SKEL) += bpf-filter-bison.o
-+perf-util-$(CONFIG_AUXTRACE) += cs-etm-base.o
-+
-+perf-util-y += parse-branch-options.o
-+perf-util-y += dump-insn.o
-+perf-util-y += parse-regs-options.o
-+perf-util-y += parse-sublevel-options.o
-+perf-util-y += term.o
-+perf-util-y += help-unknown-cmd.o
-+perf-util-y += dlfilter.o
-+perf-util-y += mem-events.o
-+perf-util-y += mem-info.o
-+perf-util-y += vsprintf.o
-+perf-util-y += units.o
-+perf-util-y += time-utils.o
-+perf-util-y += expr-flex.o
-+perf-util-y += expr-bison.o
-+perf-util-y += expr.o
-+perf-util-y += branch.o
-+perf-util-y += mem2node.o
-+perf-util-y += clockid.o
-+perf-util-y += list_sort.o
-+perf-util-y += mutex.o
-+perf-util-y += sharded_mutex.o
-+
-+perf-util-$(CONFIG_LIBBPF) += bpf_map.o
-+perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf_counter.o
-+perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf_counter_cgroup.o
-+perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf_ftrace.o
-+perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf_off_cpu.o
-+perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-filter.o
-+perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-filter-flex.o
-+perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-filter-bison.o
- 
- ifeq ($(CONFIG_LIBTRACEEVENT),y)
--  perf-$(CONFIG_PERF_BPF_SKEL) += bpf_lock_contention.o
-+  perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf_lock_contention.o
- endif
- 
- ifeq ($(CONFIG_LIBTRACEEVENT),y)
--  perf-$(CONFIG_PERF_BPF_SKEL) += bpf_kwork.o
--  perf-$(CONFIG_PERF_BPF_SKEL) += bpf_kwork_top.o
-+  perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf_kwork.o
-+  perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf_kwork_top.o
- endif
- 
--perf-$(CONFIG_LIBELF) += symbol-elf.o
--perf-$(CONFIG_LIBELF) += probe-file.o
--perf-$(CONFIG_LIBELF) += probe-event.o
-+perf-util-$(CONFIG_LIBELF) += symbol-elf.o
-+perf-util-$(CONFIG_LIBELF) += probe-file.o
-+perf-util-$(CONFIG_LIBELF) += probe-event.o
- 
- ifdef CONFIG_LIBBPF_DYNAMIC
-   hashmap := 1
-@@ -185,60 +185,60 @@ ifndef CONFIG_LIBBPF
- endif
- 
- ifdef hashmap
--perf-y += hashmap.o
-+perf-util-y += hashmap.o
- endif
- 
- ifndef CONFIG_LIBELF
--perf-y += symbol-minimal.o
-+perf-util-y += symbol-minimal.o
- endif
- 
- ifndef CONFIG_SETNS
--perf-y += setns.o
-+perf-util-y += setns.o
- endif
- 
--perf-$(CONFIG_DWARF) += probe-finder.o
--perf-$(CONFIG_DWARF) += dwarf-aux.o
--perf-$(CONFIG_DWARF) += dwarf-regs.o
--perf-$(CONFIG_DWARF) += debuginfo.o
--perf-$(CONFIG_DWARF) += annotate-data.o
-+perf-util-$(CONFIG_DWARF) += probe-finder.o
-+perf-util-$(CONFIG_DWARF) += dwarf-aux.o
-+perf-util-$(CONFIG_DWARF) += dwarf-regs.o
-+perf-util-$(CONFIG_DWARF) += debuginfo.o
-+perf-util-$(CONFIG_DWARF) += annotate-data.o
- 
--perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
--perf-$(CONFIG_LOCAL_LIBUNWIND)    += unwind-libunwind-local.o
--perf-$(CONFIG_LIBUNWIND)          += unwind-libunwind.o
--perf-$(CONFIG_LIBUNWIND_X86)      += libunwind/x86_32.o
--perf-$(CONFIG_LIBUNWIND_AARCH64)  += libunwind/arm64.o
-+perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-+perf-util-$(CONFIG_LOCAL_LIBUNWIND)    += unwind-libunwind-local.o
-+perf-util-$(CONFIG_LIBUNWIND)          += unwind-libunwind.o
-+perf-util-$(CONFIG_LIBUNWIND_X86)      += libunwind/x86_32.o
-+perf-util-$(CONFIG_LIBUNWIND_AARCH64)  += libunwind/arm64.o
- 
- ifeq ($(CONFIG_LIBTRACEEVENT),y)
--  perf-$(CONFIG_LIBBABELTRACE) += data-convert-bt.o
-+  perf-util-$(CONFIG_LIBBABELTRACE) += data-convert-bt.o
- endif
- 
--perf-y += data-convert-json.o
-+perf-util-y += data-convert-json.o
- 
--perf-y += scripting-engines/
-+perf-util-y += scripting-engines/
- 
--perf-$(CONFIG_ZLIB) += zlib.o
--perf-$(CONFIG_LZMA) += lzma.o
--perf-$(CONFIG_ZSTD) += zstd.o
-+perf-util-$(CONFIG_ZLIB) += zlib.o
-+perf-util-$(CONFIG_LZMA) += lzma.o
-+perf-util-$(CONFIG_ZSTD) += zstd.o
- 
--perf-$(CONFIG_LIBCAP) += cap.o
-+perf-util-$(CONFIG_LIBCAP) += cap.o
- 
--perf-$(CONFIG_CXX_DEMANGLE) += demangle-cxx.o
--perf-y += demangle-ocaml.o
--perf-y += demangle-java.o
--perf-y += demangle-rust.o
-+perf-util-$(CONFIG_CXX_DEMANGLE) += demangle-cxx.o
-+perf-util-y += demangle-ocaml.o
-+perf-util-y += demangle-java.o
-+perf-util-y += demangle-rust.o
- 
- ifdef CONFIG_JITDUMP
--perf-$(CONFIG_LIBELF) += jitdump.o
--perf-$(CONFIG_LIBELF) += genelf.o
--perf-$(CONFIG_DWARF) += genelf_debug.o
-+perf-util-$(CONFIG_LIBELF) += jitdump.o
-+perf-util-$(CONFIG_LIBELF) += genelf.o
-+perf-util-$(CONFIG_DWARF) += genelf_debug.o
- endif
- 
--perf-y += perf-hooks.o
-+perf-util-y += perf-hooks.o
- 
--perf-$(CONFIG_LIBBPF) += bpf-event.o
--perf-$(CONFIG_LIBBPF) += bpf-utils.o
-+perf-util-$(CONFIG_LIBBPF) += bpf-event.o
-+perf-util-$(CONFIG_LIBBPF) += bpf-utils.o
- 
--perf-$(CONFIG_LIBPFM4) += pfm.o
-+perf-util-$(CONFIG_LIBPFM4) += pfm.o
- 
- CFLAGS_config.o   += -DETC_PERFCONFIG="BUILD_STR($(ETC_PERFCONFIG_SQ))"
- 
-@@ -403,4 +403,4 @@ $(OUTPUT)%.shellcheck_log: %
- 	$(call rule_mkdir)
- 	$(Q)$(call echo-cmd,test)shellcheck -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
- 
--perf-y += $(TEST_LOGS)
-+perf-util-y += $(TEST_LOGS)
-diff --git a/tools/perf/util/arm-spe-decoder/Build b/tools/perf/util/arm-spe-decoder/Build
-index f8dae13fc876..960062b3cb9e 100644
---- a/tools/perf/util/arm-spe-decoder/Build
-+++ b/tools/perf/util/arm-spe-decoder/Build
-@@ -1 +1 @@
--perf-$(CONFIG_AUXTRACE) += arm-spe-pkt-decoder.o arm-spe-decoder.o
-+perf-util-$(CONFIG_AUXTRACE) += arm-spe-pkt-decoder.o arm-spe-decoder.o
-diff --git a/tools/perf/util/cs-etm-decoder/Build b/tools/perf/util/cs-etm-decoder/Build
-index 216cb17a3322..056d665f7f88 100644
---- a/tools/perf/util/cs-etm-decoder/Build
-+++ b/tools/perf/util/cs-etm-decoder/Build
-@@ -1 +1 @@
--perf-$(CONFIG_AUXTRACE) += cs-etm-decoder.o
-+perf-util-$(CONFIG_AUXTRACE) += cs-etm-decoder.o
-diff --git a/tools/perf/util/hisi-ptt-decoder/Build b/tools/perf/util/hisi-ptt-decoder/Build
-index db3db8b75033..3298f7b7e308 100644
---- a/tools/perf/util/hisi-ptt-decoder/Build
-+++ b/tools/perf/util/hisi-ptt-decoder/Build
-@@ -1 +1 @@
--perf-$(CONFIG_AUXTRACE) += hisi-ptt-pkt-decoder.o
-+perf-util-$(CONFIG_AUXTRACE) += hisi-ptt-pkt-decoder.o
-diff --git a/tools/perf/util/intel-pt-decoder/Build b/tools/perf/util/intel-pt-decoder/Build
-index b41c2e9c6f88..30793d08c6d4 100644
---- a/tools/perf/util/intel-pt-decoder/Build
-+++ b/tools/perf/util/intel-pt-decoder/Build
-@@ -1,4 +1,4 @@
--perf-$(CONFIG_AUXTRACE) += intel-pt-pkt-decoder.o intel-pt-insn-decoder.o intel-pt-log.o intel-pt-decoder.o
-+perf-util-$(CONFIG_AUXTRACE) += intel-pt-pkt-decoder.o intel-pt-insn-decoder.o intel-pt-log.o intel-pt-decoder.o
- 
- inat_tables_script = $(srctree)/tools/arch/x86/tools/gen-insn-attr-x86.awk
- inat_tables_maps = $(srctree)/tools/arch/x86/lib/x86-opcode-map.txt
-diff --git a/tools/perf/util/perf-regs-arch/Build b/tools/perf/util/perf-regs-arch/Build
-index d9d596d330a7..be95402aa540 100644
---- a/tools/perf/util/perf-regs-arch/Build
-+++ b/tools/perf/util/perf-regs-arch/Build
-@@ -1,9 +1,9 @@
--perf-y += perf_regs_aarch64.o
--perf-y += perf_regs_arm.o
--perf-y += perf_regs_csky.o
--perf-y += perf_regs_loongarch.o
--perf-y += perf_regs_mips.o
--perf-y += perf_regs_powerpc.o
--perf-y += perf_regs_riscv.o
--perf-y += perf_regs_s390.o
--perf-y += perf_regs_x86.o
-+perf-util-y += perf_regs_aarch64.o
-+perf-util-y += perf_regs_arm.o
-+perf-util-y += perf_regs_csky.o
-+perf-util-y += perf_regs_loongarch.o
-+perf-util-y += perf_regs_mips.o
-+perf-util-y += perf_regs_powerpc.o
-+perf-util-y += perf_regs_riscv.o
-+perf-util-y += perf_regs_s390.o
-+perf-util-y += perf_regs_x86.o
-diff --git a/tools/perf/util/scripting-engines/Build b/tools/perf/util/scripting-engines/Build
-index 586b94e90f4e..2282fe3772f3 100644
---- a/tools/perf/util/scripting-engines/Build
-+++ b/tools/perf/util/scripting-engines/Build
-@@ -1,7 +1,7 @@
- ifeq ($(CONFIG_LIBTRACEEVENT),y)
--  perf-$(CONFIG_LIBPERL)   += trace-event-perl.o
-+  perf-util-$(CONFIG_LIBPERL)   += trace-event-perl.o
- endif
--perf-$(CONFIG_LIBPYTHON) += trace-event-python.o
-+perf-util-$(CONFIG_LIBPYTHON) += trace-event-python.o
- 
- CFLAGS_trace-event-perl.o += $(PERL_EMBED_CCOPTS) -Wno-redundant-decls -Wno-strict-prototypes -Wno-unused-parameter -Wno-shadow -Wno-nested-externs -Wno-undef -Wno-switch-default -Wno-bad-function-cast -Wno-declaration-after-statement -Wno-switch-enum
- 
+Acked-by: David Hildenbrand <david@redhat.com>
+
 -- 
-2.45.2.741.gdbec12cfda-goog
+Cheers,
+
+David / dhildenb
 
