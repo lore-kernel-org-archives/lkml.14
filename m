@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154B517837C;
-	Tue, 25 Jun 2024 18:05:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F4217B438;
+	Tue, 25 Jun 2024 18:05:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719338745; cv=none; b=kb/hudi6deoBbEzOvWcHqyHXLbrErLlb2tRknLtH/gmHPWPY7z/HppBqzIZxIbNre7awAiZWAPEX7XBLa5SFTMOaiv/lFFpGJXaz1IISZsqRGzeoY2jS0jyj4sf/p8415QvDm1B06h/eflkNm8dFGjLM6bRxyxQ7fPbrJ+4ENk0=
+	t=1719338746; cv=none; b=EnBmFdQLlDn9APVGTK0lv0k9D5SejLNhBTYGYpHnGllE+I0MhTPHhajPF+qyczFzKiUXmY/aFRk7Mc5ZChYp0cuuOXmHpPfrPFXnMx8B0wUErx+q6fZYqGm51tVzWecGa7ryzJsiRgE8XuYeUGqzOPYsC3EO0m8LzOXEQ9tvEnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719338745; c=relaxed/simple;
-	bh=1TXG9SZrMDwPCPN1jihDIbGlXNgSRELots2zUsHDeb4=;
+	s=arc-20240116; t=1719338746; c=relaxed/simple;
+	bh=ywuSH6qCkdeHkBE80ZCaTZoKmSWBRtvzgEieCdzLvOc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LN02jYNGHdKbDY6VmYLJLPAS0K+DYqQsaNZQu73jXyjde5wVoRBWasuXwGzMb9/KxK7Lt6mOW3dsBGAmFuJuvURachuvpSnbECUGBDYeeR1kzx8FrggtA4As9QZQcxuLqCD5JSgsuyRwYrmuGsLeb9K3dotEgVvykKmKWJ9cFGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bu47WY5C; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ZB7ajgUJi3SgPwCRQz8e+vZTZKZ///aiQBvnORH0EWp+so3kMNVpRkNF+0FLIZAIYOcPU7LeaGU3fHUD2Lw4zYyDxYTfbiBXNvbThAfgNrUqkQEK9+Tg13Jd2l7OtP39UOLKrWgXb9epAATmfe1TygLM3sEgFvBstdvC4Q61rj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sc+31Mqf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bu47WY5C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69C14C32782;
-	Tue, 25 Jun 2024 18:05:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sc+31Mqf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAE19C4AF0A;
+	Tue, 25 Jun 2024 18:05:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719338744;
-	bh=1TXG9SZrMDwPCPN1jihDIbGlXNgSRELots2zUsHDeb4=;
+	s=k20201202; t=1719338746;
+	bh=ywuSH6qCkdeHkBE80ZCaTZoKmSWBRtvzgEieCdzLvOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bu47WY5CMcvz7hkGfMSJ2ELpSfKOgCjBYGqBqcSlmujahvS5mLk5/0/RqH31GIAq3
-	 viEOPXasgnf2Bj/tW6jbbfRnYknmObLlrzy8U3lmX7dDR8v458+VGlKPrD6Cl2Jf55
-	 JB0qK1boaZF/go0H3yZHxDp8cw+FroebV6s8ho7ZWsYgCROwQbbdUMVBq7Axj7YujR
-	 H5qEHPZRB/Fs2UpvtxwHvX6y2VPoMmJ4nobljvvqRNR3sSgrCQmp54+RwTxCU86hC3
-	 mqo6UPK+gl+gPGply5HtOyHnDDdFJldiXlzVh4P/hfK8oJp38yCkyjvu6eFAae7kO0
-	 jn7MW6yAW0s2A==
+	b=Sc+31Mqfm7OWQ/QmyXmPnb6jz1ppHcjAVkVMJ103bsVJhmTZeMfZSEzV0KfD463mE
+	 Jfa3Ujynn3hCCArqzfJyoQk0aNGRgAf7QpPtNGn/1JbrBpQXkp/TBfc/VKg5eqi9Bp
+	 4pZn6ivEFleWQ08gkTga3GNnGE8dJIqueR/Xu8PYWmAVmda2ZMZPe23GZE8RBO9AvX
+	 4GRqw/WU6iEV0kYPjq8Z8oMCo2/COA1yLCqidJZjFsKOt63LyFdZvxEGWCyUElhuFm
+	 MUzVwaBzNnFJYumVJC+UaZbqqfLgkonFu9qi5myPcSoQ7P2pjo+A3komKxNcWG3waB
+	 ixjwGIK9+g4sg==
 From: SeongJae Park <sj@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: SeongJae Park <sj@kernel.org>,
@@ -34,9 +34,9 @@ Cc: SeongJae Park <sj@kernel.org>,
 	linux-mm@kvack.org,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/8] selftests/damon/access_memory: use user-defined region size
-Date: Tue, 25 Jun 2024 11:05:31 -0700
-Message-Id: <20240625180538.73134-2-sj@kernel.org>
+Subject: [PATCH 3/8] selftests/damon: implement a program for even-numbered memory regions access
+Date: Tue, 25 Jun 2024 11:05:33 -0700
+Message-Id: <20240625180538.73134-4-sj@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240625180538.73134-1-sj@kernel.org>
 References: <20240625180538.73134-1-sj@kernel.org>
@@ -48,35 +48,85 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-'access_memory' is an artificial memory access pattern generator for
-DAMON tests.  It creates and accesses memory regions that the user
-specified the number and size via the command line.  However, real
-access part of the program ignores the user-specified size of each
-region.  Instead, it uses a hard-coded value, 10 MiB.  Fix it to use
-user-defined size.
+To test schemes_tried_regions feature, we need to have a program having
+specific number of regions that having different access pattern.
+Existing artificial access pattern generator, 'access_memory', cannot be
+used for the purpose, since it accesses only one region at a given time.
+Extending it could be an option, but since the purpose and the
+implementation are pretty simple, implementing another one from the
+scratch is better.
 
-Note that all existing 'access_memory' users are setting the region size
-as 10 MiB.  Hence no real problem has happened so far.
+Implement such another artificial memory access program that alloctes
+user-defined number/size regions and accesses even-numbered regions.
 
-Fixes: b5906f5f7359 ("selftests/damon: add a test for update_schemes_tried_regions sysfs command")
 Signed-off-by: SeongJae Park <sj@kernel.org>
 ---
- tools/testing/selftests/damon/access_memory.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/damon/Makefile        |  2 +-
+ .../selftests/damon/access_memory_even.c      | 42 +++++++++++++++++++
+ 2 files changed, 43 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/damon/access_memory_even.c
 
-diff --git a/tools/testing/selftests/damon/access_memory.c b/tools/testing/selftests/damon/access_memory.c
-index 585a2fa54329..56b17e8fe1be 100644
---- a/tools/testing/selftests/damon/access_memory.c
-+++ b/tools/testing/selftests/damon/access_memory.c
-@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
- 		start_clock = clock();
- 		while ((clock() - start_clock) * 1000 / CLOCKS_PER_SEC <
- 				access_time_ms)
--			memset(regions[i], i, 1024 * 1024 * 10);
-+			memset(regions[i], i, sz_region);
- 	}
- 	return 0;
- }
+diff --git a/tools/testing/selftests/damon/Makefile b/tools/testing/selftests/damon/Makefile
+index 29a22f50e762..7b972b5cf487 100644
+--- a/tools/testing/selftests/damon/Makefile
++++ b/tools/testing/selftests/damon/Makefile
+@@ -4,7 +4,7 @@
+ TEST_GEN_FILES += huge_count_read_write
+ TEST_GEN_FILES += debugfs_target_ids_read_before_terminate_race
+ TEST_GEN_FILES += debugfs_target_ids_pid_leak
+-TEST_GEN_FILES += access_memory
++TEST_GEN_FILES += access_memory access_memory_even
+ 
+ TEST_FILES = _chk_dependency.sh _debugfs_common.sh
+ 
+diff --git a/tools/testing/selftests/damon/access_memory_even.c b/tools/testing/selftests/damon/access_memory_even.c
+new file mode 100644
+index 000000000000..3be121487432
+--- /dev/null
++++ b/tools/testing/selftests/damon/access_memory_even.c
+@@ -0,0 +1,42 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Artificial memory access program for testing DAMON.
++ *
++ * Receives number of regions and size of each region from user.  Allocate the
++ * regions and repeatedly access even numbered (starting from zero) regions.
++ */
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <time.h>
++
++int main(int argc, char *argv[])
++{
++	char **regions;
++	clock_t start_clock;
++	int nr_regions;
++	int sz_region;
++	int access_time_ms;
++	int i;
++
++	if (argc != 3) {
++		printf("Usage: %s <number> <size (bytes)>\n", argv[0]);
++		return -1;
++	}
++
++	nr_regions = atoi(argv[1]);
++	sz_region = atoi(argv[2]);
++
++	regions = malloc(sizeof(*regions) * nr_regions);
++	for (i = 0; i < nr_regions; i++)
++		regions[i] = malloc(sz_region);
++
++	while (1) {
++		for (i = 0; i < nr_regions; i++) {
++			if (i % 2 == 0)
++				memset(regions[i], i, sz_region);
++		}
++	}
++	return 0;
++}
 -- 
 2.39.2
 
