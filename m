@@ -1,104 +1,78 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEAE815FA67;
-	Tue, 25 Jun 2024 13:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC8516086C;
+	Tue, 25 Jun 2024 13:44:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719323048; cv=none; b=GZCFU5hvt8R1Um0QoVTp9MKa+Z2zQnXK08QLiZTZQ6Ou2XKWPcnzgkza+ILGLn7w1NfgTIKScddyguOZ6X1uFzOCQnjsmkhaA8Zl0W1brSjbX5XQX+24VdGzAiOodjpdnNEwyI8opXmdEU6+1C3uub6rmSUREoaTpX+NxHVpvxE=
+	t=1719323050; cv=none; b=X+hWP0SoWo7xmmb1urbX9c3JSSosASJnY2OZ2f/2NOmO3OdE3diuKvVz4bmJUVAoLCI59os7aLRLrfOJtJClKAD1mYD5S9if6LvFrQeALPDRZSXHeZ7F6Gq5HqmasGrNUJEtea7pPRg1q0W9QJ0kNEOnoxyYwIkuDG1BW5m8wO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719323048; c=relaxed/simple;
-	bh=nQof8rcMNrS5cmjQ+nkn595vum50vVtm/h/QsH2E8fM=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=J+QAjPd+WErNpJrnlnM6RT+BaK+nunJSm3Q0Pha9xF6YuQ7k/ohCsD8N1gOvVGLGkzDCyG/YmosVcKC5IZRlloAON0PWhd5/G2+rowPTia8Dhd9ZH158goEDEU1Yqq7ZvoPAPJl7okl9N8eO7Rl/9UeikdJqEFFNKjvE/qVYYls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=JZtLw47+; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="JZtLw47+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1719323019; x=1719927819; i=markus.elfring@web.de;
-	bh=DW1LoQxnS5f5LRrDsRgHA085uas+2Iji0oND03zB5nw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=JZtLw47+8ZyxUQil47G0W9CULuQE+/JfNdpxAWvPwO4MAdZGujO9q9ZLMc8pZUsq
-	 8dT5qM08y4b+8tg0bJfgPWZhQU3HC1Z0eIarKnMEtuphSCvFEvHILuhd/hR3y8QDq
-	 aZl1Vto3FAg+Tt7+rHw0pL6WXGKCV7allTAHdPIKI20Od5oWPiucLMLedhBNKpRGl
-	 Cnw86c5noH+bom6O86Rq/oseOUbYM7mnXhj4aO2qyJ0pD4jBCD2K26+E9D8IAXasX
-	 77N1Tlyt0tZNGrCcqoeVGIl3TB1MBA8Q3Iud0KOQophl0EJAQTX+MMnJkdzYK6NWo
-	 ahwsti5odAruw0244w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1Ml4B4-1slIGt03yO-00aZqS; Tue, 25
- Jun 2024 15:43:39 +0200
-Message-ID: <8517da06-3010-4356-b5df-d9a14454feec@web.de>
-Date: Tue, 25 Jun 2024 15:43:37 +0200
+	s=arc-20240116; t=1719323050; c=relaxed/simple;
+	bh=cuBcFHRR249NAwvx9irRcav/Eox9IdRxFIgKPF2mrB8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=F//WBrzO4sBqjQI8Ye9lCv895hxscY4D9KulnTskXMfgefHBB3wND2WlPjBYusv51dPeIr4DaJwAdYqqfgoxYoAJH3pK3XdartTzO6nsTp/f22GXJjoQa057W8KXWdPmaJpDxuZ7k16jr+tj4bdlcJs5DW797a4UKeDDjdqJuVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92519C32781;
+	Tue, 25 Jun 2024 13:44:08 +0000 (UTC)
+Date: Tue, 25 Jun 2024 09:44:06 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Andrew Halaney <ahalaney@redhat.com>
+Cc: Song Chen <chensong_2000@189.cn>, Derek Barbosa <debarbos@redhat.com>,
+ pmladek@suse.com, john.ogness@linutronix.de, senozhatsky@chromium.org,
+ linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ williams@redhat.com, jlelli@redhat.com
+Subject: Re: a question about how to debug this case in ftrace
+Message-ID: <20240625094406.42acfacf@rorschach.local.home>
+In-Reply-To: <xiune2bsqgin5ksk33q5bkihuz5qrv5casjofdyopes55zfcpc@uvvnlwxb4wcp>
+References: <ZnGlt4uQRP_4nWu4@debarbos-thinkpadt14sgen2i.remote.csb>
+	<6802e81c-1926-4195-812a-1a5fe13bcdde@189.cn>
+	<xiune2bsqgin5ksk33q5bkihuz5qrv5casjofdyopes55zfcpc@uvvnlwxb4wcp>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Ma Ke <make24@iscas.ac.cn>, nouveau@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
- Danilo Krummrich <dakr@redhat.com>, David Airlie <airlied@gmail.com>,
- Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>
-Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <20240625081828.2620794-1-make24@iscas.ac.cn>
-Subject: Re: [PATCH] drm/nouveau/dispnv04: fix null pointer dereference in
- nv17_tv_get_ld_modes
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240625081828.2620794-1-make24@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:8F+pc+WjJBMs7OzY5IXr8xjes+NHPd6uUM/JgMMrj0JM3JjYtro
- 7+xVBXbK1BB3qzpe8Vj63qlrfX6Iz4XB4uAaeID6Oi6sX/8dwbygMeWaU8XJd5zmjv7wvhz
- HbdjafVWM8k8//vuS5mQ8TqHrsP5E3LxNsv8fZJtil7uYGTVby9/NkoOGZ68Rdt1J80WzRg
- rI+Ddk6GAKKeXXlYhzf2Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:UFhOZZ2eABg=;aZuRWvDiFzEGW8Ba2s44hN220sC
- Gh24rZ7uhloY3U1kRDLb1bj3kxglyTcH2SzKcb63zeF9DrpELlVQs74PzIi0DTQMKqETyC1x/
- A/ZR6Z1s1X80DPDTbWZNHuu1stccBrSg16ByR5cnNzbubMOd10Wj6xrkPatWpcyesm85DFdci
- hWqcnPAU26WwTvUGcFeNre4DWx7u+/Kzlne6/mmFz88v9k5H/eIFW/byTObUixhWEweafb5Dr
- iGMs+NUHYv5bRwRFsmOXrx5VinQD1sFyes9brzw9VhHSK6S8ayNQt9HQdYAmruGurxBNiySo3
- GoaUMbD880Pa8rOMxyEnnlZUjx9y61q9sVT0ByFTm9GPRIZKi1O5Z6a4021dBassSlp5DGDYa
- 0Qcl1YAQPG+TspeMG2yniEQgXWzQ7kBo2yas0Vnm8NaryHdPri0HmiSpUKWJ0c5j0PPzkZgN1
- rM0Jr1MbiENq2E/MDbYZlz26A0NrR4ConxomQz72+nTwhUCaNcDxFMY0fdHxcTe8LkWpuZ6BG
- yMjlxYPIzUiS18kSrHV7iVPn/xBVsQMDoPWAF2qLpSiN16QXKr2NBk/S2eeOkuudaPc+xxF4V
- IcMlrb57nadyFv+smgIwXDbxp6bA+Eh2oergs38lwk3ovBAW5dPpMtYzm3pjOF0IBA/Kt/IWH
- LTlntl3lrQZxtj6wgiGL+oeK80uxjXVA1TiDEJcO1Om6sudghNwirfZ280uKovxElkjlOZi9n
- 1UB993xA+H//Zig609Ut/fAnVz3N+ffZTLt3Cyh2TuP6LsNx3jWeuey3OSi9Uwf4Ab/3ljbdn
- MzjLGUYSMU3TfsrQ4QhQ7ToqOjZOA7jwwdofEuIbRTRV0=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-> In nv17_tv_get_ld_modes(), the return value of drm_mode_duplicate() is
-> assigned to mode, which will lead to a possible NULL pointer dereference
-> on failure of drm_mode_duplicate(). Add a check to avoid npd.
+On Tue, 25 Jun 2024 08:20:15 -0500
+Andrew Halaney <ahalaney@redhat.com> wrote:
 
-Can a wording approach (like the following) be a better change description=
-?
+> So I ended up doing a sequence like:
+> 
+>     tracing_off();
+>     ftrace_dump(DUMP_ALL);
 
-  A null pointer is stored in the local variable =E2=80=9Cmode=E2=80=9D af=
-ter a call
-  of the function =E2=80=9Cdrm_mode_duplicate=E2=80=9D failed. This pointe=
-r was used
-  in a subsequent statement where an undesirable dereference will
-  be performed then.
-  Thus add a corresponding return value check.
+I've done that several times too.
 
+> 
+> in the softlockup code when it was detected. Ideally I wanted to look at
+> the vmcore and look at the ftrace data in there (since debugging printk
+> by using printk is a little confusing), but there was a makedumpfile bug
+> I hit... so I went with the hacky route to prove to myself what was
+> going on. I think since then that's been resolved. Hope that helps!
 
-> Cc: stable@vger.kernel.org
+You may be interested in some work I'm doing that allows you to read
+the ring buffer from a previous kernel after a crash.
 
-Would you like to add the tag =E2=80=9CFixes=E2=80=9D accordingly?
+https://lore.kernel.org/linux-trace-kernel/20240612231934.608252486@goodmis.org/
 
+I also have a way to ask for any memory, that should be able to get the
+same location most times, via a "reserve_mem=" kernel command line
+parameter.
 
-How do you think about to use a summary phrase like
-=E2=80=9CPrevent null pointer dereference in nv17_tv_get_ld_modes()=E2=80=
-=9D?
+https://lore.kernel.org/linux-trace-kernel/20240613233415.734483785@goodmis.org/
 
+They are both destined for the next merge window. After that, I have
+one more patch that ties the two together, so that you can have a
+kernel command line of:
 
-Regards,
-Markus
+ reserve_mem=12M:4096:trace trace_instance=bootmap@trace
+
+and then when you boot up, you would have a trace instance that would
+be mapped to that memory. If your machine doesn't clear memory after a
+crash, you can read the data from the crash on the next boot.
+
+-- Steve
