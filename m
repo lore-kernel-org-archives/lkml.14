@@ -1,106 +1,95 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA35516F26B;
-	Tue, 25 Jun 2024 12:34:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A29156879;
+	Tue, 25 Jun 2024 12:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719318857; cv=none; b=hcBhAX5tNbkYDdpyUjH5eihCPQo+nwKamIvAXkrj4Ew5qrxrjnz7itTEE0VUMSNpAqMF/us7/nZcq1TWW1QUb6cssIgmnA1RVNnEUlP29O5pOD+Y30dtZzuo5BHjESmCRxl1JjduVq2DsGBS1zTF8GdfDc09r2+h9L/TgNFkV8A=
+	t=1719318860; cv=none; b=RrzQdtMguADKD9svb/AzeOhngW2bcp/cUgvTB1ZH3f2ExGtxWzqBtzTKXXNknGhTzvFPjJXGtNGbDfJjPRBcYkzfqViEOqFuvFDl4Vz0jahS/qx9BTs0Q7yKlrVgcW448GAbJjtsFHYRYwm85dBcdRDMaOSkSnix1lIgvyLEbtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719318857; c=relaxed/simple;
-	bh=h64D8fpBD1lKfgd7DANWqsP5wNcgHjfFMPaZVfLP9w4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UJ3gD1XM7tM631qugdCKeS1o3LBaPb5tQQJT8ubQVN4pi1Odm38EwGRno28LKPpdiOwC+O6NpbA9/3wxPGLG81iy7uW2peazytVJUvghx/a9jchRSkkdv0n2cxBl6YERgIkxmKoDPpvRMmS42HekcO20ZSZ+bB31IsKympcx4Sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=P0xrSaMp; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1719318860; c=relaxed/simple;
+	bh=MmNcMBBJtVyzgiafwqkLrHq6NRCQRYl4dPawbnLh1E4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JrmuFQtQAlRZKhxNcXdHRKQfmJbBS1LMJth/2NRiLoVKcdtiDHRfxbWOs9pPzUBEgoid99iCZrpO9QIAOtBSHtjkWGd0XbjXEduWqYJTpk1gAKjXRBxXyGKQPuJzzAyS6XPds/5u7Coi5xjHRz1Bd3Y12rsB91aCoHbop5CVYfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EG0TOPWK; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="P0xrSaMp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1719318856; x=1750854856;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=h64D8fpBD1lKfgd7DANWqsP5wNcgHjfFMPaZVfLP9w4=;
-  b=P0xrSaMpyxVJ4XREOE2mSHNXAWulGwlSbWGTte6YCONdvUiF0nlRWmtM
-   qYr4hg2sUEII8g066Pgi9Pa3lazs7/kck6H8VqfroB75LbYGemnJB7piD
-   6I4V3H171Y3MSFwy1SyYeieserxdKCmW0t4uBQ2QT48rbqtkrZ2ITEVeE
-   NXn6BXasrhd6+EMrZj2DlgcGm4lftPELMAoQGw0ajguavINQTNg+lpUE/
-   +sAo0nMpIOphCT3W1iAeNJeZq7Uz+bt2tYwO7wWvP5DGb+Ysup2UxXqWc
-   kyMYrCUVc4WkftHc5tIO/A3rMPdMwnh/RCC9noMGulU6Ffcnlq5uwd7PT
-   Q==;
-X-CSE-ConnectionGUID: XriPB4ONTrq6zgOQXS01lw==
-X-CSE-MsgGUID: iYJuNYuDTuy+amZy3+QVBA==
-X-IronPort-AV: E=Sophos;i="6.08,264,1712646000"; 
-   d="scan'208";a="28472536"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 25 Jun 2024 05:34:15 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 25 Jun 2024 05:33:44 -0700
-Received: from wendy.microchip.com (10.10.85.11) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Tue, 25 Jun 2024 05:33:43 -0700
-From: Conor Dooley <conor.dooley@microchip.com>
-To: <linux-kernel@vger.kernel.org>
-CC: <conor@kernel.org>, <conor.dooley@microchip.com>, Ulf Hansson
-	<ulf.hansson@linaro.org>, Cyril Jean <cyril.jean@microchip.com>,
-	<linux-mmc@vger.kernel.org>
-Subject: [PATCH v2] mmc: mmc_spi: allow for spi controllers incapable of getting as low as 400k
-Date: Tue, 25 Jun 2024 13:33:21 +0100
-Message-ID: <20240625-gigantic-frown-1ef4afa3e6fa@wendy>
-X-Mailer: git-send-email 2.43.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EG0TOPWK"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52ccc40e72eso3680370e87.3;
+        Tue, 25 Jun 2024 05:34:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719318856; x=1719923656; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oN2/K84i9zl3GaHFtyuViU5S2IN/66gi6BYv+zbirms=;
+        b=EG0TOPWKURaI5NU3kxqfBn5rpkPqZ+7RfgoYxlLN+kjd0fAFbVpQnrjBcxHQNgDNPU
+         j3ZlRfaEICRGOlIGbJc8wpy6RHbms+9oxawavgruXcX46Okpfi0BQ3FtFmgzwpGhBLHz
+         oxbd23Pv15+FdYN7lcHdPzIO/O/7f6NP+W+xn/AWOOWnWki+H8r4oT/NSQJIct5L6ytk
+         RlkyGloh0IN0iNKOHyLyjag2kZ0pO3Qt8WFMy8nHy5SOKdS1m0J1yEzL0p+Cj1PsTZzt
+         B7q2+FBddpggcp3esH0UMj0utogG1kCWbTxfw4OJzbIRhx2RygZ/hzzvCKnZUZoJAU9s
+         1U9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719318856; x=1719923656;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oN2/K84i9zl3GaHFtyuViU5S2IN/66gi6BYv+zbirms=;
+        b=cdJyQ39yeEoSjgDCq5QalU3tzoTK8cCAZ2HkeyftH3Xvvowbwr40YJmyVw778IF5+Z
+         YEIpMutVAC/l/0BzCiUmdnJstd3Y0Lezp5qFxl5c0Mwcncqy2DLsvPbyYaR8SPEQTJXO
+         H0iA7HTMspZBvvLd77VHB+J+AFsTqXsXUR702fXpg7Gjr7ZQglS4ey+I+svAfcxGJnV2
+         +ondI4hBoRiasjsq2HeiFJa8es0sA0Rk9Ozv6e5jdyuCm/q9jA0UOxLnL+IK1PZ3k6AO
+         H5T/Wuin/HSurD3pfuq2/3Ed0/6vZEkLRQF7PXttEDm6y8VbB9PLMSI0drJOlMIvBLLr
+         n5SQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWE7P5p1Q3H0oKubE4lg40k5MFHxv9gH8HcDJKUJtc8CBYhBUcyYYSrPBz3rv7iXRTe4SfZWfbhgkc58r08dTe8ye/GVdwmVyR7KmwbFYH78cv6wcUUYbtM5thdZMa6j58nFN+QYWHY3C6KyoKyR7svMJfRE6RsE0/qs6k+MHvpfKLceQ==
+X-Gm-Message-State: AOJu0Yxg8pxD/jMfTgEeelSZJZOCZ7+/Wun7g1wyKEsP8oND29HeXiyx
+	9fjXo64PWDGG0pYTupkymxNdK/aOxbWMC8JXX3cco0ua7uys/beEOTMRpotO
+X-Google-Smtp-Source: AGHT+IEugLyqoJPVUeJAwzI9eTjBQERaf1IqQnBaVqPFo7vfcEFHGeoEL5luenucOLlOBIKM4l/LLQ==
+X-Received: by 2002:ac2:420a:0:b0:52c:e00c:21cb with SMTP id 2adb3069b0e04-52ce1861722mr5540533e87.62.1719318856164;
+        Tue, 25 Jun 2024 05:34:16 -0700 (PDT)
+Received: from skbuf ([188.25.55.166])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4247d0b6355sm208725045e9.2.2024.06.25.05.34.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jun 2024 05:34:15 -0700 (PDT)
+Date: Tue, 25 Jun 2024 15:34:13 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev
+Subject: Re: [PATCH v4 3/3] arm64: dts: fsl-ls1043a-rdb: use common
+ spi-cs-setup(hold)-delay-ns
+Message-ID: <20240625123413.kksqh4zbi5bzfaan@skbuf>
+References: <20240624-ls_qspi-v4-0-3d1c6f5005bf@nxp.com>
+ <20240624-ls_qspi-v4-0-3d1c6f5005bf@nxp.com>
+ <20240624-ls_qspi-v4-3-3d1c6f5005bf@nxp.com>
+ <20240624-ls_qspi-v4-3-3d1c6f5005bf@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1574; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=h64D8fpBD1lKfgd7DANWqsP5wNcgHjfFMPaZVfLP9w4=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDGlVOwU3cm5oCFlWnv3X8f7s60VqYjd0fiqm6N08/F7y0Iev RdJ3OkpZGMQ4GGTFFFkSb/e1SK3/47LDuectzBxWJpAhDFycAjCRL2sYGabPdTw6W+x8cVRUuJ8Zyx aBcObLL/6+P8Z645jSpDcsaacYGT7cuF6dZCdikviw4Nea/nnM15TnflmuWnzMxuf8E5YsWW4A
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240624-ls_qspi-v4-3-3d1c6f5005bf@nxp.com>
+ <20240624-ls_qspi-v4-3-3d1c6f5005bf@nxp.com>
 
-Some controllers may not be able to reach a bus clock as low as 400 KHz
-due to a lack of sufficient divisors. In these cases, the SD card slot
-becomes non-functional as Linux continuously attempts to set the bus
-clock to 400 KHz. If the controller is incapable of getting that low,
-set its minimum frequency instead. While this may eliminate some SD
-cards, it allows those capable of operating at the controller's minimum
-frequency to be used.
+On Mon, Jun 24, 2024 at 02:55:29PM -0400, Frank Li wrote:
+> Use SPI common properties 'spi-cs-setup-delay-ns' and
+> 'spi-cs-hold-delay-ns', mark private properties 'fsl,spi-cs-sck-delay'
+> and 'fsl,spi-sck-cs-delay' as deprecated.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> Chang from v3 to v4
+> - fix typo at commit message
+> - use comments:
+> Standard CS timing
+> properties replace the deprecated vendor variants below
+> ---
 
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
-
-Without the RFC tag, but otherwise unchanged.
-
-rfc/v1: https://lore.kernel.org/all/20240612-dense-resample-563f07c30185@spud/
-
-CC: Ulf Hansson <ulf.hansson@linaro.org>
-CC: Cyril Jean <cyril.jean@microchip.com>
-CC: linux-mmc@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
----
- drivers/mmc/host/mmc_spi.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mmc/host/mmc_spi.c b/drivers/mmc/host/mmc_spi.c
-index 09d7a6a0dc1aa..c9caa1ece7ef9 100644
---- a/drivers/mmc/host/mmc_spi.c
-+++ b/drivers/mmc/host/mmc_spi.c
-@@ -1208,7 +1208,10 @@ static int mmc_spi_probe(struct spi_device *spi)
- 	 * that's the only reason not to use a few MHz for f_min (until
- 	 * the upper layer reads the target frequency from the CSD).
- 	 */
--	mmc->f_min = 400000;
-+	if (spi->controller->min_speed_hz > 400000)
-+		dev_warn(&spi->dev,"Controller unable to reduce bus clock to 400 KHz\n");
-+
-+	mmc->f_min = max(spi->controller->min_speed_hz, 400000);
- 	mmc->f_max = spi->max_speed_hz;
- 
- 	host = mmc_priv(mmc);
--- 
-2.43.2
-
+Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
