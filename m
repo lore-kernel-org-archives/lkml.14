@@ -1,164 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB3816EC10;
-	Tue, 25 Jun 2024 15:42:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25864171E5D
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 15:42:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719330170; cv=none; b=MZRw4OTY/iTApbXQcl7HmEDwweg33y2H/oiTGEjRJfVPBmjtOle11gZdv0dXYs25KkfLbXk4Dt+R/EVeMp053A7Lv5RbLa4RbZt/pp3IS2jk/RCjzO1BfurHcRucSNkCWwgwbPfHKiyvH6HTp4oZX2MB71VXzgnXreDBWyG+Jxo=
+	t=1719330175; cv=none; b=UK+yTGVBlrjPl9im6xHohIsZsLocuVRQU4yYLo4199oRmED1FApLNxOaf1dzWQMKey0IyV9d+lZCqlKlh0LYK3PwZi4HiWMKk9BqdRvGVuiQVxNLeHV7ZaJgh646oNiB49shT+lRCw3PTTBUJvvEooUrdO680L1Yi/7ZKN8vxeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719330170; c=relaxed/simple;
-	bh=0EWqU0TQngTF3BLWUKxqBKCJJ/uf0uceTeoQNO0hkEo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lv8DHigIQGV3mSk6+qE2bA1qg0u71fm4W0U5OcExtc1TWkxAbpo5iEHb6Em7iOuLmjLizNRjC0bLz4Ncrou5qtsWPJHEVfgyiPn3v2+2dHAK40rDsGwS7nOrJuiKtvv6mkFwpRSUR4jTlffxz2oV/ulxJAdJUZhDpXQLkG7c5Pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LEQUFkmy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719330175; c=relaxed/simple;
+	bh=txNOGyRY53dlUad69BGVxtVaxoLEp4azdwC4bHVsxy4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kxs4itodfFuvano0o3n9qHsoVs5RlBA2qBMNToSuWODDVFRo5oVd9xK47axgPDL68yGyKdJs64sW8y9rdLFHiZq/E2Kab/F2q69RAtfCogoTvdJh3oKh26J4IkuFCvlpL3Pz4vvyeq+NRhBdPvTZZF11O7szpfziVmgA0yZPvU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O+4WmIUk; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LEQUFkmy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9049C32782;
-	Tue, 25 Jun 2024 15:42:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719330170;
-	bh=0EWqU0TQngTF3BLWUKxqBKCJJ/uf0uceTeoQNO0hkEo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LEQUFkmya3YR+mR/j1IfIw7nhDcTMrVSVpBkCSfmCY+AvrHHMRp0leFrhiPBCMXec
-	 WIC+RIJCFVem677msnmCo+b1lST8j77gMxbUTZnjuR8tOJ90ccP5Qx450+VwsTApKq
-	 RQHm1u5EZ9631bvdj3vLUIjp9SNAFnl6WMDcizSmzA4ezPK27owtAmJTtOsdiNhGOn
-	 xbis7nC1Eh+zXx8NCBA39MqwNnvYaXdxHqVUlVvZX8oswAcq4YGho2JH9VY7vPj2Jf
-	 vslMqgLshuT5pZmD4ZteXZUfnuYhvf++aVA1hfT4Y9EQpWrSdDqZQQBkvsjGEHDwTG
-	 +5tNhEHlfvpaA==
-Date: Tue, 25 Jun 2024 16:42:45 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Guo Ren <guoren@kernel.org>
-Cc: linux-riscv@lists.infradead.org, Yangyu Chen <cyy@cyyself.name>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: (subset) [PATCH RESEND v8 0/6] riscv: add initial support for
- Canaan Kendryte K230
-Message-ID: <20240625-broadside-cope-52ecb71d459f@spud>
-References: <tencent_22BA0425B4DF1CA1713B62E4423C1BFBF809@qq.com>
- <20240410-unwoven-march-299a9499f5f4@spud>
- <20240619-hammock-drum-04bfc16a8ef6@spud>
- <CAJF2gTRYpDLij1aQoftz6ZqEgXDrfhNA39KiFVrwm7qc4WH6Fg@mail.gmail.com>
- <20240623-graveyard-consonant-97eff0f11808@spud>
- <CAJF2gTS_KkQjyQPubc2+naYiammLjN8jJyptGtCe8Z56MAmT2A@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O+4WmIUk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719330173;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qHjDjQkkVV5MnIFI/wThRjGzfK8qMKOd15SXf1Vtg8o=;
+	b=O+4WmIUk56JC/YKnALEEClT+F+RcMjpQ7HmvFQS/T4HaGI8mBXJ4ynF67sejCYRwlO6drV
+	0yrd6vbAqAJctgyvSqockBNTbFQVDE6WHrZ1NgHPlw21hL0oKKAnFpNSqJDt1ApQ5fEzoD
+	Ku8EDDNPLW0BqerbeLutd1rzZBrBRng=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-640-KMcXZk2lOcipIKTYemIOlQ-1; Tue, 25 Jun 2024 11:42:51 -0400
+X-MC-Unique: KMcXZk2lOcipIKTYemIOlQ-1
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-79557d418e0so1426380985a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 08:42:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719330171; x=1719934971;
+        h=content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qHjDjQkkVV5MnIFI/wThRjGzfK8qMKOd15SXf1Vtg8o=;
+        b=nJy7oRsbggoruI//k8y63TGCqzefPPCPFKGeEjHcMtSccnEbqmFJCKaMwWzeQnXNXh
+         HzM7MPLCK9jHa+27wRof6O1y+HSSsCYVR5ZwtRzkcUsOFoEEWgRbtu/pVvapgHpVv+Rb
+         RZB3k+4ninpT6B4REA2kfRU/J/sKfbF1TaozAH70L1FBGxUdP6R7JbwCShyg0evZGiht
+         fNoHTI1DUCJoTali3dy4mIgVwC/lhUxZMPoRigcY1rbpvSC2adLCY2Ro7xO5Oye64tfd
+         pnYHLzuTU/NbFp9dxaVl0jTbBzbS68uD0l6ZWVV3lfKt+PksLg7CLHM3swlU4GqV3Qxl
+         +upg==
+X-Forwarded-Encrypted: i=1; AJvYcCVsPuzkEoyxZUgno5O56vU4G9Pwv9dcFNk5j77sLHzNZy4pok/rU2GVEU/oM0Ab5peol5aponnRxx2CbK5AHVpncRsxWVRI57mFb5nI
+X-Gm-Message-State: AOJu0YyfaIs9LxOjNGoQeslORGOrqsudPWnkI7vnaqE+yAkjg/+A/Nu2
+	LQEIpnKB4jeOSaPBtOcTSZjJCF8yzjg5L+2Mv7jrm3CIQPz6eRpr5i12dbt2R6XUmdLr0GsnvqB
+	6bixY83Yx+gCNFHErmPc3oFTznTh3j74Hwzwp9gw87dwsdKTw1Azaaudn3v8ZkA==
+X-Received: by 2002:a05:620a:17a0:b0:795:7abd:12e2 with SMTP id af79cd13be357-79bfd66d20amr693260785a.17.1719330171153;
+        Tue, 25 Jun 2024 08:42:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHva43U36s/7Ml2cOyugoxc0TbehJGQitemaODb2b3+TkL7l4BU91CFLUjdniODZSXocu0RnA==
+X-Received: by 2002:a05:620a:17a0:b0:795:7abd:12e2 with SMTP id af79cd13be357-79bfd66d20amr693243585a.17.1719330168725;
+        Tue, 25 Jun 2024 08:42:48 -0700 (PDT)
+Received: from maya.cloud.tilaa.com (maya.cloud.tilaa.com. [164.138.29.33])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-79bce91f16esm415648285a.77.2024.06.25.08.42.48
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2024 08:42:48 -0700 (PDT)
+Date: Tue, 25 Jun 2024 17:41:49 +0200
+From: Stefano Brivio <sbrivio@redhat.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Aaron Conole <aconole@redhat.com>, Paolo Abeni <pabeni@redhat.com>,
+ netdev@vger.kernel.org, dev@openvswitch.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, Pravin B
+ Shelar <pshelar@ovn.org>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Shuah Khan <shuah@kernel.org>,
+ =?UTF-8?B?QWRyacOhbg==?= Moreno <amorenoz@redhat.com>, Simon Horman
+ <horms@kernel.org>, David Ahern <dsahern@gmail.com>
+Subject: Re: [PATCH v2 net-next 0/7] selftests: net: Switch pmtu.sh to use
+ the internal ovs script.
+Message-ID: <20240625174149.3d37ed88@elisabeth>
+In-Reply-To: <20240625070654.6a00efef@kernel.org>
+References: <20240620125601.15755-1-aconole@redhat.com>
+	<20240621180126.3c40d245@kernel.org>
+	<f7ttthjh33w.fsf@redhat.com>
+	<f7tpls6gu3q.fsf@redhat.com>
+	<e4f69335f90aae3f1daa47ba8f69b24ea15ed3b7.camel@redhat.com>
+	<f7th6dhgnvm.fsf@redhat.com>
+	<20240625070654.6a00efef@kernel.org>
+Organization: Red Hat
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="OM922ceDo/uZsKlH"
-Content-Disposition: inline
-In-Reply-To: <CAJF2gTS_KkQjyQPubc2+naYiammLjN8jJyptGtCe8Z56MAmT2A@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Tue, 25 Jun 2024 07:06:54 -0700
+Jakub Kicinski <kuba@kernel.org> wrote:
 
---OM922ceDo/uZsKlH
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jun 25, 2024 at 11:55:32AM +0800, Guo Ren wrote:
-> On Mon, Jun 24, 2024 at 1:32=E2=80=AFAM Conor Dooley <conor@kernel.org> w=
-rote:
-> >
-> > On Mon, Jun 24, 2024 at 01:07:55AM +0800, Guo Ren wrote:
-> > > On Wed, Jun 19, 2024 at 6:45=E2=80=AFPM Conor Dooley <conor@kernel.or=
-g> wrote:
-> > > >
-> > > > On Wed, Apr 10, 2024 at 11:30:25AM +0100, Conor Dooley wrote:
-> > > > > From: Conor Dooley <conor.dooley@microchip.com>
-> > > > >
-> > > > > On Mon, 08 Apr 2024 00:26:58 +0800, Yangyu Chen wrote:
-> > > > > > K230 is an ideal chip for RISC-V Vector 1.0 evaluation now. Add=
- initial
-> > > > > > support for it to allow more people to participate in building =
-drivers
-> > > > > > to mainline for it.
-> > > > > >
-> > > > > > This kernel has been tested upon factory SDK [1] with
-> > > > > > k230_evb_only_linux_defconfig and patched mainline opensbi [2] =
-to skip
-> > > > > > locked pmp and successfully booted to busybox on initrd with th=
-is log [3].
-> > > > > >
-> > > > > > [...]
-> > > > >
-> > > > > Applied to riscv-dt-for-next, thanks!
-> > > > >
-> > > > > [1/6] dt-bindings: riscv: Add T-HEAD C908 compatible
-> > > > >       https://git.kernel.org/conor/c/64cbc46bb854
-> > > > > [2/6] dt-bindings: add Canaan K230 boards compatible strings
-> > > > >       https://git.kernel.org/conor/c/b065da13ea9c
-> > > > > [3/6] dt-bindings: timer: Add Canaan K230 CLINT
-> > > > >       https://git.kernel.org/conor/c/b3ae796d0a4f
-> > > > > [4/6] dt-bindings: interrupt-controller: Add Canaan K230 PLIC
-> > > > >       https://git.kernel.org/conor/c/db54fda11b13
-> > > > > [5/6] riscv: dts: add initial canmv-k230 and k230-evb dts
-> > > > >       https://git.kernel.org/conor/c/5db2c4dc413e
-> > > >
-> > > > After some discussion on the k1 thread
-> > > > (https://lore.kernel.org/all/ZnEOU7D00J8Jzy-1@xhacker/, https://lor=
-e.kernel.org/all/ZnA6pZLkI2StP8Hh@xhacker/)
-> > > > I am going to drop this series. It's not very useful in the current
-> > > > state and there's not really been any interest from people in getti=
-ng
-> > > > the platform to a more complete state. Jisheng made some good point=
-s in
-> > > > the k1 thread about the missing clock controller stuff, and I think=
- I'm
-> > > > going to make having basic things like clocks and where applicable
-> > > > resets and pinctrl the minimum requirement for the platforms I'm lo=
-oking
-> > > > after.
-> > > Here is the k230 clock driver based on Linux-6.6:
-> > > https://github.com/ruyisdk/linux-xuantie-kernel/commit/196242fd9b9b4a=
-191dab0c7c3c5bf851ed857d8d
+> On Tue, 25 Jun 2024 09:20:29 -0400 Aaron Conole wrote:
+> > > I'm still wondering if the issue is Kconfig-related (plus possibly bad
+> > > interaction with vng). I don't see the OVS knob enabled in the self-
+> > > tests config. If it's implied by some other knob, and ends-up being
+> > > selected as a module, vng could stumble upon loading the module at
+> > > runtime, especially on incremental build (at least I experience that
+> > > problem locally). I'm not even sure if the KCI is building
+> > > incrementally or not, so all the above could is quite a wild guess.
 > > >
-> > > pinctrl:
-> > > https://github.com/ruyisdk/linux-xuantie-kernel/commit/baf26b6622c9de=
-2ff64a6ed58eeeb98c8b2c828b
-> > >
-> > > No reset driver.
-> > >
-> > > Most of the k230 drivers are under Linux-5.10, and we are porting them
-> > > into the newest version of Linux, which takes time.
-> > >
-> > > So, if the clock & punctual drivers mentioned above could satisfy the
-> > > minimum requirements for the platforms, we will update the version of
-> > > this series as a supplement.
-> > >
-> > > Is that okay?
-> >
-> > I don't understand how that changes anything, these are all out of tree
-> > drivers based on an old kernel. I know that there are drivers for a lot
-> > of the peripherals that are in-use in the vendor tree etc. What I am
-> > looking to happen, before I apply patches for the k230, is that the clo=
-ck
-> > dt-bindings will have landed in linux-next - and ideally the pinctrl on=
-es
-> > too.
-> Okay, clock & pinctrl, the reply is clear to me. Thx.
+> > > In any case I think adding the explicit CONFIG_OPENVSWITCH=y the
+> > > selftest config would make the scenario more well defined.    
+> > 
+> > That is in 7/7 - but there was a collision with a netfilter knob getting
+> > turned on.  I can repost it as-is (just after rebasing) if you think
+> > that is the only issue.  
+> 
+> Sorry for not checking it earlier, looks like the runner was missing
+> pyroute:
+> 
+> # python3 ./tools/testing/selftests/net/openvswitch/ovs-dpctl.py
+> Need to install the python pyroute2 package >= 0.6.
+> 
+> I guess run_cmd counter-productively eats the stderr output ? :(
 
-If you could get someone to work on them, or convince Canaan to do it
-etc, that'd be neat :)
+Yes, otherwise it's rather noisy, but you can run the thing with
+VERBOSE=1, see also 56490b623aa0 ("selftests: Add debugging options to
+pmtu.sh").
 
---OM922ceDo/uZsKlH
-Content-Type: application/pgp-signature; name="signature.asc"
+Before that change, we didn't eat standard error, but in the general
+case I guess it's quite an improvement.
 
------BEGIN PGP SIGNATURE-----
+-- 
+Stefano
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnrldQAKCRB4tDGHoIJi
-0mj/AQDSC+8biqd74U/wZIAYY5mPtlzOLL72kl322YLxabTrsQEAlqZIiS7uT0VG
-hn+xDxQiJhWGReEGAEQpjvt64ET4LA4=
-=j+ri
------END PGP SIGNATURE-----
-
---OM922ceDo/uZsKlH--
