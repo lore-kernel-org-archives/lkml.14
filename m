@@ -1,230 +1,262 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A2A617D360;
-	Tue, 25 Jun 2024 21:56:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A601802A7;
+	Tue, 25 Jun 2024 21:56:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719352591; cv=none; b=p8h4U4j4Q1YQansx2e6IUNAgHBOneex+/CUfokz72rOgeP26EhRc0SanUR1fd+lCWweHxegYO+LnUlvRtIHA51xuslfblohreL/1QQNNqQ6utDqPlNOeiJK/ScfFH0dw6KG01HoJI7e3efr/624XJqJ0yJSqbyvfwIpS2HXPGaI=
+	t=1719352595; cv=none; b=Xr2r4Uw+ip9uNV8DwJza1IXptt/W99/HN44LIWZKkYanYE7DtjBDKxsjQ/mgKAR+Gh0gU5o50vuy7DQCb/I4DYsIVLvNav93hWYVC3WOpvX+upc99VtETCjKKLyDhIhg3cgyicHXxZ13oWYz1VZbK76sbGUqm2yk2ifQ9OzfjtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719352591; c=relaxed/simple;
-	bh=hkbRPr9eyUyc8TLpwKSS/o8S448gatXw3MGVmqVjO/8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BWm0zj4nIYR9hbLfPEpIpgwSnaJZpKYvl2ShRZlyOVcbGWQHOEfd5G1tNWkP0zbWblfultYStIo8T8C+s4zy81RFHcNvhK0EXiw2ZxPT2R98Ayz59rORZPqIs7Ldps9WKDlcc/HaaDdCWc4Rya/zVqHNpCKNYdaMZIA6YaKzPxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=m/2r1PS0; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1719352595; c=relaxed/simple;
+	bh=jZ+wcEpx7M4J5I61Wrco+Y735X/oDe0NNCE9YQjxVHo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SLmjh/8gUh44dEJFtro5xaXVvp5YSPB9DapcvrsCYN6xG9FBjnxRVpJVSqxTffh/MU9tPriNKsOPGxGIjVQXOtMYt2vS0JPotjKRxHRIlVrIQOuNuv0LKWdnzWjhScQI/N/EKmMrGDjo3bI2KwvxwQk8PePpmLaUvhvoCyNN4jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=dyaM9Bn7; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="m/2r1PS0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1719352578;
-	bh=hkbRPr9eyUyc8TLpwKSS/o8S448gatXw3MGVmqVjO/8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m/2r1PS0nsz0Z1m0TULDFaAqsus2d4gADFfrMbLJi89AoGisxUgqLUqxIwvBv+q9p
-	 O1achJBVWW4uVSwzBWphop3y5mJvAhlhJQqiF00aRpuX0LK4BOOVmt6WqVcDGMzb8T
-	 sazVAV2+BAOozEDAX00XBXb0juEJ9X7murWv/gcs=
-Date: Tue, 25 Jun 2024 23:56:18 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Mark Brown <broonie@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Robert Moore <robert.moore@intel.com>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	acpica-devel@lists.linux.dev, Aishwarya.TCV@arm.com
-Subject: Re: [PATCH 2/5] ACPI: sysfs: use device lifecycle for _STR result
-Message-ID: <111f7a2c-403b-40b3-9e25-8c4a040d8dfb@t-8ch.de>
-References: <20240613-acpi-sysfs-groups-v1-0-665e0deb052a@weissschuh.net>
- <20240613-acpi-sysfs-groups-v1-2-665e0deb052a@weissschuh.net>
- <a72495c3-c996-4be7-bc64-ba10d5400971@sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="dyaM9Bn7"
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45PFnB26000313;
+	Tue, 25 Jun 2024 17:56:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=6Dy4X
+	Wij/fFaig7Oy0V6YA6ze5sQbhrGy8kvlRZB+fM=; b=dyaM9Bn7D5v6EGNCoCAVY
+	+xJrJul83rFtaOf7wJ/CER66fExcwGeWq9ZwxLPbZHZwZ4U7aHZnry5RE+cFoF7O
+	AYKFZu875MmG36T9N2E+JCsGEx82k3pk/oObh34V0P2lQfjAlKcL8IZ5vtviBVqG
+	AnzD/SYaYyCOis8nbm9EIdRb48NIYw4MySBXpjt6V8zmpuoCKmisKK4sJOuArcLm
+	uGSaOprDi47ztJ+RxiwEdbm6ZhIokgXQnQVATQ2q69NivVRSn2qS03KOwXRhpIaE
+	zHmEuh61lmTjHPoOzo4ug60VQPCTNMU5gcqPOmFtxqNc8L8W9LqhCxvPRhGBecr6
+	A==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3ywuh2m7af-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Jun 2024 17:56:18 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 45PLuH4G003619
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 25 Jun 2024 17:56:17 -0400
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Tue, 25 Jun 2024 17:56:16 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Tue, 25 Jun 2024 17:56:16 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Tue, 25 Jun 2024 17:56:16 -0400
+Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.129])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 45PLu0ww013888;
+	Tue, 25 Jun 2024 17:56:03 -0400
+From: Marcelo Schmitt <marcelo.schmitt@analog.com>
+To: <broonie@kernel.org>, <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <jic23@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <nuno.sa@analog.com>, <dlechner@baylibre.com>, <corbet@lwn.net>,
+        <marcelo.schmitt1@gmail.com>
+CC: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v5 7/7] docs: iio: Add documentation for AD4000
+Date: Tue, 25 Jun 2024 18:55:59 -0300
+Message-ID: <e553a7c6ba88b3d8ae2db0963212fdce0919805a.1719351923.git.marcelo.schmitt@analog.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <cover.1719351923.git.marcelo.schmitt@analog.com>
+References: <cover.1719351923.git.marcelo.schmitt@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a72495c3-c996-4be7-bc64-ba10d5400971@sirena.org.uk>
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: -KU6iPVqN3MRnq7ENWTZcMRmFV-ji0c0
+X-Proofpoint-ORIG-GUID: -KU6iPVqN3MRnq7ENWTZcMRmFV-ji0c0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-25_17,2024-06-25_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 spamscore=0 malwarescore=0 phishscore=0 clxscore=1015
+ priorityscore=1501 adultscore=0 mlxscore=0 bulkscore=0 mlxlogscore=999
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406250163
 
-On 2024-06-25 21:57:13+0000, Mark Brown wrote:
-> On Thu, Jun 13, 2024 at 10:15:33PM +0200, Thomas Weißschuh wrote:
-> > The string assigned to dev->pnp.str effectively shares the lifetime of
-> > the device. Use devm_-APIs to avoid a manual cleanup path.
-> > 
-> > This will be useful when the attributes themselves will be managed by
-> > the device core.
-> 
-> This is in -next since 20240624 and appears to be causing issues on
-> Cavium Thunder X2 in the Arm lab - with arm64 defconfig we see a bunch
-> of log messages like:
-> 
-> <6>[   50.120962] ACPI: button: Power Button [PWRB]
-> <6>[   50.120962] ACPI: button: Power Button [PWRB]
-> <2>[   50.138595] acpi LNXTHERM:00: Resources present before probing
-> <2>[   50.138595] acpi LNXTHERM:00: Resources present before probing
-> <2>[   50.150873] acpi LNXTHERM:01: Resources present before probing
-> <2>[   50.150873] acpi LNXTHERM:01: Resources present before probing
-> <2>[   50.163134] acpi LNXTHERM:02: Resources present before probing
-> <2>[   50.163134] acpi LNXTHERM:02: Resources present before probing
-> <2>[   50.175393] acpi LNXTHERM:03: Resources present before probing
-> <2>[   50.175393] acpi LNXTHERM:03: Resources present before probing
-> <2>[   50.187653] acpi LNXTHERM:04: Resources present before probing
-> <2>[   50.187653] acpi LNXTHERM:04: Resources present before probing
-> <2>[   50.199913] acpi LNXTHERM:05: Resources present before probing
-> <2>[   50.199913] acpi LNXTHERM:05: Resources present before probing
-> <2>[   50.212171] acpi LNXTHERM:06: Resources present before probing
-> <2>[   50.212171] acpi LNXTHERM:06: Resources present before probing
-> <2>[   50.224433] acpi LNXTHERM:07: Resources present before probing
-> <2>[   50.224433] acpi LNXTHERM:07: Resources present before probing
-> <2>[   50.236703] acpi LNXTHERM:08: Resources present before probing
+Document wiring configurations for the AD4000 series of ADCs.
 
-This does make sense, the device is not yet bound to a driver.
-Which apparently precludes the usage of devres.
+Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+---
+ Documentation/iio/ad4000.rst | 131 +++++++++++++++++++++++++++++++++++
+ Documentation/iio/index.rst  |   1 +
+ MAINTAINERS                  |   1 +
+ 3 files changed, 133 insertions(+)
+ create mode 100644 Documentation/iio/ad4000.rst
 
-Skipping this commit and doing the kfree() inside
-acpi_device_remove_file() also shouldn't work, as the attributes would
-live longer than the string.
-
-I'm wondering why dev->pnp.str does not share the lifecycle of the
-rest of dev->pnp, acpi_init_device_object()/acpi_device_release().
-
-Or we evaluate _STR during is_visible(), which keeps the single
-evaluation, or during description_show() which is the same as all the
-other attributes.
-
-I'm also wondering why the _STR attribute behaved differently in the
-first place.
-Does the patch below work better?
-
-> (some other bug seems to be doubling all the log lines.)  We also see
-> PCI getting upset:
-> 
-> <6>[   50.238119] pcieport 0000:00:03.0: Refused to change power state from D0 to D3hot
-> 
-> and the ethernet driver gets confused:
-> 
-> [ 71.592299] mlx5_core 0000:0b:00.1: Port module event: module 1, Cable unplugged
-> 
-> while the cable is most definitely connected, we're netbooting.  A
-> bisect pointed at this commit, full bisect log below:
-
-All these different kinds of errors are bisected to this commit?
-
-
-diff --git a/drivers/acpi/device_sysfs.c b/drivers/acpi/device_sysfs.c
-index c85ec754931c..350915b06472 100644
---- a/drivers/acpi/device_sysfs.c
-+++ b/drivers/acpi/device_sysfs.c
-@@ -510,6 +510,40 @@ static struct attribute *acpi_attrs[] = {
- 	NULL
- };
+diff --git a/Documentation/iio/ad4000.rst b/Documentation/iio/ad4000.rst
+new file mode 100644
+index 000000000000..de8fd3ae6e62
+--- /dev/null
++++ b/Documentation/iio/ad4000.rst
+@@ -0,0 +1,131 @@
++.. SPDX-License-Identifier: GPL-2.0-only
++
++=============
++AD4000 driver
++=============
++
++Device driver for Analog Devices Inc. AD4000 series of ADCs.
++
++Supported devices
++=================
++
++* `AD4000 <https://www.analog.com/AD4000>`_
++* `AD4001 <https://www.analog.com/AD4001>`_
++* `AD4002 <https://www.analog.com/AD4002>`_
++* `AD4003 <https://www.analog.com/AD4003>`_
++* `AD4004 <https://www.analog.com/AD4004>`_
++* `AD4005 <https://www.analog.com/AD4005>`_
++* `AD4006 <https://www.analog.com/AD4006>`_
++* `AD4007 <https://www.analog.com/AD4007>`_
++* `AD4008 <https://www.analog.com/AD4008>`_
++* `AD4010 <https://www.analog.com/AD4010>`_
++* `AD4011 <https://www.analog.com/AD4011>`_
++* `AD4020 <https://www.analog.com/AD4020>`_
++* `AD4021 <https://www.analog.com/AD4021>`_
++* `AD4022 <https://www.analog.com/AD4022>`_
++* `ADAQ4001 <https://www.analog.com/ADAQ4001>`_
++* `ADAQ4003 <https://www.analog.com/ADAQ4003>`_
++
++Wiring connections
++------------------
++
++Devices of the AD4000 series can be connected to the SPI host controller in a
++few different modes.
++
++CS mode, 3-wire turbo mode
++^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++Datasheet "3-wire" mode is what most resembles standard SPI connection which,
++for these devices, comprises of connecting the controller CS line to device CNV
++pin and other SPI lines as usual. This configuration is (misleadingly) called
++"CS Mode, 3-Wire Turbo Mode" connection in datasheets.
++NOTE: The datasheet definition of 3-wire mode for the AD4000 series is NOT the
++same of standard spi-3wire mode.
++This is the only connection mode that allows configuration register access but
++it requires the SPI controller to support the ``SPI_MOSI_IDLE_HIGH`` feature.
++
++Omit the ``adi,sdi-pin`` property in device tree to select this mode.
++
++::
++
++                                         +-------------+
++     + ----------------------------------| SDO         |
++     |                                   |             |
++     |               +-------------------| CS          |
++     |               v                   |             |
++     |    +--------------------+         |     HOST    |
++     |    |        CNV         |         |             |
++     +--->| SDI   AD4000   SDO |-------->| SDI         |
++          |        SCK         |         |             |
++          +--------------------+         |             |
++                    ^                    |             |
++                    +--------------------| SCLK        |
++                                         +-------------+
++
++CS mode, 3-wire, without busy indicator
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++Another wiring configuration supported as "3-wire" mode has the SDI pin
++hard-wired to digital input/output interface supply (VIO). In this setup, the
++controller is not required to support ``SPI_MOSI_IDLE_HIGH`` but register access
++is not possible. This connection mode saves one wire and works with any SPI
++controller.
++
++Set the ``adi,sdi-pin`` device tree property to ``"high"`` to select this mode.
++
++::
++
++                                         +-------------+
++                    +--------------------| CS          |
++                    v                    |             |
++    VIO   +--------------------+         |     HOST    |
++     |    |        CNV         |         |             |
++     +--->| SDI   AD4000   SDO |-------->| SDI         |
++          |        SCK         |         |             |
++          +--------------------+         |             |
++                    ^                    |             |
++                    +--------------------| SCLK        |
++                                         +-------------+
++
++Alternatively, a GPIO may be connected to the device CNV pin. This is similar to
++the previous wiring configuration but saves the use of a CS line.
++
++::
++
++                                         +-------------+
++                    +--------------------| GPIO        |
++                    v                    |             |
++    VIO   +--------------------+         |     HOST    |
++     |    |        CNV         |         |             |
++     +--->| SDI   AD4000   SDO |-------->| SDI         |
++          |        SCK         |         |             |
++          +--------------------+         |             |
++                    ^                    |             |
++                    +--------------------| SCLK        |
++                                         +-------------+
++
++CS mode, 4-wire without busy indicator
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++In datasheet "4-wire" mode, the controller CS line is connected to the ADC SDI
++pin and a GPIO is connected to the ADC CNV pin. This connection mode may better
++suit scenarios where multiple ADCs can share one CNV trigger.
++
++Set ``adi,sdi-pin`` to ``"cs"`` to select this mode.
++
++
++::
++
++                                         +-------------+
++     + ----------------------------------| CS          |
++     |                                   |             |
++     |               +-------------------| GPIO        |
++     |               v                   |             |
++     |    +--------------------+         |     HOST    |
++     |    |        CNV         |         |             |
++     +--->| SDI   AD4000   SDO |-------->| SDI         |
++          |        SCK         |         |             |
++          +--------------------+         |             |
++                    ^                    |             |
++                    +--------------------| SCLK        |
++                                         +-------------+
+diff --git a/Documentation/iio/index.rst b/Documentation/iio/index.rst
+index 4c13bfa2865c..5df157a44923 100644
+--- a/Documentation/iio/index.rst
++++ b/Documentation/iio/index.rst
+@@ -17,6 +17,7 @@ Industrial I/O Kernel Drivers
+ .. toctree::
+    :maxdepth: 1
  
-+static const char *acpi_device_str(struct acpi_device *dev)
-+{
-+	struct acpi_buffer buffer = {ACPI_ALLOCATE_BUFFER, NULL};
-+	union acpi_object *str_obj;
-+	acpi_status status;
-+	const char *ret;
-+	char buf[512];
-+	int result;
-+
-+	if (!acpi_has_method(dev->handle, "_STR"))
-+		return NULL;
-+
-+	status = acpi_evaluate_object(dev->handle, "_STR",
-+				      NULL, &buffer);
-+	if (ACPI_FAILURE(status))
-+		return NULL;
-+
-+	str_obj = buffer.pointer;
-+	/*
-+	 * The _STR object contains a Unicode identifier for a device.
-+	 * We need to convert to utf-8 so it can be displayed.
-+	 */
-+	result = utf16s_to_utf8s((wchar_t *)str_obj->buffer.pointer,
-+				 str_obj->buffer.length,
-+				 UTF16_LITTLE_ENDIAN,
-+				 buf, sizeof(buf) - 1);
-+	buf[result++] = '\0';
-+
-+	ret = kstrdup(buf, GFP_KERNEL);
-+	kfree(buffer.pointer);
-+
-+	return ret;
-+}
-+
- static bool acpi_show_attr(struct acpi_device *dev, const struct device_attribute *attr)
- {
- 	/*
-@@ -524,8 +558,11 @@ static bool acpi_show_attr(struct acpi_device *dev, const struct device_attribut
- 	/*
- 	 * If device has _STR, 'description' file is created
- 	 */
--	if (attr == &dev_attr_description)
-+	if (attr == &dev_attr_description) {
-+		kfree(dev->pnp.str);
-+		dev->pnp.str = acpi_device_str(dev);
- 		return dev->pnp.str;
-+	}
++   ad4000
+    ad7944
+    adis16475
+    adis16480
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f4ffedada8ea..a03b3db9157c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1205,6 +1205,7 @@ L:	linux-iio@vger.kernel.org
+ S:	Supported
+ W:	https://ez.analog.com/linux-software-drivers
+ F:	Documentation/devicetree/bindings/iio/adc/adi,ad4000.yaml
++F:	Documentation/iio/ad4000.rst
+ F:	drivers/iio/adc/ad4000.c
  
- 	if (attr == &dev_attr_adr)
- 		return dev->pnp.type.bus_address;
-@@ -581,47 +618,12 @@ const struct attribute_group *acpi_groups[] = {
- 	NULL
- };
- 
--static const char *devm_acpi_device_str(struct acpi_device *dev)
--{
--	struct acpi_buffer buffer = {ACPI_ALLOCATE_BUFFER, NULL};
--	union acpi_object *str_obj;
--	acpi_status status;
--	const char *ret;
--	char buf[512];
--	int result;
--
--	if (!acpi_has_method(dev->handle, "_STR"))
--		return NULL;
--
--	status = acpi_evaluate_object(dev->handle, "_STR",
--				      NULL, &buffer);
--	if (ACPI_FAILURE(status))
--		return NULL;
--
--	str_obj = buffer.pointer;
--	/*
--	 * The _STR object contains a Unicode identifier for a device.
--	 * We need to convert to utf-8 so it can be displayed.
--	 */
--	result = utf16s_to_utf8s((wchar_t *)str_obj->buffer.pointer,
--				 str_obj->buffer.length,
--				 UTF16_LITTLE_ENDIAN,
--				 buf, sizeof(buf) - 1);
--	buf[result++] = '\0';
--
--	ret = devm_kstrdup(&dev->dev, buf, GFP_KERNEL);
--	kfree(buffer.pointer);
--
--	return ret;
--}
--
- /**
-  * acpi_device_setup_files - Create sysfs attributes of an ACPI device.
-  * @dev: ACPI device object.
-  */
- void acpi_device_setup_files(struct acpi_device *dev)
- {
--	dev->pnp.str = devm_acpi_device_str(dev);
- 	acpi_expose_nondev_subnodes(&dev->dev.kobj, &dev->data);
- }
- 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index 49a8172fe0de..84c4190f03fb 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -1456,6 +1456,7 @@ void acpi_free_pnp_ids(struct acpi_device_pnp *pnp)
- 		kfree(id);
- 	}
- 	kfree(pnp->unique_id);
-+	kfree(pnp->str);
- }
- 
- /**
+ ANALOG DEVICES INC AD4130 DRIVER
+-- 
+2.43.0
+
