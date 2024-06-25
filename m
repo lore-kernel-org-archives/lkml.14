@@ -1,187 +1,257 @@
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6DA0171E5F
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 16:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3241E880;
+	Tue, 25 Jun 2024 16:02:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719331243; cv=none; b=j4b5ciyX4lif2opaiyEQcIe4FTbHvuUbkoSVQFYcqh1KswITcZhx+p3yEses2mzvOKTzFNwhAtO61ekSqSXYhM7WF3xGZZALL0HhD4dR8pyKbRiJPiVhTllnhTGEBP54KlfoSzvqhv0dzPkTacLaeTeyeYgLmxWCfcWvmz8ixJw=
+	t=1719331351; cv=none; b=ZI14ZW1KXvnrao5DUG5cxw/ORY1QgxdKI0QrSfvzXN63x7skL5zZtljuxw9W2Q9zf702yZsYDLZrqRFJy+mLSuE2EXytT3enuIjddeOtWKvaceW4oEqA+9URnh22qjmR89RybiIQ8bx6jeiCT92Mk0f65EXvUhtwj/n1Wg0spNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719331243; c=relaxed/simple;
-	bh=ISVRDzwhcr+yv8EnigfcS97Q8bWZ/YKkxrf99pzqyHk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BrTNZkg6MhgHHj4poQsCBdjTgSkHB+XxpFjjwQzbmMVCBHdtZO143YPSVdFjSXz2nHVbez7jjJiBJKIW6z3diPtL0D3Zbl9omGF7GF3amL72AFatkwjKGUirfQti+doc/SV6/1tEi1tXrv6AfQfH8tMwkVYPZFQ83yHir5QcqAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fNxrNQk1; arc=none smtp.client-ip=209.85.222.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1719331351; c=relaxed/simple;
+	bh=w3MjqKvXOCvfTZZTK3seK4G6ECGT2Vpba6LHoB4jzT0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=KAEyxnxxGGVoxbvCOm7BeS51A5V6tAQyZ353anBZCVYRq4CvczwQgZxOqXZ6w0x/MIF6oxGo7BSy2i5LQm7jc3vAwrUsO808HzWYtvBQYqKmpgPUX859QQ6FSdmgI9UBKNx9tM11bs19tRG70K6vyYL/GQJ6vuYuE+pEoaioObo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RBiZLdzF; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fNxrNQk1"
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-80fa1509989so997016241.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 09:00:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RBiZLdzF"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-7182a634815so2801883a12.3;
+        Tue, 25 Jun 2024 09:02:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719331240; x=1719936040; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=JGAs5Wtcc8fAU8dtCBhVqU6cNJrqxGDPOZOTDG4bTWk=;
-        b=fNxrNQk1mkEx4efPmSfZGGzFG2PTEddEIqDpV18XHsK/brFUhbB7DyNhBvvRmM4O1b
-         cev1i1sjZNMRg2l6EqcamRP+ttuYxwLFextekP0w/w5buzpIKUL4D88DIrJT3ppMoEzI
-         UWTaUZjJ/sQSHLd9rkr8GkBhZ6vu/pfPhrtUcWxODJpfGpTtSI2IZHVZqSVsLIi727QG
-         /UpaFekw55AD5pkJamKGhpwNFDjD/vlGEWoI5S7+5TZVnL9BuZVuVQCYpq3ISZ/qD1Pl
-         hy457ZVLzK3Q4jiNErzDfTVBoAZiebyu3AabXGJAMwQauzhKKBQtG0sKgEdI/azg2ubr
-         2uaQ==
+        d=gmail.com; s=20230601; t=1719331349; x=1719936149; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7/Ah6KTr4qN3qklceLjaouWh+axRQgCE/MoqHAZqywg=;
+        b=RBiZLdzFJivWBHwfCCRiXYccdu1W+uXJHW+bwbpSjrvrCqIaCv3RzfeOScxZuBpUuq
+         DJxFCncoCJyWWLwmiIMbi8Rl+9XItfvjnl1i0SgVXTnf+lueDbDfkEkfUvi14hlo9Wk9
+         RgaRtjq9yyYDhal8Qo73Jxt0rgSsxCUD8IM+I+oK3XoPiHtMJIqrHsQOZVUWHt/0rz8w
+         jVNRC7/9UVL/7G5dR0oWsKThdv8ToNOHxpeiMF3x+cjlqLCdOK/OK9Akr8Vw9dV0hHkG
+         6wLEBhdfFil68LTH/L2GoiWHnvOvCo1Kjg38ciKeF1OZWJuzYrNshyzjCswkEr4DT1Kk
+         rtDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719331240; x=1719936040;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1719331349; x=1719936149;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=JGAs5Wtcc8fAU8dtCBhVqU6cNJrqxGDPOZOTDG4bTWk=;
-        b=EHe9289VKzAHU2fJsMiIX8NrItT/rw1O/f8idunsZ+mSe6iwm+KqhQO+sXVS7A+H7S
-         jmp4S2k77QaIIpVaCezMEKBqvDlfmlLxrDBz9HW6qOrQqERoUE/aDj33sqnoYBmqiaKm
-         qLd0A03VDwuGu1qYAJA8GMJX7ilfiLsqVvVmMNO+9Vprs9rKQLQ/U+0JLWDlnabjrGLb
-         aTYz6J+5DUoSrW9sMDamwPzhHp1O3vCnky66n1xvDU23gPyR5Mk879k5jQ3WTrSmKALb
-         FwusiGwhqPMY+G+jtUPSARqqSEnIjGBEK+/sZCS/fyQu8EZ4dqRlSEeblxKxsZgO/mlf
-         XPPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWgIm8lQLeEF56CQ/7umroPw95B9mdekZBD40I8HrLWLh/TkTTQ8bh4LIsuOgt9hRYAjbWVBOPu/hkN7XRpXAl0YbGdx6L9B1TmMRUw
-X-Gm-Message-State: AOJu0YwHzuqDEioiYLcixvaSWfHEy/DRKUgvi5FuorYJOTOPRy6nYd2o
-	ksfRwJ+LeR48pMTACuhpdHi9U9Ost0hIQ8URp7kED9boj7mJ50BF9qd/zUivDHQ6YNvtPUbnjaS
-	XOd1YVyImVF8u5uC472++bbn2y+9IdzhM0tJSOtG+6cYleZkSlTNpD4o=
-X-Google-Smtp-Source: AGHT+IG0nu9UNAR7AZc7WRyeB2quuN3FajFGwslyoT0UUTZGqC7hJhnj0C+KxLaRtzJ2zMZg2zxGNZwQs6bwReITcP0=
-X-Received: by 2002:a67:f289:0:b0:48d:a07e:d003 with SMTP id
- ada2fe7eead31-48f49a5f853mr6502317137.2.1719331240180; Tue, 25 Jun 2024
- 09:00:40 -0700 (PDT)
+        bh=7/Ah6KTr4qN3qklceLjaouWh+axRQgCE/MoqHAZqywg=;
+        b=upi3b2AeroVeuUv/f4ME0DedmruvoV3ksdrYzEI/QY3+OtkOyRp6mH2NYhLKX1NKxC
+         9GDlFwZSLNeJsY2kxaz4vD7i5RbcAlai4d/Ubp3+A9K8iPjEqi0XO77fd18uEpQATKOr
+         bFsS3/IxB5H1YVy/7qdcQbHR57viRQhGOQsQ9f1fQMsWMnt47H9qXedPhzOZXFwUwCxY
+         q5daQDpmlHpYJ7gqOcfQrFBiYqYPKyuV1h2fxd8328LYtUxj+2fRUUh7gHbcpvlARBfN
+         P1rY0LQRrMhxp0y6ETlpZJ8LZ3GFkzFXphTC4v4WJaeF8cZWVMUHcab0XZHE49NnaopP
+         Zl5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXWcfYS7XbhTTiIPbrL37FuaVbkwDjj/2Wtw94NlX4aTNMmu1DR7OCxoejz5ECM4bdvDBwYG1m8XlGgr5w8UtFobJ9xz3XuqMaQ2sgguuYf7wJdXrjvvbpYJCs553l1lCT99d8PafMt
+X-Gm-Message-State: AOJu0Yxqj0FoxNC7n8XVgbSNdRv2ymp2Ixxy+2IPB2ONAy/iKQA3th5T
+	F7fYjOfGDwWpTcJUhAqk0yl5SQXYY9EhQEBzMObzycYQnu89z/vN
+X-Google-Smtp-Source: AGHT+IGPTkSzRYvBzIr+SMsEB/iIU++4/A74QqzdXyJKZuSG3QMsFFZKdvVJlpS/UwCRCg8LA6flyA==
+X-Received: by 2002:a17:90b:3bce:b0:2c4:dc4d:83da with SMTP id 98e67ed59e1d1-2c86127e1a0mr6482780a91.10.1719331348755;
+        Tue, 25 Jun 2024 09:02:28 -0700 (PDT)
+Received: from [127.0.1.1] ([45.32.86.188])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c7e5af9de9sm10904009a91.37.2024.06.25.09.02.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jun 2024 09:02:28 -0700 (PDT)
+From: Yasin Lee <yasin.lee.x@gmail.com>
+Subject: [PATCH v8 0/3] iio: proximity: Add TYHX HX9023S sensor driver
+Date: Tue, 25 Jun 2024 23:58:51 +0800
+Message-Id: <20240625-add-tyhx-hx9023s-sensor-driver-v8-0-0c224e3bddbc@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <171923011608.1500238.3591002573732683639.stgit@firesoul>
- <CAJD7tkbHNvQoPO=8Nubrd5an7_9kSWM=5Wh5H1ZV22WD=oFVMg@mail.gmail.com>
- <tl25itxuzvjxlzliqsvghaa3auzzze6ap26pjdxt6spvhf5oqz@fvc36ntdeg4r>
- <CAJD7tkaKDcG+W+C6Po=_j4HLOYN23rtVnM0jmC077_kkrrq9xA@mail.gmail.com>
- <exnxkjyaslel2jlvvwxlmebtav4m7fszn2qouiciwhuxpomhky@ljkycu67efbx>
- <CAJD7tkaJXNfWQtoURyf-YWS7WGPMGEc5qDmZrxhH2+RE-LeEEg@mail.gmail.com>
- <a45ggqu6jcve44y7ha6m6cr3pcjc3xgyomu4ml6jbsq3zv7tte@oeovgtwh6ytg>
- <CAJD7tkZT_2tyOFq5koK0djMXj4tY8BO3CtSamPb85p=iiXCgXQ@mail.gmail.com>
- <qolg56e7mjloynou6j7ar7xzefqojp4cagzkb3r6duoj5i54vu@jqhi2chs4ecj>
- <CAJD7tka0b52zm=SjqxO-gxc0XTib=81c7nMx9MFNttwVkCVmSg@mail.gmail.com>
- <u3jrec5n42v35f3xiigfqabajjt4onh44eyfajewnzbfqxaekw@5x2daobkkbxh>
- <CAJD7tkaMeevj2TS_aRj_WXVi26CuuBrprYwUfQmszJnwqqJrHw@mail.gmail.com> <d3b5f10a-2649-446c-a6f9-9311f96e7569@kernel.org>
-In-Reply-To: <d3b5f10a-2649-446c-a6f9-9311f96e7569@kernel.org>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Tue, 25 Jun 2024 09:00:03 -0700
-Message-ID: <CAJD7tkZ0ReOjoioACyxQ848qNMh6a93hH616jNPgX3j72thrLg@mail.gmail.com>
-Subject: Re: [PATCH V2] cgroup/rstat: Avoid thundering herd problem by kswapd
- across NUMA nodes
-To: Jesper Dangaard Brouer <hawk@kernel.org>
-Cc: Shakeel Butt <shakeel.butt@linux.dev>, tj@kernel.org, cgroups@vger.kernel.org, 
-	hannes@cmpxchg.org, lizefan.x@bytedance.com, longman@redhat.com, 
-	kernel-team@cloudflare.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADvpemYC/5XQPW+DMBAG4L8Sea6Rz+CvTgFCt1ZVO1YdIDbBa
+ sDIpogo4r+X0KGNOkQd37vT80p3RsF4awK635yRN6MN1nVLkHcbtG/K7mCw1UtGlNCEcOC41Bo
+ Pp2bCzaQIjQMOpgvOY+3taDw2QlcmrmrDFEcL0ntT22kteHtfcmPD4Pxp7RuTyxS9PonnF6CPm
+ QQCVO0kSJJBrpiKU1kQIdPkIaPbq7OoK9vea6BR752O3OdwdO4j2rsWXVpG9lfO+I6kGdCECyV
+ yLgrKsjTJi3/KfJW/30Hh1jtGjgnmDBQvlzWpYXtoS3v84cRvjt3kxMJVoDmrKAUJV9w8z1+ej
+ ThjzwEAAA==
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
+ Lars-Peter Clausen <lars@metafoo.de>, yasin.lee.x@outlook.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-iio@vger.kernel.org, Yasin Lee <yasin.lee.x@gmail.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1719331341; l=7866;
+ i=yasin.lee.x@gmail.com; s=20240616; h=from:subject:message-id;
+ bh=w3MjqKvXOCvfTZZTK3seK4G6ECGT2Vpba6LHoB4jzT0=;
+ b=zBgWgigGUBMPkeSMgmVf3SMy8YYzewWJMECKwREQ2GuxLbyIijb0xgUwGPgTqzeJO/4kfu9+t
+ OLyOoAZOOksD5yUc1G/sR3E4iMHscAz7Y2AAsprNcC6fl1QjjlSw1yY
+X-Developer-Key: i=yasin.lee.x@gmail.com; a=ed25519;
+ pk=BU85jOyDTb45hxm+MZA26zg/m26xjGZhLgKrPSRtySI=
 
-[..]
-> >
-> > Basically, I prefer that we don't skip flushing at all and keep
-> > userspace and in-kernel users the same. We can use completions to make
-> > other overlapping flushers sleep instead of spin on the lock.
-> >
->
-> I think there are good reasons for skipping flushes for userspace when
-> reading these stats. More below.
->
-> I'm looking at kernel code to spot cases where the flush MUST to be
-> completed before returning.  There are clearly cases where we don't need
-> 100% accurate stats, evident by mem_cgroup_flush_stats_ratelimited() and
-> mem_cgroup_flush_stats() that use memcg_vmstats_needs_flush().
->
-> The cgroup_rstat_exit() call seems to depend on cgroup_rstat_flush()
-> being strict/accurate, because need to free the percpu resources.
+Signed-off-by: Yasin Lee <yasin.lee.x@gmail.com>
+---
+Changes in v8:
+- Removed incorrect tags from the commit messages 
+- Removed duplicate properties in the dt-binding.
+- Link to v7: https://lore.kernel.org/r/20240625-add-tyhx-hx9023s-sensor-driver-v7-0-b1d65b221811@gmail.com
 
-Yeah I think this one cannot be skipped.
+Changes in v7:
 
->
-> The obj_cgroup_may_zswap() have a comments that says it needs to get
-> accurate stats for charging.
+**tyhx,hx9023s.yaml:**
 
-This one needs to be somewhat accurate to respect memcg limits. I am
-not sure how much inaccuracy we can tolerate.
+- Removed the unused reference to iio.yaml
+- Removed the `input-channel` property and switched to inheriting the `single-channel` property from adc.yaml
+- Sorted the items in the `required` list
 
->
-> These were the two cases, I found, do you know of others?
+**hx9023s.c:**
 
-Nothing that screamed at me, but as I mentioned, the non-deterministic
-nature of this makes me uncomfortable and feels to me like a potential
-way to get subtle bugs.
+- Header Files Section:
+  - Added `<linux/cleanup.h>`
+  - Removed `<linux/delay.h>`
+  - Replaced `<linux/math.h>` with `<linux/math64.h>`
+- Register Initialization:
+  - Deleted the `struct hx9023s_addr_val_pair`
+  - Changed the type of `hx9023s_reg_init_list` to `struct reg_sequence`
+  - Deleted the `hx9023s_reg_init` function and used `regmap_multi_reg_write` for register initialization in `probe`
+- struct hx9023s_ch_data:
+  - Added a comment to the member `mutex` explaining the data it protects
+- Function hx9023s_sample:
+  - Fixed the error related to `hx9023s_data_lock` calls
+- Function hx9023s_property_get:
+  - Added boundary protection for `reg`
+- Function hx9023s_id_check:
+  - Optimized the function
+- Function hx9023s_probe:
+  - Changed the call to `devm_iio_device_register` to `return devm_iio_device_register()`
+- Functions hx9023s_suspend and hx9023s_resume:
+  - Added `guard(mutex)(&data->mutex)`
+- Code Check:
+  - Ran `checkpatch.pl --strict` and fixed the identified issues
+- Link to v6: https://lore.kernel.org/r/20240621-add-tyhx-hx9023s-sensor-driver-v6-0-65196a9020f1@gmail.com
 
->
->
-> > A proof of concept is basically something like:
-> >
-> > void cgroup_rstat_flush(cgroup)
-> > {
-> >      if (cgroup_is_descendant(cgroup, READ_ONCE(cgroup_under_flush))) {
-> >          wait_for_completion_interruptible(&cgroup_under_flush->completion);
-> >          return;
-> >      }
->
-> This feels like what we would achieve by changing this to a mutex.
+Changes in v6:
 
-The main difference is that whoever is holding the lock still cannot
-sleep, while waiters can (and more importantly, they don't disable
-interrupts). This is essentially a middle ground between a mutex and a
-lock. I think this dodges the priority inversion problem Shakeel
-described because a low priority job holding the lock cannot sleep.
+**vendor-prefixes.yaml:**
 
-Is there an existing locking primitive that can achieve this?
+- Formatted the description in the commit
 
->
-> >
-> >      __cgroup_rstat_lock(cgrp, -1);
-> >      reinit_completion(&cgroup->completion);
-> >      /* Any overlapping flush requests after this write will not spin
-> > on the lock */
-> >      WRITE_ONCE(cgroup_under_flush, cgroup);
-> >
-> >      cgroup_rstat_flush_locked(cgrp);
-> >      complete_all(&cgroup->completion);
-> >      __cgroup_rstat_unlock(cgrp, -1);
-> > }
-> >
-> > There may be missing barriers or chances to reduce the window between
-> > __cgroup_rstat_lock and WRITE_ONCE(), but that's what I have in mind.
-> > I think it's not too complicated, but we need to check if it fixes the
-> > problem.
-> >
-> > If this is not preferable, then yeah, let's at least keep the
-> > userspace behavior intact. This makes sure we don't affect userspace
-> > negatively, and we can change it later as we please.
->
-> I don't think userspace reading these stats need to be 100% accurate.
-> We are only reading the io.stat, memory.stat and cpu.stat every 53
-> seconds. Reading cpu.stat print stats divided by NSEC_PER_USEC (1000).
->
-> If userspace is reading these very often, then they will be killing the
-> system as it disables IRQs.
->
-> On my prod system the flush of root cgroup can take 35 ms, which is not
-> good, but this inaccuracy should not matter for userspace.
->
-> Please educate me on why we need accurate userspace stats?
+**tyhx,hx9023s.yaml:**
 
-My point is not about accuracy, although I think it's a reasonable
-argument on its own (a lot of things could change in a short amount of
-time, which is why I prefer magnitude-based ratelimiting).
+- Added a link to the DataSheet
+- Added `#address-cells` and `#size-cells`
+- Removed the following properties:
+  - `channel-in-use`
+  - `channel-positive`
+  - `channel-negative`
+- Corrected the reference path to `adc.yaml`
+- Inherited `diff-channels` from `adc.yaml` as differential channels
+- Added `input-channel` property as a single-ended configuration channel
+- Made `vdd-supply` a required option
+- Used the generic name `proximity` instead of the chip name in the DTS example
 
-My point is about logical ordering. If a userspace program reads the
-stats *after* an event occurs, it expects to get a snapshot of the
-system state after that event. Two examples are:
+**hx9023s.c:**
 
-- A proactive reclaimer reading the stats after a reclaim attempt to
-check if it needs to reclaim more memory or fallback.
-- A userspace OOM killer reading the stats after a usage spike to
-decide which workload to kill.
+- Removed the following headers:
+  - `#include <linux/acpi.h>`
+  - `#include <linux/byteorder/generic.h>`
+  - `#include <linux/kernel.h>`
+- Added `#include <asm/byteorder.h>`
+- Updated some macro names:
+  - `HX9023S_DATA_2BYTES` ---> `HX9023S_2BYTES`
+  - `HX9023S_DATA_3BYTES` ---> `HX9023S_3BYTES`
+  - `HX9023S_DATA_BYTES_MAX` ---> `HX9023S_BYTES_MAX`
+- Added the following macro definitions:
+  - `#define HX9023S_POS 0x03`
+  - `#define HX9023S_NEG 0x02`
+  - `#define HX9023S_NOT_CONNECTED 16`
+  - `#define HX9023S_GLOBAL_CTRL0 0x00`
+- `struct hx9023s_ch_data`:
+  - Added comments explaining the members `raw`, `lp`, `bl`, `diff`
+  - Changed the type of struct member `thre` from `int` to `unsigned int`
+  - Removed member `cs_position`
+  - Changed the type of `struct buffer` member `channels[HX9023S_CH_NUM]` from `__be16` to `__le16`
+  - Moved `struct hx9023s_ch_data ch_data` to the bottom
+- Updated comments in the array `hx9023s_reg_init_list`:
+  - Changed `adc` to `ADC`, `avg` to `average`, and `osr` to `OSR`
+  - Provided a more detailed comment for the register `HX9023S_RAW_BL_RD_CFG`
+- `struct regmap_config hx9023s_regmap_config`:
+  - Added `.rd_type` member
+  - Changed `.cache_type` from `REGCACHE_RBTREE` to `REGCACHE_MAPLE`
+- Bugfix: The function `hx9023s_data_lock` now only operates on one bit instead of two
+- `hx9023s_ch_cfg` function:
+  - Replaced magic characters with meaningful macro definitions
+  - Changed byte concatenation operations to use `put_unaligned_le16`
+- Reviewed each function and made the following changes:
+  - Some returns now directly return `regmap_read/write()`
+  - For single-byte write operations, changed from `regmap_bulk_write(,,,1)` to `regmap_write(,,)`
+  - Changed the type of loop variable `i` to `unsigned`
+- `hx9023s_write_far_debounce` and `hx9023s_write_near_debounce` functions:
+  - Removed magic numbers and optimized the code
+- `hx9023s_get_thres_near` and `hx9023s_get_thres_far` functions:
+  - Used intermediate variables for readability and simplified the code logic
+- `hx9023s_set_thres_near` and `hx9023s_set_thres_far` functions:
+  - Optimized the logic and simplified the code
+- `hx9023s_get_prox_state` function:
+  - Changed the return value type to `int`
+- `hx9023s_data_select` function:
+  - Changed the return value type to `int`
+- `hx9023s_sample` function:
+  - Added intermediate variables for better readability
+- `hx9023s_ch_en` function:
+  - Optimized the code logic to reduce line count
+- `hx9023s_property_get` function:
+  - Rewritten due to DTS changes, and calls `fwnode_handle_put` on error to prevent memory leaks
+- `hx9023s_get_proximity` function:
+  - Added error handling logic for data
+- `hx9023s_get_samp_freq` function:
+  - Used macro definitions from `units.h` instead of specific numbers for frequency calculation
+- `hx9023s_set_samp_freq` function:
+  - Used macro definitions from `units.h` instead of specific numbers for frequency calculation
+- `hx9023s_write_raw` function:
+  - Changed the type of local variable `dir` to `unsigned`
+- `hx9023s_write_event_config` function:
+  - Replaced `set_bit` and `clear_bit` with `__assign_bit`
+- `hx9023s_trigger_handler` function:
+  - Added error handling logic for data; fixed uninitialized variable `i` bug
+- `hx9023s_buffer_preenable` function:
+  - Fixed uninitialized variable `channel` bug
+- Added `hx9023s_id_check` function
+- `hx9023s_probe` function:
+  - Returns directly on `devm_iio_device_alloc` error, without logging; removed `fsleep`
+- `hx9023s_resume` function:
+  - Calls `hx9023s_interrupt_enable` only when `data->trigger_enabled` is true
+- Removed `hx9023s_acpi_match`
+- Link to v5: https://lore.kernel.org/linux-iio/SN7PR12MB8101B6D0AB1246797C67E25BA4CE2@SN7PR12MB8101.namprd12.prod.outlook.com/
 
-I listed such examples with more detail in [1], when I removed
-stats_flush_ongoing from the memcg code.
+Changes in v5:
+- I have addressed all the issues mentioned in the email responses.
+  Additionally, regarding the IIO-related header files, I have checked and found no unused headers.
+- Link to v4: https://lore.kernel.org/linux-iio/SN7PR12MB810129D8180B1C9593A8E078A4FB2@SN7PR12MB8101.namprd12.prod.outlook.com/
 
-[1]https://lore.kernel.org/lkml/20231129032154.3710765-6-yosryahmed@google.com/
+Changes in v4:
+- Removed hardware-irrelevant properties from dt-bindings, retaining only channel configuration
+  related `channel-positive` and `channel-negative`. Grouped by channel.
+  Retained `channel-in-use` as it is hardware-related.
+- Removed redundant register definitions.
+- Reorganized `struct hx9023s_data`, extracting channel-related attributes
+  into a new `struct hx9023s_ch_data`.
+- Optimized bit operation related code.
+- Replaced `of_` versions with generic firmware parsing functions.
+- Fixed other issues mentioned in the email feedback.
+- Link to v3: https://lore.kernel.org/linux-iio/20240602152638.2c674930@jic23-huawei/
+
+---
+Yasin Lee (3):
+      dt-bindings: vendor-prefixes: add tyhx
+      dt-bindings: iio: proximity: Add TYHX HX9023S
+      iio: proximity: Add driver support for TYHX's HX9023S capacitive proximity sensor
+
+ .../bindings/iio/proximity/tyhx,hx9023s.yaml       |   93 ++
+ .../devicetree/bindings/vendor-prefixes.yaml       |    2 +
+ drivers/iio/proximity/Kconfig                      |   14 +
+ drivers/iio/proximity/Makefile                     |    1 +
+ drivers/iio/proximity/hx9023s.c                    | 1131 ++++++++++++++++++++
+ 5 files changed, 1241 insertions(+)
+---
+base-commit: 1231e065edd236295c31904fe760117551608efa
+change-id: 20240616-add-tyhx-hx9023s-sensor-driver-e7dbe3bfe596
+
+Best regards,
+-- 
+Yasin Lee <yasin.lee.x@gmail.com>
+
