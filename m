@@ -1,108 +1,149 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF0C146A83;
-	Tue, 25 Jun 2024 11:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88F4154C03
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 11:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719315911; cv=none; b=Q/xNd3Uul+ZgHL5M2F5eI1V9voaT5PEO3T0LfD1XJN38d8ARuCu0gUJ/mDTjwr8c0p3c5nHzgZ4aP1Ml6Hi1IKQ/AQ1BR80tyvW/kjozqar7VS1vaerxuv4aR46R0If+HgghMU6R6Jaqyg3Shy2ukuG83g3QOIVO+M0RiSycrxA=
+	t=1719315926; cv=none; b=EoPliFbHrJkkRMhdICcs5yzOx0suZHURIavTgaOVbksX7OWmLfGHhHgVKaI243XAvhWtYJg+KTYs8zLH68wwxTWdSt4lTME83kRJDHLnwuNRSGxFDWcT/uKT4HHihL4UkWdXQgObPzNZKNClS7LnarRmPJpKYOQ7No0AnRyvKTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719315911; c=relaxed/simple;
-	bh=AyfrCN4n2Ja8kvvlvILLd5RRFqJZdgITUeVkIqY60WY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j+UzYfZ63qgE1g2OlF3uw1TJYr75TwyvC6rA1Mdv0x+QIJHuEo9ac4tzBGeHYcV2ZJdo9Oj9IXG1tRN6WosYRIiMzJ3ifZr4JnvgyoaefDd2STYJsJrXB4uggWYrVCF0Qfgb7rpl0uBQOEkx9LGDuK8L353wpJbyuxHpTRUvMz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=vx1oCSPH; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1719315926; c=relaxed/simple;
+	bh=wu4prykytf2AM+/fQHl+GXpgJchAjyAXSdSuKMRSYNU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eiiIXGbQ1a8xik8eL6IGyVq6GqR0yNE477tVd1142hbIEsBv/dd9TA4aIybTwubLtdnY3m5V+NBUN8KhuhQk80TsH6pXBy1Ql1jUOZ9mBDwjcCKNSWiJSXsQgIxsXcV7coizxklipE2hA0vxNMOppI9xeYAS7hbNf9lJUKhvrcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=QWIe5at1; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="vx1oCSPH"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4W7jgJ6MTzz9t2m;
-	Tue, 25 Jun 2024 13:45:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1719315900;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iyy/Uh+tbYC9uCouyOUGcxbKb95j1x/VN4vR3SasgEQ=;
-	b=vx1oCSPHzXDRQPX8b0i9M9281m8Y9dOOLXEh58esfpUZkeQ8qW28s1hIC0KrbYg1kLnsh3
-	oWAiH1+XP/YA/DwPHuXNj43HGL7MdYMm2In3JAiadupkUDFJk3eOXtt76e4Mwno0lT9WIM
-	tPxEcF5ic88JEn7ZdwQvrgVwZYYFUpapyatVmWb/i90WXIE0dkAH/2UeIu9rwYItsz5eEh
-	V72EssyWBjmBHvM3d+1n6usIDunh1o3k0ckFx7HIjSpWWYfwDMQLxYN20hEC4xE9uj4MAx
-	V0CSExZkXvwCFAwmg8uJYqzFOhAD8rJovBw3MTipYl/qPFf/NFZTdyLHUBYB3Q==
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: david@fromorbit.com,
-	willy@infradead.org,
-	chandan.babu@oracle.com,
-	djwong@kernel.org,
-	brauner@kernel.org,
-	akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org,
-	yang@os.amperecomputing.com,
-	linux-mm@kvack.org,
-	john.g.garry@oracle.com,
-	linux-fsdevel@vger.kernel.org,
-	hare@suse.de,
-	p.raghav@samsung.com,
-	mcgrof@kernel.org,
-	gost.dev@samsung.com,
-	cl@os.amperecomputing.com,
-	linux-xfs@vger.kernel.org,
-	kernel@pankajraghav.com,
-	hch@lst.de,
-	Zi Yan <zi.yan@sent.com>
-Subject: [PATCH v8 09/10] xfs: make the calculation generic in xfs_sb_validate_fsb_count()
-Date: Tue, 25 Jun 2024 11:44:19 +0000
-Message-ID: <20240625114420.719014-10-kernel@pankajraghav.com>
-In-Reply-To: <20240625114420.719014-1-kernel@pankajraghav.com>
-References: <20240625114420.719014-1-kernel@pankajraghav.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="QWIe5at1"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-57d20d89748so5193560a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 04:45:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719315922; x=1719920722; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DMUhzznUZed7QosruqCaiTofY87z0Rh5ZDjCpva9+sA=;
+        b=QWIe5at1o8RJK6o12ZQL8QWh5uGvNNWilbN+mHYodhQ0tFORZ4eZUkAGjkj5aQxSLW
+         SNgkKtlVfO9Gwj0hCOeSS1JXD34daCopjRpjM5FpF3SfMWwK7rvqAv+YitRXqc99xbR0
+         HWen3yWXn0/N/iNsftpRdAR84n/7emcALeaNu4cn+Z25i/nLFBWfKlwaqqlIy1/lAUf6
+         YuV5f8wrbZhG8wSRh+oqxi8fQCupQSkqiUmB2W60nObFUejpCWlm4Njd69iQegCvzPga
+         lFCpZSmfydofwgBo99BcJWOCpxnF1kxncJOzvvCYlVgOKfBpMS34h3CurmFGxbG+X6oV
+         h5NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719315922; x=1719920722;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DMUhzznUZed7QosruqCaiTofY87z0Rh5ZDjCpva9+sA=;
+        b=RnbhjZJyt/fy75+Z6LGGk/nWmjLjgcMP3h8/izMqTgWJBW3rD6j6chlvjjl+WnobOf
+         fHLghUjXiEzA8oiUViiwQu0pRb7dv/ksW7sFqQW83S5oaILkTtbyRqceVn1dA5r1Y7Ts
+         P0TEossWJxOd68FQlcqrvwRgFGuVOL1V0UHfTmvHZOqmZTBn2u+hVGPdWm5O1gXj2dmH
+         nr/TVasz40Zun9SX9IdttKt5SIoVy39CtX6cnoR/HB4u/f8pAZ0H4Ualyw4pB7WzhG6j
+         rOSR48F3HD7iWMbnGwIYizaGNJdVomO18ilMlj/A2bw4Wnk7UMBtFh76IiR3r4eeCYEU
+         PKzw==
+X-Forwarded-Encrypted: i=1; AJvYcCVmGCvypTNOsXYcv0qpVf9wPDLCR6/lOEv4b1E+bUTgV/chGgQLIii1jVKcFHFcOi7QBj817gU2Ek6/XCdmnSqVzkYPb0OlMJlttcKd
+X-Gm-Message-State: AOJu0YxqU5cAU6DOaphXmD2043NW1j26n8Wa0nVEojhreqjJhQ42YS3A
+	peYe4TR0PBpvnrd6skHKU61mbqdVwG/g6HyKZVGg47hAs1wMvQzm3DBgjb2lOyHYBfUF9V6NmqU
+	X5O0fXGBkjamGvBqaDc3pM9SuDwa+1OdalTz68g==
+X-Google-Smtp-Source: AGHT+IH9oE5avAcWE1dPfuPWXIMdR/bUBTzCledqBKIgAA1sscmeeXwl9hobU0kHO9Oj+2sOIr59kjUvaPz1Cy6Hh38=
+X-Received: by 2002:a17:907:c78e:b0:a6f:bc02:a008 with SMTP id
+ a640c23a62f3a-a7242c4de49mr533457666b.4.1719315921872; Tue, 25 Jun 2024
+ 04:45:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4W7jgJ6MTzz9t2m
+References: <tencent_7721F6B72F58AA6154DFBDFF@qq.com>
+In-Reply-To: <tencent_7721F6B72F58AA6154DFBDFF@qq.com>
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+Date: Tue, 25 Jun 2024 13:45:10 +0200
+Message-ID: <CAHVXubhkrDv3Fx1KH-jjjWjo-LGKBMabvafAPsDZeSpGMEt-gg@mail.gmail.com>
+Subject: Re: [PATCH] riscv: Only flush the mm icache when setting an exec pte
+To: =?UTF-8?B?5qGC5YW1?= <guibing@nucleisys.com>
+Cc: aou <aou@eecs.berkeley.edu>, linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-riscv <linux-riscv@lists.infradead.org>, palmer <palmer@dabbelt.com>, 
+	"paul.walmsley" <paul.walmsley@sifive.com>, =?UTF-8?B?5pa55Y2O5ZCv?= <hqfang@nucleisys.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Pankaj Raghav <p.raghav@samsung.com>
+Hi Guibing,
 
-Instead of assuming that PAGE_SHIFT is always higher than the blocklog,
-make the calculation generic so that page cache count can be calculated
-correctly for LBS.
+You sent your email in html, so it got rejected by the ML, make sure
+you reply in plain text mode :)
 
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
----
- fs/xfs/xfs_mount.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+On Tue, Jun 25, 2024 at 10:45=E2=80=AFAM =E6=A1=82=E5=85=B5 <guibing@nuclei=
+sys.com> wrote:
+>
+> Hi alex=EF=BC=8C
+>
+> We have encountered a problem related to this patch and would like to ask=
+ for your advice, thank you in advance!
+>
+> Problem description:
+> When we use the v6.9 kernel, there is an illegal instruction problem when=
+ executing a statically linked application on an SD card, and this problem =
+is not reproduced in v6.6/v6.1 kernel.
+> SD card driver uses PIO mode, and the SD card interrupt is bound to core0=
+. If the system schedule the apllication to execute on core1, core2, or cor=
+e3, it will report an illegal instruction, and if scheduled to execute on c=
+ore0, it will be executed successfully.
 
-diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-index 09eef1721ef4..3949f720b535 100644
---- a/fs/xfs/xfs_mount.c
-+++ b/fs/xfs/xfs_mount.c
-@@ -132,11 +132,16 @@ xfs_sb_validate_fsb_count(
- 	xfs_sb_t	*sbp,
- 	uint64_t	nblocks)
- {
-+	uint64_t		max_bytes;
-+
- 	ASSERT(PAGE_SHIFT >= sbp->sb_blocklog);
- 	ASSERT(sbp->sb_blocklog >= BBSHIFT);
- 
-+	if (check_shl_overflow(nblocks, sbp->sb_blocklog, &max_bytes))
-+		return -EFBIG;
-+
- 	/* Limited by ULONG_MAX of page cache index */
--	if (nblocks >> (PAGE_SHIFT - sbp->sb_blocklog) > ULONG_MAX)
-+	if (max_bytes >> PAGE_SHIFT > ULONG_MAX)
- 		return -EFBIG;
- 	return 0;
- }
--- 
-2.44.1
+Is it a multithreaded application? You mean that if the application
+always runs on core1/2/3, you get an illegal instruction, but that
+does not happen when run on core0?
 
+>
+> We track the source code, flush_icache_pte function patch leads to this i=
+ssue on our riscv hardware.
+> If you merge this patch into the v6.1 kernel, the same problem can be rep=
+roduced in v6.1 kernel.
+> If using flush_icache_all() not flush_icache_mm in v6.9 kernel ; this iss=
+ue can not be reproduced in v6.9 kernel.
+>
+> +void flush_icache_pte(struct mm_struct *mm, pte_t pte)
+>  {
+>  struct folio *folio =3D page_folio(pte_page(pte));
+>
+>  if (!test_bit(PG_dcache_clean, &folio->flags)) {
+> -=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=
+=E2=80=82=E2=80=82=E2=80=82flush_icache_all();
+> +=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=
+=E2=80=82=E2=80=82=E2=80=82flush_icache_mm(mm, false);
+>  set_bit(PG_dcache_clean, &folio->flags);
+>  }
+>  }
+
+Did you check if the instruction in badaddr is different from the
+expected instruction? The image you provided is not available here,
+but it indicated 0xf486 which corresponds to "c.sdsp  ra, 104(sp)", is
+that correct?
+
+>
+>
+> Our riscv cpu IP supports multi-core L1 dcache synchronization, but does =
+not support multi-core L1 icache synchronization. iCache synchronization re=
+quires software maintenance.
+> Does the RISCV architecture kernel in future have mandatory requirements =
+for multi-core iCache hardware consistency?
+
+No no, we try to introduce icache flushes whenever it is needed for such ua=
+rch.
+
+>
+> Thank you for your reply!
+>
+>
+> Link=EF=BC=9A[PATCH] riscv: Only flush the mm icache when setting an exec=
+ pte - Alexandre Ghiti (kernel.org)
+>
+> ________________________________
+> =E5=8F=91=E8=87=AA=E6=88=91=E7=9A=84=E4=BC=81=E4=B8=9A=E5=BE=AE=E4=BF=A1
+>
+>
+
+Thanks for the report,
+
+Alex
