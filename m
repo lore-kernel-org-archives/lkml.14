@@ -1,103 +1,103 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB39152780;
-	Tue, 25 Jun 2024 15:58:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA1C7FD;
+	Tue, 25 Jun 2024 16:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719331115; cv=none; b=Qf69dgC8M1bS5s5p7OxzwgaFEb6EVTOhz8midYI9fP8N36vhCsc1bawW1gj08oZiaKHFNBrSFMbhzBKos0K+tTARi1HXb6S+xC80z5aHfvbkyR2k1CzTXpqxAUFWTCAibBFiwqa7nqcABFVVFHVV1gYgkQiHgLLxHKQU+Chq+78=
+	t=1719331238; cv=none; b=h/nk3climhV9ymggM94ga1AHnldTOrX128ofGcFtMo4Q7DtAW+MHDLhLIGw/f0nP2T9CfbE9a8a0m2KgfC3h8kA6Ui4j9C/OTiK0pnW8XdfdFfyKD+1g93+njKe/1aezu+eglKWPHyhfg4a+iTYOuSuwIbpLUBmLdTHgYWNWp9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719331115; c=relaxed/simple;
-	bh=/Bfji0yHOA8njxxCTUdrMJ4uJI5atTxWVOiBNvZN/NA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O1GrBx8E5m4ns9i1xlO5JrZdzkOgsIKDWG6g+KxtIHELm1Be5Wk99eK0Zel4VUVdL17oYGQ6Xgc9UQsOJp/pDC7YbwgiC/EEtiBOLnzD8PeSuqwmGqlcv5GFf3uOHOKot5C6QfgIxAhnrEVJj2uP8jZJZD6l5jPE7axei6a9fjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZKkXy95T; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719331238; c=relaxed/simple;
+	bh=sx/Sgu2zVexidr0e78d7Q0hdZTohsDJNYxZNJiQaDaA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MoOzj7o5KThO0DhyHzuRvWVeaUVbgyA4P+LMTDk0c6F/UlJt1B2ojgsVHNWF6CnYIHkhUHAz5YTSkg7IpKQ3h3WOzqoFXMgnhUpPeJ0I7Da7OGFyzaYiylcgzlzb8aMcc4CUMms8uxhNLTtGrPf+kqZm0fixATUumX28pKJG30w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qa6o1FoU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZKkXy95T"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7066c799382so3133713b3a.3;
-        Tue, 25 Jun 2024 08:58:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719331112; x=1719935912; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yH1SDsCg1psfY+W0H6ncXncvNAWFOnKRkrHx7IAe3WE=;
-        b=ZKkXy95TxD4F3tbE9jpulLS0VNPxOzrh18ixMZVmphv0YZ7fSA8YR89Ubnes2QFPqT
-         QQVnX8ClEYYX6/F7jf0YYdTdEx0SdfmzBvVekpwAohcMcjGsEkzoNQDT+nZDHCyyhY35
-         GIEexUCy51E1TVP4PTU3WWifWOIIFVOixTpWvW3Cx0bhchguFMcN1IF7Tssd43LRxiX1
-         1cN5lSCPzQw1CX2ixyDXBeuS5G6Uxeu53wcl1YuRECLd8ehtS5DA+24xQePsygvnYfFd
-         dxEtlJbIq4cXjDKo57ZARSNjk/JIMYeR2kf7g8xoXlIrejL86i+vgWKiAICQczIrAbO1
-         NwOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719331112; x=1719935912;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yH1SDsCg1psfY+W0H6ncXncvNAWFOnKRkrHx7IAe3WE=;
-        b=rIdJhhcB6uK40eyM4aA3Xjcot0p2uzdUxvCv5sqwCWmEO+NGnRP8yfPGv+FLgh1TsO
-         zHKxzuqQBE9JhEbRkyy0BXt7Ansnm6uI1K1tv8Z+9znP7D35wQEUyMupI3z43iyS50lA
-         kXUluOmPVw9By/6E7spu1ZSixmF3zNYiyBkd6rv+04w2PRr9PQvBCAZOW0nYd/eE4B2I
-         ozu9DNIz9J0kMgORR/fOj//2F296K2Y+ephEpopdcpUbPrWOgBm2Oy4ynKxbpVH1982H
-         voSgFMuGD+9bs4TZVN7wCn6h7RE5WJTjsqDN0hasLZ11rIy8kA5HBxV6ypOmD82GGgLb
-         +Gaw==
-X-Forwarded-Encrypted: i=1; AJvYcCUxACcXQGmODbS+qRc/I7E59P9JslrPLmgGO9I2gfG/TyEB+yhlB5VQz8HkckPgUYXfqOXi13et2FQ27PZj45LaHajjD1t2M3YVnuAylk+C6cfeWeVQxF3AoGK+UPetJZE+hkOwaREj
-X-Gm-Message-State: AOJu0YzMYYXhmkvM2xW3+t2OVNI4+thCqghrv4ttnD6rEymUF7q3k8/C
-	SxghYAYdMZKonGcgepqfL3wBsrrZnmrRMnVrVhjKQ6WRpAlRG8mU
-X-Google-Smtp-Source: AGHT+IFY92BQm2/8LPYgNao0SuWV2SSZWQnXK45U4AdqDwkENeC0I4zcWtMLWiakpYKl/XZktO4vlw==
-X-Received: by 2002:a05:6a21:2712:b0:1b4:6f79:e146 with SMTP id adf61e73a8af0-1bcf7e7ee7cmr7827640637.17.1719331112239;
-        Tue, 25 Jun 2024 08:58:32 -0700 (PDT)
-Received: from localhost.localdomain ([113.30.217.222])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c819dbb963sm8872368a91.41.2024.06.25.08.58.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 08:58:31 -0700 (PDT)
-From: Anand Moon <linux.amoon@gmail.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qa6o1FoU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C05D5C32781;
+	Tue, 25 Jun 2024 16:00:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719331238;
+	bh=sx/Sgu2zVexidr0e78d7Q0hdZTohsDJNYxZNJiQaDaA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Qa6o1FoUsO/Sp505hTm29y18Lo/Rltp5dpBDd4UW2av9eBN2v6Imq9j4cZ0X/CB5m
+	 +kzxuGRNnd132A2hlWTncI7py3CmerB6MX8Sqz+ZrTglp1A89NMiwlWtaVh1T/gIF6
+	 6VklMyE5BQScupkJinY9PBdqxapKd9dnm6+Z+vQWf4widCWAu20MKraXdOiuRnNfDu
+	 rDOi2sk80exqC/JcUx9IHKt7s0wrl9H+lmPpzpDVZBauvoLwsfpF/rZq4/urWTaBIo
+	 iAF7v+Nu59IAz95sDAYoy0XfaLiFzsaxxk2Nxdem0MLqU2sT+43tpY2TkuISscAgyh
+	 8qiORVuTc/mdA==
+Date: Tue, 25 Jun 2024 17:00:31 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: andrew@lunn.ch, f.fainelli@gmail.com, olteanv@gmail.com,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
 	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>
-Cc: Anand Moon <linux.amoon@gmail.com>,
-	linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH linu-next v1] PCI: dw-rockchip: Enable async probe by default
-Date: Tue, 25 Jun 2024 21:27:57 +0530
-Message-ID: <20240625155759.132878-1-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.44.0
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	=?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+	Landen Chao <Landen.Chao@mediatek.com>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Daniel Golle <daniel@makrotopia.org>
+Subject: Re: [PATCH v2] dt-bindings: net: dsa: mediatek,mt7530: Minor wording
+ fixes
+Message-ID: <20240625-battle-easiness-7ac3e81c2d6a@spud>
+References: <20240624211858.1990601-1-chris.packham@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Ns1bPUFGUN+nbcz0"
+Content-Disposition: inline
+In-Reply-To: <20240624211858.1990601-1-chris.packham@alliedtelesis.co.nz>
 
-Rockchip PCIe driver lets waits for the combo PHY link like PCIe 3.0,
-PCIe 2.0 and SATA 3.0 controller to be up during the probe this
-consumes several milliseconds during boot.
 
-Establishing a PCIe link can take a while; allow asynchronous probing so
-that link establishment can happen in the background while other devices
-are being probed.
+--Ns1bPUFGUN+nbcz0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
- drivers/pci/controller/dwc/pcie-dw-rockchip.c | 1 +
- 1 file changed, 1 insertion(+)
+On Tue, Jun 25, 2024 at 09:18:57AM +1200, Chris Packham wrote:
+> Update the mt7530 binding with some minor updates that make the document
+> easier to read.
+>=20
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+>=20
+> Notes:
+>     I was referring to this dt binding and found a couple of places where
+>     the wording could be improved. I'm not exactly a techical writer but
+>     hopefully I've made things a bit better.
+>    =20
+>     Changes in v2:
+>     - Update title, this is not just fixing grammar
+>     - Add missing The instead of changing has to have
+>=20
 
-diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-index 61b1acba7182..74a3e9d172a0 100644
---- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -367,6 +367,7 @@ static struct platform_driver rockchip_pcie_driver = {
- 		.name	= "rockchip-dw-pcie",
- 		.of_match_table = rockchip_pcie_of_match,
- 		.suppress_bind_attrs = true,
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 	},
- 	.probe = rockchip_pcie_probe,
- };
--- 
-2.44.0
+I don't really want to ack this, a 4th ack for some wording that has
+no impact on the binding itself just seems so utterly silly to me...
+Instead I've spent more time writing how silly I think it is than
+hitting the ack macro would take :)
 
+--Ns1bPUFGUN+nbcz0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnrpnwAKCRB4tDGHoIJi
+0lhUAPoDy72HR6FZqbTZ9VCwwM+664FV/l5ZosGtfzIwwNtHDwEA3erCBpYxanRS
+dXx0JBUj4DkqzhTFirctNFUCIuUuBAk=
+=gPM2
+-----END PGP SIGNATURE-----
+
+--Ns1bPUFGUN+nbcz0--
