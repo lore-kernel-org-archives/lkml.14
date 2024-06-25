@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1ECC146593;
-	Tue, 25 Jun 2024 07:01:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF127146595;
+	Tue, 25 Jun 2024 07:01:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719298867; cv=none; b=G0brDoqownTrtqod8I680E6RhhWvtkIII4ZOV/dR3bOWwoNVTMTLfF5OEW2eqIKb3PnoyBb6TsOUXzj4BTQTpMVp1YAHcPCNiMw+WhW6KFWSetQNYG6wWIasmHGDufaEhjqds6my6wIZgN6b8uHCD+cl/tMXr7wUfXP8BO1wn+E=
+	t=1719298914; cv=none; b=AqONTYVlsEU+jA6zL9s4zEKrLpXnNNDd4lHnHYx/pn4QAcuA8/zeJ04pIgFzQf6RmhwI9Bcl2hJvP01QlInC7JL+RnJhshk9YNCTA3+pE23Lw7zk9FpEb9piPE3WQpJHwdPVQ3mrk/P7ajPkFLX1+HvKRJOSBFZwKxs/pNTo/t4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719298867; c=relaxed/simple;
-	bh=xeepw0436JvXkF7t5SqHEVBLg8MBJ44psADaGMG57fA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=otbDbUAq58YCXk2gbD8p+OFiB8o3tpkga+mhdIc/pBLgZPIoBR1TyeZDo0rxVZoChnKB67ag4AWgK2ZrrG5T9Dc9oqSBU2W8HFfaIaarS+C75HCgXhHUNrnpNfHLin28OITjNUOs9p0Q8mZameHZ2J3zzPLQBzLwIN/5GXB0nR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nfEVRvUi; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719298914; c=relaxed/simple;
+	bh=5MLzzDi5Q9FaJLoUReTOr7nbEQlLpk8cNTp0kv6oISU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=PtR1DtOo143AQ2eWOBkNIUqT3PpirlV73bMatRbnRts46qIeznhlVUqA8VuwDPIDi59Ol6pF7zQo0ad/sFsJku02KFZ5gKIk8uf3+kKgGyVj0yfJkH/M9QBokmKqnRn4OEIAHN0IgFGDbt0iwawlookDQFuzhJR4uiGlhiQXwBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=csmc6Pyn; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nfEVRvUi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719298866; x=1750834866;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=xeepw0436JvXkF7t5SqHEVBLg8MBJ44psADaGMG57fA=;
-  b=nfEVRvUiK9DOzEnBaZp54IwYnfRxCTZI/EtC5ryRAKN1gEwj37dce5Aj
-   RKlDggrBLuxNOWmJUKG5FMx9dZquRv9J9WwyJeRnjfTU+SudNHh4nuDWu
-   rP+jKphl12pUT98+hKEUy/WPgfbtV+BcjU8MfLe6YfK0BoK2Ssw5Emqzd
-   GV0r9SMMgo6nhXsNAFKh6qVAav2euQr58RbTycQlFDQslX44Mts3rqKCF
-   v3EbR4VxZQ0EzMZGYgyPtGxi04loS9VnU946+LGUP6Km+3R37NmrZaLLl
-   Njx7/LLeqQuMn/YIM58DHgxToGiopYqfSgX7btnhUzSH+ht+AZwnKeXaR
-   A==;
-X-CSE-ConnectionGUID: RsPtHC17R5ClF8dH9X8Sow==
-X-CSE-MsgGUID: MT3QWbYRSqSyuvlw+Q/wyw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="26986978"
-X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
-   d="scan'208";a="26986978"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 00:01:05 -0700
-X-CSE-ConnectionGUID: dcJs2ek7QNSojUybXKCtVg==
-X-CSE-MsgGUID: B/o0JsmDTmirdHG4WG967Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
-   d="scan'208";a="43614242"
-Received: from qunyang-mobl1.ccr.corp.intel.com (HELO [10.238.2.59]) ([10.238.2.59])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 00:01:02 -0700
-Message-ID: <7fb2b31e-3c4b-4092-a60b-92aaa43821ae@linux.intel.com>
-Date: Tue, 25 Jun 2024 15:00:59 +0800
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="csmc6Pyn"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45P44M30023858;
+	Tue, 25 Jun 2024 09:01:28 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	swPpw1QOcNX9w/XaFnBy25Y/Ds/3wOvbOXxqoDBW0Fo=; b=csmc6Pynvmeimvnd
+	B6wYwX6ETR/ZGO6a1IdcJCgdMYweEFXq7TCYg/tysmTJWmdvArpQq/YofnzFF/g1
+	9quA53U2quQ7GugqmF/gxJf60PTCUNpI3M0Lz6vBlES72LK+LhzhjaKDEO6sqvsn
+	PJphCufTiMTt8Ff3x89ey177O18GxmQnTRL61ra6Tm2b7f2bL3/Z6tgV91+Yfl0H
+	9qXDeDIgC+K/nvgu8kxITOUaXPBnD0PGoMpTQJOuTVp4davFclR4bM6u6x+f1i/N
+	d+8eeIJxcZ4EoG9i9J8ZQ2M22AVbKvPoa19bRw/wLMWmLso6vQbRTzYTXk500xcf
+	hAz5rQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ywm1gafpw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Jun 2024 09:01:28 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9566240045;
+	Tue, 25 Jun 2024 09:01:23 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 58BE1211941;
+	Tue, 25 Jun 2024 09:00:26 +0200 (CEST)
+Received: from [10.48.87.62] (10.48.87.62) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 25 Jun
+ 2024 09:00:25 +0200
+Message-ID: <0d15dd5c-c03e-4a54-a151-c109836f1b4c@foss.st.com>
+Date: Tue, 25 Jun 2024 09:00:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,246 +52,175 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v19 110/130] KVM: TDX: Handle TDX PV MMIO hypercall
-From: Binbin Wu <binbin.wu@linux.intel.com>
-To: isaku.yamahata@intel.com, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
- erdemaktas@google.com, Sean Christopherson <seanjc@google.com>,
- Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
- chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com,
- Sean Christopherson <sean.j.christopherson@intel.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Reinette Chatre <reinette.chatre@intel.com>
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <a4421e0f2eafc17b4703c920936e32489d2382a3.1708933498.git.isaku.yamahata@intel.com>
- <560f3796-5a41-49fb-be6e-558bbe582996@linux.intel.com>
+Subject: Re: [PATCH 3/3] ARM: dts: sti: add thermal-zones support on stih418
+To: Raphael Gallais-Pou <rgallaispou@gmail.com>,
+        "Rafael J. Wysocki"
+	<rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui
+	<rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>
+References: <20240518-thermal-v1-0-7dfca3ed454b@gmail.com>
+ <20240518-thermal-v1-3-7dfca3ed454b@gmail.com>
 Content-Language: en-US
-In-Reply-To: <560f3796-5a41-49fb-be6e-558bbe582996@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Patrice CHOTARD <patrice.chotard@foss.st.com>
+In-Reply-To: <20240518-thermal-v1-3-7dfca3ed454b@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-25_03,2024-06-24_01,2024-05-17_01
 
 
 
-On 6/25/2024 2:54 PM, Binbin Wu wrote:
->
->
-> On 2/26/2024 4:26 PM, isaku.yamahata@intel.com wrote:
->> From: Sean Christopherson <sean.j.christopherson@intel.com>
->>
->> Export kvm_io_bus_read and kvm_mmio tracepoint and wire up TDX PV MMIO
->> hypercall to the KVM backend functions.
->>
->> kvm_io_bus_read/write() searches KVM device emulated in kernel of the 
->> given
->> MMIO address and emulates the MMIO.  As TDX PV MMIO also needs it, 
->> export
->> kvm_io_bus_read().  kvm_io_bus_write() is already exported.  TDX PV MMIO
->> emulates some of MMIO itself.  To add trace point consistently with x86
->> kvm, export kvm_mmio tracepoint.
->>
->> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
->> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
->> Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
->> ---
->>   arch/x86/kvm/vmx/tdx.c | 114 +++++++++++++++++++++++++++++++++++++++++
->>   arch/x86/kvm/x86.c     |   1 +
->>   virt/kvm/kvm_main.c    |   2 +
->>   3 files changed, 117 insertions(+)
->>
->> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
->> index 55fc6cc6c816..389bb95d2af0 100644
->> --- a/arch/x86/kvm/vmx/tdx.c
->> +++ b/arch/x86/kvm/vmx/tdx.c
->> @@ -1217,6 +1217,118 @@ static int tdx_emulate_io(struct kvm_vcpu *vcpu)
->>       return ret;
->>   }
->>   +static int tdx_complete_mmio(struct kvm_vcpu *vcpu)
->> +{
->> +    unsigned long val = 0;
->> +    gpa_t gpa;
->> +    int size;
->> +
->> +    KVM_BUG_ON(vcpu->mmio_needed != 1, vcpu->kvm);
->> +    vcpu->mmio_needed = 0;
-> mmio_needed is used by instruction emulator to setup the complete 
-> callback.
-> Since TDX handle MMIO in a PV way, mmio_needed is not needed here.
->
->> +
->> +    if (!vcpu->mmio_is_write) {
-> It's also needed by instruction emulator, we can use 
-> vcpu->run->mmio.is_write instead.
->
->> +        gpa = vcpu->mmio_fragments[0].gpa;
->> +        size = vcpu->mmio_fragments[0].len;
->
-> Since MMIO cross page boundary is not allowed according to the input 
-> checks from TDVMCALL, these mmio_fragments[] is not needed.
-> Just use vcpu->run->mmio.phys_addr and vcpu->run->mmio.len?
->
->> +
->> +        memcpy(&val, vcpu->run->mmio.data, size);
->> +        tdvmcall_set_return_val(vcpu, val);
->> +        trace_kvm_mmio(KVM_TRACE_MMIO_READ, size, gpa, &val);
->> +    }
->
-> Tracepoint for KVM_TRACE_MMIO_WRITE is missing when it is handled in 
-> userspace.
->
-> Also, the return code is only set when the emulation is done in 
-> kernel, but not set when it's handled in userspace.
->
->> +    return 1;
->> +}
->
-> How about the fixup as following:
->
-> @@ -1173,19 +1173,18 @@ static int tdx_emulate_io(struct kvm_vcpu 
-> *vcpu) static int tdx_complete_mmio(struct kvm_vcpu *vcpu) { unsigned 
-> long val = 0; - gpa_t gpa; - int size; - - vcpu->mmio_needed = 0; - - 
-> if (!vcpu->mmio_is_write) { - gpa = vcpu->mmio_fragments[0].gpa; - 
-> size = vcpu->mmio_fragments[0].len; + gpa_t gpa = 
-> vcpu->run->mmio.phys_addr; + int size = vcpu->run->mmio.len; + if 
-> (vcpu->run->mmio.is_write) { + trace_kvm_mmio(KVM_TRACE_MMIO_WRITE, 
-> size, gpa, &val); + } else { memcpy(&val, vcpu->run->mmio.data, size); 
-> tdvmcall_set_return_val(vcpu, val); 
-> trace_kvm_mmio(KVM_TRACE_MMIO_READ, size, gpa, &val); } + + 
-> tdvmcall_set_return_code(vcpu, TDVMCALL_SUCCESS); return 1; }
->
-Sorry for the mess.
+On 5/18/24 14:12, Raphael Gallais-Pou wrote:
+> Add a 'thermal-zones' node for stih418.
+> 
+> A thermal-zone needs three components:
+>   - thermal sensors, described in an earlier commit[1]
+>   - cooling devices, specified for each CPU
+>   - a thermal zone, describing the overall behavior.
+> 
+> The thermal zone needs references to both CPUs and thermal sensors,
+> which phandle are also added. The thermal management will then be
+> achieved on CPUs using the cpufreq framework.
+> 
+> [1] https://lore.kernel.org/lkml/20240320-thermal-v3-2-700296694c4a@gmail.com/
+> 
+> Signed-off-by: Raphael Gallais-Pou <rgallaispou@gmail.com>
+> ---
+>  arch/arm/boot/dts/st/stih407-family.dtsi |  6 +++--
+>  arch/arm/boot/dts/st/stih418.dtsi        | 41 +++++++++++++++++++++++++++++---
+>  2 files changed, 42 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/st/stih407-family.dtsi b/arch/arm/boot/dts/st/stih407-family.dtsi
+> index 29302e74aa1d..35a55aef7f4b 100644
+> --- a/arch/arm/boot/dts/st/stih407-family.dtsi
+> +++ b/arch/arm/boot/dts/st/stih407-family.dtsi
+> @@ -33,7 +33,7 @@ delta_reserved: rproc@44000000 {
+>  	cpus {
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+> -		cpu@0 {
+> +		cpu0: cpu@0 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a9";
+>  			reg = <0>;
+> @@ -52,8 +52,9 @@ cpu@0 {
+>  			clock-latency = <100000>;
+>  			cpu0-supply = <&pwm_regulator>;
+>  			st,syscfg = <&syscfg_core 0x8e0>;
+> +			#cooling-cells = <2>;
+>  		};
+> -		cpu@1 {
+> +		cpu1: cpu@1 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a9";
+>  			reg = <1>;
+> @@ -66,6 +67,7 @@ cpu@1 {
+>  					    1200000 0
+>  					    800000  0
+>  					    500000  0>;
+> +			#cooling-cells = <2>;
+>  		};
+>  	};
+>  
+> diff --git a/arch/arm/boot/dts/st/stih418.dtsi b/arch/arm/boot/dts/st/stih418.dtsi
+> index b35b9b7a7ccc..6622ffa8ecfa 100644
+> --- a/arch/arm/boot/dts/st/stih418.dtsi
+> +++ b/arch/arm/boot/dts/st/stih418.dtsi
+> @@ -6,23 +6,26 @@
+>  #include "stih418-clock.dtsi"
+>  #include "stih407-family.dtsi"
+>  #include "stih410-pinctrl.dtsi"
+> +#include <dt-bindings/thermal/thermal.h>
+>  / {
+>  	cpus {
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+> -		cpu@2 {
+> +		cpu2: cpu@2 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a9";
+>  			reg = <2>;
+>  			/* u-boot puts hpen in SBC dmem at 0xa4 offset */
+>  			cpu-release-addr = <0x94100A4>;
+> +			#cooling-cells = <2>;
+>  		};
+> -		cpu@3 {
+> +		cpu3: cpu@3 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a9";
+>  			reg = <3>;
+>  			/* u-boot puts hpen in SBC dmem at 0xa4 offset */
+>  			cpu-release-addr = <0x94100A4>;
+> +			#cooling-cells = <2>;
+>  		};
+>  	};
+>  
+> @@ -44,6 +47,38 @@ usb2_picophy2: phy3 {
+>  		reset-names = "global", "port";
+>  	};
+>  
+> +	thermal-zones {
+> +		cpu_thermal: cpu-thermal {
+> +			polling-delay-passive = <250>;  /* 250ms */
+> +			polling-delay = <1000>;         /* 1000ms */
+> +
+> +			thermal-sensors = <&thermal>;
+> +
+> +			trips {
+> +				cpu_crit: cpu-crit {
+> +					temperature = <95000>;  /* 95C */
+> +					hysteresis = <2000>;
+> +					type = "critical";
+> +				};
+> +				cpu_alert: cpu-alert {
+> +					temperature = <85000>;  /* 85C */
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +			};
+> +
+> +			cooling-maps {
+> +				map {
+> +					trip = <&cpu_alert>;
+> +					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+>  	soc {
+>  		rng11: rng@8a8a000 {
+>  			status = "disabled";
+> @@ -107,7 +142,7 @@ mmc0: sdhci@9060000 {
+>  			assigned-clock-rates = <200000000>;
+>  		};
+>  
+> -		thermal@91a0000 {
+> +		thermal: thermal@91a0000 {
+>  			compatible = "st,stih407-thermal";
+>  			reg = <0x91a0000 0x28>;
+>  			clock-names = "thermal";
+> 
 
-@@ -1173,19 +1173,18 @@ static int tdx_emulate_io(struct kvm_vcpu *vcpu)
-  static int tdx_complete_mmio(struct kvm_vcpu *vcpu)
-  {
-         unsigned long val = 0;
--       gpa_t gpa;
--       int size;
--
--       vcpu->mmio_needed = 0;
--
--       if (!vcpu->mmio_is_write) {
--               gpa = vcpu->mmio_fragments[0].gpa;
--               size = vcpu->mmio_fragments[0].len;
-+       gpa_t gpa = vcpu->run->mmio.phys_addr;
-+       int size = vcpu->run->mmio.len;
+Hi Raphael
 
-+       if (vcpu->run->mmio.is_write) {
-+               trace_kvm_mmio(KVM_TRACE_MMIO_WRITE, size, gpa, &val);
-+       } else {
-                 memcpy(&val, vcpu->run->mmio.data, size);
-                 tdvmcall_set_return_val(vcpu, val);
-                 trace_kvm_mmio(KVM_TRACE_MMIO_READ, size, gpa, &val);
-         }
-+
-+       tdvmcall_set_return_code(vcpu, TDVMCALL_SUCCESS);
-         return 1;
-  }
+Reviewed-by: Patrice Chotard <patrice.chotard@foss.st.com>
 
->
->
->> +
->> +static inline int tdx_mmio_write(struct kvm_vcpu *vcpu, gpa_t gpa, 
->> int size,
->> +                 unsigned long val)
->> +{
->> +    if (kvm_iodevice_write(vcpu, &vcpu->arch.apic->dev, gpa, size, 
->> &val) &&
->> +        kvm_io_bus_write(vcpu, KVM_MMIO_BUS, gpa, size, &val))
->> +        return -EOPNOTSUPP;
->> +
->> +    trace_kvm_mmio(KVM_TRACE_MMIO_WRITE, size, gpa, &val);
->> +    return 0;
->> +}
->> +
->> +static inline int tdx_mmio_read(struct kvm_vcpu *vcpu, gpa_t gpa, 
->> int size)
->> +{
->> +    unsigned long val;
->> +
->> +    if (kvm_iodevice_read(vcpu, &vcpu->arch.apic->dev, gpa, size, 
->> &val) &&
->> +        kvm_io_bus_read(vcpu, KVM_MMIO_BUS, gpa, size, &val))
->> +        return -EOPNOTSUPP;
->> +
->> +    tdvmcall_set_return_val(vcpu, val);
->> +    trace_kvm_mmio(KVM_TRACE_MMIO_READ, size, gpa, &val);
->> +    return 0;
->> +}
->> +
->> +static int tdx_emulate_mmio(struct kvm_vcpu *vcpu)
->> +{
->> +    struct kvm_memory_slot *slot;
->> +    int size, write, r;
->> +    unsigned long val;
->> +    gpa_t gpa;
->> +
->> +    KVM_BUG_ON(vcpu->mmio_needed, vcpu->kvm);
->> +
-> [...]
->> +
->> +    /* Request the device emulation to userspace device model. */
->> +    vcpu->mmio_needed = 1;
->> +    vcpu->mmio_is_write = write;
-> Then they can be dropped.
->
->
->> +    vcpu->arch.complete_userspace_io = tdx_complete_mmio;
->> +
->> +    vcpu->run->mmio.phys_addr = gpa;
->> +    vcpu->run->mmio.len = size;
->> +    vcpu->run->mmio.is_write = write;
->> +    vcpu->run->exit_reason = KVM_EXIT_MMIO;
->> +
->> +    if (write) {
->> +        memcpy(vcpu->run->mmio.data, &val, size);
->> +    } else {
->> +        vcpu->mmio_fragments[0].gpa = gpa;
->> +        vcpu->mmio_fragments[0].len = size;
-> These two lines can be dropped as well.
->
->> + trace_kvm_mmio(KVM_TRACE_MMIO_READ_UNSATISFIED, size, gpa, NULL);
->> +    }
->> +    return 0;
->> +
->> +error:
->> +    tdvmcall_set_return_code(vcpu, TDVMCALL_INVALID_OPERAND);
->> +    return 1;
->> +}
->> +
->
-> - /* Request the device emulation to userspace device model. */ - 
-> vcpu->mmio_needed = 1; - vcpu->mmio_is_write = write; 
-> vcpu->arch.complete_userspace_io = tdx_complete_mmio; 
-> vcpu->run->mmio.phys_addr = gpa; @@ -1265,13 +1272,11 @@ static int 
-> tdx_emulate_mmio(struct kvm_vcpu *vcpu) vcpu->run->mmio.is_write = 
-> write; vcpu->run->exit_reason = KVM_EXIT_MMIO; - if (write) { + if 
-> (write) memcpy(vcpu->run->mmio.data, &val, size); - } else { - 
-> vcpu->mmio_fragments[0].gpa = gpa; - vcpu->mmio_fragments[0].len = 
-> size; + else trace_kvm_mmio(KVM_TRACE_MMIO_READ_UNSATISFIED, size, 
-> gpa, NULL); - } + return 0;
->
->
->
--       /* Request the device emulation to userspace device model. */
--       vcpu->mmio_needed = 1;
--       vcpu->mmio_is_write = write;
-         vcpu->arch.complete_userspace_io = tdx_complete_mmio;
-
-         vcpu->run->mmio.phys_addr = gpa;
-@@ -1265,13 +1272,11 @@ static int tdx_emulate_mmio(struct kvm_vcpu *vcpu)
-         vcpu->run->mmio.is_write = write;
-         vcpu->run->exit_reason = KVM_EXIT_MMIO;
-
--       if (write) {
-+       if (write)
-                 memcpy(vcpu->run->mmio.data, &val, size);
--       } else {
--               vcpu->mmio_fragments[0].gpa = gpa;
--               vcpu->mmio_fragments[0].len = size;
-+       else
-                 trace_kvm_mmio(KVM_TRACE_MMIO_READ_UNSATISFIED, size, 
-gpa, NULL);
--       }
-+
-         return 0;
+Thanks
+Patrice
