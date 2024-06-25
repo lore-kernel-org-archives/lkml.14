@@ -1,188 +1,155 @@
-Received: from mta22.hihonor.com (mta22.honor.com [81.70.192.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F364D143C67
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 06:55:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.192.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D521459E5
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 06:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719298560; cv=none; b=W4J1l9W7eLJgdnXs0hHotp5F0PSj9aVoJwEkXxc5G5WIn/dJPKwe36VeHG50qWiocK9XHzNWglClHr59x/U3aN5b/vxcJGXOZuT//zJ2a779RanQ9TgSKnpJDrP7TnGt+OGY9Oy6tgz9rrC4EgwrrtDtJS6vpj0Okima7+FMxNM=
+	t=1719298647; cv=none; b=qozZ7CqzUL2kgbXKBcr55aLDX+oy27AiL5b86EsyCmTR0mVLDlJVXL4uOMZHyxiRrwnOMxz0k4U1otEut7//5HFmFuwUAs5Futlke39VMQxvlIKq8WE/oUjMay0MDgVFlu//gXhiLz0FkOE8EpxJsltFH2wHulRoqUt9txpuJqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719298560; c=relaxed/simple;
-	bh=Mw7v8IPSnvlwJ/fCk6herWniYwKtXRsPaJ9V8iamQBU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gn2uvvShyVqqFO6WoVzBbjmxJ0ZKw9KrDtRHYQrXKdlDiqs/plUNnDpJbap6MhZSjXvZbdxua3IQLkeYFvwL/1XJ0q2PnK9tj6P1hQVFhwtEnrGyiP4sX4v1koI7tk+AMnfHeNMJfsf/czd7Q8sY7QHlH/psERxalrd0GZlEsRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.192.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
-Received: from w002.hihonor.com (unknown [10.68.28.120])
-	by mta22.hihonor.com (SkyGuard) with ESMTPS id 4W7Zmc04ZFzYlPjR;
-	Tue, 25 Jun 2024 14:34:08 +0800 (CST)
-Received: from a011.hihonor.com (10.68.31.243) by w002.hihonor.com
- (10.68.28.120) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.25; Tue, 25 Jun
- 2024 14:36:11 +0800
-Received: from localhost.localdomain (10.144.23.14) by a011.hihonor.com
- (10.68.31.243) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.25; Tue, 25 Jun
- 2024 14:36:11 +0800
-From: wangzijie <wangzijie1@honor.com>
-To: <chao@kernel.org>
-CC: <bintian.wang@honor.com>, <jaegeuk@kernel.org>,
-	<linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
-	<wangzijie1@honor.com>, <zhiguo.niu@unisoc.com>
-Subject: Re: [f2fs-dev] [PATCH v3] f2fs: reduce expensive checkpoint trigger frequency
-Date: Tue, 25 Jun 2024 14:36:11 +0800
-Message-ID: <20240625063611.816629-1-wangzijie1@honor.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <874174e3-79ba-452d-afff-615fe0bc8d0d@kernel.org>
-References: <874174e3-79ba-452d-afff-615fe0bc8d0d@kernel.org>
+	s=arc-20240116; t=1719298647; c=relaxed/simple;
+	bh=9bwQGGR/wyIdfMAsvGQ9dzDTbZwlGTht+mu4n+QPefg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=H2MMr2fmnToMmcakzZjzbBSy3eLOeVGMrrr0JU3pEZGKOIQ07pQuOjlKgv/ceHIJ/YtgaJ2Rhgk/aGCtSk2DMjMOYsRbOlDGEV/npluEkzUnUxAiQ98D3aG1SegfRbAHF4HV/QRSTqKWejGos3RnLk+mdKIECMWz7L+TxwYQGsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ppy5c9v3; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ppy5c9v3"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dff02b8a956so4593080276.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 23:57:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719298644; x=1719903444; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rDmIfuJcogCN48ne3+t+LsUj7I8L6ToirSOH5B1KCCI=;
+        b=Ppy5c9v3UDf7dNKdkMc5NtogPQkRL5tKCY+76M0n48wyds0x41+35aG5s6QgbjEGwk
+         9CA2qdHLx7tEXmwHFORWItwR5boD7bbtuFpXFrBxJs0R3rVUAK208zCpzxNd7HVpKetn
+         Mn9gvw5NOuCUDMxyKbBfr0vHIWLB238YTy0Rn2ZcUn9LeO2IVWaCfWYNAUKYMbWfqqx7
+         l1jpSgeSQ/ym191DPmz+P5CdcmN6o+dUwljB4YixrVI5QKjebsvPzOD2uwVvlDbs0c0A
+         EiX6MqWlSfpxR0pADmnStBVXFm3dEVuhxp0JtOFEkAa9tjyynJ4KuaTOrlo3O7fQMjzi
+         Afww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719298644; x=1719903444;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rDmIfuJcogCN48ne3+t+LsUj7I8L6ToirSOH5B1KCCI=;
+        b=GSUzpvvsTqDbtt6DybpXSP6lej2ubhzQY50og0yKMBGCUvoGvRjK4IKzhiQrBn9PUy
+         eD8GLkaDBk/K+IWZY6hvX/koKc5AKCtHukkPeevUYclIgaB37Bj+VF/rX1qapLwhIZiO
+         4wG+d8+HY5ij7JrqsqQlKxWAuiaamZ2G+sBtAs0bzW/eSJbGmQ2gu8awgEZfMOXrhhRL
+         uQosKfl7BeB6YDAH+zm2S+FRP7bUUe18LKTmtNvfFffrUek9/cxsV9YMDB8HODxu2RbF
+         fq+NKgF9UAS+Kdiqf6lAbaC493WdpSxr+O531FCs9v2XIa44UZZLaLU/BtqW0NOeOOXY
+         VbwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVS9IxOvtT8kP7ACzRCEhSPfbqQyFOfHexK+1LfdP9nEpAgtlM44QVYNwcQv2cnn1lqDoSpG5092GmLTx2xWHNj0WTDdhfYAfMXgcRF
+X-Gm-Message-State: AOJu0YwPLMMRQTLQc32/ZFj7X4t43icX8PWOg8tJdcHxzRokGfrcrW+y
+	+m9+9eJuUEOTVizHhhk4zLwJcKqmq0MI51Hl9JB0yYBf1s9gOKktQHg2m6InMjj2We1SVv3qk0r
+	UP5SBgKp78uVtC8B4YKix1iVQ32d0DDkxmKtTn54osVqwuuWzzF0=
+X-Google-Smtp-Source: AGHT+IGripGlc3e99ZcQ7A/cB5i8DPUq0WPOuQjyoddclsAtiju4Lk8yaZqQa5u8RSMpSSF6OCkcO3tGgbtiw1qoIu8=
+X-Received: by 2002:a25:a029:0:b0:dfb:812:af06 with SMTP id
+ 3f1490d57ef6-e0300eef36bmr6622618276.10.1719298644096; Mon, 24 Jun 2024
+ 23:57:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: w010.hihonor.com (10.68.28.113) To a011.hihonor.com
- (10.68.31.243)
+References: <20240624194518.37458-1-brgl@bgdev.pl> <CAA8EJppMPeYrPH+ssDMnf6UwHRdKQetpY3PotGvR-cc2vE68AQ@mail.gmail.com>
+ <CAMRc=MeYy8MgBVbwmrR1Rd9oQMz1tUb+uL4eFJWTL7EOsRXxjg@mail.gmail.com>
+ <CAA8EJpqz7wPSyn0ybDWKwBKkp+rWVPbTgjbKuG6VHWm24MCusA@mail.gmail.com> <CAMRc=MeX6crenUhC1dqp08W+ss5YksUaaemr4PFFM95SHeED2g@mail.gmail.com>
+In-Reply-To: <CAMRc=MeX6crenUhC1dqp08W+ss5YksUaaemr4PFFM95SHeED2g@mail.gmail.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Tue, 25 Jun 2024 09:57:11 +0300
+Message-ID: <CAA8EJpr3OPi=EhpfXWghFoF0rgYwuZ8Xw-EzybOzqzftq-GhaA@mail.gmail.com>
+Subject: Re: [PATCH] Bluetooth: qca: don't disable power management for QCA6390
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->On 2024/6/25 10:14, wangzijie wrote:
->>> We may trigger high frequent checkpoint for below case:
->>> 1. mkdir /mnt/dir1; set dir1 encrypted
->>> 2. touch /mnt/file1; fsync /mnt/file1
->>> 3. mkdir /mnt/dir2; set dir2 encrypted
->>> 4. touch /mnt/file2; fsync /mnt/file2
->>> ...
->>>
->>> Although, newly created dir and file are not related, due to
->>> commit bbf156f7afa7 ("f2fs: fix lost xattrs of directories"), we will
->>> trigger checkpoint whenever fsync() comes after a new encrypted dir
->>> created.
->>>
->>> In order to avoid such condition, let's record an entry including
->>> directory's ino into global cache when we initialize encryption policy
->>> in a checkpointed directory, and then only trigger checkpoint() when
->>> target file's parent has non-persisted encryption policy, for the case
->>> its parent is not checkpointed, need_do_checkpoint() has cover that
->>> by verifying it with f2fs_is_checkpointed_node().
->>>
->>> Reported-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
->>> Tested-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
->>> Reported-by: Yunlei He <heyunlei@hihonor.com>
->>> Signed-off-by: Chao Yu <chao@kernel.org>
->>> ---
->>> v3:
->>> - Recently, Zhiguo Niu reported the same issue, so I repost this
->>> patch for comments.
->>>   fs/f2fs/f2fs.h              |  2 ++
->>>   fs/f2fs/file.c              |  3 +++
->>>   fs/f2fs/xattr.c             | 16 ++++++++++++++--
->>>   include/trace/events/f2fs.h |  3 ++-
->>>   4 files changed, 21 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->>> index e2e0ca45f881..0094a8c85f4a 100644
->>> --- a/fs/f2fs/f2fs.h
->>> +++ b/fs/f2fs/f2fs.h
->>> @@ -279,6 +279,7 @@ enum {
->>>   	APPEND_INO,		/* for append ino list */
->>>   	UPDATE_INO,		/* for update ino list */
->>>   	TRANS_DIR_INO,		/* for transactions dir ino list */
->>> +	ENC_DIR_INO,		/* for encrypted dir ino list */
->>>   	FLUSH_INO,		/* for multiple device flushing */
->>>   	MAX_INO_ENTRY,		/* max. list */
->>>   };
->>> @@ -1147,6 +1148,7 @@ enum cp_reason_type {
->>>   	CP_FASTBOOT_MODE,
->>>   	CP_SPEC_LOG_NUM,
->>>   	CP_RECOVER_DIR,
->>> +	CP_ENC_DIR,
->>>   };
->>>   
->>>   enum iostat_type {
->>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
->>> index 8198afb5fb9c..18b33b1f0c83 100644
->>> --- a/fs/f2fs/file.c
->>> +++ b/fs/f2fs/file.c
->>> @@ -218,6 +218,9 @@ static inline enum cp_reason_type need_do_checkpoint(struct inode *inode)
->>>   		f2fs_exist_written_data(sbi, F2FS_I(inode)->i_pino,
->>>   							TRANS_DIR_INO))
->>>   		cp_reason = CP_RECOVER_DIR;
->>> +	else if (f2fs_exist_written_data(sbi, F2FS_I(inode)->i_pino,
->>> +							ENC_DIR_INO))
->>> +		cp_reason = CP_ENC_DIR;
->>>   
->>>   	return cp_reason;
->>>   }
->>> diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
->>> index f290fe9327c4..cbd1b88297fe 100644
->>> --- a/fs/f2fs/xattr.c
->>> +++ b/fs/f2fs/xattr.c
->>> @@ -629,6 +629,7 @@ static int __f2fs_setxattr(struct inode *inode, int index,
->>>   			const char *name, const void *value, size_t size,
->>>   			struct page *ipage, int flags)
->>>   {
->>> +	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
->>>   	struct f2fs_xattr_entry *here, *last;
->>>   	void *base_addr, *last_base_addr;
->>>   	int found, newsize;
->>> @@ -772,8 +773,19 @@ static int __f2fs_setxattr(struct inode *inode, int index,
->>>   	if (index == F2FS_XATTR_INDEX_ENCRYPTION &&
->>>   			!strcmp(name, F2FS_XATTR_NAME_ENCRYPTION_CONTEXT))
->>>   		f2fs_set_encrypted_inode(inode);
->>> -	if (S_ISDIR(inode->i_mode))
->>> -		set_sbi_flag(F2FS_I_SB(inode), SBI_NEED_CP);
->>> +
->>> +	if (S_ISDIR(inode->i_mode)) {
->>> +		/*
->>> +		 * In restrict mode, fsync() always tries triggering checkpoint
->>> +		 * for all metadata consistency, in other mode, it only triggers
->>> +		 * checkpoint when parent's encryption metadata updates.
->>> +		 */
->>> +		if (F2FS_OPTION(sbi).fsync_mode == FSYNC_MODE_STRICT)
->>> +			set_sbi_flag(F2FS_I_SB(inode), SBI_NEED_CP);
->>> +		else if (IS_ENCRYPTED(inode) &&
->>> +			f2fs_is_checkpointed_node(sbi, inode->i_ino))
->>> +			f2fs_add_ino_entry(sbi, inode->i_ino, ENC_DIR_INO);
->>> +	}
->>>   
->>>   same:
->>>   	if (is_inode_flag_set(inode, FI_ACL_MODE)) {
->>> diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
->>> index 7ed0fc430dc6..48f2e399e184 100644
->>> --- a/include/trace/events/f2fs.h
->>> +++ b/include/trace/events/f2fs.h
->>> @@ -139,7 +139,8 @@ TRACE_DEFINE_ENUM(EX_BLOCK_AGE);
->>>   		{ CP_NODE_NEED_CP,	"node needs cp" },		\
->>>   		{ CP_FASTBOOT_MODE,	"fastboot mode" },		\
->>>   		{ CP_SPEC_LOG_NUM,	"log type is 2" },		\
->>> -		{ CP_RECOVER_DIR,	"dir needs recovery" })
->>> +		{ CP_RECOVER_DIR,	"dir needs recovery" },		\
->>> +		{ CP_ENC_DIR,		"persist encryption policy" })
->>>   
->>>   #define show_shutdown_mode(type)					\
->>>   	__print_symbolic(type,						\
->>> -- 
->>> 2.40.1
->> 
->> Hi, Chao
->> I noticed the discussion about patch v2, Jaegeuk mentioned no encryption case:
->> 1) parent is checkpointed
->> 2) set_xattr(dir) w/ new xnid
->> 3) create(file)
->> 4) fsync(file)
->> We will not trigger checkpoint() after this change.
->> So, how about adding a rule in need_do_checkpoint? We can judge if the parent has xnid
->> being checkpointed or not, if not we can still trigger checkpoint() and keep the same
->> behavior before this change.
+On Tue, 25 Jun 2024 at 09:50, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
->Hi wangzijie,
+> On Mon, 24 Jun 2024 23:19:55 +0200, Dmitry Baryshkov
+> <dmitry.baryshkov@linaro.org> said:
+> > On Mon, 24 Jun 2024 at 23:47, Bartosz Golaszewski <brgl@bgdev.pl> wrote=
+:
+> >>
+> >> On Mon, Jun 24, 2024 at 10:17=E2=80=AFPM Dmitry Baryshkov
+> >> <dmitry.baryshkov@linaro.org> wrote:
+> >> >
+> >> > On Mon, 24 Jun 2024 at 22:45, Bartosz Golaszewski <brgl@bgdev.pl> wr=
+ote:
+> >> > >
+> >> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >> > >
+> >> > > We unnecessarily fallthrough the case for QCA6390 when initializin=
+g the
+> >> > > device and hit the condition where - due to the lack of the enable=
+-gpio
+> >> > > - we disable power management despite using the power sequencer. W=
+e don't
+> >> > > need to look for clocks on this model so it makes more sense to ju=
+st
+> >> > > register the hci device and break the switch.
+> >> > >
+> >> > > Reported-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> >> > > Fixes: 4029dba6b6f1 ("Bluetooth: qca: use the power sequencer for =
+QCA6390")
+> >> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org=
 >
->It may cause performance overhead to get parent's xnid by parent ino,
->so I prefer to tag ENC_DIR_INO for the inode if its parent's xnid is
->not checkpointed, it that fine to you?
+> >> >
+> >> > Is this going to break the QCA6390 as present on M.2 / PCIe cards? O=
+r
+> >> > the older DT which didn't have pwrseq entries?
+> >> >
+> >>
+> >> Neither of these has clocks that need to be driven by linux. The only
+> >> user of QCA6390 Bluetooth in mainline is RB5. Bindings didn't exist
+> >> before so no commitment was ever made.
+> >
+> > This might make some laptop users unhappy. But anyway, restarting the
+> > hci0 now gives:
+> >
+> > [   24.387344] Bluetooth: hci0: setting up ROME/QCA6390
+> > [   24.387439] qcom_geni_serial 998000.serial: serial engine reports 0
+> > RX bytes in!
+> > [   24.554349] qcom_geni_serial 998000.serial: serial engine reports 0
+> > RX bytes in!
+> > [   24.562056] arm-smmu 15000000.iommu: Unhandled context fault:
+> > fsr=3D0x402, iova=3D0xfffd1080, fsynr=3D0x750013, cbfrsynra=3D0x5a3, cb=
+=3D3
+> > [   26.914225] Bluetooth: hci0: command 0xfc00 tx timeout
+> > [   35.042619] Bluetooth: hci0: Reading QCA version information failed =
+(-110)
+> > [   35.049721] Bluetooth: hci0: Retry BT power ON:0
+> > [   37.539492] Bluetooth: hci0: command 0xfc00 tx timeout
+> > [   45.539519] Bluetooth: hci0: Reading QCA version information failed =
+(-110)
+> > [   45.546667] Bluetooth: hci0: Retry BT power ON:1
+> > [   48.035863] Bluetooth: hci0: command 0xfc00 tx timeout
+> > [   56.034783] Bluetooth: hci0: Reading QCA version information failed =
+(-110)
+> > [   56.041901] Bluetooth: hci0: Retry BT power ON:2
+> > [   58.532174] Bluetooth: hci0: command 0xfc00 tx timeout
+> > [   66.531928] Bluetooth: hci0: Reading QCA version information failed =
+(-110)
+> >
+> >
 >
->Thanks,
+> How do you reproduce it because it works fine for me:
 
-Yes, I've also met this reported problem. Thank you for your reply.
+Hmm, most likely I had a dirty kernel version somewhere. With the
+current linux-next it works for me too.
+
+Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Tested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org> # RB5
+
+Thank you!
+
+--=20
+With best wishes
+Dmitry
