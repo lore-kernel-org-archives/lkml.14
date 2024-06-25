@@ -1,256 +1,175 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14778149002;
-	Tue, 25 Jun 2024 08:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1322149015;
+	Tue, 25 Jun 2024 08:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719304304; cv=none; b=X/rnjw+LBcvlfu6p0Jopuq5gLNdXJDqKrM84cwKcUaxX7A/BJP8MEqCSDjs/KYdxq++z+10iJdaFPGVSvv2bDFXo6FCwOfSB5i4P2SjTBTPTaiOpraKiQg9FFnlkmYu0vC3oB/vouMuC9xC/D5Lhg0vFWYaNhVSdxK2ALFVYM1I=
+	t=1719304306; cv=none; b=hbhOX3EHVmVNLilM3KMSzQrNZTssY/3eDF4yhN3Ssy5xV3yJ13U6K6hYdN38c6/8DB8lYzdVQXcLIKi20a8kLkced2mg8uADbm0XqULMueOdKkugKzkFn9DqkBfnzJGgowP/5m0rI7qHZj7+4La1JFUV/LBvd8VdymObyy2z6k8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719304304; c=relaxed/simple;
-	bh=sLKOAZP2twvyMrkmWFwa9gsRqsnFd0yb0cRV/chnGZ4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Dz9trTUkup8apQu6K/LxJ+9aFoCI6XDpApprKxMOoMJ82PI8M2MknOHF5Jbfsb6mXRLd/p5zD1bKx9ugBHtUjfbVKZU8kiK6xY9ZnOj99XpVinGIBIuoX4FvR6HDp6En5OFUBcKM/pvWUr8lvN8FDpeAcRbpc3Hi5ikVaB1RWNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=jOA1XAp6; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1719304306; c=relaxed/simple;
+	bh=+D48S5Vq0swdQkscBySnwczFMRaxSpZ8KHXgGGRiwsY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=U+jnQLIUpwByW/L95fRkWBRajcsNdOFxAyTin7M2HEmDGiEB3ad5cFXF3OzCwR6JwnXbk50qnJWR1ldyTLOq0ftbSqWrCwAd5V9sfBPo7OQNg7JI0xrC5kx4qXwgwbEeZncDU81OFf42v+f6wwz98qVNLhBaHA4neTfska/BsFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BjpjAbg5; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="jOA1XAp6"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45P7gUUk021217;
-	Tue, 25 Jun 2024 10:31:32 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	VRn4fM4+qyVZ6+D1sS8F/uhdseWA+WqX0MM6GsLHCJo=; b=jOA1XAp6s8VR2Jt5
-	gnT834DUUtk7Ooivja3fxVDdBTi1zdQgM3J2iKY5rS1LSwJ4AkTCxzYTwk8BZ48T
-	IWUCcz/8Zw8pIgy2bjHD5/ZAfqQKLkZOV6Y6XhJdrp+EwLzN6lOYiU/Kh4YNNaFo
-	Q1MyYAHaUzqekMD1OsOGlj5PZw0TdOPve9uGV3O9a5RqNHhL0xZoqv+Pgf06KoOR
-	ztIm7hyoMQ/OudMFPijBmkrb1R56ymrv85d6U4amiFAY8dqOHCoNtpshRBg7qxAf
-	AlHGHZIqDlAyadSQnbutApJFKfNMsHER0DGYk0JkjSYH4lxrCs6As5XvKgDQG0IO
-	fUX5Yg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ywm1gb2fv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Jun 2024 10:31:31 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 34B5A4002D;
-	Tue, 25 Jun 2024 10:31:27 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C8C7B20FA24;
-	Tue, 25 Jun 2024 10:31:12 +0200 (CEST)
-Received: from localhost (10.129.178.213) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 25 Jun
- 2024 10:31:12 +0200
-From: Alain Volmat <alain.volmat@foss.st.com>
-To: Alain Volmat <alain.volmat@foss.st.com>,
-        Sakari Ailus
-	<sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/2] media: i2c: gc2145: addition of RAW8 formats support
-Date: Tue, 25 Jun 2024 10:29:54 +0200
-Message-ID: <20240625082956.2556293-2-alain.volmat@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240625082956.2556293-1-alain.volmat@foss.st.com>
-References: <20240625082956.2556293-1-alain.volmat@foss.st.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BjpjAbg5"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45P8VaP4087438;
+	Tue, 25 Jun 2024 03:31:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1719304296;
+	bh=LYGd2H7FTgR/FQpG/Ynu641/TDmOOv4Oh/6t57w2iwM=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=BjpjAbg5lgCI6Y9Avm0J6xbXMN1SjzcDaMd6qI9qwAbsh2Uxs3C62snLXhep0PTxs
+	 jjMAw7zxLYZpPg+YL4XuuSD1lnUKGUzQHFiUSN+9jmaK1pdyBJ8c8aLLv2o8gPcftg
+	 Y8BXYQlZhBQ9GTZ2Ggo0iWrvL8u0Y9h6hHKK+h0g=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45P8VaCY073116
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 25 Jun 2024 03:31:36 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 25
+ Jun 2024 03:31:36 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 25 Jun 2024 03:31:36 -0500
+Received: from [172.24.227.94] (uda0132425.dhcp.ti.com [172.24.227.94])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45P8VVov086972;
+	Tue, 25 Jun 2024 03:31:32 -0500
+Message-ID: <f9f5178b-1e94-489b-8e71-43b814b7252a@ti.com>
+Date: Tue, 25 Jun 2024 14:01:30 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-25_04,2024-06-24_01,2024-05-17_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] arm64: dts: ti: k3-j784s4-main: Add McASP nodes
+To: Jayesh Choudhary <j-choudhary@ti.com>, <linux-kernel@vger.kernel.org>,
+        <nm@ti.com>, <j-luthra@ti.com>
+CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <u-kumar1@ti.com>
+References: <20240619095253.290552-1-j-choudhary@ti.com>
+ <20240619095253.290552-2-j-choudhary@ti.com>
+From: Vignesh Raghavendra <vigneshr@ti.com>
+Content-Language: en-US
+In-Reply-To: <20240619095253.290552-2-j-choudhary@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Adds support for RAW8 formats (BGGR/RGGB/RBRG/BRBG).
 
-Signed-off-by: Alain Volmat <alain.volmat@foss.st.com>
----
- drivers/media/i2c/gc2145.c | 75 ++++++++++++++++++++++++++++++++++----
- 1 file changed, 67 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/media/i2c/gc2145.c b/drivers/media/i2c/gc2145.c
-index bef7b0e056a8..bbab24f3eb57 100644
---- a/drivers/media/i2c/gc2145.c
-+++ b/drivers/media/i2c/gc2145.c
-@@ -542,45 +542,82 @@ static const struct gc2145_mode supported_modes[] = {
- /**
-  * struct gc2145_format - GC2145 pixel format description
-  * @code: media bus (MBUS) associated code
-+ * @colorspace: V4L2 colospace
-  * @datatype: MIPI CSI2 data type
-  * @output_fmt: GC2145 output format
-  * @switch_bit: GC2145 first/second switch
-+ * @row_col_switch: GC2145 switch row and/or column
-  */
- struct gc2145_format {
- 	unsigned int code;
-+	unsigned int colorspace;
- 	unsigned char datatype;
- 	unsigned char output_fmt;
- 	bool switch_bit;
-+	unsigned char row_col_switch;
- };
- 
- /* All supported formats */
- static const struct gc2145_format supported_formats[] = {
- 	{
- 		.code		= MEDIA_BUS_FMT_UYVY8_1X16,
-+		.colorspace	= V4L2_COLORSPACE_SRGB,
- 		.datatype	= MIPI_CSI2_DT_YUV422_8B,
- 		.output_fmt	= 0x00,
- 	},
- 	{
- 		.code		= MEDIA_BUS_FMT_VYUY8_1X16,
-+		.colorspace	= V4L2_COLORSPACE_SRGB,
- 		.datatype	= MIPI_CSI2_DT_YUV422_8B,
- 		.output_fmt	= 0x01,
- 	},
- 	{
- 		.code		= MEDIA_BUS_FMT_YUYV8_1X16,
-+		.colorspace	= V4L2_COLORSPACE_SRGB,
- 		.datatype	= MIPI_CSI2_DT_YUV422_8B,
- 		.output_fmt	= 0x02,
- 	},
- 	{
- 		.code		= MEDIA_BUS_FMT_YVYU8_1X16,
-+		.colorspace	= V4L2_COLORSPACE_SRGB,
- 		.datatype	= MIPI_CSI2_DT_YUV422_8B,
- 		.output_fmt	= 0x03,
- 	},
- 	{
- 		.code		= MEDIA_BUS_FMT_RGB565_1X16,
-+		.colorspace	= V4L2_COLORSPACE_SRGB,
- 		.datatype	= MIPI_CSI2_DT_RGB565,
- 		.output_fmt	= 0x06,
- 		.switch_bit	= true,
- 	},
-+	{
-+		.code           = MEDIA_BUS_FMT_SGRBG8_1X8,
-+		.colorspace     = V4L2_COLORSPACE_RAW,
-+		.datatype       = MIPI_CSI2_DT_RAW8,
-+		.output_fmt     = 0x17,
-+		.row_col_switch = GC2145_SYNC_MODE_COL_SWITCH,
-+	},
-+	{
-+		.code           = MEDIA_BUS_FMT_SRGGB8_1X8,
-+		.colorspace     = V4L2_COLORSPACE_RAW,
-+		.datatype       = MIPI_CSI2_DT_RAW8,
-+		.output_fmt     = 0x17,
-+		.row_col_switch = GC2145_SYNC_MODE_COL_SWITCH | GC2145_SYNC_MODE_ROW_SWITCH,
-+	},
-+	{
-+		.code           = MEDIA_BUS_FMT_SBGGR8_1X8,
-+		.colorspace     = V4L2_COLORSPACE_RAW,
-+		.datatype       = MIPI_CSI2_DT_RAW8,
-+		.output_fmt     = 0x17,
-+		.row_col_switch = 0,
-+	},
-+	{
-+		.code           = MEDIA_BUS_FMT_SGBRG8_1X8,
-+		.colorspace     = V4L2_COLORSPACE_RAW,
-+		.datatype       = MIPI_CSI2_DT_RAW8,
-+		.output_fmt     = 0x17,
-+		.row_col_switch = GC2145_SYNC_MODE_ROW_SWITCH,
-+	},
- };
- 
- struct gc2145_ctrls {
-@@ -641,7 +678,8 @@ gc2145_get_format_code(struct gc2145 *gc2145, u32 code)
- 
- static void gc2145_update_pad_format(struct gc2145 *gc2145,
- 				     const struct gc2145_mode *mode,
--				     struct v4l2_mbus_framefmt *fmt, u32 code)
-+				     struct v4l2_mbus_framefmt *fmt, u32 code,
-+				     u32 colorspace)
- {
- 	fmt->code = code;
- 	fmt->width = mode->width;
-@@ -663,7 +701,8 @@ static int gc2145_init_state(struct v4l2_subdev *sd,
- 	/* Initialize pad format */
- 	format = v4l2_subdev_state_get_format(state, 0);
- 	gc2145_update_pad_format(gc2145, &supported_modes[0], format,
--				 MEDIA_BUS_FMT_RGB565_1X16);
-+				 MEDIA_BUS_FMT_RGB565_1X16,
-+				 V4L2_COLORSPACE_SRGB);
- 
- 	/* Initialize crop rectangle. */
- 	crop = v4l2_subdev_state_get_crop(state, 0);
-@@ -754,7 +793,13 @@ static int gc2145_set_pad_format(struct v4l2_subdev *sd,
- 				      width, height,
- 				      fmt->format.width, fmt->format.height);
- 
--	gc2145_update_pad_format(gc2145, mode, &fmt->format, gc2145_fmt->code);
-+	/* In RAW mode, VGA is not possible so use 720p instead */
-+	if (gc2145_fmt->colorspace == V4L2_COLORSPACE_RAW &&
-+	    mode == &supported_modes[GC2145_MODE_640X480])
-+		mode = &supported_modes[GC2145_MODE_1280X720];
-+
-+	gc2145_update_pad_format(gc2145, mode, &fmt->format, gc2145_fmt->code,
-+				 gc2145_fmt->colorspace);
- 	framefmt = v4l2_subdev_state_get_format(sd_state, fmt->pad);
- 	if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
- 		gc2145->mode = mode;
-@@ -811,7 +856,11 @@ static int gc2145_config_mipi_mode(struct gc2145 *gc2145,
- 	 * For RAW8, LWC = image width
- 	 * For RAW10, LWC = image width * 1.25
- 	 */
--	lwc = gc2145->mode->width * 2;
-+	if (gc2145_format->colorspace != V4L2_COLORSPACE_RAW)
-+		lwc = gc2145->mode->width * 2;
-+	else
-+		lwc = gc2145->mode->width;
-+
- 	cci_write(gc2145->regmap, GC2145_REG_LWC_HIGH, lwc >> 8, &ret);
- 	cci_write(gc2145->regmap, GC2145_REG_LWC_LOW, lwc & 0xff, &ret);
- 
-@@ -821,10 +870,14 @@ static int gc2145_config_mipi_mode(struct gc2145 *gc2145,
- 	 * 1280x720 / 1600x1200 (aka no scaler) non RAW: 0x0001
- 	 * 1600x1200 RAW: 0x0190
- 	 */
--	if (gc2145->mode->width == 1280 || gc2145->mode->width == 1600)
--		fifo_full_lvl = 0x0001;
--	else
-+	if (gc2145_format->colorspace != V4L2_COLORSPACE_RAW) {
-+		if (gc2145->mode->width == 1280 || gc2145->mode->width == 1600)
-+			fifo_full_lvl = 0x0001;
-+		else
-+			fifo_full_lvl = 0x0190;
-+	} else {
- 		fifo_full_lvl = 0x0190;
-+	}
- 
- 	cci_write(gc2145->regmap, GC2145_REG_FIFO_FULL_LVL_HIGH,
- 		  fifo_full_lvl >> 8, &ret);
-@@ -835,7 +888,9 @@ static int gc2145_config_mipi_mode(struct gc2145 *gc2145,
- 	 * Set the FIFO gate mode / MIPI wdiv set:
- 	 * 0xf1 in case of RAW mode and 0xf0 otherwise
- 	 */
--	cci_write(gc2145->regmap, GC2145_REG_FIFO_GATE_MODE, 0xf0, &ret);
-+	cci_write(gc2145->regmap, GC2145_REG_FIFO_GATE_MODE,
-+		  gc2145_format->colorspace == V4L2_COLORSPACE_RAW ?
-+		  0xf1 : 0xf0, &ret);
- 
- 	/* Set the MIPI data type */
- 	cci_write(gc2145->regmap, GC2145_REG_MIPI_DT,
-@@ -883,6 +938,10 @@ static int gc2145_start_streaming(struct gc2145 *gc2145,
- 			GC2145_BYPASS_MODE_SWITCH,
- 			gc2145_format->switch_bit ? GC2145_BYPASS_MODE_SWITCH
- 						  : 0, &ret);
-+	cci_update_bits(gc2145->regmap, GC2145_REG_SYNC_MODE,
-+			GC2145_SYNC_MODE_COL_SWITCH |
-+			GC2145_SYNC_MODE_ROW_SWITCH,
-+			gc2145_format->row_col_switch, &ret);
- 	if (ret) {
- 		dev_err(&client->dev, "%s failed to write regs\n", __func__);
- 		goto err_rpm_put;
+On 19/06/24 15:22, Jayesh Choudhary wrote:
+> Add McASP 0-4 instances and keep them disabled as several required
+> properties are missing as they are board specific.
+> 
+> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+> ---
+>  arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi | 80 ++++++++++++++++++++++
+>  1 file changed, 80 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
+> index fd3d3344efbe..96085dc7bc18 100644
+> --- a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
+> @@ -2617,4 +2617,84 @@ dss_ports: ports {
+>  			 */
+>  		};
+>  	};
+> +
+> +	mcasp0: mcasp@2b00000 {
+> +		compatible = "ti,am33xx-mcasp-audio";
+> +		reg = <0x0 0x02b00000 0x0 0x2000>,
+> +		      <0x0 0x02b08000 0x0 0x1000>;
+
+			^^ Should be 0x00 (elsewhere as well) to be inline with rest of the file
+
+
+> +		reg-names = "mpu","dat";
+> +		interrupts = <GIC_SPI 544 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 545 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "tx", "rx";
+> +		dmas = <&main_udmap 0xc400>, <&main_udmap 0x4400>;
+> +		dma-names = "tx", "rx";
+> +		clocks = <&k3_clks 265 1>;
+> +		clock-names = "fck";
+> +		power-domains = <&k3_pds 265 TI_SCI_PD_EXCLUSIVE>;
+> +		status = "disabled";
+> +	};
+> +
+> +	mcasp1: mcasp@2b10000 {
+> +		compatible = "ti,am33xx-mcasp-audio";
+> +		reg = <0x0 0x02b10000 0x0 0x2000>,
+> +		      <0x0 0x02b18000 0x0 0x1000>;
+> +		reg-names = "mpu","dat";
+> +		interrupts = <GIC_SPI 546 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 547 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "tx", "rx";
+> +		dmas = <&main_udmap 0xc401>, <&main_udmap 0x4401>;
+> +		dma-names = "tx", "rx";
+> +		clocks = <&k3_clks 266 1>;
+> +		clock-names = "fck";
+> +		power-domains = <&k3_pds 266 TI_SCI_PD_EXCLUSIVE>;
+> +		status = "disabled";
+> +	};
+> +
+> +	mcasp2: mcasp@2b20000 {
+> +		compatible = "ti,am33xx-mcasp-audio";
+> +		reg = <0x0 0x02b20000 0x0 0x2000>,
+> +		      <0x0 0x02b28000 0x0 0x1000>;
+> +		reg-names = "mpu","dat";
+> +		interrupts = <GIC_SPI 548 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 549 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "tx", "rx";
+> +		dmas = <&main_udmap 0xc402>, <&main_udmap 0x4402>;
+> +		dma-names = "tx", "rx";
+> +		clocks = <&k3_clks 267 1>;
+> +		clock-names = "fck";
+> +		power-domains = <&k3_pds 267 TI_SCI_PD_EXCLUSIVE>;
+> +		status = "disabled";
+> +	};
+> +
+> +	mcasp3: mcasp@2b30000 {
+> +		compatible = "ti,am33xx-mcasp-audio";
+> +		reg = <0x0 0x02b30000 0x0 0x2000>,
+> +		      <0x0 0x02b38000 0x0 0x1000>;
+> +		reg-names = "mpu","dat";
+> +		interrupts = <GIC_SPI 550 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 551 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "tx", "rx";
+> +		dmas = <&main_udmap 0xc500>, <&main_udmap 0x4500>;
+> +		dma-names = "tx", "rx";
+> +		clocks = <&k3_clks 268 1>;
+> +		clock-names = "fck";
+> +		power-domains = <&k3_pds 268 TI_SCI_PD_EXCLUSIVE>;
+> +		status = "disabled";
+> +	};
+> +
+> +	mcasp4: mcasp@2b40000 {
+> +		compatible = "ti,am33xx-mcasp-audio";
+> +		reg = <0x0 0x02b40000 0x0 0x2000>,
+> +		      <0x0 0x02b48000 0x0 0x1000>;
+> +		reg-names = "mpu","dat";
+> +		interrupts = <GIC_SPI 552 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 553 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "tx", "rx";
+> +		dmas = <&main_udmap 0xc501>, <&main_udmap 0x4501>;
+> +		dma-names = "tx", "rx";
+> +		clocks = <&k3_clks 269 1>;
+> +		clock-names = "fck";
+> +		power-domains = <&k3_pds 269 TI_SCI_PD_EXCLUSIVE>;
+> +		status = "disabled";
+> +	};
+>  };
+
 -- 
-2.25.1
-
+Regards
+Vignesh
