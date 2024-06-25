@@ -1,50 +1,33 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF127146595;
-	Tue, 25 Jun 2024 07:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE182146593;
+	Tue, 25 Jun 2024 07:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719298914; cv=none; b=AqONTYVlsEU+jA6zL9s4zEKrLpXnNNDd4lHnHYx/pn4QAcuA8/zeJ04pIgFzQf6RmhwI9Bcl2hJvP01QlInC7JL+RnJhshk9YNCTA3+pE23Lw7zk9FpEb9piPE3WQpJHwdPVQ3mrk/P7ajPkFLX1+HvKRJOSBFZwKxs/pNTo/t4=
+	t=1719298931; cv=none; b=SdrrOGAvDnrq1ekdqutyGv4u6GI/72x63r3jrYU/amrLsQX9EbB/s29pvUDzH9EfstsvksFlVrInro4YHIlEIC8rb0Vc+v9yKIsvmgLnrgDFyUGR4BpeEUORP1NUTJXHx2LpMUtnZN86ytNTG3pk9GKMskBmvv+Ua509y5tS2gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719298914; c=relaxed/simple;
-	bh=5MLzzDi5Q9FaJLoUReTOr7nbEQlLpk8cNTp0kv6oISU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=PtR1DtOo143AQ2eWOBkNIUqT3PpirlV73bMatRbnRts46qIeznhlVUqA8VuwDPIDi59Ol6pF7zQo0ad/sFsJku02KFZ5gKIk8uf3+kKgGyVj0yfJkH/M9QBokmKqnRn4OEIAHN0IgFGDbt0iwawlookDQFuzhJR4uiGlhiQXwBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=csmc6Pyn; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1719298931; c=relaxed/simple;
+	bh=dka19UVHu4GfoxVgBURuqFbVwIz41E/bILjlqBgxWbU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kGSM6ZmUPjCV5scv1rnAWei5XN1eXzEviM8MAfQqZXzqMQmNUwGra4B6NemrZ40YczwCNixJaaQisTwkIFfoG+65YEpq03CwNFTM5ogJCrzl/l5YKWnEHNZqnyV1/35vq3m1zIIaeB/o/4tFhtxY6JjmpXNK+ZfWyRiUx2ihJXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DJWtDKxv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="csmc6Pyn"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45P44M30023858;
-	Tue, 25 Jun 2024 09:01:28 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	swPpw1QOcNX9w/XaFnBy25Y/Ds/3wOvbOXxqoDBW0Fo=; b=csmc6Pynvmeimvnd
-	B6wYwX6ETR/ZGO6a1IdcJCgdMYweEFXq7TCYg/tysmTJWmdvArpQq/YofnzFF/g1
-	9quA53U2quQ7GugqmF/gxJf60PTCUNpI3M0Lz6vBlES72LK+LhzhjaKDEO6sqvsn
-	PJphCufTiMTt8Ff3x89ey177O18GxmQnTRL61ra6Tm2b7f2bL3/Z6tgV91+Yfl0H
-	9qXDeDIgC+K/nvgu8kxITOUaXPBnD0PGoMpTQJOuTVp4davFclR4bM6u6x+f1i/N
-	d+8eeIJxcZ4EoG9i9J8ZQ2M22AVbKvPoa19bRw/wLMWmLso6vQbRTzYTXk500xcf
-	hAz5rQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ywm1gafpw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Jun 2024 09:01:28 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9566240045;
-	Tue, 25 Jun 2024 09:01:23 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 58BE1211941;
-	Tue, 25 Jun 2024 09:00:26 +0200 (CEST)
-Received: from [10.48.87.62] (10.48.87.62) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 25 Jun
- 2024 09:00:25 +0200
-Message-ID: <0d15dd5c-c03e-4a54-a151-c109836f1b4c@foss.st.com>
-Date: Tue, 25 Jun 2024 09:00:24 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DJWtDKxv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F172AC32781;
+	Tue, 25 Jun 2024 07:02:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719298931;
+	bh=dka19UVHu4GfoxVgBURuqFbVwIz41E/bILjlqBgxWbU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DJWtDKxvAlsBCYR06l5gY06o7mwY0OFPQYdyq1x0+uR557oDaUTI574INnJyKepMc
+	 a7gFJlFCLvWRmUid93r2C+Dsg3z8axbXC33Orm3jEeZT+TAI1Mnc7HNY27CntK776s
+	 OBkN1QwtZTCztyn6oEpxLSZee7kgBPD9nMWlOY3fXwx8JSpSP6LHn9youoXO3eSt+G
+	 bE/1DQd5w7/WL0vhYpchP1W7yWhCpDeYxKgLMi4vZAjJrZ9XE9i7hETfX6zi/1a3Jh
+	 BHyw2D3DYL6nluSPrO4ymiByTjJ1J5JNjYU8NERf6TzMkopedCO32helDvdmJx3kKm
+	 lU3pgC3eucs3g==
+Message-ID: <03174142-a2c0-4f9f-81ca-2aeb7f57ab79@kernel.org>
+Date: Tue, 25 Jun 2024 09:02:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,175 +35,100 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] ARM: dts: sti: add thermal-zones support on stih418
-To: Raphael Gallais-Pou <rgallaispou@gmail.com>,
-        "Rafael J. Wysocki"
-	<rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Zhang Rui
-	<rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>
-References: <20240518-thermal-v1-0-7dfca3ed454b@gmail.com>
- <20240518-thermal-v1-3-7dfca3ed454b@gmail.com>
+Subject: Re: [PATCH v3] dt-bindings: i2c: nxp,lpc1788-i2c: convert to dt
+ schema
+To: Kanak Shilledar <kanakshilledar@gmail.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Vladimir Zapolskiy <vz@mleia.com>,
+ linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20240625065939.6146-1-kanakshilledar@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Patrice CHOTARD <patrice.chotard@foss.st.com>
-In-Reply-To: <20240518-thermal-v1-3-7dfca3ed454b@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240625065939.6146-1-kanakshilledar@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-25_03,2024-06-24_01,2024-05-17_01
 
-
-
-On 5/18/24 14:12, Raphael Gallais-Pou wrote:
-> Add a 'thermal-zones' node for stih418.
+On 25/06/2024 08:59, Kanak Shilledar wrote:
+> Convert the NXP I2C controller for LPC2xxx/178x/18xx/43xx
+> to newer DT schema. Created DT schema based on the .txt file
+> which had `compatible`, `reg`, `interrupts`, `clocks`,
+> `#address-cells` and `#size-cells` as required properties.
 > 
-> A thermal-zone needs three components:
->   - thermal sensors, described in an earlier commit[1]
->   - cooling devices, specified for each CPU
->   - a thermal zone, describing the overall behavior.
+> Additional changes to the original .txt binding
+> - added maintainer from the MAINTAINERS file.
+> - added resets property required by the corresponding DTS files.
 > 
-> The thermal zone needs references to both CPUs and thermal sensors,
-> which phandle are also added. The thermal management will then be
-> achieved on CPUs using the cpufreq framework.
-> 
-> [1] https://lore.kernel.org/lkml/20240320-thermal-v3-2-700296694c4a@gmail.com/
-> 
-> Signed-off-by: Raphael Gallais-Pou <rgallaispou@gmail.com>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Kanak Shilledar <kanakshilledar@gmail.com>
 > ---
->  arch/arm/boot/dts/st/stih407-family.dtsi |  6 +++--
->  arch/arm/boot/dts/st/stih418.dtsi        | 41 +++++++++++++++++++++++++++++---
->  2 files changed, 42 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/st/stih407-family.dtsi b/arch/arm/boot/dts/st/stih407-family.dtsi
-> index 29302e74aa1d..35a55aef7f4b 100644
-> --- a/arch/arm/boot/dts/st/stih407-family.dtsi
-> +++ b/arch/arm/boot/dts/st/stih407-family.dtsi
-> @@ -33,7 +33,7 @@ delta_reserved: rproc@44000000 {
->  	cpus {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> -		cpu@0 {
-> +		cpu0: cpu@0 {
->  			device_type = "cpu";
->  			compatible = "arm,cortex-a9";
->  			reg = <0>;
-> @@ -52,8 +52,9 @@ cpu@0 {
->  			clock-latency = <100000>;
->  			cpu0-supply = <&pwm_regulator>;
->  			st,syscfg = <&syscfg_core 0x8e0>;
-> +			#cooling-cells = <2>;
->  		};
-> -		cpu@1 {
-> +		cpu1: cpu@1 {
->  			device_type = "cpu";
->  			compatible = "arm,cortex-a9";
->  			reg = <1>;
-> @@ -66,6 +67,7 @@ cpu@1 {
->  					    1200000 0
->  					    800000  0
->  					    500000  0>;
-> +			#cooling-cells = <2>;
->  		};
->  	};
->  
-> diff --git a/arch/arm/boot/dts/st/stih418.dtsi b/arch/arm/boot/dts/st/stih418.dtsi
-> index b35b9b7a7ccc..6622ffa8ecfa 100644
-> --- a/arch/arm/boot/dts/st/stih418.dtsi
-> +++ b/arch/arm/boot/dts/st/stih418.dtsi
-> @@ -6,23 +6,26 @@
->  #include "stih418-clock.dtsi"
->  #include "stih407-family.dtsi"
->  #include "stih410-pinctrl.dtsi"
-> +#include <dt-bindings/thermal/thermal.h>
->  / {
->  	cpus {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> -		cpu@2 {
-> +		cpu2: cpu@2 {
->  			device_type = "cpu";
->  			compatible = "arm,cortex-a9";
->  			reg = <2>;
->  			/* u-boot puts hpen in SBC dmem at 0xa4 offset */
->  			cpu-release-addr = <0x94100A4>;
-> +			#cooling-cells = <2>;
->  		};
-> -		cpu@3 {
-> +		cpu3: cpu@3 {
->  			device_type = "cpu";
->  			compatible = "arm,cortex-a9";
->  			reg = <3>;
->  			/* u-boot puts hpen in SBC dmem at 0xa4 offset */
->  			cpu-release-addr = <0x94100A4>;
-> +			#cooling-cells = <2>;
->  		};
->  	};
->  
-> @@ -44,6 +47,38 @@ usb2_picophy2: phy3 {
->  		reset-names = "global", "port";
->  	};
->  
-> +	thermal-zones {
-> +		cpu_thermal: cpu-thermal {
-> +			polling-delay-passive = <250>;  /* 250ms */
-> +			polling-delay = <1000>;         /* 1000ms */
-> +
-> +			thermal-sensors = <&thermal>;
-> +
-> +			trips {
-> +				cpu_crit: cpu-crit {
-> +					temperature = <95000>;  /* 95C */
-> +					hysteresis = <2000>;
-> +					type = "critical";
-> +				};
-> +				cpu_alert: cpu-alert {
-> +					temperature = <85000>;  /* 85C */
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +			};
-> +
-> +			cooling-maps {
-> +				map {
-> +					trip = <&cpu_alert>;
-> +					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
->  	soc {
->  		rng11: rng@8a8a000 {
->  			status = "disabled";
-> @@ -107,7 +142,7 @@ mmc0: sdhci@9060000 {
->  			assigned-clock-rates = <200000000>;
->  		};
->  
-> -		thermal@91a0000 {
-> +		thermal: thermal@91a0000 {
->  			compatible = "st,stih407-thermal";
->  			reg = <0x91a0000 0x28>;
->  			clock-names = "thermal";
-> 
+> Changes in v3:
+> - removed "address-cells" and "size-cells" as per feedback.
 
-Hi Raphael
+you already sent v3 so this is rather v4. What happened here? Why are
+you resending this?
 
-Reviewed-by: Patrice Chotard <patrice.chotard@foss.st.com>
+<form letter>
+This is a friendly reminder during the review process.
 
-Thanks
-Patrice
+Please add Acked-by/Reviewed-by/Tested-by tags when posting new
+versions, under or above your Signed-off-by tag. Tag is "received", when
+provided in a message replied to you on the mailing list. Tools like b4
+can help here. However, there's no need to repost patches *only* to add
+the tags. The upstream maintainer will do that for tags received on the
+version they apply.
+
+https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
+
+If a tag was not added on purpose, please state why and what changed.
+</form letter>
+
+
+Best regards,
+Krzysztof
+
