@@ -1,77 +1,165 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C7E14C59C;
-	Tue, 25 Jun 2024 16:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5387514C59C;
+	Tue, 25 Jun 2024 16:06:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719331529; cv=none; b=eCXhvjU7ZAGLFeBxiaBe92UUb9+79T1b32RsW+9vr4YlYs2a8dHEPFK/GoZXsaf9R7BUcd1Ozmvnge+JMD1SenonWd76DAMuqGZSYPDeyP+4yr/pJ2XoNef5CpN3pxtDdv9uV6igXkGzvhNNap/g8ONVl3FMScQhKXlbvMnOCMk=
+	t=1719331565; cv=none; b=docRSgrlyfwVgvcmDWniBfX1NQ+tsKRt7wS2n6qai1F3CP5xy07n/gE/ATwlvSY4opPKfmCijGsR5uc72GMJ6jj5P9PmyeigXH81VHf4VT5mgVULSBl3OwQY9s/dKQRSIFsI0BCtzj0tXXnBjjnEdIBOIlkkeGaoMklCf4WvhYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719331529; c=relaxed/simple;
-	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=WdpjYsnNFDeLFaEUEro6Kyu5lw4n+fjX3Bv7i58h/uYT3IzOhOMi+oIJVH9xutnCk79QPeoQ9FFg/mi/8t1oiomeVb28W+QruaeMEbSYcS/AXN214ujpBncNV8bpsvsoQ+1BVMZEv6SBFBVlAe8SBuTtu+hkfCrWZ7vmVHw4k8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=TfIgoFAP; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1719331565; c=relaxed/simple;
+	bh=1Qv0d+LigROQRA3MvAbMgGCOZbrrUmwvp4w7rjburvc=;
+	h=Message-ID:Content-Type:Mime-Version:Subject:From:In-Reply-To:
+	 Date:Cc:References:To; b=GpWxoGuqzqqRp4H05SEOAH2UqRa7QAmJXVBMTXNyeARhkJ1Jc39RQ3UcmNkZ3vQQW+h4Eae/7yI2+YSc9eGUkjskN6FEVewdotHIr1C6LEDo2iq5lDNgcmrsLsH67zlqz3GDjjl5si7oC/fINps7EbfiT86nVej8dkvJ/ss0K24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=TbpO7cCF; arc=none smtp.client-ip=162.62.57.252
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="TfIgoFAP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1719331524; x=1719936324; i=rwarsow@gmx.de;
-	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:From:To:Cc:
-	 Subject:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=TfIgoFAPs8t2VTjC+po1H+CkZzIOChEA2SSTo7JAykY/0PWRv2gmaD+tHlsnD/A/
-	 JSXgzU+hWcvIdLvNNyrhwZuCPBAxWcPt77mC6g524r2T5ofpSx/CYZlZz6hVFxJ/e
-	 RqZdyJ5z917KEvsLdjNtAX7OV2jVemRP3izyUDWEWJ1iQa4Mw7CZACCA3FGZ1zzJz
-	 MKGclIICOrcLdXMMEd1xHbgFpqtf3Is0VNVQNNG7WmiTU/SxYplOnB3Kgrc8NxgUt
-	 eFan1R8jN9C6Ti4Ln4zlZwxN6+EriQEE5JLIemnLCELgEYiFMyAYPD9+yt5SSLZAn
-	 XOB6edqrH9b/s5eu0Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.100.20] ([46.142.35.34]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MZktZ-1rs5Ct3PTb-00VEHR; Tue, 25
- Jun 2024 18:05:24 +0200
-Message-ID: <39ad29ec-6660-4c33-bd4f-78dbf339106a@gmx.de>
-Date: Tue, 25 Jun 2024 18:05:24 +0200
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="TbpO7cCF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1719331551; bh=DFA9ATURDnDHmT+JTZbTU4zjVWWw3GnhqNiNhKiKk5E=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=TbpO7cCF8xZubDRe0KJq5OeVG1SjmuktMKWbYEtusuKmeNABjdCNRQaITqz22S86A
+	 CR9G9NIW0OrK9qUNGYFqy5Cw7P6Jl+dM+8z7GpxBjqxodqGmsiTAoNWdaHGnRQM++m
+	 Ei+/NB/DAOr4/pbu7cZVumk2588FkGO7AwrmamcM=
+Received: from smtpclient.apple ([2408:8207:18a1:c8b0:f5fa:3cc7:251d:184a])
+	by newxmesmtplogicsvrsza15-1.qq.com (NewEsmtp) with SMTP
+	id 1251260D; Wed, 26 Jun 2024 00:04:37 +0800
+X-QQ-mid: xmsmtpt1719331477t7a5x97rd
+Message-ID: <tencent_B61C9F718362BC42F61A8BF95A046BB44D09@qq.com>
+X-QQ-XMAILINFO: NfHsM/dq2nWI8qGjggedwfiwSv+7cxrMVxIdxyxZk5tawVnqa9TJNjGTXSdokx
+	 yRygcOG6PkSKP7UlCCBYRTQWZnKZdsMDCs+ppB8n2diKK2Re283eWXa+EBw8Z1JUvBVSnYZ/WHbJ
+	 mOnIibbT3pBxrvC/tIWArW4jXso5Mrks3yLoMUK0jhEJlKw/HHlHtC0hyVCpTELbDz7uq4XGhXLd
+	 5QM+UoXxjraNPcJi9qiMxAd/vDmm/vpjhTlFNtQ1QXFav3JfpqFqaChk/DdQgKdg/tQvYlOetAZB
+	 ZxG9zY5rB5qNtZUvYzM14PCqj1VUItdSYvW74cBpI1y6ZKv4Kwkn/k/YIHb9sJnSuJ2QXbziikJE
+	 JzeoM3uncUGJHBdJt7GxXROxgZofkyDh9k3KbBfLQQvy0M+4TEtxGiOaTSXJR4/8epICblISBjNP
+	 2BG6OkfvAK+iQmNLOKzPWKs5z8/9Bl8S+9wxJ2xvIZL6H4C2Kazk4Hy93A+s8dgtgxkJHlgtkl66
+	 3IL9MoNMLQhB4C0EQQD/yIaKzwyjW6Zi11IH7ThOrj3kbi8u+v07LDlz2Y8yAz6AayJAIB+iO6kw
+	 XU/SF8Hff3X9XCnKFnYT8BccVR9RRw8WgdYRgATcbhp8H8hZxXKghscMTsYTwTH3+SnHhP3VRcs6
+	 n4eUWJWMzKX5is9MPeBl2ehaMl4cWPeSvmrJWBHD330lm9rSVFg47npfOrPB4t3Pdm4Mn+YX5SWG
+	 R/XZa7rGWiP20prkCrB8lLLFp9g7XOKTHHC2PCsNfIe6A1IjJHbJF7zMDLBgQ6IH8AaY87Uv76xl
+	 GgIiZDI9lP/U+bh2cY/IKLlwrViEUR59GF5M2q1+Ph2ZownIi8vj6r0FMDWqyqulSaloGDx/qKLq
+	 TSsQTdf8ScaWEwRJqiWZpQ8cnCW1FdSh1vCz8CIG+93x8T01gaLIa/eweYo4Wxy1Hp8+nRkmLXB2
+	 JWfUHTL12RzVaTIIutEgjwTf0ERBtUX7vZkxgcvwi7tjfdJHNT4w8cRmrsZPN3XAPzXVE+taY=
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Ronald Warsow <rwarsow@gmx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Content-Language: de-DE, en-US
-Subject: Re: [PATCH 6.9 000/250] 6.9.7-rc1 review
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:OwEVJlYwa9Gk9YEeFhS5PtCalyvivip8x9VWhVQ+ABN32UK52Ta
- BoTZ6KJA43rwtWGv44SFNrqe8LpV9XE+9Ay+fGLNuXmXUV/wg8ud1VwJ6zAyLJWxAkiZtxo
- 5s7SWN2EhnGPDLFl8ZF5AR5TxFif9/nFYjSkW4oZxKRN7pfPlCHHdIzalDZpPd578FxMKPn
- d7fzd/FB+NtGMJ7Q6dLyg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:wGWV8iSwoug=;tu1ItKfwC9o7Tx/RbvIclCh67m3
- t+pDougS/iFsqA+68SWhQDebalk8BRJM2y/i+XSQVrXPQdyNGmqhu4txt4CEhwrPUikLlovzH
- o/xN1ysDW4GwRM1HDaoXnL3rkTcd+vI6h7JbO0LO0sLyh6nZf6uQF7QZSRI+Wd9AY6U9wDA5N
- KQJKF0o+exe7XSwmy1oHNQ58/448ZCWbqismbQGFtIU4bgynIyuk9yoKs67KAGknXYKcybOy7
- cRlUgi71SgU4m1Z9XQ0DY/WIL17bxMCH62noW4OabDv2NToDCIBy9DoTETkH6GpP553kIQGa3
- IxMVeW19dvCyWaoVdwDJI3YT7xRQ6NXXQmdMMHUIzUMyvGZ4IWkjGRcT/z6+Vs0MPsKDOtAyg
- mGlBs3WCx7QvweS83xisA3a1RZ0hEo3MBkudZIHJqzIBe8Yh0QDB8fhBSyBnTqGb0kWK7FYZY
- bqzUe8R59XcXnJT2hIaQnZLRwueNG4Bv8D1itwFJJunBk/1i8X0TuDGI2NlMxO2nKWUPoNjWN
- zGqLp/2Zbz79qu7cWKPj1TcyMAoB7VFB4ttEt7raYtpJeipSF3vBPUG7fXV+g8XCyxmxMSpeb
- 4TnCaz5m6wT6gFEOckOko0q4Faru+KrAvV1d6q04ovd+RX7NznXBhvxt8kny2xOOhF/5MNQMQ
- 9sgvTDCL+uFl9sXbxxtjN3sc2GOPGN0NQXD0WC98hBMB8WSCiNZnLZP27oVw6ePzX4xpneABR
- b8i3v4fyqasEzeiEMTp1uOEe1YLmH15T1xvXc+9YB2uD1BWmPIERHZ95et88a0mjni/9pX44W
- vlWV6G/9UYc6fKL4aehmgxgTs2KwgC0LYzxephONk7A7c=
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
+Subject: Re: (subset) [PATCH RESEND v8 0/6] riscv: add initial support for
+ Canaan Kendryte K230
+From: Yangyu Chen <cyy@cyyself.name>
+In-Reply-To: <20240619-hammock-drum-04bfc16a8ef6@spud>
+Date: Wed, 26 Jun 2024 00:04:22 +0800
+Cc: linux-riscv@lists.infradead.org,
+ Conor Dooley <conor.dooley@microchip.com>,
+ Damien Le Moal <dlemoal@kernel.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Dan Carpenter <dan.carpenter@linaro.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>,
+ Guo Ren <guoren@kernel.org>,
+ devicetree@vger.kernel.org,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+X-OQ-MSGID: <FA81E124-32CF-4158-AA34-1EA0B603B027@cyyself.name>
+References: <tencent_22BA0425B4DF1CA1713B62E4423C1BFBF809@qq.com>
+ <20240410-unwoven-march-299a9499f5f4@spud>
+ <20240619-hammock-drum-04bfc16a8ef6@spud>
+To: Conor Dooley <conor@kernel.org>
+X-Mailer: Apple Mail (2.3774.600.62)
 
-Hi Greg
 
-no regressions here on x86_64 (RKL, Intel 11th Gen. CPU)
 
-Thanks
+> On Jun 19, 2024, at 18:45, Conor Dooley <conor@kernel.org> wrote:
+>=20
+> On Wed, Apr 10, 2024 at 11:30:25AM +0100, Conor Dooley wrote:
+>> From: Conor Dooley <conor.dooley@microchip.com>
+>>=20
+>> On Mon, 08 Apr 2024 00:26:58 +0800, Yangyu Chen wrote:
+>>> K230 is an ideal chip for RISC-V Vector 1.0 evaluation now. Add =
+initial
+>>> support for it to allow more people to participate in building =
+drivers
+>>> to mainline for it.
+>>>=20
+>>> This kernel has been tested upon factory SDK [1] with
+>>> k230_evb_only_linux_defconfig and patched mainline opensbi [2] to =
+skip
+>>> locked pmp and successfully booted to busybox on initrd with this =
+log [3].
+>>>=20
+>>> [...]
+>>=20
+>> Applied to riscv-dt-for-next, thanks!
+>>=20
+>> [1/6] dt-bindings: riscv: Add T-HEAD C908 compatible
+>>      https://git.kernel.org/conor/c/64cbc46bb854
+>> [2/6] dt-bindings: add Canaan K230 boards compatible strings
+>>      https://git.kernel.org/conor/c/b065da13ea9c
+>> [3/6] dt-bindings: timer: Add Canaan K230 CLINT
+>>      https://git.kernel.org/conor/c/b3ae796d0a4f
+>> [4/6] dt-bindings: interrupt-controller: Add Canaan K230 PLIC
+>>      https://git.kernel.org/conor/c/db54fda11b13
+>> [5/6] riscv: dts: add initial canmv-k230 and k230-evb dts
+>>      https://git.kernel.org/conor/c/5db2c4dc413e
+>=20
+> After some discussion on the k1 thread
+> (https://lore.kernel.org/all/ZnEOU7D00J8Jzy-1@xhacker/, =
+https://lore.kernel.org/all/ZnA6pZLkI2StP8Hh@xhacker/)
+> I am going to drop this series. It's not very useful in the current
+> state and there's not really been any interest from people in getting
+> the platform to a more complete state. Jisheng made some good points =
+in
+> the k1 thread about the missing clock controller stuff, and I think =
+I'm
+> going to make having basic things like clocks and where applicable
+> resets and pinctrl the minimum requirement for the platforms I'm =
+looking
+> after.
+>=20
+> I've thrown these patches into my tree:
+> =
+https://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git/log/?h=3Dk=
+230-basic
+>=20
+> I do have one of these boards, but I'm fairly limited at the moment =
+between
+> the various linux-related and work demands on my time, so it's pretty
+> unlikely that I'll do anything with it myself.
+>=20
 
-Tested-by: Ronald Warsow <rwarsow@gmx.de>
+OK. I understand about this. I do some initial support for K230
+only for my evaluation purpose and propose this tree to provide
+information for others to boot up a minimal kernel and also have
+another patch [1] to have a USB node so we will able to run a distro
+like Debian over NFS rootfs by USB ethernet which is on canmv k230
+board.
+
+But I want to say I may have no time to do further driver development.
+I have done this for my evaluation purpose to get some performance
+metrics on real RVV chips for research usage since I=E2=80=99m a Ph.D.
+student focused on computer architecture. I have to devote my time
+to my research work.
+
+If anyone wants to do some further driver development, please don=E2=80=99=
+t
+hesitate to do so. Don=E2=80=99t imagine I may be doing this, so you may
+do duplicate work. I=E2=80=99m too busy to do that.
+
+[1] =
+https://lore.kernel.org/linux-riscv/tencent_E9B853316D217B8D1E7CDF8288DA5E=
+8ED908@qq.com/
+
+Thanks,
+Yangyu Chen
+
+> Thanks,
+> Conor.
 
