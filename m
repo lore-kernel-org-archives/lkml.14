@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC73347A62
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 07:25:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB0A3146A7B
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 07:25:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719300302; cv=none; b=RxQKFTRxxHe4X3XzjIwChvHm8YkCSBd1UdhsGxQi70siOfcbUKXY7UbtRBYrWX7hYCTzXtqzWEWBCiANesCYVLtqOZI1feWLsuwQCJwH4INOl6odseCz+I54cLLvU7mQEJM6oGtXVUQ/sYcOPRaS9zVy/30zgZv40L4LMFR4ScI=
+	t=1719300314; cv=none; b=l8Fm2bUrm0BVw1pZpYS3og81Zu9X5lBTuy8jX8SgYqLeuYBrx28KqlgxsXoEfY5r/5avcdKeIpI2fTvnyiCwnkrkkUIla+VZTwaBSw54CYsRpPTSGEB0BVzQULaSLdNUc7Nk13sp6K2a7M24vM6DgPD6aSoR+g7MoNK6QadM9Q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719300302; c=relaxed/simple;
-	bh=05UkyNvzxPOHuB+H1sIZnJVrMIWtz2bLdebzpFOnY+Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CDPRscc52tnk15eEQAAyc8EmV3D6RyP77iqw2z7teps7LvfyH9y+8t8hC9rrHs9N8XD0+QJyjqLJxTx1ss6bN/Lv93eHcX03drP157GJaxV61uqhRP0nLD7YLkItlA5nxhvjB0A+6IMmeUg0Lfl6jW0bIP+z4tADib+N/kPcmxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mEKZBC4P; arc=none smtp.client-ip=198.175.65.15
+	s=arc-20240116; t=1719300314; c=relaxed/simple;
+	bh=7ZjSY3rh8J+ct5ERYhltVYubIGtiCkBKkCZbQVawuPc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=FVBGD6Y4Qcx/QDN2P9IcBeAHlFwWv5Fo6uEWTd755K4lTyeEZCMr5erzhudBniXrAWcosx1DcSMT4AXX2F+lOJZ5vNZVen2RYKlocGOlq2JrHmnAkhFWwdyRyVgi9hvi40y+bD5KNHvMmekWUf4G4sulPmnpGwJpInkO2H0knFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FPbNok2e; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mEKZBC4P"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FPbNok2e"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719300301; x=1750836301;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=05UkyNvzxPOHuB+H1sIZnJVrMIWtz2bLdebzpFOnY+Q=;
-  b=mEKZBC4PcEj+U+wOzfA1H3LOeoqKezSvxcuCY1bLdKrNPz1KXVkYMvbJ
-   eaBD4LzbAqj2RYLbQC153YYF18D0LXAS1FlJd6epZyQNeUNnPVAzN+BRx
-   yJX2lCi5XEiROm8hlQtjvmrqc/n7YnZaaY8oKclNcW2sqXCY6VM8RpHcq
-   SZLRFeXfpwMO23GXgrbAkTFgawOnpfpyCbxR5kYBIoMkMxKqBp7YO7wnM
-   VjHRMz/VpTwG0BGcMhc4/XlBD9PJAkRGIER+KscE6M1G2yHZbWZgH+qrZ
-   X8U3Q9fl5zkwWNqE2O2upN1lApoKOuefNQ0/nOpcf73r/ZASzD5qWhK7i
-   w==;
-X-CSE-ConnectionGUID: /+AyIFCPRoOv4x/shvvG/g==
-X-CSE-MsgGUID: EHFrAh9bRsWHkcKULM8Adw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="20075517"
+  t=1719300313; x=1750836313;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=7ZjSY3rh8J+ct5ERYhltVYubIGtiCkBKkCZbQVawuPc=;
+  b=FPbNok2eAZukPJJMXSJdWCbKNDtB+W5I1jzyq6IXgEpev551D7hYNy2a
+   /0SLqc3N+E8XpzXUHArumzlnZ2GQ4ltiI/Pvo/IcE9sZ9NOcCDna+muBE
+   O3ZLoXKlNPd9Dy07yWguN2DqKSKUkNofbMbIJRHqGm2GBkhNyeDz/c5fF
+   4NiAyvGz71Eo1P8MX/7HKfMnlR38l2OWfNXI3ZtdpaFyajVZFsFu20+8Q
+   2i/+pMY3SNkRCAyKpRo7kav6GP0dT/zKVdvLATqhw+2y9B55vO9DKtE2a
+   IxWwXIuXaBjqYYARTb/BDrwoUK4dwnTbobi0kM6BnRRu/VKvu4tI9u88+
+   A==;
+X-CSE-ConnectionGUID: QjkxS0WmRYWciSA5GD0ZZA==
+X-CSE-MsgGUID: ARPoO8IATYeLtTUfX5MBHw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="20075568"
 X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
-   d="scan'208";a="20075517"
+   d="scan'208";a="20075568"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 00:25:00 -0700
-X-CSE-ConnectionGUID: l3gYqzlOSC+llV1ydiVV6Q==
-X-CSE-MsgGUID: obcw5HxvQ5CfagXj+4yM2A==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 00:25:13 -0700
+X-CSE-ConnectionGUID: kEDRshYiT5eXMNMDOITXlg==
+X-CSE-MsgGUID: lZe8AqqOToiiqwAubTGSAw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
-   d="scan'208";a="48523240"
+   d="scan'208";a="48523302"
 Received: from chenyu-dev.sh.intel.com ([10.239.62.164])
-  by orviesa005.jf.intel.com with ESMTP; 25 Jun 2024 00:24:57 -0700
+  by orviesa005.jf.intel.com with ESMTP; 25 Jun 2024 00:25:10 -0700
 From: Chen Yu <yu.c.chen@intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -55,10 +56,12 @@ Cc: Mike Galbraith <efault@gmx.de>,
 	Chen Yu <yu.chen.surf@gmail.com>,
 	linux-kernel@vger.kernel.org,
 	Chen Yu <yu.c.chen@intel.com>
-Subject: [PATCH 0/2] sched/fair: Enhance sync wakeup for short duration tasks
-Date: Tue, 25 Jun 2024 15:21:49 +0800
-Message-Id: <cover.1719295669.git.yu.c.chen@intel.com>
+Subject: [PATCH 1/2] sched/fair: Record the average duration of a task
+Date: Tue, 25 Jun 2024 15:22:09 +0800
+Message-Id: <338ec61022d4b5242e4af6d156beac53f20eacf2.1719295669.git.yu.c.chen@intel.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1719295669.git.yu.c.chen@intel.com>
+References: <cover.1719295669.git.yu.c.chen@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,43 +70,102 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+Record the average duration of a task, as there is a requirement
+to leverage this information for better task placement.
 
-This is a respin of the previous work to inhit task migration[1].
+At first thought the (p->se.sum_exec_runtime / p->nvcsw)
+can be used to measure the task duration. However, the
+history long past was factored too heavily in such a formula.
+Ideally, the old activity should decay and not affect
+the current status too much.
+
+Although something based on PELT can be used, se.util_avg might
+not be appropriate to describe the task duration:
+Task p1 and task p2 are doing frequent ping-pong scheduling on
+one CPU, both p1 and p2 have a short duration, but the util_avg
+of each task can be up to 50%, which is inconsistent with the
+short task duration.
+
+Here's an example to show what the average duration is. Suppose
+on CPUx, task p1 and p2 run alternatively:
+
+ --------------------> time
+
+ | p1 runs 1ms | p2 preempt p1 | p1 switch in, runs 0.5ms and blocks |
+               ^               ^                                     ^
+ |_____________|               |_____________________________________|
+                                                                     ^
+                                                                     |
+                                                                  p1 dequeued
+
+p1's duration is (1 + 0.5)ms. Because if p2 does not preempt p1, p1 can run 1.5ms.
+This reflects the nature of a task: how long it wishes to run at most.
+
+Suggested-by: Tim Chen <tim.c.chen@intel.com>
+Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+---
+ include/linux/sched.h |  3 +++
+ kernel/sched/core.c   |  2 ++
+ kernel/sched/fair.c   | 12 ++++++++++++
+ 3 files changed, 17 insertions(+)
+
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 90691d99027e..78747d3954fd 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1339,6 +1339,9 @@ struct task_struct {
+ 	struct callback_head		cid_work;
+ #endif
  
-Many workloads suffer from high Cache-to-Cache latency on large system. Especially
-when different tasks access the same cache line, which brings false sharing.
-
-This patch set leverages the WF_SYNC flag, and inhits task wakeup migration
-for short duration ones. This can help reduce the chance to trigger the
-cache false sharing.
-
-The main concern of this proposal in the last discussion is that, it could
-break idle-cpu-first task wakeup strategy. Usually an idle CPU can beat other
-non-idle CPU in terms of latency. Based on this, the new proposal takes the
-CPU number into consideration, if it is a low-core-count system, the bar to
-inhit the task migration is much higher or even impossible. Vice versa. Meanwhile,
-only when there is no idle Core in the system, this inhiting task migration will take
-effect.
-
-According to the test on 4 different platforms, it has shown good improvement for
-Client/Server workloads, like netperf, tbench. And not saw any performance regression
-on my 8 CPUs laptop. Please refer to PATCH 2/2 for detail.
-
-Comments and tests would be appreciated.
-
-[1] https://lore.kernel.org/lkml/cover.1682661027.git.yu.c.chen@intel.com/
-
-Chen Yu (2):
-  sched/fair: Record the average duration of a task
-  sched/fair: Enhance sync wakeup for short duration tasks
-
- include/linux/sched.h   |  3 ++
- kernel/sched/core.c     |  2 ++
- kernel/sched/fair.c     | 74 ++++++++++++++++++++++++++++++++++++++---
- kernel/sched/features.h |  1 +
- 4 files changed, 75 insertions(+), 5 deletions(-)
-
++	u64				prev_sleep_sum_runtime;
++	u64				duration_avg;
++
+ 	struct tlbflush_unmap_batch	tlb_ubc;
+ 
+ 	/* Cache last used pipe for splice(): */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 0935f9d4bb7b..7399c4143528 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -4359,6 +4359,8 @@ static void __sched_fork(unsigned long clone_flags, struct task_struct *p)
+ 	p->migration_pending = NULL;
+ #endif
+ 	init_sched_mm_cid(p);
++	p->prev_sleep_sum_runtime = 0;
++	p->duration_avg = 0;
+ }
+ 
+ DEFINE_STATIC_KEY_FALSE(sched_numa_balancing);
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 41b58387023d..445877069fbf 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6833,6 +6833,15 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 
+ static void set_next_buddy(struct sched_entity *se);
+ 
++static inline void dur_avg_update(struct task_struct *p)
++{
++	u64 dur;
++
++	dur = p->se.sum_exec_runtime - p->prev_sleep_sum_runtime;
++	p->prev_sleep_sum_runtime = p->se.sum_exec_runtime;
++	update_avg(&p->duration_avg, dur);
++}
++
+ /*
+  * The dequeue_task method is called before nr_running is
+  * decreased. We remove the task from the rbtree and
+@@ -6905,6 +6914,9 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 
+ dequeue_throttle:
+ 	util_est_update(&rq->cfs, p, task_sleep);
++	if (task_sleep)
++		dur_avg_update(p);
++
+ 	hrtick_update(rq);
+ }
+ 
 -- 
 2.25.1
 
