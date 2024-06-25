@@ -1,330 +1,101 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4212E17C9FE
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 18:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C4C17C211;
+	Tue, 25 Jun 2024 18:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719340106; cv=none; b=G1jmkrfXlHw7v0WcBAhtCtZ9lQKItIkAJvKH43ztwl79xW0Z30GDLAzMKa2RKVUx5rOy2wPZZMatLVoUq1HGGAeAgyOq8ysrnfHu5SWmySFoBBoACg/knSx4995GiMYgK34KLZ63CGKX0lBv7od/SlrPRpn7UeskoXZ/Zt3qtTw=
+	t=1719340130; cv=none; b=gLgh+qnxZKurNMvtT3w1gDP6nKy+H67WHh4iKN+/MRq5Mwnr+CQXozazicSapIWKU4ERq4jlRitNwcXJYmf8bKNIL9MG1Dl0c5VASJo19j/LQaUjbESuQyu0+BLW+rvzyee9/o3FTFWzkghPIsue0pOR49uCKkEME9L6nI/KHPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719340106; c=relaxed/simple;
-	bh=Ry862n+FpOLTGn5MkJgx2cTKUCkA2znjulWGMtUKONA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tyrYFikZboZ0Z1fyQNSI8Grkc69Y1DFgwKZGm5/eY+0G0HQ1h1pX8qAGo2KFIGbj914RjKpS3gGCVvUPgCjddtaT5Ja6oMnczwxdl5f642omRziDooLiuvx+pbC9qF0G/ZdXuoqIQOnCcTt+HuTTp6O5vCan2w7UNHObVqqpOvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=apww7SLt; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719340130; c=relaxed/simple;
+	bh=CM2iH9mXGomSC7nlHDF14QKGppezrhMjXLfegpwPYcA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gfh15X39l3UcGuQTu5EWBHpfbkOKYyzkWxmDONtXLXva5929d7Ou+lvKtvM8A++0W9KkmWioaKO2qKc+LueI12t53V0X8UNI0BMfYCR2Dz6JBMGNxNx8XEmWXCnEFFp66J+NNZzn/TliItaJvxwpCVQ91DT6B/ClmSp3spGQ4iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H49UZXM4; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="apww7SLt"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57cbc66a0a6so795646a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 11:28:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H49UZXM4"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1f480624d0fso46069865ad.1;
+        Tue, 25 Jun 2024 11:28:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719340102; x=1719944902; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ICbp0JfVRMLkS3xURaXu0M0XpmVLimtiYC+UR97idFU=;
-        b=apww7SLtmNdcXVoVmEilwtDUevykqIXkf5+WSnzu8TC/napcBrVoH7t0fxw23SRxsA
-         7Cj/HCWTZA5kxqdpHz0W84sxPcyduocgjHg9YS8uLCsggg6x188dnGlHqYQTXDuvOiFB
-         gwCJDTtmSXT5TS+1HBidKOo7pmZwDuOenrOJJ6gvSYxV+v1OHE9mgCIicy8dtgWMocFp
-         2GFCdP9f6m8D3XrhmQWB1ohFwI2Qr9jCohz57xT53HQs2JNqfDmYMXJUHI8YEzb9FfCj
-         iMVHJAWsXExaIv9hXlif9xRy0cXzbgLfc864tFddEEHRRQ3dtqEM/Mpn7KrCjsupzMZQ
-         Ly0w==
+        d=gmail.com; s=20230601; t=1719340128; x=1719944928; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tpX0xeSIQSy3UCzH7IXtPcZMZx7uLWqIqcJDea4EQY4=;
+        b=H49UZXM4dbVcZW/KQVi8PSZN72YykKxC9zAtzU3Mep/xKnk+rNhfmieobamFZkXPAQ
+         9/2Y6czyIE04xriRvkmMlN+PZowttt8EDu7rKXRvXwS5jrqrs1DvCqc6/VVy9AA4luBH
+         S6a9NKGVOJwU99jbkMBmGMjde0I0XA8ycGtceUP5gmf6nGYq42u7PhNwiSfk2xDp3jJj
+         NQlS0t3MGe/eAinrBH5laKt0x0vbamdXbTA4AyEvenJBT3HaHPo+Mi/vrYlZ2xMJG/GD
+         gTAWPi7trb+hIY5zmzu+RhqcmRgdIKLX1QtZw/Ut0zUq0T2ZqWc6JRqGc6vnJtmk3YJc
+         i+bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719340102; x=1719944902;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ICbp0JfVRMLkS3xURaXu0M0XpmVLimtiYC+UR97idFU=;
-        b=SMbkg/Hex8byWpcGaqqnGvjHBgUndp+k8EvmDCEfNRpMqbDAoTJgwf7mX8Ajpascf7
-         4kZ3wL6cEW6EMtTLfTOjyWpt5DQfAoWNHS4xBmVoaD/KsR93TT3yrFw12hWSzuTve+aJ
-         SCCtaSaXMftkXPY31vCDWl2fxTMcvYJ2Rse0Vp2f93u1D1Vj/3fLqgSz8S6J1ZRIvYVl
-         cUKHl4YRn5DVJPJKBizyi/SsRpR8ZP6CqYtsRmFdpWaICCV27ceUDrw93k7YWoEO4iRT
-         f5GqJ+3a1jig8OZBcVmo9Rw/WN3cQd0Kyxp7oHehCwjIme+bt9Dz8PwGctJ5fmlCWgpO
-         LFpA==
-X-Forwarded-Encrypted: i=1; AJvYcCXzqce9FmP07Xqt/G25ZMEDuiL62VMb21WVdqJBmzBHiNae3QjIb6ZuPF4VAlMDCLdeVWn+unOp18MBuCWp/Rl7d57yPYcf16oZscko
-X-Gm-Message-State: AOJu0YxhWzcKrxwOa4TCL6On7HSMEKK77CZc0YagkhVFww/ZGNo6i94p
-	3xlrNBOjswQXIFtVwWmZmtIpZ9Cl+dH/w2j5IylXhgebr5a4i1jsDeEEw+UZFcg=
-X-Google-Smtp-Source: AGHT+IEup2qBc5JcOlhxwWSxCRUG0VZjYJJ5OJmMrT6P7/hUolkL818OjgSFrl9/U6AvA2SIUaakbw==
-X-Received: by 2002:a50:c004:0:b0:57c:b82e:884b with SMTP id 4fb4d7f45d1cf-57d70231a13mr2763887a12.19.1719340101898;
-        Tue, 25 Jun 2024 11:28:21 -0700 (PDT)
-Received: from [192.168.215.29] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d3042fd72sm6323136a12.48.2024.06.25.11.28.20
+        d=1e100.net; s=20230601; t=1719340128; x=1719944928;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tpX0xeSIQSy3UCzH7IXtPcZMZx7uLWqIqcJDea4EQY4=;
+        b=cnXftbaOVawNuwGJmImDzyRcGmBg5+KqAnSZlngq0f60f//JpLgk88cEQb3uBeIAm1
+         eevmQSrP+qd/eASEQnWxx6vTANlyjv4DyUT6aDGUS+UYn9fYiVV4WmkOGJ4DyTnIzn6N
+         k+CsOsJqggvSyGPKplKsWxgd92XlrkohHhHKc8YGrzuIBONQezHm3PytXzSG1gN+DaBZ
+         vLPyD1tjTnyA1z1ym/jQxG3aHqaF0g+ifyJUE5owLe/dHhTrVYlOgOgHxJv+5iTlLqdx
+         Fmfpq1YKk/yGfQLtgLPYI3kh+8bH7JlqJtxLTdWhtGrd0AD+acfKvu5pLwJTs5X11Oke
+         ZfuA==
+X-Forwarded-Encrypted: i=1; AJvYcCVv8DpAP9NI0IRmzQZ6vp5ZBQxVT/YMvbgOqvBYtL0Ozu+s6A8AQ9sGGZSyGK9Fzp2f1xb930Frpggeck1rITn+2sIMCvfopqmnUjPzthyU4wCtrDp/mJoPFyysHrbb75T/Mpj49Mbq
+X-Gm-Message-State: AOJu0Yz2LhKTXHlN1z4hdz6Lk58l/3kktkQxWxHg87Sgsc9wNsj9qgif
+	pmFUKvLCnLiixeDOBYWS3gl1YL+61Gv7BA5eCKz7FY5iMiLrbdU3
+X-Google-Smtp-Source: AGHT+IGbt7eIbNjWmgynrWAQBgrmJkThoBEKR8VXrWEhtnxue8mTrGlS0G+cMHKM/5HXDCsvxEL8GA==
+X-Received: by 2002:a17:902:c943:b0:1fa:2210:4562 with SMTP id d9443c01a7336-1fa23fd8a00mr98999775ad.29.1719340127998;
+        Tue, 25 Jun 2024 11:28:47 -0700 (PDT)
+Received: from localhost.localdomain ([43.135.72.207])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb320917sm84690555ad.75.2024.06.25.11.28.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 11:28:21 -0700 (PDT)
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Date: Tue, 25 Jun 2024 20:28:09 +0200
-Subject: [PATCH v4 4/5] drm/msm/adreno: Redo the speedbin assignment
+        Tue, 25 Jun 2024 11:28:47 -0700 (PDT)
+From: alexjlzheng@gmail.com
+X-Google-Original-From: alexjlzheng@tencent.com
+To: chandan.babu@oracle.com,
+	djwong@kernel.org
+Cc: david@fromorbit.com,
+	hch@infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	alexjlzheng@tencent.com
+Subject: [PATCH xfs v2 0/2] Separate xfs_log_vec/iovec to save memory
+Date: Wed, 26 Jun 2024 02:28:40 +0800
+Message-ID: <20240625182842.1038809-1-alexjlzheng@tencent.com>
+X-Mailer: git-send-email 2.41.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240625-topic-smem_speedbin-v4-4-f6f8493ab814@linaro.org>
-References: <20240625-topic-smem_speedbin-v4-0-f6f8493ab814@linaro.org>
-In-Reply-To: <20240625-topic-smem_speedbin-v4-0-f6f8493ab814@linaro.org>
-To: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Konrad Dybcio <konrad.dybcio@linaro.org>
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1719340091; l=7850;
- i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
- bh=Ry862n+FpOLTGn5MkJgx2cTKUCkA2znjulWGMtUKONA=;
- b=2LmKQAnmlokuLtndRqTr2Z3i2J0lqsGeDMaZsU18gChXDudlcRZx15ncjbOib6T6l7AtVtPZ1
- TMErj+zPijiDgD+q/z7JuXbZCMBias3Xv48gCqRY7CtMehIxctR1B5S
-X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+Content-Transfer-Encoding: 8bit
 
-There is no need to reinvent the wheel for simple read-match-set logic.
+From: Jinliang Zheng <alexjlzheng@tencent.com>
 
-Make speedbin discovery and assignment generation independent.
+xfs_log_iovec dominates the memory usage of the
+xfs_log_vec/xfs_log_iovec combination, and it is no longer useful after
+the data is flushed to the iclog. This patchset separates xfs_log_iovec
+from xfs_log_vec and releases them early to save memory.
 
-This implicitly removes the bogus 0x80 / BIT(7) speed bin on A5xx,
-which has no representation in hardware whatshowever.
+Changelog:
+V1:
+- https://lore.kernel.org/linux-xfs/20240623123119.3562031-1-alexjlzheng@tencent.com/
 
-Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
----
- drivers/gpu/drm/msm/adreno/a5xx_gpu.c   | 34 --------------------
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c   | 56 ---------------------------------
- drivers/gpu/drm/msm/adreno/adreno_gpu.c | 51 ++++++++++++++++++++++++++----
- drivers/gpu/drm/msm/adreno/adreno_gpu.h |  3 --
- 4 files changed, 45 insertions(+), 99 deletions(-)
+V2:
+- add kmem_cache for small object xfs_log_vec
+- reduce redundant free and allocation of xfs_log_vec
 
-diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-index c003f970189b..eed6a2eb1731 100644
---- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-@@ -1704,38 +1704,6 @@ static const struct adreno_gpu_funcs funcs = {
- 	.get_timestamp = a5xx_get_timestamp,
- };
- 
--static void check_speed_bin(struct device *dev)
--{
--	struct nvmem_cell *cell;
--	u32 val;
--
--	/*
--	 * If the OPP table specifies a opp-supported-hw property then we have
--	 * to set something with dev_pm_opp_set_supported_hw() or the table
--	 * doesn't get populated so pick an arbitrary value that should
--	 * ensure the default frequencies are selected but not conflict with any
--	 * actual bins
--	 */
--	val = 0x80;
--
--	cell = nvmem_cell_get(dev, "speed_bin");
--
--	if (!IS_ERR(cell)) {
--		void *buf = nvmem_cell_read(cell, NULL);
--
--		if (!IS_ERR(buf)) {
--			u8 bin = *((u8 *) buf);
--
--			val = (1 << bin);
--			kfree(buf);
--		}
--
--		nvmem_cell_put(cell);
--	}
--
--	devm_pm_opp_set_supported_hw(dev, &val, 1);
--}
--
- struct msm_gpu *a5xx_gpu_init(struct drm_device *dev)
- {
- 	struct msm_drm_private *priv = dev->dev_private;
-@@ -1763,8 +1731,6 @@ struct msm_gpu *a5xx_gpu_init(struct drm_device *dev)
- 
- 	a5xx_gpu->lm_leakage = 0x4E001A;
- 
--	check_speed_bin(&pdev->dev);
--
- 	nr_rings = 4;
- 
- 	if (config->info->revn == 510)
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index 8ace096bb68c..f038e5f1fe59 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -2112,55 +2112,6 @@ static bool a6xx_progress(struct msm_gpu *gpu, struct msm_ringbuffer *ring)
- 	return progress;
- }
- 
--static u32 fuse_to_supp_hw(const struct adreno_info *info, u32 fuse)
--{
--	if (!info->speedbins)
--		return UINT_MAX;
--
--	for (int i = 0; info->speedbins[i].fuse != SHRT_MAX; i++)
--		if (info->speedbins[i].fuse == fuse)
--			return BIT(info->speedbins[i].speedbin);
--
--	return UINT_MAX;
--}
--
--static int a6xx_set_supported_hw(struct adreno_gpu *adreno_gpu,
--				 struct device *dev,
--				 const struct adreno_info *info)
--{
--	u32 supp_hw;
--	u32 speedbin;
--	int ret;
--
--	ret = adreno_read_speedbin(adreno_gpu, dev, &speedbin);
--	/*
--	 * -ENOENT means that the platform doesn't support speedbin which is
--	 * fine
--	 */
--	if (ret == -ENOENT) {
--		return 0;
--	} else if (ret) {
--		dev_err_probe(dev, ret,
--			      "failed to read speed-bin. Some OPPs may not be supported by hardware\n");
--		return ret;
--	}
--
--	supp_hw = fuse_to_supp_hw(info, speedbin);
--
--	if (supp_hw == UINT_MAX) {
--		DRM_DEV_ERROR(dev,
--			"missing support for speed-bin: %u. Some OPPs may not be supported by hardware\n",
--			speedbin);
--		supp_hw = BIT(0); /* Default */
--	}
--
--	ret = devm_pm_opp_set_supported_hw(dev, &supp_hw, 1);
--	if (ret)
--		return ret;
--
--	return 0;
--}
--
- static const struct adreno_gpu_funcs funcs = {
- 	.base = {
- 		.get_param = adreno_get_param,
-@@ -2292,13 +2243,6 @@ struct msm_gpu *a6xx_gpu_init(struct drm_device *dev)
- 
- 	a6xx_llc_slices_init(pdev, a6xx_gpu, is_a7xx);
- 
--	ret = a6xx_set_supported_hw(adreno_gpu, &pdev->dev, config->info);
--	if (ret) {
--		a6xx_llc_slices_destroy(a6xx_gpu);
--		kfree(a6xx_gpu);
--		return ERR_PTR(ret);
--	}
--
- 	if (is_a7xx)
- 		ret = adreno_gpu_init(dev, pdev, adreno_gpu, &funcs_a7xx, 1);
- 	else if (adreno_has_gmu_wrapper(adreno_gpu))
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-index 6ffd02f38499..5b4205b76cdf 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-@@ -1064,8 +1064,8 @@ void adreno_gpu_ocmem_cleanup(struct adreno_ocmem *adreno_ocmem)
- 			   adreno_ocmem->hdl);
- }
- 
--int adreno_read_speedbin(struct adreno_gpu *adreno_gpu,
--			 struct device *dev, u32 *fuse)
-+static int adreno_read_speedbin(struct adreno_gpu *adreno_gpu,
-+				struct device *dev, u32 *fuse)
- {
- 	u32 fcode;
- 	int ret;
-@@ -1099,6 +1099,46 @@ int adreno_read_speedbin(struct adreno_gpu *adreno_gpu,
- 	return 0;
- }
- 
-+#define ADRENO_SPEEDBIN_FUSE_NODATA	0xFFFF /* Made-up large value, expected by mesa */
-+static int adreno_set_speedbin(struct adreno_gpu *adreno_gpu, struct device *dev)
-+{
-+	const struct adreno_info *info = adreno_gpu->info;
-+	u32 fuse = ADRENO_SPEEDBIN_FUSE_NODATA;
-+	u32 supp_hw = UINT_MAX;
-+	int ret;
-+
-+	/* No speedbins defined for this GPU SKU => allow all defined OPPs */
-+	if (!info->speedbins) {
-+		adreno_gpu->speedbin = ADRENO_SPEEDBIN_FUSE_NODATA;
-+		return devm_pm_opp_set_supported_hw(dev, &supp_hw, 1);
-+	}
-+
-+	/*
-+	 * If a real error (not counting older devicetrees having no nvmem references)
-+	 * occurs when trying to get the fuse value, bail out.
-+	 */
-+	ret = adreno_read_speedbin(adreno_gpu, dev, &fuse);
-+	if (ret) {
-+		return ret;
-+	} else if (fuse == ADRENO_SPEEDBIN_FUSE_NODATA) {
-+		/* The info struct has speedbin data, but the DT is too old => allow all OPPs */
-+		DRM_DEV_INFO(dev, "No GPU speed bin fuse, please update your device tree\n");
-+		return devm_pm_opp_set_supported_hw(dev, &supp_hw, 1);
-+	}
-+
-+	adreno_gpu->speedbin = fuse;
-+
-+	/* Traverse the known speedbins */
-+	for (int i = 0; info->speedbins[i].fuse != SHRT_MAX; i++) {
-+		if (info->speedbins[i].fuse == fuse) {
-+			supp_hw = BIT(info->speedbins[i].speedbin);
-+			return devm_pm_opp_set_supported_hw(dev, &supp_hw, 1);
-+		}
-+	}
-+
-+	return dev_err_probe(dev, -EINVAL, "Unknown speed bin fuse value: 0x%x\n", fuse);
-+}
-+
- int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
- 		struct adreno_gpu *adreno_gpu,
- 		const struct adreno_gpu_funcs *funcs, int nr_rings)
-@@ -1108,7 +1148,6 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
- 	struct msm_gpu_config adreno_gpu_config  = { 0 };
- 	struct msm_gpu *gpu = &adreno_gpu->base;
- 	const char *gpu_name;
--	u32 speedbin;
- 	int ret;
- 
- 	adreno_gpu->funcs = funcs;
-@@ -1135,9 +1174,9 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
- 			devm_pm_opp_set_clkname(dev, "core");
- 	}
- 
--	if (adreno_read_speedbin(adreno_gpu, dev, &speedbin) || !speedbin)
--		speedbin = 0xffff;
--	adreno_gpu->speedbin = speedbin;
-+	ret = adreno_set_speedbin(adreno_gpu, dev);
-+	if (ret)
-+		return ret;
- 
- 	gpu_name = devm_kasprintf(dev, GFP_KERNEL, "%"ADRENO_CHIPID_FMT,
- 			ADRENO_CHIPID_ARGS(config->chip_id));
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-index 563c08b44624..dc579f7afdc7 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-+++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-@@ -549,9 +549,6 @@ int adreno_fault_handler(struct msm_gpu *gpu, unsigned long iova, int flags,
- 			 struct adreno_smmu_fault_info *info, const char *block,
- 			 u32 scratch[4]);
- 
--int adreno_read_speedbin(struct adreno_gpu *adreno_gpu,
--			 struct device *dev, u32 *speedbin);
--
- /*
-  * For a5xx and a6xx targets load the zap shader that is used to pull the GPU
-  * out of secure mode
+Jinliang Zheng (2):
+  xfs: add xfs_log_vec_cache for separate xfs_log_vec/xfs_log_iovec
+  xfs: make xfs_log_iovec independent from xfs_log_vec and free it early
+
+ fs/xfs/xfs_log.c     |  3 +++
+ fs/xfs/xfs_log.h     | 10 ++++++++--
+ fs/xfs/xfs_log_cil.c | 33 ++++++++++++++++++++-------------
+ fs/xfs/xfs_super.c   |  9 +++++++++
+ 4 files changed, 40 insertions(+), 15 deletions(-)
 
 -- 
-2.45.2
+2.39.3
 
