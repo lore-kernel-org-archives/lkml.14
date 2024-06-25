@@ -1,291 +1,148 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6A7158D97
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 12:40:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E80B14B965;
+	Tue, 25 Jun 2024 12:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719319232; cv=none; b=JHqS8p8fXReVc0dIgAS9dllxsdE6mqunGo27goAjrozgupLlWMDxt4KzzK0x2CEniypOuLzCjxdFUEcVxpYqxQTzLBFvmg0Y+nI6T7P8RXAnhHGwUTWSHOkRvL2VMNvGrAq5nyWDAhtj+xPIddpZn2o+PikkAS7FPOHY8YWW1n4=
+	t=1719319261; cv=none; b=VPxOF+P8erVKjr3TfuBmmJJ1XSVNqTKivmJ5SGwHn2U+01MwmTVZwQqHSd60tOtJ5caFBjgiSgSnRDdfWxIrih2+houdYx3p2NzNwQ1OroncoWoFGJcdKpHs0pCVQS3fIcr1vz2XD0C/6pj3SkWSi+kvrajJwxmxOHB4Dm280OA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719319232; c=relaxed/simple;
-	bh=icPJJ0Va10ExCFylVJNQ64H9o0XJUqZubKvwTVNRo8s=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=L1aWROtLbr33nZoI5dxVFD8jJDbZZSnpQgu7694YLtzOuj0Xszr3bZZ6b3rUghE2oAuwBstm0ms4PJuLj7S4u0OpR5cXGheDoxLFUBl4xDeXi2dnkHjly35UVcRbwVWkgonBH5Hqi/Uab3V9djOKmsIZCeV9znYBrWHycaGBnB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LMG3sAB1; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719319261; c=relaxed/simple;
+	bh=Azz83iCxMey+RHYQMQuTn8+hKRjE9l9Ng9p796lbhdc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DmdCgqXuQZOlZ9szNFvo6LTPUU3Tg9caZfefIPt3hre1R/u7p+UYkR/9h2SH/Xq6KWIbR4vvIvx7LF5sR27FKWnyq9bjmHVi4IgGytAT/WZhapy9DH3IKr0NUyLfc9j3BosfDJpHlvDu0gT98iqMiPYAmCrLDkxidCyShdvEU6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=fZOJ29Bo; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LMG3sAB1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719319229;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=7EWz1vItROBUOYp6sdJspiDZ8uU1laai0jDHb5Vv+x0=;
-	b=LMG3sAB1yCdZZ99tJ33mLH4JpM62mo0DMmroBPSWtgmbOD2O7SqHqixHDhnTU9A3+nGo03
-	ljGtKZdIz0byw7fYXXWHQtc1Y8imPaTVAW9l4EpWerPOGrkUGSv8X4tYVXpx/lOHLzRtF1
-	JUuP0AzYjHnEQdRlpXxnayoAawmDjNE=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-460-RCkWgWX_Nm-SSEzUrXPwMA-1; Tue,
- 25 Jun 2024 08:40:23 -0400
-X-MC-Unique: RCkWgWX_Nm-SSEzUrXPwMA-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9D4051956096;
-	Tue, 25 Jun 2024 12:40:17 +0000 (UTC)
-Received: from hydra.redhat.com (unknown [10.39.192.194])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DCA1319560B2;
-	Tue, 25 Jun 2024 12:40:06 +0000 (UTC)
-From: Jocelyn Falempe <jfalempe@redhat.com>
-To: Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Kees Cook <kees@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jocelyn Falempe <jfalempe@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jani Nikula <jani.nikula@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uros Bizjak <ubizjak@gmail.com>,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-hyperv@vger.kernel.org,
-	linux-mtd@lists.infradead.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] printk: Add a short description string to kmsg_dump()
-Date: Tue, 25 Jun 2024 14:39:29 +0200
-Message-ID: <20240625123954.211184-1-jfalempe@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="fZOJ29Bo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1719319254; x=1719924054; i=deller@gmx.de;
+	bh=6DnJSkhTF263LRHIDsc/RuBomqMyNgJmJNDVqGHIMdk=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=fZOJ29BoHEsjBpIH5Ds3yOzi87xnfkKUXyENmtXzIJVkJotPtyb/mWKbCtBEuUeD
+	 jGU+EoKHaUWRjlhh4RzM5MT/NKlyg5NzCFzZPaxG69f9m1gHu8ApmZSeqZXASsH+x
+	 Ao4QfyvFL8NyEMaBiYWoqiXvduXJKAxszXYOCqUN8ZcXnw33e+p01g3AMDLun3t/0
+	 EQ/0qqjM5PmaHPC1DtkLPqzDZ0mgwzZmzeEFee1lXsJe0O61eEJ0RRgXGoLTP5046
+	 9vHaAorG5Bd2WqyuO3hEGokicOBsejOLbtEuH1B5iJQAI1vLbPlcMgS+UFlltAni4
+	 g0TOmXzfig5KpB8Wzg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [10.8.0.6] ([78.94.87.245]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MgeoI-1spcrq13q0-00gQI4; Tue, 25
+ Jun 2024 14:40:54 +0200
+Message-ID: <7a209bc9-82bc-4c3b-a9ad-6ee17280b0dc@gmx.de>
+Date: Tue, 25 Jun 2024 14:40:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fbdev: mmp: Constify struct mmp_overlay_ops
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
+References: <c5c1a26fdbf0895d1b17010f1c2da44b18b4ae55.1719259171.git.christophe.jaillet@wanadoo.fr>
+Content-Language: en-US
+From: Helge Deller <deller@gmx.de>
+Autocrypt: addr=deller@gmx.de; keydata=
+ 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
+In-Reply-To: <c5c1a26fdbf0895d1b17010f1c2da44b18b4ae55.1719259171.git.christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:2mUriBY5Bh6IvsmIPOOVoKxrCpFOTtSxaZOZ8vNrpHn3Nd16/xY
+ MHdfg8HK6bJLGKpALBi0EJbR4FmmgrnRQ9TCdHmRu9jOhfkOShSCtIP+xT9/yzYNB1fi15s
+ Q4Um2Mf4EvK6YQ03aE/qbmxwqfSoeEQjg15VL9oSthWX4UBSaJGHzZScScpHC2iJMrmuTVI
+ qUEDG9T+vxZBSORg/kwQw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:V5JHoB5155M=;tEDyanyxld9/6d4nMIFBNKfOm/8
+ 8I/Dmwa9w+nzNuWeWjBivsoamI/qk3g2hunQRj6mTJByGjZLE6Mu+DwHpo9lhzC7oqoIycsF4
+ emfkqmF34iS2rLYmCSmRiROxHqC3tO1qINkWeKcLrD/b/RStdkiLw1rgmrn4CFnlbeu8pgfmP
+ 1qj8rbmooLxile84FK+LcWEqvWBVjfHUkq0bv1eTSoPETHhWZPFFpxmd85PXsDzYRsgTHUiqX
+ MEDrZ1czKWvf9vlyewyIEawfeg09nzvvQVZAhfxrbCynwXWh6ndLzxCvEJju+lXSMz+DUw0M7
+ Ko/SvRjKXVBSdU0k1ZM+Y6DoXsvbF/jWEE2SqGKXa3DZTBkH9xOX/ZOd5Cbs1ZHyQZKqkoSFz
+ devtSYUYdJkVGA/5FlM4AQx9R+0NraflKCiMvJDtdYk3uw5vzv0/mEGnnHVfdqnLO5DFRFS//
+ ppXi/39j0LU3h/L8vTGaNFWIDYS/PybFv+7K+OOKdBtPBOHj7cpgniSonwuJ7m+Xn8rv8pyCQ
+ OqnOcISgzopz2MKSImJdgfO+kpkBxOWwL6f1UgXG2qOv8MfMNoOIUDsrNejIReLVp7ehpm/FW
+ IZbnEaJMoNtxZiQOUcNGM6UzC7bkEMrfjHKe5+Iw1mpwHRDlLHSxTW7Qj55V3v90UxwoY14fr
+ RrX/9AXrfDgwO3euEIMdDxKiD3DPJOD1ekAbtJTtcJmUpNmmag7oI8pgGo8VRsBnzm9tssgMP
+ /Chy15SzI8VxHadpfZLDZvvFFTEZXOQJ+jEWaFW6ByYPcNV51qMpEuRnwSLRDxg7IwTX73Fn3
+ merqNnvdD0FF989PBKvCxgJ9ZFEBanCpWG3wwXaAUZIqs=
 
-kmsg_dump doesn't forward the panic reason string to the kmsg_dumper
-callback.
-This patch adds a new parameter "const char *desc" to the kmsg_dumper
-dump() callback, and update all drivers that are using it.
+On 6/24/24 21:59, Christophe JAILLET wrote:
+> 'struct mmp_overlay_ops' is not modified in this driver.
+>
+> Constifying this structure moves some data to a read-only section, so
+> increase overall security.
+>
+> On a x86_64, with allmodconfig, as an example:
+> Before:
+> =3D=3D=3D=3D=3D=3D
+>     text	   data	    bss	    dec	    hex	filename
+>    11798	    555	     16	  12369	   3051	drivers/video/fbdev/mmp/hw/mmp_=
+ctrl.o
+>
+> After:
+> =3D=3D=3D=3D=3D
+>     text	   data	    bss	    dec	    hex	filename
+>    11834	    507	     16	  12357	   3045	drivers/video/fbdev/mmp/hw/mmp_=
+ctrl.o
+>
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> Compile tested-only
+> ---
+>   drivers/video/fbdev/mmp/hw/mmp_ctrl.c | 2 +-
+>   include/video/mmp_disp.h              | 4 ++--
+>   2 files changed, 3 insertions(+), 3 deletions(-)
 
-To avoid updating all kmsg_dump() call, it adds a kmsg_dump_desc()
-function and a macro for backward compatibility.
-
-I've written this for drm_panic, but it can be useful for other
-kmsg_dumper.
-It allows to see the panic reason, like "sysrq triggered crash"
-or "VFS: Unable to mount root fs on xxxx" on the drm panic screen.
-
-Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
----
- arch/powerpc/kernel/nvram_64.c             |  3 ++-
- arch/powerpc/platforms/powernv/opal-kmsg.c |  3 ++-
- drivers/gpu/drm/drm_panic.c                |  3 ++-
- drivers/hv/hv_common.c                     |  3 ++-
- drivers/mtd/mtdoops.c                      |  3 ++-
- fs/pstore/platform.c                       |  3 ++-
- include/linux/kmsg_dump.h                  | 13 ++++++++++---
- kernel/panic.c                             |  2 +-
- kernel/printk/printk.c                     |  8 +++++---
- 9 files changed, 28 insertions(+), 13 deletions(-)
-
-diff --git a/arch/powerpc/kernel/nvram_64.c b/arch/powerpc/kernel/nvram_64.c
-index e385d3164648c..6b3a80d8cfa64 100644
---- a/arch/powerpc/kernel/nvram_64.c
-+++ b/arch/powerpc/kernel/nvram_64.c
-@@ -643,7 +643,8 @@ void __init nvram_init_oops_partition(int rtas_partition_exists)
-  * partition.  If that's too much, go back and capture uncompressed text.
-  */
- static void oops_to_nvram(struct kmsg_dumper *dumper,
--			  enum kmsg_dump_reason reason)
-+			  enum kmsg_dump_reason reason,
-+			  const char *desc)
- {
- 	struct oops_log_info *oops_hdr = (struct oops_log_info *)oops_buf;
- 	static unsigned int oops_count = 0;
-diff --git a/arch/powerpc/platforms/powernv/opal-kmsg.c b/arch/powerpc/platforms/powernv/opal-kmsg.c
-index 6c3bc4b4da983..49b60de6feb04 100644
---- a/arch/powerpc/platforms/powernv/opal-kmsg.c
-+++ b/arch/powerpc/platforms/powernv/opal-kmsg.c
-@@ -20,7 +20,8 @@
-  * message, it just ensures that OPAL completely flushes the console buffer.
-  */
- static void kmsg_dump_opal_console_flush(struct kmsg_dumper *dumper,
--				     enum kmsg_dump_reason reason)
-+				     enum kmsg_dump_reason reason,
-+				     const char *desc)
- {
- 	/*
- 	 * Outside of a panic context the pollers will continue to run,
-diff --git a/drivers/gpu/drm/drm_panic.c b/drivers/gpu/drm/drm_panic.c
-index 293d4dcbc80da..88e9359fe6d78 100644
---- a/drivers/gpu/drm/drm_panic.c
-+++ b/drivers/gpu/drm/drm_panic.c
-@@ -604,7 +604,8 @@ static struct drm_plane *to_drm_plane(struct kmsg_dumper *kd)
- 	return container_of(kd, struct drm_plane, kmsg_panic);
- }
- 
--static void drm_panic(struct kmsg_dumper *dumper, enum kmsg_dump_reason reason)
-+static void drm_panic(struct kmsg_dumper *dumper, enum kmsg_dump_reason reason,
-+		      const char *desc)
- {
- 	struct drm_plane *plane = to_drm_plane(dumper);
- 
-diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-index 9c452bfbd5719..b0786ee9c94e3 100644
---- a/drivers/hv/hv_common.c
-+++ b/drivers/hv/hv_common.c
-@@ -207,7 +207,8 @@ static int hv_die_panic_notify_crash(struct notifier_block *self,
-  * buffer and call into Hyper-V to transfer the data.
-  */
- static void hv_kmsg_dump(struct kmsg_dumper *dumper,
--			 enum kmsg_dump_reason reason)
-+			 enum kmsg_dump_reason reason,
-+			 const char *desc)
- {
- 	struct kmsg_dump_iter iter;
- 	size_t bytes_written;
-diff --git a/drivers/mtd/mtdoops.c b/drivers/mtd/mtdoops.c
-index 2f11585b5613e..c618999a96832 100644
---- a/drivers/mtd/mtdoops.c
-+++ b/drivers/mtd/mtdoops.c
-@@ -298,7 +298,8 @@ static void find_next_position(struct mtdoops_context *cxt)
- }
- 
- static void mtdoops_do_dump(struct kmsg_dumper *dumper,
--			    enum kmsg_dump_reason reason)
-+			    enum kmsg_dump_reason reason,
-+			    const char *desc)
- {
- 	struct mtdoops_context *cxt = container_of(dumper,
- 			struct mtdoops_context, dump);
-diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-index 3497ede88aa01..a6ed5d56021ef 100644
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -275,7 +275,8 @@ void pstore_record_init(struct pstore_record *record,
-  * end of the buffer.
-  */
- static void pstore_dump(struct kmsg_dumper *dumper,
--			enum kmsg_dump_reason reason)
-+			enum kmsg_dump_reason reason,
-+			const char *desc)
- {
- 	struct kmsg_dump_iter iter;
- 	unsigned long	total = 0;
-diff --git a/include/linux/kmsg_dump.h b/include/linux/kmsg_dump.h
-index 906521c2329ca..a8f8a6204542d 100644
---- a/include/linux/kmsg_dump.h
-+++ b/include/linux/kmsg_dump.h
-@@ -49,13 +49,15 @@ struct kmsg_dump_iter {
-  */
- struct kmsg_dumper {
- 	struct list_head list;
--	void (*dump)(struct kmsg_dumper *dumper, enum kmsg_dump_reason reason);
-+	void (*dump)(struct kmsg_dumper *dumper,
-+		     enum kmsg_dump_reason reason,
-+		     const char *desc);
- 	enum kmsg_dump_reason max_reason;
- 	bool registered;
- };
- 
- #ifdef CONFIG_PRINTK
--void kmsg_dump(enum kmsg_dump_reason reason);
-+void kmsg_dump_desc(enum kmsg_dump_reason reason, const char *desc);
- 
- bool kmsg_dump_get_line(struct kmsg_dump_iter *iter, bool syslog,
- 			char *line, size_t size, size_t *len);
-@@ -71,7 +73,7 @@ int kmsg_dump_unregister(struct kmsg_dumper *dumper);
- 
- const char *kmsg_dump_reason_str(enum kmsg_dump_reason reason);
- #else
--static inline void kmsg_dump(enum kmsg_dump_reason reason)
-+static inline void kmsg_dump_desc(enum kmsg_dump_reason reason, const char *desc)
- {
- }
- 
-@@ -107,4 +109,9 @@ static inline const char *kmsg_dump_reason_str(enum kmsg_dump_reason reason)
- }
- #endif
- 
-+static inline void kmsg_dump(enum kmsg_dump_reason reason)
-+{
-+	kmsg_dump_desc(reason, NULL);
-+}
-+
- #endif /* _LINUX_KMSG_DUMP_H */
-diff --git a/kernel/panic.c b/kernel/panic.c
-index 0843a275531a7..0a8b29c44f3c1 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -378,7 +378,7 @@ void panic(const char *fmt, ...)
- 
- 	panic_print_sys_info(false);
- 
--	kmsg_dump(KMSG_DUMP_PANIC);
-+	kmsg_dump_desc(KMSG_DUMP_PANIC, buf);
- 
- 	/*
- 	 * If you doubt kdump always works fine in any situation,
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index d0bff0b0abfdb..2e7195894e41a 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -4287,14 +4287,16 @@ const char *kmsg_dump_reason_str(enum kmsg_dump_reason reason)
- EXPORT_SYMBOL_GPL(kmsg_dump_reason_str);
- 
- /**
-- * kmsg_dump - dump kernel log to kernel message dumpers.
-+ * kmsg_dump_desc - dump kernel log to kernel message dumpers.
-  * @reason: the reason (oops, panic etc) for dumping
-+ * @desc: a short string to describe what caused the panic or oops. Can be NULL
-+ * if no additional description is available.
-  *
-  * Call each of the registered dumper's dump() callback, which can
-  * retrieve the kmsg records with kmsg_dump_get_line() or
-  * kmsg_dump_get_buffer().
-  */
--void kmsg_dump(enum kmsg_dump_reason reason)
-+void kmsg_dump_desc(enum kmsg_dump_reason reason, const char *desc)
- {
- 	struct kmsg_dumper *dumper;
- 
-@@ -4314,7 +4316,7 @@ void kmsg_dump(enum kmsg_dump_reason reason)
- 			continue;
- 
- 		/* invoke dumper which will iterate over records */
--		dumper->dump(dumper, reason);
-+		dumper->dump(dumper, reason, desc);
- 	}
- 	rcu_read_unlock();
- }
-
-base-commit: f76698bd9a8ca01d3581236082d786e9a6b72bb7
--- 
-2.45.1
+applied.
+Thanks!
+Helge
 
