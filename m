@@ -1,148 +1,258 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4742416DEA4;
-	Tue, 25 Jun 2024 15:49:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD39E169AE4
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 15:49:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719330577; cv=none; b=XRPpjT6OuJ4mtynL9LXUuUoqlvU753rk8kgSqNt4lthbdp+ugbcaZeKIOkUd9i2Wli+1ijCoHkOPg1NJWHEHSxBmkSAdwZW8ZiaIl29n6Cnajzcge6NN3v4y5dsS3kM+r9KqF3+w2EpVEz9D3L/Bjmo8RJieC+RjM5vp2qH8iuA=
+	t=1719330576; cv=none; b=qiDW+AcUVkS2fuT/+nFhikX44hsR3f5Qn49my2nrweNA55tY73rP2MIOextYOvJVIfSZdJvB4yhUCV41Xi2AJvH4u9rz1A9Ho65H26t6n97uwWTcMLn7ArekpVWgFAySy3nEdwen7NEmKoJWMmC/g+QhT2VqxxRQcCp8R/pywew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719330577; c=relaxed/simple;
-	bh=sUIvPr5TwhY0q7QPahwTBtOYZADYoIVdqXPCUaN45QE=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BrrqHWfzT4YCLDZSRciXexbGPTP0D8huSjQKGglUC4VUB40d8r8QvkzMkMyAd+imBEQ863blRDPjg4CLPt7xGoRS1sW1gJYSkNbKPxnZxAxauOzPpVoTY5DN2XredpgalQeXk7d0v9nFO20zZnL2WRQyThbc/BEhje8VkWrIlrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=kVtp96ts; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kItZ26Ub; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=kVtp96ts; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kItZ26Ub; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1719330576; c=relaxed/simple;
+	bh=d+QWziGpgL0Ca/Wfgs+UUMxW9qcDrjZRRIe7JK15vkc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HPdzuC7tUKWBhtFlw1t3h56aPUI8SEpuLitzM2OOz488ScWuOZvESMYfHTYqVVvDEpWucM64pHVNDStYziHlfrIez4OLASIobCKAOOOX7lAMjg8EgJ2Vh14dFfCC6jWsRaSkmsEry5f9AZeKfJLfpPtbjFIvcqnZYIr6pt73aSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c/IYLOFh; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="kVtp96ts";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kItZ26Ub";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="kVtp96ts";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kItZ26Ub"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c/IYLOFh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719330573;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0wsnVV8wpGfGOkMUutdfBkeh8eoVPXf9ThGK/9X9dRk=;
+	b=c/IYLOFhUspizBAsxm1Jz4fLuAR9DQnYp982IkcEEjBlXFx79yBvtw5IKdWVTv2bzcnAXk
+	8TVisz/dOM0tfGGn7g6pC3ZnDNlQuF5E92znB/7p4WFyGdpD2mN1HbZyJAFs0QhCJcacQQ
+	fIE9y8ffde85lJb8HMguIE4suC+SsY0=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-648-JgzeuAsjP0qiKJuutWbxvQ-1; Tue,
+ 25 Jun 2024 11:49:29 -0400
+X-MC-Unique: JgzeuAsjP0qiKJuutWbxvQ-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 5CE9A219C5;
-	Tue, 25 Jun 2024 15:49:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1719330573; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kw99qVZz3ZF+3mnj5cm4S1a48bOPXeIsywDzO8R5Pas=;
-	b=kVtp96tsZGU0H/gj4nJScyjfusw1eAFBtepiuKAQayde5rtPevqAfIpxrbDtslEAjLAAuW
-	cQ5n9EvZCl72jUwlicwKEQW01UrmWCHaRU6ianbeGw247IfapbradyZthcYmhVFduZpCYY
-	iSB8KyWO1ike0KhjOId2OKmVFzOp1fU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1719330573;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kw99qVZz3ZF+3mnj5cm4S1a48bOPXeIsywDzO8R5Pas=;
-	b=kItZ26Ub03uK5X6n1TRXpfeacTeUPOdu7DdUjhfzLGoM7m+7aFelGgAQzYNnXVK5FqbhtA
-	kndDr4irkG01XoAg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1719330573; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kw99qVZz3ZF+3mnj5cm4S1a48bOPXeIsywDzO8R5Pas=;
-	b=kVtp96tsZGU0H/gj4nJScyjfusw1eAFBtepiuKAQayde5rtPevqAfIpxrbDtslEAjLAAuW
-	cQ5n9EvZCl72jUwlicwKEQW01UrmWCHaRU6ianbeGw247IfapbradyZthcYmhVFduZpCYY
-	iSB8KyWO1ike0KhjOId2OKmVFzOp1fU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1719330573;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kw99qVZz3ZF+3mnj5cm4S1a48bOPXeIsywDzO8R5Pas=;
-	b=kItZ26Ub03uK5X6n1TRXpfeacTeUPOdu7DdUjhfzLGoM7m+7aFelGgAQzYNnXVK5FqbhtA
-	kndDr4irkG01XoAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E205513A9A;
-	Tue, 25 Jun 2024 15:49:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Gh3kNQznemboRQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 25 Jun 2024 15:49:32 +0000
-Date: Tue, 25 Jun 2024 17:50:00 +0200
-Message-ID: <87ikxxkonr.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Rauty <rautyrauty@gmail.com>
-Cc: wzhd@ustc.edu,
-	Gergo Koteles <soyer@irl.hu>,
-	alsa-devel@alsa-project.org,
-	tiwai@suse.com,
-	perex@perex.cz,
-	kailang@realtek.com,
-	sbinding@opensource.cirrus.com,
-	luke@ljones.dev,
-	shenghao-ding@ti.com,
-	simont@opensource.cirrus.com,
-	foss@athaariq.my.id,
-	rf@opensource.cirrus.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ALSA: hda/realtek: Enable headset mic on IdeaPad 330-17IKB 81DM
-In-Reply-To: <CAGpJQTHajQnOr7Tr8cmMyjBqGw1sg_-SwSuAhnz-yFHZdPukGw@mail.gmail.com>
-References: <20240615125457.167844-1-rauty@altlinux.org>
-	<2c9ba341bc95d4b9010bf5f8794c0d14b1c57dc9.camel@irl.hu>
-	<CAGpJQTHoBAixmxta2WuZfjHjiK9GXF=hkfPyV7PBD5rt9Z_0WA@mail.gmail.com>
-	<CAGpJQTGqxEkfp003QLsp-syUgzDFCmHSmNaoOaem0ZMVf7_=bg@mail.gmail.com>
-	<c0a9e15e7926e098bdea97a7d31c32427e0910c9.camel@irl.hu>
-	<871q4lm9dp.wl-tiwai@suse.de>
-	<CAGpJQTFF=gKN2h105dGhBOEhN0Q1Tpj5hJWpSdQ_-nCoUTzj5A@mail.gmail.com>
-	<87tthhktdz.wl-tiwai@suse.de>
-	<87sex1kt6t.wl-tiwai@suse.de>
-	<CAGpJQTGR5WKuHUFGFUC286TUkOXYgcqigZRDb4K5deyE9uuz8w@mail.gmail.com>
-	<87msn9ksj6.wl-tiwai@suse.de>
-	<CAGpJQTHajQnOr7Tr8cmMyjBqGw1sg_-SwSuAhnz-yFHZdPukGw@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8163E195608C;
+	Tue, 25 Jun 2024 15:49:27 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.8])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4F977300021A;
+	Tue, 25 Jun 2024 15:49:24 +0000 (UTC)
+Date: Tue, 25 Jun 2024 23:49:20 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Uladzislau Rezki <urezki@gmail.com>, Hailong Liu <hailong.liu@oppo.com>
+Cc: Nick Bowler <nbowler@draconx.ca>, linux-kernel@vger.kernel.org,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	linux-mm@kvack.org, sparclinux@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: PROBLEM: kernel crashes when running xfsdump since ~6.4
+Message-ID: <ZnrnADHvOiNcZv9t@MiWiFi-R3L-srv>
+References: <ZnUmpMbCBFWnvaEz@MiWiFi-R3L-srv>
+ <ZnVLbCCkvhf5GaTf@pc636>
+ <ZnWICsPgYuBlrWlt@MiWiFi-R3L-srv>
+ <Znljtv5n-6EBgpsF@pc636>
+ <Zno52QBG0g5Z+otD@MiWiFi-R3L-srv>
+ <ZnqcuKt2qrR-wmH3@pc636>
+ <ZnqspTVl/76jM9WD@MiWiFi-R3L-srv>
+ <Znq6tEtCgB6QnnJH@pc638.lan>
+ <Znq/8/HAc/0p6Ja0@MiWiFi-R3L-srv>
+ <ZnrjZRq5-_hemrbD@pc636>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[gmail.com];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email]
-X-Spam-Flag: NO
-X-Spam-Score: -3.30
-X-Spam-Level: 
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZnrjZRq5-_hemrbD@pc636>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Tue, 25 Jun 2024 16:47:34 +0200,
-Rauty wrote:
+On 06/25/24 at 05:33pm, Uladzislau Rezki wrote:
+> On Tue, Jun 25, 2024 at 09:02:43PM +0800, Baoquan He wrote:
+> > On 06/25/24 at 02:40pm, Uladzislau Rezki wrote:
+> > > On Tue, Jun 25, 2024 at 07:40:21PM +0800, Baoquan He wrote:
+> > > > On 06/25/24 at 12:32pm, Uladzislau Rezki wrote:
+> > > > > On Tue, Jun 25, 2024 at 11:30:33AM +0800, Baoquan He wrote:
+> > > > > > On 06/24/24 at 02:16pm, Uladzislau Rezki wrote:
+> > > > > > > On Fri, Jun 21, 2024 at 10:02:50PM +0800, Baoquan He wrote:
+> > > > > > > > On 06/21/24 at 11:44am, Uladzislau Rezki wrote:
+> > > > > > > > > On Fri, Jun 21, 2024 at 03:07:16PM +0800, Baoquan He wrote:
+> > > > > > > > > > On 06/21/24 at 11:30am, Hailong Liu wrote:
+> > > > > > > > > > > On Thu, 20. Jun 14:02, Nick Bowler wrote:
+> > > > > > > > > > > > On 2024-06-20 02:19, Nick Bowler wrote:
+> > > > > > > > ......
+> > > > > > > > > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > > > > > > > > > index be2dd281ea76..18e87cafbaf2 100644
+> > > > > > > > > > --- a/mm/vmalloc.c
+> > > > > > > > > > +++ b/mm/vmalloc.c
+> > > > > > > > > > @@ -2542,7 +2542,7 @@ static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
+> > > > > > > > > >  static struct xarray *
+> > > > > > > > > >  addr_to_vb_xa(unsigned long addr)
+> > > > > > > > > >  {
+> > > > > > > > > > -	int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
+> > > > > > > > > > +	int index = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
+> > > > > > > > > >  
+> > > > > > > > > >  	return &per_cpu(vmap_block_queue, index).vmap_blocks;
+> > > > > > > > > >  }
+> > > > > > > > > > 
+> > > > > > > > > The problem i see is about not-initializing of the:
+> > > > > > > > > <snip>
+> > > > > > > > > 	for_each_possible_cpu(i) {
+> > > > > > > > > 		struct vmap_block_queue *vbq;
+> > > > > > > > > 		struct vfree_deferred *p;
+> > > > > > > > > 
+> > > > > > > > > 		vbq = &per_cpu(vmap_block_queue, i);
+> > > > > > > > > 		spin_lock_init(&vbq->lock);
+> > > > > > > > > 		INIT_LIST_HEAD(&vbq->free);
+> > > > > > > > > 		p = &per_cpu(vfree_deferred, i);
+> > > > > > > > > 		init_llist_head(&p->list);
+> > > > > > > > > 		INIT_WORK(&p->wq, delayed_vfree_work);
+> > > > > > > > > 		xa_init(&vbq->vmap_blocks);
+> > > > > > > > > 	}
+> > > > > > > > > <snip>
+> > > > > > > > > 
+> > > > > > > > > correctly or fully. It is my bad i did not think that CPUs in a possible mask
+> > > > > > > > > can be non sequential :-/
+> > > > > > > > > 
+> > > > > > > > > nr_cpu_ids - is not the max possible CPU. For example, in Nick case,
+> > > > > > > > > when he has two CPUs, num_possible_cpus() and nr_cpu_ids are the same.
+> > > > > > > > 
+> > > > > > > > I checked the generic version of setup_nr_cpu_ids(), from codes, they
+> > > > > > > > are different with my understanding.
+> > > > > > > > 
+> > > > > > > > kernel/smp.c
+> > > > > > > > void __init setup_nr_cpu_ids(void)
+> > > > > > > > {
+> > > > > > > >         set_nr_cpu_ids(find_last_bit(cpumask_bits(cpu_possible_mask), NR_CPUS) + 1);
+> > > > > > > > }
+> > > > > > > > 
+> > > > > > > I see that it is not a weak function, so it is generic, thus the
+> > > > > > > behavior can not be overwritten, which is great. This does what we
+> > > > > > > need.
+> > > > > > > 
+> > > > > > > Thank you for checking this you are right!
+> > > > > > 
+> > > > > > Thanks for confirming this.
+> > > > > > 
+> > > > > > > 
+> > > > > > > Then it is just a matter of proper initialization of the hash:
+> > > > > > > 
+> > > > > > > <snip>
+> > > > > > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > > > > > > index 5d3aa2dc88a8..1733946f7a12 100644
+> > > > > > > --- a/mm/vmalloc.c
+> > > > > > > +++ b/mm/vmalloc.c
+> > > > > > > @@ -5087,7 +5087,13 @@ void __init vmalloc_init(void)
+> > > > > > >          */
+> > > > > > >         vmap_area_cachep = KMEM_CACHE(vmap_area, SLAB_PANIC);
+> > > > > > >  
+> > > > > > > -       for_each_possible_cpu(i) {
+> > > > > > > +       /*
+> > > > > > > +        * We use "nr_cpu_ids" here because some architectures
+> > > > > > > +        * may have "gaps" in cpu-possible-mask. It is OK for
+> > > > > > > +        * per-cpu approaches but is not OK for cases where it
+> > > > > > > +        * can be used as hashes also.
+> > > > > > > +        */
+> > > > > > > +       for (i = 0; i < nr_cpu_ids; i++) {
+> > > > > > 
+> > > > > > I was wrong about earlier comments. Percpu variables are only available
+> > > > > > on possible CPUs. For those nonexistent possible CPUs of static percpu
+> > > > > > variable vmap_block_queue, there isn't memory allocated and mapped for
+> > > > > > them. So accessing into them will cause problem.
+> > > > > > 
+> > > > > > In Nick's case, there are only CPU0, CPU2. If you access
+> > > > > > &per_cpu(vmap_block_queue, 1), problem occurs. So I think we may need to
+> > > > > > change to take other way for vbq. E.g:
+> > > > > > 1) Storing the vb in the nearest neighbouring vbq on possible CPU as
+> > > > > >    below draft patch;
+> > > > > > 2) create an normal array to store vbq of size nr_cpu_ids, then we can
+> > > > > >    store/fetch each vbq on non-possible CPU?
+> > > > > > 
+> > > > > A correct way, i think, is to create a normal array. A quick fix can be
+> > > > > to stick to a next possible CPU.
+> > > > > 
+> > > > > > The way 1) is simpler, the existing code can be adapted a little just as
+> > > > > > below.
+> > > > > > 
+> > > > > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > > > > > index 633363997dec..59a8951cc6c0 100644
+> > > > > > --- a/mm/vmalloc.c
+> > > > > > +++ b/mm/vmalloc.c
+> > > > > > @@ -2542,7 +2542,10 @@ static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
+> > > > > >  static struct xarray *
+> > > > > >  addr_to_vb_xa(unsigned long addr)
+> > > > > >  {
+> > > > > > -	int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
+> > > > > > +	int index = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
+> > > > > > +
+> > > > > > +	if (!cpu_possible(idex))
+> > > > > > +		index = cpumask_next(index, cpu_possible_mask);
+> > > > > >
+> > > > > cpumask_next() can return nr_cpu_ids if no next bits set.
+> > > > 
+> > > > It won't. nr_cpu_ids is the largest index + 1, the hashed index will
+> > > > be:  0 =<  index  <= (nr_cpu_ids - 1) e.g cpu_possible_mask is
+> > > > b10001111, the nr_cpu_ids is 8, the largest bit is cpu7.
+> > > > cpu_possible(index) will check that. So the largest bit of cpumask_next()
+> > > > returns is (nr_cpu_ids - 1).
+> > > > 
+> > > /**
+> > >  * cpumask_next - get the next cpu in a cpumask
+> > >  * @n: the cpu prior to the place to search (i.e. return will be > @n)
+> > >  * @srcp: the cpumask pointer
+> > >  *
+> > >  * Return: >= nr_cpu_ids if no further cpus set.
+> > 
+> > Ah, I got what you mean. In the vbq case, it may not have chance to get
+> > a return number as nr_cpu_ids. Becuase the hashed index limits the
+> > range to [0, nr_cpu_ids-1], and cpu_possible(index) will guarantee it
+> > won't be the highest cpu number [nr_cpu_ids-1] since CPU[nr_cpu_ids-1] must
+> > be possible CPU.
+> > 
+> > Do I miss some corner cases?
+> > 
+> Right. We guarantee that a highest CPU is available by doing: % nr_cpu_ids.
+> So we do not need to use *next_wrap() variant. You do not miss anything :)
 > 
-> On Tue, 25 Jun 2024 at 17:25, Takashi Iwai <tiwai@suse.de> wrote:
-> > Great.  Could you also give the one for IdeaPad 330?
+> Hailong Liu has proposed more simpler version:
 > 
-> http://alsa-project.org/db/?f=cb04b699a8aaa07e0bd992dfc92accb993dc0a97
+> <snip>
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index 11fe5ea208aa..e1e63ffb9c57 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -1994,8 +1994,9 @@ static struct xarray *
+>  addr_to_vb_xa(unsigned long addr)
+>  {
+>         int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
+> +       int cpu = cpumask_nth(index, cpu_possible_mask);
+> 
+> -       return &per_cpu(vmap_block_queue, index).vmap_blocks;
+> +       return &per_cpu(vmap_block_queue, cpu).vmap_blocks;
+> <snip>
+> 
+> which just takes a next CPU if an index is not set in the cpu_possible_mask.
+> 
+> The only thing that can be updated in the patch is to replace num_possible_cpu()
+> by the nr_cpu_ids.
+> 
+> Any thoughts? I think we need to fix it by a minor change so it is
+> easier to back-port on stable kernels.
 
-Thanks.  I'll cook a fix patch and submit.
+Yeah, sounds good since the regresson commit is merged in v6.3.
+Please feel free to post this and the hash array patch separately for
+formal reviewing.
 
+By the way, when I am replying this mail, I check the cpumask_nth()
+again. I doubt it may take more checking then cpu_possible(), given most
+of systems don't have gaps in cpu_possible_mask. I could be dizzy at
+this moment.
 
-Takashi
+static inline unsigned int cpumask_nth(unsigned int cpu, const struct cpumask *srcp)
+{
+        return find_nth_bit(cpumask_bits(srcp), small_cpumask_bits, cpumask_check(cpu));
+}
+
