@@ -1,194 +1,109 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543D42E3E4
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 10:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A02145B32
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 10:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719311553; cv=none; b=MITkiGqQF+ZPoPLgiR6qp4ESv/ZbfB4R4Yc7EgHvse9QmJo/6M41BwJZPspXUan490JK7cFv5hauwAT4Zn+CbEbuZ7nZHDnA1wsVrJtke+BwiFgj/d4NuSXhjkpVzmBjDGqAFXBdzqCKYZcZ0U8j/jbR7fVHlAgm4k75++b+ubo=
+	t=1719311646; cv=none; b=T/JY/bVaduoMPHnPUTnAsmTe/liofuhrWoNk8puH+/rxnDg+YZB2TCKFBDVb1TLH2Ub+FnubVyt9t4nC+jfq/dYad/nmOghfm7OC4lV9bIhcl32gatHQelV2pX1glNip9OI8yS0Dv4KT6iCA0y56NFT0wUEVEvRGELvTU15q3jQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719311553; c=relaxed/simple;
-	bh=yexphHRNlx1HBIakVGghbz9IQgLRz7EgKahrZP3O3Hs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B8nJP2g0eu056J6Z3ub/TNiaOFoIoqZFImOEbIkw9Ghd233SWjQYFhrxEVJwKs2a9ATaIKafw7DmTgPf5ypk7gqT1Awo4FBa2wmkEmJwiuSfW3mt1toVEML8WV3KRlvQ08sgKYmvhzv30htMnlcboTSJVCvfmxLpULHqskjnvAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=PXzkzbKK; arc=none smtp.client-ip=209.85.219.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="PXzkzbKK"
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dff0712ede2so5221961276.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 03:32:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessos.org; s=google; t=1719311550; x=1719916350; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AeHhF7HwElqfhWVKAUpUcxv4NHbXbC1N1cEo/E0Fnrs=;
-        b=PXzkzbKKHqPZdbiGEA7NhzF+xqwu/aqw90JmvtW8A/Bl3xpLInrvlz6E2hfWTNuv7B
-         E2MpRizGbxzx+cF2LwBo44Ng6ApfC6fy0U+PtpDxgxHLtkYbnTzZEmAlUfCdw5e1WkOH
-         A36qheUArMp82t5Srd9/lRd0cNkXfvHNeFpwlIfW/Z5diDAj56K5XQTq8mH3cz8FmNUK
-         00DoPPx+1fgkjHlAcaqGg/wVEl5q9BNRER/r2AY7nsYQvG4IXsLnuRfkBrPcU7O1nEJP
-         VNV+yAOsV/c1KNyc6g+1dgkQqM9GyCs9AVoUQ7nLfWybSLOeP0NnxveBVn9sF5CPPwjU
-         j92g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719311550; x=1719916350;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AeHhF7HwElqfhWVKAUpUcxv4NHbXbC1N1cEo/E0Fnrs=;
-        b=PVWcXbFAj2lNVMe0NLb43rvEQrFneOmKBqQaDwq7WerLesCqCU9PLVb6sB+vDqDald
-         cbWU4TXG1yUzTE+wkKqhC0siUOvc53imXmt6sNWLO1ZOFb2asFpkc70E0I9Ip5roz6CS
-         yzFQNbz/kxO9f+wgqtofspZ3dmjmlc0rDkMTGWpmje0f8QDl0tO/TIXynX41qjfxt4Sr
-         lahJr3z/nT566sneriMCwbMci15Buzcjmq2hE2qSY/PjI4qOcOoNdsNDZCO+ocAzAL74
-         TvXG1ur+sXYM/TCbwaNEfE8ry8pHcdUPpuXhc6CT9yVsGQfEDFYfkT89H/zNCc+7zI20
-         +qdg==
-X-Forwarded-Encrypted: i=1; AJvYcCU9Yd1rXANmzPOCS5RbizHuCHXp+GPAxPcJguYAUaqplX/4rvRtOLw41w3kbPr+RV1ZVc7X+Kz7YwcTQZ1FxKxMYPCwKZ8d9s7pwYos
-X-Gm-Message-State: AOJu0YzVxUiV8IStYEFVL7/L/RDE/DuErr+CB9QF183UKo1IfcPCqDWC
-	bQjUVRXN4xOVO7T5QAl/V/fhP5ee/naS/tMD7sPtwR5SyvB0IljLkU2ku/loiMCb7gR83eacXdc
-	abHtgugnTQSp/mQHGCUhhuQ3ii9Vox2e+F0sQZA==
-X-Google-Smtp-Source: AGHT+IET0vZmsrLZtS70AiPitaD9jDC/goMS3ehzZdEh8KQdRBnZS8rR4Rr5tG5J6ErER+1rbE0z36/BIhmk4qSGM7w=
-X-Received: by 2002:a5b:892:0:b0:e02:45d6:6a4f with SMTP id
- 3f1490d57ef6-e0303f6eacemr6088179276.36.1719311550054; Tue, 25 Jun 2024
- 03:32:30 -0700 (PDT)
+	s=arc-20240116; t=1719311646; c=relaxed/simple;
+	bh=lf34SNsy3KanOhaYXHKd69Bn7zHfE+cWds2/CsVwHSc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bb5dENZWW3ewFDQ/pfb/AdO7qVdvvawslFb1ArXqkzVsLi0vi3P3xPGDPEEDeo0rTpD7KDOJrWER8yduFSYKAIUYOUUzShrnSUQwkDcteoeAlcCTw9x6U4F+Jz33i1niMb5OWowkX8Vp251jPrsE1fq6la2TVR5NOrigUiuKLzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sM3Um-0008Od-EV; Tue, 25 Jun 2024 12:33:52 +0200
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sM3Uk-004rrh-Pd; Tue, 25 Jun 2024 12:33:50 +0200
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sM3Uk-00E6G5-2B;
+	Tue, 25 Jun 2024 12:33:50 +0200
+Date: Tue, 25 Jun 2024 12:33:50 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Dent Project <dentproject@linuxfoundation.org>,
+	kernel@pengutronix.de, UNGLinuxDriver@microchip.com
+Subject: Re: [PATCH net-next v3 1/7] net: ethtool: pse-pd: Expand C33 PSE
+ status with class, power and extended state
+Message-ID: <ZnqdDmvy0YLqk6Ih@pengutronix.de>
+References: <20240614-feature_poe_power_cap-v3-0-a26784e78311@bootlin.com>
+ <20240614-feature_poe_power_cap-v3-1-a26784e78311@bootlin.com>
+ <Zm15fP1Sudot33H5@pengutronix.de>
+ <20240617154712.76fa490a@kmaincent-XPS-13-7390>
+ <ZnCUrUm69gmbGWQq@pengutronix.de>
+ <20240625111835.5ed3dff2@kmaincent-XPS-13-7390>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240624081108.10143-2-jhp@endlessos.org> <20240624082144.10265-2-jhp@endlessos.org>
- <20240624082458.00006da1@linux.intel.com> <897ead26-be10-4bb3-b085-1b8c97d93964@intel.com>
-In-Reply-To: <897ead26-be10-4bb3-b085-1b8c97d93964@intel.com>
-From: Jian-Hong Pan <jhp@endlessos.org>
-Date: Tue, 25 Jun 2024 18:31:54 +0800
-Message-ID: <CAPpJ_efs9nHrTx=N2NwtmN=py3CFg62izcgJrUkcMDd_ErR5VA@mail.gmail.com>
-Subject: Re: [PATCH v6 3/3] PCI: vmd: Drop resetting PCI bus action after scan
- mapped PCI child bus
-To: Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>
-Cc: Nirmal Patel <nirmal.patel@linux.intel.com>, Bjorn Helgaas <helgaas@kernel.org>, 
-	Francisco Munoz <francisco.munoz.ruiz@linux.intel.com>, Johan Hovold <johan@kernel.org>, 
-	David Box <david.e.box@linux.intel.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, Damien Le Moal <dlemoal@kernel.org>, 
-	Jonathan Derrick <jonathan.derrick@linux.dev>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux@endlessos.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240625111835.5ed3dff2@kmaincent-XPS-13-7390>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com> =E6=96=BC 2024=E5=B9=B4=
-6=E6=9C=8824=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=8811:39=E5=AF=AB=
-=E9=81=93=EF=BC=9A
->
-> On 6/24/2024 8:24 AM, Nirmal Patel wrote:
-> > On Mon, 24 Jun 2024 16:21:45 +0800
-> > Jian-Hong Pan <jhp@endlessos.org> wrote:
-> >
-> >> According to "PCIe r6.0, sec 5.5.4", before enabling ASPM L1.2 on the
-> >> PCIe Root Port and the child device, they should be programmed with
-> >> the same LTR1.2_Threshold value. However, they have different values
-> >> on VMD mapped PCI child bus. For example, Asus B1400CEAE's VMD mapped
-> >> PCI bridge and NVMe SSD controller have different LTR1.2_Threshold
-> >> values:
-> >>
-> >> 10000:e0:06.0 PCI bridge: Intel Corporation 11th Gen Core Processor
-> >> PCIe Controller (rev 01) (prog-if 00 [Normal decode]) ...
-> >>      Capabilities: [200 v1] L1 PM Substates
-> >>          L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+
-> >> L1_PM_Substates+ PortCommonModeRestoreTime=3D45us PortTPowerOnTime=3D5=
-0us
-> >>          L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
-> >>                 T_CommonMode=3D45us LTR1.2_Threshold=3D101376ns
-> >>          L1SubCtl2: T_PwrOn=3D50us
-> >>
-> >> 10000:e1:00.0 Non-Volatile memory controller: Sandisk Corp WD Blue
-> >> SN550 NVMe SSD (rev 01) (prog-if 02 [NVM Express]) ...
-> >>      Capabilities: [900 v1] L1 PM Substates
-> >>          L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
-> >> L1_PM_Substates+ PortCommonModeRestoreTime=3D32us PortTPowerOnTime=3D1=
-0us
-> >>          L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
-> >>                     T_CommonMode=3D0us LTR1.2_Threshold=3D0ns
-> >>          L1SubCtl2: T_PwrOn=3D10us
-> >>
-> >> After debug in detail, both of the VMD mapped PCI bridge and the NVMe
-> >> SSD controller have been configured properly with the same
-> >> LTR1.2_Threshold value. But, become misconfigured after reset the VMD
-> >> mapped PCI bus which is introduced from commit 0a584655ef89 ("PCI:
-> >> vmd: Fix secondary bus reset for Intel bridges") and commit
-> >> 6aab5622296b ("PCI: vmd: Clean up domain before enumeration"). So,
-> >> drop the resetting PCI bus action after scan VMD mapped PCI child bus.
-> >>
-> >> Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
-> >> ---
-> >> v6:
-> >> - Introduced based on the discussion
-> >> https://lore.kernel.org/linux-pci/CAPpJ_efYWWxGBopbSQHB=3DY2+1RrXFR2XW=
-eqEhGTgdiw3XX0Jmw@mail.gmail.com/
-> >>
-> >>   drivers/pci/controller/vmd.c | 20 --------------------
-> >>   1 file changed, 20 deletions(-)
-> >>
-> >> diff --git a/drivers/pci/controller/vmd.c
-> >> b/drivers/pci/controller/vmd.c index 5309afbe31f9..af413cdb4f4e 100644
-> >> --- a/drivers/pci/controller/vmd.c
-> >> +++ b/drivers/pci/controller/vmd.c
-> >> @@ -793,7 +793,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd,
-> >> unsigned long features) resource_size_t offset[2] =3D {0};
-> >>      resource_size_t membar2_offset =3D 0x2000;
-> >>      struct pci_bus *child;
-> >> -    struct pci_dev *dev;
-> >>      int ret;
-> >>
-> >>      /*
-> >> @@ -935,25 +934,6 @@ static int vmd_enable_domain(struct vmd_dev
-> >> *vmd, unsigned long features) pci_scan_child_bus(vmd->bus);
-> >>      vmd_domain_reset(vmd);
-> >>
-> >> -    /* When Intel VMD is enabled, the OS does not discover the
-> >> Root Ports
-> >> -     * owned by Intel VMD within the MMCFG space.
-> >> pci_reset_bus() applies
-> >> -     * a reset to the parent of the PCI device supplied as
-> >> argument. This
-> >> -     * is why we pass a child device, so the reset can be
-> >> triggered at
-> >> -     * the Intel bridge level and propagated to all the children
-> >> in the
-> >> -     * hierarchy.
-> >> -     */
-> >> -    list_for_each_entry(child, &vmd->bus->children, node) {
-> >> -            if (!list_empty(&child->devices)) {
-> >> -                    dev =3D list_first_entry(&child->devices,
-> >> -                                           struct pci_dev,
-> >> bus_list);
-> >> -                    ret =3D pci_reset_bus(dev);
-> >> -                    if (ret)
-> >> -                            pci_warn(dev, "can't reset device:
-> >> %d\n", ret); -
-> >> -                    break;
-> >> -            }
-> >> -    }
-> >> -
-> >>      pci_assign_unassigned_bus_resources(vmd->bus);
-> >>
-> >>      pci_walk_bus(vmd->bus, vmd_pm_enable_quirk, &features);
-> >
-> > Thanks for the patch.
-> >
-> > pci_reset_bus is required to avoid failure in vmd domain creation
-> > during multiple soft reboots test. So I believe we can't just remove
-> > it without proper testing. vmd_pm_enable_quirk happens after
-> > pci_reset_bus, then how is it resetting LTR1.2_Threshold value?
-> >
-> > Thanks
-> > -nirmal
->
-> To follow up on what Nirmal said: why can't you set the threshold value
-> in vmd_pm_enable_quirk() since we look at LTR there?
+Hi Köry,
 
-Looks like setting the threshold value again in vmd_pm_enable_quirk()
-is the preferred direction?
-If so, I can prepare for that in the next version patch.
+On Tue, Jun 25, 2024 at 11:18:35AM +0200, Kory Maincent wrote:
+> Hello Oleksij,
+> 
+> On Mon, 17 Jun 2024 21:55:25 +0200
+> Oleksij Rempel <o.rempel@pengutronix.de> wrote:
+> 
+> > 
+> > > > The difference between open and underload is probably:
+> > > > - open: Iport = 0, detection state
+> > > > - underload: Iport < Imin (or Ihold?), Iport can be 0. related to
+> > > > powered/MPS state.  
+> > > 
+> > > Should I put it under MPS substate then?  
+> > 
+> > If my understand is correct, then yes. Can you test it? Do you have PD
+> > with adjustable load?
+> 
+> In fact I can't test it, I have a splitter and an adjustable load, not a
+> splitter that can adjust it's own load. So I can't decrease the load of the
+> splitter itself and reach this error condition.
 
-Jian-Hong Pan
+Hm.. how about this setup:
+------>>-----x--------->>----
+PSE          |-load      splitter
+------>>-----x--------->>----
+
+Attach the load directly to the ethernet line after PSE did
+classification with splitter. Then remove splitter. As long as load is
+high enough, PSE will not turn the port off. Then reduce load until it drops
+below the threshold.
+
+Regards,
+Oleksij
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
