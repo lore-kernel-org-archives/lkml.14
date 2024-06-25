@@ -1,177 +1,280 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A7217C98
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 13:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719323413; cv=none; b=kIHGaVdimgJKEICvxDssQYLpyfwogurnVkLrgrJwIppKbbRJ/UgC12rB5kfl3bssR9l1FVM58PzwuLGEHH+0JZ9RYaBer+pK45nko1CHkfbvcTOooBxcxN267zUKaPRhL+a9yFgQ4xgcuFrDQRtOv5qJUton5pglz0Sazwv+TNQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719323413; c=relaxed/simple;
-	bh=/vgfsVSXsUeooRDQqFzdn01I0SPuNp7cJKAagnrnRGw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u7phRKCsIBojbyeCwyLuWro70D2j/ZxCBeeMw9G6iIl2xD9x5YVqBrzGhuwp7lKRay14H7Xv05hTvWmzvXFsmpo6+R/jD4cTLG445dJMtok9ueRPjbiHTwdCzWSR1IzJZUPpGjvdvM2MTmNzJjQakVB7ga44/fWPfc33LfV6nt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Bru4McZa; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3EC1607B0
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 13:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719323415; cv=fail; b=iPlZ+QqDFU7WEPV+zsoDww7O47DLzzse+l+x1mXEe8kdDvzwNOKmS9UTfi22mGHcSgwg50VgIWqxpMZ2h1LkJE0u/48naM5kpgs9vt7IzyEUMVkI60YxSewFprg7YE87HHUgbqJuTB4QUI8MBp0Z9OSkGfVchrm0rZ0O/VwKQoE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719323415; c=relaxed/simple;
+	bh=/41q3b/P9RVL7c8sXrYzlsiduffElswjgCRriLEoHpA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=udoCmUu/Em0Fds9p3H73S4GQ+FruHuAGgh0NK/XAPYmqOoBm02MKtYXPCAFM0elLPO+JFDW0YIsgtgYki8QyAUz3/OZ8q6Cz0dWJ0CFRxvWRTqAH0dW83Z+Gvig2bTl/5K5cd33eUH6D4YrbvzoklMId4VfMtTlRhIXuwswd4r4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=caDS/GL/; arc=fail smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Bru4McZa"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
-	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=+g0/VIAchowkI6/gXl8+z3FOyGKb1rgXoxY7nw4JH8E=; b=Bru4McZa68HebPVmA75iiAVwOh
-	bTTshgAd0xCiVnBndueh3nfTQqolYqHUCO8OQeO3R1IJeuLmlqcgffcgS/FSRJS/R7dHG9hNdeael
-	qRpsaPC/JSI0CYWbz4YjNbpMaTrsDvF0egRHBcwxZ+dZRRNP/+EpSfonJnZP0bk+XeawbGZxNcng4
-	medsfwy4CPYoxonHFE3goVv74lLYS/vkMXPGwTS2c35KHEphjVDOF/Tl1ENtaZZDd4V7l32jocCUg
-	XXFloM6wT5zF45CbwTqc6VaKJEiDorz8mYJaBHZ+Jc4iuHd+y7U8nUUhqRIIdQJKqD1ewej1wyVJO
-	j6owT9kQ==;
-Received: from [84.69.19.168] (helo=localhost)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1sM6Yd-007Jwz-5h; Tue, 25 Jun 2024 15:50:03 +0200
-From: Tvrtko Ursulin <tursulin@igalia.com>
-To: linux-kernel@vger.kernel.org
-Cc: Tvrtko Ursulin <tursulin@ursulin.net>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Peter Ziljstra <peterz@infradead.org>,
-	kernel-dev@igalia.com,
-	Chengming Zhou <chengming.zhou@linux.dev>
-Subject: [PATCH] sched/psi: Optimise psi_group_change a bit
-Date: Tue, 25 Jun 2024 14:50:00 +0100
-Message-ID: <20240625135000.38652-1-tursulin@igalia.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="caDS/GL/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719323414; x=1750859414;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=/41q3b/P9RVL7c8sXrYzlsiduffElswjgCRriLEoHpA=;
+  b=caDS/GL//4LQBaK6hhU5zAWvOpoRmn+530m5DTw9Po6jVpOLJeQqNQ/0
+   7Md8B6UWT5FUU4gps8G62J9GJU6SIqe/eRIS9e5UdMtYN89O+7gvAdZ/e
+   Ra8Qtsu9KLJ63H+J6iBd1/LFftk+Lp+lTpAwkKWa2biHQcCa2Q5IZK0Jl
+   VZWLb4KSp0qxCDo9KL9f+eW1VA9XAJqaGGQ5wOh7hiIvGH+PCWfcrgiIZ
+   ipnuU4gem3uM47BC5vSlCVyzbzveBq1/5QsmLkBaLmk1dIGqqz1yxSyrn
+   5ncEDcXJk1jla9+XPyCFyZteH9qabXI6j0WBUGnJPDG0c7ka1LSYkUHV3
+   w==;
+X-CSE-ConnectionGUID: mFXOxUrlQoOWqBxjaVamgw==
+X-CSE-MsgGUID: FOuj7qLfQZOM1gbNYAobBg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="20118915"
+X-IronPort-AV: E=Sophos;i="6.08,264,1712646000"; 
+   d="scan'208";a="20118915"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 06:50:13 -0700
+X-CSE-ConnectionGUID: +51SVKRuRreki5TD/AGtsQ==
+X-CSE-MsgGUID: NP1co+6mRFeYghyprAs58A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,264,1712646000"; 
+   d="scan'208";a="43539320"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orviesa010.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Jun 2024 06:50:13 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 25 Jun 2024 06:50:12 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Tue, 25 Jun 2024 06:50:12 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.169)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 25 Jun 2024 06:49:45 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=asUrKJY1VOA9Mx4tr2wV7+WO46fjZca5YcyTeGHMPzZUPe83VW3AORGjYOfXdDnOsaTSiVgXW6HvfG8hfQOPBk6N72lSJ4OwpTEbo/BgIrD10109hxpgv1CNjVWD2yfBVV/cNwVJmIIuL+tZmmn7HI3qTa3mSOPP3wPFyTtXZk/i4lKXRmzs5WpKnNN97PZB/T2oRpqJiWLWzqYGE8PBgKzC94f+Tlon1cmzCIntr4Pp9R2pZRHxL5RkbaBhgIpAD2Ah16iHCUYaUytK/A/Jf0rncDzBu3u+/U4mXGSV4Titq0SpMOxuwCXXuiGfs32prYaA9obxXNdWiW8ab+xIAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Fh+Jokw8S39CicFXtL0Mxxzo43gS56+5kctC0wNqUs0=;
+ b=Pd2VJTu7jTj2x6VcMfSSzsrW0jHKEOc/2AbQz1j4OVjQd3iV7Pg0GbtGb3QCzf8j1vAFw0s8er07VaBM5rnvP/zsuJ11tSovhp04sUMU+oEA8ye8jKlY1C0u7yUv6lpPnHKFOmWjfVtlVsANaNHLi3VRYwBdOS2llFhTFsLmOgeYygLL0NYY6duUCu8FQnto4QJ6lhCmj4LMvrbnbSWm+F7vQE03Ziv5LiV6Q01C3Nj9dCP4CqyXZT7bZ8JrzrM+XPy6xktv6bqhdb667eSfnHCFo0vrViSRLbzTxo4MX4hS4UVFnnRHpjwqMSO4S8fhqZz6Yx0JfyFvy1rwuOWJcQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from CY8PR11MB7134.namprd11.prod.outlook.com (2603:10b6:930:62::17)
+ by IA1PR11MB8173.namprd11.prod.outlook.com (2603:10b6:208:44e::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.32; Tue, 25 Jun
+ 2024 13:49:43 +0000
+Received: from CY8PR11MB7134.namprd11.prod.outlook.com
+ ([fe80::cd87:9086:122c:be3d]) by CY8PR11MB7134.namprd11.prod.outlook.com
+ ([fe80::cd87:9086:122c:be3d%5]) with mapi id 15.20.7698.025; Tue, 25 Jun 2024
+ 13:49:43 +0000
+From: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
+To: "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+	"mripard@kernel.org" <mripard@kernel.org>, "tzimmermann@suse.de"
+	<tzimmermann@suse.de>, "airlied@gmail.com" <airlied@gmail.com>,
+	"daniel@ffwll.ch" <daniel@ffwll.ch>
+CC: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Luck, Tony"
+	<tony.luck@intel.com>, "Wang, Yudong" <yudong.wang@intel.com>
+Subject: RE: [PATCH 1/1] drm/fb-helper: Don't schedule_work() to flush frame
+ buffer during panic()
+Thread-Topic: [PATCH 1/1] drm/fb-helper: Don't schedule_work() to flush frame
+ buffer during panic()
+Thread-Index: AQHasy7crBeDoIP7ckWNGUsx0I55mrHYo+7A
+Date: Tue, 25 Jun 2024 13:49:43 +0000
+Message-ID: <CY8PR11MB713430B4E2F925B88430784B89D52@CY8PR11MB7134.namprd11.prod.outlook.com>
+References: <20240531074521.30406-1-qiuxu.zhuo@intel.com>
+In-Reply-To: <20240531074521.30406-1-qiuxu.zhuo@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CY8PR11MB7134:EE_|IA1PR11MB8173:EE_
+x-ms-office365-filtering-correlation-id: 9d016e52-fe72-48a5-e058-08dc951dab2e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230037|1800799021|366013|376011|38070700015;
+x-microsoft-antispam-message-info: =?us-ascii?Q?Gs2KdqBFwYQfoO4YQ0o31xPDG1ehOi1Ja08eBHiPrN3xnvJUTVWHa5zlUvcL?=
+ =?us-ascii?Q?gbf5nRj/w5843wLVg9LI8gAEFNhyz8HTEL/a+kJ7f4GbhOC1XquVPj20fYqZ?=
+ =?us-ascii?Q?Xi8sUIHfFT1/AUtAvnVY60afnmY5wh0Ekp9JqiP/V1giii55ouMIo2FBwyAd?=
+ =?us-ascii?Q?8Qngn+XGHa8mMuoAGlKqeriQpg8WZoLBG++HXPL1CFtkKrjPsLc5RiJLGTZP?=
+ =?us-ascii?Q?3OQQgY215ABmMw4pgVJklXiU4K+m6ndfh+o/bvFkQUowHrDmtG2IptXouGW5?=
+ =?us-ascii?Q?19sha/2NLj6ZrNrAvlALHBB0ZunENLByL3QTIgQzRxy2LKMOAEKKng0DJoCj?=
+ =?us-ascii?Q?641aOQeNQFBKnGh4IHZCAjN/+s6NIsTj5L7QwHAy0EyzEUhO/Q7BJsEV4ggD?=
+ =?us-ascii?Q?xLHlsoAF6LDAF5RJHcdc4ysgx2xRZq5iRneQHRaHSsaQNUsamJ89+RwIyI0p?=
+ =?us-ascii?Q?ysc9Wq17MynpITWy6oveHjfo7PnRBi5IRfwdVC3a39wrjYR+Gtsfg3cdKjAW?=
+ =?us-ascii?Q?T/sfEzlzoxuxiYuRj7ixn5WNbz31b2tUV4sawD6mfFShPy7SfR8a2UMYFNCh?=
+ =?us-ascii?Q?MuCZ1OjWJGh2p5AQ+QTVSsNNKSmrs9UyTKnVx5gwSH4C2ft447eAEYJJM0Wo?=
+ =?us-ascii?Q?rOCusGm6WWRrq6Llz/GX9WCfEKKIn7+rrKD4T9EXPDFHtchtW4w/0zrfabet?=
+ =?us-ascii?Q?11uw96Pv6AcAQKQdbAbFudSz1Q0hKg9tY4Bh/6TdnftyH3JsTdLW/cdgMg0v?=
+ =?us-ascii?Q?idz0IJMgilXDklK79Lli7Cgd0tnHpSFG/aAZ0XTtX/za/E+PFwnJCCpSsTV6?=
+ =?us-ascii?Q?HHLaCGFz9ZAO9ggoWFNhPOugcuUgLvNrpbQbeF1FZRr3/pojx4kvuAsamM1B?=
+ =?us-ascii?Q?mEcDuvEDwfbYYQ+t9/RmW4YQrpJrzgwTAffAQnyhZuPBPa+Pb440GHyky4J2?=
+ =?us-ascii?Q?LKH9dBOTq+NxS09AuhKispdHfZB1BDPKrzKmNIfXhPCHe9OQgUCsqSt/t7/u?=
+ =?us-ascii?Q?jXhxubVxA4h4rzBgVINf1AT++EUY6Ie981SYMhDfPB+0c2mTem3saKZvRNbx?=
+ =?us-ascii?Q?2TI0BHNvylLwcD9CQrueBOC5mdnP7eDSXn9NoZrwqFO4b+lOFNLLDDrfJH1B?=
+ =?us-ascii?Q?S0Y7nlXRbY6xOXx8854ofDJfe6EsbyOaCAuRG0pfpLaEtyLw9z/X+FVVJotL?=
+ =?us-ascii?Q?eC4bEler3cW2INaoYZU6JN5wbgurTj1Q6m6oZ2A+v5/e3prPgx4cHsXvX3XH?=
+ =?us-ascii?Q?E0Zo3Hrk5ucsl+2TMU6APXk/qquCfTlReoc90rcAvISJ8AXSGsfwiA1woF5l?=
+ =?us-ascii?Q?Fug4vPMFkrKKf52X+AC44juMQ7AniTUzf2ikGHfoMRbAhjA1xyJlEAuFR9kB?=
+ =?us-ascii?Q?0eLsh68=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY8PR11MB7134.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(366013)(376011)(38070700015);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?IjP1/8btxECcb/MYk+ukye2Z9u1JeNHZUn0igRoO4ABD++ZUNJnRH/+8DtAG?=
+ =?us-ascii?Q?fr6W2eLCO1roLUKh7nS/0pfz3wKzUi6B05sYZaLKmK9mLJ6aFpp0ntERd9r3?=
+ =?us-ascii?Q?UknR+zG2adHHuFHohFVM9IGGMppC1xC1iTuR5POd5HKY3aanBtFVIXqSFWH7?=
+ =?us-ascii?Q?VAaCxs/x1zuK/r7nlrseI7/dO2Em8a+cYwvnNd9SwE8jGcKFofhSBsD82aLH?=
+ =?us-ascii?Q?boOkHId6vsZfbgk3MrCvMoed/XT+oOqx3OcQLFMmhOK9GtPs5g7fzmT0KR7d?=
+ =?us-ascii?Q?rlp90csz+A/mahofWLlD43vo8OeipSDGNswVbxDLBP7tFWTsS83pUsgYwaFt?=
+ =?us-ascii?Q?mOSGoeQMb4dV42vVOisvdMbft2p4oPvpL6Nfj4B1LIuIbv5hvsP1yPog27Kz?=
+ =?us-ascii?Q?yYGjgG9XOYZYTAre9hXnxfHvXU9dFPfpNHMzG8p7nLmLOvkPs5CrS/ny12os?=
+ =?us-ascii?Q?4/ri9YWJF97QSosnbY7vtfeL+lHmQazC1oYGFQpL3jF9ITvsJgxF/nyb5GPp?=
+ =?us-ascii?Q?G6ZWMgwlzLhIMfQC5N4UYF0LRVbR+zUGcfVUgEMmPE5RDSGKNLEP9kQ90Mib?=
+ =?us-ascii?Q?wxezc7RmVQABLhdAEKqW9TIgyMlYHxZwKJYLyxmnDkEw0+BZ7jaPlRsPNLif?=
+ =?us-ascii?Q?WAMRP8YbIGw3fQE1YEF31HO44ohduF8spOmH7KvAZqImd99VZsSm0l0W0rJ2?=
+ =?us-ascii?Q?SxwYwG/N+USVmEOg9DCc5UjEwEnFFV6hzpetYJRO2y4SZFMEPDTk25R/mg0e?=
+ =?us-ascii?Q?+W2bNHFCXZxflujDNu/i0nvUq9WKFJkrEI/tPC3Zt8YMCZhaP2wbLM//kvWt?=
+ =?us-ascii?Q?fWg5W6E+dUco3yHIeQdFDZwJy/77iYpYZYC7GjptaJEkM9PyF/eRf3iJncjl?=
+ =?us-ascii?Q?u8RgNK3W/d2x+hxsJNEq5fz8ghUCltUCCtWG5YgPkhZinj0bKYEGcMa71eyS?=
+ =?us-ascii?Q?SpNYsq+RWehM3r7L6EPIGKg3/riyj2A2dFwsXXiP8PXRm1YU7f978PRhPU8R?=
+ =?us-ascii?Q?1mRPIGWjDrNSiv+bipDaB2zlfLgEJow40rkoQc33qdoAMDBbpf8NN4XcQlgG?=
+ =?us-ascii?Q?vSJjvpQh/xTDhBUTj5RVpkZEEjinJnhjUGSRuQ+krBA7XLUoB/2QPx+Kwche?=
+ =?us-ascii?Q?dZBz/TNZWL41kZbAV+eO84heEs6DkdQ0CrYlyoDjZKwn5QBfUoG2ftKFFksm?=
+ =?us-ascii?Q?ej134qgY5gGc4zn7WeD5+d4vNCUclqV7JwBdbyLF0YJCJQt2txcAl2JwDdSS?=
+ =?us-ascii?Q?F39Twj00X+BMO3aY96OFksV0WtLG3RQOvCZYpPbnm1zSNwGgyaRpsJf+Hpr8?=
+ =?us-ascii?Q?BUkT3kkFTldmAzXWdsN9KSvthyySglZIMpNEieW8xV0diGKUMwAUy5D+W+EC?=
+ =?us-ascii?Q?yhr1e8JqLlzlbSWntS3/97em+Eog61vEmCdsRvozybH3gocgz15ErWSLAXr/?=
+ =?us-ascii?Q?yh2Z/E9GTSIJu0WX/8LifNENaoMy1VakDgh6WPDhDrQ5FYbk7OUhk6Sh8KQN?=
+ =?us-ascii?Q?NaYSj3WMi5sfGeSTpcHEEjEeeKebzBKhTDO0JvlZvbiUc3la8bWEB6GKKhH5?=
+ =?us-ascii?Q?6QLOECj7nLKNy//uCRoxN7YdR//ULLtO1C/ALNaO?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CY8PR11MB7134.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d016e52-fe72-48a5-e058-08dc951dab2e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2024 13:49:43.8149
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3WpGivCleRVK0+VdBqrNAMQjXde6XQLZFkmQAMAg5gz8HGIUUtvxMnLZiQRnTyJjv+KEzWC6Vy7+RXPrH/AamQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB8173
+X-OriginatorOrg: intel.com
 
-From: Tvrtko Ursulin <tursulin@ursulin.net>
+Hello,
 
-The current code loops over the psi_states only to call a helper which
-then resolves back to the action needed for each state using a switch
-statement. That is effectively creating a double indirection of a kind
-which, given how all the states need to be explicitly listed and handled
-anyway, we can simply remove. Both the for loop and the switch statement
-that is.
+> From: Zhuo, Qiuxu <qiuxu.zhuo@intel.com>
+> Sent: Friday, May 31, 2024 3:45 PM
+> To: maarten.lankhorst@linux.intel.com; mripard@kernel.org;
+> tzimmermann@suse.de; airlied@gmail.com; daniel@ffwll.ch
+> Cc: dri-devel@lists.freedesktop.org; linux-kernel@vger.kernel.org; Luck, =
+Tony
+> <tony.luck@intel.com>; Zhuo, Qiuxu <qiuxu.zhuo@intel.com>; Wang, Yudong
+> <yudong.wang@intel.com>
+> Subject: [PATCH 1/1] drm/fb-helper: Don't schedule_work() to flush frame
+> buffer during panic()
+>=20
+> Sometimes the system [1] hangs on x86 I/O machine checks. However, the
+> expected behavior is to reboot the system, as the machine check handler
+> ultimately triggers a panic(), initiating a reboot in the last step.
+>=20
+> The root cause is that sometimes the panic() is blocked when
+> drm_fb_helper_damage() invoking schedule_work() to flush the frame buffer=
+.
+> This occurs during the process of flushing all messages to the frame buff=
+er
+> driver as shown in the following call trace:
+>=20
+>   Machine check occurs [2]:
+>     panic()
+>       console_flush_on_panic()
+>         console_flush_all()
+>           console_emit_next_record()
+>             con->write()
+>               vt_console_print()
+>                 hide_cursor()
+>                   vc->vc_sw->con_cursor()
+>                     fbcon_cursor()
+>                       ops->cursor()
+>                         bit_cursor()
+>                           soft_cursor()
+>                             info->fbops->fb_imageblit()
+>                               drm_fbdev_generic_defio_imageblit()
+>                                 drm_fb_helper_damage_area()
+>                                   drm_fb_helper_damage()
+>                                     schedule_work() // <--- blocked here
+>     ...
+>     emergency_restart()  // wasn't invoked, so no reboot.
+>=20
+> During panic(), except the panic CPU, all the other CPUs are stopped.
+> In schedule_work(), the panic CPU requires the lock of worker_pool to que=
+ue
+> the work on that pool, while the lock may have been token by some other
+> stopped CPU. So schedule_work() is blocked.
+>=20
+> Additionally, during a panic(), since there is no opportunity to execute =
+any
+> scheduled work, it's safe to fix this issue by skipping schedule_work() o=
+n
+> 'oops_in_progress' in drm_fb_helper_damage().
+>=20
+> [1] Enable the kernel option CONFIG_FRAMEBUFFER_CONSOLE,
+>     CONFIG_DRM_FBDEV_EMULATION, and boot with the 'console=3Dtty0'
+>     kernel command line parameter.
+>=20
+> [2] Set 'panic_timeout' to a non-zero value before calling panic().
+>=20
+> Reported-by: Yudong Wang <yudong.wang@intel.com>
+> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> ---
+>  drivers/gpu/drm/drm_fb_helper.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/drm_fb_helper.c
+> b/drivers/gpu/drm/drm_fb_helper.c index d612133e2cf7..6d7b6f038821
+> 100644
+> --- a/drivers/gpu/drm/drm_fb_helper.c
+> +++ b/drivers/gpu/drm/drm_fb_helper.c
+> @@ -628,6 +628,9 @@ static void drm_fb_helper_add_damage_clip(struct
+> drm_fb_helper *helper, u32 x, u  static void drm_fb_helper_damage(struct
+> drm_fb_helper *helper, u32 x, u32 y,
+>  				 u32 width, u32 height)
+>  {
+> +	if (oops_in_progress)
+> +		return;
+> +
+>  	drm_fb_helper_add_damage_clip(helper, x, y, width, height);
+>=20
+>  	schedule_work(&helper->damage_work);
+> --
 
-The benefit is both in the code size and CPU time spent in this function.
-YMMV but on my Steam Deck, while in a game, the patch makes the CPU usage
-go from ~2.4% down to ~1.2%. Text size at the same time went from 0x323 to
-0x2c1.
+A gentle ping on this patch.=20
 
-Signed-off-by: Tvrtko Ursulin <tursulin@ursulin.net>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: Peter Ziljstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: kernel-dev@igalia.com
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
----
- kernel/sched/psi.c | 54 +++++++++++++++++++++++-----------------------
- 1 file changed, 27 insertions(+), 27 deletions(-)
+Updated with recent error injection test results:
+- Without the patch, we typically reproduced the issue [1] once in 100 cycl=
+es.
+- With the patch, we tested it on 3 systems and passed a total of 1500 cycl=
+es.
 
-diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-index 7b4aa5809c0f..55720ecf420e 100644
---- a/kernel/sched/psi.c
-+++ b/kernel/sched/psi.c
-@@ -218,28 +218,32 @@ void __init psi_init(void)
- 	group_init(&psi_system);
- }
- 
--static bool test_state(unsigned int *tasks, enum psi_states state, bool oncpu)
-+static u32 test_states(unsigned int *tasks, u32 state_mask)
- {
--	switch (state) {
--	case PSI_IO_SOME:
--		return unlikely(tasks[NR_IOWAIT]);
--	case PSI_IO_FULL:
--		return unlikely(tasks[NR_IOWAIT] && !tasks[NR_RUNNING]);
--	case PSI_MEM_SOME:
--		return unlikely(tasks[NR_MEMSTALL]);
--	case PSI_MEM_FULL:
--		return unlikely(tasks[NR_MEMSTALL] &&
--			tasks[NR_RUNNING] == tasks[NR_MEMSTALL_RUNNING]);
--	case PSI_CPU_SOME:
--		return unlikely(tasks[NR_RUNNING] > oncpu);
--	case PSI_CPU_FULL:
--		return unlikely(tasks[NR_RUNNING] && !oncpu);
--	case PSI_NONIDLE:
--		return tasks[NR_IOWAIT] || tasks[NR_MEMSTALL] ||
--			tasks[NR_RUNNING];
--	default:
--		return false;
-+	const bool oncpu = state_mask & PSI_ONCPU;
-+
-+	if (tasks[NR_IOWAIT]) {
-+		state_mask |= BIT(PSI_IO_SOME);
-+		if (!tasks[NR_RUNNING])
-+			state_mask |= BIT(PSI_IO_FULL);
- 	}
-+
-+	if (tasks[NR_MEMSTALL]) {
-+		state_mask |= BIT(PSI_MEM_SOME);
-+		if (tasks[NR_RUNNING] == tasks[NR_MEMSTALL_RUNNING])
-+			state_mask |= BIT(PSI_MEM_FULL);
-+	}
-+
-+	if (tasks[NR_RUNNING] > oncpu)
-+		state_mask |= BIT(PSI_CPU_SOME);
-+
-+	if (tasks[NR_RUNNING] && !oncpu)
-+		state_mask |= BIT(PSI_CPU_FULL);
-+
-+	if (tasks[NR_IOWAIT] || tasks[NR_MEMSTALL] || tasks[NR_RUNNING])
-+		state_mask |= BIT(PSI_NONIDLE);
-+
-+	return state_mask;
- }
- 
- static void get_recent_times(struct psi_group *group, int cpu,
-@@ -770,7 +774,6 @@ static void psi_group_change(struct psi_group *group, int cpu,
- {
- 	struct psi_group_cpu *groupc;
- 	unsigned int t, m;
--	enum psi_states s;
- 	u32 state_mask;
- 
- 	groupc = per_cpu_ptr(group->pcpu, cpu);
-@@ -841,10 +844,7 @@ static void psi_group_change(struct psi_group *group, int cpu,
- 		return;
- 	}
- 
--	for (s = 0; s < NR_PSI_STATES; s++) {
--		if (test_state(groupc->tasks, s, state_mask & PSI_ONCPU))
--			state_mask |= (1 << s);
--	}
-+	state_mask = test_states(groupc->tasks, state_mask);
- 
- 	/*
- 	 * Since we care about lost potential, a memstall is FULL
-@@ -1194,7 +1194,7 @@ void psi_cgroup_restart(struct psi_group *group)
- 	/*
- 	 * After we disable psi_group->enabled, we don't actually
- 	 * stop percpu tasks accounting in each psi_group_cpu,
--	 * instead only stop test_state() loop, record_times()
-+	 * instead only stop test_states() loop, record_times()
- 	 * and averaging worker, see psi_group_change() for details.
- 	 *
- 	 * When disable cgroup PSI, this function has nothing to sync
-@@ -1202,7 +1202,7 @@ void psi_cgroup_restart(struct psi_group *group)
- 	 * would see !psi_group->enabled and only do task accounting.
- 	 *
- 	 * When re-enable cgroup PSI, this function use psi_group_change()
--	 * to get correct state mask from test_state() loop on tasks[],
-+	 * to get correct state mask from test_states() loop on tasks[],
- 	 * and restart groupc->state_start from now, use .clear = .set = 0
- 	 * here since no task status really changed.
- 	 */
--- 
-2.44.0
+[1] the system got blocked at drm_fb_helper_damage()-> schedule_work() with=
+out reboot.
+      For details, please see the commit message.
+
+Thanks!
+-Qiuxu
 
