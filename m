@@ -1,113 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F343F1B7F7;
-	Tue, 25 Jun 2024 14:05:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37CB31B7F7;
+	Tue, 25 Jun 2024 14:06:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719324351; cv=none; b=diMUDsizrmRT3cKZyMDhxWiqEecE1B32/dTrSosynLP7h9MUz2cLFuF2XBnMnbCjPge587YCTviDQ9gU/H1TcJu3gL8WKXIOeJeh416uYriVQ9efky+3dB6AcPRQtxCP4ek0pyb6nhKZa+uDVOtZIdHT/vxU14UaMaHF8ORYcKw=
+	t=1719324416; cv=none; b=FW1O0yTFrVB5x7Bc7YXKuWHw6UHTjMnSprtu8lRaeDB/+j2YZ9orlhyg627JBZ/C86OX9Yclcj7efSVNk4mfohT4S7ixcrlMbchRybqLlzNAfYN4KqwNntTYTcMk0ZEGFHArbJMhKa7HqCP2kUn7lGjbNTnNFpWYY8AHRqMhTfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719324351; c=relaxed/simple;
-	bh=6dZAItMcJeBVKPsL6anNiuaV2akrLj/ZehEz2jVwd28=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ktWx/Shaju083ESyFJLrXocuGl3nLsWq5/VOlTrX8gRcLf3oifZH3j1P8QHKkDpKTKzQsXuXDZF7nlyaprxwj+ug6CNG9aLhDHPrhQUA/vPsBK/zW3Q8umnwMetSW4Xh8U4hPDM94ocRHJW3AQbmXxJErgGTcO5DwHrtixPauMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fo4xTVOe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719324416; c=relaxed/simple;
+	bh=7J8V+A2m4KYY9Ousnw3i3fJCgNrKZAjhDaETttSPm0c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z9U+2aVAwjoCCdGQJa0lkoD3MFgcqWCnDu2jv1Welfzdanzb1jseiKNTuNy+qrJ+1n1PGoWL5RUfNuLcaEtQdoYxxLIBzmV99gD7w/eellt4J5e7JLEv4ePYgN8foc4qCx2tTasErA4vtLNqPM5glOB04fQdK6uj5Hg5lSVCujk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FkHBIoSF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fo4xTVOe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9BB3C4AF09;
-	Tue, 25 Jun 2024 14:05:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FkHBIoSF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42DF7C32781;
+	Tue, 25 Jun 2024 14:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719324350;
-	bh=6dZAItMcJeBVKPsL6anNiuaV2akrLj/ZehEz2jVwd28=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fo4xTVOe7gc+/MUQWjDd5FoDVMXsH7yQ8Dm+fbzmalzvJH/tXJeScNRfWUW2ou2wX
-	 luM+zgJd+682/WlSFPfJl3r0LokQv0424uk5SYWJtdpTrMCb+LtSKfq2mutKbJd68V
-	 VIQ8DCJjCtDNsoyayD9aahflFlgzj3PCR7kkF2NeWLWgNZdAjLfBF6ptgj76ifY7Mr
-	 VGSxkZK7pKXAFKabZBJkRKRUx9Zfui9THxrrRaz793Ejnp/++xpNuKnlc3DaXoeerW
-	 fi/CLwp0sYDPqXL/+XunXKl2x0Xxy3nCSFU1otTZRcezetHGNiKNzjf5shLVF/Tlax
-	 ridWIZHXY+ehA==
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2ebe40673e8so60721271fa.3;
-        Tue, 25 Jun 2024 07:05:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWwtmEH19LbIwEqZyAkHQ+Gd0dV/wONI2TMWUqAYJWHIz72qvsQINwuX0D7gF41/chJgPj95zIK356hjlmDARkmNz6hcsceDQ5fN2ZAE2ZcpjygCYwN/xdjX4kLapEfFVhLNSy+KZ32rMaz
-X-Gm-Message-State: AOJu0YxoqPDPApVEeouqNMHdYYQV2rVfITCE5Zde7obbxUQDBo3NDT68
-	PJp2M0/a1mMX98ol+9sdf7WpoHihVkSkadGwxBk4FOOUJaB7BuqzrRb4VLawc1cp+8VpIlMGjCF
-	FRZ84g1yU40Y8m4muPTGQreCD8tE=
-X-Google-Smtp-Source: AGHT+IHdZXWyZThJdlhl3ZtP2SQnSA684soUV2SbCh9btSLH/kVKz83OILRohORl08dqXtfdvgz2K3FMfb3GEfgxqdM=
-X-Received: by 2002:a2e:3a10:0:b0:2eb:dfe9:b462 with SMTP id
- 38308e7fff4ca-2ec5b3e3599mr43788451fa.45.1719324349498; Tue, 25 Jun 2024
- 07:05:49 -0700 (PDT)
+	s=k20201202; t=1719324415;
+	bh=7J8V+A2m4KYY9Ousnw3i3fJCgNrKZAjhDaETttSPm0c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=FkHBIoSFBTopDeTKT/XI/obwtTFmXbucUL0Iu8XhW1Hh/aHREi75sUiaICLONLA4v
+	 VV5lyqmmZMmhPCcUvuctzn0VxJ36EkxN45CGmVg3yFXcFDmPCf9vNE6HU0c13hb7Ha
+	 DzyYVA3cSOJqLGOTWSVDgUeee6ZzY9fss+4GOZn6XrTeU7X9ckCXO/0lJdbp0yPMrU
+	 53DN+2G82EQ6Bkgq6mbGI/wP08QT3TSvMOzkXjSQZLm0i+YhfdX5qB+x2oyR47NoSE
+	 8BKvWhPcg6xeqn8Mxjd1Rn8lUNsGtW0Jx9UjQg3ukp5b6NA1LsZh275De8C7f/IdAP
+	 ga5ghxOaAIz5Q==
+Date: Tue, 25 Jun 2024 07:06:54 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Aaron Conole <aconole@redhat.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+ dev@openvswitch.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Pravin B Shelar <pshelar@ovn.org>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Shuah
+ Khan <shuah@kernel.org>, Stefano Brivio <sbrivio@redhat.com>,
+ =?UTF-8?B?QWRyacOhbg==?= Moreno <amorenoz@redhat.com>, Simon Horman
+ <horms@kernel.org>
+Subject: Re: [PATCH v2 net-next 0/7] selftests: net: Switch pmtu.sh to use
+ the internal ovs script.
+Message-ID: <20240625070654.6a00efef@kernel.org>
+In-Reply-To: <f7th6dhgnvm.fsf@redhat.com>
+References: <20240620125601.15755-1-aconole@redhat.com>
+	<20240621180126.3c40d245@kernel.org>
+	<f7ttthjh33w.fsf@redhat.com>
+	<f7tpls6gu3q.fsf@redhat.com>
+	<e4f69335f90aae3f1daa47ba8f69b24ea15ed3b7.camel@redhat.com>
+	<f7th6dhgnvm.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240624-kbuild-fix-xconfig-v1-1-7c06eae6d3aa@avm.de>
-In-Reply-To: <20240624-kbuild-fix-xconfig-v1-1-7c06eae6d3aa@avm.de>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Tue, 25 Jun 2024 23:05:12 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARej5AOyxFzRoZa3VKmJcEhbQYpx6h6rim9t+uVNaPOyw@mail.gmail.com>
-Message-ID: <CAK7LNARej5AOyxFzRoZa3VKmJcEhbQYpx6h6rim9t+uVNaPOyw@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Use $(obj)/%.cc to fix host C++ module builds
-To: Nicolas Schier <n.schier@avm.de>
-Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Rolf Eike Beer <eb@emlix.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 24, 2024 at 8:12=E2=80=AFPM Nicolas Schier <n.schier@avm.de> wr=
-ote:
->
-> Use $(obj)/ instead of $(src)/ prefix when building C++ modules for
-> host, as explained in commit b1992c3772e6 ("kbuild: use $(src) instead
-> of $(srctree)/$(src) for source directory").  This fixes build failures
-> of 'xconfig':
->
->     $ make O=3Dbuild/ xconfig
->     make[1]: Entering directory '/data/linux/kbuild-review/build'
->       GEN     Makefile
->     make[3]: *** No rule to make target '../scripts/kconfig/qconf-moc.cc'=
-, needed by 'scripts/kconfig/qconf-moc.o'.  Stop.
->
-> Fixes: b1992c3772e6 ("kbuild: use $(src) instead of $(srctree)/$(src) for=
- source directory")
-> Reported-by: Rolf Eike Beer <eb@emlix.com>
-> Signed-off-by: Nicolas Schier <n.schier@avm.de>
+On Tue, 25 Jun 2024 09:20:29 -0400 Aaron Conole wrote:
+> > I'm still wondering if the issue is Kconfig-related (plus possibly bad
+> > interaction with vng). I don't see the OVS knob enabled in the self-
+> > tests config. If it's implied by some other knob, and ends-up being
+> > selected as a module, vng could stumble upon loading the module at
+> > runtime, especially on incremental build (at least I experience that
+> > problem locally). I'm not even sure if the KCI is building
+> > incrementally or not, so all the above could is quite a wild guess.
+> >
+> > In any case I think adding the explicit CONFIG_OPENVSWITCH=y the
+> > selftest config would make the scenario more well defined.  
+> 
+> That is in 7/7 - but there was a collision with a netfilter knob getting
+> turned on.  I can repost it as-is (just after rebasing) if you think
+> that is the only issue.
 
-Applied to linux-kbuild.
-Thanks!
+Sorry for not checking it earlier, looks like the runner was missing
+pyroute:
 
+# python3 ./tools/testing/selftests/net/openvswitch/ovs-dpctl.py
+Need to install the python pyroute2 package >= 0.6.
 
-
-> ---
->  scripts/Makefile.host | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/scripts/Makefile.host b/scripts/Makefile.host
-> index d35f55e0d141..e85be7721a48 100644
-> --- a/scripts/Makefile.host
-> +++ b/scripts/Makefile.host
-> @@ -146,7 +146,7 @@ $(call multi_depend, $(host-cxxmulti), , -objs -cxxob=
-js)
->  # Create .o file from a single .cc (C++) file
->  quiet_cmd_host-cxxobjs =3D HOSTCXX $@
->        cmd_host-cxxobjs =3D $(HOSTCXX) $(hostcxx_flags) -c -o $@ $<
-> -$(host-cxxobjs): $(obj)/%.o: $(src)/%.cc FORCE
-> +$(host-cxxobjs): $(obj)/%.o: $(obj)/%.cc FORCE
->         $(call if_changed_dep,host-cxxobjs)
->
->  # Create executable from a single Rust crate (which may consist of
->
-> ---
-> base-commit: 224a21441b0925ce1e60afb27629773a522c946e
-> change-id: 20240624-kbuild-fix-xconfig-f0e95d0d5b27
->
-> Best regards,
-> --
-> Nicolas Schier
->
-
-
---=20
-Best Regards
-Masahiro Yamada
+I guess run_cmd counter-productively eats the stderr output ? :(
