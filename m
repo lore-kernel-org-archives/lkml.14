@@ -1,142 +1,169 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97FF039FD6;
-	Tue, 25 Jun 2024 14:28:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5126416C68B;
+	Tue, 25 Jun 2024 14:29:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719325721; cv=none; b=gx70UjL8i8ktf6ew1DD99Qbwzg36Qtg/BRMxQ99H/BxCbJqq/qZh6LT7kEOdKQ2FAQjhmsPlwH76NAOrhfYfLdW2/1zUVYkvj/imwyEXUzg1Etl0OPUq0gZV6+FYQuWb2PBvssQ0W8TNmOWf5fE3+KvGDLQxCBIPqHGewhuNduw=
+	t=1719325794; cv=none; b=sl2OJ76IhOzR26h2+aBu2ZHvTab2Y5Bd9PPfO1akSf57/ePnxlu85HQCLyKXICaSmDoWJnaoe7syCxx0PqNnMyDRFf8RE+NXXWdamflF4FwhkrYFe+XfZBvaPombmHqzq8s+dAbyGRKTzU56p/LtDa7OyhfHuoGnMRHIh5yKnBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719325721; c=relaxed/simple;
-	bh=4VC/dpmvV2yj+XWaUHU3QaBpFS4x/fGnrsDdid1YfWM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WCDlnFZFYWJ10rloZ7rjcWIPioq9Ng/kqZiugoDT1Meam41pceQ0/6xH2Kk0Yep6SHNB+9gDvmqQqNHKOq0a3cATaqnvG09BGr+B6aOjE0bbLY0z1kLiIGnO18nZH5jH/QiAAkd6SuMZpMZDjISY46t92eBo1uygQbePXxR/0GY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E9kitTR/; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E9kitTR/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719325719; x=1750861719;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4VC/dpmvV2yj+XWaUHU3QaBpFS4x/fGnrsDdid1YfWM=;
-  b=E9kitTR/g/0YmIBEtWLoCAYqZifG9/sNyvZnzJHZusYPWmg49yJDxOjf
-   sJeL7XBJ+WyQhbIEl1xTjaG8I3lqbGW6OpfvEQncpiOubGBBRm1zoTYrW
-   PdGdnUVq5Ptw6+5keGLcbUoVxXO2By88549A1aybfiAMIpP+HRIr4j128
-   b5qVFF+EjA3Bcv+hShX7Kl6X9PTeo60Zz9kZx9o4CJsQYE3jYbXpz71mR
-   EdBrMHPtx79QkVd2EkXKWX2Qy3ivHzT5eL+qKkxA9PmLdvkZulXaEMk0i
-   CIYjBp143f957yfXnZwiii/qHg993y1ZZA5T8UYBgRl5ECmKlTPj0q7W0
-   Q==;
-X-CSE-ConnectionGUID: a0x1Gck1Q02wzl2Tdosq8Q==
-X-CSE-MsgGUID: n1Dc4KBXRAOWnv/vVFIDPA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="16309089"
-X-IronPort-AV: E=Sophos;i="6.08,264,1712646000"; 
-   d="scan'208";a="16309089"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 07:28:39 -0700
-X-CSE-ConnectionGUID: kbnTYjbeThOxOrKl80gX5Q==
-X-CSE-MsgGUID: +lgyiggYS0WF8pCBWxD4Ug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,264,1712646000"; 
-   d="scan'208";a="43546824"
-Received: from kuha.fi.intel.com ([10.237.72.185])
-  by orviesa010.jf.intel.com with SMTP; 25 Jun 2024 07:28:35 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 25 Jun 2024 17:28:34 +0300
-Date: Tue, 25 Jun 2024 17:28:34 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Nikita Travkin <nikita@trvn.ru>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 0/7] usb: typec: ucsi: rework glue driver interface
-Message-ID: <ZnrUEp0C9+Q7p+8a@kuha.fi.intel.com>
-References: <20240621-ucsi-rework-interface-v2-0-a399ff96bf88@linaro.org>
+	s=arc-20240116; t=1719325794; c=relaxed/simple;
+	bh=3RVvHeyAWipkeVyMwWIsWzeZ9VvPaM9h3uVyhNJkd/U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=XGHmzUyYdwwJn4J+1zeNLU5hF8egu9wjqtIczR2kvHGQZ5j/ZYZw8siFbHcy30a+x2Wss6GIGfjQZtafpe1iSefI5NzI87SEfGx5tJYm009QHnnfe/a5HqaV3v08ugyBwVdfDxXNnj6ELb11o0ZGkpnl5u+1Bhng+1RGb+Sh9bY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4W7nHg0Vvxzddj8;
+	Tue, 25 Jun 2024 22:28:15 +0800 (CST)
+Received: from kwepemd100013.china.huawei.com (unknown [7.221.188.163])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8F05F180085;
+	Tue, 25 Jun 2024 22:29:48 +0800 (CST)
+Received: from [10.67.109.79] (10.67.109.79) by kwepemd100013.china.huawei.com
+ (7.221.188.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Tue, 25 Jun
+ 2024 22:29:47 +0800
+Message-ID: <b5f49ae4-a905-4c64-8918-83aa53d3dbcd@huawei.com>
+Date: Tue, 25 Jun 2024 22:29:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240621-ucsi-rework-interface-v2-0-a399ff96bf88@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next] cgroup: fix uaf when proc_cpuset_show
+To: Waiman Long <longman@redhat.com>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
+	<mkoutny@suse.com>
+CC: <tj@kernel.org>, <lizefan.x@bytedance.com>, <hannes@cmpxchg.org>,
+	<bpf@vger.kernel.org>, <cgroups@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20240622113814.120907-1-chenridong@huawei.com>
+ <19648b9c-6df7-45cd-a5ae-624a3e4d860f@redhat.com>
+ <52f72d1d-602e-4dca-85a3-adade925b056@huawei.com>
+ <71a9cc3a-1b58-4051-984b-dd4f18dabf84@redhat.com>
+ <8f83ecb3-4afa-4e0b-be37-35b168eb3c7c@huawei.com>
+ <ee30843f-2579-4dcf-9688-6541fd892678@redhat.com>
+ <3322ce46-78a1-45c5-ad07-a982dec21c8e@huawei.com>
+ <gke4hn67e2js2wcia4gopr6u26uy5epwpu7r6sepjwvp5eetql@nuwvwzg2k4dy>
+ <920bbfaa-bb76-4aa1-bd07-9a552e3bfdf2@huawei.com>
+ <80e87513-aa48-4548-893e-ed339690c941@redhat.com>
+Content-Language: en-US
+From: chenridong <chenridong@huawei.com>
+In-Reply-To: <80e87513-aa48-4548-893e-ed339690c941@redhat.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemd100013.china.huawei.com (7.221.188.163)
 
-On Fri, Jun 21, 2024 at 01:55:19AM +0300, Dmitry Baryshkov wrote:
-> The interface between UCSI and the glue driver is very low-level. It
-> allows reading the UCSI data from any offset (but in reality the UCSI
-> driver reads only VERSION, CCI an MESSAGE_IN data). All event handling
-> is to be done by the glue driver (which already resulted in several
-> similar-but-slightly different implementations). It leaves no place to
-> optimize the write-read-read sequence for the command execution (which
-> might be beneficial for some of the drivers), etc.
-> 
-> The patchseries attempts to restructure the UCSI glue driver interface
-> in order to provide sensible operations instead of a low-level read /
-> write calls.
-> 
-> If this approach is found to be acceptable, I plan to further rework the
-> command interface, moving reading CCI and MESSAGE_IN to the common
-> control code, which should simplify driver's implementation and remove
-> necessity to split quirks between sync_control and read_message_in e.g.
-> as implemented in the ucsi_ccg.c.
-> 
-> Note, the series was tested only on the ucsi_glink platforms. Further
-> testing is appreciated.
 
-I can run a few tests against these tomorrow.
+On 2024/6/25 22:16, Waiman Long wrote:
+> On 6/25/24 10:11, chenridong wrote:
+>>
+>>
+>> On 2024/6/25 18:10, Michal Koutný wrote:
+>>> Hello.
+>>>
+>>> On Tue, Jun 25, 2024 at 11:12:20AM GMT, 
+>>> chenridong<chenridong@huawei.com>  wrote:
+>>>> I am considering whether the cgroup framework has a method to fix this
+>>>> issue, as other subsystems may also have the same underlying problem.
+>>>> Since the root css will not be released, but the css->cgrp will be
+>>>> released.
+>>> <del>First part is already done in
+>>>     d23b5c5777158 ("cgroup: Make operations on the cgroup root_list 
+>>> RCU safe")
+>>> second part is that</del>
+>>> you need to take RCU read lock and check for NULL, similar to
+>>>     9067d90006df0 ("cgroup: Eliminate the need for cgroup_mutex in 
+>>> proc_cgroup_show()")
+>>>
+>>> Does that make sense to you?
+>>>
+>>> A Fixes: tag would be nice, it seems at least
+>>>     a79a908fd2b08 ("cgroup: introduce cgroup namespaces")
+>>> played some role. (Here the RCU lock is not for cgroup_roots list 
+>>> but to
+>>> preserve the root cgrp itself css_free_rwork_fn/cgroup_destroy_root.
+>>>
+>>> HTH,
+>>> Michal
+>>
+>> Thank you, Michal, that is a good idea. Do you mean as below?
+>>
+>> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+>>
+>> index c12b9fdb22a4..2ce0542067f1 100644
+>> --- a/kernel/cgroup/cpuset.c
+>> +++ b/kernel/cgroup/cpuset.c
+>> @@ -5051,10 +5051,17 @@ int proc_cpuset_show(struct seq_file *m, 
+>> struct pid_namespace *ns,
+>>         if (!buf)
+>>                 goto out;
+>>
+>> +       rcu_read_lock();
+>> +       spin_lock_irq(&css_set_lock);
+>>         css = task_get_css(tsk, cpuset_cgrp_id);
+>> -       retval = cgroup_path_ns(css->cgroup, buf, PATH_MAX,
+>> - current->nsproxy->cgroup_ns);
+>> +
+>> +       retval = cgroup_path_ns_locked(css->cgroup, buf, PATH_MAX,
+>> +               current->nsproxy->cgroup_ns);
+>>         css_put(css);
+>> +
+>> +       spin_unlock_irq(&css_set_lock);
+>> +       cgroup_unlock();
+>> +
+>>         if (retval == -E2BIG)
+>>                 retval = -ENAMETOOLONG;
+>>
+>>         if (retval < 0)
+>>
+> That should work. However, I would suggest that you take 
+> task_get_css() and css_put() outside of the critical section. The 
+> task_get_css() is a while loop that may take a while to execute and 
+> you don't want run it with interrupt disabled.
+>
+> Cheers,
+> Longman
+>
+>
+>
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -5050,11 +5050,18 @@ int proc_cpuset_show(struct seq_file *m, struct 
+pid_namespace *ns,
+         buf = kmalloc(PATH_MAX, GFP_KERNEL);
+         if (!buf)
+                 goto out;
+-
+         css = task_get_css(tsk, cpuset_cgrp_id);
+-       retval = cgroup_path_ns(css->cgroup, buf, PATH_MAX,
+-                               current->nsproxy->cgroup_ns);
++
++       rcu_read_lock();
++       spin_lock_irq(&css_set_lock);
++
++       retval = cgroup_path_ns_locked(css->cgroup, buf, PATH_MAX,
++               current->nsproxy->cgroup_ns);
++
++       spin_unlock_irq(&css_set_lock);
++       rcu_read_unlock();
+         css_put(css);
++
+         if (retval == -E2BIG)
+                 retval = -ENAMETOOLONG;
 
-I don't have have any objections with this approach, but you'll need
-to do another rebase. Now these don't apply cleanly because of
-9e3caa9dd51b ("usb: typec: ucsi_acpi: Add LG Gram quirk").
+         if (retval < 0)
 
-thanks,
 
-> Depends: [1], [2]
-> 
-> [1] https://lore.kernel.org/linux-usb/20240612124656.2305603-1-fabrice.gasnier@foss.st.com/
-> 
-> [2] https://lore.kernel.org/linux-usb/20240621-ucsi-yoga-ec-driver-v8-1-e03f3536b8c6@linaro.org/
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
-> Changes in v2:
-> - Dropped the RFC prefix
-> - Rebased on top of the fixed STM32 patch
-> - Included the pending Yoga C630 driver into the cleanup.
-> - Link to v1: https://lore.kernel.org/r/20240603-ucsi-rework-interface-v1-0-99a6d544cec8@linaro.org
-> 
-> ---
-> Dmitry Baryshkov (7):
->       usb: typec: ucsi: move ucsi_acknowledge() from ucsi_read_error()
->       usb: typec: ucsi: simplify command sending API
->       usb: typec: ucsi: split read operation
->       usb: typec: ucsi: rework command execution functions
->       usb: typec: ucsi: inline ucsi_read_message_in
->       usb: typec: ucsi: extract common code for command handling
->       usb: typec: ucsi: reorder operations in ucsi_run_command()
-> 
->  drivers/usb/typec/ucsi/ucsi.c           | 215 +++++++++++++++++---------------
->  drivers/usb/typec/ucsi/ucsi.h           |  26 ++--
->  drivers/usb/typec/ucsi/ucsi_acpi.c      | 100 +++++++--------
->  drivers/usb/typec/ucsi/ucsi_ccg.c       | 103 +++++++--------
->  drivers/usb/typec/ucsi/ucsi_glink.c     |  74 ++++-------
->  drivers/usb/typec/ucsi/ucsi_stm32g0.c   |  79 ++++--------
->  drivers/usb/typec/ucsi/ucsi_yoga_c630.c | 104 +++++----------
->  7 files changed, 309 insertions(+), 392 deletions(-)
-> ---
-> base-commit: f0dbf09a40c8100a895f675d619db5ed1f58f7ac
-> change-id: 20240525-ucsi-rework-interface-5ff2264f6aec
-> 
-> Best regards,
-> -- 
-> Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Yeah, that looks good, i will test for a while. I will send a new patch 
+if no other problem occurs.
 
--- 
-heikki
+Thank you.
+
+Regards,
+Ridong
+
+
