@@ -1,166 +1,105 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B82F216F913
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 16:25:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7500D171E41;
+	Tue, 25 Jun 2024 16:26:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719332752; cv=none; b=kXfyfPAnocJT5fSC9Eb9p/j8xuX52kwckmyPK/db70bt/m7jOwGAE7FMYb9MfgJz3tJpCQVoXJnlrfX0wzArMDWqX+AuqyJ8zEVu0jE4QvFfWCW10LBk7k2VNNe+VM/5bmfGEOtvD8t9tgC+Vcu1m64/K+RRMcWir/Ogc1OHmlQ=
+	t=1719332774; cv=none; b=syeTg6VudffnTddHzTytfNO9P8F+F7bmcNNJR3mE3a15o9NrcaW14MtMyI2zwNF45q4mbEsfXXXQQtNWqzsaIgkyifRvjZvd1OMoTNF5/ehlo6GeYY1J0krw7xGVIE3P9xuYlqaPWf7ym7nxAc5skpGejWX2OiZsn49nZ2GZa4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719332752; c=relaxed/simple;
-	bh=B2YDtkHg6fs4L+dcYvgZ3sVe0CW9/lPIvU9kwWcZ9V0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=n7AR4dIv7gvwezp65eEdWnRZke9h8o1BuA+S9wUT1HSS3MZgk8gnpy3zMPxsccySTYN41KDZ4JsILDUSSHJ15Mb2X+7vDU/TBFWP8k5q3DMYiKmaMo57cknANN8sy3qMkptwDCVTQGmfxYcUPBl4pko+M9YXN+c/6Jmkafs6EKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=BehKRk/4; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BehKRk/4"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-70673c32118so2110334b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 09:25:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1719332750; x=1719937550; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=V5Tt7Lc2+N1dSi7KU9Dntd7EOp1nzs8phsS0Ld5X6so=;
-        b=BehKRk/4Fg9+4rrmw24bAdsawNF6eS9ayOo0Rt8dBrauNCgXgqFdAkg3avorEC7mrc
-         2e9dRSltimTOxUTIpSd/BLg6FfbinxbMjlnAipEqjmJELB5zfOrnqm76rwcGtuQWUveu
-         NMCUxp3w2z1pb/uDNwTEu8kDR96aJw3I0SrNg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719332750; x=1719937550;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=V5Tt7Lc2+N1dSi7KU9Dntd7EOp1nzs8phsS0Ld5X6so=;
-        b=bHVZ5YK7GE6rD9ibHZU8s6pixzWZ44pZmoJRU/wZPoDfzHEQGKIT5CQY9+n5rZbPWN
-         mdQ/PNawDDdLCtqKEE29ElfzRdzcVSNeqC+tYBSGI6JYM98BrpLinidbPdPC3ZLGpOnI
-         NBHr4OPovuVWKkXQc85CQ4uwSmco3JYtwkDGhtjRsamyzZgfLGN2Mmu+QEOuMqDNDqsV
-         ASQuFxdKvSHfUf6+mMpZHFuxIWLb/r5YnYPhyllooDFACq16YEGV/2iuu/jKJAdM15rk
-         bKfjbJiYRS/Wbfy/bEOmPJMH7CtOPfI0b+2+nAZW06y9RyauWqifsjKcRlSqFEE6wRQw
-         UvBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUcFwqcS+BXc/OtbnF0cJ3QwbA7xoCNGhNXBEGMtk8I0xB0d1q12VkZA58QBNKh3hBa+aJUESXFbwnZYD//Djb5xxFU0aHpXLU0IG1k
-X-Gm-Message-State: AOJu0Ywum4+ZmV19J2T3aSTYoD41loW+OFpFoTmpASQ4SWpBy7GL6KOZ
-	+QANRQp8qzMdvUYw9nI5eJd4H+iTE9QaQF2xn57FGOFVoQ9NWjMh8TrfAO+BfQ==
-X-Google-Smtp-Source: AGHT+IEhsjk6aekAxj8P+vBahLkJqDcR0bi6Msxsp/13kv2NwnQagIIUi6/qZFjte+RAGbc4YnBoNg==
-X-Received: by 2002:aa7:8611:0:b0:706:375e:220d with SMTP id d2e1a72fcca58-706746fa56cmr7358170b3a.30.1719332749891;
-        Tue, 25 Jun 2024 09:25:49 -0700 (PDT)
-Received: from dianders.sjc.corp.google.com ([2620:15c:9d:2:3491:3ec9:c533:e23])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7068a63c8bfsm3535919b3a.27.2024.06.25.09.25.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 09:25:49 -0700 (PDT)
-From: Douglas Anderson <dianders@chromium.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Tony Lindgren <tony@atomide.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	linux-arm-msm@vger.kernel.org,
-	Bjorn Andersson <andersson@kernel.org>,
-	Stephen Boyd <swboyd@chromium.org>,
-	linux-serial@vger.kernel.org,
-	=?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?= <nfraprado@collabora.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	linux-kernel@vger.kernel.org,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Rob Herring <robh@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vijaya Krishna Nivarthi <quic_vnivarth@quicinc.com>
-Subject: [PATCH] serial: qcom-geni: Avoid hard lockup if bytes are dropped
-Date: Tue, 25 Jun 2024 09:24:44 -0700
-Message-ID: <20240625092440.1.Icf914852be911b95aefa9d798b6f1cd1a180f985@changeid>
-X-Mailer: git-send-email 2.45.2.741.gdbec12cfda-goog
+	s=arc-20240116; t=1719332774; c=relaxed/simple;
+	bh=oy+bElgkbcQmzHj7fmn/6KbrN65wi3Xoq/EADV3ygto=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CRIR/FKS7ZIEmi8KjXb0Uw+3EZFx1E7J27GR2jPL7G+0qvCaDUrV82mo1Ru0a59BmTi9E4gn+8tqfAjiTCvS8xg/Tnh8ikMigmrUMYL++Qp3dbRet1zpj0Fo/B1dD3wQ17AbfThLhmbyLXbtIK2LRhg50xQ5joLdvAolF0eK05c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id A73F830010DF5;
+	Tue, 25 Jun 2024 18:26:00 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 910484BC19; Tue, 25 Jun 2024 18:26:00 +0200 (CEST)
+Date: Tue, 25 Jun 2024 18:26:00 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: corbet@lwn.net, bhelgaas@google.com, galshalom@nvidia.com,
+	leonro@nvidia.com, jgg@nvidia.com, treding@nvidia.com,
+	jonathanh@nvidia.com, mmoshrefjava@nvidia.com, shahafs@nvidia.com,
+	vsethi@nvidia.com, sdonthineni@nvidia.com, jan@nvidia.com,
+	tdave@nvidia.com, linux-doc@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V4] PCI: Extend ACS configurability
+Message-ID: <ZnrvmGBw-Ss-oOO6@wunner.de>
+References: <20240523063528.199908-1-vidyas@nvidia.com>
+ <20240625153150.159310-1-vidyas@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240625153150.159310-1-vidyas@nvidia.com>
 
-If you start sending a large chunk of text over the UART (like `cat
-/var/log/messages`) and then hit Ctrl-C to stop it then, as of commit
-1788cf6a91d9 ("tty: serial: switch from circ_buf to kfifo"), you'll
-get a hard lockup. Specifically, the driver ends up looping in
-qcom_geni_serial_send_chunk_fifo(). uart_fifo_out() will return 0
-bytes were transferred and the loop will never make progress.
+On Tue, Jun 25, 2024 at 09:01:50PM +0530, Vidya Sagar wrote:
+> Add a kernel command-line option 'config_acs' to directly control all the
+> ACS bits for specific devices, which allows the operator to setup the
+> right level of isolation to achieve the desired P2P configuration.
 
-Avoid the hard lockup by making sure we never kick off a transfer that
-is larger than we can queue up immediately.
+An example wouldn't hurt, here and in kernel-parameters.txt.
 
-The issue stems from the fact that the geni serial driver tried to be
-more efficient by kicking off large transfers. It tried to do this
-because the design of geni means that whenever we get to the end of a
-transfer there is a period of time where the line goes idle while we
-wait for an interrupt to start a new transfer.
 
-The geni serial driver kicked off large transfers by peeking into the
-Linux software FIFO and kicking off a transfer based on the number of
-bytes there. While that worked (mostly), there was an unhandled corner
-case when the Linux software FIFO shrank, as happens when you kill a
-process that had queued up lots of data to send.
+> ACS offers a range of security choices controlling how traffic is
+> allowed to go directly between two devices. Some popular choices:
+>   - Full prevention
+>   - Translated requests can be direct, with various options
+>   - Asymmetric direct traffic, A can reach B but not the reverse
+>   - All traffic can be direct
+> Along with some other less common ones for special topologies.
 
-Prior to the recent kfifo change, the geni driver would keep sending
-data that had been "removed" from the Linux software FIFO. While
-definitely wrong, this didn't feel too terrible. In the above instance
-of hitting Ctrl-C while catting a large file you'd see the file keep
-spewing out to the console for a few hundred milliseconds after the
-process died. As mentioned above, after the kfifo change we get a hard
-lockup.
+I'm wondering whether it would make more sense to let users choose
+between those "higher-level" options, instead of giving direct access
+to bits (and thus risking users to choose an incorrect setting).
 
-Digging into the geni serial driver shows a whole pile of issues and
-those should be fixed. One patch series attempting to fix the issue
-has had positive testing/reviews [1] but it's a fairly large change.
-While debating / researching the right long term solution, this small
-patch at least prevents the hard lockup.
+Also, would it be possible to automatically change ACS settings
+when enabling or disabling P2PDMA?
 
-NOTE: this change does have performance impacts. On my sc7180-trogdor
-device I measured something like a 2% slowdown. Others has seen
-something more like a 20-25% slowdown [2]. However, correctness trumps
-performance so landing this makes sense while better solutions are
-devised.
+The representation chosen here (as a command line option) seems
+questionable:
 
-[1] https://lore.kernel.org/r/20240610222515.3023730-1-dianders@chromium.org
-[2] https://lore.kernel.org/r/ZnraAlR9QeYhd628@hovoldconsulting.com
+We're going to add more user-controllable options going forward.
+E.g., when introducing IDE, we'll have to let user space choose
+whether encryption should be enabled for certain PCIe devices.
+That's because encryption isn't for free, so can't be enabled
+opportunistically.  (The number of crypto engines on a CPU is
+limited and enabling encryption consumes energy.)
 
-Fixes: 1788cf6a91d9 ("tty: serial: switch from circ_buf to kfifo")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-As discussed with Johan [3], this probably makes sense to land as a
-stopgap while we come to agreement on how to solve the larger issues.
+What about exposing such user configurable settings with sysctl?
+The networking subsystem has per-interface sysctl settings,
+we could have per-PCI-device settings.
 
-NOTE: I'll be away from my work computer for the next 1.5 weeks.
-Hopefully this can land in the meantime. If it needs spinning /
-reworking I wouldn't object to someone else taking it on.
+So just like this...
 
-I've removed all "Tested-by" tags here since the code is pretty
-different and it only solves a subset of the issues of the larger
-series.
+net.ipv4.conf.default.arp_accept = 0
+net.ipv4.conf.eth0.arp_accept = 0
+net.ipv4.conf.eth1.arp_accept = 0
 
-[3] https://lore.kernel.org/r/ZnraAlR9QeYhd628@hovoldconsulting.com
+... we could have...
 
- drivers/tty/serial/qcom_geni_serial.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+pci.0000:03:00.0.acs = full_prevention
+pci.0000:03:00.0.ide = 1
+pci.0000:03:01.0.acs = all_traffic
+pci.0000:03:01.0.ide = 0
 
-diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-index 2bd25afe0d92..fc202233a3ee 100644
---- a/drivers/tty/serial/qcom_geni_serial.c
-+++ b/drivers/tty/serial/qcom_geni_serial.c
-@@ -904,8 +904,8 @@ static void qcom_geni_serial_handle_tx_fifo(struct uart_port *uport,
- 		goto out_write_wakeup;
- 
- 	if (!port->tx_remaining) {
--		qcom_geni_serial_setup_tx(uport, pending);
--		port->tx_remaining = pending;
-+		qcom_geni_serial_setup_tx(uport, chunk);
-+		port->tx_remaining = chunk;
- 
- 		irq_en = readl(uport->membase + SE_GENI_M_IRQ_EN);
- 		if (!(irq_en & M_TX_FIFO_WATERMARK_EN))
--- 
-2.45.2.741.gdbec12cfda-goog
+This isn't hard to do, just call register_sysctl() for each device
+on enumeration and unregister_sysctl_table() on pci_destroy_dev().
 
+Thanks,
+
+Lukas
