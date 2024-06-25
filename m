@@ -1,106 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gimli.kloenk.de (gimli.kloenk.de [49.12.72.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30FA017A932
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 19:06:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19CA317A932;
+	Tue, 25 Jun 2024 19:07:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.72.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719342415; cv=none; b=GuvYc6D3YdsFiYCH7tBPATBgryV3Hfmw4yrVtHnCEtDgNGnv4ajERQfBZITURUzh3Ai+3S9In6Wy5C99Mdf9tt1exv16hQJsg0zR8KRotyb/ARz/dCJs5nQlM5gBIb2bQ1ZRcqbNzhFATfab5U/aV1qUP7xV6p/KxbLG2qGmim0=
+	t=1719342426; cv=none; b=Ndog4Ddc/dBCN2uMAatnNkgePP7qzyAZCxilQ0LaoguJVyRDI19awVkp1WqeTjQVXLIySKz3SLOAsX1qx4e+LYJvLzsQZza6Vw9E444BdwdxUeFVyYBwDEw7E0DlS5sI+W2TGckEOVc3hHvheGkeRSwznRQYy41UCHzJeIb5g3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719342415; c=relaxed/simple;
-	bh=AHWWfCYDmzndrVYLTTk4fV2I6SjAMHEoPf5mWM7OBIQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m9AijzmINihl7nz8mQIg3wVnTdlhyDRrfaVjUx7OrLFBCIwKd3SMdAL1wOwQEEIBEIQrJcOnNPIp6BgblIcQrk6/VQTksg/97ffC0+Bt9zesTS2FMTZqX81Sq3wXKCiKThNHgoqb2ZP7UbVyL7NdP4aWflda742EriJElWsLQKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T/2ILEFH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719342426; c=relaxed/simple;
+	bh=Asjm/C5+CmQ+TnjuNygMYUQqEXInZseKiWCxfOweU7k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LuyQIl/cbevcvPt5ZxCrx1090UdJztR+gQUZ5/PXGP6e9HWIHvnf2QNwzWwp6naeHOLVhad5J69zfVlqIfWBP8JxJibCjdFTXW5MmzhzWoWQw9gfscNd0T+u21vnChh+wue6ER2K3qpRvbED6tOCZ8Nhw1rk/lV52TmKppauz8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev; spf=pass smtp.mailfrom=kloenk.dev; dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b=Osh/WSZb; arc=none smtp.client-ip=49.12.72.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kloenk.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T/2ILEFH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A36F1C32781;
-	Tue, 25 Jun 2024 19:06:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719342414;
-	bh=AHWWfCYDmzndrVYLTTk4fV2I6SjAMHEoPf5mWM7OBIQ=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=T/2ILEFH7tH6DgSQK/lxQl9l1a90deB4Fl20fqA4eL7pLfiyn7ozDSQvrP8etwEky
-	 YUhf25LKYr3L/u/fetU3CQW3zM/7x4Pxeay5Ajro4CrlenTPWqiPhFfvLeiRcmABVx
-	 VR9sf9CPP4Djem5I49zdxtK8+kSe4ipRjXFMg7KSUsRk06f0JLOBk4lsONJWjL4Eqf
-	 dJvPKoJU2YeKNPne0FaP6fYfcLEmvM4kv4/juvtsNYNbsB7JvzDDGkR7P3mF2mpHFk
-	 GcSIxVnBh+HkrzS+Ck8zXt/Qn9SDjw/fsLlrbnGYz7grd7d7nBculFl21Pl8hIzMmE
-	 7lQZ7izR4W8/A==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 01219CE0895; Tue, 25 Jun 2024 12:06:52 -0700 (PDT)
-Date: Tue, 25 Jun 2024 12:06:52 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Dave Hansen <dave.hansen@intel.com>,
-	Alexander Potapenko <glider@google.com>, elver@google.com,
-	dvyukov@google.com, dave.hansen@linux.intel.com,
-	peterz@infradead.org, akpm@linux-foundation.org, x86@kernel.org,
-	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH 2/3] lib/Kconfig.debug: disable LOCK_DEBUGGING_SUPPORT
- under KMSAN
-Message-ID: <3748b5db-6f92-41f8-a86d-ed0e73221028@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240621094901.1360454-1-glider@google.com>
- <20240621094901.1360454-2-glider@google.com>
- <5a38bded-9723-4811-83b5-14e2312ee75d@intel.com>
- <ZnsRq7RNLMnZsr6S@boqun-archlinux>
+	dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b="Osh/WSZb"
+From: Finn Behrens <me@kloenk.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kloenk.dev; s=mail;
+	t=1719341978; bh=DfZVYn4i4/VpKnmIgEflQ+7+YiZX3LFU35HAKDKVHMI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Osh/WSZbq02S3onY9bnOiJQkl8+OjTXDw9ow2ZrTTXTJPUoDI6E7tqHiivLvwXeyi
+	 UZ/P1xRuyUMXL61qJRnNpip8U6HXidiKeMg4AjUt01D7B0RL3/m78g9WRs51KMNQqz
+	 EacaLvpI2RJ7g4adb0YEgyJkMYgzCG+VhzeKKH7M=
+To: John Hubbard <jhubbard@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Greg KH <greg@kroah.com>,
+ Masahiro Yamada <masahiroy@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>,
+ linux-kbuild@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] Makefile: rust-analyzer target: better error
+ handling
+Date: Tue, 25 Jun 2024 20:59:36 +0200
+Message-ID: <3E731AD5-428C-427C-AFBD-7E65504169FA@kloenk.dev>
+In-Reply-To: <20240620205453.81799-2-jhubbard@nvidia.com>
+References: <20240620205453.81799-1-jhubbard@nvidia.com>
+ <20240620205453.81799-2-jhubbard@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZnsRq7RNLMnZsr6S@boqun-archlinux>
+Content-Type: text/plain
 
-On Tue, Jun 25, 2024 at 11:51:23AM -0700, Boqun Feng wrote:
-> On Fri, Jun 21, 2024 at 09:23:25AM -0700, Dave Hansen wrote:
-> > On 6/21/24 02:49, Alexander Potapenko wrote:
-> > >  config LOCK_DEBUGGING_SUPPORT
-> > >  	bool
-> > > -	depends on TRACE_IRQFLAGS_SUPPORT && STACKTRACE_SUPPORT && LOCKDEP_SUPPORT
-> > > +	depends on TRACE_IRQFLAGS_SUPPORT && STACKTRACE_SUPPORT && LOCKDEP_SUPPORT && !KMSAN
-> > >  	default y
-> > 
-> > This kinda stinks.  Practically, it'll mean that anyone turning on KMSAN
-> > will accidentally turn off lockdep.  That's really nasty, especially for
-> > folks who are turning on debug options left and right to track down
-> > nasty bugs.
-> > 
-> > I'd *MUCH* rather hide KMSAN:
-> > 
-> > config KMSAN
-> >         bool "KMSAN: detector of uninitialized values use"
-> >         depends on HAVE_ARCH_KMSAN && HAVE_KMSAN_COMPILER
-> >         depends on DEBUG_KERNEL && !KASAN && !KCSAN
-> >         depends on !PREEMPT_RT
-> > +	depends on !LOCKDEP
-> > 
-> > Because, frankly, lockdep is way more important than KMSAN.
-> > 
-> > But ideally, we'd allow them to coexist somehow.  Have we even discussed
-> > the problem with the lockdep folks?  For instance, I'd much rather have
-> > a relaxed lockdep with no checking in pfn_valid() than no lockdep at all.
-> 
-> The only locks used in pfn_valid() are rcu_read_lock_sched(), right? If
-> so, could you try (don't tell Paul ;-)) replace rcu_read_lock_sched()
-> with preempt_disable() and rcu_read_unlock_sched() with
-> preempt_enable()? That would avoid calling into lockdep. If that works
-> for KMSAN, we can either have a special rcu_read_lock_sched() or call
-> lockdep_recursion_inc() in instrumented pfn_valid() to disable lockdep
-> temporarily.
-> 
-> [Cc Paul]
 
-Don't tell me what?  ;-)
 
-An alternative is to use rcu_read_lock_sched_notrace() and
-rcu_read_unlock_sched_notrace().  If you really want to use
-preempt_disable() and preempt_enable() instead, you will likely want
-the _notrace() variants.
+On 20 Jun 2024, at 22:54, John Hubbard wrote:
 
-							Thanx, Paul
+> 1) Provide a better error message for the "Rust not available" case.
+> Without this patch, one gets various misleading messages, such as:
+>
+>     "No rule to make target 'rust-analyzer'"
+>
+> Instead, run scripts/rust_is_available.sh directly, as a prerequisite,
+> and let that script report the cause of any problems, as well as
+> providing a link to the documentation. Thanks to Miguel Ojeda for the
+> idea of just letting rust_is_available.sh report its results directly.
+>
+> The new output in the failure case looks like this:
+>
+> $ make rust-analyzer
+> ***
+> *** Rust compiler 'rustc' could not be found.
+> ***
+> ***
+> *** Please see Documentation/rust/quick-start.rst for details
+> *** on how to set up the Rust support.
+> ***
+> make[1]: *** [/kernel_work/linux-github/Makefile:1975: rust-analyzer] Error 1
+> make: *** [Makefile:240: __sub-make] Error 2
+>
+> Cc: Alice Ryhl <aliceryhl@google.com>
+> Acked-by: Miguel Ojeda <ojeda@kernel.org>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>  Makefile | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Makefile b/Makefile
+> index 14427547dc1e..07308277a6f5 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1970,6 +1970,7 @@ tags TAGS cscope gtags: FORCE
+>  # IDE support targets
+>  PHONY += rust-analyzer
+>  rust-analyzer:
+> +	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/rust_is_available.sh
+>  	$(Q)$(MAKE) $(build)=rust $@
+>
+>  # Script to generate missing namespace dependencies
+> -- 
+> 2.45.2
+
+Reviewed-by: Finn Behrens <me@kloenk.dev>
