@@ -1,157 +1,140 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A50C13A25D;
-	Tue, 25 Jun 2024 12:18:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 844D413A25D;
+	Tue, 25 Jun 2024 12:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719317894; cv=none; b=izg1+ejv3HCgDNFJX8n0aRfNSQL+Sm5uVhVTTxZDqQ7qUlkRm0AeNJkAKGfqKTZ3svLoMSoK7uBSkxVE6bcwx4U9fxDEWTZQIYpLXUbXj2q4Exhf0dARVs01l/Dup3fIccaSk8A0xjlH7VCykFnXCYW6avMdAL1CCFXogwxndnY=
+	t=1719317993; cv=none; b=URSdIGslUoV2C+rogyhZ8sr1gXAM9My4/XaIe2W1ZNdoE5LPLE4s/iOT73fru8ta2Bftdl9e3r9XAUhX6+7McCOLz4nXTsHhRPBgOCu9rYOrHp1VMLJ4srZvhgRw4M2q1TgG71pM4nYtDuVKIkoH4OGwYsuB6Dmw3OhDgpzrdNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719317894; c=relaxed/simple;
-	bh=2rOP1q+19mNvV2pPa905bRuywjshTepkMg4BN7Tkopg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pHU1JtmFZ3U+V7e8EiTea+Wyo6ORrwvxDiJMz5czcGj54DfEK/iLzOxoAx0otGYE3vruXLAnifgY4/0XfWVqoA0ie+vNyA7EWp5sAXXzvAvZzTmRXBSqt03fAi0tA4uXHzbJC93c3sPf2X0h5Q0PKR0fC6O3U5pc+suMnsDPkLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=rdTls40b; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1719317993; c=relaxed/simple;
+	bh=0RVpCwdAgU0NJ55CoYDbC8R4ss3D2p4MWleGyhuaeOQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AT5oYbpcJ06yEHjM6hVmJ86JXDc6GwHEHMoMQ/dsuOKtZI+NTPjyluSDG7+y/RQM8ey9CvUD9tRJHyBORNDHIwr7P0lWLv3vSLoeF//ytBL1PrxG1ajSLlA2r4SoGFun2Sdb0q2NbaU6LHR/RmE3cH5ilKbSGFiWPM0EOzvURvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=FDAu1hKA; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="rdTls40b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1719317892; x=1750853892;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=2rOP1q+19mNvV2pPa905bRuywjshTepkMg4BN7Tkopg=;
-  b=rdTls40bvyk3kN9m5vVjSYzAmBu+2QyBkBuJ3FU3Gb0x5EGcVa3eNwzU
-   Ivwdbjla3zAUU5YzJ5sWsWbt3YY6WqwyfCld423kaZdYNbl+feY/pA+nG
-   1zLIVFFqNTEb5D+b3fdvWhhnusg2W3ZYhgmMkCaYXkqH0o9IlaeH5LzO2
-   EXUy59EofmGRhTRh+3gBgUEiP77Loxb9f+p74Cqdzt+8C5UIDPqO7SIU6
-   sck7l/ojzGmFcc1gn69lwjJTyvVLwyMUsf+zoUaCBTRWq2xxpyHWSeS6I
-   xSlHGLsho2DfdIfoadAAIyjAnwMN7YoLrNHlkiJKQe8qI+bL30VDVyz5J
-   A==;
-X-CSE-ConnectionGUID: tkOJxDmlQSCYHKv3Z02XQA==
-X-CSE-MsgGUID: 3l1xy44+Td6pK1SYa4/QJw==
-X-IronPort-AV: E=Sophos;i="6.08,264,1712646000"; 
-   d="scan'208";a="31009605"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 25 Jun 2024 05:18:07 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 25 Jun 2024 05:17:42 -0700
-Received: from daire-X570.microchip.com (10.10.85.11) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Tue, 25 Jun 2024 05:17:40 -0700
-From: <daire.mcnamara@microchip.com>
-To: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>
-CC: <conor.dooley@microchip.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-	<robh@kernel.org>, <bhelgaas@google.com>, <linux-kernel@vger.kernel.org>,
-	<linux-riscv@lists.infradead.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <daire.mcnamara@microchip.com>,
-	<ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v5 0/3] Fix address translations on MPFS PCIe controller
-Date: Tue, 25 Jun 2024 13:17:46 +0100
-Message-ID: <20240625121746.3745641-1-daire.mcnamara@microchip.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="FDAu1hKA"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8853F40E0219;
+	Tue, 25 Jun 2024 12:19:48 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id VmN9FvopND9d; Tue, 25 Jun 2024 12:19:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1719317983; bh=/27yZpePdJa5hqawOHey5vKXK7F/oPFDOaioyOFjvnU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FDAu1hKAVlWi6E1V3f6yN1E9sBYMECMN0qNuv3SMQrC/uDqS1Fpc54Al42o+SpNpR
+	 qdnjWTftsbQZwikhljtchgIpL0rtor1ylSAV0L1/pki27SMRg8P/nzk35MOD2sHNyv
+	 sgAQqRWk5tYDUdM3l7sWEmHim2FsMyD1L5X69wJpDCAt/S1HRKgc3UFISujr/HA36u
+	 hATSfUG3pOVWX4Uo/7VgthViFhIUplHILDBSi0ZFtmdldvbwGVX/mXqs+uCKpHSHwi
+	 +vwqFfsJkP0C58/301cAQ7d2ukk+YAVU31Jkan6cqMVdklAfU+pS7RmdMUM0zoBWFY
+	 kJRbmwfEd4LKJGUUu6GmUk053u+RqhH/66sFa+5MnSgmfXHAI6M4frybsh9MbeLXfk
+	 E47u9GV68z4nQx6uiVbnB5stVyjOnGmv/1t5bUODHBMFRLo6brQj6Lpu/14fgKhXaC
+	 D0dRFjmx/gGf2D+NOefJHS1Ugf7E0KeIxR0KjJ7L8ZpZ4y3TbxLbGLiqelexPczNIy
+	 NnjncDhqjoYV56mxEKOosLHVV/xpY0KpouPXL5hfkWpj7TPaCCr4tHy8GXBBzyFrML
+	 PKMYCBbCUB0zdA1Q7nQpP8FZTr1b8+phfwjxj+21imLZoTGGlFOo0yh30+3WGFTWDt
+	 9TxyczAhIapTgCa/9cYe3JpM=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6137A40E0185;
+	Tue, 25 Jun 2024 12:19:32 +0000 (UTC)
+Date: Tue, 25 Jun 2024 14:19:27 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Nikunj A. Dadhania" <nikunj@amd.com>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, kvm@vger.kernel.org, mingo@redhat.com,
+	tglx@linutronix.de, dave.hansen@linux.intel.com, pgonda@google.com,
+	seanjc@google.com, pbonzini@redhat.com
+Subject: Re: [PATCH v9 03/24] virt: sev-guest: Make payload a variable length
+ array
+Message-ID: <20240625121927.GEZnq1z90yeZFFvaM-@fat_crate.local>
+References: <20240531043038.3370793-1-nikunj@amd.com>
+ <20240531043038.3370793-4-nikunj@amd.com>
+ <20240621165410.GIZnWwMo80ZsPkFENV@fat_crate.local>
+ <7586ae76-71ba-2d6b-aa00-24f5ff428905@amd.com>
+ <fe74fd23-5a5f-9539-ba1e-fb22f4fa5fc1@amd.com>
+ <20240624133951.GDZnl3JxlKXaIvrrJ3@fat_crate.local>
+ <4fbcdcaa-3238-8dca-4d91-cb645187671e@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <4fbcdcaa-3238-8dca-4d91-cb645187671e@amd.com>
 
-From: Daire McNamara <daire.mcnamara@microchip.com>
+On Mon, Jun 24, 2024 at 11:42:44PM +0530, Nikunj A. Dadhania wrote:
+> Sure, here is the new patch. I have separated the variable name changes to a new patch.
 
-Hi all,
+Right, please next time you send your set, sort the cleanups to sev-guest
+first so that I can pick them up separately.
 
-On Microchip PolarFire SoC (MPFS), the PCIe controller is connected to the
-CPU via one of three Fabric Interface Connectors (FICs).  Each FIC present
-to the CPU complex as 64-bit AXI-M and 64-bit AXI-S.  To preserve
-compatibility with other PolarFire family members, the PCIe controller is
-connected to its encapsulating FIC via a 32-bit AXI-M and 32-bit AXI-S
-interface.
+> 
+> Subject: [PATCH] virt: sev-guest: Ensure the SNP guest messages do not exceed
+>  a page
+> 
+> Currently, snp_guest_msg includes a message header (96 bytes) and a
+> payload (4000 bytes). There is an implicit assumption here that the SNP
+> message header will always be 96 bytes, and with that assumption the
+> payload array size has been set to 4000 bytes magic number. If any new
+> member is added to the SNP message header, the SNP guest message will span
+> more than a page.
+> 
+> Instead of using magic number '4000' for the payload, declare the
+> snp_guest_msg in a way that payload plus the message header do not exceed a
+> page.
+> 
+> Signed-off-by: Nikunj A Dadhania <nikunj@amd.com>
+> Suggested-by: Tom Lendacky <thomas.lendacky@amd.com>
+> ---
+>  drivers/virt/coco/sev-guest/sev-guest.h | 2 +-
+>  drivers/virt/coco/sev-guest/sev-guest.c | 3 +++
+>  2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/virt/coco/sev-guest/sev-guest.h b/drivers/virt/coco/sev-guest/sev-guest.h
+> index ceb798a404d6..de14a4f01b9d 100644
+> --- a/drivers/virt/coco/sev-guest/sev-guest.h
+> +++ b/drivers/virt/coco/sev-guest/sev-guest.h
+> @@ -60,7 +60,7 @@ struct snp_guest_msg_hdr {
+>  
+>  struct snp_guest_msg {
+>  	struct snp_guest_msg_hdr hdr;
+> -	u8 payload[4000];
+> +	u8 payload[PAGE_SIZE - sizeof(struct snp_guest_msg_hdr)];
+>  } __packed;
+>  
+>  #endif /* __VIRT_SEVGUEST_H__ */
+> diff --git a/drivers/virt/coco/sev-guest/sev-guest.c b/drivers/virt/coco/sev-guest/sev-guest.c
+> index 427571a2d1a2..c4aae5d4308e 100644
+> --- a/drivers/virt/coco/sev-guest/sev-guest.c
+> +++ b/drivers/virt/coco/sev-guest/sev-guest.c
+> @@ -1033,6 +1033,9 @@ static int __init sev_guest_probe(struct platform_device *pdev)
+>  	snp_dev->dev = dev;
+>  	snp_dev->secrets = secrets;
+>  
+> +	/* Ensure SNP guest messages do not span more than a page */
+> +	BUILD_BUG_ON(sizeof(struct snp_guest_msg) > PAGE_SIZE);
+> +
+>  	/* Allocate the shared page used for the request and response message. */
+>  	snp_dev->request = alloc_shared_pages(dev, sizeof(struct snp_guest_msg));
+>  	if (!snp_dev->request)
+> -- 
 
-Each FIC is implemented in FPGA logic and can incorporate logic along its 64-bit
-AXI-M to 32-bit AXI-M chain (including address translation) and, likewise, along
-its 32-bit AXI-S to 64-bit AXI-S chain (again including address translation).
+Yap, that's exactly how stuff like that should be done:
 
-In order to reduce the potential support space for the PCIe controller in
-this environment, MPFS supports certain reference designs for these address
-translations: reference designs for cache-coherent memory accesses
-and reference designs for non-cache-coherent memory accesses. The precise
-details of these reference designs and associated customer guidelines
-recommending that customers adhere to the addressing schemes used in those
-reference designs are available from Microchip, but the implication for the
-PCIe controller address translation between CPU-space and PCIe-space are:
+Acked-by: Borislav Petkov (AMD) <bp@alien8.de>
 
-For outbound address translation, the PCIe controller address translation tables
-are treated as if they are 32-bit only.  Any further address translation must
-be done in FPGA fabric.
-
-For inbound address translation, the PCIe controller is configurable for two
-cases:
-* In the case of cache-coherent designs, the base of the AXI-S side of the
-  address translation must be set to 0 and the size should be 4 GiB wide. The
-  FPGA fabric must complete any address translations based on that 0-based
-  address translation.
-* In the case of non-cache coherent designs, the base of AXI-S side of the
-  address translation must be set to 0x8000'0000 and the size shall be 2 GiB
-  wide.  The FPGA fabric must complete any address translation based on that
-  0x80000000 base.
-
-So, for example, in the non-cache-coherent case, with a device tree property
-that maps an inbound range from 0x10'0000'0000 in PCIe space to 0x10'0000'0000
-in CPU space, the PCIe rootport will translate a PCIe address of 0x10'0000'0000
-to an intermediate 32-bit AXI-S address of 0x8000'0000 and the FIC is
-responsible for translating that intermediate 32-bit AXI-S address of
-0x8000'0000 to a 64-bit AXI-S address of 0x10'0000'0000.
-
-And similarly, for example, in the cache-coherent case, with a device tree
-property that maps an inbound range from 0x10'0000'0000 in PCIe space to
-0x10'0000'0000 in CPU space, the PCIe rootport will translate a PCIe address
-of 0x10'0000'0000 to an intermediate 32-bit AXI-S address of 0x0000'0000 and
-the FIC is responsible for translating that intermediate 32-bit AXI-S address
-of 0x0000'0000 to a 64-bit AXI-S address of 0x10'0000'0000.
-
-See https://lore.kernel.org/all/20220902142202.2437658-1-daire.mcnamara@microchip.com/T/
-for backstory.
-
-Changes since v4:
-- Added more cleanups suggested by Ilpo Jarvinen
-  Added cleanups for inbound v4 and outbound v3.
-
-Changes since v3:
-- Added nice cleanups suggested by Ilpo Jarvinen
-
-Changes since v2:
-- Added <Signed-off-by: tag>
-
-Changes since v1:
-- added bindings patch to allow dma-noncoherent
-- changed a size_t to u64 to pass 32-bit compile tests
-- allowed 64-bit outbound pcie translations
-- tied PCIe side of eCAM translation table to 0
-
-Conor Dooley (1):
-  dt-bindings: PCI: microchip,pcie-host: allow dma-noncoherent
-
-Daire McNamara (2):
-  PCI: microchip: Fix outbound address translation tables
-  PCI: microchip: Fix inbound address translation tables
-
- .../bindings/pci/microchip,pcie-host.yaml     |   2 +
- drivers/pci/controller/pcie-microchip-host.c  | 118 +++++++++++++++---
- 2 files changed, 106 insertions(+), 14 deletions(-)
-
-
-base-commit: a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6
-prerequisite-patch-id: 18ffa3e9b0f8886d8d173845165d49d7a4a9f1cd
-prerequisite-patch-id: 9fc9d99faa001c3cfb2b6617656d186f609d4cb8
-prerequisite-patch-id: 29f2d8291454d817b2266bedd343b3126ad2fdfa
-prerequisite-patch-id: bde5836bc0d45aac5f4d03e002e560cdb1333c49
-prerequisite-patch-id: 632616001dfa9bdd48afc912c694d1111a7e0df8
 -- 
-2.34.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
