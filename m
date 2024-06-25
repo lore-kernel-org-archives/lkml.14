@@ -1,146 +1,341 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206661779BD
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 15:01:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CEBD178CEA;
+	Tue, 25 Jun 2024 15:01:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719327673; cv=none; b=YwUHVkY804BBf0PPRm9ETfH7D+reH91NzmRFBNc+VHYFB+bmzQHhJ6f6zfft2Hb4+V5Vzv4tlGzfRlwo/66RMm5/SEEqRj9e50RTe8WexerV3x2o38XL2441H9eoSFvGGscEr+0pJIaSNwPXuUYjjZ1pFWBOkOO/1Kn+OFtwT60=
+	t=1719327677; cv=none; b=egaGeeWy1G50wQLLsyiH3/uDxDntCMxsspzhQ8qotGoDZ+WDiNJAaZ09nzpiV+FvCCG0WLXIa0VHp9htMeF4XilE5O/BKxsPsK/4HBZsjGruVcMQC0iViId3qwBoL0UerRrIHMFJn/uORvpzykODUtyx7H2xl3EZ88ygVuwU3RI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719327673; c=relaxed/simple;
-	bh=8Mkc2dAeIVEx3R7G9p6Y+1c9o51iRv92j9rBtFVabHM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m87ElR/klDpoiRaQyQ5NYjnLl2lMNVHsKY2ex9dfGSyl/ntiD5wX3f0q8kvJTwu5+OtWg4uCOMeZS1e7O6MDpJ0nHjaYdxYj+K6PqQNw9mn6Ru6ECvtACYZeTZNaTEAnDTUFT2KCRc9A9I5vzqG82DUzdUWzcSnSFlWV+6iQgs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=PZXYapLs; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1719327677; c=relaxed/simple;
+	bh=iM3rZ1LmY8YyAanNDH7/fR7dukRhQz4hil3oumBrg2U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=segVrAE+LceUQ2FjkymeQF0EPckunT2lh51IiL3+hNNxaYuqxKjimFruAjACwYEHleY7wHvMdTAXULrdW0ikWO8Nl/V0DwzoKPzXZJoG0jDDLfIQf+xt/RLq9jkomADdcfrbGbrz+gpm8HgJZoFkvTKF/ILwc09Y5de5d+cbs9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vHUGns1+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="PZXYapLs"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-444fd22b7e5so3137111cf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 08:01:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1719327671; x=1719932471; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=wU0PYC0ZkNLbhTARB/13j0B2U4nC3MBHctLxER+tD4c=;
-        b=PZXYapLs7vFjjfjfZJok+F1RxRSP7v8EcJclSlLs4TGYIO+kDoNUG/Si8nd1uTKizx
-         wyr/jzX0IjS1yRU2M/S+P80tWtKu/Dr3ScO+jMj/RQy1jNmBNl23hNR7I7szbGqLXpBT
-         RWgGlPwnSkeQN2zmt1gNVfRCUgemqfYNN77Ao=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719327671; x=1719932471;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wU0PYC0ZkNLbhTARB/13j0B2U4nC3MBHctLxER+tD4c=;
-        b=tXdzp6bKwTPzk1STJhr8rF0jiGaNDope01aFrLFG5hfaLUQpNiEJ7M3MVltVTvjwps
-         Ee5VQgwEZ1Qr3SBgzgw0yuA/U44DPXqfMgWXP7x1C/0IQmsd8Ffyl6e/oOPpp+ohmmKu
-         vDaV65/ONTY0cD8CpmtTE/0H/fkWbspF2fMLCLTAhgqSfT0K1xW43Tf9BknE4GV/dXKB
-         /sIOE5gqeP4JHmQKZWvsscJIKI60ca4Mhe64yI+n8b8nABktWNhXuaHGw1dFezN3ty9G
-         Yi9nzCz9MvVqvkfRGmMQAzZfG/kkaBotNYjgQDVC1p1nEwpb/UerMDiTMBt/FLw7q69n
-         miGg==
-X-Gm-Message-State: AOJu0YxuOQ8Y2xU0SRfBuA5IaDHHVqXr/p4V03SfaJ+TxxX7VqwENoLB
-	9zdOEuPexMgfdVBlT/ST3uUVjqnndQx6sgN9TrStPijYA3aFNrLC7w9egsQpog==
-X-Google-Smtp-Source: AGHT+IHnSEvz1eYSAgsxVMAW3ADhvEI2ogcmyxjTyn9pVh+UkXUPLC1xrx6TzTqfMgC/8209I7UkCQ==
-X-Received: by 2002:a05:622a:4fcc:b0:444:f0b5:8a5e with SMTP id d75a77b69052e-444f0b58da0mr41753701cf.32.1719327670970;
-        Tue, 25 Jun 2024 08:01:10 -0700 (PDT)
-Received: from [192.168.1.26] ([98.97.116.235])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-444c96b06a2sm48629061cf.15.2024.06.25.08.01.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Jun 2024 08:01:10 -0700 (PDT)
-Message-ID: <46fb037b-0ee7-4d30-b690-9bdfbb38aa00@broadcom.com>
-Date: Tue, 25 Jun 2024 08:01:08 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vHUGns1+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 599EBC32786;
+	Tue, 25 Jun 2024 15:01:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719327677;
+	bh=iM3rZ1LmY8YyAanNDH7/fR7dukRhQz4hil3oumBrg2U=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=vHUGns1+w0K2+hOT/OgRgjxG/1Hg8PpGDNi7l4rDEuxs+0fqPxb1LsJkfImduq9zn
+	 jOYQqULanKPDqfOSyCga379+h53cHWHL/dDZhnFoF1p3N0u1E5oFfUHTkp0/np6a7D
+	 JJXN9cZGKxW5xO84fGZewDUETJIn+CzaF/a5LwWMzSGpeqlWtUuV4MrBbOVoQLxcli
+	 bxDv3Js7K3E+ib7c1HnNBo0ZlcsNbwrdB8IXw45esPCok7mYuJQbS/PQT/GRQ+pBmX
+	 enjcJ6E26IcVH8Of/WH0WTs71neYgNMNPB2JWAEpiJkXZBfipZHRQWyAi//2o5tO67
+	 A4I9Ww5RIZl9g==
+From: Mark Brown <broonie@kernel.org>
+Date: Tue, 25 Jun 2024 15:57:33 +0100
+Subject: [PATCH v9 05/39] arm64/gcs: Document the ABI for Guarded Control
+ Stacks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/vmware: fix panic in vmware_hypercall_slow()
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
- hpa@zytor.com, dave.hansen@linux.intel.com, mingo@redhat.com,
- tglx@linutronix.de, x86@kernel.org, ajay.kaher@broadcom.com,
- bcm-kernel-feedback-list@broadcom.com, Alex James <alex.james@broadcom.com>
-References: <20240625083348.2299-1-alexey.makhalov@broadcom.com>
- <20240625084721.GCZnqEGbrkNNW6ZCfZ@fat_crate.local>
- <8193d6d2-5322-4a9a-82ed-50ac24dd3525@broadcom.com>
- <20240625145128.GGZnrZcEK4YWOJyEMq@fat_crate.local>
-Content-Language: en-US
-From: Alexey Makhalov <alexey.makhalov@broadcom.com>
-Autocrypt: addr=alexey.makhalov@broadcom.com; keydata=
- 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 EuY0
-In-Reply-To: <20240625145128.GGZnrZcEK4YWOJyEMq@fat_crate.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240625-arm64-gcs-v9-5-0f634469b8f0@kernel.org>
+References: <20240625-arm64-gcs-v9-0-0f634469b8f0@kernel.org>
+In-Reply-To: <20240625-arm64-gcs-v9-0-0f634469b8f0@kernel.org>
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+ Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <maz@kernel.org>, 
+ Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Arnd Bergmann <arnd@arndb.de>, 
+ Oleg Nesterov <oleg@redhat.com>, Eric Biederman <ebiederm@xmission.com>, 
+ Shuah Khan <shuah@kernel.org>, 
+ "Rick P. Edgecombe" <rick.p.edgecombe@intel.com>, 
+ Deepak Gupta <debug@rivosinc.com>, Ard Biesheuvel <ardb@kernel.org>, 
+ Szabolcs Nagy <Szabolcs.Nagy@arm.com>, Kees Cook <kees@kernel.org>
+Cc: "H.J. Lu" <hjl.tools@gmail.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Florian Weimer <fweimer@redhat.com>, Christian Brauner <brauner@kernel.org>, 
+ Thiago Jung Bauermann <thiago.bauermann@linaro.org>, 
+ Ross Burton <ross.burton@arm.com>, linux-arm-kernel@lists.infradead.org, 
+ linux-doc@vger.kernel.org, kvmarm@lists.linux.dev, 
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
+ linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.14-dev-d4707
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10726; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=iM3rZ1LmY8YyAanNDH7/fR7dukRhQz4hil3oumBrg2U=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBmett2odJnwTYPXb7X3Typ+FohxTKr32AmwWNSNPsk
+ RYbb+nuJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZnrbdgAKCRAk1otyXVSH0OKxB/
+ 9dlc6QOWHrOh+pEREU/thFxcY4/DfMn4Xmj/wXev2/WByvuy1Gvt0lDxBcdYzqpDxOQlZJrc4+niq3
+ 4jhuFAU/cEVZZQshYB6j/0ltuK7zK7CjRMHTXSfJ0TCbuWRJ/xc5PeHkYQFKAZZsUKR8XSHVLA1Sj7
+ pcMgObtS54MXkn4NZCFqgjok7zhOD1cgqXVYfhL8C4tZrljXkG6MBCiMwt3ZiFK2FWxaXMl4NAVVsO
+ Qh1TMSfr85n52cMT+4cELEo4vlyIZPjNZorYqtkLRnYYyAc4ne08E/oVAzraIQARftzfhM/POHNWZT
+ RrmrT8bAIQcEXBoBGsK+gRUgF/QrmJ
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
+Add some documentation of the userspace ABI for Guarded Control Stacks.
 
+Reviewed-by: Thiago Jung Bauermann <thiago.bauermann@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/arch/arm64/gcs.rst   | 233 +++++++++++++++++++++++++++++++++++++
+ Documentation/arch/arm64/index.rst |   1 +
+ 2 files changed, 234 insertions(+)
 
-On 6/25/24 7:51 AM, Borislav Petkov wrote:
-> On Tue, Jun 25, 2024 at 07:45:50AM -0700, Alexey Makhalov wrote:
->> My test environment was screwed up during the last version of the patchset.
->> I was using a kernel which was built previously and didn't pay attention to
->> commit hash suffix in `uname -r`.
->> Human mistake, apologize for that.
-> 
-> Ok, no worries, happens.
-> 
->> Alex found it while doing TDX testing on x86/vmware on tip.
->>
->> Do you want me to resubmit the patchset to do not brake a git bisect?
-> 
-> Nah, I'll fold it into the broken patch and rebase.
+diff --git a/Documentation/arch/arm64/gcs.rst b/Documentation/arch/arm64/gcs.rst
+new file mode 100644
+index 000000000000..c45c0326836a
+--- /dev/null
++++ b/Documentation/arch/arm64/gcs.rst
+@@ -0,0 +1,233 @@
++===============================================
++Guarded Control Stack support for AArch64 Linux
++===============================================
++
++This document outlines briefly the interface provided to userspace by Linux in
++order to support use of the ARM Guarded Control Stack (GCS) feature.
++
++This is an outline of the most important features and issues only and not
++intended to be exhaustive.
++
++
++
++1.  General
++-----------
++
++* GCS is an architecture feature intended to provide greater protection
++  against return oriented programming (ROP) attacks and to simplify the
++  implementation of features that need to collect stack traces such as
++  profiling.
++
++* When GCS is enabled a separate guarded control stack is maintained by the
++  PE which is writeable only through specific GCS operations.  This
++  stores the call stack only, when a procedure call instruction is
++  performed the current PC is pushed onto the GCS and on RET the
++  address in the LR is verified against that on the top of the GCS.
++
++* When active current GCS pointer is stored in the system register
++  GCSPR_EL0.  This is readable by userspace but can only be updated
++  via specific GCS instructions.
++
++* The architecture provides instructions for switching between guarded
++  control stacks with checks to ensure that the new stack is a valid
++  target for switching.
++
++* The functionality of GCS is similar to that provided by the x86 Shadow
++  Stack feature, due to sharing of userspace interfaces the ABI refers to
++  shadow stacks rather than GCS.
++
++* Support for GCS is reported to userspace via HWCAP2_GCS in the aux vector
++  AT_HWCAP2 entry.
++
++* GCS is enabled per thread.  While there is support for disabling GCS
++  at runtime this should be done with great care.
++
++* GCS memory access faults are reported as normal memory access faults.
++
++* GCS specific errors (those reported with EC 0x2d) will be reported as
++  SIGSEGV with a si_code of SEGV_CPERR (control protection error).
++
++* GCS is supported only for AArch64.
++
++* On systems where GCS is supported GCSPR_EL0 is always readable by EL0
++  regardless of the GCS configuration for the thread.
++
++* The architecture supports enabling GCS without verifying that return values
++  in LR match those in the GCS, the LR will be ignored.  This is not supported
++  by Linux.
++
++* EL0 GCS entries with bit 63 set are reserved for use, one such use is defined
++  below for signals and should be ignored when parsing the stack if not
++  understood.
++
++
++2.  Enabling and disabling Guarded Control Stacks
++-------------------------------------------------
++
++* GCS is enabled and disabled for a thread via the PR_SET_SHADOW_STACK_STATUS
++  prctl(), this takes a single flags argument specifying which GCS features
++  should be used.
++
++* When set PR_SHADOW_STACK_ENABLE flag allocates a Guarded Control Stack
++  and enables GCS for the thread, enabling the functionality controlled by
++  GCSCRE0_EL1.{nTR, RVCHKEN, PCRSEL}.
++
++* When set the PR_SHADOW_STACK_PUSH flag enables the functionality controlled
++  by GCSCRE0_EL1.PUSHMEn, allowing explicit GCS pushes.
++
++* When set the PR_SHADOW_STACK_WRITE flag enables the functionality controlled
++  by GCSCRE0_EL1.STREn, allowing explicit stores to the Guarded Control Stack.
++
++* Any unknown flags will cause PR_SET_SHADOW_STACK_STATUS to return -EINVAL.
++
++* PR_LOCK_SHADOW_STACK_STATUS is passed a bitmask of features with the same
++  values as used for PR_SET_SHADOW_STACK_STATUS.  Any future changes to the
++  status of the specified GCS mode bits will be rejected.
++
++* PR_LOCK_SHADOW_STACK_STATUS allows any bit to be locked, this allows
++  userspace to prevent changes to any future features.
++
++* There is no support for a process to remove a lock that has been set for
++  it.
++
++* PR_SET_SHADOW_STACK_STATUS and PR_LOCK_SHADOW_STACK_STATUS affect only the
++  thread that called them, any other running threads will be unaffected.
++
++* New threads inherit the GCS configuration of the thread that created them.
++
++* GCS is disabled on exec().
++
++* The current GCS configuration for a thread may be read with the
++  PR_GET_SHADOW_STACK_STATUS prctl(), this returns the same flags that
++  are passed to PR_SET_SHADOW_STACK_STATUS.
++
++* If GCS is disabled for a thread after having previously been enabled then
++  the stack will remain allocated for the lifetime of the thread.  At present
++  any attempt to reenable GCS for the thread will be rejected, this may be
++  revisited in future.
++
++* It should be noted that since enabling GCS will result in GCS becoming
++  active immediately it is not normally possible to return from the function
++  that invoked the prctl() that enabled GCS.  It is expected that the normal
++  usage will be that GCS is enabled very early in execution of a program.
++
++
++
++3.  Allocation of Guarded Control Stacks
++----------------------------------------
++
++* When GCS is enabled for a thread a new Guarded Control Stack will be
++  allocated for it of size RLIMIT_STACK or 4 gigabytes, whichever is
++  smaller.
++
++* When a new thread is created by a thread which has GCS enabled then a
++  new Guarded Control Stack will be allocated for the new thread with
++  half the size of the standard stack.
++
++* When a stack is allocated by enabling GCS or during thread creation then
++  the top 8 bytes of the stack will be initialised to 0 and GCSPR_EL0 will
++  be set to point to the address of this 0 value, this can be used to
++  detect the top of the stack.
++
++* Additional Guarded Control Stacks can be allocated using the
++  map_shadow_stack() system call.
++
++* Stacks allocated using map_shadow_stack() can optionally have an end of
++  stack marker and cap placed at the top of the stack.  If the flag
++  SHADOW_STACK_SET_TOKEN is specified a cap will be placed on the stack,
++  if SHADOW_STACK_SET_MARKER is not specified the cap will be the top 8
++  bytes of the stack and if it is specified then the cap will be the next
++  8 bytes.  While specifying just SHADOW_STACK_SET_MARKER by itself is
++  valid since the marker is all bits 0 it has no observable effect.
++
++* Stacks allocated using map_shadow_stack() must have a size which is a
++  multiple of 8 bytes larger than 8 bytes and must be 8 bytes aligned.
++
++* An address can be specified to map_shadow_stack(), if one is provided then
++  it must be aligned to a page boundary.
++
++* When a thread is freed the Guarded Control Stack initially allocated for
++  that thread will be freed.  Note carefully that if the stack has been
++  switched this may not be the stack currently in use by the thread.
++
++
++4.  Signal handling
++--------------------
++
++* A new signal frame record gcs_context encodes the current GCS mode and
++  pointer for the interrupted context on signal delivery.  This will always
++  be present on systems that support GCS.
++
++* The record contains a flag field which reports the current GCS configuration
++  for the interrupted context as PR_GET_SHADOW_STACK_STATUS would.
++
++* The signal handler is run with the same GCS configuration as the interrupted
++  context.
++
++* When GCS is enabled for the interrupted thread a signal handling specific
++  GCS cap token will be written to the GCS, this is an architectural GCS cap
++  token with bit 63 set and the token type (bits 0..11) all clear.  The
++  GCSPR_EL0 reported in the signal frame will point to this cap token.
++
++* The signal handler will use the same GCS as the interrupted context.
++
++* When GCS is enabled on signal entry a frame with the address of the signal
++  return handler will be pushed onto the GCS, allowing return from the signal
++  handler via RET as normal.  This will not be reported in the gcs_context in
++  the signal frame.
++
++
++5.  Signal return
++-----------------
++
++When returning from a signal handler:
++
++* If there is a gcs_context record in the signal frame then the GCS flags
++  and GCSPR_EL0 will be restored from that context prior to further
++  validation.
++
++* If there is no gcs_context record in the signal frame then the GCS
++  configuration will be unchanged.
++
++* If GCS is enabled on return from a signal handler then GCSPR_EL0 must
++  point to a valid GCS signal cap record, this will be popped from the
++  GCS prior to signal return.
++
++* If the GCS configuration is locked when returning from a signal then any
++  attempt to change the GCS configuration will be treated as an error.  This
++  is true even if GCS was not enabled prior to signal entry.
++
++* GCS may be disabled via signal return but any attempt to enable GCS via
++  signal return will be rejected.
++
++
++6.  ptrace extensions
++---------------------
++
++* A new regset NT_ARM_GCS is defined for use with PTRACE_GETREGSET and
++  PTRACE_SETREGSET.
++
++* Due to the complexity surrounding allocation and deallocation of stacks and
++  lack of practical application it is not possible to enable GCS via ptrace.
++  GCS may be disabled via the ptrace interface.
++
++* Other GCS modes may be configured via ptrace.
++
++* Configuration via ptrace ignores locking of GCS mode bits.
++
++
++7.  ELF coredump extensions
++---------------------------
++
++* NT_ARM_GCS notes will be added to each coredump for each thread of the
++  dumped process.  The contents will be equivalent to the data that would
++  have been read if a PTRACE_GETREGSET of the corresponding type were
++  executed for each thread when the coredump was generated.
++
++
++
++8.  /proc extensions
++--------------------
++
++* Guarded Control Stack pages will include "ss" in their VmFlags in
++  /proc/<pid>/smaps.
+diff --git a/Documentation/arch/arm64/index.rst b/Documentation/arch/arm64/index.rst
+index d08e924204bf..dcf3ee3eb8c0 100644
+--- a/Documentation/arch/arm64/index.rst
++++ b/Documentation/arch/arm64/index.rst
+@@ -14,6 +14,7 @@ ARM64 Architecture
+     booting
+     cpu-feature-registers
+     elf_hwcaps
++    gcs
+     hugetlbpage
+     kdump
+     legacy_instructions
 
-Thanks for your time.
+-- 
+2.39.2
 
-> 
-> Btw, pls do me a favor and do not top-post but put your reply underneath the
-> quoted text, like we all do.
-Noted.
-
-> 
-> Thx.
-> 
