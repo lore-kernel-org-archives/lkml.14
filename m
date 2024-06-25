@@ -1,156 +1,228 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from EUR03-VI1-obe.outbound.protection.outlook.com (mail-vi1eur03on2049.outbound.protection.outlook.com [40.107.103.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A252414B09E
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 10:42:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719312154; cv=none; b=pt0Pjf1tRPVCBzUlyiDpVkY2XvCi7NxP9aH6WFBG1RpiIJ4ZCpu3SFiwW1BRcTH8W3JTN7fP0ayH1RKq0wgyDU6ut/K6sBXjwl/3eIdFrZicenSfmzb7LMkGPSUUITw+wh/TYxmv6cgHppB1MXVqH+6pzrxUlu4ehd6WANApQDw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719312154; c=relaxed/simple;
-	bh=/7iyMeYuJupZ1RomJ/NR2whmiGjUphWFPoPduP9U3ZQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:Content-Type:
-	 References; b=n1NHa0+QoIx3w4Y9+x5kQUKo+hD2LDZJ06OidxB27oOuSN0F9DEQqnj0oKXvsWGOlNPxRFZKrKfDvOe962ASSqC9J/5c/odfaIi31T3i7b4UZzsHXk6keqRdBxzWvWGmV1/PSqDPqA+PHm1WNmce0yjx3hnlKyguGQyeEJR+9rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=GLVTh7m3; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A49EC132126;
+	Tue, 25 Jun 2024 10:44:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.103.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719312298; cv=fail; b=ayZ24Of0fPFtwpSViRkPANPP+DV4EsuhUxC6JBAUEeEP7Fac2oROijO/Jr4BTpqaZqpofUghDXElikcKdUgOKSrP6d8U+bs0lrt7+dtQFe7qJKvFcpGDjrHAjB9B0ZdXPQ7GO2nrIi5weEUA7zx2UthabAOPhYMZyggSyWwxr0Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719312298; c=relaxed/simple;
+	bh=PISXvJq1bxeu5MhXv6vSYq6NRm1Uv8WT3pJcrFnSIek=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=RI7eGBxbP+d4NlxQWNk+HYQ/IpmGJLK35YSiUKvb5LxLmlNVX+MdylxDKghplhGGxi0LFAkcWfPjenemWeFoUFm2E5Nq+TyTtxbQVQbnWLz/bKvKcRKUQFtMlcaYvV8T61nUZtAnJS0a2flTX4VP4LiDSebLvjIPcHbrSqDEQVM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=MUxHhi4C; arc=fail smtp.client-ip=40.107.103.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GLVTh7m3"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240625104222epoutp02ef7e2781f2fa219d842cefacb7f4a53f~cOUjlI2jG1814118141epoutp02h
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 10:42:22 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240625104222epoutp02ef7e2781f2fa219d842cefacb7f4a53f~cOUjlI2jG1814118141epoutp02h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1719312143;
-	bh=K5FJorSPe1FcKHWSRV4/HNukyATsDDzjNDpl/ez9U6U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GLVTh7m3vZgjRR4Iw0TBTmwz3TdvHYhuN54Z55UaUbJHbyGQtcCrPDks4tqj9Bof0
-	 jnwqHBROb6Cl74u1enRW8VCfkDkfCrP65FxpK6XRDB6XPVhwzLxQnQMQ0F3Dl3g48M
-	 ZBaufd6QuLC9tS5w+l9zuEfFrO+ZfdIHpU+XW37o=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-	20240625104222epcas5p3041e7abbd7f37ce10a5b4f682f211510~cOUjG7Gye0555805558epcas5p3M;
-	Tue, 25 Jun 2024 10:42:22 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.174]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4W7hH11fnjz4x9Pr; Tue, 25 Jun
-	2024 10:42:21 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	CD.3A.09989.D0F9A766; Tue, 25 Jun 2024 19:42:21 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20240625094446epcas5p4e5e864d5f56af0a44e950a426bc9f5f5~cNiQ0VJ401053910539epcas5p4T;
-	Tue, 25 Jun 2024 09:44:46 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240625094446epsmtrp1e82ce481043241f53f1c171e2caca1f9~cNiQzhX7S1600816008epsmtrp1U;
-	Tue, 25 Jun 2024 09:44:46 +0000 (GMT)
-X-AuditID: b6c32a4a-bffff70000002705-e3-667a9f0d9a99
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	1E.9E.18846.E819A766; Tue, 25 Jun 2024 18:44:46 +0900 (KST)
-Received: from cheetah.sa.corp.samsungelectronics.net (unknown
-	[107.109.115.53]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240625094444epsmtip19b8f0a32d11b74bdd491d2c2daff2b9f~cNiOxRYuy0560105601epsmtip1H;
-	Tue, 25 Jun 2024 09:44:44 +0000 (GMT)
-From: Shradha Todi <shradha.t@samsung.com>
-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc: manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
-	fancer.lancer@gmail.com, yoshihiro.shimoda.uh@renesas.com,
-	conor.dooley@microchip.com, pankaj.dubey@samsung.com, gost.dev@samsung.com,
-	Shradha Todi <shradha.t@samsung.com>
-Subject: [PATCH 3/3] PCI: dwc: Create debugfs files in DWC driver
-Date: Tue, 25 Jun 2024 15:08:13 +0530
-Message-Id: <20240625093813.112555-4-shradha.t@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240625093813.112555-1-shradha.t@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMJsWRmVeSWpSXmKPExsWy7bCmpi7v/Ko0g6td7BZLmjIspmzawW6x
-	oWMOq8XNAzuZLFZ8mclu0dDzm9Xi8q45bBZn5x1ns2j508Jicbelk9Vi0dYv7Bb/9wB19B6u
-	tfi69zObA5/Hzll32T0WbCr12LSqk83jzrU9bB5Prkxn8rjzYymjx7czE1k8+rasYvT4vEku
-	gDMq2yYjNTEltUghNS85PyUzL91WyTs43jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DXLTMH6HQl
-	hbLEnFKgUEBicbGSvp1NUX5pSapCRn5xia1SakFKToFJgV5xYm5xaV66Xl5qiZWhgYGRKVBh
-	QnbG718BBa08Fb++32VvYNzP1cXIySEhYCJxffMZpi5GLg4hgd2MEuf2zGWEcD4xStzrvcsM
-	52w5uZkNpmXe07XsEImdjBKfZu+Fqmplklj3ZBIjSBWbgJZE49cuZhBbRMBa4nD7FjaQImaB
-	XUwSPU/OgRUJCzhKLGp/D2azCKhKXFo4CWgsBwcvUMP3jXkQ2+QlVm84wAwS5hSwkZh4WQlk
-	jITARA6J1nfrWSBqXCQ+fNsDZQtLvDq+hR3ClpJ42d8GZadLrNw8gxnCzpH4tnkJE4RtL3Hg
-	yhwWkPnMApoS63fpQ4RlJaaeWgdWwizAJ9H7+wlUOa/EjnkwtrLEl78wayUl5h27zAphe0hc
-	ezYFGqb9jBLrb/9lnsAoNwthxQJGxlWMkqkFxbnpqcWmBUZ5qeXwSEvOz93ECE6dWl47GB8+
-	+KB3iJGJg/EQowQHs5IIb2hJVZoQb0piZVVqUX58UWlOavEhRlNg8E1klhJNzgcm77ySeEMT
-	SwMTMzMzE0tjM0Mlcd7XrXNThATSE0tSs1NTC1KLYPqYODilGpgUbvp95Q0qfPx153SBK2fy
-	F52botmW/Nr+/qN8weveDKdWr351LeBAk2/Az9M7W5e+Fdzjzia/P35FmBXL5Lo3W0OTWH9c
-	iWpmWrHdrOjw6Vc9Pfs6jpp9tGX3zD1SJBP98PrRvQZuq3iUZl/YXSLzdp6k5ssdV5csW5fF
-	v5VT+PY7p1UTLXLVCg6n+pmXJLpdLNrA7GK+fOGGvXMr9844qjEhd8vuq8ZmiiInzj3Yo9pp
-	m+TeHSc7pbDq6DuhLGXhKXYe59JZKqa/rptzVGz1k/XX+N89++72+YjmgzKJL5vDfwdOZlbi
-	9ag+4czwx+3lsVkH/+Wmx++sanTmzGGc5ceiF5rlcmvW56czv88tVGIpzkg01GIuKk4EAFMy
-	xt0mBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKLMWRmVeSWpSXmKPExsWy7bCSnG7fxKo0g7Pf9C2WNGVYTNm0g91i
-	Q8ccVoubB3YyWaz4MpPdoqHnN6vF5V1z2CzOzjvOZtHyp4XF4m5LJ6vFoq1f2C3+7wHq6D1c
-	a/F172c2Bz6PnbPusnss2FTqsWlVJ5vHnWt72DyeXJnO5HHnx1JGj29nJrJ49G1ZxejxeZNc
-	AGcUl01Kak5mWWqRvl0CV8bvXwEFrTwVv77fZW9g3M/VxcjJISFgIjHv6Vr2LkYuDiGB7YwS
-	x35uZIFISEp8vriOCcIWllj57zlUUTOTxK77rcwgCTYBLYnGr11gtoiArcT9R5NZQYqYBU4w
-	SdyevIEVJCEs4CixqP09I4jNIqAqcWnhJKBJHBy8AtYS3zfmQSyQl1i94QAzSJhTwEZi4mUl
-	kLAQUMXdK39ZJzDyLWBkWMUomlpQnJuem1xgqFecmFtcmpeul5yfu4kRHNJaQTsYl63/q3eI
-	kYmD8RCjBAezkghvaElVmhBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFe5ZzOFCGB9MSS1OzU1ILU
-	IpgsEwenVAPTPt0NwvPz9W5seae9RTO0sMHowMmg/XUpqZvCBFc4q2UsPOn+rHvZz8CWWwee
-	Xak6ee3eni/G2w/75xyYYFIbuZPjcOkO3xtnJxmIFP14qmozPz5e5QhTYPLe1x13NrxlWunt
-	efHfprubVC7Lb3ZdbTL5nsvm1gWPj+1/qpTwTH/n040/LhbY98by856bvfL+Pn7Rreb+844H
-	chkV/esXXaqevWLihNePNjf9eDn1r/KxG3mS1d82TVBQvvfzy5Sda07sbfFcfWO+4GJuy0kL
-	ul+m6xzZY2sRKm/sPCXvpUfLnKCpfpuFpt6b4X3mrHF31YUd36x6Fsb/0ZigW/l2aYH8bH+Z
-	17xHn27UXvNwY7iCEktxRqKhFnNRcSIAlI5DztgCAAA=
-X-CMS-MailID: 20240625094446epcas5p4e5e864d5f56af0a44e950a426bc9f5f5
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240625094446epcas5p4e5e864d5f56af0a44e950a426bc9f5f5
-References: <20240625093813.112555-1-shradha.t@samsung.com>
-	<CGME20240625094446epcas5p4e5e864d5f56af0a44e950a426bc9f5f5@epcas5p4.samsung.com>
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MUxHhi4C"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Qy4xMlE+09qlygFI8s4V3SuULo8a4iS5NebAXaKXjZ8uFZZKQ6pUyQh68nYhRsO7BzcUGwyItSLjjGpGjjg/wXW1OKvTU0puKBC5C9TInvpMa0xASy211TUnhG7C4IcjcoXX+Zb6Jvg98AvR4vKCEq3sH0IiTsEpZP4KjfgLhlUF/e8sMJhYDGQ7cY8dqK9rsOv/QChBnTZfLSsk7ZYGvP/UCA3c/NqSMcJWUI0q2iWBD3N4xF6vrd/TFPIQbcmZKtFtRpkFkfYtdb+jTDYXSdPizjfkNJoxcH9wk7RtDsgto+Scv9ZakbC1z/X8b74el0R0MrrTEO1ViI7xvoZjBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cUdjBHXNSS+S+2VnCsRcidM2cAQgqmhjIw8egXVuVHk=;
+ b=WYRBPtV8VNZ+fTecR3JITmAQqaRJi90bEDNLnikOnDhwancSBiVdgC0EB2d10lNNYM0il4yMIVgAiKK7GqZgU3udFeIZb5sovU5aZ9GQbQ7i6/Wmz6ScIMzeY67QiTpA4/iZq4IUYO+T3Uliq2LqFkrpn7lpV2QAtXXyC3hAF5QI4VTodlGZWOA07amy8CBR8aFurwyedW//9VtyP6Ns5gs/zhcj8K7n6qr57nX29Q/9r1qbEE3Ou5lVt5BUkIxpH3f6+o/CoaeiwP+WaLXf0L7rvyoE1/g2Er6nLf61t+Xalm+G96M/5KuXzoEunZutJTeFFxraymWfSFsgex8Zjw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cUdjBHXNSS+S+2VnCsRcidM2cAQgqmhjIw8egXVuVHk=;
+ b=MUxHhi4CpytZKSF7WuXkFxacWmADYqcYufIc7p/rE8MW/SXa5t1Rp37Mx+snLtwDLBZ7MIFoi0xb9Ur+AgF/VYyI73QZYwKRtt0Mx4od/uGnFNvTrywAB9RRKxbNhC8nU0AAxFus8e6rT0fik1cs+FsN027WAPXITjbpWUGNBpE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DB8PR04MB7065.eurprd04.prod.outlook.com (2603:10a6:10:127::9)
+ by GV1PR04MB10582.eurprd04.prod.outlook.com (2603:10a6:150:211::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.29; Tue, 25 Jun
+ 2024 10:44:52 +0000
+Received: from DB8PR04MB7065.eurprd04.prod.outlook.com
+ ([fe80::8af7:8659:9d42:bd84]) by DB8PR04MB7065.eurprd04.prod.outlook.com
+ ([fe80::8af7:8659:9d42:bd84%4]) with mapi id 15.20.7698.025; Tue, 25 Jun 2024
+ 10:44:52 +0000
+Date: Tue, 25 Jun 2024 18:43:44 +0800
+From: Pengfei Li <pengfei.li_1@nxp.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: krzk+dt@kernel.org, robh@kernel.org, abelvesa@kernel.org,
+	mturquette@baylibre.com, sboyd@kernel.org, conor+dt@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, ping.bai@nxp.com,
+	ye.li@nxp.com, peng.fan@nxp.com, aisheng.dong@nxp.com,
+	frank.li@nxp.com, kernel@pengutronix.de, festevam@gmail.com,
+	linux-clk@vger.kernel.org, imx@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] clk: imx93: Drop macro IMX93_CLK_END
+Message-ID: <ZnqfIudepX4sH4oL@pengfei-OptiPlex-Tower-Plus-7010>
+References: <20240625175147.94985-1-pengfei.li_1@nxp.com>
+ <20240625175147.94985-2-pengfei.li_1@nxp.com>
+ <39bcab8b-ed9c-4da9-b1ee-32dbfb2a23a4@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <39bcab8b-ed9c-4da9-b1ee-32dbfb2a23a4@kernel.org>
+X-ClientProxiedBy: SI2PR02CA0041.apcprd02.prod.outlook.com
+ (2603:1096:4:196::20) To DB8PR04MB7065.eurprd04.prod.outlook.com
+ (2603:10a6:10:127::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB8PR04MB7065:EE_|GV1PR04MB10582:EE_
+X-MS-Office365-Filtering-Correlation-Id: 565a9d0c-935b-4314-208a-08dc9503d80f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230037|366013|376011|7416011|52116011|1800799021|38350700011;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?WZjFBDrRba8q+IxU4fF+Rl+YXlTHbnLr2fAq24uxGB8HcrVzOxmGUHA0pId3?=
+ =?us-ascii?Q?pX9LX86uHFap5vc6ohYhQpQrmSWtfAyXoKIA6wviMGl20VY/ejPbsKbtTYm4?=
+ =?us-ascii?Q?bxKFvzHqAKlyiW0Yg/5std88nymGQXdK4Cac7xLuT1hOxtClgtA6TNWcmgp1?=
+ =?us-ascii?Q?McGYPJwqSC87sNmrNhSdR4qvmfv7KGlE+mvsXNfr0djM3tr2LVgIQouXc+wt?=
+ =?us-ascii?Q?kA61/iKmsVzkwvl20mO52mzi+BFjU8qT4oOvs0LzxCTJf2hGaYqDRJ+5QLD1?=
+ =?us-ascii?Q?UteH+FTXQvN7i4GvhEKwBmojU3QSDCblp2pYhhy6zvD6aDOy479zDTETqOJr?=
+ =?us-ascii?Q?EJAgV0l8CFXcgIMzY9WPx4qn5LHWrn3Uoi3huvHXUJsDkgdh4dAM6Mbb4qSs?=
+ =?us-ascii?Q?EB0TbeHRBgnOJ566KgwxiVN6mMlyDLEPXuIIBJHkL5D600YkibPoNAwBKng7?=
+ =?us-ascii?Q?MJQzNMU7cJJAprPWSxS2ASeKpXzunVWk8xROqt+UnSFFCTA7ecw4Q/9JVqQd?=
+ =?us-ascii?Q?9g7qMbtEfH51lH6KfeZsPkIdQ4/dou8ywhHrPCNta+06Qx6KXyQ3+B4e0qcT?=
+ =?us-ascii?Q?XWXNUJuPy1igJEuC/hsT/Aroxbmp5Nn0ROisB8e0i+UcJo5R+XpbadgMZ3et?=
+ =?us-ascii?Q?WeMh8BcZWYikr99NOz+0xvfiutkOZl29cO8aKnR/l6RGUES3YgM1QI11bcpH?=
+ =?us-ascii?Q?F6E3WTcp64lbc9Hvu0Pmd52jJKNk+Az1PgbSPKo25eIQnXcmslEvEicZXgYv?=
+ =?us-ascii?Q?DGdPQZ75VHKD7XmR6Xv4J+qxKBdbHKxqeiPUeow+yfDTMYEfyauAnSJkxYaJ?=
+ =?us-ascii?Q?J872g2Ug3z8/BWrlWg18MVaYzLx9lRcSbrTOWUH2FzfnoZrkRiNcWBW+VSYt?=
+ =?us-ascii?Q?xyJKK2rMn/atwZxmMX3hi2QkCy2yVtBlIKH59vKNmAJiqF7XJcLfQ7jK/qcA?=
+ =?us-ascii?Q?q1FJHl6fZZ5U0/CMymvsW1x+YtsNZ8sicz76wsRV10L9vxfpEM1Y6pzRbHAX?=
+ =?us-ascii?Q?4TWOcc+hKJBncicwiQ0pcKNKJatXuNMBItqLk/TsA8bfBpBmG+hX2rj6u1sh?=
+ =?us-ascii?Q?Ki89Eq27M9uq/cWm+d0M8LG+fdzUF/APdtL/ZdagbQnwgfLp6D+KA+IW65Ty?=
+ =?us-ascii?Q?UO111fSgY53V2qcusw6YVCFQ1vi1U4pCKzUyVUClZAyrU/pT9jDolmHKG5ta?=
+ =?us-ascii?Q?jBAtvExdSk3alCZoyYZYQdIGdqcrD4AaRLKMwXf2cVDW7dcUff1HkFYLqFxD?=
+ =?us-ascii?Q?9fA1thE8BlyTVLOXiFK1fpvopjNaSYUq8V7Pb3xWtTlbNQO3ajUnoR7FdUb+?=
+ =?us-ascii?Q?cnFtAPcyOZf0U41FT1ohpfH/Dsd1oVytMMeLHyGBz60Y1nuIE8bMVcbToQ9j?=
+ =?us-ascii?Q?0zyIC7tEYkVjs12VEUP4MKRVoygw7Tm2WJvCrr/YMxOhTCkArw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB7065.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(376011)(7416011)(52116011)(1800799021)(38350700011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?izNeACAzIILk5G7UO2oU2YxJ9NzXDfFQip2KkyrW8fTBlKGgZfWQmZXisUW3?=
+ =?us-ascii?Q?l2cqK2yqmJXirha32TjEMb0CQixAf9SJA/msRCl3XK047ARWWRikQcBVP0xg?=
+ =?us-ascii?Q?vLcvTIAG84C3An7VTeu/XrptYBgJOZHjURSMlldqLH3li5iBhwwwf29QqpUm?=
+ =?us-ascii?Q?fL5/kboHNsQzJ8iYTxpc5FVKF3fBnjvwLEj+y6n7AMxz+Qg/OzE9/69bOD8S?=
+ =?us-ascii?Q?n1+2mmGUtHRTdbzYWU2KNUmVMDXz89fhNYP+aPOxQrS9LYU+pUQx2yEpCpYD?=
+ =?us-ascii?Q?5qMCyQ60D9H00L7J/h/4bQKJuqT3kWFLmKsYu5rb8/+CmIIAieYMT9iGewCW?=
+ =?us-ascii?Q?QaIsrDI7As2xHrwkDEdBwid6BOSAEnmlviGvpcx46AbNnZeN96Tc2ED4aQJV?=
+ =?us-ascii?Q?EbfRLMyPIrNP+2uvQqEd+4n/sdT5gVBa9XwR0AqCLZeTH+OHiPYJ8o01BNTt?=
+ =?us-ascii?Q?05BnygzLtsmPE3oQkFNEeaPJw6tleQKlRAtf1pgXJPG16kmg7TXn5xb8Q7sZ?=
+ =?us-ascii?Q?ObN4yehbxNLN9vTgaD+6iW7tE8NOt0PUDKytIpaDDQ/WfE1LRO4jkHxYM+/7?=
+ =?us-ascii?Q?TKKeaA0fAWkDXZgp7OuR2ERwyjCNhs1tv7guFobYfrRN86m4oAMbcw5WYi+O?=
+ =?us-ascii?Q?JdSRhU1Szcrh3yLXFtDmY8Oj7wCDDTV9YXR14u4hKVmwD5x6ADmhtu6pHt5A?=
+ =?us-ascii?Q?nbOloKooah0utm4C3YBvMPBdszloFs1HRIyf7Ve6nkWyXv0yOrUtaByhBGDo?=
+ =?us-ascii?Q?MShyH/bGBaNcnkJPE4Dg6Wa4pacLawffV8epZl6v4udiV1sjmVfQma+2m+pC?=
+ =?us-ascii?Q?MUJUxxfwK743xo2Ys64GnhLo2ENZ2KvgqqGH2iXU5Y7ZYbNfmJqZYUMq0khu?=
+ =?us-ascii?Q?riXCiUHHccwpD6t986JqjbCgCTef+KwYfqTeMRB6H3ldMPTR0Kf+qH0A+vf7?=
+ =?us-ascii?Q?ZLXTtz2kQutvEbSGIAtgWDhoCLrcHt7jHhHsnawePLjg/vMAn9Po2Yng221P?=
+ =?us-ascii?Q?pYWRt+diIAPqnG5N2dYGq88uJWwkmhrt46ysHQQy47Tu+zmbKLRgHU5b0jVI?=
+ =?us-ascii?Q?snu2rO9sUmvZBsmuv38E4RG01qFSHxSjJwu2sAb7XB4KJGS2YTDxHLk8pIwl?=
+ =?us-ascii?Q?6YxvOgRFE8AnbC+6AWvUf/Xf9cp51BCKlyVPONxWV45BiYSd0NNHLHMXfNee?=
+ =?us-ascii?Q?Jq1LisNy5D78VEZdb8JnsMsrULckUZsbgHNo6Tv+jiIZMCb/SNjXN980e7ag?=
+ =?us-ascii?Q?D/T5wv1tSCUZ/KJD4o0aNuK60CqNBJmO/IyrBfq1zSH0iNjQU7Bgw27P3Yxp?=
+ =?us-ascii?Q?y+4iypBStZLkZxtp+kmNtVrr+CTXBWqj72qJ51cWG993YAzpb5+CVeUqU/WK?=
+ =?us-ascii?Q?3382S/OJjqCZykzBlSGr4hULXaksLFR94OaczfZg90xuPC3Ph6Gv4MonccZ/?=
+ =?us-ascii?Q?ZtqnpUny2XiRAZUqYUfRn6Ka8Xzzp85QJDHoKDBTf/8PCIt76Kff1Mgbj3Fl?=
+ =?us-ascii?Q?p9HBzwJnfHZnSs8EO2sYiU9tiwK3d4leENFb5x+9URO24xMtO95A937Z3yGm?=
+ =?us-ascii?Q?/aXs+BS1UT9Ob5myUdSemfPpCrAwce9bB0LaLykH?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 565a9d0c-935b-4314-208a-08dc9503d80f
+X-MS-Exchange-CrossTenant-AuthSource: DB8PR04MB7065.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2024 10:44:52.3494
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AQMdxlIpKjWlF/esDEPSyDmf2JggL7PHu7vUSYfoPirxTz4ZGyRV5DZENw0smrkZO8vcff61h/bgA2A+g1Z+yw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10582
 
-Add call to initialize debugfs from DWC driver and create the RASDES
-debugfs hierarchy for each platform driver. Since it can be used for
-both DW HOST controller as well as DW EP controller, add it in the
-common setup function.
+On Tue, Jun 25, 2024 at 09:44:42AM +0200, Krzysztof Kozlowski wrote:
+> On 25/06/2024 19:51, Pengfei Li wrote:
+> > IMX93_CLK_END was previously defined in imx93-clock.h to
+> > indicate the number of clocks, but it is not part of the
+> > ABI, so it should be dropped.
+> > 
+> > Now, the driver gets the number of clks by querying the
+> > maximum index in the clk array. Due to the discontinuity
+> > in the definition of clk index, with some gaps present,
+> > the total count cannot be obtained by summing the array
+> > size.
+> > 
+> > Signed-off-by: Pengfei Li <pengfei.li_1@nxp.com>
+> > ---
+> >  drivers/clk/imx/clk-imx93.c | 25 +++++++++++++++++++++----
+> >  1 file changed, 21 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/clk/imx/clk-imx93.c b/drivers/clk/imx/clk-imx93.c
+> > index c6a9bc8ecc1f..68c929512e16 100644
+> > --- a/drivers/clk/imx/clk-imx93.c
+> > +++ b/drivers/clk/imx/clk-imx93.c
+> > @@ -257,6 +257,20 @@ static const struct imx93_clk_ccgr {
+> >  static struct clk_hw_onecell_data *clk_hw_data;
+> >  static struct clk_hw **clks;
+> >  
+> > +static int imx_clks_get_num(void)
+> > +{
+> > +	u32 val = 0;
+> > +	int i;
+> > +
+> > +	for (i = 0; i < ARRAY_SIZE(root_array); i++)
+> > +		val = max_t(u32, val, root_array[i].clk);
+> > +
+> > +	for (i = 0; i < ARRAY_SIZE(ccgr_array); i++)
+> > +		val = max_t(u32, val, ccgr_array[i].clk);
+> > +
+> > +	return val + 1;
+> > +}
+> > +
+> >  static int imx93_clocks_probe(struct platform_device *pdev)
+> >  {
+> >  	struct device *dev = &pdev->dev;
+> > @@ -264,14 +278,17 @@ static int imx93_clocks_probe(struct platform_device *pdev)
+> >  	const struct imx93_clk_root *root;
+> >  	const struct imx93_clk_ccgr *ccgr;
+> >  	void __iomem *base, *anatop_base;
+> > +	int clks_num;
+> >  	int i, ret;
+> >  
+> > +	clks_num = imx_clks_get_num();
+> > +
+> >  	clk_hw_data = devm_kzalloc(dev, struct_size(clk_hw_data, hws,
+> > -					  IMX93_CLK_END), GFP_KERNEL);
+> > +					  clks_num), GFP_KERNEL);
+> >  	if (!clk_hw_data)
+> >  		return -ENOMEM;
+> >  
+> > -	clk_hw_data->num = IMX93_CLK_END;
+> > +	clk_hw_data->num = clks_num;
+> 
+> Why so complicated code instead of pre-processor define or array size?
+> 
+> Best regards,
+> Krzysztof
+> 
+> 
 
-Signed-off-by: Shradha Todi <shradha.t@samsung.com>
----
- drivers/pci/controller/dwc/pcie-designware-host.c | 2 ++
- drivers/pci/controller/dwc/pcie-designware.c      | 4 ++++
- 2 files changed, 6 insertions(+)
+Hi Krzysztof,
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index d15a5c2d5b48..c2e6f8484000 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -537,6 +537,8 @@ void dw_pcie_host_deinit(struct dw_pcie_rp *pp)
- 	pci_stop_root_bus(pp->bridge->bus);
- 	pci_remove_root_bus(pp->bridge->bus);
- 
-+	dwc_pcie_rasdes_debugfs_deinit(pci);
-+
- 	dw_pcie_stop_link(pci);
- 
- 	dw_pcie_edma_remove(pci);
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index b74e4a97558e..ebb21ba75388 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -1084,4 +1084,8 @@ void dw_pcie_setup(struct dw_pcie *pci)
- 	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, val);
- 
- 	dw_pcie_link_set_max_link_width(pci, pci->num_lanes);
-+
-+	val = dwc_pcie_rasdes_debugfs_init(pci);
-+	if (val)
-+		dev_err(pci->dev, "Couldn't create debugfs files\n");
- }
--- 
-2.17.1
+Thanks for the comment, here are some of our thoughts.
+
+Regarding the predefined method, it's easy to forget to update the macro definition when adding some new clocks to
+imx93-clock.h in the future.
+
+Also, we cannot use the array size method in this scenario, as some unnecessary clocks have been removed in the past,
+resulting in discontinuous definitions of clock indexes. This means that the maximum clock index can be larger than
+the allocated clk_hw array size. At this point, using the maximum index to access the clk_hw array will result in an
+out of bounds error.
+
+BR,
+Pengfei Li
 
