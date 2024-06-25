@@ -1,187 +1,159 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ECC12F56
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 03:44:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D272F56;
+	Tue, 25 Jun 2024 03:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719287088; cv=none; b=JqGsszc0A3C7vafbJZiu/MYPhRoXIr8rQOT54SdFD7cMXqf1SFVbphw6pJmreaPtGTEZXPnXIByaBQRCY30jJy8Q+K3PJX4GR2iBg3XDlJE7i583CQi2LD4Qi/8BMJqIujAH6pO2es8kcKqzFwxlsC9lbVdQ5efm2QDpg0E/Ozc=
+	t=1719287134; cv=none; b=U0TLlLA01tEAqwYVs+nXRQ5KBbYe2S18uO9Sqwgpv5hkxRfqPmo/YQfWZfh5a5IAP9tEWNDnQJJuA7ks53v7pl+mrpfpAOYeFvuv79KSVcQYyaltvUqy48QuXZqM6m4kNQeL8gbJqN8cz6vZmmjQKtgbAhK9Y2stj50YTUq/4N8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719287088; c=relaxed/simple;
-	bh=3Kvs+mYkE7tvzWw+1nCQmDF5YnLkFg9jBHqNnjazxRU=;
-	h=From:Subject:To:Cc:Date:Message-ID:References:MIME-Version:
-	 Content-Type; b=nOeiuyPnP55MX/fgcqVkrhCLNINnVojQWRycOQrJMvYj6S6JMdbnrRh+EeYixIJ3ALngFKzNLO8DVQWhZmlOh8W69cTny91I2r6BfGu0qaqzFXcCK6ElNfc/gQPrVhohGdZYnr2aE42iYrQL4QaAZmz+Wji10ytygfC8jeSRv8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: c0824e5c32a311ef9305a59a3cc225df-20240625
-X-QC-Scan-Result: 0
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.38,REQID:94f83f07-0be2-4b29-91c3-1c7648708e1b,IP:20,
-	URL:0,TC:11,Content:0,EDM:0,RT:0,SF:-15,FILE:5,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:21
-X-CID-INFO: VERSION:1.1.38,REQID:94f83f07-0be2-4b29-91c3-1c7648708e1b,IP:20,UR
-	L:0,TC:11,Content:0,EDM:0,RT:0,SF:-15,FILE:5,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:21
-X-CID-META: VersionHash:82c5f88,CLOUDID:cd9f31ea82404ef1671e978470a70f13,BulkI
-	D:240625113357MCBYHV85,BulkQuantity:0,Recheck:0,SF:44|66|24|17|19|102,TC:0
-	,Content:0,EDM:-3,IP:-2,URL:0,File:2,RT:nil,Bulk:nil,QS:0,BEC:nil,COL:0,OS
-	I:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: c0824e5c32a311ef9305a59a3cc225df-20240625
-Received: from node2.com.cn [(39.156.73.10)] by mailgw.kylinos.cn
-	(envelope-from <lizhenneng@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1029634221; Tue, 25 Jun 2024 11:33:56 +0800
-Received: from node2.com.cn (localhost [127.0.0.1])
-	by node2.com.cn (NSMail) with SMTP id EC7A9B803C9B;
-	Tue, 25 Jun 2024 11:33:55 +0800 (CST)
-Received: by node2.com.cn (NSMail, from userid 0)
-	id E021DB803C9B; Tue, 25 Jun 2024 11:33:55 +0800 (CST)
-From: =?UTF-8?B?5p2O55yf6IO9?= <lizhenneng@kylinos.cn>
-Subject: =?UTF-8?B?5Zue5aSNOiBSZTogW1BBVENIXSBtaWdyYXRlX3BhZ2VzOiBtb2RpZnkgbWF4IG51bWJlciBvZiBwYWdlcyB0byBtaWdyYXRlIGluIGJhdGNo?=
-To: 	=?UTF-8?B?eWluZy5odWFuZw==?= <ying.huang@intel.com>,
-Cc: 	=?UTF-8?B?QW5kcmV3IE1vcnRvbg==?= <akpm@linux-foundation.org>,
-	=?UTF-8?B?bGludXgtbW0=?= <linux-mm@kvack.org>,
-	=?UTF-8?B?bGludXgta2VybmVs?= <linux-kernel@vger.kernel.org>,
-Date: Tue, 25 Jun 2024 11:33:54 +0800
-X-Mailer: NSMAIL 7.0.0
-Message-ID: <7ii375j23j-7ikn2sd5r4@nsmail7.0.0--kylin--1>
-References: 87o77pzuq3.fsf@yhuang6-desk2.ccr.corp.intel.com
-X-Israising: 0
-X-Seclevel-1: 0
-X-Seclevel: 0
-X-Delaysendtime: Tue, 25 Jun 2024 11:33:54 +0800
+	s=arc-20240116; t=1719287134; c=relaxed/simple;
+	bh=akYYhE64gutriQphsCYtrgVyTh52zZni47qVxMnregk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BZGqWVOWE963zIn+m2xbJrWgUHyCa+qcCaq3M+PXPo1tvbI9dU7CW10wWm7LQSk9Zo9vVWcQgEx8HW5EfF71UECSze85RO/431QD0s6KSFRJ6Yd7mv36p+xnE0L3AAhD83Kf4AJKMv7GeevrW7bkJADfYACaYSCPBBbabejLZJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J2zgq7/9; arc=none smtp.client-ip=209.85.161.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J2zgq7/9"
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5b97a071c92so2427577eaf.1;
+        Mon, 24 Jun 2024 20:45:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719287131; x=1719891931; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=nAGv1C3HZZdBM5385FH4CpehIrO1aLyESVw6wair3LM=;
+        b=J2zgq7/9MdKLzYoCpX+qXzPRUHUAl2Awhaw4UtIBzs5Trx+uO/879y1qsXg1zIVe8I
+         vunZVkEaKQTzXznZV481ZnbVQ5XV6OA831rrnZnWBcR7X/Z+cCkgbxMgsl6qAl0/xPyv
+         u5/yheEI2L5I+RseFBUo/+Kfas9ei8lNkX1pKp6GpEDEiEtd3wDCZg3k9aY2C3T2ah9Z
+         HVXWDvHXy+Xgzu0Rhzym173M5nL3PxmHN5MFt1jHwd28T25rkPCh1AU/HzIIQlhVTZX1
+         hTlx213zFlIDSstsPAOwNRL3GJ9DMHNgYcR+oJ1H4oBxAgSZVuw7yVJzU5mffde9s8Y4
+         XMJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719287131; x=1719891931;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nAGv1C3HZZdBM5385FH4CpehIrO1aLyESVw6wair3LM=;
+        b=gH6wHAbpyz0RJlRF9nwLNMhGxNaxLCRepzHaqd7JYVqmxMxMixuETiJYY7Qpx6YjY0
+         E519YmG8yWXiz+DCM5B6/d3E+4NB9Bpi7Do3rPCmzj2lPx4ibYHiYj9DRn97YFarmo/R
+         46C0z+0KtLy/lKP97ugsvqUws/F3suL5IGxxin4YvPgWRsmQh9wQ7dteu+eidk4c8Zys
+         jjdYahl9g5F9V60p1HN2dlzU8TqjHk1xbO4iEsAtUqK8o59dmtIp4Jz7P1uwDVKggLVl
+         45qSHKrDTLI0w12wJZDwAlT6NARLtp/fmAjl19BirQMHCD2Cuc1reC6W99inc1P+3qiI
+         VFgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXNQpEu+cx4wj0MhG3DvzAVwBi7qCYCNgkq2PU8R8H0rYnOxvF9RrTBxQ/EBZbuFGmaxyh+N3lS+dIbSTy8k7BX0LJQeXCxov01s42hfdgC6OCryi41cGnqr0+JQXZW+oSpzy4WzHJFbEn/9ikypiZUMIsiqQ3BeUZe0mmjcVXLjnm6gcs=
+X-Gm-Message-State: AOJu0YyAFfj0XtWHjmKGFevFuJ0P1m4MSMj4isKNOHLxx7RIqqLCNXSJ
+	KupjxXlEhkmDci6/qVCG6bGC7lUWUb4KnJzUvKPkvTuhghJ1ilSs
+X-Google-Smtp-Source: AGHT+IFuMpIiyI/ambneXj2V/8PhRkYWS8YSC9Jtn9HUyffHKT4WhBv98Y8lT8RDDOn1kRo/O911/g==
+X-Received: by 2002:a05:6358:2823:b0:1a1:c5c6:9da6 with SMTP id e5c5f4694b2df-1a2389a5d8dmr871908455d.3.1719287131313;
+        Mon, 24 Jun 2024 20:45:31 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-716ba5b5f7asm6051573a12.64.2024.06.24.20.45.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Jun 2024 20:45:30 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <5a4e1cd6-5770-423b-9a25-a0fbfd93014a@roeck-us.net>
+Date: Mon, 24 Jun 2024 20:45:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary=nsmail-ai4b42t5cy-ai5l1w876r
-X-ns-mid: webmail-667a3aa3-aaqvq3ul
-X-ope-from: <lizhenneng@kylinos.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Regression caused by "eeprom: at24: Probe for DDR3 thermal sensor
+ in the SPD case" - "sysfs: cannot create duplicate filename"
+To: Heiner Kallweit <hkallweit1@gmail.com>, =?UTF-8?Q?Krzysztof_Ol=C4=99dzki?=
+ <ole@ans.pl>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Wolfram Sang <wsa@the-dreams.de>
+Cc: stable@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-hwmon@vger.kernel.org,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <a57e9a39-13ce-4e4d-a7a1-c591f6b4ac65@ans.pl>
+ <0dfa2919-98eb-4433-acb4-aa1830787c9b@roeck-us.net>
+ <77c1b740-9e6d-40f7-83f0-9a949366f1c9@ans.pl>
+ <97c497ae-44f7-4cec-b7d9-f639e4597571@roeck-us.net>
+ <797c8371-dff3-4112-9733-4d3119670dbf@gmail.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <797c8371-dff3-4112-9733-4d3119670dbf@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This message is in MIME format.
+On 6/24/24 13:58, Heiner Kallweit wrote:
+[ ... ]
+> 
+> Too me the issue also looks like a race. According to the OP's logs:
+> - jc42 at 0x18 is instantiated successfully
+> - jc42 at 0x19 returns -EBUSY. This is what is expected if the device
+>    has been instantiated otherwise already.
+> - jc42 at 0x1a returns -EEXIST. Here two instantiations of the the same
+>    device seem to collide.
+> - jc42 at 0x1b returns -EBUSY, like at 0x19.
+> 
+> So it looks like referenced change isn't wrong, but reveals an
+> underlying issue with device instantiation races.
 
---nsmail-ai4b42t5cy-ai5l1w876r
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: base64
+It isn't just a race, though. Try to unload the at24 (or ee1004 driver
+for DDR4) and load it again, and you'll see the -EBUSY errors. Problem
+is that instantiating those drivers _always_ triggers the call to
+i2c_new_client_device() even if the jc42 device is already instantiated.
+Unloading the spd/eeprom driver doesn't unload the jc42 driver,
+so -EBUSY will be seen if the spd/eeprom driver is loaded again.
 
-PHA+PGJyPjxicj48YnI+PGJyPjxicj48YnI+LS0tLTwvcD4KPGRpdiBpZD0i
-Y3MyY19tYWlsX3NpZ2F0dXJlIj48L2Rpdj4KPHA+Jm5ic3A7PC9wPgo8ZGl2
-IHN0eWxlPSJtYXJnaW4tbGVmdDogMC41ZW07IHBhZGRpbmctbGVmdDogMC41
-ZW07IGJvcmRlci1sZWZ0OiAxcHggc29saWQgZ3JlZW47Ij4mbmJzcDs8L2Rp
-dj4KPGRpdiBpZD0icmUiIHN0eWxlPSJtYXJnaW4tbGVmdDogMC41ZW07IHBh
-ZGRpbmctbGVmdDogMC41ZW07IGJvcmRlci1sZWZ0OiAxcHggc29saWQgZ3Jl
-ZW47Ij48YnI+PGJyPjxicj4KPGRpdiBzdHlsZT0iYmFja2dyb3VuZC1jb2xv
-cjogI2Y1ZjdmYTsiPjxzdHJvbmc+5Li744CA6aKY77yaPC9zdHJvbmc+PHNw
-YW4gaWQ9InN1YmplY3QiPlJlOiBbUEFUQ0hdIG1pZ3JhdGVfcGFnZXM6IG1v
-ZGlmeSBtYXggbnVtYmVyIG9mIHBhZ2VzIHRvIG1pZ3JhdGUgaW4gYmF0Y2g8
-L3NwYW4+IDxicj48c3Ryb25nPuaXpeOAgOacn++8mjwvc3Ryb25nPjxzcGFu
-IGlkPSJkYXRlIj4yMDI0LTA2LTI1IDA5OjE3PC9zcGFuPiA8YnI+PHN0cm9u
-Zz7lj5Hku7bkurrvvJo8L3N0cm9uZz48c3BhbiBpZD0iZnJvbSI+eWluZy5o
-dWFuZzwvc3Bhbj4gPGJyPjxzdHJvbmc+5pS25Lu25Lq677yaPC9zdHJvbmc+
-PHNwYW4gaWQ9InRvIiBzdHlsZT0id29yZC1icmVhazogYnJlYWstYWxsOyI+
-5p2O55yf6IO9Ozwvc3Bhbj48L2Rpdj4KPGJyPgo8ZGl2IGlkPSJjb250ZW50
-Ij4KPGRpdiBjbGFzcz0idmlld2VyX3BhcnQiIHN0eWxlPSJwb3NpdGlvbjog
-cmVsYXRpdmU7Ij4KPGRpdj5IaSwgWmhlbm5lbmcsPGJyPjxicj5aaGVubmVu
-ZyBMaSB3cml0ZXM6PGJyPjxicj4mZ3Q7IFdlIHJlc3RyaWN0IHRoZSBudW1i
-ZXIgb2YgcGFnZXMgdG8gYmUgbWlncmF0ZWQgdG8gbm8gbW9yZSB0aGFuPGJy
-PiZndDsgSFBBR0VfUE1EX05SIG9yIE5SX01BWF9CQVRDSEVEX01JR1JBVElP
-TiwgYnV0IGluIGZhY3QsIHRoZTxicj4mZ3Q7IG51bWJlciBvZiBwYWdlcyB0
-byBiZSBtaWdyYXRlZCBtYXkgcmVhY2ggMipIUEFHRV9QTURfTlItMSBvciAy
-PGJyPiZndDsgKk5SX01BWF9CQVRDSEVEX01JR1JBVElPTi0xLCBpdCdzIG5v
-dCBpbiBpbmNvbnNpc3RlbnQgd2l0aCB0aGUgY29udGV4dC48YnI+PGJyPlll
-cy4gSXQncyBub3QgSFBBR0VfUE1EX05SIGV4YWN0bHkuPGJyPjxicj4mZ3Q7
-IFBsZWFzZSByZWZlciB0byB0aGUgcGF0Y2g6IDQyMDEyZTA0MzZkNChtaWdy
-YXRlX3BhZ2VzOiByZXN0cmljdCBudW1iZXI8YnI+Jmd0OyBvZiBwYWdlcyB0
-byBtaWdyYXRlIGluIGJhdGNoKTxicj4mZ3Q7PGJyPiZndDsgU2lnbmVkLW9m
-Zi1ieTogWmhlbm5lbmcgTGkgPGJyPiZndDsgLS0tPGJyPiZndDsgbW0vbWln
-cmF0ZS5jIHwgMiArLTxicj4mZ3Q7IDEgZmlsZSBjaGFuZ2VkLCAxIGluc2Vy
-dGlvbigrKSwgMSBkZWxldGlvbigtKTxicj4mZ3Q7PGJyPiZndDsgZGlmZiAt
-LWdpdCBhL21tL21pZ3JhdGUuYyBiL21tL21pZ3JhdGUuYzxicj4mZ3Q7IGlu
-ZGV4IDc4MTk3OTU2N2Y2NC4uN2E0YjM3YWFjOWU4IDEwMDY0NDxicj4mZ3Q7
-IC0tLSBhL21tL21pZ3JhdGUuYzxicj4mZ3Q7ICsrKyBiL21tL21pZ3JhdGUu
-Yzxicj4mZ3Q7IEBAIC0xOTYxLDcgKzE5NjEsNyBAQCBpbnQgbWlncmF0ZV9w
-YWdlcyhzdHJ1Y3QgbGlzdF9oZWFkICpmcm9tLCBuZXdfZm9saW9fdCBnZXRf
-bmV3X2ZvbGlvLDxicj4mZ3Q7IGJyZWFrOzxicj4mZ3Q7IH08YnI+Jmd0OyBp
-ZiAobnJfcGFnZXMgJmd0Oz0gTlJfTUFYX0JBVENIRURfTUlHUkFUSU9OKTxi
-cj4mZ3Q7IC0gbGlzdF9jdXRfYmVmb3JlKCZhbXA7Zm9saW9zLCBmcm9tLCAm
-YW1wO2ZvbGlvMi0mZ3Q7bHJ1KTs8YnI+Jmd0OyArIGxpc3RfY3V0X2JlZm9y
-ZSgmYW1wO2ZvbGlvcywgZnJvbSwgJmFtcDtmb2xpby0mZ3Q7bHJ1KTs8YnI+
-PGJyPklmIHRoZSBmaXJzdCBlbnRyeSBvZiB0aGUgbGlzdCAiZnJvbSIgaXMg
-YSBUSFAgd2l0aCBzaXplIEhQQUdFX1BNRF9OUiw8YnI+ImZvbGlvIiB3aWxs
-IGJlIHRoZSBmaXJzdCBlbnRyeSBvZiBmcm9tLCBzbyB0aGF0ICJmb2xpb3Mi
-IHdpbGwgYmUgZW1wdHkuPGJyPlJpZ2h0PzwvZGl2Pgo8L2Rpdj4KPC9kaXY+
-CjwvZGl2Pgo8ZGl2PiZuYnNwOzwvZGl2Pgo8ZGl2PlllcywgSXQncyByaWdo
-dCwgc28gd2UgY2FuIGNoZWNrIHdoZXRoZXIgaXQgaXMgdGhlIGZpcnN0IGVu
-dHJ5IG9mIHRoZSBsaXN0ICJmcm9tIiwgbmV3IHBhdGNoIGFyZSBhcyBmb2xs
-b3dzKGF0dGFjaG1lbnQgaXMgcGF0Y2ggZmlsZSk6PC9kaXY+CjxkaXY+ZGlm
-ZiAtLWdpdCBhL21tL21pZ3JhdGUuYyBiL21tL21pZ3JhdGUuYzxicj5pbmRl
-eCA3ODE5Nzk1NjdmNjQuLmNjZThlMmI4NWU4OSAxMDA2NDQ8YnI+LS0tIGEv
-bW0vbWlncmF0ZS5jPGJyPisrKyBiL21tL21pZ3JhdGUuYzxicj5AQCAtMTk1
-NywxMSArMTk1NywxMiBAQCBpbnQgbWlncmF0ZV9wYWdlcyhzdHJ1Y3QgbGlz
-dF9oZWFkICpmcm9tLCBuZXdfZm9saW9fdCBnZXRfbmV3X2ZvbGlvLDxicj59
-PGJyPjxicj5ucl9wYWdlcyArPSBmb2xpb19ucl9wYWdlcyhmb2xpbyk7PGJy
-Pi0gaWYgKG5yX3BhZ2VzICZndDs9IE5SX01BWF9CQVRDSEVEX01JR1JBVElP
-Tik8YnI+KyBpZiAoKG5yX3BhZ2VzICZndDs9IE5SX01BWF9CQVRDSEVEX01J
-R1JBVElPTikgJmFtcDsmYW1wOzxicj4rICghbGlzdF9maXJzdF9lbnRyeShm
-cm9tLCBzdHJ1Y3QgZm9saW8sIGxydSkpKTxicj5icmVhazs8YnI+fTxicj5p
-ZiAobnJfcGFnZXMgJmd0Oz0gTlJfTUFYX0JBVENIRURfTUlHUkFUSU9OKTxi
-cj4tIGxpc3RfY3V0X2JlZm9yZSgmYW1wO2ZvbGlvcywgZnJvbSwgJmFtcDtm
-b2xpbzItJmd0O2xydSk7PGJyPisgbGlzdF9jdXRfYmVmb3JlKCZhbXA7Zm9s
-aW9zLCBmcm9tLCAmYW1wO2ZvbGlvLSZndDtscnUpOzxicj5lbHNlPGJyPmxp
-c3Rfc3BsaWNlX2luaXQoZnJvbSwgJmFtcDtmb2xpb3MpOzxicj5pZiAobW9k
-ZSA9PSBNSUdSQVRFX0FTWU5DKTwvZGl2Pgo8ZGl2PiZuYnNwOzwvZGl2Pgo8
-ZGl2IGlkPSJyZSIgc3R5bGU9Im1hcmdpbi1sZWZ0OiAwLjVlbTsgcGFkZGlu
-Zy1sZWZ0OiAwLjVlbTsgYm9yZGVyLWxlZnQ6IDFweCBzb2xpZCBncmVlbjsi
-Pgo8ZGl2IGlkPSJjb250ZW50Ij4KPGRpdiBjbGFzcz0idmlld2VyX3BhcnQi
-IHN0eWxlPSJwb3NpdGlvbjogcmVsYXRpdmU7Ij4KPGRpdj48YnI+Jmd0OyBl
-bHNlPGJyPiZndDsgbGlzdF9zcGxpY2VfaW5pdChmcm9tLCAmYW1wO2ZvbGlv
-cyk7PGJyPiZndDsgaWYgKG1vZGUgPT0gTUlHUkFURV9BU1lOQyk8YnI+PGJy
-Pi0tPGJyPkJlc3QgUmVnYXJkcyw8YnI+SHVhbmcsIFlpbmc8L2Rpdj4KPC9k
-aXY+CjwvZGl2Pgo8L2Rpdj4=
+I have not been able to reproduce the backtrace with my systems, but those
+are all with AMD CPUs using the piix4 driver, so timing is likely different.
+Another difference is that my systems (with DDR4) use the ee1004 driver.
+That driver instantiates the jc42 devices under a driver lock, so it is
+guaranteed that a single instantiation doesn't interfere with other
+instantiations running in parallel.
 
---nsmail-ai4b42t5cy-ai5l1w876r
-Content-Type: application/octet-stream; name="=?UTF-8?B?bWlncmF0ZV9wYWdlcy1tb2RpZnktbWF4LW51bWJlci1vZi1wYWdlcy10by1taWdyYXRlLWluLWJhdGNoLnBhdGNo?="
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; size=1364; seclevel=0; filename="=?UTF-8?B?bWlncmF0ZV9wYWdlcy1tb2RpZnktbWF4LW51bWJlci1vZi1wYWdlcy10by1taWdyYXRlLWluLWJhdGNoLnBhdGNo?="
-X-Seclevel-1: 0
-X-Seclevel: 0
+Guenter
 
-RnJvbSAyNWMzZDJkZjFkMzhiNDlmMzg5MjM0ZTA3NDk3OGQwNTk0NmEwYTYz
-IE1vbiBTZXAgMTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBaaGVubmVuZyBMaSA8
-bGl6aGVubmVuZ0BreWxpbm9zLmNuPgpEYXRlOiBNb24sIDI0IEp1biAyMDI0
-IDEyOjE5OjA4ICswODAwClN1YmplY3Q6IFtQQVRDSF0gbWlncmF0ZV9wYWdl
-czogbW9kaWZ5IG1heCBudW1iZXIgb2YgcGFnZXMgdG8gbWlncmF0ZSBpbiBi
-YXRjaAoKV2UgcmVzdHJpY3QgdGhlIG51bWJlciBvZiBwYWdlcyB0byBiZSBt
-aWdyYXRlZCB0byBubyBtb3JlIHRoYW4KSFBBR0VfUE1EX05SIG9yIE5SX01B
-WF9CQVRDSEVEX01JR1JBVElPTiwgYnV0IGluIGZhY3QsIHRoZQpudW1iZXIg
-b2YgcGFnZXMgdG8gYmUgbWlncmF0ZWQgbWF5IHJlYWNoIDIqSFBBR0VfUE1E
-X05SLTEgb3IgMgoqTlJfTUFYX0JBVENIRURfTUlHUkFUSU9OLTEsIGl0J3Mg
-bm90IGluIGluY29uc2lzdGVudCB3aXRoIHRoZSBjb250ZXh0LgoKUGxlYXNl
-IHJlZmVyIHRvIHRoZSBwYXRjaDogNDIwMTJlMDQzNmQ0KG1pZ3JhdGVfcGFn
-ZXM6IHJlc3RyaWN0IG51bWJlcgpvZiBwYWdlcyB0byBtaWdyYXRlIGluIGJh
-dGNoKQoKU2lnbmVkLW9mZi1ieTogWmhlbm5lbmcgTGkgPGxpemhlbm5lbmdA
-a3lsaW5vcy5jbj4KLS0tCiBtbS9taWdyYXRlLmMgfCA1ICsrKy0tCiAxIGZp
-bGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQoK
-ZGlmZiAtLWdpdCBhL21tL21pZ3JhdGUuYyBiL21tL21pZ3JhdGUuYwppbmRl
-eCA3ODE5Nzk1NjdmNjQuLmNjZThlMmI4NWU4OSAxMDA2NDQKLS0tIGEvbW0v
-bWlncmF0ZS5jCisrKyBiL21tL21pZ3JhdGUuYwpAQCAtMTk1NywxMSArMTk1
-NywxMiBAQCBpbnQgbWlncmF0ZV9wYWdlcyhzdHJ1Y3QgbGlzdF9oZWFkICpm
-cm9tLCBuZXdfZm9saW9fdCBnZXRfbmV3X2ZvbGlvLAogCQl9CiAKIAkJbnJf
-cGFnZXMgKz0gZm9saW9fbnJfcGFnZXMoZm9saW8pOwotCQlpZiAobnJfcGFn
-ZXMgPj0gTlJfTUFYX0JBVENIRURfTUlHUkFUSU9OKQorCQlpZiAoKG5yX3Bh
-Z2VzID49IE5SX01BWF9CQVRDSEVEX01JR1JBVElPTikgJiYKKwkJICAgICgh
-bGlzdF9maXJzdF9lbnRyeShmcm9tLCBzdHJ1Y3QgZm9saW8sIGxydSkpKQog
-CQkJYnJlYWs7CiAJfQogCWlmIChucl9wYWdlcyA+PSBOUl9NQVhfQkFUQ0hF
-RF9NSUdSQVRJT04pCi0JCWxpc3RfY3V0X2JlZm9yZSgmZm9saW9zLCBmcm9t
-LCAmZm9saW8yLT5scnUpOworCQlsaXN0X2N1dF9iZWZvcmUoJmZvbGlvcywg
-ZnJvbSwgJmZvbGlvLT5scnUpOwogCWVsc2UKIAkJbGlzdF9zcGxpY2VfaW5p
-dChmcm9tLCAmZm9saW9zKTsKIAlpZiAobW9kZSA9PSBNSUdSQVRFX0FTWU5D
-KQotLSAKMi4yNS4xCgo=
-
---nsmail-ai4b42t5cy-ai5l1w876r--
