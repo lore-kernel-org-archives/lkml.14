@@ -1,104 +1,159 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33051E4BF;
-	Tue, 25 Jun 2024 13:31:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B79614F9E0;
+	Tue, 25 Jun 2024 13:31:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719322263; cv=none; b=AqUDnYteBLRt3rkr0sg/E2j6v5mCgoJTThYqcWMY7naHJb9JHChYHpRgvyujBXzYIsxz8p8zjV/ormrMYs3LMGaQnJ42qC/shuzhU78KMssvRgsLBNJ7TmS2pOhJQTe06VZrra9Az++UuKg8CSHkaZq9TodrGb1Zb01NgjUDJ2c=
+	t=1719322303; cv=none; b=h5sB9O6dq6mLn4AoVlt1FISmluoU+mgs/vvJOsqn9xTxCJ8Gh4sXfljWg6V2WPVll5ikQ5zPKWE1QHD/YGWTgEGhqJ2z0qm7lNIpGxbCK1daFeRegmyb/cNvKj/hPjUUgM91UAcNn5w6/FDulVVeiaVGv/rFLldPRwZc6S9Jl44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719322263; c=relaxed/simple;
-	bh=o0udTKHZEk0pg4zJtJ33LRzt+kH4A8KT9v6IDXkPB14=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aNkYU1EjJTrmlUEBqMdIw2/XLnDPqNqC240etUqI1RvYZZ4h3pVIhb+FLt8n4WFQeOU65bcoBLlZgF/jWI7WLBa61r1PWUEOisFSHy7H/TZTTufuYDIwoRhDTb3Q/iNPx/v12draWB6g7o20APKJNNVhsEHPybFfxM4YQ0qlTcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=kqMV6DWA; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1719322303; c=relaxed/simple;
+	bh=JhTOvlv/fFw83z9MA/JanU9QLXx5eZ/OqqxpAh6VhHc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FTB5ylLalJKz6rRPVnXVWDTDynmFrUCu1ARv1SHy+CzKhKTjjGdSYWjoYJIEbt6CUXQpgq9ZgLZwbJExN0MMCWBXvEEF5LfozMf3ghVTHCiVlUXIPu10aTjCqvJyCKA9vI9SkMAzHpKmju6PUrwgZRYbFW87gRzi1EWFWJfQvL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PsWpwEMV; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="kqMV6DWA"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-57d15b85a34so5812939a12.3;
-        Tue, 25 Jun 2024 06:31:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PsWpwEMV"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-57d106e69a2so214449a12.0;
+        Tue, 25 Jun 2024 06:31:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1719322260; x=1719927060; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jCPI9zmJcO9n3warYFnR4HzozQlCIFB1YY1JSHQ5z7I=;
-        b=kqMV6DWAZevNI3A6+V4WJL0snrrcutWJw9cuMxRFPUMp7ZxluYZ9SHScjH9rIo6awj
-         p3egBkIJMqnqxsrJjaQd4kJacpJtUzakTRCdu2B9Eel28DpYjvXVLTb+sGtAEjk1vD/R
-         Xp3lSZW4M0mczAEKPfyZwGJBbpV66/3+uAlY67ec9ejQ1YSewND1oLzCNhpVT/iwSyRT
-         1H2qR40nU89XOpfDLb5yXIIVBTNa34J3ffjB/OiMpeYtPZ4UrrkRZaLWXTGLYPwT8ETu
-         LsBjKuxssIaoRj2fmFpbK///EM21EcfUoe0i2AhWDsl8KO73to/g7lsZmIR8h/BZsPPy
-         oKQg==
+        d=gmail.com; s=20230601; t=1719322300; x=1719927100; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0FIaUi0sIcr6xli/A2+XeBULbh1JSIVXUEV5tbDKSEc=;
+        b=PsWpwEMVUK4oWdQo1SXjUIDkcoZwJ1Z43qs4LLQcsXwRT5c4poBZqdfZP/NyVDeJVe
+         s5mEFHYty6cKrC2VOI51tD8gyM6KiueU+ri/gLmznPmLz6fUMZQOoyv0EC6lGQDiSMgM
+         MEZGY52OiMR7mzv1zWOerYxmwB3ik6Gf+6fyQNebn/gAXLnqWtoaqscL30OS9hdvuZpR
+         QJ01xvRhio/BOjfiuQTrP9MCZhCXLTxePERISM9m/JyFnc86tozKJ8Pi/xtfaLcwN8Sf
+         UdLIphTg//gM5XMhs4O4KpyRJBO8+mzNHkVPbUblmMoVko0iXNdwgg/fj+57fEzCfVa4
+         AslA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719322260; x=1719927060;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jCPI9zmJcO9n3warYFnR4HzozQlCIFB1YY1JSHQ5z7I=;
-        b=C6EVnIA3W/uBTPd60lnXZ0W0FjwwjLwIhk9gJJKWfV12Fw1LZn1JP6JlzdBoolpKO0
-         64vKHcUYaiS7WbqcWbVvf4b8dn6sE6ple/5eJeLu6CcSpBU7aiadDYd5tLwIlDxsKrhh
-         kRI+9yBi465eRQup6fShU+anan8wzCXkce0lZ2h2T+K27E9qfo6KN/bTIrl8Tmwnc8F9
-         aZb76gYsMfSX64+ngDEniegt3sqmoLprtpn/1HJDyJ21nhp6MFApZHRFTyl2aQ2TndUo
-         17aT+BpwblOVXJRMM4jo3ZnZc1G84HxdUuzjYepPBCLNMsTime77RJSM21szK7PcQRXH
-         qNwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX/6eFRagx6cPcQISNDfxzSmLtpjCxTeYeA/zZrPQe4Od2eSHvlFtG4AdPlJejZvUNtKAcxXZ2inBcWCRSmFvJBQjZfmJ9sNZPn4WzhymHxZiEuhqRNEbyNZhTVnFf/Q1zX53M2
-X-Gm-Message-State: AOJu0YxrETMjr90MOVibFSNqc2gHQrppkY+sZulbcdymp7b/eATKTRz5
-	s9rnadaGSmkk1hu8WSjOCJjCUnCqgiVgVygLjFdH/bMCUECYG/M=
-X-Google-Smtp-Source: AGHT+IG8IvhbNWQyXNXBiabqfJKUTBxylBnGUaRIv/YzGLRkZZGtz9/ovU3Wq+9nBRyusriSfRd5Kg==
-X-Received: by 2002:a17:906:c096:b0:a6f:86fd:72b8 with SMTP id a640c23a62f3a-a715f97972bmr535116366b.42.1719322259708;
-        Tue, 25 Jun 2024 06:30:59 -0700 (PDT)
-Received: from [192.168.1.3] (p5b2b4a32.dip0.t-ipconnect.de. [91.43.74.50])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72452140e0sm315467366b.217.2024.06.25.06.30.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Jun 2024 06:30:59 -0700 (PDT)
-Message-ID: <971a36d8-b774-438c-a4a2-e2d35ae9495b@googlemail.com>
-Date: Tue, 25 Jun 2024 15:30:57 +0200
+        d=1e100.net; s=20230601; t=1719322300; x=1719927100;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0FIaUi0sIcr6xli/A2+XeBULbh1JSIVXUEV5tbDKSEc=;
+        b=YPYW+PR2aBgeP4CUEzqhGFphk/GdPzcWcKMfpZus7sjhcDsYr4Gl/UrjnbUpXiC5FW
+         /pIvc6TjOr5P9Qls02KaBz+hyHbyX77CgexhgY0hm/YSVtufHCjGCeupgaf1d8ENFP2L
+         V84D0WWgN/CLZa1wnI6I4uXba5bz6MhAFaeYiS8onx33b/UtgXzecZRQrfrNma9FRcUT
+         ZCuyY7YZD2mIXBdHcFin6106zcgy9a8sWv2BqNRoQNRgiGXxZUAfNq5kQ/u3nC8caxpA
+         e0RYx3/jqziEjg+GiyGGBq9Hx8etQvJVXCQU6/xda7Wi1akE9ZEFZvdQGfo8mcqvKqVv
+         v9jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJB7KJf+EP35D18JDtWGo7BC6HCiuF1aCg+OMPngtVjQkgJIo5VI+Tq7YqlW9jOrr/+amRsu2eBkUVPP36YDc3HYZfFd0gYRnU3cDOgESPNFAoFUmnwEtHaaWeRxiHBrkX4OvzfHzL4MnNrWZVIetpGcpIbEf2F+UDms7VAo2Lj6JgGQ==
+X-Gm-Message-State: AOJu0YyAc93VCJ0MAQN0CRtC+f3fUumKnUPB7dhaJyPcFf/mnW7XXEsU
+	A3YZFYMtM2uKW7Wb/KMtWW7jk05AacSN4Gvd83qXyI5K8dqOp+uiQW3qPwMeOeAlXDqDh/5VhEt
+	WsQIUk7UFDO6pHm2ml7Y2AR5e+G8Fq4sWhmc=
+X-Google-Smtp-Source: AGHT+IFuiZIfFcuCgctYUzMapk4c0sCuzgKH79nA6kGjmiB1u9HpHIFJXlFCzVabBY8PqSs02KZ/7t64IBwgQ4+rnyA=
+X-Received: by 2002:a50:c004:0:b0:57c:b82e:884b with SMTP id
+ 4fb4d7f45d1cf-57d70231a13mr2099283a12.19.1719322299429; Tue, 25 Jun 2024
+ 06:31:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.6 000/192] 6.6.36-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
-References: <20240625085537.150087723@linuxfoundation.org>
-Content-Language: de-DE
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20240625085537.150087723@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240601092646.52139-1-joswang1221@gmail.com> <20240603130126.25758-1-joswang1221@gmail.com>
+ <20240604000147.2xxkkp7efjsbr3i5@synopsys.com> <CAMtoTm0S2WSO6VxK79DkTs+1aq5xBYBMRsPXWAFuWo4DoymUEw@mail.gmail.com>
+ <20240622000528.3keexfbetetkrxpy@synopsys.com>
+In-Reply-To: <20240622000528.3keexfbetetkrxpy@synopsys.com>
+From: joswang <joswang1221@gmail.com>
+Date: Tue, 25 Jun 2024 21:31:28 +0800
+Message-ID: <CAMtoTm2_QoT6YL=9fDJfdgcc__X-dkJymwDXj8VpyYdXx1mHAA@mail.gmail.com>
+Subject: Re: [PATCH v2, 2/3] usb: dwc3: core: add p3p2tranok quirk
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Cc: "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>, 
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, 
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, 
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "balbi@kernel.org" <balbi@kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, joswang <joswang@lenovo.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Am 25.06.2024 um 11:31 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.6.36 release.
-> There are 192 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Sat, Jun 22, 2024 at 8:05=E2=80=AFAM Thinh Nguyen <Thinh.Nguyen@synopsys=
+.com> wrote:
+>
+> Sorry for the delay response regarding this.
+>
+> On Wed, Jun 19, 2024, joswang wrote:
+> > Hi Thinh
+> >
+> > The workaround solution provided by your company for this issue is as f=
+ollows:
+> >   Workaround=EF=BC=9Aif the phy support direct P3 to P2 transition=EF=
+=BC=8Cprogram
+> > GUSB3PIPECTL.P3P2Tranok=3D1
+> >
+> > As the databook mentions:
+> > This bit is used only for some non-Synopsys PHYs that cannot do LFPS in=
+ P3.
+> > This bit is used by third-party SS PHY. It must be set to '0' for Synop=
+sys PHY.
+> >
+> > For Synopsys PHY, if this bit is set to "1", will it cause unknown prob=
+lems?
+> > Please help confirm this, thank you!
+> >
+>
+> That depends on what your use case and requirements are.
+>
+> I've reviewed this case. The impact to this issue is that power state
+> change may take longer than expected. It may violate the PIPE spec, but
+> functionally, at least for how linux drivers are handled, I'm not clear
+> on how this will impact the typical user.
+>
+> Can you help clarify your use case and what does this resolve beside the
+> fact that it workaround the increase latency/response time.
+>
+> Thanks,
+> Thinh
 
-Builds, boots and works fine w/o regressions on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. 
-Nothing unusual in dmesg output. Running 16 VMs in parallel for an hour now, and am 
-starting to compile 6.9.7-rc1 which I will boot-test too. Everything works as smoothly as 
-it gets with all CPUs at ~100%...
+Your company provides usage scenarios:
+System software places the controller in low-power when there is no
+traffic on the USB.
+Subsequently, system software programs the controller to exit
+low-power to resume traffic.
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+The method to reproduce the problem provided by your company:
+1. Program the DWC_usb31 controller to operate in device mode of
+operation. Program GUSB3PIPECTL.P3P2TranOK=3D0. To increase the
+probability of hitting the problem run with a slower frequency for
+suspend_clk (for example, 32 KHz and 160 KHz).
+2. Place the link in U3 while ensuring that pipe_powerdown is driven to P3.
+3. Program DWC_usb31 controller to exit U3. Ensure that for P0 ->P2
+transition pipe_PhyStatus is returned immediately.
+4. Program U3 exit from the remote link.
+5. Program a D3 entry (pm_power_state_request=3DD3) at the same time
+(from the device application) and observe if the D3 entry
+acknowledgement (current_power_state_u3pmu=3DD3) takes longer than
+expected (> 10 ms).
 
+Currently, we do not have a real environment to verify this case, but
+considering the Android GKI regulations, we need to submit patches to
+Linux in advance. Based on the following workaround solution provided
+by your company=EF=BC=8Csince the hardware cannot be changed, we can only u=
+se
+workaround 1 at present.
+Workaround 1: If the PHY supports direct P3 to P2 transition, program
+GUSB3PIPECTL.P3P2TranOK=3D1. However, note that as per PIPE4
+Specification, direct transition from P3 to P2 is illegal.
+Workaround 2: Delay the pipe_PhyStatus assertion by an amount greater
+than two suspend_clk durations at the input of the controller's PIPE
+interface.
 
-Beste Grüße,
-Peter Schneider
-
--- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
-
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
+We have the following questions and hope you can help us confirm them.
+Thank you!
+1. This case seems to describe that the P3 to P2 power state change
+takes a long time, that is, the DWC3_usb31 controller takes a long
+time to exit the D3 state. Please help evaluate whether this problem
+is perceived from the software perspective, such as whether there is a
+problem in the xhci_suspend or xhci_resume process. If from the
+software perspective, this case will not cause the xhci driver to
+fail, then we may not deal with this problem.
+2. If this case causes the above problem, for Synopsys PHY,
+configuring GUSB3PIPECTL.P3P2TranOK=3D1 will cause other unknown
+problems?
