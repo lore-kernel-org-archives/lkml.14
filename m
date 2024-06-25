@@ -1,138 +1,148 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25D624B34;
-	Tue, 25 Jun 2024 09:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028E5149C58
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 09:53:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719309196; cv=none; b=Jlyniyb47+dgeWyPgxm0igz4Oi0SHZ6qVXPjklsV4Pf8FvkfgaKOHbDFOB0640VhJdGgTPB5S4nTRRyMKnCageDFxfsUcog/GiVccijA+Wfu21IOFAPPlaKXI0hH8DRyU7lDiODa6W6xQsxiI1VTlXCYRAsYnGSt7lSPdHT2Nyo=
+	t=1719309208; cv=none; b=DvwgsW2c00BUe7oociHoxdrFMZaiZL5XnqB5k6VMiwpe7Rz/WiSx0W+iMl/4yinrFbYYoDV78D93joQS2YAcWfg9WmJr0xhCrzjPIDRPEXQ46rhF+eUVfC7vD2IO3OnoeHYMlvHM8YAw/RQbfQz6w15cgT3yTD2KP4DxpeuHl98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719309196; c=relaxed/simple;
-	bh=laocTupcpwpo03bPQmm5WTanJuRMlrVao+VZtjAK0uw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KP9MAu7O/a5IN7KU7sdSBDRIT/rmW1SOSN/0h9oARXj1Cqba2Ge3WlbMG5+7otEyi4ZCQfPyATXcc8GrpokxYbErCrBnhZftqErOD2zeCUCN3ZLyhIK/o3dBlMghvquCCJYPKMm7a2XhgJ4UJfANZIRU40GswC2a+M7MhuiTxnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=gY2jBB6u; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+	s=arc-20240116; t=1719309208; c=relaxed/simple;
+	bh=R3FCxbaMJtybn040DrjxA8NUBVBQpqRvUPiknZOt1TI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OUuwDO3o7f8SHytTFTMMp12pEswUBMq1Nha5VmMx/gB9ngLGlG0OMoVcOTeIE1A4oX1c82lg+ZGnx4UVFAxyXND9p7Xe8VtSJ47qNR6Ol2/BS7ItEMPnwTm7fYUsepRjYcG23FimIW2Lasw4MIvEqbPoUl2eoIgYTCkMv5chumM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XUhW1xbt; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="gY2jBB6u"
-Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id BC992120009;
-	Tue, 25 Jun 2024 12:53:01 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru BC992120009
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1719309181;
-	bh=+CIW1+X2Rn5dOGkYI0XQ6szG1FfJLJX2NsCdYcopmHk=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:From;
-	b=gY2jBB6ualz/ekdcu8Cpnw79rvv0Lq5W7E8NcqIYqMTektp0mqbbRCtYo2Ijgg/yu
-	 LcdOKN6lWfk/xdYNjaY+n48ayJYLp+eqQK0i27W6OqW0VH/YcGOmhQb5wjpIS3FtfN
-	 rTs80AwqAf5kcpHndpcYaoWxKpzS0pETYLDeztvu8x469DvQe9TQ+MK9gUjn+d3p0g
-	 Pw/Nx/28QwyyHfQIp8RlX21WEa6iT02pbaGLnxMV7N47x9RXEGuRNJoYiPwqNH00Vn
-	 S/ORWVx7X0aE6Nv+rZJetddmtYhq1elVviMfDscndq7lm+f6nWrgqcy7AbfEf9OhnT
-	 L3vcqtRnY/ISA==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue, 25 Jun 2024 12:53:01 +0300 (MSK)
-Received: from localhost (100.64.160.123) by p-i-exch-sc-m02.sberdevices.ru
- (172.16.192.103) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 25 Jun
- 2024 12:53:00 +0300
-Date: Tue, 25 Jun 2024 12:53:00 +0300
-From: Dmitry Rokosov <ddrokosov@salutedevices.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>
-CC: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: amlogic: ad402: fix thermal zone node name
-Message-ID: <20240625095210.mnwer2d3bc5wkits@CAB-WSD-L081021>
-References: <20240624-topic-amlogic-upstream-bindings-fixes-dts-round-2-v1-1-0a21f456eb8d@linaro.org>
- <1ad3429c-0bad-4662-bc9d-b912f88e7b3a@kernel.org>
- <4c4c7840-917e-4d00-b8a4-b97a01ca2e6a@linaro.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XUhW1xbt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719309206;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VCDVg82SvAc+NbfdoyAHMeVF+Y0QRccTMhp18TkLsuQ=;
+	b=XUhW1xbtgt9Fg7v344OXvOxL+uw007NmulTq+BYFywBeh4N7IsbTPTeZckqg90n+qyGDLa
+	A3q9mI9BcB6OwJvRwUw8NQSMsnSsh8jxrNtq9xyfJS46OgKe83xn1BJTsiiluzpUdUwAVx
+	grXJtMF6DzIMX8rjOo1HBv/MhGHmnc8=
+Received: from mail-vs1-f72.google.com (mail-vs1-f72.google.com
+ [209.85.217.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-321-xASy1Ii-NyCbWevIlkS8WQ-1; Tue, 25 Jun 2024 05:53:23 -0400
+X-MC-Unique: xASy1Ii-NyCbWevIlkS8WQ-1
+Received: by mail-vs1-f72.google.com with SMTP id ada2fe7eead31-48f4687d15cso3473335137.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 02:53:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719309203; x=1719914003;
+        h=content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VCDVg82SvAc+NbfdoyAHMeVF+Y0QRccTMhp18TkLsuQ=;
+        b=lVix7CK86KYGb6FfSd/e5EQIHgjMSRSGKUezZHwVShrLURA/05KRgXztEPtmG578g7
+         qy1W3VRhQQaYP7hit7DIh/HBclJh5cx9KIMOp7j0KLqHFxBeD2nT5/+vAJ7XYwpJvFAU
+         8o9RrfcsHDb6iSglfBLfqT3CtstNzzBlNpXYSstuL7IKce25G84zem1zzfbGMdeBcBwq
+         JZlYOPAc7b45dNVnVeXSlk57t/BbGKcPQ1My7JNQQCE6hdmEZEtXA9MM0FY5/O6IlmwD
+         r8LBeV9l3xBA3bC48iSx14S+hwzpExLl3U1APy6LnQdgbDTz0TvUsQ9Os6F7KcxXI/Uv
+         ga4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXnQjtO/ltA7Wssapy6CRDyuJ3bcv8Bear54TjyOtWFGC/fEx9BpEhh8xlWOSROO76oNhwjQDZJRkEyZ/sh9Amfh8JrQfj6hBt3PpsK
+X-Gm-Message-State: AOJu0YwfjOk/R41emsl5aBzu09s3wNI7RqRBrNUPEDdt/oQhSa9hfvJD
+	p04gGdJWOHg9XjTYQqSIbLQhWdHgPhK/Xw7SWeol9ucDmxj5+/3lrp10BBlWjlhnHXsAiGjr1Fw
+	pBcSvnj4eFk8aJHH1a1fUq9kEzZtam5PnlEgd5Tro7CIvVS0hdCTwkI67OZOkSw==
+X-Received: by 2002:a05:6102:34c2:b0:48f:2f28:833c with SMTP id ada2fe7eead31-48f529c9ab0mr6186846137.5.1719309203347;
+        Tue, 25 Jun 2024 02:53:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE7GVgIeXQfikh8im4fFadRGZfZMvzwXv5Lgjya/R6ZwlnSU1s7SQ/q+IhvLlQc4qI0cL2giQ==
+X-Received: by 2002:a05:6102:34c2:b0:48f:2f28:833c with SMTP id ada2fe7eead31-48f529c9ab0mr6186831137.5.1719309202782;
+        Tue, 25 Jun 2024 02:53:22 -0700 (PDT)
+Received: from maya.cloud.tilaa.com (maya.cloud.tilaa.com. [164.138.29.33])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-444c96b06a2sm45955701cf.15.2024.06.25.02.53.22
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2024 02:53:22 -0700 (PDT)
+Date: Tue, 25 Jun 2024 11:52:17 +0200
+From: Stefano Brivio <sbrivio@redhat.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Aaron Conole <aconole@redhat.com>, netdev@vger.kernel.org,
+ dev@openvswitch.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Pravin B Shelar <pshelar@ovn.org>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
+ Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>, =?UTF-8?B?QWRy?=
+ =?UTF-8?B?acOhbg==?= Moreno <amorenoz@redhat.com>, Simon Horman
+ <horms@kernel.org>
+Subject: Re: [PATCH v2 net-next 0/7] selftests: net: Switch pmtu.sh to use
+ the internal ovs script.
+Message-ID: <20240625115217.07c820c9@elisabeth>
+In-Reply-To: <20240624153023.6fabd9f1@kernel.org>
+References: <20240620125601.15755-1-aconole@redhat.com>
+	<20240621180126.3c40d245@kernel.org>
+	<f7ttthjh33w.fsf@redhat.com>
+	<f7tpls6gu3q.fsf@redhat.com>
+	<20240624153023.6fabd9f1@kernel.org>
+Organization: Red Hat
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <4c4c7840-917e-4d00-b8a4-b97a01ca2e6a@linaro.org>
-User-Agent: NeoMutt/20220415
-X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186120 [Jun 25 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: ddrokosov@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_uf_ne_domains}, {Track_E25351}, {Tracking_from_domain_doesnt_match_to}, smtp.sberdevices.ru:5.0.1,7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;100.64.160.123:7.1.2;devicetree.org:7.1.1;salutedevices.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/06/25 02:33:00
-X-KSMG-LinksScanning: Clean, bases: 2024/06/25 02:33:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/06/25 01:39:00 #25693004
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello Neil and Krzysztof,
+On Mon, 24 Jun 2024 15:30:23 -0700
+Jakub Kicinski <kuba@kernel.org> wrote:
 
-Before posting any commit I've running dt_binding_check and dtbs_check.
-Which target should highlight the errors like mentioned in this fix?
-Please advise what I'm doing wrong.
-
-My commands:
-
-$ /usr/bin/make ARCH=arm64 INSTALL_MOD_PATH=$ROOT/out/$TARGET/target CROSS_COMPILE="$ROOT/out/$TARGET/host/bin/aarch64-buildroot-linux-gnu-" DEPMOD=$ROOT/out/$TARGET/host/sbin/depmod INSTALL_MOD_STRIP=1 -C $ROOT/out/$TARGET/build/linux-custom dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/example_device.yaml
-$ /usr/bin/make ARCH=arm64 INSTALL_MOD_PATH=$ROOT/out/$TARGET/target CROSS_COMPILE="$ROOT/out/$TARGET/host/bin/aarch64-buildroot-linux-gnu-" DEPMOD=$ROOT/out/$TARGET/host/sbin/depmod INSTALL_MOD_STRIP=1 -C $ROOT/out/$TARGET/build/linux-custom dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/example_device.yaml
-
-On Mon, Jun 24, 2024 at 11:45:51AM +0200, Neil Armstrong wrote:
-> On 24/06/2024 11:28, Krzysztof Kozlowski wrote:
-> > On 24/06/2024 10:59, Neil Armstrong wrote:
-> > > Fixes the following:
-> > > thermal-zones: 'soc_thermal' does not match any of the regexes: '^[a-zA-Z][a-zA-Z0-9\\-]{1,12}-thermal$', 'pinctrl-[0-9]+'
-> > >          from schema $id: http://devicetree.org/schemas/thermal/thermal-zones.yaml#
-> > > 
-> > > Fixes: 593ab951232b ("arm64: dts: amlogic: ad402: setup thermal-zones")
-> > > Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> > > ---
-> > >   arch/arm64/boot/dts/amlogic/meson-a1-ad402.dts | 2 +-
-> > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/amlogic/meson-a1-ad402.dts b/arch/arm64/boot/dts/amlogic/meson-a1-ad402.dts
-> > > index 6883471a93b4..0d92f5253b64 100644
-> > > --- a/arch/arm64/boot/dts/amlogic/meson-a1-ad402.dts
-> > > +++ b/arch/arm64/boot/dts/amlogic/meson-a1-ad402.dts
-> > > @@ -86,7 +86,7 @@ vddio_1v8: regulator-vddio-1v8 {
-> > >   	};
-> > >   	thermal-zones {
-> > > -		soc_thermal: soc_thermal {
-> > > +		soc_thermal: soc-thermal {
+> On Mon, 24 Jun 2024 12:53:45 -0400 Aaron Conole wrote:
+> > Additionally, the "Cannot find device ..." text comes from an iproute2
+> > utility output.  The only place we actually interact with that is via
+> > the call at pmtu.sh:973:
 > > 
-> > I was fixing all underscores... but then mentioned above commit
-> > re-introduced them.
+> > 	run_cmd ip link set ovs_br0 up
+> > 
+> > Maybe it is possible that the link isn't up (could some port memory
+> > allocation or message be delaying it?) yet in the virtual environment.  
 > 
-> Sorry about that, I'm removing all dtbs check errors, so I'll be able to spot
-> this before merging anything now !
+> Depends on how the creation is implemented, normally device creation
+> over netlink is synchronous.
+
+It also looks like pyroute2 would keep everything synchronous (unless
+you call NetlinkSocket.bind(async_cache=True))... weird.
+
+> Just to be sure have you tried to repro with vng:
 > 
-> > 
-> > Some fixes need to be done more than once to stick. :)
-> > 
-> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> >
-> > Best regards,
-> > Krzysztof
-> > 
+> https://github.com/linux-netdev/nipa/wiki/How-to-run-netdev-selftests-CI-style
 > 
-> Thanks,
-> Neil
+> ? It could be the base OS difference, too, but that's harder to confirm.
+> 
+> > To confirm, is it possible to run in the constrained environment, but
+> > put a 5s sleep or something?  I will add the following either as a
+> > separate patch (ie 7/8), or I can fold it into 6/7 (and drop Stefano's
+> > ACK waiting for another review):
+> > 
+> > 
+> > wait_for_if() {
+> >    if ip link show "$2" >/dev/null 2>&1; then return 0; fi
+> > 
+> >    for d in `seq 1 30`; do
+> >       sleep 1
+> >       if ip link show "$2" >/dev/null 2>&1; then return 0; fi
+> >    done
+> >    return 1
+> > }
+> > 
+> > ....
+> >  	setup_ovs_br_internal || setup_ovs_br_vswitchd || return $ksft_skip
+> > +	wait_for_if "ovs_br0"
+> >  	run_cmd ip link set ovs_br0 up
+> > ....
+> > 
+> > Does it make sense or does it seem like I am way off base?  
+> 
+> sleep 1 is a bit high (sleep does accept fractional numbers!)
+
+This script was originally (and mostly is) all nice and POSIX (where
+sleep doesn't take fractional numbers), so, if you don't mind, I'd
+rather prefer "sleep 0.1 || sleep 1". :)
 
 -- 
-Thank you,
-Dmitry
+Stefano
+
