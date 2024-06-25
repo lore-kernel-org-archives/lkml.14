@@ -1,133 +1,125 @@
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1422D13A3ED
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 05:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1029313C672;
+	Tue, 25 Jun 2024 05:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719294966; cv=none; b=nYY0ql0OKsQOqwJ2a64QsoK44TS/o+FQ8uUoD5gJIL0BvQpxcEl35YO27MCJVJ4w1mwlARxH5KMJWBEi+2cmH9tGDxIyif6TFggdSaJFRA40qi+qUkRNy92MPR9MHP4olAN4/AuPupmseQ8LSPuaAQNnj2AfS9pOduD8azX/kbA=
+	t=1719295011; cv=none; b=F4lVDSaP7mIb4G/kDVeTVUDWSLJysMKEm/8Ej9o/TNTpulBGCyhD7Q4GF/D/FmSlfEQ3rVHgX1q1rBUg1ajYfV+YshZ+SknW86CrEzqEFP4kCtyhEgJEOzBB8UXYAFviuOweCBEDfu9qWvIajdPYvjJyrXjy1sQEUgoglPW/GZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719294966; c=relaxed/simple;
-	bh=l6/nDOsySzcGEWttp3aXYRErAU2WilZ5nJIXPHBdA4c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B81I865gkVoFMgKlGuiPLLeSOnUQSyl9buEQMGGTYD4lQGDnhzKXqxMWBEUScNFyub2tiXPlwQR/GsBj2yifWp4BaxAjLhA36S3SYuJFAB/6g3eyA2kkv2uiMRpjnjVKG1VHsLrpEEvW2rIaNDTMGFjn36cn7ZrMxDTHf8KHq2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N6ogrGwA; arc=none smtp.client-ip=209.85.221.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719295011; c=relaxed/simple;
+	bh=e0hrp29pJGltLjFx/bA1YnlRBCvvlo7g+owpNA6BfM4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Yty11959ZEZMsH9ZLc0xemlVY/psejuzf3dDTJF+ZnjlCqZGw/7F+jTti6qDHlDnRJ0Ov/1KbsYSrAr6EQtY1kWnD42kprCegSg35sMMzdxl1hTSuWwgYgjhixt/Ijo3lh7m5/a3ZoJwbA+7FzEe+cwJiWloL/5UEwm9nXx8HfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=WtK3zRrQ; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N6ogrGwA"
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-4ef662a4725so1056554e0c.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 22:56:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719294964; x=1719899764; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DOFhycCWHBbJEQrq9FLSxAq+8ycAlK7Oq890nn94zL4=;
-        b=N6ogrGwA0FRX6pAPgVcdNBZwo90xQKvRrQWZM4YuM1BUMznrBOAyJeiXh7umctbzJl
-         MibiHaI/NMtWnb9fXnNLBM29wi+Og1iruzY4rn6vUkSuV+f/Aw3Y+tPgujKI4xMQU+eB
-         0VILNimOy80s2GLRKSAJbYOFZeL+EMulpjJYXS8aOqO5XJHCfVleMTgkZ/oJBTMSwEeL
-         MmV33ITYL5tUy9m85sD+TsW8LgxOwVkCYeAo5R+C0rnVE2WYsHLlyO7xaYWxFRsS6VyY
-         chN/e3L6aWRmxkMO1thnOqRt40Mwx2lYJqTPJpv5NEu6ayN+vHl5njNDMclPGC0+jrXO
-         92YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719294964; x=1719899764;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DOFhycCWHBbJEQrq9FLSxAq+8ycAlK7Oq890nn94zL4=;
-        b=RUCMdLhSJJdKfuuwkwN7cvnIDO9X+8DZjTpvzaeIo92kYy0ZOmN4771FDIlNRq8R6j
-         FjzWuY2MY5Sv4xCVlepHgXAh3TyoSrLTOEjmHHnhvmEUeiOXuscFfjhwUHVZQKnjkbu7
-         VM09aCQKC4rM+4TmBHjlNoupfoNLqpoN9GmM7voPTccZ6JyTvNVWcbyyQqzUnPPZAH5D
-         5UkC4ChkkenC7IYdhHtQDVBcUQ2Uo0yWAA7XK1QwXoflr2CqXyWRGAqiFBgwicDwSIWE
-         KSMkUi4EgV+Pn49YftclJvbcDkP2YmGjs0LHzdHOrp74V4fI7SWEHasYS8fA70Q/ojpb
-         aTpg==
-X-Forwarded-Encrypted: i=1; AJvYcCWyoQuHWgaPEznsNQA1PFn8btorSI86ARjZu8Dp9tElE6l9pHLi7yDV5Bsw8ISXDYE9GDgg6PFFUGSsPc7V4ujWygoxwWktXdDuubR3
-X-Gm-Message-State: AOJu0YxNUmAoxL8FaWKamUWBt6oZjA0EFvTQhN19cah/hv26Sbudd6KX
-	XTlU4WO+IAZ2eeIEExGZghV9Pz1xS/tkcyPR10jLRKnG3jd2i9ejz12rrepkzmq45gSOe8H7JVM
-	W8+cEGda9iZKNJYGLQtyZfQGsmMB8uZJx
-X-Google-Smtp-Source: AGHT+IE7T2LcUMcE1A63kLs9QJDaEDTGtUFg7xS+X+MZm0MSQGirxng8mmJ4g8tYXVFqJY2sPGcbFxxlUyITU3dOggc=
-X-Received: by 2002:a05:6122:4a13:b0:4ef:6b47:3570 with SMTP id
- 71dfb90a1353d-4ef6b473751mr5401208e0c.8.1719294963866; Mon, 24 Jun 2024
- 22:56:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="WtK3zRrQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=Fi0PpkRAy7VQ2C54ZJo6BAKncB41h/I16eVpJYJGK3U=;
+	t=1719295009; x=1719727009; b=WtK3zRrQ5t2CsfcpBMn/YxXgnp1YaNsEds/5wVeR7giu74A
+	FGNKXRpKR+qkia8UqERgiB4pFQlPvBtQp00TLcbd9J/+KnbuChwn7MqASi23mCGa2BEcbhDiM9GBl
+	dFzD+g/BNLlK62YWQUidLdIGqmr82T9UR32mpi/ynIV+7J+3HDrqsymJs1GHecI0uUWpkdLghQKH8
+	3eSU5fnDe6kLxzeV+yvTnIsAN6/xTvgoagY+vqhqyEnD3/uMr4gA1cugKZh36/4rY/QpizsLukfI+
+	ePnnIBUjksq85SPWNmY46uqbAsPGCAXYHdCSshY63hLToWclOhtzqQ2G+Rwm7CDg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sLzAM-0002GH-6n; Tue, 25 Jun 2024 07:56:30 +0200
+Message-ID: <750a60a6-4585-4bd2-97be-cf944e51fbdb@leemhuis.info>
+Date: Tue, 25 Jun 2024 07:56:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <f3599b1d-8323-0dc5-e9e0-fdb3cfc3dd5a@google.com>
-In-Reply-To: <f3599b1d-8323-0dc5-e9e0-fdb3cfc3dd5a@google.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Tue, 25 Jun 2024 17:55:51 +1200
-Message-ID: <CAGsJ_4xABUi11ruC5obXvGi3R8zVQx2gzGAeqTGh22bj4xR9Dw@mail.gmail.com>
-Subject: Re: [PATCH mm-unstable] mm: folio_add_new_anon_rmap() careful __folio_set_swapbacked()
-To: Hugh Dickins <hughd@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, baolin.wang@linux.alibaba.com, 
-	chrisl@kernel.org, david@redhat.com, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, mhocko@suse.com, ryan.roberts@arm.com, 
-	shy828301@gmail.com, surenb@google.com, v-songbaohua@oppo.com, 
-	willy@infradead.org, ying.huang@intel.com, yosryahmed@google.com, 
-	yuanshuai@oppo.com, yuzhao@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: mt7622: fix switch probe on bananapi-r64
+To: Paolo Abeni <pabeni@redhat.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ Daniel Golle <daniel@makrotopia.org>, frank-w@public-files.de,
+ Frank Wunderlich <linux@fw-web.de>, =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?=
+ <arinc.unal@arinc9.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+References: <20240516204847.171029-1-linux@fw-web.de>
+ <a29dd7d1-40a8-4c88-99aa-651a3305b640@arinc9.com>
+ <5AEE5668-0C8E-4EE4-A398-66CB99DF5650@public-files.de>
+ <43aacd9d-b851-4100-8ccc-878ac6ae10f8@leemhuis.info>
+ <698cf562-1ca9-4aa3-be7e-a1474b612c5b@leemhuis.info>
+ <0cba095c-3d55-416a-a7ad-b359129731cf@arinc9.com>
+ <714da201-654b-4183-8e5e-8ff0b64fe621@leemhuis.info>
+ <2cac4cf68304e81abffbd9ff0387ee100323c2b7.camel@redhat.com>
+ <b49c801c-6628-40a6-8294-0876d8871ba7@leemhuis.info>
+ <e92c3ca0-c9be-44ac-a4fc-57ca5ebedbc5@leemhuis.info>
+ <1807a142-1534-4fa4-ad4b-d1c03af014c2@arinc9.com>
+ <58d8ddea-71cc-427a-94cc-a95f6bce61d2@collabora.com>
+ <16e9c06e-9908-455d-a387-614fefe5bcf8@arinc9.com>
+ <5e87d31c-b059-4f9a-93f7-dc87465ed14a@collabora.com>
+ <4416ef22-78cc-4ce5-b61d-69ff0903811e@arinc9.com>
+ <bd6b6929-d34d-4bd5-9cb0-bc8fe850ee46@leemhuis.info>
+ <af561268-9793-4b5d-aa0f-d09698fd6fb0@arinc9.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <af561268-9793-4b5d-aa0f-d09698fd6fb0@arinc9.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1719295009;5742f5c7;
+X-HE-SMSGID: 1sLzAM-0002GH-6n
 
-On Tue, Jun 25, 2024 at 5:00=E2=80=AFPM Hugh Dickins <hughd@google.com> wro=
-te:
->
-> Commit "mm: use folio_add_new_anon_rmap() if folio_test_anon(folio)=3D=3D
-> false" has extended folio_add_new_anon_rmap() to use on non-exclusive
-> folios, already visible to others in swap cache and on LRU.
->
-> That renders its non-atomic __folio_set_swapbacked() unsafe: it risks
-> overwriting concurrent atomic operations on folio->flags, losing bits
-> added or restoring bits cleared.  Since it's only used in this risky
-> way when folio_test_locked and !folio_test_anon, many such races are
-> excluded; but, for example, isolations by folio_test_clear_lru() are
-> vulnerable, and setting or clearing active.
->
-> It could just use the atomic folio_set_swapbacked(); but this function
-> does try to avoid atomics where it can, so use a branch instead: just
-> avoid setting swapbacked when it is already set, that is good enough.
-> (Swapbacked is normally stable once set: lazyfree can undo it, but
-> only later, when found anon in a page table.)
->
-> This fixes a lot of instability under compaction and swapping loads:
-> assorted "Bad page"s, VM_BUG_ON_FOLIO()s, apparently even page double
-> frees - though I've not worked out what races could lead to the latter.
->
-> Signed-off-by: Hugh Dickins <hughd@google.com>
+On 17.06.24 13:08, Arınç ÜNAL wrote:
+> On 17/06/2024 11:33, Linux regression tracking (Thorsten Leemhuis) wrote:
+> [...]
+> I've submitted a patch series that fixes the regression. Angelo argued
+> against the way the regression is fixed. I've very clearly argued back why
+> I find Angelo's approach wrong. There's been no response back. I don't
+> understand why reverting the patch is the likely outcome
 
-Thanks a lot, Hugh. Sorry for my mistake. I guess we should squash this int=
-o
-patch 1/3 "mm: use folio_add_new_anon_rmap() if folio_test_anon(folio) =3D=
-=3D
-false"?
-Andrew, could you please help to squash this one?
+Long story short: because that how things like that are handled in the
+Linux kernel project, as Linus wants it like that. See some of the
+quotes from https://docs.kernel.org/process/handling-regressions.html
+for details.
 
-> ---
->  mm/rmap.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/mm/rmap.c b/mm/rmap.c
-> index df1a43295c85..5394c1178bf1 100644
-> --- a/mm/rmap.c
-> +++ b/mm/rmap.c
-> @@ -1408,7 +1408,9 @@ void folio_add_new_anon_rmap(struct folio *folio, s=
-truct vm_area_struct *vma,
->         VM_WARN_ON_FOLIO(folio_test_hugetlb(folio), folio);
->         VM_BUG_ON_VMA(address < vma->vm_start ||
->                         address + (nr << PAGE_SHIFT) > vma->vm_end, vma);
-> -       __folio_set_swapbacked(folio);
-> +
-> +       if (!folio_test_swapbacked(folio))
-> +               __folio_set_swapbacked(folio);
->         __folio_set_anon(folio, vma, address, exclusive);
->
->         if (likely(!folio_test_large(folio))) {
-> --
-> 2.35.3
->
+> whilst the
+> standing argument points towards applying the said patch series. If a
+> revert happens before this discussion with Angelo finalises, this will set
+> a precedent that will tell maintainers that they can have their way by just
+> not replying to the ongoing discussions.
+> 
+> That said, the decision of resolving the regression by either reverting the
+> patch or applying the patch series shall not depend on whether or not
+> Angelo is pleased but rather there're no counter-arguments left on the
+> points brought, meaning the decision shall be made depending on the
+> argument that stands.
+> 
+> Therefore, I suggest that unless Angelo responds back with a
+> counter-argument in the window of a week or two, as you've described, my
+> patch series shall be applied.
 
-Thanks
-Barry
+It looks more and more like we are stuck here (or was there progress and
+I just missed it?) while the 6.10 final is slowly getting closer. Hence:
+
+AngeloGioacchino, should we ask the net maintainers to revert
+868ff5f4944aa9 ("net: dsa: mt7530-mdio: read PHY address of switch from
+device tree") for now to resolve this regression? Reminder, there is
+nothing wrong with that commit per se afaik, it just exposes a problem
+that needs to be fixed first before it can be reapplied.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
