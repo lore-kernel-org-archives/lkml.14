@@ -1,88 +1,311 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CEC146A86
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 07:46:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 054A7146D6A
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 07:47:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719301604; cv=none; b=U/77QfKngexfUmTzkK6eflKNZLXMq/OFPS3AIVuBNNjuIPRxgnYw0uxjOD87j5oCrwkyOryPaxzehfnWyA6rsl2OA5sso6kfaEYvdmy+dNR9WNdWu1rNMFx57AFfU1zfgZfoRNTo18q1GbWnqoDzOK728tctBZW1Q7b8H3QA+t4=
+	t=1719301628; cv=none; b=EcBDevHKw0gs7rYF/alpj9rq3vwke6+KSSP5MN8sJdKGXBS98x5xqZuN2NO6/+wu9DmMpRacN2RkfoDd8RRCTY6CHTUVTNwuNsK3MDDSrVrCE4wSkrikvcuvPIceeMADsYbASqcPFhpbJYEnZF815JnB6mttpQBQfGAsfCUDZNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719301604; c=relaxed/simple;
-	bh=KQ+bgIYCeKBgOUkKP2xyBAw/NLvGdx/I4d0rWEKXj+8=;
+	s=arc-20240116; t=1719301628; c=relaxed/simple;
+	bh=AgEdGFRlzxq13iNkT33ceYYAdgyNaBdPfg8YBCvTwrY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uIzC1zKCKI/emherwVL1ltdtXKnu13hDsZJik+5ViZS7M3uWk4c6LEZ14dkcUVHAA2kVUq5WZ0UmIho9utJHHIhCar+gnP2/BLLxBCXRxyotT69O8znVJfxyJe8QxgsubJYujBDpyrkRnsw8AbbGDCE7YSjMrNGqoqUMvI6lA5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=0rsJxb7U; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	 To:Cc:Content-Type; b=cl/DfnFJlkibRozGf9VfX/EDO8c2fwfql4P3qmb6/YgkwKqhorCLbGU1eztoTiAIaDvH8dYuDSmESvRxBHI9D62xFHRmv10G0SCXQ2dGmH3Xs//T4J1XlARZ+b1RTmYEC17HY9/XB36nRWAxA+z0trk3N1WE6xGgiApKSk7S5hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OW+/kVTq; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="0rsJxb7U"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2eabd22d3f4so63460751fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 00:46:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719301601; x=1719906401; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KQ+bgIYCeKBgOUkKP2xyBAw/NLvGdx/I4d0rWEKXj+8=;
-        b=0rsJxb7UBpR6EOihYrq/U4qGTIBHLt+gopun2WskxiK0+S8lyYi/u9wNVkkrB1n4mh
-         fgzbLQbGRG2NPvEX+HBLLtjXuvxoOyNsdl4XBK0pfzQLo6BwOJ00evtQWi6XkNmKkgTe
-         CkBOCEzxWqQvH7O8cQ0aqznUUOuCDKtir7o6z4uREQp8jPm7g1x8dNKh6361p4FYu4Op
-         S0nJ6YiAU68j+fufB88cgX+P1lxohz2EDA5vrjc6zQLkFAtmIs9j2f2LLjBBv5ezF7IM
-         2odWDGhIGZEdra399MEIZ8/MpCKFG3Q0T+VFv8/fg5FmrVVvkSNLLuTK7ng8metpYW9g
-         TKeA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OW+/kVTq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719301625;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iXuRueWXMrw0//4BwJxmj02bU1X+gIXBgkrl4FbZrQk=;
+	b=OW+/kVTqG6uimrADtbfAgbug5JP1KEN1n89n5byCZCnt9fauldGogQECzz9NKGipVBKhMH
+	S5/Zrxu7C8KMSGSqA0ybs3v0GWsyCWWtNPJuMCWUyvqbG9qQ51ROr3cVSPduqGzblAaniB
+	dUp0s0T4/Zm5Maam7CNWzRSySOPdGKo=
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
+ [209.85.215.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-644-nbOWym9wPbOPqbMx29YZBQ-1; Tue, 25 Jun 2024 03:47:04 -0400
+X-MC-Unique: nbOWym9wPbOPqbMx29YZBQ-1
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-718c62ad099so4446133a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 00:47:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719301601; x=1719906401;
+        d=1e100.net; s=20230601; t=1719301623; x=1719906423;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KQ+bgIYCeKBgOUkKP2xyBAw/NLvGdx/I4d0rWEKXj+8=;
-        b=wts19EvGw+j0LPCcHSNAFejaAXG4NJlJ4F/9Fl6k3tSwBaO+UlguKNlwhkn/pgfmfa
-         2dCeYh9eZG9JfqB5UU4UKrODSERnj9vK5/6+x73AwXzHnjg3MnuTxxS0zGiuNeBDuiQu
-         R9v+MnQbnTdkL49wgpUl9PRikdhIzGTIbvigBIwUzhMdVT+S87vtlZlwayzMnCmyBFPR
-         hjMXBnMNhOMkt2DumAUsoHfWS3rAl5rPdnn9Xt6HdGY4+nG1aoZCD379mnW3504PoGKC
-         lzIewpPOr5TRLydMnBV6ir9bsIWNF2A0OHcaWGqkyLLow7W8OSOx27OTYUeS4uAZWLOz
-         2mxg==
-X-Forwarded-Encrypted: i=1; AJvYcCXKm/m+db3ddCMKnoakCSjgaloIaHSRQeNHOdg+t2TgfID5ZLo7YgwUgl+RGUuilaiDKECyRySpGSU2DyUOjd0lHc/uP8gl7VZIyfis
-X-Gm-Message-State: AOJu0YzxqstXkStyD+avCxc/S2UV4nnQ9t1YuLITexjyTAmP1p42J3sK
-	r8Z5reupd4SbN3OMe7eBLfzcSTTqbJWT/RAw1QmbKmf0hUOanupUDRLoRkk9pyai1EwnfchwPPD
-	befXpAkiyLhkVJSEhJ+Qf1S16ZiUtHRQol0MMlA==
-X-Google-Smtp-Source: AGHT+IG6PgHGYuAX1AUyV5EN7lc8tN5mHh/JuzzOgzPg5xDcTQ/uVLhTBQ3XbjpqG/bv4wQ2T+6h8Bru5fI5/SHFG0U=
-X-Received: by 2002:a05:651c:154b:b0:2ec:61b5:2162 with SMTP id
- 38308e7fff4ca-2ec61b521d6mr35790581fa.25.1719301600609; Tue, 25 Jun 2024
- 00:46:40 -0700 (PDT)
+        bh=iXuRueWXMrw0//4BwJxmj02bU1X+gIXBgkrl4FbZrQk=;
+        b=dGw6wjiu30h6Bo0hKvtAmlqAong0xk2DU9Ph5saghB8eNfHgfRRengYCB6tu9pAzKF
+         bFTTFLIQwKd2LaZcUpWph650Ct+GSDH2oEuawmowJntYXM7LNs6SWn12UuhttzXWFQBu
+         bwsqW1H0tthUb85VWk3wcJETGzjdgCqGTlKtTQe7Js34wUsoUwNKd0TIUdCFZFFuqcSR
+         XhifOcIbKSrMllANMVyKCQtMj/GJd0z0fy35u78SjpqIYvNAl0OvgL4aHRD57NDUgmBA
+         651MODEPWnZ8BxzE9+ct4G5TZD9HZ5SkiAgs0qNNk2IaZKWACMi6E+cbZYrr0iQEmy9C
+         A2HA==
+X-Forwarded-Encrypted: i=1; AJvYcCWAC9EHDBUmvw9uYJZ5niMhAe7I2wEL4wU7iRgt101W+XlfD/rdtlOjn5z2nHHfvQ9Hs2pIjS/GRGkUdHq1r18iq8MowjMspH1s/6us
+X-Gm-Message-State: AOJu0YxmGEU0XS8lUI2WXAkoQF1N0I8nYAXPcmWB5L4UxfHaYXhn/Yr+
+	mhS4pFOKXgT7Nic5YrtNo4acclz2ZhjUIrH7j+52a9ZOAJ/VEXM/Uy1L/jDrohxSFGKkUz7CBgn
+	0W2EmUOeu5jnwXqMgAlspBJRGao0o8dj2KhY8g57Ni/YMzrqZlBYjl+DoHt+LyvnHUJej2KnHN/
+	voi99Xblcir0QURVQESqR3y+1EV9PuKN59WEoZ
+X-Received: by 2002:a05:6a20:3ca5:b0:1bd:23de:e7e4 with SMTP id adf61e73a8af0-1bd23dee903mr356344637.3.1719301623330;
+        Tue, 25 Jun 2024 00:47:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEDBTj4XX23FYA275C5j9thFxHEkaAUx2Cd6m+DopLZnApVjmLiVAChHUsfAHgOor/2y/EzG1/i6EoKemT44lQ=
+X-Received: by 2002:a05:6a20:3ca5:b0:1bd:23de:e7e4 with SMTP id
+ adf61e73a8af0-1bd23dee903mr356319637.3.1719301622765; Tue, 25 Jun 2024
+ 00:47:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240624194518.37458-1-brgl@bgdev.pl> <CAA8EJppMPeYrPH+ssDMnf6UwHRdKQetpY3PotGvR-cc2vE68AQ@mail.gmail.com>
- <CAMRc=MeYy8MgBVbwmrR1Rd9oQMz1tUb+uL4eFJWTL7EOsRXxjg@mail.gmail.com> <CAA8EJpqz7wPSyn0ybDWKwBKkp+rWVPbTgjbKuG6VHWm24MCusA@mail.gmail.com>
-In-Reply-To: <CAA8EJpqz7wPSyn0ybDWKwBKkp+rWVPbTgjbKuG6VHWm24MCusA@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 25 Jun 2024 09:46:29 +0200
-Message-ID: <CAMRc=McZ+hrXyNESmf4pFX9+uDnc4AKsuO9X8AJsVgCfQVLd9Q@mail.gmail.com>
-Subject: Re: [PATCH] Bluetooth: qca: don't disable power management for QCA6390
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20240624024523.34272-1-jasowang@redhat.com> <20240624024523.34272-4-jasowang@redhat.com>
+ <20240624060057-mutt-send-email-mst@kernel.org> <CACGkMEsysbded3xvU=qq6L_SmR0jmfvXdbthpZ0ERJoQhveZ3w@mail.gmail.com>
+ <20240625031455-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20240625031455-mutt-send-email-mst@kernel.org>
+From: Jason Wang <jasowang@redhat.com>
+Date: Tue, 25 Jun 2024 15:46:44 +0800
+Message-ID: <CACGkMEt4qnbiotLgBx+jHBSsd-k0UAVSxjHovfXk6iGd6uSCPg@mail.gmail.com>
+Subject: Re: [PATCH V2 3/3] virtio-net: synchronize operstate with admin state
+ on up/down
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: xuanzhuo@linux.alibaba.com, eperezma@redhat.com, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, venkat.x.venkatsubra@oracle.com, 
+	gia-khanh.nguyen@oracle.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 24, 2024 at 11:20=E2=80=AFPM Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
+On Tue, Jun 25, 2024 at 3:16=E2=80=AFPM Michael S. Tsirkin <mst@redhat.com>=
+ wrote:
+>
+> On Tue, Jun 25, 2024 at 09:27:38AM +0800, Jason Wang wrote:
+> > On Mon, Jun 24, 2024 at 6:07=E2=80=AFPM Michael S. Tsirkin <mst@redhat.=
+com> wrote:
+> > >
+> > > On Mon, Jun 24, 2024 at 10:45:23AM +0800, Jason Wang wrote:
+> > > > This patch synchronize operstate with admin state per RFC2863.
+> > > >
+> > > > This is done by trying to toggle the carrier upon open/close and
+> > > > synchronize with the config change work. This allows propagate stat=
+us
+> > > > correctly to stacked devices like:
+> > > >
+> > > > ip link add link enp0s3 macvlan0 type macvlan
+> > > > ip link set link enp0s3 down
+> > > > ip link show
+> > > >
+> > > > Before this patch:
+> > > >
+> > > > 3: enp0s3: <BROADCAST,MULTICAST> mtu 1500 qdisc pfifo_fast state DO=
+WN mode DEFAULT group default qlen 1000
+> > > >     link/ether 00:00:05:00:00:09 brd ff:ff:ff:ff:ff:ff
+> > > > ......
+> > > > 5: macvlan0@enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 15=
+00 qdisc noqueue state UP mode DEFAULT group default qlen 1000
+> > > >     link/ether b2:a9:c5:04:da:53 brd ff:ff:ff:ff:ff:ff
+> > > >
+> > > > After this patch:
+> > > >
+> > > > 3: enp0s3: <BROADCAST,MULTICAST> mtu 1500 qdisc pfifo_fast state DO=
+WN mode DEFAULT group default qlen 1000
+> > > >     link/ether 00:00:05:00:00:09 brd ff:ff:ff:ff:ff:ff
+> > > > ...
+> > > > 5: macvlan0@enp0s3: <NO-CARRIER,BROADCAST,MULTICAST,UP,M-DOWN> mtu =
+1500 qdisc noqueue state LOWERLAYERDOWN mode DEFAULT group default qlen 100=
+0
+> > > >     link/ether b2:a9:c5:04:da:53 brd ff:ff:ff:ff:ff:ff
+> > > >
+> > > > Cc: Venkat Venkatsubra <venkat.x.venkatsubra@oracle.com>
+> > > > Cc: Gia-Khanh Nguyen <gia-khanh.nguyen@oracle.com>
+> > > > Signed-off-by: Jason Wang <jasowang@redhat.com>
+> > > > ---
+> > > >  drivers/net/virtio_net.c | 72 +++++++++++++++++++++++-------------=
+----
+> > > >  1 file changed, 42 insertions(+), 30 deletions(-)
+> > > >
+> > > > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> > > > index b1f8b720733e..eff3ad3d6bcc 100644
+> > > > --- a/drivers/net/virtio_net.c
+> > > > +++ b/drivers/net/virtio_net.c
+> > > > @@ -2468,6 +2468,25 @@ static int virtnet_enable_queue_pair(struct =
+virtnet_info *vi, int qp_index)
+> > > >       return err;
+> > > >  }
+> > > >
+> > > > +static void virtnet_update_settings(struct virtnet_info *vi)
+> > > > +{
+> > > > +     u32 speed;
+> > > > +     u8 duplex;
+> > > > +
+> > > > +     if (!virtio_has_feature(vi->vdev, VIRTIO_NET_F_SPEED_DUPLEX))
+> > > > +             return;
+> > > > +
+> > > > +     virtio_cread_le(vi->vdev, struct virtio_net_config, speed, &s=
+peed);
+> > > > +
+> > > > +     if (ethtool_validate_speed(speed))
+> > > > +             vi->speed =3D speed;
+> > > > +
+> > > > +     virtio_cread_le(vi->vdev, struct virtio_net_config, duplex, &=
+duplex);
+> > > > +
+> > > > +     if (ethtool_validate_duplex(duplex))
+> > > > +             vi->duplex =3D duplex;
+> > > > +}
+> > > > +
+> > > >  static int virtnet_open(struct net_device *dev)
+> > > >  {
+> > > >       struct virtnet_info *vi =3D netdev_priv(dev);
+> > > > @@ -2486,6 +2505,22 @@ static int virtnet_open(struct net_device *d=
+ev)
+> > > >                       goto err_enable_qp;
+> > > >       }
+> > > >
+> > > > +     /* Assume link up if device can't report link status,
+> > > > +        otherwise get link status from config. */
+> > > > +     netif_carrier_off(dev);
+> > > > +     if (virtio_has_feature(vi->vdev, VIRTIO_NET_F_STATUS)) {
+> > > > +             virtio_config_enable(vi->vdev);
+> > > > +             /* We are not sure if config interrupt is disabled by
+> > > > +              * core or not, so we can't schedule config_work by
+> > > > +              * ourselves.
+> > > > +              */
+> > >
+> > > This comment confuses more than it explains.
+> > > You seem to be arguing about some alternative design
+> > > you had in mind, but readers don't have it in mind.
+> > >
+> > >
+> > > Please just explain what this does and why.
+> > > For what: something like "Trigger re-read of config - same
+> > > as we'd do if config changed".
+> > >
+> > > Now, please do what you don't do here: explain the why:
+> > >
+> > >
+> > > why do we want all these VM
+> > > exits on each open/close as opposed to once on probe and later on
+> > > config changed interrupt.
+> >
+> > Fine, the main reason is that a config interrupt might be pending
+> > during ifdown and core may disable configure interrupt due to several
+> > reasons.
+> >
+> > Thanks
+>
+> If the config changes exactly as command is executing?
+> Then we'll get an interrupt later and update.
+
+Workqueue is used to serialize those so we won't lose any change.
+
+Currently the interrupt is only used to:
+
+1) update link status, so according to rfc2863, no need to do that
+when the interface is admin down
+2) announce the link, it's also meaningless to announce the link when
+the interface is down.
+
+Or anything I miss here?
+
+> You can't always win this race, even if you read it can
+> change right after.
+
+Thanks
+
+>
 >
 > >
-> > Neither of these has clocks that need to be driven by linux. The only
-> > user of QCA6390 Bluetooth in mainline is RB5. Bindings didn't exist
-> > before so no commitment was ever made.
+> > >
+> > >
+> > > > +             virtio_config_changed(vi->vdev);
+> > > > +     } else {
+> > > > +             vi->status =3D VIRTIO_NET_S_LINK_UP;
+> > > > +             virtnet_update_settings(vi);
+> > > > +             netif_carrier_on(dev);
+> > > > +     }
+> > > > +
+> > > >       return 0;
+> > > >
+> > > >  err_enable_qp:
+> > > > @@ -2928,12 +2963,19 @@ static int virtnet_close(struct net_device =
+*dev)
+> > > >       disable_delayed_refill(vi);
+> > > >       /* Make sure refill_work doesn't re-enable napi! */
+> > > >       cancel_delayed_work_sync(&vi->refill);
+> > > > +     /* Make sure config notification doesn't schedule config work=
+ */
+> > > > +     virtio_config_disable(vi->vdev);
+> > > > +     /* Make sure status updating is cancelled */
+> > > > +     cancel_work_sync(&vi->config_work);
+> > > >
+> > > >       for (i =3D 0; i < vi->max_queue_pairs; i++) {
+> > > >               virtnet_disable_queue_pair(vi, i);
+> > > >               cancel_work_sync(&vi->rq[i].dim.work);
+> > > >       }
+> > > >
+> > > > +     vi->status &=3D ~VIRTIO_NET_S_LINK_UP;
+> > > > +     netif_carrier_off(dev);
+> > > > +
+> > > >       return 0;
+> > > >  }
+> > > >
+> > > > @@ -4632,25 +4674,6 @@ static void virtnet_init_settings(struct net=
+_device *dev)
+> > > >       vi->duplex =3D DUPLEX_UNKNOWN;
+> > > >  }
+> > > >
+> > > > -static void virtnet_update_settings(struct virtnet_info *vi)
+> > > > -{
+> > > > -     u32 speed;
+> > > > -     u8 duplex;
+> > > > -
+> > > > -     if (!virtio_has_feature(vi->vdev, VIRTIO_NET_F_SPEED_DUPLEX))
+> > > > -             return;
+> > > > -
+> > > > -     virtio_cread_le(vi->vdev, struct virtio_net_config, speed, &s=
+peed);
+> > > > -
+> > > > -     if (ethtool_validate_speed(speed))
+> > > > -             vi->speed =3D speed;
+> > > > -
+> > > > -     virtio_cread_le(vi->vdev, struct virtio_net_config, duplex, &=
+duplex);
+> > > > -
+> > > > -     if (ethtool_validate_duplex(duplex))
+> > > > -             vi->duplex =3D duplex;
+> > > > -}
+> > > > -
+> > > >  static u32 virtnet_get_rxfh_key_size(struct net_device *dev)
+> > > >  {
+> > > >       return ((struct virtnet_info *)netdev_priv(dev))->rss_key_siz=
+e;
+> > > > @@ -5958,17 +5981,6 @@ static int virtnet_probe(struct virtio_devic=
+e *vdev)
+> > > >               goto free_unregister_netdev;
+> > > >       }
+> > > >
+> > > > -     /* Assume link up if device can't report link status,
+> > > > -        otherwise get link status from config. */
+> > > > -     netif_carrier_off(dev);
+> > > > -     if (virtio_has_feature(vi->vdev, VIRTIO_NET_F_STATUS)) {
+> > > > -             schedule_work(&vi->config_work);
+> > > > -     } else {
+> > > > -             vi->status =3D VIRTIO_NET_S_LINK_UP;
+> > > > -             virtnet_update_settings(vi);
+> > > > -             netif_carrier_on(dev);
+> > > > -     }
+> > > > -
+> > > >       for (i =3D 0; i < ARRAY_SIZE(guest_offloads); i++)
+> > > >               if (virtio_has_feature(vi->vdev, guest_offloads[i]))
+> > > >                       set_bit(guest_offloads[i], &vi->guest_offload=
+s);
+> > > > --
+> > > > 2.31.1
+> > >
 >
-> This might make some laptop users unhappy.
 
-Like I said: without upstreamed DT bindings, we have never made any
-commitment about the device properties. I doubt anyone will complain
-though, I haven't seen any DT with QCA6390 with clock properties yet.
-I wouldn't stress it for now.
-
-Bart
