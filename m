@@ -1,196 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06DDD143882;
-	Tue, 25 Jun 2024 19:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA753D3B3
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 19:46:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719344572; cv=none; b=PB8kvyy2Wae9Bn3Wk8HezoMyjHYjbuElL3HGoFPrErhbKWVYYl5LJjlpDG+UJEm+a47wZBoljbQ6iozxio4OfihWHGhNiW/yWPWVfm2JY/GV34rrdhxD6aqEUZHtU7pJgbuZ9zafXt3TWIAwppfbbHR4cQd3kXnkOxSSSd5V/YA=
+	t=1719344766; cv=none; b=DePPIxC7rIttrGYa4WeyXdoALaiGWkr9Y5BwquhGlXrPQmP/d7jjDnd86Ow291s1+5IIoZ0wfFmOM9xSOAherW98sRRYw1Ox+6YZW+/w6BUK7EavI9JDKRUat1DJ3PjRubraf1hJob72jbPT6wzfPig4eLgkTztXPM8zEzhWh3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719344572; c=relaxed/simple;
-	bh=DveFdF9nepyczNRTYDxbBM/91PZjFxumtLrhvZS3Rb8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T6tBuWiv3NkMWPyGgtr8xmqzMQij+yOASv8Effs3HD7GrMazQ/mP6r4egdQVxHwGvTLvyLdMCcUOqtFHXazcxEdoyr/kR0HK7R5dtncNPzr6paXb4qlG12er6u/sRsKnJmbtZVsIKedJXC074jjX+iQ/HLvlg2Qh7wpu2i37PMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CdyRNAse; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719344766; c=relaxed/simple;
+	bh=VwBrEZVFp25N9X9nSaPoLwiMlNl+UokOPiDvV1Ha+xE=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=K3pLazd46HLcnJtz8DaiaTsdZRwIsfH5aQCSLWMLrrBDtDvnGP9nD3ybWExjvJSluBw8fa5/SI7ei89fwOZi145/gmRV7P3FT0k0Lh3NhhLh/7Wwa19miWzeLWB91vpn76ACX7je6osIzfW+/UvF7Lt80UOre7LE7CK0aQ71IGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SOHBC1fr; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CdyRNAse"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719344570; x=1750880570;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=DveFdF9nepyczNRTYDxbBM/91PZjFxumtLrhvZS3Rb8=;
-  b=CdyRNAseX3LZ0/2l17tAseVDFXH3EdX0lDhKe7VmMRNA1CmOG4cYtTsd
-   NgjeGVp+iBwDdqFhcx6EayHVdt6Q3bZuD03zu/0o3hklxn+ay2inv973m
-   m/4/8mYsD3ky5XNGm1wAGRrkVmxB6ueSQ15VaNwZl0EYZlewEXPSma5UM
-   2vio3H8jt709OSJ51+r26r4oreCPO/Hr9+KkKbbaAbyOxtNnBEMIs8kcg
-   J0ynxtPw55zlhRIDQSWXEC/8WlJnLa3pMawlBnD0S4+5mNgm8bYD1OsXH
-   yVduUKjpN+kMu+sDLJL5xQcw4806jy5kTSPViOpBnqbeKwrlomJyISrnC
-   A==;
-X-CSE-ConnectionGUID: TsGecSbMRNm+ZxTbQnSsnw==
-X-CSE-MsgGUID: gyzhE1H+RCKDCia9NqL6Qg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="16530882"
-X-IronPort-AV: E=Sophos;i="6.08,264,1712646000"; 
-   d="scan'208";a="16530882"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 12:42:49 -0700
-X-CSE-ConnectionGUID: SmrJ7SUURpmPgnPi2JhHiw==
-X-CSE-MsgGUID: VhUpg8VnQSKZHobbHXpbzQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,264,1712646000"; 
-   d="scan'208";a="43569031"
-Received: from patelni-mobl1.amr.corp.intel.com (HELO localhost) ([10.124.97.190])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 12:42:48 -0700
-Date: Tue, 25 Jun 2024 12:42:47 -0700
-From: Nirmal Patel <nirmal.patel@linux.intel.com>
-To: Jian-Hong Pan <jhp@endlessos.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Francisco Munoz
- <francisco.munoz.ruiz@linux.intel.com>, Johan Hovold <johan@kernel.org>,
- David Box <david.e.box@linux.intel.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, Kuppuswamy Sathyanarayanan
- <sathyanarayanan.kuppuswamy@linux.intel.com>, Mika Westerberg
- <mika.westerberg@linux.intel.com>, Damien Le Moal <dlemoal@kernel.org>,
- Jonathan Derrick <jonathan.derrick@linux.dev>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux@endlessos.org, Paul M Stillwell Jr
- <paul.m.stillwell.jr@intel.com>
-Subject: Re: [PATCH v6 3/3] PCI: vmd: Drop resetting PCI bus action after
- scan mapped PCI child bus
-Message-ID: <20240625124247.00001768@linux.intel.com>
-In-Reply-To: <CAPpJ_ee5e-wwOGJ9z+AaXbpDUkN_zZt3Q_BLcZTztW8aHcPSfg@mail.gmail.com>
-References: <20240624081108.10143-2-jhp@endlessos.org>
-	<20240624082144.10265-2-jhp@endlessos.org>
-	<20240624082458.00006da1@linux.intel.com>
-	<CAPpJ_ee5e-wwOGJ9z+AaXbpDUkN_zZt3Q_BLcZTztW8aHcPSfg@mail.gmail.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-w64-mingw32)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SOHBC1fr"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-424ab8c2d95so551705e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 12:46:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719344763; x=1719949563; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Uj592VFsfsXigJjlHKa8dxpsEP+lDZMRz5sitwN8a0k=;
+        b=SOHBC1fr81Ij8Hs+oYDv4FRQpQ6JKT619Hb94DOPIOJJgM3GuKQiT92k4H0NxDk0XZ
+         o8wmr/6tBAMghvuTbGgyT9mOc8KTUTmu2TE3fdEpBx9qJ08yLtnFH+PrTpXsSEsfF86J
+         e7RrD4btaXCMdSn0tC+FhLbVXg3TaX7K1moO1RxkWn7EuHqRHyJleLuU6zMPnwXTXzEb
+         qgBnhJ6dk/cyC2JpgMye+yMftJzfaptAcFRjJcGDTnbAUv/VX3QE9otEtoy6mLE4QeFf
+         c9L6vUOMmCR+JqrqNNsSu8/a2CPNRKZ2Y8ZYeahg24BVrT3vGK3s0BS2PzFZNFiEeATy
+         ARjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719344763; x=1719949563;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Uj592VFsfsXigJjlHKa8dxpsEP+lDZMRz5sitwN8a0k=;
+        b=V4xSX5lwf7vOJ3ByBHflgS8R4mh1KELCthUB0jsxq5EBGwh07M2vUiTJ4OY6e/PwZN
+         TD/9QFsIACXdR6ovrtZNn7XuImevM+Npo6OBzO+8D31A5fD6TzPek7OVIiEuWpJzBTiz
+         gv2oTI7jiDdLiQlJocEFWf1B06fAK8eaeTv0RpZxvZixCi5MHsG0SlED45iP4icBa0BB
+         FrWa9SJkiw4TCvVwjHCLN/c5I1A54xDNgxEMzglXpXsgKH6NxWUdLR6Wy0yH4cyAFOPR
+         Oqxey/vMjLsPk4w2dYhzHbiwJ2Ve+XXVamKOMdkf/LkH9Rp7hom2dEPKZdxPeqivL3hA
+         kIBw==
+X-Forwarded-Encrypted: i=1; AJvYcCVULMna217znjapUFFyuaL27eOuaAsa2DKUwU8l4q/x3I8I+Kbof5IXpReJG9sfYqkeFUa/E3sC0f3NRYBilQR1PQOghjfitwL1ga62
+X-Gm-Message-State: AOJu0Yw11DxNQ2c7f451U4F8dQ1+c62g6BOXj14vICPmvOl7q/eLoivJ
+	uS34rhfzB0dfy8kVdGjRzilZ11njpEMk5HeoY4jrEr/pNfAbY0NUNEv8XQ==
+X-Google-Smtp-Source: AGHT+IFdeQrMKSiBuQQY+9Ba/MjPwOWVh6dSr+tITWeZVHuGdXgj2KK5Q67gqOADz3/VQb9LzbTAZA==
+X-Received: by 2002:a5d:59a4:0:b0:366:f743:7f92 with SMTP id ffacd0b85a97d-366f7438017mr4163387f8f.1.1719344763315;
+        Tue, 25 Jun 2024 12:46:03 -0700 (PDT)
+Received: from matrix-ESPRIMO-P710 (p57935a9b.dip0.t-ipconnect.de. [87.147.90.155])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3663a8c8aa6sm13833708f8f.105.2024.06.25.12.46.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jun 2024 12:46:03 -0700 (PDT)
+Date: Tue, 25 Jun 2024 21:46:01 +0200
+From: Philipp Hortmann <philipp.g.hortmann@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: rtl8723bs: Remove unused variable pwdev_priv
+Message-ID: <20240625194601.GA16828@matrix-ESPRIMO-P710>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, 25 Jun 2024 17:52:55 +0800
-Jian-Hong Pan <jhp@endlessos.org> wrote:
+Remove unused variable pwdev_priv.
 
-> Nirmal Patel <nirmal.patel@linux.intel.com> =E6=96=BC 2024=E5=B9=B46=E6=
-=9C=8824=E6=97=A5 =E9=80=B1=E4=B8=80
-> =E4=B8=8B=E5=8D=8811:25=E5=AF=AB=E9=81=93=EF=BC=9A
-> >
-> > On Mon, 24 Jun 2024 16:21:45 +0800
-> > Jian-Hong Pan <jhp@endlessos.org> wrote:
-> > =20
-> > > According to "PCIe r6.0, sec 5.5.4", before enabling ASPM L1.2 on
-> > > the PCIe Root Port and the child device, they should be
-> > > programmed with the same LTR1.2_Threshold value. However, they
-> > > have different values on VMD mapped PCI child bus. For example,
-> > > Asus B1400CEAE's VMD mapped PCI bridge and NVMe SSD controller
-> > > have different LTR1.2_Threshold values:
-> > >
-> > > 10000:e0:06.0 PCI bridge: Intel Corporation 11th Gen Core
-> > > Processor PCIe Controller (rev 01) (prog-if 00 [Normal decode])
-> > > ... Capabilities: [200 v1] L1 PM Substates
-> > >         L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+
-> > > L1_PM_Substates+ PortCommonModeRestoreTime=3D45us
-> > > PortTPowerOnTime=3D50us L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1-
-> > > ASPM_L1.2+ ASPM_L1.1- T_CommonMode=3D45us LTR1.2_Threshold=3D101376ns
-> > >         L1SubCtl2: T_PwrOn=3D50us
-> > >
-> > > 10000:e1:00.0 Non-Volatile memory controller: Sandisk Corp WD Blue
-> > > SN550 NVMe SSD (rev 01) (prog-if 02 [NVM Express]) ...
-> > >     Capabilities: [900 v1] L1 PM Substates
-> > >         L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
-> > > L1_PM_Substates+ PortCommonModeRestoreTime=3D32us
-> > > PortTPowerOnTime=3D10us L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1-
-> > > ASPM_L1.2+ ASPM_L1.1- T_CommonMode=3D0us LTR1.2_Threshold=3D0ns
-> > >         L1SubCtl2: T_PwrOn=3D10us
-> > >
-> > > After debug in detail, both of the VMD mapped PCI bridge and the
-> > > NVMe SSD controller have been configured properly with the same
-> > > LTR1.2_Threshold value. But, become misconfigured after reset the
-> > > VMD mapped PCI bus which is introduced from commit 0a584655ef89
-> > > ("PCI: vmd: Fix secondary bus reset for Intel bridges") and commit
-> > > 6aab5622296b ("PCI: vmd: Clean up domain before enumeration"). So,
-> > > drop the resetting PCI bus action after scan VMD mapped PCI child
-> > > bus.
-> > >
-> > > Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
-> > > ---
-> > > v6:
-> > > - Introduced based on the discussion
-> > > https://lore.kernel.org/linux-pci/CAPpJ_efYWWxGBopbSQHB=3DY2+1RrXFR2X=
-WeqEhGTgdiw3XX0Jmw@mail.gmail.com/
-> > >
-> > >  drivers/pci/controller/vmd.c | 20 --------------------
-> > >  1 file changed, 20 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/vmd.c
-> > > b/drivers/pci/controller/vmd.c index 5309afbe31f9..af413cdb4f4e
-> > > 100644 --- a/drivers/pci/controller/vmd.c
-> > > +++ b/drivers/pci/controller/vmd.c
-> > > @@ -793,7 +793,6 @@ static int vmd_enable_domain(struct vmd_dev
-> > > *vmd, unsigned long features) resource_size_t offset[2] =3D {0};
-> > >       resource_size_t membar2_offset =3D 0x2000;
-> > >       struct pci_bus *child;
-> > > -     struct pci_dev *dev;
-> > >       int ret;
-> > >
-> > >       /*
-> > > @@ -935,25 +934,6 @@ static int vmd_enable_domain(struct vmd_dev
-> > > *vmd, unsigned long features) pci_scan_child_bus(vmd->bus);
-> > >       vmd_domain_reset(vmd);
-> > >
-> > > -     /* When Intel VMD is enabled, the OS does not discover the
-> > > Root Ports
-> > > -      * owned by Intel VMD within the MMCFG space.
-> > > pci_reset_bus() applies
-> > > -      * a reset to the parent of the PCI device supplied as
-> > > argument. This
-> > > -      * is why we pass a child device, so the reset can be
-> > > triggered at
-> > > -      * the Intel bridge level and propagated to all the children
-> > > in the
-> > > -      * hierarchy.
-> > > -      */
-> > > -     list_for_each_entry(child, &vmd->bus->children, node) {
-> > > -             if (!list_empty(&child->devices)) {
-> > > -                     dev =3D list_first_entry(&child->devices,
-> > > -                                            struct pci_dev,
-> > > bus_list);
-> > > -                     ret =3D pci_reset_bus(dev);
-> > > -                     if (ret)
-> > > -                             pci_warn(dev, "can't reset device:
-> > > %d\n", ret); -
-> > > -                     break;
-> > > -             }
-> > > -     }
-> > > -
-> > >       pci_assign_unassigned_bus_resources(vmd->bus);
-> > >
-> > >       pci_walk_bus(vmd->bus, vmd_pm_enable_quirk, &features); =20
-> >
-> > Thanks for the patch.
-> >
-> > pci_reset_bus is required to avoid failure in vmd domain creation
-> > during multiple soft reboots test. So I believe we can't just remove
-> > it without proper testing. vmd_pm_enable_quirk happens after
-> > pci_reset_bus, then how is it resetting LTR1.2_Threshold value? =20
->=20
-> uh!  I mean that drop pci_reset_bus(dev) after
-> pci_scan_child_bus(vmd->bus) Not pci_walk_bus() with
-> vmd_pm_enable_quirk.
+Fixes: bdee203cd80c ("staging: rtl8723bs: Remove switch(type) as type is constant")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202406250759.FnxzD3PK-lkp@intel.com/
+Signed-off-by: Philipp Hortmann <philipp.g.hortmann@gmail.com>
+---
+Tested with rtl8723bs in ODYS Trendbook Next 14
+---
+ drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-That is what I am saying; we cannot remove/drop pci_reset_bus it is
-very useful for the case I mentioned in my previous comment and in case
-of direct assign or Guest OS PCIe device enumeration.
-
--nirmal
->=20
-> Jian-Hong Pan
->=20
->=20
-> Jian-Hong Pan
+diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
+index 2bd8b1447698..eb3c73cc2662 100644
+--- a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
++++ b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
+@@ -2550,7 +2550,6 @@ static int cfg80211_rtw_mgmt_tx(struct wiphy *wiphy, struct wireless_dev *wdev,
+ 	u8 tx_ch = (u8)ieee80211_frequency_to_channel(chan->center_freq);
+ 	u8 category, action;
+ 	struct adapter *padapter;
+-	struct rtw_wdev_priv *pwdev_priv;
+ 
+ 	if (!ndev) {
+ 		ret = -EINVAL;
+@@ -2558,7 +2557,6 @@ static int cfg80211_rtw_mgmt_tx(struct wiphy *wiphy, struct wireless_dev *wdev,
+ 	}
+ 
+ 	padapter = rtw_netdev_priv(ndev);
+-	pwdev_priv = adapter_wdev_data(padapter);
+ 
+ 	/* cookie generation */
+ 	*cookie = (unsigned long)buf;
+-- 
+2.45.2
 
