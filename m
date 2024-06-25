@@ -1,138 +1,103 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29FE16A382
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 14:18:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378E0BE71
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 14:18:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719325092; cv=none; b=DKQ2v6s5K+orVeX9D+Uk2k44hJdzCBno1fiFgCViY/fNqCI9SzMVHFVVzT47vMLEGjUbUWTwiIVKTyKS6SHOmN8psHHXFjRQb84XV9w7CRtLCtayFePy0VvJwcT46HYocXUA7rFcqP3cvSGQaUuJkzFnpOrgb2sxfHZNa9+cpio=
+	t=1719325131; cv=none; b=uMlC6QNeeqRJBvYpZnENDmcB9zw9a72DcR3xkt8Fsow6u159+K59cwPWwnVw1UTdUOJH47CUwPh0l6Hn9i/N04/bailWo1ocWDOdM7J6/JrTGete00PUpMGRyFxpEfL4zumH3BrREMqtLWmkZe9/XW1TjsYLqNGSPBQOpaIIbxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719325092; c=relaxed/simple;
-	bh=258aHTwJ8PHNVShdBmlRwFk5MhWBCxeonA2f0yI3uGw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KMVFKiU0sw+ELMC5YUE+rZqvVhTfXfcU1S5+Dm9sUGnB5S9tG1frLXVdNDmK4sVB7LjHlgKDRkl0eUzFrptE0XijR5Jf0HTdBbl9yDVtTUBcooWTMdAxAK6+V0URHFyYRdNWu0nWqDM7ewVWoVAV7QD5M4SbR0vpmjcIuZ1ATLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D7jfrKHX; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1719325131; c=relaxed/simple;
+	bh=+kgCw8pTWMAs/9+U/PTwL3LexQ+5maDizI3iW1dcE9Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OHRsEX0mCdSEf5PjGpTHXc1yfzxpQgTyr71eyAvjO538qmZACUmL+zOnBH0yCHNPKEEIexPeMQ9FuFYAK2vnlvuBzp6gffejzUGq3OP1onXfBPnl1VHSLYFNzsOLAJYeOWlXpBHi8AyVIgouwcixJCbDnZUERWiQckdu9hxozw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QNGRFV+W; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D7jfrKHX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QNGRFV+W"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719325089;
+	s=mimecast20190719; t=1719325129;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JDJanHJKnbiJNPYotPkVO2c6RbIzDk3MVlTTgVCykxk=;
-	b=D7jfrKHXD7lofxEME6N+W0ZyxVBygWH0uJLyQeqWmno+xog0XlOonD+g/MpHYyGRMUNM4i
-	sxOeXXRSk+74MDB9V9KlHY5lzOMmVFZItwGQZ1U4fWMEGAGJ2yS0hGX6vn9yY7E7xXQ0Of
-	eKizPs8HYmYDIFambNwRWd6yqQoFKuo=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+	bh=vjpx78rmMvRPtMOT3YYa62STbuCVr9mJAxrDHMrndEI=;
+	b=QNGRFV+W7OW9ybCvBNlMPlyzL7Ov96bpOGtVLU+EVCw+ptjKHuaSqsmbmcYXc5FGmVJc8j
+	98IF4cFo1Da+CFSTXio5YFgzr/C6FOxVWQzeXPGJEPgWMedDzv7nZhSCwh2GnDvoVIrl/r
+	mJJhTXkJIcplYqnFKAzATf3a4s6XCTY=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-458-KsnVk9qGMTCAI2eoQhCkRg-1; Tue,
- 25 Jun 2024 10:18:04 -0400
-X-MC-Unique: KsnVk9qGMTCAI2eoQhCkRg-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-178-htf-QfOIPLmF7OO1CwLSoA-1; Tue,
+ 25 Jun 2024 10:18:43 -0400
+X-MC-Unique: htf-QfOIPLmF7OO1CwLSoA-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F28E318DB6FA;
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 009071955D89;
+	Tue, 25 Jun 2024 14:18:13 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.198])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 72D191944EB5;
 	Tue, 25 Jun 2024 14:17:14 +0000 (UTC)
-Received: from [10.22.10.23] (unknown [10.22.10.23])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9BD18301BD32;
-	Tue, 25 Jun 2024 14:16:16 +0000 (UTC)
-Message-ID: <80e87513-aa48-4548-893e-ed339690c941@redhat.com>
-Date: Tue, 25 Jun 2024 10:16:15 -0400
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue, 25 Jun 2024 16:15:44 +0200 (CEST)
+Date: Tue, 25 Jun 2024 16:15:39 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [RFC PATCH 1/6] task_work: Provide means to check if a work is
+ queued
+Message-ID: <20240625141539.GA14254@redhat.com>
+References: <20240625135244.20227-1-frederic@kernel.org>
+ <20240625135244.20227-2-frederic@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next] cgroup: fix uaf when proc_cpuset_show
-To: chenridong <chenridong@huawei.com>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
- <mkoutny@suse.com>
-Cc: tj@kernel.org, lizefan.x@bytedance.com, hannes@cmpxchg.org,
- bpf@vger.kernel.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240622113814.120907-1-chenridong@huawei.com>
- <19648b9c-6df7-45cd-a5ae-624a3e4d860f@redhat.com>
- <52f72d1d-602e-4dca-85a3-adade925b056@huawei.com>
- <71a9cc3a-1b58-4051-984b-dd4f18dabf84@redhat.com>
- <8f83ecb3-4afa-4e0b-be37-35b168eb3c7c@huawei.com>
- <ee30843f-2579-4dcf-9688-6541fd892678@redhat.com>
- <3322ce46-78a1-45c5-ad07-a982dec21c8e@huawei.com>
- <gke4hn67e2js2wcia4gopr6u26uy5epwpu7r6sepjwvp5eetql@nuwvwzg2k4dy>
- <920bbfaa-bb76-4aa1-bd07-9a552e3bfdf2@huawei.com>
-Content-Language: en-US
-From: Waiman Long <longman@redhat.com>
-In-Reply-To: <920bbfaa-bb76-4aa1-bd07-9a552e3bfdf2@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240625135244.20227-2-frederic@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On 6/25/24 10:11, chenridong wrote:
+On 06/25, Frederic Weisbecker wrote:
 >
+> --- a/kernel/task_work.c
+> +++ b/kernel/task_work.c
+> @@ -177,6 +177,7 @@ void task_work_run(void)
 >
-> On 2024/6/25 18:10, Michal Koutný wrote:
->> Hello.
->>
->> On Tue, Jun 25, 2024 at 11:12:20AM GMT, chenridong<chenridong@huawei.com>  wrote:
->>> I am considering whether the cgroup framework has a method to fix this
->>> issue, as other subsystems may also have the same underlying problem.
->>> Since the root css will not be released, but the css->cgrp will be
->>> released.
->> <del>First part is already done in
->> 	d23b5c5777158 ("cgroup: Make operations on the cgroup root_list RCU safe")
->> second part is that</del>
->> you need to take RCU read lock and check for NULL, similar to
->> 	9067d90006df0 ("cgroup: Eliminate the need for cgroup_mutex in proc_cgroup_show()")
->>
->> Does that make sense to you?
->>
->> A Fixes: tag would be nice, it seems at least
->> 	a79a908fd2b08 ("cgroup: introduce cgroup namespaces")
->> played some role. (Here the RCU lock is not for cgroup_roots list but to
->> preserve the root cgrp itself css_free_rwork_fn/cgroup_destroy_root.
->>
->> HTH,
->> Michal
->
-> Thank you, Michal, that is a good idea. Do you mean as below?
->
-> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
->
-> index c12b9fdb22a4..2ce0542067f1 100644
-> --- a/kernel/cgroup/cpuset.c
-> +++ b/kernel/cgroup/cpuset.c
-> @@ -5051,10 +5051,17 @@ int proc_cpuset_show(struct seq_file *m, 
-> struct pid_namespace *ns,
->         if (!buf)
->                 goto out;
->
-> +       rcu_read_lock();
-> +       spin_lock_irq(&css_set_lock);
->         css = task_get_css(tsk, cpuset_cgrp_id);
-> -       retval = cgroup_path_ns(css->cgroup, buf, PATH_MAX,
-> - current->nsproxy->cgroup_ns);
-> +
-> +       retval = cgroup_path_ns_locked(css->cgroup, buf, PATH_MAX,
-> +               current->nsproxy->cgroup_ns);
->         css_put(css);
-> +
-> +       spin_unlock_irq(&css_set_lock);
-> +       cgroup_unlock();
-> +
->         if (retval == -E2BIG)
->                 retval = -ENAMETOOLONG;
->
->         if (retval < 0)
->
-That should work. However, I would suggest that you take task_get_css() 
-and css_put() outside of the critical section. The task_get_css() is a 
-while loop that may take a while to execute and you don't want run it 
-with interrupt disabled.
+>  		do {
+>  			next = work->next;
+> +			work->next = TASK_WORK_DEQUEUED;
 
-Cheers,
-Longman
+OK, but then the additional change below makes sense too?
+
+Oleg.
+---
+
+--- x/kernel/task_work.c
++++ x/kernel/task_work.c
+@@ -106,8 +106,10 @@ task_work_cancel_match(struct task_struc
+ 		if (!match(work, data)) {
+ 			pprev = &work->next;
+ 			work = READ_ONCE(*pprev);
+-		} else if (try_cmpxchg(pprev, &work, work->next))
++		} else if (try_cmpxchg(pprev, &work, work->next)) {
++			work->next = TASK_WORK_DEQUEUED;
+ 			break;
++		}
+ 	}
+ 	raw_spin_unlock_irqrestore(&task->pi_lock, flags);
+ 
 
