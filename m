@@ -1,118 +1,100 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1AB17C7B4
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 18:37:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6913417BB2C;
+	Tue, 25 Jun 2024 18:37:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719340650; cv=none; b=eImZHeHhMjpMx1ydmbNl/A4Q8LAQfn9yLgUKh+2qf8qe+dhm4VOMOdMwaJ7CtOsGNBwTBPOybKVESFfLWEde22AENSj5p4ZoyY+tyovSVqp0A8DYwSCpht3xBjmH85wuFKtOjEdPXxsQ8Ok2sLe3IYJGw6B2nKVIXeHGVP6Gdpc=
+	t=1719340657; cv=none; b=H6sRSqPwa5N3ZDJyyUW/jv8nz00Bv/AwgEol2X8u2DVYXp9ks3qsCRf3+VaGAw77+D5MWQSBvLsP0uMSLei1+6huVcXgoKxlIqR0AsfAg7CCq9hRtVShcksvtDgwjO5iaCkSKZx7Q7s7i/7E3q/xOfY5WE/OOptHGvG/PI2qrS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719340650; c=relaxed/simple;
-	bh=xaBiOUCcbhsEiDDlr9ft/ApwQ3CgJk9n92ap/EN2vY4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bErttaMTCLkyZaG2LU5Ic/sLJiaLOk6xrq+TV7bopDksKFQfJtteS+mBoqtSdU+mloVX98n1Q7kNNNyZ9aU7VscOH+oKoLENSQCjYTInnNUKNVFQVzL/BIG5IzXN6Ic8y5NOceqHbkrsyJ+k9NYvc0hQKWUmcLA1e0nhY0Z4Mqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z0im+Bxi; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719340657; c=relaxed/simple;
+	bh=BcNPqhdX1Jezx47Nm2DHVvZlt4TXAklF0cVVOknZOAE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=AXopq2akhrMMw/zrfLu87mo9nCvUVLxDeEi4lUEZFxq6pjvIcPiercUxg/N3uthAwPWkTxldlzqTncajTyLNUSTfeSiAtPGMl80fV+tt3L3TzYgH3SFUMXK0rkPdNCncSGnQCsV1wneXjPRXHZOdfOnO4rehMKRbcIzeJp0UdUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=EEwzxnfX; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z0im+Bxi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719340648;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rjP8zqa9DjMRaFNMcMFYFsi4VJ9TPziW2E5FbrHXUKo=;
-	b=Z0im+BxitRMpa3efI7Gc4GXDv6uxULwyAdkPmaMCbIq7S0H5uiVARBoEQnp4tnmEol2cJv
-	HDFAdCHpDWzOTZPslsqLVMtzF6VTHEiCwy0W/IbWrPMf6uimpMctrlUVpI9RMYoqM1VAle
-	yRRCFJqTg4iH789GEktvq9NaNX+hD2w=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-455-L-8Hp2u8NACDbRsmZqYdSg-1; Tue, 25 Jun 2024 14:37:26 -0400
-X-MC-Unique: L-8Hp2u8NACDbRsmZqYdSg-1
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7955f448a2dso924462985a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 11:37:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719340646; x=1719945446;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rjP8zqa9DjMRaFNMcMFYFsi4VJ9TPziW2E5FbrHXUKo=;
-        b=ozhISPuY0j5Y4TG1y3dZrlBvtcRS3duQCkRq6BARSyZubp8Lsi9HZ8+uTHHLNSqsVk
-         SlvOKqf8MCdcT02oRkk0jc8GA3GpHa7KrUwhI+wD3rorkJBK9IS+/syy+ENgiGFZGKNs
-         8BqMEMJgchg5zthy1ZblyM01qWy2qiOc+lT5VcSuHP8V2vW/9T1JFZv8uQFdpTN9p6vU
-         KEWAdRspnRRrqmvzSO+f10ooTK89WRfd+oEvcpLOTvWXGGuALDo18MxGsVBsB2kqn08G
-         A/t5qdgNU38VRJsrDwT4U7h/KVrK4ISVOTR7g9TI5WuR+N5E/pyD/Gb1vn2TFecYed60
-         uNCA==
-X-Forwarded-Encrypted: i=1; AJvYcCWukJmnBZ0JInC2X41mSjj/usMzQMGpJk1UH9bC4P6n49iDpbcPb5psOurmcQ3KcK9F5kiR6qIK4XN7/UA0dG4NbJzK8sKkimPP0cDR
-X-Gm-Message-State: AOJu0YzZBvsdDhHh4/TlagE4uWgFTq9mwmJXtT6/9W6QyXY6mK4ChqV9
-	BMLk8AWIkbzlKCCrBxQUW3eVlKf9QfOHckEbtPTwTf/7c+g0b6195PTNCx2u/cFizW87/w5P4h8
-	Eu3sWSMEB3nkCC3Go6oB/kfrKWDUPsZQ/VqNfTk4xFSE5U+i8LKjYEjvimOhMIQ==
-X-Received: by 2002:a05:620a:838b:b0:797:9c76:32a6 with SMTP id af79cd13be357-79be6f1457dmr796242385a.56.1719340646353;
-        Tue, 25 Jun 2024 11:37:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGoWPotw+0VrcrvK+GuskbqBpoUwqThBFYkTLju4QKTs3hCDfwBWUdZAosjHkIX634yXoPh6w==
-X-Received: by 2002:a05:620a:838b:b0:797:9c76:32a6 with SMTP id af79cd13be357-79be6f1457dmr796241185a.56.1719340646055;
-        Tue, 25 Jun 2024 11:37:26 -0700 (PDT)
-Received: from [192.168.1.152] ([70.22.187.239])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-79bce8b3777sm427599985a.54.2024.06.25.11.37.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Jun 2024 11:37:25 -0700 (PDT)
-Message-ID: <c08ab47c-944c-7393-d403-e4435cb283dc@redhat.com>
-Date: Tue, 25 Jun 2024 14:37:24 -0400
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="EEwzxnfX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1719340631; x=1719945431; i=markus.elfring@web.de;
+	bh=4FeUMM41rBgZTT/36ibhfoknQQkhU5GwynYwSWPeRUU=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
+	 References:From:Cc:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=EEwzxnfXFB9eRWf5Y7/oJ6mX4Sh9+1zSm69ip3KnNTJ5aua1HTfO6tCFLvIps9Gb
+	 iSzBaaFqdetVvULFS8vd+CQ7X+7K8SXc5teDStoy6j+YYYVOuHcUTNmLb/SjieA/2
+	 Mkdvv7I8XIvqEcPV7Nq0vnjjInIxUhDzMoIE9OZlY4C5xq9AJA0i97V/w132ebFXi
+	 XqCzkGFOpRcvZupYP6TBs+U2v00//5liJLfiDKK5m+cUYME8CNL0dsZqfi5sQEhGC
+	 nns8tJY7CI45XmzOOGKrajI0y88IqEU+aV9cka8YyeIjnq297R1EvozU7BHKPEELT
+	 jozLfqne81XFzO8wuw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1M1aDp-1sJ8u41eQd-009WO3; Tue, 25
+ Jun 2024 20:37:11 +0200
+Message-ID: <1bee6344-cc98-4746-921f-31454a9c3008@web.de>
+Date: Tue, 25 Jun 2024 20:37:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH] dm cache metadata: remove unused struct 'thunk'
-Content-Language: en-US
-To: linux@treblig.org, agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com
-Cc: dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20240523210550.309116-1-linux@treblig.org>
-From: Matthew Sakai <msakai@redhat.com>
-In-Reply-To: <20240523210550.309116-1-linux@treblig.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [net PATCH 2/7] octeontx2-af: Fix klockwork issues in
+ mcs_rvu_if.c
+To: Suman Ghosh <sumang@marvell.com>, netdev@vger.kernel.org
+References: <20240625173350.1181194-1-sumang@marvell.com>
+ <20240625173350.1181194-4-sumang@marvell.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, "David S. Miller"
+ <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Jerin Jacob <jerinj@marvell.com>, Eric Dumazet <edumazet@google.com>,
+ Geethasowjanya Akula <gakula@marvell.com>,
+ Hariprasad Kelam <hkelam@marvell.com>, Linu Cherian <lcherian@marvell.com>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Subbaraya Sundeep Bhatta <sbhatta@marvell.com>,
+ Sunil Goutham <sgoutham@marvell.com>
+In-Reply-To: <20240625173350.1181194-4-sumang@marvell.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:gjsARz0OXTzGo09X+uY9zbdeX+i9ULc5X99l7Y26zZmPNTkqT9X
+ ounZnHSvO/ZJ8BFJ/y8p+fV0tFzsA4npi6M71NXHrmuXaFviMZnCQf70rYhYMje6jDl4FYC
+ troS5BHz0JYtaFu7EkrZxJKCauK08ZZ7/O5N7fzzVLmnc9edLZjG72lWrqiJau0Ge4PNGx6
+ uE/VpS4YP85Aoh6oZoG9g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:G4ISI3yF0CQ=;HVZzIVT24a58uqzOjvHPMI7ckAs
+ leN1ngfHBbKVFuWv9Ce3UgCzW/F9VCVTHfMKvSjYI2lM41nSJe5RgjIhvUpZLXde9COtwHnCM
+ v/vwOA0PQra2aNkRxATwyTw4LDYH9zay27VSz773nMQEBK2Src9nXACg+NqfVkLQQ7veFUoMk
+ f+uwfpcpvLlmWqiB3LvcvyVmyGTsKm/r2/iO/1N0AElSGS/SAIUiwsF0o2Co5fwfNLDn5S4Cj
+ Ew36PWr9gZz7fhhnqVPZw45OSpHC75+fnYlEAnNQNx3QhLu1+Vgb4yBGim096jIj41VUPPCQn
+ j4QROYkxMn3TVgcieMgX50uFygDPybRamb3ckXC4MsPeOR7aiD7K9X4RPQEmYnnMgSC9DUojm
+ x2Nki7kPlzPrgAXax2TcMDEVgn9yBT4ukUMWGzq+X36lBVen++grnutp3gvzBOJIi+NqPqKzp
+ pkbPiMcbfpO4rWpHEkew9qEmBSZwRXedxTmobCmtleiPHTvwNAXal91c7/yNooIzZEjOVtoNv
+ VzDi27Bkz0feSWPhOPa5t+3ZdNEFJcpPQj3S5pEaZXV6JLzJ9SyhYk4zcLlG+c83uWxl1p9fj
+ VUio6bDEqZnsZBXYiFzsoTIpiloEWhhqTQm5HTQNnTF/2I3GLX4JA91HF8P5RwMgU+DDO0PBS
+ 5BmY6Uy60RuibJfnqyoErCJUvPTRCPVbjaaao/os1krJlqLMnXhjFmb+lECZAefepzuXSg5cF
+ c5gOKvPDRZTI/XlxjclTBPhRMzwml0WICnMk53Te59v40nlt3z1yT/N5s7VMt87HoqiNGntpS
+ VzpW15iBXirGJSq8wxC2jvtPhSPlzD1q/PUYqDnIxcI3E=
+
+> These are not real issues but sanity checks.
+=E2=80=A6
+
+* Did the mentioned source code analysis tool present more detailed report=
+s
+  and special development views?
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
+Documentation/process/submitting-patches.rst?h=3Dv6.10-rc5#n45
+
+* You accidentally overlooked to specify a corresponding version identific=
+ation
+  in the message subject, didn't you?
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
+Documentation/process/submitting-patches.rst?h=3Dv6.10-rc5#n668
 
 
-On 5/23/24 17:05, linux@treblig.org wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> 
-> 'thunk' has been unused since
-> commit f177940a8091 ("dm cache metadata: switch to using the new
-> cursor api for loading metadata").
-> 
-> Remove it.
-> 
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-Reviewed-by: Matthew Sakai <msakai@redhat.com>
-
-> ---
->   drivers/md/dm-cache-metadata.c | 9 ---------
->   1 file changed, 9 deletions(-)
-> 
-> diff --git a/drivers/md/dm-cache-metadata.c b/drivers/md/dm-cache-metadata.c
-> index 96751cd3d181..0ad9dc1824fa 100644
-> --- a/drivers/md/dm-cache-metadata.c
-> +++ b/drivers/md/dm-cache-metadata.c
-> @@ -1282,15 +1282,6 @@ int dm_cache_insert_mapping(struct dm_cache_metadata *cmd,
->   	return r;
->   }
->   
-> -struct thunk {
-> -	load_mapping_fn fn;
-> -	void *context;
-> -
-> -	struct dm_cache_metadata *cmd;
-> -	bool respect_dirty_flags;
-> -	bool hints_valid;
-> -};
-> -
->   static bool policy_unchanged(struct dm_cache_metadata *cmd,
->   			     struct dm_cache_policy *policy)
->   {
-
+Regards,
+Markus
