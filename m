@@ -1,115 +1,108 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59963176236
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 15:17:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62E5116FF4A
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 15:18:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719328646; cv=none; b=uQNkN2M90v56LLHOCL94HVCtGRElS4ZxFqAfS/pEvtJPJLAEDsAiRbtiA/gR2jIC9z1Wt46XqRGv/stFRdz+CahJ5F2kXcBw63VQ/z7jNT3Uzmo+nN4AU75caEeUo7QE2TE4Hzt2mHK90qf6RCeZwXwFhWK18lNDkVSRIddlqGA=
+	t=1719328694; cv=none; b=KOmwu1xvicclodxfOCQujZJG677QGswPmg1rczjJzhYaY+fYuH8dOn9KKFlvSE2OTRMvVzpZSVET+v2TJsuSWrk2CBotrHqjN25Rrv+oMl3rQjQnYVFjVWWxA0xCRL9SBgcNtLYxDSo9m3OOZjUXVeq+sKXgVSaYPmbTXWYBJaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719328646; c=relaxed/simple;
-	bh=tX7m3fbagW+Xu7Gov5fW024aDM7tXtp/CEdtBqu2uo0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=qCtj0lQaed+tnjdHJMgl8IV8v6hSIxqfxee3eCktuukL7P6Aws3180tqNirsqq4JCVNoUXJxBZk9r/2cmJceGBwjveAPBGObsamsvkaCf4+ohqxKdsqd4BYyjUk32gLv2btllNQIUkyw5bba+D1yNH+kIwBPf9P9ihaPk+xqxis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QGO5mlWo; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1719328694; c=relaxed/simple;
+	bh=oygoiBETUJQZnnh6fyNH/YRB5pNrhYh31+kfEH0vXPY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VoO58s26d9uxRCUTmr0re2MZVZvJqnt6A5Jf2t3SilPHNiiVsGDwla+ZMwqnXrp1/TtKIT1mJPiCXhrM17UHjudul3Bw/SLLV3QEoVpRmwZfvL52GrQnlnkAUe4SwP05c59a6nQbNLu+vKLgVJfTegtIzWMBBFdOVWDLqRkMql8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Cv9vTLGw; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QGO5mlWo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cv9vTLGw"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719328644;
+	s=mimecast20190719; t=1719328692;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=W1pWUcsCbDz/QzTtn1KclW1Fnze6TwCApU6kqlWKFYE=;
-	b=QGO5mlWo78Dd7lLnyg5BNYeyxbUr2Vcn1LDSPbIyDBjgWKiAZ98A18ErHpR3gVK7InMdoh
-	/F542ob25HYIfvhCDhXDDKMkvcrwi6hu3fWO65lD4w9dADxIwM0x12QGIiglPwQpKmKTD1
-	+tp+WUDONm4rg0u3HWJhViSsndWoU8c=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=DDDqIqqywCpZgnVzJ2LCa0AlAYA9C7CGtoimbDUxqB8=;
+	b=Cv9vTLGwXOWDFURXU0As4WO/6faW5g66a+etXHoU7lu7mw+C9be0gkoDi4qTYwzYhWCrF9
+	0bhea0kQ7vJwv5uN6CnkBkRd2BvddEDJ/OFVHnEvW3716z2LrZRTQymH270ogfdiJ70SCf
+	/1883tjEBdqc7X3jt1yTmShqfYmM5Ug=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-42-gWiis1akMt6uaXVEmPltRA-1; Tue,
- 25 Jun 2024 11:17:20 -0400
-X-MC-Unique: gWiis1akMt6uaXVEmPltRA-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-311-YwrBamZ8Nsa68HAOAtqung-1; Tue,
+ 25 Jun 2024 11:18:08 -0400
+X-MC-Unique: YwrBamZ8Nsa68HAOAtqung-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2B8EA19560B2;
-	Tue, 25 Jun 2024 15:17:18 +0000 (UTC)
-Received: from RHTRH0061144 (dhcp-17-72.bos.redhat.com [10.18.17.72])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9C30E1954AC1;
-	Tue, 25 Jun 2024 15:17:15 +0000 (UTC)
-From: Aaron Conole <aconole@redhat.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>,  netdev@vger.kernel.org,
-  dev@openvswitch.org,  linux-kselftest@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  Pravin B Shelar <pshelar@ovn.org>,  "David
- S. Miller" <davem@davemloft.net>,  Eric Dumazet <edumazet@google.com>,
-  Shuah Khan <shuah@kernel.org>,  Stefano Brivio <sbrivio@redhat.com>,
-  =?utf-8?Q?Adri=C3=A1n?= Moreno <amorenoz@redhat.com>,  Simon Horman
- <horms@kernel.org>
-Subject: Re: [PATCH v2 net-next 0/7] selftests: net: Switch pmtu.sh to use
- the internal ovs script.
-In-Reply-To: <20240625074145.69fc9d9f@kernel.org> (Jakub Kicinski's message of
-	"Tue, 25 Jun 2024 07:41:45 -0700")
-References: <20240620125601.15755-1-aconole@redhat.com>
-	<20240621180126.3c40d245@kernel.org> <f7ttthjh33w.fsf@redhat.com>
-	<f7tpls6gu3q.fsf@redhat.com>
-	<e4f69335f90aae3f1daa47ba8f69b24ea15ed3b7.camel@redhat.com>
-	<f7th6dhgnvm.fsf@redhat.com> <20240625070654.6a00efef@kernel.org>
-	<f7t1q4lgldr.fsf@redhat.com> <20240625074145.69fc9d9f@kernel.org>
-Date: Tue, 25 Jun 2024 11:17:14 -0400
-Message-ID: <f7tsex1f3wl.fsf@redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9156B1954238;
+	Tue, 25 Jun 2024 15:18:03 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.198])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id AD3F3300021A;
+	Tue, 25 Jun 2024 15:17:59 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue, 25 Jun 2024 17:16:29 +0200 (CEST)
+Date: Tue, 25 Jun 2024 17:16:25 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [RFC PATCH 1/6] task_work: Provide means to check if a work is
+ queued
+Message-ID: <20240625151624.GB14254@redhat.com>
+References: <20240625135244.20227-1-frederic@kernel.org>
+ <20240625135244.20227-2-frederic@kernel.org>
+ <20240625141539.GA14254@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240625141539.GA14254@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Jakub Kicinski <kuba@kernel.org> writes:
+And probably task_work_add() should do the same when it returns -ESRCH.
 
-> On Tue, 25 Jun 2024 10:14:24 -0400 Aaron Conole wrote:
->> > Sorry for not checking it earlier, looks like the runner was missing
->> > pyroute:
->> >
->> > # python3 ./tools/testing/selftests/net/openvswitch/ovs-dpctl.py
->> > Need to install the python pyroute2 package >=3D 0.6.
->> >
->> > I guess run_cmd counter-productively eats the stderr output ? :(=20=20
->>=20
->> Awesome :)  I will add a patch to ovs-dpctl that will turn the
->> sys.exit(0) into sys.exit(1) - that way it should do the skip.
->>=20
->> When I previously tested, I put an error in the `try` without reading
->> the except being specifically for a ModuleNotFound error.
->>=20
->> I'll make sure pyroute2 isn't installed when I run it again.
->>=20
->> Thanks for your help Jakub and Paolo!
+On 06/25, Oleg Nesterov wrote:
 >
-> BTW I popped the v2 back into the queue, so the next run (in 20min)
-> will tell us if that's the only thing we were missing =F0=9F=A4=9E=EF=B8=
-=8F
-
-:)  I'll wait to post the v3 then.  So far, the only change I have is:
-
---- a/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
-+++ b/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
-@@ -34,7 +34,7 @@ try:
-=20
- except ModuleNotFoundError:
-     print("Need to install the python pyroute2 package >=3D 0.6.")
--    sys.exit(0)
-+    sys.exit(1)
-=20
-=20
- OVS_DATAPATH_FAMILY =3D "ovs_datapath"
----
+> On 06/25, Frederic Weisbecker wrote:
+> >
+> > --- a/kernel/task_work.c
+> > +++ b/kernel/task_work.c
+> > @@ -177,6 +177,7 @@ void task_work_run(void)
+> >
+> >  		do {
+> >  			next = work->next;
+> > +			work->next = TASK_WORK_DEQUEUED;
+>
+> OK, but then the additional change below makes sense too?
+>
+> Oleg.
+> ---
+>
+> --- x/kernel/task_work.c
+> +++ x/kernel/task_work.c
+> @@ -106,8 +106,10 @@ task_work_cancel_match(struct task_struc
+>  		if (!match(work, data)) {
+>  			pprev = &work->next;
+>  			work = READ_ONCE(*pprev);
+> -		} else if (try_cmpxchg(pprev, &work, work->next))
+> +		} else if (try_cmpxchg(pprev, &work, work->next)) {
+> +			work->next = TASK_WORK_DEQUEUED;
+>  			break;
+> +		}
+>  	}
+>  	raw_spin_unlock_irqrestore(&task->pi_lock, flags);
+>
 
