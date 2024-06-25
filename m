@@ -1,198 +1,118 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D4B1482F8;
-	Tue, 25 Jun 2024 13:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99681156227
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 13:11:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719320997; cv=none; b=KRkl7Tx5XOMXIGK8HwRRY2kvYKEo9DCt2vhTknGldkOksIl3g5B/1ALa87DkILLs9BomLq5eL/9nsLQa5j4b/J+22K+faT04ODUBm4BKVhmx1QlpJlM/tqt3/r1LrlbKQy/O5JbC4bbRzLlxkyI+ICdvpWLy7X3bzHkc6xW0Aps=
+	t=1719321098; cv=none; b=mXoitbZ5fJI3sXQsAIsQ2bHFdEaAxD8TM9r49s7re3LLsnk3qpijrU8Hf3Xzw0mmSclbvmcW3uZMgKIsUJwwvPYaS74HWMTNXwLitHfefukwWkmiqFXI33AbIe/ayTFZnlykzEGYKNEKko3K7erDDUA+Zucok2Gi1KkaXYKJ3G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719320997; c=relaxed/simple;
-	bh=jsczAnp7CIUVDgN5gvVhygNvdruRsiSpkUKCSkdxuXY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hCmiOC7ZComxnxj0smJRWY1BX4ggawgVhkQpBBJuKqja4tM+xg7pLAASTTyLUbZ1Dfk28N+rN2WUUdtHHJmw4h8tObopYvlsKJO6oLql72SvTK6HViARu+swe1CxvplCxsf6Del2v+w7EEVGzQ4NalYAcGq4VK2S7ATpOg78Xhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R4BrQSKz; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719321098; c=relaxed/simple;
+	bh=VbQnEp1ZoteiVkv5PV7u0Hd2hXgmdWHNO9m/YGJqimQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=NBFG+5fAG98jP+ySYWivuSmnXRsQg+fRRoy1Cq6+IHqrel+OEWwemayc2ZsCLYTFX0aTp67y4H8K+D/i7ZqF59te/Az0/QeyvwHNeChZUTr847+vtO36MoAdCJC9MIJqdeA4av3+dXZVemD/wucwmUY1ZsqrZteUOVToBaQnFfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ROgwgD6a; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R4BrQSKz"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-57ccd1111aeso6731488a12.0;
-        Tue, 25 Jun 2024 06:09:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ROgwgD6a"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52cdebf9f6fso3950313e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 06:11:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719320994; x=1719925794; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1719321095; x=1719925895; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7I/OyCTH9tC0S/1ZlOh3yAXg5RWkJQCDwGUdve0tJZY=;
-        b=R4BrQSKz9Bo2zhhRAT91I9FMjpSA7x6B7Qcp2qZY1J3IwQjmcwwgWHWzxLXlbeMXl/
-         0uPrKrRUVrdus5UIZ6/TzPo6oOR/BmDdqeMB/yBJTSym2XWO5tKEy7qojnsQIZOKK2F9
-         gWFSkzIT/7oak0+CxenH3SXPWErEvMPMBovU5EiRk5W5LAxqsait5ciW+Y5kn3iAvUCc
-         iSpJ+TbdhIdXCFkrzSGNBIzDKaoD8R8vHMNYUrnFpF9iYH5/K66iQ3GciAecDxGtVt/R
-         Y4F9bDtsEt0oC3yMoHf50rhoPfkSHPu1RtfM6KuWD0PxlT+1i5a8Urf4lHnPRkH4Ht5r
-         wg2g==
+        bh=IIrvv9/kgtl+q9BfLGhefIkibZLSWIG4PIciMEcuwN0=;
+        b=ROgwgD6aRTU9WV3pHixAjh83ZrFcmslMfusqhOK/1tOks7UBsq4PXbpNAc6UOhmGfh
+         4X1nNuuuasp4kH8gbu8qQp40RYwNx+Ncp6+tv+jLj7ELq5FTxtD8VFtwZ9CtVRcirfuF
+         HI3NN8e87vJxC9XXpc/+4gFF5lrSdzww7ay1SH3Dybi7N5WWw3cs4Cu3wp7sJayaTeTi
+         99qBIp7qwi/XXG/0KaMQS6FY+n4Lv1FFwkHSj/hZ1A0oekgFRRJojJ+BBjDJ4/dhIX7U
+         V89n60nMxTpqyNpNNW6xxsKWtHwna2VckzUO24YxR6hGg3UAzv/zNeXIG6wlk6Tj4s2y
+         w9Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719320994; x=1719925794;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1719321095; x=1719925895;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7I/OyCTH9tC0S/1ZlOh3yAXg5RWkJQCDwGUdve0tJZY=;
-        b=jdXHC4rrT0PP8u34sE0bcpHLZrPJWizJ31ts58iGhb4EGST2QRso33UwaYXBdvuL+x
-         qvUi6GH+5gwcTqV4IFqNr4hlqFgVdiyvSKrxiWnLeU0ks+VjYpkY/c2GSRcmDuhIj9pD
-         y9bUnLeR2BRPR2FGlq8FA9uNk+O+x624CAkD4BtWAH3TpN/r9dVFSjLpRqTCRON/sow1
-         bZ739McbSMA6ZpIXDkFcyO20209J6w39qv8QSHX6XCkopf8LXAtoE33N9Cov4bQhd3NN
-         DItMXF67MnU12jYVod8Jvo+Byv+epeLDfZA+aBkooiGXymEuSGYlh4zqaAV+6Oef7SPW
-         I9CQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWPMK4dU8aVyQydihJ1vg3JX9zOfN8Ug2Hg9873Ds8+wULXZKLlGSQxOGTbJ5jUMLc+whwXu0btdGIRVG/BAnQ+ZqF4JOnJMyKhgHZyS78pCgCYR0Gcwa7+EUX8c144djBoYV0CmM3iQU5yuw==
-X-Gm-Message-State: AOJu0YwAmszl9AcErtveUQEwKSsv2Vn+EMIMCaJwYLpXtGDKr1PDVzmc
-	/fnrA1yG3TPOI7MoJGIimokCGWLsoE1hxSFCUkb/KMtzLLmwi6Qb9nyLhIokJW9GgCwe8RuAHgt
-	EoKydl5X1JUoKCOJEMUAqkGz0fNiH1usumEU=
-X-Google-Smtp-Source: AGHT+IG+fxBjc/EeHCo73F9LduvCGf05LFAs8kPPx8MaQUqKfvcqcEWFnugOysE1WmkczDQb2n7puSHOCZ/Man6IleU=
-X-Received: by 2002:a17:906:36cb:b0:a6f:1c81:e220 with SMTP id
- a640c23a62f3a-a7242c2e772mr574414566b.13.1719320993970; Tue, 25 Jun 2024
- 06:09:53 -0700 (PDT)
+        bh=IIrvv9/kgtl+q9BfLGhefIkibZLSWIG4PIciMEcuwN0=;
+        b=ai9tic+H3zVvsU5fXLLa2my8yXruIc2PpbuO74/rbJPkLQmV0OFP1iqac5F/QnXHIx
+         e6S1fSO9tF2lvLR8CqckV7PDeWUI1RF1fLRyfL36ZANusQ92v5xJvE2H6gGw0xrcl5Gi
+         07vLGxLxnYH0wV1TMq+enILR8jsTAfDK4qgN8+HVRVnBrNG62cGdQCFycp4rv5QXEgiX
+         wsZuIQHgX5tI4obSeHl5EUVFsvPRiW14lKYNNcJ4ol7cTfLkraRc/0Y08SBsz+ip1+Wt
+         +lRY3u3kW3r7EGFHdGnCqmskpaR5/EevISX1FFdbQHR3mfideMhsuWHUmlSYLaJA6Vj/
+         W2Ig==
+X-Forwarded-Encrypted: i=1; AJvYcCUY20HZy1vgrLfUWuexY2gJDydaL0E2c3YRO834Qd39FTgKFsDTz1O+710Hm6TaoKisplJIMt0vuadRqFQK++YUU58UJpIkuzNp7N2a
+X-Gm-Message-State: AOJu0Yx1K9c+xC19AXdFIeOr0I7Lnn26A9HLowEYbiPGjvj/JjW8w03e
+	mLwc61U8X4Bq7UfYe+DMJgQwFL8xOPS1Reaxy+DbuxO/F+kCHM1FbBeTAHEkLLg=
+X-Google-Smtp-Source: AGHT+IHzlTnRQJf2hehRs+SAvaVmz31wHZ2bP1o/glDmxazjuRiH2gBo9PGqG3oH4PdEOEf5iSt3Lg==
+X-Received: by 2002:a05:6512:3054:b0:52d:215b:9028 with SMTP id 2adb3069b0e04-52d215b914dmr63320e87.60.1719321093032;
+        Tue, 25 Jun 2024 06:11:33 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4247d0b62basm216005375e9.8.2024.06.25.06.11.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jun 2024 06:11:32 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, 
+ linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+In-Reply-To: <20240625115443.934763-1-jbrunet@baylibre.com>
+References: <20240625115443.934763-1-jbrunet@baylibre.com>
+Subject: Re: [PATCH] arm64: dts: amlogic: g12: bump spdif output drive
+ strength
+Message-Id: <171932109224.875193.12156641833117245401.b4-ty@linaro.org>
+Date: Tue, 25 Jun 2024 15:11:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240614163416.728752-1-yu.ma@intel.com> <20240622154904.3774273-1-yu.ma@intel.com>
- <20240622154904.3774273-4-yu.ma@intel.com> <20240625120834.rhkm3p5by5jfc3bw@quack3>
-In-Reply-To: <20240625120834.rhkm3p5by5jfc3bw@quack3>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Tue, 25 Jun 2024 15:09:40 +0200
-Message-ID: <CAGudoHGYQwigyQSqm97zyUafxaOCo0VoHZmcYzF1KtqmX=npUg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] fs/file.c: remove sanity_check from alloc_fd()
-To: Jan Kara <jack@suse.cz>
-Cc: Yu Ma <yu.ma@intel.com>, viro@zeniv.linux.org.uk, brauner@kernel.org, 
-	edumazet@google.com, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, pan.deng@intel.com, tianyou.li@intel.com, 
-	tim.c.chen@intel.com, tim.c.chen@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Tue, Jun 25, 2024 at 2:08=E2=80=AFPM Jan Kara <jack@suse.cz> wrote:
->
-> On Sat 22-06-24 11:49:04, Yu Ma wrote:
-> > alloc_fd() has a sanity check inside to make sure the struct file mappi=
-ng to the
-> > allocated fd is NULL. Remove this sanity check since it can be assured =
-by
-> > exisitng zero initilization and NULL set when recycling fd.
->   ^^^ existing  ^^^ initialization
->
-> Well, since this is a sanity check, it is expected it never hits. Yet
-> searching the web shows it has hit a few times in the past :). So would
-> wrapping this with unlikely() give a similar performance gain while keepi=
-ng
-> debugability? If unlikely() does not help, I agree we can remove this sin=
-ce
-> fd_install() actually has the same check:
->
-> BUG_ON(fdt->fd[fd] !=3D NULL);
->
-> and there we need the cacheline anyway so performance impact is minimal.
-> Now, this condition in alloc_fd() is nice that it does not take the kerne=
-l
-> down so perhaps we could change the BUG_ON to WARN() dumping similar kind
-> of info as alloc_fd()?
->
+Hi,
 
-Christian suggested just removing it.
+On Tue, 25 Jun 2024 13:54:41 +0200, Jerome Brunet wrote:
+> Spdif output currently uses a 0.5mA drive strength by default.
+> While the result depends on how the spdif output is hooked to
+> rest of the system, this is a bit weak and signal quality
+> may be poor. This was reported on the vim3l for example.
+> 
+> Increase the drive strength to 3mA, as used for TDM, to be on the
+> safe side.
+> 
+> [...]
 
-To my understanding the problem is not the branch per se, but the the
-cacheline bounce of the fd array induced by reading the status.
+Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.11/arm64-dt)
 
-Note the thing also nullifies the pointer, kind of defeating the
-BUG_ON in fd_install.
+[1/1] arm64: dts: amlogic: g12: bump spdif output drive strength
+      https://git.kernel.org/amlogic/c/84f6ab5fedf735a447080e2fd286eff9859cd199
 
-I'm guessing it's not going to hurt to branch on it after releasing
-the lock and forego nullifying, more or less:
-diff --git a/fs/file.c b/fs/file.c
-index a3b72aa64f11..d22b867db246 100644
---- a/fs/file.c
-+++ b/fs/file.c
-@@ -524,11 +524,11 @@ static int alloc_fd(unsigned start, unsigned
-end, unsigned flags)
-         */
-        error =3D -EMFILE;
-        if (fd >=3D end)
--               goto out;
-+               goto out_locked;
+These changes has been applied on the intermediate git tree [1].
 
-        error =3D expand_files(files, fd);
-        if (error < 0)
--               goto out;
-+               goto out_locked;
+The v6.11/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+for inclusion in their intermediate git branches in order to be sent to Linus during
+the next merge window, or sooner if it's a set of fixes.
 
-        /*
-         * If we needed to expand the fs array we
-@@ -546,15 +546,15 @@ static int alloc_fd(unsigned start, unsigned
-end, unsigned flags)
-        else
-                __clear_close_on_exec(fd, fdt);
-        error =3D fd;
--#if 1
--       /* Sanity check */
--       if (rcu_access_pointer(fdt->fd[fd]) !=3D NULL) {
-+       spin_unlock(&files->file_lock);
-+
-+       if (unlikely(rcu_access_pointer(fdt->fd[fd]) !=3D NULL)) {
-                printk(KERN_WARNING "alloc_fd: slot %d not NULL!\n", fd);
--               rcu_assign_pointer(fdt->fd[fd], NULL);
-        }
--#endif
+In the cases of fixes, those will be merged in the current release candidate
+kernel and as soon they appear on the Linux master branch they will be
+backported to the previous Stable and Long-Stable kernels [2].
 
--out:
-+       return error;
-+
-+out_locked:
-        spin_unlock(&files->file_lock);
-        return error;
- }
+The intermediate git branches are merged daily in the linux-next tree [3],
+people are encouraged testing these pre-release kernels and report issues on the
+relevant mailing-lists.
 
+If problems are discovered on those changes, please submit a signed-off-by revert
+patch followed by a corrective changeset.
 
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
 
->                                                                 Honza
->
-> > Combined with patch 1 and 2 in series, pts/blogbench-1.1.0 read improve=
-d by
-> > 32%, write improved by 17% on Intel ICX 160 cores configuration with v6=
-.10-rc4.
-> >
-> > Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
-> > Signed-off-by: Yu Ma <yu.ma@intel.com>
-> > ---
-> >  fs/file.c | 7 -------
-> >  1 file changed, 7 deletions(-)
-> >
-> > diff --git a/fs/file.c b/fs/file.c
-> > index b4d25f6d4c19..1153b0b7ba3d 100644
-> > --- a/fs/file.c
-> > +++ b/fs/file.c
-> > @@ -555,13 +555,6 @@ static int alloc_fd(unsigned start, unsigned end, =
-unsigned flags)
-> >       else
-> >               __clear_close_on_exec(fd, fdt);
-> >       error =3D fd;
-> > -#if 1
-> > -     /* Sanity check */
-> > -     if (rcu_access_pointer(fdt->fd[fd]) !=3D NULL) {
-> > -             printk(KERN_WARNING "alloc_fd: slot %d not NULL!\n", fd);
-> > -             rcu_assign_pointer(fdt->fd[fd], NULL);
-> > -     }
-> > -#endif
-> >
-> >  out:
-> >       spin_unlock(&files->file_lock);
-> > --
-> > 2.43.0
-> >
-> --
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
+-- 
+Neil
 
-
-
---=20
-Mateusz Guzik <mjguzik gmail.com>
