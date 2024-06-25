@@ -1,136 +1,102 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B72D3B7A8;
-	Tue, 25 Jun 2024 21:22:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12BB4148848
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 21:24:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719350550; cv=none; b=HDK3/qmikZ1Gvx8GCe4A1DkEelxqW6Na7ooZY2hrCSqOtayC/zRSjo9Qd8VQrExtg5NTHPjVZElJ5taacGuYqAyeaPg6tAg3TCav+pCaj1bUtieNora0A5EGRA229PjJNE8xeFSyrogUx+p+Jh+FzzkNTUWyvf50YPScBqnOxKc=
+	t=1719350685; cv=none; b=RbDOSKi258KGOcqf23BZhSrK6nKnPpIzoxmSX+62uwqZY7E2Pvt77ZtCvbLmmU4W18gZ6c0WhDUBQcsQJFwlTs14mBbIqpZBmNu1i7J7aH18mnTldr7KgA7Fz7hPiXmQx1oY4yI1pzcnKpy2mNIKlvwESnjjtIh3lEcQ/ZqbZcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719350550; c=relaxed/simple;
-	bh=GEoRhVjFStK6Qsb04Z2xZAxzZVnKtTiKCYijwuFpR/0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CS8U89cKS1C18yESMh+pyWFVWly1y8AYHdWSsQ4FHLSH4f9pesO0pd3lvgk+oSVS6b6oz2HTI8uNqo+40rv5y7YNmoVn9u5T715GtYbABGksa1EcypSlelzLeMXPRAr51qEP1Ep7q1AmGRvRdxEk56SRdEqN8pX7zLVD7nhXBVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FrXxI7lr; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719350685; c=relaxed/simple;
+	bh=nW0DR9XCcCb7XpSfcLzEN9SyQQOB3xwFqsqnicd5H2s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hb0jo8JGIiehaM0UIiqPPR2ZZ3haqKXmkrFpmt1RbqXehAe5WV3fmmDmJisArUqxa10D12Ddh0M4oIeC/9JBZINcPtgK34ZgboL+8cDSJApEY1W7fQ37r+8x6ZXvlWn+cSovcXF9CZC6Hwqq/OROsrak4C2hba6+L3QVpJRBYxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=KcjYRq4t; arc=none smtp.client-ip=209.85.166.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FrXxI7lr"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-79c0f8d6ec5so50966385a.0;
-        Tue, 25 Jun 2024 14:22:28 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="KcjYRq4t"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3758686ef2fso2954705ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 14:24:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719350548; x=1719955348; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Tw5CUHUm3Gpt6SSSe/xI/X8gPanBuozSYqQObhb6KGY=;
-        b=FrXxI7lrhnBKK+oJsNM8NWj//+jQtX49ylUlOGTtmxhoBLujBPSNjBAWnZqitka3hZ
-         UiGSGZxGWEiRIzX7RQP5Qav0cyvA9tYsVu6zwJ7dLc0IGaVl3EdTKGY3sg8rJjsslWPR
-         K0O1+AkEVlK/wLdvzTtpfNE9LGF6VmVUNNSJjhAzUJRlqZadTHnsuh/PJbzHOGcOK477
-         MMUyLuYW5XPhhoBKcIO7RDeXT33t8nkEdShQ7GweW+9/yPo6vy2XzHROk0+AmR8nAhPn
-         TjrDDnHXNF07gkc3po3c3/Qx6kUjvZbYl/2lZ2otXCM1Ny9Su/A1p5/Cng0LzVqTx3YJ
-         CayA==
+        d=linuxfoundation.org; s=google; t=1719350682; x=1719955482; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gq8Vr0aVYkgo0bSzjSaPaFgESu4jvyQ96EXjHbRRL9g=;
+        b=KcjYRq4tKVY3SCkk7M7tK0CIqQDlJML09IyQkKcWK89H/cmIskUQvYTN8GUjtJ3fvR
+         3/9lSJ7u5K+STN/vq0xXAuT9nntFAsqS7+DTEJrSbOylUpur/nJ+rw5A2Bpj+ga+hz83
+         Fj3WPvxjGyoph9bt6V7+1X00oQUK9Ap3a7EIo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719350548; x=1719955348;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Tw5CUHUm3Gpt6SSSe/xI/X8gPanBuozSYqQObhb6KGY=;
-        b=eNgGKTpDI9ujN7vm1ZNfBD+mN4o+rwmjO9beknIwWoCujOo4/DIxdYAxq0bxBFj4Bl
-         KY/rgM6oEcnPnc3ez/kM/Ah/cYgYIdPM9Tlysx4SyktSNS6b10dG4D6FcyxCtmATS1mh
-         bC9fxJSrBmJyApSXtM3r5vHaQqVuEotA8bSLaufH10AMwLGu0/6H25vmTt0eCIpLcWk1
-         bmwFh9GuNtqj72CIu9wfEcXCMpjjodoLvhQi63oxB+kW8uoHJqF9mFBs0S1fUNV36KZk
-         xLRTuUMwygy0yNK+ctkbybvF9mbnmzDCLN0Pqnn7Dx4KtjzNHrcFGnvICWYAa9rBHi2F
-         S4OQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWE4e9sJJBPQHYIDa+4lrLFdzXlu1SDabyGXQ674Wss0t8rR3T0u8ClBw2SjVveiGWqkk7E8PQAIPjmPP8MIWagD3jI4c+tRap7RQHoxnl91pyoMGH0Y3+/DODrrg/7gzRhVSGEYD/U28GVVA==
-X-Gm-Message-State: AOJu0YzSqpyuXpf2vfl1Xe663LoUDSlR+kLL+MOgZ7soW/6TGkHK5QyR
-	Ery5Q2/Ygt0gKIF7LMFlKQ28izDxFB+LFy2RWDbFLrvm6OT/mnVhy/hRglPx2LX67d7uhUIIkYw
-	UXocaboSeWUicEXTHB38cWzx4ZTk=
-X-Google-Smtp-Source: AGHT+IFXbQes4gdlhi490sxQ7X7y/cppE8GmTYOi2RZ9YmtK0eJYSO7nHKlB0DeYq0ofNiX6Js/r4nkF0aYqaVEkXP0=
-X-Received: by 2002:ac8:7e8f:0:b0:445:3f1:4715 with SMTP id
- d75a77b69052e-44503f14c47mr8059651cf.36.1719350547916; Tue, 25 Jun 2024
- 14:22:27 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719350682; x=1719955482;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gq8Vr0aVYkgo0bSzjSaPaFgESu4jvyQ96EXjHbRRL9g=;
+        b=lwamTZj7aHl/FoPiNO88HbtYeIwpra4ogdUyzQ5kzQYEOAT7sl2MDx9aCexPRc0Adi
+         NG4ir8WS7s7GozTuKqXN0zH+kk4wYq+aaXGERBBO6CYOKLe1F7srpQa+QQpK6UA6wlXw
+         53nFkjelZhkRlkZUToRbQS15efLA6f+4vRhjKuagk5zFrI3fauZNvEKbYdt63k9Bu4ME
+         xZsPCx6ObEG0h6ohf3NqJQjsDg0gpPsUy9xsw0xmbPJ7KSqvPExv/xvU0XyifwCYZwk5
+         Yt+RcHxRhrc9FPeXbtEHp/yGtkQGQjhLgHSiMr7SBWEX+2kXEqmU9qEev+9c2pQEsTcF
+         p3fQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUC7dnz9zce3TndGyKt9fVIcbv8rf83oPt50KiXBNQrpMhRqdBtauiVBZr/2lIMb1uPTSnNhqlVZ9sLWSzU81OKXhCeuWRY8/11ctaY
+X-Gm-Message-State: AOJu0Yw1sEhF7MMnPAhJE+TjEd/aT4DPM9n1zoZsNSPewMU/W7Sxw/l0
+	1Bth/0XzMZgZqaSJRu2s8S91pMULOtMzjz7ZYi+ArUEZBr/lY9oKEXz8/SOdibE=
+X-Google-Smtp-Source: AGHT+IEXftu3PDBt6unrIK42kaT9PZZmR9EuAq5kHQmhySuQkvNlwOHsh10mIITw3dzkWfWG2eiacQ==
+X-Received: by 2002:a05:6602:3305:b0:7f3:a20e:c38f with SMTP id ca18e2360f4ac-7f3a20eca45mr930160039f.0.1719350681125;
+        Tue, 25 Jun 2024 14:24:41 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-7f391ff51ecsm234726439f.31.2024.06.25.14.24.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Jun 2024 14:24:40 -0700 (PDT)
+Message-ID: <251c5d41-a8b5-48ed-adf3-864477059070@linuxfoundation.org>
+Date: Tue, 25 Jun 2024 15:24:39 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240625-adreno_barriers-v2-0-c01f2ef4b62a@linaro.org>
- <20240625-adreno_barriers-v2-2-c01f2ef4b62a@linaro.org> <CAA8EJpqnFEkWx4hq_UDgQ9n5qNj=WjN-Td0+ELGh8hrDpBFjGQ@mail.gmail.com>
-In-Reply-To: <CAA8EJpqnFEkWx4hq_UDgQ9n5qNj=WjN-Td0+ELGh8hrDpBFjGQ@mail.gmail.com>
-From: Rob Clark <robdclark@gmail.com>
-Date: Tue, 25 Jun 2024 14:22:15 -0700
-Message-ID: <CAF6AEGt0cjmNyp9wqMMLE9FCKP3E=eibW9q_HGpqnCZzO=sKcA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] Revert "drm/msm/a6xx: Poll for GBIF unhalt status
- in hw_init"
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, Sean Paul <sean@poorly.run>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	Akhil P Oommen <quic_akhilpo@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.9 000/250] 6.9.7-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240625085548.033507125@linuxfoundation.org>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240625085548.033507125@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 25, 2024 at 1:18=E2=80=AFPM Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
->
-> On Tue, 25 Jun 2024 at 21:54, Konrad Dybcio <konrad.dybcio@linaro.org> wr=
-ote:
-> >
-> > Commit c9707bcbd0f3 ("drm/msm/adreno: De-spaghettify the use of memory
->
-> ID is not present in next
+On 6/25/24 03:29, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.9.7 release.
+> There are 250 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 27 Jun 2024 08:54:55 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.9.7-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.9.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-it ofc wouldn't be, because it was the previous patch in this series ;-)
+Compiled and booted on my test system. No dmesg regressions.
 
-I've fixed that up (and below) while applying the patch
+Tested-by: Shuah Khan <skhan@linuxfoundation.org>
 
-BR,
--R
-
-> > barriers") made some fixups relating to write arrival, ensuring that
-> > the GPU's memory interface has *really really really* been told to come
-> > out of reset. That in turn rendered the hacky commit being reverted no
-> > longer necessary.
-> >
-> > Get rid of it.
-> >
-> > This reverts commit b77532803d11f2b03efab2ebfd8c0061cd7f8b30.
->
-> b77532803d11 ("drm/msm/a6xx: Poll for GBIF unhalt status in hw_init")
->
-> >
-> > Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> > ---
-> >  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 4 ----
-> >  1 file changed, 4 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/ms=
-m/adreno/a6xx_gpu.c
-> > index 4083d0cad782..03e23eef5126 100644
-> > --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> > +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> > @@ -867,10 +867,6 @@ static int hw_init(struct msm_gpu *gpu)
-> >                 gpu_read(gpu, REG_A6XX_RBBM_GBIF_HALT);
-> >         }
-> >
-> > -       /* Some GPUs are stubborn and take their sweet time to unhalt G=
-BIF! */
-> > -       if (adreno_is_a7xx(adreno_gpu) && a6xx_has_gbif(adreno_gpu))
-> > -               spin_until(!gpu_read(gpu, REG_A6XX_GBIF_HALT_ACK));
-> > -
-> >         gpu_write(gpu, REG_A6XX_RBBM_SECVID_TSB_CNTL, 0);
-> >
-> >         if (adreno_is_a619_holi(adreno_gpu))
-> >
-> > --
-> > 2.45.2
-> >
->
->
-> --
-> With best wishes
-> Dmitry
+thanks,
+-- Shuah
