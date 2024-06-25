@@ -1,159 +1,177 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B79614F9E0;
-	Tue, 25 Jun 2024 13:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2560A14F9E0;
+	Tue, 25 Jun 2024 13:32:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719322303; cv=none; b=h5sB9O6dq6mLn4AoVlt1FISmluoU+mgs/vvJOsqn9xTxCJ8Gh4sXfljWg6V2WPVll5ikQ5zPKWE1QHD/YGWTgEGhqJ2z0qm7lNIpGxbCK1daFeRegmyb/cNvKj/hPjUUgM91UAcNn5w6/FDulVVeiaVGv/rFLldPRwZc6S9Jl44=
+	t=1719322334; cv=none; b=iNamAtYybMwFLX80PujIdzTC5MOyBa3aA3fqFXNknB37iqxH6nDPsZ+373Fz2lx5QLwwb+LExWveC79Gvi77hMf9PmNucAnCi2rDp9CMUPnQFIb8bYWxHMHCT5SlZWlAMAIptx84NLLNhJJIMX5RTX2ZH9pycCqMOGZ1irOayRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719322303; c=relaxed/simple;
-	bh=JhTOvlv/fFw83z9MA/JanU9QLXx5eZ/OqqxpAh6VhHc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FTB5ylLalJKz6rRPVnXVWDTDynmFrUCu1ARv1SHy+CzKhKTjjGdSYWjoYJIEbt6CUXQpgq9ZgLZwbJExN0MMCWBXvEEF5LfozMf3ghVTHCiVlUXIPu10aTjCqvJyCKA9vI9SkMAzHpKmju6PUrwgZRYbFW87gRzi1EWFWJfQvL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PsWpwEMV; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PsWpwEMV"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-57d106e69a2so214449a12.0;
-        Tue, 25 Jun 2024 06:31:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719322300; x=1719927100; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0FIaUi0sIcr6xli/A2+XeBULbh1JSIVXUEV5tbDKSEc=;
-        b=PsWpwEMVUK4oWdQo1SXjUIDkcoZwJ1Z43qs4LLQcsXwRT5c4poBZqdfZP/NyVDeJVe
-         s5mEFHYty6cKrC2VOI51tD8gyM6KiueU+ri/gLmznPmLz6fUMZQOoyv0EC6lGQDiSMgM
-         MEZGY52OiMR7mzv1zWOerYxmwB3ik6Gf+6fyQNebn/gAXLnqWtoaqscL30OS9hdvuZpR
-         QJ01xvRhio/BOjfiuQTrP9MCZhCXLTxePERISM9m/JyFnc86tozKJ8Pi/xtfaLcwN8Sf
-         UdLIphTg//gM5XMhs4O4KpyRJBO8+mzNHkVPbUblmMoVko0iXNdwgg/fj+57fEzCfVa4
-         AslA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719322300; x=1719927100;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0FIaUi0sIcr6xli/A2+XeBULbh1JSIVXUEV5tbDKSEc=;
-        b=YPYW+PR2aBgeP4CUEzqhGFphk/GdPzcWcKMfpZus7sjhcDsYr4Gl/UrjnbUpXiC5FW
-         /pIvc6TjOr5P9Qls02KaBz+hyHbyX77CgexhgY0hm/YSVtufHCjGCeupgaf1d8ENFP2L
-         V84D0WWgN/CLZa1wnI6I4uXba5bz6MhAFaeYiS8onx33b/UtgXzecZRQrfrNma9FRcUT
-         ZCuyY7YZD2mIXBdHcFin6106zcgy9a8sWv2BqNRoQNRgiGXxZUAfNq5kQ/u3nC8caxpA
-         e0RYx3/jqziEjg+GiyGGBq9Hx8etQvJVXCQU6/xda7Wi1akE9ZEFZvdQGfo8mcqvKqVv
-         v9jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJB7KJf+EP35D18JDtWGo7BC6HCiuF1aCg+OMPngtVjQkgJIo5VI+Tq7YqlW9jOrr/+amRsu2eBkUVPP36YDc3HYZfFd0gYRnU3cDOgESPNFAoFUmnwEtHaaWeRxiHBrkX4OvzfHzL4MnNrWZVIetpGcpIbEf2F+UDms7VAo2Lj6JgGQ==
-X-Gm-Message-State: AOJu0YyAc93VCJ0MAQN0CRtC+f3fUumKnUPB7dhaJyPcFf/mnW7XXEsU
-	A3YZFYMtM2uKW7Wb/KMtWW7jk05AacSN4Gvd83qXyI5K8dqOp+uiQW3qPwMeOeAlXDqDh/5VhEt
-	WsQIUk7UFDO6pHm2ml7Y2AR5e+G8Fq4sWhmc=
-X-Google-Smtp-Source: AGHT+IFuiZIfFcuCgctYUzMapk4c0sCuzgKH79nA6kGjmiB1u9HpHIFJXlFCzVabBY8PqSs02KZ/7t64IBwgQ4+rnyA=
-X-Received: by 2002:a50:c004:0:b0:57c:b82e:884b with SMTP id
- 4fb4d7f45d1cf-57d70231a13mr2099283a12.19.1719322299429; Tue, 25 Jun 2024
- 06:31:39 -0700 (PDT)
+	s=arc-20240116; t=1719322334; c=relaxed/simple;
+	bh=8u1Yyn8Ivy3533Lcg5+kHKeSUfm2OL9UIzbXQEAX55U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IZNZhPPA9bhwQExHjyNYubHxb5rzlYbGqKVTVsRclAn5U1m+J3FTFY/rf9Amskc/XMAStizQwsqrd+CGYcwUgyAFLBckS+Sy8Wo98NrWx5Lau+Kq23FSM8MCgHM9yctsJ2LlQrMXbwfEAGzhiUBFutHyw1Q27E5SNme4/MXJdTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 23728DA7;
+	Tue, 25 Jun 2024 06:32:36 -0700 (PDT)
+Received: from e127643.broadband (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CB16F3F73B;
+	Tue, 25 Jun 2024 06:32:07 -0700 (PDT)
+From: James Clark <james.clark@arm.com>
+To: coresight@lists.linaro.org,
+	suzuki.poulose@arm.com,
+	gankulkarni@os.amperecomputing.com,
+	mike.leach@linaro.org,
+	leo.yan@linux.dev,
+	anshuman.khandual@arm.com,
+	jszu@nvidia.com,
+	bwicaksono@nvidia.com
+Cc: James Clark <james.clark@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	John Garry <john.g.garry@oracle.com>,
+	Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v4 00/17] coresight: Use per-sink trace ID maps for Perf sessions
+Date: Tue, 25 Jun 2024 14:30:43 +0100
+Message-Id: <20240625133105.671245-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240601092646.52139-1-joswang1221@gmail.com> <20240603130126.25758-1-joswang1221@gmail.com>
- <20240604000147.2xxkkp7efjsbr3i5@synopsys.com> <CAMtoTm0S2WSO6VxK79DkTs+1aq5xBYBMRsPXWAFuWo4DoymUEw@mail.gmail.com>
- <20240622000528.3keexfbetetkrxpy@synopsys.com>
-In-Reply-To: <20240622000528.3keexfbetetkrxpy@synopsys.com>
-From: joswang <joswang1221@gmail.com>
-Date: Tue, 25 Jun 2024 21:31:28 +0800
-Message-ID: <CAMtoTm2_QoT6YL=9fDJfdgcc__X-dkJymwDXj8VpyYdXx1mHAA@mail.gmail.com>
-Subject: Re: [PATCH v2, 2/3] usb: dwc3: core: add p3p2tranok quirk
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc: "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>, 
-	"conor+dt@kernel.org" <conor+dt@kernel.org>, 
-	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, 
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "balbi@kernel.org" <balbi@kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, joswang <joswang@lenovo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jun 22, 2024 at 8:05=E2=80=AFAM Thinh Nguyen <Thinh.Nguyen@synopsys=
-.com> wrote:
->
-> Sorry for the delay response regarding this.
->
-> On Wed, Jun 19, 2024, joswang wrote:
-> > Hi Thinh
-> >
-> > The workaround solution provided by your company for this issue is as f=
-ollows:
-> >   Workaround=EF=BC=9Aif the phy support direct P3 to P2 transition=EF=
-=BC=8Cprogram
-> > GUSB3PIPECTL.P3P2Tranok=3D1
-> >
-> > As the databook mentions:
-> > This bit is used only for some non-Synopsys PHYs that cannot do LFPS in=
- P3.
-> > This bit is used by third-party SS PHY. It must be set to '0' for Synop=
-sys PHY.
-> >
-> > For Synopsys PHY, if this bit is set to "1", will it cause unknown prob=
-lems?
-> > Please help confirm this, thank you!
-> >
->
-> That depends on what your use case and requirements are.
->
-> I've reviewed this case. The impact to this issue is that power state
-> change may take longer than expected. It may violate the PIPE spec, but
-> functionally, at least for how linux drivers are handled, I'm not clear
-> on how this will impact the typical user.
->
-> Can you help clarify your use case and what does this resolve beside the
-> fact that it workaround the increase latency/response time.
->
-> Thanks,
-> Thinh
+This will allow sessions with more than CORESIGHT_TRACE_IDS_MAX ETMs
+as long as there are fewer than that many ETMs connected to each sink.
 
-Your company provides usage scenarios:
-System software places the controller in low-power when there is no
-traffic on the USB.
-Subsequently, system software programs the controller to exit
-low-power to resume traffic.
+Each sink owns its own trace ID map, and any Perf session connecting to
+that sink will allocate from it, even if the sink is currently in use by
+other users. This is similar to the existing behavior where the dynamic
+trace IDs are constant as long as there is any concurrent Perf session
+active. It's not completely optimal because slightly more IDs will be
+used than necessary, but the optimal solution involves tracking the PIDs
+of each session and allocating ID maps based on the session owner. This
+is difficult to do with the combination of per-thread and per-cpu modes
+and some scheduling issues. The complexity of this isn't likely to worth
+it because even with multiple users they'd just see a difference in the
+ordering of ID allocations rather than hitting any limits (unless the
+hardware does have too many ETMs connected to one sink).
 
-The method to reproduce the problem provided by your company:
-1. Program the DWC_usb31 controller to operate in device mode of
-operation. Program GUSB3PIPECTL.P3P2TranOK=3D0. To increase the
-probability of hitting the problem run with a slower frequency for
-suspend_clk (for example, 32 KHz and 160 KHz).
-2. Place the link in U3 while ensuring that pipe_powerdown is driven to P3.
-3. Program DWC_usb31 controller to exit U3. Ensure that for P0 ->P2
-transition pipe_PhyStatus is returned immediately.
-4. Program U3 exit from the remote link.
-5. Program a D3 entry (pm_power_state_request=3DD3) at the same time
-(from the device application) and observe if the D3 entry
-acknowledgement (current_power_state_u3pmu=3DD3) takes longer than
-expected (> 10 ms).
+Per-thread mode works but only until there are any overlapping IDs, at
+which point Perf will error out. Both per-thread mode and sysfs mode are
+left to future changes, but both can be added on top of this initial
+implementation and only sysfs mode requires further driver changes.
 
-Currently, we do not have a real environment to verify this case, but
-considering the Android GKI regulations, we need to submit patches to
-Linux in advance. Based on the following workaround solution provided
-by your company=EF=BC=8Csince the hardware cannot be changed, we can only u=
-se
-workaround 1 at present.
-Workaround 1: If the PHY supports direct P3 to P2 transition, program
-GUSB3PIPECTL.P3P2TranOK=3D1. However, note that as per PIPE4
-Specification, direct transition from P3 to P2 is illegal.
-Workaround 2: Delay the pipe_PhyStatus assertion by an amount greater
-than two suspend_clk durations at the input of the controller's PIPE
-interface.
+The HW_ID version field hasn't been bumped in order to not break Perf
+which already has an error condition for other values of that field.
+Instead a new minor version has been added which signifies that there
+are new fields but the old fields are backwards compatible.
 
-We have the following questions and hope you can help us confirm them.
-Thank you!
-1. This case seems to describe that the P3 to P2 power state change
-takes a long time, that is, the DWC3_usb31 controller takes a long
-time to exit the D3 state. Please help evaluate whether this problem
-is perceived from the software perspective, such as whether there is a
-problem in the xhci_suspend or xhci_resume process. If from the
-software perspective, this case will not cause the xhci driver to
-fail, then we may not deal with this problem.
-2. If this case causes the above problem, for Synopsys PHY,
-configuring GUSB3PIPECTL.P3P2TranOK=3D1 will cause other unknown
-problems?
+Changes since v3:
+
+  * Fix issue where trace IDs were overwritten by possibly invalid ones
+    by Perf in unformatted mode. Now the HW_IDs are also used for
+    unformatted mode unless the kernel didn't emit any.
+  * Add a commit to check the OpenCSD version.
+  * Add a commit to not save invalid IDs in the Perf header.
+  * Replace cs_etm_queue's formatted and formatted_set members with a
+    single enum which is easier to use.
+  * Drop CORESIGHT_TRACE_ID_UNUSED_FLAG as it's no longer needed.
+  * Add a commit to print the queue number in the raw dump.
+  * Don't assert on the number of unformatted decoders if decoders == 0.
+
+
+Changes since v2:
+
+  * Rebase on coresight-next 6.10-rc2 (b9b25c8496).
+  * Fix double free of csdev if device registration fails.
+  * Fix leak of coresight_trace_id_perf_start() if trace ID allocation
+    fails.
+  * Don't resend HW_ID for sink changes in per-thread mode. The existing
+    CPU field on AUX records can be used to track this instead.
+  * Tidy function doc for coresight_trace_id_release_all()
+  * Drop first two commits now that they are in coresight-next
+  * Add a commit to make the trace ID spinlock local to the map
+
+Changes since V1:
+
+ * Rename coresight_device.perf_id_map to perf_sink_id_map.
+ * Instead of outputting a HW_ID for each reachable ETM, output
+   the sink ID and continue to output only the HW_ID once for
+   each mapping.
+ * Keep the first two Perf patches so that it applies cleanly
+   on coresight-next, although they have been applied on perf-tools-next
+ * Add new *_map() functions to the trace ID public API instead of
+   modifying existing ones.
+ * Collapse "coresight: Pass trace ID map into source enable" into
+   "coresight: Use per-sink trace ID maps for Perf sessions" because the
+   first commit relied on the default map being accessible which is no
+   longer necessary due to the previous bullet point.
+
+
+James Clark (17):
+  perf: cs-etm: Create decoders after both AUX and HW_ID search passes
+  perf: cs-etm: Allocate queues for all CPUs
+  perf: cs-etm: Move traceid_list to each queue
+  perf: cs-etm: Create decoders based on the trace ID mappings
+  perf: cs-etm: Only save valid trace IDs into files
+  perf: cs-etm: Support version 0.1 of HW_ID packets
+  perf: cs-etm: Print queue number in raw trace dump
+  perf: cs-etm: Add runtime version check for OpenCSD
+  coresight: Remove unused ETM Perf stubs
+  coresight: Clarify comments around the PID of the sink owner
+  coresight: Move struct coresight_trace_id_map to common header
+  coresight: Expose map arguments in trace ID API
+  coresight: Make CPU id map a property of a trace ID map
+  coresight: Use per-sink trace ID maps for Perf sessions
+  coresight: Remove pending trace ID release mechanism
+  coresight: Emit sink ID in the HW_ID packets
+  coresight: Make trace ID map spinlock local to the map
+
+ drivers/hwtracing/coresight/coresight-core.c  |  37 +-
+ drivers/hwtracing/coresight/coresight-dummy.c |   3 +-
+ .../hwtracing/coresight/coresight-etm-perf.c  |  36 +-
+ .../hwtracing/coresight/coresight-etm-perf.h  |  18 -
+ .../coresight/coresight-etm3x-core.c          |   9 +-
+ .../coresight/coresight-etm4x-core.c          |   9 +-
+ drivers/hwtracing/coresight/coresight-priv.h  |   1 +
+ drivers/hwtracing/coresight/coresight-stm.c   |   3 +-
+ drivers/hwtracing/coresight/coresight-sysfs.c |   3 +-
+ .../hwtracing/coresight/coresight-tmc-etr.c   |   5 +-
+ drivers/hwtracing/coresight/coresight-tmc.h   |   5 +-
+ drivers/hwtracing/coresight/coresight-tpdm.c  |   3 +-
+ .../hwtracing/coresight/coresight-trace-id.c  | 133 ++--
+ .../hwtracing/coresight/coresight-trace-id.h  |  70 +-
+ include/linux/coresight-pmu.h                 |  17 +-
+ include/linux/coresight.h                     |  21 +-
+ tools/build/feature/test-libopencsd.c         |   4 +-
+ tools/include/linux/coresight-pmu.h           |  17 +-
+ tools/perf/Makefile.config                    |   2 +-
+ tools/perf/arch/arm/util/cs-etm.c             |  11 +-
+ .../perf/util/cs-etm-decoder/cs-etm-decoder.c |  49 +-
+ .../perf/util/cs-etm-decoder/cs-etm-decoder.h |   3 +-
+ .../util/cs-etm-decoder/cs-etm-min-version.h  |  13 +
+ tools/perf/util/cs-etm.c                      | 625 +++++++++++-------
+ tools/perf/util/cs-etm.h                      |  12 +-
+ 25 files changed, 636 insertions(+), 473 deletions(-)
+ create mode 100644 tools/perf/util/cs-etm-decoder/cs-etm-min-version.h
+
+-- 
+2.34.1
+
