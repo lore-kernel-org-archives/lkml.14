@@ -1,142 +1,108 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA3D3A8F0
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 00:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E533B7A8;
+	Tue, 25 Jun 2024 00:52:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719276737; cv=none; b=jDLIKqO9Z2zFOjGUtW7OZNhd1NjeHH+wWDsXRyCn38urXYpNb1CypBdfJFXzTFGc3AzmmwyIx1igkTKRwZA/DrRK/sIdB+/5o7VK7coztEMehf8Dodv9yDcmidlTiZRoqbCeUGAzlPixHGt2JVOCWcgZzPoUuOWhNY0h+Ov9T/s=
+	t=1719276766; cv=none; b=q9EGVaYeWt7J7zBQdRTsR7s54qUiWVehQSDdqDSE8hcp6ftcUlbnAkcNsZWLyO7yJTlb7KQE3aN+GKJJMvLFGV0H7v3ejNTGmZn9AYOjrcKuAjtyO5W3erHkJ3nNHuo3hONPfNPsffzFuhvZDpYvBatmalrvlQuzjDaELzt54f8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719276737; c=relaxed/simple;
-	bh=VwerV7my9tD+Ybd80jCAHL+Lp6Y9EYafkoI4KG/Bsko=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DFSX0ouzgi2ep/+hQOlOo0XuRpaa0qqn6zajHetshaTyS2b31oTx4qXK2YW1dwCHFPEYKIRcjlPo1kZr0q4oeFTe4CYTiuKMA8c97cPNx7XDvVUfK/k7zO+ub4i98NM59FYqLBg5Q3L1OwRXhF7r3td17UsCqsv0WvVZ9ZtEIho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=xB3SJYS3; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1719276766; c=relaxed/simple;
+	bh=So/F8y4HqDbzH8FjFEYDBRG0qxp7bBgvTlG4bt4waM0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=rvb5Pul65+FyX5VN1HzubLQD/0o+Q6yx8NMUqoDQuuTlmf+kX92xkCTIP5joMLW3zHUnXSp+ctjCSvZY2Qz5aLzuBpeEkEUaibBiQg+cw9kT8+Krf4OMer37JI7RNVuqZdcs9/kLATyGNBmyjiqkhCvUaEgKoNjaQ8MOJzGDg9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=i6FhGy1F; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="xB3SJYS3"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-706680d3a25so1775115b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2024 17:52:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719276735; x=1719881535; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qPS8Htynt5YVDBSwFV34iezZtSuGdE5NHFiA6AMckwQ=;
-        b=xB3SJYS3xk6/Qx0e62uz9Vy+QZlC1WS62/d7nyCT2XNzowDATbXyppsF2Wl8bDlP++
-         ikDVVmhK/mS5Ym+iMPM1EaCEIRqTV7H+Hzag+0cH0oOqdEDsV/zBAPd2GU4qioAiyQ49
-         pK3yztZ4lVAQROYCjQjUbfoFhL0LiG1Z3Yl0nbGIxiW6ipNhdn3hOu9TS+DsBS9gSDh5
-         oGKq7ot3q/JKrl7Ax7NavBy74IRfbFYeuGJoM3LUDype0/kzUeFNL5eMb6GkJCqN0JpK
-         lH1r/apexh87vw0Fbct92eQnEHikr3x6jvQpJ5E4TFKUG2Cw4XLDdH+4r/enIG6x7Rbk
-         Hihg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719276735; x=1719881535;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qPS8Htynt5YVDBSwFV34iezZtSuGdE5NHFiA6AMckwQ=;
-        b=qxewpsOS7lh/ctcPzZW99MvMO1afdufI2OFEH3S8Keg2L4rCE8E09UamF3HHPqu4rm
-         qd/qmc334wXHJI7c/m/is4XKNBQXyEs/gsk9ncwnx2znauRNQQtFAemQHhfq+p1L9Ict
-         OaEVzOVDe7kdNpvvbxoH6XRBB0a/Y2XkU1vkWDVA3M55koBHZYgIJG+haOjRN6Gw6N7y
-         WO/MhWC5Mkje/Kg4R+m5jrhw4SiF/EOlwv2ev8fyPrf5xym8NG6HEREc8f5cBlm4tJBU
-         +0MElH9EbIdhNOIvxmjyAK+QX/OKi59KDELnfXEoi6nsXIFIyy5AaMZYnqm7psczc2PJ
-         2qvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUEGl2lnsOUFbRTqMTWXi6PiOyU1BaJ9a2cx1ELnCzJm93aj04ae+6/z9dTNix2Cyzw0FgAR41g+nKmK2ns6L/d8Kpp5qoN+H4lIbRI
-X-Gm-Message-State: AOJu0YxenI5rCG7ECd/XuOheNEbDKv3R5z3InnznYJouFghfk5gOZcqT
-	bMa1koEbHk7+IOVk2pfNMUdL9fvfe3i2kSsOwQ2cAunCft6KuyMk8w/yaJ6zOkA=
-X-Google-Smtp-Source: AGHT+IFXUAdJamg8ygnbLMv1f2WUsJYF7iboeHyAr7Z6Y+bevFXHoxCdZstz+th6Yy52wYFD6MOksg==
-X-Received: by 2002:a05:6a20:da96:b0:1bc:fd7f:4545 with SMTP id adf61e73a8af0-1bcfd7f49femr6118715637.8.1719276735396;
-        Mon, 24 Jun 2024 17:52:15 -0700 (PDT)
-Received: from jesse-desktop.. (pool-108-26-179-17.bstnma.fios.verizon.net. [108.26.179.17])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9ebbb2a7csm68150235ad.256.2024.06.24.17.52.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jun 2024 17:52:15 -0700 (PDT)
-From: Jesse Taube <jesse@rivosinc.com>
-To: linux-riscv@lists.infradead.org
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-	Evan Green <evan@rivosinc.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Jesse Taube <jesse@rivosinc.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Xiao Wang <xiao.w.wang@intel.com>,
-	Andy Chiu <andy.chiu@sifive.com>,
-	Eric Biggers <ebiggers@google.com>,
-	Greentime Hu <greentime.hu@sifive.com>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Zong Li <zong.li@sifive.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Ben Dooks <ben.dooks@codethink.co.uk>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Erick Archer <erick.archer@gmx.com>,
-	Joel Granados <j.granados@samsung.com>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v3 8/8] RISC-V: hwprobe: Document unaligned vector perf key
-Date: Mon, 24 Jun 2024 20:50:01 -0400
-Message-ID: <20240625005001.37901-9-jesse@rivosinc.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240625005001.37901-1-jesse@rivosinc.com>
-References: <20240625005001.37901-1-jesse@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="i6FhGy1F"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45OK1G8d014014;
+	Tue, 25 Jun 2024 00:52:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	04HLdGB3gU2fUKwtvgGY38yKf3y7Y0bAlY+VaLngquU=; b=i6FhGy1FSqOuMgeg
+	/MFUfQ3YRWEqE100/UuKpp7nna6QP3zq6Q7AimKzSvS/upF/Frwh5Ydr2LzfKjKA
+	QmznfexsjAZjURdql49MPA/ZKEAk/dtl07TYLV4ydKEjcBLM65Iv2wJ5VENmaRHo
+	wmRbB1GWevOzc3z89WMECIhL9Af2Fqm/G8yNL2305oBumC6YE9Om+hR6wUE5ULw9
+	jsIHaWRvRBhIOt68ZZE9xuOWzL0FUDPvxRhGBzDincckzSW/8MvLsKo4Z0uR0uvL
+	5JUL9iomQ1xS6ZDNoH+mYn8Q6QPwSv1oXo5uZJxSJx6C1uQrXBD4gMFHCV88Fr+E
+	vG61Zw==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ywnxgw07f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Jun 2024 00:52:37 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45P0qadO028669
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Jun 2024 00:52:36 GMT
+Received: from [10.71.112.174] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 24 Jun
+ 2024 17:52:35 -0700
+Message-ID: <80a475ab-827d-4c9f-a82f-64fc1fcaf6dc@quicinc.com>
+Date: Mon, 24 Jun 2024 17:52:34 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 1/5] soc: qcom: pdr: protect locator_addr with the main
+ mutex
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Sibi Sankar
+	<quic_sibis@quicinc.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        Johan Hovold <johan+linaro@kernel.org>,
+        Xilin Wu <wuxilin123@gmail.com>,
+        Bryan O'Donoghue
+	<bryan.odonoghue@linaro.org>,
+        Steev Klimaszewski <steev@kali.org>,
+        "Alexey
+ Minnekhanov" <alexeymin@postmarketos.org>,
+        Neil Armstrong
+	<neil.armstrong@linaro.org>
+References: <20240622-qcom-pd-mapper-v9-0-a84ee3591c8e@linaro.org>
+ <20240622-qcom-pd-mapper-v9-1-a84ee3591c8e@linaro.org>
+Content-Language: en-US
+From: Chris Lew <quic_clew@quicinc.com>
+In-Reply-To: <20240622-qcom-pd-mapper-v9-1-a84ee3591c8e@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: oAPi9LXyEJp1DIT4q6U5qsz6Whasfloe
+X-Proofpoint-ORIG-GUID: oAPi9LXyEJp1DIT4q6U5qsz6Whasfloe
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-24_21,2024-06-24_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1011
+ suspectscore=0 spamscore=0 lowpriorityscore=0 adultscore=0 mlxscore=0
+ malwarescore=0 priorityscore=1501 mlxlogscore=996 impostorscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406250005
 
-Document key for reporting the speed of unaligned vector accesses.
-The descriptions are the same as the scalar equivalent values.
 
-Signed-off-by: Jesse Taube <jesse@rivosinc.com>
----
-V1 -> V2:
-  - New patch
-V2 -> V3:
- - Specify access width
----
- Documentation/arch/riscv/hwprobe.rst | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
 
-diff --git a/Documentation/arch/riscv/hwprobe.rst b/Documentation/arch/riscv/hwprobe.rst
-index 7085a694b801..d102b4a16d55 100644
---- a/Documentation/arch/riscv/hwprobe.rst
-+++ b/Documentation/arch/riscv/hwprobe.rst
-@@ -236,3 +236,19 @@ The following keys are defined:
- 
- * :c:macro:`RISCV_HWPROBE_KEY_ZICBOZ_BLOCK_SIZE`: An unsigned int which
-   represents the size of the Zicboz block in bytes.
-+
-+* :c:macro:`RISCV_HWPROBE_KEY_VEC_MISALIGNED_PERF`: An enum value describing the
-+  performance of misaligned vector accesses on the selected set of processors.
-+
-+  * :c:macro:`RISCV_HWPROBE_VEC_MISALIGNED_UNKNOWN`: The performance of misaligned
-+    accesses is unknown.
-+
-+  * :c:macro:`RISCV_HWPROBE_VEC_MISALIGNED_SLOW`: 32bit misaligned accesses are slower
-+    than equivalent byte accesses.  Misaligned accesses may be supported
-+    directly in hardware, or trapped and emulated by software.
-+
-+  * :c:macro:`RISCV_HWPROBE_VEC_MISALIGNED_FAST`: 32bit misaligned accesses are faster
-+    than equivalent byte accesses.
-+
-+  * :c:macro:`RISCV_HWPROBE_VEC_MISALIGNED_UNSUPPORTED`: Misaligned accesses are
-+    not supported at all and will generate a misaligned address fault.
--- 
-2.45.2
+On 6/21/2024 3:03 PM, Dmitry Baryshkov wrote:
+> If the service locator server is restarted fast enough, the PDR can
+> rewrite locator_addr fields concurrently. Protect them by placing
+> modification of those fields under the main pdr->lock.
+> 
+> Fixes: fbe639b44a82 ("soc: qcom: Introduce Protection Domain Restart helpers")
+> Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8550-QRD
+> Tested-by: Steev Klimaszewski <steev@kali.org>
+> Tested-by: Alexey Minnekhanov <alexeymin@postmarketos.org>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
+Reviewed-by: Chris Lew <quic_clew@quicinc.com>
