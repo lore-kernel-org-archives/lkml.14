@@ -1,110 +1,123 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E24E17554D;
-	Tue, 25 Jun 2024 17:21:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7915917554D
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 17:22:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719336105; cv=none; b=Lw28Em1AXwQh9+Hy1PukwiQ021pLgiYy/pcSrMoGrXHqeid25OE9U/37yW8Zig8zwn2FkhVg6R3C3HbLeamzE3ak+acXdaZG114qgiH6AgSZ4Ojph3X7J/j7muX6U0vatqxPHzIjnhehWROrC1juNijNl4qppSHkWfsHc7aEHrw=
+	t=1719336151; cv=none; b=fbakXC60gmyC8EzFf3qO6Rjea42n1xv4astHsPXbXf+FQvc/PQt8ePyMdoLkQMig5zYxi8Pejwa0rG9Ewi3ySDppKWcRFdsxEw+ew5GjJzE+vxPxR/kl/nZkbcDFleqmnfnc/cEs9DklbUFCeGoMqbgPrrf+98u9FMEfLKeqmsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719336105; c=relaxed/simple;
-	bh=s8KbmMcm4KLYRhQkh2vJq5ToCwm0f8AYwsjrhCzNrxc=;
+	s=arc-20240116; t=1719336151; c=relaxed/simple;
+	bh=iR9SeV4pxy+WU0xDeL//qKWcrGtBQcHjBOf0EE9S0DY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G0gHbxIf92w6JCBXxh8blxFl7ygF4lOoZNoIcO6drIC39HueBqg8f4VfaxU4ex5cdoVI+jzPLr2m8n+Zs/+6wNUgNPhgalQ3+1vcysEhaGgXoW6SBXnzG+nC7JphAh2Dnt/G2WibZm6qzYX+E7S5/Dn//U8w6lTL0qZFW9U5hhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZO2LjxV5; arc=none smtp.client-ip=209.85.208.51
+	 To:Cc:Content-Type; b=Zry2HXdcwAPiEwtZq1yDrDPA0pFzbD2XcFZ4/D7UuZT0mRfBimWBgCFNqQPDxV/QsDrc1g3g2mRJuiK1M1LR0R0UcPSidOOLaLPPwSU09dwOJyfmoszUqoOyYKT7mhvnO4sNtAm8xTyu2PacAIHW4M9eJE0sAlpg5rkLc85TkvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LxoBkrMs; arc=none smtp.client-ip=209.85.210.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZO2LjxV5"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-57d046f4afdso3085746a12.1;
-        Tue, 25 Jun 2024 10:21:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LxoBkrMs"
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6fb840d8ffdso3092287a34.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 10:22:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719336103; x=1719940903; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719336149; x=1719940949; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PF8X3EVfaOc0m47BxMvYz7nb1AddbCK1NzyBkiDSsiE=;
-        b=ZO2LjxV5R5HCQX5oxnCcMyZB6f3Fr2P9J8ilPfL6g/DfwUBEzOQKeIdoBPvvxE4WiW
-         EwCk7XIHxZD4BTygb/WyTMx0pqeOa88V34yRw0JmitSM58dQz9uHkQsw7inC4Y87ReM3
-         kapX7O2BAfFq+Ua+0KCOWyONmkXRlhM/2bIzMabegkjyuGIAighxSWfaExbY02QLpXHt
-         O2Q/1fGR3NSsy6gLMX3o8RD8BpmbQ8FNEf6x9lMzToWP00xcDnMwqhMlTw+SMLRvDcYS
-         GHKGFvZSiYrrpz/Q9JKE/yboXdMSxnoYe4UbY4VkpL0+XBlZcmd9gNWKQdWyYa2OMn6f
-         b6SA==
+        bh=iR9SeV4pxy+WU0xDeL//qKWcrGtBQcHjBOf0EE9S0DY=;
+        b=LxoBkrMsn227BhYB9EtuOWRQ8nBcIDoLDbz7fccs6SfGdflBFQ/Pq6b1uES+2x1OZs
+         xoYSsOMpwzXCZ3blIFor8uQTeCVwrMaRGZnC5OLKwwKsBsEjatZhJ9cK1W+OW8sG9DlP
+         wh73OqaZAzcP+n7DclxM6Z5YgMoGOFmFqzOz3hIl/KXB1dQSEvaeYsDqoDMQzxf1S7Oi
+         ox52JiMjk1cAfL7cp9fg5qAvfLohN5UdgYO/pGwNaRLkRitn9XRotCbR3wsiHfiUMviz
+         5gHffZnwxk8PCcMZ4++el8IiF6g52TpCM433zWkXt9fA7D2aGJr5umYrqojpJSIFRzRJ
+         nLaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719336103; x=1719940903;
+        d=1e100.net; s=20230601; t=1719336149; x=1719940949;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PF8X3EVfaOc0m47BxMvYz7nb1AddbCK1NzyBkiDSsiE=;
-        b=cdjdF/pwJ8O71ejQno8AfSLkXmnxylMhyWLPdkeJ8WQvpdGnrkzc3vDPrhi/uLyzse
-         rmP8cGXip/uXylxF49amryrei7n0T7OjRZ7mZ8kbZyMhBYWTuxS6gWTQ4iaqK2vvp7jg
-         KLIf81CNfLNiV2goO21bwM+qScUJmmR/yDj86qUJ9kAxX1W67W55qQJh2cKs5c33q6e9
-         a2f5FDXusGq8hx9ZMQhUDTlC71c1CGUXMz60ht+ciqCa6Mhc842eSaqtKuK5Pb62Y2ji
-         0VXZ7h8cGJokhOGOt0IcPQD9bDpdPkh5KQdj2FygZpaalywbObv3hivOie7k9B9XengQ
-         oSMg==
-X-Forwarded-Encrypted: i=1; AJvYcCVUh9M2Y0o77AvYc7w0csWb5mlUD3Oc+z8xsEiMDXxy07LH8kD578nCrBmUIqFPKQQ0G2DHsycfeTVJY/fz7dEPI/FmVUiAwDinoELxvG5iPsXfo174BdEfwJoN+6PFxrg4ZOgq7g4b6aXCoueKFkqT5iv6J+iXxOuB5bx3jvXgBmKRmnv6N50=
-X-Gm-Message-State: AOJu0YwqI8HaKKwV/IA9Xf1RqCOJwMuEscUGi75U6OYd14UQFFsKUOs5
-	j9RK3vkprhvCvbE5bnrrunH/YqbedM8+MJowj1I3mFwVUJGY3N0KAEVpQWecTk8HKGwXie3CZ9t
-	V9dAwaUO05gungkpeUAkOvlhGeRE=
-X-Google-Smtp-Source: AGHT+IFeIuyJQKXKtU7lWnptJ+g4b8NhOfTie3eIuQqqinLgHNlVbZ9//tdM3Vu2irFhjN3um1vvb0W6+8VMOyR8YoE=
-X-Received: by 2002:a50:cdd2:0:b0:57c:5f77:1136 with SMTP id
- 4fb4d7f45d1cf-57d4bd8fcf3mr7296749a12.24.1719336102439; Tue, 25 Jun 2024
- 10:21:42 -0700 (PDT)
+        bh=iR9SeV4pxy+WU0xDeL//qKWcrGtBQcHjBOf0EE9S0DY=;
+        b=A9BBy5aRIIBWn3miYRo4csadA2SY1RkBVprRzKcJwHXKep8TF41yHPYeLg010+VfQc
+         n6FJUhgyglUKTiOB6/hjL1IRn07aVzFq6leZlCa0JlrjdSkJyvzheEbit+jvaJTPI4eO
+         EdH/JhrUX4otJLFnooULAUzQxZzO5RQBkXvTeVRsbscTOMtprAtB1MaQJqKkvkpxbfHA
+         4X7Qi1uGB4tLcokp5WoHFmN1qv6V8wo30hJZRPz3p1RvHeERwblgncO7VPUwmyNMYUjx
+         MqMzf+6QkaDOg9CRodR6lQ0ykq/lCl4u9z7zgkNTDxj6DnVsPNegNnzd3ZXVZfAyodXZ
+         j8kg==
+X-Forwarded-Encrypted: i=1; AJvYcCU3lnerx2Zkn4drDeffp+GyzDtlzf/u9apixkEIQxZKuyI2NI/8Fa8ZwkIBtPoM4Yqg5N0zEc7XmojFe1TVGzVTlODcwiu6u0zHp4iK
+X-Gm-Message-State: AOJu0YwkzJloTKsRjvLZ+vYe0T4bggqlfuUNxrk96lnVUT8IXKprpYoP
+	GMwkBh5K027OTDXSIDPPzpVXfOMAJ4JQv2iPbMlCT47A2FJaHxlQzYWPnrn1VCASvzMtH78hB/R
+	Rg2Rwotz/FkUIi2T4TNlBKoSZgYc=
+X-Google-Smtp-Source: AGHT+IGIX/OWWQ3YYXQRyGoc37njyeD/BNo5C5vYns2lrJ0wN7DO8N9M9ykspRsi7Y/SeC9w7j3kUtqSDrGCWEK1sac=
+X-Received: by 2002:a05:6830:310f:b0:6f9:710e:65a1 with SMTP id
+ 46e09a7af769-700af9b9389mr11300226a34.28.1719336149343; Tue, 25 Jun 2024
+ 10:22:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240605-topic-smem_speedbin-v2-0-8989d7e3d176@linaro.org> <20240605-topic-smem_speedbin-v2-4-8989d7e3d176@linaro.org>
-In-Reply-To: <20240605-topic-smem_speedbin-v2-4-8989d7e3d176@linaro.org>
-From: Rob Clark <robdclark@gmail.com>
-Date: Tue, 25 Jun 2024 10:21:30 -0700
-Message-ID: <CAF6AEGsqv3c8EfBK_CxP7Xgoxj5w6n+XdHcGMC8HxrC8C=D8qg@mail.gmail.com>
-Subject: Re: [PATCH v2 4/7] drm/msm/adreno: Add speedbin data for SM8550 / A740
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	Neil Armstrong <neil.armstrong@linaro.org>
+References: <20240621054658.1220796-1-alexs@kernel.org> <CAJD7tkbnmeVugfunffSovJf9FAgy9rhBVt_tx=nxUveLUfqVsA@mail.gmail.com>
+ <2e9ce344-e25f-41e0-8ca4-b6d80e095735@gmail.com> <CAJD7tkb=VNa6PLi_3gTvLbTFEnspmvQdScFf-CQ_KofdzXRKJQ@mail.gmail.com>
+In-Reply-To: <CAJD7tkb=VNa6PLi_3gTvLbTFEnspmvQdScFf-CQ_KofdzXRKJQ@mail.gmail.com>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Tue, 25 Jun 2024 10:22:18 -0700
+Message-ID: <CAKEwX=Mo+EaaxBYcLMTHYADB4WhqC3QmWV3WQ0h2KM491FRuQA@mail.gmail.com>
+Subject: Re: [PATCH 00/15] add zpdesc memory descriptor for zswap.zpool
+To: Yosry Ahmed <yosryahmed@google.com>
+Cc: Alex Shi <seakeel@gmail.com>, alexs@kernel.org, 
+	Vitaly Wool <vitaly.wool@konsulko.com>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, minchan@kernel.org, willy@infradead.org, 
+	senozhatsky@chromium.org, david@redhat.com, 42.hyeyoo@gmail.com, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 5, 2024 at 1:10=E2=80=AFPM Konrad Dybcio <konrad.dybcio@linaro.=
-org> wrote:
+On Tue, Jun 25, 2024 at 3:32=E2=80=AFAM Yosry Ahmed <yosryahmed@google.com>=
+ wrote:
 >
-> Add speebin data for A740, as found on SM8550 and derivative SoCs.
+> On Tue, Jun 25, 2024 at 1:11=E2=80=AFAM Alex Shi <seakeel@gmail.com> wrot=
+e:
+> >
+> > Thanks a lot for the info and comments! It's my stupid w/o checking the=
+ email list before work on it.
+> > Anyway don't know if z3fold would be removed, jut left this tested patc=
+hset here if someone need it.
 >
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> ---
->  drivers/gpu/drm/msm/adreno/adreno_device.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> It's partially our fault for leaving z3fold knowing that it is headed
+> toward deprecation/removal. FWIW, I tried to remove it or mark it as
+> deprecated, but there was some resistance :/
 >
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm=
-/msm/adreno/adreno_device.c
-> index 901ef767e491..e00eef8099ae 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_device.c
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
-> @@ -570,6 +570,10 @@ static const struct adreno_info gpulist[] =3D {
->                 .zapfw =3D "a740_zap.mdt",
->                 .hwcg =3D a740_hwcg,
->                 .address_space_size =3D SZ_16G,
-> +               .speedbins =3D ADRENO_SPEEDBINS(
-> +                       { ADRENO_SKU_ID(SOCINFO_FC_AC), 0 },
-> +                       { ADRENO_SKU_ID(SOCINFO_FC_AF), 0 },
+Our apologies, Alex. Thank you for your contribution regardless!
 
-Did you really mean for these both to map to the same speedbin?
+Regarding zbud and z3fold, this is the second time this conversation
+has come up within a week or so. Chengming was trying to revert the
+multiple zpool changes. zsmalloc (after we re-introduce the class
+locks) does not seem to regress (at least based on benchmarking), but
+z3fold and zbud suffer. I think we are starting to pay the price of
+maintaining z3fold and zbud:
 
-> +               ),
->         }, {
->                 .chip_ids =3D ADRENO_CHIP_IDS(0x43051401), /* "C520v2" */
->                 .family =3D ADRENO_7XX_GEN3,
->
-> --
-> 2.43.0
->
+1. Future improvement to related subsystems now hurts z3fold.
+Developers/maintainers have to spend extra mental capacity to consider
+this, and users could potentially see worse performance if they select
+z3fold/zbud unknowingly.
+
+2. Contributors are confused on where they should spend their effort
+on improving.
+
+Can we at least have a roadmap for deprecating these 2? Something
+along the line of:
+
+1. Deprecate either zbud or z3fold. We do not really need both of them.
+
+2. Make zsmalloc independent of MMU, somehow (IIRC, compaction was one
+reason right? maybe making zsmalloc compaction dependent on MMU
+availability?).
+
+3. Deprecate the remaining one - zsmalloc can be used in all deployments no=
+w.
+
+4. (Optional) Maybe adding another allocator for the edge cases that
+zsmalloc does not handle well? I'd need to see numbers to be convinced
+that this is the case. I think I saw somewhere that Vitaly was working
+on zblock - look forward to seeing this :)
