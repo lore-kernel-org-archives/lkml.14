@@ -1,167 +1,127 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EA916D4C8
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 19:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39AE143882;
+	Tue, 25 Jun 2024 19:40:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719344300; cv=none; b=WxyGkbPYnBF5XWFUSeIK6KRK0hyOiZtH8yl9d6nGiuoP9ODSYCetvPv3wlr2ktQB4RWPCXODDCA0I+XZbcqjHIP+Ipqdj3W9BRLgnTWydcmIeZw672zgTx4P1YuhL6vT6GxNOizH/J+8dW4kDN6+s39b3hb73kUypelfjR7X0FY=
+	t=1719344455; cv=none; b=MehKTwTaVY89eKTmGvorE3cuJFuBCzCmu9xO3Ra7TeAUJKk+MC04BP9kSJJmPzaIdyv4FzNa/44nYe+nT49iNa+rz+PKgzkaDTc1Dr/KAxBOOTMRTjxoDwZIdhD6LCHIzhhzdjT4zbnfc7lbFtSx7BxHZ7tNB0mxreuQ3+aHG5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719344300; c=relaxed/simple;
-	bh=5OoNLBK/a2S4/Z4kU9kjLu5JvVNL+ahDJ+eUyExuxGg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rw/Bwv3/ulX4YIGrH3Pm7AkiG/9bB2RxDJ0Nt9IBnEi/7KJI37+74625fnt3VAMCQt0JA3sjZZVflMPzqI6+djZ8JHQ2il+d+/s5iKj6UvKiY34bjASUNVkFS+6vFZl2qxPDq2UyRyrkrE84kAVQTPzttFPndZogneh3p9OZZMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ICaY5V/A; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719344455; c=relaxed/simple;
+	bh=fMMIPl+SPYzwOMoL8dqMiSlysIzgNns93YOy0fa+Fjw=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=Pi/cubVdu2RDJMfThvGTLcppY5Cpe61PxtDOdyKtFsQmvC9g2KniqYyvqXn5sXFAI3x/wI7BnYLp/2oheiMlAzXCVUKOeQPExlCFhy+n2JWOpovTC6VW+V6JGrhXDpDrapD1z6qmC3iHsLraHeUfPE2W40T5yWi6RXt7w5z+emU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tFrP/vLD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aw2oLBI5; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ICaY5V/A"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-444af5c09e8so39766421cf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 12:38:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719344298; x=1719949098; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i+5LEc+OBSMgdXBP2ouh0qVEc/wr3Xl6YlFgRK9NbOk=;
-        b=ICaY5V/AH45KLwaKr4Gw3S7ebr2lOeuLcaAqsxKTfy2EQQwG2BonlFDaWS+/FLv78O
-         2YTPCPPsmv3wcnKMZT8KVOKQYhV/eMSFn8IroQLYdje4Feyn8iRLQaN+MzOouaBa7eve
-         Mo9D7rvjG5YR0m9Lwq1kAI+ShbgWp+1HJgsiE45MPCXEX/JE/NhptFYqKHy0DOLrhYbh
-         v8ctqIfjEJEEnBof4B8+yRBfJyHRTKSpw6Fzgjh+wkUsxTD4srjaKAtGsvXR1a+WR7Z7
-         /DHF2ZOPRqaSdA0PQjI/e/00wwjbdGPZYOyX8zbS6ltrNJxdE/OiUNwZCNI78XOpGOzd
-         LCYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719344298; x=1719949098;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=i+5LEc+OBSMgdXBP2ouh0qVEc/wr3Xl6YlFgRK9NbOk=;
-        b=MNInXCS3BKgZtkN2MdLyI7e5jluwoybrE4N38xh+RSOKs8C4Xb9sfD3AmHUBey4yiR
-         gNTsY79GsLQpd6W0gdcMW5LmpIndWEZOBKtm1gSB0EZVx491TtWPYQ46S/UkXIDNKKij
-         /wsGfCY93Uu04x6AQTS447M8rRtiXIC2LctbuLCpfCNupRXuyxP0wTG/joNmmcjtOeJf
-         1+pW0pIev2yKKTfJyFf41T9WyO8HuejnnLX/EvUydHv90WCIohhIMgrpjbc+S6KspMbh
-         aztE0hYrJbW9wTcfmMxqTU4nduftI+GIYwFhwgt43MsVeV6oQSiMtux9wDpvypVhNo9T
-         KTPw==
-X-Forwarded-Encrypted: i=1; AJvYcCUOPXgSGqq+6XuNSavwUy8bhp5rERREoGeXIkiDh25zIbBExohgu/zLIcHStJghIqkSPeMmWVWXyOw0lkxgVf662xF4Mp8n1MrcWXST
-X-Gm-Message-State: AOJu0YzNWkqHQQLrmP8SU3A30ckcKPdvlTPQ5VgsWBe8OEaJ2VtqUfbw
-	3OfSBssTm9Rzo6hM98ky2OdHZu7Mi99EPnWa0U+5+FJOp/8iFWHn
-X-Google-Smtp-Source: AGHT+IFbCi7Uf/6gdBEP8f6CjQFm5n1RFQWfULXraKEpnOztYBZSwJjT0NVDXU7RWJm10T8t8xhBsA==
-X-Received: by 2002:ac8:5dd4:0:b0:440:1c16:547f with SMTP id d75a77b69052e-444d3c0aed9mr122255401cf.41.1719344297880;
-        Tue, 25 Jun 2024 12:38:17 -0700 (PDT)
-Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-444c2c3e5b5sm58778321cf.75.2024.06.25.12.38.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 12:38:17 -0700 (PDT)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id CEAD91200069;
-	Tue, 25 Jun 2024 15:38:16 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Tue, 25 Jun 2024 15:38:16 -0400
-X-ME-Sender: <xms:qBx7ZmyTkk67Ybc-mSynYuPRafaBlYzIiXJxfzwE7nF7PPVCdj_ylg>
-    <xme:qBx7ZiTpYfyPcuAFK-R_tMwgZdP2BdaQibXg1Xs_iFr3apdM2RHCtwiWh0P7YrQgM
-    lAu4JODeRqLygB0hA>
-X-ME-Received: <xmr:qBx7ZoX0tom6ICw_nxCdLafA-mSLBl1GPhuLdxgTGP65nBZlAX4a6WiW-QlDOg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrtddtgddutdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhu
-    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
-    htthgvrhhnpeehudfgudffffetuedtvdehueevledvhfelleeivedtgeeuhfegueeviedu
-    ffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    gsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdei
-    gedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfih
-    igmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:qBx7ZsgGFQjaQ_uS7IvnQfBSOMBV1bTbl2UcMlzij-JIDaYF6Wk_hA>
-    <xmx:qBx7ZoBXr0HfsyRoPj6ULAHE78TcxIkW3rXl4TyM8oFtDtz3HNwlDA>
-    <xmx:qBx7ZtLdK6sK_1NQL89itZCYgN0x5CPLUv7H2Oso_WU2cSUPK7ywoQ>
-    <xmx:qBx7ZvCvLVeWtU_Et0OSkqB3S4p-2IWVzblvlYjZc3OAmgtmzyp9uA>
-    <xmx:qBx7ZgxWdoTdHTHPNc3qnI-U0B2ElqEa1H16-A1UZoboanNBZlU6KeVj>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 25 Jun 2024 15:38:16 -0400 (EDT)
-Date: Tue, 25 Jun 2024 12:37:39 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Dave Hansen <dave.hansen@intel.com>,
-	Alexander Potapenko <glider@google.com>, elver@google.com,
-	dvyukov@google.com, dave.hansen@linux.intel.com,
-	peterz@infradead.org, akpm@linux-foundation.org, x86@kernel.org,
-	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH 2/3] lib/Kconfig.debug: disable LOCK_DEBUGGING_SUPPORT
- under KMSAN
-Message-ID: <Znscgx8ssMlYUF5R@boqun-archlinux>
-References: <20240621094901.1360454-1-glider@google.com>
- <20240621094901.1360454-2-glider@google.com>
- <5a38bded-9723-4811-83b5-14e2312ee75d@intel.com>
- <ZnsRq7RNLMnZsr6S@boqun-archlinux>
- <3748b5db-6f92-41f8-a86d-ed0e73221028@paulmck-laptop>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tFrP/vLD";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aw2oLBI5"
+Date: Tue, 25 Jun 2024 19:40:51 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1719344451;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=ehh6XZSBVUDBjoPODQn4J/hu5q+WHdb+JvpPc9J45nI=;
+	b=tFrP/vLDkyXvtUA2yHOIw2WCQDMGhYrvx9BxZc5q0l66+3TNHZNEJ3ISvfEpKHH+Nazg6f
+	q/nHtQXpcbNeaIgsvrk3M5EHbPhwWcZ4/JJoFMB3oit9esL+qYqwbdBVIHY5MX/qb+z6r8
+	oR9Rx38ax4eleM2AliICfWMtzkESLJW+G3k3Ame+j/Qax3RTXPAVqSBgDYlwj+rpL8cHII
+	ovi38J8ayPmc6yPDG8ZhltuwuAKNkxESPv/qllVe0cDHfkZX7qTkZjm1tFxPs2ucRhqrwa
+	zi6nwYhk4fMN0JLfun/+uzcQuYjZoCFxW64qm6jH9FrtOnIHMzlSavAa5kOYmQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1719344451;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=ehh6XZSBVUDBjoPODQn4J/hu5q+WHdb+JvpPc9J45nI=;
+	b=aw2oLBI5ukAUjNotNIb9utc+0DXetqdN0jSzfyqQzEGTllJLhxBCt2Y1uWu3eax7ik+U+0
+	F8g7p5hb2OBooKDQ==
+From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: irq/core] Revert "irqchip/dw-apb-ictl: Support building as module"
+Cc: Mark Brown <broonie@kernel.org>, kernel test robot <lkp@intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Jisheng Zhang <jszhang@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org, maz@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3748b5db-6f92-41f8-a86d-ed0e73221028@paulmck-laptop>
+Message-ID: <171934445127.2215.3526597621538197010.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 25, 2024 at 12:06:52PM -0700, Paul E. McKenney wrote:
-> On Tue, Jun 25, 2024 at 11:51:23AM -0700, Boqun Feng wrote:
-> > On Fri, Jun 21, 2024 at 09:23:25AM -0700, Dave Hansen wrote:
-> > > On 6/21/24 02:49, Alexander Potapenko wrote:
-> > > >  config LOCK_DEBUGGING_SUPPORT
-> > > >  	bool
-> > > > -	depends on TRACE_IRQFLAGS_SUPPORT && STACKTRACE_SUPPORT && LOCKDEP_SUPPORT
-> > > > +	depends on TRACE_IRQFLAGS_SUPPORT && STACKTRACE_SUPPORT && LOCKDEP_SUPPORT && !KMSAN
-> > > >  	default y
-> > > 
-> > > This kinda stinks.  Practically, it'll mean that anyone turning on KMSAN
-> > > will accidentally turn off lockdep.  That's really nasty, especially for
-> > > folks who are turning on debug options left and right to track down
-> > > nasty bugs.
-> > > 
-> > > I'd *MUCH* rather hide KMSAN:
-> > > 
-> > > config KMSAN
-> > >         bool "KMSAN: detector of uninitialized values use"
-> > >         depends on HAVE_ARCH_KMSAN && HAVE_KMSAN_COMPILER
-> > >         depends on DEBUG_KERNEL && !KASAN && !KCSAN
-> > >         depends on !PREEMPT_RT
-> > > +	depends on !LOCKDEP
-> > > 
-> > > Because, frankly, lockdep is way more important than KMSAN.
-> > > 
-> > > But ideally, we'd allow them to coexist somehow.  Have we even discussed
-> > > the problem with the lockdep folks?  For instance, I'd much rather have
-> > > a relaxed lockdep with no checking in pfn_valid() than no lockdep at all.
-> > 
-> > The only locks used in pfn_valid() are rcu_read_lock_sched(), right? If
-> > so, could you try (don't tell Paul ;-)) replace rcu_read_lock_sched()
-> > with preempt_disable() and rcu_read_unlock_sched() with
-> > preempt_enable()? That would avoid calling into lockdep. If that works
-> > for KMSAN, we can either have a special rcu_read_lock_sched() or call
-> > lockdep_recursion_inc() in instrumented pfn_valid() to disable lockdep
-> > temporarily.
-> > 
-> > [Cc Paul]
-> 
-> Don't tell me what?  ;-)
-> 
+The following commit has been merged into the irq/core branch of tip:
 
-Turn out that telling you is a good idea ;-)
+Commit-ID:     be5e5f3a1120bada0cff1bc84c2a1805da308f6e
+Gitweb:        https://git.kernel.org/tip/be5e5f3a1120bada0cff1bc84c2a1805da308f6e
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Tue, 25 Jun 2024 21:30:48 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 25 Jun 2024 21:30:48 +02:00
 
-> An alternative is to use rcu_read_lock_sched_notrace() and
-> rcu_read_unlock_sched_notrace().  If you really want to use
+Revert "irqchip/dw-apb-ictl: Support building as module"
 
-Yes, I think this is better than what I proposed.
+This reverts commit 7cc4f309c933ec5d64eea31066fe86bbf9e48819.
 
-Regards,
-Boqun
+Causes build fails.
 
-> preempt_disable() and preempt_enable() instead, you will likely want
-> the _notrace() variants.
-> 
-> 							Thanx, Paul
+Reported-by: Mark Brown <broonie@kernel.org>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jisheng Zhang <jszhang@kernel.org>
+https://lore.kernel.org/oe-kbuild-all/202406250214.WZEjWnnU-lkp@intel.com/
+---
+ drivers/irqchip/Kconfig           |  2 +-
+ drivers/irqchip/irq-dw-apb-ictl.c | 13 +++----------
+ 2 files changed, 4 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index cbf49b6..344c484 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -145,7 +145,7 @@ config DAVINCI_CP_INTC
+ 	select IRQ_DOMAIN
+ 
+ config DW_APB_ICTL
+-	tristate "DesignWare APB Interrupt Controller"
++	bool
+ 	select GENERIC_IRQ_CHIP
+ 	select IRQ_DOMAIN_HIERARCHY
+ 
+diff --git a/drivers/irqchip/irq-dw-apb-ictl.c b/drivers/irqchip/irq-dw-apb-ictl.c
+index 5eda6c4..d5c1c75 100644
+--- a/drivers/irqchip/irq-dw-apb-ictl.c
++++ b/drivers/irqchip/irq-dw-apb-ictl.c
+@@ -122,7 +122,7 @@ static int __init dw_apb_ictl_init(struct device_node *np,
+ 	int ret, nrirqs, parent_irq, i;
+ 	u32 reg;
+ 
+-	if (!parent && IS_BUILTIN(CONFIG_DW_APB_ICTL)) {
++	if (!parent) {
+ 		/* Used as the primary interrupt controller */
+ 		parent_irq = 0;
+ 		domain_ops = &dw_apb_ictl_irq_domain_ops;
+@@ -214,12 +214,5 @@ err_release:
+ 	release_mem_region(r.start, resource_size(&r));
+ 	return ret;
+ }
+-#if IS_BUILTIN(CONFIG_DW_APB_ICTL)
+-IRQCHIP_DECLARE(dw_apb_ictl, "snps,dw-apb-ictl", dw_apb_ictl_init);
+-#else
+-IRQCHIP_PLATFORM_DRIVER_BEGIN(dw_apb_ictl)
+-IRQCHIP_MATCH("snps,dw-apb-ictl", dw_apb_ictl_init)
+-IRQCHIP_PLATFORM_DRIVER_END(dw_apb_ictl)
+-MODULE_DESCRIPTION("DesignWare APB Interrupt Controller");
+-MODULE_LICENSE("GPL v2");
+-#endif
++IRQCHIP_DECLARE(dw_apb_ictl,
++		"snps,dw-apb-ictl", dw_apb_ictl_init);
