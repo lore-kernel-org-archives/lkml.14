@@ -1,100 +1,132 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7747453370;
-	Tue, 25 Jun 2024 10:52:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F7814A4D4
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 10:54:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719312776; cv=none; b=XEPuIQfrFrU/CXXxOu2bjeTp+FvuSYkKD/E3RUzXTOJcbYvtnGBKeUB3hJO06s+msXEoUwx63p5n+C1pg2vKRTBDiaHcF1UrR4JRv2/yi3L+VoqVW2KCRhc8eCNlUlKcHUkUJ7BfyMg9qjwESSluwfjt9hYbmF82z15wvjur4so=
+	t=1719312871; cv=none; b=P7v8o7AUxYc5z3xZGmV6uJcO/4IPdhY5Md6w49PUCPxr0IMRGah7e3oEDsBm5HSZG8dllEO72fT27RbNvix/RdUQ8PEnL9fh3ploz5/2vsJ5wzBJiDsvz/Hwk8A3yqHcCSdS9QcpBf2YLXcSrbfJugVvDolxTez0byA4I/GvNeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719312776; c=relaxed/simple;
-	bh=vFD+rd/N0ZO2xUJ+4r9RQ68ijp1ed6+yEhJXQ52MV+s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dy9fYsp7PZh7OEtqNSuRo2jk1dDVpKPwxUTxXxsW73lK83oZXipjxbXhHd4ewzxHNwhN1mH5uvfXypY78YY/8xEgIbza1/fOvQYFJr4daGhY11BZJfKrQsrqdtSN1/iSOBd9b4vQszVRMQpCtD1Z77QD8xzbNpLW2FHG/RxyLUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JJqFxLvo; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719312871; c=relaxed/simple;
+	bh=iqAJT77/5nQtnfkRkQeaCSfi25BV9kRWodYrzB/wJ/8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l+VgKkaV2Oy+3KiSqQBMOS4gekCbFu5U80x/u9oeyirIwq9TmxEfDrz2xjOw3HkT9FD4Jf9pDQoBP8fEqp+u09aiEgfa5XoEtaPLVkYyE1gxl1PyE3jSe2vAuiq2fmw47r3i6Lc5/v0o+IlbBejqoIfA6VhQqfLWs8RpSIF82Gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DFuY1y9T; arc=none smtp.client-ip=209.85.167.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JJqFxLvo"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-57d2fc03740so3964019a12.0;
-        Tue, 25 Jun 2024 03:52:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DFuY1y9T"
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3d55cfebcc5so87209b6e.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 03:54:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719312773; x=1719917573; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vFD+rd/N0ZO2xUJ+4r9RQ68ijp1ed6+yEhJXQ52MV+s=;
-        b=JJqFxLvoKlMYdq8pVMpqudRhAmpGddWaJYBeGUaslDHMARpXs08qA/e9zVHGVrveh1
-         RfG7PI+OHPQ46kNc7HbrdVUWIUVcqCgJy41WLPm09uxkr7/ePQ09EjyGV+Ek5M1zPXqp
-         Mt2QEScbshMqKi1xVltg+9pStqcDdU4yB9Z4jLr5rbjAnGu9E6Dn8HtqRHoMR7eSRq+t
-         ASMCtZXK2uWcahcgzKJsLjW6XrlUZIKxUQCLgiT8QijwNgCjfU/2pfW5l5YK8WTNbgLw
-         7yXOEE+j5G9aTjjVKn6wH2Y69GVdyLiQYFYoY4s/iuGh4GDBiTC+ucJoW/EDlpCXVUcO
-         6nYA==
+        d=linaro.org; s=google; t=1719312868; x=1719917668; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=S+cZWGB+2jcFhszdKI8ASmXDRJENXojOKhli/2LXpnM=;
+        b=DFuY1y9Tq8fED3wRUMOGD4eTRf1o0jrMFlwtxpiL2iMmHy8CKOUbe8Qnvt/FVzdOuC
+         /UY4vRozN64fI3hpRBVU6OpbIGVayayzwICgA0p8Sl92dN0NQ85D1gbzz3tj44dP31hv
+         Gmq/u3ms+w+bEaTzeKMmnz//UExcYTEUYCi7TKEGv9wLOqD60ci18GQ7QVqcyr6HUNFs
+         eufgq46+NswKdfCJyTUdnM/8Rdihk+AhrONHkuCVDtm1V6e86YLvf+L0nBEVr33g+3Fw
+         RrZ2ztisfaRy6xnbCXE/aN1d24ACInoAtEWCljK11GYepZo8MtttV4XbhoVfeFBw98+8
+         PtfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719312773; x=1719917573;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vFD+rd/N0ZO2xUJ+4r9RQ68ijp1ed6+yEhJXQ52MV+s=;
-        b=DWs5Pg9+mM+0wQGX8cV5TX8s2OZrAixivAUDH3Y/mg2LLIKPJ+uD4eMoubqzniungh
-         Y100cTZGMP8zqNsqBYzjrHo1l92f+S5fFzE/dBVL66E9TKvAgQUu/oHmlrEFwI9zEiiH
-         KZMSmu7SxrSHHL1aPHH3BaqIIrosXziC/MS+6u7GldXlAXUpjWaTGnpgwkM3goggEphC
-         w1Fqc2M0YS4x/UuI1z2pCef5lvySDqW3X16T2ZHrAiNVHpu4FsRicrQi9U+peK3Ek1zD
-         yu2rxPrel6RJpjLSd+fOUE+dzceUN9FB84l+y/POlmLlFz/dfcLGtIOCZonMQ62//tpk
-         AnYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVQJXsmI0YblOqJQ3F08NWRGUI6MSVNd7uWNutBTLSu+Ev8etVI+DRcO16fOHpI/5AWMmvhXuDur7OpANAvjNeS8y/hpIR0ghmMwPmm4ms9rBZI/xRq6KmZGENwjqxbVzzNTLaRfCaVZlyh5rFt6+Sxff1Pg/bdwZM8opJDe/LovFqSGOpbfcA=
-X-Gm-Message-State: AOJu0Yy11jQD8vPzxl8mX1pxP6U3gms5V0Ows4KomTgxYz+0EXN+t4vv
-	tDuYBjEwzQQ2SltYtYPVo4O7Wm7sooRqaGxQX4pXdF0HhtawcJmzbA2wICJ/dryGpHKA8tCvUU2
-	IX5N6BwTz2kavxkzL0JxS/lZNy4w=
-X-Google-Smtp-Source: AGHT+IGTa887v3D8eziyl3LcY5wiXy2Tj8wU0X39RaxGrXENpYI5ac4WWgcS5FyLRWZK5g48wFj25j5Eqcu4vUAoCQg=
-X-Received: by 2002:a50:bac5:0:b0:57d:c8:d295 with SMTP id 4fb4d7f45d1cf-57d4bd566e6mr3835656a12.4.1719312772630;
- Tue, 25 Jun 2024 03:52:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719312868; x=1719917668;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S+cZWGB+2jcFhszdKI8ASmXDRJENXojOKhli/2LXpnM=;
+        b=NdMm0Thh/Rzlm3tUp2YRDs+Z/fMJ/Rqr3fBazXRT2pDcwqmMIznRhOQRf4YnQoyMPm
+         CvohBRDx3CUlaBKCr9TRdHvERCo8J+hMNCp3oUcSJXw9XLMZN6fk1oogITbLsh1KoJzO
+         UxPa177BXVGrmT3lI/F0pkx9LRr+O2iIldgMFN3ifHjcA7OaRXs8Rw3x65DIQObOxUwn
+         VoSzInloRPcuOLEWw+BBo855D+cdi+TVBlKJbZbvk/cImS3beY6+Ag1OwKvySO5m0YCc
+         uXFjjcH1obLAPFTzQXu/aUyNAXNUN7XyQdXMZEFOb/InzYuPWSYLmCZ4e6Lty6G6C2ED
+         H1nw==
+X-Forwarded-Encrypted: i=1; AJvYcCV//F7zve5bmPRDb8d7+BZiRfXVx07ulCjL4EaYlRODzBUiINbC2vF8pu91St1u0m2/NVMozIaPVmkM6bswH5oeQUo0dVr9twwekA2N
+X-Gm-Message-State: AOJu0YxuPmihTA0UyvxjejfOd8zSS+MxrCejwDXdKG/hhMkSj43q6h6M
+	KhQOP/y8hkKEB0t7J4ZkmtWgG104w2tQe6Qv+aWTHaqB3kZ5yiFoMPpiOIhs2OI=
+X-Google-Smtp-Source: AGHT+IHkmTwzgMVZ85oOIGg7bkGQn9jD0qlRj9ZqyfrOw1uen/yda4dypNC/fa/tx1p5pHhoPulz0A==
+X-Received: by 2002:a05:6870:9720:b0:24c:afec:f1c with SMTP id 586e51a60fabf-25d06eb4fddmr6882648fac.48.1719312868320;
+        Tue, 25 Jun 2024 03:54:28 -0700 (PDT)
+Received: from localhost ([122.172.82.13])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7067f2b97dcsm3924658b3a.129.2024.06.25.03.54.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jun 2024 03:54:27 -0700 (PDT)
+Date: Tue, 25 Jun 2024 16:24:25 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>, Nikunj Kela <nkela@quicinc.com>,
+	Prasad Sodagudi <psodagud@quicinc.com>, linux-pm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-tegra@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] OPP: Fix support for required OPPs for multiple PM
+ domains
+Message-ID: <20240625105425.pkociumt4biv4j36@vireshk-i7>
+References: <20240618155013.323322-1-ulf.hansson@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240624085037.33442-2-xry111@xry111.site> <e2lv3qamggymdjqzujvyhsd2q34jy5tryniac7d446tlaebqwy@5x4zn7z4d3xz>
- <20240625-kindisch-ausgibt-b4feede36bab@brauner> <30a5fe67500c40a4d5f9516e9b549ec796faac74.camel@xry111.site>
-In-Reply-To: <30a5fe67500c40a4d5f9516e9b549ec796faac74.camel@xry111.site>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Tue, 25 Jun 2024 12:52:39 +0200
-Message-ID: <CAGudoHEDKvP926Q6tX1Te_WW9_OTLUoDRTO3nCO3LHo6HJyLpQ@mail.gmail.com>
-Subject: Re: [PATCH v2] vfs: Shortcut AT_EMPTY_PATH early for statx, and add
- AT_NO_PATH for statx and fstatat
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Christian Brauner <brauner@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Alejandro Colomar <alx@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@loongson.cn>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Icenowy Zheng <uwu@icenowy.me>, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240618155013.323322-1-ulf.hansson@linaro.org>
 
-On Tue, Jun 25, 2024 at 12:51=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wro=
-te:
->
-> On Tue, 2024-06-25 at 10:50 +0200, Christian Brauner wrote:
-> > No, let's not waste AT_* flag space in fear of some hypothetical
-> > breakage. Let's try it cleanly first and make AT_EMPTY_PATH work with
-> > NULL paths.
-> >
-> > Note, I started working on this (checks ...) 30th April but then some
-> > other work came up and I never got back to it (Sorry, Linus). I pushed
-> > the branch to #vfs.empty.path now. The top three commits was what I had
-> > started doing.
-> >
-> > It was based on a new vfs_empty_path() helper so we could reuse it for
-> > other system calls as well.
->
-> If I understand correctly, I should submit a patch against
-> vfs.empty.path making statx(fd, NULL, AT_EMPTY_PATH) work then?
->
+On 18-06-24, 17:50, Ulf Hansson wrote:
+> In _set_opp() we are normally bailing out when trying to set an OPP that is
+> the current one. This make perfect sense, but becomes a problem when
+> _set_required_opps() calls it recursively.
+> 
+> More precisely, when a required OPP is being shared by multiple PM domains,
+> we end up skipping to request the corresponding performance-state for all
+> of the PM domains, but the first one. Let's fix the problem, by calling
+> _set_opp_level() from _set_required_opps() instead.
+> 
+> Fixes: e37440e7e2c2 ("OPP: Call dev_pm_opp_set_opp() for required OPPs")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> ---
+>  drivers/opp/core.c | 47 +++++++++++++++++++++++-----------------------
+>  1 file changed, 24 insertions(+), 23 deletions(-)
+ 
+>  /* This is only called for PM domain for now */
+>  static int _set_required_opps(struct device *dev, struct opp_table *opp_table,
+>  			      struct dev_pm_opp *opp, bool up)
+> @@ -1091,7 +1113,8 @@ static int _set_required_opps(struct device *dev, struct opp_table *opp_table,
+>  		if (devs[index]) {
+>  			required_opp = opp ? opp->required_opps[index] : NULL;
+>  
+> -			ret = dev_pm_opp_set_opp(devs[index], required_opp);
+> +			ret = _set_opp_level(devs[index], opp_table,
+> +					     required_opp);
 
-I just sorted this out, will be sending a patchset shortly.
+No, we won't be doing this I guess. Its like going back instead of
+moving forward :)
 
+The required OPPs is not just a performance domain thing, but
+specially with devs[] here, it can be used to set OPP for any device
+type and so dev_pm_opp_set_opp() is the right call here.
 
---=20
-Mateusz Guzik <mjguzik gmail.com>
+Coming back to the problem you are pointing to, I am not very clear of
+the whole picture here. Can you please help me get some details on
+that ?
+
+From what I understand, you have a device which has multiple power
+domains. Now all these power domains share the same OPP table in the
+device tree (i.e. to avoid duplication of tables only). Is that right
+?
+
+Even if in DT we have the same OPP table for all the domains, the OPP
+core will have separate OPP tables structures (as the domains aren't
+connected). And these OPP tables will have their own `current_opp`
+fields and so we shouldn't really bail out earlier.
+
+Maybe there is a bug somewhere that is causing it. Maybe I can look at
+the DT to find the issue ? (Hint: The OPP table shouldn't have the
+`shared` flag set).
+
+Maybe I completely misunderstood the whole thing :)
+
+-- 
+viresh
