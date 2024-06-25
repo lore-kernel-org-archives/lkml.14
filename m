@@ -1,117 +1,210 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B3B178371
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 18:12:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD86143882;
+	Tue, 25 Jun 2024 18:13:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719339157; cv=none; b=eMrTsjE4Kvs9pkSigSIt7n/5v1IwmHmcAepSePf0r+CgIv+X9zfBsCz8CPC8b1KDcKlr7JNZQvRtEgYTshgLjf38Uf6pJT68I2jnM/hVCfNuOQnaSZ/sIWhhhk16YUY13pzF9BQYrZapYdrcjJnIlKtmTGRmwyjy3A2iX4Vubi4=
+	t=1719339223; cv=none; b=fcNbWuIWarWv+xaD4ckEvdWgvvfDFRS9u2i3jK7iw/V/FyF5EuBHhpX84iVOVbKzm5zscOE6MP7y/ZPJbbuZHgxI/mE/BS18ITUZyHBPeh3Ss5oTBnnhboYB9UonzJROlGZVfga6bJTITCepSJPagIy/FqT/50NsbknSzqHO9PY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719339157; c=relaxed/simple;
-	bh=nGXNe+PE/VAVWq1alIdYYv4xLsJd7LfebmRVN6KSWFw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b/jIGwC6xfcBF3q0wOLL+C2ZTep9eA9dHGKDEO4HJqDyLs3iL/7GufgeMZhFsnmzEyL84SPPDfxzpKEplnQuf87gX4FS5erZnB1CYQ/eY15d1BiwAfnAz6GX8khfz/cMLdEI9GHwZYf8IwO2qjELn+YdV6IzMQZlqEs7yOezPyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=g9FOoVxl; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1719339223; c=relaxed/simple;
+	bh=jUjWLcpQRnu/rEeeBv5nOxk8R/BU7l4PVA+gs/H5+2I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RxELwUajPONZByMbuDn5o8AHCOKfjiWQMLl7b1mA/KgCGyQLjS3PRTjPVRHodDPgkY2DLtnwPHlrMGJn5bt1kzWiWBN8PN6HnsmSsMC2KDLv4OrrRi1GaDPx2YYuFk9mJ8U/TDMGcjpNR405mlQCqYaot2vUL+y8HGpricBQKhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gOF23g9A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="g9FOoVxl"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2ec6635aa43so19833241fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 11:12:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1719339154; x=1719943954; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=p6VwDOaqwr4wbQW4OWCZIaWgizSIAoa+poBbII7mCEk=;
-        b=g9FOoVxlQbVOwJuCFHrNjo5ibmQE8VpZwDXIk2GAsmi9AmsBHW1lTMzK0rTB+T/UtO
-         FsadCM6oCOyEzWCXv9p6e+B+8yvX5l9zqBEbuoEtCarUdX5XD2HANz+GwS0fNXxDOS/i
-         05UyNKOwUc5R8piqCjn8zLC8zsHnfQzTsEl9g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719339154; x=1719943954;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=p6VwDOaqwr4wbQW4OWCZIaWgizSIAoa+poBbII7mCEk=;
-        b=nRW4ia94MH/w/h+ztXA0T9Dk2Azzdqr3OVIUBS63RUxbRQ201pM3YzorJiY8ILyLzF
-         UM0hMl3eA7g2qkmYhCwPILDEM+oqE0CGBwQBDGl1NVLT8ekZBWDe1Hhrk1zVPGmuKIOg
-         BUzq/Y/wXZMqYfP/RYN4nsMukSpQMvEIARdBW/VdqUHzYHjHmIBgof4nV7pw9+MrTZfq
-         16CiIMEeU7I6j4M4K8YsPgcutD5+sA+qCW7G5qOETbmcy6FAB8ptPNvh0oPInWT7juDE
-         pNr3HD+MPda+GBQcYnEx/SgrHhktyac/YTYTXs92lbg22JxJhAWUY1nxg7M0IglDD7lf
-         rxBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUaPTLretKNuj01Kz/s5HXvYFTnJTA/JIZJMbl7BM/aB63+I4G7tOBKl3+9REsU1wkplHO9eLoaAB1d0CI6FXZWgKfK/QkKPwIH1JMg
-X-Gm-Message-State: AOJu0YyjLnP5EiVOQZVSUPV1IDsmIvEtzjilLiryfywfJXToEL2/5gT6
-	64eGUJVKmdxRxyIgc2UwoMB13CBdxKYEa7DvMkctQ7N+GtcwG2f5zlckC43jVDhuoaeuheKFBVO
-	SOY5uoA==
-X-Google-Smtp-Source: AGHT+IFFKSp2cbx20G1PutA0FGwUU/2C+Tp4obCDUBsvv+vyzbsAUo0E14tANMmZ5Evrs8mxqyZyjg==
-X-Received: by 2002:a2e:9b94:0:b0:2ec:c8:2755 with SMTP id 38308e7fff4ca-2ec57983763mr53721961fa.24.1719339153966;
-        Tue, 25 Jun 2024 11:12:33 -0700 (PDT)
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec4db2ad8bsm12380991fa.85.2024.06.25.11.12.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Jun 2024 11:12:32 -0700 (PDT)
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52cdf579dd2so3333052e87.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 11:12:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW/YNzQj378Sqi6lTMsFt2/8bHGzLYAKndxAl8kLyiv1XOp4S9kcZXDvBdsx2wSen/8GW1G8JCNt2m+yd5W9fjZ8J7rMx//d74apgSh
-X-Received: by 2002:a05:6512:1594:b0:52c:cca8:a9fb with SMTP id
- 2adb3069b0e04-52cdf820956mr7108544e87.42.1719339152174; Tue, 25 Jun 2024
- 11:12:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gOF23g9A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8062C32781;
+	Tue, 25 Jun 2024 18:13:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719339222;
+	bh=jUjWLcpQRnu/rEeeBv5nOxk8R/BU7l4PVA+gs/H5+2I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gOF23g9AEBeSeSoCtouTpbBbC+umwkf3EEetWOrnWCMU56KxqTH0lDQxINcjvt86U
+	 zfCxp3VRotXIjvNQ9exhR6ihvixuFAk8OKZJ/5UP5zawD9WT6ke9fTo3TpqTAvGtmQ
+	 PrJnEOrOnsKYTKBv6ENkArtZQVJpvFRiv8OjH3EEF+/o6XkNWMNpjkkP9aJ0TEG0Nk
+	 sSTtQF/CSJdHW2+MXvxy/e38B64aLEHMkJ8PDBwsY9zNmgv4f5c7E3ESrxy5f16urz
+	 3EfcYxFtjfIAkZSRbudBsUmNi7jK/bc9akSfQh5/Lk0+FO5//JhL3761Mpykqo7k4w
+	 /jUalUrQbo8jQ==
+Date: Tue, 25 Jun 2024 19:13:37 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Dev Jain <dev.jain@arm.com>
+Cc: shuah@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kselftest@vger.kernel.org, Catalin.Marinas@arm.com,
+	will@kernel.org, ryan.roberts@arm.com, rob.herring@arm.com,
+	mark.rutland@arm.com, linux@armlinux.org.uk, suzuki.poulose@arm.com,
+	Anshuman.Khandual@arm.com, aneesh.kumar@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 6/9] selftests/arm64: Split ptrace, use ifdeffery
+Message-ID: <56dab3f3-7963-4e08-82b8-5b864c0322f7@sirena.org.uk>
+References: <20240625122408.1439097-1-dev.jain@arm.com>
+ <20240625122408.1439097-7-dev.jain@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240625040500.1788-1-jszhang@kernel.org> <4d8e0883-6a8c-4eb5-bf61-604e2b98356a@app.fastmail.com>
-In-Reply-To: <4d8e0883-6a8c-4eb5-bf61-604e2b98356a@app.fastmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 25 Jun 2024 11:12:16 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjDrx1XW1oEuUap=MN+Ku_FqFXQAwDJhyC5Q1CJkgBbFA@mail.gmail.com>
-Message-ID: <CAHk-=wjDrx1XW1oEuUap=MN+Ku_FqFXQAwDJhyC5Q1CJkgBbFA@mail.gmail.com>
-Subject: Re: [PATCH 0/4] riscv: uaccess: optimizations
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Jisheng Zhang <jszhang@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Linux-Arch <linux-arch@vger.kernel.org>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="oIvGawDpN3XdR/+9"
+Content-Disposition: inline
+In-Reply-To: <20240625122408.1439097-7-dev.jain@arm.com>
+X-Cookie: Results vary by individual.
 
-On Tue, 25 Jun 2024 at 00:22, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> I think the only bets we really need from an architecture
-> here are:
->
-> - __enable_user_access()/__disable_user_access() in
->    the label version
 
-KCSAN wants user_access_save/restore() too, but yes.
+--oIvGawDpN3XdR/+9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> - __raw_get_mem_{1,2,4,8}() and __raw_put_mem_{1,2,4,8}()
+On Tue, Jun 25, 2024 at 05:54:05PM +0530, Dev Jain wrote:
 
-You still need to split it into user/kernel.
+> --- /dev/null
+> +++ b/tools/testing/selftests/arm64/abi/ptrace.h
+> @@ -0,0 +1,135 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2024 ARM Limited.
+> + */
 
-Yes, *often* there is just one address space and they can be one "mem"
-accessor thing, but we do have architectures with actually separate
-user and kernel address spaces.
+> +#include "../../kselftest.h"
+> +
+> +static void run_tests(pid_t child);
+> +
+> +static int do_child(void);
+> +
+> +#ifdef __aarch64__
+> +static bool have_sme(void)
+> +{
+> +	return getauxval(AT_HWCAP2) & HWCAP2_SME;
+> +}
 
-But yes, it would be lovely if we did things as "implement the
-low-level accessor functions and we'll wrap them for the generic case"
-rather than have every architecture have to do the wrapping..
+> +static void test_hw_debug(pid_t child, int type, const char *type_name)
+> +{
+> +	struct user_hwdebug_state state;
+> +	struct iovec iov;
+> +	int slots, arch, ret;
+> +
+> +	iov.iov_len =3D sizeof(state);
+> +	iov.iov_base =3D &state;
+> +
+> +	/* Should be able to read the values */
+> +	ret =3D ptrace(PTRACE_GETREGSET, child, type, &iov);
+> +	ksft_test_result(ret =3D=3D 0, "read_%s\n", type_name);
 
-The wrapping isn't just the label-based "unsafe" accesses and the
-traditional error number return case, it's also the size-based case
-statements ("poor man's generics").
+This feels like it's pulling way too much stuff out into the header.  I
+think some of this needs to be a C file that gets built for both
+architectures with some mechanism they can use to run tests, and a
+library of any shared tests.
 
-The problem, of course, is that the majority of architectures are
-based on the legacy interfaces, so it's a lot of annoying low-level
-small details. I think there's a reason why nobody did the arm64
-"unsafe" ones - the patch didn't end up being that bad, but it's just
-fairly grotty code.
+> +
+> +	if (ret =3D=3D 0) {
+> +		/* Low 8 bits is the number of slots, next 4 bits the arch */
+> +		slots =3D state.dbg_info & 0xff;
+> +		arch =3D (state.dbg_info >> 8) & 0xf;
+> +
+> +		ksft_print_msg("%s version %d with %d slots\n", type_name,
+> +			       arch, slots);
+> +
+> +		/* Zero is not currently architecturally valid */
+> +		ksft_test_result(arch, "%s_arch_set\n", type_name);
+> +	} else {
+> +		ksft_test_result_skip("%s_arch_set\n", type_name);
+> +	}
+> +}
+> +#endif
+> +
+> +static int do_parent(pid_t child)
+> +{
+> +	int ret =3D EXIT_FAILURE;
+> +	pid_t pid;
+> +	int status;
+> +	siginfo_t si;
+> +
+> +	/* Attach to the child */
+> +	while (1) {
+> +		int sig;
+> +
+> +		pid =3D wait(&status);
+> +		if (pid =3D=3D -1) {
+> +			perror("wait");
+> +			goto error;
+> +		}
+> +
+> +		/*
+> +		 * This should never happen but it's hard to flag in
+> +		 * the framework.
+> +		 */
+> +		if (pid !=3D child)
+> +			continue;
+> +
+> +		if (WIFEXITED(status) || WIFSIGNALED(status))
+> +			ksft_exit_fail_msg("Child died unexpectedly\n");
+> +
+> +		if (!WIFSTOPPED(status))
+> +			goto error;
+> +
+> +		sig =3D WSTOPSIG(status);
+> +
+> +		if (sig =3D=3D SIGTRAP)
+> +			ksft_print_msg("Child received SIGTRAP\n");
+> +
+> +		if (ptrace(PTRACE_GETSIGINFO, pid, NULL, &si)) {
+> +			if (errno =3D=3D ESRCH)
+> +				goto disappeared;
+> +
+> +			if (errno =3D=3D EINVAL)
+> +				goto cont;
+> +
+> +			ksft_test_result_fail("PTRACE_GETSIGINFO: %s\n",
+> +					      strerror(errno));
+> +			goto error;
+> +		}
+> +
+> +		if (sig =3D=3D SIGSTOP && si.si_code =3D=3D SI_TKILL &&
+> +		    si.si_pid =3D=3D pid)
+> +			break;
+> +
+> +cont:
+> +		/* bust group-stop */
+> +		if (ptrace(PTRACE_CONT, pid, NULL, 0)) {
+> +			if (errno =3D=3D ESRCH)
+> +				goto disappeared;
+> +
+> +			ksft_test_result_fail("PTRACE_CONT: %s\n",
+> +					      strerror(errno));
+> +			goto error;
+> +		}
+> +	}
+> +
+> +	ksft_print_msg("Parent is %d, child is %d\n", getpid(), child);
+> +
+> +	ret =3D EXIT_SUCCESS;
+> +	run_tests(child);
+> +
+> +error:
+> +	kill(child, SIGKILL);
+> +
+> +disappeared:
+> +	return ret;
+> +}
+> --=20
+> 2.39.2
+>=20
 
-But apparently the arm64 patch was simple enough that at least RISC-V
-people went "that doesn't look so bad".
+--oIvGawDpN3XdR/+9
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Maybe other architectures will also be fairly straightforward when
-there's a fairly clear example of how it should be done.
+-----BEGIN PGP SIGNATURE-----
 
-             Linus
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZ7CNAACgkQJNaLcl1U
+h9CSaAf+OzmjUwIL1j7RqpRlpwHktvPS7B66IUE4BdU+ZsyrGJEVhtF9M4Ab+pWd
+Q4MHBu2dWWEpcqI+i4Hy8BFhUbwTvWkUB8wqzpvWEiyN6q8z2sCD4/Wigz5e9ZiJ
+9j8uzlvewWggK0QBtCI9mFkoU2i7OgusjxYood921Npux7SpROvx9wrAh1flbRsH
+AcKnNvwkvjDlWn9EZw34++icUN4b/Ez+wbpza+37/HNkWQMIT/YgptPWyqO6/lXX
+pzohRH3EKJRrXT7o2FTg06T+80Ekn4zuVmvH/3cBhEyRrCfuaiDBVhJPswoPjAR7
+0tfS7MhoGCBDKvQHVzEWtN43JwQO1Q==
+=mTos
+-----END PGP SIGNATURE-----
+
+--oIvGawDpN3XdR/+9--
