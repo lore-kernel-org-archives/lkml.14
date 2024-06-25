@@ -1,32 +1,32 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C72D2FF
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 00:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304A710A35
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 00:59:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719277172; cv=none; b=I6n2bpRl62E3r+1MOXzFPHU6lz18aDxfYJXJZ7WqneL4tBW6tmvOVZsihPWCPl4QSomMJuQd2T2QB2Dsfvvs+8pQO4zjkznmkGi7/Uh3918YT5Yv5r4Z9pIG0snAeccZ/N4liSiycSBLrCvnpo1KaKUhge0EHTZnEAB6GLsqKqs=
+	t=1719277177; cv=none; b=B7n3KgNj0wkJGtIRxsCONL2HoPutY11e4EXNXFKZJ0xhnXzhY1P+CGAkOIYLs4T6BcitnVq7N/XI1l15F7PMRgSTP08A+qdYXJRtRjknOOP7RlnrkOnoCrYJQ2Y9jWOEpXXPyZI54zDVB451Eao9fBP9O1YiNMAOoZ1Unx+LWeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719277172; c=relaxed/simple;
-	bh=BGTJ8UpPpJFLnys7Cpb4hZmQmB4cDSMfeLSWQtRFwrs=;
+	s=arc-20240116; t=1719277177; c=relaxed/simple;
+	bh=kry4xK+p8M5zaDaq9rnZFn3CVVELpltW4OQH7B4V3yE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CWkn57Dv9rqG5FlPJRsXD4ombL1mOY8IHJqxrnfYzGg84Ed6pONIsjtTWF3mVviJ8eS9CQm9Wfw8uYgBmRCKhpihaMq38LvkynE9DWZo2+SYclTPBqhs6LEXeph2mOUY/JqQMLZBYO9YvIbkp1mAuRbaHHY2F1XrQt7elmqtV9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SNHEm2mO; arc=none smtp.client-ip=91.218.175.170
+	 MIME-Version; b=HqDmKDA7XuaVY//Rm8SOkfwq7RFa2emrY9pcp3+BdKeoSoHHpWxHML5oZgT+iN9XrsglHiTU0yAtGHwlxz1/C+WD+VCJ3UYQY7c/tBUyFyM2JhFBvVuR5r4o1gWzTQzQ+XbUP6O1HjXsy2WsCHhk4tximfoukJ/f/ldk26YrhXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vC47+CqM; arc=none smtp.client-ip=91.218.175.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SNHEm2mO"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vC47+CqM"
 X-Envelope-To: akpm@linux-foundation.org
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1719277168;
+	t=1719277173;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0K8TiASsfXHI+86AZ2a2bPWGqGFFcRCb/gQyRRUpsu8=;
-	b=SNHEm2mO/2MBhZOMRXB4XkfaEiY2p+h8mD8OBd4U1zfPiQ3BuKoVwWbf2ski/Cc+TvOfxT
-	QpO01xxRyLiHWa3dG3T+27zaWcaG96hCPF5P1nHpIMrWd4l1kPGh8RycYujNQQJUiVPl5+
-	uPIKcwxBcy2hngodxGz3SoUlayh91Iw=
+	bh=jqHMldr5yb8EHMopv4QA8bs9iV164cfr+gO2HUVb6OI=;
+	b=vC47+CqMGWRzP59I6JXMOgvoaLbgn6Avaqr2H6e/hxJishCg/ejeMxkMXhSHpjUjIptXFO
+	LFVdS25i0wSGT3zri597XOuNN81MUCYX5Yb7NzyvW3ye0M4dADWj+tGmjFyCUAN5oPQFgE
+	8zmBGd0hMknLsB9MyuQU7jNjIDMmrdA=
 X-Envelope-To: hannes@cmpxchg.org
 X-Envelope-To: mhocko@kernel.org
 X-Envelope-To: shakeel.butt@linux.dev
@@ -46,9 +46,9 @@ Cc: Johannes Weiner <hannes@cmpxchg.org>,
 	cgroups@vger.kernel.org,
 	linux-mm@kvack.org,
 	Roman Gushchin <roman.gushchin@linux.dev>
-Subject: [PATCH v2 01/14] mm: memcg: introduce memcontrol-v1.c
-Date: Mon, 24 Jun 2024 17:58:53 -0700
-Message-ID: <20240625005906.106920-2-roman.gushchin@linux.dev>
+Subject: [PATCH v2 03/14] mm: memcg: rename soft limit reclaim-related functions
+Date: Mon, 24 Jun 2024 17:58:55 -0700
+Message-ID: <20240625005906.106920-4-roman.gushchin@linux.dev>
 In-Reply-To: <20240625005906.106920-1-roman.gushchin@linux.dev>
 References: <20240625005906.106920-1-roman.gushchin@linux.dev>
 Precedence: bulk
@@ -60,66 +60,144 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-This patch introduces the mm/memcontrol-v1.c source file which will be used for
-all legacy (cgroup v1) memory cgroup code. It also introduces mm/memcontrol-v1.h
-to keep declarations shared between mm/memcontrol.c and mm/memcontrol-v1.c.
-
-As of now, let's compile it if CONFIG_MEMCG is set, similar to mm/memcontrol.c.
-Later on it can be switched to use a separate config option, so that the legacy
-code won't be compiled if not required.
+Rename exported function related to the softlimit reclaim
+to have memcg1_ prefix.
 
 Signed-off-by: Roman Gushchin <roman.gushchin@linux.dev>
 ---
- mm/Makefile        | 3 ++-
- mm/memcontrol-v1.c | 3 +++
- mm/memcontrol-v1.h | 7 +++++++
- 3 files changed, 12 insertions(+), 1 deletion(-)
- create mode 100644 mm/memcontrol-v1.c
- create mode 100644 mm/memcontrol-v1.h
+ include/linux/memcontrol.h | 12 ++++++------
+ mm/memcontrol-v1.c         |  6 +++---
+ mm/memcontrol-v1.h         |  4 ++--
+ mm/memcontrol.c            |  4 ++--
+ mm/vmscan.c                | 10 +++++-----
+ 5 files changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/mm/Makefile b/mm/Makefile
-index 8fb85acda1b1..124d4dea2035 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -26,6 +26,7 @@ KCOV_INSTRUMENT_page_alloc.o := n
- KCOV_INSTRUMENT_debug-pagealloc.o := n
- KCOV_INSTRUMENT_kmemleak.o := n
- KCOV_INSTRUMENT_memcontrol.o := n
-+KCOV_INSTRUMENT_memcontrol-v1.o := n
- KCOV_INSTRUMENT_mmzone.o := n
- KCOV_INSTRUMENT_vmstat.o := n
- KCOV_INSTRUMENT_failslab.o := n
-@@ -95,7 +96,7 @@ obj-$(CONFIG_NUMA) += memory-tiers.o
- obj-$(CONFIG_DEVICE_MIGRATION) += migrate_device.o
- obj-$(CONFIG_TRANSPARENT_HUGEPAGE) += huge_memory.o khugepaged.o
- obj-$(CONFIG_PAGE_COUNTER) += page_counter.o
--obj-$(CONFIG_MEMCG) += memcontrol.o vmpressure.o
-+obj-$(CONFIG_MEMCG) += memcontrol.o memcontrol-v1.o vmpressure.o
- ifdef CONFIG_SWAP
- obj-$(CONFIG_MEMCG) += swap_cgroup.o
- endif
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index 7403dd5926eb..83c8327455d8 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -1121,9 +1121,9 @@ static inline void memcg_memory_event_mm(struct mm_struct *mm,
+ 
+ void split_page_memcg(struct page *head, int old_order, int new_order);
+ 
+-unsigned long mem_cgroup_soft_limit_reclaim(pg_data_t *pgdat, int order,
+-						gfp_t gfp_mask,
+-						unsigned long *total_scanned);
++unsigned long memcg1_soft_limit_reclaim(pg_data_t *pgdat, int order,
++					gfp_t gfp_mask,
++					unsigned long *total_scanned);
+ 
+ #else /* CONFIG_MEMCG */
+ 
+@@ -1572,9 +1572,9 @@ static inline void split_page_memcg(struct page *head, int old_order, int new_or
+ }
+ 
+ static inline
+-unsigned long mem_cgroup_soft_limit_reclaim(pg_data_t *pgdat, int order,
+-					    gfp_t gfp_mask,
+-					    unsigned long *total_scanned)
++unsigned long memcg1_soft_limit_reclaim(pg_data_t *pgdat, int order,
++					gfp_t gfp_mask,
++					unsigned long *total_scanned)
+ {
+ 	return 0;
+ }
 diff --git a/mm/memcontrol-v1.c b/mm/memcontrol-v1.c
-new file mode 100644
-index 000000000000..a941446ba575
---- /dev/null
+index 2ccb8406fa84..68e2f1a718d3 100644
+--- a/mm/memcontrol-v1.c
 +++ b/mm/memcontrol-v1.c
-@@ -0,0 +1,3 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+
-+#include "memcontrol-v1.h"
+@@ -100,7 +100,7 @@ static unsigned long soft_limit_excess(struct mem_cgroup *memcg)
+ 	return excess;
+ }
+ 
+-void mem_cgroup_update_tree(struct mem_cgroup *memcg, int nid)
++void memcg1_update_tree(struct mem_cgroup *memcg, int nid)
+ {
+ 	unsigned long excess;
+ 	struct mem_cgroup_per_node *mz;
+@@ -143,7 +143,7 @@ void mem_cgroup_update_tree(struct mem_cgroup *memcg, int nid)
+ 	}
+ }
+ 
+-void mem_cgroup_remove_from_trees(struct mem_cgroup *memcg)
++void memcg1_remove_from_trees(struct mem_cgroup *memcg)
+ {
+ 	struct mem_cgroup_tree_per_node *mctz;
+ 	struct mem_cgroup_per_node *mz;
+@@ -243,7 +243,7 @@ static int mem_cgroup_soft_reclaim(struct mem_cgroup *root_memcg,
+ 	return total;
+ }
+ 
+-unsigned long mem_cgroup_soft_limit_reclaim(pg_data_t *pgdat, int order,
++unsigned long memcg1_soft_limit_reclaim(pg_data_t *pgdat, int order,
+ 					    gfp_t gfp_mask,
+ 					    unsigned long *total_scanned)
+ {
 diff --git a/mm/memcontrol-v1.h b/mm/memcontrol-v1.h
-new file mode 100644
-index 000000000000..7c5f094755ff
---- /dev/null
+index 4da6fa561c6d..e37bc7e8d955 100644
+--- a/mm/memcontrol-v1.h
 +++ b/mm/memcontrol-v1.h
-@@ -0,0 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+
-+#ifndef __MM_MEMCONTROL_V1_H
-+#define __MM_MEMCONTROL_V1_H
-+
-+
-+#endif	/* __MM_MEMCONTROL_V1_H */
+@@ -3,8 +3,8 @@
+ #ifndef __MM_MEMCONTROL_V1_H
+ #define __MM_MEMCONTROL_V1_H
+ 
+-void mem_cgroup_update_tree(struct mem_cgroup *memcg, int nid);
+-void mem_cgroup_remove_from_trees(struct mem_cgroup *memcg);
++void memcg1_update_tree(struct mem_cgroup *memcg, int nid);
++void memcg1_remove_from_trees(struct mem_cgroup *memcg);
+ 
+ static inline void memcg1_soft_limit_reset(struct mem_cgroup *memcg)
+ {
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 003e944f34ea..3479e1af12d5 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1012,7 +1012,7 @@ static void memcg_check_events(struct mem_cgroup *memcg, int nid)
+ 						MEM_CGROUP_TARGET_SOFTLIMIT);
+ 		mem_cgroup_threshold(memcg);
+ 		if (unlikely(do_softlimit))
+-			mem_cgroup_update_tree(memcg, nid);
++			memcg1_update_tree(memcg, nid);
+ 	}
+ }
+ 
+@@ -5610,7 +5610,7 @@ static void mem_cgroup_css_free(struct cgroup_subsys_state *css)
+ 
+ 	vmpressure_cleanup(&memcg->vmpressure);
+ 	cancel_work_sync(&memcg->high_work);
+-	mem_cgroup_remove_from_trees(memcg);
++	memcg1_remove_from_trees(memcg);
+ 	free_shrinker_info(memcg);
+ 	mem_cgroup_free(memcg);
+ }
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 900bad16e506..3d4c681c6d40 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -6186,9 +6186,9 @@ static void shrink_zones(struct zonelist *zonelist, struct scan_control *sc)
+ 			 * and balancing, not for a memcg's limit.
+ 			 */
+ 			nr_soft_scanned = 0;
+-			nr_soft_reclaimed = mem_cgroup_soft_limit_reclaim(zone->zone_pgdat,
+-						sc->order, sc->gfp_mask,
+-						&nr_soft_scanned);
++			nr_soft_reclaimed = memcg1_soft_limit_reclaim(zone->zone_pgdat,
++								      sc->order, sc->gfp_mask,
++								      &nr_soft_scanned);
+ 			sc->nr_reclaimed += nr_soft_reclaimed;
+ 			sc->nr_scanned += nr_soft_scanned;
+ 			/* need some check for avoid more shrink_zone() */
+@@ -6952,8 +6952,8 @@ static int balance_pgdat(pg_data_t *pgdat, int order, int highest_zoneidx)
+ 		/* Call soft limit reclaim before calling shrink_node. */
+ 		sc.nr_scanned = 0;
+ 		nr_soft_scanned = 0;
+-		nr_soft_reclaimed = mem_cgroup_soft_limit_reclaim(pgdat, sc.order,
+-						sc.gfp_mask, &nr_soft_scanned);
++		nr_soft_reclaimed = memcg1_soft_limit_reclaim(pgdat, sc.order,
++							      sc.gfp_mask, &nr_soft_scanned);
+ 		sc.nr_reclaimed += nr_soft_reclaimed;
+ 
+ 		/*
 -- 
 2.45.2
 
