@@ -1,149 +1,122 @@
-Received: from out203-205-221-205.mail.qq.com (out203-205-221-205.mail.qq.com [203.205.221.205])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D679146A67;
-	Tue, 25 Jun 2024 10:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D2214A4C7;
+	Tue, 25 Jun 2024 10:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719310830; cv=none; b=iK0Xx6xEbN0qpHo9vYJJ5uakhMtxeqgSQR8GJdqhtgutbkWmXA1dq/b5XyNyMNrwPNtdF43fMkH4lxrM1fUUihS4vA8J2KhfRuzP5qWtU2QSBzL/yq49RSRXxiebgSdY7LqHd7fjAwJJH71cI0rDXBpAjo7jV+GcCPNuNl+XRwE=
+	t=1719310833; cv=none; b=b1A052BIRnvaJU/hjx59dt47nYHeqDqXer37bM1J+/6X3BIpjs1+tEs5E8LfjgL+FoqyYNVoX+PTCj6knYNSmu0yWk5r8YGadAh8E8EAdAlroqamLYZwfPr/Xz8g3T5De2g6Sgv41b69K/B9cXTE5Nq8CiAALhiVB2V80MKKkWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719310830; c=relaxed/simple;
-	bh=mrkCbUN4T0q6BoY0m/gooEG5R4amkIb+uH8GJY8h6fQ=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=SpXBliQ/569xYTkUqs2RNrCVb/xbffFlqCZrx/FHcXQqYMCAWw9LWpGQy/KHXzwR+rUMnJgE35z5cdLRS+XwJg/KjvSAcmTz9rq9DeHRO9r8ufuCZcUFwhoA8zwW9ji8cuztMKjndGCzXxjQCwE1VKcEqVmirgoHQn1G5ucpV/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=zqNYzLUW; arc=none smtp.client-ip=203.205.221.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1719310833; c=relaxed/simple;
+	bh=U4UKmSL+yS6H3laaPMwSWiFQQcV7Z7beDMbwiaN27C8=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=EV4XfFSaNsiqVOWyn5xE8XDS74Q7yXNrSr5UZh3kD3zWxoF++LEeUCxMG8xfjfvl0bxMwc7tyn2O9chb1FLswgXeUxxE7o25bmtWKG7R7KMQTbOVWd91N41+Bcm5jquRRpnGgI60dhe10Q4I8l7jlqMSaFzu/63PJsvRlOujRLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=v1oo70p7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TaE1pnkO; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="zqNYzLUW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1719310519; bh=NZOSPeiPAVveuWbrnAInxDlcsoHJ6JgaucOMtYnKhwA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=zqNYzLUWj88NKtIKPLkX0Nn3dCD1RObpt623bS4HnUgR+lLG5anw3fBbcglABS6RB
-	 9g/a4rBlf1vLpg/D/Z+t5G3uib2jIe7po55uHgfOoKqt0Xv+feLvPXvuA9+GWinG3Q
-	 zGzy3G4KhLGUXK1f1JO6+aT4/qNYm7Rxr/Lo7jZQ=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.103])
-	by newxmesmtplogicsvrszc5-2.qq.com (NewEsmtp) with SMTP
-	id 30EA185C; Tue, 25 Jun 2024 18:12:14 +0800
-X-QQ-mid: xmsmtpt1719310334tv296kjyp
-Message-ID: <tencent_CFD37DA36B4965E3A7C45E7770776C86DB05@qq.com>
-X-QQ-XMAILINFO: MtZ4zLDUQmWf8BIMzYOceNsyYxmg35httaPj3YYnwhHxtvnQssNEIax9AzBl3i
-	 43lZ3m5xTxQQ20u2+uvs+jEHKbqQrtTGvEob8aycLQrF+xKJPSq1nCEkNzD9rqxIMujpEBm5/Zb3
-	 SWi0kiBnC5mTGjrp+Q3GvMCX7eZ/IhmO1kOk/P8zu9bgjcnTFDczGiEzQjht2pdOPjqralUE+N0B
-	 dZ4ho/u3iylVHlMxoF6Uvq8QU/DxnPBnVOeJ6onPpzkW1TJj3J3IE0/0tPOuWxvgNiztavUH2FiS
-	 fMGeIYVz7upsm86hgDDNapcQn3RR85ipvBUTsDvd+JyyFQzj9qP8MJkMBwjJoRwDIEpV1s7oldiL
-	 c4TEeuGjrm/8BUrk7mm2zkR4hYpPPibvAgP0aW02NnNjxgzoeQwHOUZNdBcPQiZ/knxlxacljlcj
-	 eVwUx4NAjgj86d6r74lEQLECHkCFYMzHFr+jQ1SPmc4KdYHa+SMHAyCmU7hUOTFHxwfRdEgE2JVq
-	 P31DCe+BePQUW6yu4l9jpl6DyRwg5P2iMANnSjok34w84l/RaLp/Ee4yYpc3QCVgjmfkEfuIR5M5
-	 V5BEofSxgDplfEWQuQ9nRIHcjoDt/0gOliRBE0842Ki9lMfIpQrFg9Jvr4gkPPyXvpDHNFKw4XtP
-	 NNX9lyL3FMHG7079UCdFGA44DlnBIzWuXKjKnyh4jMAJDvYXOSUMSpWmleo27WmrUH0zuY5RM/aO
-	 BDcR0K8SIypwhhd5ay63y9ROqqirTongh2qPjrd8Tmimwj4OoPvHT1m7ozSxb2YAdctSw/TDSeOZ
-	 p+rhIAQvCJExBW0OdRdJHoaTAVJtKU531rkNrxS/u57hZpPgI0zqXWYPnGBJM1JaDXt7xFKeaHyb
-	 1jGZUho3+1VtMtfvhqeSHvfaqaAEduT/UGIqYTly1rVyLFZK2Mryqlin76NylQVpg7GzNbRaVovQ
-	 22LGyacIq4hDQ4fslQdw==
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-From: Edward Adam Davis <eadavis@qq.com>
-To: luiz.dentz@gmail.com
-Cc: eadavis@qq.com,
-	johan.hedberg@gmail.com,
-	linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	marcel@holtmann.org,
-	syzbot+b7f6f8c9303466e16c8a@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com
-Subject: [PATCH V3] Bluetooth/l2cap: sync sock recv cb and release
-Date: Tue, 25 Jun 2024 18:12:15 +0800
-X-OQ-MSGID: <20240625101214.598651-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <CABBYNZL5xiNDzDa3JJiwx2D-qpmA8Y3RBVWLetZ0fd4jURpN7g@mail.gmail.com>
-References: <CABBYNZL5xiNDzDa3JJiwx2D-qpmA8Y3RBVWLetZ0fd4jURpN7g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v1oo70p7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TaE1pnkO"
+Date: Tue, 25 Jun 2024 10:20:27 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1719310828;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=r2uSvmOwiL69UqeLQmZ71n4aVeb3D8wrFq0BB119oCQ=;
+	b=v1oo70p79LGHJNJl2whku34B0Bj+IFzzK33G/4fhUYjJ9KDpS+BPqoq7/w7bdVTArsaueq
+	8h8Jpsxz8mWxVTz6pF11VXFJogiXTNkDgFmV3W1b1N2CNyGgVDZAvtZWPskqMyK/3UpbgK
+	z/xLrnY5f9W0O5jg1jHS//La8ETy/1ZCLYVazzVE1jbApFb0oXys4qksGTULJ6/f0xW6/c
+	gbdoKTSNh0Bh3/BXULyAz3W08Ju62DWTIr9GZKRaWUcShaWwoXblFVa3W/S+e8L178jMYA
+	goRJXXK6wxD4MDsMPdH8NXFDKUz1+ReuU42mkpK42JqT8fCxPdkI8WlRJxVKOg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1719310828;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=r2uSvmOwiL69UqeLQmZ71n4aVeb3D8wrFq0BB119oCQ=;
+	b=TaE1pnkObbnlss4mEYvpHPS0FKSP/hiJC+eeCq/l8ddVLPAjS66mVQFoCw26Kr9FTeg+6a
+	pY9SM200aav84YDQ==
+From: "tip-bot2 for Brian Johannesmeyer" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/misc] x86/kmsan: Fix hook for unaligned accesses
+Cc: Brian Johannesmeyer <bjohannesmeyer@gmail.com>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Alexander Potapenko <glider@google.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240523215029.4160518-1-bjohannesmeyer@gmail.com>
+References: <20240523215029.4160518-1-bjohannesmeyer@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <171931082781.2215.2814033580551774313.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-The problem occurs between the system call to close the sock and hci_rx_work,
-where the former releases the sock and the latter accesses it without lock protection.
+The following commit has been merged into the x86/misc branch of tip:
 
-           CPU0                       CPU1
-           ----                       ----
-           sock_close                 hci_rx_work
-	   l2cap_sock_release         hci_acldata_packet
-	   l2cap_sock_kill            l2cap_recv_frame
-	   sk_free                    l2cap_conless_channel
-	                              l2cap_sock_recv_cb
+Commit-ID:     bf6ab33d8487f5e2a0998ce75286eae65bb0a6d6
+Gitweb:        https://git.kernel.org/tip/bf6ab33d8487f5e2a0998ce75286eae65bb0a6d6
+Author:        Brian Johannesmeyer <bjohannesmeyer@gmail.com>
+AuthorDate:    Thu, 23 May 2024 23:50:29 +02:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Tue, 25 Jun 2024 11:37:21 +02:00
 
-If hci_rx_work processes the data that needs to be received before the sock is
-closed, then everything is normal; Otherwise, the work thread may access the
-released sock when receiving data.
+x86/kmsan: Fix hook for unaligned accesses
 
-Add a chan lock in the l2cap_conless_channel of the sock to achieve sync
-between the sock release and recv cb.
+When called with a 'from' that is not 4-byte-aligned, string_memcpy_fromio()
+calls the movs() macro to copy the first few bytes, so that 'from' becomes
+4-byte-aligned before calling rep_movs(). This movs() macro modifies 'to', and
+the subsequent line modifies 'n'.
 
-Sock is dead, so set chan data to NULL, avoid others use invalid sock pointer.
+As a result, on unaligned accesses, kmsan_unpoison_memory() uses the updated
+(aligned) values of 'to' and 'n'. Hence, it does not unpoison the entire
+region.
 
-Reported-by: syzbot+b7f6f8c9303466e16c8a@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+Save the original values of 'to' and 'n', and pass those to
+kmsan_unpoison_memory(), so that the entire region is unpoisoned.
+
+Signed-off-by: Brian Johannesmeyer <bjohannesmeyer@gmail.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Reviewed-by: Alexander Potapenko <glider@google.com>
+Link: https://lore.kernel.org/r/20240523215029.4160518-1-bjohannesmeyer@gmail.com
 ---
- net/bluetooth/l2cap_core.c |  3 +++
- net/bluetooth/l2cap_sock.c | 13 +++++++++++--
- 2 files changed, 14 insertions(+), 2 deletions(-)
+ arch/x86/lib/iomem.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
-index aed025734d04..35a9534eb62d 100644
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -6771,10 +6771,13 @@ static void l2cap_conless_channel(struct l2cap_conn *conn, __le16 psm,
- 	bacpy(&bt_cb(skb)->l2cap.bdaddr, &hcon->dst);
- 	bt_cb(skb)->l2cap.psm = psm;
+diff --git a/arch/x86/lib/iomem.c b/arch/x86/lib/iomem.c
+index e0411a3..5eecb45 100644
+--- a/arch/x86/lib/iomem.c
++++ b/arch/x86/lib/iomem.c
+@@ -25,6 +25,9 @@ static __always_inline void rep_movs(void *to, const void *from, size_t n)
  
-+	l2cap_chan_lock(chan);
- 	if (!chan->ops->recv(chan, skb)) {
-+		l2cap_chan_unlock(chan);
- 		l2cap_chan_put(chan);
- 		return;
- 	}
-+	l2cap_chan_unlock(chan);
- 
- drop:
- 	l2cap_chan_put(chan);
-diff --git a/net/bluetooth/l2cap_sock.c b/net/bluetooth/l2cap_sock.c
-index 6db60946c627..25091fb992a7 100644
---- a/net/bluetooth/l2cap_sock.c
-+++ b/net/bluetooth/l2cap_sock.c
-@@ -1239,6 +1239,10 @@ static void l2cap_sock_kill(struct sock *sk)
- 
- 	BT_DBG("sk %p state %s", sk, state_to_string(sk->sk_state));
- 
-+	/* Sock is dead, so set chan data to NULL, avoid other task use invalid
-+	 * sock pointer.
-+	 */
-+	l2cap_pi(sk)->chan->data = NULL;
- 	/* Kill poor orphan */
- 
- 	l2cap_chan_put(l2cap_pi(sk)->chan);
-@@ -1481,11 +1485,16 @@ static struct l2cap_chan *l2cap_sock_new_connection_cb(struct l2cap_chan *chan)
- 
- static int l2cap_sock_recv_cb(struct l2cap_chan *chan, struct sk_buff *skb)
+ static void string_memcpy_fromio(void *to, const volatile void __iomem *from, size_t n)
  {
--	struct sock *sk = chan->data;
--	struct l2cap_pinfo *pi = l2cap_pi(sk);
-+	struct sock *sk;
-+	struct l2cap_pinfo *pi;
- 	int err;
- 
-+	if (!chan->data)
-+		return -ENXIO;
++	const void *orig_to = to;
++	const size_t orig_n = n;
 +
-+	sk = chan->data;
- 	lock_sock(sk);
-+	pi = l2cap_pi(sk);
+ 	if (unlikely(!n))
+ 		return;
  
- 	if (chan->mode == L2CAP_MODE_ERTM && !list_empty(&pi->rx_busy)) {
- 		err = -ENOMEM;
--- 
-2.43.0
-
+@@ -39,7 +42,7 @@ static void string_memcpy_fromio(void *to, const volatile void __iomem *from, si
+ 	}
+ 	rep_movs(to, (const void *)from, n);
+ 	/* KMSAN must treat values read from devices as initialized. */
+-	kmsan_unpoison_memory(to, n);
++	kmsan_unpoison_memory(orig_to, orig_n);
+ }
+ 
+ static void string_memcpy_toio(volatile void __iomem *to, const void *from, size_t n)
