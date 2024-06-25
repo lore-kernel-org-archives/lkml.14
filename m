@@ -1,102 +1,79 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 889B017D341
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 15:05:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E96A1684AC
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 15:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719327947; cv=none; b=Yddx4jTMsJCNILNpVcGbZ+1EbdloZScMk0Y4vvrDI97qqNCQZYutvsPr5o88K3Ekz0NQ7fPWwA5M2liKoAikuLnUpta8RIv++qgMpJQXAUo1NV+aKhX2e0pNgOlcQTtT9OD41kWJE5vwy9eI+qBTC1VzfBAmzfw4Le3Km+RR+jE=
+	t=1719328066; cv=none; b=p59q+4pzCBHUB/Qc6OY1TCKrYpBbtDfcZqRli8021oeA3lRfBviKQwePh7U31FYFAri+6iSfPPLQb2KoncIa9bYQ3POVyiuSZtTTZbLRT3R6mJiu+bXHmlHoe/d4bQBV/NpGQeFANDNtHZxw6PHnRUvugvC0qsrW17W3XTc55XY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719327947; c=relaxed/simple;
-	bh=3LwE2V9f4tQOo23p5aFAX93ueL2Lgaphlhtznmc/PnI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J3NLENqGl1PD+lBiDaQ4wZlUKfpo+UU/yTfe+8dIniRM8D8I01VMy0Xvlrz/1MiAwd7pqOd5mf9iGSpm41R4JQZ+qc4g9E5hDKrRU8Kuri+fUQBl6MoSJ5rVGR8OU3/+QMBF16ncYWO/SK+56v+SWVI1g10m/YfQJ8A8uvv5Kq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cxe9x4mm; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cxe9x4mm"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-630daaec9c7so51010217b3.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 08:05:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719327944; x=1719932744; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=JunNWwGKBRTYr5Pcd5O5SWyjr+J71GISSn9v9GBzIls=;
-        b=cxe9x4mmBVDtN1iTTyYcOBgVOM5KL3sBiSf58NKGzXsmaNtzqvH8Cx4qLrEo2C9VZ+
-         XAVIvU20YSLCzmzvTcorkPhReEE7uEoucpofRhKXloFiiWwlLOQmtDY9BAyj421h4+yJ
-         2x2eC/rY5naHtdmcXgsHOvuHBHeRLeVJQBlKzoyZXaJb8KGkIfLfZNQWxKMyzKp812GC
-         1aq4NMbUxS3m0LYocI6rdNP76X/SjysWoX/uuz6/bdbEb/O0xlLzatoPxIvID2EFSMLf
-         obaIX2+I2KXeKn9/pj/t1pl0APQEz+0VYM3QW2Qu57sVx7CNCIXY/D4jUASD5R52cN8o
-         KXAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719327944; x=1719932744;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JunNWwGKBRTYr5Pcd5O5SWyjr+J71GISSn9v9GBzIls=;
-        b=Xo51Gk9JtTkVOJrEndvCZy6QrUBz9AS8TGbbMw986xlODSAAwRPIDhysWVGAS3ADyt
-         QSlqo01CpcDa3sF0mddQ8Yg7Gny3mYqNORebvgMXKlvPIX1zmOpjLEqGNtBVUN0lVHVl
-         SN1g8YL7OiIhTaIwMFgGaxFOc3QiMqHpCsjGfe5SQyzru74pMw0buvM5PT5fm3/izOoa
-         Pzh1C86edxM98KT8PKC5sL8vAjSSNxbD1HLqlDaGEy80gWqPsiMX7sAEgPvhfACKdqMJ
-         PrjG7Ttp2PmK0lPK1F9l32ahc6u7POpxZVDVOZ6n2+Acl+SbZx/Tawsjfb1TGGwaGcWI
-         jHLA==
-X-Forwarded-Encrypted: i=1; AJvYcCX4OdbYNpLGIpaZwuMj82cLQ7V+PEvs4CoP7UXmQg7MzvohXdwArooeg3sUGKqULwp2xjCtcHnSqYR23bec1sGkRSc+KVDQdqGtrZPq
-X-Gm-Message-State: AOJu0Yw+sivACBT76zkJeKlR6bYD+IETTHZzObn/Am5eythaTFFZX0du
-	fMnWKl1j4uCo8Z/NK7DiFPV7CG2qLDkVee5fQZCxKloepvEvbjugbFDaTXIG3EUDVkjZVRwg33B
-	UXVI9USybKaWre5BzDg9xLGei5JpqeMRHBm2R3Q==
-X-Google-Smtp-Source: AGHT+IFe9ebZjIjKe3yw6sqBV3bTmm2If8WOtZ4l30oH3MpOHUQh7AQDYHW3owX9fbwtm1v9DNf0ncg1El4NCsVswYw=
-X-Received: by 2002:a81:c313:0:b0:618:2381:2404 with SMTP id
- 00721157ae682-643ac72278amr86606087b3.44.1719327944523; Tue, 25 Jun 2024
- 08:05:44 -0700 (PDT)
+	s=arc-20240116; t=1719328066; c=relaxed/simple;
+	bh=FJJb1ND/Hw5n8Lg55dkxnTRE+HdfB3T4SIUDinzkTMQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e5CB4r8d6JHO4D3QAhYmZOQ1knxYQujUTtXNnjLDmyXzjZsGdPhk93nVcE94R8LGS++0H/LPYnezioI8LVYSGYdXN+23iP+9pgS2XDxNqngXiPboc7dPOZhd3a2Z0PjPEdKqO6Xhv/49VUYtyrLrJRzRkq+LYPNOaemq1OELuhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from fsav119.sakura.ne.jp (fsav119.sakura.ne.jp [27.133.134.246])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 45PF7etM062223;
+	Wed, 26 Jun 2024 00:07:40 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav119.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav119.sakura.ne.jp);
+ Wed, 26 Jun 2024 00:07:40 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav119.sakura.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 45PF7bBq062214
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Wed, 26 Jun 2024 00:07:38 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <60704acc-61bd-4911-bb96-bd1cdd69803d@I-love.SAKURA.ne.jp>
+Date: Wed, 26 Jun 2024 00:07:37 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240623-drm-bridge-connector-fix-hdmi-reset-v2-0-8590d44912ce@linaro.org>
- <20240623-drm-bridge-connector-fix-hdmi-reset-v2-1-8590d44912ce@linaro.org> <20240625-feathered-loon-of-health-ec7e6d@houat>
-In-Reply-To: <20240625-feathered-loon-of-health-ec7e6d@houat>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 25 Jun 2024 18:05:33 +0300
-Message-ID: <CAA8EJpq314tQFZpkXgL1cYDPfoFRukhB_KiaDvmsqdzHFD512g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] drm/bridge-connector: reset the HDMI connector state
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Dave Stevenson <dave.stevenson@raspberrypi.com>, Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] bpf: defer printk() inside __bpf_prog_run()
+To: John Ogness <john.ogness@linutronix.de>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau
+ <martin.lau@linux.dev>,
+        Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+        Yonghong Song <yonghong.song@linux.dev>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+References: <345098dc-8cb4-4808-98cf-fa9ab3af4fc4@I-love.SAKURA.ne.jp>
+ <87ed8lxg1c.fsf@jogness.linutronix.de>
+Content-Language: en-US
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <87ed8lxg1c.fsf@jogness.linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 25 Jun 2024 at 18:02, Maxime Ripard <mripard@kernel.org> wrote:
->
-> Hi,
->
-> On Sun, Jun 23, 2024 at 08:40:12AM GMT, Dmitry Baryshkov wrote:
-> > On HDMI connectors which use drm_bridge_connector and DRM_BRIDGE_OP_HDMI
-> > IGT chokes on the max_bpc property in several kms_properties tests due
-> > to the the drm_bridge_connector failing to reset HDMI-related
-> > properties.
-> >
-> > Call __drm_atomic_helper_connector_hdmi_reset() if there is a
-> > the drm_bridge_connector has bridge_hdmi.
-> >
-> > Note, the __drm_atomic_helper_connector_hdmi_reset() is moved to
-> > drm_atomic_state_helper.c because drm_bridge_connector.c can not depend
-> > on DRM_DISPLAY_HDMI_STATE_HELPER. At the same time it is impossible to
-> > call this function from HDMI bridges, there is is no function that
-> > corresponds to the drm_connector_funcs::reset().
->
-> Why can't it depend on DRM_DISPLAY_HDMI_STATE_HELPER?
+On 2024/06/25 23:17, John Ogness wrote:
+> On 2024-06-25, Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp> wrote:
+>> syzbot is reporting circular locking dependency inside __bpf_prog_run(),
+>> for fault injection calls printk() despite rq lock is already held.
+>>
+>> Guard __bpf_prog_run() using printk_deferred_{enter,exit}() (and
+>> preempt_{disable,enable}() if CONFIG_PREEMPT_RT=n) in order to defer any
+>> printk() messages.
+> 
+> Why is the reason for disabling preemption?
 
-Is it okay to have DRM_KMS_HELPER to depend unconditionally or select
-DRM_DISPLAY_HDMI_STATE_HELPER?
+Because since kernel/printk/printk_safe.c uses a percpu counter for deferring
+printk(), printk_safe_enter() and printk_safe_exit() have to be called from
+the same CPU. preempt_disable() before printk_safe_enter() and preempt_enable()
+after printk_safe_exit() guarantees that printk_safe_enter() and
+printk_safe_exit() are called from the same CPU.
 
--- 
-With best wishes
-Dmitry
