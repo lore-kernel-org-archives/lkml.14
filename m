@@ -1,113 +1,150 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7204C802
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 07:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27BCA14659D
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 07:05:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719299099; cv=none; b=qZ5wpI37DvuCZH9GBTmiQHTv183+xQGe6XoPRRXlczx0+Dv7QLPx6OgMVza555hOKwgTuokYm4+VV+Mn8eytQvRtYY+Pnar7rM96NEsaS19NAfWU3pY+tZvFZp0x+zFY61qXXxipNY8mRtBA46YmEHGnVSBo17H7f6p58FSzf94=
+	t=1719299134; cv=none; b=SDmvK4koZiRzb9NCxYwKeldP7I4/SCTYO8nOmURAFStVujMBJKdHy4VRaKCsolnSiRa7IRWwrlGjijZHVh0G6JpKef7njJRM4o8hpD/6wvmPhwSuK+mSzIhSFP5wvLrLTNfujyt2goXI5xhpBIAm0w3vzc+eS6vPuYkQZScwG60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719299099; c=relaxed/simple;
-	bh=mnKX0CK10jeL2AUmQJ/q/5xM6jCHBJ6hOtyIRt3jvms=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a53TeOdXvoON578YkT/8Mo0s/mBBcqsI/uSBbg6JxDrOwh4Zp/1WYJFMBHZO3yt1dVHV9c6uYqA798OzcDTz2kCDcl/Qyic+RsItQlyKxPLBFnKWXQp9iK41fGDYMyNXzQLAeJ/OGf33nCwpbEz3glT3QYz2Eejvkf6WDVIOn+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=J8y0My6B; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1719299134; c=relaxed/simple;
+	bh=5wHPKnBN4N13ssl6pFwaMGesK3D0vPy/TFPtbLfiIlA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f91o98UVXWP7Y+RefBEgyn8dHtQDNoATRgF/mK5dw2LlWvkPZ2D+0UsHRk/QaQVfJYHWzdYq97QvjLh4rt+95QchJbGJMAVYPAddRdX9J849Jz5CNgLCkUSZrwql9dxevySk59jFks5wJmeeRz3UYy8GnSUDA0FYZ4KzHB/8K4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=U8iNDRT4; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="J8y0My6B"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1719299094; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=TCyWfIxYZ617Lw6Wt/fo0of1TWM+Fz/03YPYZQgvzOo=;
-	b=J8y0My6B38xJPND5IOxc2M2+QxwzmDUjB0MZyXvziBB1KPYjMkBNFc5KDVqWfD6tX7FLt2ukdinKBRzsK7t0w85Ry4JmmaKD0Fc1NoNJUNLw3FEPUbHK12ts7ZhDENFWy4Gdod2G2NlQ8hzmb1/MUh5ZlEyeM6WO6zMEQN4Xt9c=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0W9Ekw83_1719299091;
-Received: from 30.97.56.75(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W9Ekw83_1719299091)
-          by smtp.aliyun-inc.com;
-          Tue, 25 Jun 2024 15:04:52 +0800
-Message-ID: <0e66d3c8-5059-44e4-b015-40eaf2083e80@linux.alibaba.com>
-Date: Tue, 25 Jun 2024 15:04:51 +0800
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="U8iNDRT4"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-57cc1c00ba6so6291421a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 00:05:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1719299130; x=1719903930; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dRU5D6TfCbGDRiZmBlg8+VtjEI6bshTmmOYL3XFdx+8=;
+        b=U8iNDRT4P4ncpmdaMFXItboWjDv/lyapk7NAxqZ8Ra4Q6t3ksuo3EdwBAD7WP2GADE
+         rEr7ACOoAAD5RTxD80y6BTAxGkuX1AW/9LxfZqfnqLquC3tBgwY/tAYfgnxryfvRwCMe
+         MNGHcwthkYkvGLFa9Fjz/R8yf0Lovv+hdXC/eaRxTQ+G2XL7UnU8FRAoW/YDzLF8n+n0
+         n+XKKrdtt2udDU8J7pbmsMlLLck9s2V5xkTHnpk5jfQs1JDTX/RLJQlflZXhQpJj6h1n
+         ngVDQsCOR1bn8jd7ZheAqxGpBV8NJxma59JG/alMgksfqmR1ZUA48G7Pm8YVmTeRgqpD
+         xoGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719299130; x=1719903930;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dRU5D6TfCbGDRiZmBlg8+VtjEI6bshTmmOYL3XFdx+8=;
+        b=BTgqwwl452CJl6fs3q1AEGehbBpCrOYapxEUQslTMjtU/+WlSEhkHcP1m4Ogr6ZQct
+         1/ZwIMyYWOpw+TWXVK1HRs6cYL4N8l0s/pVItMfNSBOW5Zg5n7u4zGx0CfG3FGwvIMuN
+         CuhYJKAv+wX/nPWkaOei2SaclCSoFXIZoxRvFAg+kzdj6w1gPnTqAJamkP/odKGCtfqC
+         +kioXPHJbcwHHcvsbtxp4vdXL2OjqrRzJK9GhOBdwGHC5BcrtL8dwLKDGe3PXnWDbIXA
+         F+zT6buNJ3D5hwAuf7sTrliZIvnRo8ZdtMLKoBqMrVMTtxbulrWd80oQpC6QlYJRGjko
+         gCJg==
+X-Forwarded-Encrypted: i=1; AJvYcCUH8qmoI2PjvJ28y3HJxn9PuMS4qCETOM9TDO/3g7Zf5DrbMD569czumOEuG1PofwS+amjJ19rchhuzO/yAx3vUXlxnNuYmzi43lndt
+X-Gm-Message-State: AOJu0YxXjM0xVLhvntFlvPEIKaDrv9wroCLhw8T9BROJAt1epRE+QHN0
+	JIWlKcGW0TJuuXIHmkjFqXLWExAXXJfXj3qW5sD96L8l6432C+YtXRDr90kavgK+hLJ/eBsVr7w
+	p
+X-Google-Smtp-Source: AGHT+IFRK+lk5imMJt5M29iwxHDdbQXMOuxaGyygqaPcLVPZB9z7Ln2YwJJbnA7lqq9jY9Vh78Xqug==
+X-Received: by 2002:a50:a6c4:0:b0:57d:50e:d76b with SMTP id 4fb4d7f45d1cf-57d4bd53462mr3633602a12.7.1719299130392;
+        Tue, 25 Jun 2024 00:05:30 -0700 (PDT)
+Received: from localhost (109-81-95-13.rct.o2.cz. [109.81.95.13])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d303d7aaasm5548582a12.4.2024.06.25.00.05.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jun 2024 00:05:30 -0700 (PDT)
+Date: Tue, 25 Jun 2024 09:05:29 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>, linux-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v2 01/14] mm: memcg: introduce memcontrol-v1.c
+Message-ID: <ZnpsOaMLI4Y-Ju50@tiehlicka>
+References: <20240625005906.106920-1-roman.gushchin@linux.dev>
+ <20240625005906.106920-2-roman.gushchin@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mm-unstable] mm: folio_add_new_anon_rmap() careful
- __folio_set_swapbacked()
-To: Barry Song <21cnbao@gmail.com>, Hugh Dickins <hughd@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, chrisl@kernel.org,
- david@redhat.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- mhocko@suse.com, ryan.roberts@arm.com, shy828301@gmail.com,
- surenb@google.com, v-songbaohua@oppo.com, willy@infradead.org,
- ying.huang@intel.com, yosryahmed@google.com, yuanshuai@oppo.com,
- yuzhao@google.com
-References: <f3599b1d-8323-0dc5-e9e0-fdb3cfc3dd5a@google.com>
- <CAGsJ_4xABUi11ruC5obXvGi3R8zVQx2gzGAeqTGh22bj4xR9Dw@mail.gmail.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <CAGsJ_4xABUi11ruC5obXvGi3R8zVQx2gzGAeqTGh22bj4xR9Dw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240625005906.106920-2-roman.gushchin@linux.dev>
 
-
-
-On 2024/6/25 13:55, Barry Song wrote:
-> On Tue, Jun 25, 2024 at 5:00 PM Hugh Dickins <hughd@google.com> wrote:
->>
->> Commit "mm: use folio_add_new_anon_rmap() if folio_test_anon(folio)==
->> false" has extended folio_add_new_anon_rmap() to use on non-exclusive
->> folios, already visible to others in swap cache and on LRU.
->>
->> That renders its non-atomic __folio_set_swapbacked() unsafe: it risks
->> overwriting concurrent atomic operations on folio->flags, losing bits
->> added or restoring bits cleared.  Since it's only used in this risky
->> way when folio_test_locked and !folio_test_anon, many such races are
->> excluded; but, for example, isolations by folio_test_clear_lru() are
->> vulnerable, and setting or clearing active.
->>
->> It could just use the atomic folio_set_swapbacked(); but this function
->> does try to avoid atomics where it can, so use a branch instead: just
->> avoid setting swapbacked when it is already set, that is good enough.
->> (Swapbacked is normally stable once set: lazyfree can undo it, but
->> only later, when found anon in a page table.)
->>
->> This fixes a lot of instability under compaction and swapping loads:
->> assorted "Bad page"s, VM_BUG_ON_FOLIO()s, apparently even page double
->> frees - though I've not worked out what races could lead to the latter.
->>
->> Signed-off-by: Hugh Dickins <hughd@google.com>
+On Mon 24-06-24 17:58:53, Roman Gushchin wrote:
+> This patch introduces the mm/memcontrol-v1.c source file which will be used for
+> all legacy (cgroup v1) memory cgroup code. It also introduces mm/memcontrol-v1.h
+> to keep declarations shared between mm/memcontrol.c and mm/memcontrol-v1.c.
 > 
-> Thanks a lot, Hugh. Sorry for my mistake. I guess we should squash this into
-> patch 1/3 "mm: use folio_add_new_anon_rmap() if folio_test_anon(folio) ==
-> false"?
-> Andrew, could you please help to squash this one?
+> As of now, let's compile it if CONFIG_MEMCG is set, similar to mm/memcontrol.c.
+> Later on it can be switched to use a separate config option, so that the legacy
+> code won't be compiled if not required.
 
-Hope the commit message written by Hugh can also be squashed into the 
-original patch, as it is very helpful to me :)
+I do not feel strongly about that but wouldn't having the new config
+here already make it easier to test?
 
->> ---
->>   mm/rmap.c | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/mm/rmap.c b/mm/rmap.c
->> index df1a43295c85..5394c1178bf1 100644
->> --- a/mm/rmap.c
->> +++ b/mm/rmap.c
->> @@ -1408,7 +1408,9 @@ void folio_add_new_anon_rmap(struct folio *folio, struct vm_area_struct *vma,
->>          VM_WARN_ON_FOLIO(folio_test_hugetlb(folio), folio);
->>          VM_BUG_ON_VMA(address < vma->vm_start ||
->>                          address + (nr << PAGE_SHIFT) > vma->vm_end, vma);
->> -       __folio_set_swapbacked(folio);
->> +
->> +       if (!folio_test_swapbacked(folio))
->> +               __folio_set_swapbacked(folio);
->>          __folio_set_anon(folio, vma, address, exclusive);
->>
->>          if (likely(!folio_test_large(folio))) {
->> --
->> 2.35.3
->>
+> Signed-off-by: Roman Gushchin <roman.gushchin@linux.dev>
+
+Anyway
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+> ---
+>  mm/Makefile        | 3 ++-
+>  mm/memcontrol-v1.c | 3 +++
+>  mm/memcontrol-v1.h | 7 +++++++
+>  3 files changed, 12 insertions(+), 1 deletion(-)
+>  create mode 100644 mm/memcontrol-v1.c
+>  create mode 100644 mm/memcontrol-v1.h
 > 
-> Thanks
-> Barry
+> diff --git a/mm/Makefile b/mm/Makefile
+> index 8fb85acda1b1..124d4dea2035 100644
+> --- a/mm/Makefile
+> +++ b/mm/Makefile
+> @@ -26,6 +26,7 @@ KCOV_INSTRUMENT_page_alloc.o := n
+>  KCOV_INSTRUMENT_debug-pagealloc.o := n
+>  KCOV_INSTRUMENT_kmemleak.o := n
+>  KCOV_INSTRUMENT_memcontrol.o := n
+> +KCOV_INSTRUMENT_memcontrol-v1.o := n
+>  KCOV_INSTRUMENT_mmzone.o := n
+>  KCOV_INSTRUMENT_vmstat.o := n
+>  KCOV_INSTRUMENT_failslab.o := n
+> @@ -95,7 +96,7 @@ obj-$(CONFIG_NUMA) += memory-tiers.o
+>  obj-$(CONFIG_DEVICE_MIGRATION) += migrate_device.o
+>  obj-$(CONFIG_TRANSPARENT_HUGEPAGE) += huge_memory.o khugepaged.o
+>  obj-$(CONFIG_PAGE_COUNTER) += page_counter.o
+> -obj-$(CONFIG_MEMCG) += memcontrol.o vmpressure.o
+> +obj-$(CONFIG_MEMCG) += memcontrol.o memcontrol-v1.o vmpressure.o
+>  ifdef CONFIG_SWAP
+>  obj-$(CONFIG_MEMCG) += swap_cgroup.o
+>  endif
+> diff --git a/mm/memcontrol-v1.c b/mm/memcontrol-v1.c
+> new file mode 100644
+> index 000000000000..a941446ba575
+> --- /dev/null
+> +++ b/mm/memcontrol-v1.c
+> @@ -0,0 +1,3 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +
+> +#include "memcontrol-v1.h"
+> diff --git a/mm/memcontrol-v1.h b/mm/memcontrol-v1.h
+> new file mode 100644
+> index 000000000000..7c5f094755ff
+> --- /dev/null
+> +++ b/mm/memcontrol-v1.h
+> @@ -0,0 +1,7 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +
+> +#ifndef __MM_MEMCONTROL_V1_H
+> +#define __MM_MEMCONTROL_V1_H
+> +
+> +
+> +#endif	/* __MM_MEMCONTROL_V1_H */
+> -- 
+> 2.45.2
+
+-- 
+Michal Hocko
+SUSE Labs
