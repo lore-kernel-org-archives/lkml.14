@@ -1,109 +1,69 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026C714830E
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 08:32:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D42149C45
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 08:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719304377; cv=none; b=s9XrnkrsgbGqNByWM0ZzvpXlehW7r6MQUKcunmM7+zxu+Pdp+TYVgcTf0B8I1EJL75esmtls83vKkx3bV/XZSye8u5leJ6k73ts9hbRj8br6SkokCLiAm3ICE63m1y0+fVRBpaUhMkiGnDXlinWLnRO1qpZ/hGGOoAIFCkTsioY=
+	t=1719304388; cv=none; b=IjCOCc5kRNPElXMy4dkPujfJV8vEfINyYhZyEY9mCfMKyu94W98UIkkn/CDbA6kVijBvkNZA9bPFq7sBo6AScdB3yXb3w0pQ3zO8VF69W+0B82LLC5E+RirqP3iqEi8F5oR4zawuAzNqQAH6Kny6jl6cgrFmYnokQ5jqO0KkRQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719304377; c=relaxed/simple;
-	bh=RWnZq6/e1o8ODqj7cwxxBBd2E4goPZtqioAyVQQcqSY=;
+	s=arc-20240116; t=1719304388; c=relaxed/simple;
+	bh=BAC4cTMVD1u8CmBSnANIr+EbJBSCJ8Py+C49dJT7/kM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VesBeVYcvGhnarjyPDZM2WJegX5XtSo9QddjCfSKfk5P1994GdofdTLp0A2egUTUr2HkANK6XTGhApyMeBX3VgFbnHol0fPPONWXhGqXylZCg4oF2qGZ1hRj7LYB/k0rOAfSoVz1vwBlyZqzm+rjAjmwFOCAZJe3IHTGP/mrzWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DwkeaWLg; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DwkeaWLg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719304374;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kmuQcBhqdbQliLKyKkeXS3WXDCp2XThxY79yU+S5CmA=;
-	b=DwkeaWLgNLPntZ+fga/Kk0WDqjtIRh41DdZ+vyJcASdC142tv5/qSU4thfB6Se4TnTkaPg
-	I0e63Irc3i8mTRt21ia6IIm3MJ+qUb91fRuOTTcaEm8M8DiG33A+lh/MdQ5id1RPT1l6h7
-	UZY5qZtpB6L9kKRe60fGfS5n3PJUveg=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-331-rb1s8MfXPBC_M8QmCgFOMQ-1; Tue, 25 Jun 2024 04:32:52 -0400
-X-MC-Unique: rb1s8MfXPBC_M8QmCgFOMQ-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a72716df71eso38253866b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 01:32:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719304371; x=1719909171;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kmuQcBhqdbQliLKyKkeXS3WXDCp2XThxY79yU+S5CmA=;
-        b=jjnAqDNRbguuIk9COAfAsnqg6vFMZbbkbg7AGtSalZfpulyBBWPTxyeNxOQkYpq5On
-         4rkKZ0ByzF1aUBEGY1AMgArZ2IElzjDHooWGM8EJ+UUA0xxxwMewKJS3W9dGs2v4B6se
-         o0qXhc28N/23hziOmDzro6P5488u98E8HhJYbGu56+Gs61iRqFadaefOqiof0Gm0o1AH
-         LrEH6CEr/VQL6xSy69xWDqx2R67U/4y1GRKgVLZcxPiBTuEbnhULShzA4ueUccChcfRg
-         kqFpAVZX4RFYOOEG9CJvuHAOD1MAjWjp+hcLjtt35EdbSleC0QttX3XRuQS7r1QWlDDb
-         u8uA==
-X-Forwarded-Encrypted: i=1; AJvYcCXQbGpYFO1/c9ht7ynQxBNIf9i81hK/t5ruBObF/NujWkLAAO8Rh2merB5rtJTp9z0l4TDy9arAjZiVs3WAZNpNPuWGHYgGd5CSuyr1
-X-Gm-Message-State: AOJu0YwxcZfGDQj7BYg6H1gYiSmgwgDXU4AvgcAEwsRjbzFCubK+TSq2
-	mwvhLBXK8B4VyVL7ps3VyfFQgT5QMQXxo7bIliMfpeNidn9/W4IdUs6C6szVMYKvPhPU6aOiOKg
-	SkE9BS3Pf9BNrdKHXnboV9Ea/RJM1Eb50EWgSdlTrOB7V0uxsuz6OeOfh5BQw0A==
-X-Received: by 2002:a17:907:a4c8:b0:a72:5fd5:ea02 with SMTP id a640c23a62f3a-a725fd5ec00mr300909466b.10.1719304371444;
-        Tue, 25 Jun 2024 01:32:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGKGLvgEEpYliYHX2+LzsnrTLSKm1BWp3FNYDFymgqiF0mmHfghVSDUyJ+9zJAMv1pBABF97A==
-X-Received: by 2002:a17:907:a4c8:b0:a72:5fd5:ea02 with SMTP id a640c23a62f3a-a725fd5ec00mr300906066b.10.1719304370721;
-        Tue, 25 Jun 2024 01:32:50 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc7:342:f1b5:a48c:a59a:c1d6:8d0a])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6fe779bc80sm366832266b.174.2024.06.25.01.32.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 01:32:50 -0700 (PDT)
-Date: Tue, 25 Jun 2024 04:32:46 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Jason Wang <jasowang@redhat.com>
-Cc: xuanzhuo@linux.alibaba.com, eperezma@redhat.com, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	virtualization@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, venkat.x.venkatsubra@oracle.com,
-	gia-khanh.nguyen@oracle.com
-Subject: Re: [PATCH V2 3/3] virtio-net: synchronize operstate with admin
- state on up/down
-Message-ID: <20240625043206-mutt-send-email-mst@kernel.org>
-References: <20240624024523.34272-1-jasowang@redhat.com>
- <20240624024523.34272-4-jasowang@redhat.com>
- <20240624060057-mutt-send-email-mst@kernel.org>
- <CACGkMEsysbded3xvU=qq6L_SmR0jmfvXdbthpZ0ERJoQhveZ3w@mail.gmail.com>
- <20240625031455-mutt-send-email-mst@kernel.org>
- <CACGkMEt4qnbiotLgBx+jHBSsd-k0UAVSxjHovfXk6iGd6uSCPg@mail.gmail.com>
- <20240625035638-mutt-send-email-mst@kernel.org>
- <CACGkMEtY1waRRWOKvmq36Wxio3tUGbTooTe-QqCMBFVDjOW-8w@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=EIheQ8b+mBj4SKwcH02/g/iH/u8XJRnEXK1/SGBaIm1Bj0YnF4GYiF/uSP121vyLBp5Ku24tiRqQJziUyMxnSe2CMOKjEkxkge80Lk0V6p6gJbqoaGInTDYEy8RxOzJzXzNkicBjTT7l6QAmOuSGQn3++hwj1Zui4xFeO1ubcSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1sM1bf-0002Bf-70; Tue, 25 Jun 2024 10:32:51 +0200
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1sM1be-004qca-KI; Tue, 25 Jun 2024 10:32:50 +0200
+Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1sM1be-00E3rT-1l;
+	Tue, 25 Jun 2024 10:32:50 +0200
+Date: Tue, 25 Jun 2024 10:32:50 +0200
+From: Marco Felsch <m.felsch@pengutronix.de>
+To: Andrei Lalaev <andrey.lalaev@gmail.com>
+Cc: dmitry.torokhov@gmail.com, robh@kernel.org, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Andrei Lalaev <andrei.lalaev@anton-paar.com>
+Subject: Re: [PATCH] Input: qt1050 - handle CHIP_ID reading error
+Message-ID: <20240625083250.jcgfszu6plkopouu@pengutronix.de>
+References: <20240617183018.916234-1-andrey.lalaev@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACGkMEtY1waRRWOKvmq36Wxio3tUGbTooTe-QqCMBFVDjOW-8w@mail.gmail.com>
+In-Reply-To: <20240617183018.916234-1-andrey.lalaev@gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2024 at 04:11:05PM +0800, Jason Wang wrote:
-> On Tue, Jun 25, 2024 at 3:57 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> >
-> > On Tue, Jun 25, 2024 at 03:46:44PM +0800, Jason Wang wrote:
-> > > Workqueue is used to serialize those so we won't lose any change.
-> >
-> > So we don't need to re-read then?
-> >
+On 24-06-17, Andrei Lalaev wrote:
+> From: Andrei Lalaev <andrei.lalaev@anton-paar.com>
 > 
-> We might have to re-read but I don't get why it is a problem for us.
+> If the device is missing, we get the following error:
 > 
-> Thanks
+>   qt1050 3-0041: ID -1340767592 not supported
+> 
+> Let's handle this situation and print more informative error
+> when reading of CHIP_ID fails:
+> 
+>   qt1050 3-0041: Failed to read chip ID: -6
+> 
+> Fixes: cbebf5addec1 ("Input: qt1050 - add Microchip AT42QT1050 support")
+> Signed-off-by: Andrei Lalaev <andrei.lalaev@anton-paar.com>
 
-I don't think each ethtool command should force a full config read,
-is what I mean. Only do it if really needed.
-
--- 
-MST
-
+Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
