@@ -1,89 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8D61BC57;
-	Tue, 25 Jun 2024 14:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17961BC57;
+	Tue, 25 Jun 2024 15:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719327572; cv=none; b=f5XEEPdgcvQn4JMomJkS6dgZY6PiiumwDUoP41stimO2bN0BCxQWLGVmsb7fuKpRjp04ugoIkwehALYWzsJsZnieSMIvaAegdcYfXYjtkyiFpG6esN65jKrI/Xyex6hD7gkkjajRyOyEtuQGusW+ESH5h22a2lexGc4iF6N/hMc=
+	t=1719327631; cv=none; b=r1tWNRjod1x2tCLOif91GGVTYF5v+2tJZzGtzHk86UWAOygDZbM1O9ZjX3CUR+GmGkWV5xaSWTpcDPC5jCsFg6j3qz9dOGR7oTh/UwPpDggELVPkbU50nNLAPJHKu5P21zhlmu1DM1Z6oOLEBDKcAizu0XKNv40VpQlVsZyF/Nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719327572; c=relaxed/simple;
-	bh=4wYjB3JY0AnTw9nAvS+x7fjoQVoS9QzpjpY/mNtLggw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O1C4q1C9iNAOUTWx9/emcEHSap2TPW/SFp/PQ4mgGEJgfw1k4yZL56uP29swrDjkPg+82F5QIoQuMhL0nIUhMYRQg0nPTi0Fv41PLr4yR9CDviJEzUOqGIeKBPOE+NwzAOaYWxdK/G1HSNldeIkcVHBWEUuHzcjp8onPHXPftJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h7NAS6q/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719327631; c=relaxed/simple;
+	bh=XWDQMCEnDjXZKc6n8OfFSE1SonScXjdA1fH3SFBXSpQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=RmRRYLXDgBBvcX3wvF6OVfZvlhD8Hm8DlSluX5nEb4xyYGMrXAURJWYc2x0xtMF0yvO0uYBh9IGNbpzwQ/Kyl/07X2HlTuXBqEukdh2EqGCSjJLiQNfUckKqi2qkU+Aw5xxUj6LcyaVvPwH4QPRNtnuNDttk2wk/LQZMmMa3e8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=Q2M8zyXZ; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h7NAS6q/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7AA9C4AF0B;
-	Tue, 25 Jun 2024 14:59:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719327570;
-	bh=4wYjB3JY0AnTw9nAvS+x7fjoQVoS9QzpjpY/mNtLggw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=h7NAS6q/C2ZzBIAYKai5whZiBum489XS/J7zffMQOVU0xDBrGbji0HlKyZbV0brVY
-	 jwHILNhtgojEmdiUQ3GnAfMPUSaUya0+D0cFcjQ9dhbvTuMsGJh4W2x+J7X/9HXZ9V
-	 srBl3VFTN1Ly99vlBTFzJFJzSgq138zPAzzOL2os8e1W4DzrZI1H0QEVZ5ZJR09krK
-	 /Bmyi4o96W3ViZ6cus20bYwYlLEzMNrqNFN4DiYRoFZwN6N3pBDHKz/uOmL4YFYFQX
-	 m3FOmbQnP7K8OC0mOv3dwo1NOo8qb7etGTDcG2HlC0EOZ1X1ih7qXwRSXhT5bSXbyY
-	 CFeH6MEdGgYfg==
-Date: Tue, 25 Jun 2024 07:59:26 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Donald
- Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Richard
- Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky
- <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, Thomas
- Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
- <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>,
- Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
- <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
- <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Martin KaFai
- Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu
- <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend
- <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
- Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa
- <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan
- <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>, Christian
- =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>, Bagas Sanjaya
- <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, Nikolay
- Aleksandrov <razor@blackwall.org>, Pavel Begunkov <asml.silence@gmail.com>,
- David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin
- <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, Harshitha
- Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
- Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi
- <pkaligineedi@google.com>
-Subject: Re: [PATCH net-next v13 00/13] Device Memory TCP
-Message-ID: <20240625075926.146d769d@kernel.org>
-In-Reply-To: <CAHS8izO1g5vZodyvKBNyE-Fx7A4EoD70RuDLwXtzE3yvfRw_2g@mail.gmail.com>
-References: <20240625024721.2140656-1-almasrymina@google.com>
-	<CAHS8izO1g5vZodyvKBNyE-Fx7A4EoD70RuDLwXtzE3yvfRw_2g@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="Q2M8zyXZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1719327621;
+	bh=XWDQMCEnDjXZKc6n8OfFSE1SonScXjdA1fH3SFBXSpQ=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=Q2M8zyXZaOR7M633GVVzlHYspg2HcutIH2WtwMysA4BiZ9rm9WUKNpV+M0KrbCmHo
+	 17ft5wRX+xpwGPdid+6sMNNpLmT3jzihcIwQTLG4+MTXC+CaWhJZHn8lNo+uZyBpiw
+	 +JkGDnQ5V13+QELwV6TEs5K9w9uI4Y3HT7kBUeNI=
+Received: from [IPv6:240e:358:1198:3d00:dc73:854d:832e:7] (unknown [IPv6:240e:358:1198:3d00:dc73:854d:832e:7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 6B3CF6720A;
+	Tue, 25 Jun 2024 11:00:06 -0400 (EDT)
+Message-ID: <e8db013bf06d2170dc48a8252c7049c6d1ee277a.camel@xry111.site>
+Subject: Re: [PATCH 2/2] vfs: support statx(..., NULL, AT_EMPTY_PATH, ...)
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>, Mateusz Guzik <mjguzik@gmail.com>
+Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	io-uring@vger.kernel.org, axboe@kernel.dk, torvalds@linux-foundation.org, 
+	loongarch@lists.linux.dev
+Date: Tue, 25 Jun 2024 22:58:35 +0800
+In-Reply-To: <CAAhV-H47NiQ2c+7NynVxduJK-yGkgoEnXuXGQvGFG59XOBAqeg@mail.gmail.com>
+References: <20240625110029.606032-1-mjguzik@gmail.com>
+	 <20240625110029.606032-3-mjguzik@gmail.com>
+	 <CAAhV-H47NiQ2c+7NynVxduJK-yGkgoEnXuXGQvGFG59XOBAqeg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Tue, 25 Jun 2024 07:16:00 -0700 Mina Almasry wrote:
-> What happened here is that I sync'd to net-next, ran all the tests
-> including the allmodconfig build which took a few hours, then posted
-> the series. In the meantime 34 patches got merged to net-next, and one
-> of those patches seems to generate a git am failure when I try to use
-> b4 to apply:
+On Tue, 2024-06-25 at 22:09 +0800, Huacai Chen wrote:
+> On Tue, Jun 25, 2024 at 7:01=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com>
+> wrote:
+> >=20
+> > The newly used helper also checks for 0-sized buffers.
+> >=20
+> > This avoids path lookup code, lockref management, memory allocation
+> > and
+> > in case of NULL path userspace memory access (which can be quite
+> > expensive with SMAP on x86_64).
+> >=20
+> > statx with AT_EMPTY_PATH paired with "" or NULL argument as
+> > appropriate
+> > issued on Sapphire Rapids (ops/s):
+> > stock:=C2=A0=C2=A0=C2=A0=C2=A0 4231237
+> > 0-check:=C2=A0=C2=A0 5944063 (+40%)
+> > NULL path: 6601619 (+11%/+56%)
+> >=20
+> > Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+> Hi, Ruoyao,
+>=20
+> I'm a bit confused. Ii this patch a replacement of your recent patch?
 
-Got it, feel free to repost as soon as you can build test the rebased
-version.
+Yes, both Linus and Christian hates introducing a new AT_ flag for this.
+
+This patch just makes statx(fd, NULL, AT_EMPTY_PATH, ...) behave like
+statx(fd, "", AT_EMPTY_PATH, ...) instead.  NULL avoids the performance
+issue and it's also audit-able by seccomp BPF.
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
