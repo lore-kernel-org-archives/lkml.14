@@ -1,111 +1,109 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02ECA149DF4;
-	Tue, 25 Jun 2024 11:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705F614A0BD;
+	Tue, 25 Jun 2024 11:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719316751; cv=none; b=pL7E8BywpwaGx1XjIUY3Q3/37CMdS/MNdipWSh4qN7VAb6cIGN1v7q4sk6hbhoI9NOp9SUt0Njvv8w1mX39PWTF7I0L/ylkxX73YETgoMExSmlGibK5S9h6bhvhLuUdJYfW9X5q+KRvKKTnh8jFkfViOejaqOodIsMuiI3xiyMw=
+	t=1719316771; cv=none; b=oOv6sT3zUajGsTCZl465lgl/BZzxNNs/7or/ua/69z4ppFBPYsvffKrUC/lLd2/ijgKD5kCLlZiW1hIzbP9ilazkbf7rRAOk/F5IMP4QmQeX6lmfwdBgDMu/BRV4Hf7jVblrqYpaaAohF9NgFtp6O+k+eDCqchpu5gdaU7YJ4NU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719316751; c=relaxed/simple;
-	bh=Hrfq+maSEj3WxB6vB3cQGQLr956uhgW13951p1ffbds=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h6lu9G5+uEU8Gj8ElEb0JQyDUZytQ8pYjUf3TGuBdXkFoVrGXV8IvpM55J6lUQfO2bUuf1f7owo8YK+PPgu9DAU7nGi4BNnWFFD9iB5Pa5JXUMW4S0jXSaUTmMmwjzX0BXQJl2sIbtpgaKzJkwbGPT0nRxwaOSsyMOSwdchRBUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=HRMqsVsK; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1719316771; c=relaxed/simple;
+	bh=QahEkLu9TC7Ijt9CJgc7loymkbNQEbP54b1wEkKu14k=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IHwvmCTMIKiB2MY3V/Ovli2eEgK7C7+jSyQnSh9r9p5jL0YODU0FhyZ0ZpmbTMSpAX/yox4bh80+TaZLdO5AklOEoCrAkYmgxcqonff6PW1M2DIHMeQ6lhg1xOhW1wUYC6k2/nOcusc/ywbv9rKJBSAPJCct9UH7ZVC69Axewkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=VR7qrcUR; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HRMqsVsK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=+gy/BrN3plSDRuoejybnMPbKrZg1ii0jthWvzT4Keuk=; b=HRMqsVsK6KtfIJ+AhJTGPBu8WD
-	FkIKIbX8KH/L1dUAXOTOGgncK2CAGq2KF3rnzfMgo0rgOIuP7RTel+hBMlfl0fMv5GTIzhzo0HSDq
-	/I+yWPDn992eHHrayab0mD8Ndk8sODlSgZ7j+45IhBzfJxjm6GDZTtQvF4bBcrLhpQZtJprOot/4O
-	LcCHlcHJZP9eXLp44UZsbXZrWzs0UpHn/ygNPGyUNqVhr4l3uNJreI4a07Ko8EITs2ahxK4/FdKrn
-	4HdMY+RPdWzfcYKExj9dJzCs2RlmdaK8qvBTliCdwWh97ZTby7zQ1xh4HWzLhQOYaDuUYMuEh6O2G
-	dCvqkI4A==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sM4ns-00000008P5z-14sL;
-	Tue, 25 Jun 2024 11:58:02 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 0387730036F; Tue, 25 Jun 2024 13:57:35 +0200 (CEST)
-Date: Tue, 25 Jun 2024 13:57:34 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: sandipan.das@amd.com, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, leit@meta.com,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] perf/x86/amd: Warn only on new bits set
-Message-ID: <20240625115734.GX31592@noisy.programming.kicks-ass.net>
-References: <20240524141021.3889002-1-leitao@debian.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="VR7qrcUR"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E78CF240008;
+	Tue, 25 Jun 2024 11:59:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1719316760;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bymOF6q/GmNuK/4tr2qlAhNMY7OYSXYN+52K4/jUKz4=;
+	b=VR7qrcUREdOYnveWozg5HRW4txUj8aV6OxBVLDVv5zFe34TYSp7r91HfgwVWFAQoWjHctd
+	ybQ31jFGiro1WO3mNfSDxUscZ6IDXJGElPOSkeSMJgn/phaZsuEc2alKGgER5b6XtZQXZA
+	wCrcAx5KVzYTujOxFY4y8el4n5OswhpNiTG8/jgJWe3GiEVuOVLqJch/NOFTzYcfzpzpWQ
+	DMU4T+hMxyS6U36FbtzZ+VIBhIrbKXcSWlYqyGAbUzUyM5lzk6B5hAFwEMYZ2B8niQLk75
+	czn68yC2CgoPRNn+SPL1lboPIsod8ZdEDFBYTBypQ5hIor5fbgwLRHdKk34EbQ==
+Date: Tue, 25 Jun 2024 13:59:18 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>, Thomas
+ Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Dent Project
+ <dentproject@linuxfoundation.org>, kernel@pengutronix.de,
+ UNGLinuxDriver@microchip.com
+Subject: Re: [PATCH net-next v3 1/7] net: ethtool: pse-pd: Expand C33 PSE
+ status with class, power and extended state
+Message-ID: <20240625135918.65f71c1e@kmaincent-XPS-13-7390>
+In-Reply-To: <ZnqdDmvy0YLqk6Ih@pengutronix.de>
+References: <20240614-feature_poe_power_cap-v3-0-a26784e78311@bootlin.com>
+	<20240614-feature_poe_power_cap-v3-1-a26784e78311@bootlin.com>
+	<Zm15fP1Sudot33H5@pengutronix.de>
+	<20240617154712.76fa490a@kmaincent-XPS-13-7390>
+	<ZnCUrUm69gmbGWQq@pengutronix.de>
+	<20240625111835.5ed3dff2@kmaincent-XPS-13-7390>
+	<ZnqdDmvy0YLqk6Ih@pengutronix.de>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240524141021.3889002-1-leitao@debian.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Fri, May 24, 2024 at 07:10:20AM -0700, Breno Leitao wrote:
-> Warning at every leaking bits can cause a flood of message, triggering
-> vairous stall-warning mechanisms to fire, including CSD locks, which
-> makes the machine to be unusable.
-> 
-> Track the bits that are being leaked, and only warn when a new bit is
-> set.
-> 
-> Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> ---
->  arch/x86/events/amd/core.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-> index 1fc4ce44e743..df0ba2382d13 100644
-> --- a/arch/x86/events/amd/core.c
-> +++ b/arch/x86/events/amd/core.c
-> @@ -941,11 +941,12 @@ static int amd_pmu_v2_snapshot_branch_stack(struct perf_branch_entry *entries, u
->  static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
->  {
->  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-> +	static atomic64_t status_warned = ATOMIC64_INIT(0);
-> +	u64 reserved, status, mask, new_bits;
->  	struct perf_sample_data data;
->  	struct hw_perf_event *hwc;
->  	struct perf_event *event;
->  	int handled = 0, idx;
-> -	u64 reserved, status, mask;
->  	bool pmu_enabled;
->  
->  	/*
-> @@ -1010,7 +1011,11 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
->  	 * the corresponding PMCs are expected to be inactive according to the
->  	 * active_mask
->  	 */
-> -	WARN_ON(status > 0);
-> +	if (status > 0) {
-> +		new_bits = atomic64_fetch_or(status, &status_warned) ^ atomic64_read(&status_warned);
-> +		// A new bit was set for the very first time.
-> +		WARN(new_bits, "New overflows for inactive PMCs: %llx\n", new_bits);
-> +	}
+On Tue, 25 Jun 2024 12:33:50 +0200
+Oleksij Rempel <o.rempel@pengutronix.de> wrote:
 
-Why not just a WARN_ON_ONCE() instead? This really shouldn't be
-happening in the first place.
+> Hi K=C3=B6ry,
+>=20
+> On Tue, Jun 25, 2024 at 11:18:35AM +0200, Kory Maincent wrote:
+>  [...] =20
+>  [...] =20
+>  [...] =20
+>  [...] =20
+>  [...] =20
+> >=20
+> > In fact I can't test it, I have a splitter and an adjustable load, not a
+> > splitter that can adjust it's own load. So I can't decrease the load of=
+ the
+> > splitter itself and reach this error condition. =20
+>=20
+> Hm.. how about this setup:
+> ------>>-----x--------->>---- =20
+> PSE          |-load      splitter
+> ------>>-----x--------->>---- =20
+>=20
+> Attach the load directly to the ethernet line after PSE did
+> classification with splitter. Then remove splitter. As long as load is
+> high enough, PSE will not turn the port off. Then reduce load until it dr=
+ops
+> below the threshold.
 
+That was a good idea but I can't managed do test it.
+This is what I try:=20
+                       /---ethernet cable---PD
+PSE=3D=3D=3Dpassive splitter=3D+
+                       \---barrel cable---load
+
+The active PD is well powered with PoE negotiation but there is no voltage =
+at
+the barrel cable of the passive splitter so the load is useless. :/ Maybe
+passive splitter works only with passive injector.
+
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
