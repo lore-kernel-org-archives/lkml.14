@@ -1,224 +1,104 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 667211E4BF;
-	Tue, 25 Jun 2024 13:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33051E4BF;
+	Tue, 25 Jun 2024 13:31:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719322239; cv=none; b=CucFcEyFG2QKkdWQQSjF/h1KWu173pHMWyxe8NSurSR0uHma46kWwdjdyk5nOadViSD2+lYnPgCOUDJmy2X82beKRcxLK9iMNcRmHfTEtjX1vpO4dnbf/URbiN/fJxOkaDIUKIeqK4BhsSX0bwIf7B+mLNtRxQ2/SKayuA6pOZg=
+	t=1719322263; cv=none; b=AqUDnYteBLRt3rkr0sg/E2j6v5mCgoJTThYqcWMY7naHJb9JHChYHpRgvyujBXzYIsxz8p8zjV/ormrMYs3LMGaQnJ42qC/shuzhU78KMssvRgsLBNJ7TmS2pOhJQTe06VZrra9Az++UuKg8CSHkaZq9TodrGb1Zb01NgjUDJ2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719322239; c=relaxed/simple;
-	bh=JhzjXgKifu5/D/SKFpApR3mOJjj8LGEoCdENPo+xmCg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S9SAw0tzU87bnkZwZXNLZmgHSQku1yghdxUgqcFf90Iy7xFmUwc7O0WtSqKfJdvXls9+fqavZ3DbwmoEkMVpEVKG8345hNiFlp5DSGTFHT3SD+bxhp9vF2Ldqr57LbX/5wJqWdrkjflmyiYPGBd47D2+wXmWIVPz0oPRU5xtv7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=m+c+rnjF; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=bK/P1zsA; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=m+c+rnjF; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=bK/P1zsA; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1719322263; c=relaxed/simple;
+	bh=o0udTKHZEk0pg4zJtJ33LRzt+kH4A8KT9v6IDXkPB14=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aNkYU1EjJTrmlUEBqMdIw2/XLnDPqNqC240etUqI1RvYZZ4h3pVIhb+FLt8n4WFQeOU65bcoBLlZgF/jWI7WLBa61r1PWUEOisFSHy7H/TZTTufuYDIwoRhDTb3Q/iNPx/v12draWB6g7o20APKJNNVhsEHPybFfxM4YQ0qlTcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=kqMV6DWA; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="m+c+rnjF";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="bK/P1zsA";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="m+c+rnjF";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="bK/P1zsA"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7CA9D21A4F;
-	Tue, 25 Jun 2024 13:30:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1719322235; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=of4oMpIBerQ3izREzdCQfoHy6/sqMBDaWKJerWvYlbU=;
-	b=m+c+rnjFq3PVOve8WmerFuB0FI6bnxtB3JnGPbqNO8VrZ3BHoXEjjTNDgglDoti5ajnNnq
-	Wr3L97LZmG9e5fByE381uDYd5DtG5VRiqEflsAHQFKdVnAepJzM8VIqCmt2XfKx+MDTSeO
-	hGmz/nSDv9JMZVQ1QWwds4RxqxX5Umk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1719322235;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=of4oMpIBerQ3izREzdCQfoHy6/sqMBDaWKJerWvYlbU=;
-	b=bK/P1zsAVzS4UyR1m/4z23cthsd9sfKj4M/9ksOP49BVKykHvPWF6+pFgMHhyMae5Eilq3
-	z2kMVrVfd8RYjyBA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=m+c+rnjF;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="bK/P1zsA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1719322235; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=of4oMpIBerQ3izREzdCQfoHy6/sqMBDaWKJerWvYlbU=;
-	b=m+c+rnjFq3PVOve8WmerFuB0FI6bnxtB3JnGPbqNO8VrZ3BHoXEjjTNDgglDoti5ajnNnq
-	Wr3L97LZmG9e5fByE381uDYd5DtG5VRiqEflsAHQFKdVnAepJzM8VIqCmt2XfKx+MDTSeO
-	hGmz/nSDv9JMZVQ1QWwds4RxqxX5Umk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1719322235;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=of4oMpIBerQ3izREzdCQfoHy6/sqMBDaWKJerWvYlbU=;
-	b=bK/P1zsAVzS4UyR1m/4z23cthsd9sfKj4M/9ksOP49BVKykHvPWF6+pFgMHhyMae5Eilq3
-	z2kMVrVfd8RYjyBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 70C0B13A9A;
-	Tue, 25 Jun 2024 13:30:35 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id /smCG3vGemYzGgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 25 Jun 2024 13:30:35 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 2E12FA08A4; Tue, 25 Jun 2024 15:30:31 +0200 (CEST)
-Date: Tue, 25 Jun 2024 15:30:31 +0200
-From: Jan Kara <jack@suse.cz>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Jan Kara <jack@suse.cz>, Yu Ma <yu.ma@intel.com>,
-	viro@zeniv.linux.org.uk, brauner@kernel.org, edumazet@google.com,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	pan.deng@intel.com, tianyou.li@intel.com, tim.c.chen@intel.com,
-	tim.c.chen@linux.intel.com
-Subject: Re: [PATCH v2 3/3] fs/file.c: remove sanity_check from alloc_fd()
-Message-ID: <20240625133031.jjew3uevvrgwgviw@quack3>
-References: <20240614163416.728752-1-yu.ma@intel.com>
- <20240622154904.3774273-1-yu.ma@intel.com>
- <20240622154904.3774273-4-yu.ma@intel.com>
- <20240625120834.rhkm3p5by5jfc3bw@quack3>
- <CAGudoHGYQwigyQSqm97zyUafxaOCo0VoHZmcYzF1KtqmX=npUg@mail.gmail.com>
- <CAGudoHH4ixO6n2BgMGx7EEYvLS2Agb8WBz_RM55HjCWBQ5tMLg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="kqMV6DWA"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-57d15b85a34so5812939a12.3;
+        Tue, 25 Jun 2024 06:31:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1719322260; x=1719927060; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jCPI9zmJcO9n3warYFnR4HzozQlCIFB1YY1JSHQ5z7I=;
+        b=kqMV6DWAZevNI3A6+V4WJL0snrrcutWJw9cuMxRFPUMp7ZxluYZ9SHScjH9rIo6awj
+         p3egBkIJMqnqxsrJjaQd4kJacpJtUzakTRCdu2B9Eel28DpYjvXVLTb+sGtAEjk1vD/R
+         Xp3lSZW4M0mczAEKPfyZwGJBbpV66/3+uAlY67ec9ejQ1YSewND1oLzCNhpVT/iwSyRT
+         1H2qR40nU89XOpfDLb5yXIIVBTNa34J3ffjB/OiMpeYtPZ4UrrkRZaLWXTGLYPwT8ETu
+         LsBjKuxssIaoRj2fmFpbK///EM21EcfUoe0i2AhWDsl8KO73to/g7lsZmIR8h/BZsPPy
+         oKQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719322260; x=1719927060;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jCPI9zmJcO9n3warYFnR4HzozQlCIFB1YY1JSHQ5z7I=;
+        b=C6EVnIA3W/uBTPd60lnXZ0W0FjwwjLwIhk9gJJKWfV12Fw1LZn1JP6JlzdBoolpKO0
+         64vKHcUYaiS7WbqcWbVvf4b8dn6sE6ple/5eJeLu6CcSpBU7aiadDYd5tLwIlDxsKrhh
+         kRI+9yBi465eRQup6fShU+anan8wzCXkce0lZ2h2T+K27E9qfo6KN/bTIrl8Tmwnc8F9
+         aZb76gYsMfSX64+ngDEniegt3sqmoLprtpn/1HJDyJ21nhp6MFApZHRFTyl2aQ2TndUo
+         17aT+BpwblOVXJRMM4jo3ZnZc1G84HxdUuzjYepPBCLNMsTime77RJSM21szK7PcQRXH
+         qNwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX/6eFRagx6cPcQISNDfxzSmLtpjCxTeYeA/zZrPQe4Od2eSHvlFtG4AdPlJejZvUNtKAcxXZ2inBcWCRSmFvJBQjZfmJ9sNZPn4WzhymHxZiEuhqRNEbyNZhTVnFf/Q1zX53M2
+X-Gm-Message-State: AOJu0YxrETMjr90MOVibFSNqc2gHQrppkY+sZulbcdymp7b/eATKTRz5
+	s9rnadaGSmkk1hu8WSjOCJjCUnCqgiVgVygLjFdH/bMCUECYG/M=
+X-Google-Smtp-Source: AGHT+IG8IvhbNWQyXNXBiabqfJKUTBxylBnGUaRIv/YzGLRkZZGtz9/ovU3Wq+9nBRyusriSfRd5Kg==
+X-Received: by 2002:a17:906:c096:b0:a6f:86fd:72b8 with SMTP id a640c23a62f3a-a715f97972bmr535116366b.42.1719322259708;
+        Tue, 25 Jun 2024 06:30:59 -0700 (PDT)
+Received: from [192.168.1.3] (p5b2b4a32.dip0.t-ipconnect.de. [91.43.74.50])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72452140e0sm315467366b.217.2024.06.25.06.30.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Jun 2024 06:30:59 -0700 (PDT)
+Message-ID: <971a36d8-b774-438c-a4a2-e2d35ae9495b@googlemail.com>
+Date: Tue, 25 Jun 2024 15:30:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.6 000/192] 6.6.36-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
+References: <20240625085537.150087723@linuxfoundation.org>
+Content-Language: de-DE
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20240625085537.150087723@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGudoHH4ixO6n2BgMGx7EEYvLS2Agb8WBz_RM55HjCWBQ5tMLg@mail.gmail.com>
-X-Rspamd-Queue-Id: 7CA9D21A4F
-X-Spam-Score: -4.01
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[3];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_LAST(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	MISSING_XM_UA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:dkim,suse.com:email]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 
-On Tue 25-06-24 15:11:23, Mateusz Guzik wrote:
-> On Tue, Jun 25, 2024 at 3:09 PM Mateusz Guzik <mjguzik@gmail.com> wrote:
-> >
-> > On Tue, Jun 25, 2024 at 2:08 PM Jan Kara <jack@suse.cz> wrote:
-> > >
-> > > On Sat 22-06-24 11:49:04, Yu Ma wrote:
-> > > > alloc_fd() has a sanity check inside to make sure the struct file mapping to the
-> > > > allocated fd is NULL. Remove this sanity check since it can be assured by
-> > > > exisitng zero initilization and NULL set when recycling fd.
-> > >   ^^^ existing  ^^^ initialization
-> > >
-> > > Well, since this is a sanity check, it is expected it never hits. Yet
-> > > searching the web shows it has hit a few times in the past :). So would
-> > > wrapping this with unlikely() give a similar performance gain while keeping
-> > > debugability? If unlikely() does not help, I agree we can remove this since
-> > > fd_install() actually has the same check:
-> > >
-> > > BUG_ON(fdt->fd[fd] != NULL);
-> > >
-> > > and there we need the cacheline anyway so performance impact is minimal.
-> > > Now, this condition in alloc_fd() is nice that it does not take the kernel
-> > > down so perhaps we could change the BUG_ON to WARN() dumping similar kind
-> > > of info as alloc_fd()?
-> > >
-> >
-> > Christian suggested just removing it.
-> >
-> > To my understanding the problem is not the branch per se, but the the
-> > cacheline bounce of the fd array induced by reading the status.
-> >
-> > Note the thing also nullifies the pointer, kind of defeating the
-> > BUG_ON in fd_install.
-> >
-> > I'm guessing it's not going to hurt to branch on it after releasing
-> > the lock and forego nullifying, more or less:
-> > diff --git a/fs/file.c b/fs/file.c
-> > index a3b72aa64f11..d22b867db246 100644
-> > --- a/fs/file.c
-> > +++ b/fs/file.c
-> > @@ -524,11 +524,11 @@ static int alloc_fd(unsigned start, unsigned
-> > end, unsigned flags)
-> >          */
-> >         error = -EMFILE;
-> >         if (fd >= end)
-> > -               goto out;
-> > +               goto out_locked;
-> >
-> >         error = expand_files(files, fd);
-> >         if (error < 0)
-> > -               goto out;
-> > +               goto out_locked;
-> >
-> >         /*
-> >          * If we needed to expand the fs array we
-> > @@ -546,15 +546,15 @@ static int alloc_fd(unsigned start, unsigned
-> > end, unsigned flags)
-> >         else
-> >                 __clear_close_on_exec(fd, fdt);
-> >         error = fd;
-> > -#if 1
-> > -       /* Sanity check */
-> > -       if (rcu_access_pointer(fdt->fd[fd]) != NULL) {
-> > +       spin_unlock(&files->file_lock);
-> > +
-> > +       if (unlikely(rcu_access_pointer(fdt->fd[fd]) != NULL)) {
-> >                 printk(KERN_WARNING "alloc_fd: slot %d not NULL!\n", fd);
-> > -               rcu_assign_pointer(fdt->fd[fd], NULL);
-> >         }
-> > -#endif
-> 
-> Now that I sent it it is of course not safe to deref without
-> protection from either rcu or the lock, so this would have to be
-> wrapped with rcu_read_lock, which makes it even less appealing.
-> 
-> Whacking the thing as in the submitted patch seems like the best way
-> forward here. :)
+Am 25.06.2024 um 11:31 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.6.36 release.
+> There are 192 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Yeah, as I wrote, I'm fine removing it, in particular if Christian is of
-the same opinion. I was more musing about whether we should make the check
-in fd_install() less aggressive since it is now more likely to trigger...
+Builds, boots and works fine w/o regressions on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. 
+Nothing unusual in dmesg output. Running 16 VMs in parallel for an hour now, and am 
+starting to compile 6.9.7-rc1 which I will boot-test too. Everything works as smoothly as 
+it gets with all CPUs at ~100%...
 
-								Honza
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+
+
+Beste Grüße,
+Peter Schneider
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
+
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
