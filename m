@@ -1,98 +1,96 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23BA157A6C
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 12:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC6F157A6C
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 12:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719320300; cv=none; b=i64nxC7iCMyV5ggw3vwyUaoS76/AtiO6x//grsGOBJexzh1umKrwlRDQLpzW3wKQ+5CcsgyueCtnojKLbc9KyEURHnQk9pxc6DjGPMVUZ0ZXxloqCm5PZy8dYhLW/7opbpLSGQKE0TowV+XH1IOoJ4FJvIlZMixP4S7S5moMkbA=
+	t=1719320306; cv=none; b=cdqkDLimySPSI2vmpc4oR2QMhOFD/ymm8wbm1FiHy7VGQQraHq7RYmcKrX7QB9bJvJNGciVeLY4N2HkhOFx9ktmI6o4+aITECra7MmQ4zLIEh/UwIryvtROTlQyYHaX4ztlQ72eckAkh4zcsND0ccbw4/lBDyWB60vNzS7bE4Dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719320300; c=relaxed/simple;
-	bh=r/tlR21NffIMt5ZDgvV1d7RlpuCNpsFKrOnjZOwLb0I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KJOW9UIpKdcITfojHe9UDU3cfmA+PrDB03MJt49OPGQfkAfD2zcNcqzlzBN74OMFhCCsOuUyrTD+XfKqAWyrIfWylPB2IqUZoji4S2AqbCejzIQHN3r4tLIFbhgbW8UcK/xlUNANQK3MJQzSy/wio678mx9sSie8K3CLvBLiM7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IwDFT0Nm; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719320306; c=relaxed/simple;
+	bh=R+0v3SjYynSFu6kDngop0Uopo9Xqhn/mNhXd+Yeuzas=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=n5tGE3lV6ooiimKSJKLA7/CjL2S4yVkGbJ3GQg1uNNDF1HgZX9qeJoDwqNZ8pG0ld9ClFL+AmPNO644CMlQ0JmgscqBAWK2K9n9RNV5LOw32e5VZPwqdKxuw7R9CmiIe1PJEn9quVI9WTOHQBnIL/XrOjeRIvPLV9u1pTinZm2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=cd0A3Mqx; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IwDFT0Nm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719320297;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JW2KMY7G2NYtXMPV0l1YlXRPUeGBL3/eBLAs9PUnfhs=;
-	b=IwDFT0Nm2s30dZvtCyhNsHMdt3uinZoXCQHWK0+FQsHQevCzbDo25FU3hCZFpJQQI5OZ8v
-	3x9QFmy8ELhxicyCnuw6ybUCHfRwAwGynhejj420A/NmOWjXB/a2YWxfVJ6f2BgqbWBUOq
-	gQBUjoiZU+q8o6GhiSHLWiMBFM3etZg=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-644-2t0IgI5xNyud8bgogOpjDw-1; Tue,
- 25 Jun 2024 08:58:16 -0400
-X-MC-Unique: 2t0IgI5xNyud8bgogOpjDw-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0C48419560B2;
-	Tue, 25 Jun 2024 12:58:15 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.198])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 0A6C03000225;
-	Tue, 25 Jun 2024 12:58:12 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue, 25 Jun 2024 14:56:41 +0200 (CEST)
-Date: Tue, 25 Jun 2024 14:56:38 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Tejun Heo <tj@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/17] signal: Bring down all threads when handling a
- non-coredump fatal signal
-Message-ID: <20240625125638.GA17193@redhat.com>
-References: <20240609142342.GA11165@redhat.com>
- <87r0d5t2nt.fsf@email.froward.int.ebiederm.org>
- <20240610152902.GC20640@redhat.com>
- <20240613154541.GD18218@redhat.com>
- <87ikyamf4u.fsf@email.froward.int.ebiederm.org>
- <20240617183758.GB10753@redhat.com>
- <87iky5k2yi.fsf@email.froward.int.ebiederm.org>
- <87o77xinmt.fsf_-_@email.froward.int.ebiederm.org>
- <87v825h8yi.fsf_-_@email.froward.int.ebiederm.org>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="cd0A3Mqx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=u73BM2k0P5V0AYjELtkiQ2BhOsIZOrApdWBJKOtljdU=; b=cd0A3Mqxf8WtqGzNNBqSZzdhFe
+	51ANiA2VcZdEPlHP5VTbnLoyccrXwEHOYk97oHIgGPYcz8Vsj/w14T5ZQVYO2mko5ixw5gTzjtTnV
+	LRMVlcgu735PH73u4Mj71RUymizaVWyvpq6LQOJtiK89pXNmzfcv0hKxNR/yhoAoDvibeRtEwduo1
+	sz1omZjEiVSrHQn6HWWqpRe60/abE3kM/RdeCHHB75ALRjPl9SnhO52UYu/4/w5fBT7j/0+pI9E4A
+	mwwZcZCJsXNLj0Qvde6ghN9IhKW3qbmuoHj2r3ZAmUyQmNZdQ7oYz6ZSonONvXPSiCbLfQKgCqRVd
+	roJzfXaA==;
+Received: from [84.69.19.168] (helo=localhost)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1sM5kW-007J4a-AU; Tue, 25 Jun 2024 14:58:16 +0200
+From: Tvrtko Ursulin <tursulin@igalia.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org,
+	kernel-dev@igalia.com,
+	=?UTF-8?q?Ma=C3=ADra=20Canal?= <mcanal@igalia.com>,
+	Tvrtko Ursulin <tvrtko.ursulin@igalia.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 2/2] arm64/numa: Add NUMA emulation for ARM64
+Date: Tue, 25 Jun 2024 13:58:03 +0100
+Message-ID: <20240625125803.38038-3-tursulin@igalia.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240625125803.38038-1-tursulin@igalia.com>
+References: <20240625125803.38038-1-tursulin@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87v825h8yi.fsf_-_@email.froward.int.ebiederm.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 06/18, Eric W. Biederman wrote:
->
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -2882,7 +2882,13 @@ bool get_signal(struct ksignal *ksig)
->  		 * Anything else is fatal, maybe with a core dump.
->  		 */
->  		exit_code = signr;
-> -		group_exit_needed = true;
-> +		if (sig_kernel_coredump(signr))
-> +			group_exit_needed = true;
+From: Maíra Canal <mcanal@igalia.com>
 
-OK... do_coredump() can fail before coredump_wait() even if CONFIG_COREDUMP
+Allow selecting NUMA emulation on arm64.
 
-> +		else {
-> +			signal->group_exit_code = exit_code;
-> +			signal->flags = SIGNAL_GROUP_EXIT;
-> +			zap_other_threads(current);
-> +		}
+Signed-off-by: Maíra Canal <mcanal@igalia.com>
+Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: “Rafael J. Wysocki" <rafael@kernel.org>
+---
+ arch/arm64/Kconfig | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-dequeue_signal() and/or ptrace_signal() can drop siglock, I think
-the else branch should re-check SIGNAL_GROUP_EXIT/group_exec_task.
-
-Oleg.
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 8e80df015bdd..49c1cdc545d3 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -1507,6 +1507,16 @@ config NODES_SHIFT
+ 	  Specify the maximum number of NUMA Nodes available on the target
+ 	  system.  Increases memory reserved to accommodate various tables.
+ 
++config NUMA_EMULATION
++	bool "NUMA emulation"
++	depends on NUMA
++	select GENERIC_ARCH_NUMA_EMULATION
++	help
++	  Enable NUMA emulation support. A flat machine will be split into
++	  virtual nodes when booted with "numa=fake=N", where N is the number
++	  of nodes, the system RAM will be split into N equal chunks, and
++	  assigned to each node.
++
+ source "kernel/Kconfig.hz"
+ 
+ config ARCH_SPARSEMEM_ENABLE
+-- 
+2.44.0
 
