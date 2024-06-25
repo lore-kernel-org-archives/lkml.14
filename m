@@ -1,124 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA2A16F8FB;
-	Tue, 25 Jun 2024 15:01:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206661779BD
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 15:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719327670; cv=none; b=EOVm+RQucMZ9eaSeKvjCX21QtSC4ly1dTMxyWN2PPaM/E9yqVXY1GYEk1yGsYFwrBEMcSC+YgCHRZPvuR4MxpoqZ+uK3q03lLuV30qTOry/46PLYwNOi13cnM8yaURjSmQWsnAikgbgsF2bGH8XeW1ABNZcHEr3+FWGHMe/E1AE=
+	t=1719327673; cv=none; b=YwUHVkY804BBf0PPRm9ETfH7D+reH91NzmRFBNc+VHYFB+bmzQHhJ6f6zfft2Hb4+V5Vzv4tlGzfRlwo/66RMm5/SEEqRj9e50RTe8WexerV3x2o38XL2441H9eoSFvGGscEr+0pJIaSNwPXuUYjjZ1pFWBOkOO/1Kn+OFtwT60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719327670; c=relaxed/simple;
-	bh=TLqYNWudouYZxLvdqWlChA6sggy7uu0Dwx9vwrb4VlA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=T3OXpgFdT6QB40bb46gB9hz6g/ZM5cpBdFvk1mpx8Wqx9Ev+jez6soMZDxNqBRg/MMMgcvP6BZ6C9OPdlik8vkHhRlUeG+dSkuy/L52GodVJOfqpuXOT7yC78qY3gS4dmUFJyRDuq5xONkpkaDhTrSJicgfgk80KI5zIHj4a0vQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UlQ6TOIX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719327673; c=relaxed/simple;
+	bh=8Mkc2dAeIVEx3R7G9p6Y+1c9o51iRv92j9rBtFVabHM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m87ElR/klDpoiRaQyQ5NYjnLl2lMNVHsKY2ex9dfGSyl/ntiD5wX3f0q8kvJTwu5+OtWg4uCOMeZS1e7O6MDpJ0nHjaYdxYj+K6PqQNw9mn6Ru6ECvtACYZeTZNaTEAnDTUFT2KCRc9A9I5vzqG82DUzdUWzcSnSFlWV+6iQgs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=PZXYapLs; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UlQ6TOIX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B79FC4AF10;
-	Tue, 25 Jun 2024 15:01:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719327669;
-	bh=TLqYNWudouYZxLvdqWlChA6sggy7uu0Dwx9vwrb4VlA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=UlQ6TOIX5U/4oKhEYjjToTqMk9dhcx8quYDFp8K0sioj/tbOYeCCXfVrd96oczp8z
-	 Q0pQ1AEPE7/HiIy4iLFB5K7j5ibW0DWVokTzX4lE65DjnZTxPuLIEonL3nXQHZo4wb
-	 I1UJpZGPwwry2LnPeMsiR4GEMN+zugwHkF83hfkYU8H4IXeLNzBw13xm9v08eRsvXH
-	 o2UnnQAkyjFtDHERdOf7OtR/mv89YzeejZ1SfVXzTUUNH+mqa6o4P92D1jIP5EgTu/
-	 wa1xvOncxWbLm85Mi336N62dGPkN48DTMsPDIWS/7EieOqRHewAkc+v7shYz7cTJ2Y
-	 S49TMB6XfDAVg==
-From: Mark Brown <broonie@kernel.org>
-Date: Tue, 25 Jun 2024 15:57:32 +0100
-Subject: [PATCH v9 04/39] arm64: Document boot requirements for Guarded
- Control Stacks
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="PZXYapLs"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-444fd22b7e5so3137111cf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 08:01:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1719327671; x=1719932471; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=wU0PYC0ZkNLbhTARB/13j0B2U4nC3MBHctLxER+tD4c=;
+        b=PZXYapLs7vFjjfjfZJok+F1RxRSP7v8EcJclSlLs4TGYIO+kDoNUG/Si8nd1uTKizx
+         wyr/jzX0IjS1yRU2M/S+P80tWtKu/Dr3ScO+jMj/RQy1jNmBNl23hNR7I7szbGqLXpBT
+         RWgGlPwnSkeQN2zmt1gNVfRCUgemqfYNN77Ao=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719327671; x=1719932471;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wU0PYC0ZkNLbhTARB/13j0B2U4nC3MBHctLxER+tD4c=;
+        b=tXdzp6bKwTPzk1STJhr8rF0jiGaNDope01aFrLFG5hfaLUQpNiEJ7M3MVltVTvjwps
+         Ee5VQgwEZ1Qr3SBgzgw0yuA/U44DPXqfMgWXP7x1C/0IQmsd8Ffyl6e/oOPpp+ohmmKu
+         vDaV65/ONTY0cD8CpmtTE/0H/fkWbspF2fMLCLTAhgqSfT0K1xW43Tf9BknE4GV/dXKB
+         /sIOE5gqeP4JHmQKZWvsscJIKI60ca4Mhe64yI+n8b8nABktWNhXuaHGw1dFezN3ty9G
+         Yi9nzCz9MvVqvkfRGmMQAzZfG/kkaBotNYjgQDVC1p1nEwpb/UerMDiTMBt/FLw7q69n
+         miGg==
+X-Gm-Message-State: AOJu0YxuOQ8Y2xU0SRfBuA5IaDHHVqXr/p4V03SfaJ+TxxX7VqwENoLB
+	9zdOEuPexMgfdVBlT/ST3uUVjqnndQx6sgN9TrStPijYA3aFNrLC7w9egsQpog==
+X-Google-Smtp-Source: AGHT+IHnSEvz1eYSAgsxVMAW3ADhvEI2ogcmyxjTyn9pVh+UkXUPLC1xrx6TzTqfMgC/8209I7UkCQ==
+X-Received: by 2002:a05:622a:4fcc:b0:444:f0b5:8a5e with SMTP id d75a77b69052e-444f0b58da0mr41753701cf.32.1719327670970;
+        Tue, 25 Jun 2024 08:01:10 -0700 (PDT)
+Received: from [192.168.1.26] ([98.97.116.235])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-444c96b06a2sm48629061cf.15.2024.06.25.08.01.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Jun 2024 08:01:10 -0700 (PDT)
+Message-ID: <46fb037b-0ee7-4d30-b690-9bdfbb38aa00@broadcom.com>
+Date: Tue, 25 Jun 2024 08:01:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/vmware: fix panic in vmware_hypercall_slow()
+To: Borislav Petkov <bp@alien8.de>
+Cc: linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+ hpa@zytor.com, dave.hansen@linux.intel.com, mingo@redhat.com,
+ tglx@linutronix.de, x86@kernel.org, ajay.kaher@broadcom.com,
+ bcm-kernel-feedback-list@broadcom.com, Alex James <alex.james@broadcom.com>
+References: <20240625083348.2299-1-alexey.makhalov@broadcom.com>
+ <20240625084721.GCZnqEGbrkNNW6ZCfZ@fat_crate.local>
+ <8193d6d2-5322-4a9a-82ed-50ac24dd3525@broadcom.com>
+ <20240625145128.GGZnrZcEK4YWOJyEMq@fat_crate.local>
+Content-Language: en-US
+From: Alexey Makhalov <alexey.makhalov@broadcom.com>
+Autocrypt: addr=alexey.makhalov@broadcom.com; keydata=
+ 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 EuY0
+In-Reply-To: <20240625145128.GGZnrZcEK4YWOJyEMq@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240625-arm64-gcs-v9-4-0f634469b8f0@kernel.org>
-References: <20240625-arm64-gcs-v9-0-0f634469b8f0@kernel.org>
-In-Reply-To: <20240625-arm64-gcs-v9-0-0f634469b8f0@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
- Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <maz@kernel.org>, 
- Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>, 
- Suzuki K Poulose <suzuki.poulose@arm.com>, Arnd Bergmann <arnd@arndb.de>, 
- Oleg Nesterov <oleg@redhat.com>, Eric Biederman <ebiederm@xmission.com>, 
- Shuah Khan <shuah@kernel.org>, 
- "Rick P. Edgecombe" <rick.p.edgecombe@intel.com>, 
- Deepak Gupta <debug@rivosinc.com>, Ard Biesheuvel <ardb@kernel.org>, 
- Szabolcs Nagy <Szabolcs.Nagy@arm.com>, Kees Cook <kees@kernel.org>
-Cc: "H.J. Lu" <hjl.tools@gmail.com>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Florian Weimer <fweimer@redhat.com>, Christian Brauner <brauner@kernel.org>, 
- Thiago Jung Bauermann <thiago.bauermann@linaro.org>, 
- Ross Burton <ross.burton@arm.com>, linux-arm-kernel@lists.infradead.org, 
- linux-doc@vger.kernel.org, kvmarm@lists.linux.dev, 
- linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
- linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
- Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.14-dev-d4707
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1706; i=broonie@kernel.org;
- h=from:subject:message-id; bh=TLqYNWudouYZxLvdqWlChA6sggy7uu0Dwx9vwrb4VlA=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBmett1Wk4bVcZOcqjYz+jP+BA1iZz4W5DlLa3jsX37
- CNbJR56JATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZnrbdQAKCRAk1otyXVSH0PzkB/
- 4mz1VzfKV2IStH+P2yx6moJG/TRBVMdnGiYeYEGpCKpfcS9fvAUUa+UcXCtCzkp6kwSyxHpNEH1t5W
- YF4qIhKfZK6ckvcyKEOjNRfTC201wS27OPawQmtGg9vUVLxpqvVXuUbk3ogailOroPHmLUqVJuyCsl
- 3IUNWQ8gBTfYiBHY1hM43UNn0TlRByOSPmRBK+1TYhSXjtiTb/Z3qOdvSQezoQaOaN7eRBUIKtkhgn
- Rxd9FaiCF5v2yyEsMNB5/Dzu7pQQZulY0aNKv0PmF4ir7jQ12xzbj/eBym76YS0TSBWH1pLhCjjN0d
- qgro1ApVVUoCz8Ybcj1G+v6E3ZNxhP
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-FEAT_GCS introduces a number of new system registers, we require that
-access to these registers is not trapped when we identify that the feature
-is detected.
 
-Reviewed-by: Thiago Jung Bauermann <thiago.bauermann@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/arch/arm64/booting.rst | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
 
-diff --git a/Documentation/arch/arm64/booting.rst b/Documentation/arch/arm64/booting.rst
-index b57776a68f15..de3679770c64 100644
---- a/Documentation/arch/arm64/booting.rst
-+++ b/Documentation/arch/arm64/booting.rst
-@@ -411,6 +411,28 @@ Before jumping into the kernel, the following conditions must be met:
- 
-     - HFGRWR_EL2.nPIRE0_EL1 (bit 57) must be initialised to 0b1.
- 
-+ - For features with Guarded Control Stacks (FEAT_GCS):
-+
-+  - If EL3 is present:
-+
-+    - SCR_EL3.GCSEn (bit 39) must be initialised to 0b1.
-+
-+ - If the kernel is entered at EL1 and EL2 is present:
-+
-+    - HFGITR_EL2.nGCSEPP (bit 59) must be initialised to 0b1.
-+
-+    - HFGITR_EL2.nGCSSTR_EL1 (bit 58) must be initialised to 0b1.
-+
-+    - HFGITR_EL2.nGCSPUSHM_EL1 (bit 57) must be initialised to 0b1.
-+
-+    - HFGRTR_EL2.nGCS_EL1 (bit 53) must be initialised to 0b1.
-+
-+    - HFGRTR_EL2.nGCS_EL0 (bit 52) must be initialised to 0b1.
-+
-+    - HFGWTR_EL2.nGCS_EL1 (bit 53) must be initialised to 0b1.
-+
-+    - HFGWTR_EL2.nGCS_EL0 (bit 52) must be initialised to 0b1.
-+
- The requirements described above for CPU mode, caches, MMUs, architected
- timers, coherency and system registers apply to all CPUs.  All CPUs must
- enter the kernel in the same exception level.  Where the values documented
+On 6/25/24 7:51 AM, Borislav Petkov wrote:
+> On Tue, Jun 25, 2024 at 07:45:50AM -0700, Alexey Makhalov wrote:
+>> My test environment was screwed up during the last version of the patchset.
+>> I was using a kernel which was built previously and didn't pay attention to
+>> commit hash suffix in `uname -r`.
+>> Human mistake, apologize for that.
+> 
+> Ok, no worries, happens.
+> 
+>> Alex found it while doing TDX testing on x86/vmware on tip.
+>>
+>> Do you want me to resubmit the patchset to do not brake a git bisect?
+> 
+> Nah, I'll fold it into the broken patch and rebase.
 
--- 
-2.39.2
+Thanks for your time.
 
+> 
+> Btw, pls do me a favor and do not top-post but put your reply underneath the
+> quoted text, like we all do.
+Noted.
+
+> 
+> Thx.
+> 
