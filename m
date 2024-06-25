@@ -1,134 +1,95 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C4E149018
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 10:24:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79C6145FF4;
+	Tue, 25 Jun 2024 10:25:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719311059; cv=none; b=GNrtJBA74RXdLUxGvQMOoxIPfqti9tSFSRlBR1XnemX+NeL8eq3nLp0m3aFHFRcNNJIcoDBpFgQNb3GobeA7ILVI87cQ8+v/sXPkx2zBecSAIztf7tTx9qwTBPp8UtiOacftICFIbo1pCFXi6edc4aTiPOqFkH0MoRbtOJyeMoM=
+	t=1719311132; cv=none; b=LbNWYaQK04y2fJCCp3IADKolsNE4KeWFcfdLVUIJbOqa48wfB/jxhJq14Wo/wLDbamEkXxI0HzYmpkdO+MTtruNaQjjkrnJRwS4QUpTZK+UO9QzJNa9WJdi+RhyXe6UMZylkynBFEMoPvl+zadQB4DWQ8NjsLu5UynUUDKZIphY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719311059; c=relaxed/simple;
-	bh=JR/qDwFwlkXIJZghu8zx201/DRc5yzK2jHUrWR5u18s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tLM+wqUwrNQSsMfsh8Tyw4l5PRoHMORVlk1WzbnFdJ5v+xxYQdHcy9b4tu3p2iIZdE5MjJD12gPYwynza24WoMBtsVDbBmcqAEpupXX9NxKUsh/YlQtlLYizZOhnYyGhUgrP3JmcQobt8J5cGo/eifGiX43yTecjqMuDNKp815E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DiGBeVNp; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719311132; c=relaxed/simple;
+	bh=BtjWR+gEmc49VtSTIaCGRyr5H0C8Qccd3WQsIc/9xUo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jIzprul97qvN85gTVi+tqkVGo8Di2x2S/ZD5zy8Yl2AyyuM27t6e2Gtu78E2NsOd4LlqJJRoEoR4MqoTll/DRQrPnOhMb9/FKg6PZD28oDUXl5DMOQhSmCG+VRc3IijFKNeBW8ZK7ZmGsM48vpBazYVn8uulG0V4oF5zeU07f/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sV06yI4F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DiGBeVNp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719311057;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=JR/qDwFwlkXIJZghu8zx201/DRc5yzK2jHUrWR5u18s=;
-	b=DiGBeVNpWv1i0xlm3rKO86XbTw+Mm7T/6X+gnRhT17nfjV/wzeRwomL0HV7oqQ1+0/tElH
-	bkds+c5rNuH+siTCQKfBjDnA6/BrGMiN4Nyj3QQBlNJJgSaXOkkGy1pHF3bOmkXNms9seB
-	iIqa+O8Vh6lpLcCwa0PZMEi8aT15Hqo=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-282-ogBIsErNOA6UULlCk6yE_Q-1; Tue, 25 Jun 2024 06:24:15 -0400
-X-MC-Unique: ogBIsErNOA6UULlCk6yE_Q-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3658fcaf608so308111f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 03:24:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719311054; x=1719915854;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JR/qDwFwlkXIJZghu8zx201/DRc5yzK2jHUrWR5u18s=;
-        b=hGn4DyB5+WP8JxpiluDnMyVGZlp+7DaTV3b17p4+gXoT8JQFAIYuCbO/ZMQ1XJ9TBj
-         sqFeE9FZAFT0aeqb82UFb9BDs9EtYGWZc4NAb9+Iac2xcxRUGaLpEHX+4rE8roD+9+FE
-         fpoLPwKSLvzkLHk0wEjnevo5H4a1SHp/zdtG6wmWHe41iCvPuSKBWn3x+4vnYIi9QVCZ
-         VVi8zWCUtuVHvC1TRmfkoRPiMpf38zZpZrybPBz0yYtvGNnlpDXZyBbk4XOKzIl/IujD
-         4CJCohnjfh8vqK9A3i5mpnfopMldhk7yBslNc0bjAfQxtgevzGG6tqMETaO8D5w1YINy
-         onXA==
-X-Forwarded-Encrypted: i=1; AJvYcCWkvJCUK7MeVQQyqglYuZqE7o8ejWpxBJmaTdbUAa6eV9uEHvShtm7kfedoKyY1UEzfdRdAPYDpa1feZ9uKuARjVm96SrPP06Krvmuq
-X-Gm-Message-State: AOJu0YyGFTim9MnB3QG999WztHAL/0OtgiWui9LX3pUg9QcmxWxy92UW
-	GZwXvGtMnEOmZ8HQl3viy8cRlwQDdOmpU9l+tWgm5By4DxFasBJfXWDmiAFqvynDbpGoVNyeIsv
-	Dbe/h8KBqXweQX+/5YHExm+tiw2Pi8t0+JXDD5u3l1bBeN6h5E7UljNiWiM9tZg==
-X-Received: by 2002:a05:6000:2a7:b0:366:eb60:bd0c with SMTP id ffacd0b85a97d-366eb60be9cmr4976196f8f.3.1719311054720;
-        Tue, 25 Jun 2024 03:24:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFFGevlCkloEHTqSBSRezIkGXdcTB1lUzncXGf4ZXsiNyRjOLYu1nNT1wb+bRsvcdRCxDUwdA==
-X-Received: by 2002:a05:6000:2a7:b0:366:eb60:bd0c with SMTP id ffacd0b85a97d-366eb60be9cmr4976145f8f.3.1719311054291;
-        Tue, 25 Jun 2024 03:24:14 -0700 (PDT)
-Received: from gerbillo.redhat.com ([2a0d:3341:b0ae:da10::f71])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4247d208e4dsm206415575e9.33.2024.06.25.03.24.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 03:24:13 -0700 (PDT)
-Message-ID: <ac1789693e62aa47b527294fd402718306e43afd.camel@redhat.com>
-Subject: Re: [PATCH 00/15] ethernet: Convert from tasklet to BH workqueue
-From: Paolo Abeni <pabeni@redhat.com>
-To: Allen Pais <allen.lkml@gmail.com>, kuba@kernel.org, Matthias Brugger
-	 <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	 <angelogioacchino.delregno@collabora.com>
-Cc: jes@trained-monkey.org, davem@davemloft.net, edumazet@google.com, 
- kda@linux-powerpc.org, cai.huoqing@linux.dev, dougmill@linux.ibm.com, 
- npiggin@gmail.com, christophe.leroy@csgroup.eu, aneesh.kumar@kernel.org, 
- naveen.n.rao@linux.ibm.com, nnac123@linux.ibm.com, tlfalcon@linux.ibm.com, 
- cooldavid@cooldavid.org, marcin.s.wojtas@gmail.com, mlindner@marvell.com, 
- stephen@networkplumber.org, nbd@nbd.name, sean.wang@mediatek.com, 
- Mark-MC.Lee@mediatek.com, lorenzo@kernel.org, borisp@nvidia.com, 
- bryan.whitehead@microchip.com, UNGLinuxDriver@microchip.com, 
- louis.peens@corigine.com, richardcochran@gmail.com,
- linux-rdma@vger.kernel.org,  linux-kernel@vger.kernel.org,
- linux-acenic@sunsite.dk, linux-net-drivers@amd.com, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-Date: Tue, 25 Jun 2024 12:24:11 +0200
-In-Reply-To: <20240621050525.3720069-1-allen.lkml@gmail.com>
-References: <20240621050525.3720069-1-allen.lkml@gmail.com>
-Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sV06yI4F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57878C32781;
+	Tue, 25 Jun 2024 10:25:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719311131;
+	bh=BtjWR+gEmc49VtSTIaCGRyr5H0C8Qccd3WQsIc/9xUo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sV06yI4F3RaAzDzqwrxh6gxUv8cK+xRlvTpZIbM/sOGaVNSuodtK/oe5ge9iVOteP
+	 GTxxIAgW8EbUGv0gXDsw/J+Jonpt/WC2Gy+OqWpIoKUl6Ua8WKkhdiXz9hPLxVMu+o
+	 cct/GUbgBihxs16kVJjebCJDMBRA8dUX2OAmhAgXmcNlhnvNci8GUmXJYcv0GDRPtg
+	 IxmQy1ZTFXDXXrFkj6sX1D0/TDABypZQx3CEY2aswzvo7d4y3BA/TsNKNv+/z4hFcs
+	 ILMG4ciMdK16vZWcBKjhQ/i865dSTNzInqL8/nap4BKNGfYmqhe3BqgQlozm5CZMLo
+	 ACJKjip0Nr1BQ==
+Date: Tue, 25 Jun 2024 11:25:24 +0100
+From: Mark Brown <broonie@kernel.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	matthias.bgg@gmail.com, lgirdwood@gmail.com, keescook@chromium.org,
+	gustavoars@kernel.org, henryc.chen@mediatek.com,
+	linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, kernel@collabora.com,
+	wenst@chromium.org, amergnat@baylibre.com, djakov@kernel.org
+Subject: Re: [PATCH v6 0/7] MediaTek DVFSRC Bus Bandwidth and Regulator knobs
+Message-ID: <57cf8f9f-4320-4c55-a9f8-a4c1facabfe8@sirena.org.uk>
+References: <20240610085735.147134-1-angelogioacchino.delregno@collabora.com>
+ <f7b4cd98-1acf-4f6b-a7e0-57419abadba1@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="HtLS8F6gqzyPaPXW"
+Content-Disposition: inline
+In-Reply-To: <f7b4cd98-1acf-4f6b-a7e0-57419abadba1@collabora.com>
+X-Cookie: Results vary by individual.
 
-On Thu, 2024-06-20 at 22:05 -0700, Allen Pais wrote:
-> The only generic interface to execute asynchronously in the BH context is
-> tasklet; however, it's marked deprecated and has some design flaws. To
-> replace tasklets, BH workqueue support was recently added. A BH workqueue
-> behaves similarly to regular workqueues except that the queued work items
-> are executed in the BH context.
+
+--HtLS8F6gqzyPaPXW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jun 25, 2024 at 10:32:30AM +0200, AngeloGioacchino Del Regno wrote:
+
+> Mark, I assume that this series is ok from your perspective, since this h=
+as got
+> your acks and r-b -- but in order to pick the soc/mediatek stuff I need a=
+ll of
+> the dependent bindings to be in as well .. and this includes the regulato=
+r one!
 >=20
-> This patch converts a few drivers in drivers/ethernet/* from tasklet
-> to BH workqueue. The next set will be sent out after the next -rc is
-> out.
+> The main issue here is that the main soc/mediatek dvfsrc binding
+> dt-bindings: soc: mediatek: Add DVFSRC bindings for MT8183 and MT8195
+> does use the others, so I can't pick this one without the others being pr=
+esent
+> or the validation obviously fails.
 >=20
-> This series is based on=20
-> commit a6ec08beec9e ("Merge git://git.kernel.org/pub/scm/linux/kernel/git=
-/netdev/net")
->=20
-> First version converting all the drivers can be found at:
-> https://lore.kernel.org/all/20240507190111.16710
-> -2-apais@linux.microsoft.com/
+> So... gentle ping :-)
 
-The above link was mangled.
+I can't tell what you want from me here.
 
-I guess you will have to re-submit to cope at least with Andrew's
-feedback, but it think it's better to wait a little longer for the next
-version, to give the vendors more time to actually test this.
+--HtLS8F6gqzyPaPXW
+Content-Type: application/pgp-signature; name="signature.asc"
 
-When you will re-submit you can retain the already collected ack.
+-----BEGIN PGP SIGNATURE-----
 
-Please include the target tree ('net-next') in the subj title and a
-revision counter ('v3'). The whole subj should be:
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZ6mxMACgkQJNaLcl1U
+h9BI1Af7BjpHZjz2dcjVv0813GPAdnKjHAGhVhRvlIhqpTpKTUhV9kb4NaCW3WA8
+WcTOuGzqXUetqxmyeIWpMFtNVeqdieIIuUfdUlMGWpTFKs+B+TEDi62ErAUlWCNd
+3xQZMy9y9glGhigclS7EAFIcMF8eRSp/rNX0B9UD8fi9IAJMMeqBqojRam0XfAII
+UT4XL/p1HG9l16q8Oo3VMAaTCh3kkgVNp/uTWMkZzeccIGDAUS0paMDbGCWnCjiH
+A5hI1uZsXMJx6TtJf2Fkoxry7a4PleBULaXS0HM92gWwpYdqINQsFr0bn9/Lw1oc
+gPxF2FlxpRXTYEQn++SXScXX8tJVAw==
+=emPb
+-----END PGP SIGNATURE-----
 
-[PATCH net-next v3 00/15] ethernet: Convert from tasklet to BH workqueue
-
-Thanks,
-
-Paolo
-
-
-
-
+--HtLS8F6gqzyPaPXW--
