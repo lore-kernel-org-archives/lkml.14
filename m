@@ -1,133 +1,127 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BA2018E1F
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 08:40:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945CA148832
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 08:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719304809; cv=none; b=lz1UuQxKPYVj6qA9OzvEGw2r95z5AdthLDg2dczIVbMEop/SnuR3EBJEY7cIagKLGEPJMY8c3jlhPHvvdpvIZodAQpqy9qblzbqv3Hbl7IWuGiVZvqpny7/vhMANNI0GhV4q2B7hQRGawWPXvlZLtk6VKLRlXm9xyFbeFvla2sA=
+	t=1719304828; cv=none; b=M3xU7vv1DMhULaNK/OIPmaVnnigtWuIiLXvlqMu5apfdujmbUKtwzgo6Ka/4bV0+AJg+ZR7bR5OhA6CiwSkK8DvXexbuHBdrnt1TRx1Fw92AT1C88Ea73dCm9+IBr2dcnIwEDogei3XU2/kQZb77TvZn64HcbxRAhTs7vuMm18k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719304809; c=relaxed/simple;
-	bh=x0h6zK81zeMdC2nbxPC6G2Vyzce29720Fg37YW0c+8w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=Fdd17aQYdzFTRtOUQCZvxwiq2BCWO6FWqQ7Et0z+iIDkCqUc82BHEW6gYZAYfKF+ng5gSoRp7FLiTgVC9oxCSi5h1eMryCO7+oSvDBx04OCfil9VyAGsUVMCkqMuHXX594FPJ+XxIqluRSB9rdM/h/yNS0BChwaDTI7d2cupmKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=FrZURWZB; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1719304828; c=relaxed/simple;
+	bh=H0GBfM58+YQiml4VxIdC28FHy6s9KdUDhokOUjeIMWQ=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=udSmNF6swADmtDzN1UdJGSUoqXFNZwHjRX2hXAsIbtsu/rvDAiZzcC4d6wRypzq1w2wWTzFaLHJzf+otBAu9bXjiWZ2dT2saUQaq090uRsQACtFwVbi6myUGQyc9xmcA+lEEovGY64mANywxmlyEWSFWnEqHlShjE5Fb6yTRz8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eGBtcii0; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FrZURWZB"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240625083958epoutp01f9b663d1357c5f6a8c4461af3d38bcb3~cMprp19qZ2164521645epoutp01i
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 08:39:58 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240625083958epoutp01f9b663d1357c5f6a8c4461af3d38bcb3~cMprp19qZ2164521645epoutp01i
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1719304798;
-	bh=x0h6zK81zeMdC2nbxPC6G2Vyzce29720Fg37YW0c+8w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FrZURWZB7LbaR0YShmrzOTq3mfL3yJOKJqS8TuatUcZ9PNVPq2QOxLVz8Kf1rhMiB
-	 oC4+1TsSxXfhff9wkzinqiJ3VYDM9H3bv1Hx4ISHHM40bFXNpjG+Fdn9I8OvNeyPr0
-	 b713V3mdcr1YpZZ77sYISqP4ee6Z04yKBEBGZjPA=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-	20240625083958epcas5p4b061cfdc465701cf6ffe9f3ccef6b46b~cMprYgGAw2493924939epcas5p4q;
-	Tue, 25 Jun 2024 08:39:58 +0000 (GMT)
-Received: from epsmges5p3new.samsung.com (unknown [182.195.38.177]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4W7dYm2Wg9z4x9Q9; Tue, 25 Jun
-	2024 08:39:56 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	2C.02.06857.C528A766; Tue, 25 Jun 2024 17:39:56 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20240625083927epcas5p4b9d4887854da457946504e98f104e3c2~cMpOecyHR1446514465epcas5p4o;
-	Tue, 25 Jun 2024 08:39:27 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240625083927epsmtrp13ed9e28a93148c9b2aed7be32fba41c1~cMpOd0HSQ1105111051epsmtrp1g;
-	Tue, 25 Jun 2024 08:39:27 +0000 (GMT)
-X-AuditID: b6c32a4b-88bff70000021ac9-13-667a825c0ead
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	46.26.29940.F328A766; Tue, 25 Jun 2024 17:39:27 +0900 (KST)
-Received: from testpc11818.samsungds.net (unknown [109.105.118.18]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240625083926epsmtip2379fc54e913e25e0985f89d784b702c1~cMpN7tEfj1826118261epsmtip2H;
-	Tue, 25 Jun 2024 08:39:26 +0000 (GMT)
-From: hexue <xue01.he@samsung.com>
-To: axboe@kernel.dk
-Cc: asml.silence@gmail.com, io-uring@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH v5] Subject: io_uring: releasing CPU resources when
- polling
-Date: Tue, 25 Jun 2024 16:39:21 +0800
-Message-Id: <20240625083921.2579716-1-xue01.he@samsung.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <5146c97b-912e-41e3-bea9-547b0881707a@kernel.dk>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eGBtcii0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719304826; x=1750840826;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=H0GBfM58+YQiml4VxIdC28FHy6s9KdUDhokOUjeIMWQ=;
+  b=eGBtcii0SvM2fjLOuQ9sTEjgGeEj4f8osvSrxCqDYW1u3F49N6jL4eLM
+   U2yKFBFT7JbKvofWtGmnpNQrDohdpMq8NJy2bRpSY/K5B0m2866TMFVfe
+   u21spkVoxlE4trK37PdbEA9TjHWgVsUQyHbNvP7ZdTfz5muTvLwC21crV
+   gK9yTx8YOCpqwkPEmhebw7lW3MRH0DcHY1cuhXNmelq9TvQxJY/ZTwlN3
+   OTJat5hXxhsNSYXwOE/A6QfmqEdq0nr1qQzxkIac5HG2Egzz9MR3p4xdS
+   y+ny3EzKkvC6+muhVMn34pSDgcdlf6YGJnECQ8vL3fxrYqOctSHSyS4Ac
+   g==;
+X-CSE-ConnectionGUID: 1ItLB+yHR0ClrJcVHaLD6A==
+X-CSE-MsgGUID: AAAKgfpqRfG8FkABGbFQSw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="16063711"
+X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
+   d="scan'208";a="16063711"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 01:40:26 -0700
+X-CSE-ConnectionGUID: HMnY4KrCSBSem8ysH9srPQ==
+X-CSE-MsgGUID: 3sBzE1SYQE2YHQf+Dc9XHA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
+   d="scan'208";a="74339718"
+Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.124.237.100]) ([10.124.237.100])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 01:40:24 -0700
+Message-ID: <55d50738-cbb6-4bf5-8748-1b1c8c2de21e@linux.intel.com>
+Date: Tue, 25 Jun 2024 16:40:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrKKsWRmVeSWpSXmKPExsWy7bCmhm5MU1WawbtJQhZzVm1jtFh9t5/N
-	4l3rORaLy7vmsDmweOycdZfd4/LZUo/Pm+QCmKOybTJSE1NSixRS85LzUzLz0m2VvIPjneNN
-	zQwMdQ0tLcyVFPISc1NtlVx8AnTdMnOAlikplCXmlAKFAhKLi5X07WyK8ktLUhUy8otLbJVS
-	C1JyCkwK9IoTc4tL89L18lJLrAwNDIxMgQoTsjN+r9nBVPCDtWLLmQfMDYxPWLoYOTkkBEwk
-	+na+ZO1i5OIQEtjNKHF75hU2COcTo8Shs/PYIZxvjBJbd99hh2np/TSPBSKxl1Hi44aVUM4P
-	Rom7l+4wglSxCShJ7N/yAcwWERCW2N/RClTEwcEsECJx80wESFhYIFRi3f5usBIWAVWJpetv
-	MIHYvALWEis6+qCWyUvc7NrPDGJzCthKNB9bzwhRIyhxcibED8xANc1bZzOD3CAhsItdYt/y
-	N0wguyQEXCT+PxOGmCMs8er4FqiZUhIv+9ug7HyJyd8hZkoI1Eis2/wOGi7WEv+u7IE6WVNi
-	/S59iLCsxNRT65gg1vJJ9P5+wgQR55XYMQ/GVpJYcmQF1EgJid8TFrFC2B4SHx/fhwb1BEaJ
-	NVfeMk5gVJiF5J1ZSN6ZhbB6ASPzKkbJ1ILi3PTUYtMC47zUcngkJ+fnbmIEpz8t7x2Mjx58
-	0DvEyMTBeIhRgoNZSYQ3tKQqTYg3JbGyKrUoP76oNCe1+BCjKTC8JzJLiSbnAxNwXkm8oYml
-	gYmZmZmJpbGZoZI47+vWuSlCAumJJanZqakFqUUwfUwcnFINTCqv5BYc4kl8e12g69UKbp3f
-	+W2vV1bdW9/WG14jnl++Q2hl1WM3Vdve4rlOe95u+XTQWkzoSeSWGTfnBjjFFrh8PNdgarDc
-	Um/uE6u2hLYe8b3Tt7hWzj34tiN2FqPxKjU9xtqTTNtPPUt1E/y8Xlpx7t8rB9M80m6+/Pht
-	l1tHb48X/6p0w4NadX+kraf+6eKI2DnT5MSCe56Cv11F5Z7euvRzzp+TW1PULm7TlpOKnCpx
-	5XREzv4z8p7rTB9/Ofvi61MXTT7bP5Z2O8oTvl4xeFBgt3fJfrMLO2/0RFTdKlh2ouW756ct
-	8TGMM+WfcK3aey5u53s+16x3VY+zJfOKKnvvXSpwruS90muSw6DEUpyRaKjFXFScCAC222wN
-	CAQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLLMWRmVeSWpSXmKPExsWy7bCSvK59U1WawdqtQhZzVm1jtFh9t5/N
-	4l3rORaLy7vmsDmweOycdZfd4/LZUo/Pm+QCmKO4bFJSczLLUov07RK4Mn6v2cFU8IO1YsuZ
-	B8wNjE9Yuhg5OSQETCR6P80Dsrk4hAR2M0qsnTGPGSIhIbHj0R9WCFtYYuW/5+wQRd8YJXp2
-	PWUDSbAJKEns3/KBEcQWASra39EKNpVZIEyia8cZsGZhgWCJnZumsoPYLAKqEkvX32ACsXkF
-	rCVWdPSxQyyQl7jZtR9sMaeArUTzsfVgM4UEbCRWzPgIVS8ocXLmE6j58hLNW2czT2AUmIUk
-	NQtJagEj0ypGydSC4tz03GLDAsO81HK94sTc4tK8dL3k/NxNjOAQ1dLcwbh91Qe9Q4xMHIyH
-	GCU4mJVEeENLqtKEeFMSK6tSi/Lji0pzUosPMUpzsCiJ84q/6E0REkhPLEnNTk0tSC2CyTJx
-	cEo1MGVtTHLor3j54bfijaCMvULb+ndmR4XN2fPf70S08fytZc94RPa8PtdnkX9VwNchUMXv
-	qeiOI4EB+eEBRx7psC+OF48TXPTy6DyN6bNmFc/LedgqVR6+fukq9jkJwiJiISa5cfqlK/od
-	n7f3+XNPEFbOyH71yc/C2qF14gW3hR5iXgznW1YfXK3+wn/Veoflj9Pn5kUcXT1z6oE5lwo3
-	ebAFP1gZuL9qDn+NSRu32ZkLez+V7nhl2dxms9auyMVuYlqUWlVfvODJTXp+s9/ers44d/v7
-	ZLbYEDvvnHsrhK8lXlnZ/znUV5h1/fSXpSuCpc27prO2xWisu938k6NVIvF/Zej7jCWFsjbL
-	su66K7EUZyQaajEXFScCAL//ZxrAAgAA
-X-CMS-MailID: 20240625083927epcas5p4b9d4887854da457946504e98f104e3c2
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240625083927epcas5p4b9d4887854da457946504e98f104e3c2
-References: <5146c97b-912e-41e3-bea9-547b0881707a@kernel.dk>
-	<CGME20240625083927epcas5p4b9d4887854da457946504e98f104e3c2@epcas5p4.samsung.com>
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, Will Deacon <will@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] iommu/vt-d: Remove hardware automatic ATS dependency
+To: "Tian, Kevin" <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
+ "Liu, Yi L" <yi.l.liu@intel.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>
+References: <20240624052501.253405-1-baolu.lu@linux.intel.com>
+ <20240624052501.253405-2-baolu.lu@linux.intel.com>
+ <BN9PR11MB5276C8112DEF56C11CFC6F198CD52@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <BN9PR11MB5276C8112DEF56C11CFC6F198CD52@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 6/19/24 15:51, Jens Axboe wrote:
->On 6/19/24 08:18, hexue wrote:
->
->While I do suspect there are cases where hybrid polling will be more
->efficient, not sure there are many of them. And you're most likely
->better off just doing IRQ driven IO at that point? Particularly with the
->fairly substantial overhead of maintaining the data you need, and time
->querying.
+On 2024/6/25 10:32, Tian, Kevin wrote:
+>> From: Lu Baolu<baolu.lu@linux.intel.com>
+>> Sent: Monday, June 24, 2024 1:25 PM
+>>
+>> If a device is listed in the SATC table with ATC_REQUIRED flag set, it
+>> indicates that the device has a functional requirement to enable its ATC
+>> (via the ATS capability) for device operation. However, when IOMMU is
+>> running in the legacy mode, ATS could be automatically supported by the
+>> hardware so that the OS has no need to support the ATS functionality.
+> hmm I don't think "has no need to support" matches...
+> 
+>> This is a backward compatibility feature which enables older OSs. Since
+>> Linux VT-d implementation has already supported ATS features for a long
+>> time, there is no need to rely on this compatibility hardware. Remove it
+>> to make the driver future-proof.
+>>
+>> Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
+>> ---
+>>   drivers/iommu/intel/iommu.c | 9 +--------
+>>   1 file changed, 1 insertion(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+>> index 07e394dfccc1..b63347c8bf5d 100644
+>> --- a/drivers/iommu/intel/iommu.c
+>> +++ b/drivers/iommu/intel/iommu.c
+>> @@ -3056,14 +3056,7 @@ static bool dmar_ats_supported(struct pci_dev
+>> *dev, struct intel_iommu *iommu)
+>>   	dev = pci_physfn(dev);
+>>   	satcu = dmar_find_matched_satc_unit(dev);
+>>   	if (satcu)
+>> -		/*
+>> -		 * This device supports ATS as it is in SATC table.
+>> -		 * When IOMMU is in legacy mode, enabling ATS is done
+>> -		 * automatically by HW for the device that requires
+>> -		 * ATS, hence OS should not enable this device ATS
+>> -		 * to avoid duplicated TLB invalidation.
+>> -		 */
+> ...what above comment tries to convey.
+> 
+> If this comment is valid, it's not about whether the OS itself supports
+> ATS. instead it's a requirement for the OS to not manage ATS when
+> it's already managed by HW.
+> 
+> Unless there is a way to disable hw management with this change...
 
-I rebuilt the test cases based on your information, that is, each drive has
-only one thread with high pressure, there is a significant performance loss.
-I previously provided test data for a single drive with multi-threaded, which
-can achieve performance stable and CPU savings.
+This comment is not correct. The hardware automatic ATS is for older OS
+compatible purposes, where the ATS is not aware of by the OS yet, but
+ATS is functionally required for some SOC-integrated accelerators.
 
-Thanks for your data, I will reduce the cost of each IO and submit the next
-version.
+The HAS specification for those platforms states that OSs supporting ATS
+(so-called enlightened OSs) don't require automatic ATS anymore.
 
---
-hexue
+ From the iommu driver's point of view, automatic ATS is not part of the
+VT-d spec and also not enumerable, hence it should be transparent.
+
+Best regards,
+baolu
