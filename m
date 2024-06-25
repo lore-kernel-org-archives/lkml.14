@@ -1,163 +1,129 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032DC148848
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 08:31:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27CD1148850;
+	Tue, 25 Jun 2024 08:31:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719304315; cv=none; b=JegfAdsvwyOjPH0c8hCwccypd/TG6C3MYKdPYONWNwOeIcHkArkHJEIX7+LP3CDuV6B2jrcaPmqyE90FRDuP87IB2M0JSFgrQZJFHg2Sab8o4AyhGL8I60AScALaOxcCHXk51mp9T/TBal6YaDaPhnYQI0cI70H7dYnlbxlYkBw=
+	t=1719304317; cv=none; b=kxYs/A893WE0J0sIzSd2MQyltLmec1WRxuHomrfuMHf6UJxmjh03gShX3hsGXZ6wVaywiLNE28YqSzXcSREU+d5QLkj3F8Ck1W0TUQcD66b7UmthsT/pWJ9m5iyCke0b2L78oC6Jg0evdnXdB8fzhwYACWxMLmNkr4B+WwCR7co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719304315; c=relaxed/simple;
-	bh=1bUJ/s7vvwTZ73NCTa5DTXqVHc8wDMkrvmx1x4B0xZ0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=JQpDknQHUbqGiN0pxkXnvsZwnGfVO/cclohn22VYlX66hnsK56DCvccjU3ZHP9FewcnmQNdaXrjbmJWR6i6f+Xc0ezY57gKKTz/Fczi9+a4mJCw4s47vTMjhCi3DkEPwiWXq9vXJVTtdbQ/14D/SNStBG5DQ6GJ200rFOiKo4Do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=vOqFRB9/; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1719304317; c=relaxed/simple;
+	bh=LmfO5CUjX+AD6FODIFd4z8D5WgNrIle0Q9OSjKR7Cro=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h0+yhpntzDyr33PsUPo0DJ9F4d2jvqHabJ53tQl7NSU9n0YomfUUFN868ADbqiaqLA/5UOUKRuC52cKSskYAUsKKqac5U/OyY326C35uzGOdlbRkoVOhKX7RsVfcxZ9EOcunFhDtIPXfEWHvIk8sG9//n3oj9464hRYi3mB6QzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=f4RXLizk; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="vOqFRB9/"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-35f2c9e23d3so3840259f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 01:31:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719304312; x=1719909112; darn=vger.kernel.org;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6MGiV5QhyBIwfF0R22KIxg/x70JWWD4uGuZLiiLVcCo=;
-        b=vOqFRB9/PzYL1IM+qLYv8QSghjaflpCLS8cZ/b9f2KeY4t3MlQyadUCTHIfi3vAeoU
-         FttaeIDeDJ4fYLPJtNO5RhZJ2XxF+6NMjKvocB3DrvFyRfI/uM+qKQd7psHrJvowEvai
-         /o/YdjYgI/BNLTt4oWTnwHfiP6E6whKLf6+Ju0+r2ceFRMBPQRwXreeoDuNm7gKbhAXX
-         gSyCZmcoivNFnHnDU59eyTh9xfktjEX7tkAjsh86mTIctlu8OKdSVpFGJj+n8ZYTLH0P
-         UDKr9DKDj10fn2hMtbrKuvdAvIwIdMkcp2XlOkWwQorM/77y7sBMQKIMO4SoE58qDNnU
-         gZMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719304312; x=1719909112;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6MGiV5QhyBIwfF0R22KIxg/x70JWWD4uGuZLiiLVcCo=;
-        b=vjnXMRL2UrooIr7eUNJFgeoRLMS3f+KQ+PnKVwdnsKD1f8Ic4slIznw+xL4FjU1OBW
-         +QzxYDXB2cxk+qFzjVqTi3ZnMttjgLu73DqB5RK0TROZzKUw1l1qUu8jiCPh1kRQh/jx
-         NX6t9lnKiM93BvQzYdPpvV8FnRgSQktf2QoVu7C4tFQSuhLSZiWNwZLAqreYJhvikss5
-         8KdSOez/WJz0JmAupOdpxDIfk+lqSA5yj8+5DOq0wdMdhwjO1t3/Xji3iCUQ7H6g+V95
-         4epOTOWKGj9OrTpmfNguU3bQQGwPbOho3Si4VKZWXOGsGOfWlqY51Pa4wAmUeR/QYp24
-         RoiA==
-X-Forwarded-Encrypted: i=1; AJvYcCVtVAaPeogievbSwBi6hrG5r9936TidUReD0JP+Jlw3ecfHvKfGyaHnGLKk4d32DvySaV9vQsvH0405LCZR6y3qnZplEuUx+uJna2v5
-X-Gm-Message-State: AOJu0YwQrQIxWKnnwzzihKRzHGtkBhg/2GYnDfpRX2nXrBdZ7yGaJN4B
-	mlB1FSLw8Zi8jRQxWubAPXPoXMv6RguFEDWq2AQIQXebSy57J8KIi/3S9PRUzNc=
-X-Google-Smtp-Source: AGHT+IHXVO0K6EtgWIdnjCpVKEK7FGGlTzFiwp9mjcV6PfHRnKrDwThJVhKUFKQBIxHO02PjXcqiXg==
-X-Received: by 2002:a05:6000:1241:b0:366:e09c:56be with SMTP id ffacd0b85a97d-366e325c00amr6885391f8f.6.1719304312228;
-        Tue, 25 Jun 2024 01:31:52 -0700 (PDT)
-Received: from localhost ([2a01:e0a:3c5:5fb1:1b57:b4a1:3d50:32a2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-366388c401asm12286172f8f.45.2024.06.25.01.31.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 01:31:51 -0700 (PDT)
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,  Lars-Peter Clausen
- <lars@metafoo.de>,  Neil Armstrong <neil.armstrong@linaro.org>,  Kevin
- Hilman <khilman@baylibre.com>,  linux-kernel@vger.kernel.org,
-  linux-amlogic@lists.infradead.org,  linux-iio@vger.kernel.org,  Rob
- Herring <robh@kernel.org>,  Krzysztof Kozlowski <krzk+dt@kernel.org>,
-  Conor Dooley <conor+dt@kernel.org>
-Subject: Re: [PATCH 2/2] iio: frequency: add amlogic clock measure support
-In-Reply-To: <04254d15-2f6e-435d-ba4c-8e2e87766b9b@baylibre.com> (David
-	Lechner's message of "Mon, 24 Jun 2024 17:51:05 -0500")
-References: <20240624173105.909554-1-jbrunet@baylibre.com>
-	<20240624173105.909554-3-jbrunet@baylibre.com>
-	<04254d15-2f6e-435d-ba4c-8e2e87766b9b@baylibre.com>
-Date: Tue, 25 Jun 2024 10:31:51 +0200
-Message-ID: <1j4j9hift4.fsf@starbuckisacylon.baylibre.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="f4RXLizk"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45P17H8a026443;
+	Tue, 25 Jun 2024 10:31:44 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	wtQG3ZhkBeytWTT2SWRn5kkG3sojPw2kyZipMCzkB1A=; b=f4RXLizkMMqsokZ0
+	fJ469SamxnH4Jj/0a8TWrebsNNKzBK3Uzp59YoKoCzZ5yxDNaz7e0ZqLKoi2svEY
+	rg+oZ8vhH2UeczJTb+bBYLLZsfy0Qx8nAF/yKD1hbhb7+9roqPTL7ios2ucDi4fu
+	sEb4OPr9n0DlLHHn40daEHfLOURtL4hhtOom46KVO2xnzCTE2qxdvvUSjNd9cYsg
+	i9UAbqnKnWdxB8XbMkhwEfbmx8YQZDEnSmvCR97ipu8FsiXQutQatRNkSZ4yZgtt
+	VKkeIX8rNDisddr/JdA9lRLlsQ7x9+HVxVnbYgRUj6yKHcVKkEBIGtgD0nawF/4L
+	FfyQkA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ywngdad2r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Jun 2024 10:31:44 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id AB0E04002D;
+	Tue, 25 Jun 2024 10:31:39 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7469C2105AA;
+	Tue, 25 Jun 2024 10:31:23 +0200 (CEST)
+Received: from localhost (10.129.178.213) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 25 Jun
+ 2024 10:31:23 +0200
+From: Alain Volmat <alain.volmat@foss.st.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Alain Volmat
+	<alain.volmat@foss.st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 2/2] media: i2c: gc2145: use CCI_REG16_LE for little-endian registers
+Date: Tue, 25 Jun 2024 10:29:55 +0200
+Message-ID: <20240625082956.2556293-3-alain.volmat@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240625082956.2556293-1-alain.volmat@foss.st.com>
+References: <20240625082956.2556293-1-alain.volmat@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-25_04,2024-06-24_01,2024-05-17_01
 
-On Mon 24 Jun 2024 at 17:51, David Lechner <dlechner@baylibre.com> wrote:
+Use CCI_REG16_LE macro in order to access little-endian
+encoded registers of the P3 (CSI) section.
 
-> On 6/24/24 12:31 PM, Jerome Brunet wrote:
->> Add support for the HW found in most Amlogic SoC dedicated to measure
->> system clocks.
->> 
->
->
->
->> +static int cmsr_read_raw(struct iio_dev *indio_dev,
->> +			 struct iio_chan_spec const *chan,
->> +			 int *val, int *val2, long mask)
->> +{
->> +	struct amlogic_cmsr *cm = iio_priv(indio_dev);
->> +
->> +	guard(mutex)(&cm->lock);
->> +
->> +	switch (mask) {
->> +	case IIO_CHAN_INFO_RAW:
->> +		*val = cmsr_measure_unlocked(cm, chan->channel);
->
-> Is this actually returning an alternating voltage magnitutde?
-> Most frequency drivers don't have a raw value, only frequency.
+Signed-off-by: Alain Volmat <alain.volmat@foss.st.com>
+---
+ drivers/media/i2c/gc2145.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
-No it is not the magnitude, it is the clock rate (frequency) indeed.
-Maybe altvoltage was not the right pick for that but nothing obvious
-stands out for Hz measurements
-
->
->> +		if (*val < 0)
->> +			return *val;
->> +		return IIO_VAL_INT;
->> +
->> +	case IIO_CHAN_INFO_PROCESSED: /* Result in Hz */
->
-> Shouldn't this be IIO_CHAN_INFO_FREQUENCY?
-
-How would I get raw / processed / scale with IIO_CHAN_INFO_FREQUENCY ?
-
->
-> Processed is just (raw + offset) * scale which would be a voltage
-> in this case since the channel type is IIO_ALTVOLTAGE.
-
-This is was Processed does here, along with selecting the most
-appropriate scale to perform the measurement.
-
->
->> +		*val = cmsr_measure_processed_unlocked(cm, chan->channel, val2);
->> +		if (*val < 0)
->> +			return *val;
->> +		return IIO_VAL_INT_64;
->> +
->> +	case IIO_CHAN_INFO_SCALE:
->
-> What is this attribute being used for?
-
-Hz
-
->
-> (clearly not used to convert the raw value to millivolts :-) )
->
-> Maybe IIO_CHAN_INFO_INT_TIME is the right one for this? Although
-> so far, that has only been used with light sensors.
-
-I think you are mixing up channel info and type here.
-I do want the info
- * IIO_CHAN_INFO_RAW
- * IIO_CHAN_INFO_PROCESSED
- * IIO_CHAN_INFO_SCALE
-
-I want those info to represent an alternate voltage frequency in Hz.
-I thought type 'IIO_ALTVOLTAGE' was the right pick for that. Apparently
-it is not. What is the appropriate type then ? Should I add a new one ?
-
->
->> +		*val2 = cmsr_get_time_unlocked(cm);
->> +		*val = 1000000;
->> +		return IIO_VAL_FRACTIONAL;
->> +
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +}
->> +
-
+diff --git a/drivers/media/i2c/gc2145.c b/drivers/media/i2c/gc2145.c
+index bbab24f3eb57..b0737fc9366d 100644
+--- a/drivers/media/i2c/gc2145.c
++++ b/drivers/media/i2c/gc2145.c
+@@ -68,8 +68,7 @@
+ #define GC2145_DPHY_CLK_DELAY		BIT(4)
+ #define GC2145_DPHY_LANE0_DELAY		BIT(5)
+ #define GC2145_DPHY_LANE1_DELAY		BIT(6)
+-#define GC2145_REG_FIFO_FULL_LVL_LOW	CCI_REG8(0x04)
+-#define GC2145_REG_FIFO_FULL_LVL_HIGH	CCI_REG8(0x05)
++#define GC2145_REG_FIFO_FULL_LVL	CCI_REG16_LE(0x04)
+ #define GC2145_REG_FIFO_MODE		CCI_REG8(0x06)
+ #define GC2145_FIFO_MODE_READ_GATE	BIT(3)
+ #define GC2145_FIFO_MODE_MIPI_CLK_MODULE	BIT(7)
+@@ -79,8 +78,7 @@
+ #define GC2145_CSI2_MODE_MIPI_EN	BIT(4)
+ #define GC2145_CSI2_MODE_EN		BIT(7)
+ #define GC2145_REG_MIPI_DT	CCI_REG8(0x11)
+-#define GC2145_REG_LWC_LOW	CCI_REG8(0x12)
+-#define GC2145_REG_LWC_HIGH	CCI_REG8(0x13)
++#define GC2145_REG_LWC		CCI_REG16_LE(0x12)
+ #define GC2145_REG_DPHY_MODE	CCI_REG8(0x15)
+ #define GC2145_DPHY_MODE_TRIGGER_PROG	BIT(4)
+ #define GC2145_REG_FIFO_GATE_MODE	CCI_REG8(0x17)
+@@ -861,8 +859,7 @@ static int gc2145_config_mipi_mode(struct gc2145 *gc2145,
+ 	else
+ 		lwc = gc2145->mode->width;
+ 
+-	cci_write(gc2145->regmap, GC2145_REG_LWC_HIGH, lwc >> 8, &ret);
+-	cci_write(gc2145->regmap, GC2145_REG_LWC_LOW, lwc & 0xff, &ret);
++	cci_write(gc2145->regmap, GC2145_REG_LWC, lwc, &ret);
+ 
+ 	/*
+ 	 * Adjust the MIPI FIFO Full Level
+@@ -879,10 +876,8 @@ static int gc2145_config_mipi_mode(struct gc2145 *gc2145,
+ 		fifo_full_lvl = 0x0190;
+ 	}
+ 
+-	cci_write(gc2145->regmap, GC2145_REG_FIFO_FULL_LVL_HIGH,
+-		  fifo_full_lvl >> 8, &ret);
+-	cci_write(gc2145->regmap, GC2145_REG_FIFO_FULL_LVL_LOW,
+-		  fifo_full_lvl & 0xff, &ret);
++	cci_write(gc2145->regmap, GC2145_REG_FIFO_FULL_LVL,
++		  fifo_full_lvl, &ret);
+ 
+ 	/*
+ 	 * Set the FIFO gate mode / MIPI wdiv set:
 -- 
-Jerome
+2.25.1
+
