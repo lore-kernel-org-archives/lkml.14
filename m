@@ -1,73 +1,111 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03F61494A8;
-	Tue, 25 Jun 2024 11:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A87317BCC
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 11:17:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719314101; cv=none; b=oY/0UIHBHbJxlBlQ1zpEywWWoXTeOjAKxzVrb31JF097G9vjeB4AlGg0NYK2xBueM1gdENoYk0hdhMK/zmjW5wz2kXCmRPgGd3ensznfnHzoB1aMhPIFRzi8ffOqYx4GwXyMDiUrVrJZvbI9bqO6283WXHg88tzjNXH4W7GiIvE=
+	t=1719314247; cv=none; b=ZVGLH0TErq6emHrP5pv0cIhMDJ/hIWYyiY1UwNIic/0As7s/fQTQoirbDm9T7TxEZY+nmMZLwvraBZV/yij9FBUdRJYRdcmtfPxX8Ux8mOYCJmDO5SsY5nmsYjKJlzBHxn8hfvqCEbK9El9+9+YAT4FvzZvVuF9O3x9hirz+wF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719314101; c=relaxed/simple;
-	bh=8MBnL0CiEQXlt4JrauiPmJszJMYo2tDQkSCVZHRCQOY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N6o8U2zVv84zdBzWktkjMa2iyr/0JBKz7EoL/Aauh2Ftox+0DgucgK1p1xZ3zF/wyjnS3l+5qwCuw0zvsRJSOryOAljDO9NwXMKWkvl5ewGS6ZdhKP7nkumFA2hja8Q2peMJe+4PDXhw3FLwz1AP1+PCqlpcURHiLTvHXrJOSmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RCqwTvNo; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1719314247; c=relaxed/simple;
+	bh=y490bPhOlcUj6oMcNqbEbIHKwi+qcAu1wSEKHBpcp+A=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tI+/r72LB8LvXUeEZxyeKoauO0CUQWPC3OFC0tYngh/9KVZTBi8yHwKo/OT4bdZxkfhPiuuq5uEgKXWDKlJA9PcSeA36VqeXeVu0li6wFMz1PO/WFSKf+pXpxfdu15rpn4QC3ZdXbpymg2X0a0qBOYHpumbuH82CgHzQzL+Fp2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f1xuxTzd; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RCqwTvNo"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=56AFJbUXa8ufpLqSNwpW4BeYMS/Ip45Y1/frq6urfAo=; b=RCqwTvNoYj0qreSoiMOWPWNv8M
-	OM9y+LyCZHl4YQoNVN3Mke3vRMRRlgtvi8jT/uDhWbit/Oq24+zDqYhf+iibKUKIcbttrv2nJm2Go
-	xDMXsIJiy47Ke8H4Qxi29uvydUW9/hMLwbxx5wBcV6nOGokGsQYm6otsrmc8cEnx3nxBCVUTddo5I
-	r+WhYO1PWzrIVYPD30HM4HxLc7DMozEv3QdwKJWn9k0GfSj9ekLFJTfJs/qsWDL8eB1r6pweULHor
-	AGvMXMSybMJy12vmRf1AjZRiUACV0rSZLbmvTE3ISfhwUb0t9kWKfKoXrzAeqCTKdm+vn2Cf/eZ67
-	nvWL2BFg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sM48V-00000002Vao-30Pc;
-	Tue, 25 Jun 2024 11:14:55 +0000
-Date: Tue, 25 Jun 2024 04:14:55 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Jinliang Zheng <alexjlzheng@gmail.com>
-Cc: djwong@kernel.org, alexjlzheng@tencent.com, chandan.babu@oracle.com,
-	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-	david@fromorbit.com
-Subject: Re: [PATCH] xfs: make xfs_log_iovec independent from xfs_log_vec and
- release it early
-Message-ID: <Znqmr3Iki4Q8BkxJ@infradead.org>
-References: <20240624152529.GD3058325@frogsfrogsfrogs>
- <20240624160614.1984901-1-alexjlzheng@tencent.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f1xuxTzd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719314245;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=2aLXgwLy3k7Kem/gMkVxdLW2kTd5Zk6l4rzy7cvLwKo=;
+	b=f1xuxTzdIfxfDK5/cWKTmlF5+bLrBGpNXxOVw0VO27ekd93Xy8UgJW0ujxC6aKV3DFexmT
+	tqrh8WM+8sADLzYr553wjq2I+aSkCxG6OTFUIwridsrqOJbgVEmkrSQEYzs3/sTvTBS8Bm
+	6sS7by2DVWMbd9v5GyF59Wu+tDGECzI=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-644-Lmqyq6PwMPeE1KvavGpyTw-1; Tue, 25 Jun 2024 07:17:23 -0400
+X-MC-Unique: Lmqyq6PwMPeE1KvavGpyTw-1
+Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2ec4f662672so3022081fa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 04:17:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719314242; x=1719919042;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2aLXgwLy3k7Kem/gMkVxdLW2kTd5Zk6l4rzy7cvLwKo=;
+        b=GWgUS3M27HIcBxHkIVexA79ETxieRtCaKOh9gP7o5lr3GYehKbbxXjsAQ4E60cC65q
+         IMChjsVz6uLTzC2ahsz1CAGGpaVrx2j/7jVquCO9zVwXwqWMXiLmb1mCtNw8+US+zsPI
+         ANi8lrw2QpQBnBOC+AOq/SoQIaXjnKSJMc2K25zLc4rNahOQIxEBHxdSBlvnmyESEalO
+         q1cXE2sZZtX9AM6g0FY6cm4Jffu3ldQe4esKO7jhF5r7bbiwRtXVxFDW+ucivHDFVu9M
+         L3heP27IjhqhIC0ARlJua1DbZveCeEySPhOaBwhDiohZi2nUY/8wZBExM4X+dkk/Okz4
+         KEnA==
+X-Forwarded-Encrypted: i=1; AJvYcCUR7fBJRlaUplYlmYyzRaVgSMtW48LnUcUeaCixR0AgokiFNMcYv5y4Sys9taxhC9t6x9UDrvG7GOuT0u3RFzsnISB3ZVjTay9wU2mW
+X-Gm-Message-State: AOJu0YyaxWAA1QLJ3V3tYrcpY//hdAyo0wnxV9RM1VGlJ31l1RmvdLnA
+	Lh9sFGOc4MEpnRWfuya/JssRijqhu8lAEIDuhTdDZYEFtaT+e21nvqfpVFagWA+tBIUZ7wh4Rf7
+	I/gpIGj29mkBfDBFp0q0w2dlfgEnL3bX/hBcEDIqxBoa77LQzWCqEibBOVA4vvw==
+X-Received: by 2002:a05:6512:3d0a:b0:52c:dac6:107 with SMTP id 2adb3069b0e04-52cdea9994fmr5745046e87.3.1719314242194;
+        Tue, 25 Jun 2024 04:17:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFEl47EgU2487K6uzY/mUSiz9yUIgDQlD0gWBbrtXxnvHFHTHoBrINXJMvqf+y9sKohrsRwPA==
+X-Received: by 2002:a05:6512:3d0a:b0:52c:dac6:107 with SMTP id 2adb3069b0e04-52cdea9994fmr5745039e87.3.1719314241787;
+        Tue, 25 Jun 2024 04:17:21 -0700 (PDT)
+Received: from gerbillo.redhat.com ([2a0d:3341:b0ae:da10::f71])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42481922774sm173756155e9.47.2024.06.25.04.17.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jun 2024 04:17:21 -0700 (PDT)
+Message-ID: <7f6aa18e38ff3c161805b19780c6265d05b4a235.camel@redhat.com>
+Subject: Re: [PATCH net-next v4 04/10] net: psample: allow using rate as
+ probability
+From: Paolo Abeni <pabeni@redhat.com>
+To: Adrian Moreno <amorenoz@redhat.com>, netdev@vger.kernel.org
+Cc: aconole@redhat.com, echaudro@redhat.com, horms@kernel.org,
+ i.maximets@ovn.org,  dev@openvswitch.org, Yotam Gigi <yotam.gi@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Jamal Hadi Salim
+ <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko
+ <jiri@resnulli.us>,  linux-kernel@vger.kernel.org
+Date: Tue, 25 Jun 2024 13:17:19 +0200
+In-Reply-To: <20240621101113.2185308-5-amorenoz@redhat.com>
+References: <20240621101113.2185308-1-amorenoz@redhat.com>
+	 <20240621101113.2185308-5-amorenoz@redhat.com>
+Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240624160614.1984901-1-alexjlzheng@tencent.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Tue, Jun 25, 2024 at 12:06:14AM +0800, Jinliang Zheng wrote:
-> xfs_log_iovec is where all log data is saved. Compared to xfs_log_vec itself,
-> xfs_log_iovec occupies a larger memory space.
-> 
-> When their memory spaces are allocated together, the memory occupied by
-> xfs_log_iovec can only be released after iclog is written to the disk log
-> space. But when xfs_log_iovec is written to iclog, its existence becomes
-> meaningless, because a copy of its content is already saved in iclog at this
-> time.
-> 
-> And if they are separated, we can release its memory when the data in
-> xfs_log_iovec is written to iclog. The interval between these two time points
-> is not too small.
-> 
-> Since xfs_log_iovec is the area that currently uses the most memory in
-> xfs_log_vec, this means that we have released quite a lot of memory. Freeing
-> memory that occupies a larger size earlier means smaller memory usage.
+On Fri, 2024-06-21 at 12:10 +0200, Adrian Moreno wrote:
+> diff --git a/include/uapi/linux/tc_act/tc_sample.h b/include/uapi/linux/t=
+c_act/tc_sample.h
+> index fee1bcc20793..7ee0735e7b38 100644
+> --- a/include/uapi/linux/tc_act/tc_sample.h
+> +++ b/include/uapi/linux/tc_act/tc_sample.h
+> @@ -18,6 +18,7 @@ enum {
+>  	TCA_SAMPLE_TRUNC_SIZE,
+>  	TCA_SAMPLE_PSAMPLE_GROUP,
+>  	TCA_SAMPLE_PAD,
+> +	TCA_SAMPLE_PROBABILITY,
+>  	__TCA_SAMPLE_MAX
+>  };
+>  #define TCA_SAMPLE_MAX (__TCA_SAMPLE_MAX - 1)
 
-This all needs to go into the commit log.  Preferably including the
-actual quantity of memory saved for a useful workload.
+I believe Ilya's comment on v3 is correct, this chunk looks unrelated
+and unneeded. I guess you can drop it? Or am I missing something?
+
+Thanks,
+
+Paolo
+
