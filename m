@@ -1,272 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61C1F16ABF3;
-	Tue, 25 Jun 2024 13:58:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from www.linux-watchdog.org (www.linux-watchdog.org [185.87.125.42])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B67ABE71;
+	Tue, 25 Jun 2024 14:00:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.87.125.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719323939; cv=none; b=bE/9uFwT2KOGWzmaRN7RB67GwwX79jqL6VBThiuSJqPm5CAhUCh9KioPJesp/1nqlyPMOG5XRJvtLW3xwQ0HHxs3JS97yC1nkgR2T/vgJTufyaoBEMTUTowy/piAC74mgI7fx0jl/bvSiX4bENBeVYY4iYro+m011ECtYMUkvdk=
+	t=1719324037; cv=none; b=n7WnN4Y83xC/MQ4RUbtzQbQ3qXV9WRXfaNfJQlCKCs2rNIpWEhwOMLw60kScppYs8oo9bpU3T6SJgoyOXoAOxykJsvUEBInpl8mxJdzagqjTuqj4vlA/NxtGgbBYpUugWc5oBzLeEaL5U7QJidMwlqgsTV8SrfErpy6q/3PGkgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719323939; c=relaxed/simple;
-	bh=LhJ6xSwgC+isVyrfMS2bZZDUrhNmtanpSDGFTa+w9j4=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uLQ+HYGPgo8n4y+WXaIu7j1kwBEuinv9J7H0GxQC9DytrDWRVot+0lbve00XjAscHehldjfmTvVL8v2O8ljdGc98vRc9JjWlXzCnS8lPDRvvhLaAF8bwMTEWENbit9A8GASSmg6KFP7s1MxEgiudYma2jNp6qOrOBjkB68V1CYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N35Cg0yE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719324037; c=relaxed/simple;
+	bh=Rb3KOLeLTiXVITDd5CHEUeEmlO2BzhhQejT8VB/17/I=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=nhrDiXlAQ8ZS5Kf39gUz9aezbW0eEsUJamGSbIaT3MujZW3NIJM2e3gb4c4CS4LzP9+n0c/TuxZGusAGnM7DtDaSUSEKyTVUgpCf82FbLvDs/J3E3ADaV46E+3WIRnzIHxUOSab0+D5M9dUTTiaxrICyqjDHwBIgM0GeWbteknw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=linux-watchdog.org; spf=pass smtp.mailfrom=linux-watchdog.org; dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b=vxvjoZwt; arc=none smtp.client-ip=185.87.125.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=linux-watchdog.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux-watchdog.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N35Cg0yE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABB89C32781;
-	Tue, 25 Jun 2024 13:58:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719323938;
-	bh=LhJ6xSwgC+isVyrfMS2bZZDUrhNmtanpSDGFTa+w9j4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=N35Cg0yEDqVFCfMV6szY8nhMfh79bTCP/px23OE7C9stj06oDaKbhuIt22ksAwZuu
-	 JgJCScKrwe+tIhWnwrMPN5Nw5LghZySS0cnaYQKhUzYGHjVV8S4huZ9JfaokXKCmK1
-	 lbK9ooaHJvmMhFwtaFhQwXIXxUQuHaOs9rDUeXuLCmINnEaSWkI3/eYKJ6k2pdfHYa
-	 ssSWh2C1/soVuaPn1gKKmCrb0ot0B07kXa/5vIgyO++9PAdc2eQpFu3tAXW4/vj8YC
-	 O7lK7uQsKadpdIrIgRaXML1EdM5FqEq7s/gFvVCBe368Rk+9jl+z8F/YKlLd9Fv3m+
-	 y4TPvWjIZlsMg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1sM6hE-007Amz-Gb;
-	Tue, 25 Jun 2024 14:58:56 +0100
-Date: Tue, 25 Jun 2024 14:58:56 +0100
-Message-ID: <86tthhi0nz.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC 10/10] KVM: arm64: nv: Add new HDFGRTR2_GROUP & HDFGRTR2_GROUP based FGU handling
-In-Reply-To: <47dc4299-52cc-4f98-929b-fb86bd9757ae@arm.com>
-References: <20240620065807.151540-1-anshuman.khandual@arm.com>
-	<20240620065807.151540-11-anshuman.khandual@arm.com>
-	<865xu3kh4r.wl-maz@kernel.org>
-	<4d256df7-1ec7-4300-b5c8-355f46c0e869@arm.com>
-	<878qyy35e5.wl-maz@kernel.org>
-	<47dc4299-52cc-4f98-929b-fb86bd9757ae@arm.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b="vxvjoZwt"
+Received: by www.linux-watchdog.org (Postfix, from userid 500)
+	id 5640B401AE; Tue, 25 Jun 2024 15:31:51 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org 5640B401AE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-watchdog.org;
+	s=odk20180602; t=1719322311;
+	bh=Rb3KOLeLTiXVITDd5CHEUeEmlO2BzhhQejT8VB/17/I=;
+	h=Date:From:To:Cc:Subject:From;
+	b=vxvjoZwtJmvfDoK0x1VBzI4in6ZIWSRRb8uw/ELktZKw8k8JFt78HLx+Hb9g0JmpH
+	 QscUMwiio6j4BtmBktY+G5LpCuAV4PruZ2q6mO/FPs7f95WfG6imok9ETggKd0Mj4P
+	 Rs/R6Vlo5lYkkJPSYaCkxxllWnb5//lK/9zobOzI=
+Date: Tue, 25 Jun 2024 15:31:51 +0200
+From: Wim Van Sebroeck <wim@linux-watchdog.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
+	Guenter Roeck <linux@roeck-us.net>, Arnd Bergmann <arnd@arndb.de>,
+	Jeff Johnson <quic_jjohnson@quicinc.com>
+Subject: [GIT PULL REQUEST] watchdog - v6.10 release cycle (fixes).
+Message-ID: <20240625133151.GA1554@www.linux-watchdog.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org, oliver.upton@linux.dev, james.morse@arm.com, suzuki.poulose@arm.com, catalin.marinas@arm.com, will@kernel.org, broonie@kernel.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.20 (2009-12-10)
 
-On Tue, 25 Jun 2024 10:03:29 +0100,
-Anshuman Khandual <anshuman.khandual@arm.com> wrote:
->=20
-> >>>> +#define __HDFGRTR2_EL2_nMASK	~(__HDFGRTR2_EL2_RES0 | __HDFGRTR2_EL2=
-_MASK)
-> >>>
-> >>> Note the *nMASK* here. 'n' is for *negative*. Just look at how
-> >>> __HDFGRTR_EL2_MASK and __HDFGRTR_EL2_nMASK are written.
-> >>
-> >> Still trying to understand what does these three masks represent
-> >> for a given FGT register XXXX
-> >>
-> >> 	- __XXXX_RES0
-> >=20
-> > RES0 bits.
-> >=20
-> >> 	- __XXXX_MASK
-> >=20
-> > Positive trap bits.
-> >=20
-> >> 	- __XXXX_nMASK
-> >=20
-> > Negative trap bits.
->=20
-> Right, figured that eventually but these were not very clear at
-> first.
+Hi Linus,
 
-I keep hearing I'm not clear. But at this stage, I don't know what to
-do to make it (or myself) clearer.
+Please pull following watchdog changes for the v6.10 release cycle.
 
->=20
-> >=20
-> >>
-> >> But from the mentioned example for HDFGRTR_EL2.
-> >>
-> >> #define __HDFGRTR_EL2_RES0      HDFGRTR_EL2_RES0
-> >> #define __HDFGRTR_EL2_MASK      (BIT(63) | GENMASK(58, 50) | GENMASK(4=
-8, 43) | \
-> >>                                  GENMASK(41, 40) | GENMASK(37, 22) | \
-> >>                                  GENMASK(19, 9) | GENMASK(7, 0))
-> >> #define __HDFGRTR_EL2_nMASK     ~(__HDFGRTR_EL2_RES0 | __HDFGRTR_EL2_M=
-ASK)
-> >>
-> >> Looking at HDFGRTR_EL2 definition inside arch/arm64/tools/sysreg
-> >>
-> >> HDFGRTR_EL2_RES0 =3D BIT(49) | GENMASK(39, 38) | GENMASK(21, 20) | BIT=
-(8)
-> >>
-> >> is representing the entire mask in the register which are RES0. But th=
-en what
-> >> does __HDFGRTR_EL2_MASK signify ? Positive trap bits mask ?
-> >>
-> >> The following bits belong in __HDFGRTR_EL2_MASK
-> >>
-> >> HDFGRTR_EL2.PMBIDR_EL1    (63)
-> >> HDFGRTR_EL2.PMCEIDn_EL0   (58)
-> >>
-> >> Where as the following bits belong in __HDFGRTR_EL2_nMASK
-> >>
-> >> HDFGRTR_EL2.nPMSNEVFR_EL1 (61)
-> >> HDFGRTR_EL2.nBRBCTL	  (60)=20
-> >>
-> >> Reworking proposed HDFGRTR2_EL2 and HDFGWTR2_EL2.=20
-> >>
-> >> #define __HDFGRTR2_EL2_RES0     HDFGRTR2_EL2_RES0
-> >> #define __HDFGRTR2_EL2_MASK     0
-> >> #define __HDFGRTR2_EL2_nMASK    ~(__HDFGRTR2_EL2_RES0 | __HDFGRTR2_EL2=
-_MASK)
-> >>
-> >> #define __HDFGWTR2_EL2_RES0     HDFGWTR2_EL2_RES0
-> >> #define __HDFGWTR2_EL2_MASK     0
-> >> #define __HDFGWTR2_EL2_nMASK    ~(__HDFGWTR2_EL2_RES0 | __HDFGWTR2_EL2=
-_MASK)
-> >>
-> >> Please note that all trap bits in both these registers are negative on=
-es
-> >> hence __HDFGRTR2_EL2_MASK/__HDFGWTR2_EL2_MASK should be 0.
-> >=20
-> > That's because you're looking at the XML, and not the ARM ARM this was
-> > written against.
->=20
-> Did not follow that. Both in ddi0601/2024-03 XML and ARM ARM DDI 0487K.a
-> there are no positive trap bits, either in HDFGRTR2_EL2 or HDFGWTR2_EL2.
-> OR did I miss something here.
+This series contains:
+* lenovo_se10_wdt: add HAS_IOPORT dependency
+* add missing MODULE_DESCRIPTION() macros
 
-=46rom this very file:
+The output from git request-pull:
+----------------------------------------------------------------
+The following changes since commit c3f38fa61af77b49866b006939479069cd451173:
 
-<quote>
-/*
- * FGT register definitions
- *
- * RES0 and polarity masks as of DDI0487J.a, to be updated as needed.
- * We're not using the generated masks as they are usually ahead of
- * the published ARM ARM, which we use as a reference.
- *
- * Once we get to a point where the two describe the same thing, we'll
- * merge the definitions. One day.
- */
-</quote>
+  Linux 6.10-rc2 (2024-06-02 15:44:56 -0700)
 
-In case it wasn't written *CLEARLY* enough.
+are available in the git repository at:
 
-> Sure, will add the following new registers in arch/arm64/tools/sysreg for=
-mat
-> except for the ones that require a formula based enumeration. Those will =
-be
-> added into arch/arm64/include/asm/sysreg.h directly e.g
->=20
-> +#define SYS_SPMEVCNTR_EL0(m)           sys_reg(2, 3, 14, (0 | (m >> 3)),=
- (m & 7))
-> +#define SYS_SPMEVTYPER_EL0(m)          sys_reg(2, 3, 14, (2 | (m >> 3)),=
- (m & 7))
-> +#define SYS_SPMEVFILTR_EL0(m)          sys_reg(2, 3, 14, (4 | (m >> 3)),=
- (m & 7))
-> +#define SYS_SPMEVFILT2R_EL0(m)         sys_reg(2, 3, 14, (6 | (m >> 3)),=
- (m & 7))
->=20
-> 9d93fc432f1a arm64/sysreg: Add remaining debug registers affected by HDFG=
-xTR2_EL2
-> 56b8830f0a5e arm64/sysreg: Add register fields for SPMCGCR1_EL1
-> ad674ae52178 arm64/sysreg: Add register fields for SPMCGCR0_EL1
-> 8538a282d208 arm64/sysreg: Add register fields for PMZR_EL0
-> c88f0b8d898e arm64/sysreg: Add register fields for PMSSCR_EL1
-> 8788ad49b7b6 arm64/sysreg: Add register fields for SPMCFGR_EL1
-> 142de2bc3d7b arm64/sysreg: Add register fields for SPMDEVARCH_EL1
-> 3d903ba35e8c arm64/sysreg: Add register fields for SPMIIDR_EL1
-> 1a4db0b8b100 arm64/sysreg: Add register fields for PMICNTSVR_EL1
-> 6bee8f139ba5 arm64/sysreg: Add register fields for SPMSELR_EL0
-> b208ab4cd54d arm64/sysreg: Add register fields for SPMCNTENSET_EL0
-> 644abf522c8a arm64/sysreg: Add register fields for SPMCNTENCLR_EL0
-> fad9b7751359 arm64/sysreg: Add register fields for SPMINTENSET_EL1
-> c28299b8df76 arm64/sysreg: Add register fields for SPMINTENCLR_EL1
-> b9c283b27980 arm64/sysreg: Add register fields for SPMOVSSET_EL0
-> 03dd01a26c46 arm64/sysreg: Add register fields for SPMOVSCLR_EL0
-> c8a2f1b688de arm64/sysreg: Add register fields for SPMCR_EL0
-> 422ca4026aa7 arm64/sysreg: Add register fields for SPMACCESSR_EL1
-> d790b2570461 arm64/sysreg: Add register fields for SPMSCR_EL1
-> c2cdd0fecdcb arm64/sysreg: Add register fields for PMCCNTSVR_EL1
-> 3b793f3f07b8 arm64/sysreg: Add register fields for PMUACR_EL1
-> a1804742ee8c arm64/sysreg: Add register fields for PMICFILTR_EL0
-> c88476b9c52c arm64/sysreg: Add register fields for PMICNTR_EL0
-> 6d1520f3477b arm64/sysreg: Add register fields for PMECR_EL1
-> 257ea3ec7950 arm64/sysreg: Add register fields for PMIAR_EL1
-> a29f787102f0 arm64/sysreg: Add register fields for SPMDEVAFF_EL1
-> 3b7c4d4cf0eb arm64/sysreg: Add register fields for PMSDSFR_EL1
-> 2a14e5dc1903 arm64/sysreg: Add register fields for TRBMPAM_EL1
+  git://www.linux-watchdog.org/linux-watchdog.git linux-watchdog-6.10-rc-fixes
 
-Have you done this by hand? Or have you used an automated generator
-that parses the XML?  If it's the former, please do the latter and
-compare the results.
+for you to fetch changes up to acf9e67a7625367b89440855572b29c5ec19dd20:
 
-[...]
+  watchdog: add missing MODULE_DESCRIPTION() macros (2024-06-15 12:49:57 +0200)
 
-> >
-> >>>> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> >>>> index f921af014d0c..8029f408855d 100644
-> >>>> --- a/arch/arm64/kvm/sys_regs.c
-> >>>> +++ b/arch/arm64/kvm/sys_regs.c
-> >>>> @@ -4110,6 +4110,51 @@ void kvm_init_sysreg(struct kvm_vcpu *vcpu)
-> >>>>  		kvm->arch.fgu[HAFGRTR_GROUP] |=3D ~(HAFGRTR_EL2_RES0 |
-> >>>>  						  HAFGRTR_EL2_RES1);
-> >>>> =20
-> >>>> +	/* FEAT_TRBE_MPAM is not exposed to the guest */
-> >>>> +	kvm->arch.fgu[HDFGRTR2_GROUP] |=3D ~(HDFGRTR2_EL2_nTRBMPAM_EL1);
-> >>>
-> >>> Same thing about dynamic configuration.
-> >>>
-> >>> But more importantly, you are disabling anything *but* MPAM.  Does it
-> >>> seem right to you?
-> >>
-> >> Did not get that, should the inverse ~ be dropped here and also for all
-> >> other negative trap bits across the register ?
-> >=20
-> > Look at the way FGU works. A bit set to 1 means that if we have
-> > trapped because of this bit (as per the FGT table), we inject an
-> > UNDEF.
->=20
-> Seems like positive and negative trap bits do not make any difference
-> here, while setting respective bits in kvm->arch.fgu[HDFGRTR2_GROUP].=20
-> In this case the inverse should be dropped for all bits.
+----------------------------------------------------------------
+linux-watchdog 6.10-rc-fixes tag
 
-Yup, that's what "A bit set to 1" means here. We don't need to follow
-the convolutions of the HW here.
+----------------------------------------------------------------
+Arnd Bergmann (1):
+      watchdog: lenovo_se10_wdt: add HAS_IOPORT dependency
 
->=20
-> Should the lone trap bit (nPMZR_EL0) which is present in HDFGWTR2_EL2
-> but not in HDFGRTR2_EL2, be set in kvm->arch.fgu[HDFGWTR2_GROUP] as
-> well ?
->=20
-> if (!kvm_has_feat(kvm, ID_AA64DFR0_EL1, PMUVer, V3P9)) {
-> 	kvm->arch.fgu[HDFGRTR2_GROUP] |=3D HDFGRTR2_EL2_nPMUACR_EL1;
-> 	kvm->arch.fgu[HDFGWTR2_GROUP] |=3D HDFGWTR2_EL2_nPMZR_EL0;
-> }
+Jeff Johnson (1):
+      watchdog: add missing MODULE_DESCRIPTION() macros
 
-Possibly. At the time this code was written, ARMv8.9 wasn't in the ARM
-ARM.
+ drivers/watchdog/Kconfig           | 1 +
+ drivers/watchdog/menz69_wdt.c      | 1 +
+ drivers/watchdog/omap_wdt.c        | 1 +
+ drivers/watchdog/simatic-ipc-wdt.c | 1 +
+ drivers/watchdog/ts4800_wdt.c      | 1 +
+ drivers/watchdog/twl4030_wdt.c     | 1 +
+ 6 files changed, 6 insertions(+)
+----------------------------------------------------------------
 
-	M.
+Kind regards,
+Wim.
 
---=20
-Without deviation from the norm, progress is not possible.
