@@ -1,125 +1,124 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0F14204F;
-	Tue, 25 Jun 2024 17:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9D9172786;
+	Tue, 25 Jun 2024 17:12:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719335535; cv=none; b=KHtHY8jm2yYbAD3vQWDJ6oPK7Yvn5YWZ0SXXA7N06KY45DoRYBnPMA1BTw14FeSa9Av+gAh8Vo7BqUd1IuJtdnhGC0Ky/NcoNKAgGYiiiv7CjPLeV2jZCoCD66SVHWKObIJDJIizt6npTUfIaIIcppigD+6I8hHnydDxBvT9Jcg=
+	t=1719335581; cv=none; b=ZaHRK0vXXb7MFrxVsd4Y+r+athqATinKFehfQSdrh3NpaE9PxabSegqbPgWDsPj7dB2ecLgcOj6lXPaONn4gankyEm3ZG+PgAbKhRaOSBmqd4q8GYnKBnC+NJCcokW67jwj0wU2mKp42+Yrkmrb3hqUGLuOKR5S5r6mTU7NnKU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719335535; c=relaxed/simple;
-	bh=L9blIzOiyOQMTpDtc0cM0yFaL51Q+QqOq8ROY7HPUZc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=Ik/VEb4KRpPYkLO7y9hNiOyS4L82CKM19riRjNIvop3vB/UYJlFJKHRnhX6kq9hLwZVR72Kool6pObEW8Gfs0ZXzg85nT68RfIIMpHASP/CZzRc4s6a1tGKXgYPzWTG1TgDoRJeoDZx5ly0X2Gw8c6uOMu1RE70I4LaEuNvF368=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=b0exYH2Q; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1719335581; c=relaxed/simple;
+	bh=Wwa4HGkLETbKqeTTU6fvEcD/qSObTjEYyqi/1NukKz4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=o0do4xvrnEPlNxWdkkgQIB4zlMiVhgd1B2Xx8hPH1SmkufUPbOB+Th3L9OgErd2GKm7EBJeYZQ81UjIyPrxn6qp9vSsOrlKIC+pSLKvUv1jKUF19k3RPFjst/gJnt97RS+E08iO8sX6kO6tre7+dQRdj4b+B0fR9pI9QaQI1YEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R/79w8su; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="b0exYH2Q"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45P8NwEE010135;
-	Tue, 25 Jun 2024 16:35:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=nDLEPQk26/RrYJbffeyNSm
-	MC9qenZ25ho29a+rIJqt4=; b=b0exYH2QlSnReTMx9flEcz1lpe4/Nb/mt/4/C7
-	zzEIn+Fc6rZdMw35az0Kb+0VEVaEEs9zDo4JPOjpNmJC6ombV/VsunKsCCTIUYL1
-	wJxq0OUyKFX3KpBYjkHB+D+n7mBq6JiCTb7MuyyUFsWCQzt9vMJd1KsZil63uS+h
-	cN4AdahkZQ5Vmr9E2zdhv1lI1STekJ5CNxPB6lZnJ/A36BYFSWK10gHMb/gdAqAl
-	6YYIshrrUhp7w83Xygu3RCKoIncudVecu70gPlYGmyQJlycCjqylBJ9WG4T+I5b/
-	a6b1MMN/1OS0YRW1d+sdymf3vjkEI7a8HUfS6sr3+kTVXgXQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ywqcef719-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Jun 2024 16:35:43 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45PGZgAV031103
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Jun 2024 16:35:42 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 25 Jun
- 2024 09:35:42 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Tue, 25 Jun 2024 09:35:41 -0700
-Subject: [PATCH v2] s390/lcs: add missing MODULE_DESCRIPTION() macro
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R/79w8su"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-36703b0f914so575245f8f.0;
+        Tue, 25 Jun 2024 10:12:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719335578; x=1719940378; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BI5OFEaVYhrUkuh/u4LxK0p6IDDHPXl4NuFtwgsoCq4=;
+        b=R/79w8su5OYlKu588PZ/L+Ac39IOQMnyTSJ6jiEcZXGnjdnJHHihyaWIzcSrDU309q
+         /ehpuklLrmwPDHBRN77ZoYMc+ngp5IrpJO/QIrU7bihMKqVtykI/ilaqsHrySnew2+07
+         y3XkeBlHriGL0wA5+I9HsM33TrqOd+P4D/f0YkazajKxnIgvwVsQv7ybm1Oz7MM1zuii
+         atX+um2HLZHQbLBJnyIcEvsR4zny5gxS4Ka/qQlHat9wutU99XDDUMK5Pz0S0C6ST7n/
+         tKmKi/iWPXv+qhABAOTRyUIrqVtZSd2S5Ru4NLrNJACKLZ0NWlYowtk4bTIyE4oJEfL0
+         4Jpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719335578; x=1719940378;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BI5OFEaVYhrUkuh/u4LxK0p6IDDHPXl4NuFtwgsoCq4=;
+        b=YkSYEuiQl5vJnXmr1Kv5UxlXfxp99IwxyUamjJxfH2gHunEeBtufkbOLNqhs2ghv5z
+         Vhy00vqUEg91Yzc+1YWl1SMJVupdX9/uNXAHmTF1YRO4G4VlXBrwxFewRSM7LgsDqoPm
+         gF0gL2dZgXSVYbAbZ5BgBwF7GH9Q7S43UZ+quYFKm6q6CIKOIM8Vqn08zVeEIu02Gdwg
+         Axj5z0hM4UguSzBq3Q5za7FyNKSo3+K2cuXuLrBEXlfITRKtB09soT4zlh1eCusf6Pi8
+         G/nuoMS9aTnRWqLCg7/6ZASGcQ7YTS7D3KSVJqcmM+/DYNSSxXCtmORD1uOe3nsO96oE
+         a2iw==
+X-Forwarded-Encrypted: i=1; AJvYcCV1ROdD7Z2AMIKhcIdQlCgirf+aMBh0yOJnV7cou52N/LPx2vkBfJJRRgDRxp1BD0LuyIV7Dwts/q7uFACj6aGwhK3gpAclBCRW32zzDyk6Hilqdw5N0tQ06ZEARVdl8g8P+RxDfiw0JFbLl8TNfSCy7naxkEASxdSyul0fhIIj5EsvP26q
+X-Gm-Message-State: AOJu0Yzo1++47F56ZlbyP5CP+UiFgAAqDfM9d6vBnJO1ghiBqZ7zFxWO
+	JR4VHj91vQucNc9nrJGr6MEbvho0pPNNAccTpqKV4ICTY6sm9kO3L+gX435EZZIqLtAPTwhWVk7
+	jrP4Nlr2+HwEuVnpaDOxt1fDHr3M=
+X-Google-Smtp-Source: AGHT+IE06FOCAbgOD9xJVbw3JngT0HOsO4esODsbSBdUue19gmiKBnUmKzc7qwytynqNUagCApCOkM09kU86aKoNtak=
+X-Received: by 2002:a05:6000:1a8c:b0:360:728d:8439 with SMTP id
+ ffacd0b85a97d-366e36491b7mr11108459f8f.2.1719335577845; Tue, 25 Jun 2024
+ 10:12:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240625-md-s390-drivers-s390-net-v2-1-5a8a2b2f2ae3@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIANzxemYC/42OTQ6CMBCFr2K6dkzLP668h2FR2kEmkaJTaDCEu
- 1vwAi6/5L3vvVV4ZEIvrqdVMAbyNLoIyfkkTK/dA4FsZJHIJJOFymGw4NNagmUKyP4HDicoK13
- LouqUlJmI9RdjR8uhvjeRW+0RWtbO9LvwSW5eYNB+Qt7jPflp5M9xJKi99MdmUKCgLirTlmnel
- dLe3jMZcuZixkE027Z9ASE1DjnhAAAA
-To: Alexandra Winter <wintera@linux.ibm.com>,
-        Thorsten Winkler
-	<twinkler@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
-	<gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        "Christian
- Borntraeger" <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>
-CC: <linux-s390@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        "Jeff
- Johnson" <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.14.0
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: _OpMxqKNziW39itj1NFnZOOpArTyIsFz
-X-Proofpoint-ORIG-GUID: _OpMxqKNziW39itj1NFnZOOpArTyIsFz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-25_11,2024-06-25_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
- mlxscore=0 lowpriorityscore=0 bulkscore=0 phishscore=0 spamscore=0
- suspectscore=0 priorityscore=1501 malwarescore=0 mlxlogscore=946
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406250122
+References: <20240620-fault-injection-statickeys-v2-0-e23947d3d84b@suse.cz>
+ <20240620-fault-injection-statickeys-v2-6-e23947d3d84b@suse.cz> <78177ff2-e140-4e81-9b2a-be5bece34cfc@suse.cz>
+In-Reply-To: <78177ff2-e140-4e81-9b2a-be5bece34cfc@suse.cz>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 25 Jun 2024 10:12:46 -0700
+Message-ID: <CAADnVQJrirvzu8fqwRChM1aUvHUNoszNpLhXHB9EHVesuD_YJA@mail.gmail.com>
+Subject: Re: [PATCH v2 6/7] mm, slab: add static key for should_failslab()
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Christoph Lameter <cl@linux.com>, 
+	David Rientjes <rientjes@google.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
+	bpf <bpf@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-With ARCH=s390, make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/s390/net/lcs.o
+On Tue, Jun 25, 2024 at 7:24=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wr=
+ote:
+>
+> On 6/20/24 12:49 AM, Vlastimil Babka wrote:
+> > --- a/mm/slub.c
+> > +++ b/mm/slub.c
+> > @@ -3874,13 +3874,37 @@ static __always_inline void maybe_wipe_obj_free=
+ptr(struct kmem_cache *s,
+> >                       0, sizeof(void *));
+> >  }
+> >
+> > -noinline int should_failslab(struct kmem_cache *s, gfp_t gfpflags)
+> > +#if defined(CONFIG_FUNCTION_ERROR_INJECTION) || defined(CONFIG_FAILSLA=
+B)
+> > +DEFINE_STATIC_KEY_FALSE(should_failslab_active);
+> > +
+> > +#ifdef CONFIG_FUNCTION_ERROR_INJECTION
+> > +noinline
+> > +#else
+> > +static inline
+> > +#endif
+> > +int should_failslab(struct kmem_cache *s, gfp_t gfpflags)
+>
+> Note that it has been found that (regardless of this series) gcc may clon=
+e
+> this to a should_failslab.constprop.0 in case the function is empty becau=
+se
+> __should_failslab is compiled out (CONFIG_FAILSLAB=3Dn). The "noinline"
+> doesn't help - the original function stays but only the clone is actually
+> being called, thus overriding the original function achieves nothing, see=
+:
+> https://github.com/bpftrace/bpftrace/issues/3258
+>
+> So we could use __noclone to prevent that, and I was thinking by adding
+> something this to error-injection.h:
+>
+> #ifdef CONFIG_FUNCTION_ERROR_INJECTION
+> #define __error_injectable(alternative)         noinline __noclone
 
-Add the missing invocation of the MODULE_DESCRIPTION() macro.
+To prevent such compiler transformations we typically use
+__used noinline
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
-Changes in v2:
-- Modified the description (both in the patch and in the file prolog) per
-  feedback from Alexandra
-- Link to v1: https://lore.kernel.org/r/20240615-md-s390-drivers-s390-net-v1-1-968cb735f70d@quicinc.com
----
- drivers/s390/net/lcs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/s390/net/lcs.c b/drivers/s390/net/lcs.c
-index 25d4e6376591..88db8378325a 100644
---- a/drivers/s390/net/lcs.c
-+++ b/drivers/s390/net/lcs.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- *  Linux for S/390 Lan Channel Station Network Driver
-+ *  Linux for S/390 LAN channel station device driver
-  *
-  *  Copyright IBM Corp. 1999, 2009
-  *  Author(s): Original Code written by
-@@ -2380,5 +2380,6 @@ module_init(lcs_init_module);
- module_exit(lcs_cleanup_module);
- 
- MODULE_AUTHOR("Frank Pavlic <fpavlic@de.ibm.com>");
-+MODULE_DESCRIPTION("S/390 LAN channel station device driver");
- MODULE_LICENSE("GPL");
- 
-
----
-base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
-change-id: 20240615-md-s390-drivers-s390-net-78a9068f1004
-
+We didn't have a need for __noclone yet. If __used is enough I'd stick to t=
+hat.
