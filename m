@@ -1,32 +1,32 @@
-Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72BEE1C6A8
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 00:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 585A6374F1
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 00:59:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719277181; cv=none; b=F/Nae9bBM5d7x8+bxxEZxvjOoBGk8/uPBFcYqU6jUPfZRUIt5eKQiQdN3RUpESVDJj5f0iAN1g6vCdRid1hVwyVfaXw0Og9vKMVdZVqTlMtAr6NjVsZprqBkxNqEsUq5dTazbv1Y5UOBFI86lYGqlYWgX2snPC1e3YkLC7q1lbg=
+	t=1719277185; cv=none; b=nCSEQ+JQJgTdVlJbmBbpDS7iKeJUKJyLNWJVcoPL2nE1vb+zvFtle8qoEp4eZKWo+L12R9YwjIZw1A8sYs6gco6oHFPyDkGHMUiVeWJp8G8AX6Y3kjThHiOI4pTPd465CgJL1NCi2rJ58+LrQGxIG21c6317bEnu8Kph5dxIBNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719277181; c=relaxed/simple;
-	bh=xv9NOCGodCEQxYKo91VaisLIINAyjCN1JxW1krl4FrM=;
+	s=arc-20240116; t=1719277185; c=relaxed/simple;
+	bh=IQzyzCkRP8i6jF7uCdjgsanqWmOgB62q7c74jVt/VK4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lwQdhZa98uHNVBJ2noqf9TkNk+h9qRR6FQeg95uMcpCAO+LCoYNYknFsR8sylif77pOtayYbKvcK3UbA2ibnI5fQFeMLQqkS4T2ABfCptsFIH5wOL6dhGZc9Fec0H9Gm6s8DUROYU0RWFbo8aafi7ZNKUiXJj9beBOiYLf+SI88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SFL+k+TQ; arc=none smtp.client-ip=91.218.175.175
+	 MIME-Version; b=LgfBCdx5fk/3jNrnoXSqIuSnScbjs/soz9cxDksmkeH4NSLsfQ+wRXl1eOl2+nUS7aTDbxlEfIix+WtT8WoMzs4NYePl2Ql/1ECXRS/H6F3npuJ5g3TU64jCBdWnKjXOKgtTE8+OhN+1OMz3C6g1ZaRfA2pYQplK288RawhPbPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Zz5Mz7eu; arc=none smtp.client-ip=91.218.175.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SFL+k+TQ"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Zz5Mz7eu"
 X-Envelope-To: akpm@linux-foundation.org
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1719277177;
+	t=1719277181;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=v/tf3lBw3jG/rT7MJZGDLV/4uYe72LY+pJRmiKuAdfM=;
-	b=SFL+k+TQiNlRjgoH6x50pq3n0QiBjYIdOlFT3DK3/1aCGerHYnl1GSqWHiUELtnGjVl6cf
-	EHBcQ4kFu/PRip99CGJsa6MpFTpsdvUA9eQKJSLiBJ56N+W0FFhsvBi6fisG0L48+JrNBH
-	AoKWwYioVwfLl56ihuUsHU1AN4cR280=
+	bh=hnnziElivuQ/LCoNmnyRRYzwKafGd1VzRo+k4WxWNEA=;
+	b=Zz5Mz7euqVmt7XORkaBlHGPy1k/atuJWJKdYE/ol1NG1b2dsF0yeJlI/cbm0Uxkz0ZqpZn
+	pLewHnkD7xPEgvO0eWlj+ZwU0Gqm2DsLuhAD54EVH+gmRtJ+lvmB6Qm5PKalMHH1WgMkBw
+	5Z2h3LBBZWTLBVkhIT9tXB/VOGV2AtU=
 X-Envelope-To: hannes@cmpxchg.org
 X-Envelope-To: mhocko@kernel.org
 X-Envelope-To: shakeel.butt@linux.dev
@@ -46,9 +46,9 @@ Cc: Johannes Weiner <hannes@cmpxchg.org>,
 	cgroups@vger.kernel.org,
 	linux-mm@kvack.org,
 	Roman Gushchin <roman.gushchin@linux.dev>
-Subject: [PATCH v2 05/14] mm: memcg: rename charge move-related functions
-Date: Mon, 24 Jun 2024 17:58:57 -0700
-Message-ID: <20240625005906.106920-6-roman.gushchin@linux.dev>
+Subject: [PATCH v2 07/14] mm: memcg: rename memcg_check_events()
+Date: Mon, 24 Jun 2024 17:58:59 -0700
+Message-ID: <20240625005906.106920-8-roman.gushchin@linux.dev>
 In-Reply-To: <20240625005906.106920-1-roman.gushchin@linux.dev>
 References: <20240625005906.106920-1-roman.gushchin@linux.dev>
 Precedence: bulk
@@ -60,123 +60,94 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Rename exported function related to the charge move to have
-the memcg1_ prefix.
+Rename memcg_check_events() into memcg1_check_events() for
+consistency with other cgroup v1-specific functions.
 
 Signed-off-by: Roman Gushchin <roman.gushchin@linux.dev>
 ---
- mm/memcontrol-v1.c | 14 +++++++-------
- mm/memcontrol-v1.h |  8 ++++----
- mm/memcontrol.c    |  8 ++++----
- 3 files changed, 15 insertions(+), 15 deletions(-)
+ mm/memcontrol-v1.c | 6 +++---
+ mm/memcontrol-v1.h | 2 +-
+ mm/memcontrol.c    | 8 ++++----
+ 3 files changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/mm/memcontrol-v1.c b/mm/memcontrol-v1.c
-index f4c8bec5ae1b..c25e038ac874 100644
+index 4b2290ceace6..d7b5c4c14732 100644
 --- a/mm/memcontrol-v1.c
 +++ b/mm/memcontrol-v1.c
-@@ -384,7 +384,7 @@ static bool mem_cgroup_under_move(struct mem_cgroup *memcg)
+@@ -835,9 +835,9 @@ static int mem_cgroup_move_account(struct folio *folio,
+ 
+ 	local_irq_disable();
+ 	mem_cgroup_charge_statistics(to, nr_pages);
+-	memcg_check_events(to, nid);
++	memcg1_check_events(to, nid);
+ 	mem_cgroup_charge_statistics(from, -nr_pages);
+-	memcg_check_events(from, nid);
++	memcg1_check_events(from, nid);
+ 	local_irq_enable();
+ out:
  	return ret;
- }
- 
--bool mem_cgroup_wait_acct_move(struct mem_cgroup *memcg)
-+bool memcg1_wait_acct_move(struct mem_cgroup *memcg)
+@@ -1424,7 +1424,7 @@ static void mem_cgroup_threshold(struct mem_cgroup *memcg)
+  * Check events in order.
+  *
+  */
+-void memcg_check_events(struct mem_cgroup *memcg, int nid)
++void memcg1_check_events(struct mem_cgroup *memcg, int nid)
  {
- 	if (mc.moving_task && current != mc.moving_task) {
- 		if (mem_cgroup_under_move(memcg)) {
-@@ -1056,7 +1056,7 @@ static void mem_cgroup_clear_mc(void)
- 	mmput(mm);
- }
- 
--int mem_cgroup_can_attach(struct cgroup_taskset *tset)
-+int memcg1_can_attach(struct cgroup_taskset *tset)
- {
- 	struct cgroup_subsys_state *css;
- 	struct mem_cgroup *memcg = NULL; /* unneeded init to make gcc happy */
-@@ -1126,7 +1126,7 @@ int mem_cgroup_can_attach(struct cgroup_taskset *tset)
- 	return ret;
- }
- 
--void mem_cgroup_cancel_attach(struct cgroup_taskset *tset)
-+void memcg1_cancel_attach(struct cgroup_taskset *tset)
- {
- 	if (mc.to)
- 		mem_cgroup_clear_mc();
-@@ -1285,7 +1285,7 @@ static void mem_cgroup_move_charge(void)
- 	atomic_dec(&mc.from->moving_account);
- }
- 
--void mem_cgroup_move_task(void)
-+void memcg1_move_task(void)
- {
- 	if (mc.to) {
- 		mem_cgroup_move_charge();
-@@ -1294,14 +1294,14 @@ void mem_cgroup_move_task(void)
- }
- 
- #else	/* !CONFIG_MMU */
--static int mem_cgroup_can_attach(struct cgroup_taskset *tset)
-+int memcg1_can_attach(struct cgroup_taskset *tset)
- {
- 	return 0;
- }
--static void mem_cgroup_cancel_attach(struct cgroup_taskset *tset)
-+void memcg1_cancel_attach(struct cgroup_taskset *tset)
- {
- }
--static void mem_cgroup_move_task(void)
-+void memcg1_move_task(void)
- {
- }
- #endif
+ 	if (IS_ENABLED(CONFIG_PREEMPT_RT))
+ 		return;
 diff --git a/mm/memcontrol-v1.h b/mm/memcontrol-v1.h
-index 55e7c4f90c39..d377c0be9880 100644
+index 524a2c76ffc9..ef1b7037cbdc 100644
 --- a/mm/memcontrol-v1.h
 +++ b/mm/memcontrol-v1.h
-@@ -29,11 +29,11 @@ static inline int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
- void mem_cgroup_id_get_many(struct mem_cgroup *memcg, unsigned int n);
- void mem_cgroup_id_put_many(struct mem_cgroup *memcg, unsigned int n);
+@@ -12,7 +12,7 @@ static inline void memcg1_soft_limit_reset(struct mem_cgroup *memcg)
+ }
  
--bool mem_cgroup_wait_acct_move(struct mem_cgroup *memcg);
-+bool memcg1_wait_acct_move(struct mem_cgroup *memcg);
- struct cgroup_taskset;
--int mem_cgroup_can_attach(struct cgroup_taskset *tset);
--void mem_cgroup_cancel_attach(struct cgroup_taskset *tset);
--void mem_cgroup_move_task(void);
-+int memcg1_can_attach(struct cgroup_taskset *tset);
-+void memcg1_cancel_attach(struct cgroup_taskset *tset);
-+void memcg1_move_task(void);
- 
- struct cftype;
- u64 mem_cgroup_move_charge_read(struct cgroup_subsys_state *css,
+ void mem_cgroup_charge_statistics(struct mem_cgroup *memcg, int nr_pages);
+-void memcg_check_events(struct mem_cgroup *memcg, int nid);
++void memcg1_check_events(struct mem_cgroup *memcg, int nid);
+ void memcg_oom_recover(struct mem_cgroup *memcg);
+ int try_charge_memcg(struct mem_cgroup *memcg, gfp_t gfp_mask,
+ 		     unsigned int nr_pages);
 diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 3332c89cae2e..da2c0fa0de1b 100644
+index bd4b26a73596..92fb72bbd494 100644
 --- a/mm/memcontrol.c
 +++ b/mm/memcontrol.c
-@@ -2582,7 +2582,7 @@ int try_charge_memcg(struct mem_cgroup *memcg, gfp_t gfp_mask,
- 	 * At task move, charge accounts can be doubly counted. So, it's
- 	 * better to wait until the end of task_move if something is going on.
- 	 */
--	if (mem_cgroup_wait_acct_move(mem_over_limit))
-+	if (memcg1_wait_acct_move(mem_over_limit))
- 		goto retry;
+@@ -2632,7 +2632,7 @@ void mem_cgroup_commit_charge(struct folio *folio, struct mem_cgroup *memcg)
  
- 	if (nr_retries--)
-@@ -6030,12 +6030,12 @@ struct cgroup_subsys memory_cgrp_subsys = {
- 	.css_free = mem_cgroup_css_free,
- 	.css_reset = mem_cgroup_css_reset,
- 	.css_rstat_flush = mem_cgroup_css_rstat_flush,
--	.can_attach = mem_cgroup_can_attach,
-+	.can_attach = memcg1_can_attach,
- #if defined(CONFIG_LRU_GEN) || defined(CONFIG_MEMCG_KMEM)
- 	.attach = mem_cgroup_attach,
- #endif
--	.cancel_attach = mem_cgroup_cancel_attach,
--	.post_attach = mem_cgroup_move_task,
-+	.cancel_attach = memcg1_cancel_attach,
-+	.post_attach = memcg1_move_task,
- #ifdef CONFIG_MEMCG_KMEM
- 	.fork = mem_cgroup_fork,
- 	.exit = mem_cgroup_exit,
+ 	local_irq_disable();
+ 	mem_cgroup_charge_statistics(memcg, folio_nr_pages(folio));
+-	memcg_check_events(memcg, folio_nid(folio));
++	memcg1_check_events(memcg, folio_nid(folio));
+ 	local_irq_enable();
+ }
+ 
+@@ -5697,7 +5697,7 @@ static void uncharge_batch(const struct uncharge_gather *ug)
+ 	local_irq_save(flags);
+ 	__count_memcg_events(ug->memcg, PGPGOUT, ug->pgpgout);
+ 	__this_cpu_add(ug->memcg->vmstats_percpu->nr_page_events, ug->nr_memory);
+-	memcg_check_events(ug->memcg, ug->nid);
++	memcg1_check_events(ug->memcg, ug->nid);
+ 	local_irq_restore(flags);
+ 
+ 	/* drop reference from uncharge_folio */
+@@ -5836,7 +5836,7 @@ void mem_cgroup_replace_folio(struct folio *old, struct folio *new)
+ 
+ 	local_irq_save(flags);
+ 	mem_cgroup_charge_statistics(memcg, nr_pages);
+-	memcg_check_events(memcg, folio_nid(new));
++	memcg1_check_events(memcg, folio_nid(new));
+ 	local_irq_restore(flags);
+ }
+ 
+@@ -6104,7 +6104,7 @@ void mem_cgroup_swapout(struct folio *folio, swp_entry_t entry)
+ 	memcg_stats_lock();
+ 	mem_cgroup_charge_statistics(memcg, -nr_entries);
+ 	memcg_stats_unlock();
+-	memcg_check_events(memcg, folio_nid(folio));
++	memcg1_check_events(memcg, folio_nid(folio));
+ 
+ 	css_put(&memcg->css);
+ }
 -- 
 2.45.2
 
