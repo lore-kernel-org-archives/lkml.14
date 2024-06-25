@@ -1,171 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB0A3146A7B
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 07:25:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3008B1465A8;
+	Tue, 25 Jun 2024 07:25:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719300314; cv=none; b=l8Fm2bUrm0BVw1pZpYS3og81Zu9X5lBTuy8jX8SgYqLeuYBrx28KqlgxsXoEfY5r/5avcdKeIpI2fTvnyiCwnkrkkUIla+VZTwaBSw54CYsRpPTSGEB0BVzQULaSLdNUc7Nk13sp6K2a7M24vM6DgPD6aSoR+g7MoNK6QadM9Q8=
+	t=1719300327; cv=none; b=eOMeQknSzP/1aRs8tRvgYa1MRhwYjHwrapUhrP7qWYllGj9X35SBdqXA46dGGgQxi7V9K7wjzoqh2SLSJkEOHZ/IOvlLrX5EBVAVNEzy6fLSFWrVzZmqcpUs46GMMhHvR36/P21YmxFso7DM+/U82mxRJkaVJTUi2+oYFByXRqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719300314; c=relaxed/simple;
-	bh=7ZjSY3rh8J+ct5ERYhltVYubIGtiCkBKkCZbQVawuPc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FVBGD6Y4Qcx/QDN2P9IcBeAHlFwWv5Fo6uEWTd755K4lTyeEZCMr5erzhudBniXrAWcosx1DcSMT4AXX2F+lOJZ5vNZVen2RYKlocGOlq2JrHmnAkhFWwdyRyVgi9hvi40y+bD5KNHvMmekWUf4G4sulPmnpGwJpInkO2H0knFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FPbNok2e; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719300327; c=relaxed/simple;
+	bh=ezb77GZXdVAFrfyo9/1iyHlxE3AHchnIk/xpupP7DRk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=IHY6hAH8/mhFMmGeaCkeZkqUcsNuMK8pL5d9qCmEvfucdxQrkeEwlL2r8NqIOoYJ9CsJKqBdWRJcFiF14rhd2ULIQmThonw3rjx14lBcaFC40roGJbZkm2knrmqBMGIcgYVsqSZH6GCpg3JHZSA4KPz8r83HUaX2TCecPnVB770=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NgMgMb2J; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=et5PWOAo; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FPbNok2e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719300313; x=1750836313;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=7ZjSY3rh8J+ct5ERYhltVYubIGtiCkBKkCZbQVawuPc=;
-  b=FPbNok2eAZukPJJMXSJdWCbKNDtB+W5I1jzyq6IXgEpev551D7hYNy2a
-   /0SLqc3N+E8XpzXUHArumzlnZ2GQ4ltiI/Pvo/IcE9sZ9NOcCDna+muBE
-   O3ZLoXKlNPd9Dy07yWguN2DqKSKUkNofbMbIJRHqGm2GBkhNyeDz/c5fF
-   4NiAyvGz71Eo1P8MX/7HKfMnlR38l2OWfNXI3ZtdpaFyajVZFsFu20+8Q
-   2i/+pMY3SNkRCAyKpRo7kav6GP0dT/zKVdvLATqhw+2y9B55vO9DKtE2a
-   IxWwXIuXaBjqYYARTb/BDrwoUK4dwnTbobi0kM6BnRRu/VKvu4tI9u88+
-   A==;
-X-CSE-ConnectionGUID: QjkxS0WmRYWciSA5GD0ZZA==
-X-CSE-MsgGUID: ARPoO8IATYeLtTUfX5MBHw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="20075568"
-X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
-   d="scan'208";a="20075568"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 00:25:13 -0700
-X-CSE-ConnectionGUID: kEDRshYiT5eXMNMDOITXlg==
-X-CSE-MsgGUID: lZe8AqqOToiiqwAubTGSAw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
-   d="scan'208";a="48523302"
-Received: from chenyu-dev.sh.intel.com ([10.239.62.164])
-  by orviesa005.jf.intel.com with ESMTP; 25 Jun 2024 00:25:10 -0700
-From: Chen Yu <yu.c.chen@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Mike Galbraith <efault@gmx.de>,
-	Tim Chen <tim.c.chen@intel.com>,
-	Yujie Liu <yujie.liu@intel.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	"Gautham R . Shenoy" <gautham.shenoy@amd.com>,
-	Chen Yu <yu.chen.surf@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	Chen Yu <yu.c.chen@intel.com>
-Subject: [PATCH 1/2] sched/fair: Record the average duration of a task
-Date: Tue, 25 Jun 2024 15:22:09 +0800
-Message-Id: <338ec61022d4b5242e4af6d156beac53f20eacf2.1719295669.git.yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1719295669.git.yu.c.chen@intel.com>
-References: <cover.1719295669.git.yu.c.chen@intel.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NgMgMb2J";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="et5PWOAo"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1719300324;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lbM9+X7lQHMtCd9+f5UahNU/0eZ7QOoLWzJWZWNqVH8=;
+	b=NgMgMb2JTCsUYPLOwbJdeNIErCWElIL3im8v3aHkfMZrzDiafPyOHz2ZQihqzTZ59feUZI
+	Ph8GKIjDgaGD3fXranxhg0jog/omT47YnESkhPBfZYeXbIutaovJ4h46ymqAOe0w/vObtQ
+	VAmIXZt60RmMYm596wr4gT0oa1Q5nXqkVZVUIagqA0D4lGFhgPTPJ8udrrTUjHf+S93zJK
+	+wZXkqyAEgtttXeUcPfEiN9srR0V1lxTI/minAq/ggs8/RrCLiw1CV//KQH6z6iRPnsBjt
+	Wq6RLW6LZQmqqcZ+Sq9yBw1m4BTlyXefGqZ59SkNO9ZPEoqmyjOKtwBBWmpRsA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1719300324;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lbM9+X7lQHMtCd9+f5UahNU/0eZ7QOoLWzJWZWNqVH8=;
+	b=et5PWOAoB6bFhTt4xdB92o5jth/5tAlsTrRR8UenmF/PZcTUGdlGchhMt2EvKAp/MhhBQx
+	vz9Mlm/0DoVUKsCg==
+To: Sunil V L <sunilvl@ventanamicro.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+ linux-pci@vger.kernel.org, acpica-devel@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
+ <will@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, "Rafael J
+ . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, Anup Patel <anup@brainfault.org>, Samuel Holland
+ <samuel.holland@sifive.com>, Robert Moore <robert.moore@intel.com>, Conor
+ Dooley <conor.dooley@microchip.com>, Andrew Jones
+ <ajones@ventanamicro.com>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Marc Zyngier <maz@kernel.org>, Atish
+ Kumar Patra <atishp@rivosinc.com>, Haibo1 Xu <haibo1.xu@intel.com>,
+ =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, Sunil V L
+ <sunilvl@ventanamicro.com>
+Subject: Re: [PATCH v6 00/17] RISC-V: ACPI: Add external interrupt
+ controller support
+In-Reply-To: <20240601150411.1929783-1-sunilvl@ventanamicro.com>
+References: <20240601150411.1929783-1-sunilvl@ventanamicro.com>
+Date: Tue, 25 Jun 2024 09:25:23 +0200
+Message-ID: <875xtx7acc.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Record the average duration of a task, as there is a requirement
-to leverage this information for better task placement.
+On Sat, Jun 01 2024 at 20:33, Sunil V L wrote:
+> This series adds support for the below ECR approved by ASWG.
+> 1) MADT - https://drive.google.com/file/d/1oMGPyOD58JaPgMl1pKasT-VKsIKia7zR/view?usp=sharing
+>
+> The series primarily enables irqchip drivers for RISC-V ACPI based
+> platforms.
+>
+> The series can be broadly categorized like below. 
+>
+> 1) PCI ACPI related functions are migrated from arm64 to common file so
+> that we don't need to duplicate them for RISC-V.
+>
+> 2) Added support for re-ordering the probe of interrupt controllers when
+> IRQCHIP_ACPI_DECLARE is used.
+>
+> 3) To ensure probe order between interrupt controllers and devices,
+> implicit dependency is created similar to when _DEP is present.
+>
+> 4) ACPI support added in RISC-V interrupt controller drivers.
 
-At first thought the (p->se.sum_exec_runtime / p->nvcsw)
-can be used to measure the task duration. However, the
-history long past was factored too heavily in such a formula.
-Ideally, the old activity should decay and not affect
-the current status too much.
+So this needs eyeballs from the ACPI people and a strategy how to merge
+it.
 
-Although something based on PELT can be used, se.util_avg might
-not be appropriate to describe the task duration:
-Task p1 and task p2 are doing frequent ping-pong scheduling on
-one CPU, both p1 and p2 have a short duration, but the util_avg
-of each task can be up to 50%, which is inconsistent with the
-short task duration.
+Thanks,
 
-Here's an example to show what the average duration is. Suppose
-on CPUx, task p1 and p2 run alternatively:
-
- --------------------> time
-
- | p1 runs 1ms | p2 preempt p1 | p1 switch in, runs 0.5ms and blocks |
-               ^               ^                                     ^
- |_____________|               |_____________________________________|
-                                                                     ^
-                                                                     |
-                                                                  p1 dequeued
-
-p1's duration is (1 + 0.5)ms. Because if p2 does not preempt p1, p1 can run 1.5ms.
-This reflects the nature of a task: how long it wishes to run at most.
-
-Suggested-by: Tim Chen <tim.c.chen@intel.com>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
----
- include/linux/sched.h |  3 +++
- kernel/sched/core.c   |  2 ++
- kernel/sched/fair.c   | 12 ++++++++++++
- 3 files changed, 17 insertions(+)
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 90691d99027e..78747d3954fd 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1339,6 +1339,9 @@ struct task_struct {
- 	struct callback_head		cid_work;
- #endif
- 
-+	u64				prev_sleep_sum_runtime;
-+	u64				duration_avg;
-+
- 	struct tlbflush_unmap_batch	tlb_ubc;
- 
- 	/* Cache last used pipe for splice(): */
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 0935f9d4bb7b..7399c4143528 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4359,6 +4359,8 @@ static void __sched_fork(unsigned long clone_flags, struct task_struct *p)
- 	p->migration_pending = NULL;
- #endif
- 	init_sched_mm_cid(p);
-+	p->prev_sleep_sum_runtime = 0;
-+	p->duration_avg = 0;
- }
- 
- DEFINE_STATIC_KEY_FALSE(sched_numa_balancing);
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 41b58387023d..445877069fbf 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6833,6 +6833,15 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 
- static void set_next_buddy(struct sched_entity *se);
- 
-+static inline void dur_avg_update(struct task_struct *p)
-+{
-+	u64 dur;
-+
-+	dur = p->se.sum_exec_runtime - p->prev_sleep_sum_runtime;
-+	p->prev_sleep_sum_runtime = p->se.sum_exec_runtime;
-+	update_avg(&p->duration_avg, dur);
-+}
-+
- /*
-  * The dequeue_task method is called before nr_running is
-  * decreased. We remove the task from the rbtree and
-@@ -6905,6 +6914,9 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 
- dequeue_throttle:
- 	util_est_update(&rq->cfs, p, task_sleep);
-+	if (task_sleep)
-+		dur_avg_update(p);
-+
- 	hrtick_update(rq);
- }
- 
--- 
-2.25.1
-
+        tglx
