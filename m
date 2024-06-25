@@ -1,222 +1,369 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2082.outbound.protection.outlook.com [40.107.236.82])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C8517C7D3;
-	Tue, 25 Jun 2024 15:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719327910; cv=fail; b=WqSQVU8quwv0MbMtp9uAG4XKiO61iHxi/PPiCU1S4+U3WHz+630BVPPeHBGtHH4wM3Lb4QzouFoJAH7rxls2f2fnkWzfHQiAtnWCJFovBgeUn8jU4WAYIgbXKwlFu3JsspW6vKOewqswaex7nchdVi52HHZklER3wDkbbvIiANE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719327910; c=relaxed/simple;
-	bh=MFwjNMspgzQCWGvJtP5tzT/BVR0p6YUDExx957KL23Q=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=J0zs5qktQR97s0+L8cTZsvnk4dCkrkpoc7107X9NvNX/gtmesv7B1LEEjIYWidqZAp62w3b0LxFw08S3PiBgYSG1VSNuYMkimLwmYlKu8ptKczu2mnADYt9lZdO3yI7OrQPWjW9758xsqGau2+Fse1+E5janGINHqeG0EQrlNpE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LVvzE6lz; arc=fail smtp.client-ip=40.107.236.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5796B17C7D4;
+	Tue, 25 Jun 2024 15:05:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719327927; cv=none; b=SCGPIjmCZXs80Dlxkksm3KDxxo5PgyLsflJPAPHoTIy+xjU2BsZIkOCe/646vMG9G3eDuGbn93I6va9Y3QqMepETakCFMWk5mf08QvnKfFaXZqnb3GMV82mb5u5qhcfZlH1Ffclu3m0umtl9vpf2wOfH/Vwuc8URLkAkMxG7F0Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719327927; c=relaxed/simple;
+	bh=6kf8vUeE2/3/9q62BhJqQa6tQ8qTDalv3nPeOQkuUQk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=VwEu13vYAxlaqpA4UL7o2nfA0HKjnqcfBe49rIbGr9FbMIbxtWRRERrqYHExA5vhNGzq+cDkowr1uf0X+cbrHud/o/hK4ZBp15yLu6Mszok2UNrLX9+USPbF0HzTe40+ybp3fUc+B1dItS+AF8NH+XS8O1XcJrCEbM1ThMpw90s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cNEK665H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LVvzE6lz"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oSKb5IGZfv2GvucIpllnVV0APN8Mz8Th6yOxteO/HYX3RCSzkJG1xv8UApA/Gma1LU80kyBiyjbu3XQUkmTpfQOFD/Uv9Hm3lE+O0dwC1Ln5xaP6R5G0kE1GNSN8xsDHDC9G/GQJ5tB7xyj6BeNU9ehOYTnW2icYZdMA58GTAiMorfB6aQWZ+zM6XTe7kOc+C5XuMjo7Oi/x8tRucIB7qNn/7dUBdCyz1HT8PwF4vjgaE6A9HuDvfNAFXMX1BuH3eBHKUQtRhqwcdc4ImbQ0MShxezhBTF87UndOe1S6R8T894shTDD/egI6In+YHf1FyO+yDvygtdsI+/nhDOKkfg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FEMXsrfWfwIT87sUSLDeDEliXCJRmsOxC6n4bq/y8i4=;
- b=Gw6HaH9GHJzZ82LY+hroWNQffG3ZWfBTF63E7IB7MHCdD3MVNLf9fPwdiz6ywhxpq6YUJGDhGqQDNdu7iRFVurutOe1+mtss5u6sJM8ru7v0uJcNoBeiUlzlyvVl+MUJJs5BgJJDI0pZaqNZE5C0s/QBYgnBvgOajhPBs1e3HiEYiau+aRwE52vJpIYCXbfit+sDIpr0wgzZRswL6rI/n8JGuWxKLj1LVLduTR3xXVW/28SY8buFgUjSERfMlBrYw2Wv0NJ5VAgp4Hf11FlXmQEQZn5bnlOzeK6wm+X4F7DHInqtMZw7XcUnGYhf2ZLOHLtdD+QsZgvTDXh10bDXUg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FEMXsrfWfwIT87sUSLDeDEliXCJRmsOxC6n4bq/y8i4=;
- b=LVvzE6lzaUpXZk9AiIYv6AnPPCx8NWnieS75DWwwAUf01ixHYr8J1D++X32bUhPHKL8SYvRFytCJXP6HamN84Z2o0BMaVkWYng14zaRmLr08nA1/+WvFjY0uwoFua+d7zl5f1NAxqAgFbQWq72Gq47cD6iuAxA5jLCjsBb4VJNc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by DM3PR12MB9285.namprd12.prod.outlook.com (2603:10b6:0:49::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7698.30; Tue, 25 Jun 2024 15:05:04 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%5]) with mapi id 15.20.7698.025; Tue, 25 Jun 2024
- 15:05:04 +0000
-Message-ID: <9ffb50b5-ee71-466a-80bb-42660d1fe237@amd.com>
-Date: Tue, 25 Jun 2024 10:05:02 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] cpufreq/amd-pstate-ut: Handle the inconsistency
-To: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>, rafael@kernel.org,
- viresh.kumar@linaro.org, gautham.shenoy@amd.com, perry.yuan@amd.com,
- skhan@linuxfoundation.org, li.meng@amd.com, ray.huang@amd.com
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240625134127.4464-1-Dhananjay.Ugwekar@amd.com>
- <20240625134127.4464-2-Dhananjay.Ugwekar@amd.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20240625134127.4464-2-Dhananjay.Ugwekar@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1P222CA0142.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:3c2::24) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cNEK665H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04C6CC4AF0A;
+	Tue, 25 Jun 2024 15:05:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719327927;
+	bh=6kf8vUeE2/3/9q62BhJqQa6tQ8qTDalv3nPeOQkuUQk=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=cNEK665HSoWXVRXSv18N/8iIDoMvaOalTwGw1FCahJt7YskWm9Y+nm8VEilBD37Yx
+	 apZf6tKF0pjx7ZoKIxnU2+Ovb3D8/5Fss3/ONFtWcXF794jCawr2rsWg8uXDeQkedv
+	 W5OLaMX8coojfSEIejBKEryiOI+WXYyR8hKCzAOTzFgiwHshqGqKG1qLTeNvkrB+zs
+	 w1hWkRvhuVdqooQQ9FgW2/rGxseL3d7lO3DqR5lcKGigMzxen2g5MkJOB8Tn8SINga
+	 IBlrwnKXI1caWMQHxbaxOgdjg7uJbFXHU0HjlnJx8aUJTFa0IP+kdt8oTY8v9suHwN
+	 ImvUadueEf9JA==
+From: Mark Brown <broonie@kernel.org>
+Date: Tue, 25 Jun 2024 15:58:05 +0100
+Subject: [PATCH v9 37/39] kselftest/arm64: Add GCS signal tests
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DM3PR12MB9285:EE_
-X-MS-Office365-Filtering-Correlation-Id: 508e6a4b-e66c-421a-0dbc-08dc952831c8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230037|366013|376011|1800799021;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?U0pMcUsxclFPTWNidE5mMjExV2hqaWJINzZtTEhEZGRyRHkvWWxEeEJsdUM3?=
- =?utf-8?B?b2dOUTNRa1gvRGsrb0w4THZHOGQ2dlVqYlFsTUFrT0x3S0sxTU5vQm1wSXJI?=
- =?utf-8?B?ZzZxTzU5UFliRFVWTWxKZStlU2V6ajVMbVNwVGpudW0vOGJGa3dNWE5NSFZm?=
- =?utf-8?B?T0xqeHlMSERoT2VsejUraE5DTGRwbkE1QW84QXJ6UGZQUkVhWnVYaHBXQ3Zt?=
- =?utf-8?B?c0hzYWEwWi9tZnJDMHd1QmJ5dFRJdlNhRXUxMjNKVnJoY1gxdERENmV6Qld5?=
- =?utf-8?B?bVZwbC9UVjdrSmVXU2YyQWRvMTByODdwTEsxMXhsemIrRTJiWWdtbTFZaWxj?=
- =?utf-8?B?Z21kM0VJZll3MGtwbTJoWmdaa2RpT01hUmN3MStyaVBVcDV1R3VKRXNEcVdV?=
- =?utf-8?B?SnZPSXFxTzk3OWVydnhrVlpMYmhMOXI0clRpYlptNkpnRjFxME94N083Q2ZY?=
- =?utf-8?B?ZEhtVlpUZkthYkJqMFZFZUVORERkQ1g5S2tuaGxmT1JTMGlnSTFuSDBmRzh2?=
- =?utf-8?B?UUo0dmdpRXUzdmp4d0UzbEFUTEpZWjhMRlZvVzlvY1YvWnNkNVlVUXBtS25s?=
- =?utf-8?B?VnovVllBU0Z6dzZjODVSOWllamYxb2xySW0xVmpwaDE3aEluVmlUc1VjZloz?=
- =?utf-8?B?d3Z1YmVSblV1eDQ3d2Y4M3lzUjRwSmN6ck92UjRYWXhRNUtkL2N1VVBRWitu?=
- =?utf-8?B?QnhmUjc2UThxOHYzYWQ2WWpkbXh3M2FreURJTGJRRUdlaDBkb0poY1h4WFhU?=
- =?utf-8?B?NGJzODBhaUh2SFBNUkxDMDNhbFpHTHdyR0ZndGF4MHpuV25UWjViaWpvYklJ?=
- =?utf-8?B?UE1XLzRiZlBCSXNKd2FJRG9IcURHT01ud0hRMnpHTXc3Q3VMak1ma3VuU1Y1?=
- =?utf-8?B?aDFzMWJpekxqMWpSVG5nMm01RFVPTXBoeVk4TjJnbEY5dG5TaXlsKzJLYjVv?=
- =?utf-8?B?R2NHUUJUWVZ0QTEwaURJQWZua210V1grSllrcjVJR2ZpeXZoN2tqWjRVcENW?=
- =?utf-8?B?djlWazV5WE03ZVhkMzlHbk14ckhOemtOVXByNzVUT0FYTkMwc1NkKzRTZUNl?=
- =?utf-8?B?VlVMc0tKNEZzVU9zVDMrY2VKd1pqYTV1TTlaMjFrcldDeDlMREh4Q2JYZk5G?=
- =?utf-8?B?dFR5d3hRdzJJMUE1Sk91VjF6QlppUUN2dk9CMG5pOE9XZG5xU3h2ZzVicXNM?=
- =?utf-8?B?cjI3QW1VRWhqcmJuL3h1VFR6RG9MQ254eUVlbW1TalJPOFpoVE8rVmZicUYr?=
- =?utf-8?B?dnFYS1NrQ3k5d0JRM0hZKyt1MXBXNUM0NXpORHBWYUhCcERCQitvcEZVMW53?=
- =?utf-8?B?dzRhVHhKTlJBMTZJcElXVTlud0NCMXA5c3JOYmpWS015SW9JZVNlRGZERjkv?=
- =?utf-8?B?Z0pReGRYUUkvczJhdEVMaXQ4dUdtSitaWVJTMUhCVElJZklSYXVYSW1iS2Nl?=
- =?utf-8?B?bkNnZ3dvVTF5dGk1Wmt1cG05YnRIamJ1NGNVZU5QQjBacWdhWUtyZVIxa1Qr?=
- =?utf-8?B?V09XVnZNRGEzeGJMMWxJdWhUWjQ5VWI2QUNpSlF5ekFaNHRqdjdNZEM4SjJm?=
- =?utf-8?B?UEpVMXNic2NNSGhydlU5WExZaW1SZTBwRlFLVk5rNzlSTFJVMU5JN2F0Wnho?=
- =?utf-8?B?amQ3M3JIQk9zSkNUaE1KS1laWXZqa3RjeU1veTBwdGd5dDdTT2VBeTQwT014?=
- =?utf-8?B?QjhLazg3UnczeVpUS3hmSEF2bklGZzZvRkJhdUdWaTk3cW1tbDYyUEZ6RFRC?=
- =?utf-8?Q?VUKUSRe1dVK8jbhBjbXICKhkNwtWX47iHzolYig?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(376011)(1800799021);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WHR1YUNnWFdvSUEwWXJBdGFacFc4WlJMcm5TazRRYzdFcmg5ZXFYemk2YWJq?=
- =?utf-8?B?VlJiOWRnY1BpajkvMm41ZVZVVUw5d1JrbVFwMGcyOTFKMWxYQUtiRnZyY29o?=
- =?utf-8?B?SW9mQVhjNU5QMEhNa1pHclNKRWg5clR3Z0QwbUdXaktNRDdtc1BWKzZSZWdM?=
- =?utf-8?B?LzA3TXdTaDU0amsyKzFjby91Z2RZaUJZYi80T0lTNzFXWHlYYTJ6MGZONEt6?=
- =?utf-8?B?Sk9YWkJvRzNSenU0SURONXl0cVhvUVlpQi8xWldqa2x3bVhVeGdCcWx3SHIx?=
- =?utf-8?B?bEZnWUluK3ZkVWtDMld4bzR3TkF6cXBkNkRxdU5zSlgzRU1qUHZDM3JxR0JJ?=
- =?utf-8?B?R2VETW81cnZONmEwZnhnbGtRWm91Q1pNcUZwUXhtWE8yM0t5NnBWdUtuS2Vx?=
- =?utf-8?B?dmFaTlhoU0t2Q3VLMHB6cGtHenNEdDZIWDJzL3FwR3lJT0JDMGdid1IrVE5q?=
- =?utf-8?B?ZlRoUUhEN2hoblFjUlNMMERobnNXLzNoOUhzMzUrU0dsY2VjeW9xSkg1MWZP?=
- =?utf-8?B?TkxGUHk3dWsvN1h0VHZUWXgvcTBxcks4SThtWHkwR2YxT3hLbytmN25yUFF4?=
- =?utf-8?B?aHp1aDIwMXQzQ3NGb3JLSjU2S1VCYk5xSFpub0R0SkNmS0N6eVdaYWxyMGx0?=
- =?utf-8?B?aEdlTU9WM3ZBaUh2a3pndFlVdVlzcTg0QUJBNkhGc2pkYWtmVTVkdTBPeTNz?=
- =?utf-8?B?MUJ1OEE2NVMvYVZRZjJGUyt6OFBOcHA4M3BOZEh6NEhlWXl3Z250cGN2RzFW?=
- =?utf-8?B?QzlIZEYyRkI2RUl5S3B2SE5jZjdaQ0Z5TVlETnJmWW5wTW5iQ3gyMXg3NzFT?=
- =?utf-8?B?WEZVMnIzbkNVd0JKWEljejU1eTNsVHh5SmJjcEpjdzA3SkJkMUwyUHFobG1I?=
- =?utf-8?B?OUQ2S1BkN1dQcVEzWTZPWUladlo2WEpIRjgrRTBVRVJTb2pFNFRvUnRRVVZ4?=
- =?utf-8?B?a05pZXVDNy81NFgwWWg0RThQNWh3SXBNSW4zR2dGRUtNVWpKa2wrbUMrTkZw?=
- =?utf-8?B?L3doVkRXQ0oxby9Pa1l5V21LT014R25pZEZZMjhDZ2JiZytFdmpyTm9HVFEv?=
- =?utf-8?B?NEp1Qnl0dC9QakRMaTE5aFJFKzhLblI1WFFJOGFxR25VWG0yMThlSXRRUzV2?=
- =?utf-8?B?SkwzVDRia3hQMCt6ODJEbGltbmhWZjVBYWxsRVg1M2pkNUg0bjJLakNtTjRl?=
- =?utf-8?B?cmE1UjQ1aU5jaDlwV0ViYTZyMHBRSzlLZ001cTdENzQ2cHRmSWh3cFFSbnp6?=
- =?utf-8?B?ZVgyVTRwVHhMd3JSTytaZnkzQi8vd3dYbElYZWF4RE9pZlo2N2lTUlgrVDA2?=
- =?utf-8?B?ZGFxeXppUHdWZEJCWW1QRDZ0MnhkYVg2ODBaenVhcnNKQWFBWThBZGkyVDhx?=
- =?utf-8?B?VzEzbUg3SWtKV2RrMnpLd1hxS1VVQ3ZVSHl2eXgxd0IvQktnQ0RMa29hb3dl?=
- =?utf-8?B?Qk9WVlhkaXFtOE96d0VrSS9uckdFV2ZOZGFkUEpnYzZRM256YkNDTE1VdXVG?=
- =?utf-8?B?akU2VXpYQitSZW85azZ0ZjhkRVpob3V3VHBuNzNOcmNVTGpyajZyTXMvdHZQ?=
- =?utf-8?B?Z2s4U01JNzhrUjhZZlA1T09lQzBGWFZPSTFOZHo1T1BLK01FYmxTaW9oMndQ?=
- =?utf-8?B?RHpTR1JjREtlcWExRmFMbXV6ajV2MXdIblhLWjJMM2c3MzZZOStmRVQ2QnQ0?=
- =?utf-8?B?ZlN4Vm9tSU5Qc0VHT3RjK1JQSFQyZVhET3NCUlVrekI0Rk9TaWo0ZDBrOHNa?=
- =?utf-8?B?UThsNEFwcGRCc09ZU2VodHgzLy9wU24xcitlM1pHRTJqSGxrcEx2WTU0RkZ1?=
- =?utf-8?B?ZDI1aVEvNEUycjZ2QVo1M2dIOHZRWjNWbG1BdHFDU3hlYlRHZDJicmpFYWk0?=
- =?utf-8?B?eUNTMS9CZllYYmRRdmpYVFBIRnJueFo3VlhpejFjMXVsaVhZdkNaVks3Q0V2?=
- =?utf-8?B?enBxL0VaQkRadS9ySVZrWWI2VTZRc05nL0o4VU11NktUeG9xTjV1NkNSdFE2?=
- =?utf-8?B?L0J3WXAzcjNmRHh6SmNXZDc5bEJaNzh0OE5IYkpkTHkwNkZuajNjL3A0TlZK?=
- =?utf-8?B?aVFtME1BUGF2cDZ1ZVB2Ly9jRmkxcTF2dSsrR3BhWk5GZ2p3QlFwRDNDVFli?=
- =?utf-8?Q?Gviq2Z50OvhSl0yqq54HwJ4s6?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 508e6a4b-e66c-421a-0dbc-08dc952831c8
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2024 15:05:04.7613
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5ShpRXvemPmo1hogRNzodrbbbLuQpMp7epIL5Lf9i7+2EmeBblq/JVjB+Kea7moR/COWTF4hPM3P/e2BtgJWTw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9285
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240625-arm64-gcs-v9-37-0f634469b8f0@kernel.org>
+References: <20240625-arm64-gcs-v9-0-0f634469b8f0@kernel.org>
+In-Reply-To: <20240625-arm64-gcs-v9-0-0f634469b8f0@kernel.org>
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+ Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <maz@kernel.org>, 
+ Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Arnd Bergmann <arnd@arndb.de>, 
+ Oleg Nesterov <oleg@redhat.com>, Eric Biederman <ebiederm@xmission.com>, 
+ Shuah Khan <shuah@kernel.org>, 
+ "Rick P. Edgecombe" <rick.p.edgecombe@intel.com>, 
+ Deepak Gupta <debug@rivosinc.com>, Ard Biesheuvel <ardb@kernel.org>, 
+ Szabolcs Nagy <Szabolcs.Nagy@arm.com>, Kees Cook <kees@kernel.org>
+Cc: "H.J. Lu" <hjl.tools@gmail.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Florian Weimer <fweimer@redhat.com>, Christian Brauner <brauner@kernel.org>, 
+ Thiago Jung Bauermann <thiago.bauermann@linaro.org>, 
+ Ross Burton <ross.burton@arm.com>, linux-arm-kernel@lists.infradead.org, 
+ linux-doc@vger.kernel.org, kvmarm@lists.linux.dev, 
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, 
+ linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.14-dev-d4707
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7642; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=6kf8vUeE2/3/9q62BhJqQa6tQ8qTDalv3nPeOQkuUQk=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBmetuPquVxjSFARwh+scwwy3+t5W9RXsUl4EkCHnWu
+ c0ZvgoWJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZnrbjwAKCRAk1otyXVSH0PtVB/
+ 9TvfqwtKkWnWEXfy8Tnf8krx90zOIcw9m8P/csKWQ31MXOWRpAX9mZuHvU/8jsHXeN+b1FIAllWWdm
+ PhaQ+A3IE1PTOE8Fo99JiDEIT4vYY2VI/WNVd2a30nUPGArQ3bbxOb2tyS8lBF1xLLPfER1PEr8Qwt
+ iu3M2YpArb0T0/OHemiKW7nA3BDRJTZoJxqESvrWWlaTVyFJLJbmBvQcLkB41eHt+JZt89HvPmKp/V
+ iU/eVP4CXmBomCKyS4fdjkt9ncgbPxFKeL0QjUuIJo1DOFWcgLXMvJDY95DWqjnXyRmOKQ4Rh6SMB/
+ 4MdEc5KnMWmWRjF68+DhFr/M0IGmCD
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On 6/25/2024 08:41, Dhananjay Ugwekar wrote:
-> cpudata->nominal_freq being in MHz whereas other frequencies being in
-> KHz breaks the amd-pstate-ut frequency sanity check. This fixes it.
-> 
-> Fixes: 14eb1c96e3a3 ("cpufreq: amd-pstate: Add test module for amd-pstate driver")
-> Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+Do some testing of the signal handling for GCS, checking that a GCS
+frame has the expected information in it and that the expected signals
+are delivered with invalid operations.
 
-The code change below looks fine to me, but I think the tag is wrong. 
-It should go with the "fix" that caused the inconsistency.  Here is what
-I think the correct tag should be:
+Reviewed-by: Thiago Jung Bauermann <thiago.bauermann@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ tools/testing/selftests/arm64/signal/.gitignore    |  1 +
+ .../selftests/arm64/signal/test_signals_utils.h    | 10 +++
+ .../arm64/signal/testcases/gcs_exception_fault.c   | 62 +++++++++++++++
+ .../selftests/arm64/signal/testcases/gcs_frame.c   | 88 ++++++++++++++++++++++
+ .../arm64/signal/testcases/gcs_write_fault.c       | 67 ++++++++++++++++
+ 5 files changed, 228 insertions(+)
 
-Fixes: e4731baaf294 ("cpufreq: amd-pstate: Fix the inconsistency in max 
-frequency units")
+diff --git a/tools/testing/selftests/arm64/signal/.gitignore b/tools/testing/selftests/arm64/signal/.gitignore
+index 1ce5b5eac386..75d691c13207 100644
+--- a/tools/testing/selftests/arm64/signal/.gitignore
++++ b/tools/testing/selftests/arm64/signal/.gitignore
+@@ -2,6 +2,7 @@
+ mangle_*
+ fake_sigreturn_*
+ fpmr_*
++gcs_*
+ sme_*
+ ssve_*
+ sve_*
+diff --git a/tools/testing/selftests/arm64/signal/test_signals_utils.h b/tools/testing/selftests/arm64/signal/test_signals_utils.h
+index 1e80808ee105..36fc12b3cd60 100644
+--- a/tools/testing/selftests/arm64/signal/test_signals_utils.h
++++ b/tools/testing/selftests/arm64/signal/test_signals_utils.h
+@@ -6,6 +6,7 @@
+ 
+ #include <assert.h>
+ #include <stdio.h>
++#include <stdint.h>
+ #include <string.h>
+ 
+ #include <linux/compiler.h>
+@@ -47,6 +48,15 @@ void test_result(struct tdescr *td);
+ 		_arg1;							\
+ 	})
+ 
++static inline __attribute__((always_inline)) uint64_t get_gcspr_el0(void)
++{
++	uint64_t val;
++
++	asm volatile("mrs %0, S3_3_C2_C5_1" : "=r" (val));
++
++	return val;
++}
++
+ static inline bool feats_ok(struct tdescr *td)
+ {
+ 	if (td->feats_incompatible & td->feats_supported)
+diff --git a/tools/testing/selftests/arm64/signal/testcases/gcs_exception_fault.c b/tools/testing/selftests/arm64/signal/testcases/gcs_exception_fault.c
+new file mode 100644
+index 000000000000..6228448b2ae7
+--- /dev/null
++++ b/tools/testing/selftests/arm64/signal/testcases/gcs_exception_fault.c
+@@ -0,0 +1,62 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2023 ARM Limited
++ */
++
++#include <errno.h>
++#include <signal.h>
++#include <unistd.h>
++
++#include <sys/mman.h>
++#include <sys/prctl.h>
++
++#include "test_signals_utils.h"
++#include "testcases.h"
++
++/*
++ * We should get this from asm/siginfo.h but the testsuite is being
++ * clever with redefining siginfo_t.
++ */
++#ifndef SEGV_CPERR
++#define SEGV_CPERR 10
++#endif
++
++static inline void gcsss1(uint64_t Xt)
++{
++	asm volatile (
++		"sys #3, C7, C7, #2, %0\n"
++		:
++		: "rZ" (Xt)
++		: "memory");
++}
++
++static int gcs_op_fault_trigger(struct tdescr *td)
++{
++	/*
++	 * The slot below our current GCS should be in a valid GCS but
++	 * must not have a valid cap in it.
++	 */
++	gcsss1(get_gcspr_el0() - 8);
++
++	return 0;
++}
++
++static int gcs_op_fault_signal(struct tdescr *td, siginfo_t *si,
++				  ucontext_t *uc)
++{
++	ASSERT_GOOD_CONTEXT(uc);
++
++	return 1;
++}
++
++struct tdescr tde = {
++	.name = "Invalid GCS operation",
++	.descr = "An invalid GCS operation generates the expected signal",
++	.feats_required = FEAT_GCS,
++	.timeout = 3,
++	.sig_ok = SIGSEGV,
++	.sig_ok_code = SEGV_CPERR,
++	.sanity_disabled = true,
++	.trigger = gcs_op_fault_trigger,
++	.run = gcs_op_fault_signal,
++};
+diff --git a/tools/testing/selftests/arm64/signal/testcases/gcs_frame.c b/tools/testing/selftests/arm64/signal/testcases/gcs_frame.c
+new file mode 100644
+index 000000000000..b405d82321da
+--- /dev/null
++++ b/tools/testing/selftests/arm64/signal/testcases/gcs_frame.c
+@@ -0,0 +1,88 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2023 ARM Limited
++ */
++
++#include <signal.h>
++#include <ucontext.h>
++#include <sys/prctl.h>
++
++#include "test_signals_utils.h"
++#include "testcases.h"
++
++static union {
++	ucontext_t uc;
++	char buf[1024 * 64];
++} context;
++
++static int gcs_regs(struct tdescr *td, siginfo_t *si, ucontext_t *uc)
++{
++	size_t offset;
++	struct _aarch64_ctx *head = GET_BUF_RESV_HEAD(context);
++	struct gcs_context *gcs;
++	unsigned long expected, gcspr;
++	uint64_t *u64_val;
++	int ret;
++
++	ret = prctl(PR_GET_SHADOW_STACK_STATUS, &expected, 0, 0, 0);
++	if (ret != 0) {
++		fprintf(stderr, "Unable to query GCS status\n");
++		return 1;
++	}
++
++	/* We expect a cap to be added to the GCS in the signal frame */
++	gcspr = get_gcspr_el0();
++	gcspr -= 8;
++	fprintf(stderr, "Expecting GCSPR_EL0 %lx\n", gcspr);
++
++	if (!get_current_context(td, &context.uc, sizeof(context))) {
++		fprintf(stderr, "Failed getting context\n");
++		return 1;
++	}
++
++	/* Ensure that the signal restore token was consumed */
++	u64_val = (uint64_t *)get_gcspr_el0() + 1;
++	if (*u64_val) {
++		fprintf(stderr, "GCS value at %p is %lx not 0\n",
++			u64_val, *u64_val);
++		return 1;
++	}
++
++	fprintf(stderr, "Got context\n");
++
++	head = get_header(head, GCS_MAGIC, GET_BUF_RESV_SIZE(context),
++			  &offset);
++	if (!head) {
++		fprintf(stderr, "No GCS context\n");
++		return 1;
++	}
++
++	gcs = (struct gcs_context *)head;
++
++	/* Basic size validation is done in get_current_context() */
++
++	if (gcs->features_enabled != expected) {
++		fprintf(stderr, "Features enabled %llx but expected %lx\n",
++			gcs->features_enabled, expected);
++		return 1;
++	}
++
++	if (gcs->gcspr != gcspr) {
++		fprintf(stderr, "Got GCSPR %llx but expected %lx\n",
++			gcs->gcspr, gcspr);
++		return 1;
++	}
++
++	fprintf(stderr, "GCS context validated\n");
++	td->pass = 1;
++
++	return 0;
++}
++
++struct tdescr tde = {
++	.name = "GCS basics",
++	.descr = "Validate a GCS signal context",
++	.feats_required = FEAT_GCS,
++	.timeout = 3,
++	.run = gcs_regs,
++};
+diff --git a/tools/testing/selftests/arm64/signal/testcases/gcs_write_fault.c b/tools/testing/selftests/arm64/signal/testcases/gcs_write_fault.c
+new file mode 100644
+index 000000000000..faeabb18c4b2
+--- /dev/null
++++ b/tools/testing/selftests/arm64/signal/testcases/gcs_write_fault.c
+@@ -0,0 +1,67 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2023 ARM Limited
++ */
++
++#include <errno.h>
++#include <signal.h>
++#include <unistd.h>
++
++#include <sys/mman.h>
++#include <sys/prctl.h>
++
++#include "test_signals_utils.h"
++#include "testcases.h"
++
++static uint64_t *gcs_page;
++
++#ifndef __NR_map_shadow_stack
++#define __NR_map_shadow_stack 453
++#endif
++
++static bool alloc_gcs(struct tdescr *td)
++{
++	long page_size = sysconf(_SC_PAGE_SIZE);
++
++	gcs_page = (void *)syscall(__NR_map_shadow_stack, 0,
++				   page_size, 0);
++	if (gcs_page == MAP_FAILED) {
++		fprintf(stderr, "Failed to map %ld byte GCS: %d\n",
++			page_size, errno);
++		return false;
++	}
++
++	return true;
++}
++
++static int gcs_write_fault_trigger(struct tdescr *td)
++{
++	/* Verify that the page is readable (ie, not completely unmapped) */
++	fprintf(stderr, "Read value 0x%lx\n", gcs_page[0]);
++
++	/* A regular write should trigger a fault */
++	gcs_page[0] = EINVAL;
++
++	return 0;
++}
++
++static int gcs_write_fault_signal(struct tdescr *td, siginfo_t *si,
++				  ucontext_t *uc)
++{
++	ASSERT_GOOD_CONTEXT(uc);
++
++	return 1;
++}
++
++
++struct tdescr tde = {
++	.name = "GCS write fault",
++	.descr = "Normal writes to a GCS segfault",
++	.feats_required = FEAT_GCS,
++	.timeout = 3,
++	.sig_ok = SIGSEGV,
++	.sanity_disabled = true,
++	.init = alloc_gcs,
++	.trigger = gcs_write_fault_trigger,
++	.run = gcs_write_fault_signal,
++};
 
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-
-> ---
->   drivers/cpufreq/amd-pstate-ut.c | 12 +++++++-----
->   1 file changed, 7 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/amd-pstate-ut.c b/drivers/cpufreq/amd-pstate-ut.c
-> index fc275d41d51e..66b73c308ce6 100644
-> --- a/drivers/cpufreq/amd-pstate-ut.c
-> +++ b/drivers/cpufreq/amd-pstate-ut.c
-> @@ -202,6 +202,7 @@ static void amd_pstate_ut_check_freq(u32 index)
->   	int cpu = 0;
->   	struct cpufreq_policy *policy = NULL;
->   	struct amd_cpudata *cpudata = NULL;
-> +	u32 nominal_freq_khz;
->   
->   	for_each_possible_cpu(cpu) {
->   		policy = cpufreq_cpu_get(cpu);
-> @@ -209,13 +210,14 @@ static void amd_pstate_ut_check_freq(u32 index)
->   			break;
->   		cpudata = policy->driver_data;
->   
-> -		if (!((cpudata->max_freq >= cpudata->nominal_freq) &&
-> -			(cpudata->nominal_freq > cpudata->lowest_nonlinear_freq) &&
-> +		nominal_freq_khz = cpudata->nominal_freq*1000;
-> +		if (!((cpudata->max_freq >= nominal_freq_khz) &&
-> +			(nominal_freq_khz > cpudata->lowest_nonlinear_freq) &&
->   			(cpudata->lowest_nonlinear_freq > cpudata->min_freq) &&
->   			(cpudata->min_freq > 0))) {
->   			amd_pstate_ut_cases[index].result = AMD_PSTATE_UT_RESULT_FAIL;
->   			pr_err("%s cpu%d max=%d >= nominal=%d > lowest_nonlinear=%d > min=%d > 0, the formula is incorrect!\n",
-> -				__func__, cpu, cpudata->max_freq, cpudata->nominal_freq,
-> +				__func__, cpu, cpudata->max_freq, nominal_freq_khz,
->   				cpudata->lowest_nonlinear_freq, cpudata->min_freq);
->   			goto skip_test;
->   		}
-> @@ -229,13 +231,13 @@ static void amd_pstate_ut_check_freq(u32 index)
->   
->   		if (cpudata->boost_supported) {
->   			if ((policy->max == cpudata->max_freq) ||
-> -					(policy->max == cpudata->nominal_freq))
-> +					(policy->max == nominal_freq_khz))
->   				amd_pstate_ut_cases[index].result = AMD_PSTATE_UT_RESULT_PASS;
->   			else {
->   				amd_pstate_ut_cases[index].result = AMD_PSTATE_UT_RESULT_FAIL;
->   				pr_err("%s cpu%d policy_max=%d should be equal cpu_max=%d or cpu_nominal=%d !\n",
->   					__func__, cpu, policy->max, cpudata->max_freq,
-> -					cpudata->nominal_freq);
-> +					nominal_freq_khz);
->   				goto skip_test;
->   			}
->   		} else {
+-- 
+2.39.2
 
