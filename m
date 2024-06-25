@@ -1,106 +1,362 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DFA447A64;
-	Tue, 25 Jun 2024 11:38:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39885149C6A
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 11:40:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719315523; cv=none; b=PrBoEMUEDeWM5OGLo3/rPKZgVsNAofzZkGGnshfyuioPBU7WXajitoCW8oWhcCH1DbJHZRZVDRsaaRsiBBrmNZjc0TuHD4s0pGujUE161F3/riC/xU/m95uSaWVqq5YzPbJStf4NnHlhQPn9R8cvVStcbi7Qo7PN/HjiBBxVE2Y=
+	t=1719315633; cv=none; b=NBvX711DKywxU7g1UwBoB/BeB2HzyN8ZqmVHBuxTkFnlmt7W7ChkGrVTfn98KHzF1l74xyhv29yrtwULpoh0lS0XL+gwqePr7cqal3kEKJkNKNM+m8XM2K22rcdyHPN0sOuj+UZX03H3ZY9vCQE9WaPMr6J3qLctyG/9INHTQXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719315523; c=relaxed/simple;
-	bh=tuKcN7msvExSJkenmqvA0RHkiHj+FhdQ9vmYGb1gdY4=;
+	s=arc-20240116; t=1719315633; c=relaxed/simple;
+	bh=ZxVyvtYxARtDrAp6vLKjEw2lpXi8DX8ni4IcJdc5Moo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OeIRuTr5/ni6riOpBdrWm3jvYRkK5OWHtcx2b3MrmvzWJx/GEgv+YNe7eiLdXKfb2TlG8IMQvTtBUEOeaY5fHY6rFdQKpWUs0+APYhQABc1XPRwh1YnYf8HwXfSrGqFvwhgRfA9bYk/XlOnXpkeztV/zorjnjV/IB6A8TAyZ1zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4W7jWh211Jz4f3l1y;
-	Tue, 25 Jun 2024 19:38:24 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 619261A0189;
-	Tue, 25 Jun 2024 19:38:36 +0800 (CST)
-Received: from [10.174.179.155] (unknown [10.174.179.155])
-	by APP2 (Coremail) with SMTP id Syh0CgBn0YY6rHpmAfY0AQ--.8681S3;
-	Tue, 25 Jun 2024 19:38:36 +0800 (CST)
-Message-ID: <77ed0b42-60ac-0746-9a5b-23676e9668f2@huaweicloud.com>
-Date: Tue, 25 Jun 2024 19:38:34 +0800
+	 In-Reply-To:Content-Type; b=sMH3XtiwyCnJYep3M496m/5WqzwNNzCA8OQ++/Cd0ogroJkkFAt/G3TPKygL7aiy8DQ3sOZxCJaY6Gri3Z5XjNWZK4/EHf1x34M9MTQmX6IlI+COL2JBfZxuLXhSK7vH8KAAxZfgROSi18MPQkyJD2KcmkH4pjT4+tK/cjSIwmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0FB97339;
+	Tue, 25 Jun 2024 04:40:54 -0700 (PDT)
+Received: from [10.1.39.170] (XHFQ2J9959.cambridge.arm.com [10.1.39.170])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB9883F73B;
+	Tue, 25 Jun 2024 04:40:25 -0700 (PDT)
+Message-ID: <b6b485ee-7af0-42b8-b0ca-5a75f76a69e2@arm.com>
+Date: Tue, 25 Jun 2024 12:40:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101
- Thunderbird/104.0
-Subject: Re: [PATCH] block: cancel all throttled bios when deleting the cgroup
-To: =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>
-Cc: tj@kernel.org, josef@toxicpanda.com, hch@lst.de, axboe@kernel.dk,
- cgroups@vger.kernel.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, yangerkun@huawei.com, yukuai1@huaweicloud.com,
- houtao1@huawei.com, yi.zhang@huawei.com, lilingfeng3@huawei.com
-References: <20240624130940.3751791-1-lilingfeng@huaweicloud.com>
- <5emugcorjnrcgczkmi7njfzwbotpqn6heu7acfho2zfkdsajpv@yrztl7hoa6ky>
-From: Li Lingfeng <lilingfeng@huaweicloud.com>
-In-Reply-To: <5emugcorjnrcgczkmi7njfzwbotpqn6heu7acfho2zfkdsajpv@yrztl7hoa6ky>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 18/18] arm64/mm: Automatically fold contpte mappings
+Content-Language: en-GB
+To: Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Kefeng Wang <wangkefeng.wang@huawei.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Ard Biesheuvel <ardb@kernel.org>, Marc Zyngier <maz@kernel.org>,
+ James Morse <james.morse@arm.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, Mark Rutland <mark.rutland@arm.com>,
+ David Hildenbrand <david@redhat.com>, John Hubbard <jhubbard@nvidia.com>,
+ Zi Yan <ziy@nvidia.com>, Barry Song <21cnbao@gmail.com>,
+ Alistair Popple <apopple@nvidia.com>, Yang Shi <shy828301@gmail.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, "Yin, Fengwei" <fengwei.yin@intel.com>
+Cc: linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20240215103205.2607016-1-ryan.roberts@arm.com>
+ <20240215103205.2607016-19-ryan.roberts@arm.com>
+ <1285eb59-fcc3-4db8-9dd9-e7c4d82b1be0@huawei.com>
+ <8d57ed0d-fdd0-4fc6-b9f1-a6ac11ce93ce@arm.com>
+ <018b5e83-789e-480f-82c8-a64515cdd14a@huawei.com>
+ <b75aa60d-e058-4b5c-877a-9c0cd295e96f@linux.alibaba.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <b75aa60d-e058-4b5c-877a-9c0cd295e96f@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgBn0YY6rHpmAfY0AQ--.8681S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxJr1kWrWkXF15Xr4fuw13twb_yoW8Aw1Dpa
-	1Sv3W7Krn8Jr9ayF4vvF4F9FyfZrZ3Gr45AFn8Gw15Ar15Xr4DtrZakw4rua4xZrn3C3ya
-	vF4jqF1DZ3Wqk3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS
-	07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
-	02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
-	GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-	CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAF
-	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
-	7IU1zuWJUUUUU==
-X-CM-SenderInfo: polox0xjih0w46kxt4xhlfz01xgou0bp/
 
-
-在 2024/6/25 18:34, Michal Koutný 写道:
-> Hello.
->
-> On Mon, Jun 24, 2024 at 09:09:40PM GMT, Li Lingfeng <lilingfeng@huaweicloud.com> wrote:
->> From: Li Lingfeng <lilingfeng3@huawei.com>
+On 25/06/2024 08:23, Baolin Wang wrote:
+> 
+> 
+> On 2024/6/25 11:16, Kefeng Wang wrote:
 >>
->> When a process migrates to another cgroup and the original cgroup is deleted,
->> the restrictions of throttled bios cannot be removed. If the restrictions
->> are set too low, it will take a long time to complete these bios.
-> When pd_offline_fn is called because of disk going away, it makes sense
-> to cancel the bios. However, when pd_offline_fn is called due to cgroup
-> removal (with possibly surviving originating process), wouldn't bio
-> cancelling lead to loss of data?
-> Aha, it wouldn't -- the purpose of the function is to "flush" throttled
-> bios (in the original patch they'd immediately fail, here they the IO
-> operation may succeed).
-> Is that correct? (Wouldn't there be a more descriptive name than
-> tg_cancel_bios then?)
-Thanks for your advice. It's indeed more appropriate to use "flush" 
-instead of "cancel" here, I will change it soon.
->
-> And if a user is allowed to remove cgroup and use this to bypass the
-> throttling, they also must have permissions to migrate away from the
-> cgroup (and consistent config would thus allow them to change the limit
-> too), therefore this doesn't allow bypassing the throttling limit. If
-> you agree, could you please add the explanation to commit message too?
+>>
+>> On 2024/6/24 23:56, Ryan Roberts wrote:
+>>> + Baolin Wang and Yin Fengwei, who maybe able to help with this.
+>>>
+>>>
+>>> Hi Kefeng,
+>>>
+>>> Thanks for the report!
+>>>
+>>>
+>>> On 24/06/2024 15:30, Kefeng Wang wrote:
+>>>> Hi Ryan,
+>>>>
+>>>> A big regression on page-fault3("Separate file shared mapping page
+>>>> fault") testcase from will-it-scale on arm64, no issue on x86,
+>>>>
+>>>> ./page_fault3_processes -t 128 -s 5
+>>>
+>>> I see that this program is mkstmp'ing a file at "/tmp/willitscale.XXXXXX". Based
+>>> on your description, I'm inferring that /tmp is backed by ext4 with your large
+>>> folio patches enabled?
+>>
+>> Yes, mount /tmp by ext4, sorry to forget to mention that.
+>>
+>>>
+>>>>
+>>>> 1) large folio disabled on ext4:
+>>>>     92378735
+>>>> 2) large folio  enabled on ext4 +  CONTPTE enabled
+>>>>     16164943
+>>>> 3) large folio  enabled on ext4 +  CONTPTE disabled
+>>>>     80364074
+>>>> 4) large folio  enabled on ext4 +  CONTPTE enabled + large folio mapping
+>>>> enabled
+>>>> in finish_fault()[2]
+>>>>     299656874
+>>>>
+>>>> We found *contpte_convert* consume lots of CPU(76%) in case 2),
+>>>
+>>> contpte_convert() is expensive and to be avoided; In this case I expect it is
+>>> repainting the PTEs with the PTE_CONT bit added in, and to do that it needs to
+>>> invalidate the tlb for the virtual range. The code is there to mop up user space
+>>> patterns where each page in a range is temporarily made RO, then later changed
+>>> back. In this case, we want to re-fold the contpte range once all pages have
+>>> been serviced in RO mode.
+>>>
+>>> Of course this path is only intended as a fallback, and the more optimium
+>>> approach is to set_ptes() the whole folio in one go where possible - kind of
+>>> what you are doing below.
+>>>
+>>>> and disappeared
+>>>> by following change[2], it is easy to understood the different between case 2)
+>>>> and case 4) since case 2) always map one page
+>>>> size, but always try to fold contpte mappings, which spend a lot of
+>>>> time. Case 4) is a workaround, any other better suggestion?
+>>>
+>>> See below.
+>>>
+>>>>
+>>>> Thanks.
+>>>>
+>>>> [1] https://github.com/antonblanchard/will-it-scale
+>>>> [2] enable large folio mapping in finish_fault()
+>>>>
+>>>> diff --git a/mm/memory.c b/mm/memory.c
+>>>> index 00728ea95583..5623a8ce3a1e 100644
+>>>> --- a/mm/memory.c
+>>>> +++ b/mm/memory.c
+>>>> @@ -4880,7 +4880,7 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
+>>>>           * approach also applies to non-anonymous-shmem faults to avoid
+>>>>           * inflating the RSS of the process.
+>>>>           */
+>>>> -       if (!vma_is_anon_shmem(vma) || unlikely(userfaultfd_armed(vma))) {
+>>>> +       if (unlikely(userfaultfd_armed(vma))) {
+>>>
+>>> The change to make finish_fault() handle multiple pages in one go are new; added
+>>> by Baolin Wang at [1]. That extra conditional that you have removed is there to
+>>> prevent RSS reporting bloat. See discussion that starts at [2].
+>>>
+>>> Anyway, it was my vague understanding that the fault around mechanism
+>>> (do_fault_around()) would ensure that (by default) 64K worth of pages get mapped
+>>> together in a single set_ptes() call, via filemap_map_pages() ->
+>>> filemap_map_folio_range(). Looking at the code, I guess fault around only
+>>> applies to read faults. This test is doing a write fault.
+>>>
+>>> I guess we need to do a change a bit like what you have done, but also taking
+>>> into account fault_around configuration?
+> 
+> For the writable mmap() of tmpfs, we will use mTHP interface to control the size
+> of folio to allocate, as discussed in previous meeting [1], so I don't think
+> fault_around configuration will be helpful for tmpfs.
 
-I didn't quite get what you mean. Do you mean this patch will cause a 
-change in mechanics, and it is necessary to add an explanation?
+Yes agreed. But we are talking about ext4 here.
 
-(After deleting the original cgroup,
-  Before: the limit of the throttled bios can't be changed and the bios 
-will complete under this limit;
-  Now: the limit will be canceled and the throttled bios will be flushed 
-immediately.)
+> 
+> For other filesystems, like ext4, I did not found the logic to determin what
+> size of folio to allocate in writable mmap() path 
 
-> Thanks,
-> Michal
+Yes I'd be keen to understand this to. When I was doing contpte, page cache
+would only allocate large folios for readahead. So that's why I wouldn't have
+seen this.
+
+> (Kefeng, please correct me if
+> I missed something). If there is a control like mTHP, we can rely on that
+> instead of 'fault_around'?
+
+Page cache doesn't currently expose any controls for folio allocation size.
+Personally, I'd like to see some in future becaudse I suspect it will be
+neccessary to limit physical fragmentation. But that is another conversation...
+
+> 
+> [1] https://lore.kernel.org/all/f1783ff0-65bd-4b2b-8952-52b6822a0835@redhat.com/
+> 
+>> Yes, the current changes is not enough, I hint some issue and still debugging,
+>> so our direction is trying to map large folio for do_shared_fault(), right?
+
+We just need to make sure that if finish_fault() has a (non-shmem) large folio,
+it never maps more than fault_around_pages, and it does it in a way that is
+naturally aligned in virtual space (like do_fault_around() does).
+do_fault_around() actually tries to get other folios from the page cache to map.
+We don't want to do that; we just want to make sure that we don't inflate a
+process's RSS by mapping unbounded large folios.
+
+Another (orthogonal, longer term) strategy would be to optimize
+contpte_convert(). arm64 has a feature called "BBM level 2"; we could
+potentially elide the TLBIs for systems that support this. But ultimately its
+best to avoid the need for folding in the first place.
+
+Thanks,
+Ryan
+
+> 
+> I think this is the right direction to do. I add this '!vma_is_anon_shmem(vma)'
+> conditon to gradually implement support for large folio mapping buidling,
+> especially for writable mmap() support in tmpfs.
+> 
+>>> [1]
+>>> https://lore.kernel.org/all/3a190892355989d42f59cf9f2f98b94694b0d24d.1718090413.git.baolin.wang@linux.alibaba.com/
+>>> [2]
+>>> https://lore.kernel.org/linux-mm/13939ade-a99a-4075-8a26-9be7576b7e03@arm.com/
+>>>
+>>>
+>>>>                  nr_pages = 1;
+>>>>          } else if (nr_pages > 1) {
+>>>>                  pgoff_t idx = folio_page_idx(folio, page);
+>>>>
+>>>>
+>>>> On 2024/2/15 18:32, Ryan Roberts wrote:
+>>>>> There are situations where a change to a single PTE could cause the
+>>>>> contpte block in which it resides to become foldable (i.e. could be
+>>>>> repainted with the contiguous bit). Such situations arise, for example,
+>>>>> when user space temporarily changes protections, via mprotect, for
+>>>>> individual pages, such can be the case for certain garbage collectors.
+>>>>>
+>>>>> We would like to detect when such a PTE change occurs. However this can
+>>>>> be expensive due to the amount of checking required. Therefore only
+>>>>> perform the checks when an indiviual PTE is modified via mprotect
+>>>>> (ptep_modify_prot_commit() -> set_pte_at() -> set_ptes(nr=1)) and only
+>>>>> when we are setting the final PTE in a contpte-aligned block.
+>>>>>
+>>>>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+>>>>> ---
+>>>>>    arch/arm64/include/asm/pgtable.h | 26 +++++++++++++
+>>>>>    arch/arm64/mm/contpte.c          | 64 ++++++++++++++++++++++++++++++++
+>>>>>    2 files changed, 90 insertions(+)
+>>>>>
+>>>>> diff --git a/arch/arm64/include/asm/pgtable.h
+>>>>> b/arch/arm64/include/asm/pgtable.h
+>>>>> index 8310875133ff..401087e8a43d 100644
+>>>>> --- a/arch/arm64/include/asm/pgtable.h
+>>>>> +++ b/arch/arm64/include/asm/pgtable.h
+>>>>> @@ -1185,6 +1185,8 @@ extern void ptep_modify_prot_commit(struct
+>>>>> vm_area_struct *vma,
+>>>>>     * where it is possible and makes sense to do so. The PTE_CONT bit is
+>>>>> considered
+>>>>>     * a private implementation detail of the public ptep API (see below).
+>>>>>     */
+>>>>> +extern void __contpte_try_fold(struct mm_struct *mm, unsigned long addr,
+>>>>> +                pte_t *ptep, pte_t pte);
+>>>>>    extern void __contpte_try_unfold(struct mm_struct *mm, unsigned long addr,
+>>>>>                    pte_t *ptep, pte_t pte);
+>>>>>    extern pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte);
+>>>>> @@ -1206,6 +1208,29 @@ extern int contpte_ptep_set_access_flags(struct
+>>>>> vm_area_struct *vma,
+>>>>>                    unsigned long addr, pte_t *ptep,
+>>>>>                    pte_t entry, int dirty);
+>>>>>    +static __always_inline void contpte_try_fold(struct mm_struct *mm,
+>>>>> +                unsigned long addr, pte_t *ptep, pte_t pte)
+>>>>> +{
+>>>>> +    /*
+>>>>> +     * Only bother trying if both the virtual and physical addresses are
+>>>>> +     * aligned and correspond to the last entry in a contig range. The core
+>>>>> +     * code mostly modifies ranges from low to high, so this is the likely
+>>>>> +     * the last modification in the contig range, so a good time to fold.
+>>>>> +     * We can't fold special mappings, because there is no associated folio.
+>>>>> +     */
+>>>>> +
+>>>>> +    const unsigned long contmask = CONT_PTES - 1;
+>>>>> +    bool valign = ((addr >> PAGE_SHIFT) & contmask) == contmask;
+>>>>> +
+>>>>> +    if (unlikely(valign)) {
+>>>>> +        bool palign = (pte_pfn(pte) & contmask) == contmask;
+>>>>> +
+>>>>> +        if (unlikely(palign &&
+>>>>> +            pte_valid(pte) && !pte_cont(pte) && !pte_special(pte)))
+>>>>> +            __contpte_try_fold(mm, addr, ptep, pte);
+>>>>> +    }
+>>>>> +}
+>>>>> +
+>>>>>    static __always_inline void contpte_try_unfold(struct mm_struct *mm,
+>>>>>                    unsigned long addr, pte_t *ptep, pte_t pte)
+>>>>>    {
+>>>>> @@ -1286,6 +1311,7 @@ static __always_inline void set_ptes(struct mm_struct
+>>>>> *mm, unsigned long addr,
+>>>>>        if (likely(nr == 1)) {
+>>>>>            contpte_try_unfold(mm, addr, ptep, __ptep_get(ptep));
+>>>>>            __set_ptes(mm, addr, ptep, pte, 1);
+>>>>> +        contpte_try_fold(mm, addr, ptep, pte);
+>>>>>        } else {
+>>>>>            contpte_set_ptes(mm, addr, ptep, pte, nr);
+>>>>>        }
+>>>>> diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
+>>>>> index 50e0173dc5ee..16788f07716d 100644
+>>>>> --- a/arch/arm64/mm/contpte.c
+>>>>> +++ b/arch/arm64/mm/contpte.c
+>>>>> @@ -73,6 +73,70 @@ static void contpte_convert(struct mm_struct *mm, unsigned
+>>>>> long addr,
+>>>>>        __set_ptes(mm, start_addr, start_ptep, pte, CONT_PTES);
+>>>>>    }
+>>>>>    +void __contpte_try_fold(struct mm_struct *mm, unsigned long addr,
+>>>>> +            pte_t *ptep, pte_t pte)
+>>>>> +{
+>>>>> +    /*
+>>>>> +     * We have already checked that the virtual and pysical addresses are
+>>>>> +     * correctly aligned for a contpte mapping in contpte_try_fold() so the
+>>>>> +     * remaining checks are to ensure that the contpte range is fully
+>>>>> +     * covered by a single folio, and ensure that all the ptes are valid
+>>>>> +     * with contiguous PFNs and matching prots. We ignore the state of the
+>>>>> +     * access and dirty bits for the purpose of deciding if its a contiguous
+>>>>> +     * range; the folding process will generate a single contpte entry which
+>>>>> +     * has a single access and dirty bit. Those 2 bits are the logical OR of
+>>>>> +     * their respective bits in the constituent pte entries. In order to
+>>>>> +     * ensure the contpte range is covered by a single folio, we must
+>>>>> +     * recover the folio from the pfn, but special mappings don't have a
+>>>>> +     * folio backing them. Fortunately contpte_try_fold() already checked
+>>>>> +     * that the pte is not special - we never try to fold special mappings.
+>>>>> +     * Note we can't use vm_normal_page() for this since we don't have the
+>>>>> +     * vma.
+>>>>> +     */
+>>>>> +
+>>>>> +    unsigned long folio_start, folio_end;
+>>>>> +    unsigned long cont_start, cont_end;
+>>>>> +    pte_t expected_pte, subpte;
+>>>>> +    struct folio *folio;
+>>>>> +    struct page *page;
+>>>>> +    unsigned long pfn;
+>>>>> +    pte_t *orig_ptep;
+>>>>> +    pgprot_t prot;
+>>>>> +
+>>>>> +    int i;
+>>>>> +
+>>>>> +    if (!mm_is_user(mm))
+>>>>> +        return;
+>>>>> +
+>>>>> +    page = pte_page(pte);
+>>>>> +    folio = page_folio(page);
+>>>>> +    folio_start = addr - (page - &folio->page) * PAGE_SIZE;
+>>>>> +    folio_end = folio_start + folio_nr_pages(folio) * PAGE_SIZE;
+>>>>> +    cont_start = ALIGN_DOWN(addr, CONT_PTE_SIZE);
+>>>>> +    cont_end = cont_start + CONT_PTE_SIZE;
+>>>>> +
+>>>>> +    if (folio_start > cont_start || folio_end < cont_end)
+>>>>> +        return;
+>>>>> +
+>>>>> +    pfn = ALIGN_DOWN(pte_pfn(pte), CONT_PTES);
+>>>>> +    prot = pte_pgprot(pte_mkold(pte_mkclean(pte)));
+>>>>> +    expected_pte = pfn_pte(pfn, prot);
+>>>>> +    orig_ptep = ptep;
+>>>>> +    ptep = contpte_align_down(ptep);
+>>>>> +
+>>>>> +    for (i = 0; i < CONT_PTES; i++) {
+>>>>> +        subpte = pte_mkold(pte_mkclean(__ptep_get(ptep)));
+>>>>> +        if (!pte_same(subpte, expected_pte))
+>>>>> +            return;
+>>>>> +        expected_pte = pte_advance_pfn(expected_pte, 1);
+>>>>> +        ptep++;
+>>>>> +    }
+>>>>> +
+>>>>> +    pte = pte_mkcont(pte);
+>>>>> +    contpte_convert(mm, addr, orig_ptep, pte);
+>>>>> +}
+>>>>> +EXPORT_SYMBOL(__contpte_try_fold);
+>>>>> +
+>>>>>    void __contpte_try_unfold(struct mm_struct *mm, unsigned long addr,
+>>>>>                pte_t *ptep, pte_t pte)
+>>>>>    {
+>>>
+>>>
 
