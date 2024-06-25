@@ -1,166 +1,115 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611A3156238;
-	Tue, 25 Jun 2024 12:33:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FFC14831F;
+	Tue, 25 Jun 2024 12:34:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719318825; cv=none; b=WFX3ybjfixZ1RQTBMv4zHOYv9rBNoJFVNf/M88e/0vYecvt8fkUE/RIZB0N/1dmfzqz4KXtQgYfwXqTMNKC6ON5cmYpIZpy8clEe31Usuj4br39xHQ7PNFyd0FcfyFtClimAEMGX40rygtzHvHg2FFWN2OoDE8C9qlKWezE9O1E=
+	t=1719318843; cv=none; b=IVvu/js4A/4MURAsnUKNcRZhBl8kQM2DtVawqJ7xuot9uvrm/C2wqbyj/qtCfmbH1/ovQspS6qzlpws9E613W2a551sKw3TAMZRjhOdxYDxEBHCrpNVUPi3nzjvO9l2FYegDijo4dm2Wdi2w0fppq9Nk07SufZYrfsCEBCnHnH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719318825; c=relaxed/simple;
-	bh=4KvUTQLw9gvP30Tp5JNWxt3XSOwjg0Sc/Nc0NF8kTjs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Q1V0qFOTsqTH2an7gqWiX2D8/q1AEl0YEIPXVjOQdpJ6hlNRN2StJG6YDwxb3IoEHJU50as7sKwrFLSHxDdHK5tY8OebjExwWb786dF6zl2jkcnJ5YCIFbj3dpAJGJ9iVzUquZIFaammltYBClVRoxlSXS9ahLolzRxC3+EXLnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UQOKYY42; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719318843; c=relaxed/simple;
+	bh=0vTeA1bjmNtGwXezcaqYRAXYF1NLqC2a3D2GgKkavV0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=eDIlOyswpzer4MaMoz2tz1VZEnPsKGFiAd2WB+6u2NM7Kdyhi2E/o0FbAMO4e20NKSyJPazcKfAgr3w+HjTDtzP16V2KfXo4/5rNDHNpcuwPrf6WCTHq1zERszvnKn1nVjiFVJPBkdzEsRdO4ncAk4XiTv8yoTiI3bh7QHMutuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LiThNMBf; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UQOKYY42"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2ec5fad1984so31538701fa.0;
-        Tue, 25 Jun 2024 05:33:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719318821; x=1719923621; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/cqf1zVU8T9PJtUZDZ8GI36DML+N/iS1fJepnMDzz0g=;
-        b=UQOKYY42yj16gHLo2Bg6jMBthzn3FzjOFAIj8STlvR5XIJm35yKwMPjvAmmiD3GlXn
-         iPCN/bPTxta+NsmNZIzDsfSF696BGRlU/l7OSLeQN4s7p3KE5SiDAWHV+FqcLrvHW+hI
-         t88n9zeUiuzbwYRkUC+Ay1lf7ComPEw6MTzSlw10J2ExRYNV4hzJ56FMPct+0hljkdv6
-         2/5NsfWUwyiTRbr4g1xL9ynZf52tqqP8nMgv/PpBByBdyYkb7VZWa5+jpsBJ4ZOIGF3I
-         IsdxjdUP2+hNZRYVURaQm3WFGIw0qPb/ZWWFtGN5yOJVrGTrnJnfGM3MvTsxZW6w6yDB
-         2HVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719318821; x=1719923621;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/cqf1zVU8T9PJtUZDZ8GI36DML+N/iS1fJepnMDzz0g=;
-        b=rd+Nd4DedTrOU57XzWLDqgvHyQ1AKJ7hMO/huaTTYbZ+e3oKrTYDxSckcFKeQ57K6E
-         peKn/cvw74v6mXWA1/iMfG8h2SUJ9OXFLZY3lFfdItRMnht1Dxi3OUojKp6Xi0hef72v
-         JiHP7M+PAzuzO722EgdCUF0dIsDLAf53oEIXip3Cn7v9ojMQ/ozTm+xF80jg6fvr5I84
-         gO6jkpjh4VALAOB7xynVLWNFPuQGKiUd3PPSJALvoHurYLJ6ZTOsexJFq5bsb0Ng8kiv
-         oEDSfekWodte2o2jCjlN+F3m+gSnHV+QQh9wjpX6aBLRMYstYUixgm/Q/Ujdg8C9w4cV
-         6BgA==
-X-Forwarded-Encrypted: i=1; AJvYcCUcGA6EvcMnamk+qAGW/viemzaaplz1ae1v5b2eTfj9794ipYuJmUr4Qtk1LkPKEcSj6LSteNb3WnABqxsVPzI9VJrF47jx0ILXE+yH
-X-Gm-Message-State: AOJu0Yxru9HJ8eSfTgE3/2eqROjcvx8KxPbXBhQIJg1YC05/uwSyd3S4
-	199AKw6YkoLhoP9WRJ52+i/HaxYi9eMh64wbuX6rxYcjYEMAecGI
-X-Google-Smtp-Source: AGHT+IGzf5w6HLzjANOioi8j8FbeMtUVIjSCWhXUsPjbZQabhZlzSRfjXDiGuLHklpPZSuy0Ut33Vg==
-X-Received: by 2002:a2e:86ca:0:b0:2ec:52aa:1155 with SMTP id 38308e7fff4ca-2ec5b36c1fcmr59350491fa.52.1719318821025;
-        Tue, 25 Jun 2024 05:33:41 -0700 (PDT)
-Received: from prasmi.home ([2a00:23c8:2500:a01:2595:4364:d152:dff3])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4247d0be818sm210288485e9.15.2024.06.25.05.33.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 05:33:40 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	dri-devel@lists.freedesktop.org
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] drm: renesas: Move RZ/G2L MIPI DSI driver to rz-du
-Date: Tue, 25 Jun 2024 13:32:44 +0100
-Message-Id: <20240625123244.200533-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LiThNMBf"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0CA676000B;
+	Tue, 25 Jun 2024 12:33:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1719318839;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=5T/QIU/cETq1tlbuFPd7ryLw8O87C9B+H47qdJAHXJw=;
+	b=LiThNMBfzuMK6mm3vhRR/TdofVz4kMZM/w9/xsV3jU7O1+dZpRRX7eKHBE0aAwIxns+uWG
+	N1fw63F40/enhl4UuSYsZ3NwQDvQz0zo0XqsjGOgTHKpQ2XfrTXWBRvXcp5SBaURYDcxIV
+	mwwe4yMIl0nXyYZ1RXKNqCiRktcCR+yHVDO3xOi42FDSiQ2Muwn8rAeSLhziG4KF9c9pSl
+	1F9XYuQu+nYV+TyNKyNFOMKkRsKtP2AyGqjF2sU8ZxqxcnXLR+aUqqvRva5A6M/Tke+p8F
+	INpEOppFM1NU613Pve+uOHLSW8wK+j8uwkyvYqmi+Ujo6H80bqTm23x/pnIw8A==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Subject: [PATCH net-next v4 0/7] net: pse-pd: Add new PSE c33 features
+Date: Tue, 25 Jun 2024 14:33:45 +0200
+Message-Id: <20240625-feature_poe_power_cap-v4-0-b0813aad57d5@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIACm5emYC/3XNQQ7CIBAF0KsY1mJgoJa68h7GNEBHJVFoKFaN6
+ d1FNmpMF7P4+flvnmTA6HAgm8WTRBzd4ILPQS4XxJ60PyJ1Xc4EGEgmoaIH1Okase3D+24YW6t
+ 7yhU2zOgaGmlI3vYRD+5e3B3xmKjHeyL73JzckEJ8lIcjL32xK2hm7JFTRpmVhndVUwmjtiaEd
+ HZ+ZcOlmCN8nDWr5xzIjmXCQodGCW3+HfHlcDnniOxoWNdKYq0E57/ONE0vpk9+0VYBAAA=
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>, 
+ Oleksij Rempel <o.rempel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ Dent Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, 
+ linux-doc@vger.kernel.org, Kory Maincent <kory.maincent@bootlin.com>
+X-Mailer: b4 0.15-dev-8cb71
+X-GND-Sasl: kory.maincent@bootlin.com
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-All the RZ/G2L DU specific components are located under the rz-du folder,
-so it makes sense to move the RZ/G2L MIPI DSI driver there instead of
-keeping it in the rcar-du folder. This change improves the organization
-and modularity of the driver configuration by grouping related settings together.
+This patch series adds new c33 features to the PSE API.
+- Expand the PSE PI informations status with power, class and failure
+  reason
+- Add the possibility to get and set the PSE PIs power limit
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Changes in v4:
+- Made few update in PSE extended state an substate.
+- Add support for c33 pse power limit ranges.
+- Few changes in the specs and the documentation.
+- Link to v3: https://lore.kernel.org/r/20240614-feature_poe_power_cap-v3-0-a26784e78311@bootlin.com
+
+Changes in v3:
+- Use u32 instead of u8 size for c33 pse extended state and substate.
+- Reformat the state and substate enumeration to follow Oleksij proposal which
+  is more IEEE 802.3 standard compliant
+- Sent the first patch standalone in net.
+- Link to v2: https://lore.kernel.org/r/20240607-feature_poe_power_cap-v2-0-c03c2deb83ab@bootlin.com
+
+Changes in v2:
+- Use uA and uV instead of mA and mV to have more precision in the power
+  calculation. Need to use 64bit variables for the calculation.
+- Modify the pd-92x0behavior in case of setting the current out of the
+  available ranges. Report an error now.
+- Link to v1: https://lore.kernel.org/r/20240529-feature_poe_power_cap-v1-0-0c4b1d5953b8@bootlin.com
+
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
- drivers/gpu/drm/renesas/rcar-du/Kconfig                   | 8 --------
- drivers/gpu/drm/renesas/rcar-du/Makefile                  | 2 --
- drivers/gpu/drm/renesas/rz-du/Kconfig                     | 8 ++++++++
- drivers/gpu/drm/renesas/rz-du/Makefile                    | 2 ++
- .../gpu/drm/renesas/{rcar-du => rz-du}/rzg2l_mipi_dsi.c   | 0
- .../drm/renesas/{rcar-du => rz-du}/rzg2l_mipi_dsi_regs.h  | 0
- 6 files changed, 10 insertions(+), 10 deletions(-)
- rename drivers/gpu/drm/renesas/{rcar-du => rz-du}/rzg2l_mipi_dsi.c (100%)
- rename drivers/gpu/drm/renesas/{rcar-du => rz-du}/rzg2l_mipi_dsi_regs.h (100%)
+Kory Maincent (7):
+      net: ethtool: pse-pd: Expand C33 PSE status with class, power and extended state
+      netlink: specs: Expand the PSE netlink command with C33 new features
+      net: pse-pd: pd692x0: Expand ethtool status message
+      net: pse-pd: Add new power limit get and set c33 features
+      net: ethtool: Add new power limit get and set features
+      netlink: specs: Expand the PSE netlink command with C33 pw-limit attributes
+      net: pse-pd: pd692x0: Enhance with new current limit and voltage read callbacks
 
-diff --git a/drivers/gpu/drm/renesas/rcar-du/Kconfig b/drivers/gpu/drm/renesas/rcar-du/Kconfig
-index 53c356aed5d5..39af73cf2092 100644
---- a/drivers/gpu/drm/renesas/rcar-du/Kconfig
-+++ b/drivers/gpu/drm/renesas/rcar-du/Kconfig
-@@ -60,14 +60,6 @@ config DRM_RCAR_MIPI_DSI
- 	select DRM_MIPI_DSI
- 	select RESET_CONTROLLER
- 
--config DRM_RZG2L_MIPI_DSI
--	tristate "RZ/G2L MIPI DSI Encoder Support"
--	depends on DRM && DRM_BRIDGE && OF
--	depends on ARCH_RENESAS || COMPILE_TEST
--	select DRM_MIPI_DSI
--	help
--	  Enable support for the RZ/G2L Display Unit embedded MIPI DSI encoders.
--
- config DRM_RCAR_VSP
- 	bool "R-Car DU VSP Compositor Support" if ARM
- 	default y if ARM64
-diff --git a/drivers/gpu/drm/renesas/rcar-du/Makefile b/drivers/gpu/drm/renesas/rcar-du/Makefile
-index b8f2c82651d9..6f132325c8b7 100644
---- a/drivers/gpu/drm/renesas/rcar-du/Makefile
-+++ b/drivers/gpu/drm/renesas/rcar-du/Makefile
-@@ -14,5 +14,3 @@ obj-$(CONFIG_DRM_RCAR_DU)		+= rcar-du-drm.o
- obj-$(CONFIG_DRM_RCAR_DW_HDMI)		+= rcar_dw_hdmi.o
- obj-$(CONFIG_DRM_RCAR_LVDS)		+= rcar_lvds.o
- obj-$(CONFIG_DRM_RCAR_MIPI_DSI)		+= rcar_mipi_dsi.o
--
--obj-$(CONFIG_DRM_RZG2L_MIPI_DSI)	+= rzg2l_mipi_dsi.o
-diff --git a/drivers/gpu/drm/renesas/rz-du/Kconfig b/drivers/gpu/drm/renesas/rz-du/Kconfig
-index 5f0db2c5fee6..8ec14271ebba 100644
---- a/drivers/gpu/drm/renesas/rz-du/Kconfig
-+++ b/drivers/gpu/drm/renesas/rz-du/Kconfig
-@@ -10,3 +10,11 @@ config DRM_RZG2L_DU
- 	help
- 	  Choose this option if you have an RZ/G2L alike chipset.
- 	  If M is selected the module will be called rzg2l-du-drm.
-+
-+config DRM_RZG2L_MIPI_DSI
-+	tristate "RZ/G2L MIPI DSI Encoder Support"
-+	depends on DRM && DRM_BRIDGE && OF
-+	depends on ARCH_RENESAS || COMPILE_TEST
-+	select DRM_MIPI_DSI
-+	help
-+	  Enable support for the RZ/G2L Display Unit embedded MIPI DSI encoders.
-diff --git a/drivers/gpu/drm/renesas/rz-du/Makefile b/drivers/gpu/drm/renesas/rz-du/Makefile
-index 663b82a2577f..2987900ea6b6 100644
---- a/drivers/gpu/drm/renesas/rz-du/Makefile
-+++ b/drivers/gpu/drm/renesas/rz-du/Makefile
-@@ -6,3 +6,5 @@ rzg2l-du-drm-y := rzg2l_du_crtc.o \
- 
- rzg2l-du-drm-$(CONFIG_VIDEO_RENESAS_VSP1)	+= rzg2l_du_vsp.o
- obj-$(CONFIG_DRM_RZG2L_DU)		+= rzg2l-du-drm.o
-+
-+obj-$(CONFIG_DRM_RZG2L_MIPI_DSI)	+= rzg2l_mipi_dsi.o
-diff --git a/drivers/gpu/drm/renesas/rcar-du/rzg2l_mipi_dsi.c b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-similarity index 100%
-rename from drivers/gpu/drm/renesas/rcar-du/rzg2l_mipi_dsi.c
-rename to drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-diff --git a/drivers/gpu/drm/renesas/rcar-du/rzg2l_mipi_dsi_regs.h b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h
-similarity index 100%
-rename from drivers/gpu/drm/renesas/rcar-du/rzg2l_mipi_dsi_regs.h
-rename to drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h
+ Documentation/netlink/specs/ethtool.yaml     |  58 +++++
+ Documentation/networking/ethtool-netlink.rst |  87 +++++++-
+ drivers/net/pse-pd/pd692x0.c                 | 317 ++++++++++++++++++++++++++-
+ drivers/net/pse-pd/pse_core.c                | 172 ++++++++++++++-
+ include/linux/ethtool.h                      |  20 ++
+ include/linux/pse-pd/pse.h                   |  51 +++++
+ include/uapi/linux/ethtool.h                 | 191 ++++++++++++++++
+ include/uapi/linux/ethtool_netlink.h         |  12 +
+ net/ethtool/pse-pd.c                         | 119 +++++++++-
+ 9 files changed, 997 insertions(+), 30 deletions(-)
+---
+base-commit: b98d89947d124c8ca9150b32fdc0c5fb099243cf
+change-id: 20240425-feature_poe_power_cap-18e90ba7294b
+
+Best regards,
 -- 
-2.34.1
+Köry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
 
