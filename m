@@ -1,87 +1,139 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22231870;
-	Tue, 25 Jun 2024 19:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB04913C9A2
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 19:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719344243; cv=none; b=pPIEhULhmg0rPrfCLHjwQsGnp/eq9eUPVaGWahiVHQicqLNX7aC+7CNZ9tg8IV9Nk+iMPLi5wmEVViEhzXXpqLlk56D2mwjVoBwiAOgW4bNxXdy5CiUd4/X83DLs2Mylsuaq78nG6bKfgwkRnHjLn5TECFQhi4XvXlUaVj5MmUU=
+	t=1719344278; cv=none; b=VvT2ILuV5S+HYIHORnol3LJrMv+aW4YervRNB1LqT84Zs9CZ7/1pa4FBuozM1D+pzEfWvpGMmIkPFMdvKnYsuGnnL78ZxpDnMzoisNRsXLUz7tgFtSstBzBoadPks3Z/td2IsLpSjRy6iARLZf2YhbYe95oonR7o52WZdDjLuh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719344243; c=relaxed/simple;
-	bh=xyVb4qrcCw86v65yoBR8M9Bn51y9iq92v+MMh2VhOnY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Bly5ma+i+EIB792j3PlArrClgFHym3xUr1HaKcMCYPsvHZpYqQox16AWcRIZQDgO9DtkZ6p+xfRX+o152Rc6Cf7SvbNrwP3EfcZJeyfOAgTfSyO55UUDKAMlHDsVlpx6/fz9nDhvL8V6kfwk3Vms+wELK96U6D8FgYVQN0QQE6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QmcvwmUn; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719344278; c=relaxed/simple;
+	bh=IPpSDnv0Otuph5TmIXknyBcqkkHgzod1VBBj40XXcUQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=el4Zni8JLvvCaU+A8I+qrgUA7chpDuYgSDhzoEbL5tyeOmilKJYLWWl2iVKBg8C7EPb9/8n9B2AsaZ7JB/9pNQ38dXod9zuZ3GrDzdU74oJ1/UoRwZIa6fZgQ+P3nDml7cjHIn/pYNFk2SJCJCGCHoqGbqetqEJrf/sjO5Lwn+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bwNYU9rG; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QmcvwmUn"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-424ad991c1cso963435e9.1;
-        Tue, 25 Jun 2024 12:37:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bwNYU9rG"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e02da9b2db7so5573554276.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 12:37:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719344240; x=1719949040; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xyVb4qrcCw86v65yoBR8M9Bn51y9iq92v+MMh2VhOnY=;
-        b=QmcvwmUnDC+Pi6bwCSlagR3Px0TFRetm/qhinb2AtlQ3WLYNw04CRQA78L8Omz3/KY
-         8ChfXM5cw6J3f551fStIEJp7XVRDD+cuD4rxbR84GcCiVlnwzoHN9MdTm8Pk1j2PvMnu
-         0H7mvZhKnsRMDMAcljifytl5QGsSWzT+wY5QTrC7y1QLtoUWO7bH17FhSuWPne4pNDEQ
-         UTOV3VxXGVe/GQVJ6wHX2PUBPpNIX/fh/BfVMTNoHXWgSUfpG88iwX77eZgsKcCYrJEj
-         KaDDKFmFD9mfLGnhOoazyiCxh0gig/a71F71MjeXQz9mkP1BwC1d2Bb/wBzj9l+GGrsq
-         Gb8A==
+        d=google.com; s=20230601; t=1719344275; x=1719949075; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YJMwDI5sIIM5SROlRDuokl000wjQ1EBy0CMyjOqTGuU=;
+        b=bwNYU9rGJSk/YFvlrDv/jgVEzDfuK9S9UwVc35G7OX9aWP03z5x7Ns8BuoIT51dti9
+         j6F5vA3bPGvrluFlg+j5c5G2liXsMNPItKKAH1nvcRPnXlyoV9LNeHCoCWWePePWg/PD
+         QsdaoKMqINycvEJeMKBgtY7QnCYI7lOAsVyPacxQqlD43pUIG2PJohksvh09CmQx0p2T
+         rgthVBnCMWjX/RScD7YGCNpcq5K2dNPXebDHh+Qn2libXhPbi/xHMV39pLxK8g7LJMZn
+         JlxT1AiRkZGcZbqIn9ey3wUXuG7cM3aumGFtaJbi836vl0tLZjMNGCU7ep0vm3MYlYSE
+         6+3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719344240; x=1719949040;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xyVb4qrcCw86v65yoBR8M9Bn51y9iq92v+MMh2VhOnY=;
-        b=Heo0+VFbbpfgshANPrGnNs3KIWybg7Oe18Lb2DGXJyPGj5j+Cf2fxhDKmslqCORstz
-         sQznQaK/9WnFeHhCSDhYPULt/cw+UcWdDjyH0qlCy6RmuNrOLqaCLxss92TPPh5p1ldz
-         xjie/dw/Eh9L/2bYXeKNdx3E1Panz1VWAL58YCAGwkG63tT9wKQzuyiTCVplvDv7TNdH
-         cuGBsfRuXUju7igJ9hxDt0HlgglKT7VSGuevC9ksni1n6gzwLI4J9NQw4Kjv0gErdIV4
-         ksg88CTTzoifovTlOWRnz0S2+ExeMK7GVsC37hqXm5n8uOD4/KztxkUzE8tQ4l7Quig4
-         aVLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWD9lyeNcVMuEmeO/LEt9Y8iy/w7vze8+twgm04mMYv0tcTRnhlo/RK7YermiglUdtoJAHyLWXk/Zo+Eq3kvzKeS/IX15WBL1R0Rtl0b3j8oIcXL6c95ZoJ3m30bVrPo5hDlWioq5S2dFs=
-X-Gm-Message-State: AOJu0Yxh3fB/4Jm5gv9xlkZsyZtoFk/YEQDEgQWd2iZocysDZ4neKLWX
-	D4EaI5cFSqwjDI3jFDAIhPr2qX8aVbZ1qvz1uE0nlAlek2PPF5i/
-X-Google-Smtp-Source: AGHT+IGffx1paoEXgxZp5JsjudXLzJHi3TSHG8vCTB62Z+ses3XHb09wR9B2NpwWPyDIczWiClWGng==
-X-Received: by 2002:a05:600c:3b18:b0:422:1a82:3ed2 with SMTP id 5b1f17b1804b1-4248cc58702mr68106885e9.27.1719344239792;
-        Tue, 25 Jun 2024 12:37:19 -0700 (PDT)
-Received: from thinkpad-p52.telekom.ip (2a02-8388-e100-e800-c687-22dd-17e6-d8eb.cable.dynamic.v6.surfer.at. [2a02:8388:e100:e800:c687:22dd:17e6:d8eb])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4247d0bea05sm222020425e9.18.2024.06.25.12.37.19
+        d=1e100.net; s=20230601; t=1719344275; x=1719949075;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YJMwDI5sIIM5SROlRDuokl000wjQ1EBy0CMyjOqTGuU=;
+        b=Y8fb7G9lX2d8bnTvUORWmL7AIdP/yOuhqfOlLZ8pCAKk0m137pcicaQthHXQnbGwVC
+         yNHzUBy4qStYrwPqZrciDIA+4ynUlXa5RaAp+iNY6KyyQr4M8YI3tdo4HcOikLhdawmI
+         b2nn/BzYNMWD4pCXHD68qrmNyi7yIdXd+wA363EIHYAuu/HD0dSJoRDKE1MwhEGuKz+q
+         vQc5EShsWgOlYLzn89Tg7H4vQoEhgoK3CpaNT2s84CE8cBfcWdQGStBuljHQzU3/jc51
+         lgT2ADamoJ6B3EXJ+SsUK9VLH+fxXUcmc8jNVQqwBnao9KaGpECrai514G4iyG0CPmmW
+         c7qw==
+X-Forwarded-Encrypted: i=1; AJvYcCVWoUghtdQBf2U0G/y47dWs8oS9KnnoI5Mo9TQsgknE6t6CRZrsjiMFgyDhLUTGf4gXAW+Gqe83UqnuBtyJx/2p/MiT1ARP99gQbBkZ
+X-Gm-Message-State: AOJu0YzS0B0B+MWwdbKraL0iFHu50lGrnw+xATqFvfmbWfX/3NhirVbu
+	qbIv8XjS/7CP+4yobTQqc1WDLxXFZMLqPhabvmJTd5AHnpDecYXeUIeRIIfE/iW6+XF0L5AA/qV
+	E1A==
+X-Google-Smtp-Source: AGHT+IFxm9yualsjwylRAQRma05qLWD/BuSSgSFXHa94JcuXlHJdYS6kJjvdKSG92faY67NQAEVpDQ==
+X-Received: by 2002:a5b:852:0:b0:e02:b82c:f1ce with SMTP id 3f1490d57ef6-e0303f2ae69mr8583867276.8.1719344273713;
+        Tue, 25 Jun 2024 12:37:53 -0700 (PDT)
+Received: from darker.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e032327f82csm591570276.32.2024.06.25.12.37.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 12:37:19 -0700 (PDT)
-From: Andrei Lalaev <andrey.lalaev@gmail.com>
-To: dmitry.torokhov@gmail.com
-Cc: andrey.lalaev@gmail.com,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	robh@kernel.org,
-	m.felsch@pengutronix.de
-Subject: Re: [PATCH] Input: qt1050 - handle CHIP_ID reading error
-Date: Tue, 25 Jun 2024 21:35:05 +0200
-Message-ID: <20240625193633.35731-1-andrey.lalaev@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <Znrs5QVAuSjH5sCT@google.com>
-References: <Znrs5QVAuSjH5sCT@google.com>
+        Tue, 25 Jun 2024 12:37:52 -0700 (PDT)
+Date: Tue, 25 Jun 2024 12:37:41 -0700 (PDT)
+From: Hugh Dickins <hughd@google.com>
+To: David Hildenbrand <david@redhat.com>
+cc: Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+    Barry Song <21cnbao@gmail.com>, baolin.wang@linux.alibaba.com, 
+    chrisl@kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+    mhocko@suse.com, ryan.roberts@arm.com, shy828301@gmail.com, 
+    surenb@google.com, v-songbaohua@oppo.com, willy@infradead.org, 
+    ying.huang@intel.com, yosryahmed@google.com, yuanshuai@oppo.com, 
+    yuzhao@google.com
+Subject: Re: [PATCH mm-unstable] mm: folio_add_new_anon_rmap() careful
+ __folio_set_swapbacked()
+In-Reply-To: <0a41d5fc-d1a1-4b1b-873e-a701b20bbcb3@redhat.com>
+Message-ID: <f7c74073-f19a-0f59-3801-a20d319bc0ea@google.com>
+References: <f3599b1d-8323-0dc5-e9e0-fdb3cfc3dd5a@google.com> <0a41d5fc-d1a1-4b1b-873e-a701b20bbcb3@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-> But how did we get into the situation with the chip being missing?
+On Tue, 25 Jun 2024, David Hildenbrand wrote:
+> On 25.06.24 07:00, Hugh Dickins wrote:
+> > Commit "mm: use folio_add_new_anon_rmap() if folio_test_anon(folio)==
+> > false" has extended folio_add_new_anon_rmap() to use on non-exclusive
+> > folios, already visible to others in swap cache and on LRU.
+> > 
+> > That renders its non-atomic __folio_set_swapbacked() unsafe: it risks
+> > overwriting concurrent atomic operations on folio->flags, losing bits
+> > added or restoring bits cleared.  Since it's only used in this risky
+> > way when folio_test_locked and !folio_test_anon, many such races are
+> > excluded; but, for example, isolations by folio_test_clear_lru() are
+> > vulnerable, and setting or clearing active.
+> > 
+> > It could just use the atomic folio_set_swapbacked(); but this function
+> > does try to avoid atomics where it can, so use a branch instead: just
+> > avoid setting swapbacked when it is already set, that is good enough.
+> > (Swapbacked is normally stable once set: lazyfree can undo it, but
+> > only later, when found anon in a page table.)
+> > 
+> > This fixes a lot of instability under compaction and swapping loads:
+> > assorted "Bad page"s, VM_BUG_ON_FOLIO()s, apparently even page double
+> > frees - though I've not worked out what races could lead to the latter.
+> > 
+> > Signed-off-by: Hugh Dickins <hughd@google.com>
+> > ---
+> >   mm/rmap.c | 4 +++-
+> >   1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/mm/rmap.c b/mm/rmap.c
+> > index df1a43295c85..5394c1178bf1 100644
+> > --- a/mm/rmap.c
+> > +++ b/mm/rmap.c
+> > @@ -1408,7 +1408,9 @@ void folio_add_new_anon_rmap(struct folio *folio,
+> > struct vm_area_struct *vma,
+> >    VM_WARN_ON_FOLIO(folio_test_hugetlb(folio), folio);
+> >    VM_BUG_ON_VMA(address < vma->vm_start ||
+> >   			address + (nr << PAGE_SHIFT) > vma->vm_end, vma);
+> > -	__folio_set_swapbacked(folio);
+> > +
+> > +	if (!folio_test_swapbacked(folio))
+> > +		__folio_set_swapbacked(folio);
+> >    __folio_set_anon(folio, vma, address, exclusive);
+> >   
+> >    if (likely(!folio_test_large(folio))) {
+> 
+> LGTM.
+> 
+> I'll point out that it's sufficient for a PFN walker to do a tryget + trylock
+> to cause trouble.
 
-In my case, this chip is a part of an external board.
-So, for example, I see this message in the case of a bad cable connection.
+That surprises me.  I thought a racer's tryget was irrelevant (touching
+a different field) and its trylock not a problem, since "we" hold the
+folio lock throughout.  If my mental model is too naive there, please
+explain in more detail: we all need to understand this better.
 
-Also, I prefer to see messages with error codes instead of random values from a stack :)
+> 
+> Fortunately isolate_movable_page() will check __folio_test_movable() before
+> doing the trylock.
+> 
+> Reviewed-by: David Hildenbrand <david@redhat.com>
 
-P.S. sorry for the previous email, I made a typo in git-send-email args.
-
-Best regards,
-Andrei Lalaev
+Thanks,
+Hugh
