@@ -1,156 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D50148857
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 08:31:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA7214831E;
+	Tue, 25 Jun 2024 08:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719304317; cv=none; b=G9WemO8LsgDG/PDR1DBCN49D2kuDtfzHjD4VoC3TnSoEIbYmJ94ynl20GWvxkDeC2LBqpR3ipqDGWUhRy1uFyxXeZjF8RaLUM2/6hsYrwYawV6ftiNll7TJv30XWd+q3I8IJc6FE2flXuZdLqNB0c2AQoRJadvUH7VBJ/TZx22c=
+	t=1719304355; cv=none; b=WtzEX5FITpNJkxbwvYAQ7se1uGb+/eQxc9KfpACV2yKsQzLM/nJ7VPzPHQ48cM8+GBL5b/AKF7M5RS1e4fqI8R+SCxlthxh9z8uK35cTYeOJ58d47wcvF8bH5jm0qkZZE9EmoCAMHbXNsT8Z8usH/rQez3F5VHu9sQHKhyZ/9tA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719304317; c=relaxed/simple;
-	bh=4GQMcGauM1sM2qcIuTQSJ5+jNSGplBUnYe9YXxdjt0A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Epfod/X6gjitZU3mgNg4mWa47sNbXIxoMOSdiv5ushLsEpjxmLyUNK+r9LVMse4gxL+yevCgYN9ekSGy06PyQAVSVvJWpTDEhqDxWGmviNcSVcgdPu8e5g8HfVmqvXU8TGry8Vmkd+CE8sFBsBiJijldysSQZa1YJ/BqZK+e/j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dGPJ2bkq; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719304355; c=relaxed/simple;
+	bh=hi3MSzsE8nwxCxFsphtLi2390SmR1eVJsA70Ej66c/E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=or7uStE8nEazMnayfYURmtHac3QzXu3nK8ZvLCxTuc0mNSeEvloGl3k3K7sRCiUHittFAo0DMJ9JEumsX2FKBAZQIeg2GzqZRrH91HCaf5oYcU/Qgj+ambY/OuG+8zZDp1MiJk5eTj4cmbK306XtrKNu5ud2c+NIGMwN137lAkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=JQgg1H47; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dGPJ2bkq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719304314;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FtBka9f6WX8BkCVj0JZCuT7A8nh0ozt1KTXqJ+SkZZk=;
-	b=dGPJ2bkqK5Kl+9s4LpHaQ7JZf4B/U6W79V26iAnUrA0DiMgHTWHUOZrHM11dIG6Zn+MYiS
-	4Ooc0FB6jQwtY5kU3xK6CahdtYOFsHK5xTYMlD4ef0w966i87RpnhcDAjB7JXkVReW9IKH
-	AVHK1l4bRbIWuJDZ7nybI4mbLJ7p0oM=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-212-pnTwvopxMGGbv6AZxRkupA-1; Tue, 25 Jun 2024 04:31:49 -0400
-X-MC-Unique: pnTwvopxMGGbv6AZxRkupA-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a6c70438d0cso196303366b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 01:31:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719304308; x=1719909108;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FtBka9f6WX8BkCVj0JZCuT7A8nh0ozt1KTXqJ+SkZZk=;
-        b=ASHOrBEqzFGv9HAbSngRCAz2jDI/sFgG/JePz9anvbdbjOAF+/szK0HWMYmNU1UBXX
-         JSnoiUM1MIRj+Vv59aAVizDioURwcOmMtBC5b1ndDyqSPLdQE0gRjUpA/0JsBQOrJbxC
-         X1ckVWbkNNF7afN/HXdHbbQ216UudHPrYaeWzWLnfPVvdhobdGXVFA/FUFp2fBgUyEU/
-         cTQNN6YJAD1h1CNnu1CDy4WogEDerIzujegId4VxgmlWT/Og6Yoq//nhGSFkQIrNJuu+
-         tl+/YmYEtEmcwxk+Bcp8+iEKm6NV3sgTrzocIyHBSzCrNTaL2Ocemcb1MXwObuB+pWK5
-         31rQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX6sbP5/SPTq8JodzsK+qR33beX7PvNYg6/XZR2A1eazRPSgmuOTH47loLnuDnPNCgEcIT0o2CxmbT4oueyrAoQHhLhoKW3ufm9wkoj
-X-Gm-Message-State: AOJu0YwqXkqfIe7Nj7Z/YuJwuEN+vaRwuS393+tzJbcSmJgJuAz9et99
-	KuJhy7xoclibPz/CjdEDs6tLz4d+IywYKT6Q9aoZFhddBfs4/oFB4SmhTTmwaSFIXprdqxMwXRR
-	fm2T9c+Rnlv7l0zOiPR3WU/Hbqm7FemB2g34Lh06ZDbQjTAn2aZoeiwnZjLDMIA==
-X-Received: by 2002:a50:baa5:0:b0:57c:a7fe:b155 with SMTP id 4fb4d7f45d1cf-57d4bd74074mr5403365a12.15.1719304308210;
-        Tue, 25 Jun 2024 01:31:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGxhsR1+izX70xNnvyhK6UwUVonlEeFQMV9kch7eEfTNcHpuqfZ/z/U8gcxRPMmp8lA3q60mQ==
-X-Received: by 2002:a50:baa5:0:b0:57c:a7fe:b155 with SMTP id 4fb4d7f45d1cf-57d4bd74074mr5403333a12.15.1719304307535;
-        Tue, 25 Jun 2024 01:31:47 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc7:342:f1b5:a48c:a59a:c1d6:8d0a])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d30535232sm5638857a12.72.2024.06.25.01.31.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 01:31:47 -0700 (PDT)
-Date: Tue, 25 Jun 2024 04:31:42 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Jason Wang <jasowang@redhat.com>
-Cc: xuanzhuo@linux.alibaba.com, eperezma@redhat.com, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	virtualization@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, venkat.x.venkatsubra@oracle.com,
-	gia-khanh.nguyen@oracle.com
-Subject: Re: [PATCH V2 1/3] virtio: allow nested disabling of the configure
- interrupt
-Message-ID: <20240625043120-mutt-send-email-mst@kernel.org>
-References: <20240624024523.34272-1-jasowang@redhat.com>
- <20240624024523.34272-2-jasowang@redhat.com>
- <20240624054403-mutt-send-email-mst@kernel.org>
- <CACGkMEv1U7N-RRgQ=jbhBK1SWJ3EJz84qYaxC2kk6keM6J6MaQ@mail.gmail.com>
- <20240625030259-mutt-send-email-mst@kernel.org>
- <CACGkMEuP5GJTwcSoG6UP0xO6V7zeJynYyTDVRtF8R=PJ5z8aLg@mail.gmail.com>
- <20240625035746-mutt-send-email-mst@kernel.org>
- <CACGkMEtA8_StbzicRA6aEST8e4SNHFutLmtPu-8zaOZH2zO3cA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JQgg1H47"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1719304352;
+	bh=hi3MSzsE8nwxCxFsphtLi2390SmR1eVJsA70Ej66c/E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JQgg1H471/eyWzk12iOuyhV+nOj3YKnA13h9EuESkv8cHr1d88Xp6y3NI+CoBrnqB
+	 zIGXMh+ADemAqOCuZeMjhc7hd22M87WllhIGQnITdrmUlf+X1p5e+BES1t4WUeSBNg
+	 MuseE456LrBeSN/rrQJhymIAYXLOYdsZLnX8bKcmEBpoUkDYhAyFOJMr+WGNtXz6l3
+	 gFCrHntDw317dKhswm9wnlsKQFYLOFpkRlGshtabuY/+Qs61o54itTx3D+r1PAmlf4
+	 X3LhJfMYQqLXY3acCgVqPxBsXl3IkkMGHaAhJMpDLRMQ5NrKj87owcX7b3j2G9YOSc
+	 ixID8iBYdOYDg==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 31E95378045F;
+	Tue, 25 Jun 2024 08:32:31 +0000 (UTC)
+Message-ID: <f7b4cd98-1acf-4f6b-a7e0-57419abadba1@collabora.com>
+Date: Tue, 25 Jun 2024 10:32:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACGkMEtA8_StbzicRA6aEST8e4SNHFutLmtPu-8zaOZH2zO3cA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 0/7] MediaTek DVFSRC Bus Bandwidth and Regulator knobs
+To: broonie@kernel.org
+Cc: robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ matthias.bgg@gmail.com, lgirdwood@gmail.com, keescook@chromium.org,
+ gustavoars@kernel.org, henryc.chen@mediatek.com, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ kernel@collabora.com, wenst@chromium.org, amergnat@baylibre.com,
+ djakov@kernel.org
+References: <20240610085735.147134-1-angelogioacchino.delregno@collabora.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240610085735.147134-1-angelogioacchino.delregno@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 25, 2024 at 04:18:00PM +0800, Jason Wang wrote:
-> > > >
-> > > >
-> > > >
-> > > > But in conclusion ;) if you don't like my suggestion do something else
-> > > > but make the APIs make sense,
-> > >
-> > > I don't say I don't like it:)
-> > >
-> > > Limiting it to virtio-net seems to be the most easy way. And if we
-> > > want to do it in the core, I just want to make nesting to be supported
-> > > which might not be necessary now.
-> >
-> > I feel limiting it to a single driver strikes the right balance ATM.
+Il 10/06/24 10:57, AngeloGioacchino Del Regno ha scritto:
+> Changes in v6:
+>   - Fixed build with clang (thanks Nathan!)
+>   - Removed unused mtk_rmw() macro in mtk-dvfsrc.c
+>   - Added MODULE_DESCRIPTION() to mtk-dvfsrc-regulator.c
 > 
-> Just to make sure I understand here, should we go back to v1 or go
-> with the config_driver_disabled?
+
+...
+
 > 
-> Thanks
+> AngeloGioacchino Del Regno (7):
+>    dt-bindings: regulator: Add bindings for MediaTek DVFSRC Regulators
+
+Mark, I assume that this series is ok from your perspective, since this has got
+your acks and r-b -- but in order to pick the soc/mediatek stuff I need all of
+the dependent bindings to be in as well .. and this includes the regulator one!
+
+The main issue here is that the main soc/mediatek dvfsrc binding
+dt-bindings: soc: mediatek: Add DVFSRC bindings for MT8183 and MT8195
+does use the others, so I can't pick this one without the others being present
+or the validation obviously fails.
+
+So... gentle ping :-)
+
+Thanks,
+Angelo
+
+>    dt-bindings: interconnect: Add MediaTek EMI Interconnect bindings
+>    dt-bindings: soc: mediatek: Add DVFSRC bindings for MT8183 and MT8195
+>    soc: mediatek: Add MediaTek DVFS Resource Collector (DVFSRC) driver
+>    regulator: Remove mtk-dvfsrc-regulator.c
+>    regulator: Add refactored mtk-dvfsrc-regulator driver
+>    interconnect: mediatek: Add MediaTek MT8183/8195 EMI Interconnect
+>      driver
+> 
+>   .../interconnect/mediatek,mt8183-emi.yaml     |  51 ++
+>   .../mediatek,mt6873-dvfsrc-regulator.yaml     |  43 ++
+>   .../soc/mediatek/mediatek,mt8183-dvfsrc.yaml  |  83 +++
+>   drivers/interconnect/Kconfig                  |   1 +
+>   drivers/interconnect/Makefile                 |   1 +
+>   drivers/interconnect/mediatek/Kconfig         |  29 +
+>   drivers/interconnect/mediatek/Makefile        |   5 +
+>   drivers/interconnect/mediatek/icc-emi.c       | 153 +++++
+>   drivers/interconnect/mediatek/icc-emi.h       |  40 ++
+>   drivers/interconnect/mediatek/mt8183.c        | 143 +++++
+>   drivers/interconnect/mediatek/mt8195.c        | 339 +++++++++++
+>   drivers/regulator/mtk-dvfsrc-regulator.c      | 248 ++++----
+>   drivers/soc/mediatek/Kconfig                  |  11 +
+>   drivers/soc/mediatek/Makefile                 |   1 +
+>   drivers/soc/mediatek/mtk-dvfsrc.c             | 545 ++++++++++++++++++
+>   .../interconnect/mediatek,mt8183.h            |  23 +
+>   .../interconnect/mediatek,mt8195.h            |  44 ++
+>   include/linux/soc/mediatek/dvfsrc.h           |  36 ++
+>   include/linux/soc/mediatek/mtk_sip_svc.h      |   3 +
+>   19 files changed, 1666 insertions(+), 133 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/interconnect/mediatek,mt8183-emi.yaml
+>   create mode 100644 Documentation/devicetree/bindings/regulator/mediatek,mt6873-dvfsrc-regulator.yaml
+>   create mode 100644 Documentation/devicetree/bindings/soc/mediatek/mediatek,mt8183-dvfsrc.yaml
+>   create mode 100644 drivers/interconnect/mediatek/Kconfig
+>   create mode 100644 drivers/interconnect/mediatek/Makefile
+>   create mode 100644 drivers/interconnect/mediatek/icc-emi.c
+>   create mode 100644 drivers/interconnect/mediatek/icc-emi.h
+>   create mode 100644 drivers/interconnect/mediatek/mt8183.c
+>   create mode 100644 drivers/interconnect/mediatek/mt8195.c
+>   create mode 100644 drivers/soc/mediatek/mtk-dvfsrc.c
+>   create mode 100644 include/dt-bindings/interconnect/mediatek,mt8183.h
+>   create mode 100644 include/dt-bindings/interconnect/mediatek,mt8195.h
+>   create mode 100644 include/linux/soc/mediatek/dvfsrc.h
+> 
 
 
-I still like config_driver_disabled.
-
-
-> >
-> > >
-> > > > at least do better than +5
-> > > > on Rusty's interface design scale.
-> > > >
-> > > > >
-> > >
-> > > Thanks
-> > >
-> > >
-> > > > >
-> > > > >
-> > > > > >
-> > > > > >
-> > > > > >
-> > > > > >
-> > > > > > > @@ -455,7 +461,7 @@ int register_virtio_device(struct virtio_device *dev)
-> > > > > > >               goto out_ida_remove;
-> > > > > > >
-> > > > > > >       spin_lock_init(&dev->config_lock);
-> > > > > > > -     dev->config_enabled = false;
-> > > > > > > +     dev->config_enabled = 0;
-> > > > > > >       dev->config_change_pending = false;
-> > > > > > >
-> > > > > > >       INIT_LIST_HEAD(&dev->vqs);
-> > > > > > > diff --git a/include/linux/virtio.h b/include/linux/virtio.h
-> > > > > > > index 96fea920873b..4496f9ba5d82 100644
-> > > > > > > --- a/include/linux/virtio.h
-> > > > > > > +++ b/include/linux/virtio.h
-> > > > > > > @@ -132,7 +132,7 @@ struct virtio_admin_cmd {
-> > > > > > >  struct virtio_device {
-> > > > > > >       int index;
-> > > > > > >       bool failed;
-> > > > > > > -     bool config_enabled;
-> > > > > > > +     int config_enabled;
-> > > > > > >       bool config_change_pending;
-> > > > > > >       spinlock_t config_lock;
-> > > > > > >       spinlock_t vqs_list_lock;
-> > > > > > > --
-> > > > > > > 2.31.1
-> > > > > >
-> > > >
-> >
 
