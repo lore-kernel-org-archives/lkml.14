@@ -1,69 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE21F17DE3B;
-	Tue, 25 Jun 2024 20:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC2A17E47E
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 20:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719348757; cv=none; b=Ntm5Qp96KOPFEyKCvfN1XPq+4szJVCk2kRW8Q5tuowmtGd20orbeUYNcEyz6DSPlLEqC/4hpuChzWn0WZl4/8Z+Opv2+9rAhDA5RyPvZfhphP77SSoginv/o05vw/ltTw9Qw9IEVvkdS7PK2I6vvRx0l/bjZPV3nnWj5Huki620=
+	t=1719348758; cv=none; b=YVqMkwWHM4cfS55oJ8xYUxA5iix+dJKSAcmhxmsuCAQ7VNbfUoRe/bSK/2pNPGi0GqSbrXWEA7fCbr+UG7aAFV37TFIXaUC3msFlwL2NaTV37DpeB1BFEwLh1hGHtzAT32EQm65obu6uN4jIB9mN1f9eWsvB6S/9lVZuG6rE3zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719348757; c=relaxed/simple;
-	bh=7Vk/57j6HQa3g+1KrpUCkV83IiE+PdNNhcP691viN4I=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=bJ+x+O9Yd0hbYYEzBNEdQTvaBizeAdloBMi2rlHSFgO8VWv/29muYRKttdgPJqQVx2xXr2C240tAbBMmDUMT6STE8J5yp9xTUmQZQ8BKFu1Lv86UlZL4LMVreqg95QfUmYOBHB6UO4SyZiHKey791ZxUOjrWfC8U/pvv+bPffq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=NSSPCt8y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719348758; c=relaxed/simple;
+	bh=tQLqrrhieXejhc2zQDIr/lm/fO9IwZHD2PmckuwjCls=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=OEqoX8jTKYbrkVaAcF8K9LmYpTYGySIN7/IqK339QyxrlnpGoVeuElVf3ULul3NOLRbv6Sxu0NgaURFPMnkjs2WLF/OS1+nLDvTcowj7NzkxzYzhxdRvLnKVQtAAUV910VWXxDp53rKUKkplBzNDSeDd/PQ6ECtz8r0tCCEcgt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RtlqqcrW; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="NSSPCt8y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53A63C4AF09;
-	Tue, 25 Jun 2024 20:52:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1719348756;
-	bh=7Vk/57j6HQa3g+1KrpUCkV83IiE+PdNNhcP691viN4I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NSSPCt8y2S5moueuEEc+dT5eo/rJUoj3q1bkCikGiaZe0hzc4gOah0daI3hojxLPh
-	 gHbUYh9kPT3G4MouuG+kVN2ljW30ihFCb0/XLTi7XEMAaIk4F9r9/YlDwr7DPl0SVc
-	 oggO9jAJc7w3KLrFOQsqDeT7HG/dpL00Gh9d0ct0=
-Date: Tue, 25 Jun 2024 13:52:34 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Edward Liaw <edliaw@google.com>
-Cc: linux-kselftest@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>,
- Kees Cook <kees@kernel.org>, Shuah Khan <shuah@kernel.org>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra
- <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>, Davidlohr Bueso
- <dave@stgolabs.net>, =?ISO-8859-1?Q?"Andr=E9_Almeida"?=
- <andrealmeid@igalia.com>, Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian
- <kevin.tian@intel.com>, Paolo Bonzini <pbonzini@redhat.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Fenghua Yu <fenghua.yu@intel.com>, Reinette Chatre
- <reinette.chatre@intel.com>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Jarkko Sakkinen <jarkko@kernel.org>, Dave Hansen
- <dave.hansen@linux.intel.com>, linux-kernel@vger.kernel.org,
- usama.anjum@collabora.com, seanjc@google.com, kernel-team@android.com,
- linux-mm@kvack.org, iommu@lists.linux.dev, kvm@vger.kernel.org,
- netdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-sgx@vger.kernel.org
-Subject: Re: [PATCH v6 00/13] Centralize _GNU_SOURCE definition into lib.mk
-Message-Id: <20240625135234.d52ef77c0d84cb19d37dc44f@linux-foundation.org>
-In-Reply-To: <20240624232718.1154427-1-edliaw@google.com>
-References: <20240624232718.1154427-1-edliaw@google.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RtlqqcrW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719348756;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=h0NOprsJcSaID2DYqd51khJk0uqLDdoFanepxFJiHOE=;
+	b=RtlqqcrWxbGs9uPMZ3OI821T7mEE++WXMYGxF+vizUbo+KDouA8msbI6WLqwcFDWcq3GfP
+	Qn+VXm2jL/8mbF66vJDIlR7HJjuGg0b4qSMLKq9H0X3BUFNoec5HxrxtDoqm0NepjZJEiu
+	e+K/noVkx1aKsF1wpPqvg3raHDQnY+I=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-138-yFpJyctpNCKM47br3OEcmQ-1; Tue,
+ 25 Jun 2024 16:52:33 -0400
+X-MC-Unique: yFpJyctpNCKM47br3OEcmQ-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D105819560B2;
+	Tue, 25 Jun 2024 20:52:30 +0000 (UTC)
+Received: from antares.redhat.com (unknown [10.39.193.93])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 401D819560BF;
+	Tue, 25 Jun 2024 20:52:25 +0000 (UTC)
+From: Adrian Moreno <amorenoz@redhat.com>
+To: netdev@vger.kernel.org
+Cc: aconole@redhat.com,
+	echaudro@redhat.com,
+	horms@kernel.org,
+	i.maximets@ovn.org,
+	dev@openvswitch.org,
+	Adrian Moreno <amorenoz@redhat.com>,
+	Jamal Hadi Salim <jhs@mojatatu.com>,
+	Cong Wang <xiyou.wangcong@gmail.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v5 02/10] net: sched: act_sample: add action cookie to sample
+Date: Tue, 25 Jun 2024 22:51:45 +0200
+Message-ID: <20240625205204.3199050-3-amorenoz@redhat.com>
+In-Reply-To: <20240625205204.3199050-1-amorenoz@redhat.com>
+References: <20240625205204.3199050-1-amorenoz@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Mon, 24 Jun 2024 23:26:09 +0000 Edward Liaw <edliaw@google.com> wrote:
+If the action has a user_cookie, pass it along to the sample so it can
+be easily identified.
 
-> Centralizes the definition of _GNU_SOURCE into lib.mk and addresses all
-> resulting macro redefinition warnings.
-> 
-> These patches will need to be merged in one shot to avoid redefinition
-> warnings.
+Signed-off-by: Adrian Moreno <amorenoz@redhat.com>
+---
+ net/sched/act_sample.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Yes, please do this as a single patch and resend?
+diff --git a/net/sched/act_sample.c b/net/sched/act_sample.c
+index a69b53d54039..2ceb4d141b71 100644
+--- a/net/sched/act_sample.c
++++ b/net/sched/act_sample.c
+@@ -167,7 +167,9 @@ TC_INDIRECT_SCOPE int tcf_sample_act(struct sk_buff *skb,
+ {
+ 	struct tcf_sample *s = to_sample(a);
+ 	struct psample_group *psample_group;
++	u8 cookie_data[TC_COOKIE_MAX_SIZE];
+ 	struct psample_metadata md = {};
++	struct tc_cookie *user_cookie;
+ 	int retval;
+ 
+ 	tcf_lastuse_update(&s->tcf_tm);
+@@ -189,6 +191,16 @@ TC_INDIRECT_SCOPE int tcf_sample_act(struct sk_buff *skb,
+ 		if (skb_at_tc_ingress(skb) && tcf_sample_dev_ok_push(skb->dev))
+ 			skb_push(skb, skb->mac_len);
+ 
++		rcu_read_lock();
++		user_cookie = rcu_dereference(a->user_cookie);
++		if (user_cookie) {
++			memcpy(cookie_data, user_cookie->data,
++			       user_cookie->len);
++			md.user_cookie = cookie_data;
++			md.user_cookie_len = user_cookie->len;
++		}
++		rcu_read_unlock();
++
+ 		md.trunc_size = s->truncate ? s->trunc_size : skb->len;
+ 		psample_sample_packet(psample_group, skb, s->rate, &md);
+ 
+-- 
+2.45.1
+
