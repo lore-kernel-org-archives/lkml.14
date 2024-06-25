@@ -1,128 +1,117 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16A4C16EC08
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 14:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 199A816B720;
+	Tue, 25 Jun 2024 14:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719326762; cv=none; b=Soc1zuxV+gK/EzCGYV9gg6CY/207G1AwCjr5DCywoW6Cc980o9r/XqqmRgHJ46ZY/j2pdKgDLX3/eU9fTEWSOedbUVQ57ufPpOPegKZUHTpSW0mKjsPXV8X3tahYs4cAyyMD8dU7q/6KuBbKCnHcrzvO/S2IvCCmyz95bSXVQeU=
+	t=1719326828; cv=none; b=kr+JRGMmemshqj7/3Zh12/2PQ0iNVLSFGJkQACLKm/pkAiy2YlWapd9c/o4uYPRHL+HPhXdmtp7ZV40WtHcyVroGd2i5fEnn9bSJyMNt63NCFhDG9mW0AxR28PzGRlXo5hwMjBwZesFs9Do6a9YwQ5Gxzzn2NRpZVqUTLEmkhVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719326762; c=relaxed/simple;
-	bh=iOLjYYvI730HAzLOyq5czCRUlADggSHfg7r1FOsen0U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iiDAimb+9SzNIvhOIk0pKvDNEAV2Qq59kK8PQa6f1kWNDBSZwTzi0Sge3Wkbn+WHMbtzl7L902gGFaFlPRhHwWabjGRD6zgV7ad3PfglQvlQgl4ZrZAJj6dpCK4Uf3mzAvQ1N4EtNxdntRRbfVHOa08V7O/Lvwb3t4zL8V4OA2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0CD45339;
-	Tue, 25 Jun 2024 07:46:24 -0700 (PDT)
-Received: from [10.1.39.170] (XHFQ2J9959.cambridge.arm.com [10.1.39.170])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF0363F73B;
-	Tue, 25 Jun 2024 07:45:55 -0700 (PDT)
-Message-ID: <de83daf9-e899-4415-bf85-5e7d69f9693e@arm.com>
-Date: Tue, 25 Jun 2024 15:45:54 +0100
+	s=arc-20240116; t=1719326828; c=relaxed/simple;
+	bh=7INvdVScmw601ooabE8KK31RUvWRf0vcMmCdvEuMPpw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h8tgOdten38JcSvTz+2a05L0cKB+78D3DRSM2bGX5e5en8R8eXP+KrmSg8rB99cnSViqqxXB4YSejJ9+CDSy8QhGFkfWLYm+CIFe4lBrY7LDAdnAamrb6pzgs2QF26Xz/3y1ux3oLPmpAC8AHCnY+EpoWJsiMpHfqDC+eGzL4d4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gdM3o8Ze; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gdM3o8Ze"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 951E6C32781;
+	Tue, 25 Jun 2024 14:47:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719326827;
+	bh=7INvdVScmw601ooabE8KK31RUvWRf0vcMmCdvEuMPpw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=gdM3o8ZeKJSxMUQapTfXcG2O1lUUSBXsiZsI/f20yD1h+gjQGW+IeOZ4eMt80fyuF
+	 MgTVrjG41Kx4Sq0vV6st6omHRZJXZhnrDH72WM7wiN9GsyGvFTGCxv26GkJZtL3Y5s
+	 UC4xZdkCr3XjcGk4FnV83FbpY+NxqMFSI8NVQKpwK4PnqLLd6Yol7084UA08jhJW2u
+	 hxYTk6nC58fcmSXBcgfYanHUzJ4FO+TSvxtKXleKARKUUgb8XklttGfzwZ+XsidtVf
+	 rgRE37n+TOAkg9diwmyjQi7SGVNgKEjaVl76EEpPhgN1fOYHKEwDmZo/wrZIUzP9iU
+	 OnbITka7pRdVg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 97385CE04A8; Tue, 25 Jun 2024 07:47:06 -0700 (PDT)
+Date: Tue, 25 Jun 2024 07:47:06 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Breno Leitao <leitao@debian.org>, sandipan.das@amd.com,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, leit@meta.com,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] perf/x86/amd: Warn only on new bits set
+Message-ID: <e17a924d-9699-465f-8bef-cde4411e2146@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240524141021.3889002-1-leitao@debian.org>
+ <20240625115734.GX31592@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 18/18] arm64/mm: Automatically fold contpte mappings
-Content-Language: en-GB
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Baolin Wang <baolin.wang@linux.alibaba.com>,
- Kefeng Wang <wangkefeng.wang@huawei.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Ard Biesheuvel <ardb@kernel.org>, Marc Zyngier <maz@kernel.org>,
- James Morse <james.morse@arm.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Mark Rutland <mark.rutland@arm.com>, David Hildenbrand <david@redhat.com>,
- John Hubbard <jhubbard@nvidia.com>, Zi Yan <ziy@nvidia.com>,
- Barry Song <21cnbao@gmail.com>, Alistair Popple <apopple@nvidia.com>,
- Yang Shi <shy828301@gmail.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- "Yin, Fengwei" <fengwei.yin@intel.com>,
- linux-arm-kernel@lists.infradead.org, x86@kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20240215103205.2607016-19-ryan.roberts@arm.com>
- <1285eb59-fcc3-4db8-9dd9-e7c4d82b1be0@huawei.com>
- <8d57ed0d-fdd0-4fc6-b9f1-a6ac11ce93ce@arm.com>
- <018b5e83-789e-480f-82c8-a64515cdd14a@huawei.com>
- <b75aa60d-e058-4b5c-877a-9c0cd295e96f@linux.alibaba.com>
- <b6b485ee-7af0-42b8-b0ca-5a75f76a69e2@arm.com>
- <43a5986a-52ea-4090-9333-90af137a4735@linux.alibaba.com>
- <306874fe-9bc1-4dec-a856-0125e4541971@arm.com>
- <ZnrAzjm5Fqg0d1CL@casper.infradead.org>
- <dbeb71ca-8aba-4aed-9123-c4d07c3da004@arm.com>
- <ZnrO4clYoEH_67Ur@casper.infradead.org>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <ZnrO4clYoEH_67Ur@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240625115734.GX31592@noisy.programming.kicks-ass.net>
 
-On 25/06/2024 15:06, Matthew Wilcox wrote:
-> On Tue, Jun 25, 2024 at 02:41:18PM +0100, Ryan Roberts wrote:
->> On 25/06/2024 14:06, Matthew Wilcox wrote:
->>> On Tue, Jun 25, 2024 at 01:41:02PM +0100, Ryan Roberts wrote:
->>>> On 25/06/2024 13:37, Baolin Wang wrote:
->>>>
->>>> [...]
->>>>
->>>>>>> For other filesystems, like ext4, I did not found the logic to determin what
->>>>>>> size of folio to allocate in writable mmap() path
->>>>>>
->>>>>> Yes I'd be keen to understand this to. When I was doing contpte, page cache
->>>>>> would only allocate large folios for readahead. So that's why I wouldn't have
->>>>>
->>>>> You mean non-large folios, right?
->>>>
->>>> No I mean that at the time I wrote contpte, the policy was to allocate an
->>>> order-0 folio for any writes that missed in the page cache, and allocate large
->>>> folios only when doing readahead from storage into page cache. The test that is
->>>> regressing is doing writes.
->>>
->>> mmap() faults also use readahead.
->>>
->>> filemap_fault():
->>>
->>>         folio = filemap_get_folio(mapping, index);
->>>         if (likely(!IS_ERR(folio))) {
->>>                 if (!(vmf->flags & FAULT_FLAG_TRIED))
->>>                         fpin = do_async_mmap_readahead(vmf, folio);
->>> which does:
->>>         if (folio_test_readahead(folio)) {
->>>                 fpin = maybe_unlock_mmap_for_io(vmf, fpin);
->>>                 page_cache_async_ra(&ractl, folio, ra->ra_pages);
->>>
->>> which has been there in one form or another since 2007 (3ea89ee86a82).
->>
->> OK sounds like I'm probably misremembering something I read on LWN... You're
->> saying that its been the case for a while that if we take a write fault for a
->> portion of a file, then we will still end up taking the readahead path and
->> allocating a large folio (filesystem permitting)? Does that apply in the case
->> where the file has never been touched but only ftruncate'd, as is happening in
->> this test? There is obviously no need for IO in that case, but have we always
->> taken a path where a large folio may be allocated for it? I thought that bit was
->> newer for some reason.
+On Tue, Jun 25, 2024 at 01:57:34PM +0200, Peter Zijlstra wrote:
+> On Fri, May 24, 2024 at 07:10:20AM -0700, Breno Leitao wrote:
+> > Warning at every leaking bits can cause a flood of message, triggering
+> > vairous stall-warning mechanisms to fire, including CSD locks, which
+> > makes the machine to be unusable.
+> > 
+> > Track the bits that are being leaked, and only warn when a new bit is
+> > set.
+> > 
+> > Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > ---
+> >  arch/x86/events/amd/core.c | 9 +++++++--
+> >  1 file changed, 7 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+> > index 1fc4ce44e743..df0ba2382d13 100644
+> > --- a/arch/x86/events/amd/core.c
+> > +++ b/arch/x86/events/amd/core.c
+> > @@ -941,11 +941,12 @@ static int amd_pmu_v2_snapshot_branch_stack(struct perf_branch_entry *entries, u
+> >  static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
+> >  {
+> >  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+> > +	static atomic64_t status_warned = ATOMIC64_INIT(0);
+> > +	u64 reserved, status, mask, new_bits;
+> >  	struct perf_sample_data data;
+> >  	struct hw_perf_event *hwc;
+> >  	struct perf_event *event;
+> >  	int handled = 0, idx;
+> > -	u64 reserved, status, mask;
+> >  	bool pmu_enabled;
+> >  
+> >  	/*
+> > @@ -1010,7 +1011,11 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
+> >  	 * the corresponding PMCs are expected to be inactive according to the
+> >  	 * active_mask
+> >  	 */
+> > -	WARN_ON(status > 0);
+> > +	if (status > 0) {
+> > +		new_bits = atomic64_fetch_or(status, &status_warned) ^ atomic64_read(&status_warned);
+> > +		// A new bit was set for the very first time.
+> > +		WARN(new_bits, "New overflows for inactive PMCs: %llx\n", new_bits);
+> > +	}
 > 
-> The pagecache doesn't know whether the file contains data or holes.
-> It allocates folios and then invites the filesystem to fill them; the
-> filesystem checks its data structures and then either issues reads if
-> there's data on media or calls memset if the records indicate there's
-> a hole.
-> 
-> Whether it chooses to allocate large folios or not is going to depend
-> on the access pattern; a sequential write pattern will use large folios
-> and a random write pattern won't.
-> 
-> Now, I've oversimplified things a bit by talking about filemap_fault.
-> Before we call filemap_fault, we call filemap_map_pages() which looks
-> for any suitable folios in the page cache between start and end, and
-> maps those.
+> Why not just a WARN_ON_ONCE() instead? This really shouldn't be
+> happening in the first place.
 
-OK that all makes sense, thanks. I guess it just means I don't have an excuse
-for the perf regression. :)
+We did consider that, but seeing the full set of bits that shouldn't
+have been happening in the first place helps with debuggging.
 
+But is there a better way to accumulate and print the full set of
+unexpected bits?
 
+							Thanx, Paul
