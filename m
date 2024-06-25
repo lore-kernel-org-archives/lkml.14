@@ -1,80 +1,122 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB7B158D76;
-	Tue, 25 Jun 2024 12:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A307B158A23;
+	Tue, 25 Jun 2024 12:24:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719318217; cv=none; b=BRLiFeS0BSca0lanl+UfZKp2VyB2hQOf03jky2/O4FAVDOInwVoKjzdUM0oiMraFbMxjtGUnwRjcrRAqDBUz36WiztKAMay7c1F7OOS0GigLUvhxLLL3vvXdtVydyWsg7VhzSOABYP5ocbh2xWyvHNsc3onLIL3s+q6hWPQY+jM=
+	t=1719318255; cv=none; b=mKOiYqug7vbTW5ETDRHhYg5+XGH+Q04OPwsnRatWBTdE7uyV2g5TqTL8HoAM5RWNXTPvuHW2s1RmUr+LQQ50dZPoHjjdMn7QDSVOPL8aXwjl9ii/TiwB/x1KBkMW+TIUPwgE/9Xc54K6bPgFtnCGSvhE+YfV7EPTAJBMknRnuyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719318217; c=relaxed/simple;
-	bh=8G8rOqFEpTOWrGC/84IZXZF/+QeS8+01Qq0V6M4Dras=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NDCPW6/Sl7fh/qY5RUBaxQWmQ524vFpzgXp0yimWs8VBBd01YlhGydCpe1cUgS5V4dJ+GfLDN2ctFfDQtyrJUa49owrzzviUP8JNySzWRVloh2b301DUGh7Td9WifTBN+5ZXKVl50nP4GezAVGGL9nidRF/YfZZf3jOTeD41bTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=OxfDRdTt; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="OxfDRdTt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1719318214;
-	bh=8G8rOqFEpTOWrGC/84IZXZF/+QeS8+01Qq0V6M4Dras=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=OxfDRdTtecikmsPsWfXCYLRQ9iSKyWcq/XKgF9gmudd5/GRigrvrre9ch2020xtzk
-	 JSpF0BYOJ0mW5o+TUoxtOSMtRlHKA6Wn91C3JHwBuIvp0zJKlinNXh6qXQo0ax5WQ4
-	 a707tVqxklWs8u3uLP0n+bfpRXjCzXyariTpVmPU=
-Received: from [IPv6:240e:456:1030:206f:f170:d271:6bac:49d] (unknown [IPv6:240e:456:1030:206f:f170:d271:6bac:49d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id D13801A3FCE;
-	Tue, 25 Jun 2024 08:23:16 -0400 (EDT)
-Message-ID: <19ec107368c8c8dd4e627b404106c30b73132cb0.camel@xry111.site>
-Subject: Re: [PATCH 1/2] vfs: add CLASS fd_raw
-From: Xi Ruoyao <xry111@xry111.site>
-To: Mateusz Guzik <mjguzik@gmail.com>, brauner@kernel.org
-Cc: viro@zeniv.linux.org.uk, jack@suse.cz, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org, axboe@kernel.dk, 
-	torvalds@linux-foundation.org, loongarch@lists.linux.dev
-Date: Tue, 25 Jun 2024 20:22:53 +0800
-In-Reply-To: <20240625110029.606032-2-mjguzik@gmail.com>
-References: <20240625110029.606032-1-mjguzik@gmail.com>
-	 <20240625110029.606032-2-mjguzik@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	s=arc-20240116; t=1719318255; c=relaxed/simple;
+	bh=xWkRfjXbcQV976odVJL6jnfAgd/Ex17HQpOdk8g38nQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LhAv6+IWGHvJfyOzEvFBC2QWqK0wJukAfzbH3Wb4rzLh4tNm007cqWSgw67HjpHuoJbFGFMWFtnsgeTOQEEkeK9M3587koEDrnewdqXOorciD0fgbA7R5D2mMOeQi7LbUisZV8GVIidYpUylVqIDXJqhOAPncoU86Yinkn+ZA/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7923C339;
+	Tue, 25 Jun 2024 05:24:36 -0700 (PDT)
+Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6CD783F766;
+	Tue, 25 Jun 2024 05:24:05 -0700 (PDT)
+Message-ID: <1fdf637d-3571-4145-8008-f2b5f8fc8bca@arm.com>
+Date: Tue, 25 Jun 2024 13:24:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 7/8] perf python: Switch module to linking libraries
+ from building source
+To: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>,
+ Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
+ Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Yicong Yang <yangyicong@hisilicon.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng
+ <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl
+ <aliceryhl@google.com>, Nick Terrell <terrelln@fb.com>,
+ Ravi Bangoria <ravi.bangoria@amd.com>, Kees Cook <keescook@chromium.org>,
+ Andrei Vagin <avagin@google.com>, Athira Jajeev
+ <atrajeev@linux.vnet.ibm.com>, Oliver Upton <oliver.upton@linux.dev>,
+ Ze Gao <zegao2021@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org,
+ coresight@lists.linaro.org, rust-for-linux@vger.kernel.org,
+ bpf@vger.kernel.org
+References: <20240613233122.3564730-1-irogers@google.com>
+ <20240613233122.3564730-8-irogers@google.com> <Znnyi2IPC79jMd9y@google.com>
+Content-Language: en-US
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <Znnyi2IPC79jMd9y@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 2024-06-25 at 13:00 +0200, Mateusz Guzik wrote:
-> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
-> ---
-> =C2=A0include/linux/file.h | 1 +
-> =C2=A01 file changed, 1 insertion(+)
->=20
-> diff --git a/include/linux/file.h b/include/linux/file.h
-> index 169692cb1906..45d0f4800abd 100644
-> --- a/include/linux/file.h
-> +++ b/include/linux/file.h
-> @@ -84,6 +84,7 @@ static inline void fdput_pos(struct fd f)
-> =C2=A0}
-> =C2=A0
-> =C2=A0DEFINE_CLASS(fd, struct fd, fdput(_T), fdget(fd), int fd)
-> +DEFINE_CLASS(fd_raw, struct fd, fdput(_T), fdget_raw(fd), int fd)
-> =C2=A0
-> =C2=A0extern int f_dupfd(unsigned int from, struct file *file, unsigned f=
-lags);
-> =C2=A0extern int replace_fd(unsigned fd, struct file *file, unsigned flag=
-s);
 
-FWIW this change is already in the mainline kernel as
-a0fde7ed05ff020c3e7f410d73ce4f3a72b262d6.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+On 24/06/2024 23:26, Namhyung Kim wrote:
+> On Thu, Jun 13, 2024 at 04:31:21PM -0700, Ian Rogers wrote:
+>> setup.py was building most perf sources causing setup.py to mimic the
+>> Makefile logic as well as flex/bison code to be stubbed out, due to
+>> complexity building. By using libraries fewer functions are stubbed
+>> out, the build is faster and the Makefile logic is reused which should
+>> simplify updating. The libraries are passed through LDFLAGS to avoid
+>> complexity in python.
+>>
+>> Force the -fPIC flag for libbpf.a to ensure it is suitable for linking
+>> into the perf python module.
+>>
+>> Signed-off-by: Ian Rogers <irogers@google.com>
+>> Reviewed-by: James Clark <james.clark@arm.com>
+>> ---
+>>  tools/perf/Makefile.config |   5 +
+>>  tools/perf/Makefile.perf   |   6 +-
+>>  tools/perf/util/python.c   | 271 ++++++++++++++-----------------------
+>>  tools/perf/util/setup.py   |  33 +----
+>>  4 files changed, 110 insertions(+), 205 deletions(-)
+>>
+>> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+>> index 7f1e016a9253..639be696f597 100644
+>> --- a/tools/perf/Makefile.config
+>> +++ b/tools/perf/Makefile.config
+>> @@ -910,6 +910,11 @@ else
+>>           endif
+>>           CFLAGS += -DHAVE_LIBPYTHON_SUPPORT
+>>           $(call detected,CONFIG_LIBPYTHON)
+>> +	 ifeq ($(filter -fPIC,$(CFLAGS)),)
+> 
+> Nitpick: mixed TAB and SPACEs.
+> 
+> 
+>> +           # Building a shared library requires position independent code.
+>> +           CFLAGS += -fPIC
+>> +           CXXFLAGS += -fPIC
+>> +         endif
+> 
+> 
+> I'm curious if it's ok for static libraries too..
+> 
+> Thanks,
+> Namhyung
+> 
+
+I think I tested the whole set with a static build so it should be ok.
+
+> 
+>>        endif
+>>      endif
+>>    endif
