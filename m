@@ -1,160 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9954C6E;
-	Tue, 25 Jun 2024 20:44:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9F23B7A8
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 20:45:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719348289; cv=none; b=mbD7RT6j7wek+4beT/irDv0TMjTLofA2uI4XI1wJkfUDmrdZMvFEuPL6lbkM91RptwB7dgoiQoRBi3rIyM+9WCwid5ptc2ta7g01qAB9TBBvAjLI+m3g/n6JZzXlqJZENwsvn8B92geZ3Iv+C7u64yz8TUTtB0ZgsvVxZxdejD0=
+	t=1719348327; cv=none; b=UzDgFxcF1We5Gv9u5ogL4gnNj3OAHNPS8rLH8loPWCoerBxDM7Gh98qNbb9fccjdYgZhegk6SxuSsbn20QWat2aqXK/JcaFZ25QWn9ADCbV5Jx4hlYkxvUgQiMkvDj0GLa74eKUDj5LfZXxp/u0BRdOrANM68QW6RnfG5kL7TfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719348289; c=relaxed/simple;
-	bh=7CM1uNcMRbL2WWi9t6emNIXATfxoTn5T2uQeAyRyOpc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BBK63Xi4Cgfj/vRhe1YEvtAR0iAJal3ObRYCYVTXbXQxWHVkZMZOw9CPum2uvz+/7juxYbL1u+uNBeCOUlAWfQjoEZE9hTTUfMXsl+7A7F+a/yoIIJVRH1QfkAC1n+3cfVszHxTp6MLJy05/LjiraFmS+93uospYLMlo5iwLj64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZSoxOjae; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719348327; c=relaxed/simple;
+	bh=/nsH//Z58Fd2Su+RbE5/otjnSFauqQGQOzv899HhbUg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HrBJRkxtfoiZ8GWEMaEP1lX/AsM0gJM31Okim5q139/VVLtU4OkElouXpmJ5FHPaDuCfkaUJrB5PrgZBQBVOhcgsrtiDBvmKKO82vCNhGwqtzDPQVdkFQ+mMlUXQlrBMH/r+KZe3qApn+r2Yzt/QzeuvnkdHDCzs5KogZxMpNCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PmoKdpS5; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZSoxOjae"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E320EC32781;
-	Tue, 25 Jun 2024 20:44:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719348289;
-	bh=7CM1uNcMRbL2WWi9t6emNIXATfxoTn5T2uQeAyRyOpc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ZSoxOjaePp0utIpAiGZ5HHrFRjLeJqUIrPR0INpfQh/LeNfsk6mNhLyjNM1Aa1QRS
-	 +42svbe0+KLxVrWW1yfZSWquZsAxDBl/HcOcj3uyJUiO+lYUrH6xoC57069D8+bpwO
-	 OKKpHr4Kh+MaL3cGvFwa6ob5+5dJWWGQPuoenCRbk7jO9JNoM0fkKIsUYuIhxl8yw7
-	 lF8+ZmWxv8e+/RVY1KwiMbE6x5m+Gueh4SGrte5YbTDFlI82pWR/LRk30MV1xhaMiV
-	 ep/DqQwzTkIRtRRdO63v0pB69Etk5nmYqRJoeYzWqBmRu0GghME9g+FaIrZ3KUqq1m
-	 w+OYi6H6Aff/Q==
-Date: Tue, 25 Jun 2024 21:44:39 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Vasileios Amoiridis <vassilisamir@gmail.com>
-Cc: ak@it-klinger.de, phil@raspberrypi.com, lars@metafoo.de,
- andriy.shevchenko@linux.intel.com, ang.iglesiasg@gmail.com,
- mazziesaccount@gmail.com, petre.rodan@subdimension.ro, 579lpy@gmail.com,
- linus.walleij@linaro.org, semen.protsenko@linaro.org,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Adam Rizkalla
- <ajarizzo@gmail.com>
-Subject: Re: [PATCH v8 1/3] iio: pressure: bmp280: Generalize read_*()
- functions
-Message-ID: <20240625214439.245ae81a@jic23-huawei>
-In-Reply-To: <20240623171841.GA202685@vamoiridPC>
-References: <20240617230540.32325-1-vassilisamir@gmail.com>
-	<20240617230540.32325-2-vassilisamir@gmail.com>
-	<20240622102826.2ba446d9@jic23-huawei>
-	<20240622121918.GA123707@vamoiridPC>
-	<20240623172330.0f94cae9@jic23-huawei>
-	<20240623171841.GA202685@vamoiridPC>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmoKdpS5"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-57d0f84b379so898195a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 13:45:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719348323; x=1719953123; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lQ3OA/LDSmF2zaAN/8y+noIQOtUwx5jM6T2eNySOdXk=;
+        b=PmoKdpS5+NB+pqorYa/RbjIihZ2XNfm0NYqJL9tmEmjmE0W6tX3FCKaFooOeAk3CGH
+         C0c57EcbrIoPMIsP8EjADzXtESoLDK6REcOpt+jf+pO0VtOu0EBMY8iXapmsBa0/QRA3
+         ZmNLm1obsI8jFFWLVTgZDsitct4sBZdEl2nqZltsKJ/n/YMpIoJY1dphW1B0Nmc0MmgO
+         zUO19gV8Y0+iQyraQzkL6GIzdg4fsB47eQp5kjwGMK3XLGLB3NC0K2z9U5ZMaoVFC30P
+         bcjLohM18V1MJ/sEbwRiYlhjhjx1xB3RUY5MAiUpA2xy2dCWnaPlN2RtOVtsEmhnFb0m
+         YdZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719348323; x=1719953123;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lQ3OA/LDSmF2zaAN/8y+noIQOtUwx5jM6T2eNySOdXk=;
+        b=u9KEpezdrjWWY57XkjLtZ4XNobRId1/vBtH7CrKWKotDZxAvZglxYefGh3qJeRBlby
+         bO9+wIAxFC1MAxyKd/uPH2fXNkSf4WhT60puFiCKe0UTayRty0RB3A+pTJM3Xu7LMFZq
+         Jm6Bnk9iPfx/T2itLHoSWqaTXkUaOpMyrGCuTmqhgQhsJ+jWvsFK+BiL4uYtFuHjOGfy
+         kDPdM6r0Xvp5LlSZvHjpuUMwAA4LSMe+g7BiBKoqAmNCTXjtlJJOCk538SRazwU2YaMJ
+         LPnnhge1xds4keWaTgodcjqlC4U3ZEAeBJMk/r0SG3j6igpefb4txXCa34jIGinE/C0f
+         hfVA==
+X-Forwarded-Encrypted: i=1; AJvYcCUsXkSYN5niELfE0eXzrxxqBK9kdqloSLwcqOTC2M8ceXCWILC43QpHwOwEzr7gzcGJCi7YHvL9ZJnKuo3cmppdIVzTQmjB2hZNv3zj
+X-Gm-Message-State: AOJu0Yyxz4ayKjjosz40BQXCoQ7fdTIYJwQLfjlxzjG8D7wz+1XB1Rvd
+	udhtYmJq5yQghCs7jq6fWKW8/CXn91gFeN+CIZ8KlSrjxjxm1TUh
+X-Google-Smtp-Source: AGHT+IGBK4hVsbAAo4sMicnCRuHFBADiR353JtC4ouwVvbn9y9bJCYaZXXkBTyjCrp37mv2tH6tDXQ==
+X-Received: by 2002:a17:906:4f0d:b0:a70:4217:5c8b with SMTP id a640c23a62f3a-a70421765b2mr661333766b.0.1719348322594;
+        Tue, 25 Jun 2024 13:45:22 -0700 (PDT)
+Received: from [192.168.0.103] (p57935a9b.dip0.t-ipconnect.de. [87.147.90.155])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6fcf4ba625sm547783766b.93.2024.06.25.13.45.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Jun 2024 13:45:22 -0700 (PDT)
+Message-ID: <b3d9f694-77c4-45f4-a436-c00a7d6df61a@gmail.com>
+Date: Tue, 25 Jun 2024 22:45:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Staging: rtl8192e: rtllib_rx: fixed alignment
+To: Yusef Aslam <yuzi54780@outlook.com>, gregkh@linuxfoundation.org
+Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <CWLP265MB651697C43A8A396DE8989CD8FDD52@CWLP265MB6516.GBRP265.PROD.OUTLOOK.COM>
+Content-Language: en-US
+From: Philipp Hortmann <philipp.g.hortmann@gmail.com>
+In-Reply-To: <CWLP265MB651697C43A8A396DE8989CD8FDD52@CWLP265MB6516.GBRP265.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Sun, 23 Jun 2024 19:18:41 +0200
-Vasileios Amoiridis <vassilisamir@gmail.com> wrote:
-
-> On Sun, Jun 23, 2024 at 05:23:30PM +0100, Jonathan Cameron wrote:
-> > On Sat, 22 Jun 2024 14:19:18 +0200
-> > Vasileios Amoiridis <vassilisamir@gmail.com> wrote:
-> >   
-> > > On Sat, Jun 22, 2024 at 10:28:26AM +0100, Jonathan Cameron wrote:  
-> > > > On Tue, 18 Jun 2024 01:05:38 +0200
-> > > > Vasileios Amoiridis <vassilisamir@gmail.com> wrote:
-> > > >     
-> > > > > Add the coefficients for the IIO standard units and the IIO value
-> > > > > inside the chip_info structure.
-> > > > > 
-> > > > > Move the calculations for the IIO unit compatibility from inside the
-> > > > > read_{temp,press,humid}() functions and move them to the general
-> > > > > read_raw() function.
-> > > > > 
-> > > > > In this way, all the data for the calculation of the value are
-> > > > > located in the chip_info structure of the respective sensor.
-> > > > > 
-> > > > > Signed-off-by: Vasileios Amoiridis <vassilisamir@gmail.com>    
-> > > > Does this incorporate the fix?  I'm a little confused looking at
-> > > > what is visible here, so I'd like Adam to take a look.
-> > > > 
-> > > > Btw, you missed cc'ing Adam.
-> > > >     
-> > > 
-> > > Ah, I only used the output of get_maintainer...  
-> > 
-> > always be careful to sanity check that :)
-> >   
-> > > ...
-> > >     
-> > > > > @@ -518,11 +511,29 @@ static int bmp280_read_raw_impl(struct iio_dev *indio_dev,
-> > > > >  	case IIO_CHAN_INFO_PROCESSED:
-> > > > >  		switch (chan->type) {
-> > > > >  		case IIO_HUMIDITYRELATIVE:
-> > > > > -			return data->chip_info->read_humid(data, val, val2);
-> > > > > +			ret = data->chip_info->read_humid(data, &chan_value);
-> > > > > +			if (ret)
-> > > > > +				return ret;
-> > > > > +
-> > > > > +			*val = data->chip_info->humid_coeffs[0] * chan_value;
-> > > > > +			*val2 = data->chip_info->humid_coeffs[1];
-> > > > > +			return data->chip_info->humid_coeffs_type;
-> > > > >  		case IIO_PRESSURE:
-> > > > > -			return data->chip_info->read_press(data, val, val2);
-> > > > > +			ret = data->chip_info->read_press(data, &chan_value);
-> > > > > +			if (ret)
-> > > > > +				return ret;
-> > > > > +
-> > > > > +			*val = data->chip_info->press_coeffs[0] * chan_value;
-> > > > > +			*val2 = data->chip_info->press_coeffs[1];
-> > > > > +			return data->chip_info->press_coeffs_type;
-> > > > >  		case IIO_TEMP:
-> > > > > -			return data->chip_info->read_temp(data, val, val2);
-> > > > > +			ret = data->chip_info->read_temp(data, &chan_value);
-> > > > > +			if (ret)
-> > > > > +				return ret;
-> > > > > +
-> > > > > +			*val = data->chip_info->temp_coeffs[0] * (s64)chan_value;    
-> > > 
-> > > This is the first difference with the previous version where I incorporated
-> > > the typecasting to (s64).  
-> > 
-> > On a 32 bit platform that will then get pushed into a 32 bit int and overflow
-> > I think.  Back when IIO got started everything was 32 bit so it didn't make sense
-> > to make these 64 bit or indeed to worry about forcing the size.
-> > 
-> > Jonathan
-> >   
+On 6/25/24 17:28, Yusef Aslam wrote:
+>  From 3acc0622bca28c1a00696e7abd7c305ca5ad1f72 Mon Sep 17 00:00:00 2001
+> From: Yusef Aslam<YUZi54780@outlook.com>
+> Date: Tue, 25 Jun 2024 15:03:08 +0100
+> Subject: [PATCH] Staging: rtl8192e: rtllib_rx: fixed alignment
 > 
-> Well, I use a 32-bit platform, (BeagleBone Black) and the negative values are
-> handled gracefully with this code. Also, how is that different from the previous
-> code? Instead of doing the typecasting to (s64) in the bmp580_read_temp()
-> function, we do it here. I feel that it is the same piece of code, just in
-> different places.
-
-The problem, I think, is the storage between those two places is too small.
-It's not about negatives, but rather use that in the extremely large value
-case it might not fit in the 32 bit int behind val so casting that back up
-to 64 bits later won't recover the lost most significant bits.
-
-> What I can do though, for your peace of mind is the following:
+> Fixed alignment.
 > 
-> Since the problem with overflow comes when we multiply by 1000 in order to have
-> milli-Celsius, what I can do, is to "force" the division with 2^16 to happen
-> first. In this way, they divided value cannot be overflowed. The division will
-> happen inside the bmp580_read_temp() function and let the multiplication happen
-> later by the IIO code. Then we can drop the (s64) from here.
+> Signed-off-by: Yusef Aslam<YUZi54780@outlook.com>
 
-See Adam's reply - that should avoid overflow and preserve accuracy which you
-tend to loose with divide then multiply.
 
-Jonathan
+Hi Yusef,
 
-> 
-> How does that sound to you?
-> 
-> Cheers,
-> Vasilis
+OK the emailaddress of greg was wrong. But you cannot just resend. You 
+need to make a change history.
 
+If you send in a third version of this patch please use a change 
+history. Description from Dan under:
+https://staticthinking.wordpress.com/2022/07/27/how-to-send-a-v2-patch/
+
+Your next patch will be a v3 as this was v2.
+
+Thanks
+
+Bye Philipp
