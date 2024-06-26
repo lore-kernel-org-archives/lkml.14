@@ -1,118 +1,207 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481F115FA73;
-	Wed, 26 Jun 2024 08:44:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719391451; cv=none; b=frxhsbuUdm5HxL6Eh1kMX6UAugq/FnDjDSQvW8BCt6JS/bRUKptXjEbhHJFola0IwHg9ElYyaUxxFDMQFdVzZvVobJWZ12lIir5VqknvCIIPyo0/nd3d0Sy49MhLVakswgEoNdBMoq+ju9OhraykRm2NnwI9XkrmpZMoSO3YgMQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719391451; c=relaxed/simple;
-	bh=nqHzRpq/ZwTphph7XvKasqvlrolR3laeA11meI6qRnY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VGbsz6ytqJfwmFlLJVMaDqMqyb0xbdAstjqd22OBHzShtjITaXBaDYcTlGxZhNAkPiTLgMAmoBUvoPmYA3ETrZAetORp1Ik63tOOhNnCdE0gE4z81PtF1H7mqU2XX/NO3axGb0JCL6Pq20eXosbxGSMwlWsQvUyB7BSHYpZ5Sfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=I9sqf/Hy; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C6315FA73
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 08:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719391491; cv=fail; b=P7ilPj7NdYUflCTpkOU0vy1j6wuZA59qZnb39IvsMYkmur/HZZqkvg7jXLeBKEMByi19gMSWpN3qQKXxS3+7o1Maem6l49p4xQjSVoAcnfs+4dx5+ji+mSCu9yTKA61xDVIYLbvTb8P2CvMGSrReIzEI0eGVmMjEE8HB2WWbAf4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719391491; c=relaxed/simple;
+	bh=anBoEFSvileDmK1sxjMg7WvuCHp76N7AzZ2tktoVWXw=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=UEkpB+zTfYApiBU0hJxFmsmr8yXpgwNwWwndvKQJY81AjnuDqtpiSiYA7UNPPXhgHDAifFjW8mgCuBuk5G7OilzSXL1Qw5HGDP6xboHrrPHfEOrlJHNYT8Guk72aHX1jHCFVpzI4kzuv3P+pMq1nElh1Xqu094AxNUvEdesOz1U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BDoK5A4R; arc=fail smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="I9sqf/Hy"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45Q8i2b2080352;
-	Wed, 26 Jun 2024 03:44:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1719391442;
-	bh=VHjH/7YezNR75vLtgn6dRbkrKJ/z+LItV5LyONiIbC4=;
-	h=From:To:CC:Subject:Date;
-	b=I9sqf/HySE39f8beG7lN3mwtj21HKUBsAB6WD+w/CxPCMQmsj2RKq52m2oa9G31Cx
-	 xpqlqXP1GA9Pce7j5Ouew7v2eWeEzjh0abF41a4UczabIFBBE+XacYBkddZSr4oawP
-	 NyrZIRIZlNHxIRSRsrw1QSZg3xaaBYH8bhq0azVk=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45Q8i1aY009628
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 26 Jun 2024 03:44:02 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 26
- Jun 2024 03:44:01 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 26 Jun 2024 03:44:01 -0500
-Received: from dhruva.dhcp.ti.com (dhruva.dhcp.ti.com [172.24.227.68])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45Q8hxDO034650;
-	Wed, 26 Jun 2024 03:44:00 -0500
-From: Dhruva Gole <d-gole@ti.com>
-To: Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J . Wysocki"
-	<rafael.j.wysocki@intel.com>
-CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Mario
- Limonciello <mario.limonciello@amd.com>,
-        Dhruva Gole <d-gole@ti.com>
-Subject: [PATCH] cpufreq: make cpufreq_boost_enabled return bool
-Date: Wed, 26 Jun 2024 14:13:54 +0530
-Message-ID: <20240626084354.1762483-1-d-gole@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BDoK5A4R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719391489; x=1750927489;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=anBoEFSvileDmK1sxjMg7WvuCHp76N7AzZ2tktoVWXw=;
+  b=BDoK5A4RHCrH3x7uCnxqqtwbX79M9C5C4AYTFeKGpQzL789M/dTcjvoU
+   rI8juBLYmH/sQpsoFLWFEctwypGmJWIHf/8jfRnHgw9PNDaQVNGOUeBfk
+   IdNL4iMm2IGrCBgZTzXckaj497hYFH+wezX4JMUv8nVYNuR9LlU7FjeOQ
+   9KwReQd3JgHRyqgLwI7PruMFvSwlYi772kv2COVmgkgNKFfu87M6oTlCn
+   GoL/asGkJcnLK+0fde+kYrbgivJYpLzHF6uvUrujfuZvBNeaVTqf1wi4p
+   vMP3cPxLRmQYCUYmRBps/ukqqBcO9gsaJLkT1eehOSkvLvgpUzyZe0mpT
+   A==;
+X-CSE-ConnectionGUID: vMOYKPyTScCJzVEgcgcAaA==
+X-CSE-MsgGUID: o20MG1thQXefVmEwa2RPsA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="12254670"
+X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
+   d="scan'208";a="12254670"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 01:44:48 -0700
+X-CSE-ConnectionGUID: BgHB9OXNTTuQmQKksKOsMA==
+X-CSE-MsgGUID: 5n+Nsn7xTOm2ucEeO+W19w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
+   d="scan'208";a="44003056"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 26 Jun 2024 01:44:48 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Wed, 26 Jun 2024 01:44:47 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Wed, 26 Jun 2024 01:44:47 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.44) by
+ edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 26 Jun 2024 01:44:47 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mDkl2fkJ0b2QbXvsb50iJ0JOSLbKteAkaudNANG3afGFyQVEjh1f9/syjwGWtnbDDR/549Sq/fyyt3ohuWUFgb6pwQrsiv1UdKfmJ2WjXS9tLpowNN2U8u02C3dSb1DgRuIZ4IMDofuAz2kR0rSQ3xVjx0K5SfA0V7lP2AXtK7esfXKVeI92SZGWbOlvlYTBf9D4+opNgnoPtO0Aczi4+wBL8g5t3uli58JfErxd0mS+XhxNyc00Kwr3bPYt6GJL02Q0QhiHPKITHT43i5sEluIcByUqqTRk/dkaTjopgNRrBEgc2l+TUHCAIfrB07a9WLk+H+aRDXv+6yI2pdoOGA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CbyjpuSdv2N3bVv395OHEForF1fOvyp6VVbUdDLuDBE=;
+ b=GffZnd8EeC02f8Ui2KtdDKeJwR73k+MRlxIgyQHpeCzsbB5DsqyUUF6VUAX/F6GiK6XtumHRyFbEu6tERJ/tvrto9K+eIt9PO8nSmDFBvYRrXpyJ+Zrg7RTKIDoC1DD/kTle/Y0T6G09LxDFdpUpXhWSlXnda6qTnxI0czBvHa9tOKRFeGNiYXJALdvOwuLLx3j169W1XTkK5zuLKWb6ormBf5xgJW/5RjEJvxrzTvtTTB7G1uTzlKqOtKgSpP6iv3P+v537Lhe1IJgQ2imJK0kP5iOyjY3EDZfgIhn6eoeBDdTGTL7MgQ58DVVMzZjioOd9lU/QpGAWquUZ/DnoYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CY5PR11MB6366.namprd11.prod.outlook.com (2603:10b6:930:3a::8)
+ by SJ0PR11MB8294.namprd11.prod.outlook.com (2603:10b6:a03:478::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.32; Wed, 26 Jun
+ 2024 08:44:45 +0000
+Received: from CY5PR11MB6366.namprd11.prod.outlook.com
+ ([fe80::6826:6928:9e6:d778]) by CY5PR11MB6366.namprd11.prod.outlook.com
+ ([fe80::6826:6928:9e6:d778%7]) with mapi id 15.20.7698.025; Wed, 26 Jun 2024
+ 08:44:45 +0000
+Date: Wed, 26 Jun 2024 09:44:37 +0100
+From: "Cabiddu, Giovanni" <giovanni.cabiddu@intel.com>
+To: kernel test robot <lkp@intel.com>
+CC: Xin Zeng <xin.zeng@intel.com>, <oe-kbuild-all@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, Alex Williamson <alex.williamson@redhat.com>,
+	Yahui Cao <yahui.cao@intel.com>, Kevin Tian <kevin.tian@intel.com>, "Herbert
+ Xu" <herbert@gondor.apana.org.au>
+Subject: Re: ERROR: modpost: "qat_vfmig_suspend"
+ [drivers/vfio/pci/qat/qat_vfio_pci.ko] undefined!
+Message-ID: <ZnvU9bTsh6CUMYO7@gcabiddu-mobl.ger.corp.intel.com>
+References: <202406220635.PsQbyfY9-lkp@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <202406220635.PsQbyfY9-lkp@intel.com>
+Organization: Intel Research and Development Ireland Ltd - Co. Reg. #308263 -
+ Collinstown Industrial Park, Leixlip, County Kildare - Ireland
+X-ClientProxiedBy: DUZPR01CA0205.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:4b6::18) To CY5PR11MB6366.namprd11.prod.outlook.com
+ (2603:10b6:930:3a::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR11MB6366:EE_|SJ0PR11MB8294:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3b0a7343-e4e6-4bd4-5ea6-08dc95bc3ac3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230038|376012|366014|1800799022;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?iBi1OA/z+4qvtq8QzeYorIlABYs1tTqOR0+z6jxhiCqPT1sNE9TeKjbLtMrQ?=
+ =?us-ascii?Q?J/fRS/rBKTkRJixM0Y7oLw3uqwZb88lMJ2LrZJ9mnCfUnlhNQDWbgIJUybS0?=
+ =?us-ascii?Q?eUA/T/U26t0wtxwI23CLPqxeDrTQdi70knHrKcHTmXKfstJAEM8hlkLcR2qW?=
+ =?us-ascii?Q?H+GpPTRAG3azoEkSbAzd6FoX2wFGOCgXw+FZMaMg0huIKfsmL4419WMasqcP?=
+ =?us-ascii?Q?DwsnsgH/e3CgcGT9A1xT+rsdMuJOaLehSilPVWIaSyqBywAWiK/LLbzv5xFk?=
+ =?us-ascii?Q?mBD75HTncPU+ON/q7dEVBBy6tqClyFpvejjQKZJr8rQvdVP5424Z+K6LDIFq?=
+ =?us-ascii?Q?hykxCkcXogiOEGA18W/qpuc8BtKU2WCW17LN6tTZlRZJKtW+B43TcGSAKbi1?=
+ =?us-ascii?Q?jnn+UHoYkc148eLGevzLySUihXxWdvTZa2PeJMz2PFU/sngAOitBujBOFLyo?=
+ =?us-ascii?Q?t3p2ukKvroMOVTaAFEyO9QVSdI/ppMpaaut76AMnI1Pd0DTzFU3EVsiSyYkX?=
+ =?us-ascii?Q?i+e2Taxqfx15qqWHGlO7fnEHnPLEauuq4IKhajSUEjYe/EmqmCDhMf4BsmA2?=
+ =?us-ascii?Q?Gtr6R+pjkjsF9NdsjyjJmY6ioEJpOYEQxlMKnuc/i654t1/7elt6G5eoqR4t?=
+ =?us-ascii?Q?9kIM/+ZiI2kb1ozO8H984mGV7w03LVX7HjfDX6+3ZuPHiH5JLApFH6t+x4c5?=
+ =?us-ascii?Q?jNVZkVqTpV2mz8KfWtkd0V8y9xffBZdYA7mdx/ZZu0G3ZCLTNDYqBBBIk52L?=
+ =?us-ascii?Q?FKXdEvt6OSsoQAVKPz19WQEBtxb64mZHKaJAtbT9unn8vNPKuh8/TuL8tPYC?=
+ =?us-ascii?Q?eCgxJzOW6bxycwnfdoPvxTVNJRlXL9S+tel0J2gZBOCqIgzKmmryJzivi00Z?=
+ =?us-ascii?Q?TWR03n2CkLGPpZ/TsV4HSQxwxmNHyXFiicXZIBdeZ0o3Xars3h6fZomzeQRk?=
+ =?us-ascii?Q?W9ib+5F/cSjK1nETxLAQldBPTEzXqzu8EHhjWm7O+3M0Q9WNFy9p8a2Tqwdq?=
+ =?us-ascii?Q?BSrcEKEGKcIN3Jok/FEy79J4oro2/3Vi3mPl4grPIhk8tOySymGJ7UecJ+VS?=
+ =?us-ascii?Q?I/dpNa+vVRBt6Tdwelo70O4ifMuXd9LAnNBSUPpm3PNKZ7VN7SjYnD6pv6X1?=
+ =?us-ascii?Q?nf1bdZKcwu+aZ0CKPPftJi3wW1J88eqh2hMVQ15oL8uIhx6lpsIbQr3ZE8GP?=
+ =?us-ascii?Q?a3ukQTT9UzE35Odh8ny02grq9k6YKqliGKbZDrYzaM2miAEUr6we9rikTfA3?=
+ =?us-ascii?Q?4ZAwyDnpcJFYJ/J0QgBOh1M0Zhc33waWmaUjB9XJxyjsSAZ8wKHiPTf/cNc5?=
+ =?us-ascii?Q?GwGGtES3ETpXOFlGn8O0P94A?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6366.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230038)(376012)(366014)(1800799022);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?YfPsAxNeMD4eWiazW681Psm883uFrIY54JEDJ41vyXZvrbmRK041tjHMe9AT?=
+ =?us-ascii?Q?dxPoLZMSyKWI9ZgfyJeygsptSoNHxZfiJnFVoDtwY82fnJqIJDIVFfYUe/PZ?=
+ =?us-ascii?Q?WT+ZWkUZXaRMUKPh+SenWw8wR1e7GLd8hfUlK72bb64dI3OH4ctUdKvoCdI1?=
+ =?us-ascii?Q?P/ElG2m6u/D0Z8e4+lr80NkG98nUahRgZVt1uZRJRarXviIIX9F7bUbhNt30?=
+ =?us-ascii?Q?OOJDHWHIygUWpwWH+yo0sOI4VV13m6Sfe+LQfvLmPOhylEQHFJxIJbqEhnmF?=
+ =?us-ascii?Q?lWLhyQQYTAaqoYgKAtFyzGf+cZscNUcbgJfzcAI1Sv+FgoKqD7kqyScpXa47?=
+ =?us-ascii?Q?ohnBTvrJqDAEBvO9qYy0P7+yCyoAh05Ni9oq6y/7uatduWwEXrK8zrP+t1L4?=
+ =?us-ascii?Q?ucsbKJ3uBI34n01AIj3KC7hRkIGHDjzqGq167wWqVBk6ttRdkAA5y7oh9Wva?=
+ =?us-ascii?Q?QNe7buABBiPi+qHg+/XPc2Pgdfijq5l9TioX5ZoCy3oU0VXDtqjNEewC2z/Z?=
+ =?us-ascii?Q?6cm6ScVOSV8jVrNDjoZlhpnhKU15OgSeqwMlKxjAetSQ4HSn0wH3xejS6gsy?=
+ =?us-ascii?Q?n4kG/UmTN2j38uPZ87R2/Jbdz/ABf0b8LeqiqvdIHN9yooTz0O9m3jlGTZvg?=
+ =?us-ascii?Q?nQqpTzexOGmOv1TqdrC+Ivz6xg/bu1OqHgXXP4tn2qjaeN5CnZjhlMqXxq9a?=
+ =?us-ascii?Q?Xboh4ECexkqBcHMQsHJlq88RYmMwd0X/aatFuLoCvcwFADmPQaXxyzhEshwK?=
+ =?us-ascii?Q?BrtUbU3bpf4sUCZ0aht5J2ftHg0hBzhHW+3TPMdA6sBPhxrgmVwribRhIHbh?=
+ =?us-ascii?Q?KwEca5QO7x4NY6WrRrPAWxHJ1RpcoYDXQJxTUt8AhUaD4iXcvDnTxNEtD2CD?=
+ =?us-ascii?Q?+cumlR5oE4q+LYIWOWE9otop6s0HOFQkbu5sfFrZojroPJDluTLzZnN5sa9+?=
+ =?us-ascii?Q?kDeqHwQMWRKyY17rbQJDpPpmpD2NeuEDAb2OEou63lmnwuEQEmHLUuLJc33d?=
+ =?us-ascii?Q?IFso04RJUiXbAhtQ/j/9uXTbYjbOULt9TZm+Sxc5wfz9tTxH2nz/sZu0rtKT?=
+ =?us-ascii?Q?Y3m6aYrY+3jtFjRbxeZI99OLBaGgL0Aefx02qzFzODx2alqJ9ygX9AdIupdA?=
+ =?us-ascii?Q?YdblcvOGZq1WQyXNu39RtUslbFLDmpjXI0cawIHNxxv/SRYbrHSF7nspL5Vu?=
+ =?us-ascii?Q?wGQ2HqnlATzO+kAPdYLAZAe9rKfU/H7Cz59DBbtdaq2wP+k+PtO9kT8XugZo?=
+ =?us-ascii?Q?+PftCLMdQTSuthmVfpjl/JMzl4KqRPY50vCD0zwRjnYi4Fr5Egwuml07RHQ1?=
+ =?us-ascii?Q?mXQ3tS8etb30g1crkx0dD/nMKAQh3WTpK3lxaXdvlmgEhB8mJ7On+Iiir2Ri?=
+ =?us-ascii?Q?6Rlz5hfBc7gsC88ISqofC68hHMygqbZr/veR1foOthlPSSpPFo3l4hm1jBF4?=
+ =?us-ascii?Q?IQW/vjOjS7AqmJ0pNE5tlVz6WWxWxnphEqCOuMql+H7wxd9JSe1pntuN6XLD?=
+ =?us-ascii?Q?BYHBHyebzeAfi2d9t4sCxTyRzX7o4cXvorXTMa2qkG9E5ldN+qbBb6QrQ78K?=
+ =?us-ascii?Q?tK1dwpKXQUVfU+I51t0wwsCX9vUI9JlfQz+J3YB+MvL4TpTRj5R6Zk/x7S0y?=
+ =?us-ascii?Q?Dw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b0a7343-e4e6-4bd4-5ea6-08dc95bc3ac3
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6366.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2024 08:44:45.3096
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: t/0CmLCT6gtQVvcJn4UEwkDeJaTioriF4iJ2h1/vLmA0uuTCq7K1POrw9fV1dltdO7xQyYAnZPjZ3l6zcsN1h/c2xHOLvmHeLaoRCV+Ox/Q=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB8294
+X-OriginatorOrg: intel.com
 
-Since this function is supposed to return boost_enabled which is anyway
-a bool type make sure that it's return value is also marked as bool.
-This helps maintain better consistency in data types being used.
+On Sat, Jun 22, 2024 at 06:39:23AM +0800, kernel test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   35bb670d65fc0f80c62383ab4f2544cec85ac57a
+> commit: bb208810b1abf1c84870cfbe1cc9cf1a1d35c607 vfio/qat: Add vfio_pci driver for Intel QAT SR-IOV VF devices
+> date:   8 weeks ago
+> config: x86_64-randconfig-076-20240622 (https://download.01.org/0day-ci/archive/20240622/202406220635.PsQbyfY9-lkp@intel.com/config)
+> compiler: gcc-10 (Ubuntu 10.5.0-1ubuntu1) 10.5.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240622/202406220635.PsQbyfY9-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202406220635.PsQbyfY9-lkp@intel.com/
+...
+> >> ERROR: modpost: "qat_vfmig_suspend" [drivers/vfio/pci/qat/qat_vfio_pci.ko] undefined!
+> >> ERROR: modpost: "qat_vfmig_load_state" [drivers/vfio/pci/qat/qat_vfio_pci.ko] undefined!
+> >> ERROR: modpost: "qat_vfmig_reset" [drivers/vfio/pci/qat/qat_vfio_pci.ko] undefined!
+> >> ERROR: modpost: "qat_vfmig_save_setup" [drivers/vfio/pci/qat/qat_vfio_pci.ko] undefined!
+> >> ERROR: modpost: "qat_vfmig_destroy" [drivers/vfio/pci/qat/qat_vfio_pci.ko] undefined!
+> >> ERROR: modpost: "qat_vfmig_close" [drivers/vfio/pci/qat/qat_vfio_pci.ko] undefined!
+> >> ERROR: modpost: "qat_vfmig_cleanup" [drivers/vfio/pci/qat/qat_vfio_pci.ko] undefined!
+> >> ERROR: modpost: "qat_vfmig_load_setup" [drivers/vfio/pci/qat/qat_vfio_pci.ko] undefined!
+> >> ERROR: modpost: "qat_vfmig_open" [drivers/vfio/pci/qat/qat_vfio_pci.ko] undefined!
+> >> ERROR: modpost: "qat_vfmig_resume" [drivers/vfio/pci/qat/qat_vfio_pci.ko] undefined!
+> WARNING: modpost: suppressed 1 unresolved symbol warnings because there were too many)
+A fix for this this has been already merged into Herbert's stable tree [1].
 
-Signed-off-by: Dhruva Gole <d-gole@ti.com>
----
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git/commit/?id=a5d8922ab2aec39336ebc78d7cefe3b84647b058
 
-No functional changes, just noticed this as I was reviewing the patch,
-"cpufreq: Allow drivers to advertise boost enabled"
+Regards,
 
- drivers/cpufreq/cpufreq.c | 2 +-
- include/linux/cpufreq.h   | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index e678ea7b0891..5704036f294a 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -2874,7 +2874,7 @@ int cpufreq_enable_boost_support(void)
- }
- EXPORT_SYMBOL_GPL(cpufreq_enable_boost_support);
- 
--int cpufreq_boost_enabled(void)
-+bool cpufreq_boost_enabled(void)
- {
- 	return cpufreq_driver->boost_enabled;
- }
-diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
-index 20f7e98ee8af..523f81b7e2aa 100644
---- a/include/linux/cpufreq.h
-+++ b/include/linux/cpufreq.h
-@@ -785,7 +785,7 @@ ssize_t cpufreq_show_cpus(const struct cpumask *mask, char *buf);
- 
- #ifdef CONFIG_CPU_FREQ
- int cpufreq_boost_trigger_state(int state);
--int cpufreq_boost_enabled(void);
-+bool cpufreq_boost_enabled(void);
- int cpufreq_enable_boost_support(void);
- bool policy_has_boost_freq(struct cpufreq_policy *policy);
- 
-@@ -1164,7 +1164,7 @@ static inline int cpufreq_boost_trigger_state(int state)
- {
- 	return 0;
- }
--static inline int cpufreq_boost_enabled(void)
-+static inline bool cpufreq_boost_enabled(void)
- {
- 	return 0;
- }
-
-base-commit: 0fc4bfab2cd45f9acb86c4f04b5191e114e901ed
 -- 
-2.34.1
-
+Giovanni
