@@ -1,106 +1,186 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDCE181CE2;
-	Wed, 26 Jun 2024 13:08:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221DE185E65
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 13:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719407286; cv=none; b=VPKYUbykOVPVsYfUoWrRwC348cOaEckICk8lALOsxuCuZfBdU67loR8cprVW3tUwqcGUQvwupd9sowZCQUfDhnesg+xZtm/iwKsECFNDhzrXV0kBpeb4NN1oidwPH+qJIRh873OMh3dRwmRBFRMwfxeYrzkSRaxBEZED+ByPhsI=
+	t=1719407302; cv=none; b=aEnWJH6ED4n5bA2QC5dacMsit6Xy4xyLve5wOVpgDD8l9reB/NLqgVPxGQcA8Om01UbD8REYFj5fbn6vkiW850oHUfRjbPysuoj9xkfnMuAR80pFzZHZ0uJV08ZDjKsXu1q26Gi7aK6AM/Da4ujLBLPF+DRx98z2E4I4TrME15I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719407286; c=relaxed/simple;
-	bh=ZUstgPHjqY5JKrpO42mF1d8ks4hIOJMdPpqtfyuce0M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uk/N8wbid6HZYXVJwAhesOO2G7tl9uvD5Kby+5kAiJcihhpzaN51ATuCU7dTWJe/wTMZoDn84FRcQVzgHETZJYaF3vCE80rjXJ69Yk2Pn53Dd3LjlOAZdx+Gb4Anjf3YjvYkuP+czFswnHL80z+iyNgcD5JlTqF2VtKcOYElPag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Q+lxx89s; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1719407302; c=relaxed/simple;
+	bh=73KR6Ej2ApKphd24Pl1eiILZBGG1dwgteOBL5XjDHQQ=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Cq4q3KCJhU7b2GrYwGoh/HCiGe9fv/yz4HpXUjKh/m1lGW0826GvSD2ElbaiZIZQKys5pp4+1VVRwFFxyTRQff+HUe7/Gqf6ETov8Ht4oyTLTa1R93MGVJ8gnhtjsncaDw+NwAxn/SGmqc6ilcR85XGjV6ZfCg2ixK5u2qM7sfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nSou/nZk; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q+lxx89s"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=knQaeXO173yNERHjz9A2B7L+swNnkd1yL7SOMfdvQbk=; b=Q+lxx89shR6NswOm8DcLjEt1mK
-	q+PMv7YoReu/vv6rt9uHWin8jyeaY/Qafqh2km/D5v90YoL9m2oQrz8xFSuDu5EQvMgx6Y7F4gdPd
-	LZe4FdXtdmTGSFvdEi1Vh4wSfMo29FMfU3bmd8oKPmd1Fko/sr/73xD2ISFVfyUTiWPo5s63AsWv/
-	RjrsJ6YBhBydPT6t/y3zISRp8mV4kFImTMy6fiJ9ynMEk9A6jPgtMaQKiq4mjNEHyne0IVl6seqGh
-	ftsIqwoz00WzLfrMmIF4sRdZKBRvkCFrold2zk6zmm8IQ+DUMAKF0B5/xWLYv7M7RLS2eb1bO8ZqJ
-	7/v1infQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sMSNT-0000000CL0V-0N0h;
-	Wed, 26 Jun 2024 13:07:59 +0000
-Date: Wed, 26 Jun 2024 14:07:58 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org, maple-tree@lists.infradead.org
-Subject: Re: [PATCH v2 2/5] rosebush: Add new data structure
-Message-ID: <ZnwSrjqHmOzSjShI@casper.infradead.org>
-References: <20240625211803.2750563-1-willy@infradead.org>
- <20240625211803.2750563-3-willy@infradead.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nSou/nZk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719407301; x=1750943301;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=73KR6Ej2ApKphd24Pl1eiILZBGG1dwgteOBL5XjDHQQ=;
+  b=nSou/nZk+omaZ6Dkb+onCkNlW5E9N5AERKGHleUfDxk9Dj1rciQ2WxCN
+   sUApuEW/OY/VmQga+pclAVTjPt+WYLcH1MDLzxvN7KEBbNnzh1iWcVzK3
+   603NoOnubRHUf/UUBkfgPmaoXpswVFVPKflRDZjKZbIEcq69p7ZOqufjj
+   S9UTt2BkuYWeaAGJIz65Ntx4RDZ4EYi6fHvz0vC79a7sYpOwIeOfINFsz
+   8lCUZj61RuyH0N/QzpwLXXAxjoO+V4+n4RPCzDmQUOpr7z9x/JLlq8ERt
+   eee7u6jo/BWxUc3Apo2s+xoq69qELSyaTtqkkbkwpRR7ubsMAenDP0Puw
+   Q==;
+X-CSE-ConnectionGUID: SZwj56mYQRu6SV15SN9frQ==
+X-CSE-MsgGUID: hqUiaRUbR9iHIEglytkslA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="16356320"
+X-IronPort-AV: E=Sophos;i="6.08,267,1712646000"; 
+   d="scan'208";a="16356320"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 06:05:12 -0700
+X-CSE-ConnectionGUID: np6vIdDzSbetGwSXRpzCEQ==
+X-CSE-MsgGUID: e9ivyvPHR/mafUNCCf65OA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,267,1712646000"; 
+   d="scan'208";a="48445013"
+Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.125.248.220]) ([10.125.248.220])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 06:05:10 -0700
+Message-ID: <e3888b78-c787-4a2d-bd43-7dcddc2b5bb9@linux.intel.com>
+Date: Wed, 26 Jun 2024 21:05:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240625211803.2750563-3-willy@infradead.org>
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, "iommu@lists.linux.dev"
+ <iommu@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iommu/vt-d: Refactor PCI PRI enabling/disabling callbacks
+To: "Tian, Kevin" <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>
+References: <20240606034019.42795-1-baolu.lu@linux.intel.com>
+ <BN9PR11MB5276E8767AB63378C81130528CD62@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <BN9PR11MB5276E8767AB63378C81130528CD62@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 25, 2024 at 10:17:57PM +0100, Matthew Wilcox (Oracle) wrote:
-> Rosebush is a resizing hash table.  See
-> Docuemntation/core-api/rosebush.rst for details.
+On 2024/6/26 14:53, Tian, Kevin wrote:
+>> From: Lu Baolu <baolu.lu@linux.intel.com>
+>> Sent: Thursday, June 6, 2024 11:40 AM
+>>
+>> +/*
+>> + * Invalidate the caches for a present-to-present change in a context
+>> + * table entry according to the Spec 6.5.3.3 (Guidance to Software for
+>> + * Invalidations).
+>> + *
+>> + * Since context entry is not encoded by domain-id when operating in
+>> + * scalable-mode (refer Section 6.2.1), this performs coarser
+>> + * invalidation than the domain-selective granularity requested.
+>> + */
+>> +static void invalidate_present_context_change(struct device_domain_info
+>> *info)
+>> +{
+>> +	struct intel_iommu *iommu = info->iommu;
+>> +
+>> +	iommu->flush.flush_context(iommu, 0, 0, 0,
+>> DMA_CCMD_GLOBAL_INVL);
+>> +	if (sm_supported(iommu))
+>> +		qi_flush_pasid_cache(iommu, 0, QI_PC_GLOBAL, 0);
+>> +	iommu->flush.flush_iotlb(iommu, 0, 0, 0, DMA_TLB_GLOBAL_FLUSH);
+>> +	__iommu_flush_dev_iotlb(info, 0, MAX_AGAW_PFN_WIDTH);
+>> +}
+>> +
+> 
+> this invalidates the entire cache/iotlb for all devices behind this
+> iommu just due to a PRI enable/disable operation on a single
+> device.
+> 
+> No that's way too much. If there is a burden to identify all active
+> DIDs used by this device then pay it and penalize only that device.
 
-I thought I had more debugging enabled than I actually did, and
-there's some unbalanced RCU locking.  I'll fold this fix in:
+You are right. We should not simplify the flow like this.
 
-diff --git a/lib/rosebush.c b/lib/rosebush.c
-index 47106a04d11d..ab2d314cecec 100644
---- a/lib/rosebush.c
-+++ b/lib/rosebush.c
-@@ -305,13 +305,14 @@ static int rbh_split_bucket(struct rbh *rbh, struct rbh_bucket *bucket,
- 	rcu_read_unlock();
- 
- 	/* XXX: use slab */
-+	err = -ENOMEM;
- 	buckets[0] = kmalloc(sizeof(*bucket), GFP_KERNEL);
- 	if (!buckets[0])
--		return -ENOMEM;
-+		goto nomem;
- 	buckets[1] = kmalloc(sizeof(*bucket), GFP_KERNEL);
- 	if (!buckets[1]) {
- 		kfree(buckets[0]);
--		return -ENOMEM;
-+		goto nomem;
- 	}
- 
- //printk("%s: adding buckets %p %p for hash %d\n", __func__, buckets[0], buckets[1], hash);
-@@ -320,6 +321,8 @@ static int rbh_split_bucket(struct rbh *rbh, struct rbh_bucket *bucket,
- 	table = (struct rbh_table *)(tagged & (tagged + 1));
- 	mask = tagged - (unsigned long)table;
- 	hash &= mask;
-+
-+	err = 0;
- 	if (rbh_dereference_protected(table->buckets[hash], rbh) != bucket)
- 		goto free;
- 
-@@ -354,14 +357,17 @@ static int rbh_split_bucket(struct rbh *rbh, struct rbh_bucket *bucket,
- 	rbh_resize_unlock(rbh);
- 	kvfree_rcu_mightsleep(bucket);
- 
-+	rcu_read_lock();
- 	return 0;
- free:
- 	rbh_resize_unlock(rbh);
- //printk("%s: freeing bucket %p\n", __func__, bucket);
--	kfree(buckets[0]);
- 	kfree(buckets[1]);
-+nomem:
-+	kfree(buckets[0]);
- 
--	return 0;
-+	rcu_read_lock();
-+	return err;
- }
- 
- static int __rbh_insert(struct rbh *rbh, u32 hash, void *p)
+> 
+> btw in concept PRI will not be enabled/disabled when there are
+> PASIDs of this device being actively attached. So at this point
+> there should only be RID with attached domain then we only
+> need to find that DID out and use it to invalidate related caches.
+
+The assumption of "PRI will not be enabled/disabled when there are
+PASIDs of this device being actively attached" is not always correct.
+Both the pasid domain attachment and PRI are controlled by the device
+driver and there is no order rules for the drivers.
+
+For example, the idxd driver attaches the default domain to a PASID and
+use it for kernel ENQCMD and use other PASIDs for SVA usage.
+
+I am considering working out a generic helper to handle caches after
+change to a context entry what was present. How do you like below code
+(compiled but not tested)?
+
+/*
+  * Cache invalidations after change in a context table entry that was 
+present
+  * according to the Spec 6.5.3.3 (Guidance to Software for 
+Invalidations). If
+  * IOMMU is in scalable mode and all PASID table entries of the device were
+  * non-present, set affect_domains to true. Otherwise, false.
+  */
+void intel_context_flush_present(struct device_domain_info *info,
+				 struct context_entry *context,
+				 bool affect_domains)
+{
+	struct intel_iommu *iommu = info->iommu;
+	u16 did = context_domain_id(context);
+	struct pasid_entry *pte;
+	int i;
+
+	assert_spin_locked(&iommu->lock);
+
+	/*
+	 * Device-selective context-cache invalidation. The Domain-ID field
+	 * of the Context-cache Invalidate Descriptor is ignored by hardware
+	 * when operating in scalable mode. Therefore the @did value doesn't
+	 * matter in scalable mode.
+	 */
+	iommu->flush.flush_context(iommu, did, PCI_DEVID(info->bus, info->devfn),
+				   DMA_CCMD_MASK_NOBIT, DMA_CCMD_DEVICE_INVL);
+
+	/*
+	 * For legacy mode:
+	 * - Domain-selective IOTLB invalidation
+	 * - Global Device-TLB invalidation to all affected functions
+	 */
+	if (!sm_supported(iommu)) {
+		iommu->flush.flush_iotlb(iommu, did, 0, 0, DMA_TLB_DSI_FLUSH);
+		__iommu_flush_dev_iotlb(info, 0, MAX_AGAW_PFN_WIDTH);
+
+		return;
+	}
+
+	/*
+	 * For scalable mode:
+	 * - Domain-selective PASID-cache invalidation to affected domains
+	 * - Domain-selective IOTLB invalidation to affected domains
+	 * - Global Device-TLB invalidation to affected functions
+	 */
+	if (affect_domains) {
+		for (i = 0; i < info->pasid_table->max_pasid; i++) {
+			pte = intel_pasid_get_entry(info->dev, i);
+			if (!pte || !pasid_pte_is_present(pte))
+				continue;
+
+			did = pasid_get_domain_id(pte);
+			qi_flush_pasid_cache(iommu, did, QI_PC_ALL_PASIDS, 0);
+			iommu->flush.flush_iotlb(iommu, did, 0, 0, DMA_TLB_DSI_FLUSH);
+		}
+	}
+
+	__iommu_flush_dev_iotlb(info, 0, MAX_AGAW_PFN_WIDTH);
+}
+
+Best regards,
+baolu
