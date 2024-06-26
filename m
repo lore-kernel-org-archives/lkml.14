@@ -1,111 +1,152 @@
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD911E51F
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 13:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1BB1E51F;
+	Wed, 26 Jun 2024 13:24:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719408153; cv=none; b=WKiIrYBEOt9nSVZEplgmjQDE1FzU4p97plDpvihOnakm/zHYtGtY70ykKK6PZJoo5wykoL6xJ9YNi4aWFGow7SxU4XXlwHWWn/qYTwaeeNqPxHwT0myBL2AGhhF1EyoMa/elfwaul3Ijy/cqLQEsZn9NO+1dgz04nMd2sGmcPUs=
+	t=1719408269; cv=none; b=ZO2gDOj7RGPgvzYZPhfQzvxxY7d5bj1hB0ZNGQTkX2UiLHDx4BJTIv8BJQ5xEXxWudlZr9ejrQtwCdWrhlPKBy2IEz+Af1XVdXkJYbyApce+h5JqZxIwKvCQDurEujRuURVReayLUzF+EGlQMy7IvzVIZhB8KCm9opfytYEOB6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719408153; c=relaxed/simple;
-	bh=XxBobdsohKtbbp+VDP9sBXJLs9uMbEUbONhmhgK7pq4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P5LPy7Dj8Wkrgdp/pjD69JOWBKd0xeXMjlpVBcBCzXVm69XH93DbSRr1bWfv99Lkc698M59qLZw+g4jMGgg9M8BsbwAXuDXqB2Mv2crj0BB7+AoyygIqOstft9dgJb7U96IwYM/dDzZO32YAN1g4cG7Pb8QgHyeordyxOT/297M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=MkABVdL6; arc=none smtp.client-ip=209.85.210.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1719408269; c=relaxed/simple;
+	bh=jQ2TN6oLIfbGe9ZASxWBipgw5mEcx0wqxbmo17h+xJg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lWM3xAZojfmUbLf4q2w4JMqQ5hEPE4Xd+s6zHWdvWMRN5EOO+SX5tPontnz1fp3nVm5f2/LXPwJ078orWsbf8TRqk500Mq8204fbLZFeiPixQVNn8MecsijcID0QYTPt+u00TeWa2sXGDLDvVRkHGZG5V4mkMcwqyv6uvgRiVDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y4oCauRW; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="MkABVdL6"
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-700cc388839so954305a34.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 06:22:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y4oCauRW"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1f9b52ef481so54610195ad.1;
+        Wed, 26 Jun 2024 06:24:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1719408151; x=1720012951; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=I5xewZHY2oJYxuRQNOBT5mZfboUik/lCsriRBhVol24=;
-        b=MkABVdL6PzsU5MPCrZFzZFCczVjW1kUU2yObpmVSqXL8Xz0lfIhZvyXnvgWZHSlfDq
-         Bd7cnz0GMGG2yRO05qkcnnGOLa67jjxn8WntvfOKOE1QnS02ClVmjobWGt3sDpLhWqhb
-         ZOB2W0E7tGQjrr7XnVlbWkNJvRaNPD9QuqvdHkgeYAM2efmsk92ZvP2exj/XmhHzp2h4
-         eDOYuLlQOvO5KDoQgPVR2eCfcksG5B+LUZAPm+UDCJqQFnSATipors1djcA0e8M0qa6Q
-         mB2w5nVmQKCoz3EraLt3k0wP2NfIuSFwduNUWlKm/mjIgszBjrPaQ2QKPm+p1bCT/7T/
-         BzFw==
+        d=gmail.com; s=20230601; t=1719408267; x=1720013067; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=bLAtvvsYw1jar8biIujMee7AuEZKGq0togFn4n6p6bg=;
+        b=Y4oCauRWiLohbkfXUdUCNhp5MjcdQo95zlNej9KTs7BFF1VUpbgdAi6el3LSQYEE/Q
+         KucCUSyh5pbhiQNF6B1Zj4cGon9Pj1SA0xukeST35wJIskJw1w8m9YmwzZsMS4svhvht
+         pVn2a7zIkkwV3xG+SrrN9oJ0mHpTFKXmxBgIaci8DPz5gvo8tNP7cRaPAca90BlFuSyR
+         NdUYM1mRTm4CCvtxwmeKW9wIjjV26W93pdkPM8vH5KhFXe2ztAsP3x5g9mmXpc+rOFXM
+         4KulL/uzhjNabmhNIOIRH+5xfewYZ50pQiofspNif/N7wuVQh+UtK8mDHwYci6FV3kz7
+         1T9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719408151; x=1720012951;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1719408267; x=1720013067;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I5xewZHY2oJYxuRQNOBT5mZfboUik/lCsriRBhVol24=;
-        b=BzRgn1Jygarzgts7+ZP2yZ9lA5Nq/byvVwHCeQSyy0XTq09IANTJRYklNh0XC7LBPd
-         nWCOwIWO2siKd45LRgKQvm+/fNmzSH2BdN10WSjZKDA2vqj2XKAOrUYvHGdUBqOuptz1
-         J6kMNwk1FXJVpBAovG9SxC0tXB4SAahBAphorLZoVoy+Cr7lMnR1MMpdVy7mO2ihldP9
-         TWn7ED8bVKD9LRmsryRON2/+8Nv/fxUYIPc3zZWKg3nDFhgeZdxt6AKO31hUrbR0p4sx
-         V//KBOfN+q0bQ3JXCCRwK+q1Z+oQXto9n4+wdxe3j1/BaA66UltJYnCbAClfafZEPPoK
-         y+5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVJyQf2Rco9nCk7R3WzyHq81oJDaCz37kWT1OzgCyWJVt84lV2cs1dMSVw0N261iEhnq25t3uRXAayIAQ5tQdtkz2Za8FUuqEe8KE7r
-X-Gm-Message-State: AOJu0YxpVH2l+9hrUattjPqm0elQceIrkCl8JC6l9+hhtwEiitWOX2i/
-	ckDe6GxM13sK7V744q7w2hwmEWNKeF9oiFJ7r4QDsRBBbDwtIsDIIMtWTsY8PDg=
-X-Google-Smtp-Source: AGHT+IFQ7TQc949+gnCiGt+D4TzmOQ0Ckn0QWBw98q32b0sD5xDjYU5NsCtAsd0KDekGkzXy4fWwFw==
-X-Received: by 2002:a05:6830:1d46:b0:700:ab11:86c8 with SMTP id 46e09a7af769-700af98902emr11454041a34.22.1719408150773;
-        Wed, 26 Jun 2024 06:22:30 -0700 (PDT)
-Received: from [100.64.0.1] ([147.124.94.167])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-700d369f8adsm118762a34.48.2024.06.26.06.22.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Jun 2024 06:22:30 -0700 (PDT)
-Message-ID: <6f5c1de2-42da-46be-9af1-9b293e4ac3e5@sifive.com>
-Date: Wed, 26 Jun 2024 08:22:28 -0500
+        bh=bLAtvvsYw1jar8biIujMee7AuEZKGq0togFn4n6p6bg=;
+        b=pQuTBFsYe0xOdtBnsYLop35caLTmxkjurW5Pk1rABRgWxVF1cbfhHVezWh4JGdSUqg
+         egKEivIvbv4imcKRxx0p+odV6rX4LlIYljaAzqDatptj/wtAx8CK5ARTsXcP5gH0SfIl
+         w3RBuY6SruPyeaP7J/IepuodgI6DK8Rs9Q5zVR7Yo0J9rapNxzXu/I8qoa+lcFpVbyot
+         SkH+xnlhOYuhvx8fw09f4taFqkgeJWjfLqduCXQzACSxzh88Pw7hnemVZCqkBExQB/60
+         WJMbRW1oGFDNZoZ3sRDj/jMFHsNdNrBf8zrVCdKFyFH0vZkn2U8a6RmoK9VQZ3E4cul6
+         Y+Pw==
+X-Forwarded-Encrypted: i=1; AJvYcCXkvN3zns3lj9MfG/uDvXF4EQRdRvsTFk1s7rQJMUgHPclEhi9u3adQJp3TCD/uI2gjdNv/u4P/V82uvuOAvYpJb2y5UhDxnevk/GnV6ipGIhkspuXyan93QxjKff9Yx5JFoXVBQP50HWDHvtVTuh6bsJzrVDGCoomS812p196UVhLamJvniBdwbPIxWUC+BcFVNdaM3isj4wUW6wZHa4FvFDlJGa67zCh9a0GpcNRYHD2jS+s28D+3aQ==
+X-Gm-Message-State: AOJu0Yw3L3YNKXauPJlxi23MnPrAQuNsZ6fJsZqPLGn4qe32XFIdlgnK
+	4haebOv8FFD3KClOykZ5n0OOLLjbalzRjga5RFN/J2eWhKNd1vj7
+X-Google-Smtp-Source: AGHT+IHgyOORbCN2R5XDtWhRTSrn+ht2d38zXOnrDqPLV2TOIQjmmMg+Vm9SwTXZGIZ+iNTTrFAUAQ==
+X-Received: by 2002:a17:902:d511:b0:1fa:3428:53c1 with SMTP id d9443c01a7336-1fa342859b8mr96777385ad.43.1719408267299;
+        Wed, 26 Jun 2024 06:24:27 -0700 (PDT)
+Received: from localhost ([2804:30c:96b:f700:cc1d:c0ae:96c9:c934])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb3c5cb0sm99505355ad.130.2024.06.26.06.24.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jun 2024 06:24:26 -0700 (PDT)
+Date: Wed, 26 Jun 2024 10:25:52 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Alexandru Ardelean <aardelean@baylibre.com>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, broonie@kernel.org,
+	lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, nuno.sa@analog.com, dlechner@baylibre.com,
+	corbet@lwn.net, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 6/7] iio: adc: Add support for AD4000
+Message-ID: <ZnwW4Pf1OS8KjkVp@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1719351923.git.marcelo.schmitt@analog.com>
+ <eb5f7b73bdf3ac89117e28f26ee3f54ba849163e.1719351923.git.marcelo.schmitt@analog.com>
+ <CA+GgBR9E2EMeqAXJ=b7jMnJgd4FXZPNm-LYEe-=aKZhJBkFNNw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/fpu: add missing MODULE_DESCRIPTION() macro
-To: Jeff Johnson <quic_jjohnson@quicinc.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Jonathan Corbet <corbet@lwn.net>, Masahiro Yamada <masahiroy@kernel.org>,
- Michael Ellerman <mpe@ellerman.id.au>, Nathan Chancellor
- <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>,
- Palmer Dabbelt <palmer@rivosinc.com>, Russell King <linux@armlinux.org.uk>,
- Thomas Gleixner <tglx@linutronix.de>, WANG Xuerui <git@xen0n.name>,
- Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-References: <20240622-md-i386-lib-test_fpu_glue-v1-1-a4e40b7b1264@quicinc.com>
-From: Samuel Holland <samuel.holland@sifive.com>
-Content-Language: en-US
-In-Reply-To: <20240622-md-i386-lib-test_fpu_glue-v1-1-a4e40b7b1264@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+GgBR9E2EMeqAXJ=b7jMnJgd4FXZPNm-LYEe-=aKZhJBkFNNw@mail.gmail.com>
 
-On 2024-06-22 9:55 AM, Jeff Johnson wrote:
-> make allmodconfig && make W=1 C=1 now reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_fpu.o
+On 06/26, Alexandru Ardelean wrote:
+> On Wed, Jun 26, 2024 at 12:56 AM Marcelo Schmitt
+> <marcelo.schmitt@analog.com> wrote:
+> >
+> > Add support for AD4000 series of low noise, low power, high speed,
+> > successive approximation register (SAR) ADCs.
+> >
 > 
-> Add the missing invocation of the MODULE_DESCRIPTION() macro.
-> 
-> Fixes: 9613736d852d ("selftests/fpu: move FP code to a separate translation unit")
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-> ---
->  lib/test_fpu_glue.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/lib/test_fpu_glue.c b/lib/test_fpu_glue.c
-> index eef282a2715f..074f30301f29 100644
-> --- a/lib/test_fpu_glue.c
-> +++ b/lib/test_fpu_glue.c
-> @@ -59,4 +59,5 @@ static void __exit test_fpu_exit(void)
->  module_init(test_fpu_init);
->  module_exit(test_fpu_exit);
->  
-> +MODULE_DESCRIPTION("Test cases for floating point operations");
->  MODULE_LICENSE("GPL");
-> 
-> ---
-> base-commit: 6ba59ff4227927d3a8530fc2973b80e94b54d58f
-> change-id: 20240622-md-i386-lib-test_fpu_glue-437927d4afe3
-> 
+> Hello :)
 
-Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
+Hey Alexandru, nice to hear from you.
 
+> 
+> Looks good overall.
+> Just a few comments.
+> The only one where I am not sure is about the enum-to-string mapping.
+> If that's fine, we can leave this unchanged (from my side).
+> 
+> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> > ---
+> >  MAINTAINERS              |   1 +
+> >  drivers/iio/adc/Kconfig  |  12 +
+> >  drivers/iio/adc/Makefile |   1 +
+> >  drivers/iio/adc/ad4000.c | 711 +++++++++++++++++++++++++++++++++++++++
+> >  4 files changed, 725 insertions(+)
+> >  create mode 100644 drivers/iio/adc/ad4000.c
+> >
+...
+> > +enum ad4000_sdi {
+> > +       /* datasheet calls this "4-wire mode" (controller CS goes to ADC SDI!) */
+> > +       AD4000_SDI_MOSI,
+> > +       /* datasheet calls this "3-wire mode" (not related to SPI_3WIRE!) */
+> > +       AD4000_SDI_VIO,
+> > +       AD4000_SDI_CS,
+> > +};
+> > +
+> > +/* maps adi,sdi-pin property value to enum */
+> > +static const char * const ad4000_sdi_pin[] = {
+> > +       [AD4000_SDI_MOSI] = "",
+> 
+> Maybe I missed a previous comment.
+> And I'm also a little fuzzy on the details here, but in the DT this
+> property has "high", "low", "cs".
+> Is "low" the default if unspecified?
+> Or should this string be "low"?
+
+The default is to have MOSI connected to ADC SDI pin which was empty adi,sdi-pin
+dt property in v5.
+Will make the defalut explicit as "sdi" as suggested in dt-binding review.
+
+> 
+> > +       [AD4000_SDI_VIO] = "high",
+> > +       [AD4000_SDI_CS] = "cs",
+> > +};
+> > +
+...
+> > +
+> > +       st->gain_milli = 1000;
+> > +       if (chip->has_hardware_gain) {
+> > +               if (device_property_present(dev, "adi,gain-milli")) {
+> 
+> Only if there is another version, it may be neat to reduce indentation
+> here (a bit).
+> Something like:
+>         if (chip->has_hardware_gain &&
+>             device_property_present(dev, "adi,gain-milli")) {
+> 
+>         }
+> 
+looks good, will do.
+
+Thanks
