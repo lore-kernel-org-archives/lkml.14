@@ -1,150 +1,619 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB221176ABF;
-	Wed, 26 Jun 2024 10:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43E7B74BF2;
+	Wed, 26 Jun 2024 11:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719399453; cv=none; b=dhJyIB3/YcWNVPpP832itFsGhlOI9FpZmqcIim83sgk0nCaEMH0qTardve9kvPnQRn7OxLciaAm69orwWj+J2iQTzH732m3TYXeJw5EH0E628d7VIgcNEYTNwRlcpN1dNaz0wE9CVaqXv/8wzvCVjmD3NdEgTC3gELrtLirgYfw=
+	t=1719399645; cv=none; b=kZPbR91m94d8DC0Sttwm7SMLNwsOn1nv2J283xjcXtwGe6E73FqW5dTmm9/CWCinJ26yebA8k1lGKwJzVO0HTIOKpIdAJPxk51/NshJlvYVTQmywE1slvB7jaQXv6B3DryqWckYw1AYZ2yooxK6QCbUNWE5m3zj29vFeoJdR9vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719399453; c=relaxed/simple;
-	bh=KQVlKkLk8LCpNcMoR7rjlrkwTL2c/OFIAQvVsYLUIYg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PTwicv5y1u9n2o6I+3301Rz3CK7hW2ESC7dys2Rm09IiQsF5QkIoMVbd6E3xoE6GPgIGwfL+sOGd5Fiqj067VKkxTo7cafzQYf4347VQTeBmlfdG26kaVG3cXQC5AgV7kpLqD1zaB6RbT2SILFiQenmNknuvMCmUiKX4pJRwObY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LpZpCg93; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719399645; c=relaxed/simple;
+	bh=YhZx4rG4dzhjg8P0ZN2xhibtt2NklnNmJJfRMuvx6As=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=hytKxf6JpAjnUz//sEKR1wgShsiUFFWzOB7/03jgpz3gIV8+S8xgSQbNgJVRY3fvPEj4vyu3P0oZcIkH0PP/+4VX57WNI8vSIcQceIQjBveggUw8sIOLgg2L5SGZsM1TFfGUIHcHaDnDN9hBQXbuuD7W4fkQucfIVjhni5EqcnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kyYfKCXU; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LpZpCg93"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719399451; x=1750935451;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=KQVlKkLk8LCpNcMoR7rjlrkwTL2c/OFIAQvVsYLUIYg=;
-  b=LpZpCg93V3+N4I79+SsOOHwseon/YqiF1GU9B6iycIkoqyZNXs7BeVD0
-   8TWecHaeT8RQx6EyS4X4w6QkpOYrz8mK/S49f01jdThIA5tosWzPcuO7j
-   wS4mE+EK6J+tK9gchxd+GiJyWCSKxkVA8j5HjdVpSeGth9m3j9t1ekirT
-   VUC7RJy1+QxTmUHcwAe3nzcw7tp7Db7GXaSdEPgCxLNTa6/dKO1egTOX5
-   VcygPSziAdWgAxlzCPl3xYuUof7lhBqxfHj8k738BFY5Xnqgma5/vuZjQ
-   H3oBxA47zoXANDkKWdTTb/9zdNZ938yxWGNyDevAqABz6hErLkQPTyhJi
-   A==;
-X-CSE-ConnectionGUID: hjQw8fUDTuuPbT7PlGADog==
-X-CSE-MsgGUID: 8BwgAkihQb6lprkvKKZlGA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="38974652"
-X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
-   d="scan'208";a="38974652"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 03:57:30 -0700
-X-CSE-ConnectionGUID: F7YpKNaMTCaAmI28LcU2JA==
-X-CSE-MsgGUID: VvrieR5DQZugXY59GNp7Vw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
-   d="scan'208";a="44616084"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 26 Jun 2024 03:57:28 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sMQL7-000FDK-23;
-	Wed, 26 Jun 2024 10:57:25 +0000
-Date: Wed, 26 Jun 2024 18:56:45 +0800
-From: kernel test robot <lkp@intel.com>
-To: Igor Pylypiv <ipylypiv@google.com>, Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, Tejun Heo <tj@kernel.org>,
-	Hannes Reinecke <hare@suse.de>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Jason Yan <yanaijie@huawei.com>, linux-ide@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Igor Pylypiv <ipylypiv@google.com>
-Subject: Re: [PATCH v2 3/6] ata: libata-scsi: Remove redundant sense_buffer
- memsets
-Message-ID: <202406261836.Q3sEjY8b-lkp@intel.com>
-References: <20240624221211.2593736-4-ipylypiv@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kyYfKCXU"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-363826fbcdeso4800306f8f.0;
+        Wed, 26 Jun 2024 04:00:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719399641; x=1720004441; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=zzJujuINL7mWYnWrPX7uJvSnIkkrw6c4es8CLJvCOwk=;
+        b=kyYfKCXU9Xi5Tk0O86SzOJtJudOpEFm/ez2Rt+8QUP24D8o/nP6MHsQyAshEq3i+Ga
+         GYFvJh3Q6bKuyRknDzwvu+y/SxknI4uCRGe4kBbc0loTKppLsoT5WPVoKfP19WcgM6B1
+         Ti40TN/uSz8x7bveQfX+dptCmOC44kn7YiH8cnux7rCHVs5C4+r7BbOWQRQwhGUAiZHb
+         a+/ENfKUOsQhvDsIRbpMH5c7sbdwKO47TeoSCJm3bY23KEHqQOqlPOZ7ZywuelEJQk4f
+         Sl6b7vFXLRkjovGpP5Zn4RQtc+gZgN4B2+qst2yGuh3xJyJMmKyBOjohGQCRa1yNHixb
+         uMnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719399641; x=1720004441;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zzJujuINL7mWYnWrPX7uJvSnIkkrw6c4es8CLJvCOwk=;
+        b=fch6DdwtuCMMYGISGCzosL11bG42eSegln5lfkwK36FGfm9dXPi0gM1nbGuqRLkoLV
+         qUAsdcjFsuvuiRee+53Y9UCHPoRh9aDJQLBhi7NiXGWu7XNX+FMBYnUnI2M8cb6FLO0k
+         XeyubcG7kChoncx3uChnGgF4mt7oL2cD4iYbt1qTxnMWW/cqplNPOW1lEJwrdgwv5Heq
+         gKx7T6sdYPy6VrvcO1OlZbqu4JOX/czbF4gsEEiOpoZ+IINMupGLzZYvB8nLROPllvpN
+         EJw1LhHe/l7QJ0SlwgnUArh+Xlrv5VehwOALCWnXSqicl2dq2wBVtPSUzgt7iTWBf8/i
+         kVvg==
+X-Forwarded-Encrypted: i=1; AJvYcCWUsO28nPE51bkWBBAm9ZzdkXU9UOlcbC3nH/sBQ2HexWoQ6vPB/s0BtgPJehmQVuCg5+yhB9PmIxp19LlWOPKdEiMjxrBo2BrL5byp+FPUIwW0taxM60C4K218cUC85J5fgXbC1/UQPS2/r8Zl8y0dxZEjmEevNh0A2++lF+FOdjEQj5G9ub4/XzJyAoJnGwIjKB2Lk9sFqzhMe4TUlw==
+X-Gm-Message-State: AOJu0Ywz6HHL5TlpMV2FdyBukSgWpqUpO/4g6yILJ4bfqRatjGBSfwnb
+	PyzoRTN+IGSh37Up7P+KGPWJhUWzKCjubmyHyksFL0U+AcNhegm+
+X-Google-Smtp-Source: AGHT+IH5wIIFynsUSFLRMPzMUaK2jwh/6m0GskXFqU0UghRNCbLBsT3uT7pTJwG1lNF6afki2vYfow==
+X-Received: by 2002:adf:e606:0:b0:366:df65:8763 with SMTP id ffacd0b85a97d-366e7a0fdc9mr7031728f8f.34.1719399641280;
+        Wed, 26 Jun 2024 04:00:41 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-366383f670csm15558309f8f.11.2024.06.26.04.00.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jun 2024 04:00:40 -0700 (PDT)
+Message-ID: <f6dc458f759c47154eee16354c807c020028512e.camel@gmail.com>
+Subject: Re: [PATCH v5 6/7] iio: adc: Add support for AD4000
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>, broonie@kernel.org, 
+ lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org, 
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+  nuno.sa@analog.com, dlechner@baylibre.com, corbet@lwn.net, 
+ marcelo.schmitt1@gmail.com
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-spi@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Wed, 26 Jun 2024 13:04:32 +0200
+In-Reply-To: <eb5f7b73bdf3ac89117e28f26ee3f54ba849163e.1719351923.git.marcelo.schmitt@analog.com>
+References: <cover.1719351923.git.marcelo.schmitt@analog.com>
+	 <eb5f7b73bdf3ac89117e28f26ee3f54ba849163e.1719351923.git.marcelo.schmitt@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240624221211.2593736-4-ipylypiv@google.com>
 
-Hi Igor,
+On Tue, 2024-06-25 at 18:55 -0300, Marcelo Schmitt wrote:
+> Add support for AD4000 series of low noise, low power, high speed,
+> successive approximation register (SAR) ADCs.
+>=20
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> ---
+> =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+> =C2=A0drivers/iio/adc/Kconfig=C2=A0 |=C2=A0 12 +
+> =C2=A0drivers/iio/adc/Makefile |=C2=A0=C2=A0 1 +
+> =C2=A0drivers/iio/adc/ad4000.c | 711 ++++++++++++++++++++++++++++++++++++=
++++
+> =C2=A04 files changed, 725 insertions(+)
+> =C2=A0create mode 100644 drivers/iio/adc/ad4000.c
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 9aa6531f7cf2..f4ffedada8ea 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1205,6 +1205,7 @@ L:	linux-iio@vger.kernel.org
+> =C2=A0S:	Supported
+> =C2=A0W:	https://ez.analog.com/linux-software-drivers
+> =C2=A0F:	Documentation/devicetree/bindings/iio/adc/adi,ad4000.yaml
+> +F:	drivers/iio/adc/ad4000.c
+> =C2=A0
+> =C2=A0ANALOG DEVICES INC AD4130 DRIVER
+> =C2=A0M:	Cosmin Tanislav <cosmin.tanislav@analog.com>
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index b8184706c7d1..5bbe843916a3 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -21,6 +21,18 @@ config AD_SIGMA_DELTA
+> =C2=A0	select IIO_BUFFER
+> =C2=A0	select IIO_TRIGGERED_BUFFER
+> =C2=A0
+> +config AD4000
+> +	tristate "Analog Devices AD4000 ADC Driver"
+> +	depends on SPI
+> +	select IIO_BUFFER
+> +	select IIO_TRIGGERED_BUFFER
+> +	help
+> +	=C2=A0 Say yes here to build support for Analog Devices AD4000 high spe=
+ed
+> +	=C2=A0 SPI analog to digital converters (ADC).
+> +
+> +	=C2=A0 To compile this driver as a module, choose M here: the module wi=
+ll
+> be
+> +	=C2=A0 called ad4000.
+> +
+> =C2=A0config AD4130
+> =C2=A0	tristate "Analog Device AD4130 ADC Driver"
+> =C2=A0	depends on SPI
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index 51298c52b223..f4361df40cca 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -6,6 +6,7 @@
+> =C2=A0# When adding new entries keep the list in alphabetical order
+> =C2=A0obj-$(CONFIG_AB8500_GPADC) +=3D ab8500-gpadc.o
+> =C2=A0obj-$(CONFIG_AD_SIGMA_DELTA) +=3D ad_sigma_delta.o
+> +obj-$(CONFIG_AD4000) +=3D ad4000.o
+> =C2=A0obj-$(CONFIG_AD4130) +=3D ad4130.o
+> =C2=A0obj-$(CONFIG_AD7091R) +=3D ad7091r-base.o
+> =C2=A0obj-$(CONFIG_AD7091R5) +=3D ad7091r5.o
+> diff --git a/drivers/iio/adc/ad4000.c b/drivers/iio/adc/ad4000.c
+> new file mode 100644
+> index 000000000000..0b6293db68dc
+> --- /dev/null
+> +++ b/drivers/iio/adc/ad4000.c
+> @@ -0,0 +1,711 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * AD4000 SPI ADC driver
+> + *
+> + * Copyright 2024 Analog Devices Inc.
+> + */
+> +#include <linux/bits.h>
+> +#include <linux/bitfield.h>
+> +#include <linux/byteorder/generic.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/math.h>
+> +#include <linux/module.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/spi/spi.h>
+> +#include <linux/units.h>
+> +#include <linux/util_macros.h>
+> +#include <linux/iio/iio.h>
+> +
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +
+>=20
 
-kernel test robot noticed the following build warnings:
+...
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.10-rc5 next-20240625]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> +
+> +static int ad4000_read_reg(struct ad4000_state *st, unsigned int *val)
+> +{
+> +	struct spi_transfer t =3D {
+> +		.tx_buf =3D st->tx_buf,
+> +		.rx_buf =3D st->rx_buf,
+> +		.len =3D 2,
+> +	};
+> +	int ret;
+> +
+> +	st->tx_buf[0] =3D AD4000_READ_COMMAND;
+> +	ret =3D spi_sync_transfer(st->spi, &t, 1);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	*val =3D st->tx_buf[1];
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Igor-Pylypiv/ata-libata-scsi-Do-not-overwrite-valid-sense-data-when-CK_COND-1/20240625-215527
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20240624221211.2593736-4-ipylypiv%40google.com
-patch subject: [PATCH v2 3/6] ata: libata-scsi: Remove redundant sense_buffer memsets
-config: x86_64-defconfig (https://download.01.org/0day-ci/archive/20240626/202406261836.Q3sEjY8b-lkp@intel.com/config)
-compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240626/202406261836.Q3sEjY8b-lkp@intel.com/reproduce)
+I'm puzzled... tx_buf?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406261836.Q3sEjY8b-lkp@intel.com/
+> +	return ret;
+> +}
+> +
+> +/*
+> + * This executes a data sample transfer for when the device connections =
+are
+> + * in "3-wire" mode, selected when the adi,sdi-pin device tree property =
+is
+> + * absent or set to "high". In this connection mode, the ADC SDI pin is
+> + * connected to MOSI or to VIO and ADC CNV pin is connected either to a =
+SPI
+> + * controller CS or to a GPIO.
+> + * AD4000 series of devices initiate conversions on the rising edge of C=
+NV
+> pin.
+> + *
+> + * If the CNV pin is connected to an SPI controller CS line (which is by
+> default
+> + * active low), the ADC readings would have a latency (delay) of one rea=
+d.
+> + * Moreover, since we also do ADC sampling for filling the buffer on
+> triggered
+> + * buffer mode, the timestamps of buffer readings would be disarranged.
+> + * To prevent the read latency and reduce the time discrepancy between t=
+he
+> + * sample read request and the time of actual sampling by the ADC, do a
+> + * preparatory transfer to pulse the CS/CNV line.
+> + */
+> +static int ad4000_prepare_3wire_mode_message(struct ad4000_state *st,
+> +					=C2=A0=C2=A0=C2=A0=C2=A0 const struct iio_chan_spec
+> *chan)
+> +{
+> +	unsigned int cnv_pulse_time =3D st->turbo_mode ? AD4000_TQUIET1_NS
+> +						=C2=A0=C2=A0=C2=A0=C2=A0 : AD4000_TCONV_NS;
+> +	struct spi_transfer *xfers =3D st->xfers;
+> +
+> +	xfers[0].cs_change =3D 1;
+> +	xfers[0].cs_change_delay.value =3D cnv_pulse_time;
+> +	xfers[0].cs_change_delay.unit =3D SPI_DELAY_UNIT_NSECS;
+> +
+> +	xfers[1].rx_buf =3D &st->scan.data;
+> +	xfers[1].len =3D BITS_TO_BYTES(chan->scan_type.storagebits);
+> +	xfers[1].delay.value =3D AD4000_TQUIET2_NS;
+> +	xfers[1].delay.unit =3D SPI_DELAY_UNIT_NSECS;
+> +
+> +	spi_message_init_with_transfers(&st->msg, st->xfers, 2);
+> +
+> +	return devm_spi_optimize_message(st->spi, &st->msg);
+> +}
+> +
+> +/*
+> + * This executes a data sample transfer for when the device connections =
+are
+> + * in "4-wire" mode, selected when the adi,sdi-pin device tree property =
+is
+> + * set to "cs". In this connection mode, the controller CS pin is connec=
+ted
+> to
+> + * ADC SDI pin and a GPIO is connected to ADC CNV pin.
+> + * The GPIO connected to ADC CNV pin is set outside of the SPI transfer.
+> + */
+> +static int ad4000_prepare_4wire_mode_message(struct ad4000_state *st,
+> +					=C2=A0=C2=A0=C2=A0=C2=A0 const struct iio_chan_spec
+> *chan)
+> +{
+> +	unsigned int cnv_to_sdi_time =3D st->turbo_mode ? AD4000_TQUIET1_NS
+> +						=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 : AD4000_TCONV_NS;
+> +	struct spi_transfer *xfers =3D st->xfers;
+> +
+> +	/*
+> +	 * Dummy transfer to cause enough delay between CNV going high and
+> SDI
+> +	 * going low.
+> +	 */
+> +	xfers[0].cs_off =3D 1;
+> +	xfers[0].delay.value =3D cnv_to_sdi_time;
+> +	xfers[0].delay.unit =3D SPI_DELAY_UNIT_NSECS;
+> +
+> +	xfers[1].rx_buf =3D &st->scan.data;
+> +	xfers[1].len =3D BITS_TO_BYTES(chan->scan_type.storagebits);
+> +
+> +	spi_message_init_with_transfers(&st->msg, st->xfers, 2);
+> +
+> +	return devm_spi_optimize_message(st->spi, &st->msg);
+> +}
 
-All warnings (new ones prefixed by >>):
+nit: you could reduce the scope of the above prepare functions...
 
-   drivers/ata/libata-scsi.c: In function 'ata_gen_passthru_sense':
->> drivers/ata/libata-scsi.c:929:24: warning: unused variable 'sb' [-Wunused-variable]
-     929 |         unsigned char *sb = cmd->sense_buffer;
-         |                        ^~
+> +
+> +static int ad4000_convert_and_acquire(struct ad4000_state *st)
+> +{
+> +	int ret;
+> +
+> +	/*
+> +	 * In 4-wire mode, the CNV line is held high for the entire
+> conversion
+> +	 * and acquisition process. In other modes, the CNV GPIO is optional
+> +	 * and, if provided, replaces controller CS. If CNV GPIO is not
+> defined
+> +	 * gpiod_set_value_cansleep() has no effect.
+> +	 */
+> +	gpiod_set_value_cansleep(st->cnv_gpio, 1);
+> +	ret =3D spi_sync(st->spi, &st->msg);
+> +	gpiod_set_value_cansleep(st->cnv_gpio, 0);
+> +
+> +	return ret;
+> +}
+> +
+> +static int ad4000_single_conversion(struct iio_dev *indio_dev,
+> +				=C2=A0=C2=A0=C2=A0 const struct iio_chan_spec *chan, int
+> *val)
+> +{
+> +	struct ad4000_state *st =3D iio_priv(indio_dev);
+> +	u32 sample;
+> +	int ret;
+> +
+> +	ret =3D ad4000_convert_and_acquire(st);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (chan->scan_type.storagebits > 16)
+> +		sample =3D be32_to_cpu(st->scan.data.sample_buf32);
 
+Just a minor note regarding your comment in the cover. FWIW, I prefer you l=
+eave
+it like this. Yes, with 24 bits you save some space but then you need an
+unaligned access... To me that space savings are really a micro optimizatio=
+n so
+I would definitely go with the simpler form.
 
-vim +/sb +929 drivers/ata/libata-scsi.c
+> +	else
+> +		sample =3D be16_to_cpu(st->scan.data.sample_buf16);
+> +
+> +	sample >>=3D chan->scan_type.shift;
+> +
+> +	if (chan->scan_type.sign =3D=3D 's')
+> +		*val =3D sign_extend32(sample, chan->scan_type.realbits - 1);
+> +
+> +	return IIO_VAL_INT;
+> +}
+> +
+> +static int ad4000_read_raw(struct iio_dev *indio_dev,
+> +			=C2=A0=C2=A0 struct iio_chan_spec const *chan, int *val,
+> +			=C2=A0=C2=A0 int *val2, long info)
+> +{
+> +	struct ad4000_state *st =3D iio_priv(indio_dev);
+> +
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		iio_device_claim_direct_scoped(return -EBUSY, indio_dev)
+> +			return ad4000_single_conversion(indio_dev, chan,
+> val);
+> +		unreachable();
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*val =3D st->scale_tbl[st->span_comp][0];
+> +		*val2 =3D st->scale_tbl[st->span_comp][1];
+> +		return IIO_VAL_INT_PLUS_NANO;
+> +	case IIO_CHAN_INFO_OFFSET:
+> +		*val =3D 0;
+> +		if (st->span_comp)
+> +			*val =3D mult_frac(st->vref_mv, 1, 10);
+> +
+> +		return IIO_VAL_INT;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int ad4000_read_avail(struct iio_dev *indio_dev,
+> +			=C2=A0=C2=A0=C2=A0=C2=A0 struct iio_chan_spec const *chan,
+> +			=C2=A0=C2=A0=C2=A0=C2=A0 const int **vals, int *type, int *length,
+> +			=C2=A0=C2=A0=C2=A0=C2=A0 long info)
+> +{
+> +	struct ad4000_state *st =3D iio_priv(indio_dev);
+> +
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*vals =3D (int *)st->scale_tbl;
+> +		*length =3D AD4000_SCALE_OPTIONS * 2;
+> +		*type =3D IIO_VAL_INT_PLUS_NANO;
+> +		return IIO_AVAIL_LIST;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int ad4000_write_raw_get_fmt(struct iio_dev *indio_dev,
+> +				=C2=A0=C2=A0=C2=A0 struct iio_chan_spec const *chan, long
+> mask)
+> +{
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_SCALE:
+> +		return IIO_VAL_INT_PLUS_NANO;
+> +	default:
+> +		return IIO_VAL_INT_PLUS_MICRO;
+> +	}
+> +}
+> +
+> +static int ad4000_write_raw(struct iio_dev *indio_dev,
+> +			=C2=A0=C2=A0=C2=A0 struct iio_chan_spec const *chan, int val, int
+> val2,
+> +			=C2=A0=C2=A0=C2=A0 long mask)
+> +{
+> +	struct ad4000_state *st =3D iio_priv(indio_dev);
+> +	unsigned int reg_val;
+> +	bool span_comp_en;
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_SCALE:
+> +		ret =3D iio_device_claim_direct_mode(indio_dev);
 
-^1da177e4c3f41 drivers/scsi/libata-scsi.c Linus Torvalds  2005-04-16  909  
-b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  910  /*
-750426aa1ad1dd drivers/ata/libata-scsi.c  Tejun Heo       2006-11-14  911   *	ata_gen_passthru_sense - Generate check condition sense block.
-b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  912   *	@qc: Command that completed.
-b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  913   *
-2dc8b0ba527a4a drivers/ata/libata-scsi.c  Igor Pylypiv    2024-06-24  914   *	This function is specific to the ATA pass through commands.
-2dc8b0ba527a4a drivers/ata/libata-scsi.c  Igor Pylypiv    2024-06-24  915   *	Regardless of whether the command errored or not, return a sense
-84a9a8cd9d0aa9 drivers/ata/libata-scsi.c  Gwendal Grignou 2013-01-18  916   *	block. If there was no error, we get the request from an ATA
-84a9a8cd9d0aa9 drivers/ata/libata-scsi.c  Gwendal Grignou 2013-01-18  917   *	passthrough command, so we use the following sense data:
-84a9a8cd9d0aa9 drivers/ata/libata-scsi.c  Gwendal Grignou 2013-01-18  918   *	sk = RECOVERED ERROR
-84a9a8cd9d0aa9 drivers/ata/libata-scsi.c  Gwendal Grignou 2013-01-18  919   *	asc,ascq = ATA PASS-THROUGH INFORMATION AVAILABLE
-84a9a8cd9d0aa9 drivers/ata/libata-scsi.c  Gwendal Grignou 2013-01-18  920   *      
-b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  921   *
-b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  922   *	LOCKING:
-750426aa1ad1dd drivers/ata/libata-scsi.c  Tejun Heo       2006-11-14  923   *	None.
-b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  924   */
-750426aa1ad1dd drivers/ata/libata-scsi.c  Tejun Heo       2006-11-14  925  static void ata_gen_passthru_sense(struct ata_queued_cmd *qc)
-b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  926  {
-b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  927  	struct scsi_cmnd *cmd = qc->scsicmd;
-e61e067227bc76 drivers/scsi/libata-scsi.c Tejun Heo       2006-05-15  928  	struct ata_taskfile *tf = &qc->result_tf;
-b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12 @929  	unsigned char *sb = cmd->sense_buffer;
-b525e7731b90eb drivers/ata/libata-scsi.c  Hannes Reinecke 2016-04-04  930  	u8 sense_key, asc, ascq;
-b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  931  
-b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  932  	/*
-b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  933  	 * Use ata_to_sense_error() to map status register bits
-b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  934  	 * onto sense key, asc & ascq.
-b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  935  	 */
-058e55e120ca59 drivers/scsi/libata-scsi.c Tejun Heo       2006-04-02  936  	if (qc->err_mask ||
-efcef265fd83d9 drivers/ata/libata-scsi.c  Sergey Shtylyov 2022-02-15  937  	    tf->status & (ATA_BUSY | ATA_DF | ATA_ERR | ATA_DRQ)) {
-efcef265fd83d9 drivers/ata/libata-scsi.c  Sergey Shtylyov 2022-02-15  938  		ata_to_sense_error(qc->ap->print_id, tf->status, tf->error,
-ff8072d589dcff drivers/ata/libata-scsi.c  Hannes Reinecke 2023-07-31  939  				   &sense_key, &asc, &ascq);
-06dbde5f3a4424 drivers/ata/libata-scsi.c  Hannes Reinecke 2016-04-04  940  		ata_scsi_set_sense(qc->dev, cmd, sense_key, asc, ascq);
-84a9a8cd9d0aa9 drivers/ata/libata-scsi.c  Gwendal Grignou 2013-01-18  941  	} else {
-b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  942  		/*
-11093cb1ef5614 drivers/ata/libata-scsi.c  Hannes Reinecke 2016-04-04  943  		 * ATA PASS-THROUGH INFORMATION AVAILABLE
-11093cb1ef5614 drivers/ata/libata-scsi.c  Hannes Reinecke 2016-04-04  944  		 * Always in descriptor format sense.
-b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  945  		 */
-f2b1e9c6f867ec drivers/ata/libata-scsi.c  Hannes Reinecke 2021-04-27  946  		scsi_build_sense(cmd, 1, RECOVERED_ERROR, 0, 0x1D);
-11093cb1ef5614 drivers/ata/libata-scsi.c  Hannes Reinecke 2016-04-04  947  	}
-^1da177e4c3f41 drivers/scsi/libata-scsi.c Linus Torvalds  2005-04-16  948  }
-^1da177e4c3f41 drivers/scsi/libata-scsi.c Linus Torvalds  2005-04-16  949  
+iio_device_claim_direct_scoped()?
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		mutex_lock(&st->lock);
+
+guard()?
+
+> +		ret =3D ad4000_read_reg(st, &reg_val);
+> +		if (ret < 0)
+> +			goto err_unlock;
+> +
+> +		span_comp_en =3D val2 =3D=3D st->scale_tbl[1][1];
+> +		reg_val &=3D ~AD4000_CFG_SPAN_COMP;
+> +		reg_val |=3D FIELD_PREP(AD4000_CFG_SPAN_COMP, span_comp_en);
+> +
+> +		ret =3D ad4000_write_reg(st, reg_val);
+> +		if (ret < 0)
+> +			goto err_unlock;
+> +
+> +		st->span_comp =3D span_comp_en;
+> +err_unlock:
+> +		iio_device_release_direct_mode(indio_dev);
+> +		mutex_unlock(&st->lock);
+> +		return ret;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static irqreturn_t ad4000_trigger_handler(int irq, void *p)
+> +{
+> +	struct iio_poll_func *pf =3D p;
+> +	struct iio_dev *indio_dev =3D pf->indio_dev;
+> +	struct ad4000_state *st =3D iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	ret =3D ad4000_convert_and_acquire(st);
+> +	if (ret < 0)
+> +		goto err_out;
+> +
+> +	iio_push_to_buffers_with_timestamp(indio_dev, &st->scan, pf-
+> >timestamp);
+> +
+> +err_out:
+> +	iio_trigger_notify_done(indio_dev->trig);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static const struct iio_info ad4000_reg_access_info =3D {
+> +	.read_raw =3D &ad4000_read_raw,
+> +	.read_avail =3D &ad4000_read_avail,
+> +	.write_raw =3D &ad4000_write_raw,
+> +	.write_raw_get_fmt =3D &ad4000_write_raw_get_fmt,
+> +};
+> +
+> +static const struct iio_info ad4000_info =3D {
+> +	.read_raw =3D &ad4000_read_raw,
+> +};
+> +
+> +static int ad4000_config(struct ad4000_state *st)
+> +{
+> +	unsigned int reg_val =3D AD4000_CONFIG_REG_DEFAULT;
+> +
+> +	if (device_property_present(&st->spi->dev, "adi,high-z-input"))
+> +		reg_val |=3D FIELD_PREP(AD4000_CFG_HIGHZ, 1);
+> +
+> +	return ad4000_write_reg(st, reg_val);
+> +}
+> +
+> +static int ad4000_probe(struct spi_device *spi)
+> +{
+> +	const struct ad4000_chip_info *chip;
+> +	struct device *dev =3D &spi->dev;
+> +	struct iio_dev *indio_dev;
+> +	struct ad4000_state *st;
+> +	int ret;
+> +
+> +	indio_dev =3D devm_iio_device_alloc(dev, sizeof(*st));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	chip =3D spi_get_device_match_data(spi);
+> +	if (!chip)
+> +		return -EINVAL;
+> +
+> +	st =3D iio_priv(indio_dev);
+> +	st->spi =3D spi;
+> +
+> +	ret =3D devm_regulator_get_enable(dev, "vdd");
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to enable VDD
+> supply\n");
+> +
+> +	ret =3D devm_regulator_get_enable(dev, "vio");
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to enable VIO
+> supply\n");
+
+devm_regulator_bulk_get_enable()? Do we have any ordering constrains?
+
+> +
+> +	ret =3D devm_regulator_get_enable_read_voltage(dev, "ref");
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 "Failed to get ref regulator
+> reference\n");
+> +	st->vref_mv =3D ret / 1000;
+> +
+> +	st->cnv_gpio =3D devm_gpiod_get_optional(dev, "cnv", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(st->cnv_gpio))
+> +		return dev_err_probe(dev, PTR_ERR(st->cnv_gpio),
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 "Failed to get CNV GPIO");
+> +
+> +	ret =3D device_property_match_property_string(dev, "adi,sdi-pin",
+> +						=C2=A0=C2=A0=C2=A0 ad4000_sdi_pin,
+> +						=C2=A0=C2=A0=C2=A0
+> ARRAY_SIZE(ad4000_sdi_pin));
+> +	if (ret < 0 && ret !=3D -EINVAL)
+> +		return dev_err_probe(dev, ret,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 "getting adi,sdi-pin property
+> failed\n");
+> +
+> +	/* Default to usual SPI connections if pin properties are not present
+> */
+> +	st->sdi_pin =3D ret =3D=3D -EINVAL ? AD4000_SDI_MOSI : ret;
+> +	switch (st->sdi_pin) {
+> +	case AD4000_SDI_MOSI:
+> +		indio_dev->info =3D &ad4000_reg_access_info;
+> +		indio_dev->channels =3D &chip->reg_access_chan_spec;
+> +
+> +		/*
+> +		 * In "3-wire mode", the ADC SDI line must be kept high when
+> +		 * data is not being clocked out of the controller.
+> +		 * Request the SPI controller to make MOSI idle high.
+> +		 */
+> +		spi->mode |=3D SPI_MOSI_IDLE_HIGH;
+> +		ret =3D spi_setup(spi);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		ret =3D ad4000_prepare_3wire_mode_message(st, indio_dev-
+> >channels);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret =3D ad4000_config(st);
+> +		if (ret < 0)
+> +			dev_warn(dev, "Failed to config device\n");
+> +
+
+Should this be a warning? Very suspicious :)
+
+> +		break;
+> +	case AD4000_SDI_VIO:
+> +		indio_dev->info =3D &ad4000_info;
+> +		indio_dev->channels =3D &chip->chan_spec;
+> +		ret =3D ad4000_prepare_3wire_mode_message(st, indio_dev-
+> >channels);
+> +		if (ret)
+> +			return ret;
+> +
+> +		break;
+> +	case AD4000_SDI_CS:
+> +		indio_dev->info =3D &ad4000_info;
+> +		indio_dev->channels =3D &chip->chan_spec;
+> +		ret =3D ad4000_prepare_4wire_mode_message(st, indio_dev-
+> >channels);
+> +		if (ret)
+> +			return ret;
+> +
+> +		break;
+> +	default:
+> +		return dev_err_probe(dev, -EINVAL, "Unrecognized connection
+> mode\n");
+> +	}
+> +
+> +	indio_dev->name =3D chip->dev_name;
+> +	indio_dev->num_channels =3D 1;
+> +
+> +	devm_mutex_init(dev, &st->lock);
+> +
+> +	st->gain_milli =3D 1000;
+> +	if (chip->has_hardware_gain) {
+> +		if (device_property_present(dev, "adi,gain-milli")) {
+> +			ret =3D device_property_read_u16(dev, "adi,gain-milli",
+> +						=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &st->gain_milli);
+> +			if (ret)
+> +				return dev_err_probe(dev, ret,
+> +						=C2=A0=C2=A0=C2=A0=C2=A0 "Failed to read gain
+> property\n");
+> +		}
+>=20
+
+the above looks odd. Why not?
+
+ret =3D device_property_read_u16(dev, "adi,gain-milli", &st->gain_milli);
+if (!ret) {
+	...
+}
+
+Note that you're also allowing any value for gain_milli when we just allow =
+some
+of them (according to the bindings). Hence you should make sure we get supp=
+orted
+values from FW.
+
+- Nuno S=C3=A1
