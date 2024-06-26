@@ -1,184 +1,78 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 962EE15CD63
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 07:54:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B599115F3E2
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 07:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719388488; cv=none; b=LWLDTGd+QjW1Aof2/7YGDrlYZVoJgiLNIp1tZ9gx7e9J3qLkPqzNpAzBtEKTuRNc83njDkL8Qam1yvrpU9gOJkVtk7j3TuqARATiYp9lZeuMLMtrnbS8smWTgsy6mEvXQAUFyW1dJH+2nfqb6N3HDqCiFzCtiD9A7/RGKdzaNK8=
+	t=1719388506; cv=none; b=g8VySs3l4mB0eYBmN/meDH2x+NubBWBzoR/OJdfIqH769ZNmX8EajVHolAzfyL4jSxIN45uPhNK5nKEywVQxiYoIEeWf/tw40R7ZX5B1qAwWLTDILT0kzKguaE/geUcCr3qT0xI6w2JAckaDC9Q5OSToOiU85n0WhtDGYF/3uLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719388488; c=relaxed/simple;
-	bh=3lM7Krd3eubuTSd3weFykcxesluFoVIhP2qOjhiNjTY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mVE4VHAuSLRfeVWCT+daZUNX+LiRUmaRAL0Hdcpvvl+a0m3FtC7R8Y35g2cECPOOuoeLKrk01MphRZu+c/B23PfyzhtId/sz4yhIfBxQQpvWiqJ1pG7q86fLZSyX4hn4CKJJgkQ5cb+0i+iDW0r9OGmh+ksszjwpZjtXvGk+MqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FoP5V6Fk; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FoP5V6Fk"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2eaafda3b5cso66250761fa.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 00:54:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719388484; x=1719993284; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E9l4PBSU230KyF+70o0NVWXuUQoiQQyfQa7UJiR8ZC4=;
-        b=FoP5V6FkC2f4DaphdtBZca6xFoNcS6UUbmUJ7yIUG6XJ+4VaZTL1/fBjDEQEJzX++n
-         Q6tS4/oNfQbjpgZBTtSlTns8BfMKBh/yvJVSTkLiPym1Hk5RQ43ybfZ4wIEPnV4fRfVN
-         n3cu3f59D6xwzY2v9nS4tXA29vEcbYRkvrc5xZ2fhrLQ4cG1I7naIIurJdBs6e8GX2R8
-         c8vMD8tDNdTCcnUpaa4+kkXcei8EOCnlJzCAJqc2Kp65/2DfK4ZK+C1zYmsrZ510DAaS
-         R9w1KjKqWbc7x+m2/R+jd3MscEqKDUAXkdzVrPMdRwqKCn0O1/P8H5vMU7CvtrlUMP89
-         uPdg==
+	s=arc-20240116; t=1719388506; c=relaxed/simple;
+	bh=Vpt4Gye2b79EipFlbPUq00vRYctifvkkWdeZO6Gas8o=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=iy5OQhdh5LcQ07N4zOgljtHONELUUCDYs+2JoCrh4lnR6jpQ+MlLSIc421j0GsyIl18oc0CZLbRW7oMoXQ2V6z/oiHFcaGTyoRFOtkUvGW00zKV8DatXQoQaeg1cj5L/5bq+YwxGnTxO0o4Q7ddawVGBI+3CdHpptE8oZJNOhXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3737b3ee909so92471895ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 00:55:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719388484; x=1719993284;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=E9l4PBSU230KyF+70o0NVWXuUQoiQQyfQa7UJiR8ZC4=;
-        b=phHAI3oMMcB7S22BYOA5+3XJFyBy06HH+6oJPOLKPjfHU9Y5W84t1VmrPcqGSY4a+d
-         rnLv7dYkAlvRy3HeQTktzopTo1dR2ovA2m2sF5fzKrMZMGanrOw/217nhmleWNesVHaK
-         dZSXUZFLURUyPBfmz8GqaFOKTRdq0kcmJ6TLLvNLtBbEhM4w5P5QuCDla6q8Pf3wgwGG
-         5bbii/5N6BQ6QGHAYAzaAhM8AkJ9rqftEDT15dv5BHPbqNoremc7DQZfCZaKzOJQwfRD
-         eva8BZuvFUWchEcYHUIAAjZjQx2VyXKblwuc4jqeuQhPt5pGjqY2Cz4i9IwHL42dBLF/
-         +E8A==
-X-Forwarded-Encrypted: i=1; AJvYcCVkxf0B0WKEHtCGg1bwXFTIDo26LS9lfdVViDNBX9spIHMXKNnprBTG8hi2ASnUK5IYAKMrMws2c6vdnJ+xqUhpA5DZcIjn47Bh6t6O
-X-Gm-Message-State: AOJu0Yw0EIvJV71rPSHonx/XgQ8t9RT8tO5d29LW27Aief9cIsJ1SQg3
-	Aje0G5ZP8m0wKhPWaFoKe8wtWjMPuny3+oGy++L/scaBswj7VQfAdRzqOZEsXMXEpOflsM7zUDA
-	fYKlEJAOxjYXhP24JtQFKf+PdzPQkdlKH3M4=
-X-Google-Smtp-Source: AGHT+IEdM7BL7IYNDJYZSWFp4SHg4gOScBa35KINGjDg3kZVWZCHM2JlMQa+zfdTbKK0IvAx79DqhoCjSlT8PLVH1aI=
-X-Received: by 2002:a2e:86cb:0:b0:2ec:4de9:7332 with SMTP id
- 38308e7fff4ca-2ec593c296bmr56063661fa.2.1719388483724; Wed, 26 Jun 2024
- 00:54:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719388504; x=1719993304;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xzDaof2xJ74gCZ5IJDnQJMnrknLYLyty2S5JQ7HI+IM=;
+        b=CLUtS3tuoEtS6WhjzjBN7rrzPlm+vh/x0u/0LlgkMYj/l2t64sopXKH4l+e0nXTFs9
+         FIcjHyRjHUrWE3Og9mXBgHzzWrdJ3dFSJTkUrHucff6fPMXcazpAdqGCMovf5USzdpMd
+         LAsKK/PMLyuHTLJW1L8kwGAWhn7mSQJl6K5FlFf8CxWWLq2Lp8wGQvGt1iALhf9PPQEb
+         M26Ucx6nadxr9YvRW0fZpIChIrhFhtDWeIUD/seHpYtuXa0qV5Y5XSqjHSVE4XUHcQoT
+         e9FdZko/BzzLdRxIrQJn7aHLG8PC84oLiOeWEMwyGj9yZ5gkxPvAJNnUlmnAK+I+6y7r
+         OyXg==
+X-Gm-Message-State: AOJu0YzYHgDewjKSRN2g/El9L2ED4Y2gN/2iprn8GrZxivb0tOho6MCj
+	lZdnxK5Ia7XnMmfuq4mK4BxNcuN1HOxvSzIQZNs6oc3RgSJR/LgWdqvXxUmIOVOjRb5rZrHLHof
+	7jtvT1r43fExsx90ttXXlAbdhhdCzGrc6j5UckMVp8nVOwX5MCvhus8o=
+X-Google-Smtp-Source: AGHT+IHFbrYoCMxpIwQa9iv3WaCUEk+2IKcO/OW35HNSxbp9ei8R3L1Mpz70U0IVCVfOTLEiJhohYjKZ/cD9iEYeZeU8t2D18TO8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202406230912.F6XFIyA6-lkp@intel.com> <CAFULd4YVOwxQ4JDaOdscX_vtJsqJBJ5zhd0RtXXutW=Eqh29Qw@mail.gmail.com>
- <CAHk-=wg1h4w_m=Op1U4JsyDjsvqG0Kw1EOVMQ+=5GX_XytdorQ@mail.gmail.com>
- <CAFULd4YR-VkAOKiS5yxSUYi0YMzY1p=pkYe4dOkgFs+A=9AFFA@mail.gmail.com>
- <CAHk-=wi_KMO_rJ6OCr8mAWBRg-irziM=T9wxGC+J1VVoQb39gw@mail.gmail.com>
- <CAHk-=whPqqZVSeJiQsMvsAxtAmtR9iAuB4gg_1sUK2D-uBPpLw@mail.gmail.com>
- <CAFULd4YAeF7=q7DYUh016kabxS8b32qRbFqDBJQrvLq6RjwEVg@mail.gmail.com>
- <CAHk-=wiHo2YeA=TOUf8vxFLOc0+BoH8USaiT25fnX2ynXbrZkg@mail.gmail.com>
- <CAHk-=wgdCs0883dpvZpyna76q9eVcTMvvUVAaBuJMPyrgOhNig@mail.gmail.com>
- <CAFULd4ZW23_RNye6YGbsT0Uo-vOQBM_tBbSJRhh=0HZzXuC_8Q@mail.gmail.com> <CAHk-=wiWEgSo2Tb_bih7mnS27zAPL+RGg_7yX4qK1f710-j-Ng@mail.gmail.com>
-In-Reply-To: <CAHk-=wiWEgSo2Tb_bih7mnS27zAPL+RGg_7yX4qK1f710-j-Ng@mail.gmail.com>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Wed, 26 Jun 2024 09:54:32 +0200
-Message-ID: <CAFULd4YyamnC5D9SAo0w4EhbawJeS1K2ZqPt9CPUL4+S5uAOZA@mail.gmail.com>
-Subject: Re: arch/x86/include/asm/cmpxchg_32.h:149:9: error: inline assembly
- requires more registers than available
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: kernel test robot <lkp@intel.com>, oe-kbuild-all@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, 
-	Borislav Petkov <bp@alien8.de>, Peter Zijlstra <peterz@infradead.org>
+X-Received: by 2002:a05:6e02:180e:b0:375:88ec:810d with SMTP id
+ e9e14a558f8ab-3763b3695demr8702465ab.5.1719388502909; Wed, 26 Jun 2024
+ 00:55:02 -0700 (PDT)
+Date: Wed, 26 Jun 2024 00:55:02 -0700
+In-Reply-To: <20240626074013.30611-1-norbert.kaminski@3mdeb.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f274f6061bc65464@google.com>
+Subject: Re: [syzbot] [ext4?] KASAN: use-after-free Read in
+ __ext4_check_dir_entry (2)
+From: syzbot <syzbot+11af34d3c0711f233fd4@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, norbert.kaminski@infogain.com, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 25, 2024 at 8:31=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> [ Sorry for not being hugely responsive the last few days - I was on
-> the road for a family get-together on the east coast, so I spent time
-> on airplanes and hotels and I don't particularly enjoy working with a
-> laptop ]
->
-> On Mon, 24 Jun 2024 at 08:42, Uros Bizjak <ubizjak@gmail.com> wrote:
-> >
-> > >
-> > > I'm sending the patch out in the hope that another set of eyes will
-> > > make it actually better.
-> >
-> > + _lock "cmpxchg8b 0(%[ptr])", X86_FEATURE_CX8) \
-> >
-> > This can be just:
-> >
-> > + _lock "cmpxchg8b %a[ptr]", X86_FEATURE_CX8) \
->
-> Thanks, yup, will fix.
->
-> > - if (unlikely(!ret)) \
-> > - *(_oldp) =3D o.full; \
-> > + *(_oldp) =3D o; \
-> >
-> > This one should really update only when cmpxchg fails.
->
-> The thing is, when cmpxchg doesn't fail, then oldp should already be "old=
-", no?
+Hello,
 
-Also replying here with the reply to your proposed patch, to document
-a subtle issue with try_cmpxchg:
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+SYZFAIL: NL802154_CMD_SET_SHORT_ADDR failed
 
-You probably want to look at 44fe84459faf1 ("locking/atomic: Fix
-atomic_try_cmpxchg() semantics") [1] and the long LKML discussion at
-[2].
+2024/06/26 07:54:36 ignoring optional flag "sandboxArg"="0"
+2024/06/26 07:54:37 parsed 1 programs
+2024/06/26 07:54:37 [FATAL] failed to run ["./syz-executor" "setup" "fault" "binfmt_misc" "usb" "802154" "swap"]: exit status 67
+mkdir(/syzcgroup) failed: 17
+mount(binfmt_misc) failed: 16
+SYZFAIL: NL802154_CMD_SET_SHORT_ADDR failed
+ (errno 16: Device or resource busy)
 
---quote--
-This code is broken with the current implementation, the problem is
-with unconditional update of *__po.
 
-In case of success it writes the same value back into *__po, but in
-case of cmpxchg success we might have lose ownership of some memory
-locations and potentially over what __po has pointed to. The same
-holds for the re-read of *__po.
---/quote--
+Tested on:
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=
-=3D44fe84459faf1a7781595b7c64cd36daf2f2827d
-[2] https://lore.kernel.org/lkml/CACT4Y+bG+a0w6j6v1AmBE7fqqMSPyPEm4QimCzCou=
-icmHT8FqA@mail.gmail.com/
+commit:         55027e68 Merge tag 'input-for-v6.10-rc5' of git://git...
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=1000b3b6980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7bff6f9b539bef0c
+dashboard link: https://syzkaller.appspot.com/bug?extid=11af34d3c0711f233fd4
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-Uros.
-
->
-> I mean, by the very definition, atomic_try_cmpxchg() can *not* be
-> successful if the new value didn't match the old one.
->
-> I mean, just look at the very doc you point to - the "definition" is
->
->   bool atomic_try_cmpxchg(atomic_t *ptr, int *oldp, int new)
->   {
->     int ret, old =3D *oldp;
->     ret =3D atomic_cmpxchg(ptr, old, new);
->     if (ret !=3D old)
->       *oldp =3D ret;
->     return ret =3D=3D old;
->   }
->
-> iow, it only returns success of "ret =3D=3D old", and "old" by definition
-> is "the contents of oldp".
->
-> (Here "oldp" is a local variable, not something that can be changing).
->
-> So I *think* the whole
->
->     if (ret !=3D old)
->       *oldp =3D ret;
->
-> is actually counter-productive, and could/should be just that simpler
-> unconditional *oldp =3D ret, because you have two cases:
->
->  - ret =3D=3D old: the assignment doesn't change anything and is a no-op
->
->  - ret !=3D- old: the assignment needs to be done
->
-> but doing it *unconditionally* means that now as fat as the compiler
-> is concerned, the original *oldp value is unconditionally dead, which
-> sounds to me like it should be good for register allocation (the
-> context here being that it _looks_ like a pointer access, but it's
-> really meant to be a "in-out argument in a register").
->
-> Now, in practice, I suspect that everybody checks the return value and
-> "old" is never used afterwards in the success case, so in that sense
-> this doesn't matter and it's all dead regardless.
->
-> But it seems to be a complication in the docs and the implementation.
->
-> Of course, I may be missing something completely obvious, and/or you
-> have some subtle code generation reason why you prefer the conditional
-> there. Feel free to explain,
->
->              Linus
+Note: no patches were applied.
