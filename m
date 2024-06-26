@@ -1,91 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64CBD1D530;
-	Wed, 26 Jun 2024 01:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99A745BFC
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 01:58:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719367108; cv=none; b=WOz2APMI7zMXiRvm6fcchysqqdUqtXuhlLuJp4ns337+gInF2cljQ3zwok8zw3JffbxA0ArdccBLsfizc/BSDARNTIG7quFtPgfsFZVG6QDVJ7uj3uAtPNDTsxbXa0IQ0tdJmbULKJ3OgAT6zNI1jzyq5uSwGdm6W/x9uHAXfn8=
+	t=1719367131; cv=none; b=nODXUntL9r+39P+idT1wXY0kOwLsHZhgnvpmXOGPNOr8F3D/SM39saapPvuEff5CifCMoHCTvpPvOoBDLEO/c2wOo7nKLqLIsMMNw4bQVoWFtiKsUxNjhxMCiLW2hKPxGNb4lMnqB+fAIyTC0Yd2jZGVwmtZxWNctJ/hWQVPTdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719367108; c=relaxed/simple;
-	bh=BGJQ/NML6MG7AsyBe/Q9WpGnnYFAdXDeS+xVeOQIm78=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f1awu1mrJponW9c0VVYLVK9vXGG3mVx5JYUoH3Ii82y7dGyYpCZN5i8biUrhivzvys088E2wmVKiv2FECiMVnr2vR6UlVPukrvr4V2Pakh3qpmVUd1j9lRUjHtNpX2eKhzO3K7oerAUEoV3jwsFcHeHwCciXPHvpNd8ofyZLORM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eigubmSy; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719367131; c=relaxed/simple;
+	bh=GnG1sbGbs1jtmTvlrH54yNuEYDYvf8DpjOgAllIIWYk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=owbeHEoyygiwwGFK4SUYTY2/LHQjqvnYgjmhdw8ylWD0xzbo8i/Lkxz9p6rjcVJpZYG3KrjQSt8jaY3ODExU+TzMQoIFAX4cSj3W+u32w4x+Wl+QD8drHDl2qrD7nFgd7pq0CQgQYiK4vA7sVGJyeQPYR8HmcSdkm2FXtXeUbxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rs2g/cNn; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eigubmSy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719367106; x=1750903106;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=BGJQ/NML6MG7AsyBe/Q9WpGnnYFAdXDeS+xVeOQIm78=;
-  b=eigubmSybISWNiLODzxHCxs2jEQtVlRzkR9VuarN+Sj6GAg+PXNrHCbh
-   MfC8TjyeZIvc5noRJEAqvZ7di6mcxZMiLeuzjmVv46iFgdi8IQA2lK7NF
-   end7ionBfRM8WRf3PFMwa3xy5QdGnS/SBqEZRFEqVwd5qeFduwtaxsPt2
-   fXozeertB19lONd1VrHwHA/cqnXrQdbIpFICkdfWn2GSmHY9iM36N1+ui
-   dfazOl8YcE5JEVXwo3ZtfNRl+UpY7FYGbrc7z2gZUGUuV1TiT4QKv3jFG
-   ieOwYhHW0GciSja1XUOwYOOJY8GUmi0EulqbARly1jpYHc4fTYQz1DjJs
-   g==;
-X-CSE-ConnectionGUID: I9eqvD76T0utrZQySrihyg==
-X-CSE-MsgGUID: kVpgRXM5Rde9VybSz2sSQw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="16562230"
-X-IronPort-AV: E=Sophos;i="6.08,265,1712646000"; 
-   d="scan'208";a="16562230"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 18:58:25 -0700
-X-CSE-ConnectionGUID: chjdGxvsQN+UmJeaoxT1uA==
-X-CSE-MsgGUID: 9cGUqliyRFKvqz2e9fJp8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,265,1712646000"; 
-   d="scan'208";a="44273252"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.232.203]) ([10.124.232.203])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 18:58:04 -0700
-Message-ID: <b2824879-113a-4214-8bd0-f8f71bd18735@linux.intel.com>
-Date: Wed, 26 Jun 2024 09:57:55 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rs2g/cNn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719367128;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GnG1sbGbs1jtmTvlrH54yNuEYDYvf8DpjOgAllIIWYk=;
+	b=Rs2g/cNnnjfNIfJ2XJZsYch+YbHRgYCV6KO7SjYjyz88mcpaXaULK+c9fNDcz5oJogBELb
+	Wmy6sZfA1gAlP9emjNWpKJ7O7BMtscGjyqzfMjqHMLYVDHGn2jVv8o97HW1muB0E1z7Mhw
+	/t8yFJ4L5ikwn0zs5K/PU/rIBz9fqHc=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-507-vIKyfcDdNhOMY83muvBJLQ-1; Tue, 25 Jun 2024 21:58:47 -0400
+X-MC-Unique: vIKyfcDdNhOMY83muvBJLQ-1
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2c6f1c0365eso7323019a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 18:58:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719367126; x=1719971926;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GnG1sbGbs1jtmTvlrH54yNuEYDYvf8DpjOgAllIIWYk=;
+        b=n+shQDV5/qTvhaNJUro6ANEuyFMMsj5yMwQgnBfZny5WFOXkxfpkELLP0ICvZd3HK+
+         rYIS9w3GkA404w4tLnj70lgy/vacQsIRMnNueZ2/YbzA0y9bGznabIPnAF3AHzCnZUk6
+         3ncVZApEMjSZ/iOlSXiz7Kb7vEFeHh5fZr52nsvI65GFqdpJs+hC5ztsVZ38/ij8A5FT
+         bhrIMkjE/YSycHKgsNJ44GQwno9EcUJqp+PuyhLKKCP1Fy31aLneJpOC41SD88EujEAq
+         p7vv/TKpd4QimjrRnFQLuufpvE80HR2+Ut8s9btfaqrmcKyL+TF5cWFSHPsM0QF4u7fw
+         ykhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUDCWMRM7pWEtQdsrliemFMgGbb9nZJqosD2gEhwAYo0RIcf5rGg9eklslfn3Z1BxH8wxHgUY8VHun49AK33xDLfaAadm/9CAjZ7VXp
+X-Gm-Message-State: AOJu0YwusVUbxqSkSPakOannR4fQFGl088qyRoLNjgYrR0SfNGsEIgxz
+	FG4RciAhCoRmKaO3/CT7ydVXJCgCN601uYFEUY1SaIpt/DOR1QviWtPnwh1QmQUfwQmo9q/TPn3
+	MCVNkvxMFwPb4m2n7Q7AG2MbzKdT509X+V1Nl3rf7Lb+RbWvu2xp1s72NJvKv09ASwB/HGaJG7u
+	3MBfrJYkbK4o4nrLL/tCcj8fMjJECUsvoJSNXE
+X-Received: by 2002:a17:90a:d98e:b0:2c4:b8e1:89b0 with SMTP id 98e67ed59e1d1-2c850573e58mr8416519a91.30.1719367126330;
+        Tue, 25 Jun 2024 18:58:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE5cItPu7kw+lpFHgT9mFcrgcyIi3eaohdOBIsIuRQUoMjB36Oowm0mQq7gn7+W9fkMRWr+6IMsheb7X2K6btw=
+X-Received: by 2002:a17:90a:d98e:b0:2c4:b8e1:89b0 with SMTP id
+ 98e67ed59e1d1-2c850573e58mr8416498a91.30.1719367125794; Tue, 25 Jun 2024
+ 18:58:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] selftests: kvm: Reduce verbosity of "Random seed"
- messages
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org, Jim Mattson <jmattson@google.com>,
- Mingwei Zhang <mizhang@google.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
- Zhenyu Wang <zhenyuw@linux.intel.com>, Like Xu <like.xu.linux@gmail.com>,
- Jinrong Liang <cloudliang@tencent.com>, Dapeng Mi <dapeng1.mi@intel.com>,
- Yi Lai <yi1.lai@intel.com>
-References: <20240619182128.4131355-1-dapeng1.mi@linux.intel.com>
- <20240619182128.4131355-3-dapeng1.mi@linux.intel.com>
- <ZnRxQSG_wnZma3H9@google.com>
- <ee06d465-b84b-4c75-9155-3fa5db9f3325@linux.intel.com>
- <ZnWAMqimqze1a12H@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <ZnWAMqimqze1a12H@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240624024523.34272-1-jasowang@redhat.com> <20240624024523.34272-4-jasowang@redhat.com>
+ <20240624060057-mutt-send-email-mst@kernel.org> <CACGkMEsysbded3xvU=qq6L_SmR0jmfvXdbthpZ0ERJoQhveZ3w@mail.gmail.com>
+ <20240625031455-mutt-send-email-mst@kernel.org> <CACGkMEt4qnbiotLgBx+jHBSsd-k0UAVSxjHovfXk6iGd6uSCPg@mail.gmail.com>
+ <20240625035638-mutt-send-email-mst@kernel.org> <CACGkMEtY1waRRWOKvmq36Wxio3tUGbTooTe-QqCMBFVDjOW-8w@mail.gmail.com>
+ <20240625043206-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20240625043206-mutt-send-email-mst@kernel.org>
+From: Jason Wang <jasowang@redhat.com>
+Date: Wed, 26 Jun 2024 09:58:32 +0800
+Message-ID: <CACGkMEvO+hAd-JeM-LEAavZqogEhSBPQRhSQK6hPMaVyEHH7jQ@mail.gmail.com>
+Subject: Re: [PATCH V2 3/3] virtio-net: synchronize operstate with admin state
+ on up/down
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: xuanzhuo@linux.alibaba.com, eperezma@redhat.com, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, venkat.x.venkatsubra@oracle.com, 
+	gia-khanh.nguyen@oracle.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jun 25, 2024 at 4:32=E2=80=AFPM Michael S. Tsirkin <mst@redhat.com>=
+ wrote:
+>
+> On Tue, Jun 25, 2024 at 04:11:05PM +0800, Jason Wang wrote:
+> > On Tue, Jun 25, 2024 at 3:57=E2=80=AFPM Michael S. Tsirkin <mst@redhat.=
+com> wrote:
+> > >
+> > > On Tue, Jun 25, 2024 at 03:46:44PM +0800, Jason Wang wrote:
+> > > > Workqueue is used to serialize those so we won't lose any change.
+> > >
+> > > So we don't need to re-read then?
+> > >
+> >
+> > We might have to re-read but I don't get why it is a problem for us.
+> >
+> > Thanks
+>
+> I don't think each ethtool command should force a full config read,
+> is what I mean. Only do it if really needed.
 
-On 6/21/2024 9:29 PM, Sean Christopherson wrote:
-> On Fri, Jun 21, 2024, Dapeng Mi wrote:
->>> --
->>> From: Sean Christopherson <seanjc@google.com>
->>> Date: Thu, 20 Jun 2024 10:29:53 -0700
->>> Subject: [PATCH] KVM: selftests: Print the seed for the guest pRNG iff it has
->>>  changed
->> s/iff/if/
-> "iff" is shorthand for "if and only if".  I try to write out the full "if and only
-> if" when possible, but use "iff" in shortlogs when I want to squeeze in more words.
+We don't, as we will check config_pending there.
 
-Good to know. Thanks.
+Thanks
 
-
-
+>
+> --
+> MST
+>
 
