@@ -1,103 +1,115 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D271D3B1A1
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 08:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073C61534F8
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 08:48:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719391719; cv=none; b=ETUaD7J/+iMJloDedXR2o3X3uPdW2sLf+Epbh1vO+rdh09HKbj1Z6wAV9dwqo2m01zAvONGHfeWYGKlhvLfn8WOdPO1W3G6LNuIWL8LShi02s/zpaGWB+bbIECDFt2oHTwjYFPglt/H2TxMXBPvGW5se4RPvPaN+ngrjpTjUpTw=
+	t=1719391718; cv=none; b=Xxp1hUx28TEFDoUO0RgdQg+9nSkHONe/eXDdROddAgUQNyUi+45LZw5VEKKvQo+wfJ9WC8i2xIupZFI387mJwQyadLlGEnMpmQuaMCufLlFPLRlpM/ju2orvY0b1fQ/k2Q2kClDgKCSGvn1Au7HLxmn17xFIX3PIXdiESpTBqzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719391719; c=relaxed/simple;
-	bh=51mXIHmEmsttyOopkteiJ918HLyzBaY8B/B/PTB4fcM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=K5RyfgstiDxd/a0xzicld6goJwijzNnd7sEbVkpQVa5pOcGlwoQm6Xzxhui59G1EyHlgiYrMXote+qSMUc4hqEZe+KpudY+0TARzo3wuEyIX9hGiNvQ+b3TThrNtS0VQqMfn3Qv7VmsX3AByGLY4OdDKA74Zyfg7sx8fu23oujc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i53875b6a.versanet.de ([83.135.91.106] helo=phil.lan)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1sMOJf-0000RH-21; Wed, 26 Jun 2024 10:47:47 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org,
-	rfoss@kernel.org
-Cc: Laurent.pinchart@ideasonboard.com,
-	jonas@kwiboo.se,
-	jernej.skrabec@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	victor.liu@nxp.com,
-	quentin.schulz@cherry.de,
-	heiko@sntech.de,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Heiko Stuebner <heiko.stuebner@cherry.de>
-Subject: [PATCH RESEND] drm: bridge: dw-mipi-dsi: Allow sync-pulses to override the burst vid-mode
-Date: Wed, 26 Jun 2024 10:47:22 +0200
-Message-Id: <20240626084722.832763-1-heiko@sntech.de>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1719391718; c=relaxed/simple;
+	bh=UVIPWp5QKq/h9uqekbClLnSeZK1DVdDfWrr2Y5V4nMM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Rs2a+YpkPfLKuLdU5Vatp81AurcCGH0UEgE7BiHTnwBx4s+duzHw5r/R6Haqmf1b2Z/idb61duuEosfGxNZ9CXOTviLFSNOjcublbgFJx0TN29AbCxecNVKco+UkJbr4HPIPJXG5hvZTpdN/3jv9Wn6ov9I9sN7+hH3epUL5LWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T7X9mjpD; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T7X9mjpD"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-362bc731810so5734576f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 01:48:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1719391715; x=1719996515; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EuOhVzYq3wiE4Y7A5GoZE+4/Q5xc4iE6WYutIGSgv7o=;
+        b=T7X9mjpDJ+XFS02wlYb3FUYF0nVFUyKCTCuR4GOLYkE8un7QvRMZ3Zj1DV5Xv3X352
+         X9Cqisne9+4oSKFdiF1pJP2DLKCF/j51xF63EkuSeYWxLo/iZefo3uDJ0hWv4ETp4QKE
+         /CWJ1gO6WPHSWzYcOqO7PWC7qv+u71fofHs/C5sdQBK90mdPNAWSCYfZ9jLxII2ppB3x
+         dKi/CzM8Ib1+8UGSQjy6qYWLYw4XaYrWO6dNzWdjRHyBJSFYN3LeQIkl+zMZ3OCyPeaS
+         bbZqLbs0oEMVDA+G/RWIfpwLJbpW5x+6/9O5eyR3bbDc8Z43fkXCa/bnWYwUwS0nuqvQ
+         KznQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719391715; x=1719996515;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EuOhVzYq3wiE4Y7A5GoZE+4/Q5xc4iE6WYutIGSgv7o=;
+        b=B3YKPCGHO468XADeg7elKuJy7toWL8hznk1GGQDylzDai6estBTPk2JQAj9KwW/ajS
+         RwgqqYiT5/vnMDhlUBTuH9ilibMIiB9VvQRS6+FGpZrVe9Yb8vFE5fDYR07vn4wu4xj9
+         SDL964wwHdLwX9S5CGRcQC7ycMSdjw5aAOaMqOD2Pby9aGwkf9fCgdmbfaFXWKmt268U
+         bV+09nuDhPxBrv+Md8WwgcSkzZECfUUfe3XegBuLj9PHYwe6D7tq9NoOSuE1tNnE6SGV
+         Hm2wgsr8Vtw/wrx3tA2ITlxLm4HqQOMiJSW0Wo0+OujP8uCQdV8oncPTGF6wNWB+XqD2
+         iH8w==
+X-Forwarded-Encrypted: i=1; AJvYcCWHYqA+F688MkqyMe0LjrwTIfy2oN8tO37j6Re/f7gNBQ4GtODGnAqIUv0JUMi7Plsv0NBInyWx6UrVijjNs9lu/vPd11oex97fGLjn
+X-Gm-Message-State: AOJu0YzVBSwnoqlMVhRvrmgsC48942BM09bLYVPzrSdyN93uwJQxxZ2U
+	+dwTC/0JWidJ4+bdljsOVGfzikBrX+Q1b7W6S4v+RVLkt0ac7vC2wfe0SU6i4SdTI07KC6RLlq5
+	10L9JrFX5xyKkz3B3A+3+R1D1u2bpmO7KAavz
+X-Google-Smtp-Source: AGHT+IG6k43sHnAMkEDWrxc31NUjBNVuJF/BEysBO6SpoWaLGBJdAcL78H62ahXzL4uftuSYq1Hf8sENRymPPH9UvJo=
+X-Received: by 2002:a05:6000:2ab:b0:366:eb00:9ddf with SMTP id
+ ffacd0b85a97d-366eb009e92mr9799022f8f.3.1719391715071; Wed, 26 Jun 2024
+ 01:48:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240621-tracepoint-v3-0-9e44eeea2b85@google.com>
+ <20240621-tracepoint-v3-2-9e44eeea2b85@google.com> <CAH5fLghb6oVkgy3ckf=dUk9S4VdCeWin+yDBW1ffBoxu=HqBKw@mail.gmail.com>
+ <ZnsIJ6ejNX_dAc8f@boqun-archlinux>
+In-Reply-To: <ZnsIJ6ejNX_dAc8f@boqun-archlinux>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Wed, 26 Jun 2024 10:48:23 +0200
+Message-ID: <CAH5fLgiG5hdh1JJgjH94E=ZwJo6ERkuZUFDpkrrJ6ErQhTvCrg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] rust: add tracepoint support
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Heiko Stuebner <heiko.stuebner@cherry.de>
+On Tue, Jun 25, 2024 at 8:11=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
+rote:
+>
+> On Fri, Jun 21, 2024 at 02:52:10PM +0200, Alice Ryhl wrote:
+> [...]
+> >
+> > Hmm, I tried using the support where I have both events and hooks:
+> >
+> > #define CREATE_TRACE_POINTS
+> > #define CREATE_RUST_TRACE_POINTS
+> > #include <trace/hooks/rust_binder.h>
+> > #include <trace/events/rust_binder.h>
+> >
+> > But it's not really working. Initially I thought that it's because I
+> > need to undef DEFINE_RUST_DO_TRACE at the end of this file, but even
+> > when I added that, I still get this error:
+> >
+> >     error: redefinition of 'str__rust_binder__trace_system_name'
+> >
+> > Is the Rust support missing something, or is the answer just that you
+> > can't have two files of the same name like this? Or am I doing
+> > something else wrong?
+> >
+>
+> Because your hooks/rust_binder.h and events/rust_binder.h use the same
+> TRACE_SYSTEM name? Could you try something like:
+>
+>         #define TRACE_SYSTEM rust_binder_hook
+>
+> in your hooks/rust_binder.h?
 
-The state right now is that if the panel has the burst-mode flag it
-will take precedence over the sync-pulses mode.
+I was able to get it to work by moving the includes into two different
+.c files. I don't think changing TRACE_SYSTEM works because it must
+match the filename.
 
-While sync-pulses are only relevant for the video-mode, the burst-mode
-flag affects both the video-mode as well as the calculated lane_mbps.
-
-Looking at drivers like the nwl-dsi [0] it only enables burst mode when
-the panel's flags do not contain the sync_pulse flag.
-
-So handle things similar for dw-dsi in that it selects the video-mode
-with sync-pulses if that flag is set and only after that, checks for
-the burst-mode. So panels selecting a combination of both burst and
-sync-pulses get the sync-pulse mode.
-
-The case this fixes can be found on the ltk050h3148w . It does need the
-lane-rate to be calculated according to burst formulas [1], but without
-sync-pulses we see the output shifted around 20 pixels to the right,
-meaning that the last 20 pixels from each line appear at the start of
-the next display line.
-
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/bridge/nwl-dsi.c#n301
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6c9dbee84cd005bed5f9d07b3a2797ae6414b435
-
-Fixes: 93e82bb4de01 ("drm/bridge: synopsys: dw-mipi-dsi: Fix hcomponent lbcc for burst mode")
-Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
----
-resend, because I messed up and somehow forgot to include _all_
-mailing lists.
-
- drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
-index 824fb3c65742e..28dd858a751bd 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
-@@ -605,10 +605,10 @@ static void dw_mipi_dsi_video_mode_config(struct dw_mipi_dsi *dsi)
- 	 */
- 	val = ENABLE_LOW_POWER;
- 
--	if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST)
--		val |= VID_MODE_TYPE_BURST;
--	else if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
-+	if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
- 		val |= VID_MODE_TYPE_NON_BURST_SYNC_PULSES;
-+	else if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST)
-+		val |= VID_MODE_TYPE_BURST;
- 	else
- 		val |= VID_MODE_TYPE_NON_BURST_SYNC_EVENTS;
- 
--- 
-2.39.2
-
+Alice
