@@ -1,96 +1,114 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DC017C20F
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 10:43:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C41A8179957;
+	Wed, 26 Jun 2024 10:44:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719398620; cv=none; b=C6pUnpSN4aotDGcphdMZHP+Efl016UQ7asuYruvfmFdvCO1woXliYmwUZgC+QiUA5UwURB2dGyGlZYwr/9ZtsKWPsCms2SuoVk96vnS2gjhUAVCRERGLL499FFWKHVZcAPusaMtfCVP0M4Puxr8E9WdnEyQ6kgJoUwpg6OM/upA=
+	t=1719398648; cv=none; b=ggDKtG0C86B+DnT9/FtxWzi8vyav9e9m8/Fk8EuI0BsDTpT8FR9F/PGCSRMdwVwTAtuXUi5hYS0bJrAEcFFcZ3nxJ3OGEITGtiH0rK/2EWfwnd5rG5w8/5LG8fAE+oKQvm7mo6DrKvA/Idtr3gOB9L23BObb1ozR0PfKyJSavWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719398620; c=relaxed/simple;
-	bh=zfKJYYROJVk0RD7o7oXX/YtpHfug35jIrMT+PjI/g78=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XQ4i50dbiQqYYkoerVm55kQJ6U7Ya4s5xD9lmssKqLBgaYeZV6f3s8elPedc6CR6/2BQABWvMbso+FxnTO2eqCwUmkciM0Fjcr80jjT1Zluexn/sK0XL8ZHUmOVoo76Abty5WTJsBiFxH/48ORKV4JdWwKgTByRtEX2zqC1G5bM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Rqz2DK9w; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rqz2DK9w"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dfdff9771f8so6082508276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 03:43:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719398618; x=1720003418; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zfKJYYROJVk0RD7o7oXX/YtpHfug35jIrMT+PjI/g78=;
-        b=Rqz2DK9wPWbf1S1oLHOhLyGRJiYFNp7CCOjtGakcQeUZSblTUmd+Xj83fRLuyO9Fub
-         qxn68J7rKAbp/KgDHIdb2eS1snIuLgnlopfxEMNNdl5wf+PXHkVIrbWyN8YQ3a4LjDjp
-         UMNvUaF0NjyDrOIfyelR/uRrC0SnQc7t2l19czO7kcpn93eoMRYsmHQ7EUo7n1Y7dbKs
-         GtV0/fGGrJFzuL/OsV6Bay2NRBW9AitI7del326JimBjALQeBHyLprD9Q1avqMvhgTQ5
-         Yg6Bed9v9irIUSklolLog1+L29dKPJvhXrxKzMSNhgDaEDRSlxEUzpARCVN6FLdsmu1B
-         EGEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719398618; x=1720003418;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zfKJYYROJVk0RD7o7oXX/YtpHfug35jIrMT+PjI/g78=;
-        b=RR29fraMJMQOxA8rKW2OqsU5TxDnwEpfxVPSg7SpxaxyPtNOzRyYN2xeFC+s8S6vj8
-         4ZnzYNAWw5HFvF7VZsl/nT6pR1BHXfh+QS8L6J2IHWyhzZACjlEDSyk51Pb2CVCSPdof
-         0PxTEJQo2adREXviNJ7uLVe4YyObalD/rdhSikIeiQxigRJzpGrkMKzS1GptbZYOhLP2
-         /Wh/Css3JF1byCjYAx7NCthzEv0yQWWgKldo+gCf1Qc12ed9hDjqxbc6x6aD0T1f7e/5
-         L7pcEa0fRfOskqmuKdI0GWWKEj1oWuMvcjLSIfpBfDB1NRd/riJE07zH64XSY1/TXuP5
-         loGg==
-X-Forwarded-Encrypted: i=1; AJvYcCX2wzF87jeZPQ9Ydy3Fq7Xh5wlhzIXqrrvNOGMqVHR/Hu+cN7JOWNIwq7SK/i/ucTjuUM7lmDuuEksXNMjUuFcVP0k0eaaexPJTuvHy
-X-Gm-Message-State: AOJu0YzxsWWmbXHAFHZDZ3AJuP3QCzjuJM/sfhrc2U9aupns756kzb93
-	7HeoNOo599TEVhULO/1zJrZZVY5/Ocs6scMZnZv0t5Y/zkDzkPm2Y+YSRoPUnG3RcDCbYU3a3yZ
-	OQwypmG2hx6AWKjcYbiPfEqKdvuDPucdaayQj3A==
-X-Google-Smtp-Source: AGHT+IEVbTJEGpVxzE84hTCUXU5VaqurLl6zpCI+/BlfHHI8n2eoWxpJYzRl//T6mMWb1PBoQtdxwWGbYAqjp2ph14g=
-X-Received: by 2002:a25:a464:0:b0:e03:3407:c0d with SMTP id
- 3f1490d57ef6-e0334070ebfmr1539563276.30.1719398617893; Wed, 26 Jun 2024
- 03:43:37 -0700 (PDT)
+	s=arc-20240116; t=1719398648; c=relaxed/simple;
+	bh=I60E58+WFYY9o6jPKnlfqcOca3KNiFUdpYHNT52AkpY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kiNdnJpwU+mtpt7JfhS8+lK1L6nvvh2LohUFQq9boJZ2WVWnNw1SAN3rt3NGW2lH7PkqNyO1ORd4NCPIvdCyUzHeQFh6/bhA7QZiNobF1/+8r/GhXYNk9hkwWc5sNwDzN9GCl5ujAhIi2P0no3Ap9j+ciUwd2ixLSV59trCmj88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DCCB7339;
+	Wed, 26 Jun 2024 03:44:29 -0700 (PDT)
+Received: from [192.168.178.6] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 427313F766;
+	Wed, 26 Jun 2024 03:44:03 -0700 (PDT)
+Message-ID: <06231a07-c470-4156-bada-41b346b280cb@arm.com>
+Date: Wed, 26 Jun 2024 12:44:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Znc3JMEgF22xDVvB@google.com>
-In-Reply-To: <Znc3JMEgF22xDVvB@google.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 26 Jun 2024 12:43:26 +0200
-Message-ID: <CACRpkdae-xqw+M-Z39NgdEQ-KUrh1uBNi5XjHZoKxJTjw-xRCw@mail.gmail.com>
-Subject: Re: [PATCH] ARM: spitz: fix GPIO assignment for backlight
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, 
-	Robert Jarzmik <robert.jarzmik@free.fr>, Russell King <linux@armlinux.org.uk>, 
-	Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv2 2/3] cpuidle: teo: Remove recent intercepts metric
+To: Christian Loehle <christian.loehle@arm.com>, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, rafael@kernel.org
+Cc: vincent.guittot@linaro.org, qyousef@layalina.io, peterz@infradead.org,
+ daniel.lezcano@linaro.org, ulf.hansson@linaro.org, anna-maria@linutronix.de,
+ kajetan.puchalski@arm.com, lukasz.luba@arm.com
+References: <20240611112413.1241352-1-christian.loehle@arm.com>
+ <20240611112413.1241352-3-christian.loehle@arm.com>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Content-Language: en-US
+In-Reply-To: <20240611112413.1241352-3-christian.loehle@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jun 22, 2024 at 10:42=E2=80=AFPM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
+On 11/06/2024 13:24, Christian Loehle wrote:
+> The logic for recent intercepts didn't work, there is an underflow
+> of the 'recent' value that can be observed during boot already, which
+> teo usually doesn't recover from, making the entire logic pointless.
+> Furthermore the recent intercepts also were never reset, thus not
+> actually being very 'recent'.
+> 
+> Having underflowed 'recent' values lead to teo always acting as if
+> we were in a scenario were expected sleep length based on timers is
+> too high and it therefore unnecessarily selecting shallower states.
+> 
+> Experiments show that the remaining 'intercept' logic is enough to
+> quickly react to scenarios in which teo cannot rely on the timer
+> expected sleep length.
+> 
+> See also here:
+> https://lore.kernel.org/lkml/0ce2d536-1125-4df8-9a5b-0d5e389cd8af@arm.com/
 
-> GPIOs controlling backlight on Spitz and Akita are coming from GPIO
-> expanders, not the pxa27xx-gpio block, correct it.
->
-> Additionally GPIO lookup tables operate with pin numbers rather than
-> legacy GPIO numbers, fix that as well. Use raw numbers instead of legacy
-> GPIO names to avoid confusion.
->
-> Fixes: ee0c8e494cc3 ("backlight: corgi: Convert to use GPIO descriptors")
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+So the fixes proposed in teo_update() there:
+
+(1) add '&& cpu_data->state_bins[cpu_data->recent_idx[i]].recent' to the 
+    if condition to decrement 'cpu_data->state_bins[].recent' or
+
+(2) Set 'cpu_data->state_bins[].recent' = 0 instead of decrement
+
+didn't work?
+
+> Fixes: 77577558f25d ("cpuidle: teo: Rework most recent idle duration values treatment")
+> Signed-off-by: Christian Loehle <christian.loehle@arm.com>
 > ---
->
-> Linus, I am not sure if this is actually an issue, but I strongly
-> suspect that it is. I have no hardware, so no means to test it, sorry.
+>  drivers/cpuidle/governors/teo.c | 73 ++++++---------------------------
+>  1 file changed, 12 insertions(+), 61 deletions(-)
+> 
+> diff --git a/drivers/cpuidle/governors/teo.c b/drivers/cpuidle/governors/teo.c
+> index d8554c20cf10..cc7df59f488d 100644
+> --- a/drivers/cpuidle/governors/teo.c
+> +++ b/drivers/cpuidle/governors/teo.c
+> @@ -59,10 +59,6 @@
+>   * shallower than the one whose bin is fallen into by the sleep length (these
+>   * situations are referred to as "intercepts" below).
+>   *
+> - * In addition to the metrics described above, the governor counts recent
+> - * intercepts (that is, intercepts that have occurred during the last
+> - * %NR_RECENT invocations of it for the given CPU) for each bin.
+> - *
+>   * In order to select an idle state for a CPU, the governor takes the following
+>   * steps (modulo the possible latency constraint that must be taken into account
+>   * too):
+> @@ -81,20 +77,15 @@
 
-Looks right to me,
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+ 66  * 1. Find the deepest CPU idle state whose target residency does not exceed
+ 67  *    the current sleep length (the candidate idle state) and compute 3 sums as
 
-Maybe you can send it directly to soc@kernel.org so it can be applied?
+s/3/2 ?
 
-Yours,
-Linus Walleij
+[...]
+
+> @@ -320,8 +288,6 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+>  	unsigned int tick_intercept_sum = 0;
+>  	unsigned int idx_intercept_sum = 0;
+>  	unsigned int intercept_sum = 0;
+> -	unsigned int idx_recent_sum = 0;
+> -	unsigned int recent_sum = 0;
+>  	unsigned int idx_hit_sum = 0;
+>  	unsigned int hit_sum = 0;
+>  	int constraint_idx = 0;
+
+Looks like 'bool alt_intercepts, alt_recent' have to go here already and
+not in 3/3.
+
+[...]
