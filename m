@@ -1,136 +1,151 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D48166319
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 08:45:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1963A15F41F;
+	Wed, 26 Jun 2024 08:46:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719391545; cv=none; b=mZceujzynTTV2fheX+o6ULIXeRMNG8kIEXAzi1LQZVuADAffvFuEANAK6BUPv/WJebPfg6eGZihWw3COgDt9+EB2NEMb/FdJYHswdegnHIDuleRTT1qKHqvg8oJheV/UqKTXxIC14QNQ1SG3zJpqwLIkeziJB/FE2AHHredYbrQ=
+	t=1719391572; cv=none; b=hcWUyehrfg4+oCfo8h4tPHTqUrJwCZ4a+ZIFEm+9DJaN0OXauSlnb63jmNmKJmRqaesDmm7lGqxDpoM/JL3UDFgYhOBc9yECcA3atEverr6zbJaL8EiTK4mKxSPPNGVlMj6U5mF7+lRslAVwnGP/4QcEKrnFp7dTuljVZyeu5go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719391545; c=relaxed/simple;
-	bh=DzNCPz0l+qOT0t/ADA4oPjAIWHqdAm5rRYNgDCTIR/w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G90u4dG1V8fFMnBKAfQdpy59erWCDxge8oastoq0v3xV0Zwyd9GG2qQvqkg4DZfX+8QmSjI0o76RIsHNcLCj1CCDd7tkbMcoMz11XJTxiD7o4S9jG6RmPTL/nP3Br4TwxGK49DstejpwkwE/3avpS/gP1fRkrMeHRSw9WtYDHAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=AXgM3s/B; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
+	s=arc-20240116; t=1719391572; c=relaxed/simple;
+	bh=h79mznHSl/W4ra79KGuRF64LsBrfy+2kmSGDsL9msYs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Pua8tHID6j5ubhOBP3vnCZtQT+fPCO/Z9NQe0sinVZB/0W3ITc5cGdcvbLCZCkaJAm7LBQPXKxbkYJXK8gp98Fr44u54mMQk3/mwbTbmM1By6yhqiY7BfZLTi6WrqUCHw3BDAwZMP8fnCtLjCnofUGjqSvqy3kfChY4ttVbRPaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mHjZaIBU; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="AXgM3s/B"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a724440f597so479019166b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 01:45:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mHjZaIBU"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a724b4f1218so467546166b.2;
+        Wed, 26 Jun 2024 01:46:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1719391542; x=1719996342; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=neUGPkJcfoHd8KdVXvztCJl9LwrUDYQkaArrGg63MBY=;
-        b=AXgM3s/BCGsdre8yMo6b7kgR1Ntq9J7YiTRU0uLUzhEICEan5GNVvNbud5YKebP7BY
-         Y4yKpQx7f3RLDDSd46Mc/R3pax+iFWmQaicoAcxmCd663AJCcjgM7kQHKhpG03VDi5Mo
-         c8/0slWxsBYq6Jn1eXP7jEQw/NK3NdKdIB8CXmCpTC5LIudm9ji6sa6nhtRdvZzWd/w0
-         ASSKLhq2FjYai91qvBZmV7vVUG8/RSpPzuI9IucB5nQrQ7Horm6CsIfpuMzfg91BuQN0
-         DDGpPImlUnslpdI2Fs8QGkreXDkghlSSOCR5pUioLXWXw3k1w7SRLUNqnYifbjEJaMm9
-         ZowQ==
+        d=gmail.com; s=20230601; t=1719391569; x=1719996369; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=gF+HoMYTQDkw0ZS822ARO0ZCBDmJWzWJIFLnjrTtD1Q=;
+        b=mHjZaIBUQzg70Oxa+qN19dGrCQ2Li/BwppWi+ucj5kVnILOpkpqQll9w/XjqUCUfqv
+         oKiY6KJm9X6qQN4e8/RLbkvMrShhfV2DtfTbCTx5xMAMxGR2WdYBubNFvLfwC/rKvp3t
+         F+HjCKMdJT5mlD0Xv0YXRC5EtWgj4yXkYxrBOtlcKRJ1kz1zPh3KNW/SPovQkkVkUrpL
+         t2zSSesQwzWH5CEfORQcuYMmhd6RyjWAhF6EdSzO6Y9xay6jfbdN7AOcW3dlnPh7WR52
+         UPvkdga+YbygHEg1tC6iq7mrp0DXi7Euvw7gCFPfEJ7NnzG8PsA312fkNQUxm17vxf58
+         MBtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719391542; x=1719996342;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=neUGPkJcfoHd8KdVXvztCJl9LwrUDYQkaArrGg63MBY=;
-        b=CMMUcCFc69ZHZ1uK8z1Kg+MjlLYwLn6N9pb5Dbgfs0z2LZ3dfWOBs40gh30lgN0PCT
-         qeCYenZ0VcdL3Wo93cO7pxr0z3v3JAXsvBxNKTkBKzenp+XVAu8o/oHvFrS+zSrMu76r
-         dchobULAwiqhPi49B5DKbX9YRVpexO6aa82Mvuv8EFB22RmjFwEKGgGESybIQiwnYtpU
-         nh814jOFAK291QXpN8J0TgvBgfZstHEDhO26Fye4GVhSkCdEZwHymjxhYa41yf2q7jGP
-         0D9DmXTFYohU6bO1CcC2J8f0EQU/gIUgFue2n4I+5fW3MXehvvjHTEwXDv6mj5f4FueV
-         MmTg==
-X-Forwarded-Encrypted: i=1; AJvYcCWFHCQfmDdPzBUMjiLqraeUqw5fbZwOkajcim5ls2p93Q+T7EQz0fMZXpU8pxWvC5AmI7p6Iknh798UTDrlLoxcwchqQFE3PNRyJcqC
-X-Gm-Message-State: AOJu0YwYu296+pes6PRUL1IVcbM3KzwsIgTt76Xine7c4ZdaKIz00ihY
-	XCmPKVDciM0slg1sPtqLuPWnkwRL6YoEHlb8be3BCVxepgftpxx8EfLdOKSCtcE=
-X-Google-Smtp-Source: AGHT+IGDBef0WRtb0XJ8d8v5qL2Ie1rZUFdFV7B0czkJOt4XCBhN/gvVhIsedYqTp0lfpWm1P/r0cA==
-X-Received: by 2002:a17:906:911:b0:a6f:56d2:8f0b with SMTP id a640c23a62f3a-a7245b6dc3dmr664354066b.3.1719391541930;
-        Wed, 26 Jun 2024 01:45:41 -0700 (PDT)
-Received: from fedora.sec.9e.network (ip-037-049-067-221.um09.pools.vodafone-ip.de. [37.49.67.221])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72605ff279sm218647166b.5.2024.06.26.01.45.41
+        d=1e100.net; s=20230601; t=1719391569; x=1719996369;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gF+HoMYTQDkw0ZS822ARO0ZCBDmJWzWJIFLnjrTtD1Q=;
+        b=LFczI7OjUr5sZbJbgxLz0RvZ/cl9Bc3s5IeYyNkVIl/o3ztVRX+oMLBOPIYWuBewv8
+         2xV+qEqjMtsZJpmDNYFDPwGm1PpA/kPWfA1BS/n6BBR8Rq7niPe5V0W1hmtBHjw6d+7k
+         9qoglh7M1i2kj91awS936M6fR3Q7HeX7VbDvEpL+znPpcxOxoBTxJvgX/RnI5SUPe7Qi
+         levGzGe7X7n0LM94b9swvyJz5XeVu5fuInumPneqDvWyUM3v88913wVo9fKc4LBXFm6o
+         dTM1MrV9Ciz1QN0z+iwBAS0ibShBE9Pa13n+Rhl0dGPSF/OZRqPb89U8xI0zZYxEnS3l
+         S8gA==
+X-Forwarded-Encrypted: i=1; AJvYcCWD3wpseIYue/pjofrV7Jno6bsLf3SX5gqZRogAX+TXP4accrJw/1zJAhZAAfz4freZgUAx3TpjxbrM3l9Utv2wLWCb7ju9WVEIqAgh
+X-Gm-Message-State: AOJu0Yw4SEb5lIa2vWCkpl38Vxv0rh01Dc7RY5bnno5Y3pOdVOak9to4
+	709jfq9PfsScRGJbiI7DSYGsyk8YdM0AsntVzTmvps0JctZ2R0NX
+X-Google-Smtp-Source: AGHT+IG8ObbyB4q/RgRD5c3NC+vzw0I1wf5g7edgZFLdXdG8BcDf3rHZYSX45sd8t+mZqsuX5bCwXA==
+X-Received: by 2002:a17:906:7c49:b0:a68:b557:76f5 with SMTP id a640c23a62f3a-a7242e12fd3mr593042766b.69.1719391569024;
+        Wed, 26 Jun 2024 01:46:09 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7244dbeecesm397252566b.218.2024.06.26.01.46.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 01:45:41 -0700 (PDT)
-From: Patrick Rudolph <patrick.rudolph@9elements.com>
-To: Patrick Rudolph <patrick.rudolph@9elements.com>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: naresh.solanki@9elements.com,
-	andy.shevchenko@gmail.com,
-	broonie@kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] pinctrl: cy8c95x0: Update cache modification
-Date: Wed, 26 Jun 2024 10:45:23 +0200
-Message-ID: <20240626084525.787298-2-patrick.rudolph@9elements.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240626084525.787298-1-patrick.rudolph@9elements.com>
-References: <20240626084525.787298-1-patrick.rudolph@9elements.com>
+        Wed, 26 Jun 2024 01:46:08 -0700 (PDT)
+Message-ID: <0a5f82ad9ba032d03b389fce54360a82914c15af.camel@gmail.com>
+Subject: Re: [PATCH v2 1/8] iio: add read raw service to iio backend
+ framework
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Olivier Moysan <olivier.moysan@foss.st.com>,
+ fabrice.gasnier@foss.st.com,  Nuno Sa <nuno.sa@analog.com>, Jonathan
+ Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 26 Jun 2024 10:50:00 +0200
+In-Reply-To: <20240625150717.1038212-2-olivier.moysan@foss.st.com>
+References: <20240625150717.1038212-1-olivier.moysan@foss.st.com>
+	 <20240625150717.1038212-2-olivier.moysan@foss.st.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-In the previous review cycle the regmap cache update code was
-questioned since it seems and odd way of using regmap_update_bits().
-Thus update the regmap cache modification code to better explain
-what it does and why it's done. This is no functional change, but
-it's improving code maintainability.
+On Tue, 2024-06-25 at 17:07 +0200, Olivier Moysan wrote:
+> Add iio_backend_read_raw() service to support attributes read
+> from an IIO backend.
+>=20
+> Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
+> Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+> ---
+> =C2=A0drivers/iio/industrialio-backend.c | 21 +++++++++++++++++++++
+> =C2=A0include/linux/iio/backend.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 6 +++++-
+> =C2=A02 files changed, 26 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industriali=
+o-
+> backend.c
+> index 929aff4040ed..0e2653de1956 100644
+> --- a/drivers/iio/industrialio-backend.c
+> +++ b/drivers/iio/industrialio-backend.c
+> @@ -357,6 +357,27 @@ int devm_iio_backend_request_buffer(struct device *d=
+ev,
+> =C2=A0}
+> =C2=A0EXPORT_SYMBOL_NS_GPL(devm_iio_backend_request_buffer, IIO_BACKEND);
+> =C2=A0
+> +/**
+> + * iio_backend_read_raw - Request a channel attribute from the IIO backe=
+nd.
+> + * @back:	Backend device
+> + * @chan:	IIO channel reference
+> + * @val:	First element of the returned value
+> + * @val2:	Second element of the returned value
+> + * @mask:	Specify value to retrieve
+> + *
+> + * This callback replicates the read_raw callback of the IIO framework, =
+and
+> is intended to
+> + * request miscellaneous channel attributes from the backend device.
+> + *
+> + * RETURNS:
+> + * 0 on success, negative error number on failure.
+> + */
+> +int iio_backend_read_raw(struct iio_backend *back, struct iio_chan_spec =
+const
+> *chan, int *val,
+> +			 int *val2, long mask)
+> +{
+> +	return iio_backend_op_call(back, read_raw, chan, val, val2, mask);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(iio_backend_read_raw, IIO_BACKEND);
 
-Signed-off-by: Patrick Rudolph <patrick.rudolph@9elements.com>
----
- drivers/pinctrl/pinctrl-cy8c95x0.c | 22 +++++++++-------------
- 1 file changed, 9 insertions(+), 13 deletions(-)
+I actually got an idea when looking at this for my existential crisis betwe=
+en
+dedicated APIs and a catch all .read_raw() :). What we can do is just provi=
+de
+the .read_raw() or write_raw() ops to backends (so we minimize the number o=
+f
+ops) and then we build on top of them for providing more readable (dependin=
+g on
+the case; some cases it does make sense to just call iio_backend_read_raw()=
+)
+APIs to frontends.
 
-diff --git a/drivers/pinctrl/pinctrl-cy8c95x0.c b/drivers/pinctrl/pinctrl-cy8c95x0.c
-index 781949e0e09e..9a92707d2525 100644
---- a/drivers/pinctrl/pinctrl-cy8c95x0.c
-+++ b/drivers/pinctrl/pinctrl-cy8c95x0.c
-@@ -475,7 +475,7 @@ static inline int cy8c95x0_regmap_update_bits_base(struct cy8c95x0_pinctrl *chip
- 						   bool *change, bool async,
- 						   bool force)
- {
--	int ret, off, i, read_val;
-+	int ret, off, i;
- 
- 	/* Caller should never modify PORTSEL directly */
- 	if (reg == CY8C95X0_PORTSEL)
-@@ -497,24 +497,20 @@ static inline int cy8c95x0_regmap_update_bits_base(struct cy8c95x0_pinctrl *chip
- 	if (ret < 0)
- 		return ret;
- 
--	/* Update the cache when a WC bit is written */
-+	/* Mimic what hardware does and update the cache when a WC bit is written.
-+	 * Allows to mark the registers as non-volatile and reduces I/O cycles.
-+	 */
- 	if (cy8c95x0_wc_register(reg) && (mask & val)) {
-+		/* Writing a 1 clears set bits in the other drive mode registers */
-+		regcache_cache_only(chip->regmap, true);
- 		for (i = CY8C95X0_DRV_PU; i <= CY8C95X0_DRV_HIZ; i++) {
- 			if (i == reg)
- 				continue;
--			off = CY8C95X0_MUX_REGMAP_TO_OFFSET(i, port);
--
--			ret = regmap_read(chip->regmap, off, &read_val);
--			if (ret < 0)
--				continue;
- 
--			if (!(read_val & mask & val))
--				continue;
--
--			regcache_cache_only(chip->regmap, true);
--			regmap_update_bits(chip->regmap, off, mask & val, 0);
--			regcache_cache_only(chip->regmap, false);
-+			off = CY8C95X0_MUX_REGMAP_TO_OFFSET(i, port);
-+			regmap_clear_bits(chip->regmap, off, mask & val);
- 		}
-+		regcache_cache_only(chip->regmap, false);
- 	}
- 
- 	return ret;
--- 
-2.44.0
+So in your case you could have in backend.h
+
+static inline int iio_backend_read_scale(...)
+{
+	return iio_backend_read_raw(..., IIO_CHAN_INFO_SCALE);
+}
+
+Naturally no need for you to do this right now in your series. Just wanted =
+to
+write it down before I go into other stuff and forget about this :)
+
+- Nuno S=C3=A1
+
 
