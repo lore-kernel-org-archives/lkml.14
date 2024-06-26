@@ -1,174 +1,198 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA49815F33A
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 09:07:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C86415F33A;
+	Wed, 26 Jun 2024 09:07:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719392842; cv=none; b=apFPs+w+1Vk4HdmPFuDgxYzZQAADL0BUeNfvTrY7Voq38mSXG/kA3Kibyv1f6xxgQLIgbfnIHT/aFJdk0bjshWVvP8ZuxTACIJ5XTBLN1cSCU6uxh8StkICNnMkLjFyz65i9bP4xwXIPiPhObTyaQPdl8J7ktHXg76aXanAPlk8=
+	t=1719392849; cv=none; b=mTn98hhB0FK9AwDZzUKrug/LcNUlRJhkpC5xOiluJZHpP/62nN/s4QS1Qsz66uM7Nup7SKnyIPvX4pPGnZ3Fw0sJwoN811tft5HhHSutEaBqPGIYoQLcHThxVVtqVmItIJyylscoaz28Q9+IIq9IuFNnYVOZBpTyBaS9anjFr1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719392842; c=relaxed/simple;
-	bh=jyKpEKUVlq/lY8qtzzG37clBDo3AcY8FiQLLGdnjJrE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o3l3hUtys0bEDnc27xpdQio8kZkGg1364o+/oXsopNpgbIBRsdRt9+QC9voMZ7pJTi7zxi1bWPjm4r7YRVcSAf1VAeJVQ7zXafTVmqcr/+9EPhj9h63y522jdU/qo/tgKvyZraXhOPmwR+TrB9T1dzVn8ID+uvHOGj7nMBTQvTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lFsKfjT7; arc=none smtp.client-ip=209.85.208.169
+	s=arc-20240116; t=1719392849; c=relaxed/simple;
+	bh=Vef46PKEnj+c20gxbE0Uu58kS6RdxRRCUeDVUuJMjso=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=km82hDP/r0N3FrQqCJy9wdHVKI6j/5HmQp0rRhyUDqaQ1BEdgVBIYK+cqK/eAC8KcM14iMMSJwTdCZu4ayvQQ5v/xBwit2jc8OIw1zqIS0m8Xvzkdg1h6qwCg2qi0shAKph5q9bft7svQSQjNeIX5J9FKfGq/1Wm8SMGGhM5JGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E6XZ/z1Z; arc=none smtp.client-ip=209.85.167.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lFsKfjT7"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2ec1620a956so77512271fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 02:07:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E6XZ/z1Z"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52cd87277d8so4868519e87.2;
+        Wed, 26 Jun 2024 02:07:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719392839; x=1719997639; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PJ5MPl2JCBfX2ZFWJC9/OLFAr1UniKx13nANchHooqY=;
-        b=lFsKfjT7hxaI4qdi5p/1/sne3/9CG8ACQlyQEjSuPd3FmM4ucar5ezGEFSAa7/QQMt
-         WjiHLLpMarBKEu4brgYXiYfubB/p74U+igVvbsIgztKsLZpIqMdafSIVUWiBSwBDlMxO
-         od6oNw4grpJNt6k72y1MRXUCcZCu9W+LX4E4COKBuGOrqY9LwaMZ0AUg71KbsHuKqgma
-         +hAIkqejw46XQ5m5zy52jv1NPLxs7OlsUfvkBouVc5qVNePopAHbIlJJHNPNcOKn7Zff
-         ShLGvUtoNJE8Ho3aBo3xDllIxp34xl7+LJVDeN+U/Mo2WZiqHInT+gKMjiBwub+C7HjM
-         FIjg==
+        d=gmail.com; s=20230601; t=1719392846; x=1719997646; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=76/161HoTumb+iDrdbol7NJLj3KBEjm/AeLJQvuGQYM=;
+        b=E6XZ/z1ZNeF2Ss0WOEfCd4s1EJF9pjBH5N3hUKRSHhQrUfJQ0ELSBT7oHYdmC81oW0
+         kBsHCNf8gkT0+qW7IrNKYXM7R3eYGXkXBlDdxqzKgdg99HACDFyrQvufhnT67prkfjoX
+         OnKt1V5nrpXfUN1+q5xx/7ELGNeqocGTrWqtwrz+lbOIiKyGsKgkX551KJRqZKalGitr
+         dLjddjOQcDe4D4XomgDRyKgNMU6O82QMul+jo3JVaLYxkFTHRhyk1H8K3ED5nNArBGwW
+         SvWjG/6CTxhbXKezErJXE/ASak8YG0BRLy3vCdcTvnha5YY51CBgv1y9DllnzTClFAQC
+         O3Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719392839; x=1719997639;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PJ5MPl2JCBfX2ZFWJC9/OLFAr1UniKx13nANchHooqY=;
-        b=sdA66HGfpu42pkzOfGUcYYjuGW7qyx85qiLDwyzadmkLTCZ9POWsDvwcEnFUxC7DQU
-         +53rUDhzWssxpfHponu6r9p8jwoWfFuE7n09dk8zzxV2WDqL++vAam/+zeXpdUwfI8Zr
-         cI3/ap5HyjgVDrntEFWrR0wombNc+r04Dl6v54TUIJomGp20dFKZ754RlvDN/rdV7jTU
-         ddnRjBpRVgn9nbLTDEbMwhzAxaTBsw3wbPDyiBlpZbsSpMABY+kmn9ly9iv2WNC0c/3/
-         sn5c/T30K2TlO6rWVCRgLrfMq7aqlQlt3M+OkCWdG5/lNy6i/y4e9cCgh3pZL97LJ/Y2
-         wktw==
-X-Forwarded-Encrypted: i=1; AJvYcCWNZ5nzKw9OAjyC7pmdP3Ddj0sZJVEqQIeTJ31DyTvDJu+t2jP2BZlXinyr0DSnDg4fnChaCjQi+mgZMmUJ1YQWaTKFc+Kn7hJbyzfW
-X-Gm-Message-State: AOJu0Yyh2tlKXlRbmaj+0rDds6BN4TyiB/HI4qYpRrd28mN+msxNilzF
-	u9DYGA0A7hnCftImhQu8yIJLupZY9/Hy4CstHAZ0ZKKrObskHHSZB89rViGQcKbbr5Kv+RYbBWL
-	q0Jhi/D6xLW5LVjTDk0wu46pU9Ow=
-X-Google-Smtp-Source: AGHT+IH8y3gmJu6E6jCdBP+C5mKJemJ3soTyR6moedxS2bBbIeBa8beuQAnKj9rJZ7vascRqwqb5Enzo5VyqJ+g5Cw4=
-X-Received: by 2002:a2e:96d4:0:b0:2ec:56d2:de6e with SMTP id
- 38308e7fff4ca-2ec5b39c287mr54975171fa.46.1719392838490; Wed, 26 Jun 2024
- 02:07:18 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719392846; x=1719997646;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=76/161HoTumb+iDrdbol7NJLj3KBEjm/AeLJQvuGQYM=;
+        b=srAiVKSKsaJWJ2YgttVkbvLFq32g9GmjAqM6Qz+JXvm6yZ1NRfC3JFXwiUoKkClKk2
+         b48Vw2lmlsaUOp8OUHqe8cojxnYtSdMV856ysYxIalE8kbqBY0Vngre9BSGpQY+nIq2i
+         8oa0ORHXgADoEfMtoqID8RlOaLRT+dzSWD9l6YGeZax8nCREUxOEnLkNAj+O7VpbJCyg
+         o9jDeaOSDdXHB8pTyTxVY9Trip2tmdi/8smjTXxxagvNLCnNGpcJw5XAC45QZUVFVJlN
+         IbvYR84mndUl158wZm/S90JB4J9AzX6Qy9pzDl/Tt0n4sbIP6XJTVA5ad7Km7q7v/fgP
+         d9oQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVFglCX73AxZGiJ8d1uAVW595GLrCmRzfOapfgnTCgX9De7TYggq7hLTCBFU1wrbfAalPjMHk1yUFPHosYNSmQnTnrE5I0acCPmrkA6dLSc4NbdH1ZvFePwUdIRdo3YsajpTW+jgchTMqJ1hklPwdT/Ms3pjYUFxxEgddo3k5lzue+3ULQT4PiY
+X-Gm-Message-State: AOJu0YzxKjHxLT+q/7tmAa4DngzTWp54eR5gHayqeKuU4S82JiStEApC
+	Xc33jC6R6fpa/P5d1E9XxwExW/FbA8Sl2EThf6nJ3LjmjizuKT2bY2c8Yw==
+X-Google-Smtp-Source: AGHT+IFZmB6mGtubKzB8dHrJhQUZN+wpPbJjxQUSSxefcinOlw8QmfoZ2F+jKhN6CWJaO6QMqWqLEg==
+X-Received: by 2002:a05:6512:3450:b0:52c:dea8:7ca0 with SMTP id 2adb3069b0e04-52ce185cf71mr5655473e87.55.1719392844938;
+        Wed, 26 Jun 2024 02:07:24 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8cfe:d6e7:6701:9dfd? ([2a10:a5c0:800d:dd00:8cfe:d6e7:6701:9dfd])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52cd84b23d9sm1455429e87.202.2024.06.26.02.07.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Jun 2024 02:07:24 -0700 (PDT)
+Message-ID: <8d964b3f-e2d0-44b2-bece-92380b8c9a5d@gmail.com>
+Date: Wed, 26 Jun 2024 12:07:22 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHk-=wiWEgSo2Tb_bih7mnS27zAPL+RGg_7yX4qK1f710-j-Ng@mail.gmail.com>
- <20240626010924.478611-2-torvalds@linux-foundation.org> <CAFULd4YUBGO1wmsacsxm5ZdbKu++evNC0NbLpGjZVQFTeJze7A@mail.gmail.com>
-In-Reply-To: <CAFULd4YUBGO1wmsacsxm5ZdbKu++evNC0NbLpGjZVQFTeJze7A@mail.gmail.com>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Wed, 26 Jun 2024 11:07:06 +0200
-Message-ID: <CAFULd4Y5ROJjj_6ZA_A9F=xq8oOEWaq5Kodsj24T=PCFFeYf7w@mail.gmail.com>
-Subject: Re: [PATCH] x86-32: fix cmpxchg8b_emu build error with clang
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/6] Support ROHM BD96801 Scalable PMIC
+To: Lee Jones <lee@kernel.org>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck
+ <linux@roeck-us.net>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+References: <cover.1718356964.git.mazziesaccount@gmail.com>
+ <20240620143859.GM3029315@google.com>
+Content-Language: en-US, en-GB
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <20240620143859.GM3029315@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 26, 2024 at 9:39=E2=80=AFAM Uros Bizjak <ubizjak@gmail.com> wro=
-te:
->
-> On Wed, Jun 26, 2024 at 3:13=E2=80=AFAM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > The kernel test robot reported that clang no longer compiles the 32-bit
-> > x86 kernel in some configurations due to commit 95ece48165c1
-> > ("locking/atomic/x86: Rewrite x86_32 arch_atomic64_{,fetch}_{and,or,xor=
-}()
-> > functions").
-> >
-> > The build fails with
-> >
-> >   arch/x86/include/asm/cmpxchg_32.h:149:9: error: inline assembly requi=
-res more registers than available
-> >
-> > and the reason seems to be that not only does the cmpxchg8b instruction
-> > need four fixed registers (EDX:EAX and ECX:EBX), with the emulation
-> > fallback the inline asm also wants a fifth fixed register for the
-> > address (it uses %esi for that, but that's just a software convention
-> > with cmpxchg8b_emu).
-> >
-> > Avoiding using another pointer input to the asm (and just forcing it to
-> > use the "0(%esi)" addressing that we end up requiring for the sw
+On 6/20/24 17:38, Lee Jones wrote:
+> On Fri, 14 Jun 2024, Matti Vaittinen wrote:
+> 
+>> Support ROHM BD96801 Scalable PMIC
+>>
+>> The ROHM BD96801 is automotive grade PMIC, intended to be usable in
+>> multiple solutions. The BD96801 can be used as a stand-alone, or together
+>> with separate 'companion PMICs'. This modular approach aims to make this
+>> PMIC suitable for various use-cases.
+>>
+>> This series brings only limited support. The more complete set of
+>> features was sent in the RFC:
+>> https://lore.kernel.org/lkml/cover.1712058690.git.mazziesaccount@gmail.com/
+>>
+>> The v3: implemented also support for ERRB interrupt and setting a name
+>> suffix to IRQ domains. That work was postponed and will be continued
+>> after some unrelated changes to irqdomain code are completed as
+>> discussed here:
+>> https://lore.kernel.org/all/87plst28yk.ffs@tglx/
+>>
+>> Revision history still tries to summarize changes from the RFC for the
+>> reviewers.
+>>
+>> Revision history:
+>> v3 => v4:
+>>   - Drop patches 7 to 10 (inclusive) until preparatory irqdomain changes
+>>     are done.
+>>   - Cleanups as suggested by Lee.
+>> 	- Change the regulator subdevice name. (MFD and regulators).
+>> 	- Minor styling in MFD driver
+>>
+>> v2 => v3: Mostly based on feedback from Thomas Gleixner
+>> 	- Added acks from Krzysztof and Mark
+>> 	- Rebased on v6.10-rc2
+>> 	- Drop name suffix support for legacy IRQ domains (both
+>> 	  irqdomain and regmap)
+>> 	- Improve the commit message for patch 7/10
+>>
+>> v1 => v2:
+>> 	- Add support for setting a name suffix for fwnode backed IRQ domains.
+>> 	- Add support for setting a domain name suffix for regmap-IRQ.
+>> 	- Add handling of ERRB IRQs.
+>> 	- Small fixes based on feedback.
+>>
+>> RFCv2 => v1:
+>> 	- Drop ERRB IRQ from drivers (but not DT bindings).
+>> 	- Drop configuration which requires STBY - state.
+>> 	- Fix the register lock race by moving it from the regulator
+>> 	  driver to the MFD driver.
+>>
+>> RFCv1 => RFCv2:
+>> 	- Tidying code based on feedback form Krzysztof Kozlowski and
+>> 	  Lee Jones.
+>> 	- Documented undocumented watchdog related DT properties.
+>> 	- Added usage of the watchdog IRQ.
+>> 	- Use irq_domain_update_bus_token() to work-around debugFS name
+>> 	  collision for IRQ domains.
+>>
+>> ---
+>>
+>>
+>> Matti Vaittinen (6):
+>>    dt-bindings: ROHM BD96801 PMIC regulators
+>>    dt-bindings: mfd: bd96801 PMIC core
+>>    mfd: support ROHM BD96801 PMIC core
+>>    regulator: bd96801: ROHM BD96801 PMIC regulators
+>>    watchdog: ROHM BD96801 PMIC WDG driver
+>>    MAINTAINERS: Add ROHM BD96801 'scalable PMIC' entries
+>>
+>>   .../bindings/mfd/rohm,bd96801-pmic.yaml       | 173 ++++
+>>   .../regulator/rohm,bd96801-regulator.yaml     |  63 ++
+>>   MAINTAINERS                                   |   4 +
+>>   drivers/mfd/Kconfig                           |  13 +
+>>   drivers/mfd/Makefile                          |   1 +
+>>   drivers/mfd/rohm-bd96801.c                    | 273 ++++++
+>>   drivers/regulator/Kconfig                     |  12 +
+>>   drivers/regulator/Makefile                    |   2 +
+>>   drivers/regulator/bd96801-regulator.c         | 908 ++++++++++++++++++
+>>   drivers/watchdog/Kconfig                      |  13 +
+>>   drivers/watchdog/Makefile                     |   1 +
+>>   drivers/watchdog/bd96801_wdt.c                | 416 ++++++++
+>>   include/linux/mfd/rohm-bd96801.h              | 215 +++++
+>>   include/linux/mfd/rohm-generic.h              |   1 +
+>>   14 files changed, 2095 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd96801-pmic.yaml
+>>   create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd96801-regulator.yaml
+>>   create mode 100644 drivers/mfd/rohm-bd96801.c
+>>   create mode 100644 drivers/regulator/bd96801-regulator.c
+>>   create mode 100644 drivers/watchdog/bd96801_wdt.c
+>>   create mode 100644 include/linux/mfd/rohm-bd96801.h
+> 
+> allmodconfig and allyesconfig builds fail with:
+> 
+>    make[5]: *** No rule to make target 'drivers/regulator/da903x.o', needed by 'drivers/regulator/built-in.a'.
+>    make[5]: Target 'drivers/regulator/' not remade because of errors.
 
-A nit: offset 0 is required only for %ebp, so the above should read "(%esi)=
-".
+Bummer!
 
-> > fallback) seems to fix the issue.
-> >
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Closes: https://lore.kernel.org/oe-kbuild-all/202406230912.F6XFIyA6-lkp=
-@intel.com/
-> > Fixes: 95ece48165c1 ("locking/atomic/x86: Rewrite x86_32 arch_atomic64_=
-{,fetch}_{and,or,xor}() functions")
-> > Link: https://lore.kernel.org/all/202406230912.F6XFIyA6-lkp@intel.com/
-> > Suggested-by: Uros Bizjak <ubizjak@gmail.com>
-> > Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-> > ---
-> >
-> > Added commit message, and updated the asm to use '%a[ptr]' instead of
-> > writing out the addressing by hand.
-> >
-> > Still doing the 'oldp' writeback unconmditionally.  The code generation
-> > for the case I checked were the same for both clang and gcc, but until
-> > Uros hits me with the big clue-hammer, I think it's the simpler code
-> > that leaves room for potentially better optimizations too.
->
-> You probably want to look at 44fe84459faf1 ("locking/atomic: Fix
-> atomic_try_cmpxchg() semantics") [1] and the long LKML discussion at
-> [2].
->
-> --quote--
-> This code is broken with the current implementation, the problem is
-> with unconditional update of *__po.
->
-> In case of success it writes the same value back into *__po, but in
-> case of cmpxchg success we might have lose ownership of some memory
-> locations and potentially over what __po has pointed to. The same
-> holds for the re-read of *__po. "
-> --/quote--
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?i=
-d=3D44fe84459faf1a7781595b7c64cd36daf2f2827d
-> [2] https://lore.kernel.org/lkml/CACT4Y+bG+a0w6j6v1AmBE7fqqMSPyPEm4QimCzC=
-ouicmHT8FqA@mail.gmail.com/
->
-> Uros.
->
-> >
-> > This falls solidly in the "looks ok to me, but still untested" category
-> > for me.  It fixes the clang build issue in my build testing, but I no
-> > longer have a 32-bit test environment, so no actual runtime testing.   =
-                                  \
+There is unrelated change in the Makefile. I must've messed up a rebase! 
+Sorry! I'll send new version with corrected Makefile - latest early next 
+week. (I suppose new version is appropriate instead of a follow-up as 
+this breaks the build).
 
-...
+Thanks for the heads-up Lee!
 
-> >                                                                        =
- \
-> > -       if (unlikely(!ret))                                            =
- \
-> > -               *(_oldp) =3D o.full;                                   =
-   \
-> > +       *(_oldp) =3D o;                                                =
-   \
+Yours,
+	-- Matti
 
-With the above part changed to:
+-- 
+Matti Vaittinen
+Linux kernel developer at ROHM Semiconductors
+Oulu Finland
 
-       if (unlikely(!ret))                                             \
--               *(_oldp) =3D o.full;                                      \
-+               *(_oldp) =3D o;                                           \
+~~ When things go utterly wrong vim users can always type :help! ~~
 
-Reviewed-and-Tested-by: Uros Bizjak <ubizjak@gmail.com>
-
-Runtime tested with .config provided by test robot on qemu-i386 with
-both clang and GCC compiler:
-
-LKP: ttyS0: 229: Kernel tests: Boot OK!
-
-Thanks,
-Uros.
