@@ -1,99 +1,134 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7422D61FEA;
-	Wed, 26 Jun 2024 02:51:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031176F06B;
+	Wed, 26 Jun 2024 02:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719370271; cv=none; b=SYznjipwyHnP4q2pv/S4TNFOz1p708gYCGIaaQA5Yg4QM2rfiURk8+q1oIC2sNwWFsr98ag6rBvrKSnXksa65aGwl1985Nz5dIMYrUsIcjR10WMtmF8RPcG5st1+CZGBqQQO82hKQGWcLx8HM89ZD8zX6OMgy9F4tkLNnRyGrVI=
+	t=1719370276; cv=none; b=MnTectOKo8sTxDMdBa70Q3DTSIJu9AXKgduk+HVtP8OfKNXxdbH4fS6Bl+2TK12wT3tz99k5/VzHvqrE6314fHBATXjqu9vGFe+Q0TkjUXupchULjevJ44Q2MCnz3Y9JnwicKHnwAlAe4HnLp9BNtJdCMsZkYQYSmxPcjwKdrew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719370271; c=relaxed/simple;
-	bh=/5cAxMS0zmwZ3u43nrJI4+ak0vUk7GAEvG8iuXIvbuY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YI8iXKqa8FA8IaQhTpmE976o8VFCOGGgn+sjkMx90s/isNIGWfXwmsH4hG2JvGAwEVUkbH8TfEB5qU23u3DWbZsu4xxWwxp5t8pd3ieQ9ytwPFqObe3MzU+jv9SmV6V2oHd60vVXh43A7xEXt/mpAi35A70L2O5Ox3dVcZwp100=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=TZ6yf5S8; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="TZ6yf5S8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=wo14P
-	WeIUY9EYOh0eaVerCi6XcBJRd3XZw/te6DPwYs=; b=TZ6yf5S8wc7BKoK/5Szih
-	NRYHE961BDZepEeW6lqkF5QSzp1ILsFM2nIKaAMff2ZhVyrARdq3bQSBnV1YNnmP
-	5H8QsUvnne04DejIazZ/motEPBgQiOBZ2zMEoW2MjSsBqRd6o4Pbbr0dgvYXK7bM
-	sPRtpv75zUunjNnq2ZTye8=
-Received: from localhost.localdomain (unknown [193.203.214.57])
-	by gzga-smtp-mta-g2-1 (Coremail) with SMTP id _____wDXT0W6gXtm8PInAg--.40265S5;
-	Wed, 26 Jun 2024 10:49:36 +0800 (CST)
-From: ran xiaokai <ranxiaokai627@163.com>
-To: akpm@linux-foundation.org,
-	willy@infradead.org
-Cc: vbabka@suse.cz,
-	svetly.todorov@memverge.com,
-	ran.xiaokai@zte.com.cn,
-	baohua@kernel.org,
-	ryan.roberts@arm.com,
-	peterx@redhat.com,
-	ziy@nvidia.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH 1/2] mm: Constify folio_order()/folio_test_pmd_mappable()
-Date: Wed, 26 Jun 2024 02:49:23 +0000
-Message-Id: <20240626024924.1155558-2-ranxiaokai627@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240626024924.1155558-1-ranxiaokai627@163.com>
-References: <20240626024924.1155558-1-ranxiaokai627@163.com>
+	s=arc-20240116; t=1719370276; c=relaxed/simple;
+	bh=mjuTceoUgUq4NKeZo7mgWeAGUCarJ1ymjop5K9OGsY8=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pEtDNF3sB0vqtjYqj9wjXG2WOyaw8kEWWGxIiEw2AbO1O4JG9+ba7eBigZgkXOpPBfz7YNM+/IlzjR3/+LVOgfd0I0zxIp2pA7hyMgN1hPDz8l+adveA1Z9iRdoMMXnCBNCM0HFzRIqrBvf+yX+q13GIgQvo40FZI043zPls7pE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.97.1)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1sMIkO-000000005sL-1k6y;
+	Wed, 26 Jun 2024 02:51:00 +0000
+Date: Wed, 26 Jun 2024 03:50:56 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>, Jens Axboe <axboe@kernel.dk>,
+	Hauke Mehrtens <hauke@hauke-m.de>, Felix Fietkau <nbd@nbd.name>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Dave Chinner <dchinner@redhat.com>, Jan Kara <jack@suse.cz>,
+	Christian Brauner <brauner@kernel.org>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Li Lingfeng <lilingfeng3@huawei.com>,
+	Christian Heusel <christian@heusel.eu>,
+	Min Li <min15.li@samsung.com>, Avri Altman <avri.altman@wdc.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Hannes Reinecke <hare@suse.de>,
+	Mikko Rapeli <mikko.rapeli@linaro.org>, Yeqi Fu <asuk4.q@gmail.com>,
+	Victor Shih <victor.shih@genesyslogic.com.tw>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Li Zhijian <lizhijian@fujitsu.com>,
+	"Ricardo B. Marliere" <ricardo@marliere.net>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mmc@vger.kernel.org, linux-block@vger.kernel.org
+Subject: [PATCH v3 2/4] block: partitions: populate fwnode
+Message-ID: <afa870ec6ac1027561d1c002205ab1e05358a46c.1719368448.git.daniel@makrotopia.org>
+References: <cover.1719368448.git.daniel@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDXT0W6gXtm8PInAg--.40265S5
-X-Coremail-Antispam: 1Uf129KBjvJXoWxJr13ZF4rZrW7Kr48JryfXrb_yoW8GrW3pF
-	WDCFn7KrW0yFy5CrykGa17Ary5X39rWFy2yFyag3W7Jas8t3s29w4v9w1YyF1fGrW8AF4x
-	Za17WFWF9FyUJFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UlhFsUUUUU=
-X-CM-SenderInfo: xudq5x5drntxqwsxqiywtou0bp/1tbiMwQKTGXAmE8lKgAAsM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1719368448.git.daniel@makrotopia.org>
 
-From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+Let block partitions to be represented by a firmware node and hence
+allow them to being referenced e.g. for use with blk-nvmem.
 
-Constify folio_order()/folio_test_pmd_mappable().
-No functional changes, just a preparation for the next patch.
-
-Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
 ---
- include/linux/huge_mm.h | 2 +-
- include/linux/mm.h      | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ block/partitions/core.c | 40 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index 2aa986a5cd1b..8d66e4eaa1bc 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -377,7 +377,7 @@ static inline spinlock_t *pud_trans_huge_lock(pud_t *pud,
-  * folio_test_pmd_mappable - Can we map this folio with a PMD?
-  * @folio: The folio to test
-  */
--static inline bool folio_test_pmd_mappable(struct folio *folio)
-+static inline bool folio_test_pmd_mappable(const struct folio *folio)
- {
- 	return folio_order(folio) >= HPAGE_PMD_ORDER;
+diff --git a/block/partitions/core.c b/block/partitions/core.c
+index ab76e64f0f6c..f88829e254e6 100644
+--- a/block/partitions/core.c
++++ b/block/partitions/core.c
+@@ -10,6 +10,8 @@
+ #include <linux/ctype.h>
+ #include <linux/vmalloc.h>
+ #include <linux/raid/detect.h>
++#include <linux/property.h>
++
+ #include "check.h"
+ 
+ static int (*const check_part[])(struct parsed_partitions *) = {
+@@ -281,6 +283,42 @@ static ssize_t whole_disk_show(struct device *dev,
  }
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 9a5652c5fadd..b1c11371a2a3 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1105,7 +1105,7 @@ static inline unsigned int compound_order(struct page *page)
-  *
-  * Return: The order of the folio.
-  */
--static inline unsigned int folio_order(struct folio *folio)
-+static inline unsigned int folio_order(const struct folio *folio)
- {
- 	if (!folio_test_large(folio))
- 		return 0;
+ static const DEVICE_ATTR(whole_disk, 0444, whole_disk_show, NULL);
+ 
++static struct fwnode_handle *find_partition_fwnode(struct block_device *bdev)
++{
++	struct fwnode_handle *fw_parts, *fw_part;
++	struct device *ddev = disk_to_dev(bdev->bd_disk);
++	const char *partname, *uuid;
++	u32 partno;
++
++	fw_parts = device_get_named_child_node(ddev, "partitions");
++	if (!fw_parts)
++		fw_parts = device_get_named_child_node(ddev->parent, "partitions");
++
++	if (!fw_parts)
++		return NULL;
++
++	fwnode_for_each_child_node(fw_parts, fw_part) {
++		if (!fwnode_property_read_string(fw_part, "uuid", &uuid) &&
++		    (!bdev->bd_meta_info || strlen(uuid) > PARTITION_META_INFO_UUIDLTH ||
++		     strncmp(uuid, bdev->bd_meta_info->uuid, PARTITION_META_INFO_UUIDLTH)))
++			continue;
++
++		if (!fwnode_property_read_string(fw_part, "partname", &partname) &&
++		    (!bdev->bd_meta_info || strlen(uuid) > PARTITION_META_INFO_VOLNAMELTH ||
++		     strncmp(partname, bdev->bd_meta_info->volname,
++			     PARTITION_META_INFO_VOLNAMELTH)))
++			continue;
++
++		if (!fwnode_property_read_u32(fw_part, "partno", &partno) &&
++		    bdev_partno(bdev) != partno)
++			continue;
++
++		return fw_part;
++	}
++
++	return NULL;
++}
++
+ /*
+  * Must be called either with open_mutex held, before a disk can be opened or
+  * after all disk users are gone.
+@@ -355,6 +393,8 @@ static struct block_device *add_partition(struct gendisk *disk, int partno,
+ 			goto out_put;
+ 	}
+ 
++	device_set_node(pdev, find_partition_fwnode(bdev));
++
+ 	/* delay uevent until 'holders' subdir is created */
+ 	dev_set_uevent_suppress(pdev, 1);
+ 	err = device_add(pdev);
 -- 
-2.15.2
-
-
+2.45.2
