@@ -1,151 +1,152 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1963A15F41F;
-	Wed, 26 Jun 2024 08:46:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA173B1A1
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 08:46:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719391572; cv=none; b=hcWUyehrfg4+oCfo8h4tPHTqUrJwCZ4a+ZIFEm+9DJaN0OXauSlnb63jmNmKJmRqaesDmm7lGqxDpoM/JL3UDFgYhOBc9yECcA3atEverr6zbJaL8EiTK4mKxSPPNGVlMj6U5mF7+lRslAVwnGP/4QcEKrnFp7dTuljVZyeu5go=
+	t=1719391574; cv=none; b=HDkYdIgWQtzor3tOgbVRPmiJLy4/1HhLUBV17p7UIEhmNjFIDyG71WEj8U6WrSwYW/oTAcj0oOyFEFwaJTnAhT2G2YhfwxMrgLR1cKo6UEaV4xwR3+bLt0YP2/2OYsGe6+yZZJMzYhvnP7KOgFV02V7HeQ2yHvAtAfHOTYpIx/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719391572; c=relaxed/simple;
-	bh=h79mznHSl/W4ra79KGuRF64LsBrfy+2kmSGDsL9msYs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Pua8tHID6j5ubhOBP3vnCZtQT+fPCO/Z9NQe0sinVZB/0W3ITc5cGdcvbLCZCkaJAm7LBQPXKxbkYJXK8gp98Fr44u54mMQk3/mwbTbmM1By6yhqiY7BfZLTi6WrqUCHw3BDAwZMP8fnCtLjCnofUGjqSvqy3kfChY4ttVbRPaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mHjZaIBU; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719391574; c=relaxed/simple;
+	bh=a4k0vpYgW5Q44Zgxxl4VntJc5r2rzGgeLjih3avWkW8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CMohuy29ZjbPGY4fOjiPDDSVrOCcRh7EsmXQ+ZmQbzlIQj+Gnc2QO97AP/D1roAgMW3aTQIbUoes3bQdupTltkJQlX9PBX8m5898RAcIUzGkZY0Ik0cvbtGg1cmAFp1XNjkN7QCw2jQ8BJ2P7b0MZ+b01rruDbAYy0uMlvzqWoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=aHugTBZI; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mHjZaIBU"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a724b4f1218so467546166b.2;
-        Wed, 26 Jun 2024 01:46:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="aHugTBZI"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2ec52fbb50cso41926561fa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 01:46:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719391569; x=1719996369; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=gF+HoMYTQDkw0ZS822ARO0ZCBDmJWzWJIFLnjrTtD1Q=;
-        b=mHjZaIBUQzg70Oxa+qN19dGrCQ2Li/BwppWi+ucj5kVnILOpkpqQll9w/XjqUCUfqv
-         oKiY6KJm9X6qQN4e8/RLbkvMrShhfV2DtfTbCTx5xMAMxGR2WdYBubNFvLfwC/rKvp3t
-         F+HjCKMdJT5mlD0Xv0YXRC5EtWgj4yXkYxrBOtlcKRJ1kz1zPh3KNW/SPovQkkVkUrpL
-         t2zSSesQwzWH5CEfORQcuYMmhd6RyjWAhF6EdSzO6Y9xay6jfbdN7AOcW3dlnPh7WR52
-         UPvkdga+YbygHEg1tC6iq7mrp0DXi7Euvw7gCFPfEJ7NnzG8PsA312fkNQUxm17vxf58
-         MBtw==
+        d=suse.com; s=google; t=1719391571; x=1719996371; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yDRFjTdMNUzEUOE9x05fu2SY9ut8HJs3+qpIaAb+KZo=;
+        b=aHugTBZIVL9GF+ymdhJbq13kCQeT3TeE+IEDMSOAYxRLB7sPqAQoisz0pC8P3bHhN1
+         rVG+a1Im4PBoR6wDvOHwRgFkQy8eDwD4jFnwsnTfCdz2ysfZp9EZChi1WeZGeF3Tf7qj
+         n/wE/zUERf7KtPFXD3PbWU5Q24XrgV69xKI4xHquCgOnlkAWLpcsyxCXJcy+B5FRLOdx
+         gzIDrxI/mketvJmQoNoqNzeFolTiX2frytpzrUihLyY1waTR5i5tCUavxSVrH/kXOXgI
+         zHbcjgtTxVv9rT0YHJMWWhM+PTIqqW7n5SnBD4nBx4GZEY/vv5dOHxYhoS3sziF0Lxjf
+         7bvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719391569; x=1719996369;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gF+HoMYTQDkw0ZS822ARO0ZCBDmJWzWJIFLnjrTtD1Q=;
-        b=LFczI7OjUr5sZbJbgxLz0RvZ/cl9Bc3s5IeYyNkVIl/o3ztVRX+oMLBOPIYWuBewv8
-         2xV+qEqjMtsZJpmDNYFDPwGm1PpA/kPWfA1BS/n6BBR8Rq7niPe5V0W1hmtBHjw6d+7k
-         9qoglh7M1i2kj91awS936M6fR3Q7HeX7VbDvEpL+znPpcxOxoBTxJvgX/RnI5SUPe7Qi
-         levGzGe7X7n0LM94b9swvyJz5XeVu5fuInumPneqDvWyUM3v88913wVo9fKc4LBXFm6o
-         dTM1MrV9Ciz1QN0z+iwBAS0ibShBE9Pa13n+Rhl0dGPSF/OZRqPb89U8xI0zZYxEnS3l
-         S8gA==
-X-Forwarded-Encrypted: i=1; AJvYcCWD3wpseIYue/pjofrV7Jno6bsLf3SX5gqZRogAX+TXP4accrJw/1zJAhZAAfz4freZgUAx3TpjxbrM3l9Utv2wLWCb7ju9WVEIqAgh
-X-Gm-Message-State: AOJu0Yw4SEb5lIa2vWCkpl38Vxv0rh01Dc7RY5bnno5Y3pOdVOak9to4
-	709jfq9PfsScRGJbiI7DSYGsyk8YdM0AsntVzTmvps0JctZ2R0NX
-X-Google-Smtp-Source: AGHT+IG8ObbyB4q/RgRD5c3NC+vzw0I1wf5g7edgZFLdXdG8BcDf3rHZYSX45sd8t+mZqsuX5bCwXA==
-X-Received: by 2002:a17:906:7c49:b0:a68:b557:76f5 with SMTP id a640c23a62f3a-a7242e12fd3mr593042766b.69.1719391569024;
-        Wed, 26 Jun 2024 01:46:09 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7244dbeecesm397252566b.218.2024.06.26.01.46.08
+        d=1e100.net; s=20230601; t=1719391571; x=1719996371;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yDRFjTdMNUzEUOE9x05fu2SY9ut8HJs3+qpIaAb+KZo=;
+        b=Fr56+YMTj6vasQaQpeOOYX4Anxhe6blOONhCXrcmh1yscL6Hnkg43BRY6XP97in7nf
+         EC002SSOCewVGWvsnOTU3EVFsR9sd/GxvzD56IfCMeAbQWhPL9y+BKJYbf+nHFSxaioL
+         WEBmN8i6yM2qQMRof0U2gZ1fNd5mVSBGr7J8yNkmRmGpfPqUdME8h6PoOckFlZKns+T9
+         yhrgYOl6gezTY3dv8b3WbpQtm4rl7NGwEi64ANPjEctZbOqVsDvocX1IcZejtkdMWUyz
+         3SD6jMFfcLU+/7bDROW6DQ7MTjCLumEEGe5y2sCbC5YgHAfqv/yjO+XpjXxJutend4qo
+         d9XQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWn5EoxbmgPisb7OjZch70Ppxgxj7vGNbNrLcUUrATz/l7BIs3Ykh9HKWsXzZw9JJ1pNj4oaIZajQ8UNyGy8kIkf5jk+S/UCOqHj6hr
+X-Gm-Message-State: AOJu0YxMK/lvuSOJCUWrKYk/gz/ruTCvaqgdDlnwvXgm2FbvLTA2DjgV
+	ReAjkkZSBINCTkRcpgJuk+kgvNp4wf468N7KrIAJtpyy0SnK0W4Ax//MTHqgyyo=
+X-Google-Smtp-Source: AGHT+IHloQsSwgyR/8V2BcW+2VgGBMcenO+xh/ZmE7Aj/s5neytXluSwzLViJkSqVnLOOauGHTYTdw==
+X-Received: by 2002:a2e:9b0c:0:b0:2ec:54f3:7b65 with SMTP id 38308e7fff4ca-2ec5b2f034fmr61845241fa.36.1719391570779;
+        Wed, 26 Jun 2024 01:46:10 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb7d245asm94901975ad.232.2024.06.26.01.46.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 01:46:08 -0700 (PDT)
-Message-ID: <0a5f82ad9ba032d03b389fce54360a82914c15af.camel@gmail.com>
-Subject: Re: [PATCH v2 1/8] iio: add read raw service to iio backend
- framework
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Olivier Moysan <olivier.moysan@foss.st.com>,
- fabrice.gasnier@foss.st.com,  Nuno Sa <nuno.sa@analog.com>, Jonathan
- Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 26 Jun 2024 10:50:00 +0200
-In-Reply-To: <20240625150717.1038212-2-olivier.moysan@foss.st.com>
-References: <20240625150717.1038212-1-olivier.moysan@foss.st.com>
-	 <20240625150717.1038212-2-olivier.moysan@foss.st.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+        Wed, 26 Jun 2024 01:46:10 -0700 (PDT)
+Date: Wed, 26 Jun 2024 10:45:55 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	John Ogness <john.ogness@linutronix.de>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] bpf: defer printk() inside __bpf_prog_run()
+Message-ID: <ZnvVQ5cs9F0b7paI@pathway.suse.cz>
+References: <345098dc-8cb4-4808-98cf-fa9ab3af4fc4@I-love.SAKURA.ne.jp>
+ <87ed8lxg1c.fsf@jogness.linutronix.de>
+ <60704acc-61bd-4911-bb96-bd1cdd69803d@I-love.SAKURA.ne.jp>
+ <87ikxxxbwd.fsf@jogness.linutronix.de>
+ <ea56efca-552f-46d7-a7eb-4213c23a263b@I-love.SAKURA.ne.jp>
+ <CAADnVQ+hxHsQpfOkQvq4d5AEQsH41BHL+e_RtuxUzyh-vNyYEQ@mail.gmail.com>
+ <7edb0e39-a62e-4aac-a292-3cf7ae26ccbd@I-love.SAKURA.ne.jp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7edb0e39-a62e-4aac-a292-3cf7ae26ccbd@I-love.SAKURA.ne.jp>
 
-On Tue, 2024-06-25 at 17:07 +0200, Olivier Moysan wrote:
-> Add iio_backend_read_raw() service to support attributes read
-> from an IIO backend.
->=20
-> Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
-> Reviewed-by: Nuno Sa <nuno.sa@analog.com>
-> ---
-> =C2=A0drivers/iio/industrialio-backend.c | 21 +++++++++++++++++++++
-> =C2=A0include/linux/iio/backend.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0 6 +++++-
-> =C2=A02 files changed, 26 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industriali=
-o-
-> backend.c
-> index 929aff4040ed..0e2653de1956 100644
-> --- a/drivers/iio/industrialio-backend.c
-> +++ b/drivers/iio/industrialio-backend.c
-> @@ -357,6 +357,27 @@ int devm_iio_backend_request_buffer(struct device *d=
-ev,
-> =C2=A0}
-> =C2=A0EXPORT_SYMBOL_NS_GPL(devm_iio_backend_request_buffer, IIO_BACKEND);
-> =C2=A0
-> +/**
-> + * iio_backend_read_raw - Request a channel attribute from the IIO backe=
-nd.
-> + * @back:	Backend device
-> + * @chan:	IIO channel reference
-> + * @val:	First element of the returned value
-> + * @val2:	Second element of the returned value
-> + * @mask:	Specify value to retrieve
-> + *
-> + * This callback replicates the read_raw callback of the IIO framework, =
-and
-> is intended to
-> + * request miscellaneous channel attributes from the backend device.
-> + *
-> + * RETURNS:
-> + * 0 on success, negative error number on failure.
-> + */
-> +int iio_backend_read_raw(struct iio_backend *back, struct iio_chan_spec =
-const
-> *chan, int *val,
-> +			 int *val2, long mask)
-> +{
-> +	return iio_backend_op_call(back, read_raw, chan, val, val2, mask);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(iio_backend_read_raw, IIO_BACKEND);
+On Wed 2024-06-26 08:52:44, Tetsuo Handa wrote:
+> On 2024/06/26 4:32, Alexei Starovoitov wrote:
+> >>>>> On 2024-06-25, Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp> wrote:
+> >>>>>> syzbot is reporting circular locking dependency inside __bpf_prog_run(),
+> >>>>>> for fault injection calls printk() despite rq lock is already held.
+> > 
+> > If you want to add printk_deferred_enter() it
+> > probably should be in should_fail_ex(). Not here.
+> > We will not be wrapping all bpf progs this way.
+> 
+> should_fail_ex() is just an instance.
+> Three months ago you said "bpf never calls printk()" at
+> https://lkml.kernel.org/r/CAADnVQLmLMt2bF9aAB26dtBCvy2oUFt+AAKDRgTTrc7Xk_zxJQ@mail.gmail.com ,
+> but bpf does indirectly call printk() due to debug functionality.
+> 
+> We will be able to stop wrapping with printk_deferred_enter() after the printk
+> rework completes ( https://lkml.kernel.org/r/ZXBCB2Gv1O-1-T6f@alley ). But we
+> can't predict how long we need to wait for all console drivers to get converted.
+> 
+> Until the printk rework completes, it is responsibility of the caller to guard
+> whatever possible printk() with rq lock already held.
 
-I actually got an idea when looking at this for my existential crisis betwe=
-en
-dedicated APIs and a catch all .read_raw() :). What we can do is just provi=
-de
-the .read_raw() or write_raw() ops to backends (so we minimize the number o=
-f
-ops) and then we build on top of them for providing more readable (dependin=
-g on
-the case; some cases it does make sense to just call iio_backend_read_raw()=
-)
-APIs to frontends.
+Honestly, even the current printk rework does not solve the deadlock
+with rq lock completely. The console_lock/console_sem will still be needed for
+serialization with early consoles. It might need to be used when
+printing emergency messages while there is still a boot console.
 
-So in your case you could have in backend.h
+I am sure that it might be solved but I am not aware of any plan at
+the moment.
 
-static inline int iio_backend_read_scale(...)
-{
-	return iio_backend_read_raw(..., IIO_CHAN_INFO_SCALE);
-}
+I have just got a crazy idea. printk() needs to take the rq lock in
+console_unlock() only when there is a waiter for the lock. The problem
+might be gone if we offloaded the wakeup into an irq_work.
 
-Naturally no need for you to do this right now in your series. Just wanted =
-to
-write it down before I go into other stuff and forget about this :)
+It is just an idea. I haven't thought much of all consequences and
+scenarios. It might violate some basic locking rule and might not work.
+Anyway, it would require special variant for unlocking semaphore which would
+be used in console_unlock().
 
-- Nuno S=C3=A1
+> If you think that only
+> individual function that may call printk() (e.g. should_fail_ex()) should be
+> wrapped, just saying "We will not be wrapping all bpf progs this way" does not
+> help, for we need to scatter migrate_{disable,enable}() overhead as well as
+> printk_deferred_{enter,exit}() to individual function despite majority of callers
+> do not call e.g. should_fail_ex() with rq lock already held. Only who needs to
+> call e.g. should_fail_ex() with rq lock already held should pay the cost. In this
+> case, the one who should pay the cost is tracing hooks that are called with rq
+> lock already held. I don't think that it is reasonable to add overhead to all
+> users because tracing hooks might not be enabled or bpf program might not call
+> e.g. should_fail_ex().
+> 
+> If you have a method that we can predict whether e.g. should_fail_ex() is called,
+> you can wrap only bpf progs that call e.g. should_fail_ex(). But it is your role
+> to maintain list of functions that might trigger printk(). I think that you don't
+> want such burden (as well as all users don't want burden/overhead of adding
+> migrate_{disable,enable}() only for the sake of bpf subsystem).
 
+Yeah, converting printk() into printk_deferred() or using
+printk_deferred_enter() around particular code paths is a whac-a-mole
+game.
 
+Best Regards,
+Petr
