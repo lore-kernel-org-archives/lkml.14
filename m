@@ -1,84 +1,152 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8946A178385
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 10:04:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0165725774
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 10:06:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719396284; cv=none; b=siwqvsYrjePWwB5FgtRrEyxSeRr+FYRTeG/1ftYmmdqwJ6bIEN8YWqMMpRTi22RwhBprE2QUwI+uglSOLaMEiSYhLvlemmcHt776kKl8jtf/jd+rIVAD7bn0NRqN1t7NOZJmXKuEPo07Nr/DGa0FCEGCLQnZs6IswOxFGo9X8hA=
+	t=1719396406; cv=none; b=b2Z5K/F6RxCmOMMhmbKh7KSV+ZGNA9xloUDkK7hJMqRZZtzSZ6WldKrGjtM5AxNa1mZGs0Cd2WInBY4DuGmXnrCVakOfEJtXUgKVOi9x693VRkgHcC6q3OxD5N54sx02ZN5IOkhCn4a/M4v4ZeLM0Uh6+R3Xgiy/6nTZtk1WS9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719396284; c=relaxed/simple;
-	bh=wAGGb9nbphDH5JrB+dXV+rNYOi9vDVjsKxMqqIkjMOo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lwMW6J+fujc0PPIT+tXzdlqvPOLvR2PqNoxKX4eahiZc+QfGBSZiOiHaNH6sv3GVbgvNBJfH6IS6oqRvotGhJG+JxJcXoYtH9JRlZWrmf+cDFrBblMstPLUtUiLh1IfAIpaZyMj1VKr4qWt9fZQ4q2rvprcvDqkr5WPyNIwRvLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FycJKKqk; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719396406; c=relaxed/simple;
+	bh=DJ2QP0BaVusK1ZEM98l1QNG5qOn3csmrosSZGE+PPr8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L6rS0g5AeuQS4AUwDBm9Fy/VfrbIr9Xwr7L+ZatcR3Nq/U3zZtFZKvhwgNGzI9ObPVyO38gUTS1WsLOn74ciLdd18VXfHSUQMaJ6QbBlzcSE+qFn9NbtRLL3C+58Y1DkoY/Mr6J9l/KALCfMfuau0TCh5+a2Ew898y8uUBt54oM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=lPdISokD; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FycJKKqk"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52db11b1d31so1029752e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 03:04:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719396280; x=1720001080; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wAGGb9nbphDH5JrB+dXV+rNYOi9vDVjsKxMqqIkjMOo=;
-        b=FycJKKqkY+GI1B8R99drOgW3F7mwo47FtLS5n1+C8qmEyi0K4NPsG/yhQPTgIzudDa
-         SPpQHVEq8qvT6433gCt33HirOnKYDeTwRoymdk+lyTIcjessG66eHjgX9yj7GrvTWA9Z
-         BJkCnUdbaPIRIV18/fjzLnY0kDl1ssOPxNotJqF+0VxxOrdVtfwMaJ5lyCI0XwBmNmot
-         X9QkddGYPIAzlE2rUe8Vv4yOOdQP3ilgkwUdJlHUzBbWoCxCpDtgo3HuBRY76k85EaR5
-         8qUlWqz/n8xSABK0ksJs97B8/x3551SzxFZgLWXsNmGDERiLpawFGwLWGoqkYVtYbZ/Q
-         +ijg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719396280; x=1720001080;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wAGGb9nbphDH5JrB+dXV+rNYOi9vDVjsKxMqqIkjMOo=;
-        b=CauDkeqP7+BUX/R4PbI0TkMj990FQU9Yj0GLJLHBXKyeOeLLv5myXFeYlKaWArTs+P
-         cbejgQKb3kiS2Vja1c2BRgXBi5fsKonqOQAMSDHZjOf1xnlgu1bqnfrQOZro9fuGKTZq
-         tO+E0OLJfmP8ysxL8d1ajxpz+77fYPwr//5XQcQhzmmHrWOxUcOlMHdfTojbv1mbwIRb
-         wtR9rt5y/KJ4u7B3OL+auXlRE9ErLiXKeq6aW50Ldi/CNYiNfcxIG4bDbBV6OOESli0f
-         9NF48wgy0rny4Ud6DZjqZijP+tTLglX15+g/4kDnMGVb9QRPJMuZs5IoAEVU/CpCO69A
-         pqtA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+MEGHnBzEx1AeQxUfRqyahqAFP3SqOabYXKyq0ivPFW4Ncph5aLOsxCHRh4OG/amyTWQ4l7WeTXJyQLso8ERHHnJp0W/PYhfNz8j9
-X-Gm-Message-State: AOJu0YzYzejy99vc5loULWZmOFTLPcxAycRE3z4ffYEdQTWR4B65+uSJ
-	hicAHwART9m4cIykgLWW0Cm6vgQrmZVZTuw9Tp7R4WXMJZ2xT27nF+keaslc7pjVHWLs9TiGnqz
-	y8aD3mOkYw40ZgOBvAuE4SpnB8tJVTvPXNHEJTg==
-X-Google-Smtp-Source: AGHT+IH7rPG5U6OeXEnbgIj889fPheKL56AlWQLK2rD9EiaTdNPfPLg1zeaf3Y7+S07mnQaIGk8RVTc0mfDwCJd1S0g=
-X-Received: by 2002:ac2:456b:0:b0:52c:df6e:9517 with SMTP id
- 2adb3069b0e04-52cdf7e66dfmr6847985e87.11.1719396277395; Wed, 26 Jun 2024
- 03:04:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="lPdISokD"
+Received: from [192.168.88.20] (91-158-144-210.elisa-laajakaista.fi [91.158.144.210])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 963882C5;
+	Wed, 26 Jun 2024 12:06:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1719396372;
+	bh=DJ2QP0BaVusK1ZEM98l1QNG5qOn3csmrosSZGE+PPr8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lPdISokDpNVRl5+YV68dIQbOZNjTXHlF4StquoOHvZ8DEzxobbYoqAetIgGOHtUqa
+	 Bza7A/qVWYNM9a8J+ERQ7WVeWe+Eu5gpPxToe3jnpear/jPMs5JS5ZkWMnSd2yH+dO
+	 RU39NwbeuV/yjNUBbfwezoIx4bqer/9850SBuXG4=
+Message-ID: <5b52e560-1fca-4824-9f80-91526bf25062@ideasonboard.com>
+Date: Wed, 26 Jun 2024 13:06:31 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240612-sm4250-lpi-v4-0-a0342e47e21b@linaro.org>
-In-Reply-To: <20240612-sm4250-lpi-v4-0-a0342e47e21b@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 26 Jun 2024 12:04:26 +0200
-Message-ID: <CACRpkdZyupZmV+e=L0KR8ospH9P=wdUrMFvBnGXyfhLhW3-=PQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/2] pinctrl: qcom: add sm4250 lpi pinctrl
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, alexey.klimov@linaro.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 01/11] drm/bridge: cdns-dsi: Fix OF node pointer
+To: Aradhya Bhatia <a-bhatia1@ti.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Jyri Sarha <jyri.sarha@iki.fi>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>
+Cc: DRI Development List <dri-devel@lists.freedesktop.org>,
+ Linux Kernel List <linux-kernel@vger.kernel.org>,
+ Dominik Haller <d.haller@phytec.de>, Sam Ravnborg <sam@ravnborg.org>,
+ Thierry Reding <treding@nvidia.com>,
+ Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+ Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Praneeth Bajjuri <praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>,
+ Devarsh Thakkar <devarsht@ti.com>, Jayesh Choudhary <j-choudhary@ti.com>,
+ Jai Luthra <j-luthra@ti.com>
+References: <20240622110929.3115714-1-a-bhatia1@ti.com>
+ <20240622110929.3115714-2-a-bhatia1@ti.com>
+Content-Language: en-US
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <20240622110929.3115714-2-a-bhatia1@ti.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jun 22, 2024 at 6:49=E2=80=AFPM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
+Hi,
 
-> Add support for sm4250 lpi pinctrl.
->
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+On 22/06/2024 14:09, Aradhya Bhatia wrote:
+> Fix the OF node pointer passed to the of_drm_find_bridge() call to find
+> the next bridge in the display chain.
+> 
+> To find the next bridge in the pipeline, we need to pass "np" - the OF
+> node pointer of the next entity in the devicetree chain. Passing
+> "of_node" to of_drm_find_bridge will make the function try to fetch the
+> bridge for the cdns-dsi which is not what's required.
+> 
+> Fix that.
 
-No major protests against v4 so patches applied!
+The code looks fine, but I'd write the subject and desc from a different 
+perspective. The subject could be something like "Fix connecting to a 
+sink bridge", and the desc could first say that connecting the sink to a 
+DSI panel works, but connecting to a bridge fails, as wrong OF node is 
+passed to of_drm_find_bridge().
 
-Yours,
-Linus Walleij
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+
+  Tomi
+
+> Fixes: e19233955d9e ("drm/bridge: Add Cadence DSI driver")
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
+> ---
+>   drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+> index 7457d38622b0..b016f2ba06bb 100644
+> --- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+> +++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+> @@ -952,7 +952,7 @@ static int cdns_dsi_attach(struct mipi_dsi_host *host,
+>   		bridge = drm_panel_bridge_add_typed(panel,
+>   						    DRM_MODE_CONNECTOR_DSI);
+>   	} else {
+> -		bridge = of_drm_find_bridge(dev->dev.of_node);
+> +		bridge = of_drm_find_bridge(np);
+>   		if (!bridge)
+>   			bridge = ERR_PTR(-EINVAL);
+>   	}
+
