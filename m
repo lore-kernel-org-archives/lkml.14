@@ -1,71 +1,98 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 664F716DC02;
-	Wed, 26 Jun 2024 09:44:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF7B16CD11
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 09:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719395078; cv=none; b=ksXUf7PKxHuZjgHHE2C5EyUPchPCe4xN4piwafvNIZ6cXX6gIM7sQD00PBc1Snm2MS1J0aGDd8tRowXfIuxLzDN+3dMZaIWGQGzjI5YdCWmHpttp76jqrNSj1kWv0Xqgad7JMXKWcP0PFcbf/cArU0m9q/bsmN/WpUjGNOsLoNs=
+	t=1719395102; cv=none; b=k+7VM4OFQ20C8eINyGlAY8vP4eZTIlMphl9F/tdptOuqvwO2r3Ibbb1cRg3eXoLLmEGA77jxJGwUcad4I9nPJbX5nhkwJUSGjNufdwud2uHdJEDmcdcMe8DM4/4DomWA7GISIc29jKOF0v0bpkzNXWPDGnQ30juQMwHFZpYuCSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719395078; c=relaxed/simple;
-	bh=BEyHuN9KYaz/HgLYtzWccIdPuHn7PvQuBdSB2pJ8+dw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HLCx6Hmu5EhsEmtogx+xLk6zZaEcju+4gSaXAn+2k8QIqjSocVREUUQoZrxZyxDb7OCHBtLBIvmzjWSMgHAXazI6XhNM9/dqdIY2LAXMUmXe1uiF7cW46RvKmUQ417HB3TZlYo76qexuaaut//+4BpERdMA/lqbxQXQ4FNvAQQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fXFrLmYD; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1719395102; c=relaxed/simple;
+	bh=rUkb/XtxnPf8kMa8QTE5ZaHy/kdwHRipRbbMnUTdKNY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=WHxl8QM0kzjpjsC4aPWvnxee+DoRqbVGtWlZeZX8v+twPGzLlK6tmjRiAfxYT56rksjrkgMYGPhgApp9ZTnfY8M5p7ZgalIJPECPRsFnRU3eAF3WGMWX4hWxbTq4CPOpXyRyViOIF6IEie4PhimZwqW7Qxcb5kweD/iqXVzEzVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V3iI7ue8; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fXFrLmYD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=XzfMdj8RGEXjKOpU3zqHY7Vw5JxOu6m7qj04nFi/KTU=; b=fXFrLmYD4+4DSzF+sPAyI4PYMs
-	MQWE0ReZKAfC+5fkT+sdd+u8LYbumJ/AoYgCW0BewpVHIbh2FNmpeJQQZSY4JqniXLmD6KW+OcAYs
-	HxYtNKvVN0T7akfHN+2LMSKfOCKZ3bN3Jzxt429WJSOx4cbvQb0c0TZOKqiFj4aOPei6ehJr+Qogl
-	xT6qtP47UQ92MhXEMWjiRQhwtzoEvI7CIgWknb6zOdyCl5Ww/4lfSNAKjx7CuB1S0V8t3oEaiGuO5
-	h6MR06GEChqELdPObj0CNUl7JeEYC9bTLMWvmLj9jPTYZZ0/Fw+9YTK2+37z0rlzazchYrZk3VOB7
-	QEY6kAdw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sMPAy-00000008YjG-36PX;
-	Wed, 26 Jun 2024 09:44:00 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 138CD30057C; Wed, 26 Jun 2024 11:42:45 +0200 (CEST)
-Date: Wed, 26 Jun 2024 11:42:45 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	kernel test robot <lkp@intel.com>, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>
-Subject: Re: arch/x86/include/asm/cmpxchg_32.h:149:9: error: inline assembly
- requires more registers than available
-Message-ID: <20240626094245.GD31592@noisy.programming.kicks-ass.net>
-References: <CAFULd4YR-VkAOKiS5yxSUYi0YMzY1p=pkYe4dOkgFs+A=9AFFA@mail.gmail.com>
- <CAHk-=wi_KMO_rJ6OCr8mAWBRg-irziM=T9wxGC+J1VVoQb39gw@mail.gmail.com>
- <CAHk-=whPqqZVSeJiQsMvsAxtAmtR9iAuB4gg_1sUK2D-uBPpLw@mail.gmail.com>
- <CAFULd4YAeF7=q7DYUh016kabxS8b32qRbFqDBJQrvLq6RjwEVg@mail.gmail.com>
- <CAHk-=wiHo2YeA=TOUf8vxFLOc0+BoH8USaiT25fnX2ynXbrZkg@mail.gmail.com>
- <CAHk-=wgdCs0883dpvZpyna76q9eVcTMvvUVAaBuJMPyrgOhNig@mail.gmail.com>
- <CAFULd4ZW23_RNye6YGbsT0Uo-vOQBM_tBbSJRhh=0HZzXuC_8Q@mail.gmail.com>
- <CAHk-=wiWEgSo2Tb_bih7mnS27zAPL+RGg_7yX4qK1f710-j-Ng@mail.gmail.com>
- <20240626092841.GC31592@noisy.programming.kicks-ass.net>
- <CAFULd4ZUBaK+FNSKfiJzzZNFQM1bWorZGmaY=fb-sFN2uPK4MA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V3iI7ue8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719395099; x=1750931099;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=rUkb/XtxnPf8kMa8QTE5ZaHy/kdwHRipRbbMnUTdKNY=;
+  b=V3iI7ue8FFAjGY4/2FPL1+KNiv58FB6CO4qa3b8Bqn0ujYGJoY5Vntle
+   euYML4D7wU8uR+Q32w0gNoVnp4R0tkygCNzV9xTz4Cf+88kSTuyGlXXOh
+   HC4tRMjmswjy8fdjWn6WzyIcSWNPoHESEkwzadXG31dgSDtITGT5H8yi7
+   3kg9zLTw1Xt6/a924DiT/sSc/KcgfAfxuDHZT5Nx5vT4FW6DIlf49wkCs
+   LeK+4QT+0Jmq+qLbTYfZog4z85mpPkUTcER/WcqmqmxAHDV+VIXl4XP0B
+   izU7e/ovLRVhu+1lsK7TeGn81/+oiLJQFe8M/ONmtCzW7k3jKBqSD4Teo
+   Q==;
+X-CSE-ConnectionGUID: 3w6vjEotSUiAkuIUymVsvA==
+X-CSE-MsgGUID: CCr2qAt5TEGpxlCOnm4xeg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="16598061"
+X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
+   d="scan'208";a="16598061"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 02:44:58 -0700
+X-CSE-ConnectionGUID: HHQuvY9ETPqNbtN67MTYvA==
+X-CSE-MsgGUID: UGcgaTdIRcW6iNodH8BvfA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
+   d="scan'208";a="75154769"
+Received: from bergbenj-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.95])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 02:44:55 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Ma Ke <make24@iscas.ac.cn>, patrik.r.jakobsson@gmail.com,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+ tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Ma Ke
+ <make24@iscas.ac.cn>
+Subject: Re: [PATCH] drm/gma500: fix null pointer dereference in
+ psb_intel_lvds_get_modes
+In-Reply-To: <20240626011656.2763368-1-make24@iscas.ac.cn>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240626011656.2763368-1-make24@iscas.ac.cn>
+Date: Wed, 26 Jun 2024 12:44:48 +0300
+Message-ID: <8734p0domn.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFULd4ZUBaK+FNSKfiJzzZNFQM1bWorZGmaY=fb-sFN2uPK4MA@mail.gmail.com>
+Content-Type: text/plain
 
-On Wed, Jun 26, 2024 at 11:33:09AM +0200, Uros Bizjak wrote:
+On Wed, 26 Jun 2024, Ma Ke <make24@iscas.ac.cn> wrote:
+> In psb_intel_lvds_get_modes(), the return value of drm_mode_duplicate() is
+> assigned to mode, which will lead to a possible NULL pointer dereference
+> on failure of drm_mode_duplicate(). Add a check to avoid npd.
+>
+> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+> ---
+>  drivers/gpu/drm/gma500/psb_intel_lvds.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/gma500/psb_intel_lvds.c b/drivers/gpu/drm/gma500/psb_intel_lvds.c
+> index 8486de230ec9..aa5bf2a8a319 100644
+> --- a/drivers/gpu/drm/gma500/psb_intel_lvds.c
+> +++ b/drivers/gpu/drm/gma500/psb_intel_lvds.c
+> @@ -504,6 +504,8 @@ static int psb_intel_lvds_get_modes(struct drm_connector *connector)
+>  	if (mode_dev->panel_fixed_mode != NULL) {
+>  		struct drm_display_mode *mode =
+>  		    drm_mode_duplicate(dev, mode_dev->panel_fixed_mode);
+> +		if (!mode)
+> +			return -ENOMEM;
 
-> Please see the thread at [1].
-> 
-> [1] https://lore.kernel.org/lkml/CACT4Y+bG+a0w6j6v1AmBE7fqqMSPyPEm4QimCzCouicmHT8FqA@mail.gmail.com/
+Do not return negative values from .get_modes().
 
-Ha, handy these archives, much better than my memory indeed.
+BR,
+Jani.
+
+>  		drm_mode_probed_add(connector, mode);
+>  		return 1;
+>  	}
+
+-- 
+Jani Nikula, Intel
