@@ -1,209 +1,116 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7248168486;
-	Wed, 26 Jun 2024 09:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0631684A1
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 09:17:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719393442; cv=none; b=YTaZw0+taiulPkQInH4p0gnS31ysykLtaakIzAf/PzejlrAjIo9WiwLI6e+fhUbAZO5QnKstua/Yj6U5qP2YfOcb73OIxLutp0gLoovWe/tWX68y2dUTRrh62+O1+yGYtzNtdIiYOgxW3tNL9kSQks5weyzgQft/pLMNMBXAWL0=
+	t=1719393463; cv=none; b=MF6WzlMP8iFLt64D2ncoY9OG/CVksDwuwdnI7cW5UU4DtghSxFu5Z0UmEPFi/GhDF2tqn9exDd8JFEEWvkz/cMGYm21Yd2m0EGL0qB+QeM0QOCqzcL/hinuYC5PFa1mQrd+QZMmop/GZCxBr/ov7BG44t/ZNP2fMRJInAKM3ziE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719393442; c=relaxed/simple;
-	bh=tYPyX6886SAJdc9m6hgCgPEn28NWpQzFqWmfB546fS8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TXlhGu2F0BCrCEgOvP22UEagijm8o4btdDQyk8vmdtUYGE0K8ZQfVHpNr4jIKApWv9MJ1fBduSP8sQvWXST823y+3XdmLPoiDf+vFsg+/ThpzVqvuS2WPwCQVGvaNVQTA1eed/am6KUzrgFytbiw+vR6iuEY3NmgD2j2ULE+HDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=a39n9O97; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1719393463; c=relaxed/simple;
+	bh=TdR+0h5pgv6sf68bp9AYfIlXpF2fRPqacyemVdw5/HI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NFLb42viwQbUfaYSP3jtztD3Q+cVfUouoSG2YppmLr64NZXkYBpuLPvaH459QDETfnlQ7rFhVocSMGrV752QvUzTZZFn0nfYSp/WHh+iNH/3MxoG17JJzYhM9F1gZivh1ik3JGTR/6bNX1wxEUFl4qG3eRZV+VSS9LwfbWZTb2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xwoP9CJb; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="a39n9O97"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45Q8SXeH006364;
-	Wed, 26 Jun 2024 09:17:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=YTbEobxX0rS76
-	TFeDHHtgoJ3WXZMfYodjrAvpvqJhJE=; b=a39n9O97KESMHoqrEfcY8d2K0UyRJ
-	HbtDnngVCwFDudbc/7MBwtouaMcemNSyGoGOyiQ0F06/sXNh32AlOw/FHy2OTcIq
-	/bacGFLuc10ti7DRkgKTZsfMnahqXXSend4zkZ3wXOsK0rx8C6QrDSKqSDtbK5T2
-	9lKWLzIxiabv5gq07HfGY45ZtLykkT6HlOzsDcxs29Voq3jigeSMOo5woOfnS7ow
-	bqZtB8aIPVIkNHIY1j2WmKj8JVDP506bN4gr20pjQc3njoF11S1vW7ncywn6NOdM
-	kzWQiilQtmPBegLBw+o0foLG+tvJrDAvsQMYgvT2lJrZAHdLKF0Favi1Q==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 400fgng3nc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Jun 2024 09:17:08 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45Q9H7JC014220;
-	Wed, 26 Jun 2024 09:17:07 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 400fgng3n7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Jun 2024 09:17:07 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45Q7UlDf000402;
-	Wed, 26 Jun 2024 09:17:06 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yxbn3ayt7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Jun 2024 09:17:06 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45Q9H3dx49479998
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 26 Jun 2024 09:17:05 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E8A082005A;
-	Wed, 26 Jun 2024 09:17:02 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2E70E2004B;
-	Wed, 26 Jun 2024 09:16:56 +0000 (GMT)
-Received: from li-fdfde5cc-27d0-11b2-a85c-e224154bf6d4.ibm.com.com (unknown [9.43.51.102])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 26 Jun 2024 09:16:55 +0000 (GMT)
-From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Chen Yu <yu.c.chen@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>, acme@redhat.com,
-        Fernand Sieber <sieberf@amazon.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-Subject: [PATCH v5 3/3] perf sched map: Add --fuzzy-name option for fuzzy matching in task names
-Date: Wed, 26 Jun 2024 14:45:50 +0530
-Message-ID: <20240626091550.46707-4-vineethr@linux.ibm.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240626091550.46707-1-vineethr@linux.ibm.com>
-References: <20240626091550.46707-1-vineethr@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xwoP9CJb"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-52cd87277d8so4880382e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 02:17:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719393460; x=1719998260; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=lIqsgUc0qUv8b+n84AsHvKArD60z2TYKJpqdlsOonTI=;
+        b=xwoP9CJbzxfI8Jlx4ekbMSAI+6D7sjvrlMESsM9+HUpm4wnXOQI+J+eGOsePOb+bJp
+         gOwzAbLqys9IOODbYyAyDEMr74t6oWvCZ+w37Bh4B27HzWFaeIHErO/NNjte2GYmWImR
+         1LuG+DTulTQMZ4XOoBOLfdm9gF+v4+c5K77w19fOJm2e3DTqPbsO8trMneIAdOYcihgT
+         1BCxvmbXsaYq/Lblj+leI5oQms2exA6SXx6kUSVfbAIe5qJAfSxGht6ilorEI+kuiaRH
+         fTJhB5EOjV2m3CSV+ydgORRksyzL+NVSnpGo4vK9kHlQYt65DwVz/OwZF0QIyhFhQYTu
+         mRMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719393460; x=1719998260;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lIqsgUc0qUv8b+n84AsHvKArD60z2TYKJpqdlsOonTI=;
+        b=xOxlNtTa6zJjmd4begSjTJSGI8QwkO7Bz7AhEAnKiyPFuKCQSdn9gn0VY+/ikRGJ82
+         HgD76rC2uWQl/QY2D0hqP04auAXrbIOWXdNAC+Ovc1f5hLrEHnwqDVuqtCAfOcpGH43e
+         OQXVQDlW05yIaxnBz34nRavmcdqSsNb6GGCRcRJ2D95cWP0VqXCOk/Z7LpOiVzt/1oyU
+         mSLyuUNzvNJDdYydxtVgWdKmv4+kKb9bqr6xrnANFPXfXYPBnMvEXxa5p2H2duX2+ZlD
+         knEFyqrK0aGj6+9mAXfJbw5jScbOj/BV0nnSwUfu8k1VDN2M9Fbs3R0dRkttL5Ix48fg
+         eeSw==
+X-Forwarded-Encrypted: i=1; AJvYcCWw8EBKnIT51UOfUDbb5xJzeajgVlpBJxnWB1EpIeRDxla4jflfJPgtaRmTFo/H9ZC6aQVbOw5xotV3V2CM8EwqgATlwbafdrWlM6s2
+X-Gm-Message-State: AOJu0YyqzAdq+01mMJ5h0yR/DmI7FuZq5SEpEOb9/FUR8yvRwDdZ0BoH
+	y0+6V5gEeJVjUK1zcsEluA82Eje5hDI/57y9UvBuPZzNZMqcvUoS8Ao5CC/rlNs=
+X-Google-Smtp-Source: AGHT+IGUcuxRMZ/d4v953UhQb7EFPCTahiRnNum885ExgEqYymNBwBcHbYy9/YkcMVUlc/gGhu888Q==
+X-Received: by 2002:a05:6512:138e:b0:52c:890e:e8e7 with SMTP id 2adb3069b0e04-52ce185cfecmr8024194e87.50.1719393458662;
+        Wed, 26 Jun 2024 02:17:38 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52db233f5e4sm144142e87.69.2024.06.26.02.17.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jun 2024 02:17:38 -0700 (PDT)
+Date: Wed, 26 Jun 2024 12:17:36 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: george chan <gchan9527@gmail.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Robert Foss <rfoss@kernel.org>, 
+	Todor Tomov <todor.too@gmail.com>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	cros-qcom-dts-watchers@chromium.org, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFT v3 1/5] dt-bindings: media: camss: Add
+ qcom,sc7180-camss
+Message-ID: <xtnamlbshpfw4vhixdvvlbg5qwosx4xfiwys3kjrnnvpdegejl@2lq45llo7twy>
+References: <20240624-b4-sc7180-camss-v3-0-89ece6471431@gmail.com>
+ <20240624-b4-sc7180-camss-v3-1-89ece6471431@gmail.com>
+ <c33dde93-2c3a-4a00-93ee-e4de303c9057@kernel.org>
+ <CADgMGSvN=uAW7z1dpETGVRewzDG=K2MAtzOkhK7xAcskU_oeZg@mail.gmail.com>
+ <0a35f0bd-ceec-487f-b9fd-ae9698b74048@kernel.org>
+ <CADgMGSt9Hu5Ciq=ndMTaVK23Y_ixTVtTuSfy4hJkJooFH2uv9Q@mail.gmail.com>
+ <CADgMGSv+x2Z9FsWTHW0auttvpdfNDnOPxiJhXnUaW3yQczN_Ag@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: eLGAuKoBOWZ16HksXPOGGGszb8clGvKc
-X-Proofpoint-GUID: _NnUdIRmtGhsYSwgeFaeFf_tsdxUrRMZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-26_03,2024-06-25_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- suspectscore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0
- priorityscore=1501 bulkscore=0 malwarescore=0 phishscore=0 mlxlogscore=999
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406260067
+In-Reply-To: <CADgMGSv+x2Z9FsWTHW0auttvpdfNDnOPxiJhXnUaW3yQczN_Ag@mail.gmail.com>
 
-The --fuzzy-name option can be used if fuzzy name matching is required.
-For example, "taskname" can be matched to any string that contains
-"taskname" as its substring.
+On Wed, Jun 26, 2024 at 04:38:48PM GMT, george chan wrote:
+> On Wed, Jun 26, 2024 at 4:17 PM george chan <gchan9527@gmail.com> wrote:
+> >
+> > On Wed, Jun 26, 2024 at 3:15 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > > Keep the list in "required:" in the same order as the list in "properties:".
+> >
+> > ok gotcha
+> btw, i checked  "required:" and "properties:" are aligned, both of
+> them are in ascending order. I am wondering if you are talking about
+> two things, 1st one is to align both property, and 2nd is having the
+> ordering like below. Plz confirm.
+> 
+> required:
+>   - compatible
+>   - reg
+>   - reg-names
+>   - interrupt-names
+>   - interrupts
+>   - clock-names
+>   - clocks
+>   - iommus
+>   - power-domains
+>   - power-domain-names
+>   - vdda-phy-supply
+>   - vdda-pll-supply
 
-Sample output for --task-name wdav --fuzzy-name
-=============
- .  *A0  .   .   .   .   -   .   131040.641346 secs A0 => wdavdaemon:62509
- .   A0 *B0  .   .   .   -   .   131040.641378 secs B0 => wdavdaemon:62274
- -  *-   -   -   -   -   -   -   131040.641379 secs
-*C0  .   B0  .   .   .   .   .   131040.641572 secs C0 => wdavdaemon:62283
- C0  .   B0  .  *D0  .   .   .   131040.641572 secs D0 => wdavdaemon:62277
- C0  .   B0  .   D0  .  *E0  .   131040.641578 secs E0 => wdavdaemon:62270
-*-   -   -   -   -   -   -   -   131040.641581 secs
+Yes, now this looks like a correct order.
 
-Suggested-by: Chen Yu <yu.c.chen@intel.com>
-Reviewed-and-tested-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
----
- tools/perf/Documentation/perf-sched.txt |  3 +++
- tools/perf/builtin-sched.c              | 22 +++++++++++++++-------
- 2 files changed, 18 insertions(+), 7 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
-index 3095e280eb92..938b41a3befa 100644
---- a/tools/perf/Documentation/perf-sched.txt
-+++ b/tools/perf/Documentation/perf-sched.txt
-@@ -137,6 +137,9 @@ OPTIONS for 'perf sched map'
- 	task name(s).
- 	('-' indicates other tasks while '.' is idle).
- 
-+--fuzzy-name::
-+	Given task name(s) can be partially matched (fuzzy matching).
-+
- OPTIONS for 'perf sched timehist'
- ---------------------------------
- -k::
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index ecb43deb9d74..c801c38e8b9a 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -157,6 +157,7 @@ struct perf_sched_map {
- 	struct perf_cpu_map	*color_cpus;
- 	const char		*color_cpus_str;
- 	const char		*task_name;
-+	bool			fuzzy;
- 	struct perf_cpu_map	*cpus;
- 	const char		*cpus_str;
- };
-@@ -1599,12 +1600,16 @@ static struct CommandList *parse_commands(const char *commands)
- 	return cmd_list;
- }
- 
--static bool sched_match_task(const char *comm_str, struct CommandList *cmd_list)
-+static bool sched_match_task(const char *comm_str, struct CommandList *cmd_list, bool fuzzy_match)
- {
- 	bool match_found = false;
- 
--	for (int i = 0; i < cmd_list->command_count && !match_found; i++)
--		match_found = !strcmp(comm_str, cmd_list->command_list[i]);
-+	for (int i = 0; i < cmd_list->command_count && !match_found; i++) {
-+		if (fuzzy_match)
-+			match_found = !!strstr(comm_str, cmd_list->command_list[i]);
-+		else
-+			match_found = !strcmp(comm_str, cmd_list->command_list[i]);
-+	}
- 
- 	return match_found;
- }
-@@ -1727,7 +1732,8 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
- 			 */
- 			tr->shortname[0] = '.';
- 			tr->shortname[1] = ' ';
--		} else if (!sched->map.task_name || sched_match_task(str, cmd_list)) {
-+		} else if (!sched->map.task_name || sched_match_task(str, cmd_list,
-+								sched->map.fuzzy)) {
- 			tr->shortname[0] = sched->next_shortname1;
- 			tr->shortname[1] = sched->next_shortname2;
- 
-@@ -1756,15 +1762,15 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
- 	 * Check which of sched_in and sched_out matches the passed --task-name
- 	 * arguments and call the corresponding print_sched_map.
- 	 */
--	if (sched->map.task_name && !sched_match_task(str, cmd_list)) {
--		if (!sched_match_task(thread__comm_str(sched_out), cmd_list))
-+	if (sched->map.task_name && !sched_match_task(str, cmd_list, sched->map.fuzzy)) {
-+		if (!sched_match_task(thread__comm_str(sched_out), cmd_list, sched->map.fuzzy))
- 			goto out;
- 		else
- 			goto sched_out;
- 
- 	} else {
- 		str = thread__comm_str(sched_out);
--		if (!(sched->map.task_name && !sched_match_task(str, cmd_list)))
-+		if (!(sched->map.task_name && !sched_match_task(str, cmd_list, sched->map.fuzzy)))
- 			proceed = 1;
- 	}
- 
-@@ -3707,6 +3713,8 @@ int cmd_sched(int argc, const char **argv)
-                     "display given CPUs in map"),
- 	OPT_STRING(0, "task-name", &sched.map.task_name, "task",
- 		"map output only for the given task name(s)."),
-+	OPT_BOOLEAN(0, "fuzzy-name", &sched.map.fuzzy,
-+		"given command name can be partially matched (fuzzy matching)"),
- 	OPT_PARENT(sched_options)
- 	};
- 	const struct option timehist_options[] = {
 -- 
-2.43.2
-
+With best wishes
+Dmitry
