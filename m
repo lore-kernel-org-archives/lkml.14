@@ -1,121 +1,86 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8562215381B
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 06:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE6010F4
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 06:40:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719383857; cv=none; b=P6u6jpKxuFpKnChdSyXyw5MHZPHGKP9arDlvR1o+XBzyMyxsN7sPDBRZ82UOji5Qsnyx4MNHfHNjTyHvFdn6x4nLDozj9tT1vNqQh+xIiSk7TPAEpGPAEefcOgkNCg00coaSIKb82UInbVVp1xEis56GNewizoP1pqoXiLfV3A8=
+	t=1719384058; cv=none; b=KnZC4msOaVIb8PdKhCvS9rMxq74aPQb+YSLXq5F3I4OcsDUi5jwPkBzlF4baymHFjmFGKAbC0SplkgVWnmTZmV1ZrrSRA5oecPJ/jrO65m6TIgohrEN8ncQTKrTghfeh3j8P65kcPxCrmraTZSKrDXZg1DBgJa9JMSpTG5WPHdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719383857; c=relaxed/simple;
-	bh=3m8X5lO7yi/DuByYDZYlJ+FTin1mHRWK1NmeV0ahpVc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SY2DRdIcl6KKDYFyAy9Qnvs/A/zLGmGsnLSTnlXXMVSyep28Nj0gmrjf+F7U1NgJ6+UYUOilbCSqpfuEeLTN7v55SUmzWtcGiwx1o+MzYeNFnhk8198KNiDKpjfgY4ZYhJ/lybIuO8W0vjkUj+dKCiqVtg3mBcXVL2KRFxYJjG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=V9wqZ/em; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V9wqZ/em"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52cdbc20faeso5515093e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 23:37:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1719383854; x=1719988654; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sCHdJxQ4oC2ts4y76NGgpAIUHQqpky7E3Iqo+x2BgZM=;
-        b=V9wqZ/emjfrBHcqjor/9DaIwAypuZq00iNgdNOIDwABRnkMKxQm7JTdzQp5/pQaNzr
-         r/Zf09iS7sFUtT159z7d5c+4Ra4BM7mYeKBNxXqI5xRG+c4+JoKe1f7yTlNd/Hd2NGPf
-         Q0WO9JjMuddD0YDvBenvjr3MSV0eFBst+6qNs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719383854; x=1719988654;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sCHdJxQ4oC2ts4y76NGgpAIUHQqpky7E3Iqo+x2BgZM=;
-        b=HP2JQo9RhrkvfT+xHNksna04ZmUP/k7GYwx1NSQEwe0GhHWi3uQ9y3NhqGYJIUWVz0
-         YHYhgjkG1tcnxq1q/kc7RqTVrTe2iXmnq0S6lBm+isOrYl8x5Hsc5X6gtE89LVXirdU9
-         dq1inxWXI1dctE8OvAu+NOnz62R5fMTshzv+SCAueXdxQvTYZ2WI41qqbYsSLUp00nXj
-         cDuft9vn3h6AtPaTB44aWmglkqianeUvWvtJPcRoZg5mof8Cr/OuQP20rpRiXezc0Ebr
-         yGl/IaCjmvbWw1UAMDpJSUYEyvHYKhspmThXnmNI1pbKabGa+IKr1HY0uuOIkjajCo3l
-         T0nA==
-X-Forwarded-Encrypted: i=1; AJvYcCV1r77A1vAJIkV6hd7v9mCWO7O6lZNwlHqStbPcMZR+R8pMmJ3W/3UDyAWuO/JOCPcUuqsRSwn1w7YoFiSFhxZ5j6r8pu+HB+M3Qpgv
-X-Gm-Message-State: AOJu0YyqOOnF8iWI2M0YsNsn6Hc9HdMndZ0YD4vCQIHHUkI6ntInq100
-	d4Umaj2Dz2Ela2F4Q0VTp/+lLG4igPF+2WD+0TFaRoEodbJJJOaeuNrvZ3g5UrIMTYsp9R6QsWQ
-	QwfPzULQrgHkb0nKWzjpZSsmrvp86P6rasFqz
-X-Google-Smtp-Source: AGHT+IGXqfaK3Lp76aXfYjIzKpRey4MNxVqRhxxMs8nwcgXn/YAU0hTJQfa4vETDGz2L4s7B3bv6pwtt1mZk4jfCHBU=
-X-Received: by 2002:a05:6512:39c8:b0:52c:e4cf:4f31 with SMTP id
- 2adb3069b0e04-52ce4cf502dmr7041057e87.49.1719383853555; Tue, 25 Jun 2024
- 23:37:33 -0700 (PDT)
+	s=arc-20240116; t=1719384058; c=relaxed/simple;
+	bh=V0+zSwiSSVsAC+DiD23TVpiqBcPumsUZT/Qbi/p7J/k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZiGPeCpBZNHv9Src5QVzmCYGueUD+fccMqK0govmvVdB7i1vV3QYk0bcBkAvYbjlfTAVXF1DdxVxz+TXYHZCjIwSrwqCaE1gtLdECOJVpswhXYGa+M+84gX+/2gUqawCShMaa+nf7BmyKqai5arw7XqwKYokmaQq8uG2nKFWC98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
+	by APP-03 (Coremail) with SMTP id rQCowAA3Pr7Zt3tmHwqMEg--.8326S2;
+	Wed, 26 Jun 2024 14:40:37 +0800 (CST)
+From: Ma Ke <make24@iscas.ac.cn>
+To: airlied@redhat.com,
+	kraxel@redhat.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	daniel@ffwll.ch
+Cc: virtualization@lists.linux.dev,
+	spice-devel@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Ma Ke <make24@iscas.ac.cn>
+Subject: [PATCH] drm/qxl: fix null pointer dereference in qxl_add_mode
+Date: Wed, 26 Jun 2024 14:40:24 +0800
+Message-Id: <20240626064024.2811255-1-make24@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240620054708.2230665-1-wenst@chromium.org> <CAAOTY_9tLUAcw+C5D78SNwrV6kHds7JhtAoFYFmxxfAH9vtkDQ@mail.gmail.com>
-In-Reply-To: <CAAOTY_9tLUAcw+C5D78SNwrV6kHds7JhtAoFYFmxxfAH9vtkDQ@mail.gmail.com>
-From: Chen-Yu Tsai <wenst@chromium.org>
-Date: Wed, 26 Jun 2024 14:37:22 +0800
-Message-ID: <CAGXv+5FQaJFuouB4feS4KEK+KqSZaJ=en8d9700gkqpQLOBr5g@mail.gmail.com>
-Subject: Re: [PATCH] drm/mediatek: select DRM_GEM_DMA_HELPER if DRM_FBDEV_EMULATION=y
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowAA3Pr7Zt3tmHwqMEg--.8326S2
+X-Coremail-Antispam: 1UD129KBjvdXoWruF13Kr4UuryDtFWxXFykGrg_yoW3twc_ur
+	18ZwnrX34Du3Wv9r47ZFyfZr4IvFykZF4xXr1Iq34Sq3y8G3Z8Xry7Zwn5Z3y7Za4jyF9r
+	A3y8Wrn8Aan7GjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb3AFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6r1F6r1fM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
+	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
+	648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjfUOlksUUUUU
+X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
-Hi Thomas,
+In qxl_add_mode(), the return value of drm_cvt_mode() is assigned to mode,
+which will lead to a possible NULL pointer dereference on failure of
+drm_cvt_mode(). Add a check to avoid npd.
 
-On Thu, Jun 20, 2024 at 10:20=E2=80=AFPM Chun-Kuang Hu <chunkuang.hu@kernel=
-.org> wrote:
->
-> Hi, Chen-Yu:
->
-> Chen-Yu Tsai <wenst@chromium.org> =E6=96=BC 2024=E5=B9=B46=E6=9C=8820=E6=
-=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=881:47=E5=AF=AB=E9=81=93=EF=BC=9A
-> >
-> > With the recent switch from fbdev-generic to fbdev-dma, the driver now
-> > requires the DRM GEM DMA helpers. This dependency is missing, and will
-> > cause a link failure if fbdev emulation is enabled.
-> >
-> > Add the missing dependency.
->
-> Acked-by: Chun-Kuang Hu <chunkuang.hu@mediatek.com>
+Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+---
+ drivers/gpu/drm/qxl/qxl_display.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Could you help merge this?
+diff --git a/drivers/gpu/drm/qxl/qxl_display.c b/drivers/gpu/drm/qxl/qxl_display.c
+index c6d35c33d5d6..7c11383cd3c4 100644
+--- a/drivers/gpu/drm/qxl/qxl_display.c
++++ b/drivers/gpu/drm/qxl/qxl_display.c
+@@ -236,6 +236,8 @@ static int qxl_add_mode(struct drm_connector *connector,
+ 		return 0;
+ 
+ 	mode = drm_cvt_mode(dev, width, height, 60, false, false, false);
++	if (!mode)
++		return -ENOMEM;
+ 	if (preferred)
+ 		mode->type |= DRM_MODE_TYPE_PREFERRED;
+ 	mode->hdisplay = width;
+-- 
+2.25.1
 
-Thanks
-ChenYu
-
-> >
-> > Fixes: 0992284b4fe4 ("drm/mediatek: Use fbdev-dma")
-> > Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
-> > ---
-> > The commit this patch fixes is in drm-misc-next. Ideally this patch
-> > should be applied on top of it directly.
-> >
-> > CK, could you give your ack for it?
-> >
-> >  drivers/gpu/drm/mediatek/Kconfig | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/gpu/drm/mediatek/Kconfig b/drivers/gpu/drm/mediate=
-k/Kconfig
-> > index 96cbe020f493..d6449ebae838 100644
-> > --- a/drivers/gpu/drm/mediatek/Kconfig
-> > +++ b/drivers/gpu/drm/mediatek/Kconfig
-> > @@ -7,6 +7,7 @@ config DRM_MEDIATEK
-> >         depends on HAVE_ARM_SMCCC
-> >         depends on OF
-> >         depends on MTK_MMSYS
-> > +       select DRM_GEM_DMA_HELPER if DRM_FBDEV_EMULATION
-> >         select DRM_KMS_HELPER
-> >         select DRM_MIPI_DSI
-> >         select DRM_PANEL
-> > --
-> > 2.45.2.741.gdbec12cfda-goog
-> >
