@@ -1,101 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430EE191494
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 19:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E380519069C
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 19:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719430506; cv=none; b=O4o9pgXyPmIUiCVI3oBTYeRgyOtsuzsFdPzHfcRlCKnTvQXybHs6rCPu8uuygmlrdXlT7TmNFtvu7kUtSyYQ7+zsu+uwlbldmEgegOvmLJWBMxBKICVLHdAXL7PEbgkaqjuqmhq3U9GP48SUQsukh6l2CzWBrTEGtYMkZ5bArTE=
+	t=1719430629; cv=none; b=sUUT817UxssM/HdLQ+dN9nkDj9f20SC8IFoBkAYmF5h3kGzuCQjJ6+gtgsWQwaYJ6+OhcADFfgqJ8vInLxDdQh8gld1Mvg0L62yAGczY1YL7KnsBHeBsOJ+kL69OtiV+Csz5yr921gyMhCzPS3+raQC6vIjsLbITEPhynUR7+eI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719430506; c=relaxed/simple;
-	bh=2beignGpCuAM6dT9gqJC6vOcvoJjdAklESkq76GPHFI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=stgIhy55dzTxYKiYiD+8WPpea9JwFTLOfkM3OXMwDR65hnneV1S7g3g9UjpWW3eDxbfSz1cSsPgQ98l2Nlz6nMJrM7r9stGOOKxpAj3H8DaitPfI+/VUP2hhzvJUm4wraJfaLDqKPjRUN1qA8FVHtWmQRDCmEnqbRQKilM10dj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XZhapUp7; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719430629; c=relaxed/simple;
+	bh=kyH0xXB5H1Vg+c/9tiI8tskpqg7dAjXaDu1ITxLHJeo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qe4LnS6tz2fJCa+RD/OH/pd3Nkd0pcgvFXCU3rms5yWB+WwfoEQuxIFknmGqDdvVjyqgIwQ0GGiYTyoYXMKJcMvARHCVJRzx1D5K7MSWDBmuCsxFRZ42osTpSCA7iVE3/pjV44Aggu734wKhlQ5wj8vwEYTMN8RnwbcWTMKjx/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=GkDPNE7U; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XZhapUp7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719430503; x=1750966503;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2beignGpCuAM6dT9gqJC6vOcvoJjdAklESkq76GPHFI=;
-  b=XZhapUp79khBk6Buic4812/DHQohHKQG2M/iz5Sji2kn1euRUFA/OR4/
-   Af/Qa1Y/LbY9EHP7nwXTF0J7Ji+k5mDzalnB/9/H0GmjkajUvSptcePdy
-   FWkhtu8DQP0vtUJtpqUHMSgpu9K6Lls2d+AZKgPRTbDrogQ1tnMpV4wrT
-   6HsN9ouVl5Ed4TH1OB/Fv8huq5N5H6mXLu1JGUc+J6hdn5iKFxEWz24mi
-   WZpY5fFtZqqxeH4M6VS0NZkRU2JQimcoGwSL2eJ52M/BVbrFN11BnSv9p
-   puMuFl1Ra/9dMzlcyynjhewhmgyiIgTTmKANxhfX4oodfR9f304Y84qu6
-   w==;
-X-CSE-ConnectionGUID: OUYoJfGVQiKrjfPN0yR8xA==
-X-CSE-MsgGUID: R/E1eCt+TBKlx+DezCXY9A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11115"; a="16661739"
-X-IronPort-AV: E=Sophos;i="6.08,267,1712646000"; 
-   d="scan'208";a="16661739"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 12:35:03 -0700
-X-CSE-ConnectionGUID: 5Dd8HUxSR/2Y1DtuOGaSfw==
-X-CSE-MsgGUID: t63qcv8+Traa9Y/7WQeIFQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,267,1712646000"; 
-   d="scan'208";a="49076676"
-Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 12:35:03 -0700
-Date: Wed, 26 Jun 2024 12:35:01 -0700
-From: Tony Luck <tony.luck@intel.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>,
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Subject: Re: [PATCH v21 14/18] x86/resctrl: Fill out rmid_read structure for
- smp_call*() to read a counter
-Message-ID: <ZnxtZc140S11gFKL@agluck-desk3.sc.intel.com>
-References: <20240621223859.43471-1-tony.luck@intel.com>
- <20240621223859.43471-15-tony.luck@intel.com>
- <8df55906-23b1-4772-ab11-703da64d5ebb@intel.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="GkDPNE7U"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3764dd53b5aso1899615ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 12:37:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1719430627; x=1720035427; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ICvcBHP/KZCXzcYm8gtyDmBrp6ePeST6VE9B+ziPf54=;
+        b=GkDPNE7UjpOr2wbrLvndSR2hsZ/vpHcFXxc1Wx5IhCtLNwWFZQSKCXbMvrNPaZLshS
+         6QaaXZFijsJVBWWH5lUd38mxg5KeuEid56JhA9W826c1sHaqykG+TJUMD90jFPa7kFic
+         xNef/Qls+0JAzkf0kKqcZ06E1lBTldcrYgvF8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719430627; x=1720035427;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ICvcBHP/KZCXzcYm8gtyDmBrp6ePeST6VE9B+ziPf54=;
+        b=OT9pDTQMCqbJ5pj0KMTmcV3Vdg+fIlDZA/0GpkdZYF17qcCveuSBuPkblekx8VPQA9
+         D2SCQY7g0P6JP5pEix+F6LxMv0aZtCwCHv2GcONy1whPzVNfIUpC3gxE1LEMRyvhh4xP
+         4PhSwM4ObCougv/budG4zSLi7KD5kKmcVGxkUI0j1DSBMoVC+X5iS3eUKTYx+s71Q16L
+         61aXsbVRskTnxL9gPNqf+8mnGOm6KA6Lvoo3N+i9qEjZCIjGcbEG/bVJJv0R0QxuSXYN
+         V7XSDOpY2SRK21HYpPxVz4Ug6MQ2QwcTka/QJDIwZbPGdG8NXCCpNVnIG7mU6PAYDsVX
+         Bq7A==
+X-Forwarded-Encrypted: i=1; AJvYcCU07iPoxp4rC0bTnQO23D4rdKOnUNXo86rs1Hwxeu/V0FAJICVmhOd4FN5hDJOiJqPu+bNV6KIPxC3XFxOQd1ecm5LW+MJ4fr+IGhR9
+X-Gm-Message-State: AOJu0Yy/YVLeUyv0TFKn204Bp7ni7v8dSuf3ieEXMLoLYdjVOjv0a5Ru
+	Ekx9X1SU0Xki82Qp+IiT04eF2TYCDSsnGPDuBybOPDxbThLtU75oc/jHGPKxCKs=
+X-Google-Smtp-Source: AGHT+IHiRCOVFS4E+cZepyniako41FE5gtIa0MJn5xH54rfOJ6VfGKk+9lRMtzUonfZZ76YfCjUCag==
+X-Received: by 2002:a6b:4f0b:0:b0:7f3:cd61:32f5 with SMTP id ca18e2360f4ac-7f3cd613354mr315438739f.2.1719430627107;
+        Wed, 26 Jun 2024 12:37:07 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-7f392028074sm282015339f.42.2024.06.26.12.37.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Jun 2024 12:37:06 -0700 (PDT)
+Message-ID: <67828a44-9730-45fd-bc4e-73075cd3dc4e@linuxfoundation.org>
+Date: Wed, 26 Jun 2024 13:37:06 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8df55906-23b1-4772-ab11-703da64d5ebb@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests/capabilities: Fix possible file leak in
+ copy_fromat_to
+To: Ma Ke <make24@iscas.ac.cn>, shuah@kernel.org, usama.anjum@collabora.com,
+ amer.shanawany@gmail.com, swarupkotikalapudi@gmail.com, kees@kernel.org,
+ luto@kernel.org, akpm@linux-foundation.org
+Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240626072024.2816986-1-make24@iscas.ac.cn>
+ <524e2d98-f75f-4004-bd3b-39b64864bc3c@linuxfoundation.org>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <524e2d98-f75f-4004-bd3b-39b64864bc3c@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-> > diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-> > index ff4e74594a19..877d898e8fd0 100644
-> > --- a/arch/x86/kernel/cpu/resctrl/monitor.c
-> > +++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-> > @@ -785,6 +785,7 @@ static void mbm_update(struct rdt_resource *r, struct rdt_mon_domain *d,
-> >   	rr.first = false;
-> >   	rr.r = r;
-> >   	rr.d = d;
-> > +	rr.ci = NULL;
+On 6/26/24 13:33, Shuah Khan wrote:
+> On 6/26/24 01:20, Ma Ke wrote:
+>> The open() function returns -1 on error. openat() and open() initialize
+>> 'from' and 'to', and only 'from' validated with 'if' statement. If the
+>> initialization of variable 'to' fails, we should better check the value
+>> of 'to' and close 'from' to avoid possible file leak.
+>>
+>> Fixes: 32ae976ed3b5 ("selftests/capabilities: Add tests for capability evolution")
+>> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+>> ---
+>> Found this error through static analysis.
 > 
-> This keeps using a struct rmid_read with random data from stack and initialize members based on
-> knowledge about how the called functions use this struct. Could you please add initialization to
-> all these places that use struct rmid_read with whatever is on the stack? This includes
-> mon_add_all_files() introduced in this series.
-> Something like below should do (in mon_add_all_files() - done as part of patch 10, mbm_update(),
-> and mon_add_all_files():
-> 	struct rmid_read rr = {0};
+> Please add this line to change adding details about the tool you used
+> to find this problem.
+> 
+>> ---
+>>   tools/testing/selftests/capabilities/test_execve.c | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/tools/testing/selftests/capabilities/test_execve.c b/tools/testing/selftests/capabilities/test_execve.c
+>> index 47bad7ddc5bc..de187eff177d 100644
+>> --- a/tools/testing/selftests/capabilities/test_execve.c
+>> +++ b/tools/testing/selftests/capabilities/test_execve.c
+>> @@ -149,6 +149,10 @@ static void copy_fromat_to(int fromfd, const char *fromname, const char *toname)
+>>           ksft_exit_fail_msg("open copy source - %s\n", strerror(errno));
+>>       int to = open(toname, O_CREAT | O_WRONLY | O_EXCL, 0700);
+>> +    if (to == -1) {
+> 
+> Changing this check to < instead of checking for just -1 can catch
+> other error returns.
 
-I'm making that change to the three places that struct rmid_read
-is defined as a local variable.
+While you are fining this, can you fix this as well:
 
-Should I also remove "useless" assignments now that the structure
-is zeroed by the compiler. I.e. in the above snip the rr.first = false;
-and rr.ci = NULL;
+  int from = openat(fromfd, fromname, O_RDONLY);
+         if (from == -1)
+                 ksft_exit_fail_msg("open copy source - %s\n", strerror(errno));
 
-I suspect there are others.
+Same change to check for <
 
-Or do they serve as useful hints to human readers of the code?
+thanks,
+-- Shuah
 
--Tony
+
+
