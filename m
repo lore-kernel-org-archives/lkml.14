@@ -1,55 +1,57 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 228ED7173C;
-	Wed, 26 Jun 2024 16:00:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2167518E76B;
+	Wed, 26 Jun 2024 16:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719417633; cv=none; b=glJBiNY/qMe32dBCYNV+kf+A+otHcR6A4Pm/iDdjFgyL6Ze9UrpUy4i+rCyuzyF8ggymbq4IQDEdUUPG5iGLghRd76X9S2kvRWsM48gPCGCqxZdwVuJzVgKOTKBD8ju4A+UAo9ZWgu5BdRI3qsXyrT073Wjhnh/v1gm8qQMJgh8=
+	t=1719417635; cv=none; b=aon1/W4b7NQN/TU/v4CB+GVe62FEy4Vz9qaemhmQtyFatqGlZs6PMpsjBB2dv6EK1+1MpuQaLLkpupCPwLzqz6FmPxS969tYR7rOGl4yaD6KsKDT8JqN2OWsiwGANqGFDEhiu2lfOL54FlEj4vyp7TpMtUyT4cESWN5EDAHralE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719417633; c=relaxed/simple;
-	bh=zA3dF2PHL9qrsink+IGH+TJb0DiAWXMCVT6vadtTozQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HS+pZZ3JDVeFGlXUO5a+t/dqqKHCfrjO+2XI96UW0AVb75kh9XQquvMLESyYrozH1L/Nv2/QttiwsDIYhEuMPfYj9nDfhuvwVJUE0beBFnxGg0y/8HVgG19g2HI7aaEqRBXhVhTs687hHGctF6uV8siqyrp4oIysBb/dX6ww4vE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DJSTkKPz; arc=none smtp.client-ip=209.85.167.43
+	s=arc-20240116; t=1719417635; c=relaxed/simple;
+	bh=3eWDuOuAPXIqwQ37BEI/rk2/PA31lRgF9hfGMCW6fwg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hcosf5DfQaoaHIXksqkhr4n3Sz2CVx00kvF5plgV+mTOG2M/sv6DUE1S0zV7wzWK/9HII2ooixWeEj85pCIZE8ibJONE1NHZis1+ceDjy9fbxzPGBdRBm1ptBcxT8uH2afOmURy3K+1lJyvoesFUs8/KLeNIz5XJ5HEamw7LAi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JU97Ia+s; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DJSTkKPz"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52cd8897c73so5848343e87.2;
-        Wed, 26 Jun 2024 09:00:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JU97Ia+s"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-364cdfdaf91so4912206f8f.1;
+        Wed, 26 Jun 2024 09:00:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719417630; x=1720022430; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UUr0hsnVdUZQR4NG5Z+hPzjpfEp6LQwKrE2P4nzghLA=;
-        b=DJSTkKPz4gJTFXT9xiSOnjqXhnlPO6uunHgfqpyY/cQ16nnIclA8JnZF8jfwyy4y1Z
-         TAPoOU06WLNes9UwZqQ5m8Vnir05I9V8NtUdrNLdBGMf9mioJ0xlOnUMngWZxJ6ItU4/
-         4t/XvMCIw69l4QeHNAJtybvrN/Ca4afdFN/POUHiw/jGnOVOgQDwxp++l+bG0zqae+DX
-         gnUOgKAmVto6jdQTl2HgTBv+wWSOKGCFV+Vbx68NbGVveVF0Nr4XBiWP9U9ztIZLvEU8
-         M/pQmsKq4s1zZkDCkSWM/4KoUp/zdiceKDXYzPGHjQNizaSw/bThaNfOFs5wau1XDYMe
-         eiFw==
+        d=gmail.com; s=20230601; t=1719417632; x=1720022432; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=21mSbP0lHQ/HlE9P4YVvtfNI3i5USmGh/e5NZFrr3Ik=;
+        b=JU97Ia+sMhQzLEX0PutsYHHoHpdFMbN0HpZWNGjphw5/b4oTLTEeehlnXlIt5KXHcD
+         mZY3hFPvqvOQrQb0LzruoyxNoOzyVoN8eEa/QwpGaJ0mhohVgbOz90RWExvJ742SClmC
+         su2JetZpuSqCA11XAwYEkcflzO+VisjC44CwagDHvS+qfdRTVLN1Kk5PK08cjzB3uaDX
+         0HbDaBvoYBxT2+JDUrnmyH2XXJWC8CWWAOyoN39on5jpJFJ9e796VtpzU5PXLf0WC1oe
+         Nu61j+y86FEbA6TjZ84WsDOBQXNJ9xRLiCmmTWnqZg/sJFR7ow4NbHpHwe1y/igzgq+B
+         xJYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719417630; x=1720022430;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UUr0hsnVdUZQR4NG5Z+hPzjpfEp6LQwKrE2P4nzghLA=;
-        b=ry2M8PIY2aKQxrbf2v4qH2e5Xqsr4/uwhENXp4Lm2sJAvbKfHQL+P7mDhasuuNhkBD
-         Sf5fbRgmeZbj9ZTMLID96qbkr3JwjUrmYNO4oTvbxmxOnkEYEU8ujidT15FFTSTMuXBp
-         yUklIg27md4trUQfGq0f0jBctevZTNkSs47t62uC7d4oKwdPg4xhMO7F6+dRuoJe+ws5
-         BBp8mTJAsxIArA2HpYR5BwkNeqcR/TfNUtT8H8RaLBP0t70P1MRAFUV6O34gFUaKKgvO
-         CjYKY27Ca9nDl2VPyn/XINXeV5/8f68pFQG+5QOkUIV4gwWzJsSTLPYUrB5OpNPMOiVo
-         kXiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWNd2y8QpTDPLxgU+SwanStz921vssX0OebW07xFo5O2WesnD3CVCvT9b5IFUlHo2oqV+y/AW8ewCzuZBb7zqx0Y2vnVWCY1bCA/AJDnAUJgKsQ8Bl7cr588LOatJxN1AEJrgfQpIs2osQXFAL8ncXSj+iqlGLs8tDBEd6ggyjfJhzNh30=
-X-Gm-Message-State: AOJu0Yyy0LgBYhLr2gMxKOkM7YD0s774yEbamQBnpjWmrREi5vdHcCZF
-	TBM3uB2p3ahTNW5eEFk9+Wz4gpO/cqFAH92YYsrfT9TOuHW8rs8qSYKx+A==
-X-Google-Smtp-Source: AGHT+IEp8zyPKXDbZH5bO5cTsGNX6/X+RDU76LaL6o1ZFshhd/DaIBpr7WaAgiK2tNRkAx8JCeEmoQ==
-X-Received: by 2002:a05:6512:281:b0:52c:e10b:cb36 with SMTP id 2adb3069b0e04-52ce183add6mr6655985e87.33.1719417630099;
-        Wed, 26 Jun 2024 09:00:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719417632; x=1720022432;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=21mSbP0lHQ/HlE9P4YVvtfNI3i5USmGh/e5NZFrr3Ik=;
+        b=uDcUkpNu7H1M2dW631nnGsPDH5hLvU/jfcg6aQst68PDNXrt8TuYMfmtAoyJEoju+d
+         I+DaRe9VRnt9Hs8FNsHftVfJsUV29T8EBVVBFTIHWwLQSeOmF8ZfULaKCZsEjf/eRaXI
+         Jbit0RFKlUmJK+EWWRN5kjKJNbJ2aKF7mxY62tbmuUMOQ9tV5wKIJqMlVX8cmtzHA042
+         GhnobTVWnKNJikzQ5ZABx8tkLWPBuopIedbeGOqdr3+R24XbWBkugXxJiB94EkW8vu5+
+         eZmqNVEzLjQS9zzMEmYDBCLC3IajKpgo71igGx8I4OYwSFhi7J5m44ZVy4S+QE/pgUBY
+         w9xw==
+X-Forwarded-Encrypted: i=1; AJvYcCWLkI2qiFYfieLbSPN5z2dnvfGTVgtG320nlI7WmiFix3Smpe5F7icY64sT8MhsWm/Dd78gYt7unu6QLIYgLg9LuMelHmUdQKK0BoXVDZ/+JBgzcJ4iF89Gozw50VM38Z/4jM1sOWybnxwHHpvkQiVt3xT6cNvk7vWLudB4rdL5FG1nHd8=
+X-Gm-Message-State: AOJu0YwP+T6oDzRX17wXRwpWtyjZBtfd58+epaUhMw660+4EoPZpo5lh
+	Sgu1dC0HdsvSz9b70Bw77NXvKkRb18VKF8HWmPZadNbgJi/QJyq3
+X-Google-Smtp-Source: AGHT+IEi/HC/Gcbgnm7qZ5IcLEADLlJGkC5ORIvQ5w/NtsPI7RwE/FOYBlwgYxGhHFkfWP5xS+HUOA==
+X-Received: by 2002:adf:e8c5:0:b0:362:ea80:db1d with SMTP id ffacd0b85a97d-366e94d91aamr6331604f8f.6.1719417632440;
+        Wed, 26 Jun 2024 09:00:32 -0700 (PDT)
 Received: from localhost.localdomain (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-366389b88easm16180589f8f.39.2024.06.26.09.00.29
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-366389b88easm16180589f8f.39.2024.06.26.09.00.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 09:00:29 -0700 (PDT)
+        Wed, 26 Jun 2024 09:00:31 -0700 (PDT)
 From: Christian Marangi <ansuelsmth@gmail.com>
 To: Pavel Machek <pavel@ucw.cz>,
 	Lee Jones <lee@kernel.org>,
@@ -60,11 +62,14 @@ To: Pavel Machek <pavel@ucw.cz>,
 	linux-leds@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Christian Marangi <ansuelsmth@gmail.com>
-Subject: [PATCH v8 00/20] leds: leds-lp55xx: overhaul driver
-Date: Wed, 26 Jun 2024 18:00:05 +0200
-Message-ID: <20240626160027.19703-1-ansuelsmth@gmail.com>
+Cc: Christian Marangi <ansuelsmth@gmail.com>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v8 02/20] dt-bindings: leds-lp55xx: Add new ti,lp5569 compatible
+Date: Wed, 26 Jun 2024 18:00:07 +0200
+Message-ID: <20240626160027.19703-3-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240626160027.19703-1-ansuelsmth@gmail.com>
+References: <20240626160027.19703-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,103 +78,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This long series is (as requested) a big overhaul of the lp55xx based
-LED driver.
+Add new ti,lp5569 compatible, this is similar to national,lp5523 with
+slight change to reg order and reg type and advanced way for LED fault.
 
-As notice for these kind of LED chip there was the bad habit of copy
-the old driver and just modify it enough to make it work with the new
-model. Till v4 I was also doing the same by following the pattern and
-the code format of previous driver.
+Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+---
+ Documentation/devicetree/bindings/leds/leds-lp55xx.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Since Lee didn't like this, here is the BIG series that generalize
-pretty much anything in the 4 model currently supported.
-
-Indeed, although the LED chip have fundamental difference (page
-support), things can be generalized and produce slimmer drivers by
-putting everything in the lp55xx-common shared module.
-
-This result in the new model lp5569 being very small with only the
-selftest portion to be custom.
-
-Lee also wasn't clear by the meaning of ENGINE in these LED driver,
-so here some simple explaination. This is very common on these TI LED
-chip. The ENGINE (there are always 3) is just some kind of processor
-that execute a program (precompiled code ASM like) loaded in the SRAM.
-Sysfs is used to load the pattern, and to start and stop the engine.
-
-These pattern can do all kind of complex thing with LEDs. Old LED chip
-had 32bytes of space for the pattern but newer one (like lp5569) have
-pages and if correctly configured can have massive pattern.
-These pattern can do all kind of magic like loops that make the LED
-pulse, change color and all kind of stuff.
-
-(For Lee, sorry if you will have to repeat some review that I might
- have missed in the lp5569 driver)
-
-Changes v8:
-- Rebase on top of for-leds-next (assuming the 3 commit got dropped)
-Changes v7:
-- Add Suggested-by tag
-- Fix checkpatch error for complex macro (rework define)
-- Add missing values for fader conversion
-- Align some function with redundant new line
-- Capitalize every commit title
-Changes v6:
-- Fix compilation warning for ret unused in read_poll_timeout
-  (no idea why this is flagged only on some particular arch...)
-- Fix missing bitfield.h in lp55x-common.c (again it seems this
-  header gets included in the flow if the arch use them or not...)
-Changes v5:
-- Big generalization patch
-- Rework lp5569 driver with new generalized functions
-- Drop all copyright header in lp5569 as the driver got reworked
-  entirely and it's not based on previous one anymore.
-Changes v4:
-- Fix reported buffer overflow due to a copypaste error
-- Add comments to describe fw size logic
-Changes v3:
-- Add ACK tag to DT patch
-- Enlarge and support program size up to 128bytes
-Changes v2:
-- Add ACK tag to DT patch
-- Fix compilation error with target that doesn't
-  include bitfield.h
-
-Christian Marangi (20):
-  dt-bindings: leds-lp55xx: Limit pwr-sel property to ti,lp8501
-  dt-bindings: leds-lp55xx: Add new ti,lp5569 compatible
-  leds: leds-lp55xx: Generalize stop_all_engine OP
-  leds: leds-lp55xx: Generalize probe/remove functions
-  leds: leds-lp55xx: Generalize load_engine function
-  leds: leds-lp55xx: Generalize load_engine_and_select_page function
-  leds: leds-lp55xx: Generalize run_engine function
-  leds: leds-lp55xx: Generalize update_program_memory function
-  leds: leds-lp55xx: Generalize firmware_loaded function
-  leds: leds-lp55xx: Generalize led_brightness function
-  leds: leds-lp55xx: Generalize multicolor_brightness function
-  leds: leds-lp55xx: Generalize set_led_current function
-  leds: leds-lp55xx: Generalize turn_off_channels function
-  leds: leds-lp55xx: Generalize stop_engine function
-  leds: leds-lp55xx: Generalize sysfs engine_load and engine_mode
-  leds: leds-lp55xx: Generalize sysfs engine_leds
-  leds: leds-lp55xx: Generalize sysfs master_fader
-  leds: leds-lp55xx: Support ENGINE program up to 128 bytes
-  leds: leds-lp55xx: Drop deprecated defines
-  leds: leds-lp5569: Add support for Texas Instruments LP5569
-
- .../devicetree/bindings/leds/leds-lp55xx.yaml |  11 +
- drivers/leds/Kconfig                          |  16 +-
- drivers/leds/Makefile                         |   1 +
- drivers/leds/leds-lp5521.c                    | 405 +---------
- drivers/leds/leds-lp5523.c                    | 734 ++---------------
- drivers/leds/leds-lp5562.c                    | 261 +-----
- drivers/leds/leds-lp5569.c                    | 544 +++++++++++++
- drivers/leds/leds-lp55xx-common.c             | 743 +++++++++++++++++-
- drivers/leds/leds-lp55xx-common.h             | 163 ++--
- drivers/leds/leds-lp8501.c                    | 313 +-------
- 10 files changed, 1540 insertions(+), 1651 deletions(-)
- create mode 100644 drivers/leds/leds-lp5569.c
-
+diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml b/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
+index 77828dedbb9f..fe8aaecf3010 100644
+--- a/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
++++ b/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
+@@ -28,6 +28,7 @@ properties:
+       - national,lp5523
+       - ti,lp55231
+       - ti,lp5562
++      - ti,lp5569
+       - ti,lp8501
+ 
+   reg:
 -- 
 2.45.1
 
