@@ -1,168 +1,125 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC1716CD1F
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 09:49:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D2D16CD1F;
+	Wed, 26 Jun 2024 09:49:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719395368; cv=none; b=B7RjM9Wz45H04W/lAMAR47khWLrlboy0LBi4T+bNdebqnGt9NnsHp5AnR8JYM73+2ZvpFXmQVuRpHT6x8Vgz4HAZDoqtqwDlBvdAFZI0VL0HZg5IPbn0qeCAXNBpYmBjXVDHyDaQd0+NEJ/9Hdd13glGfSbcY783+3nw3nao7Zg=
+	t=1719395374; cv=none; b=m9V2B6oYULg520KDmMlXTeaq1Tf/XusypA1JX6NKEED0UbUDyw0c09ZerJdqvWXZPo4/UD3qNVaVUr8rTkcKg/lpyrY+BrBf+GPyiXK75LB24C1a7kjD89Hy6FT5R2hDcrpndu0edFQofEcWu50jchjUOTb7pct4NFge7R/mXKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719395368; c=relaxed/simple;
-	bh=DWIGWxbl+woKwQpaluXg5n45wCq4JDHrOc+cad4B7fY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BQ4dRcxTZ0ErmYdZmBhBuI/kde+vq7kPdFXYUGtx0TbiQ2KNJfCi/Lz5EdgLG+uxyjBRZTye1UvVJm0rrNnxaRQ+dalwmAHAq7v5P+eBXoHU30l/iYfsPDEPHd6Rpn4gz7wMveANq3jFbvfLOvz+ufLm0dUKwUJCpyLaUoSKazc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gBJeiEh8; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719395374; c=relaxed/simple;
+	bh=nyAn45UkdIMYYwIw68km3YLgE4LN981adMgW+jtRcjY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lNSlxtUMMGWWniLZtDKpJk387+Av/HRFHSMgmyp6HFMpDcbemSoRbEV2QZWaS8Cl12O+y6oDED6bPOPItRLiK/zgWm0QoiAHj8VpOuMzsVnPY24ABu4p3NHIIea/h6Rea3vaOdsrmlUsXx4V1ahIkOVtoTYbCRRD6WPatwgo4vQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fSnujuR1; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gBJeiEh8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719395365;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4djDjoucdiNC3v37pUz0oafRQ2jw1kRnVn3jy6AlRSM=;
-	b=gBJeiEh8EVP1Ty6IJSFEGbZpDTodpYnrQNFtgVM8gD5AVjVld4WCMMGdTWmMvGpDNUAJlt
-	XqjTi+VlXYAvJTpj0jh9JsbSCTw2Hp63iLqmPYj7Uwuu0Xj99jomrntDpEzDMMydTr1Txt
-	rAJBa5YjU1TRs868bOR/9v+0BrFkjdU=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-639-I2VkV8kYO8yljK_aml0XvQ-1; Wed, 26 Jun 2024 05:49:24 -0400
-X-MC-Unique: I2VkV8kYO8yljK_aml0XvQ-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-42490e94105so21468985e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 02:49:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fSnujuR1"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1f9b523a15cso2954705ad.0;
+        Wed, 26 Jun 2024 02:49:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719395372; x=1720000172; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cNU1a60CfCiX6Hw5x2IZFVQSkvoOIUiLn4EitVdi3Pw=;
+        b=fSnujuR1ZJy+E2XQZwMsyK5xpxLpI+om3y6IhHLotfeO73x3zf+F/A94mshgIbFS5A
+         FlFXUW+fThFg6y0XuN0+0YiOeej3iN2p4iIMCU9W4Ybn/ejejrDuu5wGW2SeNdPvjE3I
+         oE2kU7hAPYnuoqKmIuKFzoMqs8mWPu7s98jOxMUyqzyjhx++8Zbbf0uC7k0CAs2QVOFB
+         dBVtSqD0dWmL7qY/D2nu5dYeBLDi2d08tHzHsMo3kKbYv6kJL7LgJ74nUkqXKWz3yfTV
+         sMIXo/PydqbiMWd0v3Tun27oREcZ9kR2mklycSok+rqiYptqkgVoOZa5J8seqIam0NVP
+         e93g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719395363; x=1720000163;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4djDjoucdiNC3v37pUz0oafRQ2jw1kRnVn3jy6AlRSM=;
-        b=XrdM+nE8PNEt1q83ZJ3GpIUF6GffDdVbLRvdjvlgUwbW4Eg07uCb1ObfdeIPRqxt5g
-         dQpBXAGLi0gTnqfd01fJ7ZEUwJp+XtcQayD6jWkydhDPOaWCwwjv3z+R+8kUzLSFbtp6
-         JTZWuUbrks9dsfaF6tqgybxt4Gp6CR64NJesOnSzt7XvbUd+5FV/1XKNiJ/KLPFpsZnG
-         6qOtUsSWrJFSZIDLvzJXEXQWrKUbSVE1F/xTnbTjB5RHS1lMYS6hBhPddUHGzitL8ich
-         lPfUUMyKnB5Tz8Ygecl1dJjVEJNsUyN1JmCOBLxxKtCsj84En1x1CzxP3aC/0LjLytUO
-         GIEA==
-X-Forwarded-Encrypted: i=1; AJvYcCV3bmqbBdeyiwxYE6JpKzczX6OOMA4xCh5x2AWhJnwbQ6/BN2XdoLWGkigY58PXHgIGAY65CloenmXd4LSO7izY3WbQHVqu8u1f32fF
-X-Gm-Message-State: AOJu0YxaHxO9KIP5HMm1OY/PoYm6xWc5dRywCK/SSb6zVvD+zbXDw5uW
-	1UIog9RmCFPKlAl5XQJPotchpA/aBJB5TFE+WvKFMHbdt6BhCe0q1om+load8MYYnksyAqU2g1K
-	7wJDZUTx+TPtLVIEMU8KXeQGpPfac9reVxsZhTTNm2fYGA34Z8h4hq0a4e0YgKw==
-X-Received: by 2002:a05:600c:4a21:b0:424:aa73:83db with SMTP id 5b1f17b1804b1-424aa7385d9mr16426425e9.3.1719395363234;
-        Wed, 26 Jun 2024 02:49:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE/3FLpYFj1lNUdvagVZ//NSmf/wAzF1F50kld50FSwNHiB4Iwf5oXPdzRER19Pywz3nR5htA==
-X-Received: by 2002:a05:600c:4a21:b0:424:aa73:83db with SMTP id 5b1f17b1804b1-424aa7385d9mr16426215e9.3.1719395362335;
-        Wed, 26 Jun 2024 02:49:22 -0700 (PDT)
-Received: from localhost ([2a01:e11:1007:ea0:8374:5c74:dd98:a7b2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3663a2f696csm15283695f8f.82.2024.06.26.02.49.20
+        d=1e100.net; s=20230601; t=1719395372; x=1720000172;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cNU1a60CfCiX6Hw5x2IZFVQSkvoOIUiLn4EitVdi3Pw=;
+        b=L69jOKExbDegvWYU1kMuhxiWS4tBhPbGDhrSv95IyONHCwLugPMP8F0RfROtOAreKg
+         XvCVc+2dMepfEMyjosj0V3dVfmmFAqKn3dZYNoe1U/F1xVqP83aKW0qHY+1I5eZi69IO
+         bWcj92KT2R/jz/YAXKcwZ4oerD8nuBzdVZsbocFxTMm3xg9UFeIWs1DT0yYhL9QOaJSd
+         Ae0vmJE0BXU9JbMRV85DREMtPdcPQytlUInPzGNhawRSxC5u/q9QEpBuCWAZ+AVldbGb
+         94EuQ+Tk2fqxndMHfhaKmhbbsg6FXUWFwmAXuEtVEOD+EVtlMj8nuyHMOTRr2sVs5e9W
+         dZ+g==
+X-Forwarded-Encrypted: i=1; AJvYcCX8KMhw2z4BAG8lAYhqcFw5cpRXgnmFoTtvcE6lXx69ocfawcHGe0zQqMnVhIq3gcgzMaK7pszlajwibkFMozWErAOvXCDEJmDgpBXX37PGmbdT23bNH0DtoWdOuIuZAzRw+mMPiJr2bNtm3oskUruX0+zmkVG/A8qrU50Id89GiLnDQQ==
+X-Gm-Message-State: AOJu0Yw4wGPr/NBsxajN4/SCwz0eKNe+V1dxbk7MTcUnix7zG9Wb4HDo
+	WTMhSBWYxR0ANa6xXuz3u9UXhfxtSmWHF8TK4iY/25N4hRHl2HH4
+X-Google-Smtp-Source: AGHT+IH4SzOk1LTjzFzMAd6+TVYhUdE3VY0zp+6xlqS3ft2PXUhtbCcuzFHhh/gA+6swVpDF1lH22A==
+X-Received: by 2002:a17:902:9346:b0:1f9:e97d:9460 with SMTP id d9443c01a7336-1fa0f8cd9f2mr114953025ad.16.1719395371897;
+        Wed, 26 Jun 2024 02:49:31 -0700 (PDT)
+Received: from localhost.localdomain (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fa6aa7030bsm29726665ad.288.2024.06.26.02.49.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 02:49:21 -0700 (PDT)
-Date: Wed, 26 Jun 2024 11:49:20 +0200
-From: Davide Caratti <dcaratti@redhat.com>
-To: =?iso-8859-1?Q?Asbj=F8rn_Sloth_T=F8nnesen?= <ast@fiberby.net>
-Cc: Ilya Maximets <i.maximets@ovn.org>, Jamal Hadi Salim <jhs@mojatatu.com>,
-	Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	David Ahern <dsahern@kernel.org>, Simon Horman <horms@kernel.org>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH net-next 2/9] net/sched: cls_flower: prepare
- fl_{set,dump}_key_flags() for ENC_FLAGS
-Message-ID: <ZnvkIHCsqnDLlVa9@dcaratti.users.ipa.redhat.com>
-References: <20240611235355.177667-1-ast@fiberby.net>
- <20240611235355.177667-3-ast@fiberby.net>
- <ZnVR3LsBSvfRyTDD@dcaratti.users.ipa.redhat.com>
- <0fa312be-be5d-44a1-a113-f899844f13be@fiberby.net>
+        Wed, 26 Jun 2024 02:49:31 -0700 (PDT)
+From: Shan-Chun Hung <shanchun1218@gmail.com>
+To: ulf.hansson@linaro.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	adrian.hunter@intel.com,
+	p.zabel@pengutronix.de,
+	pbrobinson@gmail.com,
+	serghox@gmail.com,
+	mcgrof@kernel.org,
+	prabhakar.mahadev-lad.rj@bp.renesas.com,
+	forbidden405@outlook.com,
+	tmaimon77@gmail.com,
+	andy.shevchenko@gmail.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mmc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: ychuang3@nuvoton.com,
+	schung@nuvoton.com,
+	Shan-Chun Hung <shanchun1218@gmail.com>
+Subject: [PATCH v2 0/2] Add support for Nuvoton MA35D1 SDHCI
+Date: Wed, 26 Jun 2024 17:48:58 +0800
+Message-Id: <20240626094900.581552-1-shanchun1218@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <0fa312be-be5d-44a1-a113-f899844f13be@fiberby.net>
 
-hello Asbjørn,
+This patch adds the SDHCI driver and DT binding documentation
+for the Nuvoton MA35D1 platform.
 
-thanks for your patience!
+This MA35D1 SDHCI driver has been tested on the MA35D1 SOM board with
+Linux 6.10
 
-On Fri, Jun 21, 2024 at 02:45:28PM +0000, Asbjørn Sloth Tønnesen wrote:
-> 
-> Could you please post your iproute2 code?
+v2:
+  - Update to nuvoton,ma35d1-sdhci.yaml
+    - Remove some redundant descriptions.
+    - Replace 'minitem' with 'maxitem' in the clock settings.
+    - Make corrections to nuvoton,sys description.
+    - Add sdhci-common.yaml.
+    - Remove '|' except where neccessary to be preserved.
+    - Keeping one example is sufficient.
+    - Add regulators in the example.
+  - Update ma35d1 sdhci driver
+    - Refer to 'include what you use' to modify included header files.
+    - Replace the number 8 with sizeof(u8), and similarly for others.
+    - Use "dev" instead of "&pdev->dev".
+    - Use the min() macro to improve the code.
+    - Use dev_err_probe() instead of dev_err().
+    - Implement an error reset check mechanism.
+    - Add devm_add_action_or_reset() to help with sdhci_pltfm_free().
+    - Use devm_reset_control_get_exclusive() instead of devm_reset_control_get().
 
-sure, will clean it up and share it today in ML.
- 
-> > from
-> > 
-> > https://lore.kernel.org/netdev/20240611235355.177667-2-ast@fiberby.net/
-> > 
-> > Now: functional tests on TCA_FLOWER_KEY_ENC_FLAGS systematically fail. I must
-> > admit that I didn't complete 100% of the analysis, but IMO there is at least an
-> > endianness problem here. See below:
-> > 
-> > On Tue, Jun 11, 2024 at 11:53:35PM +0000, Asbjørn Sloth Tønnesen wrote:
+Shan-Chun Hung (2):
+  dt-bindings: mmc: nuvoton,ma35d1-sdhci: Document MA35D1 SDHCI
+    controller
+  mmc: sdhci-of-ma35d1: Add Nuvoton MA35D1 SDHCI driver
 
-[...]
- 
-> It is always preferred to have a well-defined endianness for binary protocols, even
-> if it might only be used locally for now.
+ .../bindings/mmc/nuvoton,ma35d1-sdhci.yaml    |  88 ++++++
+ drivers/mmc/host/Kconfig                      |  14 +
+ drivers/mmc/host/Makefile                     |   1 +
+ drivers/mmc/host/sdhci-of-ma35d1.c            | 291 ++++++++++++++++++
+ 4 files changed, 394 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/nuvoton,ma35d1-sdhci.yaml
+ create mode 100644 drivers/mmc/host/sdhci-of-ma35d1.c
 
-given the implementation of fl_set_key_flags() in patch 2,
-
-	key = be32_to_cpu(nla_get_be32(tb[fl_key]));
-	mask = be32_to_cpu(nla_get_be32(tb[fl_mask]));
-
-when fl_key and fl_mask are TCA_FLOWER_KEY_ENC_FLAGS and TCA_FLOWER_KEY_ENC_FLAGS_MASK,
-I assume that we want to turn them to network ordering, like it's already being done for
-TCA_FLOWER_KEY_FLAGS and TCA_FLOWER_KEY_FLAGS_MASK.
-
-So, we must htonl() the policy mask in the second hunk in patch 7,something like:
-
-@@ -746,9 +746,9 @@ static const struct nla_policy fl_policy[TCA_FLOWER_MAX + 1] = {
- 	[TCA_FLOWER_L2_MISS]		= NLA_POLICY_MAX(NLA_U8, 1),
- 	[TCA_FLOWER_KEY_CFM]		= { .type = NLA_NESTED },
- 	[TCA_FLOWER_KEY_ENC_FLAGS]	= NLA_POLICY_MASK(NLA_U32,
--							  TUNNEL_FLAGS_PRESENT),
-+							  htonl(TCA_FLOWER_KEY_ENC_FLAGS_POLICY_MASK)),
- 	[TCA_FLOWER_KEY_ENC_FLAGS_MASK]	= NLA_POLICY_MASK(NLA_U32,
--							  TUNNEL_FLAGS_PRESENT),
-+							  htonl(TCA_FLOWER_KEY_ENC_FLAGS_POLICY_MASK)),
- };
-
-And for the same reason, the flower code in patch 3 needs to be changed as follows:
-
-@@ -676,8 +680,10 @@ static const struct nla_policy fl_policy[TCA_FLOWER_MAX + 1] = {
- 	[TCA_FLOWER_KEY_ENC_UDP_SRC_PORT_MASK]	= { .type = NLA_U16 },
- 	[TCA_FLOWER_KEY_ENC_UDP_DST_PORT]	= { .type = NLA_U16 },
- 	[TCA_FLOWER_KEY_ENC_UDP_DST_PORT_MASK]	= { .type = NLA_U16 },
--	[TCA_FLOWER_KEY_FLAGS]		= { .type = NLA_U32 },
--	[TCA_FLOWER_KEY_FLAGS_MASK]	= { .type = NLA_U32 },
-+	[TCA_FLOWER_KEY_FLAGS]		= NLA_POLICY_MASK(NLA_U32,
-+							  ntohl(TCA_FLOWER_KEY_FLAGS_POLICY_MASK)),
-+	[TCA_FLOWER_KEY_FLAGS_MASK]	= NLA_POLICY_MASK(NLA_U32,
-+							  ntohl(TCA_FLOWER_KEY_FLAGS_POLICY_MASK)),
- 	[TCA_FLOWER_KEY_ICMPV4_TYPE]	= { .type = NLA_U8 },
- 	[TCA_FLOWER_KEY_ICMPV4_TYPE_MASK] = { .type = NLA_U8 },
- 	[TCA_FLOWER_KEY_ICMPV4_CODE]	= { .type = NLA_U8 },
-
-Otherwise it will break the following use case (taken from tc_flower.sh kselftest):
-
-# tc qdisc add dev lo clsact
-# tc filter add dev lo ingress protocol ip pref 1 handle 101 flower ip_flags frag action continue
-RTNETLINK answers: Invalid argument
-We have an error talking to the kernel
-
-because TCA_FLOWER_KEY_FLAGS_POLICY_MASK and TCA_FLOWER_KEY_ENC_FLAGS_POLICY_MASK
-are in host byte order _ so netlink policy mask validation will fail unless we turn
-the mask to network byte order.
-
-(And I see we don't have a tdc selftest  for 'ip_flags', this might be a
-good chance to add it :-) )
-
--- 
-davide
-
+--
+2.25.1
