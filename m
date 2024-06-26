@@ -1,43 +1,35 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34DFB9474
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 01:13:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9013D647
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 01:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719364391; cv=none; b=MdJ/jv9IjjQQtBEo5aGh5zN0IG8Dv1UmIYPWE/V61kIECsrFq+9Oy/QJhvDcjhcHj883hRwOaC4Qytjv/n1Cxg8xxoBGZkRrxsebL7oJy8RcJ/K3RTQAJcnjUUqJV6byuF8oyHu5fieW4gOilpx9sNCGLnfXxGUfw14Z8xz/faM=
+	t=1719364658; cv=none; b=buHr5GMSvTySkbbNG+DwcIwBbjVsQhaM+8o7RJKOai6BcDVtu3z37gaval0Yb+/JfJvOmu+whMjpXA87a/6ELp8zUfxL5ggGtyOm0YhN3j1pls4/3BFFsIW5NEMeDS5exWImJXR/QWCXokCpwLodGe5+LPI4HFEmZLFIzqN+iNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719364391; c=relaxed/simple;
-	bh=hFPzcxl6UY4spGPXRlxKz+vqL+RDnRsahb8H1N4odMk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VWyz5QfMVkCdfrLfnQi0m0F8ePn5j4ljRuSoaRwnNWudyEqd/rCG7GCgJ7YbUGNWYP43eUWz+xmKbAiXFEJlCePDiYgJDcbcd3xZxr6oRtXxB/P7VIHfa22/Y4DNopO4DpFuaW0omZzHHoefjw4STzK7LRaxPKtk8BM3gVCTPyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=bslfgaoQ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="bslfgaoQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79708C32781;
-	Wed, 26 Jun 2024 01:13:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1719364390;
-	bh=hFPzcxl6UY4spGPXRlxKz+vqL+RDnRsahb8H1N4odMk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bslfgaoQ4K4qDxjEzaWjngcbACWEKEf/yd81vA5KzwSN0ciT/35QfNbmV3uNn3iFx
-	 bAXEnvBA4h8DLzuj89koJcHFmu1RUZqfR9usYeDdvj5IHjpb2I7aSWB56wmrI4yCg3
-	 foIG7f1WvDw7W0jC6sgcO1JdNcqQUbyUJete3ftQ=
-From: Linus Torvalds <torvalds@linux-foundation.org>
-To: Uros Bizjak <ubizjak@gmail.com>,
-	Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>,
-	Peter Zijlstra <peterz@infradead.org>,
+	s=arc-20240116; t=1719364658; c=relaxed/simple;
+	bh=ILZTs2xb5HFxmU/WoOc9Jjay4Irnd6HuGZ0JlF46g7s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iPykT2Mo8gZ80t9XbZPgQpaVx8sNo75xS2WtsyobtUUqv3xpYkr1KOq0pwpTzAGG6LDoraqbWn1udl9o/8ydaARtV+6FrW63/Iv+aC1m8SY+9bgnazTUXXt7EV43qEVX3hUlxvLtFUU8iLyI9e/ldiLAMubJKB/fBAVpQD9Cx2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
+	by APP-05 (Coremail) with SMTP id zQCowABXXwMKbHtmqOfQEg--.45360S2;
+	Wed, 26 Jun 2024 09:17:05 +0800 (CST)
+From: Ma Ke <make24@iscas.ac.cn>
+To: patrik.r.jakobsson@gmail.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	daniel@ffwll.ch
+Cc: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] x86-32: fix cmpxchg8b_emu build error with clang
-Date: Tue, 25 Jun 2024 18:09:25 -0700
-Message-ID: <20240626010924.478611-2-torvalds@linux-foundation.org>
-X-Mailer: git-send-email 2.45.1.209.gc6f12300df
-In-Reply-To: <CAHk-=wiWEgSo2Tb_bih7mnS27zAPL+RGg_7yX4qK1f710-j-Ng@mail.gmail.com>
-References: <CAHk-=wiWEgSo2Tb_bih7mnS27zAPL+RGg_7yX4qK1f710-j-Ng@mail.gmail.com>
+	Ma Ke <make24@iscas.ac.cn>
+Subject: [PATCH] drm/gma500: fix null pointer dereference in psb_intel_lvds_get_modes
+Date: Wed, 26 Jun 2024 09:16:56 +0800
+Message-Id: <20240626011656.2763368-1-make24@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,107 +37,47 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowABXXwMKbHtmqOfQEg--.45360S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jw1xZw1xKrW7WF1Utr4xWFg_yoWftrc_uF
+	1rZr9rCFWDu3Z5Cr4xAw43ur1Ik3W0vF4kJw13KayfA34DWr15X34aqFy5XFyxZa47G3yD
+	Jw129Fy8Zr4xGjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb4xFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6r1F6r1fM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJV
+	WxJr1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
+	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
+	648v4I1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUQZ23UUU
+	UU=
+X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
-The kernel test robot reported that clang no longer compiles the 32-bit
-x86 kernel in some configurations due to commit 95ece48165c1
-("locking/atomic/x86: Rewrite x86_32 arch_atomic64_{,fetch}_{and,or,xor}()
-functions").
+In psb_intel_lvds_get_modes(), the return value of drm_mode_duplicate() is
+assigned to mode, which will lead to a possible NULL pointer dereference
+on failure of drm_mode_duplicate(). Add a check to avoid npd.
 
-The build fails with
-
-  arch/x86/include/asm/cmpxchg_32.h:149:9: error: inline assembly requires more registers than available
-
-and the reason seems to be that not only does the cmpxchg8b instruction
-need four fixed registers (EDX:EAX and ECX:EBX), with the emulation
-fallback the inline asm also wants a fifth fixed register for the
-address (it uses %esi for that, but that's just a software convention
-with cmpxchg8b_emu).
-
-Avoiding using another pointer input to the asm (and just forcing it to
-use the "0(%esi)" addressing that we end up requiring for the sw
-fallback) seems to fix the issue.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202406230912.F6XFIyA6-lkp@intel.com/
-Fixes: 95ece48165c1 ("locking/atomic/x86: Rewrite x86_32 arch_atomic64_{,fetch}_{and,or,xor}() functions")
-Link: https://lore.kernel.org/all/202406230912.F6XFIyA6-lkp@intel.com/
-Suggested-by: Uros Bizjak <ubizjak@gmail.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Ma Ke <make24@iscas.ac.cn>
 ---
+ drivers/gpu/drm/gma500/psb_intel_lvds.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Added commit message, and updated the asm to use '%a[ptr]' instead of
-writing out the addressing by hand. 
-
-Still doing the 'oldp' writeback unconmditionally.  The code generation
-for the case I checked were the same for both clang and gcc, but until
-Uros hits me with the big clue-hammer, I think it's the simpler code
-that leaves room for potentially better optimizations too. 
-
-This falls solidly in the "looks ok to me, but still untested" category
-for me.  It fixes the clang build issue in my build testing, but I no
-longer have a 32-bit test environment, so no actual runtime testing.
-
- arch/x86/include/asm/cmpxchg_32.h | 28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
-
-diff --git a/arch/x86/include/asm/cmpxchg_32.h b/arch/x86/include/asm/cmpxchg_32.h
-index ed2797f132ce..4444a8292c7a 100644
---- a/arch/x86/include/asm/cmpxchg_32.h
-+++ b/arch/x86/include/asm/cmpxchg_32.h
-@@ -88,18 +88,17 @@ static __always_inline bool __try_cmpxchg64_local(volatile u64 *ptr, u64 *oldp,
- 
- #define __arch_cmpxchg64_emu(_ptr, _old, _new, _lock_loc, _lock)	\
- ({									\
--	union __u64_halves o = { .full = (_old), },			\
--			   n = { .full = (_new), };			\
-+	__u64 o = (_old);						\
-+	union __u64_halves n = { .full = (_new), };			\
- 									\
- 	asm volatile(ALTERNATIVE(_lock_loc				\
- 				 "call cmpxchg8b_emu",			\
--				 _lock "cmpxchg8b %[ptr]", X86_FEATURE_CX8) \
--		     : [ptr] "+m" (*(_ptr)),				\
--		       "+a" (o.low), "+d" (o.high)			\
--		     : "b" (n.low), "c" (n.high), "S" (_ptr)		\
-+				 _lock "cmpxchg8b %a[ptr]", X86_FEATURE_CX8) \
-+		     : "+A" (o)						\
-+		     : "b" (n.low), "c" (n.high), [ptr] "S" (_ptr)	\
- 		     : "memory");					\
- 									\
--	o.full;								\
-+	o;								\
- })
- 
- static __always_inline u64 arch_cmpxchg64(volatile u64 *ptr, u64 old, u64 new)
-@@ -116,22 +115,19 @@ static __always_inline u64 arch_cmpxchg64_local(volatile u64 *ptr, u64 old, u64
- 
- #define __arch_try_cmpxchg64_emu(_ptr, _oldp, _new, _lock_loc, _lock)	\
- ({									\
--	union __u64_halves o = { .full = *(_oldp), },			\
--			   n = { .full = (_new), };			\
-+	__u64 o = *(_oldp);						\
-+	union __u64_halves n = { .full = (_new), };			\
- 	bool ret;							\
- 									\
- 	asm volatile(ALTERNATIVE(_lock_loc				\
- 				 "call cmpxchg8b_emu",			\
--				 _lock "cmpxchg8b %[ptr]", X86_FEATURE_CX8) \
-+				 _lock "cmpxchg8b %a[ptr]", X86_FEATURE_CX8) \
- 		     CC_SET(e)						\
--		     : CC_OUT(e) (ret),					\
--		       [ptr] "+m" (*(_ptr)),				\
--		       "+a" (o.low), "+d" (o.high)			\
--		     : "b" (n.low), "c" (n.high), "S" (_ptr)		\
-+		     : CC_OUT(e) (ret), "+A" (o)			\
-+		     : "b" (n.low), "c" (n.high), [ptr] "S" (_ptr)	\
- 		     : "memory");					\
- 									\
--	if (unlikely(!ret))						\
--		*(_oldp) = o.full;					\
-+	*(_oldp) = o;							\
- 									\
- 	likely(ret);							\
- })
+diff --git a/drivers/gpu/drm/gma500/psb_intel_lvds.c b/drivers/gpu/drm/gma500/psb_intel_lvds.c
+index 8486de230ec9..aa5bf2a8a319 100644
+--- a/drivers/gpu/drm/gma500/psb_intel_lvds.c
++++ b/drivers/gpu/drm/gma500/psb_intel_lvds.c
+@@ -504,6 +504,8 @@ static int psb_intel_lvds_get_modes(struct drm_connector *connector)
+ 	if (mode_dev->panel_fixed_mode != NULL) {
+ 		struct drm_display_mode *mode =
+ 		    drm_mode_duplicate(dev, mode_dev->panel_fixed_mode);
++		if (!mode)
++			return -ENOMEM;
+ 		drm_mode_probed_add(connector, mode);
+ 		return 1;
+ 	}
 -- 
-2.45.1.209.gc6f12300df
+2.25.1
 
