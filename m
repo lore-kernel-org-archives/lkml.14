@@ -1,151 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4494623BF;
-	Wed, 26 Jun 2024 10:00:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E89623BF;
+	Wed, 26 Jun 2024 10:01:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719396057; cv=none; b=VLh+bqYcRFNdQkKHvj0DkzuJQgsRjPWXgBGCSSnt8GWebnSLeI9y0f5Zo40lPGORDFexkV4cVPgYUdUDtfFLZXF2U85e5L+ShS7AAmZqMO9qEooi6TmlmU85EBFGJjRmG/AsBxh3M3RqxH9aCd8iZ0Raq7pAR8Kq2onKyOQveA8=
+	t=1719396113; cv=none; b=FnEMNBYC7swvc/Jlxdc3y1eSzMAwKWjihbm0Q0qh77gyJjxApkaO7U97ikT/xOYEeb8nBQGO76vhFgdC52hrmmrz7HVp+3cOTmjbw1ucWIK5/6Fb/N0L/dmD1pbDLMUGNQ+S6EOB9NLRsYO2+fXdumCJLb8kDiqoiWBjewUDoZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719396057; c=relaxed/simple;
-	bh=gvbmy8hayyWc/TfWKMAmB62QKHKxu7hiNhupMcBD3hg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n7lypRlLEn8ofFquUVXkpSLeTkJ1wkU4eQIvNno14+zwOwxROMVmgMKKl7AR8U0zcbDS6PVnzRe+vf9SzwBYJv5r6X/SbOGiJc5Q2dglXe0E+n5GdzWgpR42LAgg0b00cXrU5o4BpDKefm24PPOOZrlJUHN4iH/wf4UobQUswh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ecqnS/H/; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719396113; c=relaxed/simple;
+	bh=ZKYXmi9Zw7EkElH3xVsFfxtx1L1QW7kUwQppZKjbDbU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SXbpV+dTlUQoisMTsibdkT3qZpqAoHgrYNCfbMO1tH0nkaUt9I63iDdqkesO7NzkezVytAAeAh5cmlLZ00vyYM42XzRN/FJk0cqRhjNlf4DfFOh12o7rr6BJQMwlsqlEkFfQl6M/5+++dLvi20CYLiHrgXcY1mMU3/WwKkT5uo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TSWd9oPS; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ecqnS/H/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719396056; x=1750932056;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=gvbmy8hayyWc/TfWKMAmB62QKHKxu7hiNhupMcBD3hg=;
-  b=ecqnS/H/RAnKPtNLFkPsZsjHVbzRDvOOuQXiGw+6d1cOoeXIANC5ALxi
-   aEPbfOaF1csov3iXqHf5T5ZC3V9fyiKA90kcQKkyK1O02GOf9a6ZDtyUj
-   An2RVZRwVpS+ED1pGyMZeHDDXzaCgZLDxwBy1M/YKUx/q0xtw1MH5BSfg
-   Te1JsdlPLZWBsRW/wvrUvJSrK9dR4ws9xhqRYnUKOxv1TYOCWTO0aAx8u
-   Cg85aFzVGZb4FmdgQ25NPyvue8ypCQtjdb6I1nQjuXucxrkHhFY3pegAy
-   BULBuSO9EwVg+GanVv+WUhXpFjRI0DYhuCLV3WtkCLu3EhFInB1GrYeJa
-   A==;
-X-CSE-ConnectionGUID: MpRxYhZ9ROaQ7dE/mx51Rg==
-X-CSE-MsgGUID: mRV1ULWrRhyjq2Gd1eQbjA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="16418773"
-X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
-   d="scan'208";a="16418773"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 03:00:55 -0700
-X-CSE-ConnectionGUID: ie82TndETB6BV08gIdU3Ew==
-X-CSE-MsgGUID: b465rjCtQOiUML0uN7tMLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
-   d="scan'208";a="44664772"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.93])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 03:00:51 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cxl/acpi: Warn on unsupported platform config detection
-Date: Wed, 26 Jun 2024 12:00:47 +0200
-Message-ID: <3636999.dWV9SEqChM@fdefranc-mobl3>
-In-Reply-To: <ZnXpPGV57o7v4xYT@aschofie-mobl2>
-References:
- <20240619125949.167936-1-fabio.m.de.francesco@linux.intel.com>
- <ZnXpPGV57o7v4xYT@aschofie-mobl2>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TSWd9oPS"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 821AC1BF20F;
+	Wed, 26 Jun 2024 10:01:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1719396103;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Dn3nBMGKGJrDwWGU8hyI8eTzDONmgOWvu3/mio4YDVg=;
+	b=TSWd9oPSd5UiaKgEuf2Ms0FVuWUN02Z4wOBC8q9IVC5vKUNYyGhtkhLYAlCdhI70QWcHr1
+	2bgDS37b5hu5OiDLqoACB4e4W6cZrrail97ASJcDZBGyF6cKtNmwP30ZH77noa8InkAdfE
+	pAaE+a2MYlSNImT6o82/USSYaCL6oPLesw9t4aupuvDaJCB/iPcCwzSFYF4A4D4uOm45zA
+	8NgzLU6ZeGj6CnKa5Ip+vHplUUpfJPZszPfKA4kcbAjiQzdXucn5Dw0F2zqak0J3FRWeD/
+	7N+IStvXbKBxzWyAFnxq/VZoZQhLwy2Yougff0BaPv0L2tTE6SdPqPyLc80qoA==
+Date: Wed, 26 Jun 2024 12:01:37 +0200
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: davem@davemloft.net, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, Andrew Lunn
+ <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Russell King
+ <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, Christophe
+ Leroy <christophe.leroy@csgroup.eu>, Herve Codina
+ <herve.codina@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner
+ Kallweit <hkallweit1@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
+ =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>, Jesse Brandeburg
+ <jesse.brandeburg@intel.com>, Marek =?UTF-8?B?QmVow7pu?=
+ <kabel@kernel.org>, Piergiorgio Beruto <piergiorgio.beruto@gmail.com>,
+ Oleksij Rempel <o.rempel@pengutronix.de>, =?UTF-8?B?Tmljb2zDsg==?= Veronese
+ <nicveronese@gmail.com>, Simon Horman <horms@kernel.org>,
+ mwojtas@chromium.org, Nathan Chancellor <nathan@kernel.org>, Antoine Tenart
+ <atenart@kernel.org>, kernel@pengutronix.de
+Subject: Re: [PATCH net-next v13 00/13] Introduce PHY listing and
+ link_topology tracking
+Message-ID: <20240626120137.10c2ad61@fedora-5.home>
+In-Reply-To: <20240626-worm-of-remarkable-leadership-24f339-mkl@pengutronix.de>
+References: <20240607071836.911403-1-maxime.chevallier@bootlin.com>
+	<20240626-worm-of-remarkable-leadership-24f339-mkl@pengutronix.de>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Friday, June 21, 2024 10:57:32=E2=80=AFPM GMT+2 Alison Schofield wrote:
-> On Wed, Jun 19, 2024 at 02:59:41PM +0200, Fabio M. De Francesco wrote:
->=20
-Hi Alison,
->
-> Hi Fabio,
-> You've written such a detailed commit msg, that it pulls me in,
-> and now I want to understand more....
->=20
->
-> > Each Host Bridge instance has a corresponding CXL Host Bridge Structure
-> > (CHBS) ACPI table that identifies its capabilities. CHBS tables can be
-> > two types: RCRB and CHBCR.
->=20
-> Is there a spec reference for this?
->
-I'll add a spec reference with v2.
+Hello Marc,
 
-> While you're spelling things out, please expand RCRB and CHBCR
+Thanks for giving this a test.
 
-I'll do it.
->
-> >=20
-> > If a Host Bridge is attached to a device that is operating in Restricted
-> > CXL Device Mode (RCD), BIOS publishes an RCRB with the base address of
-> > registers that describe its capabilities.
-> >=20
-> > However, the new (CXL 2.0+) Component registers (e.g., Extended Security
-> > Capability), can only be accessed by means of a base address published
-> > with a CHBCR.
-> >=20
-> > An algorithm to locate a CHBCR associated with an RCRB would be too
-> > invasive to land without some concrete motivation.
-> >=20
-> > Therefore, just print a message to inform of unsupported config.
-> >=20
->=20
-> Were users seeing this and confused by this silent failure?
-> What did it look like before?
->=20
-Please read Dan on this topic.
-I think I'll add a few lines to the commit message to summarize Dan's comme=
-nt.
->
-> > Count how many different CHBS "Version" types are detected by
-> > cxl_get_chbs_iter(). Then make cxl_get_chbs() print a warning if that s=
-um
-> > is greater than 1.
-> >=20
-> > Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.=
-com>
-> > ---
-> >  drivers/cxl/acpi.c | 20 ++++++++++++++------
-> >  1 file changed, 14 insertions(+), 6 deletions(-)
-> >=20
-> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> > index 571069863c62..9e226a65a5ea 100644
-> > --- a/drivers/cxl/acpi.c
-> > +++ b/drivers/cxl/acpi.c
-> > @@ -482,6 +482,7 @@ struct cxl_chbs_context {
-> >  	unsigned long long uid;
-> >  	resource_size_t base;
-> >  	u32 cxl_version;
-> > +	int count;
->=20
-> Maybe s/count/nr_versions to be more explicit of what it counts.
->
-Yes, "nr_versions" is better.
+On Wed, 26 Jun 2024 11:47:52 +0200
+Marc Kleine-Budde <mkl@pengutronix.de> wrote:
 
-Thank you.
+> > # ethtool --show-phys *  
+> 
+> This creates the following warning for me:
+> 
+> [   51.877429] ------------[ cut here ]------------
+> [   51.882094] WARNING: CPU: 0 PID: 333 at lib/refcount.c:31 ref_tracker_free+0x1ac/0x254
+> [   51.890222] refcount_t: decrement hit 0; leaking memory.
+> [   51.895611] Modules linked in: mcp251xfd flexcan imx_sdma can_dev spi_imx
+> [   51.902493] CPU: 0 PID: 333 Comm: ethtool Not tainted 6.10.0-rc4+ #327
+> [   51.909056] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
+> [   51.915603] Call trace: 
+> [   51.915623] [<c0d2cbd0>] (unwind_backtrace) from [<c0109bcc>] (show_stack+0x10/0x14)
+> [   51.925979] [<c0109bcc>] (show_stack) from [<c0d4744c>] (dump_stack_lvl+0x50/0x64)
+> [   51.933605] [<c0d4744c>] (dump_stack_lvl) from [<c0d2d2ec>] (__warn+0x88/0xc0)
+> [   51.940877] [<c0d2d2ec>] (__warn) from [<c0120ba0>] (warn_slowpath_fmt+0x1b4/0x1c4)
+> [   51.948590] [<c0120ba0>] (warn_slowpath_fmt) from [<c0697f74>] (ref_tracker_free+0x1ac/0x254)
+> [   51.957176] [<c0697f74>] (ref_tracker_free) from [<c0ae4b7c>] (ethnl_phy_done+0x24/0x54)
+> [   51.965318] [<c0ae4b7c>] (ethnl_phy_done) from [<c0acda68>] (genl_done+0x3c/0x88)
+> [   51.972845] [<c0acda68>] (genl_done) from [<c0ac9b6c>] (netlink_dump+0x2d8/0x3d0)
+> [   51.980387] [<c0ac9b6c>] (netlink_dump) from [<c0aca2fc>] (__netlink_dump_start+0x1f4/0x2c4)
+> [   51.988889] [<c0aca2fc>] (__netlink_dump_start) from [<c0acd7bc>] (genl_family_rcv_msg+0x140/0x328)
+> [   51.997989] [<c0acd7bc>] (genl_family_rcv_msg) from [<c0acd9e8>] (genl_rcv_msg+0x44/0x88)
+> [   52.006204] [<c0acd9e8>] (genl_rcv_msg) from [<c0acc554>] (netlink_rcv_skb+0xb8/0x118)
+> [   52.014157] [<c0acc554>] (netlink_rcv_skb) from [<c0acd038>] (genl_rcv+0x20/0x34)
+> [   52.021673] [<c0acd038>] (genl_rcv) from [<c0acbd24>] (netlink_unicast+0x23c/0x3d0)
+> [   52.029367] [<c0acbd24>] (netlink_unicast) from [<c0acc044>] (netlink_sendmsg+0x18c/0x3d4)
+> [   52.037667] [<c0acc044>] (netlink_sendmsg) from [<c0a4b30c>] (__sys_sendto+0xd4/0x128)
+> [   52.045626] [<c0a4b30c>] (__sys_sendto) from [<c0100080>] (ret_fast_syscall+0x0/0x54)
+> [   52.053496] Exception stack(0xc3967fa8 to 0xc3967ff0)
+> [   52.058576] 7fa0:                   b6f1130c 0000000c 00000003 015dd238 00000018 00000000
+> [   52.066780] 7fc0: b6f1130c 0000000c b6fb6700 00000122 00571000 00000001 0052a2f8 015dd190
+> [   52.074978] 7fe0: 00000122 bec7cf38 b6ea847d b6e1fe86
+> [   52.080184] ---[ end trace 0000000000000000 ]---
 
-=46abio
->
-> -- Alison
-> >  };
-> > =20
-> snip
-> >=20
->=20
+Hmm I've never seen this one before, but I could be missing some debug
+options. Looks like my ethnl_parse_header_dev_put() doesn't belong in
+the ethnl_phy_done() callback. I'll see if I can reproduce this error
+on some setups, and address that in the next iteration.
 
+> While a "ethtool --show-phys lan0" works w/o problems.
 
+Thanks a lot for the test,
 
-
+Maxime
