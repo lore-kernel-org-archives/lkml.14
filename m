@@ -1,184 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B385A186E33;
-	Wed, 26 Jun 2024 15:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B63188CAD
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 15:02:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719414125; cv=none; b=KVzj6QPNUb6Hhn2kgxJ8ESbTxoTIgD1fGv+OBOvyZSUmP7F3WD/by7qfEfW0Bk1C+E6+e1MsibPGgLQEeAKiOXCbI8RyxuC71a5xjxQnW1k1DSJkV6AmKnZFmwq1VRl5kU/NNL3VBskaKsoyh5KTJOG2ue6jAgWh+AX2tCy7DV8=
+	t=1719414151; cv=none; b=ef9kiUqwtDD5S0rvqGALAvqbqlUHN3SGwkH5A9+TlbjlOPEyOnmdaQXDgd3B3JS2MIiuSOPSk0HwwqhHI7iblVRSOZ8NlsTZthUdQPNUhDyjq5JZEYIC6Dl8tmiBAxReog2Ha4KjM8yx8pe91tX4IVzt4I8/AoB/Z0te3w43Mx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719414125; c=relaxed/simple;
-	bh=fgMMM7pNiJxo+jmp2NMUAPW1f/KDpo2M0f8YCbewTSs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l7QKGj6Y0kbbUOT8+s+PB8gFlvT9KWhav/L1//A2NbuMNQLMO8LFrBLJJPqpMGccfkooJgBsbKZRU/wKtYnzFl6vdMsfuV6S8pkqIjX1Nna+ASEv3GflKLts05eUfq/J7rNl9nC/raO9U6G4pDadT5n/DPF6yZNXqnC7U+K1zFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KRE7ME/f; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719414151; c=relaxed/simple;
+	bh=IgNBlbOpf1DxNT0twqhMkos/RJG5o9tckGzN741UmLo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qkkQ5WXlDMnWqCK5I4Rhtq3c4cMRy3zuSkJXd/kUwajS/kaFSmRzuQ3kbbCih5JfMF9+uUcET4U6qHbp2NsywvCFnh/587/jO5ZVrea4RUedM+bEqBlcXj713M0TDFnVRD/qh08AVa4rn16XiSmYNIRuvZquIAqYq8RuIx0YziA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=bXchXX1Z; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KRE7ME/f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA0EEC116B1;
-	Wed, 26 Jun 2024 15:01:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719414125;
-	bh=fgMMM7pNiJxo+jmp2NMUAPW1f/KDpo2M0f8YCbewTSs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KRE7ME/fBH+rbV9VoOpFrdt/9Cgtz2ZR+BfinfbTIX1tSU/RRBahafOnNoWtz42bi
-	 pCOzSDwAKYAELnpfMZ9xdmKXf+R3YjRZAnGAM+KMvTjX+HQ+LVDJRumjecPyaKq4hq
-	 NmEvtNv9E8wU9Uq/LPUchAvcltjsGl4/LV6+wwA5hBTrk+/cpX9NDepTnDqKtC/5vO
-	 yB6Lo9UWW9aa1JRPp22W4158dneYTX1oZdV1wnPgYWu8+XvjWU47Mgq591MmXCJU+s
-	 tXh7g6T5VZVELUps3bxEDexzxn89ZPqDVWT/BOVaL3qaQNjhgI7tyZq1elvvjneAIw
-	 9WfHskj4MX+0A==
-Date: Wed, 26 Jun 2024 10:01:31 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Jingoo Han <jingoohan1@gmail.com>, quic_vbadigan@quicinc.com, quic_skananth@quicinc.com, 
-	quic_nitegupt@quicinc.com, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 1/7] dt: bindings: add qcom,qps615.yaml
-Message-ID: <4ivdeyp74faiztnrimxtdvslf4kcnmxd3omx2255pdfl27v55e@w7otowwnfeah>
-References: <20240626-qps615-v1-0-2ade7bd91e02@quicinc.com>
- <20240626-qps615-v1-1-2ade7bd91e02@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="bXchXX1Z"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1f9f6f41898so1656255ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 08:02:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1719414148; x=1720018948; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wtL2/RZ3d00iaa623m8Saevl3iucbD0YDNmUEjoIQNA=;
+        b=bXchXX1Zl4sAmDe606RFshQr0LgsIiT1q3WtHbBNA+8jV2Seqw56ICEH/1Vv56pyww
+         L1tLWtH3MUTLt4w4U5QSN4pfG+t8DqizqTW4Pkb+CE7xLMRg/HB7WFEOoNbEPbTgQKvD
+         zk4r6yB7u2gGGXdTuxeghO/nZ4J/9HJDG/iOfYJURpmZlGUjePCAaixQ4rJ6RqNAES/y
+         tE172yrHiiX8D+pCQYHO+JPCmaWh0r0WmY1Vjw5ZEyQmE0LsSYnZ+qMOrAirkuhPosWU
+         1pU7gdj1LlkWDgHLF5ta3WnpBilf0KXEI4mwg+U0Icanta6WZU7td7cOWpcxUjF9z5LV
+         0Lfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719414148; x=1720018948;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wtL2/RZ3d00iaa623m8Saevl3iucbD0YDNmUEjoIQNA=;
+        b=obpdRxbFH3TsrA772wj6leCsA+CLhD4V4SFxv8PL6y9AcAO2jH+HvQH9Xf3KlxtFik
+         5RM29eipCCPUK3meHWwQzkaT+xVy2z0Z+NNEwhvYwTqZHG7OPgMEua++9MrTkKQqTe2C
+         WWzoh1nDstaEDqv+zPCnTWqJYc0Crs/eTd93VPzVgbp3+GKYTQKMW2cwSjQLpRHCRQub
+         OVLjT1PngQqL6aO4NaNXegJR6Xnd3trDkgsHA99y6rsgSlUxOiOj6qfNkVNMx94y2Mj9
+         cLHS3dXRBRpBGqeowkQBB9e4WCQlOd9TEZmZH5K1ZQxq+cXtffts+kzjVxikAAhi9b7c
+         Q/Uw==
+X-Forwarded-Encrypted: i=1; AJvYcCXXx7FHLnmMwKAs4hTMURioMj8hdWzGrhzKRZaciAItzzmR+UydM1HN0Y+R9/svdFQttyytv3kAXhxk18FJeNEFU/8sj9/fiZ8oRSk5
+X-Gm-Message-State: AOJu0YwPWhSkv6xbACGg64jQ1Z9XySKjfbcgrxadfkLT0qULbLt0ohcp
+	+DFckxSVhD3wTvacMR9EJfLCg5XgP6LKBHlkg71rqjIbdkmneH0On3fdtwe55Ag=
+X-Google-Smtp-Source: AGHT+IES7/6m+LnbNG2Wez/0xukcHO3azrcRyMBPgOedLXHcq7TetakMG8dgyHzp5CKg6I5TQ+b1+Q==
+X-Received: by 2002:a17:903:94:b0:1fa:1a7c:9a05 with SMTP id d9443c01a7336-1fa1a7c9d36mr124122535ad.6.1719414148374;
+        Wed, 26 Jun 2024 08:02:28 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb32b9edsm100519705ad.118.2024.06.26.08.02.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Jun 2024 08:02:27 -0700 (PDT)
+Message-ID: <0e2da871-7e28-4660-a9d4-4fbf6bfe24cd@kernel.dk>
+Date: Wed, 26 Jun 2024 09:02:26 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240626-qps615-v1-1-2ade7bd91e02@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] vfs: support statx(..., NULL, AT_EMPTY_PATH, ...)
+To: Mateusz Guzik <mjguzik@gmail.com>, Xi Ruoyao <xry111@xry111.site>
+Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ io-uring@vger.kernel.org, torvalds@linux-foundation.org,
+ loongarch@lists.linux.dev
+References: <20240625151807.620812-1-mjguzik@gmail.com>
+ <0763d386dfd0d4b4a28744bac744b5e823144f0b.camel@xry111.site>
+ <CAGudoHH4LORQUXp18s8CPPLHQMi=qG9aHsCXTp2cXuT6J9PK6A@mail.gmail.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <CAGudoHH4LORQUXp18s8CPPLHQMi=qG9aHsCXTp2cXuT6J9PK6A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 26, 2024 at 06:07:49PM GMT, Krishna chaitanya chundru wrote:
-> qps615 is a driver for Qualcomm PCIe switch driver which controls
-> power & configuration of the hardware.
-> Add a bindings document for the driver.
-> 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> ---
->  .../devicetree/bindings/pci/qcom,qps615.yaml       | 73 ++++++++++++++++++++++
->  1 file changed, 73 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,qps615.yaml b/Documentation/devicetree/bindings/pci/qcom,qps615.yaml
-> new file mode 100644
-> index 000000000000..f090683f9e2f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/qcom,qps615.yaml
-> @@ -0,0 +1,73 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/qcom,pcie-qps615.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm QPS615 PCIe switch
-> +
-> +maintainers:
-> +  - Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> +
-> +description: |
-> +  Qualcomm QPS615 PCIe switch has one upstream and three downstream
-> +  ports. One of the downstream ports is used as endpoint device of
-> +  Ethernet MAC. Other two downstream ports are supposed to connect
-> +  to external device.
+On 6/26/24 7:39 AM, Mateusz Guzik wrote:
+> I am going to fix this up and write a io_uring testcase, then submit a
+> v4. Maybe today or tomorrow.
 
-Hopefully this isn't the only possible use of QPS615, so I'd suggest
-that you omit the rbg3gen2-specific integration details from this
-binding. In other words, describe the QPS615, not the QPS615 in rb3gen2.
+Sounds good, on both incremental and test case. I can just stage it
+separately in a branch with Christian's branch pulled in.
 
-> +
-> +  The power controlled by the GPIO's, if we enable the GPIO's the
-> +  power to the switch will be on.
-> +
-> +  The QPS615 PCIe switch is configured through I2C interface before
-> +  PCIe link is established.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - pci1179,0623
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  vdd-supply:
-> +    description: |
+Thanks!
 
-'|' means "preserve formatting", but there's nothing here to preserve,
-please drop it.
+-- 
+Jens Axboe
 
-> +      Phandle to the vdd input voltage which are fixed regulators which
-> +      in are mapped to the GPIO's.
-
-The binding for a regulator consumer should not document how the
-providing regulator is implemented. Only thing to describe here it which
-"supply pin" this refers to, which turns this into "vdd input" or "vdd
-pin supply" (if that's what the datasheet call this pin on the QPS615)
-and as such you can drop the description because the name of the
-property already states that.
-
-> +
-> +  switch-i2c-cntrl:
-
-I'd prefer you call it "i2c-adapter" or perhaps "i2c-bus", because it's
-not "the switch controller".
-
-> +    description: |
-> +      phandle to i2c controller which is used to configure the PCIe
-> +      switch.
-
-"Reference to the i2c adapter/bus used to configure the QPS615"
-
-But I wonder if this somehow should be described on the particular i2c
-bus and be referenced from here instead.
-
-It's not obvious how to describe these components that sits on two
-different busses - although I believe this binding refers to the
-"configuration interface" sitting on the i2c bus, abut it's described on
-the PCIe bus as it relates to power sequencing.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - vdd-supply
-> +  - switch-i2c-cntrl
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    pcie {
-> +        #address-cells = <3>;
-> +        #size-cells = <2>;
-> +
-> +        pcie@0 {
-> +            device_type = "pci";
-> +            reg = <0x0 0x0 0x0 0x0 0x0>;
-> +            #address-cells = <3>;
-> +            #size-cells = <2>;
-> +            ranges;
-> +
-> +            bus-range = <0x01 0xff>;
-> +
-> +            qps615@0 {
-> +                compatible = "pci1179,0623";
-> +                reg = <0x10000 0x0 0x0 0x0 0x0>;
-> +
-> +                vdd-supply = <&vdd>;
-> +		switch-i2c-cntrl = <&foo>;
-
-Indentation looks off here.
-
-Regards,
-Bjorn
-
-> +            };
-> +        };
-> +    };
-> 
-> -- 
-> 2.42.0
-> 
