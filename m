@@ -1,43 +1,53 @@
 Received: from relayaws-01.paragon-software.com (relayaws-01.paragon-software.com [35.157.23.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8176B183081;
-	Wed, 26 Jun 2024 12:43:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD0518413A;
+	Wed, 26 Jun 2024 12:43:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.157.23.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719405801; cv=none; b=rZAxJ2WH/P8g8xtzbKwNrLKT+yA/TWu6X4YifHhljQogDkoe1WjKGSt7O5LkClFEz6kb6VVAVktVQjnwQtfaxV7TKICxsO1PSeCIbflh1u5UzSSmlb/g0RrvBf3CLwWp4aITJy6y7gkDJKDQgCgUEQfeaoPZfV5wukkajiiCwjc=
+	t=1719405803; cv=none; b=uKfk3k4M6mtQUHMNJVN9N2VgT7F1CGGWH8Jgm1b6A9SsXT5QlRkYr1YFYkEVcWewpgtZJhm7QnIjKxPrt3D57qqpZ6AUjkzJJUmxUnEutu577Ci9TUSkZNQM3mF3/918XbQTQUwRo57Zffr0WcG4Bx1sUwl9AJqdqE5sBomNDv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719405801; c=relaxed/simple;
-	bh=MbZ8R2HHzmKQtPGot0WT26KJPRmSoT6T57hKlfdAsK4=;
+	s=arc-20240116; t=1719405803; c=relaxed/simple;
+	bh=0KBbkZOkU/9DKXGBBEBZhNyYUL0qU5jUJhKA8n7xAWI=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=M6BNAbluEoBSMYN8+hVUE/SYY17JB41wr6UnY+vgyjLSdRJ9JHPpAHtuY5kDZ+6swIYraNdys/GkdZ3ZYYkfcWojINCE8O/Y0eOh27xAQa3DcGMP9u18vF0iTS/kphO4rClg7jVMwvuk4sTlgoQcGTB5K/K+hHJm9WDR95cZ0Ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com; spf=pass smtp.mailfrom=paragon-software.com; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=RX/4unrL; arc=none smtp.client-ip=35.157.23.187
+	 MIME-Version:Content-Type; b=IJf/oOTlq+mq5gn+q4yZCMKOB0sU2mxVlV4prILF5W54+/5EHw+WQbfPjt1YmovllXHwDIzHLcBVTPLxPXqjA4VHbZIxifrM2koT0V7o3VqLppslsFY+sJ8yQxG+OIlRdXDsXn95x3edsqkPSxBXLIYKDFmsbpONJCBTadQiFVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com; spf=pass smtp.mailfrom=paragon-software.com; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=ssLres26; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=YDpUXkqs; arc=none smtp.client-ip=35.157.23.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paragon-software.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="RX/4unrL"
-Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
-	by relayaws-01.paragon-software.com (Postfix) with ESMTPS id A4E102187;
-	Wed, 26 Jun 2024 12:35:12 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="ssLres26";
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="YDpUXkqs"
+Received: from relayfre-01.paragon-software.com (unknown [172.30.72.12])
+	by relayaws-01.paragon-software.com (Postfix) with ESMTPS id 39C3E2185;
+	Wed, 26 Jun 2024 12:35:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=paragon-software.com; s=mail; t=1719405312;
-	bh=ZVfqifPRHEIBllJYgrG6P5zH4UzeV0EKg1Qvy7/20/s=;
+	d=paragon-software.com; s=mail; t=1719405316;
+	bh=kJUQ7iYRZ0hXJu2JAR0JVDSRh8+wY9bi+JC0teWagU0=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=RX/4unrLsFw54OCyqAlxlbyK/3Y9+v8UmikBXoq6GfaZSULjPuwNMhLJJaWcR20rI
-	 3Bzjo+HxX6bf1AE+vAJ2+y1nLAuwtfbvgbGrrJnif8E+aBDfQXxNptEUnzxA8rZNkS
-	 JqrhSAvEmI2s1W1AxpU7kUaOgGPdwPxrtxv3Ue3g=
+	b=ssLres26dc8x978AzoD9GPtHcKjtqJi6ptkFhurDgaeoLaPJZHhUe691ePpXRobA1
+	 cWqPCcDHji3/5ebKDv5YyS9xyBHSjGDug9uQndlBBeICsg+OY1+0KbVoDl3OvZu0RI
+	 ueBQOl9g9h9dfEIRt+V6+rIv26NRdpw3eF1o5lwE=
+Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
+	by relayfre-01.paragon-software.com (Postfix) with ESMTPS id 63B323E3;
+	Wed, 26 Jun 2024 12:43:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=paragon-software.com; s=mail; t=1719405799;
+	bh=kJUQ7iYRZ0hXJu2JAR0JVDSRh8+wY9bi+JC0teWagU0=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=YDpUXkqsrXXPUByp3RL3b2GOyBDSXICKDsDFgW78hldXokBpuAvDMl+KeX379PDKx
+	 5FXin4olU59+Ml31WFa0FOXBFMST7DNCwYNIFNT52yynE03nCTCso4re783e5k9dDl
+	 awPMPEWFWDehwYXTh5kjo1uIdW5KOGhCuarQa7dY=
 Received: from ntfs3vm.paragon-software.com (192.168.211.129) by
  vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.7; Wed, 26 Jun 2024 15:43:15 +0300
+ 15.1.2375.7; Wed, 26 Jun 2024 15:43:18 +0300
 From: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
 To: <ntfs3@lists.linux.dev>
 CC: <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	<syzbot+36bb70085ef6edc2ebb9@syzkaller.appspotmail.com>
-Subject: [PATCH 05/11] fs/ntfs3: Do copy_to_user out of run_lock
-Date: Wed, 26 Jun 2024 15:42:52 +0300
-Message-ID: <20240626124258.7264-6-almaz.alexandrovich@paragon-software.com>
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+Subject: [PATCH 08/11] fs/ntfs3: Use function file_inode to get inode from file
+Date: Wed, 26 Jun 2024 15:42:55 +0300
+Message-ID: <20240626124258.7264-9-almaz.alexandrovich@paragon-software.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240626124258.7264-1-almaz.alexandrovich@paragon-software.com>
 References: <20240626124258.7264-1-almaz.alexandrovich@paragon-software.com>
@@ -52,138 +62,62 @@ Content-Type: text/plain
 X-ClientProxiedBy: vobn-exch-01.paragon-software.com (172.30.72.13) To
  vdlg-exch-02.paragon-software.com (172.30.1.105)
 
-In order not to call copy_to_user (from fiemap_fill_next_extent)
-we allocate memory in the kernel, fill it and copy it to user memory
-after up_read(run_lock).
-
-Reported-by: syzbot+36bb70085ef6edc2ebb9@syzkaller.appspotmail.com
 Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
 ---
- fs/ntfs3/frecord.c | 75 ++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 72 insertions(+), 3 deletions(-)
+ fs/ntfs3/file.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/fs/ntfs3/frecord.c b/fs/ntfs3/frecord.c
-index d792908c85f4..a469c608a394 100644
---- a/fs/ntfs3/frecord.c
-+++ b/fs/ntfs3/frecord.c
-@@ -1898,6 +1898,47 @@ enum REPARSE_SIGN ni_parse_reparse(struct ntfs_inode *ni, struct ATTRIB *attr,
- 	return REPARSE_LINK;
- }
- 
-+/*
-+ * fiemap_fill_next_extent_k - a copy of fiemap_fill_next_extent
-+ * but it accepts kernel address for fi_extents_start
-+ */
-+static int fiemap_fill_next_extent_k(struct fiemap_extent_info *fieinfo,
-+				     u64 logical, u64 phys, u64 len, u32 flags)
-+{
-+	struct fiemap_extent extent;
-+	struct fiemap_extent __user *dest = fieinfo->fi_extents_start;
-+
-+	/* only count the extents */
-+	if (fieinfo->fi_extents_max == 0) {
-+		fieinfo->fi_extents_mapped++;
-+		return (flags & FIEMAP_EXTENT_LAST) ? 1 : 0;
-+	}
-+
-+	if (fieinfo->fi_extents_mapped >= fieinfo->fi_extents_max)
-+		return 1;
-+
-+	if (flags & FIEMAP_EXTENT_DELALLOC)
-+		flags |= FIEMAP_EXTENT_UNKNOWN;
-+	if (flags & FIEMAP_EXTENT_DATA_ENCRYPTED)
-+		flags |= FIEMAP_EXTENT_ENCODED;
-+	if (flags & (FIEMAP_EXTENT_DATA_TAIL | FIEMAP_EXTENT_DATA_INLINE))
-+		flags |= FIEMAP_EXTENT_NOT_ALIGNED;
-+
-+	memset(&extent, 0, sizeof(extent));
-+	extent.fe_logical = logical;
-+	extent.fe_physical = phys;
-+	extent.fe_length = len;
-+	extent.fe_flags = flags;
-+
-+	dest += fieinfo->fi_extents_mapped;
-+	memcpy(dest, &extent, sizeof(extent));
-+
-+	fieinfo->fi_extents_mapped++;
-+	if (fieinfo->fi_extents_mapped == fieinfo->fi_extents_max)
-+		return 1;
-+	return (flags & FIEMAP_EXTENT_LAST) ? 1 : 0;
-+}
-+
- /*
-  * ni_fiemap - Helper for file_fiemap().
-  *
-@@ -1908,6 +1949,8 @@ int ni_fiemap(struct ntfs_inode *ni, struct fiemap_extent_info *fieinfo,
- 	      __u64 vbo, __u64 len)
+diff --git a/fs/ntfs3/file.c b/fs/ntfs3/file.c
+index 35ca0f201cb8..2ceb762dc679 100644
+--- a/fs/ntfs3/file.c
++++ b/fs/ntfs3/file.c
+@@ -253,8 +253,7 @@ static int ntfs_zero_range(struct inode *inode, u64 vbo, u64 vbo_to)
+  */
+ static int ntfs_file_mmap(struct file *file, struct vm_area_struct *vma)
  {
- 	int err = 0;
-+	struct fiemap_extent __user *fe_u = fieinfo->fi_extents_start;
-+	struct fiemap_extent *fe_k = NULL;
- 	struct ntfs_sb_info *sbi = ni->mi.sbi;
- 	u8 cluster_bits = sbi->cluster_bits;
- 	struct runs_tree *run;
-@@ -1955,6 +1998,18 @@ int ni_fiemap(struct ntfs_inode *ni, struct fiemap_extent_info *fieinfo,
- 		goto out;
- 	}
+-	struct address_space *mapping = file->f_mapping;
+-	struct inode *inode = mapping->host;
++	struct inode *inode = file_inode(file);
+ 	struct ntfs_inode *ni = ntfs_i(inode);
+ 	u64 from = ((u64)vma->vm_pgoff << PAGE_SHIFT);
+ 	bool rw = vma->vm_flags & VM_WRITE;
+@@ -428,7 +427,7 @@ static int ntfs_truncate(struct inode *inode, loff_t new_size)
+  */
+ static long ntfs_fallocate(struct file *file, int mode, loff_t vbo, loff_t len)
+ {
+-	struct inode *inode = file->f_mapping->host;
++	struct inode *inode = file_inode(file);
+ 	struct address_space *mapping = inode->i_mapping;
+ 	struct super_block *sb = inode->i_sb;
+ 	struct ntfs_sb_info *sbi = sb->s_fs_info;
+@@ -741,7 +740,7 @@ int ntfs3_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ static ssize_t ntfs_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
+ {
+ 	struct file *file = iocb->ki_filp;
+-	struct inode *inode = file->f_mapping->host;
++	struct inode *inode = file_inode(file);
+ 	struct ntfs_inode *ni = ntfs_i(inode);
  
-+	/*
-+	 * To avoid lock problems replace pointer to user memory by pointer to kernel memory.
-+	 */
-+	fe_k = kmalloc_array(fieinfo->fi_extents_max,
-+			     sizeof(struct fiemap_extent),
-+			     GFP_NOFS | __GFP_ZERO);
-+	if (!fe_k) {
-+		err = -ENOMEM;
-+		goto out;
-+	}
-+	fieinfo->fi_extents_start = fe_k;
-+
- 	end = vbo + len;
- 	alloc_size = le64_to_cpu(attr->nres.alloc_size);
- 	if (end > alloc_size)
-@@ -2043,8 +2098,9 @@ int ni_fiemap(struct ntfs_inode *ni, struct fiemap_extent_info *fieinfo,
- 			if (vbo + dlen >= end)
- 				flags |= FIEMAP_EXTENT_LAST;
+ 	if (unlikely(ntfs3_forced_shutdown(inode->i_sb)))
+@@ -778,7 +777,7 @@ static ssize_t ntfs_file_splice_read(struct file *in, loff_t *ppos,
+ 				     struct pipe_inode_info *pipe, size_t len,
+ 				     unsigned int flags)
+ {
+-	struct inode *inode = in->f_mapping->host;
++	struct inode *inode = file_inode(in);
+ 	struct ntfs_inode *ni = ntfs_i(inode);
  
--			err = fiemap_fill_next_extent(fieinfo, vbo, lbo, dlen,
--						      flags);
-+			err = fiemap_fill_next_extent_k(fieinfo, vbo, lbo, dlen,
-+							flags);
-+
- 			if (err < 0)
- 				break;
- 			if (err == 1) {
-@@ -2064,7 +2120,8 @@ int ni_fiemap(struct ntfs_inode *ni, struct fiemap_extent_info *fieinfo,
- 		if (vbo + bytes >= end)
- 			flags |= FIEMAP_EXTENT_LAST;
- 
--		err = fiemap_fill_next_extent(fieinfo, vbo, lbo, bytes, flags);
-+		err = fiemap_fill_next_extent_k(fieinfo, vbo, lbo, bytes,
-+						flags);
- 		if (err < 0)
- 			break;
- 		if (err == 1) {
-@@ -2077,7 +2134,19 @@ int ni_fiemap(struct ntfs_inode *ni, struct fiemap_extent_info *fieinfo,
- 
- 	up_read(run_lock);
- 
-+	/*
-+	 * Copy to user memory out of lock
-+	 */
-+	if (copy_to_user(fe_u, fe_k,
-+			 fieinfo->fi_extents_max *
-+				 sizeof(struct fiemap_extent))) {
-+		err = -EFAULT;
-+	}
-+
- out:
-+	/* Restore original pointer. */
-+	fieinfo->fi_extents_start = fe_u;
-+	kfree(fe_k);
- 	return err;
- }
- 
+ 	if (unlikely(ntfs3_forced_shutdown(inode->i_sb)))
+@@ -1073,8 +1072,7 @@ static ssize_t ntfs_compress_write(struct kiocb *iocb, struct iov_iter *from)
+ static ssize_t ntfs_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ {
+ 	struct file *file = iocb->ki_filp;
+-	struct address_space *mapping = file->f_mapping;
+-	struct inode *inode = mapping->host;
++	struct inode *inode = file_inode(file);
+ 	ssize_t ret;
+ 	int err;
+ 	struct ntfs_inode *ni = ntfs_i(inode);
 -- 
 2.34.1
 
