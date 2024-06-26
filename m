@@ -1,277 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC54E161304
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 08:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79522167DA8
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 08:42:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719391327; cv=none; b=e0VLB11pVneVDCTE3qmYXyx+ky7Cx7RDI7nahgnSa9mAxMe6bucJbGmkoMeSn6dLyCFZO00qNdOCe6bI0YgebS6vPgd+2zSBNSPIkUrGPS4qUHd0fhnY2g3UlxXg6I8fTxA0yRoHuiHZ0dWp2dt6iELAbXMjVXFExl3NEa97O/Y=
+	t=1719391350; cv=none; b=c+pt4JUry919UoQqzM1f5Vf7adZuLGK3LHBA5xZGQZPQx9KyZTzYWKGEMsU0Pnzjz2VtWndPkhtS12YyJMAP46+gQwrCPdET1bhbsERp/bDafyc5zh/pN/c8VEAm/uUfMxPlxe67isLmz9vO9HLHwQOpjUAOrN6iXis1aXs3/LA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719391327; c=relaxed/simple;
-	bh=S3cTJq0D8wadO/sI5sOPrvLtWcPVaif86bP86Z/8TBM=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oaS+XdZEIBD1CVthQiaJAZoAX74g2BbvG7FQYglgCB5ktj9P9WZNNzhbjH2bzUJgiiJSeexztC4u3hiH5dOuTBtoIgLr1DbT8lS+GL3d2VBqcxXrJ/Px8afYUvwQqC+d2/eoBPRalbgk337zvYsNbc6b7AEvbbcyBwUsMzjeuX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u9+jzSnz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719391350; c=relaxed/simple;
+	bh=4CUIbUqVEh/bPjVMiA0Lgb2N/JCUZEE9OAiPQzAgEr4=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OdARw8u5UbahuJX6S0kW2ILrcgBVUnO1lgSSQgSHWGAyVNVMDpU8D+c11A8L3+urJVV2pqQ1lMYvytmHjdotuRWjOjEmm1Dh1H6ZNJxJNpDQoYphZMPA95F0V6dlGe8X0j199stYirKYmNtocvTDkZ3KirEAWzg/G/H98zIIp1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dEEXq9Ob; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u9+jzSnz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4724BC2BD10;
-	Wed, 26 Jun 2024 08:42:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719391327;
-	bh=S3cTJq0D8wadO/sI5sOPrvLtWcPVaif86bP86Z/8TBM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=u9+jzSnz8nuZ1+TyS61jUTAxDUGAsxVzcTciZgUhn/ug9xR6SS4y+Nw94lUTMIfOj
-	 gbYdVfDohtbC4VgoVkSG8WX0rnPfqtU1V3PSW/9vmv61RUswGXReEkMXwGEJQJjN7Y
-	 VYa6bYhamWAr5YbypZZLUpW7iLmciwVjzZUazYIBrb23F5vbl5XO0R33pu8GhO4R8o
-	 dgLrjFmAXyPuxkEn2vbfRRV2N2QGv9CKDAYPCwPqSAQ1kHv+cPzKKExnrAVbv+CRWM
-	 3s3y4qky0dXqOdZyN8x/PDmQok0b3LfbblbVBInEtfdZyBtKW8+Dm3bkTdi6LBqh+S
-	 ov9W3MoVyOHWQ==
-Received: from [104.132.45.100] (helo=wait-a-minute.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1sMOE8-007Q72-TZ;
-	Wed, 26 Jun 2024 09:42:05 +0100
-Date: Wed, 26 Jun 2024 09:41:59 +0100
-Message-ID: <87tthgrt7s.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Tangnianyao <tangnianyao@huawei.com>
-Cc: <tglx@linutronix.de>,
-	<linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>,
-	<guoyang2@huawei.com>,
-	<wangwudi@hisilicon.com>
-Subject: Re: [RESEND PATCH] irqchip/gic-v4.1: Use the ITS of the NUMA node where current cpu is located
-In-Reply-To: <60de5bd6-51db-e327-5808-280407a6285d@huawei.com>
-References: <20240625014019.3914240-1-tangnianyao@huawei.com>
-	<86wmmdihkf.wl-maz@kernel.org>
-	<60de5bd6-51db-e327-5808-280407a6285d@huawei.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dEEXq9Ob"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2ebe6495aedso68516961fa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 01:42:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719391346; x=1719996146; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2Oh0VR40TRUiFXajEyAtrpMuiTr3n0qWoEDC9cdem7E=;
+        b=dEEXq9ObmakIdU1ncLbs2e1P4X+pnXySWY5WBo0kTFDx4vTsZHtZ1zs7pYWdkUk5Es
+         mNoWD0zyeaWG2SISQpaQRBU6D2Qylg3CzX+UTPIHH2CYmgslpXodgHsImJrf9SvW/gh7
+         MdnmGkKwigUr5hwXAwblx6TKmbdNNCc5M/mnwN+ZuBtHOxL9qPHHHHtWfqD5VjBZJCed
+         0lSah1NUdFxgCyxBYsDeW6g7+U13l+cshJ3HlawQvYfcu+pmSXMYBILLXhY5eLTS08bG
+         sC8y79nf19amrdh6/QpTRNgUhr0+Ge3XxF1NtMjQc7FR7EZGri9zvokllYQlPBT6cL5I
+         ExYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719391346; x=1719996146;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2Oh0VR40TRUiFXajEyAtrpMuiTr3n0qWoEDC9cdem7E=;
+        b=EzIZMyd/hSsOVDkQfRKO4VGjCZwVj8pUcBfM8BgUvrRma+2Pr14vYVYjyt5QQnqPN8
+         jSsesRHXB4svMgqUNw97g3YtaFNo+YqtnCVqJJycu+vKooe0G6L3Z0/qIDEVjyVa20j7
+         eokGCXKTylEam1DQdrIRa8g9G/f0D2feEdTU4rQ/2tuI4ZOnNiB/hDMhzZIE2NDS+zGV
+         BNMkLAEnuXp8RXQmiv/+eaEY/riI3zqZKHRssg11rvksR8FbpZryJkgyffpZMxJHwso0
+         cLWb1WgxPf2TBi6G/qm9qmx0RU9xcThfzFaPhyZHqvL6jTQKkw7v1hpyq/OlA8CLa9TB
+         MMTw==
+X-Forwarded-Encrypted: i=1; AJvYcCXQ/NexX149hLtFFpop7YGbY6BgXQSRXCeweO5vp4Pg5RpIx50HsQEXDt3NQvTUYdnu7sMsQiYIsfSh6GDaLZCkxAjbUbF57qHdJQ4a
+X-Gm-Message-State: AOJu0Yx+MbcZHOPA+D2BmP62loe00DdPlZXvs056b79hEgUev11PcD35
+	vA4hFgBcXpdDRoZj+MjF/fh+b5tPEQH4Jhq1xvdJfxbongF8KkMZsxULxT+NgsY=
+X-Google-Smtp-Source: AGHT+IFrbNPIOjz4l8L0QPdLiBhOanVgKGAzX1JGKORXX+GcNOkKakHvdEgvdrxZRYI3gB9j/fY5+Q==
+X-Received: by 2002:ac2:5b4c:0:b0:52c:dcd4:8953 with SMTP id 2adb3069b0e04-52ce1839881mr6045361e87.36.1719391346204;
+        Wed, 26 Jun 2024 01:42:26 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52cec517173sm501360e87.244.2024.06.26.01.42.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jun 2024 01:42:25 -0700 (PDT)
+Date: Wed, 26 Jun 2024 11:42:24 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Oded Gabbay <ogabbay@kernel.org>, Tomeu Vizoso <tomeu@tomeuvizoso.net>, 
+	Jeffrey Hugo <quic_jhugo@quicinc.com>, linux-kernel@vger.kernel.org, 
+	Lucas Stach <l.stach@pengutronix.de>, Russell King <linux+etnaviv@armlinux.org.uk>, 
+	Christian Gmeiner <christian.gmeiner@gmail.com>, David Airlie <airlied@gmail.com>, etnaviv@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH] drm/etnaviv: Create an accel device node if compute-only
+Message-ID: <kzk46s2hqrbipehnqhcx47q5mtkdjc3oeeobr2jwinw2ch3pra@37xuwtyakeus>
+References: <20240424063753.3740664-1-tomeu@tomeuvizoso.net>
+ <8c55dba5-6308-685e-13da-e728197d8101@quicinc.com>
+ <CAAObsKD4-k7Ya4Mi=vEPaC9DucbnVGDO5SaEUt-_o2_Bg+_FgA@mail.gmail.com>
+ <CAAObsKCm49y-nUph=m9c+-eG37SaGKG93-1etwOQab4f5MXxOg@mail.gmail.com>
+ <20240509144118.baib2pftmpk5nikr@GABBAY.>
+ <ZnvCsJfdZdLvw1ZN@phenom.ffwll.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 104.132.45.100
-X-SA-Exim-Rcpt-To: tangnianyao@huawei.com, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, guoyang2@huawei.com, wangwudi@hisilicon.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZnvCsJfdZdLvw1ZN@phenom.ffwll.local>
 
-On Wed, 26 Jun 2024 03:22:52 +0100,
-Tangnianyao <tangnianyao@huawei.com> wrote:
+On Wed, Jun 26, 2024 at 09:26:40AM GMT, Daniel Vetter wrote:
+> On Thu, May 09, 2024 at 05:41:18PM +0300, Oded Gabbay wrote:
+> > On Thu, May 09, 2024 at 03:53:01PM +0200, Tomeu Vizoso wrote:
+> > > Oded, Dave,
+> > > 
+> > > Do you have an opinion on this?
+> > > 
+> > > Thanks,
+> > > 
+> > > Tomeu
+> > Hi Tomeu,
+> > 
+> > Sorry for not replying earlier, I was down with Covid (again...).
+> > 
+> > To your question, I don't have an objection to what you are
+> > suggesting. My personal view of accel is that it is an integral part of 
+> > DRM and therefore, if there is an *existing* drm driver that wants to 
+> > create an accel node, I'm not against it. 
 > 
+> Yeah, there's a continum from "clearly 3d gpu" to "compute AI
+> accelerator", with everything possible in-between shipping somewhere.
+> Collaboration is the important part, hair-splitting on where exactly the
+> driver should be is kinda secondary. I mean beyond "don't put a pure 3d
+> driver into accel or vice versa" of course :-)
 > 
+> > There is the question of why you want to expose an accel node, and
+> > here I would like to hear Dave's and Sima's opinion on your suggested
+> > solution as it may affect the direction of other drm drivers.
 > 
-> On 6/25/2024 15:53, Marc Zyngier wrote:
-> > On Tue, 25 Jun 2024 02:40:19 +0100,
-> > Nianyao Tang <tangnianyao@huawei.com> wrote:
-> >> When GICv4.1 enabled, guest sending IPI use the last ITS reported.
-> >> On multi-NUMA environment with more than one ITS, it makes IPI performance
-> >> various from VM to VM, depending on which NUMA the VM is deployed on.
-> >> We can use closer ITS instead of the last ITS reported.
-> > Closer to *what*? the SGI sender? or the receiver? Something else?
+> So existing userspace that blindly assumes that any render node will give
+> it useful 3d acceleration, then that's broken already.
 > 
-> VSGI sender.
-> VSGI sender use original find_4_1_its to inject vsgi, it always find the last reported
-> 4_1 ITS, regardless of which NUMA the VSGI sender cpu is located on.
-
-So your concern is about cross-node MMIO accesses?  You should capture
-this in your commit message.
-
+> - kernel with new driver support but old mesa without that driver already
+>   gives you that, even for a pure 3d chip.
 > 
-> >
-> >> Modify find_4_1_its to find the ITS of the NUMA node where current
-> >> cpu is located and save it with per cpu variable.
-> > But find_4_1_its() isn't only used for SGIs. Is it valid to do this
-> > trick for all use cases?
+> - intel (and I think also amd) have pure compute chips without 3d, so this
+>   issue already exists
 > 
-> To consider this case, I've implemented original find_4_1_its function, finding a
-> 4_1 ITS in system and return, even NUMA is not match. Would it  be enough to be
-> compatitable with other code ?
-
-That's not what I'm asking.
-
-The same helper is also used when invalidating a doorbell, configuring
-VSGIs, tearing down of a VPE. Do you see similar issues with these
-functionalities not a local ITS? Or is your issue specific to VSGI
-generation?
-
-> A new find_4_1_its can firstly select 4_1 ITS on the same NUMA as the current
-> cpu(VSGI sender), and if fail to find, then return 4_1 ITS on other NUMA.
+> Same for the other directions, 3d gpus have variable amounts of compute
+> chips nowadays.
 > 
-> >
-> >> (There's format issues with the previous patch, resend it)
-> > In the future, please move this sort of comment to a note after the
-> > --- delimiter.
+> That leaves imo just the pragmatic choice, and if we need to complicate
+> the init flow of the kernel driver just for a different charnode major,
+> then I don't really see the point.
 > 
-> ok, get it.
-> 
-> >
-> >> Signed-off-by: Nianyao Tang <tangnianyao@huawei.com>
-> >> ---
-> >>  drivers/irqchip/irq-gic-v3-its.c | 27 ++++++++++++++++++---------
-> >>  1 file changed, 18 insertions(+), 9 deletions(-)
-> >>
-> >> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> >> index 3c755d5dad6e..d35b42f3b2af 100644
-> >> --- a/drivers/irqchip/irq-gic-v3-its.c
-> >> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> >> @@ -193,6 +193,8 @@ static DEFINE_RAW_SPINLOCK(vmovp_lock);
-> >>  
-> >>  static DEFINE_IDA(its_vpeid_ida);
-> >>  
-> >> +static DEFINE_PER_CPU(struct its_node *, its_on_cpu);
-> > I don't really get the "its_on_cpu" name. "local_its" would at least
-> > indicate a notion being "close".
-> 
-> I want to mean ITS on the current cpu NUMA node.
-> Yes, "local_its" is better.
-> 
-> >
-> >> +
-> >>  #define gic_data_rdist()		(raw_cpu_ptr(gic_rdists->rdist))
-> >>  #define gic_data_rdist_cpu(cpu)		(per_cpu_ptr(gic_rdists->rdist, cpu))
-> >>  #define gic_data_rdist_rd_base()	(gic_data_rdist()->rd_base)
-> >> @@ -4058,19 +4060,25 @@ static struct irq_chip its_vpe_irq_chip = {
-> >>  
-> >>  static struct its_node *find_4_1_its(void)
-> >>  {
-> >> -	static struct its_node *its = NULL;
-> >> +	struct its_node *its = NULL;
-> >> +	struct its_node *its_non_cpu_node = NULL;
-> >> +	int cpu = smp_processor_id();
-> >>  
-> >> -	if (!its) {
-> >> -		list_for_each_entry(its, &its_nodes, entry) {
-> >> -			if (is_v4_1(its))
-> >> -				return its;
-> >> -		}
-> >> +	if (per_cpu(its_on_cpu, cpu))
-> >> +		return per_cpu(its_on_cpu, cpu);
-> >>  
-> >> -		/* Oops? */
-> >> -		its = NULL;
-> >> -	}
-> >> +	list_for_each_entry(its, &its_nodes, entry) {
-> >> +		if (is_v4_1(its) && its->numa_node == cpu_to_node(cpu)) {
-> >> +			per_cpu(its_on_cpu, cpu) = its;
-> >> +			return its;
-> >> +		} else if (is_v4_1(its))
-> >> +			its_non_cpu_node = its;
-> >> +	}
-> > Why do you consider the NUMA node instead of the ITS' own affinity?
-> > SVPET gives you some notion of distance with the RDs, and that'd
-> > probably be useful.
-> 
-> I assumed BIOS should report NUMA node following real topology, use NUMA node
-> for simplicity.
+> And if we do see the point in this, I think the right approach would be if
+> we split the init flow further into allocating the drm_device, and then in
+> a 2nd step either allocate the accel or render uapi stuff as needed. The
+> DRIVER_FOO flags just aren't super flexible for this kinda of stuff and
+> have a bit a midlayer taste to them.
 
-NUMA is about CPU memory access, and doesn't quite describe how the
-ITS fits there. I know people have abused this when the GIC didn't
-have this notion, but we're over that now. The ITS has the most
-precise information (ITS->RD->CPU), and we also need to make this work
-for systems that do not use ACPI.
-
-This is pretty easy to do as we inherit the VPE table from the ITS on
-secondary CPUs, and that's the right spot to populate your table.
-
-I'd expect something like this to do the trick:
-
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 40ebf1726393..bfcbc5a46c1c 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -119,6 +119,8 @@ struct its_node {
- 	int			vlpi_redist_offset;
- };
- 
-+static DEFINE_PER_CPU(struct its_node *, local_4_1_its);
-+
- #define is_v4(its)		(!!((its)->typer & GITS_TYPER_VLPIS))
- #define is_v4_1(its)		(!!((its)->typer & GITS_TYPER_VMAPP))
- #define device_ids(its)		(FIELD_GET(GITS_TYPER_DEVBITS, (its)->typer) + 1)
-@@ -2729,6 +2731,8 @@ static u64 inherit_vpe_l1_table_from_its(void)
- 		}
- 		val |= FIELD_PREP(GICR_VPROPBASER_4_1_SIZE, GITS_BASER_NR_PAGES(baser) - 1);
- 
-+		*this_cpu_ptr(&local_4_1_its) = its;
-+
- 		return val;
- 	}
- 
-@@ -2766,6 +2770,8 @@ static u64 inherit_vpe_l1_table_from_rd(cpumask_t **mask)
- 		gic_data_rdist()->vpe_l1_base = gic_data_rdist_cpu(cpu)->vpe_l1_base;
- 		*mask = gic_data_rdist_cpu(cpu)->vpe_table_mask;
- 
-+		*this_cpu_ptr(&local_4_1_its) = *per_cpu_ptr(&local_4_1_its, cpu);
-+
- 		return val;
- 	}
- 
-@@ -4078,8 +4084,9 @@ static struct irq_chip its_vpe_irq_chip = {
- 
- static struct its_node *find_4_1_its(void)
- {
--	static struct its_node *its = NULL;
-+	struct its_node *its;
- 
-+	its = *this_cpu_ptr(&local_4_1_its);
- 	if (!its) {
- 		list_for_each_entry(its, &its_nodes, entry) {
- 			if (is_v4_1(its))
-
-
-*if* there is no matching affinity between ITS and RDs, you can then
-fallback to NUMA nodes. But using the architected mechanism should be
-the first port of call.
-
-> 
-> >
-> >>  
-> >> -	return its;
-> >> +	if (!per_cpu(its_on_cpu, cpu) && its_non_cpu_node)
-> >> +		per_cpu(its_on_cpu, cpu) = its_non_cpu_node;
-> >> +
-> >> +	return its_non_cpu_node;
-> >>  }
-> > Urgh. Mixing init and runtime is awful. Why isn't this initialised
-> > when a CPU comes up? We already have all the infrastructure.
-> 
-> The original find_4_1_its use "static struct its_node *its" to save 4_1 ITS, and
-> it's init inside this function. So, to follow this, I tried to not modify this usage.
-
-Sure, but this is already bad, and you're making it worse. Please take
-this as an opportunity to make things better.
-
-> >
-> > But the biggest question is "what sort of performance improvement does
-> > this bring"? You give no numbers, no way to evaluate anything.
-> >
-> > I've asked for that times and times again: if your changes are
-> > claiming a performance improvement, please back it up. It's not that
-> > hard. 
-> 
-> On a 2-socket environment, reported as 2-NUMA, each socket with one ITS
-> and 32 cpu, GICv4.1 enabled.
-> For performance, I deploy a 4U8G guest, 4 vcpu on same socket.
-> When I deploy guest on socket0, kvm-unit-tests ipi_hw result is 850ns. It
-> test the delay from one vcpu sending ipi to another vcpu receiving ipi in guest.
-> When I deploy guest on socket1, the result is 750ns.
-> The reason is VSGI sender always use lasted reported ITS to inject VSGI.
-> The access from cpu to other-socket ITS will cost 100ns more compared to cpu
-> to local ITS.
-
-Right, this is exactly the sort of information I want to capture in a
-commit message. Because a 12% reduction in IPI latency is *huge*, and
-justifies the change. Please add it when you respin the patch.
-
-Thanks,
-
-	M.
+Being able to defer render allocation would be extremely useful for MSM
+too as it's not currently possible to mask the driver_features during
+drm_dev_init()
 
 -- 
-Without deviation from the norm, progress is not possible.
+With best wishes
+Dmitry
