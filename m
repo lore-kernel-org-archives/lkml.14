@@ -1,153 +1,147 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7392B1850B8;
-	Wed, 26 Jun 2024 14:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC9301836F9
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 14:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719413729; cv=none; b=o1UiRUa9ZcS/EGY9ZfTS6vqJ9BBuNnqdL8LtwqL7UYDMpcbD2xdyuLtJfyslwuQ8GrrDpu/yPmEfGSyBF2hNErd0FVI+d9PAdOoiLTBfmIxTQaPGifb997Unj0C258d7R5BNulRRoXn9JZOfbD8Yt7br0VGidn+2bGE+OqT/xqs=
+	t=1719413776; cv=none; b=Pr3KWferLRaWvLQ7QkNRI8KgKCA0NuVbtZcteKFDXoH2hO/BdTlWTc3qZFYuK1c/khpSEgWiyyIUUlOAIDx9NTcvsloWu6lfmI8b3ByQR9kqcwYV+mS2wQpoSboyyP/WZ84E3yDyqYUx7mvqq4cS1wFX6RIRIR3bxhw6Blyrkqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719413729; c=relaxed/simple;
-	bh=KcANrdZ7y8VoQfMbuEJKrubTtZ2yiWBODLZMnaA5OY4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oKw6RK+Uw4qbh3pRS0bn3VQfCyUuoYLYrCLlQh6Eja94IJWNXSN/w7kpn1KK56wGkdqwRUUdELU5oAUWtRLDQyKDy/y1mbtJVFY+w45iHzHo8gLks0EOZ4DcBoBaqGt0e8dvciPsdU45gx25ZIoy7p3W91jOx6rMeE+F4+gk0ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C487DDA7;
-	Wed, 26 Jun 2024 07:55:51 -0700 (PDT)
-Received: from e127643.cambridge.arm.com (e127643.arm.com [10.1.33.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 89D703F73B;
-	Wed, 26 Jun 2024 07:55:23 -0700 (PDT)
-From: James Clark <james.clark@arm.com>
-To: linux-perf-users@vger.kernel.org,
-	irogers@google.com,
-	namhyung@kernel.org
-Cc: robin.murphy@arm.com,
-	James Clark <james.clark@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] perf pmu: Don't de-duplicate core PMUs
-Date: Wed, 26 Jun 2024 15:54:46 +0100
-Message-Id: <20240626145448.896746-3-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240626145448.896746-1-james.clark@arm.com>
-References: <20240626145448.896746-1-james.clark@arm.com>
+	s=arc-20240116; t=1719413776; c=relaxed/simple;
+	bh=qcpv/PEkN7/dnb9WgjxI74Dt2WxRgk6JL9ZvdSkmrTU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DJtj5udoOUxvP1LyyTstc0KHMN00y+he2LsmOLyLuoTUv9hzUeogXAUwYGpAOIFCDKJaw7hsSUma6LCN8VtW+DVQbggUPISoPtuCscb+z3+/Uutq+d1v4MRNvO3/w3PS5NBHbnMhTIHq5uY3bZz+9gZchn+1cpIoxNTSw3ZNxVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XF4Pigsi; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XF4Pigsi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719413773;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tgH2VmVylsgvJB0IG2XE9dX80Rg9UYW9RXvREHo32vo=;
+	b=XF4PigsiKk1MzIhD2qBTK2H2mjvwNWK7BdsRVeZiYywY0LmLRy8mGjPfxraH4t8hVgQp8A
+	/RCr786eAc4bG4NxT0Pvme78ES/Hu0AbSV5BH/LJL+ZkrqW4YmlaEOpkYgLlkgRjrS+blc
+	Td7U3CoZZ/spVqLgT1hzXa51pZEvr98=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-201-KAkyj4uvPMehwgcU63vvKw-1; Wed,
+ 26 Jun 2024 10:56:12 -0400
+X-MC-Unique: KAkyj4uvPMehwgcU63vvKw-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4D16A1956096;
+	Wed, 26 Jun 2024 14:56:10 +0000 (UTC)
+Received: from [10.22.16.126] (unknown [10.22.16.126])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5FE60300070E;
+	Wed, 26 Jun 2024 14:56:08 +0000 (UTC)
+Message-ID: <7cc422b6-8437-455a-9d3f-718b4504ae9a@redhat.com>
+Date: Wed, 26 Jun 2024 10:56:07 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3] cgroup/cpuset: Prevent UAF in proc_cpuset_show()
+To: Chen Ridong <chenridong@huawei.com>, tj@kernel.org,
+ lizefan.x@bytedance.com, hannes@cmpxchg.org, adityakali@google.com,
+ sergeh@kernel.org, mkoutny@suse.com
+Cc: cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240626094101.472912-1-chenridong@huawei.com>
+Content-Language: en-US
+From: Waiman Long <longman@redhat.com>
+In-Reply-To: <20240626094101.472912-1-chenridong@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Arm PMUs have a suffix, either a single decimal (armv8_pmuv3_0) or 3 hex
-digits which (armv8_cortex_a53) which Perf assumes are both strippable
-suffixes for the purposes of deduplication. S390 "cpum_cf" is a
-similarly suffixed core PMU but is only two characters so is not treated
-as strippable because the rules are a minimum of 3 hex characters or 1
-decimal character.
-
-There are two paths involved in listing PMU events:
-
- * HW/cache event printing assumes core PMUs don't have suffixes so
-   doesn't try to strip.
- * Sysfs PMU events share the printing function with uncore PMUs which
-   strips.
-
-This results in slightly inconsistent Perf list behavior if a core PMU
-has a suffix:
-
-  # perf list
-  ...
-  armv8_pmuv3_0/branch-load-misses/
-  armv8_pmuv3/l3d_cache_wb/          [Kernel PMU event]
-  ...
-
-Fix it by partially reverting back to the old list behavior where
-stripping was only done for uncore PMUs. For example commit 8d9f5146f5da
-("perf pmus: Sort pmus by name then suffix") mentions that only PMUs
-starting 'uncore_' are considered to have a potential suffix. This
-change doesn't go back that far, but does only strip PMUs that are
-!is_core. This keeps the desirable behavior where the many possibly
-duplicated uncore PMUs aren't repeated, but it doesn't break listing for
-core PMUs.
-
-Searching for a PMU continues to use the new stripped comparison
-functions, meaning that it's still possible to request an event by
-specifying the common part of a PMU name, or even open events on
-multiple similarly named PMUs. For example:
-
-  # perf stat -e armv8_cortex/inst_retired/
-
-  5777173628      armv8_cortex_a53/inst_retired/          (99.93%)
-  7469626951      armv8_cortex_a57/inst_retired/          (49.88%)
-
-Fixes: 3241d46f5f54 ("perf pmus: Sort/merge/aggregate PMUs like mrvl_ddr_pmu")
-Suggested-by: Ian Rogers <irogers@google.com>
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/util/pmu.c | 27 +++++++++++++++++++++------
- 1 file changed, 21 insertions(+), 6 deletions(-)
-
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 97d74fe6d816..28af48ea803f 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -847,6 +847,23 @@ __weak const struct pmu_metrics_table *pmu_metrics_table__find(void)
- 	return perf_pmu__find_metrics_table(NULL);
- }
- 
-+/**
-+ * Return the length of the PMU name not including the suffix for uncore PMUs.
-+ *
-+ * We want to deduplicate many similar uncore PMUs by stripping their suffixes,
-+ * but there are never going to be too many core PMUs and the suffixes might be
-+ * interesting. "arm_cortex_a53" vs "arm_cortex_a57" or "cpum_cf" for example.
-+ *
-+ * @skip_duplicate_pmus: False in verbose mode so all uncore PMUs are visible
-+ */
-+static size_t pmu_deduped_name_len(const struct perf_pmu *pmu, const char *name,
-+				   bool skip_duplicate_pmus)
-+{
-+	return skip_duplicate_pmus && !pmu->is_core
-+		? pmu_name_len_no_suffix(name)
-+		: strlen(name);
-+}
-+
- /**
-  * perf_pmu__match_ignoring_suffix - Does the pmu_name match tok ignoring any
-  *                                   trailing suffix? The Suffix must be in form
-@@ -1796,9 +1813,8 @@ static char *format_alias(char *buf, int len, const struct perf_pmu *pmu,
- 			  const struct perf_pmu_alias *alias, bool skip_duplicate_pmus)
- {
- 	struct parse_events_term *term;
--	size_t pmu_name_len = skip_duplicate_pmus
--		? pmu_name_len_no_suffix(pmu->name)
--		: strlen(pmu->name);
-+	size_t pmu_name_len = pmu_deduped_name_len(pmu, pmu->name,
-+						   skip_duplicate_pmus);
- 	int used = snprintf(buf, len, "%.*s/%s", (int)pmu_name_len, pmu->name, alias->name);
- 
- 	list_for_each_entry(term, &alias->terms.terms, list) {
-@@ -1839,9 +1855,8 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
- 		size_t buf_used, pmu_name_len;
- 
- 		info.pmu_name = event->pmu_name ?: pmu->name;
--		pmu_name_len = skip_duplicate_pmus
--			? pmu_name_len_no_suffix(info.pmu_name)
--			: strlen(info.pmu_name);
-+		pmu_name_len = pmu_deduped_name_len(pmu, info.pmu_name,
-+						    skip_duplicate_pmus);
- 		info.alias = NULL;
- 		if (event->desc) {
- 			info.name = event->name;
--- 
-2.34.1
+On 6/26/24 05:41, Chen Ridong wrote:
+> An UAF can happen when /proc/cpuset is read as reported in [1].
+>
+> This can be reproduced by the following methods:
+> 1.add an mdelay(1000) before acquiring the cgroup_lock In the
+>   cgroup_path_ns function.
+> 2.$cat /proc/<pid>/cpuset   repeatly.
+> 3.$mount -t cgroup -o cpuset cpuset /sys/fs/cgroup/cpuset/
+> $umount /sys/fs/cgroup/cpuset/   repeatly.
+>
+> The race that cause this bug can be shown as below:
+>
+> (umount)		|	(cat /proc/<pid>/cpuset)
+> css_release		|	proc_cpuset_show
+> css_release_work_fn	|	css = task_get_css(tsk, cpuset_cgrp_id);
+> css_free_rwork_fn	|	cgroup_path_ns(css->cgroup, ...);
+> cgroup_destroy_root	|	mutex_lock(&cgroup_mutex);
+> rebind_subsystems	|
+> cgroup_free_root 	|
+> 			|	// cgrp was freed, UAF
+> 			|	cgroup_path_ns_locked(cgrp,..);
+>
+> When the cpuset is initialized, the root node top_cpuset.css.cgrp
+> will point to &cgrp_dfl_root.cgrp. In cgroup v1, the mount operation will
+> allocate cgroup_root, and top_cpuset.css.cgrp will point to the allocated
+> &cgroup_root.cgrp. When the umount operation is executed,
+> top_cpuset.css.cgrp will be rebound to &cgrp_dfl_root.cgrp.
+>
+> The problem is that when rebinding to cgrp_dfl_root, there are cases
+> where the cgroup_root allocated by setting up the root for cgroup v1
+> is cached. This could lead to a Use-After-Free (UAF) if it is
+> subsequently freed. The descendant cgroups of cgroup v1 can only be
+> freed after the css is released. However, the css of the root will never
+> be released, yet the cgroup_root should be freed when it is unmounted.
+> This means that obtaining a reference to the css of the root does
+> not guarantee that css.cgrp->root will not be freed.
+>
+> Fix this problem by using rcu_read_lock in proc_cpuset_show().
+> As cgroup root_list is already RCU-safe, css->cgroup is safe.
+> This is similar to commit 9067d90006df ("cgroup: Eliminate the
+> need for cgroup_mutex in proc_cgroup_show()")
+>
+> [1] https://syzkaller.appspot.com/bug?extid=9b1ff7be974a403aa4cd
+>
+> Fixes: a79a908fd2b0 ("cgroup: introduce cgroup namespaces")
+> Signed-off-by: Chen Ridong <chenridong@huawei.com>
+> ---
+>   kernel/cgroup/cpuset.c | 12 ++++++++++--
+>   1 file changed, 10 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+> index c12b9fdb22a4..7f4536c9ccce 100644
+> --- a/kernel/cgroup/cpuset.c
+> +++ b/kernel/cgroup/cpuset.c
+> @@ -21,6 +21,7 @@
+>    *  License.  See the file COPYING in the main directory of the Linux
+>    *  distribution for more details.
+>    */
+> +#include "cgroup-internal.h"
+>   
+>   #include <linux/cpu.h>
+>   #include <linux/cpumask.h>
+> @@ -5052,8 +5053,15 @@ int proc_cpuset_show(struct seq_file *m, struct pid_namespace *ns,
+>   		goto out;
+>   
+>   	css = task_get_css(tsk, cpuset_cgrp_id);
+> -	retval = cgroup_path_ns(css->cgroup, buf, PATH_MAX,
+> -				current->nsproxy->cgroup_ns);
+> +	rcu_read_lock();
+> +	spin_lock_irq(&css_set_lock);
+> +	/* In case the root has already been unmounted */
+> +	if (css->cgroup)
+> +		retval = cgroup_path_ns_locked(css->cgroup, buf, PATH_MAX,
+> +					       current->nsproxy->cgroup_ns);
+> +
+> +	spin_unlock_irq(&css_set_lock);
+> +	rcu_read_unlock();
+>   	css_put(css);
+>   	if (retval == -E2BIG)
+>   		retval = -ENAMETOOLONG;
+Reviewed-by: Waiman Long <longman@redhat.com>
 
