@@ -1,104 +1,156 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64AD16A92B;
-	Wed, 26 Jun 2024 09:33:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF108BEF;
+	Wed, 26 Jun 2024 09:34:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719394427; cv=none; b=kut+kkMmdUImcH7vyVyURUuouprQ6dM6P0nnl2nyUDAj4pkc/oQkDJJp9SE/sB71asgfSFKLd5sZQ7OYy+/SXadl1M2TH4HvjG6p/ww07zGwUFLpyaHzghKWT8n2eyU14PxoXbS7xpN3dQv3mZXpmfGYZherYGnfOIpT7WiWaLE=
+	t=1719394498; cv=none; b=ctK1BuwKECNIvodb4+s0yGabFVBd21S+jUaS9+T346eHQ8lIYaI9doA09Nh/TwlHLQmVTgrQDPxgShGnMCoS4AAh+PHcTsA4wKDjEskt66Yc0ko8LMDFJADiu1fP9F/Khv6d1qH4j7twLnuai7hmnWioKuTk/75mbkrNUy58iRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719394427; c=relaxed/simple;
-	bh=EbfiOlmbYgzxHeaGEJru1qN0I6Ch6Nlbu6LOKQXKdU8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=PI8ay5tH0QB8aC3VJqXnpgjWTkP5eDVNafhuXzFFA/eJVdPNXKT9tvrAPNLUlNuvDH3TZdCJa11CaGsfHRS0ooJcZ5O7/Cu4569+oDMTG2Q/U07h1J9Sl0lx+2KX/Yodk9DQlxlHayC+xbCYzDR2iJD6QR2ucv9HwCXdB9Q47K0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kK/5HHxh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719394498; c=relaxed/simple;
+	bh=f1/+g6RzRmHsBpgyUITjf068nJRrBDTAxMPmBq2MJ/w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EzqqSg73o0FrYPbNe7V1V5blF6vlX/xWK4JekadiBqdXtkBgWyygZJOExpj5IbRYZs8RXOegroLxB2W3Ct6r90gqchpdCOn549GHvbIhmwuVwUhjNuqJ/aDytEY0Wr0Ije+QwHSYbbojRXvJGSIlTnD3Xc7uX0QZIRpShpzZ9uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fsdaQ1TV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kK/5HHxh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C0CDC2BD10;
-	Wed, 26 Jun 2024 09:33:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fsdaQ1TV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ED94C2BD10;
+	Wed, 26 Jun 2024 09:34:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719394427;
-	bh=EbfiOlmbYgzxHeaGEJru1qN0I6Ch6Nlbu6LOKQXKdU8=;
-	h=Date:From:To:Cc:Subject:From;
-	b=kK/5HHxhxNvIQh9kncbgt2LUPODnmWVPzu4FdoMdRpkEBbsFo/jlfkMEp7SuKR0ir
-	 qsa6qcgcwdZniUAaEDtwfGFMpKg5C9uonLhxC4GzrJJhC8RGYKFj8dHCdzD4JZ+BJ3
-	 W6kM8lRU6to1NQyls2STMWDorzLl/RC2UBUyh4wKXHXPDYsZk53H5/yfDtFGvIawq3
-	 S4q+DNnNZhC8Odci3lYPiBumptf4Tg2I3hrsukMNC+FXcC8LBOX32qDS5djmClCjKU
-	 gxC98B+4orXRU10EQM3ws3ED2UjjOwQ4iIJLPTtPA9KOj3dn5v6SQ3YiwS/p1NuQTN
-	 lxnxUOL2OSUSA==
-Date: Wed, 26 Jun 2024 11:33:41 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Tony Luck <tony.luck@intel.com>, EDAC Mailing List
- <linux-edac@vger.kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab
- <m.chehab@huawei.com>, Shengwei Luo <luoshengwei@huawei.com>, Daniel
- Ferguson <danielf@os.amperecomputing.com>, Jose <shiju.jose@huawei.com>,
- Jason Tian <jason@os.amperecomputing.com>, Jonathan Cameron
- <jonathan.cameron@huawei.com>, Roberto Sassu <roberto.sassu@huawei.com>
-Subject: [GIT PULL for v6.10-rc6] edac fixes for kernel 6.11
-Message-ID: <20240626113322.5e263aa0@coco.lan>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-redhat-linux-gnu)
+	s=k20201202; t=1719394498;
+	bh=f1/+g6RzRmHsBpgyUITjf068nJRrBDTAxMPmBq2MJ/w=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fsdaQ1TVNFoqAUNalY6JH06C+UyC/QRbS5PzeR1mYQfs58TWV8ITssRoQ95GdNQU/
+	 JkhRIjzu+IOrQF9cvdRFk+K2yjzJ8oyMrU2YV1J8fIi2dpp5MfEFeseT96jKauj5HY
+	 79CxtciGiSp+vFGrKml/D+/AS9mF6K64cxMFl7+EcVRQvg4m3OF999QdqWI/a3GEXk
+	 29SQgnk6gREw8KKJ+qvcZarlCkh3g2P0dM3Ki3+/gs01D9552odlpwy1LrZjoyH6kE
+	 BUei/w9PWuucjlOAKOcLDSzaNXTDWKGiuYqde+BmXrmDmnLNBzE1aOImBbhgcWzV7z
+	 xRPBcnHOPuOYw==
+Message-ID: <549edfff-24a5-403f-b35e-8929cc14c81f@kernel.org>
+Date: Wed, 26 Jun 2024 11:34:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] ASoC: dt-bindings: fsl,xcvr: Adjust the number of
+ interrupts
+To: Shengjiu Wang <shengjiu.wang@gmail.com>
+Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, lgirdwood@gmail.com,
+ broonie@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, linux-sound@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+ festevam@gmail.com, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+References: <1719291415-1168-1-git-send-email-shengjiu.wang@nxp.com>
+ <1719291415-1168-2-git-send-email-shengjiu.wang@nxp.com>
+ <293fb3d5-9b77-4321-8b31-d060cf96565d@kernel.org>
+ <CAA+D8AMQv_=X3hC5uQbrDBN0EGo3U6EToGFVjUYcOVHpf5b=aQ@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <CAA+D8AMQv_=X3hC5uQbrDBN0EGo3U6EToGFVjUYcOVHpf5b=aQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Borislav,
+On 26/06/2024 11:25, Shengjiu Wang wrote:
+> On Wed, Jun 26, 2024 at 5:23 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>
+>> On 25/06/2024 06:56, Shengjiu Wang wrote:
+>>> On i.MX8MP, there are 3 interrupts, the third interrupt is
+>>> SPDIF wakeup interrupt from PHY
+>>>
+>>> Add ref: dai-common.yaml for #sound-dai-cells is needed and
+>>> XCVR is a DAI device.
+>>>
+>>> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/sound/fsl,xcvr.yaml | 6 ++++--
+>>>  1 file changed, 4 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/sound/fsl,xcvr.yaml b/Documentation/devicetree/bindings/sound/fsl,xcvr.yaml
+>>> index 197ae8ba9c30..7470866e11c6 100644
+>>> --- a/Documentation/devicetree/bindings/sound/fsl,xcvr.yaml
+>>> +++ b/Documentation/devicetree/bindings/sound/fsl,xcvr.yaml
+>>> @@ -42,6 +42,7 @@ properties:
+>>>      items:
+>>>        - description: WAKEUPMIX Audio XCVR Interrupt 1
+>>>        - description: WAKEUPMIX Audio XCVR Interrupt 2
+>>> +      - description: SPDIF wakeup interrupt from PHY
+>>>      minItems: 1
+>>>
+>>>    clocks:
+>>> @@ -88,6 +89,7 @@ required:
+>>>    - dma-names
+>>>
+>>>  allOf:
+>>> +  - $ref: dai-common.yaml#
+>>>    - if:
+>>>        properties:
+>>>          compatible:
+>>> @@ -112,7 +114,7 @@ allOf:
+>>>      else:
+>>>        properties:
+>>>          interrupts:
+>>> -          maxItems: 1
+>>> +          maxItems: 3
+>>
+>> I have doubts this was tested. The existing example should fail,
+>> although I did not see any reports. Not sure why.
+> 
+> it is tested, because the minItems is 1. so the example can pass
+> 
 
-Please pull from:
-  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-edac tags/edac/v6.10-1
+That's a very unexpected change in dtschema. It indeed passes, but is
+not correct. Why interrupts are flexible? This should be constrained.
+Let's wait for Rob's confirmation that this is not a bug in dtschema.
 
-For two patches that fix UEFI 2.6+ implementation of the ARM trace event, 
-as the original implementation was incomplete.
+Anyway, update example to be complete in next version.
 
-The patches on this series was sent at:
-	https://lore.kernel.org/all/20240321-b4-arm-ras-error-vendor-info-v5-rc3-v5-0-850f9bfb97a8@os.amperecomputing.com/
+Best regards,
+Krzysztof
 
-I did a couple of changes at the first patch addressing some coding style
-issues. At the second patch, I replaced the original description to a proper
-one identifying precisely why the patch is needed and what it does.
-
-In summary:
-changeset e9279e83ad1f ("trace, ras: add ARM processor error trace event")
-was incomplete: it added a trace event that was reporting only some fields
-of the CPER record generated for ARM processor from UEFI 2.6 spec.
-
-Those are not enough to actually parse such events on userspace, nor to
-take any actions like isolating problematic CPU cores.
-
-The patch was validated with the help of an ARM EINJ code for QEMU:
-
-	https://github.com/mchehab/rasdaemon/wiki/error-injection
-
-I tested the ghes and cper reports both with and without this change,
-using different versions of rasdaemon, with and without support for
-the extended trace event. Those are a summary of the test results:
-
-- adding more fields to the trace events didn't break userspace API:
-  both versions of rasdaemon handled it;
-
-- the rasdaemon patches to handle the new trace report was missing
-  a backward-compatibility logic. I fixed already. With that, rasdaemon
-  can handle both old and new trace events.
-
-Btw, rasdaemon has gained support for the extended trace since its
-version 0.5.8 (released in 2021). I didn't saw any issues there
-complain about troubles on it, so either distros used on ARM servers
-are using an old version of rasdaemon, or they're carrying on the trace
-event changes as well.
-
-Regards,
-Mauro
-
----
-
-
-The following changes since commit 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0:
-
-
-Thanks,
-Mauro
