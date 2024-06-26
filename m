@@ -1,511 +1,171 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76B751662E3
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 08:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6134D16630F
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 08:30:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719390606; cv=none; b=ZaJ0OCO2Buy18ZI0HyTiXTeTpDWvIic84QIFzLgcIDNG6WdUYV4ZmC821ir8OQCtDEgYREYNs/ZguT/biBGTY/FMdt+8y2ydNco9ywBQEduQr4d4K4iv350EAf70ZW+p4YYi88t8s4md78M/2fDS6nvzKCmSGYcDIOhJWV4Erk8=
+	t=1719390608; cv=none; b=OEi+Fl/1zDzBn/JsIjHmlH9TPQD0T3qWaZ2ZVf2Anz0VsBenyFECKz/sHEk72artV4BPmNfsJLTkSdTgBXZpTJDearjyQS3/NhET5k4TtCqa7QCqL8jMftsDSf8kD/4Qx/wueiZ4mhm7dYOgAmLCDqpyaYeCCZbewJePMERe964=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719390606; c=relaxed/simple;
-	bh=J0p11dtNRBccV6QFa2ceu0jWu3hcCAPsQrCNJAhNbew=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZhgQUBTF0dKGBpxRDGPrjlP22Pvmf78SSxkcE6EVvlC91Tj2oNNQ5YeUF4PsfjVaMgbX8cr0+Iusk5XWru/ZD8GIo8sHfGH/qTW5cgFv4pA+EjCqZbsgBh+clLqi9r7yCKozJ09V9IgJ9s6thaMlONx/dzMQnjWu8RsWeVOl/Yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=FayOYwZw; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1719390608; c=relaxed/simple;
+	bh=QeqkQtniBpxvd+UitRjWWYVFy5iXjPy7xv5fji8+3L8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DwdgWmjsXBfiImJSrN40/5McV2jmT16M9yOGMOLeXQyhwB6d9SYNOqJaCOdMovdY579XcukeiIbnye7vLyrNKTJQ2PL+dDFdkzjWcZq3sQ5OlIXN+x1vLDVk67jYG4sX99Q4+uJMZX6ylILZdGyl5buB1orsq8Zmkro+Tp1f/0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=dud3sBF2; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="FayOYwZw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=z/cXE
-	T2St5Z8IIkwJucSBod5ZKQXzHGuOYIljqwqLug=; b=FayOYwZw/ZvRUilHqTqVd
-	hS5XRjdB5mHzdaB9zavhqROJPRAGdORleA7x4pXfprFfzK/gMlL1LU91nZ25Z+zw
-	0Zib8+qsrQi47zXaPQD3Aa+6v6K2nluHrSe50TftY1Y6GUH0lwKBTd0eHi8vOQdN
-	yb4dDUwLszWr/iTEnfBu6o=
-Received: from localhost.localdomain (unknown [139.226.176.191])
-	by gzga-smtp-mta-g3-2 (Coremail) with SMTP id _____wD3__Ve0XtmGuclAg--.42928S3;
-	Wed, 26 Jun 2024 16:29:27 +0800 (CST)
-From: Ping Gan <jacky_gam_2001@163.com>
-To: hch@lst.de,
-	sagi@grimberg.me,
-	kch@nvidia.com,
-	linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: ping.gan@dell.com,
-	Ping Gan <jacky_gam_2001@163.com>
-Subject: [PATCH 1/2] nvmet-rdma: add polling cq task for nvmet-rdma
-Date: Wed, 26 Jun 2024 16:28:22 +0800
-Message-Id: <20240626082823.48326-2-jacky_gam_2001@163.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20240626082823.48326-1-jacky_gam_2001@163.com>
-References: <20240626082823.48326-1-jacky_gam_2001@163.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="dud3sBF2"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52cd6784aa4so5675779e87.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 01:30:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719390603; x=1719995403; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yyQdICgaO84yFawHrHyVyr2QToU/+XJGR839rOrXaR0=;
+        b=dud3sBF2tVPRThcYciFuClucski/fMejwvP58nN7PA2C4550Bo1BWAmdARVLHwVjwE
+         iG/VckS1SBkJmwhbUhUdrTvAXJa+qUkiUvwTUbwY7JDSg6nlUbhVGjV0lzJQfSBsWl7t
+         AJbsBQHNfkMxtODpUfkOdbbmC5LdHOE2YbM/1zX9IQm+GjXcAzEnR1Z7KPWP516s9y35
+         SWqG/skTT6LKFroJwByr0mw4jxtc5bvFQL2GWGqMKF6U4LBQLf7fwKM9+PjfzENn0O9+
+         m1wQXj+ZuAtRrWRqMYubFa0aj+njwlJO76nffH00lHmh2ntyx6AAOpjQdprKcvep0tCW
+         AKhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719390603; x=1719995403;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yyQdICgaO84yFawHrHyVyr2QToU/+XJGR839rOrXaR0=;
+        b=K9OPY7sxtNqiN5CMWcY6SoCP530IHNFKSTA5ekfIYto9hXOhJ8LDB/j43/EHD5mbTq
+         bKLj1c0YnQczpOBZpZo5g9KfupgiZ1QUuJ61oBXmCObLlNlpTysgiBKPbEtaiSUEIEfN
+         kDps9/h8A/uoUIxW8Nl4/HTBsOHoAv1286ZnaivrlADxV9tpn4IORe5cs729JgpLmOup
+         nbb9EnWTby2YyhFu64547sTf+9PxpZa+X+R35K0G67l/2qy9lWY6a6pfak2mYYVjneZX
+         sLVRbnT+OM+XTCZVr81xGstvSoWE43yREBSWiViPMPCN34Q8CfdSpZTGQI4wuaUtq1Wy
+         DBuw==
+X-Forwarded-Encrypted: i=1; AJvYcCXDAPN/4IDsn16n0s4GGsXrQFGKCkQ8ZWEf2jDP8KPhq44HiJCM4QXkvhD8NNvHmJWZBrWXkJuWGI3N1Br6iRZbmQ2MDcn6Pd43x5Hv
+X-Gm-Message-State: AOJu0YznrQzL0tnnpP8Qo1lTHupJ6Fiumze5h7IRvlsDm9mKshoHTu6g
+	uTyX37Nd3RY6bBV/P8dHKZMPnSSiRzzkda16EIzB37MPptSieSCSGu7LDVmd6IQ=
+X-Google-Smtp-Source: AGHT+IEca5cJU5ZW212x9C2okoEwkWZvRgPivrrUuJX0Y9+4JhwZuZye4d1Yr/SDCtFZrF/eM34AgA==
+X-Received: by 2002:a05:6512:607:b0:52c:d84b:93b2 with SMTP id 2adb3069b0e04-52ce18341f9mr5698467e87.15.1719390603394;
+        Wed, 26 Jun 2024 01:30:03 -0700 (PDT)
+Received: from [192.168.1.172] ([93.5.22.158])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c84245f0sm16687705e9.33.2024.06.26.01.30.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Jun 2024 01:30:03 -0700 (PDT)
+Message-ID: <79811fff-4fdf-4121-9cea-6ed7e1329dad@baylibre.com>
+Date: Wed, 26 Jun 2024 10:30:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3__Ve0XtmGuclAg--.42928S3
-X-Coremail-Antispam: 1Uf129KBjvAXoW3KFWrtr48ZF13Kw18ZFy5urg_yoW8GFy7to
-	ZxXF45JFnYkw18Ja1FyanrtFy2va4qqFZ3ArsxCFs0gF1xJ3yrWr92kw15Xr18Ww1Iyr1U
-	Wr4xuw1Sga1kXF1rn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjTicTPRDUUUU
-X-CM-SenderInfo: 5mdfy55bjdzsisqqiqqrwthudrp/1tbiKAAKKWXAl9atFAABsX
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 03/16] dt-bindings: mfd: mediatek: Add codec property
+ for MT6357 PMIC
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Lee Jones <lee@kernel.org>, Flora Fu <flora.fu@mediatek.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+References: <20240226-audio-i350-v6-0-f754ec1a7634@baylibre.com>
+ <20240226-audio-i350-v6-3-f754ec1a7634@baylibre.com>
+ <cd190d35-1658-43d8-9606-5e73257bbf3a@linaro.org>
+ <95bab90f-b196-4e79-bb88-7fd534cca721@baylibre.com>
+ <5c9ab5bf-95f2-4195-8797-335010223aac@kernel.org>
+Content-Language: en-US
+From: Alexandre Mergnat <amergnat@baylibre.com>
+In-Reply-To: <5c9ab5bf-95f2-4195-8797-335010223aac@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-To add dedicated polling cq tasks versus kworker for nvmet-rdma
-module. And we have three module parametes:
- task_num is to define number of polling cq task.
- core_affinity is to define which cpu core will be begun to use.
- idle_peroid is to define task's polling time before go to idle.
 
-Signed-off-by: Ping Gan <jacky_gam_2001@163.com>
----
- drivers/nvme/target/rdma.c | 331 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 326 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/nvme/target/rdma.c b/drivers/nvme/target/rdma.c
-index 1eff8ca6a5f1..83c03e088bf9 100644
---- a/drivers/nvme/target/rdma.c
-+++ b/drivers/nvme/target/rdma.c
-@@ -26,6 +26,28 @@
- #include <linux/nvme-rdma.h>
- #include "nvmet.h"
- 
-+/* Define a time period (in usecs) that poll thread shall sample an activated
-+ * queue before determining it to be idle.
-+ */
-+static int idle_poll_period_usecs;
-+module_param(idle_poll_period_usecs, int, 0644);
-+MODULE_PARM_DESC(idle_poll_period_usecs,
-+		"nvmet rdma cq thread poll till idle time period in usecs");
-+
-+/* Define the target rdma cq polling thread's affinity cpu core.
-+ */
-+static int pt_affinity_core = -2;
-+module_param(pt_affinity_core, int, 0644);
-+MODULE_PARM_DESC(pt_affinity_core,
-+	    "target rdma cq polling thread's affinity core, -1 for all online cpus");
-+
-+/* Define the polling thread number.
-+ */
-+static int pt_num;
-+module_param(pt_num, int, 0644);
-+MODULE_PARM_DESC(pt_num, "target rdma cq polling thread number");
-+bool rdma_polling_cq_task;
-+
- /*
-  * We allow at least 1 page, up to 4 SGEs, and up to 16KB of inline data
-  */
-@@ -39,6 +61,23 @@
- 
- #define NVMET_RDMA_BACKLOG 128
- 
-+struct nvmet_rdma_pt_data {
-+	struct wait_queue_head	wait_head;
-+	struct mutex		queue_lock;
-+	struct list_head	pt_admin_queue_list;
-+	struct list_head	pt_io_queue_list;
-+	u32		thread_idle;
-+	int		affinity_cpu;
-+	pid_t			task_pid;
-+	pid_t			task_tgid;
-+	atomic64_t		admin_queue_cnt;
-+	atomic64_t		io_queue_cnt;
-+	struct task_struct *thread;
-+	struct mutex	   thread_lock;
-+};
-+
-+struct nvmet_rdma_pt_data **rdma_pt_data;
-+
- struct nvmet_rdma_srq;
- 
- struct nvmet_rdma_cmd {
-@@ -114,6 +153,10 @@ struct nvmet_rdma_queue {
- 	int			send_queue_size;
- 
- 	struct list_head	queue_list;
-+	//for cq poll thread
-+	struct nvmet_rdma_pt_data *pt_data;
-+	struct list_head	pt_list_entry;
-+	atomic64_t		req_cnt;
- };
- 
- struct nvmet_rdma_port {
-@@ -176,6 +219,59 @@ static int nvmet_rdma_alloc_rsp(struct nvmet_rdma_device *ndev,
- 
- static const struct nvmet_fabrics_ops nvmet_rdma_ops;
- 
-+static void nvmet_rdma_wakeup_poll_thread(struct nvmet_rdma_queue *queue)
-+{
-+	smp_mb();
-+	if (queue->pt_data && waitqueue_active(&queue->pt_data->wait_head))
-+		wake_up(&queue->pt_data->wait_head);
-+}
-+
-+static void nvmet_rdma_ib_cq_handler(struct ib_cq *cq, void *private)
-+{
-+	struct nvmet_rdma_queue *queue = (struct nvmet_rdma_queue *)cq->cq_context;
-+	atomic64_set(&queue->req_cnt, 1);
-+	nvmet_rdma_wakeup_poll_thread(queue);
-+}
-+
-+static int nvmet_rdma_get_pcq_task(bool io_queue)
-+{
-+	int i = 1, ret = 0;
-+	s64 min, tmp;
-+	struct nvmet_rdma_pt_data *tptd;
-+
-+	tptd = rdma_pt_data[0];
-+	if (io_queue)
-+		min = atomic64_read(&tptd->io_queue_cnt);
-+	else
-+		min = atomic64_read(&tptd->admin_queue_cnt);
-+	while (i < pt_num) {
-+		tptd = rdma_pt_data[i];
-+		if (io_queue)
-+			tmp = atomic64_read(&tptd->io_queue_cnt);
-+		else
-+			tmp = atomic64_read(&tptd->admin_queue_cnt);
-+		if (min > tmp) {
-+			min = tmp;
-+			ret = i;
-+		}
-+		i++;
-+	}
-+	tptd = rdma_pt_data[ret];
-+	if (io_queue)
-+		atomic64_inc(&tptd->io_queue_cnt);
-+	else
-+		atomic64_inc(&tptd->admin_queue_cnt);
-+	return ret;
-+}
-+
-+static inline void nvmet_rdma_pq_clear_req(struct nvmet_rdma_queue *queue)
-+{
-+	struct nvmet_rdma_pt_data *tptd = queue->pt_data;
-+	mutex_lock(&tptd->queue_lock);
-+	list_del(&queue->pt_list_entry);
-+	mutex_unlock(&tptd->queue_lock);
-+}
-+
- static int srq_size_set(const char *val, const struct kernel_param *kp)
- {
- 	int n = 0, ret;
-@@ -507,6 +603,10 @@ static int nvmet_rdma_post_recv(struct nvmet_rdma_device *ndev,
- 
- 	if (unlikely(ret))
- 		pr_err("post_recv cmd failed\n");
-+	else if (rdma_polling_cq_task) {
-+		atomic64_set(&cmd->queue->req_cnt, 1);
-+		nvmet_rdma_wakeup_poll_thread(cmd->queue);
-+	}
- 
- 	return ret;
- }
-@@ -740,6 +840,9 @@ static void nvmet_rdma_queue_response(struct nvmet_req *req)
- 	if (unlikely(ib_post_send(cm_id->qp, first_wr, NULL))) {
- 		pr_err("sending cmd response failed\n");
- 		nvmet_rdma_release_rsp(rsp);
-+	} else if (rdma_polling_cq_task) {
-+		atomic64_set(&rsp->queue->req_cnt, 1);
-+		nvmet_rdma_wakeup_poll_thread(rsp->queue);
- 	}
- }
- 
-@@ -816,6 +919,9 @@ static void nvmet_rdma_write_data_done(struct ib_cq *cq, struct ib_wc *wc)
- 	if (unlikely(ib_post_send(cm_id->qp, &rsp->send_wr, NULL))) {
- 		pr_err("sending cmd response failed\n");
- 		nvmet_rdma_release_rsp(rsp);
-+	} else if (rdma_polling_cq_task) {
-+		atomic64_set(&rsp->queue->req_cnt, 1);
-+		nvmet_rdma_wakeup_poll_thread(rsp->queue);
- 	}
- }
- 
-@@ -957,6 +1063,10 @@ static bool nvmet_rdma_execute_command(struct nvmet_rdma_rsp *rsp)
- 		if (rdma_rw_ctx_post(&rsp->rw, queue->qp,
- 				queue->cm_id->port_num, &rsp->read_cqe, NULL))
- 			nvmet_req_complete(&rsp->req, NVME_SC_DATA_XFER_ERROR);
-+		if (rdma_polling_cq_task) {
-+			atomic64_set(&queue->req_cnt, 1);
-+			nvmet_rdma_wakeup_poll_thread(queue);
-+		}
- 	} else {
- 		rsp->req.execute(&rsp->req);
- 	}
-@@ -1259,8 +1369,16 @@ static int nvmet_rdma_create_queue_ib(struct nvmet_rdma_queue *queue)
- 	 */
- 	nr_cqe = queue->recv_queue_size + 2 * queue->send_queue_size;
- 
--	queue->cq = ib_cq_pool_get(ndev->device, nr_cqe + 1,
--				   queue->comp_vector, IB_POLL_WORKQUEUE);
-+	if (rdma_polling_cq_task) {
-+		queue->cq = ib_alloc_cq(ndev->device, queue, nr_cqe + 1,
-+						queue->comp_vector, IB_POLL_DIRECT);
-+		queue->cq->comp_handler = nvmet_rdma_ib_cq_handler;
-+		ib_req_notify_cq(queue->cq, IB_CQ_NEXT_COMP);
-+	} else {
-+		queue->cq = ib_cq_pool_get(ndev->device, nr_cqe + 1,
-+						queue->comp_vector, IB_POLL_WORKQUEUE);
-+	}
-+
- 	if (IS_ERR(queue->cq)) {
- 		ret = PTR_ERR(queue->cq);
- 		pr_err("failed to create CQ cqe= %d ret= %d\n",
-@@ -1331,8 +1449,11 @@ static void nvmet_rdma_destroy_queue_ib(struct nvmet_rdma_queue *queue)
- 	if (queue->cm_id)
- 		rdma_destroy_id(queue->cm_id);
- 	ib_destroy_qp(queue->qp);
--	ib_cq_pool_put(queue->cq, queue->recv_queue_size + 2 *
--		       queue->send_queue_size + 1);
-+	if (rdma_polling_cq_task)
-+		ib_free_cq(queue->cq);
-+	else
-+		ib_cq_pool_put(queue->cq, queue->recv_queue_size + 2 *
-+			       queue->send_queue_size + 1);
- }
- 
- static void nvmet_rdma_free_queue(struct nvmet_rdma_queue *queue)
-@@ -1340,6 +1461,13 @@ static void nvmet_rdma_free_queue(struct nvmet_rdma_queue *queue)
- 	pr_debug("freeing queue %d\n", queue->idx);
- 
- 	nvmet_sq_destroy(&queue->nvme_sq);
-+	if (rdma_polling_cq_task) {
-+		nvmet_rdma_pq_clear_req(queue);
-+		if (queue->host_qid > 0)
-+			atomic64_dec(&queue->pt_data->io_queue_cnt);
-+		else
-+			atomic64_dec(&queue->pt_data->admin_queue_cnt);
-+	}
- 
- 	nvmet_rdma_destroy_queue_ib(queue);
- 	if (!queue->nsrq) {
-@@ -1600,6 +1728,19 @@ static int nvmet_rdma_queue_connect(struct rdma_cm_id *cm_id,
- 		goto free_queue;
- 	}
- 
-+	if (rdma_polling_cq_task) {
-+		bool io_queue = queue->host_qid > 0?1:0;
-+		ret = nvmet_rdma_get_pcq_task(io_queue);
-+		queue->pt_data = rdma_pt_data[ret];
-+		mutex_lock(&queue->pt_data->queue_lock);
-+		if (io_queue)
-+			list_add_tail(&queue->pt_list_entry, &queue->pt_data->pt_io_queue_list);
-+		else
-+			list_add_tail(&queue->pt_list_entry, &queue->pt_data->pt_admin_queue_list);
-+		mutex_unlock(&queue->pt_data->queue_lock);
-+		nvmet_rdma_wakeup_poll_thread(queue);
-+	}
-+
- 	mutex_lock(&nvmet_rdma_queue_mutex);
- 	list_add_tail(&queue->queue_list, &nvmet_rdma_queue_list);
- 	mutex_unlock(&nvmet_rdma_queue_mutex);
-@@ -2082,9 +2223,156 @@ static struct ib_client nvmet_rdma_ib_client = {
- 	.remove = nvmet_rdma_remove_one
- };
- 
-+#define RDMA_POLL_BUDGET   8
-+static int __nvmet_rdma_poll_thread(struct nvmet_rdma_pt_data *rptd)
-+{
-+	int rcv_ret = 0;
-+	bool need_repoll = false;
-+	struct nvmet_rdma_queue *qreq, *tmp;
-+
-+	mutex_lock(&rptd->queue_lock);
-+	if (!list_empty(&rptd->pt_admin_queue_list)) {
-+		list_for_each_entry_safe(qreq, tmp, &rptd->pt_admin_queue_list, pt_list_entry) {
-+			if (atomic64_read(&qreq->req_cnt) > 0) {
-+				rcv_ret = ib_process_cq_direct(qreq->cq, RDMA_POLL_BUDGET);
-+				if (rcv_ret > 0)
-+					need_repoll = true;
-+				else {
-+					atomic64_set(&qreq->req_cnt, 0);
-+					ib_req_notify_cq(qreq->cq, IB_CQ_NEXT_COMP);
-+				}
-+			}
-+		}
-+	}
-+	if (!list_empty(&rptd->pt_io_queue_list)) {
-+		list_for_each_entry_safe(qreq, tmp, &rptd->pt_io_queue_list, pt_list_entry) {
-+			if (atomic64_read(&qreq->req_cnt) > 0) {
-+				rcv_ret = ib_process_cq_direct(qreq->cq, RDMA_POLL_BUDGET);
-+				if (rcv_ret > 0)
-+					need_repoll = true;
-+				else {
-+					atomic64_set(&qreq->req_cnt, 0);
-+					ib_req_notify_cq(qreq->cq, IB_CQ_NEXT_COMP);
-+				}
-+			}
-+		}
-+	}
-+	mutex_unlock(&rptd->queue_lock);
-+	if (need_repoll)
-+		return 1;
-+	else
-+		return 0;
-+}
-+
-+static int nvmet_rdma_poll_thread(void *data)
-+{
-+	struct nvmet_rdma_pt_data *rptd = data;
-+	unsigned long timeout = 0;
-+	DEFINE_WAIT(wait);
-+
-+	if (rptd->affinity_cpu != -1)
-+		set_cpus_allowed_ptr(current, cpumask_of(rptd->affinity_cpu));
-+	else
-+		set_cpus_allowed_ptr(current, cpu_online_mask);
-+	current->flags |= PF_NO_SETAFFINITY;
-+	mutex_lock(&rptd->thread_lock);
-+	rptd->task_pid = current->pid;
-+	rptd->task_tgid = current->tgid;
-+
-+	while (!kthread_should_stop()) {
-+		int ret = __nvmet_rdma_poll_thread(rptd);
-+		if (ret > 0 || !time_after(jiffies, timeout)) {
-+			cond_resched();
-+			if (ret > 0)
-+				timeout = jiffies + rptd->thread_idle;
-+			continue;
-+		}
-+		prepare_to_wait(&rptd->wait_head, &wait, TASK_INTERRUPTIBLE);
-+		mutex_unlock(&rptd->thread_lock);
-+		schedule();
-+		mutex_lock(&rptd->thread_lock);
-+		finish_wait(&rptd->wait_head, &wait);
-+		timeout = jiffies + rptd->thread_idle;
-+	}
-+	rptd->thread = NULL;
-+	rptd->task_pid = -1;
-+	rptd->task_tgid = -1;
-+	mutex_unlock(&rptd->thread_lock);
-+	kthread_complete_and_exit(NULL, 0);
-+	//do_exit(0);
-+}
-+
- static int __init nvmet_rdma_init(void)
- {
--	int ret;
-+	int ret, i;
-+	char task_name[TASK_COMM_LEN];
-+	struct task_struct *task;
-+
-+	rdma_polling_cq_task = false;
-+	if ((pt_affinity_core >= -1 && pt_affinity_core < (int)nr_cpu_ids)
-+		|| pt_num > 0 || idle_poll_period_usecs > 0) {
-+		if (pt_num == 0)
-+			pt_num = 1;
-+		else if (pt_num < 0) {
-+			printk(KERN_ERR "bad parameter for task num\n");
-+			ret =  -EINVAL;
-+			return ret;
-+		}
-+		if (pt_affinity_core == -2)
-+			pt_affinity_core = -1;
-+		if (pt_affinity_core < -1 ||
-+			pt_affinity_core >= (int)nr_cpu_ids) {
-+			printk(KERN_ERR "bad parameter for affinity core \n");
-+			ret =  -EINVAL;
-+			return ret;
-+		}
-+		if (idle_poll_period_usecs == 0)
-+			idle_poll_period_usecs = 1000; // default 1ms
-+		else if (idle_poll_period_usecs < 0) {
-+			printk(KERN_ERR "bad parameter for idle poll period\n");
-+			ret =  -EINVAL;
-+			return ret;
-+		}
-+		rdma_pt_data = kmalloc(pt_num * sizeof(void *), GFP_KERNEL);
-+		if (!rdma_pt_data)
-+			return -ENOMEM;
-+
-+		for (i = 0; i < pt_num; i++) {
-+			rdma_pt_data[i] = kmalloc(sizeof(struct nvmet_rdma_pt_data), GFP_KERNEL);
-+			if (!rdma_pt_data[i]) {
-+				ret = -ENOMEM;
-+				goto err_free_pqtd;
-+			}
-+		}
-+		for (i = 0; i < pt_num; i++) {
-+			mutex_init(&rdma_pt_data[i]->thread_lock);
-+			rdma_pt_data[i]->thread_idle = usecs_to_jiffies(idle_poll_period_usecs);
-+			mutex_init(&rdma_pt_data[i]->queue_lock);
-+			INIT_LIST_HEAD(&rdma_pt_data[i]->pt_admin_queue_list);
-+			INIT_LIST_HEAD(&rdma_pt_data[i]->pt_io_queue_list);
-+			init_waitqueue_head(&rdma_pt_data[i]->wait_head);
-+			atomic64_set(&rdma_pt_data[i]->admin_queue_cnt, 0);
-+			atomic64_set(&rdma_pt_data[i]->io_queue_cnt, 0);
-+			if (pt_affinity_core != -1)
-+				rdma_pt_data[i]->affinity_cpu = (pt_affinity_core + (int)i) %
-+								((int) nr_cpu_ids);
-+			else
-+				rdma_pt_data[i]->affinity_cpu = -1;
-+			snprintf(task_name, TASK_COMM_LEN, "nvmet-rdma-pt%u", i);
-+			task = kthread_create(nvmet_rdma_poll_thread, (void *)rdma_pt_data[i], task_name);
-+			if (IS_ERR(task)) {
-+				ret = PTR_ERR(task);
-+				goto err_free_pt_data;
-+			}
-+			set_user_nice(task, -20);
-+			mutex_lock(&rdma_pt_data[i]->thread_lock);
-+			rdma_pt_data[i]->thread = task;
-+			mutex_unlock(&rdma_pt_data[i]->thread_lock);
-+		}
-+		rdma_polling_cq_task = true;
-+		for (i = 0; i <  pt_num; i++)
-+			wake_up_process(rdma_pt_data[i]->thread);
-+	}
- 
- 	ret = ib_register_client(&nvmet_rdma_ib_client);
- 	if (ret)
-@@ -2098,15 +2386,48 @@ static int __init nvmet_rdma_init(void)
- 
- err_ib_client:
- 	ib_unregister_client(&nvmet_rdma_ib_client);
-+err_free_pt_data:
-+	if ((pt_affinity_core >= -1 && pt_affinity_core < (int)nr_cpu_ids)
-+		|| pt_num > 0 || idle_poll_period_usecs > 0) {
-+		while (i > 0) {
-+			kthread_stop(rdma_pt_data[i-1]->thread);
-+			i--;
-+		}
-+		i = pt_num;
-+err_free_pqtd:
-+		while (i > 0) {
-+			kfree(rdma_pt_data[i-1]);
-+			i--;
-+		}
-+		kfree(rdma_pt_data);
-+	}
- 	return ret;
- }
- 
- static void __exit nvmet_rdma_exit(void)
- {
-+	int i = 0;
-+
-+	if (rdma_polling_cq_task) {
-+		for (i = 0; i < pt_num; i++) {
-+			mutex_lock(&rdma_pt_data[i]->thread_lock);
-+			if (rdma_pt_data[i]->thread) {
-+				mutex_unlock(&rdma_pt_data[i]->thread_lock);
-+				kthread_stop(rdma_pt_data[i]->thread);
-+			} else  {
-+				mutex_unlock(&rdma_pt_data[i]->thread_lock);
-+			}
-+		}
-+	}
- 	nvmet_unregister_transport(&nvmet_rdma_ops);
- 	ib_unregister_client(&nvmet_rdma_ib_client);
- 	WARN_ON_ONCE(!list_empty(&nvmet_rdma_queue_list));
- 	ida_destroy(&nvmet_rdma_queue_ida);
-+	if (rdma_polling_cq_task) {
-+		for (i = 0; i < pt_num; i++)
-+			kfree(rdma_pt_data[i]);
-+		kfree(rdma_pt_data);
-+	}
- }
- 
- module_init(nvmet_rdma_init);
+On 25/06/2024 15:44, Krzysztof Kozlowski wrote:
+> On 25/06/2024 11:23, Alexandre Mergnat wrote:
+>>
+>>
+>> On 21/06/2024 17:00, Krzysztof Kozlowski wrote:
+>>> On 19/06/2024 16:46, Alexandre Mergnat wrote:
+>>>> Add the audio codec sub-device. This sub-device is used to set the
+>>>> optional voltage values according to the hardware.
+>>>> The properties are:
+>>>>     - Setup of microphone bias voltage.
+>>>>     - Setup of the speaker pin pull-down.
+>>>>
+>>>> Also, add the audio power supply property which is dedicated for
+>>>> the audio codec sub-device.
+>>>>
+>>>> Signed-off-by: Alexandre Mergnat<amergnat@baylibre.com>
+>>>> ---
+>>>>    .../devicetree/bindings/mfd/mediatek,mt6357.yaml   | 33 ++++++++++++++++++++++
+>>>>    1 file changed, 33 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/mfd/mediatek,mt6357.yaml b/Documentation/devicetree/bindings/mfd/mediatek,mt6357.yaml
+>>>> index 37423c2e0fdf..d95307393e75 100644
+>>>> --- a/Documentation/devicetree/bindings/mfd/mediatek,mt6357.yaml
+>>>> +++ b/Documentation/devicetree/bindings/mfd/mediatek,mt6357.yaml
+>>>> @@ -37,6 +37,32 @@ properties:
+>>>>      "#interrupt-cells":
+>>>>        const: 2
+>>>>    
+>>>> +  vaud28-supply:
+>>>> +    description: 2.8 volt supply phandle for the audio codec
+>>>> +
+>>>> +  audio-codec:
+>>>> +    type: object
+>>> Still not much improved. You do not have any resources there, so these
+>>> should go to the parent node.
+>>
+>> Hi Krzysztof,
+>>
+>> vaud28-supply seems to be a mistake that I forward port.
+>> In the V4, AFAII, your feedback [1] suggested me to move the vaud28-supply from the "audio-codec"
+>> sub-node to the parent node, which for me is the "pmic" (mfd), because the property is considered as
+>> power-supply.
+>>
+>>       pwrap {
+>>           pmic {
+>>               ...
+>>               audio-codec {
+>>                   ...
+>>
+>> Hardware side, vaud28-supply is the output of PMIC-regulator subsystem, and AVDD28 is the input of
+>> PMIC-audio-codec subsystem. Then:
+>> - The property name is wrong and must be change to AVDD28, which is a consumer (power input), not a
+>> power-supply. => description: 2.8 volt power input for microphones (AU_VIN0, AU_VIN1, AU_VIN2)
+>> - IMHO, move this property to the next parent (pwrap) isn't consistent. It should be moved back to
+>> Documentation/devicetree/bindings/mfd/mediatek,mt6357.yaml (Done in the V4) into audio-codec
+>> substystem, beside mediatek,micbias0-microvolt
+> 
+> I don't understand why do we talk again about supply. My comment was not
+> under the supply.
+
+Because your word are:
+"
+And now you should see how odd it looks. Supplies are part of entire
+chip, not subblock, even if they supply dedicated domain within that chip.
+
+That's why I asked to put it in the parent node.
+"
+
+My bad, I forgot to link you the old message in my previous answer [1]
+
+[1] https://lore.kernel.org/all/6d21da37-8be7-467c-8878-d57af0b0201b@kernel.org/#t
+
 -- 
-2.26.2
-
+Regards,
+Alexandre
