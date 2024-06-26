@@ -1,390 +1,254 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36372181D1B
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 13:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E1CD185E65
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 13:07:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719407276; cv=none; b=H/bQQgo4iYdXDiVzYxSW6E3OnnXooV8YR5VM9hr2T/NpAj6w8d9qCY5+N7jLYfpc1aGEesKs1381VO+bCFnJMLImSySgLPrDaFBU1kqzrVgWxzK8CJwNjsxpRTwKU25wKyu9UE0FRCH0MskoKWJEg84PVuIJKgEofHAFhaLPtRM=
+	t=1719407281; cv=none; b=Uw2Uun62JFo1D5Dc6GVsDI+4Ao3DDS+OjvlKwbcwMEGOZorcUT0O8IR8Y4/JvLqEdZNm7AitsnZ8b/0FmKYK1QCj8M+Mxrmoup/Lg0h7GmBpsB0yxl9BozBIGSN+dNE2nFTqzvD2CYju2udFbFMGF95PBypv33G9f3sMm3Sa+N0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719407276; c=relaxed/simple;
-	bh=CR/nuzzaq8rbJhJkOw2IbAD3ShbDjO/1VG2so/cJFFM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k+vWKPiva4K8LlTmF80q1nkgJVtS5OV37NF9Z4YE62cLe706TL7by4GOkBXo6yBCarAd3VCekIN81KBX1zETaCF9MM62Bpp6mrdqlalYVWTq7+gauJN2i2mmvd9ZbxWR5nfajglugtON0tcVyOpxLjNBRcvgelx38MOOXF2WVbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mZo0cwiP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719407281; c=relaxed/simple;
+	bh=E1dArXUJoA5c+pEIPLkeGZNPzuED9bTXBuqFFCJr2HY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=RC1v5scBL+HP5DPQRVM7WLLlTKfn4uFvK7VKhg21yb00OqSV27jl3CEaFhZAz4LRj+STlUXa5rF95TtqeG3qqfwQfPHcOSLFEwtbzWF5pO9g1RfqeKgknyxpNOxHLOpKPMz6B0s9omH1vaWpkYkiQMjPU9l0ic5QFolDn3Pm+bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=n/yob9B7; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mZo0cwiP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 404FCC32786;
-	Wed, 26 Jun 2024 13:07:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719407275;
-	bh=CR/nuzzaq8rbJhJkOw2IbAD3ShbDjO/1VG2so/cJFFM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mZo0cwiPajn8p75hKTzVY7jgXowSZN5KncxQLT8/Qj4pLRzbRwoc/O7qoHRjOrPYi
-	 hxgAjpQoLBvF6g3me3io7hk+ClhCfMQQitUCSFPOJxD00+DIa8a29Q71rbpfCdta6s
-	 XzAjXnbgjKQOaefSEKOXTFDONAWcp8R73mwYQ6hCTUPpJjsGIfxZa6hXvCamPSk6yC
-	 eJhEn0LU5+huSYDlDeUjfGdtFLMx/pEoi5rZ7RVH265g/khYqhEshp5DNT5vwScaeU
-	 eyPoFhQRfa7liSvwFPcQ0kS+N4E7Cj5fFpyibnOSnvlJ8xbBIXhQ5tngO8L4NQv4S8
-	 0ulRPIaWYIMnA==
-Date: Wed, 26 Jun 2024 15:07:52 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: Aradhya Bhatia <a-bhatia1@ti.com>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Jyri Sarha <jyri.sarha@iki.fi>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	DRI Development List <dri-devel@lists.freedesktop.org>, Linux Kernel List <linux-kernel@vger.kernel.org>, 
-	Dominik Haller <d.haller@phytec.de>, Sam Ravnborg <sam@ravnborg.org>, 
-	Thierry Reding <treding@nvidia.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
-	Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>, 
-	Praneeth Bajjuri <praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>, Devarsh Thakkar <devarsht@ti.com>, 
-	Jayesh Choudhary <j-choudhary@ti.com>, Jai Luthra <j-luthra@ti.com>
-Subject: Re: [PATCH v4 10/11] drm/atomic-helper: Re-order bridge chain
- pre-enable and post-disable
-Message-ID: <20240626-tremendous-fantastic-rhino-ab73fc@houat>
-References: <20240622110929.3115714-1-a-bhatia1@ti.com>
- <20240622110929.3115714-11-a-bhatia1@ti.com>
- <e7dde09d-ceb0-4fb0-a23e-6aaba8f1beb3@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="n/yob9B7"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2ebe0a81dc8so88816471fa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 06:07:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719407276; x=1720012076; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6Y2lg3OgYzhfS3tcxdHdgy6tUi+qEwW8C3VWq7VXFkI=;
+        b=n/yob9B7HDNO0+wjSlLGNzd+niUZ/e30zroxnGXX0Ra6viTm+0R3Ihv9MyqsI/pmwj
+         moIMg5IGhCMrzW+PA4NxHIMpsIKBTXSNQt2klBlYA1anz387zVjKgWhQGqXEXb/WAkwv
+         TmlFoZy6aYYN28YbehILy+fy3IvVDCp4RQSyFpPLgmEZzXWmopfmB5GNFDGmSu+4R5P7
+         D+g5nOgCgN6p33vEnk8TAbRj25DFQDfzwF8qOrFyjn/xsvA8shJgYGRDrIKnTdDC+C24
+         BBwqy3WFV9u38xE2cNJAdabCYYXPzsaXw2Pf87XQDXsErRuAArBhIwlcasJIMQlYynwJ
+         grog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719407276; x=1720012076;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6Y2lg3OgYzhfS3tcxdHdgy6tUi+qEwW8C3VWq7VXFkI=;
+        b=lF7RBBr7My+PWQprsA/+tKAAqcxrgTDledKqGEJiHqm2DbHl3CenW+ytRFfdDzg8Ov
+         CQRurnvJQy9n0kN/6rdhaipOe+VtiFuE4LxwM37r0lt1hNyIdX2AmENJiNyXFgsWAJ6R
+         0ThWqXlhuGD1J5mZmPAt2psJODwIQsNTt9bTgJ7hJqLdavQ6mXqG0h11FHbbp27u6M74
+         2kRsVz3r8c1nsPm0LtlLhSQWNqfsOyNAPnQNs5lhe/q5ZWdHCMN6Jd1LUfqus5drp9lp
+         KS9Oh+cogJUM+Z/XErKYuNCzmc+8AA2nVP5LmE9LqJHBB+kd9ihtHQRJeXmfvySINtIi
+         51tQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU85+AJoRInc8rN8Y3UTcC2ByVYuBYxRT0+zIJmgUbPq37MddQ0bC5tkIgl2OV150MGsJaiSE+9h2qg9zOBq9tbmB2XAB78WBvuMiOi
+X-Gm-Message-State: AOJu0YyXELhZCAEv/QcKaaj/puCYGDR1rp537rLNZxLhemmMwxMiWeRc
+	yx+xTC1yVmMZXVJyLSbGhHnsXsxmqZkSrpl+BZj0Hvb4gJXi5w+V+6n09w0ZYg0=
+X-Google-Smtp-Source: AGHT+IFibXerpu/bTQ8y3LbVZ+LSuPoGA9fjYKjk5jwlDwlIOb8M9rkEFeIslajkZZ7g7g2gAUfMJA==
+X-Received: by 2002:a2e:720c:0:b0:2ec:4e79:b416 with SMTP id 38308e7fff4ca-2ec5b2fc299mr74660131fa.6.1719407276560;
+        Wed, 26 Jun 2024 06:07:56 -0700 (PDT)
+Received: from localhost.localdomain (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c838bef4sm24669765e9.46.2024.06.26.06.07.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jun 2024 06:07:56 -0700 (PDT)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Andrea Parri <parri.andrea@gmail.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Leonardo Bras <leobras@redhat.com>,
+	Guo Ren <guoren@kernel.org>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-arch@vger.kernel.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrea Parri <andrea@rivosinc.com>
+Subject: [PATCH v2 04/10] riscv: Improve amocas.X use in cmpxchg()
+Date: Wed, 26 Jun 2024 15:03:41 +0200
+Message-Id: <20240626130347.520750-5-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240626130347.520750-1-alexghiti@rivosinc.com>
+References: <20240626130347.520750-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4t3r6z362poaxhce"
-Content-Disposition: inline
-In-Reply-To: <e7dde09d-ceb0-4fb0-a23e-6aaba8f1beb3@ideasonboard.com>
+Content-Transfer-Encoding: 8bit
 
+cmpxchg() uses amocas.X instructions from Zacas and Zabha but still uses
+the LR/SC acquire/release semantics which require barriers.
 
---4t3r6z362poaxhce
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Let's improve that by using proper amocas acquire/release semantics in
+order to avoid any of those barriers.
 
-On Wed, Jun 26, 2024 at 02:28:57PM GMT, Tomi Valkeinen wrote:
-> On 22/06/2024 14:09, Aradhya Bhatia wrote:
-> > Move the bridge pre_enable call before crtc enable, and the bridge
-> > post_disable call after the crtc disable.
-> >=20
-> > The sequence of enable after this patch will look like:
-> >=20
-> > 	bridge[n]_pre_enable
-> > 	...
-> > 	bridge[1]_pre_enable
-> >=20
-> > 	crtc_enable
-> > 	encoder_enable
-> >=20
-> > 	bridge[1]_enable
-> > 	...
-> > 	bridge[n]__enable
-> >=20
-> > and vice-versa for the bridge chain disable sequence.
-> >=20
-> > The definition of bridge pre_enable hook says that,
-> > "The display pipe (i.e. clocks and timing signals) feeding this bridge
-> > will not yet be running when this callback is called".
-> >=20
-> > Since CRTC is also a source feeding the bridge, it should not be enabled
-> > before the bridges in the pipeline are pre_enabled. Fix that by
-> > re-ordering the sequence of bridge pre_enable and bridge post_disable.
-> >=20
-> > Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
-> > ---
-> >   drivers/gpu/drm/drm_atomic_helper.c | 165 ++++++++++++++++++----------
-> >   include/drm/drm_atomic_helper.h     |   7 ++
-> >   2 files changed, 114 insertions(+), 58 deletions(-)
-> >=20
-> > diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_=
-atomic_helper.c
-> > index fb97b51b38f1..e8ad08634f58 100644
-> > --- a/drivers/gpu/drm/drm_atomic_helper.c
-> > +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> > @@ -74,6 +74,7 @@
-> >    * also shares the &struct drm_plane_helper_funcs function table with=
- the plane
-> >    * helpers.
-> >    */
-> > +
->=20
-> Extra change.
->=20
-> >   static void
-> >   drm_atomic_helper_plane_changed(struct drm_atomic_state *state,
-> >   				struct drm_plane_state *old_plane_state,
-> > @@ -1122,11 +1123,11 @@ crtc_needs_disable(struct drm_crtc_state *old_s=
-tate,
-> >   }
-> >   static void
-> > -disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_s=
-tate)
-> > +disable_encoder_brige_chain(struct drm_device *dev, struct drm_atomic_=
-state *old_state,
-> > +			    enum bridge_chain_operation_type op_type)
-> >   {
-> >   	struct drm_connector *connector;
-> >   	struct drm_connector_state *old_conn_state, *new_conn_state;
-> > -	struct drm_crtc *crtc;
-> >   	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
-> >   	int i;
-> > @@ -1163,32 +1164,55 @@ disable_outputs(struct drm_device *dev, struct =
-drm_atomic_state *old_state)
-> >   		if (WARN_ON(!encoder))
-> >   			continue;
-> > -		funcs =3D encoder->helper_private;
-> > -
-> > -		drm_dbg_atomic(dev, "disabling [ENCODER:%d:%s]\n",
-> > -			       encoder->base.id, encoder->name);
-> > -
-> >   		/*
-> >   		 * Each encoder has at most one connector (since we always steal
-> >   		 * it away), so we won't call disable hooks twice.
-> >   		 */
-> >   		bridge =3D drm_bridge_chain_get_first_bridge(encoder);
-> > -		drm_atomic_bridge_chain_disable(bridge, old_state);
-> > -		/* Right function depends upon target state. */
-> > -		if (funcs) {
-> > -			if (funcs->atomic_disable)
-> > -				funcs->atomic_disable(encoder, old_state);
-> > -			else if (new_conn_state->crtc && funcs->prepare)
-> > -				funcs->prepare(encoder);
-> > -			else if (funcs->disable)
-> > -				funcs->disable(encoder);
-> > -			else if (funcs->dpms)
-> > -				funcs->dpms(encoder, DRM_MODE_DPMS_OFF);
-> > -		}
-> > +		switch (op_type) {
-> > +		case DRM_ENCODER_BRIDGE_DISABLE:
-> > +			funcs =3D encoder->helper_private;
-> > +
-> > +			drm_dbg_atomic(dev, "disabling [ENCODER:%d:%s]\n",
-> > +				       encoder->base.id, encoder->name);
-> > +
-> > +			drm_atomic_bridge_chain_disable(bridge, old_state);
-> > +
-> > +			/* Right function depends upon target state. */
-> > +			if (funcs) {
-> > +				if (funcs->atomic_disable)
-> > +					funcs->atomic_disable(encoder, old_state);
-> > +				else if (new_conn_state->crtc && funcs->prepare)
-> > +					funcs->prepare(encoder);
-> > +				else if (funcs->disable)
-> > +					funcs->disable(encoder);
-> > +				else if (funcs->dpms)
-> > +					funcs->dpms(encoder, DRM_MODE_DPMS_OFF);
-> > +			}
-> > +
-> > +			break;
-> > +
-> > +		case DRM_BRIDGE_POST_DISABLE:
-> > +			drm_atomic_bridge_chain_post_disable(bridge, old_state);
-> > -		drm_atomic_bridge_chain_post_disable(bridge, old_state);
-> > +			break;
-> > +
-> > +		default:
-> > +			drm_err(dev, "Unrecognized Encoder/Bridge Operation (%d).\n", op_ty=
-pe);
-> > +			break;
-> > +		}
-> >   	}
-> > +}
-> > +
-> > +static void
-> > +disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_s=
-tate)
-> > +{
-> > +	struct drm_crtc *crtc;
-> > +	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
-> > +	int i;
-> > +
-> > +	disable_encoder_brige_chain(dev, old_state, DRM_ENCODER_BRIDGE_DISABL=
-E);
-> >   	for_each_oldnew_crtc_in_state(old_state, crtc, old_crtc_state, new_c=
-rtc_state, i) {
-> >   		const struct drm_crtc_helper_funcs *funcs;
-> > @@ -1234,6 +1258,8 @@ disable_outputs(struct drm_device *dev, struct dr=
-m_atomic_state *old_state)
-> >   		if (ret =3D=3D 0)
-> >   			drm_crtc_vblank_put(crtc);
-> >   	}
-> > +
-> > +	disable_encoder_brige_chain(dev, old_state, DRM_BRIDGE_POST_DISABLE);
-> >   }
-> >   /**
-> > @@ -1445,6 +1471,64 @@ static void drm_atomic_helper_commit_writebacks(=
-struct drm_device *dev,
-> >   	}
-> >   }
-> > +static void
-> > +enable_encoder_brige_chain(struct drm_device *dev, struct drm_atomic_s=
-tate *old_state,
-> > +			   enum bridge_chain_operation_type op_type)
-> > +{
-> > +	struct drm_connector *connector;
-> > +	struct drm_connector_state *new_conn_state;
-> > +	int i;
-> > +
-> > +	for_each_new_connector_in_state(old_state, connector, new_conn_state,=
- i) {
-> > +		const struct drm_encoder_helper_funcs *funcs;
-> > +		struct drm_encoder *encoder;
-> > +		struct drm_bridge *bridge;
-> > +
-> > +		if (!new_conn_state->best_encoder)
-> > +			continue;
-> > +
-> > +		if (!new_conn_state->crtc->state->active ||
-> > +		    !drm_atomic_crtc_needs_modeset(new_conn_state->crtc->state))
-> > +			continue;
-> > +
-> > +		encoder =3D new_conn_state->best_encoder;
-> > +
-> > +		/*
-> > +		 * Each encoder has at most one connector (since we always steal
-> > +		 * it away), so we won't call enable hooks twice.
-> > +		 */
-> > +		bridge =3D drm_bridge_chain_get_first_bridge(encoder);
-> > +
-> > +		switch (op_type) {
-> > +		case DRM_BRIDGE_PRE_ENABLE:
-> > +			drm_atomic_bridge_chain_pre_enable(bridge, old_state);
-> > +			break;
-> > +
-> > +		case DRM_ENCODER_BRIDGE_ENABLE:
-> > +			funcs =3D encoder->helper_private;
-> > +
-> > +			drm_dbg_atomic(dev, "enabling [ENCODER:%d:%s]\n",
-> > +				       encoder->base.id, encoder->name);
-> > +
-> > +			if (funcs) {
-> > +				if (funcs->atomic_enable)
-> > +					funcs->atomic_enable(encoder, old_state);
-> > +				else if (funcs->enable)
-> > +					funcs->enable(encoder);
-> > +				else if (funcs->commit)
-> > +					funcs->commit(encoder);
-> > +			}
-> > +
-> > +			drm_atomic_bridge_chain_enable(bridge, old_state);
-> > +			break;
-> > +
-> > +		default:
-> > +			drm_err(dev, "Unrecognized Encoder/Bridge Operation (%d).\n", op_ty=
-pe);
-> > +			break;
-> > +		}
-> > +	}
-> > +}
-> > +
-> >   /**
-> >    * drm_atomic_helper_commit_modeset_enables - modeset commit to enabl=
-e outputs
-> >    * @dev: DRM device
-> > @@ -1465,10 +1549,10 @@ void drm_atomic_helper_commit_modeset_enables(s=
-truct drm_device *dev,
-> >   	struct drm_crtc *crtc;
-> >   	struct drm_crtc_state *old_crtc_state;
-> >   	struct drm_crtc_state *new_crtc_state;
-> > -	struct drm_connector *connector;
-> > -	struct drm_connector_state *new_conn_state;
-> >   	int i;
-> > +	enable_encoder_brige_chain(dev, old_state, DRM_BRIDGE_PRE_ENABLE);
-> > +
-> >   	for_each_oldnew_crtc_in_state(old_state, crtc, old_crtc_state, new_c=
-rtc_state, i) {
-> >   		const struct drm_crtc_helper_funcs *funcs;
-> > @@ -1491,42 +1575,7 @@ void drm_atomic_helper_commit_modeset_enables(st=
-ruct drm_device *dev,
-> >   		}
-> >   	}
-> > -	for_each_new_connector_in_state(old_state, connector, new_conn_state,=
- i) {
-> > -		const struct drm_encoder_helper_funcs *funcs;
-> > -		struct drm_encoder *encoder;
-> > -		struct drm_bridge *bridge;
-> > -
-> > -		if (!new_conn_state->best_encoder)
-> > -			continue;
-> > -
-> > -		if (!new_conn_state->crtc->state->active ||
-> > -		    !drm_atomic_crtc_needs_modeset(new_conn_state->crtc->state))
-> > -			continue;
-> > -
-> > -		encoder =3D new_conn_state->best_encoder;
-> > -		funcs =3D encoder->helper_private;
-> > -
-> > -		drm_dbg_atomic(dev, "enabling [ENCODER:%d:%s]\n",
-> > -			       encoder->base.id, encoder->name);
-> > -
-> > -		/*
-> > -		 * Each encoder has at most one connector (since we always steal
-> > -		 * it away), so we won't call enable hooks twice.
-> > -		 */
-> > -		bridge =3D drm_bridge_chain_get_first_bridge(encoder);
-> > -		drm_atomic_bridge_chain_pre_enable(bridge, old_state);
-> > -
-> > -		if (funcs) {
-> > -			if (funcs->atomic_enable)
-> > -				funcs->atomic_enable(encoder, old_state);
-> > -			else if (funcs->enable)
-> > -				funcs->enable(encoder);
-> > -			else if (funcs->commit)
-> > -				funcs->commit(encoder);
-> > -		}
-> > -
-> > -		drm_atomic_bridge_chain_enable(bridge, old_state);
-> > -	}
-> > +	enable_encoder_brige_chain(dev, old_state, DRM_ENCODER_BRIDGE_ENABLE);
-> >   	drm_atomic_helper_commit_writebacks(dev, old_state);
-> >   }
-> > diff --git a/include/drm/drm_atomic_helper.h b/include/drm/drm_atomic_h=
-elper.h
-> > index 9aa0a05aa072..b45a175a9f8a 100644
-> > --- a/include/drm/drm_atomic_helper.h
-> > +++ b/include/drm/drm_atomic_helper.h
-> > @@ -43,6 +43,13 @@
-> >    */
-> >   #define DRM_PLANE_NO_SCALING (1<<16)
-> > +enum bridge_chain_operation_type {
-> > +	DRM_BRIDGE_PRE_ENABLE,
-> > +	DRM_BRIDGE_POST_DISABLE,
-> > +	DRM_ENCODER_BRIDGE_ENABLE,
-> > +	DRM_ENCODER_BRIDGE_DISABLE,
-> > +};
->=20
-> Why are the last two "DRM_ENCODER"?
->=20
-> I don't like the enum... Having "enum bridge_chain_operation_type" as a
-> parameter to a function looks like one can pass any of the enum's values,
-> which is not the case.
->=20
-> How about an enum with just two values:
->=20
-> DRM_BRIDGE_PRE_ENABLE_POST_DISABLE
-> DRM_BRIDGE_ENABLE_DISABLE
+Suggested-by: Andrea Parri <andrea@rivosinc.com>
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
+ arch/riscv/include/asm/cmpxchg.h | 60 ++++++++++++++++++--------------
+ 1 file changed, 33 insertions(+), 27 deletions(-)
 
-I think I'd go a step further and ask why do we need that rework in the
-first place. We had a discussion about changing the time the CRTC is
-enabled compared to bridges, but it's not clear, nor explained, why we
-need to do that rework in the first place.
+diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
+index b9a3fdcec919..3c65b00a0d36 100644
+--- a/arch/riscv/include/asm/cmpxchg.h
++++ b/arch/riscv/include/asm/cmpxchg.h
+@@ -105,7 +105,9 @@
+  * indicated by comparing RETURN with OLD.
+  */
+ 
+-#define __arch_cmpxchg_masked(sc_sfx, cas_sfx, prepend, append, r, p, o, n)	\
++#define __arch_cmpxchg_masked(sc_sfx, cas_sfx,				\
++			      sc_prepend, sc_append,			\
++			      r, p, o, n)				\
+ ({									\
+ 	__label__ no_zacas, zabha, end;					\
+ 									\
+@@ -129,7 +131,7 @@ no_zacas:;								\
+ 	ulong __rc;							\
+ 									\
+ 	__asm__ __volatile__ (						\
+-		prepend							\
++		sc_prepend							\
+ 		"0:	lr.w %0, %2\n"					\
+ 		"	and  %1, %0, %z5\n"				\
+ 		"	bne  %1, %z3, 1f\n"				\
+@@ -137,7 +139,7 @@ no_zacas:;								\
+ 		"	or   %1, %1, %z4\n"				\
+ 		"	sc.w" sc_sfx " %1, %1, %2\n"			\
+ 		"	bnez %1, 0b\n"					\
+-		append							\
++		sc_append							\
+ 		"1:\n"							\
+ 		: "=&r" (__retx), "=&r" (__rc), "+A" (*(__ptr32b))	\
+ 		: "rJ" ((long)__oldx), "rJ" (__newx),			\
+@@ -150,9 +152,7 @@ no_zacas:;								\
+ zabha:									\
+ 	if (IS_ENABLED(CONFIG_RISCV_ISA_ZABHA)) {			\
+ 		__asm__ __volatile__ (					\
+-			prepend						\
+ 			"	amocas" cas_sfx " %0, %z2, %1\n"	\
+-			append						\
+ 			: "+&r" (r), "+A" (*(p))			\
+ 			: "rJ" (n)					\
+ 			: "memory");					\
+@@ -160,7 +160,9 @@ zabha:									\
+ end:;									\
+ })
+ 
+-#define __arch_cmpxchg(lr_sfx, sc_cas_sfx, prepend, append, r, p, co, o, n)	\
++#define __arch_cmpxchg(lr_sfx, sc_sfx, cas_sfx,				\
++		       sc_prepend, sc_append,				\
++		       r, p, co, o, n)					\
+ ({									\
+ 	__label__ zacas, end;						\
+ 	register unsigned int __rc;					\
+@@ -172,12 +174,12 @@ end:;									\
+ 	}								\
+ 									\
+ 	__asm__ __volatile__ (						\
+-		prepend							\
++		sc_prepend							\
+ 		"0:	lr" lr_sfx " %0, %2\n"				\
+ 		"	bne  %0, %z3, 1f\n"				\
+-		"	sc" sc_cas_sfx " %1, %z4, %2\n"			\
++		"	sc" sc_sfx " %1, %z4, %2\n"			\
+ 		"	bnez %1, 0b\n"					\
+-		append							\
++		sc_append							\
+ 		"1:\n"							\
+ 		: "=&r" (r), "=&r" (__rc), "+A" (*(p))			\
+ 		: "rJ" (co o), "rJ" (n)					\
+@@ -187,9 +189,7 @@ end:;									\
+ zacas:									\
+ 	if (IS_ENABLED(CONFIG_RISCV_ISA_ZACAS)) {			\
+ 		__asm__ __volatile__ (					\
+-			prepend						\
+-			"	amocas" sc_cas_sfx " %0, %z2, %1\n"	\
+-			append						\
++			"	amocas" cas_sfx " %0, %z2, %1\n"	\
+ 			: "+&r" (r), "+A" (*(p))			\
+ 			: "rJ" (n)					\
+ 			: "memory");					\
+@@ -197,7 +197,8 @@ zacas:									\
+ end:;									\
+ })
+ 
+-#define _arch_cmpxchg(ptr, old, new, sc_sfx, prepend, append)		\
++#define _arch_cmpxchg(ptr, old, new, sc_sfx, cas_sfx,			\
++		      sc_prepend, sc_append)				\
+ ({									\
+ 	__typeof__(ptr) __ptr = (ptr);					\
+ 	__typeof__(*(__ptr)) __old = (old);				\
+@@ -206,22 +207,24 @@ end:;									\
+ 									\
+ 	switch (sizeof(*__ptr)) {					\
+ 	case 1:								\
+-		__arch_cmpxchg_masked(sc_sfx, ".b" sc_sfx,		\
+-					prepend, append,		\
+-					__ret, __ptr, __old, __new);    \
++		__arch_cmpxchg_masked(sc_sfx, ".b" cas_sfx,		\
++				      sc_prepend, sc_append,		\
++				      __ret, __ptr, __old, __new);	\
+ 		break;							\
+ 	case 2:								\
+-		__arch_cmpxchg_masked(sc_sfx, ".h" sc_sfx,		\
+-					prepend, append,		\
+-					__ret, __ptr, __old, __new);	\
++		__arch_cmpxchg_masked(sc_sfx, ".h" cas_sfx,		\
++				      sc_prepend, sc_append,		\
++				      __ret, __ptr, __old, __new);	\
+ 		break;							\
+ 	case 4:								\
+-		__arch_cmpxchg(".w", ".w" sc_sfx, prepend, append,	\
+-				__ret, __ptr, (long), __old, __new);	\
++		__arch_cmpxchg(".w", ".w" sc_sfx, ".w" cas_sfx,		\
++			       sc_prepend, sc_append,			\
++			       __ret, __ptr, (long), __old, __new);	\
+ 		break;							\
+ 	case 8:								\
+-		__arch_cmpxchg(".d", ".d" sc_sfx, prepend, append,	\
+-				__ret, __ptr, /**/, __old, __new);	\
++		__arch_cmpxchg(".d", ".d" sc_sfx, ".d" cas_sfx,		\
++			       sc_prepend, sc_append,			\
++			       __ret, __ptr, /**/, __old, __new);	\
+ 		break;							\
+ 	default:							\
+ 		BUILD_BUG();						\
+@@ -230,16 +233,19 @@ end:;									\
+ })
+ 
+ #define arch_cmpxchg_relaxed(ptr, o, n)					\
+-	_arch_cmpxchg((ptr), (o), (n), "", "", "")
++	_arch_cmpxchg((ptr), (o), (n), "", "", "", "")
+ 
+ #define arch_cmpxchg_acquire(ptr, o, n)					\
+-	_arch_cmpxchg((ptr), (o), (n), "", "", RISCV_ACQUIRE_BARRIER)
++	_arch_cmpxchg((ptr), (o), (n), "", ".aq",			\
++		      "", RISCV_ACQUIRE_BARRIER)
+ 
+ #define arch_cmpxchg_release(ptr, o, n)					\
+-	_arch_cmpxchg((ptr), (o), (n), "", RISCV_RELEASE_BARRIER, "")
++	_arch_cmpxchg((ptr), (o), (n), "", ".rl",			\
++		      RISCV_RELEASE_BARRIER, "")
+ 
+ #define arch_cmpxchg(ptr, o, n)						\
+-	_arch_cmpxchg((ptr), (o), (n), ".rl", "", "	fence rw, rw\n")
++	_arch_cmpxchg((ptr), (o), (n), ".rl", ".aqrl",			\
++		      "", RISCV_FULL_BARRIER)
+ 
+ #define arch_cmpxchg_local(ptr, o, n)					\
+ 	arch_cmpxchg_relaxed((ptr), (o), (n))
+-- 
+2.39.2
 
-It should even be two patches imo.
-
-Maxime
-
---4t3r6z362poaxhce
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZnwSqAAKCRDj7w1vZxhR
-xd4RAP93iBQzZ3HToXyl6ivtKebMLjS0pnsOHcLe9iVoiv309QD/fVKA/el399Eb
-UJra2zlfOxZR6MwK75UpN8EjCbBuIQI=
-=CxiF
------END PGP SIGNATURE-----
-
---4t3r6z362poaxhce--
