@@ -1,75 +1,75 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 139361850A2
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 14:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B252E186E58
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 14:28:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719412079; cv=none; b=CTh/ELkeWs0ljXU2AvRiXoUEmqmOP2caCTybEhxQxHvWKGAhF8cG7PREO+YVOAIDl9IgP5vU5qYOVu127L4QFMPho/FvOy0ZHc4KceH+xMFxdrMviKRmKuTXDwKB010muIEePaWEJQjcZSiWxoOXd3u1Z3yIER1zqdphguJOHRY=
+	t=1719412084; cv=none; b=sAeTNkGruXmXwS/IU0BRlOMAhHV6o8JEngG9v3eH/XNUGOpFWKqCza3OJprivHSx1IAPoixbeszHdTrdMCTXc4eeXd6p6gURtykD/JUuLBd8TYjOlQ3B2edGWJ76ydB47A+sAIyKZNk33/icFImXCHpZEMIa0HVJRBoSranxxzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719412079; c=relaxed/simple;
-	bh=uvJrspBU9bKcZunDCtqHx/7zul1bnfXgHggRAC+SCok=;
+	s=arc-20240116; t=1719412084; c=relaxed/simple;
+	bh=Jszx5xLnInAAS2PzV21hdC61cHrHQ9SmiiBcgrX3ltc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ep2MCT8PfAcLxEUYE+0Rm5k2wv2r2HUsYTUn6kcEl70qfh4DHyyryuQ+u2f0hSNqKQrYw71zHVieGqq58YgL1txYiNmLR2ZSMqXq7BovpDwSfbiRWR13Sn9RSJIB+NcdUCmgv/U4d89+UHLClc87NdqNyldMPXG5HfGbcnwhatM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HeGqIaEV; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=T67wT2r+oKmri/WPzO23NMOLE/CDp0SgyY5s3b9MduBlXZXDHcdzH8+T8fCMtbLPo3UL0W4RBJE/qDok8bRPoCsYdNbthcHmvnYQkJ/gZ/FhHl0CBDEUgyFfy1y5xDwdeTtrU5amP0aT7s/2rYRhSQ5x08pU1e0GAM+NS0pEXpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y5mhGF6F; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HeGqIaEV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y5mhGF6F"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719412077;
+	s=mimecast20190719; t=1719412081;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=uvJrspBU9bKcZunDCtqHx/7zul1bnfXgHggRAC+SCok=;
-	b=HeGqIaEVikMR2wCTICtTY9VQ47WimQmsB7RfrM0AQidaoEe6m7s9jt3zeKifjm/5OBLQdR
-	VDNzV2s/d2bHF9l1+gMBlERI0RE1YuPLQdvSoPQa80EKgFwWEyFk7JqOVt+hSQE7p6yyGL
-	b6SIHE+njHjycSnPP2GR5whnkIri6jc=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Jszx5xLnInAAS2PzV21hdC61cHrHQ9SmiiBcgrX3ltc=;
+	b=Y5mhGF6FKg3AKrSwbrEfFdpTp2pD0+lUxXj/qH1N37SoOxgdLRHwDC2wl1QfDEdlpfhaJI
+	Q9Ap6saXKnYjWfU096ZKoZ7FTcelAl4wjZBffLfHQS6zGV1SHmncC9F57hq7WZEQNHWz6f
+	VINJa84SOsuO4cS7FXZXDuz2vTaAPcY=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-17-gAq8BlXjO2qnDOBJvd5ZFg-1; Wed, 26 Jun 2024 10:27:55 -0400
-X-MC-Unique: gAq8BlXjO2qnDOBJvd5ZFg-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a6fe871a5aeso233921066b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 07:27:55 -0700 (PDT)
+ us-mta-590-NrT8q2_VN5qNx9wk_c9GTQ-1; Wed, 26 Jun 2024 10:28:00 -0400
+X-MC-Unique: NrT8q2_VN5qNx9wk_c9GTQ-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a7244d1b086so268337166b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 07:27:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719412074; x=1720016874;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uvJrspBU9bKcZunDCtqHx/7zul1bnfXgHggRAC+SCok=;
-        b=dME6OQm0f3lBavDpRInP/wOmx4QuaW1qy5y/flVFenvOTSlmlLE7D1UKZ8GryU+Nm4
-         N7OinLEpYXvvFXiX3HDZcK7PfdGZQtYcvyT+c+vwECLHd+aJOItAzxZJy2EW7GgsK1mY
-         Oc1YaJooeTmuCob+cjs5ZRGPHiiq1tP5bdVMdPkfIoFWHxDfcFgv+V4U1rQMUTKUmWcD
-         94+GwFPhPEsc3V/llLQzUVOT+I9UB54WehRXdzG7TErA1+/oeXd5wtEk4LO2jF+9Gfc/
-         mmNec/Sj9DmSpr3PihguGaKEEP12Ac1vVN7HINm1/Eu7rZIs0NcEfXf6W5QMYwxGgEX0
-         MenQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU6Q+kkcmClILhD7LQs/UVaY7xeUzkEVmVwN8SttVPalzGdeeR2X6LKFOXJaZL6XViX/TZMpOrcWRF+pxBsODtFBUg1DOvMyyjeAOwe
-X-Gm-Message-State: AOJu0Yzb3Z/ZZo1y/LwiiCECoJ+4zFsCeaJ9GJOcqFP011L4S71zfqLE
-	4A4xnaALqygUj6wGfBP/OPpt3l1bgB2bW05D92u/hUdSTVkUSd+VN3saBGxNTFPsVR/As43GEh4
-	YcFPaGyhhAO/xEVn0PQxfgnH3e1ihKR5IGDTCzvf5IMJCb3NxV86RJw4ZMjD/Vw==
-X-Received: by 2002:a17:907:270c:b0:a6f:b181:e3a0 with SMTP id a640c23a62f3a-a7242c9ca27mr660659066b.27.1719412074537;
-        Wed, 26 Jun 2024 07:27:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGITU0WM1nvWNIRcPvt+8mKmTQC+2o4+y19m9kOvk7XXOOdDyxmbEGYzgSiACONT2x5sY2Z3w==
-X-Received: by 2002:a17:907:270c:b0:a6f:b181:e3a0 with SMTP id a640c23a62f3a-a7242c9ca27mr660657566b.27.1719412074195;
-        Wed, 26 Jun 2024 07:27:54 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719412079; x=1720016879;
+        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jszx5xLnInAAS2PzV21hdC61cHrHQ9SmiiBcgrX3ltc=;
+        b=hciO2zD0v0/jbqK8J5ygKM7eDXsAtPm0lYzlbKhs9ipxTYa/QnbQIIgHFhjILSLLN5
+         /XElLinwXP1YPqyfZ5bhhZEbdY9GoOr9Jn/XvNKmeID+IeVuTOwHJ4mRS0QmWaKdrxxZ
+         0jxCgB9Srpcc0+c1S2eHHQaSFaErlXZVXpRpBoEkbEmC1cIuQlZPZHzD8PjjWjU+t1P8
+         guPF7ZOYrRMmkBH6u1Agdb8aL5Ut77Bm39zFTcL7ACeQyPyaBo8ES3o5BbnnB7l+SSqW
+         hyw+W4BK9AEWk/pGBwCGRHQjZdZckoUWD2Clu93hMFEoxJG7XbehlyT+FixS+rNtISfQ
+         I4aw==
+X-Forwarded-Encrypted: i=1; AJvYcCUWSg8fouHSmla9NgUg9rAaEZ3oxBuJk1RzB8WXL4l+u4Ezw43RRbcIIG/2QUqvdzQxQ/o6M2tph13OteenFDdG25bSENDgWaPaUvAz
+X-Gm-Message-State: AOJu0YybdPL5Ie8E7FOLp3QRYc5/VC+m4e4n2FEl4zpkZ3MtVXl3ZODv
+	eF3rZJaKDF8Bi/bL1fq0BpusqUeBLTg7IKQXD2u+Mz2wZ9o2VDZjiaSSsRvrq1PgnKmjUmo1Quf
+	RPjPhrpxKakUbUlvc558jxQRREoYnv5tVucr4Pl7TLY3e1zzaFAypvBAmt1UQTg==
+X-Received: by 2002:a17:906:e28c:b0:a72:42f6:ff0f with SMTP id a640c23a62f3a-a7245c70af8mr566335166b.77.1719412078858;
+        Wed, 26 Jun 2024 07:27:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHbOBcMfRBhvshk7EYwyI0+qzKm0u+wGTMOkcIJZFCXy3eaPn3qGR/opDnZRQ8Cvzp3SipKeQ==
+X-Received: by 2002:a17:906:e28c:b0:a72:42f6:ff0f with SMTP id a640c23a62f3a-a7245c70af8mr566333566b.77.1719412078594;
+        Wed, 26 Jun 2024 07:27:58 -0700 (PDT)
 Received: from [10.39.194.16] (5920ab7b.static.cust.trined.nl. [89.32.171.123])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a724ae806dbsm383611766b.41.2024.06.26.07.27.53
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a724ae806dbsm383611766b.41.2024.06.26.07.27.57
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Jun 2024 07:27:53 -0700 (PDT)
+        Wed, 26 Jun 2024 07:27:57 -0700 (PDT)
 From: Eelco Chaudron <echaudro@redhat.com>
 To: Adrian Moreno <amorenoz@redhat.com>
 Cc: netdev@vger.kernel.org, aconole@redhat.com, horms@kernel.org,
- i.maximets@ovn.org, dev@openvswitch.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH net-next v5 00/10] net: openvswitch: Add sample
- multicasting.
-Date: Wed, 26 Jun 2024 16:27:52 +0200
+ i.maximets@ovn.org, dev@openvswitch.org, Yotam Gigi <yotam.gi@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v5 01/10] net: psample: add user cookie
+Date: Wed, 26 Jun 2024 16:27:57 +0200
 X-Mailer: MailMate (1.14r6039)
-Message-ID: <256A6A9B-FAFA-4048-985E-7165B38760F8@redhat.com>
-In-Reply-To: <20240625205204.3199050-1-amorenoz@redhat.com>
+Message-ID: <31B53809-DCB7-4081-915E-52311DE5DF4E@redhat.com>
+In-Reply-To: <20240625205204.3199050-2-amorenoz@redhat.com>
 References: <20240625205204.3199050-1-amorenoz@redhat.com>
+ <20240625205204.3199050-2-amorenoz@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,60 +77,19 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
 
 
 
 On 25 Jun 2024, at 22:51, Adrian Moreno wrote:
 
-> ** Background **
-> Currently, OVS supports several packet sampling mechanisms (sFlow,
-> per-bridge IPFIX, per-flow IPFIX). These end up being translated into a=
+> Add a user cookie to the sample metadata so that sample emitters can
+> provide more contextual information to samples.
+>
+> If present, send the user cookie in a new attribute:
+> PSAMPLE_ATTR_USER_COOKIE.
+>
+> Reviewed-by: Simon Horman <horms@kernel.org>
+> Signed-off-by: Adrian Moreno <amorenoz@redhat.com>
 
-> userspace action that needs to be handled by ovs-vswitchd's handler
-> threads only to be forwarded to some third party application that
-> will somehow process the sample and provide observability on the
-> datapath.
->
-> A particularly interesting use-case is controller-driven
-> per-flow IPFIX sampling where the OpenFlow controller can add metadata
-> to samples (via two 32bit integers) and this metadata is then available=
-
-> to the sample-collecting system for correlation.
->
-> ** Problem **
-> The fact that sampled traffic share netlink sockets and handler thread
-> time with upcalls, apart from being a performance bottleneck in the
-> sample extraction itself, can severely compromise the datapath,
-> yielding this solution unfit for highly loaded production systems.
->
-> Users are left with little options other than guessing what sampling
-> rate will be OK for their traffic pattern and system load and dealing
-> with the lost accuracy.
->
-> Looking at available infrastructure, an obvious candidated would be
-> to use psample. However, it's current state does not help with the
-> use-case at stake because sampled packets do not contain user-defined
-> metadata.
->
-> ** Proposal **
-> This series is an attempt to fix this situation by extending the
-> existing psample infrastructure to carry a variable length
-> user-defined cookie.
->
-> The main existing user of psample is tc's act_sample. It is also
-> extended to forward the action's cookie to psample.
->
-> Finally, a new OVS action (OVS_SAMPLE_ATTR_EMIT_SAMPLE) is created.
-> It accepts a group and an optional cookie and uses psample to
-> multicast the packet and the metadata.
-Hi Adrian,
-
-I reviewed the first part of this series to ensure it aligns with the use=
-rspace integration. I skipped the selftest patches, assuming Aaron is han=
-dling/reviewing those.
-
-Thanks,
-
-Eelco
+Acked-by: Eelco Chaudron <echaudro@redhat.com>
 
