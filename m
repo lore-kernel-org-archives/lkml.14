@@ -1,257 +1,513 @@
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2054.outbound.protection.outlook.com [40.107.241.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A95C7185E52;
-	Wed, 26 Jun 2024 15:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719414280; cv=fail; b=sgdGafiAYhW4je6nDWWbgVi9x/gzGDzHlP9a5LIQ/o2V5sXyuwPZoCSvRyqqnUjrDt3n8fpeROdzvf2Jj+yDNzKAFkDY7P9Pwb0naYP63X8ajJdjaimgDXHiiKjzImIM67KZ8hpzUnjW1gc4Q18q83aFOCpbPopd9q4uqR7sQ4A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719414280; c=relaxed/simple;
-	bh=rFE3r+rHjppeyXPy/kxk51EavHxdLpG1+T39CchoJE0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=oEsH8PxBaMzwnlOU02a9YhzqwCbb0xi3yzG2Pd7Nc/XFyY0AR1uAe2UAY3dgjDCiTTwPAYAax4iq6C/Y0VBY2xXU+HMZk3Fw/ixoTSGx8y8FW5xef88VuivFLNZaNPHwQLGwbZhibMZ88rFtIt7SLUbl6fNFnvpGX19vDAhq97A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=AEYnIc8W; arc=fail smtp.client-ip=40.107.241.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74DE318509F;
+	Wed, 26 Jun 2024 15:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719414352; cv=none; b=s94L8bSc89mdpet4Kgzby6nWcWGox2JJDbj0FK/Z8PkzuUs9DFj4YDpPy8jq7yRt/iI3w2weUOKPxyfsb8gtif+yJkIS/EZHmgOy/8eJS8MtKWYpGZDr5rGDesiZpObfeQrdy7vANREZiIoxyuaRH1UwsLm38NLaYNbEyDoIArM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719414352; c=relaxed/simple;
+	bh=IxAd4upe9fmE4XdyGShW3nCD39XW5BHu25DymPl43jg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bZrjzmhRR0sZ6ZmCVnme73dAoEMGDjnIfe20wtTP82vOUQ7k1mWajW3ADQTOj8cRxxCBk61YK3vj9qy8LCOsHNiPwXk0yu5yFlpuCTRpO/o6p8m9iPngSgZrB1ZdDO3n27C5zBSrvfGW2AYEbEVJ5gVMvfqJbgRRe7NvIKcOfHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bRdpsHqw; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AEYnIc8W"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jGEstg0R+eXVgDamplldWQ5KIfyvU33F15G8EWZm7neW75sZoJd82VArK8are+U2iwjizR2UKzHKlWT0e/Ibq46xrswvIbkkdi16cNE677uKAxM0vN6Kf1ORy6qOF6bBph8/U4+I5X4fzFx0hjoCMyLl5XN/hiold+5JA26NqxZCZ1ULMnzq1RJxrcq8AJhmj7eJHHPBngzCMrFcFcPa3B+ZxLLmQCdNNQYhJsOYnDnm+cGU01B+rlHJE5oDm2youCaUg1L58CJ6NM6n9q0jbv2VeDQRI7ynah6X56w6Lc93l5+qBq4CFTdWcU85RGNdO8NY3XMyo0x39fRDgb8o3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wUyGOJxm7fFKK8bUKAbMyoTPJwMHu1nDFGng9Z/2EPk=;
- b=Q9B2jmdd0oS5C5jBXmwdlO7TQJ+u6E031NHlFnUBgFIih/PW56X+ZL2GKCS+5rDBy/OhlIjjtdDMl5MwiM11QFl/lPUCHV5U/eEjlo0YCOeDDqP7vT+d7jKpB3lTdO/EkAIR9j0YB4PWiqX8ddmmW8ewrXwpBgujt2zhJUs5A+YRSpu7qK8TF4bybpW8BKiadgzfw0Bgfv/PBv1eB63FFEBAh+/95qNRtM6LE+4nHPLB5Su4dEi/1IdUg3px4M3gBKEIXgOsQimCyPnIJWKLwuljS00QiXHztKwBEUhcvBFNHUJ9aw6EDR1MeGhAFGgD2UO0eIjb0kOjp8ZKVvp5Kw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wUyGOJxm7fFKK8bUKAbMyoTPJwMHu1nDFGng9Z/2EPk=;
- b=AEYnIc8WMtj2ufH0Z7VCFsf1LhYJjHqCdAKUzQluGOPs+CIaJ2Vsm+Opr1XOHhOdAn9s8/qOEP4mAPfnMXSpzAxsFheIb0mglyf020m1UpFTjOSoMAv3vojNK3upEEzfzZApVr1+0NOryG1vPtiwvu/5nvz/BRXCGAjewtxNwR4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by GV1PR04MB10200.eurprd04.prod.outlook.com (2603:10a6:150:1ad::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.32; Wed, 26 Jun
- 2024 15:04:35 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7698.025; Wed, 26 Jun 2024
- 15:04:35 +0000
-Date: Wed, 26 Jun 2024 11:04:26 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH 1/1] dt-bindings: usb: Convert fsl-usb to yaml
-Message-ID: <Znwt+vZZ0chXQp+Q@lizhi-Precision-Tower-5810>
-References: <20240625022541.2007010-1-Frank.Li@nxp.com>
- <b354d11e-9031-47f1-8a23-bbd14ea3d5dd@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b354d11e-9031-47f1-8a23-bbd14ea3d5dd@kernel.org>
-X-ClientProxiedBy: SJ0PR13CA0028.namprd13.prod.outlook.com
- (2603:10b6:a03:2c0::33) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bRdpsHqw"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52cdf579dd2so4376691e87.3;
+        Wed, 26 Jun 2024 08:05:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719414349; x=1720019149; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bhZutRH62J+/FRWi2pPQOnLif3nNehoGYOCj0XwfrU0=;
+        b=bRdpsHqwq22hA4cBPjlx8Z990/1QRd01Kx287ciGG5xJPTg3cRqzwnjMiKt9uZK9IR
+         ypXFgR63hy8myk+9SjlCSOjqw5tVC91V4TCaxT/8Zp7LlffllWZCgiL93yMKd5GhzV3N
+         RoPG7fST9jF1qjBbSbhk2AysJpWiHB9ddGLzXki93Q2EJiqeN4ejGFpbHKGZt2EcHxgb
+         mjuhADwgHSQpbABdpB6MkjZ/hHkpAplRZ2el+feVG7o4d++czhk+d+wM18yzZv1ZSPTc
+         pz03n6bB4NegizV3rUvAciVoeiRusNpBtSFzHn11bb7gfeZDNVSxwk6fVsghDZELxeBB
+         gVfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719414349; x=1720019149;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bhZutRH62J+/FRWi2pPQOnLif3nNehoGYOCj0XwfrU0=;
+        b=S3lLNzXuPkeFbiA/+YXtTc/7wbWKN6cBoz3rC0OgpYzQkCfLmaSDZBAPCMp+q0CMFl
+         aykJsjmEoeEUyNr0LgZRirStBvIKxwj2io6GOIkDuG0ieu/udE5X+A5d56WL6HHyQIo4
+         IpqokHCbEQO4nnAflX5R8fI2WF0BAEGZJminHfwnYjTe8zDFKzTDujkwAxLSz8+dJOhZ
+         ebQIpwKAgmJh6qDp2ZoEWVqhE9Yz3lGBCCsqSoFAt98zKx0ctKGMyc1vxkrtz5eLMoS2
+         ZcQ8hZWyLq4y4bMnx9mi+wG2LyqEJ3v37L2iTZ015HMcDvlh515pq+20AI6aVSoCYItW
+         kVdw==
+X-Forwarded-Encrypted: i=1; AJvYcCVy6cLc9udzNSxy7bjqDZrtKEg5Lpr4Zt4bbVHZnDvgw9XFcAOxxxj04bG6X4PnaMtptJoldmC2R64jFwQ9kvfH4LEZOQpJhfcvWFp+wjEDJJ5p1zfAjpWvkmeBMAUPBgEZSiPYaDxri6egdmk0KBZpGGL6JfpsZw2xdObFP881aQ==
+X-Gm-Message-State: AOJu0YwWKpsvlAwoyBkDTnwlJmw2gIusBg89nY/SzFKBH2txFssEfm7I
+	HTfV+6MObioYhZqRKG8Z25nYoNBNfsFXLYKi+6+6UB7mF0KvWVUs
+X-Google-Smtp-Source: AGHT+IFfvQuvbFtUymfS+v+q1U8+HqmXwVg3jhbZkUkyGIolFmwzG7d9zEm7xC7zyYhb9iSQcMXKDQ==
+X-Received: by 2002:a05:6512:32a4:b0:52c:d647:1375 with SMTP id 2adb3069b0e04-52cdf826725mr7522240e87.66.1719414348270;
+        Wed, 26 Jun 2024 08:05:48 -0700 (PDT)
+Received: from mobilestation ([213.79.110.82])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52cd63b48c1sm1592588e87.29.2024.06.26.08.05.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jun 2024 08:05:47 -0700 (PDT)
+Date: Wed, 26 Jun 2024 18:05:45 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Lorenzo Bianconi <lorenzo@kernel.org>, 
+	Felix Fietkau <nbd@nbd.name>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Giuseppe Cavallaro <peppe.cavallaro@st.com>, Jose Abreu <joabreu@synopsys.com>, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH net-next] dt-bindings: net: Define properties at top-level
+Message-ID: <gr7rgy7cptnpj2rkeufhgqkve4ytqddpts6gdekeszoq7znwf2@ivyjpaiyxruk>
+References: <20240625215442.190557-2-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|GV1PR04MB10200:EE_
-X-MS-Office365-Filtering-Correlation-Id: e4c880a5-557e-47cb-e046-08dc95f14a76
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230038|366014|52116012|376012|1800799022|38350700012;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?eJQIkdS4EQyQyV0V00jMBEI2e0v92KV+hGvC9kJpCRwQ0Z4s4Pciax7yHbMF?=
- =?us-ascii?Q?Dtqgnzr+dW0f1vgea/2qgNXDyJGv0P3kZ/kTdRyYI18Ljoknsbto/PYXADwM?=
- =?us-ascii?Q?qySIUyccuPMXKSFZAa/kyV02Kw81VQ7Leas2LGbqigCZ1bl7HUCdLKTbB9TL?=
- =?us-ascii?Q?pbqaaFJe15BzDJs5F0zaQbHLdxtmVSs1aIop8S0C8XJCd0fEpaBAwQzDSiFv?=
- =?us-ascii?Q?868tBSkR0mnVRr0atGIwxWIJMq+jP/K96Q2KW2qNB5EH9w+nTrdKYNODMR5B?=
- =?us-ascii?Q?9DeiU8ucNfnmboInljbVPdrsjsy0vBeBS7FdHWHhxAgC+NUGfrasUAtRu6LY?=
- =?us-ascii?Q?qDK6IPosNPx2bnlT8Vo/DbSGVXpsPcKPvcFj+gIIxm7FcrM++wow6yX/rj5x?=
- =?us-ascii?Q?Co/6kAfApfvk3nL0kRlhRf3zNUa79Ii9DTJ3vfDqfM0c6mhMBrexKMhlRyMI?=
- =?us-ascii?Q?b3CPOyShYxR6LRQqrKjAdsUjzGIz54J7g+EaYzOfFkhbrV7K6rd6YO/m4Ozj?=
- =?us-ascii?Q?nfRtjkWqwRjifRJbNdnkjvt5jP1H+LnNFNVZ//zkFWknf9DJQolg3ayavqzP?=
- =?us-ascii?Q?G4Fg+EYYLtIq/Glpg60/PTcqCuut2WCnEDns2RnmjAxAFXIV3b1S19NjSj7j?=
- =?us-ascii?Q?ZtP1JZuT1MRVo/ZfUentSAX0s1gL4H2rz0dgSIRTnhBlqmOG75pQ2Dcj7BV/?=
- =?us-ascii?Q?yr2rWC6Kg6+OKKJFUBHi0+bES+BhENBtHzobcmWvZR1cOxs033Nhdj0U/C8X?=
- =?us-ascii?Q?vxlxY76AVVMv24v7SBYucJniCZFcX1B25utS/6RYcGER5xxxs15mFhsn5Jzf?=
- =?us-ascii?Q?fgvXPJuvapt0Ljkz4qMnV5EXSduQnBbg7uHHpFzPU7U78wFLd5AA6S1M+wU+?=
- =?us-ascii?Q?K5kzkjgL3fT0evHvqxAhebZ913AYvd6XLJX2ky5fTEADmN5PPq6chDYG9CBw?=
- =?us-ascii?Q?jB+NV5tA414n6eoWZLQU4dd2XdLGARSVIwFQBp46pSiA50Mcg36n6yTsI+Xr?=
- =?us-ascii?Q?jFqtiGZbVj9OkepqNdENYcXzmHOnPdRw+pYmRHg2x/yWZ6r1jP8DKexG8QeE?=
- =?us-ascii?Q?ZNmjxTilnutPEKv+Eoy6gMp949nlgDk+lAH/tXSIeQRXrHlvcgEQ/PljQ/V4?=
- =?us-ascii?Q?jn91OeLHhORYB0xGZtBSLjT2g28wCT60yoG+ZIV50iM4ArU3BV/fVvjf2FpM?=
- =?us-ascii?Q?0ykyIGV0uTZ4MfrWfNmCSh/AfdSaIJEQJOscigOhk3lwallcNUCjnx/9zTTx?=
- =?us-ascii?Q?cwThoL9qsPoqq5uDtfZBaO8LYmX7/bruZCCiFeglLjtCXY782UMmblmozCTk?=
- =?us-ascii?Q?DBH1tUVYkE6z8McOHplM/qQvu8ph49mR89wPrzsWDjFLp+utAK0Uh7P9A6o2?=
- =?us-ascii?Q?7rRCcKo=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230038)(366014)(52116012)(376012)(1800799022)(38350700012);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?UzQ1O/5o7/7+fMotRqZltWoca2pBE4swTVJoBZgXvWgenBoiscalzFUdwJwB?=
- =?us-ascii?Q?6skXJxVXmwV7jFDiF49h890sQ3HKp+JS92VFLPRcJ2cCPe7U1MYziTKbfCCc?=
- =?us-ascii?Q?iHuF2S41Tm+upiag4lrpLSpPoPGjOIf8lI8/+oWbCpRONmr7eY//xTHYOx8m?=
- =?us-ascii?Q?UzcTyc6mBvqcIrwRrahLCF/AXcOeMewPBmGn3TkxGtxKEFJZpOU+y17p9O8f?=
- =?us-ascii?Q?UR+KhVYbIuM5I79QZIUM00LdtN3PtoFSsfO+pyDoxgZCfHlQwAoFKzYroZUy?=
- =?us-ascii?Q?J9vamh+IxMTS8epsoa2RyXNto4FV7BwGI9huqwxuK6HsO7iQpDy3XKJYvrWI?=
- =?us-ascii?Q?guAxHLBZQTITLBmWyUMjku+Elgs5UNFzY1EXRuVed9RrFrUKEmrDAOXkgztV?=
- =?us-ascii?Q?8bhuZS2aAwlGgu3fKA+J1OwIF1zMIBeJ5sJjv9w9Px6WFrReTChMnnmyctRh?=
- =?us-ascii?Q?AxYsOlR2a57ZDfq0xAeUue+yE47szVaSlgqmKsS82iaex4yy4Qo7iTRo7iPu?=
- =?us-ascii?Q?oE5SM5C7CpX8Pb023dghsRkQD+cLRlSDa3soRiDVj80/BAOEwnZXGcrgwy34?=
- =?us-ascii?Q?MywMDopCB3tZCNsdBAeK/oR9juQjULcU70XsoJyki6nydWZ6EWRi4LrwjpHt?=
- =?us-ascii?Q?ZWwxaihBUk71S7rlSoMJ8rL2njvMA7FlEQln8XD21oGRa0u6piF1zaf7gjxm?=
- =?us-ascii?Q?xlAgKM/RK8XMkFKQq7JsOvVaojADUwPJyn5vKe7ItbV77jl+3wsZTPln2MfW?=
- =?us-ascii?Q?2RhoL0eMr39Rgt6UYhqdjPVvo+mc+/1ydB9RDND0RJfSyAjtanbAaKRAjXbB?=
- =?us-ascii?Q?3DJmCtM7v4jL3nyOHMv4U2aIxJCR2AaIBPSkBm04ZzcE+XeEYaZFzgC9t0Py?=
- =?us-ascii?Q?WtetwpwIHgbjSrLkDPtmQ8urS6KPJuCuZW7Aakn1mGvF0HvS7VDiWOAJqqW5?=
- =?us-ascii?Q?q7u+LQo+SWVitkNICEXL7b1c4jWaorkzCdTyKUnv5RY5HYwo+shsEZ7bC/4N?=
- =?us-ascii?Q?7Roxx40se0U6G3vpXbDxL+a8mHSFC/jtzSbYJUj5isgO5I34vJchFPmEQsk0?=
- =?us-ascii?Q?BN9D2M0a0bpRI6/lDnN7heNXAp5pyKaZqtsYGToyEUWdybJQWNo3i+ahNNZo?=
- =?us-ascii?Q?tIn54BL1bb4Pu+Dz1Zqyi+p/spOI3PILbBtrYTlLvWPB4FUe0W21G3C9LKbd?=
- =?us-ascii?Q?Ll1pkDoGU1hizTio/WJUjUB466gGtA6SoolztGMziZDys1CFZT/L7hBU4rKE?=
- =?us-ascii?Q?zhS1GFNHKo5NtD8lsgS/PE4R2chdZdyF+xqeSt5/wSEMorFouTKRU3V/k1UG?=
- =?us-ascii?Q?G714TNjrd6OviWHakfy50X8v9j6s+IMX8cJsuAohfIvwIgXKLRayNLlBqS1k?=
- =?us-ascii?Q?j+/QlzKDJTGZ9VD3jSxONtpOxxfwFMcTx4CiD4bFSC0k0i8MeJFdQlCpPbLS?=
- =?us-ascii?Q?3UUyTk30b80iW8rYW96CUNPxzuyjsWScJ7TPyLyYY9wgtODQR50XljHeCtQR?=
- =?us-ascii?Q?wiJxPfxPSxpQM/Qkxp766tq6HHWl0GKmBudSVzPBAANOno7j3rYSkBgOIEiv?=
- =?us-ascii?Q?a+oDJJEnneUxnh7YjAEpMcmkmHAYvBvAn8PtmLW4?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e4c880a5-557e-47cb-e046-08dc95f14a76
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2024 15:04:35.0024
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wwz6kjNQrXrIdM9WK8TCwAyxsG8Tn6CXha0KwWCtEasUViTzPZPxhxDn1Dlu1PMGMarj2VZCGCvZrwdwOXXefA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10200
+Content-Type: multipart/mixed; boundary="v3mh3gbsjgv5bejq"
+Content-Disposition: inline
+In-Reply-To: <20240625215442.190557-2-robh@kernel.org>
 
-On Wed, Jun 26, 2024 at 11:26:18AM +0200, Krzysztof Kozlowski wrote:
-> On 25/06/2024 04:25, Frank Li wrote:
-> > Convert fsl-usb binding doc to yaml format.
-> > 
-> > Additional change:
-> 
-> 
-> > -	usb@4000 {
-> > -		compatible = "fsl,mpc5121-usb2-dr";
-> > -		reg = <0x4000 0x1000>;
-> > -		#address-cells = <1>;
-> > -		#size-cells = <0>;
-> > -		interrupt-parent = < &ipic >;
-> > -		interrupts = <44 0x8>;
-> > -		dr_mode = "otg";
-> > -		phy_type = "utmi_wide";
-> > -		fsl,invert-drvvbus;
-> > -		fsl,invert-pwr-fault;
-> > -	};
-> > diff --git a/Documentation/devicetree/bindings/usb/fsl-usb.yaml b/Documentation/devicetree/bindings/usb/fsl-usb.yaml
-> > new file mode 100644
-> > index 0000000000000..8b5724e213f09
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/usb/fsl-usb.yaml
-> 
-> fsl,usb.yaml
-> or: fsl,usb2.yaml
-> 
-> > +
-> > +maintainers:
-> > +  - Frank Li <Frank.Li@nxp.com>
-> > +
-> > +description: |
-> 
-> Do not need '|' unless you need to preserve formatting.
 
-dt_binding_check report error without '|'
-fsl,usb2.yaml:15:11: [error] syntax error: mapping values are not allowed here (syntax)
+--v3mh3gbsjgv5bejq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-"Practice:" impact yaml parse.
+Hi Rob
 
+On Tue, Jun 25, 2024 at 03:54:41PM -0600, Rob Herring (Arm) wrote:
+> Convention is DT schemas should define all properties at the top-level
+> and not inside of if/then schemas. That minimizes the if/then schemas
+> and is more future proof.
 > 
-> > +  The device node for a USB controller that is part of a Freescale
-> > +  SOC is as described in the document "Open Firmware Recommended
-> > +  Practice: Universal Serial Bus" with the following modifications
-> > +  and additions.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - enum:
-> > +          - fsl-usb2-mph
-> > +          - fsl-usb2-dr
-> > +          - fsl-usb2-dr-v2.2
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/net/mediatek,net.yaml |  28 +--
+
+>  .../devicetree/bindings/net/snps,dwmac.yaml   | 167 +++++++++---------
+
+For Synopsys DW MACs you can just move the PBL-properties constraints to
+the top-level schema part with no compatible-based conditional
+validation left. It's because the DMA PBL settings are available on all the
+DW MAC IP-cores (DW MAC, DW GMAC, DW QoS Eth, DW XGMAC, DW XLGMAC).
+Moreover the STMMAC driver responsible for the DW MAC device handling
+parses the pbl* properties for all IP-cores irrespective from the
+device compatible string.
+
+Alternatively you can just merge in the attached patch, which BTW you
+have already reviewed sometime ago.
+
+-Serge(y)
+
+>  2 files changed, 105 insertions(+), 90 deletions(-)
 > 
-> It cannot be standalone and not-standalone. Cannot be both. Choose one.
+> diff --git a/Documentation/devicetree/bindings/net/mediatek,net.yaml b/Documentation/devicetree/bindings/net/mediatek,net.yaml
+> index 3202dc7967c5..686b5c2fae40 100644
+> --- a/Documentation/devicetree/bindings/net/mediatek,net.yaml
+> +++ b/Documentation/devicetree/bindings/net/mediatek,net.yaml
+> @@ -68,6 +68,17 @@ properties:
+>        Phandle to the syscon node that handles the path from GMAC to
+>        PHY variants.
+>  
+> +  mediatek,pcie-mirror:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      Phandle to the mediatek pcie-mirror controller.
+> +
+> +  mediatek,pctl:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      Phandle to the syscon node that handles the ports slew rate and
+> +      driver current.
+> +
+>    mediatek,sgmiisys:
+>      $ref: /schemas/types.yaml#/definitions/phandle-array
+>      minItems: 1
+> @@ -131,15 +142,12 @@ allOf:
+>  
+>          mediatek,infracfg: false
+>  
+> -        mediatek,pctl:
+> -          $ref: /schemas/types.yaml#/definitions/phandle
+> -          description:
+> -            Phandle to the syscon node that handles the ports slew rate and
+> -            driver current.
+> -
+>          mediatek,wed: false
+>  
+>          mediatek,wed-pcie: false
+> +    else:
+> +      properties:
+> +        mediatek,pctl: false
+>  
+>    - if:
+>        properties:
+> @@ -201,12 +209,10 @@ allOf:
+>            minItems: 1
+>            maxItems: 1
+>  
+> -        mediatek,pcie-mirror:
+> -          $ref: /schemas/types.yaml#/definitions/phandle
+> -          description:
+> -            Phandle to the mediatek pcie-mirror controller.
+> -
+>          mediatek,wed-pcie: false
+> +    else:
+> +      properties:
+> +        mediatek,pcie-mirror: false
+>  
+>    - if:
+>        properties:
+> diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> index 21cc27e75f50..023865b6f497 100644
+> --- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> +++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> @@ -485,6 +485,38 @@ properties:
+>      description:
+>        Frequency division factor for MDC clock.
+>  
+> +  snps,pbl:
+> +    description:
+> +      Programmable Burst Length (tx and rx)
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [1, 2, 4, 8, 16, 32]
+> +
+> +  snps,txpbl:
+> +    description:
+> +      Tx Programmable Burst Length. If set, DMA tx will use this value rather
+> +      than snps,pbl.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [1, 2, 4, 8, 16, 32]
+> +
+> +  snps,rxpbl:
+> +    description:
+> +      Rx Programmable Burst Length. If set, DMA rx will use this value rather
+> +      than snps,pbl.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [1, 2, 4, 8, 16, 32]
+> +
+> +  snps,no-pbl-x8:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description:
+> +      Don\'t multiply the pbl/txpbl/rxpbl values by 8. For core rev < 3.50,
+> +      don\'t multiply the values by 4.
+> +
+> +  snps,tso:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description:
+> +      Enables the TSO feature otherwise it will be managed by MAC HW capability
+> +      register.
+> +
+>    mdio:
+>      $ref: mdio.yaml#
+>      unevaluatedProperties: false
+> @@ -568,95 +600,72 @@ allOf:
+>    - if:
+>        properties:
+>          compatible:
+> -          contains:
+> -            enum:
+> -              - allwinner,sun7i-a20-gmac
+> -              - allwinner,sun8i-a83t-emac
+> -              - allwinner,sun8i-h3-emac
+> -              - allwinner,sun8i-r40-gmac
+> -              - allwinner,sun8i-v3s-emac
+> -              - allwinner,sun50i-a64-emac
+> -              - ingenic,jz4775-mac
+> -              - ingenic,x1000-mac
+> -              - ingenic,x1600-mac
+> -              - ingenic,x1830-mac
+> -              - ingenic,x2000-mac
+> -              - qcom,sa8775p-ethqos
+> -              - qcom,sc8280xp-ethqos
+> -              - snps,dwmac-3.50a
+> -              - snps,dwmac-4.10a
+> -              - snps,dwmac-4.20a
+> -              - snps,dwmac-5.20
+> -              - snps,dwxgmac
+> -              - snps,dwxgmac-2.10
+> -              - st,spear600-gmac
+> +          not:
+> +            contains:
+> +              enum:
+> +                - allwinner,sun7i-a20-gmac
+> +                - allwinner,sun8i-a83t-emac
+> +                - allwinner,sun8i-h3-emac
+> +                - allwinner,sun8i-r40-gmac
+> +                - allwinner,sun8i-v3s-emac
+> +                - allwinner,sun50i-a64-emac
+> +                - ingenic,jz4775-mac
+> +                - ingenic,x1000-mac
+> +                - ingenic,x1600-mac
+> +                - ingenic,x1830-mac
+> +                - ingenic,x2000-mac
+> +                - qcom,sa8775p-ethqos
+> +                - qcom,sc8280xp-ethqos
+> +                - snps,dwmac-3.50a
+> +                - snps,dwmac-4.10a
+> +                - snps,dwmac-4.20a
+> +                - snps,dwmac-5.20
+> +                - snps,dwxgmac
+> +                - snps,dwxgmac-2.10
+> +                - st,spear600-gmac
+>  
+>      then:
+>        properties:
+> -        snps,pbl:
+> -          description:
+> -            Programmable Burst Length (tx and rx)
+> -          $ref: /schemas/types.yaml#/definitions/uint32
+> -          enum: [1, 2, 4, 8, 16, 32]
+> -
+> -        snps,txpbl:
+> -          description:
+> -            Tx Programmable Burst Length. If set, DMA tx will use this
+> -            value rather than snps,pbl.
+> -          $ref: /schemas/types.yaml#/definitions/uint32
+> -          enum: [1, 2, 4, 8, 16, 32]
+> -
+> -        snps,rxpbl:
+> -          description:
+> -            Rx Programmable Burst Length. If set, DMA rx will use this
+> -            value rather than snps,pbl.
+> -          $ref: /schemas/types.yaml#/definitions/uint32
+> -          enum: [1, 2, 4, 8, 16, 32]
+> -
+> -        snps,no-pbl-x8:
+> -          $ref: /schemas/types.yaml#/definitions/flag
+> -          description:
+> -            Don\'t multiply the pbl/txpbl/rxpbl values by 8. For core
+> -            rev < 3.50, don\'t multiply the values by 4.
+> +        snps,pbl: false
+> +        snps,txpbl: false
+> +        snps,rxpbl: false
+> +        snps,no-pbl-x8: false
+>  
+>    - if:
+>        properties:
+>          compatible:
+> -          contains:
+> -            enum:
+> -              - allwinner,sun7i-a20-gmac
+> -              - allwinner,sun8i-a83t-emac
+> -              - allwinner,sun8i-h3-emac
+> -              - allwinner,sun8i-r40-gmac
+> -              - allwinner,sun8i-v3s-emac
+> -              - allwinner,sun50i-a64-emac
+> -              - loongson,ls2k-dwmac
+> -              - loongson,ls7a-dwmac
+> -              - ingenic,jz4775-mac
+> -              - ingenic,x1000-mac
+> -              - ingenic,x1600-mac
+> -              - ingenic,x1830-mac
+> -              - ingenic,x2000-mac
+> -              - qcom,qcs404-ethqos
+> -              - qcom,sa8775p-ethqos
+> -              - qcom,sc8280xp-ethqos
+> -              - qcom,sm8150-ethqos
+> -              - snps,dwmac-4.00
+> -              - snps,dwmac-4.10a
+> -              - snps,dwmac-4.20a
+> -              - snps,dwmac-5.10a
+> -              - snps,dwmac-5.20
+> -              - snps,dwxgmac
+> -              - snps,dwxgmac-2.10
+> -              - st,spear600-gmac
+> +          not:
+> +            contains:
+> +              enum:
+> +                - allwinner,sun7i-a20-gmac
+> +                - allwinner,sun8i-a83t-emac
+> +                - allwinner,sun8i-h3-emac
+> +                - allwinner,sun8i-r40-gmac
+> +                - allwinner,sun8i-v3s-emac
+> +                - allwinner,sun50i-a64-emac
+> +                - loongson,ls2k-dwmac
+> +                - loongson,ls7a-dwmac
+> +                - ingenic,jz4775-mac
+> +                - ingenic,x1000-mac
+> +                - ingenic,x1600-mac
+> +                - ingenic,x1830-mac
+> +                - ingenic,x2000-mac
+> +                - qcom,qcs404-ethqos
+> +                - qcom,sa8775p-ethqos
+> +                - qcom,sc8280xp-ethqos
+> +                - qcom,sm8150-ethqos
+> +                - snps,dwmac-4.00
+> +                - snps,dwmac-4.10a
+> +                - snps,dwmac-4.20a
+> +                - snps,dwmac-5.10a
+> +                - snps,dwmac-5.20
+> +                - snps,dwxgmac
+> +                - snps,dwxgmac-2.10
+> +                - st,spear600-gmac
+>  
+>      then:
+>        properties:
+> -        snps,tso:
+> -          $ref: /schemas/types.yaml#/definitions/flag
+> -          description:
+> -            Enables the TSO feature otherwise it will be managed by
+> -            MAC HW capability register.
+> +        snps,tso: false
+>  
+>  additionalProperties: true
+>  
+> -- 
+> 2.43.0
 > 
-> > +      - items:
-> > +          - enum:
-> > +              - fsl-usb2-dr-v2.2
-> > +              - fsl-usb2-dr-v2.5
-> > +          - const: fsl-usb2-dr
-> > +
-> > +  phy_type:
-> > +    $ref: /schemas/types.yaml#/definitions/string
-> > +    enum: [ulpi, serial, utmi, utmi_wide]
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  port0:
-> > +    $ref: /schemas/types.yaml#/definitions/flag
-> > +    description:
-> > +      Indicates port0 is connected for fsl-usb2-mph compatible controllers.
-> > +
-> > +  port1:
-> > +    $ref: /schemas/types.yaml#/definitions/flag
-> > +    description:
-> > +      Indicates port1 is connected for "fsl-usb2-mph" compatible controllers.
-> > +
-> > +  fsl,invert-drvvbus:
-> > +    $ref: /schemas/types.yaml#/definitions/flag
-> > +    description:
-> > +      for MPC5121 USB0 only. Indicates the
-> > +      port power polarity of internal PHY signal DRVVBUS is inverted.
-> > +
-> > +  fsl,invert-pwr-fault:
-> > +    $ref: /schemas/types.yaml#/definitions/flag
-> > +    description:
-> > +      for MPC5121 USB0 only. Indicates
-> > +      the PWR_FAULT signal polarity is inverted.
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - phy_type
 > 
-> Keep the same order as in "properties:". Preferably this order, so
-> adjust "properties:" to match "required:".
-> 
-> > +
-> > +allOf:
-> > +  - $ref: usb-drd.yaml#
-> > +
-> 
-> 
-> Best regards,
-> Krzysztof
-> 
+
+--v3mh3gbsjgv5bejq
+Content-Type: text/x-patch; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0001-dt-bindings-net-dwmac-Validate-PBL-for-all-IP-cores.patch"
+
+From 7222d63947e61e6ef82eb72f2110d62d68222147 Mon Sep 17 00:00:00 2001
+From: Serge Semin <fancer.lancer@gmail.com>
+Date: Sun, 22 Nov 2020 22:17:40 +0300
+Subject: [PATCH v2] dt-bindings: net: dwmac: Validate PBL for all IP-cores
+
+Indeed the maximum DMA burst length can be programmed not only for DW
+xGMACs, Allwinner EMACs and Spear SoC GMAC, but in accordance with [1, 2,
+3] for Generic DW *MAC IP-cores. Moreover the STMMAC driver parses the
+property and then apply the configuration for all supported DW MAC
+devices. All of that makes the property being available for all IP-cores
+the bindings supports. Let's make sure the PBL-related properties are
+validated for all of them by the common DW MAC DT schema.
+
+[1] DesignWare Cores Ethernet MAC Universal Databook, Revision 3.73a,
+    October 2013, p.378.
+
+[2] DesignWare Cores Ethernet Quality-of-Service Databook, Revision 5.10a,
+    December 2017, p.1223.
+
+[3] DesignWare Cores XGMAC - 10G Ethernet MAC Databook, Revision 2.11a,
+    September 2015, p.469-473.
+
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+---
+
+Changelog v1:
+- Use correct syntax of the JSON pointers, so the later would begin
+  with a '/' after the '#'.
+
+Changelog v2:
+- Fix invalid constraints defined after movement. (@DT-bot)
+---
+ .../devicetree/bindings/net/snps,dwmac.yaml   | 80 ++++++-------------
+ 1 file changed, 26 insertions(+), 54 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+index 5a39d931e429..509086b76211 100644
+--- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
++++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+@@ -447,6 +447,32 @@ properties:
+     description:
+       Use Address-Aligned Beats
+ 
++  snps,pbl:
++    description:
++      Programmable Burst Length (tx and rx)
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [1, 2, 4, 8, 16, 32]
++
++  snps,txpbl:
++    description:
++      Tx Programmable Burst Length. If set, DMA tx will use this
++      value rather than snps,pbl.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [1, 2, 4, 8, 16, 32]
++
++  snps,rxpbl:
++    description:
++      Rx Programmable Burst Length. If set, DMA rx will use this
++      value rather than snps,pbl.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [1, 2, 4, 8, 16, 32]
++
++  snps,no-pbl-x8:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Don\'t multiply the pbl/txpbl/rxpbl values by 8. For core
++      rev < 3.50, don\'t multiply the values by 4.
++
+   snps,fixed-burst:
+     $ref: /schemas/types.yaml#/definitions/flag
+     description:
+@@ -577,60 +603,6 @@ dependencies:
+ 
+ allOf:
+   - $ref: ethernet-controller.yaml#
+-  - if:
+-      properties:
+-        compatible:
+-          contains:
+-            enum:
+-              - allwinner,sun7i-a20-gmac
+-              - allwinner,sun8i-a83t-emac
+-              - allwinner,sun8i-h3-emac
+-              - allwinner,sun8i-r40-gmac
+-              - allwinner,sun8i-v3s-emac
+-              - allwinner,sun50i-a64-emac
+-              - ingenic,jz4775-mac
+-              - ingenic,x1000-mac
+-              - ingenic,x1600-mac
+-              - ingenic,x1830-mac
+-              - ingenic,x2000-mac
+-              - qcom,sa8775p-ethqos
+-              - qcom,sc8280xp-ethqos
+-              - snps,dwmac-3.50a
+-              - snps,dwmac-4.10a
+-              - snps,dwmac-4.20a
+-              - snps,dwmac-5.20
+-              - snps,dwxgmac
+-              - snps,dwxgmac-2.10
+-              - st,spear600-gmac
+-
+-    then:
+-      properties:
+-        snps,pbl:
+-          description:
+-            Programmable Burst Length (tx and rx)
+-          $ref: /schemas/types.yaml#/definitions/uint32
+-          enum: [1, 2, 4, 8, 16, 32]
+-
+-        snps,txpbl:
+-          description:
+-            Tx Programmable Burst Length. If set, DMA tx will use this
+-            value rather than snps,pbl.
+-          $ref: /schemas/types.yaml#/definitions/uint32
+-          enum: [1, 2, 4, 8, 16, 32]
+-
+-        snps,rxpbl:
+-          description:
+-            Rx Programmable Burst Length. If set, DMA rx will use this
+-            value rather than snps,pbl.
+-          $ref: /schemas/types.yaml#/definitions/uint32
+-          enum: [1, 2, 4, 8, 16, 32]
+-
+-        snps,no-pbl-x8:
+-          $ref: /schemas/types.yaml#/definitions/flag
+-          description:
+-            Don\'t multiply the pbl/txpbl/rxpbl values by 8. For core
+-            rev < 3.50, don\'t multiply the values by 4.
+-
+   - if:
+       properties:
+         compatible:
+-- 
+2.43.0
+
+
+--v3mh3gbsjgv5bejq--
