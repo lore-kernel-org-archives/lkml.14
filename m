@@ -1,78 +1,146 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2D118C34B;
-	Wed, 26 Jun 2024 15:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9175F18C359
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 15:39:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719416359; cv=none; b=XoLVyoU8oAt+6wS0ZRJ5sKXpEoFlfOeKRS5grybSyCPvnBfu0W8yvrcTSq3A0n89t0ZfKXdPQNH8ZlIywNNYRUjOzwiXJMttE/KMDx5d8bktBeeF3iSLoR8RlPM2dRMwDZzp/QZr9kK3V1lIg2j3sfhEjdgP27NQjhtoeUA3RW8=
+	t=1719416377; cv=none; b=iBiLE8RzkPXFYk7UEmwkUqAU/gDLrAdFpE5TB1Dm0pg1yv37H5D1BqSTJ/XkPeaUZBT8RN6a0bZatK+l+CEgcI4tjmf7UmQHtPoRbRw0eT/TvyhGwbjCxFCoeYHJv6J/dYyGnA0CmD2JVdf9uLu+t+vKwodJtXD/VciKJj6eE/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719416359; c=relaxed/simple;
-	bh=0adLUO8t8jDrE8KFJgKgS1xWlQGXyFePt2oJdFvjdc0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=PtC0ahYpgAbSUViZxwe7N1WqGn+BayvOtHu8w11zM6oem1ddFkYtyK7cwzj1xA6YFSEZ80RfF9tiF7awCFAujQp1csobLwv7GdIoQnbuzDZAxfOJ0k0ajUCioing697MJjYyU5+uWnP+ByIidxZylCEduAzQ2Satq8JTlanXs1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=l94VoYcn; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1719416377; c=relaxed/simple;
+	bh=PBmsA3dp7WOzVuKoikoPlIqgP7yl2wLUkbDd8Z333GU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Cdo5NFT1Un2KBw1g44mmiL/mpLDCVuiYPTdG3/jPCH937U/I2YezIAMd6YeWF7/0pqkiRQ4vY4iEHRhqr73EEox8bFQMa7arzr8mpC3iHXl/Gh+uTNTB/0LBF6HRlynGb4HJo2BD643HomAbJStzIyNjTpL44M+Y53HfoQ9U1e0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JfoPqh2e; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="l94VoYcn"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 0B59845E2B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1719416351; bh=PgEyPeBVA82w0vwwqwOb+4wIK5bkzxbeIhbog1W2lJg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=l94VoYcnEQvybRqbGOduVQTU6AtC4I7bw3N9EcXUx33AIYaAKMv+fDtVj3Lqmc+E9
-	 ufiGoUy66ihk2IiTPqdlehJfrOQLhQgkJXFUOfMO4I7/oZujEqiIH1M+8LP5NpazYe
-	 /N4vRK8foLhs0HRGEARpb2hMWBlAMHPHV5JETRKnQRhet4WH2B2lBZNpW2wH6plozS
-	 Zi+hOlJRE0fiLHiESdXQDGc8/TVqS/efqgNDwgcVedDIvQz2ewpm3SGcnJj8Hh/0MB
-	 xlL7p8qWPpnVQUquyE8DUJUXh87LLr46mKLCME4nHB5htcodRzDP6r9iTq3G/lRzzn
-	 T8RxzcwHOU96w==
-Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 0B59845E2B;
-	Wed, 26 Jun 2024 15:39:10 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Jiri Kastner <cz172638@gmail.com>, linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, cz172638@gmail.com, Steven Rostedt
- <rostedt@goodmis.org>
-Subject: Re: [PATCH] Documentation/tools/rv: fix document header
-In-Reply-To: <20240626150727.156397-1-cz172638@gmail.com>
-References: <20240626150727.156397-1-cz172638@gmail.com>
-Date: Wed, 26 Jun 2024 09:39:09 -0600
-Message-ID: <87ikxv3e8y.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JfoPqh2e"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a6fe118805dso482737166b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 08:39:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719416374; x=1720021174; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=0bkJu/bkE4YATT5DotU3XkvD4f0O0B8V67eM7kRZPuY=;
+        b=JfoPqh2eQAYjUP4y7GDbPKgMFiul/C+ssUC+eCVuEtj1+iYn7aICkEQ9D5/96fS9Fy
+         8exdo9A0SEvigm66cZYoh+XOlqx/ZBc0Stltxd5oE+kOzEEQpnE1+japUV2/463FRfHt
+         WjEYkT3kn2VAwyobGKds2sZTE4euon+S1tqiL5jlqQd+L5jaAH0vkncnmWlTnGE+h45d
+         E+JnqgpTg6TUzhkC56S7MlM2xeNWkHyGOVq2XODeuZiu01fBDZoJJSJqY8O3zxKD/t0U
+         yXO72J9PBkF+KMNT0rOY1RsDkwYqzHJ2b10mhExLER2qi8rs7AEEtmd/1oAiuWYpP+hb
+         qixQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719416374; x=1720021174;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0bkJu/bkE4YATT5DotU3XkvD4f0O0B8V67eM7kRZPuY=;
+        b=UvJ9DcEb8nwYhbl7WNqUB5+N27uI7KFqzQiDsT5ntd7uzr5zp+WjIJSfaQNvZxN2R3
+         hMTjQwu27MNXxMsFSvQT+CdSnMR5B77SeBuCK2PWxtKjQenYHlnCUkWlQkPaoEzB5xCv
+         cAdT6T+kGXHsM81NxHb81dOPkw+dnrIZ+Cp1tSNShm5GMuWX58pDgLBVJ7pVQ/twNLlb
+         mrSXxV5HV/X1UlTaolYvSuKs7zzavQDeKDuBvctDUu3c5mYu4GUsk5+aJIzhKHRdRnCt
+         MqZ5Tr6qk7pUl1u0j+HQ5o3a7YdY0IPEg4PhnfzCKR2D2SfRntjNjSgdpkbGGppMiPdo
+         U5Rw==
+X-Forwarded-Encrypted: i=1; AJvYcCV6RJ8KVp1dHFxnFt4+s0Sz9nEDGVllyiMx8Z/zLySCOR+G98ZwOdlUI3yXvvPBLMxxb/1vw8Y7LsSnXq8gOu1+DjyyJqxHbfXWv0X/
+X-Gm-Message-State: AOJu0Yzq64lfRUDuqf99fRf7BajYyLxTOW2Ka8Hvc6NRDZLQQClj+7ny
+	XcLr6NOpInb3gqftRQCFdaic2+IWs4+t9vL8EXlyxFGYdmBB/XXJuGQ/B3zW6w4=
+X-Google-Smtp-Source: AGHT+IG/rHUrDCvGY9wJr8ucozPZKf0rO73NUY5HSWLeuYxtBLnN/cI1iFrL9wx3/pOzGPv/gbUI7w==
+X-Received: by 2002:a17:907:c242:b0:a72:8296:ca12 with SMTP id a640c23a62f3a-a728296d192mr290301866b.36.1719416373600;
+        Wed, 26 Jun 2024 08:39:33 -0700 (PDT)
+Received: from [192.168.215.29] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a724ebbc1a5sm367452366b.213.2024.06.26.08.39.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Jun 2024 08:39:33 -0700 (PDT)
+Message-ID: <e678339b-356f-4aa4-aa04-e6e54d8e554c@linaro.org>
+Date: Wed, 26 Jun 2024 17:39:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V5 5/7] clk: qcom: Add NSS clock Controller driver for
+ IPQ9574
+To: Devi Priya <quic_devipriy@quicinc.com>, andersson@kernel.org,
+ mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com,
+ will@kernel.org, p.zabel@pengutronix.de, richardcochran@gmail.com,
+ geert+renesas@glider.be, dmitry.baryshkov@linaro.org,
+ neil.armstrong@linaro.org, arnd@arndb.de, m.szyprowski@samsung.com,
+ nfraprado@collabora.com, u-kumar1@ti.com, linux-arm-msm@vger.kernel.org,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ netdev@vger.kernel.org
+References: <20240626143302.810632-1-quic_devipriy@quicinc.com>
+ <20240626143302.810632-6-quic_devipriy@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240626143302.810632-6-quic_devipriy@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Jiri Kastner <cz172638@gmail.com> writes:
-
-> align header of document with filename and rest of the content
->
-> Signed-off-by: Jiri Kastner <cz172638@gmail.com>
+On 26.06.2024 4:33 PM, Devi Priya wrote:
+> Add Networking Sub System Clock Controller(NSSCC) driver for ipq9574 based
+> devices.
+> 
+> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
+> Tested-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
 > ---
->  Documentation/tools/rv/rv-mon.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/tools/rv/rv-mon.rst b/Documentation/tools/rv/rv-mon.rst
-> index af0f329a7c9c..bed937120dca 100644
-> --- a/Documentation/tools/rv/rv-mon.rst
-> +++ b/Documentation/tools/rv/rv-mon.rst
-> @@ -1,7 +1,7 @@
->  .. SPDX-License-Identifier: GPL-2.0
->  
->  =======
-> -rv-list
-> +rv-mon
->  =======
 
-A nit, but you should adjust the "=====" lines to match the new length
-of the heading text.
+[...]
 
-Thanks,
+> +	struct regmap *regmap;
+> +	struct qcom_cc_desc nsscc_ipq9574_desc = nss_cc_ipq9574_desc;
+> +	struct clk *nsscc_clk;
+> +	struct device_node *np = (&pdev->dev)->of_node;
+> +	int ret;
+> +
+> +	nsscc_clk = of_clk_get(np, 11);
+> +	if (IS_ERR(nsscc_clk))
+> +		return PTR_ERR(nsscc_clk);
+> +
+> +	ret = clk_prepare_enable(nsscc_clk);
+> +	if (ret)
+> +		clk_disable_unprepare(nsscc_clk);
 
-jon
+No changes to be seen..
+
+Konrad
