@@ -1,97 +1,71 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A521E1684A4
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 09:44:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 664F716DC02;
+	Wed, 26 Jun 2024 09:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719395074; cv=none; b=OC31SjfxAILDDijf6KMEt15niMfvE5KnosfdyzsNbODCJeJIDEuX61sBKKrJ2+gAzSqNBK3Yyk/pX7VwnldV330fpJuanm6QCygETMO7haA7Osi2xeC5rAsDPX0+VrGQmQUFhKmp9x1IV2oXucM3XXC9HE43rrS1hpAX6WreEQo=
+	t=1719395078; cv=none; b=ksXUf7PKxHuZjgHHE2C5EyUPchPCe4xN4piwafvNIZ6cXX6gIM7sQD00PBc1Snm2MS1J0aGDd8tRowXfIuxLzDN+3dMZaIWGQGzjI5YdCWmHpttp76jqrNSj1kWv0Xqgad7JMXKWcP0PFcbf/cArU0m9q/bsmN/WpUjGNOsLoNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719395074; c=relaxed/simple;
-	bh=8oj6vqU/PrvAFjUQi14sL3u4RL2wfEfrUPz8HaO20Cg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=DmNOuLYbnzHQJCg0fkhRNIwOdDR5LmZF+1wg8APtgZsS99nYTdjYuVgwZupgNDdvh/1DgyX8CBTvLQJS/MraZncygwatkVOWgsCG4uIJV+LvgYKAlqXuZtPgtoK6JnQBp1WvefN1vNg7azDr/bTNaCGQKqtXotHYcRdjE9E9/VQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AW9RFeWE; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719395078; c=relaxed/simple;
+	bh=BEyHuN9KYaz/HgLYtzWccIdPuHn7PvQuBdSB2pJ8+dw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HLCx6Hmu5EhsEmtogx+xLk6zZaEcju+4gSaXAn+2k8QIqjSocVREUUQoZrxZyxDb7OCHBtLBIvmzjWSMgHAXazI6XhNM9/dqdIY2LAXMUmXe1uiF7cW46RvKmUQ417HB3TZlYo76qexuaaut//+4BpERdMA/lqbxQXQ4FNvAQQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fXFrLmYD; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AW9RFeWE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719395072; x=1750931072;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=8oj6vqU/PrvAFjUQi14sL3u4RL2wfEfrUPz8HaO20Cg=;
-  b=AW9RFeWEIgAiZccyE/weKfsQ/jVlI7nC2ruJtJr76rJ+bw4A+ZGqzyA2
-   enxn3P0oRNueun68It0ubDPC7wT9LJhV3CSQ1NjynZCIGrhO3zZyWiLek
-   1wrrqmaAzzb+anh49VKECax8Eu7h35+HkvxOrnm97RcuEi8QoaFwecgyO
-   iOw4jQU0fYrJZr82a0l7VZ6gO6fko7TqCGJeJSonQaGptQUjVSldhcq+5
-   IW91dCgt78/rSVwRYSPaGn0iGyDuOufQIeYr40jErEo8eCSAJF6irSOb1
-   40qHGzikZJbBe8/StV97Zclrj43m/3cO17WbOSriNZaazxs1gSQITkXrK
-   g==;
-X-CSE-ConnectionGUID: 71jsrH+2Tt2g+NzgGOaORw==
-X-CSE-MsgGUID: YUm2FsynSNWJmSvWV1CTkw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="16598041"
-X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
-   d="scan'208";a="16598041"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 02:44:31 -0700
-X-CSE-ConnectionGUID: 7FTY5V5eSnyjRNefLzoS/A==
-X-CSE-MsgGUID: oZKct96xRY2xVb/2TmCQIg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
-   d="scan'208";a="75154744"
-Received: from bergbenj-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.95])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 02:44:28 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Ma Ke <make24@iscas.ac.cn>, kherbst@redhat.com, lyude@redhat.com,
- dakr@redhat.com, airlied@gmail.com, daniel@ffwll.ch
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, Ma Ke <make24@iscas.ac.cn>
-Subject: Re: [PATCH] drm/nouveau: fix null pointer dereference in
- nouveau_connector_get_modes
-In-Reply-To: <20240626013013.2765395-1-make24@iscas.ac.cn>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20240626013013.2765395-1-make24@iscas.ac.cn>
-Date: Wed, 26 Jun 2024 12:44:21 +0300
-Message-ID: <875xtwdone.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fXFrLmYD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=XzfMdj8RGEXjKOpU3zqHY7Vw5JxOu6m7qj04nFi/KTU=; b=fXFrLmYD4+4DSzF+sPAyI4PYMs
+	MQWE0ReZKAfC+5fkT+sdd+u8LYbumJ/AoYgCW0BewpVHIbh2FNmpeJQQZSY4JqniXLmD6KW+OcAYs
+	HxYtNKvVN0T7akfHN+2LMSKfOCKZ3bN3Jzxt429WJSOx4cbvQb0c0TZOKqiFj4aOPei6ehJr+Qogl
+	xT6qtP47UQ92MhXEMWjiRQhwtzoEvI7CIgWknb6zOdyCl5Ww/4lfSNAKjx7CuB1S0V8t3oEaiGuO5
+	h6MR06GEChqELdPObj0CNUl7JeEYC9bTLMWvmLj9jPTYZZ0/Fw+9YTK2+37z0rlzazchYrZk3VOB7
+	QEY6kAdw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sMPAy-00000008YjG-36PX;
+	Wed, 26 Jun 2024 09:44:00 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 138CD30057C; Wed, 26 Jun 2024 11:42:45 +0200 (CEST)
+Date: Wed, 26 Jun 2024 11:42:45 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	kernel test robot <lkp@intel.com>, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+	Borislav Petkov <bp@alien8.de>
+Subject: Re: arch/x86/include/asm/cmpxchg_32.h:149:9: error: inline assembly
+ requires more registers than available
+Message-ID: <20240626094245.GD31592@noisy.programming.kicks-ass.net>
+References: <CAFULd4YR-VkAOKiS5yxSUYi0YMzY1p=pkYe4dOkgFs+A=9AFFA@mail.gmail.com>
+ <CAHk-=wi_KMO_rJ6OCr8mAWBRg-irziM=T9wxGC+J1VVoQb39gw@mail.gmail.com>
+ <CAHk-=whPqqZVSeJiQsMvsAxtAmtR9iAuB4gg_1sUK2D-uBPpLw@mail.gmail.com>
+ <CAFULd4YAeF7=q7DYUh016kabxS8b32qRbFqDBJQrvLq6RjwEVg@mail.gmail.com>
+ <CAHk-=wiHo2YeA=TOUf8vxFLOc0+BoH8USaiT25fnX2ynXbrZkg@mail.gmail.com>
+ <CAHk-=wgdCs0883dpvZpyna76q9eVcTMvvUVAaBuJMPyrgOhNig@mail.gmail.com>
+ <CAFULd4ZW23_RNye6YGbsT0Uo-vOQBM_tBbSJRhh=0HZzXuC_8Q@mail.gmail.com>
+ <CAHk-=wiWEgSo2Tb_bih7mnS27zAPL+RGg_7yX4qK1f710-j-Ng@mail.gmail.com>
+ <20240626092841.GC31592@noisy.programming.kicks-ass.net>
+ <CAFULd4ZUBaK+FNSKfiJzzZNFQM1bWorZGmaY=fb-sFN2uPK4MA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFULd4ZUBaK+FNSKfiJzzZNFQM1bWorZGmaY=fb-sFN2uPK4MA@mail.gmail.com>
 
-On Wed, 26 Jun 2024, Ma Ke <make24@iscas.ac.cn> wrote:
-> In nouveau_connector_get_modes(), the return value of drm_mode_duplicate()
-> is assigned to mode, which will lead to a possible NULL pointer
-> dereference on failure of drm_mode_duplicate(). Add a check to avoid npd.
->
-> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
-> ---
->  drivers/gpu/drm/nouveau/nouveau_connector.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
-> index 856b3ef5edb8..010eed56b14d 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_connector.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
-> @@ -1001,6 +1001,8 @@ nouveau_connector_get_modes(struct drm_connector *connector)
->  		struct drm_display_mode *mode;
->  
->  		mode = drm_mode_duplicate(dev, nv_connector->native_mode);
-> +		if (!mode)
-> +			return -ENOMEM;
+On Wed, Jun 26, 2024 at 11:33:09AM +0200, Uros Bizjak wrote:
 
-Do not return negative values from .get_modes().
+> Please see the thread at [1].
+> 
+> [1] https://lore.kernel.org/lkml/CACT4Y+bG+a0w6j6v1AmBE7fqqMSPyPEm4QimCzCouicmHT8FqA@mail.gmail.com/
 
-BR,
-Jani.
-
->  		drm_mode_probed_add(connector, mode);
->  		ret = 1;
->  	}
-
--- 
-Jani Nikula, Intel
+Ha, handy these archives, much better than my memory indeed.
