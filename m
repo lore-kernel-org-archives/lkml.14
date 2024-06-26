@@ -1,144 +1,75 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2028917E8EF;
-	Wed, 26 Jun 2024 10:41:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07711822F9;
+	Wed, 26 Jun 2024 10:41:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719398500; cv=none; b=KeXb9ZTRJp+8whmk2sAoIaXjYWHDqE1bUZeyU4e9rpk4s2MjSiQW5ZcrercTTrG4hJfg+OYGJq9mrP02253GlYzRFoTnYUBnSjf0m1fis0UK5gnjeoNWlgBkqoK/zBR7FYacZWUYIUhv8bBFVx1ExHtPF2FgJr1oRUx9mTUa1H0=
+	t=1719398503; cv=none; b=h8s5UDVxfkzuzhINaSe/S8jJV5DYw/IPV8gTnLd1TPxxi8IQ2BgRcxYAf5hNLkrxHyq9A/4Aqge8p3fGc/g8CfdtgDKY7VuPWyXVppD+c0AG/ujT2Kn+qsws0G1ng/wXv658SEwW//upE6NrZjpGP45A08hq9w+B2L3XfNv1h0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719398500; c=relaxed/simple;
-	bh=yd9JckspeWwCdPRuNk0bHbT8g0DNYSX0JcGydDzUzH8=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hqctn7CtvwZf4o0W+EgAvShV9Kd3gZ81Hf+SAqqG2cGyyhoKrX+CZ5sA/XilDoIQWxcXfVMvPHj65qbZpgt5NDWHuhUA4/W2B6eY90ALXs8IslJMk86irye1yZl1N8fsoKMJq9UTIe96AkoPMxB/NdNVndDyhHnVH+PKaCvvZE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Roui13ZO; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1719398503; c=relaxed/simple;
+	bh=5liAa5eq+JjIRvMH4LLV+J2ftrJA8xP0V0652DuHtkE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nEmbitIYYN0PNBGqz6zD6TSThwGlox9iqBdvWDrQUVQE/UhaiRFetmfe9F5XrTgGlHD2uSyQJZEs5SxymDoTJAZgkOHPN/mC3y4AQtvW7M9PnSj52Vu170zbTtIMcwzvjCWOkIV3NBBtLUNVS9lS0H/9mTshj5zpLSnk0ZPJNd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U6/KVl26; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Roui13ZO"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45QAfUI9018102;
-	Wed, 26 Jun 2024 10:41:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	qzYZKDC0mxcSxh7F2I3bVpuKrpqivJa+bwOnhrbv9ys=; b=Roui13ZOfjwM9Nw7
-	HHuWe/HOjuuWjiQPs7bfMNLEfk575sB3G4bYjjQ0QwYp5LB1o0AkBG8gY8v5Mx+I
-	A5NnazP4grGrmF9n3SCZ26fjaETfXmJmn7SBWxajMcLJ0rU6YqZCggffIFL/xNO6
-	2r3RIv0vDsa+EhrRuaoKCW0E+JaTmVL4eUpnXd/IT7bAQd/n/tMXwvh1LJ/3pUPY
-	TB+biYcv86/IOW+1syzm+tFAdk7xPEXAgvy3x+i+nyMGv3SiZrXpfQcXQ7K4cLdR
-	qnQyGKOSP88YJvvUX4MhudTvs5LLxssZ32wmU+eWnpMbNn9amm6guztdeRaUvDoN
-	AmHARQ==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ywppv92w5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Jun 2024 10:41:29 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45QAfA33029793
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Jun 2024 10:41:10 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 26 Jun 2024 03:41:03 -0700
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <angelogioacchino.delregno@collabora.com>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <ilia.lin@kernel.org>, <rafael@kernel.org>,
-        <viresh.kumar@linaro.org>, <ulf.hansson@linaro.org>,
-        <quic_sibis@quicinc.com>, <otto.pflueger@abscue.de>,
-        <neil.armstrong@linaro.org>, <luca@z3ntu.xyz>, <abel.vesa@linaro.org>,
-        <danila@jiaxyga.com>, <quic_varada@quicinc.com>,
-        <quic_ipkumar@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-pm@vger.kernel.org>
-Subject: [PATCH v3 5/9] pmdomain: qcom: rpmpd: Add IPQ9574 power domains
-Date: Wed, 26 Jun 2024 16:09:58 +0530
-Message-ID: <20240626104002.420535-6-quic_varada@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240626104002.420535-1-quic_varada@quicinc.com>
-References: <20240626104002.420535-1-quic_varada@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U6/KVl26"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A620DC32786;
+	Wed, 26 Jun 2024 10:41:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719398503;
+	bh=5liAa5eq+JjIRvMH4LLV+J2ftrJA8xP0V0652DuHtkE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U6/KVl26xDBLftI1+kDRvccEqK2MWbddiTESoO0Esin9P86fdZ7jGHqry8xatNikm
+	 iGGX8Aws55BlWxKicoIsQDu5vOUFMSe9dB2elSQlDKOzahCVEvl5ReiVDpyW6R1Mg0
+	 N63h+53UB634bkgUhbHsKTV8L0MjgOP1YSGRf+WNmUMsLJZ2rP87g3AqDpXPJdPRRm
+	 Gl9LjvCvHi8qNIV0/7c+9atP/HzS/55sQbny3kl9anMD/mE1924kKfpeteQQ7Ct2pB
+	 F4F9y1qpdcnpav2mazBGZaxPE64hEklMGk/byd1lyWNNazEafJjxWgOheX5bmRg+96
+	 RFtHDhv/W3Oag==
+Date: Wed, 26 Jun 2024 11:41:38 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Zhu Jun <zhujun2@cmss.chinamobile.com>
+Cc: ivan.orlov0322@gmail.com, perex@perex.cz, tiwai@suse.com,
+	shuah@kernel.org, linux-sound@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests/alsa:Add memset to initialize memory
+Message-ID: <755d4876-9ce5-436e-aeeb-200f02ad7819@sirena.org.uk>
+References: <20240626095817.5037-1-zhujun2@cmss.chinamobile.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: CMhfws0mieFXWGpimtUXWy_odaCH9Zd_
-X-Proofpoint-ORIG-GUID: CMhfws0mieFXWGpimtUXWy_odaCH9Zd_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-26_05,2024-06-25_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- clxscore=1015 priorityscore=1501 mlxlogscore=999 mlxscore=0 adultscore=0
- lowpriorityscore=0 phishscore=0 suspectscore=0 impostorscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
- definitions=main-2406260081
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="942wIzHHpXhuyjzx"
+Content-Disposition: inline
+In-Reply-To: <20240626095817.5037-1-zhujun2@cmss.chinamobile.com>
+X-Cookie: Results vary by individual.
 
-From: Praveenkumar I <quic_ipkumar@quicinc.com>
 
-Add the APC power domain definitions used in IPQ9574.
+--942wIzHHpXhuyjzx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Praveenkumar I <quic_ipkumar@quicinc.com>
-Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
----
-v3: Fix patch author
-v2: Fix Signed-off-by order
----
- drivers/pmdomain/qcom/rpmpd.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+On Wed, Jun 26, 2024 at 02:58:17AM -0700, Zhu Jun wrote:
+> Add memset to initialize the requested memory
 
-diff --git a/drivers/pmdomain/qcom/rpmpd.c b/drivers/pmdomain/qcom/rpmpd.c
-index 5e6280b4cf70..947d6a9c3897 100644
---- a/drivers/pmdomain/qcom/rpmpd.c
-+++ b/drivers/pmdomain/qcom/rpmpd.c
-@@ -38,6 +38,7 @@ static struct qcom_smd_rpm *rpmpd_smd_rpm;
- #define KEY_FLOOR_CORNER	0x636676   /* vfc */
- #define KEY_FLOOR_LEVEL		0x6c6676   /* vfl */
- #define KEY_LEVEL		0x6c766c76 /* vlvl */
-+#define RPM_KEY_UV		0x00007675 /* "uv" */
- 
- #define MAX_CORNER_RPMPD_STATE	6
- 
-@@ -644,6 +645,23 @@ static const struct rpmpd_desc mdm9607_desc = {
- 	.max_state = RPM_SMD_LEVEL_TURBO,
- };
- 
-+static struct rpmpd apc_s1_lvl = {
-+	.pd = { .name = "apc", },
-+	.res_type = RPMPD_SMPA,
-+	.res_id = 1,
-+	.key = RPM_KEY_UV,
-+};
-+
-+static struct rpmpd *ipq9574_rpmpds[] = {
-+	[IPQ9574_VDDAPC] =	&apc_s1_lvl,
-+};
-+
-+static const struct rpmpd_desc ipq9574_desc = {
-+	.rpmpds = ipq9574_rpmpds,
-+	.num_pds = ARRAY_SIZE(ipq9574_rpmpds),
-+	.max_state = RPM_SMD_LEVEL_TURBO_HIGH,
-+};
-+
- static struct rpmpd *msm8226_rpmpds[] = {
- 	[MSM8226_VDDCX] =	&cx_s1a_corner,
- 	[MSM8226_VDDCX_AO] =	&cx_s1a_corner_ao,
-@@ -931,6 +949,7 @@ static const struct rpmpd_desc qcm2290_desc = {
- };
- 
- static const struct of_device_id rpmpd_match_table[] = {
-+	{ .compatible = "qcom,ipq9574-rpmpd", .data = &ipq9574_desc },
- 	{ .compatible = "qcom,mdm9607-rpmpd", .data = &mdm9607_desc },
- 	{ .compatible = "qcom,msm8226-rpmpd", .data = &msm8226_desc },
- 	{ .compatible = "qcom,msm8909-rpmpd", .data = &msm8916_desc },
--- 
-2.34.1
+Why?
 
+--942wIzHHpXhuyjzx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZ78GIACgkQJNaLcl1U
+h9B6lwgAgO34y5xxu4pQjPXhvISych0YvoDsDFvW7n12BQ6Xmo80RCY4lQrxMs32
+BRKKoaUe3vux5+8mOjs7/skY3V43ToRyoN5gFIwXOf21Gg/EogUYxAKXYrd1MXai
+mlXG7ukuEbXf5g9UdxPeyj2bV71Ft/HOHnlflckQCJh+6xkpeMy+Gmq+fQF9+a1/
+mZkunXXibYE71ZeWGsyT7KaSRH7PJ9e8kCxeagDTiIorv3bah24w2+Mu1e/cD/xQ
+UPHCH+nvt8RMC+KQgC6t9yDZoytHKw5ulpN1nOcD/SKLt2a2FJmMkSlHTHJcIYRV
+JHfHD8h4U33BFJl6YFhbqWTDw7F6ng==
+=Zfgl
+-----END PGP SIGNATURE-----
+
+--942wIzHHpXhuyjzx--
