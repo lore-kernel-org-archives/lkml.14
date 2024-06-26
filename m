@@ -1,121 +1,153 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F02B1F94C;
-	Wed, 26 Jun 2024 15:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A513F176ABF;
+	Wed, 26 Jun 2024 15:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719416875; cv=none; b=cYULsy0lNQlQMMbCeZW4Mco/ilWHcS/4kqd7Ze8qgM0s7KZA+GbqAS52Bkgek5JUrR7XNMGc5aAJs/ctbv5QouKXzefpK89msjoBtvB2rlHu+B6FQpBfulPX03/00E3JHOSqKwHhMuEwjeKbewQZygRgwP7tLrhB1Gt5Lro4yXc=
+	t=1719416906; cv=none; b=A8Vp7KuQc5djcY+95jz/FsqR8E5ORq+/Y8/7NwGrwZ2rLjwwCAay15e2uip9P4BE+Sus8zngzO15RxgqvPPCXR1vzqpZYki3cH2b6xs5/2FQKW8dgBQ46RjtKqlcOKja+GPQWw00nKOhFJ/sPQP7T8nBvEEwdRq62C5k0JqeNS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719416875; c=relaxed/simple;
-	bh=iIwbTdgH6YrONpmP1QKayaTmhFJ+XFBFXOn324NrzLM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kbPF9652/9FSOa19RhhiA9tcrTk5fNl6VkwEkSpJ4hkaFWItELNT4yNZ0m4/ARQ9yzNiZ8pqpUZMom/7By4EeC9R5pZ5EiknWtTZ72/Z45wAsNAq0AHwRqeMHKIRp6D0NDchCsUicjZSvr9bZVQnvX/XSml8920UhN3kpo+DRaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hh9gRjsx; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719416906; c=relaxed/simple;
+	bh=7xwExvsEtQoE7N89hQc/J6z0i05gkGebrUaPVCObEFM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iPX3y+iK+Tx+f+j+JPh0eghr/iXJyT1pPe6OuwNUJtkoEecmvhW+oMAgnROr4lQilhojoJ301GxTtJpgbKD2zJOlAwVSDlFex8No+uexzptFxonjlnWBBDYYDMCRJMEuk8TCRonGQcb9j6zlra8I7yjnocsMZYnWMZjFFVIMacE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HviN61+Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hh9gRjsx"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7066f68e22cso3226644b3a.2;
-        Wed, 26 Jun 2024 08:47:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719416874; x=1720021674; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JXfvd0m+3+tN0rU0XB0XqzYmYVrFO9u31ZbFfeNGbqY=;
-        b=Hh9gRjsxjPfDzcTylqzZ8r0G9/EVaZUs1cEHW0KuScCacvDZtmGreC0vzxvbpqr2i7
-         uHZqdrQtnexHcaFXPUPlGnnZ6pzvMWtDoJDTLf2in/QyiyXyj+Tid5OAIbIjG/lCVPEs
-         fPft3nlX9FkKtleTqvCmINvgRNEd7yKKb61oatko5NCJsb2rBjd5Onr9/M63xY4El9Q5
-         ve2qhX7b/hYRO1dXcsf/eBCW88QNCWhRVURKBMDhVVlefbGE5r0/EIbYFA1t5FaOEDRA
-         GLYogrZwiW7TP/ByLffDiriQqZJr7WRKmkLxa7Np6G+Eey8u4itU3vZkysFEjTPb6b+X
-         DDNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719416874; x=1720021674;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JXfvd0m+3+tN0rU0XB0XqzYmYVrFO9u31ZbFfeNGbqY=;
-        b=cPZh53uF2DrpnAXMoFhFAHPAjJ83n8zBAngpC+MA9Zi2PXy+qZyzWj6nDwTgMt1mI/
-         XECg0+EJgBn1MkF3WhHxtVCFMdQMQSmATzu41SUj9BhSZ/qgbk6wQcEntpJWBMdocwZa
-         BmsaE1rHWCozGER4nsfzE/VEslW7VfDWMqmvF5H1VHf9XhfBOFrmQGB6V7P9ykdSgH2c
-         dzJD2kxLN6oa3i7dlIcoEdgv3guzeTfE2e4TAinEibUXeQ4vS3xK3A3XJUPDX8+sRN6n
-         d7VArHB3q852k8LgcKgncJ37zif8Uad1reN198CTzj1UkTnJOUDManakd9tA18p36NWM
-         JByw==
-X-Forwarded-Encrypted: i=1; AJvYcCVq34VdiUv92hQCdsQP7NPXjwfj32PEc/zsMEB/a3goP/1Hfxd5tIT/l4LHh5hGPOyBXPA21Tbrw4DEVt4NWDrIaVG/TWqQEiWcjCgi/oBpavEitq1HJSb6cFqWX5iMjIMI62OHtG1VMQxULk4IcA==
-X-Gm-Message-State: AOJu0YxbD274aHmYI/9vSyGj1UZk1VYmNKSraERL8F/QG8eMVpc1pT6w
-	mI1dRQWAkx2iNiuY+TYWtNIunlwxdm4KbPv5YscVQQhKBVt029zU
-X-Google-Smtp-Source: AGHT+IHTwZkDn97M57gb+TXkmFzxBvuEOvlZ68cTG4QgvSt0Au0lYg2lm7cTfeBVxk2kgb34opLNFw==
-X-Received: by 2002:a05:6a00:2d12:b0:706:7052:205 with SMTP id d2e1a72fcca58-70670ee94c2mr14161244b3a.18.1719416873578;
-        Wed, 26 Jun 2024 08:47:53 -0700 (PDT)
-Received: from [192.168.50.95] ([118.32.98.101])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-706a8d0388fsm1451661b3a.157.2024.06.26.08.47.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Jun 2024 08:47:53 -0700 (PDT)
-Message-ID: <ee434711-e4b1-47cf-a47a-6ba15ec6241d@gmail.com>
-Date: Thu, 27 Jun 2024 00:47:47 +0900
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HviN61+Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A91D7C32782;
+	Wed, 26 Jun 2024 15:48:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719416906;
+	bh=7xwExvsEtQoE7N89hQc/J6z0i05gkGebrUaPVCObEFM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HviN61+YBV3eLHyiuRy4LkHEQ41TYCbBKwmC+EQlJITSa3tdk+hdSy18vkGB5xyPt
+	 9UHzKpY3b6aWVl2xQjf58xirSIipJgVkBw5P65W7XF4qcC5SZs2sZjvCdsjXyUmtOL
+	 zw8GJ5U3eV0cNBD6fvTtuGM146MSDJxGAx37hShelajotSxSEmp+zcv7dtbs7VBh3k
+	 3X2uLsNy/eDDZzFKwoRZmEoSps/Kpsf0icPnwuq8d8iOyB7mhqAe7eWt5wybZ6xuFS
+	 Ewg5cLQHcbAlnQEvsCK+TL20LtTViYu6bUecyMKn781sbojycNFJvE/1UBZdWxLcwK
+	 UDZIxvPMAwTNQ==
+Date: Wed, 26 Jun 2024 16:48:21 +0100
+From: Lee Jones <lee@kernel.org>
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: arnd@arndb.de, krzk@kernel.org, alim.akhtar@samsung.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	tudor.ambarus@linaro.org, andre.draszik@linaro.org,
+	saravanak@google.com, willmcvicker@google.com,
+	semen.protsenko@linaro.org, kernel-team@android.com
+Subject: Re: [PATCH v3 0/2] Add syscon of_syscon_register_regmap api
+Message-ID: <20240626154821.GE2504017@google.com>
+References: <20240621115544.1655458-1-peter.griffin@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf unwind-libunwind: Add malloc() failure handling
-To: Namhyung Kim <namhyung@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
-Cc: kan.liang@linux.intel.com, Yang Jihong <yangjihong1@huawei.com>,
- Ze Gao <zegao2021@gmail.com>, Leo Yan <leo.yan@linux.dev>,
- Ravi Bangoria <ravi.bangoria@amd.com>, Austin Kim <austindh.kim@gmail.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- MichelleJin <shjy180909@gmail.com>
-References: <20240619204211.6438-2-yskelg@gmail.com>
- <171937445590.2860437.11253278806338067490.b4-ty@kernel.org>
-Content-Language: en-US
-From: Yunseong Kim <yskelg@gmail.com>
-In-Reply-To: <171937445590.2860437.11253278806338067490.b4-ty@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240621115544.1655458-1-peter.griffin@linaro.org>
 
-Hi Namhyung,
+On Fri, 21 Jun 2024, Peter Griffin wrote:
 
-On 6/26/24 1:01 오후, Namhyung Kim wrote:
-> On Thu, 20 Jun 2024 05:42:12 +0900, yskelg@gmail.com wrote:
-
->> This patch resolve following warning.
->>
->> tools/perf/util/evsel.c:1620:9: error: result of comparison of constant
->> -1 with expression of type 'char' is always false
->>  -Werror,-Wtautological-constant-out-of-range-compare
->>  1620 |                 if (c == -1)
->>       |                     ~ ^  ~~
->>
->> [...]
-
-> Applied to perf-tools-next, thanks!
-
-Thank you!
-
->> Add malloc() failure handling in unread_unwind_spec_debug_frame().
->> This make caller find_proc_info() works well when the allocation failure.
->>
->>
+> Hi Lee, Arnd, Krzysztof, all,
 > 
-> Applied to perf-tools-next, thanks!
+> This series adds support to syscon driver for a new of_syscon_register_regmap()
+> api.
 > 
-> Best regards,
-> Namhyung
+> Platforms such as gs101 require a special regmap to access PMU registers, which
+> in the existing upstream client drivers are accessed via syscon regmap. This
+> issue was partly solved in [1] whereby a custom regmap is created in exynos-pmu
+> and a new API exynos_get_pmu_regmap_by_phandle() created.
+> 
+> One issue with the approach in [1] is that it required client drivers to be
+> updated from syscon_regmap_lookup_by_phandle() to
+> exynos_get_pmu_regmap_by_phandle() when obtaining the regmap.
+> 
+> Whilst updating to exynos_get_pmu_regmap_by_phandle() was OK for exynos
+> specific drivers, it meant other drivers like syscon-reboot and syscon-poweroff
+> which span multiple SoC architectures could not be easily re-used.
+> 
+> In previous review feedback for USB phy and gs101 poweroff driver Krzysztof
+> requested [2] that we take a more generic approach that other SoCs can also
+> leverage.
+> 
+> The new of_syscon_register_regmap() api overcomes this limitation by allowing
+> a SoC driver like exynos-pmu to register it's SoC specific regmap with the
+> syscon driver. This keeps the SoC complexity out of syscon driver, and allows
+> client drivers to continue using syscon_regmap_lookup_by_phandle() as before.
+> The solution allows more code re-use and can be used by other SoC archs.
+> 
+> Notes on probe ordering
+> 
+> exynos-pmu runs at postcore_initcall, so all but one of the client drivers
+> (ufs phy, usb phy, watchdog) run after the regmap is created and registered.
+> 
+> The one exception to this is pinctrl-samsung driver which is also
+> postcore_initcall level. The exynos_get_pmu_regmap() and
+> exynos_get_pmu_regmap_by_phandle() have been temporarily left to support
+> -EPROBE_DEFER for pinctrl-samsung driver.
+> 
+> The longer term plan to solve that probe ordering issue is to enable
+> fw_devlink for syscon dt properties so they are correctly listed as
+> suppliers in /sys/class/devlink. I tested a PoC patch (see below) for
+> fw_devlink and that seemed to work fine. Once fw_devlink supports syscon I
+> believe exynos_get_pmu_regmap_by_phandle() api could be removed. The main issue
+> currently with fw_devlink syscon support is the wide diversity of dt property
+> naming currently in use. That was discussed previously here [3]
+> 
+> 1248a1256,1257
+> > DEFINE_SUFFIX_PROP(syscon_phandle, "syscon-phandle", NULL)
+> > DEFINE_SUFFIX_PROP(pmu_syscon, "pmu-syscon", NULL)
+> 1358a1368,1369
+> >     { .parse_prop = parse_syscon_phandle, },
+> >     { .parse_prop = parse_pmu_syscon, },
+> 
+> 
+> Note one previous concern from Saravana about syscon potentially probing
+> before exynos-pmu driver and it relying on drivers/Makefile ordering. I tested
+> this and even if mfd is listed before soc in drivers/Makefile exynos-pmu
+> always probes first due to syscon driver not setting a .of_match_table entry.
+> 
+> Once the syscon and exynos-pmu patchs are queued I will send patches for
+> watchdog and ufs phy drivers to switch back to syscon_regmap_lookup_by_phandle()
+> 
+> Many thanks,
+> 
+> Peter.
+> 
+> [1] https://lore.kernel.org/linux-arm-kernel/20240219204238.356942-1-peter.griffin@linaro.org/T/
+> [2] https://lore.kernel.org/lkml/06383015-51b2-4f4c-9fd8-e4f7ce12f44e@kernel.org/
+> [3] https://lore.kernel.org/all/CAGETcx-CCpaV7R0O0HpDpoX6KxQBuJiMmKdWA8nDE-5Qj2Sa7g@mail.gmail.com/
+> 
+> Changes since v2:
+>  - Move allocation outside spinlock area (Arnd)
+> Link to v2:
+>  - https://lore.kernel.org/linux-arm-kernel/20240620112446.1286223-1-peter.griffin@linaro.org/
+> 
+> Changes since v1:
+>  - Collect by tags
+>  - Keep syscon lock held for check and adding entry (Krzysztof)
+>  - pass pmu_np not np to syscon_node_to_regmap() (William)
+> 
+> Link to v1:
+>  - https://lore.kernel.org/linux-arm-kernel/20240614140421.3172674-1-peter.griffin@linaro.org/
+> 
+> Peter Griffin (2):
+>   mfd: syscon: add of_syscon_register_regmap() API
+>   soc: samsung: exynos-pmu: update to use of_syscon_register_regmap()
+> 
+>  drivers/mfd/syscon.c             | 48 ++++++++++++++++++++++++++++++++
+>  drivers/soc/samsung/exynos-pmu.c | 38 ++++++++++---------------
+>  include/linux/mfd/syscon.h       |  8 ++++++
+>  3 files changed, 70 insertions(+), 24 deletions(-)
 
+Applied and submitted for build testing.
 
-Thank you for applying my patch set.
+If all is good, I'll send out a PR for the other maintainer(s).
 
-I've been looking up the feedback you provided earlier and analyzing it
-further.
+Note to self: ib-mfd-soc-samsung-6.11
 
-Next time, I will strive to send a more meaningful patch set.
-
-
-Warm regards,
-Yunseong Kim
+-- 
+Lee Jones [李琼斯]
