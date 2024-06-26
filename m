@@ -1,31 +1,31 @@
-Received: from mta-64-226.siemens.flowmailer.net (mta-64-226.siemens.flowmailer.net [185.136.64.226])
+Received: from mta-64-227.siemens.flowmailer.net (mta-64-227.siemens.flowmailer.net [185.136.64.227])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5121013BC3E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4648613BC3D
 	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 04:42:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.226
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719376937; cv=none; b=O9e339JIT5EddvuVl4NdrQwnBVTAt4F3Wcn1MCgK2wzFjJUHC4uQcZPNkZC7qLqNbhEygVvKByLbJS/mjeNu5JiBW5SWcy22aiHF3KNlfm2EdEieRFJL+6UliKXdDQghe1gOPEcPckC71fIerGx/GhWZK6FYePwLB0sfE1ABFas=
+	t=1719376938; cv=none; b=P5vdQ/v/HgDr5WpSX4Xv7v4L2WHZKkBoWnJflq7aARkesie0HjtWu+K1EL1s0MGjCCKoUXwtNn+p1S0Dr4LYLVuRW3KifZhKfs3GCmliKojELGtrWUxV4HNVb22MqZUYcZpgjkNp2B9QFtpTpmQhnbYFG2+0dSXj2x4pPlNalU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719376937; c=relaxed/simple;
-	bh=gOnnGFrCNHyAwTXnFy/ijI8fleOSIwfAMcn6FK04PNE=;
+	s=arc-20240116; t=1719376938; c=relaxed/simple;
+	bh=J/PLgkHkOsr2eBTn5nMQzSYBYyLV+wS3IDQLohuTDiY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XDoaH4ZUhJ5uALBbn/Eey74BqA8RGpZfDc1ked6J88bnaDgHd1wmz94uzi23xWSiG+MG82KbkL9nK1raVWpeWIcdeHIMa/6eZ1DrRy2xURIQRv/GAaoKbf69/PJs7kB7Vjsu4Eu97wPFHzej/69hE4whms9Br2jlMCzapUTKev0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (1024-bit key) header.d=siemens.com header.i=jan.kiszka@siemens.com header.b=Nu7rQosA; arc=none smtp.client-ip=185.136.64.226
+	 MIME-Version; b=T73a3fPj2nHk+1i2kOdU7Qh4gy4ccT72IfuaW7xoVwqQQAK699GTwQImJQtPxKiH0p19bsX3uP+lurLpTnkUtdHgqqYgstn60v6ffRbd3SyqXTYuga2y3IITqUuU+QZvR3veZsTQNw800govCSqI57QPaQsUgWixV86xLPfc1Mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (1024-bit key) header.d=siemens.com header.i=jan.kiszka@siemens.com header.b=R6kuCHw1; arc=none smtp.client-ip=185.136.64.227
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=siemens.com header.i=jan.kiszka@siemens.com header.b="Nu7rQosA"
-Received: by mta-64-226.siemens.flowmailer.net with ESMTPSA id 2024062604420900bbb0050e713d7ff5
+	dkim=pass (1024-bit key) header.d=siemens.com header.i=jan.kiszka@siemens.com header.b="R6kuCHw1"
+Received: by mta-64-227.siemens.flowmailer.net with ESMTPSA id 202406260442101ac91dbe04f9986f64
         for <linux-kernel@vger.kernel.org>;
-        Wed, 26 Jun 2024 06:42:09 +0200
+        Wed, 26 Jun 2024 06:42:10 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
  d=siemens.com; i=jan.kiszka@siemens.com;
  h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
- bh=2JW562zd7UF7vvqn05zomFnN4EhjrMfcocTZCV1+5wk=;
- b=Nu7rQosAw6U4N4xpkinSbPFSVSUx0x5LUJrk7WvUSAlu59tOD8ijXgUzL032MWjxITqF5Q
- Q3y6JacX2MkyKLBnfjF0pAfll1kHfVw4vR5QhyA5/DGbMMjs0l0S7UiSvFJAE87jFRt3AUHs
- OdpIRsIjbg+I03JADo0/jNGZ5bJUs=;
+ bh=PYDTR3Dp5LCkhODZw+ueFbI4XXSedtoAqEfw3je+soA=;
+ b=R6kuCHw1U+lzDmCfio2GiwZFZGb2UDreXyxQp3KJ/8SBZsr7SMh8AOZAs3sg88a/+MaYuS
+ 5vgehQp+NEBkZ21fo2uH/6dQ2HX8arlquUWLwA4Uew5es28iNZ0XeuKcTqcyqmzsC/pn4a6d
+ MvD+5x4gnesepP03GhotsYD8rYVxI=;
 From: Jan Kiszka <jan.kiszka@siemens.com>
 To: Nishanth Menon <nm@ti.com>,
 	Vignesh Raghavendra <vigneshr@ti.com>,
@@ -38,9 +38,9 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	devicetree@vger.kernel.org,
 	Bao Cheng Su <baocheng.su@siemens.com>,
 	Diogo Ivo <diogo.ivo@siemens.com>
-Subject: [PATCH v2 1/4] arm64: dts: ti: k3-j72xx-mcu-wakeup: add dedicated wakeup controller compatible
-Date: Wed, 26 Jun 2024 06:42:05 +0200
-Message-ID: <f589fcea70004cae1c822871023ade86723bb1e3.1719376928.git.jan.kiszka@siemens.com>
+Subject: [PATCH v2 3/4] dt-bindings: soc: ti: am645-system-controller: add child nodes used by main domain
+Date: Wed, 26 Jun 2024 06:42:07 +0200
+Message-ID: <1ac6bf9ef2d77dfc606a825d768bd4d23853052a.1719376928.git.jan.kiszka@siemens.com>
 In-Reply-To: <cover.1719376928.git.jan.kiszka@siemens.com>
 References: <cover.1719376928.git.jan.kiszka@siemens.com>
 Precedence: bulk
@@ -55,60 +55,50 @@ Feedback-ID: 519:519-294854:519-21489:flowmailer
 
 From: Jan Kiszka <jan.kiszka@siemens.com>
 
-Each syscon node must come with a dedicated/specific compatible, which
-is also reported by dtbs_check:
-
-  k3-j7200-common-proc-board.dtb: scm-conf@40f00000: compatible: ['syscon', 'simple-mfd'] is too short
-
-Add one for the TI K3 AM654 MCU wakeup system controller used in J72xx
-SoCs.
+Expand bindings to cover both the MCU and the main usage of the AM654
+system controller.
 
 Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
 ---
- arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi  | 2 +-
- arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi  | 2 +-
- arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ .../soc/ti/ti,am654-system-controller.yaml    | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
-index fccaabfb1348..3a78a3c1676d 100644
---- a/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
-@@ -165,7 +165,7 @@ mcu_timer9: timer@40490000 {
- 	};
+diff --git a/Documentation/devicetree/bindings/soc/ti/ti,am654-system-controller.yaml b/Documentation/devicetree/bindings/soc/ti/ti,am654-system-controller.yaml
+index e79803e586ca..a03e13cf2677 100644
+--- a/Documentation/devicetree/bindings/soc/ti/ti,am654-system-controller.yaml
++++ b/Documentation/devicetree/bindings/soc/ti/ti,am654-system-controller.yaml
+@@ -34,6 +34,31 @@ patternProperties:
+     type: object
+     $ref: /schemas/phy/ti,phy-gmii-sel.yaml#
  
- 	mcu_conf: syscon@40f00000 {
--		compatible = "syscon", "simple-mfd";
-+		compatible = "ti,am654-system-controller", "syscon", "simple-mfd";
- 		reg = <0x00 0x40f00000 0x00 0x20000>;
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-index 9349ae07c046..d68e33d71eb3 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-@@ -35,7 +35,7 @@ k3_reset: reset-controller {
- 	};
- 
- 	mcu_conf: syscon@40f00000 {
--		compatible = "syscon", "simple-mfd";
-+		compatible = "ti,am654-system-controller", "syscon", "simple-mfd";
- 		reg = <0x0 0x40f00000 0x0 0x20000>;
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-diff --git a/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi
-index 5ccb04c7c462..1edb71f4a1bb 100644
---- a/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi
-@@ -140,7 +140,7 @@ wkup_gpio_intr: interrupt-controller@42200000 {
- 	};
- 
- 	mcu_conf: syscon@40f00000 {
--		compatible = "syscon", "simple-mfd";
-+		compatible = "ti,am654-system-controller", "syscon", "simple-mfd";
- 		reg = <0x0 0x40f00000 0x0 0x20000>;
- 		#address-cells = <1>;
- 		#size-cells = <1>;
++  "^mux-controller$":
++    type: object
++    ref: /schemas/mux/reg-mux.yaml#
++    description:
++      This is the SERDES lane control mux.
++
++  "^clock@[0-9a-f]+$":
++    type: object
++    $ref: /schemas/soc/ti/ti,am654-serdes-ctrl.yaml#
++
++  "^dss-oldi-io-ctrl@[0-9a-f]+$":
++    type: object
++    $ref: /schemas/mfd/syscon.yaml#
++    properties:
++      compatible:
++        items:
++          - const: ti,am654-dss-oldi-io-ctrl
++          - const: syscon
++
++  "^clock-controller@[0-9a-f]+$":
++    type: object
++    $ref: /schemas/clock/ti,am654-ehrpwm-tbclk.yaml#
++    description:
++      Clock provider for TI EHRPWM nodes.
++
+ required:
+   - compatible
+   - reg
 -- 
 2.43.0
 
