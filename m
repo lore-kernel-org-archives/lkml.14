@@ -1,28 +1,27 @@
 Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A1A714A81;
-	Wed, 26 Jun 2024 02:50:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81E7B1B806;
+	Wed, 26 Jun 2024 02:51:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719370256; cv=none; b=nmiRB6XwppP0hy1nyOQ2bBSh2jiU7vsgbEBhQsI64/+gz4rNREr7NSfkkyR/OYTJUf5A35b19LSKthJ+T6hYaj3cFeaQF6+salqc5r8RPSKmY4MMUpZwFGCGqzN/xsUtFCXPXmQt4SdjJGOUnuFKxFCQbw6j+rUGQv9btfNMYo0=
+	t=1719370263; cv=none; b=iGNxXnYYLlK8UZSk/DZ0DUMkbbh9JDvFsbxFdOuu4gRJpogAGKnLbDXFvqkvGdy0yiZt0S6hgc+kEgCV0vofLPTbyoQD98YJh84v+4Kw36uHJBAyN/IzUjiTx3rjxZVChGeZW1AG8KOnz44me3tNNrklEH2pbcWq3DXnXPrOLsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719370256; c=relaxed/simple;
-	bh=I+Mmm7O8zWsVG9k4of9tiyj3aKGe9eU+KFhKPGSFyKM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=r3fSpNCNqMEUcww/oQnOyTvoiCYTXyI+lJxypahmLgYYtoed0kPYN4TNVImTiF0Le8LeOkl3TvWDOy080f+7ZWWuwLpEivab22lHi1+gOktgsjPhVHO/jNPFp2xmA4iyzXzqMTRrKu7/mkxlVOnBZv73jEbAoMr4g1I1H7pVz9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=PPGQD/Es; arc=none smtp.client-ip=220.197.31.2
+	s=arc-20240116; t=1719370263; c=relaxed/simple;
+	bh=+UdFbFyoTBFSw/MBlOcW7NPpenHJlHxk4HJdOurYbw4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RTJr1oMrAUyfRm1A5RaKlZwocOXifOIrA2ahzgMVSKYZrbywEt42Caftt8w+aGfTbVecJwrQ5GecSI8BuXYgfPnvHitZNtceDDsBVFt2aIW/fz6JwvkEk8pRNgoVmHmtLhFLC8csJh8lP39RIWYbebC6SdDJwoUjoNRjw7rte3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=CC8lh8zp; arc=none smtp.client-ip=220.197.31.2
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="PPGQD/Es"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="CC8lh8zp"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=fFFOK
-	vSRi6Ay443e2K7KzltG1+t1YPDbN1yuinD8/Nk=; b=PPGQD/EsvA0Z+MY/IMniF
-	hOPxc8wWMMMHDa1tpDilBGc8lUHnN+ZQgh+p1olSHX5AWzda45w/5lHbj5Y3A23j
-	lxuG58iieCXnxglAAMSH+RmrMgEGGtaRkeuC4XigpkPdAEoTJIMpbQ76emlCqK2R
-	RYnLsm1NJHgsMugixX8wsk=
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=dNW9M
+	BZdUm3qDfTvaBACpmBsWZ/fc9kmEQT+JbGeXb8=; b=CC8lh8zp2v1facYTbafV6
+	mfzeuHV4VvOuHz/KmwFX3BjP1j/1zXwTqdG9C+sH4HAl9Mc5U8f6ewhuZd4ZIvt0
+	5MtSdz0JBF6Xc31+TYxuIKNzvNPapsdRYEtIp3NDK/RPQxOOzxfmW703qQqtV+8Y
+	RkuH46sJ53nr3musL/L7cQ=
 Received: from localhost.localdomain (unknown [193.203.214.57])
-	by gzga-smtp-mta-g2-1 (Coremail) with SMTP id _____wDXT0W6gXtm8PInAg--.40265S6;
-	Wed, 26 Jun 2024 10:49:38 +0800 (CST)
+	by gzga-smtp-mta-g2-1 (Coremail) with SMTP id _____wDXT0W6gXtm8PInAg--.40265S4;
+	Wed, 26 Jun 2024 10:49:32 +0800 (CST)
 From: ran xiaokai <ranxiaokai627@163.com>
 To: akpm@linux-foundation.org,
 	willy@infradead.org
@@ -36,12 +35,10 @@ Cc: vbabka@suse.cz,
 	linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
 	linux-fsdevel@vger.kernel.org
-Subject: [PATCH 2/2] kpageflags: fix wrong KPF_THP on non-pmd-mappable compound pages
-Date: Wed, 26 Jun 2024 02:49:24 +0000
-Message-Id: <20240626024924.1155558-3-ranxiaokai627@163.com>
+Subject: [PATCH 0/2] kpageflags: fix wrong KPF_THP on non-pmd-mappable compound pages
+Date: Wed, 26 Jun 2024 02:49:22 +0000
+Message-Id: <20240626024924.1155558-1-ranxiaokai627@163.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240626024924.1155558-1-ranxiaokai627@163.com>
-References: <20240626024924.1155558-1-ranxiaokai627@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,60 +46,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDXT0W6gXtm8PInAg--.40265S6
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ZF4rKrW3uF43urykAryxKrg_yoW8WFykpr
-	Z3GF9rArWkW3Z8Ar18Xw1qkry8Kr98WF4Utayakw1Iv3ZxXwnrKFW8tw4FyFy7XFyxAan2
-	vayDuF13Za4DuaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UMuWJUUUUU=
-X-CM-SenderInfo: xudq5x5drntxqwsxqiywtou0bp/1tbiMwQKTGXAmE8lKgABsN
+X-CM-TRANSID:_____wDXT0W6gXtm8PInAg--.40265S4
+X-Coremail-Antispam: 1Uf129KBjvdXoWrKr1fJFyUCF4xXw4fGr1xKrg_yoWfuFX_ua
+	97Awn8GFs7Zry3Jr1ayw1xXrs8Kw1rKrnF9F1rtF1ak3Z2q3WvvrnFyrW2vFWrWF4ayrWS
+	ya1rZrnYyr17ZjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUji0eJUUUUU==
+X-CM-SenderInfo: xudq5x5drntxqwsxqiywtou0bp/xtbB0gz8TGWXyU9d2QABsf
 
 From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
 
-KPF_COMPOUND_HEAD and KPF_COMPOUND_TAIL are set on "common" compound
-pages, which means of any order, but KPF_THP should only be set
-when the folio is a 2M pmd mappable THP. Since commit 19eaf44954df
+KPF_THP means that the folio is a 2M pmd mappable compound page,
+meanwhile KPF_COMPOUND_HEAD and KPF_COMPOUND_TAIL are used to
+indicate common compound pages, so after commit 19eaf44954df
 ("mm: thp: support allocation of anonymous multi-size THP"),
-multiple orders of folios can be allocated and mapped to userspace,
-so the folio_test_large() check is not sufficient here,
-replace it with folio_test_pmd_mappable() to fix this.
+the folio_test_large() in stable_page_flags() is insufficient
+and should be replaced with folio_test_pmd_mappable().
 
-Also kpageflags is not only for userspace memory but for all valid pfn
-pages,including slab pages or drivers used pages, so the PG_lru and
-is_anon check are unnecessary here.
+Patch1 is a preparation to solve the compile time warning introduced
+by patch2.
 
-Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
----
- fs/proc/page.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+Patch2 replaces folio_test_large() with folio_test_pmd_mappable() to
+indicate KPF_THP for only pmd mappable THP.
 
-diff --git a/fs/proc/page.c b/fs/proc/page.c
-index 2fb64bdb64eb..3e7b70449c2f 100644
---- a/fs/proc/page.c
-+++ b/fs/proc/page.c
-@@ -146,19 +146,13 @@ u64 stable_page_flags(const struct page *page)
- 		u |= kpf_copy_bit(k, KPF_COMPOUND_HEAD, PG_head);
- 	else
- 		u |= 1 << KPF_COMPOUND_TAIL;
-+
- 	if (folio_test_hugetlb(folio))
- 		u |= 1 << KPF_HUGE;
--	/*
--	 * We need to check PageLRU/PageAnon
--	 * to make sure a given page is a thp, not a non-huge compound page.
--	 */
--	else if (folio_test_large(folio)) {
--		if ((k & (1 << PG_lru)) || is_anon)
--			u |= 1 << KPF_THP;
--		else if (is_huge_zero_folio(folio)) {
-+	else if (folio_test_pmd_mappable(folio)) {
-+		u |= 1 << KPF_THP;
-+		if (is_huge_zero_folio(folio))
- 			u |= 1 << KPF_ZERO_PAGE;
--			u |= 1 << KPF_THP;
--		}
- 	} else if (is_zero_pfn(page_to_pfn(page)))
- 		u |= 1 << KPF_ZERO_PAGE;
- 
+Ran Xiaokai (2):
+  mm: Constify folio_order()/folio_test_pmd_mappable()
+  kpageflags: fix wrong KPF_THP on non-pmd-mappable compound pages
+
+ fs/proc/page.c          | 14 ++++----------
+ include/linux/huge_mm.h |  2 +-
+ include/linux/mm.h      |  2 +-
+ 3 files changed, 6 insertions(+), 12 deletions(-)
+
 -- 
 2.15.2
 
