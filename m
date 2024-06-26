@@ -1,196 +1,177 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BEF2180A9F;
-	Wed, 26 Jun 2024 12:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2F9180A9F
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 12:15:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719403952; cv=none; b=BqVgDJ3m78UV+mQULX8SRAy0DUeq08bKHwUvQ+9mF8azdlwT1xc5hkG2EGp91kJzfXvQxJiO3n6HwiSIXYBT2racORVqAJPUFsS9l613sURN189A0FKH/+4NcOT5D/reDUPK9tc/slXKbtL4+lf0PkGep52yuqzm8+I8VP85bq4=
+	t=1719404103; cv=none; b=CRVZZS+i83b0e4qXT6RN82MZpEA9NatYrJYL2mdXqfAwwPCHc5g91KhB6R/m7W/qjFO6WkKFtfCY/ZCQ+UgwaUddp9LsCHacIQ70lLFUe6I86QymokbuuN7/cexU4YTgssw5hGRJG6N6HyjmWSfy4YeEJPpoMNXomN1tVshVWKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719403952; c=relaxed/simple;
-	bh=fQz4wCDRCJLOQHVyli+/5hjGJm3w1q7BbpFIa0/lJME=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BADzxsp50WabhYYJIRUVoN/Wj0Bgvq5LLKM0nCuLFi1vpTxqb43upGDxFyL5rzE0tk6/A/zOA6tveTDSeFGOmyChhrNb1/zt5OTOtixAR7MG7dDl+1YsqfegHRmDHK/h0vW2pVOWtKL5xIMvh1vfFL6cWYSpOnXQPnTSb0d6AA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KrzUPHdr; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719404103; c=relaxed/simple;
+	bh=H3xN7XNgO4wSQjlz1GucupOGW3kccQKGe39mf4SfYek=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dP+Ux6m4BUP9FNa67SW1Gz5N7RI20rvG4ZEkpF2ir91Lxir+Pg1x2x9C5KJ2ANZMw1loibkRLQc4IgbWKqMx8Ap+x1s/YypWSWWiSQhVCySXO9W98RnvHfkKQOEieaW9xrz45tITXsnHis31cZ+pSPOgZ4mcHDfARJlffnxEfWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=W3E6LtQa; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KrzUPHdr"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2ec17eb4493so89796211fa.2;
-        Wed, 26 Jun 2024 05:12:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="W3E6LtQa"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2ebe40673d8so76169851fa.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 05:15:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719403948; x=1720008748; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=fQz4wCDRCJLOQHVyli+/5hjGJm3w1q7BbpFIa0/lJME=;
-        b=KrzUPHdrsDWep6xQS9DxaBRe0DD6KcD04ehsHch9NFrAq9TTgqEJ6Nd9iz2kd9Fygr
-         Na6YEizusybio5KmDfByeMVpkIgzUgXTCUOsgw++fZ5kZeyXYb6rlG53TuAahUSaN3To
-         8SpGJQHErzFuwd1qOfps7H3hEpWxEF1AUt9taruCw+c2bdDwZ9NrkbN/VtNQ+YcZCWlj
-         XamvJ+MeUk8dyQ8gHzrxPFvJog+zMTVwI2FRMI5prkhUP83VVp/HJ6GelfH784HUVeTT
-         khxuA+X1OT3b/MZaIQBDhDtYfYEdDMGCO969bjOdaBWlhc/vDTYyuvsBQzYmoPzyV1Ge
-         sniw==
+        d=suse.com; s=google; t=1719404099; x=1720008899; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=s0zAqH30TzcFYcIaNWuyZONtaFaRBcnpnYO/QbPj8/4=;
+        b=W3E6LtQa374mlSbOx00P0PmVPyNJLXoE2/59zKaX+Ynole1Kcgbuc89+OBXrOF4UHn
+         GPvZVmzk5k3zXPK+tMgb9HllahQBOyBoqFrKFUO3I3MUJjtjYExqzMZ0lk6qZPoz/Gpc
+         9M5ZOFKy1RWkQtYVzV1tnHWqkEHwiwsdz9Xs3/y89FtC/6snZeSH4Arb8PnL/i16kvyE
+         en1TamOAHqFCkFMe4RD1c6PLKjRTtGwzGmccpLuWmZ7EXFVbr1WWjYgtQxm08E9b7jQW
+         R7Ktsoq+uo0nJq0yN6iqMLSDqe0d5goMzBJ/snZ0IfrKdK7s89zxaUXSbJSfoukGHHV9
+         XaQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719403948; x=1720008748;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fQz4wCDRCJLOQHVyli+/5hjGJm3w1q7BbpFIa0/lJME=;
-        b=fRDXm3BAhT0BIey/D+wPV+rQJ5TpRAxH3uyl6TgKcotBkForz6+5lKZIk53xsHfTjY
-         UashoV7lAIieUVRQFAgUiVP01OuwEz4McPVviQPaQAVFBzYt3V49jWeifE3ppxkcCgxY
-         GYQnRu5jhZsV9R2CHzTBPbH9GyZmL+z2gGT65SJmq2mC+Q52OYYYemMvdn0xZ9EIlLcR
-         bosiBBWXn0PVzJAUnAL5zEAdVV6jku3aHnxmSxbabqJsSGcNkfIonOQFyum2qtC4GSGd
-         yW9Z/a3qUNjfmwmUTAhD7U6kgQueFmPUqaBUUBQGlAxmYOLMkiKbXpLuRJzzotcDpMqx
-         I7UA==
-X-Forwarded-Encrypted: i=1; AJvYcCUAcCYw/wer8sFwPI2XKT1vGC3zoqGR4LcOmkNn+/Gzn7t5oylVGDW01rHBCV6C71UoBkpdjwuB0+tXuoDSTZmRtQETRmiTflpQBl975u6NS0OsUU1Btc3kKksuex0QR1odd+Ft75HQPJmVd7HGzfh7CC9hAbHs/vRd2QhXaa5CUf9oKw==
-X-Gm-Message-State: AOJu0YzzePVhUNJJF/bWEnPfBLhTu4lMb1DJUQX7u9+h5mRmqA/HVRsf
-	YMDEk8mmOfBSQzXeOTA7eG0lqU7pVb0L5JpC7IJmL/BV+VCaUrbv
-X-Google-Smtp-Source: AGHT+IGPuP9pwCzWgijUnGx8ceVmUnevln+2dyxiUAnDzQSWov/OGqOOeYUV6nbLSK5TZPVIBmn2Fg==
-X-Received: by 2002:ac2:46ee:0:b0:52c:84ac:8fa2 with SMTP id 2adb3069b0e04-52ce182c12cmr7912098e87.7.1719403948092;
-        Wed, 26 Jun 2024 05:12:28 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7279161095sm144404866b.26.2024.06.26.05.12.27
+        d=1e100.net; s=20230601; t=1719404099; x=1720008899;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s0zAqH30TzcFYcIaNWuyZONtaFaRBcnpnYO/QbPj8/4=;
+        b=BC2EfvLu95FFvtNptZrGN9H9gCxMCjVtxvgK/wpots9Rcp3F77NCwPkfa96x9chfBi
+         vAGky6xyB5LTe+tq7d+nd1OwfoP68ocz23aHFcYOT7sJKLvsuCKb2mGzHoIzPGNjWcjD
+         rgCd2012A07oGVUmHwc45H/s1CaXdhMWvCJJXCX43ja2NeJuTw76SuAPift0/mq3pX1J
+         irjoEBgvLgW1qK0oDFwsrRKAJ8ltbAsRobX863A2hMRQzmANUVZtqEl+KF8Ie0PioIqQ
+         vp+yHeO6NMebAb82nRXNwTVI/j/XK23JApyTPNtxxvNPFxDrW5Qg41x09LVdKnreIBi2
+         gUQw==
+X-Forwarded-Encrypted: i=1; AJvYcCUdYr2NXeEuLbQcfWNiMZelKTA4HYF/f5eklJA+Dc583jf08yAJ/4VAkamaccjDa74TgwZryg6bibjsiF1RN5fFtIZWH9of66HZMQnz
+X-Gm-Message-State: AOJu0YwrUdJKLb4KDsmmrZM7r46WgymLkRevan+TnvkXpvL0Eq70sLwd
+	J90r5RllSPeQcc1NrDgqHbKAWA5h6x1uUGCaooFTS93szt3+tyNcm3a5jvyccgs=
+X-Google-Smtp-Source: AGHT+IEk0Vd8QVRZ9+EMgzByNdvlrulhitE5mwDbIEkYBLfFebPHvlc1iJxL7iv+tLqucKv17QbrWA==
+X-Received: by 2002:a2e:9847:0:b0:2ec:661e:e83e with SMTP id 38308e7fff4ca-2ec661ee8fbmr42202231fa.23.1719404099102;
+        Wed, 26 Jun 2024 05:14:59 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c8d8066732sm1519741a91.28.2024.06.26.05.14.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 05:12:27 -0700 (PDT)
-Message-ID: <a72569f7c1f5d9a7158fe774179ec8fc76016168.camel@gmail.com>
-Subject: Re: [PATCH v6 5/6] iio: adc: ad7192: Add clock provider
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Alexandru Ardelean <aardelean@baylibre.com>, Alisa-Dariana Roman
-	 <alisadariana@gmail.com>
-Cc: Alisa-Dariana Roman <alisa.roman@analog.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, Michael Hennerich
- <michael.hennerich@analog.com>,  linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org, Lars-Peter
- Clausen <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor Dooley
- <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
- <broonie@kernel.org>
-Date: Wed, 26 Jun 2024 14:16:19 +0200
-In-Reply-To: <CA+GgBR8r_W9X0hROUEw-xePyKAhOTBjJtf=cHbfWfvUUfk5j_g@mail.gmail.com>
-References: <20240624124941.113010-1-alisa.roman@analog.com>
-	 <20240624124941.113010-6-alisa.roman@analog.com>
-	 <CA+GgBR8r_W9X0hROUEw-xePyKAhOTBjJtf=cHbfWfvUUfk5j_g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.52.2 
+        Wed, 26 Jun 2024 05:14:58 -0700 (PDT)
+Date: Wed, 26 Jun 2024 14:14:49 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH printk v2 08/18] printk: nbcon: Stop threads on
+ shutdown/reboot
+Message-ID: <ZnwGOaSLTkIB0csA@pathway.suse.cz>
+References: <20240603232453.33992-1-john.ogness@linutronix.de>
+ <20240603232453.33992-9-john.ogness@linutronix.de>
+ <ZnBUe0ZJgjbZXlAL@pathway.suse.cz>
+ <874j9gyexd.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <874j9gyexd.fsf@jogness.linutronix.de>
 
-T24gVHVlLCAyMDI0LTA2LTI1IGF0IDA4OjQ4ICswMzAwLCBBbGV4YW5kcnUgQXJkZWxlYW4gd3Jv
-dGU6Cj4gT24gTW9uLCBKdW4gMjQsIDIwMjQgYXQgMzo1MeKAr1BNIEFsaXNhLURhcmlhbmEgUm9t
-YW4KPiA8YWxpc2FkYXJpYW5hQGdtYWlsLmNvbT4gd3JvdGU6Cj4gPiAKPiA+IEludGVybmFsIGNs
-b2NrIG9mIEFENzE5WCBkZXZpY2VzIGNhbiBiZSBtYWRlIGF2YWlsYWJsZSBvbiBNQ0xLMiBwaW4u
-IEFkZAo+ID4gY2xvY2sgcHJvdmlkZXIgdG8gc3VwcG9ydCB0aGlzIGZ1bmN0aW9uYWxpdHkuCj4g
-PiAKPiAKPiBKdXN0IGEgcXVlc3Rpb24gdGhhdCBzaG91bGQgYmUgYWRkcmVzc2VkIGJ5IHRoZSBm
-YWlsaW5nIG9mIHRoZQo+IGNsb2NrLXByb3ZpZGVyIHJlZ2lzdHJhdGlvbi4KPiBXaXRoIHRoYXQg
-YWRkcmVzc2VkOgo+IAo+IFJldmlld2VkLWJ5OiBBbGV4YW5kcnUgQXJkZWxlYW4gPGFhcmRlbGVh
-bkBiYXlsaWJyZS5jb20+Cj4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbGlzYS1EYXJpYW5hIFJvbWFu
-IDxhbGlzYS5yb21hbkBhbmFsb2cuY29tPgo+ID4gLS0tCj4gPiDCoGRyaXZlcnMvaWlvL2FkYy9h
-ZDcxOTIuYyB8IDg5ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiA+
-IMKgMSBmaWxlIGNoYW5nZWQsIDg5IGluc2VydGlvbnMoKykKPiA+IAo+ID4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvaWlvL2FkYy9hZDcxOTIuYyBiL2RyaXZlcnMvaWlvL2FkYy9hZDcxOTIuYwo+ID4g
-aW5kZXggOTQwNTE3ZGY1NDI5Li45MDc2M2MxNDY3OWQgMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJz
-L2lpby9hZGMvYWQ3MTkyLmMKPiA+ICsrKyBiL2RyaXZlcnMvaWlvL2FkYy9hZDcxOTIuYwo+ID4g
-QEAgLTgsNiArOCw3IEBACj4gPiDCoCNpbmNsdWRlIDxsaW51eC9pbnRlcnJ1cHQuaD4KPiA+IMKg
-I2luY2x1ZGUgPGxpbnV4L2JpdGZpZWxkLmg+Cj4gPiDCoCNpbmNsdWRlIDxsaW51eC9jbGsuaD4K
-PiA+ICsjaW5jbHVkZSA8bGludXgvY2xrLXByb3ZpZGVyLmg+Cj4gPiDCoCNpbmNsdWRlIDxsaW51
-eC9kZXZpY2UuaD4KPiA+IMKgI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPgo+ID4gwqAjaW5jbHVk
-ZSA8bGludXgvc2xhYi5oPgo+ID4gQEAgLTIwMSw2ICsyMDIsNyBAQCBzdHJ1Y3QgYWQ3MTkyX2No
-aXBfaW5mbyB7Cj4gPiDCoHN0cnVjdCBhZDcxOTJfc3RhdGUgewo+ID4gwqDCoMKgwqDCoMKgwqAg
-Y29uc3Qgc3RydWN0IGFkNzE5Ml9jaGlwX2luZm/CoMKgICpjaGlwX2luZm87Cj4gPiDCoMKgwqDC
-oMKgwqDCoCBzdHJ1Y3QgY2xrwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgICptY2xrOwo+ID4gK8KgwqDCoMKgwqDCoCBzdHJ1Y3QgY2xrX2h3wqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIGludF9jbGtfaHc7Cj4gPiDCoMKgwqDCoMKgwqDCoCB1MTbC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBp
-bnRfdnJlZl9tdjsKPiA+IMKgwqDCoMKgwqDCoMKgIHUzMsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGFpbmNvbV9tdjsKPiA+IMKgwqDCoMKg
-wqDCoMKgIHUzMsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIGZjbGs7Cj4gPiBAQCAtNDAxLDYgKzQwMyw4OCBAQCBzdGF0aWMgY29uc3QgY2hh
-ciAqY29uc3QgYWQ3MTkyX2Nsb2NrX25hbWVzW10gPSB7Cj4gPiDCoMKgwqDCoMKgwqDCoCAibWNs
-ayIKPiA+IMKgfTsKPiA+IAo+ID4gK3N0YXRpYyBzdHJ1Y3QgYWQ3MTkyX3N0YXRlICpjbGtfaHdf
-dG9fYWQ3MTkyKHN0cnVjdCBjbGtfaHcgKmh3KQo+ID4gK3sKPiA+ICvCoMKgwqDCoMKgwqAgcmV0
-dXJuIGNvbnRhaW5lcl9vZihodywgc3RydWN0IGFkNzE5Ml9zdGF0ZSwgaW50X2Nsa19odyk7Cj4g
-PiArfQo+ID4gKwo+ID4gK3N0YXRpYyB1bnNpZ25lZCBsb25nIGFkNzE5Ml9jbGtfcmVjYWxjX3Jh
-dGUoc3RydWN0IGNsa19odyAqaHcsCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHVu
-c2lnbmVkIGxvbmcgcGFyZW50X3JhdGUpCj4gPiArewo+ID4gK8KgwqDCoMKgwqDCoCByZXR1cm4g
-QUQ3MTkyX0lOVF9GUkVRX01IWjsKPiA+ICt9Cj4gPiArCj4gPiArc3RhdGljIGludCBhZDcxOTJf
-Y2xrX291dHB1dF9pc19lbmFibGVkKHN0cnVjdCBjbGtfaHcgKmh3KQo+ID4gK3sKPiA+ICvCoMKg
-wqDCoMKgwqAgc3RydWN0IGFkNzE5Ml9zdGF0ZSAqc3QgPSBjbGtfaHdfdG9fYWQ3MTkyKGh3KTsK
-PiA+ICsKPiA+ICvCoMKgwqDCoMKgwqAgcmV0dXJuIHN0LT5jbG9ja19zZWwgPT0gQUQ3MTkyX0NM
-S19JTlRfQ087Cj4gPiArfQo+ID4gKwo+ID4gK3N0YXRpYyBpbnQgYWQ3MTkyX2Nsa19wcmVwYXJl
-KHN0cnVjdCBjbGtfaHcgKmh3KQo+ID4gK3sKPiA+ICvCoMKgwqDCoMKgwqAgc3RydWN0IGFkNzE5
-Ml9zdGF0ZSAqc3QgPSBjbGtfaHdfdG9fYWQ3MTkyKGh3KTsKPiA+ICvCoMKgwqDCoMKgwqAgaW50
-IHJldDsKPiA+ICsKPiA+ICvCoMKgwqDCoMKgwqAgc3QtPm1vZGUgJj0gfkFENzE5Ml9NT0RFX0NM
-S1NSQ19NQVNLOwo+ID4gK8KgwqDCoMKgwqDCoCBzdC0+bW9kZSB8PSBBRDcxOTJfQ0xLX0lOVF9D
-TzsKPiA+ICsKPiA+ICvCoMKgwqDCoMKgwqAgcmV0ID0gYWRfc2Rfd3JpdGVfcmVnKCZzdC0+c2Qs
-IEFENzE5Ml9SRUdfTU9ERSwgMywgc3QtPm1vZGUpOwo+ID4gK8KgwqDCoMKgwqDCoCBpZiAocmV0
-KQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIHJldDsKPiA+ICsKPiA+
-ICvCoMKgwqDCoMKgwqAgc3QtPmNsb2NrX3NlbCA9IEFENzE5Ml9DTEtfSU5UX0NPOwo+ID4gKwo+
-ID4gK8KgwqDCoMKgwqDCoCByZXR1cm4gMDsKPiA+ICt9Cj4gPiArCj4gPiArc3RhdGljIHZvaWQg
-YWQ3MTkyX2Nsa191bnByZXBhcmUoc3RydWN0IGNsa19odyAqaHcpCj4gPiArewo+ID4gK8KgwqDC
-oMKgwqDCoCBzdHJ1Y3QgYWQ3MTkyX3N0YXRlICpzdCA9IGNsa19od190b19hZDcxOTIoaHcpOwo+
-ID4gK8KgwqDCoMKgwqDCoCBpbnQgcmV0Owo+ID4gKwo+ID4gK8KgwqDCoMKgwqDCoCBzdC0+bW9k
-ZSAmPSB+QUQ3MTkyX01PREVfQ0xLU1JDX01BU0s7Cj4gPiArwqDCoMKgwqDCoMKgIHN0LT5tb2Rl
-IHw9IEFENzE5Ml9DTEtfSU5UOwo+ID4gKwo+ID4gK8KgwqDCoMKgwqDCoCByZXQgPSBhZF9zZF93
-cml0ZV9yZWcoJnN0LT5zZCwgQUQ3MTkyX1JFR19NT0RFLCAzLCBzdC0+bW9kZSk7Cj4gPiArwqDC
-oMKgwqDCoMKgIGlmIChyZXQpCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1
-cm47Cj4gPiArCj4gPiArwqDCoMKgwqDCoMKgIHN0LT5jbG9ja19zZWwgPSBBRDcxOTJfQ0xLX0lO
-VDsKPiA+ICt9Cj4gPiArCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBjbGtfb3BzIGFkNzE5Ml9p
-bnRfY2xrX29wcyA9IHsKPiA+ICvCoMKgwqDCoMKgwqAgLnJlY2FsY19yYXRlID0gYWQ3MTkyX2Ns
-a19yZWNhbGNfcmF0ZSwKPiA+ICvCoMKgwqDCoMKgwqAgLmlzX2VuYWJsZWQgPSBhZDcxOTJfY2xr
-X291dHB1dF9pc19lbmFibGVkLAo+ID4gK8KgwqDCoMKgwqDCoCAucHJlcGFyZSA9IGFkNzE5Ml9j
-bGtfcHJlcGFyZSwKPiA+ICvCoMKgwqDCoMKgwqAgLnVucHJlcGFyZSA9IGFkNzE5Ml9jbGtfdW5w
-cmVwYXJlLAo+ID4gK307Cj4gPiArCj4gPiArc3RhdGljIGludCBhZDcxOTJfcmVnaXN0ZXJfY2xr
-X3Byb3ZpZGVyKHN0cnVjdCBhZDcxOTJfc3RhdGUgKnN0KQo+ID4gK3sKPiA+ICvCoMKgwqDCoMKg
-wqAgc3RydWN0IGRldmljZSAqZGV2ID0gJnN0LT5zZC5zcGktPmRldjsKPiA+ICvCoMKgwqDCoMKg
-wqAgc3RydWN0IGNsa19pbml0X2RhdGEgaW5pdCA9IHt9Owo+ID4gK8KgwqDCoMKgwqDCoCBpbnQg
-cmV0Owo+ID4gKwo+ID4gK8KgwqDCoMKgwqDCoCBpZiAoIUlTX0VOQUJMRUQoQ09ORklHX0NPTU1P
-Tl9DTEspKQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIDA7Cj4gPiAr
-Cj4gPiArwqDCoMKgwqDCoMKgIGluaXQubmFtZSA9IGRldm1fa2FzcHJpbnRmKGRldiwgR0ZQX0tF
-Uk5FTCwgIiVzLWNsayIsCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGZ3bm9kZV9nZXRfbmFtZShkZXZfZndub2Rl
-KGRldikpKTsKPiA+ICvCoMKgwqDCoMKgwqAgaWYgKCFpbml0Lm5hbWUpCj4gPiArwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm4gLUVOT01FTTsKPiA+ICsKPiA+ICvCoMKgwqDCoMKg
-wqAgaW5pdC5vcHMgPSAmYWQ3MTkyX2ludF9jbGtfb3BzOwo+ID4gKwo+ID4gK8KgwqDCoMKgwqDC
-oCBzdC0+aW50X2Nsa19ody5pbml0ID0gJmluaXQ7Cj4gPiArwqDCoMKgwqDCoMKgIHJldCA9IGRl
-dm1fY2xrX2h3X3JlZ2lzdGVyKGRldiwgJnN0LT5pbnRfY2xrX2h3KTsKPiA+ICvCoMKgwqDCoMKg
-wqAgaWYgKHJldCkKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJldHVybiByZXQ7
-Cj4gPiArCj4gPiArwqDCoMKgwqDCoMKgIHJldHVybiBkZXZtX29mX2Nsa19hZGRfaHdfcHJvdmlk
-ZXIoZGV2LCBvZl9jbGtfaHdfc2ltcGxlX2dldCwKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgICZzdC0+aW50X2Nsa19odyk7Cj4gPiArfQo+ID4gKwo+ID4gwqBzdGF0aWMgaW50IGFkNzE5
-Ml9jbG9ja19zZXR1cChzdHJ1Y3QgYWQ3MTkyX3N0YXRlICpzdCkKPiA+IMKgewo+ID4gwqDCoMKg
-wqDCoMKgwqAgc3RydWN0IGRldmljZSAqZGV2ID0gJnN0LT5zZC5zcGktPmRldjsKPiA+IEBAIC00
-MTIsNiArNDk2LDExIEBAIHN0YXRpYyBpbnQgYWQ3MTkyX2Nsb2NrX3NldHVwKHN0cnVjdCBhZDcx
-OTJfc3RhdGUgKnN0KQo+ID4gwqDCoMKgwqDCoMKgwqAgaWYgKHJldCA8IDApIHsKPiA+IMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzdC0+Y2xvY2tfc2VsID0gQUQ3MTkyX0NMS19JTlQ7
-Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc3QtPmZjbGsgPSBBRDcxOTJfSU5U
-X0ZSRVFfTUhaOwo+ID4gKwo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0ID0g
-YWQ3MTkyX3JlZ2lzdGVyX2Nsa19wcm92aWRlcihzdCk7Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCBpZiAocmV0KQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIHJldHVybiBkZXZfZXJyX3Byb2JlKGRldiwgcmV0LAo+ID4gK8KgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgICJGYWlsZWQgdG8gcmVnaXN0ZXIgY2xvY2sKPiA+IHByb3Zp
-ZGVyXG4iKTsKPiAKPiBBIHF1ZXN0aW9uIGhlcmU6IGRvIHdlIHdhbnQgdG8gZmFpbCB0aGUgcHJv
-YmUgb2YgdGhpcyBkcml2ZXIgd2hlbiBpdAo+IGNhbm5vdCByZWdpc3RlciBhIGNsb2NrIHByb3Zp
-ZGVyPwo+IE9yIHNob3VsZCB3ZSBpZ25vcmUgaXQ/Cj4gTm8gcHJlZmVyZW5jZSBmcm9tIG15IHNp
-ZGUuCgpTZW5zaWJsZSBxdWVzdGlvbi4uLiBJIHdvdWxkIHNheSBpdCBkZXBlbmRzLiBPbiBvbmUg
-c2lkZSB0aGlzIGlzIGFuIG9wdGlvbmFsCmZlYXR1cmUgc28gd2Ugc2hvdWxkIG5vdCAoYXJndWFi
-bHkpIGVycm9yIG91dC4gT1RPSCwgc29tZW9uZSBtYXkgcmVhbGx5IHdhbnQKKGFuZCByZWxpZXMg
-b24pIHRoaXMgZmVhdHVyZSBzbyBmYWlsaW5nIG1ha2VzIHNlbnNlLgoKTWF5YmUgd2Ugc2hvdWxk
-IGhhdmUKCmlmICghZGV2aWNlX3Byb3BlcnR5X3ByZXNlbnQoJnNwaS0+ZGV2LCAiI2Nsb2NrLWNl
-bGxzIikpCglyZXR1cm4gMDsKCmluIGFkNzE5Ml9yZWdpc3Rlcl9jbGtfcHJvdmlkZXIoKS4gU28g
-dGhhdCBpZiB3ZSBmYWlsIHRoZSBmdW5jdGlvbiwgdGhlbiB5ZXMsIHdlCnNob3VsZCBmYWlsIHBy
-b2JpbmcgYXMgRlcgd2FudHMgdGhpcyB0byBiZSBhIHByb3ZpZGVyLiBBbHNvLCBub3QgcHJvdmlk
-aW5nCiNjbG9jay1jZWxscyBtZWFucyB3ZSBkb24ndCByZWdpc3RlciB0aGUgY2xvY2suCgpIYXZp
-bmcgc2FpZCB0aGUgYWJvdmUgSSB0aGluayB0aGF0IGZhaWxpbmcgZGV2bV9jbGtfaHdfcmVnaXN0
-ZXIoKSBtZWFucyB0aGF0CnNvbWV0aGluZyBpcyBhbHJlYWR5IHJlYWxseSB3cm9uZyAob3Igd2Ug
-aGF2ZSBhIGJ1ZyBpbiB0aGUgZHJpdmVyKSBzbyBsaWtlbHkgd2UKc2hvdWxkIGtlZXAgaXQgc2lt
-cGxlIGFuZCBqdXN0IGFsd2F5cyBwcm92aWRlIHRoZSBjbG9jayBhbmQgcmV0dXJuIGFuIGVycm9y
-IGlmCndlIGZhaWwgdG8gZG8gc28uCgpteSAyIGNlbnRzLi4uCgotIE51bm8gU8OhCgoK
+On Tue 2024-06-25 22:02:30, John Ogness wrote:
+> On 2024-06-17, Petr Mladek <pmladek@suse.com> wrote:
+> > This makes me wonder whether we need to stop the kthreads at all.
+> 
+> > How exactly does this make printk more robust during shutdown?
+> 
+> Because by stopping them, the printing threads are guaranteed to go
+> silent before they suddenly freeze. Without the clean shutdown, I could
+> create shutdown/reboot scenarios where the printing thread would stop
+> mid-line. Then the atomic printing would never be able to finish because
+> it is a non-panic situation and the thread was frozen while holding the
+> context. The result: the user never sees the final printk messages.
 
+I see.
+
+> > Well, there is one differece. The kthreads could not interferre with
+> > the direct flush when they are stopped.
+> >
+> > But we have the same problem also with suspend/resume. And we do not
+> > stop the kthreads in this case.
+> 
+> Suspend/resume is something different. Suspend needs to stop _all_
+> printing. I do not think it makes sense to shutdown threads for
+> this. The consoles becoming temporarily !usable() is enough.
+
+Just to be sure that we are on the same page. I made a closer
+look at the suspend code. I see 4 important milestones:
+
+  1. suspend_console();
+
+     The consoles are intentionally stopped after this point.
+     It allows to suspend the related hardware, for example,
+     the serial port.
+
+
+  2. pm_sleep_disable_secondary_cpus();
+
+     Other CPUs are stopped at this point. The kthread might still
+     be theoretically scheduled.
+
+
+  3. local_irq_disable();
+
+     IRQs get disabled. Neither the hardware nor the kthread could
+     work after this point.
+
+
+  4. system_state = SYSTEM_SUSPEND;
+
+     The global value is set. vprintk_emit() starts calling
+     nbcon_atomic_flush_pending().
+
+
+From some reasons, I thought that ordering was different and
+the "system_state" was set much earlier. This is why I thought
+that it would make sense to "stop" the kthreads.
+
+But it seems that, in reality, the nbcon_atomic_flush_pending() in
+vprintk_emit() would never do anything during suspend. The consoles
+are already suspended (unusable) when the system_state gets set
+to SYSTEM_SUSPEND.
+
+It means that we do not need to synchronize the printk kthreads with
+vprintk_emit() for suspend. The only important thing is
+the pr_flush() in suspend_console().
+
+
+> For shutdown, the consoles are usable() the entire time. I just want the
+> threads to get out of the way before they freeze so that the user can
+> see all the messages on shutdown/reboot.
+
+I see what you mean now. The consoles are not suspended => they are
+usable all the time.
+
+
+> > Maybe, we should just add a check of
+> >
+> >        system_state > SYSTEM_RUNNING
+> >
+> > also into the nbcon_kthread_func(). Maybe, the kthread should not try
+> > to flush the messages when they are flushed directly by
+> > vprintk_emit().
+> 
+> It gets racy when we start relying on the contexts noticing some
+> variables. By racy, I mean there are scenarios where there are unprinted
+> records and no context is printing. I think it is easiest when the
+> following steps occur within a notifier:
+> 
+> 1. notifier sets a flag to allow atomic printing from vprintk_emit()
+> 
+> 2. notifier stops all threads (with the kthread_should_stop() moved
+>    inside the printing loop of nbcon_kthread_func())
+> 
+> 3. notifier performs nbcon_atomic_flush_pending()
+> 
+> This guarantees that no messages are lost and that all get flushed.
+
+Makes sense.
+
+Best Regards,
+Petr
