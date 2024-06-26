@@ -1,259 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CFD2180A83;
-	Wed, 26 Jun 2024 12:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9BC7180A8B;
+	Wed, 26 Jun 2024 12:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719403719; cv=none; b=XNuTRWW+YEJqGZs/8CVBNzRRJ3zjmjubXhODYHtuGNqHIj379EZk/BLFJpOgmqYO2n42/v7uGvQVYBMHFnrwWLi+WA5eLhofGr5foMwN/OHAupR0DNgCI2zhD/zU2TIqG639Ptco3LkQhB60qgfoNEj4MptvS3HmDAVttwkKcl0=
+	t=1719403758; cv=none; b=uLtVLgk65cNM1yzwzAOzL5l2Rlh7TPPhwbHRuAkBJsed1y2xowzzHOIuycEPfbB0bmPRPUcZE9/rmUQ8+om3pmSsFGV7BigZmACKA2n06oUB0K1/jai4Dro4WKVG0E8f4rAk2vEgd6Xk8GZn3phx7nZ/XPgLyPeLVF2wQF0HZsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719403719; c=relaxed/simple;
-	bh=87xO/t3Pwhz0ct0Y0iGmuW6ljRW180gEkDhXDa6Qlis=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pgzd7rVckQp7m3bU6Of6nLVuIk7E1Vi35QikwQH9bPVHFSKLZbC+Z+0StVbrtBoyw7ScnRLm+Wc4Q6x9qPh0LGECvaap/uQqYzdWxcpN+WI9X/U0RNtZzG3WFMbjVG8BPYPZ/nj4o+4EqnpQ8JAyceiVuO4kTgFT1bf9Ct+dn7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=orJD1PPt; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="orJD1PPt"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D7081C4AF07;
-	Wed, 26 Jun 2024 12:08:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719403718;
-	bh=87xO/t3Pwhz0ct0Y0iGmuW6ljRW180gEkDhXDa6Qlis=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=orJD1PPtkOdpcy1PQspPOWKVCdbPrmXaCVylIHDlFnx8T2nbBXEnjzeludEr0v2zI
-	 5Epy0UqqfzaO0XkFALekfjW9j6qLIbDqi/C0CUxPxtAT5cIQvjCeeigA4zWA7WoEki
-	 kfrfoUYR0EIjcn8k9n8PqkGQnpY6R1V/rs18EDVdZ+JfdwR7Eyq8PZL6KMSar59PX3
-	 jEkCTPRc6GX6/GFFRPAF/ITT8iavhBZgSbndq/B8aDJSoBZsIsz90OG8PqYtYb8E5j
-	 pFkgcgeHFWSXmOq+QiE7EjwLcEO9xBmXdRP9BUNbJnZiFOxoUQmA9eSIfy7TRdCRvt
-	 TGaBPjezHiJ9Q==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C12D3C3065A;
-	Wed, 26 Jun 2024 12:08:38 +0000 (UTC)
-From: Luigi Leonardi via B4 Relay <devnull+luigi.leonardi.outlook.com@kernel.org>
-Date: Wed, 26 Jun 2024 14:08:36 +0200
-Subject: [PATCH net-next v3 2/3] vsock/virtio: add SIOCOUTQ support for all
- virtio based transports
+	s=arc-20240116; t=1719403758; c=relaxed/simple;
+	bh=2+xH1mBOhPUluIxywXqOwQLxQ9N4Y9lY8NDxqSCdRcw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G1j38JyX8+k5DdYRCVh6JVvZMDpfrgXY5smeU/io03ACZv26hNcLDQJP87aKetJ4UFFdUGk6PfE2CoJ2Tdca4+lp9coVzVnVf/RnWDV/qF2eGrYzxkJSQlPwy32JgmsxiBWGeqQtpce7rQNgyIZjI0ZZ00cFf0hXVa83qYxd2Zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dfe43dca3bfso6735833276.0;
+        Wed, 26 Jun 2024 05:09:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719403755; x=1720008555;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=R0mk92Bl3LQ3otRfOdnBzHIQx6l64HiZ4cpcn1DGppY=;
+        b=epqPNZcgvvO2GidJuls/Ew3B4Lc7CPtq1QApoRLmqZnSzoBpeLcrBZIexFWY1uHyRP
+         CWwrzSSAeDB+zf2oi5e7nXzpiFW6AIyIOc+1Qtkfh97TxgJ5HR0ll41VKM1SZHNoQhG4
+         zYjHkIf91lMlEOUnSuulD9f5QfA7vkEeBj0HQqF7MSjmP2aDXiu+tupYuuORBW+j1zv5
+         90O/aF+MrQp2qXHS+VMrZo8YphnbaxsmnWXFzNkGPAN7fTKj/Qq6u80KC013e6Pb6sFB
+         P897AMMDVfzk2EB8wEEIivx8RhMTouXdLhX0Fj8EjckaHJwt3NBw5XTwxcwzGSUjVRpI
+         SBAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUyubZWhzk3NHcgi+UjaCs0isjYj1CAwPa4IFnEud4OCHhLvbzSv2WweYXDW6gYnouL8kJDf/TWWeUbfg4cZm4mhWc+g/8QVeGrMZ7VqinMMUXBstOH9MkZQRVd2SfSPymk9pfbW/1f4zeinr9onSZLRkvz8PIGd6kczQ8j9R9hUxk96M2LpjlLMH3l5bcHhAileGVRTOizmdA188858ApvS18wqe+mFkK91L/73Vo3vZk+8oWHC71lQ4p7pIj1qeNZ
+X-Gm-Message-State: AOJu0YxabAcVDU77n0AJj2GajYDGnNT6TxLM1v33a5A7xmNlzGrUh6S4
+	Mq8vOnS2CCxewcpzlM0DIM2WIzabzjJH847bHBsobc0xz4fJQPAhzxTj4rui
+X-Google-Smtp-Source: AGHT+IHT8Ji9BSYpDePtcyLAvDd8mwMDstHI+WrAsMa+68ZO1QhEa1+74Lf08SYmALlC1gB1tMs0ug==
+X-Received: by 2002:a05:6902:102f:b0:e02:b7ee:5354 with SMTP id 3f1490d57ef6-e0300f893d9mr13313130276.20.1719403755045;
+        Wed, 26 Jun 2024 05:09:15 -0700 (PDT)
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com. [209.85.128.180])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e02e65dbbafsm4391812276.60.2024.06.26.05.09.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Jun 2024 05:09:14 -0700 (PDT)
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-63bdb089ffdso52892097b3.3;
+        Wed, 26 Jun 2024 05:09:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVtP+P2l7EssqxlAePpcX/HMKIobOWHioZsWMcxgSzIrdb+BLEpSGBhCcrIKIEV7TVe5zFJHHz6vXEhqwr9xssi6MI0XUmaClfFbRjdXM4D2PBS/O1ubTZgn58G/o50uBurHQpJhw/tgV2g7l2gGcQnbnc5Q4sXO3J+k2bV8bdUKLMn2xge4+swZw/trlMYJD7iQ/fT1WTBbS7qCh4v72Wylx5w0rqoPylIAbKTukrMT1h8Zxn0MRrs45SRbGMsW1DA
+X-Received: by 2002:a0d:eb84:0:b0:61a:ae79:816a with SMTP id
+ 00721157ae682-643413779ccmr91520187b3.31.1719403754668; Wed, 26 Jun 2024
+ 05:09:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240626-ioctl_next-v3-2-63be5bf19a40@outlook.com>
-References: <20240626-ioctl_next-v3-0-63be5bf19a40@outlook.com>
-In-Reply-To: <20240626-ioctl_next-v3-0-63be5bf19a40@outlook.com>
-To: Stefano Garzarella <sgarzare@redhat.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Stefan Hajnoczi <stefanha@redhat.com>, 
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
- Luigi Leonardi <luigi.leonardi@outlook.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1719403717; l=6371;
- i=luigi.leonardi@outlook.com; s=20240626; h=from:subject:message-id;
- bh=sI4aKzv65G8Vd6esvUjfpOdcZxrW87hFO3L+yINHGpI=;
- b=MJgAWqdl5ujUmscMJMELnSlpGJy6V8fNgMjp8s4GaxTHDXY+3yYOEW3ILFijsBEwDC2rigKza
- DbwuczPf0d/BzEWuW0Wz6oONwx/49gtUR6QmaXWW7aeLBI2GvApKe0g
-X-Developer-Key: i=luigi.leonardi@outlook.com; a=ed25519;
- pk=RYXD8JyCxGnx/izNc/6b3g3pgpohJMAI0LJ7ynxXzi8=
-X-Endpoint-Received: by B4 Relay for luigi.leonardi@outlook.com/20240626
- with auth_id=177
-X-Original-From: Luigi Leonardi <luigi.leonardi@outlook.com>
-Reply-To: luigi.leonardi@outlook.com
+References: <20240614071932.1014067-1-claudiu.beznea.uj@bp.renesas.com> <20240614071932.1014067-2-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20240614071932.1014067-2-claudiu.beznea.uj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 26 Jun 2024 14:09:02 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWMQJrEWEK-RK7Nv4Xoj=B84x9sRPiM=KCNpmx1Xk=Ktw@mail.gmail.com>
+Message-ID: <CAMuHMdWMQJrEWEK-RK7Nv4Xoj=B84x9sRPiM=KCNpmx1Xk=Ktw@mail.gmail.com>
+Subject: Re: [PATCH 01/12] clk: renesas: r9a08g045: Add clock, reset and power
+ domain support for the VBATTB IP
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, lee@kernel.org, 
+	alexandre.belloni@bootlin.com, magnus.damm@gmail.com, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Luigi Leonardi <luigi.leonardi@outlook.com>
+On Fri, Jun 14, 2024 at 9:19=E2=80=AFAM Claudiu <claudiu.beznea@tuxon.dev> =
+wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> The Renesas RZ/G3S SoC has an IP named Battery Backup Function (VBATTB)
+> that generates the RTC clock. Add clock, reset and power domain support
+> for it.
+>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Introduce support for stream_bytes_unsent and seqpacket_bytes_unsent
-ioctl for virtio_transport, vhost_vsock and vsock_loopback.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-clk for v6.11.
 
-For all transports the unsent bytes counter is incremented
-in virtio_transport_get_credit.
+Gr{oetje,eeting}s,
 
-In the virtio_transport (G2H) the counter is decremented each
-time the host notifies the guest that it consumed the skbuffs.
-In vhost-vsock (H2G) the counter is decremented after the skbuff
-is queued in the virtqueue.
-In vsock_loopback the counter is decremented after the skbuff is
-dequeued.
+                        Geert
 
-Signed-off-by: Luigi Leonardi <luigi.leonardi@outlook.com>
----
- drivers/vhost/vsock.c                   |  4 +++-
- include/linux/virtio_vsock.h            |  7 +++++++
- net/vmw_vsock/virtio_transport.c        |  4 +++-
- net/vmw_vsock/virtio_transport_common.c | 35 +++++++++++++++++++++++++++++++++
- net/vmw_vsock/vsock_loopback.c          |  7 +++++++
- 5 files changed, 55 insertions(+), 2 deletions(-)
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-index ec20ecff85c7..dba8b3ea37bf 100644
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -244,7 +244,7 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
- 					restart_tx = true;
- 			}
- 
--			consume_skb(skb);
-+			virtio_transport_consume_skb_sent(skb, true);
- 		}
- 	} while(likely(!vhost_exceeds_weight(vq, ++pkts, total_len)));
- 	if (added)
-@@ -451,6 +451,8 @@ static struct virtio_transport vhost_transport = {
- 		.notify_buffer_size       = virtio_transport_notify_buffer_size,
- 		.notify_set_rcvlowat      = virtio_transport_notify_set_rcvlowat,
- 
-+		.unsent_bytes             = virtio_transport_bytes_unsent,
-+
- 		.read_skb = virtio_transport_read_skb,
- 	},
- 
-diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
-index c82089dee0c8..e74c12878213 100644
---- a/include/linux/virtio_vsock.h
-+++ b/include/linux/virtio_vsock.h
-@@ -134,6 +134,8 @@ struct virtio_vsock_sock {
- 	u32 peer_fwd_cnt;
- 	u32 peer_buf_alloc;
- 
-+	size_t bytes_unsent;
-+
- 	/* Protected by rx_lock */
- 	u32 fwd_cnt;
- 	u32 last_fwd_cnt;
-@@ -193,6 +195,11 @@ s64 virtio_transport_stream_has_data(struct vsock_sock *vsk);
- s64 virtio_transport_stream_has_space(struct vsock_sock *vsk);
- u32 virtio_transport_seqpacket_has_data(struct vsock_sock *vsk);
- 
-+size_t virtio_transport_bytes_unsent(struct vsock_sock *vsk);
-+
-+void virtio_transport_consume_skb_sent(struct sk_buff *skb,
-+				       bool consume);
-+
- int virtio_transport_do_socket_init(struct vsock_sock *vsk,
- 				 struct vsock_sock *psk);
- int
-diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
-index 43d405298857..fc62d2818c2c 100644
---- a/net/vmw_vsock/virtio_transport.c
-+++ b/net/vmw_vsock/virtio_transport.c
-@@ -311,7 +311,7 @@ static void virtio_transport_tx_work(struct work_struct *work)
- 
- 		virtqueue_disable_cb(vq);
- 		while ((skb = virtqueue_get_buf(vq, &len)) != NULL) {
--			consume_skb(skb);
-+			virtio_transport_consume_skb_sent(skb, true);
- 			added = true;
- 		}
- 	} while (!virtqueue_enable_cb(vq));
-@@ -540,6 +540,8 @@ static struct virtio_transport virtio_transport = {
- 		.notify_buffer_size       = virtio_transport_notify_buffer_size,
- 		.notify_set_rcvlowat      = virtio_transport_notify_set_rcvlowat,
- 
-+		.unsent_bytes             = virtio_transport_bytes_unsent,
-+
- 		.read_skb = virtio_transport_read_skb,
- 	},
- 
-diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
-index 16ff976a86e3..3a7fa36f306b 100644
---- a/net/vmw_vsock/virtio_transport_common.c
-+++ b/net/vmw_vsock/virtio_transport_common.c
-@@ -463,6 +463,26 @@ void virtio_transport_inc_tx_pkt(struct virtio_vsock_sock *vvs, struct sk_buff *
- }
- EXPORT_SYMBOL_GPL(virtio_transport_inc_tx_pkt);
- 
-+void virtio_transport_consume_skb_sent(struct sk_buff *skb, bool consume)
-+{
-+	struct sock *s = skb->sk;
-+
-+	if (s && skb->len) {
-+		struct vsock_sock *vs = vsock_sk(s);
-+		struct virtio_vsock_sock *vvs;
-+
-+		vvs = vs->trans;
-+
-+		spin_lock_bh(&vvs->tx_lock);
-+		vvs->bytes_unsent -= skb->len;
-+		spin_unlock_bh(&vvs->tx_lock);
-+	}
-+
-+	if (consume)
-+		consume_skb(skb);
-+}
-+EXPORT_SYMBOL_GPL(virtio_transport_consume_skb_sent);
-+
- u32 virtio_transport_get_credit(struct virtio_vsock_sock *vvs, u32 credit)
- {
- 	u32 ret;
-@@ -475,6 +495,7 @@ u32 virtio_transport_get_credit(struct virtio_vsock_sock *vvs, u32 credit)
- 	if (ret > credit)
- 		ret = credit;
- 	vvs->tx_cnt += ret;
-+	vvs->bytes_unsent += ret;
- 	spin_unlock_bh(&vvs->tx_lock);
- 
- 	return ret;
-@@ -488,6 +509,7 @@ void virtio_transport_put_credit(struct virtio_vsock_sock *vvs, u32 credit)
- 
- 	spin_lock_bh(&vvs->tx_lock);
- 	vvs->tx_cnt -= credit;
-+	vvs->bytes_unsent -= credit;
- 	spin_unlock_bh(&vvs->tx_lock);
- }
- EXPORT_SYMBOL_GPL(virtio_transport_put_credit);
-@@ -1090,6 +1112,19 @@ void virtio_transport_destruct(struct vsock_sock *vsk)
- }
- EXPORT_SYMBOL_GPL(virtio_transport_destruct);
- 
-+size_t virtio_transport_bytes_unsent(struct vsock_sock *vsk)
-+{
-+	struct virtio_vsock_sock *vvs = vsk->trans;
-+	size_t ret;
-+
-+	spin_lock_bh(&vvs->tx_lock);
-+	ret = vvs->bytes_unsent;
-+	spin_unlock_bh(&vvs->tx_lock);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(virtio_transport_bytes_unsent);
-+
- static int virtio_transport_reset(struct vsock_sock *vsk,
- 				  struct sk_buff *skb)
- {
-diff --git a/net/vmw_vsock/vsock_loopback.c b/net/vmw_vsock/vsock_loopback.c
-index 6dea6119f5b2..9098613561e3 100644
---- a/net/vmw_vsock/vsock_loopback.c
-+++ b/net/vmw_vsock/vsock_loopback.c
-@@ -98,6 +98,8 @@ static struct virtio_transport loopback_transport = {
- 		.notify_buffer_size       = virtio_transport_notify_buffer_size,
- 		.notify_set_rcvlowat      = virtio_transport_notify_set_rcvlowat,
- 
-+		.unsent_bytes             = virtio_transport_bytes_unsent,
-+
- 		.read_skb = virtio_transport_read_skb,
- 	},
- 
-@@ -123,6 +125,11 @@ static void vsock_loopback_work(struct work_struct *work)
- 	spin_unlock_bh(&vsock->pkt_queue.lock);
- 
- 	while ((skb = __skb_dequeue(&pkts))) {
-+		/* Decrement the bytes_sent counter without deallocating skb
-+		 * It is freed by the receiver.
-+		 */
-+		virtio_transport_consume_skb_sent(skb, false);
-+
- 		virtio_transport_deliver_tap_pkt(skb);
- 		virtio_transport_recv_pkt(&loopback_transport, skb);
- 	}
-
--- 
-2.45.2
-
-
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
