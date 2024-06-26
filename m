@@ -1,111 +1,90 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8410D1802A3;
-	Wed, 26 Jun 2024 11:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE91180A9F;
+	Wed, 26 Jun 2024 11:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719402636; cv=none; b=er736UZQroemEv9xsFzFonInbX5OWzZSgnNl0n6QmAFRya95EjHQVye/RHcE/S/jUB5pomSU4BhMDs+sjuohX3xGngZKenkv10tfM7fkD2GHFD1/HiXahyhLnlfoxN3c0I7/OLwenVtc/2A2NIZu2qgjs9YXBJKBvaVOFFaeuHc=
+	t=1719402637; cv=none; b=PyVavWz6h2iuLIHmV/8ntgjDdOaMPKGQQu7hsKLIbdWy+QiLXVzv6J7y7RN+wQEHz4Fpb/fqqtRud0NsFqyVN2Dlw7gCWcqihFKsLrCutzuK+8nfFrNrImxazy9+Xd8cjf/RsZkCWN3OHfZsuPxX2gX/y9ZHY06TWMFIPiQ6NE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719402636; c=relaxed/simple;
-	bh=ofPusKWLOwmUb2AYKGiawB8MhlRCDoTLrGx6m1Ye3H4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=haZTgdNjSrGUe2zwsaO6y/jbpe/0KLkmKKob9WqjJB9YgT5TzjgtyXPm0EZYN9ei4qf12ykRZxTJ3ERBkAsu+hVZrjjUxNqXsblzFR2lpkZE3+l+9YaVcj1DcwaContL546XoOAS51b73CgqsBtlaD/hoRxoC/lotSnTU2YoleM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qxGdT6hO; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1719402637; c=relaxed/simple;
+	bh=SaIU/2dEnekDrk5wU+9WLeL+H51aE9uNonF6YvUiL5U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YoMoC/bwvd0vHMaaTXa+VmSxYfpOHK07Tc8q8s3IiZ7z9vI5kAaDZ6PSHh7Fw7bwWXpdRZDW1GTNKuV9i5KuAB0+fm2WPba/bToEDcImhk1EbtfYB2+WHBQyNzoQKtlzTaLPh69VB5jsfTXlEku7MwXKfEUkYVSW2EL7pImZFS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=New132iK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qxGdT6hO"
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45QBRG1f022697;
-	Wed, 26 Jun 2024 11:50:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:date:subject:to:cc:references:from:in-reply-to
-	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
-	FuYGLcPJmc5EbSHey+hHc0f8H78DH+GPjDEIrdfzUOY=; b=qxGdT6hO51ZS7w22
-	g7C9swHVwvULxwGTcj0JLifrzVXt7OzMTJ5EaL5Re5ZAA0wjoKnovU1dNBEn3X25
-	rKK30DH16z7fTFXQAUBiMV2/KxaNZ20EBOSeoNvMNqWfQsR52uwndOPaQA3fEMu7
-	HXWAW6CSlp95CDQ9xgxoNPg664ynUTMhXS8wOhuc85w23/PKGSHZFd/oRdaAET/3
-	WD0iMjlOeF3u55J2CYVIH08KhS0DDBysEuIfygFs2q6zWQ2WCcPjkIenVHwLTs+Y
-	kWgiuq8x8cnEyNRwEU2jsxSAcvRk3DFSblY2LczPhKWd6Td7CzUFMHGXYI6U+fZh
-	GCpcCQ==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 400hq803cm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Jun 2024 11:50:29 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45QBm5xa019533;
-	Wed, 26 Jun 2024 11:50:29 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yx9xq47tn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Jun 2024 11:50:28 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45QBoNdb42336688
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 26 Jun 2024 11:50:25 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B856C2005A;
-	Wed, 26 Jun 2024 11:50:21 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8E5D42004B;
-	Wed, 26 Jun 2024 11:50:21 +0000 (GMT)
-Received: from [9.152.224.141] (unknown [9.152.224.141])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 26 Jun 2024 11:50:21 +0000 (GMT)
-Message-ID: <cd626321-51e1-4e69-b043-a838d1351de7@linux.ibm.com>
-Date: Wed, 26 Jun 2024 13:50:21 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] s390/lcs: add missing MODULE_DESCRIPTION() macro
-Content-Language: en-US
-To: Jeff Johnson <quic_jjohnson@quicinc.com>,
-        Thorsten Winkler <twinkler@linux.ibm.com>,
-        Heiko Carstens
- <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20240625-md-s390-drivers-s390-net-v2-1-5a8a2b2f2ae3@quicinc.com>
-From: Alexandra Winter <wintera@linux.ibm.com>
-In-Reply-To: <20240625-md-s390-drivers-s390-net-v2-1-5a8a2b2f2ae3@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 3QEDTMdxbxghYG-mFRAI7qroOFu9LTMv
-X-Proofpoint-GUID: 3QEDTMdxbxghYG-mFRAI7qroOFu9LTMv
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="New132iK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CD8DC32786;
+	Wed, 26 Jun 2024 11:50:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719402636;
+	bh=SaIU/2dEnekDrk5wU+9WLeL+H51aE9uNonF6YvUiL5U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=New132iK9iJBrUPriS8BqUxxVo0eBII6Cu/xNK+kGcDNw/SJLjttzSoe68O6CRtFe
+	 kaSnYW8z9OUitusGnpXBPfP+mJKZPHhgpXjpmPjBnkQoYs6ILkVqmVDvutP6FGtJEa
+	 2+/HKz5rKjFSIRvT8nhq6KnQX1gXhYJn6FEbksHA/lp8DEdYZ9m3UK+/fxkCZTui49
+	 qnpuNyWNMVtQl3AyRVkYEMZOTMuyiACADLPjB4/N9pYIbgdbbe6055J1QUDpys3n11
+	 syL/t2xOBeICtnsoNj3Bpw7RBdwvm79WGoJD5aSmO2mOIOQNjzM0r+Y/H0HKCXVyEQ
+	 eJ/HOHS2BHO+A==
+Date: Wed, 26 Jun 2024 19:36:30 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Mark Brown <broonie@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the tip tree
+Message-ID: <Znv9PgzW8b7rd-Ia@xhacker>
+References: <ZnrXSitgAnCO0EG9@sirena.org.uk>
+ <87sex051ib.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-26_05,2024-06-25_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- phishscore=0 lowpriorityscore=0 adultscore=0 spamscore=0 suspectscore=0
- mlxlogscore=909 impostorscore=0 mlxscore=0 priorityscore=1501
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406260086
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87sex051ib.ffs@tglx>
 
-
-
-On 25.06.24 18:35, Jeff Johnson wrote:
-> With ARCH=s390, make allmodconfig && make W=1 C=1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/s390/net/lcs.o
+On Tue, Jun 25, 2024 at 08:19:08PM +0200, Thomas Gleixner wrote:
+> On Tue, Jun 25 2024 at 15:42, Mark Brown wrote:
 > 
-> Add the missing invocation of the MODULE_DESCRIPTION() macro.
+> > Hi all,
+> >
+> > After merging the tip tree, today's linux-next build (x86_64
+> > allmodconfig) failed like this:
+> >
+> > /tmp/next/build/drivers/irqchip/irq-dw-apb-ictl.c:33:25: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'dw_apb_ictl_handle_irq'
+> >    33 | static void __irq_entry dw_apb_ictl_handle_irq(struct pt_regs *regs)
+
+I will try to fix it. I tested arm/arm64, but didn't try x86 :(
+
+Thanks for the information.
+
+> >       |                         ^~~~~~~~~~~~~~~~~~~~~~
+> > In file included from /tmp/next/build/drivers/irqchip/irq-dw-apb-ictl.c:15:
+> > /tmp/next/build/drivers/irqchip/irq-dw-apb-ictl.c: In function 'dw_apb_ictl_init':
+> > /tmp/next/build/drivers/irqchip/irq-dw-apb-ictl.c:206:32: error: 'dw_apb_ictl_handle_irq' undeclared (first use in this function); did you mean 'dw_apb_ictl_init'?
+> >   206 |                 set_handle_irq(dw_apb_ictl_handle_irq);
+> >       |                                ^~~~~~~~~~~~~~~~~~~~~~
+> > /tmp/next/build/include/linux/irq.h:1331:23: note: in definition of macro 'set_handle_irq'
+> >  1331 |                 (void)handle_irq;               \
+> >       |                       ^~~~~~~~~~
+> > /tmp/next/build/drivers/irqchip/irq-dw-apb-ictl.c:206:32: note: each undeclared identifier is reported only once for each function it appears in
+> >   206 |                 set_handle_irq(dw_apb_ictl_handle_irq);
+> >       |                                ^~~~~~~~~~~~~~~~~~~~~~
+> > /tmp/next/build/include/linux/irq.h:1331:23: note: in definition of macro 'set_handle_irq'
+> >  1331 |                 (void)handle_irq;               \
+> >       |                       ^~~~~~~~~~
+> >
+> >
+> > Caused by commit
+> >
+> >   7cc4f309c933ec5d ("irqchip/dw-apb-ictl: Support building as module")
+> >
+> > (I think, I didn't specifically verify.)  I have used the tree from
+> > 20240624 instead.
 > 
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-> ---
-> Changes in v2:
-> - Modified the description (both in the patch and in the file prolog) per
->   feedback from Alexandra
-> - Link to v1: https://lore.kernel.org/r/20240615-md-s390-drivers-s390-net-v1-1-968cb735f70d@quicinc.com
-> ---
-
-
-Acked-by: Alexandra Winter <wintera@linux.ibm.com>
+> It comes from irq/core. It'll be gone tomorrow.
