@@ -1,72 +1,77 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67DEA16A948
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 09:15:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC7316EB53;
+	Wed, 26 Jun 2024 09:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719393336; cv=none; b=pIMSmjN4l5RDgBwdCUY5aiP/cSePgaz+xh/NY4AoyDN71TMyP2PEjnKlIvAiAqsA8wm+JwpMrBuYuTA9+v2cruaKHU7Ow1DfrxHRL8S025O8mes9gQMuFXbdX8L1IxNXWI31D7xEqJ0S2zKSg++BHkid9P78KpAvbeI3KRSWYcM=
+	t=1719393365; cv=none; b=I6h0M2McX4eR/Hel19XYmu+pEvI+o3FHIFUdGuFMk+Q5WJ4xzA7VCS/wFcVaTFAgN7zKEsyO8uhoRO19UuHHUHKYOqFCNOUjfflGnkfb6do5T0CMi5R3lAbG4y8nhTLOh/UtfPVSEn+Fr46Kdo5DyUKoojU1ewInmZfmkhMdW7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719393336; c=relaxed/simple;
-	bh=1oJhdzOe6APUUeZ5Bt3L+6w0fBQ8DcMKY89ZYua6KfA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nbSjZF9ZppicoUNK1PnOpWCBxCc7ipuVQYf7RS2h8yRIKwgKQZK4TIOfw8HuYbzeuzlGerlcqzPAmvc1ftSOHm/SzgPc785jlpZIZE4P4c0fRpFdr9Q9jX1gD63MOZnA0DFrw7JtGNP9QHyDcNyQnO5yY8rc7fSRyvMePF5Wvcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K1+apxTf; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719393365; c=relaxed/simple;
+	bh=MMtXv5Ri6gnu/ZvxtyFF8jeukfcqm67vgKUvtekW57o=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P5+p7Dou+rfUZLvUkpE7uee727Rc/YSXA4Qp0BuhmhE5/TAKpUPac1hDipcNP1QUWmLZ86LmhDrTi+yvmKe8ar9NjsYrHguj6XbF7JZF05KJ/rpv9H1OavZd9YDKskad9AAIg9Nngv2MfKIBSODHkEIFGTVj7/9t9rzbr5We5Hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gNuS/5C+; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K1+apxTf"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52ce674da85so3307159e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 02:15:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gNuS/5C+"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2ebec2f11b7so71490011fa.2;
+        Wed, 26 Jun 2024 02:16:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719393332; x=1719998132; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719393362; x=1719998162; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qqYdOJxs+VFbdv5Sum02xSfIfK4O1Ds0i5uQR9Cc/Lg=;
-        b=K1+apxTfpF4xceOTFoLPUYFz6xb7/rywQRM9IwVA2sQNCI3N9/Q1Y9Ua8RvowrNxWH
-         7VGajRiYbN+L5ER59DR00Z4mRbJIVplpTh5UCW+l1mdmyuRo6zhM7Ujt7/ay2OVLGFOJ
-         i3qcI9gGgNQWQsNUlOEhd29OTQUlUXmXHpC8FsFUUrpceuScDVrqCz0Bn+yU3oXAiavQ
-         LLVXQn35bLOh0t59TNo1lATpKIdVM6+GHOXlQbpM68LwuMcDNNlBdeLjE6Lz6L2T/Gt7
-         h8XXzQWk+4keCX9ICc0PIVMI1EjPmFK7U3Y3AZuKJQOMezz0jih844q9pz1M/n1MKfNG
-         zLTQ==
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Eto0wDQ+VnHOvIV84i+qZbXGq9+6luYSO1FuNV/i1EM=;
+        b=gNuS/5C+VDbFMQAJEgvNxr8YSCFShhYRtwXcqurKVK0ZAcbKwGfJ3BwlP0+TLcnQKC
+         th1nteG5eFd69Vt/yR9JZ6w9c3EYlHo5sxPUzneXTzfcBvRFAaqvcAaffsdwPQLq4boF
+         WmzAYXK5RXDu+uLzzrwRyT+Tl+P23i2al5iec7YQPZ3U11G3Sq4GHkiAw+1M7E9YUZnB
+         T6dYiccDaD2uIVl41I+45EAgIZc367FOgkaQoNkHi4ql6Lz9/Aac/QObMxkmkd0YafIs
+         jEEBV3Am5smBrMvIPRjCYKTXJMZ8sJ3WtOnlqB8N6Y4VuIBgUcZsJEOhg0hgEX6cwQyu
+         Espw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719393332; x=1719998132;
+        d=1e100.net; s=20230601; t=1719393362; x=1719998162;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qqYdOJxs+VFbdv5Sum02xSfIfK4O1Ds0i5uQR9Cc/Lg=;
-        b=GD+aq67nIbjFS6Ni1YSQJUhfSm6cNduw5EWnB2tChQP+CU8F1+Hh7LFTI+oGGLx2Ur
-         3XOtK0/MMlB5XXd0tf3GjzSvfejqkP8PdMzXqbb8+H2HKsx8cuAGPrygpOJ5V/XzT27A
-         yfSVX9nlbZluntCb3wJUdYGnN7DxCJ3deLJqIJzSpA9zTzyQAjK6KdCXsXwCxOWKoXHk
-         9gYc8qbOMTxuTfeUzd/Q7gI//DdkpkjduEherQJQVD+rN7NviP/U4hGqC/J/cl/AZKyE
-         EL580oFffE8kOHRSr+jvoMDPBvWLkieVzO9P8YeG6+QcHYRNNDQsy6hkPGfR0AgQjzu8
-         zEEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVo+hF6mrLreZiGXikogPfNiVRR8xhg+QZ9O/7g6HPRinO/qBpFIxFpbtXYZEWU1adO+DmU/LYPMpyTrGfrlw2X+Sw7vEEUxX+mMxoj
-X-Gm-Message-State: AOJu0Yz3MP7b9ruEinEEOv0dYKltPNugvnws/7ts2ON2nVKHhl6I96m/
-	nfoV4YBC52iiVWk9JP43k8Fmq3RW4uj+/EQMezP1dVnxJMy7Ibuh12gk3NA6qko=
-X-Google-Smtp-Source: AGHT+IEoPEZ+Z1GDHwYgi6YwL3Dp42WEH58e9eBo3wjc+0KVQYyGcZlw/ZsNg8ZiVT7ZuwxnNv3rXg==
-X-Received: by 2002:a19:e014:0:b0:52c:dfe6:6352 with SMTP id 2adb3069b0e04-52ce185db23mr7675461e87.48.1719393332427;
-        Wed, 26 Jun 2024 02:15:32 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52cd641f655sm1496404e87.162.2024.06.26.02.15.31
+        bh=Eto0wDQ+VnHOvIV84i+qZbXGq9+6luYSO1FuNV/i1EM=;
+        b=LI9sNUq11zIr+rnkSnKXPbjcSf5jduF1jWOMaIpzkJpEy3xNWChWYPGnlhecDx2NFC
+         Wrm6VBgN4Z7FTVBDxaWYWSo/eY+b5yRoAAGvP0t0FvBqiav0W8cJryucuTJnRKgCpuz7
+         +a3hQ4FfRIjU9u5cxXZ3TEKEtwPkBX/U8R1IRI36ukLI/mjvNdz034484pq2rsBhGN+/
+         L48cTgRAg3RyHREJNuzLfWJFGvRGWIIR/UOgBmnvz0dzcDAblI40ImmbIJhjO+MGXLiw
+         W22bh0jb+DckLGNfjdh/Ifr728sz1NDVQtpF25MLW7DCNigfCK6/MvXl2yCM9IAVjNzS
+         7Q1g==
+X-Forwarded-Encrypted: i=1; AJvYcCXPBswy/V2zsa5ZgBIgsV2kNwbKLiWy/AT1PsUsQHIp09sIGc4GUjTbvPoNYnMET2lf7G0NE+sJUYsVNS+m+zLtL1rWZT4p/Pfq3jUgB1NQAQPcjZ4ECkrQUcUiF7YnUKAm96QMqaUwaQ==
+X-Gm-Message-State: AOJu0YzYEdsIjWuNVVlY+9/btOdAycTT4XvxCg4KrtOBrkk12tQC5qcl
+	/3VAOfHDABw5uXKlcvZCSSZ2VBNacVeev9TC3APUA8PthomdedNO
+X-Google-Smtp-Source: AGHT+IH3CGPS2TZW4EbFb0VD5oUjqGvL3TfaspIt5F5OYeRa/0TR/mOSL97U7IIWNPSpBzA7tuqQqw==
+X-Received: by 2002:a2e:3218:0:b0:2ec:55f3:40d with SMTP id 38308e7fff4ca-2ec5b346102mr56875141fa.30.1719393361493;
+        Wed, 26 Jun 2024 02:16:01 -0700 (PDT)
+Received: from pc636 (host-90-233-219-252.mobileonline.telia.com. [90.233.219.252])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec53b7c876sm11450641fa.62.2024.06.26.02.16.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 02:15:31 -0700 (PDT)
-Date: Wed, 26 Jun 2024 12:15:30 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 3/3] drm/panel: add lincoln lcd197 support
-Message-ID: <xc4laokjirwetexrcgfxq4kk3wrqn2i7k2kiqe7ivylhgmjw3w@pwwde5mlwxit>
-References: <20240625142552.1000988-1-jbrunet@baylibre.com>
- <20240625142552.1000988-4-jbrunet@baylibre.com>
- <irzer3be5fj2rg2bmc2oqxqtaw6jybbdkgv3jgxpyhdvojwv24@e4i2v6d454nz>
- <1jmsn8gjq6.fsf@starbuckisacylon.baylibre.com>
+        Wed, 26 Jun 2024 02:16:00 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Wed, 26 Jun 2024 11:15:58 +0200
+To: Hailong Liu <hailong.liu@oppo.com>
+Cc: Uladzislau Rezki <urezki@gmail.com>, Baoquan He <bhe@redhat.com>,
+	Nick Bowler <nbowler@draconx.ca>, linux-kernel@vger.kernel.org,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	linux-mm@kvack.org, sparclinux@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: PROBLEM: kernel crashes when running xfsdump since ~6.4
+Message-ID: <ZnvcToH1h-sVtikh@pc636>
+References: <Zno52QBG0g5Z+otD@MiWiFi-R3L-srv>
+ <ZnqcuKt2qrR-wmH3@pc636>
+ <ZnqspTVl/76jM9WD@MiWiFi-R3L-srv>
+ <Znq6tEtCgB6QnnJH@pc638.lan>
+ <Znq/8/HAc/0p6Ja0@MiWiFi-R3L-srv>
+ <ZnrjZRq5-_hemrbD@pc636>
+ <ZnrnADHvOiNcZv9t@MiWiFi-R3L-srv>
+ <Znr1IQ1mssdNNXbv@pc638.lan>
+ <ZnsjIB2byIxSgbjc@pc636>
+ <20240626051206.mx2r4iy3wpexykay@oppo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,179 +80,120 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1jmsn8gjq6.fsf@starbuckisacylon.baylibre.com>
+In-Reply-To: <20240626051206.mx2r4iy3wpexykay@oppo.com>
 
-On Wed, Jun 26, 2024 at 11:02:25AM GMT, Jerome Brunet wrote:
-> On Wed 26 Jun 2024 at 07:41, Dmitry Baryshkov <dmitry.baryshkov@linaro.org> wrote:
-> 
-> > On Tue, Jun 25, 2024 at 04:25:50PM GMT, Jerome Brunet wrote:
-> >> Add support for the Lincoln LCD197 1080x1920 DSI panel.
-> >> 
-> >> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> >> ---
-> >>  drivers/gpu/drm/panel/Kconfig                |  11 +
-> >>  drivers/gpu/drm/panel/Makefile               |   1 +
-> >>  drivers/gpu/drm/panel/panel-lincoln-lcd197.c | 333 +++++++++++++++++++
-> >>  3 files changed, 345 insertions(+)
-> >>  create mode 100644 drivers/gpu/drm/panel/panel-lincoln-lcd197.c
-> >> 
+On Wed, Jun 26, 2024 at 01:12:06PM +0800, Hailong Liu wrote:
+> On Tue, 25. Jun 22:05, Uladzislau Rezki wrote:
+> > > > > > > /**
+> > > > > > >  * cpumask_next - get the next cpu in a cpumask
+> > > > > > >  * @n: the cpu prior to the place to search (i.e. return will be > @n)
+> > > > > > >  * @srcp: the cpumask pointer
+> > > > > > >  *
+> > > > > > >  * Return: >= nr_cpu_ids if no further cpus set.
+> > > > > >
+> > > > > > Ah, I got what you mean. In the vbq case, it may not have chance to get
+> > > > > > a return number as nr_cpu_ids. Becuase the hashed index limits the
+> > > > > > range to [0, nr_cpu_ids-1], and cpu_possible(index) will guarantee it
+> > > > > > won't be the highest cpu number [nr_cpu_ids-1] since CPU[nr_cpu_ids-1] must
+> > > > > > be possible CPU.
+> > > > > >
+> > > > > > Do I miss some corner cases?
+> > > > > >
+> > > > > Right. We guarantee that a highest CPU is available by doing: % nr_cpu_ids.
+> > > > > So we do not need to use *next_wrap() variant. You do not miss anything :)
+> > > > >
+> > > > > Hailong Liu has proposed more simpler version:
+> > > > >
+> > > > > <snip>
+> > > > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > > > > index 11fe5ea208aa..e1e63ffb9c57 100644
+> > > > > --- a/mm/vmalloc.c
+> > > > > +++ b/mm/vmalloc.c
+> > > > > @@ -1994,8 +1994,9 @@ static struct xarray *
+> > > > >  addr_to_vb_xa(unsigned long addr)
+> > > > >  {
+> > > > >         int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
+> > > > > +       int cpu = cpumask_nth(index, cpu_possible_mask);
+> > > > >
+> > > > > -       return &per_cpu(vmap_block_queue, index).vmap_blocks;
+> > > > > +       return &per_cpu(vmap_block_queue, cpu).vmap_blocks;
+> > > > > <snip>
+> > > > >
+> > > > > which just takes a next CPU if an index is not set in the cpu_possible_mask.
+> > > > >
+> > > > > The only thing that can be updated in the patch is to replace num_possible_cpu()
+> > > > > by the nr_cpu_ids.
+> > > > >
+> > > > > Any thoughts? I think we need to fix it by a minor change so it is
+> > > > > easier to back-port on stable kernels.
+> > > >
+> > > > Yeah, sounds good since the regresson commit is merged in v6.3.
+> > > > Please feel free to post this and the hash array patch separately for
+> > > > formal reviewing.
+> > > >
+> > > Agreed! The patch about hash array i will post later.
+> > >
+> > > > By the way, when I am replying this mail, I check the cpumask_nth()
+> > > > again. I doubt it may take more checking then cpu_possible(), given most
+> > > > of systems don't have gaps in cpu_possible_mask. I could be dizzy at
+> > > > this moment.
+> > > >
+> > > > static inline unsigned int cpumask_nth(unsigned int cpu, const struct cpumask *srcp)
+> > > > {
+> > > >         return find_nth_bit(cpumask_bits(srcp), small_cpumask_bits, cpumask_check(cpu));
+> > > > }
+> > > >
+> > > Yep, i do not think it is a big problem based on your noted fact.
+> > >
+> > Checked. There is a difference:
 > >
-> > [...]
+> > 1. Default
 > >
-> >> +
-> >> +	mipi_dsi_dcs_write_seq(lcd->dsi, 0xB9, 0xFF, 0x83, 0x99);
+> > <snip>
+> > ...
+> > +   15.95%     6.05%  [kernel]        [k] __vmap_pages_range_noflush
+> > +   15.91%     1.74%  [kernel]        [k] addr_to_vb_xa <---------------
+> > +   15.13%    12.05%  [kernel]        [k] vunmap_p4d_range
+> > +   14.17%    13.38%  [kernel]        [k] __find_nth_bit <--------------
+> > +   10.62%     0.00%  [kernel]        [k] ret_from_fork_asm
+> > +   10.62%     0.00%  [kernel]        [k] ret_from_fork
+> > +   10.62%     0.00%  [kernel]        [k] kthread
+> > ...
+> > <snip>
 > >
-> > - Please use lowercase hex instead
-> > - Please consider switching to _multi() functions.
+> > 2. Check if cpu_possible() and then fallback to cpumask_nth() if not
+> >
+> > <snip>
+> > ...
+> > +    6.84%     0.29%  [kernel]          [k] alloc_vmap_area
+> > +    6.80%     6.70%  [kernel]          [k] native_queued_spin_lock_slowpath
+> > +    4.24%     0.09%  [kernel]          [k] free_vmap_block
+> > +    2.41%     2.38%  [kernel]          [k] addr_to_vb_xa <-----------
+> > +    1.94%     1.91%  [kernel]          [k] xas_start
+> > ...
+> > <snip>
+> >
+> > It is _worth_ to check if an index is in possible mask:
+> >
+> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > index 45e1506d58c3..af20f78c2cbf 100644
+> > --- a/mm/vmalloc.c
+> > +++ b/mm/vmalloc.c
+> > @@ -2542,7 +2542,10 @@ static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
+> >  static struct xarray *
+> >  addr_to_vb_xa(unsigned long addr)
+> >  {
+> > -       int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
+> > +       int index = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
+> IIUC, use nr_cpu_ids here maybe incorrect.
 > 
-> Could you be a bit more specific about these '_multi' function ?
-> I've looked at 'drm_mipi_dsi.h' and can't really make what you mean.
-> 
-> Maybe I'm not looking in the right place.
+> take b101 as example, nr_cpu_ids is 3. if index is 2 cpumask_nth(2, cpu_possible_mask);
+> might return 64.
+>
+But then a CPU2 becomes possible? Cutting by % nr_cpu_ids generates values < nr_cpu_ids.
+So, last CPU is always possible and we never do cpumask_nth() on a last possible CPU.
 
-What is your baseline? Please see commits 966e397e4f60 ("drm/mipi-dsi:
-Introduce mipi_dsi_*_write_seq_multi()") and f79d6d28d8fe
-("drm/mipi-dsi: wrap more functions for streamline handling") (and
-66055636a146 ("drm/mipi-dsi: fix handling of ctx in mipi_dsi_msleep") as
-it fixes a mistake in those two).
+What i miss here?
 
-> 
-> >
-> >
-> >> +	usleep_range(200, 300);
-> >
-> > This will require new helper msm_dsi_usleep_range(ctx, 200, 300);
-> 
-> I don't really understand why I would need something else to just sleep
-> ? Could you add some context please ?
-> 
-> Isn't 'msm_' usually something Qcom specific ?
-
-Yes, mipi_dsi_usleep_range(). Mea culpa.
-
-> >> +	mipi_dsi_dcs_write_seq(lcd->dsi, 0xB6, 0x92, 0x92);
-> >> +	mipi_dsi_dcs_write_seq(lcd->dsi, 0xCC, 0x00);
-> >> +	mipi_dsi_dcs_write_seq(lcd->dsi, 0xBF, 0x40, 0x41, 0x50, 0x49);
-> >> +	mipi_dsi_dcs_write_seq(lcd->dsi, 0xC6, 0xFF, 0xF9);
-> >> +	mipi_dsi_dcs_write_seq(lcd->dsi, 0xC0, 0x25, 0x5A);
-> >> +	mipi_dsi_dcs_write_seq(lcd->dsi, MIPI_DCS_SET_ADDRESS_MODE, 0x02);
-> >> +
-> >> +	err = mipi_dsi_dcs_exit_sleep_mode(lcd->dsi);
-> >> +	if (err < 0) {
-> >> +		dev_err(panel->dev, "failed to exit sleep mode: %d\n", err);
-> >> +		goto poweroff;
-> >> +	}
-> >> +	msleep(120);
-> >> +
-> >> +	err = mipi_dsi_dcs_read(lcd->dsi, MIPI_DCS_GET_DISPLAY_ID, display_id, 3);
-> >
-> > This probably needs new _multi helper too.
-> >
-> >> +	if (err < 0) {
-> >> +		dev_err(panel->dev, "Failed to read display id: %d\n", err);
-> >> +	} else {
-> >> +		dev_dbg(panel->dev, "Display id: 0x%02x-0x%02x-0x%02x\n",
-> >> +			display_id[0], display_id[1], display_id[2]);
-> >> +	}
-> >> +
-> >> +	lcd->prepared = true;
-> >
-> > Should not be required anymore.
-> 
-> The whole driver is heavily inspired by what is already in
-> drivers/gpu/drm/panel/ and a lot are doing something similar.
-> 
-> Maybe there has been a change since then and the existing have been
-> reworked yet. Would you mind pointing me that change if that is
-> the case ?
-
-See d2aacaf07395 ("drm/panel: Check for already prepared/enabled in
-drm_panel")
-
-> 
-> >
-> >> +
-> >> +	return 0;
-> >> +
-> >> +poweroff:
-> >> +	gpiod_set_value_cansleep(lcd->enable_gpio, 0);
-> >> +	gpiod_set_value_cansleep(lcd->reset_gpio, 1);
-> >> +	regulator_disable(lcd->supply);
-> >> +
-> >> +	return err;
-> >> +}
-> >> +
-> >
-> >> +
-> >> +static const struct drm_display_mode default_mode = {
-> >> +	.clock = 154002,
-> >> +	.hdisplay = 1080,
-> >> +	.hsync_start = 1080 + 20,
-> >> +	.hsync_end = 1080 + 20 + 6,
-> >> +	.htotal = 1080 + 204,
-> >> +	.vdisplay = 1920,
-> >> +	.vsync_start = 1920 + 4,
-> >> +	.vsync_end = 1920 + 4 + 4,
-> >> +	.vtotal = 1920 + 79,
-> >> +	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-> >> +};
-> >> +
-> >> +static int lincoln_lcd197_panel_get_modes(struct drm_panel *panel,
-> >> +					  struct drm_connector *connector)
-> >> +{
-> >> +	struct drm_display_mode *mode;
-> >> +
-> >> +	mode = drm_mode_duplicate(connector->dev, &default_mode);
-> >> +	if (!mode) {
-> >> +		dev_err(panel->dev, "failed to add mode %ux%u@%u\n",
-> >> +			default_mode.hdisplay, default_mode.vdisplay,
-> >> +			drm_mode_vrefresh(&default_mode));
-> >> +		return -ENOMEM;
-> >> +	}
-> >> +
-> >> +	drm_mode_set_name(mode);
-> >> +	drm_mode_probed_add(connector, mode);
-> >> +	connector->display_info.width_mm = 79;
-> >> +	connector->display_info.height_mm = 125;
-> >
-> > drm_connector_helper_get_modes_fixed()
-> 
-> Thanks for the hint
-> 
-> >
-> >> +
-> >> +	return 1;
-> >> +}
-> >> +
-> >
-> >
-> >> +
-> >> +static void lincoln_lcd197_panel_shutdown(struct mipi_dsi_device *dsi)
-> >> +{
-> >> +	struct lincoln_lcd197_panel *lcd = mipi_dsi_get_drvdata(dsi);
-> >> +
-> >> +	drm_panel_disable(&lcd->panel);
-> >> +	drm_panel_unprepare(&lcd->panel);
-> >> +}
-> >
-> > I think the agreement was that there should be no need for the panel's
-> > shutdown, the DRM driver should shutdown the panel.
-> 
-> I'm happy to drop that if there is such agreement. Again, most panel
-> drivers do implement that callback so I just did the same.
-> 
-> Could you point me to this 'agreement' please, so I can get a better
-> understanding of it ? 
-
-Quoting one of commit messages:
-
-    It's the responsibility of a correctly written DRM modeset driver to
-    call drm_atomic_helper_shutdown() at shutdown time and that should be
-    disabling / unpreparing the panel if needed. Panel drivers shouldn't
-    be calling these functions themselves.
-
-I could not describe it better.
-
--- 
-With best wishes
-Dmitry
+--
+Uladzislau Rezki
