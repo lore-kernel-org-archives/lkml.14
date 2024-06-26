@@ -1,193 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486971E890
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 13:32:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9DA181BBF;
+	Wed, 26 Jun 2024 13:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719408761; cv=none; b=raKJTZnWsqxuGKV38QBuZJFZ4+3BZvRDxY0yJ3IwMrfzyPs3OlSCbYg4ibeE14mbV6LEOYNdOG0xGumcUrHzziyV1oicfAvuxke6et3kdAzp6tSM36vBu49ztEEkh+IeUjgvUx3QuwRPvdhJCHpFK8QR9bRJvlhIvxca4P34rPs=
+	t=1719408782; cv=none; b=CfSXvsH9ol2EXxAEN2SQTCYUJ2haQLqIEoYZvfnJ44euzUd67+nX/JTXtAIUED2Rs+NuQmWS8dKPE345dHWLN+1xVd6UMrhegIp+uQu3YVUfVNRCFCkm62MtbLNqka+bYKracY/26bf7BMWIfOwV+FqzkMfqIl/vRIiZaMwuYx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719408761; c=relaxed/simple;
-	bh=BpC4jkRO/Y4dva9jy2LNSSoyaFURbYQjZeqc2cVtz0E=;
+	s=arc-20240116; t=1719408782; c=relaxed/simple;
+	bh=BtIEJ29GmbJjobMmhUF/L75Shxh4CvTEph4ds53y3CE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eYEgnV57zV+UmFdXu6dQUmaz2dSBvj6/tkfX2kRLJe44OXItlQLtVPXqaK7HPVW1vXoHgxUF+4are2RFokRIPpmGirIXMTwni/z2e+QVECGtXhBxCTMVc1lkQsulger6pjThA0nNZZCcKCYWGJMBYQWpTvF7yDAVyjl0rhuTCSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f4fRYrbw; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=hEOxo2KdYN1vK8iWuI9K5kG7AIsNcATQ8Y6Ua4L4AFt0vy4FwMWJuJNa5LtzFIFcHUXmFcZPjYgiSTGvssf0wh67OKTlMcdeG45e2/YZMU5n0mGwLbIOfQkLVE+l5hRt6vcttiwzcLFQ0MuQ3+eHWuYlND3Cen00h1xeshSrzn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G75Rmuus; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f4fRYrbw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AA85C2BD10;
-	Wed, 26 Jun 2024 13:32:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719408760;
-	bh=BpC4jkRO/Y4dva9jy2LNSSoyaFURbYQjZeqc2cVtz0E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f4fRYrbwf1JT5YZst1PiAi4aFzq22Q10NLheMwylJUhz8LLva7P4Bpi+kywhJYXEt
-	 RNLKDvyL1TZTvSIsQLImQo1uEkeHfZHbiLKYXYL1BcZ/phfTW2Wa/cPeJG/qI2BwSM
-	 UtDfChLs+W09T/UjLqPD2xIZamMQy8JNF5c2szq9PfN433dsIGAOOsrulb+GPIPhmW
-	 gseBbYOQ2uFIGizssSl38u7UCrGhVKB7Bd1FEGA/mC3j/bFwcJEho0QaXYIy3AGVKu
-	 nf6Sna6aiAlnUZm6Si+We7A3BbVPN5ThytXCD0+2v+QtCbdRrRzyowKZp3igLB2lJJ
-	 p6tgEk9LWOI/Q==
-Date: Wed, 26 Jun 2024 21:18:34 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] riscv: uaccess: use input constraints for ptr of
- __put_user
-Message-ID: <ZnwVKs3vI9Zrtvb-@xhacker>
-References: <20240625040500.1788-1-jszhang@kernel.org>
- <20240625040500.1788-3-jszhang@kernel.org>
- <acd2e53f-b5c1-49c5-86e2-bc09eb917163@app.fastmail.com>
- <ZnwKXWzRz9B5FbLM@xhacker>
- <ZnwObmA70Bfx9yCn@xhacker>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G75Rmuus"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7066f68e22cso3082388b3a.2;
+        Wed, 26 Jun 2024 06:33:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719408780; x=1720013580; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=U4SpG465Zq0wFUQJD4T6CGPlHVUtjrzjJUeqwICCVB0=;
+        b=G75Rmuus+EXmc2Kii4VxerNR72vBNVLbomkr+hGZ1yn7wlbFSfOH8RWlVVCCNCJF8N
+         Prp66LhTMOlloXzJChjnZVsX6lCQMH2jMoIdLiAl0l1n7q7wbmJ82q+tpaQgS+IZuREY
+         BSJynVaWdpUF0lEfFe3+9uxfnXcI6A0hLBrwya48nPOu4zhOHYWMFCEklhKPC7UaIEsG
+         5aMh95Pd12pjKTylQgVqcP6p8fCr6uqrFk7LoAnIPUiUkATpC6VbEYxJdSxw/3zbSWDi
+         1P5ZNZW81Qe+eVVF1rJNvhczoMJfvk6kw9oWEfeKiwBu9/aoWpMG4FQy1Z7Y33cS/vU2
+         gdNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719408780; x=1720013580;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U4SpG465Zq0wFUQJD4T6CGPlHVUtjrzjJUeqwICCVB0=;
+        b=hsVJ/cE82dxFywRH4aNbAwebJukcgKy7WCwquA1YXffEUEnh2dFLgRpLFphGvOcS8s
+         ZPzUNstyLx7qBVdLmLzgDgwCfs9SZpvxAU6m8ZX0ZK59tLond4OQjE7CyM6HB+/ylyox
+         77cT6vymU2UcaFn8zb+iGA/FL20piIGD0UB5LSp8LvWyE/Hl+LCjUt2JwKj0Td+LP/dL
+         d0SUwSFXaqHmzPn2PEdLSbpJr10f9X6QserPgUyzy7DuATMR0UHioLzHuO2+ZMfbJCvn
+         w4MqFchbNWecUhJVJNVFyuT78AQ3lp6LZEQZO5oz1PbfWUZI2tN1mhdp6snunWBd0bGK
+         jC0g==
+X-Forwarded-Encrypted: i=1; AJvYcCVybCFrE22G1FwUKJXGfsYRIboJjB0STRTw3/Xb83szYHcBT/o9dbbKCRhA1pXhJxMhrzjg/KkrenpP6ZL0BuH0GUN8Vs/XA4rPwAoRJMXbDYrQIyUjt6cPf4cfW78omM5iguA/fiIcQmCgh2UpZ25tlwzyQOIgpOyPBO/7V7uwtYWqsNPq4PZXfRoB3QuzGJqVU1L5TEUaf+OfIqNDlrSRNCtM46ZMBZFqo2JjMxcOsbWsp8wYkGf/0g==
+X-Gm-Message-State: AOJu0YyN+Wp9qr0VcLBUHmvbtEkJGKUorjSaR/9cYTHYSP8msncvxipf
+	j3FdQAkomWQe1RxpBGiBfUySrzHyFuBVEHiJ4Y9uZYEuUTDA5dy6
+X-Google-Smtp-Source: AGHT+IER57KcsE5A6v0eX5mNYLuzZpa08lQwfGmIk/QpxqLOfeNqNB0VfK27wnjYzWXj4yOGmexT+g==
+X-Received: by 2002:aa7:9a1d:0:b0:706:6ad6:1866 with SMTP id d2e1a72fcca58-70671012a58mr10321399b3a.30.1719408780319;
+        Wed, 26 Jun 2024 06:33:00 -0700 (PDT)
+Received: from localhost ([2804:30c:96b:f700:cc1d:c0ae:96c9:c934])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-716bb22dffesm8796040a12.83.2024.06.26.06.32.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jun 2024 06:32:59 -0700 (PDT)
+Date: Wed, 26 Jun 2024 10:34:24 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Conor Dooley <conor@kernel.org>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, broonie@kernel.org,
+	lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, nuno.sa@analog.com, dlechner@baylibre.com,
+	corbet@lwn.net, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 5/7] dt-bindings: iio: adc: Add AD4000
+Message-ID: <ZnwY4MqCYFKUNtL3@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1719351923.git.marcelo.schmitt@analog.com>
+ <10678612efbbd97bb47a31f4a062607cf35b03f9.1719351923.git.marcelo.schmitt@analog.com>
+ <20240626-handbrake-mustang-38c2aab3f04b@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZnwObmA70Bfx9yCn@xhacker>
+In-Reply-To: <20240626-handbrake-mustang-38c2aab3f04b@spud>
 
-On Wed, Jun 26, 2024 at 08:49:59PM +0800, Jisheng Zhang wrote:
-> On Wed, Jun 26, 2024 at 08:32:38PM +0800, Jisheng Zhang wrote:
-> > On Tue, Jun 25, 2024 at 07:54:30AM +0200, Arnd Bergmann wrote:
-> > > On Tue, Jun 25, 2024, at 06:04, Jisheng Zhang wrote:
-> > > > I believe the output constraints "=m" is not necessary, because
-> > > > the instruction itself is "write", we don't need the compiler
-> > > > to "write" for us. So tell compiler we read from memory instead
-> > > > of writing.
-> > > >
-> > > > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> > > 
-> > > I think this is a bit too confusing: clearly there is no
-> > > read access from the __user pointer, so what you add in here
-> > > is not correct. There also needs to be a code comment about
+On 06/26, Conor Dooley wrote:
+> On Tue, Jun 25, 2024 at 06:55:03PM -0300, Marcelo Schmitt wrote:
+> > Add device tree documentation for AD4000 series of ADC devices.
 > > 
-> > Here is my understanding: the __put_user is implemented with
-> > sd(or its less wider variant, sw etc.), w/o considering the
-> > ex_table, the previous code can be simplified as below:
-> > 
-> > __asm__ __volatile__ (
-> > 	"sw	%z2, %1\n"
-> > 	: "+r" (err), "=m" (*(ptr))
-> > 	: "rJ" (__x));
-> > 
-> > Here ptr is really an input, just tells gcc where to store,
-> > And the "store" action is from the "sw" instruction, I don't
-> > need the gcc generates "store" instruction for me. so IMHO,
-> > there's no need to use output constraints here. so I changed
-> > it to
-> > 
-> > __asm__ __volatile__ (
-> > 	"sw	%z1, %2\n"
-> > 	: "+r" (err)
-> > 	: "rJ" (__x), "m"(*(ptr)));
-> > 
-> > The key here: is this correct?
-> > 
-> > 
-> > Here is the put_user piece code and comments from x86
-> > 
-> > /*
-> >  * Tell gcc we read from memory instead of writing: this is because
-> >  * we do not write to any memory gcc knows about, so there are no
-> >  * aliasing issues.
-> >  */
-> > #define __put_user_goto(x, addr, itype, ltype, label)                   \
-> >         asm goto("\n"                                                   \
-> >                 "1:     mov"itype" %0,%1\n"                             \
-> >                 _ASM_EXTABLE_UA(1b, %l2)                                \
-> >                 : : ltype(x), "m" (__m(addr))                           \
-> >                 : : label)
+> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> > ---
+> >  .../bindings/iio/adc/adi,ad4000.yaml          | 190 ++++++++++++++++++
+> >  MAINTAINERS                                   |   7 +
+...
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - const: adi,ad4000
+> > +      - items:
+> > +          - enum:
+> > +              - adi,ad4004
+> > +              - adi,ad4008
+> > +          - const: adi,ad4000
 > 
-> Here is the simplified put_user piece code of arm64:
+> > +      - const: adi,ad4001
+> > +      - items:
+> > +          - enum:
+> > +              - adi,ad4005
+> > +          - const: adi,ad4001
 > 
-> #define __put_mem_asm(store, reg, x, addr, err, type)                   \
->         asm volatile(                                                   \
->         "1:     " store "       " reg "1, [%2]\n"                       \
->         "2:\n"                                                          \
->         _ASM_EXTABLE_##type##ACCESS_ERR(1b, 2b, %w0)                    \
->         : "+r" (err)                                                    \
->         : "rZ" (x), "r" (addr))
+> > +      - const: adi,ad4002
+> > +      - items:
+> > +          - enum:
+> > +              - adi,ad4006
+> > +              - adi,ad4010
+> > +          - const: adi,ad4002
 > 
-> no output constraints either. It just uses "r" input constraints to tell
+> > +      - const: adi,ad4003
+> > +      - items:
+> > +          - enum:
+> > +              - adi,ad4007
+> > +              - adi,ad4011
+> > +          - const: adi,ad4003
+> 
+> > +      - const: adi,ad4020
+> > +      - items:
+> > +          - enum:
+> > +              - adi,ad4021
+> > +              - adi,ad4022
+> > +          - const: adi,ad4020
+> 
+> > +      - const: adi,adaq4001
+> 
+> > +      - const: adi,adaq4003
+> 
+> I think some blank lines, maybe like the above, would go a long way with
+> this list of compatibles.
+> 
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  spi-max-frequency:
+> > +    maximum: 102040816 # for VIO > 2.7 V, 81300813 for VIO > 1.7 V
+> > +
+> > +  adi,sdi-pin:
+> > +    $ref: /schemas/types.yaml#/definitions/string
+> > +    enum: [ high, low, cs ]
+> 
+>     enum: [ high, low, cs, sdi ]
+>     default: sdi
+> 
+> I'd do this, so that the default is documented in the binding, not in
+> the description text.
+> 
+> Otherwise, this looks good to me.
 
-make it accurate: by this I mean the "addr" of __put_user() isn't
-in the output constraints.
-
-> gcc to read the store address into one proper GP reg.
-> 
-> > 
-> > 
-> > As can be seen, x86 also doesn't put the (addr) in output constraints,
-> > I think x86 version did similar modification in history, but when I tried
-> > to searh the git history, the comment is there from the git first day.
-> > 
-> > Any hint or suggestion is appreciated!
-> > 
-> > > why you do it this way, as it's not clear that this is
-> > > a workaround for old compilers without
-> > > CONFIG_CC_HAS_ASM_GOTO_OUTPUT.
-> > > 
-> > > > index 09d4ca37522c..84b084e388a7 100644
-> > > > --- a/arch/riscv/include/asm/uaccess.h
-> > > > +++ b/arch/riscv/include/asm/uaccess.h
-> > > > @@ -186,11 +186,11 @@ do {								\
-> > > >  	__typeof__(*(ptr)) __x = x;				\
-> > > >  	__asm__ __volatile__ (					\
-> > > >  		"1:\n"						\
-> > > > -		"	" insn " %z2, %1\n"			\
-> > > > +		"	" insn " %z1, %2\n"			\
-> > > >  		"2:\n"						\
-> > > >  		_ASM_EXTABLE_UACCESS_ERR(1b, 2b, %0)		\
-> > > > -		: "+r" (err), "=m" (*(ptr))			\
-> > > > -		: "rJ" (__x));					\
-> > > > +		: "+r" (err)			\
-> > > > +		: "rJ" (__x), "m"(*(ptr)));					\
-> > > >  } while (0)
-> > > > 
-> > > 
-> > > I suspect this could just be a "r" constraint instead of
-> > > "m", treating the __user pointer as a plain integer.
-> > 
-> > I tried "r", the generated code is not as good as "m"
-> > 
-> > for example
-> > __put_user(0x12, &frame->uc.uc_flags);
-> > 
-> > with "m", the generated code will be
-> > 
-> > ...
-> > csrs    sstatus,a5
-> > li      a4,18
-> > sd      a4,128(s1)
-> > csrc    sstatus,a5
-> > ...
-> > 
-> > 
-> > with "r", the generated code will be
-> > 
-> > ...
-> > csrs    sstatus,a5
-> > li      a4,18
-> > addi    s1,s1,128
-> > sd      a4,0(s1)
-> > csrc    sstatus,a5
-> > ...
-> > 
-> > As can be seen, "m" can make use of the 'offset' of
-> > sd, so save one instruction.
-> > 
-> > > 
-> > > For kernel pointers, using "m" and "=m" constraints
-> > > correctly is necessary since gcc will often access the
-> > > same data from C code as well. For __user pointers, we
-> > > can probably get away without it since no C code is
-> > > ever allowed to just dereference them. If you do that,
-> > > you may want to have the same thing in the __get_user
-> > > side.
-> > > 
-> > >       Arnd
+Ack, will do.
+Thanks
