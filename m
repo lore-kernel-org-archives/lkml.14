@@ -1,222 +1,235 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDCC149C52
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 11:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA8F149C52;
+	Wed, 26 Jun 2024 11:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719400170; cv=none; b=BLvboDnfPYT9+xDqqVr1AjtbG4/a5bwjRKNHUcpuDAe3bT1yPUCLTtJ2vQyeHFLXi2RjH8ShdcPaK4IIaXRicyamccUwcIB9bizI0FBB5qlBohUlpARhm9qLCqmDeXvK2JNPcBp0OM1zm9oNKfX/ErypeMZ7lmgJ/FvaMfZ6dEI=
+	t=1719400244; cv=none; b=Q6w6mKEiqcnht42SWXAgleqZJXkho+sa12shuu0hhR0YYyb68S8qzkYDg7GZukSkdsSfP4PYrzAgVEMkry2YYW7U58n2AF6XzRnXigjjz7p1ruszjAlb3nElg1d8gc8FauRPTmuVdfVasTEIQbqxRQsBri0KGecpof99vtZj/y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719400170; c=relaxed/simple;
-	bh=hUDZyxr8E0VhpPuOMhpLErVrjQ/SFZ7QlGb6et9BwuE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ql3h6FnsNn1K7TEzOvmNsBzW1+beBXKjzYJQ3WHubiqXvxSi3lvpasT1mMC8DfnJ7FExvPhr4pn9TSK2q2ZFOEWSeHuQcnMq62hACAzo8mhxlNUaEasGGO15WiuS3JriGUJ1spSpcrIVRZN5UUw2hNfBQEFkrvYzLpo2wDNpL2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=dCWAU9Xc; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1719400244; c=relaxed/simple;
+	bh=y5GB7iZxGrVNLx9zEM0w79I4bjgFC4YG83muA1Hj6Bk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tj79gNNSvwcGFQ+cnDb6avSSdzx742ozxHoQQGRc8ssIQ2fKQM4tFiFc4mtk41eAUIZJv+++g4xFybr+lpcEnrdUQmvoJnOd5EJsUJGhVBZoYklE/z0H0tW1FKHHJ8L6E3+tJB6/HB3dOGgBtfEpu2Kl95mhmxRp6gIt+AJrDOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=klbJ08a5; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="dCWAU9Xc"
-Received: from [192.168.88.20] (91-158-144-210.elisa-laajakaista.fi [91.158.144.210])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C119CFD6;
-	Wed, 26 Jun 2024 13:09:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1719400143;
-	bh=hUDZyxr8E0VhpPuOMhpLErVrjQ/SFZ7QlGb6et9BwuE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dCWAU9XcLhm5CEipAGWVQfywI9aIHkN4VDyS+xuk8QN27A1MRIkXdMs/79hRMmrq1
-	 YImTMqaYC0fsE+onx6aflsejpgde4F/NvKV85ncskJmzpsTWtkzvHrQEQF+7oai9sF
-	 B7yqyfeLHq8Dz5chtLp0IfS8Fvs8b9y0VVo8ZRII=
-Message-ID: <73e4d081-f5f4-4e6f-988c-43bbc312632a@ideasonboard.com>
-Date: Wed, 26 Jun 2024 14:09:22 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="klbJ08a5"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-424aa70fbc4so7789705e9.1;
+        Wed, 26 Jun 2024 04:10:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719400241; x=1720005041; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=87aPA93jqh73LcqxNsHjq/adaWYJgqncVxDTzkIZqG8=;
+        b=klbJ08a5DwBldfYtpOoyLy+u0qv5o4wd0bJQKMRlWHu5QJyzQzD6aB/OJqatzIKTua
+         tUc9mGWepimJ4KWkJXS81Y16x/AQSFnKB+WElkDu8Iepn8P9hL+ce5wCDAZLQvC83AsI
+         TQ5XU+JoIrgTaQ8a66/FdhG5j+FV1Jqgd6JUmmVprrH7wOy3OnROhSL1cIhN+xCAvbVW
+         V7pXVzVV2A414qHDLfMM+Pptfg67LMYZAxhJBP1hNmRSFwOmdszcPP55YOcQR8qqsWFb
+         mbY/sck6qGUo81zjdCBirNRIvWXcjqhUEwg5jbbBDZ4s9iZg+o7dMAIlU//d18l77o2v
+         n27Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719400241; x=1720005041;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=87aPA93jqh73LcqxNsHjq/adaWYJgqncVxDTzkIZqG8=;
+        b=bOq9z1dw+gCiQ22kDqLJPTkFkTg2TvCFsjtJ51ZVL7FmvXnPDr34U3zFYKDQ9WM6ML
+         4rt/2Iq0cXmxGySRYyh7tkMXx12yGT5j7J2HzXCQsiPJue0s7U6rl3sVcQz6zJz3UYyN
+         qKfIk40b6316GvipUSW0e+QUV+1/rcYCJbqq510PrZSLkXYkMiXGbOtAZpsFnlmI82JP
+         1fOXaG6lxTPQGmBoVcXf87PPf83FS/e2SQEmBgM0m9NgGUpb4AGWqN/SoG9GuLKcktqY
+         iBjV9A3OVLesWvyUjHOGAK3Cyls48PNhkNarTX7zPALQGTZeqzTlC6p/ZjQlMFyKckY7
+         NC0g==
+X-Forwarded-Encrypted: i=1; AJvYcCWYi1iE+A1KeeR1mJI/HvvC+VTKLrAQuKy3ABfZNIRxWXfjPK0D1ZqLrS+gP+3gVm3JzF7xWb8WDC4upjJ6HdvONmUaEeOgNyVqQ2d4wuPRw/DowrngAhTHWGJ46SXVHAQCL+pTEPY5Kf6HzzEEXMB7EFEPf9gmxp5gtC0qoqUYfVenVA==
+X-Gm-Message-State: AOJu0Yw0vcdYrlJHpHxoCK5Uio9lCFaYF81VV3cEtW4fJ6mYp7U/YVWE
+	WbXcPuvg3SxZ5GnEKsSFDu4SoMPxSThEP2VeTV32CGvV8zUdHJs3
+X-Google-Smtp-Source: AGHT+IEf52+IKIte1UwZtSbMg1MFU4zo8snbtBy8CVYafBcPTevpxEZODaBrOTFHM9OTyO9pQ8/dxA==
+X-Received: by 2002:a05:600c:5686:b0:423:668:4c39 with SMTP id 5b1f17b1804b1-4248cc18115mr76449425e9.1.1719400241030;
+        Wed, 26 Jun 2024 04:10:41 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c8280962sm21609355e9.34.2024.06.26.04.10.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jun 2024 04:10:40 -0700 (PDT)
+Message-ID: <2c8127ab4e26cc3b12793c942435ccd6cb9f5432.camel@gmail.com>
+Subject: Re: [PATCH v4 5/5] iio: dac: ltc2664: Add driver for LTC2664 and
+ LTC2672
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Kim Seer Paller <kimseer.paller@analog.com>,
+ linux-kernel@vger.kernel.org,  linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org
+Cc: Jonathan Cameron <jic23@kernel.org>, David Lechner
+ <dlechner@baylibre.com>,  Lars-Peter Clausen <lars@metafoo.de>, Liam
+ Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Dimitri
+ Fedrau <dima.fedrau@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,  Michael
+ Hennerich <michael.hennerich@analog.com>
+Date: Wed, 26 Jun 2024 13:14:32 +0200
+In-Reply-To: <20240619064904.73832-6-kimseer.paller@analog.com>
+References: <20240619064904.73832-1-kimseer.paller@analog.com>
+	 <20240619064904.73832-6-kimseer.paller@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 09/11] drm/bridge: cdns-dsi: Support atomic bridge APIs
-To: Aradhya Bhatia <a-bhatia1@ti.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Jyri Sarha <jyri.sarha@iki.fi>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>
-Cc: DRI Development List <dri-devel@lists.freedesktop.org>,
- Linux Kernel List <linux-kernel@vger.kernel.org>,
- Dominik Haller <d.haller@phytec.de>, Sam Ravnborg <sam@ravnborg.org>,
- Thierry Reding <treding@nvidia.com>,
- Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
- Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
- Praneeth Bajjuri <praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>,
- Devarsh Thakkar <devarsht@ti.com>, Jayesh Choudhary <j-choudhary@ti.com>,
- Jai Luthra <j-luthra@ti.com>
-References: <20240622110929.3115714-1-a-bhatia1@ti.com>
- <20240622110929.3115714-10-a-bhatia1@ti.com>
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Content-Language: en-US
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- xsFNBE6ms0cBEACyizowecZqXfMZtnBniOieTuFdErHAUyxVgtmr0f5ZfIi9Z4l+uUN4Zdw2
- wCEZjx3o0Z34diXBaMRJ3rAk9yB90UJAnLtb8A97Oq64DskLF81GCYB2P1i0qrG7UjpASgCA
- Ru0lVvxsWyIwSfoYoLrazbT1wkWRs8YBkkXQFfL7Mn3ZMoGPcpfwYH9O7bV1NslbmyJzRCMO
- eYV258gjCcwYlrkyIratlHCek4GrwV8Z9NQcjD5iLzrONjfafrWPwj6yn2RlL0mQEwt1lOvn
- LnI7QRtB3zxA3yB+FLsT1hx0va6xCHpX3QO2gBsyHCyVafFMrg3c/7IIWkDLngJxFgz6DLiA
- G4ld1QK/jsYqfP2GIMH1mFdjY+iagG4DqOsjip479HCWAptpNxSOCL6z3qxCU8MCz8iNOtZk
- DYXQWVscM5qgYSn+fmMM2qN+eoWlnCGVURZZLDjg387S2E1jT/dNTOsM/IqQj+ZROUZuRcF7
- 0RTtuU5q1HnbRNwy+23xeoSGuwmLQ2UsUk7Q5CnrjYfiPo3wHze8avK95JBoSd+WIRmV3uoO
- rXCoYOIRlDhg9XJTrbnQ3Ot5zOa0Y9c4IpyAlut6mDtxtKXr4+8OzjSVFww7tIwadTK3wDQv
- Bus4jxHjS6dz1g2ypT65qnHen6mUUH63lhzewqO9peAHJ0SLrQARAQABzTBUb21pIFZhbGtl
- aW5lbiA8dG9taS52YWxrZWluZW5AaWRlYXNvbmJvYXJkLmNvbT7CwY4EEwEIADgWIQTEOAw+
- ll79gQef86f6PaqMvJYe9QUCX/HruAIbAwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgAAKCRD6
- PaqMvJYe9WmFD/99NGoD5lBJhlFDHMZvO+Op8vCwnIRZdTsyrtGl72rVh9xRfcSgYPZUvBuT
- VDxE53mY9HaZyu1eGMccYRBaTLJSfCXl/g317CrMNdY0k40b9YeIX10feiRYEWoDIPQ3tMmA
- 0nHDygzcnuPiPT68JYZ6tUOvAt7r6OX/litM+m2/E9mtp8xCoWOo/kYO4mOAIoMNvLB8vufi
- uBB4e/AvAjtny4ScuNV5c5q8MkfNIiOyag9QCiQ/JfoAqzXRjVb4VZG72AKaElwipiKCWEcU
- R4+Bu5Qbaxj7Cd36M/bI54OrbWWETJkVVSV1i0tghCd6HHyquTdFl7wYcz6cL1hn/6byVnD+
- sR3BLvSBHYp8WSwv0TCuf6tLiNgHAO1hWiQ1pOoXyMEsxZlgPXT+wb4dbNVunckwqFjGxRbl
- Rz7apFT/ZRwbazEzEzNyrBOfB55xdipG/2+SmFn0oMFqFOBEszXLQVslh64lI0CMJm2OYYe3
- PxHqYaztyeXsx13Bfnq9+bUynAQ4uW1P5DJ3OIRZWKmbQd/Me3Fq6TU57LsvwRgE0Le9PFQs
- dcP2071rMTpqTUteEgODJS4VDf4lXJfY91u32BJkiqM7/62Cqatcz5UWWHq5xeF03MIUTqdE
- qHWk3RJEoWHWQRzQfcx6Fn2fDAUKhAddvoopfcjAHfpAWJ+ENc7BTQROprNHARAAx0aat8GU
- hsusCLc4MIxOQwidecCTRc9Dz/7U2goUwhw2O5j9TPqLtp57VITmHILnvZf6q3QAho2QMQyE
- DDvHubrdtEoqaaSKxKkFie1uhWNNvXPhwkKLYieyL9m2JdU+b88HaDnpzdyTTR4uH7wk0bBa
- KbTSgIFDDe5lXInypewPO30TmYNkFSexnnM3n1PBCqiJXsJahE4ZQ+WnV5FbPUj8T2zXS2xk
- 0LZ0+DwKmZ0ZDovvdEWRWrz3UzJ8DLHb7blPpGhmqj3ANXQXC7mb9qJ6J/VSl61GbxIO2Dwb
- xPNkHk8fwnxlUBCOyBti/uD2uSTgKHNdabhVm2dgFNVuS1y3bBHbI/qjC3J7rWE0WiaHWEqy
- UVPk8rsph4rqITsj2RiY70vEW0SKePrChvET7D8P1UPqmveBNNtSS7In+DdZ5kUqLV7rJnM9
- /4cwy+uZUt8cuCZlcA5u8IsBCNJudxEqBG10GHg1B6h1RZIz9Q9XfiBdaqa5+CjyFs8ua01c
- 9HmyfkuhXG2OLjfQuK+Ygd56mV3lq0aFdwbaX16DG22c6flkkBSjyWXYepFtHz9KsBS0DaZb
- 4IkLmZwEXpZcIOQjQ71fqlpiXkXSIaQ6YMEs8WjBbpP81h7QxWIfWtp+VnwNGc6nq5IQDESH
- mvQcsFS7d3eGVI6eyjCFdcAO8eMAEQEAAcLBXwQYAQIACQUCTqazRwIbDAAKCRD6PaqMvJYe
- 9fA7EACS6exUedsBKmt4pT7nqXBcRsqm6YzT6DeCM8PWMTeaVGHiR4TnNFiT3otD5UpYQI7S
- suYxoTdHrrrBzdlKe5rUWpzoZkVK6p0s9OIvGzLT0lrb0HC9iNDWT3JgpYDnk4Z2mFi6tTbq
- xKMtpVFRA6FjviGDRsfkfoURZI51nf2RSAk/A8BEDDZ7lgJHskYoklSpwyrXhkp9FHGMaYII
- m9EKuUTX9JPDG2FTthCBrdsgWYPdJQvM+zscq09vFMQ9Fykbx5N8z/oFEUy3ACyPqW2oyfvU
- CH5WDpWBG0s5BALp1gBJPytIAd/pY/5ZdNoi0Cx3+Z7jaBFEyYJdWy1hGddpkgnMjyOfLI7B
- CFrdecTZbR5upjNSDvQ7RG85SnpYJTIin+SAUazAeA2nS6gTZzumgtdw8XmVXZwdBfF+ICof
- 92UkbYcYNbzWO/GHgsNT1WnM4sa9lwCSWH8Fw1o/3bX1VVPEsnESOfxkNdu+gAF5S6+I6n3a
- ueeIlwJl5CpT5l8RpoZXEOVtXYn8zzOJ7oGZYINRV9Pf8qKGLf3Dft7zKBP832I3PQjeok7F
- yjt+9S+KgSFSHP3Pa4E7lsSdWhSlHYNdG/czhoUkSCN09C0rEK93wxACx3vtxPLjXu6RptBw
- 3dRq7n+mQChEB1am0BueV1JZaBboIL0AGlSJkm23kw==
-In-Reply-To: <20240622110929.3115714-10-a-bhatia1@ti.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 22/06/2024 14:09, Aradhya Bhatia wrote:
-> Change the existing (and deprecated) bridge hooks, to the bridge
-> atomic APIs.
-> 
-> Add drm helpers for duplicate_state, destroy_state, and bridge_reset
-> bridge hooks.
-> 
-> Further add support for the input format negotiation hook.
-> 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
-
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-
-  Tomi
-
+On Wed, 2024-06-19 at 14:49 +0800, Kim Seer Paller wrote:
+> LTC2664 4 channel, 12-/16-Bit Voltage Output SoftSpan DAC
+> LTC2672 5 channel, 12-/16-Bit Current Output Softspan DAC
+>=20
+> Co-developed-by: Michael Hennerich <michael.hennerich@analog.com>
+> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+> Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
 > ---
->   .../gpu/drm/bridge/cadence/cdns-dsi-core.c    | 51 ++++++++++++++++---
->   1 file changed, 43 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-> index cad0c1478ef0..c9697818308e 100644
-> --- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-> +++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-> @@ -655,7 +655,8 @@ cdns_dsi_bridge_mode_valid(struct drm_bridge *bridge,
->   	return MODE_OK;
->   }
->   
-> -static void cdns_dsi_bridge_disable(struct drm_bridge *bridge)
-> +static void cdns_dsi_bridge_atomic_disable(struct drm_bridge *bridge,
-> +					   struct drm_bridge_state *old_bridge_state)
->   {
->   	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
->   	struct cdns_dsi *dsi = input_to_dsi(input);
-> @@ -679,7 +680,8 @@ static void cdns_dsi_bridge_disable(struct drm_bridge *bridge)
->   	pm_runtime_put(dsi->base.dev);
->   }
->   
-> -static void cdns_dsi_bridge_post_disable(struct drm_bridge *bridge)
-> +static void cdns_dsi_bridge_atomic_post_disable(struct drm_bridge *bridge,
-> +						struct drm_bridge_state *old_bridge_state)
->   {
->   	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
->   	struct cdns_dsi *dsi = input_to_dsi(input);
-> @@ -755,7 +757,8 @@ static void cdns_dsi_init_link(struct cdns_dsi *dsi)
->   	dsi->link_initialized = true;
->   }
->   
-> -static void cdns_dsi_bridge_enable(struct drm_bridge *bridge)
-> +static void cdns_dsi_bridge_atomic_enable(struct drm_bridge *bridge,
-> +					  struct drm_bridge_state *old_bridge_state)
->   {
->   	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
->   	struct cdns_dsi *dsi = input_to_dsi(input);
-> @@ -906,7 +909,8 @@ static void cdns_dsi_bridge_enable(struct drm_bridge *bridge)
->   	writel(tmp, dsi->regs + MCTL_MAIN_EN);
->   }
->   
-> -static void cdns_dsi_bridge_pre_enable(struct drm_bridge *bridge)
-> +static void cdns_dsi_bridge_atomic_pre_enable(struct drm_bridge *bridge,
-> +					      struct drm_bridge_state *old_bridge_state)
->   {
->   	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
->   	struct cdns_dsi *dsi = input_to_dsi(input);
-> @@ -918,13 +922,44 @@ static void cdns_dsi_bridge_pre_enable(struct drm_bridge *bridge)
->   	cdns_dsi_hs_init(dsi);
->   }
->   
-> +static u32 *cdns_dsi_bridge_get_input_bus_fmts(struct drm_bridge *bridge,
-> +					       struct drm_bridge_state *bridge_state,
-> +					       struct drm_crtc_state *crtc_state,
-> +					       struct drm_connector_state *conn_state,
-> +					       u32 output_fmt,
-> +					       unsigned int *num_input_fmts)
+
+Just minor nits... Anyways:
+
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+
+> =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+> =C2=A0drivers/iio/dac/Kconfig=C2=A0=C2=A0 |=C2=A0 11 +
+> =C2=A0drivers/iio/dac/Makefile=C2=A0 |=C2=A0=C2=A0 1 +
+> =C2=A0drivers/iio/dac/ltc2664.c | 755 +++++++++++++++++++++++++++++++++++=
++++
+> =C2=A04 files changed, 768 insertions(+)
+> =C2=A0create mode 100644 drivers/iio/dac/ltc2664.c
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f4a5b5bc8ccc..7a02d9a196fb 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13082,6 +13082,7 @@ S:	Supported
+> =C2=A0W:	https://ez.analog.com/linux-software-drivers
+> =C2=A0F:	Documentation/devicetree/bindings/iio/dac/adi,ltc2664.yaml
+> =C2=A0F:	Documentation/devicetree/bindings/iio/dac/adi,ltc2672.yaml
+> +F:	drivers/iio/dac/ltc2664.c
+> =C2=A0
+> =C2=A0LTC2688 IIO DAC DRIVER
+> =C2=A0M:	Nuno S=C3=A1 <nuno.sa@analog.com>
+> diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
+> index fb48dddbcc20..3a7691db3998 100644
+> --- a/drivers/iio/dac/Kconfig
+> +++ b/drivers/iio/dac/Kconfig
+> @@ -371,6 +371,17 @@ config LTC2632
+> =C2=A0	=C2=A0 To compile this driver as a module, choose M here: the
+> =C2=A0	=C2=A0 module will be called ltc2632.
+> =C2=A0
+> +config LTC2664
+> +	tristate "Analog Devices LTC2664 and LTC2672 DAC SPI driver"
+> +	depends on SPI
+> +	select REGMAP
+> +	help
+> +	=C2=A0 Say yes here to build support for Analog Devices
+> +	=C2=A0 LTC2664 and LTC2672 converters (DAC).
+> +
+> +	=C2=A0 To compile this driver as a module, choose M here: the
+> +	=C2=A0 module will be called ltc2664.
+> +
+> =C2=A0config M62332
+> =C2=A0	tristate "Mitsubishi M62332 DAC driver"
+> =C2=A0	depends on I2C
+> diff --git a/drivers/iio/dac/Makefile b/drivers/iio/dac/Makefile
+> index 8432a81a19dc..2cf148f16306 100644
+> --- a/drivers/iio/dac/Makefile
+> +++ b/drivers/iio/dac/Makefile
+> @@ -37,6 +37,7 @@ obj-$(CONFIG_DS4424) +=3D ds4424.o
+> =C2=A0obj-$(CONFIG_LPC18XX_DAC) +=3D lpc18xx_dac.o
+> =C2=A0obj-$(CONFIG_LTC1660) +=3D ltc1660.o
+> =C2=A0obj-$(CONFIG_LTC2632) +=3D ltc2632.o
+> +obj-$(CONFIG_LTC2664) +=3D ltc2664.o
+> =C2=A0obj-$(CONFIG_LTC2688) +=3D ltc2688.o
+> =C2=A0obj-$(CONFIG_M62332) +=3D m62332.o
+> =C2=A0obj-$(CONFIG_MAX517) +=3D max517.o
+> diff --git a/drivers/iio/dac/ltc2664.c b/drivers/iio/dac/ltc2664.c
+> new file mode 100644
+> index 000000000000..9b73b9c6a7a7
+> --- /dev/null
+> +++ b/drivers/iio/dac/ltc2664.c
+> @@ -0,0 +1,755 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * LTC2664 4 channel, 12-/16-Bit Voltage Output SoftSpan DAC driver
+> + * LTC2672 5 channel, 12-/16-Bit Current Output Softspan DAC driver
+> + *
+> + * Copyright 2024 Analog Devices Inc.
+> + */
+> +
+>=20
+
+...
+
+> +
+> +static int ltc2664_dac_code_read(struct ltc2664_state *st, u32 chan, u32
+> input,
+> +				 u32 *code)
 > +{
-> +	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
-> +	struct cdns_dsi *dsi = input_to_dsi(input);
-> +	struct cdns_dsi_output *output = &dsi->output;
-> +	u32 *input_fmts;
+> +	guard(mutex)(&st->lock);
+> +	*code =3D st->channels[chan].raw[input];
 > +
-> +	*num_input_fmts = 0;
+> +	return 0;
+
+no need for an error code...
+
+...
+
+>=20
+> +static int ltc2664_probe(struct spi_device *spi)
+> +{
+> +	static const char * const regulators[] =3D { "vcc", "iovcc", "v-neg" };
+> +	const struct ltc2664_chip_info *chip_info;
+> +	struct device *dev =3D &spi->dev;
+> +	struct iio_dev *indio_dev;
+> +	struct ltc2664_state *st;
+> +	int ret;
 > +
-> +	input_fmts = kzalloc(sizeof(*input_fmts), GFP_KERNEL);
-> +	if (!input_fmts)
-> +		return NULL;
+> +	indio_dev =3D devm_iio_device_alloc(dev, sizeof(*st));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
 > +
-> +	input_fmts[0] = drm_mipi_dsi_get_input_bus_fmt(output->dev->format);
-> +	if (!input_fmts[0])
-> +		return NULL;
+> +	st =3D iio_priv(indio_dev);
+> +	st->spi =3D spi;
 > +
-> +	*num_input_fmts = 1;
+> +	chip_info =3D spi_get_device_match_data(spi);
+> +	if (!chip_info)
+> +		return -ENODEV;
 > +
-> +	return input_fmts;
-> +}
+> +	st->chip_info =3D chip_info;
 > +
->   static const struct drm_bridge_funcs cdns_dsi_bridge_funcs = {
->   	.attach = cdns_dsi_bridge_attach,
->   	.mode_valid = cdns_dsi_bridge_mode_valid,
-> -	.disable = cdns_dsi_bridge_disable,
-> -	.pre_enable = cdns_dsi_bridge_pre_enable,
-> -	.enable = cdns_dsi_bridge_enable,
-> -	.post_disable = cdns_dsi_bridge_post_disable,
-> +	.atomic_disable = cdns_dsi_bridge_atomic_disable,
-> +	.atomic_pre_enable = cdns_dsi_bridge_atomic_pre_enable,
-> +	.atomic_enable = cdns_dsi_bridge_atomic_enable,
-> +	.atomic_post_disable = cdns_dsi_bridge_atomic_post_disable,
-> +	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
-> +	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
-> +	.atomic_reset = drm_atomic_helper_bridge_reset,
-> +	.atomic_get_input_bus_fmts = cdns_dsi_bridge_get_input_bus_fmts,
->   };
->   
->   static int cdns_dsi_attach(struct mipi_dsi_host *host,
+> +	mutex_init(&st->lock);
+> +
+> +	st->regmap =3D devm_regmap_init_spi(spi, &ltc2664_regmap_config);
+> +	if (IS_ERR(st->regmap))
+> +		return dev_err_probe(dev, PTR_ERR(st->regmap),
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 "Failed to init regmap");
+> +
+> +	ret =3D devm_regulator_bulk_get_enable(dev, ARRAY_SIZE(regulators),
+> +					=C2=A0=C2=A0=C2=A0=C2=A0 regulators);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to enable
+> regulators\n");
+> +
+> +	ret =3D devm_regulator_get_enable_read_voltage(dev, "ref");
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "Failed to get vref
+> voltage\n");
+> +	else if (ret =3D=3D -ENODEV)
+> +		st->vref_mv =3D chip_info->internal_vref_mv;
+> +	else
+> +		st->vref_mv =3D ret / 1000;
+
+This could be:
+if (ret < 0 && ret !=3D -ENODEV)
+	return ret;
+
+st->vref_mv =3D ret > 0 ? ret / 1000 :  chip_info->internal_vref_mv;
+
+- Nuno S=C3=A1
+
 
