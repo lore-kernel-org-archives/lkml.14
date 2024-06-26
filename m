@@ -1,34 +1,34 @@
 Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAAE9191482;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA4A191481;
 	Wed, 26 Jun 2024 18:59:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719428364; cv=none; b=D3OYZ8IwIapP/+opzfGqS3XJiIK9l4+cBRRLlSzE1SzS6WL06TIKtCVuHZu7FJijLm5lT+U/KsyQlvbFTuMrzLu63FdZsctummdd/Oz9CGEXh+EYSzwIAg03eCg7i2Qafw45v6l7fRcdpQPIe2Tecr9LVV4Z7+O8+ubUgzt1YBw=
+	t=1719428364; cv=none; b=EnBoXc5RmmBDo4YipMITDQHDHTS9d0nJUlbRj5IxZgmjH4LJdRXrACcvJzZTs/5NykcoGrq7O7Rgc9ZuW3GVl22qaIJxqsYkmbZ6Wxj+xyplSGvFoBYG1prGzrmwDhhpEcchfHXdIMHeuAjBWqDSE2kHv0BwdZFsMY0BWElKjmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719428364; c=relaxed/simple;
-	bh=2mk8HSCqGquRc1KNhaGgF6qZcaJwdfAMjsS8jm0hoyU=;
+	bh=Ii+cxjz0MLUIaEg5tcYbEKz1AeI5UWrbwUMe27azAqI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=s3RPwEFd7tDwsRr5VfAuZ7tfa/XTzYCg0GTFIIIqtIWbWkWeRGmhmj/AlYqrm6LqrxhqWl2kzSHNom5nGrzN4DU1EcZHLqVz8s1vxFyJIO0Ck4zoHoN/RSIXJfSRhUvc0xe+wcAdPZJmBsRxSm3rHEIW4o3kfYhdvRH/bQuI800=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=L+lkskOr; arc=none smtp.client-ip=167.114.26.122
+	 MIME-Version; b=i9X3VMJeDop13QvmjuO78Pq4l7bvHUe+2YQ+P+t7hvB4hd193o0ynXbBhBucjghyz+wbAET3Dt7F4vEc0oDsA9+LgcZvRuKAxQ2i/S5dIHgwam9nfQ0bWuyGZt+Zim6+y7K5mgphDXCVD7g+nGPyO/uL0caCwzflYIcOIMvrFM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=wA0zd7b1; arc=none smtp.client-ip=167.114.26.122
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="L+lkskOr"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="wA0zd7b1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
 	s=smtpout1; t=1719428355;
-	bh=2mk8HSCqGquRc1KNhaGgF6qZcaJwdfAMjsS8jm0hoyU=;
+	bh=Ii+cxjz0MLUIaEg5tcYbEKz1AeI5UWrbwUMe27azAqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=L+lkskOrfHIDPnR8oWSFo9jBPt/aYy3J7opM0bX0fjFecqlTs9ShYQU7Dk+fKUrkM
-	 fG0r9fCQ3r9BOvUlLDoeWx/CfsK9zfLUnlcvfiEBB6mWqseIobfFMAMHJ/vwxPXCjo
-	 NbmeHFLDR3PdqPHE51vg68WO7aF7fpCDTGEmwiL/5M3Q4vSDKC8RoDlaqxihiRNP/O
-	 wjrHyh9Sr2Wz85KFbdKdXoOVbTYkVWKs6mJ5VizWE3D8g+tDn+NBnLdlqhyK9eQrcx
-	 idTEcdlKqJHjS/C437FNNzCkUMAB6fQdLqYteMZhDBOj4MvOazvNUsmd1/1HUbgyNz
-	 3EpnMezqTQfqw==
+	b=wA0zd7b1/dZnXXwMP1KlkiWG3Ud7Q3K2yNDDBYqn5VFlS8Q1bdBL+RAoe4H2s8S0g
+	 mkj8MLq129ZbrM2BwaY6MSfTayemr7Gx+/i0MhwCPkaBI0i9cqHOrw/thvMTv7poD5
+	 ipzTogztWbtzUy3WidWH0HcfVyVY5Qfn5j8fgf4q6bdZ5sHw/g05e3OyLZ307OBAym
+	 niyn0neFJjVsPLgD06s+rWHnDtniND2KpKoZ0JFiiMX7g9x7EPBLGnehozbeCYeTGE
+	 ls8aodr2C7d79iwZ6078WzQoWgdMYRJRo1KXcp5UUTV28LeyF1BM1iBbr2ljf5TviX
+	 EQDRPPdQPh4yg==
 Received: from thinkos.internal.efficios.com (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4W8WFv4MSKz180H;
-	Wed, 26 Jun 2024 14:59:15 -0400 (EDT)
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4W8WFt5zV5z17d1;
+	Wed, 26 Jun 2024 14:59:14 -0400 (EDT)
 From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
@@ -47,9 +47,9 @@ Cc: linux-kernel@vger.kernel.org,
 	bpf@vger.kernel.org,
 	Joel Fernandes <joel@joelfernandes.org>,
 	Michael Jeanson <mjeanson@efficios.com>
-Subject: [PATCH v5 8/8] tracing: Convert sys_enter/exit to faultable tracepoints
-Date: Wed, 26 Jun 2024 14:59:41 -0400
-Message-Id: <20240626185941.68420-9-mathieu.desnoyers@efficios.com>
+Subject: [PATCH v5 6/8] tracing/bpf-trace: Add support for faultable tracepoints
+Date: Wed, 26 Jun 2024 14:59:39 -0400
+Message-Id: <20240626185941.68420-7-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240626185941.68420-1-mathieu.desnoyers@efficios.com>
 References: <20240626185941.68420-1-mathieu.desnoyers@efficios.com>
@@ -61,11 +61,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the definition of the system call enter/exit tracepoints to
-faultable tracepoints now that all upstream tracers handle it.
+In preparation for converting system call enter/exit instrumentation
+into faultable tracepoints, make sure that bpf can handle registering to
+such tracepoints by explicitly disabling preemption within the bpf
+tracepoint probes to respect the current expectations within bpf tracing
+code.
 
-This allows tracers to fault-in userspace system call arguments such as
-path strings within their probe callbacks.
+This change does not yet allow bpf to take page faults per se within its
+probe, but allows its existing probes to connect to faultable
+tracepoints.
 
 Link: https://lore.kernel.org/lkml/20231002202531.3160-1-mathieu.desnoyers@efficios.com/
 Co-developed-by: Michael Jeanson <mjeanson@efficios.com>
@@ -85,150 +89,90 @@ Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: bpf@vger.kernel.org
 Cc: Joel Fernandes <joel@joelfernandes.org>
-
 ---
-Since v4:
-- Use 'guard(preempt_notrace)'.
+Changes since v4:
+- Use DEFINE_INACTIVE_GUARD.
 - Add brackets to multiline 'if' statements.
 ---
- include/trace/events/syscalls.h |  4 +--
- kernel/trace/trace_syscalls.c   | 52 ++++++++++++++++++++++++++++-----
- 2 files changed, 46 insertions(+), 10 deletions(-)
+ include/trace/bpf_probe.h | 20 ++++++++++++++++----
+ kernel/trace/bpf_trace.c  | 12 +++++++++---
+ 2 files changed, 25 insertions(+), 7 deletions(-)
 
-diff --git a/include/trace/events/syscalls.h b/include/trace/events/syscalls.h
-index b6e0cbc2c71f..dc30e3004818 100644
---- a/include/trace/events/syscalls.h
-+++ b/include/trace/events/syscalls.h
-@@ -15,7 +15,7 @@
+diff --git a/include/trace/bpf_probe.h b/include/trace/bpf_probe.h
+index e609cd7da47e..96c1269dd88c 100644
+--- a/include/trace/bpf_probe.h
++++ b/include/trace/bpf_probe.h
+@@ -42,17 +42,29 @@
+ /* tracepoints with more than 12 arguments will hit build error */
+ #define CAST_TO_U64(...) CONCATENATE(__CAST, COUNT_ARGS(__VA_ARGS__))(__VA_ARGS__)
  
- #ifdef CONFIG_HAVE_SYSCALL_TRACEPOINTS
+-#define __BPF_DECLARE_TRACE(call, proto, args)				\
++#define __BPF_DECLARE_TRACE(call, proto, args, tp_flags)		\
+ static notrace void							\
+ __bpf_trace_##call(void *__data, proto)					\
+ {									\
+ 	struct bpf_prog *prog = __data;					\
++									\
++	DEFINE_INACTIVE_GUARD(preempt_notrace, bpf_trace_guard);	\
++									\
++	if ((tp_flags) & TRACEPOINT_MAY_FAULT) {			\
++		might_fault();						\
++		activate_guard(preempt_notrace, bpf_trace_guard)();	\
++	}								\
++									\
+ 	CONCATENATE(bpf_trace_run, COUNT_ARGS(args))(prog, CAST_TO_U64(args));	\
+ }
  
--TRACE_EVENT_FN(sys_enter,
-+TRACE_EVENT_FN_MAY_FAULT(sys_enter,
- 
- 	TP_PROTO(struct pt_regs *regs, long id),
- 
-@@ -41,7 +41,7 @@ TRACE_EVENT_FN(sys_enter,
- 
- TRACE_EVENT_FLAGS(sys_enter, TRACE_EVENT_FL_CAP_ANY)
- 
--TRACE_EVENT_FN(sys_exit,
-+TRACE_EVENT_FN_MAY_FAULT(sys_exit,
- 
- 	TP_PROTO(struct pt_regs *regs, long ret),
- 
-diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
-index 9c581d6da843..314666d663b6 100644
---- a/kernel/trace/trace_syscalls.c
-+++ b/kernel/trace/trace_syscalls.c
-@@ -299,6 +299,12 @@ static void ftrace_syscall_enter(void *data, struct pt_regs *regs, long id)
- 	int syscall_nr;
- 	int size;
- 
-+	/*
-+	 * Probe called with preemption enabled (may_fault), but ring buffer and
-+	 * per-cpu data require preemption to be disabled.
-+	 */
-+	guard(preempt_notrace)();
+ #undef DECLARE_EVENT_CLASS
+ #define DECLARE_EVENT_CLASS(call, proto, args, tstruct, assign, print)	\
+-	__BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args))
++	__BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args), 0)
 +
- 	syscall_nr = trace_get_syscall_nr(current, regs);
- 	if (syscall_nr < 0 || syscall_nr >= NR_syscalls)
- 		return;
-@@ -338,6 +344,12 @@ static void ftrace_syscall_exit(void *data, struct pt_regs *regs, long ret)
- 	struct trace_event_buffer fbuffer;
- 	int syscall_nr;
++#undef DECLARE_EVENT_CLASS_MAY_FAULT
++#define DECLARE_EVENT_CLASS_MAY_FAULT(call, proto, args, tstruct, assign, print) \
++	__BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args), TRACEPOINT_MAY_FAULT)
  
-+	/*
-+	 * Probe called with preemption enabled (may_fault), but ring buffer and
-+	 * per-cpu data require preemption to be disabled.
-+	 */
-+	guard(preempt_notrace)();
-+
- 	syscall_nr = trace_get_syscall_nr(current, regs);
- 	if (syscall_nr < 0 || syscall_nr >= NR_syscalls)
- 		return;
-@@ -376,8 +388,11 @@ static int reg_event_syscall_enter(struct trace_event_file *file,
- 	if (WARN_ON_ONCE(num < 0 || num >= NR_syscalls))
- 		return -ENOSYS;
- 	mutex_lock(&syscall_trace_lock);
--	if (!tr->sys_refcount_enter)
--		ret = register_trace_sys_enter(ftrace_syscall_enter, tr);
-+	if (!tr->sys_refcount_enter) {
-+		ret = register_trace_prio_flags_sys_enter(ftrace_syscall_enter, tr,
-+							  TRACEPOINT_DEFAULT_PRIO,
-+							  TRACEPOINT_MAY_FAULT);
+ /*
+  * This part is compiled out, it is only here as a build time check
+@@ -106,13 +118,13 @@ static inline void bpf_test_buffer_##call(void)				\
+ 
+ #undef DECLARE_TRACE
+ #define DECLARE_TRACE(call, proto, args)				\
+-	__BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args))		\
++	__BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args), 0)	\
+ 	__DEFINE_EVENT(call, call, PARAMS(proto), PARAMS(args), 0)
+ 
+ #undef DECLARE_TRACE_WRITABLE
+ #define DECLARE_TRACE_WRITABLE(call, proto, args, size) \
+ 	__CHECK_WRITABLE_BUF_SIZE(call, PARAMS(proto), PARAMS(args), size) \
+-	__BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args)) \
++	__BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args), 0) \
+ 	__DEFINE_EVENT(call, call, PARAMS(proto), PARAMS(args), size)
+ 
+ #include TRACE_INCLUDE(TRACE_INCLUDE_FILE)
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 192de33d961f..873b0e885677 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2443,9 +2443,15 @@ static int __bpf_probe_register(struct bpf_raw_event_map *btp, struct bpf_prog *
+ 	if (prog->aux->max_tp_access > btp->writable_size)
+ 		return -EINVAL;
+ 
+-	return tracepoint_probe_register_prio_flags(tp, (void *)btp->bpf_func,
+-						    prog, TRACEPOINT_DEFAULT_PRIO,
+-						    TRACEPOINT_MAY_EXIST);
++	if (tp->flags & TRACEPOINT_MAY_FAULT) {
++		return tracepoint_probe_register_prio_flags(tp, (void *)btp->bpf_func,
++							    prog, TRACEPOINT_DEFAULT_PRIO,
++							    TRACEPOINT_MAY_EXIST | TRACEPOINT_MAY_FAULT);
++	} else {
++		return tracepoint_probe_register_prio_flags(tp, (void *)btp->bpf_func,
++							    prog, TRACEPOINT_DEFAULT_PRIO,
++							    TRACEPOINT_MAY_EXIST);
 +	}
- 	if (!ret) {
- 		rcu_assign_pointer(tr->enter_syscall_files[num], file);
- 		tr->sys_refcount_enter++;
-@@ -414,8 +429,11 @@ static int reg_event_syscall_exit(struct trace_event_file *file,
- 	if (WARN_ON_ONCE(num < 0 || num >= NR_syscalls))
- 		return -ENOSYS;
- 	mutex_lock(&syscall_trace_lock);
--	if (!tr->sys_refcount_exit)
--		ret = register_trace_sys_exit(ftrace_syscall_exit, tr);
-+	if (!tr->sys_refcount_exit) {
-+		ret = register_trace_prio_flags_sys_exit(ftrace_syscall_exit, tr,
-+							 TRACEPOINT_DEFAULT_PRIO,
-+							 TRACEPOINT_MAY_FAULT);
-+	}
- 	if (!ret) {
- 		rcu_assign_pointer(tr->exit_syscall_files[num], file);
- 		tr->sys_refcount_exit++;
-@@ -582,6 +600,12 @@ static void perf_syscall_enter(void *ignore, struct pt_regs *regs, long id)
- 	int rctx;
- 	int size;
+ }
  
-+	/*
-+	 * Probe called with preemption enabled (may_fault), but ring buffer and
-+	 * per-cpu data require preemption to be disabled.
-+	 */
-+	guard(preempt_notrace)();
-+
- 	syscall_nr = trace_get_syscall_nr(current, regs);
- 	if (syscall_nr < 0 || syscall_nr >= NR_syscalls)
- 		return;
-@@ -630,8 +654,11 @@ static int perf_sysenter_enable(struct trace_event_call *call)
- 	num = ((struct syscall_metadata *)call->data)->syscall_nr;
- 
- 	mutex_lock(&syscall_trace_lock);
--	if (!sys_perf_refcount_enter)
--		ret = register_trace_sys_enter(perf_syscall_enter, NULL);
-+	if (!sys_perf_refcount_enter) {
-+		ret = register_trace_prio_flags_sys_enter(perf_syscall_enter, NULL,
-+							  TRACEPOINT_DEFAULT_PRIO,
-+							  TRACEPOINT_MAY_FAULT);
-+	}
- 	if (ret) {
- 		pr_info("event trace: Could not activate syscall entry trace point");
- 	} else {
-@@ -682,6 +709,12 @@ static void perf_syscall_exit(void *ignore, struct pt_regs *regs, long ret)
- 	int rctx;
- 	int size;
- 
-+	/*
-+	 * Probe called with preemption enabled (may_fault), but ring buffer and
-+	 * per-cpu data require preemption to be disabled.
-+	 */
-+	guard(preempt_notrace)();
-+
- 	syscall_nr = trace_get_syscall_nr(current, regs);
- 	if (syscall_nr < 0 || syscall_nr >= NR_syscalls)
- 		return;
-@@ -727,8 +760,11 @@ static int perf_sysexit_enable(struct trace_event_call *call)
- 	num = ((struct syscall_metadata *)call->data)->syscall_nr;
- 
- 	mutex_lock(&syscall_trace_lock);
--	if (!sys_perf_refcount_exit)
--		ret = register_trace_sys_exit(perf_syscall_exit, NULL);
-+	if (!sys_perf_refcount_exit) {
-+		ret = register_trace_prio_flags_sys_exit(perf_syscall_exit, NULL,
-+							 TRACEPOINT_DEFAULT_PRIO,
-+							 TRACEPOINT_MAY_FAULT);
-+	}
- 	if (ret) {
- 		pr_info("event trace: Could not activate syscall exit trace point");
- 	} else {
+ int bpf_probe_register(struct bpf_raw_event_map *btp, struct bpf_prog *prog)
 -- 
 2.39.2
 
