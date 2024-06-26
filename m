@@ -1,157 +1,150 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAFD26E611;
-	Wed, 26 Jun 2024 16:16:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3DA6E611
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 16:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719418599; cv=none; b=hCs6bvH8q+axphrBBXkaH18u8U9695i/TYHVsL7p4N1eseBgCyVKYA3Gl8hdzJGy8FK1AoboXYW3hxI4d7LV6pgVg5beLGHAGN1/01Eu+gx5jLL5r+Zgbj3zJov+zHKXoKrQIPDyfmyJFM2o1fPsmvg/yNZ8GSdazZAp9TE0wIE=
+	t=1719418646; cv=none; b=KotQDG+5WE3tqDJaxbP8UEIu67NZ+A6ltyFz3vRP+qdgH9BI4X0Xa+DyMhnA8Mp6wGUQSf+pwYWDFuq9gMb24rmpTxLaZl7o+YyTYgNsLLa7C64soF71DP0uo7AUEd2R7ePubluEznFvAlhPjl66EYRmNZwTZMl11cp8cTb0XNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719418599; c=relaxed/simple;
-	bh=1mqK9G/ZFh6zwovAXJD+vTuqi1iQEJ8sHB9zoLajBS4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Yv0UAjAdgZBqRDhelUMl84O4QZTFPnzzSxMoOsSp58FlONU+TomZ3QG+sMH9d1dxixkzOwqwrVxcBbWRjHXVkfrpVIoWdCuysdOvTKDrkntsm6J5fOjQc5OPWaOYWHCTwOQe9EGnYwYxqg72bujD/QKnr1PrFAioOG1tqPlwBzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=EyU3L10n; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="EyU3L10n"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45QBLI8W023451;
-	Wed, 26 Jun 2024 18:16:04 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	0K6g4n5PAuZsVsxr2X9hg3rFa4+lIJuxNGEgIloS7DY=; b=EyU3L10newAuzHTN
-	t+Bk/jwsZdFiq35Ki6JMbOWT/srmka8vs5v3dGLrPN1f2vgDh4bARIsJwKAPl1gD
-	+byra0tGSKKY0YEIASQBi+4YhVB9fmx/YkP8zE+xfV7M8Z5bcfVz5uhbydJKwNO0
-	rbJ1sc5LkcLyXL+c3laPCTd6jAS3TriBJPUqCt8U7llRbUxwJ71BQEXE9F1zLV3b
-	EQ9IToEVMJJZjz25/NPeAq6ipKdJnU28mUh+eX8EORs/xWvYhPBYPm7fBxhpCI1p
-	2gr1f701xzjpdKcazRMsEoUX/RcHq6s35/AB543kKUFoZsUxQ7nkCLe6VSvxfyM/
-	myhAmw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yx9jjest7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Jun 2024 18:16:03 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 633E340044;
-	Wed, 26 Jun 2024 18:15:54 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C59B62291CA;
-	Wed, 26 Jun 2024 18:15:16 +0200 (CEST)
-Received: from [10.252.26.2] (10.252.26.2) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 26 Jun
- 2024 18:15:16 +0200
-Message-ID: <7125491f-880c-486e-b417-8fc1e0c20c88@foss.st.com>
-Date: Wed, 26 Jun 2024 18:15:15 +0200
+	s=arc-20240116; t=1719418646; c=relaxed/simple;
+	bh=GwAi6zqoaV4pJ798T1tU40n9yaG2QPacobbro6Ag6/M=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Sg10acHq64iPTXiAGY5nQz5VOWD+TqSohuWXZXWbwMUVY2PMVzrHca6myreBVKYjD38Nh0ET2BfXb35X/SKOkE3IE3K/F4x4EeZAY09MHlz3lCHa2s7nm0DPihOzneuDSqP+q5bCXmb4iZolOltWkp4tcH6Y1udDU5hl08Hdg6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1sMVKc-0008Dt-Ad; Wed, 26 Jun 2024 18:17:14 +0200
+Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1sMVKa-005ASZ-1K; Wed, 26 Jun 2024 18:17:12 +0200
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1sMVKZ-000FZ7-39;
+	Wed, 26 Jun 2024 18:17:11 +0200
+Message-ID: <5500e3d44be69f5bc843e5b2159f6d0aead24ff9.camel@pengutronix.de>
+Subject: Re: [PATCH RFC 1/3] reset: replace boolean parameters with flags
+ parameter
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Lad Prabhakar
+ <prabhakar.mahadev-lad.rj@bp.renesas.com>,  Geert Uytterhoeven
+ <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,  kernel@pengutronix.de
+Date: Wed, 26 Jun 2024 18:17:11 +0200
+In-Reply-To: <o3rf7gprs7mrldglqg7e4scibumdno36iuvtlr3c43sofjcb2t@w3d7jsjyddxe>
+References: <20240621-reset-get-deasserted-v1-0-94ee76fb7b7d@pengutronix.de>
+	 <20240621-reset-get-deasserted-v1-1-94ee76fb7b7d@pengutronix.de>
+	 <o3rf7gprs7mrldglqg7e4scibumdno36iuvtlr3c43sofjcb2t@w3d7jsjyddxe>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 8/8] iio: adc: stm32-dfsdm: add scaling support to
- dfsdm
-To: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
-        <fabrice.gasnier@foss.st.com>, Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-CC: Nuno Sa <nuno.sa@analog.com>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20240625150717.1038212-1-olivier.moysan@foss.st.com>
- <20240625150717.1038212-9-olivier.moysan@foss.st.com>
- <c2d746c73f7450dd10c0a0b229b3672e44fe583a.camel@gmail.com>
-Content-Language: en-US
-From: Olivier MOYSAN <olivier.moysan@foss.st.com>
-In-Reply-To: <c2d746c73f7450dd10c0a0b229b3672e44fe583a.camel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-26_07,2024-06-25_01,2024-05-17_01
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hi Nuno,
+Hi Uwe,
 
-On 6/26/24 10:59, Nuno Sá wrote:
-> Hi Olivier,
-> 
-> One thing that I just noticed...
-> 
-> On Tue, 2024-06-25 at 17:07 +0200, Olivier Moysan wrote:
->> Add scaling support to STM32 DFSDM.
->>
->> When used in an analog context, a DFSDM filter typically converts the data
->> from a sigma delta modulator. The IIO device associated to the DFSDM
->> filter provides these data as raw data.
->> The IIO device can provide scaling information (voltage and offset) to
->> allow conversion of raw data into physical values.
->>
->> With the new binding based on IIO backend framework, the sigma delta
->> modulators are defined as backends providing scaling information.
->>
->> The scaling is not supported with legacy binding.
->>
->> Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
->> Acked-by: Nuno Sa <nuno.sa@analog.com>
->> ---
->>
-> 
-> ...
-> 
->> +
->> +	case IIO_CHAN_INFO_SCALE:
->> +		/*
->> +		 * Scale is expressed in mV.
->> +		 * When fast mode is disabled, actual resolution may be lower
->> +		 * than 2^n, where n = realbits - 1.
->> +		 * This leads to underestimating the input voltage.
->> +		 * To compensate this deviation, the voltage reference can be
->> +		 * corrected with a factor = realbits resolution / actual max
->> +		 */
->> +		if (adc->backend[idx]) {
->> +			iio_backend_read_raw(adc->backend[idx], chan, val,
->> val2, mask);
-> 
-> Eve if it does not matter for your usecase, you should still do error handling
-> as iio_backend_read_raw() can return an error.
-> 
+On Sa, 2024-06-22 at 09:47 +0200, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Philipp,
+>=20
+> I like the idea in general. Just a detail concern down below.
 
-Ack. On the same occasion, I will switch to a dedicated API.
+Thank you, much appreciated.
 
-Olivier
+> On Fri, Jun 21, 2024 at 04:45:02PM +0200, Philipp Zabel wrote:
+> > @@ -999,8 +1001,9 @@ static struct reset_controller_dev *__reset_find_r=
+cdev(const struct of_phandle_a
+> > =20
+> >  struct reset_control *
+> >  __of_reset_control_get(struct device_node *node, const char *id, int i=
+ndex,
+> > -		       bool shared, bool optional, bool acquired)
+> > +		       enum reset_control_flags flags)
+> >  {
+> > +	bool optional =3D flags & RESET_CONTROL_FLAGS_BIT_OPTIONAL;
+> >  	bool gpio_fallback =3D false;
+> >  	struct reset_control *rstc;
+> >  	struct reset_controller_dev *rcdev;
+> > @@ -1065,7 +1068,7 @@ __of_reset_control_get(struct device_node *node, =
+const char *id, int index,
+> >  	}
+> > =20
+> >  	/* reset_list_mutex also protects the rcdev's reset_control list */
+> > -	rstc =3D __reset_control_get_internal(rcdev, rstc_id, shared, acquire=
+d);
+> > +	rstc =3D __reset_control_get_internal(rcdev, rstc_id, flags);
+>=20
+> If RESET_CONTROL_FLAGS_BIT_OPTIONAL was passed to
+> __of_reset_control_get(), you're forwarding it to
+> __reset_control_get_internal(). But the latter doesn't do anything with
+> that flag. I wonder if the API would be still less prone to error if
+> you'd filter out RESET_CONTROL_FLAGS_BIT_OPTIONAL before passing to
+> __reset_control_get_internal() and in __reset_control_get_internal() add
+> a check for unsupported flags.
 
->> +			*val = div_u64((u64)*val * (u64)BIT(DFSDM_DATA_RES -
->> 1), max);
->> +			*val2 = chan->scan_type.realbits;
->> +			if (chan->differential)
->> +				*val *= 2;
->> +		}
->> +		return IIO_VAL_FRACTIONAL_LOG2;
->> +
->> +	case IIO_CHAN_INFO_OFFSET:
->> +		/*
->> +		 * DFSDM output data are in the range [-2^n, 2^n],
->> +		 * with n = realbits - 1.
->> +		 * - Differential modulator:
->> +		 * Offset correspond to SD modulator offset.
->> +		 * - Single ended modulator:
->> +		 * Input is in [0V, Vref] range,
->> +		 * where 0V corresponds to -2^n, and Vref to 2^n.
->> +		 * Add 2^n to offset. (i.e. middle of input range)
->> +		 * offset = offset(sd) * vref / res(sd) * max / vref.
->> +		 */
->> +		if (adc->backend[idx]) {
->> +			iio_backend_read_raw(adc->backend[idx], chan, val,
->> val2, mask);
-> 
-> Same...
-> 
-> - Nuno Sá
+Yes, I'll do that. For every enum value with the optional bit set,
+there is a corresponding value without it.
+
+> >  out_unlock:
+> >  	mutex_unlock(&reset_list_mutex);
+> > @@ -1096,8 +1099,9 @@ __reset_controller_by_name(const char *name)
+> > =20
+> >  static struct reset_control *
+> >  __reset_control_get_from_lookup(struct device *dev, const char *con_id=
+,
+> > -				bool shared, bool optional, bool acquired)
+> > +				enum reset_control_flags flags)
+> >  {
+> > +	bool optional =3D flags & RESET_CONTROL_FLAGS_BIT_OPTIONAL;
+> >  	const struct reset_control_lookup *lookup;
+> >  	struct reset_controller_dev *rcdev;
+> >  	const char *dev_id =3D dev_name(dev);
+> > [...]
+> > @@ -1422,7 +1423,7 @@ EXPORT_SYMBOL_GPL(of_reset_control_array_get);
+> >   * Returns pointer to allocated reset_control on success or error on f=
+ailure
+> >   */
+> >  struct reset_control *
+> > -devm_reset_control_array_get(struct device *dev, bool shared, bool opt=
+ional)
+> > +devm_reset_control_array_get(struct device *dev, enum reset_control_fl=
+ags flags)
+> >  {
+> >  	struct reset_control **ptr, *rstc;
+> > =20
+> > @@ -1431,7 +1432,7 @@ devm_reset_control_array_get(struct device *dev, =
+bool shared, bool optional)
+> >  	if (!ptr)
+> >  		return ERR_PTR(-ENOMEM);
+> > =20
+> > -	rstc =3D of_reset_control_array_get(dev->of_node, shared, optional, t=
+rue);
+> > +	rstc =3D of_reset_control_array_get(dev->of_node, flags);
+>=20
+> Is it an error if the new devm_reset_control_array_get() is called
+> without RESET_CONTROL_FLAGS_BIT_ACQUIRED in flags?
+
+I'd be inclined to consider this not-an-error.
+
+There is one user of of_reset_control_array_get_exclusive_released(),
+so it should work in theory. Of course nobody is using both devres and
+the acquire/release API at the same time, and there is no
+devm_reset_control_array_get_exclusive_released() wrapper.
+
+regards
+Philipp
