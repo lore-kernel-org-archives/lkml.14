@@ -1,174 +1,144 @@
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235B917FAAE;
-	Wed, 26 Jun 2024 17:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1D517FAAE;
+	Wed, 26 Jun 2024 17:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719422431; cv=none; b=o9cgYJHUibu+unMDHcxS2jrF0m04GkbgdIU31PcF+knMn6wS+tPPFE7mnVOXqQEKPwELkDqngq+7O/QFBEkqASPH4pCOdH9ITMlYsnmxAIr6HOL2stqU0hzkAML7QzxiETCeXsbVHtXQCMvwq3aAafNXcHKKbJodt2f7QjEg6ig=
+	t=1719422462; cv=none; b=KuuMVRnSsIPK/txGSCp6fzIg8jy+GdaG5h8LClHL6xRxHBKZC3fwNEoUrzuHCeO+tIzNUGAaW6E4rchCz+CzDCa2UkbTkQyc7P06NjuzMBxhx2fm09m84qsfpop3/GkeY46e1LC4AS5L+y2tzANFV3OoCdds7n+4vEZ/Nt6hjEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719422431; c=relaxed/simple;
-	bh=FpmfseKvsNrIyy6B2hAFiPzR46XhnvKTaVIYDG7zZdY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=USplVvAZn1CQrKyNQH/HGvWttxuXUGpVnPOVZZd6xkQdujElsbwFwqCSMK1hKAdK5ByZh/h73BgoJDfpJxUuL3TDWfIvselYqNtXYnE6BT4YDpen89Grfg2QsJz9ZN61DckyfxeGIU2Oahyd7jg5jJoNxNo0u6oTW9fKMrz+BFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OxBZgqyD; arc=none smtp.client-ip=209.85.166.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719422462; c=relaxed/simple;
+	bh=LPOu4xLWz0iufE4AOQosfGDmN14Ha0iB0K8zPuR8alA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jegh+iTUQzcn17m3HM+TkItKutLeoIL6uMfrwdsC6mChfKz/B/Je/KIbuG+s9FGVYaKrtV4BAp7g5ktJapKaFpzBehje6/MYtnmHI3chGaZy9vOCqryNbWVaAwbiPiLbLz+bM5Pu/OadAgzz8VlAUDnUS4kY0o9ffJT2Df21lZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=JWZiz0OF; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OxBZgqyD"
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-7f3c5af0a04so102403639f.0;
-        Wed, 26 Jun 2024 10:20:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719422429; x=1720027229; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OIGwS8SF4bCfxZNVEqDa8yq7jny8yEUT/eble4D1TDs=;
-        b=OxBZgqyDinFl3FVWneYN5matErtTtngidtsq4qAwwKaGxlDdeazaquXKG2OPL5v49e
-         h4735AuXmQwzsa6tUcchxU2vRJo+hO5MHAnZQRLA06mHGBrqjxLuSKk6cKxX0oLEJAmb
-         sLfxzmi0LQ1YLQ3lt+Is8SGMLZk6ycCFA9jH4Lfx/vvGCZHTfL+z/9eSHgHmxMNQp8jU
-         cJZR28e+nSEUwTm1k2dTGcvjwhfibkuroLlH9ePS9vcT67t1Vr813mOkVm2l/GcFB95j
-         0XjB66oBDSC6NiVOyqeyK8NdKKoNMHYFDLqBEAK5U309qdpjNUX4ThMbj680yveB+zdr
-         +Cuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719422429; x=1720027229;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OIGwS8SF4bCfxZNVEqDa8yq7jny8yEUT/eble4D1TDs=;
-        b=eitMy5BJZfr/6/kYVYF3r1xQzKQGmU5e/2ve1jqlEZ54SAcZ7Th/cbg3TfvgkDZla2
-         RsCNs6he6Tue3IZfIENrhkYDR0G4qhNvI+YLA3I8D7SMQSniSUurLOqO6PA1dkq8bl2B
-         DZslyu/Y/LPAKtzQJmNGYzoRF9vLpT3+6OWQXEm6lALKoncEe+26bhZcTRaJIic1dSDD
-         Nu1HmSzNaEOi2Y3Tht10RIH3CMjAQh4M6G3Hnt3cCm4dV9kjMd4T0///AElQgvqnq55v
-         R5zwFlIuOj8cr/iV8KemSByW9KazZ4GEF17xpi0t07y0FVBovtsr8IkOTfdyLGCORVyO
-         sPmA==
-X-Forwarded-Encrypted: i=1; AJvYcCWRx4SvSJ7nhf7PkPZa1cam/QGtmIQeuQ4iW4jP6Ndcwi7MzRjU6S+p9VPY/ZMZyybqyz6BiYke3C0O5+6XucwQAi9mfo91aaekEqKEb4/ugdKWxUGXejSBRNM5wJAX9JiA
-X-Gm-Message-State: AOJu0YxDvUXVZb9QoCU3Yz3ZbunYmmTMFD7Kv9swhTdDkTa1s6Ak0zLj
-	GbwhuMK7c2cPCqa3Vq/pGxvsVbOYvze2R/RAlQVrJFgCCo7JSCdmwaXAcvkEQGfwM5u5jFjEgAd
-	CROC2LC+iX6lmXBRt3ocHbumYYHY=
-X-Google-Smtp-Source: AGHT+IHnOfn2sbxPWjAazylFRWlND8nm1YEP9y+YSWcboQP72tyGVXpbgT+rdy9CjIyrRVN9t2Pwyn/lu9svJTAXh+Q=
-X-Received: by 2002:a05:6602:14ce:b0:7eb:7bc9:7fc3 with SMTP id
- ca18e2360f4ac-7f3a74b20dfmr1388847039f.3.1719422429115; Wed, 26 Jun 2024
- 10:20:29 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="JWZiz0OF"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1FC3440E0185;
+	Wed, 26 Jun 2024 17:14:46 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id iHP5c9MTlWuM; Wed, 26 Jun 2024 17:14:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1719422082; bh=du9baA4/tM06ftN4VOOSwZJhxvgB1fJD5Bf/wvADGZ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JWZiz0OFmSHoJHwCwJEyy1t1cPjbvBZ6Zop2rhvgGNQ5oKQwl2ER+QH6Fj5vgpObg
+	 X10Z5mZhBkh6CY25fgZyUZtIeCjQoSYksN772LiS3W9qCKAYF1WoGrQxcoF2PuRZeE
+	 hW1zAXJW/otdvYxdHghU5cYymsjXJPX0b3mYZQv4WHpnDRaz1IX2QShgMgyEEl+5rc
+	 0z2Z/JvYWxZGteCV3e2qVsWrYqero/mukCV0OFZr1FR5dwKtrLE9rYK6NnST4uIAed
+	 knMdg3tbhEaawkJPW/CrdovL6E/7Bbt9kUWGLbEy5eP7zr2vS2WQxAM3Kcg2sSjWxH
+	 J5+Ck7fdKwizKzu6H1NJypUsoUwHbbfyJLug+RCawxAHmZ6zKLTOBu0moymczjeS7y
+	 Jq9UxOB18kb88RaUejmqvr6zMXuOwn0Z9clvNS8302sb8EHG5qrqElc38haqtxQE/Y
+	 3Z6WJqZ42w6Y3qZ1GLzH+ZJPQQljR8ImkO8soXrccHqfORVlL7nxy5GWfZ8KPV4/Rw
+	 OBolqH0NOmVUrFqkjyVGx07/XaDz6hS3Dv1bXCpcVmhxI2pzyf0T7qEawnV4q56Sdr
+	 j0ha4L/26SNbiJeDCk8MpAHghZ+YpVDXUHcfEoK2fCPgQTboJj5juTwoMcwGI/2CR5
+	 CpQjz6umQIwTfDKeyIvQt56E=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 79FFD40E01D6;
+	Wed, 26 Jun 2024 17:14:27 +0000 (UTC)
+Date: Wed, 26 Jun 2024 19:14:21 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+	Perry Yuan <perry.yuan@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>, Huang Rui <ray.huang@amd.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>,
+	"open list:AMD PSTATE DRIVER" <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH 1/2] x86/cpu/amd: Clarify amd_get_highest_perf()
+Message-ID: <20240626171421.GRZnxMbcI83xe1SLtB@fat_crate.local>
+References: <20240626042043.2410-1-mario.limonciello@amd.com>
+ <20240626042043.2410-2-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <81f4e616-8125-4934-a8e2-fd5beae90995@paulmck-laptop>
- <20240604222652.2370998-3-paulmck@kernel.org> <CAFwiDX_5BZ9e0odyJKTPJJ9BDkHJ6fcEzSwgs9rnjhuRk4qhhw@mail.gmail.com>
- <ZnwloG9xOrOHru4B@localhost.localdomain>
-In-Reply-To: <ZnwloG9xOrOHru4B@localhost.localdomain>
-From: Neeraj upadhyay <neeraj.iitr10@gmail.com>
-Date: Wed, 26 Jun 2024 22:49:58 +0530
-Message-ID: <CAFwiDX8OE74e4ZVsy3wJbX5F4Huv0NR1w2EqM4xfeoa03JjCpg@mail.gmail.com>
-Subject: Re: [PATCH rcu 3/6] rcu/exp: Remove superfluous full memory barrier
- upon first EQS snapshot
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel-team@meta.com, rostedt@goodmis.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240626042043.2410-2-mario.limonciello@amd.com>
 
-On Wed, Jun 26, 2024 at 7:58=E2=80=AFPM Frederic Weisbecker <frederic@kerne=
-l.org> wrote:
->
-> Le Wed, Jun 12, 2024 at 02:14:14PM +0530, Neeraj upadhyay a =C3=A9crit :
-> > On Wed, Jun 5, 2024 at 3:58=E2=80=AFAM Paul E. McKenney <paulmck@kernel=
-.org> wrote:
-> > >
-> > > From: Frederic Weisbecker <frederic@kernel.org>
-> > >
-> > > When the grace period kthread checks the extended quiescent state
-> > > counter of a CPU, full ordering is necessary to ensure that either:
-> > >
-> > > * If the GP kthread observes the remote target in an extended quiesce=
-nt
-> > >   state, then that target must observe all accesses prior to the curr=
-ent
-> > >   grace period, including the current grace period sequence number, o=
-nce
-> > >   it exits that extended quiescent state.
-> > >
-> > > or:
-> > >
-> > > * If the GP kthread observes the remote target NOT in an extended
-> > >   quiescent state, then the target further entering in an extended
-> > >   quiescent state must observe all accesses prior to the current
-> > >   grace period, including the current grace period sequence number, o=
-nce
-> > >   it enters that extended quiescent state.
-> > >
-> > > This ordering is enforced through a full memory barrier placed right
-> > > before taking the first EQS snapshot. However this is superfluous
-> > > because the snapshot is taken while holding the target's rnp lock whi=
-ch
-> > > provides the necessary ordering through its chain of
-> > > smp_mb__after_unlock_lock().
-> > >
-> > > Remove the needless explicit barrier before the snapshot and put a
-> > > comment about the implicit barrier newly relied upon here.
-> > >
-> > > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > > ---
-> > >  kernel/rcu/tree_exp.h | 8 +++++++-
-> > >  1 file changed, 7 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-> > > index 8a1d9c8bd9f74..bec24ea6777e8 100644
-> > > --- a/kernel/rcu/tree_exp.h
-> > > +++ b/kernel/rcu/tree_exp.h
-> > > @@ -357,7 +357,13 @@ static void __sync_rcu_exp_select_node_cpus(stru=
-ct rcu_exp_work *rewp)
-> > >                     !(rnp->qsmaskinitnext & mask)) {
-> > >                         mask_ofl_test |=3D mask;
-> > >                 } else {
-> > > -                       snap =3D rcu_dynticks_snap(cpu);
-> > > +                       /*
-> > > +                        * Full ordering against accesses prior curre=
-nt GP and
-> > > +                        * also against current GP sequence number is=
- enforced
-> > > +                        * by current rnp locking with chained
-> > > +                        * smp_mb__after_unlock_lock().
-> >
-> > Again, worth mentioning the chaining sites sync_exp_reset_tree() and
-> > this function?
->
-> How about this?
->
+On Tue, Jun 25, 2024 at 11:20:42PM -0500, Mario Limonciello wrote:
+>  static inline int rdmsrl_amd_safe(unsigned msr, unsigned long long *p)
+>  {
+>  	u32 gprs[8] = { 0 };
+> @@ -1194,15 +1198,27 @@ u32 amd_get_highest_perf(void)
+>  {
+>  	struct cpuinfo_x86 *c = &boot_cpu_data;
+>  
+> -	if (c->x86 == 0x17 && ((c->x86_model >= 0x30 && c->x86_model < 0x40) ||
+> -			       (c->x86_model >= 0x70 && c->x86_model < 0x80)))
+> -		return 166;
+> +	if (cpu_feature_enabled(X86_FEATURE_ZEN2)) {
+> +		switch (c->x86_model) {
+> +		case 0x30 ... 0x40:
+> +		case 0x70 ... 0x80:
 
-Looks good to me, thanks!
+Well, it was < 0x40 and < 0x80
 
+You're making it <=.
 
-- Neeraj
+> +			return CPPC_HIGHEST_PERF_DEFAULT;
+> +		default:
+> +			return CPPC_HIGHEST_PERF_MAX;
+> +		}
+> +	}
+>  
+> -	if (c->x86 == 0x19 && ((c->x86_model >= 0x20 && c->x86_model < 0x30) ||
+> -			       (c->x86_model >= 0x40 && c->x86_model < 0x70)))
+> -		return 166;
+> +	if (cpu_feature_enabled(X86_FEATURE_ZEN3)) {
+> +		switch (c->x86_model) {
+> +		case 0x20 ... 0x30:
+> +		case 0x40 ... 0x70:
 
->     /*
->      * Full ordering against accesses prior current GP and also against
->      * current GP sequence number is enforced by rcu_seq_start() implicit
->      * barrier, relayed by kworkers locking and even further by
->      * smp_mb__after_unlock_lock() barriers chained all the way throughou=
-t
->      * the rnp locking tree since sync_exp_reset_tree() and up to the cur=
-rent
->      * leaf rnp locking.
->      */
->
-> Thanks.
->
-> >
-> >
-> > Thanks
-> > Neeraj
-> >
-> > > +                        */
-> > > +                       snap =3D ct_dynticks_cpu_acquire(cpu);
-> > >                         if (rcu_dynticks_in_eqs(snap))
-> > >                                 mask_ofl_test |=3D mask;
-> > >                         else
-> > > --
-> > > 2.40.1
-> > >
-> > >
+Ditto.
+
+Also, ontop:
+
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index 73559db78433..5d496de4e141 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -1204,7 +1204,7 @@ u32 amd_get_highest_perf(void)
+ 		case 0x70 ... 0x80:
+ 			return CPPC_HIGHEST_PERF_DEFAULT;
+ 		default:
+-			return CPPC_HIGHEST_PERF_MAX;
++			break;
+ 		}
+ 	}
+ 
+@@ -1214,7 +1214,7 @@ u32 amd_get_highest_perf(void)
+ 		case 0x40 ... 0x70:
+ 			return CPPC_HIGHEST_PERF_DEFAULT;
+ 		default:
+-			return CPPC_HIGHEST_PERF_MAX;
++			break;
+ 		}
+ 	}
+ 
+so that you don't have so many redundant returns in the function.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
