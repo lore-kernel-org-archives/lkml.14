@@ -1,104 +1,97 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC9613D89B;
-	Wed, 26 Jun 2024 12:18:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9BC180A7B;
+	Wed, 26 Jun 2024 12:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719404320; cv=none; b=EeD+1/MDkdImTTA4D0AdDNBQwy/zSzlDEAWL9NneXX/kRHHII1klQxzr5Xu+JCRzlW6H/8DAEyjqJqRy78awGWBwAreeW8Ki+knZOmdH1LdXknRZMkq3b7hBcEJE9nbo9zPzBOwkhMzyMNJu56fhZUr3+z/kfI9F/JAQSUJxXfY=
+	t=1719404344; cv=none; b=NX5Re7znpOzPDy8+/9tgWR6Unt7VSHSqje3fjhyzC3xwM6x5lPbZJ8OVkdZ3e2K3UBHz/DB0iR2s57XcyV7Gt7H2UMEI5gvXaQXoruIfwvOh6UvlniqXieo7IYkP3pN63h5BeYIoGrBy5h530S3hnQhp7Xesbo7fKNpeJVD17jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719404320; c=relaxed/simple;
-	bh=2x37NzR/2lEZeNq0vRkCFXPL3a+/btL9FCqu5MrlKVg=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=ub9bN7jjxJ7bVRoGsVfjaGxhsJ4NYHC6gVbXHthTs1FQSfhs0/dEOxiDAkWF4Bu9ewrAO9AS594ZR/faym4+6KWThcThq4Yx1SJomydg/PJl0Z46K1FdiD74MStT8JbZXHjVmatPH70czFr7J8xyVtEivSF2aPjwluVlE5ieMbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=OrNn3f1X; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1719404344; c=relaxed/simple;
+	bh=56dkKsWwS6gT3chl9n/33P6uCAEWaG+N58h+O4G8UQ8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XrrXG5wDpxkD9wkvjeglZJC3gaOFAux59dVjZS2Nlv0SKvEQxQheDQANrKxgFd6wDVBNNXk1GlmBth5XOFTjADZCD2HK6elTjFfxgPsTwW1tFn3Fmmfe1obmSwtv9GJqPyIbO+kLAPTX4246GGob2qkilxBxjUQ+Rgo8hnS2DX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GLTpwX43; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="OrNn3f1X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1719404288; x=1720009088; i=markus.elfring@web.de;
-	bh=yUPAIAof3AkzY+BmPwggZrxS5owZtdhbXK8kkUOSg5c=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=OrNn3f1X2IUD5M4sIr9wqstdaJaB72n7F4OiQN/C4hhyFZd/tw7A0+GNPYfGQNtq
-	 k8O8NLzl8Xdqtvq/09CWapuEueBn8eQSTCoYftkMbwTerLYwQJg+yKutf66C0zLaM
-	 FB4pN9iBH0PSn5BIgZclTJxldgH4GcPK+LWGkUeA/ios8DseolRFH0jZbIFDNO+uG
-	 6jVjb3M8fm7HgucbaEaGev2Z0vazbQ6s+5Y/QjG9vqFjg7xLFfJSxf/NizWb74q19
-	 XbOfIOcCD6czEahZilGZfnPCrbcVsD7c/shJFP0wLwIhd+p5nEfp3Jt+Yn9j+P0tm
-	 XFTZLD7DGXSYBdgKQA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N30ZN-1sSSoc3rPZ-00sdVt; Wed, 26
- Jun 2024 14:18:07 +0200
-Message-ID: <7efdcd35-7511-491a-a0b2-c500ebb2256d@web.de>
-Date: Wed, 26 Jun 2024 14:18:06 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GLTpwX43"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a6fbe639a76so86609566b.1;
+        Wed, 26 Jun 2024 05:19:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719404341; x=1720009141; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=cEiETu+xNt0IYUh7HRwOgMHLEPTYFNW00L5a7FsgGcc=;
+        b=GLTpwX43nzpk7+Y1YAV3SANzNrRHZbAp3B2VaK1bhD8hJabnkQ/Tueyw3eHWFuxZiq
+         6UH/JlQFExPdS1JaMDKCeX3et/rUiGvENz+lYsO6rngCad/ZhYzmVeRCb0QWN0A4NG5R
+         dLGC9wnLMAiX20Y6DLng+Ka6wuW+qlcJdnR+L6uPNqoVIvAqd+F7wRHxafChDPt2GQyl
+         ZSwJ1j5zfQ5ARdSKAUBUXneQdKHX65oXV8tYauHyfKZwgE5myIp4FuzPH2fqUF5SlfVQ
+         5owyxjsR00sTgD0mzBN0fNm0VazvoAJQJAOcRC768LSe54g1YSE3GBSqNWcIfKcME8C9
+         yd4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719404341; x=1720009141;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cEiETu+xNt0IYUh7HRwOgMHLEPTYFNW00L5a7FsgGcc=;
+        b=D7LLVd7BNyvfO/cblmFSZozZ/aKO0A9AFgpRHVWCvLAyEV717nsyaFuTd6XhVRJnwC
+         R0gyhcopDUpNl5gys+V4hwjb5IjfaVkJg9/ZPQIq+/lrtjE64g+ie52Y0bdD5wpaR2K2
+         wTKLd++Lz/Ce6NDRpGmFBtJ5G//pdEowdNOvOv8+8zdncjqxP/Yop5UiLfLefEDMfrY2
+         tvGY28DrZVYEuHYZsRBvXamIoReV6XZl2Fc/nigFWIudzMTCJ7S22rwqS/s0KzVHEFTM
+         94i/unUmNd8ChFx1jkracgXGFHRXPqdeEW0ymQvRYt3tKqCKOW8+/TtOr/midynVl9lD
+         z7qQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXHxiTrhFnvzCjYl2ltkdFxDLQGmfLv6KWlwvtjus3D7wrt+T2p6tPOz7XsYa844AsoCmw+h3lVHQ6o6pMTjR+Fc+lM/rUeByoY3VsF
+X-Gm-Message-State: AOJu0YxKho4MBnEFGg1gcqAb8H3CTjKkLQXYa64uTphhr8wyGKkrJeaK
+	TiETJPV7aJGgshXeijEcRKjhlNEfZZbYy4Gdrm7sLgUVi5gauMqQ4n5gDknaqAYhEvmqX3kF3eM
+	ZHiriWMnE4iduiRQ6yqvMtQVV7mQ=
+X-Google-Smtp-Source: AGHT+IGSQHt/2tK0iZI5vAD3vfe2hzBW25voA5HAWCa5f2Gvd2zcJJ0FNmsRkR1DGpgP2T3jsjGeOlqYW45SOJTprY0=
+X-Received: by 2002:a17:907:d506:b0:a72:7a71:7f4f with SMTP id
+ a640c23a62f3a-a727fb4082dmr230132066b.7.1719404340670; Wed, 26 Jun 2024
+ 05:19:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Ma Ke <make24@iscas.ac.cn>, dri-devel@lists.freedesktop.org,
- spice-devel@lists.freedesktop.org, virtualization@lists.linux.dev,
- Daniel Vetter <daniel@ffwll.ch>, Dave Airlie <airlied@redhat.com>,
- Gerd Hoffmann <kraxel@redhat.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, David Airlie <airlied@gmail.com>
-References: <20240626064024.2811255-1-make24@iscas.ac.cn>
-Subject: Re: [PATCH] drm/qxl: fix null pointer dereference in qxl_add_mode
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240626064024.2811255-1-make24@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:C60OHFSjUuj7c1Ny1z+3dfhRyGU9CgYduGDl5Y0uOjNWFaNRIBg
- pZn9Q1V4E276IQizd99IZn+VBG3/z4MThrqGn+8Zf43SzQz9WiXCEuvVJq53xuWJGmsubrO
- A+k/2CYu4mODi/iGDVY6OwkP55j6PQzl9r/vRNqwosZBvTUXyQcRdzvzfXq0RKHg/Y6SccJ
- tIoZ/gnAkHy1336uFBbig==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:8l6RBOATA38=;k3Ef5uHGkoup54xiTgrtslyJhyB
- 8qsV6Y68qgY1O30UVdyYKXiZJiWeypvHKHgXUYOTEpgUR1F6dstjJ1FWWM1SFR+3YC+BJIEUB
- Uy86NirTHEraqqqf5DVheVAnFIPyCogdGluIZknBWrx09x2M3V+ganzKkjy885E6F2E23h1vc
- Hma/UYfAs3KN6AfrAZhU8wRyfi3Nh0z2zXv2OYj/mDRndnB7SGBq6ZBy7yZSzWL/6lpB/lpiV
- N32AqwSRwVx2k/o55YSMxDCyJzkYSaSbdRNy/uO40QWLE69mLKc6Ir7eLBGNYUXn9jzvmMLap
- ODT37KSAGcydgciEDT4y3M2UJ8W+XS/GVLaKNAcjGiIarKUU4medUIn2Fc4rNa7WGjEqZ302H
- a4g04HAn8U95oYPkX6M0+Dqsrbdb2cXvfVPrfN/FNiDsINxoClU4UcBF6FWrH3O1r+1oO5E3W
- qdMTQA0l0bT6o0YuHTpr8LpkxNXfmAK1WyvtaSOLE18AvxqfYvBFJi/Ae/8xGLJ0dPnMHzwHd
- RIiASKB6tyTkjNLqX/dQIPDwsZC7R8DQ2j0ZgPEw7HC6g8lMI8PI7J839xXk3aKXW60bo9GAB
- NxemrNOs+c87ww5r/EQaRinoJe9x1ZcrUlttenTgiv0MZu1ALqZdFMK+H+3aCETpOr3oQu1uY
- ZtyTcf1F+XYPiYAWkFtcFMXcEBWSkkjYwlj8Onl6SgMR7iLNLh1pfYSx03d1QWrisg8t22cTZ
- qaHfMBT3NnkZwruCDIBxKDL7yQdjpsvNUTNtTWjXOa24He+gL7cmaxfWMZsyb4NOBGGtaHQO/
- i32qOJYTULauwOM+r/guAnVvsBUiYHFmOHcisD9uF8y78=
+References: <20240625085548.033507125@linuxfoundation.org>
+In-Reply-To: <20240625085548.033507125@linuxfoundation.org>
+From: Allen <allen.lkml@gmail.com>
+Date: Wed, 26 Jun 2024 05:18:38 -0700
+Message-ID: <CAOMdWSKFTJa-Q=OMV_50uPrJdgQHCdYfR7uT27_9=dP3B3YzFg@mail.gmail.com>
+Subject: Re: [PATCH 6.9 000/250] 6.9.7-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-> In qxl_add_mode(), the return value of drm_cvt_mode() is assigned to mod=
-e,
-> which will lead to a possible NULL pointer dereference on failure of
-> drm_cvt_mode(). Add a check to avoid npd.
+> This is the start of the stable review cycle for the 6.9.7 release.
+> There are 250 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 27 Jun 2024 08:54:55 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.9.7-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.9.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-1. Can a wording approach (like the following) be a better change descript=
-ion?
+Compiled and booted on my x86_64 and ARM64 test systems. No errors or
+regressions.
 
-   A null pointer is stored in the local variable =E2=80=9Cmode=E2=80=9D a=
-fter a call
-   of the function =E2=80=9Cdrm_cvt_mode=E2=80=9D failed. This pointer was=
- used
-   in subsequent statements where an undesirable dereference
-   will be performed then.
-   Thus add a corresponding return value check.
+Tested-by: Allen Pais <apais@linux.microsoft.com>
 
-
-2. Would you like to add any tags (like =E2=80=9CFixes=E2=80=9D and =E2=80=
-=9CCc=E2=80=9D) accordingly?
-
-
-3. How do you think about to append parentheses to the function name
-   in the summary phrase?
-
-
-Regards,
-Markus
+Thanks.
