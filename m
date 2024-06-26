@@ -1,57 +1,57 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44BCF12B144
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 09:38:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A19761FEA
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 09:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719394706; cv=none; b=lyUoqJ8exVU6Ie84ymDkLDmuINE3RvVhUF0jW05f1XcrUesC3mAhqcA/n+eVvWeCjfTDP4G3MCWZZJZ6XAporUOUkmpMVeTm8UMias1mSOGJjXErNK5CJfn67GORMEZaV4r8cCaBsxMxrHh11aRwt5rgUSIm5ho03oGGmGrk368=
+	t=1719394816; cv=none; b=Zur1CX5wgYWbW59TZfTWCg3qgjaxY6x+6brmwG+7BLPEhb+vIIKZEzLP51WvSuqU27N236OHWULbtPYdg9hAriByajengz9v+Ug5hHnqtFKFB9hQQqHqVP3BPHgDtzc/5hjIlfXeGlFFH0T7Zo9d2bo6RXDR1/CEaL7giUEODrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719394706; c=relaxed/simple;
-	bh=VMgxm/Ef7XHNkgrpqem5t2A+iBBaltsqNuNFFFlZROE=;
+	s=arc-20240116; t=1719394816; c=relaxed/simple;
+	bh=t3x+yPoWJqcunaS/pKWvxbPII/x2hQ1qiSygdYUHM84=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rTyEb5M8mWzt+uUaRdwXf71lSUj0hY+SMfcjPSEm98AaMHS78xpg7zDHq0I1LEP17OYlVNiMOsc7LOFmLUrt1M2xFMfbk2+8V4qTjDugY3F/mv4Z7M5mpyIS9RpmAxixnk7VS9RAfTSf2LxYapH1FyYTSbCVc+XJyPpNuwUYtYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=hYPbyF7h; arc=none smtp.client-ip=209.85.215.171
+	 MIME-Version; b=jyU0cBTd3akyLKJBtthNoY+3SeNU9A6boYfwYkbBsNe0yi8zyCP24oSU8nVZqWdFhZg3DLzaEKx/BGa75SLH3XM9/cUln7mb1zhilNludQngWgGbK9Q1a8wl/NVIJYPq+PJ9NgPyxhf/F1ljQC+Cu2EAgL8Vavf1plnjiATE0do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=N0uEqOZa; arc=none smtp.client-ip=209.85.216.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="hYPbyF7h"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-70b2421471aso4601238a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 02:38:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="N0uEqOZa"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2c80637ee79so4570537a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 02:40:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessos.org; s=google; t=1719394704; x=1719999504; darn=vger.kernel.org;
+        d=endlessos.org; s=google; t=1719394814; x=1719999614; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=K8+v3noNoyPjynJix5Z6KWWDUhj0ABP/SpdUpbNFskg=;
-        b=hYPbyF7hEXoNJRpZ0k0dZdUb3ZqCMxZenL9iP+0zd3armOWxzF+voEOFMx3ZvG+A7M
-         0rICP3hI1gTiAj2RRGphCUY3uZ55dx830DAM6lXhHiWQctnuU/N4AH1XKK5+0Xy2ckzd
-         aAf+w0Q/O++2DSWO30h2PWykXH/QORroUdKKZpY1gIol7WwiOgiDpe589GVfjCTkBoM7
-         FXb30Pm8aoiShIqHQPykabZiJ935Q7kT95mEX5NpFuAh0+8L19ToHVa5JtjBE1Vw2Ipj
-         LU/879XXLhIZj1stAqLB/tGrFJ8uq7csopfLODifEePZ0Zbr8EMEpVWByC8rd+4m+b1J
-         Qs8Q==
+        bh=EYkL/+OYvrPefgy3yyZJb4UdPCVnAP9ikoloQG2+LAg=;
+        b=N0uEqOZaTh/aqHFkpOfdHSZQWREJGX+6QQIzadsbBdSCQvDDRqtnRjp23XHMQk8Nz0
+         vIZ3v1L1WC4j7oLxMsVSyOSTqwpAIcqVgbcz+jmJOA3cCcMBadMA4S03Gr2ygGXbE0xR
+         U3E3rFigujCbNtXC6/yziIkTR6Q1btkyync3zxI4op/ZtciQGlYXCJzGEPoVhQpyB4uR
+         eyrvbJ/DumIgg0qfJxhWUqFMcNzAmidwRLGmRfz1AVJKDwvlLv8Jq3FUuDYTYtk6s3ME
+         B2eHBH1QEmhUsMYNKV+MnVGYus3dMF9jgDrd9VA42ngRuxaPfTsv1FgE2QnjZ/Z/j8tb
+         GG4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719394704; x=1719999504;
+        d=1e100.net; s=20230601; t=1719394814; x=1719999614;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=K8+v3noNoyPjynJix5Z6KWWDUhj0ABP/SpdUpbNFskg=;
-        b=T5QOApAStu44eiVnOehvdZqjYy44xapQrfvbOGe3YfHW65TuRGZpSOVIKdmp2MssBl
-         EGkbRJgBjp/ZndTJ3AbdfkHARlvbR8JiLO/XXS+dj3cljPW/JusjmwhLLBTVnncKhujP
-         fUbGKAMp+CtuZRcf93BzSm/zncf4pC/bL2QSCjZVdQSYSzG9EKWjYl9t5lfFvHVWI2g8
-         qnV1Z6wph09Vpm4FU3YHxWn+46kkvwH81dwm7RugvmAW9GHype+xBlodse+W5u8Zcm4R
-         c7k6Z8Gk2RF+NK7ScAdcBEVscGwawmCe5GNLuH83Fs2samzRws4vIpkBpcQr6ai1Gz2F
-         6U6A==
-X-Forwarded-Encrypted: i=1; AJvYcCX4U9yeTTSSep2Bdt02nARITdq/DqshJGn0wMt7ohI0Ppu18O+Ok+TdcXpMFFEDgMDbdqRgPNkKtCeF4zu+BDcrCFx0kT7zzzzfKNBI
-X-Gm-Message-State: AOJu0YyDkzKa5td0Bx+rO4TVfV1U2fTVbhEcqF6eDyuyPASNW/lMY5br
-	UwsX8s++shNSSbNCuBK8JQG0zAmqMlQrfjVsuuaMc77ecMcejZXNMTzjPw90RYc=
-X-Google-Smtp-Source: AGHT+IEC3KSzdYFibbSuDaV54ZQfYOq+YaBYF/YhFaYzGn4bpoJpyTfuPOdLMIDcdRzSetN4TJ0NrA==
-X-Received: by 2002:a05:6a20:4f24:b0:1bd:1972:370e with SMTP id adf61e73a8af0-1bd19723884mr4741524637.48.1719394704435;
-        Wed, 26 Jun 2024 02:38:24 -0700 (PDT)
+        bh=EYkL/+OYvrPefgy3yyZJb4UdPCVnAP9ikoloQG2+LAg=;
+        b=GXbjgQi6mg1Am4XxwfNmhBWDOsMMUuHRCNaUaOsr0OKaZ5xKOpgm3S9jCBO4MNuDhb
+         JlWxc8sCvCwMVkw7gkGulOeBntE/zGBLRUn2jGVjZKd04GncE7GEFxl4RnPx6+XK/7Nn
+         0/BnPufgIfsYWP601ogtoCT43kiEcQtflJNX9bjJ5I9EUrJaFutf2eqMkzAdbPScyarE
+         k76Wsc9zzoHWUWgjtFdUm8JB9aHT5JnkPlgu2fk8YDqKTjGox3v7YuZJqR97sz30PxNN
+         qHjXds5Bc5R+F15Qomh4b812PdGu/LCcPV/Ogc86deEtmaVOeVjAoh0gXkX0KEHnWpU4
+         Xnbw==
+X-Forwarded-Encrypted: i=1; AJvYcCUA6iiyNB9AMOWunn7xNkMfyxhGSO2We72schptKkVVAt1sLQ/m39B8iL36Lp4j/eYHzTKpb2mgC8T/j8I/YjjI7jBeezfQv2AxsoZE
+X-Gm-Message-State: AOJu0YwdyyCy69m6CQPszUN/mth9loCc2LOM4qNLtXbPzygG2ASjdeI5
+	GJrX4kKSJNnVjYO9BnGISEBstrW8wvevM1A115xDfdaV69pYxMdBo+HqZYx53dE=
+X-Google-Smtp-Source: AGHT+IG3oKwCrQlC6wo/9oxGXcDpBv5N7NMtxjzsIJEcW7oGLQArvKeicnb3ZhGwKn3EmwKnwHhuvQ==
+X-Received: by 2002:a17:90b:4c8f:b0:2c8:a8f:c97 with SMTP id 98e67ed59e1d1-2c86146c865mr7628141a91.37.1719394814219;
+        Wed, 26 Jun 2024 02:40:14 -0700 (PDT)
 Received: from localhost.localdomain ([123.51.167.56])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-1f9eb3c6d47sm95676685ad.178.2024.06.26.02.38.22
+        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-2c8d806f8f7sm1199096a91.35.2024.06.26.02.40.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 02:38:24 -0700 (PDT)
+        Wed, 26 Jun 2024 02:40:13 -0700 (PDT)
 From: Jian-Hong Pan <jhp@endlessos.org>
 To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: Johan Hovold <johan@kernel.org>,
@@ -65,11 +65,10 @@ Cc: Johan Hovold <johan@kernel.org>,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux@endlessos.org,
-	Jian-Hong Pan <jhp@endlessos.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v7 2/4] PCI/ASPM: Add notes about enabling PCI-PM L1SS to pci_enable_link_state(_locked)
-Date: Wed, 26 Jun 2024 17:37:00 +0800
-Message-ID: <20240626093659.14346-2-jhp@endlessos.org>
+	Jian-Hong Pan <jhp@endlessos.org>
+Subject: [PATCH v7 3/4] PCI/ASPM: Introduce aspm_get_l1ss_cap()
+Date: Wed, 26 Jun 2024 17:39:12 +0800
+Message-ID: <20240626093911.14435-2-jhp@endlessos.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240626092821.14158-2-jhp@endlessos.org>
 References: <20240626092821.14158-2-jhp@endlessos.org>
@@ -81,52 +80,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-According to "PCIe r6.0, sec 5.5.4", add note about D0 requirement in
-pci_enable_link_state() kernel-doc.
+Introduce aspm_get_l1ss_cap() which is extracted from aspm_l1ss_init() to
+get the PCIe's L1SS capability. This does not change any behavior, but
+aspm_get_l1ss_cap() can be reused later.
 
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=218394
 Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Reviewed-by: David E. Box <david.e.box@linux.intel.com>
 ---
-v3:
-- Fix as readable comments
+v6:
+- Skipped
 
-v4:
-- The same
+v7:
+- Pick back
 
-v5:
-- Tweak and simplify the commit message
-
-v6, v7:
-- The same
-
- drivers/pci/pcie/aspm.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/pci/pcie/aspm.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index cee2365e54b8..bd0a8a05647e 100644
+index bd0a8a05647e..5db1044c9895 100644
 --- a/drivers/pci/pcie/aspm.c
 +++ b/drivers/pci/pcie/aspm.c
-@@ -1442,6 +1442,9 @@ static int __pci_enable_link_state(struct pci_dev *pdev, int state, bool locked)
-  * touch the LNKCTL register. Also note that this does not enable states
-  * disabled by pci_disable_link_state(). Return 0 or a negative errno.
-  *
-+ * Note: Ensure devices are in D0 before enabling PCI-PM L1 PM Substates, per
-+ * PCIe r6.0, sec 5.5.4.
-+ *
-  * @pdev: PCI device
-  * @state: Mask of ASPM link states to enable
-  */
-@@ -1458,6 +1461,9 @@ EXPORT_SYMBOL(pci_enable_link_state);
-  * can't touch the LNKCTL register. Also note that this does not enable states
-  * disabled by pci_disable_link_state(). Return 0 or a negative errno.
-  *
-+ * Note: Ensure devices are in D0 before enabling PCI-PM L1 PM Substates, per
-+ * PCIe r6.0, sec 5.5.4.
-+ *
-  * @pdev: PCI device
-  * @state: Mask of ASPM link states to enable
-  *
+@@ -611,6 +611,18 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+ 	}
+ }
+ 
++static u32 aspm_get_l1ss_cap(struct pci_dev *pdev)
++{
++	u32 l1ss_cap;
++
++	pci_read_config_dword(pdev, pdev->l1ss + PCI_L1SS_CAP, &l1ss_cap);
++
++	if (!(l1ss_cap & PCI_L1SS_CAP_L1_PM_SS))
++		l1ss_cap = 0;
++
++	return l1ss_cap;
++}
++
+ /* Calculate L1.2 PM substate timing parameters */
+ static void aspm_calc_l12_info(struct pcie_link_state *link,
+ 				u32 parent_l1ss_cap, u32 child_l1ss_cap)
+@@ -721,15 +733,8 @@ static void aspm_l1ss_init(struct pcie_link_state *link)
+ 		return;
+ 
+ 	/* Setup L1 substate */
+-	pci_read_config_dword(parent, parent->l1ss + PCI_L1SS_CAP,
+-			      &parent_l1ss_cap);
+-	pci_read_config_dword(child, child->l1ss + PCI_L1SS_CAP,
+-			      &child_l1ss_cap);
+-
+-	if (!(parent_l1ss_cap & PCI_L1SS_CAP_L1_PM_SS))
+-		parent_l1ss_cap = 0;
+-	if (!(child_l1ss_cap & PCI_L1SS_CAP_L1_PM_SS))
+-		child_l1ss_cap = 0;
++	parent_l1ss_cap = aspm_get_l1ss_cap(parent);
++	child_l1ss_cap = aspm_get_l1ss_cap(child);
+ 
+ 	/*
+ 	 * If we don't have LTR for the entire path from the Root Complex
 -- 
 2.45.2
 
