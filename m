@@ -1,205 +1,151 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2083.outbound.protection.outlook.com [40.107.101.83])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBF71891B3;
-	Wed, 26 Jun 2024 10:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719397702; cv=fail; b=pdECgMV/fXTMGPNxy1YKCuA9UEigho84uOFxDNyOKgI0W7FY/gJunpaNAY13FRjKf7V/czJ+7WwQqY0820xesuMYJJf94yCqJ8rP2IDm+//Jz5vNdLadxJsF+V1qGsrziz/Fes9G6ft4xgZfiwlNAHs7fmI9yscu4Htu/AdJPag=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719397702; c=relaxed/simple;
-	bh=whQRwMurwR7+5xmqkko0RXDfBCTnvyZor1nUs9Pfldk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=Y2Z3Vy5gpKm3Tm99aw5LycJ/DHpJMR//md01NzsKCwYwZ0ZAXYCdG99cMW+khLMF8Mw/1UTRsqVW+ByseoQkNxOsEWkMw64gJJaSFKDi7TwtzXbZqAdmgvLydVKloe/I1ouf0lfpyL37w05zoz+ivRWGhVRefR5GZwonTTkwsT8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=DJ54YFpk; arc=fail smtp.client-ip=40.107.101.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38AAA18A92B;
+	Wed, 26 Jun 2024 10:28:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719397707; cv=none; b=rj9j5/UHEeoW/H97kQ1cTGy7IpZrDZDASQc4uH8F/kT/ofIC8d3T7Zb3L3o4JIJDqwI4Wof26TNHDTTLqjHt70IivPsri7OICickYXSMREuxCiiDQ1kq6KzHTO59H5dMI0cV6mnxTBWJlHICppbAgAEIAj4jKCvPOEDiBi2EKzg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719397707; c=relaxed/simple;
+	bh=R8koNdIOIs1xSzrQoGWQfGJPVAZmC0McFmOxHDebHL8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HzZsOLlryCBiSbiMg0JYsUHqjaqqiDqz8IZvs7Eev2fbXN7tTi/iHWbsHEYZb09os5qWIzeUpXfqXF+XEGnBFvYfgjrWBmmckfH89qCFEIAFDGPo7ItAiAmhtLgdyWbVLctzWsz+6evs4GFu7fAfHMtaMXdJqZ2HMCwe0N3C4QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jmx56Hm8; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="DJ54YFpk"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gw7ikQwrOQkeRTb4vyrdtd8nV5a/kENHR60D2sGQ6RCWbvWWSVsBK5KWsaLpMjAXL4vQZD3TwEyE9PSTSO7GyNXKJ/VSJ68or9gxHExETuEjhRN/uW9r1GZZjKlCLU0T3ggz/DvIJfUmfCn6kowximgXkrqnJIOa7f3TJinil8q1IMcwQ7rLD0MTqpbTDR+veQIwcjhAX3oFTuj/VumEjdqpdJ1LmrkYCOoO2l8BKGmEd2U9BPxX4nPYubG1ZWasvqO5xCgFfmayzzdy3sYpx3kPH7bczk+n89GyIO2Njhbs8MDnOM/8MNwpfhn7rB7hia/FtcFXMufHGx+KeqRkwg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WC3s7q91jMMJangr3DqIrBQXO49/MF0PtoKsocV6JwM=;
- b=ETgOOfE8u2MZUQ0mFOltf7xctG3/lhNlR/fwfXirxHDCL4mKAUA33y2gI9AtRJEIcNSjUs0TVd/mxLb35RRFvcryD0/8vc2kCL9H3v3GVWNos3GoyDnFgGnKiCvVUtoMd5FG8WfP9DFKPFpy8GbqiMdkkssa2Lo2nbCuaolvKYcnuEiI2JORs+koO/8j3rNgRhSY7N1eT5wh3bYpMFCIBqLg8NJCg3a4UDThsXZ2LBXHZAHjeNTxvszTKJcIQUwA83gt6soIIQIxO6y878YwzujToHdYjyfdqLP9do8oqVH2TlKhWAd6eAGWfIinG2R2EibfgY4Hc03C9vrx83Ld3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WC3s7q91jMMJangr3DqIrBQXO49/MF0PtoKsocV6JwM=;
- b=DJ54YFpkykr0+nAhx5dedInVU11Il0flu9ZJEez90hCwEd8zU2htxHK/GB9mmE+QKiO73BQKmWTp8CC9/lzN3HGFXxTGUnME+sxlTDk/+cHD5oReGvvEjuwgCiPNLR2ykKyqcJascdpqWvjGkg7XgO7Z2Z1Poeha8NWkYZiccGIPqPkMm2B051taJmsd1M5hBObwdcc4vkE+u1v3yMc8acgkNWmxsa5uQXrShEEnUO9KvSt2Mfsvk0AnU1caSe+VTTp4nAO89vyG6co1Axn7H7aMFuTfE7SRyJOU+h8AkrGM3fObg5c4wH9ZP5quT+SnWo3TNQnVknqlKHvlnloAfA==
-Received: from BYAPR11CA0081.namprd11.prod.outlook.com (2603:10b6:a03:f4::22)
- by PH8PR12MB6937.namprd12.prod.outlook.com (2603:10b6:510:1bc::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.30; Wed, 26 Jun
- 2024 10:28:18 +0000
-Received: from MWH0EPF000971E6.namprd02.prod.outlook.com
- (2603:10b6:a03:f4:cafe::88) by BYAPR11CA0081.outlook.office365.com
- (2603:10b6:a03:f4::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.22 via Frontend
- Transport; Wed, 26 Jun 2024 10:28:17 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- MWH0EPF000971E6.mail.protection.outlook.com (10.167.243.74) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7677.15 via Frontend Transport; Wed, 26 Jun 2024 10:28:17 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 26 Jun
- 2024 03:28:04 -0700
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 26 Jun
- 2024 03:28:04 -0700
-Received: from dev-l-177.mtl.labs.mlnx (10.127.8.11) by mail.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Wed, 26 Jun 2024 03:28:00 -0700
-From: Dragos Tatulea <dtatulea@nvidia.com>
-Date: Wed, 26 Jun 2024 13:26:55 +0300
-Subject: [PATCH vhost v2 19/24] vdpa/mlx5: Forward error in suspend/resume
- device
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jmx56Hm8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719397706; x=1750933706;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=R8koNdIOIs1xSzrQoGWQfGJPVAZmC0McFmOxHDebHL8=;
+  b=jmx56Hm8CWLf562Fih0J+If8vsIVIaD8Ej1+2nWww1zpVdnkhttEf2il
+   6pc85vpjXA3/MRt1vPUgzyoTXyCWdkzx0UfedZxn5wFSjYNXIj5NTWwzU
+   2HkP99wuEfA7NgNsW8pOi+SRFGEf21mCkQJOqxZY/e36ukEba8oKsfhhp
+   mnerc/bRPpGi8N3kxBNs9JKPDOhcKbX9S2jJ5OV6IBqOf0GB14Jv9kgJD
+   VeKmBXj866yoRjPgGX7xe2xqN1TmoUW9TfwwyuA33mM33JGbwzSXpHfph
+   Ouzn1Swn2+9VL0ZAqKQTQ0725bzA52nAT0UH7qgY9REVCCa/zIStLKQvr
+   A==;
+X-CSE-ConnectionGUID: yRUAwlIqQhCsDHxgZD0nRA==
+X-CSE-MsgGUID: TX4BljKTS2+os3mxwG1mTQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="19351636"
+X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
+   d="scan'208";a="19351636"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 03:28:26 -0700
+X-CSE-ConnectionGUID: tJoVEplgSQeDKyi7EUs7qQ==
+X-CSE-MsgGUID: nPmW/HKWQ1Gw4O20Z0Xhgg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
+   d="scan'208";a="44611032"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.93])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 03:28:22 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cxl/acpi: Warn on unsupported platform config detection
+Date: Wed, 26 Jun 2024 12:28:19 +0200
+Message-ID: <21841700.4csPzL39Zc@fdefranc-mobl3>
+In-Reply-To: <667b4f4a46cc6_563929472@dwillia2-xfh.jf.intel.com.notmuch>
+References:
+ <20240619125949.167936-1-fabio.m.de.francesco@linux.intel.com>
+ <667b4f4a46cc6_563929472@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240626-stage-vdpa-vq-precreate-v2-19-560c491078df@nvidia.com>
-References: <20240626-stage-vdpa-vq-precreate-v2-0-560c491078df@nvidia.com>
-In-Reply-To: <20240626-stage-vdpa-vq-precreate-v2-0-560c491078df@nvidia.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?utf-8?q?Eugenio_P=C3=A9rez?=
-	<eperezma@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky
-	<leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>, Si-Wei Liu
-	<si-wei.liu@oracle.com>
-CC: <virtualization@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>, Cosmin Ratiu
-	<cratiu@nvidia.com>, Zhu Yanjun <yanjun.zhu@linux.dev>, Dragos Tatulea
-	<dtatulea@nvidia.com>
-X-Mailer: b4 0.13.0
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000971E6:EE_|PH8PR12MB6937:EE_
-X-MS-Office365-Filtering-Correlation-Id: 76a213df-99c1-479c-9736-08dc95cab1c7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230038|36860700011|376012|7416012|1800799022|82310400024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YU5GYzNOSEVqRmtDR29MTFUwWDNVc29LUzc1Tjk4bmg5dHFkNFBBQ3dIK2hM?=
- =?utf-8?B?bGZ6UUFybHRZdzJKWEtwUndSUUdQazVPZUJ6WUh6d0wrYnkyMnZUWm52Zmk5?=
- =?utf-8?B?SFkrVlgzUE9oS3Qrb2dWRGJVdENkaXlodGhsZjk4eEZZZ09PNk4vT1k1Y2Zo?=
- =?utf-8?B?Rm1CaHdRSTVYUGM0eVhxRVlKcVhtVVQyL3o2dUdvclliemVGRGlTWU5JczQ1?=
- =?utf-8?B?MjlpL1h1Ly9zMTFxMEdERVhUT2NIeWVGa25XZlV0RU5mRGJ1ZnJnSnU4RHY4?=
- =?utf-8?B?Qzh1UUI1MUFibkR4cmdvVldrWkMwNUFnaEdEWHRodTFkVWxxbVNkYTIzSEpP?=
- =?utf-8?B?UWVMYXhjNUtDejZGbnZSK0xibGhZdGx1UjRmK294V3BJaGtBYWZxVUtUdGlo?=
- =?utf-8?B?dDRHcUtvUmhCZTNLWHl6N2k5WThSM3hqaGdaamp0bDRmM3pQanU2TjFmcFR4?=
- =?utf-8?B?elpoUXh5ajdoYnhOQkdxeXFPdFZWVHRmMDFacFpjQWZDdmEwcFNpQjdpa1BE?=
- =?utf-8?B?NDJmazhxbVh3cHRBU2JPYWpjeElRYVM5azRydXpUQitPN2MwRGdtRHltVVo1?=
- =?utf-8?B?Tm1NbUZadWdLaVJvOTlxUFJrVWQ2NG1JQVBJam56NEFMcmNpNEp6eVp5Y2NR?=
- =?utf-8?B?Y2NjVUtYRURJL0RMdGZWQXVyb2RtV2YwWWFSQ04yU1Aybm1Cbnd0dTFub3Ba?=
- =?utf-8?B?NU84NWVmZkVVSy9DZzZBNFllenhJaGxiUXV5WDZJTHZlaHBxRjdpRGp0a0NH?=
- =?utf-8?B?aWhkSlE4U1FnVzRac1RCK0w2bHhLTTZuc3o0dWV3a3dpd0IzS20zRFJ1MTM1?=
- =?utf-8?B?MW9nZzNsM3ZCME40L1BqWWwwVklpTHc3YXphSXBjTHFKR0NNcDF5VzJwZ2p3?=
- =?utf-8?B?ekJaK0gyV2tUL2hScEVRcDlodVhLOWJsM3FrcFRhTCtVemFCV0Z3ZG5NZUNm?=
- =?utf-8?B?RWxFVUxKUHR6U04wcHV3cFR1cXpTazVBOEsvakNEMTdjV2FQTGxvc0ovRUh1?=
- =?utf-8?B?TFU3UjRWc1J3S21XR3hOdlhtVUpybkZVUFppTHBQRDh1Z2p3L1pGMmdlY1dM?=
- =?utf-8?B?MWEvdGFUV0E3VjBJTlZtMGhVL0dJNXA1dlhwMXFjS21mcmxMTmpQaDFFTU14?=
- =?utf-8?B?MTRuSHVBSEp2NTJsdlZFdE0yc2dHMnZOTTI2WU1URXpOK3FnTlp1czNuN1dD?=
- =?utf-8?B?SG1MWWRFUTM1WGlqK2pBY0twcE81MHk1Sk1sK1FZT2FydENLZDVMbUlpZ0hO?=
- =?utf-8?B?c3o0MUZVa21zUGhVSDV1MG9GdmdPM3Fja3grUXVtN0hiRytvMUt1NWZvMkcw?=
- =?utf-8?B?VVVKNU1sNHVxdFVXUExQWitYeXdHdjJzaHcrdVVzNTFCbUtseEkyeTFaZ3l0?=
- =?utf-8?B?WFB6ZG5Ea1lLampVZVVNcjJnQ3VPTzQ1bUt4UW8xcHpSYlBOTHgxQ21JOWdk?=
- =?utf-8?B?YlM4MCtYQ2lTVXJJb2NKd29FWG8za0JrYTVmTzExWWJrU2hZeFhRaWhGL0g5?=
- =?utf-8?B?UDRMN1V0bGhqckE3Q2N0OGdpemdOb29ub3pUT21tWFp4UlRNdU4vUzVGWWtC?=
- =?utf-8?B?T2FoS1FkdzY5MjhGY0lZTXFyNm5HeXZmTmRlV1d0L05rTGRFUlJhSzdZN1ZH?=
- =?utf-8?B?ZlJKRE5lK0swbnRYOVZPcFNOaUdzQjk3WnFxMDN0L3JiYXJrbm9ObW9WRzY1?=
- =?utf-8?B?ajdkVHNJWndRNTB5REFrZmhhZXV2WGNtSmY4YmhhVVd2NjJwdmxkNjhGZ3Vm?=
- =?utf-8?B?ODY2ZE5pY0ZwdjhOd2ZyUzhCRGJkcHJpREpoTVQ1LytMdVQ4OGhLRlFPbUdx?=
- =?utf-8?B?YmVzOEVMU0pvVTBoT1N6aXEyNFc4dmVsRnNTQWFaakFXUzVJTzJ1YXJwb0My?=
- =?utf-8?B?Zmg3WjhOeWVubDdTZG5leXI1N3QvV1FuZkIvcGtWa01sa0E9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230038)(36860700011)(376012)(7416012)(1800799022)(82310400024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2024 10:28:17.7566
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 76a213df-99c1-479c-9736-08dc95cab1c7
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000971E6.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6937
 
-Start using the suspend/resume_vq() error return codes previously added.
+On Wednesday, June 26, 2024 1:14:18=E2=80=AFAM GMT+2 Dan Williams wrote:
 
-Reviewed-by: Cosmin Ratiu <cratiu@nvidia.com>
-Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
-Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
----
- drivers/vdpa/mlx5/net/mlx5_vnet.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+Hi Dan,
 
-diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-index e65d488f7a08..ce1f6a1f36cd 100644
---- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
-+++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-@@ -3436,22 +3436,25 @@ static int mlx5_vdpa_suspend(struct vdpa_device *vdev)
- {
- 	struct mlx5_vdpa_dev *mvdev = to_mvdev(vdev);
- 	struct mlx5_vdpa_net *ndev = to_mlx5_vdpa_ndev(mvdev);
-+	int err;
- 
- 	mlx5_vdpa_info(mvdev, "suspending device\n");
- 
- 	down_write(&ndev->reslock);
- 	unregister_link_notifier(ndev);
--	suspend_vqs(ndev);
-+	err = suspend_vqs(ndev);
- 	mlx5_vdpa_cvq_suspend(mvdev);
- 	mvdev->suspended = true;
- 	up_write(&ndev->reslock);
--	return 0;
-+
-+	return err;
- }
- 
- static int mlx5_vdpa_resume(struct vdpa_device *vdev)
- {
- 	struct mlx5_vdpa_dev *mvdev = to_mvdev(vdev);
- 	struct mlx5_vdpa_net *ndev;
-+	int err;
- 
- 	ndev = to_mlx5_vdpa_ndev(mvdev);
- 
-@@ -3459,10 +3462,11 @@ static int mlx5_vdpa_resume(struct vdpa_device *vdev)
- 
- 	down_write(&ndev->reslock);
- 	mvdev->suspended = false;
--	resume_vqs(ndev);
-+	err = resume_vqs(ndev);
- 	register_link_notifier(ndev);
- 	up_write(&ndev->reslock);
--	return 0;
-+
-+	return err;
- }
- 
- static int mlx5_set_group_asid(struct vdpa_device *vdev, u32 group,
+> Fabio M. De Francesco wrote:
+> > Each Host Bridge instance has a corresponding CXL Host Bridge Structure
+> > (CHBS) ACPI table that identifies its capabilities. CHBS tables can be
+> > two types: RCRB and CHBCR.
+> >=20
+> > If a Host Bridge is attached to a device that is operating in Restricted
+> > CXL Device Mode (RCD), BIOS publishes an RCRB with the base address of
+> > registers that describe its capabilities.
+> >=20
+> > However, the new (CXL 2.0+) Component registers (e.g., Extended Security
+> > Capability), can only be accessed by means of a base address published
+> > with a CHBCR.
+> >=20
+> > An algorithm to locate a CHBCR associated with an RCRB would be too
+> > invasive to land without some concrete motivation.
+> >=20
+> > Therefore, just print a message to inform of unsupported config.
+> >=20
+> > Count how many different CHBS "Version" types are detected by
+> > cxl_get_chbs_iter(). Then make cxl_get_chbs() print a warning if that s=
+um
+> > is greater than 1.
+> >=20
+> > Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.=
+com>
+> > ---
+> >  drivers/cxl/acpi.c | 20 ++++++++++++++------
+> >  1 file changed, 14 insertions(+), 6 deletions(-)
+> >=20
 
--- 
-2.45.1
+snip
+
+> > @@ -533,6 +537,10 @@ static int cxl_get_chbs(struct device *dev, struct=
+=20
+acpi_device *hb,
+> > =20
+> >  	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CHBS, cxl_get_chbs_iter,=20
+ctx);
+> > =20
+> > +	if (ctx->count > 1)
+> > +		/* Disclaim eRCD support given some component register=20
+may only be found via CHBCR */
+> > +		dev_info(dev, "Unsupported platform config, mixed=20
+Virtual Host and Restricted CXL Host hierarchy.");
+>=20
+> I believe this is already queued, but my personal preference is that
+> multiline statements include brackets, or move the comment above the "if
+> ()", so either:
+>=20
+> 	/* Disclaim eRCD support given some component register may only be=20
+found via CHBCR */
+> 	if (ctx->count > 1)
+> 		dev_info(dev, "Unsupported platform config, mixed Virtual=20
+Host and Restricted CXL Host hierarchy.");
+>=20
+> ...or:
+>=20
+> 	if (ctx->count > 1) {
+> 		/* Disclaim eRCD support given some component register=20
+may only be found via CHBCR */
+> 		dev_info(dev, "Unsupported platform config, mixed Virtual=20
+Host and Restricted CXL Host hierarchy.");
+> 	}
+>=20
+> ...but don't spin the patch just for that fixup.
+>=20
+I'll send v2 mainly for Alison's comments and so I will also add brackets h=
+ere=20
+(the second solution meets my preferences).
+
+Thank you,
+
+=46abio
+
+
+
 
