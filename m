@@ -1,128 +1,125 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1302718629B;
-	Wed, 26 Jun 2024 14:52:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F481850A4
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 14:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719413553; cv=none; b=L+4306ncJR1J60cvdcvYzpFZhQTEJVpj0+4aL6ou9LMMp7Aun7NuzoZgE0mc3FWfurWdKk7s5zUcgIcyoKsqU+87UwtYORW5KZ8znjLgLPXTKKY29ZaufhAcx6Niu2lYMNGSqhtrsJtB4iqxNPFYIs0Y9ZmoCTzuSwUJxh4cdrU=
+	t=1719413607; cv=none; b=pikXZoL4ozia5EBzeiVOo/jzRyoiM6ujbuCzaMdmG6cdMaNRNQEGWOGoDt7TWeRiCc0AiO0yF2gkZo7HihlRIkeiZVXd9BJQ9V6jYW/zh/UmGQ5XTCaxWaFwCDm0XX5ElQKTFGjvCLN8RdQeACyC7g0Kt1gprsYSgh7Spqf/sCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719413553; c=relaxed/simple;
-	bh=F0CnGji1wRDPkT1q0o6oYL7yDo0gD2uyVQ159WDkbWg=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=kuhDbWfhF+g+qbSKbqt2hpXEEjwRaUBO9+Gv4zuaUeNYCBubrpTXZ3uxr6MlhATG+0EmtoZioKBEOH/319HJoj9mbDk4usDn1GSgilMWrQJwKtOOZBZh2N52jBPJwCffRNQjib6EUPt6n56oD+3C4lZdPgl8XVAtjCgZ36khbOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=cZZbmNnS; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1719413607; c=relaxed/simple;
+	bh=hyNxaFzPXWFBRg+/6WUFhFSPBWdIIx4INvH/NCiLLHo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fXXoh0RSFCibVMX2iBpdw11J8SkifX0kJfPM95hmSUmxnhwJ3McmzRV7YnT3BWAQtTqfN1AQZwsDThLUvHiJnqE16V/3w3YG05DFujb6YXUl9C8l0lpsYrBoyFxL0zxloI+2C5XWHF9WpId8lDDlcgSegaKW/Eo/SC0lPKYeFiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JH0kiPV4; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="cZZbmNnS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1719413531; x=1720018331; i=markus.elfring@web.de;
-	bh=FFE85tnMm6EJuo/UO7THJkkwDz/ISy4hRYIl0uSduj0=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=cZZbmNnSymc6AFYBLcGQ2pZu19jTUSr3eNwEiX5mGNkRqrg3SxszSoRRkCJbCNZy
-	 4gz5Bdk3Lw4r5ZU8wvtOvyKyfcrVsY5eD3qryMUBd3ETYASajWWcoDstrmqQwTrqf
-	 iYpq2n4iYhg0F0Zb2RPnIpYBmiC5xJSzCW5QWBW3+F0Py5SEsivI9tO8pFu+Nc3uH
-	 iNmD1CEqyQE2wo5zVsA3J0vUJ6qhtaYxebvTznaONmmfVxhnWBxgow3QbLFuUMnm7
-	 2SYHVqPGF37YxFxlVu+oGVQy7jHVLhg9ThQKgTg6Pq7RN7DVy8UWMp0kKh/zCPduL
-	 nR0mrWLYWvYlJT5K2Q==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N7QQD-1sO2go0hgb-00x18V; Wed, 26
- Jun 2024 16:52:11 +0200
-Message-ID: <8a66afe4-5df8-4542-b74f-b050e71263fb@web.de>
-Date: Wed, 26 Jun 2024 16:52:09 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JH0kiPV4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719413604;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YrKnBGUsXzxltAg01s3o4kyy9jXBJCa6pgwUhoUuJvY=;
+	b=JH0kiPV4PHEsyLGjjiuVBN7zON5+teC0M68NEuuhVkXYAfIC9n/wqI0sLn7GxHERYfrags
+	ZCViaA9YO5NtKDIPGbLe44kp7sk+OnHMMxM1CtVLqaAt4sauns4vcg+VVahprCxou/RngB
+	awndBsqxcbXMOWub6UXqkgGYncdHnUo=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-74-r-5IlMDRM1eDEjIZ7VFlVA-1; Wed, 26 Jun 2024 10:53:23 -0400
+X-MC-Unique: r-5IlMDRM1eDEjIZ7VFlVA-1
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-79d586c5e9eso31163685a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 07:53:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719413600; x=1720018400;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YrKnBGUsXzxltAg01s3o4kyy9jXBJCa6pgwUhoUuJvY=;
+        b=s0DPDlnbXrvSgZZushM/c2MR8B4xCWxeQDybp8rQsbj3m+IFMgWaFCLbuPVXDg+LNh
+         mVjShjhj7XuRMOEVim/EeQlUPHySQ348vP14zUkQpzzz7ylA84HOhmEM7nBxXykmOeXC
+         8gqBpqB+7nZLLQrL3vsZFsh3oNSQceO/WJco3v+nLJas2b9T5Ez2cQbKi74UOMj32jPm
+         kvoSA3+tQ96Ued+E98SR/4n5Mxxtp37qareAQ3DKdL5iKpMC9Vi6CbMxMevKATgpzM/Q
+         VKemPCrommY58fhkM/R2BfgglMwB1Nkpl+jwi/RfPCbevq/7UKktZIve55mKW95VgF+O
+         eQIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUkQways7NJ/Ja3nc10CUicOIblJVaQO8jA7bE47unZAND/pV4aE5B1tAnexgyd7apPSZfrCHkumxZEiCWHx4qRfn4RQzN9cSNrUl8m
+X-Gm-Message-State: AOJu0YzFa3ZXP6sT5Oouy++FvPpCvfJu8LTdRU7mtFcvJLTvTwDUEmPj
+	BaOYWnigSrVs1JDQZWX3kr5dFkHrcNqmaNjiR36bDzr5ZOxafPowc1uviDe9uHiBGJ1K/px3DIq
+	908pRBvYB8eWBolOOJnJds2T/+yVJYDw6yPrr+/nD7V6cXC9Y6Rc4E5WKkcwF6w==
+X-Received: by 2002:a05:620a:1998:b0:79d:5414:68d2 with SMTP id af79cd13be357-79d54146b12mr159312685a.44.1719413599702;
+        Wed, 26 Jun 2024 07:53:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE7rWL9/p+Lnv9AbO8zaoMmKP9NuiF/Sz5Kmi1mA7Vt5rgp/9627GpolyqUJFKWM3RKg3m/gg==
+X-Received: by 2002:a05:620a:1998:b0:79d:5414:68d2 with SMTP id af79cd13be357-79d54146b12mr159308585a.44.1719413599165;
+        Wed, 26 Jun 2024 07:53:19 -0700 (PDT)
+Received: from x1gen2nano ([2600:1700:1ff0:d0e0::f])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-79bce89a5d5sm505133885a.19.2024.06.26.07.53.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jun 2024 07:53:18 -0700 (PDT)
+Date: Wed, 26 Jun 2024 09:53:16 -0500
+From: Andrew Halaney <ahalaney@redhat.com>
+To: Sagar Cheluvegowda <quic_scheluve@quicinc.com>
+Cc: Vinod Koul <vkoul@kernel.org>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Bhupesh Sharma <bhupesh.sharma@linaro.org>, kernel@quicinc.com, 
+	Andrew Lunn <andrew@lunn.ch>, linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: net: qcom: ethernet: Add
+ interconnect properties
+Message-ID: <q2ou73goc2pgrmx7xul4z7zrqo4zylh3nd2ldxw5vnz2z4fnkf@axbse4awc6lf>
+References: <20240625-icc_bw_voting_from_ethqos-v2-0-eaa7cf9060f0@quicinc.com>
+ <20240625-icc_bw_voting_from_ethqos-v2-1-eaa7cf9060f0@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Ma Ke <make24@iscas.ac.cn>, linux-s390@vger.kernel.org,
- netdev@vger.kernel.org, Alexander Gordeev <agordeev@linux.ibm.com>,
- Alexandra Winter <wintera@linux.ibm.com>,
- =?UTF-8?Q?Christian_Borntr=C3=A4ger?= <borntraeger@linux.ibm.com>,
- "David S. Miller" <davem@davemloft.net>, Gerd Bayer <gbayer@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Niklas Schnelle
- <schnelle@linux.ibm.com>, Stefan Raspl <raspl@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- Thorsten Winkler <twinkler@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>, Wenjia Zhang <wenjia@linux.ibm.com>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20240626081215.2824627-1-make24@iscas.ac.cn>
-Subject: Re: [PATCH] s390/ism: Add check for dma_set_max_seg_size in
- ism_probe()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240626081215.2824627-1-make24@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:HRGw43YV7SkuT0Xt4fwMTX9TEURd7yMQTJtdVH/oHNrhfXeGUZW
- Jeb5W7VzO23BvEvq0PM6KzNqgZQctsQVgJ5w0xNM9y7KJusJVX8O2Npp4sZZek4VKJvjEHk
- Srvx1W261wPMz5LjIb8MLitoC4ElHTUPtKPSk5nW8byyTDfckZR0IObqbFu7AiM20u0SS7o
- XrfEOuMk0Qq5ndiwmHJNw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:WTlxYGB/qos=;9avwyHEogKHHx/HTwSuuZtAPQQ6
- Pam58lxvKlZC2/LcIYocQ2qyIzLZZdgdFdFwcfLQT0KV3dOn949EyFxmbljRJIMvD5FAV6fLg
- lyLNm5ka6fOMWujFeK9FA4gjoD2Qi6AlKHzb03i3+WGyX/+SAKrFWD+YAAzPqTdLQsxM5WYlU
- t0xiE7GmN7F8/QDRJU1VNVPhBOqdv/o+XMcYPrS0A0dGq4W5va8WczG4w1fg1kanZFsubf407
- gktOgN1ioS1EofbgWHBSOlfpj8NpQ4y9IvKIYk/pNhiuLZqCkb/saFb/6x7w8P4P9D7sVKJ2J
- Qb0apf2YZgTUZhKI9XKSBCxMmqsxRQEWZ0EdqKCzLjJcX6rWDhu7YKs4hAwsi+nrJ8v4x+KOi
- gFD/H04MF3CRQNVY87/wF8+6QIZKEu/3GqTXruUanWkLM3B3+48f6Vir3R6ZLiFp57SkkKjPc
- /2hLSedfgzLeMsVWxVTDdLNDPMkbzJR3LmLYCrSh0N3jCuWnIY7RCk4afj9ipq0KCW8uzrJx1
- anQGfGnDi3JrX6IECCG2lCD7eEXX1oaWjL/M3kT6+IYhsePBnKMzG5pRfkg15hq2bECJ6uYaW
- PD79VMYRG0Rum318AqZ1X09RJR0xz6e6zVmbMUo6+jFgp+XznUTP7Kiagmvv3qh8Q2wAHRoPW
- ykWUE6rVUVSZXHjsAkESMBUCIXes3hV5IWmXdYfOesBQTySpW8yVqgyWP9UIb9MIo7MGTu+th
- yChdVfF0YCdHyjoig9i0iMwUXCmHrgab3VqWuC+iP7UopeT9WP/1C+jVIq+vbglvdwOA5x1am
- CFAMCJ4qjOJ2XfK4sGcHeDn8EEiow/ne7dh0RmatLMznc=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240625-icc_bw_voting_from_ethqos-v2-1-eaa7cf9060f0@quicinc.com>
 
-> As the possible failure of the dma_set_max_seg_size(), we should better
-> check the return value of the dma_set_max_seg_size().
+On Tue, Jun 25, 2024 at 04:49:28PM GMT, Sagar Cheluvegowda wrote:
+> Add documentation for the interconnect and interconnect-names
+> properties required when voting for AHB and AXI buses.
+> 
+> Suggested-by: Andrew Halaney <ahalaney@redhat.com>
+> Signed-off-by: Sagar Cheluvegowda <quic_scheluve@quicinc.com>
+> ---
+>  Documentation/devicetree/bindings/net/qcom,ethqos.yaml | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/qcom,ethqos.yaml b/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
+> index 6672327358bc..b7e2644bfb18 100644
+> --- a/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
+> +++ b/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
+> @@ -63,6 +63,14 @@ properties:
+>  
 
-Please avoid the repetition of a function name in such a change descriptio=
-n.
-Can it be improved with corresponding imperative wordings?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.10-rc5#n94
+Does it make sense to make these changes in snps,dwmac.yaml since you're
+trying to do this generically for stmmac? I don't poke bindings super
+often so might be a silly question, the inheritance of snps,dwmac.yaml
+into the various platform specific bindings (qcom,ethqos.yaml) would
+then let you define it once in the snps,dwmac.yaml right?
 
+>    dma-coherent: true
+>  
+> +  interconnects:
+> +    maxItems: 2
+> +
+> +  interconnect-names:
+> +    items:
+> +      - const: axi
+> +      - const: ahb
 
-=E2=80=A6
-> +++ b/drivers/s390/net/ism_drv.c
-> @@ -620,7 +620,9 @@ static int ism_probe(struct pci_dev *pdev, const str=
-uct pci_device_id *id)
->  		goto err_resource;
->
->  	dma_set_seg_boundary(&pdev->dev, SZ_1M - 1);
-> -	dma_set_max_seg_size(&pdev->dev, SZ_1M);
-> +	ret =3D dma_set_max_seg_size(&pdev->dev, SZ_1M);
-> +	if (ret)
-> +		return ret;
->  	pci_set_master(pdev);
-=E2=80=A6
+Sorry to bikeshed, and with Krzysztof's review on this already its
+probably unnecessary, but would names like cpu-mac and mac-mem be
+more generic / appropriate? I see that sort of convention a lot in the
+other bindings, and to me those read really well and are understandable.
 
-1. Will the shown dma_set_seg_boundary() call trigger similar software dev=
-elopment concerns?
-   https://elixir.bootlin.com/linux/v6.10-rc5/source/include/linux/dma-map=
-ping.h#L562
-
-
-2. Would the following statement be more appropriate for the proposed comp=
-letion
-   of the exception handling?
-
-+		goto err_resource;
-
-
-3. Under which circumstances would you become interested to increase the a=
-pplication
-   of scope-based resource management here?
-   https://elixir.bootlin.com/linux/v6.10-rc5/source/include/linux/cleanup=
-.h#L8
-
-
-Regards,
-Markus
