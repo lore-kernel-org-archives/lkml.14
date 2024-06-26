@@ -1,157 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD1D1849CB;
-	Wed, 26 Jun 2024 13:31:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0CA185E74
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 13:31:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719408693; cv=none; b=QFAwSR7Kp7uZ2PBz+gcPg1UQeFfJekdjIlV5dMfxTvZpYZ48lplAohabTSObK3sKFHCNCmA8RGnLCvpaM1Mg7gFvAm4FE7Nyj48TBrUhMRSGixOHUszaKC0fUZWOu7Vt9MAhKRrx1tfdDZE+jjL2XlyPr+4AgGmk2xhSr/rj8Zk=
+	t=1719408698; cv=none; b=jWyjuKnMpZ+1HY+vEekc9K1t17w+qHaFsqBSCtICk/Gru47egxtGnhllWCRWz6hji/TIYGVQEG3OLF3Z0Eanb19Z8Vcqwq/xWguh6UhB222P0xTrBN48/lqMcKNslXxpKo6XMelWyREigvZK1enV5i9kQSAcYZANkCNe1PipVOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719408693; c=relaxed/simple;
-	bh=giXhCnsVoZ650ze2PoXjlVHEuytwY/dyarTP8oKdqw8=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=cCqTnvLk+L4XVNoWxcy2knCH/9Od+K8sGKSc73nIxGbR8k0Fexbjn1vFIIltbJTlz94mXUfPSyU4TF5/9RYDJWbdqHeay7IYzm/DUCoNG2JWWTCifBRYQOJdw6ax+cOsINoCi0OT4oiE/AkAefCnn74kNUIDs12VP4Bj/f3FZdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rBtLFCCE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719408698; c=relaxed/simple;
+	bh=laiCWkqIzqDn9RQumgzyZB0Vh2hyYS+nQ9Hp1LnFzJ0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=eb4ALSN5prTqNJtuOIZ7h4ogv8S2h0XvE5sr30s07gwwc75FwYZr2MVZT7JaDQV6PR6arXjnioWD4WbAoVRBEAeO0VodttzVw1MUM7d+i8PiSzmNr7nFH5wfKrKqDKJcRUJmBgvwZujnuAp3kBbRmYkfIWloPf1DF+nz4WJ6XxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=AKFlY8A8; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rBtLFCCE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D4FEC4AF0C;
-	Wed, 26 Jun 2024 13:31:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719408693;
-	bh=giXhCnsVoZ650ze2PoXjlVHEuytwY/dyarTP8oKdqw8=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=rBtLFCCENjGh8d/4fkdzHlS/cuQEQSszQY0kBwX9o41KBHt7ZINsuho/Hb4MLy2Fz
-	 7w8z7TE7N1GiP9CUJJaahJ6iNvqLz3Fahak+4vZpNlevyM5gZmNpx8lK1ljQHkIpTE
-	 4s56O06lG2Eqz4K2T+f5+CY0QsccbVzSXdjalUe9hMadTzQIO4K0JopK4T3pGD2b5Z
-	 eRcOd4PXfsn8cfrYYnYh6CpXoqFyVTxNwpSyrqD/YTQpTVSy0nvC+4GmNAEVIylwbR
-	 yOZ/8HJWi01moJfFpxatd6Mx7RLJ0yAGpwlKYY1+PzaRSkuBPF5vBizvtTn/NPrVv/
-	 1ktONF4l//XGQ==
-Date: Wed, 26 Jun 2024 07:31:32 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AKFlY8A8"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45QDUmh6003322;
+	Wed, 26 Jun 2024 08:30:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1719408648;
+	bh=OnjaqgD5fCB3Kqii6KOFHTmJbJLH6HLUW/2JLcRptY0=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=AKFlY8A8c7XPSrDIRWR594GDzZje8alOoOjgch3evoabm0GiKn7nxqrbzl58Nb0TG
+	 fgUXxiMc1os3e7k9/1Dofn11SIFcKCbYyGhmPlOR3PDc6ytfGEB7jhB3HoSpyeLpyD
+	 5jGKH7wGTWx5yrqgJitIr3vOpaNN3waC7KO5aRBY=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45QDUmWN117989
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 26 Jun 2024 08:30:48 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 26
+ Jun 2024 08:30:47 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 26 Jun 2024 08:30:47 -0500
+Received: from [172.24.227.31] (uda0496377.dhcp.ti.com [172.24.227.31])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45QDUeX0009465;
+	Wed, 26 Jun 2024 08:30:40 -0500
+Message-ID: <e62750de-488c-4c5a-b1aa-e431605515c6@ti.com>
+Date: Wed, 26 Jun 2024 19:00:39 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc: Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
- Jingoo Han <jingoohan1@gmail.com>, linux-arm-msm@vger.kernel.org, 
- quic_vbadigan@quicinc.com, Bjorn Helgaas <bhelgaas@google.com>, 
- linux-pci@vger.kernel.org, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- quic_skananth@quicinc.com, devicetree@vger.kernel.org, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, quic_nitegupt@quicinc.com, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>
-In-Reply-To: <20240626-qps615-v1-0-2ade7bd91e02@quicinc.com>
-References: <20240626-qps615-v1-0-2ade7bd91e02@quicinc.com>
-Message-Id: <171940833120.2961439.17567783042891416848.robh@kernel.org>
-Subject: Re: [PATCH RFC 0/7] PCI: enable Power and configure the QPS615
- PCIe switch
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 03/11] drm/bridge: cdns-dsi: Fix Phy _init() and
+ _exit()
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@linaro.org>,
+        Andrzej Hajda <andrzej.hajda@intel.com>,
+        Neil
+ Armstrong <neil.armstrong@linaro.org>,
+        Robert Foss <rfoss@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman
+	<jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard
+	<mripard@kernel.org>, Jyri Sarha <jyri.sarha@iki.fi>,
+        Thomas Zimmermann
+	<tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Daniel Vetter
+	<daniel@ffwll.ch>
+CC: DRI Development List <dri-devel@lists.freedesktop.org>,
+        Linux Kernel List
+	<linux-kernel@vger.kernel.org>,
+        Dominik Haller <d.haller@phytec.de>, Sam
+ Ravnborg <sam@ravnborg.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Kieran
+ Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Nishanth Menon
+	<nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Praneeth Bajjuri
+	<praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>,
+        Devarsh Thakkar
+	<devarsht@ti.com>,
+        Jayesh Choudhary <j-choudhary@ti.com>, Jai Luthra
+	<j-luthra@ti.com>
+References: <20240622110929.3115714-1-a-bhatia1@ti.com>
+ <20240622110929.3115714-4-a-bhatia1@ti.com>
+ <8fcbc541-d7a3-4d0d-ab0f-74d7f1cd63b5@ideasonboard.com>
+Content-Language: en-US
+From: Aradhya Bhatia <a-bhatia1@ti.com>
+In-Reply-To: <8fcbc541-d7a3-4d0d-ab0f-74d7f1cd63b5@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
+Hi Tomi,
 
-On Wed, 26 Jun 2024 18:07:48 +0530, Krishna chaitanya chundru wrote:
-> QPS615 is the PCIe switch which has one upstream and three downstream
-> ports. One of the downstream ports is used as endpoint device of Ethernet
-> MAC. Other two downstream ports are supposed to connect to external
-> device. One Host can connect to QPS615 by upstream port.
+Thanks for reviewing the patches!
+
+On 26/06/24 15:55, Tomi Valkeinen wrote:
+> Hi,
 > 
-> QPS615 switch power is controlled by the GPIO's. After powering on
-> the switch will immediately participate in the link training. if the
-> host is also ready by that time PCIe link will established.
+> On 22/06/2024 14:09, Aradhya Bhatia wrote:
+>> Initialize the Phy during the cdns-dsi _resume(), and de-initialize it
+>> during the _suspend().
+>>
+>> Also power-off the Phy from bridge_disable.
+>>
+>> Fixes: fced5a364dee ("drm/bridge: cdns: Convert to phy framework")
+>> Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
+>> ---
+>>   drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 10 ++++++++--
+>>   1 file changed, 8 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+>> b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+>> index 5159c3f0853e..d89c32bae2b9 100644
+>> --- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+>> +++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+>> @@ -672,6 +672,10 @@ static void cdns_dsi_bridge_disable(struct
+>> drm_bridge *bridge)
+>>       if (dsi->platform_ops && dsi->platform_ops->disable)
+>>           dsi->platform_ops->disable(dsi);
+>>   +    phy_power_off(dsi->dphy);
+>> +    dsi->link_initialized = false;
+>> +    dsi->phy_initialized = false;
+>> +
+>>       pm_runtime_put(dsi->base.dev);
+>>   }
+>>   @@ -698,7 +702,6 @@ static void cdns_dsi_hs_init(struct cdns_dsi *dsi)
+>>              DPHY_CMN_PDN | DPHY_PLL_PDN,
+>>              dsi->regs + MCTL_DPHY_CFG0);
+>>   -    phy_init(dsi->dphy);
+>>       phy_set_mode(dsi->dphy, PHY_MODE_MIPI_DPHY);
+>>       phy_configure(dsi->dphy, &output->phy_opts);
+>>       phy_power_on(dsi->dphy);
+>> @@ -1120,6 +1123,8 @@ static int __maybe_unused cdns_dsi_resume(struct
+>> device *dev)
+>>       clk_prepare_enable(dsi->dsi_p_clk);
+>>       clk_prepare_enable(dsi->dsi_sys_clk);
+>>   +    phy_init(dsi->dphy);
+>> +
+>>       return 0;
+>>   }
+>>   @@ -1127,10 +1132,11 @@ static int __maybe_unused
+>> cdns_dsi_suspend(struct device *dev)
+>>   {
+>>       struct cdns_dsi *dsi = dev_get_drvdata(dev);
+>>   +    phy_exit(dsi->dphy);
+>> +
+>>       clk_disable_unprepare(dsi->dsi_sys_clk);
+>>       clk_disable_unprepare(dsi->dsi_p_clk);
+>>       reset_control_assert(dsi->dsi_p_rst);
+>> -    dsi->link_initialized = false;
+>>       return 0;
+>>   }
+>>   
 > 
-> The QPS615 needs to configured certain parameters like de-emphasis,
-> disable unused port etc before link is established. These settings
-> vary from platform to platform.
+> So with this patch, phy_init/exit will be called in the resume/suspend
+> functions. That looks fine.
 > 
-> As the controller starts link training before the probe of pwrctl driver,
-> the PCIe link may come up before configuring the switch itself.
-> To avoid this introduce two functions in pci_ops to start_link() &
-> stop_link() which will disable the link training if the PCIe link is
-> not up yet.
+> But the phy_power_on/phy_power_off looks odd to me. Here you add
+> phy_power_off() to cdns_dsi_bridge_disable(), which sounds fine. But
+> phy_power_on() is called in cdns_dsi_hs_init(), and that is called in
+> cdns_dsi_bridge_enable() (which sounds fine), but also in
+> cdns_dsi_bridge_pre_enable().
 > 
-> Now PCI pwrctl device is the child of the pci-pcie bridge, if we want
-> to enable the suspend resume for pwrctl device there may be issues
-> since pci bridge will try to access some registers in the config which
-> may cause timeouts or Un clocked access as the power can be removed in
-> the suspend of pwrctl driver.
-> 
-> To solve this make PCIe controller as parent to the pci pwr ctrl driver
-> and create devlink between host bridge and pci pwrctl driver so that
-> pci pwrctl driver will go suspend only after all the PCIe devices went
-> to suspend.
-> 
-> In pci pwrctl driver use stop_link() to keep the link in D3cold and
-> start_link() to bring back link to D0.
-> 
-> This series is developed on top the series:
-> https://lore.kernel.org/lkml/20240612082019.19161-1-brgl@bgdev.pl/
-> 
-> we are sending this series to get coments on the usage of stop_link
-> and start_link which is being add in this series.
-> 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> ---
-> Krishna chaitanya chundru (7):
->       dt: bindings: add qcom,qps615.yaml
->       arm64: dts: qcom: qcs6490-rb3gen2: Add qps615 node
->       pci: Change the parent of the platform devices for child OF nodes
->       pci: Add new start_link() & stop_link function ops
->       pci: dwc: Add support for new pci function op
->       pci: qcom: Add support for start_link() & stop_link()
->       pci: pwrctl: Add power control driver for qps615
-> 
->  .../devicetree/bindings/pci/qcom,qps615.yaml       |  73 ++++++
->  arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts       |  55 ++++
->  drivers/pci/bus.c                                  |   5 +-
->  drivers/pci/controller/dwc/pcie-designware-host.c  |  19 ++
->  drivers/pci/controller/dwc/pcie-qcom.c             | 108 +++++++-
->  drivers/pci/pwrctl/Kconfig                         |   7 +
->  drivers/pci/pwrctl/Makefile                        |   1 +
->  drivers/pci/pwrctl/core.c                          |   7 +-
->  drivers/pci/pwrctl/pci-pwrctl-qps615.c             | 278 +++++++++++++++++++++
->  include/linux/pci.h                                |   2 +
->  10 files changed, 541 insertions(+), 14 deletions(-)
-> ---
-> base-commit: d737627471e5b3962eedae870aa0475d6c9bba18
-> change-id: 20240624-qps615-faa0cc60dc74
-> 
-> Best regards,
-> --
-> Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> 
-> 
-> 
+> So doesn't that mean cdns_dsi_hs_init() call in cdns_dsi_bridge_enable()
+> is extra, as it effectively does nothing (it exists right away if
+> dsi->phy_initialized == true)?
+
+That's right. When cdns_dsi_hs_init() is called from
+cdns_dsi_bridge_enable(), it is simply expected to return since
+phy_initialized is true.
+
+I am not aware about the exact reasoning behind this, but this gets
+addressed when I convert the _bridge_enable() to _bridge_pre_enable()
+and drop the older _bridge_pre_enable() entirely.
 
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-New warnings running 'make CHECK_DTBS=y qcom/qcs6490-rb3gen2.dtb' for 20240626-qps615-v1-0-2ade7bd91e02@quicinc.com:
-
-arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts:562.12-567.5: Warning (pci_device_reg): /soc@0/pcie@1c08000/pcie@0/qps615@0: PCI unit address format error, expected "2,0"
-arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts:560.3-27: Warning (pci_device_bus_num): /soc@0/pcie@1c08000/pcie@0/qps615@0:bus-range: PCI bus number 0 out of range, expected (1 - 255)
-arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dtb: rsc@18200000: 'qps615-0p9-vreg', 'qps615-1p8-vreg', 'qps615-rsex-vreg' do not match any of the regexes: '^regulators(-[0-9])?$', 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/soc/qcom/qcom,rpmh-rsc.yaml#
-
-
-
-
-
+Regards
+Aradhya
