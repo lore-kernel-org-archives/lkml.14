@@ -1,137 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A83815F41F
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 08:50:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED6B8168493;
+	Wed, 26 Jun 2024 08:50:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719391825; cv=none; b=H5NLKBysfVBm0+z2a0wdTh7uo6wXPwQ8WtU/7JbqvIahgYSMOAp8Rwdft1yBJEQAUMGeOZAECLjK1aJ2iJS47kL5xfii3xADM2nabhxpFv/CU+IlrpbUgLHW4h3cf3YgsuKj91j//AAAZR5XUNsRMDu5K87n2k9/vcyqx9qYnMA=
+	t=1719391834; cv=none; b=giUbIg98b3hURn5KxdwbsbSQfUtu4Uho8fD4u7bnx7qNRHyxYQ22iXXD7JHTtCQIgN7AKwq/IeqPJcHspQ3W+bP7N5SG9POoniARwhO4sLOdzAn7C6itQDoRqbdTWQ4j9YZtdlCwnjz+2MIcrnxYbdBCJ0j28JVaQEvHcRxGTMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719391825; c=relaxed/simple;
-	bh=hbgIrvLNG3JVyk+XOg/DvdfZjiWKR0LtGTMHMqm6PJM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=egI+D4/mRbvnSpu1gfV0QICLQyiQdncoczGL+28BPSTLS4vk4rCvkzbSaMMjvKAGV0m0HGVAAWFcv5wcK/bAz3Q8SjSnx7ks55R5vUbaihD2mn0cj7b6vHIEeQyDivhBPiryKLu4cwo80LaatSjWluy7hpkWrCtaOrIQotA4yxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IvpsOpwm; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IvpsOpwm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719391823; x=1750927823;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=hbgIrvLNG3JVyk+XOg/DvdfZjiWKR0LtGTMHMqm6PJM=;
-  b=IvpsOpwmMQY1dK68wAOOvwaH9JOArx+VzrYJxz1YULSUfFBPONb72Scq
-   xTvkSXwLBlO4AoytdfuvZTckYMVXtRsJ2i5xqLFb/rGCRchQ+Stz7wEvq
-   TtVKkaHidwnwnbxTnm5g8OvTBYzhR9pQFe46j4bAiyflKkaWyR7HCTB11
-   19ys8/20lKAeNYtkPE0l3JIT48ZChhuSQ/iHdeZJN0IYWw1fk/9fCWjNF
-   ZnmKM0/DTC3RpTrX6kC3EWk8116AvNH7aHdJwux4ZdKUKcWoPHikB0TYK
-   mwdiBagoD/kwWN0iAoI2QfSvv0ji7WOcM50eFLy6cM6A0J5eki4QmXYFI
-   Q==;
-X-CSE-ConnectionGUID: ktDN+RrPTI6AYwMJUMfgLg==
-X-CSE-MsgGUID: q5s7YauoTTSBO8iut8Honw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="33983960"
-X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
-   d="scan'208";a="33983960"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 01:50:22 -0700
-X-CSE-ConnectionGUID: 5HnKgUo+S8Kzqy/b6pxSmQ==
-X-CSE-MsgGUID: vNboYoUMT2id2AEudTcF3g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
-   d="scan'208";a="44038581"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 01:50:19 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Tvrtko Ursulin <tursulin@igalia.com>
-Cc: linux-mm@kvack.org,  linux-kernel@vger.kernel.org,
-  kernel-dev@igalia.com,  Tvrtko Ursulin <tvrtko.ursulin@igalia.com>,  Mel
- Gorman <mgorman@suse.de>,  Peter Zijlstra <peterz@infradead.org>,  Ingo
- Molnar <mingo@redhat.com>,  Rik van Riel <riel@surriel.com>,  Johannes
- Weiner <hannes@cmpxchg.org>,  "Matthew Wilcox (Oracle)"
- <willy@infradead.org>,  Dave Hansen <dave.hansen@intel.com>,  Andi Kleen
- <ak@linux.intel.com>,  Michal Hocko <mhocko@suse.com>,  David Rientjes
- <rientjes@google.com>
-Subject: Re: [PATCH] mm/numa_balancing: Teach mpol_to_str about the
- balancing mode
-In-Reply-To: <20240625132605.38428-1-tursulin@igalia.com> (Tvrtko Ursulin's
-	message of "Tue, 25 Jun 2024 14:26:05 +0100")
-References: <20240625132605.38428-1-tursulin@igalia.com>
-Date: Wed, 26 Jun 2024 16:48:27 +0800
-Message-ID: <87r0ckozs4.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1719391834; c=relaxed/simple;
+	bh=MZFfzfAFfUgpvR7oa4k1bw16AjKnS6MP4CeDyZ0bsEM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NHek/t7jjDCFcCuTrmr11X5p5a596VNTiKat6KH75fqJf0y3/Ai6GKzJqeAiy9NQxALeN22VfDXCZIKsux4w8XwOcsHmDyjfYCBApT/iaplLAP7K6f/4PDM0QPovUG4zWtgViluXjfrTKupgZKwjLQ4kEoGmSq1obuRGv9bMB2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 7B55C2800BB5F;
+	Wed, 26 Jun 2024 10:50:22 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 6971D208267; Wed, 26 Jun 2024 10:50:22 +0200 (CEST)
+Date: Wed, 26 Jun 2024 10:50:22 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Esther Shimanovich <eshimanovich@chromium.org>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Rajat Jain <rajatja@google.com>
+Subject: Re: [PATCH v4] PCI: Relabel JHL6540 on Lenovo X1 Carbon 7,8
+Message-ID: <ZnvWTo1M_z0Am1QC@wunner.de>
+References: <ZjsKPSgV39SF0gdX@wunner.de>
+ <20240510052616.GC4162345@black.fi.intel.com>
+ <CA+Y6NJF2Ex6Rwxw0a5V1aMY2OH4=MP5KTtat9x9Ge7y-JBdapw@mail.gmail.com>
+ <20240511043832.GD4162345@black.fi.intel.com>
+ <20240511054323.GE4162345@black.fi.intel.com>
+ <CA+Y6NJF+sJs_zQEF7se5QVMBAhoXJR3Y7x0PHfnBQZyCBbbrQg@mail.gmail.com>
+ <ZkUcihZR_ZUUEsZp@wunner.de>
+ <20240516083017.GA1421138@black.fi.intel.com>
+ <20240516100315.GC1421138@black.fi.intel.com>
+ <CA+Y6NJH8vEHVtpVd7QB0UHZd=OSgX1F-QAwoHByLDjjJqpj7MA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+Y6NJH8vEHVtpVd7QB0UHZd=OSgX1F-QAwoHByLDjjJqpj7MA@mail.gmail.com>
 
-Tvrtko Ursulin <tursulin@igalia.com> writes:
+On Mon, Jun 24, 2024 at 11:58:46AM -0400, Esther Shimanovich wrote:
+> On Wed, May 15, 2024 at 4:45???PM Lukas Wunner <lukas@wunner.de> wrote:
+> > Could you add this to the command line:
+> >   thunderbolt.dyndbg ignore_loglevel log_buf_len=10M
+> >
+> > and this to your kernel config:
+> >   CONFIG_DYNAMIC_DEBUG=y
+> >
+> > You should see "... is associated with ..." messages in dmesg.
+> 
+> I tried Lukas's patches again, after enabling the Thunderbolt driver
+> in the config and also verbose messages, so that I can see
+> "thunderbolt:" messages, but it still never reaches the
+> tb_pci_notifier_call function. I don't see "associated with" in any of
+> the logs. The config on the image I am testing does not have the
+> thunderbolt driver enabled by default, so this patch wouldn't help my
+> use case even if I did manage to get it to work.
 
-> From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
->
-> If a task has had MPOL_F_NUMA_BALANCING set it is useful to show that in
+Mika, what do you make of this?  Are the ChromeBooks in question
+using ICM-based tunneling instead of native tunneling?  I thought
+this is all native nowadays and ICM is only used on older (pre-USB4)
+products.
 
-IIUC, MPOL_F_NUMA_BALANCING works for VMA area via mbind() too.
+Thanks,
 
-> procfs. Teach the mpol_to_str helper about its existance and while at it
-> update the comment to account for "weighted interleave" when suggesting
-> a recommended buffer size.
-
-Otherwise LGTM, Thanks!
-
-Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
-
-> Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-> References: bda420b98505 ("numa balancing: migrate on fault among multiple bound nodes")
-> Cc: Huang Ying <ying.huang@intel.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Rik van Riel <riel@surriel.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> Cc: Dave Hansen <dave.hansen@intel.com>
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: David Rientjes <rientjes@google.com>
-> ---
->  mm/mempolicy.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
->
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index aec756ae5637..d147287c4505 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -3293,8 +3293,9 @@ int mpol_parse_str(char *str, struct mempolicy **mpol)
->   * @pol:  pointer to mempolicy to be formatted
->   *
->   * Convert @pol into a string.  If @buffer is too short, truncate the string.
-> - * Recommend a @maxlen of at least 32 for the longest mode, "interleave", the
-> - * longest flag, "relative", and to display at least a few node ids.
-> + * Recommend a @maxlen of at least 42 for the longest mode, "weighted
-> + * interleave", the longest flag, "balancing", and to display at least a few
-> + * node ids.
->   */
->  void mpol_to_str(char *buffer, int maxlen, struct mempolicy *pol)
->  {
-> @@ -3331,12 +3332,15 @@ void mpol_to_str(char *buffer, int maxlen, struct mempolicy *pol)
->  		p += snprintf(p, buffer + maxlen - p, "=");
->  
->  		/*
-> -		 * Currently, the only defined flags are mutually exclusive
-> +		 * The below two flags are mutually exclusive:
->  		 */
->  		if (flags & MPOL_F_STATIC_NODES)
->  			p += snprintf(p, buffer + maxlen - p, "static");
->  		else if (flags & MPOL_F_RELATIVE_NODES)
->  			p += snprintf(p, buffer + maxlen - p, "relative");
-> +
-> +		if (flags & MPOL_F_NUMA_BALANCING)
-> +			p += snprintf(p, buffer + maxlen - p, "balancing");
->  	}
->  
->  	if (!nodes_empty(nodes))
+Lukas
