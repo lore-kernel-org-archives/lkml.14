@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE02194C64;
-	Wed, 26 Jun 2024 22:32:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8CE1946D2;
+	Wed, 26 Jun 2024 22:32:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719441170; cv=none; b=ZzK80/gTZE8uzjd9BF881HzYGhQmS/EHfSHq+mISTDW8BbdsB567oX9/vam7Fpz72BO60Ye/nxoYqscNK+4HDRy51+34wIcIBRgTyCskwPlUPGCnutv0Lqt8qc81OqGbKX6bKm4V9eULhrkUlehyzrgMB53lZ4T9QWN43Fpfp+M=
+	t=1719441167; cv=none; b=WiYtUxiQy+1094xc9Emi+owgvdTy1NlWbyApqeOD3hyu+tPmzVwOKAOP+MetjbB/3csppuOyKS+4tp28JsO/PscncC38okUfCQzcCTK5L5CI5NtEvgY04kahhSYNK/9+O8reSNfI3fKI1L8/q5Px5lBgmobtDylWk/uKn4YogZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719441170; c=relaxed/simple;
-	bh=wYtP0aH9fJbZZHyZZvzwA995oKRV3TgakLXKmZjWeaA=;
+	s=arc-20240116; t=1719441167; c=relaxed/simple;
+	bh=lVtI4VfU2ttLX2Ioi/4I38S+V5AJZpD0oKyjWsqKikM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=QLwOOwK6B9QDmnhvy3BXAXIWQt/oMwJUGoh1IsxQQ2ssvzf76K1RTFr5rJPK79skC3y5p+Ml6K+RXfQGOG/aL57k7RYenzOmEFXhaRs4LoDfc92Qx8nlMFaFUaplCwKbWzKZukzNc4FV5PpwQBF8pJtdYZvR8aq7yAFUL10yEEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bSLec07J; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=aMxkMh7mcuOoEHHD3PpXgbM7jr9eXS7QgVFsnvSAyXoVCdhNexBDZIm8dpVLSTMFSMBU4WZRqKsx0NQ++lOlh98YZONsOYIty8FuWJNV1oCyF75zL/ZJte2Zc3R5lqShbO82sI/5cjJohyUvgV9E2DXI2VUtyHjVexOpfmMQdAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O8PfXpS9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bSLec07J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE4C0C4AF09;
-	Wed, 26 Jun 2024 22:32:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O8PfXpS9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C08E5C4AF07;
+	Wed, 26 Jun 2024 22:32:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719441170;
-	bh=wYtP0aH9fJbZZHyZZvzwA995oKRV3TgakLXKmZjWeaA=;
+	s=k20201202; t=1719441167;
+	bh=lVtI4VfU2ttLX2Ioi/4I38S+V5AJZpD0oKyjWsqKikM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=bSLec07JisOBOgpLsTSMSAQ5CWExbONYAscijobtG38T+Q+zTHoa5SLpACXB70Ddw
-	 QiE4ONStcjCSMBYrPDcFZYJ+PYbnOPzkqihHoChtAGHuln//7YaTtXwm8wd7T5h/yX
-	 AiSaE1X2ZQV4oCHfz9JvR99G6UvMu125+HK9nk7EhOvGFsvFA4PN8WPq50XkFcUox+
-	 9ey7+qdTl/wK19K9kxNaA5f/jJPo04zjHZlDBTKwulLBMZv58UK0neuZnMCfUHFfp8
-	 vzVx+qRGyOAutwFQIDPuGySS+ZZmKMjK2tDYbQhZGTjI4/vyOpJ6GSj7qINfcNXhsM
-	 2c80R4/JyqCoQ==
+	b=O8PfXpS9e1bjE6QaP25Puq4Br2HuWdPRB7gfPezHMieQo17t/WGg8bAwjcLXAwFjh
+	 Ug+xXfCFZTpGHFK8mW3bSq1ayTI0tPgj77I3PjoeI0ikKuaklts0oIflSGzGdPN/la
+	 k8W9os+kJmbijBq4F0+tHoOOYal9QyzxW6lfpegXpaWXrNJT+snCWRIgMMqaM8z+A9
+	 d3j9et4LfwzkB1IaarVzIteV9MV0A9IYrLQDgbuq67KWOvmestmdrw7RjYWvaQ/1Ts
+	 GxlJaHtEc//h6SKlfAxaSyQxanCmd8TaJz8ErL9JFgI1J8bocYcaZB7nXlKR0GlzaR
+	 bynpZ0wCkTMJQ==
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Date: Wed, 26 Jun 2024 16:32:32 -0600
-Subject: [PATCH v2 08/12] KVM: arm64: pmu: Use arm_pmuv3.h register
- accessors
+Date: Wed, 26 Jun 2024 16:32:30 -0600
+Subject: [PATCH v2 06/12] perf: arm_pmu: Remove event index to counter
+ remapping
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240626-arm-pmu-3-9-icntr-v2-8-c9784b4f4065@kernel.org>
+Message-Id: <20240626-arm-pmu-3-9-icntr-v2-6-c9784b4f4065@kernel.org>
 References: <20240626-arm-pmu-3-9-icntr-v2-0-c9784b4f4065@kernel.org>
 In-Reply-To: <20240626-arm-pmu-3-9-icntr-v2-0-c9784b4f4065@kernel.org>
 To: Russell King <linux@armlinux.org.uk>, 
@@ -58,150 +58,653 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
  linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev
 X-Mailer: b4 0.14-dev
 
-Commit df29ddf4f04b ("arm64: perf: Abstract system register accesses
-away") split off PMU register accessor functions to a standalone header.
-Let's use it for KVM PMU code and get rid one copy of the ugly switch
-macro.
+Xscale and Armv6 PMUs defined the cycle counter at 0 and event counters
+starting at 1 and had 1:1 event index to counter numbering. On Armv7 and
+later, this changed the cycle counter to 31 and event counters start at
+0. The drivers for Armv7 and PMUv3 kept the old event index numbering
+and introduced an event index to counter conversion. The conversion uses
+masking to convert from event index to a counter number. This operation
+relies on having at most 32 counters so that the cycle counter index 0
+can be transformed to counter number 31.
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+Armv9.4 adds support for an additional fixed function counter
+(instructions) which increases possible counters to more than 32, and
+the conversion won't work anymore as a simple subtract and mask. The
+primary reason for the translation (other than history) seems to be to
+have a contiguous mask of counters 0-N. Keeping that would result in
+more complicated index to counter conversions. Instead, store a mask of
+available counters rather than just number of events. That provides more
+information in addition to the number of events.
+
+No (intended) functional changes.
+
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
 v2:
- - Use linux/perf/arm_pmuv3.h include instead of asm/
+ - Include Apple M1 PMU changes
+ - Use set_bit instead of bitmap_set(addr, bit, 1)
+ - Use for_each_andnot_bit() when clearing unused counters to avoid
+   accessing non-existent counters
+ - Use defines for XScale number of counters and
+   s/XSCALE_NUM_COUNTERS/XSCALE1_NUM_COUNTERS/
+ - Add and use define ARMV8_PMU_MAX_GENERAL_COUNTERS (copied from
+   tools/testing/selftests/kvm/aarch64/vpmu_counter_access.c)
 ---
- arch/arm64/include/asm/arm_pmuv3.h | 13 ++++++++
- arch/arm64/kvm/pmu.c               | 66 +++++---------------------------------
- 2 files changed, 21 insertions(+), 58 deletions(-)
+ arch/arm64/kvm/pmu-emul.c       |  6 ++--
+ drivers/perf/apple_m1_cpu_pmu.c |  4 +--
+ drivers/perf/arm_pmu.c          | 11 +++---
+ drivers/perf/arm_pmuv3.c        | 62 +++++++++++----------------------
+ drivers/perf/arm_v6_pmu.c       |  6 ++--
+ drivers/perf/arm_v7_pmu.c       | 77 ++++++++++++++++-------------------------
+ drivers/perf/arm_xscale_pmu.c   | 12 ++++---
+ include/linux/perf/arm_pmu.h    |  2 +-
+ include/linux/perf/arm_pmuv3.h  |  1 +
+ 9 files changed, 75 insertions(+), 106 deletions(-)
 
-diff --git a/arch/arm64/include/asm/arm_pmuv3.h b/arch/arm64/include/asm/arm_pmuv3.h
-index 19b3f9150058..36c3e82b4eec 100644
---- a/arch/arm64/include/asm/arm_pmuv3.h
-+++ b/arch/arm64/include/asm/arm_pmuv3.h
-@@ -33,6 +33,14 @@ static inline void write_pmevtypern(int n, unsigned long val)
- 	PMEVN_SWITCH(n, WRITE_PMEVTYPERN);
+diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
+index d1a476b08f54..69be070a9378 100644
+--- a/arch/arm64/kvm/pmu-emul.c
++++ b/arch/arm64/kvm/pmu-emul.c
+@@ -910,10 +910,10 @@ u8 kvm_arm_pmu_get_max_counters(struct kvm *kvm)
+ 	struct arm_pmu *arm_pmu = kvm->arch.arm_pmu;
+ 
+ 	/*
+-	 * The arm_pmu->num_events considers the cycle counter as well.
+-	 * Ignore that and return only the general-purpose counters.
++	 * The arm_pmu->cntr_mask considers the fixed counter(s) as well.
++	 * Ignore those and return only the general-purpose counters.
+ 	 */
+-	return arm_pmu->num_events - 1;
++	return bitmap_weight(arm_pmu->cntr_mask, ARMV8_PMU_MAX_GENERAL_COUNTERS);
  }
  
-+#define RETURN_READ_PMEVTYPERN(n) \
-+	return read_sysreg(pmevtyper##n##_el0)
-+static inline unsigned long read_pmevtypern(int n)
-+{
-+	PMEVN_SWITCH(n, RETURN_READ_PMEVTYPERN);
-+	return 0;
-+}
+ static void kvm_arm_set_pmu(struct kvm *kvm, struct arm_pmu *arm_pmu)
+diff --git a/drivers/perf/apple_m1_cpu_pmu.c b/drivers/perf/apple_m1_cpu_pmu.c
+index f322e5ca1114..c8f607912567 100644
+--- a/drivers/perf/apple_m1_cpu_pmu.c
++++ b/drivers/perf/apple_m1_cpu_pmu.c
+@@ -400,7 +400,7 @@ static irqreturn_t m1_pmu_handle_irq(struct arm_pmu *cpu_pmu)
+ 
+ 	regs = get_irq_regs();
+ 
+-	for (idx = 0; idx < cpu_pmu->num_events; idx++) {
++	for_each_set_bit(idx, cpu_pmu->cntr_mask, M1_PMU_NR_COUNTERS) {
+ 		struct perf_event *event = cpuc->events[idx];
+ 		struct perf_sample_data data;
+ 
+@@ -560,7 +560,7 @@ static int m1_pmu_init(struct arm_pmu *cpu_pmu, u32 flags)
+ 	cpu_pmu->reset		  = m1_pmu_reset;
+ 	cpu_pmu->set_event_filter = m1_pmu_set_event_filter;
+ 
+-	cpu_pmu->num_events	  = M1_PMU_NR_COUNTERS;
++	bitmap_set(cpu_pmu->cntr_mask, 0, M1_PMU_NR_COUNTERS);
+ 	cpu_pmu->attr_groups[ARMPMU_ATTR_GROUP_EVENTS] = &m1_pmu_events_attr_group;
+ 	cpu_pmu->attr_groups[ARMPMU_ATTR_GROUP_FORMATS] = &m1_pmu_format_attr_group;
+ 	return 0;
+diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+index 8458fe2cebb4..398cce3d76fc 100644
+--- a/drivers/perf/arm_pmu.c
++++ b/drivers/perf/arm_pmu.c
+@@ -522,7 +522,7 @@ static void armpmu_enable(struct pmu *pmu)
+ {
+ 	struct arm_pmu *armpmu = to_arm_pmu(pmu);
+ 	struct pmu_hw_events *hw_events = this_cpu_ptr(armpmu->hw_events);
+-	bool enabled = !bitmap_empty(hw_events->used_mask, armpmu->num_events);
++	bool enabled = !bitmap_empty(hw_events->used_mask, ARMPMU_MAX_HWEVENTS);
+ 
+ 	/* For task-bound events we may be called on other CPUs */
+ 	if (!cpumask_test_cpu(smp_processor_id(), &armpmu->supported_cpus))
+@@ -742,7 +742,7 @@ static void cpu_pm_pmu_setup(struct arm_pmu *armpmu, unsigned long cmd)
+ 	struct perf_event *event;
+ 	int idx;
+ 
+-	for (idx = 0; idx < armpmu->num_events; idx++) {
++	for_each_set_bit(idx, armpmu->cntr_mask, ARMPMU_MAX_HWEVENTS) {
+ 		event = hw_events->events[idx];
+ 		if (!event)
+ 			continue;
+@@ -772,7 +772,7 @@ static int cpu_pm_pmu_notify(struct notifier_block *b, unsigned long cmd,
+ {
+ 	struct arm_pmu *armpmu = container_of(b, struct arm_pmu, cpu_pm_nb);
+ 	struct pmu_hw_events *hw_events = this_cpu_ptr(armpmu->hw_events);
+-	bool enabled = !bitmap_empty(hw_events->used_mask, armpmu->num_events);
++	bool enabled = !bitmap_empty(hw_events->used_mask, ARMPMU_MAX_HWEVENTS);
+ 
+ 	if (!cpumask_test_cpu(smp_processor_id(), &armpmu->supported_cpus))
+ 		return NOTIFY_DONE;
+@@ -924,8 +924,9 @@ int armpmu_register(struct arm_pmu *pmu)
+ 	if (ret)
+ 		goto out_destroy;
+ 
+-	pr_info("enabled with %s PMU driver, %d counters available%s\n",
+-		pmu->name, pmu->num_events,
++	pr_info("enabled with %s PMU driver, %d (%*pb) counters available%s\n",
++		pmu->name, bitmap_weight(pmu->cntr_mask, ARMPMU_MAX_HWEVENTS),
++		ARMPMU_MAX_HWEVENTS, &pmu->cntr_mask,
+ 		has_nmi ? ", using NMIs" : "");
+ 
+ 	kvm_host_pmu_init(pmu);
+diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
+index 6cbd37fd691a..53ad674bf009 100644
+--- a/drivers/perf/arm_pmuv3.c
++++ b/drivers/perf/arm_pmuv3.c
+@@ -454,9 +454,7 @@ static const struct attribute_group armv8_pmuv3_caps_attr_group = {
+ /*
+  * Perf Events' indices
+  */
+-#define	ARMV8_IDX_CYCLE_COUNTER	0
+-#define	ARMV8_IDX_COUNTER0	1
+-#define	ARMV8_IDX_CYCLE_COUNTER_USER	32
++#define	ARMV8_IDX_CYCLE_COUNTER	31
+ 
+ /*
+  * We unconditionally enable ARMv8.5-PMU long event counter support
+@@ -489,19 +487,12 @@ static bool armv8pmu_event_is_chained(struct perf_event *event)
+ 	return !armv8pmu_event_has_user_read(event) &&
+ 	       armv8pmu_event_is_64bit(event) &&
+ 	       !armv8pmu_has_long_event(cpu_pmu) &&
+-	       (idx != ARMV8_IDX_CYCLE_COUNTER);
++	       (idx <= ARMV8_PMU_MAX_GENERAL_COUNTERS);
+ }
+ 
+ /*
+  * ARMv8 low level PMU access
+  */
+-
+-/*
+- * Perf Event to low level counters mapping
+- */
+-#define	ARMV8_IDX_TO_COUNTER(x)	\
+-	(((x) - ARMV8_IDX_COUNTER0) & ARMV8_PMU_COUNTER_MASK)
+-
+ static u64 armv8pmu_pmcr_read(void)
+ {
+ 	return read_pmcr();
+@@ -521,14 +512,12 @@ static int armv8pmu_has_overflowed(u32 pmovsr)
+ 
+ static int armv8pmu_counter_has_overflowed(u32 pmnc, int idx)
+ {
+-	return pmnc & BIT(ARMV8_IDX_TO_COUNTER(idx));
++	return pmnc & BIT(idx);
+ }
+ 
+ static u64 armv8pmu_read_evcntr(int idx)
+ {
+-	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
+-
+-	return read_pmevcntrn(counter);
++	return read_pmevcntrn(idx);
+ }
+ 
+ static u64 armv8pmu_read_hw_counter(struct perf_event *event)
+@@ -557,7 +546,7 @@ static bool armv8pmu_event_needs_bias(struct perf_event *event)
+ 		return false;
+ 
+ 	if (armv8pmu_has_long_event(cpu_pmu) ||
+-	    idx == ARMV8_IDX_CYCLE_COUNTER)
++	    idx >= ARMV8_PMU_MAX_GENERAL_COUNTERS)
+ 		return true;
+ 
+ 	return false;
+@@ -595,9 +584,7 @@ static u64 armv8pmu_read_counter(struct perf_event *event)
+ 
+ static void armv8pmu_write_evcntr(int idx, u64 value)
+ {
+-	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
+-
+-	write_pmevcntrn(counter, value);
++	write_pmevcntrn(idx, value);
+ }
+ 
+ static void armv8pmu_write_hw_counter(struct perf_event *event,
+@@ -628,7 +615,6 @@ static void armv8pmu_write_counter(struct perf_event *event, u64 value)
+ 
+ static void armv8pmu_write_evtype(int idx, unsigned long val)
+ {
+-	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
+ 	unsigned long mask = ARMV8_PMU_EVTYPE_EVENT |
+ 			     ARMV8_PMU_INCLUDE_EL2 |
+ 			     ARMV8_PMU_EXCLUDE_EL0 |
+@@ -638,7 +624,7 @@ static void armv8pmu_write_evtype(int idx, unsigned long val)
+ 		mask |= ARMV8_PMU_EVTYPE_TC | ARMV8_PMU_EVTYPE_TH;
+ 
+ 	val &= mask;
+-	write_pmevtypern(counter, val);
++	write_pmevtypern(idx, val);
+ }
+ 
+ static void armv8pmu_write_event_type(struct perf_event *event)
+@@ -667,7 +653,7 @@ static void armv8pmu_write_event_type(struct perf_event *event)
+ 
+ static u32 armv8pmu_event_cnten_mask(struct perf_event *event)
+ {
+-	int counter = ARMV8_IDX_TO_COUNTER(event->hw.idx);
++	int counter = event->hw.idx;
+ 	u32 mask = BIT(counter);
+ 
+ 	if (armv8pmu_event_is_chained(event))
+@@ -726,8 +712,7 @@ static void armv8pmu_enable_intens(u32 mask)
+ 
+ static void armv8pmu_enable_event_irq(struct perf_event *event)
+ {
+-	u32 counter = ARMV8_IDX_TO_COUNTER(event->hw.idx);
+-	armv8pmu_enable_intens(BIT(counter));
++	armv8pmu_enable_intens(BIT(event->hw.idx));
+ }
+ 
+ static void armv8pmu_disable_intens(u32 mask)
+@@ -741,8 +726,7 @@ static void armv8pmu_disable_intens(u32 mask)
+ 
+ static void armv8pmu_disable_event_irq(struct perf_event *event)
+ {
+-	u32 counter = ARMV8_IDX_TO_COUNTER(event->hw.idx);
+-	armv8pmu_disable_intens(BIT(counter));
++	armv8pmu_disable_intens(BIT(event->hw.idx));
+ }
+ 
+ static u32 armv8pmu_getreset_flags(void)
+@@ -786,7 +770,8 @@ static void armv8pmu_enable_user_access(struct arm_pmu *cpu_pmu)
+ 	struct pmu_hw_events *cpuc = this_cpu_ptr(cpu_pmu->hw_events);
+ 
+ 	/* Clear any unused counters to avoid leaking their contents */
+-	for_each_clear_bit(i, cpuc->used_mask, cpu_pmu->num_events) {
++	for_each_andnot_bit(i, cpu_pmu->cntr_mask, cpuc->used_mask,
++			    ARMPMU_MAX_HWEVENTS) {
+ 		if (i == ARMV8_IDX_CYCLE_COUNTER)
+ 			write_pmccntr(0);
+ 		else
+@@ -869,7 +854,7 @@ static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
+ 	 * to prevent skews in group events.
+ 	 */
+ 	armv8pmu_stop(cpu_pmu);
+-	for (idx = 0; idx < cpu_pmu->num_events; ++idx) {
++	for_each_set_bit(idx, cpu_pmu->cntr_mask, ARMPMU_MAX_HWEVENTS) {
+ 		struct perf_event *event = cpuc->events[idx];
+ 		struct hw_perf_event *hwc;
+ 
+@@ -908,7 +893,7 @@ static int armv8pmu_get_single_idx(struct pmu_hw_events *cpuc,
+ {
+ 	int idx;
+ 
+-	for (idx = ARMV8_IDX_COUNTER0; idx < cpu_pmu->num_events; idx++) {
++	for_each_set_bit(idx, cpu_pmu->cntr_mask, ARMV8_PMU_MAX_GENERAL_COUNTERS) {
+ 		if (!test_and_set_bit(idx, cpuc->used_mask))
+ 			return idx;
+ 	}
+@@ -924,7 +909,9 @@ static int armv8pmu_get_chain_idx(struct pmu_hw_events *cpuc,
+ 	 * Chaining requires two consecutive event counters, where
+ 	 * the lower idx must be even.
+ 	 */
+-	for (idx = ARMV8_IDX_COUNTER0 + 1; idx < cpu_pmu->num_events; idx += 2) {
++	for_each_set_bit(idx, cpu_pmu->cntr_mask, ARMV8_PMU_MAX_GENERAL_COUNTERS) {
++		if (!(idx & 0x1))
++			continue;
+ 		if (!test_and_set_bit(idx, cpuc->used_mask)) {
+ 			/* Check if the preceding even counter is available */
+ 			if (!test_and_set_bit(idx - 1, cpuc->used_mask))
+@@ -978,15 +965,7 @@ static int armv8pmu_user_event_idx(struct perf_event *event)
+ 	if (!sysctl_perf_user_access || !armv8pmu_event_has_user_read(event))
+ 		return 0;
+ 
+-	/*
+-	 * We remap the cycle counter index to 32 to
+-	 * match the offset applied to the rest of
+-	 * the counter indices.
+-	 */
+-	if (event->hw.idx == ARMV8_IDX_CYCLE_COUNTER)
+-		return ARMV8_IDX_CYCLE_COUNTER_USER;
+-
+-	return event->hw.idx;
++	return event->hw.idx + 1;
+ }
+ 
+ /*
+@@ -1211,10 +1190,11 @@ static void __armv8pmu_probe_pmu(void *info)
+ 	probe->present = true;
+ 
+ 	/* Read the nb of CNTx counters supported from PMNC */
+-	cpu_pmu->num_events = FIELD_GET(ARMV8_PMU_PMCR_N, armv8pmu_pmcr_read());
++	bitmap_set(cpu_pmu->cntr_mask,
++		   0, FIELD_GET(ARMV8_PMU_PMCR_N, armv8pmu_pmcr_read()));
+ 
+ 	/* Add the CPU cycles counter */
+-	cpu_pmu->num_events += 1;
++	set_bit(ARMV8_IDX_CYCLE_COUNTER, cpu_pmu->cntr_mask);
+ 
+ 	pmceid[0] = pmceid_raw[0] = read_pmceid0();
+ 	pmceid[1] = pmceid_raw[1] = read_pmceid1();
+diff --git a/drivers/perf/arm_v6_pmu.c b/drivers/perf/arm_v6_pmu.c
+index 0bb685b4bac5..b09615bb2bb2 100644
+--- a/drivers/perf/arm_v6_pmu.c
++++ b/drivers/perf/arm_v6_pmu.c
+@@ -64,6 +64,7 @@ enum armv6_counters {
+ 	ARMV6_CYCLE_COUNTER = 0,
+ 	ARMV6_COUNTER0,
+ 	ARMV6_COUNTER1,
++	ARMV6_NUM_COUNTERS
+ };
+ 
+ /*
+@@ -254,7 +255,7 @@ armv6pmu_handle_irq(struct arm_pmu *cpu_pmu)
+ 	 */
+ 	armv6_pmcr_write(pmcr);
+ 
+-	for (idx = 0; idx < cpu_pmu->num_events; ++idx) {
++	for_each_set_bit(idx, cpu_pmu->cntr_mask, ARMV6_NUM_COUNTERS) {
+ 		struct perf_event *event = cpuc->events[idx];
+ 		struct hw_perf_event *hwc;
+ 
+@@ -391,7 +392,8 @@ static void armv6pmu_init(struct arm_pmu *cpu_pmu)
+ 	cpu_pmu->start		= armv6pmu_start;
+ 	cpu_pmu->stop		= armv6pmu_stop;
+ 	cpu_pmu->map_event	= armv6_map_event;
+-	cpu_pmu->num_events	= 3;
 +
- static inline unsigned long read_pmmir(void)
- {
- 	return read_cpuid(PMMIR_EL1);
-@@ -96,6 +104,11 @@ static inline void write_pmccfiltr(u64 val)
- 	write_sysreg(val, pmccfiltr_el0);
++	bitmap_set(cpu_pmu->cntr_mask, 0, ARMV6_NUM_COUNTERS);
  }
  
-+static inline u64 read_pmccfiltr(void)
-+{
-+	return read_sysreg(pmccfiltr_el0);
-+}
+ static int armv6_1136_pmu_init(struct arm_pmu *cpu_pmu)
+diff --git a/drivers/perf/arm_v7_pmu.c b/drivers/perf/arm_v7_pmu.c
+index 928ac3d626ed..420cadd108e7 100644
+--- a/drivers/perf/arm_v7_pmu.c
++++ b/drivers/perf/arm_v7_pmu.c
+@@ -649,24 +649,12 @@ static struct attribute_group armv7_pmuv2_events_attr_group = {
+ /*
+  * Perf Events' indices
+  */
+-#define	ARMV7_IDX_CYCLE_COUNTER	0
+-#define	ARMV7_IDX_COUNTER0	1
+-#define	ARMV7_IDX_COUNTER_LAST(cpu_pmu) \
+-	(ARMV7_IDX_CYCLE_COUNTER + cpu_pmu->num_events - 1)
+-
+-#define	ARMV7_MAX_COUNTERS	32
+-#define	ARMV7_COUNTER_MASK	(ARMV7_MAX_COUNTERS - 1)
+-
++#define	ARMV7_IDX_CYCLE_COUNTER	31
++#define	ARMV7_IDX_COUNTER_MAX	31
+ /*
+  * ARMv7 low level PMNC access
+  */
+ 
+-/*
+- * Perf Event to low level counters mapping
+- */
+-#define	ARMV7_IDX_TO_COUNTER(x)	\
+-	(((x) - ARMV7_IDX_COUNTER0) & ARMV7_COUNTER_MASK)
+-
+ /*
+  * Per-CPU PMNC: config reg
+  */
+@@ -725,19 +713,17 @@ static inline int armv7_pmnc_has_overflowed(u32 pmnc)
+ 
+ static inline int armv7_pmnc_counter_valid(struct arm_pmu *cpu_pmu, int idx)
+ {
+-	return idx >= ARMV7_IDX_CYCLE_COUNTER &&
+-		idx <= ARMV7_IDX_COUNTER_LAST(cpu_pmu);
++	return test_bit(idx, cpu_pmu->cntr_mask);
+ }
+ 
+ static inline int armv7_pmnc_counter_has_overflowed(u32 pmnc, int idx)
+ {
+-	return pmnc & BIT(ARMV7_IDX_TO_COUNTER(idx));
++	return pmnc & BIT(idx);
+ }
+ 
+ static inline void armv7_pmnc_select_counter(int idx)
+ {
+-	u32 counter = ARMV7_IDX_TO_COUNTER(idx);
+-	asm volatile("mcr p15, 0, %0, c9, c12, 5" : : "r" (counter));
++	asm volatile("mcr p15, 0, %0, c9, c12, 5" : : "r" (idx));
+ 	isb();
+ }
+ 
+@@ -787,29 +773,25 @@ static inline void armv7_pmnc_write_evtsel(int idx, u32 val)
+ 
+ static inline void armv7_pmnc_enable_counter(int idx)
+ {
+-	u32 counter = ARMV7_IDX_TO_COUNTER(idx);
+-	asm volatile("mcr p15, 0, %0, c9, c12, 1" : : "r" (BIT(counter)));
++	asm volatile("mcr p15, 0, %0, c9, c12, 1" : : "r" (BIT(idx)));
+ }
+ 
+ static inline void armv7_pmnc_disable_counter(int idx)
+ {
+-	u32 counter = ARMV7_IDX_TO_COUNTER(idx);
+-	asm volatile("mcr p15, 0, %0, c9, c12, 2" : : "r" (BIT(counter)));
++	asm volatile("mcr p15, 0, %0, c9, c12, 2" : : "r" (BIT(idx)));
+ }
+ 
+ static inline void armv7_pmnc_enable_intens(int idx)
+ {
+-	u32 counter = ARMV7_IDX_TO_COUNTER(idx);
+-	asm volatile("mcr p15, 0, %0, c9, c14, 1" : : "r" (BIT(counter)));
++	asm volatile("mcr p15, 0, %0, c9, c14, 1" : : "r" (BIT(idx)));
+ }
+ 
+ static inline void armv7_pmnc_disable_intens(int idx)
+ {
+-	u32 counter = ARMV7_IDX_TO_COUNTER(idx);
+-	asm volatile("mcr p15, 0, %0, c9, c14, 2" : : "r" (BIT(counter)));
++	asm volatile("mcr p15, 0, %0, c9, c14, 2" : : "r" (BIT(idx)));
+ 	isb();
+ 	/* Clear the overflow flag in case an interrupt is pending. */
+-	asm volatile("mcr p15, 0, %0, c9, c12, 3" : : "r" (BIT(counter)));
++	asm volatile("mcr p15, 0, %0, c9, c12, 3" : : "r" (BIT(idx)));
+ 	isb();
+ }
+ 
+@@ -853,15 +835,12 @@ static void armv7_pmnc_dump_regs(struct arm_pmu *cpu_pmu)
+ 	asm volatile("mrc p15, 0, %0, c9, c13, 0" : "=r" (val));
+ 	pr_info("CCNT  =0x%08x\n", val);
+ 
+-	for (cnt = ARMV7_IDX_COUNTER0;
+-			cnt <= ARMV7_IDX_COUNTER_LAST(cpu_pmu); cnt++) {
++	for_each_set_bit(cnt, cpu_pmu->cntr_mask, ARMV7_IDX_COUNTER_MAX) {
+ 		armv7_pmnc_select_counter(cnt);
+ 		asm volatile("mrc p15, 0, %0, c9, c13, 2" : "=r" (val));
+-		pr_info("CNT[%d] count =0x%08x\n",
+-			ARMV7_IDX_TO_COUNTER(cnt), val);
++		pr_info("CNT[%d] count =0x%08x\n", cnt, val);
+ 		asm volatile("mrc p15, 0, %0, c9, c13, 1" : "=r" (val));
+-		pr_info("CNT[%d] evtsel=0x%08x\n",
+-			ARMV7_IDX_TO_COUNTER(cnt), val);
++		pr_info("CNT[%d] evtsel=0x%08x\n", cnt, val);
+ 	}
+ }
+ #endif
+@@ -958,7 +937,7 @@ static irqreturn_t armv7pmu_handle_irq(struct arm_pmu *cpu_pmu)
+ 	 */
+ 	regs = get_irq_regs();
+ 
+-	for (idx = 0; idx < cpu_pmu->num_events; ++idx) {
++	for_each_set_bit(idx, cpu_pmu->cntr_mask, ARMPMU_MAX_HWEVENTS) {
+ 		struct perf_event *event = cpuc->events[idx];
+ 		struct hw_perf_event *hwc;
+ 
+@@ -1027,7 +1006,7 @@ static int armv7pmu_get_event_idx(struct pmu_hw_events *cpuc,
+ 	 * For anything other than a cycle counter, try and use
+ 	 * the events counters
+ 	 */
+-	for (idx = ARMV7_IDX_COUNTER0; idx < cpu_pmu->num_events; ++idx) {
++	for_each_set_bit(idx, cpu_pmu->cntr_mask, ARMV7_IDX_COUNTER_MAX) {
+ 		if (!test_and_set_bit(idx, cpuc->used_mask))
+ 			return idx;
+ 	}
+@@ -1073,7 +1052,7 @@ static int armv7pmu_set_event_filter(struct hw_perf_event *event,
+ static void armv7pmu_reset(void *info)
+ {
+ 	struct arm_pmu *cpu_pmu = (struct arm_pmu *)info;
+-	u32 idx, nb_cnt = cpu_pmu->num_events, val;
++	u32 idx, val;
+ 
+ 	if (cpu_pmu->secure_access) {
+ 		asm volatile("mrc p15, 0, %0, c1, c1, 1" : "=r" (val));
+@@ -1082,7 +1061,7 @@ static void armv7pmu_reset(void *info)
+ 	}
+ 
+ 	/* The counter and interrupt enable registers are unknown at reset. */
+-	for (idx = ARMV7_IDX_CYCLE_COUNTER; idx < nb_cnt; ++idx) {
++	for_each_set_bit(idx, cpu_pmu->cntr_mask, ARMPMU_MAX_HWEVENTS) {
+ 		armv7_pmnc_disable_counter(idx);
+ 		armv7_pmnc_disable_intens(idx);
+ 	}
+@@ -1161,20 +1140,22 @@ static void armv7pmu_init(struct arm_pmu *cpu_pmu)
+ 
+ static void armv7_read_num_pmnc_events(void *info)
+ {
+-	int *nb_cnt = info;
++	int nb_cnt;
++	struct arm_pmu *cpu_pmu = info;
+ 
+ 	/* Read the nb of CNTx counters supported from PMNC */
+-	*nb_cnt = (armv7_pmnc_read() >> ARMV7_PMNC_N_SHIFT) & ARMV7_PMNC_N_MASK;
++	nb_cnt = (armv7_pmnc_read() >> ARMV7_PMNC_N_SHIFT) & ARMV7_PMNC_N_MASK;
++	bitmap_set(cpu_pmu->cntr_mask, 0, nb_cnt);
+ 
+ 	/* Add the CPU cycles counter */
+-	*nb_cnt += 1;
++	set_bit(ARMV7_IDX_CYCLE_COUNTER, cpu_pmu->cntr_mask);
+ }
+ 
+ static int armv7_probe_num_events(struct arm_pmu *arm_pmu)
+ {
+ 	return smp_call_function_any(&arm_pmu->supported_cpus,
+ 				     armv7_read_num_pmnc_events,
+-				     &arm_pmu->num_events, 1);
++				     arm_pmu, 1);
+ }
+ 
+ static int armv7_a8_pmu_init(struct arm_pmu *cpu_pmu)
+@@ -1524,7 +1505,7 @@ static void krait_pmu_reset(void *info)
+ {
+ 	u32 vval, fval;
+ 	struct arm_pmu *cpu_pmu = info;
+-	u32 idx, nb_cnt = cpu_pmu->num_events;
++	u32 idx;
+ 
+ 	armv7pmu_reset(info);
+ 
+@@ -1538,7 +1519,7 @@ static void krait_pmu_reset(void *info)
+ 	venum_post_pmresr(vval, fval);
+ 
+ 	/* Reset PMxEVNCTCR to sane default */
+-	for (idx = ARMV7_IDX_CYCLE_COUNTER; idx < nb_cnt; ++idx) {
++	for_each_set_bit(idx, cpu_pmu->cntr_mask, ARMV7_IDX_COUNTER_MAX) {
+ 		armv7_pmnc_select_counter(idx);
+ 		asm volatile("mcr p15, 0, %0, c9, c15, 0" : : "r" (0));
+ 	}
+@@ -1562,7 +1543,7 @@ static int krait_event_to_bit(struct perf_event *event, unsigned int region,
+ 	 * Lower bits are reserved for use by the counters (see
+ 	 * armv7pmu_get_event_idx() for more info)
+ 	 */
+-	bit += ARMV7_IDX_COUNTER_LAST(cpu_pmu) + 1;
++	bit += bitmap_weight(cpu_pmu->cntr_mask, ARMV7_IDX_COUNTER_MAX);
+ 
+ 	return bit;
+ }
+@@ -1845,7 +1826,7 @@ static void scorpion_pmu_reset(void *info)
+ {
+ 	u32 vval, fval;
+ 	struct arm_pmu *cpu_pmu = info;
+-	u32 idx, nb_cnt = cpu_pmu->num_events;
++	u32 idx;
+ 
+ 	armv7pmu_reset(info);
+ 
+@@ -1860,7 +1841,7 @@ static void scorpion_pmu_reset(void *info)
+ 	venum_post_pmresr(vval, fval);
+ 
+ 	/* Reset PMxEVNCTCR to sane default */
+-	for (idx = ARMV7_IDX_CYCLE_COUNTER; idx < nb_cnt; ++idx) {
++	for_each_set_bit(idx, cpu_pmu->cntr_mask, ARMV7_IDX_COUNTER_MAX) {
+ 		armv7_pmnc_select_counter(idx);
+ 		asm volatile("mcr p15, 0, %0, c9, c15, 0" : : "r" (0));
+ 	}
+@@ -1883,7 +1864,7 @@ static int scorpion_event_to_bit(struct perf_event *event, unsigned int region,
+ 	 * Lower bits are reserved for use by the counters (see
+ 	 * armv7pmu_get_event_idx() for more info)
+ 	 */
+-	bit += ARMV7_IDX_COUNTER_LAST(cpu_pmu) + 1;
++	bit += bitmap_weight(cpu_pmu->cntr_mask, ARMV7_IDX_COUNTER_MAX);
+ 
+ 	return bit;
+ }
+diff --git a/drivers/perf/arm_xscale_pmu.c b/drivers/perf/arm_xscale_pmu.c
+index 3d8b72d6b37f..638fea9b1263 100644
+--- a/drivers/perf/arm_xscale_pmu.c
++++ b/drivers/perf/arm_xscale_pmu.c
+@@ -53,6 +53,8 @@ enum xscale_counters {
+ 	XSCALE_COUNTER2,
+ 	XSCALE_COUNTER3,
+ };
++#define XSCALE1_NUM_COUNTERS	3
++#define XSCALE2_NUM_COUNTERS	5
+ 
+ static const unsigned xscale_perf_map[PERF_COUNT_HW_MAX] = {
+ 	PERF_MAP_ALL_UNSUPPORTED,
+@@ -168,7 +170,7 @@ xscale1pmu_handle_irq(struct arm_pmu *cpu_pmu)
+ 
+ 	regs = get_irq_regs();
+ 
+-	for (idx = 0; idx < cpu_pmu->num_events; ++idx) {
++	for_each_set_bit(idx, cpu_pmu->cntr_mask, XSCALE1_NUM_COUNTERS) {
+ 		struct perf_event *event = cpuc->events[idx];
+ 		struct hw_perf_event *hwc;
+ 
+@@ -364,7 +366,8 @@ static int xscale1pmu_init(struct arm_pmu *cpu_pmu)
+ 	cpu_pmu->start		= xscale1pmu_start;
+ 	cpu_pmu->stop		= xscale1pmu_stop;
+ 	cpu_pmu->map_event	= xscale_map_event;
+-	cpu_pmu->num_events	= 3;
 +
- static inline void write_pmovsclr(u64 val)
- {
- 	write_sysreg(val, pmovsclr_el0);
-diff --git a/arch/arm64/kvm/pmu.c b/arch/arm64/kvm/pmu.c
-index e633b4434c6a..a47ae311d4a8 100644
---- a/arch/arm64/kvm/pmu.c
-+++ b/arch/arm64/kvm/pmu.c
-@@ -5,6 +5,7 @@
-  */
- #include <linux/kvm_host.h>
- #include <linux/perf_event.h>
-+#include <linux/perf/arm_pmuv3.h>
++	bitmap_set(cpu_pmu->cntr_mask, 0, XSCALE1_NUM_COUNTERS);
  
- static DEFINE_PER_CPU(struct kvm_pmu_events, kvm_pmu_events);
- 
-@@ -62,63 +63,16 @@ void kvm_clr_pmu_events(u64 clr)
- 	pmu->events_guest &= ~clr;
+ 	return 0;
  }
+@@ -500,7 +503,7 @@ xscale2pmu_handle_irq(struct arm_pmu *cpu_pmu)
  
--#define PMEVTYPER_READ_CASE(idx)				\
--	case idx:						\
--		return read_sysreg(pmevtyper##idx##_el0)
--
--#define PMEVTYPER_WRITE_CASE(idx)				\
--	case idx:						\
--		write_sysreg(val, pmevtyper##idx##_el0);	\
--		break
--
--#define PMEVTYPER_CASES(readwrite)				\
--	PMEVTYPER_##readwrite##_CASE(0);			\
--	PMEVTYPER_##readwrite##_CASE(1);			\
--	PMEVTYPER_##readwrite##_CASE(2);			\
--	PMEVTYPER_##readwrite##_CASE(3);			\
--	PMEVTYPER_##readwrite##_CASE(4);			\
--	PMEVTYPER_##readwrite##_CASE(5);			\
--	PMEVTYPER_##readwrite##_CASE(6);			\
--	PMEVTYPER_##readwrite##_CASE(7);			\
--	PMEVTYPER_##readwrite##_CASE(8);			\
--	PMEVTYPER_##readwrite##_CASE(9);			\
--	PMEVTYPER_##readwrite##_CASE(10);			\
--	PMEVTYPER_##readwrite##_CASE(11);			\
--	PMEVTYPER_##readwrite##_CASE(12);			\
--	PMEVTYPER_##readwrite##_CASE(13);			\
--	PMEVTYPER_##readwrite##_CASE(14);			\
--	PMEVTYPER_##readwrite##_CASE(15);			\
--	PMEVTYPER_##readwrite##_CASE(16);			\
--	PMEVTYPER_##readwrite##_CASE(17);			\
--	PMEVTYPER_##readwrite##_CASE(18);			\
--	PMEVTYPER_##readwrite##_CASE(19);			\
--	PMEVTYPER_##readwrite##_CASE(20);			\
--	PMEVTYPER_##readwrite##_CASE(21);			\
--	PMEVTYPER_##readwrite##_CASE(22);			\
--	PMEVTYPER_##readwrite##_CASE(23);			\
--	PMEVTYPER_##readwrite##_CASE(24);			\
--	PMEVTYPER_##readwrite##_CASE(25);			\
--	PMEVTYPER_##readwrite##_CASE(26);			\
--	PMEVTYPER_##readwrite##_CASE(27);			\
--	PMEVTYPER_##readwrite##_CASE(28);			\
--	PMEVTYPER_##readwrite##_CASE(29);			\
--	PMEVTYPER_##readwrite##_CASE(30)
--
- /*
-  * Read a value direct from PMEVTYPER<idx> where idx is 0-30
-  * or PMCCFILTR_EL0 where idx is ARMV8_PMU_CYCLE_IDX (31).
-  */
- static u64 kvm_vcpu_pmu_read_evtype_direct(int idx)
- {
--	switch (idx) {
--	PMEVTYPER_CASES(READ);
--	case ARMV8_PMU_CYCLE_IDX:
--		return read_sysreg(pmccfiltr_el0);
--	default:
--		WARN_ON(1);
--	}
-+	if (idx == ARMV8_PMU_CYCLE_IDX)
-+		return read_pmccfiltr();
+ 	regs = get_irq_regs();
  
--	return 0;
-+	return read_pmevtypern(idx);
+-	for (idx = 0; idx < cpu_pmu->num_events; ++idx) {
++	for_each_set_bit(idx, cpu_pmu->cntr_mask, XSCALE2_NUM_COUNTERS) {
+ 		struct perf_event *event = cpuc->events[idx];
+ 		struct hw_perf_event *hwc;
+ 
+@@ -719,7 +722,8 @@ static int xscale2pmu_init(struct arm_pmu *cpu_pmu)
+ 	cpu_pmu->start		= xscale2pmu_start;
+ 	cpu_pmu->stop		= xscale2pmu_stop;
+ 	cpu_pmu->map_event	= xscale_map_event;
+-	cpu_pmu->num_events	= 5;
++
++	bitmap_set(cpu_pmu->cntr_mask, 0, XSCALE2_NUM_COUNTERS);
+ 
+ 	return 0;
  }
+diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
+index b3b34f6670cf..e5d6d204beab 100644
+--- a/include/linux/perf/arm_pmu.h
++++ b/include/linux/perf/arm_pmu.h
+@@ -96,7 +96,7 @@ struct arm_pmu {
+ 	void		(*stop)(struct arm_pmu *);
+ 	void		(*reset)(void *);
+ 	int		(*map_event)(struct perf_event *event);
+-	int		num_events;
++	DECLARE_BITMAP(cntr_mask, ARMPMU_MAX_HWEVENTS);
+ 	bool		secure_access; /* 32-bit ARM only */
+ #define ARMV8_PMUV3_MAX_COMMON_EVENTS		0x40
+ 	DECLARE_BITMAP(pmceid_bitmap, ARMV8_PMUV3_MAX_COMMON_EVENTS);
+diff --git a/include/linux/perf/arm_pmuv3.h b/include/linux/perf/arm_pmuv3.h
+index 7867db04ec98..eccbdd8eb98f 100644
+--- a/include/linux/perf/arm_pmuv3.h
++++ b/include/linux/perf/arm_pmuv3.h
+@@ -6,6 +6,7 @@
+ #ifndef __PERF_ARM_PMUV3_H
+ #define __PERF_ARM_PMUV3_H
  
- /*
-@@ -127,14 +81,10 @@ static u64 kvm_vcpu_pmu_read_evtype_direct(int idx)
-  */
- static void kvm_vcpu_pmu_write_evtype_direct(int idx, u32 val)
- {
--	switch (idx) {
--	PMEVTYPER_CASES(WRITE);
--	case ARMV8_PMU_CYCLE_IDX:
--		write_sysreg(val, pmccfiltr_el0);
--		break;
--	default:
--		WARN_ON(1);
--	}
-+	if (idx == ARMV8_PMU_CYCLE_IDX)
-+		write_pmccfiltr(val);
-+	else
-+		write_pmevtypern(idx, val);
- }
++#define ARMV8_PMU_MAX_GENERAL_COUNTERS	31
+ #define ARMV8_PMU_MAX_COUNTERS	32
+ #define ARMV8_PMU_COUNTER_MASK	(ARMV8_PMU_MAX_COUNTERS - 1)
  
- /*
 
 -- 
 2.43.0
