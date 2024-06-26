@@ -1,187 +1,1125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from honk.sigxcpu.org (honk.sigxcpu.org [24.134.29.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E972181CFF
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 13:03:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0615417B50F
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 13:04:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=24.134.29.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719407037; cv=none; b=D3T1po0sO1dtNXQ/Vy4/FdfsXcaspLip8dgsJXOog5nI6TnEWS0kFCvcq3uTjmDvzSP+9cQuMy8XGmEjKSHL8AWVpeyw+2VAy8bj43wx1c8dNIEBNWHNkIptUOgB1jYJ2GQpFuTZ0onjtHo0hfT2W72V+hAN3ryzYwSHGG/quMM=
+	t=1719407070; cv=none; b=rRGel3kJu2m1EiEeW33NYgYIxl9sl+mgr0/pf/ol9rWyDWWsFwcVjA7wfScf0L6f1BWw0q+IJfAaMdSkg9A+4mbn8yCkkbemFgkN+Ao8N1++gCIs/NB62VGpYlieIIaO07ij39ZBp4P++WRRaeqByLQzDerTP+AEj7KCqnn7iRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719407037; c=relaxed/simple;
-	bh=Uta7Ar4IuN68vM/aeq1mQnasHGnsAdafsPir9UrleIA=;
+	s=arc-20240116; t=1719407070; c=relaxed/simple;
+	bh=QX0tII29TQZRiLAyWchGLjkL6P3Aw45BG+ZEVKkLI4k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nn6DHeQbweqLBOHJtEJGXUxCdw+nEhigdA9eTVR29EVVVqxLzvvkX5nsgQUDs5PNh0JQjapVkKK15nDkM9LgB84W73FcNKcKaS+iOQM/ni0Fe4uJbNwvz+Tw+FMkMKp0s+SrM0Kx50e8CkZEC91CvQKQT2luChiILBgqUsfKuK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pd/i5zHI; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=oCAHvJo0wlHi6igieoyUQxMapcvXlpfHYIStEF5spO8Cn7Qnj5Ho0F8q9PKfS0rHdgjgZ7DtmV66FTyodkR1DfBgUt20+8NGezPthU+C0CzPRDREYTyLOUTAAHY0gWGhKiQvaK6+zRNu2o08mZQKA9+pcwLPO5Yex0NT268vHb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigxcpu.org; spf=pass smtp.mailfrom=sigxcpu.org; dkim=pass (2048-bit key) header.d=sigxcpu.org header.i=@sigxcpu.org header.b=VllCTk5f; dkim=pass (2048-bit key) header.d=sigxcpu.org header.i=@sigxcpu.org header.b=LAhOVZJ7; arc=none smtp.client-ip=24.134.29.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigxcpu.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sigxcpu.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pd/i5zHI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91FF3C2BD10;
-	Wed, 26 Jun 2024 13:03:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719407036;
-	bh=Uta7Ar4IuN68vM/aeq1mQnasHGnsAdafsPir9UrleIA=;
+	dkim=pass (2048-bit key) header.d=sigxcpu.org header.i=@sigxcpu.org header.b="VllCTk5f";
+	dkim=pass (2048-bit key) header.d=sigxcpu.org header.i=@sigxcpu.org header.b="LAhOVZJ7"
+Received: from localhost (localhost [127.0.0.1])
+	by honk.sigxcpu.org (Postfix) with ESMTP id F3E5EFB03;
+	Wed, 26 Jun 2024 15:04:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sigxcpu.org; s=2024;
+	t=1719407062; bh=QX0tII29TQZRiLAyWchGLjkL6P3Aw45BG+ZEVKkLI4k=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Pd/i5zHIn/AQu7DnXglDjXVDP9Kqs1JHUD2n7nhTlLi8yjm2IKz+JBZx+4Yr+VtVE
-	 e7yHGcUPsRbgcbw2P9+0iAa3eQIuPxdxCvD4zQ0061JLX7KAItn2oMa+/oo7u6EDKu
-	 InxF+MFcm1V/lYROQX9e8N+GxCkVpWhXIeDRiX1glTL0WRzxgq4B6Rtu/igGkMkHjJ
-	 kKbqnRgp6CKAu2f9hX6M/ujgXDcLOn2TSFJ7iTZJAYpwPGfOf02rZC1mJD1CS20bqy
-	 b3G+YD1AUQjI6Cbskf2xxrUstH05FMPGqFtukjg1/JATbW2sStWEYgcPcvdhb0UfS+
-	 VYyYxbL50Koew==
-Date: Wed, 26 Jun 2024 20:49:50 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] riscv: uaccess: use input constraints for ptr of
- __put_user
-Message-ID: <ZnwObmA70Bfx9yCn@xhacker>
-References: <20240625040500.1788-1-jszhang@kernel.org>
- <20240625040500.1788-3-jszhang@kernel.org>
- <acd2e53f-b5c1-49c5-86e2-bc09eb917163@app.fastmail.com>
- <ZnwKXWzRz9B5FbLM@xhacker>
+	b=VllCTk5ftKCV5hf2W7W+s74kTlwOf8xw+CTHYNaGRLMhnG0rixKS2XAXvHZSMhwiF
+	 oc3fPVyQldAXXyGtpYanwwbHySSesDYpcgHRRbZO/Vy+9Qr+7hqGZAvs6uVyXci7ix
+	 qURnCgZxU6kWflOSOaJo2BlCSJk48kLI/FEhilqgcCRAECB2GkLikq8OEirTy7J1W/
+	 ebSvWTiuW+or4Hm0vZYDGvab95bMIQGvBlzeoEd7E4PPKNue5gT1yBxi30mpkhCny9
+	 Fp9tH/O1007SyrDYGwVNuIlA/+9net+dzf4zA5i+Re5nYxLx6D1X/x/x6OxBmXFvcF
+	 z1eUnpaRU83nQ==
+Received: from honk.sigxcpu.org ([127.0.0.1])
+	by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id klHQDiK2H-ED; Wed, 26 Jun 2024 15:04:12 +0200 (CEST)
+Date: Wed, 26 Jun 2024 15:04:10 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sigxcpu.org; s=2024;
+	t=1719407052; bh=QX0tII29TQZRiLAyWchGLjkL6P3Aw45BG+ZEVKkLI4k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LAhOVZJ7qu3qJKqKlwp7PblrlPjbC0RsPFQrFTIqAods513rE6L+OHq96Na+/fB8R
+	 K7Qkem//8EuFWrU/CbNWOpQbMa1giwcFjoDMY3rok1NJEOHOTbEL2eXkLRRI+53iR1
+	 9B9wyZHY3GfUbG0BT11kjYA4eWcw5awsyV2RrpOdqfP0PjASLUcAUtd5GwwvYjEOmi
+	 Es501aGAyV7+VSMTAufhwjUHS6NL52+CVDRAvVWK6nPNko1AchE13+oFlRoeKHfoal
+	 Hjhepep80u+HqdAn5rM5FVZQHztXdeB9ZQljJsg/vdd6z2QK0/ONJpo/svZwWz/ASi
+	 byZa3ZRY0luwg==
+From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To: Tejas Vipin <tejasvipin76@gmail.com>
+Cc: kernel@puri.sm, megi@xff.cz, neil.armstrong@linaro.org,
+	quic_jesszhan@quicinc.com, dianders@chromium.org,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/panel: sitronix-st7703: transition to mipi_dsi
+ wrapped functions
+Message-ID: <ZnwRyvzLchHz3WAA@qwark.sigxcpu.org>
+References: <20240626045244.48858-1-tejasvipin76@gmail.com>
+ <ZnwIrH47Rhcu4zDq@qwark.sigxcpu.org>
+ <b11a822d-6be3-48dc-959e-fa9fb06d745b@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <ZnwKXWzRz9B5FbLM@xhacker>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b11a822d-6be3-48dc-959e-fa9fb06d745b@gmail.com>
 
-On Wed, Jun 26, 2024 at 08:32:38PM +0800, Jisheng Zhang wrote:
-> On Tue, Jun 25, 2024 at 07:54:30AM +0200, Arnd Bergmann wrote:
-> > On Tue, Jun 25, 2024, at 06:04, Jisheng Zhang wrote:
-> > > I believe the output constraints "=m" is not necessary, because
-> > > the instruction itself is "write", we don't need the compiler
-> > > to "write" for us. So tell compiler we read from memory instead
-> > > of writing.
-> > >
-> > > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+Hi,
+On Wed, Jun 26, 2024 at 06:23:51PM +0530, Tejas Vipin wrote:
+> Hi,
+> 
+> On 6/26/24 5:55 PM, Guido Günther wrote:
+> > Hi,
+> > On Wed, Jun 26, 2024 at 10:22:41AM +0530, Tejas Vipin wrote:
+> >> Use functions introduced in commit 966e397e4f60 ("drm/mipi-dsi:
+> >> Introduce mipi_dsi_*_write_seq_multi()") and commit f79d6d28d8fe
+> >> ("drm/mipi-dsi: wrap more functions for streamline handling") for 
+> >> sitronix-st7703 based panels.
+> >>
+> >> Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
+> >> ---
+> >>  drivers/gpu/drm/panel/panel-sitronix-st7703.c | 836 +++++++++---------
+> >>  1 file changed, 400 insertions(+), 436 deletions(-)
+> >>
+> >> diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7703.c b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
+> >> index 77b30e045a57..67e8e45498cb 100644
+> >> --- a/drivers/gpu/drm/panel/panel-sitronix-st7703.c
+> >> +++ b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
+> >> @@ -69,7 +69,7 @@ struct st7703_panel_desc {
+> >>  	unsigned int lanes;
+> >>  	unsigned long mode_flags;
+> >>  	enum mipi_dsi_pixel_format format;
+> >> -	int (*init_sequence)(struct st7703 *ctx);
+> >> +	void (*init_sequence)(struct mipi_dsi_multi_context *dsi_ctx);
+> >>  };
+> >>  
+> >>  static inline struct st7703 *panel_to_st7703(struct drm_panel *panel)
+> >> @@ -77,62 +77,58 @@ static inline struct st7703 *panel_to_st7703(struct drm_panel *panel)
+> >>  	return container_of(panel, struct st7703, panel);
+> >>  }
+> >>  
+> >> -static int jh057n_init_sequence(struct st7703 *ctx)
+> >> +static void jh057n_init_sequence(struct mipi_dsi_multi_context *dsi_ctx)
+> >>  {
+> >> -	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+> >> -
+> >>  	/*
+> >>  	 * Init sequence was supplied by the panel vendor. Most of the commands
+> >>  	 * resemble the ST7703 but the number of parameters often don't match
+> >>  	 * so it's likely a clone.
+> >>  	 */
+> >> -	mipi_dsi_generic_write_seq(dsi, ST7703_CMD_SETEXTC,
+> >> -				   0xF1, 0x12, 0x83);
+> >> -	mipi_dsi_generic_write_seq(dsi, ST7703_CMD_SETRGBIF,
+> >> -				   0x10, 0x10, 0x05, 0x05, 0x03, 0xFF, 0x00, 0x00,
+> >> -				   0x00, 0x00);
+> >> -	mipi_dsi_generic_write_seq(dsi, ST7703_CMD_SETSCR,
+> >> -				   0x73, 0x73, 0x50, 0x50, 0x00, 0x00, 0x08, 0x70,
+> >> -				   0x00);
+> >> -	mipi_dsi_generic_write_seq(dsi, ST7703_CMD_SETVDC, 0x4E);
+> >> -	mipi_dsi_generic_write_seq(dsi, ST7703_CMD_SETPANEL, 0x0B);
+> >> -	mipi_dsi_generic_write_seq(dsi, ST7703_CMD_SETCYC, 0x80);
+> >> -	mipi_dsi_generic_write_seq(dsi, ST7703_CMD_SETDISP, 0xF0, 0x12, 0x30);
+> >> -	mipi_dsi_generic_write_seq(dsi, ST7703_CMD_SETEQ,
+> >> -				   0x07, 0x07, 0x0B, 0x0B, 0x03, 0x0B, 0x00, 0x00,
+> >> -				   0x00, 0x00, 0xFF, 0x00, 0xC0, 0x10);
+> >> -	mipi_dsi_generic_write_seq(dsi, ST7703_CMD_SETBGP, 0x08, 0x08);
+> >> -	msleep(20);
+> >> -
+> >> -	mipi_dsi_generic_write_seq(dsi, ST7703_CMD_SETVCOM, 0x3F, 0x3F);
+> >> -	mipi_dsi_generic_write_seq(dsi, ST7703_CMD_UNKNOWN_BF, 0x02, 0x11, 0x00);
+> >> -	mipi_dsi_generic_write_seq(dsi, ST7703_CMD_SETGIP1,
+> >> -				   0x82, 0x10, 0x06, 0x05, 0x9E, 0x0A, 0xA5, 0x12,
+> >> -				   0x31, 0x23, 0x37, 0x83, 0x04, 0xBC, 0x27, 0x38,
+> >> -				   0x0C, 0x00, 0x03, 0x00, 0x00, 0x00, 0x0C, 0x00,
+> >> -				   0x03, 0x00, 0x00, 0x00, 0x75, 0x75, 0x31, 0x88,
+> >> -				   0x88, 0x88, 0x88, 0x88, 0x88, 0x13, 0x88, 0x64,
+> >> -				   0x64, 0x20, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
+> >> -				   0x02, 0x88, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -				   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+> >> -	mipi_dsi_generic_write_seq(dsi, ST7703_CMD_SETGIP2,
+> >> -				   0x02, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -				   0x00, 0x00, 0x00, 0x00, 0x02, 0x46, 0x02, 0x88,
+> >> -				   0x88, 0x88, 0x88, 0x88, 0x88, 0x64, 0x88, 0x13,
+> >> -				   0x57, 0x13, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
+> >> -				   0x75, 0x88, 0x23, 0x14, 0x00, 0x00, 0x02, 0x00,
+> >> -				   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -				   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x30, 0x0A,
+> >> -				   0xA5, 0x00, 0x00, 0x00, 0x00);
+> >> -	mipi_dsi_generic_write_seq(dsi, ST7703_CMD_SETGAMMA,
+> >> -				   0x00, 0x09, 0x0E, 0x29, 0x2D, 0x3C, 0x41, 0x37,
+> >> -				   0x07, 0x0B, 0x0D, 0x10, 0x11, 0x0F, 0x10, 0x11,
+> >> -				   0x18, 0x00, 0x09, 0x0E, 0x29, 0x2D, 0x3C, 0x41,
+> >> -				   0x37, 0x07, 0x0B, 0x0D, 0x10, 0x11, 0x0F, 0x10,
+> >> -				   0x11, 0x18);
+> >> -	msleep(20);
+> >> -
+> >> -	return 0;
+> >> +	mipi_dsi_generic_write_seq_multi(dsi_ctx, ST7703_CMD_SETEXTC,
+> >> +					 0xF1, 0x12, 0x83);
+> >> +	mipi_dsi_generic_write_seq_multi(dsi_ctx, ST7703_CMD_SETRGBIF,
+> >> +					 0x10, 0x10, 0x05, 0x05, 0x03, 0xFF, 0x00, 0x00,
+> >> +					 0x00, 0x00);
+> >> +	mipi_dsi_generic_write_seq_multi(dsi_ctx, ST7703_CMD_SETSCR,
+> >> +					 0x73, 0x73, 0x50, 0x50, 0x00, 0x00, 0x08, 0x70,
+> >> +					 0x00);
+> >> +	mipi_dsi_generic_write_seq_multi(dsi_ctx, ST7703_CMD_SETVDC, 0x4E);
+> >> +	mipi_dsi_generic_write_seq_multi(dsi_ctx, ST7703_CMD_SETPANEL, 0x0B);
+> >> +	mipi_dsi_generic_write_seq_multi(dsi_ctx, ST7703_CMD_SETCYC, 0x80);
+> >> +	mipi_dsi_generic_write_seq_multi(dsi_ctx, ST7703_CMD_SETDISP, 0xF0, 0x12, 0x30);
+> >> +	mipi_dsi_generic_write_seq_multi(dsi_ctx, ST7703_CMD_SETEQ,
+> >> +					 0x07, 0x07, 0x0B, 0x0B, 0x03, 0x0B, 0x00, 0x00,
+> >> +					 0x00, 0x00, 0xFF, 0x00, 0xC0, 0x10);
+> >> +	mipi_dsi_generic_write_seq_multi(dsi_ctx, ST7703_CMD_SETBGP, 0x08, 0x08);
+> >> +	mipi_dsi_msleep(dsi_ctx, 20);
+> >> +
+> >> +	mipi_dsi_generic_write_seq_multi(dsi_ctx, ST7703_CMD_SETVCOM, 0x3F, 0x3F);
+> >> +	mipi_dsi_generic_write_seq_multi(dsi_ctx, ST7703_CMD_UNKNOWN_BF, 0x02, 0x11, 0x00);
+> >> +	mipi_dsi_generic_write_seq_multi(dsi_ctx, ST7703_CMD_SETGIP1,
+> >> +					 0x82, 0x10, 0x06, 0x05, 0x9E, 0x0A, 0xA5, 0x12,
+> >> +					 0x31, 0x23, 0x37, 0x83, 0x04, 0xBC, 0x27, 0x38,
+> >> +					 0x0C, 0x00, 0x03, 0x00, 0x00, 0x00, 0x0C, 0x00,
+> >> +					 0x03, 0x00, 0x00, 0x00, 0x75, 0x75, 0x31, 0x88,
+> >> +					 0x88, 0x88, 0x88, 0x88, 0x88, 0x13, 0x88, 0x64,
+> >> +					 0x64, 0x20, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
+> >> +					 0x02, 0x88, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +					 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+> >> +	mipi_dsi_generic_write_seq_multi(dsi_ctx, ST7703_CMD_SETGIP2,
+> >> +					 0x02, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +					 0x00, 0x00, 0x00, 0x00, 0x02, 0x46, 0x02, 0x88,
+> >> +					 0x88, 0x88, 0x88, 0x88, 0x88, 0x64, 0x88, 0x13,
+> >> +					 0x57, 0x13, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
+> >> +					 0x75, 0x88, 0x23, 0x14, 0x00, 0x00, 0x02, 0x00,
+> >> +					 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +					 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x30, 0x0A,
+> >> +					 0xA5, 0x00, 0x00, 0x00, 0x00);
+> >> +	mipi_dsi_generic_write_seq_multi(dsi_ctx, ST7703_CMD_SETGAMMA,
+> >> +					 0x00, 0x09, 0x0E, 0x29, 0x2D, 0x3C, 0x41, 0x37,
+> >> +					 0x07, 0x0B, 0x0D, 0x10, 0x11, 0x0F, 0x10, 0x11,
+> >> +					 0x18, 0x00, 0x09, 0x0E, 0x29, 0x2D, 0x3C, 0x41,
+> >> +					 0x37, 0x07, 0x0B, 0x0D, 0x10, 0x11, 0x0F, 0x10,
+> >> +					 0x11, 0x18);
+> >> +	mipi_dsi_msleep(dsi_ctx, 20);
+> >>  }
+> >>  
+> >>  static const struct drm_display_mode jh057n00900_mode = {
+> >> @@ -159,163 +155,159 @@ static const struct st7703_panel_desc jh057n00900_panel_desc = {
+> >>  	.init_sequence = jh057n_init_sequence,
+> >>  };
+> >>  
+> >> -static int xbd599_init_sequence(struct st7703 *ctx)
+> >> +static void xbd599_init_sequence(struct mipi_dsi_multi_context *dsi_ctx)
+> >>  {
+> >> -	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+> >> -
+> >>  	/*
+> >>  	 * Init sequence was supplied by the panel vendor.
+> >>  	 */
+> >>  
+> >>  	/* Magic sequence to unlock user commands below. */
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETEXTC, 0xF1, 0x12, 0x83);
+> >> -
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETMIPI,
+> >> -			       0x33, /* VC_main = 0, Lane_Number = 3 (4 lanes) */
+> >> -			       0x81, /* DSI_LDO_SEL = 1.7V, RTERM = 90 Ohm */
+> >> -			       0x05, /* IHSRX = x6 (Low High Speed driving ability) */
+> >> -			       0xF9, /* TX_CLK_SEL = fDSICLK/16 */
+> >> -			       0x0E, /* HFP_OSC (min. HFP number in DSI mode) */
+> >> -			       0x0E, /* HBP_OSC (min. HBP number in DSI mode) */
+> >> -			       /* The rest is undocumented in ST7703 datasheet */
+> >> -			       0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x44, 0x25, 0x00, 0x91, 0x0a, 0x00, 0x00, 0x02,
+> >> -			       0x4F, 0x11, 0x00, 0x00, 0x37);
+> >> -
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER_EXT,
+> >> -			       0x25, /* PCCS = 2, ECP_DC_DIV = 1/4 HSYNC */
+> >> -			       0x22, /* DT = 15ms XDK_ECP = x2 */
+> >> -			       0x20, /* PFM_DC_DIV = /1 */
+> >> -			       0x03  /* ECP_SYNC_EN = 1, VGX_SYNC_EN = 1 */);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETEXTC, 0xF1, 0x12, 0x83);
+> >> +
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETMIPI,
+> >> +				     0x33, /* VC_main = 0, Lane_Number = 3 (4 lanes) */
+> >> +				     0x81, /* DSI_LDO_SEL = 1.7V, RTERM = 90 Ohm */
+> >> +				     0x05, /* IHSRX = x6 (Low High Speed driving ability) */
+> >> +				     0xF9, /* TX_CLK_SEL = fDSICLK/16 */
+> >> +				     0x0E, /* HFP_OSC (min. HFP number in DSI mode) */
+> >> +				     0x0E, /* HBP_OSC (min. HBP number in DSI mode) */
+> >> +				     /* The rest is undocumented in ST7703 datasheet */
+> >> +				     0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x44, 0x25, 0x00, 0x91, 0x0a, 0x00, 0x00, 0x02,
+> >> +				     0x4F, 0x11, 0x00, 0x00, 0x37);
+> >> +
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETPOWER_EXT,
+> >> +				     0x25, /* PCCS = 2, ECP_DC_DIV = 1/4 HSYNC */
+> >> +				     0x22, /* DT = 15ms XDK_ECP = x2 */
+> >> +				     0x20, /* PFM_DC_DIV = /1 */
+> >> +				     0x03  /* ECP_SYNC_EN = 1, VGX_SYNC_EN = 1 */);
+> >>  
+> >>  	/* RGB I/F porch timing */
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETRGBIF,
+> >> -			       0x10, /* VBP_RGB_GEN */
+> >> -			       0x10, /* VFP_RGB_GEN */
+> >> -			       0x05, /* DE_BP_RGB_GEN */
+> >> -			       0x05, /* DE_FP_RGB_GEN */
+> >> -			       /* The rest is undocumented in ST7703 datasheet */
+> >> -			       0x03, 0xFF,
+> >> -			       0x00, 0x00,
+> >> -			       0x00, 0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETRGBIF,
+> >> +				     0x10, /* VBP_RGB_GEN */
+> >> +				     0x10, /* VFP_RGB_GEN */
+> >> +				     0x05, /* DE_BP_RGB_GEN */
+> >> +				     0x05, /* DE_FP_RGB_GEN */
+> >> +				     /* The rest is undocumented in ST7703 datasheet */
+> >> +				     0x03, 0xFF,
+> >> +				     0x00, 0x00,
+> >> +				     0x00, 0x00);
+> >>  
+> >>  	/* Source driving settings. */
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETSCR,
+> >> -			       0x73, /* N_POPON */
+> >> -			       0x73, /* N_NOPON */
+> >> -			       0x50, /* I_POPON */
+> >> -			       0x50, /* I_NOPON */
+> >> -			       0x00, /* SCR[31,24] */
+> >> -			       0xC0, /* SCR[23,16] */
+> >> -			       0x08, /* SCR[15,8] */
+> >> -			       0x70, /* SCR[7,0] */
+> >> -			       0x00  /* Undocumented */);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETSCR,
+> >> +				     0x73, /* N_POPON */
+> >> +				     0x73, /* N_NOPON */
+> >> +				     0x50, /* I_POPON */
+> >> +				     0x50, /* I_NOPON */
+> >> +				     0x00, /* SCR[31,24] */
+> >> +				     0xC0, /* SCR[23,16] */
+> >> +				     0x08, /* SCR[15,8] */
+> >> +				     0x70, /* SCR[7,0] */
+> >> +				     0x00  /* Undocumented */);
+> >>  
+> >>  	/* NVDDD_SEL = -1.8V, VDDD_SEL = out of range (possibly 1.9V?) */
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETVDC, 0x4E);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETVDC, 0x4E);
+> >>  
+> >>  	/*
+> >>  	 * SS_PANEL = 1 (reverse scan), GS_PANEL = 0 (normal scan)
+> >>  	 * REV_PANEL = 1 (normally black panel), BGR_PANEL = 1 (BGR)
+> >>  	 */
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETPANEL, 0x0B);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETPANEL, 0x0B);
+> >>  
+> >>  	/* Zig-Zag Type C column inversion. */
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETCYC, 0x80);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETCYC, 0x80);
+> >>  
+> >>  	/* Set display resolution. */
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETDISP,
+> >> -			       0xF0, /* NL = 240 */
+> >> -			       0x12, /* RES_V_LSB = 0, BLK_CON = VSSD,
+> >> -				      * RESO_SEL = 720RGB
+> >> -				      */
+> >> -			       0xF0  /* WHITE_GND_EN = 1 (GND),
+> >> -				      * WHITE_FRAME_SEL = 7 frames,
+> >> -				      * ISC = 0 frames
+> >> -				      */);
+> >> -
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETEQ,
+> >> -			       0x00, /* PNOEQ */
+> >> -			       0x00, /* NNOEQ */
+> >> -			       0x0B, /* PEQGND */
+> >> -			       0x0B, /* NEQGND */
+> >> -			       0x10, /* PEQVCI */
+> >> -			       0x10, /* NEQVCI */
+> >> -			       0x00, /* PEQVCI1 */
+> >> -			       0x00, /* NEQVCI1 */
+> >> -			       0x00, /* reserved */
+> >> -			       0x00, /* reserved */
+> >> -			       0xFF, /* reserved */
+> >> -			       0x00, /* reserved */
+> >> -			       0xC0, /* ESD_DET_DATA_WHITE = 1, ESD_WHITE_EN = 1 */
+> >> -			       0x10  /* SLPIN_OPTION = 1 (no need vsync after sleep-in)
+> >> -				      * VEDIO_NO_CHECK_EN = 0
+> >> -				      * ESD_WHITE_GND_EN = 0
+> >> -				      * ESD_DET_TIME_SEL = 0 frames
+> >> -				      */);
+> >> -
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETECO, 0x01, 0x00, 0xFF, 0xFF, 0x00);
+> >> -
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER,
+> >> -			       0x74, /* VBTHS, VBTLS: VGH = 17V, VBL = -11V */
+> >> -			       0x00, /* FBOFF_VGH = 0, FBOFF_VGL = 0 */
+> >> -			       0x32, /* VRP  */
+> >> -			       0x32, /* VRN */
+> >> -			       0x77, /* reserved */
+> >> -			       0xF1, /* APS = 1 (small),
+> >> -				      * VGL_DET_EN = 1, VGH_DET_EN = 1,
+> >> -				      * VGL_TURBO = 1, VGH_TURBO = 1
+> >> -				      */
+> >> -			       0xFF, /* VGH1_L_DIV, VGL1_L_DIV (1.5MHz) */
+> >> -			       0xFF, /* VGH1_R_DIV, VGL1_R_DIV (1.5MHz) */
+> >> -			       0xCC, /* VGH2_L_DIV, VGL2_L_DIV (2.6MHz) */
+> >> -			       0xCC, /* VGH2_R_DIV, VGL2_R_DIV (2.6MHz) */
+> >> -			       0x77, /* VGH3_L_DIV, VGL3_L_DIV (4.5MHz) */
+> >> -			       0x77  /* VGH3_R_DIV, VGL3_R_DIV (4.5MHz) */);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETDISP,
+> >> +				     0xF0, /* NL = 240 */
+> >> +				     0x12, /* RES_V_LSB = 0, BLK_CON = VSSD,
+> >> +					    * RESO_SEL = 720RGB
+> >> +					    */
+> >> +				     0xF0  /* WHITE_GND_EN = 1 (GND),
+> >> +					    * WHITE_FRAME_SEL = 7 frames,
+> >> +					    * ISC = 0 frames
+> >> +					    */);
+> >> +
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETEQ,
+> >> +				     0x00, /* PNOEQ */
+> >> +				     0x00, /* NNOEQ */
+> >> +				     0x0B, /* PEQGND */
+> >> +				     0x0B, /* NEQGND */
+> >> +				     0x10, /* PEQVCI */
+> >> +				     0x10, /* NEQVCI */
+> >> +				     0x00, /* PEQVCI1 */
+> >> +				     0x00, /* NEQVCI1 */
+> >> +				     0x00, /* reserved */
+> >> +				     0x00, /* reserved */
+> >> +				     0xFF, /* reserved */
+> >> +				     0x00, /* reserved */
+> >> +				     0xC0, /* ESD_DET_DATA_WHITE = 1, ESD_WHITE_EN = 1 */
+> >> +				     0x10  /* SLPIN_OPTION = 1 (no need vsync after sleep-in)
+> >> +					    * VEDIO_NO_CHECK_EN = 0
+> >> +					    * ESD_WHITE_GND_EN = 0
+> >> +					    * ESD_DET_TIME_SEL = 0 frames
+> >> +					    */);
+> >> +
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETECO, 0x01, 0x00, 0xFF, 0xFF, 0x00);
+> >> +
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETPOWER,
+> >> +				     0x74, /* VBTHS, VBTLS: VGH = 17V, VBL = -11V */
+> >> +				     0x00, /* FBOFF_VGH = 0, FBOFF_VGL = 0 */
+> >> +				     0x32, /* VRP  */
+> >> +				     0x32, /* VRN */
+> >> +				     0x77, /* reserved */
+> >> +				     0xF1, /* APS = 1 (small),
+> >> +					    * VGL_DET_EN = 1, VGH_DET_EN = 1,
+> >> +					    * VGL_TURBO = 1, VGH_TURBO = 1
+> >> +					    */
+> >> +				     0xFF, /* VGH1_L_DIV, VGL1_L_DIV (1.5MHz) */
+> >> +				     0xFF, /* VGH1_R_DIV, VGL1_R_DIV (1.5MHz) */
+> >> +				     0xCC, /* VGH2_L_DIV, VGL2_L_DIV (2.6MHz) */
+> >> +				     0xCC, /* VGH2_R_DIV, VGL2_R_DIV (2.6MHz) */
+> >> +				     0x77, /* VGH3_L_DIV, VGL3_L_DIV (4.5MHz) */
+> >> +				     0x77  /* VGH3_R_DIV, VGL3_R_DIV (4.5MHz) */);
+> >>  
+> >>  	/* Reference voltage. */
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETBGP,
+> >> -			       0x07, /* VREF_SEL = 4.2V */
+> >> -			       0x07  /* NVREF_SEL = 4.2V */);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETBGP,
+> >> +				     0x07, /* VREF_SEL = 4.2V */
+> >> +				     0x07  /* NVREF_SEL = 4.2V */);
+> >>  
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETVCOM,
+> >> -			       0x2C, /* VCOMDC_F = -0.67V */
+> >> -			       0x2C  /* VCOMDC_B = -0.67V */);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETVCOM,
+> >> +				     0x2C, /* VCOMDC_F = -0.67V */
+> >> +				     0x2C  /* VCOMDC_B = -0.67V */);
+> >>  
+> >>  	/* Undocumented command. */
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_UNKNOWN_BF, 0x02, 0x11, 0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_UNKNOWN_BF, 0x02, 0x11, 0x00);
+> >>  
+> >>  	/* This command is to set forward GIP timing. */
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP1,
+> >> -			       0x82, 0x10, 0x06, 0x05, 0xA2, 0x0A, 0xA5, 0x12,
+> >> -			       0x31, 0x23, 0x37, 0x83, 0x04, 0xBC, 0x27, 0x38,
+> >> -			       0x0C, 0x00, 0x03, 0x00, 0x00, 0x00, 0x0C, 0x00,
+> >> -			       0x03, 0x00, 0x00, 0x00, 0x75, 0x75, 0x31, 0x88,
+> >> -			       0x88, 0x88, 0x88, 0x88, 0x88, 0x13, 0x88, 0x64,
+> >> -			       0x64, 0x20, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
+> >> -			       0x02, 0x88, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETGIP1,
+> >> +				     0x82, 0x10, 0x06, 0x05, 0xA2, 0x0A, 0xA5, 0x12,
+> >> +				     0x31, 0x23, 0x37, 0x83, 0x04, 0xBC, 0x27, 0x38,
+> >> +				     0x0C, 0x00, 0x03, 0x00, 0x00, 0x00, 0x0C, 0x00,
+> >> +				     0x03, 0x00, 0x00, 0x00, 0x75, 0x75, 0x31, 0x88,
+> >> +				     0x88, 0x88, 0x88, 0x88, 0x88, 0x13, 0x88, 0x64,
+> >> +				     0x64, 0x20, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
+> >> +				     0x02, 0x88, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+> >>  
+> >>  	/* This command is to set backward GIP timing. */
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP2,
+> >> -			       0x02, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x00, 0x00, 0x00, 0x00, 0x02, 0x46, 0x02, 0x88,
+> >> -			       0x88, 0x88, 0x88, 0x88, 0x88, 0x64, 0x88, 0x13,
+> >> -			       0x57, 0x13, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
+> >> -			       0x75, 0x88, 0x23, 0x14, 0x00, 0x00, 0x02, 0x00,
+> >> -			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x0A,
+> >> -			       0xA5, 0x00, 0x00, 0x00, 0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETGIP2,
+> >> +				     0x02, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x00, 0x00, 0x00, 0x00, 0x02, 0x46, 0x02, 0x88,
+> >> +				     0x88, 0x88, 0x88, 0x88, 0x88, 0x64, 0x88, 0x13,
+> >> +				     0x57, 0x13, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
+> >> +				     0x75, 0x88, 0x23, 0x14, 0x00, 0x00, 0x02, 0x00,
+> >> +				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x0A,
+> >> +				     0xA5, 0x00, 0x00, 0x00, 0x00);
+> >>  
+> >>  	/* Adjust the gamma characteristics of the panel. */
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETGAMMA,
+> >> -			       0x00, 0x09, 0x0D, 0x23, 0x27, 0x3C, 0x41, 0x35,
+> >> -			       0x07, 0x0D, 0x0E, 0x12, 0x13, 0x10, 0x12, 0x12,
+> >> -			       0x18, 0x00, 0x09, 0x0D, 0x23, 0x27, 0x3C, 0x41,
+> >> -			       0x35, 0x07, 0x0D, 0x0E, 0x12, 0x13, 0x10, 0x12,
+> >> -			       0x12, 0x18);
+> >> -
+> >> -	return 0;
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETGAMMA,
+> >> +				     0x00, 0x09, 0x0D, 0x23, 0x27, 0x3C, 0x41, 0x35,
+> >> +				     0x07, 0x0D, 0x0E, 0x12, 0x13, 0x10, 0x12, 0x12,
+> >> +				     0x18, 0x00, 0x09, 0x0D, 0x23, 0x27, 0x3C, 0x41,
+> >> +				     0x35, 0x07, 0x0D, 0x0E, 0x12, 0x13, 0x10, 0x12,
+> >> +				     0x12, 0x18);
+> >>  }
+> >>  
+> >>  static const struct drm_display_mode xbd599_mode = {
+> >> @@ -341,72 +333,68 @@ static const struct st7703_panel_desc xbd599_desc = {
+> >>  	.init_sequence = xbd599_init_sequence,
+> >>  };
+> >>  
+> >> -static int rg353v2_init_sequence(struct st7703 *ctx)
+> >> +static void rg353v2_init_sequence(struct mipi_dsi_multi_context *dsi_ctx)
+> >>  {
+> >> -	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+> >> -
+> >>  	/*
+> >>  	 * Init sequence was supplied by the panel vendor.
+> >>  	 */
+> >>  
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETEXTC, 0xf1, 0x12, 0x83);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETAPID, 0x00, 0x00, 0x00,
+> >> -			       0xda, 0x80);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETDISP, 0x00, 0x13, 0x70);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETRGBIF, 0x10, 0x10, 0x28,
+> >> -			       0x28, 0x03, 0xff, 0x00, 0x00, 0x00, 0x00);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETCYC, 0x80);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETBGP, 0x0a, 0x0a);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETVCOM, 0x92, 0x92);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER_EXT, 0x25, 0x22,
+> >> -			       0xf0, 0x63);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETMIPI, 0x33, 0x81, 0x05,
+> >> -			       0xf9, 0x0e, 0x0e, 0x20, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x00, 0x00, 0x00, 0x44, 0x25, 0x00, 0x90, 0x0a,
+> >> -			       0x00, 0x00, 0x01, 0x4f, 0x01, 0x00, 0x00, 0x37);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETVDC, 0x47);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_UNKNOWN_BF, 0x02, 0x11, 0x00);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETSCR, 0x73, 0x73, 0x50, 0x50,
+> >> -			       0x00, 0x00, 0x12, 0x50, 0x00);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER, 0x53, 0xc0, 0x32,
+> >> -			       0x32, 0x77, 0xe1, 0xdd, 0xdd, 0x77, 0x77, 0x33,
+> >> -			       0x33);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETECO, 0x82, 0x00, 0xbf, 0xff,
+> >> -			       0x00, 0xff);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETIO, 0xb8, 0x00, 0x0a, 0x00,
+> >> -			       0x00, 0x00);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETCABC, 0x10, 0x40, 0x1e,
+> >> -			       0x02);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETPANEL, 0x0b);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETGAMMA, 0x00, 0x07, 0x0d,
+> >> -			       0x37, 0x35, 0x3f, 0x41, 0x44, 0x06, 0x0c, 0x0d,
+> >> -			       0x0f, 0x11, 0x10, 0x12, 0x14, 0x1a, 0x00, 0x07,
+> >> -			       0x0d, 0x37, 0x35, 0x3f, 0x41, 0x44, 0x06, 0x0c,
+> >> -			       0x0d, 0x0f, 0x11, 0x10, 0x12, 0x14, 0x1a);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETEQ, 0x07, 0x07, 0x0b, 0x0b,
+> >> -			       0x0b, 0x0b, 0x00, 0x00, 0x00, 0x00, 0xff, 0x00,
+> >> -			       0xc0, 0x10);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP1, 0xc8, 0x10, 0x02, 0x00,
+> >> -			       0x00, 0xb0, 0xb1, 0x11, 0x31, 0x23, 0x28, 0x80,
+> >> -			       0xb0, 0xb1, 0x27, 0x08, 0x00, 0x04, 0x02, 0x00,
+> >> -			       0x00, 0x00, 0x00, 0x04, 0x02, 0x00, 0x00, 0x00,
+> >> -			       0x88, 0x88, 0xba, 0x60, 0x24, 0x08, 0x88, 0x88,
+> >> -			       0x88, 0x88, 0x88, 0x88, 0x88, 0xba, 0x71, 0x35,
+> >> -			       0x18, 0x88, 0x88, 0x88, 0x88, 0x88, 0x00, 0x00,
+> >> -			       0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x00, 0x00, 0x00);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP2, 0x97, 0x0a, 0x82, 0x02,
+> >> -			       0x03, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x81, 0x88, 0xba, 0x17, 0x53, 0x88, 0x88, 0x88,
+> >> -			       0x88, 0x88, 0x88, 0x80, 0x88, 0xba, 0x06, 0x42,
+> >> -			       0x88, 0x88, 0x88, 0x88, 0x88, 0x88, 0x23, 0x00,
+> >> -			       0x00, 0x02, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x00);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_UNKNOWN_EF, 0xff, 0xff, 0x01);
+> >> -
+> >> -	return 0;
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETEXTC, 0xf1, 0x12, 0x83);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETAPID, 0x00, 0x00, 0x00,
+> >> +				     0xda, 0x80);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETDISP, 0x00, 0x13, 0x70);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETRGBIF, 0x10, 0x10, 0x28,
+> >> +				     0x28, 0x03, 0xff, 0x00, 0x00, 0x00, 0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETCYC, 0x80);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETBGP, 0x0a, 0x0a);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETVCOM, 0x92, 0x92);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETPOWER_EXT, 0x25, 0x22,
+> >> +				     0xf0, 0x63);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETMIPI, 0x33, 0x81, 0x05,
+> >> +				     0xf9, 0x0e, 0x0e, 0x20, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x00, 0x00, 0x00, 0x44, 0x25, 0x00, 0x90, 0x0a,
+> >> +				     0x00, 0x00, 0x01, 0x4f, 0x01, 0x00, 0x00, 0x37);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETVDC, 0x47);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_UNKNOWN_BF, 0x02, 0x11, 0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETSCR, 0x73, 0x73, 0x50, 0x50,
+> >> +				     0x00, 0x00, 0x12, 0x50, 0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETPOWER, 0x53, 0xc0, 0x32,
+> >> +				     0x32, 0x77, 0xe1, 0xdd, 0xdd, 0x77, 0x77, 0x33,
+> >> +				     0x33);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETECO, 0x82, 0x00, 0xbf, 0xff,
+> >> +				     0x00, 0xff);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETIO, 0xb8, 0x00, 0x0a, 0x00,
+> >> +				     0x00, 0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETCABC, 0x10, 0x40, 0x1e,
+> >> +				     0x02);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETPANEL, 0x0b);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETGAMMA, 0x00, 0x07, 0x0d,
+> >> +				     0x37, 0x35, 0x3f, 0x41, 0x44, 0x06, 0x0c, 0x0d,
+> >> +				     0x0f, 0x11, 0x10, 0x12, 0x14, 0x1a, 0x00, 0x07,
+> >> +				     0x0d, 0x37, 0x35, 0x3f, 0x41, 0x44, 0x06, 0x0c,
+> >> +				     0x0d, 0x0f, 0x11, 0x10, 0x12, 0x14, 0x1a);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETEQ, 0x07, 0x07, 0x0b, 0x0b,
+> >> +				     0x0b, 0x0b, 0x00, 0x00, 0x00, 0x00, 0xff, 0x00,
+> >> +				     0xc0, 0x10);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETGIP1, 0xc8, 0x10, 0x02, 0x00,
+> >> +				     0x00, 0xb0, 0xb1, 0x11, 0x31, 0x23, 0x28, 0x80,
+> >> +				     0xb0, 0xb1, 0x27, 0x08, 0x00, 0x04, 0x02, 0x00,
+> >> +				     0x00, 0x00, 0x00, 0x04, 0x02, 0x00, 0x00, 0x00,
+> >> +				     0x88, 0x88, 0xba, 0x60, 0x24, 0x08, 0x88, 0x88,
+> >> +				     0x88, 0x88, 0x88, 0x88, 0x88, 0xba, 0x71, 0x35,
+> >> +				     0x18, 0x88, 0x88, 0x88, 0x88, 0x88, 0x00, 0x00,
+> >> +				     0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x00, 0x00, 0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETGIP2, 0x97, 0x0a, 0x82, 0x02,
+> >> +				     0x03, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x81, 0x88, 0xba, 0x17, 0x53, 0x88, 0x88, 0x88,
+> >> +				     0x88, 0x88, 0x88, 0x80, 0x88, 0xba, 0x06, 0x42,
+> >> +				     0x88, 0x88, 0x88, 0x88, 0x88, 0x88, 0x23, 0x00,
+> >> +				     0x00, 0x02, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_UNKNOWN_EF, 0xff, 0xff, 0x01);
+> >>  }
+> >>  
+> >>  static const struct drm_display_mode rg353v2_mode = {
+> >> @@ -433,68 +421,64 @@ static const struct st7703_panel_desc rg353v2_desc = {
+> >>  	.init_sequence = rg353v2_init_sequence,
+> >>  };
+> >>  
+> >> -static int rgb30panel_init_sequence(struct st7703 *ctx)
+> >> +static void rgb30panel_init_sequence(struct mipi_dsi_multi_context *dsi_ctx)
+> >>  {
+> >> -	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+> >> -
+> >>  	/* Init sequence extracted from Powkiddy RGB30 BSP kernel. */
+> >>  
+> >>  	/*
+> >>  	 * For some reason this specific panel must be taken out of sleep
+> >>  	 * before the full init sequence, or else it will not display.
+> >>  	 */
+> >> -	mipi_dsi_dcs_exit_sleep_mode(dsi);
+> >> -	msleep(250);
+> >> -
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETEXTC, 0xf1, 0x12, 0x83);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETMIPI, 0x33, 0x81, 0x05, 0xf9,
+> >> -			       0x0e, 0x0e, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x00, 0x00, 0x44, 0x25, 0x00, 0x90, 0x0a, 0x00,
+> >> -			       0x00, 0x01, 0x4f, 0x01, 0x00, 0x00, 0x37);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER_EXT, 0x25, 0x22, 0xf0,
+> >> -			       0x63);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_UNKNOWN_BF, 0x02, 0x11, 0x00);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETRGBIF, 0x10, 0x10, 0x28,
+> >> -			       0x28, 0x03, 0xff, 0x00, 0x00, 0x00, 0x00);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETSCR, 0x73, 0x73, 0x50, 0x50,
+> >> -			       0x00, 0x00, 0x12, 0x70, 0x00);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETVDC, 0x46);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETPANEL, 0x0b);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETCYC, 0x80);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETDISP, 0x3c, 0x12, 0x30);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETEQ, 0x07, 0x07, 0x0b, 0x0b,
+> >> -			       0x03, 0x0b, 0x00, 0x00, 0x00, 0x00, 0xff, 0x00,
+> >> -			       0xc0, 0x10);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER, 0x36, 0x00, 0x32,
+> >> -			       0x32, 0x77, 0xf1, 0xcc, 0xcc, 0x77, 0x77, 0x33,
+> >> -			       0x33);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETBGP, 0x0a, 0x0a);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETVCOM, 0x88, 0x88);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP1, 0xc8, 0x10, 0x0a, 0x10,
+> >> -			       0x0f, 0xa1, 0x80, 0x12, 0x31, 0x23, 0x47, 0x86,
+> >> -			       0xa1, 0x80, 0x47, 0x08, 0x00, 0x00, 0x0d, 0x00,
+> >> -			       0x00, 0x00, 0x00, 0x00, 0x0d, 0x00, 0x00, 0x00,
+> >> -			       0x48, 0x02, 0x8b, 0xaf, 0x46, 0x02, 0x88, 0x88,
+> >> -			       0x88, 0x88, 0x88, 0x48, 0x13, 0x8b, 0xaf, 0x57,
+> >> -			       0x13, 0x88, 0x88, 0x88, 0x88, 0x88, 0x00, 0x00,
+> >> -			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x00, 0x00, 0x00);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP2, 0x96, 0x12, 0x01, 0x01,
+> >> -			       0x01, 0x78, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x4f, 0x31, 0x8b, 0xa8, 0x31, 0x75, 0x88, 0x88,
+> >> -			       0x88, 0x88, 0x88, 0x4f, 0x20, 0x8b, 0xa8, 0x20,
+> >> -			       0x64, 0x88, 0x88, 0x88, 0x88, 0x88, 0x23, 0x00,
+> >> -			       0x00, 0x01, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x00, 0x00, 0x40, 0xa1, 0x80, 0x00, 0x00, 0x00,
+> >> -			       0x00);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETGAMMA, 0x00, 0x0a, 0x0f,
+> >> -			       0x29, 0x3b, 0x3f, 0x42, 0x39, 0x06, 0x0d, 0x10,
+> >> -			       0x13, 0x15, 0x14, 0x15, 0x10, 0x17, 0x00, 0x0a,
+> >> -			       0x0f, 0x29, 0x3b, 0x3f, 0x42, 0x39, 0x06, 0x0d,
+> >> -			       0x10, 0x13, 0x15, 0x14, 0x15, 0x10, 0x17);
+> >> -
+> >> -	return 0;
+> >> +	mipi_dsi_dcs_exit_sleep_mode_multi(dsi_ctx);
+> >> +	mipi_dsi_msleep(dsi_ctx, 250);
+> >> +
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETEXTC, 0xf1, 0x12, 0x83);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETMIPI, 0x33, 0x81, 0x05, 0xf9,
+> >> +				     0x0e, 0x0e, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x00, 0x00, 0x44, 0x25, 0x00, 0x90, 0x0a, 0x00,
+> >> +				     0x00, 0x01, 0x4f, 0x01, 0x00, 0x00, 0x37);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETPOWER_EXT, 0x25, 0x22, 0xf0,
+> >> +				     0x63);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_UNKNOWN_BF, 0x02, 0x11, 0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETRGBIF, 0x10, 0x10, 0x28,
+> >> +				     0x28, 0x03, 0xff, 0x00, 0x00, 0x00, 0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETSCR, 0x73, 0x73, 0x50, 0x50,
+> >> +				     0x00, 0x00, 0x12, 0x70, 0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETVDC, 0x46);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETPANEL, 0x0b);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETCYC, 0x80);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETDISP, 0x3c, 0x12, 0x30);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETEQ, 0x07, 0x07, 0x0b, 0x0b,
+> >> +				     0x03, 0x0b, 0x00, 0x00, 0x00, 0x00, 0xff, 0x00,
+> >> +				     0xc0, 0x10);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETPOWER, 0x36, 0x00, 0x32,
+> >> +				     0x32, 0x77, 0xf1, 0xcc, 0xcc, 0x77, 0x77, 0x33,
+> >> +				     0x33);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETBGP, 0x0a, 0x0a);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETVCOM, 0x88, 0x88);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETGIP1, 0xc8, 0x10, 0x0a, 0x10,
+> >> +				     0x0f, 0xa1, 0x80, 0x12, 0x31, 0x23, 0x47, 0x86,
+> >> +				     0xa1, 0x80, 0x47, 0x08, 0x00, 0x00, 0x0d, 0x00,
+> >> +				     0x00, 0x00, 0x00, 0x00, 0x0d, 0x00, 0x00, 0x00,
+> >> +				     0x48, 0x02, 0x8b, 0xaf, 0x46, 0x02, 0x88, 0x88,
+> >> +				     0x88, 0x88, 0x88, 0x48, 0x13, 0x8b, 0xaf, 0x57,
+> >> +				     0x13, 0x88, 0x88, 0x88, 0x88, 0x88, 0x00, 0x00,
+> >> +				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x00, 0x00, 0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETGIP2, 0x96, 0x12, 0x01, 0x01,
+> >> +				     0x01, 0x78, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x4f, 0x31, 0x8b, 0xa8, 0x31, 0x75, 0x88, 0x88,
+> >> +				     0x88, 0x88, 0x88, 0x4f, 0x20, 0x8b, 0xa8, 0x20,
+> >> +				     0x64, 0x88, 0x88, 0x88, 0x88, 0x88, 0x23, 0x00,
+> >> +				     0x00, 0x01, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x00, 0x00, 0x40, 0xa1, 0x80, 0x00, 0x00, 0x00,
+> >> +				     0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETGAMMA, 0x00, 0x0a, 0x0f,
+> >> +				     0x29, 0x3b, 0x3f, 0x42, 0x39, 0x06, 0x0d, 0x10,
+> >> +				     0x13, 0x15, 0x14, 0x15, 0x10, 0x17, 0x00, 0x0a,
+> >> +				     0x0f, 0x29, 0x3b, 0x3f, 0x42, 0x39, 0x06, 0x0d,
+> >> +				     0x10, 0x13, 0x15, 0x14, 0x15, 0x10, 0x17);
+> >>  }
+> >>  
+> >>  static const struct drm_display_mode rgb30panel_mode = {
+> >> @@ -521,70 +505,66 @@ static const struct st7703_panel_desc rgb30panel_desc = {
+> >>  	.init_sequence = rgb30panel_init_sequence,
+> >>  };
+> >>  
+> >> -static int rgb10max3_panel_init_sequence(struct st7703 *ctx)
+> >> +static void rgb10max3_panel_init_sequence(struct mipi_dsi_multi_context *dsi_ctx)
+> >>  {
+> >> -	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+> >> -
+> >>  	/* Init sequence extracted from Powkiddy RGB10MAX3 BSP kernel. */
+> >>  
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETEXTC, 0xf1, 0x12, 0x83);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETAPID, 0x00, 0x00, 0x00, 0xda,
+> >> -			       0x80);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETDISP, 0xc8, 0x02, 0x30);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETRGBIF, 0x10, 0x10, 0x28,
+> >> -			       0x28, 0x03, 0xff, 0x00, 0x00, 0x00, 0x00);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETCYC, 0x80);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETBGP, 0x04, 0x04);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETVCOM, 0x78, 0x78);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER_EXT, 0x25, 0x22, 0xf0,
+> >> -			       0x63);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETMIPI, 0x33, 0x81, 0x05, 0xf9,
+> >> -			       0x0e, 0x0e, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x00, 0x00, 0x44, 0x25, 0x00, 0x90, 0x0a, 0x00,
+> >> -			       0x00, 0x01, 0x4f, 0x01, 0x00, 0x00, 0x37);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETVDC, 0x47);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_UNKNOWN_BF, 0x02, 0x11, 0x00);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETSCR, 0x73, 0x73, 0x50, 0x50,
+> >> -			       0x00, 0x00, 0x12, 0x70, 0x00);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER, 0x25, 0x00, 0x32,
+> >> -			       0x32, 0x77, 0xe1, 0xff, 0xff, 0xcc, 0xcc, 0x77,
+> >> -			       0x77);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETECO, 0x82, 0x00, 0xbf, 0xff,
+> >> -			       0x00, 0xff);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETIO, 0xb8, 0x00, 0x0a, 0x00,
+> >> -			       0x00, 0x00);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETCABC, 0x10, 0x40, 0x1e,
+> >> -			       0x02);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETPANEL, 0x0b);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETGAMMA, 0x00, 0x04, 0x07,
+> >> -			       0x2a, 0x39, 0x3f, 0x36, 0x31, 0x06, 0x0b, 0x0e,
+> >> -			       0x12, 0x14, 0x12, 0x13, 0x0f, 0x17, 0x00, 0x04,
+> >> -			       0x07, 0x2a, 0x39, 0x3f, 0x36, 0x31, 0x06, 0x0b,
+> >> -			       0x0e, 0x12, 0x14, 0x12, 0x13, 0x0f, 0x17);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETEQ, 0x03, 0x03, 0x03, 0x03,
+> >> -			       0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0xff, 0x80,
+> >> -			       0xc0, 0x10);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP1, 0xc8, 0x10, 0x08, 0x00,
+> >> -			       0x00, 0x41, 0xf8, 0x12, 0x31, 0x23, 0x37, 0x86,
+> >> -			       0x11, 0xc8, 0x37, 0x2a, 0x00, 0x00, 0x0c, 0x00,
+> >> -			       0x00, 0x00, 0x00, 0x00, 0x0c, 0x00, 0x00, 0x00,
+> >> -			       0x88, 0x20, 0x46, 0x02, 0x88, 0x88, 0x88, 0x88,
+> >> -			       0x88, 0x88, 0xff, 0x88, 0x31, 0x57, 0x13, 0x88,
+> >> -			       0x88, 0x88, 0x88, 0x88, 0x88, 0xff, 0x00, 0x00,
+> >> -			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x00, 0x00, 0x00);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP2, 0x00, 0x1a, 0x00, 0x00,
+> >> -			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x8f, 0x13, 0x31, 0x75, 0x88, 0x88, 0x88, 0x88,
+> >> -			       0x88, 0x88, 0xf8, 0x8f, 0x02, 0x20, 0x64, 0x88,
+> >> -			       0x88, 0x88, 0x88, 0x88, 0x88, 0xf8, 0x00, 0x00,
+> >> -			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x00);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_UNKNOWN_EF, 0xff, 0xff, 0x01);
+> >> -
+> >> -	return 0;
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETEXTC, 0xf1, 0x12, 0x83);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETAPID, 0x00, 0x00, 0x00, 0xda,
+> >> +				     0x80);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETDISP, 0xc8, 0x02, 0x30);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETRGBIF, 0x10, 0x10, 0x28,
+> >> +				     0x28, 0x03, 0xff, 0x00, 0x00, 0x00, 0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETCYC, 0x80);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETBGP, 0x04, 0x04);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETVCOM, 0x78, 0x78);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETPOWER_EXT, 0x25, 0x22, 0xf0,
+> >> +				     0x63);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETMIPI, 0x33, 0x81, 0x05, 0xf9,
+> >> +				     0x0e, 0x0e, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x00, 0x00, 0x44, 0x25, 0x00, 0x90, 0x0a, 0x00,
+> >> +				     0x00, 0x01, 0x4f, 0x01, 0x00, 0x00, 0x37);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETVDC, 0x47);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_UNKNOWN_BF, 0x02, 0x11, 0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETSCR, 0x73, 0x73, 0x50, 0x50,
+> >> +				     0x00, 0x00, 0x12, 0x70, 0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETPOWER, 0x25, 0x00, 0x32,
+> >> +				     0x32, 0x77, 0xe1, 0xff, 0xff, 0xcc, 0xcc, 0x77,
+> >> +				     0x77);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETECO, 0x82, 0x00, 0xbf, 0xff,
+> >> +				     0x00, 0xff);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETIO, 0xb8, 0x00, 0x0a, 0x00,
+> >> +				     0x00, 0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETCABC, 0x10, 0x40, 0x1e,
+> >> +				     0x02);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETPANEL, 0x0b);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETGAMMA, 0x00, 0x04, 0x07,
+> >> +				     0x2a, 0x39, 0x3f, 0x36, 0x31, 0x06, 0x0b, 0x0e,
+> >> +				     0x12, 0x14, 0x12, 0x13, 0x0f, 0x17, 0x00, 0x04,
+> >> +				     0x07, 0x2a, 0x39, 0x3f, 0x36, 0x31, 0x06, 0x0b,
+> >> +				     0x0e, 0x12, 0x14, 0x12, 0x13, 0x0f, 0x17);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETEQ, 0x03, 0x03, 0x03, 0x03,
+> >> +				     0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0xff, 0x80,
+> >> +				     0xc0, 0x10);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETGIP1, 0xc8, 0x10, 0x08, 0x00,
+> >> +				     0x00, 0x41, 0xf8, 0x12, 0x31, 0x23, 0x37, 0x86,
+> >> +				     0x11, 0xc8, 0x37, 0x2a, 0x00, 0x00, 0x0c, 0x00,
+> >> +				     0x00, 0x00, 0x00, 0x00, 0x0c, 0x00, 0x00, 0x00,
+> >> +				     0x88, 0x20, 0x46, 0x02, 0x88, 0x88, 0x88, 0x88,
+> >> +				     0x88, 0x88, 0xff, 0x88, 0x31, 0x57, 0x13, 0x88,
+> >> +				     0x88, 0x88, 0x88, 0x88, 0x88, 0xff, 0x00, 0x00,
+> >> +				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x00, 0x00, 0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETGIP2, 0x00, 0x1a, 0x00, 0x00,
+> >> +				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x8f, 0x13, 0x31, 0x75, 0x88, 0x88, 0x88, 0x88,
+> >> +				     0x88, 0x88, 0xf8, 0x8f, 0x02, 0x20, 0x64, 0x88,
+> >> +				     0x88, 0x88, 0x88, 0x88, 0x88, 0xf8, 0x00, 0x00,
+> >> +				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_UNKNOWN_EF, 0xff, 0xff, 0x01);
+> >>  }
+> >>  
+> >>  static const struct drm_display_mode rgb10max3_panel_mode = {
+> >> @@ -611,66 +591,62 @@ static const struct st7703_panel_desc rgb10max3_panel_desc = {
+> >>  	.init_sequence = rgb10max3_panel_init_sequence,
+> >>  };
+> >>  
+> >> -static int gameforcechi_init_sequence(struct st7703 *ctx)
+> >> +static void gameforcechi_init_sequence(struct mipi_dsi_multi_context *dsi_ctx)
+> >>  {
+> >> -	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+> >> -
+> >>  	/*
+> >>  	 * Init sequence was supplied by the panel vendor. Panel will not
+> >>  	 * respond to commands until it is brought out of sleep mode first.
+> >>  	 */
+> >>  
+> >> -	mipi_dsi_dcs_exit_sleep_mode(dsi);
+> >> -	msleep(250);
+> >> -
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETEXTC, 0xf1, 0x12, 0x83);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETMIPI, 0x31, 0x81, 0x05, 0xf9,
+> >> -			       0x0e, 0x0e, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x00, 0x00, 0x44, 0x25, 0x00, 0x91, 0x0a, 0x00,
+> >> -			       0x00, 0x02, 0x4f, 0xd1, 0x00, 0x00, 0x37);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER_EXT, 0x25);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_UNKNOWN_BF, 0x02, 0x11, 0x00);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETRGBIF, 0x0c, 0x10, 0x0a,
+> >> -			       0x50, 0x03, 0xff, 0x00, 0x00, 0x00, 0x00);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETSCR, 0x73, 0x73, 0x50, 0x50,
+> >> -			       0x00, 0x00, 0x08, 0x70, 0x00);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETVDC, 0x46);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETPANEL, 0x0b);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETCYC, 0x80);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETDISP, 0x00, 0x13, 0xf0);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETEQ, 0x07, 0x07, 0x0b, 0x0b,
+> >> -			       0x03, 0x0b, 0x00, 0x00, 0x00, 0x00, 0xff, 0x00,
+> >> -			       0xc0, 0x10);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER, 0x53, 0x00, 0x1e,
+> >> -			       0x1e, 0x77, 0xe1, 0xcc, 0xdd, 0x67, 0x77, 0x33,
+> >> -			       0x33);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETBGP, 0x10, 0x10);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETVCOM, 0x6c, 0x7c);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP1, 0x08, 0x00, 0x0e, 0x00,
+> >> -			       0x00, 0xb0, 0xb1, 0x11, 0x31, 0x23, 0x28, 0x10,
+> >> -			       0xb0, 0xb1, 0x27, 0x08, 0x00, 0x04, 0x02, 0x00,
+> >> -			       0x00, 0x00, 0x00, 0x04, 0x02, 0x00, 0x00, 0x00,
+> >> -			       0x88, 0x88, 0xba, 0x60, 0x24, 0x08, 0x88, 0x88,
+> >> -			       0x88, 0x88, 0x88, 0x88, 0x88, 0xba, 0x71, 0x35,
+> >> -			       0x18, 0x88, 0x88, 0x88, 0x88, 0x88, 0x00, 0x00,
+> >> -			       0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x00, 0x00, 0x00);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP2, 0x97, 0x0a, 0x82, 0x02,
+> >> -			       0x13, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x80, 0x88, 0xba, 0x17, 0x53, 0x88, 0x88, 0x88,
+> >> -			       0x88, 0x88, 0x88, 0x81, 0x88, 0xba, 0x06, 0x42,
+> >> -			       0x88, 0x88, 0x88, 0x88, 0x88, 0x88, 0x23, 0x10,
+> >> -			       0x00, 0x02, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> -			       0x00);
+> >> -	mipi_dsi_dcs_write_seq(dsi, ST7703_CMD_SETGAMMA, 0x00, 0x07, 0x0b,
+> >> -			       0x27, 0x2d, 0x3f, 0x3b, 0x37, 0x05, 0x0a, 0x0b,
+> >> -			       0x0f, 0x11, 0x0f, 0x12, 0x12, 0x18, 0x00, 0x07,
+> >> -			       0x0b, 0x27, 0x2d, 0x3f, 0x3b, 0x37, 0x05, 0xa0,
+> >> -			       0x0b, 0x0f, 0x11, 0x0f, 0x12, 0x12, 0x18);
+> >> -
+> >> -	return 0;
+> >> +	mipi_dsi_dcs_exit_sleep_mode_multi(dsi_ctx);
+> >> +	mipi_dsi_msleep(dsi_ctx, 250);
+> >> +
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETEXTC, 0xf1, 0x12, 0x83);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETMIPI, 0x31, 0x81, 0x05, 0xf9,
+> >> +				     0x0e, 0x0e, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x00, 0x00, 0x44, 0x25, 0x00, 0x91, 0x0a, 0x00,
+> >> +				     0x00, 0x02, 0x4f, 0xd1, 0x00, 0x00, 0x37);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETPOWER_EXT, 0x25);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_UNKNOWN_BF, 0x02, 0x11, 0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETRGBIF, 0x0c, 0x10, 0x0a,
+> >> +				     0x50, 0x03, 0xff, 0x00, 0x00, 0x00, 0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETSCR, 0x73, 0x73, 0x50, 0x50,
+> >> +				     0x00, 0x00, 0x08, 0x70, 0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETVDC, 0x46);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETPANEL, 0x0b);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETCYC, 0x80);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETDISP, 0x00, 0x13, 0xf0);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETEQ, 0x07, 0x07, 0x0b, 0x0b,
+> >> +				     0x03, 0x0b, 0x00, 0x00, 0x00, 0x00, 0xff, 0x00,
+> >> +				     0xc0, 0x10);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETPOWER, 0x53, 0x00, 0x1e,
+> >> +				     0x1e, 0x77, 0xe1, 0xcc, 0xdd, 0x67, 0x77, 0x33,
+> >> +				     0x33);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETBGP, 0x10, 0x10);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETVCOM, 0x6c, 0x7c);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETGIP1, 0x08, 0x00, 0x0e, 0x00,
+> >> +				     0x00, 0xb0, 0xb1, 0x11, 0x31, 0x23, 0x28, 0x10,
+> >> +				     0xb0, 0xb1, 0x27, 0x08, 0x00, 0x04, 0x02, 0x00,
+> >> +				     0x00, 0x00, 0x00, 0x04, 0x02, 0x00, 0x00, 0x00,
+> >> +				     0x88, 0x88, 0xba, 0x60, 0x24, 0x08, 0x88, 0x88,
+> >> +				     0x88, 0x88, 0x88, 0x88, 0x88, 0xba, 0x71, 0x35,
+> >> +				     0x18, 0x88, 0x88, 0x88, 0x88, 0x88, 0x00, 0x00,
+> >> +				     0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x00, 0x00, 0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETGIP2, 0x97, 0x0a, 0x82, 0x02,
+> >> +				     0x13, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x80, 0x88, 0xba, 0x17, 0x53, 0x88, 0x88, 0x88,
+> >> +				     0x88, 0x88, 0x88, 0x81, 0x88, 0xba, 0x06, 0x42,
+> >> +				     0x88, 0x88, 0x88, 0x88, 0x88, 0x88, 0x23, 0x10,
+> >> +				     0x00, 0x02, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> >> +				     0x00);
+> >> +	mipi_dsi_dcs_write_seq_multi(dsi_ctx, ST7703_CMD_SETGAMMA, 0x00, 0x07, 0x0b,
+> >> +				     0x27, 0x2d, 0x3f, 0x3b, 0x37, 0x05, 0x0a, 0x0b,
+> >> +				     0x0f, 0x11, 0x0f, 0x12, 0x12, 0x18, 0x00, 0x07,
+> >> +				     0x0b, 0x27, 0x2d, 0x3f, 0x3b, 0x37, 0x05, 0xa0,
+> >> +				     0x0b, 0x0f, 0x11, 0x0f, 0x12, 0x12, 0x18);
+> >>  }
+> >>  
+> >>  static const struct drm_display_mode gameforcechi_mode = {
+> >> @@ -701,50 +677,37 @@ static int st7703_enable(struct drm_panel *panel)
+> >>  {
+> >>  	struct st7703 *ctx = panel_to_st7703(panel);
+> >>  	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+> >> -	int ret;
+> >> +	struct mipi_dsi_multi_context dsi_ctx = {.dsi = dsi};
+> >>  
+> >> -	ret = ctx->desc->init_sequence(ctx);
+> >> -	if (ret < 0) {
+> >> -		dev_err(ctx->dev, "Panel init sequence failed: %d\n", ret);
+> >> -		return ret;
+> >> -	}
+> >> +	ctx->desc->init_sequence(&dsi_ctx);
 > > 
-> > I think this is a bit too confusing: clearly there is no
-> > read access from the __user pointer, so what you add in here
-> > is not correct. There also needs to be a code comment about
+> > Why no return early here in the error case (same for the other cases
+> > below) giving us an indication which step went wrong?
+> > 
+> >>  
+> >> -	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
+> >> -	if (ret < 0) {
+> >> -		dev_err(ctx->dev, "Failed to exit sleep mode: %d\n", ret);
+> >> -		return ret;
+> >> -	}
+> >> +	mipi_dsi_dcs_exit_sleep_mode_multi(&dsi_ctx);
+> >>  
+> >>  	/* It takes the controller 120 msec to wake up after sleep. */
+> >> -	msleep(120);
+> >> +	mipi_dsi_msleep(&dsi_ctx, 120);
+> >>  
+> >> -	ret = mipi_dsi_dcs_set_display_on(dsi);
+> >> -	if (ret)
+> >> -		return ret;
+> >> +	mipi_dsi_dcs_set_display_on_multi(&dsi_ctx);
+> >>  
+> >> -	dev_dbg(ctx->dev, "Panel init sequence done\n");
+> > 
+> > Would be nice to keep the debug message.
 > 
-> Here is my understanding: the __put_user is implemented with
-> sd(or its less wider variant, sw etc.), w/o considering the
-> ex_table, the previous code can be simplified as below:
+> The debug message is still there. Except now it runs only if no errors
+> have occurred to preserve the previous behavior, where the line 
+> wouldn't have run in the case of an early return.
 > 
-> __asm__ __volatile__ (
-> 	"sw	%z2, %1\n"
-> 	: "+r" (err), "=m" (*(ptr))
-> 	: "rJ" (__x));
+> > 
+> >> +	if (!dsi_ctx.accum_err)
+> >> +		dev_dbg(ctx->dev, "Panel init sequence done\n");
+> >>  
+> >> -	return 0;
+> >> +	return dsi_ctx.accum_err;
+> >>  }
+> >>  
+> >>  static int st7703_disable(struct drm_panel *panel)
+> >>  {
+> >>  	struct st7703 *ctx = panel_to_st7703(panel);
+> >>  	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+> >> -	int ret;
+> >> +	struct mipi_dsi_multi_context dsi_ctx = {.dsi = dsi};
+> >>  
+> >> -	ret = mipi_dsi_dcs_set_display_off(dsi);
+> >> -	if (ret < 0)
+> >> -		dev_err(ctx->dev, "Failed to turn off the display: %d\n", ret);
+> >> +	mipi_dsi_dcs_set_display_off_multi(&dsi_ctx);
+> > 
+> > Similar to the above: it'd be nice to keep the information which step
+> > failed.
 > 
-> Here ptr is really an input, just tells gcc where to store,
-> And the "store" action is from the "sw" instruction, I don't
-> need the gcc generates "store" instruction for me. so IMHO,
-> there's no need to use output constraints here. so I changed
-> it to
-> 
-> __asm__ __volatile__ (
-> 	"sw	%z1, %2\n"
-> 	: "+r" (err)
-> 	: "rJ" (__x), "m"(*(ptr)));
-> 
-> The key here: is this correct?
-> 
-> 
-> Here is the put_user piece code and comments from x86
-> 
-> /*
->  * Tell gcc we read from memory instead of writing: this is because
->  * we do not write to any memory gcc knows about, so there are no
->  * aliasing issues.
->  */
-> #define __put_user_goto(x, addr, itype, ltype, label)                   \
->         asm goto("\n"                                                   \
->                 "1:     mov"itype" %0,%1\n"                             \
->                 _ASM_EXTABLE_UA(1b, %l2)                                \
->                 : : ltype(x), "m" (__m(addr))                           \
->                 : : label)
+> The difference between the new multi variants of the functions and the 
+> old functions is that multi functions don't run if an error has 
+> occurred previously (thus removing need for early returns), and they 
+> call dev_err internally in the case of an error, thus letting us know 
+> where the error occurred without explicitly having to do error handling 
+> in the call site.
 
-Here is the simplified put_user piece code of arm64:
+Ahh..I see the 
 
-#define __put_mem_asm(store, reg, x, addr, err, type)                   \
-        asm volatile(                                                   \
-        "1:     " store "       " reg "1, [%2]\n"                       \
-        "2:\n"                                                          \
-        _ASM_EXTABLE_##type##ACCESS_ERR(1b, 2b, %w0)                    \
-        : "+r" (err)                                                    \
-        : "rZ" (x), "r" (addr))
++       if (ctx->accum_err)
++               return;
 
-no output constraints either. It just uses "r" input constraints to tell
-gcc to read the store address into one proper GP reg.
+in f79d6d28d8fe now. Thanks for pointing that out. This makes it
+
+  Reviewed-by: Guido Günther <agx@sigxcpu.org>
+
+for me.
+Cheers,
+ -- Guido
+
+
 
 > 
-> 
-> As can be seen, x86 also doesn't put the (addr) in output constraints,
-> I think x86 version did similar modification in history, but when I tried
-> to searh the git history, the comment is there from the git first day.
-> 
-> Any hint or suggestion is appreciated!
-> 
-> > why you do it this way, as it's not clear that this is
-> > a workaround for old compilers without
-> > CONFIG_CC_HAS_ASM_GOTO_OUTPUT.
 > > 
-> > > index 09d4ca37522c..84b084e388a7 100644
-> > > --- a/arch/riscv/include/asm/uaccess.h
-> > > +++ b/arch/riscv/include/asm/uaccess.h
-> > > @@ -186,11 +186,11 @@ do {								\
-> > >  	__typeof__(*(ptr)) __x = x;				\
-> > >  	__asm__ __volatile__ (					\
-> > >  		"1:\n"						\
-> > > -		"	" insn " %z2, %1\n"			\
-> > > +		"	" insn " %z1, %2\n"			\
-> > >  		"2:\n"						\
-> > >  		_ASM_EXTABLE_UACCESS_ERR(1b, 2b, %0)		\
-> > > -		: "+r" (err), "=m" (*(ptr))			\
-> > > -		: "rJ" (__x));					\
-> > > +		: "+r" (err)			\
-> > > +		: "rJ" (__x), "m"(*(ptr)));					\
-> > >  } while (0)
-> > > 
+> > Cheers,
+> >  -- Guido
 > > 
-> > I suspect this could just be a "r" constraint instead of
-> > "m", treating the __user pointer as a plain integer.
+> >>  
+> >> -	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
+> >> -	if (ret < 0)
+> >> -		dev_err(ctx->dev, "Failed to enter sleep mode: %d\n", ret);
+> >> +	mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
+> >>  
+> >>  	/* It takes the controller 120 msec to enter sleep mode. */
+> >> -	msleep(120);
+> >> +	mipi_dsi_msleep(&dsi_ctx, 120);
+> >>  
+> >> -	return 0;
+> >> +	return dsi_ctx.accum_err;
+> >>  }
+> >>  
+> >>  static int st7703_unprepare(struct drm_panel *panel)
+> >> @@ -840,10 +803,11 @@ static int allpixelson_set(void *data, u64 val)
+> >>  {
+> >>  	struct st7703 *ctx = data;
+> >>  	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+> >> +	struct mipi_dsi_multi_context dsi_ctx = {.dsi = dsi};
+> >>  
+> >>  	dev_dbg(ctx->dev, "Setting all pixels on\n");
+> >> -	mipi_dsi_generic_write_seq(dsi, ST7703_CMD_ALL_PIXEL_ON);
+> >> -	msleep(val * 1000);
+> >> +	mipi_dsi_generic_write_seq_multi(&dsi_ctx, ST7703_CMD_ALL_PIXEL_ON);
+> >> +	mipi_dsi_msleep(&dsi_ctx, val * 1000);
+> >>  
+> >>  	/*
+> >>  	 * Reset the panel to get video back. NOTE: This isn't a
+> >> @@ -856,7 +820,7 @@ static int allpixelson_set(void *data, u64 val)
+> >>  	drm_panel_prepare(&ctx->panel);
+> >>  	drm_panel_enable(&ctx->panel);
+> >>  
+> >> -	return 0;
+> >> +	return dsi_ctx.accum_err;
+> >>  }
+> >>  
+> >>  DEFINE_SIMPLE_ATTRIBUTE(allpixelson_fops, NULL,
+> >> -- 
+> >> 2.45.2
+> >>
+> >>
 > 
-> I tried "r", the generated code is not as good as "m"
+> -- 
+> Tejas Vipin
 > 
-> for example
-> __put_user(0x12, &frame->uc.uc_flags);
-> 
-> with "m", the generated code will be
-> 
-> ...
-> csrs    sstatus,a5
-> li      a4,18
-> sd      a4,128(s1)
-> csrc    sstatus,a5
-> ...
-> 
-> 
-> with "r", the generated code will be
-> 
-> ...
-> csrs    sstatus,a5
-> li      a4,18
-> addi    s1,s1,128
-> sd      a4,0(s1)
-> csrc    sstatus,a5
-> ...
-> 
-> As can be seen, "m" can make use of the 'offset' of
-> sd, so save one instruction.
-> 
-> > 
-> > For kernel pointers, using "m" and "=m" constraints
-> > correctly is necessary since gcc will often access the
-> > same data from C code as well. For __user pointers, we
-> > can probably get away without it since no C code is
-> > ever allowed to just dereference them. If you do that,
-> > you may want to have the same thing in the __get_user
-> > side.
-> > 
-> >       Arnd
