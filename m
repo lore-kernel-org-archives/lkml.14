@@ -1,138 +1,172 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8481DA31;
-	Wed, 26 Jun 2024 07:11:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963B7155316;
+	Wed, 26 Jun 2024 07:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719385868; cv=none; b=emCGaV4R48J2K81o/jYgqjyji3intCNNBPcdvF8lO56724fHBHXAsWkJTsgyaVPldQUI24hxq8+sf2EWPjtVHNBlDXlHrryAPZWkIVPg/pNlx/ESw5W0XxQquVK7veBbQL8b+qHAx0yZHxatA34L+zOT/9ab9ZdFjGh9UWoOgms=
+	t=1719385930; cv=none; b=ODgmO8UlsY4iZbT39PuiE9YNzVCEXoUgytesljNrwEGGFYpp3YwEfGICe1BbOt8nii7BAN/FXL8fYmuTBFXYKdk7aOFj8lhM1HrkQoQIRUPzPw0lknbCtwhG0w0D4oFFSsCw/Gq1G3Bzgvtpi7C7GBgg6jUrgT1m0XLwJokLZHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719385868; c=relaxed/simple;
-	bh=fzxSia2agHN3X/RNLtdjuINsI+EbMnDIGmS892xRA6M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f/FqoRX65DFMTdTmSzTPgvFPqCYnLkli//PZVOeITGpUJxBiSuDYmfEXJ430Ztrj7CTGxiPraqSMkokViRknNUCUlB3hcQg0RZJd1Ts5iCEnsFcE46ce1xwp5NDof7VyEk2a6uHYHUb6i5K1BKd04RYSwsPOBUGwVGo3KxDqa7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-64789495923so11678057b3.0;
-        Wed, 26 Jun 2024 00:11:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719385864; x=1719990664;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=07yYxV7EnOmksXH2UcjyWNu5DW1U/oEUl8YKdbIe8Js=;
-        b=VNw+OZ6sxv3lcERUikJ311nzTknwAoGqfSKnJctP4NhEubGj5UmBEk26VRYrzEfWNe
-         xS7jn+Q9H8vU8NyXD8/KD5f4SlUISGeSWv0P8+o/RVe1TNB+/1ebrQF+BiBGURdKuYau
-         uhY46siRWxL3R4fHhWbyLk2L+ZI6IzOAepc9o7jUyjwZb+PlGNeYqVSifZaB8T+Z1+1C
-         ICS1/fA+r9+WAC4f2FCNfRzDPMtnf7VVH/BuLDCR+GwCHHTLj2tnGPVTozPOhbh2ESvJ
-         +CSgsI0w0BiuZTIcyPSWHWq1fOVFQPkjsyOQR1FGYGqc9qkVVpFv4vUrMDjwSxaXUkw+
-         rskg==
-X-Forwarded-Encrypted: i=1; AJvYcCUK41HoK9WWXsHYHlhUD7u/9hLzz8a+IbdHiN4Uw4m/GDAInw9P4HD58fh8RsUrCaYMPqsyfw8Ohk405mTW7f+ivDI7MEK0TW+yQxhpBvQ5kSlAoeMTvbDREV+fDluYFDH28G1Nc9ksGHQoqekz6rMbcu5bx8U3euphGTv4l2dMbFnp8s6HGmJ5qKrN2fR67h1y5YLFOOiFg3SVYGMhWs3fV4GlXm75sqf8TlnjiMxZqrH4TM0PAdzETtBsJgW9b+qG
-X-Gm-Message-State: AOJu0YwjIJTvyO0dxdPaQ6dXyx2Usx3rtatUVNHSiZClry+PiCf05b5+
-	L+ZjGfxBCrIrYGpdeRcj404jA+cHznhA99WRzHAsEGKwyymVFJ7AUoFPuRmc
-X-Google-Smtp-Source: AGHT+IH0zgec7hwqcLbCl46WL8YDXZcl/65syzLW1GAUrRVGI9HTo8JwM/PQVt6qYQrhGcpHiffkXA==
-X-Received: by 2002:a81:6057:0:b0:61a:bc2d:5186 with SMTP id 00721157ae682-643aba46495mr100522467b3.32.1719385864257;
-        Wed, 26 Jun 2024 00:11:04 -0700 (PDT)
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com. [209.85.219.182])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-63f154d6075sm38423587b3.113.2024.06.26.00.11.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Jun 2024 00:11:03 -0700 (PDT)
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dfdff9771f8so5922062276.1;
-        Wed, 26 Jun 2024 00:11:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWaoQlIeEnSq1zgag1u614KipmMP2mHJXn0cJuJg60pQ21X6kB3HHMoLuFs7OOoROuvpqT5bu3iYOGQyY9syiNOavhbJI3yAnsBpTjxnK2g2gKEuex8QsdGNEbixwx3/HhDYhDZYlJ4Nu/ToN2k+9NZJDEetN9uLqcFNWdjcE6a/Qn3mHfS5p/YLlvqRAHM3EwPyCv61QSnMCNb1GjGyb0bzESFpzKrm+k2r06iwCJtea3cwtUMQy0cS65DK+M29JoB
-X-Received: by 2002:a25:97c5:0:b0:df7:7065:24cc with SMTP id
- 3f1490d57ef6-e0304045133mr9012192276.61.1719385863499; Wed, 26 Jun 2024
- 00:11:03 -0700 (PDT)
+	s=arc-20240116; t=1719385930; c=relaxed/simple;
+	bh=6XsOg7UqkhRAwrD+4PQezyUZ3ZQ094gHiGcfRbRA4YY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GFah348jdAQtiEw5ZPVkyw2leq2HUJXlxVVcSv4n3Pe2y2YxbCmY67p+W997EapLGni59aiAhdInGnRBQ8YPd3BMBKZlDjlsA1PmeOZx10O4lcL6n/2YVtyaR3jrO/TjjgLMlLClzdAlApjf6hpRZWJ0W4WB6kKh/5gq/paefQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u+NN+MUi; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u+NN+MUi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60524C2BD10;
+	Wed, 26 Jun 2024 07:12:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719385930;
+	bh=6XsOg7UqkhRAwrD+4PQezyUZ3ZQ094gHiGcfRbRA4YY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=u+NN+MUizcD6EkdtEmqivwIhvCocNpwVCnkLtJho0CPujAKYISR+Tk2AK3HAAnuHj
+	 HJWAjRByRFJ40WttQb9sg/rX4wuT5zUYP8Q0wVJSd/6xSuhqF9wP8Oo+oZS2CCrYQF
+	 ZJrqKiqkwNeJ3O4JJmISv+u2DAKgPsjGy8IuLjNl/UqzVUlk4A12Jjxe1xKPAuLp5e
+	 vlpSUcLlsu6gD72yjdAq2cDIxLzTbXpv5pWbMNsitLApo8R0tgZeshzVPxEt3eS/W4
+	 llAAkI3tq6ER9oFchO03uEhFQYawPSgM7Cc3mXZUfApjKZ1Ze/t1OTpamYNL8zct/E
+	 HeaBvAk3fr+/A==
+Message-ID: <365fcddb-095d-4907-97bf-0810818c8265@kernel.org>
+Date: Wed, 26 Jun 2024 09:12:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240625121358.590547-1-claudiu.beznea.uj@bp.renesas.com>
- <20240625121358.590547-5-claudiu.beznea.uj@bp.renesas.com>
- <TY3PR01MB11346F03386D05D608041DE8D86D52@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <14167607-e67b-4627-99f0-6e99acc7f880@tuxon.dev> <TY3PR01MB11346A47493E0EE96CB2CF17B86D62@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY3PR01MB11346A47493E0EE96CB2CF17B86D62@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 26 Jun 2024 09:10:51 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWDMMy-Q-1=DPcvpu9Co-oCQOvbStt-hLpdEwrLRdpt_A@mail.gmail.com>
-Message-ID: <CAMuHMdWDMMy-Q-1=DPcvpu9Co-oCQOvbStt-hLpdEwrLRdpt_A@mail.gmail.com>
-Subject: Re: [PATCH v2 04/12] i2c: riic: Use pm_runtime_resume_and_get()
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: "Claudiu.Beznea" <claudiu.beznea@tuxon.dev>, Chris Brandt <Chris.Brandt@renesas.com>, 
-	"andi.shyti@kernel.org" <andi.shyti@kernel.org>, "robh@kernel.org" <robh@kernel.org>, 
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
-	"magnus.damm@gmail.com" <magnus.damm@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, 
-	"sboyd@kernel.org" <sboyd@kernel.org>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, 
-	"wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
-	"linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/8] dt-bindings: mips: realtek: Add rtl930x-soc
+ compatible
+To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+ "tglx@linutronix.de" <tglx@linutronix.de>, "robh@kernel.org"
+ <robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "tsbogend@alpha.franken.de" <tsbogend@alpha.franken.de>,
+ "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+ "paulburton@kernel.org" <paulburton@kernel.org>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "mail@birger-koblitz.de" <mail@birger-koblitz.de>,
+ "bert@biot.com" <bert@biot.com>, "john@phrozen.org" <john@phrozen.org>,
+ "sander@svanheule.net" <sander@svanheule.net>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ "kabel@kernel.org" <kabel@kernel.org>,
+ "ericwouds@gmail.com" <ericwouds@gmail.com>
+References: <20240624012300.1713290-1-chris.packham@alliedtelesis.co.nz>
+ <20240624012300.1713290-4-chris.packham@alliedtelesis.co.nz>
+ <e71780a1-8d53-44ae-ac0f-d406de7e26e8@kernel.org>
+ <2b33e7d2-24e5-48c3-a2e3-f128f5d7e39b@alliedtelesis.co.nz>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <2b33e7d2-24e5-48c3-a2e3-f128f5d7e39b@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Biju,
+On 24/06/2024 07:00, Chris Packham wrote:
+> Hi Krzysztof,
+> 
+> On 24/06/24 16:48, Krzysztof Kozlowski wrote:
+>> On 24/06/2024 03:22, Chris Packham wrote:
+>>> Add the rtl930x-soc and RTL9302C board to the list of Realtek compatible
+>> 930x or 9302?
+> 
+> Oops. Will fix.
+> 
+>>> strings.
+>>>
+>>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+>>> ---
+>>>
+>>> Notes:
+>>>      Changes in v2:
+>>>      - Use specific compatible for rtl9302-soc
+>>>      - Fix to allow correct board, soc compatible
+>>>
+>>>   Documentation/devicetree/bindings/mips/realtek-rtl.yaml | 4 ++++
+>>>   1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mips/realtek-rtl.yaml b/Documentation/devicetree/bindings/mips/realtek-rtl.yaml
+>>> index f8ac309d2994..05daa53417e5 100644
+>>> --- a/Documentation/devicetree/bindings/mips/realtek-rtl.yaml
+>>> +++ b/Documentation/devicetree/bindings/mips/realtek-rtl.yaml
+>>> @@ -20,5 +20,9 @@ properties:
+>>>             - enum:
+>>>                 - cisco,sg220-26
+>>>             - const: realtek,rtl8382-soc
+>>> +      - items:
+>>> +          - enum:
+>>> +              - realtek,rtl9302c
+>> Why board has the name of SoC?
+> 
+> What I have is actually a reference board with the name 
+> RTL9302C_2xRTL8224_2XGE. If found that a bit incomprehensible so I 
+> (over) shortened it. Technically it would be something like 
+> cameo,rtl9302c-2x-rtl8224-2xge which I can include in the next round.
 
-On Wed, Jun 26, 2024 at 8:23=E2=80=AFAM Biju Das <biju.das.jz@bp.renesas.co=
-m> wrote:
-> > From: claudiu beznea <claudiu.beznea@tuxon.dev>
-> > On 25.06.2024 18:53, Biju Das wrote:
-> > >> From: Claudiu <claudiu.beznea@tuxon.dev>
-> > >> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> > >>
-> > >> pm_runtime_get_sync() may return with error. In case it returns with
-> > >> error
-> > >> dev->power.usage_count needs to be decremented.
-> > >> dev->pm_runtime_resume_and_get()
-> > >> takes care of this. Thus use it.
-> > >>
-> > >> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Looks fine to me.
 
-> > >> -  pm_runtime_get_sync(dev);
-> > >> +  ret =3D pm_runtime_resume_and_get(dev);
-> > >> +  if (ret) {
-> > >> +          dev_err(dev, riic_rpm_err_msg);
-> > >
-> > > As at the moment we don't know how to reproduce this error condition
-> > > Can we use WARN_ON_ONCE() instead to catch detailed error condition h=
-ere??
-> >
-> > [1] states "So, naturally, use of WARN_ON() is also now discouraged muc=
-h of the time". I've go with
-> > dev_err() or something similar.
->
-> WARN_ON_ONCE() should be ok I guess as people are using for printing this=
- info only once??
->
-> Currently we don't know how to trigger pm_runtime_resume_and_get() error
-> condition in our setup using a testapp and we are expecting an error may
-> happen in future. If at all there is an error in future, we need detailed
-> error info so that we can handle it and fix the bug.
+> 
+>>> +          - const: realtek,rtl9302-soc
+>> Drop the -soc suffix. The rtl9302 is the soc.
+> 
+> On that. I hope to eventually add "realtek,rtl9302-switch" for the DSA 
+> switch block in the same chip. So keeping the -soc suffix was 
+> intentional to try to disambiguate things. I can drop the -soc if the 
+> consensus is that there is no need to disambiguate the two.
 
-On Renesas systems, pm_runtime_resume_and_get() never fails.
-That's the reason why originally we didn't care to check the return
-value of pm_runtime_get_sync().
+Thanks for explanation, kind of depends on what exactly is this. Most of
+SoCs comprise of several items. The entire chip is the soc, e.g.
+"qcom,foo1234". It might have MAC/Ethernet/whatever inside, controllable
+by the SoC (Linux, bootloader, TF, hypervisor, other VM guest) and that
+part is "qcom,foo1234-ethernet". Regardless whether Linux OS actually
+controls it or not.
 
-The various janitors disagreed, causing cascaded changes all over
-the place...
+The question is whether DSA switch is part of the SoC or not.
 
-IMHO, WARN_ON_ONCE() is definitely overkill, only bloating the code.
+Best regards,
+Krzysztof
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
