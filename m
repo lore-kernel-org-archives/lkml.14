@@ -1,29 +1,29 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 716241FBB
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 07:38:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6736715B115
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 07:39:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719387520; cv=none; b=Mllz/JNHElEOYEXRHOBsXzEFOhenojEpN4mG6S+h0Z/0EGg3pvrl8orszcW+/uPwQxw4BuKudcdFW76oTyxjyblIjX7gF0lwEelX43/wPtmgDYhgKr4fuTyv9NzVtkJaWcn24yTwahSDESuzhMKcwMHH5rs71QMnv/sd4/ZAaos=
+	t=1719387545; cv=none; b=sg5av84C62YnClFVNsJZN+Yew5UHn4YNB3eDjwbQ0t0MEAkbmgsCroeIfbRMf3oWGCUYc1Sm4pMnyfRbxPwTtzTo6t5O6J0GKNgp8Wnujx5qBCcIZPj1Y5Eqkdnh67DEYqaOVoHNPXom0oWAULX+Xwq9juAxjZ4uEoxLamrWaio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719387520; c=relaxed/simple;
-	bh=vHW/g4nP2o+hvEzqZQsIKpaAOHRc8WHJ7y2cWQzsDmI=;
+	s=arc-20240116; t=1719387545; c=relaxed/simple;
+	bh=obMllH7JVqZ5QKsgwKwdcDXXw5cA9IXGchQ3KcBiTrw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P79AqOatHJKGZThrYAmx6cBZmVWJH2mftV9QhtlmKoH/IamqcF/7U1ZVM2NmHuVyAuioXgdL1Ya1+i9wiTN8v6FbKskCDGYajCV2LGjrVXSRHKygCKTdDKuFwocs5aT2/aR5Hwf1kzQ5CT5IQ+pihUZKp9mk52sCpMLuecW+L1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=rmXhL/KG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z6EApO9ypYlkv0lRA0Jjd4qh8uQyKeT6o1hE6gHpcqM5+kZPMvOj2jyWHdU+a6pJDaPOkvVqov+v7AkSnuVWvhI78BkroI62gzkwoIU7TYNAhvJwnuwnVlEDpPWV5BStUZoaQ66PXJnKqZaBfDxjtnrxLRFEkqBmzgrMQ6sTpYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=UgbXCGIP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="rmXhL/KG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2B22C2BD10;
-	Wed, 26 Jun 2024 07:38:39 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="UgbXCGIP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B218CC4AF07;
+	Wed, 26 Jun 2024 07:39:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1719387520;
-	bh=vHW/g4nP2o+hvEzqZQsIKpaAOHRc8WHJ7y2cWQzsDmI=;
+	s=korg; t=1719387545;
+	bh=obMllH7JVqZ5QKsgwKwdcDXXw5cA9IXGchQ3KcBiTrw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rmXhL/KGHK7KJoTZg8iWsW70QrSESSu8PfLeLwg5Qm3k+3iaSuxJjipB8DGO00LLF
-	 rRqXpty+RiYmDe9/8pIuWg+p4iykoXAXmtZeAKdprJ+ouax2oRr0RbvJo0vQprwjy5
-	 rUtTnZ1n2mWfGbKVHHWECIf8vTbwnYiCiYPXDcDs=
-Date: Wed, 26 Jun 2024 09:38:44 +0200
+	b=UgbXCGIP7kq6Rg3W+N4kyshjEVXDwN6ZmG2QUYwryIh+0cJGYQmKw3hXZe5leu9nI
+	 mChltdU0PP7YOSEitwBrlsXtygsMIuokFqeiJqtRJKmg9YUHSE5QiSyjOB+Ylt51dV
+	 qMMfyCZxqbBkKCSAZe8n0AAmgxIg6Sm1CFH0RLTE=
+Date: Wed, 26 Jun 2024 09:39:10 +0200
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: Tvrtko Ursulin <tursulin@igalia.com>
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
@@ -33,7 +33,7 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
 	Catalin Marinas <catalin.marinas@arm.com>,
 	Will Deacon <will@kernel.org>
 Subject: Re: [PATCH 1/2] numa: Add simple generic NUMA emulation
-Message-ID: <2024062627-curler-unlucky-51e0@gregkh>
+Message-ID: <2024062658-unmasked-degree-2f80@gregkh>
 References: <20240625125803.38038-1-tursulin@igalia.com>
  <20240625125803.38038-2-tursulin@igalia.com>
 Precedence: bulk
@@ -71,11 +71,58 @@ On Tue, Jun 25, 2024 at 01:58:02PM +0100, Tvrtko Ursulin wrote:
 >  drivers/base/arch_numa.c      |  6 ++++
 >  drivers/base/numa_emulation.c | 67 +++++++++++++++++++++++++++++++++++
 >  drivers/base/numa_emulation.h | 21 +++++++++++
+>  5 files changed, 102 insertions(+)
+>  create mode 100644 drivers/base/numa_emulation.c
+>  create mode 100644 drivers/base/numa_emulation.h
+> 
+> diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
+> index 2b8fd6bb7da0..1f60cd4dd057 100644
+> --- a/drivers/base/Kconfig
+> +++ b/drivers/base/Kconfig
+> @@ -230,6 +230,13 @@ config GENERIC_ARCH_NUMA
+>  	  Enable support for generic NUMA implementation. Currently, RISC-V
+>  	  and ARM64 use it.
+>  
+> +config GENERIC_ARCH_NUMA_EMULATION
+> +	bool
+> +	depends on GENERIC_ARCH_NUMA
+> +	help
+> +	  Enable NUMA emulation. Note that NUMA emulation will only be used if
+> +	  the machine has no NUMA node.
+> +
+>  config FW_DEVLINK_SYNC_STATE_TIMEOUT
+>  	bool "sync_state() behavior defaults to timeout instead of strict"
+>  	help
+> diff --git a/drivers/base/Makefile b/drivers/base/Makefile
+> index 3079bfe53d04..34fcf5bd7370 100644
+> --- a/drivers/base/Makefile
+> +++ b/drivers/base/Makefile
+> @@ -25,6 +25,7 @@ obj-$(CONFIG_DEV_COREDUMP) += devcoredump.o
+>  obj-$(CONFIG_GENERIC_MSI_IRQ) += platform-msi.o
+>  obj-$(CONFIG_GENERIC_ARCH_TOPOLOGY) += arch_topology.o
+>  obj-$(CONFIG_GENERIC_ARCH_NUMA) += arch_numa.o
+> +obj-$(CONFIG_GENERIC_ARCH_NUMA_EMULATION) += numa_emulation.o
+>  obj-$(CONFIG_ACPI) += physical_location.o
+>  
+>  obj-y			+= test/
+> diff --git a/drivers/base/arch_numa.c b/drivers/base/arch_numa.c
+> index 5b59d133b6af..6ad08f681b3c 100644
+> --- a/drivers/base/arch_numa.c
+> +++ b/drivers/base/arch_numa.c
+> @@ -15,6 +15,8 @@
+>  
+>  #include <asm/sections.h>
+>  
+> +#include "numa_emulation.h"
+> +
+>  struct pglist_data *node_data[MAX_NUMNODES] __read_mostly;
+>  EXPORT_SYMBOL(node_data);
+>  nodemask_t numa_nodes_parsed __initdata;
+> @@ -30,6 +32,8 @@ static __init int numa_parse_early_param(char *opt)
+>  		return -EINVAL;
+>  	if (str_has_prefix(opt, "off"))
+>  		numa_off = true;
+> +	if (str_has_prefix(opt, "fake="))
+> +		return numa_emu_cmdline(opt + 5);
 
-Why not just properly describe the numa topology in your bootloader or
-device tree and not need any such "fake" stuff at all?
-
-Also, you are now asking me to maintain these new files, not something
-I'm comfortable doing at all sorry.
-
-greg k-h
+You did not document this at all :(
