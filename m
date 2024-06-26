@@ -1,98 +1,108 @@
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 3C598190686
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 20:12:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA52E155749
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 20:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719432782; cv=none; b=rKoNhH1RY1N2efmzJuK40WJQgMKLUvLiyPFN7XdkbdvlIJbI1VAlDMQ8EGEm4Zr75zvaVG+4fw+D7apRusqaqrHzUAl+nQ+jeEGA52YU8ClFZ2gA+zOxstwPKaFfH9ock/ePug5eXqWr+PdeqZrepoY3OHkmCYjU4cl5Egjrjhs=
+	t=1719432964; cv=none; b=clpjD4oFpb6e2yfOtkhEtjO5A1ZJqCQkN+uj5rH+hHMFyqQbTdjVTdrv0N6wYPiEPzlydtHcklJKPR797UB/SUWTtZxMagbLZtVs+GcWyQzJVRTi/MRD6LCziGQu460uWsfFB3mIev/8lo7LXUIGVCqmkDvYsR1W4vvqNA12CG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719432782; c=relaxed/simple;
-	bh=FkxG7fRF+wMVcAc0Q5SWjOgn88PKXvdKEXGjxxZg/II=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IItl6k/AYRX3+T2kZnJQeIxXVlSvW5aczCq3lDhGSM2wPP2XDHl7SSlBJDUCzFjobXQEvHTGktMco4sc8qMT33/nQwRzYbF4i5eRQoHmmdaU9G+M2TWu3Irzgv1zAeiC8vfehrSg27CSBtaamh9aS9FKZtyq7TuqiVr2mg7QcLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
-Received: (qmail 716269 invoked by uid 1000); 26 Jun 2024 16:12:58 -0400
-Date: Wed, 26 Jun 2024 16:12:58 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: syzbot <syzbot+8693a0bb9c10b554272a@syzkaller.appspotmail.com>
-Cc: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-  linux-usb@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org,
-  syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [usb?] [bluetooth?] WARNING in
- btusb_submit_intr_urb/usb_submit_urb
-Message-ID: <f3ab10ab-38e0-4856-9d89-3b5409da0e55@rowland.harvard.edu>
-References: <6d1f6bcc-2918-48cd-bbb3-e8cca46622a1@rowland.harvard.edu>
- <00000000000077d198061bcf30f1@google.com>
+	s=arc-20240116; t=1719432964; c=relaxed/simple;
+	bh=Edk9KaveOFb77WSFKm9P132fNZq9OZCsMRe+lxtXnNA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h5n0YAIEACJUSSK8Ifg0Gx3aq7HFUNyxzsV273EBxJpXTdGvHsIWHdXQ+pWLFLHRCUJO9VWJbH5us6GAwDWh2BkjA085VecTU3jyDJ1gNaa+ALJ+rBx+b0/i5N//0nhPWVNqoaPWoeyqpmmkzzzVvmCuMaTdHyKtGLyXH92G1vU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C1Scr18s; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C1Scr18s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719432960;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ZX2AGcRMmoaPmdp0U9TEIQ7B80WrvLquACg08mJmXsI=;
+	b=C1Scr18skJn/tkxXY2x+n1vXwXosY7VJjm72GKM/K8F2qKgfqW25vY85ub5vjrN4DKK7DM
+	HsL4Jh+XEDSr0U3oMrvJI5cqkvm74PSbA2OxQCBuShzXLNyRDHSPJB+wdvOzS+Ubz4KrBH
+	4NpyhoVnuffY7yOcDK7VorNOYZgWZ+s=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-421-W1-MZ9W5PFOcG3ctAhqMXQ-1; Wed, 26 Jun 2024 16:15:59 -0400
+X-MC-Unique: W1-MZ9W5PFOcG3ctAhqMXQ-1
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6b51db044edso114827586d6.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 13:15:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719432958; x=1720037758;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZX2AGcRMmoaPmdp0U9TEIQ7B80WrvLquACg08mJmXsI=;
+        b=kpjyEfeshZ2seETudAxjZewoMC7rKMwfe9ACjg8s2K6TwFIHtoYuYip96zioethhIe
+         UT+gURc+Qn7PT7RMu0Kq5G8JV8GL3syo5JeMIScp8BRKoGu4XsjaSoV7PlAq/Qxr4yBE
+         shgWFptQzNLQZiV7M6qzN8i5/Wr/276bGbn0FOaBSzdFq7rX+xlWWPG6svQz0SMi/lyZ
+         X46Vl0JiWM0qg19cQIGXwg1nHmoCUYYAjWUiewx6eUKI7vyeNtPQ5vf9f+hPdyAURjJP
+         YHmSinHcMZ7IdcHGzCSAanZoKCaV7lg6GqQz5tD++gSo93uqcZOREf2PKAbAuDVab7c3
+         CpBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXRxq6Bedk3bhu/jjYSXorD11teYGc25JIu/gqE6KlclxloYZX94VPRDSd1Tm6KJsN8lWWcvv4OshqeFh/hVPR7j3ZwJqIwX3zryH52
+X-Gm-Message-State: AOJu0YzqG2mPuxPKk8LjuEo5h4m1uDStGZCoSkhYg31IE0dOXynteAH1
+	UTY0/gnAnGCWav171vYbX8Ojc/UfZoMGt9k0P0uA9yrmCtLA3MuLWig5GxlJHx/G5UjDXwRMylA
+	MDUwKc0QO8W9SzLIjHEq0YEFNNvy5qFGuFIdgd1lrfNUFyRGl2K6j7/si2ucgHw==
+X-Received: by 2002:a05:6214:18c5:b0:6b0:910a:8c1e with SMTP id 6a1803df08f44-6b5409f4631mr106503496d6.36.1719432958646;
+        Wed, 26 Jun 2024 13:15:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEwZqOsqHTw4VypxWFI1V8GoYqGEwdbd8AMzxpFaZTVNMdtx8iar2ZPTbvrWpJUZAg/Mc3/Zw==
+X-Received: by 2002:a05:6214:18c5:b0:6b0:910a:8c1e with SMTP id 6a1803df08f44-6b5409f4631mr106503336d6.36.1719432958350;
+        Wed, 26 Jun 2024 13:15:58 -0700 (PDT)
+Received: from localhost.localdomain ([174.91.39.183])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b51ecfef30sm57710316d6.17.2024.06.26.13.15.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jun 2024 13:15:58 -0700 (PDT)
+From: Lucas Karpinski <lkarpins@redhat.com>
+To: viro@zeniv.linux.org.uk,
+	brauner@kernel.org,
+	jack@suse.cz
+Cc: raven@themaw.net,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lucas Karpinski <lkarpins@redhat.com>
+Subject: [RFC v3 0/1] fs/namespace: defer RCU sync for MNT_DETACH umount 
+Date: Wed, 26 Jun 2024 16:07:48 -0400
+Message-ID: <20240626201129.272750-2-lkarpins@redhat.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00000000000077d198061bcf30f1@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 26, 2024 at 11:29:05AM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot has tested the proposed patch and the reproducer did not trigger any issue:
-> 
-> Reported-and-tested-by: syzbot+8693a0bb9c10b554272a@syzkaller.appspotmail.com
-> 
-> Tested on:
-> 
-> commit:         66cc544f Merge tag 'dmaengine-fix-6.10' of git://git.k..
-> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15a59299980000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3f7b9f99610e0e87
-> dashboard link: https://syzkaller.appspot.com/bug?extid=8693a0bb9c10b554272a
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> patch:          https://syzkaller.appspot.com/x/patch.diff?x=169b3789980000
-> 
-> Note: testing is done by a robot and is best-effort only.
+Hi all,                                            
+                                                   
+Attached is v3 of the umount optimization. Please take a look at v1 for
+the original introduction to the problem. Al made it clear in the
+RFC v1 that if a filesystem is shut down by umount(2), that the
+shut down needs to be completed before the return from the syscall. In 
+the RFC v2, it was pointed out that call_rcu can block within an 
+interrupt context. This RFC v3 addresses both that and removes 
+unneccesary code by taking advantage of mntput for the cleanup of lazy 
+umounts.                                           
+                                                   
+Lucas                                              
+                                                   
+v3:                                                
+- Removed unneeded code for lazy umount case.      
+- Don't block within interrupt context.            
+v2:                                                
+- Only defer releasing umount'ed filesystems for lazy umounts
+v1:                                                
+https://lore.kernel.org/all/20230119205521.497401-1-echanude@redhat.com/
 
-Somewhat different approach.  Let's see if this works.
+Lucas Karpinski (1):
+  fs/namespace: remove RCU sync for MNT_DETACH umount
 
-Alan Stern
+ fs/namespace.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-#syz test: upstream 66cc544fd75c
-
-Index: usb-devel/drivers/usb/core/config.c
-===================================================================
---- usb-devel.orig/drivers/usb/core/config.c
-+++ usb-devel/drivers/usb/core/config.c
-@@ -291,6 +291,19 @@ static int usb_parse_endpoint(struct dev
- 	if (ifp->desc.bNumEndpoints >= num_ep)
- 		goto skip_to_next_endpoint_or_interface_descriptor;
- 
-+	/* Save a copy of the descriptor and use it instead of the original */
-+	endpoint = &ifp->endpoint[ifp->desc.bNumEndpoints];
-+	memcpy(&endpoint->desc, d, n);
-+	d = &endpoint->desc;
-+
-+	i = d->bEndpointAddress &
-+			(USB_ENDPOINT_DIR_MASK | USB_ENDPOINT_NUMBER_MASK);
-+	if (i != d->bEndpointAddress) {
-+		dev_notice(ddev, "config %d interface %d altsetting %d has an endpoint descriptor with address 0x%X, changing to 0x%X\n",
-+		    cfgno, inum, asnum, d->bEndpointAddress, i);
-+		endpoint->desc.bEndpointAddress = i;
-+	}
-+
- 	/* Check for duplicate endpoint addresses */
- 	if (config_endpoint_is_duplicate(config, inum, asnum, d)) {
- 		dev_notice(ddev, "config %d interface %d altsetting %d has a duplicate endpoint with address 0x%X, skipping\n",
-@@ -308,10 +321,8 @@ static int usb_parse_endpoint(struct dev
- 		}
- 	}
- 
--	endpoint = &ifp->endpoint[ifp->desc.bNumEndpoints];
-+	/* Accept this endpoint */
- 	++ifp->desc.bNumEndpoints;
--
--	memcpy(&endpoint->desc, d, n);
- 	INIT_LIST_HEAD(&endpoint->urb_list);
- 
- 	/*
+-- 
+2.45.2
 
