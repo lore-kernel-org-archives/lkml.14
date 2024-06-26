@@ -1,57 +1,57 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37ECD18F2C5;
-	Wed, 26 Jun 2024 16:00:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53AA618FC70;
+	Wed, 26 Jun 2024 16:00:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719417638; cv=none; b=BQeuug30Ro8koUN27r2OmY9+coosUGalXTUtMT87Uowj1vhU+Ny+L8D4q+IimTa8sNFu/WSqsJMJ3RRgo+ccq6PV2ulWmheqh9xRK05D20Z/aXK5E67u2Q5h0kuNnYuwv087uGOOq5EArjvyhXIuHmGo0PehZkGbCTGcqmpQ3Es=
+	t=1719417641; cv=none; b=SdFu+CAO9OyunnTMOFq3uGmipIo3+N3Ds8flu9+uAvKnHedl+gRKlOMphZWiGSd2mKhWCTM6vbiTtzUIjiH6dAx3yPPZjt7Ae5CR/pWIHOvSof+sw/OzPCAtLGgEF0PWTa0caQ2JDUQo00MU5t1yAfKmQBzhmedZYbTiVhKQszM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719417638; c=relaxed/simple;
-	bh=SmjtxShMC/MeN5LxSHq9p2LUeSSangClxELNKdgN2XE=;
+	s=arc-20240116; t=1719417641; c=relaxed/simple;
+	bh=vSqdD0lB+GHwFfN2RL+57FqEEEIb8AoA7CDQH3bU0ZY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UJJD6uh9EqSYLB5y3x3U2UKk4GiuDfzlEE6Rs14y8i5HD6S8VDm++EBbBSzvUSx/l1g8c8MGod3GKqk0O4EyJlEdm5yKH0ZDHumqTCOQu4W81WS79NY7Ua+o7rOIj5WjP+k2j7jOgzuDcHwh6cLvmCaoY12QSgP/G2/hpYy5q7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GbEdqi2Y; arc=none smtp.client-ip=209.85.221.49
+	 MIME-Version; b=i+k7Mqtl0crlP73DdNIeKKbHvzjNiObMnfhpgex4GxNzSIl8kF0p7ltxFR7rI0axeEOTmGacoyk1kwCgQ+6+140LDuS1b4VAJCt69pMeaXANvUC5Bgq/OqlhX3h4UKkb1ShK15bGWTqsj7seUzV+VRpBBGwSpjCZEJH5AkL+l98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tzbi2MRP; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GbEdqi2Y"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-367339bd00aso266125f8f.3;
-        Wed, 26 Jun 2024 09:00:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tzbi2MRP"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-364cdfdaf91so4912282f8f.1;
+        Wed, 26 Jun 2024 09:00:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719417634; x=1720022434; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719417638; x=1720022438; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mEf3r1d9MB8qpJNjhf4z5Bor9q+rkqR86BR+W9NrFv0=;
-        b=GbEdqi2YKm7x9TB23erd+6FKJU8uOyt8uzcltFuxAkNhFlPjxw07NWcYn1JvYcYnH2
-         sDY+UIHbMbTN8127Xj+d75UXyhfc60jaw7QrMpHivkCJIGqG25uFfLGWvhGe7gDKpRjj
-         X3z3hal4QxIcVBpHM5KpRgEWV6SptSdpu9YRG4877WBCz8RhfLq/6LNo/zElaarZxwuP
-         30Rz5XBdT0OwWgeosPM4JlI7OakflQxyMO1E/pQ5m8s95eELrs/CFI75pJr10HMtCI8B
-         qo2PNr3fcx0HT67UCsdty/VhUX/LKcYS7OigbZBnRNN8M/NLZjKK29ND+ghs58Pp1zRQ
-         TiNA==
+        bh=FrbReal7lMIAAtnYiQ/ZH8usDjXZPMQ9YxNeEJWEqEw=;
+        b=Tzbi2MRPv90u+1kCWdwU95LYpqD+uzQz8IUVMwJVHqMHdrPXCKgMcKY9jimmTQnbGS
+         W5IoThN7a5uwTVGnANT6cKRCecrvnwtX/8ufI66wk7/iL0RanV7oqRyL+p65czR2rFTO
+         9zffoRUBaBoa9Y9+4vqlcBO1Mahvj3aFwswBXmHWGSB7bxXvp9UinYXwZ1aPvJK8p0Us
+         mN5+v9aZ9tUYuBfrXHSg56nD9t4Q0ZVGr3SRVeR9w7ofeZ8mpJ9GevhL5fZUzTRHU18f
+         qmYdHXi5E2iu1PhYI/f/wWKhcYGRYDadOejtK+eCDt6XbkfI8ow3k8L+5b4DVClJCs4r
+         YQQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719417634; x=1720022434;
+        d=1e100.net; s=20230601; t=1719417638; x=1720022438;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mEf3r1d9MB8qpJNjhf4z5Bor9q+rkqR86BR+W9NrFv0=;
-        b=dztGOAlyJWvIJmXOEPDLzf+GTWx63B3lq3Pq59DIQYffRnJpYkRPV9jkP29XxqllBF
-         eT6dK6+UVfuNDb2xGaRrImTwR0Wy+42HSt0VOCYaRH9Fbc663HYe43838sxSix3AQUFE
-         3aBlCQEUPnzSKTSKzaKYiMl790J95rL0OwXvEwE5y+5yE3WNDQiDI2mAhuPFpFHt2v13
-         ME4RHhvowbpGDNQ/hNnaCIuhi+71CXHPIRHxDUZ096q4AkDvzOzYsA/1gsDmViop4hi7
-         CxuK2G7FLV3n6/VMOwFykznFNGsVXC1AnNRYL9CTe4+7vuPtiBIKnTcIwDOn/CGxG7IN
-         jL0A==
-X-Forwarded-Encrypted: i=1; AJvYcCV8si3aCXvDGJy8la2Bvd6C0sMoF5mgjhRE1/4hshxP9TwMoJMxl9MlwU87f37z0+JcpuvhP8jtYxd2Pb9Y0ijV4yfiYAtolHNBmt+GycN8E6WJ5+I0GwzT3xwrEno58RfvU5TwOdU0QSzePdi0cS7eIVFAEHuyszRhLPTFyRVLi84eE1U=
-X-Gm-Message-State: AOJu0YyPzgXZp3NofNQBFPxg6LpVc+zHFknvs7LUFrSGSdaCfvBBs526
-	jmEKj2TzPu1ylkdaU4WifufTFZQWaguJp6kMoILAtUlps4Rnan2q
-X-Google-Smtp-Source: AGHT+IH79zRItxEh9Matb2AOVzF29qo3zE27Zn0zUtIjAwOvitbKpjz/jAOSEvj5vmFevvhiOjxCXg==
-X-Received: by 2002:adf:f003:0:b0:365:b695:ef76 with SMTP id ffacd0b85a97d-366e94d148amr6725834f8f.36.1719417634378;
-        Wed, 26 Jun 2024 09:00:34 -0700 (PDT)
+        bh=FrbReal7lMIAAtnYiQ/ZH8usDjXZPMQ9YxNeEJWEqEw=;
+        b=BIth6BrBlHjOUuSbHMivL+IL+ZtoleDkYegHZhYhfTd7c5JesJNSM01Cxe+DO3a3dr
+         TFb6NJE2vnkRVrRvb9uButmgb9fg+UFmoe8wyePgd+RwGhAAM4E06m1+pOE/+6+C97Je
+         H9WacU+ZGbVNKNV9VwxZAKvH1ZmNHgv7MrEu9mDCuBVU7TAA/Rq9yeZcOWHRkZ1TSjGD
+         ja1dRYyVmZI2i8QBCAEcpCqucbRs9IXaBsvBdV1QOvV4R4yNLUo3TZHpvpRF+CKP5HQy
+         tIm/rvlFCwj9CiD5REI0UWRE2dtYYoxtUr3lOoeFh+3d+zZxgs58C5VtUo0L3Uzk6D7c
+         QSgw==
+X-Forwarded-Encrypted: i=1; AJvYcCXKWCmnfdd+p2ykCdlaQjKZBFbvqxSEhIaqKVejO9+VNmpQOWhxTVRSWaafrE6i/xtVggNnsp2XwRMT2BUArAGB2oSjbtNVrghQ75ck+z3ys5NiB+DZHOCD6q9FSjGW/KT9P7UIBLDoBDdjfdYT6IfZCVJTGemKsz9sHABQhCgXkaWnwoQ=
+X-Gm-Message-State: AOJu0YxAaTpJtQRZABqAJMsBqqzIJIeDxBwOusqAGu9YIIE20gSiPKk4
+	f3aLGdzo3VibzxwlUoN/LyCmSBHfJJLb919xb1tXxyL9AcpF+C66
+X-Google-Smtp-Source: AGHT+IH/P09rA7Vh/1pD8vRse9rJALNJIjQJ0hTAnJnf8JhZnqd4I6mGbEhSc9xtXMNvvUO3uVz0zQ==
+X-Received: by 2002:adf:fdc7:0:b0:360:81f8:698 with SMTP id ffacd0b85a97d-366e96be4dcmr7126366f8f.58.1719417637550;
+        Wed, 26 Jun 2024 09:00:37 -0700 (PDT)
 Received: from localhost.localdomain (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-366389b88easm16180589f8f.39.2024.06.26.09.00.33
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-366389b88easm16180589f8f.39.2024.06.26.09.00.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 09:00:34 -0700 (PDT)
+        Wed, 26 Jun 2024 09:00:37 -0700 (PDT)
 From: Christian Marangi <ansuelsmth@gmail.com>
 To: Pavel Machek <pavel@ucw.cz>,
 	Lee Jones <lee@kernel.org>,
@@ -63,9 +63,9 @@ To: Pavel Machek <pavel@ucw.cz>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Christian Marangi <ansuelsmth@gmail.com>
-Subject: [PATCH v8 04/20] leds: leds-lp55xx: Generalize probe/remove functions
-Date: Wed, 26 Jun 2024 18:00:09 +0200
-Message-ID: <20240626160027.19703-5-ansuelsmth@gmail.com>
+Subject: [PATCH v8 07/20] leds: leds-lp55xx: Generalize run_engine function
+Date: Wed, 26 Jun 2024 18:00:12 +0200
+Message-ID: <20240626160027.19703-8-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240626160027.19703-1-ansuelsmth@gmail.com>
 References: <20240626160027.19703-1-ansuelsmth@gmail.com>
@@ -77,751 +77,372 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Now that stop_all_engine is generalized, probe and remove function are
-the same across every lp55xx based LED driver and can be generalized.
+Generalize run_engine function for lp55xx based LED driver. The logic is
+similar to every LED driver, rework it with more macro magic and account
+for LED model that might have OP MODE and EXEC at base offset in the
+reg.
 
-To permit to use a common probe, make use of the OF match_data and i2c
-driver_data value to store the device_config struct specific for the
-LED.
-
-Also drop the now unused exported symbol in lp55xx-common and make them
-static.
-
-Update any lp55xx based LED driver to use the new generic probe/remove.
+Update any lp55xx based LED driver to use this generalized function and
+declare required bits.
 
 Suggested-by: Lee Jones <lee@kernel.org>
 Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 ---
- drivers/leds/leds-lp5521.c        |  81 +----------------
- drivers/leds/leds-lp5523.c        |  85 ++----------------
- drivers/leds/leds-lp5562.c        |  80 +----------------
- drivers/leds/leds-lp55xx-common.c | 141 ++++++++++++++++++++++--------
- drivers/leds/leds-lp55xx-common.h |  21 +----
- drivers/leds/leds-lp8501.c        |  81 +----------------
- 6 files changed, 127 insertions(+), 362 deletions(-)
+ drivers/leds/leds-lp5521.c        | 42 +++++-------------------------
+ drivers/leds/leds-lp5523.c        | 41 +++--------------------------
+ drivers/leds/leds-lp5562.c        | 42 +++++-------------------------
+ drivers/leds/leds-lp55xx-common.c | 43 +++++++++++++++++++++++++++++++
+ drivers/leds/leds-lp55xx-common.h |  2 ++
+ drivers/leds/leds-lp8501.c        | 41 +++--------------------------
+ 6 files changed, 65 insertions(+), 146 deletions(-)
 
 diff --git a/drivers/leds/leds-lp5521.c b/drivers/leds/leds-lp5521.c
-index 8b006de400fd..5015f385cc17 100644
+index 08db470fff6c..0b9f99f4fff2 100644
 --- a/drivers/leds/leds-lp5521.c
 +++ b/drivers/leds/leds-lp5521.c
-@@ -514,87 +514,14 @@ static struct lp55xx_device_config lp5521_cfg = {
- 	.dev_attr_group     = &lp5521_group,
- };
+@@ -132,8 +132,6 @@ static void lp5521_stop_engine(struct lp55xx_chip *chip)
+ static void lp5521_run_engine(struct lp55xx_chip *chip, bool start)
+ {
+ 	int ret;
+-	u8 mode;
+-	u8 exec;
  
--static int lp5521_probe(struct i2c_client *client)
--{
--	const struct i2c_device_id *id = i2c_client_get_device_id(client);
--	int ret;
--	struct lp55xx_chip *chip;
--	struct lp55xx_led *led;
--	struct lp55xx_platform_data *pdata = dev_get_platdata(&client->dev);
--	struct device_node *np = dev_of_node(&client->dev);
+ 	/* stop engine */
+ 	if (!start) {
+@@ -143,40 +141,9 @@ static void lp5521_run_engine(struct lp55xx_chip *chip, bool start)
+ 		return;
+ 	}
+ 
+-	/*
+-	 * To run the engine,
+-	 * operation mode and enable register should updated at the same time
+-	 */
 -
--	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
--	if (!chip)
--		return -ENOMEM;
+-	ret = lp55xx_read(chip, LP5521_REG_OP_MODE, &mode);
+-	if (ret)
+-		return;
 -
--	chip->cfg = &lp5521_cfg;
+-	ret = lp55xx_read(chip, LP5521_REG_ENABLE, &exec);
+-	if (ret)
+-		return;
 -
--	if (!pdata) {
--		if (np) {
--			pdata = lp55xx_of_populate_pdata(&client->dev, np,
--							 chip);
--			if (IS_ERR(pdata))
--				return PTR_ERR(pdata);
--		} else {
--			dev_err(&client->dev, "no platform data\n");
--			return -EINVAL;
--		}
+-	/* change operation mode to RUN only when each engine is loading */
+-	if (LP5521_R_IS_LOADING(mode)) {
+-		mode = (mode & ~LP5521_MODE_R_M) | LP5521_RUN_R;
+-		exec = (exec & ~LP5521_EXEC_R_M) | LP5521_RUN_R;
 -	}
 -
--	led = devm_kcalloc(&client->dev,
--			pdata->num_channels, sizeof(*led), GFP_KERNEL);
--	if (!led)
--		return -ENOMEM;
--
--	chip->cl = client;
--	chip->pdata = pdata;
--
--	mutex_init(&chip->lock);
--
--	i2c_set_clientdata(client, led);
--
--	ret = lp55xx_init_device(chip);
--	if (ret)
--		goto err_init;
--
--	dev_info(&client->dev, "%s programmable led chip found\n", id->name);
--
--	ret = lp55xx_register_leds(led, chip);
--	if (ret)
--		goto err_out;
--
--	ret = lp55xx_register_sysfs(chip);
--	if (ret) {
--		dev_err(&client->dev, "registering sysfs failed\n");
--		goto err_out;
+-	if (LP5521_G_IS_LOADING(mode)) {
+-		mode = (mode & ~LP5521_MODE_G_M) | LP5521_RUN_G;
+-		exec = (exec & ~LP5521_EXEC_G_M) | LP5521_RUN_G;
 -	}
 -
--	return 0;
+-	if (LP5521_B_IS_LOADING(mode)) {
+-		mode = (mode & ~LP5521_MODE_B_M) | LP5521_RUN_B;
+-		exec = (exec & ~LP5521_EXEC_B_M) | LP5521_RUN_B;
+-	}
 -
--err_out:
--	lp55xx_deinit_device(chip);
--err_init:
--	return ret;
--}
+-	lp55xx_write(chip, LP5521_REG_OP_MODE, mode);
+-	lp5521_wait_opmode_done();
 -
--static void lp5521_remove(struct i2c_client *client)
--{
--	struct lp55xx_led *led = i2c_get_clientdata(client);
--	struct lp55xx_chip *chip = led->chip;
--
--	lp55xx_stop_all_engine(chip);
--	lp55xx_unregister_sysfs(chip);
--	lp55xx_deinit_device(chip);
--}
--
- static const struct i2c_device_id lp5521_id[] = {
--	{ "lp5521" }, /* Three channel chip */
-+	{ "lp5521", .driver_data = (kernel_ulong_t)&lp5521_cfg, }, /* Three channel chip */
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, lp5521_id);
+-	lp55xx_update_bits(chip, LP5521_REG_ENABLE, LP5521_EXEC_M, exec);
+-	lp5521_wait_enable_done();
++	ret = lp55xx_run_engine_common(chip);
++	if (!ret)
++		lp5521_wait_enable_done();
+ }
  
- static const struct of_device_id of_lp5521_leds_match[] = {
--	{ .compatible = "national,lp5521", },
-+	{ .compatible = "national,lp5521", .data = &lp5521_cfg, },
- 	{},
- };
- 
-@@ -605,8 +532,8 @@ static struct i2c_driver lp5521_driver = {
- 		.name	= "lp5521",
- 		.of_match_table = of_lp5521_leds_match,
+ static int lp5521_update_program_memory(struct lp55xx_chip *chip,
+@@ -476,6 +443,9 @@ static struct lp55xx_device_config lp5521_cfg = {
+ 	.reg_op_mode = {
+ 		.addr = LP5521_REG_OP_MODE,
  	},
--	.probe		= lp5521_probe,
--	.remove		= lp5521_remove,
-+	.probe		= lp55xx_probe,
-+	.remove		= lp55xx_remove,
- 	.id_table	= lp5521_id,
- };
- 
++	.reg_exec = {
++		.addr = LP5521_REG_ENABLE,
++	},
+ 	.reset = {
+ 		.addr = LP5521_REG_RESET,
+ 		.val  = LP5521_RESET,
 diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
-index 79931555eddd..bd0209e2ee42 100644
+index 8dabd5814110..b28955b72189 100644
 --- a/drivers/leds/leds-lp5523.c
 +++ b/drivers/leds/leds-lp5523.c
-@@ -895,90 +895,17 @@ static struct lp55xx_device_config lp5523_cfg = {
- 	.dev_attr_group     = &lp5523_group,
- };
+@@ -184,10 +184,6 @@ static void lp5523_turn_off_channels(struct lp55xx_chip *chip)
  
--static int lp5523_probe(struct i2c_client *client)
--{
--	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+ static void lp5523_run_engine(struct lp55xx_chip *chip, bool start)
+ {
 -	int ret;
--	struct lp55xx_chip *chip;
--	struct lp55xx_led *led;
--	struct lp55xx_platform_data *pdata = dev_get_platdata(&client->dev);
--	struct device_node *np = dev_of_node(&client->dev);
+-	u8 mode;
+-	u8 exec;
 -
--	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
--	if (!chip)
--		return -ENOMEM;
+ 	/* stop engine */
+ 	if (!start) {
+ 		lp5523_stop_engine(chip);
+@@ -195,39 +191,7 @@ static void lp5523_run_engine(struct lp55xx_chip *chip, bool start)
+ 		return;
+ 	}
+ 
+-	/*
+-	 * To run the engine,
+-	 * operation mode and enable register should updated at the same time
+-	 */
 -
--	chip->cfg = &lp5523_cfg;
+-	ret = lp55xx_read(chip, LP5523_REG_OP_MODE, &mode);
+-	if (ret)
+-		return;
 -
--	if (!pdata) {
--		if (np) {
--			pdata = lp55xx_of_populate_pdata(&client->dev, np,
--							 chip);
--			if (IS_ERR(pdata))
--				return PTR_ERR(pdata);
--		} else {
--			dev_err(&client->dev, "no platform data\n");
--			return -EINVAL;
--		}
+-	ret = lp55xx_read(chip, LP5523_REG_ENABLE, &exec);
+-	if (ret)
+-		return;
+-
+-	/* change operation mode to RUN only when each engine is loading */
+-	if (LP5523_ENG1_IS_LOADING(mode)) {
+-		mode = (mode & ~LP5523_MODE_ENG1_M) | LP5523_RUN_ENG1;
+-		exec = (exec & ~LP5523_EXEC_ENG1_M) | LP5523_RUN_ENG1;
 -	}
 -
--	led = devm_kcalloc(&client->dev,
--			pdata->num_channels, sizeof(*led), GFP_KERNEL);
--	if (!led)
--		return -ENOMEM;
--
--	chip->cl = client;
--	chip->pdata = pdata;
--
--	mutex_init(&chip->lock);
--
--	i2c_set_clientdata(client, led);
--
--	ret = lp55xx_init_device(chip);
--	if (ret)
--		goto err_init;
--
--	dev_info(&client->dev, "%s Programmable led chip found\n", id->name);
--
--	ret = lp55xx_register_leds(led, chip);
--	if (ret)
--		goto err_out;
--
--	ret = lp55xx_register_sysfs(chip);
--	if (ret) {
--		dev_err(&client->dev, "registering sysfs failed\n");
--		goto err_out;
+-	if (LP5523_ENG2_IS_LOADING(mode)) {
+-		mode = (mode & ~LP5523_MODE_ENG2_M) | LP5523_RUN_ENG2;
+-		exec = (exec & ~LP5523_EXEC_ENG2_M) | LP5523_RUN_ENG2;
 -	}
 -
--	return 0;
+-	if (LP5523_ENG3_IS_LOADING(mode)) {
+-		mode = (mode & ~LP5523_MODE_ENG3_M) | LP5523_RUN_ENG3;
+-		exec = (exec & ~LP5523_EXEC_ENG3_M) | LP5523_RUN_ENG3;
+-	}
 -
--err_out:
--	lp55xx_deinit_device(chip);
--err_init:
--	return ret;
--}
+-	lp55xx_write(chip, LP5523_REG_OP_MODE, mode);
+-	lp5523_wait_opmode_done();
 -
--static void lp5523_remove(struct i2c_client *client)
--{
--	struct lp55xx_led *led = i2c_get_clientdata(client);
--	struct lp55xx_chip *chip = led->chip;
--
--	lp55xx_stop_all_engine(chip);
--	lp55xx_unregister_sysfs(chip);
--	lp55xx_deinit_device(chip);
--}
--
- static const struct i2c_device_id lp5523_id[] = {
--	{ "lp5523",  LP5523 },
--	{ "lp55231", LP55231 },
-+	{ "lp5523",  .driver_data = (kernel_ulong_t)&lp5523_cfg, },
-+	{ "lp55231", .driver_data = (kernel_ulong_t)&lp5523_cfg, },
- 	{ }
- };
+-	lp55xx_update_bits(chip, LP5523_REG_ENABLE, LP5523_EXEC_M, exec);
++	lp55xx_run_engine_common(chip);
+ }
  
- MODULE_DEVICE_TABLE(i2c, lp5523_id);
- 
- static const struct of_device_id of_lp5523_leds_match[] = {
--	{ .compatible = "national,lp5523", },
--	{ .compatible = "ti,lp55231", },
-+	{ .compatible = "national,lp5523", .data = &lp5523_cfg, },
-+	{ .compatible = "ti,lp55231", .data = &lp5523_cfg, },
- 	{},
- };
- 
-@@ -989,8 +916,8 @@ static struct i2c_driver lp5523_driver = {
- 		.name	= "lp5523x",
- 		.of_match_table = of_lp5523_leds_match,
+ static int lp5523_init_program_engine(struct lp55xx_chip *chip)
+@@ -840,6 +804,9 @@ static struct lp55xx_device_config lp5523_cfg = {
+ 	.reg_op_mode = {
+ 		.addr = LP5523_REG_OP_MODE,
  	},
--	.probe		= lp5523_probe,
--	.remove		= lp5523_remove,
-+	.probe		= lp55xx_probe,
-+	.remove		= lp55xx_remove,
- 	.id_table	= lp5523_id,
- };
- 
++	.reg_exec = {
++		.addr = LP5523_REG_ENABLE,
++	},
+ 	.engine_busy = {
+ 		.addr = LP5523_REG_STATUS,
+ 		.mask  = LP5523_ENGINE_BUSY,
 diff --git a/drivers/leds/leds-lp5562.c b/drivers/leds/leds-lp5562.c
-index 123abfc7b6c4..65a6a05c3848 100644
+index 5e26a52f534f..fb05439576c3 100644
 --- a/drivers/leds/leds-lp5562.c
 +++ b/drivers/leds/leds-lp5562.c
-@@ -508,86 +508,14 @@ static struct lp55xx_device_config lp5562_cfg = {
- 	.dev_attr_group     = &lp5562_group,
- };
+@@ -127,8 +127,6 @@ static void lp5562_set_led_current(struct lp55xx_led *led, u8 led_current)
+ static void lp5562_run_engine(struct lp55xx_chip *chip, bool start)
+ {
+ 	int ret;
+-	u8 mode;
+-	u8 exec;
  
--static int lp5562_probe(struct i2c_client *client)
--{
--	int ret;
--	struct lp55xx_chip *chip;
--	struct lp55xx_led *led;
--	struct lp55xx_platform_data *pdata = dev_get_platdata(&client->dev);
--	struct device_node *np = dev_of_node(&client->dev);
+ 	/* stop engine */
+ 	if (!start) {
+@@ -141,40 +139,9 @@ static void lp5562_run_engine(struct lp55xx_chip *chip, bool start)
+ 		return;
+ 	}
+ 
+-	/*
+-	 * To run the engine,
+-	 * operation mode and enable register should updated at the same time
+-	 */
 -
--	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
--	if (!chip)
--		return -ENOMEM;
+-	ret = lp55xx_read(chip, LP5562_REG_OP_MODE, &mode);
+-	if (ret)
+-		return;
 -
--	chip->cfg = &lp5562_cfg;
+-	ret = lp55xx_read(chip, LP5562_REG_ENABLE, &exec);
+-	if (ret)
+-		return;
 -
--	if (!pdata) {
--		if (np) {
--			pdata = lp55xx_of_populate_pdata(&client->dev, np,
--							 chip);
--			if (IS_ERR(pdata))
--				return PTR_ERR(pdata);
--		} else {
--			dev_err(&client->dev, "no platform data\n");
--			return -EINVAL;
--		}
+-	/* change operation mode to RUN only when each engine is loading */
+-	if (LP5562_ENG1_IS_LOADING(mode)) {
+-		mode = (mode & ~LP5562_MODE_ENG1_M) | LP5562_RUN_ENG1;
+-		exec = (exec & ~LP5562_EXEC_ENG1_M) | LP5562_RUN_ENG1;
 -	}
 -
--
--	led = devm_kcalloc(&client->dev,
--			pdata->num_channels, sizeof(*led), GFP_KERNEL);
--	if (!led)
--		return -ENOMEM;
--
--	chip->cl = client;
--	chip->pdata = pdata;
--
--	mutex_init(&chip->lock);
--
--	i2c_set_clientdata(client, led);
--
--	ret = lp55xx_init_device(chip);
--	if (ret)
--		goto err_init;
--
--	ret = lp55xx_register_leds(led, chip);
--	if (ret)
--		goto err_out;
--
--	ret = lp55xx_register_sysfs(chip);
--	if (ret) {
--		dev_err(&client->dev, "registering sysfs failed\n");
--		goto err_out;
+-	if (LP5562_ENG2_IS_LOADING(mode)) {
+-		mode = (mode & ~LP5562_MODE_ENG2_M) | LP5562_RUN_ENG2;
+-		exec = (exec & ~LP5562_EXEC_ENG2_M) | LP5562_RUN_ENG2;
 -	}
 -
--	return 0;
+-	if (LP5562_ENG3_IS_LOADING(mode)) {
+-		mode = (mode & ~LP5562_MODE_ENG3_M) | LP5562_RUN_ENG3;
+-		exec = (exec & ~LP5562_EXEC_ENG3_M) | LP5562_RUN_ENG3;
+-	}
 -
--err_out:
--	lp55xx_deinit_device(chip);
--err_init:
--	return ret;
--}
+-	lp55xx_write(chip, LP5562_REG_OP_MODE, mode);
+-	lp5562_wait_opmode_done();
 -
--static void lp5562_remove(struct i2c_client *client)
--{
--	struct lp55xx_led *led = i2c_get_clientdata(client);
--	struct lp55xx_chip *chip = led->chip;
--
--	lp55xx_stop_all_engine(chip);
--
--	lp55xx_unregister_sysfs(chip);
--	lp55xx_deinit_device(chip);
--}
--
- static const struct i2c_device_id lp5562_id[] = {
--	{ "lp5562" },
-+	{ "lp5562", .driver_data = (kernel_ulong_t)&lp5562_cfg, },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, lp5562_id);
+-	lp55xx_update_bits(chip, LP5562_REG_ENABLE, LP5562_EXEC_M, exec);
+-	lp5562_wait_enable_done();
++	ret = lp55xx_run_engine_common(chip);
++	if (!ret)
++		lp5562_wait_enable_done();
+ }
  
- static const struct of_device_id of_lp5562_leds_match[] = {
--	{ .compatible = "ti,lp5562", },
-+	{ .compatible = "ti,lp5562", .data = &lp5562_cfg, },
- 	{},
- };
- 
-@@ -598,8 +526,8 @@ static struct i2c_driver lp5562_driver = {
- 		.name	= "lp5562",
- 		.of_match_table = of_lp5562_leds_match,
+ static int lp5562_update_firmware(struct lp55xx_chip *chip,
+@@ -472,6 +439,9 @@ static struct lp55xx_device_config lp5562_cfg = {
+ 	.reg_op_mode = {
+ 		.addr = LP5562_REG_OP_MODE,
  	},
--	.probe		= lp5562_probe,
--	.remove		= lp5562_remove,
-+	.probe		= lp55xx_probe,
-+	.remove		= lp55xx_remove,
- 	.id_table	= lp5562_id,
- };
- 
++	.reg_exec = {
++		.addr = LP5562_REG_ENABLE,
++	},
+ 	.reset = {
+ 		.addr = LP5562_REG_RESET,
+ 		.val  = LP5562_RESET,
 diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
-index 2cbc5b302fd4..2949ea56a170 100644
+index 38564b9cda0d..9830df285b96 100644
 --- a/drivers/leds/leds-lp55xx-common.c
 +++ b/drivers/leds/leds-lp55xx-common.c
-@@ -49,7 +49,7 @@ static struct lp55xx_led *mcled_cdev_to_led(struct led_classdev_mc *mc_cdev)
+@@ -46,6 +46,15 @@
+ #define   LP55xx_MODE_ENGn_GET(n, mode, shift)        \
+ 	(((mode) >> LP55xx_MODE_ENGn_SHIFT(n, shift)) & LP55xx_MODE_ENG_MASK)
  
- static void lp55xx_wait_opmode_done(struct lp55xx_chip *chip)
- {
--	struct lp55xx_device_config *cfg = chip->cfg;
-+	const struct lp55xx_device_config *cfg = chip->cfg;
- 	int __always_unused ret;
- 	u8 val;
- 
-@@ -69,7 +69,7 @@ static void lp55xx_wait_opmode_done(struct lp55xx_chip *chip)
- 
- void lp55xx_stop_all_engine(struct lp55xx_chip *chip)
- {
--	struct lp55xx_device_config *cfg = chip->cfg;
-+	const struct lp55xx_device_config *cfg = chip->cfg;
- 
- 	lp55xx_write(chip, cfg->reg_op_mode.addr, LP55xx_MODE_DISABLE_ALL_ENG);
- 	lp55xx_wait_opmode_done(chip);
-@@ -78,7 +78,7 @@ EXPORT_SYMBOL_GPL(lp55xx_stop_all_engine);
- 
- static void lp55xx_reset_device(struct lp55xx_chip *chip)
- {
--	struct lp55xx_device_config *cfg = chip->cfg;
-+	const struct lp55xx_device_config *cfg = chip->cfg;
- 	u8 addr = cfg->reset.addr;
- 	u8 val  = cfg->reset.val;
- 
-@@ -88,7 +88,7 @@ static void lp55xx_reset_device(struct lp55xx_chip *chip)
- 
- static int lp55xx_detect_device(struct lp55xx_chip *chip)
- {
--	struct lp55xx_device_config *cfg = chip->cfg;
-+	const struct lp55xx_device_config *cfg = chip->cfg;
- 	u8 addr = cfg->enable.addr;
- 	u8 val  = cfg->enable.val;
- 	int ret;
-@@ -111,7 +111,7 @@ static int lp55xx_detect_device(struct lp55xx_chip *chip)
- 
- static int lp55xx_post_init_device(struct lp55xx_chip *chip)
- {
--	struct lp55xx_device_config *cfg = chip->cfg;
-+	const struct lp55xx_device_config *cfg = chip->cfg;
- 
- 	if (!cfg->post_init_device)
- 		return 0;
-@@ -176,7 +176,7 @@ static int lp55xx_set_mc_brightness(struct led_classdev *cdev,
- {
- 	struct led_classdev_mc *mc_dev = lcdev_to_mccdev(cdev);
- 	struct lp55xx_led *led = mcled_cdev_to_led(mc_dev);
--	struct lp55xx_device_config *cfg = led->chip->cfg;
-+	const struct lp55xx_device_config *cfg = led->chip->cfg;
- 
- 	led_mc_calc_color_components(&led->mc_cdev, brightness);
- 	return cfg->multicolor_brightness_fn(led);
-@@ -187,7 +187,7 @@ static int lp55xx_set_brightness(struct led_classdev *cdev,
- 			     enum led_brightness brightness)
- {
- 	struct lp55xx_led *led = cdev_to_lp55xx_led(cdev);
--	struct lp55xx_device_config *cfg = led->chip->cfg;
-+	const struct lp55xx_device_config *cfg = led->chip->cfg;
- 
- 	led->brightness = (u8)brightness;
- 	return cfg->brightness_fn(led);
-@@ -197,7 +197,7 @@ static int lp55xx_init_led(struct lp55xx_led *led,
- 			struct lp55xx_chip *chip, int chan)
- {
- 	struct lp55xx_platform_data *pdata = chip->pdata;
--	struct lp55xx_device_config *cfg = chip->cfg;
-+	const struct lp55xx_device_config *cfg = chip->cfg;
- 	struct device *dev = &chip->cl->dev;
- 	int max_channel = cfg->max_channel;
- 	struct mc_subled *mc_led_info;
-@@ -459,10 +459,21 @@ bool lp55xx_is_extclk_used(struct lp55xx_chip *chip)
++#define   LP55xx_EXEC_ENG_MASK         GENMASK(1, 0)
++#define   LP55xx_EXEC_HOLD_ENG         FIELD_PREP_CONST(LP55xx_EXEC_ENG_MASK, 0x0)
++#define   LP55xx_EXEC_STEP_ENG         FIELD_PREP_CONST(LP55xx_EXEC_ENG_MASK, 0x1)
++#define   LP55xx_EXEC_RUN_ENG          FIELD_PREP_CONST(LP55xx_EXEC_ENG_MASK, 0x2)
++#define   LP55xx_EXEC_ONCE_ENG         FIELD_PREP_CONST(LP55xx_EXEC_ENG_MASK, 0x3)
++
++#define   LP55xx_EXEC_ENGn_SHIFT(n, shift)    ((shift) + (2 * (3 - (n))))
++#define   LP55xx_EXEC_ENGn_MASK(n, shift)     (LP55xx_EXEC_ENG_MASK << LP55xx_EXEC_ENGn_SHIFT(n, shift))
++
+ /* Memory Page Selection */
+ #define LP55xx_REG_PROG_PAGE_SEL	0x4f
+ /* If supported, each ENGINE have an equal amount of pages offset from page 0 */
+@@ -117,6 +126,40 @@ void lp55xx_load_engine(struct lp55xx_chip *chip)
  }
- EXPORT_SYMBOL_GPL(lp55xx_is_extclk_used);
+ EXPORT_SYMBOL_GPL(lp55xx_load_engine);
  
--int lp55xx_init_device(struct lp55xx_chip *chip)
-+static void lp55xx_deinit_device(struct lp55xx_chip *chip)
++int lp55xx_run_engine_common(struct lp55xx_chip *chip)
 +{
-+	struct lp55xx_platform_data *pdata = chip->pdata;
-+
-+	if (chip->clk)
-+		clk_disable_unprepare(chip->clk);
-+
-+	if (pdata->enable_gpiod)
-+		gpiod_set_value(pdata->enable_gpiod, 0);
-+}
-+
-+static int lp55xx_init_device(struct lp55xx_chip *chip)
- {
- 	struct lp55xx_platform_data *pdata;
--	struct lp55xx_device_config *cfg;
-+	const struct lp55xx_device_config *cfg;
- 	struct device *dev = &chip->cl->dev;
- 	int ret = 0;
- 
-@@ -512,24 +523,11 @@ int lp55xx_init_device(struct lp55xx_chip *chip)
- err:
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(lp55xx_init_device);
- 
--void lp55xx_deinit_device(struct lp55xx_chip *chip)
-+static int lp55xx_register_leds(struct lp55xx_led *led, struct lp55xx_chip *chip)
- {
- 	struct lp55xx_platform_data *pdata = chip->pdata;
--
--	if (chip->clk)
--		clk_disable_unprepare(chip->clk);
--
--	if (pdata->enable_gpiod)
--		gpiod_set_value(pdata->enable_gpiod, 0);
--}
--EXPORT_SYMBOL_GPL(lp55xx_deinit_device);
--
--int lp55xx_register_leds(struct lp55xx_led *led, struct lp55xx_chip *chip)
--{
--	struct lp55xx_platform_data *pdata = chip->pdata;
--	struct lp55xx_device_config *cfg = chip->cfg;
 +	const struct lp55xx_device_config *cfg = chip->cfg;
- 	int num_channels = pdata->num_channels;
- 	struct lp55xx_led *each;
- 	u8 led_current;
-@@ -566,12 +564,11 @@ int lp55xx_register_leds(struct lp55xx_led *led, struct lp55xx_chip *chip)
- err_init_led:
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(lp55xx_register_leds);
- 
--int lp55xx_register_sysfs(struct lp55xx_chip *chip)
-+static int lp55xx_register_sysfs(struct lp55xx_chip *chip)
- {
- 	struct device *dev = &chip->cl->dev;
--	struct lp55xx_device_config *cfg = chip->cfg;
-+	const struct lp55xx_device_config *cfg = chip->cfg;
- 	int ret;
- 
- 	if (!cfg->run_engine || !cfg->firmware_cb)
-@@ -585,19 +582,17 @@ int lp55xx_register_sysfs(struct lp55xx_chip *chip)
- 	return cfg->dev_attr_group ?
- 		sysfs_create_group(&dev->kobj, cfg->dev_attr_group) : 0;
- }
--EXPORT_SYMBOL_GPL(lp55xx_register_sysfs);
- 
--void lp55xx_unregister_sysfs(struct lp55xx_chip *chip)
-+static void lp55xx_unregister_sysfs(struct lp55xx_chip *chip)
- {
- 	struct device *dev = &chip->cl->dev;
--	struct lp55xx_device_config *cfg = chip->cfg;
-+	const struct lp55xx_device_config *cfg = chip->cfg;
- 
- 	if (cfg->dev_attr_group)
- 		sysfs_remove_group(&dev->kobj, cfg->dev_attr_group);
- 
- 	sysfs_remove_group(&dev->kobj, &lp55xx_engine_attr_group);
- }
--EXPORT_SYMBOL_GPL(lp55xx_unregister_sysfs);
- 
- static int lp55xx_parse_common_child(struct device_node *np,
- 				     struct lp55xx_led_config *cfg,
-@@ -690,9 +685,9 @@ static int lp55xx_parse_logical_led(struct device_node *np,
- 	return ret;
- }
- 
--struct lp55xx_platform_data *lp55xx_of_populate_pdata(struct device *dev,
--						      struct device_node *np,
--						      struct lp55xx_chip *chip)
-+static struct lp55xx_platform_data *lp55xx_of_populate_pdata(struct device *dev,
-+							     struct device_node *np,
-+							     struct lp55xx_chip *chip)
- {
- 	struct device_node *child;
- 	struct lp55xx_platform_data *pdata;
-@@ -749,7 +744,81 @@ struct lp55xx_platform_data *lp55xx_of_populate_pdata(struct device *dev,
- 
- 	return pdata;
- }
--EXPORT_SYMBOL_GPL(lp55xx_of_populate_pdata);
++	u8 mode, exec;
++	int i, ret;
 +
-+int lp55xx_probe(struct i2c_client *client)
-+{
-+	const struct i2c_device_id *id = i2c_client_get_device_id(client);
-+	int ret;
-+	struct lp55xx_chip *chip;
-+	struct lp55xx_led *led;
-+	struct lp55xx_platform_data *pdata = dev_get_platdata(&client->dev);
-+	struct device_node *np = dev_of_node(&client->dev);
++	/* To run the engine, both OP MODE and EXEC needs to be put in RUN mode */
++	ret = lp55xx_read(chip, cfg->reg_op_mode.addr, &mode);
++	if (ret)
++		return ret;
 +
-+	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
-+		return -ENOMEM;
++	ret = lp55xx_read(chip, cfg->reg_exec.addr, &exec);
++	if (ret)
++		return ret;
 +
-+	chip->cfg = i2c_get_match_data(client);
++	/* Switch to RUN only for engine that were put in LOAD previously */
++	for (i = LP55XX_ENGINE_1; i <= LP55XX_ENGINE_3; i++) {
++		if (LP55xx_MODE_ENGn_GET(i, mode, cfg->reg_op_mode.shift) != LP55xx_MODE_LOAD_ENG)
++			continue;
 +
-+	if (!pdata) {
-+		if (np) {
-+			pdata = lp55xx_of_populate_pdata(&client->dev, np,
-+							 chip);
-+			if (IS_ERR(pdata))
-+				return PTR_ERR(pdata);
-+		} else {
-+			dev_err(&client->dev, "no platform data\n");
-+			return -EINVAL;
-+		}
++		mode &= ~LP55xx_MODE_ENGn_MASK(i, cfg->reg_op_mode.shift);
++		mode |= LP55xx_MODE_RUN_ENG << LP55xx_MODE_ENGn_SHIFT(i, cfg->reg_op_mode.shift);
++		exec &= ~LP55xx_EXEC_ENGn_MASK(i, cfg->reg_exec.shift);
++		exec |= LP55xx_EXEC_RUN_ENG << LP55xx_EXEC_ENGn_SHIFT(i, cfg->reg_exec.shift);
 +	}
 +
-+	led = devm_kcalloc(&client->dev,
-+			   pdata->num_channels, sizeof(*led), GFP_KERNEL);
-+	if (!led)
-+		return -ENOMEM;
-+
-+	chip->cl = client;
-+	chip->pdata = pdata;
-+
-+	mutex_init(&chip->lock);
-+
-+	i2c_set_clientdata(client, led);
-+
-+	ret = lp55xx_init_device(chip);
-+	if (ret)
-+		goto err_init;
-+
-+	dev_info(&client->dev, "%s Programmable led chip found\n", id->name);
-+
-+	ret = lp55xx_register_leds(led, chip);
-+	if (ret)
-+		goto err_out;
-+
-+	ret = lp55xx_register_sysfs(chip);
-+	if (ret) {
-+		dev_err(&client->dev, "registering sysfs failed\n");
-+		goto err_out;
-+	}
++	lp55xx_write(chip, cfg->reg_op_mode.addr, mode);
++	lp55xx_wait_opmode_done(chip);
++	lp55xx_write(chip, cfg->reg_exec.addr, exec);
 +
 +	return 0;
-+
-+err_out:
-+	lp55xx_deinit_device(chip);
-+err_init:
-+	return ret;
 +}
-+EXPORT_SYMBOL_GPL(lp55xx_probe);
++EXPORT_SYMBOL_GPL(lp55xx_run_engine_common);
 +
-+void lp55xx_remove(struct i2c_client *client)
-+{
-+	struct lp55xx_led *led = i2c_get_clientdata(client);
-+	struct lp55xx_chip *chip = led->chip;
-+
-+	lp55xx_stop_all_engine(chip);
-+	lp55xx_unregister_sysfs(chip);
-+	lp55xx_deinit_device(chip);
-+}
-+EXPORT_SYMBOL_GPL(lp55xx_remove);
- 
- MODULE_AUTHOR("Milo Kim <milo.kim@ti.com>");
- MODULE_DESCRIPTION("LP55xx Common Driver");
+ static void lp55xx_reset_device(struct lp55xx_chip *chip)
+ {
+ 	const struct lp55xx_device_config *cfg = chip->cfg;
 diff --git a/drivers/leds/leds-lp55xx-common.h b/drivers/leds/leds-lp55xx-common.h
-index c7c8a77ddb1a..26a724acac16 100644
+index 015ac2ef4e4d..dd74b214ec74 100644
 --- a/drivers/leds/leds-lp55xx-common.h
 +++ b/drivers/leds/leds-lp55xx-common.h
-@@ -164,7 +164,7 @@ struct lp55xx_chip {
- 	struct lp55xx_platform_data *pdata;
- 	struct mutex lock;	/* lock for user-space interface */
- 	int num_leds;
--	struct lp55xx_device_config *cfg;
-+	const struct lp55xx_device_config *cfg;
- 	enum lp55xx_engine_index engine_idx;
- 	struct lp55xx_engine engines[LP55XX_ENGINE_MAX];
- 	const struct firmware *fw;
-@@ -203,21 +203,8 @@ extern bool lp55xx_is_extclk_used(struct lp55xx_chip *chip);
+@@ -112,6 +112,7 @@ struct lp55xx_reg {
+  */
+ struct lp55xx_device_config {
+ 	const struct lp55xx_reg reg_op_mode; /* addr, shift */
++	const struct lp55xx_reg reg_exec; /* addr, shift */
+ 	const struct lp55xx_reg engine_busy; /* addr, mask */
+ 	const struct lp55xx_reg reset;
+ 	const struct lp55xx_reg enable;
+@@ -206,6 +207,7 @@ extern bool lp55xx_is_extclk_used(struct lp55xx_chip *chip);
  /* common chip functions */
  extern void lp55xx_stop_all_engine(struct lp55xx_chip *chip);
+ extern void lp55xx_load_engine(struct lp55xx_chip *chip);
++extern int lp55xx_run_engine_common(struct lp55xx_chip *chip);
  
--/* common device init/deinit functions */
--extern int lp55xx_init_device(struct lp55xx_chip *chip);
--extern void lp55xx_deinit_device(struct lp55xx_chip *chip);
--
--/* common LED class device functions */
--extern int lp55xx_register_leds(struct lp55xx_led *led,
--				struct lp55xx_chip *chip);
--
--/* common device attributes functions */
--extern int lp55xx_register_sysfs(struct lp55xx_chip *chip);
--extern void lp55xx_unregister_sysfs(struct lp55xx_chip *chip);
--
--/* common device tree population function */
--extern struct lp55xx_platform_data
--*lp55xx_of_populate_pdata(struct device *dev, struct device_node *np,
--			  struct lp55xx_chip *chip);
-+/* common probe/remove function */
-+extern int lp55xx_probe(struct i2c_client *client);
-+extern void lp55xx_remove(struct i2c_client *client);
- 
- #endif /* _LEDS_LP55XX_COMMON_H */
+ /* common probe/remove function */
+ extern int lp55xx_probe(struct i2c_client *client);
 diff --git a/drivers/leds/leds-lp8501.c b/drivers/leds/leds-lp8501.c
-index 9eaad0c2148f..d3c718bb8275 100644
+index abe2c4b213d7..47b30e9d04a2 100644
 --- a/drivers/leds/leds-lp8501.c
 +++ b/drivers/leds/leds-lp8501.c
-@@ -305,87 +305,14 @@ static struct lp55xx_device_config lp8501_cfg = {
- 	.run_engine         = lp8501_run_engine,
- };
+@@ -127,10 +127,6 @@ static void lp8501_turn_off_channels(struct lp55xx_chip *chip)
  
--static int lp8501_probe(struct i2c_client *client)
--{
--	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+ static void lp8501_run_engine(struct lp55xx_chip *chip, bool start)
+ {
 -	int ret;
--	struct lp55xx_chip *chip;
--	struct lp55xx_led *led;
--	struct lp55xx_platform_data *pdata = dev_get_platdata(&client->dev);
--	struct device_node *np = dev_of_node(&client->dev);
+-	u8 mode;
+-	u8 exec;
 -
--	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
--	if (!chip)
--		return -ENOMEM;
+ 	/* stop engine */
+ 	if (!start) {
+ 		lp55xx_stop_all_engine(chip);
+@@ -138,39 +134,7 @@ static void lp8501_run_engine(struct lp55xx_chip *chip, bool start)
+ 		return;
+ 	}
+ 
+-	/*
+-	 * To run the engine,
+-	 * operation mode and enable register should updated at the same time
+-	 */
 -
--	chip->cfg = &lp8501_cfg;
+-	ret = lp55xx_read(chip, LP8501_REG_OP_MODE, &mode);
+-	if (ret)
+-		return;
 -
--	if (!pdata) {
--		if (np) {
--			pdata = lp55xx_of_populate_pdata(&client->dev, np,
--							 chip);
--			if (IS_ERR(pdata))
--				return PTR_ERR(pdata);
--		} else {
--			dev_err(&client->dev, "no platform data\n");
--			return -EINVAL;
--		}
+-	ret = lp55xx_read(chip, LP8501_REG_ENABLE, &exec);
+-	if (ret)
+-		return;
+-
+-	/* change operation mode to RUN only when each engine is loading */
+-	if (LP8501_ENG1_IS_LOADING(mode)) {
+-		mode = (mode & ~LP8501_MODE_ENG1_M) | LP8501_RUN_ENG1;
+-		exec = (exec & ~LP8501_EXEC_ENG1_M) | LP8501_RUN_ENG1;
 -	}
 -
--	led = devm_kcalloc(&client->dev,
--			pdata->num_channels, sizeof(*led), GFP_KERNEL);
--	if (!led)
--		return -ENOMEM;
--
--	chip->cl = client;
--	chip->pdata = pdata;
--
--	mutex_init(&chip->lock);
--
--	i2c_set_clientdata(client, led);
--
--	ret = lp55xx_init_device(chip);
--	if (ret)
--		goto err_init;
--
--	dev_info(&client->dev, "%s Programmable led chip found\n", id->name);
--
--	ret = lp55xx_register_leds(led, chip);
--	if (ret)
--		goto err_out;
--
--	ret = lp55xx_register_sysfs(chip);
--	if (ret) {
--		dev_err(&client->dev, "registering sysfs failed\n");
--		goto err_out;
+-	if (LP8501_ENG2_IS_LOADING(mode)) {
+-		mode = (mode & ~LP8501_MODE_ENG2_M) | LP8501_RUN_ENG2;
+-		exec = (exec & ~LP8501_EXEC_ENG2_M) | LP8501_RUN_ENG2;
 -	}
 -
--	return 0;
+-	if (LP8501_ENG3_IS_LOADING(mode)) {
+-		mode = (mode & ~LP8501_MODE_ENG3_M) | LP8501_RUN_ENG3;
+-		exec = (exec & ~LP8501_EXEC_ENG3_M) | LP8501_RUN_ENG3;
+-	}
 -
--err_out:
--	lp55xx_deinit_device(chip);
--err_init:
--	return ret;
--}
+-	lp55xx_write(chip, LP8501_REG_OP_MODE, mode);
+-	lp8501_wait_opmode_done();
 -
--static void lp8501_remove(struct i2c_client *client)
--{
--	struct lp55xx_led *led = i2c_get_clientdata(client);
--	struct lp55xx_chip *chip = led->chip;
--
--	lp55xx_stop_all_engine(chip);
--	lp55xx_unregister_sysfs(chip);
--	lp55xx_deinit_device(chip);
--}
--
- static const struct i2c_device_id lp8501_id[] = {
--	{ "lp8501" },
-+	{ "lp8501",  .driver_data = (kernel_ulong_t)&lp8501_cfg, },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, lp8501_id);
+-	lp55xx_update_bits(chip, LP8501_REG_ENABLE, LP8501_EXEC_M, exec);
++	lp55xx_run_engine_common(chip);
+ }
  
- static const struct of_device_id of_lp8501_leds_match[] = {
--	{ .compatible = "ti,lp8501", },
-+	{ .compatible = "ti,lp8501", .data = &lp8501_cfg, },
- 	{},
- };
- 
-@@ -396,8 +323,8 @@ static struct i2c_driver lp8501_driver = {
- 		.name	= "lp8501",
- 		.of_match_table = of_lp8501_leds_match,
+ static int lp8501_update_program_memory(struct lp55xx_chip *chip,
+@@ -258,6 +222,9 @@ static struct lp55xx_device_config lp8501_cfg = {
+ 	.reg_op_mode = {
+ 		.addr = LP8501_REG_OP_MODE,
  	},
--	.probe		= lp8501_probe,
--	.remove		= lp8501_remove,
-+	.probe		= lp55xx_probe,
-+	.remove		= lp55xx_remove,
- 	.id_table	= lp8501_id,
- };
- 
++	.reg_exec = {
++		.addr = LP8501_REG_ENABLE,
++	},
+ 	.engine_busy = {
+ 		.addr = LP8501_REG_STATUS,
+ 		.mask = LP8501_ENGINE_BUSY,
 -- 
 2.45.1
 
