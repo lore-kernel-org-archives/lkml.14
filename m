@@ -1,106 +1,80 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91BF818E748
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 16:26:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7720418E748;
+	Wed, 26 Jun 2024 16:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719419177; cv=none; b=mYH9sNg/zLlxo+/qJdJrx2SThzYCplYOncDN6Ta1agHa6JfJiT2WNZtUwWvF0rjDzcXU5LzgRn8arQr7Big5e0AFqaY0lZL+f1tjeWz+pvB5ljCmdGCNhUZ6GsPTn396T7YXlWhkgDheMZtOnDkZoxeo4CkGoPNzi3jBTGoyo+A=
+	t=1719419272; cv=none; b=aZKJdtyvsyV58reVrai/Q3pPC0lS1POKR+RT3k8KKtbLTr+O2cOOL3kNFQjEKN4fpWvqstF0+TXxawW/656AwRIWBBz3kji6whhYveomH2hfLX4nyJ6IkRcrp/hbHjcAM49iAgZISu4n4/CyCpJ3dLC56LU58PLfVb+uskzPxVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719419177; c=relaxed/simple;
-	bh=4GMKS9rjKVAuKs90LIE7Nud9qV5fRXEVtDwhzxNSU4I=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=QbRWeUG3X7wdw3F42wo90gfYho4eFoqMsZHiZtlEIvhGHsprtIngDhfLpbp4m1Mi0Mwhu8600ToUFdEjClZyROmbHJ3+r/xuuw41vlXZkSXSVTbfGm67x2dpOl7lRSVtDF36mx53Qo3T9UlAP0zGeqmUSM9T2Llq6Vkk31+rNt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=BUopx4bm; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="BUopx4bm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1719419156; x=1720023956; i=markus.elfring@web.de;
-	bh=+BOJNdTWEc0DoeEIadfvO9hcM5W1C0uZqLmVuEgings=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=BUopx4bm5LepcSY9IGuR2p7li7I8+ZvtMbKcbPkK24fKoOGXW7RRR4WDEKvKEI3K
-	 3Bz/P/EO4IWVje5Y7d0cjg95elb2TI1JDeDVQ5BydMtlUkzLAlH7/+8g+wUIuBRd0
-	 EduNZrAi/1lt96GkBBQGGYvjkjtaEaqY59W+MWww6qr8o1OCvE9DLW06A+FrHtbXI
-	 XSFgHSH70p9jwP+ILpkrlsuR92Jvgo+VikjANgHKiZzO7rAa6RpMfCIx59mAvzrob
-	 3hVmGHuotkix2FUk3Urx4Uz/w/tlVktXnvpSTF5h5eTJsd1iXAUXobRPKAri3k32m
-	 ahvdxqkLEzy4+3zk4g==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MGgJK-1s9uYI0kEM-0070K0; Wed, 26
- Jun 2024 18:25:56 +0200
-Message-ID: <a8470f92-8059-46b3-b50d-5ed776d5b087@web.de>
-Date: Wed, 26 Jun 2024 18:25:53 +0200
+	s=arc-20240116; t=1719419272; c=relaxed/simple;
+	bh=roiUtnPs1fbsAbMpylIIpg5rUzTkeD36yCWtzy3qV58=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LLWLXm6Muo8PCO9NcyZwM0y9TGuRwaqYMolzcNwLVfTlEFShf8m23xQF6vsPj79sq8CvaEyvIFZ7vj2IdT2sdI7SR9BlyTZI8LK8boLT0AGNQ4C/4GBd+qcWKSydizTM6SQxFd4iu1kN/Uh+Mc8hu5QzcICgAyytrnxBUV7TS50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4FFFC116B1;
+	Wed, 26 Jun 2024 16:27:49 +0000 (UTC)
+Date: Wed, 26 Jun 2024 12:27:48 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, John Ogness
+ <john.ogness@linutronix.de>, Alexei Starovoitov <ast@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>, Yonghong Song
+ <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, KP
+ Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo
+ <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Petr Mladek
+ <pmladek@suse.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, bpf
+ <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] bpf: defer printk() inside __bpf_prog_run()
+Message-ID: <20240626122748.065a903b@rorschach.local.home>
+In-Reply-To: <744c9c43-9e4f-4069-9773-067036237bff@I-love.SAKURA.ne.jp>
+References: <345098dc-8cb4-4808-98cf-fa9ab3af4fc4@I-love.SAKURA.ne.jp>
+	<87ed8lxg1c.fsf@jogness.linutronix.de>
+	<60704acc-61bd-4911-bb96-bd1cdd69803d@I-love.SAKURA.ne.jp>
+	<87ikxxxbwd.fsf@jogness.linutronix.de>
+	<ea56efca-552f-46d7-a7eb-4213c23a263b@I-love.SAKURA.ne.jp>
+	<CAADnVQ+hxHsQpfOkQvq4d5AEQsH41BHL+e_RtuxUzyh-vNyYEQ@mail.gmail.com>
+	<7edb0e39-a62e-4aac-a292-3cf7ae26ccbd@I-love.SAKURA.ne.jp>
+	<CAADnVQKoHk5FTN=jywBjgdTdLwv-c76nCzyH90Js-41WxPK_Tw@mail.gmail.com>
+	<744c9c43-9e4f-4069-9773-067036237bff@I-love.SAKURA.ne.jp>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Ma Ke <make24@iscas.ac.cn>, amd-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>,
- Dillon Varone <dillon.varone@amd.com>,
- Harry Wentland <harry.wentland@amd.com>, Jun Lei <jun.lei@amd.com>,
- Leo Li <sunpeng.li@amd.com>,
- Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>,
- Qingqing Zhuo <qingqing.zhuo@amd.com>,
- Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
- Stylon Wang <stylon.wang@amd.com>, Wayne Lin <Wayne.Lin@amd.com>,
- Xinhui Pan <Xinhui.Pan@amd.com>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20240626130650.2866706-1-make24@iscas.ac.cn>
-Subject: Re: [PATCH] drm/amd/display: Add null check before access structs
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240626130650.2866706-1-make24@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:hW5T3ytNJy84MW/WoW5rqy1HSSQrjRdA2CQImSwGMFGq+ssNq1U
- 2KmdBKYZeF+wxg9l+M2L/2jHW5jC5t+/lswua/aMyCTz9p2rh8pAlhkiYmFyXUnnOzIzO+n
- EqqNO3rgp/TM9HvF3VEe0xF6RNO7J7QVEjCVn2urM4xiJfVlXb6Hr4r/bnGKQRYEgQ/lu43
- 7WoEaxsY/oaV3nNnEDWhw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:BrK4kecaDD8=;x68V+m7KY51k84B+tcqQPLPp5Z/
- 02focIqKuCbb14UU9GVSNkg4W0t/t8tKvY2jkL6Mzh3HIBeI5Rkl0m3cwCEKuCqcCgyLoy1Ny
- b5ciZCTEVHM56RKL/1o8Xe8maOPzwYtpWA9EPcb3cvx1MBowLlgYChSjz9VZLbL9s2IHBKxOi
- ZgABaH+zEQ/w/4avT64YEZAU3if2MsivhbfhD5YdM8cMMsWJv5wyHsBTTONawFTXj7CojnjFC
- yY8QA2iZTjeKuLDqppGfzutKJ9M+uPxvD66mKbXAcCh7gBx1kCUgt9QuhLvrbeohFpBJhwAYI
- 3I9sfHjQFexgRX4PBIzYdtrg87X9eZHPrU5olO0bwKzeaPYeb/rHsLms257vzy+2YJqzERpzO
- jlq2HwU1uVYia9H1FWTJKrd7osYOYUpg8mSZbyGu8Q/lbR+YaoXdRLKT026iX1+Mhiz/NWyqA
- NPE1hfyN/cBH+DStzuXk0VmcVKTrmdjyjGBqU5mze0F49u8C5UoouniI21U90O26cMv+PcYRq
- b34XFj6f0ZuUq60BpCO3sLJnH15XmU8nxHog8D0KPEkewD5vDdAXaHxV5BnCs7hJuGAqp5jCP
- d5m5iC22zZFRkOvlc0xvp+EidS9CPJDCQ87RsWkFMvplV0zbtd3yChdnotxPIY7SiIuN0rZAw
- lN6MxRh6xEgqjTHSxu5wRWA/IwpI8BU0WKSrECVUYgXARhiqTHGd7LRMCSwtOb9ZlreN5vF/K
- E/nGZBT6IvPWdr9VyBFoJ+f5JCAosy7bf5OrYgMRR/21IxDoSl7ieVAI3Rf+Su+nZI4Oe+RHo
- QgVfioky/3erOihTVwCE+bNVhpCxbVClqx2n69vtaOEys=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-> In enable_phantom_plane, we should better check null pointer before
-> accessing various structs.
+On Wed, 26 Jun 2024 09:02:22 +0900
+Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp> wrote:
 
-1. Can a wording approach (like the following) be a better change descript=
-ion?
-   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/Documentation/process/submitting-patches.rst?h=3Dv6.10-rc5#n45
+> On 2024/06/26 8:56, Alexei Starovoitov wrote:
+> > You are missing the point. The bug has nothing to do with bpf.  
+> 
+> The bug is caused by calling tracing hooks with rq lock held.
+> If tracing hooks do not exist, this bug does not exist.
 
-   A null pointer is stored in the local variable =E2=80=9Cphantom_plane=
-=E2=80=9D after a call
-   of the function =E2=80=9Ccreate_phantom_plane=E2=80=9D (as a data struc=
-ture menber) failed.
-   This pointer was used in subsequent statements where an undesirable
-   dereference will be performed then.
-   Thus add a corresponding return value check.
+Could you expand on this. What tracing hooks are called with rq lock
+held? You mean the scheduling events?
 
+> 
+> > It can happen without any bpf loaded. Exactly the same way.
+> > should_fail_usercopy() is called on all user accesses.  
+> 
+> Not all callers of e.g. should_fail_usercopy() are holding rq lock.
 
-2. How do you think about to use a summary phrase like
-   =E2=80=9CPrevent null pointer dereference in enable_phantom_plane()=E2=
-=80=9D?
+Sorry, but if a function is going to call printk and can be called in
+any context that has rq locks held, then it should be doing the printk
+deferred and preempt disable logic, and not expect the caller of it to
+do that dirty work. Otherwise this will expand out of control.
 
-Regards,
-Markus
+The same goes with calling spin_lock_irq() vs spin_lock_irqsave(). If a
+function is called with interrupts disabled sometimes and sometimes
+not, it needs the irqsave() version. We don't make all callers of it
+disable interrupts.
+
+-- Steve
