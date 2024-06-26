@@ -1,189 +1,118 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74AC184127
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 13:12:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13AD3181BB8
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 13:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719407524; cv=none; b=czXIagqnc2pyV32wJlU1u9Ofzlp/Mvyl5YsaLXGzs09llNZQBrE+6S76+1Maltn2oRCAHYQCfz0aSVnkafM7ygEbnkkv1PBSXodRBrt7ydyiI6pMam7uwN7Qtqpy9VyE2br87Mn3WU87k1HaHS8Azry+biyotG4c3uqk6hTZcA8=
+	t=1719407573; cv=none; b=Grv2hqzlAINJUjGjK6edLl31gNzPQqtUKa2aOTaEMRG9DPQUkvhYpnOnhrptKpcTi0WZ0Wrmdi2G8ZJpcn8fcdOCMCX4rjAqh2xpyo9BX6JiPRLYds35QeX8oDtGBaNAZvd84PuXVu+CCtBc6c2QQSBJ6In/BgZL/u40v2AtVF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719407524; c=relaxed/simple;
-	bh=zIctHSF8s4ycH2M1Xuee5DajFIDyCPEPGL7Vxs9tOR4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eExN26/cqCZyEM3K/EA8ho7hOo0qg40FhPs3moaesyl7EjYCGH+s/bkt/jOfn+wp8F/Akqvlcrb+EuXhYRmeDfBxcaA7zLKhUKS1SRj7nXDoXi3RlFdoAqP3rwnIxdHAJtYrNEr4xj2HAqgL5XDOTopOoDPtvdZt7rU7Cew5kGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=XxTu5ndA; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1719407573; c=relaxed/simple;
+	bh=kHDZgcJ0udVs+eyU3t/o9puU7N3q6vsn1coCtrZHWuM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ZQpNtgZ08tNCiL1Zz2TxMDps7Lw+/LcS5YOXVu10ql/NakVX4zMFl1DJYilItTxW5j2OQNy4NDj6MdoGpSBg8JQcK7UovJ2IDofU+M+5hsgpi/HEj8w3ZAcsOo3n9UNSPNMSltNQHmoXUmGg1YnIuCTqFwjeSbNMWSVnQ0hydvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=B+pAT+RV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JsPBC40J; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=B+pAT+RV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JsPBC40J; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="XxTu5ndA"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2eabd22d3f4so81624101fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 06:12:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719407521; x=1720012321; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=heAbIXv1oMx4SoDoWG1mJ8ALiEwmwn+mI3czPDKQjFY=;
-        b=XxTu5ndATa6Xd7KDMzMbcjwzLlUcv5e1vz1fccd8ybxAjQW/OZXv83sRVPaHwY4ryW
-         QG37Q+wqDnMl8AWBJujs0ufHBBTpAT2DBATfzl1+xz57G4XzjIBMdfUhECPur3HN7P9n
-         Egp6RRiVGGEQmxe78OAnCI5SPvtv6TZ1Z/KrBV7IU5JT1MjUnfppHpuMSQeSCJw2/brj
-         ngGo09GZBrLnvM8XrZ2ZS81Ft02WNtBI2DrkQ+nId1Hg3Lw74iMsy/K5VldOoNMC3bds
-         DCTc4y6tC6FuNpKES62IZSo6gWFHvR/sKQuPQBiZUhvQKvEppbFiml2+CY3vucfi54CQ
-         ZiPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719407521; x=1720012321;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=heAbIXv1oMx4SoDoWG1mJ8ALiEwmwn+mI3czPDKQjFY=;
-        b=N3tcP5Zp1EBuswyNqU0rU27NZoWTTYV4i2vYs6yLrJyjLJxW8/tdHfgrbg6tdnuHD0
-         Y/YC1c6F2t2wkpCK4l3geAiSrepRA2bHDpx4p8X2B3DCszb26q26NTN0J1CQ05vCeE4I
-         V6XFxxfvV9ogOcIvXxoM4YPdc9ZkfClab551hMr619duRvPmdtX01D0v7sZh5jQsY2AW
-         KgwdMzpMa8x17jH9euZuHa3cUbM2XhOz6vXFZqIsOc4THk7m8kvWaxHZQg2Z/ZMyHV1L
-         YOjaBCrPGSG26AVPoZvzvHeU9YwVl1aNhxN2dxPycCT+UTTzztauHDpB9EsRUSkb65jZ
-         FNpA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBXUUrD/oINVLtt+9LggK6bW/iOYTu27lkF0FK5aUxphAcgK/6BWLBtPC/of8rs0R13vNIP1x4aihcmiDhXmP7Nc3NRl5UyTu0sULQ
-X-Gm-Message-State: AOJu0YxfJe9sLxF/imfqhew/ZNssu5eJ3Bzs8khF46Glw7ARKcgQb4/5
-	HLgrbzhxrbj/fbz+6kqQ6iCTga7okwY7CESILpKWq5L/sNvIAtx2iCi7o71G4Mg=
-X-Google-Smtp-Source: AGHT+IGnfuN9yldtMSaVACEfklvq5QMnwW2TuArhVHZwcMBHnbeoMlc6OQU0v0zbHCs2zie7YJcaew==
-X-Received: by 2002:a2e:890d:0:b0:2eb:e258:717f with SMTP id 38308e7fff4ca-2ec5b2f0400mr62412471fa.42.1719407521185;
-        Wed, 26 Jun 2024 06:12:01 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c84248afsm25143335e9.31.2024.06.26.06.12.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 06:12:00 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Andrea Parri <parri.andrea@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Leonardo Bras <leobras@redhat.com>,
-	Guo Ren <guoren@kernel.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-arch@vger.kernel.org
-Cc: Guo Ren <guoren@linux.alibaba.com>
-Subject: [PATCH v2 08/10] asm-generic: ticket-lock: Reuse arch_spinlock_t of qspinlock
-Date: Wed, 26 Jun 2024 15:03:45 +0200
-Message-Id: <20240626130347.520750-9-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240626130347.520750-1-alexghiti@rivosinc.com>
-References: <20240626130347.520750-1-alexghiti@rivosinc.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="B+pAT+RV";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JsPBC40J";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="B+pAT+RV";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JsPBC40J"
+Received: from hawking.nue2.suse.org (unknown [10.168.4.11])
+	by smtp-out1.suse.de (Postfix) with ESMTP id 25B7421A99;
+	Wed, 26 Jun 2024 13:12:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1719407570; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uCa82HaPuM92DEe4lqLQ19XPhcnsH9XJaUHSDB5WOrg=;
+	b=B+pAT+RVwsuhyDCyJlII7uNA+7KhhqBIQeT3pkN9/guAk3tUG2+qyus0DKMdOvgFa+rNiJ
+	FfBkZ3KQPCd7+qupc1NNhOKHdzB+90ign7VtPpZ8zkssGVdV8gubo3xo8XeRKC9oKtbGyl
+	cB9j0NtJsrnrcfgJDbnu90WqXrFLN/w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1719407570;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uCa82HaPuM92DEe4lqLQ19XPhcnsH9XJaUHSDB5WOrg=;
+	b=JsPBC40J3px8snBbnKMa/1cpnkIANAq3EgZsMvFhgexwioIfRjOlrzwZ5X7lRbhk8tm1fF
+	Osm8UCYX7RkVj/Bg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1719407570; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uCa82HaPuM92DEe4lqLQ19XPhcnsH9XJaUHSDB5WOrg=;
+	b=B+pAT+RVwsuhyDCyJlII7uNA+7KhhqBIQeT3pkN9/guAk3tUG2+qyus0DKMdOvgFa+rNiJ
+	FfBkZ3KQPCd7+qupc1NNhOKHdzB+90ign7VtPpZ8zkssGVdV8gubo3xo8XeRKC9oKtbGyl
+	cB9j0NtJsrnrcfgJDbnu90WqXrFLN/w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1719407570;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uCa82HaPuM92DEe4lqLQ19XPhcnsH9XJaUHSDB5WOrg=;
+	b=JsPBC40J3px8snBbnKMa/1cpnkIANAq3EgZsMvFhgexwioIfRjOlrzwZ5X7lRbhk8tm1fF
+	Osm8UCYX7RkVj/Bg==
+Received: by hawking.nue2.suse.org (Postfix, from userid 17005)
+	id 14A504A050D; Wed, 26 Jun 2024 15:12:50 +0200 (CEST)
+From: Andreas Schwab <schwab@suse.de>
+To: Jisheng Zhang <jszhang@kernel.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,  Palmer Dabbelt
+ <palmer@dabbelt.com>,  Albert Ou <aou@eecs.berkeley.edu>,
+  linux-riscv@lists.infradead.org,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] riscv: uaccess: use input constraints for ptr of
+ __put_user
+In-Reply-To: <20240625040500.1788-3-jszhang@kernel.org> (Jisheng Zhang's
+	message of "Tue, 25 Jun 2024 12:04:58 +0800")
+References: <20240625040500.1788-1-jszhang@kernel.org>
+	<20240625040500.1788-3-jszhang@kernel.org>
+X-Yow: MMM-MM!!  So THIS is BIO-NEBULATION!
+Date: Wed, 26 Jun 2024 15:12:50 +0200
+Message-ID: <mvmikxvonjh.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Spamd-Result: default: False [-4.18 / 50.00];
+	BAYES_HAM(-2.98)[99.92%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.986];
+	RCVD_NO_TLS_LAST(0.10)[];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_ONE(0.00)[1];
+	TO_DN_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email]
+X-Spam-Flag: NO
+X-Spam-Score: -4.18
+X-Spam-Level: 
 
-From: Guo Ren <guoren@linux.alibaba.com>
+On Jun 25 2024, Jisheng Zhang wrote:
 
-The arch_spinlock_t of qspinlock has contained the atomic_t val, which
-satisfies the ticket-lock requirement. Thus, unify the arch_spinlock_t
-into qspinlock_types.h. This is the preparation for the next combo
-spinlock.
+> I believe the output constraints "=m" is not necessary, because
+> the instruction itself is "write", we don't need the compiler
+> to "write" for us.
 
-Reviewed-by: Leonardo Bras <leobras@redhat.com>
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/linux-riscv/CAK8P3a2rnz9mQqhN6-e0CGUUv9rntRELFdxt_weiD7FxH7fkfQ@mail.gmail.com/
-Signed-off-by: Guo Ren <guoren@kernel.org>
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
----
- include/asm-generic/spinlock.h       | 14 +++++++-------
- include/asm-generic/spinlock_types.h | 12 ++----------
- 2 files changed, 9 insertions(+), 17 deletions(-)
+No, this is backwards.  Being an output operand means that the *asm* is
+writing to it, and the compiler can read the value from there afterwards
+(and the previous value is dead before the asm).
 
-diff --git a/include/asm-generic/spinlock.h b/include/asm-generic/spinlock.h
-index 90803a826ba0..4773334ee638 100644
---- a/include/asm-generic/spinlock.h
-+++ b/include/asm-generic/spinlock.h
-@@ -32,7 +32,7 @@
- 
- static __always_inline void arch_spin_lock(arch_spinlock_t *lock)
- {
--	u32 val = atomic_fetch_add(1<<16, lock);
-+	u32 val = atomic_fetch_add(1<<16, &lock->val);
- 	u16 ticket = val >> 16;
- 
- 	if (ticket == (u16)val)
-@@ -46,31 +46,31 @@ static __always_inline void arch_spin_lock(arch_spinlock_t *lock)
- 	 * have no outstanding writes due to the atomic_fetch_add() the extra
- 	 * orderings are free.
- 	 */
--	atomic_cond_read_acquire(lock, ticket == (u16)VAL);
-+	atomic_cond_read_acquire(&lock->val, ticket == (u16)VAL);
- 	smp_mb();
- }
- 
- static __always_inline bool arch_spin_trylock(arch_spinlock_t *lock)
- {
--	u32 old = atomic_read(lock);
-+	u32 old = atomic_read(&lock->val);
- 
- 	if ((old >> 16) != (old & 0xffff))
- 		return false;
- 
--	return atomic_try_cmpxchg(lock, &old, old + (1<<16)); /* SC, for RCsc */
-+	return atomic_try_cmpxchg(&lock->val, &old, old + (1<<16)); /* SC, for RCsc */
- }
- 
- static __always_inline void arch_spin_unlock(arch_spinlock_t *lock)
- {
- 	u16 *ptr = (u16 *)lock + IS_ENABLED(CONFIG_CPU_BIG_ENDIAN);
--	u32 val = atomic_read(lock);
-+	u32 val = atomic_read(&lock->val);
- 
- 	smp_store_release(ptr, (u16)val + 1);
- }
- 
- static __always_inline int arch_spin_value_unlocked(arch_spinlock_t lock)
- {
--	u32 val = lock.counter;
-+	u32 val = lock.val.counter;
- 
- 	return ((val >> 16) == (val & 0xffff));
- }
-@@ -84,7 +84,7 @@ static __always_inline int arch_spin_is_locked(arch_spinlock_t *lock)
- 
- static __always_inline int arch_spin_is_contended(arch_spinlock_t *lock)
- {
--	u32 val = atomic_read(lock);
-+	u32 val = atomic_read(&lock->val);
- 
- 	return (s16)((val >> 16) - (val & 0xffff)) > 1;
- }
-diff --git a/include/asm-generic/spinlock_types.h b/include/asm-generic/spinlock_types.h
-index 8962bb730945..f534aa5de394 100644
---- a/include/asm-generic/spinlock_types.h
-+++ b/include/asm-generic/spinlock_types.h
-@@ -3,15 +3,7 @@
- #ifndef __ASM_GENERIC_SPINLOCK_TYPES_H
- #define __ASM_GENERIC_SPINLOCK_TYPES_H
- 
--#include <linux/types.h>
--typedef atomic_t arch_spinlock_t;
--
--/*
-- * qrwlock_types depends on arch_spinlock_t, so we must typedef that before the
-- * include.
-- */
--#include <asm/qrwlock_types.h>
--
--#define __ARCH_SPIN_LOCK_UNLOCKED	ATOMIC_INIT(0)
-+#include <asm-generic/qspinlock_types.h>
-+#include <asm-generic/qrwlock_types.h>
- 
- #endif /* __ASM_GENERIC_SPINLOCK_TYPES_H */
 -- 
-2.39.2
-
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
