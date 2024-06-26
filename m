@@ -1,143 +1,164 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB8317F4FE;
-	Wed, 26 Jun 2024 10:47:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3043D17B50B
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 10:48:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719398851; cv=none; b=CnINsYDTMQtuTjUs8RMhhSoPY8RoezyWCB3k7FbD5ge+XpgZGmqGvCu/ppW4Y+iY5Fh7+jfLazUk31k6ZFcmilCIjmwYB+o48bLL7Qw29bBA7pbFXUQ3BcRBbV9FtQEyWLzcBxnlq1w4jGy5DbxZVZzsrvuC1sJG0QD+F0WvtXY=
+	t=1719398888; cv=none; b=HDPILOtWaVymsbhDIi65OnlQbornOrRtZY4LKfPWXn7lMd1lG4IT+hpv6Ky47A5AudWI9wcNgrO7E7uTwXYbab6QCYfN2Aw5Dq/kQxOgr90MvXI4sLGu4OurwxYtR4SwL6HGdhHWUJaqVhyuM0Ldz80AWMB7+K8mk0neCiPFC5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719398851; c=relaxed/simple;
-	bh=wEx2+H8luSgiVDKSwitW+t2X93jcCLvcetCHbAkBuHc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X+PVwdri69jt7/A8tWTu/QxPqZYDygYPz5HonpuVRsA+3ElCrTUUhk88uJa4/vCec2OyUbxKeXJF3fbgI/7nO3wSDuqxQCgCmx5cB4gIRVAmk9kr27NOMDdalPssJCPLQfewD5AMYbh8XPZzzAcCPvrSS7xvQyU0XXHsioFqK2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=tRlfOtOI; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1719398888; c=relaxed/simple;
+	bh=nAqxKya6AZrBH1sAckqDbh98c4+umtEBWjgUkM0C9B8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hN6u84j6a2KfXRPCZXQ+RKvKYXR+eQa6x7m0zE29ts/43/FBm7RkDBmZsEX0avk66TGawpUGT/Tgf0njK0zxgS+R+WDBMVkB19wf+YmVB4rR54uAOdnTX4ioLfcwt+jzjVp+kO7a6rH5dJPJ+QjzNH/IsB9fjC8URCgGnfaVkzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=E3EKDTjb; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="tRlfOtOI"
-X-UUID: 774b379233a911ef8da6557f11777fc4-20240626
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Y6nWayEm5MHkjBJY49kDWoN3tVruxwuy2vR8wvEeAhE=;
-	b=tRlfOtOIJIUXLgaUyw2Nx0k6ricg+vW9rL8PtvZeZMKKlVkXGDbCFToWhLDvHzaVWwjrSqW7CpltnBZEZ41E0K0/lokcxgoedzY4BBglF/08xGiaFfPADys9Ifd8pBdqMGqPaM5rM0cZ+qwLgpQd7+RDERWE/RSJSKoeefQFbkQ=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.39,REQID:6833076f-6f7b-4eca-bc94-05470368605b,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:393d96e,CLOUDID:b10e8f85-4f93-4875-95e7-8c66ea833d57,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 774b379233a911ef8da6557f11777fc4-20240626
-Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw01.mediatek.com
-	(envelope-from <skylake.huang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1469580072; Wed, 26 Jun 2024 18:47:21 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Wed, 26 Jun 2024 03:47:20 -0700
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Wed, 26 Jun 2024 18:47:20 +0800
-From: Sky Huang <SkyLake.Huang@mediatek.com>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Daniel Golle
-	<daniel@makrotopia.org>, Qingfang Deng <dqfext@gmail.com>, SkyLake Huang
-	<SkyLake.Huang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
-CC: Steven Liu <Steven.Liu@mediatek.com>, SkyLake.Huang
-	<skylake.huang@mediatek.com>
-Subject: [PATCH net-next v9 04/13] net: phy: mediatek: Improve readability of mtk-phy-lib.c's mtk_phy_led_hw_ctrl_set()
-Date: Wed, 26 Jun 2024 18:43:20 +0800
-Message-ID: <20240626104329.11426-5-SkyLake.Huang@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20240626104329.11426-1-SkyLake.Huang@mediatek.com>
-References: <20240626104329.11426-1-SkyLake.Huang@mediatek.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="E3EKDTjb"
+Received: from [192.168.88.20] (91-158-144-210.elisa-laajakaista.fi [91.158.144.210])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 84F724CF;
+	Wed, 26 Jun 2024 12:47:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1719398860;
+	bh=nAqxKya6AZrBH1sAckqDbh98c4+umtEBWjgUkM0C9B8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=E3EKDTjb+iPqWQi3GBMiym9Zr2530GLF8YBUwTd4ryRVk8T8WYdHq20EJXnAiqSJe
+	 3PFJa/aDr9UQBHQX4ZovOjTU1tx8hNWuR2+sy57TaFOAQ/ILGT5jshWi0T7h1WGuVe
+	 IUqeSU14juGhO+l6xgbp3ds50XLQAsK5fiYAMnFc=
+Message-ID: <6aca2e93-034f-4731-adc4-4eaa3d148193@ideasonboard.com>
+Date: Wed, 26 Jun 2024 13:47:59 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK: N
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 05/11] drm/bridge: cdns-dsi: Fix the clock variable for
+ mode_valid()
+To: Aradhya Bhatia <a-bhatia1@ti.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Jyri Sarha <jyri.sarha@iki.fi>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>
+Cc: DRI Development List <dri-devel@lists.freedesktop.org>,
+ Linux Kernel List <linux-kernel@vger.kernel.org>,
+ Dominik Haller <d.haller@phytec.de>, Sam Ravnborg <sam@ravnborg.org>,
+ Thierry Reding <treding@nvidia.com>,
+ Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+ Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Praneeth Bajjuri <praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>,
+ Devarsh Thakkar <devarsht@ti.com>, Jayesh Choudhary <j-choudhary@ti.com>,
+ Jai Luthra <j-luthra@ti.com>
+References: <20240622110929.3115714-1-a-bhatia1@ti.com>
+ <20240622110929.3115714-6-a-bhatia1@ti.com>
+Content-Language: en-US
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <20240622110929.3115714-6-a-bhatia1@ti.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: "SkyLake.Huang" <skylake.huang@mediatek.com>
+On 22/06/2024 14:09, Aradhya Bhatia wrote:
+> Allow the D-Phy config checks to use mode->clock instead of
+> mode->crtc_clock during mode_valid checks, like everywhere else in the
+> driver.
+> 
+> Fixes: fced5a364dee ("drm/bridge: cdns: Convert to phy framework")
+> Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
+> ---
+>   drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+> index 03a5af52ec0b..426f77092341 100644
+> --- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+> +++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+> @@ -574,7 +574,7 @@ static int cdns_dsi_check_conf(struct cdns_dsi *dsi,
+>   	if (ret)
+>   		return ret;
+>   
+> -	phy_mipi_dphy_get_default_config(mode->crtc_clock * 1000,
+> +	phy_mipi_dphy_get_default_config((mode_valid_check ? mode->clock : mode->crtc_clock) * 1000,
+>   					 mipi_dsi_pixel_format_to_bpp(output->dev->format),
+>   					 nlanes, phy_cfg);
+>   
 
-This patch removes parens around TRIGGER_NETDEV_RX/TRIGGER_NETDEV_TX in
-mtk_phy_led_hw_ctrl_set(), which improves readability.
+I think this is fine as a fix.
 
-Signed-off-by: SkyLake.Huang <skylake.huang@mediatek.com>
----
- drivers/net/phy/mediatek/mtk-phy-lib.c | 44 ++++++++++++++------------
- 1 file changed, 24 insertions(+), 20 deletions(-)
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 
-diff --git a/drivers/net/phy/mediatek/mtk-phy-lib.c b/drivers/net/phy/mediatek/mtk-phy-lib.c
-index e1fbeff..20796ae 100644
---- a/drivers/net/phy/mediatek/mtk-phy-lib.c
-+++ b/drivers/net/phy/mediatek/mtk-phy-lib.c
-@@ -127,29 +127,33 @@ int mtk_phy_led_hw_ctrl_set(struct phy_device *phydev, u8 index,
- 		on |= MTK_PHY_LED_ON_LINK2500;
- 
- 	if (rules & BIT(TRIGGER_NETDEV_RX)) {
--		blink |= (on & on_set) ?
--			  (((on & MTK_PHY_LED_ON_LINK10) ?
--			    MTK_PHY_LED_BLINK_10RX : 0) |
--			   ((on & MTK_PHY_LED_ON_LINK100) ?
--			    MTK_PHY_LED_BLINK_100RX : 0) |
--			   ((on & MTK_PHY_LED_ON_LINK1000) ?
--			    MTK_PHY_LED_BLINK_1000RX : 0) |
--			   ((on & MTK_PHY_LED_ON_LINK2500) ?
--			    MTK_PHY_LED_BLINK_2500RX : 0)) :
--			  rx_blink_set;
-+		if (on & on_set) {
-+			if (on & MTK_PHY_LED_ON_LINK10)
-+				blink |= MTK_PHY_LED_BLINK_10RX;
-+			if (on & MTK_PHY_LED_ON_LINK100)
-+				blink |= MTK_PHY_LED_BLINK_100RX;
-+			if (on & MTK_PHY_LED_ON_LINK1000)
-+				blink |= MTK_PHY_LED_BLINK_1000RX;
-+			if (on & MTK_PHY_LED_ON_LINK2500)
-+				blink |= MTK_PHY_LED_BLINK_2500RX;
-+		} else {
-+			blink |= rx_blink_set;
-+		}
- 	}
- 
- 	if (rules & BIT(TRIGGER_NETDEV_TX)) {
--		blink |= (on & on_set) ?
--			  (((on & MTK_PHY_LED_ON_LINK10) ?
--			    MTK_PHY_LED_BLINK_10TX : 0) |
--			   ((on & MTK_PHY_LED_ON_LINK100) ?
--			    MTK_PHY_LED_BLINK_100TX : 0) |
--			   ((on & MTK_PHY_LED_ON_LINK1000) ?
--			    MTK_PHY_LED_BLINK_1000TX : 0) |
--			   ((on & MTK_PHY_LED_ON_LINK2500) ?
--			    MTK_PHY_LED_BLINK_2500TX : 0)) :
--			  tx_blink_set;
-+		if (on & on_set) {
-+			if (on & MTK_PHY_LED_ON_LINK10)
-+				blink |= MTK_PHY_LED_BLINK_10TX;
-+			if (on & MTK_PHY_LED_ON_LINK100)
-+				blink |= MTK_PHY_LED_BLINK_100TX;
-+			if (on & MTK_PHY_LED_ON_LINK1000)
-+				blink |= MTK_PHY_LED_BLINK_1000TX;
-+			if (on & MTK_PHY_LED_ON_LINK2500)
-+				blink |= MTK_PHY_LED_BLINK_2500TX;
-+		} else {
-+			blink |= tx_blink_set;
-+		}
- 	}
- 
- 	if (blink || on)
--- 
-2.18.0
+However... The code looks a bit messy. Maybe the first one is something 
+that could be addressed in this series.
+
+- Return value of phy_mipi_dphy_get_default_config() is not checked
+
+- Using the non-crtc and crtc versions of the timings this way looks 
+bad, but that's not a problem of the driver. It would be better to have 
+a struct that contains the timings, and struct drm_display_mode would 
+contain two instances of that struct. The driver code could then just 
+pick the correct instance, instead of making the choice for each and 
+every field. This would be an interesting coccinelle project ;)
+
+- Calling cdns_dsi_check_conf() in cdns_dsi_bridge_enable() is odd. 
+Everything should already have been checked. In fact, at the check phase 
+the resulting config values could have been stored somewhere, so that 
+they're ready for use by cdns_dsi_bridge_enable(). But this rises the 
+question if the non-crtc and crtc timings can actually be different, and 
+if they are... doesn't it break everything if at the check phase we use 
+the non-crtc ones, but at enable phase we use crtc ones?
+
+Ah, I see, this is with non-atomic. Maybe after you switch to atomic 
+callbacks, atomic_check could be used so that there's no need for the 
+WARN_ON_ONCE() in enable callback.
+
+  Tomi
 
