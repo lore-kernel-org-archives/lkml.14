@@ -1,141 +1,140 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B35C21836FE;
-	Wed, 26 Jun 2024 13:10:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795281891B8;
+	Wed, 26 Jun 2024 13:10:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719407405; cv=none; b=GaQNJ82I+V3MhmAW17eASWSJu6w86hRXWk35QEFqhbkFWkUeayD+oDM1wXIi+4EOS0sLtMjOy0dtZAnUHuSO1uaqTjkmqdIcHtvMgJ4qq5HzLt44QyOZwLtkLXPo0CBEPjqDRcfqq4r9r3qKdRlWIJG7SNX2R6RDn0RVKiigkbM=
+	t=1719407407; cv=none; b=Fb/udPp6z89T1qBeJbp1i5HRNm38mhF1xvr6/s004BmI+kREi4HnVEUETTqVzqaDrMLUTAwJxqBtPMGbiJXfiTpLZBwrViDdmjxVYhmbQW4G2xKBlnN5gTvFoz0SlusSl3rSYDb0u81Nbnz2csbt+nPx/llANM/PYfV10xUI5YU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719407405; c=relaxed/simple;
-	bh=fbyEDTduMIiV7ATd0/mO/o39aMMcYcfKWmIo8CJP4ig=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NDj2EFAQoV2jm+S1KZp4B0yZ+MWKDoMWRMEKWCQ1Y1+D9Xwulfh8iAaF0KJBLgHMfgIeSz2dcHLBb1/CCCXMoamElIjgwRmytQT3dpzRzuXekCcc28OhKDtZE35Cqjynh40bTng+2Cus4bpASBR4vUKFp/T7PKif7IeC8S4wDsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B660F339;
-	Wed, 26 Jun 2024 06:10:25 -0700 (PDT)
-Received: from [192.168.178.6] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 103273F73B;
-	Wed, 26 Jun 2024 06:09:58 -0700 (PDT)
-Message-ID: <99518a43-8347-4f62-aaf6-de6ce68eca0c@arm.com>
-Date: Wed, 26 Jun 2024 15:09:57 +0200
+	s=arc-20240116; t=1719407407; c=relaxed/simple;
+	bh=jK/3QtruOsnXjjBSZNkqfDNubM1EGnFDWABJ0MLfuGY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bd9yVfNiDVJFXZnSIAYmy/6Igi98hrl7mGaZuFYxl9sRDe0LbAY6j/AGnenmlzcCys+sJkNhJxW3mUMvCCjf4dvJVcA+YrjG5RAF8yE/LRSJ5/nNl42hT0bnEqYlkELRiiT3BL2L/XAWiJxXCpvJ9JST5pwqAyAW2RGHZvxmsZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fga8Ux79; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fga8Ux79"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30868C2BD10;
+	Wed, 26 Jun 2024 13:10:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719407407;
+	bh=jK/3QtruOsnXjjBSZNkqfDNubM1EGnFDWABJ0MLfuGY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fga8Ux79LCwSYWL5W8BEDbjd/EVwvBQFUbfCSAOsqmL5usSX01jW7Tu6ms/vUuwZT
+	 Kahd3vVVGQRtxkZBp5w6i8srse17KyjUnckQen5RmxWAT2xC6U2s+MmfCokqCI/Kxt
+	 vC5AGi+xkKhzWgdkCupm25msgSM+QHR2ArD8TxEW2afJI212Gm9OjCCuK943f5M5wT
+	 bypIwY3vRcrzaabm9L5J+ov4V9+7PMuqSJA6U9SIR1IkR6jJBOON2mfr7WcasZA+Mr
+	 ky5sBz1suFco7veDhkaxvKj6MQXfLpqEuUz7ZK6IstiGgm+6RwuoCJIsVOG5L0fgCT
+	 duu1K0GQpLJJQ==
+Date: Wed, 26 Jun 2024 15:10:01 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Jan Kara <jack@suse.cz>
+Cc: Mateusz Guzik <mjguzik@gmail.com>, Yu Ma <yu.ma@intel.com>, 
+	viro@zeniv.linux.org.uk, edumazet@google.com, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, pan.deng@intel.com, tianyou.li@intel.com, tim.c.chen@intel.com, 
+	tim.c.chen@linux.intel.com
+Subject: Re: [PATCH v2 3/3] fs/file.c: remove sanity_check from alloc_fd()
+Message-ID: <20240626-rohstoff-robben-dfde8cc3f309@brauner>
+References: <20240614163416.728752-1-yu.ma@intel.com>
+ <20240622154904.3774273-1-yu.ma@intel.com>
+ <20240622154904.3774273-4-yu.ma@intel.com>
+ <20240625120834.rhkm3p5by5jfc3bw@quack3>
+ <CAGudoHGYQwigyQSqm97zyUafxaOCo0VoHZmcYzF1KtqmX=npUg@mail.gmail.com>
+ <CAGudoHH4ixO6n2BgMGx7EEYvLS2Agb8WBz_RM55HjCWBQ5tMLg@mail.gmail.com>
+ <20240625133031.jjew3uevvrgwgviw@quack3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv2 3/3] cpuidle: teo: Don't count non-existent intercepts
-To: Christian Loehle <christian.loehle@arm.com>, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, rafael@kernel.org
-Cc: vincent.guittot@linaro.org, qyousef@layalina.io, peterz@infradead.org,
- daniel.lezcano@linaro.org, ulf.hansson@linaro.org, anna-maria@linutronix.de,
- kajetan.puchalski@arm.com, lukasz.luba@arm.com
-References: <20240611112413.1241352-1-christian.loehle@arm.com>
- <20240611112413.1241352-4-christian.loehle@arm.com>
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Content-Language: en-US
-In-Reply-To: <20240611112413.1241352-4-christian.loehle@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240625133031.jjew3uevvrgwgviw@quack3>
 
-On 11/06/2024 13:24, Christian Loehle wrote:
-> When bailing out early, teo will not query the sleep length anymore
-> since commit 6da8f9ba5a87 ("cpuidle: teo:
-> Skip tick_nohz_get_sleep_length() call in some cases") with an
-> expected sleep_length_ns value of KTIME_MAX.
-> This lead to state0 accumulating lots of 'intercepts' because
-> the actually measured sleep length was < KTIME_MAX, so count KTIME_MAX
-> as a hit (we have to count them as something otherwise we are stuck)
-> and therefore teo taking too long to recover from intercept-heavy
-> scenarios.
+On Tue, Jun 25, 2024 at 03:30:31PM GMT, Jan Kara wrote:
+> On Tue 25-06-24 15:11:23, Mateusz Guzik wrote:
+> > On Tue, Jun 25, 2024 at 3:09 PM Mateusz Guzik <mjguzik@gmail.com> wrote:
+> > >
+> > > On Tue, Jun 25, 2024 at 2:08 PM Jan Kara <jack@suse.cz> wrote:
+> > > >
+> > > > On Sat 22-06-24 11:49:04, Yu Ma wrote:
+> > > > > alloc_fd() has a sanity check inside to make sure the struct file mapping to the
+> > > > > allocated fd is NULL. Remove this sanity check since it can be assured by
+> > > > > exisitng zero initilization and NULL set when recycling fd.
+> > > >   ^^^ existing  ^^^ initialization
+> > > >
+> > > > Well, since this is a sanity check, it is expected it never hits. Yet
+> > > > searching the web shows it has hit a few times in the past :). So would
+> > > > wrapping this with unlikely() give a similar performance gain while keeping
+> > > > debugability? If unlikely() does not help, I agree we can remove this since
+> > > > fd_install() actually has the same check:
+> > > >
+> > > > BUG_ON(fdt->fd[fd] != NULL);
+> > > >
+> > > > and there we need the cacheline anyway so performance impact is minimal.
+> > > > Now, this condition in alloc_fd() is nice that it does not take the kernel
+> > > > down so perhaps we could change the BUG_ON to WARN() dumping similar kind
+> > > > of info as alloc_fd()?
+> > > >
+> > >
+> > > Christian suggested just removing it.
+> > >
+> > > To my understanding the problem is not the branch per se, but the the
+> > > cacheline bounce of the fd array induced by reading the status.
+> > >
+> > > Note the thing also nullifies the pointer, kind of defeating the
+> > > BUG_ON in fd_install.
+> > >
+> > > I'm guessing it's not going to hurt to branch on it after releasing
+> > > the lock and forego nullifying, more or less:
+> > > diff --git a/fs/file.c b/fs/file.c
+> > > index a3b72aa64f11..d22b867db246 100644
+> > > --- a/fs/file.c
+> > > +++ b/fs/file.c
+> > > @@ -524,11 +524,11 @@ static int alloc_fd(unsigned start, unsigned
+> > > end, unsigned flags)
+> > >          */
+> > >         error = -EMFILE;
+> > >         if (fd >= end)
+> > > -               goto out;
+> > > +               goto out_locked;
+> > >
+> > >         error = expand_files(files, fd);
+> > >         if (error < 0)
+> > > -               goto out;
+> > > +               goto out_locked;
+> > >
+> > >         /*
+> > >          * If we needed to expand the fs array we
+> > > @@ -546,15 +546,15 @@ static int alloc_fd(unsigned start, unsigned
+> > > end, unsigned flags)
+> > >         else
+> > >                 __clear_close_on_exec(fd, fdt);
+> > >         error = fd;
+> > > -#if 1
+> > > -       /* Sanity check */
+> > > -       if (rcu_access_pointer(fdt->fd[fd]) != NULL) {
+> > > +       spin_unlock(&files->file_lock);
+> > > +
+> > > +       if (unlikely(rcu_access_pointer(fdt->fd[fd]) != NULL)) {
+> > >                 printk(KERN_WARNING "alloc_fd: slot %d not NULL!\n", fd);
+> > > -               rcu_assign_pointer(fdt->fd[fd], NULL);
+> > >         }
+> > > -#endif
+> > 
+> > Now that I sent it it is of course not safe to deref without
+> > protection from either rcu or the lock, so this would have to be
+> > wrapped with rcu_read_lock, which makes it even less appealing.
+> > 
+> > Whacking the thing as in the submitted patch seems like the best way
+> > forward here. :)
 > 
-> Fundamentally we can only do one of the two:
-> 1. Skip sleep_length_ns query when we think intercept is likely
+> Yeah, as I wrote, I'm fine removing it, in particular if Christian is of
+> the same opinion. I was more musing about whether we should make the check
+> in fd_install() less aggressive since it is now more likely to trigger...
 
-Isn't this what we do right now? Skip tick_nohz_get_sleep_length() for
-state0 and set cpu_data->sleep_length_ns to KTIME_MAX in teo_select()
-and then count this as an 'intercept' in teo_update().
-
-> 2. Have accurate data if sleep_length_ns is actually intercepted when
-> we believe it is currently intercepted.
-> 
-> This patch chooses the latter as I've found the additional time it
-> takes to query the sleep length to be negligible and the variants of
-> option 1 (count all unknowns as misses or count all unknown as hits)
-> had significant regressions (as misses had lots of too shallow idle
-> state selections and as hits had terrible performance in
-> intercept-heavy workloads).
-
-IMHO, you do 2 things here:
-
-(1) Set 'cpu_data->sleep_length_ns != KTIME_MAX' for '!idx &&
-    prev_intercept_idx' in teo_select().
-
-(2) Force an update with 'cpu_data->sleep_length_ns == KTIME_MAX' to be
-    counted as a 'hit' rather an 'intercept' in teo_update().
-
-Can't really see how this matches the explanatory text exactly.
-
-
-> 
-> Fixes: 6da8f9ba5a87 ("cpuidle: teo: Skip tick_nohz_get_sleep_length() call in some cases")
-> Signed-off-by: Christian Loehle <christian.loehle@arm.com>
-> ---
->  drivers/cpuidle/governors/teo.c | 18 ++++++++++++++++--
->  1 file changed, 16 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cpuidle/governors/teo.c b/drivers/cpuidle/governors/teo.c
-> index cc7df59f488d..1e4b40474f49 100644
-> --- a/drivers/cpuidle/governors/teo.c
-> +++ b/drivers/cpuidle/governors/teo.c
-> @@ -231,8 +231,13 @@ static void teo_update(struct cpuidle_driver *drv, struct cpuidle_device *dev)
->  	 * length, this is a "hit", so update the "hits" metric for that bin.
->  	 * Otherwise, update the "intercepts" metric for the bin fallen into by
->  	 * the measured idle duration.
-> +	 * If teo_select() bailed out early, we have to count this as a hit as
-> +	 * we don't know what the true sleep length would've been. Otherwise
-> +	 * we accumulate lots of intercepts at the shallower state (especially
-> +	 * state0) even though there weren't any intercepts due to us
-> +	 * anticipating one.
->  	 */
-> -	if (idx_timer == idx_duration)
-> +	if (idx_timer == idx_duration || cpu_data->sleep_length_ns == KTIME_MAX)
->  		cpu_data->state_bins[idx_timer].hits += PULSE;
->  	else
->  		cpu_data->state_bins[idx_duration].intercepts += PULSE;
-> @@ -292,7 +297,7 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
->  	unsigned int hit_sum = 0;
->  	int constraint_idx = 0;
->  	int idx0 = 0, idx = -1;
-> -	bool alt_intercepts, alt_recent;
-> +	int prev_intercept_idx;
->  	s64 duration_ns;
->  	int i;
->  
-> @@ -370,6 +375,7 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
->  	 * all of the deeper states a shallower idle state is likely to be a
->  	 * better choice.
->  	 */
-> +	prev_intercept_idx = idx;
->  	if (2 * idx_intercept_sum > cpu_data->total - idx_hit_sum) {
->  		int first_suitable_idx = idx;
->  
-> @@ -421,6 +427,14 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
->  			first_suitable_idx = i;
->  		}
->  	}
-> +	if (!idx && prev_intercept_idx) {
-> +		/*
-> +		 * We have to query the sleep length here otherwise we don't
-> +		 * know after wakeup if our guess was correct.
-> +		 */
-> +		duration_ns = tick_nohz_get_sleep_length(&delta_tick);
-> +		cpu_data->sleep_length_ns = duration_ns;
-> +	}
->  
->  	/*
->  	 * If there is a latency constraint, it may be necessary to select an
-
+We could change it to WARN_ON() and then people can get BUG_ON()
+behavior when they turn WARN into BUG which apparently is a thing that
+we support.
