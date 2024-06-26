@@ -1,88 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C7E18C354;
-	Wed, 26 Jun 2024 15:29:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6892AFBEF
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 15:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719415779; cv=none; b=pPFDO1r0lat9Odt7MDVYLgi6XrnWty6Sq8Ao22gFVSaGFXwP6wMZutI0c9u+8MoLVP9J450nY2HFx5V3NlWganMZXupcL++zKeCXXsnVnAoBf8EAYi2r7Y6Ds2Hxigw/z8UYoHi2RiklQQ12abpMRh45cFOUIvk+czjfAL5xTVk=
+	t=1719415822; cv=none; b=i75nYxib3mkJ+2eJqRlt9UiMxfI9QdH1koXu9GmFs6zWQQ7gZ5KuAHfm9dGq6c0wMCDu5Xnf/2GnukuGmUAone7P5a2gbltLgGjWZMqFOLjNkFE6t4UR9Ma66hnL1MSeinn6kvv9HUjdjF7cSidTurbyaJ2m6PohQYCGmAE6OCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719415779; c=relaxed/simple;
-	bh=KYmFufaZOq+tPce2dbRFyvr/jertkuSk6czkmOSH2yY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DLo4OpF5TsnaCrVpOFinQ3tYR3+tg8/CHanGXb1TMiQJGy3sq0a7tJD51rxWskt5zAMCwMRbfYvxVupyk+kGjm035DsGYZ9ronPkHlTg/8/167suOdhi7wGRWTBacPAUKnj7kFKfbpOkFzQl2mYjIwf59OnTi0yFVzrvsvK7Mf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HqOqXDJh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719415822; c=relaxed/simple;
+	bh=k22ie6hHIhjYT8DjXFokXCWeeEjB7cTfhyrI6fPRW+M=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=jm4EIuXs1evy1dOFY/R9POK5Sxs5eDEBBSffx1ONxbwmA5j4LpdplIceiGi6zeUS3u7+Q89cEXbPHXfwaBSiT1/m3X+vaHLt0MaZTfH89pgIDupL5aqQEehMKIUE9vqLoda5jGnGvl0zGJ7p46E8DZkoY1L14QGVwotV/5hn5fM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CQjg7w/b; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HqOqXDJh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBC82C116B1;
-	Wed, 26 Jun 2024 15:29:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719415779;
-	bh=KYmFufaZOq+tPce2dbRFyvr/jertkuSk6czkmOSH2yY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HqOqXDJhMESXTHTIVuG4rMwahchgQPfA/xPdyLszHIa74qc7c+/tqnBMjIkEpaJlz
-	 B4t7LlD9dTHcQpG+AZmED327hygu+2cztsoYcMfmB2tTOOO60+irXO/HpMVJWCtXYj
-	 E5gfnfZyW5cGDAv2gDEX6BwyGlrOwrPBklrpg7AGk9J7KOn/2+HFy9rioPsspQtxSp
-	 RGdCLhJqNrdTq0J46AgY7fMT9+lV4Bb/6qaAnMgC4MECKP0MouMGeT5KE5xJsSvtO6
-	 h73VhOu+hIP9C6AWwkYIG9xkzaxDJA7rxS4tCphCXQoXlOXeoyJNLQAPCTnd/PQgdc
-	 +qkjL6JM848hQ==
-Date: Wed, 26 Jun 2024 16:29:33 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, dri-devel@lists.freedesktop.org,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: panel-simple-dsi: add lincoln LCD197
- panel bindings
-Message-ID: <20240626-chowtime-coveted-93da3bf31bb7@spud>
-References: <20240626142212.1341556-1-jbrunet@baylibre.com>
- <20240626142212.1341556-2-jbrunet@baylibre.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CQjg7w/b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719415819;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=k22ie6hHIhjYT8DjXFokXCWeeEjB7cTfhyrI6fPRW+M=;
+	b=CQjg7w/bsmIAE67sF+y/msabHZLUQwaca4apTM9o0GyuFkGa/GyJYCRwS5qwW2czeB58TW
+	j8sIdZ23gD2o2KlxVMjVi1mS7y9IeYsMdJbfouVM1REoq9U/rOjuyCHh61UIBmFd/fjSIE
+	dAVvXN+GBxCXSifRP8mRhQlEFJR1ncY=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-341-uIhVIbkZPxu0MW8gvoPg-w-1; Wed,
+ 26 Jun 2024 11:30:15 -0400
+X-MC-Unique: uIhVIbkZPxu0MW8gvoPg-w-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 24D1619560AE;
+	Wed, 26 Jun 2024 15:30:13 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.94])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 76B551956087;
+	Wed, 26 Jun 2024 15:30:09 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 26 Jun 2024 17:28:39 +0200 (CEST)
+Date: Wed, 26 Jun 2024 17:28:35 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Michal Hocko <mhocko@suse.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Jinliang Zheng <alexjlzheng@tencent.com>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Tycho Andersen <tandersen@netflix.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH -mm 0/2] memcg: deuglify mm_update_next_owner()
+Message-ID: <20240626152835.GA17910@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="phGq938lt5gtN+KA"
-Content-Disposition: inline
-In-Reply-To: <20240626142212.1341556-2-jbrunet@baylibre.com>
-
-
---phGq938lt5gtN+KA
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Wed, Jun 26, 2024 at 04:22:07PM +0200, Jerome Brunet wrote:
-> This adds the bindings for the 1080x1920 Lincoln LCD197 DSI panel to
-> panel-simple-dsi.
->=20
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+On top of mm-optimize-the-redundant-loop-of-mm_update_owner_next.patch
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Michal, et al, could you review ? Compile tested only.
 
-Cheers,
-Conor.
+Oleg.
 
---phGq938lt5gtN+KA
-Content-Type: application/pgp-signature; name="signature.asc"
+ kernel/exit.c | 81 +++++++++++++++++++++++++++++++----------------------------
+ 1 file changed, 43 insertions(+), 38 deletions(-)
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnwz3QAKCRB4tDGHoIJi
-0jOaAQDx/3F2dkEEHhkpmmB5G7WSj/Ti3O7ogsCSBE/sPvDpmgEAq09d+xd7eY9+
-Qar6TEY8dfFapHFrGfP+PxVrfmLNWwk=
-=hC5p
------END PGP SIGNATURE-----
-
---phGq938lt5gtN+KA--
