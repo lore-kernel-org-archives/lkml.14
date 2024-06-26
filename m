@@ -1,122 +1,154 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D1714B957;
-	Wed, 26 Jun 2024 05:49:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBEA5139D10;
+	Wed, 26 Jun 2024 05:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719380999; cv=none; b=eUbriafvv85cX0Ni98UUlkXmZKKvGb89bDVYUQnKMVbROVGdg5xviRltgLNoIhL/mSCOf0JeOZxVy/9pZgwl6WaokYmM21bVfn6o4LjvrP8SRr0vR9PtMtYtpwOBsLNXeKLbUs+2wnPsAv5NYdPFWyW11vefY6SsUx1yqSZ7W6c=
+	t=1719381093; cv=none; b=kq/hsj+yPEhq1ualwRg/aauD/Z0FL2LtocIYqSvxuMOcgxP60E8P3a5e4XXjDc0mY7cM+lzmqOHrslsCPLPbnvEFk1z1LyJkwL0yoKqFfBOZtjv+HZkJtc2lT0qOFGphC7fzbanmeG+rfEgBIxBIJ3tO0X6reLUZiPYVbDVGmpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719380999; c=relaxed/simple;
-	bh=v5K9W0GO9PpzxtYq7caERQlS2z7z7pdua1mzI8qQKIg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c/lMmE4ukCqZrBgMnLT0+5C6plcSCcZg4vWEMGGwqIGvE3NzvmItlB3WSc0BknhkbEsBq5557wcYXja0DAKWyTHphoRvVEXArSvPlgDeOpJ4gg/T086wksVGEJYlYWt2vqKaVMhs33HRoXBFZOBVF/+vpAffg8oxzPzlscsw5gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gowTIA0W; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719381093; c=relaxed/simple;
+	bh=MHp/zhusMFMz7uCcBaQsQqttODzjyCKr/GtDgI6hQkw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xapskr68LZz1amgK3wFy9ZJEMv137Vnhhss5OjiZJmaUhIK+9XxCEqBSGeK1PYPC2GCqUJr/ZkHd0DGcuXSDhi6fBbAwDjeTrZLXrcYiw0FJQNXL5BR0sNTEU5IqGo4Jy8LFDPJVvpvAq4i0qV/ASePeGWNKOhNglSNTl0HLqHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=vj/LXfZO; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gowTIA0W"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2ec50a5e230so46345271fa.0;
-        Tue, 25 Jun 2024 22:49:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719380996; x=1719985796; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v5K9W0GO9PpzxtYq7caERQlS2z7z7pdua1mzI8qQKIg=;
-        b=gowTIA0WVyMYoRD4Lndnyyfwe1yyPFnQ5xMqu856aE5cUzDskO84Ib2EMrYmpoFV4+
-         nlGNIMP6wHs4X1teK9AJ/Qm4nQIyRxQ8Eds5/hEFaawM0AjwFBs5Kvg0pOxCFS2rVRya
-         CUPsBBobIve8i0Yos++CWCWIbYIUPJoVjVs0ze1mj8H8ErumqKZowy9xIzYQstOxitLO
-         VxdVuGtvoFAyEf49uOYLeOs3eFYHhq4P1b4shPb6lmg9UJe6z9XEZDbKqyWNVrQF28L1
-         uLS5rA4kmhA+qvkU+VEbtCHOFBYFC9ydh61u+uOZyr6N6SUqTu7ig+K5OC2XM1pgzvG4
-         hspA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719380996; x=1719985796;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=v5K9W0GO9PpzxtYq7caERQlS2z7z7pdua1mzI8qQKIg=;
-        b=FHQlQItxBDFwThmb4EZdMnbcTCfiv9VPeqY380Go7Gxw8fqzNw9szxFmtqPFzFI2Nv
-         MNZNzyFyIQBtJCf+bduTuqSe4/6fb/mB1t2pm4Oa2S1xIPQCrfXeO7ddHiMYdpKvy//f
-         +A39fnhy+ruvGArYJPJ1kPL0CZg+AWbzbVmFaLJtEfO6TyKmHhIfS2J6fR6g7rNsRoRg
-         h6EjxLPH6j8C36ExuEJCZDV8zrzFgrE+6bgov8/qCvQLUrhmyVzLkaDq7K0c2GQ+8XLs
-         Qfm5c96QNmvcM5hsoiA3SKlf+cvfXph15r8/vD9WhTAIg3q8XuDGdNCSZXJ2WgH4RbQ2
-         Xo2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXSTc2TwOdRLl/mwdnJ1KIf8ltpjFFFMw0AYFonjp79hTa0VoH/mPulNzGkrrNoFvpdb9lko/9h7AtAz89EHUjQ/9sX+4pBdUZRxAnvA7e4pg5z6WUtVGikw3B6uBf8dAHjynK8U+N4oooceAWl1ME2m1I2ADToSe6KZ4uibapxypHcIwkiCzSB0VjlojfH7RNH8/1j0feAhRS6sUwJ+lhvnC+yNw==
-X-Gm-Message-State: AOJu0YycfRzdUzJnDBI/yBb+2WGLhzywnL/GOrorFa0RHhE3GQhuL7sl
-	vZZpD5zjQomUuBZVf9JV1W9i8ayB4oiTDd1TLRUA7nmSReAK6Dq7Qg1cC0TVCQoyv28VyxqDbdL
-	5uKuNp7BHTyE85SD3EjtOMliU7bl0wx/m
-X-Google-Smtp-Source: AGHT+IHqPmoNHc/D6CitRQRrrwA72PsfsO3G0YCKPJaaFQm8Pb0gFDwLXSmWJ6pDvgH5ty5s6ZH5XOcaJ8l9Q9r4Q+A=
-X-Received: by 2002:a05:651c:158:b0:2ec:55b5:ed51 with SMTP id
- 38308e7fff4ca-2ec5b269428mr53995721fa.9.1719380995389; Tue, 25 Jun 2024
- 22:49:55 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="vj/LXfZO"
+Received: from pendragon.ideasonboard.com (unknown [193.209.96.36])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 072A373E;
+	Wed, 26 Jun 2024 07:51:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1719381067;
+	bh=MHp/zhusMFMz7uCcBaQsQqttODzjyCKr/GtDgI6hQkw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vj/LXfZO2Tl3iAaaoMh7OLzFFO1HNUdCnhr9a+k0O1OxFMxd9kj+Kun2tDEc21lZA
+	 4/cp5SoG2Lu0ylCPfGluEO48cOmD4mfO4mog4ieRbpnbvWqi0Spo1E7Y1a/YXa+WB2
+	 O225teShT5kSQQxCl4+jpEBd+OMWJ32gGXvfVWUw=
+Date: Wed, 26 Jun 2024 08:51:08 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH] drm: renesas: Move RZ/G2L MIPI DSI driver to rz-du
+Message-ID: <20240626055108.GA10453@pendragon.ideasonboard.com>
+References: <20240625123244.200533-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240624-b4-sc7180-camss-v3-0-89ece6471431@gmail.com>
- <4d2f4a52-826e-44be-b242-55b50708692d@linaro.org> <CADgMGSt2sRecrrYrG3t4RtgGn8QJzr1N+iRSWFKQVPgA6Pk8tw@mail.gmail.com>
- <a06505c7-fd8e-4135-94d3-d05d9b4dc90d@linaro.org> <74215bff-933b-4d11-be2f-c1d5b5788f9e@linaro.org>
-In-Reply-To: <74215bff-933b-4d11-be2f-c1d5b5788f9e@linaro.org>
-From: george chan <gchan9527@gmail.com>
-Date: Wed, 26 Jun 2024 13:49:42 +0800
-Message-ID: <CADgMGStpV1XZCKavw8pgW+ReTCaDZ+_52367HvWOGHLPfb0pYw@mail.gmail.com>
-Subject: Re: [PATCH RFT v3 0/5] Add sc7180 camss subsys support
-To: "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Todor Tomov <todor.too@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	cros-qcom-dts-watchers@chromium.org, Bjorn Andersson <andersson@kernel.org>, 
-	linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240625123244.200533-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-On Wed, Jun 26, 2024 at 7:44=E2=80=AFAM Bryan O'Donoghue
-<bryan.odonoghue@linaro.org> wrote:
->
-> On 25/06/2024 17:57, Konrad Dybcio wrote:
-> > On 24.06.2024 5:03 PM, george chan wrote:
-> >> On Mon, Jun 24, 2024 at 9:50=E2=80=AFPM Bryan O'Donoghue
-> >> <bryan.odonoghue@linaro.org> wrote:
-> >>>
-> >>> On 24/06/2024 13:13, George Chan via B4 Relay wrote:
-> >>>> - Add RFT tag to all patches, since no tested-by at all.
-> >>>
-> >>> Have you not tested this updated series ?
-> >>>
-> >>> ---
-> >>> bod
-> >>
-> >> Do you wanna add my tested-by too? It just feels weird to add my
-> >> tested-by that way.
-> >
-> > "RFT" means "I didn't actually test this" or "please provide more testi=
-ng",
-> > not "there have not been tested-by's from others"
-> >
-> > Konrad
->
-> Exactly, RFT says to me "someone else needs to add testing here".
->
+Hi Prabhakar,
 
-gotcha.
+Thank you for the patch.
 
-> In your next drop with the changes and RBs please drop RFT - unless you
-> want someone else to test it for you.
->
+On Tue, Jun 25, 2024 at 01:32:44PM +0100, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> 
+> All the RZ/G2L DU specific components are located under the rz-du folder,
+> so it makes sense to move the RZ/G2L MIPI DSI driver there instead of
+> keeping it in the rcar-du folder. This change improves the organization
+> and modularity of the driver configuration by grouping related settings together.
 
-If the test result on sm7125 is convincing then I have no problem.
+I was thinking the same the other day. Thanks for beating me at sending
+a patch :-)
 
-> I don't think that's required right now since the set seems
-> straight-forward enough and TBH the bit of 7180 hardware I have sits in
-> a box unopened and will likely stay that way for the next few months at
-> least.
->
-> I think your example video is proof enough the thing works ;)
-Nice to hear.
->
+Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+
+Do you or Biju has committer rights to drm-misc to push this patch ?
+
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
-> bod
+>  drivers/gpu/drm/renesas/rcar-du/Kconfig                   | 8 --------
+>  drivers/gpu/drm/renesas/rcar-du/Makefile                  | 2 --
+>  drivers/gpu/drm/renesas/rz-du/Kconfig                     | 8 ++++++++
+>  drivers/gpu/drm/renesas/rz-du/Makefile                    | 2 ++
+>  .../gpu/drm/renesas/{rcar-du => rz-du}/rzg2l_mipi_dsi.c   | 0
+>  .../drm/renesas/{rcar-du => rz-du}/rzg2l_mipi_dsi_regs.h  | 0
+>  6 files changed, 10 insertions(+), 10 deletions(-)
+>  rename drivers/gpu/drm/renesas/{rcar-du => rz-du}/rzg2l_mipi_dsi.c (100%)
+>  rename drivers/gpu/drm/renesas/{rcar-du => rz-du}/rzg2l_mipi_dsi_regs.h (100%)
+> 
+> diff --git a/drivers/gpu/drm/renesas/rcar-du/Kconfig b/drivers/gpu/drm/renesas/rcar-du/Kconfig
+> index 53c356aed5d5..39af73cf2092 100644
+> --- a/drivers/gpu/drm/renesas/rcar-du/Kconfig
+> +++ b/drivers/gpu/drm/renesas/rcar-du/Kconfig
+> @@ -60,14 +60,6 @@ config DRM_RCAR_MIPI_DSI
+>  	select DRM_MIPI_DSI
+>  	select RESET_CONTROLLER
+>  
+> -config DRM_RZG2L_MIPI_DSI
+> -	tristate "RZ/G2L MIPI DSI Encoder Support"
+> -	depends on DRM && DRM_BRIDGE && OF
+> -	depends on ARCH_RENESAS || COMPILE_TEST
+> -	select DRM_MIPI_DSI
+> -	help
+> -	  Enable support for the RZ/G2L Display Unit embedded MIPI DSI encoders.
+> -
+>  config DRM_RCAR_VSP
+>  	bool "R-Car DU VSP Compositor Support" if ARM
+>  	default y if ARM64
+> diff --git a/drivers/gpu/drm/renesas/rcar-du/Makefile b/drivers/gpu/drm/renesas/rcar-du/Makefile
+> index b8f2c82651d9..6f132325c8b7 100644
+> --- a/drivers/gpu/drm/renesas/rcar-du/Makefile
+> +++ b/drivers/gpu/drm/renesas/rcar-du/Makefile
+> @@ -14,5 +14,3 @@ obj-$(CONFIG_DRM_RCAR_DU)		+= rcar-du-drm.o
+>  obj-$(CONFIG_DRM_RCAR_DW_HDMI)		+= rcar_dw_hdmi.o
+>  obj-$(CONFIG_DRM_RCAR_LVDS)		+= rcar_lvds.o
+>  obj-$(CONFIG_DRM_RCAR_MIPI_DSI)		+= rcar_mipi_dsi.o
+> -
+> -obj-$(CONFIG_DRM_RZG2L_MIPI_DSI)	+= rzg2l_mipi_dsi.o
+> diff --git a/drivers/gpu/drm/renesas/rz-du/Kconfig b/drivers/gpu/drm/renesas/rz-du/Kconfig
+> index 5f0db2c5fee6..8ec14271ebba 100644
+> --- a/drivers/gpu/drm/renesas/rz-du/Kconfig
+> +++ b/drivers/gpu/drm/renesas/rz-du/Kconfig
+> @@ -10,3 +10,11 @@ config DRM_RZG2L_DU
+>  	help
+>  	  Choose this option if you have an RZ/G2L alike chipset.
+>  	  If M is selected the module will be called rzg2l-du-drm.
+> +
+> +config DRM_RZG2L_MIPI_DSI
+> +	tristate "RZ/G2L MIPI DSI Encoder Support"
+> +	depends on DRM && DRM_BRIDGE && OF
+> +	depends on ARCH_RENESAS || COMPILE_TEST
+> +	select DRM_MIPI_DSI
+> +	help
+> +	  Enable support for the RZ/G2L Display Unit embedded MIPI DSI encoders.
+> diff --git a/drivers/gpu/drm/renesas/rz-du/Makefile b/drivers/gpu/drm/renesas/rz-du/Makefile
+> index 663b82a2577f..2987900ea6b6 100644
+> --- a/drivers/gpu/drm/renesas/rz-du/Makefile
+> +++ b/drivers/gpu/drm/renesas/rz-du/Makefile
+> @@ -6,3 +6,5 @@ rzg2l-du-drm-y := rzg2l_du_crtc.o \
+>  
+>  rzg2l-du-drm-$(CONFIG_VIDEO_RENESAS_VSP1)	+= rzg2l_du_vsp.o
+>  obj-$(CONFIG_DRM_RZG2L_DU)		+= rzg2l-du-drm.o
+> +
+> +obj-$(CONFIG_DRM_RZG2L_MIPI_DSI)	+= rzg2l_mipi_dsi.o
+> diff --git a/drivers/gpu/drm/renesas/rcar-du/rzg2l_mipi_dsi.c b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> similarity index 100%
+> rename from drivers/gpu/drm/renesas/rcar-du/rzg2l_mipi_dsi.c
+> rename to drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> diff --git a/drivers/gpu/drm/renesas/rcar-du/rzg2l_mipi_dsi_regs.h b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h
+> similarity index 100%
+> rename from drivers/gpu/drm/renesas/rcar-du/rzg2l_mipi_dsi_regs.h
+> rename to drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h
+
+-- 
+Regards,
+
+Laurent Pinchart
