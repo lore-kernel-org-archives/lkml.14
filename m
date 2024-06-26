@@ -1,111 +1,103 @@
-Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03DBB13C3F9;
-	Wed, 26 Jun 2024 04:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B2213B2B1;
+	Wed, 26 Jun 2024 04:50:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719377369; cv=none; b=fCTXcHPjZSj358TveaEQm2wdn9XRbQgjXKGgYmFfcRnBKfkbqba+TWgeB+452IeDVy6dEfQTFsRAksVRDhB+ewgXMdtT1mqJVOM+qOew6sqVoA6lJ4umAs/er/1EhpYrCD9hEzlPAzB0koIxgSsQWjnbWwtBmmCOGzvXztnLZHw=
+	t=1719377415; cv=none; b=Kv8XmjHUz9RfFXvBJD34ie1vVqYCpUOF13kZum7U74hB5OmovUzUEM640NqcKmIBThqvP2T6wUOQIZc67dXktL6aERQQjdUw619Plj9xtbPWypi/3fg2PpMbz9x7WJKNy3DQ+TUmuOrKv1rHo1fvVmMcGvJusnsXWVJMFKNgBIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719377369; c=relaxed/simple;
-	bh=DeNUckMmF4HuoYfQPD23ziZ14eW1uotkgiAdWyU4xxY=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=OvRwftbc2s9Z42ixqlxkeOYjUU9bPXgZiF89exNJTfth8knFTJTQ2/k34cyKxoTyf2nSYPm8foj3EsVzFOF49QRjHyRDjITPm7VoHGD+0cSZDs1lJ9wV/j+YH7eySq2H8gkyiaT1fT2dkEYFHWYskO2Cdmn0Jetr2XBM1IxJl7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=u96Etjop; arc=none smtp.client-ip=192.134.164.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+	s=arc-20240116; t=1719377415; c=relaxed/simple;
+	bh=JNT6n7gJQS1ekI8Tauqvdq8JctJu4XPq5pK/wqzf1n0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h8mnn/wXnudMQwpa6XFGdW7/VjAXnJxu0INZHPf5tfXuUNjbg9HBEqagMXlR8f0f5RPb86q3Ig+0dKyy8lAfK/j5JOmN5PkpFCi71RGPGU2JJNpji/Ji5lo72kgWvf/qwQ1IpNt/o8EXX6aEhPalou7KQnYhP38+kNPCBCKFIIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=NDvzdFfg; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=rdDcWB8l reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="u96Etjop"
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="NDvzdFfg";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="rdDcWB8l"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=gWh23bngFhtOBET3jRZTmg2MWDWx9l+WXBy5PKJFqxo=;
-  b=u96Etjop0wXuyWgHQWBwrlZVH6sEVJgjoyS+LoNx5zy7VPXmLaN7+mrv
-   CnPaAgtTCqNOd+M4U8XRSAMqcd+JUl1dDV0H8ZZlLYFMHNlRgOPm0iZ+k
-   PHHpls2Mhb1Jaj74urRKaN3gEh+2U3HjJdfBPO1M9r0/L/mBQeAIyIYQp
-   U=;
-Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1719377411; x=1750913411;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=PyotQWY+vhDeX6zc3eagaZBEBtHJTWwRgB86lW0uB1w=;
+  b=NDvzdFfgYVIrEFL3Yx1gkL8Kqxl24R+jEeZKjA9jaYDmtYfSkebrSHUG
+   5QWT2Ydf9RN8yLxnAv3Hu3m6Mu5Eb5pBKCkyqtXEaxTPdh9DkCjBkudpK
+   cNr/JoqvcWtnGz3HBV5/gJEZalJLvmreO70SaIyyNWYfWezH+s7Hplgfs
+   JEH2mcerrEbrp23H8R2kGmVk/g9BPFoZ3RVou3XVEBeQ+CWCPDYkrISC9
+   BMre/gCtg3QITB+Woc6ZcMWGJuxvY8DkF3JaJMq8Hcc5gV4qVxVdkK6Q+
+   CKUnX9NBtoJF63qHPOWai5KiagxkcyYKKwTHKyufi33MhD4RhXpP0ELeO
+   Q==;
+X-CSE-ConnectionGUID: DLYO0bOJRn2SOU8zwygVtg==
+X-CSE-MsgGUID: T0XYMbzOSD+5UwkLbT618Q==
 X-IronPort-AV: E=Sophos;i="6.08,265,1712613600"; 
-   d="scan'208";a="90632967"
-Received: from 203-174-183-243.bri.static-ipl.aapt.com.au (HELO hadrien) ([203.174.183.243])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 06:48:08 +0200
-Date: Wed, 26 Jun 2024 14:48:03 +1000 (AEST)
-From: Julia Lawall <julia.lawall@inria.fr>
-To: Philipp Hortmann <philipp.g.hortmann@gmail.com>
-cc: Tom Mounet <tommounet@gmail.com>, Marc Dietrich <marvin24@gmx.de>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, ac100@lists.launchpad.net, 
-    linux-tegra@vger.kernel.org, linux-staging@lists.linux.dev, 
-    linux-kernel@vger.kernel.org, outreachy@lists.linux.dev
-Subject: Re: [PATCH] staging: nvec: use x instead of x != NULL
-In-Reply-To: <c2911f68-d1e2-4b45-af95-590926b7a6f1@gmail.com>
-Message-ID: <21151f5a-059-538c-3cec-7c40d625c5a8@inria.fr>
-References: <667b2ee6.050a0220.f9c1.5426@mx.google.com> <c2911f68-d1e2-4b45-af95-590926b7a6f1@gmail.com>
+   d="scan'208";a="37587111"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 26 Jun 2024 06:50:08 +0200
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E05AA160B1D;
+	Wed, 26 Jun 2024 06:50:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1719377404; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding; bh=PyotQWY+vhDeX6zc3eagaZBEBtHJTWwRgB86lW0uB1w=;
+	b=rdDcWB8lWIRAgWyjinUmEWXwvz9SmJcSwajwy05Ce7f9lnN/rqniTBbeombDvIYH6V8Gxc
+	JImMfVAnEtyoI6yTyrpO9F+nh1XATBvEBC0osYqXqtcln7+4d4hygY14t31F1Xgv5bqBsQ
+	0DnZQbxSIQ+BH7i9aAGupoS8zZT12FuvoWWEigRD+//j4s/rsWdLThLP6yWAg34urpcAvd
+	BNoahIUjyAz9pRX7TVfnXT+dQoGpPcafV+pVXq7LPRdSkFrTn3f7rOsI9dUtC2k2OBZwhk
+	/aBka9jlMkGmeyuXXUzGYBJOoehgghp+OzfwVY+6urL2GwnUjv79D834IY9vYA==
+From: Paul Gerber <paul.gerber@ew.tq-group.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>
+Cc: Paul Gerber <paul.gerber@ew.tq-group.com>,
+	dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] dt-bindings: display: simple: Add AUO G104STN01 panel
+Date: Wed, 26 Jun 2024 06:36:27 +0200
+Message-ID: <20240626044727.2330191-1-paul.gerber@ew.tq-group.com>
+X-Mailer: git-send-email 2.44.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
+Add AUO G104STN01 10.4" LCD-TFT LVDS panel compatible string.
 
+Signed-off-by: Paul Gerber <paul.gerber@ew.tq-group.com>
+---
 
-On Wed, 26 Jun 2024, Philipp Hortmann wrote:
+Tested on TQ MBa8MPxL with TQMa8MPxL.
 
-> On 6/25/24 22:56, Tom Mounet wrote:
-> > Comply with coding rules defined in checkpatch
-> >
-> > Signed-off-by: Tom Mounet <tommounet@gmail.com>
-> > ---
-> >   drivers/staging/nvec/nvec.c | 4 ++--
-> >   1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/staging/nvec/nvec.c b/drivers/staging/nvec/nvec.c
-> > index e5ca78e57..814eb121c 100644
-> > --- a/drivers/staging/nvec/nvec.c
-> > +++ b/drivers/staging/nvec/nvec.c
-> > @@ -300,7 +300,7 @@ int nvec_write_sync(struct nvec_chip *nvec,
-> >   {
-> >   	mutex_lock(&nvec->sync_write_mutex);
-> >   -	if (msg != NULL)
-> > +	if (msg)
-> >   		*msg = NULL;
-> >     	nvec->sync_write_pending = (data[1] << 8) + data[0];
-> > @@ -322,7 +322,7 @@ int nvec_write_sync(struct nvec_chip *nvec,
-> >     	dev_dbg(nvec->dev, "nvec_sync_write: pong!\n");
-> >   -	if (msg != NULL)
-> > +	if (msg)
-> >   		*msg = nvec->last_sync_msg;
-> >   	else
-> >   		nvec_msg_free(nvec, nvec->last_sync_msg);
->
->
-> Hi Tom,
->
-> what you change in this patch is fine. But the Description is not so lucky.
-> Reason is that checkpatch is not defining the coding style. Not at all.
-> Sometimes checkpatch is even wrong. The description I like would be:
->
-> Use x instead of x != NULL to shorten code.
->
-> or
->
-> Use x instead of x != NULL to improve readability.
->
-> If you send in a second version of this patch please use a change history.
-> Description from Dan under:
-> https://staticthinking.wordpress.com/2022/07/27/how-to-send-a-v2-patch/
+ .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
+ 1 file changed, 2 insertions(+)
 
-How about adding "Issue identified by checkpatch"?  Checkpatch helped find
-the problem, so it would be nice to acknowledge that.
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+index 5067f5c0a272..8d75284845db 100644
+--- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
++++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+@@ -64,6 +64,8 @@ properties:
+         # AU Optronics Corporation 10.4" (800x600) color TFT LCD panel
+       - auo,g104sn02
+         # AU Optronics Corporation 12.1" (1280x800) TFT LCD panel
++      - auo,g104stn01
++        # AU Optronics Corporation 10.4" (800x600) color TFT LCD panel
+       - auo,g121ean01
+         # AU Optronics Corporation 15.6" (1366x768) TFT LCD panel
+       - auo,g156xtn01
+-- 
+2.44.1
 
-julia
-
-
->
-> Thanks
->
-> Bye Philipp
->
->
