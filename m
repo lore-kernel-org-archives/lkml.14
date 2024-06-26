@@ -1,106 +1,121 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52A6C136;
-	Wed, 26 Jun 2024 14:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A7831755A;
+	Wed, 26 Jun 2024 14:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719410471; cv=none; b=Sg719MfNrfgoGtjgREyFVDeqR/2ubQulgNlqOoFCzn0J5ApcRiS/epblJBXOC7UnExL6wQe1N/yG6Xd4lA9nAu/uL5e2I1yzSIgUfmbZ3+ZaMJwrN6DPtECmxQD2lqVvAXV0B3OZTMuGAaxPYPEKPo6Av8MH02taGvp/8Nnp4N4=
+	t=1719410530; cv=none; b=MW73D2K+nQGeTsXQr9ZGY23VJtCTp/fD5vpyn99326dz253hVFrFRAVM4RC/dw0fHBRwMKPDQKlBoGkH0k2sYTOnQnrMseKEnugpkflcFHp6RrVspnmFENHcRbkfdw/8gCUgjqRFBsMXBHlmGPb6CBlj88+u6z4WXhXj7RmbpLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719410471; c=relaxed/simple;
-	bh=hII3Q92Ova8i4hUPBYvI76xLncvZJuiw2a5GonhEhIU=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=WmZozminVkJ+nVpON0SFR5Rcpxf+P24xtOYHih6EYlJ6TGS45LIRpKzMkxTNPi8AoL3VPbM9+FTWOpq+aT/E+3YZOWpaw5e1++6RCaRNHzTruC/fy3zmrIt8nJvKoyqMsH+jwrnOw75OL8oV0nB0cjoRsMLH0Kpx9chsvZJuHt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=EUnvvgGV; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1719410530; c=relaxed/simple;
+	bh=Z35Nb4vXzItDiHKF9HUk9/dMjwDwEL8AOUtpP0W3VFo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C0ejuvnAJOgWhAao8sc9xrBwmxfqw7wueUol2TGxJP0/i4rVPcAnj9bd3ka4LcN2ff0XxDeRsnxFFWdLSALStFHrdOI/VXUmJUZIX9KT+p/XK6FjLaaLoSrV46Fjzka6Jx4rNlvBqlZpUbfJYJOjguVR0JPT6GR94qjqF/0EB0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZBkQzVU6; arc=none smtp.client-ip=209.85.160.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="EUnvvgGV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1719410447; x=1720015247; i=markus.elfring@web.de;
-	bh=hII3Q92Ova8i4hUPBYvI76xLncvZJuiw2a5GonhEhIU=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=EUnvvgGVHt8s666lwyG481E93VX8sXDxYOb5Zjx398BsDgn02UtYX/1KFYtgqdxD
-	 A31V3266VyuXemqpCMBaPm62y4vCaQjr/OPQ2PH3wy4iDK5HKw1AlAr0mFd25ffH4
-	 5Xd7ArChrbbw7kS/IWs/5I+KU+4fJLVaGjubMLjvdI/DKPit5jQ5wdejTB7ECe5qz
-	 kKgtBtM5zXJWGxPPP879g4xtpaTqTIBxB8YbQ8Uci2BsUHde2BJIyVNdG2M/ixEHf
-	 +j3ICIOTsvHvFXdFvTj+bf/SBqJoMV6lHlZoHXcHBojslnek6gLMtHxI6LA+eHwOc
-	 DRq9VU9WGPz71uLRvQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N1uAv-1sTZnb44Wv-00rWRL; Wed, 26
- Jun 2024 16:00:47 +0200
-Message-ID: <17b2f95a-b6ce-47d5-a826-9cfd1ff3f419@web.de>
-Date: Wed, 26 Jun 2024 16:00:40 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZBkQzVU6"
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2598001aae7so3301916fac.2;
+        Wed, 26 Jun 2024 07:02:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719410528; x=1720015328; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WlX6ofd4eUvev3IitES3h0rQ2uet+ifDwXi5r0qMYlA=;
+        b=ZBkQzVU6G3pf8MZ780XnAl6zg5DwYcJdGNa0UE3qWQGW6TaKypn8JY3isFw8Ycju/i
+         DoQrSZfNAJMZUG/EI+jHtITKOExiuuQTN/5oLloCJ+g/avC3/znSaScM5RMjQ6lUIDLv
+         G23T+m8hriuNkF3ndi8el1mmdTUznEGiCOdBSbqJ//wDvsYFlXc1BvgnztjwhRNJI6yQ
+         tUVwnwfTw7SeHCFDGXQn+hvFU+FjFJ5YdhFMffp1QYurYwCQmZyPdPxGT0/d4PishLVN
+         dioLTrduwPxVRAgFG27abitNMzSpzDRfVW57s1H2kOsIomUqsvfysP8WxaVsp2cKNji1
+         vqog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719410528; x=1720015328;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WlX6ofd4eUvev3IitES3h0rQ2uet+ifDwXi5r0qMYlA=;
+        b=QGunWQ0iR5DBIEJGwKIx8uDW2hKEeoQBi+x9fNEkZFtvVOh3PTVrAw6om4pSN/nPup
+         dMlG2AFUsA6qxbM7Yt140Bag8EKufGEnOhS+Rns3zDcg8fAb32ARBERxjrbc0LD1lwDj
+         tRlCdrog92HHkSK59Ff9aZqWd+MK8O1iq8zEG+fzTk0K3dY/RHd3Y06Dp0NNH8p896vB
+         LFuirzo7dNHMsNKwxLiLciPVnzqsJib/77pM74lpvMWPPNqBJ1TcAU68dD1KaRlRMiey
+         pSp0vAU3M2fM7zLCQqJmfr0Nc3Ajk9AlEu6lXqCxNU+krmbc4OQ+mFXP+XWti8MadVav
+         cJVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUiqVmwBt7JrlE57WURO3/yilEeHwZNhjbQKwdc+hQxPESe1RVVwe0SeMFNkd69KwIvNfeU0wHW39MXPNhfdCjlcRFXuAzvEvjrDrZet4S+cyDEp0kh58Bl25zSr2HLAgxV/C3GXeY1rA==
+X-Gm-Message-State: AOJu0YyIfU8Z3IUiBDnYYLYXwh8xKl5j+xM4Vp3UOhmGZFzeLiRPIeZG
+	UaOJSd6hIHzUpJXdR+NSGKwNeAvJtXqMWRmSq7EybMhEUl4wHzgBr/w1Kpi/GVPz5kSCLBjcUVH
+	aDH4C5gwbQgDJapUe6SD7K4xzhmCwGBzAwio=
+X-Google-Smtp-Source: AGHT+IH1IDVeSLxIl19iRxYfSks6SiF5dVhrO6anINHh6vSqqhiBjcUChgbTG/g2pFbZXYVvnqxQn3g8GL6UuLaG9dk=
+X-Received: by 2002:a05:6870:702a:b0:25b:3e23:e5e7 with SMTP id
+ 586e51a60fabf-25d016724b7mr9830696fac.3.1719410528222; Wed, 26 Jun 2024
+ 07:02:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Gerd Bayer <gbayer@linux.ibm.com>, Ma Ke <make24@iscas.ac.cn>,
- linux-s390@vger.kernel.org, netdev@vger.kernel.org,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Alexandra Winter <wintera@linux.ibm.com>,
- =?UTF-8?Q?Christian_Borntr=C3=A4ger?= <borntraeger@linux.ibm.com>,
- "David S. Miller" <davem@davemloft.net>, Heiko Carstens <hca@linux.ibm.com>,
- Niklas Schnelle <schnelle@linux.ibm.com>, Stefan Raspl
- <raspl@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>,
- Thorsten Winkler <twinkler@linux.ibm.com>,
- Wenjia Zhang <wenjia@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org
-References: <4ab328297c12d1c286c56dbc01d611b77ea2da03.camel@linux.ibm.com>
-Subject: Re: [PATCH] s390/ism: Add check for dma_set_max_seg_size in
- ism_probe()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <4ab328297c12d1c286c56dbc01d611b77ea2da03.camel@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
+References: <20240626130332.929534-1-yangchen.openbmc@gmail.com> <CAL_JsqL-b==HMLJGd_e-43yZHjBFYrrLV5J2a=E2LSEck=ii6w@mail.gmail.com>
+In-Reply-To: <CAL_JsqL-b==HMLJGd_e-43yZHjBFYrrLV5J2a=E2LSEck=ii6w@mail.gmail.com>
+From: Yang Chen <yangchen.openbmc@gmail.com>
+Date: Wed, 26 Jun 2024 22:01:55 +0800
+Message-ID: <CALFa7M8bgVX_L30J72SqZ-0vzfezoJLtZHnKjL-dZki0kMJFoQ@mail.gmail.com>
+Subject: Re: [PATCH v1 00/17] Revise Facebook Minerva BMC DTS
+To: Rob Herring <robh@kernel.org>
+Cc: joel@jms.id.au, andrew@codeconstruct.com.au, patrick@stwcx.xyz, 
+	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	Jerry.Lin@quantatw.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:0DEVK3hEYZce4m2x0HcOm4kkmWuuBi11g0rGzGdPbe4Qpn87svX
- 5XQ/MZieW0HABaYEKtAWwdpHqkAP18mCyF/gG4lKTvfy65YCTDuexqWaq+EE8RdwaO0/Jds
- cV1hbtXBiXVClTpKNZX22cIEAuDQ/HXrquHnhSkGzAfcPjLwFZiUQ+kJLl7pJ/k8CF0eqv6
- gzweJJL6vF5HCPxct+6GA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:UETjU5nTgts=;lV8DTmeBl0SijkeRl00bzdeTllM
- 3cplHKVNgNZmEI1glocO11M0214gpAfGNRcyhNSDRtxzb3SjvtJyrPr08xF9B/lxFUQcg6HLy
- f5IQSKFO3BqwCcKNs3AxyXSIHJ+unNyGqEowWKsuGOent9OYnzIb8/oC1uH9s7lwrGEqjjPU3
- zUKEHv/3+XBFuSAgaviI5Pt5jv0qoAI6eXdCASAnSNxY4nVH34tJ0qNk0myTbubWIt8zcrUOW
- H5M+xGbUG76+ZdRNSp74mOdjwZYX2LzhCmSwMt8GNtaESsApL8VmskQro751KLFUGA0s00Qg2
- ZU40mBWi9MzpAVFdB3gZedU80NdnucbVNqerRSCCh6fceMiUAmCubDIMvHCUuHizG1rwochpA
- l6SGCYZ6RjvOfCGcWv88zTmJS4Ju6MveZD5C9I26S1c8Xt6xzsbVZskIxSdc9uxgvtvQrgtmr
- Nl0LYYMCa+WnXShvtp3IyqAjakhvst3068SQ7bFtl3bYOcIOTfDgknOI4iokUZx9pDGWBibad
- SfesNl7CIxq2jpJjsXvwKxLqVzNNkvLjVYJXNaEaQ2zeXGqRKjlEZ3VlNHTbNhlZ+/92zkQ/B
- y47KlYUMziiacqVQHWfdCZ2VrOGAfnoENhJYOKn8J9gYtjfcMoQed0vypiHvntO433aGYYBw+
- CDSr9YhS3PW1dBO+En5PKgLZloI3KRJkZKQoey626F0WP0/EdBzXYScgJUHWZbBXsvzLf1W2m
- L+8nF/aizMwkL8fE7nltxmBMLALuJuOsr9Lggno9gJfX7YkQBtEFSMwzyTxYxtJqI8NCEKLPh
- WS8avs4PHSX6lJIUdgujAGhUi8GzGMazDd+seYdPMvVJU=
 
-> > As the possible failure of the dma_set_max_seg_size(), we should
-> > better check the return value of the dma_set_max_seg_size().
+On Wed, Jun 26, 2024 at 9:38=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
+:
 >
-> I think formally you're correct. dma_set_max_seg_size() could return an
-> error if dev->dma_parms was not present.
+> On Wed, Jun 26, 2024 at 7:05=E2=80=AFAM Yang Chen <yangchen.openbmc@gmail=
+.com> wrote:
+> >
+> > Revise the Linux device tree entry related to Facebook platform Minerva
+> > specific devices connected to the Aspeed AST2600 BMC.
+> >
+> > Changelog:
+> > - v1:
 >
-> However, since ISM devices are PCI attached (and will remain PCI
-> attached I believe) we can take the existance of dev->dma_parms for
-> granted since pci_device_add() (in drivers/pci/probe.c) will make that
-> point to the pci_dev's dma_parms for every PCI device.
+> You already sent v1. This is v2.
+Hi Rob,
+
+I appreciate your reminder. Should I send another patch series and use v3?
+
+Thanks,
+Yang Chen
+
 >
-> So I'm not sure how important this fix is.
-
-Another function call can fail eventually.
-
-dma_set_seg_boundary()
-https://elixir.bootlin.com/linux/v6.10-rc5/source/include/linux/dma-mappin=
-g.h#L562
-
-Will it become relevant to complete the error detection
-and corresponding exception handling any further?
-
-Regards,
-Markus
+> >   - Modify the properties of spi to match the schema.
+> >
+> > Yang Chen (17):
+> >   ARM: dts: aspeed: minerva: change the address of tmp75
+> >   ARM: dts: aspeed: minerva: change aliases for uart
+> >   ARM: dts: aspeed: minerva: add eeprom on i2c bus
+> >   ARM: dts: aspeed: minerva: change RTC reference
+> >   ARM: dts: aspeed: minerva: enable mdio3
+> >   ARM: dts: aspeed: minerva: remove unused bus and device
+> >   ARM: dts: aspeed: minerva: Define the LEDs node name
+> >   ARM: dts: aspeed: minerva: Add adc sensors for fan board
+> >   ARM: dts: aspeed: minerva: add linename of two pins
+> >   ARM: dts: aspeed: minerva: enable ehci0 for USB
+> >   ARM: dts: aspeed: minerva: add tmp75 sensor
+> >   ARM: dts: aspeed: minerva: add power monitor xdp710
+> >   ARM: dts: aspeed: minerva: revise sgpio line name
+> >   ARM: dts: aspeed: minerva: Switch the i2c bus number
+> >   ARM: dts: aspeed: minerva: remove unused power device
+> >   ARM: dts: aspeed: minerva: add ltc4287 device
+> >   ARM: dts: aspeed: minerva: Add spi-gpio
+> >
+> >  .../aspeed/aspeed-bmc-facebook-minerva.dts    | 516 +++++++++++++-----
+> >  1 file changed, 373 insertions(+), 143 deletions(-)
+> >
+> > --
+> > 2.34.1
+> >
+> >
