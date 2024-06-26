@@ -1,73 +1,83 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4691018734F;
-	Wed, 26 Jun 2024 13:05:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F339079F0
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 13:05:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719407157; cv=none; b=Bz1wo9AYUzPhUX2Km6VREJh3zShWLHupqZh4iJCAicBhRHSqFSyvz8Ez7OltVNkfk9zr0EywnXSih+NvFJNgLuG/E1B6ElkwjqkLvIdp0Nf2faWNBpjZ67sKVGm3rJrFEYtyzc73cRzi+PcQzni6/xoLpnOQ83qaxF28C5ensqA=
+	t=1719407158; cv=none; b=fhwI0rha4QQRxhgYNPOO3fyex5c5+4Ac1Z23R+l2NrpYy6MDkJiun8396WHHYwyz3+cllpC0vEiTVdKUgwOBKokyhr2RcodqwXLrvYj/N1gGQKc2hK/nBObsT5gJmgHdrvJlg+6wQJfHvEiibbrzyS+RRk6GT5adx/+xjXfenuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719407157; c=relaxed/simple;
-	bh=NCe4Tnc9Gl3Yaa78tFal/B94TAIv3wlb+cJhYfxWyLs=;
+	s=arc-20240116; t=1719407158; c=relaxed/simple;
+	bh=tYSKztlvYXjqrUVGqUlFZcjNQFbhaN4iVt2oyZFJdVA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eAqUL5N/z7vqYLvJcyWYdSELPfVQlSIFduuaF4zmFo17ckiuDNgNx/yHHNHExsdHnOIyCd/XCCJUR6KwK7GtAUBLOalUTV0cetjgZtE/Mkv/l0CYnp8TMmmzzad0q6aHU6PhIlHBP6vIb5NBV9KjAuTymg0rtv1+1JbMmlvQaLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AdJVL7qY; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version; b=u5s5IxQ6J8+769Ei8qVpKsqd3QfQb/wYhjw5bKuxOdI1+yxFxDuGoD+NkCP2nDUopaS4z/vopiErt6q9y1mfdgXMm0W7KR1OMSGAznOsM20AiipRahgsx+NuMHA59P+sYmoxLSBelPlB9h5LQi3G2ICSFpnTl8/RvbbZue9iZvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=mtyO9Z1t; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AdJVL7qY"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1f9d9b57b90so44891045ad.0;
-        Wed, 26 Jun 2024 06:05:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="mtyO9Z1t"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5295e488248so7815728e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 06:05:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719407155; x=1720011955; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719407154; x=1720011954; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bV2dcDDnQmUqF9lNzCGX3CGaBRrLRWxvY3uAb50Y988=;
-        b=AdJVL7qYWdqz7wFByJ617ISq25eCgI4MQXHqLGdL1h+eni6GVZTwZz1iS6uNm3HhzS
-         krztbZxSsU3ekQxfwBISIb4o89CY+ykiUzWLaEmBTgU1U3SHhU4LABdHCd9ikjLF6uhq
-         VtsdQrLUGbyz33v8g97YJ8qJgpQ8jF0ClT9vdU41Aabjl4ciAh0VXKRzJ5X2EhOrlT+A
-         pUCtvn5usQPasbRKrPlPx+yuXtJoZc4FHFEHXZNomlgFS4CMlXVBWrxmuXSmuA7G2OjN
-         A+RiSbrxaTYJGWQ5wVQ+RsLNjGXNzqL+nA58kyDCtKzGigbM/ddIX3EMsALxTpCnWxZC
-         HexQ==
+        bh=T6LJZCR61gmm4dvekAa0Q1TIoLF/ScrG5TtOv9gDZ/w=;
+        b=mtyO9Z1t2T1EDXVZGrkLqYk7i+oB2j+lt1paslYuCYQSOxDgHw9tyHRqJioDvVu2Gz
+         WOdBvMxFFKqRUFfR16cLelrUHBo+4M+td7iSVAihK4oio/xdzUD77MLO2iH6FDxlTb26
+         KkbpYcbT/swcrq7lRKtu/tvEnI02EfRAgxNVqAnGUrNxruGF+KtrfJrVZjrM2sEju08W
+         gL5cEYc67ZBK4oDX8p0TsnBxSdNJkRZuq9R2sm1LOJs3UFUOyiA2a1HL//0/apUpyqiI
+         6zAqFYXrgJQc4rdP+etFYDWv59wSqVm59zmpLnsMKvPUfGRfbIvjXr5+1lpwbC0eqlDC
+         SO1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719407155; x=1720011955;
+        d=1e100.net; s=20230601; t=1719407154; x=1720011954;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bV2dcDDnQmUqF9lNzCGX3CGaBRrLRWxvY3uAb50Y988=;
-        b=HXsfG0RezNrDds+oLdRZeCguilCYsZ6brUAWxst5hkmg4Ap7PKfEr/arrgpXm5E6uY
-         NB6CZV/LKr1hhZ2/ARLrdCPE0KYOv4IwUbQTvFZnZBbMe/THHc3CqHkqrJU8DH9f0G+z
-         vmLMwuNa4Ywrqc1JG7O5M2tvyDCqgLrzv3lF1qH6ut8rUHS6GKyxWtzBw918LdJXhOwd
-         Mi2w6Bim09rZIjJNFvl6QbkglZXBVXivT0O2HsTyGrSOrr7OInWPXtKrdyncRlplR72b
-         eirkWmMYkjWLz2nSRbO5C3/JZozZYSe9d3y9ggKaMioe5JjXKbbG/2XKJM1AyT1x33g/
-         xOjw==
-X-Forwarded-Encrypted: i=1; AJvYcCWPub0x4iQRmKn3iFg9FVbgr3v29ayRSqh9/shQrWaL0R/3zE3ReOJCo3bVtOrM8hORO85wJyO+9sDVX9w1koTy8vTvzKFQ1AkfS3rRLjQEoESrqGitqwNl+nCJgC/3/AdkIrZeHbWw1g==
-X-Gm-Message-State: AOJu0YzUAyqXMBznRj8ANYwotYkeLUTd3Il7u56/eKDeTu3GLD5X9Jh5
-	WT4fF7MaJtcE9NwfS6mTkiLDQo6NpiMnblswrg2FLaMo/7nF84ok
-X-Google-Smtp-Source: AGHT+IFKyKanqJegFloDMjHf3mrlG0KpLvhC+Rc/rVahResBIQAyJt4ZieC+JHHGb5NG5e5vfa/y9w==
-X-Received: by 2002:a17:902:ce90:b0:1f7:1706:2596 with SMTP id d9443c01a7336-1fa23f4a1d7mr138232585ad.67.1719407154441;
+        bh=T6LJZCR61gmm4dvekAa0Q1TIoLF/ScrG5TtOv9gDZ/w=;
+        b=fbMNkEvbUZkn+bc31qc8ddc0gmuhrLxGOwG1zUA+nEHFIy2Hh5JIKVjEldmSTEdmcG
+         RZs6/SdzDWNpmD2I13/Ny/Bx+IetFvixwixASPLHZMhBCOdIfiOceaiRsIquei6ApD3p
+         fgiHfhhAa3tzy9QBXow3Lt+0/b1PYa999mnMJHLmHVpzf/0I1J/onSBIVylIlrPu6yxI
+         6PqKpQli1IbYz0hHyPn4Z0JyJq/XOFO3bo59URj1MNj7Cu0fPVuP8KBqV4lFx1Q8lPOv
+         977dmFq0rBPGCKdo5dkKNeiV6IwLVw7cO6R4ad9kyX7IZ3ffxgvHqU9Q9CiONhd94QSw
+         5o2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU8L8EtaRSmw3AZvjLgbbdql62kZwUqT0L7mU+FMRYYtmGlQjgSm04+aMrJPT1D5++okWFdP+AmLS4hiiPpk52MQEiBYw6aM5NcYsCg
+X-Gm-Message-State: AOJu0YzpOG5+yl5OjBZwj079avRhkHT0pmTZFegZE8iDD/K4OFtuzGaf
+	H/v2juyiLMl85hgpEJaAWguX32LEDiSUemxLVaPTn6umcM9d+m0SdIpxNYM5IG8=
+X-Google-Smtp-Source: AGHT+IHX+jzGQgnJriZOGQ/oAJSCUkFR6oZJI+0k3ahW32MnlEUF+2I4ESnYZpAqS9088kQ4KTVI2w==
+X-Received: by 2002:ac2:5f4e:0:b0:52c:e030:144e with SMTP id 2adb3069b0e04-52ce185ecd4mr6228931e87.47.1719407154179;
         Wed, 26 Jun 2024 06:05:54 -0700 (PDT)
-Received: from obliging-System-Product-Name.dhcpserver.bu9bmc.local (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb7cf885sm99112395ad.224.2024.06.26.06.05.52
+Received: from localhost.localdomain (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36638d9bd0fsm15831149f8f.52.2024.06.26.06.05.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 06:05:54 -0700 (PDT)
-From: Yang Chen <yangchen.openbmc@gmail.com>
-To: joel@jms.id.au,
-	andrew@codeconstruct.com.au,
-	patrick@stwcx.xyz,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
+        Wed, 26 Jun 2024 06:05:53 -0700 (PDT)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Andrea Parri <parri.andrea@gmail.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Leonardo Bras <leobras@redhat.com>,
+	Guo Ren <guoren@kernel.org>,
+	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Cc: Jerry.Lin@quantatw.com,
-	yangchen.openbmc@gmail.com
-Subject: [PATCH v1 07/17] ARM: dts: aspeed: minerva: Define the LEDs node name
-Date: Wed, 26 Jun 2024 21:03:22 +0800
-Message-Id: <20240626130332.929534-8-yangchen.openbmc@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240626130332.929534-1-yangchen.openbmc@gmail.com>
-References: <20240626130332.929534-1-yangchen.openbmc@gmail.com>
+	linux-riscv@lists.infradead.org,
+	linux-arch@vger.kernel.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH v2 02/10] dt-bindings: riscv: Add Zabha ISA extension description
+Date: Wed, 26 Jun 2024 15:03:39 +0200
+Message-Id: <20240626130347.520750-3-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240626130347.520750-1-alexghiti@rivosinc.com>
+References: <20240626130347.520750-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,57 +86,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Yang Chen <yang.chen@quantatw.com>
+Add description for the Zabha ISA extension which was ratified in April
+2024.
 
-Define the LEDs node name.
-
-Signed-off-by: Yang Chen <yang.chen@quantatw.com>
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 ---
- .../aspeed/aspeed-bmc-facebook-minerva.dts    | 28 +++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/riscv/extensions.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts
-index bc323bfbe514..dfea0025e6ce 100644
---- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts
-+++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts
-@@ -44,11 +44,35 @@ iio-hwmon {
- 	leds {
- 		compatible = "gpio-leds";
+diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
+index 468c646247aa..e6436260bdeb 100644
+--- a/Documentation/devicetree/bindings/riscv/extensions.yaml
++++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
+@@ -171,6 +171,12 @@ properties:
+             memory types as ratified in the 20191213 version of the privileged
+             ISA specification.
  
--		led-fan-fault {
--			label = "led-fan-fault";
-+		led-0 {
-+			label = "bmc_heartbeat_amber";
-+			gpios = <&gpio0 ASPEED_GPIO(P, 7) GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "heartbeat";
-+		};
++        - const: zabha
++          description: |
++            The Zabha extension for Byte and Halfword Atomic Memory Operations
++            as ratified at commit 49f49c842ff9 ("Update to Rafified state") of
++            riscv-zabha.
 +
-+		led-1 {
-+			label = "fp_id_amber";
-+			default-state = "off";
-+			gpios = <&gpio0 ASPEED_GPIO(B, 5) GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		led-2 {
-+			label = "power_blue";
-+			default-state = "off";
-+			gpios = <&gpio0 ASPEED_GPIO(P, 4) GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		led-3 {
-+			label = "fan_status_led";
- 			gpios = <&leds_gpio 9 GPIO_ACTIVE_HIGH>;
- 			default-state = "off";
- 		};
-+
-+		led-4 {
-+			label = "fan_fault_led_n";
-+			gpios = <&leds_gpio 10 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
- 	};
- };
- 
+         - const: zacas
+           description: |
+             The Zacas extension for Atomic Compare-and-Swap (CAS) instructions
 -- 
-2.34.1
+2.39.2
 
