@@ -1,134 +1,117 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64EE4BE6C
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 19:54:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F99BE6C
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 19:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719431685; cv=none; b=fcKDAMj/YNnrQmqjxVPZ9s/NRIaeEgA96keHoRVB+IqYWOm8kAjPKyJWDXcbuwT230I37/RVJ4rS6cfIwEK/qHliRNLPF0ExDE4CuDQe73RNVYU8U5vm8BZ2bcs23ULtsPHTIZYTJt0cEmupHdLUUq7BFkGGXDV1yQ4XBJbLjkc=
+	t=1719431762; cv=none; b=tgMy/OzO7JNN2bdg1oTsaQ+wVim+ltU3Q3ka4wn8fhzDLvFtz4dr7Nwsz+nmgyJZhvtM2lLI3nQwxjVHktSSdbyynoPf1sdOH1N8dyNpLG765xiA3XqaWKWTVaxtlolkGg9hMU9M6tutW0dkt2LaWcHYI6bViG7G39Ky9Uwip88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719431685; c=relaxed/simple;
-	bh=UdHTQOSX7Km3cZSiYgkk31AZTE6moQgEO9Q5MH3sEME=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Ss9g0FqrHNVu/vgeVLIWdKouJ/qZOFx+KLWoM1PEgpbMxBWeXptM0yYKkq8+cYvbBIKqMMWblSKcIf6135e9yK6PLSoxAF/Hzs37LqVOyBj7T6mNTDrcLhechF0ej1vIigVdmyCsaHs4Gh8XkDprdwyZKkIDyB4cB9izlfC8kvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IsRdtuvS; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1719431762; c=relaxed/simple;
+	bh=VStahdc+xT5qsKNlriY5Qfhtj/4m/b+JQnzUhJkoQWc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pI84LT9TfFronKxM65BJMsh7fqRjQEmWnmvN4G5ImeiiHZj3IltoyHVg0bAB84K7fQoeEfmRnbJDIM4urVijcwPWwr9xGbqcGVlFaYJNo14VlbW7BvN40QgL1jLOwleR6/EfCJX7ReiHOQJ9Pvp3zHUDSHwbTZkmtxGRFE2+0UU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=HB0r+sCk; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IsRdtuvS"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-643f57e2f0fso100424027b3.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 12:54:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="HB0r+sCk"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57d0eca877cso907215a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 12:56:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719431683; x=1720036483; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bPUXoB4WicVXeQU5K1G3z57co6ZndiCkVz/lqTR/Pns=;
-        b=IsRdtuvSCGz8T6AlYP+noyGipOf3xqk7l49nUuD4wp4J+VuWWWJfv2ok1Zyjk8+QYO
-         A3iyoXUsO4eaz4z6XZ5UIo6aRQehzCsmkexhTAV7ldH0eKSqAtVjhYRT9IhiobdZ3v26
-         SwJ0+DlwWvRboyfgK6O4s2obsNEL/zhtYRQKn2N8Y71v3OKpl/qfgD0gcBKOndbRxqOx
-         kEbUxYbaMTPDjIUUHqXtbJl/xSfRl3JnxODhuugXAhVhaxgaZxn3wh5wXvSC8IiJ0pId
-         N/s/zOlD3iQrSgcYwEtrKkgkBQofnWIDTyMV4D4T0EntXqUSPf+WAypq4U6HtfMIAe4R
-         cEWA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719431759; x=1720036559; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VStahdc+xT5qsKNlriY5Qfhtj/4m/b+JQnzUhJkoQWc=;
+        b=HB0r+sCkvmIyBrf0NWN48WIBNOrmLUftimyojOKhPmG2owJrzv824rBTpEr9lEYPYD
+         puNtgv3U9EyI3OUAhLZPibbtuYLLwmPNXyOUTPtSTfQzTvrrzXMRgix4DH6R5nQMJuSm
+         CQaV0WbI/dG2eAL29DCHr8BMx/F3vnKoBkNFU/c73yJfpBdY5LxnRONLkLLQ0JyciHR3
+         LyNL905BYW8zSsQuPMWzppL28oWo+sd0JpN63CczNpParJBEWkxHAgO0xj2h/CP5kVB1
+         C/9IvOTcUtEOUFwLe6XBu0ozTVJHnGLiiPykEbXWismmK8NVPBffUqdCWI3uypyUphE2
+         r0aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719431683; x=1720036483;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bPUXoB4WicVXeQU5K1G3z57co6ZndiCkVz/lqTR/Pns=;
-        b=k06QdYfHGNV/A1mzFAHUB8cqPen/8GJPsnWU4KIDELYWrLzJJ2YLlGizIBDl0INMfb
-         878SvoV8/WJEytEPwrRMgaf/zeXdruskZX8t9iPgKkq/kV2n9UdEtJbF9HWcu0WdpYbO
-         9B9RTQh/gvyz6G/nS1ZYcJVP1pyUYeQK194SdiyYLYp/+ceeSHqkSd7oZRlDz+6wzbF5
-         Qd7tLPsvl2pNnqrja+w/NgqTM76axuWniiDYAzaI3U1l1s7F916avVxNrNW+f7DvNVHQ
-         fZ6utVP044+3qX/505vFEiV+uy0DzCMghNWw9F6Frovy9r7HzWdjJubPRVYHk0APVEiT
-         ub8g==
-X-Forwarded-Encrypted: i=1; AJvYcCVAHZoaaIqEQ4soOoqqZ8QYibYOwDwn1SI1FoNrG2NtIc4GD3lrb3V2/fe+FqScZeM/+7zsU9FY2evOUVuM5EaOTAQfhmTan8HrWXlf
-X-Gm-Message-State: AOJu0YyWh1rxL0yWByvUTsHwRKjBOIdO4V9Rp9rvaaR5SlfDAw4GYU2w
-	y2ZdLVaDhLsST7JQ/gEF167UL/7/kzs6mzP5EML6Zfp3xuZSn6CVpYQ0eE4wRJMKxgygW/WB/Do
-	+pA==
-X-Google-Smtp-Source: AGHT+IF/MuePa6kq1/3pH9PDPsT95qNUWlvGn8Hv4+YHMNEXsj8xRxB+BfP0mTgqgttvjciz4uFSvH9s1i8=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a81:4c89:0:b0:648:3f93:796e with SMTP id
- 00721157ae682-6483fa2bc62mr57577b3.7.1719431683355; Wed, 26 Jun 2024 12:54:43
- -0700 (PDT)
-Date: Wed, 26 Jun 2024 12:54:41 -0700
-In-Reply-To: <fbzi5bals5rmva3efgdpnljsfzdbehg4akwli7b5io7kqs3ikw@qfpdpxfec7ks>
+        d=1e100.net; s=20230601; t=1719431759; x=1720036559;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VStahdc+xT5qsKNlriY5Qfhtj/4m/b+JQnzUhJkoQWc=;
+        b=guSssGuHPFVLRrd2dSB6MstylNs9qttYoLnX0nClU1edgRD3epN6WZ2m2okxxt7Kax
+         FduoLoQfxrsHzbrGEixHAyQjYV7fNKjYX6n/mevBp7881Fde9btHGavn/ry26zOo7FMq
+         48XdUBkWXQbCD7f1IPnGH9NiiqyBcsst/8r/2yoDu5c6Kbz9RCSqHx4lSVLjFtREoiTQ
+         uzmKkIMfw2ntPP895ailB2dP3OFwo82af2IVuNLVrVaUwcOcUOnp/vJanN8d0hidvo6v
+         HQ1cUdpbuMw45zzvjABHPva86zCtEeIX8xx6GxJt/+BLZR8Ws55vpRvSCEcioQ21Ob73
+         xSCg==
+X-Forwarded-Encrypted: i=1; AJvYcCWvcMP9DYimDm1d9hX9ZK5tN9kUH81hLgcMUv6DEXztYFpQE+aTzL9NYakbsJ2SpRU+H5DdCld3RxqDyWMc0dmJ5n5HMfMlX4khQyJq
+X-Gm-Message-State: AOJu0Yza1VD+TZS4WXD42/ygKS1cPCJR1jrbpM75xaarOw2Jsz+5PtsC
+	VxLtDTjXqEy7BM9wdECOUkxmKGxjnnPh1mjS3W4lazWk1ey/6U1SBLpkzh8xFjg=
+X-Google-Smtp-Source: AGHT+IGx4yr/IsrDbjytCCrhgFDG4h8ha+n7vpXHHMXD1rUABSW7A50SrfYz2LfdXXZXN6tlmkX52A==
+X-Received: by 2002:a17:907:d403:b0:a72:554d:829c with SMTP id a640c23a62f3a-a72554d8597mr884511566b.3.1719431759269;
+        Wed, 26 Jun 2024 12:55:59 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72451fd535sm453244166b.149.2024.06.26.12.55.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jun 2024 12:55:58 -0700 (PDT)
+Date: Wed, 26 Jun 2024 21:55:57 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Lee Jones <lee@kernel.org>, William Breathitt Gray <wbg@kernel.org>
+Cc: Fabrice Gasnier <fabrice.gasnier@foss.st.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	linux-pwm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Thorsten Scherer <T.Scherer@eckelmann.de>
+Subject: Re: [PATCH v2 3/5] counter: stm32-timer-cnt: Use TIM_DIER_CCxIE(x)
+ instead of TIM_DIER_CCxIE(x)
+Message-ID: <u7kisifvsi2bwbayum6rlndu7mingsm3jpaqym6jrzpfzecukz@6xtbqlwxauf6>
+References: <cover.1718791090.git.u.kleine-koenig@baylibre.com>
+ <126bd153a03f39e42645573eecf44ffab5354fc7.1718791090.git.u.kleine-koenig@baylibre.com>
+ <20240620084451.GC3029315@google.com>
+ <imyuhtcsjrbyodsndzbaqfwa4jxny25eylfdh4u4xtsiotsk5g@45l556pcrzys>
+ <20240620173838.GB1318296@google.com>
+ <ip5aysvcuchc6q6sikghcz7vjn6zvih5r3amkvp7n7xpvncbhh@jdq5lkckeoej>
+ <cgtiizodhbyutaeu2kw5qszb6ap6bpzdk5pnpurliikhz4isvp@3xtidwcttjkb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240621134041.3170480-1-michael.roth@amd.com>
- <20240621134041.3170480-2-michael.roth@amd.com> <ZnwecZ5SZ8MrTRRT@google.com>
- <6sczq2nmoefcociyffssdtoav2zjtuenzmhybgdtqyyvk5zps6@nnkw2u74j7pu>
- <ZnxMSEVR_2NRKMRy@google.com> <fbzi5bals5rmva3efgdpnljsfzdbehg4akwli7b5io7kqs3ikw@qfpdpxfec7ks>
-Message-ID: <ZnxyAWmKIu680R_5@google.com>
-Subject: Re: [PATCH v1 1/5] KVM: SEV: Provide support for SNP_GUEST_REQUEST
- NAE event
-From: Sean Christopherson <seanjc@google.com>
-To: Michael Roth <michael.roth@amd.com>
-Cc: kvm@vger.kernel.org, linux-coco@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, pbonzini@redhat.com, 
-	jroedel@suse.de, thomas.lendacky@amd.com, pgonda@google.com, 
-	ashish.kalra@amd.com, bp@alien8.de, pankaj.gupta@amd.com, 
-	liam.merwick@oracle.com, Brijesh Singh <brijesh.singh@amd.com>, 
-	Alexey Kardashevskiy <aik@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="odshdq4rqvga6wxb"
+Content-Disposition: inline
+In-Reply-To: <cgtiizodhbyutaeu2kw5qszb6ap6bpzdk5pnpurliikhz4isvp@3xtidwcttjkb>
 
-On Wed, Jun 26, 2024, Michael Roth wrote:
-> On Wed, Jun 26, 2024 at 10:13:44AM -0700, Sean Christopherson wrote:
-> > On Wed, Jun 26, 2024, Michael Roth wrote:
-> > > On Wed, Jun 26, 2024 at 06:58:09AM -0700, Sean Christopherson wrote:
-> > > > [*] https://lore.kernel.org/all/20240229025759.1187910-1-stevensd@google.com
-> > > > 
-> > > > > +	if (is_error_noslot_pfn(req_pfn))
-> > > > > +		return -EINVAL;
-> > > > > +
-> > > > > +	resp_pfn = gfn_to_pfn(kvm, gpa_to_gfn(resp_gpa));
-> > > > > +	if (is_error_noslot_pfn(resp_pfn)) {
-> > > > > +		ret = EINVAL;
-> > > > > +		goto release_req;
-> > > > > +	}
-> > > > > +
-> > > > > +	if (rmp_make_private(resp_pfn, 0, PG_LEVEL_4K, 0, true)) {
-> > > > > +		ret = -EINVAL;
-> > > > > +		kvm_release_pfn_clean(resp_pfn);
-> > > > > +		goto release_req;
-> > > > > +	}
-> > > > 
-> > > > I don't see how this is safe.  KVM holds no locks, i.e. can't guarantee that the
-> > > > resp_pfn stays private for the duration of the operation.  And on the opposite
-> > > 
-> > > When the page is set to private with asid=0,immutable=true arguments,
-> > > this puts the page in a special 'firmware-owned' state that specifically
-> > > to avoid any changes to the page state happening from under the ASPs feet.
-> > > The only way to switch the page to any other state at this point is to
-> > > issue the SEV_CMD_SNP_PAGE_RECLAIM request to the ASP via
-> > > snp_page_reclaim().
-> > >
-> > > I could see the guest shooting itself in the foot by issuing 2 guest
-> > > requests with the same req_pfn/resp_pfn, but on the KVM side whichever
-> > > request issues rmp_make_private() first would succeed, and then the
-> > > 2nd request would generate an EINVAL to userspace.
-> > > 
-> > > In that sense, rmp_make_private()/snp_page_reclaim() sort of pair to
-> > > lock/unlock a page that's being handed to the ASP. But this should be
-> > > better documented either way.
-> > 
-> > What about the host kernel though?  I don't see anything here that ensures resp_pfn
-> > isn't "regular" memory, i.e. that ensure the page isn't being concurrently accessed
-> > by the host kernel (or some other userspace process).
-> > 
-> > Or is the "private" memory still accessible by the host?
-> 
-> It's accessible, but it is immutable according to RMP table, so so it would
-> require KVM to be elsewhere doing a write to the page,
 
-I take it "immutable" means "read-only"?  If so, it would be super helpful to
-document that in the APM.  I assumed "immutable" only meant that the RMP entry
-itself is immutable, and that Assigned=AMD-SP is what prevented host accesses.
+--odshdq4rqvga6wxb
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> but that seems possible if the guest is misbehaved. So I do think the RMP #PF
-> concerns are warranted, and that looking at using KVM-allocated
-> intermediary/"bounce" pages to pass to firmware is definitely worth looking
-> into for v2 as that's just about the safest way to guarantee nothing else
-> will be writing to the page after it gets set to immutable/firmware-owned.
+Hello,
+
+On Wed, Jun 26, 2024 at 09:43:29PM +0200, Uwe Kleine-K=F6nig wrote:
+> I wonder what's the state here. Maybe Lee waiting for William to send an
+> Ack that Lee can do the first option?
+
+Huh, sorry for the noise, just noticed Lee's mail after sending mine ...
+
+Best regards
+Uwe
+
+
+
+--odshdq4rqvga6wxb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZ8cksACgkQj4D7WH0S
+/k7zYAf/XnWC8IKcAjOYCWUlOn51NvYiVs+jnm/GKBWbNOMgjmXYnWRxgRHEVzhT
+x2EkGFN8ECZTxfySdpZgzYWC5G59mSKgSSwfUEohqEUjCbVG6ZIHKMPXKs6olaqD
+KqD2CDfwGSJkasedNYJ0PRoE4wWnEDOx+mEbtqATfewhmcQo1FPAo0J94mt1yuxw
+xcERsKlDDVmEj9H7yL2GAUEJ6Neons7GErFh/ZIrJjSkH1BvhBsv/Eyg8IiyR76s
+abCQ6Y6yhpNRsiLzXXNZAckMQ0BdY8db3P0Hm5ejG6uo+mCoFXSXKI8k3N/T/pQd
+x2J4zhIJDOGVtFb4YRD+NmzkrHVPUQ==
+=8Tv7
+-----END PGP SIGNATURE-----
+
+--odshdq4rqvga6wxb--
