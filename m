@@ -1,97 +1,77 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22BD8177998
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 15:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA0BC18A932;
+	Wed, 26 Jun 2024 15:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719415532; cv=none; b=VQetg9FL7Jtk2VawmAW4A5ancURCSS2Ovk+Tgl9r955xdBeJfwEY5dsDgy1wY5J5Zq9gomNXThzo+Szm6UFYMQIW8/JqYMiKu8/2iwHT9KtO4oAYak5hWiVvgZ17tG4LuPd3l6nRBqiKAnjDJWrFp4p+OZfM/atlVz2jm/E1afk=
+	t=1719415553; cv=none; b=aGSjtRMlNXKPzuXLGmFr3kOxrN6Q2oBRXMyFCvF4FUJupqokWUl9gMypIx1jPX+XYUjxnKXqcAAJIgwVmPTkmFimD+9mON0aTYcT+jcZNsn+/H62rUbM4VqBUYAGjKQtxyQCKlBqnojGRyPm09eaNaNFG4wm7+ftVXUpmWINbZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719415532; c=relaxed/simple;
-	bh=n2eyTmEVbUI0DY39yr7MWMW2MvOH5CtjCxH/a90cE6k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g0jR01uDCzhduPXKU+mJZOezl2Z+QTpPaPsV/uQ7kID/Br3rCkAISnPSbbVvE1/KNBxqx81JTOZEP2yZQ/Q+FxI4NpRNja8JJZS/lzz3ZUb7gGOeoiwErxjeLH98A6bsXFaMpA0jLBUbNYf0Kc3xOEcj4vSqJr+VEKN9CtcNDHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hpUITXxU; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719415553; c=relaxed/simple;
+	bh=umQXEjb2PL2e6U2B+fVH2n32pkx0la3uAx1khMFgVWU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d6d+I/3hI5PojaXS2XEUHeJ8Xfb6ueuSX6YL7HNaivbd8G4tRfRaWQ6DeVJD/sWoEnNF/rAGkVPKRVJtd9txHZlWz/J3PLVN+HEXrIL6NFsoGjas/tKih1ihY+H6QAp1Fzc2VNDxzpSn25OcVEyoZrjSdHA6p3R/yq4tfbMCgXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kLSOeu/8; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hpUITXxU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719415529;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kLSOeu/8"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 17CEB1C0003;
+	Wed, 26 Jun 2024 15:25:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1719415549;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=n2eyTmEVbUI0DY39yr7MWMW2MvOH5CtjCxH/a90cE6k=;
-	b=hpUITXxUbnxDfa9Wc1pX+vthZ4d6EqOlUSVC1YPNPGE4ou1Fmr0htQNC+dG0FOBh+KQY94
-	sPFH85xl31C5c8+Fnr2FT7TpoKRyZIssorK/BObIlb1mKFcqdbsJRa6oGmosn0FT1+Palx
-	czH1+TUC5/zHO7fk28AzloRoNa2yTDY=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-584-mCYyMfNuNlmYKRw9ZOZTDQ-1; Wed,
- 26 Jun 2024 11:25:21 -0400
-X-MC-Unique: mCYyMfNuNlmYKRw9ZOZTDQ-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 996BE1955F54;
-	Wed, 26 Jun 2024 15:25:19 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.94])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 98B121956057;
-	Wed, 26 Jun 2024 15:25:14 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 26 Jun 2024 17:23:46 +0200 (CEST)
-Date: Wed, 26 Jun 2024 17:23:40 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Michal Hocko <mhocko@suse.com>
-Cc: alexjlzheng@gmail.com, "Eric W. Biederman" <ebiederm@xmission.com>,
-	akpm@linux-foundation.org, brauner@kernel.org, axboe@kernel.dk,
-	tandersen@netflix.com, willy@infradead.org, mjguzik@gmail.com,
-	alexjlzheng@tencent.com, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH v2] mm: optimize the redundant loop of
- mm_update_next_owner()
-Message-ID: <20240626152340.GA17644@redhat.com>
-References: <20240620152744.4038983-1-alexjlzheng@tencent.com>
- <20240620172958.GA2058@redhat.com>
- <ZnU-wlFE5usvo9ah@tiehlicka>
+	bh=KzWNL/B1WPRI1LHle3EgQV0Lb6TkftrlmClTLMWSPBs=;
+	b=kLSOeu/8phqJ9r0wDZzEov/Ok8bEN9tgl6yPtsL1phpTujYSra21gKL1mch4AuK8gt3hP7
+	fqlCL96/h5S4xaylSaX/SKQCIz8YOcSxWseLcQX1KnRNqzqSI67r/ahBO6HSnFzryYGyyu
+	YC6PSrIijhS0RVFMzzjkMkHTuBnMMnlV0HwA4AMn9TJ0Mn/j3O2hjef8SlqZktcs15Omx+
+	QbUtaN6EEv5dfGC40hmBcT8RKTIxPI24BeQ4hBZVCrsuNG0afPIShQx1VC1aNgG4lvbkON
+	xbJ4wSQVUpkBVijbpT2DXM8BjCQlAiJLWXsDBqtCNWtddehbimNkJapETsSP3Q==
+Date: Wed, 26 Jun 2024 17:25:47 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Donald Hunter
+ <donald.hunter@gmail.com>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ Jonathan Corbet <corbet@lwn.net>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, Dent Project <dentproject@linuxfoundation.org>,
+ kernel@pengutronix.de, linux-doc@vger.kernel.org
+Subject: Re: [PATCH net-next v4 0/7] net: pse-pd: Add new PSE c33 features
+Message-ID: <20240626172547.115e95cc@kmaincent-XPS-13-7390>
+In-Reply-To: <20240626062711.499695c5@kernel.org>
+References: <20240625-feature_poe_power_cap-v4-0-b0813aad57d5@bootlin.com>
+	<20240625184144.49328de3@kernel.org>
+	<20240626095211.00956faa@kmaincent-XPS-13-7390>
+	<20240626062711.499695c5@kernel.org>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZnU-wlFE5usvo9ah@tiehlicka>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On 06/21, Michal Hocko wrote:
->
-> On Thu 20-06-24 19:30:19, Oleg Nesterov wrote:
-> >
-> > Or even better. Can't we finally kill mm_update_next_owner() and turn the
-> > ugly mm->owner into mm->mem_cgroup ?
->
-> Yes, dropping the mm->owner should be a way to go. Replacing that by
-> mem_cgroup sounds like an improvemnt. I have a vague recollection that
-> this has some traps on the way. E.g. tasks sharing the mm but living in
-> different cgroups. Things have changes since the last time I've checked
-> and for example memcg charge migration on task move will be deprecated
-> soon so chances are that there are less roadblocks on the way.
+On Wed, 26 Jun 2024 06:27:11 -0700
+Jakub Kicinski <kuba@kernel.org> wrote:
 
-OK, thanks...
+> On Wed, 26 Jun 2024 09:52:11 +0200 Kory Maincent wrote:
+>  [...] =20
+>=20
+> Every Thursday, usually around noon PST but exact timing depends on when
+> Linus pulls and how quickly I notice that he did :)
 
-So if we can't do this right now, can we at least cleanup it? To me it looks
-just ugly.
+Ok, thanks for the information!
 
-We don't need get/put_task_struct. The "retry" logic is obviously suboptimal.
-The search in the children/siblings doesn't handle zombie leaders.
-
-I'll send 2 (hopefully simple) patches in a minute, could you review? I have
-no idea how to test them...
-
-Oleg.
-
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
