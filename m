@@ -1,173 +1,158 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48EF416CD1F;
-	Wed, 26 Jun 2024 09:35:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0978BEF
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 09:37:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719394538; cv=none; b=Ju7TUPVIHGZQki1rQKqCasADs12otnYHJoQolpB8BwTpB8WjV63648TBTLiFm/93uTxOZbEh8/qw/lkSd1qSwIjGKbuGCyNQLAnf3v5jUKalBIPAqCpOO+uOdEX/BRMJmZPZutTSeSDVTjxBHH9k1YjOQgiI+Q8LZKJlAULEOiQ=
+	t=1719394628; cv=none; b=IGid6cvIgIrW5g7Z+jLHpiglRq+Hat+YtXu4vHHM7g4HEfE2XzO3qHSDqkKXCO8VbrS4k0XA3KryrIQJC76XK87OxKhiYS4qgEiDBf/6N5lHACm7M6G51aJZultO1IDAf9vgPbXzXMxkh1GTUD/JuiZYM4n3Fhfx5GCDUHYQUV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719394538; c=relaxed/simple;
-	bh=mJPHb1h8PtVkohruP9kTZw0RpbsN3fWIjbsowGJOhB4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QwBZjrJEg8JIlPqTWsH5BDpxeoJe3zw0lFman6rMUl+YyFIwZpJlGNqB4mcGXYf0Dtew5VuiIU2woh43ytG5If6Av+LPT0p3DuFbM/iuDqTOscd1BhmTyMPmjjEGcCyEFkLSRqkcHsswXviLVkpB9jMbVxPqAFcUsK4nNmmGXSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6326f1647f6so60079087b3.0;
-        Wed, 26 Jun 2024 02:35:36 -0700 (PDT)
+	s=arc-20240116; t=1719394628; c=relaxed/simple;
+	bh=IOe74BviUgYXIjE1Ibu85GUlLOQUmCeF+sTT7UuVvYY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YUYTmIn70mFeYTlY+TVTwRN5wtegeIdbH+xHMYf2fzVHqSZqNm1sRfYD9ZdAyANt55UbUIyKIhrMXekSDM0UhqdJRwdZPUvoZoP/rmzLuzRDwYIOHNOBphxW+fCoflh02NchX37KnD5MwuEfLlya2iVe2IMmgIrhkIo4a9JTsAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D8WDNRF1; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D8WDNRF1"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a72477a6096so444299466b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 02:37:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719394625; x=1719999425; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=AEVD+w0TTAAVvcUXpjCC9r3Xtde98FGUdgCPdfiAa2c=;
+        b=D8WDNRF1wtHlVOi23WMvuW6ndEJWZfUiDtPKX6qz8NUjnDMP6VkLgWUgAr4dx7gKDO
+         tINk5E/NqWrYKYTLl37gZ1z26s9RTZM0QAqxCy8wYQMVGrrJkVBk/tbjkaR03UGg3evt
+         ydzmBVo35cBIyTfv7f3SFOXAdJtrPC/edYz6FVdzF0KKU5VtR35RvXV2fqFnFWbh5ih7
+         jghFpWlO6l39fTKlmMO6JAA5ExKm/M8sFE1ctUP2X8wQ0U19/b8i6HKs4kIORPZdDwOU
+         fsxzc2EQBE+UGvXkdoMJ3/6MFoyXWJK8P2N4Kloz8cbApXFfYLsqYMkp3uGNgeWELuPb
+         ODyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719394534; x=1719999334;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fXYZ7JaFw5Xny2CU1Qww3vsC5MqHS7GWiaZ6UXzK1eQ=;
-        b=tPwqKM9oMEOv4PiHNutxalmXqJZvVFWJLauz5S+M438l/Y2J1yxlgYVSWaDQanzoYw
-         yHQSP/AnUouOI8EF90b0gYUyu/gism+1fJHRz3hNoNxanXfYMDLMV9hJCU5aAPz3onWr
-         aUl/YT3mC52XkLukdBUmVi+yv2ZZn95sZDGo4edlvHJKkEM+AoLoEGWkYBhie9BlHJgz
-         n/3ynzUNWrOa7tRt1pHjeT1BFWc0zB2/B/T3FHobgvtKFgQFKWE64NDBZaltURwHPrOX
-         jsusVokagVa6yvPZYkApdWa7z8lYtH8o5udIcvpMAn1PhjNHOwPiR5CHwbJm75T/3X52
-         UKgw==
-X-Forwarded-Encrypted: i=1; AJvYcCX1SJKo3RpQy2idn3K2n5ctaCUlPF95ygC9V8nKtna5m2LZZOlJkOHqBW+CLSNcNlGJg3kzpqKlER+LUxdz/PEf3n5+jlaJop7R/dicwb2SNB6wMIKoq/Etg4ToQKlBG8q4vlFJEj/hcIWA0lE2SOm5h3zBcp5epoVtyEGXzROCPgMrWgiTS8PTZh2GWu3sbdTDxChE/UAblirkDpr1lJducd9kCY4J
-X-Gm-Message-State: AOJu0YxdLf6L+WGxbrud+hpldIitpeAtD0WQztbZj1Lc61SCTmyp6oAw
-	9ADDy3HGg1Q+HowrFPlyNS7MoSTA3zXwFkp7w6XYBd0T3Ri0+5lEJ8WDN3vR
-X-Google-Smtp-Source: AGHT+IF10ois1JaXNgZUnMdqAsjSc5sEBmXo5QKR+U0QqKNnkVc/SCIXI38rXLcv+m3ZiBypHAWyew==
-X-Received: by 2002:a0d:e603:0:b0:627:a757:cdfa with SMTP id 00721157ae682-643ac81d382mr93856377b3.38.1719394534188;
-        Wed, 26 Jun 2024 02:35:34 -0700 (PDT)
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com. [209.85.128.182])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-63f14e10330sm38247737b3.76.2024.06.26.02.35.33
+        d=1e100.net; s=20230601; t=1719394625; x=1719999425;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AEVD+w0TTAAVvcUXpjCC9r3Xtde98FGUdgCPdfiAa2c=;
+        b=JF1WKRr0S29lu2mz33DwBRaomX4Sr8enK+ebhW6tA/48IpS1XyDhsje+8QDMx6/2Q9
+         2nqO49GVIE4b85YTBaE07nc04GSIbiAIgSTgiS71Un68yVvOCmaFB7Wn8Qj0KJt3Wrtn
+         MYmLDy/VqoEPGcqW6vOcVpek+BUiFk+mx+9L73JSoGDWKUCkWd3UoVehVmx4TGXcf/v6
+         7WyqXPqd9ZjZdqfdmbPx1+605KoElOIjjXt8hcN0XrArt+Mi+Sh+HG++eQIXUkJ5Itgl
+         1vQRglxNAwX9RTplY9q7GAD+DXbbJvLFGQqjO01FA9D6RzlOfah/ZrFWk+BTOWsqCY0W
+         f/6A==
+X-Forwarded-Encrypted: i=1; AJvYcCUWeVRKUeAQbZoWJTDBWUhGIfq48PPlDB1qCGs7qB9JSPXQOA4s1ZVT4lVOyi0WyxTEZsStTReZ6/W01SDEilnDin+oY2lm7ym7wv3B
+X-Gm-Message-State: AOJu0YwAm1BMmhhAd5zTHIZ0GxEaJ+jy5tOLHGdlsGdajKDxQ27YyuIy
+	DaSoOvqgLEBOS2M1FIbR+r2v5PEA/+q5SO/WhjpAovttLD43+pRdaTnql/G6Zuw=
+X-Google-Smtp-Source: AGHT+IHMd5gcTGXG0btMMetTthXNYoimPBO8ehjkfI6u1J6Ceh0RTvs6sjMc+EPy7NGvsHh8ni7voA==
+X-Received: by 2002:a17:906:a8d:b0:a6f:4c10:8da6 with SMTP id a640c23a62f3a-a7245b45a69mr587403866b.2.1719394624617;
+        Wed, 26 Jun 2024 02:37:04 -0700 (PDT)
+Received: from [192.168.215.29] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a725cc93794sm246743566b.170.2024.06.26.02.37.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Jun 2024 02:35:33 -0700 (PDT)
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-64546605546so32976537b3.1;
-        Wed, 26 Jun 2024 02:35:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUj1AGAfgHHD56y+dCdVn671LVnEOfsf/EyTjjaAgSnR1U86NDULoJFumBWTySpJeJ6psFSo36ATZ/zh0DWK8ecGbXoIKXAk2cZDELVWm0F83Z3CAcb+yy3dbkOD84eNQDNmofZux25/KeD3KBhwweTrGCla8zFeR5EhqpIMAYTYN2owK812OAkT6k4gTi1g/HEJ49UheiRM5bbVuFr2BJBWGy6SH8r
-X-Received: by 2002:a05:690c:4b02:b0:63c:819:2a8f with SMTP id
- 00721157ae682-643aa5a1d6fmr113309907b3.4.1719394533239; Wed, 26 Jun 2024
- 02:35:33 -0700 (PDT)
+        Wed, 26 Jun 2024 02:37:04 -0700 (PDT)
+Message-ID: <a33ac27f-ab88-40a7-9cb0-9d27342fed09@linaro.org>
+Date: Wed, 26 Jun 2024 11:37:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240610233221.242749-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240610233221.242749-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <34b21e6f-0896-4691-9b66-d06ef2f44905@kernel.org> <CA+V-a8u6dDpbb5BrQ+ty_RbwcPOF-U6rnJnuASRXEDVdrhrvAA@mail.gmail.com>
- <20438973-d7a1-427f-a2ed-5c5b9f7db872@kernel.org>
-In-Reply-To: <20438973-d7a1-427f-a2ed-5c5b9f7db872@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 26 Jun 2024 11:35:20 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVrXmDBxD4gGkHvs3iUuT6nnzjWzVUme7jH5u=YpyzQuw@mail.gmail.com>
-Message-ID: <CAMuHMdVrXmDBxD4gGkHvs3iUuT6nnzjWzVUme7jH5u=YpyzQuw@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 1/4] dt-bindings: clock: renesas: Document
- RZ/V2H(P) SoC CPG
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/3] drm/msm/adreno: Add support for X185 GPU
+To: Akhil P Oommen <quic_akhilpo@quicinc.com>
+Cc: freedreno <freedreno@lists.freedesktop.org>,
+ dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+ Rob Clark <robdclark@gmail.com>, Bjorn Andersson <andersson@kernel.org>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, Daniel Vetter <daniel@ffwll.ch>,
+ David Airlie <airlied@gmail.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Marijn Suijten <marijn.suijten@somainline.org>, Sean Paul <sean@poorly.run>,
+ linux-kernel@vger.kernel.org
+References: <20240623110753.141400-1-quic_akhilpo@quicinc.com>
+ <20240623110753.141400-3-quic_akhilpo@quicinc.com>
+ <5947559d-30dd-4da1-93cc-a15dc65cb77d@linaro.org>
+ <20240626082422.zcsari27yoskayuo@hu-akhilpo-hyd.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240626082422.zcsari27yoskayuo@hu-akhilpo-hyd.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Krzysztof,
+On 26.06.2024 10:24 AM, Akhil P Oommen wrote:
+> On Mon, Jun 24, 2024 at 03:53:48PM +0200, Konrad Dybcio wrote:
+>>
+>>
+>> On 6/23/24 13:06, Akhil P Oommen wrote:
+>>> Add support in drm/msm driver for the Adreno X185 gpu found in
+>>> Snapdragon X1 Elite chipset.
+>>>
+>>> Signed-off-by: Akhil P Oommen <quic_akhilpo@quicinc.com>
+>>> ---
+>>>
+>>>   drivers/gpu/drm/msm/adreno/a6xx_gmu.c      | 19 +++++++++++++++----
+>>>   drivers/gpu/drm/msm/adreno/a6xx_gpu.c      |  6 ++----
+>>>   drivers/gpu/drm/msm/adreno/adreno_device.c | 14 ++++++++++++++
+>>>   drivers/gpu/drm/msm/adreno/adreno_gpu.h    |  5 +++++
+>>>   4 files changed, 36 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+>>> index 0e3dfd4c2bc8..168a4bddfaf2 100644
+>>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+>>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+>>> @@ -830,8 +830,10 @@ static int a6xx_gmu_fw_start(struct a6xx_gmu *gmu, unsigned int state)
+>>>   	 */
+>>>   	gmu_write(gmu, REG_A6XX_GMU_CM3_CFG, 0x4052);
+>>> +	if (adreno_is_x185(adreno_gpu)) {
+>>> +		chipid = 0x7050001;
+>>
+>> What's wrong with using the logic below?
+> 
+> patchid is BITS(7, 0), not (15, 8) in the case of x185. Due to the
+> changes in the chipid scheme within the a7x family, this is a bit
+> confusing. I will try to improve here in another series.
 
-On Thu, Jun 13, 2024 at 2:57=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
-g> wrote:
-> On 13/06/2024 11:53, Lad, Prabhakar wrote:
-> > On Tue, Jun 11, 2024 at 8:02=E2=80=AFAM Krzysztof Kozlowski <krzk@kerne=
-l.org> wrote:
-> >> On 11/06/2024 01:32, Prabhakar wrote:
-> >>> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >>>
-> >>> Document the device tree bindings for the Renesas RZ/V2H(P) SoC
-> >>> Clock Pulse Generator (CPG).
-> >>>
-> >>> CPG block handles the below operations:
-> >>> - Generation and control of clock signals for the IP modules
-> >>> - Generation and control of resets
-> >>> - Control over booting
-> >>> - Low power consumption and power supply domains
-> >>>
-> >>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com=
->
+Ohh I overlooked this.. sounds a bit unfortunate.. 
 
-> >>> +  '#clock-cells':
-> >>> +    description: |
-> >>> +      - For CPG core clocks, the two clock specifier cells must be "=
-CPG_CORE"
-> >>> +        and a core clock reference, as defined in
-> >>> +        <dt-bindings/clock/r9a09g057-cpg.h>,
-> >>
-> >> So second cell is not used?
-> >>
-> > It will be used for blocks using core clocks.
-> >
-> >>> +      - For module clocks, the two clock specifier cells must be "CP=
-G_MOD" and
-> >>> +        a module number.  The module number is calculated as the CLK=
-ON register
-> >>> +        offset index multiplied by 16, plus the actual bit in the re=
-gister
-> >>> +        used to turn the CLK ON. For example, for CGC_GIC_0_GICCLK, =
-the
-> >>> +        calculation is (1 * 16 + 3) =3D 19.
-> >>
-> >> You should not have different values. Make it const: 1 and just use ID=
-s.
-> >>
-> > Are you suggesting not to differentiate between core/mod clocks. They
-> > are differentiated because the MOD clocks can turned ON/OFF but where
-> > as with the core clocks we cannot turn them ON/OF so the driver needs
-> > to know this, hence two specifiers are used.
->
-> Every driver knows it... I am really, what is the problem here? Are you
-> saying the drivers create some unknown clocks?
+Seems like it doesn't really fit the "else" branch anyway, let's
+keep it for now then
 
-The driver knows for sure which clocks are module clocks, and thus can
-be used for power management.  To simplify the driver, two separate
-numbers spaces are used:
-  1. Core clock numbers come from IDs in the DT binding headers,
-  2. Module clock numbers come straight[1] from the hardware docs.
-As the latter are fixed, merging them into a single number space in
-a future-proof way is hard[2], the bindings use 2 clock cells.
-
-Alternatively, a unified number space using IDs in the DT binding
-headers could be used, as you suggest.
-
-[1] "straight" may be a misnomer here, as the DT writer still has to
-    calculate the number from register index and bit index:
-
-        n =3D register index * 16 + bit index
-
-    i.e. register index 1 and register bit 3 become 19.
-
-    In the R-Car series, this is handled slightly more elegant
-    (IMHO ;-), and easier to the human eye, by using a sparse
-    number space:
-
-        n =3D register index * 100 + bit index
-
-    i.e. register index 1 and register bit 3 become 103.
-    Which also matches how the bits were named in older SH-Mobile
-    hardware docs.
-
-[2] One could use an offset to indicate core or module clocks, but
-    future SoCs in the family may have more clocks.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Konrad
