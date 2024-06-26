@@ -1,30 +1,29 @@
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [195.130.137.90])
+Received: from andre.telenet-ops.be (andre.telenet-ops.be [195.130.132.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4375015D5DE
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 08:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F88A161304
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 08:41:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719391317; cv=none; b=ZzEMMgJOHu1eGPrPTi6eTwJHJU/GX6S+4gGntexblflD0vyH4pKAdlZ1eM5Hq1w8OPqRoR3T53XJC/qVGUclj7YHlNCRhCUleq2Y9iLl4I6WVByN3JIxSRC31SddTKer6xvgCTOfTGDOkKM4Dmx2LcmKIp47L+ztFKb0ftEY9XI=
+	t=1719391318; cv=none; b=VtxMRuv3Ol9dtAyWcBcxnsay/dw6CPJIm0zvXJZPrGT2zdSRb0LGi479JyNmJjuz2LHXA6OZHN5ZgDQFKJDirbtxrLt8gncdCH0xqfNCurWiJW7knobxoqmxVyPfH981zSHRwbjTujzT1rFPXiGNc/Y/bk+BFVDh0Uy98XAVa60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719391317; c=relaxed/simple;
-	bh=JAbpCj/RCVldgdIk3yRrqc8Eh1Edg+BwtOO7Sfn3Vyw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=S22InrIQooEyI0MHghBnDX85neH1Tye3IVwK8krqCfq5U/fwqbJqc4lFCATetT1xHyzZtFSVf0zYXKtcGUb+rK2osKUY+qdZMG7vEILw4/BDPZKmy3DZQXj3I54AdDMtErzHVmvF9p6kdcrbdzRZo1okeXyEqPlHRWwp2EYyRKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.90
+	s=arc-20240116; t=1719391318; c=relaxed/simple;
+	bh=3nOK4BeLNH28VmMIO7giZ32TCzmZKakFp6UpEuQbkjk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UcHbOw58OVY7RX4LnCv+MOG/Fc4KMa7igpNgIv4S0dMchNgJPlY6E6a6Hu7uF6pdL8R6QXq1p9HNbnoSyHUgp8B6zPpriFOjlLCY0PBzBuJVnisdlsvNCj6Mykf907G+9kYCFLymFDppIA1RkRQnGIEFyUtGOhyP3dgrN89YBc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
 Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:1dff:b715:1a2c:c3f5])
-	by albert.telenet-ops.be with bizsmtp
-	id g8hm2C00G0lK4vA068hmGN; Wed, 26 Jun 2024 10:41:47 +0200
+	by andre.telenet-ops.be with bizsmtp
+	id g8hm2C00N0lK4vA018hmZ4; Wed, 26 Jun 2024 10:41:47 +0200
 Received: from rox.of.borg ([192.168.97.57])
 	by ramsan.of.borg with esmtp (Exim 4.95)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1sMODm-000OVr-Fx;
+	id 1sMODm-000OVm-F6;
 	Wed, 26 Jun 2024 10:41:46 +0200
 Received: from geert by rox.of.borg with local (Exim 4.95)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1sMODq-00Aonj-By;
+	id 1sMODq-00Aond-90;
 	Wed, 26 Jun 2024 10:41:46 +0200
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 To: Jocelyn Falempe <jfalempe@redhat.com>,
@@ -35,14 +34,11 @@ To: Jocelyn Falempe <jfalempe@redhat.com>,
 	Daniel Vetter <daniel@ffwll.ch>
 Cc: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH 2/2] drm/panic: Restrict graphical logo handling to built-in
-Date: Wed, 26 Jun 2024 10:41:45 +0200
-Message-Id: <4009fca99a7c05f617cc9899c6d0a5748415595d.1719391132.git.geert+renesas@glider.be>
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 0/2] drm/panic: Miscellaneous fixes
+Date: Wed, 26 Jun 2024 10:41:43 +0200
+Message-Id: <cover.1719391132.git.geert+renesas@glider.be>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1719391132.git.geert+renesas@glider.be>
-References: <cover.1719391132.git.geert+renesas@glider.be>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,37 +47,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When CONFIG_DRM_PANIC=y, but CONFIG_DRM=m:
+	Hi all,
 
-    ld: drivers/gpu/drm/drm_panic.o: in function `drm_panic_setup_logo':
-    drivers/gpu/drm/drm_panic.c:99: multiple definition of `init_module'; drivers/gpu/drm/drm_drv.o:drivers/gpu/drm/drm_drv.c:1079: first defined here
+Here are two more fixes for the DRM panic code.
 
-Fix this by restricting the graphical logo handling and its
-device_initcall() to the built-in case.  Logos are freed during late
-kernel initialization, so they are no longer available at module load
-time anyway.
+Thanks for your comments!
 
-Fixes: 294bbd1f2697ff28 ("drm/panic: Add support for drawing a monochrome graphical logo")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202406261341.GYsbLpN1-lkp@intel.com/
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/gpu/drm/drm_panic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Geert Uytterhoeven (2):
+  drm/panic: Do not select DRM_KMS_HELPER
+  drm/panic: Restrict graphical logo handling to built-in
 
-diff --git a/drivers/gpu/drm/drm_panic.c b/drivers/gpu/drm/drm_panic.c
-index 67f78b5a76b61e3d..948aed00595eb6dd 100644
---- a/drivers/gpu/drm/drm_panic.c
-+++ b/drivers/gpu/drm/drm_panic.c
-@@ -91,7 +91,7 @@ static const struct drm_panic_line logo_ascii[] = {
- 	PANIC_LINE(" \\___)=(___/"),
- };
- 
--#ifdef CONFIG_LOGO
-+#if defined(CONFIG_LOGO) && !defined(MODULE)
- static const struct linux_logo *logo_mono;
- 
- static int drm_panic_setup_logo(void)
+ drivers/gpu/drm/Kconfig     | 1 -
+ drivers/gpu/drm/drm_panic.c | 3 +--
+ 2 files changed, 1 insertion(+), 3 deletions(-)
+
 -- 
 2.34.1
 
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
