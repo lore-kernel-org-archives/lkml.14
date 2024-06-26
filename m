@@ -1,175 +1,337 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2054.outbound.protection.outlook.com [40.107.94.54])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F4AE18EFEB;
-	Wed, 26 Jun 2024 10:28:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719397723; cv=fail; b=cdt9fMdUS0fsmkzJQ3HwHlnigItuIBDX22O90MeDCvB2aLRhiIgvYj6xq4wd8ZHQdiuG6S+cYcu8OWDKSzGEA3qrAvkWUdFoBQMSwf/Ii8BDNJSg3hgH55Nm1F5Mjcch6ycC4ji2CsY5ym3fB+Fzd8HK7ViyJgoQ979BSm3PSLQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719397723; c=relaxed/simple;
-	bh=KBnBLZMKRDaX0Ajt793FuGR2p9G/jNobTfmgv1LiTxI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=Wq1QpQiHRDRSKZcf7T+Oo8P8yNmTrLYD70nzhN4DldtEIe7KRYFo56kC/hM9aSh99P+yYQbHHlJ1JIzRe/bor4S+eM4NbK5gOqESjeys/jUZ5gPIjYKywaHrMixDBRReoSbAUbo7I/ippIXKgidqvCbb7hmcTGIClHuUj7I3sms=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=VQpb5nty; arc=fail smtp.client-ip=40.107.94.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E2B17C20F
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 10:29:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719397751; cv=none; b=GB6A0ytF0XVF+mNYzBjfP5MNmr9BuNp9EanB1HcrV/xx5puI3VZ58hZEPV6RdxjtTTBLalY3wSSBGlt176DPXqZFexLeuwAmfyx/6U8LM5XGQ17Jn3/f6CKJmGXKZyAODny6NdVO60awicww/xE3cw5nVM6efxSS2MqEFiGDLyM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719397751; c=relaxed/simple;
+	bh=2zM6rv5oUP0Wt46AuhDdaFJBL0drdU6c9ikeqaYjVqE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=kYZ4JKFj7ZGaofFcAHSvrzoMsmJhQ2BLFrq/6JonuJuMAlxlIZPfTqMqU3UYxhMIlsUkDQ0htbXPnAqm7NkOfk80w4SwOVzhjhTTzZdcu6rc5TPeTExgHOPwWEfgYK+5Hiz9nTKHoXtTksf/8tfSyDzLshEsVV0KJyi9VRPs9uM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UQWkippN; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="VQpb5nty"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Pgk79V7g6AH+r9cGUb1XmHHWH0WjGz1NFmnMjV6o7fIcYW6GdoHM1rbjbml2Mp0bAtDfuAVWc2vlSzPk6o8UCVBV0Qbmldxj/pVPHnqo2uAzOiVBNLM3ib6Prh7dw6t/h8NqOfTyfaFXXv2+9cbMnam/gUw0q/gVafs7GCY88yR1zjQm/q9ileWMvW2djyLVkG2vgneei5JbMisg3qXZ/GDCOag0k09aW0hlbF0FCnCrbBixVf3hMohd31ln9bCokUXxJJS9pMjG9eEYZatJRdCkvOxcpIaAW9BJnoqWIDb74Ng/1EHiz/wrh4+lYgLMpsSnC3W7LYB3Q6OtManzEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=U9kDi5k6Pml6EGu7R9eE8ZQZvIGr/YjAOvpoY03s6Pg=;
- b=jYlJH0uSnxu7jle4Hs5uk4ITc4qHHjrgclDENMOMmrLWlpuiBJyWWk+X8UJ+WbvdkjjKUi2Ouyn+aUsMvyf/R4zXes3zIWkVhEvZnp7xFbR58DNExyBrMMwEjEh/BkpXtEnEJfiozuiyqq9r+nhnkrC1NwPW6mL06g1Jee9apAQTEXML15P6que5GEAHuvpeOjWsxXTaRA4zaEJsP0qefn/Ch/W0ZzbczF7LX3POvvwOGV4BD/RVcMQm3YAJrNBQ74xEdSoELjM8l+WwGZ6KIcfnchzn23lU4WP5lzlQcShutSZdPScq2CESNtwsLPWXB9GaelDXr6cyxHR3FmPmrA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U9kDi5k6Pml6EGu7R9eE8ZQZvIGr/YjAOvpoY03s6Pg=;
- b=VQpb5ntys9iumS/ffmCmINFScPRWH+QVOlyEkAY/CMdmaLZPVI8nJWb/tNGKa6JPBXy4HNzboOh+A4QCEIWny6hxFZ6FBhLpyAmQIYV30TOvDs3Q5B9JVwE3EdiqxwR9n7BC1UxufeJRGPX+56K+UsDsIoqDezxzZ7psTHplslXt1igOxGWuqfjG4sXrKe4L9FM3gJrFQ7JW1ZB/+VpEe4y67DI89yMPSwLFvoZ9SqnRrQ1mk8RuMRQeWeMqj20TP6EpDFcm/npD86oWLb/Tid2uNWZ+Uf1Z7gaWzrEAVOHPRn974uYp4q+Tx2/pXjG6p4mUs+/dp+dXvCFdm7hGqg==
-Received: from SJ0PR03CA0370.namprd03.prod.outlook.com (2603:10b6:a03:3a1::15)
- by MW4PR12MB7310.namprd12.prod.outlook.com (2603:10b6:303:22c::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.32; Wed, 26 Jun
- 2024 10:28:37 +0000
-Received: from MWH0EPF000971E9.namprd02.prod.outlook.com
- (2603:10b6:a03:3a1:cafe::e0) by SJ0PR03CA0370.outlook.office365.com
- (2603:10b6:a03:3a1::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.22 via Frontend
- Transport; Wed, 26 Jun 2024 10:28:37 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- MWH0EPF000971E9.mail.protection.outlook.com (10.167.243.71) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7677.15 via Frontend Transport; Wed, 26 Jun 2024 10:28:37 +0000
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 26 Jun
- 2024 03:28:25 -0700
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail203.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 26 Jun
- 2024 03:28:24 -0700
-Received: from dev-l-177.mtl.labs.mlnx (10.127.8.11) by mail.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Wed, 26 Jun 2024 03:28:21 -0700
-From: Dragos Tatulea <dtatulea@nvidia.com>
-Date: Wed, 26 Jun 2024 13:27:00 +0300
-Subject: [PATCH vhost v2 24/24] vdpa/mlx5: Don't enable non-active VQs in
- .set_vq_ready()
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UQWkippN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719397746;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wdxOcpPgIsnTj5I78VN3KWscrX6h2YohEmv3kQR5obo=;
+	b=UQWkippNx4chhmhjVzntinrLET+mt/t/NhvstPerbCpKp7RtBq2G4IdvhimoPKLFl/iS4R
+	doZJjlBX641HbHrbtsj88TBNOylcqQk8EqDd+BRj7m/INImqJaybg/rqYhexibxbCxLlI4
+	l4/goHA4lGurn9rZeLZO1o3VXdrHd8s=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-610-jx-dDPYLM8amBAocEqRwtw-1; Wed, 26 Jun 2024 06:29:05 -0400
+X-MC-Unique: jx-dDPYLM8amBAocEqRwtw-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4218447b900so2676555e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 03:29:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719397744; x=1720002544;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wdxOcpPgIsnTj5I78VN3KWscrX6h2YohEmv3kQR5obo=;
+        b=K7wwm5PuSOVDXlHdDoGvZc3ojncD42q39UO40OOB60OeTXKesT8MtKcyrsNVQgFEhN
+         q4jO+4xvgxDZ05AJEsytU40WQcag8+oZ1M9495lvUD7oibLXFl0fiAJq+Fc3Zpa5FUf7
+         P8kGXOSgA4X2CPh0xIpPvGp+hXJnb9hrRYQKy61g0Ft9xAt74Ng+DtbAVhozvkmifzAD
+         p7Z7NpF2wa1gdJIh7BeNkGGySxv7DnSBGe1idijfiHuZ6d/vLj2c6/G5zfCVpKlaboZl
+         PO082nXSt4JTp2yAMTg1b1oGWto2ICpgtBSktdkG/IJfd16q7PkqX7rhCinfnzcZAECX
+         mSwg==
+X-Forwarded-Encrypted: i=1; AJvYcCWZrHX3Blm4ECIfTjd1Yot9dX7PSHSnbr2U6y1SJPh2LoB0jmRdTwYUfFJIBfhy+ydrg2sDiNdihaUZFXcM6gIPgh8aa//7vwAWeIg9
+X-Gm-Message-State: AOJu0Ywg4kCdq0qWpi05BQL44/v8OyW8EFWKooW9X4k3Gl8TgrvHo7ZN
+	DCO2rRk8PIHlH5JMoK1VP3QpdkuORiTpmzxgnubKlIWajFexX1wnn1/KCXlEr/gF0B+ihLEumvu
+	S89SAozb1T97OsLBFxeujipUZwXd4yRCeIBh70GWBM5mUT+SZZMMn9WT7004rww==
+X-Received: by 2002:a05:600c:d8:b0:424:acbf:c068 with SMTP id 5b1f17b1804b1-424acbfc179mr18763305e9.16.1719397744232;
+        Wed, 26 Jun 2024 03:29:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFkqDjaE9S3VCKyJP4dgg0MCYwCjWYFJFRkmjGRrGcYsSu9yuLlt/wmeGH6cAwn/Wu/uWjQuw==
+X-Received: by 2002:a05:600c:d8:b0:424:acbf:c068 with SMTP id 5b1f17b1804b1-424acbfc179mr18762925e9.16.1719397743752;
+        Wed, 26 Jun 2024 03:29:03 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:4b3f:ee94:abf:b8ff:feee:998b? ([2a02:810d:4b3f:ee94:abf:b8ff:feee:998b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c837f1cesm19955025e9.37.2024.06.26.03.29.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Jun 2024 03:29:03 -0700 (PDT)
+Message-ID: <5d7b22c7-de22-4a8c-a122-624afc3d12f1@redhat.com>
+Date: Wed, 26 Jun 2024 12:29:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-ID: <20240626-stage-vdpa-vq-precreate-v2-24-560c491078df@nvidia.com>
-References: <20240626-stage-vdpa-vq-precreate-v2-0-560c491078df@nvidia.com>
-In-Reply-To: <20240626-stage-vdpa-vq-precreate-v2-0-560c491078df@nvidia.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?utf-8?q?Eugenio_P=C3=A9rez?=
-	<eperezma@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky
-	<leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>, Si-Wei Liu
-	<si-wei.liu@oracle.com>
-CC: <virtualization@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>, Cosmin Ratiu
-	<cratiu@nvidia.com>, Dragos Tatulea <dtatulea@nvidia.com>
-X-Mailer: b4 0.13.0
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000971E9:EE_|MW4PR12MB7310:EE_
-X-MS-Office365-Filtering-Correlation-Id: ff6a3ebb-2596-429e-b0a8-08dc95cabd83
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230038|36860700011|376012|7416012|1800799022|82310400024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WHdLUERoV0owRUZMa2ZsZm16WlBDY1JKUSt3ME92Z2Z3ZGNpNkhna3UxVm41?=
- =?utf-8?B?K2FVUzBsTkhSTkpMNy9EV3dOOEZ0WnZUSTZEYXN4SExwSXI1UkNHVkRRT3dw?=
- =?utf-8?B?T2o5ZVU1eStCSzZuVHF3T3Y2dythNXA4SHFza1VTRy9VRThRUzFrRG9hZGwy?=
- =?utf-8?B?MXVPT1VyeE5WSzJXb2Y1VFNqQ0xXQjc3ZGZ3cndSL0NPQkhqVnlXdGJVSnR0?=
- =?utf-8?B?RVNMSEJkbE5jVVBQTlhkYmFGVzc5WUZiR1JrWnBHUkNXUDZIekFjMm05Y1VC?=
- =?utf-8?B?QnAxdEZCdW56OTFpVzRIOHhMYkh2VytzQmZadzNHTFN4VmpMVndqc21hUjZL?=
- =?utf-8?B?U1hFM3podXZIMldOV0J2OUsyVDJKTU0yaVgxZFJ4UnArRmRpNVVVVE5QeWZa?=
- =?utf-8?B?MW1HUjFKQmNZd1ZTRnEyVmdQS3hUTWlvMWRaTHd4TnQyRnZkZGFPNzZVaThB?=
- =?utf-8?B?QlhlY3ZOZUZTUUp6aThqSG53ajFYWmJMZ1pvV2Y3bGp4cWdTZFl0dnNSUUhW?=
- =?utf-8?B?N3k5N1BqakFkaFRJV0tHVWV2Y1JpMEZEeWk0ZmhuZGpCTkRSTWh3UEpHaTFU?=
- =?utf-8?B?dElhaGpRUkxZcDJlM21tdFZNUkU5L3NVOTdJajFxRjcvSndRcEtKUDBOZGgy?=
- =?utf-8?B?bTh1UWkxODBhbTJ1WWVBTGVNR3MzNS9aSWZCNkRnYnNLb29sMFZPdC9qUXN5?=
- =?utf-8?B?QTVwbkExSk5jTWQ0OGQwUEN3MnR3cHBDblY1cFZ6R1o3aExueXRlMC9VQ1BJ?=
- =?utf-8?B?QUpRcHE1dmJWd3Q0OXE2UEdDQlpsV2VMMUNBU2d6SHBBUXJzWTRCbXVwNWFS?=
- =?utf-8?B?MGlQUDdlbTBpZXdRdEVxMWZ1MnB0RS9CQldycFNkQ3RDYW1UTDlER1Y3NUdO?=
- =?utf-8?B?bkJoR0tCWENhMnFPM01DMTJyVHBaV0JnZ24rMGNtbUhnQ2gzQmdVWUs3bGNj?=
- =?utf-8?B?b3N2akU5bjBmSHdzLzZ4eTIrQmFXQzRKazlNU3NSWXhTeWdjejB3eG9EZ2ZU?=
- =?utf-8?B?SHFqU2MrZzRtbFZSS3Fvbm04WTI4anppbzk0UE1uL3VyVHJVcElZaTdmSzlG?=
- =?utf-8?B?dDU5Mk1id0VLaFM3Vis5QzI2KzJ0NGdSZkNwTHV2YVNlWG9wei9TNFMxZ2Q2?=
- =?utf-8?B?cjgzU3RKd3cxVUtXcy92Ulc4SmFkWTVzSFk5Y3g2ZW5VZHhZaUpsSmQraVd3?=
- =?utf-8?B?NTFuVldJNGZna1ZpdU52dWZIc3VHV2tYY2N4RVo5a1YzRVprSmZEYVhPUWVy?=
- =?utf-8?B?eTV0b1BBQ1BBbGNHOHJjazlWcFlxVjNxVStScHU3QTgvamdzUVp5dTdiNUVM?=
- =?utf-8?B?QkU3U1c1Tkkydms3MGdRaDhwOFYvRUxVTTZiVEZrY1FyUCs5dUxkZEE0RXpE?=
- =?utf-8?B?VEtUcnN2Q3ZmTkdyUWhwRjM1TmhGRTdhZHNmdUtxVHN3WmovbnlSclhxMlVK?=
- =?utf-8?B?Tm5KRUpvSWVhZmFwb2o3THY0UVJrc1JzQlRwNHlvZFBDUkRybVpvU1pSUHJu?=
- =?utf-8?B?empiU2dEQlp5aGpuMjJ4UCtObHZXUUNxZXBsYit4Z0JQckJCd1RNaGR1WDFv?=
- =?utf-8?B?V3lnMXJRRUxTZUN2TTY5Z3ViNW5SNm43K09ORFhBMkFQcDFSeXBBUUl1ZVNM?=
- =?utf-8?B?WEhScUduLzNZdDZYeVNyK2lvcFhHbGNwQUlxVjh1bFVwWEdTOThoMEVEbnNN?=
- =?utf-8?B?VzdRZ0R1N3loNXVPQjJrMERDSGx4UHJKVWZ0ZVZQdHVac3VlLzBWT253NmV1?=
- =?utf-8?B?VEcycUxNTkM5RFdETlRKSnoydnZqc3dsa1dOWXpuMm80dlYyTDBiRHpmcEJZ?=
- =?utf-8?B?QjJDNmVCSXcrQVRyRTkyTFltejRmNGk4ckk4eGRZc204NytDaFg4MnYwR2ZS?=
- =?utf-8?B?VzVJUkR3Y0RJVTNpWHlOeEkrMENBa1cxYWhzRlNIM3VPVXl5c3FocHhaYzAz?=
- =?utf-8?Q?EBrpvsQ+1VRfhnptJ3bKM342U/T0WqIo?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230038)(36860700011)(376012)(7416012)(1800799022)(82310400024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2024 10:28:37.4443
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff6a3ebb-2596-429e-b0a8-08dc95cabd83
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000971E9.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7310
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/10] rust: pass module name to `Module::init`
+From: Danilo Krummrich <dakr@redhat.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
+ alex.gaynor@gmail.com, wedsonaf@gmail.com, boqun.feng@gmail.com,
+ gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+ a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
+ fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
+ ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org,
+ daniel.almeida@collabora.com, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20240618234025.15036-1-dakr@redhat.com>
+ <20240618234025.15036-2-dakr@redhat.com>
+ <2024062038-backroom-crunchy-d4c9@gregkh> <ZnRUXdMaFJydAn__@cassiopeiae>
+ <2024062010-change-clubhouse-b16c@gregkh> <ZnSeAZu3IMA4fR8P@cassiopeiae>
+Content-Language: en-US
+Organization: RedHat
+In-Reply-To: <ZnSeAZu3IMA4fR8P@cassiopeiae>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-VQ indices in the range [cur_num_qps, max_vqs) represent queues that
-have not yet been activated. .set_vq_ready should not activate these
-VQs.
+Hi Greg,
 
-Reviewed-by: Cosmin Ratiu <cratiu@nvidia.com>
-Acked-by: Eugenio Pérez <eperezma@redhat.com>
-Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
----
- drivers/vdpa/mlx5/net/mlx5_vnet.c | 3 +++
- 1 file changed, 3 insertions(+)
+On 6/20/24 23:24, Danilo Krummrich wrote:
 
-diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-index 573dc01df8c3..fa78e8288ebb 100644
---- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
-+++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-@@ -1575,6 +1575,9 @@ static int resume_vq(struct mlx5_vdpa_net *ndev, struct mlx5_vdpa_virtqueue *mvq
- 	if (!mvq->initialized)
- 		return 0;
- 
-+	if (mvq->index >= ndev->cur_num_vqs)
-+		return 0;
-+
- 	switch (mvq->fw_state) {
- 	case MLX5_VIRTIO_NET_Q_OBJECT_STATE_INIT:
- 		/* Due to a FW quirk we need to modify the VQ fields first then change state.
+This is a polite reminder about the below discussion.
 
--- 
-2.45.1
+> On Thu, Jun 20, 2024 at 06:36:08PM +0200, Greg KH wrote:
+>> On Thu, Jun 20, 2024 at 06:10:05PM +0200, Danilo Krummrich wrote:
+>>> On Thu, Jun 20, 2024 at 04:19:48PM +0200, Greg KH wrote:
+>>>> On Wed, Jun 19, 2024 at 01:39:47AM +0200, Danilo Krummrich wrote:
+>>>>> In a subsequent patch we introduce the `Registration` abstraction used
+>>>>> to register driver structures. Some subsystems require the module name on
+>>>>> driver registration (e.g. PCI in __pci_register_driver()), hence pass
+>>>>> the module name to `Module::init`.
+>>>>
+>>>> I understand the need/want here, but it feels odd that you have to
+>>>> change anything to do it.
+>>>>
+>>>>>
+>>>>> Signed-off-by: Danilo Krummrich <dakr@redhat.com>
+>>>>> ---
+>>>>>   rust/kernel/lib.rs           | 14 ++++++++++----
+>>>>>   rust/kernel/net/phy.rs       |  2 +-
+>>>>>   rust/macros/module.rs        |  3 ++-
+>>>>>   samples/rust/rust_minimal.rs |  2 +-
+>>>>>   samples/rust/rust_print.rs   |  2 +-
+>>>>>   5 files changed, 15 insertions(+), 8 deletions(-)
+>>>>>
+>>>>> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+>>>>> index a791702b4fee..5af00e072a58 100644
+>>>>> --- a/rust/kernel/lib.rs
+>>>>> +++ b/rust/kernel/lib.rs
+>>>>> @@ -71,7 +71,7 @@ pub trait Module: Sized + Sync + Send {
+>>>>>       /// should do.
+>>>>>       ///
+>>>>>       /// Equivalent to the `module_init` macro in the C API.
+>>>>> -    fn init(module: &'static ThisModule) -> error::Result<Self>;
+>>>>> +    fn init(name: &'static str::CStr, module: &'static ThisModule) -> error::Result<Self>;
+>>>>
+>>>> Why can't the name come directly from the build system?  Why must it be
+>>>> passed into the init function of the module "class"?  What is it going
+>>>> to do with it?
+>>>
+>>> The name does come from the build system, that's where `Module::init` gets it
+>>> from.
+>>>
+>>>>
+>>>> A PCI, or other bus, driver "knows" it's name already by virtue of the
+>>>> build system, so it can pass that string into whatever function needs
+>>>
+>>> Let's take pci_register_driver() as example.
+>>>
+>>> ```
+>>> #define pci_register_driver(driver)		\
+>>> 	__pci_register_driver(driver, THIS_MODULE, KBUILD_MODNAME)
+>>> ```
+>>>
+>>> In C drivers this works because (1) it's a macro and (2) it's called directly
+>>> from the driver code.
+>>>
+>>> In Rust, for very good reasons, we have abstractions for C APIs, hence the
+>>> actual call to __pci_register_driver() does not come from code within the
+>>> module, but from the PCI Rust abstraction `Module::init` calls into instead.
+>>
+>> I don't understand those reasons, sorry.
+> 
+> Ok, good you point this out. We should definitely discuss this point then and
+> build some consensus around it.
+> 
+> I propose to focus on this point first and follow up with the discussion of the
+> rest of the series afterwards.
+> 
+> Let me explain why I am convinced that it's very important to have abstractions
+> in place in general and from the get-go.
+> 
+> In general, having abstractions for C APIs is the foundation of being able to
+> make use of a lot of advantages Rust has to offer.
+> 
+> The most obvious one are all the safety aspects. For instance, with an
+> abstraction we have to get exactly one piece of code right in terms of pointer
+> validity, lifetimes, type safety, API semantics, etc. and in all other places
+> (e.g. drivers) we get the compiler to check those things for us through the
+> abstraction.
+> 
+> Now, the abstraction can be buggy or insufficient and hence there is no absolute
+> safety guarantee. *But*, if we get this one thing right, there is nothing a
+> driver can mess up by itself trying to do stupid things anymore.
+> 
+> If we just call the C code instead we have to get it right everywhere instead.
+> 
+> Now, you could approach this top-down instead and argue that we could at least
+> benefit from Rust for the driver specific parts.
+> 
+> Unfortunately, this doesn't really work out either. Also driver specific code is
+> typically (very) closely connected to kernel APIs. If you want to use the safety
+> aspects of Rust for the driver specific parts you inevitably end up writing
+> abstractions for the C APIs in your driver.
+> 
+> There are basically three options you can end up with:
+> 
+> (1) An abstraction for the C API within your driver that is actually generic
+>      for every driver, and hence shouldn't be there.
+> (2) Your driver specific code is full of raw pointers and `unsafe {}` calls,
+>      which in the end just means that you ended up baking the abstraction into
+>      your driver specific code.
+> (3) You ignore everything, put everything in a huge `unsafe {}` block and
+>      compile C code with the Rust compiler. (Admittedly, maybe slightly
+>      overstated, but not that far off either.)
+> 
+> The latter is also the reason why it doesn't make sense to only have
+> abstractions for some things, but not for other.
+> 
+> If an abstraction for B is based on A, but we don't start with A, then B ends up
+> implementing (at least partially) the abstraction for A as well. For instance,
+> if we don't implement `driver::Registration` then the PCI abstractions (and
+> platform, usb, etc.) have to implement it.
+> 
+> It really comes down to the point that it just bubbles up. We really have to do
+> this bottom-up, otherwise we just end up moving those abstractions up, layer by
+> layer, where they don't belong to and we re-implement them over and over again.
+> 
+>>
+>>> Consequently, we have to pass things through. This also isn't new, please note
+>>> that the current code already does the same thing: `Module::init` (without this
+>>> patch) is already declared as
+>>>
+>>> `fn init(module: &'static ThisModule) -> error::Result<Self>`
+>>> passing through `ThisModule` for the exact same reason.
+>>
+>> Yeah, and I never quite understood that either :)
+> 
+> Since commit 247b365dc8dc ("rust: add `kernel` crate") shows me your RB for
+> that, am I good to assume that this one isn't a blocker?
+> 
+>>
+>>> Please also note that in the most common case (one driver per module) we don't
+>>> see any of this anyway.
+>>
+>> True, but someone has to review and most importantly, maintain, this
+>> glue code.
+>>
+>>> Just like the C macro module_pci_driver(), Rust drivers can use the
+>>> `module_pci_driver!` macro.
+>>>
+>>> Example from Nova:
+>>>
+>>> ```
+>>>      kernel::module_pci_driver! {
+>>>          // The driver type that implements the corresponding probe() and
+>>>          // remove() driver callbacks.
+>>>          type: NovaDriver,
+>>>          name: "Nova",
+>>>          author: "Danilo Krummrich",
+>>>          description: "Nova GPU driver",
+>>>          license: "GPL v2",
+>>>      }
+>>> ```
+>>
+>> As I said when you implemented this fun macro, don't do this yet.
+>>
+>> We added these "helper" macros WAY late in the development cycle of the
+>> driver model, AFTER we were sure we got other parts right.  There is no
+>> need to attempt to implement all of what you can do in C today in Rust,
+>> in fact, I would argue that we don't want to do that, just to make
+>> things simpler to review the glue code, which is the most important part
+>> here to get right!
+> 
+> We're not reinventing the wheel here, we stick to the architecture the kernel
+> already has.
+> 
+> However, I understand that not starting with this macro directly makes it easier
+> for you to see what's going on. I can introduce the macro in a separate patch to
+> make it more obvious what's going on.
+> 
+>>
+>> Changing drivers later, to take advantage of code savings like this
+>> macro can be done then, not just yet.  Let's get this understood and
+>> right first, no need to be tricky or complex.
+>>
+>> And, as I hinted at before, I don't think we should be doing this at all
+>> just yet either.  I still think a small "C shim" layer to wrap the
+>> struct pci driver up and pass the calls to the rust portion of the
+>> module is better to start with, it both saves you time and energy so
+>> that you can work on what you really want to do (i.e. a driver in rust)
+>> and not have to worry about the c bindings as that's the "tricky" part
+>> that is stopping you from getting your driver work done.
+> 
+> I strongly disagree here. As explained above, it just bubbles up, this approach
+> would just make me end up having to write a lot of the code from the
+> abstractions in the driver.
+> 
+> However, it would indeed safe me time and energy to do just that. But that isn't
+> really what I want. I also don't want to write a driver in Rust *only*.
+> 
+> And I also don't really think that you want people, who commit to work hard to
+> get things right, to just take the shortcut and create some random mess buried
+> in a driver. :)
+> 
+> What I actually want is to get to a solid foundation for Rust drivers in
+> general, since I'm convinced that this provides a lot of value beyond the scope
+> of a single driver.
+> 
+> Since you've brought the topic up a few times, I am also willing to maintain
+> those abstractions if this is a concern. Maybe one day the corresponding
+> maintainers are comfortable enough and this isn't needed anymore, but at least
+> until then, I'm happy to help out.
+> 
+>>
+>> After all, it's not the pci driver model code that is usually the tricky
+>> bits to verify in C, it's the whole rest of the mess.  Stick with a
+>> small C file, with just the pci driver structure and device ids, and
+>> then instantiate your rust stuff when probe() is called, and clean up
+>> when release() is called.
+> 
+> Again, this really bubbles up.
+> 
+> What do we pass to Rust probe() function? A raw struct pci_dev pointer or the
+> proper PCI device abstraction?
+> 
+> How do we implement I/O memory mappings for PCI bars without PCI / I/O
+> abstraction?
+> 
+> How do we perform (boundary checked) I/O memory reads / writes without `Io`
+> abstraction?
+> 
+> How do we handle the lifetime of resources without `Devres` abstraction?
+> 
+> How do we (properly) implement a DRM device registration abstraction without
+> `Devres`?
+> 
+> Luckily we already got the `Firmware` and `Device` abstraction in place. :)
+> 
+>>
+>> I can provide an example if needed.
+> 
+> If you do so, please don't stop at the probe() boundary, please continue to the
+> point where the Nova stub driver is. It really does just enough to show / proove
+> that the abstractions tie together nicely. But it should be enough to see that
+> you end up with either (1), (2) or (3) from above.
+> 
+>>
+>> thanks,
+>>
+>> greg k-h
+>>
 
