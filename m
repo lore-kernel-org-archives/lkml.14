@@ -1,93 +1,165 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2428181326;
-	Wed, 26 Jun 2024 13:28:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6C2181326
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 13:29:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719408526; cv=none; b=g7ZPGGecp4LvzfBxMHg0TecYduW3cSqkANt985GUCO0kwTAnd89Ocx6go9BDETQFIaN+ikwM45QFtdvZMzSJ7fy5R9K3mMcUqFCvHUTdlVsnvSjTBPbT6FX0klsDR6CP+Iqt9rs/VogwiHfHk/ilNaFm2I1Mr3FqtlY+tJiifXI=
+	t=1719408563; cv=none; b=UKRwOwm3YyEE7wpUS4xFtAaq22vIl0qxMcD6Kj4xc8vBGMHvqLg6cy3vfLD/eIVf9TUsQXe7a78KsBHxQ6wbAbU9dc7XPqOPsZ+vDwgXlUK2vKn/2muL+CAHGrplh4BSYtpD6W/aEYTu4dqZaa9ijVJt4MFvxs/2qlzCXlkTQO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719408526; c=relaxed/simple;
-	bh=dC6GP9/oaLl6FQTpY3wSzhic8KMRpCzvW8QGmRCpcpA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MM1XKPVAfYvat05taxokXXUuzvoT8fsUhzCRNxacx5Qk+5BpyWs5AdgOu6cNYRkbffWbNFWMxzs2TRRjTKZ3YxQbkKMqWoKbbO+mm0jttgIgkLklQWiEHGxeQn2oHEmpCFE7pjNrlww8gflUAOPyAcjpOdREt1wRELI471K+KzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4W8MwD6WKnz4f3l1m;
-	Wed, 26 Jun 2024 21:28:28 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 15A2A1A0170;
-	Wed, 26 Jun 2024 21:28:41 +0800 (CST)
-Received: from [10.174.177.174] (unknown [10.174.177.174])
-	by APP1 (Coremail) with SMTP id cCh0CgD3IH2CF3xm2VGPAQ--.5318S3;
-	Wed, 26 Jun 2024 21:28:38 +0800 (CST)
-Message-ID: <f3a1084a-5b0d-4e4c-b78b-1a67082fc172@huaweicloud.com>
-Date: Wed, 26 Jun 2024 21:28:34 +0800
+	s=arc-20240116; t=1719408563; c=relaxed/simple;
+	bh=m3A54rNj/ABm02WsaHZTKTWcdo3Gge+5OqiRvEOav60=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=AuyRbLJPqtZF87rM3TE8l1SUAeTSclZZG0+U0+PVru4Vst8O2clkCo2CrkGx4zMj6IVBZGsW7voYC97lK9MMsE7RWIAZn70spbqpL+jw3/1M5JDPG0uxZclcuGPcye9YELkMzn4qUz4OdgupxfDC2t+mrceKiDyzaBLw5L65X9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3762b8b440cso90938765ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 06:29:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719408561; x=1720013361;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=808FpBkpDsOyTMQG/Wc5jK3cn9vL1Kq3xpMCaflc4Wk=;
+        b=U0W8FDstOiWfrHDuBxo6qCLWzCgG9A8PCsiNqJt3xr9V+UhGIEQZKyHYu69p58kXIl
+         HXPV6FOCwtRygFF2j2K2LIRl6W/1IYr4Fw++9IKJimNubkhuiombmyUVrmo9eHResSke
+         dskzJSwfxYWJ2qyDvWcJRyRYLy7Kfh53lBMdwe4QB8sEnTxG6Wi9IVn0pbTB9l1zQbcZ
+         N+Y7MpqOyg6eunb8/LtLGfBj1EfmURIVZhc4fZS+kXVJWCqRv/25a94YGbikuk9HTSxM
+         K16Z1kxENe4rFjBYjGutrR8t/MP3WsYKz4dOlqKSCEe9UEqVmQg2dFDSh/RWBPs/TuXW
+         AnoA==
+X-Forwarded-Encrypted: i=1; AJvYcCV1Mhfoi0lXwj4Bd89YMVluaUJ8DoHB8yiH7WwcpERRW1O2gpF5kOiYL4i2HGBU//yccMeC7hXNXrw2h3B2mTNcvB/AQWXgfpoaAM4H
+X-Gm-Message-State: AOJu0Yw0+RkIRhPqUGaM3DkUSM6QLb2qayo+C+X7d7aT7Bkb/Xj0GSGk
+	eIynuaP+r6Msf7ZsHIUIB4FO9n/V/g+Xfn5RF/XiQjWy+R9Y6fvHsZVDGS4KaqpLm8mpiBnDNP6
+	QgWpgAWMOjuXuHi0f9GOXIGnjR2umX9cHB57fxq0InePZT2GYaV7sxJQ=
+X-Google-Smtp-Source: AGHT+IG73d/Yo7Cev6LSACw0jNK9nc1EnrU//U4Z6S/kFpnUfXoRgWj9gHpp8rtt4pXtx7ysvdJp9VE+iJ92k6WDTeBnfuILXD8X
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND 0/5] cachefiles: some bugfixes for withdraw and
- xattr
-To: Christian Brauner <brauner@kernel.org>
-Cc: netfs@lists.linux.dev, dhowells@redhat.com, jlayton@kernel.org,
- hsiangkao@linux.alibaba.com, jefflexu@linux.alibaba.com,
- zhujia.zj@bytedance.com, linux-erofs@lists.ozlabs.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- yangerkun@huawei.com, houtao1@huawei.com, yukuai3@huawei.com,
- wozizhi@huawei.com, Baokun Li <libaokun1@huawei.com>,
- Baokun Li <libaokun@huaweicloud.com>
-References: <20240522115911.2403021-1-libaokun@huaweicloud.com>
- <4f357745-67a6-4f2e-8d69-2f72dc8a42d0@huaweicloud.com>
- <20240626-ballungszentrum-zugfahrt-b45c1790ed7b@brauner>
-Content-Language: en-US
-From: Baokun Li <libaokun@huaweicloud.com>
-In-Reply-To: <20240626-ballungszentrum-zugfahrt-b45c1790ed7b@brauner>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:cCh0CgD3IH2CF3xm2VGPAQ--.5318S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7XFyDCFy5JryUuryxJryUGFg_yoWxuwb_uF
-	95uF97C3ykCrWj9a17WFW5ArsxKFyxX3sYywn7XFy3K34furWkAF4rGFZxAry3GFWrJF95
-	Cas8Wanavw1aqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb4kFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY
-	04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
-	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y
-	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUOmhFUU
-	UUU
-X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/1tbiAgAGBV1jkHpckwAAsa
+X-Received: by 2002:a05:6e02:1a21:b0:376:4cc6:66bc with SMTP id
+ e9e14a558f8ab-3764cc668edmr8010995ab.2.1719408561527; Wed, 26 Jun 2024
+ 06:29:21 -0700 (PDT)
+Date: Wed, 26 Jun 2024 06:29:21 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000088b5bc061bcb0009@google.com>
+Subject: [syzbot] [tipc?] general protection fault in tipc_mon_reinit_self (2)
+From: syzbot <syzbot+c13de708dc9a3bb8e9aa@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, jmaloy@redhat.com, 
+	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	pabeni@redhat.com, syzkaller-bugs@googlegroups.com, 
+	tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 2024/6/26 21:16, Christian Brauner wrote:
-> On Wed, Jun 26, 2024 at 11:03:10AM GMT, Baokun Li wrote:
->> A gentle ping.
-> Hm? That's upstream in
->
-> commit a82c13d29985 ('Merge patch series "cachefiles: some bugfixes and cleanups for ondemand requests"')
-Due to the large number of patches, these patches have been
-divided into three patch sets according to their dependencies.
+Hello,
 
-The 12 patches that have been merged in are the largest set,
-and there are two other sets that have not yet been merged in.
+syzbot found the following issue on:
 
-The current patch set is one of the unmerged sets, and the other
-set is:
-https://patchwork.kernel.org/project/linux-fsdevel/list/?series=853409
+HEAD commit:    b947cc5bf6d7 Merge tag 'erofs-for-6.9-rc7-fixes' of git://..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=147780a7180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3310e643b6ef5d69
+dashboard link: https://syzkaller.appspot.com/bug?extid=c13de708dc9a3bb8e9aa
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
-Thanks,
+Unfortunately, I don't have any reproducer for this issue yet.
 
--- 
-With Best Regards,
-Baokun Li
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/e05b77341eca/disk-b947cc5b.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/ad295493d850/vmlinux-b947cc5b.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/e7c8f23427a9/bzImage-b947cc5b.xz
 
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+c13de708dc9a3bb8e9aa@syzkaller.appspotmail.com
+
+tipc: Node number set to 10005162
+general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN PTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 1 PID: 927 Comm: kworker/1:2 Not tainted 6.9.0-rc6-syzkaller-00005-gb947cc5bf6d7 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Workqueue: events tipc_net_finalize_work
+RIP: 0010:tipc_mon_reinit_self+0x112/0x1e0 net/tipc/monitor.c:719
+Code: e4 ba ff ff 48 8d 78 10 48 89 f9 48 c1 e9 03 0f b6 0c 29 84 c9 74 09 80 f9 03 0f 8e a9 00 00 00 8b 48 10 4c 89 f0 48 c1 e8 03 <0f> b6 04 28 84 c0 74 04 3c 03 7e 7e 41 89 0e 4c 89 ff e8 67 55 6e
+RSP: 0018:ffffc900045cfbd8 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 000000000098aaaa
+RDX: 1ffff110041af159 RSI: ffffffff8b0cb100 RDI: ffff88801f92c010
+RBP: dffffc0000000000 R08: 0000000000000000 R09: fffffbfff1f3e922
+R10: ffffffff8f9f4917 R11: 0000000000000003 R12: 0000000000000007
+R13: fffffbfff1f4293b R14: 0000000000000000 R15: ffff88802dc05010
+FS:  0000000000000000(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b3133f000 CR3: 000000005e626000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ tipc_net_finalize+0x10c/0x180 net/tipc/net.c:140
+ process_one_work+0x9a9/0x1ac0 kernel/workqueue.c:3254
+ process_scheduled_works kernel/workqueue.c:3335 [inline]
+ worker_thread+0x6c8/0xf70 kernel/workqueue.c:3416
+ kthread+0x2c1/0x3a0 kernel/kthread.c:388
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:tipc_mon_reinit_self+0x112/0x1e0 net/tipc/monitor.c:719
+Code: e4 ba ff ff 48 8d 78 10 48 89 f9 48 c1 e9 03 0f b6 0c 29 84 c9 74 09 80 f9 03 0f 8e a9 00 00 00 8b 48 10 4c 89 f0 48 c1 e8 03 <0f> b6 04 28 84 c0 74 04 3c 03 7e 7e 41 89 0e 4c 89 ff e8 67 55 6e
+RSP: 0018:ffffc900045cfbd8 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 000000000098aaaa
+RDX: 1ffff110041af159 RSI: ffffffff8b0cb100 RDI: ffff88801f92c010
+RBP: dffffc0000000000 R08: 0000000000000000 R09: fffffbfff1f3e922
+R10: ffffffff8f9f4917 R11: 0000000000000003 R12: 0000000000000007
+R13: fffffbfff1f4293b R14: 0000000000000000 R15: ffff88802dc05010
+FS:  0000000000000000(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b3133f000 CR3: 000000005e626000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess), 1 bytes skipped:
+   0:	ba ff ff 48 8d       	mov    $0x8d48ffff,%edx
+   5:	78 10                	js     0x17
+   7:	48 89 f9             	mov    %rdi,%rcx
+   a:	48 c1 e9 03          	shr    $0x3,%rcx
+   e:	0f b6 0c 29          	movzbl (%rcx,%rbp,1),%ecx
+  12:	84 c9                	test   %cl,%cl
+  14:	74 09                	je     0x1f
+  16:	80 f9 03             	cmp    $0x3,%cl
+  19:	0f 8e a9 00 00 00    	jle    0xc8
+  1f:	8b 48 10             	mov    0x10(%rax),%ecx
+  22:	4c 89 f0             	mov    %r14,%rax
+  25:	48 c1 e8 03          	shr    $0x3,%rax
+* 29:	0f b6 04 28          	movzbl (%rax,%rbp,1),%eax <-- trapping instruction
+  2d:	84 c0                	test   %al,%al
+  2f:	74 04                	je     0x35
+  31:	3c 03                	cmp    $0x3,%al
+  33:	7e 7e                	jle    0xb3
+  35:	41 89 0e             	mov    %ecx,(%r14)
+  38:	4c 89 ff             	mov    %r15,%rdi
+  3b:	e8                   	.byte 0xe8
+  3c:	67 55                	addr32 push %rbp
+  3e:	6e                   	outsb  %ds:(%rsi),(%dx)
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
