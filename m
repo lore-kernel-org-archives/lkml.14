@@ -1,195 +1,137 @@
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2045.outbound.protection.outlook.com [40.107.249.45])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A251F194AEE;
-	Wed, 26 Jun 2024 20:26:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719433591; cv=fail; b=Vwfgz1utA5b9gkZ/+4I45mPvOWjLckUvVCSgugTm8sUOqjA3pmalumFGSDL590d6vWPFXel9x4dLDLEO0Z/TWLrNeSehegDkeZDL8N+OskQLsaav8pw2a3ge/GL3I+ITToDHVa2aF45nTQbqRdWYjfvdBdOGYDMCTkqqJDoEZwo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719433591; c=relaxed/simple;
-	bh=sjvgZFr5ZrpWNCYeV+8RS+XjUX75JgVBtLSps4rRwe0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iEWaFp82g0MLEn7A5oh2Gg7XU5M2mrP97xLkbmuSoN/T/y0T3GHIO+yggZ5vh/c1hMbdkdGmvVJO30EhZpZb3DcfvKVV67fItLMWQHGts4xb+yFZW1oSxrMe7HoMDVBIBleO4auU2+9i2+yU44IJUWxk0XMpUHDs+UxjVlT6QP8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=lWDiV99B; arc=fail smtp.client-ip=40.107.249.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5092192B86;
+	Wed, 26 Jun 2024 20:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719433703; cv=none; b=WAW6PV8moeNqEChx+toD89xVJsVHwUC6yiXr4GReKemEF5C715XK4SSLs5oG0pzIV/QA68C/DzR3RUbRjiNGhluxU/UI67RrFlpxHj4g1GMeFYj+06zqSFKxruyaAcwjIRGV1zMWBa+oS82p07E/2PCCGdRtvArvYQ2R7HG4yJg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719433703; c=relaxed/simple;
+	bh=v2Pn6jDUh8/+T+CxVdwZTDUcmeatg3e/w1LXRKtyNUs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=MAeugQmMaJVTX7ozu0Vey8A+Kxp9uZrBtPBcKQStCZJzTJMcDJUfuhPOr0MvIhaBE26T0Aw/YNu3qqKcvmbCpcOqaOauvwX4bYodwPZeZi4vuhihUvxF/zg3rzBykHqe7/uXxdbudKRuX7b9e80p5sQeAnqWRUNjuUXNabaufb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=N6MSsfdo; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="lWDiV99B"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SFVaz47n5S+Ovsd810KP+tny0Jkf3SDicdlruWhSYzfG5Pd5Uy2tLDxKXQrWSCBIAX66q5j+jd4u9ztGQdbDiIJcMTuCNnK98CgqNVuu1Q6E1EEkgcsD/p/ZWSr9RTRfS1MRGaHYV9dhmqdxvP3EGEQfIWA5CZ9X0OIwyhfqNWUv+NobcIkj1Vxxo2jtb99HRxA4saKMNDYXxgEAE9lc6Rh+z1Ee8g3DWIFnp/HF/iQ1cnWG09O79THtfmBInyWPlH7jfr4/pS/dXNxP79bkuUDhDmRYwlV4j741uxeyth38B69vB1FQOC/cblWKs/RUVAQrNcfIaULr4YNnwYJOhg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hocmI2lB6xoVnuKqvHscGHzyqympuZ09ImFvGpQYAe4=;
- b=e/T1RaPl+I4iNqkI7MxYrmDb0izeB8nW3WKqA1HEll1zjYZXQKr84KWrBcSE6ZPoNgdUcqlQ5fm9mPm78uaQYFJzNI4ml5Kdj1mtmlzXI5ePQrojaddbwlUxPjGm5hnZ1BmKHf4XbEYeDKTF4q/G7YZu5GazfR88nfrNG4QXtQA2IE1R64YMCRVU3339kf1CJWY1VMSHZHj0fiLMK/m9w5qdUgqHOuWUDOwtshwPlLyvyHMvDGrdR3yVSUxzCqdfR/2lItT7kUs4ct2GWdObEqGdf/gfBxBYgVSX/TGcEHjtcGWNPHOyiFcdxX2FAj7eI3lFRbYi1EsBiyIuYZsTuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hocmI2lB6xoVnuKqvHscGHzyqympuZ09ImFvGpQYAe4=;
- b=lWDiV99BFk74VZaf0iJP9oBRE/ZhfugXneYQxpG6mYp641ZkR89Rxfn5DPjc3Jvh7L2Tgo0ppbfALaKc1d3/syyouP3WOy55hCPHIbcY/XHwuugaDkNJDBHLjQtJgMWUTXG65SDpOQYCqpvzXaRZ7MGcvjtIt2Zew9sVrxHZHwo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DU4PR04MB10838.eurprd04.prod.outlook.com (2603:10a6:10:581::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.25; Wed, 26 Jun
- 2024 20:26:27 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7698.025; Wed, 26 Jun 2024
- 20:26:27 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: Shawn Guo <shawnguo@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE LAYERSCAPE ARM ARCHITECTURE),
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-kernel@vger.kernel.org (open list)
-Cc: imx@lists.linux.dev
-Subject: [PATCH v2 13/13] arm64: dts: layerscape: rename b(q)man-portals to b(q)man-portals-bus
-Date: Wed, 26 Jun 2024 16:25:33 -0400
-Message-Id: <20240626202533.2182846-14-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240626202533.2182846-1-Frank.Li@nxp.com>
-References: <20240626202533.2182846-1-Frank.Li@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR03CA0067.namprd03.prod.outlook.com
- (2603:10b6:a03:331::12) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="N6MSsfdo"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45QAfNaB015295;
+	Wed, 26 Jun 2024 20:28:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	z8DskCEILdjj+vXb/2QVw44H3Ar9No/KdokEiE/dJjQ=; b=N6MSsfdo9NSKJEin
+	0lPnQ+O8Hbg8GD2V+RGrAliax0xSsjMPEBUqatY+PEUCrX8aRKsVdlngAySWJJMN
+	A4XF89hjU7+bnwxlpQ50nOiqVfO88y+2U8527cPvTfLz+T6bHI1GYeSjg3jBayb5
+	ECVh3F9MbDnpbbiSbobLzknRbRzoIDFr9bRX6ZmrH4/MopwiBjLYunl8F68Cuopk
+	sUJRkTQfRwsEKYoaaqiks/2o76XR/AA4QcGnm3SSf5U5/yoZuURPUHNlJ646n1Je
+	sZIDQzR3zFxaRKIw/TzisWTBsWW3ce3IcL+8oyKqPbAIdlwZeyzzV33WoR3xYbBk
+	pqDOVw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 400gcm9hva-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Jun 2024 20:28:10 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45QKS9pa006381
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Jun 2024 20:28:09 GMT
+Received: from [10.48.244.230] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 26 Jun
+ 2024 13:28:08 -0700
+Message-ID: <d1c0abfc-bc14-4327-83de-88dcf07f15f1@quicinc.com>
+Date: Wed, 26 Jun 2024 13:28:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DU4PR04MB10838:EE_
-X-MS-Office365-Filtering-Correlation-Id: a8c4e30c-241b-4b7b-bba9-08dc961e415d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230038|366014|52116012|376012|1800799022|38350700012;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?lUG1OXJu+O+1DSMBLpk7uDhigXGzv9Ijo0HNXI/wBfGLCjP1/9a2T0OKt9Gk?=
- =?us-ascii?Q?ntPVVro2wgybLut7sVbcnD0EpHy/mZC2icKoMm3uEw/iMqmthcYWTYreLMWT?=
- =?us-ascii?Q?wLWYbvj44ywWppVfQbsPtswR++cqogItuW6OI9ujNBzGhPjqeStmxUQcoI8y?=
- =?us-ascii?Q?ElgU6pnoXOcmpOWbkRq83u6E5dV7BEANXR8jp8K2FEA9t2Eg4AwiIAYkEPGX?=
- =?us-ascii?Q?qZHtPwST7D21vnT2dhaN54YwGRY+zHHfWp0BLkja7gnSboks77g25h3tXbfb?=
- =?us-ascii?Q?/cmPu0Tp5MI68NsZNCoHqn40j8aOgKpofMLZmOrl5q3oCGT6Ipjeg6+Q0/nY?=
- =?us-ascii?Q?ODfFYnsIE/Br/DtIfKYhK21B+pVEwSuVTXuzW3U3geAXTwat9O1MDK1e378K?=
- =?us-ascii?Q?IfSA9+Lu2i8duKKKR3W/DlXwwXfaTU1FY+X0lsaBGbY3+QovTlLCWX5xAOvI?=
- =?us-ascii?Q?3P71OPQv5FM5M77XRwSsYUEMETltmwafw8fTYLFZnQ7d25Xm5doYPlSl+df6?=
- =?us-ascii?Q?vbUtiGjBlfIc2qOCnR1NPwcMeuWMWUUxHMHphQJABOLYTYLQTznUmQHx6yHY?=
- =?us-ascii?Q?Jj+sET+zxfnAL56Zh+D98Fj6YPazput7H7pQiYZHiOhNSbJibztquPhsAObf?=
- =?us-ascii?Q?p+rZHaakk1kO2RQNQZlwgTC9MBd5F+cI2LgFMVpp6+Qyb+vBSAH215fqlAHu?=
- =?us-ascii?Q?JqutW4ySVCF8WSW3p1Rys+6jYOHU7RISXNAKVCLdKvxCdip1NhfTWt+ADL7h?=
- =?us-ascii?Q?fPccJJRUKb7NF2pjBFbMy0swtv3jEtuB1UyJqccubw057E7KX0+8OoZTaFGf?=
- =?us-ascii?Q?pUM8GQ8iUa6Mqzw7ZRiJGaYhGnxKWtYF4t+GOfb1qnEh+v2zcV9pg2vU/i8K?=
- =?us-ascii?Q?bUCal4RVUPyb6Aleb9SP6Mp/B9LLqGGq0u399kDHlZqoH/fiv7DDbfzTY/jE?=
- =?us-ascii?Q?5BShIARW991PXVynLLyORafkTDLiwTznkmMeUGmAH0y4lJwOidkd5VNI6Exy?=
- =?us-ascii?Q?+Biw0o7HOnW7u0mLWp7MFnly6GXlR20JYsIBomqdWVu1f7ZxzDlblawrlH5/?=
- =?us-ascii?Q?itWv7xIegxLC9AOWR9znmHUA1gQ+SMB3RJuHU7T4HRRm96yEkMJfawCBaffl?=
- =?us-ascii?Q?t2ao+Cc5xK8sif7KNf01w8zEA9pxn9t/wA55EY8ECVMQgx6n7A25eNdKQYvU?=
- =?us-ascii?Q?0lrQjKiMmnR4/Iy9AEm2/O1nTdFtBTlayLJwri/NilIbm1e9Crp/jAfLdqN6?=
- =?us-ascii?Q?K5yzH+9XQseqDQ6jm5WeXitbEanZTaVbrlK8XUmpQiGwOdFcQQK/LByOKSQR?=
- =?us-ascii?Q?O5qA6u5URWUXgHuNC6qKX/zZ/AP5c5vRtMnNaNa5lz0pO6a/aqjBtvbJXyhx?=
- =?us-ascii?Q?Exvwy9E=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230038)(366014)(52116012)(376012)(1800799022)(38350700012);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?4weDn2Wn//KNJsQuPsvyZ2JlL72M7IYi4mcH045wnj3soNa5677dou3Ycc9R?=
- =?us-ascii?Q?y51FJowpsl7mxQ0Mg6oQCZcNU4B5N4cqirfZGs+SWN1q9X4q6Em/+WDeyXBp?=
- =?us-ascii?Q?kRHHpTN6uctNyroGT4djYPhiRHxLz362Il96nq2ikDEHALKWZJeXRnqYx5ud?=
- =?us-ascii?Q?VqUirDsl2jYelkVfEi61TWimEdXHlB8Ms8MQCiOZRZgV46oC47VJmu8PCcxS?=
- =?us-ascii?Q?S49kXf8/WOgoej6DOhOS5fk7SR559TSume6cBuCjOhxpZ28TXiORiuHosD4C?=
- =?us-ascii?Q?YpDzlfqA8O8LwQ9tY4qUDMck8koz2DTE7OynhYlZ/A8RpIMYPU3WUBv0eRSI?=
- =?us-ascii?Q?rHJryJkzz6vD6S0VOswHoKNpUM0v7GIQoIi+2eEIv78a+VQsZqoRR0t7G0LZ?=
- =?us-ascii?Q?fHdvg4ujS11oSMPtKzuQzA76ycHW5yorf7vtoh5bBTkhcITONJMQEQk4c+qK?=
- =?us-ascii?Q?972C9pBMrTaXG7J4dvm/CcXqtcsTUICDqmvJAfM8X3l33MfDM7owYwrAmsP6?=
- =?us-ascii?Q?ecknfhPr/Uq1wUKiAC/kmEbpr2OnNZLerasFfhhDh2f/75xQ0gcqr9R3AbYi?=
- =?us-ascii?Q?kYSMFgSWlC3doAU3sa97WTBT4vbYGVkxjE14VQPh3Jr9SmNibaFFcAcRsFkQ?=
- =?us-ascii?Q?7dyuz7elN1/W0vk90nyNK1uuz+qHa7u7Qfth0CiYZOkBIFYJVJWsS4jxuLeF?=
- =?us-ascii?Q?EXjjDlbGEEsQYlv26vo/Fn1eoZnFlHRnOqSNhaHuZtFtrftcDfS3D9rWNAvO?=
- =?us-ascii?Q?ecU7HwgsYo7ypRGwJp1LrWKZmf0nvbCx/PCZz8fYIXyCeI6Yx/w8zm3ywlK8?=
- =?us-ascii?Q?EgNuCqtHba2CsvTxk8BAtNrm8slIx29Z7orOkkdaJPgT4kWwTOMzBmDNITxi?=
- =?us-ascii?Q?Zsd5ntkDtsMW6Xjibw4l47hrl2u/XfL0NaZaJQco3Vi7dABOI7EkKH3L1uLw?=
- =?us-ascii?Q?PZZGAMsR6vJCgCL3xVgNGqMSbV5/LrPgII96qhIMlrXncjMlGibUcW8uGqhd?=
- =?us-ascii?Q?KkRGp3EWZ7PpXc4abwp1VxSMEj3GRbLriwMRdrNAb5BlvMcRV8RaG29J/0Cv?=
- =?us-ascii?Q?lRushIDLi1PZOlYcFr0L8ZrOHi2e6C+9KDBv/F9jwEiqvIktfsYPcGcxuL5h?=
- =?us-ascii?Q?NuZwHC/IWYQ4cATGnHht15FY+Qt0Z7D8TjYJW8CuQ74OgCHz/enWT8BA8Izc?=
- =?us-ascii?Q?OetfcddVXO5bd3voO7UIOuPGQPEXtNHp1N54oX080GlbX2SoBwl6D4rbU+oG?=
- =?us-ascii?Q?fPSjoHsasaad+a+wkbRiVgrQ7VWTCTFpz+Nht+PDuENZSCOlVMVpuunQRY10?=
- =?us-ascii?Q?vADwio+cIv5UGk9/frucp4qs4Py71JaC9eVd+Dc7W0KyW4y2nNG75ivK+E8n?=
- =?us-ascii?Q?Yth70b+89PQXPiK7sAeo1UsFdu4CCit6zuVe+5/+Ruy9NXSYtVGJ/WwB9Jb1?=
- =?us-ascii?Q?yfWON9aDSabtffhyy2okwn34qaK3ia/2Qs6AnKcn++vWokvY6Ip+/xazMqXG?=
- =?us-ascii?Q?9Wx/W/3fVbeyWIjmT9HQ5yn10yQWqQc2KjySW8t7/4Y3gbWeB/1YaHECfnB0?=
- =?us-ascii?Q?1TungtJid3qf9h1oT/I=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a8c4e30c-241b-4b7b-bba9-08dc961e415d
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2024 20:26:27.0798
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3iM8+b637XNQDULtuAm3kJqLQQ3+gttQ92KJjWsY6MCGNaaDLOWYf1U9nZxCra3oYSzeKSQLAjlAi6B+Tu4/lA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR04MB10838
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] greybus: add missing MODULE_DESCRIPTION() macros
+Content-Language: en-US
+To: Alex Elder <elder@ieee.org>, Johan Hovold <johan@kernel.org>,
+        Alex Elder
+	<elder@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: <greybus-dev@lists.linaro.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+References: <20240607-md-drivers-greybus-v1-1-31faa0b21105@quicinc.com>
+ <a132dc0b-2b2c-41db-9d09-4676a3f88535@ieee.org>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <a132dc0b-2b2c-41db-9d09-4676a3f88535@ieee.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: IrITrbaihxF-bHx_7eeZLHo34IXy3ADQ
+X-Proofpoint-ORIG-GUID: IrITrbaihxF-bHx_7eeZLHo34IXy3ADQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-26_13,2024-06-25_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
+ mlxlogscore=999 clxscore=1011 mlxscore=0 phishscore=0 impostorscore=0
+ adultscore=0 malwarescore=0 lowpriorityscore=0 priorityscore=1501
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406260149
 
-Rename b(q)man-portals to b(q)man-portals-bus to fix below CHECK_DTB
-warnings.
+On 6/26/2024 1:18 PM, Alex Elder wrote:
+> On 6/7/24 3:56 PM, Jeff Johnson wrote:
+>> make allmodconfig && make W=1 C=1 reports:
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/greybus/greybus.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/greybus/gb-es2.o
+>>
+>> Add all missing invocations of the MODULE_DESCRIPTION() macro.
+>>
+>> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> 
+> I would drop the single quotes, but I don't feel very strongly about it.
+> Greg can offer a second opinion (taking the patch or not).
+> 
+> Acked-by: Alex Elder <elder@kernel.org>
 
-arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dtb:
-  bman-portals@508000000: $nodename:0: 'bman-portals@508000000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+Those were copy/paste from the file prolog, swapping double to single quotes:
+ * Greybus "Core"
+ * Greybus "AP" USB driver for "ES2" controller chips
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 4 ++--
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+I'll spin a v2 dropping the quoting entirely
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index bfb5841456d76..8f8cfc96790cc 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -505,11 +505,11 @@ bman: bman@1890000 {
- 			memory-region = <&bman_fbpr>;
- 		};
- 
--		bportals: bman-portals@508000000 {
-+		bportals: bman-portals-bus@508000000 {
- 			ranges = <0x0 0x5 0x08000000 0x8000000>;
- 		};
- 
--		qportals: qman-portals@500000000 {
-+		qportals: qman-portals-bus@500000000 {
- 			ranges = <0x0 0x5 0x00000000 0x8000000>;
- 		};
- 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 060b74d3ca58d..200e52622f998 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -409,11 +409,11 @@ bman: bman@1890000 {
- 
- 		};
- 
--		qportals: qman-portals@500000000 {
-+		qportals: qman-portals-bus@500000000 {
- 			ranges = <0x0 0x5 0x00000000 0x8000000>;
- 		};
- 
--		bportals: bman-portals@508000000 {
-+		bportals: bman-portals-bus@508000000 {
- 			ranges = <0x0 0x5 0x08000000 0x8000000>;
- 		};
- 
--- 
-2.34.1
+> 
+>> ---
+>>   drivers/greybus/core.c | 1 +
+>>   drivers/greybus/es2.c  | 1 +
+>>   2 files changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/greybus/core.c b/drivers/greybus/core.c
+>> index 95c09d4f3a86..c28bb973f67c 100644
+>> --- a/drivers/greybus/core.c
+>> +++ b/drivers/greybus/core.c
+>> @@ -375,5 +375,6 @@ static void __exit gb_exit(void)
+>>   	tracepoint_synchronize_unregister();
+>>   }
+>>   module_exit(gb_exit);
+>> +MODULE_DESCRIPTION("Greybus 'core' driver");
+>>   MODULE_LICENSE("GPL v2");
+>>   MODULE_AUTHOR("Greg Kroah-Hartman <gregkh@linuxfoundation.org>");
+>> diff --git a/drivers/greybus/es2.c b/drivers/greybus/es2.c
+>> index 1ee78d0d90b4..db4d033925e6 100644
+>> --- a/drivers/greybus/es2.c
+>> +++ b/drivers/greybus/es2.c
+>> @@ -1456,5 +1456,6 @@ static struct usb_driver es2_ap_driver = {
+>>   
+>>   module_usb_driver(es2_ap_driver);
+>>   
+>> +MODULE_DESCRIPTION("Greybus 'AP' USB driver for 'ES2' controller chips");
+>>   MODULE_LICENSE("GPL v2");
+>>   MODULE_AUTHOR("Greg Kroah-Hartman <gregkh@linuxfoundation.org>");
+>>
+>> ---
+>> base-commit: 19ca0d8a433ff37018f9429f7e7739e9f3d3d2b4
+>> change-id: 20240607-md-drivers-greybus-a13b64e41256
+>>
+> 
 
