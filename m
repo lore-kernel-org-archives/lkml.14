@@ -1,128 +1,179 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A4B16B38F
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 09:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD1016CD11
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 09:43:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719395006; cv=none; b=PCteJdfKoIT0YI2A9+gNkkZc/TMv6Efb3/L1rWOXcW3/0FSuyFDLxLiUEWvW+XX9JxKEGsRzKM6aMuwRVhQ1XPEBhOHLRKsnRNZfUafAmtQjyPmJWFQFLLt9A29ofxZvZ6xlykdGwN1sLekSxjInJ5SgHXMBc8sxFqrmpwCWdU0=
+	t=1719395008; cv=none; b=WwbD7cRv+8ld2oNC8b0TwqkDiPBki/jZm/58uqOCUX4H8cTGTkqXRXFHoXI7ksfNu5hUXtjYbKIQSTvEKPPsJVCsCf8vED161FeG9DZroLmG0czMiV/U+PkALuSk+zI14/2DRkU12RppXw3dmkGMgw9aSAi6oYedcWxcDEVM090=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719395006; c=relaxed/simple;
-	bh=23vsqplp7p0dTjJyFJ06exBE7rBzCFg/mwbt7R9Zt58=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DU1dI5/jUtxzzz2J6L2mCeqj2MzZJYa9w1MoYn9EIpQ/1brY1DjKVgP2KBNsHwiqGZeaAObkzbKDrU6qaoPVHkKro4swIvvvxnGkkA25zbLRkqLacoP33JM2D5YUg68Zcz07LXyzwxdzCNJ3hjGCZLtlEwAtpTqlnFnxErIznho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nM05GUG/; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719395008; c=relaxed/simple;
+	bh=vDLv0eUVGJMmwyg+4UxkWlAksU175EmQrjDIno/a+Gs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=se+CBTyiKXh4YPchytjF/sTMafiztJLI16fAFH/bJMCbD/VG1gqPAgES/LgbN8AbkySaX9nfeQGX8j5zpWeiH5+7T3FJFqG4GCp+B8FFqIpIgp/Upeq8WadgwCOdnyxDPAX2ECEr97oMcnJxllp3C17mnX6czqyu6+JA5teARDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=vwpfgZQe; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nM05GUG/"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-57d07464aa9so6695091a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 02:43:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="vwpfgZQe"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1f47f07acd3so53363565ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 02:43:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719395003; x=1719999803; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=T7a7vAWfVEZEUomcIDZr7oOcprDh9VkDg31EMGUcI/E=;
-        b=nM05GUG/DfKCU4ydFbrfEIfNGJauiGZnCkLkK8VCRyKeUoj0StN3bcHggVWxnvCuVR
-         jDGZZzpL8nAozRmpS3OpRtngIHMcvjOXch531lbvG31vi1IXOc1t5XB9598O8ffxd+H7
-         gCwZza67VR3QmbTu7VL3ODM7SNXqCkqm/8CnhKP2r2+m2H0rP8ZZFYJNWboRsLL6qAI0
-         eYVCmdlPH5B3qv+r9EHJMO/djjkWDC6niJkId2Y/yMo5M88N7sgrYQfplXAw9I/iZDZZ
-         FOlplpS48iY5hxSlkuUeaZ5tcn9GyC+ZEgRatow9oo/c4mmuyx2QAgt5lVo1eGqG4qfu
-         puSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719395003; x=1719999803;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=endlessos.org; s=google; t=1719395006; x=1719999806; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=T7a7vAWfVEZEUomcIDZr7oOcprDh9VkDg31EMGUcI/E=;
-        b=ABs6Ru2YmeV5yj4M4Nj2zrsmxi8DmZwimucNb7zTwpZvf+EBRpebuhNbxz2qoXg7v6
-         JZenixRPbjfOd9Ad9rGWiaPTklK6rFNfYl5l32+6oWSvYCt1kcUFvmEZClsn7yi5ERgY
-         Zd1BdG01c+aYFHz+L9PhkdR+FfZJ1048EQ+WPSliUSF76di9m2m6dT6xen02ih+mt0g3
-         teZWzXAIs4awZ5zi+i0bRjLMWWlBlK3sduw7wQUYfvmQqW6TL+2FVbGYtDv0kxgXxNNX
-         HwnHpb4MexRrJ+NSk8UbLZXD9/yH/CqfX3zSumbwCFp+SMEpKaVAa3WM2FLolo0TvYEf
-         VwRA==
-X-Gm-Message-State: AOJu0Ywnuu+zvt1+IkZyc7HWAjdo0rQR6+yJGvsJLbd2LaZNONV38ffr
-	e4Yks+cVyjQzVb8528ILZkcmw9YWnluGllj3P5KayGnssL3J+5VgDrKuM6bi16w=
-X-Google-Smtp-Source: AGHT+IEq0RJtYLiCqRoGI4aTI4VSTQHwfMrCezWO3XMrfrXZYmNqHKhZXM4w93fk2hA+LMUbY9zq2A==
-X-Received: by 2002:a17:906:35d4:b0:a6f:af96:1230 with SMTP id a640c23a62f3a-a7245b4cb88mr639074666b.1.1719395003280;
-        Wed, 26 Jun 2024 02:43:23 -0700 (PDT)
-Received: from [192.168.215.29] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a724491c8e1sm404787366b.38.2024.06.26.02.43.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Jun 2024 02:43:22 -0700 (PDT)
-Message-ID: <48ee8fc0-62fd-46e8-aaf9-5ad416706191@linaro.org>
-Date: Wed, 26 Jun 2024 11:43:20 +0200
+        bh=jWFJ83bKSjpBaUA+SG/yPoduHd16W9GZx5KqGR4AgEA=;
+        b=vwpfgZQeL49q6ymP0Kpc4x4eSMcAgLK+4DK6siPxGI2rrqqD38Hb0IyQZCAs+EwhB+
+         ZzSlEArQj1AE1RzTSYetjRvmXQ6VqBFE1LEis13WUE6PCLtJ9mnbNEpbutt0SlSeAoXt
+         F1OH/iDOZxJkt9TSIKrBSwc1dWSGUi95mAeMmO13EIbvH/SYKF7PqmNJmAHgoSUDEO8T
+         mRIRIGNgxBM1g4LwDjLYUxh25ku3Lgzrk7BJTsht+TETRWogr1qmkF5+cih+nHfVAoEP
+         y8iGYH5nRWgSQonc8Dlko6skMXdqrmQLkqx0b4K6IQbG/ZH3gBICbw71FO7IRQMDFXWj
+         fMKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719395006; x=1719999806;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jWFJ83bKSjpBaUA+SG/yPoduHd16W9GZx5KqGR4AgEA=;
+        b=EvGRiA8MM8MQdfgWDs+roOFSBO57wHic4UGjq+3RDbou9CtEXRJCgTg2w2lLDzdhjs
+         OKwIQUetJAzGWThrFiCHno+zVOZA9OICqq32JvD6BUhz+mH0V6dqtldxO5I3sep3aTMJ
+         KzjwvMI1gPhwB+ZFIsYuZsCwZAhwytTl5klW7HzHIrEWlio877xKaioxNehKKqjdMiX+
+         v4uSfB9efn5jQhMy3qyDJjG5FK7MdoTXB3nIO+m3F2PSG7CgnBpcyDp3RevLTcniMTfC
+         0AvO5i3uzDT/v4J1Xq9rtD1LFrBEHV5Yd5jOOrDdiU6/eaQURfTfAWB+xjbitzDFeIqB
+         hxVw==
+X-Forwarded-Encrypted: i=1; AJvYcCXnWujWUGUCNq+P4/GBT9WbyUmg+w+KE+walCssmATowuFNFWCbyawElGMS8LDdDFl56l4QV6ggeXy5DXeihhMlMkgWDDIbhDDXf2Iw
+X-Gm-Message-State: AOJu0YxjC3UjQBOkWPUgFPkbE6GbYjcoSQ9b67uEqI53vxSSTRr8nUaD
+	lFvH1oQhKavDAH85b9SqLkLvsgHq/v9T33WGF94ilyDbM23z42UH63qK6Llglmw=
+X-Google-Smtp-Source: AGHT+IE2etjp6SLgpYIk6NOvVt25jF7m5xfwbrxRBUDv9rWsMCAEdZz8pW2+kWTCkFtQsPXiOao3DA==
+X-Received: by 2002:a17:902:ecc8:b0:1f9:c289:737c with SMTP id d9443c01a7336-1fa1d683c1emr116520375ad.60.1719395006080;
+        Wed, 26 Jun 2024 02:43:26 -0700 (PDT)
+Received: from localhost.localdomain ([123.51.167.56])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-1f9eb5e030dsm95700375ad.218.2024.06.26.02.43.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jun 2024 02:43:25 -0700 (PDT)
+From: Jian-Hong Pan <jhp@endlessos.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Johan Hovold <johan@kernel.org>,
+	David Box <david.e.box@linux.intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux@endlessos.org,
+	Jian-Hong Pan <jhp@endlessos.org>
+Subject: [PATCH v7 4/4] PCI/ASPM: Fix L1.2 parameters when enable link state
+Date: Wed, 26 Jun 2024 17:41:16 +0800
+Message-ID: <20240626094115.14470-2-jhp@endlessos.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240626092821.14158-2-jhp@endlessos.org>
+References: <20240626092821.14158-2-jhp@endlessos.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V6 2/5] mailbox: Add support for QTI CPUCP mailbox
- controller
-To: Sibi Sankar <quic_sibis@quicinc.com>, sudeep.holla@arm.com,
- cristian.marussi@arm.com, andersson@kernel.org, jassisinghbrar@gmail.com,
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- dmitry.baryshkov@linaro.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, quic_rgottimu@quicinc.com,
- quic_kshivnan@quicinc.com, conor+dt@kernel.org, quic_nkela@quicinc.com,
- quic_psodagud@quicinc.com, abel.vesa@linaro.org
-References: <20240612124056.39230-1-quic_sibis@quicinc.com>
- <20240612124056.39230-3-quic_sibis@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <20240612124056.39230-3-quic_sibis@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 12.06.2024 2:40 PM, Sibi Sankar wrote:
-> Add support for CPUSS Control Processor (CPUCP) mailbox controller,
-> this driver enables communication between AP and CPUCP by acting as
-> a doorbell between them.
-> 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
-> ---
+Currently, when enable link's L1.2 features with __pci_enable_link_state(),
+it configs the link directly without ensuring related L1.2 parameters, such
+as T_POWER_ON, Common_Mode_Restore_Time, and LTR_L1.2_THRESHOLD have been
+programmed.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+This leads the link's L1.2 between PCIe Root Port and child device gets
+wrong configs when a caller tries to enabled it.
 
-Konrad
+Here is a failed example on ASUS B1400CEAE with enabled VMD:
+
+10000:e0:06.0 PCI bridge: Intel Corporation 11th Gen Core Processor PCIe Controller (rev 01) (prog-if 00 [Normal decode])
+    ...
+    Capabilities: [200 v1] L1 PM Substates
+        L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
+        	  PortCommonModeRestoreTime=45us PortTPowerOnTime=50us
+        L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+        	   T_CommonMode=45us LTR1.2_Threshold=101376ns
+        L1SubCtl2: T_PwrOn=50us
+
+10000:e1:00.0 Non-Volatile memory controller: Sandisk Corp WD Blue SN550 NVMe SSD (rev 01) (prog-if 02 [NVM Express])
+    ...
+    Capabilities: [900 v1] L1 PM Substates
+        L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Substates+
+                  PortCommonModeRestoreTime=32us PortTPowerOnTime=10us
+        L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+                   T_CommonMode=0us LTR1.2_Threshold=0ns
+        L1SubCtl2: T_PwrOn=10us
+
+According to "PCIe r6.0, sec 5.5.4", before enabling ASPM L1.2 on the PCIe
+Root Port and the child NVMe, they should be programmed with the same
+LTR1.2_Threshold value. However, they have different values in this case.
+
+Invoke aspm_calc_l12_info() to program the L1.2 parameters properly before
+enable L1.2 bits of L1 PM Substates Control Register in
+__pci_enable_link_state().
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=218394
+Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
+---
+v2:
+- Prepare the PCIe LTR parameters before enable L1 Substates
+
+v3:
+- Only enable supported features for the L1 Substates part
+
+v4:
+- Focus on fixing L1.2 parameters, instead of re-initializing whole L1SS
+
+v5:
+- Fix typo and commit message
+- Split introducing aspm_get_l1ss_cap() to "PCI/ASPM: Introduce
+  aspm_get_l1ss_cap()"
+
+v6:
+- Skipped
+
+v7:
+- Pick back and rebase on the new version kernel
+- Drop the link state flag check. And, always config link state's timing
+  parameters
+
+ drivers/pci/pcie/aspm.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 5db1044c9895..7f2cdda259dc 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -1411,6 +1411,8 @@ EXPORT_SYMBOL(pci_disable_link_state);
+ static int __pci_enable_link_state(struct pci_dev *pdev, int state, bool locked)
+ {
+ 	struct pcie_link_state *link = pcie_aspm_get_link(pdev);
++	struct pci_dev *child = link->downstream, *parent = link->pdev;
++	u32 parent_l1ss_cap, child_l1ss_cap;
+ 
+ 	if (!link)
+ 		return -EINVAL;
+@@ -1428,6 +1430,15 @@ static int __pci_enable_link_state(struct pci_dev *pdev, int state, bool locked)
+ 	if (!locked)
+ 		down_read(&pci_bus_sem);
+ 	mutex_lock(&aspm_lock);
++	/*
++	 * Ensure L1.2 parameters: Common_Mode_Restore_Times, T_POWER_ON and
++	 * LTR_L1.2_THRESHOLD are programmed properly before enable bits for
++	 * L1.2, per PCIe r6.0, sec 5.5.4.
++	 */
++	parent_l1ss_cap = aspm_get_l1ss_cap(parent);
++	child_l1ss_cap = aspm_get_l1ss_cap(child);
++	aspm_calc_l12_info(link, parent_l1ss_cap, child_l1ss_cap);
++
+ 	link->aspm_default = pci_calc_aspm_enable_mask(state);
+ 	pcie_config_aspm_link(link, policy_to_aspm_state(link));
+ 
+-- 
+2.45.2
+
