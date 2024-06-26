@@ -1,100 +1,95 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [195.130.137.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940BC161304
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 08:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A9D15F316
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 08:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719391184; cv=none; b=tuwscp2XjY0PRXC1j8JcgcLIiRVwcY1iAbdFG5QIo2aRQGD8Bhab35by0KTOnogFPE4KhffemdjjBvsrbWNtQAzeOC/axjPwrde1PXh/N+cbRZ0Yd3W3T3MW1dIBp+kYjXe8g1dKkkzF/VwZZYxfvs5MFMh7WvTE5eKtMDZIVww=
+	t=1719391317; cv=none; b=jrdUnvSFaUVQvXzBvMv0ltK86ShYwqMomxVQX2vHs6EuBDI0fS1ZYGa3zbNDZWBCpklTP9hmn7AHTGhCN1kKqL91jdvQpUBzZjbKUwumwLNUo+J3ygReyY+VSYk7B4MAuhmAINTYD7ulxzMMXzobr92mo4cSir9L2RmAhtYN3sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719391184; c=relaxed/simple;
-	bh=NLR+N75GA2geLHdSgsfuC4nIH+6DQelAEiCMDVcetsw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QPLHYPRmjOifIQG2/+nOaSjU9PSOwBZAHaymxfzOqGftBZ+G97yEUVNsT7ZADTVG02ZKh4tzVKapKKe8p6STdHD5HneJNOjz1GnLQsct7iGzvgbgxfOw3BWCOSPT929tadRnRrCn8a3FSNJGEV3J4Q52wGX7felBqW4XWc1YsjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=CQ4Rtrw1; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="CQ4Rtrw1"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-424a2dabfefso16105085e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 01:39:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719391181; x=1719995981; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D9yKfF45fFxX0NqrzvUPKwtywpvOvpdxxd5cgWduHSI=;
-        b=CQ4Rtrw1p07b3jX3rxQWJa5yw/7IaTLdpGaC83AbDhvjkCbLW050TOnuC+Stk+QpPp
-         +AWU/gMLyaqoTLk5Gl0T4Tw+5zeeWkTNNkjCW/JjaPDp9JGdpjAYVj94NV6rubKhf8gT
-         s1NnNiXZsFVWsI2EQsKcRJ41bc+Um404Nzx0mF14xtTYyQPPG27IC0rrjvWm9w0wli7Z
-         JCp2ps1YgzABQxzht3MaNDPeNOd70uUsomzIx/KDOeOLpCpAs4TF7fUfLzulbTrR4jza
-         2lNPKKWky05TuwOuEClTm8J0lWCG7To7bl/wGZevA3Rqlk2oK9IKj7KabRzdCJdk3Fek
-         EERA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719391181; x=1719995981;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=D9yKfF45fFxX0NqrzvUPKwtywpvOvpdxxd5cgWduHSI=;
-        b=D0QkTxR0x+tHrrO1m8Mi9XU3YDHQoO+5icL1uCimMCJ66uJlaY4jrFRveluE+jBcx6
-         WuwAP4nKcMsc6bmdxnWECbMnWT7F71n52WsPlqCP0led1sJmkJkAmnH1ua1JF7KOgDGE
-         69LXNP3bYmGfiRlzs14GK9SCVt9RWngoexvfY97IBsQOoBEHXnUp6regULS2lir0RNuz
-         fgWJoy0UHQ3/Zysj/CI43hELbWCjUDU8MUgZHHEBnmwNxHN61qc7Rlgay53cCUTJKmcw
-         2u80cHQ15rBozenbrmRinUxRM3gaXrFSjfpTpBVQhbA8X2pp9gSrl6u5IMwaSNbj3OPs
-         7NgA==
-X-Forwarded-Encrypted: i=1; AJvYcCVo61dTHIDOAjdmC91cLK5KtmqJQgHOvputC27YT0xrDa1i0LBTuJYBe1W5OIhm3dzskmC5gaFOAxiiZKCW400kTsjsBaTrfp05ucng
-X-Gm-Message-State: AOJu0YwM1nnClKW19oKVqcE+wz8QQTZ+HEVRejunYnrUaYcbEbASq3jg
-	3W2I38CDf6GbagAK6m5v6WSydGXTLbt7QL3HMywQW4M3tEQbuFk2S9oT/q98H4s=
-X-Google-Smtp-Source: AGHT+IEs6lBo5otfDhtsB1Twa+uJYgIAh5Rq06nVGafEYvg+dnsr4+FgYr6Io6O6eVtAAkKgbX30UA==
-X-Received: by 2002:a5d:6985:0:b0:362:a1e8:15b with SMTP id ffacd0b85a97d-366e949d36bmr8249196f8f.28.1719391180762;
-        Wed, 26 Jun 2024 01:39:40 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:a149:6586:c473:97d7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3670ca007adsm2458411f8f.25.2024.06.26.01.39.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 01:39:40 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linux-gpio@vger.kernel.org,
-	Shiji Yang <yangshiji66@outlook.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Alban Bedel <albeu@free.fr>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
+	s=arc-20240116; t=1719391317; c=relaxed/simple;
+	bh=vGvpvDkTEKPSeCsnGYZN5jSHNJXDkF8Oj7//DH35elU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=QCDNQSjIDUUze04uR8HrP8cUTu8Fjh4M2yP16FxqfDJHYtAMMAVZnK3+ToTXEHsqI/iTUOt+A4J9BNIZA8gmJx0UuX9sQ0uLl1yZ5/cftZ8DQrKs4wlXdyAqc9ibG9LUbU7THbVrFip819lxkDEhOnwOFgd4bASH65OJduZtc5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:1dff:b715:1a2c:c3f5])
+	by laurent.telenet-ops.be with bizsmtp
+	id g8hm2C00K0lK4vA018hmnr; Wed, 26 Jun 2024 10:41:47 +0200
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1sMODm-000OVn-F9;
+	Wed, 26 Jun 2024 10:41:46 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1sMODq-00Aong-AJ;
+	Wed, 26 Jun 2024 10:41:46 +0200
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Jocelyn Falempe <jfalempe@redhat.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
-	Jonas Gorski <jonas.gorski@gmail.com>
-Subject: Re: [PATCH v2] gpio: ath79: convert to dynamic GPIO base allocation
-Date: Wed, 26 Jun 2024 10:39:39 +0200
-Message-ID: <171939117715.9694.13266518943488176229.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <TYCP286MB089598EA71E964BD8AB9EFD3BCD62@TYCP286MB0895.JPNP286.PROD.OUTLOOK.COM>
-References: <TYCP286MB089598EA71E964BD8AB9EFD3BCD62@TYCP286MB0895.JPNP286.PROD.OUTLOOK.COM>
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 1/2] drm/panic: Do not select DRM_KMS_HELPER
+Date: Wed, 26 Jun 2024 10:41:44 +0200
+Message-Id: <60155f8c939ed286e324a7c12a1daa69fe49fcf6.1719391132.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1719391132.git.geert+renesas@glider.be>
+References: <cover.1719391132.git.geert+renesas@glider.be>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+DRM core code cannot call into DRM helper code, as this would lead to
+circular references in the modular case.  Hence drop the selection of
+DRM_KMS_HELPER.  It was unused anyway, as v10 switched from using
+the DRM format helpers to its own color format conversion, cfr. commit
+9544309775c334c9 ("drm/panic: Add support for color format
+conversion")).
 
+Remove the unneeded include of <drm/drm_format_helper.h>.
 
-On Wed, 26 Jun 2024 08:33:18 +0800, Shiji Yang wrote:
-> ath79 target has already been converted to device tree based
-> platform. Using dynamic GPIO numberspace base to suppress the
-> warning:
-> 
-> gpio gpiochip0: Static allocation of GPIO base is deprecated, use dynamic allocation.
-> 
-> Tested on Atheros AR7241 and AR9344.
-> 
-> [...]
+Fixes: bf9fb17c6672868d ("drm/panic: Add a drm panic handler")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/gpu/drm/Kconfig     | 1 -
+ drivers/gpu/drm/drm_panic.c | 1 -
+ 2 files changed, 2 deletions(-)
 
-Applied, thanks!
-
-[1/1] gpio: ath79: convert to dynamic GPIO base allocation
-      commit: 9a473c2a093e0d1c466bf86073230e2c8b658977
-
-Best regards,
+diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+index b903a2c0b5e8f95c..ce9bf2b6e9d332d4 100644
+--- a/drivers/gpu/drm/Kconfig
++++ b/drivers/gpu/drm/Kconfig
+@@ -108,7 +108,6 @@ config DRM_KMS_HELPER
+ config DRM_PANIC
+ 	bool "Display a user-friendly message when a kernel panic occurs"
+ 	depends on DRM && !(FRAMEBUFFER_CONSOLE && VT_CONSOLE)
+-	select DRM_KMS_HELPER
+ 	select FONT_SUPPORT
+ 	help
+ 	  Enable a drm panic handler, which will display a user-friendly message
+diff --git a/drivers/gpu/drm/drm_panic.c b/drivers/gpu/drm/drm_panic.c
+index 8d2eded1fd19ff6c..67f78b5a76b61e3d 100644
+--- a/drivers/gpu/drm/drm_panic.c
++++ b/drivers/gpu/drm/drm_panic.c
+@@ -20,7 +20,6 @@
+ #include <linux/types.h>
+ 
+ #include <drm/drm_drv.h>
+-#include <drm/drm_format_helper.h>
+ #include <drm/drm_fourcc.h>
+ #include <drm/drm_framebuffer.h>
+ #include <drm/drm_modeset_helper_vtables.h>
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.34.1
+
