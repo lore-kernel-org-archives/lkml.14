@@ -1,113 +1,144 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99A745BFC
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 01:58:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41928947E
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 02:02:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719367131; cv=none; b=nODXUntL9r+39P+idT1wXY0kOwLsHZhgnvpmXOGPNOr8F3D/SM39saapPvuEff5CifCMoHCTvpPvOoBDLEO/c2wOo7nKLqLIsMMNw4bQVoWFtiKsUxNjhxMCiLW2hKPxGNb4lMnqB+fAIyTC0Yd2jZGVwmtZxWNctJ/hWQVPTdc=
+	t=1719367327; cv=none; b=QaNZth/vuOeEZmp0Jfw3Fnu9e6vGTYevS11XPR4fcqPc+pplf+VWKFFbdSOYPpOd0ziU//m26BgDh8yAK7B6ysXaEuI1rAEQFAANpwchfXKbSJd0GcL5RTEbZZ1/ki9Njqs9GIwQmg5QvW+jSGL8zvAl96X2PpksURPpU4KoZyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719367131; c=relaxed/simple;
-	bh=GnG1sbGbs1jtmTvlrH54yNuEYDYvf8DpjOgAllIIWYk=;
+	s=arc-20240116; t=1719367327; c=relaxed/simple;
+	bh=D6dRbojHwOB90aNJgUPTQWtYJDx5XfGJu58jRfCR0kw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=owbeHEoyygiwwGFK4SUYTY2/LHQjqvnYgjmhdw8ylWD0xzbo8i/Lkxz9p6rjcVJpZYG3KrjQSt8jaY3ODExU+TzMQoIFAX4cSj3W+u32w4x+Wl+QD8drHDl2qrD7nFgd7pq0CQgQYiK4vA7sVGJyeQPYR8HmcSdkm2FXtXeUbxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rs2g/cNn; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=hJZx+yXXRPwryXExe8pesUgEHYQkklHKYkUQszyNMu6jVu0IcF6J0Jo7I/+raX8ZjerH/l2WwNMDI+3LQnv7sFAYxSZdhTvj6qfjrjhN4b07/0he5WOsM+Yjq7kts+gBtnKX5f/vxQhti28+vMBRhW5MUGFh1zJpMJdNzGq0LfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SO2Z5TNH; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rs2g/cNn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719367128;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GnG1sbGbs1jtmTvlrH54yNuEYDYvf8DpjOgAllIIWYk=;
-	b=Rs2g/cNnnjfNIfJ2XJZsYch+YbHRgYCV6KO7SjYjyz88mcpaXaULK+c9fNDcz5oJogBELb
-	Wmy6sZfA1gAlP9emjNWpKJ7O7BMtscGjyqzfMjqHMLYVDHGn2jVv8o97HW1muB0E1z7Mhw
-	/t8yFJ4L5ikwn0zs5K/PU/rIBz9fqHc=
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
- [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-507-vIKyfcDdNhOMY83muvBJLQ-1; Tue, 25 Jun 2024 21:58:47 -0400
-X-MC-Unique: vIKyfcDdNhOMY83muvBJLQ-1
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2c6f1c0365eso7323019a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 18:58:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SO2Z5TNH"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-361785bfa71so4744835f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 19:02:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719367324; x=1719972124; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j827eyPfovm1pttAYGkAs9K2vKAWkyr0R4XxYEpN49k=;
+        b=SO2Z5TNHrAOjw3tFzjv7rIwV0tP5Y/M/Rr3M57O+WVtY2QKZsdP4uHolF5Voab8Nef
+         8E7W5MigYO0y1TDBfJcs043SjKtymrQutdkk+fgD/kk8uDqxwQteQTkFk/fYzvuqU6l8
+         jdz1OZ6oHq+fxvmWMeNGaiRGjYpTnKcC8WAL0vZitBxscdRfYM/QSg0tUNPD5ysC6/lB
+         MwH5v+EC9DBwLkfwhKcgm46MEGs8ikADfihfkGwL5OaCusZuUL/9SN9aPFsGh+m2J1wv
+         Pbh+olYdBvl55rgLX7mJPq1XwN2NAQzNMtY8Tg4UjvGY9toC48RVOhv5zFKSs5c6o2Tt
+         TDjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719367126; x=1719971926;
+        d=1e100.net; s=20230601; t=1719367324; x=1719972124;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GnG1sbGbs1jtmTvlrH54yNuEYDYvf8DpjOgAllIIWYk=;
-        b=n+shQDV5/qTvhaNJUro6ANEuyFMMsj5yMwQgnBfZny5WFOXkxfpkELLP0ICvZd3HK+
-         rYIS9w3GkA404w4tLnj70lgy/vacQsIRMnNueZ2/YbzA0y9bGznabIPnAF3AHzCnZUk6
-         3ncVZApEMjSZ/iOlSXiz7Kb7vEFeHh5fZr52nsvI65GFqdpJs+hC5ztsVZ38/ij8A5FT
-         bhrIMkjE/YSycHKgsNJ44GQwno9EcUJqp+PuyhLKKCP1Fy31aLneJpOC41SD88EujEAq
-         p7vv/TKpd4QimjrRnFQLuufpvE80HR2+Ut8s9btfaqrmcKyL+TF5cWFSHPsM0QF4u7fw
-         ykhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUDCWMRM7pWEtQdsrliemFMgGbb9nZJqosD2gEhwAYo0RIcf5rGg9eklslfn3Z1BxH8wxHgUY8VHun49AK33xDLfaAadm/9CAjZ7VXp
-X-Gm-Message-State: AOJu0YwusVUbxqSkSPakOannR4fQFGl088qyRoLNjgYrR0SfNGsEIgxz
-	FG4RciAhCoRmKaO3/CT7ydVXJCgCN601uYFEUY1SaIpt/DOR1QviWtPnwh1QmQUfwQmo9q/TPn3
-	MCVNkvxMFwPb4m2n7Q7AG2MbzKdT509X+V1Nl3rf7Lb+RbWvu2xp1s72NJvKv09ASwB/HGaJG7u
-	3MBfrJYkbK4o4nrLL/tCcj8fMjJECUsvoJSNXE
-X-Received: by 2002:a17:90a:d98e:b0:2c4:b8e1:89b0 with SMTP id 98e67ed59e1d1-2c850573e58mr8416519a91.30.1719367126330;
-        Tue, 25 Jun 2024 18:58:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE5cItPu7kw+lpFHgT9mFcrgcyIi3eaohdOBIsIuRQUoMjB36Oowm0mQq7gn7+W9fkMRWr+6IMsheb7X2K6btw=
-X-Received: by 2002:a17:90a:d98e:b0:2c4:b8e1:89b0 with SMTP id
- 98e67ed59e1d1-2c850573e58mr8416498a91.30.1719367125794; Tue, 25 Jun 2024
- 18:58:45 -0700 (PDT)
+        bh=j827eyPfovm1pttAYGkAs9K2vKAWkyr0R4XxYEpN49k=;
+        b=G5kO6/hBrNjEVtOmouRu/QDjPqqo1kglq1y/DfGKOdJKhCLu0Dmng+5S/uQKVjF4KV
+         CApcy/AhFrYiUcAyq/U2N29w0iZdLrb74Dyvk4LmEk7SMQMD8GCDTUTlKpeITmKPlDXf
+         f1Js4syOtl8n7THloofwnCuuDoYCi9jyi4dqHLjIgtR/QpsX/C2DbbbcBZHkpdd21TPq
+         fVlRjjLyyBjrMyx6hLsyYziAG4vgA6LO+nXzsb9FvAcCisTRBzPd1RIEf4nUzees/t7k
+         1cmb6t0B3aoPPVNkLH/8nTL04c7/DMlZUkgYUAXOzHMcowJ0OsGwoXdqA2ohJJV7mo8B
+         prYA==
+X-Forwarded-Encrypted: i=1; AJvYcCX+TD6BF8+tAIzr2BsOnUrBc6QCcIVz9mLgDWM4S/0rZ1i+MLJXJ6PVPWS9MELhVBwfkK8v1R/Hk/Q1coBOXmk5Rkdmn5BLYR87j0PE
+X-Gm-Message-State: AOJu0YwdThHj29QRLme+oWrAX1NR2zawyRwdzyHREw65QrD/tZnWLS3m
+	PF3MBx8feHhvgFriBE4mt1KUfySldWkXdByN5xHIHasLqMWNyEwu8v/A7YLjH9/DK7L595cUqkx
+	TH7mMyTX2Cm6GoWXH3BfNB63UiEc=
+X-Google-Smtp-Source: AGHT+IGwrr2Re6QtzgDShGiOpHkoGQZgADb65PV0KxFMYpZIY4JGPzwGSV50AioRPApDEtm5jaEVBV1HipBAgflUfmg=
+X-Received: by 2002:a05:6000:a83:b0:365:e76b:e908 with SMTP id
+ ffacd0b85a97d-366e79fe983mr6147040f8f.24.1719367324358; Tue, 25 Jun 2024
+ 19:02:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240624024523.34272-1-jasowang@redhat.com> <20240624024523.34272-4-jasowang@redhat.com>
- <20240624060057-mutt-send-email-mst@kernel.org> <CACGkMEsysbded3xvU=qq6L_SmR0jmfvXdbthpZ0ERJoQhveZ3w@mail.gmail.com>
- <20240625031455-mutt-send-email-mst@kernel.org> <CACGkMEt4qnbiotLgBx+jHBSsd-k0UAVSxjHovfXk6iGd6uSCPg@mail.gmail.com>
- <20240625035638-mutt-send-email-mst@kernel.org> <CACGkMEtY1waRRWOKvmq36Wxio3tUGbTooTe-QqCMBFVDjOW-8w@mail.gmail.com>
- <20240625043206-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20240625043206-mutt-send-email-mst@kernel.org>
-From: Jason Wang <jasowang@redhat.com>
-Date: Wed, 26 Jun 2024 09:58:32 +0800
-Message-ID: <CACGkMEvO+hAd-JeM-LEAavZqogEhSBPQRhSQK6hPMaVyEHH7jQ@mail.gmail.com>
-Subject: Re: [PATCH V2 3/3] virtio-net: synchronize operstate with admin state
- on up/down
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: xuanzhuo@linux.alibaba.com, eperezma@redhat.com, davem@davemloft.net, 
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	virtualization@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, venkat.x.venkatsubra@oracle.com, 
-	gia-khanh.nguyen@oracle.com
+References: <20240625142512.3916063-1-chao@kernel.org>
+In-Reply-To: <20240625142512.3916063-1-chao@kernel.org>
+From: Zhiguo Niu <niuzhiguo84@gmail.com>
+Date: Wed, 26 Jun 2024 10:01:53 +0800
+Message-ID: <CAHJ8P3+VUozoMVHvMxqDrDRVttRWDJ5a4A2ysJv2_O4ytfq8OA@mail.gmail.com>
+Subject: Re: [f2fs-dev] [PATCH v2] f2fs: fix to avoid racing in between read
+ and OPU dio write
+To: Chao Yu <chao@kernel.org>
+Cc: jaegeuk@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-f2fs-devel@lists.sourceforge.net
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 25, 2024 at 4:32=E2=80=AFPM Michael S. Tsirkin <mst@redhat.com>=
- wrote:
+Chao Yu <chao@kernel.org> =E4=BA=8E2024=E5=B9=B46=E6=9C=8825=E6=97=A5=E5=91=
+=A8=E4=BA=8C 22:29=E5=86=99=E9=81=93=EF=BC=9A
 >
-> On Tue, Jun 25, 2024 at 04:11:05PM +0800, Jason Wang wrote:
-> > On Tue, Jun 25, 2024 at 3:57=E2=80=AFPM Michael S. Tsirkin <mst@redhat.=
-com> wrote:
-> > >
-> > > On Tue, Jun 25, 2024 at 03:46:44PM +0800, Jason Wang wrote:
-> > > > Workqueue is used to serialize those so we won't lose any change.
-> > >
-> > > So we don't need to re-read then?
-> > >
-> >
-> > We might have to re-read but I don't get why it is a problem for us.
-> >
-> > Thanks
+> If lfs mode is on, buffered read may race w/ OPU dio write as below,
+> it may cause buffered read hits unwritten data unexpectly, and for
+> dio read, the race condition exists as well.
 >
-> I don't think each ethtool command should force a full config read,
-> is what I mean. Only do it if really needed.
-
-We don't, as we will check config_pending there.
-
-Thanks
-
+> Thread A                        Thread B
+> - f2fs_file_write_iter
+>  - f2fs_dio_write_iter
+>   - __iomap_dio_rw
+>    - f2fs_iomap_begin
+>     - f2fs_map_blocks
+>      - __allocate_data_block
+>       - allocated blkaddr #x
+>        - iomap_dio_submit_bio
+>                                 - f2fs_file_read_iter
+>                                  - filemap_read
+>                                   - f2fs_read_data_folio
+>                                    - f2fs_mpage_readpages
+>                                     - f2fs_map_blocks
+>                                      : get blkaddr #x
+>                                     - f2fs_submit_read_bio
+>                                 IRQ
+>                                 - f2fs_read_end_io
+>                                  : read IO on blkaddr #x complete
+> IRQ
+> - iomap_dio_bio_end_io
+>  : direct write IO on blkaddr #x complete
 >
+> In LFS mode, if there is inflight dio, let's force read to buffered
+> IO, this policy won't cover all race cases, however it is a tradeoff
+> which avoids abusing lock around IO paths.
+>
+> Fixes: f847c699cff3 ("f2fs: allow out-place-update for direct IO in LFS m=
+ode")
+> Signed-off-by: Chao Yu <chao@kernel.org>
+> ---
+>  fs/f2fs/file.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 278573974db4..866f1a34e92b 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -882,6 +882,10 @@ static bool f2fs_force_buffered_io(struct inode *ino=
+de, int rw)
+>                 return true;
+>         if (is_sbi_flag_set(sbi, SBI_CP_DISABLED))
+>                 return true;
+> +       /* In LFS mode, if there is inflight dio, force read to buffered =
+IO */
+> +       if (rw =3D=3D READ && f2fs_lfs_mode(sbi) &&
+> +                       atomic_read(&inode->i_dio_count))
+> +               return false;
+Hi Chao,
+A little doubt:)=EF=BC=8Cforce =E2=80=9Cbuffered IO=E2=80=9D should return =
+"true"?
+another want to confirm is, "thread B" in commit msg just doing buffer
+read, so this modification just cover direct read case=EF=BC=9F
+thanks=EF=BC=81
+>
+>         return false;
+>  }
 > --
-> MST
+> 2.40.1
 >
-
+>
+>
+> _______________________________________________
+> Linux-f2fs-devel mailing list
+> Linux-f2fs-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
