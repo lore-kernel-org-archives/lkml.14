@@ -1,118 +1,316 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13AD3181BB8
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 13:12:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FAA3181CE6
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 13:13:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719407573; cv=none; b=Grv2hqzlAINJUjGjK6edLl31gNzPQqtUKa2aOTaEMRG9DPQUkvhYpnOnhrptKpcTi0WZ0Wrmdi2G8ZJpcn8fcdOCMCX4rjAqh2xpyo9BX6JiPRLYds35QeX8oDtGBaNAZvd84PuXVu+CCtBc6c2QQSBJ6In/BgZL/u40v2AtVF4=
+	t=1719407586; cv=none; b=TgKhyX7Gkc6VYZ+66jRPhj3cEf9ydOAJgvEWBK8CViMGrCVbQocZCZAAU25viidl8i3Z3w+IY+pNTiMNTOTq8p886rA/9JOk5ofXMfQZOr4S137FhwHgItSO+a5V+JpGQi40exDDuFpVL0LUeWoiKD8sWpOESc6fLL63NojGKBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719407573; c=relaxed/simple;
-	bh=kHDZgcJ0udVs+eyU3t/o9puU7N3q6vsn1coCtrZHWuM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ZQpNtgZ08tNCiL1Zz2TxMDps7Lw+/LcS5YOXVu10ql/NakVX4zMFl1DJYilItTxW5j2OQNy4NDj6MdoGpSBg8JQcK7UovJ2IDofU+M+5hsgpi/HEj8w3ZAcsOo3n9UNSPNMSltNQHmoXUmGg1YnIuCTqFwjeSbNMWSVnQ0hydvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=B+pAT+RV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JsPBC40J; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=B+pAT+RV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JsPBC40J; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1719407586; c=relaxed/simple;
+	bh=o4ZK/GG6lXAN1cfDXgIpVYZWTFwSck3jVd1HEtW4i7A=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=bYNgITYeC9i9irgPBvgPRmSELm6W8IOWu8GUMdI40Z+4PVmKd+5BxCzfKjw471j3AQcMPcuHCeDJ6td735hNbwuKR7kSozjVtv7SH9uW+3VW/BvJHWU+zVK2ChXEz+mc1WNFQWfWI6p8ZqXxFNZcHx8/2zeqVRcXoc5tbag8eI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=m6Nne5tF; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="B+pAT+RV";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JsPBC40J";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="B+pAT+RV";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JsPBC40J"
-Received: from hawking.nue2.suse.org (unknown [10.168.4.11])
-	by smtp-out1.suse.de (Postfix) with ESMTP id 25B7421A99;
-	Wed, 26 Jun 2024 13:12:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1719407570; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uCa82HaPuM92DEe4lqLQ19XPhcnsH9XJaUHSDB5WOrg=;
-	b=B+pAT+RVwsuhyDCyJlII7uNA+7KhhqBIQeT3pkN9/guAk3tUG2+qyus0DKMdOvgFa+rNiJ
-	FfBkZ3KQPCd7+qupc1NNhOKHdzB+90ign7VtPpZ8zkssGVdV8gubo3xo8XeRKC9oKtbGyl
-	cB9j0NtJsrnrcfgJDbnu90WqXrFLN/w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1719407570;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uCa82HaPuM92DEe4lqLQ19XPhcnsH9XJaUHSDB5WOrg=;
-	b=JsPBC40J3px8snBbnKMa/1cpnkIANAq3EgZsMvFhgexwioIfRjOlrzwZ5X7lRbhk8tm1fF
-	Osm8UCYX7RkVj/Bg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1719407570; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uCa82HaPuM92DEe4lqLQ19XPhcnsH9XJaUHSDB5WOrg=;
-	b=B+pAT+RVwsuhyDCyJlII7uNA+7KhhqBIQeT3pkN9/guAk3tUG2+qyus0DKMdOvgFa+rNiJ
-	FfBkZ3KQPCd7+qupc1NNhOKHdzB+90ign7VtPpZ8zkssGVdV8gubo3xo8XeRKC9oKtbGyl
-	cB9j0NtJsrnrcfgJDbnu90WqXrFLN/w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1719407570;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uCa82HaPuM92DEe4lqLQ19XPhcnsH9XJaUHSDB5WOrg=;
-	b=JsPBC40J3px8snBbnKMa/1cpnkIANAq3EgZsMvFhgexwioIfRjOlrzwZ5X7lRbhk8tm1fF
-	Osm8UCYX7RkVj/Bg==
-Received: by hawking.nue2.suse.org (Postfix, from userid 17005)
-	id 14A504A050D; Wed, 26 Jun 2024 15:12:50 +0200 (CEST)
-From: Andreas Schwab <schwab@suse.de>
-To: Jisheng Zhang <jszhang@kernel.org>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,  Palmer Dabbelt
- <palmer@dabbelt.com>,  Albert Ou <aou@eecs.berkeley.edu>,
-  linux-riscv@lists.infradead.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] riscv: uaccess: use input constraints for ptr of
- __put_user
-In-Reply-To: <20240625040500.1788-3-jszhang@kernel.org> (Jisheng Zhang's
-	message of "Tue, 25 Jun 2024 12:04:58 +0800")
-References: <20240625040500.1788-1-jszhang@kernel.org>
-	<20240625040500.1788-3-jszhang@kernel.org>
-X-Yow: MMM-MM!!  So THIS is BIO-NEBULATION!
-Date: Wed, 26 Jun 2024 15:12:50 +0200
-Message-ID: <mvmikxvonjh.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="m6Nne5tF"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52d259dbe3cso1402139e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 06:13:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719407582; x=1720012382; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JpMFH6VmSNUk91jIQ+0kjGx11FiPCz2ltKgHshZWUPg=;
+        b=m6Nne5tF+i3AUVd9OkXw8T+zBdar7p8xvpQ0XgPDGlHyhGFuI5tTmVhyx3IRrwce5y
+         SjnbU5Gy2sJQIQvCDr5ZPa9f1AJWSLzCvMSDA5nY04BiBsuqf6VXJksMGUHIP/lJD1vp
+         97GlAqL2mBu2s2vTMeOpryhlKOm5s8CZRgS7yASiOA7BpQuZIGqFEFfA1YHdZDaVyZYI
+         SdXcQc5sntK993MTS9472QOoIOmN6UPwWz5kuQY9NzmoNRTl8SgxyFOug+4y5MHFZBhr
+         owLWx6g/TezTjt2HsY9VAzn6k9jQAWVyky9PKZFOUpNttEv6cgLAW3q8MgM7qb9yJ7QQ
+         oF5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719407582; x=1720012382;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JpMFH6VmSNUk91jIQ+0kjGx11FiPCz2ltKgHshZWUPg=;
+        b=X5u+4Cyn7UKkaeq4qMEC5uA8Hx1k7R/gZT3r8uuL4ZCc7i7E8Clcb0qIbikdRebqZl
+         OF/7ml8/hxkyzT1LkcJTZuFGdKv1tgBfecg1IqXyVZTPDdwzklBn5uleRLXya7vhS/Hs
+         fN3t65UQnN/TYUPvE5esMmBWJpuiFxtsBQxCOl6EVwpR4UEeUmm2r5P5KKkmXpOcBRec
+         /22TaKBjjjkXy9MHLZwnza1UxvJOxW/IpMD0A3tT3EzDDuxtsNb/6XLtdsjt9p7SJqrm
+         epcu5vrdmY6MTd3eMcf0H/daPSMF6lgGceraJ/HWKR+Qb/r7Ko7odYq/kgzBr3I8abHH
+         35XA==
+X-Forwarded-Encrypted: i=1; AJvYcCViLuRalmaEAMsBlRGnk6DH5iJ+5aZVcCgBxnbheHzWiniN97+80UKldoYGAiLJQMCcCY7cot8Fs57+qocbILG9hOb6KQrRAGbMvjde
+X-Gm-Message-State: AOJu0YyBnzhxARKEgB4HBZGtd3YKGydibDLf+XH8jGcLYrpoDs6k9bOy
+	5OkdGOOzKQShCwkc5Efa0DHHN5puUznNUEz5Xa6+lqgJ0ib5ZgOuhQ9f9zvEY/Y=
+X-Google-Smtp-Source: AGHT+IFJ9B27bdcSX0Wfqr/hDP4pnXMetZ6wPAy775G8aSk8a7BY3E+tTCNDaFLKsaqnc6by2wVkZg==
+X-Received: by 2002:ac2:5984:0:b0:52c:caaf:6905 with SMTP id 2adb3069b0e04-52ce0646921mr7674671e87.58.1719407582367;
+        Wed, 26 Jun 2024 06:13:02 -0700 (PDT)
+Received: from localhost.localdomain (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3663a2f6977sm15857663f8f.80.2024.06.26.06.13.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jun 2024 06:13:02 -0700 (PDT)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Andrea Parri <parri.andrea@gmail.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Leonardo Bras <leobras@redhat.com>,
+	Guo Ren <guoren@kernel.org>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-arch@vger.kernel.org
+Cc: Guo Ren <guoren@linux.alibaba.com>
+Subject: [PATCH v2 09/10] asm-generic: ticket-lock: Add separate ticket-lock.h
+Date: Wed, 26 Jun 2024 15:03:46 +0200
+Message-Id: <20240626130347.520750-10-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240626130347.520750-1-alexghiti@rivosinc.com>
+References: <20240626130347.520750-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spamd-Result: default: False [-4.18 / 50.00];
-	BAYES_HAM(-2.98)[99.92%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.986];
-	RCVD_NO_TLS_LAST(0.10)[];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email]
-X-Spam-Flag: NO
-X-Spam-Score: -4.18
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
-On Jun 25 2024, Jisheng Zhang wrote:
+From: Guo Ren <guoren@linux.alibaba.com>
 
-> I believe the output constraints "=m" is not necessary, because
-> the instruction itself is "write", we don't need the compiler
-> to "write" for us.
+Add a separate ticket-lock.h to include multiple spinlock versions and
+select one at compile time or runtime.
 
-No, this is backwards.  Being an output operand means that the *asm* is
-writing to it, and the compiler can read the value from there afterwards
-(and the previous value is dead before the asm).
+Reviewed-by: Leonardo Bras <leobras@redhat.com>
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/linux-riscv/CAK8P3a2rnz9mQqhN6-e0CGUUv9rntRELFdxt_weiD7FxH7fkfQ@mail.gmail.com/
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+Signed-off-by: Guo Ren <guoren@kernel.org>
+---
+ include/asm-generic/spinlock.h        |  87 +---------------------
+ include/asm-generic/ticket_spinlock.h | 103 ++++++++++++++++++++++++++
+ 2 files changed, 104 insertions(+), 86 deletions(-)
+ create mode 100644 include/asm-generic/ticket_spinlock.h
 
+diff --git a/include/asm-generic/spinlock.h b/include/asm-generic/spinlock.h
+index 4773334ee638..970590baf61b 100644
+--- a/include/asm-generic/spinlock.h
++++ b/include/asm-generic/spinlock.h
+@@ -1,94 +1,9 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ 
+-/*
+- * 'Generic' ticket-lock implementation.
+- *
+- * It relies on atomic_fetch_add() having well defined forward progress
+- * guarantees under contention. If your architecture cannot provide this, stick
+- * to a test-and-set lock.
+- *
+- * It also relies on atomic_fetch_add() being safe vs smp_store_release() on a
+- * sub-word of the value. This is generally true for anything LL/SC although
+- * you'd be hard pressed to find anything useful in architecture specifications
+- * about this. If your architecture cannot do this you might be better off with
+- * a test-and-set.
+- *
+- * It further assumes atomic_*_release() + atomic_*_acquire() is RCpc and hence
+- * uses atomic_fetch_add() which is RCsc to create an RCsc hot path, along with
+- * a full fence after the spin to upgrade the otherwise-RCpc
+- * atomic_cond_read_acquire().
+- *
+- * The implementation uses smp_cond_load_acquire() to spin, so if the
+- * architecture has WFE like instructions to sleep instead of poll for word
+- * modifications be sure to implement that (see ARM64 for example).
+- *
+- */
+-
+ #ifndef __ASM_GENERIC_SPINLOCK_H
+ #define __ASM_GENERIC_SPINLOCK_H
+ 
+-#include <linux/atomic.h>
+-#include <asm-generic/spinlock_types.h>
+-
+-static __always_inline void arch_spin_lock(arch_spinlock_t *lock)
+-{
+-	u32 val = atomic_fetch_add(1<<16, &lock->val);
+-	u16 ticket = val >> 16;
+-
+-	if (ticket == (u16)val)
+-		return;
+-
+-	/*
+-	 * atomic_cond_read_acquire() is RCpc, but rather than defining a
+-	 * custom cond_read_rcsc() here we just emit a full fence.  We only
+-	 * need the prior reads before subsequent writes ordering from
+-	 * smb_mb(), but as atomic_cond_read_acquire() just emits reads and we
+-	 * have no outstanding writes due to the atomic_fetch_add() the extra
+-	 * orderings are free.
+-	 */
+-	atomic_cond_read_acquire(&lock->val, ticket == (u16)VAL);
+-	smp_mb();
+-}
+-
+-static __always_inline bool arch_spin_trylock(arch_spinlock_t *lock)
+-{
+-	u32 old = atomic_read(&lock->val);
+-
+-	if ((old >> 16) != (old & 0xffff))
+-		return false;
+-
+-	return atomic_try_cmpxchg(&lock->val, &old, old + (1<<16)); /* SC, for RCsc */
+-}
+-
+-static __always_inline void arch_spin_unlock(arch_spinlock_t *lock)
+-{
+-	u16 *ptr = (u16 *)lock + IS_ENABLED(CONFIG_CPU_BIG_ENDIAN);
+-	u32 val = atomic_read(&lock->val);
+-
+-	smp_store_release(ptr, (u16)val + 1);
+-}
+-
+-static __always_inline int arch_spin_value_unlocked(arch_spinlock_t lock)
+-{
+-	u32 val = lock.val.counter;
+-
+-	return ((val >> 16) == (val & 0xffff));
+-}
+-
+-static __always_inline int arch_spin_is_locked(arch_spinlock_t *lock)
+-{
+-	arch_spinlock_t val = READ_ONCE(*lock);
+-
+-	return !arch_spin_value_unlocked(val);
+-}
+-
+-static __always_inline int arch_spin_is_contended(arch_spinlock_t *lock)
+-{
+-	u32 val = atomic_read(&lock->val);
+-
+-	return (s16)((val >> 16) - (val & 0xffff)) > 1;
+-}
+-
++#include <asm-generic/ticket_spinlock.h>
+ #include <asm/qrwlock.h>
+ 
+ #endif /* __ASM_GENERIC_SPINLOCK_H */
+diff --git a/include/asm-generic/ticket_spinlock.h b/include/asm-generic/ticket_spinlock.h
+new file mode 100644
+index 000000000000..cfcff22b37b3
+--- /dev/null
++++ b/include/asm-generic/ticket_spinlock.h
+@@ -0,0 +1,103 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/*
++ * 'Generic' ticket-lock implementation.
++ *
++ * It relies on atomic_fetch_add() having well defined forward progress
++ * guarantees under contention. If your architecture cannot provide this, stick
++ * to a test-and-set lock.
++ *
++ * It also relies on atomic_fetch_add() being safe vs smp_store_release() on a
++ * sub-word of the value. This is generally true for anything LL/SC although
++ * you'd be hard pressed to find anything useful in architecture specifications
++ * about this. If your architecture cannot do this you might be better off with
++ * a test-and-set.
++ *
++ * It further assumes atomic_*_release() + atomic_*_acquire() is RCpc and hence
++ * uses atomic_fetch_add() which is RCsc to create an RCsc hot path, along with
++ * a full fence after the spin to upgrade the otherwise-RCpc
++ * atomic_cond_read_acquire().
++ *
++ * The implementation uses smp_cond_load_acquire() to spin, so if the
++ * architecture has WFE like instructions to sleep instead of poll for word
++ * modifications be sure to implement that (see ARM64 for example).
++ *
++ */
++
++#ifndef __ASM_GENERIC_TICKET_SPINLOCK_H
++#define __ASM_GENERIC_TICKET_SPINLOCK_H
++
++#include <linux/atomic.h>
++#include <asm-generic/spinlock_types.h>
++
++static __always_inline void ticket_spin_lock(arch_spinlock_t *lock)
++{
++	u32 val = atomic_fetch_add(1<<16, &lock->val);
++	u16 ticket = val >> 16;
++
++	if (ticket == (u16)val)
++		return;
++
++	/*
++	 * atomic_cond_read_acquire() is RCpc, but rather than defining a
++	 * custom cond_read_rcsc() here we just emit a full fence.  We only
++	 * need the prior reads before subsequent writes ordering from
++	 * smb_mb(), but as atomic_cond_read_acquire() just emits reads and we
++	 * have no outstanding writes due to the atomic_fetch_add() the extra
++	 * orderings are free.
++	 */
++	atomic_cond_read_acquire(&lock->val, ticket == (u16)VAL);
++	smp_mb();
++}
++
++static __always_inline bool ticket_spin_trylock(arch_spinlock_t *lock)
++{
++	u32 old = atomic_read(&lock->val);
++
++	if ((old >> 16) != (old & 0xffff))
++		return false;
++
++	return atomic_try_cmpxchg(&lock->val, &old, old + (1<<16)); /* SC, for RCsc */
++}
++
++static __always_inline void ticket_spin_unlock(arch_spinlock_t *lock)
++{
++	u16 *ptr = (u16 *)lock + IS_ENABLED(CONFIG_CPU_BIG_ENDIAN);
++	u32 val = atomic_read(&lock->val);
++
++	smp_store_release(ptr, (u16)val + 1);
++}
++
++static __always_inline int ticket_spin_value_unlocked(arch_spinlock_t lock)
++{
++	u32 val = lock.val.counter;
++
++	return ((val >> 16) == (val & 0xffff));
++}
++
++static __always_inline int ticket_spin_is_locked(arch_spinlock_t *lock)
++{
++	arch_spinlock_t val = READ_ONCE(*lock);
++
++	return !ticket_spin_value_unlocked(val);
++}
++
++static __always_inline int ticket_spin_is_contended(arch_spinlock_t *lock)
++{
++	u32 val = atomic_read(&lock->val);
++
++	return (s16)((val >> 16) - (val & 0xffff)) > 1;
++}
++
++/*
++ * Remapping spinlock architecture specific functions to the corresponding
++ * ticket spinlock functions.
++ */
++#define arch_spin_is_locked(l)		ticket_spin_is_locked(l)
++#define arch_spin_is_contended(l)	ticket_spin_is_contended(l)
++#define arch_spin_value_unlocked(l)	ticket_spin_value_unlocked(l)
++#define arch_spin_lock(l)		ticket_spin_lock(l)
++#define arch_spin_trylock(l)		ticket_spin_trylock(l)
++#define arch_spin_unlock(l)		ticket_spin_unlock(l)
++
++#endif /* __ASM_GENERIC_TICKET_SPINLOCK_H */
 -- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
+2.39.2
+
