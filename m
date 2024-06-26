@@ -1,95 +1,71 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5222923BF;
-	Wed, 26 Jun 2024 08:29:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF8B423BF
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 08:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719390552; cv=none; b=Fi4cSobo3p0ZdixQhXpgLOdEjP31Yb9zFlDW3/r5Onm1nKok/3ngfwLluF+cgSpVECm5SRSqY12KGEs3q3/fXoVwYlQsQWwoEc1M6xkUF86j2x+evH8JcTJIXJvQsT0bw+SprIDWVPRyUvxkYb1apy74k60jtazM1hN1XllIHnU=
+	t=1719390603; cv=none; b=HQfsL5D8oP4zkXXyrcIUVtBtQw5YZvzVmWhza1N8q3HatH1RoPSwgVOp7RppXmt0+4MJWNukWMIhCLs6qi2DTt5YljpiBN8WW46Kzw65lpCX4hHPO1L7tzGWj6OcgWDT8ji6GNhLMjTm/JKyXTRKmFdhVR2GO4KSPGrODssyrD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719390552; c=relaxed/simple;
-	bh=Cp7NuRUJVqGGZYwOZ8n29EcYvv+5dVawcwjYBiu90F4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PlW0jX8xTcE023xg/BN/veDxmUo9zxZbMk8bdquc5NDr1sFXiycrl1MBT650r3+Lh2vai1LM9N8LuwJfD7CjZyT+6xZNbOrgVUJcfGTM09htBB/z7BWTfCTxjo38oyMAe3wb4o7wFZBDMqo4Utv/aTMtDtFBXzKJHk2ne4jAPa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FYPJl1ye; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1719390603; c=relaxed/simple;
+	bh=EBtPDBeaywnYW/+2LKB3DHJ4zg4paAIBx22m2ppCcA4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=h91hsM/hbzLISk6wJwF8aIs6fyz5fu93FVOMCZx9B8VbJutsOf8urofYsn4GSOGfvkrPscTSkKl+EX4tzp+Qt6s+jTbXXaRxpDJE10YmyzjThQhOd4V5p+RkVOMLX4Yh/g/JyHtMwkIQIEFB6+DWASwUm/G6AbV5+ShM50gKAlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=XLd6TTiN; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FYPJl1ye"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=gx1YbM7m9OifZ66nwDwy8F0WLf5LnqApcjTF7ww/P44=; b=FYPJl1yeXy6/ssmw7YTSEecDm+
-	8miUIgYGdjz/FiaOWbN/u4zwXu2zYt/g1ipyvH9N10LEUu14PcLG+1Ema97tXdxmjwErHrzYWjfMK
-	yv25AqjD5/cioi8CHFAtTYoKZR9VS/lqWdGaKXHVwNsXSWgYqXl76Z96Insn/c8QEs28lkvKVG90y
-	6Y7pG2evZEKL20FjlGxCunQN1vpYq7Gsu4koboUHe3RwkPErcDsMod/Nba/qwWgEzFBWBARafAVgt
-	8wqOMvIPzkQccV1yu4+0OPgP21BgnekUL3aV2DWnO8IAWnTQgg8UC5vmvRLcAzbe++DrZQngfbFxd
-	MPVgtLiw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sMO1I-0000000C48O-3pdW;
-	Wed, 26 Jun 2024 08:28:49 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 8E69330057C; Wed, 26 Jun 2024 10:28:48 +0200 (CEST)
-Date: Wed, 26 Jun 2024 10:28:48 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Tejun Heo <tj@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>, mingo@redhat.com,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
-	ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-	martin.lau@kernel.org, joshdon@google.com, brho@google.com,
-	pjt@google.com, derkling@google.com, haoluo@google.com,
-	dvernet@meta.com, dschatzberg@meta.com, dskarlat@cs.cmu.edu,
-	riel@surriel.com, changwoo@igalia.com, himadrics@inria.fr,
-	memxor@gmail.com, andrea.righi@canonical.com,
-	joel@joelfernandes.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH sched_ext/for-6.11] sched, sched_ext: Replace
- scx_next_task_picked() with sched_class->switch_class()
-Message-ID: <20240626082848.GZ31592@noisy.programming.kicks-ass.net>
-References: <CAHk-=wiKgKpNA6Dv7zoLHATweM-nEYWeXeFdS03wUQ8-V4wFxg@mail.gmail.com>
- <878qz0pcir.ffs@tglx>
- <CAHk-=wg88k=EsHyGrX9dKt10KxSygzcEGdKRYRTx9xtA_y=rqQ@mail.gmail.com>
- <CAHk-=wgjbNLRtOvcmeEUtBQyJtYYAtvRTROBy9GHeF1Quszfgg@mail.gmail.com>
- <ZnRptXC-ONl-PAyX@slm.duckdns.org>
- <ZnSp5mVp3uhYganb@slm.duckdns.org>
- <20240624085927.GE31592@noisy.programming.kicks-ass.net>
- <ZnnelpsfuVPK7rE2@slm.duckdns.org>
- <20240625074935.GR31592@noisy.programming.kicks-ass.net>
- <ZntS_eM2reaszYcj@slm.duckdns.org>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="XLd6TTiN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=H8E+S
+	y95f1wvg9QrRX1Lu+FTsFS+/TcipMRWQA1B6NE=; b=XLd6TTiNyw3hUu6nc0IGn
+	TVNP6HWQzGY6Y05aAJHV8R8SbbM+zMr5AZRufyruURRdWymu/2Zvx4y8VlMgSR6A
+	2m/eyHNMULIoZzMiXpt7Un/nyBoVAPVp7qP8xFKXltky19/VMsjnv4IBZH/WIEr9
+	MDdIlS13utgMeqTGBIbFzw=
+Received: from localhost.localdomain (unknown [139.226.176.191])
+	by gzga-smtp-mta-g3-2 (Coremail) with SMTP id _____wD3__Ve0XtmGuclAg--.42928S2;
+	Wed, 26 Jun 2024 16:29:18 +0800 (CST)
+From: Ping Gan <jacky_gam_2001@163.com>
+To: hch@lst.de,
+	sagi@grimberg.me,
+	kch@nvidia.com,
+	linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: ping.gan@dell.com,
+	Ping Gan <jacky_gam_2001@163.com>
+Subject: [PATCH 0/2] nvmet: support polling task for RDMA and TCP
+Date: Wed, 26 Jun 2024 16:28:21 +0800
+Message-Id: <20240626082823.48326-1-jacky_gam_2001@163.com>
+X-Mailer: git-send-email 2.26.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZntS_eM2reaszYcj@slm.duckdns.org>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3__Ve0XtmGuclAg--.42928S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrZF4DCrW8tr45XF1kWr1DGFg_yoWfWrc_ZF
+	WfJryDGa1xWa4DtFy7KryrZrZ5t3y5tryUuF4vqF4Utr98Xr1UAr1UAryrCF1xAr18JF15
+	JrnxAF4fCwsxCjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRAwI63UUUUU==
+X-CM-SenderInfo: 5mdfy55bjdzsisqqiqqrwthudrp/1tbiEAEKKWXAln0mkAABsL
 
-On Tue, Jun 25, 2024 at 01:30:05PM -1000, Tejun Heo wrote:
-> Hello,
-> 
-> On Tue, Jun 25, 2024 at 09:49:35AM +0200, Peter Zijlstra wrote:
-> > > Imagine a case where a sched_ext task was running but then a RT task wakes
-> > > up on the CPU. We'd enter the scheduling path, RT's pick_next_task() would
-> > > return the new RT task to run. We now need to tell the BPF scheduler that we
-> > > lost the CPU to the RT task but haven't called its pick_next_task() yet.
-> > 
-> > Bah, I got it backwards indeed. But in this case, don't you also need
-> > something in pick_task() -- the whole core scheduling thing does much
-> > the same.
-> 
-> Yes, indeed we do, but because we're dispatching from the balance path, the
-> cpu_acquire method is being called from there. Because who was running on
-> the CPU before us is less interesting, @prev is not passed into
-> cpu_acquire() but if that becomes necessary, it's already available there
-> too.
+When running nvmf on SMP platform, current nvme target's RDMA and
+TCP use kworker to handle IO. But if there is other high workload 
+in the system(eg: on kubernetes), the competition between the 
+kworker and other workload is very radical. And since the kworker
+is scheduled by OS randomly, it's difficult to control OS resource 
+and also tune the performance. If target support to use delicated 
+polling task to handle IO, it's useful to control OS resource and 
+gain good performance. So it makes sense to add polling task in
+rdma-rdma and rdma-tcp modules.
 
-I suppose I need to read more, because I'm not knowing what cpu_acquire
-is :/ I do know I don't much like the asymmetry here, but maybe it makes
-sense, dunno.
+Ping Gan (2):
+  nvmet-rdma: add polling cq task for nvmet-rdma
+  nvmet-tcp: add polling task for nvmet-tcp
+
+ drivers/nvme/target/rdma.c | 331 +++++++++++++++++++++++++++++++++-
+ drivers/nvme/target/tcp.c  | 356 +++++++++++++++++++++++++++++++++++--
+ 2 files changed, 665 insertions(+), 22 deletions(-)
+
+-- 
+2.26.2
+
