@@ -1,117 +1,143 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F9A181D1F
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 14:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8F41836F7
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 14:03:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719410616; cv=none; b=EkphcFTMYMcUYv5H4d7GplkrTtG5/5gb9GQCwFH7gX6rTwlLHKuKRENiD4DieKsaAIq72fyrzZS94BdNdalrE3qUF4FFGEDxrGpqVKbQSF3cUys2pJCw3m1/rXpuniCta2Uxw8XIYe/Co61EJT+tr+OjejXoWxztQuB7g5BtMRE=
+	t=1719410629; cv=none; b=rJ+FGcMKVPLtyNzPeFqv384Tsh7IUrFIEXk51BJ8u2ieAi8Li/QRq5/cAfFo2OTjCOkOg0sWEGX37S74XKobFhhb1S0+AYS/hZ22hob6zwTZpOZ+7QdMQXoUuOm9pgS1DK7QZhFnXDJigKXBjCObw84lY7RbFaSzis9WPWRHCUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719410616; c=relaxed/simple;
-	bh=zO0ET6/ST7Go9gIMb2eyBEc5Sg5in16GY49d0Ky8J/Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Qid18o2WnBfyrY8OC8oEtCZQFa/9R8jCSlQydSt/Q5LJF3cS0nI9af9tijVySHbw9i7RF9lS1zlZdT/ZxcDjDhorIipt1GGJp5Fa/L0WzcA+rwGNbjAzc1niCcELJ2yj/9lcLUtkBRt1OhRY/V06U6nTsE8V7O1uXIWyrCQQkvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K21gvrpq; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719410629; c=relaxed/simple;
+	bh=xs4LLYsfrRzMfpfjWbXCA0eI8gA2aN/e8u81yI8Lugs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mgRYYeFC13ALNWQArbIb763aAYt8U7sbR1LjlB8ZwZYfhAy+aCBTCncaQPla0ANa3zfH7XNRF+QSEQlrFHNFgKgA4SszbvRaTZ6WEBYMpBcSc8uStD0iq1teNdju7Fkmw14NovyeHGNeDAfKIeKdrLWX4raksZd/I6FzC1ZhCm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kWKi6AnJ; arc=none smtp.client-ip=209.85.160.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K21gvrpq"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57d0f929f79so312705a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 07:03:34 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kWKi6AnJ"
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-24c9f892aeaso3500286fac.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 07:03:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719410613; x=1720015413; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=a8J/0rbvyVLHrEXRHvUI44ewOQgj0kI0R2lTjROyuIg=;
-        b=K21gvrpqud1vpGq9f2PXLaebGO1yLaUEx9Y1y4F8IFbKeuhPe7hY0esdlyc6fV66Eq
-         ZfV6MxjLuBQ7LIY1rQLOmhzzddMRlCa+VvXpyX9YdH3EV3ei2fsmCwZZsK5ydbD3cvgp
-         KKOO1UCVfQAqBqJTQIK+4HROR5XraG9pDFhU3cxaH6nSUYt58zdPV2w5NR+c8Ij8qTOn
-         cTbB0+Z4QauMt7yQUa/YmaSzJ4HCtuhyn9EOrWNc0/fyzC3CY5dT+sIw0XvPLamu5zT/
-         XlY5F+hPIuRF1MMyoiP2Lfz2rn+Olnz1d3uV1n9aFpnLdoETO0bSGHr94dp8xMZrG0g8
-         IoJw==
+        d=chromium.org; s=google; t=1719410627; x=1720015427; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lJUHJEXAc+QcqYtg3JPqiGV21t0n+2d3pWybHwk5YPo=;
+        b=kWKi6AnJO/LltRyE7J7bOJ1PXfEyCr3HIOM4rmwLES9EyO0OAcgb6sI9nGmcpLof+d
+         IV6ClEcRl7/EZePuSJ7sUCu5LyYEiyO/DiGMqBo3vTjcsHXdiz7PL1IesYS2IHSc+n6m
+         7MbHrTCAZLPPclrXQLWozIRJpg651KKy6uUx4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719410613; x=1720015413;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=a8J/0rbvyVLHrEXRHvUI44ewOQgj0kI0R2lTjROyuIg=;
-        b=Lbmb2/HYefwxl3uznwV4LJ5eTmp85zrnJHtXvgt/1M/S+EGrhe38xFsCs8I4VGZ/9V
-         Ql3cNPBBCf59C0sCdMwvdj89T1ZHGWa2dzazLEIocB9W47YL1J1e9bZgbEC8FI5f0lgu
-         dSNh/adkRK/1lsrEH6gOWXniu/rQ+IXMkIOuCQReB+tQTZEk8+WEXWdFtAG2Iw8jjvl3
-         1TkfTo7P9DJNnfWNiEZj+wZ19gcM86PcpugsCJnHvjCoVVxao84M/M4H0wuLYSM2FUho
-         e1NDeZsOMFfSPvA0MEJm4rYH1MP74mGfLqX6QpRqV4jgGIFwFTGc1hDAQZtuBTRJIv7K
-         8INw==
-X-Gm-Message-State: AOJu0Ywyl2zrgpzeXMJVwtoBv24WxZfRKUNzmIVngRgxdom3YfWIxtst
-	spMNZStALpM9D2IqmFYIxy+54AKBFBVAB8TQpiKnOj6I5aSTFSuk
-X-Google-Smtp-Source: AGHT+IGwnJigcVlekJc4wuhQ5CyFPJkiRM/TvW9TOjWhYvxkbyUS/ofbTHF/oNZGwslIbIrTilh92g==
-X-Received: by 2002:a17:906:2690:b0:a6f:586b:6c1 with SMTP id a640c23a62f3a-a7245c2db6cmr683232866b.56.1719410612919;
-        Wed, 26 Jun 2024 07:03:32 -0700 (PDT)
-Received: from pc638.lan (host-185-121-47-193.sydskane.nu. [185.121.47.193])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a725bc1b3e1sm270143766b.8.2024.06.26.07.03.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 07:03:32 -0700 (PDT)
-From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-To: linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Baoquan He <bhe@redhat.com>,
-	Hailong Liu <hailong.liu@oppo.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Nick Bowler <nbowler@draconx.ca>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
-Subject: [PATCH v2] mm: vmalloc: Check if a hash-index is in cpu_possible_mask
-Date: Wed, 26 Jun 2024 16:03:30 +0200
-Message-Id: <20240626140330.89836-1-urezki@gmail.com>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20230601; t=1719410627; x=1720015427;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lJUHJEXAc+QcqYtg3JPqiGV21t0n+2d3pWybHwk5YPo=;
+        b=uYCmtFUTToiTqw7kn5RJCikzzAEdx0tb3mbEJsFYY96jwWqPpkHZ8ecXSxTW7PAvp4
+         AWrkLOzgRYTX7Z9y+j+bBFX0NiB/UXCdBa/s0VQJMyIfxfSSZv67i0SgSrE+BlvsqaB/
+         rbfbpTn8t3fYrT1N0XTBEnh8D39xzV0+fdaYzib2qFDpzG8PU6SP2CFpEevyRIFrOuvh
+         MnHND9rPg9DpwOaTlRVHw3YKAGV17w+p+JzJeKS949GEXDOF8hit3tMGibuckpB/80lZ
+         e5QwBmKr5XdfjGuoE+UT00shuuedbJy2oQlAli7+PCE8f164fRra6iv5s/uc8M0II3bs
+         M2Mg==
+X-Gm-Message-State: AOJu0YxkM4b9fa4o2AbX4awfVs2VNnI/mUimGld7qx2HmZ+mTk8aDV1a
+	IwhushHIKah/FvPSHdSzpHdVavD4k/akEoTTB4WBOg9P9X1m0WpuSRlI4QSi0fr/VhRwM9vI1zF
+	t58IU
+X-Google-Smtp-Source: AGHT+IHTbCE+YKc9MzWwhqODr0evzKCzAR1tyWfa8iYDy/LP8S5A1aEI6+SD2nSere7H/2ofyynwWA==
+X-Received: by 2002:a05:6870:90c1:b0:258:42c1:2523 with SMTP id 586e51a60fabf-25d06c30dcamr7612967fac.18.1719410627095;
+        Wed, 26 Jun 2024 07:03:47 -0700 (PDT)
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com. [209.85.160.42])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-25cd49d9a2bsm2998952fac.33.2024.06.26.07.03.46
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Jun 2024 07:03:46 -0700 (PDT)
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-25957dfd971so3428841fac.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 07:03:46 -0700 (PDT)
+X-Received: by 2002:a05:6871:58c:b0:254:de02:4c65 with SMTP id
+ 586e51a60fabf-25d06bc819dmr11469477fac.6.1719410625090; Wed, 26 Jun 2024
+ 07:03:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240610132513.1.I6434acf426183b4077ba3e8af4eccaa5921c6c2f@changeid>
+In-Reply-To: <20240610132513.1.I6434acf426183b4077ba3e8af4eccaa5921c6c2f@changeid>
+From: Jett Rink <jettrink@chromium.org>
+Date: Wed, 26 Jun 2024 08:03:34 -0600
+X-Gmail-Original-Message-ID: <CAK+PMK4Vbka3XhbXJHmWJRHD4WVe_k9yvRMw71r+n28Jp5cyvA@mail.gmail.com>
+Message-ID: <CAK+PMK4Vbka3XhbXJHmWJRHD4WVe_k9yvRMw71r+n28Jp5cyvA@mail.gmail.com>
+Subject: Re: [PATCH] tpm: Add new device/vendor ID 0x50666666
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, Peter Huewe <peterhuewe@gmx.de>, 
+	linux-integrity@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The problem is that there are systems where cpu_possible_mask
-has gaps between set CPUs, for example SPARC. In this scenario
-addr_to_vb_xa() hash function can return an index which accesses
-to not-possible and not setup CPU area using per_cpu() macro.
+I wanted to check the status of this review. Is there something I did
+incorrectly?
 
-A per-cpu vmap_block_queue is also used as hash table, incorrectly
-assuming the cpu_possible_mask has no gaps. Fix it by adjusting an
-index to a next possible CPU.
+-Jett
 
-v1 -> v2:
- - update a commit message.
-
-Fixes: 062eacf57ad9 ("mm: vmalloc: remove a global vmap_blocks xarray")
-Reported-by: Nick Bowler <nbowler@draconx.ca>
-Closes: https://lore.kernel.org/linux-kernel/ZntjIE6msJbF8zTa@MiWiFi-R3L-srv/T/
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
----
- mm/vmalloc.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index b4c42da9f3901..6b783baf12a14 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -2544,7 +2544,15 @@ static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
- static struct xarray *
- addr_to_vb_xa(unsigned long addr)
- {
--	int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
-+	int index = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
-+
-+	/*
-+	 * Please note, nr_cpu_ids points on a highest set
-+	 * possible bit, i.e. we never invoke cpumask_next()
-+	 * if an index points on it which is nr_cpu_ids - 1.
-+	 */
-+	if (!cpu_possible(index))
-+		index = cpumask_next(index, cpu_possible_mask);
- 
- 	return &per_cpu(vmap_block_queue, index).vmap_blocks;
- }
--- 
-2.39.2
-
+On Mon, Jun 10, 2024 at 1:25=E2=80=AFPM Jett Rink <jettrink@chromium.org> w=
+rote:
+>
+> Accept another DID:VID for the next generation Google TPM. This TPM
+> has the same Ti50 firmware and fulfills the same interface.
+>
+> Signed-off-by: Jett Rink <jettrink@chromium.org>
+> ---
+>
+>  drivers/char/tpm/tpm_tis_i2c_cr50.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/char/tpm/tpm_tis_i2c_cr50.c b/drivers/char/tpm/tpm_t=
+is_i2c_cr50.c
+> index 86c9a1a43adb..d9b6abdcda5f 100644
+> --- a/drivers/char/tpm/tpm_tis_i2c_cr50.c
+> +++ b/drivers/char/tpm/tpm_tis_i2c_cr50.c
+> @@ -32,7 +32,8 @@
+>  #define TPM_CR50_TIMEOUT_SHORT_MS      2               /* Short timeout =
+during transactions */
+>  #define TPM_CR50_TIMEOUT_NOIRQ_MS      20              /* Timeout for TP=
+M ready without IRQ */
+>  #define TPM_CR50_I2C_DID_VID           0x00281ae0L     /* Device and ven=
+dor ID reg value */
+> -#define TPM_TI50_I2C_DID_VID           0x504a6666L     /* Device and ven=
+dor ID reg value */
+> +#define TPM_TI50_DT_I2C_DID_VID                0x504a6666L     /* Device=
+ and vendor ID reg value */
+> +#define TPM_TI50_OT_I2C_DID_VID                0x50666666L     /* Device=
+ and vendor ID reg value */
+>  #define TPM_CR50_I2C_MAX_RETRIES       3               /* Max retries du=
+e to I2C errors */
+>  #define TPM_CR50_I2C_RETRY_DELAY_LO    55              /* Min usecs betw=
+een retries on I2C */
+>  #define TPM_CR50_I2C_RETRY_DELAY_HI    65              /* Max usecs betw=
+een retries on I2C */
+> @@ -781,13 +782,17 @@ static int tpm_cr50_i2c_probe(struct i2c_client *cl=
+ient)
+>         }
+>
+>         vendor =3D le32_to_cpup((__le32 *)buf);
+> -       if (vendor !=3D TPM_CR50_I2C_DID_VID && vendor !=3D TPM_TI50_I2C_=
+DID_VID) {
+> +       if (vendor !=3D TPM_CR50_I2C_DID_VID &&
+> +           vendor !=3D TPM_TI50_DT_I2C_DID_VID &&
+> +           vendor !=3D TPM_TI50_OT_I2C_DID_VID) {
+>                 dev_err(dev, "Vendor ID did not match! ID was %08x\n", ve=
+ndor);
+>                 return -ENODEV;
+>         }
+>
+>         dev_info(dev, "%s TPM 2.0 (i2c 0x%02x irq %d id 0x%x)\n",
+> -                vendor =3D=3D TPM_TI50_I2C_DID_VID ? "ti50" : "cr50",
+> +                vendor =3D=3D TPM_CR50_I2C_DID_VID    ? "cr50" :
+> +                vendor =3D=3D TPM_TI50_DT_I2C_DID_VID ? "ti50 DT" :
+> +                                                    "ti50 OT",
+>                  client->addr, client->irq, vendor >> 16);
+>         return tpm_chip_register(chip);
+>  }
+> --
+> 2.45.2.505.gda0bf45e8d-goog
+>
