@@ -1,149 +1,153 @@
-Received: from AUS01-SY4-obe.outbound.protection.outlook.com (mail-sy4aus01olkn2153.outbound.protection.outlook.com [40.92.62.153])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279BC17E45E
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 11:02:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.62.153
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719399753; cv=fail; b=VZBB6uzoON/dDkUioBn17SApFuTWGaNVciK4qxa1pJiVPLdSke/kyGw+PukoCIyqDfQQtSrJUg/9ENbKtxrw+Nui70lU+G9S69V2c6Iv04GaZqGqVCYUm5j6qDLtVE5bDRXpbVoqFlLF+IbRqE7Y8eYGFltSbua65yjgYJ11exw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719399753; c=relaxed/simple;
-	bh=N0FjUtSYsqMYnXnNsmZcWSM0H2CKVCCLtvCAUxIln4M=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=CQJhszjfm66rY6ufeiBGYDBiE3CqrBkC0vVTOIzg678EzoTaeUNwZ5lt6RNFNkDJzDCccmY1SwbkMCGg6bDQkmiFpaX/VUoaIukmvXiI1x3jjFxfPSeNVT5LnI6Mwk1yi4a17x4bouGN0VMn1wfgWuAtjWdn3r0sQiGLhjVGOig=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=FvCplf7A; arc=fail smtp.client-ip=40.92.62.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C7717A924
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 11:03:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719399789; cv=none; b=n0wa5sHsNjOQBJkS7cphpDr0QQAUz6yhw8ZYKP/D9Dm8F0WciZktfNVUH0+2huAh5sG32xS9lB8ZiD2O01PhLoeGZaed/PvNw4TaQL370ndieCaCN50imbOBNAtLhu9lSLWdJkp5tfVTgofYVCrSfgFx1IMdR3lAopfzTSi+rxw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719399789; c=relaxed/simple;
+	bh=gERsFsx3DJe83rNhhgOflhiyJKqXYtpDKlgawOY9RbU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j8XUJ0Ub/m7/aQSkRaWYBINKAZY43fdK4G/dNtRTr59Jtb92js6HSKdMFvOuf93gZisskdygFPOEMvqhAXEUgZwmy9InepVcJJZgyyXNySaqpulMsx4/bwIVjeUJu5ULfgVv5DT2BC0h5V8KVfBZp7KTOK92uQ8m9NHxOfYepvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=sQHageCT; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="FvCplf7A"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iJ4c9c2SRMek6D5f5QNow/qdYDPvyzeBuf7Ii2rs160cJ/XL0ZCFUUd4//iScQ0h5XHrllfUBPFZcYSzdQjjJ3CfnPJ/ehiyUHpZLZKkq3SNduC3udWD0NMpnL1PIf9KxM9ITU2iVGRt3UPmAzadw7CBk0eYAVJmPioyU5CQA48NK1X8bT0bnBoqgvD9c/AhL7h2Jzkj7WOzOfaoqkRkkW2001PrMYVsJozzFrgM42wNzC4WXT+kyx4wfSKyqzossEQfIj6sedMhuTUdkgNHcvqQ/PZUT/KSm2Wf1XemCTG+6h/V2s5hUhLUmGrUujFrYOwhTHQi/RZDMBvghFIIEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eubp37KkZ/RAdu+V0tZbFGPTFeI5eY8DvCCo8q93/vo=;
- b=S8N5Fx82e/WYyB3WCOLt9t08rdgD2kN1020yRGW0ryrwbJcs313w/OByMRfEVpYholWelhVpk8u2kr7iMqdFOBgz/RsGKTJu1rXOiqHoIO/8XKKUa8zKEyglq8zJTlS1NW+NehIEeg5/5UtjNPfHe1DWGxdWkMuaECx9TvLxyq4TPrZghzcx0UVX0ogCv1ad4HG1nPMgx7tJp/Q3RJ7TEzFu/JSp6OJCzszZjT0+fXy4BvvxQ/wLJeSE7G4ObEBXDszg4IXlPhUkJEBjKzKUreDgx+6wBJFltWUsRp9jBZ85AnI9zX6CMJKcetZiU+6g8I6uecJTpRTtzZA8yi2/Ow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eubp37KkZ/RAdu+V0tZbFGPTFeI5eY8DvCCo8q93/vo=;
- b=FvCplf7A66IXPQAcqe6if42hR04EBGKT1xzAiCD2U0vozLdgAVAsm1fB1gDriLPOGmLRIe9GnGlX4kJ3DJyPbwNLkNFGCVsp7bDeYJfxq/ewsXoBvh7rZEAdP02b2LkS4hBVxAoq+01J0f9d+rLSRJ8u2LN56ZeYVZhAInS0f2uWSGTC4IyTydg0fNDzVpEs7uoZ4hMi6tUPI21KPU2gRxRr5T1eptMlhAsctKmwAQcLYLnupLPn3q/N/kjRQf0VRozYavNpN+cDnHz5Pn4axnDPnh0fWn6+OzUxXNPeIuwDNvszIAJeISRyLWafdVPicCNAGl3rBKr+YO4jaIoTrw==
-Received: from ME0P282MB4890.AUSP282.PROD.OUTLOOK.COM (2603:10c6:220:228::21)
- by MEYP282MB3532.AUSP282.PROD.OUTLOOK.COM (2603:10c6:220:17c::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.32; Wed, 26 Jun
- 2024 11:02:27 +0000
-Received: from ME0P282MB4890.AUSP282.PROD.OUTLOOK.COM
- ([fe80::d384:a02f:2370:f33e]) by ME0P282MB4890.AUSP282.PROD.OUTLOOK.COM
- ([fe80::d384:a02f:2370:f33e%3]) with mapi id 15.20.7698.025; Wed, 26 Jun 2024
- 11:02:27 +0000
-From: Roland Xu <mu001999@outlook.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	will@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Roland Xu <mu001999@outlook.com>
-Subject: [PATCH] Avoid schedule while atomic if meeting the early deadlock.
-Date: Wed, 26 Jun 2024 19:01:53 +0800
-Message-ID:
- <ME0P282MB48902DA6F350513DBD1BE902CCD62@ME0P282MB4890.AUSP282.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [wYlN+SQIKq1oBIZtLqREK5bvMV11gNRYGMkdg6O7J6I=]
-X-ClientProxiedBy: SI2P153CA0001.APCP153.PROD.OUTLOOK.COM (2603:1096:4:140::7)
- To ME0P282MB4890.AUSP282.PROD.OUTLOOK.COM (2603:10c6:220:228::21)
-X-Microsoft-Original-Message-ID:
- <20240626110153.1201153-1-mu001999@outlook.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="sQHageCT"
+Received: from [192.168.88.20] (91-158-144-210.elisa-laajakaista.fi [91.158.144.210])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6518B73E;
+	Wed, 26 Jun 2024 13:02:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1719399762;
+	bh=gERsFsx3DJe83rNhhgOflhiyJKqXYtpDKlgawOY9RbU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sQHageCTN2xmcHbf6GAEwH76sr8ygHpPPR7qCMditF8fabynud86CT8pAb3dbgCsS
+	 n9PUAw5zGxnZKojpQuI3HZCcFXUZAfpkWBNJhSg2fPs5tUkZclpyB/uGp5qy/+bhau
+	 WGP+nFaKC8EkkP4N/dyJYnfxpE1T9Vg0L8Q6m54Q=
+Message-ID: <11bf22b8-4a5a-4c9b-8c78-0454165ae711@ideasonboard.com>
+Date: Wed, 26 Jun 2024 14:03:01 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: ME0P282MB4890:EE_|MEYP282MB3532:EE_
-X-MS-Office365-Filtering-Correlation-Id: 02c3ed81-d65f-4747-7a0f-08dc95cf7721
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199026|3412199023|440099026|3430499032|1710799026;
-X-Microsoft-Antispam-Message-Info:
-	4WZWuYXlicbkNHm2X9I9HL2auiXeFo7fgtnWSCO0m9e8j+V+dTVn1sE7iZSlw6y3aSK7W5oqTZR3wDcJ89dpDKDRL+tdgekUmp69lK3AZrXu15L+laDoEEYvWPwo2Rcp+qy5jEFkM3O7pJRMSepzFTuLEoy4H6jP0sjqXo+Z0fcqVI4bm+iGLlxVbbuDfvIjJltN8EduArjZpK0XBYJNbh5i9T8Jm5wNCP1cv++z78EcyKv6dNriL3ckIOXNxgxSSbfLYagfrIFMmDUiwqVRsvT/USWhl7aDAUc9ivGYZwzB10KwoQcIRHY+ZWo3dmOmhQTIqiz4dVaR9EuhaXzmMIydrPg3CeMU7uvU1A8PpTvlLC0B5hQTAowo0FytfTe+W216Z213YOc48OuqevVEkT/JUxKcNQwg0L1Cgx+Uy554fsHttzw5rQM0Xhld9ubrovcv/+Njyk3xl+b/nDImt8BRN8rmh2JwmSftip6JqhffRoj5dDfQUJ+v7Rv2QX1DxBxFOcAIfoeaw2CaylWkPi9+AgPgFpIa6nVrBImN/+MVeJgE+zTtSF+19ehaUdtAAdrf6wx5QBHAPrw3sSJLMef1FWysqmjQn3VRMYTxRjw=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?XhYAAQDJwx/x1YWWEGuPouNNueSG3P+bHK/ncsP/5MBcCRYfKpygF0uHuby/?=
- =?us-ascii?Q?Ey2d1Wl0XCoyFuSjbInQhMvSuq5Y9ZTnxEJt4N+kmZ+OqYZGRPSf6sEA2Vvt?=
- =?us-ascii?Q?AY0HpMC/VIyhf8HNlZXeizKpQGVMEh1iLuvrU653AmBNW12TLv/IIWEuUSKj?=
- =?us-ascii?Q?IpPCYbrkm5pjaz666G7xSSSK2GizFDhYZGDDvatRi8N/kEKuhyM5xBsNXuMA?=
- =?us-ascii?Q?IGxIl9kpsQJtjLD6RRuOYpz71sx20fJ+QfHrnHzjxqi6hQEta/se3YrR5wFn?=
- =?us-ascii?Q?shYguZGnDZb3JHYgIlcYOgu9QJCy/w3T2SUUgwosYH6LpNnLpTmz2125LaHK?=
- =?us-ascii?Q?9UE2mbP0nNNgw1xPfE68ezkY6sYrsHdDJ0ZRxDHD93Tiyfr7owAjrjOUVZYM?=
- =?us-ascii?Q?gVoYBs+hNq1+eYKkzu+EEQHXTKYbYNGWxHwByFbyAGaD2NQbN36T3Y20InaF?=
- =?us-ascii?Q?uAXjc218Px004n0LY7IYnYpcvFNp9cEeW5A1wnWWLeZHNmvD/CxnhmbvG5Y3?=
- =?us-ascii?Q?GtayM/hJicMKaJLIP7a+adUPR+ITe6OEEiNjPjD2T2RJZOaWgorZxT87rf2Y?=
- =?us-ascii?Q?eopmp3vQ8tqA6QaRnLVHVLBIkSraIEXp6UkgVtYDQkGaihgj7ApG1zQHxICr?=
- =?us-ascii?Q?sdihg7yqsrT9arBC3AWN8NacdGPzUQ1+beWAcAtjzqSgfB3qnTq7R0ox10FT?=
- =?us-ascii?Q?VlPwIM3n0VaQiGLPNkAiDnYqkOA31z4kpaHNVNpsxY5j5tR4/vkL10a7jWE6?=
- =?us-ascii?Q?yf2Fo0ojVG9/sXHXkiQTuiezf49ZhUWC8lYnK7gUQOZT3r8h58kz9k7RTMbD?=
- =?us-ascii?Q?IbbabYYEErJAL6Kxvnkyqtd7zFzsCPfKd0cD/Ckfujw9xb/pGw96rpCvDeQi?=
- =?us-ascii?Q?0o48aJEsY7aYXcHzFT8zjvC5S1XKMboTivCZShkqDU0nLaFLBCcDRviaPMOa?=
- =?us-ascii?Q?T11V6RKDmGLTqGZ9DeqCkbigfrw9ip9HF3GDGMmQ26peu1DbRco4410MuYXV?=
- =?us-ascii?Q?/HiXHaQfJvj6mAXauwXlarGuLeax9emXdxLgLtKcdQ200YTzb450czxn+Hpg?=
- =?us-ascii?Q?nFwcD4pbXyRwNiOAjcSxVlpIEds6OCY4HayBpXRBgcRvFIz/VckSiAVOiLEW?=
- =?us-ascii?Q?ajza53fBelvfsKqE+hDmIF4K+yM9tZZMwshePPhAlrpbaQE+m20bRm1JTebl?=
- =?us-ascii?Q?iqPZ06azHCDXDDiUXgBvKT1FFR/dE10wqm41uxS7UWVponKm93vBfwI/2QE?=
- =?us-ascii?Q?=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 02c3ed81-d65f-4747-7a0f-08dc95cf7721
-X-MS-Exchange-CrossTenant-AuthSource: ME0P282MB4890.AUSP282.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2024 11:02:27.2373
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MEYP282MB3532
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 07/11] drm/bridge: cdns-dsi: Reset the DCS write FIFO
+To: Aradhya Bhatia <a-bhatia1@ti.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Jyri Sarha <jyri.sarha@iki.fi>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>
+Cc: DRI Development List <dri-devel@lists.freedesktop.org>,
+ Linux Kernel List <linux-kernel@vger.kernel.org>,
+ Dominik Haller <d.haller@phytec.de>, Sam Ravnborg <sam@ravnborg.org>,
+ Thierry Reding <treding@nvidia.com>,
+ Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+ Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Praneeth Bajjuri <praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>,
+ Devarsh Thakkar <devarsht@ti.com>, Jayesh Choudhary <j-choudhary@ti.com>,
+ Jai Luthra <j-luthra@ti.com>
+References: <20240622110929.3115714-1-a-bhatia1@ti.com>
+ <20240622110929.3115714-8-a-bhatia1@ti.com>
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Content-Language: en-US
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <20240622110929.3115714-8-a-bhatia1@ti.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The wait_lock is held in rt_mutex_handle_deadlock,
-so unlock_irq it if rtmutex deadlock is detected.
-Otherwise, this would trigger scheduling while atomic.
+On 22/06/2024 14:09, Aradhya Bhatia wrote:
+> If any normal DCS write command has already been transmitted prior to
+> transmitting any Zero-Parameter DCS command, then it is necessary to
+> clear the TX FIFO by resetting it. Otherwise, the FIFO points to another
+> location, and the DCS command transmits unnecessary data causing the
+> panel to not work[0].
+> 
+> Allow the DCS Write FIFO in the cdns-dsi controller to reset as a rule,
+> before any DCS packet is transmitted to the DSI peripheral.
+> 
+> [0]: Section 12.6.5.7.5.2: "Command Mode Settings" in TDA4VM Technical
+>       Reference Manual: https://www.ti.com/lit/zip/spruil1
 
-Signed-off-by: Roland Xu <mu001999@outlook.com>
----
- kernel/locking/rtmutex.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Hmm so if I read the doc right, it says: if sending zero-parameter dcs 
+command, clear the FIFO and write zero to direct_cmd_wrdat.
 
-diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
-index 88d08eeb8bc0..9188bfb63cb6 100644
---- a/kernel/locking/rtmutex.c
-+++ b/kernel/locking/rtmutex.c
-@@ -1644,6 +1644,7 @@ static int __sched rt_mutex_slowlock_block(struct rt_mutex_base *lock,
- }
- 
- static void __sched rt_mutex_handle_deadlock(int res, int detect_deadlock,
-+					     struct rt_mutex_base *lock,
- 					     struct rt_mutex_waiter *w)
- {
- 	/*
-@@ -1660,6 +1661,7 @@ static void __sched rt_mutex_handle_deadlock(int res, int detect_deadlock,
- 	 * Yell loudly and stop the task right here.
- 	 */
- 	WARN(1, "rtmutex deadlock detected\n");
-+	raw_spin_unlock_irq(&lock->wait_lock);
- 	while (1) {
- 		set_current_state(TASK_INTERRUPTIBLE);
- 		rt_mutex_schedule();
-@@ -1713,7 +1715,7 @@ static int __sched __rt_mutex_slowlock(struct rt_mutex_base *lock,
- 	} else {
- 		__set_current_state(TASK_RUNNING);
- 		remove_waiter(lock, waiter);
--		rt_mutex_handle_deadlock(ret, chwalk, waiter);
-+		rt_mutex_handle_deadlock(ret, chwalk, lock, waiter);
- 	}
- 
- 	/*
--- 
-2.34.1
+Your patch seems to always clear the FIFO, not only for zero-parameter 
+commands. Is that a problem (I don't think so, but...)?
+
+Also, is the direct_cmd_wrdat written at all when sending zero-parameter 
+dcs command?
+
+  Tomi
+
+> 
+> Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
+> ---
+>   drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+> index 126e4bccd868..cad0c1478ef0 100644
+> --- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+> +++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+> @@ -1018,6 +1018,9 @@ static ssize_t cdns_dsi_transfer(struct mipi_dsi_host *host,
+>   
+>   	cdns_dsi_init_link(dsi);
+>   
+> +	/* Reset the DCS Write FIFO */
+> +	writel(0x00, dsi->regs + DIRECT_CMD_FIFO_RST);
+> +
+>   	ret = mipi_dsi_create_packet(&packet, msg);
+>   	if (ret)
+>   		goto out;
 
