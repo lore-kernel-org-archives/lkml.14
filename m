@@ -1,109 +1,150 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38FC17F4F2;
-	Wed, 26 Jun 2024 10:55:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB221176ABF;
+	Wed, 26 Jun 2024 10:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719399356; cv=none; b=qqkXaAsfTmY4UA0y7RatVx1U+knrmZbXNmEN6bAqkGDBexzlXGkL+HC9VxVKz2IBwXzYP/NwrKGZdcvDaYFRw8UBz2Bi+TTAH76mz9LTFX1N1L89HNPb97YHeAZca/64aM+splWGw1a86KP1kG5fw2Sk+2ZF/xFePltNZ1fggOE=
+	t=1719399453; cv=none; b=dhJyIB3/YcWNVPpP832itFsGhlOI9FpZmqcIim83sgk0nCaEMH0qTardve9kvPnQRn7OxLciaAm69orwWj+J2iQTzH732m3TYXeJw5EH0E628d7VIgcNEYTNwRlcpN1dNaz0wE9CVaqXv/8wzvCVjmD3NdEgTC3gELrtLirgYfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719399356; c=relaxed/simple;
-	bh=NFazCmtvteJe3dk4EPQLE2s6aXERomtkUSNX8Z6StSU=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=rz6/hGhE9+n80Wvjt+igHEpxTwaFOIr6OQfV6zY/v4d2MfJ/Cy5TwWt54T3rOfOIJrFdx+E/AljljEPtZm/m+t5dI36cSWH3m5eA823WqoluXDWqR9LDuuwnbAMjfg5ft7Azyin+QpgO4OP6/n/AlsyKhEF+WYa44O2CblReh14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gkFZai57; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1719399453; c=relaxed/simple;
+	bh=KQVlKkLk8LCpNcMoR7rjlrkwTL2c/OFIAQvVsYLUIYg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PTwicv5y1u9n2o6I+3301Rz3CK7hW2ESC7dys2Rm09IiQsF5QkIoMVbd6E3xoE6GPgIGwfL+sOGd5Fiqj067VKkxTo7cafzQYf4347VQTeBmlfdG26kaVG3cXQC5AgV7kpLqD1zaB6RbT2SILFiQenmNknuvMCmUiKX4pJRwObY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LpZpCg93; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gkFZai57"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45QAfV4g023753;
-	Wed, 26 Jun 2024 10:55:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:date:from:message-id:subject:to; s=qcppdkim1; bh=ncWWruiY2lo+
-	c+aIbVVxq7qvZxouEUyAxGka6MeZ9Fg=; b=gkFZai57/fSMgz1NDQz4efOOmL8b
-	hcasmgmHAmrNrRl51QknOWSkMzifbJV4xwtlKhQYkG12mBVM2lfOCUwtPtbey322
-	4dnhoDJD41dHq28i4Y9dncygW+DZ9kPKX9DkBs2/65R5Xnjzxrg6YkLpaIQw9mpQ
-	74A4LhMFpPz3Lin8sxDaavwKWDSqqkXzjY9YwGDkggyI05doBsgFt9jGIDSVCt6P
-	Sq2iV62l0EFkDsSWktvEwEP9fR6G97iWm1vhQDw9a3Njtqq+I/he7Ug4sJwnp1uQ
-	hSjt3pYRK1T6ZjgjEc9yHRQX6dL4VOUhPs3zRjcbFEUpe38fma7H/+9PJg==
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ywp6ysak5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Jun 2024 10:55:35 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTP id 45QAmBVG019093;
-	Wed, 26 Jun 2024 10:55:26 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 3ywqpm73yc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Wed, 26 Jun 2024 10:55:26 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 45QAtP3R027026;
-	Wed, 26 Jun 2024 10:55:25 GMT
-Received: from hu-maiyas-hyd.qualcomm.com (hu-rampraka-hyd.qualcomm.com [10.213.109.119])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 45QAtPs2027020;
-	Wed, 26 Jun 2024 10:55:25 +0000
-Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 2305851)
-	id BEC9052B08E; Wed, 26 Jun 2024 16:00:34 +0530 (+0530)
-From: Ram Prakash Gupta <quic_rampraka@quicinc.com>
-To: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        quic_cang@quicinc.com, quic_nguyenb@quicinc.com,
-        quic_rampraka@quicinc.com, quic_pragalla@quicinc.com,
-        quic_nitirawa@quicinc.com
-Subject: [PATCH V1 0/2] Suspend clk scaling when there is no request
-Date: Wed, 26 Jun 2024 16:00:31 +0530
-Message-Id: <20240626103033.2332-1-quic_rampraka@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 6XfUJXwRQXgeS_umIi3j6szHEVnGgLqB
-X-Proofpoint-ORIG-GUID: 6XfUJXwRQXgeS_umIi3j6szHEVnGgLqB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-26_05,2024-06-25_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=837 bulkscore=0
- phishscore=0 adultscore=0 mlxscore=0 suspectscore=0 malwarescore=0
- clxscore=1015 lowpriorityscore=0 spamscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406260083
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LpZpCg93"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719399451; x=1750935451;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KQVlKkLk8LCpNcMoR7rjlrkwTL2c/OFIAQvVsYLUIYg=;
+  b=LpZpCg93V3+N4I79+SsOOHwseon/YqiF1GU9B6iycIkoqyZNXs7BeVD0
+   8TWecHaeT8RQx6EyS4X4w6QkpOYrz8mK/S49f01jdThIA5tosWzPcuO7j
+   wS4mE+EK6J+tK9gchxd+GiJyWCSKxkVA8j5HjdVpSeGth9m3j9t1ekirT
+   VUC7RJy1+QxTmUHcwAe3nzcw7tp7Db7GXaSdEPgCxLNTa6/dKO1egTOX5
+   VcygPSziAdWgAxlzCPl3xYuUof7lhBqxfHj8k738BFY5Xnqgma5/vuZjQ
+   H3oBxA47zoXANDkKWdTTb/9zdNZ938yxWGNyDevAqABz6hErLkQPTyhJi
+   A==;
+X-CSE-ConnectionGUID: hjQw8fUDTuuPbT7PlGADog==
+X-CSE-MsgGUID: 8BwgAkihQb6lprkvKKZlGA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="38974652"
+X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
+   d="scan'208";a="38974652"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 03:57:30 -0700
+X-CSE-ConnectionGUID: F7YpKNaMTCaAmI28LcU2JA==
+X-CSE-MsgGUID: VvrieR5DQZugXY59GNp7Vw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
+   d="scan'208";a="44616084"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 26 Jun 2024 03:57:28 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sMQL7-000FDK-23;
+	Wed, 26 Jun 2024 10:57:25 +0000
+Date: Wed, 26 Jun 2024 18:56:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: Igor Pylypiv <ipylypiv@google.com>, Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, Tejun Heo <tj@kernel.org>,
+	Hannes Reinecke <hare@suse.de>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Jason Yan <yanaijie@huawei.com>, linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Igor Pylypiv <ipylypiv@google.com>
+Subject: Re: [PATCH v2 3/6] ata: libata-scsi: Remove redundant sense_buffer
+ memsets
+Message-ID: <202406261836.Q3sEjY8b-lkp@intel.com>
+References: <20240624221211.2593736-4-ipylypiv@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240624221211.2593736-4-ipylypiv@google.com>
 
-Currently ufs clk scaling is getting suspended only when the
-clks are scaled down, but next when high load is generated its
-adding a huge amount of latency in scaling up the clk and complete
-the request post that.
+Hi Igor,
 
-Now if the scaling is suspended in its existing state, and when high
-load is generated it is helping improve the random performance KPI by
-28%. So suspending the scaling when there is no request. And the clk
-would be put in low scaled state when the actual request load is low.
+kernel test robot noticed the following build warnings:
 
-Making this change as optional for other vendor by having the check
-enabled using vops as for some vendor suspending without bringing the
-clk in low scaled state might have impact on power consumption on the
-SoC.
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.10-rc5 next-20240625]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Igor-Pylypiv/ata-libata-scsi-Do-not-overwrite-valid-sense-data-when-CK_COND-1/20240625-215527
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20240624221211.2593736-4-ipylypiv%40google.com
+patch subject: [PATCH v2 3/6] ata: libata-scsi: Remove redundant sense_buffer memsets
+config: x86_64-defconfig (https://download.01.org/0day-ci/archive/20240626/202406261836.Q3sEjY8b-lkp@intel.com/config)
+compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240626/202406261836.Q3sEjY8b-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406261836.Q3sEjY8b-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/ata/libata-scsi.c: In function 'ata_gen_passthru_sense':
+>> drivers/ata/libata-scsi.c:929:24: warning: unused variable 'sb' [-Wunused-variable]
+     929 |         unsigned char *sb = cmd->sense_buffer;
+         |                        ^~
 
 
-Ram Prakash Gupta (2):
-  scsi: ufs: Suspend clk scaling on no request
-  scsi: ufs: qcom: Enable suspending clk scaling on no request
+vim +/sb +929 drivers/ata/libata-scsi.c
 
- drivers/ufs/core/ufshcd.c   | 3 ++-
- drivers/ufs/host/ufs-qcom.c | 2 ++
- include/ufs/ufshcd.h        | 1 +
- 3 files changed, 5 insertions(+), 1 deletion(-)
+^1da177e4c3f41 drivers/scsi/libata-scsi.c Linus Torvalds  2005-04-16  909  
+b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  910  /*
+750426aa1ad1dd drivers/ata/libata-scsi.c  Tejun Heo       2006-11-14  911   *	ata_gen_passthru_sense - Generate check condition sense block.
+b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  912   *	@qc: Command that completed.
+b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  913   *
+2dc8b0ba527a4a drivers/ata/libata-scsi.c  Igor Pylypiv    2024-06-24  914   *	This function is specific to the ATA pass through commands.
+2dc8b0ba527a4a drivers/ata/libata-scsi.c  Igor Pylypiv    2024-06-24  915   *	Regardless of whether the command errored or not, return a sense
+84a9a8cd9d0aa9 drivers/ata/libata-scsi.c  Gwendal Grignou 2013-01-18  916   *	block. If there was no error, we get the request from an ATA
+84a9a8cd9d0aa9 drivers/ata/libata-scsi.c  Gwendal Grignou 2013-01-18  917   *	passthrough command, so we use the following sense data:
+84a9a8cd9d0aa9 drivers/ata/libata-scsi.c  Gwendal Grignou 2013-01-18  918   *	sk = RECOVERED ERROR
+84a9a8cd9d0aa9 drivers/ata/libata-scsi.c  Gwendal Grignou 2013-01-18  919   *	asc,ascq = ATA PASS-THROUGH INFORMATION AVAILABLE
+84a9a8cd9d0aa9 drivers/ata/libata-scsi.c  Gwendal Grignou 2013-01-18  920   *      
+b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  921   *
+b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  922   *	LOCKING:
+750426aa1ad1dd drivers/ata/libata-scsi.c  Tejun Heo       2006-11-14  923   *	None.
+b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  924   */
+750426aa1ad1dd drivers/ata/libata-scsi.c  Tejun Heo       2006-11-14  925  static void ata_gen_passthru_sense(struct ata_queued_cmd *qc)
+b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  926  {
+b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  927  	struct scsi_cmnd *cmd = qc->scsicmd;
+e61e067227bc76 drivers/scsi/libata-scsi.c Tejun Heo       2006-05-15  928  	struct ata_taskfile *tf = &qc->result_tf;
+b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12 @929  	unsigned char *sb = cmd->sense_buffer;
+b525e7731b90eb drivers/ata/libata-scsi.c  Hannes Reinecke 2016-04-04  930  	u8 sense_key, asc, ascq;
+b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  931  
+b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  932  	/*
+b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  933  	 * Use ata_to_sense_error() to map status register bits
+b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  934  	 * onto sense key, asc & ascq.
+b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  935  	 */
+058e55e120ca59 drivers/scsi/libata-scsi.c Tejun Heo       2006-04-02  936  	if (qc->err_mask ||
+efcef265fd83d9 drivers/ata/libata-scsi.c  Sergey Shtylyov 2022-02-15  937  	    tf->status & (ATA_BUSY | ATA_DF | ATA_ERR | ATA_DRQ)) {
+efcef265fd83d9 drivers/ata/libata-scsi.c  Sergey Shtylyov 2022-02-15  938  		ata_to_sense_error(qc->ap->print_id, tf->status, tf->error,
+ff8072d589dcff drivers/ata/libata-scsi.c  Hannes Reinecke 2023-07-31  939  				   &sense_key, &asc, &ascq);
+06dbde5f3a4424 drivers/ata/libata-scsi.c  Hannes Reinecke 2016-04-04  940  		ata_scsi_set_sense(qc->dev, cmd, sense_key, asc, ascq);
+84a9a8cd9d0aa9 drivers/ata/libata-scsi.c  Gwendal Grignou 2013-01-18  941  	} else {
+b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  942  		/*
+11093cb1ef5614 drivers/ata/libata-scsi.c  Hannes Reinecke 2016-04-04  943  		 * ATA PASS-THROUGH INFORMATION AVAILABLE
+11093cb1ef5614 drivers/ata/libata-scsi.c  Hannes Reinecke 2016-04-04  944  		 * Always in descriptor format sense.
+b095518ef51c37 drivers/scsi/libata-scsi.c Jeff Garzik     2005-05-12  945  		 */
+f2b1e9c6f867ec drivers/ata/libata-scsi.c  Hannes Reinecke 2021-04-27  946  		scsi_build_sense(cmd, 1, RECOVERED_ERROR, 0, 0x1D);
+11093cb1ef5614 drivers/ata/libata-scsi.c  Hannes Reinecke 2016-04-04  947  	}
+^1da177e4c3f41 drivers/scsi/libata-scsi.c Linus Torvalds  2005-04-16  948  }
+^1da177e4c3f41 drivers/scsi/libata-scsi.c Linus Torvalds  2005-04-16  949  
 
 -- 
-2.17.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
