@@ -1,59 +1,61 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7018016A948;
-	Wed, 26 Jun 2024 09:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7060C16EB68
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 09:12:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719393139; cv=none; b=eA6dqigwy+toXHjwqCo4WcNW0L8gdzuw1BrVS2Dfd+pMDPdJXxLhBQMHhxjVTHpKK4ELlqW1hzO92C38CqJ3Y5MBRhMSHtGUKFSENKhtO7nd9iOZbYi+sbZs+4WCGMrftrxU6xMRor4oBSgMEMM1zw7ZMz/e40CULP8mp4/aDlM=
+	t=1719393149; cv=none; b=cM0817pbK95hao0IGnAkpXvqlVNES5318z4FcxwqdCu2VUTYGM9Uk20GDs7c37HGlS3J56ejYadWuWU1YW/wMZfuFaH9bVnuF4KsfX6lHvWOD5IXR4bhtSRJ4jFjKvjH5Z3PDtOMCV92FiXkW/2ROeCL12+SHkyhxpBSGKjjTNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719393139; c=relaxed/simple;
-	bh=CanSw/ga/v+NZ5681NPAHHodTA0bxrOv2IrK+wa7u/E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y1nsKuD7pfiyMch6YKdlV1uiuV/BcxME/iUUndWcsmopcr43ZJ5Ka/EoZWFC0FLkz3khsyQFWOidfUGYV17VV/EtB1M43wAVnZ/4rjn1FVpFX1qz4HJTpE674bwzVAXKwUyuGIsOhYRTlzGIQpBrm31IV63PHQvTdqKQMZMaTVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hv2C2vEJ; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719393149; c=relaxed/simple;
+	bh=CxVZvsP8mJPz+oaA35+FButrh6bm59DMUjmqtKqhFZo=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=YOamawcrWc214JB5GmLTk7ssM5csgmM0Zz1obhOiDAQmxPSM+MZlGxB2inY7ftMEiFsP8rfQEF0xCgPlxUuK8Rdqo3vzlbLsjNv8xuPkHvMsBn+UVBIiqAsPed6GNxukWwTbpMQouDFVal87yv0jkUxC6pP4OsJ+aYgmxfFcIaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=T/yRgxtP; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hv2C2vEJ"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a6fe7a0cb58so243997766b.1;
-        Wed, 26 Jun 2024 02:12:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T/yRgxtP"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-363826fbcdeso4738771f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 02:12:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719393135; x=1719997935; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FongEw4DVTz7Uk7t+o0KVv9EUD1iaAZOmKGMy2sDWqU=;
-        b=Hv2C2vEJYpUtFh9GgMU4kw+z5BbpvwlYzoUAOgoNEyHCDqeW2YOnIW7/G8pkezhpz1
-         oRLcR7m7JK1vlk4E4kVCnI2cogEOX+lfmhHc4RNtz/SoRKCcGksw9v0AJnLFjy99aWNa
-         aggi7EkxSYKv19Sk4DtO1p2cc1ScWTuTOi5lgF8TqvtsAgjfBi4Yro9L/r7c7GN7YVA1
-         wNiF60D4qW1oMCfdtyfkmuUY+NS30LUXZ/M5ZZKOXvhQWxQTZUAKznj2ywiMEcO84/8V
-         JEk+2kGJE6GxoVLpUW8Ep6IxUYUYPOaqDWo3T2dbhFgp/tiNLrLhyMcrjOlMiSYMJgF/
-         t6ug==
+        d=linaro.org; s=google; t=1719393146; x=1719997946; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rJIDdwVD2k5g4CopGwX8Y+QYYGOC76Pl/4BHACHUhIw=;
+        b=T/yRgxtPI2w8nr+LvzHgN5+d1YK08fZccdgh5zb0IkgK7wpFJZG6KtAoYvOhryr37x
+         AJKHK+6riMuGQyJvFlkzq0ozv1TLXr/2lEyuEweH5iYxLnYVH8pbD8nsWRQxSJwqw0Up
+         AhJRMW17ljvfksWDEZqbe2W0dzt3SkH8xAzoS3rpsYFrXMAQ8t/q/JE3J1nrw0MnLuBA
+         L/BbtbbIe0f+INPRM5iVAC2Qtch6aAEnVH/gSOQsx+THoLxf2oFOBvC24ljgV8u1OuiM
+         0U+5e/DQb5lQ03fXhOtxpMPlWlsZcGJOxG7gIisBJwewQo52U2QMpRvhpGY4mu26t9ty
+         ko9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719393135; x=1719997935;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FongEw4DVTz7Uk7t+o0KVv9EUD1iaAZOmKGMy2sDWqU=;
-        b=at4w0W3RW6/El4jv+XsBdq/cOcsR8zNAg7t1m7D7TdODahSo3K6XYTiKCESk2YBX1g
-         KrYkMBEdiSF1EAAExuLexf2MPencoX3PFv9PKIUZGEqmcunZVfvXr0oW9BruchCPRK49
-         NppH5AjY03q9+1O9UtVjJ923hTbOBxhWTuVnuQAgSlVRIuZg9VDNDEx9cF4wvWpEBBUm
-         +FA0uQbuSISoxvL7TH6EFpuDDSaT6xBfdYn/M5N4BERnudwN2zZPqYoXH5qbHUhgqhVk
-         3nFAfoAg6s1K0Jg/LhXtGp8uDOfmwb3fZnkWSeY0ALFoAOhDrnPNH82yBFB2vsuMxWdb
-         ng+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV2QHGq/9mqUbAnFK6RCMLtFM30yGFKVv+z4XcKM8WE7Z8ZZAsnHd1Pnj2bxDr3pIAMgSO87lbj0cSR5B1iSRxNhXE2ZpuvDmQ9IS6ICY7nqFhXUpfr4PW/k3AxSEoMhs8bmtVzPOHf+xY4mqsRz3zgnwDahjjwcqYQY2jhOqUR4MgjGHWw
-X-Gm-Message-State: AOJu0YzZ+HyPK9UDr8bVu3XRXM9USpSQMHMk0sNWLEVtTVV7hJ0HbvU5
-	lIomvF2M8MyE404IjmsZTNFKbo9Tc4BJwZB3IXQmBbAKKEWBB4I=
-X-Google-Smtp-Source: AGHT+IGb5T6cpB/7EWvmhQ43Jf3bxUsfnnaogIExV5juuGP3ucFrS+SngbbnT41X1ojvJgNGssHk3Q==
-X-Received: by 2002:a50:d5d3:0:b0:57c:7c44:74df with SMTP id 4fb4d7f45d1cf-57d4bdcabb7mr8935735a12.29.1719393133298;
-        Wed, 26 Jun 2024 02:12:13 -0700 (PDT)
-Received: from ?IPV6:2a02:810b:f40:4600:79e0:cc0d:71b1:3c08? ([2a02:810b:f40:4600:79e0:cc0d:71b1:3c08])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d30413446sm7045617a12.31.2024.06.26.02.12.12
+        d=1e100.net; s=20230601; t=1719393146; x=1719997946;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=rJIDdwVD2k5g4CopGwX8Y+QYYGOC76Pl/4BHACHUhIw=;
+        b=n1sZ3r1mUkWwHZ/snFOE5oiPopeUnBSJkCmmoziNY0lgpTi5ymxfhzZgTEUEr+40Pu
+         SxI4GkTufpcFqD2Ukjm6jXu+s+NY5i8Wh2SBiST13ZFRF2l8SnmySX2BlqPPjptsGBNq
+         Si0pm8JXXKSLwEKye+Uyp2iBVCNmDXeAn/fbUrA680b3uKQHZiFZary0RDxUbddOqnFt
+         GnAb0DBsHmtaAAqw2EpQGuc9LvjzvdxVQqPj8CGaWBrsCyib/eEtbWEAPr72wO3iDrlC
+         oLUPjJkMKyOI+C7HsEScTJwnJj4m1bDcmVDi9qKQf31fwikqh67EZEMQ7pvpNXpzR3ZN
+         EC2w==
+X-Forwarded-Encrypted: i=1; AJvYcCXJKfMRklGbwode7UbM4fQpS1oLJWMgfoV8bhOKRDet0L3K8czirF3+iCc0WhQQsRBA0kk8zx1EG/RXkhWctny1sMlFZ7Kiu0uyWGhu
+X-Gm-Message-State: AOJu0Yy+f1Ou4CL/SVckNBScz56ZRY3cMFfXYdl+JARRBUfofP1BU5he
+	/yUJ/IkXzuwWPU/Kxzz88waaM5VlePYiyR90aT1X/p96YU5uGM+bv8CEtj1yFhU=
+X-Google-Smtp-Source: AGHT+IGZiUiseO18+zxNZHL14SXXILWN1LiGMQkTEVTh7yA2B9xxXApJEzmPP2KVy/ZU3/5CveX2tw==
+X-Received: by 2002:a5d:6551:0:b0:35f:20eb:cae3 with SMTP id ffacd0b85a97d-366e7a51ea9mr7327647f8f.67.1719393145291;
+        Wed, 26 Jun 2024 02:12:25 -0700 (PDT)
+Received: from ?IPV6:2a01:cb1c:fcf:4600:a281:d23c:1a8b:ab6? ([2a01:cb1c:fcf:4600:a281:d23c:1a8b:ab6])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-366666ff3f0sm14872928f8f.68.2024.06.26.02.12.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Jun 2024 02:12:12 -0700 (PDT)
-Message-ID: <5a15b138-4e03-4487-8a53-b7ff3527701f@gmail.com>
-Date: Wed, 26 Jun 2024 11:12:13 +0200
+        Wed, 26 Jun 2024 02:12:24 -0700 (PDT)
+Message-ID: <bb73744f-9b04-410b-b4ec-1c5071016d28@linaro.org>
+Date: Wed, 26 Jun 2024 11:12:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,231 +63,204 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/4] media: rockchip: Introduce the rkvdec2 driver
-To: Detlev Casanova <detlev.casanova@collabora.com>,
- linux-kernel@vger.kernel.org
-Cc: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Dragan Simic <dsimic@manjaro.org>, Diederik de Haas <didi.debian@cknow.org>,
- Andy Yan <andy.yan@rock-chips.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Hans Verkuil <hverkuil-cisco@xs4all.nl>,
- Daniel Almeida <daniel.almeida@collabora.com>,
- Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
- Nicolas Dufresne <nicolas.dufresne@collabora.com>,
- Benjamin Gaignard <benjamin.gaignard@collabora.com>,
- Jonas Karlman <jonas@kwiboo.se>, linux-media@vger.kernel.org,
- linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-staging@lists.linux.dev
-References: <20240620142532.406564-1-detlev.casanova@collabora.com>
- <20240620142532.406564-3-detlev.casanova@collabora.com>
- <c7882f94-e2cb-4023-a53e-87ebc8fa3460@gmail.com> <3815203.kQq0lBPeGt@arisu>
-Content-Language: en-US
-From: Alex Bee <knaerzche@gmail.com>
-In-Reply-To: <3815203.kQq0lBPeGt@arisu>
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 3/3] drm/panel: add lincoln lcd197 support
+To: Jerome Brunet <jbrunet@baylibre.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg
+ <sam@ravnborg.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, dri-devel@lists.freedesktop.org
+References: <20240625142552.1000988-1-jbrunet@baylibre.com>
+ <20240625142552.1000988-4-jbrunet@baylibre.com>
+ <irzer3be5fj2rg2bmc2oqxqtaw6jybbdkgv3jgxpyhdvojwv24@e4i2v6d454nz>
+ <1jmsn8gjq6.fsf@starbuckisacylon.baylibre.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <1jmsn8gjq6.fsf@starbuckisacylon.baylibre.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Detlev,
-
-Am 25.06.24 um 18:56 schrieb Detlev Casanova:
-> Hi Alex,
->
-> On Sunday, June 23, 2024 5:33:28 A.M. EDT you wrote:
->> Hi Detlev,
->>
->> Am 20.06.24 um 16:19 schrieb Detlev Casanova:
->>> This driver supports the second generation of the Rockchip Video
->>> decoder, also known as vdpu34x.
->>> It is currently only used on the RK3588(s) SoC.
+On 26/06/2024 11:02, Jerome Brunet wrote:
+> On Wed 26 Jun 2024 at 07:41, Dmitry Baryshkov <dmitry.baryshkov@linaro.org> wrote:
+> 
+>> On Tue, Jun 25, 2024 at 04:25:50PM GMT, Jerome Brunet wrote:
+>>> Add support for the Lincoln LCD197 1080x1920 DSI panel.
 >>>
->>> There are 2 decoders on the RK3588 SoC that can work in pair to decode
->>> 8K video at 30 FPS but currently, only using one core at a time is
->>> supported.
->>>
->>> Scheduling requests between the two cores will be implemented later.
->>>
->>> The core supports H264, HEVC, VP9 and AVS2 decoding but this driver
->>> currently only supports H264.
->>>
->>> The driver is based on rkvdec and they may share some code in the
->>> future.
->>> The decision to make a different driver is mainly because rkvdec2 has
->>> more features and can work with multiple cores.
->>>
->>> The registers are mapped in a struct in RAM using bitfields. It is IO
->>> copied to the HW when all values are configured.
->>> The decision to use such a struct instead of writing buffers one by one
->>>
->>> is based on the following reasons:
->>>    - Rockchip cores are known to misbehave when registers are not written
->>>    
->>>      in address order,
->>>    
->>>    - Those cores also need the software to write all registers, even if
->>>    
->>>      they are written their default values or are not related to the task
->>>      (this core will not start decoding some H264 frames if some VP9
->>>      registers are not written to 0)
->>>    
->>>    - In the future, to support multiple cores, the scheduler could be
->>>    
->>>      optimized by storing the precomputed registers values and copy them
->>>      to the HW as soos as a core becomes available.
->>>
->>> This makes the code more readable and may bring performance improvements
->>> in future features.
->>>
->>> Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
+>>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 >>> ---
+>>>   drivers/gpu/drm/panel/Kconfig                |  11 +
+>>>   drivers/gpu/drm/panel/Makefile               |   1 +
+>>>   drivers/gpu/drm/panel/panel-lincoln-lcd197.c | 333 +++++++++++++++++++
+>>>   3 files changed, 345 insertions(+)
+>>>   create mode 100644 drivers/gpu/drm/panel/panel-lincoln-lcd197.c
 >>>
->>>    drivers/staging/media/Kconfig                |    1 +
->>>    drivers/staging/media/Makefile               |    1 +
->>>    drivers/staging/media/rkvdec2/Kconfig        |   15 +
->>>    drivers/staging/media/rkvdec2/Makefile       |    3 +
->>>    drivers/staging/media/rkvdec2/TODO           |    9 +
->>>    drivers/staging/media/rkvdec2/rkvdec2-h264.c |  739 +++++++++++
->>>    drivers/staging/media/rkvdec2/rkvdec2-regs.h |  345 +++++
->>>    drivers/staging/media/rkvdec2/rkvdec2.c      | 1253 ++++++++++++++++++
->>>    drivers/staging/media/rkvdec2/rkvdec2.h      |  130 ++
->>>    9 files changed, 2496 insertions(+)
->>>    create mode 100644 drivers/staging/media/rkvdec2/Kconfig
->>>    create mode 100644 drivers/staging/media/rkvdec2/Makefile
->>>    create mode 100644 drivers/staging/media/rkvdec2/TODO
->>>    create mode 100644 drivers/staging/media/rkvdec2/rkvdec2-h264.c
->>>    create mode 100644 drivers/staging/media/rkvdec2/rkvdec2-regs.h
->>>    create mode 100644 drivers/staging/media/rkvdec2/rkvdec2.c
->>>    create mode 100644 drivers/staging/media/rkvdec2/rkvdec2.h
->> ...
 >>
->>> +static inline void rkvdec2_memcpy_toio(void __iomem *dst, void *src,
->>> size_t len) +{
->>> +#ifdef CONFIG_ARM64
->>> +	__iowrite32_copy(dst, src, len);
->>> +#elif defined(CONFIG_ARM)
->> I guess that can get an "#else" since memcpy_toio exists for all archs.
+>> [...]
 >>
->>> +	memcpy_toio(dst, src, len);
->>> +#endif
+>>> +
+>>> +	mipi_dsi_dcs_write_seq(lcd->dsi, 0xB9, 0xFF, 0x83, 0x99);
+>>
+>> - Please use lowercase hex instead
+>> - Please consider switching to _multi() functions.
+> 
+> Could you be a bit more specific about these '_multi' function ?
+> I've looked at 'drm_mipi_dsi.h' and can't really make what you mean.
+> 
+> Maybe I'm not looking in the right place.
+> 
+>>
+>>
+>>> +	usleep_range(200, 300);
+>>
+>> This will require new helper msm_dsi_usleep_range(ctx, 200, 300);
+> 
+> I don't really understand why I would need something else to just sleep
+> ? Could you add some context please ?
+> 
+> Isn't 'msm_' usually something Qcom specific ?
+> 
+>>
+>>> +	mipi_dsi_dcs_write_seq(lcd->dsi, 0xB6, 0x92, 0x92);
+>>> +	mipi_dsi_dcs_write_seq(lcd->dsi, 0xCC, 0x00);
+>>> +	mipi_dsi_dcs_write_seq(lcd->dsi, 0xBF, 0x40, 0x41, 0x50, 0x49);
+>>> +	mipi_dsi_dcs_write_seq(lcd->dsi, 0xC6, 0xFF, 0xF9);
+>>> +	mipi_dsi_dcs_write_seq(lcd->dsi, 0xC0, 0x25, 0x5A);
+>>> +	mipi_dsi_dcs_write_seq(lcd->dsi, MIPI_DCS_SET_ADDRESS_MODE, 0x02);
+>>> +
+>>> +	err = mipi_dsi_dcs_exit_sleep_mode(lcd->dsi);
+>>> +	if (err < 0) {
+>>> +		dev_err(panel->dev, "failed to exit sleep mode: %d\n", err);
+>>> +		goto poweroff;
+>>> +	}
+>>> +	msleep(120);
+>>> +
+>>> +	err = mipi_dsi_dcs_read(lcd->dsi, MIPI_DCS_GET_DISPLAY_ID, display_id, 3);
+>>
+>> This probably needs new _multi helper too.
+>>
+>>> +	if (err < 0) {
+>>> +		dev_err(panel->dev, "Failed to read display id: %d\n", err);
+>>> +	} else {
+>>> +		dev_dbg(panel->dev, "Display id: 0x%02x-0x%02x-0x%02x\n",
+>>> +			display_id[0], display_id[1], display_id[2]);
+>>> +	}
+>>> +
+>>> +	lcd->prepared = true;
+>>
+>> Should not be required anymore.
+> 
+> The whole driver is heavily inspired by what is already in
+> drivers/gpu/drm/panel/ and a lot are doing something similar.
+> 
+> Maybe there has been a change since then and the existing have been
+> reworked yet. Would you mind pointing me that change if that is
+> the case ?
+> 
+>>
+>>> +
+>>> +	return 0;
+>>> +
+>>> +poweroff:
+>>> +	gpiod_set_value_cansleep(lcd->enable_gpio, 0);
+>>> +	gpiod_set_value_cansleep(lcd->reset_gpio, 1);
+>>> +	regulator_disable(lcd->supply);
+>>> +
+>>> +	return err;
 >>> +}
 >>> +
->> ...
->>
->>> +	/* Set timeout threshold */
->>> +	if (pixels < RKVDEC2_1080P_PIXELS)
->>> +		regs->common.timeout_threshold = RKVDEC2_TIMEOUT_1080p;
->>> +	else if (pixels < RKVDEC2_4K_PIXELS)
->>> +		regs->common.timeout_threshold = RKVDEC2_TIMEOUT_4K;
->>> +	else if (pixels < RKVDEC2_8K_PIXELS)
->>> +		regs->common.timeout_threshold = RKVDEC2_TIMEOUT_8K;
->>> +
->> Did you test if it works with anything > 8K? If so, you propably want to
->> make the check above
->>
->> +	else
->> +		regs->common.timeout_threshold = RKVDEC2_TIMEOUT_8K;
->>
->> Otherwise the timeout may not be set/contain invalid values from any former
->> stream.
-> That's right, but it would be set to 0 because of the memset.
-> RKVDEC2_TIMEOUT_8K might not be enough for bigger frame sizes, so I'll set it
-> to the maximum value (0xffffffff) when frames are bigger than 8K and also adapt
-> the watchdog time: RKVDEC2_TIMEOUT_8K is around 100 ms, but 0xffffffff is arnoud
-> 5.3 seconds (reg032/axi_clock_freq)
->
-> I'll do more tests with this as well.
->
->> ...
 >>
 >>> +
->>> +static const struct rkvdec2_coded_fmt_desc rkvdec2_coded_fmts[] = {
->>> +	{
->>> +		.fourcc = V4L2_PIX_FMT_H264_SLICE,
->>> +		.frmsize = {
->>> +			.min_width = 16,
->>> +			.max_width =  65520,
->>> +			.step_width = 16,
->>> +			.min_height = 16,
->>> +			.max_height =  65520,
->>> +			.step_height = 16,
->>> +		},
->>> +		.ctrls = &rkvdec2_h264_ctrls,
->>> +		.ops = &rkvdec2_h264_fmt_ops,
->>> +		.num_decoded_fmts =
-> ARRAY_SIZE(rkvdec2_h264_decoded_fmts),
->>> +		.decoded_fmts = rkvdec2_h264_decoded_fmts,
->>> +		.subsystem_flags =
-> VB2_V4L2_FL_SUPPORTS_M2M_HOLD_CAPTURE_BUF,
->>> +	},
+>>> +static const struct drm_display_mode default_mode = {
+>>> +	.clock = 154002,
+>>> +	.hdisplay = 1080,
+>>> +	.hsync_start = 1080 + 20,
+>>> +	.hsync_end = 1080 + 20 + 6,
+>>> +	.htotal = 1080 + 204,
+>>> +	.vdisplay = 1920,
+>>> +	.vsync_start = 1920 + 4,
+>>> +	.vsync_end = 1920 + 4 + 4,
+>>> +	.vtotal = 1920 + 79,
+>>> +	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
 >>> +};
 >>> +
->> Note, that this is also given to userspace (VIDIOC_ENUM_FRAMESIZES) and
->> this is already incorrect in the old rkvdec driver (and hantro): From
->> userspace perspective we do not have a restriction in
->> step_width/step_width, as we are aligning any given width/height to HW
->> requirements in the driver - what we should give to userspace is
->> fsize->type = V4L2_FRMSIZE_TYPE_CONTINUOUS; fsize->stepwise.min_height =
->> 1; fsize->stepwise.min_width = 1; fsize->stepwise.max_height = 65520;
->> fsize->stepwise.max_width = 65520;
-> Is fsize->stepwise.min_height = 1; and fsize->stepwise.min_width = 1 correct ?
-> Or do you mean fsize->stepwise.step_height = 1; and fsize->stepwise.setp_width
-> = 1 ?
->
-> It would give this instead:
->
-> .frmsize = {
-> 	.min_width = 16,
-> 	.max_width =  65520,
-> 	.step_width = 1,
-> 	.min_height = 16,
-> 	.max_height =  65520,
-> 	.step_height = 1,
-> },
->
-> and .vidioc_enum_framesizes sets fsize->type = V4L2_FRMSIZE_TYPE_CONTINUOUS;
-You can't adapt this here, because this .frmsize is also given to the
-v4l2_apply_frmsize_constraints helper, which does the actual alignment to
-HW requirements and requires the HW step_with and step_height.
-IIRC, we also align framesizes which are below minimum HW requirement, at
-least in rkvdec1 driver and it looks a lot like this is done here the same:
-so this should be .min_height = 1 and .min_width = 1. (I remember because
-there are VP9 conformance tests with very small framesizes). And yes, it
-looks like you've had to set .step_width and .step_height to 1 for
-V4L2_FRMSIZE_TYPE_CONTINUOUS, not sure why that is required.
+>>> +static int lincoln_lcd197_panel_get_modes(struct drm_panel *panel,
+>>> +					  struct drm_connector *connector)
+>>> +{
+>>> +	struct drm_display_mode *mode;
+>>> +
+>>> +	mode = drm_mode_duplicate(connector->dev, &default_mode);
+>>> +	if (!mode) {
+>>> +		dev_err(panel->dev, "failed to add mode %ux%u@%u\n",
+>>> +			default_mode.hdisplay, default_mode.vdisplay,
+>>> +			drm_mode_vrefresh(&default_mode));
+>>> +		return -ENOMEM;
+>>> +	}
+>>> +
+>>> +	drm_mode_set_name(mode);
+>>> +	drm_mode_probed_add(connector, mode);
+>>> +	connector->display_info.width_mm = 79;
+>>> +	connector->display_info.height_mm = 125;
+>>
+>> drm_connector_helper_get_modes_fixed()
+> 
+> Thanks for the hint
+> 
+>>
+>>> +
+>>> +	return 1;
+>>> +}
+>>> +
+>>
+>>
+>>> +
+>>> +static void lincoln_lcd197_panel_shutdown(struct mipi_dsi_device *dsi)
+>>> +{
+>>> +	struct lincoln_lcd197_panel *lcd = mipi_dsi_get_drvdata(dsi);
+>>> +
+>>> +	drm_panel_disable(&lcd->panel);
+>>> +	drm_panel_unprepare(&lcd->panel);
+>>> +}
+>>
+>> I think the agreement was that there should be no need for the panel's
+>> shutdown, the DRM driver should shutdown the panel.
+> 
+> I'm happy to drop that if there is such agreement. Again, most panel
+> drivers do implement that callback so I just did the same.
+> 
+> Could you point me to this 'agreement' please, so I can get a better
+> understanding of it ?
+> 
 
-So, imho, the final rkvdec2_enum_framesizes should look like
+please rebase on linux-next or drm-misc-next and use the new introduced macros
+dmitry pointed out.
 
-+static int rkvdec2_enum_framesizes(struct file *file, void *priv,
-+                   struct v4l2_frmsizeenum *fsize)
-....
-+    fmt = rkvdec2_find_coded_fmt_desc(fsize->pixel_format);
-+    if (!fmt)
-+        return -EINVAL;
-+
-+    fsize->type = V4L2_FRMSIZE_TYPE_CONTINUOUS;
-+    fsize->stepwise.min_height = 1;
-+    fsize->stepwise.max_height = fmt->frmsize.max_height;
-+    fsize->stepwise.min_width = 1;
-+    fsize->stepwise.max_width = fmt->frmsize.max_width;
-+    fsize->stepwise.min_width = 1;
-+    fsize->stepwise.step_height = 1;
-+    fsize->stepwise.step_width = 1;
-+    return 0;
-+}
-
-Note: Not even build tested :)
-Jonas: maybe you can add a fixup patch to your rkvdec patches as well.
-
-Regards,
-
-Alex
-
->> I guess this new driver should be an
->> opportunity to fix that and distinguish between internal and external
->> frame size requirements and the .vidioc_enum_framesizes callback should
->> adapted accordingly. Regards, Alex
-> Detlev.
+Neil
