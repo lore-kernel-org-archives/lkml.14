@@ -1,48 +1,59 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA37181CEF;
-	Wed, 26 Jun 2024 13:18:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD911E51F
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 13:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719407910; cv=none; b=JvtBG5x4eZZzaS/HzI0kReK6bEIBk2ZNOL2IpUrXiqSJZFztpMDcps6BtBbX2oBCXxlhjA9/A7NNF3ed/jHNl1sRvcLRfBnWp+1VnLcbkrqp3M0Cwc7Jvqp26HCekGNZ8G/dsRl8kXiUUeHdmRszJqLZ9pEe7ZX206sCTSi48ik=
+	t=1719408153; cv=none; b=WKiIrYBEOt9nSVZEplgmjQDE1FzU4p97plDpvihOnakm/zHYtGtY70ykKK6PZJoo5wykoL6xJ9YNi4aWFGow7SxU4XXlwHWWn/qYTwaeeNqPxHwT0myBL2AGhhF1EyoMa/elfwaul3Ijy/cqLQEsZn9NO+1dgz04nMd2sGmcPUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719407910; c=relaxed/simple;
-	bh=LnJ4BdBatnaKJIt8DTZVCb92CAvzC0dTStPyroTM/vc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NH4hSczJPyb0bUzLWPr636VsRyBsdod4d1pvO48muo7oaWPtnln711pmUigowdKXW08M407FxcN+8Ed94+tkPHN4Z5f58h+jePPZhxxBjxFoVNkD+52ffQfxvSy51900Eedv8v8tmrjSUeBwkMJfvxea1KMmMHEwAm/dtP1c1wU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=duf1TmKr; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1719408153; c=relaxed/simple;
+	bh=XxBobdsohKtbbp+VDP9sBXJLs9uMbEUbONhmhgK7pq4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P5LPy7Dj8Wkrgdp/pjD69JOWBKd0xeXMjlpVBcBCzXVm69XH93DbSRr1bWfv99Lkc698M59qLZw+g4jMGgg9M8BsbwAXuDXqB2Mv2crj0BB7+AoyygIqOstft9dgJb7U96IwYM/dDzZO32YAN1g4cG7Pb8QgHyeordyxOT/297M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=MkABVdL6; arc=none smtp.client-ip=209.85.210.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="duf1TmKr"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45QAfUmK015158;
-	Wed, 26 Jun 2024 13:18:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	DK9j4PGjY2UmCnvRToOqo/sLZ+R/jph7j04TEirCL6s=; b=duf1TmKrLXk3ZFis
-	BMCwHZsGpJ70zHd6N45JcK2fPq0JDD5GuAcdWNxH3yoifvR4OTMMUPlF0R5SudZ3
-	d3zr2vxdPaddhFMoj9MxhBD2mL+GtWatuPwc47uvfEu1EX+XHbfjga1u9GivxRIw
-	HYFoUZUHIGNGfvFMUEfrA3BWZmmH3ntdj9YInca8sB80ppSfhosR2ln8K0wJkSrT
-	35SKUbYtypx6UAwOP0XZfW800opwJ5Oo88aRVzaMEIr+2Mdmc+Tcr6Yqy6NSSAsU
-	uI250nr8iIZofrlSdKYCQz+aqwua/lA0qWYfTnESOgrVWYlHY15i1nxdmoj95J4B
-	KJvioQ==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ywqshsra7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Jun 2024 13:18:13 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45QDICdf002339
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Jun 2024 13:18:12 GMT
-Received: from [10.239.155.136] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 26 Jun
- 2024 06:18:08 -0700
-Message-ID: <272184ed-2fd8-413a-816c-9470bf9332da@quicinc.com>
-Date: Wed, 26 Jun 2024 21:18:04 +0800
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="MkABVdL6"
+Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-700cc388839so954305a34.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 06:22:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1719408151; x=1720012951; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=I5xewZHY2oJYxuRQNOBT5mZfboUik/lCsriRBhVol24=;
+        b=MkABVdL6PzsU5MPCrZFzZFCczVjW1kUU2yObpmVSqXL8Xz0lfIhZvyXnvgWZHSlfDq
+         Bd7cnz0GMGG2yRO05qkcnnGOLa67jjxn8WntvfOKOE1QnS02ClVmjobWGt3sDpLhWqhb
+         ZOB2W0E7tGQjrr7XnVlbWkNJvRaNPD9QuqvdHkgeYAM2efmsk92ZvP2exj/XmhHzp2h4
+         eDOYuLlQOvO5KDoQgPVR2eCfcksG5B+LUZAPm+UDCJqQFnSATipors1djcA0e8M0qa6Q
+         mB2w5nVmQKCoz3EraLt3k0wP2NfIuSFwduNUWlKm/mjIgszBjrPaQ2QKPm+p1bCT/7T/
+         BzFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719408151; x=1720012951;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=I5xewZHY2oJYxuRQNOBT5mZfboUik/lCsriRBhVol24=;
+        b=BzRgn1Jygarzgts7+ZP2yZ9lA5Nq/byvVwHCeQSyy0XTq09IANTJRYklNh0XC7LBPd
+         nWCOwIWO2siKd45LRgKQvm+/fNmzSH2BdN10WSjZKDA2vqj2XKAOrUYvHGdUBqOuptz1
+         J6kMNwk1FXJVpBAovG9SxC0tXB4SAahBAphorLZoVoy+Cr7lMnR1MMpdVy7mO2ihldP9
+         TWn7ED8bVKD9LRmsryRON2/+8Nv/fxUYIPc3zZWKg3nDFhgeZdxt6AKO31hUrbR0p4sx
+         V//KBOfN+q0bQ3JXCCRwK+q1Z+oQXto9n4+wdxe3j1/BaA66UltJYnCbAClfafZEPPoK
+         y+5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVJyQf2Rco9nCk7R3WzyHq81oJDaCz37kWT1OzgCyWJVt84lV2cs1dMSVw0N261iEhnq25t3uRXAayIAQ5tQdtkz2Za8FUuqEe8KE7r
+X-Gm-Message-State: AOJu0YxpVH2l+9hrUattjPqm0elQceIrkCl8JC6l9+hhtwEiitWOX2i/
+	ckDe6GxM13sK7V744q7w2hwmEWNKeF9oiFJ7r4QDsRBBbDwtIsDIIMtWTsY8PDg=
+X-Google-Smtp-Source: AGHT+IFQ7TQc949+gnCiGt+D4TzmOQ0Ckn0QWBw98q32b0sD5xDjYU5NsCtAsd0KDekGkzXy4fWwFw==
+X-Received: by 2002:a05:6830:1d46:b0:700:ab11:86c8 with SMTP id 46e09a7af769-700af98902emr11454041a34.22.1719408150773;
+        Wed, 26 Jun 2024 06:22:30 -0700 (PDT)
+Received: from [100.64.0.1] ([147.124.94.167])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-700d369f8adsm118762a34.48.2024.06.26.06.22.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Jun 2024 06:22:30 -0700 (PDT)
+Message-ID: <6f5c1de2-42da-46be-9af1-9b293e4ac3e5@sifive.com>
+Date: Wed, 26 Jun 2024 08:22:28 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,93 +61,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] scsi: ufs: core: quiesce request queues before check
- pending cmds
-To: Bart Van Assche <bvanassche@acm.org>,
-        =?UTF-8?B?UGV0ZXIgV2FuZyAo546L5L+h5Y+LKQ==?= <peter.wang@mediatek.com>,
-        "quic_rampraka@quicinc.com" <quic_rampraka@quicinc.com>,
-        "quic_nguyenb@quicinc.com" <quic_nguyenb@quicinc.com>,
-        "quic_nitirawa@quicinc.com" <quic_nitirawa@quicinc.com>,
-        "beanhuo@micron.com"
-	<beanhuo@micron.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "junwoo80.lee@samsung.com" <junwoo80.lee@samsung.com>,
-        "mani@kernel.org"
-	<mani@kernel.org>,
-        "quic_cang@quicinc.com" <quic_cang@quicinc.com>
-CC: "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com"
-	<jejb@linux.ibm.com>,
-        "quic_asutoshd@quicinc.com"
-	<quic_asutoshd@quicinc.com>,
-        "quic_mnaresh@quicinc.com"
-	<quic_mnaresh@quicinc.com>,
-        "manivannan.sadhasivam@linaro.org"
-	<manivannan.sadhasivam@linaro.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-References: <1717754818-39863-1-git-send-email-quic_ziqichen@quicinc.com>
- <d3fc4d2b-81b0-4ab2-9606-5f4a5fb8b867@acm.org>
- <efc80348-46c0-4307-a363-a242a7b44d94@quicinc.com>
- <b1173b6f-445c-4d6d-9c78-b0351da2893a@acm.org>
- <ee45ce9429b1f69147c1a01e07b050275b4009bf.camel@mediatek.com>
- <3c7e776e-df2e-4718-995f-5e5dfa3cc916@acm.org>
+Subject: Re: [PATCH] selftests/fpu: add missing MODULE_DESCRIPTION() macro
+To: Jeff Johnson <quic_jjohnson@quicinc.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Jonathan Corbet <corbet@lwn.net>, Masahiro Yamada <masahiroy@kernel.org>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nathan Chancellor
+ <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>,
+ Palmer Dabbelt <palmer@rivosinc.com>, Russell King <linux@armlinux.org.uk>,
+ Thomas Gleixner <tglx@linutronix.de>, WANG Xuerui <git@xen0n.name>,
+ Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+References: <20240622-md-i386-lib-test_fpu_glue-v1-1-a4e40b7b1264@quicinc.com>
+From: Samuel Holland <samuel.holland@sifive.com>
 Content-Language: en-US
-From: Ziqi Chen <quic_ziqichen@quicinc.com>
-In-Reply-To: <3c7e776e-df2e-4718-995f-5e5dfa3cc916@acm.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: t0o3G9yz7_cq_Ga1aXwpg19sBXPty3gt
-X-Proofpoint-GUID: t0o3G9yz7_cq_Ga1aXwpg19sBXPty3gt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-26_07,2024-06-25_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- bulkscore=0 phishscore=0 suspectscore=0 lowpriorityscore=0 malwarescore=0
- mlxscore=0 impostorscore=0 mlxlogscore=999 priorityscore=1501 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
- definitions=main-2406260099
+In-Reply-To: <20240622-md-i386-lib-test_fpu_glue-v1-1-a4e40b7b1264@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 2024-06-22 9:55 AM, Jeff Johnson wrote:
+> make allmodconfig && make W=1 C=1 now reports:
+> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_fpu.o
+> 
+> Add the missing invocation of the MODULE_DESCRIPTION() macro.
+> 
+> Fixes: 9613736d852d ("selftests/fpu: move FP code to a separate translation unit")
+> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> ---
+>  lib/test_fpu_glue.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/lib/test_fpu_glue.c b/lib/test_fpu_glue.c
+> index eef282a2715f..074f30301f29 100644
+> --- a/lib/test_fpu_glue.c
+> +++ b/lib/test_fpu_glue.c
+> @@ -59,4 +59,5 @@ static void __exit test_fpu_exit(void)
+>  module_init(test_fpu_init);
+>  module_exit(test_fpu_exit);
+>  
+> +MODULE_DESCRIPTION("Test cases for floating point operations");
+>  MODULE_LICENSE("GPL");
+> 
+> ---
+> base-commit: 6ba59ff4227927d3a8530fc2973b80e94b54d58f
+> change-id: 20240622-md-i386-lib-test_fpu_glue-437927d4afe3
+> 
 
+Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
 
-On 6/26/2024 12:13 AM, Bart Van Assche wrote:
-> On 6/24/24 8:38 PM, Peter Wang (王信友) wrote:
->> But ufshcd_scsi_block_requests usage is correct in SDR mode.
-> 
-> ufshcd_scsi_block_requests() uses scsi_block_requests(). It is almost
-> never correct to use scsi_block_requests() in a blk-mq driver because
-> scsi_block_requests() does not wait for ongoing request submission
-> calls to complete. scsi_block_requests() is a legacy from the time when
-> all request dispatching and queueing was protected by the SCSI host
-> lock, a change that was made in 2010 or about 14 years ago. See also
-> https://lore.kernel.org/linux-scsi/20101105002409.GA21714@havoc.gtf.org/
-> 
->> So, I think ufshcd_wait_for_doorbell_clr should be revise.
->> Check tr_doorbell in SDR mode. (before 8d077ede48c1 do)
->> Check each HWQ's are all empty in MCQ mode. (need think how to do)
->> Make sure all requests is complete, and finish this function' job
->> correctly.
->> Or there still have a gap in ufshcd_wait_for_doorbell_clr.
-> 
-> ufshcd_wait_for_doorbell_clr() should be removed and 
-> ufshcd_clock_scaling_prepare() should use blk_mq_freeze_*().
-> See also my patch "ufs: Simplify the clock scaling mechanism
-> implementation" from 5 years ago 
-> (https://lore.kernel.org/linux-scsi/20191112173743.141503-5-bvanassche@acm.org/).
-> 
-The defect of blk_mq_freeze_*() is that it would bring in significant 
-latency and performance regression. I don't think it is what many people 
-want to see.
-
-BRs,
-Ziqi
-
-> Best regards,
-> 
-> Bart.
