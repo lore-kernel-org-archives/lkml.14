@@ -1,109 +1,184 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FAF17F51D;
-	Wed, 26 Jun 2024 11:33:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4FF148FE3;
+	Wed, 26 Jun 2024 11:34:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719401628; cv=none; b=uCifncTh1xAgcA1g0ydCLhMp1djOgwXmERYGGC7IuOZhHwy3S/sUUBR7RTejWrBHnn8E9JPb3mYzFvnhWN4mmw+Hu3LXFg3nklTfPALu8CZH/dDQw/1HEp1aD9lkpCQ8Fe1iEFtk4QX+Tk2NWtPtcMCm5ZEIpYo9+fEf66tO72A=
+	t=1719401685; cv=none; b=XOiScjwzMat466cC1vn27YL24aquW3fSiaUs8uMV6Cl3S6LngU8HpFk9+PskIAg0VkTELz64/FiPlstpil86cCpGh4B6grOV7tTOPpA7NKcGEXFip0xXSsBVcjGDLa39sWMFyejdxRu8Kbf/+FylElkfuZ8+GevTE6gsCAPIDi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719401628; c=relaxed/simple;
-	bh=9ZwFb0l03Kp1RAFAFT45v/mJ2mRrnVcu7V9EgEP0f3Y=;
+	s=arc-20240116; t=1719401685; c=relaxed/simple;
+	bh=qbiy6Fgp2bm0hkADsq5IGcGBc9I/3nBS4s5u3d1poSU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m/qPhVOFoJ5UBxD5trfwyoDDGRi4Lt2GfTPzYn8fhvFb4Gk87q8radso8XLJprPOTQRf4SewheEmQsHRtecs6GllX/50dMDcGjDawb1EJJ7xc3R8lpd4NN0AwGOdqI6WXmMTsD4kNEvgXW/r+EvhS0oNZNWxRYKwyy/j9bPNgpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JFuKZ4rD; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ojzxlRWIYGmW91pHf2xZNJ+t5+lbLETJbQ2T5bnymSqmdrpY2aMlVHtbOSXZ2sTeCs1fTewjlloVOFdK3ksy5npqj0Ue95u8rbJHoRAt3+QnbuSjFU2CRnMJcm2P+peyostfOoMyQCH9A57UZpwnnVRrZS1hBz54pDEI5f8Ypek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S0YLvAdE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JFuKZ4rD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719401627; x=1750937627;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9ZwFb0l03Kp1RAFAFT45v/mJ2mRrnVcu7V9EgEP0f3Y=;
-  b=JFuKZ4rDoPULLLsEQNblCdigcS4qEOJd0lNVLOFju0hm90C3X6678VmJ
-   FxN6IsSFppN9RPZ7GqyI6hzgfzB9jOSk2NTq2t3yqHFhF91ktu0kyLskP
-   BgpbCdV+IrH+eICEMJbiWCHDiQmkb8UxzMhVRMXcoiVJnRMggcw7tlV8J
-   so9/gGVQftJKzqeu4q85JnHpLrW0655xa7LpUwBLNN/PVCYdItSq3pbNN
-   N3rJyEaAP0fOZvoYQQGvmmyZA60pg5kB9etDZ+U+yYE4OfvoPfhUqhOqv
-   t03i7Yix8ZLDqX0HraPYpwTyyxJUwLRBoVB0ivQbbGmvLNFNpryhwtSzS
-   w==;
-X-CSE-ConnectionGUID: GfGR41wTQuG6sqOrX+z0dA==
-X-CSE-MsgGUID: Z4hO/AURR3+ZbdlEzZyWIQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="27057369"
-X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
-   d="scan'208";a="27057369"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 04:33:44 -0700
-X-CSE-ConnectionGUID: w3GcokUbTp6EubPCW3719A==
-X-CSE-MsgGUID: YFjj4ifuSEyONunsnNQFwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
-   d="scan'208";a="48423311"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 26 Jun 2024 04:33:39 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sMQu8-000FEO-2Y;
-	Wed, 26 Jun 2024 11:33:36 +0000
-Date: Wed, 26 Jun 2024 19:32:41 +0800
-From: kernel test robot <lkp@intel.com>
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>, tglx@linutronix.de,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	tsbogend@alpha.franken.de, daniel.lezcano@linaro.org,
-	paulburton@kernel.org, peterz@infradead.org, mail@birger-koblitz.de,
-	bert@biot.com, john@phrozen.org, sander@svanheule.net
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-	kabel@kernel.org, ericwouds@gmail.com,
-	Chris Packham <chris.packham@alliedtelesis.co.nz>,
-	Markus Stockhausen <markus.stockhausen@gmx.de>
-Subject: Re: [PATCH 4/6] clocksource: realtek: Add timer driver for rtl-otto
- platforms
-Message-ID: <202406261928.jfuyByiO-lkp@intel.com>
-References: <20240621042737.674128-5-chris.packham@alliedtelesis.co.nz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S0YLvAdE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9A2FC2BD10;
+	Wed, 26 Jun 2024 11:34:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719401685;
+	bh=qbiy6Fgp2bm0hkADsq5IGcGBc9I/3nBS4s5u3d1poSU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S0YLvAdEG+rYvLPWUP2jCiTS/JopkRtuPMsE3URFpkubiMX+wUKPF2ONR1Mg3O6r/
+	 ZtLrjgeLuN1p2IvyYpBsDYsy57VTpq6xfUu8Z9nzX6GtOEetvcXabiwUoYhtEUkQDq
+	 0EFcFK909NUINO2NTMH4q/0OcdEHOOaspP92EHuCX3P92nk4wNG4S5vjbHpvrlwtZM
+	 5TlbqoYRQVtE/Teqw7l71o6n+OSzaOyAVY1lrgnNWe3a7rDWfFhDRSMzmI1Zj81A3O
+	 OZO+EGZOmPWsx7/qWwEJwqETLNQrkpKXT+U+PyJi7Hvuw4DjYvX/43TN0E0TeFL0nC
+	 olKJqS8JAh/Ww==
+Date: Wed, 26 Jun 2024 12:34:39 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>
+Cc: broonie@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
+	jic23@kernel.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	nuno.sa@analog.com, dlechner@baylibre.com, corbet@lwn.net,
+	marcelo.schmitt1@gmail.com, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 5/7] dt-bindings: iio: adc: Add AD4000
+Message-ID: <20240626-handbrake-mustang-38c2aab3f04b@spud>
+References: <cover.1719351923.git.marcelo.schmitt@analog.com>
+ <10678612efbbd97bb47a31f4a062607cf35b03f9.1719351923.git.marcelo.schmitt@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="QP1fq927jihdQdME"
+Content-Disposition: inline
+In-Reply-To: <10678612efbbd97bb47a31f4a062607cf35b03f9.1719351923.git.marcelo.schmitt@analog.com>
+
+
+--QP1fq927jihdQdME
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240621042737.674128-5-chris.packham@alliedtelesis.co.nz>
+Content-Transfer-Encoding: quoted-printable
 
-Hi Chris,
+On Tue, Jun 25, 2024 at 06:55:03PM -0300, Marcelo Schmitt wrote:
+> Add device tree documentation for AD4000 series of ADC devices.
+>=20
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> ---
+>  .../bindings/iio/adc/adi,ad4000.yaml          | 190 ++++++++++++++++++
+>  MAINTAINERS                                   |   7 +
+>  2 files changed, 197 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4000.=
+yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4000.yaml b/=
+Documentation/devicetree/bindings/iio/adc/adi,ad4000.yaml
+> new file mode 100644
+> index 000000000000..76035dff5474
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4000.yaml
+> @@ -0,0 +1,190 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/adi,ad4000.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD4000 and similar Analog to Digital Converters
+> +
+> +maintainers:
+> +  - Marcelo Schmitt <marcelo.schmitt@analog.com>
+> +
+> +description: |
+> +  Analog Devices AD4000 family of Analog to Digital Converters with SPI =
+support.
+> +  Specifications can be found at:
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
+ad4000-4004-4008.pdf
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
+ad4001-4005.pdf
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
+ad4002-4006-4010.pdf
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
+ad4003-4007-4011.pdf
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
+ad4020-4021-4022.pdf
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
+adaq4001.pdf
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
+adaq4003.pdf
+> +
+> +$ref: /schemas/spi/spi-peripheral-props.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: adi,ad4000
+> +      - items:
+> +          - enum:
+> +              - adi,ad4004
+> +              - adi,ad4008
+> +          - const: adi,ad4000
 
-kernel test robot noticed the following build warnings:
+> +      - const: adi,ad4001
+> +      - items:
+> +          - enum:
+> +              - adi,ad4005
+> +          - const: adi,ad4001
 
-[auto build test WARNING on robh/for-next]
-[also build test WARNING on tip/timers/core tip/irq/core tip/smp/core linus/master v6.10-rc5 next-20240625]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> +      - const: adi,ad4002
+> +      - items:
+> +          - enum:
+> +              - adi,ad4006
+> +              - adi,ad4010
+> +          - const: adi,ad4002
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Chris-Packham/dt-bindings-mips-realtek-Add-rtl930x-soc-compatible/20240625-160622
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20240621042737.674128-5-chris.packham%40alliedtelesis.co.nz
-patch subject: [PATCH 4/6] clocksource: realtek: Add timer driver for rtl-otto platforms
-config: m68k-kismet-CONFIG_COMMON_CLK-CONFIG_REALTEK_OTTO_TIMER-0-0 (https://download.01.org/0day-ci/archive/20240626/202406261928.jfuyByiO-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20240626/202406261928.jfuyByiO-lkp@intel.com/reproduce)
+> +      - const: adi,ad4003
+> +      - items:
+> +          - enum:
+> +              - adi,ad4007
+> +              - adi,ad4011
+> +          - const: adi,ad4003
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406261928.jfuyByiO-lkp@intel.com/
+> +      - const: adi,ad4020
+> +      - items:
+> +          - enum:
+> +              - adi,ad4021
+> +              - adi,ad4022
+> +          - const: adi,ad4020
 
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for COMMON_CLK when selected by REALTEK_OTTO_TIMER
-   WARNING: unmet direct dependencies detected for COMMON_CLK
-     Depends on [n]: !HAVE_LEGACY_CLK [=y]
-     Selected by [y]:
-     - REALTEK_OTTO_TIMER [=y] && GENERIC_CLOCKEVENTS [=y]
+> +      - const: adi,adaq4001
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +      - const: adi,adaq4003
+
+I think some blank lines, maybe like the above, would go a long way with
+this list of compatibles.
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  spi-max-frequency:
+> +    maximum: 102040816 # for VIO > 2.7 V, 81300813 for VIO > 1.7 V
+> +
+> +  adi,sdi-pin:
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +    enum: [ high, low, cs ]
+
+    enum: [ high, low, cs, sdi ]
+    default: sdi
+
+I'd do this, so that the default is documented in the binding, not in
+the description text.
+
+Otherwise, this looks good to me.
+
+--QP1fq927jihdQdME
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnv8zwAKCRB4tDGHoIJi
+0niZAP9rjml4FX9J5YcHZEsoDTdGZp2QtDDXoMjlf4egM1sttAD9HWoM7tT1u3x2
+BfEys783Oxp2baO4Uey0cJifxyCBVAU=
+=iNmk
+-----END PGP SIGNATURE-----
+
+--QP1fq927jihdQdME--
