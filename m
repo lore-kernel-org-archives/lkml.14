@@ -1,111 +1,143 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B210F193067
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 19:43:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E76B33C5
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 19:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719430998; cv=none; b=NYr9L0Wcu9uuGRtKsg5KQym2GDKjB6xnabXZyIRfBBpNmZc6ANdYPK56GAn/uxQzxRH2UbbA8oqukDUmgjq5AVXTbTLlLsuF95+dauumgaI8Bj4oHsn9YqqSDBSYjpCC1FIdniXeXHrKvufzUotCFHabkQWdqSXeArVOIjxkVKA=
+	t=1719431013; cv=none; b=LydCy0ISAhIKv/o8M2AcHptbYpMWQHbNTqv5axj8f5uNzglTJxzf6ERX7GZNOaO8G876AsUmBrPMF58pQOWxfoCACv+uFf/Hg2qqjVKg8lZYaZqjhs1mXD7NhlA7lKh8NlEFYVpHwDJMDsdF8awNUTjq4y/95vyBZ2U/3YyB2ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719430998; c=relaxed/simple;
-	bh=APPE5dKRkNonvKUqWSiryKOGNpOJlvFzK+dcKt1+dBo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Mbp9ZBwiqOVEUgjPRO6wK53+IjA7mBKhoDbts9k2+TG8w9y7FMbx5AZY3QDxEBEYiQgsuH5As9qZSF9oVUlMHg+gCSVUOrqjvWSgKvX2XXaoGrppll8JPfHNGtIpUgxAHs4DfR8j8aLVggPZi9FV8Htln9TOqB/Q5BPryqXXxtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tM7Ucryg; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719431013; c=relaxed/simple;
+	bh=G7iGKd3NpkuleCjeNOrRcet5y5rwezOykiNc+TTLj/s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nsDHZHuGOkWF5mBQth8DJtbEMMgknus5Ig0nJluv2bPQMd951+9vOfDv6RyZWXrVY6sF2ohAUf4jUta2qyOGtBZC56pSrzOzHkbZ1sFguEP1Pwjf0FLFktmv6gmGLZrCpnMo4t+JW+ZCEkmHE78SjqPGbuXxqzdd+uFbh+PzYL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=H+Vd0VAO; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tM7Ucryg"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52cd628f21cso6488550e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 12:43:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="H+Vd0VAO"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a7241b2fe79so585851566b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 12:43:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719430995; x=1720035795; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vZg0Dan8dZ1cJlzdkxx9g6a64AyosFvjL+3niLEIVTM=;
-        b=tM7UcrygseR6YravsEJUDH6ROi9tj8d/3rgQKffuTpXjVYjiwDxNlGLGNWH4jkbxhT
-         p9EfsQQ35gyfBPEGanIrQsfWa8dPpTdAzlRwz6T35Vr8LHutFNZb5Q6CiKcLO7lMeT2I
-         G9SujYGsc84gRZkpdqDq0upsGcPgPAeWqOLf0h+PA87yM2tyYaqCKqm8RdcR6KXGgqSg
-         /nhjPdjrhx0e/c+fdwaHZ7NgXzmHtOqCchsG1vfNTD6umpK+yOPWlZEyTHoKCVJTIRyS
-         zNOBsv3iDJAFkqFxIB4GSof86/ueTxKYEXmNEc0h94TqkK1WK4HU6X8i7M+44pLzslW0
-         l2Gw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719431009; x=1720035809; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GjGTkNIBK/W7dyZDTk9H62YteS6jTO2H7CEOhj6wZPc=;
+        b=H+Vd0VAOBWF2ofpEyQsy+K/39pgPb2ImnX53ijvGwyv0riPvVYA3b7/vwex2bxgi9/
+         quKmCV/68JHPdEWTNG7EULbpaz/U/ga1aJRvaMGE4ByTz+4RS0BRy++11IU1Dex/JDwk
+         r/niYcsjlSXNBpdZQlnWJ6IIm1DZUbcEsCTH6fCWbVtFYy8/U6vG+/t264OMo2SCySHW
+         K8tiYUkxEslTg56JBd/yJl8jfPuGBj7hTE3IjjqaZXLcZxiLo+9ER4oNtCGXhH1yGQ5V
+         sjL183TZ69bF78NWm6jljd+2VUT7kNMxKhXvlz/zx5MU7T2Lay5OoCXMXuIu9TQBOMPN
+         /KkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719430995; x=1720035795;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vZg0Dan8dZ1cJlzdkxx9g6a64AyosFvjL+3niLEIVTM=;
-        b=NAHoL5Q1d7eWvlVsIk513pq6WhKGilGEJlUWEV8ddKB46Z5bSiYiEc0sM3VVb86soz
-         AV1AAMv/W2FAVErWGB/R0N/7qQDK+fdXb2nr/RaAan3DBZbSCgwwfgmo2R4i7XUl4VOY
-         UVV/hqE9BV0BV5lSB1Tvka2vUboHTUH4p4jOTp3GwvMmSBVJHIkXnY3IEsFUHrHsqvCl
-         OnJBs6Iae8W44rvDwLHuCzGbHWNMFk0bNJ0v5cDa5bYDXOebzzaT3XJq+w6Q5mf/oQKC
-         MmGA2rRm2OzDxH9pvEhsWGR5S4bGuDqxWhSYyTVINMoFb7XmLPltnUOy/Xt4jB8QzHQI
-         NQFw==
-X-Forwarded-Encrypted: i=1; AJvYcCV/jgFE4PeWGu8HRNhevAX+EwE7JF8XF2bz24q8497urfWKMMo+zoBaGbTTDc4uakbRHXApVbKHwzfRD33iLQLY4HJ37pCrbU6GyaQc
-X-Gm-Message-State: AOJu0Yw8qReEGzK2M05aUpCksMxnUmCMGqW+lNL4gOJ65HtK1E6WUmf+
-	2tSpAu3eN8J1AJW9WzDWvhcjaR8RcUN1ScCOLs56uz63ohTZz5IMO/kp2KVHC/0=
-X-Google-Smtp-Source: AGHT+IF5TBKDZODftqTmo/Y2LCMw2rq2sjADo9zE73i9eab9HhHgjvgOrzapHeP3tI3ZKFHbYrq1dw==
-X-Received: by 2002:a05:6512:3f0b:b0:52d:215a:5071 with SMTP id 2adb3069b0e04-52d215a5162mr2982937e87.62.1719430993614;
-        Wed, 26 Jun 2024 12:43:13 -0700 (PDT)
-Received: from gpeter-l.lan ([2a0d:3344:2e8:8510:24d9:a20a:2de5:8eda])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c837eb2bsm36728905e9.39.2024.06.26.12.43.11
+        d=1e100.net; s=20230601; t=1719431009; x=1720035809;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GjGTkNIBK/W7dyZDTk9H62YteS6jTO2H7CEOhj6wZPc=;
+        b=ws/nHQYXB3YavTTRSE+0btc5fn7gWT6GaTfJeC9vZTNk5kSIu77tGN+U0EZRvJ1nzh
+         YtE058rDR9+0+mlBsnD3aifZKl7u2R861dP88TyJ+y2xPfMAo1yBwFFOZ+WLSY2xeHpo
+         LmiWYTY3Zn35elnk5VR2VYykzKnQhM/MUnx3OcjE5kQWqEJHNCjnbVQh1/hbj6D9sUvn
+         0grrfpZfiYUzyDrLZB0ywrLtjZJJiS9wx5cr5LUiCnRJst6O7/Uvn34mp2+BHCRGW5L/
+         1ArfwSFIfKqTGcLxz+2nvnwetpalAwf9EqdKGwg2gOMMVD5P89LPbMb2oXwYoL38peQ0
+         bNRA==
+X-Forwarded-Encrypted: i=1; AJvYcCUi/G2h7WlqxABIHf6qzqWu+LozJtezHHW1rG0ulu33z+ez23pgMu44PzLNuz5J/yhpB4cmfV1M8LJImnbDmRtpLfpUZTbWU7xKszkf
+X-Gm-Message-State: AOJu0YwkP05EgYCv6YQA35W4AY04DPdfE84nTifR8F7VPH80+GOpA+9v
+	Dh3mX480+Ck7PNpwOZF1JBrch1NYXz3SNfsX8Dcn7JPgH7vmnRso44Nv4/iYLFVgPWx8ap3q3Yy
+	32HY=
+X-Google-Smtp-Source: AGHT+IG4TjffVhUXYhDKxyCatM54/g+s4fUWCsSBNsfk6wfhm8KPJ2zLGyyYXEOBP2q79X3ceoR9WQ==
+X-Received: by 2002:a17:906:c243:b0:a6f:569b:3ff0 with SMTP id a640c23a62f3a-a7242c39c0cmr794609666b.26.1719431009283;
+        Wed, 26 Jun 2024 12:43:29 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a724610ff5dsm437619466b.223.2024.06.26.12.43.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 12:43:12 -0700 (PDT)
-From: Peter Griffin <peter.griffin@linaro.org>
-To: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	alim.akhtar@samsung.com,
-	s.nawrocki@samsung.com,
-	cw00.choi@samsung.com,
-	mturquette@baylibre.com,
-	sboyd@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	tudor.ambarus@linaro.org,
-	andre.draszik@linaro.org,
-	kernel-team@android.com,
-	willmcvicker@google.com,
-	devicetree@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH 3/3] clk: samsung: gs101: mark gout_hsi2_ufs_embd_i_clk_unipro as critical
-Date: Wed, 26 Jun 2024 20:43:00 +0100
-Message-ID: <20240626194300.302327-4-peter.griffin@linaro.org>
-X-Mailer: git-send-email 2.45.2.741.gdbec12cfda-goog
-In-Reply-To: <20240626194300.302327-1-peter.griffin@linaro.org>
-References: <20240626194300.302327-1-peter.griffin@linaro.org>
+        Wed, 26 Jun 2024 12:43:28 -0700 (PDT)
+Date: Wed, 26 Jun 2024 21:43:26 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Lee Jones <lee@kernel.org>, William Breathitt Gray <wbg@kernel.org>
+Cc: Fabrice Gasnier <fabrice.gasnier@foss.st.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	linux-pwm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Thorsten Scherer <T.Scherer@eckelmann.de>
+Subject: Re: [PATCH v2 3/5] counter: stm32-timer-cnt: Use TIM_DIER_CCxIE(x)
+ instead of TIM_DIER_CCxIE(x)
+Message-ID: <cgtiizodhbyutaeu2kw5qszb6ap6bpzdk5pnpurliikhz4isvp@3xtidwcttjkb>
+References: <cover.1718791090.git.u.kleine-koenig@baylibre.com>
+ <126bd153a03f39e42645573eecf44ffab5354fc7.1718791090.git.u.kleine-koenig@baylibre.com>
+ <20240620084451.GC3029315@google.com>
+ <imyuhtcsjrbyodsndzbaqfwa4jxny25eylfdh4u4xtsiotsk5g@45l556pcrzys>
+ <20240620173838.GB1318296@google.com>
+ <ip5aysvcuchc6q6sikghcz7vjn6zvih5r3amkvp7n7xpvncbhh@jdq5lkckeoej>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ufxu7ubv2j356spy"
+Content-Disposition: inline
+In-Reply-To: <ip5aysvcuchc6q6sikghcz7vjn6zvih5r3amkvp7n7xpvncbhh@jdq5lkckeoej>
 
-The system hangs on poweroff when this UFS clock is turned off, meaning
-the system never powers down. For the moment mark the clock as critical.
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
----
- drivers/clk/samsung/clk-gs101.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--ufxu7ubv2j356spy
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/clk/samsung/clk-gs101.c b/drivers/clk/samsung/clk-gs101.c
-index ba9570f7a5fa..85098c61c15e 100644
---- a/drivers/clk/samsung/clk-gs101.c
-+++ b/drivers/clk/samsung/clk-gs101.c
-@@ -2846,7 +2846,7 @@ static const struct samsung_gate_clock hsi2_gate_clks[] __initconst = {
- 	GATE(CLK_GOUT_HSI2_UFS_EMBD_I_CLK_UNIPRO,
- 	     "gout_hsi2_ufs_embd_i_clk_unipro", "mout_hsi2_ufs_embd_user",
- 	     CLK_CON_GAT_GOUT_BLK_HSI2_UID_UFS_EMBD_IPCLKPORT_I_CLK_UNIPRO,
--	     21, 0, 0),
-+	     21, CLK_IS_CRITICAL, 0),
- 	GATE(CLK_GOUT_HSI2_UFS_EMBD_I_FMP_CLK,
- 	     "gout_hsi2_ufs_embd_i_fmp_clk", "mout_hsi2_bus_user",
- 	     CLK_CON_GAT_GOUT_BLK_HSI2_UID_UFS_EMBD_IPCLKPORT_I_FMP_CLK,
--- 
-2.45.2.741.gdbec12cfda-goog
+Hello,
 
+On Thu, Jun 20, 2024 at 10:56:15PM +0200, Uwe Kleine-K=F6nig wrote:
+> On Thu, Jun 20, 2024 at 06:38:38PM +0100, Lee Jones wrote:
+> > Which patches need to be in the pull-request and which can be hoovered
+> > up by their associated subsystems?
+>=20
+> The dependencies are as follows:
+>=20
+> 	#1 <- #2 <- #3 <- #4
+> 	       ^
+> 	      #5
+>=20
+> So the practical options are (in the order of my not very strong preferen=
+ce):
+>=20
+>  - Immutable branch with #1 - #4 (assuming William is ok to let you
+>    merge #3), and then I can add #5 (and further work on the pwm-stm32
+>    driver that I'm currently working on). Maybe William even doesn't
+>    need to pull; I didn't check.
+>=20
+>  - Immutable branch with only #1 and #2. Then William can pull and add
+>    #3 and I can pull and add #5. #4 can be applied later then.
+>    (I can remind about #4 in the next cycle.)
+>=20
+>  - Immutable branch with #1 - #5
+>    (Reminder: In that case please fixup the pwm patch's short log with
+>    s/-/: /)
+>    I would add this for sure to the pwm tree. I didn't even try to check
+>    if it's needed for mfd and/or counter. So if you don't need it, I
+>    volunteer to create that branch, but if you want to do it, that's
+>    just fine, too.
+
+I wonder what's the state here. Maybe Lee waiting for William to send an
+Ack that Lee can do the first option?
+
+Best regards
+Uwe
+
+--ufxu7ubv2j356spy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZ8b08ACgkQj4D7WH0S
+/k5u9wf8D3qbnAeT1su3hEebC3PyyJaGAQgQP3j6KOeSzL1QwvEYVG2QWirUwU4M
+nduLdm0RKB//DIb98T87S1WNT9+6yRy4YNG51liRGPPdJkCPftYiA7qCrmS8+knn
+XxFUJ0q578MzWTPZEuIFVNybdF1XLjb07eWerpE9TNIOwawnrmdrSXAEWF/7AjaL
+krin++PPjmLPvcaREVVvosFdov4XIZJij9gso9M61zj+ZiDGQxRYBWsrrjDhGPKD
+/6E5R9RISaOSqFyi/kpLgifRQP0ts94QLVIvtbvD30M9pB9exTBRRl1AHxq4iSws
+YmMOzrRvYdoXCNcwcerJ4oXz3keWqA==
+=Y58C
+-----END PGP SIGNATURE-----
+
+--ufxu7ubv2j356spy--
