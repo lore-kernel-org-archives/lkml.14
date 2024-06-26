@@ -1,215 +1,197 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3013617C9F6;
-	Wed, 26 Jun 2024 10:45:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0524113A26F;
+	Wed, 26 Jun 2024 10:46:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719398750; cv=none; b=GPpz5NJ8TQOvxxlMv6NQ4or9+enLB0GlIuKILkDNZFOTK85GnrruDYNf8W7bdCn1UBkw5n6ZzaSuvRG7wdvOWMPxxNT5Zf3Sl19PtIpuD4vQCl3Yr4KRzUCBpMRzZ+Oh6WT438C8HMbZmbUn2nnznVvvAw2fLQDGRMitT/fkKbc=
+	t=1719398805; cv=none; b=XwOGaiykWQ1O7Hxe/ht/B/0zYJq/zfN8d578f19ydbbh1NCyZdIcHuqYuDaekVp6POvRKi4iCq6xJ1GcRRunCQ53UaEXGByPSctXOj5EW8z/xUO4SVwTY2vKrlVkDKBthThWzhTAF8IsMoMgAdbBTk5OWUpos4e+F8t9YCj7MTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719398750; c=relaxed/simple;
-	bh=gUvkfQR3XurRfokYgcQVTroT7co+N0bdpPY0/yQwGaA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZjDhFZuRZMj6cEcGaco/q1T32pQ/qEsPTMHVTUbTTtVygQmqJ0rZdzquzxNYqSQvZNMIwhr5IJxzkJaHBEXZJe55nzRog8609JnnQ4+BDdbPRJnszutOj0uomsWkBCXtG78N5gp44F7BSomsBQB9qUpYeZbwpZTkyGniwsAsSTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=LS6iIdN/; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1719398805; c=relaxed/simple;
+	bh=12cKuQ+zRvobmODA4op7ItxgMeiU50RQfcgDGX/gsYg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YbxgCdSJlnofkgTFdr5bFQ4t5lsPiKAZeextMznXRvtDgq5qA8+5NpstJ7R0PmEUFau83u04+atP4RGMUTXuQIamwoRzCSro6sCEYHtxp9HvpitEFYJNwFRyxR/hCQgKWDN0QKOcPVeoqYmu3+Jywxtz0WyOynQYO6HlKggMEWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Gd507zXd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Kg/CM1CG; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=e7+KCXzS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=R6lIPqGW; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="LS6iIdN/"
-X-UUID: 3aa05a0c33a911ef8da6557f11777fc4-20240626
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=ogmvRorUVnK4moYtGoV0bPSi4opMDU4Im8iwlQNM6Z0=;
-	b=LS6iIdN/7v63HwLDrSA5GI1BjRd9hDFS+N+t9q1Tl4SPa7X+XZkaVenwr8FMjXzgAtRQhOWADkNSZWkt8ScNj7/6FSKFyBKuZTJmtwH3GT2zkFadrRLHRdeMYBvLBWg+1BuiujbZ0L+VhRyqdEnWwkdzf4HnFJlmUjueAc8a+5c=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.39,REQID:545742a5-9448-4a4b-b835-4dcc04baa68f,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-25
-X-CID-META: VersionHash:393d96e,CLOUDID:e7430c45-4544-4d06-b2b2-d7e12813c598,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 3aa05a0c33a911ef8da6557f11777fc4-20240626
-Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw01.mediatek.com
-	(envelope-from <skylake.huang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 4047383; Wed, 26 Jun 2024 18:45:39 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Wed, 26 Jun 2024 18:45:38 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Wed, 26 Jun 2024 18:45:38 +0800
-From: Sky Huang <SkyLake.Huang@mediatek.com>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Daniel Golle
-	<daniel@makrotopia.org>, Qingfang Deng <dqfext@gmail.com>, SkyLake Huang
-	<SkyLake.Huang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
-CC: Steven Liu <Steven.Liu@mediatek.com>, SkyLake.Huang
-	<skylake.huang@mediatek.com>
-Subject: [PATCH net-next v9 01/13] net: phy: mediatek: Re-organize MediaTek ethernet phy drivers
-Date: Wed, 26 Jun 2024 18:43:17 +0800
-Message-ID: <20240626104329.11426-2-SkyLake.Huang@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20240626104329.11426-1-SkyLake.Huang@mediatek.com>
-References: <20240626104329.11426-1-SkyLake.Huang@mediatek.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Gd507zXd";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Kg/CM1CG";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="e7+KCXzS";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="R6lIPqGW"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 135EF1FB4C;
+	Wed, 26 Jun 2024 10:46:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1719398801; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=YojtZiArRHb8JKphs/qX6maCDdsDI0fte/sTccK0ELU=;
+	b=Gd507zXdcc0PYjIWCHABMw8L8HNBiy9FfJBVj3pA0Zvi1/OR6/ny7CDrIKQi86j4EgsRax
+	gd57kTyANcCxU8OBxKwLx+m72/FSpysP7WLa1dpKP0LzLhOPxcXJDGAS18upl+aYPlxWDb
+	3Ox8ffgQ8BR426DRrepO7VG2RT0Q1jo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1719398801;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=YojtZiArRHb8JKphs/qX6maCDdsDI0fte/sTccK0ELU=;
+	b=Kg/CM1CGhzbiP8GXWne53MUp/CIhe+xSBQ/6tS3FNDl3/IPb0IuFxWmffkDeWusLTlwQ6t
+	cb2Z4c5ZwAiTIfCg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=e7+KCXzS;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=R6lIPqGW
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1719398800; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=YojtZiArRHb8JKphs/qX6maCDdsDI0fte/sTccK0ELU=;
+	b=e7+KCXzSmS7VlJnfXszGUfOHpANhnfMsXlmcHdWQoZsRYBqGE/a+DXiQspbbquYXzlNwVh
+	Aimn45dhzKUofuV4t0y4NZ1hdNZt/r1usCacaewIQAQCRTXeOnhwyVc4CYbTs+DfJpEqWp
+	4YI+apYx+3Ops+3AqbsprAVrZdOIjAI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1719398800;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=YojtZiArRHb8JKphs/qX6maCDdsDI0fte/sTccK0ELU=;
+	b=R6lIPqGWAJiVrPSPuup4LX4ehc8kY8CsCTToNUEjBVeFlnyJlm61lu21iQ4/UVa+nGp73z
+	JAl1lmyrPCFDgbAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EE113139C2;
+	Wed, 26 Jun 2024 10:46:38 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id tQ1AN47xe2ZuDQAAD6G6ig
+	(envelope-from <svarbanov@suse.de>); Wed, 26 Jun 2024 10:46:38 +0000
+From: Stanimir Varbanov <svarbanov@suse.de>
+To: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	kw@linux.com,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Phil Elwell <phil@raspberrypi.com>,
+	Jonathan Bell <jonathan@raspberrypi.com>,
+	Stanimir Varbanov <svarbanov@suse.de>
+Subject: [PATCH 0/7] Add PCIe support for bcm2712
+Date: Wed, 26 Jun 2024 13:45:37 +0300
+Message-ID: <20240626104544.14233-1-svarbanov@suse.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--8.915500-8.000000
-X-TMASE-MatchedRID: 1GombW7zgV6fF/fARRyav23NvezwBrVmK2i9pofGVSvNQVzhfYY5snLM
-	RSx26gTiX3E2fHKxS5INbmAgKiEzxIoNrmb7m9Z4A9lly13c/gFU3K6aV1ad7QfxTM57BPHDf+2
-	a6pivqxbyCYcrUQnR1dRrGypw1446T9giPNdKW0PJ5W6OZe5hhfNYQxCOihTN/RM/+SKR6qea1z
-	srn5MD0uLzNWBegCW2wgn7iDBesS15zdAzex5xZpQoddEsLAee3kHAlZxyq1YGGO+ypLi6rK7h4
-	7PGA3okuj+5pI2E6kKUTGVAhB5EbQ==
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--8.915500-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP: 118BC591DA5557C86C9A0A716BA93092443A1DE8779866A0991F32A71DA195F72000:8
-X-MTK: N
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-1.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_CC(0.00)[linutronix.de,kernel.org,broadcom.com,gmail.com,google.com,linux.com,pengutronix.de,suse.com,raspberrypi.com,suse.de];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim];
+	TAGGED_RCPT(0.00)[dt];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 135EF1FB4C
+X-Spam-Flag: NO
+X-Spam-Score: -1.51
+X-Spam-Level: 
 
-From: "SkyLake.Huang" <skylake.huang@mediatek.com>
+This patchset aims to add bare minimum support for bcm2712
+in brcmstb PCIe driver needed to support the peripherals from
+RP1 south-bridge found in RPi5. In order to support RP1
+PCIe endpoint peripherals a new interrupt controller is added.
+The interrupt controller supports 64 interrupt sources which
+are enough to handle 61 RP1 peripherals.
 
-Re-organize MediaTek ethernet phy driver files and get ready to integrate
-some common functions and add new 2.5G phy driver.
-mtk-ge.c: MT7530 Gphy on MT7621 & MT7531 Gphy
-mtk-ge-soc.c: Built-in Gphy on MT7981 & Built-in switch Gphy on MT7988
-mtk-2p5ge.c: Planned for built-in 2.5G phy on MT7988
+Patch 1 is adding DT binding schema for the MIP interrupt
+controller, patch 2 is adding relevant changes for PCIe
+bcm2712 in yaml. Patch 3 adds MIP intterrupt cotroller driver.
+Patches 4 and 5 are preparations for adding bcm2712 support in 6.
+The last patch updates bcm2712 .dsti by adding pcie DT nodes.
 
-Signed-off-by: SkyLake.Huang <skylake.huang@mediatek.com>
----
-Changes in v5:
-- Change MEDIATEK_GE_SOC_PHY from bool back to tristate.
----
- MAINTAINERS                                   |  4 ++--
- drivers/net/phy/Kconfig                       | 17 +-------------
- drivers/net/phy/Makefile                      |  3 +--
- drivers/net/phy/mediatek/Kconfig              | 22 +++++++++++++++++++
- drivers/net/phy/mediatek/Makefile             |  3 +++
- .../mtk-ge-soc.c}                             |  0
- .../phy/{mediatek-ge.c => mediatek/mtk-ge.c}  |  0
- 7 files changed, 29 insertions(+), 20 deletions(-)
- create mode 100644 drivers/net/phy/mediatek/Kconfig
- create mode 100644 drivers/net/phy/mediatek/Makefile
- rename drivers/net/phy/{mediatek-ge-soc.c => mediatek/mtk-ge-soc.c} (100%)
- rename drivers/net/phy/{mediatek-ge.c => mediatek/mtk-ge.c} (100%)
+Few concerns about the implementation:
+ - the connection between MIP interrupt-controller and PCIe RC is 
+   done through BAR1. The PCIe driver is parsing the msi_parent
+   DT property in order to obtain few private DT properties like 
+   "brcm,msi-pci-addr" and "reg". IMO this looks hackish but I failed
+   to find something better. Ideas? 
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e291445..6deaf94 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13793,8 +13793,8 @@ M:	Qingfang Deng <dqfext@gmail.com>
- M:	SkyLake Huang <SkyLake.Huang@mediatek.com>
- L:	netdev@vger.kernel.org
- S:	Maintained
--F:	drivers/net/phy/mediatek-ge-soc.c
--F:	drivers/net/phy/mediatek-ge.c
-+F:	drivers/net/phy/mediatek/mtk-ge-soc.c
-+F:	drivers/net/phy/mediatek/mtk-ge.c
- F:	drivers/phy/mediatek/phy-mtk-xfi-tphy.c
- 
- MEDIATEK I2C CONTROLLER DRIVER
-diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-index 1df0595..e0e4b5e 100644
---- a/drivers/net/phy/Kconfig
-+++ b/drivers/net/phy/Kconfig
-@@ -251,22 +251,7 @@ config MAXLINEAR_GPHY
- 	  Support for the Maxlinear GPY115, GPY211, GPY212, GPY215,
- 	  GPY241, GPY245 PHYs.
- 
--config MEDIATEK_GE_PHY
--	tristate "MediaTek Gigabit Ethernet PHYs"
--	help
--	  Supports the MediaTek Gigabit Ethernet PHYs.
--
--config MEDIATEK_GE_SOC_PHY
--	tristate "MediaTek SoC Ethernet PHYs"
--	depends on (ARM64 && ARCH_MEDIATEK) || COMPILE_TEST
--	depends on NVMEM_MTK_EFUSE
--	help
--	  Supports MediaTek SoC built-in Gigabit Ethernet PHYs.
--
--	  Include support for built-in Ethernet PHYs which are present in
--	  the MT7981 and MT7988 SoCs. These PHYs need calibration data
--	  present in the SoCs efuse and will dynamically calibrate VCM
--	  (common-mode voltage) during startup.
-+source "drivers/net/phy/mediatek/Kconfig"
- 
- config MICREL_PHY
- 	tristate "Micrel PHYs"
-diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-index 197acfa..de38cbf 100644
---- a/drivers/net/phy/Makefile
-+++ b/drivers/net/phy/Makefile
-@@ -71,8 +71,7 @@ obj-$(CONFIG_MARVELL_PHY)	+= marvell.o
- obj-$(CONFIG_MARVELL_88Q2XXX_PHY)	+= marvell-88q2xxx.o
- obj-$(CONFIG_MARVELL_88X2222_PHY)	+= marvell-88x2222.o
- obj-$(CONFIG_MAXLINEAR_GPHY)	+= mxl-gpy.o
--obj-$(CONFIG_MEDIATEK_GE_PHY)	+= mediatek-ge.o
--obj-$(CONFIG_MEDIATEK_GE_SOC_PHY)	+= mediatek-ge-soc.o
-+obj-y				+= mediatek/
- obj-$(CONFIG_MESON_GXL_PHY)	+= meson-gxl.o
- obj-$(CONFIG_MICREL_KS8995MA)	+= spi_ks8995.o
- obj-$(CONFIG_MICREL_PHY)	+= micrel.o
-diff --git a/drivers/net/phy/mediatek/Kconfig b/drivers/net/phy/mediatek/Kconfig
-new file mode 100644
-index 0000000..6839ea6
---- /dev/null
-+++ b/drivers/net/phy/mediatek/Kconfig
-@@ -0,0 +1,22 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+config MEDIATEK_GE_PHY
-+	tristate "MediaTek Gigabit Ethernet PHYs"
-+	help
-+	  Supports the MediaTek non-built-in Gigabit Ethernet PHYs.
-+
-+	  Non-built-in Gigabit Ethernet PHYs include mt7530/mt7531.
-+	  You may find mt7530 inside mt7621. This driver shares some
-+	  common operations with MediaTek SoC built-in Gigabit
-+	  Ethernet PHYs.
-+
-+config MEDIATEK_GE_SOC_PHY
-+	tristate "MediaTek SoC Ethernet PHYs"
-+	depends on (ARM64 && ARCH_MEDIATEK) || COMPILE_TEST
-+	select NVMEM_MTK_EFUSE
-+	help
-+	  Supports MediaTek SoC built-in Gigabit Ethernet PHYs.
-+
-+	  Include support for built-in Ethernet PHYs which are present in
-+	  the MT7981 and MT7988 SoCs. These PHYs need calibration data
-+	  present in the SoCs efuse and will dynamically calibrate VCM
-+	  (common-mode voltage) during startup.
-diff --git a/drivers/net/phy/mediatek/Makefile b/drivers/net/phy/mediatek/Makefile
-new file mode 100644
-index 0000000..005bde2
---- /dev/null
-+++ b/drivers/net/phy/mediatek/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_MEDIATEK_GE_PHY)		+= mtk-ge.o
-+obj-$(CONFIG_MEDIATEK_GE_SOC_PHY)	+= mtk-ge-soc.o
-diff --git a/drivers/net/phy/mediatek-ge-soc.c b/drivers/net/phy/mediatek/mtk-ge-soc.c
-similarity index 100%
-rename from drivers/net/phy/mediatek-ge-soc.c
-rename to drivers/net/phy/mediatek/mtk-ge-soc.c
-diff --git a/drivers/net/phy/mediatek-ge.c b/drivers/net/phy/mediatek/mtk-ge.c
-similarity index 100%
-rename from drivers/net/phy/mediatek-ge.c
-rename to drivers/net/phy/mediatek/mtk-ge.c
+ - in downstream RPi kernel "ranges" and "dma-ranges" DT properties 
+   are under an axi {} simple-bus node even that PCIe block is on CPU
+   MMIO bus. I tried to merge axi {} in soc {} and the result could be
+   seen on the last patch in this series, but I'm still not sure that
+   it looks good enough.
+
+This series has been functionally tested on OpenSUSE Tumbleweed with
+downstream RP1 south-bridge PCIe endpoint driver implementation as
+MFD by using ethernet which is part of it. 
+
+The series is based on Andrea's "Add minimal boot support for Raspberry Pi 5"
+series.
+
+Comments are welcome!
+
+regards,
+~Stan
+
+Stanimir Varbanov (7):
+  dt-bindings: interrupt-controller: Add bcm2712 MSI-X DT bindings
+  dt-bindings: PCI: brcmstb: Update bindings for PCIe on bcm2712
+  irqchip: Add Broadcom bcm2712 MSI-X interrupt controller
+  PCI: brcmstb: Reuse config structure
+  PCI: brcmstb: add phy_controllable flag
+  PCI: brcmstb: Add bcm2712 support
+  arm64: dts: broadcom: bcm2712: Add PCIe DT nodes
+
+ .../brcm,bcm2712-msix.yaml                    |  74 +++++
+ .../bindings/pci/brcm,stb-pcie.yaml           |  17 +
+ arch/arm64/boot/dts/broadcom/bcm2712.dtsi     | 218 +++++++++++-
+ drivers/irqchip/Kconfig                       |  12 +
+ drivers/irqchip/Makefile                      |   1 +
+ drivers/irqchip/irq-bcm2712-mip.c             | 287 ++++++++++++++++
+ drivers/pci/controller/pcie-brcmstb.c         | 314 ++++++++++++++++--
+ 7 files changed, 876 insertions(+), 47 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2712-msix.yaml
+ create mode 100644 drivers/irqchip/irq-bcm2712-mip.c
+
 -- 
-2.18.0
+2.43.0
 
