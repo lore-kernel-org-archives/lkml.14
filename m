@@ -1,164 +1,184 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F035186E5B
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 13:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A35C181317;
+	Wed, 26 Jun 2024 13:09:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719407342; cv=none; b=VgD/xqAWaBnNgsSBcb2eSkJ6R2RF3lppcYpnOLEWp4DyujU5SGI4/0a23u2ed+h7cmkrJzO8wQ6T/P2mDaeekXBu+R1Ww4Ah01MnfkIDMdxHqPSi8xnNPN+pPzR6oVubHuUYWDFvJzyJe8e6vGMuw4APSICCK2Ly1K1HOzYqZGw=
+	t=1719407381; cv=none; b=bGuEYaj0tQQkROtn3IXLTIO1Iwa7+1gSLFeNcBrFxRj1PP3JK4UzxfTf+Ws/yRLMCRmeWOS0sqAyIx7/5e3qyvKYgl+Ffx7Lqd2LAnprfS13RiSElt06ocI1RsyaUK2GqmNP5vXW8NEJtmAWpEUvTyZ1IE0RxzlGHp2Ru4kI7Yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719407342; c=relaxed/simple;
-	bh=n6pkAuT24rtEoXNw0ZKKew3iM/VuDUjre3EgSariM/0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Sjc7QkdRFe2+awuOCw/zb8PIqRNjqgY0tjwVNxKu2z0sG8XbkGPCt4/ua3BjeSsT6tRX8BhyUYn4lHKd+IAWpMd8oYyMA95fdSUNV3rLOUG2PDSH1gjqzYG7FHBEJ+l3qSte41Z4csx/d35iDg2lUp7l3mLrZvhV8QqYNgx/1HY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=3EsF6Hbk; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1719407381; c=relaxed/simple;
+	bh=XRza0LYYRc3eq7/ZicGsRqiyjXUJRix+TvSQm3uUJ30=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uqA+4Xecv/oLHv+Enni6NSciUWJDs5PFXNitR8uv0w48Py8sXgP93fyGqM3GGPJt2Vj/+nlxAzbVSPwP2ksWuuB4n8CrFIQv/WckYFURIGdYLLIqeqUzuSYT5kjSIYwI0kYeln9mM4Hd+BUpglkSJafQhqaE07sbplHA8xYssTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dPOICk61; arc=none smtp.client-ip=209.85.166.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="3EsF6Hbk"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52cd717ec07so6026435e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 06:08:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dPOICk61"
+Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7ec0385de1fso256426039f.3;
+        Wed, 26 Jun 2024 06:09:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719407338; x=1720012138; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DAwsmjkuECiz/mPkaZn9ympydsm9zMlHdoAoEYhhRo8=;
-        b=3EsF6HbkdjpczwL8z8ejw1byJWZxllkKXdUXAx++G6KlBPycETsXvkXXq1jtTqGjj4
-         QZyadlgwdf3xLQtRKzSOw7gZpdVraL3uLs8PoEhek0nm/ZWPnL1AnfpeeO+7c4Jce0Pu
-         oX228uHyHwgh8LKeYAEwisMNGvNAhEG1wVpBz9nfy+hAy9lUSc7PUF1wcnFSEiIetNss
-         RwhfW8eb//MwqgOFmamG2i8KrV6KH+OPcLFERbRDrlqHjwxd710Lxb7G7hKfYyY6/adK
-         tp2JEhQ7KznT/UNrX3V7dIobuE0qgz0xQ527yyJveOolrFxVOiSIEsCGA3NOADFS63gU
-         blrg==
+        d=gmail.com; s=20230601; t=1719407378; x=1720012178; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=jbIul95IiAdrCpaQCiXavVl0qli0kmX8f13o2oCOgGQ=;
+        b=dPOICk619MUmf13Qi/X1afy4+8GnvNZZ+h8MwcotS4CkG2RQmoSPD1qvbI4TEMQHSf
+         fL8gR3dscg8YoPGfE+TQzft4eb3HGXF3jEFR5FXvhsN+ndNCGhNnXVWweaQLzYTMmS7a
+         UwcaHvBBllo2XLaLaOOIRVcRixAmMWfOYgbpdNnGkGyhfF4G/JmkCC7jrxbgbres8ZWC
+         0F4Wq7c4fUZnQs/f1V9bHATStWVG8RMF6bWjSStxyeyIDfkaFiiotOmhT0X64z/iQBR6
+         rOXBRq4m6lcBXuDlRd/fjnIU6ZmWFyi57bHMY4gbA6OgpDAwWb+BQLneAJ3UVwTn9/oa
+         h2hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719407338; x=1720012138;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DAwsmjkuECiz/mPkaZn9ympydsm9zMlHdoAoEYhhRo8=;
-        b=Dbxl8vAmYFR7iqJEphrR4gvDYJlovK8v3mrkoNo2T1RWYyIrX1BtDYyld6xHrPHFQk
-         3LSTNu6iWl4JnbN959EAvDID9j8aAHeCL36Bm9AbUT/SyzNlRJ34fXWGWF/W03iBFlho
-         d0BWnsT64s7PjoJYGtymuAXMNrl5t8R4tgmc7Xad9c+4U9ZKE10awPHbdzU5kqCWyl5y
-         8upNuTshIdi7QXwXqjQwlgnemzUfmHc1bD06xBwQAai9dDms48C51Yx7BOU+WEQ9b+oS
-         juh+DS1V1Zu4MQ0wXiLdv7IMVLPnQc+lBsd61fIVNox7Q4wL5TFE45yBbCTCz9pTKKm8
-         jbzA==
-X-Forwarded-Encrypted: i=1; AJvYcCV4Ll73iz8PBhNgJ6W81XpmuW3ypynhdtuhmtyJ0g/cw9gvV0/FHXnwVpDnPRc+va7nDTtT29enFdu8wJGisQDZoCj3AbW6EqpYBgrg
-X-Gm-Message-State: AOJu0Yya9H5mvmjZbkRdUjsaI5bwzGkfS/u+PtWKl9wjIX76TJPKl3WH
-	DkWcV9cAqxNN791bg/CymUsNNTpIGWmU03vF6qwtOB3VDQolM7qAgP6B0DHV/Yo=
-X-Google-Smtp-Source: AGHT+IE6IYtOzpJIWWby5oBtItvoKm+O8WuyMECCoA3dQcwC4BqVw/peghmNdO01PLv674LqbGf4lw==
-X-Received: by 2002:a05:6512:6ce:b0:52d:b1bb:370 with SMTP id 2adb3069b0e04-52db1bb0490mr1964462e87.23.1719407337732;
-        Wed, 26 Jun 2024 06:08:57 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c8266bd5sm25627705e9.26.2024.06.26.06.08.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 06:08:57 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Andrea Parri <parri.andrea@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Leonardo Bras <leobras@redhat.com>,
-	Guo Ren <guoren@kernel.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-arch@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v2 05/10] riscv: Implement arch_cmpxchg128() using Zacas
-Date: Wed, 26 Jun 2024 15:03:42 +0200
-Message-Id: <20240626130347.520750-6-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240626130347.520750-1-alexghiti@rivosinc.com>
-References: <20240626130347.520750-1-alexghiti@rivosinc.com>
+        d=1e100.net; s=20230601; t=1719407378; x=1720012178;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jbIul95IiAdrCpaQCiXavVl0qli0kmX8f13o2oCOgGQ=;
+        b=ICCr3kE/mfVodv+uydDZy21jqLl6+vI9WtqN6eGlJRq9Qp/iA6pqOlg5d2ZyccHbFL
+         +sF4IECuldPzzC/eJDpBq5+1m7T9NG0x6o8gGwdN2Ou0VrhsPanjIOcXn3w2t/Fod0cr
+         EUXTXXEEUB5OZCtLVY8kqJ6oPIHaEr0IFMRnf2iZPK5i6PZYy1Yu4iIIAdySXQYP656v
+         Ih3+01HNnR/K7dLT3Ys/2x/hfi9OCAVPDx2VRoea40O96MnHflSy30CjGZL3trGKPFRU
+         /a/dgcO5MAJXvrPYgscLLiN+obqXUjBv2inhyULUTklZ6GwRxwXVZQKUSJ6z0/x31IZZ
+         9VUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU7t7lh5Wzc1WgxSVtqx0RgFF2DGtsuAD6eBk+Q3qBOsmawCg4Z2s7USCrFc7fpFePgGmNJQW/cRzRr8y1jXu8RroIiheAZchxd59gq+nUxdOM5W/It+sPbKMmBCH4SI4pmDAiHnqY4X1Y=
+X-Gm-Message-State: AOJu0YzXXmYsgeZo7/CoiC9CfVsfkUBqczJvHTuda5MkCbSVZyghVScH
+	+SerGUyhMVggmyD3T/j5VwHatW7IAvbgzZyzsXphYRpwcjwLyfyMIE/OyA==
+X-Google-Smtp-Source: AGHT+IHDBNwyF3yqYq8SINduMUQOS+BdwelFCdeuqy0+90D2akEC2VYuXkqqgotMW0QQOKvpaPOURw==
+X-Received: by 2002:a05:6602:6c0b:b0:7eb:8887:d6bb with SMTP id ca18e2360f4ac-7f3a74d7044mr1320387839f.2.1719407378556;
+        Wed, 26 Jun 2024 06:09:38 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7067e0e5723sm6181314b3a.75.2024.06.26.06.09.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Jun 2024 06:09:37 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <7bbf1688-4dfd-4a6f-90f2-ee235027c701@roeck-us.net>
+Date: Wed, 26 Jun 2024 06:09:34 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ALSA: hda: intel-dsp-config: Fix Azulle Access 4 quirk
+ detection
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
+ <amadeuszx.slawinski@linux.intel.com>, Allen Ballway <ballway@chromium.org>,
+ LKML <linux-kernel@vger.kernel.org>, Brady Norander
+ <bradynorander@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>,
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+ Mark Brown <broonie@kernel.org>, linux-sound@vger.kernel.org,
+ Mark Hasemeyer <markhas@chromium.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Cezary Rojewski <cezary.rojewski@intel.com>
+References: <20240430212838.1.I77b0636d5df17c275042fd66cfa028de8ad43532@changeid>
+ <83e218f9-29f5-4f35-bd0c-b298e3bb9e8c@linux.intel.com>
+ <CAEs41JC-vJaMHj6fzmNO=-bu5oURRA-u565sN2=yzBeVtKb=4g@mail.gmail.com>
+ <b2375610-4044-49e6-86e9-5c172abb2ffa@linux.intel.com>
+ <CAEs41JAPPr3xRR42H6vKic5rVrtV-on4HyT5wNCXxbJtwijnCA@mail.gmail.com>
+ <3d44c749-6c81-4c11-9409-b01815fe1a91@linux.intel.com>
+ <3d9ef693-75e9-4be0-b1c0-488d3e2d41c5@linux.intel.com>
+ <01904abc-5e7c-4006-96d9-83fc5de8bb21@roeck-us.net>
+ <fb9ce0ce-dddb-4f88-9ac6-0f6cdd6ccb28@linux.intel.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <fb9ce0ce-dddb-4f88-9ac6-0f6cdd6ccb28@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Now that Zacas is supported in the kernel, let's use the double word
-atomic version of amocas to improve the SLUB allocator.
+On 6/26/24 00:04, Pierre-Louis Bossart wrote:
+> 
+> 
+> On 6/25/24 23:37, Guenter Roeck wrote:
+>> On Fri, Jun 21, 2024 at 10:35:31AM +0200, Pierre-Louis Bossart wrote:
+>>>
+>>>
+>>> On 6/21/24 08:15, Amadeusz Sławiński wrote:
+>>>> On 6/20/2024 9:27 PM, Allen Ballway wrote:
+>>>>> I filed a bug and after sharing the requested information it looks
+>>>>> like this device won't work on SOF without vendor support. Given this,
+>>>>> would the original patch returning this device to using HDAudio be
+>>>>> reasonable, or is there an preferred alternative to force this device
+>>>>> into using HDAudio?
+>>>>>
+>>>>
+>>>> And can you share link to the issue on mailing list, so someone reading
+>>>> this thread in the future doesn't have to guess where it is? ;)
+>>>
+>>> https://github.com/thesofproject/linux/issues/4981
+>>>
+>>> I don't know what to do with this configuration.
+>>> We added a quirk to force SOF to be used for ES8336 devices. It worked
+>>> for some, but not for others. Now we have quite a few ES8336-based
+>>> platforms that are broken with zero support from the vendor, with
+>>> obscure I2C/GPIO/clk issues.
+>>> Are we going to tag each one of them and say 'not supported, use HDMI only'?
+>>> That's pushing a bit the notion of quirk...It would generate an endless
+>>> stream of patches. The alternative is to do nothing and ask that those
+>>> platforms revert to HDMI audio only with a kernel parameter. That latter
+>>> alternative has my vote.
+>>>
+>>
+>> Given that this apparently does not work for many ES8336 devices,
+>> would it make more sense to disable SOF support for those by default
+>> and _enable_ them with a kernel parameter ?
+> 
+> Some configurations work, so we would break them.
+> 
 
-Note that we have to select fixed registers, otherwise gcc fails to pick
-even registers and then produces a reserved encoding which fails to
-assemble.
+Yes, but for others it is a regression, so arguably the change to force-enable
+SOF caused a regression and should either be reverted or fixed such that all
+previously working configurations still work (even more so since fixing
+the problem one-by-one as affected systems are found is being rejected).
 
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- arch/riscv/Kconfig               |  1 +
- arch/riscv/include/asm/cmpxchg.h | 39 ++++++++++++++++++++++++++++++++
- 2 files changed, 40 insertions(+)
-
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index d3b0f92f92da..0bbaec0444d0 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -104,6 +104,7 @@ config RISCV
- 	select GENERIC_VDSO_TIME_NS if HAVE_GENERIC_VDSO
- 	select HARDIRQS_SW_RESEND
- 	select HAS_IOPORT if MMU
-+	select HAVE_ALIGNED_STRUCT_PAGE
- 	select HAVE_ARCH_AUDITSYSCALL
- 	select HAVE_ARCH_HUGE_VMALLOC if HAVE_ARCH_HUGE_VMAP
- 	select HAVE_ARCH_HUGE_VMAP if MMU && 64BIT
-diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
-index 3c65b00a0d36..da42f32ea53d 100644
---- a/arch/riscv/include/asm/cmpxchg.h
-+++ b/arch/riscv/include/asm/cmpxchg.h
-@@ -280,4 +280,43 @@ end:;									\
- 	arch_cmpxchg_release((ptr), (o), (n));				\
- })
- 
-+#ifdef CONFIG_RISCV_ISA_ZACAS
-+
-+#define system_has_cmpxchg128()						\
-+			riscv_has_extension_unlikely(RISCV_ISA_EXT_ZACAS)
-+
-+union __u128_halves {
-+	u128 full;
-+	struct {
-+		u64 low, high;
-+	};
-+};
-+
-+#define __arch_cmpxchg128(p, o, n, cas_sfx)					\
-+({										\
-+	__typeof__(*(p)) __o = (o);						\
-+	union __u128_halves __hn = { .full = (n) };				\
-+	union __u128_halves __ho = { .full = (__o) };				\
-+	register unsigned long x6 asm ("x6") = __hn.low;			\
-+	register unsigned long x7 asm ("x7") = __hn.high;			\
-+	register unsigned long x28 asm ("x28") = __ho.low;			\
-+	register unsigned long x29 asm ("x29") = __ho.high;			\
-+										\
-+	__asm__ __volatile__ (							\
-+		"	amocas.q" cas_sfx " %0, %z3, %2"			\
-+		: "+&r" (x28), "+&r" (x29), "+A" (*(p))				\
-+		: "rJ" (x6), "rJ" (x7)						\
-+		: "memory");							\
-+										\
-+	((u128)x29 << 64) | x28;						\
-+})
-+
-+#define arch_cmpxchg128(ptr, o, n)						\
-+	__arch_cmpxchg128((ptr), (o), (n), ".aqrl")
-+
-+#define arch_cmpxchg128_local(ptr, o, n)					\
-+	__arch_cmpxchg128((ptr), (o), (n), "")
-+
-+#endif /* CONFIG_RISCV_ISA_ZACAS */
-+
- #endif /* _ASM_RISCV_CMPXCHG_H */
--- 
-2.39.2
+Thanks,
+Guenter
 
