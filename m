@@ -1,33 +1,42 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208A633C5;
-	Wed, 26 Jun 2024 06:22:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A79BE542
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 06:22:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719382921; cv=none; b=lfZCUhSptFrJNen6hSo8NdOAC7Git/QeH6pl+xczHDm5Vg2fKbihuB9VyVbkdhj8hO+KM8tUeYVWpjlFji0N4YaPM3b7yVPT8xg4V//gH9S4EjhJdbba6CTK9XQE4v1vCPZERKme7eO/eMAVb/d4ezJhSLQnfAkc8krhRRlcHJE=
+	t=1719382957; cv=none; b=doc18lo715qxlDgyngj8x2b0D6HVnlRTBMoBEaunjYDeOYmWxF9RY/76xRgS8Nol4060OPvG3Oq0qyvDUKnKmF5kO3ChDsYuegKghlMC9OTWIx0iaNoLD0drqT1NOhi3CY6P76lI8IQMyeIDYfwp+pWOZZR0y08NrAFQ6nvrSWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719382921; c=relaxed/simple;
-	bh=1Yqx0WkL7pvMSlUmi9moTnQle6ioWFoYo3zI/ISLmP8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tzPC0wZTqx7BXj+UgEc3TphX0yXzl2z/2oEDFgMqq54tKEY9vfMbdWJVuh40HWJngBbAijkoNMw3Pwp9fAQZ63p0qcCEY/d9oNrZWx+xOLZScLYYi54w+oeKnM5oFtwYT15yASuUGVXJTEICXfyMZkyP14VUwKl7I120kMDMvjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VlQGZrKQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719382957; c=relaxed/simple;
+	bh=i8Es4Zte3SN2y3xQpjhof63uPgu63+n6XcqR2hqdcGc=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=nAglPLVLpxgncrx1IB/iXYc7lmYAhLEFRidk/MSzb6Wfm4jq35Wr+Y8FPKoNX5DqSZcF+e5ED/n0wDjZWKruuEZMdys1gN+XdMQTIwh856rqaC2xhd8XSwZeFRUFq/6fdue4hKrVLpeZrQgWlBkLQ43NUSA/Yr7ENtQLMsPbuFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=malaika-12.net; spf=pass smtp.mailfrom=malaika-12.net; dkim=pass (2048-bit key) header.d=malaika-12.net header.i=@malaika-12.net header.b=h2EJMhNk; arc=none smtp.client-ip=194.63.252.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=malaika-12.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=malaika-12.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VlQGZrKQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ED0EC2BD10;
-	Wed, 26 Jun 2024 06:21:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719382920;
-	bh=1Yqx0WkL7pvMSlUmi9moTnQle6ioWFoYo3zI/ISLmP8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VlQGZrKQgu05rMOK6YmjwjYQdiGA5F0WnTMfTUe7Fr58UZDYzil5gT+YvXEQf9Qif
-	 545W0ANA2sQtaPGxw0pBXkW4NVBb3BDDsX5ACVdDWxQWoyGiW9UWnKvQinPJtoC/s+
-	 sbIDhIgvFz3upWBx1m0RPHZRdP/HoIqKfT+CM2ksxQIcc8EFnVEHzHn3M5xhxPyCN7
-	 8l25d1sDn4vbKi3x6eeS30IH7CZNkq36g9UeZlCD3CZezK281XrlORD9jG3DhFknin
-	 K3uV0/KOS2YX8IoAhBqGdDMmf9IvNLZUO24Z1Mmuvq05C4UAENCPmjHHc0V2JYaPmY
-	 J5C1hb8fbVmJA==
-Message-ID: <ab9f6564-3df1-4061-93e7-32a59aacb205@kernel.org>
-Date: Wed, 26 Jun 2024 15:21:58 +0900
+	dkim=pass (2048-bit key) header.d=malaika-12.net header.i=@malaika-12.net header.b="h2EJMhNk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=malaika-12.net; s=ds202404; h=Content-Transfer-Encoding:Content-Type:
+	Subject:From:To:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=GbBtHxKx/hbQLCt66A4+/E8hEhcuZIlyUmxaTdjWiDg=; b=h2EJMhNkt8hC1v9cGMbk36/zJZ
+	EGWw8lNKyFzycrZOY071nXURC74F25R69P2rObVdKyQiXvqm20KldBMBpaqzutJG4CuGeOc3C1sf9
+	5QeOT+1MD3eq4VwUmu6fQWIghNU/GDRVqt0N78fUIEPGhUoW16WpBLz7AajhtN5HAhch46bFg09/X
+	92nIt7MTfCbf/7g3yhEKKAgG7k5y7oc5SSD8dtF6YZiDGPg6mydxyW5lH6PSAFTclbxINANkrhXaG
+	p6X1+k3egaNUYTjKb88oINrkPPn52obHs764xUqcKSxrmmMcJ9WKcrH4SRVegOcgNQVy6BtMvo1iE
+	2SWQpsow==;
+Received: from [2a02:fe1:716d:5f00:4062:1f9d:2fd2:105b] (port=62836)
+	by smtp.domeneshop.no with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <BIT@malaika-12.net>)
+	id 1sMLhC-00Fw8T-9U
+	for linux-kernel@vger.kernel.org;
+	Wed, 26 Jun 2024 07:59:54 +0200
+Message-ID: <bb7dec69-39f9-4f74-b889-19949765c890@malaika-12.net>
+Date: Wed, 26 Jun 2024 07:59:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,110 +44,32 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/6] ata: libata-scsi: Check ATA_QCFLAG_RTF_FILLED
- before using result_tf
-To: Igor Pylypiv <ipylypiv@google.com>, Hannes Reinecke <hare@suse.de>
-Cc: Niklas Cassel <cassel@kernel.org>, Tejun Heo <tj@kernel.org>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Jason Yan <yanaijie@huawei.com>, linux-ide@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240624221211.2593736-1-ipylypiv@google.com>
- <20240624221211.2593736-7-ipylypiv@google.com>
- <7d085940-2ad1-4f44-83bb-33d852e80da0@suse.de> <ZnthK-NjkSgIiGiE@google.com>
-From: Damien Le Moal <dlemoal@kernel.org>
-Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <ZnthK-NjkSgIiGiE@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+To: linux-kernel@vger.kernel.org
+From: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <BIT@malaika-12.net>
+Subject: Philosophy of The Vast X continued (was Fair Pay & Low Jitter)
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 6/26/24 09:30, Igor Pylypiv wrote:
-> On Tue, Jun 25, 2024 at 08:26:59AM +0200, Hannes Reinecke wrote:
->> On 6/25/24 00:12, Igor Pylypiv wrote:
->>> qc->result_tf contents are only valid when the ATA_QCFLAG_RTF_FILLED flag
->>> is set. The ATA_QCFLAG_RTF_FILLED flag should be always set for commands
->>> that failed or for commands that have the ATA_QCFLAG_RESULT_TF flag set.
->>>
->>> For ATA errors and ATA PASS-THROUGH commands the ATA_QCFLAG_RTF_FILLED
->>> flag should be always set. Added WARN_ON_ONCE() checks to generate
->>> a warning when ATA_QCFLAG_RTF_FILLED is not set and libata needs to
->>> generate sense data.
->>>
->>> Signed-off-by: Igor Pylypiv <ipylypiv@google.com>
->>> ---
->>>   drivers/ata/libata-scsi.c | 10 ++++++++++
->>>   1 file changed, 10 insertions(+)
->>>
->>> diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
->>> index e5669a296d81..7a8a08692ce9 100644
->>> --- a/drivers/ata/libata-scsi.c
->>> +++ b/drivers/ata/libata-scsi.c
->>> @@ -246,6 +246,9 @@ static void ata_scsi_set_passthru_sense_fields(struct ata_queued_cmd *qc)
->>>   	struct ata_taskfile *tf = &qc->result_tf;
->>>   	unsigned char *sb = cmd->sense_buffer;
->>>
->>> +	if (WARN_ON_ONCE(!(qc->flags & ATA_QCFLAG_RTF_FILLED)))
->>> +		return;
->>> +
->>>   	if ((sb[0] & 0x7f) >= 0x72) {
->>>   		unsigned char *desc;
->>>   		u8 len;
->>> @@ -928,6 +931,9 @@ static void ata_gen_passthru_sense(struct ata_queued_cmd *qc)
->>>   	unsigned char *sb = cmd->sense_buffer;
->>>   	u8 sense_key, asc, ascq;
->>> +	if (WARN_ON_ONCE(!(qc->flags & ATA_QCFLAG_RTF_FILLED)))
->>> +		return;
->>> +
->>>   	/*
->>>   	 * Use ata_to_sense_error() to map status register bits
->>>   	 * onto sense key, asc & ascq.
->>> @@ -971,6 +977,10 @@ static void ata_gen_ata_sense(struct ata_queued_cmd *qc)
->>>   		ata_scsi_set_sense(dev, cmd, NOT_READY, 0x04, 0x21);
->>>   		return;
->>>   	}
->>> +
->>> +	if (WARN_ON_ONCE(!(qc->flags & ATA_QCFLAG_RTF_FILLED)))
->>> +		return;
->>> +
->>>   	/* Use ata_to_sense_error() to map status register bits
->>>   	 * onto sense key, asc & ascq.
->>>   	 */
->>
->> Hmm. Not sure if we really need the WARN_ON() here or whether a simple
->> logging message wouldn't be sufficient; after all, we continue fine here.
->>
-> 
-> My worry about adding a simple log statement is that it might cause a log
-> spam if things go wrong for some reason.
-> 
-> This code is more like a "this should never happen" comment and we always
-> expect ATA_QCFLAG_RTF_FILLED to be present when generating sense data
-> based on ATA registers.
-> 
-> If WARN_ON_ONCE() is too much for this case I guess we can just remove it
-> and silently return?
+As it comes to me, I send some emails, keeping a ping of me going :)
 
-what about ata_dev_dbg() or ata_port_dbg() ?
-No message spamming by default and if problems are detected, they can be turned
-on to figure out what is going on.
+On the C64 many godconceptions were combined, really making out a MARUF 
+not MUNKAR principle as it in Islam.
 
-> 
-> Damien, Niklas, what are your thoughts on this?
-> 
-> Thanks,
-> Igor
-> 
->> Cheers,
->>
->> Hannes
->> -- 
->> Dr. Hannes Reinecke                  Kernel Storage Architect
->> hare@suse.de                                +49 911 74053 688
->> SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
->> HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
->>
+This is still relevant, as the Rainbow Computers Users, are still the 
+ones it is about, and was Irix before, and now Open Source.
 
--- 
-Damien Le Moal
-Western Digital Research
+In an experimental culture, still in "debug mode", one ofourse needs to 
+take the correct developments, and reject the bad.
+
+MARUF not MUNKAR does this, and as we approach finality of things, we 
+have a wide enough dataset to just take the MARUF (The Good) of this and 
+not the Poor (MUNKAR).
+
+The Vast X is this, and now instead of Rainbow logos, and also could be 
+for hardware design aswell, for those wishing an alternative to SIN. (We 
+do not need an association to Sinful here.)
+
+Yes?
+
+https://the-vast-x.net/Ruhban/Ruhban.html
 
