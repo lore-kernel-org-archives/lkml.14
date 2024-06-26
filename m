@@ -1,85 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862A5180A6A
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 12:05:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9964180A88
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 12:06:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719403501; cv=none; b=fLieSOyYFOLMriDGvlmRbkFWy0qGVfqUcQ0aw4MdoO7Hwelu7Kb6dVTf+xsFQ4vcqr0p80k74fdcuEPVfsbbPQx4Cis9mk29+vER6fT9H3zXHtl5ZptdB6JPhSp5tsg1V2+IMt3kDVwfxAKlzPYPBLhj20kktPJOXLzOZT3O5Gc=
+	t=1719403593; cv=none; b=hCfS1rkrFpRWvUYOll/URirowFTVrMDjHYsdP6AO0zqar43qByHWYxLImZFunN+6l2eW0I8HgFjM29UXevpBWSKTFYM/j6gXrCSXBtznl0S1tBjFclbvYsjwcZNJU3XNA7BXTnKJtbNzo3kQ7LBgy8WfcKKp78DnehciXhwvEM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719403501; c=relaxed/simple;
-	bh=2uHDlGI4Mkm4jPb0WidaIGWBR2l/OxTlZaVOBsJiMIo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sjf9VzRB4ZJVM1T+PN4R1CDvqlD2W1dZD80PdVyaIJkmKWUl7+eXD14lKPc58NpxQyOOi/Q5e/+A+oVGVWeU6ZhheVe3+TOjKEp1PREobI89YcHYBQoj1c3gLNSRUNSCjmpsN0xk6Krk/+V6jX4mZ993RBwhks4PFLclfDz8z4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CIJIWohu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719403593; c=relaxed/simple;
+	bh=hHmrnmVkA+icg7WMUj6EJBFmbuxO5bQ3bYPlOLRcydA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=HvaxWPrddKAWZp+bbdpqCwW8pakaxrWiII8mUlY3vvQ9/sCbrG4H+Mpwfj26gWMgIEWd+i5gJi0bIVPVf32iNowRtBN3/tIzgczv0voH1j0Efn6daVXHJw3oJy32tMFWpS0uoIL4qX4ML+Xa6MQwf6FYpNY03ypVXM5FmVKsvaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RhqCh3vl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CIJIWohu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F073CC32786;
-	Wed, 26 Jun 2024 12:04:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RhqCh3vl"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4A663C2BD10;
+	Wed, 26 Jun 2024 12:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719403501;
-	bh=2uHDlGI4Mkm4jPb0WidaIGWBR2l/OxTlZaVOBsJiMIo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CIJIWohuVu9Es+FhJFnQDacFByt/NzWi/EQzCRN1IRgMYcENXVihg30Uw+ytU8c9Q
-	 lA3svGvI0JtY7eoSDIgxOth06mBqeOTQikD0z/q8xvIjg2Y00GN40JxjRe94tFSqGQ
-	 XL3oI4alBePURw+4ZHGjv5mkc1DtNBF2SHF/Eyv0f87eInKMLRKvbBnEYLIYov01Xn
-	 e3OQPTFOPl4eCz+trbfyudzcPBvq0lDPLP1kWr3Pc8kmLZJXklM7uKg9Vhs+s4uqR8
-	 OX+ICpRqb8dNC+/2/5GSMKTYCo4K4xx/r5OPvrF8hsG4fFcSdqvIbj6Lt9PDL27oxe
-	 2cgE47E6KqNTg==
-Date: Wed, 26 Jun 2024 19:50:57 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64/lib: copy_page: s/stnp/stp
-Message-ID: <ZnwAoWh-_bTxT-rT@xhacker>
-References: <20240613001812.2141-1-jszhang@kernel.org>
- <ZnmzUa2D_wWXAlJl@arm.com>
+	s=k20201202; t=1719403592;
+	bh=hHmrnmVkA+icg7WMUj6EJBFmbuxO5bQ3bYPlOLRcydA=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=RhqCh3vlTEedAXYD86vsPOTqA/T6mY2xn7PIBn/P16eZS840B/3si/pU+U+QLaRxR
+	 h8nMJXZ9l82ubbRhoffXiC1fnlP6O7EY/3wNAczIOlzdwu85/lWIvn/haVMf8UYzHb
+	 wcz2OMQo4r6/Ga139fRL6dq52/0zDAserzFDy7sGdwoR/Z+qYPYP56cRrB9dP3Zb03
+	 A/JC7aFXW8xY00t76TxH74wc+j67u/Qv/NXimUyLqmqku1wXAtKIEpO9JhVYRflMcD
+	 WG3vmouZHG5zl66kLYzk0Hskh3oj8xSWpbA1uXLOhqGvxfxY4WopnqPJ8Zvr+4Yayb
+	 3sRkrtR8+GMRg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3660BC30659;
+	Wed, 26 Jun 2024 12:06:32 +0000 (UTC)
+From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
+Date: Wed, 26 Jun 2024 14:06:16 +0200
+Subject: [PATCH v2] kbuild: scripts/gdb: bring the "abspath" back
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZnmzUa2D_wWXAlJl@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240626-jag-fix_gdb_py_symlinks-v2-1-1a05406c8063@samsung.com>
+X-B4-Tracking: v=1; b=H4sIADcEfGYC/4WNXQ6CMBCEr0L22Zp2VYg+eQ9DSKE/rNpCukokh
+ LtbuYCP32TmmwXYJrIMl2KBZCdiGmIG3BXQ9Tp6K8hkBpR4lCVKcddeOPo03rTNODc8hyfFBwt
+ U5myksdVJI+T1mGyubeZbnbknfg1p3o4m9Uv/OycllDiUWjqJqnKtu7IO/I5+3w0B6nVdv7Wnw
+ dnAAAAA
+To: Jan Kiszka <jan.kiszka@siemens.com>, 
+ Kieran Bingham <kbingham@kernel.org>, 
+ Masahiro Yamada <masahiroy@kernel.org>, 
+ Douglas Anderson <dianders@chromium.org>
+Cc: linux-kernel@vger.kernel.org, Joel Granados <j.granados@samsung.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1389;
+ i=j.granados@samsung.com; h=from:subject:message-id;
+ bh=ELA3O2VefITuAlFWSunBt6d4ILv4gEPSDCYoeDsUf/w=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGZ8BEZ7361AGuuL1AzQ/hAcHZJ4bCyhOod8M
+ AJJ0PxwNRIyY4kBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmfARGAAoJELqXzVK3
+ lkFPbMoL/1UPGDA+dGpVQ4m8RzzzYa06hQnsp4OoNOVHK0R5EUVb0sZitdVbGD3TzLBcvKVPf51
+ Ov0nMnZJ48icshqAXD6gOhd1KPJiMFJMBEtvx7QLUfa/4Hg6fhZC6XOtNwUgLO5iLdmc1MP2It7
+ Uif0r7/c+MLSEUO1YtW8vUOA9jI4CiaPHD59RlcLPe2dPW/W0Ne7ODSFKD8tFLjK53pHavt9X0/
+ qa0AFZZV/IKdl0zg+TWc3ZRKCXiPD7KlD2grhLbSdlcS74G3z+kiDk8KDwbR77xBAMjNNKnxMm8
+ I8Ff4Mf+epcgueu71td/Jr/5QMmpEw7wYGXPWFMJbFjCSJhHTcFN7oR36zkROHPCE8dtEDS6lGa
+ oOw1AzU7sEhetdDAJaz8AftBm6KRM/TopvO4beNPZF1+lbEJ/X6piysWETAIVOQYFECBDRvKPy6
+ eRcMlZWYDyBODOOPFvNDRuiR3Dgav6rX9JY2oAmLHqa0ecLrnDCwNpFN3XmsdKRwzUsPlD/X3U4
+ iI=
+X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
+ fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
+X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with
+ auth_id=70
+X-Original-From: Joel Granados <j.granados@samsung.com>
+Reply-To: j.granados@samsung.com
 
-On Mon, Jun 24, 2024 at 06:56:33PM +0100, Catalin Marinas wrote:
-> On Thu, Jun 13, 2024 at 08:18:12AM +0800, Jisheng Zhang wrote:
-> > stnp performs non-temporal store, give a hints to the memory system
-> > that caching is not useful for this data. But the scenario where
-> > copy_page() used may not have this implication, although I must admit
-> > there's such case where stnp helps performance(good). In this good
-> > case, we can rely on the HW write streaming mechanism in some
-> > implementations such as cortex-a55 to detect the case and take actions.
-> > 
-> > testing with https://github.com/apinski-cavium/copy_page_benchmark
-> > this patch can reduce the time by about 3% on cortex-a55 platforms.
-> 
-> What about other CPUs? I'm also not convinced by such microbenchmarks.
+From: Joel Granados <j.granados@samsung.com>
 
-Per my test on CA53 and CA73, CA73 got similar improvements. As for CA53
-there's no difference, maybe due to the follwoing commit in the ATF:
+Use the "abspath" call when symlinking the gdb python scripts in
+scripts/gdb/linux. This call is needed to avoid broken links when
+running the scripts_gdb target on a build directory located directly
+under the source tree (e.g., O=builddir).
 
-54035fc4672aa ("Disable non-temporal hint on Cortex-A53/57")
+Fixes: 659bbf7e1b08 ("kbuild: scripts/gdb: Replace missed $(srctree)/$(src) w/ $(src)")
+Signed-off-by: Joel Granados <j.granados@samsung.com>
+---
+Changes in v2:
+- Rephrased the commit message to clarify what is happening
+- Link to v1: https://lore.kernel.org/r/20240620-jag-fix_gdb_py_symlinks-v1-1-36a0f0217fbf@samsung.com
+---
+ scripts/gdb/linux/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> It looks like it always copies to the same page, the stp may even
-> benefit from some caching of the data which we wouldn't need in a real
-> scenario.
+diff --git a/scripts/gdb/linux/Makefile b/scripts/gdb/linux/Makefile
+index fd1402c0a1a1..fcd32fcf3ae0 100644
+--- a/scripts/gdb/linux/Makefile
++++ b/scripts/gdb/linux/Makefile
+@@ -5,7 +5,7 @@ ifdef building_out_of_srctree
+ symlinks := $(patsubst $(src)/%,%,$(wildcard $(src)/*.py))
+ 
+ quiet_cmd_symlink = SYMLINK $@
+-      cmd_symlink = ln -fsn $(patsubst $(obj)/%,$(src)/%,$@) $@
++      cmd_symlink = ln -fsn $(patsubst $(obj)/%,$(abspath $(src))/%,$@) $@
+ 
+ always-y += $(symlinks)
+ $(addprefix $(obj)/, $(symlinks)): FORCE
 
-Yep this is also my understanding where's the improvement from. And
-I must admit there's case where stnp helps performance. we can rely
-on the HW write streaming mechanism to detect and take actions.
+---
+base-commit: 6ba59ff4227927d3a8530fc2973b80e94b54d58f
+change-id: 20240620-jag-fix_gdb_py_symlinks-21d9d0de75a2
 
-However, sometimes, the "cache" behavior can benefit the scenario. Then
-in this case, the stnp here would double lose.
+Best regards,
+-- 
+Joel Granados <j.granados@samsung.com>
 
-what do you think?
 
-> 
-> So, I'm not merging this unless it's backed by some solid data across
-> several CPU implementations.
-> 
-> -- 
-> Catalin
