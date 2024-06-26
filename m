@@ -1,82 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9875E14D458;
-	Wed, 26 Jun 2024 06:03:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916DB2B9C0;
+	Wed, 26 Jun 2024 06:07:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719381781; cv=none; b=I3I0VZlkR3WOUR43jhtMLj30NTPDWIlBANYVKuX7SxgJeWyfmlhREEvi+RG4LZK1K/Z1MNpXav542MlwmSc2TUeETfyIy4rUseQGMvSVe7fkx8MWl5eI80dgzpe7CzSfgX/FHP8ZedgGTeTg3LZu4B0eSwoWK98oL6zgMh97JjM=
+	t=1719382079; cv=none; b=CaACdnGWqoDMW0zHW+nd+VqYyk0pFvo/M4isg/LVIbvQtKhcsldpoDs+dqvpw+8ZXc7Awv/j1mNceb2uBIq5w6NWpV+RAZfgpFXatqWfSGP6a3fYLcYEIzpP8ZYXOcvrz57o71EMztoJjXbr4dGDMyFlel6cfsRLRifL/0+pAtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719381781; c=relaxed/simple;
-	bh=Y+Zf9ItE55P3r95JkXBtjtBnIHDpQoA7hI7hDp/zREc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hv55mb2SNbEjB8Qm3TdaqOilWdM/DyXQ1TGflplW+4F4xkp5oFRwQgcyQ5SBfvf9CjPdUz/oq3OGso0qZ+GUEk9l6XAEZL9s3WRG3bQBmUCESXx0lboeXQ3dwhGOeXD3KKBJ+zMgAZkzyIVm93B+N1GScgQOOHmW3yYRujHSR2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kUlSj0tg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719382079; c=relaxed/simple;
+	bh=RpW3pyUuDN6ReYlgAjSd9nrfqdrRn2bJnPyDkjkcTUw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gdr38vwAfAQD2bxEo4cPhZ9IJtH7ZRQFKDPemUMAJAHNXD0q+Pim8BaIL/BFk/B3yS3QXN6SpGzcY4ydBF9Nkv7fpH0vpaxtRu+wa5MM37vML1Etp8AB6ITArQCUcJ+xiFgo1HI7o0zOxsCedTB8cy+R8tyI9qxslFQmrnlIpcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Olw+FSv4; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kUlSj0tg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA520C32782;
-	Wed, 26 Jun 2024 06:03:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719381781;
-	bh=Y+Zf9ItE55P3r95JkXBtjtBnIHDpQoA7hI7hDp/zREc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kUlSj0tgTPbXha9yQ4zGfLklLatVe7AvnLkAw/TXtu0S+brG77+7+QfGRTeHl48Te
-	 rBjSdKkZjVpXaSLyl8S1zmrL3wLPBZxU6OaKEZ+XinPrV8ga+gtiGnUsc1bIBOGQR+
-	 4voXNxM1l8TxHNs35tYutqIq9Ql3Di3NpvPl6qZenylFEkiWdMMMoP0iK/3I9uVs0Z
-	 uYYezEgi3EhcmrTNFzSz7j8Lue8lQA2KBYh6H3GZOXNAqY+6PcppyO0PrB/vXBT0nr
-	 pUjzjaBPqkbs9dC+cS+Pk1NaHGBN941fNSiJDodQlzRNAyg9tFsImV5nHISngqSPPz
-	 K/z27KEV/RJyA==
-Date: Wed, 26 Jun 2024 09:02:56 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Vidya Sagar <vidyas@nvidia.com>, corbet@lwn.net, bhelgaas@google.com,
-	galshalom@nvidia.com, jgg@nvidia.com, treding@nvidia.com,
-	jonathanh@nvidia.com, mmoshrefjava@nvidia.com, shahafs@nvidia.com,
-	vsethi@nvidia.com, sdonthineni@nvidia.com, jan@nvidia.com,
-	tdave@nvidia.com, linux-doc@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V4] PCI: Extend ACS configurability
-Message-ID: <20240626060256.GO29266@unreal>
-References: <20240523063528.199908-1-vidyas@nvidia.com>
- <20240625153150.159310-1-vidyas@nvidia.com>
- <ZnrvmGBw-Ss-oOO6@wunner.de>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Olw+FSv4"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45PK6elr018110;
+	Wed, 26 Jun 2024 06:07:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=HlqBNYpYDnsP6od7gKlrv+
+	WkUaBVZGago0uliQENjrg=; b=Olw+FSv48FSDkx9wM/dIKH8u+BUZqFpB+xJ+6c
+	P/c/8woGZHP5uAIGaTREI6CDPF92abxpZANGjM84bTS8Fpxe5yT38YaUbbPzJmEx
+	Dwses165XTwWlgnihzr2ksr8FnXMkp60/XEEDopc1Xd1TWUxqSJWTkrd/0ZDUblR
+	61zjJfxkN6Y9vQa6jH+zy8kyTC2iRQsm66za0Xj9bccXc5CilXZgY9p+dMuB9gvD
+	O3Ndtntv6sMxyPVZeo+NcMB1FRXZD+rINKfN0qka88rIB9eXsuwCqNGLPp/c3sBQ
+	V0jQRLFtpUibeLOurw/57G+kpEzMXXe2xKdoMQQnFBRNE4iA==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ywnm6rbjq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Jun 2024 06:07:38 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45Q67aVT031734
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Jun 2024 06:07:36 GMT
+Received: from hu-jinlmao-lv.qualcomm.com (10.49.16.6) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 25 Jun 2024 23:07:36 -0700
+From: Mao Jinlong <quic_jinlmao@quicinc.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach
+	<mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Mao Jinlong <quic_jinlmao@quicinc.com>,
+        "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>
+CC: <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>,
+        Tingwei Zhang <quic_tingweiz@quicinc.com>,
+        Yuanfang Zhang <quic_yuanfang@quicinc.com>,
+        Tao Zhang
+	<quic_taozha@quicinc.com>,
+        songchai <quic_songchai@quicinc.com>
+Subject: [PATCH v3 0/3] coresight: Add preferred trace id support
+Date: Tue, 25 Jun 2024 23:07:19 -0700
+Message-ID: <20240626060724.28862-1-quic_jinlmao@quicinc.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZnrvmGBw-Ss-oOO6@wunner.de>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: RsaxaYJO0j_7DpXlAyhf_thPkv9rC1hr
+X-Proofpoint-ORIG-GUID: RsaxaYJO0j_7DpXlAyhf_thPkv9rC1hr
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-26_03,2024-06-25_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 suspectscore=0 phishscore=0 clxscore=1011 spamscore=0
+ mlxscore=0 malwarescore=0 mlxlogscore=898 lowpriorityscore=0
+ impostorscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2406140001 definitions=main-2406260046
 
-On Tue, Jun 25, 2024 at 06:26:00PM +0200, Lukas Wunner wrote:
-> On Tue, Jun 25, 2024 at 09:01:50PM +0530, Vidya Sagar wrote:
-> > Add a kernel command-line option 'config_acs' to directly control all the
-> > ACS bits for specific devices, which allows the operator to setup the
-> > right level of isolation to achieve the desired P2P configuration.
-> 
-> An example wouldn't hurt, here and in kernel-parameters.txt.
-> 
-> 
-> > ACS offers a range of security choices controlling how traffic is
-> > allowed to go directly between two devices. Some popular choices:
-> >   - Full prevention
-> >   - Translated requests can be direct, with various options
-> >   - Asymmetric direct traffic, A can reach B but not the reverse
-> >   - All traffic can be direct
-> > Along with some other less common ones for special topologies.
-> 
-> I'm wondering whether it would make more sense to let users choose
-> between those "higher-level" options, instead of giving direct access
-> to bits (and thus risking users to choose an incorrect setting).
+Some HW has static trace id which cannot be changed via
+software programming. For this case, configure the trace id
+in device tree with "arm,trace-id = <xxx>", and
+call coresight_trace_id_get_system_id with the trace id value
+in device probe function. The id will be reserved for the HW
+all the time if the device is probed.
 
-IMHO, with "higher-level" options will be much more complex to use than
-simple ACS bits matrix. In any case, the user who will use this feature
-will need to read PCI spec before.
+Changes since V2:
+1. Change "trace-id" to "arm,trace-id".
+2. Add trace id flag for getting preferred id or ODD id.
 
-In PCI v6, 13 bits are used for ACS with 8192 possible combinations and
-it is unlikely to find small set of "definitions" that will fit all cases.
+Changes since V1:
+1. Add argument to coresight_trace_id_get_system_id for preferred id
+instead of adding new function coresight_trace_id_reserve_system_id.
+2. Add constraint to trace-id in dt-binding file.
 
-Thanks
+Mao Jinlong (3):
+  dt-bindings: arm: Add arm,trace-id for coresight dummy source
+  coresight: Add support to get preferred id for system trace sources
+  coresight: dummy: Add reserve atid support for dummy source
+
+ .../sysfs-bus-coresight-devices-dummy-source  | 15 +++++
+ .../arm/arm,coresight-dummy-source.yaml       |  6 ++
+ drivers/hwtracing/coresight/coresight-dummy.c | 59 +++++++++++++++++--
+ .../hwtracing/coresight/coresight-platform.c  | 25 ++++++++
+ drivers/hwtracing/coresight/coresight-stm.c   |  2 +-
+ drivers/hwtracing/coresight/coresight-tpda.c  |  2 +-
+ .../hwtracing/coresight/coresight-trace-id.c  | 35 +++++++----
+ .../hwtracing/coresight/coresight-trace-id.h  | 11 +++-
+ include/linux/coresight.h                     |  1 +
+ 9 files changed, 137 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-coresight-devices-dummy-source
+
+-- 
+2.41.0
+
