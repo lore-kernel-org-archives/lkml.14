@@ -1,57 +1,57 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23D58190044;
-	Wed, 26 Jun 2024 16:00:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C0819006C;
+	Wed, 26 Jun 2024 16:00:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719417646; cv=none; b=Jgclw8qp68uyhQWgOAmqK4uBR6qkXBqP86hKwHHUsaGXCkW7qxHzxxIsTqQ06dpiplARxqH3dJDdOwF6ICdwj4KU4lC2TJK+cCML01Fsnvha/8mYPwV3Jwf8ZaluyJZcRhNmYjYJd0VPF1SCUoN1kNw0SRrjOs6D39EpKrh3TZc=
+	t=1719417647; cv=none; b=Mgr0NBAhDw7Pxp1oZUrpSlzduBRUvq5oHu6bxi7NHQxg+LRnZ5jqVoSQ7nCzVrPx+hOzBxySGytEismN8D1o492e+C+6mWdk5BuRr6Xcr94v0JY1+MSrtmMplhmsbb1mT0M9tkU9DBOGb2CRGlSZeXzPm/D16YU7gC5xdri8BiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719417646; c=relaxed/simple;
-	bh=DNqXmzHMEsh3DwV1S15V2tQqJuzOJaJFTIW5s/jJFbo=;
+	s=arc-20240116; t=1719417647; c=relaxed/simple;
+	bh=WYfEnqGU/jttnGRW1Dl3AAXqGn8PsUodgf/YFXg4lD0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ilLCO8IAzTrbc+SYtzJtXIPmn7f8uLEGJGXGCsIhj4x59RXFKCOqCTpv6lxkqnAXiRZ5S/VbJr7DJwQM+5S+aHdKWjY0xXL7nKPLM6RdNQYN1hyzRw64Y5YJaNn0siovfquODOQrAw6I7jyahRhen5I0yX8spJjhapoS/+0AowI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KgvMTiM0; arc=none smtp.client-ip=209.85.221.53
+	 MIME-Version; b=mJ5CZ9DWzOMAF9kv1tYIJsHhgP2U3LA+HZ2fq9kgJpz+/8Z/fyIitzSOmjup6VBRY2y0sW2WKh1L6Hgf+2uERLh6HlY9+uZEyWwAY9lQcfp3Ga2zVpj2x05yya7MaL1CqZsR5NqyZLUw6TBD0YjdcwomIgDGJnKdWJ2NUn6iUKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MWUS9MUJ; arc=none smtp.client-ip=209.85.221.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KgvMTiM0"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-362b32fbb3bso4389863f8f.2;
-        Wed, 26 Jun 2024 09:00:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MWUS9MUJ"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-363826fbcdeso5057326f8f.0;
+        Wed, 26 Jun 2024 09:00:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719417642; x=1720022442; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719417644; x=1720022444; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+cd55MwcmwxDYM1xS6QNPLsC66LDeGdAfdzlXmx5K3c=;
-        b=KgvMTiM02VzVQkGmQQ3j4Yyymf78W60HiMHY25XGU3iSaxtFlIs8zWLXKV6tpt7X8j
-         6av4ObqhsQdI8Hrp683oqUvfcUJ21FCuoQ6S6SF1RWhxJQMfQmnLOTC+h3N4YZRsohjL
-         P8g0JS0vxD6KWayFNt7NLjMfS/zYjbBjqBpoRkb8i18fQQlc2ETT6zPruWrk5LICSGhy
-         cp6N1EPw6pn3Z63Si0HGAdn/Egvmrb49f2fB/UeXs0FhwZSTlsnXd7EPRM8s+30hYpdo
-         L3VmLIAXokOYfm2krKj3/ZUviiRdjjW9LUm4K+qMF38Om6yQmdUiLRri4N4saHn4B3Ew
-         /krg==
+        bh=gKKOM38AF+UhyCgTW0uK8yuV/Hf10uvfG1nRgbJlZYo=;
+        b=MWUS9MUJLZoCTX0DXSYrb7moQOovYAuXHMOF1Fyy2R6fNrRa747ZZLu8qFqbLEg6Bf
+         4UNWZJR4AV9t+6DYp6Rj5eFGeSrdSSCvZx+UkBaRtj5Ia0SgPDMBxAIzIMR5LuWdY+MF
+         k72nyQOxnLlrc0ko2b0lEv5xoYXlOy8WlVj0vujguDbwDR3k3Gw7gVfd4RgW7ISw0vYB
+         jsbmJWMwufmoVq9sG7L/rv0TIv9PjaCxSuHsYQP5EjncAbtbm7uYizGoGO5lQ7VPZL/+
+         eclO+GEpwR1t563m2K+CGrdE+anC+E0F2PwZgTrzzE8fWWCaCjjQv04tz2NtmazmoPwJ
+         ruRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719417642; x=1720022442;
+        d=1e100.net; s=20230601; t=1719417644; x=1720022444;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+cd55MwcmwxDYM1xS6QNPLsC66LDeGdAfdzlXmx5K3c=;
-        b=DDwEyE/WElIj/9wZfutddtnheoB45n4jBbLtCukUQpXpS70wNXVGOLKTc2ycA5eSj/
-         UpY40QNASIjtVP7vOhd3Vg8WGkelPsJRnbQqs2yD7aNsiLwZWHAQEQKHH5l1XpGzntkX
-         2BnBdgAurcJxpwPG+Wry7QzG+b3Csl9sBy4SuulDWIZ/1oLDdS5JqdXBP8ELo2a0i6Ox
-         B9rDXw5iYSPLDG2Hov+NE+YLfLBXhoIsfqprio1IYnxKCupiiR4ouAAOnRfYjQiwW9cp
-         PjG2yIWneqhXM+VW1pxkEiAz4bHMVHe8ggZi3wJCeYSjtb7I6gC21GkUj1/OaBcm2KBT
-         Ap/w==
-X-Forwarded-Encrypted: i=1; AJvYcCUw7DIVx7+MYiynzAvyLTRAeSBmwqwuFpkLyJFN9SN7ooJQx52qpzlqTg4ECO8HBzrXzrrF3s58bKPrGD1wnTqE1ih2hcKj+uwnfjO1Da8H0XQBQLiCQ2hTKcx9LnxMVdsU296L5dhvZfp9v4ddjL0hdhQKwFZTryImORfoc+WQRJscwUs=
-X-Gm-Message-State: AOJu0YxfMKq7BJnVU1TpWaeVcDoF9BOIRUfIRVPppW/rRmbeIaHMKwgM
-	Fhuxhzs3Vwxo1Qk/aK8VOEqJZMqWHXMeCh7FmAmixKCTKriC9dCw
-X-Google-Smtp-Source: AGHT+IGnM3CtH4XKpdKgrWFEL5XQ4VMM0zdK6aCU/kP4DNVzhX5igAuO4TQ2xCI19+ZATi+ICGZHLw==
-X-Received: by 2002:adf:e38f:0:b0:35f:488:6d3d with SMTP id ffacd0b85a97d-366e7a63686mr7503365f8f.58.1719417642364;
-        Wed, 26 Jun 2024 09:00:42 -0700 (PDT)
+        bh=gKKOM38AF+UhyCgTW0uK8yuV/Hf10uvfG1nRgbJlZYo=;
+        b=bjemK0mtpQ4j9SknCuuU3Yi4nJWK4Its9cRXLW32L4PIs02fiCwdooZKsZb0dAod9g
+         5fV0ve27Ayjs+GxTZ+iuJwDWlNfhXQa2RX5MMbMgCwKddKDhtcghU0SVNrESqX3dKuL7
+         nhSNvuiX8JF/FaPm/QnPzw1NYnXTWryAWyaHG0eYmqFNlFMXez3brswDOqHrSF/aZJoR
+         9WP8ETTTkJo04IiP5bpCvM8GIVrjy0zoz2PL7Dd2U9QJ47D17akpyUfi/MSJn7g8RW5F
+         WerUa2Rv7s8S+vzeT+sxPu++eiPKomCkf/Ewcu+qKU7nm/6E+VwhQV9V9WUI7tIAhcoq
+         nfAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWATCSZYu/Uug55RtP95vgGQwuMrboAWWGcmZ7F1/hbqpUe7UyTndEzL61s/3ktMypICis2vacalKkTYJdTt9MEmpDjYyOucuOqmURy4Do+KZt2JnwNIK5XF1k1s8JSOZF1FHqZyOj9MgyqpBduvm1oJY+qBlHf9hSO1WjY0MU6aQZAcls=
+X-Gm-Message-State: AOJu0Yxk7jAykodRtyIBT/nKQf21KfEkKCqLztcwgBZmAkerBjbe0jrw
+	jpns0i0AlAaYYkHCTNWCB+AJSnaF5PL41k+qBZkPwOgLSDJwUCnOCPKxpg==
+X-Google-Smtp-Source: AGHT+IH+E/EuGJvKHTY+dv2nxR4rP/l1wdtfLHJIBtysuboai8d33l5WWSO6yXNBO9kZUxl2XU3Zzw==
+X-Received: by 2002:a05:6000:178f:b0:366:ee52:28bf with SMTP id ffacd0b85a97d-366ee522954mr8216061f8f.59.1719417644218;
+        Wed, 26 Jun 2024 09:00:44 -0700 (PDT)
 Received: from localhost.localdomain (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-366389b88easm16180589f8f.39.2024.06.26.09.00.40
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-366389b88easm16180589f8f.39.2024.06.26.09.00.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 09:00:41 -0700 (PDT)
+        Wed, 26 Jun 2024 09:00:43 -0700 (PDT)
 From: Christian Marangi <ansuelsmth@gmail.com>
 To: Pavel Machek <pavel@ucw.cz>,
 	Lee Jones <lee@kernel.org>,
@@ -63,9 +63,9 @@ To: Pavel Machek <pavel@ucw.cz>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Christian Marangi <ansuelsmth@gmail.com>
-Subject: [PATCH v8 11/20] leds: leds-lp55xx: Generalize multicolor_brightness function
-Date: Wed, 26 Jun 2024 18:00:16 +0200
-Message-ID: <20240626160027.19703-12-ansuelsmth@gmail.com>
+Subject: [PATCH v8 13/20] leds: leds-lp55xx: Generalize turn_off_channels function
+Date: Wed, 26 Jun 2024 18:00:18 +0200
+Message-ID: <20240626160027.19703-14-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240626160027.19703-1-ansuelsmth@gmail.com>
 References: <20240626160027.19703-1-ansuelsmth@gmail.com>
@@ -77,140 +77,103 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Generalize multicolor_brightness function as the implementation is the
-same for most of the lp55xx based LED driver.
+Generalize turn_off_channels function as the implementation is the same for
+most of the lp55xx based LED driver.
 
 Suggested-by: Lee Jones <lee@kernel.org>
 Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 ---
- drivers/leds/leds-lp5521.c        | 21 +--------------------
- drivers/leds/leds-lp5523.c        | 21 +--------------------
- drivers/leds/leds-lp55xx-common.c | 21 +++++++++++++++++++++
+ drivers/leds/leds-lp5523.c        | 10 +---------
+ drivers/leds/leds-lp55xx-common.c | 10 ++++++++++
  drivers/leds/leds-lp55xx-common.h |  1 +
- 4 files changed, 24 insertions(+), 40 deletions(-)
+ drivers/leds/leds-lp8501.c        | 10 +---------
+ 4 files changed, 13 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/leds/leds-lp5521.c b/drivers/leds/leds-lp5521.c
-index e4d0dcdbf11b..dd7e996f22f9 100644
---- a/drivers/leds/leds-lp5521.c
-+++ b/drivers/leds/leds-lp5521.c
-@@ -222,25 +222,6 @@ static int lp5521_run_selftest(struct lp55xx_chip *chip, char *buf)
- 	return 0;
- }
- 
--static int lp5521_multicolor_brightness(struct lp55xx_led *led)
--{
--	struct lp55xx_chip *chip = led->chip;
--	int ret;
--	int i;
--
--	mutex_lock(&chip->lock);
--	for (i = 0; i < led->mc_cdev.num_colors; i++) {
--		ret = lp55xx_write(chip,
--				   LP5521_REG_LED_PWM_BASE +
--				   led->mc_cdev.subled_info[i].channel,
--				   led->mc_cdev.subled_info[i].brightness);
--		if (ret)
--			break;
--	}
--	mutex_unlock(&chip->lock);
--	return ret;
--}
--
- static ssize_t show_engine_mode(struct device *dev,
- 				struct device_attribute *attr,
- 				char *buf, int nr)
-@@ -381,7 +362,7 @@ static struct lp55xx_device_config lp5521_cfg = {
- 	.max_channel  = LP5521_MAX_LEDS,
- 	.post_init_device   = lp5521_post_init_device,
- 	.brightness_fn      = lp55xx_led_brightness,
--	.multicolor_brightness_fn = lp5521_multicolor_brightness,
-+	.multicolor_brightness_fn = lp55xx_multicolor_brightness,
- 	.set_led_current    = lp5521_set_led_current,
- 	.firmware_cb        = lp55xx_firmware_loaded_cb,
- 	.run_engine         = lp5521_run_engine,
 diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
-index a3b4063d504e..bfa0c4431ede 100644
+index 3030a4495808..4a4463cb44a4 100644
 --- a/drivers/leds/leds-lp5523.c
 +++ b/drivers/leds/leds-lp5523.c
-@@ -664,25 +664,6 @@ static ssize_t store_master_fader_leds(struct device *dev,
- 	return ret;
+@@ -167,20 +167,12 @@ static void lp5523_stop_engine(struct lp55xx_chip *chip)
+ 	lp5523_wait_opmode_done();
  }
  
--static int lp5523_multicolor_brightness(struct lp55xx_led *led)
+-static void lp5523_turn_off_channels(struct lp55xx_chip *chip)
 -{
--	struct lp55xx_chip *chip = led->chip;
--	int ret;
 -	int i;
 -
--	mutex_lock(&chip->lock);
--	for (i = 0; i < led->mc_cdev.num_colors; i++) {
--		ret = lp55xx_write(chip,
--				   LP5523_REG_LED_PWM_BASE +
--				   led->mc_cdev.subled_info[i].channel,
--				   led->mc_cdev.subled_info[i].brightness);
--		if (ret)
--			break;
--	}
--	mutex_unlock(&chip->lock);
--	return ret;
+-	for (i = 0; i < LP5523_MAX_LEDS; i++)
+-		lp55xx_write(chip, LP5523_REG_LED_PWM_BASE + i, 0);
 -}
 -
- static LP55XX_DEV_ATTR_RW(engine1_mode, show_engine1_mode, store_engine1_mode);
- static LP55XX_DEV_ATTR_RW(engine2_mode, show_engine2_mode, store_engine2_mode);
- static LP55XX_DEV_ATTR_RW(engine3_mode, show_engine3_mode, store_engine3_mode);
-@@ -754,7 +735,7 @@ static struct lp55xx_device_config lp5523_cfg = {
- 	.max_channel  = LP5523_MAX_LEDS,
- 	.post_init_device   = lp5523_post_init_device,
- 	.brightness_fn      = lp55xx_led_brightness,
--	.multicolor_brightness_fn = lp5523_multicolor_brightness,
-+	.multicolor_brightness_fn = lp55xx_multicolor_brightness,
- 	.set_led_current    = lp5523_set_led_current,
- 	.firmware_cb        = lp55xx_firmware_loaded_cb,
- 	.run_engine         = lp5523_run_engine,
+ static void lp5523_run_engine(struct lp55xx_chip *chip, bool start)
+ {
+ 	/* stop engine */
+ 	if (!start) {
+ 		lp5523_stop_engine(chip);
+-		lp5523_turn_off_channels(chip);
++		lp55xx_turn_off_channels(chip);
+ 		return;
+ 	}
+ 
 diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
-index cc393e407837..27008b6a4757 100644
+index d17538ebfcf9..58121f27f17b 100644
 --- a/drivers/leds/leds-lp55xx-common.c
 +++ b/drivers/leds/leds-lp55xx-common.c
-@@ -256,6 +256,27 @@ int lp55xx_led_brightness(struct lp55xx_led *led)
+@@ -288,6 +288,16 @@ void lp55xx_set_led_current(struct lp55xx_led *led, u8 led_current)
  }
- EXPORT_SYMBOL_GPL(lp55xx_led_brightness);
+ EXPORT_SYMBOL_GPL(lp55xx_set_led_current);
  
-+int lp55xx_multicolor_brightness(struct lp55xx_led *led)
++void lp55xx_turn_off_channels(struct lp55xx_chip *chip)
 +{
-+	struct lp55xx_chip *chip = led->chip;
 +	const struct lp55xx_device_config *cfg = chip->cfg;
-+	int ret;
 +	int i;
 +
-+	mutex_lock(&chip->lock);
-+	for (i = 0; i < led->mc_cdev.num_colors; i++) {
-+		ret = lp55xx_write(chip,
-+				   cfg->reg_led_pwm_base.addr +
-+				   led->mc_cdev.subled_info[i].channel,
-+				   led->mc_cdev.subled_info[i].brightness);
-+		if (ret)
-+			break;
-+	}
-+	mutex_unlock(&chip->lock);
-+	return ret;
++	for (i = 0; i < cfg->max_channel; i++)
++		lp55xx_write(chip, cfg->reg_led_pwm_base.addr + i, 0);
 +}
-+EXPORT_SYMBOL_GPL(lp55xx_multicolor_brightness);
++EXPORT_SYMBOL_GPL(lp55xx_turn_off_channels);
 +
  static void lp55xx_reset_device(struct lp55xx_chip *chip)
  {
  	const struct lp55xx_device_config *cfg = chip->cfg;
 diff --git a/drivers/leds/leds-lp55xx-common.h b/drivers/leds/leds-lp55xx-common.h
-index 4578418e5011..021dd17bc5d7 100644
+index e638049d9297..531fbb0acb2e 100644
 --- a/drivers/leds/leds-lp55xx-common.h
 +++ b/drivers/leds/leds-lp55xx-common.h
-@@ -216,6 +216,7 @@ extern int lp55xx_update_program_memory(struct lp55xx_chip *chip,
- 					const u8 *data, size_t size);
- extern void lp55xx_firmware_loaded_cb(struct lp55xx_chip *chip);
+@@ -220,6 +220,7 @@ extern void lp55xx_firmware_loaded_cb(struct lp55xx_chip *chip);
  extern int lp55xx_led_brightness(struct lp55xx_led *led);
-+extern int lp55xx_multicolor_brightness(struct lp55xx_led *led);
+ extern int lp55xx_multicolor_brightness(struct lp55xx_led *led);
+ extern void lp55xx_set_led_current(struct lp55xx_led *led, u8 led_current);
++extern void lp55xx_turn_off_channels(struct lp55xx_chip *chip);
  
  /* common probe/remove function */
  extern int lp55xx_probe(struct i2c_client *client);
+diff --git a/drivers/leds/leds-lp8501.c b/drivers/leds/leds-lp8501.c
+index d924572e4533..1fb876f64cb7 100644
+--- a/drivers/leds/leds-lp8501.c
++++ b/drivers/leds/leds-lp8501.c
+@@ -110,20 +110,12 @@ static int lp8501_post_init_device(struct lp55xx_chip *chip)
+ 				LP8501_PWR_CONFIG_M, chip->pdata->pwr_sel);
+ }
+ 
+-static void lp8501_turn_off_channels(struct lp55xx_chip *chip)
+-{
+-	int i;
+-
+-	for (i = 0; i < LP8501_MAX_LEDS; i++)
+-		lp55xx_write(chip, LP8501_REG_LED_PWM_BASE + i, 0);
+-}
+-
+ static void lp8501_run_engine(struct lp55xx_chip *chip, bool start)
+ {
+ 	/* stop engine */
+ 	if (!start) {
+ 		lp55xx_stop_all_engine(chip);
+-		lp8501_turn_off_channels(chip);
++		lp55xx_turn_off_channels(chip);
+ 		return;
+ 	}
+ 
 -- 
 2.45.1
 
