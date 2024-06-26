@@ -1,106 +1,64 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B68F184105;
-	Wed, 26 Jun 2024 13:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ADD818A959;
+	Wed, 26 Jun 2024 13:06:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719407168; cv=none; b=cGpzpxzHLts0HvJHU+logZHFPx67rrQP5tDM8zClyTolA6PpTHDvtkphCFmUeZ/OQ5B3ZZ6YAl8ISDkzoTSu9owHgn4C8OVv2KlMdtNGBQlUfF0L7gMq/jvOSj1KR6vyGnfYHHKnySi0EPHKo8JJjnFcoZxetWVGCxaNTliq+MQ=
+	t=1719407172; cv=none; b=A1f7luv7vXboXTGrbwyw8dFzAIpnPYm61AeR90h2yU+xQ1hvEBD3pJbPNo1b7FFpYD+k595yItvoe/iPSlyQ3/n2Fr61XL+tqinBNMbd8ndFOFkva9iz1Ko4lXPrGeTgAkCw8UOS/l6OkyYg284ObvJw52RRsrr4Mrhom50Nr/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719407168; c=relaxed/simple;
-	bh=Y30furkV+cMSEv1GGvBYubrYp3wihc3Azqh0Nsma9mM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bOGEuuv1Lwl/pycxGiZG6XGiZB2zqR5QrZ59AnsQbwexmApbnch8GKQVsua/pLsMprdY+Kr/f3AqEX4ozupMgCP+YcIFrqee6kEY09+zTR9eENVWM1piGzuLDyFnOgPKTx4Khg4H8HQ5hKIjP+y6gNdMGjzjcxYSmxSupwanmpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QHbxrTLC; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QHbxrTLC"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1f9b52ef481so54429715ad.1;
-        Wed, 26 Jun 2024 06:06:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719407167; x=1720011967; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6QMNZrdOhBJtXo/ncaekHBRhjTvNlqY+hHR6bexm0Kg=;
-        b=QHbxrTLCMpSoebmUz4lZL+qbLPUCmEX+xrjG6RbVsNbelhSvP9BVkolc2vut07O83h
-         1w72TSHZ3s95gB8oX6L8/tfqm/hTmyX1J6jH4gfM7U3CLB7aGuA8jd2srfSMSCHO2uHe
-         rfUWSgn9BZ2GrVVEsKK3O/oHMcYv1IlSsyg6i465/6tlSCqyKMpHLeB+CLE8QdrRt8+2
-         h+OzMcFoTFLHoqElrLZFipJrAnUEFNORM2rNqogJ7pAc7B0w10GwKVrO6SWbboOl3ow7
-         XSm0Qalk42WknsL/SlAoB2qLzYETOfOBzZSCa2Z1iMrIYcl9FU6Qv1lT2FL/Csd7tVxX
-         BqPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719407167; x=1720011967;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6QMNZrdOhBJtXo/ncaekHBRhjTvNlqY+hHR6bexm0Kg=;
-        b=YOAdC+QHkOtvFRAc9MY02MgEQ3COC9lOOZJ0Qo1fnzPXtJoh0/fRUIbdd8expUU4aG
-         LyJkchHlYbMBKvsLgozsflZ2vns0L+yNNBdEm2CikAyxqDDU5x8i/rBf6p4D3RWY/RYV
-         GFaLTAHfUvQ0gygIJRB5vfHeQyPa/s4ySrLFp0jxeawK4wDDxc+I1yCk1SOfWlHd6V4j
-         Md0pYnqM+cF+rc5Sr3HjRpObdWWz1nh4rBg5rl0HoS3gOG+TmPtkeiYwbzMHO5QkgVqN
-         Vt/s7/wDOFWVP5r4XGhRhCjgVsemdiVDN3mhs6LGFdwYrhG6KWSBEYS7xbUQ4qEHcdHh
-         b8Zg==
-X-Forwarded-Encrypted: i=1; AJvYcCUv9kPWBLcjHCC6nJ9rLdKwmrqhZm+SeaqHVCu8/Lsi4KZD5WLqV8ykwQJS+gRcgVN3OGflZT3m2CaHsfnNZ+6nRyjUyb4yGOmVLMX2Y4Pb7yA+QmbRxSJg6g799nQXOwy83VjIhAzYfQ==
-X-Gm-Message-State: AOJu0Yybu6RPvyPpk6/CEx5Jt4WHEsa/Gfe6iTs0pgqu1vAh8DjzdApf
-	wgm5f1pf1qmanpuxxX+eMB60nboB0pMSOozd5z1LZWFggsqmE05n
-X-Google-Smtp-Source: AGHT+IGXLyzlC236sq7iVFAmdM7iFDnu3HHVf2NPqgOoGr1Q99dC/Kt2LUa8EVydJPm2vIe9lGvA2A==
-X-Received: by 2002:a17:902:d483:b0:1fa:2270:450d with SMTP id d9443c01a7336-1fa23ee0fd9mr106842485ad.27.1719407166681;
-        Wed, 26 Jun 2024 06:06:06 -0700 (PDT)
-Received: from obliging-System-Product-Name.dhcpserver.bu9bmc.local (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb7cf885sm99112395ad.224.2024.06.26.06.06.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 06:06:06 -0700 (PDT)
-From: Yang Chen <yangchen.openbmc@gmail.com>
-To: joel@jms.id.au,
-	andrew@codeconstruct.com.au,
-	patrick@stwcx.xyz,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Cc: Jerry.Lin@quantatw.com,
-	yangchen.openbmc@gmail.com
-Subject: [PATCH v1 12/17] ARM: dts: aspeed: minerva: add power monitor xdp710
-Date: Wed, 26 Jun 2024 21:03:27 +0800
-Message-Id: <20240626130332.929534-13-yangchen.openbmc@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240626130332.929534-1-yangchen.openbmc@gmail.com>
-References: <20240626130332.929534-1-yangchen.openbmc@gmail.com>
+	s=arc-20240116; t=1719407172; c=relaxed/simple;
+	bh=GOp37wPmnAvgXsqMReUrdRIqdeUb22PiUxfzKAposJQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=uofA4P43qJEWq37VAKGkGYhTVAKRAOZzJ73cyRNZr6zdvJKUVaPGAYvM3JwDRzMJY5HTshZG9p02nN9EFhVpedc0EW/BLfGSeeu+jTNen5xyqmaUE68Y9I73nGkZi+l1X5e+64TL7iW1Y6FlhR+DBeaTSvmSC+zekH6QlJYer1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21902C32789;
+	Wed, 26 Jun 2024 13:06:12 +0000 (UTC)
+Received: by mercury (Postfix, from userid 1000)
+	id A4A1E106093D; Wed, 26 Jun 2024 15:06:09 +0200 (CEST)
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: linus.walleij@linaro.org, sre@kernel.org, jic23@kernel.org, 
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel-janitors@vger.kernel.org
+In-Reply-To: <cover.1719037737.git.christophe.jaillet@wanadoo.fr>
+References: <cover.1719037737.git.christophe.jaillet@wanadoo.fr>
+Subject: Re: [PATCH 0/3] power: supply: ab8500: Improve code related to
+ iio_read_channel_processed() and fix a bug
+Message-Id: <171940716965.127964.17060971210782573496.b4-ty@collabora.com>
+Date: Wed, 26 Jun 2024 15:06:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-From: Yang Chen <yang.chen@quantatw.com>
 
-Add HSC xdp710 on i2c bus0.
+On Sat, 22 Jun 2024 09:04:23 +0200, Christophe JAILLET wrote:
+> This series is inspired by a patch submitted at [1].
+> 
+> While looking if the same pattern was relevant elsewhere, I ended in
+> ab8500_charger.c.
+> 
+> Patch 1 fixes what looks to me as a regression introduced by
+> 97ab78bac5d0.
+> 
+> [...]
 
-Signed-off-by: Yang Chen <yang.chen@quantatw.com>
----
- arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+Applied, thanks!
 
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts
-index 3d80993885b7..0c305ddf7011 100644
---- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts
-+++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts
-@@ -154,6 +154,11 @@ power-monitor@68 {
- 		reg = <0x68>;
- 	};
- 
-+	power-monitor@43 {
-+		compatible = "infineon,xdp710";
-+		reg = <0x43>;
-+	};
-+
- 	leds_gpio: gpio@19 {
- 		compatible = "nxp,pca9555";
- 		reg = <0x19>;
+[1/3] power: supply: ab8500: Fix error handling when calling iio_read_channel_processed()
+      commit: 3288757087cbb93b91019ba6b7de53a1908c9d48
+[2/3] power: supply: ab8500: Use iio_read_channel_processed_scale()
+      commit: dc6ce568afd3452ac682261ea0db570d28f7d82d
+[3/3] power: supply: ab8500: Clean some error messages
+      commit: f62b267adcac33c64a26ec55973dad92bc8a8358
+
+Best regards,
 -- 
-2.34.1
+Sebastian Reichel <sebastian.reichel@collabora.com>
 
