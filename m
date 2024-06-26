@@ -1,74 +1,94 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C4016DC0F;
-	Wed, 26 Jun 2024 09:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4A816CD1F
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 09:50:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719395443; cv=none; b=mW5uTJ8OgHEilnP226UFku4ld/IPb9hBrXqY4IyvGkLIwxvS3gyUrz1jYsHIrvCXqndUDWPeXvsVBFxv89YYyUCNlyHbQDeFMJVJ0pwmrWYei8PdEeb3aHrDNIktJ/4Z9u3Dkjzla41nmHqCucXgfibZxUz4gwnOvuSIF1d3l/k=
+	t=1719395449; cv=none; b=t1/d+/EPvf1LtZNaow78wg9m4kzdiOEl+jNL2tlU3PhVGQ2ceLMDHKxcD65bE9kZZVwSn9tJh94EwIl+MbqHZGnKi4k5uObJ5QWNz0nqGBDH679o3uXwspquLmLjmQKiu0TxTamHoVM+z76SrenOopw0/ojr6chdiQZFxnsaNcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719395443; c=relaxed/simple;
-	bh=6ODZGI61b1WJDcimhYjCBP/Mw49nF+azQMXjE7SdsdI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FmXKurlVHiLPt+PpBX6D7i4qPF6hrwuhUctnufkFWiJs4NpSgRhu5t8Gf+M+vMJWlhomzzdkGYkYavCy4HlV3taUbfjcw5fB7RJL3HqDaW6LxO4BFaF4nh/rDiMp3pD57CV2qPjtaVp7F5ExY0o5+df4rZ9hpPiafDO7DieiX98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4W8H4l6t1KznXgs;
-	Wed, 26 Jun 2024 17:50:31 +0800 (CST)
-Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
-	by mail.maildlp.com (Postfix) with ESMTPS id 22048180086;
-	Wed, 26 Jun 2024 17:50:38 +0800 (CST)
-Received: from hulk-vt.huawei.com (10.67.174.26) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 26 Jun 2024 17:50:37 +0800
-From: Xiu Jianfeng <xiujianfeng@huawei.com>
-To: <hannes@cmpxchg.org>, <mhocko@kernel.org>, <roman.gushchin@linux.dev>,
-	<shakeel.butt@linux.dev>, <muchun.song@linux.dev>,
-	<akpm@linux-foundation.org>
-CC: <cgroups@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] mm: memcg: remove redundant seq_buf_has_overflowed()
-Date: Wed, 26 Jun 2024 09:42:32 +0000
-Message-ID: <20240626094232.2432891-1-xiujianfeng@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1719395449; c=relaxed/simple;
+	bh=B8XMw0Lq/znZjV0KsDQqRopt02tCEu5Vs8kv9SLuKd8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DYjH3ypuLw97fqUDVDXS76nnp/Z4czZbQkSbR5KYoB9FvlRxR5t0sgjmUpz5Ae2ep2I/NeY7xR5+Ihcsl9kV6/vxcebRwZN8YAt/+LNXV/Z2HuCH8hk8CCjHfytMSuuiM5L63bG4Zmom76y2rbq+rMShGQCoBosdaxjysWS4HNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UM3sUncr; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UM3sUncr"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52cd80e55efso8544553e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 02:50:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719395445; x=1720000245; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B8XMw0Lq/znZjV0KsDQqRopt02tCEu5Vs8kv9SLuKd8=;
+        b=UM3sUncrWN6zhe36o3vEJ8ZFcJtCBJHXNPzWKNx3PUGfSw7V/Od8UOK1OMQUbe7Wg9
+         ssEEA+cP+Adjz9O5fTGUcn0CaGYVV/NC8suICwgGQdfgbTpZuW6Juw7VzLuQQ6TcqWfd
+         EYcfjHFs7c1P1BV9CtTy6FtWwOExlVUSR/sLTWme32MWq+6MsZBhieavMNmMV4IUKEGk
+         3IfjT796ajjL+W1xxOm7d3vr0+vTGz5TpxR7Z736KjeAFqGCmCNKezmCbpb6OG7KaHet
+         vNTc2xrqygHMhPWnrcI2Kc6pIChdnHXSlrwZRkqCgWgJtu2LWEUjKA1BJMU/EbJoZIkN
+         DtBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719395445; x=1720000245;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B8XMw0Lq/znZjV0KsDQqRopt02tCEu5Vs8kv9SLuKd8=;
+        b=ekApBGiCr1lQA4sIOfP8rhYLAR8ISsIF8czwMkGd/EXE4F5TMJXQcipZPSavWQVGQ6
+         aXJTQ8qhRseJYgTDHKC66u/xWWB0Jp8LHbPRnBinAMYGjsG2QHTIB+x8ndn+SjeX2zif
+         mZURhj6q2Rt+Oq6h9hhFPxI8VHEetvX6fozIzV26R8ED6MTgQF9ZItVjDIgbSq54YTz0
+         ByPB4awA2Z6yMLpYQv2vI0kz4vo0xzwsTZVErF9X0/Vjz7+kt3pSQ8OeIyojpPlVwE5H
+         Lk5oIrJ1+XO7QFek0AGHraboiVv/KG+uWHX70oU0nFNDCeEBYJHOiy+J3/kLIyr4J+Ql
+         4DCw==
+X-Forwarded-Encrypted: i=1; AJvYcCWYIXAUgOdak0svCzV4eDjwNSIi7arh7lnMrrsg8/9yM/4GoC7GpzlbQozGLvPwHlrO8xNMFd1f4ae2xP5vPn+MgxyXwI+W1nlFKuoh
+X-Gm-Message-State: AOJu0YyE8m+6C3RDTi+jxIFHzYpwYAz5uBPT6PWp5dsu089/Uj2EqTPg
+	ljd9/hNt4ZofGOI+sLVYboL+sbWJPomBxMePZGyrgz3nfIB2Z9NKlO5vpBaVgZVM5gYGwr32dxc
+	byz0qAfMTeORjr4QeSISJcJ5zepYQz9yIQ0rvyw==
+X-Google-Smtp-Source: AGHT+IGSObvqboJ4ZZ6yoQ1c/G7L7JssRKsKX/b79P3e90H6Lvbk2DOvVW3Js3s99JnAusteMlXmpMMT3T35ygpYy94=
+X-Received: by 2002:a05:6512:3449:b0:52c:dbf9:7e54 with SMTP id
+ 2adb3069b0e04-52ce1836330mr6750930e87.41.1719395445554; Wed, 26 Jun 2024
+ 02:50:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpeml500023.china.huawei.com (7.185.36.114)
+References: <20240618032620.2445395-1-ruanjinjie@huawei.com> <20240618032620.2445395-2-ruanjinjie@huawei.com>
+In-Reply-To: <20240618032620.2445395-2-ruanjinjie@huawei.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 26 Jun 2024 11:50:33 +0200
+Message-ID: <CACRpkdYAjKMSGmR4pc+LEfZ4NQArvgCEwy=ujzjOQus0K9j40w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ARM: 9258/1: Fix callchain_trace() return value
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: linux@armlinux.org.uk, will@kernel.org, mark.rutland@arm.com, 
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, arnd@arndb.de, afd@ti.com, 
+	akpm@linux-foundation.org, rmk+kernel@armlinux.org.uk, 
+	eric.devolder@oracle.com, robh@kernel.org, ardb@kernel.org, 
+	broonie@kernel.org, lihuafei1@huawei.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Both the end of memory_stat_format() and memcg_stat_format() will call
-WARN_ON_ONCE(seq_buf_has_overflowed()). However, memory_stat_format()
-is the only caller of memcg_stat_format(), when memcg is on the default
-hierarchy, seq_buf_has_overflowed() will be executed twice, so remove
-the reduntant one.
+On Tue, Jun 18, 2024 at 5:23=E2=80=AFAM Jinjie Ruan <ruanjinjie@huawei.com>=
+ wrote:
 
-Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
----
- mm/memcontrol.c | 3 ---
- 1 file changed, 3 deletions(-)
+> perf_callchain_store() return 0 on success, -1 otherwise, fix
+> callchain_trace() to return correct bool value. So walk_stackframe() can
+> have a chance to stop walking the stack ahead.
+>
+> Fixes: 70ccc7c0667b ("ARM: 9258/1: stacktrace: Make stack walk callback c=
+onsistent with generic code")
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 974bd160838c..776d22bc66a2 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1846,9 +1846,6 @@ static void memcg_stat_format(struct mem_cgroup *memcg, struct seq_buf *s)
- 			       vm_event_name(memcg_vm_event_stat[i]),
- 			       memcg_events(memcg, memcg_vm_event_stat[i]));
- 	}
--
--	/* The above should easily fit into one page */
--	WARN_ON_ONCE(seq_buf_has_overflowed(s));
- }
- 
- static void memcg1_stat_format(struct mem_cgroup *memcg, struct seq_buf *s);
--- 
-2.34.1
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
+Please put this into Russell's patch tracker.
+
+Yours,
+Linus Walleij
