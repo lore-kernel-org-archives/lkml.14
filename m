@@ -1,134 +1,234 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2134.outbound.protection.outlook.com [40.107.104.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F303DEEDD
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 09:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719395746; cv=none; b=tQQw90HTAjyM4N2Fc1RvTVeP6kRyd2Wyg+QXclpXokMlXh3n8vkW6Y4y4XwbYAq6vaFNAczP6Er4zVuIGVLB1g0TRaviB5VkJswlAGwLg/5lq8sN9ozThIq+2oW2smwn/r3mEfN+p3683UUsNWz14WjcATgTYUBiqFNGMEQ8ljs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719395746; c=relaxed/simple;
-	bh=UqxORZFoWrTgtfacpB99r8lUREab2Fbrnsec5IXJypk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hHT5dWsINGoApVhi9c0TRuEJm2qsehcVzPP6IfoXR6Vluxach1ySgRtEvMG8S9rM2jNxMPzUCzNY8zvaG/dSJvSSAolWBt/qton6lDT0LwR0TBM4PeuRMkZ/etVZNgVA3vmaKq2rN0he02ssYdsl+PEoe8FNiymI8LaiIeIn+44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=e2aRnLWM; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458EFEEDD;
+	Wed, 26 Jun 2024 09:56:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.134
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719395787; cv=fail; b=n0h9h76qQoENoJdJFzw+lt/F7Enc9C7eFHl0KCV9ViF2DG0Ye5lpLpgf0Ea3YaeTxcVLmFMt42WCsZ+uGJrFpG25dxtqzEwkAdiLsm+7mes5wsQQG/lLHjluPFNIKHD0Mieje2p35Wd1j5x58n2ZsUVjp1sBY4S18NNJXKn9uVk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719395787; c=relaxed/simple;
+	bh=p9Jwz/8rK0zTZPWVuIL6lA7Sdrjcu8RH3+Ur4C6kCgs=;
+	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
+	 To:Cc:MIME-Version; b=AByjWg9YkwzS8YkuU378msfylBc3YAi6Fl1cK5FnrcW4cepGHgCH9hEHl7WrYkpXcEw5wZ95x1il01IS8DQ8+9W2seA9PoaLu4070ORWMX+KKwNaldQ4NvqSlljp+4VeWa0IFESKz6FBUrqTIXX9GPyPCks7tXmUKb80Fni9cBs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net; spf=pass smtp.mailfrom=wolfvision.net; dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b=WnYQyLHy; arc=fail smtp.client-ip=40.107.104.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wolfvision.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="e2aRnLWM"
-Received: from [192.168.88.20] (91-158-144-210.elisa-laajakaista.fi [91.158.144.210])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 54C8A73E;
-	Wed, 26 Jun 2024 11:55:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1719395719;
-	bh=UqxORZFoWrTgtfacpB99r8lUREab2Fbrnsec5IXJypk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=e2aRnLWMJZzQg5QGhcG3Z8Y4ptYSnu9vHoy8Chj5GttboagVtazoDYP7EsYQjnCtF
-	 b9pzjTIo1HyYUO5FyenMZS9ytFHSPxnclnqPf30bwkwlxrTlIyddjx8i24wBs9p6Gh
-	 4mksNBvsEKLFo3uNQnKMMc+l0vRf9+Vnw0HcEOdo=
-Message-ID: <66ab4206-d1c8-4aad-99a7-c4c316e343a9@ideasonboard.com>
-Date: Wed, 26 Jun 2024 12:55:39 +0300
+	dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b="WnYQyLHy"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=g6fT8LjrlHowDNSyLJQiEMieRicvTLas9fuJKFa84xpbai2pCJTVLGZVGOOhm5fQsoWrXk7qcQVkxFE3kP2yi5oDClAUQoQoU1fkX6ElR9YYm/ZvS6YV3CwyPO2Do5P8nD6At76J+asELpp8hRFlhNg/kEviAMqranfh6JLG1s2S4oJKvctCwZVPNuC0rm44kRj+MBV+h4/LSQwtIHo64LTKidv+Gq2NCsGlIPUNv7Z4IgoujI4B2Mfh/rA6+xxswHF53MiC4Ng73NJz0l/p4QrfcZLRDMddnNrMCSX+78yU0U4/AgDLrnU+rf/4JzZYWE6ZJjzvZJ7RHhpoka/mRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0u1KdYXdRmqiAc1PitUbeMUNPuGUu3updOr0DLsVY+c=;
+ b=mwOdxKUnYsyfHLE6UHckjUYlYSUGagjYfVWyymwPaGzAFJ5P3h2VK+1R6LByFDtKbooWKUTnVSMavQVAsQCgteclSinZPP4n0TAZG7JJ2D1JryO7IibvrYaM+9DHsWqyPtlJgFz1zBN+3YhEOTIPsJBrE51H2fThWrQk4IlFiCD8sCDxEEj0QDhuNkx4NzJ8iDi3F5ayowaaVHT6FTqGUPsQXGX/0EXp5wqzC2r7xm/LgkGgAFa1ZEVYvNoplCuzgNJUXtFs+/m7WiaCOlWqb4ZDQ6VT+Pj4APXtBTKIltSfscoZxDwHj6sKV3n4SdT/aZ/HkW7s8njp9P/FN/y5mA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wolfvision.net; dmarc=pass action=none
+ header.from=wolfvision.net; dkim=pass header.d=wolfvision.net; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wolfvision.net;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0u1KdYXdRmqiAc1PitUbeMUNPuGUu3updOr0DLsVY+c=;
+ b=WnYQyLHygJav0em+nIwujeMZZIZ2kVCPL0dSgE49QjFBFuXZhlcQ6cvenmBhqw2YI3rINXJFUQDn7Dx+SF9IVvxR9/ie1GSXDNIO/zyEt6I5NDKgAj9W0Bw/GSC3MZyNElP0Sedk6Qo5uUECa/VY36o0cGw+266HfPiNn0dwdgY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wolfvision.net;
+Received: from VE1PR08MB4974.eurprd08.prod.outlook.com (2603:10a6:803:111::15)
+ by GV2PR08MB8679.eurprd08.prod.outlook.com (2603:10a6:150:b3::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.30; Wed, 26 Jun
+ 2024 09:56:21 +0000
+Received: from VE1PR08MB4974.eurprd08.prod.outlook.com
+ ([fe80::a08:11be:8709:f5e1]) by VE1PR08MB4974.eurprd08.prod.outlook.com
+ ([fe80::a08:11be:8709:f5e1%4]) with mapi id 15.20.7698.025; Wed, 26 Jun 2024
+ 09:56:21 +0000
+From: Javier Carrasco <javier.carrasco@wolfvision.net>
+Date: Wed, 26 Jun 2024 11:56:15 +0200
+Subject: [PATCH v10 3/4] dt-bindings: input: touchscreen: st1232: add
+ touch-overlay example
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240626-feature-ts_virtobj_patch-v10-3-873ad79bb2c9@wolfvision.net>
+References: <20240626-feature-ts_virtobj_patch-v10-0-873ad79bb2c9@wolfvision.net>
+In-Reply-To: <20240626-feature-ts_virtobj_patch-v10-0-873ad79bb2c9@wolfvision.net>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bastian Hecht <hechtb@gmail.com>, 
+ Michael Riesch <michael.riesch@wolfvision.net>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Javier Carrasco <javier.carrasco@wolfvision.net>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1719395779; l=2517;
+ i=javier.carrasco@wolfvision.net; s=20240617; h=from:subject:message-id;
+ bh=p9Jwz/8rK0zTZPWVuIL6lA7Sdrjcu8RH3+Ur4C6kCgs=;
+ b=YOY/sceyh/9SmhZoZz1Yj0SLpNlA/xWw+BsDI0zl/k50nkrYzJthkY6t1JZlxSFiT4uWyM01V
+ d0lQtx2XOngDq8b9AFcbh/hpKjdBCIr2ug3XBLMx0/VEh1IM58AgM9O
+X-Developer-Key: i=javier.carrasco@wolfvision.net; a=ed25519;
+ pk=hfASRUP6l4lf3Lo2mjLM085/h37dT3m0Qj1HejXDPDc=
+X-ClientProxiedBy: VI1PR09CA0118.eurprd09.prod.outlook.com
+ (2603:10a6:803:78::41) To VE1PR08MB4974.eurprd08.prod.outlook.com
+ (2603:10a6:803:111::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/mipi-dsi: Fix devm unregister & detach
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-References: <20240619-dsi-devres-fix-v1-1-a5c59310a52e@ideasonboard.com>
- <20240626-gabby-ladybug-of-freedom-08e6eb@houat>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- xsFNBE6ms0cBEACyizowecZqXfMZtnBniOieTuFdErHAUyxVgtmr0f5ZfIi9Z4l+uUN4Zdw2
- wCEZjx3o0Z34diXBaMRJ3rAk9yB90UJAnLtb8A97Oq64DskLF81GCYB2P1i0qrG7UjpASgCA
- Ru0lVvxsWyIwSfoYoLrazbT1wkWRs8YBkkXQFfL7Mn3ZMoGPcpfwYH9O7bV1NslbmyJzRCMO
- eYV258gjCcwYlrkyIratlHCek4GrwV8Z9NQcjD5iLzrONjfafrWPwj6yn2RlL0mQEwt1lOvn
- LnI7QRtB3zxA3yB+FLsT1hx0va6xCHpX3QO2gBsyHCyVafFMrg3c/7IIWkDLngJxFgz6DLiA
- G4ld1QK/jsYqfP2GIMH1mFdjY+iagG4DqOsjip479HCWAptpNxSOCL6z3qxCU8MCz8iNOtZk
- DYXQWVscM5qgYSn+fmMM2qN+eoWlnCGVURZZLDjg387S2E1jT/dNTOsM/IqQj+ZROUZuRcF7
- 0RTtuU5q1HnbRNwy+23xeoSGuwmLQ2UsUk7Q5CnrjYfiPo3wHze8avK95JBoSd+WIRmV3uoO
- rXCoYOIRlDhg9XJTrbnQ3Ot5zOa0Y9c4IpyAlut6mDtxtKXr4+8OzjSVFww7tIwadTK3wDQv
- Bus4jxHjS6dz1g2ypT65qnHen6mUUH63lhzewqO9peAHJ0SLrQARAQABzTBUb21pIFZhbGtl
- aW5lbiA8dG9taS52YWxrZWluZW5AaWRlYXNvbmJvYXJkLmNvbT7CwY4EEwEIADgWIQTEOAw+
- ll79gQef86f6PaqMvJYe9QUCX/HruAIbAwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgAAKCRD6
- PaqMvJYe9WmFD/99NGoD5lBJhlFDHMZvO+Op8vCwnIRZdTsyrtGl72rVh9xRfcSgYPZUvBuT
- VDxE53mY9HaZyu1eGMccYRBaTLJSfCXl/g317CrMNdY0k40b9YeIX10feiRYEWoDIPQ3tMmA
- 0nHDygzcnuPiPT68JYZ6tUOvAt7r6OX/litM+m2/E9mtp8xCoWOo/kYO4mOAIoMNvLB8vufi
- uBB4e/AvAjtny4ScuNV5c5q8MkfNIiOyag9QCiQ/JfoAqzXRjVb4VZG72AKaElwipiKCWEcU
- R4+Bu5Qbaxj7Cd36M/bI54OrbWWETJkVVSV1i0tghCd6HHyquTdFl7wYcz6cL1hn/6byVnD+
- sR3BLvSBHYp8WSwv0TCuf6tLiNgHAO1hWiQ1pOoXyMEsxZlgPXT+wb4dbNVunckwqFjGxRbl
- Rz7apFT/ZRwbazEzEzNyrBOfB55xdipG/2+SmFn0oMFqFOBEszXLQVslh64lI0CMJm2OYYe3
- PxHqYaztyeXsx13Bfnq9+bUynAQ4uW1P5DJ3OIRZWKmbQd/Me3Fq6TU57LsvwRgE0Le9PFQs
- dcP2071rMTpqTUteEgODJS4VDf4lXJfY91u32BJkiqM7/62Cqatcz5UWWHq5xeF03MIUTqdE
- qHWk3RJEoWHWQRzQfcx6Fn2fDAUKhAddvoopfcjAHfpAWJ+ENc7BTQROprNHARAAx0aat8GU
- hsusCLc4MIxOQwidecCTRc9Dz/7U2goUwhw2O5j9TPqLtp57VITmHILnvZf6q3QAho2QMQyE
- DDvHubrdtEoqaaSKxKkFie1uhWNNvXPhwkKLYieyL9m2JdU+b88HaDnpzdyTTR4uH7wk0bBa
- KbTSgIFDDe5lXInypewPO30TmYNkFSexnnM3n1PBCqiJXsJahE4ZQ+WnV5FbPUj8T2zXS2xk
- 0LZ0+DwKmZ0ZDovvdEWRWrz3UzJ8DLHb7blPpGhmqj3ANXQXC7mb9qJ6J/VSl61GbxIO2Dwb
- xPNkHk8fwnxlUBCOyBti/uD2uSTgKHNdabhVm2dgFNVuS1y3bBHbI/qjC3J7rWE0WiaHWEqy
- UVPk8rsph4rqITsj2RiY70vEW0SKePrChvET7D8P1UPqmveBNNtSS7In+DdZ5kUqLV7rJnM9
- /4cwy+uZUt8cuCZlcA5u8IsBCNJudxEqBG10GHg1B6h1RZIz9Q9XfiBdaqa5+CjyFs8ua01c
- 9HmyfkuhXG2OLjfQuK+Ygd56mV3lq0aFdwbaX16DG22c6flkkBSjyWXYepFtHz9KsBS0DaZb
- 4IkLmZwEXpZcIOQjQ71fqlpiXkXSIaQ6YMEs8WjBbpP81h7QxWIfWtp+VnwNGc6nq5IQDESH
- mvQcsFS7d3eGVI6eyjCFdcAO8eMAEQEAAcLBXwQYAQIACQUCTqazRwIbDAAKCRD6PaqMvJYe
- 9fA7EACS6exUedsBKmt4pT7nqXBcRsqm6YzT6DeCM8PWMTeaVGHiR4TnNFiT3otD5UpYQI7S
- suYxoTdHrrrBzdlKe5rUWpzoZkVK6p0s9OIvGzLT0lrb0HC9iNDWT3JgpYDnk4Z2mFi6tTbq
- xKMtpVFRA6FjviGDRsfkfoURZI51nf2RSAk/A8BEDDZ7lgJHskYoklSpwyrXhkp9FHGMaYII
- m9EKuUTX9JPDG2FTthCBrdsgWYPdJQvM+zscq09vFMQ9Fykbx5N8z/oFEUy3ACyPqW2oyfvU
- CH5WDpWBG0s5BALp1gBJPytIAd/pY/5ZdNoi0Cx3+Z7jaBFEyYJdWy1hGddpkgnMjyOfLI7B
- CFrdecTZbR5upjNSDvQ7RG85SnpYJTIin+SAUazAeA2nS6gTZzumgtdw8XmVXZwdBfF+ICof
- 92UkbYcYNbzWO/GHgsNT1WnM4sa9lwCSWH8Fw1o/3bX1VVPEsnESOfxkNdu+gAF5S6+I6n3a
- ueeIlwJl5CpT5l8RpoZXEOVtXYn8zzOJ7oGZYINRV9Pf8qKGLf3Dft7zKBP832I3PQjeok7F
- yjt+9S+KgSFSHP3Pa4E7lsSdWhSlHYNdG/czhoUkSCN09C0rEK93wxACx3vtxPLjXu6RptBw
- 3dRq7n+mQChEB1am0BueV1JZaBboIL0AGlSJkm23kw==
-In-Reply-To: <20240626-gabby-ladybug-of-freedom-08e6eb@houat>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VE1PR08MB4974:EE_|GV2PR08MB8679:EE_
+X-MS-Office365-Filtering-Correlation-Id: 373c5a69-c95c-4d01-6a1c-08dc95c63af2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230038|366014|52116012|376012|1800799022|38350700012;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?b1hhSVMrdXIxMEFncUFXd3lEalJlYlY4OElTUlh3aGZyRllSbDVFZ3IyTUxY?=
+ =?utf-8?B?ZG5FOGFoT053U1FYUzRVRUMwV3p0VndMZlFwc2pjVVRtWXBFYnJQWTI3YVZR?=
+ =?utf-8?B?Uk1VSWJqZ2dpUGRaOFNwYUxaSTdkNWlrUGprQWVUOUl1d1R4UGFzaW0xYlRw?=
+ =?utf-8?B?REFlYkp1eUsxeXdLTklJRWk5NTJxVE9CRHZlK0JXR0tFbTFGbktScmFKOFJ1?=
+ =?utf-8?B?aDhJSUdnM1pTNEwvVzRXS1JyTVJjZkJHc1Vpanh0blM1U01FUHJUNEMvL1BI?=
+ =?utf-8?B?Q2w5RjdCcjRMUkNMYVNvQWJweW14NmJ3TCs5M2k1T2tkZksvandkNytvZ0d1?=
+ =?utf-8?B?TXZiWEZOWUxBSWZiTEpaNCtTbUZZZHhPZEFMQ0VMSGc3RHJ5bjN6RHpCang4?=
+ =?utf-8?B?eEdIbDNKNHl1U3FkZkZCMDJWcWNlU3RrVzZiNVNMSE81WDlscGpySlVrSFFL?=
+ =?utf-8?B?cC8ydkgvK0Z5TGwxT3NpYWlac2lnK1gzWFdUclBRb3JIcTc5WFhDWDlBMWpp?=
+ =?utf-8?B?TitNemRSOTJQRldVc1NEQXZrVEdqWmFKdnZBTi8vQVZXZkNRZE14NEtvVjd1?=
+ =?utf-8?B?T1hmUFAwcVBjbUszRWdKcVl1Wmo3RWpUTWloSUZFR0tkZFNpQms2T0VmZkxt?=
+ =?utf-8?B?WjdKYk9HWVZtZDdwUGJiM3NaTzhuelBiMmlwV0lKbTFGSUhPQ05na3hVR3RR?=
+ =?utf-8?B?Q3JKaVVmVHpGL2FYYUdxRzN2MlUwQlkraCt0TXplMk5HTUFITWtvY21sMnIx?=
+ =?utf-8?B?b2IwbHNlbjFNdGxCczB3R1RTNzB6SHNkUjRCN3hFSGRkcHR3dzQrSTRibERZ?=
+ =?utf-8?B?UkVNMzUxSkpuY0dkS21PNUpvT2JSNFpSdy9ucjhSUk0raGV3cFVDZ3h1emZm?=
+ =?utf-8?B?QVN0NjJhZityQTdDSStaMis0NUlKbmJwTEV0ZXgwVVhWc2dPWm1HcWQvOEls?=
+ =?utf-8?B?a2VaWXB5QUc3NUlrUDczK3BoejNMc3hWVTJBTVJWZXZlVGhzeHcrUENGZCts?=
+ =?utf-8?B?ZTBlZnFVZjdLRm9Za2wwT2dHNXExT0VUN05jSU1ObFdVNHF1NzAyS1dwYWl3?=
+ =?utf-8?B?TFRSMEtpZUZ4STVUQkJTVnQzSEh4T1NoQ2wxRVZvbXBubm8wcmRlVVZFVkk0?=
+ =?utf-8?B?WFZEUkhDbzJkcUxhZHJrNW1QL0JCdkZjWURVcTFCL3FtQUNXelJLSktLWXFF?=
+ =?utf-8?B?T3BOV3F2UlhkVTR5VHZ6MldvREFBc25DZENhTEpXYkJzeldSZHVENk1WeEZy?=
+ =?utf-8?B?VEpHVitNQVlISjhCcWowc1ExL2FNU3VLNXZIcXN4QUJFdDNFM2xOOWhnenhM?=
+ =?utf-8?B?aVQvdnFySUJZZHdLUXh5d3JFZkVPTWtxMVBvcXBtbytHempORG5Eb2tBalZF?=
+ =?utf-8?B?aERCU3p6ZVhjYTFmK2c4VkpjeHZVUlJQM3gxOUIxa0ZDVW5vQ1F1UTBxdlNC?=
+ =?utf-8?B?SzN3MXZkajlyOW5VYzc2L0V1bmVOdGlxM0FxdlF1UUF1UU1LSjBFU0wyQ0Fy?=
+ =?utf-8?B?a0tiazNPaG45NVZCNG9oYlZseTMrc2doV3UySVhSeWtHOTA2SUNGSXNKUzhj?=
+ =?utf-8?B?SlQvTTRVeUlmcEpsMWFBRklnWnc4NEtyNzZYakI4NE9GNG83ZFpiK1lueWYv?=
+ =?utf-8?B?NXNRTG1iU2VrRFdtOUV0Ty9hSkdrRjc2MHJVQzFTK3U4MlZzZlhPUjVMZFRh?=
+ =?utf-8?B?TzBBMkxPL21pYStPcHdQQ21MUjYyZnY2WkVTWHJDdThIbzFyc0ZMTWtBMjA5?=
+ =?utf-8?B?ek5kcHhOZ1daWWhNSG1xYlJCcWw1ZG9RWEhXTndhZGpPczBHWkJ1Q20vQWs2?=
+ =?utf-8?B?RUYvaEhES1JVd3EzTWRUK2w3YUVENzJUeVN1N3JZcUlOUk5oei82QmRadUJu?=
+ =?utf-8?B?SmUyZnI0NkxHZXV1NmtKZFpNNXZWNXNpT3JxM0xZbGVsNUE9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR08MB4974.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230038)(366014)(52116012)(376012)(1800799022)(38350700012);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QkNkTHRkeDlUVUFzYUtqTDc1Sk5NSXhVejh3bWxNL3hmdnQ5K2VORVBnaERL?=
+ =?utf-8?B?WmxFWERKZVFUZ0czTjhHNXFkR3U2emZjM2NlaFgzdU51ZVpBbjBocXlIVVZk?=
+ =?utf-8?B?WUFTZHNDckZOYU1aTWpLSkZiWmtqVmhVOGJFRFpKS1BXYUM2WGtFblY3UGhz?=
+ =?utf-8?B?aStiWk0xUDF3SkxFQ0t3R0t1Mmt4QnVKelFHWFdNNGdMOW11U2o0b2o4Yk1P?=
+ =?utf-8?B?VTV6VlR2MjBLbXFiSStGejI4aC9FNjFrS0E1OVZESzRxWU9FNUwrMmRvOVBG?=
+ =?utf-8?B?YnBleWVEYUtVS3lzcktZWHBnVkJVSHU3Vzc5MVVsN2MzWEkxaVBkS0dUM0tB?=
+ =?utf-8?B?WkhxRXNxNDVwb1E1WFoweDFTY2dTUFBiMWFXTGF6VXZhTk5JNnBUM0hGOVB0?=
+ =?utf-8?B?Unp0V2ZXb2xZMnFqTFR4aVRUZFplSkpqQll6TzNvbzhGZmc3MCtJa01mL291?=
+ =?utf-8?B?QzZiR2llekNmUWpEUUpWc2VjL1VMd3ZzS01GZHR5QWpWT3RJU1R4RFYzOTNm?=
+ =?utf-8?B?VDdvY3U5UGYyeXNkL2Z1aWExemVqcFhnOU85WFRrTXhqdzFKamlVU1Vtb3dh?=
+ =?utf-8?B?dmp0SnFEbmVyOGYyQ2RLYVBGNVA3RUFsa25XSmtVNVBTUFNsdHlobGVHdU1R?=
+ =?utf-8?B?aklHVmN6b2cvMFhlc3hRU1gvdGMrNEtLM21nVUZHSkNPTFMzMkg3UkFITE9r?=
+ =?utf-8?B?c1pkZ3RacWY1VG1xbmFWZkVqY0hZQ2pPMit6UXJQWnBXTFd3dFdudkdBT2pl?=
+ =?utf-8?B?aG9RTml0RGRyRG9lWHNxaGRRK29hM0dBRTR6eDVSYkViSjlHU0NPVUY3Rnlt?=
+ =?utf-8?B?clJCcERBN3p4T0w2UGpZYjQreWtkOFdVMUZkNjNIL0FzMXQ3RVRtMWFmZTlF?=
+ =?utf-8?B?d0loQnRoREtNaWVucVFwQmFycjhXVHdnaG1WcERKVW9lM2czL3RMZll5U3Nw?=
+ =?utf-8?B?RTdmSzNmTWhpUHloZThFdVNuTmlqSk0zRWtibzBHTi92Uzh0S2YxQnpzc1JR?=
+ =?utf-8?B?N2ZmWWkvNDN1bWpsSDUwQVgxYVpNQ1F6U1BndjV3Qng5UHZCRzVlZEVwKzJL?=
+ =?utf-8?B?OVBwVUYxSmw3UWtEVCt3cDU2TWtuaVBJNmFLZzA0SS9xMHRIdHZCbkdNK1Jl?=
+ =?utf-8?B?QmFQU0JmbEkwTnhONitoWGlydlhXWjVyUmhnSTdqUmpDNXhTbzJyR2xKZ1kx?=
+ =?utf-8?B?WjB3cGtSWWFESlg0NGdsT0d3T1JaczdwUmcvNnBheFZzYzdYWGtrY2F1VDVq?=
+ =?utf-8?B?cUR1a3lWUm1NRWZJV3pCbWZ5RStVQVdXMnppYU5EUklSYXFjbldScks2a1BK?=
+ =?utf-8?B?aStXUWZnUjNWY1ZZeGR5KzJmcVJCMlVObG8vazhZdWRLSXJxYkxmenFVamZL?=
+ =?utf-8?B?UGhhaDFlVDZXN3QyV2VTRTRCY3N6Y2hBMSswa2pIamlWSVdwbFRGQllIR2xy?=
+ =?utf-8?B?N2dCSDhTTWpialUvdTVkS1VjY2FIaG5yMVBnYi9PdEw2QzRFdjRLdnJIeHhs?=
+ =?utf-8?B?K0hWQ2Q5bkQ0ZEZESXpXMkt4TlQ5OGhCZGJxVEZNYklYeWdaT2g5bC9SMjdO?=
+ =?utf-8?B?UlI3TE5iR2pTemVHQjlvS1JSaktDYThoaWpTc1N6b1B1cm9KZm1NaDhvRkg1?=
+ =?utf-8?B?ZCttd1VGZnRNZkFLM2hmbCtNWFFzL2J0bkxTdTIzdDNuOS8wYmNKSU1wcTZT?=
+ =?utf-8?B?aStuY0tXRGZXZms3NmhwWGtDeElMSS9ZUWFnbnJpN2pGNXY0WHM0ZDZPdHE3?=
+ =?utf-8?B?Y1NWWXlBVllaVnVPT2NSSnRaamdxckM1VkxZTGwyLzF4UWJESlhKRlc3ZS9i?=
+ =?utf-8?B?dXRYczQvN3RrZmVyRFNmYmNmQ0dZWFM5UkQ4L3V2Qm9wSnkxUjMwMnNaUjB6?=
+ =?utf-8?B?aEsvOEo4ZnNuSXVPTmhlbVdlYmdtOW12SlVnaEFGVFZPSXA5Zzd1dGRNNU5G?=
+ =?utf-8?B?eURUL1JQcC9CWi9rRDVJaldralZzWDZJQXp0amRoZlZSdzcweGVldTkwOTdP?=
+ =?utf-8?B?ZHIrazFhYlZGMUM4M1VPR2hJUEVDNGY4dnVpbERHS052anJBcnJ1UWFlUUl2?=
+ =?utf-8?B?TTZFRkllcnFkd0xyNjU2c2dJQkFpcWh0QmNreFNUVlVHUFg1Sk1IWlE3Wkx4?=
+ =?utf-8?B?WXB2RmVZQWlYWWxieFdQekpFOElHbzN0ZDRQMy9oVmlOTmpQbDlBeExUbXJJ?=
+ =?utf-8?Q?A/NEammBSQIf4GB9CQoklto=3D?=
+X-OriginatorOrg: wolfvision.net
+X-MS-Exchange-CrossTenant-Network-Message-Id: 373c5a69-c95c-4d01-6a1c-08dc95c63af2
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR08MB4974.eurprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2024 09:56:20.5690
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e94ec9da-9183-471e-83b3-51baa8eb804f
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0ZIjfpY8Dp59xtqtozBUi5ihSNX/5cxnHWgTJ5Vwj6InB2PmPW3CM9ml5mKLH7jlpW16aheyDmzxoFQ7IPXGfRG1H33q/wwLK5abCW7+E/8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR08MB8679
 
-On 26/06/2024 11:49, Maxime Ripard wrote:
-> Hi,
-> 
-> On Wed, Jun 19, 2024 at 12:07:48PM GMT, Tomi Valkeinen wrote:
->> From: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
->>
->> When a bridge driver uses devm_mipi_dsi_device_register_full() or
->> devm_mipi_dsi_attach(), the resource management is moved to devres,
->> which releases the resource automatically when the bridge driver is
->> unbound.
->>
->> However, if the DSI host goes away first, the host unregistration code
->> will automatically detach and unregister any DSI peripherals, without
->> notifying the devres about it. So when the bridge driver later is
->> unbound, the resources are released a second time, leading to crash.
-> 
-> That's super surprising. mipi_dsi_device_unregister calls
-> device_unregister, which calls device_del, which in turn calls
-> devres_release_all.
+The touch-overlay feature adds support for segments (touch areas) on the
+touchscreen surface that represent overlays with clipped touchscreen
+areas and printed buttons.
 
-Hmm, right.
+Add nodes for a clipped touchscreen and overlay buttons to the existing
+example.
 
-> If that doesn't work like that, then it's what needs to be fixed, and
-> not worked around in the MIPI-DSI bus.
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Javier Carrasco <javier.carrasco@wolfvision.net>
+---
+ .../input/touchscreen/sitronix,st1232.yaml         | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-Well, something causes a crash for both the device register/unregister 
-case and the attach/detach case, and the call stacks and debug prints 
-showed a double unregister/detach...
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/sitronix,st1232.yaml b/Documentation/devicetree/bindings/input/touchscreen/sitronix,st1232.yaml
+index 1d8ca19fd37a..e7ee7a0d74c4 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/sitronix,st1232.yaml
++++ b/Documentation/devicetree/bindings/input/touchscreen/sitronix,st1232.yaml
+@@ -37,6 +37,7 @@ unevaluatedProperties: false
+ 
+ examples:
+   - |
++    #include <dt-bindings/input/linux-event-codes.h>
+     i2c {
+             #address-cells = <1>;
+             #size-cells = <0>;
+@@ -46,5 +47,33 @@ examples:
+                     reg = <0x55>;
+                     interrupts = <2 0>;
+                     gpios = <&gpio1 166 0>;
++
++                    touch-overlay {
++                            segment-0 {
++                                    label = "Touchscreen";
++                                    x-origin = <0>;
++                                    x-size = <240>;
++                                    y-origin = <40>;
++                                    y-size = <280>;
++                            };
++
++                            segment-1a {
++                                    label = "Camera light";
++                                    linux,code = <KEY_LIGHTS_TOGGLE>;
++                                    x-origin = <40>;
++                                    x-size = <40>;
++                                    y-origin = <0>;
++                                    y-size = <40>;
++                            };
++
++                            segment-2a {
++                                    label = "Power";
++                                    linux,code = <KEY_POWER>;
++                                    x-origin = <160>;
++                                    x-size = <40>;
++                                    y-origin = <0>;
++                                    y-size = <40>;
++                            };
++                    };
+             };
+     };
 
-I need to dig up the board and check again why the devres_release_all() 
-in device_del() doesn't solve this. But I can probably only get back to 
-this in August, so it's perhaps best to ignore this patch for now.
-
-However, the attach/detach case is still valid? I see no devres calls in 
-the detach paths.
-
-  Tomi
+-- 
+2.40.1
 
