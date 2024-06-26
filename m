@@ -1,34 +1,34 @@
 Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54DA219006C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AECC0190491;
 	Wed, 26 Jun 2024 18:59:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719428362; cv=none; b=dYJtEWLlahKBTEzBXXoaT+P1DuFRJDPcCXWW6LVD0z7O7N2ozWD0qZmS2vq43F7uUzliiePsK7vSg8CzxY/+6Ostpl6b6BLqgxjE4Lmd6s+c/V7lUsixHGm3yPg0LMou9qYhkDO6DGW/vONAHwRGq2HV0n3skdR+JYngKCw+1HQ=
+	t=1719428362; cv=none; b=B7O8q3pETERnSC9UkkCsxfnyA9xZFAHAcVy/0y2PDoypsOUiDQM1FlJoKOTGwy0eF3QeAP+te+6fYc8IdP2BoyCN837p0iK8ee7Pp1gXeIZHCqFzf++nh7BRygVgwF+wujePCkxO3EZqAGqWNS/thXHtRuU4OsTa6D3+TdHnZhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719428362; c=relaxed/simple;
-	bh=yP+LIbKJrOeA3BYfx1Pv/DUs/vsdWYAxVDdeHfKVSFk=;
+	bh=Tjzvmf5EBWU/mIHNxl5zJ84d7NNq4nJZW+2g+oj8Cjs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jDOzDn2okNGeAnIWSw/zupkcJxwhABYYUu1BNnCfKoPDxsOy05ZYSW1+lrPbF8mGbKFpfyv/pXW95+NEHmsfyhkleBsMABzQH/s94n3hPFH6uHsPL6w51EJiJaOFxoRkGo3+BsSO//boz2q5EPF1vKe6+nx3rpqegKVYY7n3dbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=O8H30BvR; arc=none smtp.client-ip=167.114.26.122
+	 MIME-Version; b=n5OlWYMHKOv9FRbwnSMzkipEbonvI8zWN30m7WuyADo5UUk7myK8ocHGkpBFhJuysvlNwbz0SFUH2I4VDVzNroOKcxiQvpmRmP1T0HKwIqj+eYdJTyT5Uqrw398UPoUiKmIDv7CbHO1rWd84uKHrjVrkCC4teYkviRQQ5gCec+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=ehnbNBmG; arc=none smtp.client-ip=167.114.26.122
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="O8H30BvR"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ehnbNBmG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
 	s=smtpout1; t=1719428353;
-	bh=yP+LIbKJrOeA3BYfx1Pv/DUs/vsdWYAxVDdeHfKVSFk=;
+	bh=Tjzvmf5EBWU/mIHNxl5zJ84d7NNq4nJZW+2g+oj8Cjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=O8H30BvRBrN3MRFdDRRitHB87Mg1mxfUYJa40lT7NJHoink1a5ljxYu8TtEDFB1NO
-	 TYo9RWmNSq9omEz68dLtz5ADim4iiIoG2SQAP6KJCgVUHbZIkZM2hDHBXluLJ8/fvf
-	 8uaQ4a4TOYCEUKr0IkMdeBzsPIqwdCBYyoVmMiOfU1olfwd6iyOZ5twJ5tpmpBKaHi
-	 QLHOTWSbuGt0CLIYmZbvbgApSASEcNr0TswWqUR2AXZlzYv+BkmdpHY+JGLUTqmeVM
-	 mTzimsfAlMrUlnrHd/6cOqx+eEXwQ6aWADyJQ/ZdCAQLefm+qF3LJX/HXr6N439oMN
-	 X5+uG8aCm7Ldw==
+	b=ehnbNBmGy94iL3Mj2oboy0yV/cErK1xTRrGWHFImaoSJXGKZtjklFRb+24gLfkXAt
+	 SgR61xDS0JSXYBQa1N6zDf17xYqVHhsycybzOpnqgp153jCiTZ725iRUfFMtla1as8
+	 FqVJkCAWGAh7I5kfWbfDG+1gmPq4SMDjQkjTcPLxLvUmTEvdP0V6eqlbzvX0xbhA1o
+	 cnwB4eO30ws4+pGZiAmfqmaDgtAc0gtz4Xj0cr7TJgr/gLZVUMkgrLlvhbfPAVpiTB
+	 fBPmrBEuhNcJiFawQWuzHxPhW0kxX5p53/uPpi8HFqCOp0a1StSyl2QiFq1ejXzNYo
+	 J5YsXHfCIDndw==
 Received: from thinkos.internal.efficios.com (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4W8WFr5vCqz17tY;
-	Wed, 26 Jun 2024 14:59:12 -0400 (EDT)
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4W8WFs4NXrz17r1;
+	Wed, 26 Jun 2024 14:59:13 -0400 (EDT)
 From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
@@ -46,10 +46,14 @@ Cc: linux-kernel@vger.kernel.org,
 	Namhyung Kim <namhyung@kernel.org>,
 	bpf@vger.kernel.org,
 	Joel Fernandes <joel@joelfernandes.org>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH v5 1/8] cleanup.h: Header include guard should match header name
-Date: Wed, 26 Jun 2024 14:59:34 -0400
-Message-Id: <20240626185941.68420-2-mathieu.desnoyers@efficios.com>
+	Ingo Molnar <mingo@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Kees Cook <keescook@chromium.org>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Sean Christopherson <seanjc@google.com>
+Subject: [PATCH v5 3/8] cleanup.h: Introduce DEFINE_INACTIVE_GUARD and activate_guard
+Date: Wed, 26 Jun 2024 14:59:36 -0400
+Message-Id: <20240626185941.68420-4-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240626185941.68420-1-mathieu.desnoyers@efficios.com>
 References: <20240626185941.68420-1-mathieu.desnoyers@efficios.com>
@@ -61,35 +65,87 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The include guard should match the header name. Rename __LINUX_GUARDS_H
-to __LINUX_CLEANUP_H.
+In scenarios where the scope of the guard differs from the scope of its
+activation, introduce DEFINE_INACTIVE_GUARD() and activate_guard().
+
+Here is an example use for a conditionally activated guard variable:
+
+void func(bool a)
+{
+	DEFINE_INACTIVE_GUARD(preempt_notrace, myguard);
+
+	[...]
+	if (a) {
+		might_sleep();
+		activate_guard(preempt_notrace, myguard)();
+	}
+	[ protected code ]
+}
 
 Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Sean Christopherson <seanjc@google.com>
 ---
- include/linux/cleanup.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ include/linux/cleanup.h | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
 diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
-index c2d09bc4f976..4cf8ad5d27a3 100644
+index 04f03ad5f25d..d6a3d8099d77 100644
 --- a/include/linux/cleanup.h
 +++ b/include/linux/cleanup.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
--#ifndef __LINUX_GUARDS_H
--#define __LINUX_GUARDS_H
-+#ifndef __LINUX_CLEANUP_H
-+#define __LINUX_CLEANUP_H
+@@ -146,12 +146,20 @@ static inline class_##_name##_t class_##_name##ext##_constructor(_init_args) \
+  *      similar to scoped_guard(), except it does fail when the lock
+  *      acquire fails.
+  *
++ * DEFINE_INACTIVE_GUARD(name, var):
++ *      define an inactive guard variable in a given scope, initialized to NULL.
++ *
++ * activate_guard(name, var)(args...):
++ *      activate a guard variable with its constructor, if it is not already
++ *      activated.
+  */
  
- #include <linux/compiler.h>
+ #define DECLARE_GUARD(_name, _type, _lock, _unlock) \
+ 	DECLARE_CLASS(_name, _type, if (_T) { _unlock; }, ({ _lock; _T; }), _type _T); \
+ 	static inline void * class_##_name##_lock_ptr(class_##_name##_t *_T) \
+-	{ return *_T; }
++	{ return *_T; } \
++	static inline class_##_name##_t class_##_name##_null(void) \
++	{ return NULL; }
  
-@@ -247,4 +247,4 @@ __DEFINE_LOCK_GUARD_0(_name, _lock)
- 	{ return class_##_name##_lock_ptr(_T); }
+ #define DECLARE_GUARD_COND(_name, _ext, _condlock) \
+ 	EXTEND_CLASS(_name, _ext, \
+@@ -175,6 +183,14 @@ static inline class_##_name##_t class_##_name##ext##_constructor(_init_args) \
+ 		if (!__guard_ptr(_name)(&scope)) _fail; \
+ 		else
+ 
++#define DEFINE_INACTIVE_GUARD(_name, _var) \
++	class_##_name##_t _var __cleanup(class_##_name##_destructor) = \
++		class_##_name##_null()
++
++#define activate_guard(_name, _var) \
++	if (!class_##_name##_lock_ptr(&(_var))) \
++		_var = class_##_name##_constructor
++
+ /*
+  * Additional helper macros for generating lock guards with types, either for
+  * locks that don't have a native type (eg. RCU, preempt) or those that need a
+@@ -209,6 +225,11 @@ static inline void class_##_name##_destructor(class_##_name##_t *_T)	\
+ static inline void *class_##_name##_lock_ptr(class_##_name##_t *_T)	\
+ {									\
+ 	return _T->lock;						\
++}									\
++static inline class_##_name##_t class_##_name##_null(void)		\
++{									\
++	class_##_name##_t _t = { .lock = NULL };			\
++	return _t;							\
+ }
  
  
--#endif /* __LINUX_GUARDS_H */
-+#endif /* __LINUX_CLEANUP_H */
 -- 
 2.39.2
 
