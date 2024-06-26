@@ -1,90 +1,73 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7CF16A92B;
-	Wed, 26 Jun 2024 09:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D0416CD07
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 09:30:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719394207; cv=none; b=mUFBMiucS4OhOfBBdN8RPYa/4XMEVZkuDSpAgIYamlYjzawwOHEDzQqr9fnhqXUf8oOKlWFI6BlsF3avtiWmM4k1+UYwaoQmnPIPMSAWuguDcY4HoJB0zHJ3UPsKDNSMuoPxiUBmQVneAubHf+m6PgLuR0AjkkREMDbdw+VGfp8=
+	t=1719394210; cv=none; b=ln+uNpnxMJFmXNjvWieXY9fS6sQ2ohL0PnNABweRk2UIXG5nxI+tmgPsQBqxdmV2xNnZOakt/7swCHTQkbBJJEEFPFnDvoqFRubnxwwVUu687scnDhE9n7wT74qO6T1RhN1WX1zlnf9rW7Aw7qRyJXRryB8ak+Mrb/0WHWNMgL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719394207; c=relaxed/simple;
-	bh=cZWxBSiO/iJGBZwpSi/BIu0JIjVhS5+evAWr+FNRzAc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VEAPo6jwSv8UDZibUgvTKTThJ3Ct2xJh+De5SHeRr2hedi3tErA8PcGE6PLus0zWCJnILsyNk1sejmmOrG+TQRGP5Jum8MYnboOBkmH8yq7BigMIQzy3OQ3ykvkYG5R0qTEt8X1YAuEaEiWXL6n31NH0jrPVI6UcOsv4reFwEKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RtaAOCf7; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719394210; c=relaxed/simple;
+	bh=lDBfcXo4MYncJX2tMzyeD2qNceFjdFH7FKwnlwisHi0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=snQGoEijMKoSGO6gjjkVMNvuJ8y1JvWEqpJcdo4hfPzA9l/HbGk1a8ApQJ6K4o6199IFD5VjoB81AXva708ipwO977eSWcm4R1242VWZ6oD4IpHU+vzQocHk6YFHURav6BvkJFVMLeHKLUkBLaH7hKvdmSmzCjsl6QP5jlFZn+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=mu4nQV4T; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RtaAOCf7"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7065a2f4573so3602420b3a.2;
-        Wed, 26 Jun 2024 02:30:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="mu4nQV4T"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-6bce380eb9bso3933248a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 02:30:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719394205; x=1719999005; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cZWxBSiO/iJGBZwpSi/BIu0JIjVhS5+evAWr+FNRzAc=;
-        b=RtaAOCf7sC5ghNqVGbMwmiL10Mzj/wV32XVrjireguf9QwyoXRNipbky92szYRwxtP
-         kg5hYfosY95WJMm5p5kHrmDfWkK3JNcowzD6jHZzWLGEYnUdW7a1L1AgfghogRVxEPBB
-         z4vjvRuSUHQBGXrCUdI+Mwq7qGA6qE+o9ndksEb9800c2W5OPuHhfMuxJnLo+LZYmdXN
-         16Am1qcyDrpY4NMYWiMIdK+BNrtgLMfuh0Tz6nZWYoLMsO7BPcrHfhM6itKkk0oy/LXC
-         Ke/35esOTUoo2cAPTuetOitHzck2AXkMKgK8nS33cfFA1OyjHfq/P7U1WEeYh6GdbJnV
-         7vIA==
+        d=endlessos.org; s=google; t=1719394207; x=1719999007; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Kxer964xgyXPeOfcKPwyWSpEHZF7G93F+GF2s3GrJcU=;
+        b=mu4nQV4Tu5vgqYN51F72WtzmyXMOjUGx1ufkjaTtgoPBCP37pehdWywZK2ssqYFMIJ
+         rYokYk0XJl+NucxIiTs5TXoOH+Qr6qWas6jOQ+GmqWOlQV7o57olznMxi5CsYZXAlKS4
+         BPrRbRZdrXyBRK1G78z//EipbblrCwbeyEIug3qCUw6Z7TDWuugmaJFr9aesc/1p9UnL
+         beu0bdrkmLWVxOzTJezN9/Xh1uy85NIoeSiqOl68C0WxX09mfKvX+XcxOELeMB0NLyKp
+         OgvM0q+dNJBccAHSR7pT7t31mRyn0ICaJr0hUsecMWfmg+gWhQ+LblUrvx8imsGr6AvN
+         mprQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719394205; x=1719999005;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cZWxBSiO/iJGBZwpSi/BIu0JIjVhS5+evAWr+FNRzAc=;
-        b=LFPjYgXRHb9tv+yPFUNInYsmYfmLcOGVpOyXJoXNCKoMOoBfo1agChzs3q7Hn/N8J1
-         6kwWJnvQYd5d7xOSz6x+lw5JHCYDRL7VFvZEN3e0EZIDLeyEoXAzUkj/p/RcLvjdrCdm
-         FP6M/20Vbj2/AU9CM9+cqhsH+H/lnTiUbyBC9HCrCHer7mPP8PzY1p6xGDAa/vwt0wCA
-         IQJNI+bOlXdNRVwFFY/S8QZqyhgF3vXIac0rV3yFORDoB3VzMw0rmxRK4If54SzTuWc3
-         Qlo/ahuiinEgpR4Wa9umrPhUq4+DF6HxCCpVKspuNZJjdx4ET38Dw+cNSfykKtLBtUGF
-         Q2mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUqB+74t+uJ4MluXOZynXkmLW+blnqEnWpWW3oORpTOgvOK58nDiO6J5O7OA12NndwC/8euc1lTUF2DYliJU/Di5ra+iHbgSsOBy1cgCrQQo4rdWGj5oBdjIQlfDktDrj0sJ2oF70FMZlMI3z7P82SmUnyqf917cb8Xrq9h8o2x0p+OhRnF
-X-Gm-Message-State: AOJu0Yyqo4b8g1gdlRb8TEQJB4ceyrCDMUCR0C0Kk0BQLy4NBOeknFTP
-	Y8ff1QxZOENk0aDx7vsbaXXrBpT6joScxJN0eK2wzv4rOzRXjKUrduX8jXkJcpQ=
-X-Google-Smtp-Source: AGHT+IHZLTWWWiK7JVATb724zAbQNSxCuFklY5BX1h7VZKH4cXhxSYQMi7uVau7fHMxpC0LqHr2cAg==
-X-Received: by 2002:a05:6a00:2d5:b0:706:5aee:b987 with SMTP id d2e1a72fcca58-706746b601bmr7122207b3a.22.1719394205361;
-        Wed, 26 Jun 2024 02:30:05 -0700 (PDT)
-Received: from localhost.localdomain ([221.220.128.96])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7068998497esm4994220b3a.15.2024.06.26.02.29.59
+        d=1e100.net; s=20230601; t=1719394207; x=1719999007;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Kxer964xgyXPeOfcKPwyWSpEHZF7G93F+GF2s3GrJcU=;
+        b=FJW08C/6gtFrBMLrRHzd5rnHz7dn0vIB+dzfiNtoOTCZi6Y38c1MkFwoYiBti7qHyZ
+         Q3EQ94akprqTaOkhi+X/0D9gbHOaV5vpYxbUubnWqF1VbWc8fKT5qyYHOJwhqBX6dDz9
+         yVELENYoaqTxXrjNfDEXRkqQyR/Eoim+oPDUzT4ofnOmuhRtyUkrxmWFgbnVAsrfPO/Q
+         Im2SH+0m3zWXK92TvUaQYsvyhVftOUD+xDnCEyN8xBSkG3VWrvKFExmDjjCayH5PGQAo
+         GhxisfzFF/5YkHihRTSBiGVXkdH85Z8eUi4dvDn5VfboRGD49nD6a4UAiq+NFJBSe81A
+         0NmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWakik7OA3L+pfn0tE/5VuqBwI+JJ9CAZ8F/4G0cWtbY9eamRCggnW/uTR+VN7r1ijEKpDEkAMY2Q1fXLAQXDp9sueBnnTAdknIIo/y
+X-Gm-Message-State: AOJu0YzBiababB62IcfgfwMfbwGK3J8H9/FsksW0hz2gHv1MLtl/xKVA
+	/kEOY7mAKuMlENzdDSQRqN0LEOgKEcDmHi8kCHqSaTVHaHGWwtMcuR8j8iQuYWA=
+X-Google-Smtp-Source: AGHT+IGRzPevjU9Paw4Ge6XiaKZ6yUz3NHOTZ7GhcEPpP37dPvI7RAdoZRNUCqJpp8J86vlRiioX4A==
+X-Received: by 2002:a05:6a20:341b:b0:1be:b30d:3b37 with SMTP id adf61e73a8af0-1beb30d3ca6mr899340637.36.1719394206912;
+        Wed, 26 Jun 2024 02:30:06 -0700 (PDT)
+Received: from localhost.localdomain ([123.51.167.56])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-1f9eb3c6ecdsm95257395ad.136.2024.06.26.02.30.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 02:30:04 -0700 (PDT)
-From: Jianfeng Liu <liujianfeng1994@gmail.com>
-To: detlev.casanova@collabora.com
-Cc: andy.yan@rock-chips.com,
-	benjamin.gaignard@collabora.com,
-	boris.brezillon@collabora.com,
-	conor+dt@kernel.org,
-	daniel.almeida@collabora.com,
-	devicetree@vger.kernel.org,
-	didi.debian@cknow.org,
-	dsimic@manjaro.org,
-	ezequiel@vanguardiasur.com.ar,
-	gregkh@linuxfoundation.org,
-	heiko@sntech.de,
-	hverkuil-cisco@xs4all.nl,
-	jonas@kwiboo.se,
-	knaerzche@gmail.com,
-	krzk+dt@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
+        Wed, 26 Jun 2024 02:30:06 -0700 (PDT)
+From: Jian-Hong Pan <jhp@endlessos.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Johan Hovold <johan@kernel.org>,
+	David Box <david.e.box@linux.intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-staging@lists.linux.dev,
-	mchehab@kernel.org,
-	nicolas.dufresne@collabora.com,
-	paul.kocialkowski@bootlin.com,
-	robh@kernel.org,
-	sebastian.reichel@collabora.com
-Subject: Re: [PATCH v3 4/4] arm64: dts: rockchip: Add rkvdec2 Video Decoder on rk3588(s)
-Date: Wed, 26 Jun 2024 17:29:55 +0800
-Message-Id: <20240626092955.530229-1-liujianfeng1994@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240620142532.406564-5-detlev.casanova@collabora.com>
-References: <20240620142532.406564-5-detlev.casanova@collabora.com>
+	linux@endlessos.org,
+	Jian-Hong Pan <jhp@endlessos.org>
+Subject: [PATCH v7 0/4] PCI: vmd: Enable PCI PM's L1 substates of remapped PCIe Root Port and NVMe
+Date: Wed, 26 Jun 2024 17:28:22 +0800
+Message-ID: <20240626092821.14158-2-jhp@endlessos.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -93,17 +76,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+Notice the VMD remapped PCIe Root Port and NVMe have PCI PM L1 substates
+capability, but they are disabled originally.
 
-I just confirmed that this driver also works for rk356x. I tested it on
-orangepi3b with kernel 6.9, and chromium can decode 4K H264 video with
-hardware acceleration.
+Here is a failed example on ASUS B1400CEAE with enabled VMD:
 
-Here is the devicetree patch for rk356x:
-https://github.com/amazingfate/build/blob/4c3564bc82b8963246450d3ebe1ad93965e7c22f/patch/kernel/archive/rockchip64-6.9/rk356x-add-rkvdec2-support.patch
+10000:e0:06.0 PCI bridge: Intel Corporation 11th Gen Core Processor PCIe Controller (rev 01) (prog-if 00 [Normal decode])
+    ...
+    Capabilities: [200 v1] L1 PM Substates
+        L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
+                  PortCommonModeRestoreTime=45us PortTPowerOnTime=50us
+        L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+                   T_CommonMode=45us LTR1.2_Threshold=101376ns
+        L1SubCtl2: T_PwrOn=50us
 
-Please ignore the change of vpu's compatiable string change. I did that to
-disable its 1080p h264 hantro g1 decoder.
+10000:e1:00.0 Non-Volatile memory controller: Sandisk Corp WD Blue SN550 NVMe SSD (rev 01) (prog-if 02 [NVM Express])
+    ...
+    Capabilities: [900 v1] L1 PM Substates
+        L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Substates+
+                  PortCommonModeRestoreTime=32us PortTPowerOnTime=10us
+        L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+                   T_CommonMode=0us LTR1.2_Threshold=0ns
+        L1SubCtl2: T_PwrOn=10us
 
-Best regards,
-Jianfeng
+According to "PCIe r6.0, sec 5.5.4", to config the link between the PCIe
+Root Port and the child device correctly:
+* Ensure both devices are in D0 before enabling PCI-PM L1 PM Substates.
+* Ensure L1.2 parameters: Common_Mode_Restore_Times, T_POWER_ON and
+  LTR_L1.2_THRESHOLD are programmed properly on both devices before enable
+  bits for L1.2.
+
+Prepare this series to fix that.
+
+Jian-Hong Pan (4):
+  PCI: vmd: Set PCI devices to D0 before enable PCI PM's L1 substates
+  PCI/ASPM: Add notes about enabling PCI-PM L1SS to
+    pci_enable_link_state(_locked)
+  PCI/ASPM: Introduce aspm_get_l1ss_cap()
+  PCI/ASPM: Fix L1.2 parameters when enable link state
+
+ drivers/pci/controller/vmd.c | 13 ++++++++----
+ drivers/pci/pcie/aspm.c      | 40 ++++++++++++++++++++++++++++--------
+ 2 files changed, 40 insertions(+), 13 deletions(-)
+
+-- 
+2.45.2
+
