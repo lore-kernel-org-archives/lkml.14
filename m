@@ -1,83 +1,73 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F339079F0
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 13:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8113187546;
+	Wed, 26 Jun 2024 13:05:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719407158; cv=none; b=fhwI0rha4QQRxhgYNPOO3fyex5c5+4Ac1Z23R+l2NrpYy6MDkJiun8396WHHYwyz3+cllpC0vEiTVdKUgwOBKokyhr2RcodqwXLrvYj/N1gGQKc2hK/nBObsT5gJmgHdrvJlg+6wQJfHvEiibbrzyS+RRk6GT5adx/+xjXfenuM=
+	t=1719407160; cv=none; b=IqeHQrOqnrWzzywvUZU9/s3svfkuscrZRvmlnvSv/0QpzkHcd9s9ZURYyBNNzyn1HChRADeYcHZ7wSsxo81y07rBXXvhfOtyyl/JZCtvcrlgPQ1WicoWTIJ7sCkdEhnS3YtzxBmmvENtx5u2f407NOQ7Xrvy0CIhY+q/JkTOjBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719407158; c=relaxed/simple;
-	bh=tYSKztlvYXjqrUVGqUlFZcjNQFbhaN4iVt2oyZFJdVA=;
+	s=arc-20240116; t=1719407160; c=relaxed/simple;
+	bh=7qXUjqpPU5R+Vq0buV6eE9zzYkFveU735owUmzBozZI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=u5s5IxQ6J8+769Ei8qVpKsqd3QfQb/wYhjw5bKuxOdI1+yxFxDuGoD+NkCP2nDUopaS4z/vopiErt6q9y1mfdgXMm0W7KR1OMSGAznOsM20AiipRahgsx+NuMHA59P+sYmoxLSBelPlB9h5LQi3G2ICSFpnTl8/RvbbZue9iZvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=mtyO9Z1t; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 MIME-Version; b=KGxeXMbz7hqK7Fg8W2pWkTY6nULL2wFIPnwDEJt4cH5IMEngiSkB8/SPIs/8I7FJqWHt2Gr7m9eZpJIVo34/glrGeaT5d5feAkvqLSPF6Cw8l4GjHFILCP6uYNoFCe6j3Z3++DFab97ak/jJ9V1ZtOcxiysez6tXkoEMyJuUvfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nHNAa4Pw; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="mtyO9Z1t"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5295e488248so7815728e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 06:05:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nHNAa4Pw"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1f9fb3ca81bso30500555ad.3;
+        Wed, 26 Jun 2024 06:05:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719407154; x=1720011954; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719407158; x=1720011958; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=T6LJZCR61gmm4dvekAa0Q1TIoLF/ScrG5TtOv9gDZ/w=;
-        b=mtyO9Z1t2T1EDXVZGrkLqYk7i+oB2j+lt1paslYuCYQSOxDgHw9tyHRqJioDvVu2Gz
-         WOdBvMxFFKqRUFfR16cLelrUHBo+4M+td7iSVAihK4oio/xdzUD77MLO2iH6FDxlTb26
-         KkbpYcbT/swcrq7lRKtu/tvEnI02EfRAgxNVqAnGUrNxruGF+KtrfJrVZjrM2sEju08W
-         gL5cEYc67ZBK4oDX8p0TsnBxSdNJkRZuq9R2sm1LOJs3UFUOyiA2a1HL//0/apUpyqiI
-         6zAqFYXrgJQc4rdP+etFYDWv59wSqVm59zmpLnsMKvPUfGRfbIvjXr5+1lpwbC0eqlDC
-         SO1g==
+        bh=BdGXb9xaxS+at5MNG5psiNQJLwy+4zAvvWhthDyzcbA=;
+        b=nHNAa4PwuWfM6/TABPhVBbc+1SVXawiL3JoUkpYvZ6Kuzzy25lCupu504zcz3EdhYh
+         NyV8Fe56RsLEZIWz4quT2zis8x596BT4xgWcUorZqmh/T9z+0oUOKbM9FwXPGacSrb8A
+         Qvg1aMI8mDTjW+IW7jOlooRhhBPxS8u0rw6TjWWsTtAvSQLDAYnCID7PuDS17PmeBk7y
+         IRpFS9WQLHdW76fV42vEbT+dQUEFsDk2U/jvUaWDdrtASG5JZC5EGbysWPw2L0i4zZ60
+         fzTJ2z0NOOYe5tFmVl1jqbUM3ClPvKg/gmeHtLilJGytUzL8ezwaN9TIt+EZTGnas8zF
+         9xMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719407154; x=1720011954;
+        d=1e100.net; s=20230601; t=1719407158; x=1720011958;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=T6LJZCR61gmm4dvekAa0Q1TIoLF/ScrG5TtOv9gDZ/w=;
-        b=fbMNkEvbUZkn+bc31qc8ddc0gmuhrLxGOwG1zUA+nEHFIy2Hh5JIKVjEldmSTEdmcG
-         RZs6/SdzDWNpmD2I13/Ny/Bx+IetFvixwixASPLHZMhBCOdIfiOceaiRsIquei6ApD3p
-         fgiHfhhAa3tzy9QBXow3Lt+0/b1PYa999mnMJHLmHVpzf/0I1J/onSBIVylIlrPu6yxI
-         6PqKpQli1IbYz0hHyPn4Z0JyJq/XOFO3bo59URj1MNj7Cu0fPVuP8KBqV4lFx1Q8lPOv
-         977dmFq0rBPGCKdo5dkKNeiV6IwLVw7cO6R4ad9kyX7IZ3ffxgvHqU9Q9CiONhd94QSw
-         5o2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU8L8EtaRSmw3AZvjLgbbdql62kZwUqT0L7mU+FMRYYtmGlQjgSm04+aMrJPT1D5++okWFdP+AmLS4hiiPpk52MQEiBYw6aM5NcYsCg
-X-Gm-Message-State: AOJu0YzpOG5+yl5OjBZwj079avRhkHT0pmTZFegZE8iDD/K4OFtuzGaf
-	H/v2juyiLMl85hgpEJaAWguX32LEDiSUemxLVaPTn6umcM9d+m0SdIpxNYM5IG8=
-X-Google-Smtp-Source: AGHT+IHX+jzGQgnJriZOGQ/oAJSCUkFR6oZJI+0k3ahW32MnlEUF+2I4ESnYZpAqS9088kQ4KTVI2w==
-X-Received: by 2002:ac2:5f4e:0:b0:52c:e030:144e with SMTP id 2adb3069b0e04-52ce185ecd4mr6228931e87.47.1719407154179;
-        Wed, 26 Jun 2024 06:05:54 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36638d9bd0fsm15831149f8f.52.2024.06.26.06.05.53
+        bh=BdGXb9xaxS+at5MNG5psiNQJLwy+4zAvvWhthDyzcbA=;
+        b=msHFvPA0hEz1KvAW2JKeh1OMdyt3Cs/sXtBwyw1kTfUSqGpDPM+VIKhYa03iz1uU9U
+         3ygvm/EQeA9bpYcdBzD1HxN1OHEF96SvGt8CDOR+KvuX1QHdY6q06gPKccwzQSTB7q4s
+         MSWMMUAe9zEubX/0iZ1F3QFRE+0R40zFiChn3SxLs0YX5gQs6kAgCdUu9FEpfxrc6yTv
+         rjWLXJneCPXrfbHD9C34BYbUhlMK3WyKkdrfMF/TLQHpCj5ub9nhFwnUhCOsObKooWaE
+         BTp3js+M3rf8QVOWJ+uEa+6YdkhsY96C3NjdbDGNsP0aJcihLv5k/PhGr7OmSvoISqnJ
+         RYNw==
+X-Forwarded-Encrypted: i=1; AJvYcCX2yrW2WCvVRR8FPSD10Inzcer4lNupbmdgW75fg8ZL5bDCdagDULVYQ1ASgh3FFRciigm2Vsw9ik+4e3hBG6KpsqGs5wazY/JvPcs7yxxQnC5n/ax2lnuXMM+NgGXnIsi4zijH2PWyZw==
+X-Gm-Message-State: AOJu0Yz2dG409AKe25w9IrtpaEC/zrI48K55LwILeTFPFRYoANgzpknO
+	2vUWwEDtUNb/N56PlB/7Y/A0f9KxqI/CzfXt9ZJamc1mMzfHxZAX
+X-Google-Smtp-Source: AGHT+IEaWb9bMQzZFOYWTqIbH1czxKQEGH++hJttO+WxTvjO0VFAW9LCdcw7pQbK9MTllDpAV0DpYQ==
+X-Received: by 2002:a17:902:ea08:b0:1f9:d551:c848 with SMTP id d9443c01a7336-1fa240e74a8mr105800835ad.53.1719407157649;
+        Wed, 26 Jun 2024 06:05:57 -0700 (PDT)
+Received: from obliging-System-Product-Name.dhcpserver.bu9bmc.local (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb7cf885sm99112395ad.224.2024.06.26.06.05.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 06:05:53 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Andrea Parri <parri.andrea@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Leonardo Bras <leobras@redhat.com>,
-	Guo Ren <guoren@kernel.org>,
-	linux-doc@vger.kernel.org,
+        Wed, 26 Jun 2024 06:05:57 -0700 (PDT)
+From: Yang Chen <yangchen.openbmc@gmail.com>
+To: joel@jms.id.au,
+	andrew@codeconstruct.com.au,
+	patrick@stwcx.xyz,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
 	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-arch@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v2 02/10] dt-bindings: riscv: Add Zabha ISA extension description
-Date: Wed, 26 Jun 2024 15:03:39 +0200
-Message-Id: <20240626130347.520750-3-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240626130347.520750-1-alexghiti@rivosinc.com>
-References: <20240626130347.520750-1-alexghiti@rivosinc.com>
+	devicetree@vger.kernel.org
+Cc: Jerry.Lin@quantatw.com,
+	yangchen.openbmc@gmail.com
+Subject: [PATCH v1 08/17] ARM: dts: aspeed: minerva: Add adc sensors for fan board
+Date: Wed, 26 Jun 2024 21:03:23 +0800
+Message-Id: <20240626130332.929534-9-yangchen.openbmc@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240626130332.929534-1-yangchen.openbmc@gmail.com>
+References: <20240626130332.929534-1-yangchen.openbmc@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,31 +76,205 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add description for the Zabha ISA extension which was ratified in April
-2024.
+From: Yang Chen <yang.chen@quantatw.com>
 
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+Add ina238 support to read the sensors in front of fans.
+
+Signed-off-by: Yang Chen <yang.chen@quantatw.com>
 ---
- Documentation/devicetree/bindings/riscv/extensions.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../aspeed/aspeed-bmc-facebook-minerva.dts    | 144 ++++++++++++++++++
+ 1 file changed, 144 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
-index 468c646247aa..e6436260bdeb 100644
---- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-+++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-@@ -171,6 +171,12 @@ properties:
-             memory types as ratified in the 20191213 version of the privileged
-             ISA specification.
- 
-+        - const: zabha
-+          description: |
-+            The Zabha extension for Byte and Halfword Atomic Memory Operations
-+            as ratified at commit 49f49c842ff9 ("Update to Rafified state") of
-+            riscv-zabha.
+diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts
+index dfea0025e6ce..86d319d7edcd 100644
+--- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts
++++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-minerva.dts
+@@ -207,6 +207,30 @@ pwm@5e{
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 			};
 +
-         - const: zacas
-           description: |
-             The Zacas extension for Atomic Compare-and-Swap (CAS) instructions
++			power-sensor@40 {
++				compatible = "ti,ina238";
++				reg = <0x40>;
++				shunt-resistor = <1000>;
++			};
++
++			power-sensor@41 {
++				compatible = "ti,ina238";
++				reg = <0x41>;
++				shunt-resistor = <1000>;
++			};
++
++			power-sensor@44 {
++				compatible = "ti,ina238";
++				reg = <0x44>;
++				shunt-resistor = <1000>;
++			};
++
++			power-sensor@45 {
++				compatible = "ti,ina238";
++				reg = <0x45>;
++				shunt-resistor = <1000>;
++			};
+ 		};
+ 
+ 		imux17: i2c@1 {
+@@ -225,6 +249,30 @@ pwm@5e{
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 			};
++
++			power-sensor@40 {
++				compatible = "ti,ina238";
++				reg = <0x40>;
++				shunt-resistor = <1000>;
++			};
++
++			power-sensor@41 {
++				compatible = "ti,ina238";
++				reg = <0x41>;
++				shunt-resistor = <1000>;
++			};
++
++			power-sensor@44 {
++				compatible = "ti,ina238";
++				reg = <0x44>;
++				shunt-resistor = <1000>;
++			};
++
++			power-sensor@45 {
++				compatible = "ti,ina238";
++				reg = <0x45>;
++				shunt-resistor = <1000>;
++			};
+ 		};
+ 
+ 		imux18: i2c@2 {
+@@ -243,6 +291,30 @@ pwm@5e{
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 			};
++
++			power-sensor@40 {
++				compatible = "ti,ina238";
++				reg = <0x40>;
++				shunt-resistor = <1000>;
++			};
++
++			power-sensor@41 {
++				compatible = "ti,ina238";
++				reg = <0x41>;
++				shunt-resistor = <1000>;
++			};
++
++			power-sensor@44 {
++				compatible = "ti,ina238";
++				reg = <0x44>;
++				shunt-resistor = <1000>;
++			};
++
++			power-sensor@45 {
++				compatible = "ti,ina238";
++				reg = <0x45>;
++				shunt-resistor = <1000>;
++			};
+ 		};
+ 
+ 		imux19: i2c@3 {
+@@ -261,6 +333,30 @@ pwm@5e{
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 			};
++
++			power-sensor@40 {
++				compatible = "ti,ina238";
++				reg = <0x40>;
++				shunt-resistor = <1000>;
++			};
++
++			power-sensor@41 {
++				compatible = "ti,ina238";
++				reg = <0x41>;
++				shunt-resistor = <1000>;
++			};
++
++			power-sensor@44 {
++				compatible = "ti,ina238";
++				reg = <0x44>;
++				shunt-resistor = <1000>;
++			};
++
++			power-sensor@45 {
++				compatible = "ti,ina238";
++				reg = <0x45>;
++				shunt-resistor = <1000>;
++			};
+ 		};
+ 
+ 		imux20: i2c@4 {
+@@ -279,6 +375,30 @@ pwm@5e{
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 			};
++
++			power-sensor@40 {
++				compatible = "ti,ina238";
++				reg = <0x40>;
++				shunt-resistor = <1000>;
++			};
++
++			power-sensor@41 {
++				compatible = "ti,ina238";
++				reg = <0x41>;
++				shunt-resistor = <1000>;
++			};
++
++			power-sensor@44 {
++				compatible = "ti,ina238";
++				reg = <0x44>;
++				shunt-resistor = <1000>;
++			};
++
++			power-sensor@45 {
++				compatible = "ti,ina238";
++				reg = <0x45>;
++				shunt-resistor = <1000>;
++			};
+ 		};
+ 
+ 		imux21: i2c@5 {
+@@ -297,6 +417,30 @@ pwm@5e{
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 			};
++
++			power-sensor@40 {
++				compatible = "ti,ina238";
++				reg = <0x40>;
++				shunt-resistor = <1000>;
++			};
++
++			power-sensor@41 {
++				compatible = "ti,ina238";
++				reg = <0x41>;
++				shunt-resistor = <1000>;
++			};
++
++			power-sensor@44 {
++				compatible = "ti,ina238";
++				reg = <0x44>;
++				shunt-resistor = <1000>;
++			};
++
++			power-sensor@45 {
++				compatible = "ti,ina238";
++				reg = <0x45>;
++				shunt-resistor = <1000>;
++			};
+ 		};
+ 	};
+ };
 -- 
-2.39.2
+2.34.1
 
