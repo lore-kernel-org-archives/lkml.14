@@ -1,94 +1,165 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E603F17FAAE
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 11:49:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1BC139D04;
+	Wed, 26 Jun 2024 11:49:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719402552; cv=none; b=Q9YlR7Bs5CR6NFYs/Y458grdXMu5NGvdj+Xpiyd1jyZzaXOp4khW7VMrR10U2heN2WeFEki6yQ74eOlbz4N7a+vTYlKcJs6P6SY7XwxlCNyupceq852Cf7P6A6C532oRk2hjCcwNxc7Ump/66bu1uycbA7oL7p31DQKbZVDuHII=
+	t=1719402584; cv=none; b=p+GtCuaZJyR07iM9CnEonP+cODWIG5cAlW5aP+izOlyZPp3Pm+c4ZNJ8+HnVGWjYRjxX4dcBCw/8IpvqY508J5BMhM6fXBrn6249eQrByAa+sc0yAwweOjb0QjCpQahbeKkRE27SIdCgBvmtgUqZpD3R3nJYxu0c0gsPzx6HjYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719402552; c=relaxed/simple;
-	bh=YO1t6RF3glr3rCz97Et9FOGeJn8Z+b5W8m/w3Gj5amU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p4UH8cX7ICvySP1AX5lShFlMe38WtHHcEChjPi3gkYoINT2COxeQSv7lyEqKyNcbnarlUJq1KJrnbCTV2KuKn0gtfBHZDo4MH97Kad9lPkdh5apUzl7fTaPb9d1vmJQrvwDn4DzQ6BGbOg6OV8kabnaNRryDVv/Rmul1AoTSYyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yTr+ToUO; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719402584; c=relaxed/simple;
+	bh=5Lh37O2jhiCVEaOJh/sZBLPNDudG+Lwj5d/JZWTN6RE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=axV5Vbd00rVE7HsivkA7ditfmU0KzslFrlXz4YP9ULO3vU/NvhcXslXa76hdgW5ljTntfw55pOzKbhs+QFy0taqGL0RJl95rGHLilRT2fUf8UCuTRept3ZatWrK5u7QjR6+CR8/Ft/aciTHVoInBmBo7Kaafl8PFVtv15is7faU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=cEQI5aUl; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=WxL5D7Jh; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yTr+ToUO"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2ed5ac077f5so8201681fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 04:49:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719402549; x=1720007349; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YO1t6RF3glr3rCz97Et9FOGeJn8Z+b5W8m/w3Gj5amU=;
-        b=yTr+ToUO1KDd0Vj7fZiyEDEZSZO0u+f5S0/Zir6OnlvjaxCO6v8sjzAPow4Db6gMUg
-         MeYdd30rY2XrgrpLvnIfekDckrRYuxzi1bP43InHQX4CZtVHWh4tY9uM98Z5xN0FJcaQ
-         6tWRvmtMuvSvSBMGHJTrqgA4EMoulUeYNZiRi/WR9v7qzPU4lXnQPJPg6QYZ+H3mbny3
-         WOANFeL9YPSgva0/Z8ofXxcRXv8SU+lgpxw2c+5QEFO+mreGqIEBJSbIuG7xhan2xD09
-         y2dcSIQ4P37R6GsITiqF15NIOuxfwfxl0kSZGUBzvEyENTHDOhvyRxWp1TQXE/03PqVU
-         hUbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719402549; x=1720007349;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YO1t6RF3glr3rCz97Et9FOGeJn8Z+b5W8m/w3Gj5amU=;
-        b=qts1bL2WInHzE472rcXtH1hUJSzVQL6dzZFR5+V+pLhHREQiHAPzungp+CX4M1TeDc
-         yHUEPPF1A4X93wEPprTVOzmjpdN6lIaUSMQp4Ca5yck7GE4LlXF3vgdattt+XSTCsqNe
-         IM+cyfImMwP2is4qk04wTHqREqbO2ouhQuxQJlxBw4QRuFRoVoL+Y11VP+vGuxHAgu6m
-         lqvdvn3X46RJdO38Y0ZY+Yvq8pM0KoHtw/8nLfR7Z5hf8jFQCs4c0k/8Y676heRH4gKo
-         sIa2U19VkkjtNY8nZVeNZYJUJDlMVfZOMfUqlBMJfGchydRmOyUEwzyeV2W11YFc+0vm
-         vM5g==
-X-Forwarded-Encrypted: i=1; AJvYcCUPjCK4cYGd9z1JDhVqf6tirfuL6jqz4nv14APy6N0w5HsIckcA12PCGHQnZZP6uRfyzYxErjofsGJ6Toey85bOxyqjXKx2nsJMEHdA
-X-Gm-Message-State: AOJu0YxDDUsQYh9FS3oq9w/W/S9dQ4kA74qeIk6R3ljChmexD7ltZ1uV
-	Pjcqq1BieSGKdDVkLVuVKraHNX5TO1v7JJxQU3ySA6X8LU1DeKyg+6Y+E5+K2wN/1XA+a/UFaag
-	WsgLRlsJR9scnmAppo1LDCFpMn0PykBs79V3GhA==
-X-Google-Smtp-Source: AGHT+IHN7aInxDMIB6i3bGQDmb/JUI7qoajbt6wkmr4ZypVyLp9oVk4jd00YUfJaTtzkY/gO9rVTtu8oZUeLfxWlpgE=
-X-Received: by 2002:ac2:4eca:0:b0:52c:cc38:592c with SMTP id
- 2adb3069b0e04-52ce05f8bf9mr6292345e87.0.1719402549050; Wed, 26 Jun 2024
- 04:49:09 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="cEQI5aUl";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="WxL5D7Jh"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 699D921A16;
+	Wed, 26 Jun 2024 11:49:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1719402580; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5Lh37O2jhiCVEaOJh/sZBLPNDudG+Lwj5d/JZWTN6RE=;
+	b=cEQI5aUl8Osxwtn4yY2CwRSUyXVENuHCxJ1UlBpXAt4IIqTqS4RbdfmQkgNs9oM9f7g4ql
+	taDIUE+asznBB2jhc12HjzRAL+SM4FeetIpUtenU6N66W11cJhEYhOSJ2dDlgCYM+GEa8B
+	YBouU/7/9LTJv7Dz3rdWbYJ0eXqplY8=
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=WxL5D7Jh
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1719402579; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5Lh37O2jhiCVEaOJh/sZBLPNDudG+Lwj5d/JZWTN6RE=;
+	b=WxL5D7JhVJ8x674qP2k4SIUARuCB/3nCkKyWW172/Nvxxh/OM17mTU0nVEv3jrTCPa6yV4
+	lrNu+eZN1e+R/RgQXRZQxPyNccdKps5sE37CQmky5wO+D0X+wAXqrRKsA/oLcLckPD+oWY
+	CpDUjUG4cWQzhQLh+pprhygc682yDsc=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3BFB413AAD;
+	Wed, 26 Jun 2024 11:49:39 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id aa15DlMAfGapIAAAD6G6ig
+	(envelope-from <mkoutny@suse.com>); Wed, 26 Jun 2024 11:49:39 +0000
+Date: Wed, 26 Jun 2024 13:49:38 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Frederic Griffoul <griffoul@gmail.com>
+Cc: Fred Griffoul <fgriffo@amazon.co.uk>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Alex Williamson <alex.williamson@redhat.com>, Waiman Long <longman@redhat.com>, 
+	Zefan Li <lizefan.x@bytedance.com>, Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Mark Brown <broonie@kernel.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Joey Gouly <joey.gouly@arm.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Jeremy Linton <jeremy.linton@arm.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Yi Liu <yi.l.liu@intel.com>, Kevin Tian <kevin.tian@intel.com>, 
+	Eric Auger <eric.auger@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>, 
+	Christian Brauner <brauner@kernel.org>, Ankit Agrawal <ankita@nvidia.com>, 
+	Reinette Chatre <reinette.chatre@intel.com>, Ye Bin <yebin10@huawei.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	cgroups@vger.kernel.org
+Subject: Re: [PATCH v5 0/2] vfio/pci: add msi interrupt affinity support
+Message-ID: <rjkb6eqsagejwnmdhsxfvu3rjrmplbe6unvqmerquepd7qm2nu@ggez7xtxmgtm>
+References: <20240610125713.86750-1-fgriffo@amazon.co.uk>
+ <k4r7ngm7cyctnyjcwbbscvprhj3oid6wv3cqobkwt4p4j4ibfy@pvmb35lmvdlz>
+ <CAF2vKzP0C1nEYTWRdWeAFKVUcuu3BkPD0FVA7yAS1rc-c=gs5A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240624093934.17089-1-brgl@bgdev.pl> <20240624093934.17089-2-brgl@bgdev.pl>
-In-Reply-To: <20240624093934.17089-2-brgl@bgdev.pl>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 26 Jun 2024 13:48:58 +0200
-Message-ID: <CACRpkdb7ouG6ocHd_YiAj0JjvzXcbgbGzY6JPSntzpHOr_rDPQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] genirq/irq_sim: add an extended irq_sim initializer
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Thomas Gleixner <tglx@linutronix.de>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="r74rwaco3a2x2q4m"
+Content-Disposition: inline
+In-Reply-To: <CAF2vKzP0C1nEYTWRdWeAFKVUcuu3BkPD0FVA7yAS1rc-c=gs5A@mail.gmail.com>
+X-Spamd-Result: default: False [-6.11 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SIGNED_PGP(-2.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FREEMAIL_TO(0.00)[gmail.com];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	RCPT_COUNT_TWELVE(0.00)[30];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RLdbs4abguf4x6atqn9fu113td)];
+	MISSING_XM_UA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.com:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 699D921A16
+X-Spam-Flag: NO
+X-Spam-Score: -6.11
+X-Spam-Level: 
+
+
+--r74rwaco3a2x2q4m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 24, 2024 at 11:39=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
+On Wed, Jun 12, 2024 at 03:45:48PM GMT, Frederic Griffoul <griffoul@gmail.c=
+om> wrote:
+> To be honest my initial idea was to store an affinity mask per vfio group=
+, which
+> can be done in the privileged process setting the vfio group/device owner=
+, and
+> later apply the mask to each interrupt of each device in the group.
+>=20
+> It would still require to fix the affinity of all the interrupts if
+> the vfio group affinity is
+> changed (or deliberately ignore this case). And it did not match
+> exactly my use case
+> where I need the process handling the interrupts to sometimes be able
+> to change them
+> but always within the cpuset. So I would still need the current patch,
+> in addition to
+> a new ioctl() to set the affinity mask of a vfio group.
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> Currently users of the interrupt simulator don't have any way of being
-> notified about interrupts from the simulated domain being requested or
-> released. This causes a problem for one of the users - the GPIO
-> simulator - which is unable to lock the pins as interrupts.
->
-> Define a structure containing callbacks to be executed on various
-> irq_sim-related events (for now: irq request and release) and provide an
-> extended function for creating simulated interrupt domains that takes it
-> and a pointer to custom user data (to be passed to said callbacks) as
-> arguments.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+It's not clear to me what is the relation between the process A calling
+that ioctl() (and whose cpuset is used to check affinity for)
+and a process B that ends up handling the IRQ.
+At which place would process B be scheduled on IRQ's affinity CPUs?
+(I'm not familiar with VFIO.)
 
-Fair enough, I see you agreed with tglx on this layout so:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Thanks,
+Michal
 
-Yours,
-Linus Walleij
+--r74rwaco3a2x2q4m
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZnwAUAAKCRAt3Wney77B
+SUYHAP9E4KiCr8neoUcGLa9bfsAswF2rgXTMfwxM4uRgu39xiwD/Snob+Tz8WCak
+OFObvu+CpXRmtFHIcDDvsvocrEG+7wY=
+=otng
+-----END PGP SIGNATURE-----
+
+--r74rwaco3a2x2q4m--
