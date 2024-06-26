@@ -1,158 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024222F5E;
-	Wed, 26 Jun 2024 05:35:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E6C2F5E
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 05:36:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719380115; cv=none; b=XPR/t9+7382mJ5gyyPGEkLVbRf039/X8f6f5jX/H/DtVM5jBePqUqVFP6c22RCskmExVZcZwsN9fBKpcenAR7Btnh568pHk/0PEpa1oohrlNXknayJ5W8yIZXWnhyjOt4Q1NCcvMoGuIck6ZFJs7JKgBMABek12qPuBmxWiQVfQ=
+	t=1719380206; cv=none; b=ttIp/8pilJDxb0e7myMuJXjcKAZZ3h7oiPmrN7YmwAuBvpKS/8NT/dVI8EYidLPE3bisRQxU4gC4DxWRI/uQOeEUL3Uslxdszb4mJw8/lXIdUaHqoA2uKhwsfx1A3niS/gynMKso4za9QPT7SvXQpMBKQHI1hg3Ub1XOs+kTt9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719380115; c=relaxed/simple;
-	bh=/G7fO/Q3JvUeVnBbit8Ih4BufFWcmDw2Sl71qmKYszs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZaUzmNJlHTb5upKqP4O1cTPfMNh+/Pn0ukxSp+gdCigqLStHt92K9wpbYRt/K0MS1GXvpqWrYK3kr675RGmhCLBd0V4GpjGkjJAn4ZF4L0xqM8uJj+KYioAsBrQk5HiKT/i0zQl9trXeHRsq9tjUQ3C8tYVOz0V1MYChu9kPZbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y2ioERG5; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719380206; c=relaxed/simple;
+	bh=HMR2KyYL8Z2r7JjFAwLkfq/xdGrtXmiJ5Wwg40Ii2sE=;
+	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:Cc:To; b=LdE6GN0LDVGXcE6V1N2EAfJ+nP9Fq9jVaPuYX07o/ZSVPSBrDgsueBZiifTH04m7St6zRXYU/A4MYvt4p65xbVsZmiU7aHZQfXzWQGm/NfM2d+p0X5o+j6ARpg+A+wJYvPC8weDMJq8lFn2WZqsiXgr4bvZE05Skiz/6xfttu/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=vqLnR0gY; arc=none smtp.client-ip=209.85.161.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y2ioERG5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719380114; x=1750916114;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/G7fO/Q3JvUeVnBbit8Ih4BufFWcmDw2Sl71qmKYszs=;
-  b=Y2ioERG58og+he4QKGPM7YBykQlqfDB48ncK5v1qzJsvWqvjMW2FgbTk
-   tSysG1N8MMzFzwtRMwiMCeTUwyOmLzGtmGGU09EVmT4vowN8a/wRWFSEt
-   gVkAJA9HxRClDtFnp7qEGxSXgRh07rvXhIkknZ8uFPsjWForYuaU/gaaN
-   BZMhzbkW0FwoJCXIVLeJuPPKg6Doozv6NsVhVxkP/EQkMghgmHSfMLbf+
-   uGZOlWjimEcyS6OHZ3MfqxDC34UF9dwmP8+UlRyJZltSOZxlu9x5WCxyB
-   ygKdzWHLNtRvwiGLzHheUbOMPoBNLqUnc+NYqTm9nD35tgOmE8NNgvAGv
-   g==;
-X-CSE-ConnectionGUID: NFdrQlvsTweGUScoHrf8HA==
-X-CSE-MsgGUID: iXV3WmjoQAejxoJNtyjKHw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="27119961"
-X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
-   d="scan'208";a="27119961"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 22:35:14 -0700
-X-CSE-ConnectionGUID: x0USdE5aRPGrRsUis8ENQg==
-X-CSE-MsgGUID: dM8BzhOPRhu2MrQumls2Gw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
-   d="scan'208";a="75091561"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 25 Jun 2024 22:35:11 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sMLJF-000F1S-1b;
-	Wed, 26 Jun 2024 05:35:09 +0000
-Date: Wed, 26 Jun 2024 13:34:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ma Ke <make24@iscas.ac.cn>, gregkh@linuxfoundation.org,
-	u.kleine-koenig@pengutronix.de
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: gadget: r8a66597-udc: validate endpoint index for
- r8a66597 udc
-Message-ID: <202406261324.4izkBtpK-lkp@intel.com>
-References: <20240622142308.1929531-1-make24@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="vqLnR0gY"
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5c1acd482e4so3411352eaf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 22:36:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1719380204; x=1719985004; darn=vger.kernel.org;
+        h=to:cc:date:message-id:subject:mime-version
+         :content-transfer-encoding:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5xoGmgspSdBUAHUJqXx7P8wqOEZDQ8GrzwQ5Y9V0VsI=;
+        b=vqLnR0gY4vU/won87C1CeA4c8yB9+owekpEf893dVovj9Hsv2q+StT5at+A/TljyhM
+         pY1PUSnn0auy3Wf81ZQY06e9Kf9MW/L3kVw45igGIIcj/7dt4d/kCUIQC3LzZcBZNh/P
+         ZlW93yS8GLegzZUKTiLkisPPk0OksLI07WMC0fCL7e1vm2Syl19by0BKazS0u9Kz7tRj
+         6TZZmGBd5m0UOUiXqWnOkdVu8eWKztf5L2ZKNvIjZNoD4E28XMrBwHhOVQPYMsmpHPg6
+         cNkxExpNSMdTnVZQZmVekHLA7RiEKG+6HunnioWk2gRUUfNVIwfbNWMlKhz77eiReayY
+         s+JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719380204; x=1719985004;
+        h=to:cc:date:message-id:subject:mime-version
+         :content-transfer-encoding:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5xoGmgspSdBUAHUJqXx7P8wqOEZDQ8GrzwQ5Y9V0VsI=;
+        b=fAFNETC7QZRUlD3DzJyX8HzL1XVAFlg89Wcm5zcP0DeGJ8JISXSS1YB3gQ/uiT7Z7t
+         9670kdQd/SCsu6kljteCKcjmrqPFq5n4a6l0PPEkk4Kcp+5KnC6F+jsxFJZarIdY7bk4
+         O7zLnykbS14J5wzs1T40jRCaXmj3VZRbhdLqJhlAGSgAy2r/ggm8E+EiUhybeuAcEW7j
+         qZleLe1pqvWEU31+rBhK3A5M2718mVMsOEPFwSJca7F6uh61XZx3e2aobjoccoaJug01
+         Ky3wilLT0X9z2LhOmFrE3w+14ZSE91QbDU40WDA75SkRmNfyIMTXZ27oqyzZi6yxX1Sh
+         zG5A==
+X-Forwarded-Encrypted: i=1; AJvYcCUb8zusiwFpr3fZC+PUQZfOhLt9+w5G3zQVnze7byKtbd6fuPIG5mshGXccj9aBFwCM6QMTkT5EpEIDBKJSzuTpc6T/zSMsENNDM8yW
+X-Gm-Message-State: AOJu0YzSXRvggzkc89Uy319a1j0JBUdZWye4SsN3qLKpxRB8mPrhUmXF
+	bYj3rlsx0hZ54N028khwvW7kma15Q+aEPW33xHMzx1IdHmYV9sscJ83XzWYPpQM=
+X-Google-Smtp-Source: AGHT+IHIm4hgF1JV++efoOuA8VVxoHAW1Q4zjQmqoslSdwHThRFL0aUyjbdMSUOiHfb8JQhkCNjnDA==
+X-Received: by 2002:a05:6359:6ec7:b0:1a2:5bf6:2266 with SMTP id e5c5f4694b2df-1a25bf6c9c9mr349095155d.15.1719380204009;
+        Tue, 25 Jun 2024 22:36:44 -0700 (PDT)
+Received: from smtpclient.apple ([2604:3d08:8e80:cf0:8977:5a8e:a205:ae3])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-719e81277b0sm6308830a12.82.2024.06.25.22.36.43
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2024 22:36:43 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+Content-Type: text/plain;
+	charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240622142308.1929531-1-make24@iscas.ac.cn>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
+Subject: Re: [PATCH] timekeeping: Use min() to fix Coccinelle warning
+Message-Id: <3F9C4695-42B1-4A0A-846E-6FC3BFA7E97E@toblux.com>
+Date: Tue, 25 Jun 2024 22:36:32 -0700
+Cc: jstultz@google.com,
+ sboyd@kernel.org,
+ linux-kernel@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+X-Mailer: Apple Mail (2.3774.600.62)
 
-Hi Ma,
+Hi Thomas,
 
-kernel test robot noticed the following build errors:
+On 24. Jun 2024, at 23:36, Thomas Gleixner <tglx@linutronix.de> wrote:
+> On Mon, Jun 24 2024 at 08:24, Thorsten Blum wrote:
+> 
+>> Fixes the following Coccinelle/coccicheck warning reported by
+>> minmax.cocci:
+>> 
+>> WARNING opportunity for min()
+> 
+> I'm fine with the change, but not so much with the change log.
+> 
+> You cannot fix a coccinelle warning. You can only fix the code which
+> triggers the warning, right?
+> 
+> 'Opportunity to use min()' is nothing else than an opportunity, but
+> what's the benefit of replacing correct code with it? What does this
+> fix?
+> 
+> It fixes nothing. So calling it a fix is confusing at best.
 
-[auto build test ERROR on usb/usb-testing]
-[also build test ERROR on usb/usb-next usb/usb-linus linus/master v6.10-rc5 next-20240625]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I think it's pretty common to "fix a warning" -- there are thousands of
+commits in the kernel using this wording in the summary alone -- even
+when the change doesn't actually "fix" anything other than removing the
+warning.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ma-Ke/usb-gadget-r8a66597-udc-validate-endpoint-index-for-r8a66597-udc/20240626-003228
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-patch link:    https://lore.kernel.org/r/20240622142308.1929531-1-make24%40iscas.ac.cn
-patch subject: [PATCH] usb: gadget: r8a66597-udc: validate endpoint index for r8a66597 udc
-config: i386-buildonly-randconfig-005-20240626 (https://download.01.org/0day-ci/archive/20240626/202406261324.4izkBtpK-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240626/202406261324.4izkBtpK-lkp@intel.com/reproduce)
+However, how about 'resolve' instead?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406261324.4izkBtpK-lkp@intel.com/
+ timekeeping: Use min() to resolve Coccinelle warning
 
-All error/warnings (new ones prefixed by >>):
+> What you want to say is something like this:
+> 
+> Subject: timekeeping: Replace open coded min()
+> 
+> Replace open coded min() because $GOOD_REASON
+> 
+> Discovered by minmax.cocci
+> 
+> $GOOD_REASON is not 'coccinelle emitted a warning'.
 
->> drivers/usb/gadget/udc/r8a66597-udc.c:1176:3: warning: label followed by a declaration is a C23 extension [-Wc23-extensions]
-    1176 |                 int pipe = w_index & USB_ENDPOINT_NUMBER_MASK;
-         |                 ^
->> drivers/usb/gadget/udc/r8a66597-udc.c:1178:15: error: use of undeclared identifier 'USB_MAX_ENDPOINTS'
-    1178 |                 if (pipe >= USB_MAX_ENDPOINTS)
-         |                             ^
-   drivers/usb/gadget/udc/r8a66597-udc.c:1217:15: error: use of undeclared identifier 'USB_MAX_ENDPOINTS'
-    1217 |                 if (pipe >= USB_MAX_ENDPOINTS)
-         |                             ^
-   drivers/usb/gadget/udc/r8a66597-udc.c:1280:15: error: use of undeclared identifier 'USB_MAX_ENDPOINTS'
-    1280 |                 if (pipe >= USB_MAX_ENDPOINTS)
-         |                             ^
-   1 warning and 3 errors generated.
+Removing a warning can be a good reason in itself to refactor code,
+because fewer warnings make "real" warnings and potential problems
+become more noticeable and thus more likely to get fixed. In short, it
+improves maintainability.
 
+To me this is obvious, but I'm happy to add something like "refactor
+code to remove warning and improve overall maintainability" to the
+commit message.
 
-vim +/USB_MAX_ENDPOINTS +1178 drivers/usb/gadget/udc/r8a66597-udc.c
-
-  1158	
-  1159	static void get_status(struct r8a66597 *r8a66597, struct usb_ctrlrequest *ctrl)
-  1160	__releases(r8a66597->lock)
-  1161	__acquires(r8a66597->lock)
-  1162	{
-  1163		struct r8a66597_ep *ep;
-  1164		u16 pid;
-  1165		u16 status = 0;
-  1166		u16 w_index = le16_to_cpu(ctrl->wIndex);
-  1167	
-  1168		switch (ctrl->bRequestType & USB_RECIP_MASK) {
-  1169		case USB_RECIP_DEVICE:
-  1170			status = r8a66597->device_status;
-  1171			break;
-  1172		case USB_RECIP_INTERFACE:
-  1173			status = 0;
-  1174			break;
-  1175		case USB_RECIP_ENDPOINT:
-> 1176			int pipe = w_index & USB_ENDPOINT_NUMBER_MASK;
-  1177	
-> 1178			if (pipe >= USB_MAX_ENDPOINTS)
-  1179				break;
-  1180			ep = r8a66597->epaddr2ep[pipe];
-  1181			pid = control_reg_get_pid(r8a66597, ep->pipenum);
-  1182			if (pid == PID_STALL)
-  1183				status = 1 << USB_ENDPOINT_HALT;
-  1184			else
-  1185				status = 0;
-  1186			break;
-  1187		default:
-  1188			pipe_stall(r8a66597, 0);
-  1189			return;		/* exit */
-  1190		}
-  1191	
-  1192		r8a66597->ep0_data = cpu_to_le16(status);
-  1193		r8a66597->ep0_req->buf = &r8a66597->ep0_data;
-  1194		r8a66597->ep0_req->length = 2;
-  1195		/* AV: what happens if we get called again before that gets through? */
-  1196		spin_unlock(&r8a66597->lock);
-  1197		r8a66597_queue(r8a66597->gadget.ep0, r8a66597->ep0_req, GFP_ATOMIC);
-  1198		spin_lock(&r8a66597->lock);
-  1199	}
-  1200	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Thorsten
