@@ -1,60 +1,60 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0978BEF
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 09:37:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8303D12B144
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 09:38:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719394628; cv=none; b=IGid6cvIgIrW5g7Z+jLHpiglRq+Hat+YtXu4vHHM7g4HEfE2XzO3qHSDqkKXCO8VbrS4k0XA3KryrIQJC76XK87OxKhiYS4qgEiDBf/6N5lHACm7M6G51aJZultO1IDAf9vgPbXzXMxkh1GTUD/JuiZYM4n3Fhfx5GCDUHYQUV8=
+	t=1719394699; cv=none; b=lvdV0nE44bT8OksYyBIXyVmM+GBVBzX8hUq8G6W3tfpjnTlLd4qTdxWjQFjrDV5GSTpaHAJQqbqZxj3oHWSIK9TPGlPTV4VHpk1H6tHBCg8zDOCdU8yjRB/Exhzkw/so4sE7IFWakkA7BNkOLtdDSioXu7Cxz6m5mPLIFbF6gig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719394628; c=relaxed/simple;
-	bh=IOe74BviUgYXIjE1Ibu85GUlLOQUmCeF+sTT7UuVvYY=;
+	s=arc-20240116; t=1719394699; c=relaxed/simple;
+	bh=c2rLFz0BIgPPMzKPVpGfu3TBAoN3a11ZKGAdBOGnP+E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YUYTmIn70mFeYTlY+TVTwRN5wtegeIdbH+xHMYf2fzVHqSZqNm1sRfYD9ZdAyANt55UbUIyKIhrMXekSDM0UhqdJRwdZPUvoZoP/rmzLuzRDwYIOHNOBphxW+fCoflh02NchX37KnD5MwuEfLlya2iVe2IMmgIrhkIo4a9JTsAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D8WDNRF1; arc=none smtp.client-ip=209.85.218.44
+	 In-Reply-To:Content-Type; b=UFNM1B7Di90ZNdqDbBuqwHyMJC417GuZes9gGsKJ7K1ZukRmErrFC/HKTbBOUmmu9ryCa9oqTPpCChIoHykCHpxe/C3JIgohVq1/IpyQIzUctXMIR5cxLaguCdihT+zVYt2QM2xtDUCSxlFEHSQGyLQF+GDpO6ENjAMP0KB852M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=I1iVBOAp; arc=none smtp.client-ip=209.85.208.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D8WDNRF1"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a72477a6096so444299466b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 02:37:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I1iVBOAp"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-57d1012e52fso7546743a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 02:38:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719394625; x=1719999425; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1719394696; x=1719999496; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=AEVD+w0TTAAVvcUXpjCC9r3Xtde98FGUdgCPdfiAa2c=;
-        b=D8WDNRF1wtHlVOi23WMvuW6ndEJWZfUiDtPKX6qz8NUjnDMP6VkLgWUgAr4dx7gKDO
-         tINk5E/NqWrYKYTLl37gZ1z26s9RTZM0QAqxCy8wYQMVGrrJkVBk/tbjkaR03UGg3evt
-         ydzmBVo35cBIyTfv7f3SFOXAdJtrPC/edYz6FVdzF0KKU5VtR35RvXV2fqFnFWbh5ih7
-         jghFpWlO6l39fTKlmMO6JAA5ExKm/M8sFE1ctUP2X8wQ0U19/b8i6HKs4kIORPZdDwOU
-         fsxzc2EQBE+UGvXkdoMJ3/6MFoyXWJK8P2N4Kloz8cbApXFfYLsqYMkp3uGNgeWELuPb
-         ODyQ==
+        bh=PtgRu1hSkNXJVH/wLpskaZQjg+HOTe4PmSs3H6aE+QY=;
+        b=I1iVBOApkFCtXZW6aEsUN9r8dhydMxfOhGTxslJQbdngXiNX67xIracxFMGMrweYBq
+         7BZ7XEC8pqNVNpwZlfZ/d++Zx9rHx2dYUhOOnXUE0i/HzCoy3lGZnZFCq/3cvh2Ip1sV
+         5g0kZgtbe5TUQ0HXe0lMpf/+V3mVcvwptd/DCCIOUDVlujq6LJkvYHe7dxbklraCrU8e
+         wZMKpG3VAOFS62UN+HYgfb2tGzAfOztp26QFmc0ky2FJu57TyxI4khIg9/HF8MsHIvnL
+         NBsOd7srR3utWIGqPZI0AorOU41u4cmktTSvFzRLJp7eNDdViTIMaot6QcYTHxd76xum
+         hhOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719394625; x=1719999425;
+        d=1e100.net; s=20230601; t=1719394696; x=1719999496;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AEVD+w0TTAAVvcUXpjCC9r3Xtde98FGUdgCPdfiAa2c=;
-        b=JF1WKRr0S29lu2mz33DwBRaomX4Sr8enK+ebhW6tA/48IpS1XyDhsje+8QDMx6/2Q9
-         2nqO49GVIE4b85YTBaE07nc04GSIbiAIgSTgiS71Un68yVvOCmaFB7Wn8Qj0KJt3Wrtn
-         MYmLDy/VqoEPGcqW6vOcVpek+BUiFk+mx+9L73JSoGDWKUCkWd3UoVehVmx4TGXcf/v6
-         7WyqXPqd9ZjZdqfdmbPx1+605KoElOIjjXt8hcN0XrArt+Mi+Sh+HG++eQIXUkJ5Itgl
-         1vQRglxNAwX9RTplY9q7GAD+DXbbJvLFGQqjO01FA9D6RzlOfah/ZrFWk+BTOWsqCY0W
-         f/6A==
-X-Forwarded-Encrypted: i=1; AJvYcCUWeVRKUeAQbZoWJTDBWUhGIfq48PPlDB1qCGs7qB9JSPXQOA4s1ZVT4lVOyi0WyxTEZsStTReZ6/W01SDEilnDin+oY2lm7ym7wv3B
-X-Gm-Message-State: AOJu0YwAm1BMmhhAd5zTHIZ0GxEaJ+jy5tOLHGdlsGdajKDxQ27YyuIy
-	DaSoOvqgLEBOS2M1FIbR+r2v5PEA/+q5SO/WhjpAovttLD43+pRdaTnql/G6Zuw=
-X-Google-Smtp-Source: AGHT+IHMd5gcTGXG0btMMetTthXNYoimPBO8ehjkfI6u1J6Ceh0RTvs6sjMc+EPy7NGvsHh8ni7voA==
-X-Received: by 2002:a17:906:a8d:b0:a6f:4c10:8da6 with SMTP id a640c23a62f3a-a7245b45a69mr587403866b.2.1719394624617;
-        Wed, 26 Jun 2024 02:37:04 -0700 (PDT)
+        bh=PtgRu1hSkNXJVH/wLpskaZQjg+HOTe4PmSs3H6aE+QY=;
+        b=CZBt0HJJIGlft3gxjXGCPL5JcAnab2T7QZPz47dgdHK5y+05KM7TG6U5cC9oKQ4SLH
+         yxjDXa2B+oymX7Eyr3EtfTWvPAgLLHK8cG/YMOLpk1BIK5KLZNo5gcLrcHJJpbkIQa8B
+         WRwqSX3ZsbeDjo44owY72QH7J/I6LTKNKanRL51Jb78DrFfI7aJyVT15IthFoFZTigko
+         ntucxhbFVpHP4EIxtx+8hMUMQEFj0Aufwk7qsV7FJAs3est0S4sK+yv82cbDcnj5F6FC
+         +BED1hQ6s1F1WkN4DqJq8QEoOTpQWu9MOIP3tKtajE7iibIeuqC23p/os6+VAZjJALS1
+         +8Tg==
+X-Forwarded-Encrypted: i=1; AJvYcCUuITi3+BDqvrh6yUByEwbdX4xlqtrZxbeMi3E9UWlyLwPEe2bTN2Ng6MueIpMhBO6cO4ghegJkGJOhI7/a2TMD+yOSxrs2ia3a15+t
+X-Gm-Message-State: AOJu0YyNEdSjV7lgpIzgjWpEHEJjf/WSr9UIv6huq6dLQwN++IA1zhiP
+	OQdb0UpjgZvjBlHi5qLN6Yr7aG9745HkCU8juwH0YznuCseu27J7qvmmTpb327U=
+X-Google-Smtp-Source: AGHT+IG8q70Wfm9EEv2AuTnKLh1TLqbrSwrYoDamHfO3r9IuQeHyXkYQ2f/eHmnrKoLpFJZtU9E2wA==
+X-Received: by 2002:a50:bb69:0:b0:57c:6f0a:bc57 with SMTP id 4fb4d7f45d1cf-57d4bdd8e36mr7500901a12.36.1719394695602;
+        Wed, 26 Jun 2024 02:38:15 -0700 (PDT)
 Received: from [192.168.215.29] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a725cc93794sm246743566b.170.2024.06.26.02.37.02
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d3040f3e0sm6922516a12.25.2024.06.26.02.38.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Jun 2024 02:37:04 -0700 (PDT)
-Message-ID: <a33ac27f-ab88-40a7-9cb0-9d27342fed09@linaro.org>
-Date: Wed, 26 Jun 2024 11:37:01 +0200
+        Wed, 26 Jun 2024 02:38:15 -0700 (PDT)
+Message-ID: <b56ec42e-f8e2-4ca2-a40f-eb55825e800d@linaro.org>
+Date: Wed, 26 Jun 2024 11:38:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,20 +62,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/3] drm/msm/adreno: Add support for X185 GPU
-To: Akhil P Oommen <quic_akhilpo@quicinc.com>
-Cc: freedreno <freedreno@lists.freedesktop.org>,
- dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
- Rob Clark <robdclark@gmail.com>, Bjorn Andersson <andersson@kernel.org>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>, Daniel Vetter <daniel@ffwll.ch>,
- David Airlie <airlied@gmail.com>,
+Subject: Re: [PATCH] drm/msm/adreno: fix a7xx gpu init
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+ Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Marijn Suijten <marijn.suijten@somainline.org>, Sean Paul <sean@poorly.run>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+Cc: Rob Clark <robdclark@chromium.org>, linux-arm-msm@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
  linux-kernel@vger.kernel.org
-References: <20240623110753.141400-1-quic_akhilpo@quicinc.com>
- <20240623110753.141400-3-quic_akhilpo@quicinc.com>
- <5947559d-30dd-4da1-93cc-a15dc65cb77d@linaro.org>
- <20240626082422.zcsari27yoskayuo@hu-akhilpo-hyd.qualcomm.com>
+References: <20240626-topic-sm8x50-upstream-fix-a7xx-gpu-init-v1-1-ff0a0b7c778d@linaro.org>
 Content-Language: en-US
 From: Konrad Dybcio <konrad.dybcio@linaro.org>
 Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
@@ -113,46 +110,25 @@ Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
  bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
  nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
  izWDgYvmBE8=
-In-Reply-To: <20240626082422.zcsari27yoskayuo@hu-akhilpo-hyd.qualcomm.com>
+In-Reply-To: <20240626-topic-sm8x50-upstream-fix-a7xx-gpu-init-v1-1-ff0a0b7c778d@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 26.06.2024 10:24 AM, Akhil P Oommen wrote:
-> On Mon, Jun 24, 2024 at 03:53:48PM +0200, Konrad Dybcio wrote:
->>
->>
->> On 6/23/24 13:06, Akhil P Oommen wrote:
->>> Add support in drm/msm driver for the Adreno X185 gpu found in
->>> Snapdragon X1 Elite chipset.
->>>
->>> Signed-off-by: Akhil P Oommen <quic_akhilpo@quicinc.com>
->>> ---
->>>
->>>   drivers/gpu/drm/msm/adreno/a6xx_gmu.c      | 19 +++++++++++++++----
->>>   drivers/gpu/drm/msm/adreno/a6xx_gpu.c      |  6 ++----
->>>   drivers/gpu/drm/msm/adreno/adreno_device.c | 14 ++++++++++++++
->>>   drivers/gpu/drm/msm/adreno/adreno_gpu.h    |  5 +++++
->>>   4 files changed, 36 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->>> index 0e3dfd4c2bc8..168a4bddfaf2 100644
->>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->>> @@ -830,8 +830,10 @@ static int a6xx_gmu_fw_start(struct a6xx_gmu *gmu, unsigned int state)
->>>   	 */
->>>   	gmu_write(gmu, REG_A6XX_GMU_CM3_CFG, 0x4052);
->>> +	if (adreno_is_x185(adreno_gpu)) {
->>> +		chipid = 0x7050001;
->>
->> What's wrong with using the logic below?
+On 26.06.2024 9:53 AM, Neil Armstrong wrote:
+> The gpulist has twice the a6xx gpulist, replace the second one
+> with the a7xx gpulist.
 > 
-> patchid is BITS(7, 0), not (15, 8) in the case of x185. Due to the
-> changes in the chipid scheme within the a7x family, this is a bit
-> confusing. I will try to improve here in another series.
+> Solves:
+> msm_dpu ae01000.display-controller: Unknown GPU revision: 7.3.0.1
+> msm_dpu ae01000.display-controller: Unknown GPU revision: 67.5.10.1
+> msm_dpu ae01000.display-controller: Unknown GPU revision: 67.5.20.1
+> 
+> on SM8450, SM8550 & SM8560.
+> 
+> Fixes: 8ed322f632a9 ("drm/msm/adreno: Split up giant device table")
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> ---
 
-Ohh I overlooked this.. sounds a bit unfortunate.. 
-
-Seems like it doesn't really fit the "else" branch anyway, let's
-keep it for now then
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
 Konrad
