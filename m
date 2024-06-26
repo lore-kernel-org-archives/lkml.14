@@ -1,164 +1,205 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2105.outbound.protection.outlook.com [40.107.94.105])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F29118EFE4;
-	Wed, 26 Jun 2024 16:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.105
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719418951; cv=fail; b=Lp3nRbRvJtMJ7BMcHGjIde2aRUwNJWh2OJRCIrBEjeXvr34nFqbLtyf2WdAmSdpkIPrs0IS2CRLOTMGEmnTs9l5uPkdHsnKc9OLX4FVYFB2jqoBZTDbxI9Nnm4dSswb+SJJIt+Fwpoq2HchE1MEh0itvL0ncfMF6Zz1gkwJtrNA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719418951; c=relaxed/simple;
-	bh=bOro1hIjNHINYAcxIK2Gze0HZhEsLkpLBHyHH7fKN0Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=MTI0Dp1+SN3XLCa76luyRMHAg/hXA/3GgoapUpuazSTJQcnvsWBtZ5LNkWobeKgwazuSZ7S4PJoRNxE/eXh1Ryk8YKXTcrzKMfiUDENx1HFwJyowlbH8AQP/XsXIVLh4TlaNXBPch2LmlLWti86Rpg9nEccq1ZRNjVgUSlwaNUo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=phytec.com; spf=pass smtp.mailfrom=phytec.com; dkim=pass (1024-bit key) header.d=phytec.com header.i=@phytec.com header.b=gf/tc57s; arc=fail smtp.client-ip=40.107.94.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=phytec.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD5318F2D4
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 16:22:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719418954; cv=none; b=m9GTIG2DfszFrBsZDBO9d9WzG5FICAtgsT+I9guqDyTmEPLAp8isTAy9x8BXNoDUv620VyLx+0MDm/LaJtphocIxGgiJ4DoYs0bDye7piXhkFC+QbuVwze6V2F3ti/Z3XSMS0XSXsA87j6Qq1W0k5Hc4RWT27pIhuiQi9r82+pc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719418954; c=relaxed/simple;
+	bh=9XhgXHG8+tusH/9LC9l7b0azJTE85BoDuG8tkGn7KF8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J8MZvJMzaCuVb9QEMF/UbJ89aZz/+u4fT3YZDxmo/3JhpwxV0eHPzmfPvoLkwykPevNSKnraMVvNIs+oCNrMXRzgwkwp4bu2PgXn83l+ECU8SE30+hLzpL+K4CNKSYLdg3N37mJTnZQQt9dZNKHHMFYTwsvP6g1I916eoHKEbqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PPGeOZel; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=phytec.com header.i=@phytec.com header.b="gf/tc57s"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nmbPTLZoDyh222X/yn4hIQFhkixo5cjoiPr3KbvQdQf4SJcGDh/cvoYElBAH5Vksn031KzQTtDLBFf4fH2jP9jIboHWo7dpGhJYvK/1eGGt4iPs20QIXLxCSq0ZV/N+0oydETossn3hogvvIhyoLDJDfUOqKY4KmYFQNYEzagG5UbcgC41moGuzZB/qghR7ORtQGrM/nvayMwGBVY3jr8uoBmGcnXXQGb1YzbioIqODM71r5RfLFtvxPuMk7Ax7FvRnqXtOVQR942WGicCEtBU7Eo/L2ZfXeb9yhB9CZw0YpwClWU2BIT8JVTcEM+L0ymGvlScCWqDw2gb3+vir9pg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dPrf+dLEOmfkGex5atRoKlk9BbGRaT+gHbLQTxSKrmk=;
- b=Yjh/Up+y20y4nqYXHWSTjq2kNGCNm5OTs63SvEPQqKJDPHjWtrVAeecCL6HGkfzU0dKwVrJUL+27jd+/qw/VZyuSfsFpjsu/z7+ULk9buqK1sJtIZqs6MnadzFDH8CXCSEtvIeScr95ifPKldp0Y3PKl5ToQ6UjLAFGlsY/V/Wy2nMLtgVMCGd0Pejy71LsOSTw3M2uKe62De84rqC7KMwUt09PVsTPT1itMOcSNZC/KeIG0jiOm0FsNkxXmZsq5uoBvZltye1dnA7mNWVirG33kzby2DuvEPTKbrSqtZXGx8e7Srsyq++R8sbZ3E/NFQUfbYqXihgFmNMaG8S61vQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=phytec.com; dmarc=pass action=none header.from=phytec.com;
- dkim=pass header.d=phytec.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=phytec.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dPrf+dLEOmfkGex5atRoKlk9BbGRaT+gHbLQTxSKrmk=;
- b=gf/tc57s7NtjT/cRW4ROxc/HCUcAJ87MrKBEYAbH8blFBpc56bkmtuJYZS4L2KmWaRvm0GCm1Zj2vAALJjouAZGqTSFIlRnGlVMV5d3MvEt3Z29v8p9qLvS8zrkOY0pQp9W+eLDsM9NiTJFSgsrB6pBAjYwlkh2N9VzliqK0zxY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=phytec.com;
-Received: from SJ2PR22MB4354.namprd22.prod.outlook.com (2603:10b6:a03:537::8)
- by MN0PR22MB5638.namprd22.prod.outlook.com (2603:10b6:208:4a5::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.32; Wed, 26 Jun
- 2024 16:22:15 +0000
-Received: from SJ2PR22MB4354.namprd22.prod.outlook.com
- ([fe80::789c:e41e:1367:383d]) by SJ2PR22MB4354.namprd22.prod.outlook.com
- ([fe80::789c:e41e:1367:383d%3]) with mapi id 15.20.7698.025; Wed, 26 Jun 2024
- 16:22:15 +0000
-From: Garrett Giordano <ggiordano@phytec.com>
-To: andersson@kernel.org,
-	mathieu.poirier@linaro.org,
-	w.egorov@phytec.de
-Cc: linux-remoteproc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	upstream@lists.phytec.de
-Subject: [PATCH 1/2] remoteproc: k3-dsp: Fix log levels where appropriate
-Date: Wed, 26 Jun 2024 09:22:02 -0700
-Message-Id: <20240626162203.3484272-1-ggiordano@phytec.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: CH2PR12CA0006.namprd12.prod.outlook.com
- (2603:10b6:610:57::16) To SJ2PR22MB4354.namprd22.prod.outlook.com
- (2603:10b6:a03:537::8)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PPGeOZel"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719418951;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=fGxp6Ukd0LTljOubDYeVT+TIf0qV9JZHHFrPwd/iFcE=;
+	b=PPGeOZelEvCF9twefmkf/l9zcIo1PjOOdm3hFEtRgK7f9z2kxiYx2AF+s2OvRIOgDjL+Q+
+	HGieXfHMFTK5pBJ9l4IzaKy7xCSieT9m4dzosobAWhz+K8NRtQS9j474wUpBAR989H0Rnl
+	bPSy0kTTSzWFwQ6v0TbGZrc0PjikMSM=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-395-PGsyOBztMk-ZTGvyOLZZoQ-1; Wed, 26 Jun 2024 12:22:30 -0400
+X-MC-Unique: PGsyOBztMk-ZTGvyOLZZoQ-1
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-52ce324c204so3668318e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 09:22:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719418948; x=1720023748;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=fGxp6Ukd0LTljOubDYeVT+TIf0qV9JZHHFrPwd/iFcE=;
+        b=GDy5Hfkna1q+0JtMD7z6SYJeHicttagirD4HJET+B/094aDudq/JexeIFS0Lddwsyf
+         oy55v9PJ7qmbtD2VmcujDuIGr0AB4NQQs/xJcKBVB1DwYb03gXQT5E9FjImM5JmgQV0H
+         S5xu9uO0hkglkYdatnwGbyYmRHCB33ct9LK/JK1ARaaMXbzLVrt/vR7zx9x+VEOnNqsy
+         TIr5XcoVeTkmoTeHtIf6EPtXlTX6XsOhYTTHFFQDEF78Y78WTCZAq51uo0sfR6hHvXnH
+         JQBxZwc5rSxA/vFKcNCEwV/XcjnSuCCIBPGuiumv7Z1ve1CjMI3Yj0x461LtxeqRRVEJ
+         XeLQ==
+X-Gm-Message-State: AOJu0YzaqvlFW8GMm+DoBOKQW2lgTv/pXJstDN6T6H+HX2LrLzKntwmh
+	LTGCBAp6ixkw1nw8IsjJhXUUztfO7D80PeWOjYDTCrZoDOWPbdkSY5v2U1lbO+8PIQkas7Wfp2y
+	YU0STdX2jOqVBY+XkyzQv6GRcgiuGw206uZg3ubavN5gFOskOEEjui4TdjIsWWdFwbslOCc7SFF
+	p/C7Bdz+J6z40krM62dk1itNiHOiMcNVDLXd0ImYiGpQ==
+X-Received: by 2002:a19:750d:0:b0:52c:df10:a8de with SMTP id 2adb3069b0e04-52ce1834580mr6267541e87.21.1719418948444;
+        Wed, 26 Jun 2024 09:22:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFiAMtKflpiz6Zx/dw1ERax0IBJ4gYhZCNcDVi0X2nNDaQR8PXtDtv3586cQ3Hi6OWEfwsKEA==
+X-Received: by 2002:a19:750d:0:b0:52c:df10:a8de with SMTP id 2adb3069b0e04-52ce1834580mr6267518e87.21.1719418947860;
+        Wed, 26 Jun 2024 09:22:27 -0700 (PDT)
+Received: from [192.168.1.34] (p548825e3.dip0.t-ipconnect.de. [84.136.37.227])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c82519b0sm31626855e9.14.2024.06.26.09.22.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Jun 2024 09:22:27 -0700 (PDT)
+Message-ID: <8f85c31a-e603-4578-bf49-136dae0d4b69@redhat.com>
+Date: Wed, 26 Jun 2024 18:22:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR22MB4354:EE_|MN0PR22MB5638:EE_
-X-MS-Office365-Filtering-Correlation-Id: 883acc58-d716-4b72-2e98-08dc95fc23fb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230038|366014|52116012|376012|1800799022|38350700012;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?RRfVjrwaYybBbVWf9k1liNpjyr5EWpnN27CGaDoSbDFKL5rhQ22RGi2ck8QD?=
- =?us-ascii?Q?i8rs6ThEBvTE//XKWjiRxqF/JaP+3VcccRT6L7dahj8kO+lVtsKoULeoTmd3?=
- =?us-ascii?Q?/JifgO14nGaL8ndHgorpxm/fagpSgW6RZL3bfBRUS+SBu5oAU9MtkG8xZwWw?=
- =?us-ascii?Q?ndt5pV+ZLIdNzVswjV37vIUma4ZJ6xlpdv+ixOVyUBGuXc+EBL53dM6bAooI?=
- =?us-ascii?Q?S5RlyoylXH30iQisptj62xjMfu9ywatsLf3aR/DU/9nw9m7Dlq84Z49LOsXy?=
- =?us-ascii?Q?IeTMVyUw52P8VSEpcNp9bSboU0jjErcQ8yedDspt/Unk+N/zeO4dWwu5zNft?=
- =?us-ascii?Q?mSfsGY/ig/hrGHmpVEXrnnUUWL1OGbkgssb5pwQQ+z/wJJHhITzZX3XfsbVy?=
- =?us-ascii?Q?qGqylWFoYp+EbOKsTyY4NBpcOqXdVdBF2rJTrhhJ/MeCqU5+dNPUGjyLwHz/?=
- =?us-ascii?Q?k1THCGZCIulLuDPshihStZg1JqKjAQ0gsPkGEar6OB0S3uD0xDPqKUIfefA0?=
- =?us-ascii?Q?IrmtMPEmqx/S8yKoYBKAnicOi1LRz7FxkemdLTpevi0K3G8iLJ+Nh9prGP+R?=
- =?us-ascii?Q?IyyzYd4WsCAtVExS8Hh23UyruMrRed1BThaKlMPvsmUctpIAskVGy0uvZIke?=
- =?us-ascii?Q?s+cKibFlH15FSXeBDGS8CrYM/45q0YlIHo8L0+0AllL8hmaM29GDDSfkJxbj?=
- =?us-ascii?Q?GS0PYcZQ8qOLEBKLo/4XKfvU3rhmS8utQEJm+1klvlFLY6Isg81wKAxnN9jk?=
- =?us-ascii?Q?r4IDiHuk98oZDdsORTSxbchzevRwVabAIYI9X/DH9VSQntEFYiS1oStzieGk?=
- =?us-ascii?Q?THBF/fu0UsLml/HycfNINU+aQ1hui6OnXPW/T2t4P3emhIJWx+x4IzirkViT?=
- =?us-ascii?Q?n0XGI9EroGrivtcHCK+xceO3l2UJies4MfBW7pzSAJIPKUr43WM/dMgpaPgu?=
- =?us-ascii?Q?RO9MRrvZ7K+WCgwhe7m+XijkFBcJNZK5OoyEVRNFHjCm3j/DjZU3d2XBFIhs?=
- =?us-ascii?Q?mtyj4p1QBtbM2aWYYD7PZ5wFf8x+mF0zgVZI6C0haF0jrNFf7ZCPNdJdWrcO?=
- =?us-ascii?Q?+3A7tzrGuvstocXsXwUgC6G5JyeBEpuKyHX3VbSCHxiVAuTqDDkGNJfCyCwB?=
- =?us-ascii?Q?a4T0zCQj/GLTRYNLJJDkfHOmx2l85k5jVexP/65+MYIVIzEbj7+cgEBKmOVq?=
- =?us-ascii?Q?m+1gAqI1QzFaw0EprCCn1nyoTZqR/3YLpfPEXuJYUC9x2Kmm7upwt1kNSFDz?=
- =?us-ascii?Q?7KFfUYCON+/i1OaO2bbjpD9CFqAaI4stle+FmBf44oBq55FTizQRIEn0jh4P?=
- =?us-ascii?Q?u2e5Xb2d2A/Ukcner0HC+f7GKzApGlvkIEY/XcszXYjSGfexPZvZuulN0TgF?=
- =?us-ascii?Q?suRIElI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR22MB4354.namprd22.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230038)(366014)(52116012)(376012)(1800799022)(38350700012);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?c/pDk0E4tq+eSREZOOLe4J2Jqle5ujMgxoZn9zwWV1V109ZCcIT5I2EohQ9Z?=
- =?us-ascii?Q?dyw7DD/X+lJahSuafB2j9BKUxJlgiL//j52v/13dKyKowsFRpkpZlphxx00i?=
- =?us-ascii?Q?zPOPEILkp/c1arHFgZJ7ZS2yBGZkYIKGiRp5q4KgIdtu5R/BGGplQJ4H1uEj?=
- =?us-ascii?Q?z6a6FV2NsTGhMZXMjL0wUXIbYATxS1FyE40RbWu5RgQYEMMOta1UiRuBf36A?=
- =?us-ascii?Q?q7FE/Qe+8ajnsrDrBOpkMBISZN9bTcHyUH615zIT4AlClfNRif6YTUToxMXe?=
- =?us-ascii?Q?8vqIuTBilvsG9QeTmOb8QCAJQ6mfIKOh2vjK12spkjEIw0N0cTd/CN6ITZvP?=
- =?us-ascii?Q?B++3gnFy59zFXSNvuGjZZNwkBjWQ4N24tlDAsw5Zqcju1PLyAnF34h/2O63o?=
- =?us-ascii?Q?4ZCSr01H0wVgI2Grn8wwreS7UzokRy8wHgbdqjMVZxGXROJ/MUHN7qbenryE?=
- =?us-ascii?Q?yoWGM/BnhF+oJWgL51He9QiAYw0Iy24ERwR9M9Ka9oLkAPnlTS+hMW9rof09?=
- =?us-ascii?Q?an/2WJfWoQ7UzWRyRHqAr/PrEC84JJ+aqWo/x+VYFi6if+dfBUmrOn5mM7FD?=
- =?us-ascii?Q?IDhq4NqnAwf3y+UPUG44Ywitky360rX+CTV71lweHsYlSL5SB0CmYfurhiSN?=
- =?us-ascii?Q?AM2szlLbOBjs73/kDa7tuaLhkGBSpTxxHTyNT++dNj8NHoquo5FGAUN9EPed?=
- =?us-ascii?Q?lwLsKRVTSM2KpDZ9v5EKF8i8yE7y6BWpv+FyOtInnyXjFuZDQb0fWIUUwxPy?=
- =?us-ascii?Q?dgJE5XBcNjxwPS9bTl84+ENTU3aW005yteEr0O98SrPM2afAwQ1zOfOXrn60?=
- =?us-ascii?Q?uws2a0VcrmqYssJjW4n0/QcGa8wvqn8c0ctsgbPy7JS+Dsov4LBVRI+ft1tj?=
- =?us-ascii?Q?fZtoLQQED8DJLV1CjgFM6pX8/qhkS4Ahgnt6kwXGg7E/tEwo3kKlkf/W+d2v?=
- =?us-ascii?Q?m5q0gMTilS5OYaMuH1CwRkXluj8vmG+XdFrAlHhFogISYtHOObwioHwXIW5L?=
- =?us-ascii?Q?a+GtIb99LQsupv//m43sqDWnOgK5JlVf/iZrADAvirflSRHdD/kiW0d3L6lp?=
- =?us-ascii?Q?UnJLPMJqrY2PkayvAKXpEGeOGhiSuk2cLusLd0tdGquoN7zcUi87qBOHazmr?=
- =?us-ascii?Q?nuaRbo4yoF5ER6VMvLSMcx4kDsmeLIwz3bP8/pUu9R0DTyEWb8bgPdCS82y8?=
- =?us-ascii?Q?Bdypz1UXxl1KmM6np9QpWNKFfhuaUV/uZoACZ6/2eyloArhUWnEpxo4ndn0W?=
- =?us-ascii?Q?k+MQEM8gWPjRPifXD7KA9dFcwQiegcrbV9t8vHAZDYGWn02mxduNq/7w4JW5?=
- =?us-ascii?Q?06Qq9aFKHn7o/GpE/FMGQcUNnfZ7Bjw1WG85NREjG7tbDlO+RmlcykMrPwly?=
- =?us-ascii?Q?wkP0YlNIy5xZfn0ujMtgNOhPc5v1Hkew7PHDm+9hwxIXc59n4P6u6bTZl8CQ?=
- =?us-ascii?Q?I6rG+HQ8gJTKJH5UZLsUFhBeYh7uFzyOj8yxQ3Uv/f2FGnO1mU5B/XPjMNTb?=
- =?us-ascii?Q?DCNOGWMBwo+qL7JQzsb4fA8FmtRCG6FqmDNXcNuwpJGogeLNKfqiPN6lfzwf?=
- =?us-ascii?Q?ZT3OHDFRGIzsVktPo+++e7dznKG4X2dG8DHKCrtb?=
-X-OriginatorOrg: phytec.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 883acc58-d716-4b72-2e98-08dc95fc23fb
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR22MB4354.namprd22.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2024 16:22:14.9727
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 67bcab1a-5db0-4ee8-86f4-1533d0b4b5c7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iaCUWaKdLJrdSvOOLUh1NSz8T0ApAmlyd4T0q6UH28oGubgZp+z57/9EUPTOiIztsvAXo5fxkIjs0XZZDpYSKw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR22MB5638
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/2] mm/migrate: move NUMA hinting fault folio
+ isolation + checks under PTL
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+ Donet Tom <donettom@linux.ibm.com>
+References: <20240620212935.656243-1-david@redhat.com>
+ <20240620212935.656243-3-david@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240620212935.656243-3-david@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Driver was logging information as errors. Changed dev_err to dev_info
-where appropriate.
+On 20.06.24 23:29, David Hildenbrand wrote:
+> Currently we always take a folio reference even if migration will not
+> even be tried or isolation failed, requiring us to grab+drop an additional
+> reference.
+> 
+> Further, we end up calling folio_likely_mapped_shared() while the folio
+> might have already been unmapped, because after we dropped the PTL, that
+> can easily happen. We want to stop touching mapcounts and friends from
+> such context, and only call folio_likely_mapped_shared() while the folio
+> is still mapped: mapcount information is pretty much stale and unreliable
+> otherwise.
+> 
+> So let's move checks into numamigrate_isolate_folio(), rename that
+> function to migrate_misplaced_folio_prepare(), and call that function
+> from callsites where we call migrate_misplaced_folio(), but still with
+> the PTL held.
+> 
+> We can now stop taking temporary folio references, and really only take
+> a reference if folio isolation succeeded. Doing the
+> folio_likely_mapped_shared() + golio isolation under PT lock is now similar
+> to how we handle MADV_PAGEOUT.
+> 
+> While at it, combine the folio_is_file_lru() checks.
+> 
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
 
-Signed-off-by: Garrett Giordano <ggiordano@phytec.com>
+Donet just reported an issue. I suspect this fixes it -- in any case, this is
+the right thing to do.
+
+ From 0833b9896e98c8d88c521609c811a220d14a2e7e Mon Sep 17 00:00:00 2001
+From: David Hildenbrand <david@redhat.com>
+Date: Wed, 26 Jun 2024 18:14:44 +0200
+Subject: [PATCH] Fixup: mm/migrate: move NUMA hinting fault folio isolation +
+  checks under PTL
+
+Donet reports an issue during NUMA migration we haven't seen previously:
+
+	[   71.422804] list_del corruption, c00c00000061b3c8->next is
+	LIST_POISON1 (5deadbeef0000100)
+	[   71.422839] ------------[ cut here ]------------
+	[   71.422843] kernel BUG at lib/list_debug.c:56!
+	[   71.422850] Oops: Exception in kernel mode, sig: 5 [#1]
+
+We forgot to convert one "return 0;" to return an error instead from
+migrate_misplaced_folio_prepare() in case the target node is nearly
+full.
+
+Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- drivers/remoteproc/ti_k3_dsp_remoteproc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+  mm/migrate.c | 2 +-
+  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/remoteproc/ti_k3_dsp_remoteproc.c b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-index 3555b535b168..57d21f8ae3b7 100644
---- a/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-+++ b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-@@ -327,7 +327,7 @@ static int k3_dsp_rproc_start(struct rproc *rproc)
- 		goto put_mbox;
- 	}
- 
--	dev_err(dev, "booting DSP core using boot addr = 0x%x\n", boot_addr);
-+	dev_info(dev, "booting DSP core using boot addr = 0x%x\n", boot_addr);
- 	ret = ti_sci_proc_set_config(kproc->tsp, boot_addr, 0, 0);
- 	if (ret)
- 		goto put_mbox;
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 8beedbb42a93..9ed43c1eea5e 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -2564,7 +2564,7 @@ int migrate_misplaced_folio_prepare(struct folio *folio,
+  		int z;
+  
+  		if (!(sysctl_numa_balancing_mode & NUMA_BALANCING_MEMORY_TIERING))
+-			return 0;
++			return -EAGAIN;
+  		for (z = pgdat->nr_zones - 1; z >= 0; z--) {
+  			if (managed_zone(pgdat->node_zones + z))
+  				break;
+
+base-commit: 4b17ce353e02b47b00e2fe87b862f09e8b9a47e6
 -- 
-2.25.1
+2.45.2
+
+
+-- 
+Cheers,
+
+David / dhildenb
 
