@@ -1,60 +1,61 @@
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3CF17D8B2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B4117DE02
 	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 10:10:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719396620; cv=none; b=ogwzVZ3FzGrtBn9fJ+NJVdkfSQNP4fkDLXwB7xPGpMm2Am5kC5e3/POGH/u1t6UxUFxnMMPjCTsxdMW86iC0lz7Kc6ZFzqoziTkKPSeKnRD740odAu7Xg2aBimSB/zRljwlygOV7y7n8e+dAAVnBRPBIjvpZxvjFIPY767Zru/o=
+	t=1719396620; cv=none; b=uOLoe1EakE4R/Z7RzRJ256ivImOWAop+NXzP81abRScXeAxrsoht8Lc9POC1fFEgWe84tHwezbzGJWqpEqiyzbf4G6XyZA4pF+obm9yjQE7fuTyXZ6lfpEW75BzFaazXKpu9Jxj5jQ1p4nppeSqFMhkyqTNJ/XKaBpyn/wxMXNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719396620; c=relaxed/simple;
-	bh=lJ28Y3M24JoUrkT0kfRU9mVaVheUptQt841EFO3wEWg=;
+	bh=2G0rLi4cLmhzl8ZJMSFvOy5W9L4JVSO3sWW9FraSLfY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=g6qEvVswgXwgUpcxxLb5qsdNoruuvDq1oQC+A8oxmgnS2hv0FDUA1T8Ek5DyBMQZnJS8m3L+X7ZC/od/XHqEJEJNeNBP+ctMPB+nXbQrSrlm/Env9gjVDA6iASpDtFzUogQBN2Sq3Vqlonay/RbekT762+gAwe+XdVQ6o4scCZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oJnthlNW; arc=none smtp.client-ip=209.85.166.52
+	 In-Reply-To:To:Cc; b=GRaQ0ywWH8cGmMvyN9v7b3JjefmZVoHPPIBJgcbgltaodxy6vXUS7jDDok9/xgZJpXxLX78fPVkPjEkUpPoW2Wx/WLjj1WqFt9K73uxipXKkwrE04sQAtQs4KyKBKV0gibGB1cRx23X3m/k5PBSjm5JdHsUaWvNsMnrnLoodpLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aN2jDpj2; arc=none smtp.client-ip=209.85.166.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oJnthlNW"
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7f3ca6869e8so40158239f.3
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aN2jDpj2"
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-7f3d59ff826so10139f.3
         for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 03:10:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719396618; x=1720001418; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1719396597; x=1720001397; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=59XlO8N85CHKMZTE14dutfLqTOocIO6QaYNJIqLDR0E=;
-        b=oJnthlNWd7xKEZIv5vv9PBCPJpCEjW0QJ8tzOQucNEHZTCq6mD7uXRmfWK6WkhxKEz
-         lJanv1QGLYl8bpYvrz5klqyHTWQ7qgW7IFQm4aZoxEpF8ClPBenv047hnYOxODGfdk0E
-         TY/PDVkNZM7huHvWlhKod3GAsZvUxIcA5E56A4jkJB0DpfXba5DRhu6Fe0yekHT6zw8+
-         hxyr3h1hbUMg+P5Tx5pmVCUDU+9St54UAnUZuqNBHa7kK2aDimIGlbTk6UQaV50UCQKM
-         rc82CRukdsVG6KOryNJcS5nMvGfxicepgKhmRBlm5Tuj/6uEKULCGR9IF95W3NOV+UoA
-         0u6A==
+        bh=LDxj3dPqBsikHw3COW9fzyU/UFgyyuz6MU/96w6Q9SQ=;
+        b=aN2jDpj2931sDPnkhD6vQY/5IWyjlOh2KfS5l08upHv5Wrfv2Rqn2JxM1Vz40+iux/
+         PwFCQngDGVr3UU72O1EEO3J0vZILKqWvocisLjSQ2FDMNt4a5hfG5chVLSkXE5fYudUj
+         TXwFiwSqjycnRdhEXRdMAT2e7JXtaGqLMAtQD9Fsjc9wXD96CqPWWduez6WA0tILIAIv
+         dKWx+IgQilnzXFvjAyD3aP+0/E49ZdcA3hI93YXaaBos+msJB4XsC3B7bm7gc/9Emosj
+         IPWVsVT+6y1VQ8A/DihttcUTDW3jB1ouhYQo8eR565E5iumuCGHCjOvpTUJ0Jqmr0Xwu
+         FicQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719396618; x=1720001418;
+        d=1e100.net; s=20230601; t=1719396597; x=1720001397;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=59XlO8N85CHKMZTE14dutfLqTOocIO6QaYNJIqLDR0E=;
-        b=R8oyscCFzy8S7hu1cu3B7MbEnwyI5pcL5BCvuZuQsxrn4oVLsSERU98CmVerdziYeY
-         euge+oDLpQ5+Kl7aI65bdAib3J6ZDIwef7a78dB1j5cD/eG5yubenkQnJ8GNWFd/nyEs
-         SJ0AfdidA3clE0QlGP9eeI2+JM3OSStoNxDjIyP0muK0Z4shDdi10ux97KpFhIHmnbh6
-         x5cHB9AzHzOPvrBN594QLJjaxiK17fClW/Ja7KaWnckZp/84cccp0x95h6qzN29LrE7F
-         uiMQjD7V9au8UQwYAoByJd9Fxs/UqHwiM4bQYNpmWVIqiukcZuBMw/TLLWZm6nv9VkDY
-         fVgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVPDxxdboLjIdeFsfSHAMLuKaIv9k6Ojq3YyQNrj/E79K+ptQ00v7SZNaChGiR+JelIcE/f/IGbBSlyq40r/o3jXAyoZIlJQCp5BKso
-X-Gm-Message-State: AOJu0YxfO10eF6Cjdn5tqzncxtEyTLk9IgX8sHlIRQLhPvFyBs07F9Pl
-	mneNI8FUNKzuJVwvz75Yr/tTZwn9ambk1ey1fQSx3xy4fHHgJt1hZdhaAmSJs1w=
-X-Google-Smtp-Source: AGHT+IH5jBZh+2gfhC53GuIZJ8jCOVDi3reMK55I7AmQ0e+4wBYPfNvgxYCPjk0H5YJl3LjlcD09vQ==
-X-Received: by 2002:a05:6602:1549:b0:7eb:776f:d970 with SMTP id ca18e2360f4ac-7f3a75d95e8mr1114379739f.14.1719396617514;
-        Wed, 26 Jun 2024 03:10:17 -0700 (PDT)
+        bh=LDxj3dPqBsikHw3COW9fzyU/UFgyyuz6MU/96w6Q9SQ=;
+        b=CfsguMTcmawiQ6QFYUSbQeCFbvaBiQTod19piwsIWDszOl2gJ5fgXEDeesTxrylIL2
+         T1ZUa9rokbmtsWxHiYCCwpvaxsaeQagson/A9U4+B4+fS+JqLvmG+0ERigPGV+ZoL+b1
+         K4GeFRCoNyqP1GBaLnfrsU3AQ4frX4KVW4a7hNUygf3xJyRpbC+5krxM5tX/slVXpYul
+         bqYMVI5xY9H3T98AxLJKdiWBw+72gAoFs17HG1JdPi8ZCUic89aHTi5EBbi/SN0nw/Ld
+         q2fTb+kp/fzHGdTbBY+VxGnaKd1DQ8wLO5aA1KRPKJFpujIwveYG0c/XNAc/MQwW5/sl
+         C2XQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU74viEiUVgCL8gcPHIzhsH52fS1ngNIYlgZy6UWNsqwy3WuEKNm9nYxUmN0IjOBMbkaFHp0tChbvJXOHVxUtGREI6kbixt9zHXThjp
+X-Gm-Message-State: AOJu0YyZmxoZjhkNeQig9hXHJeqTZLuVsNneCEyCrQwjIWIRj7HfE4iQ
+	l3ko1bVrxt+z7t5z2QrqXEb/Z7k5l9FVodQNp0C3zcD+rH0KxVlunkE0spFMTwA=
+X-Google-Smtp-Source: AGHT+IHI1wtegxgP3+6Da94JrIe1ZxojFMEUdsp5T+ZGQfCNxN4Ar0Gf4u6U3yfHQ3/tOnqVb8Y03g==
+X-Received: by 2002:a05:6602:6b10:b0:7f1:3ad1:234e with SMTP id ca18e2360f4ac-7f3a4e62794mr1343333539f.18.1719396596988;
+        Wed, 26 Jun 2024 03:09:56 -0700 (PDT)
 Received: from [127.0.1.1] ([178.197.219.137])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4b9d121859csm3079108173.137.2024.06.26.03.10.11
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4b9d121859csm3079108173.137.2024.06.26.03.09.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 03:10:17 -0700 (PDT)
+        Wed, 26 Jun 2024 03:09:56 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Wed, 26 Jun 2024 12:09:16 +0200
-Subject: [PATCH v3 7/7] dt-bindings: mfd: syscon: Add APM poweroff mailbox
+Date: Wed, 26 Jun 2024 12:09:13 +0200
+Subject: [PATCH v3 4/7] dt-bindings: soc: microchip: sparx5-cpu-syscon:
+ Move to dedicated schema
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240626-dt-bindings-mfd-syscon-split-v3-7-3409903bb99b@linaro.org>
+Message-Id: <20240626-dt-bindings-mfd-syscon-split-v3-4-3409903bb99b@linaro.org>
 References: <20240626-dt-bindings-mfd-syscon-split-v3-0-3409903bb99b@linaro.org>
 In-Reply-To: <20240626-dt-bindings-mfd-syscon-split-v3-0-3409903bb99b@linaro.org>
 To: Orson Zhai <orsonzhai@gmail.com>, 
@@ -84,54 +85,107 @@ Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, devicetree@vger.kernel.org,
  linux-mediatek@lists.infradead.org, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1201;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2802;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=lJ28Y3M24JoUrkT0kfRU9mVaVheUptQt841EFO3wEWg=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBme+jTtrYuM01hjhHqNdEtBumYFIQAj1hCW6QmI
- qkgn/4bVjuJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZnvo0wAKCRDBN2bmhouD
- 13oED/4w11Sz6XcfEYcb7aCh448tvr/mT1uzJWylaAQ7h0adW5pLvYy6V8VNcH50TcOFSNz8pKb
- mP+/8qYde/sPaCx26zuPBwf9DyMvVP20grTsTmieBrx8cBd7TaJxf8ZNnl8XOzIcdrqmhaPU+Pv
- MKiUdtVS6Vnj1c8jAj33lufxbePDWl8Ec2kE6cgwtSAj5f9p6cEgfVqA9LnXMpT3VLwt8hluNJ3
- ji1uiFDP2y0D4g6B6arahRnZw+GbNbx8LnjhOs8MIx5OEHYjifdnUCmLL+vs8BQc8NmXNvFUR9a
- O+HUnsCoVL7GMidD69z8RjZ6whWaLHuAp39caMXOLCrE5lopNm5bW+QPpQA2RjVEPPV4waQvzvu
- pnnLbom9fpB8aHVH7zTTqw6AEKFK/uphsxA+9X9MkHAQrsIKPBlali7VxEMAxImoWa7ysFU3Js0
- AsqI8MYxIjz1O5N8PugktWFU6vpSaRy8BvLkt9xlcux2+ln3EQHLzhBysHYX2vejfxON9tZVp/f
- SRV3pAPTp0rNPsfS0McAkplHYhkuDsiQJpL61gURK6MI7mMJCWFVMz7Kcrvk6/DhOH75asCYxdv
- WV8AqbpzacSECz3Vvdf2gb3rIEabhrJZVkJnCko5Qbl0IGYl0XiqRk/i2h1ubOh86X4ofL9PB9C
- Jy0rzXiiGk3H+HQ==
+ bh=2G0rLi4cLmhzl8ZJMSFvOy5W9L4JVSO3sWW9FraSLfY=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBme+jQVYvtx7mGIQPlwytJrS9d+PkZFNMW+2/a7
+ XEXUUXPRFOJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZnvo0AAKCRDBN2bmhouD
+ 18d7D/9XW67fIBG54/dKruUXgjoUk97WDQY9GDGuvYHIdqvuAjQ9Pc12XOHfTt0vlJ5UphWrM2o
+ NkIedVjvzsEkI8ncuFSfD1GvwypTgtYly9duJ6HOP+RC6QORcaPTlxfdFLEl3g23uio164nY65c
+ vFDduNYvKbF/8WbwckF9aKGnvMq5K5jsIM3Sa8mVJT+L6sP5kLFXJX2xUFP3deBXqGEtYSrvru9
+ NTgJKckLWd+3vpuX+xy3tQ5b4qV/zm49RrmHepjUbPI1eR4+HnB+rWEtXMejx2fNBAAHRYUrEC8
+ OHbzg31wDfLAjOxdE4yiRqG+u46J+ASS+v6Q9Xt8gqYpC/Nxf1T0vLnoIQevZsDD4dvKNoG1F1n
+ bLuXZqhp39cGJKoCUMcUd0pmePatEZK2w88cS1SMgWc1KTnI4lJrPkTPJaiL3zGGAtCeg4a/6AT
+ ea4r98wjcLSWbZVv3agdaF27ioRsvZm1uAjLFGRRbPCI1BxPzPU/V0LXChNWEmPH4K7t7f1xHgZ
+ 3n9qZ0C5+iicCfd3dIFklyFNjvBhIiwb59JJJqUC/0nRjqZB33lAGyKi0AYu3sFH1HhDOHWrZ/4
+ UjfSLHejQZVoc6B8o3LxEQkk9vI2IqfvQSQf5KpUSpRUK99JdVZXpIqaPPW5U9ZBmPSDkGQPtzA
+ U5IRE1lCVUdhxbQ==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Add compatible for an already used syscon poweroff/mailbox block in APM.
+microchip,sparx5-cpu-syscon is not a simple syscon device - it has
+children and implements simple-mfd compatible - thus it should be fully
+documented in its own binding.
 
 Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- Documentation/devicetree/bindings/mfd/syscon.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+
+Context might depend on patch in Lee's MFD tree:
+https://lore.kernel.org/all/171828959006.2643902.8308227314531523435.b4-ty@kernel.org/
+and also further patches here depend on this one.
+---
+ Documentation/devicetree/bindings/mfd/syscon.yaml  |  1 -
+ .../soc/microchip/microchip,sparx5-cpu-syscon.yaml | 49 ++++++++++++++++++++++
+ 2 files changed, 49 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
-index d4e9533cf3fe..70e3a4465b4f 100644
+index b9bf5bc05e92..abd3debe5faf 100644
 --- a/Documentation/devicetree/bindings/mfd/syscon.yaml
 +++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
-@@ -41,6 +41,8 @@ select:
-           - amlogic,meson8b-analog-top
-           - amlogic,meson8-pmu
-           - amlogic,meson8b-pmu
-+          - apm,merlin-poweroff-mailbox
-+          - apm,mustang-poweroff-mailbox
-           - apm,xgene-csw
-           - apm,xgene-efuse
-           - apm,xgene-mcb
-@@ -133,6 +135,8 @@ properties:
-           - amlogic,meson8b-analog-top
-           - amlogic,meson8-pmu
-           - amlogic,meson8b-pmu
-+          - apm,merlin-poweroff-mailbox
-+          - apm,mustang-poweroff-mailbox
-           - apm,xgene-csw
-           - apm,xgene-efuse
-           - apm,xgene-mcb
+@@ -95,7 +95,6 @@ properties:
+               - microchip,lan966x-cpu-syscon
+               - microchip,sam9x60-sfr
+               - microchip,sama7g5-ddr3phy
+-              - microchip,sparx5-cpu-syscon
+               - mscc,ocelot-cpu-syscon
+               - mstar,msc313-pmsleep
+               - nuvoton,ma35d1-sys
+diff --git a/Documentation/devicetree/bindings/soc/microchip/microchip,sparx5-cpu-syscon.yaml b/Documentation/devicetree/bindings/soc/microchip/microchip,sparx5-cpu-syscon.yaml
+new file mode 100644
+index 000000000000..1f0b542d2296
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/microchip/microchip,sparx5-cpu-syscon.yaml
+@@ -0,0 +1,49 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/soc/microchip/microchip,sparx5-cpu-syscon.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Microchip Sparx5 CPU Syscon
++
++maintainers:
++  - Lars Povlsen <lars.povlsen@microchip.com>
++
++properties:
++  compatible:
++    items:
++      - const: microchip,sparx5-cpu-syscon
++      - const: syscon
++      - const: simple-mfd
++
++  reg:
++    maxItems: 1
++
++  mux-controller:
++    $ref: /schemas/mux/reg-mux.yaml#
++
++required:
++  - compatible
++  - reg
++  - mux-controller
++
++additionalProperties: false
++
++examples:
++  - |
++    soc {
++        #address-cells = <2>;
++        #size-cells = <1>;
++
++        syscon@600000000 {
++            compatible = "microchip,sparx5-cpu-syscon", "syscon",
++                         "simple-mfd";
++            reg = <0x6 0x00000000 0xd0>;
++
++            mux: mux-controller {
++                compatible = "mmio-mux";
++                #mux-control-cells = <1>;
++                mux-reg-masks = <0x88 0xf0>;
++            };
++        };
++    };
 
 -- 
 2.43.0
