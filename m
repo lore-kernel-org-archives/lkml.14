@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42081FBB;
-	Wed, 26 Jun 2024 07:36:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 648A31FBB;
+	Wed, 26 Jun 2024 07:37:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719387403; cv=none; b=PXArgNTsyvtcG+vhXtfxdZ/PE+pbe+aqgJ/rfbuk0hVdkHZOmC5mxAZIIqdfRnPxYK/wYDkrz5yGNn/nahCdIPP5vOKPcajd0oopeR45PJAssn5sQYujUfN6Ssqhwqw2AcXIZSqyCkyzabCiUESWMkVcxoE3npMmkDs9+s0m8A0=
+	t=1719387450; cv=none; b=S8vBt177Tej20yzjgi96qwnvYuOAuL+p2d3JkKptgrn8Oa5Yo825xqjRGaaDrmw/kKH0nQ2D/7Dp93Z9p4rD4BpM9zPx3Vgp2NzDnfiM1sfxlrQkgwZI6cjNOJMj177rY0v2kcBhFS5fljT3nnb1e9vrokCoKNvvnsQp2BvDfyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719387403; c=relaxed/simple;
-	bh=BOFd+RDHZhDpVP8QzGCCbA/vWy0qbNyIJACj4mi9gBE=;
+	s=arc-20240116; t=1719387450; c=relaxed/simple;
+	bh=nRSlKVcpayELllH5UVKhFKJKcDAvMvdyHvTbz1LOGLU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gK4IeSmH4srrBF4yEHAwKA7rOQycI7dbPT09PEyX4rENCrn1+YLNsgrijUTXJQrnoRgF+8ZfoWl4Yd3xh/lqgt7n6F9wWNPqRuTgNvFChGQTjxsrHfbLTTA5BAiaUsvy5Ux0ZgpqDCPOzW6TPDzVYajI7aDnx2XAmsAHAcv+Svc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K45oxu5T; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=a3esfDW10J3Os70gTqES3b1VrbhlQY+Yx6xi7j5kCQrGRZ+ZYh9jYHaN/jCe0iXfkqabjQvbxSWLBc/4ZPwnmpmhqekbhSENs4+nHfjXkTtc8K/yDMgaUGfkM8JotW5a5X+xIbe+y6t06B2/i2S9/WR6/JGtqMx4MB0lU4VoTuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aApLDCYU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K45oxu5T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 972FAC2BD10;
-	Wed, 26 Jun 2024 07:36:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aApLDCYU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8B51C2BD10;
+	Wed, 26 Jun 2024 07:37:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719387403;
-	bh=BOFd+RDHZhDpVP8QzGCCbA/vWy0qbNyIJACj4mi9gBE=;
+	s=k20201202; t=1719387449;
+	bh=nRSlKVcpayELllH5UVKhFKJKcDAvMvdyHvTbz1LOGLU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=K45oxu5TKdxzevro5K7XdlOAZkwCoBbP/1+VBIAJED8NgV+TnWDDTKcD7++6rEoWe
-	 zGNBGDyW2qZmNkuot2AvfI7owqbRrPCduzO1pg+zQ8fzsYEdm8qiJ/GgmTiV6MVfag
-	 OFihy922HpgObgkjZeDaV3dUKZL13gDvY2H/mK4RtnFSOlv5ZEjrjA/A3HjOs4TJWO
-	 DPQXJPzyjwvHpqcpAv4ZeYgKBVKHjJZ5ftCGnte9+vPzp2f1BAxFbNlpRvplqP2tXa
-	 JaEA7DdXrLRYDNlFl1k+lfSmFaLz7qUfAepL98sU6tKDBtq6QV4gVxtOpU5FhJLl6W
-	 hqc1NW3Fw6qlw==
-Message-ID: <8dbe4a2d-3d25-460a-8fa1-3511d315a901@kernel.org>
-Date: Wed, 26 Jun 2024 09:36:36 +0200
+	b=aApLDCYUcHF0LOtt35jiJ4sozSrPxRHWtPg7n9ePn2DdqbBUM0vTDdYCI9iRlcPed
+	 i6F1LgrTd2cLmSQYC4UQB33BT2rnB2gWiWmq6x8VIWpAjJJWVgltMTGrfhdSLnnULp
+	 oFbNO0ruteElkkQhG6x+kkCwt2F+X9heTxnCICtpTMBcO6dOq49CD4UVmE42EPd97+
+	 eESn53hbAri2/8JY8pcX/jPbt5JZV9BoGeGbDzM7toY969hk5yN7qwzZdy09Kqo9IW
+	 g8eIA4ecKcZg4bBLKUxDhDiffQZQrXjjxAWu7+x/Lv3P8bnvQWh45Cr4WWa8cU5jSL
+	 Hf4yEXVwFLM8Q==
+Message-ID: <040eb302-df2b-4ad4-a12d-58aad53f5f39@kernel.org>
+Date: Wed, 26 Jun 2024 10:37:23 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,94 +35,49 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: display: simple: Add AUO G104STN01 panel
-To: Paul Gerber <paul.gerber@ew.tq-group.com>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240626044727.2330191-1-paul.gerber@ew.tq-group.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH net-next v2] net: ti: icssg-prueth: Split out common
+ object into module
+To: MD Danish Anwar <danishanwar@ti.com>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Diogo Ivo <diogo.ivo@siemens.com>, Andrew Lunn <andrew@lunn.ch>,
+ Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+ Eric Dumazet <edumazet@google.com>, "David S. Miller" <davem@davemloft.net>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, srk@ti.com,
+ Vignesh Raghavendra <vigneshr@ti.com>, kernel test robot <lkp@intel.com>,
+ Thorsten Leemhuis <linux@leemhuis.info>
+References: <20240606073639.3299252-1-danishanwar@ti.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240626044727.2330191-1-paul.gerber@ew.tq-group.com>
+From: Roger Quadros <rogerq@kernel.org>
+In-Reply-To: <20240606073639.3299252-1-danishanwar@ti.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 26/06/2024 06:36, Paul Gerber wrote:
-> Add AUO G104STN01 10.4" LCD-TFT LVDS panel compatible string.
+
+
+On 06/06/2024 10:36, MD Danish Anwar wrote:
+> icssg_prueth.c and icssg_prueth_sr1.c drivers use multiple common .c
+> files. These common objects are getting added to multiple modules. As a
+> result when both drivers are enabled in .config, below warning is seen.
 > 
-> Signed-off-by: Paul Gerber <paul.gerber@ew.tq-group.com>
+> drivers/net/ethernet/ti/Makefile: icssg/icssg_common.o is added to multiple modules: icssg-prueth icssg-prueth-sr1
+> drivers/net/ethernet/ti/Makefile: icssg/icssg_classifier.o is added to multiple modules: icssg-prueth icssg-prueth-sr1
+> drivers/net/ethernet/ti/Makefile: icssg/icssg_config.o is added to multiple modules: icssg-prueth icssg-prueth-sr1
+> drivers/net/ethernet/ti/Makefile: icssg/icssg_mii_cfg.o is added to multiple modules: icssg-prueth icssg-prueth-sr1
+> drivers/net/ethernet/ti/Makefile: icssg/icssg_stats.o is added to multiple modules: icssg-prueth icssg-prueth-sr1
+> drivers/net/ethernet/ti/Makefile: icssg/icssg_ethtool.o is added to multiple modules: icssg-prueth icssg-prueth-sr1
+> 
+> Fix this by building a new module (icssg.o) for all the common objects.
+> Both the driver can then depend on this common module.
+> 
+> This also fixes below error seen when both drivers are built.
+> ERROR: modpost: "icssg_queue_pop"
+> [drivers/net/ethernet/ti/icssg-prueth-sr1.ko] undefined!
+> ERROR: modpost: "icssg_queue_push"
+> [drivers/net/ethernet/ti/icssg-prueth-sr1.ko] undefined!
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202405182038.ncf1mL7Z-lkp@intel.com/
+> Fixes: 487f7323f39a ("net: ti: icssg-prueth: Add helper functions to configure FDB")
+> Signed-off-by: MD Danish Anwar <danishanwar@ti.com>
 
-
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-
----
-
-<form letter>
-This is an automated instruction, just in case, because many review tags
-are being ignored. If you know the process, you can skip it (please do
-not feel offended by me posting it here - no bad intentions intended).
-If you do not know the process, here is a short explanation:
-
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-versions, under or above your Signed-off-by tag. Tag is "received", when
-provided in a message replied to you on the mailing list. Tools like b4
-can help here. However, there's no need to repost patches *only* to add
-the tags. The upstream maintainer will do that for tags received on the
-version they apply.
-
-https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
-</form letter>
-
-Best regards,
-Krzysztof
-
+Reviewed-by: Roger Quadros <rogerq@kernel.org>
