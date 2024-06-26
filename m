@@ -1,191 +1,122 @@
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931FC13A405
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 04:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF07F4FB
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 04:38:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719376487; cv=none; b=SS+zbuBu8yOUVaQJEAG2jka9saNi7hzDwazIKFXueKfp3VYMIMBGqTZ+ZpEEYV9V+n6CvWhPSSoxg67OX5ZZX/vuxVOEq3QpmWNS5hf54H894dQHXpGNs7lNcvLUt6hHpHGu7/Jn3tPFwmPDkEn3SNUcLzPCLBdhCEkwcL0lpH4=
+	t=1719376715; cv=none; b=psWMrugo/1fy0jtNLG4oqGkp5voxLOgxrjSlrOHdjDLCfAiBnfR61o1R+H5PWqYx02hw6cH+wrBkyScO/YlSf97RZGtzuVsG5Uj25gqVPOlhgtv9Nd/F89mjPo3dyq0Kf9q59kKe6C24vpmZgW/xfP1RvGSpHnVlF5ewyLZvtX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719376487; c=relaxed/simple;
-	bh=M6WBnQVFtvyi2wfyjqjz4MRvXlMKTTXIHg+isqJ9GL8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JiBJjjshWOdGxtBu5t5CNHX3XsOi9gZyDpOTPQL6Sy7oslGDRAJZqhJ0pQdfd+mqxnncN+OvKbVfAeGmC4rpKtoTUcoG4gsP7Sg33xdbkHKh3bUpHIIcE8F0rlf6kobNnFQNK4dl48YoBzUsXW7kHSLURg+3nmp2in9SmEzWLhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yHD5kVbu; arc=none smtp.client-ip=209.85.167.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719376715; c=relaxed/simple;
+	bh=urO9PF41hgll0dRPTGLkmriEDOf5ydq979P37U8+EZQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H4Y3sCgHaVjchSBYxn7KH6sdcQ1wzTMGe7ofsIL2Q224uvCcNF/S0HQLBjSPbzgt3nfKS2N6SnIc4FNRDB2By6Z6UBGY+49/JWIQ1pv8eUAVyFIRtZ1fo/mHK3bZtQC+bRZEh11Sxn4fq5KPtbrT2SqylnEZBgVklWHDuFKJPN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=eZMwmba+; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yHD5kVbu"
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3c9cc681e4fso3324668b6e.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 21:34:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="eZMwmba+"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52cdb0d8107so5821126e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 21:38:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719376484; x=1719981284; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=VG4jlRyCD+JGeMHjtnplqjiPI6rXDpxs/+8GzPHHLGY=;
-        b=yHD5kVbuO2A82L6K6GK+HLCnGsu+Lt24iqX4+uJDybrdF1jnHR5qMtfVguz4jRVLN0
-         R4rFReOdYqvIoBvZ7mRBK8k9TYk5ZjfQCV0p98qMhxG5AQLojTBdVQmulrkbRNimxBFK
-         1mRbVJ0c9eZAjdN3XqhHjbAdExYH2YaryFuZoYsBhPIm21nSURxMJhgFdcMvPdg+4qDr
-         fbzI5S0d5k2ycSczb5D7/xYH/9HHj4Olu0zkRL00M5qK9mTMgj90XlN2Y7IMaX6ATOb2
-         1e1YuA3OxOWpgiNJUOO0SSQq63ugInM5A69VZjHuHMBl3iwExkm2JOdOIZrJfS05CABC
-         AXQw==
+        d=suse.com; s=google; t=1719376711; x=1719981511; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aqcce+viBw5891cRDW3KYK3GO/t8otW+H0eaejzqnZ8=;
+        b=eZMwmba+Li7E9LcVjeWDlSsUa8HGXgXveRdYgpMxxv+xBemiw75vBi8cBXqfd4OHbx
+         CWvVhfDseMdVWGeGnvyxpWVLXDe9D2fz7AbrJuuhDvRr36pp23wlKZOryx9R37UmuPzs
+         AZBH077PBILZXsVj/IOUi0CLkpa0/c1vDr4rIDim4VOxzzUq6q7nkKk2lmbTSlKrWa4v
+         ulSuqMGtFcoQAWUICwwRB8CZLTToxjPR2fw2M2PR0KN97/DH7YjNyZWKNmfCZDzRTM6S
+         2DESFasT2RCFcBpqb8ZUp2kdF6YfjXZ7ZVeLkZuMvkul42PrtoQaBznx+zdwPPi0qu7u
+         HIQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719376484; x=1719981284;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1719376711; x=1719981511;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VG4jlRyCD+JGeMHjtnplqjiPI6rXDpxs/+8GzPHHLGY=;
-        b=A/GaQVvCNvi7Q0lENMBKTq/49uJUZdP2qP/59Ere0guUlLOsjK1B0I/af7+dHuCDYJ
-         w4EQdmPW0+abz1D8vTMNECxoZoQzrK6PRB9orJA1AiWoKuz4eA+c5A+EGPUGfi+knHYi
-         lbZ/u+0+DqpfP7+TB111VfC9ZhwS7Kbn6SfPwq7kEAvHKjuUqwgYLvxbiFBr4vvPyihD
-         WxEdy2RxqAdDuWEKwFR87NPTnlSyhtWlO55M0bnIsagKsxt8TZMotteup0gKBOl26BCb
-         CzYZrPg0HwZHj0WaaLeEBx/R6jlemnW9A0I9jduqcY4VsipjUdFgLAoWJximhHbPVrFI
-         CJUw==
-X-Forwarded-Encrypted: i=1; AJvYcCUnxZU/PO/z28E3BF5CeX4k/og4Q4Of/gF9HubjB9u6y7jzA2U8EfuOyVptuwreDhmZJH1Y1aMU6wNZOq5i1dX44AN3xGmTPWQoy3QC
-X-Gm-Message-State: AOJu0YzQEPHRR63/kCei5KX4mmbbkJKRtfn1ImiEcD38M10LwYf+qA45
-	hMPB1+N+MHYWELeTxPf69VFiT5FfvcUOG6EJ5vHi4m9e68gI0rn7UWfd3VrMzow=
-X-Google-Smtp-Source: AGHT+IF3TEvGQGK56opiow5WQuF34xaU6ta0N1F6/fCI9qz1DpGK6+xYltdN/QIwdgVNxBwrPte07w==
-X-Received: by 2002:a05:6808:d4b:b0:3d5:1a20:e8d9 with SMTP id 5614622812f47-3d5459654c0mr10675896b6e.24.1719376484472;
-        Tue, 25 Jun 2024 21:34:44 -0700 (PDT)
-Received: from localhost ([122.172.82.13])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7068af60b61sm4155236b3a.134.2024.06.25.21.34.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 21:34:43 -0700 (PDT)
-Date: Wed, 26 Jun 2024 10:04:41 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>,
-	"Rafael J . Wysocki" <rafael@kernel.org>, loongarch@lists.linux.dev,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: Re: [PATCH 2/2] cpufreq: Add Loongson-3 CPUFreq driver support
-Message-ID: <20240626043441.tsmvhzw4mmf6xjzj@vireshk-i7>
-References: <20240612064205.2041548-1-chenhuacai@loongson.cn>
- <20240612064205.2041548-3-chenhuacai@loongson.cn>
- <20240625075645.m372bpbe7m2dozil@vireshk-i7>
- <CAAhV-H5wSzhD373L61Mxvu-7ZUSGh9LmC4yBoaHm_5rAxsu-5w@mail.gmail.com>
+        bh=aqcce+viBw5891cRDW3KYK3GO/t8otW+H0eaejzqnZ8=;
+        b=TnoStBpW2J5UYhWKokGVU6W0M6pYjBps0qh77JPEEaLITAX2CVIpXL2wf/f/SEQ7vZ
+         fYB1IBPRs02CINq3e26mU4otictnvzGfplOJ7nowNDAdlzWNgXHk7Y6lXvTRhJDfKFIa
+         rh5O42WPdWOboCgxBoPeI12HqN8WRCAMfy/Fob+5qig0VQcAMsFD6BxR5CUJT5NXOEhU
+         RaV9TsAQ8vMeFnixREJY3Pt8lsKC9C+ZXdC3jv7UdmBl2g5F3pzhmkXCO+/87EataSIL
+         CYdIAs96nzxO6g3CXyM7rsiyzLaAlcKgMFS2RYfr5wxVAaO6UrXBBs7vf8rWn0tfBLGQ
+         t75Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWVV3GMahjXSkaGZCjSWo94hCfgX1DCAfro38GsO3iE30NpS6FaA7NbXAI4Ps7M7llfSG/7YDBwne6nXjgY1PBPQLN3+PDStWb99NGM
+X-Gm-Message-State: AOJu0YzIJwpRrYq+yGGzu0HDLfJN4SW8++EhqjiIlcROV0NyR7+NGgvI
+	ycvMwIeWQF28V4iGMGCRtLnXvizHzavVD3Wd+PiCTTg35fCELprbVZV/aqpXHVH2iKkoBM5WUfS
+	m
+X-Google-Smtp-Source: AGHT+IFmIWttdaTJRAvIH8UrjPds8xvnf85HM29QagGQ7d1YSELkyFRIvS+iI6cQUa86E2mDA3DxXw==
+X-Received: by 2002:a05:6512:3da3:b0:52c:e728:cca1 with SMTP id 2adb3069b0e04-52ce728cd5bmr6009512e87.39.1719376710614;
+        Tue, 25 Jun 2024 21:38:30 -0700 (PDT)
+Received: from ?IPV6:2a10:bac0:b000:7579:7285:c2ff:fedd:7e3a? ([2a10:bac0:b000:7579:7285:c2ff:fedd:7e3a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c8285f5csm9826695e9.25.2024.06.25.21.38.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Jun 2024 21:38:30 -0700 (PDT)
+Message-ID: <0844686c-0108-4267-87e0-a79531dbeaf3@suse.com>
+Date: Wed, 26 Jun 2024 07:38:28 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] x86/paravirt: Disable virt spinlock on bare metal
+To: Chen Yu <yu.c.chen@intel.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Arnd Bergmann <arnd@arndb.de>, virtualization@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+ Chen Yu <yu.chen.surf@gmail.com>, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+ Prem Nath Dey <prem.nath.dey@intel.com>,
+ Xiaoping Zhou <xiaoping.zhou@intel.com>
+References: <20240625125403.187110-1-yu.c.chen@intel.com>
+From: Nikolay Borisov <nik.borisov@suse.com>
+Content-Language: en-US
+In-Reply-To: <20240625125403.187110-1-yu.c.chen@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H5wSzhD373L61Mxvu-7ZUSGh9LmC4yBoaHm_5rAxsu-5w@mail.gmail.com>
 
-On 26-06-24, 11:51, Huacai Chen wrote:
-> On Tue, Jun 25, 2024 at 3:56 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > On 12-06-24, 14:42, Huacai Chen wrote:
-> > > +struct loongson3_freq_data {
-> > > +     unsigned int cur_cpu_freq;
-> >
-> > You never use it. Remove it.
-> Emm, it is used in loongson3_cpufreq_get().
 
-Yeah, you are just filling it there and reading immediately after
-that, which can be done directly too. But you don't use it anywhere
-else.
 
-> > > +static int loongson3_cpufreq_target(struct cpufreq_policy *policy, unsigned int index)
-> > > +{
-> > > +     unsigned int cpu = policy->cpu;
-> > > +     unsigned int package = cpu_data[cpu].package;
-> > > +
-> > > +     if (!cpu_online(cpu))
-> > > +             return -ENODEV;
-> > > +
-> > > +     /* setting the cpu frequency */
-> > > +     mutex_lock(&cpufreq_mutex[package]);
-> >
-> > No locking required here. Core doesn't call them in parallel.
+On 25.06.24 г. 15:54 ч., Chen Yu wrote:
+> The kernel can change spinlock behavior when running as a guest. But
+> this guest-friendly behavior causes performance problems on bare metal.
+> So there's a 'virt_spin_lock_key' static key to switch between the two
+> modes.
+> 
+> The static key is always enabled by default (run in guest mode) and
+> should be disabled for bare metal (and in some guests that want native
+> behavior).
+> 
+> Performance drop is reported when running encode/decode workload and
+> BenchSEE cache sub-workload.
+> Bisect points to commit ce0a1b608bfc ("x86/paravirt: Silence unused
+> native_pv_lock_init() function warning"). When CONFIG_PARAVIRT_SPINLOCKS
+> is disabled the virt_spin_lock_key is incorrectly set to true on bare
+> metal. The qspinlock degenerates to test-and-set spinlock, which
+> decrease the performance on bare metal.
+> 
+> Set the default value of virt_spin_lock_key to false. If booting in a VM,
+> enable this key. Later during the VM initialization, if other
+> high-efficient spinlock is preferred(paravirt-spinlock eg), the
+> virt_spin_lock_key is disabled accordingly. The relation is described as
+> below:
+> 
+> X86_FEATURE_HYPERVISOR         Y    Y    Y     N
+> CONFIG_PARAVIRT_SPINLOCKS      Y    Y    N     Y/N
+> PV spinlock                    Y    N    N     Y/N
+> 
+> virt_spin_lock_key             N    N    Y     N
+> 
+> Fixes: ce0a1b608bfc ("x86/paravirt: Silence unused native_pv_lock_init() function warning")
+> Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
+> Suggested-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> Suggested-by: Nikolay Borisov <nik.borisov@suse.com>
+> Reported-by: Prem Nath Dey <prem.nath.dey@intel.com>
+> Reported-by: Xiaoping Zhou <xiaoping.zhou@intel.com>
+> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
 
-s/Core/CPUFreq core/
-
-> I'm a bit confused, I think different cores may call .target() in
-> parallel.
-
-Not for same policy, but for different yes.
-
-> Cores in the same package share the same
-> LOONGARCH_IOCSR_SMCMBX register, so I think the lock is required.
-
-If that is the access you are protecting, then you better move the
-lock to do_service_request() instead, which gets called from other
-places too.
-
-What exactly is a package here though ? A group of CPUs doing DVFS
-together ? Governed by the same policy structure ? In that case, you
-don't need a lock as the cpufreq core guarantees to not call multiple
-target_index() routines in parallel for the same policy.
-
-> > > +     msg.id          = cpu;
-> > > +     msg.cmd         = CMD_GET_FREQ_LEVEL_NUM;
-> > > +     msg.extra       = 0;
-> > > +     msg.complete    = 0;
-> > > +     ret = do_service_request(&msg);
-> > > +     if (ret < 0)
-> > > +             return ret;
-> > > +     max_level = msg.val;
-> > > +
-> >
-> >
-> > > +     msg.id          = cpu;
-> > > +     msg.cmd         = CMD_GET_FREQ_BOOST_LEVEL;
-> > > +     msg.extra       = 0;
-> > > +     msg.complete    = 0;
-> > > +     ret = do_service_request(&msg);
-> > > +     if (ret < 0)
-> > > +             return ret;
-> > > +     boost_level = msg.val;
-> >
-> > This stuff is repeated a lot, maybe create a generic function for this
-> > ?
-> Do you means move the msg filling into do_service_request()?
-
-Yeah, the filling of the msg structure, the call to
-do_service_request() and returning msg.val.
-
-> > > +static int __init cpufreq_init(void)
-> > > +{
-> > > +     int i, ret;
-> > > +
-> > > +     ret = platform_driver_register(&loongson3_platform_driver);
-> > > +     if (ret)
-> > > +             return ret;
-> >
-> > What is the use of this platform driver ? I thought the whole purpose
-> > of the platform device/driver in your case was to probe this driver.
-> > In that case cpufreq_init() should only be doing above and not the
-> > below part. The rest should be handled in the probe() function of the
-> > driver.
-> This driver file is now a very basic version, in future it will be a
-> little like intel_pstate that has more than one cpufreq_drivers
-> (active/passive, hwp/nohwp, etc.), so it will register different
-> cpufreq_drivers depends on the result of configure_cpufreq_info().
-
-At this moment we can only review the current version on its merit.
-For the current version, the way things are done is simply wrong. We
-can review later once you have more things to add to this. So simplify
-it to the best of our understanding for now and make as many changes
-later as you need.
-
-> > > +     ret = cpufreq_register_driver(&loongson3_cpufreq_driver);
-> > > +     if (ret)
-> > > +             goto err;
-> > > +
-> > > +     pr_info("cpufreq: Loongson-3 CPU frequency driver.\n");
-> >
-> > Make this pr_debug if you want.. There is not much use of this for the
-> > user.
-> Emm, I just want to see a line in dmesg.
-
-Yeah, a debug message is what you need then. We don't want to print
-too much unnecessarily on the console, unless there is an error.
-
--- 
-viresh
+Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
