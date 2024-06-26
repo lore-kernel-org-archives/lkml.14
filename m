@@ -1,138 +1,100 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC89A31;
-	Wed, 26 Jun 2024 04:51:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B296113A88A
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 04:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719377492; cv=none; b=geATMmeM23/aygCyz9I8ontap84utaWwWt4vtiLWNR0XnZO7XwKvKFBJHTjNK/DUygHcYSfyvupTI27BK3FOGd4wEPSyPzadqwAO4CQXzoqfETnvXMHQ2iY+1WLHF8dZbRuGhTS8Km18DOEhE+t931maLiLaXqrB5zNGHGu13Mg=
+	t=1719377531; cv=none; b=PAWyaa2ocpxeOtoQAzbg6SLUnz4UiMz3o80xDK2zjEU1Amgf4wcdlLS2AP6B9Wxc6SQMDD0jFhKWJLu+xfzCXujbU0w2mDvJarc0suPx0vI98i48dNrb46T9082YmzY3ZOGksDPXacgFeb/YsxkL1nmQZlJi102+r+yMULy3wds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719377492; c=relaxed/simple;
-	bh=Zh3rJyajdE7v5l10STmndy5NoWirRdPuNluCDCkraDE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hkHSJ2VsBsc8/2zWc8bz5osNtPqr+0i2doI/IfLwenbVw+auoehLfiQTaII/2zGwuykqBU/CZEArpLT/D5jFI/sN4tkFt4rqD1bmF04LLYRzgJTReicnCKmzf9FvnPiZhJtaXc9jJ5UiS6wuCmJAzvExfX5mj51MgkBl1elmNKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=K60Nj6PU; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=HATLGglR reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1719377531; c=relaxed/simple;
+	bh=YWCP4XS9NCMeFl42NORBvKgAR97zTeSKqwDJJ42RPHY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kdXMv9XFmjGbMFzzoC3+AKvQHoS4Wq68GKZzWM/ykSDReWFoii4n4PB2SyKejzr+HF6KXERYnFSXvv+Wo+EISx3UWuzLcIvHS/YCrSfHFP0zvqGlL4xT876h8ELKISrgOVnTlAvYsEnt2tCtFoPN80bCWmowTma+BVNKGotOqu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=q/czBRDL; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="K60Nj6PU";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="HATLGglR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q/czBRDL"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52cecba8d11so1901987e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 21:52:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1719377489; x=1750913489;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=vG2Rc4xkGFImIioZv6ZRCJMBuYbFRtMECaHSkdBskOE=;
-  b=K60Nj6PU65/sCs/OWIl7tvec+DHjPEXSHsz7+C5fFMcZph+wlvpGCPYC
-   Ls2Mh7CRuYujLN6u2ZKnSjs+625gtb2l7QqZ7Xd5G2vBDr09fmA3U6/d1
-   lNAXb5JQY0T+grs3hkebikV5LpyjnNYNA33OPDsUH6HhLHeCe3uf2CICu
-   6FhzfWw2DqKIVh0Q87FmG+AvkTG0jmCvsrZ+AgqlqrnPW0D+RuehjO/3Q
-   G8UmJrYSbnGjwX6voMfi3giSs8JvRV9Lafq9lIGiG1fvf5Lb2WQsAAQaT
-   K7ZpMGmKkmdFW2wKUzkNLROdGVOZpqSBP3iJD+WnEP+eZdxv0K85YJIhA
-   A==;
-X-CSE-ConnectionGUID: 7E+dOCUBTiS18j49G/35uQ==
-X-CSE-MsgGUID: xt2H0tgQQHiCJZdsUyj98A==
-X-IronPort-AV: E=Sophos;i="6.08,265,1712613600"; 
-   d="scan'208";a="37587119"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 26 Jun 2024 06:51:27 +0200
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id CB1781639F7;
-	Wed, 26 Jun 2024 06:51:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1719377483; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=vG2Rc4xkGFImIioZv6ZRCJMBuYbFRtMECaHSkdBskOE=;
-	b=HATLGglRbaAsM8WFN40WYfLHukhc5KL6OXmy7n5yO/quND9gKiD3nT55P51mvfqCzh4YrT
-	6vHnPBQWKI3ZZAAbpus8PK+oPjCVTe/QlWvjWPUHCzGkZ49fafNCHN+KfTxzrSJzUpkuVF
-	I1exw/VWEU++748D202jtaqKy7alrmLojhHwCdGhrlsI0DYwAyFit2RnIpClo67X/2dQTf
-	goAXwAcDdNKreA4aBRehAauezj9W9Oh6qersDCL8ODyzLupLsbRMKYXLxmEew42W26DcoY
-	t1RqAXJXUo+yhirXnS/TTPN+eDBJyc/0elrQvO9nZzTkNCW5R3V4CXdSsO2/Vg==
-From: Paul Gerber <paul.gerber@ew.tq-group.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>
-Cc: Paul Gerber <paul.gerber@ew.tq-group.com>,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] drm/panel: simple: Add AUO G104STN01 panel entry
-Date: Wed, 26 Jun 2024 06:36:29 +0200
-Message-ID: <20240626044727.2330191-3-paul.gerber@ew.tq-group.com>
-X-Mailer: git-send-email 2.44.1
-In-Reply-To: <20240626044727.2330191-1-paul.gerber@ew.tq-group.com>
-References: <20240626044727.2330191-1-paul.gerber@ew.tq-group.com>
+        d=linaro.org; s=google; t=1719377528; x=1719982328; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lc/ad8AuMtJ2+wNqYmI1VVXdrc0waVEdjHmQ67idPjs=;
+        b=q/czBRDLs5jw/8xT8lBWuNpfHypa12ZNozSfjkcI+QTafxcFsOpOL96ib+f41q2DCB
+         xFjTeqOqnsHvTOrAp3/PYvuLbqWnYREtesbHwTkYelHB5ExGsD4j2gZsvbydpGb2foFA
+         aG/VBac1asieM5Qmu8z+i7u7nZ6WHIl0hBRtDqzurC6n+mbx1QDzveEjtmb+Z1KPiaVB
+         Xha00pj93f5hZyB1O63fLaTFncLUqN5dND5ISEdEqtfd1AELeIm2qr0lwjzH5d7AM3ZV
+         BBBjSRBQTR9gnsDORNGpePk9O/hDxvWLyLyK9jHX6qB26aR/92zmsq44PJFzwf00A0Ti
+         YIgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719377528; x=1719982328;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lc/ad8AuMtJ2+wNqYmI1VVXdrc0waVEdjHmQ67idPjs=;
+        b=etcq72yBcYcsZ4U0ecyXL2vEbWqzZu1wOtNrGJHqEuGuApSL8FGhiO+BMaSCA7ewMp
+         0QjjYKBagxWVoSpqW3HG6+xWHN87LkVobuvwO1VPxLfvN6oGPTRHxj4vtWM0YGOi0eEg
+         4CYTKfuuH3A8Wxh0gOGHOgIQ/apSDG6aYcu9Hp1DFdLHivp0FOL7nf3l0BfY3ywAH+Q0
+         xLgeWzKXz5YuyuHHdumKj/kjOymvHQ3S7fo1FaqnyylBYJi40DfCHvKJsfM2wcd4Xmma
+         4RFkwVSxyqNytX4Ph3WSXQjB3ZNvijd2Sp5O2U2A3z7CLX/IyXeUJ+iBuGLet8JgXgx1
+         XPPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUBpQMHYqVRwVyRw/P3qb12zvYyf+1y5YNItDTXuXch5mwtfq684Pekhe7ULSJj8AXCgdcA8lO3pB/LhYlwB6gwD4hmvoF/UiNLjSkl
+X-Gm-Message-State: AOJu0YwlPJCRtb8ECAVdTVFNvz2j/9Z7fTnlP4Rz6vTv1PaOAmZt+FmY
+	CHc6lc+lxRKLsla3qfOQWAhae180nVN4m+CVPFs2MEXU47B95LBhQugGvW7zP6g=
+X-Google-Smtp-Source: AGHT+IFZ09iILP6kHgbKBpqNhbwz7AeISIrZ1LRcAxMhjyJ00DcvGAljOBBjtcKB7z+S0JfJ25G87Q==
+X-Received: by 2002:ac2:544f:0:b0:52c:d626:77aa with SMTP id 2adb3069b0e04-52ce18644a1mr5111412e87.58.1719377527612;
+        Tue, 25 Jun 2024 21:52:07 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52cd810d633sm1394422e87.165.2024.06.25.21.52.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jun 2024 21:52:07 -0700 (PDT)
+Date: Wed, 26 Jun 2024 07:52:05 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Banajit Goswami <bgoswami@quicinc.com>, 
+	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, 
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 1/2] ASoC: codecs: lpass-macro: Gracefully handle unknown
+ version
+Message-ID: <6b4rnvhqnqf2w6kbafceaclri2gq7x7lttusllqswy4nkxzqg7@bqtmns4m3ghs>
+References: <20240625165736.722106-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240625165736.722106-1-krzysztof.kozlowski@linaro.org>
 
-Add support for the AUO G104STN01 10.4" (800x600) LCD-TFT panel.
+On Tue, Jun 25, 2024 at 06:57:35PM GMT, Krzysztof Kozlowski wrote:
+> Qualcomm LPASS macro codec driver parses registers in order to
+> detect version of the codec.  It recognizes codecs v2.0 - v2.8, however
+> we know that there are earlier versions and 'enum lpass_codec_version'
+> has also v1.0, v1.1 and v1.2.  If by any chance we run on unrecognized
+> version, driver will use random value from the stack as the codec
+> version.
+> 
+> Fix it by mapping such cases to an enum of value 0:
+> LPASS_CODEC_VERSION_UNKNOWN.
+> 
+> Fixes: 378918d59181 ("ASoC: codecs: lpass-macro: add helpers to get codec version")
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  sound/soc/codecs/lpass-macro-common.h | 3 ++-
+>  sound/soc/codecs/lpass-va-macro.c     | 3 ++-
+>  2 files changed, 4 insertions(+), 2 deletions(-)
+> 
 
-Signed-off-by: Paul Gerber <paul.gerber@ew.tq-group.com>
----
-Tested on TQ MBa8MPxL with TQMa8MPxL.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
- drivers/gpu/drm/panel/panel-simple.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index dcb6d0b6ced0..5eacd2085a53 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1081,6 +1081,30 @@ static const struct panel_desc auo_g104sn02 = {
- 	.connector_type = DRM_MODE_CONNECTOR_LVDS,
- };
- 
-+static const struct drm_display_mode auo_g104stn01_mode = {
-+	.clock = 40000,
-+	.hdisplay = 800,
-+	.hsync_start = 800 + 40,
-+	.hsync_end = 800 + 40 + 88,
-+	.htotal = 800 + 40 + 88 + 128,
-+	.vdisplay = 600,
-+	.vsync_start = 600 + 1,
-+	.vsync_end = 600 + 1 + 23,
-+	.vtotal = 600 + 1 + 23 + 4,
-+};
-+
-+static const struct panel_desc auo_g104stn01 = {
-+	.modes = &auo_g104stn01_mode,
-+	.num_modes = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 211,
-+		.height = 158,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
-+	.connector_type = DRM_MODE_CONNECTOR_LVDS,
-+};
-+
- static const struct display_timing auo_g121ean01_timing = {
- 	.pixelclock = { 60000000, 74400000, 90000000 },
- 	.hactive = { 1280, 1280, 1280 },
-@@ -4434,6 +4458,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "auo,g104sn02",
- 		.data = &auo_g104sn02,
-+	}, {
-+		.compatible = "auo,g104stn01",
-+		.data = &auo_g104stn01,
- 	}, {
- 		.compatible = "auo,g121ean01",
- 		.data = &auo_g121ean01,
 -- 
-2.44.1
-
+With best wishes
+Dmitry
