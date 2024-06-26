@@ -1,291 +1,350 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2073.outbound.protection.outlook.com [40.107.101.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034C618EFCC;
-	Wed, 26 Jun 2024 16:05:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719417951; cv=fail; b=HzepSE/bqAUYWgPrXcoVCkVPvMrOgQagDF8ZL8qySY1Sd2UjZb+m40gV3zXIqvQBILIe4OQyn3pGqQWNYoWo+pWunu4ujGmR1LMpmYUZAr/lF4aquJtsX4usvgxjhL+FcVzornX6VCvUU0UZRoOmCYnpma9Rylw7DmC9ZttH18U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719417951; c=relaxed/simple;
-	bh=AXu54D/7jELgZgHjOi61LLDAgmkQxRAZClCSabRf2Qk=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pyWy0IC90zfyXpF9HotclA11Bu7kxsQ+jmfC35wbik9WALBNPcFjXZIMFlY5neacotADY16rA3Co+FHcflX/QnC867+gT35bjfUp1f2jnlrnw4wPiMA+ARjdnjoCYX7G0zZCI6oM0EAFFWDqpDCqD7Uv16rozCl4VhEB2NPKRBw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jPxUpbne; arc=fail smtp.client-ip=40.107.101.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF160191487;
+	Wed, 26 Jun 2024 16:05:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719417958; cv=none; b=Mi6Q6zxeCOXPB51e6meKMI1Gskg+4rOS4ce2Wgoi/63oISJ7J13UFxms2yxdNHFdBQtZeGkq9GD9k8ai+Gs5rSCyC2UrwWKKR1IYyb+sUTIB5FcLVwGSPraS9h/LQfAkkrO7O62S9VQ+3PpZXlPaTqGmW2bT0UJQ772v91SZYzs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719417958; c=relaxed/simple;
+	bh=7quorED8PVoS/4PYoO0gWoSJS/dOdm1F1zXj93sTyYY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aOHn8a8DxiEWRrWbuwFI5VvU4Kim4mHoWZx2s5AfPURndYr0GSwXZdxX1lOgp9/60BOr53Mm6NF4dREFOW2ENNgN4kgM5EzHfVExffahzF/3DlAgucymJgZ1cSOYMDQbo49J3ZHCPvxM1hd1UaW10qwMNhQ7zjI9ZyLDuxLHflk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uzlddmox; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0uts6qXk; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uzlddmox; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0uts6qXk; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jPxUpbne"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V1Gmdm2y1TnJYH0Bf+KOn/l0bAPtMkvjuBc9WCHXNcNJHhFuB7Qn+4MeLnRFWS1+7uBuUpuIOxeOTO1138kOOCqFHZLuQZkuN4arwGtpa8q5aunuPF1U3V6N+wUJ4yNY3r4LyyTKNO/TMwe6ESw+9kk6vgljIuqteS6D3U5iSYsyFP+H2oWsfek8I4rZTaZ/G92TLuYv/XL/DFZIkaERHb7KLLkhAvQxLri/I94cYPOMI81nnfkchpVaIEukRfI1ws4EfCk28befsahwtzoLeBSthtukWTJ721oq8TwhTqJNHuDCkmiQRSoI7RxmWdwxuQB1zkarv6OIaQJiTrn58g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=b9P0ypJwcNpn/YgqlAdOGUPPzj65wPYbQ+XAKrvOGT0=;
- b=l8/Pg4AgmBG6ZGgu8qV/FKXtrY7/8T9nTGLwEguBrg5szzA0eGp75RxEU95yFFw1PJPLZPGZtfEAL8SNWsmcY+f7FgsKQsSTBa9SEAhFgfUriG+1vVLD/Qdf8xK9TXIk8emYATjCKHj0IpH30wkp40MrVuwBYgaHQmKNmCGshq6z0yB2LzNa7HPekd5g3vPjf+oaH6SLFk9XJoRFFEWp9qLea23+o2eFxKcYoMgMO26ESANZQFuH+g3I1Z5aLmq3p69cwAyzfO+v0y4rgRXu1Fu0qEU+gwq0lb8ol4sSlYZGm+qw1GznsWiYCYHg4fUVGG4prwjDB2h08RwiL14f3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b9P0ypJwcNpn/YgqlAdOGUPPzj65wPYbQ+XAKrvOGT0=;
- b=jPxUpbnej7mGduuUUmjHiM8KYMdAT04g5HOw4RfuvscleItpiLA8agsm7C442AlNH000UQnQ3GeqbwBhs2/oZda+UhX0YMG2kAjQe91B93zEvS5lmAlCdu9F6T5nudXOOumxdY5LWyXOCFC1mrPkFC9tyQ5sZzUZfdAKlCfPDyI=
-Received: from PH8PR20CA0024.namprd20.prod.outlook.com (2603:10b6:510:23c::19)
- by MN0PR12MB5835.namprd12.prod.outlook.com (2603:10b6:208:37a::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.30; Wed, 26 Jun
- 2024 16:05:42 +0000
-Received: from SJ1PEPF0000231B.namprd03.prod.outlook.com
- (2603:10b6:510:23c:cafe::91) by PH8PR20CA0024.outlook.office365.com
- (2603:10b6:510:23c::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.24 via Frontend
- Transport; Wed, 26 Jun 2024 16:05:40 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF0000231B.mail.protection.outlook.com (10.167.242.232) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7677.15 via Frontend Transport; Wed, 26 Jun 2024 16:05:39 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Jun
- 2024 11:05:38 -0500
-Date: Wed, 26 Jun 2024 10:45:31 -0500
-From: Michael Roth <michael.roth@amd.com>
-To: Sean Christopherson <seanjc@google.com>
-CC: <kvm@vger.kernel.org>, <linux-coco@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, <x86@kernel.org>, <pbonzini@redhat.com>,
-	<jroedel@suse.de>, <thomas.lendacky@amd.com>, <pgonda@google.com>,
-	<ashish.kalra@amd.com>, <bp@alien8.de>, <pankaj.gupta@amd.com>,
-	<liam.merwick@oracle.com>, Brijesh Singh <brijesh.singh@amd.com>, "Alexey
- Kardashevskiy" <aik@amd.com>
-Subject: Re: [PATCH v1 1/5] KVM: SEV: Provide support for SNP_GUEST_REQUEST
- NAE event
-Message-ID: <6sczq2nmoefcociyffssdtoav2zjtuenzmhybgdtqyyvk5zps6@nnkw2u74j7pu>
-References: <20240621134041.3170480-1-michael.roth@amd.com>
- <20240621134041.3170480-2-michael.roth@amd.com>
- <ZnwecZ5SZ8MrTRRT@google.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uzlddmox";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0uts6qXk";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uzlddmox";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0uts6qXk"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B5B001FB5B;
+	Wed, 26 Jun 2024 16:05:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1719417951; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=eShvz6cx1RJVkeFTzcDVwhKLDscOaGkFuNY6Wh/kUAA=;
+	b=uzlddmoxHCTGGSRZV8kVVRLG2uM5SGNKgYIO5ymvoXz29eBdRiVoyjVF906kxsn/aKRmGR
+	HxcqIhK4OvkXRUSvixo7HbusIWji5fPg9uLxmkU4bvT/KTHsEe3U5j4BsAMo6Mj73Y2E0H
+	x7NQYcpp90wilqwnWONI9zJ2Xqqn/aY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1719417951;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=eShvz6cx1RJVkeFTzcDVwhKLDscOaGkFuNY6Wh/kUAA=;
+	b=0uts6qXkiFf83pqLpoBwRzyH7LXU7g6ePp3QBbmRVvcbjHZUhraMhCqvz6P0xZVqjZR36/
+	rlaurJGefeGYywCQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=uzlddmox;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=0uts6qXk
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1719417951; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=eShvz6cx1RJVkeFTzcDVwhKLDscOaGkFuNY6Wh/kUAA=;
+	b=uzlddmoxHCTGGSRZV8kVVRLG2uM5SGNKgYIO5ymvoXz29eBdRiVoyjVF906kxsn/aKRmGR
+	HxcqIhK4OvkXRUSvixo7HbusIWji5fPg9uLxmkU4bvT/KTHsEe3U5j4BsAMo6Mj73Y2E0H
+	x7NQYcpp90wilqwnWONI9zJ2Xqqn/aY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1719417951;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=eShvz6cx1RJVkeFTzcDVwhKLDscOaGkFuNY6Wh/kUAA=;
+	b=0uts6qXkiFf83pqLpoBwRzyH7LXU7g6ePp3QBbmRVvcbjHZUhraMhCqvz6P0xZVqjZR36/
+	rlaurJGefeGYywCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 23B5813AAD;
+	Wed, 26 Jun 2024 16:05:51 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id OLJqB188fGabdQAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 26 Jun 2024 16:05:51 +0000
+Message-ID: <ef535c21-4242-436c-900a-9b9a2b8cf8db@suse.de>
+Date: Wed, 26 Jun 2024 18:05:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ZnwecZ5SZ8MrTRRT@google.com>
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF0000231B:EE_|MN0PR12MB5835:EE_
-X-MS-Office365-Filtering-Correlation-Id: 724cb405-bf59-401c-2b42-08dc95f9d31f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230038|36860700011|376012|7416012|1800799022|82310400024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?8kZJsQddM7zs1YUEj8UMMOlPqfmoXxAux1xsRdW7Y8RBGH0454UxcMEeA+Wp?=
- =?us-ascii?Q?mSwLxgljwNIU+Dqbraqer6PXqyM7JuOJp/xJrEhQ1gJ550N80fSAEiiaEJU2?=
- =?us-ascii?Q?7Qt2kTGOpZMWuFiGTLuFD0iivjj+YwQF5RkcSeIbF9nHGeH4BI9i/j/5VhnT?=
- =?us-ascii?Q?IMSUFBDAg6Gas6F3mLxr4bFnjSixrwSV7teFgkEu55MbLH8OlnkYi/+W/2FO?=
- =?us-ascii?Q?fipAel1/l1yxhskOJj/MjbS0KLlmo1NtYm1C1OXOdakSF1O4ZukopqziRmH/?=
- =?us-ascii?Q?xBQ1dcOYHsU8kiHUfUXc49JnI7b8ZnQOMsJuSzP91Ht7BjVAX2A9uUTPj7O1?=
- =?us-ascii?Q?0Z8rZ79Rv+v8LV17PQzRw7cDuOrEzjKcSIaloQ6VF/sO2Y2snJAHIq9eLyIo?=
- =?us-ascii?Q?ZKCzbspXimcdTHpOsTqZKrd9F33utbKCPdy3HC0A5PQEcc4IZW4zd44Q05K6?=
- =?us-ascii?Q?cj1mWAsFIPqMVE7RYf4dEKB5PwC8wDALsPiPN5LCP4U9rL3217Fi6wkw0Bzu?=
- =?us-ascii?Q?eAyNZbJMVa1foeHlfBzxVbrkdWSRbQ6X/3HfseOO+EvuK4+Dv59iWYm6lWVI?=
- =?us-ascii?Q?HLDM8MZaI8AGx9jwdV7eHI4SdxwIbFhHTHid91QniulM5l+HD6C9WHF0qqtd?=
- =?us-ascii?Q?Rvu+ix2s8AiWUApoKqKI2ip1uvfpOP9G1XK3AnxaGGf5KlVgu+RLS4dlNS5W?=
- =?us-ascii?Q?sJUaFrTb3+f/yg/OxXCmzOmBppUE3X6lAgs7Vh8kcbtYyludysBtEWaigdMx?=
- =?us-ascii?Q?K8TfM8E7lgvr68EgXRgrL7lzRmRSyOi7SUtouUSJ7C+4iB1N/N1qMTHQ6El2?=
- =?us-ascii?Q?y7m6nQusRo7vVDVXdoWa8YOBb3VSTKgegcMiU+T6vzX3wHKtBeLopJc8u32I?=
- =?us-ascii?Q?1elbHQJy2T3q34t2cUgXb1MCkuGvOffFoN335F7z2qnxu1Vm0CgH4JpyeaYK?=
- =?us-ascii?Q?N9RlL7BWKH55oWvwhiyQyjCGf2VhsFYW62sA51uI/SWCc+XGCbIlMukhECQz?=
- =?us-ascii?Q?eAugdY3nNlrNdonh1O8Q5ULJSjqO6vybbVWBfOs8quzV36sMpVgQgZ5Tc61U?=
- =?us-ascii?Q?9KVNBJXpmO6l924paLpfCT6XBM/j+jsH7lSoAwW8EimUaLsGwbjc+0z/2I4n?=
- =?us-ascii?Q?Oa5WFKtsdpFAzsrDg5vJmeXRGIKQF7q12+AP9bcfNZoxzF80N/VItFjPJLX4?=
- =?us-ascii?Q?QCe7WIbxO/Ch3psaLJvZJyBbe/yBS4D9P9uqAPxVZWodeSZThgXGtrpzcora?=
- =?us-ascii?Q?/MABli52L10SWPsesvSeuEqFKmOQcxOXEG6V0xFN6Kdq5auWHYuQxkLnf54l?=
- =?us-ascii?Q?jUPGiuw6kxnDydTXtpnBzdTvSqqxw1kY8eVPS8X5SRc9JPtOlJbEDM3Lm/qy?=
- =?us-ascii?Q?+NqnY4g=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230038)(36860700011)(376012)(7416012)(1800799022)(82310400024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2024 16:05:39.9792
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 724cb405-bf59-401c-2b42-08dc95f9d31f
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF0000231B.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5835
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] drm/display: split DSC helpers from DP helpers
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Jani Nikula
+ <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, Rob Clark <robdclark@gmail.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>
+Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org
+References: <20240623-panel-sw43408-fix-v5-1-5401ab61e738@linaro.org>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20240623-panel-sw43408-fix-v5-1-5401ab61e738@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-4.50 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	MX_GOOD(-0.01)[];
+	FREEMAIL_TO(0.00)[linaro.org,amd.com,gmail.com,ffwll.ch,linux.intel.com,kernel.org,intel.com,ursulin.net,quicinc.com,poorly.run,somainline.org];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: B5B001FB5B
+X-Spam-Flag: NO
+X-Spam-Score: -4.50
+X-Spam-Level: 
 
-On Wed, Jun 26, 2024 at 06:58:09AM -0700, Sean Christopherson wrote:
-> On Fri, Jun 21, 2024, Michael Roth wrote:
-> > @@ -3939,6 +3944,67 @@ static int sev_snp_ap_creation(struct vcpu_svm *svm)
-> >  	return ret;
-> >  }
-> >  
-> > +static int snp_handle_guest_req(struct vcpu_svm *svm, gpa_t req_gpa, gpa_t resp_gpa)
-> > +{
-> > +	struct sev_data_snp_guest_request data = {0};
-> > +	struct kvm *kvm = svm->vcpu.kvm;
-> > +	kvm_pfn_t req_pfn, resp_pfn;
-> > +	sev_ret_code fw_err = 0;
-> > +	int ret;
-> > +
-> > +	if (!sev_snp_guest(kvm) || !PAGE_ALIGNED(req_gpa) || !PAGE_ALIGNED(resp_gpa))
-> > +		return -EINVAL;
-> > +
-> > +	req_pfn = gfn_to_pfn(kvm, gpa_to_gfn(req_gpa));
-> 
-> This is going to sound odd, but I think we should use gfn_to_page(), i.e. require
-> that the page be a refcounted page so that it can be pinned.  Long story short,
-> one of my learnings from the whole non-refcounted pages saga is that doing DMA
-> to unpinned pages outside of mmu_lock is wildly unsafe, and for all intents and
-> purposes the ASP is a device doing DMA.  I'm also pretty sure KVM should actually
-> *pin* pages, as in FOLL_PIN, but I'm ok tackling that later.
-> 
-> For now, using gfn_to_pages() would avoid creating ABI (DMA to VM_PFNMAP and/or
-> VM_MIXEDMAP memory) that KVM probably doesn't want to support in the long term.
+Hi
 
-That seems reasonable. Will switch this to gfn_to_page().
+Am 23.06.24 um 00:44 schrieb Dmitry Baryshkov:
+> Currently the DRM DSC functions are selected by the
+> DRM_DISPLAY_DP_HELPER Kconfig symbol. This is not optimal, since the DSI
+> code (both panel and host drivers) end up selecting the seemingly
+> irrelevant DP helpers. Split the DSC code to be guarded by the separate
+> DRM_DISPLAY_DSC_HELPER Kconfig symbol.
+>
+> Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+> Reviewed-by: Marijn Suijten <marijn.suijten@somainline.org>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+> To: Alex Deucher <alexander.deucher@amd.com>
+> To: Christian König <christian.koenig@amd.com>
+> To: Pan, Xinhui <Xinhui.Pan@amd.com>
+> To: David Airlie <airlied@gmail.com>
+> To: Daniel Vetter <daniel@ffwll.ch>
+> To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> To: Maxime Ripard <mripard@kernel.org>
+> To: Thomas Zimmermann <tzimmermann@suse.de>
+> To: Jani Nikula <jani.nikula@linux.intel.com>
+> To: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+> To: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> To: Tvrtko Ursulin <tursulin@ursulin.net>
+> To: Rob Clark <robdclark@gmail.com>
+> To: Abhinav Kumar <quic_abhinavk@quicinc.com>
+> To: Sean Paul <sean@poorly.run>
+> To: Marijn Suijten <marijn.suijten@somainline.org>
+> To: Neil Armstrong <neil.armstrong@linaro.org>
+> To: Jessica Zhang <quic_jesszhan@quicinc.com>
+> Cc: amd-gfx@lists.freedesktop.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: intel-gfx@lists.freedesktop.org
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: freedreno@lists.freedesktop.org
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>
+> Changes in v5:
+> - Drop applied patches
+> - Link to v4: https://lore.kernel.org/r/20240528-panel-sw43408-fix-v4-0-330b42445bcc@linaro.org
+>
+> Changes in v4:
+> - Reoder patches so that fixes come first, to be able to land them to
+>    drm-misc-fixes
+> - Link to v3: https://lore.kernel.org/r/20240522-panel-sw43408-fix-v3-0-6902285adcc0@linaro.org
+>
+> Changes in v3:
+> - Split DRM_DISPLAY_DSC_HELPER from DRM_DISPLAY_DP_HELPER
+> - Added missing Fixes tags
+> - Link to v2: https://lore.kernel.org/r/20240510-panel-sw43408-fix-v2-0-d1ef91ee1b7d@linaro.org
+>
+> Changes in v2:
+> - use SELECT instead of DEPEND to follow the reverted Kconfig changes
+> - Link to v1: https://lore.kernel.org/r/20240420-panel-sw43408-fix-v1-0-b282ff725242@linaro.org
+> ---
+>   drivers/gpu/drm/amd/amdgpu/Kconfig | 1 +
+>   drivers/gpu/drm/display/Kconfig    | 6 ++++++
+>   drivers/gpu/drm/display/Makefile   | 3 ++-
+>   drivers/gpu/drm/i915/Kconfig       | 1 +
+>   drivers/gpu/drm/msm/Kconfig        | 1 +
+>   drivers/gpu/drm/panel/Kconfig      | 6 +++---
+>   6 files changed, 14 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/Kconfig b/drivers/gpu/drm/amd/amdgpu/Kconfig
+> index 4232ab27f990..5933ca8c6b96 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/Kconfig
+> +++ b/drivers/gpu/drm/amd/amdgpu/Kconfig
+> @@ -6,6 +6,7 @@ config DRM_AMDGPU
+>   	depends on !UML
+>   	select FW_LOADER
+>   	select DRM_DISPLAY_DP_HELPER
+> +	select DRM_DISPLAY_DSC_HELPER
+>   	select DRM_DISPLAY_HDMI_HELPER
+>   	select DRM_DISPLAY_HDCP_HELPER
+>   	select DRM_DISPLAY_HELPER
+> diff --git a/drivers/gpu/drm/display/Kconfig b/drivers/gpu/drm/display/Kconfig
+> index 479e62690d75..a2e42014ffe0 100644
+> --- a/drivers/gpu/drm/display/Kconfig
+> +++ b/drivers/gpu/drm/display/Kconfig
+> @@ -59,6 +59,12 @@ config DRM_DISPLAY_DP_TUNNEL_STATE_DEBUG
+>   
+>   	  If in doubt, say "N".
+>   
+> +config DRM_DISPLAY_DSC_HELPER
+> +	bool
+> +	depends on DRM_DISPLAY_HELPER
+> +	help
+> +	  DRM display helpers for VESA DSC (used by DSI and DisplayPort).
+> +
+>   config DRM_DISPLAY_HDCP_HELPER
+>   	bool
+>   	depends on DRM_DISPLAY_HELPER
+> diff --git a/drivers/gpu/drm/display/Makefile b/drivers/gpu/drm/display/Makefile
+> index 629df2f4d322..df8f22c7e916 100644
+> --- a/drivers/gpu/drm/display/Makefile
+> +++ b/drivers/gpu/drm/display/Makefile
+> @@ -6,7 +6,8 @@ drm_display_helper-y := drm_display_helper_mod.o
+>   drm_display_helper-$(CONFIG_DRM_DISPLAY_DP_HELPER) += \
+>   	drm_dp_dual_mode_helper.o \
+>   	drm_dp_helper.o \
+> -	drm_dp_mst_topology.o \
+> +	drm_dp_mst_topology.o
+> +drm_display_helper-$(CONFIG_DRM_DISPLAY_DSC_HELPER) += \
+>   	drm_dsc_helper.o
+>   drm_display_helper-$(CONFIG_DRM_DISPLAY_DP_TUNNEL) += \
 
-> 
-> [*] https://lore.kernel.org/all/20240229025759.1187910-1-stevensd@google.com
-> 
-> > +	if (is_error_noslot_pfn(req_pfn))
-> > +		return -EINVAL;
-> > +
-> > +	resp_pfn = gfn_to_pfn(kvm, gpa_to_gfn(resp_gpa));
-> > +	if (is_error_noslot_pfn(resp_pfn)) {
-> > +		ret = EINVAL;
-> > +		goto release_req;
-> > +	}
-> > +
-> > +	if (rmp_make_private(resp_pfn, 0, PG_LEVEL_4K, 0, true)) {
-> > +		ret = -EINVAL;
-> > +		kvm_release_pfn_clean(resp_pfn);
-> > +		goto release_req;
-> > +	}
-> 
-> I don't see how this is safe.  KVM holds no locks, i.e. can't guarantee that the
-> resp_pfn stays private for the duration of the operation.  And on the opposite
+nit: DSC_HELPER should go after DP_TUNNEL to keep it sorted alphabetically.
 
-When the page is set to private with asid=0,immutable=true arguments,
-this puts the page in a special 'firmware-owned' state that specifically
-to avoid any changes to the page state happening from under the ASPs feet.
-The only way to switch the page to any other state at this point is to
-issue the SEV_CMD_SNP_PAGE_RECLAIM request to the ASP via
-snp_page_reclaim().
+Best regards
+Thomas
 
-I could see the guest shooting itself in the foot by issuing 2 guest
-requests with the same req_pfn/resp_pfn, but on the KVM side whichever
-request issues rmp_make_private() first would succeed, and then the
-2nd request would generate an EINVAL to userspace.
+>   	drm_dp_tunnel.o
+> diff --git a/drivers/gpu/drm/i915/Kconfig b/drivers/gpu/drm/i915/Kconfig
+> index faa253b27664..db400aad88fa 100644
+> --- a/drivers/gpu/drm/i915/Kconfig
+> +++ b/drivers/gpu/drm/i915/Kconfig
+> @@ -11,6 +11,7 @@ config DRM_I915
+>   	select SHMEM
+>   	select TMPFS
+>   	select DRM_DISPLAY_DP_HELPER
+> +	select DRM_DISPLAY_DSC_HELPER
+>   	select DRM_DISPLAY_HDCP_HELPER
+>   	select DRM_DISPLAY_HDMI_HELPER
+>   	select DRM_DISPLAY_HELPER
+> diff --git a/drivers/gpu/drm/msm/Kconfig b/drivers/gpu/drm/msm/Kconfig
+> index 1931ecf73e32..6dcd26180611 100644
+> --- a/drivers/gpu/drm/msm/Kconfig
+> +++ b/drivers/gpu/drm/msm/Kconfig
+> @@ -111,6 +111,7 @@ config DRM_MSM_DSI
+>   	depends on DRM_MSM
+>   	select DRM_PANEL
+>   	select DRM_MIPI_DSI
+> +	select DRM_DISPLAY_DSC_HELPER
+>   	default y
+>   	help
+>   	  Choose this option if you have a need for MIPI DSI connector
+> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+> index bf4eadfe21cb..afae8b130e9a 100644
+> --- a/drivers/gpu/drm/panel/Kconfig
+> +++ b/drivers/gpu/drm/panel/Kconfig
+> @@ -349,7 +349,7 @@ config DRM_PANEL_LG_SW43408
+>   	depends on OF
+>   	depends on DRM_MIPI_DSI
+>   	depends on BACKLIGHT_CLASS_DEVICE
+> -	select DRM_DISPLAY_DP_HELPER
+> +	select DRM_DISPLAY_DSC_HELPER
+>   	select DRM_DISPLAY_HELPER
+>   	help
+>   	  Say Y here if you want to enable support for LG sw43408 panel.
+> @@ -558,7 +558,7 @@ config DRM_PANEL_RAYDIUM_RM692E5
+>   	depends on OF
+>   	depends on DRM_MIPI_DSI
+>   	depends on BACKLIGHT_CLASS_DEVICE
+> -	select DRM_DISPLAY_DP_HELPER
+> +	select DRM_DISPLAY_DSC_HELPER
+>   	select DRM_DISPLAY_HELPER
+>   	help
+>   	  Say Y here if you want to enable support for Raydium RM692E5-based
+> @@ -916,7 +916,7 @@ config DRM_PANEL_VISIONOX_R66451
+>   	depends on OF
+>   	depends on DRM_MIPI_DSI
+>   	depends on BACKLIGHT_CLASS_DEVICE
+> -	select DRM_DISPLAY_DP_HELPER
+> +	select DRM_DISPLAY_DSC_HELPER
+>   	select DRM_DISPLAY_HELPER
+>   	help
+>   	  Say Y here if you want to enable support for Visionox
+>
+> ---
+> base-commit: 2102cb0d050d34d50b9642a3a50861787527e922
+> change-id: 20240420-panel-sw43408-fix-ff6549c121be
+>
+> Best regards,
 
-In that sense, rmp_make_private()/snp_page_reclaim() sort of pair to
-lock/unlock a page that's being handed to the ASP. But this should be
-better documented either way.
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
-> resp_pfn stays private for the duration of the operation.  And on the opposite
-> side, KVM can't guarantee that resp_pfn isn't being actively used by something
-> in the kernel, e.g. KVM might induce an unexpected #PF(RMP).
-> 
-> Why can't KVM require that the response/destination page already be private?  I'm
-
-Hmm. This is a bit tricky. The GHCB spec states:
-
-  The Guest Request NAE event requires two unique pages, one page for the
-  request and one page for the response. Both pages must be assigned to the
-  hypervisor (shared). The guest must supply the guest physical address of
-  the pages (i.e., page aligned) as input.
-
-  The hypervisor must translate the guest physical address (GPA) of each
-  page into a system physical address (SPA). The SPA is used to verify that
-  the request and response pages are assigned to the hypervisor.
-
-At least for req_pfn, this makes sense because the header of the message
-is actually plain text, and KVM does need to parse it to read the message
-type from the header. It's just the req/resp payload that are encrypted
-by the guest/firmware, i.e. it's not relying on hardware-based memory
-encryption in this case.
-
-Because of that though, I think we could potential address this by
-allocating the req/resp page as separate pages outside of guest memory,
-and simply copy the contents to/from the GPAs provided by the guest.
-I'll look more into this approach.
-
-If we go that route I think some of the concerns above go away as well,
-but we might still need to a lock or something to serialize access to
-these separate/intermediate pages to avoid needed to allocate them every
-time or per-request.
-
-> also somewhat confused by the reclaim below.  If KVM converts the response page
-> back to shared, doesn't that clobber the data?  If so, how does the guest actually
-> get the response?  I feel like I'm missing something.
-
-In this case we're just setting it immutable/firmware-owned, which just
-happens to be equivalent (in terms of the RMP table) to a guest-owned page,
-but with rmp_entry.ASID=0/rmp_entry.immutable=true instead of
-rmp_entry.ASID=<guest asid>/rmp_entry.immutable=false. So the contents remain
-intact/readable after the reclaim.
-
-> 
-> Regardless of whether or not I'm missing something, this needs comments, and the
-> changelog needs to be rewritten with --verbose to explain what's going on.  
-
-Sure, will add more comments and details in the commit msg for v2.
-
-> 
-> > +	data.gctx_paddr = __psp_pa(to_kvm_sev_info(kvm)->snp_context);
-> > +	data.req_paddr = __sme_set(req_pfn << PAGE_SHIFT);
-> > +	data.res_paddr = __sme_set(resp_pfn << PAGE_SHIFT);
-> > +
-> > +	ret = sev_issue_cmd(kvm, SEV_CMD_SNP_GUEST_REQUEST, &data, &fw_err);
-> > +	if (ret)
-> > +		return ret;
-> 
-> This leaks both req_pfn and resp_pfn.
-
-Yes, this one should be fixed up by the v1-revised version of the patch.
-
-Thanks!
-
--Mike
-
-> 
-> > +
-> > +	/*
-> > +	 * If reclaim fails then there's a good chance the guest will no longer
-> > +	 * be runnable so just let userspace terminate the guest.
-> > +	 */
-> > +	if (snp_page_reclaim(kvm, resp_pfn)) {
-> > +		return -EIO;
-> > +		goto release_req;
-> > +	}
-> > +
-> > +	/*
-> > +	 * As per GHCB spec, firmware failures should be communicated back to
-> > +	 * the guest via SW_EXITINFO2 rather than be treated as immediately
-> > +	 * fatal.
-> > +	 */
-> > +	ghcb_set_sw_exit_info_2(svm->sev_es.ghcb,
-> > +				SNP_GUEST_ERR(ret ? SNP_GUEST_VMM_ERR_GENERIC : 0,
-> > +					      fw_err));
-> > +
-> > +	ret = 1; /* resume guest */
-> > +	kvm_release_pfn_dirty(resp_pfn);
-> > +
-> > +release_req:
-> > +	kvm_release_pfn_clean(req_pfn);
-> > +	return ret;
-> > +}
