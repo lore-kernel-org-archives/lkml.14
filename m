@@ -1,205 +1,178 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD5318F2D4
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 16:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2271118E758;
+	Wed, 26 Jun 2024 16:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719418954; cv=none; b=m9GTIG2DfszFrBsZDBO9d9WzG5FICAtgsT+I9guqDyTmEPLAp8isTAy9x8BXNoDUv620VyLx+0MDm/LaJtphocIxGgiJ4DoYs0bDye7piXhkFC+QbuVwze6V2F3ti/Z3XSMS0XSXsA87j6Qq1W0k5Hc4RWT27pIhuiQi9r82+pc=
+	t=1719418986; cv=none; b=UkE6E3Lto6R3TbZgyOqb1qBOqRybfpZrVT1w4nntNkT7CYKGLgqQ7dYU1AVJkVdTJ7JPh5gMKzoY2+MtzK0p/ItD7bMFGwvVivV3uR+ZkSthMRKUAtJCnrOewnbN0OpuizKfl6EZxnNg6O/1CJ3HWC3nFCOdx6idk1CkwInBcAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719418954; c=relaxed/simple;
-	bh=9XhgXHG8+tusH/9LC9l7b0azJTE85BoDuG8tkGn7KF8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J8MZvJMzaCuVb9QEMF/UbJ89aZz/+u4fT3YZDxmo/3JhpwxV0eHPzmfPvoLkwykPevNSKnraMVvNIs+oCNrMXRzgwkwp4bu2PgXn83l+ECU8SE30+hLzpL+K4CNKSYLdg3N37mJTnZQQt9dZNKHHMFYTwsvP6g1I916eoHKEbqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PPGeOZel; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719418986; c=relaxed/simple;
+	bh=6gFjRqnmAlZ+KmWeNakm51Ebba0HMPjTrguhw4sm/E0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ne7ONDYM4siVWJW6R29+PHHY34RqM3SYiY+qmdU/K7275DL6Haq7Pw3dMhSGDmEQGvWnoe1PwlgFqMzYM/XnShP4PP/2kYp87/M0CzTgqYFhU4nSuXQCParwq7W9sLQhCTLFhfYrdq++ifpdsO7HwYSV+nl8MYHaDRJK/ptREXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YPv+SDn7; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PPGeOZel"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719418951;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=fGxp6Ukd0LTljOubDYeVT+TIf0qV9JZHHFrPwd/iFcE=;
-	b=PPGeOZelEvCF9twefmkf/l9zcIo1PjOOdm3hFEtRgK7f9z2kxiYx2AF+s2OvRIOgDjL+Q+
-	HGieXfHMFTK5pBJ9l4IzaKy7xCSieT9m4dzosobAWhz+K8NRtQS9j474wUpBAR989H0Rnl
-	bPSy0kTTSzWFwQ6v0TbGZrc0PjikMSM=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-395-PGsyOBztMk-ZTGvyOLZZoQ-1; Wed, 26 Jun 2024 12:22:30 -0400
-X-MC-Unique: PGsyOBztMk-ZTGvyOLZZoQ-1
-Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-52ce324c204so3668318e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 09:22:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719418948; x=1720023748;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=fGxp6Ukd0LTljOubDYeVT+TIf0qV9JZHHFrPwd/iFcE=;
-        b=GDy5Hfkna1q+0JtMD7z6SYJeHicttagirD4HJET+B/094aDudq/JexeIFS0Lddwsyf
-         oy55v9PJ7qmbtD2VmcujDuIGr0AB4NQQs/xJcKBVB1DwYb03gXQT5E9FjImM5JmgQV0H
-         S5xu9uO0hkglkYdatnwGbyYmRHCB33ct9LK/JK1ARaaMXbzLVrt/vR7zx9x+VEOnNqsy
-         TIr5XcoVeTkmoTeHtIf6EPtXlTX6XsOhYTTHFFQDEF78Y78WTCZAq51uo0sfR6hHvXnH
-         JQBxZwc5rSxA/vFKcNCEwV/XcjnSuCCIBPGuiumv7Z1ve1CjMI3Yj0x461LtxeqRRVEJ
-         XeLQ==
-X-Gm-Message-State: AOJu0YzaqvlFW8GMm+DoBOKQW2lgTv/pXJstDN6T6H+HX2LrLzKntwmh
-	LTGCBAp6ixkw1nw8IsjJhXUUztfO7D80PeWOjYDTCrZoDOWPbdkSY5v2U1lbO+8PIQkas7Wfp2y
-	YU0STdX2jOqVBY+XkyzQv6GRcgiuGw206uZg3ubavN5gFOskOEEjui4TdjIsWWdFwbslOCc7SFF
-	p/C7Bdz+J6z40krM62dk1itNiHOiMcNVDLXd0ImYiGpQ==
-X-Received: by 2002:a19:750d:0:b0:52c:df10:a8de with SMTP id 2adb3069b0e04-52ce1834580mr6267541e87.21.1719418948444;
-        Wed, 26 Jun 2024 09:22:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFiAMtKflpiz6Zx/dw1ERax0IBJ4gYhZCNcDVi0X2nNDaQR8PXtDtv3586cQ3Hi6OWEfwsKEA==
-X-Received: by 2002:a19:750d:0:b0:52c:df10:a8de with SMTP id 2adb3069b0e04-52ce1834580mr6267518e87.21.1719418947860;
-        Wed, 26 Jun 2024 09:22:27 -0700 (PDT)
-Received: from [192.168.1.34] (p548825e3.dip0.t-ipconnect.de. [84.136.37.227])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c82519b0sm31626855e9.14.2024.06.26.09.22.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Jun 2024 09:22:27 -0700 (PDT)
-Message-ID: <8f85c31a-e603-4578-bf49-136dae0d4b69@redhat.com>
-Date: Wed, 26 Jun 2024 18:22:26 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YPv+SDn7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719418984; x=1750954984;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6gFjRqnmAlZ+KmWeNakm51Ebba0HMPjTrguhw4sm/E0=;
+  b=YPv+SDn7/EhbHb3HgVmYD1gHLPuUSgtsAH/+SVu0IMUDFIzLBUn+NavU
+   DeNMJQxUwS8PREfnIyBJRjHNsWle//Hr2XzOw8crUDtGkLS/WBWSDimcm
+   j878TWe3w7agPSbOeFSqmCd1qCzvUVAtTcP0WVB4su1zNSeNmC1gjcFrf
+   fuN3sBkLnQI+1iiHXvA8qCtwWJU+/8zisrVs4sxnm6Qb41m4n4oP0iqo4
+   hMyfCVynLvrCQDfcTJAkSDuCNb0RZ3jn8/FTWG6dR9d8lZM4LpOgd53sS
+   ORus+ZB/O/FjJHsJv5sp9BCIJbVTf9qLT+ZJWn3jkHm1KJxyTUJYC2Jlq
+   w==;
+X-CSE-ConnectionGUID: EB1HoWh4R6ikNx7AIbO69A==
+X-CSE-MsgGUID: Eul6hx8DTPWticHZs8pJhA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11115"; a="16651449"
+X-IronPort-AV: E=Sophos;i="6.08,267,1712646000"; 
+   d="scan'208";a="16651449"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 09:23:03 -0700
+X-CSE-ConnectionGUID: aqVxw+UeSm2pAi9hLFlh0g==
+X-CSE-MsgGUID: 49XKsDlLR0O245zfXBJvQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,267,1712646000"; 
+   d="scan'208";a="43930121"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 26 Jun 2024 09:23:00 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sMVQ9-000FNi-1r;
+	Wed, 26 Jun 2024 16:22:57 +0000
+Date: Thu, 27 Jun 2024 00:21:13 +0800
+From: kernel test robot <lkp@intel.com>
+To: ran xiaokai <ranxiaokai627@163.com>, akpm@linux-foundation.org,
+	willy@infradead.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, vbabka@suse.cz,
+	svetly.todorov@memverge.com, ran.xiaokai@zte.com.cn,
+	baohua@kernel.org, ryan.roberts@arm.com, peterx@redhat.com,
+	ziy@nvidia.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 2/2] kpageflags: fix wrong KPF_THP on non-pmd-mappable
+ compound pages
+Message-ID: <202406262300.iAURISyJ-lkp@intel.com>
+References: <20240626024924.1155558-3-ranxiaokai627@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/2] mm/migrate: move NUMA hinting fault folio
- isolation + checks under PTL
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
- Donet Tom <donettom@linux.ibm.com>
-References: <20240620212935.656243-1-david@redhat.com>
- <20240620212935.656243-3-david@redhat.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240620212935.656243-3-david@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240626024924.1155558-3-ranxiaokai627@163.com>
 
-On 20.06.24 23:29, David Hildenbrand wrote:
-> Currently we always take a folio reference even if migration will not
-> even be tried or isolation failed, requiring us to grab+drop an additional
-> reference.
-> 
-> Further, we end up calling folio_likely_mapped_shared() while the folio
-> might have already been unmapped, because after we dropped the PTL, that
-> can easily happen. We want to stop touching mapcounts and friends from
-> such context, and only call folio_likely_mapped_shared() while the folio
-> is still mapped: mapcount information is pretty much stale and unreliable
-> otherwise.
-> 
-> So let's move checks into numamigrate_isolate_folio(), rename that
-> function to migrate_misplaced_folio_prepare(), and call that function
-> from callsites where we call migrate_misplaced_folio(), but still with
-> the PTL held.
-> 
-> We can now stop taking temporary folio references, and really only take
-> a reference if folio isolation succeeded. Doing the
-> folio_likely_mapped_shared() + golio isolation under PT lock is now similar
-> to how we handle MADV_PAGEOUT.
-> 
-> While at it, combine the folio_is_file_lru() checks.
-> 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
+Hi ran,
 
-Donet just reported an issue. I suspect this fixes it -- in any case, this is
-the right thing to do.
+kernel test robot noticed the following build errors:
 
- From 0833b9896e98c8d88c521609c811a220d14a2e7e Mon Sep 17 00:00:00 2001
-From: David Hildenbrand <david@redhat.com>
-Date: Wed, 26 Jun 2024 18:14:44 +0200
-Subject: [PATCH] Fixup: mm/migrate: move NUMA hinting fault folio isolation +
-  checks under PTL
+[auto build test ERROR on akpm-mm/mm-everything]
+[also build test ERROR on linus/master v6.10-rc5 next-20240625]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Donet reports an issue during NUMA migration we haven't seen previously:
+url:    https://github.com/intel-lab-lkp/linux/commits/ran-xiaokai/mm-Constify-folio_order-folio_test_pmd_mappable/20240626-113027
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20240626024924.1155558-3-ranxiaokai627%40163.com
+patch subject: [PATCH 2/2] kpageflags: fix wrong KPF_THP on non-pmd-mappable compound pages
+config: x86_64-allnoconfig (https://download.01.org/0day-ci/archive/20240626/202406262300.iAURISyJ-lkp@intel.com/config)
+compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240626/202406262300.iAURISyJ-lkp@intel.com/reproduce)
 
-	[   71.422804] list_del corruption, c00c00000061b3c8->next is
-	LIST_POISON1 (5deadbeef0000100)
-	[   71.422839] ------------[ cut here ]------------
-	[   71.422843] kernel BUG at lib/list_debug.c:56!
-	[   71.422850] Oops: Exception in kernel mode, sig: 5 [#1]
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406262300.iAURISyJ-lkp@intel.com/
 
-We forgot to convert one "return 0;" to return an error instead from
-migrate_misplaced_folio_prepare() in case the target node is nearly
-full.
+All errors (new ones prefixed by >>):
 
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
-  mm/migrate.c | 2 +-
-  1 file changed, 1 insertion(+), 1 deletion(-)
+>> fs/proc/page.c:151:35: error: passing 'const struct folio *' to parameter of type 'struct folio *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+     151 |         else if (folio_test_pmd_mappable(folio)) {
+         |                                          ^~~~~
+   include/linux/huge_mm.h:438:58: note: passing argument to parameter 'folio' here
+     438 | static inline bool folio_test_pmd_mappable(struct folio *folio)
+         |                                                          ^
+   1 error generated.
 
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 8beedbb42a93..9ed43c1eea5e 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -2564,7 +2564,7 @@ int migrate_misplaced_folio_prepare(struct folio *folio,
-  		int z;
-  
-  		if (!(sysctl_numa_balancing_mode & NUMA_BALANCING_MEMORY_TIERING))
--			return 0;
-+			return -EAGAIN;
-  		for (z = pgdat->nr_zones - 1; z >= 0; z--) {
-  			if (managed_zone(pgdat->node_zones + z))
-  				break;
 
-base-commit: 4b17ce353e02b47b00e2fe87b862f09e8b9a47e6
--- 
-2.45.2
+vim +151 fs/proc/page.c
 
+   108	
+   109	u64 stable_page_flags(const struct page *page)
+   110	{
+   111		const struct folio *folio;
+   112		unsigned long k;
+   113		unsigned long mapping;
+   114		bool is_anon;
+   115		u64 u = 0;
+   116	
+   117		/*
+   118		 * pseudo flag: KPF_NOPAGE
+   119		 * it differentiates a memory hole from a page with no flags
+   120		 */
+   121		if (!page)
+   122			return 1 << KPF_NOPAGE;
+   123		folio = page_folio(page);
+   124	
+   125		k = folio->flags;
+   126		mapping = (unsigned long)folio->mapping;
+   127		is_anon = mapping & PAGE_MAPPING_ANON;
+   128	
+   129		/*
+   130		 * pseudo flags for the well known (anonymous) memory mapped pages
+   131		 */
+   132		if (page_mapped(page))
+   133			u |= 1 << KPF_MMAP;
+   134		if (is_anon) {
+   135			u |= 1 << KPF_ANON;
+   136			if (mapping & PAGE_MAPPING_KSM)
+   137				u |= 1 << KPF_KSM;
+   138		}
+   139	
+   140		/*
+   141		 * compound pages: export both head/tail info
+   142		 * they together define a compound page's start/end pos and order
+   143		 */
+   144		if (page == &folio->page)
+   145			u |= kpf_copy_bit(k, KPF_COMPOUND_HEAD, PG_head);
+   146		else
+   147			u |= 1 << KPF_COMPOUND_TAIL;
+   148	
+   149		if (folio_test_hugetlb(folio))
+   150			u |= 1 << KPF_HUGE;
+ > 151		else if (folio_test_pmd_mappable(folio)) {
+   152			u |= 1 << KPF_THP;
+   153			if (is_huge_zero_folio(folio))
+   154				u |= 1 << KPF_ZERO_PAGE;
+   155		} else if (is_zero_pfn(page_to_pfn(page)))
+   156			u |= 1 << KPF_ZERO_PAGE;
+   157	
+   158		/*
+   159		 * Caveats on high order pages: PG_buddy and PG_slab will only be set
+   160		 * on the head page.
+   161		 */
+   162		if (PageBuddy(page))
+   163			u |= 1 << KPF_BUDDY;
+   164		else if (page_count(page) == 0 && is_free_buddy_page(page))
+   165			u |= 1 << KPF_BUDDY;
+   166	
+   167		if (PageOffline(page))
+   168			u |= 1 << KPF_OFFLINE;
+   169		if (PageTable(page))
+   170			u |= 1 << KPF_PGTABLE;
+   171		if (folio_test_slab(folio))
+   172			u |= 1 << KPF_SLAB;
+   173	
 
 -- 
-Cheers,
-
-David / dhildenb
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
