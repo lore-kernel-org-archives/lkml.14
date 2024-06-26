@@ -1,92 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED583B1A1
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 08:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49EB91534F8;
+	Wed, 26 Jun 2024 08:50:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719391791; cv=none; b=ZkRyPdwspVHn0mGUXYe2QS76Nx5rxzp06Ubwc9lVDI7zuMKgqAgORf0s9fpGCDOEVZ1uHvcnCrLj7CmYbHNMiGhhwcoB1fwMNpTCl6+j7W2TDf3N/5Ntp2FITdhSZikjlb+nr2BWfbWWk09HGmJWNNY00ScjT/lWE3hDkxSE7OU=
+	t=1719391808; cv=none; b=p/lBcLDz7OjlVK30sX9Jp4sCPpDKoSYKTBfhNgGi9t5n1vN8zQOfeTzXUBlUwqZqgm9e8vkqCZVt1S9VA4fhhut0YCrtc4uWqRNAoaXZsGMDsc/Kvx2HtfrwSMZgkpWJR/7F9NDMaAAzcSHMdiI6KsXUktv3Fh2C5FGhuAqgdK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719391791; c=relaxed/simple;
-	bh=x2FQqs4Sx0iJn0+hfgdF3u+B2PEHaqqKDMTHL+Hlyu4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hoh/mDjs4dOTJpkJwBWwfuliW8WSV2913CCqkA1Fl37RrFv6fzYRa4RgXVB1+yhRnxyrGU0aJUOj1OqdnIy8M9jQx45VzxhgNDPhlZqWvBS6BLeGW2hhB59Wa4u/j6UvpaQZ0MVqa98pMOz9tUMPgE1Wfqkfvcqb1LgZin6oQjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OYGQ2IbG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719391808; c=relaxed/simple;
+	bh=TH9ocGf0t4tmZuZh3WEwgOQQT8qJPfwDAACN9DZf/FY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rqPFDkBPk/hM91BqcqTZVBgEyZNYTE5EvRD5z6tdIgeQQgjo/zBm/EfKklsz+Dn/+h0AEyVrSL3tm7ONJiE5T5T5x5CiWsh7pVhK1VtJmkCqyx2Um32Icn/VPWBkWpNQIUgFF+ctQsFap1DYsCVC7eVp+Z92yEY1Rp8tPnFkaWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XSC82Qah; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OYGQ2IbG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C088C2BD10;
-	Wed, 26 Jun 2024 08:49:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719391790;
-	bh=x2FQqs4Sx0iJn0+hfgdF3u+B2PEHaqqKDMTHL+Hlyu4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OYGQ2IbGRTMrHKwG4fIR9ePAyoeTZCAVRGxiy9a7ZhDnz/t11Ps202E2sT+ZsKKbM
-	 XUtr+ozeoGNb3FWN36aN0Z6Mm5iNQ4nCVaEg3RptIoKGfhZSplP++PEMnmq8yPWqqc
-	 Dpx3vSlrc+lF/rwYamEsNcD+dGgRZho+fVh22thNfkvdyIOZtG0cnBH8lea7iHzV4o
-	 PK50q/u+0lo7gaQOa96DZ966nan/1EIv7vrA6bn1hR5E1F71ZBZl+PbPf40VaUOGlP
-	 oPQHILH6IJaaqc2iAbUJhfnwLdipDfRWFqwcPevbEHdslAxVGb/TC35xyUjrr8dRp0
-	 QZqRchXBTvhHA==
-Date: Wed, 26 Jun 2024 10:49:47 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-Subject: Re: [PATCH] drm/mipi-dsi: Fix devm unregister & detach
-Message-ID: <20240626-gabby-ladybug-of-freedom-08e6eb@houat>
-References: <20240619-dsi-devres-fix-v1-1-a5c59310a52e@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XSC82Qah"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-42499b98d4cso14308055e9.2;
+        Wed, 26 Jun 2024 01:50:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719391805; x=1719996605; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=QQz4kMO+LVo3JUvqwvrWDdXDqDW105QydyrvwjnrXVg=;
+        b=XSC82QahGe3S1OA7CPrPn3k7xRnroEyKLQVaRnmyN6+MtAmhdpd31rZMIoKa5dletG
+         QioCAofH6qFfP/Rh5QTZ+6QzYCJDZzBeUOFGdYVhjyZnlSeifoLh11m6XMWv2gKQzqYO
+         RwqSmEJ//vd4Y3XARxZPG8wTfbB52+JsD5Z9EKWhJxQtJx+QYSpVocnLThd5gKLR2JYj
+         ZEEnGdlC+3rNyYx4AaTQWd0/pneRSpo4CScVYyq0btYDxks3fICwRWaEacRGtcMjORDy
+         H03ULNm+YJ9iKMFEsppfjIGTCxE54lqxu9ipBOnWtBDsog+3VZ41oWWBQHxoGK1D6By5
+         ChCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719391805; x=1719996605;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QQz4kMO+LVo3JUvqwvrWDdXDqDW105QydyrvwjnrXVg=;
+        b=iVGLgoGSJSEFHnRB0yNeXKj72031BVcsnJZUmQP/WaDy7gnaEIGTZ1DzkbDsvA6zHS
+         aRfFPDWyuuzxXXALGG0L9FhRCU2qYJzFBEYQBYLuefvkwI/KesRuyuJHA3VdOrRT0FDs
+         OXqJXPH1Qazra4PkKnbHFcue2L3vo1C2oOHlT8KFIR6840Uy3YsXaSZr82vwqCuKIuD0
+         yFWbW39dDRAtmUdZWzDntayTUzxrFIlzhSbFZc78s2S0dc+JGSAHw+6tnaRdviFZ+t2g
+         ZLg8em24T1/YhJhejvC7v2pwu3sLbAQk9scpGtNW2TA07PJA6lCwsJs4UMJidGPpDK5g
+         OjCw==
+X-Forwarded-Encrypted: i=1; AJvYcCWDqmI0BjT2O2dGCY1jD7zcIhxElKXJDM1pBQFyqTJjmRxnY/GumzlE4eHt7mu+U39UquDrBqfk0ZpM6XHczi1tDz4e9ORNrTcnC18N
+X-Gm-Message-State: AOJu0Yz3VtsKRu1kEln3gOTTtQcMg+B9ubD3ctFo1FPWc3gOtHlraSqE
+	uO3ly1ZEhB/Vsp2Y6KBepyYXFchqMPRERPTuFwlzqns3JyxHdNALJ4qmtJyX9PU=
+X-Google-Smtp-Source: AGHT+IESG/WfXg8XZdNYiKy4dyUNqkHu6mZw5n0OHCQsSIv52g5S3mtrz284MfM7DqcRG3W+2dfCww==
+X-Received: by 2002:a05:600c:3b20:b0:424:761f:edbb with SMTP id 5b1f17b1804b1-4248e448891mr71365825e9.31.1719391805370;
+        Wed, 26 Jun 2024 01:50:05 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c82515a1sm17250325e9.12.2024.06.26.01.50.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jun 2024 01:50:05 -0700 (PDT)
+Message-ID: <de6378671c260d0548a299797f3288fe6f95e246.camel@gmail.com>
+Subject: Re: [PATCH v2 3/8] iio: add child nodes support in iio backend
+ framework
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Olivier Moysan <olivier.moysan@foss.st.com>,
+ fabrice.gasnier@foss.st.com,  Nuno Sa <nuno.sa@analog.com>, Jonathan
+ Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 26 Jun 2024 10:53:57 +0200
+In-Reply-To: <20240625150717.1038212-4-olivier.moysan@foss.st.com>
+References: <20240625150717.1038212-1-olivier.moysan@foss.st.com>
+	 <20240625150717.1038212-4-olivier.moysan@foss.st.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ma4ycpybtoh2dbzf"
-Content-Disposition: inline
-In-Reply-To: <20240619-dsi-devres-fix-v1-1-a5c59310a52e@ideasonboard.com>
 
-
---ma4ycpybtoh2dbzf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Wed, Jun 19, 2024 at 12:07:48PM GMT, Tomi Valkeinen wrote:
-> From: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+On Tue, 2024-06-25 at 17:07 +0200, Olivier Moysan wrote:
+> Add an API to support IIO generic channels binding:
+> http://devicetree.org/schemas/iio/adc/adc.yaml#
+> This new API is needed, as generic channel DT node isn't populated as a
+> device.
+> Add devm_iio_backend_fwnode_get() to allow an IIO device backend
+> consumer to reference backend phandles in its child nodes.
 >=20
-> When a bridge driver uses devm_mipi_dsi_device_register_full() or
-> devm_mipi_dsi_attach(), the resource management is moved to devres,
-> which releases the resource automatically when the bridge driver is
-> unbound.
->=20
-> However, if the DSI host goes away first, the host unregistration code
-> will automatically detach and unregister any DSI peripherals, without
-> notifying the devres about it. So when the bridge driver later is
-> unbound, the resources are released a second time, leading to crash.
+> Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
+> Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+> ---
+> =C2=A0drivers/iio/industrialio-backend.c | 62 +++++++++++++++++++++------=
+---
+> =C2=A0include/linux/iio/backend.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 2 +
+> =C2=A02 files changed, 45 insertions(+), 19 deletions(-)
 
-That's super surprising. mipi_dsi_device_unregister calls
-device_unregister, which calls device_del, which in turn calls
-devres_release_all.
+...
 
-If that doesn't work like that, then it's what needs to be fixed, and
-not worked around in the MIPI-DSI bus.
+> --- a/include/linux/iio/backend.h
+> +++ b/include/linux/iio/backend.h
+> @@ -153,6 +153,8 @@ int iio_backend_extend_chan_spec(struct iio_dev
+> *indio_dev,
+> =C2=A0				 struct iio_chan_spec *chan);
+> =C2=A0void *iio_backend_get_priv(const struct iio_backend *conv);
+> =C2=A0struct iio_backend *devm_iio_backend_get(struct device *dev, const =
+char
+> *name);
+> +struct iio_backend *devm_iio_backend_fwnode_get(struct device *dev, cons=
+t
+> char *name,
+> +						struct fwnode_handle *node);
 
-Maxime
+node -> fwnode
 
---ma4ycpybtoh2dbzf
-Content-Type: application/pgp-signature; name="signature.asc"
+- Nuno S=C3=A1
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZnvWKwAKCRDj7w1vZxhR
-xV+RAQDxPPXHzU0G5JIlvexkx+UGfN/vqNUmfWcE/Uf5o9YCBgD6AxDzso4qILCM
-yKnz2Ap02KUvyMTtu1qzFLkfRoYDzAI=
-=Paf6
------END PGP SIGNATURE-----
-
---ma4ycpybtoh2dbzf--
