@@ -1,55 +1,55 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47912194132
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 23:04:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2BDA194158
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 23:04:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719443070; cv=none; b=fKWuPMTX/pTNWEvIUGuZn8CjTJRX2vk4VWWma3WNx03ljCgE31lkRPqX94M9mCIhXxaIL0mDLIXLUE0St51PNFewrh55miWo6aYNPuGZaNvlAYQ22zU2oq2kQjXvtDRNQcPFkC29Fchf6i7vlN55fhPW3FpTFv3m6fFaJGC6V08=
+	t=1719443073; cv=none; b=js6A6vdThahMA5GNCrBmCSySnncCLnxWvI3oc2pE3XSqy2CnY/sFgAY9NXXUL5mT2G6N3Ff+W/8X2xiOvqSsICLDkfaBOfA/pKuREsHsxW4EnutCLkuLKKoYJTdAF5Yq9+mvTpgKC5NzPtiTqqlj7SHv2PCawIRsDYvg5yq/Ea8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719443070; c=relaxed/simple;
-	bh=X36javU244m1Pe7Nm6RJMAr7OamOkUPb1UbNIZe4cd8=;
+	s=arc-20240116; t=1719443073; c=relaxed/simple;
+	bh=rrgk4/GN+4afQi82RWjkVdACN68Mce2bh09M2M+kIiE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=W3z/au5q26WfoVnW6i6l04wiNK3b/2IAD9iEu4AAcCH2hU/FKnJpmFfoZt3itxzyjjg+5jJ+FnNZfnxT+8MBO2DYfCVi1yh9ppmp0J4l0RrHbfbncoBkmYyDSyP8f92UDwxdWH2cK1r8ekwE0l1RvF87FzrpawagkXJPcPm4KN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ipylypiv.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mx8v7Sf5; arc=none smtp.client-ip=209.85.215.201
+	 To:Cc:Content-Type; b=LiRL/FqCM/qsVJGzKAMskJ/U3mwh9hRTaCNjS06TFmOa6VVA6slGOpw7lFjkfllatsIxgYTUHfs0EMfWtIsSr+G2+LOBZcHhmKDc0+6+1LLd1ngG8+BcDhb3fCnTP5gJ8QlmlIMTCYZ4nqIVcqvDz+Ufh9qpA6X/griuV/TCgiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ipylypiv.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wLm0kUne; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ipylypiv.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mx8v7Sf5"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-721d20a0807so3111137a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 16:04:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wLm0kUne"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-62fb4a1f7bfso173886097b3.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 16:04:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719443067; x=1720047867; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1719443071; x=1720047871; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jYTcox1uxiDsgrgstLUNMompUZVUnfSZPE6ZrKVubcY=;
-        b=mx8v7Sf5VSZ/raWU8yjyqdOgcCg0xNkuiNr2Ez/PP56TT6o4zPZXp6pI6aqbYYRLjX
-         kKF+FBeaaDpAgYh9YuJo5zrJohSnorUnkL0uODIG7J9k7SMO8JocD5ekS37UTHC4DFvc
-         207j9SpkKOtMcjI8v7bLNb2Wj9WKQ+IGyUtOe9ud3qTucj9VHiNZz6OrMeaq6u0mRs7U
-         WB0+iQUkNhbi0eVhK2c6yPbsbE91AkDOrlesG1Xfbue2QddhU8XVVdEDyg1B7CZJubNY
-         yGRIWWMMY8aoYee4GxbFkXNx70R5VHp+CSdM+Veyo/vkqlmw+zVMSnOaOb5jhvyU3kRT
-         UwHg==
+        bh=t/AvM/q6eju1FsW+yZoXAdsmFslERaWnMqALTvRepcM=;
+        b=wLm0kUne+f06wja8x6z0zsOrKV5ScP28P/L/bdTpFOyUM1ZIhDhGDy+hboncNldeZ0
+         AfABcmWmhvwIgCXoC7bbeowqvcGTd7ZyzQnbRYJY2NMYxNWqjkDB93iy2r1IohQGzAZG
+         OK+JQU/wc23B+zbdhc2zSie+k3ag9/MuTFahFwLVtLCuiEZBGnwWbOdYomTZ3ozx3hYK
+         lo7w0X1j7z9hNkmijOWRPqsW4QnwtOv7XiQ77HOEHy9/5JAcnhpLia6dstp9LOkkZwqL
+         BZIEXaWNfn9aYXwKtet/ZZpWHruVCDycYdTzgGCzXqKL9K6uMqDlrP0TomkZzKeg0MUM
+         lV2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719443067; x=1720047867;
+        d=1e100.net; s=20230601; t=1719443071; x=1720047871;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jYTcox1uxiDsgrgstLUNMompUZVUnfSZPE6ZrKVubcY=;
-        b=OnnmAhBM4CzMw5YjIQP3fHdKFzNkkDj8RWzwoWXrF8gSfodyzh2xNK7HFdJWnwWen4
-         5Bx+OiUMnleiASbccV+TEPtoKKK/mMZuAO868nV7pQkdy8PJd9kUVWQb073aZ2BkdhRH
-         HKnSGcapQlxAgc+5k4QYuUm7j1WEr7dU5wSJjh1R28NORARwAoXxUHLsuCDZMXJGId/4
-         aPBPsDYgj3hdoBWWk7gQkfvN5hpVEiu9JxeiNwJHfeo7fDWVe/QJ27uLKthS8zOLTpY+
-         6th8KFmuh3INIW8VRzrewX5Q7uSsa6ypyHYG2QyGth9Fx+MkqAhOJqVRgRtVX9ecru1u
-         Vukw==
-X-Forwarded-Encrypted: i=1; AJvYcCUHUNSophi7oasyyTrt8eAHGscElfg9mEOuJDYcNGVFwI3EgM112kfQMgOB5mWQhdeEv2IS3hwLHh+i5hJzUCPKHeM+ScZIVs0Y80oU
-X-Gm-Message-State: AOJu0YxuiwLDCSon1E/Bvpzwr02oivl8ynwMqTA96rat7Lnvmuci4hmv
-	FqPwwvXPN4432qfSxUfFVOSr8TQ3rkxCW9W4rGVNgZRuVhNr7ir4Kz95JE7zFI7vgJ0xREbxLPu
-	kWeJW4loPYg==
-X-Google-Smtp-Source: AGHT+IFovcMZN+k505LVJQ0M7+wE+Qk1gQ7CAGuZCVOne74Cr/uZsi84LMT4f7Jo9RaI7qWgiK8IxZ8+6US2HQ==
+        bh=t/AvM/q6eju1FsW+yZoXAdsmFslERaWnMqALTvRepcM=;
+        b=hBwH0IbN+bbmlAPw4xFit81B10NcpXjf9Vv92ZQvLHjddKlEef+f80Ba1gg4gF7kA2
+         ideeRhe0ZBpwnnWDyObGZl7gBZsjHUTLyO2chowsFIQiPg+K0bSuuIYAT8PSdkDghBAR
+         7UF2pc56QpfO9vs5etdtii/wI56foESEUuRCN1EwPN5PUhIcbQzbecS+g7kojvibWckh
+         i7yDljZstHSuIUu9MFq2OS6VLJufHhVhm0O+q5Nj6CKGpxlaKlCvYVi84wN1vzm//FIu
+         Xdl2qJnPj/7V4LKptpdml6NLcnmMie1GRj4qxzEnM+W0LiDl5wjpHyCK7JCSQKh6K+rk
+         t3IA==
+X-Forwarded-Encrypted: i=1; AJvYcCVqF7fVA8Y+9xHwyyU2+2Y956lsDiMiBK8WJPg0bbfJOBUIdZsBUgykAVu4PlFR1wwpeY3eQ1BBBkQbmhvBglgcSHxX4EXAGCDinL3h
+X-Gm-Message-State: AOJu0YwwQkQIWe9RJ64UtWZomm85BcgkmYVL6oe6bNFXHJaUGs9ls/GL
+	rWBFx9PvgyXNut0hAcQ4AEjqyRly5X0TqrSqTuRQ4R0rl94r3j0qPWZRjozVlynkBzNXk91e/BB
+	TlLHQACRHqA==
+X-Google-Smtp-Source: AGHT+IGHbW9wWs9Mfi0inpboOmSQg9uCUPvebnEdxpQuJ2+zXLOG/ST6R9W4mdAq7jmPeHiFUa3LGqjhiLvsAw==
 X-Received: from ip.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:57f3])
- (user=ipylypiv job=sendgmr) by 2002:a63:3d43:0:b0:71a:1f6f:1d0f with SMTP id
- 41be03b00d2f7-71b5c3db10amr29716a12.6.1719443067521; Wed, 26 Jun 2024
- 16:04:27 -0700 (PDT)
-Date: Wed, 26 Jun 2024 23:04:07 +0000
+ (user=ipylypiv job=sendgmr) by 2002:a05:6902:f85:b0:e03:33c7:5678 with SMTP
+ id 3f1490d57ef6-e0333c75779mr304400276.13.1719443070943; Wed, 26 Jun 2024
+ 16:04:30 -0700 (PDT)
+Date: Wed, 26 Jun 2024 23:04:09 +0000
 In-Reply-To: <20240626230411.3471543-1-ipylypiv@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,245 +59,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240626230411.3471543-1-ipylypiv@google.com>
 X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
-Message-ID: <20240626230411.3471543-3-ipylypiv@google.com>
-Subject: [PATCH v3 2/6] ata: libata-scsi: Do not overwrite valid sense data
- when CK_COND=1
+Message-ID: <20240626230411.3471543-5-ipylypiv@google.com>
+Subject: [PATCH v3 4/6] ata: libata-scsi: Do not pass ATA device id to ata_to_sense_error()
 From: Igor Pylypiv <ipylypiv@google.com>
 To: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>
 Cc: Tejun Heo <tj@kernel.org>, Hannes Reinecke <hare@suse.de>, linux-ide@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Igor Pylypiv <ipylypiv@google.com>, stable@vger.kernel.org
+	linux-kernel@vger.kernel.org, Igor Pylypiv <ipylypiv@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Current ata_gen_passthru_sense() code performs two actions:
-1. Generates sense data based on the ATA 'status' and ATA 'error' fields.
-2. Populates "ATA Status Return sense data descriptor" / "Fixed format
-   sense data" with ATA taskfile fields.
+ATA device id is not used in ata_to_sense_error().
 
-The problem is that #1 generates sense data even when a valid sense data
-is already present (ATA_QCFLAG_SENSE_VALID is set). Factoring out #2 into
-a separate function allows us to generate sense data only when there is
-no valid sense data (ATA_QCFLAG_SENSE_VALID is not set).
-
-As a bonus, we can now delete a FIXME comment in atapi_qc_complete()
-which states that we don't want to translate taskfile registers into
-sense descriptors for ATAPI.
-
-Cc: stable@vger.kernel.org
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
 Signed-off-by: Igor Pylypiv <ipylypiv@google.com>
 ---
- drivers/ata/libata-scsi.c | 158 +++++++++++++++++++++-----------------
- 1 file changed, 86 insertions(+), 72 deletions(-)
+ drivers/ata/libata-scsi.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
-index a9e44ad4c2de..26b1263f5c7c 100644
+index 6b6e35292620..02af4d5d5799 100644
 --- a/drivers/ata/libata-scsi.c
 +++ b/drivers/ata/libata-scsi.c
-@@ -230,6 +230,80 @@ void ata_scsi_set_sense_information(struct ata_device *dev,
- 				   SCSI_SENSE_BUFFERSIZE, information);
- }
- 
-+/**
-+ *	ata_scsi_set_passthru_sense_fields - Set ATA fields in sense buffer
-+ *	@qc: ATA PASS-THROUGH command.
-+ *
-+ *	Populates "ATA Status Return sense data descriptor" / "Fixed format
-+ *	sense data" with ATA taskfile fields.
-+ *
-+ *	LOCKING:
-+ *	None.
-+ */
-+static void ata_scsi_set_passthru_sense_fields(struct ata_queued_cmd *qc)
-+{
-+	struct scsi_cmnd *cmd = qc->scsicmd;
-+	struct ata_taskfile *tf = &qc->result_tf;
-+	unsigned char *sb = cmd->sense_buffer;
-+
-+	if ((sb[0] & 0x7f) >= 0x72) {
-+		unsigned char *desc;
-+		u8 len;
-+
-+		/* descriptor format */
-+		len = sb[7];
-+		desc = (char *)scsi_sense_desc_find(sb, len + 8, 9);
-+		if (!desc) {
-+			if (SCSI_SENSE_BUFFERSIZE < len + 14)
-+				return;
-+			sb[7] = len + 14;
-+			desc = sb + 8 + len;
-+		}
-+		desc[0] = 9;
-+		desc[1] = 12;
-+		/*
-+		 * Copy registers into sense buffer.
-+		 */
-+		desc[2] = 0x00;
-+		desc[3] = tf->error;
-+		desc[5] = tf->nsect;
-+		desc[7] = tf->lbal;
-+		desc[9] = tf->lbam;
-+		desc[11] = tf->lbah;
-+		desc[12] = tf->device;
-+		desc[13] = tf->status;
-+
-+		/*
-+		 * Fill in Extend bit, and the high order bytes
-+		 * if applicable.
-+		 */
-+		if (tf->flags & ATA_TFLAG_LBA48) {
-+			desc[2] |= 0x01;
-+			desc[4] = tf->hob_nsect;
-+			desc[6] = tf->hob_lbal;
-+			desc[8] = tf->hob_lbam;
-+			desc[10] = tf->hob_lbah;
-+		}
-+	} else {
-+		/* Fixed sense format */
-+		sb[0] |= 0x80;
-+		sb[3] = tf->error;
-+		sb[4] = tf->status;
-+		sb[5] = tf->device;
-+		sb[6] = tf->nsect;
-+		if (tf->flags & ATA_TFLAG_LBA48)  {
-+			sb[8] |= 0x80;
-+			if (tf->hob_nsect)
-+				sb[8] |= 0x40;
-+			if (tf->hob_lbal || tf->hob_lbam || tf->hob_lbah)
-+				sb[8] |= 0x20;
-+		}
-+		sb[9] = tf->lbal;
-+		sb[10] = tf->lbam;
-+		sb[11] = tf->lbah;
-+	}
-+}
-+
- static void ata_scsi_set_invalid_field(struct ata_device *dev,
- 				       struct scsi_cmnd *cmd, u16 field, u8 bit)
- {
-@@ -837,10 +911,8 @@ static void ata_to_sense_error(unsigned id, u8 drv_stat, u8 drv_err, u8 *sk,
-  *	ata_gen_passthru_sense - Generate check condition sense block.
-  *	@qc: Command that completed.
-  *
-- *	This function is specific to the ATA descriptor format sense
-- *	block specified for the ATA pass through commands.  Regardless
-- *	of whether the command errored or not, return a sense
-- *	block. Copy all controller registers into the sense
-+ *	This function is specific to the ATA pass through commands.
-+ *	Regardless of whether the command errored or not, return a sense
-  *	block. If there was no error, we get the request from an ATA
-  *	passthrough command, so we use the following sense data:
-  *	sk = RECOVERED ERROR
-@@ -875,63 +947,6 @@ static void ata_gen_passthru_sense(struct ata_queued_cmd *qc)
- 		 */
- 		scsi_build_sense(cmd, 1, RECOVERED_ERROR, 0, 0x1D);
- 	}
--
--	if ((sb[0] & 0x7f) >= 0x72) {
--		unsigned char *desc;
--		u8 len;
--
--		/* descriptor format */
--		len = sb[7];
--		desc = (char *)scsi_sense_desc_find(sb, len + 8, 9);
--		if (!desc) {
--			if (SCSI_SENSE_BUFFERSIZE < len + 14)
--				return;
--			sb[7] = len + 14;
--			desc = sb + 8 + len;
--		}
--		desc[0] = 9;
--		desc[1] = 12;
--		/*
--		 * Copy registers into sense buffer.
--		 */
--		desc[2] = 0x00;
--		desc[3] = tf->error;
--		desc[5] = tf->nsect;
--		desc[7] = tf->lbal;
--		desc[9] = tf->lbam;
--		desc[11] = tf->lbah;
--		desc[12] = tf->device;
--		desc[13] = tf->status;
--
--		/*
--		 * Fill in Extend bit, and the high order bytes
--		 * if applicable.
--		 */
--		if (tf->flags & ATA_TFLAG_LBA48) {
--			desc[2] |= 0x01;
--			desc[4] = tf->hob_nsect;
--			desc[6] = tf->hob_lbal;
--			desc[8] = tf->hob_lbam;
--			desc[10] = tf->hob_lbah;
--		}
--	} else {
--		/* Fixed sense format */
--		sb[0] |= 0x80;
--		sb[3] = tf->error;
--		sb[4] = tf->status;
--		sb[5] = tf->device;
--		sb[6] = tf->nsect;
--		if (tf->flags & ATA_TFLAG_LBA48)  {
--			sb[8] |= 0x80;
--			if (tf->hob_nsect)
--				sb[8] |= 0x40;
--			if (tf->hob_lbal || tf->hob_lbam || tf->hob_lbah)
--				sb[8] |= 0x20;
--		}
--		sb[9] = tf->lbal;
--		sb[10] = tf->lbam;
--		sb[11] = tf->lbah;
--	}
- }
+@@ -785,7 +785,6 @@ static void ata_qc_set_pc_nbytes(struct ata_queued_cmd *qc)
  
  /**
-@@ -1634,6 +1649,8 @@ static void ata_scsi_qc_complete(struct ata_queued_cmd *qc)
- 	u8 *cdb = cmd->cmnd;
- 	int need_sense = (qc->err_mask != 0) &&
- 		!(qc->flags & ATA_QCFLAG_SENSE_VALID);
-+	int need_passthru_sense = (qc->err_mask != 0) ||
-+		(qc->flags & ATA_QCFLAG_SENSE_VALID);
+  *	ata_to_sense_error - convert ATA error to SCSI error
+- *	@id: ATA device number
+  *	@drv_stat: value contained in ATA status register
+  *	@drv_err: value contained in ATA error register
+  *	@sk: the sense key we'll fill out
+@@ -799,8 +798,8 @@ static void ata_qc_set_pc_nbytes(struct ata_queued_cmd *qc)
+  *	LOCKING:
+  *	spin_lock_irqsave(host lock)
+  */
+-static void ata_to_sense_error(unsigned id, u8 drv_stat, u8 drv_err, u8 *sk,
+-			       u8 *asc, u8 *ascq)
++static void ata_to_sense_error(u8 drv_stat, u8 drv_err, u8 *sk, u8 *asc,
++			       u8 *ascq)
+ {
+ 	int i;
  
- 	/* For ATA pass thru (SAT) commands, generate a sense block if
- 	 * user mandated it or if there's an error.  Note that if we
-@@ -1645,13 +1662,16 @@ static void ata_scsi_qc_complete(struct ata_queued_cmd *qc)
- 	 * asc,ascq = ATA PASS-THROUGH INFORMATION AVAILABLE
+@@ -934,7 +933,7 @@ static void ata_gen_passthru_sense(struct ata_queued_cmd *qc)
  	 */
- 	if (((cdb[0] == ATA_16) || (cdb[0] == ATA_12)) &&
--	    ((cdb[2] & 0x20) || need_sense))
--		ata_gen_passthru_sense(qc);
--	else if (need_sense)
-+	    ((cdb[2] & 0x20) || need_passthru_sense)) {
-+		if (!(qc->flags & ATA_QCFLAG_SENSE_VALID))
-+			ata_gen_passthru_sense(qc);
-+		ata_scsi_set_passthru_sense_fields(qc);
-+	} else if (need_sense) {
- 		ata_gen_ata_sense(qc);
--	else
-+	} else {
- 		/* Keep the SCSI ML and status byte, clear host byte. */
- 		cmd->result &= 0x0000ffff;
-+	}
- 
- 	ata_qc_done(qc);
- }
-@@ -2590,14 +2610,8 @@ static void atapi_qc_complete(struct ata_queued_cmd *qc)
- 	/* handle completion from EH */
- 	if (unlikely(err_mask || qc->flags & ATA_QCFLAG_SENSE_VALID)) {
- 
--		if (!(qc->flags & ATA_QCFLAG_SENSE_VALID)) {
--			/* FIXME: not quite right; we don't want the
--			 * translation of taskfile registers into a
--			 * sense descriptors, since that's only
--			 * correct for ATA, not ATAPI
--			 */
-+		if (!(qc->flags & ATA_QCFLAG_SENSE_VALID))
- 			ata_gen_passthru_sense(qc);
--		}
- 
- 		/* SCSI EH automatically locks door if sdev->locked is
- 		 * set.  Sometimes door lock request continues to
+ 	if (qc->err_mask ||
+ 	    tf->status & (ATA_BUSY | ATA_DF | ATA_ERR | ATA_DRQ)) {
+-		ata_to_sense_error(qc->ap->print_id, tf->status, tf->error,
++		ata_to_sense_error(tf->status, tf->error,
+ 				   &sense_key, &asc, &ascq);
+ 		ata_scsi_set_sense(qc->dev, cmd, sense_key, asc, ascq);
+ 	} else {
+@@ -976,7 +975,7 @@ static void ata_gen_ata_sense(struct ata_queued_cmd *qc)
+ 	 */
+ 	if (qc->err_mask ||
+ 	    tf->status & (ATA_BUSY | ATA_DF | ATA_ERR | ATA_DRQ)) {
+-		ata_to_sense_error(qc->ap->print_id, tf->status, tf->error,
++		ata_to_sense_error(tf->status, tf->error,
+ 				   &sense_key, &asc, &ascq);
+ 		ata_scsi_set_sense(dev, cmd, sense_key, asc, ascq);
+ 	} else {
 -- 
 2.45.2.803.g4e1b14247a-goog
 
