@@ -1,189 +1,141 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88291187575
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 13:10:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B35C21836FE;
+	Wed, 26 Jun 2024 13:10:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719407402; cv=none; b=YVvN0sLDxLG++3kwZDoEIuJO0McfS1JSo5u+1YTc7ETeRY9NWOs8yVE7svLJYG+qj/9HrW7CMYJdclhq+pRjI/hQJar1ge10o+pDpmAcJOj82BkDdVfkehK4DuzXe4xGzjcCYSYYwmasN1sSLCF8CQD0Su1WMxBnc/+RWaXdva8=
+	t=1719407405; cv=none; b=GaQNJ82I+V3MhmAW17eASWSJu6w86hRXWk35QEFqhbkFWkUeayD+oDM1wXIi+4EOS0sLtMjOy0dtZAnUHuSO1uaqTjkmqdIcHtvMgJ4qq5HzLt44QyOZwLtkLXPo0CBEPjqDRcfqq4r9r3qKdRlWIJG7SNX2R6RDn0RVKiigkbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719407402; c=relaxed/simple;
-	bh=1nsWpj/1AHADQ4wqup/AgTW4I3Ye+rUKhZdyv9agWxQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gy2mAxpfshRMKY1IDl/D/oQceg2jaQs2KqRkWW/uG6nPbf0VOueSt3Lx0vq217bffkWqe9tv0D8TMjKU6sJXTtmCufV05crJSuxjzK8uIpwL49cxFCweJRvFcWYk69m9afTpcgk0IzpFVc4OlLlfThW9ElEK+QETvwjNFgWILak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=FvBI4Q4Q; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="FvBI4Q4Q"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-42108856c33so3771445e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 06:10:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719407399; x=1720012199; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QWrbp7YnSuSg4cTyCRLd07oshRok5ClJY3Zre9Kj0ww=;
-        b=FvBI4Q4Q3HQCTqPsoEoLRnI8gOmuBXhqSSPpUCRZPUo4xW5tKaSwy26l0QxSQ/rt+y
-         1Q9yizARS8f/nYAdicq2qMYq9s1EemDfqztUruz3B/qIw4/63N+UccACntKQem4nxITR
-         FddT4jnF3KxLVlHM8D1qHktQq2ZI4/0IYTr1fQwY1vS7sObxiz2KpDmoucXp1h40lHJI
-         /CwSzjlLdq82mfX/KmqE461P6ax0l9rnYnxzZxTADxJ9LEHYQSy1xmdTdZaPwbqvBRai
-         ey6rMGb5bRqod+H/R3GR39jkm9PGbLwFfuaOjlFA8UzPJBYeV5/xf3DTiltZtuUU9Nhv
-         5fwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719407399; x=1720012199;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QWrbp7YnSuSg4cTyCRLd07oshRok5ClJY3Zre9Kj0ww=;
-        b=MdovldWS6l2QgLO6lip1ZqzJ2E7Ha3eyqRGKthErCAESpNwAHjmRWtIDZudqQCZG51
-         NaOlMbBUa9fQ/e9nvHdl5tU8XhFKMMpe+/su27KWmjFV3ei0MnsJAPPCubFo2k66DbAf
-         2X7zObr2LVFHhlRdvfbU6JxNdtm6rUAdFYgGeYBNLeVlZts1N+Mk0nzgZ9jvd6ep2F0r
-         IEZ2P3NKvscj5IaQssypmk7JNWqQipaRMsm1G+0b32J+M3uh+o8vc9GeRm6DL+qyk8yN
-         RHUImkMT6+Mt7PM/wy1gitHuEU0kpoDGqxAoIFswwmWRDN0xKAEXshQGAcnu79t5HYV3
-         QSAw==
-X-Forwarded-Encrypted: i=1; AJvYcCVqgQ4L5PWmp/kYOeUVbJ1WabN7aCWy6JcEcO28SPODe6sTPOUkOJCJ1t9h9a/koa1gYEvldA4QnaGQVTSosF9wl1MRkL09zVrSVKR4
-X-Gm-Message-State: AOJu0YxabpNSbv/00VOIXcD2oZLzOOLbn5WAIQrQI04IK1Zn1jZGK7x9
-	NlN3N5QcZG/PiCGn/Cgzipzz8w+f9kTjZv6YnXybd3JLlME6jHjx2fnabLkilVs=
-X-Google-Smtp-Source: AGHT+IF1O9RqB95BpuZCH8OUjPkY7BW4xVu+M+7CZDEbvz5gp1RkR9X5IwXEN5r4vgMt231tIFpnRA==
-X-Received: by 2002:a05:6000:1c4:b0:367:3404:1c06 with SMTP id ffacd0b85a97d-36734041cecmr473355f8f.20.1719407398822;
-        Wed, 26 Jun 2024 06:09:58 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3663ada0bdesm15712197f8f.113.2024.06.26.06.09.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 06:09:58 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Andrea Parri <parri.andrea@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Leonardo Bras <leobras@redhat.com>,
-	Guo Ren <guoren@kernel.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-arch@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v2 06/10] riscv: Implement xchg8/16() using Zabha
-Date: Wed, 26 Jun 2024 15:03:43 +0200
-Message-Id: <20240626130347.520750-7-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240626130347.520750-1-alexghiti@rivosinc.com>
-References: <20240626130347.520750-1-alexghiti@rivosinc.com>
+	s=arc-20240116; t=1719407405; c=relaxed/simple;
+	bh=fbyEDTduMIiV7ATd0/mO/o39aMMcYcfKWmIo8CJP4ig=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NDj2EFAQoV2jm+S1KZp4B0yZ+MWKDoMWRMEKWCQ1Y1+D9Xwulfh8iAaF0KJBLgHMfgIeSz2dcHLBb1/CCCXMoamElIjgwRmytQT3dpzRzuXekCcc28OhKDtZE35Cqjynh40bTng+2Cus4bpASBR4vUKFp/T7PKif7IeC8S4wDsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B660F339;
+	Wed, 26 Jun 2024 06:10:25 -0700 (PDT)
+Received: from [192.168.178.6] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 103273F73B;
+	Wed, 26 Jun 2024 06:09:58 -0700 (PDT)
+Message-ID: <99518a43-8347-4f62-aaf6-de6ce68eca0c@arm.com>
+Date: Wed, 26 Jun 2024 15:09:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv2 3/3] cpuidle: teo: Don't count non-existent intercepts
+To: Christian Loehle <christian.loehle@arm.com>, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, rafael@kernel.org
+Cc: vincent.guittot@linaro.org, qyousef@layalina.io, peterz@infradead.org,
+ daniel.lezcano@linaro.org, ulf.hansson@linaro.org, anna-maria@linutronix.de,
+ kajetan.puchalski@arm.com, lukasz.luba@arm.com
+References: <20240611112413.1241352-1-christian.loehle@arm.com>
+ <20240611112413.1241352-4-christian.loehle@arm.com>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Content-Language: en-US
+In-Reply-To: <20240611112413.1241352-4-christian.loehle@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This adds runtime support for Zabha in xchg8/16() operations.
+On 11/06/2024 13:24, Christian Loehle wrote:
+> When bailing out early, teo will not query the sleep length anymore
+> since commit 6da8f9ba5a87 ("cpuidle: teo:
+> Skip tick_nohz_get_sleep_length() call in some cases") with an
+> expected sleep_length_ns value of KTIME_MAX.
+> This lead to state0 accumulating lots of 'intercepts' because
+> the actually measured sleep length was < KTIME_MAX, so count KTIME_MAX
+> as a hit (we have to count them as something otherwise we are stuck)
+> and therefore teo taking too long to recover from intercept-heavy
+> scenarios.
+> 
+> Fundamentally we can only do one of the two:
+> 1. Skip sleep_length_ns query when we think intercept is likely
 
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- arch/riscv/include/asm/cmpxchg.h | 33 +++++++++++++++++++++++++++++---
- arch/riscv/include/asm/hwcap.h   |  1 +
- arch/riscv/kernel/cpufeature.c   |  1 +
- 3 files changed, 32 insertions(+), 3 deletions(-)
+Isn't this what we do right now? Skip tick_nohz_get_sleep_length() for
+state0 and set cpu_data->sleep_length_ns to KTIME_MAX in teo_select()
+and then count this as an 'intercept' in teo_update().
 
-diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
-index da42f32ea53d..eb35e2d30a97 100644
---- a/arch/riscv/include/asm/cmpxchg.h
-+++ b/arch/riscv/include/asm/cmpxchg.h
-@@ -11,8 +11,17 @@
- #include <asm/fence.h>
- #include <asm/alternative.h>
- 
--#define __arch_xchg_masked(sc_sfx, prepend, append, r, p, n)		\
-+#define __arch_xchg_masked(sc_sfx, swap_sfx, prepend, sc_append,	\
-+			   swap_append, r, p, n)			\
- ({									\
-+	__label__ zabha, end;						\
-+									\
-+	if (IS_ENABLED(CONFIG_RISCV_ISA_ZABHA)) {			\
-+		asm goto(ALTERNATIVE("nop", "j %[zabha]", 0,		\
-+				     RISCV_ISA_EXT_ZABHA, 1)		\
-+			 : : : : zabha);				\
-+	}								\
-+									\
- 	u32 *__ptr32b = (u32 *)((ulong)(p) & ~0x3);			\
- 	ulong __s = ((ulong)(p) & (0x4 - sizeof(*p))) * BITS_PER_BYTE;	\
- 	ulong __mask = GENMASK(((sizeof(*p)) * BITS_PER_BYTE) - 1, 0)	\
-@@ -28,12 +37,25 @@
- 	       "	or   %1, %1, %z3\n"				\
- 	       "	sc.w" sc_sfx " %1, %1, %2\n"			\
- 	       "	bnez %1, 0b\n"					\
--	       append							\
-+	       sc_append							\
- 	       : "=&r" (__retx), "=&r" (__rc), "+A" (*(__ptr32b))	\
- 	       : "rJ" (__newx), "rJ" (~__mask)				\
- 	       : "memory");						\
- 									\
- 	r = (__typeof__(*(p)))((__retx & __mask) >> __s);		\
-+	goto end;							\
-+									\
-+zabha:									\
-+	if (IS_ENABLED(CONFIG_RISCV_ISA_ZABHA)) {			\
-+		__asm__ __volatile__ (					\
-+			prepend						\
-+			"	amoswap" swap_sfx " %0, %z2, %1\n"	\
-+			swap_append						\
-+			: "=&r" (r), "+A" (*(p))			\
-+			: "rJ" (n)					\
-+			: "memory");					\
-+	}								\
-+end:;									\
- })
- 
- #define __arch_xchg(sfx, prepend, append, r, p, n)			\
-@@ -56,8 +78,13 @@
- 									\
- 	switch (sizeof(*__ptr)) {					\
- 	case 1:								\
-+		__arch_xchg_masked(sc_sfx, ".b" swap_sfx,		\
-+				   prepend, sc_append, swap_append,	\
-+				   __ret, __ptr, __new);		\
-+		break;							\
- 	case 2:								\
--		__arch_xchg_masked(sc_sfx, prepend, sc_append,		\
-+		__arch_xchg_masked(sc_sfx, ".h" swap_sfx,		\
-+				   prepend, sc_append, swap_append,	\
- 				   __ret, __ptr, __new);		\
- 		break;							\
- 	case 4:								\
-diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
-index e17d0078a651..f71ddd2ca163 100644
---- a/arch/riscv/include/asm/hwcap.h
-+++ b/arch/riscv/include/asm/hwcap.h
-@@ -81,6 +81,7 @@
- #define RISCV_ISA_EXT_ZTSO		72
- #define RISCV_ISA_EXT_ZACAS		73
- #define RISCV_ISA_EXT_XANDESPMU		74
-+#define RISCV_ISA_EXT_ZABHA		75
- 
- #define RISCV_ISA_EXT_XLINUXENVCFG	127
- 
-diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-index 5ef48cb20ee1..c125d82c894b 100644
---- a/arch/riscv/kernel/cpufeature.c
-+++ b/arch/riscv/kernel/cpufeature.c
-@@ -257,6 +257,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
- 	__RISCV_ISA_EXT_DATA(zihintpause, RISCV_ISA_EXT_ZIHINTPAUSE),
- 	__RISCV_ISA_EXT_DATA(zihpm, RISCV_ISA_EXT_ZIHPM),
- 	__RISCV_ISA_EXT_DATA(zacas, RISCV_ISA_EXT_ZACAS),
-+	__RISCV_ISA_EXT_DATA(zabha, RISCV_ISA_EXT_ZABHA),
- 	__RISCV_ISA_EXT_DATA(zfa, RISCV_ISA_EXT_ZFA),
- 	__RISCV_ISA_EXT_DATA(zfh, RISCV_ISA_EXT_ZFH),
- 	__RISCV_ISA_EXT_DATA(zfhmin, RISCV_ISA_EXT_ZFHMIN),
--- 
-2.39.2
+> 2. Have accurate data if sleep_length_ns is actually intercepted when
+> we believe it is currently intercepted.
+> 
+> This patch chooses the latter as I've found the additional time it
+> takes to query the sleep length to be negligible and the variants of
+> option 1 (count all unknowns as misses or count all unknown as hits)
+> had significant regressions (as misses had lots of too shallow idle
+> state selections and as hits had terrible performance in
+> intercept-heavy workloads).
+
+IMHO, you do 2 things here:
+
+(1) Set 'cpu_data->sleep_length_ns != KTIME_MAX' for '!idx &&
+    prev_intercept_idx' in teo_select().
+
+(2) Force an update with 'cpu_data->sleep_length_ns == KTIME_MAX' to be
+    counted as a 'hit' rather an 'intercept' in teo_update().
+
+Can't really see how this matches the explanatory text exactly.
+
+
+> 
+> Fixes: 6da8f9ba5a87 ("cpuidle: teo: Skip tick_nohz_get_sleep_length() call in some cases")
+> Signed-off-by: Christian Loehle <christian.loehle@arm.com>
+> ---
+>  drivers/cpuidle/governors/teo.c | 18 ++++++++++++++++--
+>  1 file changed, 16 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cpuidle/governors/teo.c b/drivers/cpuidle/governors/teo.c
+> index cc7df59f488d..1e4b40474f49 100644
+> --- a/drivers/cpuidle/governors/teo.c
+> +++ b/drivers/cpuidle/governors/teo.c
+> @@ -231,8 +231,13 @@ static void teo_update(struct cpuidle_driver *drv, struct cpuidle_device *dev)
+>  	 * length, this is a "hit", so update the "hits" metric for that bin.
+>  	 * Otherwise, update the "intercepts" metric for the bin fallen into by
+>  	 * the measured idle duration.
+> +	 * If teo_select() bailed out early, we have to count this as a hit as
+> +	 * we don't know what the true sleep length would've been. Otherwise
+> +	 * we accumulate lots of intercepts at the shallower state (especially
+> +	 * state0) even though there weren't any intercepts due to us
+> +	 * anticipating one.
+>  	 */
+> -	if (idx_timer == idx_duration)
+> +	if (idx_timer == idx_duration || cpu_data->sleep_length_ns == KTIME_MAX)
+>  		cpu_data->state_bins[idx_timer].hits += PULSE;
+>  	else
+>  		cpu_data->state_bins[idx_duration].intercepts += PULSE;
+> @@ -292,7 +297,7 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+>  	unsigned int hit_sum = 0;
+>  	int constraint_idx = 0;
+>  	int idx0 = 0, idx = -1;
+> -	bool alt_intercepts, alt_recent;
+> +	int prev_intercept_idx;
+>  	s64 duration_ns;
+>  	int i;
+>  
+> @@ -370,6 +375,7 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+>  	 * all of the deeper states a shallower idle state is likely to be a
+>  	 * better choice.
+>  	 */
+> +	prev_intercept_idx = idx;
+>  	if (2 * idx_intercept_sum > cpu_data->total - idx_hit_sum) {
+>  		int first_suitable_idx = idx;
+>  
+> @@ -421,6 +427,14 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+>  			first_suitable_idx = i;
+>  		}
+>  	}
+> +	if (!idx && prev_intercept_idx) {
+> +		/*
+> +		 * We have to query the sleep length here otherwise we don't
+> +		 * know after wakeup if our guess was correct.
+> +		 */
+> +		duration_ns = tick_nohz_get_sleep_length(&delta_tick);
+> +		cpu_data->sleep_length_ns = duration_ns;
+> +	}
+>  
+>  	/*
+>  	 * If there is a latency constraint, it may be necessary to select an
 
