@@ -1,198 +1,127 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C86415F33A;
-	Wed, 26 Jun 2024 09:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9CD16849C
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 09:07:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719392849; cv=none; b=mTn98hhB0FK9AwDZzUKrug/LcNUlRJhkpC5xOiluJZHpP/62nN/s4QS1Qsz66uM7Nup7SKnyIPvX4pPGnZ3Fw0sJwoN811tft5HhHSutEaBqPGIYoQLcHThxVVtqVmItIJyylscoaz28Q9+IIq9IuFNnYVOZBpTyBaS9anjFr1k=
+	t=1719392868; cv=none; b=VQQpOCKxEj4Uvc1UKPgQKRXgkITRbq/KEOQxyxSV2wQ9f1ZUMky/raishIpbI68aWEqYzcGnVQTtC2bsDqEEv6I073N9ub5EXlqUAaFUwJskgwWAcAcxNlN8x1AywIeYqxqlDPin0YFh5qCkYXPay0tIGE/gyNdOLV96g+Kwub4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719392849; c=relaxed/simple;
-	bh=Vef46PKEnj+c20gxbE0Uu58kS6RdxRRCUeDVUuJMjso=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=km82hDP/r0N3FrQqCJy9wdHVKI6j/5HmQp0rRhyUDqaQ1BEdgVBIYK+cqK/eAC8KcM14iMMSJwTdCZu4ayvQQ5v/xBwit2jc8OIw1zqIS0m8Xvzkdg1h6qwCg2qi0shAKph5q9bft7svQSQjNeIX5J9FKfGq/1Wm8SMGGhM5JGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E6XZ/z1Z; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719392868; c=relaxed/simple;
+	bh=ssH+6iURMN7zx64iT61gWIWA5rPqCh8kGeC+MevKIHU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DpVDtXl6d74AyS05M7FlcpHJZD8blgUVsURxdhmG8Kbbl3qyDVNyTWrS95gUuXjgHsJGXdDypTGygl47lp4KVJh+oFmVHJ3fpOoZ1VxTzGf90jmZ+6gkuAbrt/m6mfDj2I/9GrnF/3el+piI/mVl93D0TQqCYzE0744gBtYv3uA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=MdI6eein; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E6XZ/z1Z"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52cd87277d8so4868519e87.2;
-        Wed, 26 Jun 2024 02:07:27 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="MdI6eein"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57d07f07a27so7441608a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 02:07:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719392846; x=1719997646; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=76/161HoTumb+iDrdbol7NJLj3KBEjm/AeLJQvuGQYM=;
-        b=E6XZ/z1ZNeF2Ss0WOEfCd4s1EJF9pjBH5N3hUKRSHhQrUfJQ0ELSBT7oHYdmC81oW0
-         kBsHCNf8gkT0+qW7IrNKYXM7R3eYGXkXBlDdxqzKgdg99HACDFyrQvufhnT67prkfjoX
-         OnKt1V5nrpXfUN1+q5xx/7ELGNeqocGTrWqtwrz+lbOIiKyGsKgkX551KJRqZKalGitr
-         dLjddjOQcDe4D4XomgDRyKgNMU6O82QMul+jo3JVaLYxkFTHRhyk1H8K3ED5nNArBGwW
-         SvWjG/6CTxhbXKezErJXE/ASak8YG0BRLy3vCdcTvnha5YY51CBgv1y9DllnzTClFAQC
-         O3Bg==
+        d=amarulasolutions.com; s=google; t=1719392865; x=1719997665; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6lxJDkVp4n9+n100SOtMCWceyFBnjbdm10d/AO3Twck=;
+        b=MdI6eeinTKb5wFX6TVzWmfAtKWgiJC6nutanQfCgFhYFzKwnKkL7v/3pJLsznjKfBJ
+         iacqiS+EBV+oCwu8ShFQwZfNmgwB60BWrwndZfzDKYFY5o4b6vpMN73x9DHEzxH5rZpK
+         2XZFmeEribEfd9fSqP7EcxjL5WLNYI/Xe55F0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719392846; x=1719997646;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=76/161HoTumb+iDrdbol7NJLj3KBEjm/AeLJQvuGQYM=;
-        b=srAiVKSKsaJWJ2YgttVkbvLFq32g9GmjAqM6Qz+JXvm6yZ1NRfC3JFXwiUoKkClKk2
-         b48Vw2lmlsaUOp8OUHqe8cojxnYtSdMV856ysYxIalE8kbqBY0Vngre9BSGpQY+nIq2i
-         8oa0ORHXgADoEfMtoqID8RlOaLRT+dzSWD9l6YGeZax8nCREUxOEnLkNAj+O7VpbJCyg
-         o9jDeaOSDdXHB8pTyTxVY9Trip2tmdi/8smjTXxxagvNLCnNGpcJw5XAC45QZUVFVJlN
-         IbvYR84mndUl158wZm/S90JB4J9AzX6Qy9pzDl/Tt0n4sbIP6XJTVA5ad7Km7q7v/fgP
-         d9oQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVFglCX73AxZGiJ8d1uAVW595GLrCmRzfOapfgnTCgX9De7TYggq7hLTCBFU1wrbfAalPjMHk1yUFPHosYNSmQnTnrE5I0acCPmrkA6dLSc4NbdH1ZvFePwUdIRdo3YsajpTW+jgchTMqJ1hklPwdT/Ms3pjYUFxxEgddo3k5lzue+3ULQT4PiY
-X-Gm-Message-State: AOJu0YzxKjHxLT+q/7tmAa4DngzTWp54eR5gHayqeKuU4S82JiStEApC
-	Xc33jC6R6fpa/P5d1E9XxwExW/FbA8Sl2EThf6nJ3LjmjizuKT2bY2c8Yw==
-X-Google-Smtp-Source: AGHT+IFZmB6mGtubKzB8dHrJhQUZN+wpPbJjxQUSSxefcinOlw8QmfoZ2F+jKhN6CWJaO6QMqWqLEg==
-X-Received: by 2002:a05:6512:3450:b0:52c:dea8:7ca0 with SMTP id 2adb3069b0e04-52ce185cf71mr5655473e87.55.1719392844938;
-        Wed, 26 Jun 2024 02:07:24 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8cfe:d6e7:6701:9dfd? ([2a10:a5c0:800d:dd00:8cfe:d6e7:6701:9dfd])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52cd84b23d9sm1455429e87.202.2024.06.26.02.07.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Jun 2024 02:07:24 -0700 (PDT)
-Message-ID: <8d964b3f-e2d0-44b2-bece-92380b8c9a5d@gmail.com>
-Date: Wed, 26 Jun 2024 12:07:22 +0300
+        d=1e100.net; s=20230601; t=1719392865; x=1719997665;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6lxJDkVp4n9+n100SOtMCWceyFBnjbdm10d/AO3Twck=;
+        b=wUITvfIo1tobb7e3iHEHe5i4qbCmvHp4rJAUxlvRXBFcucA3xr54wL8cP83d5W+S4V
+         Z+YWaWhNbu9zEPPPJFi6SE53wTENi7pJhGL6rxFHw+vRCJp4uRQAVJB6XTXocL3P8OdD
+         6m2yA4OODP+PVOI1tiGE2M/JfNUBZJD9tstXueNsKoPN1M7Vrpu4xwonYebVFekxyMcd
+         Cpj5Xts79HP1k5fzF/U8ZTbhVQIV9a9BSCjO0+JXTV7W9EI62zLvQuEV/9L3p+ecJMVp
+         DtAdpxV//6fyx7qzKrr/WCRk8MhEXJYpm9b4R7Bj8r1qQlr316QfD8eu8wlC4ljGYbQY
+         AzCg==
+X-Forwarded-Encrypted: i=1; AJvYcCXpPuPegbuLPT0ry7aBhd8PZbs1MEncN3kg0oOH25kQA7hJl8gi/9+x8jj6YLBl2i08JlmGTb97Q4Db712itflVh4B66qjfUOiyZ1HY
+X-Gm-Message-State: AOJu0YxZ+SdSm4sgBDGwh7ExtijjNfc3w68Mzu5Ln2BHGn0PSARvdKSR
+	XcQaz04KXdvuXvvdeDjYgdp7Cewqyx0ImY0BYUm8Qt4Kso85iZwaMKJnLuSsxqhMLaRj4yX8pQI
+	eLsVe3X7wKdE7ngHKMhU5cjTgwyUpHxobkbVBEA==
+X-Google-Smtp-Source: AGHT+IHykAPt//reChktNIqv1b8u1tQWErhzQtFS2JSTQpUaKUXwg3goKPI4W/qQKafT4xUP3B30jIrlQPXEK6H9lgE=
+X-Received: by 2002:a50:9350:0:b0:57d:24ce:cbc8 with SMTP id
+ 4fb4d7f45d1cf-57d4bdcedebmr6248778a12.31.1719392865433; Wed, 26 Jun 2024
+ 02:07:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/6] Support ROHM BD96801 Scalable PMIC
-To: Lee Jones <lee@kernel.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck
- <linux@roeck-us.net>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-References: <cover.1718356964.git.mazziesaccount@gmail.com>
- <20240620143859.GM3029315@google.com>
-Content-Language: en-US, en-GB
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20240620143859.GM3029315@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240626084515.2829595-1-make24@iscas.ac.cn> <AM6PR04MB594141B66F1DEB2354ADDF7B88D62@AM6PR04MB5941.eurprd04.prod.outlook.com>
+In-Reply-To: <AM6PR04MB594141B66F1DEB2354ADDF7B88D62@AM6PR04MB5941.eurprd04.prod.outlook.com>
+From: Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
+Date: Wed, 26 Jun 2024 11:07:33 +0200
+Message-ID: <CAOf5uwkrGGPrfAcHO_hDQEZMvBHZ5JR9B=7=COSJLGjQV307SQ@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: mxs-dma: Add check for dma_set_max_seg_size in mxs_dma_probe()
+To: Peng Fan <peng.fan@nxp.com>
+Cc: Ma Ke <make24@iscas.ac.cn>, "vkoul@kernel.org" <vkoul@kernel.org>, 
+	"shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, 
+	"kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, 
+	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/20/24 17:38, Lee Jones wrote:
-> On Fri, 14 Jun 2024, Matti Vaittinen wrote:
-> 
->> Support ROHM BD96801 Scalable PMIC
->>
->> The ROHM BD96801 is automotive grade PMIC, intended to be usable in
->> multiple solutions. The BD96801 can be used as a stand-alone, or together
->> with separate 'companion PMICs'. This modular approach aims to make this
->> PMIC suitable for various use-cases.
->>
->> This series brings only limited support. The more complete set of
->> features was sent in the RFC:
->> https://lore.kernel.org/lkml/cover.1712058690.git.mazziesaccount@gmail.com/
->>
->> The v3: implemented also support for ERRB interrupt and setting a name
->> suffix to IRQ domains. That work was postponed and will be continued
->> after some unrelated changes to irqdomain code are completed as
->> discussed here:
->> https://lore.kernel.org/all/87plst28yk.ffs@tglx/
->>
->> Revision history still tries to summarize changes from the RFC for the
->> reviewers.
->>
->> Revision history:
->> v3 => v4:
->>   - Drop patches 7 to 10 (inclusive) until preparatory irqdomain changes
->>     are done.
->>   - Cleanups as suggested by Lee.
->> 	- Change the regulator subdevice name. (MFD and regulators).
->> 	- Minor styling in MFD driver
->>
->> v2 => v3: Mostly based on feedback from Thomas Gleixner
->> 	- Added acks from Krzysztof and Mark
->> 	- Rebased on v6.10-rc2
->> 	- Drop name suffix support for legacy IRQ domains (both
->> 	  irqdomain and regmap)
->> 	- Improve the commit message for patch 7/10
->>
->> v1 => v2:
->> 	- Add support for setting a name suffix for fwnode backed IRQ domains.
->> 	- Add support for setting a domain name suffix for regmap-IRQ.
->> 	- Add handling of ERRB IRQs.
->> 	- Small fixes based on feedback.
->>
->> RFCv2 => v1:
->> 	- Drop ERRB IRQ from drivers (but not DT bindings).
->> 	- Drop configuration which requires STBY - state.
->> 	- Fix the register lock race by moving it from the regulator
->> 	  driver to the MFD driver.
->>
->> RFCv1 => RFCv2:
->> 	- Tidying code based on feedback form Krzysztof Kozlowski and
->> 	  Lee Jones.
->> 	- Documented undocumented watchdog related DT properties.
->> 	- Added usage of the watchdog IRQ.
->> 	- Use irq_domain_update_bus_token() to work-around debugFS name
->> 	  collision for IRQ domains.
->>
->> ---
->>
->>
->> Matti Vaittinen (6):
->>    dt-bindings: ROHM BD96801 PMIC regulators
->>    dt-bindings: mfd: bd96801 PMIC core
->>    mfd: support ROHM BD96801 PMIC core
->>    regulator: bd96801: ROHM BD96801 PMIC regulators
->>    watchdog: ROHM BD96801 PMIC WDG driver
->>    MAINTAINERS: Add ROHM BD96801 'scalable PMIC' entries
->>
->>   .../bindings/mfd/rohm,bd96801-pmic.yaml       | 173 ++++
->>   .../regulator/rohm,bd96801-regulator.yaml     |  63 ++
->>   MAINTAINERS                                   |   4 +
->>   drivers/mfd/Kconfig                           |  13 +
->>   drivers/mfd/Makefile                          |   1 +
->>   drivers/mfd/rohm-bd96801.c                    | 273 ++++++
->>   drivers/regulator/Kconfig                     |  12 +
->>   drivers/regulator/Makefile                    |   2 +
->>   drivers/regulator/bd96801-regulator.c         | 908 ++++++++++++++++++
->>   drivers/watchdog/Kconfig                      |  13 +
->>   drivers/watchdog/Makefile                     |   1 +
->>   drivers/watchdog/bd96801_wdt.c                | 416 ++++++++
->>   include/linux/mfd/rohm-bd96801.h              | 215 +++++
->>   include/linux/mfd/rohm-generic.h              |   1 +
->>   14 files changed, 2095 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd96801-pmic.yaml
->>   create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd96801-regulator.yaml
->>   create mode 100644 drivers/mfd/rohm-bd96801.c
->>   create mode 100644 drivers/regulator/bd96801-regulator.c
->>   create mode 100644 drivers/watchdog/bd96801_wdt.c
->>   create mode 100644 include/linux/mfd/rohm-bd96801.h
-> 
-> allmodconfig and allyesconfig builds fail with:
-> 
->    make[5]: *** No rule to make target 'drivers/regulator/da903x.o', needed by 'drivers/regulator/built-in.a'.
->    make[5]: Target 'drivers/regulator/' not remade because of errors.
+Hi
 
-Bummer!
+On Wed, Jun 26, 2024 at 11:02=E2=80=AFAM Peng Fan <peng.fan@nxp.com> wrote:
+>
+> > Subject: [PATCH] dmaengine: mxs-dma: Add check for
+> > dma_set_max_seg_size in mxs_dma_probe()
+>
+> Please read
+> https://lore.kernel.org/all/ZiocjS6tbeTt2mPD@matsya/
+>
+> Regards,
+> Peng.
+>
+> >
+> > As the possible failure of the dma_set_max_seg_size(), we should
+> > better check the return value of the dma_set_max_seg_size().
+> >
+> > Fixes: a580b8c5429a ("dmaengine: mxs-dma: add dma support for
+> > i.MX23/28")
+> > Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+> > ---
+> >  drivers/dma/mxs-dma.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c index
+> > cfb9962417ef..90cbb9b04b02 100644
+> > --- a/drivers/dma/mxs-dma.c
+> > +++ b/drivers/dma/mxs-dma.c
+> > @@ -798,7 +798,9 @@ static int mxs_dma_probe(struct
+> > platform_device *pdev)
+> >       mxs_dma->dma_device.dev =3D &pdev->dev;
+> >
+> >       /* mxs_dma gets 65535 bytes maximum sg size */
+> > -     dma_set_max_seg_size(mxs_dma->dma_device.dev,
+> > MAX_XFER_BYTES);
+> > +     ret =3D dma_set_max_seg_size(mxs_dma->dma_device.dev,
+> > MAX_XFER_BYTES);
+> > +     if (ret)
+> > +             return ret;
+> >
 
-There is unrelated change in the Makefile. I must've messed up a rebase! 
-Sorry! I'll send new version with corrected Makefile - latest early next 
-week. (I suppose new version is appropriate instead of a follow-up as 
-this breaks the build).
+If the function returns an error then you should check for it. If it's
+not logical to have it, then you could
+make void the function that is called and WARN_ON on an illogical situation
 
-Thanks for the heads-up Lee!
+Michael
 
-Yours,
-	-- Matti
-
--- 
-Matti Vaittinen
-Linux kernel developer at ROHM Semiconductors
-Oulu Finland
-
-~~ When things go utterly wrong vim users can always type :help! ~~
-
+> >       mxs_dma->dma_device.device_alloc_chan_resources =3D
+> > mxs_dma_alloc_chan_resources;
+> >       mxs_dma->dma_device.device_free_chan_resources =3D
+> > mxs_dma_free_chan_resources;
+> > --
+> > 2.25.1
+> >
+>
+>
