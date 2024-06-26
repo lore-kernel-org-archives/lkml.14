@@ -1,84 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC1F17D37E;
-	Wed, 26 Jun 2024 11:54:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30ADD149E06;
+	Wed, 26 Jun 2024 11:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719402893; cv=none; b=bRZCgSMNFpMPEva2MkZTTBokCC2PYU0H6GgzUW+3vss/QWfFVfhtCJ23jTLYI9w3CBIphGTM9zap+k7N3SqjbA8R0c5eumnwLahXxguezg3t6105Xfi7k8xh27LfemeBagoFU84Cm8LyHJbqv5c1UFlDt7WXpEDmMDBd6Qeg+bM=
+	t=1719402949; cv=none; b=jSEM5oUlIQr5uLUmxklG9LcbMUgLST6TU8kLcP9LoJcEePiGn+HsX4k7P72Jo1AmH062RUsteV754Xjnu+8ScBiqEAfCamN/dZ/pFhpkw3RkG3RXBu6oeRWpL//HRlZJleeqZELom71a5J+Vg6SpTEFa/Ahhquj+O8c8F7sxUTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719402893; c=relaxed/simple;
-	bh=Z4f5P14gfddhvoGI8bqxaeXaG2n8qogI/Lq5uB6zaFk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ECDgOlra6dUr30l2w+CcBmCKFtFtAVfG4BjqeTqvCPohbeUj+KuQDBbN8x4YvbS6/sYGTa4dbs8CQg4/CmNIDQ2wZ2WscGJ0+WacsmBHfSq44GrvSwGy6nWAXZfFcqFbkdY9SzluYHgMd9h4XrSnKNp/hmINOWTsI2QWGNnSetM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NCw/7D+F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719402949; c=relaxed/simple;
+	bh=LexiWfrYm9DMTWjiLp0N38eu6kBfhX6jtR4dGHx5BGw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rS70o8++YWadrkL59vvgvGY8KB0z4a4qj0IIlj4bh+yhQ/Ejy2RehrlYbpn6p+D+shRZ9+pVmxlD5fcRiF8wNVnb8FcZxU7VxvHAAro+Kf6ueN3j9lzqjCaA9ow1sAZXubGDsb3IqPCpg/7kSM2l/UBTQv8RUvMTNMhvIBCxe5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=JyaYUA9n; arc=none smtp.client-ip=193.104.135.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NCw/7D+F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0699BC2BD10;
-	Wed, 26 Jun 2024 11:54:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719402893;
-	bh=Z4f5P14gfddhvoGI8bqxaeXaG2n8qogI/Lq5uB6zaFk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NCw/7D+FJeMBQGQgAiyUNaW8gT4NJwkSTC7qkbozoZjZjxnrBGUUTuoCmLk05nmy0
-	 jyZGh7K/DJzogE/GhCJzNcz1mD6zZWequHuDQTK8KLE/iJBi/3Ft31FozXReiJbqMf
-	 kojVpvBQFE/v7H6KxxOYQvo5RjP82WbsvxhHIu4TdwWD9a7ccTdhoZs0eoEUBjqzsk
-	 N7cG2lKK705bycGl9KUKG93jetVCbKuKKoaHAtFVe+/YAPaQXafLCiGf1L0l5uQpam
-	 g09wLAq7yBA0jmQYJ3tHjUgdm0FGsVefq8qEVnRJ6s41RrEJYK4fuYfFzkRPieIPeS
-	 iofZQrp8UGc+w==
-Date: Wed, 26 Jun 2024 19:40:48 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: kernel test robot <lkp@intel.com>, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [tip:irq/core 41/49] drivers/irqchip/irq-dw-apb-ictl.c:33:25:
- error: expected '=', ',', ';', 'asm' or '__attribute__' before
- 'dw_apb_ictl_handle_irq'
-Message-ID: <Znv-QA4QM_JLZwo3@xhacker>
-References: <202406250214.WZEjWnnU-lkp@intel.com>
- <87v81y6v6d.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="JyaYUA9n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
+	s=202008; t=1719402937;
+	bh=LexiWfrYm9DMTWjiLp0N38eu6kBfhX6jtR4dGHx5BGw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JyaYUA9nkBmZSDRdAjW37V75tgvL6HDpQUnnlE5tlhaJY8qhmxTR/SmZu+UUfCKSC
+	 8gzuKAs/Jt+5NaAxDi42TNtLN2drIEetNQM2h04lHeUVq52XEFnxCpqQf/kzL0FasW
+	 u5ER0d9EzP3YGGdNARwxnz96Rz7e49dK33NWUoZRGvO3uSKEOGkzvCDR40TAyBj83n
+	 tE4VnhZwkTDOsM0fFHizpMqcIwl9yU3KAt3DXTSZPsxwhFU2knmvWi4cuk/4mJtKY8
+	 jftckm8tcX0W4+KFTz3fTBfUyQ+7H7GrUD/fFv2i0Y04Y8OaaSTPvzmvQqrbezCgzb
+	 WLY1MmjWL/GOg==
+Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
+	by mail1.fiberby.net (Postfix) with ESMTPSA id 9B6AC60078;
+	Wed, 26 Jun 2024 11:55:36 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by x201s (Postfix) with ESMTP id B99592018B3;
+	Wed, 26 Jun 2024 11:55:31 +0000 (UTC)
+Message-ID: <d2df2837-070b-4669-8a35-c3d1341849d2@fiberby.net>
+Date: Wed, 26 Jun 2024 11:55:31 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87v81y6v6d.ffs@tglx>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH net-next 2/9] net/sched: cls_flower: prepare
+ fl_{set,dump}_key_flags() for ENC_FLAGS
+To: Davide Caratti <dcaratti@redhat.com>
+Cc: Ilya Maximets <i.maximets@ovn.org>, Jamal Hadi Salim <jhs@mojatatu.com>,
+ Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ David Ahern <dsahern@kernel.org>, Simon Horman <horms@kernel.org>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240611235355.177667-1-ast@fiberby.net>
+ <20240611235355.177667-3-ast@fiberby.net>
+ <ZnVR3LsBSvfRyTDD@dcaratti.users.ipa.redhat.com>
+ <0fa312be-be5d-44a1-a113-f899844f13be@fiberby.net>
+ <ZnvkIHCsqnDLlVa9@dcaratti.users.ipa.redhat.com>
+ <CAKa-r6uqO20RB-fEVRifAEE_hLA50Zch=wbKtX8vNt5m6kE5_Q@mail.gmail.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Asbj=C3=B8rn_Sloth_T=C3=B8nnesen?= <ast@fiberby.net>
+In-Reply-To: <CAKa-r6uqO20RB-fEVRifAEE_hLA50Zch=wbKtX8vNt5m6kE5_Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 24, 2024 at 08:40:42PM +0200, Thomas Gleixner wrote:
-> On Tue, Jun 25 2024 at 02:06, kernel test robot wrote:
-> > Hi Jisheng,
-> >
-> > First bad commit (maybe != root cause):
-> >
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/core
-> > head:   f2605e1715dd28e8943b557453fed3a40421d3b5
-> > commit: 7cc4f309c933ec5d64eea31066fe86bbf9e48819 [41/49] irqchip/dw-apb-ictl: Support building as module
-> > config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20240625/202406250214.WZEjWnnU-lkp@intel.com/config)
-> > compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
-> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240625/202406250214.WZEjWnnU-lkp@intel.com/reproduce)
-> >
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202406250214.WZEjWnnU-lkp@intel.com/
-> >
-> > All errors (new ones prefixed by >>):
-> >
-> >>> drivers/irqchip/irq-dw-apb-ictl.c:33:25: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'dw_apb_ictl_handle_irq'
-> >       33 | static void __irq_entry dw_apb_ictl_handle_irq(struct pt_regs *regs)
-> >          |                         ^~~~~~~~~~~~~~~~~~~~~~
+Hi Davide,
+
+On 6/26/24 10:01 AM, Davide Caratti wrote:
+> On Wed, Jun 26, 2024 at 11:49 AM Davide Caratti <dcaratti@redhat.com> wrote:
+>>
+>> So, we must htonl() the policy mask in the second hunk in patch 7,something like:
+
+Good catch.
+
+> or maybe better (but still untested), use NLA_BE32, like netfilter does in [1]
 > 
-> That's because the drivers is now selectable via Kconfig, so
-> allmodconfig sets it to M and builds it which does not work on a x86
-> build unsurprisingly.
+> [1] https://elixir.bootlin.com/linux/latest/A/ident/NF_NAT_RANGE_MASK
 
-Yes, I didn't take care this.
+Yes, that is better. It should work, as it triggers a htonl() in nla_validate_mask().
 
-> 
-> Jisheng, please send a delta fix ASAP. Otherwise I have to revert it.
-
-I missed it. I will send a v2. Even if it's too late, it can be picked
-up in next development window.
+-- 
+Best regards
+Asbjørn Sloth Tønnesen
+Network Engineer
+Fiberby - AS42541
