@@ -1,135 +1,105 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2440C19004C
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 17:44:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A34218FDBF;
+	Wed, 26 Jun 2024 17:46:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719423854; cv=none; b=E0vm7636bH7d92kT0yTXBRMxTGZz7OA0vElF5KYxIFoHw0CUjWV7YQjyZkACpOZirtbpPnQmId+SoWsHH+iXZzBEOWlXbHsJNnmfhQarn4eey3D23O6Rs7gY83/08vb0XQY/DyW3/gQtKpvhTW3vLgzMc4ymWZtjTq1ZxEk6798=
+	t=1719423972; cv=none; b=GczYcb5YYQaOvxIM+3RCJWi29y8oFG9vwL4jIKLhqNmZJzux+iaToR0H5RXHmanxs+fo5Y6Fh+XR2lmO9Ob0Fov3l83kpaw8WkPYj+bOwPyuqX6aVEUMsVXcNOdyh1HhSqTLcOG11J9dZzkdUXd6/sXJ/PHD8ltW6dfW8GXvgzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719423854; c=relaxed/simple;
-	bh=/io84hCwNbZcZKn9HhK0O8w0sd+tGoi/1ISDC9vOJx8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nVq+v7+yIgVwPyvN55CD1taaRd5v51h/MUOQvacgIkgYc1awNdWe+LJle89JuNoYKjKZmKev+q04hslhSQHAf4UKJollSmyLzQlYToXr0Av8aw0Gy5WfM3Isk+Af5c7NTy2DWbhs865IjwOzYBzJhQEYe6Bbcqo3mbzStXj/eCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xfMHYoCj; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719423972; c=relaxed/simple;
+	bh=v0Vh4kAkmKCJro2vJe6FJUdsNe+J9F0n0qvBZYaqEMY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Pq2FrvaLJl03I8ax2tBrPdbw7Xiso2Rg1eQszWwmiVDjJ5mLSfvjN+nIVoBtKzBapQ1+Jvfrq3ViUXFNZ+QHRolf++xXjzp3Nn/+UiLsVird8Hh8Gcwo6OkKdlHZ2BIdTCt+l8mVW16VlaLhPyGA+rapkMNl9zldMt92e55GTCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=K7rO6ztX; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xfMHYoCj"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52ce09b76e0so724304e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 10:44:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719423851; x=1720028651; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/+RSCVFLz9dWkUiNsQKrMfnEz/6x83/Tw3aZ3JSUbSg=;
-        b=xfMHYoCjoWZorBkeORDx2hka6n5QDUpkeVOvAHEXpIWT0hOBHicTjFvaZqflPFbxbr
-         mfuZyWs6E7wxFt8HBXMbyEgV0N6NDgKNwqhZOtnZKndgvRhIjFritQnanzIu2KZQ/K8c
-         R7TqqkHE8hSxL+XgxV1hUFDuQODE+OhJMvFr9Bf+13jgnLcUCXEa+XtzChAbdCMxDBV6
-         ZVGAqcDXkI80Ih7CluRtuf1rnEPHxkMQKezCN5KjFgj/LIYpRuxZDhjTLlAzuJZTwlnW
-         ArYSPyfNkHaT9cgVRHKbbQkp2cKs55MiXDYStPq0rm86qKEVKdkkYR6dNV/ogVExvwKZ
-         oOWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719423851; x=1720028651;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/+RSCVFLz9dWkUiNsQKrMfnEz/6x83/Tw3aZ3JSUbSg=;
-        b=eilRsTmtxnYKjQ7OgraIyxohY27krQauIQHUER/GSXXqEeC8pdyqJzsMsrxprPyZuf
-         /Qb+shGf+EDP7HypGPwHar/aJAZQMJXu82/Vs65wQPnvymSdfR3XpYCQyWdtWe+NbzCO
-         QxSiQkcI6e4Y1EM/adfi0w3lCAAJW5WUizGvSXqCrozdzx+iSaWOsV1UDcZm0e8uHWLr
-         y4XoN+NcLcOp+W5ieqfnh2RXYjfSnOEzZ4bV2skE7s8EM+sH/+S6R07J6eUzJfdHi2Of
-         ToURSy1RrTVdmkyfkPj7JHtA5KFgfIGxAFwdxrctiR+8SYEVrKEzcT91TZCVZ3M8KgwJ
-         gakg==
-X-Forwarded-Encrypted: i=1; AJvYcCX+zfVKY+Brq4i0MIUUM/KfMPhcDLpwN60LYbKWt67eIRfXY9kT1w4x/ecnXqZPBW88WkShCQaDFryEKG0KcpE1Es3b8xXMw/ahvH/Q
-X-Gm-Message-State: AOJu0YxVOJCx4oyrGKfU7z66z7y0ae+24aCzueWCyDuTTI+b2nEwRR8Y
-	57DuPOwkl66ZGoD/X3WYdshXup9aixEli0HXnsFQ9E5AFyngsVFdqa2WxOBYk7g=
-X-Google-Smtp-Source: AGHT+IGnUAROwlJn+4uQP1wT4fjtCJ2sVWNGvlK5tM6g25KfhEOOoihtvJG60M8WXMyNj0tndQxo8Q==
-X-Received: by 2002:a05:6512:b91:b0:52c:a070:944 with SMTP id 2adb3069b0e04-52e6ecf7b82mr69374e87.23.1719423849374;
-        Wed, 26 Jun 2024 10:44:09 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52cde8b5658sm1339462e87.256.2024.06.26.10.44.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 10:44:08 -0700 (PDT)
-Date: Wed, 26 Jun 2024 20:44:07 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Ram Prakash Gupta <quic_rampraka@quicinc.com>
-Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, 
-	Bart Van Assche <bvanassche@acm.org>, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, quic_cang@quicinc.com, quic_nguyenb@quicinc.com, 
-	quic_pragalla@quicinc.com, quic_nitirawa@quicinc.com
-Subject: Re: [PATCH 1/2] scsi: ufs: Suspend clk scaling on no request
-Message-ID: <62m4bfyhgzidseda2mduetaq4b2onlpjkxzsc3skc3fx7iw3xh@eyt2nwn2cuoi>
-References: <20240626103033.2332-1-quic_rampraka@quicinc.com>
- <20240626103033.2332-2-quic_rampraka@quicinc.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="K7rO6ztX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1719423968;
+	bh=v0Vh4kAkmKCJro2vJe6FJUdsNe+J9F0n0qvBZYaqEMY=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=K7rO6ztXaBSACwy14eiHwe4hrwfzRq5yJy1iqhmvYCDKsiBoSHGcpTQfoZL32bfGs
+	 AlaBzTi8sk2IF8OyyAL8Wd6xq24K6CzLDz+/ozJ4gSKYCAhgkAcHqQsrwShLb93nzT
+	 /GgSMJnyEMBpAbpQ39/oULIfSMlGdNv3J+S/oqCZGaNfTgSLDIPIZhrXjnWjQKtDUx
+	 5QWDM2KjxIus5KQEbw4+dUpDHXBHU65TSQvHg5cVpLOjNq41x9l2qoxQgPM3O85R2d
+	 hTrPMYsJUXUNUoURTASSdK1rvxDARVMd/1VZLbCu5MiGMEwfEPmYwUA9qb0ambYCCc
+	 7vwcdDloLSu+A==
+Received: from nicolas-tpx395.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 5CF0A37810CD;
+	Wed, 26 Jun 2024 17:46:06 +0000 (UTC)
+Message-ID: <f04e25bf3c09c55049775e8f012cb653cb4682ba.camel@collabora.com>
+Subject: Re: [PATCH v7 6/6] arm64: dts: rockchip: Add VPU121 support for
+ RK3588
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: Jianfeng Liu <liujianfeng1994@gmail.com>, sebastian.reichel@collabora.com
+Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, 
+ ezequiel@vanguardiasur.com.ar, frattaroli.nicolas@gmail.com,
+ heiko@sntech.de,  kernel@collabora.com, krzk+dt@kernel.org,
+ linkmauve@linkmauve.fr,  linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org,  linux-rockchip@lists.infradead.org,
+ p.zabel@pengutronix.de, robh@kernel.org,  sigmaris@gmail.com,
+ detlev.casanova@collabora.com
+Date: Wed, 26 Jun 2024 13:46:03 -0400
+In-Reply-To: <20240621092234.280171-1-liujianfeng1994@gmail.com>
+References: <20240618183816.77597-7-sebastian.reichel@collabora.com>
+	 <20240621092234.280171-1-liujianfeng1994@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 (3.52.2-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240626103033.2332-2-quic_rampraka@quicinc.com>
 
-On Wed, Jun 26, 2024 at 04:00:32PM GMT, Ram Prakash Gupta wrote:
-> Currently ufs clk scaling is getting suspended only when the
-> clks are scaled down, but next when high load is generated its
-> adding a huge amount of latency in scaling up the clk and complete
-> the request post that.
-> 
-> Now if the scaling is suspended in its existing state, and when high
-> load is generated it is helping improve the random performance KPI by
-> 28%. So suspending the scaling when there is no request. And the clk
-> would be put in low scaled state when the actual request load is low.
-> 
-> Making this change as optional for other vendor by having the check
-> enabled using vops as for some vendor suspending without bringing the
-> clk in low scaled state might have impact on power consumption on the
-> SoC.
-> 
-> Signed-off-by: Ram Prakash Gupta <quic_rampraka@quicinc.com>
-> ---
->  drivers/ufs/core/ufshcd.c | 3 ++-
->  include/ufs/ufshcd.h      | 1 +
->  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-> index 1b65e6ae4137..0dc9928ae18d 100644
-> --- a/drivers/ufs/core/ufshcd.c
-> +++ b/drivers/ufs/core/ufshcd.c
-> @@ -1560,7 +1560,8 @@ static int ufshcd_devfreq_target(struct device *dev,
->  		ktime_to_us(ktime_sub(ktime_get(), start)), ret);
->  
->  out:
-> -	if (sched_clk_scaling_suspend_work && !scale_up)
-> +	if (sched_clk_scaling_suspend_work && (!scale_up ||
-> +				hba->clk_scaling.suspend_on_no_request))
+Hi Jianfeng,
 
-Really a nit: moving !scale_up to the next line would make easier to
-read.
+Le vendredi 21 juin 2024 =C3=A0 17:22 +0800, Jianfeng Liu a =C3=A9crit=C2=
+=A0:
+> Hi Sebastian,
+>=20
+> Detlev is working on rkvdec2 and gstreamer can't deal with two h264
 
->  		queue_work(hba->clk_scaling.workq,
->  			   &hba->clk_scaling.suspend_work);
->  
-> diff --git a/include/ufs/ufshcd.h b/include/ufs/ufshcd.h
-> index bad88bd91995..c14607f2890b 100644
-> --- a/include/ufs/ufshcd.h
-> +++ b/include/ufs/ufshcd.h
-> @@ -457,6 +457,7 @@ struct ufs_clk_scaling {
->  	bool is_initialized;
->  	bool is_busy_started;
->  	bool is_suspended;
-> +	bool suspend_on_no_request;
->  };
->  
->  #define UFS_EVENT_HIST_LENGTH 8
-> -- 
-> 2.17.1
-> 
+Just to clarify, since you are right that it won't work well with GStreamer=
+. It
+does work with multiple decoders (it exposes them all), it is simply that i=
+t
+will randomly pick one when decoding, and it may not pick the best one.
 
--- 
-With best wishes
-Dmitry
+> stateless decoders. So it's better to disable h264 decoding feature of
+> this vpu121, just like what we have done for rk3399. If your multicore
+> patch can handle the jpeg enc node at fdb50000 with other VEPU121 nodes
+> properly, we can just use compatible string "rockchip,rk3399-vpu" instead
+> of "rockchip,rk3568-vpu".
+
+In the long term, I'd like to stop having to do "like downstream" and expos=
+e
+them all. I believe the fix is fairly straightforward in GStreamer. We need=
+ to
+expose in the generated element the width/height ranges, and for H.264 the
+supported profiles and level. With that, we at least won't randomly fail at
+decoding 4K, and it should be good enough.
+
+For RK3588, which is a new SoC, its not a problem to upstream something tha=
+t
+does not work with existing userspace. It would only be a regression if we =
+where
+to enable VDPU121 on RK3399, as now updating linux would cause bugs with
+existing userspace.
+
+For users, it would be best if we get this sorted out in GStreamer by the t=
+ime
+we have a second decoder. Note that I have some vacation coming up this mon=
+th,
+so there might be extra delays. Yet, its logical to merge this (the "worst"
+decoder) first, since then randomly picking a better one won't be a regress=
+ion.
+
+Nicolas
