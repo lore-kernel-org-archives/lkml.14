@@ -1,194 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01olkn2021.outbound.protection.outlook.com [40.92.107.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08768BEF;
-	Wed, 26 Jun 2024 09:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719394901; cv=none; b=JwepR0FuLlI550LZ9HYE4cHtQbPTfb2d7/xS+w+Iyqpn5vvFxf19oUVHlKc/647pL/Z0TQyADNXceYroNnxeXG3F0UKfjwQxusw36/2XuSDnMyxhmArFbLFAFAY3d+JxQBL94/MRXirzJdyV06LZw9KHdsWf6/OouLycsQS8WsE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719394901; c=relaxed/simple;
-	bh=s3z7HXMv4Han+cJsdchl0Tjew+5XriJiwIN+Ja5UnaI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MeNL21XRxpDXvNONeZ90HD7NY95wfBj4RXr2/vjID1LpA8GAXTJlKXRS9E1+a1rZJjsMVzRvdkBa/tnKEPbiRmmn3GJx/+8cJHM4kwP0Ad98XPxR4RU/3jkgwAKfEWbHFbyBMF+zqOpvxiUDWcmD/fYvZOTa0R25lOxfR/api7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uOrrSKWm; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1317B16D33A;
+	Wed, 26 Jun 2024 09:41:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.107.21
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719394913; cv=fail; b=LO3bAG+4CFYTvkG3HzxO9LTC8bPYhMeZriW+wcbvyiYXVx0UEU3vGyUfCuU3BNezF9NSBNzrJQP2NMFeEgD08WtlTC7cbU7d1ZDT8c2uCd0dLfA7MrH/uvIURwJfPp6lnvcffRBmjFfMzpCZgHOfhEppMbAeXRRs31HSUUwInag=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719394913; c=relaxed/simple;
+	bh=50g6sRfgx1/t7QamK3wBhoAI7vzV5xtuU0LXzLiMOiw=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=AUOT00mbkNsY1LlOyYM5I0V4cRHaVXherdeTxWzinONDa1XOpVtSJ8V7VxT5QVwnfgmMiWFQWGSdfUJr90KHfEPBPyWfvIKvE5QX7ATzbJ85imjchIsZbiCjqE978MBaBrx4DHdPXmZAn8MeTR+ZwEupn+WE3VZ2gJUz2x29S2M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=bDYqTNGZ; arc=fail smtp.client-ip=40.92.107.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uOrrSKWm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C58D4C32786;
-	Wed, 26 Jun 2024 09:41:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719394900;
-	bh=s3z7HXMv4Han+cJsdchl0Tjew+5XriJiwIN+Ja5UnaI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uOrrSKWmRIW4TSdz+ruUE1K5qfT30Xcy9B4W9WAYRPr0ClteEew+XD0o8YxxRtYHj
-	 d9412DC9EwkSRtEYo+rYXmmhw26ome1CIq5U/zB3CKH8k3tvIjRcyjEK00INVhPii/
-	 XCcMXIUU9HuxGhokj4CDpQixmu9xU7xSBiqRuGIpS30+fD9B8/iU4LxX9iN005G2xh
-	 Gf5Mthm42iLQgZAMPHmOicHnjyipeVIGIDzk2VX6/PfZvm38n1rEoywuSZRV4PKFy2
-	 TK3qFxAaK9TsN+pxFNl9leYVXXvNSJRD5yYG3+JbhFl5nwAy3miz/mv7jYnsDvfQGY
-	 d0CrnQq6a+LnQ==
-Message-ID: <214be4bb-3e24-4868-8cb7-db73b6cd4b50@kernel.org>
-Date: Wed, 26 Jun 2024 11:41:33 +0200
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="bDYqTNGZ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B+aKq6U9Xfr4kYMXheD9aKQ46fSUv06Sw2YV0rau4HpdRSJNGpsIC93aoSXAzjxmnPnE352JX4b3PBoP4RFqg1FwxIlSIgLMKSxHK/2LszBZ/dTZL1YDmWLlY2JAC6Gu2GkQ0ZL57i/+7RsNlGy7LALjrDsF9g1blOMxuuKkkulSKDAcNPDTiGwHgbyDpLK6vksjLXIW75IpyFV2QZ2JXNyvVmd36O7+F93Tj5VNM4Ut0XyNr68Bc1JRK/kB6tdzAXh6vPSR8uEc64+WtLmultls/a3+yTx/Q4yDXXgyrCljpQzyA0YbUCX6MQlqBgUa9AJFEY9uEUlwj6/5FQjhCA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Bvb1teCh3/N7hnagGkRfo/F/3hifXIp4vV/RoCr9zJs=;
+ b=kLAwqGNBoGQQcG8k/Aq2Iwajhp/8IH+ey806s05t9/5xnYv7hQxNr8+QcmsgcMpLD2d8AxsaKyN82TOUe27HKMe/zLny63YNo/yiv43ahBa3OP22FR1kaZhailKVkGAW+oIDr2lEpxzwNtOdVVWwu3XuVYFvkcOQTiT0LjA9Odqf/8xoOPHj2yAcPET8WrU1kXYKPvxGx3kQC68Hgb645/Vo1A0Ni43rzVnXorq8bwTbfkJaPLeP5XMPdnJT+9igsFUA8NRpsCJLdsTwyrZN5TKW5f8pNJnp5NYQYW7Gq14d/Ec5Puqo/C6HCykUTgyyjNaqqu9z1PCOYgde+saMCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Bvb1teCh3/N7hnagGkRfo/F/3hifXIp4vV/RoCr9zJs=;
+ b=bDYqTNGZOHibfiffhfzFMTsJFiZlF4AjQpnhXiiG9hms2zNFRbYdwXI00iPcCdHXc83dV/LaqV9SwyL4izMmX+L2jB6/gwXDTRUVq7V2quGZ7W8OMALFIZ2OK6LSDh8cUlXT46nmNcIpewtbNuQMmJWsOeFh3BFl/b6p1/vawu+VDlmoPO97EPrUGmrA20Zz8+l9+aH0FfgN00aBAmKL3Y70P/MBxD/Iqka+13GQzho+pQ9n9eZthFlryqZ7bpJbMxABISkw7Q2aZ9C7iOHaw90y3M7kGaJVyARxndtuD0ORpSyTnLLPKDfoO6PL1u7uFKvlAQhQ89f+j0D2ZJ0i1g==
+Received: from SEYPR04MB6482.apcprd04.prod.outlook.com (2603:1096:101:be::7)
+ by SEZPR04MB6827.apcprd04.prod.outlook.com (2603:1096:101:f0::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.24; Wed, 26 Jun
+ 2024 09:41:45 +0000
+Received: from SEYPR04MB6482.apcprd04.prod.outlook.com
+ ([fe80::ca2b:8a48:a7ab:60e5]) by SEYPR04MB6482.apcprd04.prod.outlook.com
+ ([fe80::ca2b:8a48:a7ab:60e5%5]) with mapi id 15.20.7719.014; Wed, 26 Jun 2024
+ 09:41:45 +0000
+From: Noah Wang <noahwang.wang@outlook.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	jdelvare@suse.com,
+	linux@roeck-us.net
+Cc: corbet@lwn.net,
+	Delphine_CC_Chiu@Wiwynn.com,
+	peteryin.openbmc@gmail.com,
+	javier.carrasco.cruz@gmail.com,
+	patrick.rudolph@9elements.com,
+	bhelgaas@google.com,
+	lukas@wunner.de,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	Noah Wang <noahwang.wang@outlook.com>
+Subject: [PATCH v5 0/2] hwmon: Add support for MPS mp2891 chip
+Date: Wed, 26 Jun 2024 17:41:02 +0800
+Message-ID:
+ <SEYPR04MB6482EE353C207DA6977C974DFAD62@SEYPR04MB6482.apcprd04.prod.outlook.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [5NPxxu6YlqkAoDp5mm7wVMIkacgQ4Q0q]
+X-ClientProxiedBy: SI1PR02CA0054.apcprd02.prod.outlook.com
+ (2603:1096:4:1f5::13) To SEYPR04MB6482.apcprd04.prod.outlook.com
+ (2603:1096:101:be::7)
+X-Microsoft-Original-Message-ID:
+ <20240626094102.52007-1-noahwang.wang@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 1/4] dt-bindings: clock: renesas: Document
- RZ/V2H(P) SoC CPG
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
- linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
- Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20240610233221.242749-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240610233221.242749-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <34b21e6f-0896-4691-9b66-d06ef2f44905@kernel.org>
- <CA+V-a8u6dDpbb5BrQ+ty_RbwcPOF-U6rnJnuASRXEDVdrhrvAA@mail.gmail.com>
- <20438973-d7a1-427f-a2ed-5c5b9f7db872@kernel.org>
- <CAMuHMdVrXmDBxD4gGkHvs3iUuT6nnzjWzVUme7jH5u=YpyzQuw@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <CAMuHMdVrXmDBxD4gGkHvs3iUuT6nnzjWzVUme7jH5u=YpyzQuw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEYPR04MB6482:EE_|SEZPR04MB6827:EE_
+X-MS-Office365-Filtering-Correlation-Id: af7da3f9-7bfc-4fb1-3625-08dc95c4313c
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199026|3412199023|440099026|1710799026;
+X-Microsoft-Antispam-Message-Info:
+	lf22tjlxIbW8BGafW+i9kEJvG/W6voRAi0WDoZxQ2mj+CSh/Xjt9jjKtEFmXvAWGG9xzlLbgHJ28ctY50GpiVZcCycSQOs/BQZSdVF/wPRxYoI8L7ffPMrzPEiCZ0gJ6l0VSrV5XASVfnyWJpaDDlutGSeEC5qeH4OXEDG8tJhk6xBAApnU0JApTpf9cPAelz7DbbWnEGmlnKYMYtrVmYj7BTfxMI4nCHiLRHjO9MZ9RxDZDdskC94j8UyCR4A/oa51tt7d4RWlz/KMVkktlVLymKd8midu08ohBNYXIWTLmfNXlvtaLYFx4SZcSrogUAlGck7BQKtFE5us39L8RjfzjQSML+bOihqvyGh2w8sKyJ5QvDf6mftXqOocQea0RTCkAouiAa54Lch7BSokSzgoNw2r31owFuBtwrLtSEsru8NBpOQw03taWEcL0fZVo8bga1eRgiBi4QGm4r70M1EHWgD3QrAE2XjT4pdD7lw6xthDUaTdB1KHab4+VGWtNgMEUPO8aXLXtz6zBoQTh4/3ade9eqkqe3sYqPSUx+UiHAXWikxRwyHasmKKeXLZTaJVh9vHpkChD56EsOwpv1MhEUL48N0jrxsAyhrL3Jbsjw1SBx3cOk0igv0qXWZCU
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?lwbi4l9l07sGiaXCVVzXqzkAETdQCOsDXCCIcyNrceAaL0LlW5bBdqqekQ4J?=
+ =?us-ascii?Q?i6/WixC4L5VeeCu15oQfuh7BenMW86fKXf2FZrBfBxGHXk/KD2cNePBlzY2D?=
+ =?us-ascii?Q?yRWzF9AvL/w0iT4M9Mwv5cbFZeqU3lza8nWYa6XgnQOhXkqc30iki/J5kcH7?=
+ =?us-ascii?Q?IvgJWwrah1Sx+APRgKF7TvZeJQl2vzbKDWy7dRjB+6JFHB8Xx8/rYKTyOz96?=
+ =?us-ascii?Q?cK/EuxHmw4E5NHfZsEOKhH49WZNKBDjMRkcJT0HWnydkVd3VK5O77PdfWvJH?=
+ =?us-ascii?Q?lD+EbgqyqCe0vIBvCPVRvOPRC6NwbL98+jRwlBnwpmtq/ZgHSTifhdh6KZYZ?=
+ =?us-ascii?Q?pkatoPsx+gLITampgEkzm7FJekzWlf7aefIltfFE0rPcyVE8MY7nkfX+EUVn?=
+ =?us-ascii?Q?ffAA5oTgS3XtulgXLxEP29OsftrydAl/lsG8PV6e0zWcPJgpmcconjANjSjc?=
+ =?us-ascii?Q?DJlZWPd9UwYN5+loZzVF+O13YZUa2LRXpU5B43+3JqoP1Go0oIVFZys8i4jP?=
+ =?us-ascii?Q?UcBV0qC2bJqBFtUyiQp9+6g/wg9pSzRQatoxcnPessaZ63FVJX+EVkiIdqT1?=
+ =?us-ascii?Q?eQxiBkVecE1jDU0t2XX2TFd+3H5X7wy/vKcJlF6hDg468dLx5RwhQFrHQlZ8?=
+ =?us-ascii?Q?YnY9V/bPa7tsFVu+mZ8RM+BSU9exppR/AatoZkVSFsMEKSIIsRKN8JJ0zOZp?=
+ =?us-ascii?Q?jGfutcpBX/hqSzSG+z2miunsXZW3bE/g8Ric9Fg8rboNUybFjW5mewu7cz6j?=
+ =?us-ascii?Q?rIJvOu0qLw9iP1d1tr4C4acIqwtnq64wYBuBkrLZWs6yOcFc8BM7OTqr9Wsr?=
+ =?us-ascii?Q?3s+PQGqpQYy03Y7Wbsl71Nba16SwWhjKNiXz6nE1MOoFl7WKSvJ1PGlg8plT?=
+ =?us-ascii?Q?FVCPOw4JBJ3BiSaYRjpc0yIFfE0o7NVE5XiLKK/a0T9fChLk09nJJdk4ilPK?=
+ =?us-ascii?Q?Q7hqt3spVAXhOGJCcAZ87uYNfckE5+jSUj7MShWYww75rG8RS45B/+Ei/f7T?=
+ =?us-ascii?Q?0evBnlTGYtq9Rfd7jGvN+e7JxElgVGGWSp348SX/8wreYaKgIwfvFcPLXf7F?=
+ =?us-ascii?Q?2cfi/yYwWru2Fgm3hidycUwFKfyoyYFfktiEK7BBG7kAX7Vp1cwTxv031pE+?=
+ =?us-ascii?Q?ty0+CGCw+/BQSRiPalzsIkz0kuEcA2OJxOBcd7N3or1mRBELAh7ho9RSmYp5?=
+ =?us-ascii?Q?AFXNxl86X9Pwx46cj7LUJP0hnJiJnZOMN+arb3yb9RtMG5oJk4feGMY9h5Ot?=
+ =?us-ascii?Q?AC/vp8Vn8yQnWowUfJNO?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: af7da3f9-7bfc-4fb1-3625-08dc95c4313c
+X-MS-Exchange-CrossTenant-AuthSource: SEYPR04MB6482.apcprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2024 09:41:45.4387
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR04MB6827
 
-On 26/06/2024 11:35, Geert Uytterhoeven wrote:
-> Hi Krzysztof,
-> 
-> On Thu, Jun 13, 2024 at 2:57 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->> On 13/06/2024 11:53, Lad, Prabhakar wrote:
->>> On Tue, Jun 11, 2024 at 8:02 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>>> On 11/06/2024 01:32, Prabhakar wrote:
->>>>> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->>>>>
->>>>> Document the device tree bindings for the Renesas RZ/V2H(P) SoC
->>>>> Clock Pulse Generator (CPG).
->>>>>
->>>>> CPG block handles the below operations:
->>>>> - Generation and control of clock signals for the IP modules
->>>>> - Generation and control of resets
->>>>> - Control over booting
->>>>> - Low power consumption and power supply domains
->>>>>
->>>>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> 
->>>>> +  '#clock-cells':
->>>>> +    description: |
->>>>> +      - For CPG core clocks, the two clock specifier cells must be "CPG_CORE"
->>>>> +        and a core clock reference, as defined in
->>>>> +        <dt-bindings/clock/r9a09g057-cpg.h>,
->>>>
->>>> So second cell is not used?
->>>>
->>> It will be used for blocks using core clocks.
->>>
->>>>> +      - For module clocks, the two clock specifier cells must be "CPG_MOD" and
->>>>> +        a module number.  The module number is calculated as the CLKON register
->>>>> +        offset index multiplied by 16, plus the actual bit in the register
->>>>> +        used to turn the CLK ON. For example, for CGC_GIC_0_GICCLK, the
->>>>> +        calculation is (1 * 16 + 3) = 19.
->>>>
->>>> You should not have different values. Make it const: 1 and just use IDs.
->>>>
->>> Are you suggesting not to differentiate between core/mod clocks. They
->>> are differentiated because the MOD clocks can turned ON/OFF but where
->>> as with the core clocks we cannot turn them ON/OF so the driver needs
->>> to know this, hence two specifiers are used.
->>
->> Every driver knows it... I am really, what is the problem here? Are you
->> saying the drivers create some unknown clocks?
-> 
-> The driver knows for sure which clocks are module clocks, and thus can
-> be used for power management.  To simplify the driver, two separate
-> numbers spaces are used:
->   1. Core clock numbers come from IDs in the DT binding headers,
->   2. Module clock numbers come straight[1] from the hardware docs.
-> As the latter are fixed, merging them into a single number space in
-> a future-proof way is hard[2], the bindings use 2 clock cells.
+Add mp2891 driver in hwmon and add dt-bindings for it.
 
-IIUC, your module clock numbers are not DT ABI and should not be put
-into the binding headers. I think that's the case currently, right?
+v4 -> v5:
+    1. remove useless code in mp2891_identify()
+    2. add Rob's Acked-by
 
-If above is correct, considering your explanation I am fine. Thanks for
-the time to make it clear.
+v3 -> v4:
+    1. add mp2891 to Makefile, Kconfig and MAINTAINERS file
+       in alpha order
+    2. sort include files in alpha order
+    3. fix some issue in annotation
+    4. remove info variable in mp2891_probe()
+    5. add const attribute to mp2891_info variable
+    6. add mp2891 in alpha order
 
-> 
-> Alternatively, a unified number space using IDs in the DT binding
-> headers could be used, as you suggest.
-> 
-> [1] "straight" may be a misnomer here, as the DT writer still has to
->     calculate the number from register index and bit index:
-> 
->         n = register index * 16 + bit index
-> 
->     i.e. register index 1 and register bit 3 become 19.
-> 
->     In the R-Car series, this is handled slightly more elegant
->     (IMHO ;-), and easier to the human eye, by using a sparse
->     number space:
-> 
->         n = register index * 100 + bit index
-> 
->     i.e. register index 1 and register bit 3 become 103.
->     Which also matches how the bits were named in older SH-Mobile
->     hardware docs.
-> 
-> [2] One could use an offset to indicate core or module clocks, but
->     future SoCs in the family may have more clocks.
+v2 -> v3:
+    1. change PSC_VOLTAGE_IN, PSC_CURRENT_IN, PSC_TEMPERATURE,
+        and PSC_POWER format from linear to direct
+    2. add limit register writtings.
+    3. fix some coding style issues
+    4. move mp2891 dt-bindings to trivial devices
 
+V1 -> V2:
+    1. add limit register readings
+    2. add status register readings
+    3. change PSC_CURRENT_OUT format from linear to direct
+    4. add more detailed explanation for special processing
+    5. remove useless code
+    6. move identify vout_scale, iout_scale function to
+        identify() callback
+    7. update MP2891 datasheet
+    8. add mp2891 dt-bindings
 
-> 
+Noah Wang (2):
+  dt-bindings: hwmon: Add MPS mp2891
+  hwmon: add MP2891 driver
 
-Best regards,
-Krzysztof
+ .../devicetree/bindings/trivial-devices.yaml  |   2 +
+ Documentation/hwmon/index.rst                 |   1 +
+ Documentation/hwmon/mp2891.rst                | 179 ++++++
+ MAINTAINERS                                   |   7 +
+ drivers/hwmon/pmbus/Kconfig                   |   9 +
+ drivers/hwmon/pmbus/Makefile                  |   1 +
+ drivers/hwmon/pmbus/mp2891.c                  | 600 ++++++++++++++++++
+ 7 files changed, 799 insertions(+)
+ create mode 100644 Documentation/hwmon/mp2891.rst
+ create mode 100644 drivers/hwmon/pmbus/mp2891.c
+
+-- 
+2.25.1
 
