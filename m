@@ -1,126 +1,88 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mta-64-227.siemens.flowmailer.net (mta-64-227.siemens.flowmailer.net [185.136.64.227])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E6E13C909;
-	Wed, 26 Jun 2024 04:41:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4643E13B78F
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 04:42:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719376916; cv=none; b=uI102cGxXofumG84ddKGk+lEYtS7/i657MCLYG+cH+QwvRvEk2/WZP8AKlWcDv1LLJ8hupyFOqBQzdXQ4x+B7q4b4HkRVhD0diyFO30zzb5cEC+nVeoZu9mm5cZLF+F1nAWOeIOwA/H/+dQXIoDBWF6LeL+yw79ud1EDu/aL5pk=
+	t=1719376937; cv=none; b=UAUNBw6i3aPxGkNIjqSbcYVrQlJWSBgPDA2GKlkSDIMjWzFvpePGl8Gm+xWppEIJLOIXYCpxISU7JrsD6cni4mkrP3GD+MFK92Lgl3ivrzGZH3eKvPWImXvuqG9SMP2LIwpR8Yt7lSiBC8C0gATG8qYfG/pQcg+MkWCGyT5lnfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719376916; c=relaxed/simple;
-	bh=c3Yze73LZu3I/gljxsqZ2WmNEz/P/xYnIpox7TAo2FU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=rgkztRL2IJf1r27eGy498lPtFPKB9GqU3yEI282w2kFbfmNUX4AHHool6aGMkFTVfcU4LOKX8da6or4SkbqJOmRrXMlIMa/FQXigHLTPCBJcQf+pbbXH1HnpF9i9d/pZmhO2usEW9c74uX9dXG2OPaTc+vacbz38rpDS1vpYzLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hK6iMFpF; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719376937; c=relaxed/simple;
+	bh=cSteKp6CIOnq1PYX49xABbAigJDBuMpb7FyGBju3kUQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MWyW++koxQWGqjKS5ch9ZDatpAVoZvpmDdZtg0MWdO72V9kfcVyEwlWL/oBXtH/RvBd9E7L3QktUc2Y2Go/AZT6ZlND6Uao/m5B5hXJ54uQHf5AJ+p7YY2ggu2XdzKOLA/eKboaHW2W5LhM8RhVP23jSCm625tQSu2XXeNB+Rwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (1024-bit key) header.d=siemens.com header.i=jan.kiszka@siemens.com header.b=cOlrSKzE; arc=none smtp.client-ip=185.136.64.227
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hK6iMFpF"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-422948b9140so5537075e9.1;
-        Tue, 25 Jun 2024 21:41:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719376912; x=1719981712; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=OPu8o3NFntJwVaPbGld8pCdkv12AmcbKbLHyv6SdaIc=;
-        b=hK6iMFpFoJFJrEBJ2TwiWy9YXyScnmtKq0cFxEC4Jcb+nAw7GFMhdWJcoZ1QwZ9SlE
-         jawSqqjmsG0S2C0lNdcBYJFTvaUmvu1niM97pkd3ugOQBa45eLH3SLEedWHDBf0jEwi4
-         6kWV9K/k7BuO1T5oYri5JG+gppvuLA8NMjlNQ07eU2hiKA+p56a2doxWdkGvMzEOLdkn
-         ayszcaSIg7TW6GE7k1e67mZKFL5vSI4cXI9O7D4YuIQQVlUm9b59CxZKf5O0tGQmE/hA
-         flgKLyMRRTTkExlZ8+zXYbTwdRyMAtBL2Bmgcp96xBKeSPGXDVxfwH+M1JGVRWznZ+yp
-         GuTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719376912; x=1719981712;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OPu8o3NFntJwVaPbGld8pCdkv12AmcbKbLHyv6SdaIc=;
-        b=SbUB7pfzbRboxQbGiV+X5Wot/14eBI7v7Uqz+e7Saf0dEZGwSx/pGKDzsfBrx1/Ye/
-         /jGzwGRg/T0+ZIIr9FH6gUHzvLw+W4cAX+FuaUPMwFvbFVDF4Ig/lnhH+mjPzRbUY58H
-         Mvtr48HIDdg93293mXczfhaC7G5hxX9wOELczRdAo0tCWK8SSuEzjpGBwj/CynlqmcFR
-         xJmcciSHosR6MsbzxJmaVR4YT4Z9JCo/pNiFa8x+f9SE2nGrPDiPQN49XgI8AmjlE+rv
-         Ei/vQX1mJR7HkQ0WJ3Pkix+kJfYqnh3Mk17PkZA9E4HQQqzwmSqCPvsK6AJqdmCcBIoh
-         zH6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXUbXSyU+UsFeHM+LYaMP8ssLxgWdgg/1q9PuNJaxQVKdzmrWzB7ANQRkegQWn3sHkdeb4GfB0G3ztTjH2S8/WRChELaTtdMbqiPSam9/FqoKAv9VTR/hXdgddmiD8D2d/xLK63JbgTtb8=
-X-Gm-Message-State: AOJu0YxoQKaI6pdxkE8JBc/uvBHBIXMVR+8CDJTOrEatHipA7raqHgL6
-	IJUg+qmJQMHePvJSz+UGrJYFAdKiMXwN8Vh/u/YQNgwtzP4svG8E
-X-Google-Smtp-Source: AGHT+IGrG4cFrWFZFLHowsdYdllxDPlIUG7c3w0AxGdkSM0WlzloTYOFNV/Z1mztaxkugppxgJhufw==
-X-Received: by 2002:a05:600c:1c23:b0:424:8c26:a236 with SMTP id 5b1f17b1804b1-4248c26a402mr71896525e9.0.1719376912043;
-        Tue, 25 Jun 2024 21:41:52 -0700 (PDT)
-Received: from [192.168.0.103] (p57935a9b.dip0.t-ipconnect.de. [87.147.90.155])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c824ef19sm10021125e9.15.2024.06.25.21.41.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Jun 2024 21:41:51 -0700 (PDT)
-Message-ID: <c2911f68-d1e2-4b45-af95-590926b7a6f1@gmail.com>
-Date: Wed, 26 Jun 2024 06:41:50 +0200
+	dkim=pass (1024-bit key) header.d=siemens.com header.i=jan.kiszka@siemens.com header.b="cOlrSKzE"
+Received: by mta-64-227.siemens.flowmailer.net with ESMTPSA id 202406260442102548e7b32fd701ca5a
+        for <linux-kernel@vger.kernel.org>;
+        Wed, 26 Jun 2024 06:42:10 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
+ d=siemens.com; i=jan.kiszka@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
+ bh=HcAaeWHnc9AqXonQzh8RdFlKgEgIVm0dEwxF9CuTCBs=;
+ b=cOlrSKzEK/nC5Bi5DyzXX58+sjx/jrvroS+O9fosSFJ77CIiHiRwniVcMC0ymNSas+HYts
+ flMkoO51MV6LOEiE3nh1MFY67Iudes7cJbc6M6FAL6RZi6I6EQxa2EtYgx5sXkBl28hEaMYC
+ OV9iqZHSk8aSdtzNJ6rrYpkMzQuAU=;
+From: Jan Kiszka <jan.kiszka@siemens.com>
+To: Nishanth Menon <nm@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Bao Cheng Su <baocheng.su@siemens.com>,
+	Diogo Ivo <diogo.ivo@siemens.com>
+Subject: [PATCH v2 2/4] arm64: dts: ti: k3-am642-evm: Silence schema warning
+Date: Wed, 26 Jun 2024 06:42:06 +0200
+Message-ID: <f46bc2b35ff3c3b58c8825cc3c8b4d2f079a37c5.1719376928.git.jan.kiszka@siemens.com>
+In-Reply-To: <cover.1719376928.git.jan.kiszka@siemens.com>
+References: <cover.1719376928.git.jan.kiszka@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] staging: nvec: use x instead of x != NULL
-To: Tom Mounet <tommounet@gmail.com>, Marc Dietrich <marvin24@gmx.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, ac100@lists.launchpad.net,
- linux-tegra@vger.kernel.org, linux-staging@lists.linux.dev,
- linux-kernel@vger.kernel.org, outreachy@lists.linux.dev
-References: <667b2ee6.050a0220.f9c1.5426@mx.google.com>
-Content-Language: en-US
-From: Philipp Hortmann <philipp.g.hortmann@gmail.com>
-In-Reply-To: <667b2ee6.050a0220.f9c1.5426@mx.google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-294854:519-21489:flowmailer
 
-On 6/25/24 22:56, Tom Mounet wrote:
-> Comply with coding rules defined in checkpatch
-> 
-> Signed-off-by: Tom Mounet <tommounet@gmail.com>
-> ---
->   drivers/staging/nvec/nvec.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/nvec/nvec.c b/drivers/staging/nvec/nvec.c
-> index e5ca78e57..814eb121c 100644
-> --- a/drivers/staging/nvec/nvec.c
-> +++ b/drivers/staging/nvec/nvec.c
-> @@ -300,7 +300,7 @@ int nvec_write_sync(struct nvec_chip *nvec,
->   {
->   	mutex_lock(&nvec->sync_write_mutex);
->   
-> -	if (msg != NULL)
-> +	if (msg)
->   		*msg = NULL;
->   
->   	nvec->sync_write_pending = (data[1] << 8) + data[0];
-> @@ -322,7 +322,7 @@ int nvec_write_sync(struct nvec_chip *nvec,
->   
->   	dev_dbg(nvec->dev, "nvec_sync_write: pong!\n");
->   
-> -	if (msg != NULL)
-> +	if (msg)
->   		*msg = nvec->last_sync_msg;
->   	else
->   		nvec_msg_free(nvec, nvec->last_sync_msg);
+From: Jan Kiszka <jan.kiszka@siemens.com>
 
+The resolves
 
-Hi Tom,
+k3-am642-evm.dtb: adc: 'ti,adc-channels' is a required property
+        from schema $id: http://devicetree.org/schemas/iio/adc/ti,am3359-adc.yaml#
 
-what you change in this patch is fine. But the Description is not so 
-lucky. Reason is that checkpatch is not defining the coding style. Not 
-at all. Sometimes checkpatch is even wrong. The description I like would be:
+As the adc is reserved, thus not used by Linux, this has no practical
+impact.
 
-Use x instead of x != NULL to shorten code.
+Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+---
+ arch/arm64/boot/dts/ti/k3-am642-evm.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-or
+diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm.dts b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
+index e20e4ffd0f1f..0e42d09aa785 100644
+--- a/arch/arm64/boot/dts/ti/k3-am642-evm.dts
++++ b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
+@@ -640,6 +640,10 @@ cpsw3g_phy0: ethernet-phy@0 {
+ &tscadc0 {
+ 	/* ADC is reserved for R5 usage */
+ 	status = "reserved";
++
++	adc {
++		ti,adc-channels = <0 1 2 3 4 5 6 7>;
++	};
+ };
+ 
+ &ospi0 {
+-- 
+2.43.0
 
-Use x instead of x != NULL to improve readability.
-
-If you send in a second version of this patch please use a change 
-history. Description from Dan under:
-https://staticthinking.wordpress.com/2022/07/27/how-to-send-a-v2-patch/
-
-Thanks
-
-Bye Philipp
