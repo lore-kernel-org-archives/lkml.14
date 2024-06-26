@@ -1,81 +1,72 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014E91862B7
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 14:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719413147; cv=none; b=BLEpKNiyLVQQ/pdmJZWSP5Wkbruq+uFLvzye1gAntVaBJ8UxZp/x9l31BFJCQK2EuQOlKT3Za1wC508wnDTmk+DS1zQfvPJv2bFtBPs+AgV3MLsVnDt7fud4X/4AM/WK62cnP3bSoP+rjbm4rzlqvHzNdV38vKlhhVahBDnti1A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719413147; c=relaxed/simple;
-	bh=YfAZGE0teJPjgXxRcXb24zZQXeFrcfh1Lc4T5v6k+28=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UZx9vSElCsXr10NwVzKAhlsdWBd7sTlONA3g4UGZSw2aSdsV6DWpvNmrM3WTuJHPwtSrItgVRAfnuvfiU1TA9NtQ3SCASsVQSKnzdfacfuNvAmU1RxjyAxi/h/dbOkmm7QznEJs0oVWba6W/NChPH4Ym+mAS33/BcQuk57d0VjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=2KKjN3V7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JKAtOpjr; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=2KKjN3V7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JKAtOpjr; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804ED1822F1;
+	Wed, 26 Jun 2024 14:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719413160; cv=pass; b=Wpoga1Db6fnRy/PIocnlDx9gUi5yosiq8uAHAJQ15ux4TqsMbBIAZYrwd2FK3LYfpbXYahWpHN518QskvZu960TshEIl3tUFFhKQLHeQ5yzV20osFbMCsiUO9gfBpnzxBJa6f6dcOW1oOqfAjKobqXDKmVKSdnLw+dO9uICeJzY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719413160; c=relaxed/simple;
+	bh=B0wIR+DNYlDksmSVoZWLnMUOiWz5ip9Uyw3InWe4zp8=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=b2Ed3hDCJYzhM2lf36O7A/w7HH9v4DKJgMos06E9aaCl2Arh3WiH1zNaYCWxGy2OD+FO6DjNrNt0bBp4BhJHxYDbDCJwF6ME7HVFTuXXsqnLGeLOzT/yM5cAQIps8/1IgjfPvnMj6Xw6UM+rUG2y2rrO54Ee3JklIGOiZ/OG3OM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ibv-augsburg.net; spf=none smtp.mailfrom=ibv-augsburg.net; dkim=pass (2048-bit key) header.d=ibv-augsburg.net header.i=@ibv-augsburg.net header.b=HKvR/UtR; dkim=permerror (0-bit key) header.d=ibv-augsburg.net header.i=@ibv-augsburg.net header.b=TrBnMcMu; arc=pass smtp.client-ip=85.215.255.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ibv-augsburg.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ibv-augsburg.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="2KKjN3V7";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JKAtOpjr";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="2KKjN3V7";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JKAtOpjr"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 187701FB57;
-	Wed, 26 Jun 2024 14:45:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1719413143; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=OcWujkPoCob+1bpQdKUYlH6gppmc+0nz4OvCsAtTE6U=;
-	b=2KKjN3V7XGbzFvynQcWjeSxJfAUACJ7gMc9Q/LpttIgYfxGSP9qFhm2Od79Aafh9GSjt+/
-	Ic+blWT3zEC4eAYIQ+VDsKpVpiv/VYo/bXREAjma3vPYJ8j2FACBLiXkcV27mtpsqHJgWy
-	28voG1tFSdMoUxD4f/0ySiLVH550e24=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1719413143;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=OcWujkPoCob+1bpQdKUYlH6gppmc+0nz4OvCsAtTE6U=;
-	b=JKAtOpjrrs9MpzH6PvL+mgRYa3OvNtfJOZZIhaXeBqf28JSy3Z0P6mh4xIc5JTZTYrN97d
-	pwnRFEqfnkJ7EuDQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=2KKjN3V7;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=JKAtOpjr
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1719413143; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=OcWujkPoCob+1bpQdKUYlH6gppmc+0nz4OvCsAtTE6U=;
-	b=2KKjN3V7XGbzFvynQcWjeSxJfAUACJ7gMc9Q/LpttIgYfxGSP9qFhm2Od79Aafh9GSjt+/
-	Ic+blWT3zEC4eAYIQ+VDsKpVpiv/VYo/bXREAjma3vPYJ8j2FACBLiXkcV27mtpsqHJgWy
-	28voG1tFSdMoUxD4f/0ySiLVH550e24=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1719413143;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=OcWujkPoCob+1bpQdKUYlH6gppmc+0nz4OvCsAtTE6U=;
-	b=JKAtOpjrrs9MpzH6PvL+mgRYa3OvNtfJOZZIhaXeBqf28JSy3Z0P6mh4xIc5JTZTYrN97d
-	pwnRFEqfnkJ7EuDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C3152139C2;
-	Wed, 26 Jun 2024 14:45:42 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id pPtALpYpfGb3WgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Wed, 26 Jun 2024 14:45:42 +0000
-Message-ID: <c549235c-2542-454f-b0ae-1ce6ea884f5c@suse.de>
-Date: Wed, 26 Jun 2024 16:45:42 +0200
+	dkim=pass (2048-bit key) header.d=ibv-augsburg.net header.i=@ibv-augsburg.net header.b="HKvR/UtR";
+	dkim=permerror (0-bit key) header.d=ibv-augsburg.net header.i=@ibv-augsburg.net header.b="TrBnMcMu"
+ARC-Seal: i=1; a=rsa-sha256; t=1719412790; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=cI2qRxlGJxz6qfKuxHXdHwYQq+O+cJOmQXGEOKx0A+xy9AVS6HWARzSPfsRDK23z2N
+    icYUgIt6lXnXkD9YTAmw04KKVBrRWcp40By7A0ftacUrUabDsnQ+gii6IIUukp8oBX8R
+    OPWgvFkF/CA6YzQfKr1s/iy8WU5GXbCrgPAWwOGLgr/09IndmY4en0z8SXO9hbvIcwaD
+    1YLMxGzqYBJ60gGTnB5otkCQcIIDKWRNBsd8k4iGsrcp44E4FkmUDOkhZPfhCROB+Suh
+    ZVIIufH7OHDe3E9U2XrtcS4IB6m0m4pkyO6yFpU2/oxG4r1jG0oTJiGllldQfqqE+tG+
+    zqzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1719412790;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:References:Cc:To:Subject:From:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=2ZHyOO7SRY4zZJCiCUO3Bjijz7x4V3Dbzd1rEJ9eMgQ=;
+    b=TaFYAr5LD+w+GXjlgmPWWJAxO/nY9uWebgvr86Uw4Lsns3D1VVKpOWCcMKHc1ycpsB
+    KkK0UcsvTpibApeR+M9zD2psxty461Eklkt2gKLUsJ1XeiMmXu7A/F37rQrF1Jm1TzPF
+    KTg07PyHdrlLOeUVcNLigqhLVqRj0Ys+U58z93POf3wGKo4Wp2DN1rfaLIqkso/TXkXk
+    oxDDGofjI+EltvaFW991K8c+uCEOrtFJciMQq1XQh45GuJAJuyCRZkvGKGiYBaZDE7wc
+    Q2rvuYARsjJmDRRu/NUhzcqvkkhx8XcSm9aB+pkZQe9coSzn61cnWUwOjiE7k9bBHOWf
+    9epg==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1719412790;
+    s=strato-dkim-0002; d=ibv-augsburg.net;
+    h=In-Reply-To:References:Cc:To:Subject:From:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=2ZHyOO7SRY4zZJCiCUO3Bjijz7x4V3Dbzd1rEJ9eMgQ=;
+    b=HKvR/UtRhzy4j4DQvo5+oLhDTQeJAECo9oZBsaJ6dcK8zj2lZsTkLgDHUlJH8DtPu6
+    Dlf8SHvRh5j6snnXOXkCIHvtGYIV7/3gwkAkXBLbQfTrmElN5/iGmgsFg+oSG0iFqXzD
+    uoVkuS83vM19R8ezWW6sBgO8HMNA9s1V2Ts02TXUrEoTymMEd+LvIlVGmwQX0v1P3A22
+    O3R+38FedD7obAf9it3jqLpVjdno3TP19u9HI9+kJQIqmasHsAx7ziTch0jhSHQLDpk0
+    qUuJkesZN607Fb0zk0RRUcX6u8V2gN+lkFZMHTDMX/PF1PrOKinw9eS8UQg/Rlr07ySX
+    yPdQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1719412790;
+    s=strato-dkim-0003; d=ibv-augsburg.net;
+    h=In-Reply-To:References:Cc:To:Subject:From:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=2ZHyOO7SRY4zZJCiCUO3Bjijz7x4V3Dbzd1rEJ9eMgQ=;
+    b=TrBnMcMuqx/UySJmGyoxwWnYER4TJXAcGT5Pd+nEuiwm4pNdGUDMqU1bdJ9g0mwuyI
+    gtn78jo/h21dzfqpGiAQ==
+X-RZG-AUTH: ":KGMJfE6heLGk8b3w7Oa1fDtXwBjeDczIOHPRx8yNRKhFG/cxcP9JMCwOG/8exKYuJH3BToJAML1PywPd"
+Received: from [172.26.1.108]
+    by smtp.strato.de (RZmta 50.5.0 DYNA|AUTH)
+    with ESMTPSA id N07c8805QEdoI9Z
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Wed, 26 Jun 2024 16:39:50 +0200 (CEST)
+Message-ID: <5980f22f-44ef-4984-8912-163ca4773568@ibv-augsburg.net>
+Date: Wed, 26 Jun 2024 16:39:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,385 +74,85 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/7] drm/radeon: rdev->ddev to rdev_to_drm(rdev) 1
-To: Wu Hoi Pok <wuhoipok@gmail.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- "Pan, Xinhui" <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20240624151122.23724-1-wuhoipok@gmail.com>
- <20240624151122.23724-3-wuhoipok@gmail.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <20240624151122.23724-3-wuhoipok@gmail.com>
+From: Dominic Rath <dominic.rath@ibv-augsburg.net>
+Subject: Re: [PATCH v2 00/13] OMAP mailbox FIFO removal
+To: Andrew Davis <afd@ti.com>, Jassi Brar <jassisinghbrar@gmail.com>,
+ Hari Nagalla <hnagalla@ti.com>, Nick Saulnier <nsaulnier@ti.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240410135942.61667-1-afd@ti.com>
+ <b5c8d134-edcb-4a1a-8940-b26047c9b79d@ibv-augsburg.net>
+ <4d7c1525-a3d1-48f3-9e9c-eb61527a1b23@ti.com>
+In-Reply-To: <4d7c1525-a3d1-48f3-9e9c-eb61527a1b23@ti.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 187701FB57
-X-Spam-Score: -4.50
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.50 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	MX_GOOD(-0.01)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_CC(0.00)[amd.com,gmail.com,ffwll.ch,lists.freedesktop.org,vger.kernel.org];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+Content-Transfer-Encoding: 8bit
 
-Hi
+On 13.06.2024 14:22, Andrew Davis wrote:
+>> We looked into this some time ago, and noticed that the IRQ approach 
+>> caused problems in the virtio/rpmsg code. I'd like to understand if 
+>> your change was for the same reason, or something else we missed before.
+>>
+> 
+> It is most likely the same reason. Seems despite its name, 
+> rproc_vq_interrupt() cannot
+> be called from an IRQ/atomic context. As the following backtrace shows, 
+> that function
+> calls down into functions which are not IRQ safe. So we needed to keep 
+> it threaded:
+> 
+> [    5.389374] BUG: scheduling while atomic: (udev-worker)/232/0x00010002
+> [    5.395917] Modules linked in: videobuf2_dma_contig videobuf2_memops 
+> videobuf2_v4l2 phy_j721e_wiz display_connector omap_mailbox(+) videodev 
+> tps6594_i2c(+) videobuf2_common phy_can_transceiver at24 cd6
+> [    5.433562] CPU: 0 PID: 232 Comm: (udev-worker) Not tainted 
+> 6.10.0-rc1-next-20240528-dirty #10
+> [    5.442158] Hardware name: Texas Instruments AM69 SK (DT)
+> [    5.447540] Call trace:
+> [    5.449976]  dump_backtrace+0x94/0xec
+> [    5.453640]  show_stack+0x18/0x24
+> [    5.456944]  dump_stack_lvl+0x78/0x90
+> [    5.460598]  dump_stack+0x18/0x24
+> [    5.463900]  __schedule_bug+0x50/0x68
+> [    5.467552]  __schedule+0x80c/0xb0c
+> [    5.471029]  schedule+0x34/0x104
+> [    5.474243]  schedule_preempt_disabled+0x24/0x40
+> [    5.478845]  rwsem_down_write_slowpath+0x31c/0x56c
+> [    5.483622]  down_write+0x90/0x94
+> [    5.486924]  kernfs_add_one+0x3c/0x148
+> [    5.490661]  kernfs_create_dir_ns+0x50/0x94
+> [    5.494830]  sysfs_create_dir_ns+0x70/0x10c
+> [    5.498999]  kobject_add_internal+0x98/0x26c
+> [    5.503254]  kobject_add+0x9c/0x10c
+> [    5.506729]  device_add+0xc0/0x790
+> [    5.510120]  rpmsg_register_device_override+0x10c/0x1c0
+> [    5.515333]  rpmsg_register_device+0x14/0x20
+> [    5.519590]  virtio_rpmsg_create_channel+0xb0/0x104
+> [    5.524452]  rpmsg_create_channel+0x28/0x60
+> [    5.528622]  rpmsg_ns_cb+0x100/0x1dc
+> [    5.532185]  rpmsg_recv_done+0x114/0x2e4
+> [    5.536094]  vring_interrupt+0x68/0xa4
+> [    5.539833]  rproc_vq_interrupt+0x2c/0x48
+> [    5.543830]  k3_r5_rproc_mbox_callback+0x84/0x90 [ti_k3_r5_remoteproc]
+> [    5.550348]  mbox_chan_received_data+0x1c/0x2c
+> [    5.554779]  mbox_interrupt+0xa0/0x17c [omap_mailbox]
+> [    5.559820]  __handle_irq_event_percpu+0x48/0x13c
+> [    5.564511]  handle_irq_event+0x4c/0xac
+> 
 
-please squash patches 2 to 7 into a single patch that goes first.
+I looked into this a bit more closely, together with the colleague who 
+implemented our internal workaround, and we came up with one more concern:
 
-Am 24.06.24 um 17:10 schrieb Wu Hoi Pok:
-> Please refer to patch 1.
+Have you considered that this synchronous path from the (threaded) IRQ 
+draining the mailbox down to the (potentially blocking) rpmsg_* calls 
+might let the hardware mailbox grow full?
 
-That's not a commit message. Once a patchset landed, no one will know 
-what patch 1 was.
+ From what I remember the vring (?) has room for 512 messages, but the 
+hardware mailbox on e.g. the AM64x can only handle four messages. At 
+least with the current implementation on TI's MCU+ SDK running on the 
+R5f that could cause the R5f to block, waiting for room in the hardware 
+mailbox, while there are plenty of vring buffers available.
 
-Best regards
-Thomas
+Best Regards,
 
->
-> Signed-off-by: Wu Hoi Pok <wuhoipok@gmail.com>
-> ---
->   drivers/gpu/drm/radeon/atombios_encoders.c |  2 +-
->   drivers/gpu/drm/radeon/cik.c               | 14 ++++++-------
->   drivers/gpu/drm/radeon/dce6_afmt.c         |  2 +-
->   drivers/gpu/drm/radeon/evergreen.c         | 12 +++++------
->   drivers/gpu/drm/radeon/ni.c                |  2 +-
->   drivers/gpu/drm/radeon/r100.c              | 24 +++++++++++-----------
->   6 files changed, 28 insertions(+), 28 deletions(-)
->
-> diff --git a/drivers/gpu/drm/radeon/atombios_encoders.c b/drivers/gpu/drm/radeon/atombios_encoders.c
-> index 03e6871b3065..c82e0fbc49b4 100644
-> --- a/drivers/gpu/drm/radeon/atombios_encoders.c
-> +++ b/drivers/gpu/drm/radeon/atombios_encoders.c
-> @@ -2179,7 +2179,7 @@ int radeon_atom_pick_dig_encoder(struct drm_encoder *encoder, int fe_idx)
->   void
->   radeon_atom_encoder_init(struct radeon_device *rdev)
->   {
-> -	struct drm_device *dev = rdev->ddev;
-> +	struct drm_device *dev = rdev_to_drm(rdev);
->   	struct drm_encoder *encoder;
->   
->   	list_for_each_entry(encoder, &dev->mode_config.encoder_list, head) {
-> diff --git a/drivers/gpu/drm/radeon/cik.c b/drivers/gpu/drm/radeon/cik.c
-> index b5e96a8fc2c1..11a492f21157 100644
-> --- a/drivers/gpu/drm/radeon/cik.c
-> +++ b/drivers/gpu/drm/radeon/cik.c
-> @@ -7585,7 +7585,7 @@ int cik_irq_process(struct radeon_device *rdev)
->   					DRM_DEBUG("IH: IH event w/o asserted irq bit?\n");
->   
->   				if (rdev->irq.crtc_vblank_int[0]) {
-> -					drm_handle_vblank(rdev->ddev, 0);
-> +					drm_handle_vblank(rdev_to_drm(rdev), 0);
->   					rdev->pm.vblank_sync = true;
->   					wake_up(&rdev->irq.vblank_queue);
->   				}
-> @@ -7615,7 +7615,7 @@ int cik_irq_process(struct radeon_device *rdev)
->   					DRM_DEBUG("IH: IH event w/o asserted irq bit?\n");
->   
->   				if (rdev->irq.crtc_vblank_int[1]) {
-> -					drm_handle_vblank(rdev->ddev, 1);
-> +					drm_handle_vblank(rdev_to_drm(rdev), 1);
->   					rdev->pm.vblank_sync = true;
->   					wake_up(&rdev->irq.vblank_queue);
->   				}
-> @@ -7645,7 +7645,7 @@ int cik_irq_process(struct radeon_device *rdev)
->   					DRM_DEBUG("IH: IH event w/o asserted irq bit?\n");
->   
->   				if (rdev->irq.crtc_vblank_int[2]) {
-> -					drm_handle_vblank(rdev->ddev, 2);
-> +					drm_handle_vblank(rdev_to_drm(rdev), 2);
->   					rdev->pm.vblank_sync = true;
->   					wake_up(&rdev->irq.vblank_queue);
->   				}
-> @@ -7675,7 +7675,7 @@ int cik_irq_process(struct radeon_device *rdev)
->   					DRM_DEBUG("IH: IH event w/o asserted irq bit?\n");
->   
->   				if (rdev->irq.crtc_vblank_int[3]) {
-> -					drm_handle_vblank(rdev->ddev, 3);
-> +					drm_handle_vblank(rdev_to_drm(rdev), 3);
->   					rdev->pm.vblank_sync = true;
->   					wake_up(&rdev->irq.vblank_queue);
->   				}
-> @@ -7705,7 +7705,7 @@ int cik_irq_process(struct radeon_device *rdev)
->   					DRM_DEBUG("IH: IH event w/o asserted irq bit?\n");
->   
->   				if (rdev->irq.crtc_vblank_int[4]) {
-> -					drm_handle_vblank(rdev->ddev, 4);
-> +					drm_handle_vblank(rdev_to_drm(rdev), 4);
->   					rdev->pm.vblank_sync = true;
->   					wake_up(&rdev->irq.vblank_queue);
->   				}
-> @@ -7735,7 +7735,7 @@ int cik_irq_process(struct radeon_device *rdev)
->   					DRM_DEBUG("IH: IH event w/o asserted irq bit?\n");
->   
->   				if (rdev->irq.crtc_vblank_int[5]) {
-> -					drm_handle_vblank(rdev->ddev, 5);
-> +					drm_handle_vblank(rdev_to_drm(rdev), 5);
->   					rdev->pm.vblank_sync = true;
->   					wake_up(&rdev->irq.vblank_queue);
->   				}
-> @@ -8581,7 +8581,7 @@ int cik_init(struct radeon_device *rdev)
->   	/* Initialize surface registers */
->   	radeon_surface_init(rdev);
->   	/* Initialize clocks */
-> -	radeon_get_clock_info(rdev->ddev);
-> +	radeon_get_clock_info(rdev_to_drm(rdev));
->   
->   	/* Fence driver */
->   	radeon_fence_driver_init(rdev);
-> diff --git a/drivers/gpu/drm/radeon/dce6_afmt.c b/drivers/gpu/drm/radeon/dce6_afmt.c
-> index 4c06f47453fd..d6ab93ed9ec4 100644
-> --- a/drivers/gpu/drm/radeon/dce6_afmt.c
-> +++ b/drivers/gpu/drm/radeon/dce6_afmt.c
-> @@ -91,7 +91,7 @@ struct r600_audio_pin *dce6_audio_get_pin(struct radeon_device *rdev)
->   			pin = &rdev->audio.pin[i];
->   			pin_count = 0;
->   
-> -			list_for_each_entry(encoder, &rdev->ddev->mode_config.encoder_list, head) {
-> +			list_for_each_entry(encoder, &rdev_to_drm(rdev)->mode_config.encoder_list, head) {
->   				if (radeon_encoder_is_digital(encoder)) {
->   					radeon_encoder = to_radeon_encoder(encoder);
->   					dig = radeon_encoder->enc_priv;
-> diff --git a/drivers/gpu/drm/radeon/evergreen.c b/drivers/gpu/drm/radeon/evergreen.c
-> index c634dc28e6c3..bc4ab71613a5 100644
-> --- a/drivers/gpu/drm/radeon/evergreen.c
-> +++ b/drivers/gpu/drm/radeon/evergreen.c
-> @@ -1673,7 +1673,7 @@ void evergreen_pm_misc(struct radeon_device *rdev)
->    */
->   void evergreen_pm_prepare(struct radeon_device *rdev)
->   {
-> -	struct drm_device *ddev = rdev->ddev;
-> +	struct drm_device *ddev = rdev_to_drm(rdev);
->   	struct drm_crtc *crtc;
->   	struct radeon_crtc *radeon_crtc;
->   	u32 tmp;
-> @@ -1698,7 +1698,7 @@ void evergreen_pm_prepare(struct radeon_device *rdev)
->    */
->   void evergreen_pm_finish(struct radeon_device *rdev)
->   {
-> -	struct drm_device *ddev = rdev->ddev;
-> +	struct drm_device *ddev = rdev_to_drm(rdev);
->   	struct drm_crtc *crtc;
->   	struct radeon_crtc *radeon_crtc;
->   	u32 tmp;
-> @@ -1763,7 +1763,7 @@ void evergreen_hpd_set_polarity(struct radeon_device *rdev,
->    */
->   void evergreen_hpd_init(struct radeon_device *rdev)
->   {
-> -	struct drm_device *dev = rdev->ddev;
-> +	struct drm_device *dev = rdev_to_drm(rdev);
->   	struct drm_connector *connector;
->   	unsigned enabled = 0;
->   	u32 tmp = DC_HPDx_CONNECTION_TIMER(0x9c4) |
-> @@ -1804,7 +1804,7 @@ void evergreen_hpd_init(struct radeon_device *rdev)
->    */
->   void evergreen_hpd_fini(struct radeon_device *rdev)
->   {
-> -	struct drm_device *dev = rdev->ddev;
-> +	struct drm_device *dev = rdev_to_drm(rdev);
->   	struct drm_connector *connector;
->   	unsigned disabled = 0;
->   
-> @@ -4753,7 +4753,7 @@ int evergreen_irq_process(struct radeon_device *rdev)
->   				event_name = "vblank";
->   
->   				if (rdev->irq.crtc_vblank_int[crtc_idx]) {
-> -					drm_handle_vblank(rdev->ddev, crtc_idx);
-> +					drm_handle_vblank(rdev_to_drm(rdev), crtc_idx);
->   					rdev->pm.vblank_sync = true;
->   					wake_up(&rdev->irq.vblank_queue);
->   				}
-> @@ -5211,7 +5211,7 @@ int evergreen_init(struct radeon_device *rdev)
->   	/* Initialize surface registers */
->   	radeon_surface_init(rdev);
->   	/* Initialize clocks */
-> -	radeon_get_clock_info(rdev->ddev);
-> +	radeon_get_clock_info(rdev_to_drm(rdev));
->   	/* Fence driver */
->   	radeon_fence_driver_init(rdev);
->   	/* initialize AGP */
-> diff --git a/drivers/gpu/drm/radeon/ni.c b/drivers/gpu/drm/radeon/ni.c
-> index 77aee99e473a..3890911fe693 100644
-> --- a/drivers/gpu/drm/radeon/ni.c
-> +++ b/drivers/gpu/drm/radeon/ni.c
-> @@ -2360,7 +2360,7 @@ int cayman_init(struct radeon_device *rdev)
->   	/* Initialize surface registers */
->   	radeon_surface_init(rdev);
->   	/* Initialize clocks */
-> -	radeon_get_clock_info(rdev->ddev);
-> +	radeon_get_clock_info(rdev_to_drm(rdev));
->   	/* Fence driver */
->   	radeon_fence_driver_init(rdev);
->   	/* initialize memory controller */
-> diff --git a/drivers/gpu/drm/radeon/r100.c b/drivers/gpu/drm/radeon/r100.c
-> index 0b1e19345f43..d7d7d23bf9a1 100644
-> --- a/drivers/gpu/drm/radeon/r100.c
-> +++ b/drivers/gpu/drm/radeon/r100.c
-> @@ -459,7 +459,7 @@ void r100_pm_misc(struct radeon_device *rdev)
->    */
->   void r100_pm_prepare(struct radeon_device *rdev)
->   {
-> -	struct drm_device *ddev = rdev->ddev;
-> +	struct drm_device *ddev = rdev_to_drm(rdev);
->   	struct drm_crtc *crtc;
->   	struct radeon_crtc *radeon_crtc;
->   	u32 tmp;
-> @@ -490,7 +490,7 @@ void r100_pm_prepare(struct radeon_device *rdev)
->    */
->   void r100_pm_finish(struct radeon_device *rdev)
->   {
-> -	struct drm_device *ddev = rdev->ddev;
-> +	struct drm_device *ddev = rdev_to_drm(rdev);
->   	struct drm_crtc *crtc;
->   	struct radeon_crtc *radeon_crtc;
->   	u32 tmp;
-> @@ -603,7 +603,7 @@ void r100_hpd_set_polarity(struct radeon_device *rdev,
->    */
->   void r100_hpd_init(struct radeon_device *rdev)
->   {
-> -	struct drm_device *dev = rdev->ddev;
-> +	struct drm_device *dev = rdev_to_drm(rdev);
->   	struct drm_connector *connector;
->   	unsigned enable = 0;
->   
-> @@ -626,7 +626,7 @@ void r100_hpd_init(struct radeon_device *rdev)
->    */
->   void r100_hpd_fini(struct radeon_device *rdev)
->   {
-> -	struct drm_device *dev = rdev->ddev;
-> +	struct drm_device *dev = rdev_to_drm(rdev);
->   	struct drm_connector *connector;
->   	unsigned disable = 0;
->   
-> @@ -798,7 +798,7 @@ int r100_irq_process(struct radeon_device *rdev)
->   		/* Vertical blank interrupts */
->   		if (status & RADEON_CRTC_VBLANK_STAT) {
->   			if (rdev->irq.crtc_vblank_int[0]) {
-> -				drm_handle_vblank(rdev->ddev, 0);
-> +				drm_handle_vblank(rdev_to_drm(rdev), 0);
->   				rdev->pm.vblank_sync = true;
->   				wake_up(&rdev->irq.vblank_queue);
->   			}
-> @@ -807,7 +807,7 @@ int r100_irq_process(struct radeon_device *rdev)
->   		}
->   		if (status & RADEON_CRTC2_VBLANK_STAT) {
->   			if (rdev->irq.crtc_vblank_int[1]) {
-> -				drm_handle_vblank(rdev->ddev, 1);
-> +				drm_handle_vblank(rdev_to_drm(rdev), 1);
->   				rdev->pm.vblank_sync = true;
->   				wake_up(&rdev->irq.vblank_queue);
->   			}
-> @@ -1471,7 +1471,7 @@ int r100_cs_packet_parse_vline(struct radeon_cs_parser *p)
->   	header = radeon_get_ib_value(p, h_idx);
->   	crtc_id = radeon_get_ib_value(p, h_idx + 5);
->   	reg = R100_CP_PACKET0_GET_REG(header);
-> -	crtc = drm_crtc_find(p->rdev->ddev, p->filp, crtc_id);
-> +	crtc = drm_crtc_find(rdev_to_drm(p->rdev), p->filp, crtc_id);
->   	if (!crtc) {
->   		DRM_ERROR("cannot find crtc %d\n", crtc_id);
->   		return -ENOENT;
-> @@ -3059,7 +3059,7 @@ DEFINE_SHOW_ATTRIBUTE(r100_debugfs_mc_info);
->   void  r100_debugfs_rbbm_init(struct radeon_device *rdev)
->   {
->   #if defined(CONFIG_DEBUG_FS)
-> -	struct dentry *root = rdev->ddev->primary->debugfs_root;
-> +	struct dentry *root = rdev_to_drm(rdev)->primary->debugfs_root;
->   
->   	debugfs_create_file("r100_rbbm_info", 0444, root, rdev,
->   			    &r100_debugfs_rbbm_info_fops);
-> @@ -3069,7 +3069,7 @@ void  r100_debugfs_rbbm_init(struct radeon_device *rdev)
->   void r100_debugfs_cp_init(struct radeon_device *rdev)
->   {
->   #if defined(CONFIG_DEBUG_FS)
-> -	struct dentry *root = rdev->ddev->primary->debugfs_root;
-> +	struct dentry *root = rdev_to_drm(rdev)->primary->debugfs_root;
->   
->   	debugfs_create_file("r100_cp_ring_info", 0444, root, rdev,
->   			    &r100_debugfs_cp_ring_info_fops);
-> @@ -3081,7 +3081,7 @@ void r100_debugfs_cp_init(struct radeon_device *rdev)
->   void  r100_debugfs_mc_info_init(struct radeon_device *rdev)
->   {
->   #if defined(CONFIG_DEBUG_FS)
-> -	struct dentry *root = rdev->ddev->primary->debugfs_root;
-> +	struct dentry *root = rdev_to_drm(rdev)->primary->debugfs_root;
->   
->   	debugfs_create_file("r100_mc_info", 0444, root, rdev,
->   			    &r100_debugfs_mc_info_fops);
-> @@ -3947,7 +3947,7 @@ int r100_resume(struct radeon_device *rdev)
->   			RREG32(R_0007C0_CP_STAT));
->   	}
->   	/* post */
-> -	radeon_combios_asic_init(rdev->ddev);
-> +	radeon_combios_asic_init(rdev_to_drm(rdev));
->   	/* Resume clock after posting */
->   	r100_clock_startup(rdev);
->   	/* Initialize surface registers */
-> @@ -4056,7 +4056,7 @@ int r100_init(struct radeon_device *rdev)
->   	/* Set asic errata */
->   	r100_errata(rdev);
->   	/* Initialize clocks */
-> -	radeon_get_clock_info(rdev->ddev);
-> +	radeon_get_clock_info(rdev_to_drm(rdev));
->   	/* initialize AGP */
->   	if (rdev->flags & RADEON_IS_AGP) {
->   		r = radeon_agp_init(rdev);
-
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
-
+Dominic
