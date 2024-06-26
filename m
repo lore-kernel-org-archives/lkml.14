@@ -1,127 +1,208 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2053.outbound.protection.outlook.com [40.107.215.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9CD16849C
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 09:07:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719392868; cv=none; b=VQQpOCKxEj4Uvc1UKPgQKRXgkITRbq/KEOQxyxSV2wQ9f1ZUMky/raishIpbI68aWEqYzcGnVQTtC2bsDqEEv6I073N9ub5EXlqUAaFUwJskgwWAcAcxNlN8x1AywIeYqxqlDPin0YFh5qCkYXPay0tIGE/gyNdOLV96g+Kwub4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719392868; c=relaxed/simple;
-	bh=ssH+6iURMN7zx64iT61gWIWA5rPqCh8kGeC+MevKIHU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DpVDtXl6d74AyS05M7FlcpHJZD8blgUVsURxdhmG8Kbbl3qyDVNyTWrS95gUuXjgHsJGXdDypTGygl47lp4KVJh+oFmVHJ3fpOoZ1VxTzGf90jmZ+6gkuAbrt/m6mfDj2I/9GrnF/3el+piI/mVl93D0TQqCYzE0744gBtYv3uA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=MdI6eein; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C38316849C;
+	Wed, 26 Jun 2024 09:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.215.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719392885; cv=fail; b=L9Unn25apV53j8MtMkUz9lBFYXdbFlQ9Bkoj9IU8BdYO9jEablrHvpfnGusyG+UwF5zWzVhmc9WnmpfEbOXjRQSbGB+OXEMd8h21llSxy+TORlWZ6LzJo2VwjRd4MqKTGacjQKMrh9Wg2hf3bWchwMt720C6jK0JZ3ZgugZSFuo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719392885; c=relaxed/simple;
+	bh=g3QlpPOuv2Eq68R1MCgAfCyqN9Jh7IId0/oexsFF0Kk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=d3xZkkmiqt47Axux96mznQj1c2mltO8EGRo4t/kibiQCuWlgxxy3pjUmbGx/5FBiaNgtdiEM2p3cObtheDangQFAX3N3zUtqosV0xjRb9YkRLukveqZtaIlU3fqpwqB/YG8swfLH4LFGh4dPNCVqMLSISr7V5NOkhCN92/pfiBw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com; spf=pass smtp.mailfrom=wiwynn.com; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=T6oho/y4; arc=fail smtp.client-ip=40.107.215.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wiwynn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="MdI6eein"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57d07f07a27so7441608a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 02:07:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1719392865; x=1719997665; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6lxJDkVp4n9+n100SOtMCWceyFBnjbdm10d/AO3Twck=;
-        b=MdI6eeinTKb5wFX6TVzWmfAtKWgiJC6nutanQfCgFhYFzKwnKkL7v/3pJLsznjKfBJ
-         iacqiS+EBV+oCwu8ShFQwZfNmgwB60BWrwndZfzDKYFY5o4b6vpMN73x9DHEzxH5rZpK
-         2XZFmeEribEfd9fSqP7EcxjL5WLNYI/Xe55F0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719392865; x=1719997665;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6lxJDkVp4n9+n100SOtMCWceyFBnjbdm10d/AO3Twck=;
-        b=wUITvfIo1tobb7e3iHEHe5i4qbCmvHp4rJAUxlvRXBFcucA3xr54wL8cP83d5W+S4V
-         Z+YWaWhNbu9zEPPPJFi6SE53wTENi7pJhGL6rxFHw+vRCJp4uRQAVJB6XTXocL3P8OdD
-         6m2yA4OODP+PVOI1tiGE2M/JfNUBZJD9tstXueNsKoPN1M7Vrpu4xwonYebVFekxyMcd
-         Cpj5Xts79HP1k5fzF/U8ZTbhVQIV9a9BSCjO0+JXTV7W9EI62zLvQuEV/9L3p+ecJMVp
-         DtAdpxV//6fyx7qzKrr/WCRk8MhEXJYpm9b4R7Bj8r1qQlr316QfD8eu8wlC4ljGYbQY
-         AzCg==
-X-Forwarded-Encrypted: i=1; AJvYcCXpPuPegbuLPT0ry7aBhd8PZbs1MEncN3kg0oOH25kQA7hJl8gi/9+x8jj6YLBl2i08JlmGTb97Q4Db712itflVh4B66qjfUOiyZ1HY
-X-Gm-Message-State: AOJu0YxZ+SdSm4sgBDGwh7ExtijjNfc3w68Mzu5Ln2BHGn0PSARvdKSR
-	XcQaz04KXdvuXvvdeDjYgdp7Cewqyx0ImY0BYUm8Qt4Kso85iZwaMKJnLuSsxqhMLaRj4yX8pQI
-	eLsVe3X7wKdE7ngHKMhU5cjTgwyUpHxobkbVBEA==
-X-Google-Smtp-Source: AGHT+IHykAPt//reChktNIqv1b8u1tQWErhzQtFS2JSTQpUaKUXwg3goKPI4W/qQKafT4xUP3B30jIrlQPXEK6H9lgE=
-X-Received: by 2002:a50:9350:0:b0:57d:24ce:cbc8 with SMTP id
- 4fb4d7f45d1cf-57d4bdcedebmr6248778a12.31.1719392865433; Wed, 26 Jun 2024
- 02:07:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="T6oho/y4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=V//5mvLrls4MzAhnuE/s6GEawAoS3gEWM64FNR4VQhVBB658Gftq7rg4BIUBpSeY+XnvdGItsjUbhXk+OB4hOk7WtWGURkY+InvkJKlHXFMh/ean6sHPtgm78H/fzKkzmIqaIUEJIq+UITI9vfCUCZ5JLiRBEeZ64mOyOCHFmQ36xKesYaMhg2b+IXkiihoo4RNkCc5KJlRMYYa53vy2GmVcmDCiF8IziJA+cIwSFSLhAngllTyfMOFOs5vkwhdM6FBzlwmi261l2iJm6zKyAbDJYMVZ1XN329cKS3qthZXiZrwvvf6R+LKrrol8bf8UD+OHeIaZF0YTtbYalVnLGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=31CYjOTVsj1JPdS59aXrPrSDTJGFqo4mbfw2xTuR3OQ=;
+ b=hyiK/ionUwPTXbSODy9lNK/9yJyUEG1StUh9ghx8VMmibeEKWaFiqTSyw5q6TiV7wKlSpNlUwjHXch+a1uFsdN2cS9glwYtdOcxL0i69TzPx5LtYiUGdhy1ZGe4qpBIrqmk3ZsEwnCX4THfiz4H/slqRDRo6jgM5O/j2BaRGlOUExPR+Ur3fAvFN/Jw879VCrU3DOSEPN/zlUSxGPng0lhtEbb36lK5lNMmb1vvZdqNkaOPE8K+IFnzzNpCg5MBhHLKosPRM3REYrKIk5f484L04oMRSfc8BI9a0xnmooMyK8FvKXvvyq2zRue0vGDFuuTOsBSFS6nEY6E8fOFUhjg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 211.20.1.79) smtp.rcpttodomain=stwcx.xyz smtp.mailfrom=wiwynn.com; dmarc=fail
+ (p=quarantine sp=quarantine pct=100) action=quarantine
+ header.from=wiwynn.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=31CYjOTVsj1JPdS59aXrPrSDTJGFqo4mbfw2xTuR3OQ=;
+ b=T6oho/y4UKw7zcZIxXNCDyj7NsI3XRfme7ZAvmZ4iiFczqeRFnH0Jc6+8iDeDTmybso73FaDL3uJxefvqKq8KQRGHy7UrhE0kIVmo/X+Sh8baePf/O8WhKWbNbXvpHAAM1FwfJoY4qqK4f6BPkwTR3g1CQd77TY17Hj8ir+xUWzxm53xT+Vw1n3U6CBZ2CCPRaqBagYkNGUZZj2WChWgrGjDZJD/o5HsxlSQYLbFxO6+IacDUA0o3ZOlOtuTWHJNJm6FAHK6cXDmoFU3PsYU4XT8pD3uEydUEqn8TqfR46o5VEHlTJ5BS59oG/34HfzzxNMYO1cGXmfdq3uNtiCApQ==
+Received: from KL1PR02CA0001.apcprd02.prod.outlook.com (2603:1096:820:c::6) by
+ TYZPR04MB7453.apcprd04.prod.outlook.com (2603:1096:405:42::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7719.20; Wed, 26 Jun 2024 09:07:59 +0000
+Received: from HK2PEPF00006FB4.apcprd02.prod.outlook.com
+ (2603:1096:820:c:cafe::2c) by KL1PR02CA0001.outlook.office365.com
+ (2603:1096:820:c::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.22 via Frontend
+ Transport; Wed, 26 Jun 2024 09:07:58 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 211.20.1.79)
+ smtp.mailfrom=wiwynn.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=quarantine header.from=wiwynn.com;
+Received-SPF: Fail (protection.outlook.com: domain of wiwynn.com does not
+ designate 211.20.1.79 as permitted sender) receiver=protection.outlook.com;
+ client-ip=211.20.1.79; helo=localhost.localdomain;
+Received: from localhost.localdomain (211.20.1.79) by
+ HK2PEPF00006FB4.mail.protection.outlook.com (10.167.8.10) with Microsoft SMTP
+ Server id 15.20.7677.15 via Frontend Transport; Wed, 26 Jun 2024 09:07:58
+ +0000
+From: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>
+To: patrick@stwcx.xyz
+Cc: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v9 00/26] Add i2c-mux and eeprom devices for Meta Yosemite 4
+Date: Wed, 26 Jun 2024 17:07:16 +0800
+Message-Id: <20240626090744.174351-1-Delphine_CC_Chiu@wiwynn.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240626084515.2829595-1-make24@iscas.ac.cn> <AM6PR04MB594141B66F1DEB2354ADDF7B88D62@AM6PR04MB5941.eurprd04.prod.outlook.com>
-In-Reply-To: <AM6PR04MB594141B66F1DEB2354ADDF7B88D62@AM6PR04MB5941.eurprd04.prod.outlook.com>
-From: Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
-Date: Wed, 26 Jun 2024 11:07:33 +0200
-Message-ID: <CAOf5uwkrGGPrfAcHO_hDQEZMvBHZ5JR9B=7=COSJLGjQV307SQ@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: mxs-dma: Add check for dma_set_max_seg_size in mxs_dma_probe()
-To: Peng Fan <peng.fan@nxp.com>
-Cc: Ma Ke <make24@iscas.ac.cn>, "vkoul@kernel.org" <vkoul@kernel.org>, 
-	"shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, 
-	"kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, 
-	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HK2PEPF00006FB4:EE_|TYZPR04MB7453:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: d2f94421-34da-4a6c-67fb-08dc95bf7956
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230038|1800799022|82310400024|36860700011|7416012|376012;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?wHnqjFToLiaN5KSGxAylKenHdSIUDqWxKQzzArIRsR36Sx44064YQvouZggg?=
+ =?us-ascii?Q?u3wnR6C3GkQRpLBHVt1+wwRoo/ASTry4AiONVMHpzOYbmtCtJmZkRAoS1j1D?=
+ =?us-ascii?Q?TbJo1anG6qZphbFRXPMFDWi600GZDSZPkVbPrjm8p++Dq1HpxyPto++caO1c?=
+ =?us-ascii?Q?Uz9ub24KiGqWNKJR0WjWlDgGyYJnzSxGTcAUr/KS3kODvKzfwFdEBh9aPRFg?=
+ =?us-ascii?Q?pKo7o0zdd8PUzijdg0Kouq2qWCfZJatTTNwmbHW4qWfIqNwMOuwd450Z1aSe?=
+ =?us-ascii?Q?RyaSpep2wPlT/eEG4Ob8PvHmrMhOTyxDe6v1wvLAAD/lfzZEVS893PBC0rkI?=
+ =?us-ascii?Q?BgKutwBLYXSeMCWNUjvdu2Uvxo/WdDVlLs9lfltikxrRP10ag8W1hv/pCsE7?=
+ =?us-ascii?Q?9So2ELDLkOiUoLk48D9Extz7vBF5bTyPZ/2kb5BwaGo9tUE96s1PUW6soKQT?=
+ =?us-ascii?Q?KeY+MV8D2KWYg8A6+PCcIiJsmcyhk2pEz5FrpdZoI5UmwNE/D5R+0Z9Keptm?=
+ =?us-ascii?Q?jkuBEEWjOyzlQ43E66x+zzxtmLI4Q35jUeNeWBq4+Zogl8vtJ1edWzsGgirY?=
+ =?us-ascii?Q?gFsZ0U0RL5m15MKG52FBQH+Z8nEnWjdszqO/Av1c2qlBboo5T/irMYGYEQ/k?=
+ =?us-ascii?Q?VMcwCEVq5xomIapECewxP84l+Ju4JS3XhM4zPk6BuB3kjrKuwYENIG8dxp8t?=
+ =?us-ascii?Q?FTZaUjtwEc8wFVegXc7Wo04giqkLXqSRIy31jjdQm85P1RoKfHExghaG10nO?=
+ =?us-ascii?Q?tzY7TY+WA60YADBRGkwO/rdGkmo9+DSOOpdYqWtpDf6pmrPuaenrfRzJd58f?=
+ =?us-ascii?Q?i7s9M9+mMPuQkkoKfNKtCcceKOk2cqrVvkjarmYPnQc74MMoAknNKvmlM/+Q?=
+ =?us-ascii?Q?CAWDgOB4hid4N4+jIJ0JT2tEE7YFaDZ5Iog3zZyREvxvcDrDb3F0/z0JfinP?=
+ =?us-ascii?Q?KerJi/q1kENAuWMR6c2OyguKl9M/9+TKiJR5Cz5Z3t+7LQaA4F08Py2F7xvC?=
+ =?us-ascii?Q?wovu5IOPZvEXxRKzYrqjNUuhPlKtbrOpu6+lRFD7WtOckHX9RcqYY9rmbMxv?=
+ =?us-ascii?Q?AKcIitfvv/wCcY5A4jU5XxFEqIxesZ1AzjyHRxGlyc9j6h/D/AN2s6r3WN7c?=
+ =?us-ascii?Q?DfkV2vKFBaGYJLVCVqgTJnxyd51hkIssXX/y0JyQv+82322V1P6WYwvFswrO?=
+ =?us-ascii?Q?roiSU0vUL9cUJzwjGHTYxhoTWRWtBsjyCTJu+lH+lI6EPygq3hLuB46sgOrw?=
+ =?us-ascii?Q?tuGwED/GI+3CXtcV75P+UmJsUqoUbRlckGHEJacvSZFCPeJ2UJn/n8ZcLPTt?=
+ =?us-ascii?Q?T+7Snzm8ou1k9pL6a57TWV4KoaxuZTR3TSbrnrZfJFMEHBn9XRmhqdQD5+9q?=
+ =?us-ascii?Q?CngTL9Mw5CFghc0PsYUxoOMdSznAAiYMKZp9E8WIArojzq4few=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:211.20.1.79;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:localhost.localdomain;PTR:211-20-1-79.hinet-ip.hinet.net;CAT:NONE;SFS:(13230038)(1800799022)(82310400024)(36860700011)(7416012)(376012);DIR:OUT;SFP:1101;
+X-OriginatorOrg: wiwynn.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2024 09:07:58.3797
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d2f94421-34da-4a6c-67fb-08dc95bf7956
+X-MS-Exchange-CrossTenant-Id: da6e0628-fc83-4caf-9dd2-73061cbab167
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=da6e0628-fc83-4caf-9dd2-73061cbab167;Ip=[211.20.1.79];Helo=[localhost.localdomain]
+X-MS-Exchange-CrossTenant-AuthSource:
+	HK2PEPF00006FB4.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR04MB7453
 
-Hi
+Changelog:
+  - v9
+    - add XDP710 support
+    - add RTQ6056 support
+    - add MP5990 support
+  - v8
+    - add fan led config
+  - v7
+    - Revise pca9506 i2c address
+  - v6
+    - Revise i2c duty-cycle for meeting 400khz spec
+  - v5
+    - Support medusa board adc sensors
+    - support NIC eeprom
+  - v4
+    - Re-format gpio linename
+    - Revise i2c device node names
+    - Split patches by logic changes
+  - v3
+    - Correct patch for revising gpio name
+  - v2
+    - Revise mx31790 fan tach config
+    - Add mctp config for NIC
+    - Support mux to cpld
+    - Revise gpio name
+  - v1
+    - Add gpio and eeprom behind i2c-mux
+    - Remove redundant idle-state setting for i2c-mux
+    - Enable adc 15, wdt2,spi gpio for yosemite4 use
+    - Revise quad mode to dual mode to avoid WP pin influnece the SPI
+    - Revise power sensor adm1281 for yosemite4 schematic change
+    - Add gpio pca9506 I/O expander for yosemite4 use
+    - remove space for adm1272 compatible
+    - enable interrupt setting for pca9555
+    - add eeprom for yosemite4 medusa board/BSM use
+    - remove temperature sensor for yosemite4 schematic change
+    - add power sensor for power module reading
+    - Revise adc128d818 adc mode for yosemite4 schematic change
+    - Revise ina233 for yosemite4 schematic change
+    - Remove idle state setting for yosemite4 NIC connection
+    - Initialize bmc gpio state
+    - Revise mx31790 fan tach config
+    - Add mctp config for NIC
+    - Support mux to cpld
+    - Revise gpio name
 
-On Wed, Jun 26, 2024 at 11:02=E2=80=AFAM Peng Fan <peng.fan@nxp.com> wrote:
->
-> > Subject: [PATCH] dmaengine: mxs-dma: Add check for
-> > dma_set_max_seg_size in mxs_dma_probe()
->
-> Please read
-> https://lore.kernel.org/all/ZiocjS6tbeTt2mPD@matsya/
->
-> Regards,
-> Peng.
->
-> >
-> > As the possible failure of the dma_set_max_seg_size(), we should
-> > better check the return value of the dma_set_max_seg_size().
-> >
-> > Fixes: a580b8c5429a ("dmaengine: mxs-dma: add dma support for
-> > i.MX23/28")
-> > Signed-off-by: Ma Ke <make24@iscas.ac.cn>
-> > ---
-> >  drivers/dma/mxs-dma.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c index
-> > cfb9962417ef..90cbb9b04b02 100644
-> > --- a/drivers/dma/mxs-dma.c
-> > +++ b/drivers/dma/mxs-dma.c
-> > @@ -798,7 +798,9 @@ static int mxs_dma_probe(struct
-> > platform_device *pdev)
-> >       mxs_dma->dma_device.dev =3D &pdev->dev;
-> >
-> >       /* mxs_dma gets 65535 bytes maximum sg size */
-> > -     dma_set_max_seg_size(mxs_dma->dma_device.dev,
-> > MAX_XFER_BYTES);
-> > +     ret =3D dma_set_max_seg_size(mxs_dma->dma_device.dev,
-> > MAX_XFER_BYTES);
-> > +     if (ret)
-> > +             return ret;
-> >
+Delphine CC Chiu (26):
+  ARM: dts: aspeed: yosemite4: Revise i2c-mux devices
+  ARM: dts: aspeed: yosemite4: Enable adc15
+  ARM: dts: aspeed: yosemite4: Enable spi-gpio setting
+  ARM: dts: aspeed: yosemite4: Enable watchdog2
+  ARM: dts: aspeed: yosemite4: Revise quad mode to dual mode
+  ARM: dts: aspeed: yosemite4: Revise power sensor adm1281 for schematic
+    change
+  ARM: dts: aspeed: yosemite4: Add gpio pca9506
+  ARM: dts: aspeed: yosemite4: Remove space for adm1272 compatible
+  ARM: dts: aspeed: yosemite4: Enable interrupt setting for pca9555
+  ARM: dts: aspeed: yosemite4: Add power sensor for power module reading
+  ARM: dts: aspeed: yosemite4: Add eeprom for yosemite4 use
+  ARM: dts: aspeed: yosemite4: Remove temperature sensor for yosemite4
+    schematic change
+  ARM: dts: aspeed: yosemite4: Revise adc128d818 adc mode for yosemite4
+    schematic change
+  ARM: dts: aspeed: yosemite4: Revise ina233 config for yosemite4
+    schematic change
+  ARM: dts: aspeed: yosemite4: Remove idle state setting for yosemite4
+    NIC connection
+  ARM: dts: aspeed: yosemite4: Initialize bmc gpio state
+  ARM: dts: aspeed: yosemite4: Revise mx31790 fan tach config
+  ARM: dts: aspeed: yosemite4: add mctp config for NIC
+  ARM: dts: aspeed: yosemite4: support mux to cpld
+  ARM: dts: aspeed: yosemite4: support medusa board adc sensors
+  ARM: dts: aspeed: yosemite4: support NIC eeprom
+  ARM: dts: aspeed: yosemite4: Revise i2c duty-cycle
+  ARM: dts: aspeed: yosemite4: add fan led config
+  ARM: dts: aspeed: yosemite4: add XDP710
+  ARM: dts: aspeed: yosemite4: add RTQ6056 support
+  ARM: dts: aspeed: yosemite4: add MP5990 support
 
-If the function returns an error then you should check for it. If it's
-not logical to have it, then you could
-make void the function that is called and WARN_ON on an illogical situation
+ .../aspeed/aspeed-bmc-facebook-yosemite4.dts  | 1410 +++++++++++++++--
+ 1 file changed, 1306 insertions(+), 104 deletions(-)
 
-Michael
+-- 
+2.25.1
 
-> >       mxs_dma->dma_device.device_alloc_chan_resources =3D
-> > mxs_dma_alloc_chan_resources;
-> >       mxs_dma->dma_device.device_free_chan_resources =3D
-> > mxs_dma_free_chan_resources;
-> > --
-> > 2.25.1
-> >
->
->
