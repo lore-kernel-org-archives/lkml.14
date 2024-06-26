@@ -1,118 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC6F143C70;
-	Wed, 26 Jun 2024 08:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58E8143C70;
+	Wed, 26 Jun 2024 08:59:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719392347; cv=none; b=P2s3CFJFTY3axFpr7UMLQjw2wsQBA11vjBvz2JPPIXuUbsvqYY12Y9VsZwrMZ0r9da3xmmP6619hmV7D8y87V4uLBAJvpspRJXfcNVuCme9qYAWJgQZHUZ2+GACvkIn2s4kR9BTBHmKrkMKfYyzZoVuTsRGjQtS4ZYSnBGc3DGw=
+	t=1719392391; cv=none; b=b+0ppXtkTTWxfIEWDxKARzCYJYZV2Gje+RDC3d7G8+/bVbcGsVV2T9jue5qqeiIfOn9RJXYLvMpyPbW2q3lUXLB4kEJNxrD5oNxfMapjPg19pujcpwJEA7p8szkodViK08knKwyAOXy0yT9vUGdh1y3tGDozngWsm0gbhrPU/N8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719392347; c=relaxed/simple;
-	bh=Yi0uUdwXQGESASIay29BdNm3t+M80GUeRqfnhkBP8jA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oFzS0pVVYQWYzPVKzstzGLqroGot/Y8rUQfQz1MoFy6s3a6F/WHKo433SBC8oR3il8POOeZzoGiS/0spyUcylCOy8iUXMqJFXf2zBqeeuAOBXK5jgvlUQJ6MCuTOaheZaqoc+qbCMnKssqKyz1vq6i1AueHUDCZ+V/b0yjXuuok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F8CVkSaL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719392391; c=relaxed/simple;
+	bh=FSISfV6zDHg7rk9JZjapnhY/iNl3oAqtg8/lTJkUjcY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O+czb42RCX9q6wP1Ls0HhGWYjaxz7h27rUuF9FfhIn9S3hV+zgd+PsZf8Fbsy35Teyo7BGI8pcgLMpQ6zyl1ap47ASNsZYSjR0fcLhJEbAildS/vHyH4Ib93VRbRsOoznuQDcLT6HBEd6pZvnpZ83yH+txD0aqCHLIDxOwpps4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=egVA+ia9; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F8CVkSaL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFFDEC2BD10;
-	Wed, 26 Jun 2024 08:59:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719392347;
-	bh=Yi0uUdwXQGESASIay29BdNm3t+M80GUeRqfnhkBP8jA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=F8CVkSaL9UhxM1zNzWHr9i3hYmKgO/Tdw0ScJk5Ll7e+/DFEQpAYF6vnrAL9sjkQe
-	 B2KCbRFyEdYLxIjixhX8tceUB3dFfedXHZ7lvHLTMTUezFX5He679WzqU9NvQhXn12
-	 NtOUmmx2g0ZuqtSGSOVkMw/X8VSoFgv9pLNW5BOABp2+p7lU+id29/afS+BflYYN5C
-	 +3N5a0rO9viLPsX1MZ0M3/LdjSasiu01/9mzsbrWefSyvY20/t5Eb7uuTHjZovpVTv
-	 sbSiMXFXAmzh/Xk8dPO8HXP/nDswabpl5keLy+onUxDU3yASZw6JVYaNAPLuzL0URu
-	 LfeshodyrKkIw==
-Message-ID: <c4ee50a8-2fdd-4aa9-9d88-ec3f3ea52633@kernel.org>
-Date: Wed, 26 Jun 2024 10:59:01 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="egVA+ia9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719392390; x=1750928390;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=FSISfV6zDHg7rk9JZjapnhY/iNl3oAqtg8/lTJkUjcY=;
+  b=egVA+ia9/PURrhRerdJBhxWPS3w5GuL+2kjPveG32+C3HutdvGQMeMGi
+   SwK6E8Y0wLtWICrrszabjQRxab4SnJSWllYGcshywfrgGgqKiYA+8yB+/
+   wejmHqrqdcWoPIIqLnImfmYf3FOi2p5oUC47DYItdykuD7jgbYbMTb1uQ
+   YLdiv+ijaQNoCNI5ZK048A5p3i1D7ljbpltYQRxYIkS5hMVcT5K9rImSe
+   NDin7OJ14yrysHS/eYkCPwUhxAHkwHeeknTWP6vvlxqYWIpl4rH5cYyWI
+   i5DoqQ/laFBCYb37M6ItYjlyxMibpb6OHqP0AkQxULNdlSix0iJcfR0vT
+   Q==;
+X-CSE-ConnectionGUID: 8cM3cZTnTRykzYC7o3clTw==
+X-CSE-MsgGUID: YUImQ3QjQ2u7ziz7dB2DqA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="16329955"
+X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
+   d="scan'208";a="16329955"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 01:59:49 -0700
+X-CSE-ConnectionGUID: ay8DWYltT06BBtCZW60Bqw==
+X-CSE-MsgGUID: QzCdzugPSFqx+dCOMOUebw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
+   d="scan'208";a="44648004"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa008.jf.intel.com with ESMTP; 26 Jun 2024 01:59:47 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id F0D13474; Wed, 26 Jun 2024 11:59:45 +0300 (EEST)
+Date: Wed, 26 Jun 2024 11:59:45 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Esther Shimanovich <eshimanovich@chromium.org>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Rajat Jain <rajatja@google.com>
+Subject: Re: [PATCH v4] PCI: Relabel JHL6540 on Lenovo X1 Carbon 7,8
+Message-ID: <20240626085945.GA1532424@black.fi.intel.com>
+References: <20240510052616.GC4162345@black.fi.intel.com>
+ <CA+Y6NJF2Ex6Rwxw0a5V1aMY2OH4=MP5KTtat9x9Ge7y-JBdapw@mail.gmail.com>
+ <20240511043832.GD4162345@black.fi.intel.com>
+ <20240511054323.GE4162345@black.fi.intel.com>
+ <CA+Y6NJF+sJs_zQEF7se5QVMBAhoXJR3Y7x0PHfnBQZyCBbbrQg@mail.gmail.com>
+ <ZkUcihZR_ZUUEsZp@wunner.de>
+ <20240516083017.GA1421138@black.fi.intel.com>
+ <20240516100315.GC1421138@black.fi.intel.com>
+ <CA+Y6NJH8vEHVtpVd7QB0UHZd=OSgX1F-QAwoHByLDjjJqpj7MA@mail.gmail.com>
+ <ZnvWTo1M_z0Am1QC@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] Add documentation for PA_STATS and MAINTAINERS
- entry for ti,pruss.yaml
-To: MD Danish Anwar <danishanwar@ti.com>, Suman Anna <s-anna@ti.com>,
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
- Santosh Shilimkar <ssantosh@kernel.org>, Nishanth Menon <nm@ti.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, srk@ti.com,
- Vignesh Raghavendra <vigneshr@ti.com>, Roger Quadros <rogerq@kernel.org>
-References: <20240625153319.795665-1-danishanwar@ti.com>
- <20240625153319.795665-4-danishanwar@ti.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240625153319.795665-4-danishanwar@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZnvWTo1M_z0Am1QC@wunner.de>
 
-On 25/06/2024 17:33, MD Danish Anwar wrote:
-> Hi,
+On Wed, Jun 26, 2024 at 10:50:22AM +0200, Lukas Wunner wrote:
+> On Mon, Jun 24, 2024 at 11:58:46AM -0400, Esther Shimanovich wrote:
+> > On Wed, May 15, 2024 at 4:45???PM Lukas Wunner <lukas@wunner.de> wrote:
+> > > Could you add this to the command line:
+> > >   thunderbolt.dyndbg ignore_loglevel log_buf_len=10M
+> > >
+> > > and this to your kernel config:
+> > >   CONFIG_DYNAMIC_DEBUG=y
+> > >
+> > > You should see "... is associated with ..." messages in dmesg.
+> > 
+> > I tried Lukas's patches again, after enabling the Thunderbolt driver
+> > in the config and also verbose messages, so that I can see
+> > "thunderbolt:" messages, but it still never reaches the
+> > tb_pci_notifier_call function. I don't see "associated with" in any of
+> > the logs. The config on the image I am testing does not have the
+> > thunderbolt driver enabled by default, so this patch wouldn't help my
+> > use case even if I did manage to get it to work.
 > 
-> This series adds documentation for PA_STATS in dt-bindings file ti,pruss.yaml.
-> This bindings file doesn't have a MAINTAINERS entry. This series add the
-> MAINTAINERS entry for this file as well.
-> 
-> Changes since v2:
-> *) Added RB tag of Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> to
->    patch 2/2
-> *) Added patch 1/2 to the series as the binding file is orphan.
-> 
-> v2 https://lore.kernel.org/all/20240529115149.630273-1-danishanwar@ti.com/
+> Mika, what do you make of this?  Are the ChromeBooks in question
+> using ICM-based tunneling instead of native tunneling?  I thought
+> this is all native nowadays and ICM is only used on older (pre-USB4)
+> products.
 
-That's some duplicated posting.
+I think these are not Chromebooks. They are "regular" PCs with
+Thunderbolt 3 host controller which is ICM as you suggest.
 
-Why you just can't use b4?
-
-Best regards,
-Krzysztof
-
+There is still Maple Ridge and Tiger Lake (non-Chrome) that are ICM
+(firmware based connection manager) that are USB4 but everything after
+that is software based connection manager.
