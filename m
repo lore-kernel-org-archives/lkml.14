@@ -1,57 +1,57 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4245A193088
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 20:36:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E4E193061
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 20:36:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719434206; cv=none; b=HWoEYlCOHQ9E8RMq2rCep/tUHdRwksJYkLZkrEudwUjNi2DPedTI7eqETy9sfBGyyDzDhVHp1fINvRJd5M+d/D/LDzefENSncl/wmEI/MYVgvTec0uYPs5j+g2lj51Omkm788AWddghXHdPI2433b5OAH9s2S5l45HzHYf0CS0s=
+	t=1719434213; cv=none; b=scV/R6BmpskEDqKvQ+h71QpuYLxWGQYzJbIfoWFVjSLkXpuvKw5FiW6Crbpm3elj8Z5FMr5ldvOdwCpKmKjYNDTvCTTiC70qp2jK7FWSZrNipPOTwBThJw732S0Tig9sTWztPDoZXPl+9lv7pCjeSs/Cz4iCoZNIB90vqXhoflc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719434206; c=relaxed/simple;
-	bh=qdeanQ8GYgnxi/cu3Zjdli62tKEIwEpZcs71nTkIs/A=;
+	s=arc-20240116; t=1719434213; c=relaxed/simple;
+	bh=0aVHJrC08XhbCG4RutjMTYNM2P5O2raGsxoyhdcFWYM=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=qhnK8IbMgguoeFplmDWNjWrPgQDBP90ov5HsJ6Tq2DwYDK2UdVbj6Zrwz9uy+Cyj31VZOsQRuw2OB9b6EdDAKp5v3b19YQ5Ekgl4Hm0HZUGeovdlv7IY9rSg8EGH/BFtX+q2lIl8fmDlDYn86IeOVEPOrfG/nkSz2uAzhMS++aA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2LCt0nW1; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=kb1UlYsJ+spTnhjxp0ueUDevKBaJNgaY7t5iF9XbL0Falc7wD4kAXsiq+2deL5zKJLtFtZKBaw2ykr0j7qfiTZeaDHkcgI0/3QdNSln7ILBfmu2v8Lax7I5L/X8Oa/hjJtAPpJdf7ZE4xyl3iKNsgw/1SJim+jSMxX2FxlQdyMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g68d2k08; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2LCt0nW1"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-643f57e2f0fso101238217b3.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 13:36:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g68d2k08"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dfe4f388d33so15128423276.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 13:36:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719434203; x=1720039003; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1719434210; x=1720039010; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=lcJ2tbGh1Yfs0OJM6bkJDG9fBvcliigGM1tYWqZJmL4=;
-        b=2LCt0nW1aCZUIJajkIOdSVXZx7QcXcgXlPSgn2JNhBwbPhSdy8Cul3sVKsTX+rGpgO
-         NyqY0/lK2pvVbM0PIZaOJ06hi/sG0/8ttwyFPlu268LTP0DO+cCxgv3zXADuiJZOpEQn
-         AGmtO3xYsebWldLVPB3lZj/oLnY2UugPke1rAr57v2dKY0f4Lq6l4yANCQ3hO17qs9WX
-         ZhpJl9HDDYjdQdhNXd6NuJ5fXUj266e8KjmWv5z3+o1nXnHAxZNI7Ve8hRRvlHO45K0o
-         MA9df5Dg/DqqAaRvOjBQzGvmLqG3Aqmb7uwNYJDFmJ74ucYAnbgp87pywrNh7P5vIoGC
-         nYLg==
+        bh=AFiPugBk+wYhM4/j4Jlr9h9+wpX8LHXAYZExjKx1mqU=;
+        b=g68d2k08wLKCiAVA2EbKSanwRlGf3uWpplqRU32d2aizqzDl+O6P5Js9quWWcmRafh
+         j/BRdRl7nHIiJ7dQjvnT0a7Zu0C6p4XLWUQ1pIoSp1AgXsRZEwMnv1Ip7lz4Hlo9rCT+
+         SRisur0NMDRhG2Fegh6aXSvN/zhCen57GBSQTiZX5u0/ZrnUjVVLFI5kyY7MaXctaaoC
+         eGmhGoAtCjxsOE+6z7dgNGjiSXWmUg0dVT8wPL5KYVwYq8j3eqJF04bxnyVbjBDaJNy0
+         SJPCx7kJ/tQw/AmvvDLqZMvzYYXlmAxm5gxroQbFpavqh4hK4w02bTelOAuKpGzSDAPr
+         8RtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719434203; x=1720039003;
+        d=1e100.net; s=20230601; t=1719434210; x=1720039010;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lcJ2tbGh1Yfs0OJM6bkJDG9fBvcliigGM1tYWqZJmL4=;
-        b=jGQqv0yvwSgy8FPzFjSWNyqpLuCO6o8MhYpsAAn2baRU5YFuQ+9QJex/eoEy4iidFy
-         4kJxA/8P7qxN4WNr9namZhANfZwuzylZDGXY2thIHabIeYtDWAcANCce6shOUApQfWoT
-         aKEyNSM7IVnZGu1hAG7mOw7cMTzmmF6OJ6OHfqb86/Lueih0wGVqm8bwrALg2wT8y+4c
-         oCmllbRzbdzdGAkMG/fG8MpO+YZFBT/KLrY5G/960xbiMlhl7XpT6zDqVCzLMpHQYQ7a
-         7COyGl4J6dOoe6QL91b6N9jFLq/sco1pSWiSOaHiwtd6xR2mVlRTIpXCRrH22wh9i79N
-         xGkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUT0tiwuBtvOsL9ion2HJrenGoNALVkHIYiHhSoFL60UjisRIZxFXLfM1iKJ31+0SWV3C6orlh9ZlbtekIIQeT9QdRTSy0AGfb8WzHP
-X-Gm-Message-State: AOJu0YwsDo7jqe+f4f22yvcfjREUj2+bcfU0FMMlf6BOVHsAykQNGZEs
-	HCUwytNDKb/a55zM+TD7D2kAA/Vt3c+3XeG55ZhhJtMvJysD2yitUAXJh/9pZG75KgyR/OvKs5V
-	Fhz7UfQ==
-X-Google-Smtp-Source: AGHT+IF1ujd8fnaq1c9+yRQXwV8wiVuEn0TIgaMmQb8DJtqM0t0gj5rgMA3or/ZxmEcUAkhmByF2yBScwXbC
+        bh=AFiPugBk+wYhM4/j4Jlr9h9+wpX8LHXAYZExjKx1mqU=;
+        b=Pe9Mj/rXWQ4Z/qOhYr6wYfcSKCH83cZ3zThP7mSEuBgcLfzN2CPhVbnj3Q1cYijh74
+         7Ao1twLl0+PXPxP5L+e9JTdvBGRHb0qWZqiPccFmnUryZKKDFPKwgt2KNmp20+g1XtrJ
+         cieu+9+x3HKZkdCP8kPClrRg6QTgJ+6FKcHzTE5t7JDF1pbduBoUWqeyshzogaKaqH5a
+         /GeGKLMvuxsuLOS7ispvi1K8/NuLyMaMRdPd7JUjZP7AtEjt7YzfEnTUtQeValvozzFP
+         4t9/qxgfC3ioftoeJn9+rrWsZ2UpAh6HSGZ3KyqoSvmy7dRWxFQOwXTeV5ZJzr8vAwVi
+         Uh+g==
+X-Forwarded-Encrypted: i=1; AJvYcCUxcJQ9oNPLKfXyKXdebf639hieK5OFy03lyZ0K3xQMztC21G7DlkU2apmvYWj6k7qYuJJXw6wBcQBk+2p1kc+jX32Y9D9FER4/dBJm
+X-Gm-Message-State: AOJu0YzhBlDOZ3UPQaFVTh77aDXIPkpids+5v/yO3gdmXLZmNMbnx46O
+	f8RlSFhmlSl78fBStH9tnoyhF0zNTipMVrob5bjZxlHxafMHQaG5BwRSKMArTWMXhKACr2cxzYn
+	1MBrRFg==
+X-Google-Smtp-Source: AGHT+IHT6UsLLgb3WeR5Tle1hXNSZKCOcstdTB0LxqaxWb7lVdJw/IMWJFFV90Y6uJl5XDW/2Jn5RtufdKfJ
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:23a1:25b9:2412:56de])
- (user=irogers job=sendgmr) by 2002:a05:6902:f84:b0:e03:31ec:8a25 with SMTP id
- 3f1490d57ef6-e0331ec8b21mr6829276.10.1719434203172; Wed, 26 Jun 2024 13:36:43
- -0700 (PDT)
-Date: Wed, 26 Jun 2024 13:36:04 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:154b:b0:dff:12d0:2072 with SMTP
+ id 3f1490d57ef6-e0303fd4396mr704257276.2.1719434210053; Wed, 26 Jun 2024
+ 13:36:50 -0700 (PDT)
+Date: Wed, 26 Jun 2024 13:36:07 -0700
 In-Reply-To: <20240626203630.1194748-1-irogers@google.com>
-Message-Id: <20240626203630.1194748-3-irogers@google.com>
+Message-Id: <20240626203630.1194748-6-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240626203630.1194748-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.2.741.gdbec12cfda-goog
-Subject: [PATCH v2 02/27] perf cs-etm: Fix address sanitizer dso build failure
+Subject: [PATCH v2 05/27] perf tool: Add perf_tool__init
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -80,67 +80,96 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-cs-etm.c had been missed from having accessor functions added for the
-sake of reference count checking. Add the function calls and missing
-dso accessor functions.
+Add init function that behaves like perf_tool__fill_defaults but
+assumes all values haven't been initialized.
 
-Fixes: ee756ef7491e ("perf dso: Add reference count checking and accessor functions")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/cs-etm.c | 10 +++++-----
- tools/perf/util/dso.h    | 10 ++++++++++
- 2 files changed, 15 insertions(+), 5 deletions(-)
+ tools/perf/util/tool.c | 58 ++++++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/tool.h |  1 +
+ 2 files changed, 59 insertions(+)
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 9fd2967d4e3f..e1a7eebbb15f 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -1013,7 +1013,7 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
- 	if (!dso)
- 		goto out;
- 
--	if (dso->data.status == DSO_DATA_STATUS_ERROR &&
-+	if (dso__data(dso)->status == DSO_DATA_STATUS_ERROR &&
- 	    dso__data_status_seen(dso, DSO_DATA_STATUS_SEEN_ITRACE))
- 		goto out;
- 
-@@ -1027,11 +1027,11 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
- 	if (len <= 0) {
- 		ui__warning_once("CS ETM Trace: Missing DSO. Use 'perf archive' or debuginfod to export data from the traced system.\n"
- 				 "              Enable CONFIG_PROC_KCORE or use option '-k /path/to/vmlinux' for kernel symbols.\n");
--		if (!dso->auxtrace_warned) {
-+		if (!dso__auxtrace_warned(dso)) {
- 			pr_err("CS ETM Trace: Debug data not found for address %#"PRIx64" in %s\n",
--				    address,
--				    dso->long_name ? dso->long_name : "Unknown");
--			dso->auxtrace_warned = true;
-+				address,
-+				dso__long_name(dso) ? dso__long_name(dso) : "Unknown");
-+			dso__set_auxtrace_warned(dso);
- 		}
- 		goto out;
- 	}
-diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index d72f3b8c37f6..878c1f441868 100644
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -280,6 +280,16 @@ static inline void dso__set_annotate_warned(struct dso *dso)
- 	RC_CHK_ACCESS(dso)->annotate_warned = 1;
+diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
+index 17219ecb8fa6..cbd9b888bd73 100644
+--- a/tools/perf/util/tool.c
++++ b/tools/perf/util/tool.c
+@@ -230,6 +230,64 @@ static int perf_session__process_compressed_event_stub(struct perf_session *sess
+ 	return 0;
  }
  
-+static inline bool dso__auxtrace_warned(const struct dso *dso)
++void perf_tool__init(struct perf_tool *tool, bool ordered_events)
 +{
-+	return RC_CHK_ACCESS(dso)->auxtrace_warned;
++	tool->ordered_events = ordered_events;
++	tool->ordering_requires_timestamps = false;
++	tool->namespace_events = false;
++	tool->cgroup_events = false;
++	tool->no_warn = false;
++	tool->show_feat_hdr = SHOW_FEAT_NO_HEADER;
++
++	tool->sample = process_event_sample_stub;
++	tool->mmap = process_event_stub;
++	tool->mmap2 = process_event_stub;
++	tool->comm = process_event_stub;
++	tool->namespaces = process_event_stub;
++	tool->cgroup = process_event_stub;
++	tool->fork = process_event_stub;
++	tool->exit = process_event_stub;
++	tool->lost = perf_event__process_lost;
++	tool->lost_samples = perf_event__process_lost_samples;
++	tool->aux = perf_event__process_aux;
++	tool->itrace_start = perf_event__process_itrace_start;
++	tool->context_switch = perf_event__process_switch;
++	tool->ksymbol = perf_event__process_ksymbol;
++	tool->bpf = perf_event__process_bpf;
++	tool->text_poke = perf_event__process_text_poke;
++	tool->aux_output_hw_id = perf_event__process_aux_output_hw_id;
++	tool->read = process_event_sample_stub;
++	tool->throttle = process_event_stub;
++	tool->unthrottle = process_event_stub;
++	tool->attr = process_event_synth_attr_stub;
++	tool->event_update = process_event_synth_event_update_stub;
++	tool->tracing_data = process_event_synth_tracing_data_stub;
++	tool->build_id = process_event_op2_stub;
++
++	if (ordered_events)
++		tool->finished_round = perf_event__process_finished_round;
++	else
++		tool->finished_round = process_finished_round_stub;
++
++	tool->id_index = process_event_op2_stub;
++	tool->auxtrace_info = process_event_op2_stub;
++	tool->auxtrace = process_event_auxtrace_stub;
++	tool->auxtrace_error = process_event_op2_stub;
++	tool->thread_map = process_event_thread_map_stub;
++	tool->cpu_map = process_event_cpu_map_stub;
++	tool->stat_config = process_event_stat_config_stub;
++	tool->stat = process_stat_stub;
++	tool->stat_round = process_stat_round_stub;
++	tool->time_conv = process_event_time_conv_stub;
++	tool->feature = process_event_op2_stub;
++#ifdef HAVE_ZSTD_SUPPORT
++	tool->compressed = perf_session__process_compressed_event;
++#else
++	tool->compressed = perf_session__process_compressed_event_stub;
++#endif
++	tool->finished_init = process_event_op2_stub;
 +}
 +
-+static inline void dso__set_auxtrace_warned(struct dso *dso)
-+{
-+	RC_CHK_ACCESS(dso)->auxtrace_warned = 1;
-+}
-+
- static inline struct auxtrace_cache *dso__auxtrace_cache(struct dso *dso)
+ void perf_tool__fill_defaults(struct perf_tool *tool)
  {
- 	return RC_CHK_ACCESS(dso)->auxtrace_cache;
+ 	if (tool->sample == NULL)
+diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
+index 7913b698033a..897c6c44b6b2 100644
+--- a/tools/perf/util/tool.h
++++ b/tools/perf/util/tool.h
+@@ -88,6 +88,7 @@ struct perf_tool {
+ 	enum show_feature_header show_feat_hdr;
+ };
+ 
++void perf_tool__init(struct perf_tool *tool, bool ordered_events);
+ void perf_tool__fill_defaults(struct perf_tool *tool);
+ 
+ bool perf_tool__compressed_is_stub(const struct perf_tool *tool);
 -- 
 2.45.2.741.gdbec12cfda-goog
 
