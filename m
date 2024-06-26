@@ -1,123 +1,140 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE20014F9E0;
-	Wed, 26 Jun 2024 04:31:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8620F13D28F
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 04:31:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719376277; cv=none; b=R6ffyLSxZx+G59Wj4yBQnFSh3lAP1k4e1vf0mn/MRfhWh0fp3wdDyvgtZg2iRxB6+lFWZb/sLiZG3ZHYNaM7+FFLME7STYnKLRGZ+49mMHT0319Q8111dpk108IlrJjcT6yV7Ash3OB67euJRD7oUFrjw9UJF0fpi09jX4ABpik=
+	t=1719376291; cv=none; b=SBNsV0ku2jeMGoNsdsxkiAdfzJmujQvMbvBZyX5vkj8JHY8ETZoGhEXbDEmILlKyp+OhbXCWAXllctFjbaXmWsV5dwEqznr5thK/mCZASrRj2wDMgmP6SvoPHdNdLiHEG1UDnA7YSdJHtItvrltHFUeB0q8FR0POy4piAon3L9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719376277; c=relaxed/simple;
-	bh=RJOeGqax6JoYjAfq9DLPFiimUs5ZHcSto1H9DnAKfNw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WIR/7Pn8g746wce7drb3C2y8M140316E85vqeLSJmPz3ELO6mJzpNUHFkyI3wao+Ie9XzR5PAK6lq70JybHvOmwlCPWkM+ngdi7Sc9PoZjzsy2ON4nvAekN3mj6Fdh34OTQ8kr37WbZulF5UsYmzdBhOzBdFUFDQnVU/64z9OGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=DT6ENWHU; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1719376291; c=relaxed/simple;
+	bh=adfuNxru1U6BeAy7pQ0mgIrjzsGqUpk7soP+iYRkcEo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LL5gWSWspXY+5E0BqFzSiHfRm+XAYi/3PxRsHOKm62l5JPV9nnxvrJwSHBwJ3b3wExbeekBqHXqF+gTeX7VmraqwHFt4KzypyTWq+Juh4o5KjnkhDkbtEw8ndI834Th+9215Q67nPmgic1E0NsTXXShINVByTCQN6GglB1Uawco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RFI+a1Ca; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="DT6ENWHU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=AFaTt
-	yuJ68VmYg9yBKPjPkv3Q9fuc+z8xPwml6AHFaU=; b=DT6ENWHUDa2SOzgt1IuX0
-	UnHTzzGhT/aaxYXllqIyF3TURBb4c70Mr/pe8BbpuITLdkLKXZMPU5QtqIRKQ5HS
-	V/JkZPR6GZIKpkSNpzJQxdBfiIy28JAfMbhXILjHiWzxSdijpwomRiYGd/aLGpkO
-	zGFM6oYTGIWcEpzYxEtl3o=
-Received: from localhost.localdomain (unknown [193.203.214.57])
-	by gzga-smtp-mta-g2-0 (Coremail) with SMTP id _____wDnr+ZSmXtm99EUAg--.42408S4;
-	Wed, 26 Jun 2024 12:30:12 +0800 (CST)
-From: ran xiaokai <ranxiaokai627@163.com>
-To: ziy@nvidia.com
-Cc: yang.yang29@zte.com.cn,
-	si.hao@zte.com.cn,
-	akpm@linux-foundation.org,
-	baohua@kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	peterx@redhat.com,
-	ran.xiaokai@zte.com.cn,
-	ranxiaokai627@163.com,
-	ryan.roberts@arm.com,
-	svetly.todorov@memverge.com,
-	vbabka@suse.cz,
-	willy@infradead.org
-Subject: Re: [PATCH 1/2] mm: Constify folio_order()/folio_test_pmd_mappable()
-Date: Wed, 26 Jun 2024 04:30:10 +0000
-Message-Id: <20240626043010.1156065-1-ranxiaokai627@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <D29MAAR3YBI6.3G6PVIR1SJACO@nvidia.com>
-References: <D29MAAR3YBI6.3G6PVIR1SJACO@nvidia.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RFI+a1Ca"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52cecba8d11so1885451e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 21:31:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719376288; x=1719981088; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qDMOY6eglp03mIp9Xp9m5yyz1aKQNtppCZRvZo0tS5E=;
+        b=RFI+a1CasWZa+RskgS+lmPtq0DDZcIc7pvm3d88xNl35yMzs98bGuh5pn9sHIlJo+G
+         ER977FKHvff0gzOXIXvii3U1vJYen3YIUwViih6ULy7RaFqekE/xUARQCtFVAys54AnF
+         oZhPXU9x5rAGnl26x70uYMNjEwROnXg6GtxHhK2LC1wRSOoFfLhtFYuZMStxZBjRQdVO
+         MlzvGaBQBAVXy0N51I04KTV4GCbCHpJXyylgIG5+w/aWMa1BAtoPieqf2MvLQOgWBf9T
+         8mdbEYhmggKVuUzxO0SsSo8JkMzoYabMb7qWh5JTuw0zeFlcBsCPeE2QSrrj8yD7fZyR
+         jAsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719376288; x=1719981088;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qDMOY6eglp03mIp9Xp9m5yyz1aKQNtppCZRvZo0tS5E=;
+        b=cpYS5wDdSonoR+L21CjveJO2jAc1kVcdcVcK203jTGA4g4eKkMkSbt7x9HuGuqnQO6
+         LCzYUd2AJnpLJPJRGz1vb818kQZn26tABJLJf6TnbEflOy5/3aCsbO/8TXoXqkL1eW8B
+         OjrjInhe7yrO5CEisaIAl5rHsHmTr5bmfUsW/DiIs4JLQRodV59rePCRc++yRn3B7lCw
+         M4X6iVj7MBIGbupmGf6cxIPo5jkK/ZeyKUvFvGZ92jzbqv/wTbXDTMAXCCzRvlBiHym4
+         5d+UM4riNmUWJq9lGMWblUbsY/n+2f3ckD0xoHFOZDh+4KnPZHY8IKzavq2iy2wbxiuH
+         gebA==
+X-Forwarded-Encrypted: i=1; AJvYcCUb9yWimCuCwbzCvMtkeiUfWBM0vFJozqt75SNYbr7xbgupg8x6jAvSgicjZxxwB+pqEiUHxNPFMwh9NF5SncmtJ1xU9jhqh8fDq/Qc
+X-Gm-Message-State: AOJu0YxuA2e5VyCkOsI0pbFr9BJoSAZ4E1Ndkid0OBcrayVpQPNhJcdA
+	+6daHeZAvD9ftEvUDfBL62i4WOPrlqRA6EyndcPXyQKjCbdfjvmfFkQpojFRvAQ=
+X-Google-Smtp-Source: AGHT+IEJDJbJ0nmjp0FdUDEdV4/Bu3Xu/XaM3QtCeSYzxL+1CRkCFEiMq1C2y/BjX9CIR2z91E+1Wg==
+X-Received: by 2002:a2e:9684:0:b0:2ec:53a8:4b3e with SMTP id 38308e7fff4ca-2ec5b387fcamr53011001fa.38.1719376287461;
+        Tue, 25 Jun 2024 21:31:27 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec67316e57sm4088891fa.103.2024.06.25.21.31.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jun 2024 21:31:27 -0700 (PDT)
+Date: Wed, 26 Jun 2024 07:31:25 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Akhil P Oommen <quic_akhilpo@quicinc.com>
+Subject: Re: [PATCH] dt-bindings: display/msm/gmu: fix the schema being not
+ applied
+Message-ID: <vuzzs5xd2zacpamln7apyhnxebg3xadkagzheg5cz2fnuj2ggc@lancgcviktpy>
+References: <20240623125930.110741-1-krzysztof.kozlowski@linaro.org>
+ <20240625225127.GA361957-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnr+ZSmXtm99EUAg--.42408S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Ar1fuF45GryfKw4rGr1xKrg_yoW5JF48pF
-	yDCFn7tFW0krW5uryDta1IyryYq39FgFWjyFy7Kry7Jas8t3sF93Wq9w1YkFn3GrZ7CF1I
-	ga17WFyYga4UJFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUk73kUUUUU=
-X-CM-SenderInfo: xudq5x5drntxqwsxqiywtou0bp/xtbB0hYKTGWXym5ASQAAsd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240625225127.GA361957-robh@kernel.org>
 
-> On Tue Jun 25, 2024 at 10:49 PM EDT, ran xiaokai wrote:
-> > From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
-> >
-> > Constify folio_order()/folio_test_pmd_mappable().
-> > No functional changes, just a preparation for the next patch.
+On Tue, Jun 25, 2024 at 04:51:27PM GMT, Rob Herring wrote:
+> On Sun, Jun 23, 2024 at 02:59:30PM +0200, Krzysztof Kozlowski wrote:
+> > dtschema v2024.4, v2024.5 and maybe earlier do not select device nodes for
 > 
-> What warning/error are you seeing when you just apply patch 2? I wonder why it
-> did not show up in other places. Thanks.
+> That should be just since db9c05a08709 ("validator: Rework selecting 
+> schemas for validation") AKA the 6x speed up in v2024.04.
+> 
+> > given binding validation if the schema contains compatible list with
+> > pattern and a const fallback.  This leads to binding being a no-op - not
+> > being applied at all.  Issue should be fixed in the dtschema but for now
+> > add a work-around do the binding can be used against DTS validation.
+> 
+> The issue is we only look at the first compatible. I'm testing out a fix 
+> and will apply it tomorrow assuming no issues. With that, I don't think 
+> we should apply this patch.
 
-fs/proc/page.c: In function 'stable_page_flags':
-fs/proc/page.c:152:35: warning: passing argument 1 of 'folio_test_pmd_mappable' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
-  152 |  else if (folio_test_pmd_mappable(folio)) {
-      |                                   ^~~~~
-In file included from include/linux/mm.h:1115,
-                 from include/linux/memblock.h:12,
-                 from fs/proc/page.c:2:
-include/linux/huge_mm.h:380:58: note: expected 'struct folio *' but argument is of type 'const struct folio *'
-  380 | static inline bool folio_test_pmd_mappable(struct folio *folio)
+I think we ended up picking up the next iteration of the patch, but we
+can probably land a revert later.
 
-u64 stable_page_flags(const struct page *page)
-{
-	const struct folio *folio; // the const definition causes the warning
-	...
-}
-
-As almost all the folio_test_XXX(flags) have converted to received
-a const parameter, it is Ok to also do this for folio_order()?
-
-> >
-> > Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+> 
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > 
 > > ---
-> >  include/linux/huge_mm.h | 2 +-
-> >  include/linux/mm.h      | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-> > index 2aa986a5cd1b..8d66e4eaa1bc 100644
-> > --- a/include/linux/huge_mm.h
-> > +++ b/include/linux/huge_mm.h
-> > @@ -377,7 +377,7 @@ static inline spinlock_t *pud_trans_huge_lock(pud_t *pud,
-> >   * folio_test_pmd_mappable - Can we map this folio with a PMD?
-> >   * @folio: The folio to test
-> >   */
-> > -static inline bool folio_test_pmd_mappable(struct folio *folio)
-> > +static inline bool folio_test_pmd_mappable(const struct folio *folio)
-> >  {
-> >  	return folio_order(folio) >= HPAGE_PMD_ORDER;
-> >  }
-> > diff --git a/include/linux/mm.h b/include/linux/mm.h
-> > index 9a5652c5fadd..b1c11371a2a3 100644
-> > --- a/include/linux/mm.h
-> > +++ b/include/linux/mm.h
-> > @@ -1105,7 +1105,7 @@ static inline unsigned int compound_order(struct page *page)
-> >   *
-> >   * Return: The order of the folio.
-> >   */
-> > -static inline unsigned int folio_order(struct folio *folio)
-> > +static inline unsigned int folio_order(const struct folio *folio)
-> >  {
-> >  	if (!folio_test_large(folio))
-> >  		return 0;
+> > 
+> > Cc: Akhil P Oommen <quic_akhilpo@quicinc.com>
+> > ---
+> >  .../devicetree/bindings/display/msm/gmu.yaml         | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/msm/gmu.yaml b/Documentation/devicetree/bindings/display/msm/gmu.yaml
+> > index b3837368a260..8d1b515f59ec 100644
+> > --- a/Documentation/devicetree/bindings/display/msm/gmu.yaml
+> > +++ b/Documentation/devicetree/bindings/display/msm/gmu.yaml
+> > @@ -17,6 +17,18 @@ description: |
+> >    management and support to improve power efficiency and reduce the load on
+> >    the CPU.
+> >  
+> > +# dtschema does not select nodes based on pattern+const, so add custom select
+> > +# as a work-around:
+> > +select:
+> > +  properties:
+> > +    compatible:
+> > +      contains:
+> > +        enum:
+> > +          - qcom,adreno-gmu
+> > +          - qcom,adreno-gmu-wrapper
+> > +  required:
+> > +    - compatible
+> > +
+> >  properties:
+> >    compatible:
+> >      oneOf:
+> > -- 
+> > 2.43.0
+> > 
 
+-- 
+With best wishes
+Dmitry
