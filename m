@@ -1,100 +1,143 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D211836F5;
-	Wed, 26 Jun 2024 10:47:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB8317F4FE;
+	Wed, 26 Jun 2024 10:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719398842; cv=none; b=glmD4ndSUMP9isoatwa8bp5MCm45ryBrOQr7Vh6sYG4A7q19wh17puPU5Gg8ujxb92AT6fGmXHp26HBywifF5g/4d+PQuUEwqAhnS62sMv6Rjw3FGGdibbse8KG8qBKRjRbbCUtPyeRL77pjdNnYSW7crd+CYLhtdmNLRhefUU4=
+	t=1719398851; cv=none; b=CnINsYDTMQtuTjUs8RMhhSoPY8RoezyWCB3k7FbD5ge+XpgZGmqGvCu/ppW4Y+iY5Fh7+jfLazUk31k6ZFcmilCIjmwYB+o48bLL7Qw29bBA7pbFXUQ3BcRBbV9FtQEyWLzcBxnlq1w4jGy5DbxZVZzsrvuC1sJG0QD+F0WvtXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719398842; c=relaxed/simple;
-	bh=wxrHq8YLOler5eJNVHa07AdcBpDkGb2s0gSKy1Rcjoo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uJpquqyiCCNTHQHWXFrF+uvSyLqKYObkmwBc+BFOABTRsKPhEIhrvBUbqNmZJP096l0vwbn11+LGKwqOQ7FK+dmhv3StN2/TvEkiZmgDqlAZoccVrRGWli1tEcULR6NIgRnDNERiGOzCVWEEZNU5/XhA26e8fGs/qC9u/3E8c5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=E0lfL2/B; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1719398851; c=relaxed/simple;
+	bh=wEx2+H8luSgiVDKSwitW+t2X93jcCLvcetCHbAkBuHc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=X+PVwdri69jt7/A8tWTu/QxPqZYDygYPz5HonpuVRsA+3ElCrTUUhk88uJa4/vCec2OyUbxKeXJF3fbgI/7nO3wSDuqxQCgCmx5cB4gIRVAmk9kr27NOMDdalPssJCPLQfewD5AMYbh8XPZzzAcCPvrSS7xvQyU0XXHsioFqK2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=tRlfOtOI; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="E0lfL2/B"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id BC8B940E0219;
-	Wed, 26 Jun 2024 10:47:17 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id u6vXT4yo2Han; Wed, 26 Jun 2024 10:47:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1719398833; bh=WFvhoSaR1JtMQwa6oAWZalZtdUwtVYaRIDSM12z6668=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E0lfL2/BBVkVTmkEBV7alMhc1su4/ZLeX1SFNPMZ4JLvhE7JYT+f3JDK2Iuq7bNko
-	 oBA4tVP5Zqxm0CBxD+nVbds4qFVhhDuA6lQXO2fPtIst8uMYeVsmcB/hvyxbLdAy0M
-	 G6hjxA+ZczZ6sEKxeUGfLeGOhWMWpLkp5nEhmZOVKBr7O4BDTBvr1ry07TUvrNqxg2
-	 dPyso8Cf+u2Cg1XUB0xq8QQ6c8nP127PAaDl+mYdA7qEWCHKExL/TpDAj4kKo9cR8G
-	 3ieIX3DPKnxVTMURj1dWp6nVQY74oSIpQoZn+8k/5cSQ9Sc0p+Or9RDxtCPd/tktn8
-	 FmSmTuM+D4FmAwHx21yGWUaMPj7zFEjpC+gRe8LzdMN0n8wd7ufYMNaDyVhifSDwbu
-	 a+Ly6O0OVQ30v5O6aI3CHCmOSt8ptNbGTM1n8o8nzVaNmucm5owU0Hz331w8OgyKic
-	 aVTJxD5EE8K/X0rKQvSOd7MNZnO3vV5GKztZ2GZ+YZSTOVZh82jmcZfVBTDCVraejs
-	 ZQX26dUf04gLfwZKqqCPNStFRQntgoGi/gAZnSB/2zXaQucM/SQLsle1vGnCJsk+E2
-	 hB44Y2sjfuB5ORBLJeumIDuUJyfxjIlMgsqAD7zAC36/O6qQKXiShc52n5rrXI7GFL
-	 6LYed0pRX+/acDeWA/R/qxeM=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3D22840E0218;
-	Wed, 26 Jun 2024 10:46:49 +0000 (UTC)
-Date: Wed, 26 Jun 2024 12:46:48 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: lkp@intel.com, ardb@kernel.org, brijesh.singh@amd.com, corbet@lwn.net,
-	dave.hansen@linux.intel.com, hpa@zytor.com, jan.kiszka@siemens.com,
-	jgross@suse.com, kbingham@kernel.org, linux-doc@vger.kernel.org,
-	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, luto@kernel.org, michael.roth@amd.com,
-	mingo@redhat.com, oe-kbuild-all@lists.linux.dev,
-	peterz@infradead.org, rick.p.edgecombe@intel.com,
-	sandipan.das@amd.com, tglx@linutronix.de, thomas.lendacky@amd.com,
-	x86@kernel.org
-Subject: Re: [PATCH] x86/64/mm: Make 5-level paging support unconditional
-Message-ID: <20240626104648.GBZnvxmMXCZbEhoqls@fat_crate.local>
-References: <202406260735.rkb4c8N7-lkp@intel.com>
- <20240626102624.1059275-1-kirill.shutemov@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="tRlfOtOI"
+X-UUID: 774b379233a911ef8da6557f11777fc4-20240626
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Y6nWayEm5MHkjBJY49kDWoN3tVruxwuy2vR8wvEeAhE=;
+	b=tRlfOtOIJIUXLgaUyw2Nx0k6ricg+vW9rL8PtvZeZMKKlVkXGDbCFToWhLDvHzaVWwjrSqW7CpltnBZEZ41E0K0/lokcxgoedzY4BBglF/08xGiaFfPADys9Ifd8pBdqMGqPaM5rM0cZ+qwLgpQd7+RDERWE/RSJSKoeefQFbkQ=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.39,REQID:6833076f-6f7b-4eca-bc94-05470368605b,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:393d96e,CLOUDID:b10e8f85-4f93-4875-95e7-8c66ea833d57,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
+	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 774b379233a911ef8da6557f11777fc4-20240626
+Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw01.mediatek.com
+	(envelope-from <skylake.huang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1469580072; Wed, 26 Jun 2024 18:47:21 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Wed, 26 Jun 2024 03:47:20 -0700
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Wed, 26 Jun 2024 18:47:20 +0800
+From: Sky Huang <SkyLake.Huang@mediatek.com>
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Daniel Golle
+	<daniel@makrotopia.org>, Qingfang Deng <dqfext@gmail.com>, SkyLake Huang
+	<SkyLake.Huang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
+CC: Steven Liu <Steven.Liu@mediatek.com>, SkyLake.Huang
+	<skylake.huang@mediatek.com>
+Subject: [PATCH net-next v9 04/13] net: phy: mediatek: Improve readability of mtk-phy-lib.c's mtk_phy_led_hw_ctrl_set()
+Date: Wed, 26 Jun 2024 18:43:20 +0800
+Message-ID: <20240626104329.11426-5-SkyLake.Huang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20240626104329.11426-1-SkyLake.Huang@mediatek.com>
+References: <20240626104329.11426-1-SkyLake.Huang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240626102624.1059275-1-kirill.shutemov@linux.intel.com>
+Content-Type: text/plain
+X-MTK: N
 
-On Wed, Jun 26, 2024 at 01:26:23PM +0300, Kirill A. Shutemov wrote:
-> Both Intel and AMD CPUs support 5-level paging, which is expected to
-> become more widely adopted in the future.
-> 
-> Remove CONFIG_X86_5LEVEL and ifdeffery for it to make it more readable.
-> 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Suggested-by: Borislav Petkov <bp@alien8.de>
-> ---
-> 
->  v2:
->   - Fix 32-bit build by wrapping p4d_set_huge() and p4d_clear_huge() in
->     #if CONFIG_PGTABLE_LEVELS > 4
+From: "SkyLake.Huang" <skylake.huang@mediatek.com>
 
-Is the 0day bot smart enough to detect separate v2 fixups like that and
-re-test using them?
+This patch removes parens around TRIGGER_NETDEV_RX/TRIGGER_NETDEV_TX in
+mtk_phy_led_hw_ctrl_set(), which improves readability.
 
-If not, you can push your tree to your repo so that it can chew on it again
-and report any other potential breakages...
+Signed-off-by: SkyLake.Huang <skylake.huang@mediatek.com>
+---
+ drivers/net/phy/mediatek/mtk-phy-lib.c | 44 ++++++++++++++------------
+ 1 file changed, 24 insertions(+), 20 deletions(-)
 
-Thx.
-
+diff --git a/drivers/net/phy/mediatek/mtk-phy-lib.c b/drivers/net/phy/mediatek/mtk-phy-lib.c
+index e1fbeff..20796ae 100644
+--- a/drivers/net/phy/mediatek/mtk-phy-lib.c
++++ b/drivers/net/phy/mediatek/mtk-phy-lib.c
+@@ -127,29 +127,33 @@ int mtk_phy_led_hw_ctrl_set(struct phy_device *phydev, u8 index,
+ 		on |= MTK_PHY_LED_ON_LINK2500;
+ 
+ 	if (rules & BIT(TRIGGER_NETDEV_RX)) {
+-		blink |= (on & on_set) ?
+-			  (((on & MTK_PHY_LED_ON_LINK10) ?
+-			    MTK_PHY_LED_BLINK_10RX : 0) |
+-			   ((on & MTK_PHY_LED_ON_LINK100) ?
+-			    MTK_PHY_LED_BLINK_100RX : 0) |
+-			   ((on & MTK_PHY_LED_ON_LINK1000) ?
+-			    MTK_PHY_LED_BLINK_1000RX : 0) |
+-			   ((on & MTK_PHY_LED_ON_LINK2500) ?
+-			    MTK_PHY_LED_BLINK_2500RX : 0)) :
+-			  rx_blink_set;
++		if (on & on_set) {
++			if (on & MTK_PHY_LED_ON_LINK10)
++				blink |= MTK_PHY_LED_BLINK_10RX;
++			if (on & MTK_PHY_LED_ON_LINK100)
++				blink |= MTK_PHY_LED_BLINK_100RX;
++			if (on & MTK_PHY_LED_ON_LINK1000)
++				blink |= MTK_PHY_LED_BLINK_1000RX;
++			if (on & MTK_PHY_LED_ON_LINK2500)
++				blink |= MTK_PHY_LED_BLINK_2500RX;
++		} else {
++			blink |= rx_blink_set;
++		}
+ 	}
+ 
+ 	if (rules & BIT(TRIGGER_NETDEV_TX)) {
+-		blink |= (on & on_set) ?
+-			  (((on & MTK_PHY_LED_ON_LINK10) ?
+-			    MTK_PHY_LED_BLINK_10TX : 0) |
+-			   ((on & MTK_PHY_LED_ON_LINK100) ?
+-			    MTK_PHY_LED_BLINK_100TX : 0) |
+-			   ((on & MTK_PHY_LED_ON_LINK1000) ?
+-			    MTK_PHY_LED_BLINK_1000TX : 0) |
+-			   ((on & MTK_PHY_LED_ON_LINK2500) ?
+-			    MTK_PHY_LED_BLINK_2500TX : 0)) :
+-			  tx_blink_set;
++		if (on & on_set) {
++			if (on & MTK_PHY_LED_ON_LINK10)
++				blink |= MTK_PHY_LED_BLINK_10TX;
++			if (on & MTK_PHY_LED_ON_LINK100)
++				blink |= MTK_PHY_LED_BLINK_100TX;
++			if (on & MTK_PHY_LED_ON_LINK1000)
++				blink |= MTK_PHY_LED_BLINK_1000TX;
++			if (on & MTK_PHY_LED_ON_LINK2500)
++				blink |= MTK_PHY_LED_BLINK_2500TX;
++		} else {
++			blink |= tx_blink_set;
++		}
+ 	}
+ 
+ 	if (blink || on)
 -- 
-Regards/Gruss,
-    Boris.
+2.18.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
