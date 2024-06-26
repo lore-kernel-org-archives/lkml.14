@@ -1,94 +1,78 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B1813B78F;
-	Wed, 26 Jun 2024 05:28:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B01114036F
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 05:29:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719379727; cv=none; b=f6haXMuVEcWuhNQNkFsy7RUebK5kgfHcvtKuhsgDUN4DYsZ/sP3kM60fsokvzpydQ6mMMwZWGlFKCz50FJuY12sa2Wfnt8mzrcs68fYC2FcQU2ymmrqzYXyHXDoRjLuC1q3zWAHjbQSsOvfPCVEQk9oRJqpa6a8iy5WmbfXshbY=
+	t=1719379745; cv=none; b=Wpyx1p/N25GfSBEGdQmKlqCiVAgfvBd1NpvfcTam5wZEoosMS1nP5NYDx4VROn5QqdTyobAqp21hTy5NvK5T+FzvS/dpEg8FjKGHC74iZ0ligeVlQdwLFAQltjox7QdweLv9Jx2aHrYrVEkwhzg7t57YAc5BaVCv2zRpHPL0f8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719379727; c=relaxed/simple;
-	bh=zLRst5U/dLmvEUbfJH9CcN41z0qbxMYggen2chbXKxc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=CS6nKTivs03+JeMXF6kbjc1uSmP9A8sXxFZcqvLNsTRFr6SdZzcci3eoKWO6SGIJz+IVL8lsf+xakehqMwj540gTTYMVvYuRACGMcBbw7N8hoz7eYlY5Ho/BZ3ftxuRgbs6zkeVBNLX9yxelhV/eKuUNb2GehhL2pjUl2rqIRoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 45Q5S89C01136783, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/3.02/5.92) with ESMTPS id 45Q5S89C01136783
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 26 Jun 2024 13:28:08 +0800
-Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 26 Jun 2024 13:28:08 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXDAG02.realtek.com.tw (172.21.6.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 26 Jun 2024 13:28:07 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7]) by
- RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7%5]) with mapi id
- 15.01.2507.035; Wed, 26 Jun 2024 13:28:07 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: Jakub Kicinski <kuba@kernel.org>
-CC: "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com"
-	<edumazet@google.com>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "andrew@lunn.ch"
-	<andrew@lunn.ch>,
-        "jiri@resnulli.us" <jiri@resnulli.us>,
-        "horms@kernel.org"
-	<horms@kernel.org>,
-        "rkannoth@marvell.com" <rkannoth@marvell.com>,
-        "Ping-Ke
- Shih" <pkshih@realtek.com>,
-        Larry Chiu <larry.chiu@realtek.com>
-Subject: RE: [PATCH net-next v21 12/13] realtek: Update the Makefile and Kconfig in the realtek folder
-Thread-Topic: [PATCH net-next v21 12/13] realtek: Update the Makefile and
- Kconfig in the realtek folder
-Thread-Index: AQHaxgC74unetcPOEkWaER3yo/MGorHYuHIAgADOJDA=
-Date: Wed, 26 Jun 2024 05:28:07 +0000
-Message-ID: <f7748d20b5974d6188b690d935a85b29@realtek.com>
-References: <20240624062821.6840-1-justinlai0215@realtek.com>
-	<20240624062821.6840-13-justinlai0215@realtek.com>
- <20240625180758.069a9d4f@kernel.org>
-In-Reply-To: <20240625180758.069a9d4f@kernel.org>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1719379745; c=relaxed/simple;
+	bh=z46Img2M9tES2OAFsmy0WpYkrZexbG4QVHz5Vc5X7Zk=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=SlSSFNeoq5+jzHyM1Orz2V/+l1RFdfbEJS4dRj9aIsWlWdDfB1gFG7x3YxZPACmxXf8HPLHjbM4KmFrSKdU0yU6zCgqQO9/At18Ye5xLqEmqf1W3YXCWCG/hZkLDxJLtUBqRi9z1WlsvZm208DwD85zC+zLuzclBGuHjWU9drbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-375d2ddeffbso90587925ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 22:29:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719379742; x=1719984542;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=o7jLFVxsran+Hxnl2Rjm/F6ukvXu6ukvDYfTlI6b4gg=;
+        b=Ag11HWHkPQhZz7H86J2HM2d8JFlgWtJosj5sXdrT1U4p6kLHY1MJJb+IwNTfwA1K8N
+         q3Fjv99+hISwLd9rUKmsE9G+/NYJ4koOz8hH4Xb6u9cUaknQc7SwXF5z/CUFW+EXe3sb
+         kj1it4NQOzdgIZqNmhIZEi7vehqdD0ihTHXeCZn22S33LqvDmEIfvYpsEdW5wBcwAA8q
+         olGP4MJuR+DQUczduUJd/F2vSU63MQUno2T9pkyCf90b6OtdVBFuQ99EI8C2mH3Q/Pqq
+         UYnjBMfh7P2WQPYYleZl8nIB2qlE0B9HeKrg8D9ITgRH9xacp4e0deHeyPKNdjeXvvMf
+         /Scg==
+X-Forwarded-Encrypted: i=1; AJvYcCWZsFI1MQ7S805j/PCrp8LPHc5aPcoqEngCTHQ2gfNU/R1KMKM5KhtT/ZOeTYiqGJ2lVc3WN2qQLhUTLIGTTvSWSzqGwbkKlelubWS9
+X-Gm-Message-State: AOJu0YzDMZNC0ey2GJL1/M5gNiS1eXEmTvz0Cxp+bH2x4VVk/5loVpDI
+	ZaQDL849lKVGAjKJGu6x6lXaGFrxr6K0gH0biwN8YUOAjmxvqhRVk81et3xNZ/OKN81x/Q8QbG1
+	l+zUyGdcPQkxI4EBkMi+APJrL4MmEc/WR4rtveCwsX/eiWlV7kqPxHVw=
+X-Google-Smtp-Source: AGHT+IFlgf0qW4V2vp2uiO2LtpRA9jZ0J28yl5GlbXreZyyCGWbyKG3jnTZuA0un7Ca8uwcdDb/1n51YlQ8U33kMNYg94mF7vofE
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:1fe7:b0:375:e698:d0f3 with SMTP id
+ e9e14a558f8ab-3763f49d3dfmr7074855ab.0.1719379742684; Tue, 25 Jun 2024
+ 22:29:02 -0700 (PDT)
+Date: Tue, 25 Jun 2024 22:29:02 -0700
+In-Reply-To: <0000000000009ce262061963e5e4@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000cc087d061bc44a72@google.com>
+Subject: Re: [syzbot] [hams?] WARNING: refcount bug in ax25_release (3)
+From: syzbot <syzbot+33841dc6aa3e1d86b78a@syzkaller.appspotmail.com>
+To: davem@davemloft.net, duoming@zju.edu.cn, edumazet@google.com, 
+	jreuter@yaina.de, kuba@kernel.org, linux-hams@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	ralf@linux-mips.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
->=20
-> On Mon, 24 Jun 2024 14:28:20 +0800 Justin Lai wrote:
-> > diff --git a/drivers/net/ethernet/realtek/Makefile
-> > b/drivers/net/ethernet/realtek/Makefile
-> > index 635491d8826e..046adf503ff4 100644
-> > --- a/drivers/net/ethernet/realtek/Makefile
-> > +++ b/drivers/net/ethernet/realtek/Makefile
-> > @@ -9,3 +9,4 @@ obj-$(CONFIG_ATP) +=3D atp.o  r8169-y +=3D r8169_main.o
-> > r8169_firmware.o r8169_phy_config.o
-> >  r8169-$(CONFIG_R8169_LEDS) +=3D r8169_leds.o
-> >  obj-$(CONFIG_R8169) +=3D r8169.o
-> > +obj-$(CONFIG_RTASE) +=3D rtase/
->=20
-> sparse points out:
->=20
-> drivers/net/ethernet/realtek/rtase/rtase_main.c:1668:32: warning: cast to
-> restricted __le64
-> drivers/net/ethernet/realtek/rtase/rtase_main.c:1668:32: warning: cast fr=
-om
-> restricted __le32
-> --
-> pw-bot: cr
+syzbot has bisected this issue to:
 
-Sorry, I will modify it.
+commit 9fd75b66b8f68498454d685dc4ba13192ae069b0
+Author: Duoming Zhou <duoming@zju.edu.cn>
+Date:   Fri Mar 18 00:54:04 2022 +0000
+
+    ax25: Fix refcount leaks caused by ax25_cb_del()
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12f83301980000
+start commit:   568ebdaba637 MAINTAINERS: adjust file entry in FREESCALE Q..
+git tree:       net-next
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=11f83301980000
+console output: https://syzkaller.appspot.com/x/log.txt?x=16f83301980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e78fc116033e0ab7
+dashboard link: https://syzkaller.appspot.com/bug?extid=33841dc6aa3e1d86b78a
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=121324ae980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1607cdda980000
+
+Reported-by: syzbot+33841dc6aa3e1d86b78a@syzkaller.appspotmail.com
+Fixes: 9fd75b66b8f6 ("ax25: Fix refcount leaks caused by ax25_cb_del()")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
