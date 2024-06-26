@@ -1,65 +1,35 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtpdh17-1.aruba.it (smtpdh17-1.aruba.it [62.149.155.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A0F1836F9
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 14:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414D41849DB
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 14:19:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.155.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719411568; cv=none; b=DdfWg+Ai4qQEr0Orc4NDUJKhAehq5uVd/g9qHeVjwf7ELev/JekXbTKhdtbUXtS0YSC+hz57g+utkJuZ3YSTV2J7wUXrla9xXoPA8uy3p9hM5GSztbA8mhzz7dAG1O6DPjgmf4tyMiP2ml7uiKc1000uPOJoM75LXmJQKo9zViE=
+	t=1719411573; cv=none; b=iN9dLjIQjWa5AFvriImLYgV6RCq7Ar2TMIz3UU7E6cYzbOIzceOPnQpIjZRwJY320VmygGENGMRYKDcLwDDr6sSWzno1ePEI5DuM/v/0RKeC+W/4XodGj/MUuTocRJD9YhuYcqvTpzYhkXAu86RLWfYPbm6xfH8wvHrOaqwoP6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719411568; c=relaxed/simple;
-	bh=5K51asI2OsXHPnp6ePSF4qdpZPMhk1zVXsrs1a71z1Q=;
+	s=arc-20240116; t=1719411573; c=relaxed/simple;
+	bh=Hs7Dp0ctIDOdnOUPFqDg6ULHT7hHurXwWeHACeB/32Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D69RrN0GDHmlA2izwESoTcOiUpHnaNWw0Eq5dt1l81z2rvBbGz/ZdDn5DlyORTfEI3yOOE2n3GQekndXjRQb3goo5Gs4e1L8Sl7DTzBZFM1drXUFvHThST5VnpRVsddgBtXeBm1X6MWRnxwHCKz/XmwDAzNhFC0BBmVWrBJ7N5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N9ICocUw; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=IPkKnFrIUK3rsLKEBYVOTGYrOP+NHfuVIXV8N/zwef2k+ipk+8RaomGydKMch4rVSolMfltTEBkf+NaBXMb+djn7+gDlQqF/w4zZvJMYEC2jrr2Gs4FzkofKoD02V153HLeX0gf54okG3Zi2clmFs9y+2KCNQ4yNDWkHo7THWrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com; spf=pass smtp.mailfrom=enneenne.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=J22XXaVo; arc=none smtp.client-ip=62.149.155.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enneenne.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N9ICocUw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719411566;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j3+6+X1eVY0Jkg6cNgj0EcYrMDIo+k7L8u8CKTnBBMg=;
-	b=N9ICocUwwCNA1j1Mn1AoQD77lDLW+FV9EFLhrMOi9gax/feBwAuu0dnTOUwac+55NtXDVj
-	ZfsfNuATig0iR++6Yzcvb9jffQyYTaXBzKb1xgGVeZESmVyKhkaXRGX26VqkrJA0Yefq0z
-	RftteS7FNi4VsHggEl/WTs/p6yMQ+zk=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-605-4GOkTNwYPtysqmh1nF3nug-1; Wed, 26 Jun 2024 10:19:23 -0400
-X-MC-Unique: 4GOkTNwYPtysqmh1nF3nug-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-421739476b3so58332355e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 07:19:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719411562; x=1720016362;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=j3+6+X1eVY0Jkg6cNgj0EcYrMDIo+k7L8u8CKTnBBMg=;
-        b=leHyB0lQk0t3kauc9AcCCyWukraoBwCY1FzcMwPuougnCOxOCSzk+GCNxuBI4zw3LU
-         PdBPoNYDgZeLdzIn8bt0Bm3Fw/nKL2gX1OGnIBMRVIR3bwGQfll3X2HIDnJGDGqor34B
-         6KUQilRQjPw45NRi4LNDNSmCuK819CQ54xMwoW0o5MriIlvv5itTfiRlAmhyHlt5bztI
-         J9NbPMFsIL/6J462sakD4+Mv1odlYQoVFgVarDU0YaQYxR84qOt+LBv1EDgIPGgGpFq9
-         vfRH9xn3IYaR+h4CMk+YgiDEEUbqQ+MgtKIcJFd0Qu/IK3wmIlMtLUcpOFF7L1aoQHZN
-         YxnA==
-X-Forwarded-Encrypted: i=1; AJvYcCWzBJw0NymjUFwLTucYzD8OydTdqFjzaFBELKAM6xQotIu3A7X5AX4aEOfFwsbL4Bbitgs0dGr4Sm1J3r5wqL9zHcuDsgf1dxXh9u9X
-X-Gm-Message-State: AOJu0Yym8Qc5q/sGn9zpao1IBM/kiD3AvM2lAIfchid0Qu0xLVehoC0x
-	RfJTVS+vPnnc23XAOCYz5/4Wc9PfyMOr1eTIyYcVWSdZL8Zfv+44nnAndl8ZS0JsDQrV4Wn+PE+
-	Fq8zJaJ0M8dh4iOABN432uoX2JVgfzA0Q/8HsXUVJFvyeoTDFlI0XccnhSNRKOQ==
-X-Received: by 2002:a05:600c:4790:b0:425:5f12:1cf9 with SMTP id 5b1f17b1804b1-4255f1238aemr13234825e9.27.1719411562301;
-        Wed, 26 Jun 2024 07:19:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGax9kaCNhOUBP+phnm1HFeZemuLngNNz4bs/QuG7DeUYhJ/v9FE8YtoxfaDOcJ9+RPmKYo0A==
-X-Received: by 2002:a05:600c:4790:b0:425:5f12:1cf9 with SMTP id 5b1f17b1804b1-4255f1238aemr13234675e9.27.1719411561967;
-        Wed, 26 Jun 2024 07:19:21 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:c:37e0:38da:a7d9:7cc9:db3e? ([2a01:e0a:c:37e0:38da:a7d9:7cc9:db3e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36638d9b8a8sm15874592f8f.50.2024.06.26.07.19.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Jun 2024 07:19:21 -0700 (PDT)
-Message-ID: <f647756a-fa9b-4a97-8c33-826f7496821f@redhat.com>
-Date: Wed, 26 Jun 2024 16:19:20 +0200
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="J22XXaVo"
+Received: from [192.168.1.57] ([79.0.204.227])
+	by Aruba Outgoing Smtp  with ESMTPSA
+	id MTRZsZSe7JLbHMTRas2WX0; Wed, 26 Jun 2024 16:16:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1719411379; bh=Hs7Dp0ctIDOdnOUPFqDg6ULHT7hHurXwWeHACeB/32Q=;
+	h=Date:MIME-Version:Subject:To:From:Content-Type;
+	b=J22XXaVoleMNo6F340IMMVKpfKYdmuS0PQPYGLAzlk87Zy9cu28btS4V7bOB0C1NM
+	 jDWNX8iFIezKIKX7FXRjn2azoLLzuO0yNZnwYKVHVecKrKZMi5bObBaakTWMvQ7tEf
+	 D3vKVDLRJSjTcNdCmLumeIhqHC/PYOpGUAaIXyNycVZ7oZI/ewovECHJl/c9LTJMFP
+	 hlhRf7KyIbffiKMFtYV8d6m+4x1PfiYEqOmufMRMnji35jXSMt0tht6TuLUzEHp+gE
+	 m/FjfrvT4GnjhpOLqWCLzaXoH701gk2cL6Oh6uQNt14t3ugMG8G8/AnP99wmJZMkkg
+	 Q341igZeBTrSw==
+Message-ID: <956e2244-a95e-4c5e-a4a3-fb694c124739@enneenne.com>
+Date: Wed, 26 Jun 2024 16:16:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,66 +37,63 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] drm/panic: Do not select DRM_KMS_HELPER
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <cover.1719391132.git.geert+renesas@glider.be>
- <60155f8c939ed286e324a7c12a1daa69fe49fcf6.1719391132.git.geert+renesas@glider.be>
-Content-Language: en-US, fr
-From: Jocelyn Falempe <jfalempe@redhat.com>
-In-Reply-To: <60155f8c939ed286e324a7c12a1daa69fe49fcf6.1719391132.git.geert+renesas@glider.be>
+Subject: Re: [PATCH v3 1/1] pps: clients: gpio: Bypass edge's direction check
+ when not needed
+To: Bastien Curutchet <bastien.curutchet@bootlin.com>
+Cc: linux-kernel@vger.kernel.org,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, herve.codina@bootlin.com,
+ christophercordahi@nanometrics.ca,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+References: <20240425122853.29544-1-bastien.curutchet@bootlin.com>
+ <3612b36e-3350-4a5c-827e-482434753e95@enneenne.com>
+ <973aa216-4932-4e21-b9a1-184ce809d483@bootlin.com>
+From: Rodolfo Giometti <giometti@enneenne.com>
+Content-Language: en-US, it, it-IT
+In-Reply-To: <973aa216-4932-4e21-b9a1-184ce809d483@bootlin.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfDXK4FpfAiwub8FhGWD2GEDJezOjSXlfrqQGyI8JNZzx+QZGhTyoSSKC7TM4a94N7mqRw19r7xd6vVA8O5KWqgN/iBkGPItlDJAFf5saXHl84EC91IMn
+ Fdj9ZBq2Q+PCmLm0SoS7kw/iRmlKaR2DZK30i2/QPV3ZG7I1+t9QTukCOnY6wCDZXcZbtGDJrxjc0KxIneDlsVYS8/QVfm8/ONrFQ982V/GTxDsf18A9bFIS
+ nhBWQ7P3pC66yT6KapgSMEPFGjG+5NWInVFnwM7Aa/u0rPGeciZhpzrCeERfSeXygkt9nC8Z6qmdvoxIIG9wzl0jScXlxp9E2GT90yt+/CoGHoJ9gSWudZt7
+ iObQD4fNkgKajX4KNkaswEQgi5xefNz0gULX95BA+/cgUCj+yAB3N8UoaMquONVlVoXP7vR3JFX9BjR9AaZFmd3JV3wDnz3RYb2xzG2pPho3Tkw+Gtw=
 
-
-
-On 26/06/2024 10:41, Geert Uytterhoeven wrote:
-> DRM core code cannot call into DRM helper code, as this would lead to
-> circular references in the modular case.  Hence drop the selection of
-> DRM_KMS_HELPER.  It was unused anyway, as v10 switched from using
-> the DRM format helpers to its own color format conversion, cfr. commit
-> 9544309775c334c9 ("drm/panic: Add support for color format
-> conversion")).
-
-Thanks a lot for this cleanup,
-
-Reviewed-by: Jocelyn Falempe <jfalempe@redhat.com>
-
+On 26/06/24 14:55, Bastien Curutchet wrote:
+> Hi Rodolfo
 > 
-> Remove the unneeded include of <drm/drm_format_helper.h>.
+> On 4/25/24 14:42, Rodolfo Giometti wrote:
+>> On 25/04/24 14:28, Bastien Curutchet wrote:
+>>> In the IRQ handler, the GPIO's state is read to verify the direction of
+>>> the edge that triggered the interruption before generating the PPS event.
+>>> If a pulse is too short, the GPIO line can reach back its original state
+>>> before this verification and the PPS event is lost.
+>>>
+>>> This check is needed when info->capture_clear is set because it needs
+>>> interruptions on both rising and falling edges. When info->capture_clear
+>>> is not set, interruption is triggered by one edge only so this check can
+>>> be omitted.
+>>>
+>>> Add a warning if irq_handler is left without triggering any PPS event.
+>>> Bypass the edge's direction verification when info->capture_clear is not
+>>> set.
+>>>
+>>> Signed-off-by: Bastien Curutchet <bastien.curutchet@bootlin.com>
+>>
+>> Acked-by: Rodolfo Giometti <giometti@enneenne.com>
+>>
 > 
-> Fixes: bf9fb17c6672868d ("drm/panic: Add a drm panic handler")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->   drivers/gpu/drm/Kconfig     | 1 -
->   drivers/gpu/drm/drm_panic.c | 1 -
->   2 files changed, 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-> index b903a2c0b5e8f95c..ce9bf2b6e9d332d4 100644
-> --- a/drivers/gpu/drm/Kconfig
-> +++ b/drivers/gpu/drm/Kconfig
-> @@ -108,7 +108,6 @@ config DRM_KMS_HELPER
->   config DRM_PANIC
->   	bool "Display a user-friendly message when a kernel panic occurs"
->   	depends on DRM && !(FRAMEBUFFER_CONSOLE && VT_CONSOLE)
-> -	select DRM_KMS_HELPER
->   	select FONT_SUPPORT
->   	help
->   	  Enable a drm panic handler, which will display a user-friendly message
-> diff --git a/drivers/gpu/drm/drm_panic.c b/drivers/gpu/drm/drm_panic.c
-> index 8d2eded1fd19ff6c..67f78b5a76b61e3d 100644
-> --- a/drivers/gpu/drm/drm_panic.c
-> +++ b/drivers/gpu/drm/drm_panic.c
-> @@ -20,7 +20,6 @@
->   #include <linux/types.h>
->   
->   #include <drm/drm_drv.h>
-> -#include <drm/drm_format_helper.h>
->   #include <drm/drm_fourcc.h>
->   #include <drm/drm_framebuffer.h>
->   #include <drm/drm_modeset_helper_vtables.h>
+> I don't think I've received any updates since you acked this. Is there something 
+> missing before the patch can be applied?
+
+No updates. It can be applied.
+
+Ciao,
+
+Rodolfo
+
+-- 
+GNU/Linux Solutions                  e-mail: giometti@enneenne.com
+Linux Device Driver                          giometti@linux.it
+Embedded Systems                     phone:  +39 349 2432127
+UNIX programming
 
