@@ -1,94 +1,115 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E122E17F39A;
-	Wed, 26 Jun 2024 11:40:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16FC22AF1A
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 11:43:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719402047; cv=none; b=eKiv+PPf0fc4q9e9tsEb7ggBdcYu2X0VMM9C+dG5U9YBLTF3oxLMdsihNTJMsyxVDcNb9tX7EsMBpR1d863ey9FteMnSuLreIgdMlRXRqtH5mp3e2F1EuZlMYubh8FB0mPynSVyJjzOI9C/+Hxbj5JJV6vFhqeq0AlF6zIhWuio=
+	t=1719402210; cv=none; b=PpHU2Wbctg0pJrXt8yelrXHrd2CfwpBCxYKo4igo6IOMICVeJMPF4fNkEuelPtrG8KLQHJryO3noKurEgERVTueVYUGyDJYZSg1Y3aJUIPNELxQhqbiUM4nnh/L3GtzL1hvxABHrwrlh8QhyR+ZZu3XJYBB0wFTEmTV90B3eQIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719402047; c=relaxed/simple;
-	bh=pczfog09UIHcPsEJjzJd5+EU+oHI91fjPgKgwsYbpUQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=OigBfMcRgXH+P4tFc5963UFohkkVk8JqAbtwKuTeKncQyMESb7oQqGEIsKUGbNHjFHmw7yMYRvTBDU9ktzifWcih6sVkb1pP/PWAl5DGjAu3EKd9Q7oQxzKCh/tJWJC8BxPEJj8wYkirbnnJ7ESMmmq1Hg1TTlUPftXq6pE5STA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=dj4/v/mo; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1719402210; c=relaxed/simple;
+	bh=yDgpjULbGpf74flIs/KZFjD95dyQt8UIej7x4ZY1Y44=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QUbN4zgdhe1VPbQoMFQOxGlyyVXi0+tZg4r7NOgmecbuUkFZx69c+qQlH3j9oAdXi2XCOR/oFPolQKHYCmtMgsxnB2gmUWUqVfZ5oI5VnIk29Zrd+gHurUyg7SzqENliJd28HHHroBmmydaa0IiJ2jFrOIDGtUrz6QdiWnRTmWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Taq5XDpM; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dj4/v/mo"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45QBeJea107396;
-	Wed, 26 Jun 2024 06:40:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1719402019;
-	bh=CFBdJZ7nQEh8e7MuO6Sn87b7kJj+Ogt1xZYKl5Es3eA=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=dj4/v/moBDp5qdtoYkEsNAqmIepOOEc9jVpAhpYHW8aSWX5sRaVEkX+w5z6ZfVnNf
-	 5rSHxhK8FKzv+gTgzNoDK6o1B/Ixffg9j6HtbT1c9rXW9zmlF76xb4VMsHXBmHWWJJ
-	 2uQqhQWpdFnK3ghGcOcCu5J1OKZ8UfajqZ9hAacM=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45QBeJdt039449
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 26 Jun 2024 06:40:19 -0500
-Received: from lewvowa02.ent.ti.com (10.180.75.80) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 26
- Jun 2024 06:40:19 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by lewvowa02.ent.ti.com
- (10.180.75.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2507.34; Wed, 26 Jun
- 2024 06:40:19 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 26 Jun 2024 06:40:19 -0500
-Received: from [137.167.6.231] (lt5cg1094w5k.dhcp.ti.com [137.167.6.231])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45QBeHPP080750;
-	Wed, 26 Jun 2024 06:40:17 -0500
-Message-ID: <16de364e-bd80-4674-9125-74c33e551961@ti.com>
-Date: Wed, 26 Jun 2024 14:40:16 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Taq5XDpM"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a72510ebc3fso504775466b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 04:43:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719402207; x=1720007007; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=u0vlM+qZ0aOaH69nP4epFVl6In7rL2hoACpDR7WfzP8=;
+        b=Taq5XDpMe6bz+08I7PzZUHDP9TmaWxIaLqVlxAaGg2RH1hdeYM2hW6nqtMMLZuUrJl
+         3c9RBoBKhc8FdGrWXAcwErwyOFb6oGbHxkfy5k+eC1mGL3D+Lbvjt+dgbKJdUpX0FdZK
+         4JQwt/AUbZXNDWSKp4eUbgN+EQ6o1k4zQZZcmM3DKQJBd1q1w2REl7KzLKem2Rd6DvGI
+         rjubrtKG7IrKYjD2uuOczvED/FASuhaZEJ8eeSDH106K41vWID4gq2i8TKnaoIs87NAC
+         Gv77V1AakG2wnusisCohNtX3OmAXJR6dquqDa/7XV6ADcmxYvsfv2EbKQENa4IlCTtF2
+         oPdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719402207; x=1720007007;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=u0vlM+qZ0aOaH69nP4epFVl6In7rL2hoACpDR7WfzP8=;
+        b=MasgWoSjgJd1xGvpDPHaShL3Q3GUezc2cY7oehsfya4dqJbp8kxK/UM4HCtFwogW4y
+         /inqi+Ugnts/mvIV9XaOj91nwaRnTiDUYOX2fLGDPVHWNnKA8KskEqlV9wJaukgh2MDu
+         KK3j3FyHpRCDJRQX9TaWSBAE6kEHKNly23E7zBV0v6gDNFQYkdknxgt+lzB1u5ysC4nP
+         uonitSxmo9fzMB5vRZAcKUqR48XWaHqMkgbGgaVNBRBElVPmabz215HhMT5XqTJcz0vC
+         aQu4rCoX5tKQoPMnCekJK60Scex7nOp/lcRMpYoMwyEdY+caxllgcyFF8bKxlYzuYJE+
+         07XQ==
+X-Gm-Message-State: AOJu0YwucURE8ftw2nK/htxGKHO4IptoJl/d1QM69AcJCZvVAI3UESfM
+	wp3OudQGRUoJfRYDzoDXEyhoV7y8pkApnkAXGIUI5ze9H0K2BLDFhGfCbg==
+X-Google-Smtp-Source: AGHT+IH0zTf3PRIs+wLpFlt0dnNP1JgTx6WSdgmDhpVsQcy/yQ+0DmXy8dcDqf7xJ4EdVZoGHDqZYQ==
+X-Received: by 2002:a17:906:c1d0:b0:a6f:5922:54e7 with SMTP id a640c23a62f3a-a7242d29bfemr815358266b.65.1719402207101;
+        Wed, 26 Jun 2024 04:43:27 -0700 (PDT)
+Received: from pc638.lan (host-185-121-47-193.sydskane.nu. [185.121.47.193])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72452140e0sm409649266b.217.2024.06.26.04.43.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jun 2024 04:43:26 -0700 (PDT)
+From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+To: linux-mm@kvack.org,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Baoquan He <bhe@redhat.com>,
+	Hailong Liu <hailong.liu@oppo.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Nick Bowler <nbowler@draconx.ca>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
+Subject: [PATCH] mm: vmalloc: Check if a hash-index is in cpu_possible_mask
+Date: Wed, 26 Jun 2024 13:43:24 +0200
+Message-Id: <20240626114324.87334-1-urezki@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [EXTERNAL] [PATCH 26/43] wifi: nxpwifi: add sdio.c
-To: David Lin <yu-hao.lin@nxp.com>, <linux-wireless@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <briannorris@chromium.org>,
-        <kvalo@kernel.org>, <francesco@dolcini.it>,
-        <tsung-hsien.hsieh@nxp.com>
-References: <20240621075208.513497-1-yu-hao.lin@nxp.com>
- <20240621075208.513497-27-yu-hao.lin@nxp.com>
-Content-Language: en-US
-From: "Nemanov, Michael" <michael.nemanov@ti.com>
-In-Reply-To: <20240621075208.513497-27-yu-hao.lin@nxp.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 
-On 6/21/2024 10:51 AM, David Lin wrote:
-...
-> +
-> +/* This function unregisters the SDIO device.
-> + *
-> + * The SDIO IRQ is released, the function is disabled and driver
-> + * data is set to null.
-> + */
-> +static void
-> +nxpwifi_unregister_dev(struct nxpwifi_adapter *adapter)
-> +{
-> +	struct sdio_mmc_card *card = adapter->card;
-> +
-> +	if (adapter->card) {
-> +		card->adapter = NULL;
-> +		sdio_claim_host(card->func);
-> +		sdio_disable_func(card->func);
-> +		sdio_release_host(card->func);
-> +	}
-> +}
+The problem is that there are systems where cpu_possible_mask
+has gaps between set CPUs, for example SPARC. In this scenario
+addr_to_vb_xa() hash function can return an index which accesses
+to not-possible and not setup CPU area using per_cpu() macro.
 
-Missing call to sdio_release_irq() ?
+A per-cpu vmap_block_queue is also used as hash table assuming
+that incorrectly assumes the cpu_possible_mask has not gaps.
 
-Michael.
+Fix it by adjusting an index to a next possible CPU.
+
+Fixes: 062eacf57ad9 ("mm: vmalloc: remove a global vmap_blocks xarray")
+Reported-by: Nick Bowler <nbowler@draconx.ca>
+Closes: https://lore.kernel.org/linux-kernel/ZntjIE6msJbF8zTa@MiWiFi-R3L-srv/T/
+Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+---
+ mm/vmalloc.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index b4c42da9f3901..6b783baf12a14 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -2544,7 +2544,15 @@ static DEFINE_PER_CPU(struct vmap_block_queue, vmap_block_queue);
+ static struct xarray *
+ addr_to_vb_xa(unsigned long addr)
+ {
+-	int index = (addr / VMAP_BLOCK_SIZE) % num_possible_cpus();
++	int index = (addr / VMAP_BLOCK_SIZE) % nr_cpu_ids;
++
++	/*
++	 * Please note, nr_cpu_ids points on a highest set
++	 * possible bit, i.e. we never invoke cpumask_next()
++	 * if an index points on it which is nr_cpu_ids - 1.
++	 */
++	if (!cpu_possible(index))
++		index = cpumask_next(index, cpu_possible_mask);
+ 
+ 	return &per_cpu(vmap_block_queue, index).vmap_blocks;
+ }
+-- 
+2.39.2
+
