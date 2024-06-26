@@ -1,30 +1,42 @@
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 2CBC3C136
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 14:00:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5BEC136;
+	Wed, 26 Jun 2024 14:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719410432; cv=none; b=FfwJ1F9Q5WOMsEj6ATgUBvgN8qvi5wVoiv+Xl1HkLkMYBoihNju0hGYVTWeFzDty4rUCSFBuxx0B7Q2jnt2HsW0P+6o4KszgdYMesRD7E6q+ApucVHvodjRP92WZSZwNgN9FebIfS811Vesqu9OYAiHCe70+ewqK3dcaj5+QoLc=
+	t=1719410465; cv=none; b=XkSlnRtd39gpXLDHW/l3ygZhdnRV8est3KhfuzRfua1AUM4V3NIrJuQ8QY4CQ3JPilGx7nEMlz5y4UbaavR6OLMVmklUWwRhdoRmrONW293k022yltby8gIoUBd/IpvX/KrqpF30hEm8s3OpJcqQyNxwRn2k5Yd8Rmpr+eL6M/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719410432; c=relaxed/simple;
-	bh=gN49NjQI2oDX1isFpvDIKMKeo4XbMy61JOUIbU6BEcM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cd+uleYx85TqH6Vp5gAzUXnAAiQMRAAajVvhTCq/jCkBKgKEw04um3nmR9Ptd8FaznaGwKjGWzMGtAcGxBSaGplkly5oAiYuJyx9QmgqmMk+fMdCkTKxUi/ULc1UvKs6rCeFCkvNedaOTDvsOkvL9uPScKZV9o4CE65WTMbYANI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
-Received: (qmail 704740 invoked by uid 1000); 26 Jun 2024 10:00:22 -0400
-Date: Wed, 26 Jun 2024 10:00:22 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Marcello Sylvester Bauer <marcello.bauer@9elements.com>
-Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-  Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
-  Thomas Gleixner <tglx@linutronix.de>,
-  Matthias Stoeckl <matthias.stoeckl@secunet.com>
-Subject: Re: [PATCH v1 0/1] usb: gadget: dummy_hcd: Fix regression due to
- hrtimer migration
-Message-ID: <5d7266d4-3349-4414-99c1-4c6154e69292@rowland.harvard.edu>
-References: <cover.1719405791.git.marcello.bauer@9elements.com>
+	s=arc-20240116; t=1719410465; c=relaxed/simple;
+	bh=Y6I6wohTOcfHXnc2xlk4UwZF0BqadzOjW0083GuqF7k=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=erUvF8eKk/Bhy9+hi5i7+WubPuMMxQ88ZjCYsZqZIz5SVzGRCxDiwS5YBRWnfygT2F4MBMvnOMXdaY+xllh5LAwTngWJYRg5z1lGgjONW+cYBXfX4ZyaHMStHeO3Rb6tHlzVxC8R+FIhljrzO9UJKXuKulFsq4jCXqUOk2S6jAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XiKW5po0; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XiKW5po0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39D4DC116B1;
+	Wed, 26 Jun 2024 14:01:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719410464;
+	bh=Y6I6wohTOcfHXnc2xlk4UwZF0BqadzOjW0083GuqF7k=;
+	h=Date:From:To:Subject:References:In-Reply-To:From;
+	b=XiKW5po0uVzl3fyqJ38W+/TlmxEg9XC09/fBEK6DxRXqogVwpf7icO+WJdgtyJMLo
+	 JWV+2cDhv7amoguLF3e8456hJZmyDP3cPtM/QuPOj68CYX1+E2fOWLWdZTkljQsIcd
+	 kAdOY+2Nti6TOIxuSp45UdRGnd1thejwYrxrrHdvbvuS/xy1F5Mz5LqQWzNBVTA3Vx
+	 9aXRz1tu7adiOyb9uYIkKRsyZisywClVsletC5RQ6TO0KLQyRu4nFkLUXvsN0Sdcgj
+	 nFjgE3x5iB0ThHpPTtiYPppQVoJyjjdCrkNxxZ/9yb3YTkTWgKrsPeCRUxEFsgwvNm
+	 ibgNJb/FaGelQ==
+Date: Wed, 26 Jun 2024 16:01:01 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Arnd Bergmann <arnd@kernel.org>, Hans Hu <hanshu@zhaoxin.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Wentong Wu <wentong.wu@intel.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] i2c: viai2c: turn common code into a proper module
+Message-ID: <zxdgdwtw5o7juwd45ydnjmswz4j7rwxw2xcr6psvph3wkdyzj3@4mto7xnuddiw>
+References: <20240528120710.3433792-1-arnd@kernel.org>
+ <bi3lwgeh5egvd4g6aspwvefibk3cviwuzinvgkmnwy4f3bvua4@nf5a6w77cr7v>
+ <5shzq44g75xykn2tdbutbqa4u5by3sijvztam2x2scey5rglox@kgh7lul4j2el>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,30 +45,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1719405791.git.marcello.bauer@9elements.com>
+In-Reply-To: <5shzq44g75xykn2tdbutbqa4u5by3sijvztam2x2scey5rglox@kgh7lul4j2el>
 
-On Wed, Jun 26, 2024 at 03:47:19PM +0200, Marcello Sylvester Bauer wrote:
-> The kernel CI bots such as syzbot and intel kernel bot reported a
-> regression due to the migration of the transfare scheduler from timer
-> list to hrtimer. The current assumption is that this is because timer
-> list uses soft interrupt context. I have not been able to reproduce the
-> regression consistently. So I'm submitting this patch in the hope that
-> it solves the issue.
+On Wed, Jun 26, 2024 at 12:42:03PM GMT, Wolfram Sang wrote:
+> On Tue, Jun 04, 2024 at 10:00:04AM GMT, Wolfram Sang wrote:
+> > On Tue, May 28, 2024 at 02:06:30PM +0200, Arnd Bergmann wrote:
+> > > From: Arnd Bergmann <arnd@arndb.de>
+> > > 
+> > > The i2c-viai2c-common.c file is used by two drivers, but is not a proper
+> > > abstraction and can get linked into both modules in the same configuration,
+> > > which results in a warning:
+> > > 
+> > > scripts/Makefile.build:236: drivers/i2c/busses/Makefile: i2c-viai2c-common.o is added to multiple modules: i2c-wmt i2c-zhaoxin
+> > > 
+> > > The other problems with this include the incorrect use of a __weak function
+> > > when both are built-in, and the fact that the "common" module is sprinked
+> > > with 'if (i2c->plat == ...)' checks that have knowledge about the differences
+> > > between the drivers using it.
+> > > 
+> > > Avoid the link time warning by making the common driver a proper module
+> > > with MODULE_LICENCE()/MODULE_AUTHOR() tags, and remove the __weak function
+> > > by slightly rearranging the code.
+> > > 
+> > > This adds a little more duplication between the two main drivers, but
+> > > those versions get more readable in the process.
+> > > 
+> > > Fixes: a06b80e83011 ("i2c: add zhaoxin i2c controller driver")
+> > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > 
+> > Andi, I am tempted to include this in my for-current pull request this
+> > week. Are you okay with this or do you want to review it more closely?
 > 
-> Do not apply the patch if any bot still reports the problem.
+> Meh, I forgot about it. Andi, do you plan a PR for rc6?
 
-You should send the patch to syzbot and have it run its test.  Then 
-you'll know whether the patch works.
+yes, sorry, will take it.
 
-Alan Stern
+Sorry for having missed it.
 
-> Marcello Sylvester Bauer (1):
->   usb: gadget: dummy_hcd: make hrtimer expire in soft irq context
-> 
->  drivers/usb/gadget/udc/dummy_hcd.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> -- 
-> 2.45.2
-> 
-> 
+Andi
