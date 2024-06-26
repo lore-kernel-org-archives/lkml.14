@@ -1,280 +1,160 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E9C18F2F0;
-	Wed, 26 Jun 2024 16:55:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719420952; cv=fail; b=W8tJZ1OXywVHbaMpsWEqLjVJTTR6kO/5Yytk1cxt1E8VnSOsfmwCLU7vZXjcKsW/7JfUP5pVMxZ5Ey/J55fXCQdsWL/glGTYowJF1q0M8ZfPWseQNV/U/zIs0Kxv5Kwa8z5GMVJsILtrcdrt8aCi2ZYiEbfQ2tNbpHmmYKpgy1c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719420952; c=relaxed/simple;
-	bh=7sM02mcG3eENmIbvLi6ZWFJn3/F8spVaf+KjMhMQU7Y=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=SLPpYFXcEoVEL+W7hQHd/dzJO7Ve/Hi97RrZqpl95mlk7mxjlGWJ/SmIAFa+dQSdOG37xvs9BAYKZFa43lf2MjbcOQHELJNChuYaJPfQSMy+BUflClyrbatsJ7EtTEwpw9XHXM1im/zoXQ1mnwCNwVeDO8SCmoDxHw63ZSujKvI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Okiawf0s; arc=fail smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8B718FC63
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 16:56:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719420986; cv=none; b=M3RJjqdDF2cxJmktUz70j0rrNUZyAkJKJIl2604kAc5j7B/kemEHjdb+wt9/+VtGK2QrKKrlixMV2lIemgaq+xeQtjS58gvJmfnA6/713CXxqJ2oNchDhjAt07sMN2CaK6zRMJCB6ggdjhFj9N5rTDDEccPLWTjkQwgf8o7j02g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719420986; c=relaxed/simple;
+	bh=C6ME1IwOzHYbPTSz6neRG6o/tR0/cP7f8Fk4N4+jog8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XQ5BMd/nNWPyPorFIpt0iV+zu58mQLb87gkF2FxsUozxSu4qtjXPs4KWEFMYYmPYFMDViM3ItIx1xoSDQ97heKKG4ZWr7Wmb1elNRr0xKCy1mAxkhqXup2ODXapjfZ8sW23k9uZDaMjiZIOrh0XJT8/KJcw8CyxaqcKgmHEONnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=0p2RY6Ib; arc=none smtp.client-ip=209.85.210.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Okiawf0s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719420951; x=1750956951;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=7sM02mcG3eENmIbvLi6ZWFJn3/F8spVaf+KjMhMQU7Y=;
-  b=Okiawf0sSteZ5JydU9qtvQWiDSKqPnaJHm2lxm6tL5sqNSoXuYLjXof0
-   uehjKgVhsIIiYeRTFmF+SPWNMCPzWP37v9gE89tHMK0Bjrw6zC+jlDdJA
-   SPsdE/bA/4uGubtmEZQkOsHw3onuzHetZ5/Op6QX4aQWa16PPAOM5CLAI
-   7RjvCoCEXOgdU+bfNrrnVYbXhb7DdII7Tukw0pjdbXuOIJU9cW/GS1v/C
-   3qf01RtWjTD/OVtvyCeWpU3ep5Fv9qYGEbld/9NmjIOSybQCZCbHg+M52
-   iuMsv7nBcKeBSKndmO9uk1TsRJb5dB4eoZjKWJ4N2w1MzRonw1l8iJ0eR
-   w==;
-X-CSE-ConnectionGUID: JqiXRxXoR86cwSjfvJo2PQ==
-X-CSE-MsgGUID: hyZZKsMrQFGZ4eayUQ8okw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11115"; a="33962079"
-X-IronPort-AV: E=Sophos;i="6.08,267,1712646000"; 
-   d="scan'208";a="33962079"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 09:55:26 -0700
-X-CSE-ConnectionGUID: I5RXeB4wSl2VcJNy7Ir+ww==
-X-CSE-MsgGUID: lhs7oDk9TiqbypnI5HXhyA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,267,1712646000"; 
-   d="scan'208";a="43959329"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orviesa010.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 26 Jun 2024 09:55:26 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 26 Jun 2024 09:55:25 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Wed, 26 Jun 2024 09:55:25 -0700
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.44) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 26 Jun 2024 09:55:25 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YlaCXGxAFC/Drv/t1Yb4XQdceGDsIutVtRfvNhqKhEPeF8UpuYwwJh3EWyGUdd32L76j4QG5njxZpzZsrZSzqdfOnNn3uXKUIle44IOb3GlVq98ccNlUC1VPfajstp7T2eyrS6e9H+nSRHOlojIqQbM69rhRbyO/3zH1Yk7TWFL/c3hSMwZymVF902+WIoUr7CZ1EbtCeJTm3zQzL60Lvb7KTN4v8BbprWOaJZVfew7MtV+l5Gzcr7txinke4D0iwjO4tiOlwRIuvMOVE5LLQpBTSDbzwlG7JHmwk2cHV3QGd6J3TEF7edbSqSb0b7ji/NO3WUWl8M9pDi4d4Wz4NQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ccctpF3cDuo1sknS+4I8HVCdhHkMPHpujQ4am0gE9c0=;
- b=djk4mqBsh3s2A/FmXsr5dEMWYjciJCEHapeNwgsuGx3K+X+KhK20XRdBMDlNC85G+0JKMfVZ6ls3NvODFjrkNaupFmp/2RPzPXYLRa0NTX89ZqIIq91RlBPrHImsvhf/6lkBcT+LdG53ngQrUWHLWqclcHEf+aXL5HcsfbecmQMfoAFAuYVbcivo+NVyApzJCuZemowIcH9d7BiPrg5TqYAgOEXdYsVmLgGmmHa2Pnh9BLySTmvlByODmmhHsssLNGgB7q1qFatp2B4Dg21XdzK8Zjqrp3qnucCkLga1qomWAeInJVhPl5CdiBx9YmzLMwCqW0PLVLUB+x0PUF9HbQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by MW4PR11MB7128.namprd11.prod.outlook.com (2603:10b6:303:22b::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.29; Wed, 26 Jun
- 2024 16:55:20 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.7698.025; Wed, 26 Jun 2024
- 16:55:19 +0000
-Message-ID: <4be0449a-1337-4fc6-8ed6-fec10cc74bd6@intel.com>
-Date: Wed, 26 Jun 2024 09:55:15 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] selftests/resctrl: Fix non-contiguous CBM for AMD
-To: <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<ilpo.jarvinen@linux.intel.com>, <maciej.wieczor-retman@intel.com>,
-	<peternewman@google.com>, <eranian@google.com>, <fenghua.yu@intel.com>, "Babu
- Moger" <babu.moger@amd.com>
-References: <3a6c9dd9dc6bda6e2582db049bfe853cd836139f.1717622080.git.babu.moger@amd.com>
- <96d276c11e69cfb1e29d50a12c8043555c06b404.1718144237.git.babu.moger@amd.com>
-From: Reinette Chatre <reinette.chatre@intel.com>
-Content-Language: en-US
-In-Reply-To: <96d276c11e69cfb1e29d50a12c8043555c06b404.1718144237.git.babu.moger@amd.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR03CA0329.namprd03.prod.outlook.com
- (2603:10b6:303:dd::34) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="0p2RY6Ib"
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-700d1721dd9so537729a34.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 09:56:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719420984; x=1720025784; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=I9WF5q68ZePMbZuzgldrpeFkJQIx5++lavDIav1RipY=;
+        b=0p2RY6Ib4QhMldh0jnWYB2F0kkWudDGuERZHFFmfyT1JMI92a7Mk29ZB7rRauUui8c
+         ij0F4Poy2uieWIedtAdS3Hw8TzXBjm5RPiyyAJycucfW8xdItpXE1Tis1I+pGeQ+Q7Im
+         fULd/yQc+RvRYCF8mWIDYyBvSfkxm7k3UD+TdFEDJkdTTBd1vxUt77AFENFiqJP+4z5j
+         hkzKBjRYaXKaXDnANi/L4bofifxZgx3RBdUqMxJaIS4T5oTA2ol9ThEL7JMMQCc7b02U
+         jnp/or1ECaZySF6LyghxRfDyyIVFlq5pBtDXNUlLiQh1ytlV7FXI9Gnkcfr73NNcFNa2
+         TVhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719420984; x=1720025784;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=I9WF5q68ZePMbZuzgldrpeFkJQIx5++lavDIav1RipY=;
+        b=CrAq+u3NZIfyIU5Cl0coBFt4RxgGAV72GTlVQXw5n2iXSpPrT4bt+MyZ/SVJZ3B7lV
+         +3GhnHyOvPFX2rWYyZcWzMK2G3uabDo9aG7puk+eKS80Vysvc26DblnDL0VT/44xtrdi
+         yQfaPtmcOWvX44/BE9yAwY50RbiCdzLBT4mWqoBWE1MFfadNca3pXNV4h44e0vrmaBmT
+         A79AEAQrJ8kqCegvJs3jYNtDqAJYbC46DHJt0lWk/qo/Wfo8h9+dwe26nR+PtKaPhVSh
+         +P3Z4VYOMChP3taRLk5krfGcl7s15DRElByPbq+yLihXsErsJfhTutVP51SwN3nz+oKA
+         97hg==
+X-Forwarded-Encrypted: i=1; AJvYcCV5Ydgyn1Vfj8FgbMKacazfXXS5oeBKtDVcSkQvy87TPALtOuvqvoP/MT3CL1ByM6nlEM5bunDCDChIfIMKSmlFVfz4DrOM/CF/sfAN
+X-Gm-Message-State: AOJu0YwbAERv37jesyHfqWtyZbf+LEuwNpwKTmV1woGGTgo+4dXxyzeQ
+	ilS+qcUn/8kdVBafwe3oNFU6xaFn153vrUF+etyGqUSmkZWr4ZeDC2Zu4+kHHlY=
+X-Google-Smtp-Source: AGHT+IFIA6lVNQS4eN/SmzgcST24H2LTBlnYknBiU44VIzeZ3/EW6KKBtCIolqXn4UeVDoEoNyu3xw==
+X-Received: by 2002:a05:6830:1045:b0:6fa:17c9:1978 with SMTP id 46e09a7af769-700b12a888bmr12074802a34.30.1719420983632;
+        Wed, 26 Jun 2024 09:56:23 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7009c607e9esm1944499a34.45.2024.06.26.09.56.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Jun 2024 09:56:23 -0700 (PDT)
+Message-ID: <1db5d054-8cce-4cbf-a02c-6ba52791548f@baylibre.com>
+Date: Wed, 26 Jun 2024 11:56:22 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|MW4PR11MB7128:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9568ac6e-d944-4a84-7a67-08dc9600c29d
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230038|366014|376012|1800799022;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?cjNVUTN0OC9oTlNQdWdkZGhhbGZ6MElsL1IycWF4NXZYTHNmcE9uQVgvN0Zu?=
- =?utf-8?B?N3pHR29JWStXdWNDdVVYOUVvUGMvWjlsY09RSzAwTTJSSjFyMVZFRWpwVUlR?=
- =?utf-8?B?cERLZ0ZrNnI4aStxNXNRbE5MR3hOZkhseGxvSjZldDYvRE42NUNHRXdXRFM4?=
- =?utf-8?B?amQwUWdkMG41cnR2WEwvOVo5MWphV013Q0RYUDRkRnU5YUp4cmtCai9xMHRY?=
- =?utf-8?B?RURvNkJDYk13MVFvdnRJNHJSSXpJR0hPUE5VeXB6R3NNeGJERzUrWUJLQ01Y?=
- =?utf-8?B?NlMrUnZLOTFEcTZTSSthNTI0Wm1GM0tqRnJCcWZlZ1RoK1VyaTdFQ05yYUlO?=
- =?utf-8?B?Ty9UQ0t6RUMySGZzWDVnVlQzVlZxU29pbThBSkFCVzd6RVVOSHpDeXZNNmVP?=
- =?utf-8?B?MzFCaHNCMUluVDNrMEdtanFaelQyNWJxUjhIWmMyRCtRRmdxci9VSGpWamVG?=
- =?utf-8?B?ZFVlcUUwdzBYaCtXN0N5VlNLVlJhZnhXUzJRVVlmTFZaNFJuS3hYc2xBWi84?=
- =?utf-8?B?aWVTR1NuZ2FzdXFiL0kxdVN0clI1UVY0YmtZVEdkdE9rTlZOdXExRGx1cmg1?=
- =?utf-8?B?RThsME5nTmpRSXV2WTBNd0wzcHNwdmpmNzBnQWlnbVJKd2pSTEtuSGE0ZStU?=
- =?utf-8?B?a0tJZzZvVXN3bHdTd05CTmZKVmh5N2g5eWRlSkl6M2tXVW40cEVFZXVKN2RR?=
- =?utf-8?B?bGI0OEJzR2o0TCtpanUxbkhuek5kcW40UUV4YkdTd3piZTdpZDBCbDRGZm5n?=
- =?utf-8?B?eE16djRJZHhtWGsrcmFKSXdlMWxleHhpZGttTWkxR0ZzMERwMmJzdHZNQTVD?=
- =?utf-8?B?ZDRBeDlvYm1HTGpnSW1TOGYrNiswWmdDblcwWENOcjNqT3dmWThkYTVFeTdI?=
- =?utf-8?B?dnZ3WTNaM0doOXRxS250ejNvRm43M0p0ZmlxTnd5MW5Fb0t5a0I5QmdCVW1V?=
- =?utf-8?B?ZHBERHllbWNJZWxtSjJKY1kzbTl1cFlIbkx5NlZGZm8rM3RVUEt5Y1lwKzNl?=
- =?utf-8?B?QTVqK1pXOW5iNktZekZ1NWdJYUxlY1JwdTJpT296Q0tKc0hEVDJmZk8reUtt?=
- =?utf-8?B?OTFJRVMwNEIvWDJISjJiZk1tT0JKMzdGU2FrdFAwWks3Y2UydWptaVV4Qm9D?=
- =?utf-8?B?bVZ4U0M3enZvTnFWZ2hFUXFvOEhnNjZGeE1SZSs2am0yZUdpWCtHSVluSnl4?=
- =?utf-8?B?WWNKTHpRZnRLUThoa2p4Mkt1NDQwQzVZTVdydXZnRk9UOUFwUEhXK1lFaVo3?=
- =?utf-8?B?SFpiN2FUeTQ3RktpZWkzNTkrMmpNUXc4YnNXQ01ZK0ZoVVNkbXg2eHp4TFkr?=
- =?utf-8?B?ZVNPUGdaTTJaSW9YOGhOdzY4RjI2VzJOUitwSFFESG1Jem9JVDM2UENpZkpt?=
- =?utf-8?B?dnY1Y3lYQnNXWTBQb3R0NFJuRnhoRitCengzN2pxbHB4a2xLQ01QQXExcThr?=
- =?utf-8?B?b3dqRy9iUytLaXZkQUh3UGJ5NEZGVmRtRFNTdUtYcVZVVHhwUWVNay9XOTBq?=
- =?utf-8?B?eURCK08xWGpFTmQ2YmRRZFJCMzRleTg0OEx4WXlXZlFheDFzRWtBYWFxaEhM?=
- =?utf-8?B?Ym05SWg1N1ZNcVQ5STB2am5vMm1XNXp1VGxtUWdvT1kySUJOL2J1N0VSZ2NP?=
- =?utf-8?B?YTM5SDNDL1FKMmlKZjUxRzlUWWtYVGNzZEhZblhjc01qMDJvMmNrV2VEZTNJ?=
- =?utf-8?Q?LPnrWlEXTVH+VppcPdbc?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230038)(366014)(376012)(1800799022);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?a0t5Z3podzdHZGZsRFRpdzZTdU5TbTFJN1E2ajg3M2dOV1dCaVd4V1lFcElz?=
- =?utf-8?B?SU5Oc3dtU2VEYzFJZTRBVlhNUzIvVDY4YWluTVI1T2p2VW9RWWFWc3REUWxu?=
- =?utf-8?B?RWdBRFpVYmRRQ3dMenQyOThmNmRUS3Vudks4YThueFUrWWhvVmgyVFNEOHdV?=
- =?utf-8?B?bmdmRGNxblpHcVVIb0JvZFZZeWtOUlVhdFRjNkxjbi9CQ1ZSN2RkK2NZQ0hW?=
- =?utf-8?B?VXM5QlJBWG1uTEpmTlRFQXcwTzVMcTc1Ry93czJjbWhzWjlRc01jY3VDUGpv?=
- =?utf-8?B?d050QytyVFJIZlIvRWttN3RPclE5WkwzNTFRNmpheU1JVHcrR0U4Zkw0U25x?=
- =?utf-8?B?QjdFb2hKajdFUU50VXJsMDNMeUs4a3JSTnNUc0ZTbTlRUThXclVpZWEzSlZt?=
- =?utf-8?B?Q0JjY2xMd21VRUJzYTJjMlhTZUF0cXJJMW5ZTGtHUFBHaEhOV283Yng2VzRH?=
- =?utf-8?B?RzZadmdNN3IvNVc4WTNUWlNSUnhETzVQUDBMTU5TTFo5QWVpOVJCR1ZSd2VL?=
- =?utf-8?B?bFNYcTdUMW8wY0lzUGQ2aVdXZmtVSmptNmZjcnQ1WDBFb1VpdlNNWVFhZ2wr?=
- =?utf-8?B?ZWpsYSs2b09kdTA4SWt1WHdKYnBjK21icDB6UklwdVI3VjI3MTRJWFdPMW4w?=
- =?utf-8?B?VDZUWlhtYUNCNUx6c2plMU5KdlRncVZPak81VytjbW5RN3B6Mkw5RDlmNXJv?=
- =?utf-8?B?MDI3SjVRNVVreFdFcU12VjV4b1ZkRDdZYlp4QmFBdTVXQSt2b2VvZXJmZ1Fx?=
- =?utf-8?B?WHV5ZXM3U3JSVEs4ZkIzK1ZnU1JCS1lGZTJZaDhTczRHNnF4bkpKUlVMWEt1?=
- =?utf-8?B?czlheExZTnJzdStjd1B6bDhqMnlEYktXdXFlVmJhMU5LMkZLR0p1TFRnM01H?=
- =?utf-8?B?TnpqcXVUaXRGTTBZYmR0TWx2NkduTk9pV0J2ZTZZZmpxSEVHWTR0V0N6VDR4?=
- =?utf-8?B?clpydTA2dFZpT2xVOHhvMXNNU1B0VmZ6RmVPbExHMTZoK3BnMFlRTFRlajlC?=
- =?utf-8?B?cWw2WFl2VlVnNFRnT1VoTGNzQ21IMlVBNVRrZktjMEUrY1VDWmZKNVY4bnFl?=
- =?utf-8?B?NFpMUkQvaVFVZUYzVytZZkdBOUkrcStmTGxCVXVzSitwbmRML1FONGlxS3Jw?=
- =?utf-8?B?WkRJVlFJRnpGV21tbEVneElGcjhrUjZWYktiVUlqU2orL3AvbWRpNVJ3TDl1?=
- =?utf-8?B?bEwwZkhxclBqVXlFM0pSd0NXYldmNW80ZkdmQVlQb2szVGhjZGRDa2lEZmxa?=
- =?utf-8?B?YnV2bnYxaTc2ZmFUN2IzSjBCWUlRVDUxK3lZMTFiNVRCZFV0aDl4WXZ5N3Ru?=
- =?utf-8?B?YlFleHdtM1dsbTRXcWUzZGJjOGdTY3RPRS9ucXFhNExZeEVsc0ZWSXNUb2Mx?=
- =?utf-8?B?ZTZSZEFzaVUvTDFjaDh3ZDdIcTUvTmZuKzh3YVo5bWtoTjIzaUszQjBwOXdw?=
- =?utf-8?B?UWExRm1BdzE3WHJXZ0puekl3K3pmNkZuenY0YTVOZXlGSnpFa1gxd0E4SlBo?=
- =?utf-8?B?RFh4THhPemo0NTdKbmRpM1Jhc1hyZEJ4dzFHOGM4MERmN3c0Y004ZHR3YVpJ?=
- =?utf-8?B?WUZraTBhU1dUNVN4RDhJRjZZcUdRN1hxSWFYbVY1WjZMYmxMMldQWjQ1YWxm?=
- =?utf-8?B?TG5aYjlRVytMVGlMN1ZUVE13a0ZnYnUzYXpuMjZiRjVvaEFLL3RxVVdTMVB5?=
- =?utf-8?B?Z0dNV25ZdFNBamhoNDRxRUxFcll0VEl4RTBQNGprVmkzbXg1T2xHOXp4Rkgr?=
- =?utf-8?B?ZHJkbVZsKzlDdUNTNmJaZThqWmluZWxwcXhKbjA3WWRSZWNRcTIycTZ0bjht?=
- =?utf-8?B?OXlSRDRXLy9qODV0ZzhBeEZQTXJNbC9pVy9Rb0tvRGdoK1haM0hNNDFCeDZO?=
- =?utf-8?B?Y3dTeGZsRnJOUDdyZXROcEtrVnNHN1ArRC9sS3QwZElGR3BSNHZsUnZEeW8x?=
- =?utf-8?B?eGkrVExtWDRNT0poYVA4am9VdkUzaFJnMmZ5YjhGN0U5bW1zK1R1RVBaZ1dQ?=
- =?utf-8?B?SkxZNlYxendNZlVINFhzTVNjQ2NXcVppQ0xvdlhZNy9iWEFydUczbXhERlhp?=
- =?utf-8?B?V3BIQzFZY2N3QzJKZVovTXVNU3oxdW5FR2pwVStoem52b29PSzJlUFA3ZlRr?=
- =?utf-8?B?RjcrblI5QlVWQ1dxZDUxaXR2TktkSFY0dlZOSjZwQVlwTnZhV0U1RUsza01l?=
- =?utf-8?B?U1E9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9568ac6e-d944-4a84-7a67-08dc9600c29d
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2024 16:55:19.0090
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +xPlI+OLxdqz4XGG0OfDi8NehIxO5p7vUMgIRROvSvCr+RezXaGLZx5U7yAxONRdt2K5nDIdVjcUYHhKCNMTOccstQwfQDJ3ukVgrXlwE4M=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB7128
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 6/7] iio: adc: Add support for AD4000
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>, broonie@kernel.org,
+ lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ nuno.sa@analog.com, corbet@lwn.net, marcelo.schmitt1@gmail.com
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1719351923.git.marcelo.schmitt@analog.com>
+ <eb5f7b73bdf3ac89117e28f26ee3f54ba849163e.1719351923.git.marcelo.schmitt@analog.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <eb5f7b73bdf3ac89117e28f26ee3f54ba849163e.1719351923.git.marcelo.schmitt@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Shuah,
+On 6/25/24 4:55 PM, Marcelo Schmitt wrote:
 
-Could you please consider this fix for inclusion into kselftests?
+> +
+> +enum ad4000_sdi {
+> +	/* datasheet calls this "4-wire mode" (controller CS goes to ADC SDI!) */
 
-Thank you very much.
+It looks like this comment was meant for AD4000_SDI_CS.
 
-Reinette
+> +	AD4000_SDI_MOSI,
+> +	/* datasheet calls this "3-wire mode" (not related to SPI_3WIRE!) */
+> +	AD4000_SDI_VIO,
+> +	AD4000_SDI_CS,
+> +};
+> +
+> +/* maps adi,sdi-pin property value to enum */
+> +static const char * const ad4000_sdi_pin[] = {
+> +	[AD4000_SDI_MOSI] = "",
+> +	[AD4000_SDI_VIO] = "high",
+> +	[AD4000_SDI_CS] = "cs",
+> +};
 
-On 6/11/24 3:18 PM, Babu Moger wrote:
-> The non-contiguous CBM test fails on AMD with:
-> Starting L3_NONCONT_CAT test ...
-> Mounting resctrl to "/sys/fs/resctrl"
-> CPUID output doesn't match 'sparse_masks' file content!
-> not ok 5 L3_NONCONT_CAT: test
-> 
-> AMD always supports non-contiguous CBM but does not report it via CPUID.
-> 
-> Fix the non-contiguous CBM test to use CPUID to discover non-contiguous
-> CBM support only on Intel.
-> 
-> Fixes: ae638551ab64 ("selftests/resctrl: Add non-contiguous CBMs CAT test")
-> Signed-off-by: Babu Moger <babu.moger@amd.com>
-> Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-> ---
-> v3: Reworked changelong.
-> 
-> v2: Moved the non-contiguous CBM verification to a new function
->      arch_supports_noncont_cat.
-> 
-> v1: This was part of the series
->      https://lore.kernel.org/lkml/cover.1708637563.git.babu.moger@amd.com/
->      Sending this as a separate fix per review comments.
-> ---
->   tools/testing/selftests/resctrl/cat_test.c | 32 +++++++++++++++-------
->   1 file changed, 22 insertions(+), 10 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/resctrl/cat_test.c b/tools/testing/selftests/resctrl/cat_test.c
-> index d4dffc934bc3..742782438ca3 100644
-> --- a/tools/testing/selftests/resctrl/cat_test.c
-> +++ b/tools/testing/selftests/resctrl/cat_test.c
-> @@ -288,11 +288,30 @@ static int cat_run_test(const struct resctrl_test *test, const struct user_param
->   	return ret;
->   }
->   
-> +static bool arch_supports_noncont_cat(const struct resctrl_test *test)
+Should we go ahead and add "low" here too even though it isn't supported
+yet? We could give a different error message in this case. (not supported
+mode vs. invalid value).
+
+> +/*
+> + * This executes a data sample transfer for when the device connections are
+> + * in "3-wire" mode, selected when the adi,sdi-pin device tree property is
+> + * absent or set to "high". In this connection mode, the ADC SDI pin is
+> + * connected to MOSI or to VIO and ADC CNV pin is connected either to a SPI
+> + * controller CS or to a GPIO.
+> + * AD4000 series of devices initiate conversions on the rising edge of CNV pin.
+> + *
+> + * If the CNV pin is connected to an SPI controller CS line (which is by default
+> + * active low), the ADC readings would have a latency (delay) of one read.
+> + * Moreover, since we also do ADC sampling for filling the buffer on triggered
+> + * buffer mode, the timestamps of buffer readings would be disarranged.
+> + * To prevent the read latency and reduce the time discrepancy between the
+> + * sample read request and the time of actual sampling by the ADC, do a
+> + * preparatory transfer to pulse the CS/CNV line.
+
+This description doesn't sound quite correct. When st->turbo_mode is true
+the shorter delay will cause a read during conversion, so we would be 
+reading the sample from the previous conversion trigger, not the current one.
+
+The description sounds like this function always does a read during
+aquisition. So if that is the actual intent (and I agree it should be),
+maybe the best thing to do would be to just remove st->turbo_mode for
+now? Then we can add it back when we do SPI offload support that actually
+needs it to achieve max sample rate. Then the function will match the
+description as-is.
+
+st->turbo_mode is never set to true currently anyway. So removing it
+for now seems best.
+
+> + */
+> +static int ad4000_prepare_3wire_mode_message(struct ad4000_state *st,
+> +					     const struct iio_chan_spec *chan)
 > +{
-> +	unsigned int eax, ebx, ecx, edx;
+> +	unsigned int cnv_pulse_time = st->turbo_mode ? AD4000_TQUIET1_NS
+> +						     : AD4000_TCONV_NS;
+> +	struct spi_transfer *xfers = st->xfers;
 > +
-> +	/* AMD always supports non-contiguous CBM. */
-> +	if (get_vendor() == ARCH_AMD)
-> +		return true;
+> +	xfers[0].cs_change = 1;
+> +	xfers[0].cs_change_delay.value = cnv_pulse_time;
+> +	xfers[0].cs_change_delay.unit = SPI_DELAY_UNIT_NSECS;
 > +
-> +	/* Intel support for non-contiguous CBM needs to be discovered. */
-> +	if (!strcmp(test->resource, "L3"))
-> +		__cpuid_count(0x10, 1, eax, ebx, ecx, edx);
-> +	else if (!strcmp(test->resource, "L2"))
-> +		__cpuid_count(0x10, 2, eax, ebx, ecx, edx);
-> +	else
-> +		return false;
+> +	xfers[1].rx_buf = &st->scan.data;
+> +	xfers[1].len = BITS_TO_BYTES(chan->scan_type.storagebits);
+> +	xfers[1].delay.value = AD4000_TQUIET2_NS;
+> +	xfers[1].delay.unit = SPI_DELAY_UNIT_NSECS;
 > +
-> +	return ((ecx >> 3) & 1);
+> +	spi_message_init_with_transfers(&st->msg, st->xfers, 2);
+> +
+> +	return devm_spi_optimize_message(st->spi, &st->msg);
+
+In the cover letter or after --- in this patch we should mention the
+dependency since this is a new API and depends on the tag from Mark.
+
 > +}
 > +
->   static int noncont_cat_run_test(const struct resctrl_test *test,
->   				const struct user_params *uparams)
->   {
->   	unsigned long full_cache_mask, cont_mask, noncont_mask;
-> -	unsigned int eax, ebx, ecx, edx, sparse_masks;
-> +	unsigned int sparse_masks;
->   	int bit_center, ret;
->   	char schemata[64];
->   
-> @@ -301,15 +320,8 @@ static int noncont_cat_run_test(const struct resctrl_test *test,
->   	if (ret)
->   		return ret;
->   
-> -	if (!strcmp(test->resource, "L3"))
-> -		__cpuid_count(0x10, 1, eax, ebx, ecx, edx);
-> -	else if (!strcmp(test->resource, "L2"))
-> -		__cpuid_count(0x10, 2, eax, ebx, ecx, edx);
-> -	else
-> -		return -EINVAL;
-> -
-> -	if (sparse_masks != ((ecx >> 3) & 1)) {
-> -		ksft_print_msg("CPUID output doesn't match 'sparse_masks' file content!\n");
-> +	if (arch_supports_noncont_cat(test) != sparse_masks) {
-> +		ksft_print_msg("Hardware and kernel differ on non-contiguous CBM support!\n");
->   		return 1;
->   	}
->   
