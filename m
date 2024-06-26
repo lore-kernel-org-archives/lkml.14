@@ -1,114 +1,93 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 364891891BC
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 15:07:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6F818509F;
+	Wed, 26 Jun 2024 15:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719414445; cv=none; b=CWTbnrXp7OvdS2mzEbpgZ0DniYcvC+PZImZtThzcloZddTMCzgk0QGdqKsPxvseMTxoXHGfxXNMRlPIwHQjyq6EFYmHQkyC5cjlYIboQxF/T3W9172bv699fyUIOAzOHqugxgrV/HMIowQVjjgktRXLfOKk1lniFLfx1kTshpAE=
+	t=1719414506; cv=none; b=JwZQyqVLgjvS4lKlpuCkm4u4YMRLALwzm363PMcONPZVy4bD6SnC71U/J9aRAzY9WM29sbKgPF0u2DhrunQV4d47iYlYTWyGfYQhpd5kVw+2Z6OHDua2Q5cCtIu8dDBaIi95hzzFo+L3hiursIZwTd8fEMvYitJ+wucLq6dPbdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719414445; c=relaxed/simple;
-	bh=wXPMzNtNlpsPJeeERAGhiFsCceMNMb3huYtSRM1DPwA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QOVOsxYOCzLzL1T7VA6h5eWojoUFOW1Ub4dUFTHcPvCYdZC5ZclUgxLwTpgZRN8f1Dkhv9HY7hTRsTuZdjz2FXUToM3DDF9aPMPK2oLciCDEHVgP/1syQETk03P28R9uVV56wV3zBdXvq2XArZkRHfqnAzXIOYhHzz+0kgbqj5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=1CFGL6q/; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1719414506; c=relaxed/simple;
+	bh=43FkPRae793YLZ9Lpekm1+NTDzvCf+L1463miSaTVkA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Sf/nEDf97y5GzMrwhkfy+y1NFvTAYiKylaCvH8atZpjsZrfdB4v3kiY/5QqzxEkx2lewfmt/I5luM1G8F8hfLygOaGVMMUiMEGNOKGyihCQO9nI5dtnQqlgm5en/sVbwpfYxx+5D9dPWuW3w9JW4YeLZgKvyha0/7G8SvAMpW1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BKOlySSW; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="1CFGL6q/"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2ec5779b423so46953861fa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 08:07:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BKOlySSW"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2ec3f875e68so76109551fa.0;
+        Wed, 26 Jun 2024 08:08:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719414441; x=1720019241; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KPxOJfkJIWCY4sqntkOf7FIbvrW1HVZyYX7BT4XYMJ8=;
-        b=1CFGL6q/2aGvnWYJoCUN9Ar1l28aj+2En5Px8PWW+ij3f5viv8qy+/fFR+X0jO2yCm
-         r5xKYAtR4LGz5U8Gntx7YRB52OuwsZmhrkvQyK1+bkM993ny10m03o/BcCC/4f70/kZ1
-         SOv7bvPypXzBq8XZcaK7Ch2EgIxLKWukydROY5MUs42nSz64/VMwp4nNm32uNV8z8LSt
-         o8JXBdXJhQfkj9pkbeNPAbp0qokI5L7Tx4UwOej3Bn+4lkZPuTzKbd+E9FEqx2G0LM6J
-         CWqOmwHd9LwauHu5N47AZXc8s6AAKgn0qrRQ1DTYs6yWR7Hmalfy22zD9lOlv5EAsACw
-         ZuMw==
+        d=gmail.com; s=20230601; t=1719414502; x=1720019302; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Aiz1xP79g5MWOcw+N04ZQRRPPPjd2aK1InqzkyIXJpw=;
+        b=BKOlySSWN21xLbrrNybpvrD9buqlnJVsal4H/6HnIOIJbgXLf0LINcuilameq+D3j8
+         kevUom8hDqlixbbtNBdAEyNTBPr20MQt/a3KnKZefbj7V9bVYHoPf3+iubAtzsMskZv3
+         bk4wsSu5wakAbcCu8nY3muOTWHbD4nwZSa7gpRO6IexM4UddiLHZkuctdGSUM9vbbIPy
+         xKayzF/59MCauNJLIFYVYmrpsfAt2AKwwSkz3KkuHBLo9LP2jWbKjtdGe4UPUvNwav27
+         +wAKsj7oTeOkRc/8pz/7ul4K1ci6oL4zb5rCoispGCP+mNW14yAyAcgAbMMDAXi/nkHl
+         UGjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719414441; x=1720019241;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KPxOJfkJIWCY4sqntkOf7FIbvrW1HVZyYX7BT4XYMJ8=;
-        b=CyAFkAP0lz0CxvI9YZsMhxMTZL7Su1IjwGe3KFnxEFa4opK31/fEgzJIINygTZ6OpP
-         J1J7qXg4X8/e/4cXXIJuphvhjP375Sju+bygesv73HrG0jtsplrChijUPK3b8/AwcOLp
-         yhujNi4EK6ZTWnPzt8QwDA6kIRgl0j6DnHJQJVqzorZ76hljXtS136I3yp3gmSKFqnwZ
-         /VgUoi/pnPdc/prMJcFMAttEZjZBf+m546Tf2rBMx0KnMbd9l7IEDNHdydET0e9R7hlH
-         Opq/NjX9yUqKnlVLPAIWplzOUnScho/BCpqmpifFRM85xebNiv0JVcJbRZfeBoFW6MRI
-         iWsw==
-X-Forwarded-Encrypted: i=1; AJvYcCX0s54vajvFB/PzGqdhaI7Mh6mrWZOhrKMfdzXMSKM8HzI7p7/DVrJfwP0CBdo22Onk5iBcr+QGtVD7q+LpbNSRt8ewIIhteUbSFF2Z
-X-Gm-Message-State: AOJu0YyH0wYorz/4UUXuqHeNW9joFSbVxxakeCYrvWlDs6r6Z7Huwr7B
-	g2UL1PzeCiQdV8qNIR39MgLiFb5CJMAW2J8bS0r7OV0F/Pe8vAn3+vlDBljcLGVpXFMb36KAxlQ
-	t0nDRb2MWCgNDwguFt0xjYMpY1i6z1+MLQtlLYw==
-X-Google-Smtp-Source: AGHT+IEUkNjLlmTxavRfhMndMCySdn3PbAFz1s6PnS1Bxg+VsA4owIRUUH76BL6HCSdoGMnwFnx4HSaROo7ZAfFCFEQ=
-X-Received: by 2002:a2e:9f10:0:b0:2eb:fc08:5d83 with SMTP id
- 38308e7fff4ca-2ec59389fffmr76705281fa.44.1719414441210; Wed, 26 Jun 2024
- 08:07:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719414502; x=1720019302;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Aiz1xP79g5MWOcw+N04ZQRRPPPjd2aK1InqzkyIXJpw=;
+        b=hiOZQqE7oviXvHdLQ3D7nG4bQoSfh9mb728Q6ZSO/ivTe6HMoPZuJAhBTgj/GK43i1
+         YPwbX/QsBzXieg+iCWOZbwiFIqXoLHiJZFKEO6zifrNqynCRy3raiTOPIZdw9J7ka5zv
+         5Sjt+bWL4iS7pa/jIHSJb3nrJhOL//Cjwq9n8D7xFpKyLRpuh8fPAibIuO2lke1DcqRN
+         O6SHWvAjFK7CtDAlKL9D+YDMGd27H2wnwmmVIuSdxR/TE6n3idjRvWvU/BQwUHaPGhWk
+         qZtdvXqQkDZXTKp2aw64ECDuSjdjZoAZ281PUamODRp53BrRbfw9jDavcdOq2HZYl8jD
+         Pw8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUEk6iPohWXgLuEHAON6YmHxgfm5ezqeBQqdOMOKe5GL8cHpjoCx9VXYK7BcRqcKU1Y6cJ1XWIeyQc5DuOplttMVANRiXzWdKkmh3Fu
+X-Gm-Message-State: AOJu0Yy6cp3MeF8rQMSY9SwLDQ6Pal6q+ccOo0+Yv5qvPLfrI7qzyHby
+	lS82jRITBlR7y5HvMqEoEvO1PFurfE71NjfBSapgqNgOtihpewuye3z+ADtWTzY=
+X-Google-Smtp-Source: AGHT+IHZ7jM0OuwV/LmUhLIeLlnOQ4aaGlWGhH/0x43uOEV5CJlqv/GtYVvfMpBP8gdspq55bkEg3Q==
+X-Received: by 2002:a2e:9e96:0:b0:2ec:588d:7eb8 with SMTP id 38308e7fff4ca-2ec5b37a303mr60830501fa.21.1719414501240;
+        Wed, 26 Jun 2024 08:08:21 -0700 (PDT)
+Received: from seskpc0236u.linux.cat.com (static-dsl-173.87-197-126.telecom.sk. [87.197.126.173])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-424c837f1cesm28296385e9.37.2024.06.26.08.08.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jun 2024 08:08:19 -0700 (PDT)
+From: Jiri Kastner <cz172638@gmail.com>
+To: linux-doc@vger.kernel.org
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	linux-kernel@vger.kernel.org,
+	cz172638@gmail.com,
+	Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH] Documentation/tools/rv: fix document header
+Date: Wed, 26 Jun 2024 17:07:27 +0200
+Message-ID: <20240626150727.156397-1-cz172638@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240626-qps615-v1-0-2ade7bd91e02@quicinc.com> <20240626-qps615-v1-4-2ade7bd91e02@quicinc.com>
-In-Reply-To: <20240626-qps615-v1-4-2ade7bd91e02@quicinc.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 26 Jun 2024 17:07:09 +0200
-Message-ID: <CAMRc=MeAz8yT_-YR8dSW+hZrezbhsTcc+oSdCO=+sZ84M=fkmA@mail.gmail.com>
-Subject: Re: [PATCH RFC 4/7] pci: Add new start_link() & stop_link function ops
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Jingoo Han <jingoohan1@gmail.com>, quic_vbadigan@quicinc.com, quic_skananth@quicinc.com, 
-	quic_nitegupt@quicinc.com, linux-arm-msm@vger.kernel.org, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 26, 2024 at 2:38=E2=80=AFPM Krishna chaitanya chundru
-<quic_krichai@quicinc.com> wrote:
->
-> Certain devices like QPS615 which uses PCI pwrctl framework
-> needs to stop link training before configuring the PCIe device.
->
-> As controller driver already enables link training, we need to
-> stop the link training by using stop_link and enable them back after
-> device is configured by using start_link.
->
-> The stop_link() & start_link() be used to keep the link in D3cold &
-> D0 before turning off the power of the device.
->
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> ---
->  include/linux/pci.h | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index fb004fd4e889..3892ff7fd536 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -803,6 +803,8 @@ struct pci_ops {
->         void __iomem *(*map_bus)(struct pci_bus *bus, unsigned int devfn,=
- int where);
->         int (*read)(struct pci_bus *bus, unsigned int devfn, int where, i=
-nt size, u32 *val);
->         int (*write)(struct pci_bus *bus, unsigned int devfn, int where, =
-int size, u32 val);
-> +       int (*start_link)(struct pci_bus *bus);
-> +       int (*stop_link)(struct pci_bus *bus);
->  };
->
+align header of document with filename and rest of the content
 
-IMO stop_link() should return void.
+Signed-off-by: Jiri Kastner <cz172638@gmail.com>
+---
+ Documentation/tools/rv/rv-mon.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Bart
+diff --git a/Documentation/tools/rv/rv-mon.rst b/Documentation/tools/rv/rv-mon.rst
+index af0f329a7c9c..bed937120dca 100644
+--- a/Documentation/tools/rv/rv-mon.rst
++++ b/Documentation/tools/rv/rv-mon.rst
+@@ -1,7 +1,7 @@
+ .. SPDX-License-Identifier: GPL-2.0
+ 
+ =======
+-rv-list
++rv-mon
+ =======
+ -----------------------
+ List available monitors
+-- 
+2.45.2
+
