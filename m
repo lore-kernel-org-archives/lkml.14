@@ -1,55 +1,58 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 555A616089A;
-	Wed, 26 Jun 2024 10:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A55176AAA;
+	Wed, 26 Jun 2024 10:16:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719397014; cv=none; b=HrYUdGewEQcUroU4D+nGNHg4eCqNqBI3nRi2/FTAdy6bdyF4RZfXwxiKv0IWcp5rLozhPlhhOLMHiuc3PD+3muaP3Ds3Qvrn9kPjdENHjstVdkMlqVingvOOD0Z+6rWWRdEO2iVvyTamiwFDHwPVG2y1s2YEMe4Pp9LhrUIUKeY=
+	t=1719397016; cv=none; b=kPw8qGDT2zWhfSadCizinzcn7WCxhT766L0GZ9ehw4vRXJeTZEL95fQcJdwR5P9wdBS75gBgDGHnGbYKBkjD1sulU9mhbkDHn0hIZ0qozmpeuS8YZrcAI0SlQ388IUqNg1t1IWJE5xLNg+efx8pBg63ETcqQnZXXfNKOAEEoRTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719397014; c=relaxed/simple;
-	bh=Ep4U3OkPPZTIcBWPx+19jCGjtqPhQnVHpwjFL+W/Bc0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JhE1+B3A1ZLobqSGEs5y9Hid9d8+csFYAdxt4FiLTziX5LSit/q0p9QueTfnVVK/Srph6QAiFjh2GlOAAZB9GsKgt/bgJmXeQxxb6MlseE/4lPeOslGQjp/PfQHZzX/PhlgExLg/cyvt9OZHtz8nFNmaCIPut5ZBYVX4xv9wR+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=CP/yWKeO; arc=none smtp.client-ip=198.47.23.249
+	s=arc-20240116; t=1719397016; c=relaxed/simple;
+	bh=LzuNCOUQ9whKlqoew9WHGEBnV6ZQgmziyMW/fn0bPy0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D56r9O+Aqz+erdHIn4JoC0gknJ+/FF6kknDeth8MBZt4C8Lfil96M4aQ8hajizUNaOZ7HsKc8bRsBVdST7izy9r7cPhpgkDyoUHpSyVdu0YZVk8MHqLxquvstYhPvs5c37LkzVf4LPLeKZ9OUwMYm4bLRp4L4sk/LRyeUH+x/GE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=slmuzacb; arc=none smtp.client-ip=198.47.19.142
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CP/yWKeO"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45QAGl7B102197;
-	Wed, 26 Jun 2024 05:16:47 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="slmuzacb"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45QAGogo102915;
+	Wed, 26 Jun 2024 05:16:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1719397007;
-	bh=YJXho8AVdwhK5yCk/v+SUMui3th4HKFl1eVnAGhcQIY=;
-	h=From:To:CC:Subject:Date;
-	b=CP/yWKeOX3FpA53wXfxjYyqGX5pTFAj2vTnzypoMZW4b+c19vYOt9nDJ3MlKgmrNx
-	 JiiQe3FcuAADBoDpCvdKs/FTA/d9daPEnvloIJRdqv2wIu2dMoftM5UJh+UrOuxVb1
-	 KClfGxl3U+OgQOxr+6wyAmnpFjEW6DVo2YT86FLQ=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45QAGlTY003512
+	s=ti-com-17Q1; t=1719397010;
+	bh=0cF2pKdprLckfiVqSJAJnSYhv9Psf/lX2svMNJQUwcM=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=slmuzacbXNmJg1x4kkfQY4CHNOP8/nOwwiSyeTr6RNPxBv5m9/hTye4xpHye/KFQ3
+	 yohN4j3MKW7VDwsDVKCsAOWVJCJV119ptEnOvGhEVEN5JR8X6C0NTj9neEFQrPPDRg
+	 HrfK3QOH6RZurS4V5vXwlO0zGcy/kN4khRi/Mr+o=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45QAGoRu128074
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 26 Jun 2024 05:16:47 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+	Wed, 26 Jun 2024 05:16:50 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 26
- Jun 2024 05:16:46 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2024 05:16:49 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 26 Jun 2024 05:16:46 -0500
+ Frontend Transport; Wed, 26 Jun 2024 05:16:49 -0500
 Received: from localhost (jayesh-hp-probook-440-g8-notebook-pc.dhcp.ti.com [172.24.227.248])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45QAGkWC094542;
-	Wed, 26 Jun 2024 05:16:46 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45QAGnod094595;
+	Wed, 26 Jun 2024 05:16:49 -0500
 From: Jayesh Choudhary <j-choudhary@ti.com>
 To: <linux-kernel@vger.kernel.org>, <nm@ti.com>, <vigneshr@ti.com>,
         <j-luthra@ti.com>, <j-choudhary@ti.com>
 CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
         <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
         <devicetree@vger.kernel.org>, <u-kumar1@ti.com>
-Subject: [PATCH v2 0/3] Enable audio for J784S4-EVM platform
-Date: Wed, 26 Jun 2024 15:46:42 +0530
-Message-ID: <20240626101645.36764-1-j-choudhary@ti.com>
+Subject: [PATCH v2 2/3] arm64: dts: ti: k3-j784s4-main: Add audio_refclk node
+Date: Wed, 26 Jun 2024 15:46:44 +0530
+Message-ID: <20240626101645.36764-3-j-choudhary@ti.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240626101645.36764-1-j-choudhary@ti.com>
+References: <20240626101645.36764-1-j-choudhary@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,43 +63,36 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hello All,
+On J784S4 SoC, the AUDIO_REFCLK1 can be used as input to external
+peripherals when configured through CTRL_MMR.
+Add audio_refclk1 node which would be used as system clock for
+audio codec PCM3168A.
 
-These three patches enable audio on J784S4-EVM platform.
-- First patch adds the McASP nodes.
-- Second patch adds the audio_refclk1 node that is required
-  to configure the CTRL_MMR register for the external clock
-- Third patch enables the analog audio
+Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-For audio to work, the ti-dm firmware that should be picked
-for uboot is now publically available and will be shortly
-merged to the ti-linux-firmware branch:
-<https://git.ti.com/cgit/processor-firmware/ti-linux-firmware/tree/ti-dm/j784s4/ipc_echo_testb_mcu1_0_release_strip.xer5f?h=ti-linux-firmware-next>
-
-For testing, ~/.asoundrc file was created in root partition
-which can be seen in the test logs:
-<https://gist.github.com/Jayesh2000/3ca38cbac2f37842b1010af79dfe9b4c>
-
-Changelog v1->v2:
-- Rebase on tag next-20240624
-- Add padding in mcasp reg property
-- Add assigned-clock and assigned-clock-parents property for mcasp
-  for more accurate description
-- Change mcasp pinmux node name similar to other nodes
-- Fix typo in k3_clk node and remove unnecessary comments for refclk1
-
-v1 patch:
-<https://lore.kernel.org/all/20240619095253.290552-1-j-choudhary@ti.com/>
-
-Jayesh Choudhary (3):
-  arm64: dts: ti: k3-j784s4-main: Add McASP nodes
-  arm64: dts: ti: k3-j784s4-main: Add audio_refclk node
-  arm64: dts: ti: k3-j784s4-evm: Enable analog audio support
-
- arch/arm64/boot/dts/ti/k3-j784s4-evm.dts   | 111 +++++++++++++++++++++
- arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi |  99 ++++++++++++++++++
- 2 files changed, 210 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
+index 7e10be314684..f170f80f00c1 100644
+--- a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
+@@ -121,6 +121,15 @@ ehrpwm_tbclk: clock-controller@4140 {
+ 			reg = <0x4140 0x18>;
+ 			#clock-cells = <1>;
+ 		};
++
++		audio_refclk1: clock@82e4 {
++			compatible = "ti,am62-audio-refclk";
++			reg = <0x82e4 0x4>;
++			clocks = <&k3_clks 157 34>;
++			assigned-clocks = <&k3_clks 157 34>;
++			assigned-clock-parents = <&k3_clks 157 63>;
++			#clock-cells = <0>;
++		};
+ 	};
+ 
+ 	main_ehrpwm0: pwm@3000000 {
 -- 
 2.25.1
 
