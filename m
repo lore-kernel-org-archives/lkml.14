@@ -1,98 +1,66 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93ED5183083;
-	Wed, 26 Jun 2024 20:39:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9AA1940AA
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 20:40:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719434379; cv=none; b=jhBNPD54fnpoPQPVa8bB2tReXfyj+gb+gYh2tjUFXFKw4fH4lyJ39WWr5PctNR29kaO6qzL8D8nHz36Q3Njc42PEH2MZ4Bgu82LlK2iSGXTYnHaiDoPy+yDtH6v8Ya4es6CvUbyOlXwlOE8aAuSh78ahZ1C6Q6LWjcYsaPx3cmA=
+	t=1719434442; cv=none; b=jVMuY89RrnYZxDW3vrT9Fgt2TScGTipKkvNQ1uj1W1uhbQd4xtT5rGIG1189tj1KR+SDYL3SSYbnLlfH7nl8IDpZB5m1nz0Ds5lwDEv9obG6DaRfXCieSIf019c6yIrEmcnCro+YmlMoNz+xcdbDg2qxHfBirrA7mYWE+6dofWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719434379; c=relaxed/simple;
-	bh=/9W3G49m6A/qb2aig9tVX/75zGdSbXbe9vL831wbHWs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FJoHH0jCA1WEb1aufXU5dJ4UYB8l39U0I4Eg9yXceXyrSdtmFTypK1NcLLTqDSJei1N1HW2UHkzUz8WQ6keLaYgTvxDyL2PK/41HOWsMq71tcNGMbGHz8cjG8UBT6jJcNrhyIEiXXpH3ToZuFLb6fRbaUkHTWgLEdg1Hq6a2y5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XD/grlT6; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719434442; c=relaxed/simple;
+	bh=+MTghs/ruEyPO8KiBbZQEvIF3zJkuIad4OGKhCyeqQM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=LJGb6IRGwEeCl++qkgBCbQp3MagZxOA0quLQFhLVIahvdYPYqX5W9u8sOdmnQfzPbLNTNY2qbaXRfWm9fH5jeLGp68E4jb+FEDzpOYl1FHc1D266GTXoNiRNu1c6scNEht8TIHgAys6AgXP9Z7I68i9cdut/YkCjICfVufOX8oY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=tTjdpp+S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XD/grlT6"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-42561715d41so4569965e9.0;
-        Wed, 26 Jun 2024 13:39:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719434376; x=1720039176; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2E5szASgFFa7et9hf6JKLTJ5flysbwDYJWoC3WWH5W0=;
-        b=XD/grlT6cJdcz9UvuLg/uJ3ptlk5+9Z1aub2dUvyXmX8/EsI0gvkGUVRm+Q4+3eiag
-         cH8RxrnBw8PIxNtOjW19qzJ/Hi4RU6JhqUC4gZ/zVEG6biPPpQjJR1xD3cCfByY7yKX0
-         X+57K7XRSe7vPLh1L9yQp+4JlYqs0FOjC72fDS6PiykV4pDx48Jv2le4g8JRkxKaxZh7
-         isnCdG66Nr63MkdyxgBxEckV00s2NKySXn9AGNpSOjUNSw7OuK+q6aRuYD8dcyiWiZkx
-         qe7Q+f4G0+G8SRnkvR7uSXtgcKAxB3ZrLwnIEvdjb80XOqyrtOccy28jLG+p4CU7hKXo
-         ylvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719434376; x=1720039176;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2E5szASgFFa7et9hf6JKLTJ5flysbwDYJWoC3WWH5W0=;
-        b=PLilv2KrirgyttYhRQ+prcD2VsS3DFm3uqtr9bSuI0DJaGtFbVT2CJpqN4AwQDr3KT
-         TuSqFVQOCcOkD6AwTfSnwb8AK7O0Y4RdC00+NP8S8gYT0qze5UXKJ2L+Dgws3z+aReOj
-         Q/3MLXtzy/pZoHBJcIuTGjJIFm7L3jCM9d8LUMWZfzCIkPkkNTiqLR4/YR868+3mAP8b
-         XdE4ngmyOG4zLiAtqaJljmxTvF4Q+s4tIKwSs6OOjLPA41Ucdzc/Y6b53O/a/8mHtSPA
-         XJgcdV5rvsB60ETB1T+IpOteOqnAhS66j6LmP7n+EVeCzbNaZEeMadpa9ez4etxlUUkC
-         Llsw==
-X-Forwarded-Encrypted: i=1; AJvYcCV2rBU1kRs11L9L6Vgo4/NTg5WvrJbWspmxzPAf6CTGbhRCvPtCn3wV5sq117hgAJ2PF4WUkcGqXBtDn8DPfycsiD6n3Rbdk2+83OS4
-X-Gm-Message-State: AOJu0YwMsNvc97zQa24uG7TnUgDrl9SS3BciFDqfbLX4o7Wpbngm5G2r
-	pcrpP3KtQTJw1OWqo2vJCOJ2uGcw8wNzHV4i8W0nW0TamkGpCt/jH/SUEd0XDI8=
-X-Google-Smtp-Source: AGHT+IFKDR2sUT+AuFSaaRTVuaMId/3tR6eXb6ySb3gtXwcPNSlO+mrqxdZ1i/9J453D4BlGAorIMA==
-X-Received: by 2002:a5d:4e0e:0:b0:360:9500:9bbb with SMTP id ffacd0b85a97d-3673cc55d87mr706365f8f.12.1719434375678;
-        Wed, 26 Jun 2024 13:39:35 -0700 (PDT)
-Received: from seskpc0236u.linux.cat.com (static-dsl-173.87-197-126.telecom.sk. [87.197.126.173])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3663a8c8f50sm16661946f8f.109.2024.06.26.13.39.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 13:39:34 -0700 (PDT)
-From: Jiri Kastner <cz172638@gmail.com>
-To: linux-doc@vger.kernel.org
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	linux-kernel@vger.kernel.org,
-	cz172638@gmail.com,
-	Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH v2] Documentation/tools/rv: fix document header
-Date: Wed, 26 Jun 2024 22:39:06 +0200
-Message-ID: <20240626203906.191841-1-cz172638@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240626150727.156397-1-cz172638@gmail.com>
-References: <20240626150727.156397-1-cz172638@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="tTjdpp+S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39183C32786;
+	Wed, 26 Jun 2024 20:40:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1719434441;
+	bh=+MTghs/ruEyPO8KiBbZQEvIF3zJkuIad4OGKhCyeqQM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=tTjdpp+SHVjyWZT2LNBDjQ2ODFKazV5WkhurSz+62l0adrGbOZ2/7f1Lw8BJZenPg
+	 ZD7IFjHX6We+P8Cr8nf5WcaWGgPMtujDZmEooldFSnqPCcS8+7MlrGF+AChOXFCr4K
+	 7FtiMf+tISYzPYPRAL2H9dA/RptZ4PEhWBGwcROo=
+Date: Wed, 26 Jun 2024 13:40:40 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Yang Shi <yang@os.amperecomputing.com>
+Cc: muchun.song@linux.dev, catalin.marinas@arm.com, will@kernel.org,
+ linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hugetlbfs: add MTE support
+Message-Id: <20240626134040.63fe621bff6a5fe1c0503999@linux-foundation.org>
+In-Reply-To: <20240625233717.2769975-1-yang@os.amperecomputing.com>
+References: <20240625233717.2769975-1-yang@os.amperecomputing.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: Jiri Kastner <cz172638@gmail.com>
----
- Documentation/tools/rv/rv-mon.rst | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On Tue, 25 Jun 2024 16:37:17 -0700 Yang Shi <yang@os.amperecomputing.com> wrote:
 
-diff --git a/Documentation/tools/rv/rv-mon.rst b/Documentation/tools/rv/rv-mon.rst
-index af0f329a7c9c..4d86fd55eb59 100644
---- a/Documentation/tools/rv/rv-mon.rst
-+++ b/Documentation/tools/rv/rv-mon.rst
-@@ -1,8 +1,8 @@
- .. SPDX-License-Identifier: GPL-2.0
- 
--=======
--rv-list
--=======
-+======
-+rv-mon
-+======
- -----------------------
- List available monitors
- -----------------------
--- 
-2.45.2
+> MTE can be supported on ram based filesystem. It is supported on tmpfs.
+> There is use case to use MTE on hugetlbfs as well, adding MTE support.
+> 
+> --- a/fs/hugetlbfs/inode.c
+> +++ b/fs/hugetlbfs/inode.c
+> @@ -110,7 +110,7 @@ static int hugetlbfs_file_mmap(struct file *file, struct vm_area_struct *vma)
+>  	 * way when do_mmap unwinds (may be important on powerpc
+>  	 * and ia64).
+>  	 */
+> -	vm_flags_set(vma, VM_HUGETLB | VM_DONTEXPAND);
+> +	vm_flags_set(vma, VM_HUGETLB | VM_DONTEXPAND | VM_MTE_ALLOWED);
+>  	vma->vm_ops = &hugetlb_vm_ops;
+>  
+>  	ret = seal_check_write(info->seals, vma);
 
+How thoroughly has this been tested?
+
+Can we expect normal linux-next testing to exercise this, or must
+testers make special arangements to get the coverage?
