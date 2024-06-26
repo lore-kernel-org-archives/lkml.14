@@ -1,171 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786F818E755;
-	Wed, 26 Jun 2024 13:47:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94CDA185E70
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 13:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719409635; cv=none; b=YEGf4G0SDa+C1d2gy5fYZd8yIcziu92VBT6xALJkG/6NiOcjGbxUKRAeG9PQPhdOGnGv4tAYCgnxd5yBAcJkddX/h+ascP3nZnbbAayH4BgpgiQRfsfOCw/1pkTDM5nkW9aK0RDzvpW3xjLfRqFmFrANbi3d0EEg/eLx01L5gOM=
+	t=1719409650; cv=none; b=HTnADng9WrrVRIzqz/D4/GpI4+2yvbArIn1uI6UGcOH9v13heqTTmN0Cr1fVetKLvrsLf5bRtHjzkRuQNVMyAsk8v14AGyh7sdoXAUckaxjNU3ohlAaWSmYMMA0nBH7Bup46DBgPEZ+pF3biVyiwW2Chtg1l0SD0mp9cHZw0WmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719409635; c=relaxed/simple;
-	bh=coSvairEXZ/UoBj93IfzT1BpGcOK/jnPrORkflCNJ84=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NPqwuL+s//UYPAZ8sBkQ2mDNJw94M/bHi+uageZJGGa+WtL3j5nq6J6H2kvaSdILv75kIcC/7+TD7WUQIYYLe/xi+2BZZJKcs7SzIb+6C55UyeV7uaIt418zdA+5NA6Y9HrzwgG0G1B71NNzWSyi3bps2U7mfDkAdJpF4eGvExI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M7TgyvOq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719409650; c=relaxed/simple;
+	bh=/jEClEHDxEl+djPgKLOGRJWMVDG+RYF17xauYwyh5qE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vb8Wp2tRHD9NWi0zqqxhaPRWKxk0hRtoeagJ3JL4Atz+fn4PH2KReuorvmjRzAr5eXPsIjWisslPyccoOH5FclC3a8JNNjtJfOtqY0dPsROmlL1U/ldLL3ChII8/x1IHKoMga2SKYjK6bp6Gy4rzN+3+0G8RHVvixbSjOCBSbqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=dBiV9eWC; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M7TgyvOq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F55BC4AF07;
-	Wed, 26 Jun 2024 13:47:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719409635;
-	bh=coSvairEXZ/UoBj93IfzT1BpGcOK/jnPrORkflCNJ84=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=M7TgyvOqh+G8JBHZHxNOGoIIsb0OsioBMMg+gOn3TNV2PLOLkJ4AFX/7QXQhW2132
-	 XYagHiEHIDF3QcAPTMADf7q5VPdhGTK7+owjeNWkzBJ1cXERnJ/1h1iykUccDUp4PE
-	 kuD1m9RrzITqb69QiZOIi/HxAY299c+0rPcgtu0J3NNyRRKFeEt6ndbKgLrReKiIKC
-	 wguo+WVHSMkOPKQiq7dWMNaB4ardr+pcIv2Rpi4IsAoT+ONvZ+YBv5mbuX82d2JhHw
-	 KXt2QnVFzV2gGVnLVKrRtAA2ERheboepDnc0EgKd8WTobmRObueqSzVRoAdBmWSofZ
-	 hIdu+Z7T9P6Fg==
-From: Benjamin Tissoires <bentiss@kernel.org>
-Date: Wed, 26 Jun 2024 15:46:34 +0200
-Subject: [PATCH HID v2 13/13] selftests/hid: add an infinite loop test for
- hid_bpf_try_input_report
+	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="dBiV9eWC"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4255fc43f1cso3188615e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 06:47:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=9elements.com; s=google; t=1719409647; x=1720014447; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RHiBgnfP/0rnnPCnPMDBOWshAUvOWKD1FEoaKWD/1kE=;
+        b=dBiV9eWCrfWN0NfagsXskNqpQO1bN72mc/aYMIsNuWgCM7smDauPkOv9mc/aJEMLiS
+         60PRKToVI+B6PBYuk/wjbSQ0DmvWcGAyhtOFFiqLjkpBRcxDnj6jTECqyAA355Ox7AaN
+         dGbVgNcd577qoSkz7uMK4ScAcmM5KOkVlMNii/2OVqVgJ7idoAiMLX+7yE/oUA6d2jeR
+         SLRALhL5UnYSsU/UcaC1vH45/avc3Njnorpz/7tIeCCr1PolRYDQqzUYOOOe66xYVXYF
+         jcJI9isTTKtn3zv3RBv0rvrH4OY8FvSLcz9VL9gCzNNJlvYKJeD8W5tXljXzZDDrHbPc
+         9bcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719409647; x=1720014447;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RHiBgnfP/0rnnPCnPMDBOWshAUvOWKD1FEoaKWD/1kE=;
+        b=XGclD/S1aiyQdCBEg3aVbMt0L0IRRH2Fv8LYwPAuw/hJ7pDJPtTOKgDeJF6ishxlJ2
+         D6me2JGIXQ/q9xMn+/ZAx7oPteKqhJnkQTdGA6t3ObGBDGhxU0ajQO+jczNs3OEJoWYa
+         uiTwGT3914Jsqd84XXm0RbVonn80gdSDS8iY0VO+/Z1eZ88O66XYGGHLojiLlHZj6B47
+         cpTTDqdOEor4WY3AfAsbw4TwWEeHE++0+t14RRtcB+QWX1ilwDmT7+76MsJs33tu5KVT
+         yUaIWCtwY6YiPtXQ7UgtKkR2uuXfzGxltiWCu3uE40LJwSDuagMtXwQgGg3oMSQl6xf4
+         XyqA==
+X-Gm-Message-State: AOJu0Yz7As3qHxFXE4u5kEtb27m0A7dJDTIch/oP/TSJchGJzr/kBz45
+	wBDmypiKrMVY4xscNSlfAYzFs3d+XXbmgXVC8UYnDsWk4ovsjYTBzNYakuvinJUroy8tj+2iwol
+	O
+X-Google-Smtp-Source: AGHT+IEmS2OWbS79dMTwL4fhRrin/KFAoeZqHlZtaieH7je5p3m5/smsvb2C9xkGG3a3QPu3VxqGvA==
+X-Received: by 2002:a05:600c:3503:b0:422:218e:b8d7 with SMTP id 5b1f17b1804b1-4248cc66a78mr89547365e9.38.1719409646730;
+        Wed, 26 Jun 2024 06:47:26 -0700 (PDT)
+Received: from T14s.n1ce.space ([185.254.75.30])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c8475aacsm26611625e9.47.2024.06.26.06.47.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jun 2024 06:47:26 -0700 (PDT)
+From: Marcello Sylvester Bauer <marcello.bauer@9elements.com>
+To: linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Matthias Stoeckl <matthias.stoeckl@secunet.com>,
+	Marcello Sylvester Bauer <marcello.bauer@9elements.com>
+Subject: [PATCH v1 0/1] usb: gadget: dummy_hcd: Fix regression due to hrtimer migration
+Date: Wed, 26 Jun 2024 15:47:19 +0200
+Message-ID: <cover.1719405791.git.marcello.bauer@9elements.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240626-hid_hw_req_bpf-v2-13-cfd60fb6c79f@kernel.org>
-References: <20240626-hid_hw_req_bpf-v2-0-cfd60fb6c79f@kernel.org>
-In-Reply-To: <20240626-hid_hw_req_bpf-v2-0-cfd60fb6c79f@kernel.org>
-To: Jiri Kosina <jikos@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
- Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-doc@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1719409602; l=3521;
- i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
- bh=coSvairEXZ/UoBj93IfzT1BpGcOK/jnPrORkflCNJ84=;
- b=y3R38nLnIx95jobpAICJH1TPSo58IZ3qiL3BnUPgxNlYvk6mTJ8bIWv2euPxrMe7T3qg3vOGa
- jOkMsJiAcShAU0XVpvS0VDk6ymvazKa9awoDZgpz/V6UVXz4BJjAvYA
-X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
- pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
+Content-Transfer-Encoding: 8bit
 
-We don't want this call to allow an infinite loop in HID-BPF, so let's
-have some tests.
+The kernel CI bots such as syzbot and intel kernel bot reported a
+regression due to the migration of the transfare scheduler from timer
+list to hrtimer. The current assumption is that this is because timer
+list uses soft interrupt context. I have not been able to reproduce the
+regression consistently. So I'm submitting this patch in the hope that
+it solves the issue.
 
-Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
+Do not apply the patch if any bot still reports the problem.
 
----
+Marcello Sylvester Bauer (1):
+  usb: gadget: dummy_hcd: make hrtimer expire in soft irq context
 
-no changes in v2
----
- tools/testing/selftests/hid/hid_bpf.c   | 41 +++++++++++++++++++++++++++++++++
- tools/testing/selftests/hid/progs/hid.c | 37 +++++++++++++++++++++++++++++
- 2 files changed, 78 insertions(+)
-
-diff --git a/tools/testing/selftests/hid/hid_bpf.c b/tools/testing/selftests/hid/hid_bpf.c
-index 36bbad8e0f9f..dc0408a831d0 100644
---- a/tools/testing/selftests/hid/hid_bpf.c
-+++ b/tools/testing/selftests/hid/hid_bpf.c
-@@ -1204,6 +1204,47 @@ TEST_F(hid_bpf, test_multiply_events)
- 	ASSERT_EQ(buf[1], 52);
- }
- 
-+/*
-+ * Call hid_bpf_input_report against the given uhid device,
-+ * check that the program is not making infinite loops.
-+ */
-+TEST_F(hid_bpf, test_hid_infinite_loop_input_report_call)
-+{
-+	const struct test_program progs[] = {
-+		{ .name = "hid_test_infinite_loop_input_report" },
-+	};
-+	__u8 buf[10] = {0};
-+	int err;
-+
-+	LOAD_PROGRAMS(progs);
-+
-+	/* emit hid_hw_output_report from hidraw */
-+	buf[0] = 1; /* report ID */
-+	buf[1] = 2;
-+	buf[2] = 42;
-+
-+	uhid_send_event(_metadata, self->uhid_fd, buf, 6);
-+
-+	/* read the data from hidraw */
-+	memset(buf, 0, sizeof(buf));
-+	err = read(self->hidraw_fd, buf, sizeof(buf));
-+	ASSERT_EQ(err, 6) TH_LOG("read_hidraw");
-+	ASSERT_EQ(buf[0], 1);
-+	ASSERT_EQ(buf[1], 3);
-+
-+	/* read the data from hidraw: hid_bpf_try_input_report should work exactly one time */
-+	memset(buf, 0, sizeof(buf));
-+	err = read(self->hidraw_fd, buf, sizeof(buf));
-+	ASSERT_EQ(err, 6) TH_LOG("read_hidraw");
-+	ASSERT_EQ(buf[0], 1);
-+	ASSERT_EQ(buf[1], 4);
-+
-+	/* read the data from hidraw: there should be none */
-+	memset(buf, 0, sizeof(buf));
-+	err = read(self->hidraw_fd, buf, sizeof(buf));
-+	ASSERT_EQ(err, -1) TH_LOG("read_hidraw");
-+}
-+
- /*
-  * Attach hid_insert{0,1,2} to the given uhid device,
-  * retrieve and open the matching hidraw node,
-diff --git a/tools/testing/selftests/hid/progs/hid.c b/tools/testing/selftests/hid/progs/hid.c
-index 46feeb91d1d5..ee9bbbcf751b 100644
---- a/tools/testing/selftests/hid/progs/hid.c
-+++ b/tools/testing/selftests/hid/progs/hid.c
-@@ -561,3 +561,40 @@ SEC(".struct_ops.link")
- struct hid_bpf_ops test_multiply_events = {
- 	.hid_device_event = (void *)hid_test_multiply_events,
- };
-+
-+SEC("?struct_ops/hid_device_event")
-+int BPF_PROG(hid_test_infinite_loop_input_report, struct hid_bpf_ctx *hctx,
-+	     enum hid_report_type report_type, __u64 source)
-+{
-+	__u8 *data = hid_bpf_get_data(hctx, 0 /* offset */, 6 /* size */);
-+	__u8 buf[6];
-+
-+	if (!data)
-+		return 0; /* EPERM check */
-+
-+	/*
-+	 * we have to use an intermediate buffer as hid_bpf_input_report
-+	 * will memset data to \0
-+	 */
-+	__builtin_memcpy(buf, data, sizeof(buf));
-+
-+	/* always forward the request as-is to the device, hid-bpf should prevent
-+	 * infinite loops.
-+	 * the return value is ignored so the event is passing to userspace.
-+	 */
-+
-+	hid_bpf_try_input_report(hctx, report_type, buf, sizeof(buf));
-+
-+	/* each time we process the event, we increment by one data[1]:
-+	 * after each successful call to hid_bpf_try_input_report, buf
-+	 * has been memcopied into data by the kernel.
-+	 */
-+	data[1] += 1;
-+
-+	return 0;
-+}
-+
-+SEC(".struct_ops.link")
-+struct hid_bpf_ops test_infinite_loop_input_report = {
-+	.hid_device_event = (void *)hid_test_infinite_loop_input_report,
-+};
+ drivers/usb/gadget/udc/dummy_hcd.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 -- 
-2.44.0
+2.45.2
 
