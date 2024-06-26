@@ -1,195 +1,134 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8657D14AAD;
-	Wed, 26 Jun 2024 01:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CB2F9C9
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 01:30:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719365403; cv=none; b=E1Ff2RpjvW8B88FlOMGLo8TT5esicvujzjpbcZpU9sNwyZsf+ARI70oTVLfMqv++bbInvlArzG0EYRkcT16Isvn09p+CF5TVnX1KSZZb8xrP0k34mNiqkhkOXlALFsi26neOx6FnO5DDK2PpiatMWK0EmM+eSUmMAYcWzXXINJY=
+	t=1719365424; cv=none; b=Y6mmSMeGBpO0rhvzNa6tJhsNHH1Yr8VaFvGyWJDQ0EiZPN/U6I9rItm6ony/gL4TkYO+R5ouZcM4ZS0vP+YbFLCYKenJXPA87shkp5CF38lmdwfcKwbQNrVcEEpxNlODypdpd5oVPZAzGZYqs/THi+TL4pKx8vRSPHcyTPj8Cvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719365403; c=relaxed/simple;
-	bh=iknmKhXNGutkLsmVPjGoOiKCXLGQOYlpe4WBibl5F4c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VwCnHGbTliSdDD0uQRsTt7FRFqIxhGYyrR143eK2UxpZJItZ7Wz3owbjCykis+3xAhZnRKGWPyfgWaGqC8GGY0nRYxH7vnRrAX5hijUo9scHS213rXDdiZuJ4Zs5aJ7qnOLCz/Qk0CwA5/TZtQjzfwTBFWhQDI0//wLIuHbQiWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MZZcPfEt; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MZZcPfEt"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7024d571d8eso4834701b3a.0;
-        Tue, 25 Jun 2024 18:30:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719365401; x=1719970201; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Xz3ZwvH8uplrWFZnVIemSkwprKalyOlrNxjP8tA2gBA=;
-        b=MZZcPfEtVjgeD8U3FgLj2TAh/XrmFIdhObJjy8nYG9/E733P3m9kLNFfV1R3Xe1N3z
-         kwpwAZXXj7N50CTCbtAxzLbunrOF4BQVFfYmisPjKK4fdC5mdvEI3oUAlyjC1fHu4vGa
-         GAkt+X5Zu9D8p+vsR+ApJwFsnQi85MVHM087vP4H19wnu7Mgh+XnTlrYXzg0qT9GSKgA
-         k3uWDw9AhVgjBqarPOpaZRZAwnXvvbsv1m3dq2xxWIY6lhTJcizrE/6QLqSHFz8P9yaj
-         l57EzwRUy/iEUhNzKl4QylH+UXlarVSX2ZgHf3lEeBLFo02dUr30KIhN+6Z7jAOx4KqM
-         D1Ig==
+	s=arc-20240116; t=1719365424; c=relaxed/simple;
+	bh=p2zkOZD+8+T1dAuryaMFbTjK8h6djut6lMgkrePaOWk=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=MpOhbymq40qUxDKzauk1mFY2TH/SvWCSNbDJFPSqrQ7HUBpGVm5dj25C6oZ8VteLefXZpwlMWQuieow2kUv4cOn/O7ZddlkGQItuZJQuFzVo0SXLwOntPhv3u6WoUYthkA+TvNQ+YZ9TG7tUZZa8PJonmHnwOmmIezgsq+BHkRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-375df29cb12so76318575ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2024 18:30:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719365401; x=1719970201;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Xz3ZwvH8uplrWFZnVIemSkwprKalyOlrNxjP8tA2gBA=;
-        b=o7tqH10NgwicT/vIArt2u5EauErD23h9ZH8WJ9vA9bl1IfJM8r/2Sw+Vcg1BtqiuQz
-         IEIAg6aYZEJnShmA5Zg00fApCCs2Ihdvih/RTMVkrgITmKlQtiPrmhe2JkmmoqD/ZSBS
-         YIDGF4hcWgIUMRqFskYaLSLft29TVSFrbD5v//oiQnUYd05Y7WOxQlG/5ur9nyl9Ezuj
-         054UlLuwjp29oM1QrpYtvd9dMuXrVjPR3L3EBwF8Y+FaJdee8czXz+tP/XARe5AdN67U
-         QiLEEM1H0jWI+0AbL3lP0BXEve052JwvILgL8WM2ISUCSUDQnA73xlvvfJzzpGLRfdJ6
-         /6cw==
-X-Forwarded-Encrypted: i=1; AJvYcCUTyF8Y6ZWLUT7ay/m6KgpFEm6A8Y0XLMd7P/tyM29w4UM8Wr3LzyIcOhYS5dtwz+8kjV2nZ7VxYiztflB0M9Wq4pn3yU0u00t5A4RN1fc/SMjCR3d0feaLguIlBjJAXP9u
-X-Gm-Message-State: AOJu0YweCW1jo46cBpIX27rZKvUH9YsNuBluTGJRvoEQVmONJsTnSudy
-	Til91rvayatuK3drcVQDOGNkU0xDEGJITbhXz3X00NzdE62qjBon
-X-Google-Smtp-Source: AGHT+IERk91Z4NK+zMUTqy+XbpoYjC7VgtnExWq4cCbXy7lMiZ1rsEXL3iH8fxQPVmszAtH1bQzoFg==
-X-Received: by 2002:aa7:87d0:0:b0:706:6771:4a98 with SMTP id d2e1a72fcca58-706747520fcmr9307701b3a.32.1719365400699;
-        Tue, 25 Jun 2024 18:30:00 -0700 (PDT)
-Received: from localhost (dhcp-141-239-159-203.hawaiiantel.net. [141.239.159.203])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-706a795bebdsm237519b3a.163.2024.06.25.18.29.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 18:30:00 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Tue, 25 Jun 2024 15:29:58 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: torvalds@linux-foundation.org, mingo@redhat.com, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	bristot@redhat.com, vschneid@redhat.com, ast@kernel.org,
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@kernel.org,
-	joshdon@google.com, brho@google.com, pjt@google.com,
-	derkling@google.com, haoluo@google.com, dvernet@meta.com,
-	dschatzberg@meta.com, dskarlat@cs.cmu.edu, riel@surriel.com,
-	changwoo@igalia.com, himadrics@inria.fr, memxor@gmail.com,
-	andrea.righi@canonical.com, joel@joelfernandes.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	kernel-team@meta.com
-Subject: [PATCH sched/urgent] sched/fair: set_load_weight() must also call
- reweight_task() for SCHED_IDLE tasks
-Message-ID: <ZntvFkBlLc9CIrpR@slm.duckdns.org>
-References: <20240501151312.635565-1-tj@kernel.org>
- <20240501151312.635565-5-tj@kernel.org>
- <20240624102331.GI31592@noisy.programming.kicks-ass.net>
- <ZnoIRnCZaN_oHQ6N@slm.duckdns.org>
- <20240625072954.GQ31592@noisy.programming.kicks-ass.net>
- <ZntZcRgm-zok7kyb@slm.duckdns.org>
+        d=1e100.net; s=20230601; t=1719365422; x=1719970222;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=D/LozekO3Rawr7o5vm0SBlhMDQbth1dTopz64bhOVSI=;
+        b=YbScV9pNbURTbbXSqtMd9H4yfbHkzV9aIoz+WnaZS37aMGbqvg8bKWUGvbRoOM4MWK
+         GKX8C4mooKI5uus3jzGOR1CROuIijmLyLLEr7F99fMruFz2B/B+TxftZ1pTpme3rXrRc
+         u9uPCVVd2aUsW0Bpm7JpHnJCnY/Ft40uFT8WCRv2OwYP68a0xs0MvZMR97/NCTrL//fl
+         wn6/ZdVlU+LKnE6qjMO8tj9CPdkbAl4IuzVg0i9ZMQZxi6ALnVwJTJ+efde0swjQLCVV
+         IDZviF4w/CA9AhY/JY5ET+nczIU1OF6g3NEUbAmO7XM/GfLJmCDYEqyRBSPl4uHU0kzT
+         zsew==
+X-Forwarded-Encrypted: i=1; AJvYcCUdL65QK3IL5p4MmoSKKUUJkN+I1vfcZKxx2TnVq4178R+CDSsUIQOk4DwqGEXtsY4yAi7XEzodUN5WHc8vFZfWq2XwiGg44u9nkKup
+X-Gm-Message-State: AOJu0YyUSlK2XqZSFxo8rT2jNedvzkdWWNoz78LlOt8XGyi8N4QotMFn
+	ugJsMfCqFbi7Xkn8jpnELjl0Vrp0b/R6ekVISlJWV2tMhEzg9xhMzIxcByKEUwxQ+I9VlITRc9P
+	+bk898JOkYrT9ZUuLFVAQXUAI/ZfQ5sPMHwQRMUUNFbj5DU9OcQ7JPKQ=
+X-Google-Smtp-Source: AGHT+IGI0fxQLvY8mOI7xe2da3Qu72XrkZlHdyAcx9r1eo2GONZMZz+PZXMIgaS/ogLXtWRbNiZ05Z6ireQSysqwJwVWsSTUJRnL
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZntZcRgm-zok7kyb@slm.duckdns.org>
+X-Received: by 2002:a05:6e02:184f:b0:376:42a0:b2e7 with SMTP id
+ e9e14a558f8ab-37642a0b586mr7471625ab.4.1719365422380; Tue, 25 Jun 2024
+ 18:30:22 -0700 (PDT)
+Date: Tue, 25 Jun 2024 18:30:22 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003d868e061bc0f554@google.com>
+Subject: [syzbot] [usb?] [bluetooth?] WARNING in btusb_submit_intr_urb/usb_submit_urb
+From: syzbot <syzbot+8693a0bb9c10b554272a@syzkaller.appspotmail.com>
+To: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-usb@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-When a task's weight is being changed, set_load_weight() is called with
-@update_load set. As weight changes aren't trivial for the fair class,
-set_load_weight() calls fair.c::reweight_task() for fair class tasks.
-
-However, set_load_weight() first tests task_has_idle_policy() on entry and
-skips calling reweight_task() for SCHED_IDLE tasks. This is buggy as
-SCHED_IDLE tasks are just fair tasks with a very low weight and they would
-incorrectly skip load, vlag and position updates.
-
-Fix it by updating reweight_task() to take struct load_weight as idle weight
-can't be expressed with prio and making set_load_weight() call
-reweight_task() for SCHED_IDLE tasks too when @update_load is set.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20240624102331.GI31592@noisy.programming.kicks-ass.net
-Fixes: 9059393e4ec1 ("sched/fair: Use reweight_entity() for set_user_nice()")
-Cc: stable@vger.kernel.org # v4.15+
----
 Hello,
 
-Peter, I took the liberty to use struct load_weight instead of open coding
-weight and inv_weight. As it's an obviously user visible bug, I tagged it
-with the stable tag but given how long it's been broken, I'm not sure how
-urgent it is, so please use your discretion. I verified that the
-reweight_task() is called with the right weights on SCHED_IDLE switches.
+syzbot found the following issue on:
 
-Thanks.
+HEAD commit:    66cc544fd75c Merge tag 'dmaengine-fix-6.10' of git://git.k..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=14280161980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3f7b9f99610e0e87
+dashboard link: https://syzkaller.appspot.com/bug?extid=8693a0bb9c10b554272a
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16f59c82980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12b955b6980000
 
- kernel/sched/core.c  |   23 ++++++++++-------------
- kernel/sched/fair.c  |    7 +++----
- kernel/sched/sched.h |    2 +-
- 3 files changed, 14 insertions(+), 18 deletions(-)
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/b4d37fd1f3c8/disk-66cc544f.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/04c8b576cea2/vmlinux-66cc544f.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/05e217dc3c31/bzImage-66cc544f.xz
 
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1328,27 +1328,24 @@ int tg_nop(struct task_group *tg, void *
- void set_load_weight(struct task_struct *p, bool update_load)
- {
- 	int prio = p->static_prio - MAX_RT_PRIO;
--	struct load_weight *load = &p->se.load;
-+	struct load_weight lw;
- 
--	/*
--	 * SCHED_IDLE tasks get minimal weight:
--	 */
- 	if (task_has_idle_policy(p)) {
--		load->weight = scale_load(WEIGHT_IDLEPRIO);
--		load->inv_weight = WMULT_IDLEPRIO;
--		return;
-+		lw.weight = scale_load(WEIGHT_IDLEPRIO);
-+		lw.inv_weight = WMULT_IDLEPRIO;
-+	} else {
-+		lw.weight = scale_load(sched_prio_to_weight[prio]);
-+		lw.inv_weight = sched_prio_to_wmult[prio];
- 	}
- 
- 	/*
- 	 * SCHED_OTHER tasks have to update their load when changing their
- 	 * weight
- 	 */
--	if (update_load && p->sched_class == &fair_sched_class) {
--		reweight_task(p, prio);
--	} else {
--		load->weight = scale_load(sched_prio_to_weight[prio]);
--		load->inv_weight = sched_prio_to_wmult[prio];
--	}
-+	if (update_load && p->sched_class == &fair_sched_class)
-+		reweight_task(p, &lw);
-+	else
-+		p->se.load = lw;
- }
- 
- #ifdef CONFIG_UCLAMP_TASK
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3835,15 +3835,14 @@ static void reweight_entity(struct cfs_r
- 	}
- }
- 
--void reweight_task(struct task_struct *p, int prio)
-+void reweight_task(struct task_struct *p, const struct load_weight *lw)
- {
- 	struct sched_entity *se = &p->se;
- 	struct cfs_rq *cfs_rq = cfs_rq_of(se);
- 	struct load_weight *load = &se->load;
--	unsigned long weight = scale_load(sched_prio_to_weight[prio]);
- 
--	reweight_entity(cfs_rq, se, weight);
--	load->inv_weight = sched_prio_to_wmult[prio];
-+	reweight_entity(cfs_rq, se, lw->weight);
-+	load->inv_weight = lw->inv_weight;
- }
- 
- static inline int throttled_hierarchy(struct cfs_rq *cfs_rq);
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -2509,7 +2509,7 @@ extern void init_sched_dl_class(void);
- extern void init_sched_rt_class(void);
- extern void init_sched_fair_class(void);
- 
--extern void reweight_task(struct task_struct *p, int prio);
-+extern void reweight_task(struct task_struct *p, const struct load_weight *lw);
- 
- extern void resched_curr(struct rq *rq);
- extern void resched_cpu(int cpu);
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+8693a0bb9c10b554272a@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+usb 1-1: BOGUS urb xfer, pipe 1 != type 3
+WARNING: CPU: 0 PID: 4491 at drivers/usb/core/urb.c:504 usb_submit_urb+0xc4e/0x18c0 drivers/usb/core/urb.c:503
+Modules linked in:
+CPU: 0 PID: 4491 Comm: kworker/u9:1 Not tainted 6.10.0-rc4-syzkaller-00164-g66cc544fd75c #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
+Workqueue: hci0 hci_power_on
+RIP: 0010:usb_submit_urb+0xc4e/0x18c0 drivers/usb/core/urb.c:503
+Code: f8 48 c1 e8 03 0f b6 04 18 84 c0 0f 85 b1 08 00 00 45 8b 07 48 c7 c7 40 90 6d 8c 48 8b 34 24 4c 89 e2 89 e9 e8 23 9a 3c fa 90 <0f> 0b 90 90 48 8b 5c 24 30 41 89 dc 4c 89 e7 48 c7 c6 b0 4b f2 8e
+RSP: 0018:ffffc9000d817798 EFLAGS: 00010246
+RAX: 6d750bdfc6b7f400 RBX: dffffc0000000000 RCX: ffff888030053c00
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: 0000000000000001 R08: ffffffff81585822 R09: fffffbfff1c39994
+R10: dffffc0000000000 R11: fffffbfff1c39994 R12: ffff88801c2e7560
+R13: ffff88801a2af400 R14: 0000000000000001 R15: ffffffff8c6d8e28
+FS:  0000000000000000(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000559f0e1c6bd8 CR3: 000000002e10e000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ btusb_submit_intr_urb+0x3dd/0x7b0 drivers/bluetooth/btusb.c:1409
+ btusb_open+0x1a1/0x770 drivers/bluetooth/btusb.c:1865
+ hci_dev_open_sync+0x2cc/0x2b40 net/bluetooth/hci_sync.c:4889
+ hci_dev_do_open net/bluetooth/hci_core.c:485 [inline]
+ hci_power_on+0x1c7/0x6b0 net/bluetooth/hci_core.c:1012
+ process_one_work kernel/workqueue.c:3231 [inline]
+ process_scheduled_works+0xa2c/0x1830 kernel/workqueue.c:3312
+ worker_thread+0x86d/0xd70 kernel/workqueue.c:3393
+ kthread+0x2f0/0x390 kernel/kthread.c:389
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
