@@ -1,93 +1,162 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20E317FAD9
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 11:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E28149E06;
+	Wed, 26 Jun 2024 11:57:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719402981; cv=none; b=B1OEDS5dy6hYh9Fuin6bBzMOcZyCJDtE6XC7H29uXWOjrVk3vU5xFliQcruEcRTRYdgsgIoWtGpoD1TQy8c0qVHooxwLFXNXJc7r2KOy28zoZpKWf1aM12uSjlhnujcvmwqdBgQ27YnAsQYv5RlzW5eSXv15dWc2MBTkFISQOQw=
+	t=1719403078; cv=none; b=puSIxl/4LIbgN2GVs/PMuWQNAkufIg3QVfxuXTOZViV1vnds/BuzEPBErXO7ivRPdoYKqoW0LbjhR1z8ENE3ojN+fiOrkNFvQZXMD4zMumWhAwmUhRm4Arl7LjVC7b0B87vRle/amVpqoOlB7MjP0pyP9EKbGsz7FGCRU/o1g+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719402981; c=relaxed/simple;
-	bh=lgWICHNHPuubQOwpPjvNZahWKQ8qhmpoYioYgoXyJo0=;
+	s=arc-20240116; t=1719403078; c=relaxed/simple;
+	bh=N4l6MEM8Kb0sl/tgaxpPhxXwDu9KIcUXzbA5ENyc4Pg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PRZV5cZapwE2NbOHQKE2S0xgNl4sQko/4bvt44KbnUf61Am1XrkMqfd5cv0IXwGY8QX0s5kcodc8WwyHIzA6lrlGWVhjfW3KWFRdeXtzH7ScTi2YChi9w5mDHfVWceIxLDCyzqKqQSNyDvv39e4sXPxJIM2qCBC87cB4pNzkgio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ddUkQHX3; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=fHW3pfO1pxDEaYlkx7KKLtVLsnSY/Gk6w6NMYYp01XnFT146tnnGU4eszu59mdjb0PW6tBFtKJn5bJTxArpLxk4IG7h0rGKiHKH9ZsKo1RbOG1oKU6jjBP6rkT0+Yf+6n1vjh4qiJXJ6p2yK2CHQZk5L2JepRHKQUct7h+XwTEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=OlSDsUWb; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ddUkQHX3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719402978;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IeDy1CF3yxC2mGRBAE7SbitMy+vsryV2IcHQr9VWleA=;
-	b=ddUkQHX3nwfa/Nz9x9q6FdkFoHabEEkBWlDZqIoD2y65Y98Se/Oh394AEvEWN5QyrJjy4s
-	iQHQKjVOrmGLEz2+HYMXc73I0Z5WavlGssrXFGvJiiMBw8g7MfeGWgBI0c3pC9EI8n3+L9
-	/x9lIWei/CZQB5X9r4ZUZ4+z7JDtIus=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-517-ThZg6DUDNf6i1AC3i71SbA-1; Wed,
- 26 Jun 2024 07:56:14 -0400
-X-MC-Unique: ThZg6DUDNf6i1AC3i71SbA-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="OlSDsUWb"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E03D640E0219;
+	Wed, 26 Jun 2024 11:57:53 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 3BoJPFucZedR; Wed, 26 Jun 2024 11:57:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1719403069; bh=r49OXr3owHtWkbfriGJWueL5gi1+VE3lZHu88Kq8SVA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OlSDsUWbpR1ckeVIt9DRoVmraS5ScvD0SdcsdlzdJDyhdg+qnsStSjIEAoD+C0Bqt
+	 MWKu6ac4ZOsK8bW8kry0XHTaFVqigwkPYBHsOlMBIIHB9EUGuayIEpe1alGG25NrEM
+	 vb1CHn4yFj7a3/LGHPa38fa2UAgWXw5MZrGwCXR1EduRaRHppGdPqc5hZiyGGgkGjv
+	 FlRL/hzLaJfaaVR1O2l0LrbnBMRQoo0NKnI6/1q36ss9Kbfz3FSFHYI6CsWuojyQJB
+	 p9I4LtngJMrlZKfNPEADovMRU10VPAQKNIKYkDErbGQbU6We/CE6usih2z4EMA0AVJ
+	 qhZt5ea3oQFVAdNVBQmHyZLvVoYBO46I3WNrH2FW669elDEtAE1yuZLP8Jgj3Lo/Hu
+	 /PVR8tdPXpy0FU6eJ+RddI/kXUfN+Sh3xsmpW0D5KL3wI2Qt7PQpo1dpOBfLaxxYA+
+	 cuKNB9JJWXgZMQNTr72gTIYg5H9VQsJIdHBvdiLpKcbAfyqPkM/+OPMfWdLR/W3Mnf
+	 PJcV0mWKe6sEdmKP8R5b77OWNxwqht20t0AW75yt7PmtzYmheuEtssQ8arAPjuQ961
+	 uHjYZ2P+HC5inOFoRfoM3H0YmfkUmeCEqFU7rM0qtvPscjOTPbow/UQTFH3RjsT9zp
+	 Vcn287CjQbUSHqpSg3KMwbhQ=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EB2F11955EAB;
-	Wed, 26 Jun 2024 11:56:11 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.94])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 2E6E61956054;
-	Wed, 26 Jun 2024 11:56:06 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 26 Jun 2024 13:54:38 +0200 (CEST)
-Date: Wed, 26 Jun 2024 13:54:32 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Dev Jain <dev.jain@arm.com>
-Cc: shuah@kernel.org, mingo@kernel.org, tglx@linutronix.de,
-	mark.rutland@arm.com, ryan.roberts@arm.com, broonie@kernel.org,
-	suzuki.poulose@arm.com, Anshuman.Khandual@arm.com,
-	DeepakKumar.Mishra@arm.com, aneesh.kumar@kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] selftests: Add a test mangling with uc_sigmask
-Message-ID: <20240626115410.GA27271@redhat.com>
-References: <20240626054847.1463889-1-dev.jain@arm.com>
- <20240626054847.1463889-3-dev.jain@arm.com>
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4E11340E0218;
+	Wed, 26 Jun 2024 11:57:31 +0000 (UTC)
+Date: Wed, 26 Jun 2024 13:57:24 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Avadhut Naik <avadhut.naik@amd.com>
+Cc: x86@kernel.org, linux-edac@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, tony.luck@intel.com,
+	rafael@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+	rostedt@goodmis.org, lenb@kernel.org, mchehab@kernel.org,
+	james.morse@arm.com, airlied@gmail.com, yazen.ghannam@amd.com,
+	john.allen@amd.com, avadnaik@amd.com
+Subject: Re: [PATCH v2 3/4] x86/mce/apei: Handle variable register array size
+Message-ID: <20240626115641.GPZnwB-QEGYCoI_Fv3@fat_crate.local>
+References: <20240625195624.2565741-1-avadhut.naik@amd.com>
+ <20240625195624.2565741-4-avadhut.naik@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240626054847.1463889-3-dev.jain@arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+In-Reply-To: <20240625195624.2565741-4-avadhut.naik@amd.com>
 
-On 06/26, Dev Jain wrote:
->
-> +int main(int argc, char *argv[])
-> +{
-> +	struct sigaction act, act2;
-> +	sigset_t *set, *oldset;
+On Tue, Jun 25, 2024 at 02:56:23PM -0500, Avadhut Naik wrote:
+> From: Yazen Ghannam <yazen.ghannam@amd.com>
+> 
+> ACPI Boot Error Record Table (BERT) is being used by the kernel to
+> report errors that occurred in a previous boot. On some modern AMD
+> systems, these very errors within the BERT are reported through the
+> x86 Common Platform Error Record (CPER) format which consists of one
+> or more Processor Context Information Structures. These context
+> structures provide a starting address and represent an x86 MSR range
+> in which the data constitutes a contiguous set of MSRs starting from,
+> and including the starting address.
+> 
+> It's common, for AMD systems that implement this behavior, that the
+> MSR range represents the MCAX register space used for the Scalable MCA
+> feature. The apei_smca_report_x86_error() function decodes and passes
+> this information through the MCE notifier chain. However, this function
+> assumes a fixed register size based on the original HW/FW implementation.
+> 
+> This assumption breaks with the addition of two new MCAX registers viz.
+> MCA_SYND1 and MCA_SYND2. These registers are added at the end of the
+> MCAX register space, so they won't be included when decoding the CPER
+> data.
+> 
+> Rework apei_smca_report_x86_error() to support a variable register array
+> size. This covers any case where the MSR context information starts at
+> the MCAX address for MCA_STATUS and ends at any other register within
+> the MCAX register space.
+> 
+> Add code comments indicating the MCAX register at each offset.
+> 
+> [Yazen: Add Avadhut as co-developer for wrapper changes.]
+> 
+> Co-developed-by: Avadhut Naik <avadhut.naik@amd.com>
+> Signed-off-by: Avadhut Naik <avadhut.naik@amd.com>
+> Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
 
-...
+This needs Avadhut's SOB after Yazen's.
 
-> +	set = malloc(sizeof(sigset_t *));
-> +	if (!set)
-> +		ksft_exit_fail_perror("malloc");
-> +
-> +	oldset = malloc(sizeof(sigset_t *));
+Touchups ontop:
 
-Why malloc() ?
+diff --git a/arch/x86/kernel/cpu/mce/apei.c b/arch/x86/kernel/cpu/mce/apei.c
+index 7a15f0ca1bd1..6bbeb29125a9 100644
+--- a/arch/x86/kernel/cpu/mce/apei.c
++++ b/arch/x86/kernel/cpu/mce/apei.c
+@@ -69,7 +69,7 @@ EXPORT_SYMBOL_GPL(apei_mce_report_mem_error);
+ int apei_smca_report_x86_error(struct cper_ia_proc_ctx *ctx_info, u64 lapic_id)
+ {
+ 	const u64 *i_mce = ((const u64 *) (ctx_info + 1));
+-	unsigned int cpu, num_registers;
++	unsigned int cpu, num_regs;
+ 	struct mce_hw_err err;
+ 	struct mce *m = &err.m;
+ 
+@@ -93,10 +93,10 @@ int apei_smca_report_x86_error(struct cper_ia_proc_ctx *ctx_info, u64 lapic_id)
+ 	/*
+ 	 * The number of registers in the register array is determined by
+ 	 * Register Array Size/8 as defined in UEFI spec v2.8, sec N.2.4.2.2.
+-	 * Ensure that the array size includes at least 1 register.
++	 * Sanity-check registers array size.
+ 	 */
+-	num_registers = ctx_info->reg_arr_size >> 3;
+-	if (!num_registers)
++	num_regs = ctx_info->reg_arr_size >> 3;
++	if (!num_regs)
+ 		return -EINVAL;
+ 
+ 	mce_setup(m);
+@@ -118,13 +118,12 @@ int apei_smca_report_x86_error(struct cper_ia_proc_ctx *ctx_info, u64 lapic_id)
+ 	/*
+ 	 * The SMCA register layout is fixed and includes 16 registers.
+ 	 * The end of the array may be variable, but the beginning is known.
+-	 * Switch on the number of registers. Cap the number of registers to
+-	 * expected max (15).
++	 * Cap the number of registers to expected max (15).
+ 	 */
+-	if (num_registers > 15)
+-		num_registers = 15;
++	if (num_regs > 15)
++		num_regs = 15;
+ 
+-	switch (num_registers) {
++	switch (num_regs) {
+ 	/* MCA_SYND2 */
+ 	case 15:
+ 		err.vi.amd.synd2 = *(i_mce + 14);
 
-Can't you simply do
+-- 
+Regards/Gruss,
+    Boris.
 
-	sigset_t set, oldset;
-
-and then use sigemptyset(&set) / etc ?
-
-Oleg.
-
+https://people.kernel.org/tglx/notes-about-netiquette
