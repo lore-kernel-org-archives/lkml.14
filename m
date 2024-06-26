@@ -1,130 +1,146 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C844B13A869;
-	Wed, 26 Jun 2024 06:29:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F8913A869;
+	Wed, 26 Jun 2024 06:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719383380; cv=none; b=oaN1DMn3C3KT6Do3dsqsx6I3oSz/QrTyUbP0dUNwpoP1/Fe+94NkP1pI25nVXV4Lpch9c/LjV9WvwZ5W/g9roZ7xLgBMbBCPzTyWoP+J/RMNBRd3V4pxib7YI81/2qprp08Cj/ylS8QRoXMMjAeaRWqyen+emAP9LhiMv3JYlaY=
+	t=1719383388; cv=none; b=AZihES0E6Vr0JtQA0b4J24Sm6N1Q443wtGHTV61HRnDWvsZNX0zfzfMNjepgW0W6ommu1syqTySAb/W/rTtCotXtMStQAOrE4lvySgysZjI2jyfTxUr0t+vm+cqW0pQzETY+opeze+emJo3FcNxSoL6lE+mdhHJSSJ66vgi2mVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719383380; c=relaxed/simple;
-	bh=/jCc9mtWvZLS16zTeecEjWi2EsgVC2iaKCws4I/LokU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y3zR4y1xvW1qjfJ7CKcLqM/hvHrGvfgxV9HeMWRO7CnwhWvpsipsvk48OysTL30ELS/hQ05TWSW4WXPp4mzpv419jLPjY1n7biXemhzyUOli70t7USd0NmCakGL/sFcZ1Lyua7s1CjXXWn18/W2e7Y3hF0QUx/ycZXDz4qbs3cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N7rX4V8H; arc=none smtp.client-ip=209.85.208.43
+	s=arc-20240116; t=1719383388; c=relaxed/simple;
+	bh=wcTOigAllogu0DSwfrGUFSIGPo2YkJCiUGsMUNsrS1M=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rUsYhMWgJQKj2/lvvkMM9EbY+7NvPevvM6YlClONHNYdxZBkfPssMNgu/1OOjsf6bi3wf/fxRYQfipEMKkWUAraCFVx/uM6U77Qp3MFZnOGGLLHeveewZ/aL60HBU00ijvCRQ1JkqbUwB7hc23fSSFQettUgW3wenQ0ZUwKWNok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M4sb1/19; arc=none smtp.client-ip=209.85.208.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N7rX4V8H"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57d1782679fso7754127a12.0;
-        Tue, 25 Jun 2024 23:29:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M4sb1/19"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57d07f07a27so7228530a12.3;
+        Tue, 25 Jun 2024 23:29:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719383377; x=1719988177; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/jCc9mtWvZLS16zTeecEjWi2EsgVC2iaKCws4I/LokU=;
-        b=N7rX4V8HPd19FvX2DwI2mGnNldpfPu75QSgBIkmrRmwcDzD2WzmEEkAClSrDLw/EAk
-         MWpCOtXtOYjnEPkMsyeZuqVI/v/m4t+d+EHw/W+9Sgp5cu2Yj9+wJ+NrIvgeUtBh1rlm
-         PAOFWWUKlfOOYeNKUElN4H7iMcF4+B2yJXUAKpyE1XbhHJjW9viUFfuaeRoSnqu9Czr5
-         YXdhwlB9UlB2Rz9SXi5HphcVxmP1Ti/OjLywXBWwRfhesFwmkKuBXKEK/TY6YY2nYJzR
-         1uPK6BhrcbEFhRtJc2OiYPNyjE3Bmx4+d+t0OLsiDFVNJnNvhEyKwu59Xgjl6ffAkjlo
-         KzQw==
+        d=gmail.com; s=20230601; t=1719383385; x=1719988185; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wcTOigAllogu0DSwfrGUFSIGPo2YkJCiUGsMUNsrS1M=;
+        b=M4sb1/19vOECk7+3+25kXwV8ruCLXC0vNncNCPzlKESixAi5abS6JTZNfEtGfTs9lN
+         Z2U0rExUA6YBRn0dlnFYT3VBjqlqS/hQz0k7QwlmPi2wdhr2pMirBK0xVZyySp9FMkN4
+         DYs94bn+OTPpGXVOs/zLhyiIxmFrq37aODH3OLBawCKNAH1JCvNHYMEI8BzfgHGXn62Y
+         Y1vMY26B8t9W2PjsZcHe45eiSVdHd0R9hzKWic+KE8CkbEJopDOIjsJoL8TFJfs+cH4/
+         M7yA1bb1WSafpPUGKADZyO9cD/mrz2CCmPY6ryqGKZF+yTmU38HvxuokkZwzZFFhj/ob
+         QEQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719383377; x=1719988177;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/jCc9mtWvZLS16zTeecEjWi2EsgVC2iaKCws4I/LokU=;
-        b=hBDlDnJyfReZ7CE++xbtKXCFdW4i7wSshrM+x4lUD3afv1k4Azmh8QBr7d3nweraQ2
-         7uTO1zWD9xCEXiTOwM6toDAJSUIfsGuRw4YQ9IUDwe2i9wRH8RyK5Y1FBZ5cQAYZSjlK
-         TLdiqb19jQug8cPP8KuGj6sVHNILSuPqY1u6qat8f8te0WeCwNVE9xnGKqRgfEBQ4tmQ
-         sE4CG2KimCYn/mrwVt6EtwARjURDmXrgNRlcjZ1YEFzOMqbit5cfPc/cP5AqI3tVIyy3
-         vHdDq71BLdL0RbVGr9StLJPoRgjWqY3uG25CmnorOjrBEvWwZzFo2mWP3STFlQTL85ii
-         dwUw==
-X-Forwarded-Encrypted: i=1; AJvYcCXXziAKVSPJTqO2IdrcUP5LAG8gYTGW0AAQXhIa/5SpP0yOAPhiauKQj5I5/khIIssXT48PiDPLjISmT1hOIngXmaA8qyD7ePlNfEuGOuhH3sP5ekuSS5GbPk0syR22H82nd6/TtlUEeyx678e3xfBu5QZxnL/j2ckwd6KnuvM0dAMNHg==
-X-Gm-Message-State: AOJu0YzpCAMvN011BfrHQARdX4sTud0ybjP6P3jkkYKo14nHo8a1Eppy
-	tPNUJqiuBKbvsrKPVZe4oJ2FNs+0Ti7Cf4DaagSGm/+LKmFBz2VwXkQF8U9PpdpXMHdkLHrE0DD
-	lj3F3Y8h844GbrBpsnzV4VOhtfrA=
-X-Google-Smtp-Source: AGHT+IGQhJnEa1WFdNMiF5wajiiAA9kN/8m2sWv3CeaxXeeXTF72N7x1sE97BLdrMMZn+nfkOKOrbPlDNtKjTuGtkx8=
-X-Received: by 2002:a50:aada:0:b0:57d:72e:5b3a with SMTP id
- 4fb4d7f45d1cf-57d4bdd0061mr6864655a12.33.1719383376583; Tue, 25 Jun 2024
- 23:29:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719383385; x=1719988185;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wcTOigAllogu0DSwfrGUFSIGPo2YkJCiUGsMUNsrS1M=;
+        b=kmxHzPzJJwYj/7A4mYsCamBLHVcYNamy2QnjEuSygsV9ZNXN7Zw15gE6+U2hfJS3WR
+         cGCI3FDwds+yxMTaCs1/cqa5MQviVYmU5RAK66WRnSQob6YQNC47bIKNNYFnRAEotHqK
+         lwPvUL9FrFsUkNZ2JTrZ2rY4/7a/Yk7R2liOJwXD7Wn7p0MLuawLF8DHiDbKjSrm5Bj1
+         VRPQFaZrPb9pUR4BNY0RCjuPxc27eKhdze291hv5iAUzW7yikX/j6Ls/g7cfqnNNcwpe
+         ARICz+TWbdsdWn2B+efMrgswkEY1wCTqobpNuHcd74W0KWaSRnwRq7qGUaCNH0kxO2g1
+         MoSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVT07E4rTxKOlRkq8grMyB5mmhsa0I2YqjTmbD6dyW4SuPXV6Fo7wjJYCDKGpfX+yua3SQ5N7r2Lkc9pSJXD0xc00G8bzMkRmBEqQkfyfJ+UowtPgGrj1CEEDsn4earzMIg1r2x9Dx3YElIdyQejphuin8jWvijV1/siA5CuILuo82yFMyx3d0A//RLxIo+OgBXgzOytaqPrcMcRFgcXekMEQ==
+X-Gm-Message-State: AOJu0YztiUQ0ZEiSOrOi+dSCq4PFPqS29D8tdBh1fKP21/tbRAaWxfKC
+	l+tCt5Y/aqW3MVm/SsuxNkpZ907zLStfkDEIdj+JAOM4IVpmBdRP
+X-Google-Smtp-Source: AGHT+IEUoyW0X469t4cMCMQD6yp4U9TgW6q8ZrFrHJwvys/gFlNpzy8MrNRr98L4zzJEB6+G47h3zQ==
+X-Received: by 2002:a50:9ee6:0:b0:57d:5bc:56d9 with SMTP id 4fb4d7f45d1cf-57d4bd5630bmr5980637a12.2.1719383384511;
+        Tue, 25 Jun 2024 23:29:44 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d30534e2asm6812991a12.70.2024.06.25.23.29.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jun 2024 23:29:44 -0700 (PDT)
+Message-ID: <7b194e7c4a96cacb13756b05ca7738010742eb12.camel@gmail.com>
+Subject: Re: [PATCH v2 3/3] hwmon: (ltc2992) Use
+ fwnode_for_each_available_child_node_scoped()
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, Jonathan Cameron
+	 <jic23@kernel.org>
+Cc: Javier Carrasco <javier.carrasco.cruz@gmail.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Andy
+ Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally
+ <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,  Jean Delvare
+ <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Antoniu Miclaus
+ <antoniu.miclaus@analog.com>, linux-acpi@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, Rob Herring
+ <robh@kernel.org>, devicetree@vger.kernel.org
+Date: Wed, 26 Jun 2024 08:33:35 +0200
+In-Reply-To: <ZlSY8tjYm5g9bEJ_@surfacebook.localdomain>
+References: 
+	<20240523-fwnode_for_each_available_child_node_scoped-v2-0-701f3a03f2fb@gmail.com>
+	 <20240523-fwnode_for_each_available_child_node_scoped-v2-3-701f3a03f2fb@gmail.com>
+	 <20240526144851.493dd3f2@jic23-huawei>
+	 <ZlSY8tjYm5g9bEJ_@surfacebook.localdomain>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240625065939.6146-1-kanakshilledar@gmail.com>
- <03174142-a2c0-4f9f-81ca-2aeb7f57ab79@kernel.org> <329ef10f-14d1-4346-8496-906aaf91ccfe@kernel.org>
- <CAGLn_=vWxoHJivPgLHov8h7wHxmTH0y19twN=Xhyh_rZEmjbOg@mail.gmail.com> <fkycdpk7wstgnkmdlp4upkzqpasc4xjcrgwj6zfckj6megg3om@qn2stul7fcxx>
-In-Reply-To: <fkycdpk7wstgnkmdlp4upkzqpasc4xjcrgwj6zfckj6megg3om@qn2stul7fcxx>
-From: Kanak Shilledar <kanakshilledar@gmail.com>
-Date: Wed, 26 Jun 2024 11:59:25 +0530
-Message-ID: <CAGLn_=vDpwy8f2XokUv4-fvwD90OhSaFoivbTe932wQ8iAbm0w@mail.gmail.com>
-Subject: Re: [PATCH v3] dt-bindings: i2c: nxp,lpc1788-i2c: convert to dt schema
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Vladimir Zapolskiy <vz@mleia.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 26, 2024 at 2:24=E2=80=AFAM Andi Shyti <andi.shyti@kernel.org> =
-wrote:
->
-> On Tue, Jun 25, 2024 at 04:37:47PM GMT, Kanak Shilledar wrote:
-> > On Tue, Jun 25, 2024 at 12:33=E2=80=AFPM Krzysztof Kozlowski <krzk@kern=
-el.org> wrote:
-> > > On 25/06/2024 09:02, Krzysztof Kozlowski wrote:
-> > > > On 25/06/2024 08:59, Kanak Shilledar wrote:
-> > > >> Convert the NXP I2C controller for LPC2xxx/178x/18xx/43xx
-> > > >> to newer DT schema. Created DT schema based on the .txt file
-> > > >> - added maintainer from the MAINTAINERS file.
-> > > >> - added resets property required by the corresponding DTS files.
-> > > >>
-> > > >> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> > > >> Signed-off-by: Kanak Shilledar <kanakshilledar@gmail.com>
-> > > >> ---
-> > > >> Changes in v3:
-> > > > you already sent v3 so this is rather v4. What happened here? Why a=
-re
-> > > > you resending this?
-> > >
-> > > Ah, I see the changes - you dropped the incorrect tags. It's fine but=
- it
-> > > should have been v4. Not sure how b4 or other tools will handle this.
->
-> why should b4 complain? I fetch it from the mail-id. And even if
-> b4 complains, good old git-am still works :-)
->
-> > I thought there is no need to bump up the version just for changing tag=
-s.
->
-> You should increase the version number for every single change,
-> even trivial changes in the commit log. If you are sending again
-> the same patch (which means that you are git-sending the same
-> .patch file without any change), then you should tag it as [PATCH
-> RESEND].
->
-> > Shall I resend it as v4 and update the commit message with the change
-> > log to include
-> > the removal of kernel bot tags and addition of your review tag?
->
-> No need, your patch has been added to i2c/i2c-host.
+On Mon, 2024-05-27 at 17:30 +0300, Andy Shevchenko wrote:
+> Sun, May 26, 2024 at 02:48:51PM +0100, Jonathan Cameron kirjoitti:
+> > On Thu, 23 May 2024 17:47:16 +0200
+> > Javier Carrasco <javier.carrasco.cruz@gmail.com> wrote:
+> >=20
+> > > The scoped version of the fwnode_for_each_available_child_node() macr=
+o
+> > > automates object recfount decrement, avoiding possible memory leaks
+> > > in new error paths inside the loop like it happened when
+> > > commit '10b029020487 ("hwmon: (ltc2992) Avoid division by zero")'
+> > > was added.
+> > >=20
+> > > The new macro removes the need to manually call fwnode_handle_put() i=
+n
+> > > the existing error paths and in any future addition. It also removes =
+the
+> > > need for the current child node declaration as well, as it is interna=
+lly
+> > > declared.
+> > >=20
+> > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+> >=20
+> > This looks like another instances of the lack of clarify about=20
+> > what device_for_each_child_node[_scoped]() guarantees about node
+> > availability.
+> > On DT it guarantees the node is available as ultimately calls
+> > of_get_next_available_child()
+> >=20
+> > On ACPI it doesn't (I think).
+> > For swnode, there isn't an obvious concept of available.
+> >=20
+> > It would be much better if we reached some agreement on this and
+> > hence could avoid using the fwnode variants just to get the _available_=
+ form
+> > as done here.
+>=20
+> > Or just add the device_for_each_available_child_node[_scoped]()
+> > and call that in almost all cases.
+>=20
+> device_for_each*() _implies_ availability. You need to talk to Rob about =
+all
+> this. The design of the device_for_each*() was exactly done in accordance=
+ with
+> his suggestions...
+>=20
+> > In generic code, do we ever want to walk unavailable child nodes?
+>=20
+> ...which are most likely like your question here, i.e. why we ever need t=
+o
+> traverse over unavailable nodes.
+>=20
 
-Thanks for the clarification
+I have some vague idea of Rob talking about CPUs being one of the reasons f=
+or
+the current design. Don't remember for sure. At least (if not already) havi=
+ng
+this clearly documented would be nice.
 
-> Thanks,
-> Andi
->
-> > > Best regards,
-> > > Krzysztof
-> >
-> > Thanks and Regards,
-> > Kanak Shilledar
-
-Thanks and Regards,
-Kanak Shilledar
+- Nuno S=C3=A1
