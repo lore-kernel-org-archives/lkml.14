@@ -1,115 +1,171 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E1D1802AA
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 12:46:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C12B5D53B
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 12:46:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719405966; cv=none; b=L+EIDhuu+eja7B4vq4kDjVTuwCxKiQj4Al5OYbNG+1EaHODbyHlrBmb6S0YusZ2Hvwj20hZSdoVyT/sCBT7QMpzOc8G9VC4Kbse5CWZihYwMP+9qCj6pP+pxi4AgWAqb02LEEli/vDWJI6EuX1f4mGVUncYSWx3F5k0KA9mGwa4=
+	t=1719405995; cv=none; b=XGlgbEdeekqEaxMQjSX2FVSfcKFvouMi1lNlwJLJyYlcitBYXiIOsnShr22A/OXOLablUku6j40EPoGI0RfR/jIO9wks1Efx3/HCujI1ICCxjHeJ8/PImHJ7DrgMVY5sLs76l8tI9uo3yheo3yGiR7qDeMR8zr+hM8J/f2UJGaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719405966; c=relaxed/simple;
-	bh=ARBEaufTM1wTiJu+3ot5+xuSpijWuCxVaQKS3lVicMw=;
-	h=Subject:To:Cc:References:In-Reply-To:From:Message-ID:Date:
-	 MIME-Version:Content-Type; b=r4NlpiBe8pFMCScaj75NXNidgyL62kBec6sHRIRyHhm7Nl15l2ATX7K2bKxMjmKr0dQVjvHTmpAtpRmc0jLPET1QoA557QMTs8e5cFwM479rciDX87KegViVMmkqs7reRIYcjLVNKGUEOL6L9krWGZjYii+ygJZWWGHY6NjyL3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=xbqAQ4UO; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1719405995; c=relaxed/simple;
+	bh=yBRxGCyHhvuJu8ZihGw7xHj2l5Wg5TZnqQXWyklINCg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H5VDI+89sTnYxfx+uGrigJHNz6GxOezPfGs+M31uRdgNGXv15XpM6Qagv5zJO29D2K5wu/VflkU3RsePF5lL2vI6Iz908uJw3nskbq6JYVYtDTsR3yQ837Amq4EqFwXwuUuFnMjDO/ECd3DTQFSLS1X9oMKtT+Mg06nV5x2z72k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bk9zdNni; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="xbqAQ4UO"
-Received: from eig-obgw-6002a.ext.cloudfilter.net ([10.0.30.222])
-	by cmsmtp with ESMTPS
-	id MQIEs7v37JXoqMS2AsBDi9; Wed, 26 Jun 2024 12:45:58 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id MS28sth3qiKqRMS29s3bMC; Wed, 26 Jun 2024 12:45:57 +0000
-X-Authority-Analysis: v=2.4 cv=I9quR8gg c=1 sm=1 tr=0 ts=667c0d85
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=T1WGqf2p2xoA:10 a=-Ou01B_BuAIA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=nIAznLeY9BhABaY2-0MA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22 a=nmWuMzfKamIsx3l42hEX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
-	Message-ID:From:In-Reply-To:References:Cc:To:Subject:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ZzpdcqY2O/Im96eQOpnzB/JaPm4sawgGi0lMMBZ251I=; b=xbqAQ4UOGoP03yB82z1ntIybqm
-	CM+Ixw/8GydrK23ICH4y82h58bKy+NY5xeMAqH1X8Ndii4T2vu12ehwb5Lrq7n8bqGb7Pn0typY5e
-	sWdWBKt/7vViH5SOMwTuNUrJgzJ2QxrgBTdCjVU4zXkC50HWr39HH+5nEMxvGY3Rp19LX5r+iiMET
-	gV8R8lT22RvRaK/tsRcro85FnvpAWqrp5MRhZ63A1Nao0bol5z6AVbJmXKTe2PNmEVAxfx/prmzg4
-	fZlaugZceVVITr5xGM7Mc9R4YXG3Zqf2TAJJAttZjLBHUIGJH23PvXS5zqU+Fxr4n4Thlw4/f+JLP
-	XW8Gon3A==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:45924 helo=[10.0.1.47])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <re@w6rz.net>)
-	id 1sMS24-002qlN-2B;
-	Wed, 26 Jun 2024 06:45:52 -0600
-Subject: Re: [PATCH 6.9 000/250] 6.9.7-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
-References: <20240625085548.033507125@linuxfoundation.org>
-In-Reply-To: <20240625085548.033507125@linuxfoundation.org>
-From: Ron Economos <re@w6rz.net>
-Message-ID: <ab8ad886-19e5-dc7a-20ec-766ee038f1f5@w6rz.net>
-Date: Wed, 26 Jun 2024 05:45:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bk9zdNni"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2260AC2BD10;
+	Wed, 26 Jun 2024 12:46:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719405995;
+	bh=yBRxGCyHhvuJu8ZihGw7xHj2l5Wg5TZnqQXWyklINCg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bk9zdNnisf8YhqaofsuWXspKWLaZ42QsKYZZ399+nxPkeJCsGr8BRFYjxT3MRweEb
+	 a4ckROL2LUpSOkH+ZD7F5ffOLulmU9d3rNcDOS4a7rOsq9MNCrclCoq0kMB8o+oJJB
+	 v/K0r6sn7s8UtlKpro3KPQIkW+mlvbxxxH9N9Bs92m9oDtoJqsPb8mfddtxRdbgmUF
+	 vqGTGcN+21rps4Z4r8/yTr4+KmEbwwBxc96hJ/oKV8+q4RsCncR5T5z/zap78sHPss
+	 uFf/CMztZJZC1Ce+SY5DWxqR5IrsDVLCzQ4vDAbpHDaUZdVqxIKhi6FhjF3cqBMCWP
+	 dWJU1RGH5XIXA==
+Date: Wed, 26 Jun 2024 20:32:29 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] riscv: uaccess: use input constraints for ptr of
+ __put_user
+Message-ID: <ZnwKXWzRz9B5FbLM@xhacker>
+References: <20240625040500.1788-1-jszhang@kernel.org>
+ <20240625040500.1788-3-jszhang@kernel.org>
+ <acd2e53f-b5c1-49c5-86e2-bc09eb917163@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1sMS24-002qlN-2B
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.47]) [73.223.253.157]:45924
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 4
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfFW7N4/ErRfqhS1kERIXA7bdIV11czFBS3HHbLCBIOF9gj/q9n3ZpWJDMcj+p2F6UQVvv9B1r/s9sihEnbhLx3GjGoy5XvgmKI69SWIYGkUdmS8XbfiQ
- GSSO3XcnfaqQ5Wv8KXc6Af7Pj0oqadUu5P2joyH/s+6oIltt1sX376Jwcg2ZfNkrt+BgybqyQE9B7cNzXljp9H113Nshy3FoCOk=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <acd2e53f-b5c1-49c5-86e2-bc09eb917163@app.fastmail.com>
 
-On 6/25/24 2:29 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.9.7 release.
-> There are 250 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 27 Jun 2024 08:54:55 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.9.7-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.9.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Tue, Jun 25, 2024 at 07:54:30AM +0200, Arnd Bergmann wrote:
+> On Tue, Jun 25, 2024, at 06:04, Jisheng Zhang wrote:
+> > I believe the output constraints "=m" is not necessary, because
+> > the instruction itself is "write", we don't need the compiler
+> > to "write" for us. So tell compiler we read from memory instead
+> > of writing.
+> >
+> > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+> 
+> I think this is a bit too confusing: clearly there is no
+> read access from the __user pointer, so what you add in here
+> is not correct. There also needs to be a code comment about
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+Here is my understanding: the __put_user is implemented with
+sd(or its less wider variant, sw etc.), w/o considering the
+ex_table, the previous code can be simplified as below:
 
-Tested-by: Ron Economos <re@w6rz.net>
+__asm__ __volatile__ (
+	"sw	%z2, %1\n"
+	: "+r" (err), "=m" (*(ptr))
+	: "rJ" (__x));
 
+Here ptr is really an input, just tells gcc where to store,
+And the "store" action is from the "sw" instruction, I don't
+need the gcc generates "store" instruction for me. so IMHO,
+there's no need to use output constraints here. so I changed
+it to
+
+__asm__ __volatile__ (
+	"sw	%z1, %2\n"
+	: "+r" (err)
+	: "rJ" (__x), "m"(*(ptr)));
+
+The key here: is this correct?
+
+
+Here is the put_user piece code and comments from x86
+
+/*
+ * Tell gcc we read from memory instead of writing: this is because
+ * we do not write to any memory gcc knows about, so there are no
+ * aliasing issues.
+ */
+#define __put_user_goto(x, addr, itype, ltype, label)                   \
+        asm goto("\n"                                                   \
+                "1:     mov"itype" %0,%1\n"                             \
+                _ASM_EXTABLE_UA(1b, %l2)                                \
+                : : ltype(x), "m" (__m(addr))                           \
+                : : label)
+
+
+As can be seen, x86 also doesn't put the (addr) in output constraints,
+I think x86 version did similar modification in history, but when I tried
+to searh the git history, the comment is there from the git first day.
+
+Any hint or suggestion is appreciated!
+
+> why you do it this way, as it's not clear that this is
+> a workaround for old compilers without
+> CONFIG_CC_HAS_ASM_GOTO_OUTPUT.
+> 
+> > index 09d4ca37522c..84b084e388a7 100644
+> > --- a/arch/riscv/include/asm/uaccess.h
+> > +++ b/arch/riscv/include/asm/uaccess.h
+> > @@ -186,11 +186,11 @@ do {								\
+> >  	__typeof__(*(ptr)) __x = x;				\
+> >  	__asm__ __volatile__ (					\
+> >  		"1:\n"						\
+> > -		"	" insn " %z2, %1\n"			\
+> > +		"	" insn " %z1, %2\n"			\
+> >  		"2:\n"						\
+> >  		_ASM_EXTABLE_UACCESS_ERR(1b, 2b, %0)		\
+> > -		: "+r" (err), "=m" (*(ptr))			\
+> > -		: "rJ" (__x));					\
+> > +		: "+r" (err)			\
+> > +		: "rJ" (__x), "m"(*(ptr)));					\
+> >  } while (0)
+> > 
+> 
+> I suspect this could just be a "r" constraint instead of
+> "m", treating the __user pointer as a plain integer.
+
+I tried "r", the generated code is not as good as "m"
+
+for example
+__put_user(0x12, &frame->uc.uc_flags);
+
+with "m", the generated code will be
+
+...
+csrs    sstatus,a5
+li      a4,18
+sd      a4,128(s1)
+csrc    sstatus,a5
+...
+
+
+with "r", the generated code will be
+
+...
+csrs    sstatus,a5
+li      a4,18
+addi    s1,s1,128
+sd      a4,0(s1)
+csrc    sstatus,a5
+...
+
+As can be seen, "m" can make use of the 'offset' of
+sd, so save one instruction.
+
+> 
+> For kernel pointers, using "m" and "=m" constraints
+> correctly is necessary since gcc will often access the
+> same data from C code as well. For __user pointers, we
+> can probably get away without it since no C code is
+> ever allowed to just dereference them. If you do that,
+> you may want to have the same thing in the __get_user
+> side.
+> 
+>       Arnd
