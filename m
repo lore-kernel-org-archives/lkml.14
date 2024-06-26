@@ -1,158 +1,71 @@
-Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81591684A3;
-	Wed, 26 Jun 2024 08:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+Received: from cmccmta1.chinamobile.com (cmccmta6.chinamobile.com [111.22.67.139])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3ED7E166310;
+	Wed, 26 Jun 2024 08:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.22.67.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719391723; cv=none; b=F+NJREnm5JuOnXxmWNlRHeUCJH/5GrD0OOAbg/0rngw+Q13Nz7AM1mxWxH82sKkKvVGTMsFIiduVytiEc4pNATDgJ+0fgr66mzYWjSSBMuEXOYhVaLr2IqOieNcd5kLpIos98y7yE5deDAUd2X2Iw3h+xe4psTW83VWWa9rvq+8=
+	t=1719391747; cv=none; b=uhCQSxFstm82PcQ4ic04ssmjiN5Cemr5Ry4ArKqNNx8SvACJT6Bc+v5byOzO3szLEPgxv9Hh1oZ1KfD8uSnFbENKMWrHXDynrn/NyWA9CNb2aHD/wph+U7md+pYKu+0C2pDv4c3Ujyq3J4lREtui7yD8BB+Ylz1hkyaV8RE38gE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719391723; c=relaxed/simple;
-	bh=gVe3FZNSeWFXzNdM+NW+WvLJ4x0CtX/MXlsGAlIPRtY=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=a8gJ//obDt3GPROx0XkyAqKHdH56HCP7Ic7dWW5AMVljmQosPOrQYDC9KKvvBGmIWL1jJ0NKwb0jNbGy8XACkTqx2zun8Rc4ZHqt6DxE54V4ZV/up5KRmiEPw5/xXFbzJbxHQmXx/S7uocTz4Byl+iau1+kvJe+GUWDWJU8Xqjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 45Q8iCJx045005;
-	Wed, 26 Jun 2024 16:44:12 +0800 (+08)
-	(envelope-from zhaoyang.huang@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4W8FVp1GfDz2K8nj0;
-	Wed, 26 Jun 2024 16:39:30 +0800 (CST)
-Received: from bj03382pcu01.spreadtrum.com (10.0.73.40) by
- BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Wed, 26 Jun 2024 16:44:10 +0800
-From: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand
-	<david@redhat.com>, <linux-mm@kvack.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Zhaoyang Huang <huangzhaoyang@gmail.com>, <steve.kang@unisoc.com>
-Subject: [RFC PATCH] mm: introduce gen information in /proc/xxx/smaps
-Date: Wed, 26 Jun 2024 16:44:06 +0800
-Message-ID: <20240626084406.2106291-1-zhaoyang.huang@unisoc.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1719391747; c=relaxed/simple;
+	bh=1ODE0XKaeMtnd8mzTknDOkALaTc8RLBP04scttwZkuE=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=XxmX0PQKyp9WCMvxPeFne0F6B1i5DvFfNAT7eyfeLFdHyhoeyfAHEPleqtlltm6pcJMftXW8kQt6Uv1w04NSR3FEOmIb24MqEqB8oMYPdrj1j4E90Xrqzg76o5cmtKR0oGEB+k9dWMuijXo2trNLpKG8crBk8n5Q5sZ3O/giZy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com; spf=pass smtp.mailfrom=cmss.chinamobile.com; arc=none smtp.client-ip=111.22.67.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
+	by rmmx-syy-dmz-app01-12001 (RichMail) with SMTP id 2ee1667bd5fd0ad-819a2;
+	Wed, 26 Jun 2024 16:49:01 +0800 (CST)
+X-RM-TRANSID:2ee1667bd5fd0ad-819a2
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from ubuntu.localdomain (unknown[10.54.5.255])
+	by rmsmtp-syy-appsvr09-12009 (RichMail) with SMTP id 2ee9667bd5fc2b7-a3e8b;
+	Wed, 26 Jun 2024 16:49:01 +0800 (CST)
+X-RM-TRANSID:2ee9667bd5fc2b7-a3e8b
+From: Zhu Jun <zhujun2@cmss.chinamobile.com>
+To: perex@perex.cz
+Cc: tiwai@suse.com,
+	shuah@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	broonie@kernel.org,
+	zhujun2@cmss.chinamobile.com
+Subject: [PATCH] selftests/alsa:Fix printf format string in pcm-test.c
+Date: Wed, 26 Jun 2024 01:48:59 -0700
+Message-Id: <20240626084859.4350-1-zhujun2@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL:SHSQR01.spreadtrum.com 45Q8iCJx045005
 
-From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+Inside of test_pcm_time() arguments are printed via printf
+but '%d' is used to print @flags (of type unsigned int).
+Use '%u' instead, just like we do everywhere else.
 
-Madvise_cold_and_pageout could break the LRU's balance by
-colding or moving the folio without taking activity information into
-consideration. This commit would like to introduce the folios' gen
-information based on VMA block via which the userspace could query
-the VA's activity before madvise.
-
-eg. The VMA(56c00000-56e14000) which has big Rss/Gen value suggest that
-it possesses larger proportion active folios than VMA(70dd7000-71090000)
-does and is not good candidate for madvise.
-
-56c00000-56e14000 rw-p 00000000 00:00 0                                  [anon:dalvik-/system/framework/oat/arm64/services.art]
-Size:               2128 kB
-KernelPageSize:        4 kB
-MMUPageSize:           4 kB
-Rss:                2128 kB
-Pss:                2128 kB
-Pss_Dirty:          2128 kB
-Shared_Clean:          0 kB
-Shared_Dirty:          0 kB
-Private_Clean:         0 kB
-Private_Dirty:      2128 kB
-Referenced:         2128 kB
-Anonymous:          2128 kB
-KSM:                   0 kB
-LazyFree:              0 kB
-AnonHugePages:         0 kB
-ShmemPmdMapped:        0 kB
-FilePmdMapped:         0 kB
-Shared_Hugetlb:        0 kB
-Private_Hugetlb:       0 kB
-Swap:                  0 kB
-SwapPss:               0 kB
-Locked:                0 kB
-Gen:                 664
-THPeligible:           0
-VmFlags: rd wr mr mw me ac
-70dd7000-71090000 rw-p 00000000 00:00 0                                  [anon:dalvik-/system/framework/boot.art]
-Size:               2788 kB
-KernelPageSize:        4 kB
-MMUPageSize:           4 kB
-Rss:                2788 kB
-Pss:                 275 kB
-Pss_Dirty:           275 kB
-Shared_Clean:          0 kB
-Shared_Dirty:       2584 kB
-Private_Clean:         0 kB
-Private_Dirty:       204 kB
-Referenced:         2716 kB
-Anonymous:          2788 kB
-KSM:                   0 kB
-LazyFree:              0 kB
-AnonHugePages:         0 kB
-ShmemPmdMapped:        0 kB
-FilePmdMapped:         0 kB
-Shared_Hugetlb:        0 kB
-Private_Hugetlb:       0 kB
-Swap:                  0 kB
-SwapPss:               0 kB
-Locked:                0 kB
-Gen:                1394
-THPeligible:           0
-
-Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+Signed-off-by: Zhu Jun <zhujun2@cmss.chinamobile.com>
 ---
- fs/proc/task_mmu.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ tools/testing/selftests/alsa/pcm-test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index f8d35f993fe5..9731f43aa639 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -408,12 +408,23 @@ struct mem_size_stats {
- 	u64 pss_dirty;
- 	u64 pss_locked;
- 	u64 swap_pss;
-+#ifdef CONFIG_LRU_GEN
-+	u64 gen;
-+#endif
- };
- 
- static void smaps_page_accumulate(struct mem_size_stats *mss,
- 		struct folio *folio, unsigned long size, unsigned long pss,
- 		bool dirty, bool locked, bool private)
- {
-+#ifdef CONFIG_LRU_GEN
-+	int gen = folio_lru_gen(folio);
-+	struct lru_gen_folio *lrugen = &folio_lruvec(folio)->lrugen;
-+
-+	if (gen >= 0)
-+		mss->gen += (lru_gen_from_seq(lrugen->max_seq) - gen + MAX_NR_GENS) % MAX_NR_GENS;
-+#endif
-+
- 	mss->pss += pss;
- 
- 	if (folio_test_anon(folio))
-@@ -852,6 +863,10 @@ static void __show_smap(struct seq_file *m, const struct mem_size_stats *mss,
- 	SEQ_PUT_DEC(" kB\nLocked:         ",
- 					mss->pss_locked >> PSS_SHIFT);
- 	seq_puts(m, " kB\n");
-+#ifdef CONFIG_LRU_GEN
-+	seq_put_decimal_ull_width(m, "Gen:            ",  mss->gen, 8);
-+	seq_puts(m, "\n");
-+#endif
- }
- 
- static int show_smap(struct seq_file *m, void *v)
+diff --git a/tools/testing/selftests/alsa/pcm-test.c b/tools/testing/selftests/alsa/pcm-test.c
+index de664dedb541..914efcdce1ec 100644
+--- a/tools/testing/selftests/alsa/pcm-test.c
++++ b/tools/testing/selftests/alsa/pcm-test.c
+@@ -383,7 +383,7 @@ static void test_pcm_time(struct pcm_data *data, enum test_class class,
+ 		goto __close;
+ 	}
+ 	if (rrate != rate) {
+-		snprintf(msg, sizeof(msg), "rate mismatch %ld != %d", rate, rrate);
++		snprintf(msg, sizeof(msg), "rate mismatch %ld != %u", rate, rrate);
+ 		goto __close;
+ 	}
+ 	rperiod_size = period_size;
 -- 
-2.25.1
+2.17.1
+
+
 
