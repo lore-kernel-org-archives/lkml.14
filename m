@@ -1,76 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988B0134B1;
-	Thu, 27 Jun 2024 08:30:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CB30811E0
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 08:31:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719477023; cv=none; b=Sn/VSuv+DBU97gB36Y/bl2KoI3cFFvTSHiQ3K0Fsd1/LHQhXY8s+XT/kaNydlCPx92OiozSgofjAEwhIjNQ5pw8Jh27eCCxDN8w5coIxvP4UdoavFceNFq0KOrc/QI2rXoVQHHpwjbdJr9V/wxLE46p3wTgBN6Z/UF4rvh2CXjc=
+	t=1719477099; cv=none; b=GoSHCIDW/TK3JIJqILf06YtlzAUGrQTrsvbk5Yq/7mW4f5s8BC6CO0bhcD0wcLQWSzX50Y8MDdRNkBHdzmjZfElxEivgDG9+2HzxmB6mfDnu8yH/5Qs6O5sDSh2FEEBMv2GhWFruRAREeEs8uxND7ykOS2wiUKo2Zt9GcUExBbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719477023; c=relaxed/simple;
-	bh=SRxQT/BRSRJL3CvUyHc3/7UJ6jrwQN+2sL5nddh4M/I=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=gTeEb94Pp1eTMYl+cabbuJIRwVfL9oLLOP+1aCaY48USiAP3ID5D367oFYVJ5OtNCL4frHtOwu4R2pHKWrnEPspCYkrGgI8oNo6GNgcMYOpYh/wH1uqHhIpcKBQjzmaEoexLmCrGFHOTONEWYq445fP7FUVRFIRdDpqLKeRU8uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rg5x8Nd6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719477099; c=relaxed/simple;
+	bh=69dNhsMtHWUZwGq4tRdy+zYPCaxQs0hBmwjzWtLSx/c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aFMfCmbmgeNx/UUTE0P2AVB+Rfr4rZ8zhFYqEfhl7x3cPPNsukyo1EpOtTLjtZ78v6iZ8s/GFwzJ/9zP+tkSCLswZTn2+v6L9lYiEUObi+bcn5MZwhBpVjw2tmLjwEmmfE+ux4ExrIP+mv534OrLBs3PgiS0V02nmEnwCdINFxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Jrg3Fazd; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rg5x8Nd6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01AF3C2BBFC;
-	Thu, 27 Jun 2024 08:30:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719477023;
-	bh=SRxQT/BRSRJL3CvUyHc3/7UJ6jrwQN+2sL5nddh4M/I=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=rg5x8Nd6UWeYUBb6FkNWA5keSE8TJsuZxeHL9Q3U7uAsWo8N1aL9a+CYwKUhNvzrz
-	 LWpiPif8Z2J02kZFHc3FhKfq9kDgMqBW1YfyB6aUIuJzJ88zP0Z5LDkwpRTd1T99Xx
-	 xHJHXQlmsOELFzkDquwJ7zKVD3lzzpnHtANS4V7bTHR3PqM3zJpYwVcA4FJHQP3ztN
-	 Z+8QMXHbX8jNiJzSJLDjikWrdfzBXxzA5qq23V8PVxspeLI/nNHkS/ek+CHBnkuzGk
-	 PPx0ke3bL+3hVpECvan4jciv9OxGuy7O8+ka9/jRNfTvXAGwTXOj8xl8HgTSlLWUQL
-	 8ucNcKNSuJYWA==
-From: Lee Jones <lee@kernel.org>
-To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Chris Zhong <zyw@rock-chips.com>, Zhang Qing <zhangqing@rock-chips.com>, 
- Chris Morgan <macromorgan@hotmail.com>, 
- Furkan Kardame <f.kardame@manjaro.org>, 
- Michael Riesch <michael.riesch@wolfvision.net>, 
- Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Cc: kernel@collabora.com, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <20240622-rk809-fixes-v2-0-c0db420d3639@collabora.com>
-References: <20240622-rk809-fixes-v2-0-c0db420d3639@collabora.com>
-Subject: Re: (subset) [PATCH v2 0/5] DT fixes for Rockchip RK809 audio
- codec support
-Message-Id: <171947701973.2892686.10620287501091714886.b4-ty@kernel.org>
-Date: Thu, 27 Jun 2024 09:30:19 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jrg3Fazd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719477096;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=H7fg323TlM/G5nlOhZV+l1V8FOvg18d3mVisBJ/KjeM=;
+	b=Jrg3FazdGCv8FsRiIX6zn65AC/ee0cL1brftYtKGid8sb6WEUh+Wh+zUdZnSZl92ULHHdS
+	OLVA58umawlyJRHit44/odeifHYZ/xkw8DnwS2ZPS8VScl6bJiZI7wVbiTurcRSNrfxsw4
+	CvyOZg04dmcxAjpyLb6awwTJCusicn8=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-444-9LDVHzboOWeU0kNEEk7nyQ-1; Thu,
+ 27 Jun 2024 04:31:24 -0400
+X-MC-Unique: 9LDVHzboOWeU0kNEEk7nyQ-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6163C19560B0;
+	Thu, 27 Jun 2024 08:31:21 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.18])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 0519A300021A;
+	Thu, 27 Jun 2024 08:31:16 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu, 27 Jun 2024 10:29:47 +0200 (CEST)
+Date: Thu, 27 Jun 2024 10:29:42 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Michal Hocko <mhocko@suse.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Christian Brauner <brauner@kernel.org>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Jinliang Zheng <alexjlzheng@tencent.com>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Tycho Andersen <tandersen@netflix.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] memcg: mm_update_next_owner: kill the "retry" logic
+Message-ID: <20240627082941.GA21813@redhat.com>
+References: <20240626152835.GA17910@redhat.com>
+ <20240626152924.GA17933@redhat.com>
+ <Zn0bPrHrBGwdrGwU@tiehlicka>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zn0bPrHrBGwdrGwU@tiehlicka>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Sat, 22 Jun 2024 00:57:17 +0300, Cristian Ciocaltea wrote:
-> Rockchip RK809 MFD provides a RK817 compatible audio codec, supported by
-> the rk817_codec driver.
-> 
-> This patch series fixes a few issues identified by dtbs_check for the
-> boards making use of the codec: rk3566-quartz64-b, k3566-roc-pc,
-> rk3568-evb1-v10, rk3568-lubancat-2, rk3568-odroid-m1, rk3568-rock-3a.
-> 
-> [...]
+Michal, thanks for looking at this,
 
-Applied, thanks!
+On 06/27, Michal Hocko wrote:
+>
+> On Wed 26-06-24 17:29:24, Oleg Nesterov wrote:
+> > @@ -446,7 +463,6 @@ void mm_update_next_owner(struct mm_struct *mm)
+> >  {
+> >  	struct task_struct *c, *g, *p = current;
+> >
+> > -retry:
+> >  	/*
+> >  	 * If the exiting or execing task is not the owner, it's
+> >  	 * someone else's problem.
+> > @@ -468,16 +484,16 @@ void mm_update_next_owner(struct mm_struct *mm)
+> >  	 * Search in the children
+> >  	 */
+> >  	list_for_each_entry(c, &p->children, sibling) {
+> > -		if (c->mm == mm)
+> > -			goto assign_new_owner;
+> > +		if (c->mm == mm && try_to_set_owner(c, mm))
+> > +			goto ret;
+>
+> You need to unlock tasklist_lock, right? Same for other goto ret.
 
-[1/5] dt-bindings: mfd: rk817: Fixup clocks and reference dai-common
-      commit: e472369bd5624fa899d0d1dfbe69b594fd7e6e7d
-[2/5] dt-bindings: mfd: rk817: Merge support for RK809
-      commit: ae61fa9ee01049abfca7a954a7c62e1274858d10
+No. From the patch
 
---
-Lee Jones [李琼斯]
+	+/* drops tasklist_lock if succeeds */
+	+static bool try_to_set_owner(struct task_struct *tsk, struct mm_struct *mm)
+	+{
+	+       bool ret = false;
+	+
+	+       task_lock(tsk);
+	+       if (likely(tsk->mm == mm)) {
+	+               /* tsk can't pass exit_mm/exec_mmap and exit */
+	+               read_unlock(&tasklist_lock);
+	                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+try_to_set_owner() drops tasklist right after it verifies that
+tsk->mm == mm under task_lock().
+
+> It should still die but it can do so in a better shape.
+
+Agreed!
+
+Oleg.
 
