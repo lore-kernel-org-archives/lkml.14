@@ -1,211 +1,249 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF66FBE8
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 02:34:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA86EC8E9;
+	Thu, 27 Jun 2024 02:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719455652; cv=none; b=CmKFnngrQyvSU2PPiJcT9eF966FLKDwXyROBBt2PGkiOPPmw7jMKpMJwJ29QqqlSGM9FcFrTnVtoUhVZqFLbfeWatAxslqMLkCM6s20a+qIp6umR9cQgNJ4IK1RT69ELv70ofmwxKyLVn+rt2fM6Fm/XGorLHYyUi3JID8O9egs=
+	t=1719456023; cv=none; b=gaD2JsZflb5xLSaFKvUSZH5v62R7v2wHOzmFxtKcc8odvwGqYp5V1GxXOK+7qxjUwqrCRPB+Z2rFn2zlLKFy90oN6hK5SJ1W5cNLidVdtbew2pnRQDUpd2cxH4OcIbPmoc/uvteDBFkSY5MrCGCb0WgVUbF+bwj0o7W84jaz2+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719455652; c=relaxed/simple;
-	bh=IPj5UlSmlPQRPZvxU93+IxrZCbUC9raz/ITLzuv5H9Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JsP0xR1ircgT2CtMSR/agRVXVggO1msDK3uXsMdQjsJAgVa4dxH6jww1boZQXZNfgO7CFpttUKk30LzhmiU8X8Ok2sJdx7rTYHJeC2tg42mbX8z3Rn/4UKDM+4838dTBH6BC4uIedBAo7/hHbDpIzYH5fJbBdSLwv4r0F10nvLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FrsfQdUc; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719456023; c=relaxed/simple;
+	bh=I3qMPc9qUfiAFg8bs2NXUNGb6Oa005vf5im4UUd0UrI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YiOs6Tl0uNNw3zIYGVHMEVXeRqvhieCGQo14vkEQVyHQAJ5XP/jKbE7vnaUEvq/9vX8dyoymt0US69C39WRt1L2uj5Vo1D3Gy+ow4CngW9S1lFoPNIfbymcPBlR+yfZOSVDfv9/jiMp0SOdavGTisZsVwoBIllVGMO8kNulN5VE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ai6R5ju0; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FrsfQdUc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719455651; x=1750991651;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=IPj5UlSmlPQRPZvxU93+IxrZCbUC9raz/ITLzuv5H9Q=;
-  b=FrsfQdUcxJ4x8nTmlaXBqgzkJ/i/eT31XU2ABR6gsjuappP9TI4c1V6K
-   7oTe2rVzUDnKLGidi2vUeJYeyqzuI5HbrtZ5qZd/PGYCYT1X/UVJfxIRm
-   9jcEmBMv0HL2F67WyMtxttDGW8wQBQf9DS1xgA1orWq2ZbMod5Kd2SUC0
-   gAR0b+oZFAdN9r3HwPK3w+vyNbHP6YBhivOl/xdQlSBD/dpNHJgia92hG
-   KKszaQkf38m+4DCkgq9dkqwPPpCBJ3rpSW2YaFu9s0YJU7sDWa9hh9Jnm
-   y92ABhCPmfGP608ONf/o/xv2F+k5gbsmpu2JLDkNm0qMMJEiYgxbS2DZ0
-   A==;
-X-CSE-ConnectionGUID: d5Xa6u9LRFGnB/t1v0MF6Q==
-X-CSE-MsgGUID: tG/7rn25T1S3TpDaGuZPqw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11115"; a="16786023"
-X-IronPort-AV: E=Sophos;i="6.08,268,1712646000"; 
-   d="scan'208";a="16786023"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 19:34:09 -0700
-X-CSE-ConnectionGUID: 7qjr6PfuRlGSaf135jn9Wg==
-X-CSE-MsgGUID: xKp/sHKnQ6K6gz2KZRnA3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,268,1712646000"; 
-   d="scan'208";a="49385444"
-Received: from unknown (HELO allen-box.sh.intel.com) ([10.239.159.127])
-  by orviesa004.jf.intel.com with ESMTP; 26 Jun 2024 19:34:07 -0700
-From: Lu Baolu <baolu.lu@linux.intel.com>
-To: Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Kevin Tian <kevin.tian@intel.com>
-Cc: iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH v2 2/2] iommu/vt-d: Refactor PCI PRI enabling/disabling callbacks
-Date: Thu, 27 Jun 2024 10:31:21 +0800
-Message-Id: <20240627023121.50166-3-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240627023121.50166-1-baolu.lu@linux.intel.com>
-References: <20240627023121.50166-1-baolu.lu@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ai6R5ju0"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a6fe61793e2so327734666b.0;
+        Wed, 26 Jun 2024 19:40:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719456020; x=1720060820; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+4Ay7++MkN/pxOO3USj58zzpiS633Yr9vwAppfqnzXo=;
+        b=Ai6R5ju0P49rG2oOpnfLSDKTOp3foeUAzVCE1snWFBnC2Gfs/CeP0UUhcDKgD0xqcr
+         KYdZ6X94+CVkBswMU7k51ud5HlSq2j6HGeb0otIu9B6uJRzkzOt5WfxQiDGupc0zjn50
+         Kw0vs8ad7qhPaDu5krSDt5bwetWSZ4wS8iaTX5uBbdKXrpBhdxS4m3fcvTu3u1w1RU+t
+         gFadm4b09rCR0mMLlQ/fX1ddL7fgP+uc1TRYDEsQmlVJXpJ36qBCYAbACIXqC43FGxDc
+         7rj2tNuL9tkRx/Q0jH1kOWKRdvY7E7L6p/LSf9gXTbJvQyjdw/WLAwgRgM6VZh27eGVf
+         ITGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719456020; x=1720060820;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+4Ay7++MkN/pxOO3USj58zzpiS633Yr9vwAppfqnzXo=;
+        b=dOfh4D7ZMbsd+B52+pVmNB0XgRPAlEhs5sIfc9nN8wnrBzlf8xp/ktJOu542VgvFkT
+         mGG/vJwiMSF+7FpYfvN+OxMqFaymYbKnGpQJufvWSa5MT7tJ2AZPxFuodpoqjqXmsH9u
+         kgv7trFNFf0YgMse2L3G7N3zH/ERMdd8n5/KoTfRqYWUZZP+rIRxqQQzaoLS+HPSuXFk
+         d09V/2wQjQAO10BWmEWniaaGtp7Db6T2ByK/g2isaB7qflpl4WrdS4Pr91kc98CDwIe1
+         +iR7wc/pvHP+BJ+EUWEToTfC8ZcuTlCorJa2PNXAbjFCKsYkjwNfkq/umjCAxrasXP83
+         BQPg==
+X-Forwarded-Encrypted: i=1; AJvYcCW3knW3OdWzmSW1OmoVGKQXkQ3cjSBfj+1y9obIP8yCWFlIJodCXoK+6eQvaJyNLeqRg3UO/UHORw3ojvuB4JwqsxE+0HcvqWU2uHYcHX8bkO6nwNh0QtwmT0ACEbaEhRei
+X-Gm-Message-State: AOJu0YwH0MkcMmEyJqT5ywjrxoVvq4YDuNqr1Ha2xhVPA/aAgMWWbvru
+	D9zZCcSD1ZGOi87+y0CrqBQWu7ezKwHW/3iigSID7s1ANk+OlfXa5C+WCOubHB2SitBL37ZHD2b
+	546K2tDHRu3CszL2DoHDYk2OjFFc=
+X-Google-Smtp-Source: AGHT+IG1lY98mbgHIfxulrCqW75x67WBWZl4edIbVhiG+f7NWfYRsJW7OWWgL06It5sLaxE75txVfNRoRGC6xPp8lTY=
+X-Received: by 2002:a50:99dd:0:b0:57c:5874:4f5c with SMTP id
+ 4fb4d7f45d1cf-57d4bdcad82mr10679798a12.32.1719456019734; Wed, 26 Jun 2024
+ 19:40:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <81f4e616-8125-4934-a8e2-fd5beae90995@paulmck-laptop>
+ <20240604222652.2370998-2-paulmck@kernel.org> <CAFwiDX9ynNpmU_Au=J7geJYjE8NLLM-p2x8QDyjmZ1qNBkLXZQ@mail.gmail.com>
+ <ZnwiCsor-cku3ETF@localhost.localdomain> <CAFwiDX8EL8q-ihiXR8GSu5AxmRGs8w4z682nWMMMqDe2phLjuQ@mail.gmail.com>
+ <ZnyQJGJGeAbTSEhv@pavilion.home> <CAFwiDX8TP4EzsnFCfrj-2iKVdXGqsM5_eLexp=qpqnd7qEE-bw@mail.gmail.com>
+In-Reply-To: <CAFwiDX8TP4EzsnFCfrj-2iKVdXGqsM5_eLexp=qpqnd7qEE-bw@mail.gmail.com>
+From: Neeraj upadhyay <neeraj.iitr10@gmail.com>
+Date: Thu, 27 Jun 2024 08:10:07 +0530
+Message-ID: <CAFwiDX9U1ABD4Nvvimnx6FFECrgqJ0_F1WAEChQUchQZT0a-0g@mail.gmail.com>
+Subject: Re: [PATCH rcu 2/6] rcu: Remove superfluous full memory barrier upon
+ first EQS snapshot
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-team@meta.com, rostedt@goodmis.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Commit 0095bf83554f8 ("iommu: Improve iopf_queue_remove_device()")
-specified the flow for disabling the PRI on a device. Refactor the
-PRI callbacks in the intel iommu driver to better manage PRI
-enabling and disabling and align it with the device queue interfaces
-in the iommu core.
+On Thu, Jun 27, 2024 at 7:46=E2=80=AFAM Neeraj upadhyay <neeraj.iitr10@gmai=
+l.com> wrote:
+>
+> On Thu, Jun 27, 2024 at 3:33=E2=80=AFAM Frederic Weisbecker <frederic@ker=
+nel.org> wrote:
+> >
+> > Le Wed, Jun 26, 2024 at 10:49:05PM +0530, Neeraj upadhyay a =C3=A9crit =
+:
+> > > On Wed, Jun 26, 2024 at 7:43=E2=80=AFPM Frederic Weisbecker <frederic=
+@kernel.org> wrote:
+> > > >
+> > > > Le Wed, Jun 12, 2024 at 01:57:20PM +0530, Neeraj upadhyay a =C3=A9c=
+rit :
+> > > > > On Wed, Jun 5, 2024 at 3:58=E2=80=AFAM Paul E. McKenney <paulmck@=
+kernel.org> wrote:
+> > > > > >
+> > > > > > From: Frederic Weisbecker <frederic@kernel.org>
+> > > > > >
+> > > > > > When the grace period kthread checks the extended quiescent sta=
+te
+> > > > > > counter of a CPU, full ordering is necessary to ensure that eit=
+her:
+> > > > > >
+> > > > > > * If the GP kthread observes the remote target in an extended q=
+uiescent
+> > > > > >   state, then that target must observe all accesses prior to th=
+e current
+> > > > > >   grace period, including the current grace period sequence num=
+ber, once
+> > > > > >   it exits that extended quiescent state.
+> > > > > >
+> > > > > > or:
+> > > > > >
+> > > > > > * If the GP kthread observes the remote target NOT in an extend=
+ed
+> > > > > >   quiescent state, then the target further entering in an exten=
+ded
+> > > > > >   quiescent state must observe all accesses prior to the curren=
+t
+> > > > > >   grace period, including the current grace period sequence num=
+ber, once
+> > > > > >   it enters that extended quiescent state.
+> > > > > >
+> > > > > > This ordering is enforced through a full memory barrier placed =
+right
+> > > > > > before taking the first EQS snapshot. However this is superfluo=
+us
+> > > > > > because the snapshot is taken while holding the target's rnp lo=
+ck which
+> > > > > > provides the necessary ordering through its chain of
+> > > > > > smp_mb__after_unlock_lock().
+> > > > > >
+> > > > > > Remove the needless explicit barrier before the snapshot and pu=
+t a
+> > > > > > comment about the implicit barrier newly relied upon here.
+> > > > > >
+> > > > > > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> > > > > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > > > > > ---
+> > > > > >  .../Design/Memory-Ordering/Tree-RCU-Memory-Ordering.rst    | 6=
+ +++---
+> > > > > >  kernel/rcu/tree.c                                          | 7=
+ ++++++-
+> > > > > >  2 files changed, 9 insertions(+), 4 deletions(-)
+> > > > > >
+> > > > > > diff --git a/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-=
+Memory-Ordering.rst b/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Mem=
+ory-Ordering.rst
+> > > > > > index 5750f125361b0..728b1e690c646 100644
+> > > > > > --- a/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-=
+Ordering.rst
+> > > > > > +++ b/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-=
+Ordering.rst
+> > > > > > @@ -149,9 +149,9 @@ This case is handled by calls to the strong=
+ly ordered
+> > > > > >  ``atomic_add_return()`` read-modify-write atomic operation tha=
+t
+> > > > > >  is invoked within ``rcu_dynticks_eqs_enter()`` at idle-entry
+> > > > > >  time and within ``rcu_dynticks_eqs_exit()`` at idle-exit time.
+> > > > > > -The grace-period kthread invokes ``rcu_dynticks_snap()`` and
+> > > > > > -``rcu_dynticks_in_eqs_since()`` (both of which invoke
+> > > > > > -an ``atomic_add_return()`` of zero) to detect idle CPUs.
+> > > > > > +The grace-period kthread invokes first ``ct_dynticks_cpu_acqui=
+re()``
+> > > > > > +(preceded by a full memory barrier) and ``rcu_dynticks_in_eqs_=
+since()``
+> > > > > > +(both of which rely on acquire semantics) to detect idle CPUs.
+> > > > > >
+> > > > > >  +-------------------------------------------------------------=
+----------+
+> > > > > >  | **Quick Quiz**:                                             =
+          |
+> > > > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > > > > index f07b8bff4621b..1a6ef9c5c949e 100644
+> > > > > > --- a/kernel/rcu/tree.c
+> > > > > > +++ b/kernel/rcu/tree.c
+> > > > > > @@ -769,7 +769,12 @@ static void rcu_gpnum_ovf(struct rcu_node =
+*rnp, struct rcu_data *rdp)
+> > > > > >   */
+> > > > > >  static int dyntick_save_progress_counter(struct rcu_data *rdp)
+> > > > > >  {
+> > > > > > -       rdp->dynticks_snap =3D rcu_dynticks_snap(rdp->cpu);
+> > > > > > +       /*
+> > > > > > +        * Full ordering against accesses prior current GP and =
+also against
+> > > > > > +        * current GP sequence number is enforced by current rn=
+p locking
+> > > > > > +        * with chained smp_mb__after_unlock_lock().
+> > > > > > +        */
+> > > > >
+> > > > > It might be worth mentioning that this chained smp_mb__after_unlo=
+ck_lock()
+> > > > > is provided by rnp leaf node locking in rcu_gp_init() and rcu_gp_=
+fqs_loop() ?
+> > > >
+> > > > Right!
+> > > >
+> > > > How about this?
+> > > >
+> > >
+> > > Looks good to me, thanks! Minor comment (ditto for the other patch) b=
+elow
+> > >
+> > >
+> > > >     /*
+> > > >      * Full ordering against accesses prior current GP and also aga=
+inst
+> > >
+> > > Nit: "prior to current GP" ?
+> >
+> > Thanks. On a second thought and just to make sure we don't forget why w=
+e did
+> > what we did after a few years, I expanded some more, still ok with the =
+following?
+> >
+>
+> Yes, looks good!
+>
 
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- drivers/iommu/intel/iommu.h |  9 ++++++
- drivers/iommu/intel/iommu.c | 57 +++++++++++++++++++++++++++++++++----
- drivers/iommu/intel/pasid.c |  2 --
- 3 files changed, 61 insertions(+), 7 deletions(-)
+So, I rechecked this after reviewing the other one. One comment below:
 
-diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
-index 63eb3306c025..b67c14da1240 100644
---- a/drivers/iommu/intel/iommu.h
-+++ b/drivers/iommu/intel/iommu.h
-@@ -1045,6 +1045,15 @@ static inline void context_set_sm_pre(struct context_entry *context)
- 	context->lo |= BIT_ULL(4);
- }
- 
-+/*
-+ * Clear the PRE(Page Request Enable) field of a scalable mode context
-+ * entry.
-+ */
-+static inline void context_clear_sm_pre(struct context_entry *context)
-+{
-+	context->lo &= ~BIT_ULL(4);
-+}
-+
- /* Returns a number of VTD pages, but aligned to MM page size */
- static inline unsigned long aligned_nrpages(unsigned long host_addr, size_t size)
- {
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index 89f489372138..d51f840715e5 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -4241,6 +4241,37 @@ static int intel_iommu_enable_sva(struct device *dev)
- 	return 0;
- }
- 
-+static int context_flip_pri(struct device_domain_info *info, bool enable)
-+{
-+	struct intel_iommu *iommu = info->iommu;
-+	u8 bus = info->bus, devfn = info->devfn;
-+	struct context_entry *context;
-+
-+	spin_lock(&iommu->lock);
-+	if (context_copied(iommu, bus, devfn)) {
-+		spin_unlock(&iommu->lock);
-+		return -EINVAL;
-+	}
-+
-+	context = iommu_context_addr(iommu, bus, devfn, false);
-+	if (!context || !context_present(context)) {
-+		spin_unlock(&iommu->lock);
-+		return -ENODEV;
-+	}
-+
-+	if (enable)
-+		context_set_sm_pre(context);
-+	else
-+		context_clear_sm_pre(context);
-+
-+	if (!ecap_coherent(iommu->ecap))
-+		clflush_cache_range(context, sizeof(*context));
-+	intel_context_flush_present(info, context, true);
-+	spin_unlock(&iommu->lock);
-+
-+	return 0;
-+}
-+
- static int intel_iommu_enable_iopf(struct device *dev)
- {
- 	struct pci_dev *pdev = dev_is_pci(dev) ? to_pci_dev(dev) : NULL;
-@@ -4270,15 +4301,23 @@ static int intel_iommu_enable_iopf(struct device *dev)
- 	if (ret)
- 		return ret;
- 
-+	ret = context_flip_pri(info, true);
-+	if (ret)
-+		goto err_remove_device;
-+
- 	ret = pci_enable_pri(pdev, PRQ_DEPTH);
--	if (ret) {
--		iopf_queue_remove_device(iommu->iopf_queue, dev);
--		return ret;
--	}
-+	if (ret)
-+		goto err_clear_pri;
- 
- 	info->pri_enabled = 1;
- 
- 	return 0;
-+err_clear_pri:
-+	context_flip_pri(info, false);
-+err_remove_device:
-+	iopf_queue_remove_device(iommu->iopf_queue, dev);
-+
-+	return ret;
- }
- 
- static int intel_iommu_disable_iopf(struct device *dev)
-@@ -4289,6 +4328,15 @@ static int intel_iommu_disable_iopf(struct device *dev)
- 	if (!info->pri_enabled)
- 		return -EINVAL;
- 
-+	/* Disable new PRI reception: */
-+	context_flip_pri(info, false);
-+
-+	/*
-+	 * Remove device from fault queue and acknowledge all outstanding
-+	 * PRQs to the device:
-+	 */
-+	iopf_queue_remove_device(iommu->iopf_queue, dev);
-+
- 	/*
- 	 * PCIe spec states that by clearing PRI enable bit, the Page
- 	 * Request Interface will not issue new page requests, but has
-@@ -4299,7 +4347,6 @@ static int intel_iommu_disable_iopf(struct device *dev)
- 	 */
- 	pci_disable_pri(to_pci_dev(dev));
- 	info->pri_enabled = 0;
--	iopf_queue_remove_device(iommu->iopf_queue, dev);
- 
- 	return 0;
- }
-diff --git a/drivers/iommu/intel/pasid.c b/drivers/iommu/intel/pasid.c
-index aef4b4afb873..b1ec9660bc11 100644
---- a/drivers/iommu/intel/pasid.c
-+++ b/drivers/iommu/intel/pasid.c
-@@ -749,8 +749,6 @@ static int context_entry_set_pasid_table(struct context_entry *context,
- 
- 	if (info->ats_supported)
- 		context_set_sm_dte(context);
--	if (info->pri_supported)
--		context_set_sm_pre(context);
- 	if (info->pasid_supported)
- 		context_set_pasid(context);
- 
--- 
-2.34.1
+>
+> Thanks
+> Neeraj
+>
+> >         /*
+> >          * Full ordering between remote CPU's post idle accesses and up=
+dater's
+> >          * accesses prior to current GP (and also the started GP sequen=
+ce number)
+> >          * is enforced by rcu_seq_start() implicit barrier and even fur=
+ther by
+> >          * smp_mb__after_unlock_lock() barriers chained all the way thr=
+oughout the
+> >          * rnp locking tree since rcu_gp_init() and up to the current l=
+eaf rnp
+> >          * locking.
+> >          *
+> >          * Ordering between remote CPU's pre idle accesses and post gra=
+ce period's
+> >          * accesses is enforced by the below acquire semantic.
 
+Maybe say "post grace period updater's accesses" as in the other change?
+
+(I had to refer to your sequence flow in PATCH 1/6, between GP kthread
+and remote CPU
+to visualize this :) )
+
+
+Thanks
+Neeraj
+
+> >          */
+> >
+> > Thanks.
