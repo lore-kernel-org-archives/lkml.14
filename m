@@ -1,155 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A030213A245;
-	Thu, 27 Jun 2024 15:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C2213C821;
+	Thu, 27 Jun 2024 15:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719500767; cv=none; b=cSFdC6TdDPqOLVmgRH5AovASaXGhYmZa/pMsrZG3/CaABR+emwhMrwWBXid6uv3LdL/VZhDQskhoaGCq2y+sYePLMN4FtFbdKCe0G6Xg70WKEfQhsal3OHw2UDw1Tl0vxB4NDO/GPHYd3YlkY99/8NhMZe71cR2YJZHXyDGQJ3k=
+	t=1719500789; cv=none; b=j0+SWqXT5sTiLoKX1rztbRtVft1Us4eShGdT6a2mUEf9oiAMWJ/7Vnc8aDIg40BLLRxQvSaajxNGUknQOgt+AHsQRsXHT7O3jwCXDL044HYw5+Wdc7MfoxxhXc9G5eHl4LW2QL44c3JMnx0f9noWQA9yYjjv3/Ou6bsDSo4Sz5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719500767; c=relaxed/simple;
-	bh=Djbrivkq0wc2jEsn+rTxgWDZpcBMsUplG+Wqu9mPo2g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CJVO5BFm1k+EyoVp77BdFn92dF+U/El8vB6AW4UY3ozmWL1BCf2f4MvOAltmqKxU1ja+D2RTvgteEdCzCl+kvWlzypjq95949NG1YNtSv+Y7Dw3QkC4jAUoNdtcaDA94Ycha+dwYvuFV5A7263HIpDYJOg/YpjuWeVd10EmUkVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U6/AjJFA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719500789; c=relaxed/simple;
+	bh=Q6CNiPkkdNu7gSD02dlZ4a+giT7+eN+yTgHoayf3dXY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KHOqfddMwRnou/NvSkJO6PvJuYNRp6uEbt6JdYCZ6MaRuTTIxBQo+ouF6AAGSr9WNkDyuiFat63Js3fYetnl+PobTWuZhIRTs5Ik1PKQdX7hPQCSewQcogMoEV9Udj8LP6eESWJ5uMypsfOIpIfblf1KNNxN+HWdP5KYuSATAq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=C+GMefX+; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U6/AjJFA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE4CDC2BBFC;
-	Thu, 27 Jun 2024 15:06:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719500767;
-	bh=Djbrivkq0wc2jEsn+rTxgWDZpcBMsUplG+Wqu9mPo2g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U6/AjJFAW4WolWRAJvjof7CxpmtiX3kDNLeTk9ABltlygOqBrGDrYhzuqbdkx/eCF
-	 xWGhx3JavgSEI3MSGiDZxV0XkpHbqTWKC1TNk3ATeg4148ft/pMMw4BLd1OJ5EaoDh
-	 lJKDsimBob+/B/mPpw01RH35RvpRUDWm1fXOpr7mvLVc0Q4r2C/VkU9Q+8hdu9aCdV
-	 +alapw+vuNIUqNPbGd7B0zfhDQsoGluza435rqEIVEFFZYN9y2O6ZHTGGiZAsbkZZm
-	 NFvfZjnqorZiZJ7Cn6EpjMRAIL+el1Qt6DbEF+cnR51G7vfA7ZutVBH/7+8SwPYAlf
-	 b8aLGpUerp4Aw==
-Date: Thu, 27 Jun 2024 16:06:01 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Ramona Gradinariu <ramona.gradinariu@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jun Yan <jerrysteve1101@gmail.com>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Mehdi Djait <mehdi.djait.k@gmail.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] dt-bindings: iio: accel: add ADXL380
-Message-ID: <20240627-stiffly-annoying-f1f53fc432df@spud>
-References: <20240627102617.24416-1-antoniu.miclaus@analog.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="C+GMefX+"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45RF6BXQ004455;
+	Thu, 27 Jun 2024 10:06:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1719500771;
+	bh=AA7CCvsy3fGdZWB/58CmRJN2Df5l8paTg5EoWlnMJ1o=;
+	h=From:To:CC:Subject:Date;
+	b=C+GMefX+Z+LXjfKt1Xk5de2oyQNswMN6blN7w29ecMgukSinYs0STHdV1KIs9yg9E
+	 a8F9Q5RS9lzVf//XQfH/TO8dWr3im+ac+2m3x8dKKKE3ouBFqKsF69Z1qThkfh/28w
+	 7BMuyTSTR+c5pZImmYFI3RxuWkJpkOaI8HfsBis0=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45RF6Bgd033898
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 27 Jun 2024 10:06:11 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 27
+ Jun 2024 10:06:11 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 27 Jun 2024 10:06:11 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45RF6BHV001943;
+	Thu, 27 Jun 2024 10:06:11 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Tony Lindgren <tony@atomide.com>, Conor Dooley <conor+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        Nishanth Menon <nm@ti.com>
+Subject: [PATCH V2] dt-bindings: pinctrl: pinctrl-single: Fix pinctrl-single,gpio-range description
+Date: Thu, 27 Jun 2024 10:06:10 -0500
+Message-ID: <20240627150610.469645-1-nm@ti.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="0n+nOH0+6w7iTwZd"
-Content-Disposition: inline
-In-Reply-To: <20240627102617.24416-1-antoniu.miclaus@analog.com>
+Organization: Texas Instruments, Inc.
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
+The binding is supposed to describe the properties of each element
+of the pinctrl-single,gpio-range array entry, however when we use
+"- items:" instead of "items:", it explicitly describes that there
+is just a single entry in the array.
 
---0n+nOH0+6w7iTwZd
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The pinctrl-single,gpio-range property should describe more than one
+entry in the array. Fix the typo and adjust the alignment of the
+description of the entries appropriately.
 
-On Thu, Jun 27, 2024 at 01:25:17PM +0300, Antoniu Miclaus wrote:
-> Add dt-bindings for ADXL380/ADLX382 low noise density, low
-> power, 3-axis accelerometer with selectable measurement ranges.
->=20
-> Signed-off-by: Ramona Gradinariu <ramona.gradinariu@analog.com>
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> ---
-> changes in v3:
->  - add power support
->  - add support for both interrupts
->  .../bindings/iio/accel/adi,adxl380.yaml       | 103 ++++++++++++++++++
->  MAINTAINERS                                   |   7 ++
->  2 files changed, 110 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adxl3=
-80.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adxl380.yaml=
- b/Documentation/devicetree/bindings/iio/accel/adi,adxl380.yaml
-> new file mode 100644
-> index 000000000000..55e25a9b31ac
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/accel/adi,adxl380.yaml
-> @@ -0,0 +1,103 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/accel/adi,adxl380.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices ADXL380/382 3-Axis Digital Accelerometer
-> +
-> +maintainers:
-> +  - Ramona Gradinariu <ramona.gradinariu@analog.com>
-> +  - Antoniu Miclaus <antoniu.miclaus@analog.com>
-> +
-> +description: |
-> +  The ADXL380/ADXL382 is a low noise density, low power, 3-axis
-> +  accelerometer with selectable measurement ranges. The ADXL380
-> +  supports the =B14 g, =B18 g, and =B116 g ranges, and the ADXL382 suppo=
-rts
-> +  =B115 g, =B130 g, and =B160 g ranges.
-> +  The ADXL380/ADXL382 offers industry leading noise, enabling precision
-> +  applications with minimal calibration. The low noise, and low power
-> +  ADXL380/ADXL382 enables accurate measurement in an environment with
-> +  high vibration, heart sounds and audio.
-> +
-> +  In addition to its low power consumption, the ADXL380/ADXL382 has
-> +  many features to enable true system level performance. These
-> +  include a built-in micropower temperature sensor, single / double /
-> +  triple tap detection and a state machine to prevent a false
-> +  triggering. In addition, the ADXL380/ADXL382 has provisions for
-> +  external control of the sampling time and/or an external clock.
+Fixes: 677a62482bd6 ("dt-bindings: pinctrl: Update pinctrl-single to use yaml")
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+Symptom:
+pinctrl-single,gpio-range = <&range 0 21 7>;
+generates no warning
+However,
+pinctrl-single,gpio-range = <&range 0 21 7>, <&range 32 2 7>;
+generates "is too long" warning.
 
-Please cull the marketing from the descriptions. "Industry leading" may
-or may not be accurate at the time of going to print, but might be
-completely incorrect in 5 years. Ditto "low power consumption".
+This is just an attempt to fix the binding that is existing.
 
-With the marketing gone,
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+V1: https://lore.kernel.org/all/20240618165102.2380159-1-nm@ti.com/
 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index be590c462d91..1425182c85e2 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -618,6 +618,13 @@ F:	drivers/iio/accel/adxl372.c
->  F:	drivers/iio/accel/adxl372_i2c.c
->  F:	drivers/iio/accel/adxl372_spi.c
-> =20
-> +ADXL380 THREE-AXIS DIGITAL ACCELEROMETER DRIVER
-> +M:	Ramona Gradinariu <ramona.gradinariu@analog.com>
-> +M:	Antoniu Miclaus <antoniu.miclaus@analog.com>
-> +S:	Supported
-> +W:	https://ez.analog.com/linux-software-drivers
+Patch is based on next-20240626
 
-Seems like having a website like
-https://wiki.analog.com/resources/tools-software/linux-drivers/input-misc/a=
-dxl345
-would make more sense than a generic forum for all of your drivers?
+ .../devicetree/bindings/pinctrl/pinctrl-single.yaml    | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---0n+nOH0+6w7iTwZd
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
+index c11495524dd2..4e7fd00d602a 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
+@@ -75,11 +75,11 @@ properties:
+     description: Optional list of pin base, nr pins & gpio function
+     $ref: /schemas/types.yaml#/definitions/phandle-array
+     items:
+-      - items:
+-          - description: phandle of a gpio-range node
+-          - description: pin base
+-          - description: number of pins
+-          - description: gpio function
++      items:
++        - description: phandle of a gpio-range node
++        - description: pin base
++        - description: number of pins
++        - description: gpio function
+ 
+   '#gpio-range-cells':
+     description: No longer needed, may exist in older files for gpio-ranges
 
------BEGIN PGP SIGNATURE-----
+base-commit: df9574a57d02b265322e77fb8628d4d33641dda9
+-- 
+2.43.0
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZn1/2QAKCRB4tDGHoIJi
-0j95AQDhJeGs/zhD0V7SpekjUWa7OBI/8gYbp6v6f23EddLZRwEAq9TJq+x1gWOb
-QAmC4UOsxBMJ5TcKx9mPYL719tWz0g8=
-=Li+x
------END PGP SIGNATURE-----
-
---0n+nOH0+6w7iTwZd--
