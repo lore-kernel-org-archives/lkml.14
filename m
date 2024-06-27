@@ -1,345 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A48519597B
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 14:09:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A68195B04;
+	Thu, 27 Jun 2024 14:09:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719497347; cv=none; b=KrDbjtizOUzZj/4KCDY+wmEx26t+rUQev28KZOg3iRdCjJP1dBy0cas/f59xmlM/9/ZCku11d0ELc2WKY54eMgISZ/LjRhgOEmylxIFJIR9+9oxRfxetQd9KsQ9YmqayXn93YERHMTXXJiS65ORnjOz0ccKqGoaYadRlFskjDgU=
+	t=1719497385; cv=none; b=lTZ/8LEoivk1bxpF5IFWx3piigc9gZTYGqeT5AJo/cQg37l1VFzYBhNpJwC7f+rsUVSMtzNjbErDw4+W8k25PwdPnjSUOmcoM1kGR7Z8oI4tN5HxNHXoG6GXp8s4i36j4TAUpKcOsFThDVTQHtihWmrZsWvlC3hE/pVUtc8X6Vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719497347; c=relaxed/simple;
-	bh=n4HIkVyl2LxxKLdNc1L3vZhE8WXNvJbiOIbwjTU0EFM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PafjVHeDxeDX//amwmMIh1ojvohEQMlzXN8rwxO3xzB9GzdwoJSs3D8ROKJ78bsK/daune/7+wkRrYhdOZ/R/T2dP5W3sDP+WODgywHJcrGWumBiFzEldQZZmcxG3yEsqk7Cb4in/dDhWGEoXNf/m6s8T98OchPn/Tkd/P1v9iU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WKfz4fhu; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719497385; c=relaxed/simple;
+	bh=bf8xtcKWz2ekG6ZG9mxbefmEIFpXZW0+JgN9tcZmwwM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=paldOtX9qfZOLIWtnRqYF1pxI3azKILlUXN1Qa2RnHhb5pl7OYhVrzL5ZIfJ0w1ALDN6izjvSKolAypA8Bh/YZYI/4SJekBpWDKFZcxgN+1yREMcFd6aNU1Oa699NFG3/XNbS4VGeaCAxy5yR05pDJy0EcF/l2EXeDURn72Eb1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MlUyZpFP; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WKfz4fhu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719497344;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=m2MJw8DUeIzMnv5roWQI911cUTl2Nf3F1gSFyr8dYmc=;
-	b=WKfz4fhuqpBXRn81seqNkNUh3UZD+2oB4eX0jp5zImc0Iec6JyHvYoHi4SjZImDwBGyz9j
-	fHuLqrZYmaxCdWf6YQuB+MLBxit8qnCXQSer1rqnXBvPGWHz+E0em5uY2h9daB5LrKbqWQ
-	146ptZUlLKsFFeqDrCtGo2QFBeo+L+Y=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-339-mmKBDl6xNbCav_PzwwuN8A-1; Thu,
- 27 Jun 2024 10:09:01 -0400
-X-MC-Unique: mmKBDl6xNbCav_PzwwuN8A-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A6A1F19560B0;
-	Thu, 27 Jun 2024 14:08:59 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.45.225.168])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5DCBA19560A3;
-	Thu, 27 Jun 2024 14:08:57 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: torvalds@linux-foundation.org
-Cc: kuba@kernel.org,
-	davem@davemloft.net,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Networking for v6.10-rc6
-Date: Thu, 27 Jun 2024 16:08:37 +0200
-Message-ID: <20240627140837.42758-1-pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MlUyZpFP"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52cdc4d221eso6645674e87.3;
+        Thu, 27 Jun 2024 07:09:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719497382; x=1720102182; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WxbdUF3igWgZnkX8ezz96rfrkEDeMV7VPqBBzmY6B/M=;
+        b=MlUyZpFPVTOVzHrDuvOjfnbg3cLmBRJ0gEkdM+MxN5zlD571JklivsGrRhBsjkDxIL
+         4UF+ihPs367R2yOTmUuRz+/f22NmfSUSlo8PZWEz7m00TIHUAfwLHw1nj40BCoxbs20N
+         OCotgGIzDMkRicXfo9YzL3SoqvTPaSerYTy3pqgMNDgF4awJWFRl4WLe73F4PbtxlNEZ
+         tMC/ifWbx2iPsyXfwllQovjwHIthorBD8rPkKIKaNztAz/jAA8GyIfvF2sWduXkLzA1w
+         aWS4EOGSMQIuVKJcxlfcKjO/9X3o1M6vT7z9VVpB9nL9DCs3p1xcTmy7zjAfG63c1D/A
+         GB/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719497382; x=1720102182;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WxbdUF3igWgZnkX8ezz96rfrkEDeMV7VPqBBzmY6B/M=;
+        b=SV67PJ08Ew+68I02f05I99qPTKnQM9cBQjbAyoYvcoBDOsTbqq9MbnVful0SzQ+6ll
+         ygspUiDGe8wT179h38Q834q7/jGQJdn4E6lMhEl5AY2KrvvqWyPfDodjH7bs22M2/xn2
+         hBNmyz204oKYk411TTY2Q9W+rq9ikIJ5d729kqJTRzjXWno38w8oX+gUD/iQB6B+hvwb
+         UxKN3x/UF3JIsgU4zxMAJcCPP3ISaGNwDrGD/sMC6FkwCOdPDtcnkPow1rqkM4s4R6VH
+         GhObRg2WKN6Num2M+XW0WW+rlWMHzyNR0dVcnB9/xwFxjQmOoDTOv01KbZpvnEKXsxRb
+         ovVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUrzzE/DZ66f0Z5DrI8NBg308AbgzZQ3pyq6KYsidcVtjfIReBtwlN/5RJqFUouGTQhOIkTEczfa1lAEkisF9a/7+XnVCNeNjSizTsYedHwBbc9FCSv5oUb/fWD8JIpwijVwc32Hh0QQkd81cIrHl5GUyvBdLA+O2PaEmYn8uGHkg==
+X-Gm-Message-State: AOJu0YzuXlB7KOkzrMPIkWDsGYmcMKOgUZbr2CaHCgvD93A/Rz17SdmV
+	IkXzMuhiKxEFHz5s2Nb11NWoHtz1Covc4lHsTP0GrBLXfY2jJ6Ra
+X-Google-Smtp-Source: AGHT+IGYnYpUx4D98KzvsoiC9IwR+Ky0CtunlggIok0VAdrIJJsUBpeuWypCrzdBCggYRccbsLhkLg==
+X-Received: by 2002:a05:6512:281:b0:52c:e10b:cb36 with SMTP id 2adb3069b0e04-52ce183add6mr8239966e87.33.1719497379045;
+        Thu, 27 Jun 2024 07:09:39 -0700 (PDT)
+Received: from mobilestation ([213.79.110.82])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52e71329529sm215060e87.293.2024.06.27.07.09.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jun 2024 07:09:38 -0700 (PDT)
+Date: Thu, 27 Jun 2024 17:09:36 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Vladimir Oltean <olteanv@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+	Russell King <linux@armlinux.org.uk>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Jose Abreu <joabreu@synopsys.com>, Jose Abreu <Jose.Abreu@synopsys.com>, 
+	Florian Fainelli <f.fainelli@gmail.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, 
+	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Sagar Cheluvegowda <quic_scheluve@quicinc.com>, 
+	Abhishek Chauhan <quic_abchauha@quicinc.com>, Andrew Halaney <ahalaney@redhat.com>, 
+	Jiawen Wu <jiawenwu@trustnetic.com>, Mengyuan Lou <mengyuanlou@net-swift.com>, 
+	Tomer Maimon <tmaimon77@gmail.com>, openbmc@lists.ozlabs.org, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 00/10] net: pcs: xpcs: Add memory-mapped
+ device support
+Message-ID: <nct7rbh5w7nd4jneiqzwqpwv5gy6t7q2xobv74hqgilzpykzx5@v6l2aoh5fcaj>
+References: <20240627004142.8106-1-fancer.lancer@gmail.com>
+ <20240627111034.nusgjux3lzf5s3bk@skbuf>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
-
-Hi Linus!
-
-There are a bunch of regressions addressed by this PR, but hopefully
-nothing spectacular. We are still waiting the driver fix from
-Intel, mentioned by Jakub in the previous net PR.
-
-The following changes since commit d5a7fc58da039903b332041e8c67daae36f08b50:
-
-  Merge tag 'net-6.10-rc5' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net (2024-06-20 10:49:50 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git net-6.10-rc6
-
-for you to fetch changes up to b62cb6a7e83622783100182d9b70e9c70393cfbe:
-
-  Merge tag 'nf-24-06-27' of git://git.kernel.org/pub/scm/linux/kernel/git/netfilter/nf (2024-06-27 13:00:50 +0200)
-
-----------------------------------------------------------------
-Including fixes from can, bpf and netfilter.
-
-Current release - regressions:
-
-  - core: add softirq safety to netdev_rename_lock
-
-  - tcp: fix tcp_rcv_fastopen_synack() to enter TCP_CA_Loss for failed TFO
-
-  - batman-adv: fix RCU race at module unload time
-
-Current release - new code bugs:
-
-Previous releases - regressions:
-
-  - openvswitch: get related ct labels from its master if it is not confirmed
-
-  - eth: bonding: fix incorrect software timestamping report
-
-  - eth: mlxsw: fix memory corruptions on spectrum-4 systems
-
-  - eth: ionic: use dev_consume_skb_any outside of napi
-
-Previous releases - always broken:
-
-  - netfilter: fully validate NFT_DATA_VALUE on store to data registers
-
-  - unix: several fixes for OoB data
-
-  - tcp: fix race for duplicate reqsk on identical SYN
-
-  - bpf:
-    - fix may_goto with negative offset.
-    - fix the corner case with may_goto and jump to the 1st insn.
-    - fix overrunning reservations in ringbuf
-
-  - can:
-    - j1939: recover socket queue on CAN bus error during BAM transmission
-    - mcp251xfd: fix infinite loop when xmit fails
-
-  - dsa: microchip: monitor potential faults in half-duplex mode
-
-  - eth: vxlan: pull inner IP header in vxlan_xmit_one()
-
-  - eth: ionic: fix kernel panic due to multi-buffer handling
-
-Misc:
-
-  - selftest: unix tests refactor and a lot of new cases added
-
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-
-----------------------------------------------------------------
-Alexei Starovoitov (6):
-      Merge branch 'bpf-fix-missed-var_off-related-to-movsx-in-verifier'
-      bpf: Fix remap of arena.
-      bpf: Fix the corner case with may_goto and jump to the 1st insn.
-      selftests/bpf: Tests with may_goto and jumps to the 1st insn
-      bpf: Fix may_goto with negative offset.
-      selftests/bpf: Add tests for may_goto with negative offset.
-
-Aryan Srivastava (1):
-      net: mvpp2: fill-in dev_port attribute
-
-Chen Ni (1):
-      can: kvaser_usb: fix return value for hif_usb_send_regout
-
-Daniel Borkmann (2):
-      bpf: Fix overrunning reservations in ringbuf
-      selftests/bpf: Add more ring buffer test coverage
-
-Daniele Palmas (1):
-      net: usb: qmi_wwan: add Telit FN912 compositions
-
-Daniil Dulov (1):
-      xdp: Remove WARN() from __xdp_reg_mem_model()
-
-David S. Miller (2):
-      Merge branch 'mlxsw-fixes'
-      Merge branch 'phy-microchip-ksz-9897-errata'
-
-Enguerrand de Ribaucourt (3):
-      net: phy: micrel: add Microchip KSZ 9477 to the device table
-      net: dsa: microchip: use collision based back pressure mode
-      net: dsa: microchip: monitor potential faults in half-duplex mode
-
-Eric Dumazet (1):
-      net: add softirq safety to netdev_rename_lock
-
-Frank Li (1):
-      dt-bindings: net: fman: remove ptp-timer from required list
-
-Guillaume Nault (1):
-      vxlan: Pull inner IP header in vxlan_xmit_one().
-
-Hangbin Liu (1):
-      bonding: fix incorrect software timestamping report
-
-Ido Schimmel (2):
-      mlxsw: pci: Fix driver initialization with Spectrum-4
-      mlxsw: spectrum_buffers: Fix memory corruptions on Spectrum-4 systems
-
-Jakub Kicinski (3):
-      Merge tag 'linux-can-fixes-for-6.10-20240621' of git://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-can
-      Merge tag 'batadv-net-pullrequest-20240621' of git://git.open-mesh.org/linux-merge
-      Merge tag 'for-netdev' of ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/bpf/bpf
-
-Jan Sokolowski (1):
-      ice: Rebuild TC queues on VSI queue reconfiguration
-
-Jianguo Wu (1):
-      netfilter: fix undefined reference to 'netfilter_lwtunnel_*' when CONFIG_SYSCTL=n
-
-Jose Ignacio Tornos Martinez (1):
-      net: usb: ax88179_178a: improve link status logs
-
-Kory Maincent (2):
-      net: pse-pd: Kconfig: Fix missing firmware loader config select
-      netlink: specs: Fix pse-set command attributes
-
-Kuniyuki Iwashima (12):
-      selftest: af_unix: Add Kconfig file.
-      selftest: af_unix: Remove test_unix_oob.c.
-      selftest: af_unix: Add msg_oob.c.
-      af_unix: Stop recv(MSG_PEEK) at consumed OOB skb.
-      af_unix: Don't stop recv(MSG_DONTWAIT) if consumed OOB skb is at the head.
-      selftest: af_unix: Add non-TCP-compliant test cases in msg_oob.c.
-      af_unix: Don't stop recv() at consumed ex-OOB skb.
-      selftest: af_unix: Add SO_OOBINLINE test cases in msg_oob.c
-      selftest: af_unix: Check SIGURG after every send() in msg_oob.c
-      selftest: af_unix: Check EPOLLPRI after every send()/recv() in msg_oob.c
-      af_unix: Fix wrong ioctl(SIOCATMARK) when consumed OOB skb is at the head.
-      selftest: af_unix: Check SIOCATMARK after every send()/recv() in msg_oob.c.
-
-Linus Lüssing (1):
-      Revert "batman-adv: prefer kfree_rcu() over call_rcu() with free-only callbacks"
-
-Ma Ke (1):
-      net: mana: Fix possible double free in error handling path
-
-Matt Bobrowski (1):
-      bpf: Update BPF LSM maintainer list
-
-Neal Cardwell (1):
-      tcp: fix tcp_rcv_fastopen_synack() to enter TCP_CA_Loss for failed TFO
-
-Nick Child (2):
-      ibmvnic: Free any outstanding tx skbs during scrq reset
-      ibmvnic: Add tx check to prevent skb leak
-
-Oleksij Rempel (2):
-      net: can: j1939: enhanced error handling for tightly received RTS messages in xtp_rx_rts_session_new
-      net: can: j1939: recover socket queue on CAN bus error during BAM transmission
-
-Pablo Neira Ayuso (1):
-      netfilter: nf_tables: fully validate NFT_DATA_VALUE on store to data registers
-
-Paolo Abeni (2):
-      Merge branch 'af_unix-fix-bunch-of-msg_oob-bugs-and-add-new-tests'
-      Merge tag 'nf-24-06-27' of git://git.kernel.org/pub/scm/linux/kernel/git/netfilter/nf
-
-Ratheesh Kannoth (1):
-      octeontx2-pf: Fix coverity and klockwork issues in octeon PF driver
-
-Shannon Nelson (2):
-      net: remove drivers@pensando.io from MAINTAINERS
-      ionic: use dev_consume_skb_any outside of napi
-
-Shigeru Yoshida (1):
-      net: can: j1939: Initialize unused data in j1939_send_one()
-
-Sven Eckelmann (1):
-      batman-adv: Don't accept TT entries for out-of-spec VIDs
-
-Taehee Yoo (1):
-      ionic: fix kernel panic due to multi-buffer handling
-
-Tristram Ha (2):
-      net: dsa: microchip: fix initial port flush problem
-      net: dsa: microchip: fix wrong register write when masking interrupt
-
-Vitor Soares (1):
-      can: mcp251xfd: fix infinite loop when xmit fails
-
-Xin Long (1):
-      openvswitch: get related ct labels from its master if it is not confirmed
-
-Yonghong Song (3):
-      bpf: Add missed var_off setting in set_sext32_default_val()
-      bpf: Add missed var_off setting in coerce_subreg_to_size_sx()
-      selftests/bpf: Add a few tests to cover
-
-Yunseong Kim (1):
-      tracing/net_sched: NULL pointer dereference in perf_trace_qdisc_reset()
-
-luoxuanqiang (1):
-      Fix race for duplicate reqsk on identical SYN
-
- .../devicetree/bindings/net/fsl,fman-dtsec.yaml    |   1 -
- Documentation/netlink/specs/ethtool.yaml           |   7 +-
- MAINTAINERS                                        |   4 +-
- drivers/net/bonding/bond_main.c                    |   3 +
- drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c     |  14 +-
- drivers/net/can/spi/mcp251xfd/mcp251xfd-tx.c       |  55 +-
- drivers/net/can/spi/mcp251xfd/mcp251xfd.h          |   5 +
- drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c   |   2 +-
- drivers/net/dsa/microchip/ksz9477.c                |  61 +-
- drivers/net/dsa/microchip/ksz9477.h                |   2 +
- drivers/net/dsa/microchip/ksz9477_reg.h            |  11 +-
- drivers/net/dsa/microchip/ksz_common.c             |  13 +-
- drivers/net/dsa/microchip/ksz_common.h             |   1 +
- drivers/net/ethernet/ibm/ibmvnic.c                 |  18 +
- drivers/net/ethernet/intel/ice/ice_main.c          |  10 +-
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c    |   1 +
- .../ethernet/marvell/octeontx2/nic/otx2_common.c   |  10 +-
- .../net/ethernet/marvell/octeontx2/nic/otx2_reg.h  |  55 +-
- .../net/ethernet/marvell/octeontx2/nic/otx2_txrx.c |   2 +-
- drivers/net/ethernet/marvell/octeontx2/nic/qos.c   |   3 +-
- drivers/net/ethernet/mellanox/mlxsw/pci.c          |  18 +-
- drivers/net/ethernet/mellanox/mlxsw/reg.h          |   2 +
- .../net/ethernet/mellanox/mlxsw/spectrum_buffers.c |  20 +-
- drivers/net/ethernet/microsoft/mana/mana_en.c      |   2 +
- drivers/net/ethernet/pensando/ionic/ionic_dev.h    |   4 +-
- drivers/net/ethernet/pensando/ionic/ionic_lif.c    |   2 +-
- drivers/net/ethernet/pensando/ionic/ionic_txrx.c   |  55 +-
- drivers/net/phy/micrel.c                           |   1 +
- drivers/net/pse-pd/Kconfig                         |   1 +
- drivers/net/usb/ax88179_178a.c                     |   6 +-
- drivers/net/usb/qmi_wwan.c                         |   2 +
- drivers/net/vxlan/vxlan_core.c                     |   9 +-
- include/net/inet_connection_sock.h                 |   2 +-
- include/net/netfilter/nf_tables.h                  |   5 +
- include/trace/events/qdisc.h                       |   2 +-
- kernel/bpf/arena.c                                 |  16 +-
- kernel/bpf/ringbuf.c                               |  31 +-
- kernel/bpf/verifier.c                              |  61 +-
- net/batman-adv/originator.c                        |  27 +
- net/batman-adv/translation-table.c                 |  47 +-
- net/can/j1939/main.c                               |   6 +-
- net/can/j1939/transport.c                          |  21 +-
- net/core/dev.c                                     |  12 +-
- net/core/xdp.c                                     |   4 +-
- net/dccp/ipv4.c                                    |   7 +-
- net/dccp/ipv6.c                                    |   7 +-
- net/ipv4/inet_connection_sock.c                    |  17 +-
- net/ipv4/tcp_input.c                               |  45 +-
- net/netfilter/nf_hooks_lwtunnel.c                  |   3 +
- net/netfilter/nf_tables_api.c                      |   8 +-
- net/netfilter/nft_lookup.c                         |   3 +-
- net/openvswitch/conntrack.c                        |   7 +-
- net/unix/af_unix.c                                 |  37 +-
- tools/testing/selftests/bpf/Makefile               |   2 +-
- tools/testing/selftests/bpf/prog_tests/ringbuf.c   |  56 ++
- .../selftests/bpf/progs/test_ringbuf_write.c       |  46 ++
- .../bpf/progs/verifier_iterating_callbacks.c       | 146 ++++
- tools/testing/selftests/bpf/progs/verifier_movsx.c |  63 ++
- tools/testing/selftests/net/.gitignore             |   1 -
- tools/testing/selftests/net/af_unix/Makefile       |   2 +-
- tools/testing/selftests/net/af_unix/config         |   3 +
- tools/testing/selftests/net/af_unix/msg_oob.c      | 734 +++++++++++++++++++++
- .../testing/selftests/net/af_unix/test_unix_oob.c  | 436 ------------
- 63 files changed, 1663 insertions(+), 594 deletions(-)
- create mode 100644 tools/testing/selftests/bpf/progs/test_ringbuf_write.c
- create mode 100644 tools/testing/selftests/net/af_unix/config
- create mode 100644 tools/testing/selftests/net/af_unix/msg_oob.c
- delete mode 100644 tools/testing/selftests/net/af_unix/test_unix_oob.c
-
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240627111034.nusgjux3lzf5s3bk@skbuf>
+
+Hi Vladimir
+
+On Thu, Jun 27, 2024 at 02:10:34PM +0300, Vladimir Oltean wrote:
+> Hi Sergey,
+> 
+> This does not apply to net-next.
+> 
+> Applying: net: pcs: xpcs: Move native device ID macro to linux/pcs/pcs-xpcs.h
+> Applying: net: pcs: xpcs: Split up xpcs_create() body to sub-functions
+> Applying: net: pcs: xpcs: Convert xpcs_id to dw_xpcs_desc
+> Applying: net: pcs: xpcs: Convert xpcs_compat to dw_xpcs_compat
+> Applying: net: pcs: xpcs: Introduce DW XPCS info structure
+> Applying: dt-bindings: net: Add Synopsys DW xPCS bindings
+> Applying: net: pcs: xpcs: Add Synopsys DW xPCS platform device driver
+> Applying: net: pcs: xpcs: Add fwnode-based descriptor creation method
+> Applying: net: stmmac: Create DW XPCS device with particular address
+> Using index info to reconstruct a base tree...
+> M       drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
+> M       include/linux/stmmac.h
+> Checking patch drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c...
+> Checking patch drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c...
+> Checking patch include/linux/stmmac.h...
+> Applied patch drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c cleanly.
+> Applied patch drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c cleanly.
+> Applied patch include/linux/stmmac.h cleanly.
+> Falling back to patching base and 3-way merge...
+> error: Your local changes to the following files would be overwritten by merge:
+>         drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
+>         drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+>         include/linux/stmmac.h
+> Please commit your changes or stash them before you merge.
+> Aborting
+> error: Failed to merge in the changes.
+> Patch failed at 0009 net: stmmac: Create DW XPCS device with particular address
+> hint: Use 'git am --show-current-patch=diff' to see the failed patch
+
+Argg, right! I forgot to port the Russell' latest series introduced
+the select_pcs() callback. Sorry for the inconvenience.
+
+I'll get it merged in my repo (based on the kernel upstream tree with
+verious plat-specific fixes) and test it out again. Then I'll _make
+sure_ this time that the series is applicable onto the net-next tree
+before resubmitting.
+
+Thanks,
+-Serge(y)
+
+> 
+> Thanks,
+> Vladimir
