@@ -1,137 +1,202 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF7B197A72
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 15:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0247319885B
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 15:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719500489; cv=none; b=gbIbbmb5D3bG7cbQVSQWrLP1TVsWxh5z13mQ1bwALNJaVuJJWJjVWDd6AIvPM/ZEqY3YzJoxRP32ARmdDjj91cWabqMjom4C4GWeAxETVPHxdPOXxXphZ1SlM0u+bJojka7+g9UG+MibOsTZJibABuh3iq9pWsZEFA5+gIRh6gM=
+	t=1719500494; cv=none; b=ZipkvdJ5CBEolxtAKAyArULuBHNPQ5bYepQ3IKjIdbPh8S55V8fo5AgP0SF+LjcPV5ZSeWoNcdpMHatz9bOzJhuNMyXE/FmRZZIDy/ndC0psqBjcXFl1SyraZ5u0YxA8ukQdHThdIZjYSxg6klD6QyWfm7YosFwoyqs81kPm2Ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719500489; c=relaxed/simple;
-	bh=/+0HsTEIHWvC/B2RZhsHb8iwndt4VfKfMx8j4TDepXo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=skBbNgtojNeoskv0t9zQ5GoXYiyR0e79JOmYLL9TUVG/Ft8mKO9SfeVhWKZxlruQs4RF0G9S0XGPNg0Ue4xb2T1UX/0KfLQwkJYEy6eOvLORfUaKxq2oJNUfuZ97ida+zJpBU+n5NllVlbW4q8+WNt6usCv1Ru4Ua6shezOL3Ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com; spf=pass smtp.mailfrom=timesys.com; dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b=nGEZVwIy; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timesys.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b="nGEZVwIy"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57d457357easo1876126a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 08:01:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=timesys-com.20230601.gappssmtp.com; s=20230601; t=1719500486; x=1720105286; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4a6tf/qTdWDt3Tjpej1OobYeqXk77XY7cVTYcp4zK/A=;
-        b=nGEZVwIyAYTwkWcNxSi4xKJJZ77Al0psxmG2ruo5RESBCcfKs6zllLNMlTU3x5nCwc
-         livdrlhtvSmFVuWU0/XkuaT14RAibzmj+puzrJbIiCB0pui0NgMnjj8GTKPSKZ32raCR
-         Rcw7VSErCgZHSXNXP0WyifQGWYFLFZVUE+lVUCq34U/FMacxlg08Tjyn2RACAkobS048
-         bntJCBPbErrGHk/oTaJx4d749/Ly/Zkb6xUd64xPC5se3Zabc0JzMCDhCM4WXs/FOPFY
-         BnxTqoEtjLoKwHZdYuBumQ37QsotzApifF7g5oqS7V7KMvJn15Syr9M7rzQxNYPzonVT
-         fypg==
+	s=arc-20240116; t=1719500494; c=relaxed/simple;
+	bh=Ls8TWf7Ls4rDuQM9C/rkvoWcEbirlUYvbabBwsFNNA8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TpKT/YQpwdTHYRotyE/JH+dVe5DJDq6reC0R7Zw1B1CW5gkP+p7Ujof42F2Cj7XcA9gwKQv/AEzPfRArgK+hRIhHzbwBBa9JOpBxSkz1for5Txvs52HacFn5SrGOkvF9YBqIz+eH4j+kIRp4zDw2TbHQBuG27i63XQAiEMEbxbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-630640c1e14so84858497b3.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 08:01:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719500486; x=1720105286;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1719500491; x=1720105291;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4a6tf/qTdWDt3Tjpej1OobYeqXk77XY7cVTYcp4zK/A=;
-        b=afWfbpPhmP3s81ZuWUjk6emouUHtgGzQgHVkdHSFb7CLjSFX1Yuf9SJZoNSOzGE/g/
-         wUFvTBuUmKMH5fl7a+Jf40NJv/jolqpVU3H1le8DYI8qkIMLGVNZiK9BDck5pemHB891
-         vgPeZSQVkTkD8lwJq7kBE5HA6iExRwV3cnNJ7/NnDz8WvbZ0VDe0kKbwmcg9aVExdbY7
-         WsPLH12Ic6htueEmabHl548KCsTZ5gf9VAGYXpGN/xYAF2D3uLifKyPoY3Fktn4v7g+D
-         WMPImhrIQSrJgZdreVvzgtEW2UeHNtMvD9ADAkaIsCgR1ldrNgyAepIVRPgK20Wc1B1Q
-         sGQg==
-X-Forwarded-Encrypted: i=1; AJvYcCWS7fLqVvZQH9ax5YbpgMiWuwwVfrTaQ+kD3F5iFeSyqAjpQ3qRnn3QuJmIEPS3JdtL5DUcvC19DzGaXGHxM5kVDxBt6mFoKwTjpV+M
-X-Gm-Message-State: AOJu0Yyz8rR94mpKdkNvx3S8Anr9ZyH/GkXdp+p+t/COCPHltgCpTLOW
-	IgY3WEceHEBXUfFKkrFwZ8Iic2MEX8Kcc4OnCvsydbFhVvDLyWc7wtbbSxzVQ2U=
-X-Google-Smtp-Source: AGHT+IFXCFq1n96sdM+EJa0YoZN/nrFqErXffElfAdyQDTZKHkn50i6FKtEEBJOwTL4yL1Vq+tcklA==
-X-Received: by 2002:a17:906:e215:b0:a6f:b78a:b39 with SMTP id a640c23a62f3a-a7245b6dcafmr796279766b.1.1719500484672;
-        Thu, 27 Jun 2024 08:01:24 -0700 (PDT)
-Received: from localhost.localdomain ([91.216.213.152])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a729d7ca289sm67189066b.222.2024.06.27.08.01.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 08:01:24 -0700 (PDT)
-From: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"J.M.B. Downing" <jonathan.downing@nautel.com>,
-	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Yangtao Li <frank.li@vivo.com>,
-	Li Zetao <lizetao1@huawei.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Chancel Liu <chancel.liu@nxp.com>,
-	Corentin Labbe <clabbe@baylibre.com>,
-	dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	alsa-devel@alsa-project.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-sound@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [Patch v5 01/12] dt-bindings: dma: pl08x: Add dma-cells description
-Date: Thu, 27 Jun 2024 17:00:19 +0200
-Message-Id: <20240627150046.258795-2-piotr.wojtaszczyk@timesys.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240627150046.258795-1-piotr.wojtaszczyk@timesys.com>
-References: <20240627150046.258795-1-piotr.wojtaszczyk@timesys.com>
+        bh=zg4w7tXCY7d1fGix7mfUzMIgqJ5X93RyC1ZsNDKryqU=;
+        b=wjBioOle3HDpkU5HAZxobupzycVjOpU8bVQ3MIFbm+5/+oIHJowx1g1Zwed3GunJCo
+         4n7GlNbsjQvzmDtGFFFu9LFb4s5LAA9PF2Vmx60FcpCWMSUyBuAMcYzwlD+7++kRIIum
+         95oEm9YpfGAa8c9HNMsjkUCRCmpjOZMNT2Bzp2VX5+hDAABdLcxyPAMbl1vuKTPDbhq9
+         lbEyoa5BWE/gfw0W+6q1V+jd2+5w8Ne0HPybx6uH0oOrFuqD8huULKoJgFu/YvwGOifp
+         3GpKipLhXhAYiKX8njlK5ScV97REdhNQSdNMxl2In5eDF2TXue89q0kpPJhSN7783gpw
+         vxkA==
+X-Forwarded-Encrypted: i=1; AJvYcCVZoMcnYC8DoSHDgTOMkzOQI8yB3nDBrya+c/sx+FSYIjN+9ekMULlkaTUcQ9TnnSZKWCMHjDGh26+LTbg1Z3phKZ6cbq60pzoWQBtN
+X-Gm-Message-State: AOJu0YxlkXh8XSOxar6gqQIVHAWPtqZAoNOnkdf7ZDhWwp/PgA9S4VQ1
+	CX7FBKpIwN7IoU//ROSm6q2Gw1ILUnlHZQxkZ8jn4qvQVum2pcIw/tu0JrUM
+X-Google-Smtp-Source: AGHT+IHyhfwqJy8PFDQDtGAXJcSvwyD2tedqtNZrop5DDDjUmTt1wKf3NGr3XcJVLmtMk7NVXHxIDg==
+X-Received: by 2002:a05:690c:6f8b:b0:63b:f6c1:6068 with SMTP id 00721157ae682-643ac323ac6mr156569117b3.32.1719500491273;
+        Thu, 27 Jun 2024 08:01:31 -0700 (PDT)
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com. [209.85.128.177])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-64979418ea9sm2737247b3.62.2024.06.27.08.01.30
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Jun 2024 08:01:30 -0700 (PDT)
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6325b04c275so82165757b3.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 08:01:30 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWqERSVhtIgtW9nID15RigbtTjRcbmtYDL0tNgpvm6sqoc98XgorLhwziOG2iz7bHohXsUUwzIiRsIafNJXjz2Rk4GI9H08YJpnJyYx
+X-Received: by 2002:a05:690c:f0a:b0:63b:d0df:ffe5 with SMTP id
+ 00721157ae682-643ac81d7b3mr161262737b3.45.1719500490444; Thu, 27 Jun 2024
+ 08:01:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240620-upstream-nfc-mcf5441x-v1-1-69b64807d7a6@yoseli.org>
+In-Reply-To: <20240620-upstream-nfc-mcf5441x-v1-1-69b64807d7a6@yoseli.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 27 Jun 2024 17:01:17 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdV6z6OST=U3cvt3NRe3nj7DKCf+0O4v9s14ZV-j2v=qrA@mail.gmail.com>
+Message-ID: <CAMuHMdV6z6OST=U3cvt3NRe3nj7DKCf+0O4v9s14ZV-j2v=qrA@mail.gmail.com>
+Subject: Re: [PATCH] mtd: nand: Add support for M5441x NFC
+To: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, Stefan Agner <stefan@agner.ch>, linux-m68k@lists.linux-m68k.org, 
+	linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Recover dma-cells description from the legacy DT binding.
+Hi Jean-Michel,
 
-Signed-off-by: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-Fixes: 6f64aa5746d2 ("dt-bindings: dma: convert arm-pl08x to yaml")
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
-Changes for v4:
-- This patch is new in v4
+On Thu, Jun 20, 2024 at 6:25=E2=80=AFPM Jean-Michel Hautbois
+<jeanmichel.hautbois@yoseli.org> wrote:
+> The vf610_nfc driver is also the one which should be used for the
+> coldfire series. Sadly, these device don't support device-tree and so we
+> need to do a few modifications:
+> - Adapt the probe to use pdata if available
+> - Add a new variant as there is a small part to adapt in
+>   vf610_nfc_select_target()
+> - Add the corresponding missing register definitions
+>
+> Tested successfully on a 54418 custom board with a raw NAND:
+> [    2.640000] nand: device found, Manufacturer ID: 0x2c, Chip ID: 0xdc
+> [    2.650000] nand: Micron MT29F4G08ABADAWP
+> [    2.650000] nand: 512 MiB, SLC, erase size: 128 KiB, page size: 2048, =
+OOB size: 64
+>
+> Signed-off-by: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
 
- Documentation/devicetree/bindings/dma/arm-pl08x.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
+Thanks for your patch!
 
-diff --git a/Documentation/devicetree/bindings/dma/arm-pl08x.yaml b/Documentation/devicetree/bindings/dma/arm-pl08x.yaml
-index ab25ae63d2c3..191215d36c85 100644
---- a/Documentation/devicetree/bindings/dma/arm-pl08x.yaml
-+++ b/Documentation/devicetree/bindings/dma/arm-pl08x.yaml
-@@ -52,6 +52,13 @@ properties:
-   clock-names:
-     maxItems: 1
- 
-+  "#dma-cells":
-+    const: 2
-+    description: |
-+      First cell should contain the DMA request,
-+      second cell should contain either 1 or 2 depending on
-+      which AHB master that is used.
-+
-   lli-bus-interface-ahb1:
-     type: boolean
-     description: if AHB master 1 is eligible for fetching LLIs
--- 
-2.25.1
+> --- a/drivers/mtd/nand/raw/vf610_nfc.c
+> +++ b/drivers/mtd/nand/raw/vf610_nfc.c
+> @@ -810,6 +840,7 @@ static int vf610_nfc_probe(struct platform_device *pd=
+ev)
+>         struct vf610_nfc *nfc;
+>         struct mtd_info *mtd;
+>         struct nand_chip *chip;
+> +       struct nand_chip *pdata;
+>         struct device_node *child;
 
+As reported by the robot, this is now unused.
+
+>         int err;
+>         int irq;
+> @@ -820,30 +851,53 @@ static int vf610_nfc_probe(struct platform_device *=
+pdev)
+>
+>         nfc->dev =3D &pdev->dev;
+>         chip =3D &nfc->chip;
+> +       pdata =3D dev_get_platdata(&pdev->dev);
+> +       if (pdata)
+> +               *chip =3D *pdata;
+> +
+>         mtd =3D nand_to_mtd(chip);
+>
+>         mtd->owner =3D THIS_MODULE;
+>         mtd->dev.parent =3D nfc->dev;
+> -       mtd->name =3D DRV_NAME;
+> +
+> +       /*
+> +        * We keep the MTD name unchanged to avoid breaking platforms
+> +        * where the MTD cmdline parser is used and the bootloader
+> +        * has not been updated to use the new naming scheme.
+> +        */
+> +       if (!nfc->dev->of_node)
+> +               mtd->name =3D "NAND";
+> +       else
+> +               mtd->name =3D DRV_NAME;
+>
+>         irq =3D platform_get_irq(pdev, 0);
+>         if (irq < 0)
+>                 return irq;
+>
+>         nfc->regs =3D devm_platform_ioremap_resource(pdev, 0);
+> -       if (IS_ERR(nfc->regs))
+> +       if (IS_ERR(nfc->regs)) {
+> +               dev_err(nfc->dev, "Unable to map registers!\n");
+>                 return PTR_ERR(nfc->regs);
+> +       }
+>
+> +#ifdef CONFIG_OF
+
+Do you need all the #ifdeffery?
+
+>         nfc->clk =3D devm_clk_get_enabled(&pdev->dev, NULL);
+
+Perhaps replace by devm_clk_get_optional_enabled() instead?
+
+>         if (IS_ERR(nfc->clk)) {
+>                 dev_err(nfc->dev, "Unable to get and enable clock!\n");
+>                 return PTR_ERR(nfc->clk);
+>         }
+>
+> -       nfc->variant =3D (enum vf610_nfc_variant)device_get_match_data(&p=
+dev->dev);
+> -       if (!nfc->variant)
+> -               return -ENODEV;
+> +       const void *data =3D device_get_match_data(&pdev->dev);
+>
+> +       nfc->variant =3D (enum vf610_nfc_variant)data;
+> +       if (!nfc->variant) {
+> +               dev_err(nfc->dev, "No variant data found!\n");
+> +               return -ENODEV;
+> +       }
+> +#else
+> +       nfc->variant =3D (enum vf610_nfc_variant)platform_get_device_id(p=
+dev)->driver_data;
+> +#endif
+> +#ifdef CONFIG_OF
+>         for_each_available_child_of_node(nfc->dev->of_node, child) {
+
+for_each_available_child_of_node_scoped(...), so the child variable
+no longer needs to be declared at the top.
+
+>                 if (of_device_is_compatible(child, "fsl,vf610-nfc-nandcs"=
+)) {
+>
+> @@ -862,6 +916,10 @@ static int vf610_nfc_probe(struct platform_device *p=
+dev)
+>                 dev_err(nfc->dev, "NAND chip sub-node missing!\n");
+>                 return -ENODEV;
+>         }
+> +#else
+> +       nfc->clk =3D NULL;
+> +       mtd->dev.parent =3D &pdev->dev;
+> +#endif
+>
+>         chip->options |=3D NAND_NO_SUBPAGE_WRITE;
+>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
