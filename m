@@ -1,192 +1,234 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C678C17F3;
-	Thu, 27 Jun 2024 10:29:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D75579F0;
+	Thu, 27 Jun 2024 10:30:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719484156; cv=none; b=KvHEOkj47nTlkatb2c1Hg8iZ6znCWVmerJQ2m+B8ES/Omdk4rEKG44eSwcKbRJEdOXoBw6Qh/zFRlTX/1YkKPsPWgP57OmNAl9zyG4PNx0aBzN6RCx4A/jjojXOlmqVsGEfwP1dYyldoKiU7A7DD24AhSRH6N6sKbZNm0cZ4xfk=
+	t=1719484243; cv=none; b=eUVSI9xAfG3bIpcp9nS9STQdqkgIUPs0fyQ/wAH66y4KGocpUWuq0VaVhEen+lqhi8G2UYzcFJtv8zqP9H2AJr8xQPZvMzuDx5mkDCzDZlWirDphE3jjW6y7PhYsgqchAXu7vEUqea0C+XBVZbVG7X6EmRv0e5Lfsxf6tlUHzYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719484156; c=relaxed/simple;
-	bh=GELWn5JWIe4WVSe1h4iG5+t5T7ZIxD7YH6MbfCELx/c=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=T5Vl0JBmzsTLczSDEds8LVWa4F2YnihTJHTmYAsfverX5gB+ncxN5c1i5AOPSGVMB9TEWCBMnePuIyK6CuoFrX5syBuSeuCzt03ryHIhwJFupNrq0NtqEfT+CQUtoNGZPE7oeNPD0J4NaX3oySrmHBtmlw3NwM/z7Ahpb3HJcoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=n9G7MSQ4; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
+	s=arc-20240116; t=1719484243; c=relaxed/simple;
+	bh=/8NyOuFrsIHdO2r91wTRCS6o5U3GDI7g+a4G/f08Uik=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lDmmZEuJH8zgHoC/PZju26HIJ/qRN/aD/6VCSlay1fpHg1/sGrlGr8ZHjNE34qbzgI88e5SqzGQIRM+5OCuUTnfCXxGh21fjv4v1EUAfjvYIJfRoipQ4ue8HkaMH2Fk2hq8TzTPF6KvC8DlLXmiUQaJjVu9TVJIz7gDWAuui094=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=qygZK2Wh; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="n9G7MSQ4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
-	s=s31663417; t=1719484137; x=1720088937; i=frank-w@public-files.de;
-	bh=D5NGZ7FBqBdRj1CxmbyFuu09/ZpTa0X+w9fUYiQA4SQ=;
-	h=X-UI-Sender-Class:Date:From:To:CC:Subject:Reply-to:In-Reply-To:
-	 References:Message-ID:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=n9G7MSQ4uPHWwI+yEE9Pz5PFTD2oI/SBdgyhok0S9hkRLC4Le0GJnGrLmlPHyg1H
-	 sThQYQb0HCBHZxETLN8z4vwIJzQbWmtKRCuqVzpo2vnY6w/YvPlgTtLFENLaFve0O
-	 7/AXviXqldaRqZSsF6S7hgucpefFWIcxb12la8V01XhA2MkGiNvZqRm+f6NlELsn/
-	 +lu7EvZ5K30+nuMjKV1f7hPv+aumVxItPk22W0IvP1CXOauFFNfHasqPd+UFZaP7n
-	 xtybmIPqyhkvW8hGwjsBL2loNWruC+slMPXfwuR9Y7Rv9MXqGriC2A+KwRTNF8cxf
-	 dshYBf+IKP4hfa3zHQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [IPv6:::1] ([80.187.71.1]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MaJ7v-1rqcUn3xm1-00Vo5B; Thu, 27
- Jun 2024 12:28:57 +0200
-Date: Thu, 27 Jun 2024 12:28:54 +0200
-From: Frank Wunderlich <frank-w@public-files.de>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>
-CC: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
- Daniel Golle <daniel@makrotopia.org>, Rob Herring <robh+dt@kernel.org>,
- Frank Wunderlich <linux@fw-web.de>
-Subject: =?US-ASCII?Q?Re=3A_Aw=3A_=5BPATCH_v3_1/2=5D_arm64=3A_dts=3A_mt7986=3A?=
- =?US-ASCII?Q?_add_dtbs_with_applied_overlays_for_bpi-r3?=
-User-Agent: K-9 Mail for Android
-Reply-to: frank-w@public-files.de
-In-Reply-To: <726f2ed3-675f-45e8-94f0-d392181e7f92@collabora.com>
-References: <20240608080530.9436-1-linux@fw-web.de> <20240608080530.9436-2-linux@fw-web.de> <trinity-82c94d49-2a78-4470-83cd-3c6747e01849-1719434738199@3c-app-gmx-bs52> <726f2ed3-675f-45e8-94f0-d392181e7f92@collabora.com>
-Message-ID: <951E802C-1B53-45C4-B3E6-4A3400F47214@public-files.de>
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="qygZK2Wh"
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45R7Gb7S026083;
+	Thu, 27 Jun 2024 06:30:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=
+	content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=p/OShLG1DvzLaxgFY9eCBJu8cE0
+	1k/tVxLTHfdPqOsk=; b=qygZK2WhuamKcY3IlX2VLF5WgAz0tcHZQ74NJfJVvEb
+	FYZazO3bBbifKrIhFGJgQd9MEpuAo6ZoFDrGO3teUUXhdLJgAtU7LtMnuHHcP3R6
+	D7/kKrgmUmuPmyYYlhJDnKXjNrnzFEAOKrnzuEArLvlr3vOGJ5Y3G8BGy8gQ/5yb
+	d4Aac/xZNVbkV/DhQazcSNMZqeSeARhlFw2OXS5TEJsNWV776KZqcBW8DYHJjp7+
+	KxDVkfQw1frY0gjFLIrQSbpXMNPDyS5w5BOr0H1vZiGaAO73y3zA27UkE8iSSDNo
+	aG1J9k9DjMRF4CsVaqz3/ADhNsjwvein7j2nXZMaqnQ==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 4013j48t9x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Jun 2024 06:30:17 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 45RAUGIh059536
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 27 Jun 2024 06:30:16 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Thu, 27 Jun
+ 2024 06:30:15 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Thu, 27 Jun 2024 06:30:15 -0400
+Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.159])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 45RATvYQ018482;
+	Thu, 27 Jun 2024 06:30:00 -0400
+From: Antoniu Miclaus <antoniu.miclaus@analog.com>
+To: Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich
+	<Michael.Hennerich@analog.com>,
+        Ramona Gradinariu
+	<ramona.gradinariu@analog.com>,
+        Antoniu Miclaus <antoniu.miclaus@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Jonathan
+ Corbet <corbet@lwn.net>,
+        Jun Yan <jerrysteve1101@gmail.com>,
+        Matti Vaittinen
+	<mazziesaccount@gmail.com>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        Mehdi Djait <mehdi.djait.k@gmail.com>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>
+Subject: [PATCH v3 1/3] dt-bindings: iio: accel: add ADXL380
+Date: Thu, 27 Jun 2024 13:25:17 +0300
+Message-ID: <20240627102617.24416-1-antoniu.miclaus@analog.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:GQ81Q1zMBThpI//1P+HkTAUBlpTlOxo+qxvTc9TAMiOK9giLFEo
- h3YILAMhlW6igT41eOkAQu5PFe/3tORpWonl/JeUV46oIc4ucqt7Gt3e4lREBAA3+fg+Ef/
- 3Kp8dlsKQwlO/ccpitJ7zNC37XnxutY0VPXEMSPkJSL5X1cUeyLpxBVnORhSF8R46/sM+DF
- z3drwJueoPBukzSRyDleA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Zt1rFlEjGSc=;DqDpGYepkvNHUBa8OktHl8cu696
- hNNHFYR4v9cr/X9qvsueO0bEhAelCWcntlu9hUUZlaAwFTuIwlaQQwG5qSk7TSte0l+LLaFxe
- aMvED9wnNU02QiWakFEVKtCAuoSRv6Zey8Xgqzn6KJPhqdbAV/gqI6bJ4IDQeoEZw+qaRmLNR
- KUtn5+rr+dmY1ZvZY14l7n54t17hSI0sXzfDeU7w5wwGzqoBmHaMi+1NRtIjJWhRBLdOnj144
- pTO74Hh7pbGRPYhWqsu68/d5DMGvSRcgIvqsHXYoWJMAX5Xs0eny8heGOEa7n80BZi069wNKz
- rkv8HTrk27LX5vqRn5mNPhO27o6qMo48wqc27sjtSi38vP0Bjr6lVF79I8aNJwqG/VyvFoa5/
- UGDONGw9u2xS9Q+liZh+dqmshGGzVCwDOCwoZrJIg5UM2VJy5E5XK23AMGGnRTe3WTkGXXF4v
- O3B9KJXuJMmmJrVBn0BqXChr+wIqGsj0i6GF7QTEYz/R7SkFqheD0jfX03JIdzg8GnTRVVFr3
- VG7FzMJpiNAPOwUP9DWXXYRCyMicXHmKCFz1wotVQjsna5a5/Zh8ctb17O/1VZXK5Yfal/jB4
- oNO/LIGhg7VdM044uaA81TfFxeoG+w8If74ISzMN700u6yh+FJjlat7WYsEsO6kzUKjI6/jR/
- 7Zpg+nzgelZoe+j3dgChRZBqUWwXmL2U+g/jimhnDcQLPh/1zNpc3IqGxZS1mZv5y3QHnp+Rp
- miYqSClYnyLF7B3GJxJbdDmGwREJXPied0/Ql6qXi5HsAk03UrJswtw+aizT93Dqzb+6DEXQE
- /+g5erp4o0fxOaSnuvKLl4GbW07evTXILBh7kGG6C4430=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-ORIG-GUID: sF05aFnhZ5TVYScdDtWdQpNQVWYUpm4P
+X-Proofpoint-GUID: sF05aFnhZ5TVYScdDtWdQpNQVWYUpm4P
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-27_06,2024-06-25_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=999
+ impostorscore=0 mlxscore=0 malwarescore=0 suspectscore=0 clxscore=1015
+ bulkscore=0 priorityscore=1501 adultscore=0 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406270079
 
-Am 27=2E Juni 2024 12:10:17 MESZ schrieb AngeloGioacchino Del Regno <angelo=
-gioacchino=2Edelregno@collabora=2Ecom>:
->Il 26/06/24 22:45, Frank Wunderlich ha scritto:
->> any suggestions? hoping it does no laying around so long as v2
->>=20
->
->So you're trying to just test that the overlay is valid and can actually =
-be
->overlaid to the base dts?
->
->I'm not sure that this is the right/best way=2E=2E=2E and I honestly have=
- no time
->to check that *exactly right now*, even though that should be=2E
->
->I have to be convinced of what I'm doing before applying patches, and I k=
-now
->that this was sent a bit of time ago, but I really didn't have any time t=
-o
->dig into that=2E=2E=2E let's see if for some miracle I can do that for th=
-is cycle
->otherwise it's going to be the next one=2E
->
->I mean no disrespect to Rob who suggested this change, but I still want t=
-o
->check that on my own before picking it=2E
->
+Add dt-bindings for ADXL380/ADLX382 low noise density, low
+power, 3-axis accelerometer with selectable measurement ranges.
 
->>=20
->>=20
->>> Gesendet: Samstag, 08=2E Juni 2024 um 10:05 Uhr
->>> Von: "Frank Wunderlich" <linux@fw-web=2Ede>
+Signed-off-by: Ramona Gradinariu <ramona.gradinariu@analog.com>
+Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+---
+changes in v3:
+ - add power support
+ - add support for both interrupts
+ .../bindings/iio/accel/adi,adxl380.yaml       | 103 ++++++++++++++++++
+ MAINTAINERS                                   |   7 ++
+ 2 files changed, 110 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adxl380.yaml
 
->>> Betreff: [PATCH v3 1/2] arm64: dts: mt7986: add dtbs with applied over=
-lays for bpi-r3
->>>=20
->>> From: Frank Wunderlich <frank-w@public-files=2Ede>
->>>=20
->>> Build devicetree binaries for testing overlays and providing users
->>> full dtb without using overlays=2E
->>>=20
->>> Suggested-by: Rob Herring <robh+dt@kernel=2Eorg>
- https://lore=2Ekernel=2Eorg/all/CAL_JsqK_3xxD0DFwipXO85P=3Dq=3DEYjUdjE1_8=
-g1MKtvw3vVzx5A@mail=2Egmail=2Ecom/
->>> https://lore=2Ekernel=2Eorg/all/CAL_JsqJSi=3DkJSix=3Df3787ULZnaCy_Y26P=
-hdhy5y9fat_vkDuUw@mail=2Egmail=2Ecom/
->>>=20
->>> v2:
->>> make full dtbs multiline for better readability
->>> ---
->>>   arch/arm64/boot/dts/mediatek/Makefile | 21 +++++++++++++++++++++
->>>   1 file changed, 21 insertions(+)
->>>=20
->>> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/d=
-ts/mediatek/Makefile
->>> index 37b4ca3a87c9=2E=2E0ec5b904d35d 100644
->>> --- a/arch/arm64/boot/dts/mediatek/Makefile
->>> +++ b/arch/arm64/boot/dts/mediatek/Makefile
->>> @@ -15,6 +15,27 @@ dtb-$(CONFIG_ARCH_MEDIATEK) +=3D mt7986a-bananapi-b=
-pi-r3-emmc=2Edtbo
->>>   dtb-$(CONFIG_ARCH_MEDIATEK) +=3D mt7986a-bananapi-bpi-r3-nand=2Edtbo
->>>   dtb-$(CONFIG_ARCH_MEDIATEK) +=3D mt7986a-bananapi-bpi-r3-nor=2Edtbo
->>>   dtb-$(CONFIG_ARCH_MEDIATEK) +=3D mt7986a-bananapi-bpi-r3-sd=2Edtbo
->>> +mt7986a-bananapi-bpi-r3-emmc-nand-dtbs :=3D \
->>> +	mt7986a-bananapi-bpi-r3=2Edtb \
->>> +	mt7986a-bananapi-bpi-r3-emmc=2Edtbo \
->>> +	mt7986a-bananapi-bpi-r3-nand=2Edtbo
->>> +dtb-$(CONFIG_ARCH_MEDIATEK) +=3D mt7986a-bananapi-bpi-r3-emmc-nand=2E=
-dtb
->>> +mt7986a-bananapi-bpi-r3-emmc-nor-dtbs :=3D \
->>> +	mt7986a-bananapi-bpi-r3=2Edtb \
->>> +	mt7986a-bananapi-bpi-r3-emmc=2Edtbo \
->>> +	mt7986a-bananapi-bpi-r3-nor=2Edtbo
->>> +dtb-$(CONFIG_ARCH_MEDIATEK) +=3D mt7986a-bananapi-bpi-r3-emmc-nor=2Ed=
-tb
->>> +mt7986a-bananapi-bpi-r3-sd-nand-dtbs :=3D \
->>> +	mt7986a-bananapi-bpi-r3=2Edtb \
->>> +	mt7986a-bananapi-bpi-r3-sd=2Edtbo \
->>> +	mt7986a-bananapi-bpi-r3-nand=2Edtbo
->>> +dtb-$(CONFIG_ARCH_MEDIATEK) +=3D mt7986a-bananapi-bpi-r3-sd-nand=2Edt=
-b
->>> +mt7986a-bananapi-bpi-r3-sd-nor-dtbs :=3D \
->>> +	mt7986a-bananapi-bpi-r3=2Edtb \
->>> +	mt7986a-bananapi-bpi-r3-sd=2Edtbo \
->>> +	mt7986a-bananapi-bpi-r3-nor=2Edtbo
->>> +dtb-$(CONFIG_ARCH_MEDIATEK) +=3D mt7986a-bananapi-bpi-r3-sd-nor=2Edtb
->>> +
->>>   dtb-$(CONFIG_ARCH_MEDIATEK) +=3D mt7986a-rfb=2Edtb
->>>   dtb-$(CONFIG_ARCH_MEDIATEK) +=3D mt7986b-rfb=2Edtb
->>>   dtb-$(CONFIG_ARCH_MEDIATEK) +=3D mt7988a-bananapi-bpi-r4=2Edtb
->>> --
->>> 2=2E34=2E1
->>>=20
->>>=20
->
+diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adxl380.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adxl380.yaml
+new file mode 100644
+index 000000000000..55e25a9b31ac
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/accel/adi,adxl380.yaml
+@@ -0,0 +1,103 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/accel/adi,adxl380.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices ADXL380/382 3-Axis Digital Accelerometer
++
++maintainers:
++  - Ramona Gradinariu <ramona.gradinariu@analog.com>
++  - Antoniu Miclaus <antoniu.miclaus@analog.com>
++
++description: |
++  The ADXL380/ADXL382 is a low noise density, low power, 3-axis
++  accelerometer with selectable measurement ranges. The ADXL380
++  supports the ±4 g, ±8 g, and ±16 g ranges, and the ADXL382 supports
++  ±15 g, ±30 g, and ±60 g ranges.
++  The ADXL380/ADXL382 offers industry leading noise, enabling precision
++  applications with minimal calibration. The low noise, and low power
++  ADXL380/ADXL382 enables accurate measurement in an environment with
++  high vibration, heart sounds and audio.
++
++  In addition to its low power consumption, the ADXL380/ADXL382 has
++  many features to enable true system level performance. These
++  include a built-in micropower temperature sensor, single / double /
++  triple tap detection and a state machine to prevent a false
++  triggering. In addition, the ADXL380/ADXL382 has provisions for
++  external control of the sampling time and/or an external clock.
++
++    https://www.analog.com/en/products/adxl380.html
++
++properties:
++  compatible:
++    enum:
++      - adi,adxl380
++      - adi,adxl382
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 1
++    maxItems: 2
++
++  interrupt-names:
++    minItems: 1
++    items:
++      - enum: [INT0, INT1]
++      - const: INT1
++
++  vddio-supply: true
++
++  vsupply-supply: true
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-names
++  - vddio-supply
++  - vsupply-supply
++
++allOf:
++  - $ref: /schemas/spi/spi-peripheral-props.yaml#
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      accelerometer@54 {
++        compatible = "adi,adxl380";
++        reg = <0x54>;
++        vddio-supply = <&vddio>;
++        vsupply-supply = <&vsupply>;
++        interrupt-parent = <&gpio>;
++        interrupts = <25 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-names = "INT0";
++      };
++    };
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    spi {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      accelerometer@0 {
++        compatible = "adi,adxl380";
++        reg = <0>;
++        spi-max-frequency = <8000000>;
++        vddio-supply = <&vddio>;
++        vsupply-supply = <&vsupply>;
++        interrupt-parent = <&gpio>;
++        interrupts = <25 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-names = "INT0";
++      };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index be590c462d91..1425182c85e2 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -618,6 +618,13 @@ F:	drivers/iio/accel/adxl372.c
+ F:	drivers/iio/accel/adxl372_i2c.c
+ F:	drivers/iio/accel/adxl372_spi.c
+ 
++ADXL380 THREE-AXIS DIGITAL ACCELEROMETER DRIVER
++M:	Ramona Gradinariu <ramona.gradinariu@analog.com>
++M:	Antoniu Miclaus <antoniu.miclaus@analog.com>
++S:	Supported
++W:	https://ez.analog.com/linux-software-drivers
++F:	Documentation/devicetree/bindings/iio/accel/adi,adxl380.yaml
++
+ AF8133J THREE-AXIS MAGNETOMETER DRIVER
+ M:	Ondřej Jirman <megi@xff.cz>
+ S:	Maintained
+-- 
+2.45.2
 
-Yes, 1st reason is to check if overlay can be applied to base dts (the par=
-t rob was requested)=2E The second thing that was solved is that some users=
- wanting a "full" dtb without the need to handle overlays in bootloader=2E =
-Due to hardware design of the board there are 4 "full" dtb's=2E
-
-So i adressed both in one Patch=2E I myself (and openwrt) still use the ov=
-erlays and apply them after probing hardware in uboot=2E=2E=2Eso for me it =
-is not needed but requested from others=2E Current state was defined as bro=
-ken by rob and for future additions (like mt7988/bpi-r4) we want to have a =
-blueprint=2E
-
-I hope you find time to look into it to have it solved soon and avoid disc=
-ussions like the 2 links from commit message in future=2E=2E=2Ethen we have=
- a reference for similar situations=2E
-
-
-regards Frank
