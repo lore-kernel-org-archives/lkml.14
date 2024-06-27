@@ -1,73 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6FE223BE;
-	Thu, 27 Jun 2024 08:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C177641E
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 08:09:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719475770; cv=none; b=MSXPrsV3bmKySgZmbElfhxsBFSxD8dr9pxmUQm0ETzpgth3aPeAu8GrERMthwidPp8W+4K3xjbPiO4CNqIRZ8EMkQa2BrkYNrDTAJHUPI3WtJvfWsPgLh59w57V3qrEPtl8GUWCPFk0EjE4Ot3K6Emhj4NAZ5Mi+uBg8zki5gio=
+	t=1719475774; cv=none; b=AhHjJX5J1CPC8phoCb4Qu5/bjgIwKgom/QmR0Drup8XEw2nK3WJDFBLFRmNhLqBW411TAmczsbSQueIbw1kPO2xcAg04oNopU9/khlIW3UTRA71QGAApSUT/X8srUhsSo5U269hkuctfTaTStfVgJokjBoE/eUfVn9aWeM5xOiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719475770; c=relaxed/simple;
-	bh=ux6VK6OgKfxrD3reF2GyyseKF9sQnDr7S0hNOTb9Psc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=T0MwoeReQa6tpOmOmmtrzUN3xagYxgwavVhvda80JYpDhiS8vbaNOSoSRNNL+du/EATmOyu1bKQU+MQV6X8TQmtjk9hQjfZ5padxrbRGg5RvpWb3A4vT1qtcEWmWE5lbGl2re4tTIRC2PTOBClAbc2lj1CY7EwKeb9M39XyyiNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z8hzy0g1; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z8hzy0g1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDA1DC2BBFC;
-	Thu, 27 Jun 2024 08:09:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719475769;
-	bh=ux6VK6OgKfxrD3reF2GyyseKF9sQnDr7S0hNOTb9Psc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Z8hzy0g1LPbLFsSaJvHMdgFhv5bh1C0bKPqi4CoNZbJQoiy/JTiv9bSvwwZ39G6gh
-	 5/D35OL5Fe9wVdR8Iiqqd4OJAQcr8wj1T1IMN7xcRrYQx4pzfZb+7RRINKvS7ZN+32
-	 cMSuhU7imBYiYDStN5gTmCYEua46f/VUwdrHOADZmXRiPj/4RCnVDNyXUD3VW87X9j
-	 51+MOR1kdR4lBGBQ0gs2PtqU1v8pOz5pNLBe50i7O/rQRMAFhvlziuOjIPtyKuQqvg
-	 ds7sJ1XlTGNTLwtzqhMTiGQftmv/rO40XthhoLK/3cTtJZvYubDHTHZ1uLVyB6pbfb
-	 vIEOWbvqp3bBg==
-From: Lee Jones <lee@kernel.org>
-To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
- Miaoqian Lin <linmq006@gmail.com>, 
- Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, 
- =?utf-8?q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-leds@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240625-led-class-device-leak-v2-1-75fdccf47421@bootlin.com>
-References: <20240625-led-class-device-leak-v2-1-75fdccf47421@bootlin.com>
-Subject: Re: (subset) [PATCH v2] Revert "leds: led-core: Fix refcount leak
- in of_led_get()"
-Message-Id: <171947576772.2875250.15838690035445924875.b4-ty@kernel.org>
-Date: Thu, 27 Jun 2024 09:09:27 +0100
+	s=arc-20240116; t=1719475774; c=relaxed/simple;
+	bh=URJJ0VTb5At2bI+ZPx3Z/uEYy8l7ogZI+Fom0NkP9LM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sEmCrApmd5sJsJJMaBnlPZe/ptA406yXd0tDMlS0VohoxBX2p7Faxbp9iZDiB+IlzVQD84Dt9yvZLb1sFMGZYet/aSNP4RmaSC9tdJ/EMcbcd/swt4WEY/7eibA2lXO1KBirxt4uUeufyhMOVy9SFRyhGid0JG+sSK2P3qXMfnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4W8rhy73NQz1X4Pw;
+	Thu, 27 Jun 2024 16:05:22 +0800 (CST)
+Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1B8BC140157;
+	Thu, 27 Jun 2024 16:09:24 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
+ (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 27 Jun
+ 2024 16:09:23 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <catalin.marinas@arm.com>, <will@kernel.org>, <oleg@redhat.com>,
+	<tglx@linutronix.de>, <peterz@infradead.org>, <luto@kernel.org>,
+	<kees@kernel.org>, <wad@chromium.org>, <ruanjinjie@huawei.com>,
+	<rostedt@goodmis.org>, <arnd@arndb.de>, <ardb@kernel.org>,
+	<broonie@kernel.org>, <mark.rutland@arm.com>, <rick.p.edgecombe@intel.com>,
+	<leobras@redhat.com>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v2 0/3] arm64: entry: Convert to generic entry
+Date: Thu, 27 Jun 2024 16:12:06 +0800
+Message-ID: <20240627081209.3511918-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemi100008.china.huawei.com (7.221.188.57)
 
-On Tue, 25 Jun 2024 10:34:38 +0200, Luca Ceresoli wrote:
-> This reverts commit da1afe8e6099980fe1e2fd7436dca284af9d3f29.
-> 
-> Commit 699a8c7c4bd3 ("leds: Add of_led_get() and led_put()"), introduced in
-> 5.5, added of_led_get() and led_put() but missed a put_device() in
-> led_put(), thus creating a leak in case the consumer device is removed.
-> 
-> Arguably device removal was not very popular, so this went apparently
-> unnoticed until 2022. In January 2023 two different patches got merged to
-> fix the same bug:
-> 
-> [...]
+Currently, x86, Riscv, Loongarch use the generic entry. Convert arm64
+to use the generic entry infrastructure from kernel/entry/*. The generic
+entry makes maintainers' work easier and codes more elegant, which aslo
+removed a lot of duplicate code.
 
-Applied, thanks!
+Changes in v2:
+- Add tested-by.
+- Fix a bug that not call arch_post_report_syscall_entry() in
+  syscall_trace_enter() if ptrace_report_syscall_entry() return not zero.
+- Refactor report_syscall().
+- Add comment for arch_prepare_report_syscall_exit().
+- Adjust entry-common.h header file inclusion to alphabetical order.
+- Update the commit message.
 
-[1/1] Revert "leds: led-core: Fix refcount leak in of_led_get()"
-      commit: 940b27161afc6ec53fc66245a4fb3518394cdc92
+Jinjie Ruan (3):
+  entry: Add some arch funcs to support arm64 to use generic entry
+  arm64: Prepare to switch to generic entry
+  arm64: entry: Convert to generic entry
 
---
-Lee Jones [李琼斯]
+ arch/arm64/Kconfig                    |   1 +
+ arch/arm64/include/asm/entry-common.h |  60 +++++
+ arch/arm64/include/asm/ptrace.h       |   5 +
+ arch/arm64/include/asm/stacktrace.h   |   5 +-
+ arch/arm64/include/asm/syscall.h      |   6 +-
+ arch/arm64/include/asm/thread_info.h  |  23 +-
+ arch/arm64/kernel/entry-common.c      | 355 ++++++--------------------
+ arch/arm64/kernel/ptrace.c            |  81 +++---
+ arch/arm64/kernel/signal.c            |   3 +-
+ arch/arm64/kernel/syscall.c           |  18 +-
+ include/linux/entry-common.h          |  51 ++++
+ kernel/entry/common.c                 |  48 +++-
+ 12 files changed, 294 insertions(+), 362 deletions(-)
+ create mode 100644 arch/arm64/include/asm/entry-common.h
+
+-- 
+2.34.1
 
