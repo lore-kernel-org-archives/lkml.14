@@ -1,127 +1,249 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454CD19306F
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 13:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF01193071
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 13:36:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719495372; cv=none; b=VZkUhQbjXQoS1ZsnbHoLxtfzZw41+OUysSI5AQY9PN/F7unzTQaSZPi7P3yUSOGCQDYNt3p0mmUY3fwz53vEi543BswVJbs0o+VKpfr7/qbS82FWBDg9i4TIRpOAhVTYF5julSNzH3HMJN+M0V9+WFCmCRB0xQC7XLDBuS75UX0=
+	t=1719495375; cv=none; b=RFHQUqgvAHF3nuFgyg6pMOMetpg9l0cnYhEhXN3qA44MtNrxeTMiicV0CGOzFppEecPE0EKtsFDxSk6nvEiSEEhcNJVrSSlGUjgGlhpg9jV8bZF18ddWNAKpo78WNF6qj18o26xWaprO57lfKurwSp0TgQfDUcnIqvmcUDqlWG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719495372; c=relaxed/simple;
-	bh=Dr001Wah9ESPtevHFhB9490WtU/Ek+CTOlsKztX2X2E=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JsDDwtztRJJ2N5QIIM83GbwB9DqfDlQJ3JQw/ivKrNIXmJQNgHYHWTooZFxwCd2ohtL4flfuNTKzpGslAnAb92Zp23fM44SoARTkzn/g05YafWw900Png/lxXQtr/fQ212da/PxSxbqu+54RYea4+4WwdnaHUi0SFjy2hUseof8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4W902Q0yK8znY36;
-	Thu, 27 Jun 2024 21:35:58 +0800 (CST)
-Received: from canpemm500001.china.huawei.com (unknown [7.192.104.163])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0FE6B180087;
-	Thu, 27 Jun 2024 21:36:06 +0800 (CST)
-Received: from huawei.com (10.67.174.191) by canpemm500001.china.huawei.com
- (7.192.104.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 27 Jun
- 2024 21:36:05 +0800
-From: Zhang Qiao <zhangqiao22@huawei.com>
-To: <mingo@redhat.com>, <peterz@infradead.org>, <juri.lelli@redhat.com>,
-	<vincent.guittot@linaro.org>, <dietmar.eggemann@arm.com>,
-	<rostedt@goodmis.org>, <bsegall@google.com>, <mgorman@suse.de>,
-	<bristot@redhat.com>, <vschneid@redhat.com>, <Markus.Elfring@web.de>,
-	<linux-kernel@vger.kernel.org>
-CC: Zhang Qiao <zhangqiao22@huawei.com>
-Subject: [PATCH v2] sched: Initialize the vruntime of a new task when it is first enqueued
-Date: Thu, 27 Jun 2024 21:33:59 +0800
-Message-ID: <20240627133359.1370598-1-zhangqiao22@huawei.com>
-X-Mailer: git-send-email 2.18.0.huawei.25
+	s=arc-20240116; t=1719495375; c=relaxed/simple;
+	bh=o0xP6qtuI2xAaBgmlMNQoczDWl/0Ocbp9qhH2FYUfKA=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=Y6BK8/NbyLnWWwCZMhlBXHWTA+e2USyQFyvzTBWLGriao94jmFPhlnTEqIS7ADd2btIywwfYrxfI5TIb5ldEq6s0WQ6xypSBTvbQ925ehbe4bnjthoQjT73lv+OKzmvgdmGo//LMVm0dEFNDs/JDsixtOwDx/kU2et2hQwdPkSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=A8DjVxl9; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="A8DjVxl9"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240627133608epoutp045cf1f6ff9008eb15954564e6562401b7~c3_1Xoo7C1876318763epoutp04W
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 13:36:08 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240627133608epoutp045cf1f6ff9008eb15954564e6562401b7~c3_1Xoo7C1876318763epoutp04W
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1719495368;
+	bh=oZFefIbTEXfHE9kmb3JrnZ21gch5OUIrWc+UYD4fy9g=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=A8DjVxl9q1pWqqCXRYMT9VbexFW1Hvr4XKyeOn1ojjf6weJTfQSXIL/80bNB1hKdf
+	 rImJvk1T4zMgrzBPOLE13G9FSw8yQung0BdLgoYoD0MwuPO+H/8Yp9iQxZPElHHW+z
+	 m7lBZ3Mvzay6akrvJ3RVMLAuL7JvxeEm/7xm2zLg=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20240627133607epcas5p31dcfcf49b7b2bf04481fb31eb45863e0~c3_0w1SXL0254402544epcas5p3U;
+	Thu, 27 Jun 2024 13:36:07 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.180]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4W902Y5wF4z4x9Pt; Thu, 27 Jun
+	2024 13:36:05 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	85.AC.07307.5CA6D766; Thu, 27 Jun 2024 22:36:05 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20240627133545epcas5p461398bd51e6482f7a364fdfbb69e7243~c3_gMDdY22898428984epcas5p41;
+	Thu, 27 Jun 2024 13:35:45 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240627133545epsmtrp29817ddeb1ef407da2f71aed6b8766c56~c3_gLWIqR0470304703epsmtrp2G;
+	Thu, 27 Jun 2024 13:35:45 +0000 (GMT)
+X-AuditID: b6c32a44-3f1fa70000011c8b-17-667d6ac54660
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	C3.59.18846.1BA6D766; Thu, 27 Jun 2024 22:35:45 +0900 (KST)
+Received: from FDSFTE582 (unknown [107.122.82.121]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20240627133542epsmtip185ac39553214b64cc180369a2688d07b~c3_d1AfLO0198001980epsmtip1E;
+	Thu, 27 Jun 2024 13:35:42 +0000 (GMT)
+From: "Vishnu Reddy" <vishnu.reddy@samsung.com>
+To: "'Krzysztof Kozlowski'" <krzysztof.kozlowski@linaro.org>, "'Krzysztof
+ Kozlowski'" <krzk@kernel.org>, <s.nawrocki@samsung.com>,
+	<alim.akhtar@samsung.com>, <linus.walleij@linaro.org>
+Cc: <linux-arm-kernel@lists.infradead.org>,
+	<linux-samsung-soc@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <pankaj.dubey@samsung.com>,
+	<ravi.patel@samsung.com>, <gost.dev@samsung.com>
+In-Reply-To: <4efb51f3-4600-4d88-a5df-e7be43294d53@linaro.org>
+Subject: RE: [PATCH v2] pinctrl: samsung: Add support for pull-up and
+ pull-down
+Date: Thu, 27 Jun 2024 19:05:41 +0530
+Message-ID: <086b01dac896$e988fed0$bc9afc70$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- canpemm500001.china.huawei.com (7.192.104.163)
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: en-in
+Thread-Index: AQJsl4iGk1jvO+hY9fFKxJSBqey3YQJX8oCQAbw/7GgCIZ1lJgH0CiQ3sHaumEA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMJsWRmVeSWpSXmKPExsWy7bCmuu7RrNo0g6br2hYP5m1js7h5YCeT
+	xfnzG9gt9r7eym4x5c9yJotNj6+xWmye/4fR4vKuOWwWM87vY7JYtPULu8XDD3vYLQ6/aWd1
+	4PHYtKqTzePOtT1sHpuX1Hv0bVnF6PF5k1wAa1S2TUZqYkpqkUJqXnJ+SmZeuq2Sd3C8c7yp
+	mYGhrqGlhbmSQl5ibqqtkotPgK5bZg7QeUoKZYk5pUChgMTiYiV9O5ui/NKSVIWM/OISW6XU
+	gpScApMCveLE3OLSvHS9vNQSK0MDAyNToMKE7Iz315oYC16qVGzsvs3awLhLrouRk0NCwETi
+	4b3XzF2MXBxCArsZJa70bYVyPjFK9M27yI7g9G9lgmlZ8vsjVGIno8TsWXugnBeMEvt/bARy
+	ODjYBPQlmm9IgMRFBPYwSky43M8I4jALPGSUmHj/EyvIKE4BO4mtVx8zg9jCAoESza/us4A0
+	swioSqy7mQcS5hWwlLj0u40ZwhaUODnzCQuIzSygLbFs4WtmiIsUJH4+XcYKEReXOPqzBywu
+	IuAncebJehaQvRICWzgkmu+9Y4RocJE4e7gbqllY4tXxLewQtpTE53d72SDsZIn1v0+BPSMh
+	kCPRM00BImwvceDKHLAzmQU0Jdbv0ocIy0pMPbWOCeIEPone30+ggcUrsWMejK0mcWzSdFYI
+	W0aic8UNxgmMSrOQfDYLyWezkHwzC2HbAkaWVYySqQXFuempyaYFhnmp5fAIT87P3cQITr1a
+	LjsYb8z/p3eIkYmD8RCjBAezkghvaElVmhBvSmJlVWpRfnxRaU5q8SFGU2BoT2SWEk3OByb/
+	vJJ4QxNLAxMzMzMTS2MzQyVx3tetc1OEBNITS1KzU1MLUotg+pg4OKUamBLecjpKuBjck5Vv
+	bfwYY/01eTfvv/fz/uiz80tK5hw4cZ7/vWRmjvBH97dnPNvMnLMeCt5h/7LYIH6JlslSjQ4Z
+	0XQOI50LV2N/l23WUJQXWiDmt3VvnMYFx2Oln67+yr/4a76S58K+Gh41ocC9nQdO335fdXxa
+	TfU156mx175NCjh9J3R6XFcQ//mDEcE6dVzfnpWtW/OMQ5ojyuTt6b2aLN0Triqf1fD7xrez
+	/NItubMNjUklS14+360YNd/llFCfZ2mTpWLGRh9dS9XGoj7WSXuX87DWdkauNVvyZc37/qTL
+	1fdUJ4YfnP/71BLpz1NtvJTMtx6KiNhSYKge0/Zjj+UKeR/9tV7hVZm7lFiKMxINtZiLihMB
+	3nhi4EYEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKIsWRmVeSWpSXmKPExsWy7bCSnO7GrNo0g3vvhS0ezNvGZnHzwE4m
+	i/PnN7Bb7H29ld1iyp/lTBabHl9jtdg8/w+jxeVdc9gsZpzfx2SxaOsXdouHH/awWxx+087q
+	wOOxaVUnm8eda3vYPDYvqffo27KK0ePzJrkA1igum5TUnMyy1CJ9uwSujKb1Z9gL5qlUvLnK
+	3cD4VLaLkZNDQsBEYsnvj+wgtpDAdkaJTY1OEHEZiQ93tjBD2MISK/89B6rhAqp5xihxbkIr
+	SxcjBwebgL5E8w0JkLiIwAFGiQOtT5lBHGaB50CDXsxjguhYyCSxbOpFJpBRnAJ2EluvPmYG
+	6RYW8JeYcFgHxGQRUJVYdzMPpIJXwFLi0u82ZghbUOLkzCcsIDazgLZE78NWRhh72cLXUMcp
+	SPx8uowVIi4ucfRnD1hcRMBP4syT9SwTGIVnIRk1C8moWUhGzULSvoCRZRWjaGpBcW56bnKB
+	oV5xYm5xaV66XnJ+7iZGcMxpBe1gXLb+r94hRiYOxkOMEhzMSiK8oSVVaUK8KYmVValF+fFF
+	pTmpxYcYpTlYlMR5lXM6U4QE0hNLUrNTUwtSi2CyTBycUg1ME2Syty1NWKF6asoOVu4AO4Uj
+	+fftr//W5Un0dnS7WFRe++oo30IxQ/cNJ2fECxR27lRxCmu9z5e78Mj/lwcducwm5//8f31H
+	fsqe9dqBP68+e7vzpOXWu5fn5sQJ222yyrH/su+v0Z/0h0v7V1l23fTnMFf3YdvcXl/9jC3w
+	+oqtzhZGPYft0nvKjr/ITTs1s/9Sp+Xz9GPqSt6PHx8W/nJMpThR36z+ec19jrmuHZGtvodZ
+	jxd+UfgzrdPWcE1lc3Ti15wMMce/fIIsua9f2GkLCV+bPzvr2I726mVRM60eJq1RP/zkyMVy
+	udzFvGqN79svrrs7Y+9CRoOlVr5fTtXvEFBu5Xr11thmCYuGEktxRqKhFnNRcSIAqMSdoCgD
+	AAA=
+X-CMS-MailID: 20240627133545epcas5p461398bd51e6482f7a364fdfbb69e7243
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240620103950epcas5p10514d4a19bdfd505d7d92ceb1fe10cc7
+References: <CGME20240620103950epcas5p10514d4a19bdfd505d7d92ceb1fe10cc7@epcas5p1.samsung.com>
+	<20240620103410.35786-1-vishnu.reddy@samsung.com>
+	<38fae674-f672-46e0-a44e-1278deaaf36a@kernel.org>
+	<07f201dac7be$e81317d0$b8394770$@samsung.com>
+	<4efb51f3-4600-4d88-a5df-e7be43294d53@linaro.org>
 
-When creating a new task, we initialize vruntime of the newly task at
-sched_cgroup_fork(). However, the timing of executing this action is too
-early and may not be accurate.
 
-Because it uses current CPU to init the vruntime, but the new task
-actually runs on the cpu which be assigned at wake_up_new_task().
 
-To optimize this case, we pass ENQUEUE_INITIAL flag to activate_task()
-in wake_up_new_task(), in this way, when place_entity is called in
-enqueue_entity(), the vruntime of the new task will be initialized.
+> -----Original Message-----
+> From: Krzysztof Kozlowski =5Bmailto:krzysztof.kozlowski=40linaro.org=5D
+> Sent: 26 June 2024 18:31
+> To: Vishnu Reddy <vishnu.reddy=40samsung.com>; 'Krzysztof Kozlowski'
+> <krzk=40kernel.org>; s.nawrocki=40samsung.com; alim.akhtar=40samsung.com;
+> linus.walleij=40linaro.org
+> Cc: linux-arm-kernel=40lists.infradead.org; linux-samsung-
+> soc=40vger.kernel.org; linux-gpio=40vger.kernel.org; linux-
+> kernel=40vger.kernel.org; pankaj.dubey=40samsung.com;
+> ravi.patel=40samsung.com; gost.dev=40samsung.com
+> Subject: Re: =5BPATCH v2=5D pinctrl: samsung: Add support for pull-up and=
+ pull-
+> down
+>=20
+> On 26/06/2024 13:49, Vishnu Reddy wrote:
+> >
+> >
+> >> -----Original Message-----
+> >> From: Krzysztof Kozlowski =5Bmailto:krzk=40kernel.org=5D
+> >> Sent: 24 June 2024 19:27
+> >> To: Vishnu Reddy <vishnu.reddy=40samsung.com>;
+> >> krzysztof.kozlowski=40linaro.org; s.nawrocki=40samsung.com;
+> >> alim.akhtar=40samsung.com; linus.walleij=40linaro.org
+> >> Cc: linux-arm-kernel=40lists.infradead.org; linux-samsung-
+> >> soc=40vger.kernel.org; linux-gpio=40vger.kernel.org; linux-
+> >> kernel=40vger.kernel.org; pankaj.dubey=40samsung.com;
+> >> ravi.patel=40samsung.com; gost.dev=40samsung.com
+> >> Subject: Re: =5BPATCH v2=5D pinctrl: samsung: Add support for pull-up =
+and
+> >> pull- down
+> >>
+> >> On 20/06/2024 12:34, Vishnu Reddy wrote:
+> >>> gpiolib framework has the implementation of setting up the PUD
+> >>> configuration for GPIO pins but there is no driver support.
+> >>>
+> >>> Add support to handle the PUD configuration request from the
+> >>> userspace in samsung pinctrl driver.
+> >>>
+> >>> Signed-off-by: Vishnu Reddy <vishnu.reddy=40samsung.com>
+> >>> ---
+> >>> Verified the offset from the user manual of following Exynos SoC
+> >>> series and found the current code is taking care of correct offset
+> >>> for pull-up and pull-down
+> >>>
+> >>> Exynos-3250
+> >>> Exynos-3470
+> >>> Exynos-4412
+> >>> Exynos-4415
+> >>> Exynos-5250
+> >>> Exynos-5260
+> >>> Exynos-5410
+> >>> Exynos-5420
+> >>> Exynos-5422
+> >>> Exynos-7420
+> >>> Exynos-7580
+> >>> Exynos-7880
+> >>> Exynos-9820
+> >>> Exynos-9830
+> >>> Exynos-4210
+> >>> Exynos-S5PC210
+> >>> Exynos-S5PV310
+> >>>
+> >>> This patch is tested on FSD platform
+> >>
+> >> You verified but...
+> >>
+> >>> diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.h
+> >> b/drivers/pinctrl/samsung/pinctrl-samsung.h
+> >>> index d50ba6f07d5d..758b623a4bea 100644
+> >>> --- a/drivers/pinctrl/samsung/pinctrl-samsung.h
+> >>> +++ b/drivers/pinctrl/samsung/pinctrl-samsung.h
+> >>> =40=40 -61,6 +61,13 =40=40 enum pincfg_type =7B
+> >>>  =23define PIN_CON_FUNC_INPUT		0x0
+> >>>  =23define PIN_CON_FUNC_OUTPUT		0x1
+> >>>
+> >>> +/*
+> >>> + * Values for the pin PUD register.
+> >>> + */
+> >>> +=23define PIN_PUD_PULL_UP_DOWN_DISABLE	0x0
+> >>> +=23define PIN_PUD_PULL_DOWN_ENABLE	0x1
+> >>> +=23define PIN_PUD_PULL_UP_ENABLE		0x3
+> >>
+> >> ... I said it is not correct, so you send the same? If you think I
+> >> was wrong, then please respond and keep discussion going. Sending the
+> >> same suggests you just ignored my comment.
+> >>
+> >> Look at two headers s5pv210-pinctrl.h and s3c64xx-pinctrl.h. How did
+> >> you resolve these?
+> > Thank you for sharing the s5pv210-pinctrl.h and s3c64xx-pinctrl.h  file
+> names for the pin value information.
+> > I have not ignored your comment. Unfortunately, I don't have the user
+> manuals for the s3c64xx and s5pv210 series.
+> > I have an idea to handle the PIN_PULL_UP value of the s3c64xx and
+> s5pv210 series by checking the compatibility with the
+> of_device_is_compatible API.
+> > Will it be okay or do you have any other suggestions?
+>=20
+> I don't remember the code used here, but usually such choices are
+> determined by driver match data (and flags or value customized per varian=
+t).
+Hi, Thanks for suggestion.
+I have gone through this and found that driver match data in this driver is=
+ stored in the __initconst section, which is freed up after kernel initiali=
+zation. So we have two options:
+1: Keep this platform specific data in driver match data and then populate =
+driver_data field in probe function.=20
+2: Use compatible matching and set different values during set_config.=20
 
-In addition, place_entity() in task_fork_fair() was introduced for two
-reasons:
-1. Previously, the __enqueue_entity() was in task_new_fair(),
-in order to provide vruntime for enqueueing the newly task, the
-vruntime assignment equation "se->vruntime = cfs_rq->min_vruntime" was
-introduced by commit e9acbff6484d ("sched: introduce se->vruntime").
-This is the initial state of place_entity().
+First approach will result in many changes, such as populating  driver matc=
+h data for all platforms and then storing the same in driver_data in probe.
 
-2. commit 4d78e7b656aa ("sched: new task placement for vruntime") added
-child_runs_first task placement feature which based on vruntime, this
-also requires the new task's vruntime value.
+In the second approach, we can handle this using simple if/else based on a =
+compatible match.=20
 
-After removing the child_runs_first and enqueue_entity() from
-task_fork_fair(), this place_entity() no longer makes sense, so remove
-it also.
+IMO, second approach would be simpler and introduce less changes. Any sugge=
+stions from your end?
+>=20
+> Best regards,
+> Krzysztof
 
-Signed-off-by: Zhang Qiao <zhangqiao22@huawei.com>
----
-v2:
-Improve comments and commit log.
-
-v1: https://lore.kernel.org/lkml/20240606121133.2218723-1-zhangqiao22@huawei.com/
----
- kernel/sched/core.c |  2 +-
- kernel/sched/fair.c | 15 ---------------
- 2 files changed, 1 insertion(+), 16 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index bcf2c4cc0522..b4ff595a2dc8 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4897,7 +4897,7 @@ void wake_up_new_task(struct task_struct *p)
- 	update_rq_clock(rq);
- 	post_init_entity_util_avg(p);
- 
--	activate_task(rq, p, ENQUEUE_NOCLOCK);
-+	activate_task(rq, p, ENQUEUE_NOCLOCK | ENQUEUE_INITIAL);
- 	trace_sched_wakeup_new(p);
- 	wakeup_preempt(rq, p, WF_FORK);
- #ifdef CONFIG_SMP
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 8a5b1ae0aa55..bb5f376fd51e 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -12702,22 +12702,7 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
-  */
- static void task_fork_fair(struct task_struct *p)
- {
--	struct sched_entity *se = &p->se, *curr;
--	struct cfs_rq *cfs_rq;
--	struct rq *rq = this_rq();
--	struct rq_flags rf;
--
--	rq_lock(rq, &rf);
--	update_rq_clock(rq);
--
- 	set_task_max_allowed_capacity(p);
--
--	cfs_rq = task_cfs_rq(current);
--	curr = cfs_rq->curr;
--	if (curr)
--		update_curr(cfs_rq);
--	place_entity(cfs_rq, se, ENQUEUE_INITIAL);
--	rq_unlock(rq, &rf);
- }
- 
- /*
--- 
-2.18.0.huawei.25
 
