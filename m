@@ -1,101 +1,122 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB5515FD0F
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 12:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813A11581E1;
+	Thu, 27 Jun 2024 12:45:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719492265; cv=none; b=PQQYJFmBvaw50ZIKIS1K2xJ1sX6S/9zq8LzUDII0R0mNamVUCsF/HuP2+S+Zz7ZF2H61CA/xdHWpoSBI8y+/QzgRw6i847A5gKaNipWJPSZyw3fqdpmOg83vOl0Ipf6FTPXL+WOyT6eURrNMURF5CIdVN72HfsXjMqmncQPKvXg=
+	t=1719492351; cv=none; b=tr/xUL4B5iJBwpPaI+HoqaQdra3c9qrtep6yX+SntJPHT/vBwETFBjAWkbOdwwWE430YVG/zp2+lM8OwxbmUWcShHAzXONqkZ1a0YTmq2Ea7yHpgXR0sadRJXLbO7u6jzLi84/pjB2KVSLOVWk2PdXXVfNftLtW0E6nD/3RXFWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719492265; c=relaxed/simple;
-	bh=pi3DHNQCv9R6UCFWH2MdSRk0b7vmsHj+UgIAfiRMFTM=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OPvJrzO4jb98mHLdUMuxW3LWpXM3SKT0cE+wf/Zy9mT2cy0axtFE4G1LQn9lvm6z7jyFVSxSvc6WiNpHkN6LVn1EuYExmEpTtVWzHsDl4iwstii+L5tNSs58TxRa2ZnMW8f4agEqOetRhI5/09mNpzPbWfpxBld7Etx1Wz81r9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=pL4PMpBK; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1719492351; c=relaxed/simple;
+	bh=kzLjW83/58j+7eIFdoNOekMG35rdMimMsZmjjIIOGrc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t/KfRZeC/MgT52Aq8PZAp3Tl69NmoyfW1eddSlniuTE3u2jhqjCsG/WJtBkiSkm1Yc+pOhp6XHQFH/zWGH6VoNwVq9lA7EpyKUQY7Fbz9t7YDQJRwv+KrCHwxVi+zcptBt14jDLXHGeWYVXyqJDPlsLJJy+SPkCLiA2sQtyr+qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WYEqjhng; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="pL4PMpBK"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a729da840a8so91896866b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 05:44:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719492261; x=1720097061; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AoHL1adqPi6egt2LDvYCmnfXjH4AiRnMDVVthfhiOGY=;
-        b=pL4PMpBKJZpPtQ1dpNQr5IEn535DwQOzfSkI3UeAuS/RCsjqhO3IdbV3U3o7alSA/O
-         i63eKo9wZQqSr48L2qxMrI4aHyzQkDgopsZJA1l0c6PsD/HBzSqX5E0tJ1ads4uLLHjF
-         npzh7/Im2WLNAj+eYCahku6z/sgleU9i1WFb1AKVjYUj+s8tN67YdOP13dlbi1IuDUnu
-         0R1CkeLqIXGeVoaEYBIDIxDvj4WEMRpAKZ8Xqi0RwYju1Gb6XiYkZB0H0XvboCzCvnHT
-         APBMgXzysyNyJf63pvrbIS3Zu8zDXxBMT0QzSVk6ibQeWVsLIiQYqTj5DX3czJ6JVPrX
-         r/rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719492261; x=1720097061;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AoHL1adqPi6egt2LDvYCmnfXjH4AiRnMDVVthfhiOGY=;
-        b=vmSXrsfpZEwKYmbcqhFHN4tO/NfdpXlOS0HhNjoex1OMc7xUA2RBorkMx4ObeksQpc
-         Stg4RgHcud0UKX1Z4oFrJkkBqu8nyknNikxesZjbPA8oEvy3Y3vZ8/xSyy1zmf/210zN
-         kLS5Q7sgaPsm8kl6UFlHbQrs5kg/U94IETSdFdjZrdH4WqN7V+qENYkCk7YOVFe5is4e
-         qU/zyV2+kHO17YbRg/54TTHZMnuImO+4Cd+2JkTiAxqHhTg0hFiTWIo1S5J9waHcr1J+
-         Dl1q6vNFQjgcX2Vs0xAqZZLhUbXRR+UB4R7VLVasYgnJhxfzisfAvn/XrIF2UyHhH6Vj
-         M1rw==
-X-Forwarded-Encrypted: i=1; AJvYcCVujDhz1JcO6eRpzLLGnGlUIiGVxsvn0qsXpr5l0XmDMNjnFPeCAoNEyw+9U0J/gh2dUPWGsvI+s7RppiXf6aZE2k569zLCHktWVHx5
-X-Gm-Message-State: AOJu0YygUmCV0opi0sMFeywGpytAcLLqI9HhWnVMEx4h4N+EKKEPfCSd
-	8tnhhK6NxuOBEo/4oespdHlM3ZcyskpOJiZCHy/9KW0xQq9rXv6b+8LBZRN9mFw=
-X-Google-Smtp-Source: AGHT+IFeaiSpwuIh7g2JkEWpjFnfDJbPJTm3K8sWRedli0PvmQPwA/kwXIvdntky4Hl+GJAwNEAyPQ==
-X-Received: by 2002:a17:906:99d5:b0:a72:58c3:2696 with SMTP id a640c23a62f3a-a7296f5d2admr226130066b.14.1719492261140;
-        Thu, 27 Jun 2024 05:44:21 -0700 (PDT)
-Received: from ryzen9.fritz.box ([2a01:2a8:8103:2c01:45d5:74ac:5265:59da])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a729d6fdf62sm57030266b.8.2024.06.27.05.44.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 05:44:20 -0700 (PDT)
-From: =?UTF-8?q?Bernhard=20Rosenkr=C3=A4nzer?= <bero@baylibre.com>
-To: florian.fainelli@broadcom.com,
-	bcm-kernel-feedback-list@broadcom.com,
-	gregkh@linuxfoundation.org,
-	umang.jain@ideasonboard.com,
-	wahrenst@gmx.net,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: vchiq_debugfs: Fix build if CONFIG_DEBUG_FS is not set
-Date: Thu, 27 Jun 2024 14:44:19 +0200
-Message-ID: <20240627124419.2498642-1-bero@baylibre.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WYEqjhng"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719492350; x=1751028350;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kzLjW83/58j+7eIFdoNOekMG35rdMimMsZmjjIIOGrc=;
+  b=WYEqjhngbr+AhKtMm3xbhijVRNtF0LWwqZpJdNBKLZyiZ2eVIfYuXD4C
+   N9RUUFOY5XYBh+nqtvSs3wWsNSOEgkpLig1d4McmCDIWRVELzEuOvS02Z
+   YuaSHpGcBvT6WumS2FJskNYu2W+UflUI0jhoPG3zrxt3+ydJJJTXd64wO
+   ua8D8VSH25OIb7r49aTvshbXOs/GeMEtEnUBYRMWnk1VXPmSHKOdpVt4i
+   KuzfP+qonOS9sA9RfmlBAPZsFxheWHb34yYxRkw6F4RSq2iSI+TN84ikI
+   vxum4h+IdOwARFIAkJmmiTbapUls3Vhc8/kCd62KRlx/A92cKZZInGcKz
+   g==;
+X-CSE-ConnectionGUID: 7RhWomrxQ/Wjun3wiYn0Lw==
+X-CSE-MsgGUID: prbDpuwuRGW/ER4Q+HxI3A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11115"; a="19501750"
+X-IronPort-AV: E=Sophos;i="6.09,166,1716274800"; 
+   d="scan'208";a="19501750"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 05:45:49 -0700
+X-CSE-ConnectionGUID: BgCU1k5lST237jrSSf5nGw==
+X-CSE-MsgGUID: faB+XbraTrSzCZHWq2RSIQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,166,1716274800"; 
+   d="scan'208";a="67573958"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 05:45:48 -0700
+Date: Thu, 27 Jun 2024 05:51:54 -0700
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Brice Goglin <brice.goglin@gmail.com>,
+	srinivas pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: Re: [PATCH 0/9] Add CPU-type to topology
+Message-ID: <20240627125154.GA4743@ranerica-svr.sc.intel.com>
+References: <20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com>
+ <8d757ea3-87a3-4663-ac76-66b04e33e6b3@gmail.com>
+ <20240619015315.3ei5f6rovzdnxovo@desk>
+ <bc75ff55161671e4470849ed51baa547f619889d.camel@linux.intel.com>
+ <0021f5f2-67c5-4b20-939d-48c9c1c60cdb@gmail.com>
+ <1b99017a-6964-46de-ba3a-09552e7cf072@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1b99017a-6964-46de-ba3a-09552e7cf072@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-Commit 42a2f6664e18 ("staging: vc04_services: Move global g_state to
-vchiq_state") adds a parameter to vchiq_debugfs_init, but leaves the
-dummy implementation in the !CONFIG_DEBUG_FS case untouched, causing a
-compile time error.
+On Thu, Jun 20, 2024 at 08:06:11AM -0700, Dave Hansen wrote:
+> On 6/19/24 14:25, Brice Goglin wrote:
+> > Good point. From this patch series, I understand that the current kernel
+> > side doesn't care about these different E-cores. However it might be
+> > good to expose them as different cpu-types (or better name) to userspace ?
+> > 
+> > Something like type 0 = P-core, 1 = normal E-core, 2 = low power E-core ?
+> 
+> The first priority here is getting the kernel to comprehend these types
+> for architectural purposes: when there are functional differences
+> between the cores.
+> 
+> Let's get that in place, first.  Then we can discuss the possibility of
+> new ABI in the area.
+> 
+> Did the ARM folks ever do a sysfs ABI for big.LITTLE?  I don't see
+> anything obvious in Documentation/ABI/testing/sysfs-devices-system-cpu.
+> 
 
-Fixes: c3552ab19aeb ("staging: vchiq_debugfs: Fix NPD in vchiq_dump_state")
-Signed-off-by: Bernhard Rosenkränzer <bero@baylibre.com>
----
- .../staging/vc04_services/interface/vchiq_arm/vchiq_debugfs.c   | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ARM has the interface /sys/devices/system/cpu/cpu0/regs/identification
 
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_debugfs.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_debugfs.c
-index 1f74d0bb33bae..d5f7f61c56269 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_debugfs.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_debugfs.c
-@@ -138,7 +138,7 @@ void vchiq_debugfs_deinit(void)
- 
- #else /* CONFIG_DEBUG_FS */
- 
--void vchiq_debugfs_init(void)
-+void vchiq_debugfs_init(struct vchiq_state *state)
- {
- }
- 
--- 
-2.45.2
+Here they show the Main ID Register [A]. This register has CPU
+identification fields such as architecture and other details. The
+architecture can be specified as a number or refer to architecture-specific
+features in other registers.
 
+On my DragonBoard 845c, this interface shows different values for different
+types of CPUs.
+
+For functionality, there is also a /sys/devices/system/cpu/aarch32_el0. It
+lists the CPUs that can 32-bit ARM programs on processors in which only a
+subset of CPUs can do it.
+
+ARM gives userspace specific details. This makes more sense to me. Instead
+of reading these details, user space would have to infer these details if
+a CPU type was given in sysfs.
+
+Having said that, Intel does have a CPUID leaf that gives the CPU type. Such
+leaf also has a "Native Model ID". Exposing only the CPU type may not be
+sufficient.
+
+[A]. https://developer.arm.com/documentation/ddi0595/2020-12/AArch64-Registers/MIDR-EL1--Main-ID-Register
