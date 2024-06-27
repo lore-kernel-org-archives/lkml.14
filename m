@@ -1,108 +1,66 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA4D376E0;
-	Thu, 27 Jun 2024 06:27:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.16])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73F1620B33;
+	Thu, 27 Jun 2024 06:29:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719469627; cv=none; b=cHWv8q0ee4Ak9N2WdfN//SwshZf+CXEmcJo37gEvgBfSD1rkgq7proHQCavhWIgDCGB6KwsJw7euidSSlgd/ZJuNt8ojMjuzN31GebiPrxHznEHg+W8GOr4tmi1e0GN+sGI0Kcfu72dx6d0JZoLvh6Yu5sc/Y0QUqwvon3hqPkc=
+	t=1719469774; cv=none; b=DLCR4Qh5Sg8vIYEdZSmCZrEYy0uoB9e1WY6McorvJet8oZJO14nOKXmlFId2FFGV5y9BpoZRqI8rdJh/RBmXTyHSB5yLE3H0gydt/ASUEjrLKhC82H5sXEKxiSMOM60wEuA6nTZEHWYgmI4hXu64/3YtDuBAoJc0/ir7kbLjExs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719469627; c=relaxed/simple;
-	bh=wyQ0BNlQZDym+FNWJd3NW7ohng0EPPqco/xEKaWgMQ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=XB0WnfXhHnVl32gPXJUT5bvCzTbQBnvLafLuJypkrSNGEJsfEYU+CBul2zjyMN7yXutZbpHAMam1MEWgEYU9+aGsKS0LfEQqfUi92PMjUil+lvT1Z2HsIGyLni5sDjtWwea9IvmvdSfRp9i3B5v50srKhdTWSmysGghGdZMkNjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=m3H86Qvn; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1719469774; c=relaxed/simple;
+	bh=wHiwBzg0drLuXMvAPru+bat178YvBZzqVOLmGt0Zl6c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GpZA3MfaWJVMYjPDRqyaBNxEWjMApXIaYYH0/eZ7J0fWVOLQApImOqBjQ+G/mn8hjR51w309veyDCe42y4kKfgyGyhkwnCoGICbTaUlPAuinohuWKu/ao4APH+Vv1p6sSkt0m3rtGGPAniYJ7L/4GSVJ3nxc5tqEtJ0Igin+2jM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=GYRR4Fqz; arc=none smtp.client-ip=220.197.32.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="m3H86Qvn"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45R6QslO008650;
-	Thu, 27 Jun 2024 01:26:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1719469614;
-	bh=FnBX2WcfoG/M4I88+iE1oOfx0nlSEYSTb/yqXcoRJd0=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=m3H86QvndPSxjkDekG3lw+MaBWr+2wNqxzCGbTJ7rKe32zcaj4qkHoJXJaIYf0NfP
-	 ahz5pKBQd5b2wT7nbvdRHbwFPWRROG0PguadDIjahJmtWxAV00U9mAZIhsvoFJPtV0
-	 NjoJB8SruTXQGuXKhhGAo48w6lfBCSs3NhrqMU+o=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45R6Qs3p005564
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 27 Jun 2024 01:26:54 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 27
- Jun 2024 01:26:54 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 27 Jun 2024 01:26:53 -0500
-Received: from [137.167.6.231] (lt5cg1094w5k.dhcp.ti.com [137.167.6.231])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45R6QqBC100855;
-	Thu, 27 Jun 2024 01:26:52 -0500
-Message-ID: <df34e044-8c51-4ced-8381-cbf424711e2f@ti.com>
-Date: Thu, 27 Jun 2024 09:26:51 +0300
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="GYRR4Fqz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=4JVbwBMrJBsF2RiES/eofL7TJIZJsypozKg6acb8498=;
+	b=GYRR4FqzDkNp1v7oDKqNrfn9aTuYTBcS9pYvjMeIJk0GfmCpOvdr9diNXmUFDF
+	tJS8yBHis8oy2IxK4vyninFJi+/AAlhZ4jJvsiDlc9840Rlmwl9VrAr6IFENjVEE
+	iM5l9zBkUZJ9GJ+RB1iq8DZjfvoWQQxAPZm+3JpxUx3gw=
+Received: from dragon (unknown [114.218.218.47])
+	by gzsmtp3 (Coremail) with SMTP id M88vCgD3vx6aBn1m1VYZAA--.51586S3;
+	Thu, 27 Jun 2024 14:28:44 +0800 (CST)
+Date: Thu, 27 Jun 2024 14:28:41 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Han Xu <han.xu@nxp.com>,
+	Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Marek Vasut <marex@denx.de>,
+	linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 6/6] arm64: dts: imx8dxl-ss-conn: add gpmi nand
+Message-ID: <Zn0GmUVgk1Plj5mA@dragon>
+References: <20240520-gpmi_nand-v2-0-e3017e4c9da5@nxp.com>
+ <20240520-gpmi_nand-v2-6-e3017e4c9da5@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH 26/43] wifi: nxpwifi: add sdio.c
-To: David Lin <yu-hao.lin@nxp.com>,
-        "linux-wireless@vger.kernel.org"
-	<linux-wireless@vger.kernel.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "briannorris@chromium.org" <briannorris@chromium.org>,
-        "kvalo@kernel.org"
-	<kvalo@kernel.org>,
-        "francesco@dolcini.it" <francesco@dolcini.it>,
-        Pete Hsieh
-	<tsung-hsien.hsieh@nxp.com>
-References: <20240621075208.513497-1-yu-hao.lin@nxp.com>
- <20240621075208.513497-27-yu-hao.lin@nxp.com>
- <16de364e-bd80-4674-9125-74c33e551961@ti.com>
- <PA4PR04MB963897BF79B6F05700263A7CD1D72@PA4PR04MB9638.eurprd04.prod.outlook.com>
-Content-Language: en-US
-From: "Nemanov, Michael" <michael.nemanov@ti.com>
-In-Reply-To: <PA4PR04MB963897BF79B6F05700263A7CD1D72@PA4PR04MB9638.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240520-gpmi_nand-v2-6-e3017e4c9da5@nxp.com>
+X-CM-TRANSID:M88vCgD3vx6aBn1m1VYZAA--.51586S3
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUVaZXUUUUU
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiCRwLZWZv-cwmbAAAsJ
 
-On 6/27/2024 6:37 AM, David Lin wrote:
->>
->> On 6/21/2024 10:51 AM, David Lin wrote:
->> ...
->>> +
->>> +/* This function unregisters the SDIO device.
->>> + *
->>> + * The SDIO IRQ is released, the function is disabled and driver
->>> + * data is set to null.
->>> + */
->>> +static void
->>> +nxpwifi_unregister_dev(struct nxpwifi_adapter *adapter) {
->>> +     struct sdio_mmc_card *card = adapter->card;
->>> +
->>> +     if (adapter->card) {
->>> +             card->adapter = NULL;
->>> +             sdio_claim_host(card->func);
->>> +             sdio_disable_func(card->func);
->>> +             sdio_release_host(card->func);
->>> +     }
->>> +}
->>
->> Missing call to sdio_release_irq() ?
->>
->> Michael.
+On Mon, May 20, 2024 at 12:09:17PM -0400, Frank Li wrote:
+> Update gpmi nand and dma_apbh interrupt number for imx8dxl.
 > 
-> sdio_release_irq() is called by nxpwifi_sdio_disable_host_int().
-> 
-> David
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-Right, I see you calling it from nxpwifi_uninit_sw(). Maybe just align 
-the comment then.
+Applied, thanks!
 
-Michael.
