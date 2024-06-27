@@ -1,135 +1,306 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0150199E98
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 14:44:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7383219AA56;
+	Thu, 27 Jun 2024 14:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719499500; cv=none; b=aUja8hk/RovHW60Bhfcvl1V6d4JugGjaiXPutl2JWGWWXL0MyvxiroZwYHW8Kutnb5Kbau/dD1GXI5H3tXrpaD5DcbLtJB4Bn34thzmkXmwQjBCY4JKLwzGm2+IoGs5b0pKUC0fDkRxPMnvhcOQzEbtmWoqmS44+BSoHx1WvEMo=
+	t=1719499502; cv=none; b=aYX/l5BQWFhTGGAlwUzgimsx0PzcnUEgYaRYtqmChlV+QDjnt1Sti4wWsQShBxMp+494ybCd5FtjSyG5SMPN4xKNpBxiwIM9SG5RuhglgQiWRnQwEBRmWYUMRy1zxpYnnTLJ7NjHcfcx30ibWUyvGhVxvyqU6N6GdStTGOF9qyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719499500; c=relaxed/simple;
-	bh=2R23639fkPX8iIC+qUMimWznPuF4ISsfAKV3cLgsdsU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SzxsyFWgbZgbs8DHskT+MdHPIES5m45Tu/m7bf1b/JNZ18RzzaLYwskkLzWtgtpS9GTDBhHIaeyyfrq9LQBVvOP1lHAagT0KU6MwDcVVil3FRQgY6dTMw7l8+GQHaEC59KAdvSUKVgMM34FuUXFlreA+Y2WCJ6PDT20avY029MU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ynzFP2RS; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719499502; c=relaxed/simple;
+	bh=wiRhXRt2NhOH8Yp4ES4mussK0B06KmxvL55Tjh5zfak=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YF6PLcagaVBq2kJbonhkjWN02gAZU5tvdOR8PVtl3ZYhIXoje0yUvifJq4JzVQiXTxI8MIDu3kafnID96STFCZbHLK/xP+u9Q2FFk2wecx2ly+BMZglxhFp9rJPphv2eTodZ8UWlAG7eMJCpPpb+2ZzCTsx4/rf7OHUL0z/uEBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=NxhVU6oI; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ynzFP2RS"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-424ad289949so18443855e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 07:44:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719499495; x=1720104295; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Q/2h0WxI0Gkdc2KmSebeNCSc6/7iWl3nnZ9U6r19RMI=;
-        b=ynzFP2RSh/yIyHy6rfzKm/8U+LQA6fxd8eN8hCo5QlREfyOrrSjH6u6q++PfPbXa/n
-         OmDIsVRTm75ZtrggwZX5einqOt7uaNGo0JbWzGAaGmbwdslIYfPXwmh3uc9hfdOl8gO2
-         9mGDos0RPpSyd4tRv+9CX0OvRAxalE1chtAcuLxgAwrD7ogrDj7tqzizWbtZYdpFDqjs
-         dg6UIAcOcC1WhTcnQHiX/b8bVF/E0fGOO/8d+8dWqDRRMBPJF0z43VgaPedCLjvJOuHl
-         /3yJUpyOtTD22wUy5uIDV75gY5LaTZ6gnP55FLx8U49ncYQubI2+hzis8QGl4Bn/jAMO
-         ocSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719499495; x=1720104295;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q/2h0WxI0Gkdc2KmSebeNCSc6/7iWl3nnZ9U6r19RMI=;
-        b=oV4C5P0AnAM0ovvObHp2yVXkbkO9ubpFzR2rWCW7R4AM1sFQ58tJgAu4hXIvpC0WkW
-         +elkg27ayiAjFFL/k9usJCV/FuGlHlCeoLu/MrXlQRTRkstfxzSG7UpUirIDfMBfSb5H
-         UOpHSmCA+s4dkziy2AI51l/3dhVy+jOsapnKoA52u4oWSUYxHL8FXDWH0IRfCz6+EQAx
-         E/n4zgaKsJIr6xk6M0Ho1BUk5he5CS27EiWuZ0lA2HhV6rfQq3vKIzTKfLW4XeEUJaSi
-         Z3FMdXNSK8U2JjI3CEIXgW9XC10q9t0emctFb7QdNUsMaLdkajYQj3vmcBhnBSd08tP0
-         8JWg==
-X-Forwarded-Encrypted: i=1; AJvYcCU3Qu6XyOWTKkEQHq+OIwgGIuZMJD/xFwx+W5x3iItlEH2LycRbAswtrZJwzxwEeDxbXBgelbNSyboG9m1XMUhfKNxEnw09PrvGypOd
-X-Gm-Message-State: AOJu0Ywie2v/4aU19c3fWndJDcYdPnssHS6VYSo6keqoD1tZeFTai04g
-	tPziDqRD5DvY9Owp9b5dP0IdPnmOOdpvU0vimD2qfHGscw+nmqoY95EWpwgnnKk=
-X-Google-Smtp-Source: AGHT+IFGt4B0RZSOZNczxSiz5zFHWD1XhA8KV6rhtB/C6YEJbwb2mVelgfDCWMl8+kBFTiWhCuIkDA==
-X-Received: by 2002:a05:600c:6a18:b0:425:6327:f00c with SMTP id 5b1f17b1804b1-4256327f189mr21483385e9.22.1719499495427;
-        Thu, 27 Jun 2024 07:44:55 -0700 (PDT)
-Received: from [192.168.1.195] ([5.133.47.210])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42564b7b7c1sm31254075e9.23.2024.06.27.07.44.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 07:44:54 -0700 (PDT)
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Date: Thu, 27 Jun 2024 15:44:43 +0100
-Subject: [PATCH v2 6/6] arm64: dts: x1e80100-qcp: fix wsa soundwire port
- mapping
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="NxhVU6oI"
+Received: from [192.168.88.20] (91-158-144-210.elisa-laajakaista.fi [91.158.144.210])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 274032C5;
+	Thu, 27 Jun 2024 16:44:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1719499474;
+	bh=wiRhXRt2NhOH8Yp4ES4mussK0B06KmxvL55Tjh5zfak=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=NxhVU6oIpKM5a+VZtk7haJq3mXvpgIWHgrDnKfwc6+kPBYedfWJOZgMClaDA5iEHG
+	 dGkAOtYUrk7L64FWBBpXoPipUSa7MVyDDgjNyGwsmQ16jek0gy3GIAdT0c5LMAuznI
+	 zwfQAjRdtRrBngJ39azq9+9iQX9zJ3xhHeyzs38g=
+Message-ID: <30545e01-2456-429f-aa1a-ea525270820b@ideasonboard.com>
+Date: Thu, 27 Jun 2024 17:44:54 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] dt-bindings: display: ti: Add schema for AM625 OLDI
+ Transmitter
+To: Aradhya Bhatia <a-bhatia1@ti.com>, Rob Herring <robh@kernel.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Jyri Sarha <jyri.sarha@iki.fi>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Neil Armstrong <neil.armstrong@linaro.org>, David Airlie
+ <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, DRI Development List
+ <dri-devel@lists.freedesktop.org>,
+ Devicetree List <devicetree@vger.kernel.org>,
+ Linux Kernel List <linux-kernel@vger.kernel.org>, Nishanth Menon
+ <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Praneeth Bajjuri <praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>,
+ Francesco Dolcini <francesco@dolcini.it>,
+ Alexander Sverdlin <alexander.sverdlin@siemens.com>,
+ Randolph Sapp <rs@ti.com>, Devarsh Thakkar <devarsht@ti.com>,
+ Jayesh Choudhary <j-choudhary@ti.com>, Jai Luthra <j-luthra@ti.com>
+References: <20240511193055.1686149-1-a-bhatia1@ti.com>
+ <20240511193055.1686149-3-a-bhatia1@ti.com>
+ <20240512193459.GF17158@pendragon.ideasonboard.com>
+ <e0433619-75c7-40bc-aafb-f0a875ea7dc3@ti.com>
+ <20240513193009.GA2986074-robh@kernel.org>
+ <cbd44252-2abf-4443-ade7-b1aa32d24e3e@ti.com>
+Content-Language: en-US
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <cbd44252-2abf-4443-ade7-b1aa32d24e3e@ti.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240626-port-map-v2-6-6cc1c5608cdd@linaro.org>
-References: <20240626-port-map-v2-0-6cc1c5608cdd@linaro.org>
-In-Reply-To: <20240626-port-map-v2-0-6cc1c5608cdd@linaro.org>
-To: Banajit Goswami <bgoswami@quicinc.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, 
- Neil Armstrong <neil.armstrong@linaro.org>, alsa-devel@alsa-project.org, 
- linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1346;
- i=srinivas.kandagatla@linaro.org; h=from:subject:message-id;
- bh=2R23639fkPX8iIC+qUMimWznPuF4ISsfAKV3cLgsdsU=;
- b=owEBbQGS/pANAwAKAXqh/VnHNFU3AcsmYgBmfXrYZXcaDPDTEMgAamcZ9w/ZPoMFkd898cvKx
- t8+dolO7NCJATMEAAEKAB0WIQQi509axvzi9vce3Y16of1ZxzRVNwUCZn162AAKCRB6of1ZxzRV
- N9HKB/9z1cCqL0paPtQ+5UMxA9t4wauT0ugB80R2gRNhFexPvqGNB2MHSChO53+qU2/XXbq8Q0L
- W7ruCUqhn1IS7jj2n6siZMkx+2OxEFJ6KwxScKy+yo1PcvwyWpO3ec22X3VS7nAVY6fIpgBG1Ca
- sCiOlFaarg92iccVZeS9vLmadcKCG0YUAXPWgavGusQi6D1Rf/m0B/BbMYWeVAjK0JhOJsHgv3a
- 6rwmbuJH+qOgRilQHW9vSzrD7q/ikcKWzLU2lfZ6xAS13MfU68UAgUiogzyA052dyuC49gooiJK
- tdm8ufp2wsZAT0gAWpxyeWBcEi2ZgbKUqdAUw+4aw3FFDjx8
-X-Developer-Key: i=srinivas.kandagatla@linaro.org; a=openpgp;
- fpr=ED6472765AB36EC43B3EF97AD77E3FC0562560D6
 
-Existing way of allocating ports dynamically is linear starting from 1 to
-MAX_PORTS. This will not work for x1e80100 as the master ports are
-are not mapped in the same order.
+On 14/05/2024 08:08, Aradhya Bhatia wrote:
+> Hi Rob,
+> 
+> Thank you for reviewing the patches!
+> 
+> On 14/05/24 01:00, Rob Herring wrote:
+>> On Mon, May 13, 2024 at 02:07:44PM +0530, Aradhya Bhatia wrote:
+>>> Hi Laurent,
+>>>
+>>> Thank you for reviewing the patches!
+>>>
+>>> On 13-May-24 01:04, Laurent Pinchart wrote:
+>>>> Hi Aradhya,
+>>>>
+>>>> Thank you for the patch.
+>>>>
+>>>> On Sun, May 12, 2024 at 01:00:53AM +0530, Aradhya Bhatia wrote:
+>>>>> Add devicetree binding schema for AM625 OLDI Transmitters.
+>>>>>
+>>>>> Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
+>>>>> ---
+>>>>>   .../bindings/display/ti/ti,am625-oldi.yaml    | 153 ++++++++++++++++++
+>>>>>   MAINTAINERS                                   |   1 +
+>>>>>   2 files changed, 154 insertions(+)
+>>>>>   create mode 100644 Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml b/Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml
+>>>>> new file mode 100644
+>>>>> index 000000000000..0a96e600bc0b
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml
+>>>>> @@ -0,0 +1,153 @@
+>>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>>>> +%YAML 1.2
+>>>>> +---
+>>>>> +$id: http://devicetree.org/schemas/display/ti/ti,am625-oldi.yaml#
+>>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>>> +
+>>>>> +title: Texas Instruments AM625 OLDI Transmitter
+>>>>> +
+>>>>> +maintainers:
+>>>>> +  - Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+>>>>> +  - Aradhya Bhatia <a-bhatia1@ti.com>
+>>>>> +
+>>>>> +description: |
+>>>>> +  The AM625 TI Keystone OpenLDI transmitter (OLDI TX) supports serialized RGB
+>>>>> +  pixel data transmission between host and flat panel display over LVDS (Low
+>>>>> +  Voltage Differential Sampling) interface. The OLDI TX consists of 7-to-1 data
+>>>>> +  serializers, and 4-data and 1-clock LVDS outputs. It supports the LVDS output
+>>>>> +  formats "jeida-18", "jeida-24" and "vesa-18", and can accept 24-bit RGB or
+>>>>> +  padded and un-padded 18-bit RGB bus formats as input.
+>>>>> +
+>>>>> +properties:
+>>>>> +  reg:
+>>>>> +    maxItems: 1
+>>>>> +
+>>>>> +  clocks:
+>>>>> +    maxItems: 1
+>>>>> +    description: serial clock input for the OLDI transmitters
+>>>>> +
+>>>>> +  clock-names:
+>>>>> +    const: s_clk
+>>>>> +
+>>>>> +  ti,companion-oldi:
+>>>>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>>>>> +    description:
+>>>>> +      phandle to companion OLDI transmitter. This property is mandatory for the
+>>>>> +      primarty OLDI TX if the OLDI TXes are expected to work either in dual-lvds
+>>>>> +      mode or in clone mode. This property should point to the secondary OLDI
+>>>>> +      TX.
+>>>>> +
+>>>>> +  ti,secondary-oldi:
+>>>>> +    type: boolean
+>>>>> +    description: Boolean property to mark an OLDI TX as secondary node.
+>>>>> +
+>>>>> +  ti,oldi-io-ctrl:
+>>>>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>>>>> +    description:
+>>>>> +      phandle to syscon device node mapping OLDI IO_CTRL registers found in the
+>>>>> +      control MMR region. This property is needed for OLDI interface to work.
+>>>>> +
+>>>>> +  ports:
+>>>>> +    $ref: /schemas/graph.yaml#/properties/ports
+>>>>> +
+>>>>> +    properties:
+>>>>> +      port@0:
+>>>>> +        $ref: /schemas/graph.yaml#/properties/port
+>>>>> +        description: Parallel RGB input port
+>>>>> +
+>>>>> +      port@1:
+>>>>> +        $ref: /schemas/graph.yaml#/properties/port
+>>>>> +        description: LVDS output port
+>>>>> +
+>>>>> +    required:
+>>>>> +      - port@0
+>>>>> +      - port@1
+>>>>> +
+>>>>> +allOf:
+>>>>> +  - if:
+>>>>> +      properties:
+>>>>> +        ti,secondary-oldi: true
+>>>>> +    then:
+>>>>> +      properties:
+>>>>> +        ti,companion-oldi: false
+>>>>> +        ti,oldi-io-ctrl: false
+>>>>> +        clocks: false
+>>>>> +        clock-names: false
+>>>>> +
+>>>>> +    else:
+>>>>> +      required:
+>>>>> +        - ti,oldi-io-ctrl
+>>>>> +        - clocks
+>>>>> +        - clock-names
+>>>>> +
+>>>>> +required:
+>>>>> +  - reg
+>>>>> +  - ports
+>>>>> +
+>>>>> +additionalProperties: false
+>>>>> +
+>>>>> +examples:
+>>>>> +  - |
+>>>>> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+>>>>> +
+>>>>> +    oldi_txes {
+>>>>> +        #address-cells = <1>;
+>>>>> +        #size-cells = <0>;
+>>>>> +        oldi: oldi@0 {
+>>>>> +            reg = <0>;
+>>>>> +            clocks = <&k3_clks 186 0>;
+>>>>> +            clock-names = "s_clk";
+>>>>> +            ti,oldi-io-ctrl = <&dss_oldi_io_ctrl>;
+>>>>
+>>>> What bus does this device live on ? Couldn't the I/O register space be
+>>>> referenced by the reg property ?.
+>>>>
+>>>
+>>> These registers are a part of the system-controller register space
+>>> (ctrl_mmr0). The whole register set is owned by the main_conf[0]
+>>> devicetree node, with sub-nodes pointing to specific regions. That's why
+>>> I cannot reference these registers directly.
+>>
+>> Then what does 'reg' represent? Looks like you just made up an index. If
+>> so, then this should probably be a child of &dss_oldi_io_ctrl instead.
+>> Or it should just be merged into that node.
+>>
+> 
+> I did make up an index when I used the 'reg' property. Similar to how
+> ports can be indexed. The AM65 has 1 OLDI TX. AM62 and AM62P have 2 OLDI
+> TXes each. The index is to help the driver parse through each of them.
+> 
+> If I push these OLDI TX nodes as child nodes under &dss_oldi_io_ctrl,
+> then that would be an inaccurate representation of the hardware.
+> 
+> The OLDI TXes are very well a part of the DSS hardware. As such, the
+> (three) registers that control the functionality have been made a part
+> of the DSS video-port (VP) register space, leaving OLDI TXes with no
+> direct access to the primary bus (cbass_main) where the DSS sits.
+> 
+> The IO control registers, on the other hand, do not affect OLDI
+> functionality in any way. These are just helper registers that merely
+> control the power characteristics of the OLDI data and clock lanes.
 
-Without this fix only one speaker in a pair of speakers will function.
+Just summarizing my understanding from today's code and ref manual (TRM) 
+reading, which mostly repeats what Aradhya said above:
 
-After this fix along with WSA codec changes both the speakers starts
-working.
+There may be 0, 1 or 2 OLDI instances, depending on the SoC. With two 
+instances, they may be (or are currently always?) connected to the same 
+display controller videoport, and thus can be used for cloning or 
+dual-link lvds.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8650-HDK
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- arch/arm64/boot/dts/qcom/x1e80100-qcp.dts | 2 ++
- 1 file changed, 2 insertions(+)
+In the TRM the OLDI instances are depicted to be inside DSS (display 
+subsystem), but outside DISPC (display controller). However, the 
+registers to configure and control OLDI are in the DISPC register block. 
+More specifically, in the DISPC VP1 block, which is the videoport to 
+which the OLDIs are connected to, and additionally one bit in the 
+DSS_SYSSTATUS register.
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts b/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts
-index 4edec3212dde..79563ae34890 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts
-+++ b/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts
-@@ -749,6 +749,7 @@ left_spkr: speaker@0,0 {
- 		sound-name-prefix = "SpkrLeft";
- 		vdd-1p8-supply = <&vreg_l15b_1p8>;
- 		vdd-io-supply = <&vreg_l12b_1p2>;
-+		qcom,port-mapping = <1 2 3 7 10 13>;
- 	};
- 
- 	/* WSA8845, Right Speaker */
-@@ -760,6 +761,7 @@ right_spkr: speaker@0,1 {
- 		sound-name-prefix = "SpkrRight";
- 		vdd-1p8-supply = <&vreg_l15b_1p8>;
- 		vdd-io-supply = <&vreg_l12b_1p2>;
-+		qcom,port-mapping = <4 5 6 7 11 13>;
- 	};
- };
- 
+The oldi-io-ctrl points to a system-control module, which contains a 
+register to control OLDI power up/down. But why is it called 
+"oldi-io-ctrl"? The register in question is OLDI_PD_CTRL.
 
--- 
-2.25.1
+So... How to represent this in the DT?
+
+I think we do want have separate nodes for the OLDIs, so that we can use 
+the of_graph to represent how the data flows. OLDI doesn't have its own 
+register block, and is controlled via DSS. If the OLDI nodes are not 
+children of the DSS node, where could they be?
+
+I think the DT design in these patches matches my understanding of the 
+hardware.
+
+  Tomi
 
