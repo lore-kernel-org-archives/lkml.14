@@ -1,139 +1,177 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B732E1A2C25;
-	Thu, 27 Jun 2024 20:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6C81A2FDB
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 20:39:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719520760; cv=none; b=bctYBOpwDNlMTjvMQ3uUcIcDi6hAXq6+1X+kMogEIE091FPpUpyDHmAtXRIHWK+NHbOKQo0M2unmcQ3qOuG2c5BBJiKqpUJnlGijnurRu7u8UY98YkGhhAs4TFrgCNDn5B07Ixj9Y3E4fKz+1bpGTkXdQ7nNKxjuP8HJNf9cVCw=
+	t=1719520761; cv=none; b=qFZUAfuHyMQPwIT93zNI1KJ5twlbdsDeeGR6rQlMd93pwzO8vZJoXKqyNaYUi4NmWl+RmbWzuSruQBH4C80scmYEYjkxsr89fuFSsqALyx5HrxwRqYqmdrrO9tjoBbehrwFyr9iv+oq1OnF66JPClXpKM3cns9GwymcCh8IAxCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719520760; c=relaxed/simple;
-	bh=ygOXSRJbnNQdyHCECIvl37zEXo8k5jpFmObJDlhAErw=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MpVcAahewqOVmj5V6UQMjaq7hFYUS43bpGpHszI5H/ZvW0YQ6T2BIjibM9FPfqc5PAs5mCsQS54hbNfc1d9xMyCbgHFkDiw5JqBP6OhkK9bU9dxManxwOSwMIj0VwQVmAXqv33G9eeW08yLNlOcurSS6i9JxrrT1XOeWaWjpykE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B1yALOX3; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719520761; c=relaxed/simple;
+	bh=zdAqMUk9VHyJiHDiw90uSeeCYe6sqc1oUAH918cf/OY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=g4F2VVR4ZzvNbguLqyafVeM6RdZ9Gcyj/ZbAYG9WDNwh0QMWJtERwk0/7nxXMqyMJhNZxPrbd6wH52Mmundt+WvnZSXMnmWymvnGCQpcv5o1Lstu+uxwhEZsbDCvpcX5960Lij6W3pg0gO/BmDPz2m8OX40Gduj6Pk1LbA9519M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GQ9IeppV; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B1yALOX3"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4217c7eb6b4so68357665e9.2;
-        Thu, 27 Jun 2024 13:39:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719520756; x=1720125556; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hxkqSPLSZ8WVJ8qA/5pMZTxdnGoTZa9LTxkjHCNUlZg=;
-        b=B1yALOX3QkXX8Z6BG33wNzJKsBnV5l7wZUSgYbTRPs4w0ObcZCRQdeNWhLinmg8JMK
-         ASCTC0ENiIvn5aWbZ9l6LxJS3WtPcR0//iPYctNHBm8s6mYQuCEt5LJQJYAcHi/6Iejt
-         rlnpovxZsRiFOYR4yFs5A4CQbFbzB1HTAEahcKdJpVOr2E6znJsscEZq/08ekc51rFMS
-         eigMJrVhdZRBUV8XGBDwmAtONcijC1b0DDChhm/Gx2w0z+fMcNCN6umoeqTmenCsAYY+
-         3rk9VCKAdzWwJrYmPOI0SzYGOd72F3yDKQykGFuuCyOHORPS0WLaW+a3Hm2LpUDeO9xm
-         uYYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719520756; x=1720125556;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hxkqSPLSZ8WVJ8qA/5pMZTxdnGoTZa9LTxkjHCNUlZg=;
-        b=jhpooLdUPR2XV7Emp+i6nIYpBBVGeQADIjzZOrXV3wgDWNL8HHoKreW3VVN87pxXiH
-         9K/9s7MYYwebcchtBuRkhkru37TQ4dA+lI3AO+TnPdKJPyxbFP/DDE8MlrLqtRRn7xBp
-         Lf3KzX4ujcW7FinITifX+zQ6HFFwMYT1LB8foseIVzxdHLc+Jq+XjUiugJyk88gAnZYf
-         kLF8tgKsWMP2N0OpMqR0hHX8s3SiQgxb85LzH8eVT+davuo+ExcpK8TRL9yLFCbLxDLi
-         LoGcbDob1mZduGJZCJ/YgklnE50svbIzO0PHCZ9yQ5zcaN8uvXC0VQoIWkWUZeJqMja1
-         aSxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWy/+d8S63jLYOd8s9mr2e8MZfnHmJ9fEjFqq/S8O/biq8+Zg35kHbPiPUZmYSukICgkiC+znI1hzqemgt+N6pbyVmjTPZ85AIMUtXr2DpPILbaXQhFbMF6G7D4uLq6W6pV+hQedHSeFJzJcg==
-X-Gm-Message-State: AOJu0YyDmfpVjN+hLH6YrjMXKu+TSSQKF1CtIZLKVUja7fdRGHY7D1Tw
-	8Bj7k5lOX4/aZdrNfXy2BasbQzH5YpDA3Q0w+G5uNK+wQAVa1E/P
-X-Google-Smtp-Source: AGHT+IFp6wy4V+XJozxcZ1RwiAljDE5gB959PiYO/3inJwovYyKVDd1cYakxkcuEl7/1ZPYf6tfKpg==
-X-Received: by 2002:a05:600c:3b16:b0:425:52c7:1f14 with SMTP id 5b1f17b1804b1-42552c71f73mr37988875e9.24.1719520755859;
-        Thu, 27 Jun 2024 13:39:15 -0700 (PDT)
-Received: from localhost ([2a00:23cc:d20f:ba01:bb66:f8b2:a0e8:6447])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256b097bd6sm6892345e9.30.2024.06.27.13.39.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 13:39:14 -0700 (PDT)
-Date: Thu, 27 Jun 2024 21:39:14 +0100
-From: Lorenzo Stoakes <lstoakes@gmail.com>
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>,
-	Matthew Wilcox <willy@infradead.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [RFC PATCH 6/7] tools: separate out shared radix-tree components
-Message-ID: <4b4361cc-3a29-4dbf-ad47-a1d8d05e7781@lucifer.local>
-References: <cover.1719481836.git.lstoakes@gmail.com>
- <c23f1b80c62bc906267a8b144befe7ac96daa88c.1719481836.git.lstoakes@gmail.com>
- <3kswdhugo2jmlkejboymem4yhakird5fvmnbschicaldwjwu7x@6c6z5lk4ctvy>
- <c2797b55-59cd-4731-899f-015631c1e553@lucifer.local>
- <mqqoj4c2777ypdmj2o5xyofvitytijfuxwjqujnaww7y22zrob@rof2tmdb7hwl>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GQ9IeppV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719520760; x=1751056760;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=zdAqMUk9VHyJiHDiw90uSeeCYe6sqc1oUAH918cf/OY=;
+  b=GQ9IeppVzkOWtH96/5dMMGTj7KpAfj6kHkZYC4KLDGVAYtXHfV8T+hOM
+   r1yWNP2KLQdYN/PSC0zG3+HzHF3I++c6kEPR+RA4JnpMjYEv0mV51Nf3B
+   6OVYhoi8nC9QhMg3fOJI6YzKtUA7PVcmiZOjwTC71XooXzg4jamWKOpbn
+   xVpqk3jZl9K3ttTjfSDeNoInZ4oG9Nm29tCx+s6nDIPTip4A58r2qdXBq
+   ov5sE5TyvvGMn3hqCzt9uih3i5vriK24kMLezk7sHsJ0q0HWFBSZGyz6q
+   uhdJh1hnloHEDzgiNvdNL6hlpGRd+dZI92hPgJOI2jyK5t/TUo+XaS3zg
+   A==;
+X-CSE-ConnectionGUID: trdc3e7LSxSLwp5IEu4ByQ==
+X-CSE-MsgGUID: zl4YqEzBQMiNPG37AG5UKg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="16809842"
+X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
+   d="scan'208";a="16809842"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 13:39:11 -0700
+X-CSE-ConnectionGUID: Yg5CSV4LQA24iyx2sIpRuw==
+X-CSE-MsgGUID: pNxhQzCMQDuhEI4i9PSWEA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
+   d="scan'208";a="82052922"
+Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 13:39:10 -0700
+From: Tony Luck <tony.luck@intel.com>
+To: Fenghua Yu <fenghua.yu@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>,
+	Babu Moger <babu.moger@amd.com>,
+	Drew Fustini <dfustini@baylibre.com>,
+	Dave Martin <Dave.Martin@arm.com>
+Cc: x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev,
+	Tony Luck <tony.luck@intel.com>
+Subject: [PATCH v22 15/18] x86/resctrl: Make __mon_event_count() handle sum domains
+Date: Thu, 27 Jun 2024 13:38:53 -0700
+Message-ID: <20240627203856.66628-16-tony.luck@intel.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240627203856.66628-1-tony.luck@intel.com>
+References: <20240627203856.66628-1-tony.luck@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <mqqoj4c2777ypdmj2o5xyofvitytijfuxwjqujnaww7y22zrob@rof2tmdb7hwl>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 27, 2024 at 04:03:21PM -0400, Liam R. Howlett wrote:
-> * Lorenzo Stoakes <lstoakes@gmail.com> [240627 15:47]:
-> > On Thu, Jun 27, 2024 at 01:59:18PM -0400, Liam R. Howlett wrote:
-> > > * Lorenzo Stoakes <lstoakes@gmail.com> [240627 06:39]:
-> > > > The core components contained within the radix-tree tests which provide
-> > > > shims for kernel headers and access to the maple tree are useful for
-> > > > testing other things, so separate them out and make the radix tree tests
-> > > > dependent on the shared components.
-> > > >
-> > > > This lays the groundwork for us to add VMA tests of the newly introduced
-> > > > vma.c file.
-> > >
-> > > This separation and subsequent patch requires building the
-> > > xarray-hsared, radix-tree, idr, find_bit, and bitmap .o files which are
-> > > unneeded for the target 'main'.  I'm not a build expert on how to fix
-> > > this, but could that be reduced to the minimum set somehow?
-> >
-> > I'm confused, the existing Makefile specified:
-> >
-> > CORE_OFILES := xarray.o radix-tree.o idr.o linux.o test.o find_bit.o bitmap.o \
-> > 			 slab.o maple.o
-> >
-> > OFILES = main.o $(CORE_OFILES) regression1.o regression2.o regression3.o \
-> > 	 regression4.o tag_check.o multiorder.o idr-test.o iteration_check.o \
-> > 	 iteration_check_2.o benchmark.o
-> >
-> > main:	$(OFILES)
-> >
-> > Making all of the files you mentioned dependencies of main no? (xarray-shared
-> > being a subset of xarray.o which requires it anyway)
->
-> After replacing main with vma and dropping the vma.c, I can generate the
-> vma executable. I had to generate map-shift.h and bit-lenght.h, then
-> execute:
->
-> cc -O2 -g -Wall -I../shared -I. -I../../include -I../../../lib -g -Og -Wall -D_LGPL_SOURCE -fsanitize=address -fsanitize=undefined -c -o vma.o vma.c
-> cc -c -O2 -g -Wall -I../shared -I. -I../../include -I../../../lib -g -Og -Wall -D_LGPL_SOURCE -fsanitize=address -fsanitize=undefined ../shared/linux.c -o linux.o
-> cc -O2 -g -Wall -I../shared -I. -I../../include -I../../../lib -g -Og -Wall -D_LGPL_SOURCE -fsanitize=address -fsanitize=undefined -c -o slab.o ../../lib/slab.c
-> cc -c -O2 -g -Wall -I../shared -I. -I../../include -I../../../lib -g -Og -Wall -D_LGPL_SOURCE -fsanitize=address -fsanitize=undefined ../shared/maple-shim.c -o maple-shim.o
-> cc -O2 -g -Wall -I../shared -I. -I../../include -I../../../lib -g -Og -Wall -D_LGPL_SOURCE -fsanitize=address -fsanitize=undefined -c -o vma_stub.o vma_stub.c
-> cc -fsanitize=address -fsanitize=undefined vma.o linux.o slab.o maple-shim.o vma_stub.o -lpthread -lurcu -o vma
->
-> Dropping a number of the pre-built items.  When I looked at the list, it
-> seemed too numerous for what we were doing (why do we need idr, and
-> radix-tree?)  So I tried removing as many as I could.
+Legacy resctrl monitor files must provide the sum of event values across
+all Sub-NUMA Cluster (SNC) domains that share an L3 cache instance.
 
-I did see link errors at some point when radix-tree wasn't included there,
-I'll take another look and see if we can reduce to a smaller subset if
-posible.
+There are now two cases:
+1) A specific domain is provided in struct rmid_read
+   This is either a non-SNC system, or the request is to read data
+   from just one SNC node.
+2) Domain pointer is NULL. In this case the cacheinfo field in struct
+   rmid_read indicates that all SNC nodes that share that L3 cache
+   instance should have the event read and return the sum of all
+   values.
 
->
-> >
-> > I'm not sure this is a huge big deal as these are all rather small :)
->
-> Yeah, maybe not worth the effort.
->
-> Cheers,
-> Liam
+Update the CPU sanity check. The existing check that an event is read
+from a CPU in the requested domain still applies when reading a single
+domain. But when summing across domains a more relaxed check that the
+current CPU is in the scope of the L3 cache instance is appropriate
+since the MSRs to read events are scoped at L3 cache level.
+
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+---
+ arch/x86/kernel/cpu/resctrl/monitor.c | 51 ++++++++++++++++++++++-----
+ 1 file changed, 42 insertions(+), 9 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index ca309c93a56b..ca486d00541e 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -324,9 +324,6 @@ int resctrl_arch_rmid_read(struct rdt_resource *r, struct rdt_mon_domain *d,
+ 
+ 	resctrl_arch_rmid_read_context_check();
+ 
+-	if (!cpumask_test_cpu(smp_processor_id(), &d->hdr.cpu_mask))
+-		return -EINVAL;
+-
+ 	prmid = logical_rmid_to_physical_rmid(cpu, rmid);
+ 	ret = __rmid_read_phys(prmid, eventid, &msr_val);
+ 	if (ret)
+@@ -592,7 +589,10 @@ static struct mbm_state *get_mbm_state(struct rdt_mon_domain *d, u32 closid,
+ 
+ static int __mon_event_count(u32 closid, u32 rmid, struct rmid_read *rr)
+ {
++	int cpu = smp_processor_id();
++	struct rdt_mon_domain *d;
+ 	struct mbm_state *m;
++	int err, ret;
+ 	u64 tval = 0;
+ 
+ 	if (rr->first) {
+@@ -603,14 +603,47 @@ static int __mon_event_count(u32 closid, u32 rmid, struct rmid_read *rr)
+ 		return 0;
+ 	}
+ 
+-	rr->err = resctrl_arch_rmid_read(rr->r, rr->d, closid, rmid, rr->evtid,
+-					 &tval, rr->arch_mon_ctx);
+-	if (rr->err)
+-		return rr->err;
++	if (rr->d) {
++		/* Reading a single domain, must be on a CPU in that domain. */
++		if (!cpumask_test_cpu(cpu, &rr->d->hdr.cpu_mask))
++			return -EINVAL;
++		rr->err = resctrl_arch_rmid_read(rr->r, rr->d, closid, rmid,
++						 rr->evtid, &tval, rr->arch_mon_ctx);
++		if (rr->err)
++			return rr->err;
+ 
+-	rr->val += tval;
++		rr->val += tval;
+ 
+-	return 0;
++		return 0;
++	}
++
++	/* Summing domains that share a cache, must be on a CPU for that cache. */
++	if (!cpumask_test_cpu(cpu, &rr->ci->shared_cpu_map))
++		return -EINVAL;
++
++	/*
++	 * Legacy files must report the sum of an event across all
++	 * domains that share the same L3 cache instance.
++	 * Report success if a read from any domain succeeds, -EINVAL
++	 * (translated to "Unavailable" for user space) if reading from
++	 * all domains fail for any reason.
++	 */
++	ret = -EINVAL;
++	list_for_each_entry(d, &rr->r->mon_domains, hdr.list) {
++		if (d->ci->id != rr->ci->id)
++			continue;
++		err = resctrl_arch_rmid_read(rr->r, d, closid, rmid,
++					     rr->evtid, &tval, rr->arch_mon_ctx);
++		if (!err) {
++			rr->val += tval;
++			ret = 0;
++		}
++	}
++
++	if (ret)
++		rr->err = ret;
++
++	return ret;
+ }
+ 
+ /*
+-- 
+2.45.2
+
