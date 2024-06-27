@@ -1,166 +1,147 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A43198838;
-	Thu, 27 Jun 2024 18:25:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4180F19AA42;
+	Thu, 27 Jun 2024 18:25:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719512709; cv=none; b=SVsN3+2gA0fiFuDc9FJkHZUrrQMO9omkptHCv3Ody9ydUfrl/lIl0cXoAqjU8LYR6nSBX76X0oDevnzURWpisiRB3YqE26WoNQ/IF4vi9/9kqElzcJY1orhUlcvLll0aIMg51sCCR2ObTmzarjRb21JSqOc55qzZO6ifdsk84xU=
+	t=1719512718; cv=none; b=YBFFNno8LW5zVg0nryrwYKsQ/RjM88zPYZ3Qez4h4wfeq72RA2DLEQyWrRUn2mtkrS0VN9Q2TyfLoEDi6m4C8Kxkv5EMCKgLFB9hb0udv+kcv8QKqH7++1rASUyul2W4NTa+1sPEVz7oepEx0n3ehe1xT/XplbVXBH4bTFr3XcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719512709; c=relaxed/simple;
-	bh=KeBGO9CRPaD0wSlNnklz3IGku9jngU6aEeR9XG3Lfh4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OSl4ldNujFcoUwxnfeWKngnaT4BbJ8cW1H0YQQH+RCTMoHGSgi9HPYEeSOha+6LjtmQapfgDEsBWzLQ+iUAjJPVd5oSIXuf1fg6lkQnU9RmePNo31NGsEgcSvM/tJuqFr+9f1nFSLZunxXpUijsW6kuZgF4VYo7G3bEXejJKl/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=m5Dow/Q8; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1719512718; c=relaxed/simple;
+	bh=1Ajy1en2qPpu1h+fHYclENO/17vYGHDO6/UafbA2Eyw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BFjyN2fa03tuEH6vv3KjqqwVkohLoQvH46hvty548wyrycZo8OBZfNhqA5y6vqmcMIBtEDr8YRGtmnqpvM2GGuyrGkJ5P3fn84ksul3KzvCuK+n3Q18M88qr6/QKe2klv8x5sun3JGIAojUdpk7mjCGGG25vQ6k5tC3xww+flCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k+aseVKe; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="m5Dow/Q8"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45RFtWer012266;
-	Thu, 27 Jun 2024 18:24:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	from:to:cc:subject:date:message-id:mime-version:content-type
-	:content-transfer-encoding; s=corp-2023-11-20; bh=lWQliWfHdkYY0l
-	iIKUPYYMRUdsUHPFcSTvSEg1ybQA0=; b=m5Dow/Q8S+22FvzT4Rs7+SJAbp1+ST
-	u/H5R0Z6DrUN6NlbuAJ7pEvKf8MT/oYL4oB8aQpXjaJNSwCjRDPAEPeExU/ERwPM
-	hLOyDGqwmOIItPWjYjxexOsvwGfhzQFeIcd7O2JK6+Pk2zGxULrV78LpI3qtG44N
-	B1PyEvC9ZtNmeClw+iwfkeQ3ulNEQwzG+ayBfzTwF6iuc1ve+O/Dn/KpXb5MdXhP
-	gMnZgdSPLN94sOcqBut452JzDfleE564LMkOkszqL1q4jbj5WB/IzvztN5jlhjW6
-	30xNb+SxSmIKzth+6bJLJqwlN4Oi43ZfTPCB1BLHbAlfQT+WFDUIMUsw==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ywq5t6sea-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 27 Jun 2024 18:24:52 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45RHb7sO023397;
-	Thu, 27 Jun 2024 18:24:50 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3ywn2hannt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 27 Jun 2024 18:24:50 +0000
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 45RIOnP3007370;
-	Thu, 27 Jun 2024 18:24:50 GMT
-Received: from aakhoje-ol.in.oracle.com (dhcp-10-191-198-246.vpn.oracle.com [10.191.198.246])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3ywn2hane7-1;
-	Thu, 27 Jun 2024 18:24:49 +0000
-From: Anand Khoje <anand.a.khoje@oracle.com>
-To: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc: saeedm@mellanox.com, leon@kernel.org, tariqt@nvidia.com,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        davem@davemloft.net, rama.nichanamatlu@oracle.com,
-        manjunath.b.patil@oracle.com
-Subject: [PATCH v6] net/mlx5: Reclaim max 50K pages at once
-Date: Thu, 27 Jun 2024 23:54:43 +0530
-Message-ID: <20240627182443.19254-1-anand.a.khoje@oracle.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k+aseVKe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719512716; x=1751048716;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1Ajy1en2qPpu1h+fHYclENO/17vYGHDO6/UafbA2Eyw=;
+  b=k+aseVKejOBt6dW2eIJ20m3jbySZdk2NXfAbbd163ROSSyuTG42XX3EP
+   TigkV6kNjSm0tEz7YsP2g5CzpwrjkOZz+EQ8DV8I9dcNOW6SRqysn9/by
+   FlBBTr3mttHqh0Iv5oiTfYDcyfINmjQfj0HLTWlfD9iQ4BFsNGJsyIp0a
+   /wioGQ2YqEtF9ndQVUqcc8Qd1rbhYlAEFV8d0zC4WdiRSClJ6ScTkQQWv
+   /4G9BSmtBz7oytrDv+GtHYP5e03jyJvJPMXoonelG54j7/RdiDNES4QVX
+   y5/IAwg5ActhL1H7ydIUf/boFohmK5o5H1L/C9jLXYzyOPCKRHwU+IPcE
+   Q==;
+X-CSE-ConnectionGUID: pJnL7xc7SNGqiMy6b5h8+Q==
+X-CSE-MsgGUID: 6Ke7XxyPREyMl8fkcvRSkw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="16488369"
+X-IronPort-AV: E=Sophos;i="6.09,166,1716274800"; 
+   d="scan'208";a="16488369"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 11:25:15 -0700
+X-CSE-ConnectionGUID: ahlKCS5gSKyDs0rBA+MtJg==
+X-CSE-MsgGUID: ivEELg1lQLe/k2fFRQLdeg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,166,1716274800"; 
+   d="scan'208";a="44303023"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 27 Jun 2024 11:25:13 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sMtny-000GQA-36;
+	Thu, 27 Jun 2024 18:25:10 +0000
+Date: Fri, 28 Jun 2024 02:25:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Chris Lu <chris.lu@mediatek.com>, Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Luiz Von Dentz <luiz.dentz@gmail.com>
+Cc: oe-kbuild-all@lists.linux.dev, Sean Wang <sean.wang@mediatek.com>,
+	Aaron Hou <aaron.hou@mediatek.com>,
+	Steve Lee <steve.lee@mediatek.com>,
+	linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	linux-mediatek <linux-mediatek@lists.infradead.org>,
+	Chris Lu <chris.lu@mediatek.com>
+Subject: Re: [PATCH v5 8/8] Bluetooth: btusb: mediatek: add ISO data
+ transmission functions
+Message-ID: <202406280211.EtaVcgeY-lkp@intel.com>
+References: <20240626025329.26424-9-chris.lu@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-27_14,2024-06-27_03,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 suspectscore=0
- phishscore=0 adultscore=0 malwarescore=0 mlxscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2406180000
- definitions=main-2406270138
-X-Proofpoint-GUID: mEh18h35oB4pCkI1VJxZBS92kp5H7oV9
-X-Proofpoint-ORIG-GUID: mEh18h35oB4pCkI1VJxZBS92kp5H7oV9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240626025329.26424-9-chris.lu@mediatek.com>
 
-In non FLR context, at times CX-5 requests release of ~8 million FW pages.
-This needs humongous number of cmd mailboxes, which to be released once
-the pages are reclaimed. Release of humongous number of cmd mailboxes is
-consuming cpu time running into many seconds. Which with non preemptible
-kernels is leading to critical process starving on that cpu’s RQ.
-To alleviate this, this change restricts the total number of pages
-a worker will try to reclaim maximum 50K pages in one go.
-The limit 50K is aligned with the current firmware capacity/limit of
-releasing 50K pages at once per MLX5_CMD_OP_MANAGE_PAGES + MLX5_PAGES_TAKE
-device command.
+Hi Chris,
 
-Our tests have shown significant benefit of this change in terms of
-time consumed by dma_pool_free().
-During a test where an event was raised by HCA
-to release 1.3 Million pages, following observations were made:
+kernel test robot noticed the following build warnings:
 
-- Without this change:
-Number of mailbox messages allocated was around 20K, to accommodate
-the DMA addresses of 1.3 million pages.
-The average time spent by dma_pool_free() to free the DMA pool is between
-16 usec to 32 usec.
-           value  ------------- Distribution ------------- count
-             256 |                                         0
-             512 |@                                        287
-            1024 |@@@                                      1332
-            2048 |@                                        656
-            4096 |@@@@@                                    2599
-            8192 |@@@@@@@@@@                               4755
-           16384 |@@@@@@@@@@@@@@@                          7545
-           32768 |@@@@@                                    2501
-           65536 |                                         0
+[auto build test WARNING on bluetooth-next/master]
+[also build test WARNING on next-20240626]
+[cannot apply to bluetooth/master linus/master v6.10-rc5]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-- With this change:
-Number of mailbox messages allocated was around 800; this was to
-accommodate DMA addresses of only 50K pages.
-The average time spent by dma_pool_free() to free the DMA pool in this case
-lies between 1 usec to 2 usec.
-           value  ------------- Distribution ------------- count
-             256 |                                         0
-             512 |@@@@@@@@@@@@@@@@@@                       346
-            1024 |@@@@@@@@@@@@@@@@@@@@@@                   435
-            2048 |                                         0
-            4096 |                                         0
-            8192 |                                         1
-           16384 |                                         0
+url:    https://github.com/intel-lab-lkp/linux/commits/Chris-Lu/Bluetooth-btusb-mediatek-remove-the-unnecessary-goto-tag/20240626-114003
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.git master
+patch link:    https://lore.kernel.org/r/20240626025329.26424-9-chris.lu%40mediatek.com
+patch subject: [PATCH v5 8/8] Bluetooth: btusb: mediatek: add ISO data transmission functions
+config: mips-lemote2f_defconfig (https://download.01.org/0day-ci/archive/20240628/202406280211.EtaVcgeY-lkp@intel.com/config)
+compiler: mips64el-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240628/202406280211.EtaVcgeY-lkp@intel.com/reproduce)
 
-Signed-off-by: Anand Khoje <anand.a.khoje@oracle.com>
----
-Changes in v6
- - Added comments to explain usage os negative MAX_RECLAIM_NPAGES
----
- drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406280211.EtaVcgeY-lkp@intel.com/
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c b/drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c
-index d894a88..972e8e9 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c
-@@ -608,6 +608,11 @@ enum {
- 	RELEASE_ALL_PAGES_MASK = 0x4000,
- };
- 
-+/* This limit is based on the capability of the firmware as it cannot release
-+ * more than 50000 back to the host in one go.
-+ */
-+#define MAX_RECLAIM_NPAGES (-50000)
-+
- static int req_pages_handler(struct notifier_block *nb,
- 			     unsigned long type, void *data)
- {
-@@ -639,7 +644,16 @@ static int req_pages_handler(struct notifier_block *nb,
- 
- 	req->dev = dev;
- 	req->func_id = func_id;
--	req->npages = npages;
-+
-+	/* npages > 0 means HCA asking host to allocate/give pages,
-+	 * npages < 0 means HCA asking host to reclaim back the pages allocated.
-+	 * Here we are restricting the maximum number of pages that can be
-+	 * reclaimed to be MAX_RECLAIM_NPAGES. Note that MAX_RECLAIM_NPAGES is
-+	 * a negative value.
-+	 * Since MAX_RECLAIM is negative, we are using max() to restrict
-+	 * req->npages (and not min ()).
-+	 */
-+	req->npages = max_t(s32, npages, MAX_RECLAIM_NPAGES);
- 	req->ec_function = ec_function;
- 	req->release_all = release_all;
- 	INIT_WORK(&req->work, pages_work_handler);
+All warnings (new ones prefixed by >>):
+
+   In file included from drivers/bluetooth/btusb.c:28:
+   drivers/bluetooth/btmtk.h: In function 'alloc_mtk_intr_urb':
+>> drivers/bluetooth/btmtk.h:274:24: warning: passing argument 1 of 'PTR_ERR' makes pointer from integer without a cast [-Wint-conversion]
+     274 |         return PTR_ERR(-EOPNOTSUPP);
+   In file included from include/linux/kernfs.h:9,
+                    from include/linux/sysfs.h:16,
+                    from include/linux/kobject.h:20,
+                    from include/linux/dmi.h:6,
+                    from drivers/bluetooth/btusb.c:9:
+   include/linux/err.h:49:61: note: expected 'const void *' but argument is of type 'int'
+      49 | static inline long __must_check PTR_ERR(__force const void *ptr)
+         |                                                 ~~~~~~~~~~~~^~~
+>> drivers/bluetooth/btmtk.h:274:16: warning: returning 'long int' from a function with return type 'struct urb *' makes pointer from integer without a cast [-Wint-conversion]
+     274 |         return PTR_ERR(-EOPNOTSUPP);
+         |                ^~~~~~~~~~~~~~~~~~~~
+   drivers/bluetooth/btmtk.h: At top level:
+   drivers/bluetooth/btmtk.h:256:13: warning: 'btmtk_fw_get_filename' defined but not used [-Wunused-function]
+     256 | static void btmtk_fw_get_filename(char *buf, size_t size, u32 dev_id,
+         |             ^~~~~~~~~~~~~~~~~~~~~
+   drivers/bluetooth/btmtk.h:251:12: warning: 'btmtk_process_coredump' defined but not used [-Wunused-function]
+     251 | static int btmtk_process_coredump(struct hci_dev *hdev, struct sk_buff *skb)
+         |            ^~~~~~~~~~~~~~~~~~~~~~
+   drivers/bluetooth/btmtk.h:245:12: warning: 'btmtk_register_coredump' defined but not used [-Wunused-function]
+     245 | static int btmtk_register_coredump(struct hci_dev *hdev, const char *name,
+         |            ^~~~~~~~~~~~~~~~~~~~~~~
+   drivers/bluetooth/btmtk.h:235:12: warning: 'btmtk_setup_firmware' defined but not used [-Wunused-function]
+     235 | static int btmtk_setup_firmware(struct hci_dev *hdev, const char *fwname,
+         |            ^~~~~~~~~~~~~~~~~~~~
+   drivers/bluetooth/btmtk.h:229:12: warning: 'btmtk_setup_firmware_79xx' defined but not used [-Wunused-function]
+     229 | static int btmtk_setup_firmware_79xx(struct hci_dev *hdev, const char *fwname,
+         |            ^~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +/PTR_ERR +274 drivers/bluetooth/btmtk.h
+
+   270	
+   271	static struct urb *alloc_mtk_intr_urb(struct hci_dev *hdev, struct sk_buff *skb,
+   272					      usb_complete_t tx_complete)
+   273	{
+ > 274		return PTR_ERR(-EOPNOTSUPP);
+   275	}
+   276	
+
 -- 
-1.8.3.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
