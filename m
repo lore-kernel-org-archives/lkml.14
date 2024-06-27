@@ -1,59 +1,50 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5181953A1
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 14:34:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3EA5195FEC;
+	Thu, 27 Jun 2024 14:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719498899; cv=none; b=LBpKEyql4VJvbgQ75BNgRR2lplTsXqOHSAcrECASKTMsw8eqZfMegmPOQqM9a1vvIaVwhJNpcAF0S3a+D1UaeQiyXARLGA79LKKMI3Pz6ptawG8yAJ8/1c/mTUb6DU0O6faQJZTfPDBWgXRwfyhV5HXlgEihzb+EeA97E9eNtQQ=
+	t=1719498941; cv=none; b=rQxan9zaDbrRVcb586oWBrdNtMBj2MAZAf8DJx5e++9sEizc5cp+enRue2jSVs2pYyRe3FJPCUTSSm4znkXwBM4G7apXNMYHHTofrhO8ne6Yp+OYSIBQG3ksuNQGwONPYXo/xxCrIA5ETlFu56FuLoG4DKgeagXfnuc3wHG+L4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719498899; c=relaxed/simple;
-	bh=zguDLaxzEP5ll5x1PQ8QZ4iJg4eLozqPD1M8fbq03jI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DGwelnTTGdEHyZ+ZKvB/ThsjQ90axtJPZDiukxQtm4zusAX5pD8X3TJkn1neRmJHS31E8CSd5tz0zbjfH17tq4VICDWcYXTrXqXhwKWCuOUCW9N4ZUzApsxVct0FcWNuUrE+vppUKkUYgs7HfRfqNaEEbwTxg4q416i5MysyoLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rp+DlHSg; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719498941; c=relaxed/simple;
+	bh=3Vi0uGfEuBdcPspVCidcNyOiSGrFtVEnJEsAyuLLmok=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=VHFT3+yCtT3HDWwrBo9Qs+fSVSfMTRjiSnqbWIsBgp20Ad2mYp6u+VRqZVbkdIhWOWmCfJoYkLJUkH66wH5W0Qfy0RcCwYuyg0PsUlkrR+bV3WF4zukgz0uf/i9Dmey4MFBUd34r68NhucpX3ZeXkrIZ0XUFvZVDggTuOXhY8sM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=At8UPRXD; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rp+DlHSg"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52cdc4d221eso6683182e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 07:34:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719498896; x=1720103696; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Jz1cCr8L4wELlDLV7TgHeFnSV7RSZaDycktjZG7y30g=;
-        b=rp+DlHSg/SQW56Nx+dcc1GBJuObNp5wiIgIFznrqeIw/ugSYS+fScZeeIjDEHx2HG1
-         f/gY97W0+uII4s+j0ikL0oCyxd+fMB6lUNY4Sej0xJ4qQsJxEsHd+h/1lABXO/FIoaZh
-         dUxJbiBBtWEH4m+nOcDrPH8A9wFo0T1P1RJgvAn4dnLUpEevpetuZ5f4Nnpys2jJvqxw
-         d4RbpFLzyYY5AbPfyycWY+ZA+sybs/t5j+FJUVxnkMnMj8k5e032G7QhhgnTefoR+2UL
-         VJslsR3WxmDDdtQPdJZj168hlOdN/bvZ3CvxUBqTgqrdkOgpphifsgM309TffokhLBrd
-         74Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719498896; x=1720103696;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Jz1cCr8L4wELlDLV7TgHeFnSV7RSZaDycktjZG7y30g=;
-        b=HXVJ4Fc+9hatEwtjw6kOnVZR1YNpWKBvc4fGDVw817u3zAXmRGiGBBfK2umNFsaenY
-         QvaIJzfwDU1q7OU9TRWT/RUBKKoG12pvDxspsrZ8Lg0LBfI6teBUEFW/MY+58wsArj/j
-         74lObHjFOyEjWI1ao1P6QB15x7g1BRx1Q0GyLkYg3YRozI/XJae1h3oiwUxm/dVd2eI4
-         0/wPCZw0lmMxoXaWx5fsSyn3snml9oI/YJUngs26QAcPoKlCV6TOwrvtQJJWJn2MNU43
-         oBrhDAbon69qARAgBI2w9VKPNWXDQ4WQxjwWETKV7THsoJ813Vbi46ZBcZa4J8hdNTbq
-         +3yw==
-X-Forwarded-Encrypted: i=1; AJvYcCV2fJ6FV0abXIcy6djFa2d+Qzf47iZM8eYuw6lSeSqD8fI6lQGekvt3Aq8vNS8etU2WhNrxMzpzxYeQbkKasaDX/3WDiLnMBf+U4tPH
-X-Gm-Message-State: AOJu0YzsUm/VmswtQmsj0WBJ/JM5uVgQ9LkmDkiSoJjsAio6l+rxSmsL
-	aEK0QyDW5yVC1dj+0acAKTR4qdBL6i14Qihz7crZ0izr3Sy0Yjrp/Oct1FMLHyA=
-X-Google-Smtp-Source: AGHT+IHgZ1tGepEs1cMlh/0EwKv7vLqC2jcAsTAPu51Jor47f+778HanIWr3gvAKeMkBNwQX0VdDSw==
-X-Received: by 2002:ac2:528c:0:b0:52c:df51:20bc with SMTP id 2adb3069b0e04-52ce18350e0mr7717882e87.16.1719498894488;
-        Thu, 27 Jun 2024 07:34:54 -0700 (PDT)
-Received: from [192.168.1.195] ([5.133.47.210])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4249b132fd1sm81927285e9.0.2024.06.27.07.34.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Jun 2024 07:34:53 -0700 (PDT)
-Message-ID: <8bfa46a4-b18e-4d6f-856a-acbeca9398bf@linaro.org>
-Date: Thu, 27 Jun 2024 15:34:53 +0100
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="At8UPRXD"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45R9aZpk001371;
+	Thu, 27 Jun 2024 16:35:08 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	JZtOepcBSS+kH3b4UBs+hMQyBQdO3T/Rwy2l9o6fnIA=; b=At8UPRXDc6cOjJzL
+	LdgebuAfvq1RI3Q1q6fuQ5fxzM4/cxORPud1Tqc/bSReshwD+d4onUMVZCI6BdE7
+	TVTbzAaW1QDGmrKNaSU4ArrB7cFdtuGuE2sgkbtQVtBHaAk6I53PfyHasZMrhGh8
+	e5qmAq2GpHfsg4JmisbypDmPkZnGco3ow4wgxw41Pl8vw8vvMCWiyleLq6unI6MY
+	+jZcTUNOZDr9lajx2qiwQnQf2d5xvADicI7Isp21EIcsK2JZ0kveYn29woZ7Om3N
+	1A5XtTjWrs4sbXs+ecL0hkfemKp+7z8tY6bnezYlf5Gti/JYHiUmqqxilyawpbOg
+	p8jfwg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ywm1gpfpw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Jun 2024 16:35:08 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5EECA40046;
+	Thu, 27 Jun 2024 16:34:57 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0A9D9220B68;
+	Thu, 27 Jun 2024 16:33:43 +0200 (CEST)
+Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 27 Jun
+ 2024 16:33:42 +0200
+Message-ID: <876586b4-3957-4b55-83c4-decf42b05efd@foss.st.com>
+Date: Thu, 27 Jun 2024 16:33:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,66 +52,73 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] ASoC: codecs: wsa883x: parse port-mapping information
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Banajit Goswami <bgoswami@quicinc.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, linux-arm-msm@vger.kernel.org,
- Neil Armstrong <neil.armstrong@linaro.org>, alsa-devel@alsa-project.org,
- linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20240626-port-map-v1-0-bd8987d2b332@linaro.org>
- <20240626-port-map-v1-2-bd8987d2b332@linaro.org>
- <z7wmi55kimskgfcon2difo6agc5nwkssehao72w3mtq3u2ig4f@msmv2on6mw62>
+Subject: Re: [PATCH v2 0/3] Series DTs to deliver Ethernet for STM32MP25
+To: Christophe Roullier <christophe.roullier@foss.st.com>,
+        "David S . Miller"
+	<davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Rob Herring
+	<robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Richard Cochran
+	<richardcochran@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Liam Girdwood
+	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Marek Vasut
+	<marex@denx.de>
+CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20240619125815.358207-1-christophe.roullier@foss.st.com>
 Content-Language: en-US
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-In-Reply-To: <z7wmi55kimskgfcon2difo6agc5nwkssehao72w3mtq3u2ig4f@msmv2on6mw62>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
+In-Reply-To: <20240619125815.358207-1-christophe.roullier@foss.st.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-27_11,2024-06-27_03,2024-05-17_01
 
+Hi Christophe
 
-
-On 27/06/2024 14:36, Dmitry Baryshkov wrote:
-> On Thu, Jun 27, 2024 at 12:55:18PM GMT, Srinivas Kandagatla wrote:
->> Add support to parse static master port map information from device tree.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   sound/soc/codecs/wsa883x.c | 8 ++++++++
->>   1 file changed, 8 insertions(+)
->>
->> diff --git a/sound/soc/codecs/wsa883x.c b/sound/soc/codecs/wsa883x.c
->> index a2e86ef7d18f..43156d39480f 100644
->> --- a/sound/soc/codecs/wsa883x.c
->> +++ b/sound/soc/codecs/wsa883x.c
->> @@ -1399,6 +1399,14 @@ static int wsa883x_probe(struct sdw_slave *pdev,
->>   	wsa883x->sconfig.direction = SDW_DATA_DIR_RX;
->>   	wsa883x->sconfig.type = SDW_STREAM_PDM;
->>   
->> +	/**
->> +	 * Port map index starts with 0, however the data port for this codec
->> +	 * are from index 1
->> +	 */
->> +	if (of_property_read_u32_array(dev->of_node, "qcom,port-mapping", &pdev->m_port_map[1],
->> +					WSA883X_MAX_SWR_PORTS))
->> +		dev_info(dev, "Static Port mapping not specified\n");
+On 6/19/24 14:58, Christophe Roullier wrote:
+> STM32MP25 is STM32 SOC with 2 GMACs instances.
+>      GMAC IP version is SNPS 5.3x.
+>      GMAC IP configure with 2 RX and 4 TX queue.
+>      DMA HW capability register supported
+>      RX Checksum Offload Engine supported
+>      TX Checksum insertion supported
+>      Wake-Up On Lan supported
+>      TSO supported
 > 
-> dev_info looks strange. It should be either dev_warn or dev_dbg.
-
-dev_dbg should be good in this case!
-
---srini
+> Delivered Ethernet2 instance for board EV1 which is connected
+> to Realtek PHY in RGMII mode.
+> Ethernet1 instance will be delivered in next step.
 > 
->> +
->>   	pdev->prop.sink_ports = GENMASK(WSA883X_MAX_SWR_PORTS, 0);
->>   	pdev->prop.simple_clk_stop_capable = true;
->>   	pdev->prop.sink_dpn_prop = wsa_sink_dpn_prop;
->>
->> -- 
->> 2.25.1
->>
+> V2: - Remark from Marek (sort DT)
 > 
+> Christophe Roullier (3):
+>    arm64: dts: st: add ethernet1 and ethernet2 support on stm32mp25
+>    arm64: dts: st: add eth2 pinctrl entries in stm32mp25-pinctrl.dtsi
+>    arm64: dts: st: enable Ethernet2 on stm32mp257f-ev1 board
+> 
+>   arch/arm64/boot/dts/st/stm32mp25-pinctrl.dtsi | 59 +++++++++++++++++++
+>   arch/arm64/boot/dts/st/stm32mp251.dtsi        | 49 +++++++++++++++
+>   arch/arm64/boot/dts/st/stm32mp253.dtsi        | 51 ++++++++++++++++
+>   arch/arm64/boot/dts/st/stm32mp257f-ev1.dts    | 24 ++++++++
+>   4 files changed, 183 insertions(+)
+> 
+> 
+> base-commit: 382d1741b5b2feffef7942dd074206372afe1a96
+
+Series applied on stm32-next
+
+Thanks!!
+Alex
