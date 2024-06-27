@@ -1,476 +1,326 @@
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F5E2376A
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 04:33:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 356D61799D
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 04:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719462812; cv=none; b=NzmFPL6jiqvwNHuH/RSx0D6Fm0i9OsH8TpnIJ8Eji8GapFgDw9xR0Ss5XA7Aj4BV0nWaB5hWoFpX+Zbn/hjppPhuJP9Pzjq559a35XUAF9x4IepR+sE2KLpD2Jt6VKpk8Pja6rBJmOKEj8f5m7u7Tn0yCdysLhfsbVP53UJx4Aw=
+	t=1719463420; cv=none; b=VCVuD6ppwXhrrPTxGwbMJMmliAAopiJBOETde37KhuM5vs+Ibkc7CN5emnBJCcQyR6WBNfPbkse68acM92TqqRlG4E3YxxAY7QRJ1H/kMNwZokqUpxr1zb+Rx3gTzmZ7+CI0yxes0+VIFJGe2OqNFNR475yaW3qoxK4a0P5kstU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719462812; c=relaxed/simple;
-	bh=+BXIG/gITstDI5TQ5bzMkPue36VfuxT3zmb6OgiWCRw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hzEtMuKiR/bpuPVNC+udU+WNfajXrpNFnyjzTQc3rV7XWsV65L0uObze3GwNlUyehd8pSI0hJ7HxaiW4BTZLjQ48xD36VfluI3fJxAXfxWL+OzRJiehS0aj9NYlnxz44sDyEFS9gEDBLkxKfsEj2H20izPwU6aOylUdZ01Gf3io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=uJN/nSa8; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+	s=arc-20240116; t=1719463420; c=relaxed/simple;
+	bh=d8yFX4pftbWbyhnQJoGAUL01yHraB+5XMSuiFs6igLc=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=JSV6/r6qMJt6or/j7tq0yb93ZIl5611kB/LpAFujEHpVhVgNaCRGzDh4TlequCs8aHXkNaZ5JxeqPRw+WPn5R/VIfiP2JwzqeWcPaDAyJiDT3B3bUQz5CiaxTyRTnb8pPP5FIIfLDdbGG1/C51PS7cJ59ZpS3Cc/NMGZqA2OgqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuzhao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4bmCgFYN; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yuzhao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="uJN/nSa8"
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id E4A1B2C0BA5;
-	Thu, 27 Jun 2024 16:33:22 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1719462802;
-	bh=uwxKKaRxDPXdNi/DNP11vICh+TgslIC6Vig0FtEYjmA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uJN/nSa8wYkcFTQ0LYKBcCTb9h+a/z+ft6uvM2TNZjgUw2lgmxRJX3URejdhSSCrI
-	 L4cfxrNASZCxgJdKwvH0dAit68tyPThv//ypt5UWRwzWUkZ2Oa45/mI30V669YDeAG
-	 cXetaJN28nh+S3jI3Tk6qrmUhhMRwRW3B+hwYO9S3Vvb2Gh5BrfFDr+NcxqS+coQyB
-	 tKuMmX3D6oCYOH4fxwSmaLG4E3KwBfbNXG/20rOMpt0NErP/UtY0G0hfkGcdOE4VnJ
-	 wRj4RE+u80d1CTpSDavyBirYj1zFNhDoXTB/w8gRijFQCnfY2jzdMqQamE5a3nXGVl
-	 eWH/ErLUIDERg==
-Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B667ceb920002>; Thu, 27 Jun 2024 16:33:22 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-	by pat.atlnz.lc (Postfix) with ESMTP id 05D2713EE94;
-	Thu, 27 Jun 2024 16:33:22 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-	id 02BFE28078C; Thu, 27 Jun 2024 16:33:22 +1200 (NZST)
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-To: tglx@linutronix.de,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	tsbogend@alpha.franken.de,
-	daniel.lezcano@linaro.org,
-	paulburton@kernel.org,
-	peterz@infradead.org,
-	mail@birger-koblitz.de,
-	bert@biot.com,
-	john@phrozen.org,
-	sander@svanheule.net
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	kabel@kernel.org,
-	ericwouds@gmail.com,
-	Chris Packham <chris.packham@alliedtelesis.co.nz>,
-	Markus Stockhausen <markus.stockhausen@gmx.de>
-Subject: [PATCH v3 7/9] clocksource: realtek: Add timer driver for rtl-otto platforms
-Date: Thu, 27 Jun 2024 16:33:15 +1200
-Message-ID: <20240627043317.3751996-8-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240627043317.3751996-1-chris.packham@alliedtelesis.co.nz>
-References: <20240627043317.3751996-1-chris.packham@alliedtelesis.co.nz>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4bmCgFYN"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e0322e5d0daso2480745276.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2024 21:43:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1719463418; x=1720068218; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=hdRtKbQiOkGUeLR6KDBlvVV6ztPezKPNE7EFhbYdET8=;
+        b=4bmCgFYNrZ2hUxqiqVCzVZVult9GCNYYDW2KnVAaKUBPoF9l6PV1CEq9uoGiKGMZ2W
+         MHWEZSeXvgjqlNuln6eSmhw+O7bAOLk3rg1hFqeBo36clmMQhWMeB9sQLO8mfm/8te9Z
+         z7AY6CJMIZTocHXJYHaUYMec4EY0x/QUupFmXdBKywK34ftUmccsFf0k+lci63i4TBW3
+         gbhUh/4/mXiO8d0xf5LmEhzzsq8JxxprytzmeD4Ue1CfUuiheggN7GKf//F51fmaZ4T+
+         YrlH/CErMSyop/vssP61oPgRwOSuftAGQCWQydCopo2QM3lTqHGJHS/eHo86//HF2mda
+         Vvhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719463418; x=1720068218;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hdRtKbQiOkGUeLR6KDBlvVV6ztPezKPNE7EFhbYdET8=;
+        b=hJGE5pGmxBvj30gQI4DucI8ZNIv0a5G3vqSFB2T4e6iENj8lDnA5qE5zBkuykl0uJE
+         O1xrhv52A/ObuEIK78idQf27vNjXvSTohbwUjo3tCUTVr0Vm8CCr2Lag0ryoMku3BuGO
+         hTfMmaa3tQXxh+c5JxfXgXhnPm/YqO+3igu1uXbe/S8uk01hkYgyEs5xHpUbhzKOFOUx
+         2pQlTCOXd+d4H+RNcqgVklj3XTaSimrNsNpL9HjniBJAxzHd9pJgxiC0IqlE+MXZShgR
+         1uuXoGXaETq2NMPAqnhjPsyw7nBTtiAuTm1Jplo5eWnEzDnJS0Sy/T3MjdCi+D2QnQE7
+         TkVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUgQkWWBVNuk6ek0mI2YfIIPH8tsHuSCP+Pob1FH3SXkiGJpZTC7Zo5N6XM7ffc/VsLS4C/9Xypn1uEhJPnkjrgb8wUbUBYgy38jof1
+X-Gm-Message-State: AOJu0Yzn+2RgAm2vDKp5vRgmOKOkmh959pyCQXxPBVH+i065BSwW+k1H
+	HhMz1qtyzW4wMpxC7CqvyI4dqk1nKx/vWMeGjFY3+u9p4y8D/sgjnCuvaL0DWET+yUHVGJ2kcNw
+	qTQ==
+X-Google-Smtp-Source: AGHT+IELOZfdvbJRxtxyvrlCwB2OQtSBvFck+2H0B3d4kUKw92oWpBAzgjoIfxEO7GlE1eBl4BMLNb7GVJA=
+X-Received: from yuzhao2.bld.corp.google.com ([2a00:79e0:2e28:6:edf9:510d:6ad1:f544])
+ (user=yuzhao job=sendgmr) by 2002:a25:ae07:0:b0:e02:f3cf:9454 with SMTP id
+ 3f1490d57ef6-e034508affamr5146276.2.1719463418116; Wed, 26 Jun 2024 21:43:38
+ -0700 (PDT)
+Date: Wed, 26 Jun 2024 22:43:34 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=CvQccW4D c=1 sm=1 tr=0 ts=667ceb92 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=T1WGqf2p2xoA:10 a=jU52IrjdAAAA:8 a=jdP34snFAAAA:8 a=lYcVSoeQvU4dK_rf-5cA:9 a=3ZKOabzyN94A:10 a=udjdHy_fWrGJRxLc5KTh:22 a=jlphF6vWLdwq7oh3TaWq:22
-X-SEG-SpamProfiler-Score: 0
-x-atlnz-ls: pat
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
+Message-ID: <20240627044335.2698578-1-yuzhao@google.com>
+Subject: [PATCH mm-unstable v1] mm/hugetlb_vmemmap: fix race with speculative
+ PFN walkers
+From: Yu Zhao <yuzhao@google.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Muchun Song <muchun.song@linux.dev>
+Cc: David Hildenbrand <david@redhat.com>, Frank van der Linden <fvdl@google.com>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Peter Xu <peterx@redhat.com>, 
+	Yang Shi <yang@os.amperecomputing.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Yu Zhao <yuzhao@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The timer/counter block on the Realtek SoCs provides up to 5 timers. It
-also includes a watchdog timer but this isn't being used currently (it
-will be added as a separate wdt driver).
+While investigating HVO for THPs [1], it turns out that speculative
+PFN walkers like compaction can race with vmemmap modifications, e.g.,
 
-One timer will be used per CPU as a local clock event generator. An
-additional timer will be used as an overal stable clocksource.
+  CPU 1 (vmemmap modifier)         CPU 2 (speculative PFN walker)
+  -------------------------------  ------------------------------
+  Allocates an LRU folio page1
+                                   Sees page1
+  Frees page1
 
-Signed-off-by: Markus Stockhausen <markus.stockhausen@gmx.de>
-Signed-off-by: Sander Vanheule <sander@svanheule.net>
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+  Allocates a hugeTLB folio page2
+  (page1 being a tail of page2)
+
+  Updates vmemmap mapping page1
+                                   get_page_unless_zero(page1)
+
+Even though page1->_refcount is zero after HVO, get_page_unless_zero()
+can still try to modify this read-only field, resulting in a crash.
+
+An independent report [2] confirmed this race.
+
+There are two discussed approaches to fix this race:
+1. Make RO vmemmap RW so that get_page_unless_zero() can fail without
+   triggering a PF.
+2. Use RCU to make sure get_page_unless_zero() either sees zero
+   page->_refcount through the old vmemmap or non-zero page->_refcount
+   through the new one.
+
+The second approach is preferred here because:
+1. It can prevent illegal modifications to struct page[] that has been
+   HVO'ed;
+2. It can be generalized, in a way similar to ZERO_PAGE(), to fix
+   similar races in other places, e.g., arch_remove_memory() on x86
+   [3], which frees vmemmap mapping offlined struct page[].
+
+While adding synchronize_rcu(), the goal is to be surgical, rather
+than optimized. Specifically, calls to synchronize_rcu() on the error
+handling paths can be coalesced, but it is not done for the sake of
+Simplicity: noticeably, this fix removes ~50% more lines than it adds.
+
+[1] https://lore.kernel.org/20240229183436.4110845-4-yuzhao@google.com/
+[2] https://lore.kernel.org/917FFC7F-0615-44DD-90EE-9F85F8EA9974@linux.dev/
+[3] https://lore.kernel.org/be130a96-a27e-4240-ad78-776802f57cad@redhat.com/
+
+Signed-off-by: Yu Zhao <yuzhao@google.com>
 ---
+ include/linux/page_ref.h |  8 +++++-
+ mm/hugetlb.c             | 53 ++++++----------------------------------
+ mm/hugetlb_vmemmap.c     | 16 ++++++++++++
+ 3 files changed, 30 insertions(+), 47 deletions(-)
 
-Notes:
-    This is derrived from openwrt[1],[2]. I've retained the original sign=
-off
-    and added my own.
-   =20
-    [1] https://git.openwrt.org/?p=3Dopenwrt/openwrt.git;a=3Dblob_plain;f=
-=3Dtarget/linux/realtek/files-5.15/drivers/clocksource/timer-rtl-otto.c;h=
-b=3DHEAD
-    [2] https://git.openwrt.org/?p=3Dopenwrt/openwrt.git;a=3Dblob_plain;f=
-=3Dtarget/linux/realtek/patches-5.15/302-clocksource-add-otto-driver.patc=
-h;hb=3DHEAD
-   =20
-    Changes in v3:
-    - Remove unnecessary select COMMON_CLK
-    - Use %p when printing pointer
-    Changes in v2
-    - None
-
- drivers/clocksource/Kconfig          |  10 +
- drivers/clocksource/Makefile         |   1 +
- drivers/clocksource/timer-rtl-otto.c | 287 +++++++++++++++++++++++++++
- include/linux/cpuhotplug.h           |   1 +
- 4 files changed, 299 insertions(+)
- create mode 100644 drivers/clocksource/timer-rtl-otto.c
-
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 34faa0320ece..70ba57210862 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -134,6 +134,16 @@ config RDA_TIMER
- 	help
- 	  Enables the support for the RDA Micro timer driver.
-=20
-+config REALTEK_OTTO_TIMER
-+	bool "Clocksource/timer for the Realtek Otto platform"
-+	select TIMER_OF
-+	help
-+	  This driver adds support for the timers found in the Realtek RTL83xx
-+	  and RTL93xx SoCs series. This includes chips such as RTL8380, RTL8381
-+	  and RTL832, as well as chips from the RTL839x series, such as RTL8390
-+	  RT8391, RTL8392, RTL8393 and RTL8396 and chips of the RTL930x series
-+	  such as RTL9301, RTL9302 or RTL9303.
+diff --git a/include/linux/page_ref.h b/include/linux/page_ref.h
+index 490d0ad6e56d..8c236c651d1d 100644
+--- a/include/linux/page_ref.h
++++ b/include/linux/page_ref.h
+@@ -230,7 +230,13 @@ static inline int folio_ref_dec_return(struct folio *folio)
+ 
+ static inline bool page_ref_add_unless(struct page *page, int nr, int u)
+ {
+-	bool ret = atomic_add_unless(&page->_refcount, nr, u);
++	bool ret = false;
 +
- config SUN4I_TIMER
- 	bool "Sun4i timer driver" if COMPILE_TEST
- 	depends on HAS_IOMEM
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index 4bb856e4df55..22743785299e 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -59,6 +59,7 @@ obj-$(CONFIG_MILBEAUT_TIMER)	+=3D timer-milbeaut.o
- obj-$(CONFIG_SPRD_TIMER)	+=3D timer-sprd.o
- obj-$(CONFIG_NPCM7XX_TIMER)	+=3D timer-npcm7xx.o
- obj-$(CONFIG_RDA_TIMER)		+=3D timer-rda.o
-+obj-$(CONFIG_REALTEK_OTTO_TIMER)	+=3D timer-rtl-otto.o
-=20
- obj-$(CONFIG_ARC_TIMERS)		+=3D arc_timer.o
- obj-$(CONFIG_ARM_ARCH_TIMER)		+=3D arm_arch_timer.o
-diff --git a/drivers/clocksource/timer-rtl-otto.c b/drivers/clocksource/t=
-imer-rtl-otto.c
-new file mode 100644
-index 000000000000..f1b9d35eacd1
---- /dev/null
-+++ b/drivers/clocksource/timer-rtl-otto.c
-@@ -0,0 +1,287 @@
-+// SPDX-License-Identifier: GPL-2.0-only
++	rcu_read_lock();
++	/* avoid writing to the vmemmap area being remapped */
++	if (!page_is_fake_head(page) && page_ref_count(page) != u)
++		ret = atomic_add_unless(&page->_refcount, nr, u);
++	rcu_read_unlock();
+ 
+ 	if (page_ref_tracepoint_active(page_ref_mod_unless))
+ 		__page_ref_mod_unless(page, nr, ret);
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 9691624fcb79..1ddaf25737da 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -1629,13 +1629,10 @@ static inline void destroy_compound_gigantic_folio(struct folio *folio,
+  * folio appears as just a compound page.  Otherwise, wait until after
+  * allocating vmemmap to clear the flag.
+  *
+- * A reference is held on the folio, except in the case of demote.
+- *
+  * Must be called with hugetlb lock held.
+  */
+-static void __remove_hugetlb_folio(struct hstate *h, struct folio *folio,
+-							bool adjust_surplus,
+-							bool demote)
++static void remove_hugetlb_folio(struct hstate *h, struct folio *folio,
++							bool adjust_surplus)
+ {
+ 	int nid = folio_nid(folio);
+ 
+@@ -1657,6 +1654,7 @@ static void __remove_hugetlb_folio(struct hstate *h, struct folio *folio,
+ 		h->surplus_huge_pages_node[nid]--;
+ 	}
+ 
++	folio_clear_hugetlb_freed(folio);
+ 	/*
+ 	 * We can only clear the hugetlb flag after allocating vmemmap
+ 	 * pages.  Otherwise, someone (memory error handling) may try to write
+@@ -1665,33 +1663,13 @@ static void __remove_hugetlb_folio(struct hstate *h, struct folio *folio,
+ 	if (!folio_test_hugetlb_vmemmap_optimized(folio))
+ 		__folio_clear_hugetlb(folio);
+ 
+-	 /*
+-	  * In the case of demote we do not ref count the page as it will soon
+-	  * be turned into a page of smaller size.
+-	 */
+-	if (!demote)
+-		folio_ref_unfreeze(folio, 1);
+-
+ 	h->nr_huge_pages--;
+ 	h->nr_huge_pages_node[nid]--;
+ }
+ 
+-static void remove_hugetlb_folio(struct hstate *h, struct folio *folio,
+-							bool adjust_surplus)
+-{
+-	__remove_hugetlb_folio(h, folio, adjust_surplus, false);
+-}
+-
+-static void remove_hugetlb_folio_for_demote(struct hstate *h, struct folio *folio,
+-							bool adjust_surplus)
+-{
+-	__remove_hugetlb_folio(h, folio, adjust_surplus, true);
+-}
+-
+ static void add_hugetlb_folio(struct hstate *h, struct folio *folio,
+ 			     bool adjust_surplus)
+ {
+-	int zeroed;
+ 	int nid = folio_nid(folio);
+ 
+ 	VM_BUG_ON_FOLIO(!folio_test_hugetlb_vmemmap_optimized(folio), folio);
+@@ -1715,21 +1693,6 @@ static void add_hugetlb_folio(struct hstate *h, struct folio *folio,
+ 	 */
+ 	folio_set_hugetlb_vmemmap_optimized(folio);
+ 
+-	/*
+-	 * This folio is about to be managed by the hugetlb allocator and
+-	 * should have no users.  Drop our reference, and check for others
+-	 * just in case.
+-	 */
+-	zeroed = folio_put_testzero(folio);
+-	if (unlikely(!zeroed))
+-		/*
+-		 * It is VERY unlikely soneone else has taken a ref
+-		 * on the folio.  In this case, we simply return as
+-		 * free_huge_folio() will be called when this other ref
+-		 * is dropped.
+-		 */
+-		return;
+-
+ 	arch_clear_hugetlb_flags(folio);
+ 	enqueue_hugetlb_folio(h, folio);
+ }
+@@ -1783,6 +1746,8 @@ static void __update_and_free_hugetlb_folio(struct hstate *h,
+ 		spin_unlock_irq(&hugetlb_lock);
+ 	}
+ 
++	folio_ref_unfreeze(folio, 1);
 +
-+#define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
+ 	/*
+ 	 * Non-gigantic pages demoted from CMA allocated gigantic pages
+ 	 * need to be given back to CMA in free_gigantic_folio.
+@@ -3106,11 +3071,8 @@ static int alloc_and_dissolve_hugetlb_folio(struct hstate *h,
+ 
+ free_new:
+ 	spin_unlock_irq(&hugetlb_lock);
+-	if (new_folio) {
+-		/* Folio has a zero ref count, but needs a ref to be freed */
+-		folio_ref_unfreeze(new_folio, 1);
++	if (new_folio)
+ 		update_and_free_hugetlb_folio(h, new_folio, false);
+-	}
+ 
+ 	return ret;
+ }
+@@ -3965,7 +3927,7 @@ static int demote_free_hugetlb_folio(struct hstate *h, struct folio *folio)
+ 
+ 	target_hstate = size_to_hstate(PAGE_SIZE << h->demote_order);
+ 
+-	remove_hugetlb_folio_for_demote(h, folio, false);
++	remove_hugetlb_folio(h, folio, false);
+ 	spin_unlock_irq(&hugetlb_lock);
+ 
+ 	/*
+@@ -3979,7 +3941,6 @@ static int demote_free_hugetlb_folio(struct hstate *h, struct folio *folio)
+ 		if (rc) {
+ 			/* Allocation of vmemmmap failed, we can not demote folio */
+ 			spin_lock_irq(&hugetlb_lock);
+-			folio_ref_unfreeze(folio, 1);
+ 			add_hugetlb_folio(h, folio, false);
+ 			return rc;
+ 		}
+diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
+index fa00d61b6c5a..829112b0a914 100644
+--- a/mm/hugetlb_vmemmap.c
++++ b/mm/hugetlb_vmemmap.c
+@@ -455,6 +455,8 @@ static int __hugetlb_vmemmap_restore_folio(const struct hstate *h,
+ 	unsigned long vmemmap_reuse;
+ 
+ 	VM_WARN_ON_ONCE_FOLIO(!folio_test_hugetlb(folio), folio);
++	VM_WARN_ON_ONCE_FOLIO(folio_ref_count(folio), folio);
 +
-+#include <linux/clk.h>
-+#include <linux/clockchips.h>
-+#include <linux/cpu.h>
-+#include <linux/cpuhotplug.h>
-+#include <linux/interrupt.h>
-+#include <linux/sched_clock.h>
-+#include "timer-of.h"
+ 	if (!folio_test_hugetlb_vmemmap_optimized(folio))
+ 		return 0;
+ 
+@@ -490,6 +492,9 @@ static int __hugetlb_vmemmap_restore_folio(const struct hstate *h,
+  */
+ int hugetlb_vmemmap_restore_folio(const struct hstate *h, struct folio *folio)
+ {
++	/* avoid writes from page_ref_add_unless() while unfolding vmemmap */
++	synchronize_rcu();
 +
-+#define RTTM_DATA		0x0
-+#define RTTM_CNT		0x4
-+#define RTTM_CTRL		0x8
-+#define RTTM_INT		0xc
+ 	return __hugetlb_vmemmap_restore_folio(h, folio, 0);
+ }
+ 
+@@ -514,6 +519,9 @@ long hugetlb_vmemmap_restore_folios(const struct hstate *h,
+ 	long restored = 0;
+ 	long ret = 0;
+ 
++	/* avoid writes from page_ref_add_unless() while unfolding vmemmap */
++	synchronize_rcu();
 +
-+#define RTTM_CTRL_ENABLE	BIT(28)
-+#define RTTM_INT_PENDING	BIT(16)
-+#define RTTM_INT_ENABLE		BIT(20)
+ 	list_for_each_entry_safe(folio, t_folio, folio_list, lru) {
+ 		if (folio_test_hugetlb_vmemmap_optimized(folio)) {
+ 			ret = __hugetlb_vmemmap_restore_folio(h, folio,
+@@ -559,6 +567,8 @@ static int __hugetlb_vmemmap_optimize_folio(const struct hstate *h,
+ 	unsigned long vmemmap_reuse;
+ 
+ 	VM_WARN_ON_ONCE_FOLIO(!folio_test_hugetlb(folio), folio);
++	VM_WARN_ON_ONCE_FOLIO(folio_ref_count(folio), folio);
 +
-+/*
-+ * The Otto platform provides multiple 28 bit timers/counters with the f=
-ollowing
-+ * operating logic. If enabled the timer counts up. Per timer one can se=
-t a
-+ * maximum counter value as an end marker. If end marker is reached the =
-timer
-+ * fires an interrupt. If the timer "overflows" by reaching the end mark=
-er or
-+ * by adding 1 to 0x0fffffff the counter is reset to 0. When this happen=
-s and
-+ * the timer is in operating mode COUNTER it stops. In mode TIMER it wil=
-l
-+ * continue to count up.
-+ */
-+#define RTTM_CTRL_COUNTER	0
-+#define RTTM_CTRL_TIMER		BIT(24)
+ 	if (!vmemmap_should_optimize_folio(h, folio))
+ 		return ret;
+ 
+@@ -610,6 +620,9 @@ void hugetlb_vmemmap_optimize_folio(const struct hstate *h, struct folio *folio)
+ {
+ 	LIST_HEAD(vmemmap_pages);
+ 
++	/* avoid writes from page_ref_add_unless() while folding vmemmap */
++	synchronize_rcu();
 +
-+#define RTTM_BIT_COUNT		28
-+#define RTTM_MIN_DELTA		8
-+#define RTTM_MAX_DELTA		CLOCKSOURCE_MASK(28)
+ 	__hugetlb_vmemmap_optimize_folio(h, folio, &vmemmap_pages, 0);
+ 	free_vmemmap_page_list(&vmemmap_pages);
+ }
+@@ -653,6 +666,9 @@ void hugetlb_vmemmap_optimize_folios(struct hstate *h, struct list_head *folio_l
+ 
+ 	flush_tlb_all();
+ 
++	/* avoid writes from page_ref_add_unless() while folding vmemmap */
++	synchronize_rcu();
 +
-+/*
-+ * Timers are derived from the LXB clock frequency. Usually this is a fi=
-xed
-+ * multiple of the 25 MHz oscillator. The 930X SOC is an exception from =
-that.
-+ * Its LXB clock has only dividers and uses the switch PLL of 2.45 GHz a=
-s its
-+ * base. The only meaningful frequencies we can achieve from that are 17=
-5.000
-+ * MHz and 153.125 MHz. The greatest common divisor of all explained pos=
-sible
-+ * speeds is 3125000. Pin the timers to this 3.125 MHz reference frequen=
-cy.
-+ */
-+#define RTTM_TICKS_PER_SEC	3125000
-+
-+struct rttm_cs {
-+	struct timer_of		to;
-+	struct clocksource	cs;
-+};
-+
-+/* Simple internal register functions */
-+static inline void rttm_set_counter(void __iomem *base, unsigned int cou=
-nter)
-+{
-+	iowrite32(counter, base + RTTM_CNT);
-+}
-+
-+static inline unsigned int rttm_get_counter(void __iomem *base)
-+{
-+	return ioread32(base + RTTM_CNT);
-+}
-+
-+static inline void rttm_set_period(void __iomem *base, unsigned int peri=
-od)
-+{
-+	iowrite32(period, base + RTTM_DATA);
-+}
-+
-+static inline void rttm_disable_timer(void __iomem *base)
-+{
-+	iowrite32(0, base + RTTM_CTRL);
-+}
-+
-+static inline void rttm_enable_timer(void __iomem *base, u32 mode, u32 d=
-ivisor)
-+{
-+	iowrite32(RTTM_CTRL_ENABLE | mode | divisor, base + RTTM_CTRL);
-+}
-+
-+static inline void rttm_ack_irq(void __iomem *base)
-+{
-+	iowrite32(ioread32(base + RTTM_INT) | RTTM_INT_PENDING, base + RTTM_INT=
-);
-+}
-+
-+static inline void rttm_enable_irq(void __iomem *base)
-+{
-+	iowrite32(RTTM_INT_ENABLE, base + RTTM_INT);
-+}
-+
-+static inline void rttm_disable_irq(void __iomem *base)
-+{
-+	iowrite32(0, base + RTTM_INT);
-+}
-+
-+/* Aggregated control functions for kernel clock framework */
-+#define RTTM_DEBUG(base)			\
-+	pr_debug("------------- %d %p\n",	\
-+		 smp_processor_id(), base)
-+
-+static irqreturn_t rttm_timer_interrupt(int irq, void *dev_id)
-+{
-+	struct clock_event_device *clkevt =3D dev_id;
-+	struct timer_of *to =3D to_timer_of(clkevt);
-+
-+	rttm_ack_irq(to->of_base.base);
-+	RTTM_DEBUG(to->of_base.base);
-+	clkevt->event_handler(clkevt);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void rttm_stop_timer(void __iomem *base)
-+{
-+	rttm_disable_timer(base);
-+	rttm_ack_irq(base);
-+}
-+
-+static void rttm_start_timer(struct timer_of *to, u32 mode)
-+{
-+	rttm_set_counter(to->of_base.base, 0);
-+	rttm_enable_timer(to->of_base.base, mode, to->of_clk.rate / RTTM_TICKS_=
-PER_SEC);
-+}
-+
-+static int rttm_next_event(unsigned long delta, struct clock_event_devic=
-e *clkevt)
-+{
-+	struct timer_of *to =3D to_timer_of(clkevt);
-+
-+	RTTM_DEBUG(to->of_base.base);
-+	rttm_stop_timer(to->of_base.base);
-+	rttm_set_period(to->of_base.base, delta);
-+	rttm_start_timer(to, RTTM_CTRL_COUNTER);
-+
-+	return 0;
-+}
-+
-+static int rttm_state_oneshot(struct clock_event_device *clkevt)
-+{
-+	struct timer_of *to =3D to_timer_of(clkevt);
-+
-+	RTTM_DEBUG(to->of_base.base);
-+	rttm_stop_timer(to->of_base.base);
-+	rttm_set_period(to->of_base.base, RTTM_TICKS_PER_SEC / HZ);
-+	rttm_start_timer(to, RTTM_CTRL_COUNTER);
-+
-+	return 0;
-+}
-+
-+static int rttm_state_periodic(struct clock_event_device *clkevt)
-+{
-+	struct timer_of *to =3D to_timer_of(clkevt);
-+
-+	RTTM_DEBUG(to->of_base.base);
-+	rttm_stop_timer(to->of_base.base);
-+	rttm_set_period(to->of_base.base, RTTM_TICKS_PER_SEC / HZ);
-+	rttm_start_timer(to, RTTM_CTRL_TIMER);
-+
-+	return 0;
-+}
-+
-+static int rttm_state_shutdown(struct clock_event_device *clkevt)
-+{
-+	struct timer_of *to =3D to_timer_of(clkevt);
-+
-+	RTTM_DEBUG(to->of_base.base);
-+	rttm_stop_timer(to->of_base.base);
-+
-+	return 0;
-+}
-+
-+static void rttm_setup_timer(void __iomem *base)
-+{
-+	RTTM_DEBUG(base);
-+	rttm_stop_timer(base);
-+	rttm_set_period(base, 0);
-+}
-+
-+static u64 rttm_read_clocksource(struct clocksource *cs)
-+{
-+	struct rttm_cs *rcs =3D container_of(cs, struct rttm_cs, cs);
-+
-+	return (u64)rttm_get_counter(rcs->to.of_base.base);
-+}
-+
-+/* Module initialization part. */
-+static DEFINE_PER_CPU(struct timer_of, rttm_to) =3D {
-+	.flags				=3D TIMER_OF_BASE | TIMER_OF_CLOCK | TIMER_OF_IRQ,
-+	.of_irq =3D {
-+		.flags			=3D IRQF_PERCPU | IRQF_TIMER,
-+		.handler		=3D rttm_timer_interrupt,
-+	},
-+	.clkevt =3D {
-+		.rating			=3D 400,
-+		.features		=3D CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT,
-+		.set_state_periodic	=3D rttm_state_periodic,
-+		.set_state_shutdown	=3D rttm_state_shutdown,
-+		.set_state_oneshot	=3D rttm_state_oneshot,
-+		.set_next_event		=3D rttm_next_event
-+	},
-+};
-+
-+static int rttm_enable_clocksource(struct clocksource *cs)
-+{
-+	struct rttm_cs *rcs =3D container_of(cs, struct rttm_cs, cs);
-+
-+	rttm_disable_irq(rcs->to.of_base.base);
-+	rttm_setup_timer(rcs->to.of_base.base);
-+	rttm_enable_timer(rcs->to.of_base.base, RTTM_CTRL_TIMER,
-+			  rcs->to.of_clk.rate / RTTM_TICKS_PER_SEC);
-+
-+	return 0;
-+}
-+
-+struct rttm_cs rttm_cs =3D {
-+	.to =3D {
-+		.flags	=3D TIMER_OF_BASE | TIMER_OF_CLOCK,
-+	},
-+	.cs =3D {
-+		.name	=3D "realtek_otto_timer",
-+		.rating	=3D 400,
-+		.mask	=3D CLOCKSOURCE_MASK(RTTM_BIT_COUNT),
-+		.flags	=3D CLOCK_SOURCE_IS_CONTINUOUS,
-+		.read	=3D rttm_read_clocksource,
-+	}
-+};
-+
-+static u64 notrace rttm_read_clock(void)
-+{
-+	return (u64)rttm_get_counter(rttm_cs.to.of_base.base);
-+}
-+
-+static int rttm_cpu_starting(unsigned int cpu)
-+{
-+	struct timer_of *to =3D per_cpu_ptr(&rttm_to, cpu);
-+
-+	RTTM_DEBUG(to->of_base.base);
-+	to->clkevt.cpumask =3D cpumask_of(cpu);
-+	irq_force_affinity(to->of_irq.irq, to->clkevt.cpumask);
-+	clockevents_config_and_register(&to->clkevt, RTTM_TICKS_PER_SEC,
-+					RTTM_MIN_DELTA, RTTM_MAX_DELTA);
-+	rttm_enable_irq(to->of_base.base);
-+
-+	return 0;
-+}
-+
-+static int __init rttm_probe(struct device_node *np)
-+{
-+	int cpu, cpu_rollback;
-+	struct timer_of *to;
-+	int clkidx =3D num_possible_cpus();
-+
-+	/* Use the first n timers as per CPU clock event generators */
-+	for_each_possible_cpu(cpu) {
-+		to =3D per_cpu_ptr(&rttm_to, cpu);
-+		to->of_irq.index =3D to->of_base.index =3D cpu;
-+		if (timer_of_init(np, to)) {
-+			pr_err("setup of timer %d failed\n", cpu);
-+			goto rollback;
-+		}
-+		rttm_setup_timer(to->of_base.base);
-+	}
-+
-+	/* Activate the n'th + 1 timer as a stable CPU clocksource. */
-+	to =3D &rttm_cs.to;
-+	to->of_base.index =3D clkidx;
-+	timer_of_init(np, to);
-+	if (rttm_cs.to.of_base.base && rttm_cs.to.of_clk.rate) {
-+		rttm_enable_clocksource(&rttm_cs.cs);
-+		clocksource_register_hz(&rttm_cs.cs, RTTM_TICKS_PER_SEC);
-+		sched_clock_register(rttm_read_clock, RTTM_BIT_COUNT, RTTM_TICKS_PER_S=
-EC);
-+	} else
-+		pr_err(" setup of timer %d as clocksource failed", clkidx);
-+
-+	return cpuhp_setup_state(CPUHP_AP_REALTEK_TIMER_STARTING,
-+				"timer/realtek:online",
-+				rttm_cpu_starting, NULL);
-+rollback:
-+	pr_err("timer registration failed\n");
-+	for_each_possible_cpu(cpu_rollback) {
-+		if (cpu_rollback =3D=3D cpu)
-+			break;
-+		to =3D per_cpu_ptr(&rttm_to, cpu_rollback);
-+		timer_of_cleanup(to);
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+TIMER_OF_DECLARE(otto_timer, "realtek,otto-timer", rttm_probe);
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index 7a5785f405b6..56b744dc1317 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -171,6 +171,7 @@ enum cpuhp_state {
- 	CPUHP_AP_ARMADA_TIMER_STARTING,
- 	CPUHP_AP_MIPS_GIC_TIMER_STARTING,
- 	CPUHP_AP_ARC_TIMER_STARTING,
-+	CPUHP_AP_REALTEK_TIMER_STARTING,
- 	CPUHP_AP_RISCV_TIMER_STARTING,
- 	CPUHP_AP_CLINT_TIMER_STARTING,
- 	CPUHP_AP_CSKY_TIMER_STARTING,
---=20
-2.45.2
+ 	list_for_each_entry(folio, folio_list, lru) {
+ 		int ret;
+ 
+-- 
+2.45.2.803.g4e1b14247a-goog
 
