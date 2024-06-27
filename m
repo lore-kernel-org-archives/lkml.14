@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7154653C;
-	Thu, 27 Jun 2024 06:59:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A1221350;
+	Thu, 27 Jun 2024 07:00:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719471563; cv=none; b=uaM3+Tslu1NNPVAdlWQt3U+gVXkHM103qbz9b1Nv28chjlTFFuPidOmsls/1Q9rK4Gr9VyGQlP9+xg0CKy1V3j3jLCzXy4CM7rkdI9RGZehN7Es5eOIhR4LX7jQlau9VGwQSA0AaKqdeukRjMqbe6tQOEO6HNmQaH9GX33kMN2E=
+	t=1719471609; cv=none; b=d7De81nC5XBWxGOEnlxrbgGEBCiIeDpoM2DgIMfRSrol8ViBw/BFhtrVEUC9CVumxsRVrJDFuTFvMzbv/Mb0Qv2ier9zRlddiPl+uyUS1YGNhrwU0XUllEnlDIAsX0UI/VKkfIGh99eMpCAwTBtlpQTOZY1PxL+9jvXyBoPrynQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719471563; c=relaxed/simple;
-	bh=PntdgHJA1BlWZil7N33io6kd7kWBqhKgzu1SbzOVzLM=;
+	s=arc-20240116; t=1719471609; c=relaxed/simple;
+	bh=I8j+GaB3KF4SfGKchT3lPtkRXSSloihCL1e0OctOujc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=StJNoBty07Stc4DIqKB54kuJY/4nxVIQiw9QSp9RPr47xrh/FiIwdo3gIYKZqmFWG5EQ6HN/cZUwmZ+gSdKywxndGS2o0oVncVsyna4MLLVNTKDS5SMYcy7gnKLA8mWsBS94jVb7VrYzLvr/HxxuLWh4A8jkWvh/gyojUCeKzMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tLWGVk+x; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=B+6iiflwyTKxTR/sodtJdNrtpAF+BYabATws0FSOgtEemxlsBmaEr1aHggjpXfM4FcCTolFY4kcr+f31vT2C/4Pf98thuG0PEci8wB6MalGyEOYtEGn/NZKE67FMeoEdBuEQ+/skUIox7pXVOaiqhB0/cXkI8A9hxj5r4ZXr3DI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eDY9JI48; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tLWGVk+x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DFAEC2BBFC;
-	Thu, 27 Jun 2024 06:59:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eDY9JI48"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88869C2BBFC;
+	Thu, 27 Jun 2024 07:00:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719471563;
-	bh=PntdgHJA1BlWZil7N33io6kd7kWBqhKgzu1SbzOVzLM=;
+	s=k20201202; t=1719471609;
+	bh=I8j+GaB3KF4SfGKchT3lPtkRXSSloihCL1e0OctOujc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tLWGVk+xNhapz0R51yQInJ9IjJ9WgDKDOlaQt/7PdlkGS+juwXJWEUOF/7thm99Wk
-	 bzT9qN8c39Cjyv8K1MX/Z5mmFZCalIYrgU/9/f5QDIH9GV3IX4B1rzBKbOS8ddyOFf
-	 ZCh54wuFCPyyYiW9AOQRYaVMRrtEoTTqfISw0Gg//Ot2COlVU0G7koP7/HgJh261Xx
-	 sTnLv3EGQHNsnyftIOPTWTkxLLjIJqt+G1F69FTf7L3kyqlHzGXfUCazWE3iZWmaFB
-	 fh94/VcrTbvX00w2bi1Mo8SyscHafMi2FhelfOK2kik3ER/oXQAEwsfBbUcJHd4QRv
-	 xW4DLWSyz4HaA==
-Message-ID: <905b483a-b011-44f9-bec9-c6b1c07f4fec@kernel.org>
-Date: Thu, 27 Jun 2024 08:59:15 +0200
+	b=eDY9JI48MiOrJaP19e+HxBdk5Fi/MqobgPj2WrVpvpBHz9kA5im406iEHHlnVMJ1F
+	 XsE8cBb2LpsvlWbvSvb+ZDwKrt3kS5B+VSA2UB4S2hkkoEycgmVK+WPg74IzOpx88g
+	 Vc0FPhra2OZ5qV+3QWDttbtM8Vm0+LgL1Qg0frCZpfaTolT2hI86rAQ/658idIOxcL
+	 MgaLvkaOnAdWBuhfNKT6Jo2jGDpTQbDHhN8E5l2VNaGRAW4gttjs5GcFYUd0/g/cc8
+	 Wls3dxnzOHrYwDZeFmN9KzPl6d5mJKogCOyhTCSJ1SWio3w6VWn2IrhHiWPWPv+wBN
+	 pWhjZLHcsN8lA==
+Message-ID: <c26f76eb-5f1f-40e2-af5e-13029ee32a95@kernel.org>
+Date: Thu, 27 Jun 2024 09:00:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,30 +35,18 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/8] dt-bindings: mips: realtek: Add rtl930x-soc
- compatible
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
- "tglx@linutronix.de" <tglx@linutronix.de>, "robh@kernel.org"
- <robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "tsbogend@alpha.franken.de" <tsbogend@alpha.franken.de>,
- "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
- "paulburton@kernel.org" <paulburton@kernel.org>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "mail@birger-koblitz.de" <mail@birger-koblitz.de>,
- "bert@biot.com" <bert@biot.com>, "john@phrozen.org" <john@phrozen.org>,
- "sander@svanheule.net" <sander@svanheule.net>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- "kabel@kernel.org" <kabel@kernel.org>,
- "ericwouds@gmail.com" <ericwouds@gmail.com>
-References: <20240624012300.1713290-1-chris.packham@alliedtelesis.co.nz>
- <20240624012300.1713290-4-chris.packham@alliedtelesis.co.nz>
- <e71780a1-8d53-44ae-ac0f-d406de7e26e8@kernel.org>
- <2b33e7d2-24e5-48c3-a2e3-f128f5d7e39b@alliedtelesis.co.nz>
- <365fcddb-095d-4907-97bf-0810818c8265@kernel.org>
- <5267bf22-0b95-48ab-b207-ead4a697c263@alliedtelesis.co.nz>
+Subject: Re: [PATCH 1/1] dt-bindings: usb: Convert fsl-usb to yaml
+To: Frank Li <Frank.li@nxp.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ imx@lists.linux.dev
+References: <20240625022541.2007010-1-Frank.Li@nxp.com>
+ <b354d11e-9031-47f1-8a23-bbd14ea3d5dd@kernel.org>
+ <Znwt+vZZ0chXQp+Q@lizhi-Precision-Tower-5810>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -104,57 +92,53 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <5267bf22-0b95-48ab-b207-ead4a697c263@alliedtelesis.co.nz>
+In-Reply-To: <Znwt+vZZ0chXQp+Q@lizhi-Precision-Tower-5810>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 26/06/2024 23:01, Chris Packham wrote:
->>>>> +              - realtek,rtl9302c
->>>> Why board has the name of SoC?
->>> What I have is actually a reference board with the name
->>> RTL9302C_2xRTL8224_2XGE. If found that a bit incomprehensible so I
->>> (over) shortened it. Technically it would be something like
->>> cameo,rtl9302c-2x-rtl8224-2xge which I can include in the next round.
->> Looks fine to me.
+On 26/06/2024 17:04, Frank Li wrote:
+> On Wed, Jun 26, 2024 at 11:26:18AM +0200, Krzysztof Kozlowski wrote:
+>> On 25/06/2024 04:25, Frank Li wrote:
+>>> Convert fsl-usb binding doc to yaml format.
+>>>
+>>> Additional change:
 >>
->>>>> +          - const: realtek,rtl9302-soc
->>>> Drop the -soc suffix. The rtl9302 is the soc.
->>> On that. I hope to eventually add "realtek,rtl9302-switch" for the DSA
->>> switch block in the same chip. So keeping the -soc suffix was
->>> intentional to try to disambiguate things. I can drop the -soc if the
->>> consensus is that there is no need to disambiguate the two.
->> Thanks for explanation, kind of depends on what exactly is this. Most of
->> SoCs comprise of several items. The entire chip is the soc, e.g.
->> "qcom,foo1234". It might have MAC/Ethernet/whatever inside, controllable
->> by the SoC (Linux, bootloader, TF, hypervisor, other VM guest) and that
->> part is "qcom,foo1234-ethernet". Regardless whether Linux OS actually
->> controls it or not.
 >>
->> The question is whether DSA switch is part of the SoC or not.
+>>> -	usb@4000 {
+>>> -		compatible = "fsl,mpc5121-usb2-dr";
+>>> -		reg = <0x4000 0x1000>;
+>>> -		#address-cells = <1>;
+>>> -		#size-cells = <0>;
+>>> -		interrupt-parent = < &ipic >;
+>>> -		interrupts = <44 0x8>;
+>>> -		dr_mode = "otg";
+>>> -		phy_type = "utmi_wide";
+>>> -		fsl,invert-drvvbus;
+>>> -		fsl,invert-pwr-fault;
+>>> -	};
+>>> diff --git a/Documentation/devicetree/bindings/usb/fsl-usb.yaml b/Documentation/devicetree/bindings/usb/fsl-usb.yaml
+>>> new file mode 100644
+>>> index 0000000000000..8b5724e213f09
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/usb/fsl-usb.yaml
+>>
+>> fsl,usb.yaml
+>> or: fsl,usb2.yaml
+>>
+>>> +
+>>> +maintainers:
+>>> +  - Frank Li <Frank.Li@nxp.com>
+>>> +
+>>> +description: |
+>>
+>> Do not need '|' unless you need to preserve formatting.
 > 
-> The RTL9302C is a single package but I'd assume internally it has 
-> multiple dies.
+> dt_binding_check report error without '|'
+> fsl,usb2.yaml:15:11: [error] syntax error: mapping values are not allowed here (syntax)
 > 
->  From the block diagram in the datasheet they do have a portion they 
-> call the "SoC" which has the CPU and peripherals like UARTs, GPIOs, SPI 
-> etc. That is separate from the switch block which has a bunch of MACs, 
-> SERDES and various network switch tables. So based on that 
-> "realtek,rtl9302-soc" and "realtek,rtl9302-switch" as two separate 
-> things make sense to me.
-> 
+> "Practice:" impact yaml parse.
 
-OK, -soc and -switch are fine with me.
-
-> I'm still trying to figure out a bit more of the details. The block 
-> diagram looks a lot like you'd expect to see with a traditional DSA 
-> switch where you have a SoC Ethernet NIC/MAC connected to one port of a 
-> switch. But getting into the datasheet it looks like what they call the 
-> NIC is actually just the DMA portion of the switch as the registers are 
-> all in that second block. As is the MDIO interface. I'm considering that 
-> maybe the DSA model isn't right for this and I should be looking at 
-> switchdev instead.
-
-
+Ah, indeed.
 
 Best regards,
 Krzysztof
