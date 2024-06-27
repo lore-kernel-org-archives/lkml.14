@@ -1,122 +1,116 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6911BC41;
-	Thu, 27 Jun 2024 07:17:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C351BF3A;
+	Thu, 27 Jun 2024 07:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719472651; cv=none; b=ONIF1Hm/MDfJC27+cyiuiwhvAz49cagBgdRM+bnWbriG1i2ed4qfYUuU04UDwgzPo9rcrQPy3yp1sFUseqzwsHAn4Ai1Yt2zmsZ+INIn7HNnb+e80uJt5R+aD6Bftcj7ej2zS7p9jVAvGfPJ+/zrWxp18x5UtUNjESwfp2E5cRY=
+	t=1719472726; cv=none; b=q9sQR0DGA8jq4ncMaC3YWntH4+wnEavNobd9rmNZPsxcAwFdhPd/QBoyIkff8FGOcKm5gWU6bTZGxlUFmXcgJ+cCR98lcFrxwyzdKujPKYPBr9UhN/OLe04JkaJZlueZgMKWvvQl7BRAm4xwJOTwmZya/22hZXvu0NSWPE83vKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719472651; c=relaxed/simple;
-	bh=BV5z22IpWivvxrMc5u3zvbwZgfY3boEwrt69DCmvPL0=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=DobsfcyxnM2E5//r6o2IKrMH2swhhS5qxz0Sc4a2i+XDRCuauGKWE4G/zKKEysKWuoamwXCm7By0V2EGbl16cp9pRTh3hFtJ8smY14DJCrfEeF84JWHPqWcRF7IUcc4QgGWcuqlF6ztSwePNAUGBSmF0XkeIrv0lgPyTCC1DwGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=hllt61Ra; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1719472726; c=relaxed/simple;
+	bh=N77V0dE/apH22+7RK8IW/xhIj81SUdpfM54CWaNtWbI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vBJkQhzMjM95ToIBpsY9fV3oO/xfaJQHUgHEpOrtk2Hp0dTymAgGWxOqNlT5qCw5MHSZI/tHxtxCZPD7OoLRCKwHJ0oeZtKxfxMnqxbPxtzCwFOr7hDO+pflPW6f+OGDXqUiHF3WRrKq7wgytrKUHoGiPY4KhFlTvpzZn1yVNiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=db7rACDG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="hllt61Ra"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1719472628; x=1720077428; i=markus.elfring@web.de;
-	bh=pQLS3M77BV+fefngy/wAr56sPedHsdxQmz1MnWGoH3w=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=hllt61RaF2fmClWdBmIo2J/8OSsu9o5cheVMXa1ax6L2pymJwwDciMYPGhSexzF1
-	 iZSZ4SEEuFObAPeBpMpOtdbgubcYArCwG4mrkLY8+uCUz/QJV8ZQQzsqLs8WW47Jm
-	 WVMpeTFBnKrf4RlQ2nDvT3lS13Z93q8bAvgkiVkSuHI6A4xZiA2ClOEVCEvBV1eQF
-	 MnzT6HY5slI3Oo6aae8GQO60B9b1mc9bmjt5b7/Keg9sjLKe+0WvgxPyxfKcAviUK
-	 kjn20cYtdWX3o/rQRzUEbPluafDMNZdf4VrSQPyzrsTi5rslOfJlRwTTAaDz021Qh
-	 3CNNjnWsEPZiH+OE8g==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MFs1z-1s6XPf07Cx-005cWs; Thu, 27
- Jun 2024 09:17:08 +0200
-Message-ID: <2c4ff078-a792-480e-971f-8bfeac07fac8@web.de>
-Date: Thu, 27 Jun 2024 09:17:05 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="db7rACDG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41D4EC2BBFC;
+	Thu, 27 Jun 2024 07:18:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719472726;
+	bh=N77V0dE/apH22+7RK8IW/xhIj81SUdpfM54CWaNtWbI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=db7rACDG7c+uVpFm8X+Q2C8rjsq2oVLPGxfrfmVEKxyIdamcn7Lr6N1e/jXeEZuiB
+	 u+0EoEZ7zbMfbBW/BVN6OZ37nN+cJ7F9cpmyCypsoceLUsikDh0k1+X913R5sYjfsY
+	 hPWy/wpdVQ+Q34Gwpkx4xUUsBN36c/6PTXzXaZpGgY+YXQBxlzVGDdVUpUqWtzohxH
+	 5v+u0BLxjL2W7/8Fgejx9uFlKhe08XJPY9V5FnfBSjvsD+SFdmyE+l/YSQwdKjN2sd
+	 S6fGjmM9IkKea0DgNqJ7vFsW+HE50oqDudWh9cbyq1p+DLFmnuy1ceO9vZJMzXBf4k
+	 0zQydjO+6flAQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1sMjPH-000000000Zg-1AXV;
+	Thu, 27 Jun 2024 09:18:59 +0200
+Date: Thu, 27 Jun 2024 09:18:59 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Vanillan Wang <vanillanwang@163.com>
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] USB: serial: option: add Rolling RW350-GL variants
+Message-ID: <Zn0SY4nQzESrQ4xw@hovoldconsulting.com>
+References: <20240531024012.29805-1-vanillanwang@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Ma Ke <make24@iscas.ac.cn>, linux-s390@vger.kernel.org,
- netdev@vger.kernel.org, Alexander Gordeev <agordeev@linux.ibm.com>,
- Alexandra Winter <wintera@linux.ibm.com>,
- =?UTF-8?Q?Christian_Borntr=C3=A4ger?= <borntraeger@linux.ibm.com>,
- "David S. Miller" <davem@davemloft.net>, Gerd Bayer <gbayer@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Niklas Schnelle
- <schnelle@linux.ibm.com>, Stefan Raspl <raspl@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- Thorsten Winkler <twinkler@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>, Wenjia Zhang <wenjia@linux.ibm.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Ratheesh Kannoth <rkannoth@marvell.com>
-References: <20240627021314.2976443-1-make24@iscas.ac.cn>
-Subject: Re: [PATCH v2] s390/ism: Add check for dma_set_max_seg_size in
- ism_probe()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240627021314.2976443-1-make24@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:+jTNX88Foym3ZjbszoowSuI7fIbGxAcTbyXGYvEtQQKCzmeO3Y0
- /6UKcmdofE9SDbczxv7G5d7VboQrkduhJRWxPAznn6w00IZDD5VPT0RSi3Ot4ZCTKD+lpwf
- yRF0lX5HCv2DkOqRTCFPfrP+O6I93tiy3riEhoMaNoXx2CqfoD8vNPmRSIl7+wtyAKfvqM+
- FcoPJ9SN8suu8Liwcj2Xw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:hIB8XmAEbvU=;0wKE4IlQ2C0952FDL4Y/8ChNzb4
- 25iuGdOHUz3jVm2uEnmPbuW38MBU5Yt9JG96wxQfCDmAOEUTp+k+IqDaPc6I6TuIOe4+EDJJl
- 0+UA5fdUo/S8Dn45ictqeTVa6GE09MLvE99fLtXfl//x2wJNtxS73BFODm8WN5BmGEF5UtqZh
- ZW+JRFH4V/us+G2UfR8+rO4KKWGN1TvD4uXWXDGco0loxQSmhXx0f84y9xZ2q5t9l+EZ0hHo6
- X2LbkmjGr1pV5BsXStlzDbVIHiXADMFL2xzfkzRqig/FCON1qDxct5e3Ir69GjkrEHV/srmZK
- gL0r7A91NT1PI3fUc/WXQg7wJUVgcwcPO0i1jukjarRMqQsxdmi+U22ZgCX4dxnMtC+qrqTcl
- 73Uj4PTQ608SQGQc+6o16l2Q+vNYMp3viaUtiIBn01VA6680yxzFOGlIyWeHJB0Om7Z13TBOD
- JkOgKJn75mJmr8eL4yIND1bMLz9QU5eolcKg9qKtvtQvNHa7m91vi2srLuRqopqk3RlUUPa1i
- uL8vw/hcx430fm0FPkwRzrhFrDCRvQxG7E5G4j6iB8BYFAhD5YeO2Ir9t8GeWdd8cEqgPPPjB
- cIHxntVmxAcZtNuVoootg3b2dR9pieYzd05G2ufN16Hh6SxJbLsIETtNXCigSLx7TM0waH/b/
- rgSG0wvClrjA6kiDWjsVcxNigjCd/E9dAhz97JGY7oiUUnVyhoU9JZ5hgO3sGAsOe7VOFG22O
- kTiK2BO/cQu+QihYJJnMO+P1lYR1SiCKUI+/YZdNSvbnkJcb4u2eqIUaJsv1uTJmnj4F5WCXa
- +cn/JkVPo4ZLpfHdjxjBnq68MYg3FjjnTNIQwtRrBAQr0=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240531024012.29805-1-vanillanwang@163.com>
 
-> As the possible failure of the dma_set_max_seg_size(), we should better
-> check the return value of the dma_set_max_seg_size().
+On Fri, May 31, 2024 at 10:40:12AM +0800, Vanillan Wang wrote:
+> Update the USB serial option driver support for the Rolling
+> RW350-GL
+> - VID:PID 33f8:0802, RW350-GL are laptop M.2 cards (with
+> MBIM interfaces for /Linux/Chrome OS)
+> 
+> Here are the outputs of usb-devices:
+> 
+> usbmode=63: mbim, pipe
+> 
+> T:  Bus=02 Lev=01 Prnt=01 Port=02 Cnt=01 Dev#=  2 Spd=5000 MxCh= 0
+> D:  Ver= 3.00 Cls=ef(misc ) Sub=02 Prot=01 MxPS= 9 #Cfgs=  1
+> P:  Vendor=33f8 ProdID=0802 Rev=00.01
+> S:  Manufacturer=Rolling Wireless S.a.r.l.
+> S:  Product=USB DATA CARD
+> C:  #Ifs= 3 Cfg#= 1 Atr=a0 MxPwr=896mA
+> I:  If#= 0 Alt= 0 #EPs= 1 Cls=02(commc) Sub=0e Prot=00 Driver=cdc_mbim
+> E:  Ad=82(I) Atr=03(Int.) MxPS=  64 Ivl=32ms
+> I:  If#= 1 Alt= 1 #EPs= 2 Cls=0a(data ) Sub=00 Prot=02 Driver=cdc_mbim
+> E:  Ad=01(O) Atr=02(Bulk) MxPS=1024 Ivl=0ms
+> E:  Ad=81(I) Atr=02(Bulk) MxPS=1024 Ivl=0ms
+> I:  If#= 2 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+> E:  Ad=02(O) Atr=02(Bulk) MxPS=1024 Ivl=0ms
+> E:  Ad=83(I) Atr=02(Bulk) MxPS=1024 Ivl=0ms
+> 
+> usbmode=64: mbim, others at (If#= 5 adb)
 
-Please avoid the repetition of a function name in such a change descriptio=
-n.
-Can it be improved with corresponding imperative wordings?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.10-rc5#n94
+Can you be more specific about the other interface?
 
+> T:  Bus=02 Lev=01 Prnt=01 Port=02 Cnt=01 Dev#=  5 Spd=5000 MxCh= 0
+> D:  Ver= 3.00 Cls=ef(misc ) Sub=02 Prot=01 MxPS= 9 #Cfgs=  1
+> P:  Vendor=33f8 ProdID=0802 Rev=00.01
+> S:  Manufacturer=Rolling Wireless S.a.r.l.
+> S:  Product=USB DATA CARD
+> C:  #Ifs=10 Cfg#= 1 Atr=a0 MxPwr=896mA
+> I:  If#= 0 Alt= 0 #EPs= 1 Cls=02(commc) Sub=0e Prot=00 Driver=cdc_mbim
+> E:  Ad=82(I) Atr=03(Int.) MxPS=  64 Ivl=32ms
+> I:  If#= 1 Alt= 1 #EPs= 2 Cls=0a(data ) Sub=00 Prot=02 Driver=cdc_mbim
+> E:  Ad=01(O) Atr=02(Bulk) MxPS=1024 Ivl=0ms
+> E:  Ad=81(I) Atr=02(Bulk) MxPS=1024 Ivl=0ms
+> I:  If#= 2 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+> E:  Ad=02(O) Atr=02(Bulk) MxPS=1024 Ivl=0ms
+> E:  Ad=83(I) Atr=02(Bulk) MxPS=1024 Ivl=0ms
+> I:  If#= 3 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+> E:  Ad=03(O) Atr=02(Bulk) MxPS=1024 Ivl=0ms
+> E:  Ad=84(I) Atr=02(Bulk) MxPS=1024 Ivl=0ms
+> I:  If#= 4 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+> E:  Ad=04(O) Atr=02(Bulk) MxPS=1024 Ivl=0ms
+> E:  Ad=85(I) Atr=02(Bulk) MxPS=1024 Ivl=0ms
+> I:  If#= 5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=usbfs
+> E:  Ad=05(O) Atr=02(Bulk) MxPS=1024 Ivl=0ms
+> E:  Ad=86(I) Atr=02(Bulk) MxPS=1024 Ivl=0ms
+> I:  If#= 6 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+> E:  Ad=06(O) Atr=02(Bulk) MxPS=1024 Ivl=0ms
+> E:  Ad=87(I) Atr=02(Bulk) MxPS=1024 Ivl=0ms
+> I:  If#= 7 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+> E:  Ad=07(O) Atr=02(Bulk) MxPS=1024 Ivl=0ms
+> E:  Ad=88(I) Atr=02(Bulk) MxPS=1024 Ivl=0ms
+> I:  If#= 8 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+> E:  Ad=08(O) Atr=02(Bulk) MxPS=1024 Ivl=0ms
+> E:  Ad=89(I) Atr=02(Bulk) MxPS=1024 Ivl=0ms
+> I:  If#= 9 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+> E:  Ad=09(O) Atr=02(Bulk) MxPS=1024 Ivl=0ms
+> E:  Ad=8a(I) Atr=02(Bulk) MxPS=1024 Ivl=0ms
 
-=E2=80=A6
-> +++ b/drivers/s390/net/ism_drv.c
-> @@ -620,7 +620,10 @@ static int ism_probe(struct pci_dev *pdev, const st=
-ruct pci_device_id *id)
->  		goto err_resource;
->
->  	dma_set_seg_boundary(&pdev->dev, SZ_1M - 1);
-> -	dma_set_max_seg_size(&pdev->dev, SZ_1M);
-> +	ret =3D dma_set_max_seg_size(&pdev->dev, SZ_1M);
-> +	if (ret)
-> +		goto err_resource;
-> +
->  	pci_set_master(pdev);
-=E2=80=A6
-
-A) Will the shown dma_set_seg_boundary() call trigger similar software dev=
-elopment concerns?
-   https://elixir.bootlin.com/linux/v6.10-rc5/source/include/linux/dma-map=
-ping.h#L562
-
-B) Under which circumstances would you become interested to increase the a=
-pplication
-   of scope-based resource management here?
-   https://elixir.bootlin.com/linux/v6.10-rc5/source/include/linux/cleanup=
-.h#L8
-
-
-Regards,
-Markus
+Johan
