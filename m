@@ -1,59 +1,71 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841F514A0A2;
-	Thu, 27 Jun 2024 10:49:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8FA208A5;
+	Thu, 27 Jun 2024 10:50:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719485352; cv=none; b=AQSIAXWBFRt1wRGLhAH1pzcyQrR+4ep91OUzBW0DCfD5mPh8TpfEqkd4qNMxlutL64OlVsQNlFZKIl86YfsCtG9Q9kLQ+E1yCgo1UAPt/tM68BdXjpWN0RHWUmhU9pRNcMmeXy/2M4CL9ahz0i/ZpaO4bKTuMbnb8csJRn0qcpI=
+	t=1719485452; cv=none; b=gANIQ4CExsPmDgJCwfbtFVrDt7aXqIXJXmQ7PtdhLE3M1pqeedGlySk86Rxlm9rKwH4Q5xWy8/5lNvVDxrFEn/xDodZ+W8PmwdN0c0ShQJ9SPWhipaVFiGtfx2rt5HM+FoxJtnCkWw/yPfpARhkhX75YBL3xsn9duw16L2orFA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719485352; c=relaxed/simple;
-	bh=c5lcVmFIoWfuSzrbY5zB8s0IDhy57d4nb1ETd1V+0uQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AZC1l+WOWsjaWnIb7lfbu9Nujq+tPwEK3pdqGDZNB+J0GhHiPZsqnR4VmMO9eRXJvvazUM2oN0Xo8YHym/0wqZ4zyT0pRw+J6k/2qHZCBttqgSyj9axFMQDSB5iv3PLjsbjIe9G0Mn5z8kNelPsQATaN+6JrvNepJgR4YqTSdVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Nn8tVPyt; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1719485452; c=relaxed/simple;
+	bh=YBwgjVUikR/vPP6m/xvgU/SfQMiAcLM7lsk6wezZYrE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DBUxPMTdMV7NkAkQ07TOYkdhyCcyDOHH+y5kqcBshp3wB9/I0GG2DLF7awSAgRzjnV5tJ8suNfLNCjv05lNjqxGZh3EUBN3DGdoIpVJVlsfYSZ8MgYsNqJ3zx3hYkQCWaLL5h2i2gQO/Ermauc9GmsVPsjOorcECnHwIPMO/PQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JiRiFRiq; arc=none smtp.client-ip=209.85.166.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Nn8tVPyt"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45RA55vs015125;
-	Thu, 27 Jun 2024 10:49:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	wUP7OkSjxccZXMrC/om1s69siujQlmzEYh73ztXduGU=; b=Nn8tVPytHQfePRAZ
-	++Psd2dZ5RBfPhSmzB2lHJCzI2lLpwpkruKlBn3VM21tKb2c2ZZ8QZN+2kAGKE4U
-	+qATpWyOPOYQiDBw2tHvZO1yIa3vKjYSOtkIaw3d9tK+HzrAAGDU5uDXZVWIN1bD
-	HdT6HWUfiEAumwxOfErBWcVZ9ZW6rku7wg0AXLiRflZIxD0bTBdJDcELEfdntRvp
-	M6AvwgXUcuAJXdAQ3kr/gTjG7ChiGI9a/hi6b0gq4jJ8PXyZKcs6zqMm9j6oibVR
-	3bIolUuYzZS/qUFU3P32Hwgit+Lh6cN74ZWWnLYGE39H3H6HiWdSVro0/oZLhd3r
-	QZHw2Q==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ywqshv9ve-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Jun 2024 10:49:07 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45RAn64d001633
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Jun 2024 10:49:06 GMT
-Received: from hu-sudeepgo-hyd.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 27 Jun 2024 03:49:03 -0700
-From: Sudeepgoud Patil <quic_sudeepgo@quicinc.com>
-To: <quic_bjorande@quicinc.com>, <andersson@kernel.org>,
-        <quic_clew@quicinc.com>, <mathieu.poirier@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, <quic_deesin@quicinc.com>,
-        <quic_sudeepgo@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>
-Subject: [PATCH V3 2/2] soc: qcom: smp2p: Introduce tracepoint support
-Date: Thu, 27 Jun 2024 16:18:31 +0530
-Message-ID: <20240627104831.4176799-3-quic_sudeepgo@quicinc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240627104831.4176799-1-quic_sudeepgo@quicinc.com>
-References: <20240627104831.4176799-1-quic_sudeepgo@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JiRiFRiq"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3762abfe005so32200365ab.2;
+        Thu, 27 Jun 2024 03:50:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719485450; x=1720090250; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1Z0nf81rt4pKCg289A1fafeQoAs93ALMK9Xuprzaa04=;
+        b=JiRiFRiqfjeQ3YF+dRrhfzU+VyMAq8Y+U0LXGz1M8wep8U7GlC/qOBBoT5ITGf2pR3
+         5aVUT8284I/5cEyuTxV2qbKw/k0IRBx2Bp4Z02YuYkSZv7rUosvIXMOkmuco0J+uqr31
+         FI5o7t2USsrnVm/OXiQyGiETYx5yUP4Y+9mJ/6iRgtqpyPg/y/1atNAJHQ05L0ckqFxO
+         uIb3Epf8YeELXPwCoK1ktzjvhUJbX9mS+mM33F2xAjchIZZXTJe0spzVAfvtZFD0K9y+
+         bvp6fCHwyCnqWWXYuj8mmgLUKE7JL03KDnG5xnoNGCcpBOyuMjRxdMUjpOipUUkw4FlU
+         zJZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719485450; x=1720090250;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1Z0nf81rt4pKCg289A1fafeQoAs93ALMK9Xuprzaa04=;
+        b=HueyDeEjSsMFBfTGR08WhNY3LiVOZdmv/8ttn6SPsyHgM0m30P/eqVFqdRTMHOpPA3
+         UTMYxwBhEfBNOkoy0DXp8C5ue5j68aujJeNrDxAMQr/qCIbYgHWEfsrsZt6zxHdoSUd5
+         5RN4jPDTHwW7lJiL8qI+c86Yugeo9n5TqLYtB6B9rFSaYVF27/Booh+VUgrfJZYaGLn1
+         /OmbHCaL7vwrRwxws6K2/6nXEIF0ryKafyrHkykAPBMHDcUeNkLt8cQiN8nZq5XGn/4V
+         pA6vzU2AQfvCGzFkByDnopQ0YcQyz+Py0+6APA/kfFRFFXKCSu6Vq1Qei/R3S6Kyl5bf
+         +k6g==
+X-Forwarded-Encrypted: i=1; AJvYcCUOhChg7MLlbltoeRd762VmcIG0NoVWKRnzx5vLsLOevuXDABDyTBqhF9kfLrHy+kDYFUGmV5WU4WHNpi9/1wmVs/GfpgPQkKb7rHCv50yQp6f8kn9MDZsvbyw3gvfteWSgES68yy4O1ostOhkDMoIo2MHAjEiq7LbhJDJa6FGDwnB0HOJT
+X-Gm-Message-State: AOJu0Yxc8cxr4Gu9VU5NX4eSF9pHsixSYsKIgrM5xOUIJX54ORKn8Iy9
+	rS9zU7RJPd7pPPaMqhCxJmpFSngs7DIfAqeSuCgBsJYiHNEcFqQq
+X-Google-Smtp-Source: AGHT+IGDM0alksr+Hd4IyG19uJTvuI9/pP6uHRFbuipA+wKeHE7MFDNVcAiTXIeALNGcV08o2DrY6g==
+X-Received: by 2002:a05:6e02:1807:b0:375:a6cd:dff2 with SMTP id e9e14a558f8ab-3763f5ca221mr181124435ab.5.1719485449554;
+        Thu, 27 Jun 2024 03:50:49 -0700 (PDT)
+Received: from fedora.one.one.one.one ([2405:201:6013:c9a2:59df:d296:bffe:732c])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-72749c25c3asm830283a12.90.2024.06.27.03.50.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jun 2024 03:50:49 -0700 (PDT)
+From: Animesh Agarwal <animeshagarwal28@gmail.com>
+To: 
+Cc: animeshagarwal28@gmail.com,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ASoC: dt-bindings: realtek,rt5677: Convert to dtschema
+Date: Thu, 27 Jun 2024 16:20:26 +0530
+Message-ID: <20240627105030.14360-1-animeshagarwal28@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,200 +73,248 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: jMfCRo_t-jOS9POJUxT7XWfTOlqqImiX
-X-Proofpoint-GUID: jMfCRo_t-jOS9POJUxT7XWfTOlqqImiX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-27_06,2024-06-27_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- bulkscore=0 phishscore=0 suspectscore=0 lowpriorityscore=0 malwarescore=0
- mlxscore=0 impostorscore=0 mlxlogscore=999 priorityscore=1501 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
- definitions=main-2406270081
 
-This commit introduces tracepoint support for smp2p, enabling
-logging of communication between local and remote processors.
-These tracepoints include information about the remote subsystem
-name, negotiation details, supported features, bit change
-notifications, and ssr activity. These logs are useful for
-debugging issues between subsystems.
+Convert the RT5677 audio CODEC bindings to DT schema.
 
-Signed-off-by: Sudeepgoud Patil <quic_sudeepgo@quicinc.com>
+Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
+Cc: Daniel Baluta <daniel.baluta@nxp.com>
+
 ---
- drivers/soc/qcom/Makefile      |  1 +
- drivers/soc/qcom/smp2p.c       |  9 ++++
- drivers/soc/qcom/trace-smp2p.h | 98 ++++++++++++++++++++++++++++++++++
- 3 files changed, 108 insertions(+)
- create mode 100644 drivers/soc/qcom/trace-smp2p.h
+Changes in v2:
+  - Used consistant quotes.
+  - Listed jack detect as properties instead of patternProperties.
+---
+ .../bindings/sound/realtek,rt5677.yaml        | 135 ++++++++++++++++++
+ .../devicetree/bindings/sound/rt5677.txt      |  78 ----------
+ 2 files changed, 135 insertions(+), 78 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/realtek,rt5677.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/rt5677.txt
 
-diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-index ca0bece0dfff..30c1bf645501 100644
---- a/drivers/soc/qcom/Makefile
-+++ b/drivers/soc/qcom/Makefile
-@@ -23,6 +23,7 @@ qcom_rpmh-y			+= rpmh.o
- obj-$(CONFIG_QCOM_SMD_RPM)	+= rpm-proc.o smd-rpm.o
- obj-$(CONFIG_QCOM_SMEM) +=	smem.o
- obj-$(CONFIG_QCOM_SMEM_STATE) += smem_state.o
-+CFLAGS_smp2p.o := -I$(src)
- obj-$(CONFIG_QCOM_SMP2P)	+= smp2p.o
- obj-$(CONFIG_QCOM_SMSM)	+= smsm.o
- obj-$(CONFIG_QCOM_SOCINFO)	+= socinfo.o
-diff --git a/drivers/soc/qcom/smp2p.c b/drivers/soc/qcom/smp2p.c
-index 696c2a8387d0..4aa61b0f11ad 100644
---- a/drivers/soc/qcom/smp2p.c
-+++ b/drivers/soc/qcom/smp2p.c
-@@ -161,6 +161,9 @@ struct qcom_smp2p {
- 	struct list_head outbound;
- };
- 
-+#define CREATE_TRACE_POINTS
-+#include "trace-smp2p.h"
-+
- static void qcom_smp2p_kick(struct qcom_smp2p *smp2p)
- {
- 	/* Make sure any updated data is written before the kick */
-@@ -192,6 +195,7 @@ static void qcom_smp2p_do_ssr_ack(struct qcom_smp2p *smp2p)
- 	struct smp2p_smem_item *out = smp2p->out;
- 	u32 val;
- 
-+	trace_smp2p_ssr_ack(smp2p->dev);
- 	smp2p->ssr_ack = !smp2p->ssr_ack;
- 
- 	val = out->flags & ~BIT(SMP2P_FLAGS_RESTART_ACK_BIT);
-@@ -214,6 +218,7 @@ static void qcom_smp2p_negotiate(struct qcom_smp2p *smp2p)
- 			smp2p->ssr_ack_enabled = true;
- 
- 		smp2p->negotiation_done = true;
-+		trace_smp2p_negotiate(smp2p->dev, out->features);
- 	}
- }
- 
-@@ -252,6 +257,8 @@ static void qcom_smp2p_notify_in(struct qcom_smp2p *smp2p)
- 		status = val ^ entry->last_value;
- 		entry->last_value = val;
- 
-+		trace_smp2p_notify_in(entry, status, val);
-+
- 		/* No changes of this entry? */
- 		if (!status)
- 			continue;
-@@ -415,6 +422,8 @@ static int smp2p_update_bits(void *data, u32 mask, u32 value)
- 	writel(val, entry->value);
- 	spin_unlock_irqrestore(&entry->lock, flags);
- 
-+	trace_smp2p_update_bits(entry, orig, val);
-+
- 	if (val != orig)
- 		qcom_smp2p_kick(entry->smp2p);
- 
-diff --git a/drivers/soc/qcom/trace-smp2p.h b/drivers/soc/qcom/trace-smp2p.h
+diff --git a/Documentation/devicetree/bindings/sound/realtek,rt5677.yaml b/Documentation/devicetree/bindings/sound/realtek,rt5677.yaml
 new file mode 100644
-index 000000000000..fa985a0d7615
+index 000000000000..9ce23e58e5ea
 --- /dev/null
-+++ b/drivers/soc/qcom/trace-smp2p.h
-@@ -0,0 +1,98 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
++++ b/Documentation/devicetree/bindings/sound/realtek,rt5677.yaml
+@@ -0,0 +1,135 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/realtek,rt5677.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM qcom_smp2p
++title: RT5677 audio CODEC
 +
-+#if !defined(__QCOM_SMP2P_TRACE_H__) || defined(TRACE_HEADER_MULTI_READ)
-+#define __QCOM_SMP2P_TRACE_H__
++maintainers:
++  - Animesh Agarwal <animeshagarwal28@gmail.com>
 +
-+#include <linux/device.h>
-+#include <linux/tracepoint.h>
++description: |
++  This device supports I2C only.
 +
-+TRACE_EVENT(smp2p_ssr_ack,
-+	TP_PROTO(const struct device *dev),
-+	TP_ARGS(dev),
-+	TP_STRUCT__entry(
-+		__string(dev_name, dev_name(dev))
-+	),
-+	TP_fast_assign(
-+		__assign_str(dev_name, dev_name(dev));
-+	),
-+	TP_printk("%s: SSR detected", __get_str(dev_name))
-+);
++  Pins on the device (for linking into audio routes):
++    * IN1P
++    * IN1N
++    * IN2P
++    * IN2N
++    * MICBIAS1
++    * DMIC1
++    * DMIC2
++    * DMIC3
++    * DMIC4
++    * LOUT1
++    * LOUT2
++    * LOUT3
 +
-+TRACE_EVENT(smp2p_negotiate,
-+	TP_PROTO(const struct device *dev, unsigned int features),
-+	TP_ARGS(dev, features),
-+	TP_STRUCT__entry(
-+		__string(dev_name, dev_name(dev))
-+		__field(u32, out_features)
-+	),
-+	TP_fast_assign(
-+		__assign_str(dev_name, dev_name(dev));
-+		__entry->out_features = features;
-+	),
-+	TP_printk("%s: state=open out_features=%s", __get_str(dev_name),
-+		__print_flags(__entry->out_features, "|",
-+			{SMP2P_FEATURE_SSR_ACK, "SMP2P_FEATURE_SSR_ACK"})
-+	)
-+);
++allOf:
++  - $ref: dai-common.yaml#
 +
-+TRACE_EVENT(smp2p_notify_in,
-+	TP_PROTO(struct smp2p_entry *smp2p_entry, unsigned long status, u32 val),
-+	TP_ARGS(smp2p_entry, status, val),
-+	TP_STRUCT__entry(
-+		__string(dev_name, dev_name(smp2p_entry->smp2p->dev))
-+		__string(client_name, smp2p_entry->name)
-+		__field(unsigned long, status)
-+		__field(u32, val)
-+	),
-+	TP_fast_assign(
-+		__assign_str(dev_name, dev_name(smp2p_entry->smp2p->dev));
-+		__assign_str(client_name, smp2p_entry->name);
-+		__entry->status = status;
-+		__entry->val = val;
-+	),
-+	TP_printk("%s: %s: status:0x%0lx val:0x%0x",
-+		__get_str(dev_name),
-+		__get_str(client_name),
-+		__entry->status,
-+		__entry->val
-+	)
-+);
++properties:
++  compatible:
++    const: realtek,rt5677
 +
-+TRACE_EVENT(smp2p_update_bits,
-+	TP_PROTO(struct smp2p_entry *smp2p_entry, u32 orig, u32 val),
-+	TP_ARGS(smp2p_entry, orig, val),
-+	TP_STRUCT__entry(
-+		__string(dev_name, dev_name(smp2p_entry->smp2p->dev))
-+		__string(client_name, smp2p_entry->name)
-+		__field(u32, orig)
-+		__field(u32, val)
-+	),
-+	TP_fast_assign(
-+		__assign_str(dev_name, dev_name(smp2p_entry->smp2p->dev));
-+		__assign_str(client_name, smp2p_entry->name);
-+		__entry->orig = orig;
-+		__entry->val = val;
-+	),
-+	TP_printk("%s: %s: orig:0x%0x new:0x%0x",
-+		__get_str(dev_name),
-+		__get_str(client_name),
-+		__entry->orig,
-+		__entry->val
-+	)
-+);
++  reg:
++    maxItems: 1
 +
-+#endif /* __QCOM_SMP2P_TRACE_H__ */
++  interrupts:
++    maxItems: 1
 +
-+#undef TRACE_INCLUDE_PATH
-+#define TRACE_INCLUDE_PATH .
++  gpio-controller: true
 +
-+#undef TRACE_INCLUDE_FILE
-+#define TRACE_INCLUDE_FILE trace-smp2p
++  '#gpio-cells':
++    const: 2
 +
-+#include <trace/define_trace.h>
++  realtek,pow-ldo2-gpio:
++    maxItems: 1
++    description: CODEC's POW_LDO2 pin.
++
++  realtek,reset-gpio:
++    maxItems: 1
++    description: CODEC's RESET pin. Active low.
++
++  realtek,gpio-config:
++    description: |
++      Array of six 8bit elements that configures GPIO.
++      0 - floating (reset value)
++      1 - pull down
++      2 - pull up
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    minItems: 6
++    maxItems: 6
++    items:
++      maximum: 2
++
++  realtek,jd1-gpio:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum:
++      - 0 # OFF
++      - 1 # GPIO1 for jd1.
++      - 2 # GPIO2 for jd1.
++      - 3 # GPIO3 for jd1.
++    description: Configures GPIO Mic Jack detection 1.
++
++  realtek,jd2-gpio:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum:
++      - 0 # OFF
++      - 1 # GPIO4 for jd2.
++      - 2 # GPIO5 for jd2.
++      - 3 # GPIO6 for jd2.
++    description: Configures GPIO Mic Jack detection 2.
++
++  realtek,jd3-gpio:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum:
++      - 0 # OFF
++      - 1 # GPIO4 for jd3.
++      - 2 # GPIO5 for jd3.
++      - 3 # GPIO6 for jd3.
++    description: Configures GPIO Mic Jack detection 3.
++
++patternProperties:
++  '^realtek,in[1-2]-differential$':
++    type: boolean
++    description: Indicate MIC1/2 input are differential, rather than
++      single-ended.
++
++  '^realtek,lout[1-3]-differential$':
++    type: boolean
++    description: Indicate LOUT1/2/3 outputs are differential, rather than
++      single-ended.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - gpio-controller
++  - '#gpio-cells'
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        codec@2c {
++            compatible = "realtek,rt5677";
++            reg = <0x2c>;
++            interrupt-parent = <&gpio>;
++            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
++            gpio-controller;
++            #gpio-cells = <2>;
++            realtek,pow-ldo2-gpio = <&gpio 3 GPIO_ACTIVE_HIGH>;
++            realtek,reset-gpio = <&gpio 3 GPIO_ACTIVE_LOW>;
++            realtek,in1-differential;
++            realtek,gpio-config = <0 0 0 0 0 2>;
++        };
++    };
+diff --git a/Documentation/devicetree/bindings/sound/rt5677.txt b/Documentation/devicetree/bindings/sound/rt5677.txt
+deleted file mode 100644
+index da2430099181..000000000000
+--- a/Documentation/devicetree/bindings/sound/rt5677.txt
++++ /dev/null
+@@ -1,78 +0,0 @@
+-RT5677 audio CODEC
+-
+-This device supports I2C only.
+-
+-Required properties:
+-
+-- compatible : "realtek,rt5677".
+-
+-- reg : The I2C address of the device.
+-
+-- interrupts : The CODEC's interrupt output.
+-
+-- gpio-controller : Indicates this device is a GPIO controller.
+-
+-- #gpio-cells : Should be two. The first cell is the pin number and the
+-  second cell is used to specify optional parameters (currently unused).
+-
+-Optional properties:
+-
+-- realtek,pow-ldo2-gpio : The GPIO that controls the CODEC's POW_LDO2 pin.
+-- realtek,reset-gpio : The GPIO that controls the CODEC's RESET pin. Active low.
+-
+-- realtek,in1-differential
+-- realtek,in2-differential
+-- realtek,lout1-differential
+-- realtek,lout2-differential
+-- realtek,lout3-differential
+-  Boolean. Indicate MIC1/2 input and LOUT1/2/3 outputs are differential,
+-  rather than single-ended.
+-
+-- realtek,gpio-config
+-  Array of six 8bit elements that configures GPIO.
+-    0 - floating (reset value)
+-    1 - pull down
+-    2 - pull up
+-
+-- realtek,jd1-gpio
+-  Configures GPIO Mic Jack detection 1.
+-  Select 0 ~ 3 as OFF, GPIO1, GPIO2 and GPIO3 respectively.
+-
+-- realtek,jd2-gpio
+-- realtek,jd3-gpio
+-  Configures GPIO Mic Jack detection 2 and 3.
+-  Select 0 ~ 3 as OFF, GPIO4, GPIO5 and GPIO6 respectively.
+-
+-Pins on the device (for linking into audio routes):
+-
+-  * IN1P
+-  * IN1N
+-  * IN2P
+-  * IN2N
+-  * MICBIAS1
+-  * DMIC1
+-  * DMIC2
+-  * DMIC3
+-  * DMIC4
+-  * LOUT1
+-  * LOUT2
+-  * LOUT3
+-
+-Example:
+-
+-rt5677 {
+-	compatible = "realtek,rt5677";
+-	reg = <0x2c>;
+-	interrupt-parent = <&gpio>;
+-	interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_LEVEL_HIGH>;
+-
+-	gpio-controller;
+-	#gpio-cells = <2>;
+-
+-	realtek,pow-ldo2-gpio =
+-		<&gpio TEGRA_GPIO(V, 3) GPIO_ACTIVE_HIGH>;
+-	realtek,reset-gpio = <&gpio TEGRA_GPIO(BB, 3) GPIO_ACTIVE_LOW>;
+-	realtek,in1-differential = "true";
+-	realtek,gpio-config = /bits/ 8  <0 0 0 0 0 2>;   /* pull up GPIO6 */
+-	realtek,jd2-gpio = <3>;  /* Enables Jack detection for GPIO6 */
+-};
 -- 
+2.45.2
 
