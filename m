@@ -1,116 +1,148 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4917156863
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 12:20:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A54781581F9;
+	Thu, 27 Jun 2024 12:20:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719490825; cv=none; b=K6y/AEoi1kyN9G+Mgh0WCNcTWV3WQW7ydlNKAJL0NbLzk3fOYiDexio39r6HqsYDeB+qPST9QxlE4gAzVaK3L8Icjjv+03emCyWkyBJH7js/fscEyLDFXU7hTD4iX1JM1luCNM2kNOuyoWQ263yJMAse5nNNJnVEshOfyhcdhJ0=
+	t=1719490827; cv=none; b=RsoWMRWwz0/PYVnfTwmAVkzwEScmm09k5l0ycbD5H37aL/JcHJsontezj+ATMmgNqZfsBaakxBPD1BOMNmyXkoQL9pX5X7smpTs5KvCDFtLdoZloJ+zdgAuvZAqUXF7GFD4cEaGwO9XecNaPqJtRIG5C9ew2cNqWVFA7mqNMnRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719490825; c=relaxed/simple;
-	bh=sUkdPuQbPyTADqcRllGyHnJ7Vi420C9DZGnZln1HFGI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=s/5SdyffR66DY+3hONadf+QesC4tqxeB+WWfQvvZmSbriyW1kevMkNXeaUUIEILuHeqj+Bjf2h1dqU++hVnv5kCr217Z+ECgKm4XmNWduBSZzIdBsfDSH7TKSWOVnLgs5mHL9BewT+YLs33eLy9X+72Cr3wZSmINsV1a9mawtWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wbSekzxP; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719490827; c=relaxed/simple;
+	bh=PUiC+p80y1527E72vWRjZZNVADRcn5j2khxOYSvQAJI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V/fBXdAH9/LFaEe983xLDtWoq5YOkMRAwLEUSYe1T7/o10WBfDzfsgDRQHJkDQWs7DfEXjzXMip4bzNRPtDaP0xA5ty5r0Is8PAG6o0b8BBv+VJJnJgTeWUAwOUB9zt5UqyjcWLP7nqRZl/a7RM8S1eXW4F2emDKo/4FnHqkW0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=anue5/zB; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wbSekzxP"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-42565670e20so3410165e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 05:20:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="anue5/zB"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-57cc1c00b97so1624414a12.0;
+        Thu, 27 Jun 2024 05:20:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719490821; x=1720095621; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1719490823; x=1720095623; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BzuRu3TYFUavJ3fIbGrdOxztoebeEOJ4/hLXJ9FwGMw=;
-        b=wbSekzxPnztQ5CuzVX6FiYkyBle2uwLKMtJ6Ffrkrc/kn/iWgzWBtILHoKrH//4Dgg
-         /M/fouotxviBfHeTbILWuF4cI54NvBonhh4QV57wiutpdJiTMthiFU3BOYMcxEYf92zM
-         ukal4uN33zsweb1v1AcUEj42+1En0+DL88TjPy93+w3WS8rWwl3X38nlHJOkqoa4uTL3
-         2AC4QTFpE2HiocB+3sYkalH0MZfXVrq5LfwYCqeqx0gaa/V3hbda+Io2GrKAvkYeT0xL
-         U/jNKcEd4jwpwWjWZp4BKU6IRledkCbKN8uIx8ncgKeunISpnSG6fCpuLNl7Tg/42SCH
-         oMsg==
+        bh=HfPAvEEoOhqlNc3o5XSKpPKNsQK+jNCsk3UKc8ZzX2E=;
+        b=anue5/zB2FK5jLm7L0co5tXzZzSO8q3cgXbp3yagkR+kjiEG2LQmdTzpCFsgCqOmq5
+         H/2cdBFIYo3zgk1iixEz9DFJalwxJ3U7/aabnUa92hmeEcoFqPPsRJQYqnv/PQFZOyGz
+         3e1B8irLFDNAKG6y1Phc7UsIyPX0AcwOTwv99nciTEYO9MDGTjec9Q35P1aE9trTMhm3
+         1gI+ojja2kwXJojNFER6pe2U7QUKQ6Pf9gIuHrBg/fXsNGcZBMg2/i9VQOObwjsg0Uij
+         TKkSy4yM/iaIEbgccQ/CIlXK1VpN6MWj/JpvYsqQD8Rlq0COy4F+vKvgPHiTw1wRUkIg
+         KhhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719490821; x=1720095621;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1719490823; x=1720095623;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BzuRu3TYFUavJ3fIbGrdOxztoebeEOJ4/hLXJ9FwGMw=;
-        b=uvWmMhUJLgfRXBJl3J8ANq2eJHNEmfBTuBFS39pSVFvWYLh2a/GBG2/MjXk5upvfmt
-         Vcsm4wqQIyW7TjYK+HUmEI3XLMiJE7rXm+8VTXwkGNTZDb961/1VJtX1aJQMiRIXep2K
-         3/NqYe8QRcjmKPNYQTYx/0uXPge3BtBtRTDFI2G8kkx1MBYlPl6L3Ge2NwVKFnB9zRKG
-         T2qzL9zEQ+ZQQpJlDHNP4jiUmum76sE0IgQ/6o8onjcRTAds5+OExKKD+QoNi+qVGzBi
-         qji926EJk1l9JU3yc5uyrJN7ytdXEVmBUBUBmpkjC7L8bZRNYUR/lKBYneBh5UgGTpDc
-         Amcg==
-X-Forwarded-Encrypted: i=1; AJvYcCUjwHXXEmutZJ5GdLmh7UZzI0Srev7T+y1nAGxzh6zURcDxAwqYkG73YM0JX/rGIq/EJpKcz+EP6UfWJWz1GTeMUOhZKA3u+gkwErJL
-X-Gm-Message-State: AOJu0Yxf+XWqfv/7RhR4EimIDvLeTqtPD2lNUDRxHzLeexcXXaABwpQv
-	7kHKXfSTXCdc3cv2INVcPRwM5ZrwrT4LsSLBtPXZ9k2c5hVcOqJEbxu8Op7a8b0=
-X-Google-Smtp-Source: AGHT+IHXhFgxyEkcJCCrWQdO9Ydbw+jJMliEDlzXzFMU/AuCxMArjpiJIM4PdWhK15j/MHAd79vk5Q==
-X-Received: by 2002:a05:600c:19cd:b0:424:ade3:c6b7 with SMTP id 5b1f17b1804b1-42564502cc7mr15766815e9.2.1719490821344;
-        Thu, 27 Jun 2024 05:20:21 -0700 (PDT)
-Received: from krzk-bin.. ([178.197.219.137])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c8424b43sm62692885e9.32.2024.06.27.05.20.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 05:20:20 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 3/3] arm64: dts: qcom: sm8550-qrd: add port mapping to speakers
-Date: Thu, 27 Jun 2024 14:20:15 +0200
-Message-ID: <20240627122015.30945-3-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240627122015.30945-1-krzysztof.kozlowski@linaro.org>
-References: <20240627122015.30945-1-krzysztof.kozlowski@linaro.org>
+        bh=HfPAvEEoOhqlNc3o5XSKpPKNsQK+jNCsk3UKc8ZzX2E=;
+        b=ViVe7N2GmPEPqURjZds9bnhjPCgqviQeQaz+OYRsrc9fmzwjI1qkEliJ0xsAiQrEBh
+         J50ConH+9L7XorUUIXri+x1wzQmprkVzU7GTEcwh6uuJ34S9cn3IQVOnkgzLfyaAtiaO
+         5ZIRPga1b7zHeYqhK5XoLFsY2je4Mb+XHVGqysQQqLv60JOdnELceSvdemS8WoaQEmDo
+         K+L2CkGuZ+o3fEW3ZKxt0z0EGtu0ECLkw0tCrbgbOOvgluhnRuNV5QdcA4LiI00FUlRX
+         /7G2iwqNV665CaGKhsR1HHjGgj1c9mij631tjgHDYKLak9Jg5DtILz8v6tsIiUkl4YKS
+         b/KQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXHFlD7CBs3QyKsQMdUMcKO3Wg6F+1361bb2L97K5LhqcCF/Wb0aIqH/dnJ+A3+x2m1x8UkFmwWAX1a130Jv45KuDDqVmqiHAYjLZUKTf6jMSjd8v6R3m/kmr4FEIhXW2JfonYUep2ek4JK2w==
+X-Gm-Message-State: AOJu0YwQQWUaNNjNWfx/PPFS7RXK72THubc+fcFKQxQzQCDMe9B5CZFs
+	tkb9atPqYPyxAcIlBrMJBTIbLIgf8rD+9KkKu8xDKol7mMFoWxYz6hN3he0qQ4anEo71+T5Rh/L
+	Gd1MEVVX5lHzr/OlNlgffoympkekklTMmm+Q=
+X-Google-Smtp-Source: AGHT+IF3Ih0kBarK1vQ38L5gWHqqfPJPR/YBqRJqemKxAXKc6yKtlejb9rsU1Qqbk9DjpFo85XLpqFhIJEd9edEUylo=
+X-Received: by 2002:a17:907:104c:b0:a6f:59dc:4ed2 with SMTP id
+ a640c23a62f3a-a7245b6dc4bmr799923566b.12.1719490822798; Thu, 27 Jun 2024
+ 05:20:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240614163416.728752-1-yu.ma@intel.com> <20240622154904.3774273-1-yu.ma@intel.com>
+ <20240622154904.3774273-2-yu.ma@intel.com> <20240625115257.piu47hzjyw5qnsa6@quack3>
+ <20240625125309.y2gs4j5jr35kc4z5@quack3> <87a1279c-c5df-4f3b-936d-c9b8ed58f46e@intel.com>
+ <20240626115427.d3x7g3bf6hdemlnq@quack3> <690de703aeee089f86beca5cb90d3d43dcd7df56.camel@linux.intel.com>
+ <3d553b6571eaa878e4ce68898113d73c9c1ed87d.camel@linux.intel.com> <20240627120922.khxiy5xjxlnnyhiy@quack3>
+In-Reply-To: <20240627120922.khxiy5xjxlnnyhiy@quack3>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Thu, 27 Jun 2024 14:20:10 +0200
+Message-ID: <CAGudoHH3QuUfuD5aSGxTFhZqXzce6i1Be2XfEvfRKQ5qG8NDxg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] fs/file.c: add fast path in alloc_fd()
+To: Jan Kara <jack@suse.cz>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>, "Ma, Yu" <yu.ma@intel.com>, viro@zeniv.linux.org.uk, 
+	brauner@kernel.org, edumazet@google.com, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, pan.deng@intel.com, tianyou.li@intel.com, 
+	tim.c.chen@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add appropriate mappings of Soundwire ports of WSA8845 speaker.  This
-solves second (south) speaker sound distortions when playing audio.
+On Thu, Jun 27, 2024 at 2:09=E2=80=AFPM Jan Kara <jack@suse.cz> wrote:
+>
+> On Wed 26-06-24 09:52:50, Tim Chen wrote:
+> > On Wed, 2024-06-26 at 09:43 -0700, Tim Chen wrote:
+> > > On Wed, 2024-06-26 at 13:54 +0200, Jan Kara wrote:
+> > > >
+> > > >
+> > > > Indeed, thanks for correcting me! next_fd is just a lower bound for=
+ the
+> > > > first free fd.
+> > > >
+> > > > > The conditions
+> > > > > should either be like it is in patch or if (!start && !test_bit(0=
+,
+> > > > > fdt->full_fds_bits)), the latter should also have the bitmap load=
+ing cost,
+> > > > > but another point is that a bit in full_fds_bits represents 64 bi=
+ts in
+> > > > > open_fds, no matter fd >64 or not, full_fds_bits should be loaded=
+ any way,
+> > > > > maybe we can modify the condition to use full_fds_bits ?
+> > > >
+> > > > So maybe I'm wrong but I think the biggest benefit of your code com=
+pared to
+> > > > plain find_next_fd() is exactly in that we don't have to load full_=
+fds_bits
+> > > > into cache. So I'm afraid that using full_fds_bits in the condition=
+ would
+> > > > destroy your performance gains. Thinking about this with a fresh he=
+ad how
+> > > > about putting implementing your optimization like:
+> > > >
+> > > > --- a/fs/file.c
+> > > > +++ b/fs/file.c
+> > > > @@ -490,6 +490,20 @@ static unsigned int find_next_fd(struct fdtabl=
+e *fdt, unsigned int start)
+> > > >         unsigned int maxbit =3D maxfd / BITS_PER_LONG;
+> > > >         unsigned int bitbit =3D start / BITS_PER_LONG;
+> > > >
+> > > > +       /*
+> > > > +        * Optimistically search the first long of the open_fds bit=
+map. It
+> > > > +        * saves us from loading full_fds_bits into cache in the co=
+mmon case
+> > > > +        * and because BITS_PER_LONG > start >=3D files->next_fd, w=
+e have quite
+> > > > +        * a good chance there's a bit free in there.
+> > > > +        */
+> > > > +       if (start < BITS_PER_LONG) {
+> > > > +               unsigned int bit;
+> > > > +
+> > > > +               bit =3D find_next_zero_bit(fdt->open_fds, BITS_PER_=
+LONG, start);
+> > >
+> > > Say start is 31 (< BITS_PER_LONG)
+> > > bit found here could be 32 and greater than start.  Do we care if we =
+return bit > start?
+> >
+> > Sorry, I mean to say that we could find a bit like 30 that is less than
+> > start instead of the other way round.
+>
+> Well, I propose calling find_next_zero_bit() with offset set to 'start' s=
+o
+> it cannot possibly happen that the returned bit number is smaller than
+> start... But maybe I'm missing something?
+>
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+You gate it with " if (start < BITS_PER_LONG)" which only covers the
+small initital range, while I'm arguing this should work for any fd.
 
----
-
-Bindings:
-https://lore.kernel.org/all/20240626-port-map-v1-3-bd8987d2b332@linaro.org/
-
-Can be applied independently, if bindings are fine.
----
- arch/arm64/boot/dts/qcom/sm8550-qrd.dts | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sm8550-qrd.dts b/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
-index d27820fb5fc0..de40cb623c8c 100644
---- a/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
-@@ -935,6 +935,7 @@ north_spkr: speaker@0,0 {
- 		sound-name-prefix = "SpkrLeft";
- 		vdd-1p8-supply = <&vreg_l15b_1p8>;
- 		vdd-io-supply = <&vreg_l3g_1p2>;
-+		qcom,port-mapping = <1 2 3 7 10 13>;
- 	};
- 
- 	/* WSA8845, Speaker South */
-@@ -948,6 +949,7 @@ south_spkr: speaker@0,1 {
- 		sound-name-prefix = "SpkrRight";
- 		vdd-1p8-supply = <&vreg_l15b_1p8>;
- 		vdd-io-supply = <&vreg_l3g_1p2>;
-+		qcom,port-mapping = <4 5 6 7 11 13>;
- 	};
- };
- 
--- 
-2.43.0
-
+--=20
+Mateusz Guzik <mjguzik gmail.com>
