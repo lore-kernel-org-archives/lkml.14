@@ -1,106 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CCD9197A90;
-	Thu, 27 Jun 2024 15:16:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2805715216F;
+	Thu, 27 Jun 2024 15:16:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719501395; cv=none; b=ji6Hd0dfzW+MNjB85zEHxbffwWSf/YSInrnhvAHuzjihxi2o/K7HDCqIhMYyKQQgmSnX0cKPIHeC2dG1z/Kq0GaRpAtyiXr5lzGYmA50mWjx5/bh1QA0g1wHRXY0Y1BtK6+04FwyFJuxaXSjSyuu+f7aGtTAryu73Pg77GRsPl0=
+	t=1719501415; cv=none; b=eFNHcnHfAIOm6fQxNxx2RGEQM745u/K3pSHVZyY39JQ2wkG/20Pj2xt/xZhA/y1XJgXGOnZss2tZFjl8Zts/0ifFeA515AZJlXkaeBWLoY+gmLv5gkypUzPCbzkCp67nQaCtVtuzDXdMzEK4qznaVtAkYCj9NwcjrSEF48JBE8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719501395; c=relaxed/simple;
-	bh=wjjEufZ41AUoOLd05jyoxLk3rwtu6jIvnI98K2hPGkg=;
+	s=arc-20240116; t=1719501415; c=relaxed/simple;
+	bh=3GozPIpP9jAx9el91ibI+vx4flekmq46sTMmK/4U6m0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ntUNMfyeS1gJfHpwo8hFM7EFDieZuORGLevYZ7jz/wkAl00r5v/dV1krphtTxfRrjhWO9cjgzGjG43Kve4KDzNTr8BK+G7WB0XflEQWoCFD6Xt4lp/yxJ17ejj5BRI+prvNRtgEDmf/ua+17S/23OGCX7k9i5SfzrKVLliATCPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XpdSuyX2; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=MFcdKmA7WSvIwpK3rbZFhPtrtp0vVm437kaTdi+9SBMuMIiu7yW6Q/okiHf9zWmut8zvlw5hPSNOW3feWGKzIH2A+iC4KCGYm+84DvxRR4743ghCD53KEhl2Sjd+O0TY6aV+QaL0YAPZv+/JZVRdaoGMrav6OPw8zaaOLDqoO+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DtMUsgH2; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XpdSuyX2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BA09C2BBFC;
-	Thu, 27 Jun 2024 15:16:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719501394;
-	bh=wjjEufZ41AUoOLd05jyoxLk3rwtu6jIvnI98K2hPGkg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XpdSuyX2YlDJ2Tb7sFhdgY0lyTbfLDtzddZ4PVa5SLyWaJSI+TfFnV3xipBsEuFs8
-	 EuXn4C+338qYjvdEwWadLta0PlgyFd4uN8QoR1eWudm0eIQuGyo4i8A+eqDBPAmT+P
-	 H49er30u1jRBJ5oUYrnOx0AOoLSecdUBN7fjBROj0nqqCmry273f1MC102y28rr7CJ
-	 xl0q+BOgxdAMPUdkouaDHkB/5WtaZIAR0IDAUYVpbx4ZzcbOhbIh24h+OoW0dt37kS
-	 03RcbdqOrcZgzNLO78PSux+ilDex+jYauGMA2Krd5FgPXVdTt5sYh3utiNwiJave5I
-	 nATmbqsTniCTQ==
-Date: Thu, 27 Jun 2024 17:16:29 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Cc: Ian Kent <ikent@redhat.com>, Matthew Wilcox <willy@infradead.org>, 
-	Lucas Karpinski <lkarpins@redhat.com>, viro@zeniv.linux.org.uk, raven@themaw.net, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Alexander Larsson <alexl@redhat.com>, Eric Chanudet <echanude@redhat.com>
-Subject: Re: [RFC v3 1/1] fs/namespace: remove RCU sync for MNT_DETACH umount
-Message-ID: <20240627-abkassieren-grinsen-6ce528fe5526@brauner>
-References: <20240626201129.272750-2-lkarpins@redhat.com>
- <20240626201129.272750-3-lkarpins@redhat.com>
- <Znx-WGU5Wx6RaJyD@casper.infradead.org>
- <50512ec3-da6d-4140-9659-58e0514a4970@redhat.com>
- <20240627115418.lcnpctgailhlaffc@quack3>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DtMUsgH2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719501415; x=1751037415;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=3GozPIpP9jAx9el91ibI+vx4flekmq46sTMmK/4U6m0=;
+  b=DtMUsgH2GvJcVoo3xam8Tj4w9i6qM0a00FEAYWlESYlshfDne2ZaYTFA
+   ASjNbU72BlWl8Grq3qCvO71iSADi0/GOgxz1gO2cAWkcQvQoyLLBjxZ+R
+   zAGaof+ZvEWsb9ttptgWUIgQLNS8r/hIjIwoSRklA7TolXEwBvijw6jCX
+   /oPLKafCMZIDr3VdJcOComu3WSjjtQ4y6R+t9f7T4fcGfUE2KC8L2fv1R
+   f6a5eI6XJ7RuWm0sQAVoclSIyiku0gypusNH4S4wGZuUt42BjATPUZWoX
+   2p683EMrwr4bnhYm6t61uAiiq2+8ln6j30kgIZkCFzt3ODw14CUvFO2Xd
+   Q==;
+X-CSE-ConnectionGUID: ffg1S4zQSmKAIvXw0ySyNg==
+X-CSE-MsgGUID: cyV3Vh+/RLG6JAPab249iw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="16469949"
+X-IronPort-AV: E=Sophos;i="6.09,166,1716274800"; 
+   d="scan'208";a="16469949"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 08:16:54 -0700
+X-CSE-ConnectionGUID: kDj9fzqvTfCF4dhc72knZA==
+X-CSE-MsgGUID: 9kmkGbpiQuq+VPsyOAnhZg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,166,1716274800"; 
+   d="scan'208";a="44236881"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 08:16:53 -0700
+Date: Thu, 27 Jun 2024 08:22:59 -0700
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: Brice Goglin <brice.goglin@gmail.com>
+Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: Re: [PATCH 0/9] Add CPU-type to topology
+Message-ID: <20240627152259.GB5201@ranerica-svr.sc.intel.com>
+References: <20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com>
+ <8d757ea3-87a3-4663-ac76-66b04e33e6b3@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240627115418.lcnpctgailhlaffc@quack3>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8d757ea3-87a3-4663-ac76-66b04e33e6b3@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-On Thu, Jun 27, 2024 at 01:54:18PM GMT, Jan Kara wrote:
-> On Thu 27-06-24 09:11:14, Ian Kent wrote:
-> > On 27/6/24 04:47, Matthew Wilcox wrote:
-> > > On Wed, Jun 26, 2024 at 04:07:49PM -0400, Lucas Karpinski wrote:
-> > > > +++ b/fs/namespace.c
-> > > > @@ -78,6 +78,7 @@ static struct kmem_cache *mnt_cache __ro_after_init;
-> > > >   static DECLARE_RWSEM(namespace_sem);
-> > > >   static HLIST_HEAD(unmounted);	/* protected by namespace_sem */
-> > > >   static LIST_HEAD(ex_mountpoints); /* protected by namespace_sem */
-> > > > +static bool lazy_unlock = false; /* protected by namespace_sem */
-> > > That's a pretty ugly way of doing it.  How about this?
-> > 
-> > Ha!
-> > 
-> > That was my original thought but I also didn't much like changing all the
-> > callers.
-> > 
-> > I don't really like the proliferation of these small helper functions either
-> > but if everyone
-> > 
-> > is happy to do this I think it's a great idea.
+On Tue, Jun 18, 2024 at 02:49:10PM +0200, Brice Goglin wrote:
+> Le 17/06/2024 à 11:11, Pawan Gupta a écrit :
+
+[...]
+ 
+> Hello
 > 
-> So I know you've suggested removing synchronize_rcu_expedited() call in
-> your comment to v2. But I wonder why is it safe? I *thought*
-> synchronize_rcu_expedited() is there to synchronize the dropping of the
-> last mnt reference (and maybe something else) - see the comment at the
-> beginning of mntput_no_expire() - and this change would break that?
+> Is there still a plan to expose this info in sysfs? Userspace currently uses
+> frequencies to guess which cores are E or P. Intel sent some patches several
+> years ago [1], but they got abandoned nowhere as far as I know.
 
-Yes. During umount mnt->mnt_ns will be set to NULL with namespace_sem
-and the mount seqlock held. mntput() doesn't acquire namespace_sem as
-that would get rather problematic during path lookup. It also elides
-lock_mount_hash() by looking at mnt->mnt_ns because that's set to NULL
-when a mount is actually unmounted.
+At the time of writing those patches an alternative interface emerged from
+perf sysfs. You can read the CPUs of a given type from
+/sys/devices/cpu_{core,atom}/cpus .
 
-So iirc synchronize_rcu_expedited() will ensure that it is actually the
-system call that shuts down all the mounts it put on the umounted list
-and not some other task that also called mntput() as that would cause
-pretty blatant EBUSY issues.
-
-So callers that come before mnt->mnt_ns = NULL simply return of course
-but callers that come after mnt->mnt_ns = NULL will acquire
-lock_mount_hash() _under_ rcu_read_lock(). These callers see an elevated
-reference count and thus simply return while namespace_lock()'s
-synchronize_rcu_expedited() prevents the system call from making
-progress.
-
-But I also don't see it working without risk even with MNT_DETACH. It
-still has potential to cause issues in userspace. Any program that
-always passes MNT_DETACH simply to ensure that even in the very rare
-case that a mount might still be busy is unmounted might now end up
-seeing increased EBUSY failures for mounts that didn't actually need to
-be unmounted with MNT_DETACH. In other words, this is only inocuous if
-userspace only uses MNT_DETACH for stuff they actually know is busy when
-they're trying to unmount. And I don't think that's the case.
+Yes, this is perf sysfs, but is not obvious from the name and has a list of
+CPUs. It meet the need, IMO.
