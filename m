@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC4CC19AD58;
-	Thu, 27 Jun 2024 17:50:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A4419B3DC;
+	Thu, 27 Jun 2024 17:50:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719510657; cv=none; b=rqpVxhQZcsTFedfYd4ok2dc4ud5wW4Q1QwPwNSLmabyu4aAwrmmWAl5FXTZLlAvq4LVcc9Q236ULyljuGIfcTiVYAAGMeAS6wZ5lMyb9C/iadm4OggWZ/4gWfa5GT8kIEHfHRK85GPhP8aghkmKXAXT8mERN8odMaEi+jnzsiN0=
+	t=1719510657; cv=none; b=V+k62c9Os+iPOfVePgEb93PLfRJEet8MkvrM9BbQD2OA8eTCSiVOsjEDyw0iDf0Ze5NivfRPlUFrTSSwTEp69Lbc/W/5JAxB2xMP6s10NEQN2jK158B1nNDwLeU5B0+T80ISjclkahKtth8lAJzoc/7DaeYRKVxlwwggeLsTzaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719510657; c=relaxed/simple;
-	bh=YUjyg0q4v3BZyzysolzPu/T8WS3EYTPzZ+otN37RtXA=;
+	bh=aEmY+usoEI0JCLbYcZGViK6r8rPMlyAeGBCWtdOs+Ig=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Nrb1GTlKXi9k+ztzpSU3FEjzHlfiqRQOM1vuRrmtUJHor55JRLA/BUfMv61GndYmXi55Vn2im1KrUVku5ykk0qYJRSmv3m4yvjDkXwuCHpRJuH+SxiIyjwc+bGa2lzfCu7LZexOAWM1Be0o+t4+eHCq6QWyrFkSaAiqczXUI5+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N2nrl5Ds; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=gvn0PIZno6auBrqdybHIGpt/sIjTmEI+wUd8yeTeRmuW9s+BKSSPt5BtfiONuqbbxln6+XT0sI1v2yGdJtEFNFkczgoeqSB+O7GxbAED4yJAMiSRI5BLP3vGZFbf5lw4Wu8f+C/XNleut00OyVrx/+ioZUjsHVDaQdEy7fqhOrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EGnPyufg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N2nrl5Ds"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C66C2C4AF0B;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EGnPyufg"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DD36EC4AF14;
 	Thu, 27 Jun 2024 17:50:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1719510656;
-	bh=YUjyg0q4v3BZyzysolzPu/T8WS3EYTPzZ+otN37RtXA=;
+	bh=aEmY+usoEI0JCLbYcZGViK6r8rPMlyAeGBCWtdOs+Ig=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=N2nrl5DseeenBGaeHfDLdEjo4/BG92v3NRt3x1NnXe6DxoxFD0JrT9SfThyrOF3qk
-	 fTexPLpWMIcX00TfMNpyR9FGFm2dRthpim4bB/WKcas0F6hF3u4Cyy59Lygl0I0Nte
-	 ImeWjAtKzA8sForbwTZ9YzyoTAlTwHlYGr9Q1DyDOPxl1sl9oGiaQQ7hipBe7NV8Nb
-	 8L8hr69PEUERGq2MXhshdyS4RqosypRU5mUVWfkoxX03fz7nMTbpgbBpfbQ5cRK85U
-	 pMfPII7jfFpCUW/fhA+4jTInUnnAxnDzIkazRxYJ02hQQa6xgOJRlaJa8fH/0AAxcL
-	 +5pRHMl3AuNuA==
+	b=EGnPyufgOJ4Y9Rs8F7kwwOdwhS+bQgguOfKrrJIZBbTa5uxnvZqznlBjrRpBCGBnV
+	 k5XP/3S35nI0Wu8/9U7JxPdgtTuf1vlM5OVvb5X/1u5ieZcOkP2Bz3LCE7q8wIDgdu
+	 YIZ5YJobggGuX84AsT/quvLa85blZ6oTzHmrltROmVr5jgyAJgamuJ5/2uT2dhfDFj
+	 Wb7KI9XgzhzRK0XLS9BngyYu3ww6sJM5iZFMqs8goXWI7Q92l2djZDm7UepQUnsJAq
+	 QmYWEBGfnUkv6ywkj7Ym5Nj7k4Gjb7Mzez0LwhNI3t0x/P60l9ybF4C7n0OAdpB/OM
+	 wdzAryF8DZTUA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 91B0FC433A2;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B415AC43443;
 	Thu, 27 Jun 2024 17:50:56 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,40 +37,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v3] riscv: dmi: Add SMBIOS/DMI support
+Subject: Re: [RESEND v4 0/2] dt-bindings: interrupt-controller: riscv,cpu-intc
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <171951065659.6762.4551986079431885211.git-patchwork-notify@kernel.org>
+ <171951065673.6762.2519132722674117186.git-patchwork-notify@kernel.org>
 Date: Thu, 27 Jun 2024 17:50:56 +0000
-References: <20240613065507.287577-1-haibo1.xu@intel.com>
-In-Reply-To: <20240613065507.287577-1-haibo1.xu@intel.com>
-To: Haibo Xu <haibo1.xu@intel.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-efi@vger.kernel.org, aou@eecs.berkeley.edu, atishp@rivosinc.com,
- palmer@dabbelt.com, paul.walmsley@sifive.com, xiaobo55x@gmail.com,
- ardb@kernel.org
+References: <20240615021507.122035-1-kanakshilledar@gmail.com>
+In-Reply-To: <20240615021507.122035-1-kanakshilledar@gmail.com>
+To: Kanak Shilledar <kanakshilledar@gmail.com>
+Cc: linux-riscv@lists.infradead.org, kanakshilledar111@protonmail.com,
+ tglx@linutronix.de, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ conor+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, samuel.holland@sifive.com,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ conor.dooley@microchip.com
 
 Hello:
 
-This patch was applied to riscv/linux.git (for-next)
+This series was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Thu, 13 Jun 2024 14:55:07 +0800 you wrote:
-> Enable the dmi driver for riscv which would allow access the
-> SMBIOS info through some userspace file(/sys/firmware/dmi/*).
+On Sat, 15 Jun 2024 07:45:02 +0530 you wrote:
+> This series of patches converts the RISC-V CPU interrupt controller to
+> the newer dt-schema binding.
 > 
-> The change was based on that of arm64 and has been verified
-> by dmidecode tool.
-> 
-> Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
-> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-> Reviewed-by: Atish Patra <atishp@rivosinc.com>
+> Patch 1:
+> This patch is currently at v4 as it has been previously rolled out.
+> Contains the bindings for the interrupt controller.
 > 
 > [...]
 
 Here is the summary with links:
-  - [v3] riscv: dmi: Add SMBIOS/DMI support
-    https://git.kernel.org/riscv/c/d6ecd188937f
+  - [RESEND,v4,1/2] dt-bindings: interrupt-controller: riscv,cpu-intc: convert to dtschema
+    https://git.kernel.org/riscv/c/9ff141042a62
+  - [RESEND,v4,2/2] dt-bindings: riscv: cpus: add ref to interrupt-controller
+    https://git.kernel.org/riscv/c/1f6e218859f1
 
 You are awesome, thank you!
 -- 
