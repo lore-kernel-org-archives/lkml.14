@@ -1,109 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1245A1865A
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 17:39:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6461865A
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 17:42:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719509995; cv=none; b=e17VYMzGiNb+j14cbznQouq/6+VcqJ9R90swM3/YwyGu7GDcyRH2Udxkj6PXzFP9nEazm+gJlkNNkm5XAG4RjUbort+wuzGRPzJG1JlLPu1YQVn1F+LJ0jDk5UR8HKur7tYWai90DmQlOxXwF4XrIVkqnN6HXBCb16yYmuwB8CU=
+	t=1719510142; cv=none; b=n1TarK/ISkEEMk/wGFMvHpRxIwISBUpGopJcyHHdGMRsJJpUBvoh27LB8wmbJKSzKSVN2RgqP7dxl5Kx71IdYL7+AKPyQX2bGn2DbaJCO9oDDolynSFEZIVeKvBkOziwEM5ZS8DRmKFWNkvuL7POJuzpCVZSkNWXfpPtNb40Shg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719509995; c=relaxed/simple;
-	bh=M1Pr/ccqxR64Qy5pX519WkVfLnUUaSq7Qjbum1LSRes=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mgMLMJCXEr0/5ObXLykPtjeLvfO4J9S52qKFPVDHoRFR0fJnkL+U4IxtOmYdKFDfS3kI/Ueu1gyBtmMBXxiSQ4DTu9FSyO14cOtT+N/RXV7DPGalo5gn3EkMDuNRisDq0CJtb1GPPmi7zUFYO8MacTvl1hmN9nIEpdBXgZF/EW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BIBGGjOv; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719510142; c=relaxed/simple;
+	bh=QWiCFle1OjlmoDLkJTUXa/Nbue5uZFbpxYfIHw4qoco=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=G9l28OYHB0WxJX4FEgmGhz5NCzaS8YVHuZK3lp758vjv5smk6XeqUXsE3fmcIvQoC2EmVQFekMJATbqTaxIAm/aNpzoyD9fQZCWYqn0qXB+WxcNIstd0hljeHv3C9WgtGo92XxV7g0PMFitvgyscrflL/YeD+OwSbvwFoWVUADw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bRAQV1Dp; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BIBGGjOv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719509993;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=34BYMyGoC6lX3CxmLrEw2DjPDGR7811PFr+ZC7aQ/ZU=;
-	b=BIBGGjOv82g28vIyG0Yi7R1mJiZcTWyw+j9AItF79U9oqtDV/bsj6g7RYbZFB2iw7SStaS
-	Rae4SVqQRGWOQ7d5xBUuofZ/LCEOml/vAYvFZCCJM8Y3BG++P5SnqUWN7GHJraxzQdaGgm
-	ZSGQO/B7POCAbUE4SswZ2phFMrO0U34=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-395-sTRvXhL3ML203UbvsHfRAA-1; Thu,
- 27 Jun 2024 13:39:49 -0400
-X-MC-Unique: sTRvXhL3ML203UbvsHfRAA-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9D9E2195608A;
-	Thu, 27 Jun 2024 17:39:46 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.18])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 5297819560AA;
-	Thu, 27 Jun 2024 17:39:41 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 27 Jun 2024 19:38:12 +0200 (CEST)
-Date: Thu, 27 Jun 2024 19:38:06 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Jiri Olsa <jolsa@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
-Subject: Re: [PATCH] LoongArch: uprobes: make
- UPROBE_SWBP_INSN/UPROBE_XOLBP_INSN constant
-Message-ID: <20240627173806.GC21813@redhat.com>
-References: <20240618194306.1577022-1-jolsa@kernel.org>
- <20240627160255.GA25374@redhat.com>
- <CAEf4BzZVmKjfQD1zKMDOD-Zc4pVp+EGgb8h2veg=bXe1Pjn_Uw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bRAQV1Dp"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-62f43c95de4so179783307b3.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 10:42:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1719510140; x=1720114940; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1sQpJMlhaOImbaZsmQPczRmnXse/xZ0ADeEMYCxzlHY=;
+        b=bRAQV1Dp5u5Adi3cLjCobR05EDS+7XtfTblwgoAQ6i0LcBITtl2aeHrQrK6R7gsqrU
+         nGoKGSCKkH7iE1905nRzgCDq7fxDRqVM5XfgQffNnxluFhMafO1kBlDPb65eGwCmQGuA
+         GCN0nkdv2HB+2kyW0I1B4SF71atzgayuRyAUVkPeUu1nrPZriuvch9r/gk1wb/Rj/qta
+         xg0apBKlYyGT8iwS4HhkB4ImrXR3+8KDhlg19rxa1HrXSqFnWV/AMXSJDVzwV9PpDKYp
+         YozyGDw5xHRPwaJXJwwaGU1WGxtaKvszww9E+pxr2sNP8QmHZC3S8tWjbBm9SFiPQno/
+         GjTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719510140; x=1720114940;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1sQpJMlhaOImbaZsmQPczRmnXse/xZ0ADeEMYCxzlHY=;
+        b=HMXVutHG+iR225DlE3KOB/KnZ+01C6vVkADdj06kMA03vdITjFrP4wlMdHIhQuBV3n
+         Vkp1uXC7t6kyiS5jDfotJQd/VbxpicUaaOVm9zYSYOMiMhy+muTwle/hh9kPndO7jkhQ
+         Uql7kBc3EO1m+xXjE3NKBt7sYTzuZ0SstjKe7B+Nayp9oPm6pq/lU54JlVkZwMKyp/ZZ
+         8uZY0YrZW1O42X4ayNReC54hOXujCNARXgjT+5LjAlgxsEVWN0NuYuXdBbaXR4qhB4/s
+         hH/C7FvWlXkanNfIx+g9wG8KfKNk96yXxjwJn+COlBro+o+wMOuWDJ0tWGfPsZVackmm
+         NV6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVQVXrAtCUsIySu7eGRF5Fbh+YGEXezqSPy9X7UyBO9867jBBqEJi4O2+yh2AX4HR1oEiCngEfSSKKJH30rYWb61SeIcUTGJZVllAqz
+X-Gm-Message-State: AOJu0Yzgj/6BB0RF3wX+CVwwAabn3RMFIIceK5xFy3c1k/QUExg+0gfV
+	8UxNrvitrVnOxpjAkylMm8jcUAsiKWOiwTZo0rOKP0RpMzK+1WHjpyovNptUeh5mkKTLVE3dPiA
+	1TQ==
+X-Google-Smtp-Source: AGHT+IE8qFFP1ajg6w4kSm8Qn4ro9HS/brjSiPL5I1EbZHI/6XKc4cVAGbMPmz4OZwpyYhZSw4GJu61Pw7M=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:690c:c16:b0:631:9b3b:525d with SMTP id
+ 00721157ae682-642997c4d57mr470617b3.4.1719510140198; Thu, 27 Jun 2024
+ 10:42:20 -0700 (PDT)
+Date: Thu, 27 Jun 2024 10:42:18 -0700
+In-Reply-To: <20240621204305.1730677-2-mlevitsk@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzZVmKjfQD1zKMDOD-Zc4pVp+EGgb8h2veg=bXe1Pjn_Uw@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Mime-Version: 1.0
+References: <20240621204305.1730677-1-mlevitsk@redhat.com> <20240621204305.1730677-2-mlevitsk@redhat.com>
+Message-ID: <Zn2ker_KZ7Fk-7W1@google.com>
+Subject: Re: [PATCH 1/1] KVM: selftests: pmu_counters_test: increase
+ robustness of LLC cache misses
+From: Sean Christopherson <seanjc@google.com>
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, 
+	linux-kselftest@vger.kernel.org, Shuah Khan <shuah@kernel.org>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On 06/27, Andrii Nakryiko wrote:
->
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+On Fri, Jun 21, 2024, Maxim Levitsky wrote:
+> Currently this test does a single CLFLUSH on its memory location
+> but due to speculative execution this might not cause LLC misses.
+> 
+> Instead, do a cache flush on each loop iteration to confuse the prediction
+> and make sure that cache misses always occur.
+> 
+> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+> ---
+>  .../selftests/kvm/x86_64/pmu_counters_test.c  | 20 +++++++++----------
+>  1 file changed, 9 insertions(+), 11 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c b/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c
+> index 96446134c00b7..ddc0b7e4a888e 100644
+> --- a/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c
+> @@ -14,8 +14,8 @@
+>   * instructions that are needed to set up the loop and then disabled the
+>   * counter.  1 CLFLUSH/CLFLUSHOPT/NOP, 1 MFENCE, 2 MOV, 2 XOR, 1 WRMSR.
+>   */
+> -#define NUM_EXTRA_INSNS		7
+> -#define NUM_INSNS_RETIRED	(NUM_BRANCHES + NUM_EXTRA_INSNS)
+> +#define NUM_EXTRA_INSNS		5
+> +#define NUM_INSNS_RETIRED	(NUM_BRANCHES * 2 + NUM_EXTRA_INSNS)
 
-Thanks!
+The comment above is stale.  I also think it's worth adding a macro to capture
+that the '2' comes from having two instructions in the loop body (three, if we
+keep the MFENCE).
 
-> > --- a/arch/loongarch/kernel/uprobes.c
-> > +++ b/arch/loongarch/kernel/uprobes.c
-> > @@ -7,6 +7,14 @@
-> >
-> >  #define UPROBE_TRAP_NR UINT_MAX
-> >
-> > +static __init int check_emit_break(void)
-> > +{
-> > +       BUG_ON(UPROBE_SWBP_INSN  != larch_insn_gen_break(BRK_UPROBE_BP));
-> > +       BUG_ON(UPROBE_XOLBP_INSN != larch_insn_gen_break(BRK_UPROBE_XOLBP));
-> > +       return 0;
-> > +}
-> > +arch_initcall(check_emit_break);
-> > +
->
-> I wouldn't even bother with this, but whatever.
+>  static uint8_t kvm_pmu_version;
+>  static bool kvm_has_perf_caps;
+> @@ -133,9 +133,8 @@ static void guest_assert_event_count(uint8_t idx,
+>   * doesn't need to be clobbered as the input value, @pmc_msr, is restored
+>   * before the end of the sequence.
+>   *
+> - * If CLFUSH{,OPT} is supported, flush the cacheline containing (at least) the
+> - * start of the loop to force LLC references and misses, i.e. to allow testing
+> - * that those events actually count.
+> + * If CLFUSH{,OPT} is supported, flush the cacheline containing the CLFUSH{,OPT}
+> + * instruction on each loop iteration to ensure that LLC cache misses happen.
+>   *
+>   * If forced emulation is enabled (and specified), force emulation on a subset
+>   * of the measured code to verify that KVM correctly emulates instructions and
+> @@ -145,10 +144,9 @@ static void guest_assert_event_count(uint8_t idx,
+>  #define GUEST_MEASURE_EVENT(_msr, _value, clflush, FEP)				\
+>  do {										\
+>  	__asm__ __volatile__("wrmsr\n\t"					\
+> -			     clflush "\n\t"					\
+> -			     "mfence\n\t"					\
 
-Agreed, this looks a bit ugly. I did this only because I can not test
-this (hopefully trivial) patch and the maintainers didn't reply.
+Based on your testing, it's probably ok to drop the mfence, but I don't see any
+reason to do so.  It's not like that mfence meaningfully affects the runtime, and
+anything easy/free we can do to avoid flaky tests is worth doing.
 
-If LoongArch boots at least once with this change, this run-time check
-can be removed.
+I'll post and apply a v2, with a prep patch to add a NUM_INSNS_PER_LOOP macro and
+keep the MFENCE (I'll be offline all of next week, and don't want to push anything
+to -next tomorrow, even though the risk of breaking anything is minimal).
 
-And just in case... I didn't dare to make a more "generic" change, but
-perhaps KPROBE_BP_INSN and KPROBE_SSTEPBP_INSN should be redefined the
-same way for micro-optimization. In this case __emit_break() should be
-probably moved into arch/loongarch/include/asm/inst.h.
-
-Oleg.
-
+> -			     "1: mov $" __stringify(NUM_BRANCHES) ", %%ecx\n\t"	\
+> -			     FEP "loop .\n\t"					\
+> +			     " mov $" __stringify(NUM_BRANCHES) ", %%ecx\n\t"	\
+> +			     "1: " clflush "\n\t"				\
+> +			     FEP "loop 1b\n\t"					\
+>  			     FEP "mov %%edi, %%ecx\n\t"				\
+>  			     FEP "xor %%eax, %%eax\n\t"				\
+>  			     FEP "xor %%edx, %%edx\n\t"				\
+> @@ -163,9 +161,9 @@ do {										\
+>  	wrmsr(pmc_msr, 0);							\
+>  										\
+>  	if (this_cpu_has(X86_FEATURE_CLFLUSHOPT))				\
+> -		GUEST_MEASURE_EVENT(_ctrl_msr, _value, "clflushopt 1f", FEP);	\
+> +		GUEST_MEASURE_EVENT(_ctrl_msr, _value, "clflushopt .", FEP);	\
+>  	else if (this_cpu_has(X86_FEATURE_CLFLUSH))				\
+> -		GUEST_MEASURE_EVENT(_ctrl_msr, _value, "clflush 1f", FEP);	\
+> +		GUEST_MEASURE_EVENT(_ctrl_msr, _value, "clflush .", FEP);	\
+>  	else									\
+>  		GUEST_MEASURE_EVENT(_ctrl_msr, _value, "nop", FEP);		\
+>  										\
+> -- 
+> 2.26.3
+> 
