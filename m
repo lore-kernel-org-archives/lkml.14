@@ -1,88 +1,126 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D53514F12C
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 11:56:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6043A154BFC
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 11:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719489366; cv=none; b=hEB67XF2qwaaHEVGSxNcL4rJgrUYlRp81iFu/52r4PgrezAHxR4zxH8sR2VjhcPugdGspfvNSCFN1O8wkeh/9yUeGrI2G873ZV6z2+iRa+1isiuXBD7ShAoB35Ghrh3Lhz4Yj+rhyQZwR1+Hc5ySQBgN8Mp6FQP304DOKfpdq4s=
+	t=1719489367; cv=none; b=WKlMpTBEl8I1k1oCaZ1LMVJ3qecCBOhfdw9uYOh7uZv90stxgomOUThjzby5DhDiOIwXA7YQr+oYqWjBv7Zi/gs/IpvWGrrIloZHdMpwvb6pHvLlUzxdosgcBHGyEYOOSH5aLz6LL+8r/Zdo9m4MH3whkU9zwpVCKOlY9x8MV+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719489366; c=relaxed/simple;
-	bh=FYwN9+WXxNL0s8JGZrDOOlC0+Oy/VpiVqU6F01gXKwY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gu8RVZHIZJ7utm8sEJN5oMkUkV1lrllQf8jyDL5g27YclhesiSnIgDppIrr3jSs2MxYwQWv2OgbJ1I4gUYS0IrEZxvUSLNVMmJpMRMmvZVACW/3RCiDm4xw0aaJ7t8I06MCY2g4pvT6u53DDX5t0fPoiwfi6iIbmyad7fx1x464=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=infogain.com; spf=fail smtp.mailfrom=infogain.com; dkim=pass (2048-bit key) header.d=infogain-com.20230601.gappssmtp.com header.i=@infogain-com.20230601.gappssmtp.com header.b=3ExhrygD; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=infogain.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=infogain.com
+	s=arc-20240116; t=1719489367; c=relaxed/simple;
+	bh=dUSDrgAtHsqrMBMVwu3TID32cVpjInOWsGks5FuWKtk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=AV+iljRGAWX/cHgPaGLlgERdMmyV7bXoiur+h03L9+4En9hvYwDNpkN9yhQ6WXvXtJidMy0seNRDVOgrxZvBfR9ODU/iOyXk711B2MR1Rmh7CJZu5nFcJwXWNet3ZCifjEIgmHa0LVLU96aN2aKtNCH4XhgyV5vpNBOK7xEp0sM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PH6EDQxL; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infogain-com.20230601.gappssmtp.com header.i=@infogain-com.20230601.gappssmtp.com header.b="3ExhrygD"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52ce6c93103so5780764e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 04:56:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PH6EDQxL"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-42563a9fa58so6838025e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 04:56:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=infogain-com.20230601.gappssmtp.com; s=20230601; t=1719489360; x=1720094160; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FYwN9+WXxNL0s8JGZrDOOlC0+Oy/VpiVqU6F01gXKwY=;
-        b=3ExhrygDHAe3ZViPQGR8GKO/CNpSx7vvhN6oSw4yhzEFiBAvglmdNhd3tEr4Zyp8vd
-         5HJlrIVfa8yCHDae2JmFxExJ9MKwKRNv2UNCzArhzyTfF2hUoAcNKGJJ3MsJPyBq48Nn
-         kiaf7KKrfwtfi3g8HPHUHYdvH3ErbxCAnq2F8AQqynbftHdtdjoqoeMRwnkIoAHm9zf8
-         zk/GVeE5rzRBnxKlKjMo+nFWUwMchFCneSpVBcsF+sJbggoCrfLXOFGxAVKVdMdQMfnr
-         BaGMSrihD8K5f1zgqclrEYy6Cb8Bw1w9KpoKLNJJjuePbM515qHcHtMYlx0+c3vxt2uP
-         ExOw==
+        d=linaro.org; s=google; t=1719489364; x=1720094164; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=C8PKRIjUjJvRpKUO3o64Ez7TG7JmfxLlBEHlJ45a3zY=;
+        b=PH6EDQxLTcxGM3sPn8xsNhYjHy0y/L/pEw/+x4SRv00k/xeac/cfyvw85tFbhTBxcP
+         QdHawqIvgeYdTtz6KCesI2jnspq5r0tcBu35tDVVe7GuzREFyjZFbpapXvn8NNA0x3x1
+         qdJpxbwhskH34G7f1Qnl/ldf0SIIhVzxWlWA1OmIDIqDQhOYccGbhFUuOOKxD/fYBNgK
+         QqCuj9ZlefYRKSeCqDhp0LjOoca/UiSQ2Svl3kwuQIoJCJsYB6qDHcROCNDoM78OMlS2
+         VJ/YsxEwqUhute5nyBl1VL5EOjD8dduXbHrFC+Dp+gZv5XEdlTYUvMZxs7z0y+clzv7e
+         Xd9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719489360; x=1720094160;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1719489364; x=1720094164;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FYwN9+WXxNL0s8JGZrDOOlC0+Oy/VpiVqU6F01gXKwY=;
-        b=IpDizEMzQfzGTy2eUVqiTbPlI4G6evixbnfvfH3FF/rlRjrd1ddRPVA69ftIIcHKTn
-         1nPAe2r+haXsyTBiGKr2ULWUeAWoeCRIkTSlomutR+DB0JJ14eB6R9RgpHbtJ+3JyUft
-         tYhDM/OtkjZMTNGQIx4HWWldcLAq21cg5mUp4JJmErkD8TIJSIEDMnPpfGnYxPUrNGX1
-         B0TufSaUw1zMk25nxvGH7bO/iwnm9qOCnfdD5r2dfZbYD5E2BM82Hzs8j+P+czdX8lVQ
-         W3T8PPXagjGbebDj5ahSEb3CdmDESCQgObLS9ae/AwcecNjjXg6M7ta1Kp2uRl0c8YZo
-         Tjow==
-X-Forwarded-Encrypted: i=1; AJvYcCUqhNn0RA8YJOHoeyKwtE8ieeN+nnTDfRTB4sTHxt/d1XjetTlcA0W3dR4ovyh0qDozTSxd94xqMV/VffmIvWRhLZIZTbiZzEiNkejA
-X-Gm-Message-State: AOJu0Yxyg2WPomCrNWDRE/aXM8mpF2Fu+cK8CSDuGq5qaPWHUltP5c9k
-	6rX/ezX1RQUXbKfcKGPhyUuiqPMlYfjh3jM/Hdm8WxJ2GL7ZXxb9/A9kPu1T8fQjSsURctH1ZLl
-	1
-X-Google-Smtp-Source: AGHT+IE5dEqi32o555lHsYH6cLbWsYyak8HFjN733ejp92fah5sVWgpO97Hsp6G9Neyybv3KzqjyMg==
-X-Received: by 2002:a05:6512:324a:b0:52c:deea:57cb with SMTP id 2adb3069b0e04-52ce182bccamr9414630e87.3.1719489360229;
-        Thu, 27 Jun 2024 04:56:00 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:a31a:e140:9480:20a0:e0ea:447a:fdd3])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a729d779773sm52072066b.103.2024.06.27.04.55.58
+        bh=C8PKRIjUjJvRpKUO3o64Ez7TG7JmfxLlBEHlJ45a3zY=;
+        b=uuX0dXi5F4OzdIklYxHdzMSxpyoal4JMeawqxFtunizrXhp0vPmQ5xAEQtWJ/2XduH
+         pLZetJd7POwVgV+WBMDdy2kf8inOiqiUmEoiCbt2yKJ977jiZ2ztctbs/DvPpFV4N6pr
+         F2kc89wYoKyntSGkdz6SCYVUNmLsUAw1w3nNsnvaeQx8fORdSOvmw6e2J0gA+voJB4hp
+         37KyV7AcvoGzXyTWH7XPwBs9Xyxx6KGnBN2mHrVn4u4WuRJDe6HmViC7l+7CgQAQG0V5
+         C4+lXSbQmMpONp2G5Hhik86N/WMDhxG1hac78bxclMDUUv6Yg9S/mg6XAqObjvPTebbA
+         ewbw==
+X-Forwarded-Encrypted: i=1; AJvYcCVKrl1X+Yz7SqUJuEXE6eMFYcUicfvlZWhzsiYZzQ1YcIKeKkNqJlAN6HDvokiCjTsBcsfoaWSN3tktXLM0Th0AMzl6B0Av4JsRTLf1
+X-Gm-Message-State: AOJu0YyC37rSaznGWnHfppF/IQWuu6uf1gLuCQ+fGmc9FnMsW4hu16N8
+	LtHYuSLgYdDh33DjlyVN0NkAaaQ41zfLWzZqVXUGNjzMKImNBgeW2RomI4x6KUg=
+X-Google-Smtp-Source: AGHT+IHBbWux1XK3iRVshTsRxxXviYQma5KbR0jw+TjRRrgK4sLvfpFamoLeU0YCU0X6iuVK/eCNOQ==
+X-Received: by 2002:a05:600c:1789:b0:424:a403:565f with SMTP id 5b1f17b1804b1-424a4035701mr51778595e9.11.1719489363863;
+        Thu, 27 Jun 2024 04:56:03 -0700 (PDT)
+Received: from [192.168.1.195] ([5.133.47.210])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3674369980asm1597552f8f.80.2024.06.27.04.56.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 04:55:59 -0700 (PDT)
-From: Michal Switala <michal.switala@infogain.com>
-To: kalachev@swemel.ru
-Cc: davem@davemloft.net,
-	kuba@kernel.org,
-	kuznet@ms2.inr.ac.ru,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	syzbot+e738404dcd14b620923c@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com,
-	yoshfuji@linux-ipv6.org
-Subject: Progress in ticket
-Date: Thu, 27 Jun 2024 13:55:44 +0200
-Message-ID: <20240627115544.1090671-1-michal.switala@infogain.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <ZnWSHbkV6qVy1KHd@ural>
-References: <ZnWSHbkV6qVy1KHd@ural>
+        Thu, 27 Jun 2024 04:56:02 -0700 (PDT)
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Date: Thu, 27 Jun 2024 12:55:20 +0100
+Subject: [PATCH 4/6] ASoC: codecs: wsa884x: parse port-mapping information
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240626-port-map-v1-4-bd8987d2b332@linaro.org>
+References: <20240626-port-map-v1-0-bd8987d2b332@linaro.org>
+In-Reply-To: <20240626-port-map-v1-0-bd8987d2b332@linaro.org>
+To: Banajit Goswami <bgoswami@quicinc.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, 
+ Neil Armstrong <neil.armstrong@linaro.org>, alsa-devel@alsa-project.org, 
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1132;
+ i=srinivas.kandagatla@linaro.org; h=from:subject:message-id;
+ bh=dUSDrgAtHsqrMBMVwu3TID32cVpjInOWsGks5FuWKtk=;
+ b=owEBbQGS/pANAwAKAXqh/VnHNFU3AcsmYgBmfVNNx5Keb8/2UTS2PdI7G4dwNTqMZW5WTi47u
+ +Gyoboi9hKJATMEAAEKAB0WIQQi509axvzi9vce3Y16of1ZxzRVNwUCZn1TTQAKCRB6of1ZxzRV
+ N+SWB/9vQ7yE+tHfTCFxUmw7TEKD+173QS/8VEoVYvSpK0ZvixgEnUmeHsfZVfik5aauwyZi4qy
+ EuwBCYrGkJt8e4RCsPkTC923sD43Sryur5818zRXs2x+3qzm9dKlVhLZzEUMl7W0FSA1WRikR5U
+ 2YicmmmHE61u0snF1GwA68kS43KHDEcxlJzQ09O4MYGMCJ3YA/LYaNCQkSHVYEemYgdDD1ZvSrt
+ xqFqvcy+ivl6e230dGVSNO+GPHVAXnLUk6rRHUCCoNYku99GIxThaYleKR6/HKsn5dbRNAjisWB
+ 4M3vKwa9Wr41gtNrGaBQCdKeU1t4B5vGi7iyYUCwHg5RSg5x
+X-Developer-Key: i=srinivas.kandagatla@linaro.org; a=openpgp;
+ fpr=ED6472765AB36EC43B3EF97AD77E3FC0562560D6
 
-Hello,
+Add support to parse static master port map information from device tree.
+This is required for correct port mapping between soundwire device and
+master ports.
 
-I am currently looking at this bug and checked your reproduction.
-Unfortunately, it doesn's set xfrm transformations in the same way as
-syz reproducer. The effect is that in xfrm_lookup_with_ifid, the packet goes to
-the nopol section instead of notransform as in the original.
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ sound/soc/codecs/wsa884x.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Regards
-Michal
+diff --git a/sound/soc/codecs/wsa884x.c b/sound/soc/codecs/wsa884x.c
+index a9767ef0e39d..72ff71bfb827 100644
+--- a/sound/soc/codecs/wsa884x.c
++++ b/sound/soc/codecs/wsa884x.c
+@@ -1887,6 +1887,14 @@ static int wsa884x_probe(struct sdw_slave *pdev,
+ 	wsa884x->sconfig.direction = SDW_DATA_DIR_RX;
+ 	wsa884x->sconfig.type = SDW_STREAM_PDM;
+ 
++	/**
++	 * Port map index starts with 0, however the data port for this codec
++	 * are from index 1
++	 */
++	if (of_property_read_u32_array(dev->of_node, "qcom,port-mapping", &pdev->m_port_map[1],
++					WSA884X_MAX_SWR_PORTS))
++		dev_info(dev, "Static Port mapping not specified\n");
++
+ 	pdev->prop.sink_ports = GENMASK(WSA884X_MAX_SWR_PORTS, 0);
+ 	pdev->prop.simple_clk_stop_capable = true;
+ 	pdev->prop.sink_dpn_prop = wsa884x_sink_dpn_prop;
+
+-- 
+2.25.1
+
