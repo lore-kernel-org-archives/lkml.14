@@ -1,136 +1,175 @@
-Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E6BA4C3C3
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 07:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA712482F6;
+	Thu, 27 Jun 2024 07:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719472979; cv=none; b=p9ebNBmr/FcApJzQWVOlqI/donZ6OmDe4creNYnbgAb6Gz324Cbx1AYhkW7/SfWkCfTgbkQwzgLI55AwgaXfwdJEsOpliH9ewmtmWI5NuQlHA/gNGBQMdnmRXvvNJiOOnfGPdf2wilCuzgHOlZLIjDPtEh1X47VE5BbsmLIQeLo=
+	t=1719473027; cv=none; b=tVU9ajN7GrtNI/JH8bRMhxqbMSzr+Ni2kv76d37psY8Fozm5cTxnWqIYGpPkVZ6cLIUgsclB/PZvdktgLuiRJiT3KbqK2+QTZx8Hf+rzJmDvTu2OZ291DfACvpGPGM6qS4VmgjPU9t79BeR6XZnsLmkmVsNEbxBNa4pyA7ZH7p0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719472979; c=relaxed/simple;
-	bh=9Xl0Rl3PAyn7vH900ginCE5IOyjIAOhyTagO/dBh9RQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QyoRSK/Rm7Y1NTRBPIVOHLahFv9hMMWtMGMFeORyEWKjh5MA4r+EOQ7vq8//7s/tFqb1FVn5y4hOamJpi2Jwt2wiouOfcnqFeyzYvY7+VLwT0Wi9Gy2kLxDmQktP1aUHildSYbWd84LcA6AT1a87Ql3BuYyVcrRsw7Vvg8i7DZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-	by vmicros1.altlinux.org (Postfix) with ESMTP id 574DD72C8CC;
-	Thu, 27 Jun 2024 10:14:22 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-	id 4DCDF7CCB3C; Thu, 27 Jun 2024 10:14:22 +0300 (IDT)
-Date: Thu, 27 Jun 2024 10:14:22 +0300
-From: "Dmitry V. Levin" <ldv@strace.io>
-To: Celeste Liu <coelacanthushex@gmail.com>
-Cc: Palmer Dabbelt <palmer@rivosinc.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
-	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Andreas Schwab <schwab@suse.de>,
-	David Laight <David.Laight@ACULAB.COM>,
-	Felix Yan <felixonmars@archlinux.org>,
-	Ruizhe Pan <c141028@gmail.com>,
-	Shiqi Zhang <shiqi@isrc.iscas.ac.cn>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	"Ivan A. Melnikov" <iv@altlinux.org>
-Subject: Re: [PATCH v5] riscv: entry: set a0 = -ENOSYS only when syscall != -1
-Message-ID: <20240627071422.GA2626@altlinux.org>
-References: <20230801141607.435192-1-CoelacanthusHex@gmail.com>
+	s=arc-20240116; t=1719473027; c=relaxed/simple;
+	bh=GOh/cH6/r/eNXGbISTWzC6NNL+2UhJuov5Tbid9lxtA=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PsanQB5I+EJZ9nTfuvKSnNojGIbXmMxUKaK4V0ZJpNP2Q1u8CreKy/0GNg8sLoIJsLN2SnGtMwZjj6ZocvXMSKuDx0lpQcFI3JrH0Q4Crm0kaqrBAhgzLqhTDhNQzqj+/CdgVqZgwv9wbPgiJeDLPfrQ+i5bIO5/ifspPdkArEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OQ4J/YP5; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OQ4J/YP5"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45QLccCg016938;
+	Thu, 27 Jun 2024 07:23:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=cXE3pGdxpHYpYuaQiyy6Y5lE
+	6iV5vehOUqJ9RtaCnxY=; b=OQ4J/YP5MSYTl6lIrUPbafh7UZ4iEfznTqHUtCJ2
+	H55OzGvEgqQjS+Zs+PhwJkpNQAXO9BDaecYZvEVt/NTRZQ88hjFkEaeDFo7uQupl
+	KKBGayy73TpQubODmVbJaRGE1c8x8mLpiKc1HlouL6GZ9C2LQ09WOOHwK1cXo8px
+	fb2B+b5xCx3OiBN0wRtiP1TQJ0xwcq8C+X/CDJANam5zuovKVrQNoX+F6pHi0oyt
+	tRgVbhikYrGQDDRfmrn72+/8r3Fj82PfXRBUD74s5sVwmDT/mNY/OTjY47D2/F9E
+	yO/yyhgWaobIBM2d/q/anSFt90KJt1U2CyuXymsj79u2CA==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ywnjs35ew-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Jun 2024 07:23:30 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45R7NTPI023177
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Jun 2024 07:23:29 GMT
+Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 27 Jun 2024 00:23:22 -0700
+Date: Thu, 27 Jun 2024 12:53:18 +0530
+From: Varadarajan Narayanan <quic_varada@quicinc.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <angelogioacchino.delregno@collabora.com>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <ilia.lin@kernel.org>, <rafael@kernel.org>,
+        <viresh.kumar@linaro.org>, <ulf.hansson@linaro.org>,
+        <quic_sibis@quicinc.com>, <otto.pflueger@abscue.de>,
+        <neil.armstrong@linaro.org>, <luca@z3ntu.xyz>, <abel.vesa@linaro.org>,
+        <danila@jiaxyga.com>, <quic_ipkumar@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH v3 8/9] soc: qcom: cpr3: Add IPQ9574 definitions
+Message-ID: <Zn0TZiIDQ9W/ttox@hu-varada-blr.qualcomm.com>
+References: <20240626104002.420535-1-quic_varada@quicinc.com>
+ <20240626104002.420535-9-quic_varada@quicinc.com>
+ <txid2b47zhnuknz35xaosfctuojrnrskcjehhqmyqubuxdimqj@7q7pzxlavk6k>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230801141607.435192-1-CoelacanthusHex@gmail.com>
+In-Reply-To: <txid2b47zhnuknz35xaosfctuojrnrskcjehhqmyqubuxdimqj@7q7pzxlavk6k>
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: um9BVXflAiB9fiHUEXGPDtfhOuhGlzp5
+X-Proofpoint-ORIG-GUID: um9BVXflAiB9fiHUEXGPDtfhOuhGlzp5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-27_03,2024-06-25_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ clxscore=1015 mlxscore=0 suspectscore=0 adultscore=0 mlxlogscore=999
+ impostorscore=0 bulkscore=0 malwarescore=0 spamscore=0 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406270054
 
-Hi,
+On Wed, Jun 26, 2024 at 09:27:53PM +0300, Dmitry Baryshkov wrote:
+> On Wed, Jun 26, 2024 at 04:10:01PM GMT, Varadarajan Narayanan wrote:
+> > From: Praveenkumar I <quic_ipkumar@quicinc.com>
+> >
+> > Add thread, scaling factor, CPR descriptor defines to enable CPR
+> > on IPQ9574.
+> >
+> > Signed-off-by: Praveenkumar I <quic_ipkumar@quicinc.com>
+> > Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+> > ---
+> > v3: Fix patch author
+> >     Included below information in cover letter
+> > v2: Fix Signed-off-by order
+> > Depends:
+> > 	[1] https://lore.kernel.org/lkml/20230217-topic-cpr3h-v14-0-9fd23241493d@linaro.org/T/
+> > 	[2] https://github.com/quic-varada/cpr/commits/konrad/
+> > ---
+> >  drivers/pmdomain/qcom/cpr3.c | 137 +++++++++++++++++++++++++++++++++++
+> >  1 file changed, 137 insertions(+)
+> >
+> > diff --git a/drivers/pmdomain/qcom/cpr3.c b/drivers/pmdomain/qcom/cpr3.c
+> > index c28028be50d8..66c8a4bd9adc 100644
+> > --- a/drivers/pmdomain/qcom/cpr3.c
+> > +++ b/drivers/pmdomain/qcom/cpr3.c
+>
+> > +
+> > +static const struct cpr_desc ipq9574_cpr_desc = {
+> > +	.cpr_type = CTRL_TYPE_CPR4,
+>
+> So, is it CPR4 or CPRh?
 
-On Tue, Aug 01, 2023 at 10:15:16PM +0800, Celeste Liu wrote:
-> When we test seccomp with 6.4 kernel, we found errno has wrong value.
-> If we deny NETLINK_AUDIT with EAFNOSUPPORT, after f0bddf50586d, we will
-> get ENOSYS instead. We got same result with commit 9c2598d43510 ("riscv:
-> entry: Save a0 prior syscall_enter_from_user_mode()").
-> 
-> After analysing code, we think that regs->a0 = -ENOSYS should only be
-> executed when syscall != -1. In __seccomp_filter, when seccomp rejected
-> this syscall with specified errno, they will set a0 to return number as
-> syscall ABI, and then return -1. This return number is finally pass as
-> return number of syscall_enter_from_user_mode, and then is compared with
-> NR_syscalls after converted to ulong (so it will be ULONG_MAX). The
-> condition syscall < NR_syscalls will always be false, so regs->a0 = -ENOSYS
-> is always executed. It covered a0 set by seccomp, so we always get
-> ENOSYS when match seccomp RET_ERRNO rule.
-> 
-> Fixes: f0bddf50586d ("riscv: entry: Convert to generic entry")
-> Reported-by: Felix Yan <felixonmars@archlinux.org>
-> Co-developed-by: Ruizhe Pan <c141028@gmail.com>
-> Signed-off-by: Ruizhe Pan <c141028@gmail.com>
-> Co-developed-by: Shiqi Zhang <shiqi@isrc.iscas.ac.cn>
-> Signed-off-by: Shiqi Zhang <shiqi@isrc.iscas.ac.cn>
-> Signed-off-by: Celeste Liu <CoelacanthusHex@gmail.com>
-> Tested-by: Felix Yan <felixonmars@archlinux.org>
-> Tested-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-> Reviewed-by: Björn Töpel <bjorn@rivosinc.com>
-> Reviewed-by: Guo Ren <guoren@kernel.org>
-> ---
-> 
-> v4 -> v5: add Tested-by Emil Renner Berthing <emil.renner.berthing@canonical.com>
-> v3 -> v4: use long instead of ulong to reduce type cast and avoid
->           implementation-defined behavior, and make the judgment of syscall
->           invalid more explicit
-> v2 -> v3: use if-statement instead of set default value,
->           clarify the type of syscall
-> v1 -> v2: added explanation on why always got ENOSYS
-> 
->  arch/riscv/kernel/traps.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-> index f910dfccbf5d2..729f79c97e2bf 100644
-> --- a/arch/riscv/kernel/traps.c
-> +++ b/arch/riscv/kernel/traps.c
-> @@ -297,7 +297,7 @@ asmlinkage __visible __trap_section void do_trap_break(struct pt_regs *regs)
->  asmlinkage __visible __trap_section void do_trap_ecall_u(struct pt_regs *regs)
->  {
->  	if (user_mode(regs)) {
-> -		ulong syscall = regs->a7;
-> +		long syscall = regs->a7;
->  
->  		regs->epc += 4;
->  		regs->orig_a0 = regs->a0;
-> @@ -306,9 +306,9 @@ asmlinkage __visible __trap_section void do_trap_ecall_u(struct pt_regs *regs)
->  
->  		syscall = syscall_enter_from_user_mode(regs, syscall);
->  
-> -		if (syscall < NR_syscalls)
-> +		if (syscall >= 0 && syscall < NR_syscalls)
->  			syscall_handler(regs, syscall);
-> -		else
-> +		else if (syscall != -1)
->  			regs->a0 = -ENOSYS;
->  
->  		syscall_exit_to_user_mode(regs);
+CPR4.
 
-Unfortunately, this change introduced a regression: it broke strace
-syscall tampering on riscv.  When the tracer changes syscall number to -1,
-the kernel fails to initialize a0 with -ENOSYS and subsequently fails to
-return the error code of the failed syscall to userspace.
+> > +	.num_threads = 1,
+> > +	.apm_threshold = 850000,
+> > +	.apm_crossover = 880000,
+> > +	.apm_hysteresis = 0,
+> > +	.cpr_base_voltage = 700000,
+> > +	.cpr_max_voltage = 1100000,
+> > +	.timer_delay_us = 5000,
+> > +	.timer_cons_up = 0,
+> > +	.timer_cons_down = 0,
+> > +	.up_threshold = 2,
+> > +	.down_threshold = 2,
+> > +	.idle_clocks = 15,
+> > +	.count_mode = CPR3_CPR_CTL_COUNT_MODE_ALL_AT_ONCE_MIN,
+> > +	.count_repeat = 1,
+> > +	.gcnt_us = 1,
+> > +	.vreg_step_fixed = 12500,
+> > +	.vreg_step_up_limit = 1,
+> > +	.vreg_step_down_limit = 1,
+> > +	.vdd_settle_time_us = 34,
+> > +	.corner_settle_time_us = 6,
+> > +	.reduce_to_corner_uV = true,
+> > +	.hw_closed_loop_en = false,
+> > +	.threads = (const struct cpr_thread_desc *[]) {
+> > +		&ipq9574_thread_silver,
+>
+> If it's silver, where is gold or bronze?
 
-I wish you were running strace test suite before changing this part of the
-kernel.  Now I'm going to apply a workaround [1] in strace, but please
-note that riscv seems to be the only linux architecture where such a
-workaround is currently required.
+Will rename this as "ipq9574_thread"
 
-There was a similar kernel bug once on parisc, but it was fixed [2]
-several years ago by commit b7dc5a071ddf.
+Thanks
+Varada
 
-[1] https://github.com/strace/strace/commit/c3ae2b27732952663a3600269884e363cb77a024
-[2] https://git.kernel.org/torvalds/c/b7dc5a071ddf69c0350396b203cba32fe5bab510
-
-
--- 
-ldv
+> > +	},
+> > +};
+> > +
+> > +static const struct cpr_acc_desc ipq9574_cpr_acc_desc = {
+> > +	.cpr_desc = &ipq9574_cpr_desc,
+> > +};
+> > +
+> >  static const int sdm630_gold_scaling_factor[][CPR3_RO_COUNT] = {
+> >  	/* Same RO factors for all fuse corners */
+> >  	{
+> > @@ -2828,6 +2964,7 @@ static void cpr_remove(struct platform_device *pdev)
+> >  }
+> >
+> >  static const struct of_device_id cpr3_match_table[] = {
+> > +	{ .compatible = "qcom,ipq9574-cprh", .data = &ipq9574_cpr_acc_desc },
+> >  	{ .compatible = "qcom,msm8998-cprh", .data = &msm8998_cpr_acc_desc },
+> >  	{ .compatible = "qcom,sdm630-cprh", .data = &sdm630_cpr_acc_desc },
+> >  	{ }
+> > --
+> > 2.34.1
+> >
+>
+> --
+> With best wishes
+> Dmitry
