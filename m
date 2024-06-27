@@ -1,211 +1,170 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2076.outbound.protection.outlook.com [40.107.100.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB671A38C0
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 23:53:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719532440; cv=none; b=Ej5SgSTjf12yd6lJkjwHrPBUAwPkYvLOcfPp7XvkBBo76X48OoAKvpZwU51klAlHUUemtdiFyO1DvLDIbarlnm+H8kNeoCTN0KsaQeUmd4pOOpfReQfAmd6m+d8xRGbIXh29cmk14/qQPxcw2josVxHaS6dZo10An3shFaKiI4w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719532440; c=relaxed/simple;
-	bh=em4fT6gc4FKgIY5Dn0mKLeU5n6+xY+c5SD9nUabtX7w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Qh7BKVZxx+9uK+WtPTTZ5cXEqkgz5nnre23zFKFxTWjelbuSY9r4dQj5V0fQRLTonFunnsCEJqXflE5Tr1m1+e3WM6Scakvt+EMX0+pWTQ8bzD4Vlf+rsl3gyXRhw03cbveap3xHE8g2abLqX9etj3/ma3GJJzHEws9K7eIfQu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=DC5sbAlO; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD77D1A2549;
+	Thu, 27 Jun 2024 23:55:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719532514; cv=fail; b=guuEyF6sLLERMW0rOF+2afJ9cUR+qwgGFu2ci+dSdpsczyP8FgLSRYsDukd/ry4Qi2JzT3yr/zYIT+fIQbRHi5rZ1LsQAOBlbgE/iHJ93cApU5P0BGUtoRspC7S6aOrqhOh8oWB5m+0fk7bDhRxM3XmVgkqtkz8zR/aHOnmx9Wg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719532514; c=relaxed/simple;
+	bh=9KMOc1ULTi8NsqW/adTosZFxZXkuj/w4SN6kz3hgzfE=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 Content-Type:MIME-Version; b=gGXf+4X/tXoCrGfT7DWSXLG3lS9ZN+1my3cNHZHCae/VJWfuwXF2iGmJ9mHl6Vy3fV1DXop3wiIvDLmMUtVSKUD0ZmAZPstkSqxepK+Elayz0sXqwe+X29MesTvycv5FMYjXUR068GsQ1Ff6tyWBUYFO//9MN3funM787BhSMWQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Ez7rmtiH; arc=fail smtp.client-ip=40.107.100.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DC5sbAlO"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-70675977d0eso68532b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 16:53:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1719532439; x=1720137239; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wz8mCbvpvyvinIWniLr2yCzgz2midVzsHqb0HV25yDo=;
-        b=DC5sbAlOPmorlSIRzPpqgia0j31GSR745WHQqvdNDqszMBLEH6xTdi0pKhSUM7ROAH
-         FBBUOwY9lxhRQ0V0sd99DXUSfr2JWVRsvVX5/PyAY9ovgkh0b9W0WAVhqH0MD5ot33Zw
-         RewUUldOum8Y01jhp1eoaqY7s9wF2PDa3wZN0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719532439; x=1720137239;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wz8mCbvpvyvinIWniLr2yCzgz2midVzsHqb0HV25yDo=;
-        b=h7Tf85uSI2y4OyTl18bIXTjFSZYocgiPOQXArcfboCao1M1YYcggOTjW5qB0wxnv8k
-         NBMlwetqrW8bAGz4Vg7P65wtMDqlJ49rhUUxm9e+mYzxs/LvuNbpf2uQgvDl+JBcitz7
-         Bl2R/7CRJsM6gI9Yrt7bwuDGH4AyqPYuTAMgWASgJxzNrAcUDU8GN64iMPWnQpCVdAtx
-         IrimA4DVHqkbDQ3M2ZMtvLfMSeuArUyTvwFN3gFA4CbsoJQHjVwNSRBfCGqYKsQDoob5
-         IwYjCyoUsvgiCRpSq7i3wzemyozewQlrb4rKp1t6YoIkgL83a/YEvpjVSgJ0d+kz01lT
-         UgCw==
-X-Forwarded-Encrypted: i=1; AJvYcCUDHrZI6tyM/jEHCNhYYvX6LO0GVVVubNRfie5G8va4AePL2AdlMSdQiUypk1YdUOKLzhY+38mFxtyFT5LpTGOedlftZzzCszqy5tsX
-X-Gm-Message-State: AOJu0YzCkv/ryzFn7zeQi5WZ6uOT92JgSQJlKcJbtbmShI5EmQ+cN6Xz
-	UekpbSdCbAjUfdyJtBMFj88xGOwr2UzFTllUaXm6mYjXtZoWir/KBQLOlkQAeg==
-X-Google-Smtp-Source: AGHT+IGt6uAjd9DFIOlTtILhCIG4SNMhMufSYHw3k2LiUPAd2ggYsmIv8nZuUujU4HrY8cQoqV0l1Q==
-X-Received: by 2002:a05:6a20:4307:b0:1be:c6a5:5e88 with SMTP id adf61e73a8af0-1bec6a563a4mr6295239637.10.1719532438690;
-        Thu, 27 Jun 2024 16:53:58 -0700 (PDT)
-Received: from pc98uv11.mtv.corp.google.com ([2620:15c:9d:2:cf5d:cb26:248e:ee00])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac11d8cd2sm3366595ad.107.2024.06.27.16.53.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 16:53:58 -0700 (PDT)
-From: Daisuke Nojiri <dnojiri@chromium.org>
-To: 
-Cc: Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Reka Norman <rekanorman@chromium.org>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-	Gwendal Grignou <gwendal@chromium.org>,
-	Pavan Holla <pholla@chromium.org>,
-	Lukasz Majczak <lma@chromium.org>,
-	Ching-Kang Yen <chingkang@chromium.org>,
-	Daisuke Nojiri <dnojiri@chromium.org>,
-	Stephen Boyd <swboyd@chromium.org>,
-	Prashant Malani <pmalani@chromium.org>,
-	chrome-platform@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v5 2/2] dt-bindings: cros-ec-keyboard: Add keyboard matrix v3.0
-Date: Thu, 27 Jun 2024 16:53:08 -0700
-Message-ID: <9ae4d96cc2ce8c9de8755b9beffb78c641100fe7.1719531519.git.dnojiri@chromium.org>
-X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
-In-Reply-To: <cover.1719531519.git.dnojiri@chromium.org>
-References: <cover.1719531519.git.dnojiri@chromium.org>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Ez7rmtiH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LXe8jbM9mEdRe1vsaeTAv87NZruohK0XVpfXfr3RlcUvZiCODccTEyaYhtbM4F0sFmGgm1JkRYY4vIzGbyTBjYhyOcyalcyiyZEdDrfthkVC5wQ3jE2RaQHiwqo2u2D1wCQid4GixA+VyvRGIMs+mWzTrR/UK6aosw+OMh5yx3CPL5ID+N8SAsomKMFy+91qn1aB4rkF6uBQ72olZbGGI7E8ModhjwQhThJvYrE/KUK++7hPsZwm+mmn5mty/zZT1e7eDZgv3LhUEpvsr9+LqPEAIXALoY0ybIRoPc10ENsjsD1ag1IEm2rG1NkORPDjKKc4S39jreH2KIoK7waeQw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=r5XVoYwQuDg+GQxyx5siP3T4svWGIJrj+ZagRfnWls4=;
+ b=QpcqlQe/ZyLb42yFEWFPalk6bsjulH//9xbp9yXdSilKSvcKJwQKdqeyvMvayNNs4Kz58QeckCW2JuHp4w7laVa/3artbEAnY4s3QZD89Q2dtLlIFceYu65iZmXLnF/Ij1ZG9INQey6jvWwVuQ++2Z0/4pIsflzZiP1ZaKP4JJQxyIOBLzXU29LfRDoLpLm+8QLKoER1MgUba73TQVQckTTUX+pAbtM5w5jLmVG1S18t99gstfs7WumMUUJLMvu27Tjwc4DsvfQAnLAurH/6drPGDLucIF/5EWHWEPgNLKFG4gUP4R8+MtHAHmuHETcN2POPQiUazHvEOrwVrLpf4A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r5XVoYwQuDg+GQxyx5siP3T4svWGIJrj+ZagRfnWls4=;
+ b=Ez7rmtiH/nOHT5pwpBHDMDRl/SBlQjbvL7+xjJ14w69SECCk1fRM+0r7QZhgnmHsucQGV6jXUeev1XQaH8/04QKKtW1YNIetZzWgyWj4Awzmn+0uN/matD77T+/6Gc/m1HHg7UoQF36xFjaWfe5evG/W1aJEcK7UL+hZlbBiMvqamHVntPpc6lOW+gXXoJoAK6jEXdXDneZNivFoudtI1RmyyjvugnQBKcKk0uHU3zQfO1WC+2Qlahswod9TCkNw6ijg13OsusCzI0GtrCeirlcfiOKdePQfHMlqlu2FB9PpONrDN6/PH5TxcaCW9bBCOOl4lIl4URU4B9WOIrFVuw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
+ MW6PR12MB7070.namprd12.prod.outlook.com (2603:10b6:303:238::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7698.35; Thu, 27 Jun 2024 23:55:06 +0000
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe%6]) with mapi id 15.20.7698.025; Thu, 27 Jun 2024
+ 23:55:06 +0000
+References: <cover.66009f59a7fe77320d413011386c3ae5c2ee82eb.1719386613.git-series.apopple@nvidia.com>
+ <e626eda568267e1f86d5c30c24bc62474b45f6c3.1719386613.git-series.apopple@nvidia.com>
+ <20240627053343.GD14837@lst.de>
+User-agent: mu4e 1.10.8; emacs 29.1
+From: Alistair Popple <apopple@nvidia.com>
+To: Christoph Hellwig <hch@lst.de>
+Cc: dan.j.williams@intel.com, vishal.l.verma@intel.com,
+ dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com,
+ jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com, will@kernel.org,
+ mpe@ellerman.id.au, npiggin@gmail.com, dave.hansen@linux.intel.com,
+ ira.weiny@intel.com, willy@infradead.org, djwong@kernel.org,
+ tytso@mit.edu, linmiaohe@huawei.com, david@redhat.com, peterx@redhat.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+ jhubbard@nvidia.com, david@fromorbit.com
+Subject: Re: [PATCH 04/13] fs/dax: Add dax_page_free callback
+Date: Fri, 28 Jun 2024 09:48:24 +1000
+In-reply-to: <20240627053343.GD14837@lst.de>
+Message-ID: <87h6de54by.fsf@nvdebian.thelocal>
+Content-Type: text/plain
+X-ClientProxiedBy: SY4P282CA0005.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:a0::15) To DS0PR12MB7726.namprd12.prod.outlook.com
+ (2603:10b6:8:130::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|MW6PR12MB7070:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8b44b16d-8c7a-44b3-f14a-08dc97048f7e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?SPGdZo8TfYwVvMzhdP6QmxPRGi7srD29uFwCixlsojXCdRLKEAteUlXWMpKo?=
+ =?us-ascii?Q?ERQ0DQBhJMTLlPpym3G8tAjWf04rEY0+Py5hIVqZDjdEtMG33B8YPB1WUTNe?=
+ =?us-ascii?Q?kgOIXn3kTUSLHVZp9z2G0lSZglWNmFC0vsrGemyvxdqImWJlkBWXubM1m3+i?=
+ =?us-ascii?Q?Hs69oQnh8ejlyC9fuipM9eUSz/JUqz+onempibaXV/SLe7tqHcsW2tjlK3d+?=
+ =?us-ascii?Q?5QQtj3VuxtKlfaNEQkSDIxuUeB8XKsTX7jy4Y5lz+oegqXBGOjB6rssaJe0n?=
+ =?us-ascii?Q?Mx213JljFLMvx+5230+BmSWvTgyOWZPzISUnkrMiL9auzQj8WOwmIaFR4h9z?=
+ =?us-ascii?Q?SDHgYUgNPBJyXwxVA2do7VfkrU8RCJ8wi0g5Ge6Tc2EAlitqQ1EY2mYatng5?=
+ =?us-ascii?Q?vfO/DYklslQ8AaLvmGuLl0AOs8UQdbBIvEs6VhotqEpSc9kc/Hzom444NpTT?=
+ =?us-ascii?Q?Uk17E4ymMPIWZ78YPlbNKc2eXOH6JNs01nHRZM4yFpFSJ/w435SeGPFzJ33G?=
+ =?us-ascii?Q?BMumsWjPspU+CTZMSkvPVJAoBe16jTwqOKwrKFbrBiD6HInE5sIy2ZNpSDi5?=
+ =?us-ascii?Q?DAywerDXxjhK8id7PS4wsSv7ozedmgW+tu+21JlzX1u8WAciCghmJ/ujRsy8?=
+ =?us-ascii?Q?vJHYk3Iz0ey7YKRuwHOzE9Vppom8x5I3FSCUhXyOs9YPtybmSK5y1djbOLnL?=
+ =?us-ascii?Q?ROYOrDDXdzfJx2JZlR90Y/6dUP57AoOAnTKeutVQpKDauhWvtWetHYZhLtJW?=
+ =?us-ascii?Q?VV1nKtbKesyD920rieWJ9SOf9LM3zqMbS9wHmEwUYG0/cy9A1L0RT+MCwmcq?=
+ =?us-ascii?Q?mWdlAJlF8vOQiHDcbmFEhzHKUp4Lfu1XcWdHxKIf14a3cNnx2v18U9wDPfuD?=
+ =?us-ascii?Q?4OcqAKwGpYt8hUTCmLg3uEOS0PmN+J/d+aYeXE4N0YNQTiEUutqGh6+3NZN9?=
+ =?us-ascii?Q?joDbnMIKyqzsiVspWKQtCCBED/QjtnS/7n284P9cXbJB1JdqxjKkAJH6u1OH?=
+ =?us-ascii?Q?pKThAT3zSv0BTLS8BaFnSFxQhePLhXakoErQO9s2WrQ+PB6UonT93OQk3XG1?=
+ =?us-ascii?Q?L7sRWRWyPCEn77tFg/G+tzRLnihsPrrXhP/rD9h0eXfFJI6Mnhs1UkNxTCkc?=
+ =?us-ascii?Q?SgzNfyzj5YUpEKZGvLjxY49gQVt18AT2BPkuREpfhtIj3py4RpM5xMGoNmnp?=
+ =?us-ascii?Q?n1TcAz3KpI0baNwrPjJqvelMOM88IvVzKQQ+07sCYZqzIkhkafs1iUspWyIo?=
+ =?us-ascii?Q?ZHlkjxc5ij1LlpgCz7N62ILFvZW403T6UEwF60RvVbKyAesn3hshw+kJe1h4?=
+ =?us-ascii?Q?2x8XMuEaWQO92iv7ESqFlPwc9Dd+8LgyyFLFU8IPL7NO4w=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?tkitERBnPU1pVbMOLz75E/q0I+6Jb3wBSk3hRXD93QNit8SPL/tDG2xlCdxZ?=
+ =?us-ascii?Q?4rXtSpcUSCimDfUKLPTZsjF3t9vVlQ2PwG+p9KV8beM9YiExjV2E4XVPNhV1?=
+ =?us-ascii?Q?gRMUkQMeg83tq7XhzxFl7s49v4qzqYrhfkdnt0vsND+i9RCicYuJwyc4JbMY?=
+ =?us-ascii?Q?2LUeFF/nqm8Y9QA9rJwDTA1QKuJGl1pw8uKH4Xcs9hY/Kv1oREgBsiUyEwSF?=
+ =?us-ascii?Q?SZyh/VAZJqDVJ+QHw0BwmL8xgcLGr06AaLomEoETtqlSN848KzTtZMzammUt?=
+ =?us-ascii?Q?hWuCtKrB2H+lCn9L8K5MvL3QFNw613jnszfmqfkwV11o4wmrX0xHSU1Zz4aV?=
+ =?us-ascii?Q?rNWxxGI9ds6H2ojYikPqsTo56EEdnNnp7lYK7jRlrQhF9UatUzWnYyP0Ehh8?=
+ =?us-ascii?Q?Nbn8/N3DYhZag/ngv/0vu8uLjkO5zTud8PiBHQe8j3ef2JgWUCg0G+vuztkN?=
+ =?us-ascii?Q?boh4uiEuIzbjjCvwDKyThOW+5ADPetF8nKZYDk02yJ552qmV4ksijbA59+Lk?=
+ =?us-ascii?Q?gLZO/116BmNDMBBBHOgBjI7P7U7cNkBBKvboiF3vr/Ry6iFBk/Sz5n6IAgDE?=
+ =?us-ascii?Q?54rHOZTksM7njfweGQhWrEyWGIuejg+T8qTrzYC+RzAQYZ9ud0iHCn0bvzTC?=
+ =?us-ascii?Q?ZqaF/1npXaMk0cFzedKtaMFSAhu4mulqKhqv+Wtl1VCZkVokuxNFIEDeNEEU?=
+ =?us-ascii?Q?0iz2HEbwY4k0gtzzbMmxwE4N8IQgm7WAKP99J/HsM24zEQKls6t2616+bAD+?=
+ =?us-ascii?Q?ZLvymMJrfpQwWleWjfywi/nWsjSLnehAcOUni6V2C4cMuLOww1m7rI1gE47o?=
+ =?us-ascii?Q?P311zMtj0Uq+atMV6AoWexuJPWNUGVPr1t+aG4AZPfzS4GRCkhKXOARB185S?=
+ =?us-ascii?Q?Uo3W3saymTu2YBhJaqXfMpbQtGU+Wf3igKTTsSPoNfyrVIOMU6+RzqcFusdz?=
+ =?us-ascii?Q?6Nq3dqlhBScPUGvARkg1/C5E5i1lk/c/QMQofuX+RVhBZB147zik1HiVP+B/?=
+ =?us-ascii?Q?AKci3YR4eZey7PWYZecXQuFqzy6xBgMKi5T6GQx8BHmqQqTlOQeU8UogfMyK?=
+ =?us-ascii?Q?i2LXjzJFqkfvafaxi5Bxago8EcHj7eJ+kH6qqaPIm5HB/KrlivDjnAk3LvaH?=
+ =?us-ascii?Q?XvD2kFg9WdxGQRTikcVcTl6Ydu/QTTWFZgyB0TTZzw3uDVa7d/SuRfWHl+mA?=
+ =?us-ascii?Q?Fiuane5u7W2o08oElwBRRxP9DwMurUphw8Qu4EH5tCnXa/Laxj2ZKXcWselW?=
+ =?us-ascii?Q?armMdxPE1NHP8o16lb3XSc2d2ESXpyCKZ/lTcp/vDzSbYNiprGN1ccnCK75n?=
+ =?us-ascii?Q?OA0MgM1Ewx2fVsP1KXpjrUUwpv9x5CNn4oLJuu0Gw1ZGIAApIy3px6/qbZga?=
+ =?us-ascii?Q?1zJVOhuF27djBBsNePcQGnP95Clgs3H3sjDRS8J8PRvPG6QuiCtDTstIgzTw?=
+ =?us-ascii?Q?z20TLx7mt4kv0YKxXkxo0ZSjD3AVeG/n52h087c0pNYWRBk2T92swmD7gbvA?=
+ =?us-ascii?Q?ujjyV1ulXqBW2oS7n3Jq/ja1qmPN78fEQWQqWXNksUuzlOshgYMb6Mv4S8w1?=
+ =?us-ascii?Q?+iFcM+vKpGWL/pxh0SncWia4iwZfsmneHU/RsUWg?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8b44b16d-8c7a-44b3-f14a-08dc97048f7e
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2024 23:55:02.4467
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oRDrO8BAmSekk8UJnkD7mxe7Gnu0KiIBE7zQZqcDA2rCfQ62abWPR/hEU8Ol3oQlJ8QFPFFhxHfF3WjF/0ahPA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB7070
 
-Add support for keyboard matrix version 3.0, which reduces keyboard
-ghosting.
 
-Signed-off-by: Daisuke Nojiri <dnojiri@chromium.org>
----
- include/dt-bindings/input/cros-ec-keyboard.h | 104 +++++++++++++++++++
- 1 file changed, 104 insertions(+)
+Christoph Hellwig <hch@lst.de> writes:
 
-diff --git a/include/dt-bindings/input/cros-ec-keyboard.h b/include/dt-bindings/input/cros-ec-keyboard.h
-index f0ae03634a96..afc12f6aa642 100644
---- a/include/dt-bindings/input/cros-ec-keyboard.h
-+++ b/include/dt-bindings/input/cros-ec-keyboard.h
-@@ -100,4 +100,108 @@
- 	MATRIX_KEY(0x07, 0x0b, KEY_UP)		\
- 	MATRIX_KEY(0x07, 0x0c, KEY_LEFT)
- 
-+/* No numpad */
-+#define CROS_TOP_ROW_KEYMAP_V30 \
-+	MATRIX_KEY(0x00, 0x01, KEY_F11)		/* T11 */	\
-+	MATRIX_KEY(0x00, 0x02, KEY_F1)		/* T1 */	\
-+	MATRIX_KEY(0x00, 0x04, KEY_F10)		/* T10 */	\
-+	MATRIX_KEY(0x00, 0x0b, KEY_F14)		/* T14 */	\
-+	MATRIX_KEY(0x00, 0x0c, KEY_F15)		/* T15 */	\
-+	MATRIX_KEY(0x01, 0x02, KEY_F4)		/* T4 */	\
-+	MATRIX_KEY(0x01, 0x04, KEY_F7)		/* T7 */	\
-+	MATRIX_KEY(0x01, 0x05, KEY_F12)		/* T12 */	\
-+	MATRIX_KEY(0x01, 0x09, KEY_F9)		/* T9 */	\
-+	MATRIX_KEY(0x02, 0x02, KEY_F3)		/* T3 */	\
-+	MATRIX_KEY(0x02, 0x04, KEY_F6)		/* T6 */	\
-+	MATRIX_KEY(0x02, 0x0b, KEY_F8)		/* T8 */	\
-+	MATRIX_KEY(0x03, 0x02, KEY_F2)		/* T2 */	\
-+	MATRIX_KEY(0x03, 0x05, KEY_F13)		/* T13 */	\
-+	MATRIX_KEY(0x04, 0x04, KEY_F5)		/* T5 */
-+
-+#define CROS_MAIN_KEYMAP_V30			/* Keycode */	\
-+	MATRIX_KEY(0x00, 0x03, KEY_B)		/* 50 */	\
-+	MATRIX_KEY(0x00, 0x05, KEY_N)		/* 51 */	\
-+	MATRIX_KEY(0x00, 0x06, KEY_RO)		/* 56 (JIS) */	\
-+	MATRIX_KEY(0x00, 0x08, KEY_EQUAL)	/* 13 */	\
-+	MATRIX_KEY(0x00, 0x09, KEY_HOME)	/* 80 (Numpad) */	\
-+	MATRIX_KEY(0x00, 0x0a, KEY_RIGHTALT)	/* 62 */	\
-+	MATRIX_KEY(0x00, 0x10, KEY_FN)		/* 127 */	\
-+								\
-+	MATRIX_KEY(0x01, 0x01, KEY_ESC)		/* 110 */	\
-+	MATRIX_KEY(0x01, 0x03, KEY_G)		/* 35 */	\
-+	MATRIX_KEY(0x01, 0x06, KEY_H)		/* 36 */	\
-+	MATRIX_KEY(0x01, 0x08, KEY_APOSTROPHE)	/* 41 */	\
-+	MATRIX_KEY(0x01, 0x0b, KEY_BACKSPACE)	/* 15 */	\
-+	MATRIX_KEY(0x01, 0x0c, KEY_HENKAN)	/* 65 (JIS) */	\
-+	MATRIX_KEY(0x01, 0x0e, KEY_LEFTCTRL)	/* 58 */	\
-+								\
-+	MATRIX_KEY(0x02, 0x01, KEY_TAB)		/* 16 */	\
-+	MATRIX_KEY(0x02, 0x03, KEY_T)		/* 21 */	\
-+	MATRIX_KEY(0x02, 0x05, KEY_RIGHTBRACE)	/* 28 */	\
-+	MATRIX_KEY(0x02, 0x06, KEY_Y)		/* 22 */	\
-+	MATRIX_KEY(0x02, 0x08, KEY_LEFTBRACE)	/* 27 */	\
-+	MATRIX_KEY(0x02, 0x09, KEY_DELETE)	/* 76 (Numpad) */	\
-+	MATRIX_KEY(0x02, 0x0c, KEY_PAGEUP)	/* 85 (Numpad) */	\
-+	MATRIX_KEY(0x02, 0x011, KEY_YEN)	/* 14 (JIS) */	\
-+								\
-+	MATRIX_KEY(0x03, 0x00, KEY_LEFTMETA)	/* Launcher */	\
-+	MATRIX_KEY(0x03, 0x01, KEY_GRAVE)	/* 1 */	\
-+	MATRIX_KEY(0x03, 0x03, KEY_5)		/* 6 */	\
-+	MATRIX_KEY(0x03, 0x04, KEY_S)		/* 32 */	\
-+	MATRIX_KEY(0x03, 0x06, KEY_MINUS)	/* 12 */	\
-+	MATRIX_KEY(0x03, 0x08, KEY_6)		/* 7 */		\
-+	MATRIX_KEY(0x03, 0x09, KEY_SLEEP)	/* Lock */	\
-+	MATRIX_KEY(0x03, 0x0b, KEY_BACKSLASH)	/* 29 */	\
-+	MATRIX_KEY(0x03, 0x0c, KEY_MUHENKAN)	/* 63 (JIS) */	\
-+	MATRIX_KEY(0x03, 0x0e, KEY_RIGHTCTRL)	/* 64 */	\
-+								\
-+	MATRIX_KEY(0x04, 0x01, KEY_A)		/* 31 */	\
-+	MATRIX_KEY(0x04, 0x02, KEY_D)		/* 33 */	\
-+	MATRIX_KEY(0x04, 0x03, KEY_F)		/* 34 */	\
-+	MATRIX_KEY(0x04, 0x05, KEY_K)		/* 38 */	\
-+	MATRIX_KEY(0x04, 0x06, KEY_J)		/* 37 */	\
-+	MATRIX_KEY(0x04, 0x08, KEY_SEMICOLON)	/* 40 */	\
-+	MATRIX_KEY(0x04, 0x09, KEY_L)		/* 39 */	\
-+	MATRIX_KEY(0x04, 0x0b, KEY_ENTER)	/* 43 */	\
-+	MATRIX_KEY(0x04, 0x0c, KEY_END)		/* 81 (Numpad) */	\
-+								\
-+	MATRIX_KEY(0x05, 0x01, KEY_1)		/* 2 */	\
-+	MATRIX_KEY(0x05, 0x02, KEY_COMMA)	/* 53 */	\
-+	MATRIX_KEY(0x05, 0x03, KEY_DOT)		/* 54 */	\
-+	MATRIX_KEY(0x05, 0x04, KEY_SLASH)	/* 55 */	\
-+	MATRIX_KEY(0x05, 0x05, KEY_C)		/* 48 */	\
-+	MATRIX_KEY(0x05, 0x06, KEY_SPACE)	/* 61 */	\
-+	MATRIX_KEY(0x05, 0x07, KEY_LEFTSHIFT)	/* 44 */	\
-+	MATRIX_KEY(0x05, 0x08, KEY_X)		/* 47 */	\
-+	MATRIX_KEY(0x05, 0x09, KEY_V)		/* 49 */	\
-+	MATRIX_KEY(0x05, 0x0b, KEY_M)		/* 52 */	\
-+	MATRIX_KEY(0x05, 0x0c, KEY_PAGEDOWN)	/* 86 (Numpad) */	\
-+								\
-+	MATRIX_KEY(0x06, 0x01, KEY_Z)		/* 46 */	\
-+	MATRIX_KEY(0x06, 0x02, KEY_3)		/* 4 */		\
-+	MATRIX_KEY(0x06, 0x03, KEY_4)		/* 5 */		\
-+	MATRIX_KEY(0x06, 0x04, KEY_2)		/* 3 */		\
-+	MATRIX_KEY(0x06, 0x05, KEY_8)		/* 9 */		\
-+	MATRIX_KEY(0x06, 0x06, KEY_0)		/* 11 */	\
-+	MATRIX_KEY(0x06, 0x08, KEY_7)		/* 8 */		\
-+	MATRIX_KEY(0x06, 0x09, KEY_9)		/* 10 */	\
-+	MATRIX_KEY(0x06, 0x0b, KEY_DOWN)	/* 84 */	\
-+	MATRIX_KEY(0x06, 0x0c, KEY_RIGHT)	/* 89 */	\
-+	MATRIX_KEY(0x06, 0x0d, KEY_LEFTALT)	/* 60 */	\
-+	MATRIX_KEY(0x06, 0x0f, KEY_ASSISTANT)	/* 128 */	\
-+	MATRIX_KEY(0x06, 0x11, KEY_BACKSLASH)	/* 42 (JIS, ISO) */	\
-+								\
-+	MATRIX_KEY(0x07, 0x01, KEY_U)		/* 23 */	\
-+	MATRIX_KEY(0x07, 0x02, KEY_I)		/* 24 */	\
-+	MATRIX_KEY(0x07, 0x03, KEY_O)		/* 25 */	\
-+	MATRIX_KEY(0x07, 0x04, KEY_P)		/* 26 */	\
-+	MATRIX_KEY(0x07, 0x05, KEY_Q)		/* 17 */	\
-+	MATRIX_KEY(0x07, 0x06, KEY_W)		/* 18 */	\
-+	MATRIX_KEY(0x07, 0x07, KEY_RIGHTSHIFT)	/* 57 */	\
-+	MATRIX_KEY(0x07, 0x08, KEY_E)		/* 19 */	\
-+	MATRIX_KEY(0x07, 0x09, KEY_R)		/* 20 */	\
-+	MATRIX_KEY(0x07, 0x0b, KEY_UP)		/* 83 */	\
-+	MATRIX_KEY(0x07, 0x0c, KEY_LEFT)	/* 79 */	\
-+	MATRIX_KEY(0x07, 0x11, KEY_102ND)	/* 45 (ISO) */
-+
- #endif /* _CROS_EC_KEYBOARD_H */
--- 
-2.45.2.803.g4e1b14247a-goog
+> On Thu, Jun 27, 2024 at 10:54:19AM +1000, Alistair Popple wrote:
+>> When a fs dax page is freed it has to notify filesystems that the page
+>> has been unpinned/unmapped and is free. Currently this involves
+>> special code in the page free paths to detect a transition of refcount
+>> from 2 to 1 and to call some fs dax specific code.
+>> 
+>> A future change will require this to happen when the page refcount
+>> drops to zero. In this case we can use the existing
+>> pgmap->ops->page_free() callback so wire that up for all devices that
+>> support FS DAX (nvdimm and virtio).
+>
+> Given that ->page_ffree is only called from free_zone_device_folio
+> and right next to a switch on the the type, can't we just do the
+> wake_up_var there without the somewhat confusing indirect call that
+> just back in common code without any driver logic?
 
+Longer term I'm hoping we can get rid of that switch on type entirely as
+I don't think the whole get/put_dev_pagemap() thing is very useful. Less
+indirection is good though so will move the wake_up_var there.
