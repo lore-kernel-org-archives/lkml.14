@@ -1,57 +1,57 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100001A2C11;
-	Thu, 27 Jun 2024 17:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9541A2FCE;
+	Thu, 27 Jun 2024 17:33:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719509614; cv=none; b=GZvlRdTvZl5rO1qdzz2be9FGkNDsnl/PevtbnXtzsxQ3ApSHD2v3gQ/+YmBRAjRctq5KFuLyjgFDEWBUlBHMnvCG53yFhvbCMskEOf5n0O3WqLNCupDsaSDKms4Z5v/Y2qO6VMub3QkSt3suS3rhCFBCwtMhgiV5Zd5QfxKQfLM=
+	t=1719509619; cv=none; b=VwMGsFyNdp/RCk6aSdxX+kpTzMyG5fIToRV2Y/acR/Hc+j16h6Xep0FJ+QRfe8w++qZAq76yWhd/ipfX932A4LGmp/KIJqUbaI3yoanuud2fDlq9CBHtiK4ixcfPWIKWTmqbrQ9eG9ASJomc3/9vIEVys+ANDHNbYgT5J8EbF4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719509614; c=relaxed/simple;
-	bh=GVSy0DuUlaxZ8lEDNXRBGWu9lQzA7n3kAdPbfg0QhL0=;
+	s=arc-20240116; t=1719509619; c=relaxed/simple;
+	bh=u+PmNdptXMwR5KPv1GAroKgDqv5Lz1l/qDx4/H6Axe0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tBIpmE8dG7PfC+JGd8NsNrUA6C0dpBbEuJvsGKwGHl7yPblhBcw9aQBX/8tpKWLKZ9JljZ0M0lZy1WC495WcSgn35JZHvBgSnHoTvw7FTmXFUwFwFTV1WKjdXq6GFIxfvkVycyZd7SACwNMMON7dZxGvJjNhis3dCRR/CWwfoyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G72Whg/y; arc=none smtp.client-ip=209.85.208.179
+	 MIME-Version; b=fHEfVWHbO2B/+FkJMH9vdvEOOVRUhFlawWGtghhnaxKxKBDStze6D0bWUMYqmHWe22UNc7KFHILi6yuKJr8YHsSWon9/TnHRPh29Qy/VVZXNuSkpnb/BFYK+snHXrbGdTJd1mhT09pV9/bqnw6iNlfMuFisQNF7oJSMWSd0Awyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aUQp5YUz; arc=none smtp.client-ip=209.85.167.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G72Whg/y"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2eaafda3b5cso83750011fa.3;
-        Thu, 27 Jun 2024 10:33:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aUQp5YUz"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52cdb0d8107so8346198e87.1;
+        Thu, 27 Jun 2024 10:33:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719509610; x=1720114410; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719509616; x=1720114416; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5ty7Gmc1X/mwWFoPoRLqOGmSpPckWZFya9nvYkgbaHo=;
-        b=G72Whg/yRU4sYXqBWxQQLIqb0c4/O/ldDabf8BTexyztLqYyuLZrFW6OWPWGzlop6J
-         hwjrH6R/998vFYHNhvULOmDU/egwVjkp7Z7Xr0Bb6Kn2Oox+NinzAQFEIOnS+obrquCA
-         lGnRWiEXmlPsbTfvQBicJIEC8EcLhGq4ftDRcWiKlCrQIv3Ta6fI5W4k7nwPnEXQ+nhg
-         +Igr7dI1B12g42fxhTNjyCAQc6mbTGx7k+O7Xu/R9hRb2JmqyvgVkxT8QYOMUiLayWI2
-         eDhExpFM4AXPp2MOFSYLT2go+LG0F+mmyTsC465cxJjldjH7NCpFzMyfv5o67zIC+0M7
-         94YA==
+        bh=TZa91h6JHbvpzFhbsgcXRu/FV0fHLPTukVYlit5Rupc=;
+        b=aUQp5YUzvlnzQy3jRdUaCPJG20siHZp69o5h/GsI9DY8KUPUVofIvcYVUw2K1Hl7Cc
+         6HwQxHuZnTO0d8TF3ONVlqfoiV4rEYYGSX5dPYWUQe4vaGxrP7/ejPOA4L5RDqfguXzM
+         DOFYNSjPq7xERIZSnxEL0IwCm5ho1Zrdzldz0oiA0iMm70u9TjbP4fXzpueglKJpEz8/
+         EbgfWasMrTBeEkdypUpTk94JXtEYUQ7stSj9I9ZxvXJiupHMPGlJAZJkQJApoHkjCCbw
+         9wXWhBEwhpGqKaUIz5Rs3vpDUdOLUucEbzzknDvixz2PG3Z1A2iHvM15Z7rjzKQQyaGi
+         ezVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719509610; x=1720114410;
+        d=1e100.net; s=20230601; t=1719509616; x=1720114416;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5ty7Gmc1X/mwWFoPoRLqOGmSpPckWZFya9nvYkgbaHo=;
-        b=gfovolW07t8LMjyIMbqkr3pLRpe0peAF66eAAIJyznwTmKztXyDjxe0w9AnmjYQ1iR
-         OIjzyilKkC3ZYBIveFEDnyzBxxa/GKDLSAuxJQS8vvygGcwxdEYDcgGgtuiQrRnjIWVJ
-         E9oeVnacOiBmKK5Gxim36jZ1knS/DOsCbk+7FtpJhAcf6rNLGpTxqsQOx/+Bc0A0XBBn
-         r4WzsjC65/K1cefMHX8ZF3fdwVtIaupEOB32DHyI2J6H0NdnYudQYTI2G5htW60pmjvf
-         tW2PPBV4gls2Mg8QUFRJmRsX8O7SaB514UAnhP4QYKiUPsTfbJ0nrenfmGfUy/AJbecc
-         UQJw==
-X-Forwarded-Encrypted: i=1; AJvYcCWCz1gWIZ72KOSchvN1Bb/9vbCHRN1EW9iKHvVha93ls+PhAO3w5ekEWZ2Iek7KF65tl6Yx+vi5UH3YLUMHtzXh2gM6n1SPUEnnADV7akDN18komTVY9BiXyLrekeKNDn2HFRcaeXraiw==
-X-Gm-Message-State: AOJu0YzEP570MH26msr9VINHFuO9fI4JEVGCdI1mCanhXYb5euFFflBY
-	zLuTX9q/CiYM2aP6xRW4d6KUrIZXJqQY1GwyN+9cXEjg3/h//WRL
-X-Google-Smtp-Source: AGHT+IF5UbhAbT1rHZOx8h8nKPeDxFazLYQU4Sj9M5hTcQVaUWslppa7zsfG9EBPXf9JBo2kghjXkQ==
-X-Received: by 2002:a2e:9cd4:0:b0:2ec:520d:f1dd with SMTP id 38308e7fff4ca-2ec593be843mr84533611fa.3.1719509609889;
-        Thu, 27 Jun 2024 10:33:29 -0700 (PDT)
+        bh=TZa91h6JHbvpzFhbsgcXRu/FV0fHLPTukVYlit5Rupc=;
+        b=sUhLkuzmRIrJxq9mVFUQ5Qmeld7tKA3oAyW/zUJzuiuZA4LnQlnkY9BHRjijslj3T5
+         5ybAKTZ+PlGVTskMfzDqt7FXlQbBQuZzK01iZ3JM/qtjf2Kb0vqLRU32ErDABBNNeM1c
+         tx6/iOoeva2SM9/qgfzv59o2PJLLn2dvgUwuSAYbKDC0p5NEUzt/NHdA+1Jmh7Zz7HlJ
+         HP0F5DORnHidJcM340Z8vi2gXqCA8gFpoh7Q7GclNsu2LVVjzaG1kd1WTP5ykW2YICxo
+         ih+0wYQISGXfkUjIvFqL1mDU386gWLJ1RqtMjZRP79AuArTB3Fp09B1OCMx7WDUS9CE0
+         +ktA==
+X-Forwarded-Encrypted: i=1; AJvYcCWTWwE1du8NUBdj5k3gNpy9d/dxU9sUfrnuhxlnAJ820hPaUl8SR70eoNGxyjPqE6LCiTLPxU93Wi0raLuXuHfhQMjF6q779kC1xXh74VkDOhaCMMbrWXRsmL6pIQno5fplMpu40phYkA==
+X-Gm-Message-State: AOJu0YyRJbL8bG/6xj+EVW/J/iYgqFfL9GmqHGNvGGLW7V5dphnX+r5Y
+	U49z+l1q4p3bwtArsJK0CLR1EWmTI0eOBFVBpr1AGk2DxL2R7Qw4DbNTwgNI
+X-Google-Smtp-Source: AGHT+IFQPd2z7z8/jzojDMq3jNKV/pXbP52IPlrBLwBzxdJ/4vsV6ETxbhRdstJb5WoQAIqbExN8+A==
+X-Received: by 2002:a05:6512:1590:b0:52e:7a2c:96ee with SMTP id 2adb3069b0e04-52e7a2c987amr207372e87.34.1719509613733;
+        Thu, 27 Jun 2024 10:33:33 -0700 (PDT)
 Received: from localhost ([213.79.110.82])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ee4a4beeb8sm3162171fa.116.2024.06.27.10.33.29
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52e7ab0bbf0sm1339e87.25.2024.06.27.10.33.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 10:33:29 -0700 (PDT)
+        Thu, 27 Jun 2024 10:33:33 -0700 (PDT)
 From: Serge Semin <fancer.lancer@gmail.com>
 To: Michal Simek <michal.simek@amd.com>,
 	Alexander Stein <alexander.stein@ew.tq-group.com>,
@@ -69,9 +69,9 @@ Cc: Serge Semin <fancer.lancer@gmail.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-edac@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND v6 14/18] EDAC/synopsys: Detach Zynq A05 DDRC support to separate driver
-Date: Thu, 27 Jun 2024 20:32:21 +0300
-Message-ID: <20240627173251.25718-15-fancer.lancer@gmail.com>
+Subject: [PATCH RESEND v6 16/18] EDAC/synopsys: Unify CSRs macro declarations
+Date: Thu, 27 Jun 2024 20:32:23 +0300
+Message-ID: <20240627173251.25718-17-fancer.lancer@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240627173251.25718-1-fancer.lancer@gmail.com>
 References: <20240627173251.25718-1-fancer.lancer@gmail.com>
@@ -83,972 +83,307 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The synopsys_edac.c driver currently supports three memory-controllers:
-1. Synopsys DW uMCTL2 DDRC v3.80 (with the ZynqMP-specific params).
-2. Xilinx ZynqMP DDRC Synopsys DW uMCTL2 DDRC v2.40.
-3. Xilinx Zynq A05 DDR controller.
-If the first two devices are based on the Synopsys DW uMCTL2 IP-cores
-(ZynqMP MC is based on the DW uMCTL2 v2.40), the later device has
-absolutely nothing in common with the Synopsys DW uMCTL2 DDR controllers:
-- the CSRs map is absolutely different;
-- it doesn't support IRQs unlike the Synopsys memory controllers.
-Having the driver to support so different devices caused implementing an
-additional level of abstraction, which will be a great deal of obstacle in
-about to be added comprehensive set of the Synopsys DDR-controller features (DW
-uCMTL2 IP-core parameters auto-detection, common SDRAM<->phys address
-translation, multi-ranked memory, ECC scrubber, individual IRQs, DFI alert_n
-IRQ, and so on). Moreover the original reason of having these devices support
-living in a single driver hasn't been introduced for all these years: the
-synopsys_edac.c driver currently supports only a single memory controller
-detected on the system.
+Originally the device CSR macros were supposed to be defined following the
+next local convention: first CSR offsets are listed, then their fields and
+flags are described in the same order; CSRs offset macros are supposed to
+have _OFST suffix; ECC-related macros shall have ECC_ prefix, generic
+DDR-related macros - DDR_ prefix. After all the years the driver has been
+living in kernel the CSRs macros have turned to be partly deviated away
+from the denoted convention.
 
-So in order to make the Synopsys driver ready for the new features added
-move the Xilinx Zynq A05 DDRC support into a separate driver: detach the
-Zynq-specific callbacks, init/probe/remove methods and move them into the
-new zynq_edac.c driver. The resultant driver will mostly look similar to
-the code submitted in the initial commit ae9b56e3996d ("EDAC, synps: Add
-EDAC support for zynq ddr ecc controller") except a few fixes added
-afterwards.
-
-Note several Zynq-specific macros have been used in the DW uMCTL2
-DDRC-specific functions. These macros just for a mere coincident have
-values suitable for the DW uMCTL2 code but their names either partly or
-fully unrelated to the Synopsys memory controllers. Since these macros are
-now moved to another driver introduce a new Synopsys-specific ones and fix
-the places where the macros have been improperly utilized.
+Fix all the related inconsistencies: move several CSRs offset macros to be
+defined before the CSRs fields and flags macros; replace OFFSET suffix
+with OFST; replace DDRC_ prefix with DDR_ and ECC_ with DDR_ where it's
+appropriate; group DDR_MSTR and ECC_CTRL (ECC_CLR) sibling fields macros
+together and make sure their prefixes match to the CSRs offset macros. In
+addition to that drop _MASK suffix from the macros which aren't used as
+masks and add ZYNQMP_ prefix to the ZYNQMP-specific macros to distinguish
+them from the generic Synopsys memory controller macros.
 
 Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 
 ---
 
-Changelog v3:
-- Drop the no longer used "priv" pointer from the zynq_mc_init() function.
-  (@tbot)
-
-Changelog v5:
-- Rename handle_error and check_errors to zynq_handle_error and
-  zynq_check_errors in the kdoc comments (@tbot)
+Changelog v4:
+- This is a new patch collected from the rest of the series to simplify
+  the review process.
 ---
- MAINTAINERS                  |   1 +
- drivers/edac/Kconfig         |   9 +-
- drivers/edac/Makefile        |   1 +
- drivers/edac/synopsys_edac.c | 239 ++---------------
- drivers/edac/zynq_edac.c     | 501 +++++++++++++++++++++++++++++++++++
- 5 files changed, 531 insertions(+), 220 deletions(-)
- create mode 100644 drivers/edac/zynq_edac.c
+ drivers/edac/synopsys_edac.c | 134 +++++++++++++++++------------------
+ 1 file changed, 66 insertions(+), 68 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cf9c9221c388..16641a852259 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3132,6 +3132,7 @@ F:	arch/arm/mach-zynq/
- F:	drivers/clocksource/timer-cadence-ttc.c
- F:	drivers/cpuidle/cpuidle-zynq.c
- F:	drivers/edac/synopsys_edac.c
-+F:	drivers/edac/zynq_edac.c
- F:	drivers/i2c/busses/i2c-cadence.c
- F:	drivers/i2c/busses/i2c-xiic.c
- F:	drivers/mmc/host/sdhci-of-arasan.c
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 16c8de5050e5..49ddf216793d 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -488,7 +488,7 @@ config EDAC_ARMADA_XP
- 
- config EDAC_SYNOPSYS
- 	tristate "Synopsys DDR Memory Controller"
--	depends on ARCH_ZYNQ || ARCH_ZYNQMP || ARCH_INTEL_SOCFPGA || ARCH_MXC
-+	depends on ARCH_ZYNQMP || ARCH_INTEL_SOCFPGA || ARCH_MXC
- 	help
- 	  Support for error detection and correction on the Synopsys DDR
- 	  memory controller.
-@@ -543,6 +543,13 @@ config EDAC_DMC520
- 	  Support for error detection and correction on the
- 	  SoCs with ARM DMC-520 DRAM controller.
- 
-+config EDAC_ZYNQ
-+	tristate "Xilinx Zynq A05 DDR Memory Controller"
-+	depends on ARCH_ZYNQ || COMPILE_TEST
-+	help
-+	  Support for error detection and correction on the Xilinx Zynq A05
-+	  DDR memory controller.
-+
- config EDAC_ZYNQMP
- 	tristate "Xilinx ZynqMP OCM Controller"
- 	depends on ARCH_ZYNQMP || COMPILE_TEST
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index 9c09893695b7..2829036f8468 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -85,5 +85,6 @@ obj-$(CONFIG_EDAC_ASPEED)		+= aspeed_edac.o
- obj-$(CONFIG_EDAC_BLUEFIELD)		+= bluefield_edac.o
- obj-$(CONFIG_EDAC_DMC520)		+= dmc520_edac.o
- obj-$(CONFIG_EDAC_NPCM)			+= npcm_edac.o
-+obj-$(CONFIG_EDAC_ZYNQ)			+= zynq_edac.o
- obj-$(CONFIG_EDAC_ZYNQMP)		+= zynqmp_edac.o
- obj-$(CONFIG_EDAC_VERSAL)		+= versal_edac.o
 diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-index 23a2f56fcb74..8085ed0726d2 100644
+index 8ed942735e23..6d2fc8a53447 100644
 --- a/drivers/edac/synopsys_edac.c
 +++ b/drivers/edac/synopsys_edac.c
-@@ -29,68 +29,16 @@
- #define SYNPS_EDAC_MOD_STRING		"synps_edac"
- #define SYNPS_EDAC_MOD_VER		"1"
+@@ -77,20 +77,34 @@
+ #define ECC_POISON0_OFST		0xB8
+ #define ECC_POISON1_OFST		0xBC
  
--/* Synopsys DDR memory controller registers that are relevant to ECC */
--#define CTRL_OFST			0x0
--#define T_ZQ_OFST			0xA4
+-#define ECC_ADDRMAP0_OFFSET		0x200
 -
--/* ECC control register */
--#define ECC_CTRL_OFST			0xC4
--/* ECC log register */
--#define CE_LOG_OFST			0xC8
--/* ECC address register */
--#define CE_ADDR_OFST			0xCC
--/* ECC data[31:0] register */
--#define CE_DATA_31_0_OFST		0xD0
+-/* Control register bitfield definitions */
+-#define ECC_CTRL_CLR_CE_ERR		BIT(0)
+-#define ECC_CTRL_CLR_UE_ERR		BIT(1)
+-#define ECC_CTRL_CLR_CE_ERRCNT		BIT(2)
+-#define ECC_CTRL_CLR_UE_ERRCNT		BIT(3)
 -
--/* Uncorrectable error info registers */
--#define UE_LOG_OFST			0xDC
--#define UE_ADDR_OFST			0xE0
--#define UE_DATA_31_0_OFST		0xE4
--
--#define STAT_OFST			0xF0
--#define SCRUB_OFST			0xF4
--
--/* Control register bit field definitions */
--#define CTRL_BW_MASK			0xC
--#define CTRL_BW_SHIFT			2
--
--#define DDRCTL_WDTH_16			1
--#define DDRCTL_WDTH_32			0
--
--/* ZQ register bit field definitions */
--#define T_ZQ_DDRMODE_MASK		0x2
--
--/* ECC control register bit field definitions */
--#define ECC_CTRL_CLR_CE_ERR		0x2
--#define ECC_CTRL_CLR_UE_ERR		0x1
--
--/* ECC correctable/uncorrectable error log register definitions */
--#define LOG_VALID			0x1
--#define CE_LOG_BITPOS_MASK		0xFE
--#define CE_LOG_BITPOS_SHIFT		1
--
--/* ECC correctable/uncorrectable error address register definitions */
--#define ADDR_COL_MASK			0xFFF
--#define ADDR_ROW_MASK			0xFFFF000
--#define ADDR_ROW_SHIFT			12
--#define ADDR_BANK_MASK			0x70000000
--#define ADDR_BANK_SHIFT			28
--
--/* ECC statistic register definitions */
--#define STAT_UECNT_MASK			0xFF
--#define STAT_CECNT_MASK			0xFF00
--#define STAT_CECNT_SHIFT		8
--
--/* ECC scrub register definitions */
--#define SCRUB_MODE_MASK			0x7
--#define SCRUB_MODE_SECDED		0x4
--
- /* DDR ECC Quirks */
- #define DDR_ECC_INTR_SUPPORT		BIT(0)
- #define DDR_ECC_DATA_POISON_SUPPORT	BIT(1)
- #define SYNPS_ZYNQMP_IRQ_REGS		BIT(2)
- 
--/* ZynqMP Enhanced DDR memory controller registers that are relevant to ECC */
-+/* Synopsys DDR memory controller registers that are relevant to ECC */
+-/* DDR Control Register width definitions  */
++/* DDR Address Map Registers */
++#define DDR_ADDRMAP0_OFST		0x200
 +
-+/* DDRC Master 0 Register */
-+#define DDR_MSTR_OFST			0x0
++/* DDR Software Control Register */
++#define DDR_SWCTL			0x320
 +
- /* ECC Configuration Registers */
- #define ECC_CFG0_OFST			0x70
- #define ECC_CFG1_OFST			0x74
-@@ -134,16 +82,22 @@
- #define ECC_ADDRMAP0_OFFSET		0x200
++/* ZynqMP DDR QOS Registers */
++#define ZYNQMP_DDR_QOS_IRQ_STAT_OFST	0x20200
++#define ZYNQMP_DDR_QOS_IRQ_EN_OFST	0x20208
++#define ZYNQMP_DDR_QOS_IRQ_DB_OFST	0x2020C
++
++/* DDR Master register definitions */
++#define DDR_MSTR_DEV_CFG_MASK		0xC0000000
++#define DDR_MSTR_DEV_CFG_SHIFT		30
++#define DDR_MSTR_DEV_X4			0
++#define DDR_MSTR_DEV_X8			1
++#define DDR_MSTR_DEV_X16		2
++#define DDR_MSTR_DEV_X32		3
+ #define DDR_MSTR_BUSWIDTH_MASK		0x3000
+ #define DDR_MSTR_BUSWIDTH_SHIFT		12
+-#define DDRCTL_EWDTH_16			2
+-#define DDRCTL_EWDTH_32			1
+-#define DDRCTL_EWDTH_64			0
++#define DDR_MSTR_BUSWIDTH_16		2
++#define DDR_MSTR_BUSWIDTH_32		1
++#define DDR_MSTR_BUSWIDTH_64		0
++#define DDR_MSTR_MEM_LPDDR4		0x20
++#define DDR_MSTR_MEM_DDR4		0x10
++#define DDR_MSTR_MEM_LPDDR3		0x8
++#define DDR_MSTR_MEM_DDR2		0x4
++#define DDR_MSTR_MEM_DDR3		0x1
  
- /* Control register bitfield definitions */
--#define ECC_CTRL_BUSWIDTH_MASK		0x3000
--#define ECC_CTRL_BUSWIDTH_SHIFT		12
+ /* ECC CFG0 register definitions */
+ #define ECC_CFG0_MODE_MASK		0x7
+@@ -103,23 +117,19 @@
+ #define ECC_STAT_CECNT_SHIFT		8
+ #define ECC_STAT_BITNUM_MASK		0x7F
+ 
++/* ECC control/clear register definitions */
 +#define ECC_CTRL_CLR_CE_ERR		BIT(0)
 +#define ECC_CTRL_CLR_UE_ERR		BIT(1)
- #define ECC_CTRL_CLR_CE_ERRCNT		BIT(2)
- #define ECC_CTRL_CLR_UE_ERRCNT		BIT(3)
- 
- /* DDR Control Register width definitions  */
-+#define DDR_MSTR_BUSWIDTH_MASK		0x3000
-+#define DDR_MSTR_BUSWIDTH_SHIFT		12
- #define DDRCTL_EWDTH_16			2
- #define DDRCTL_EWDTH_32			1
- #define DDRCTL_EWDTH_64			0
- 
-+/* ECC CFG0 register definitions */
-+#define ECC_CFG0_MODE_MASK		0x7
-+#define ECC_CFG0_MODE_SECDED		0x4
++#define ECC_CTRL_CLR_CE_ERRCNT		BIT(2)
++#define ECC_CTRL_CLR_UE_ERRCNT		BIT(3)
++#define ECC_CTRL_EN_CE_IRQ		BIT(8)
++#define ECC_CTRL_EN_UE_IRQ		BIT(9)
 +
- /* ECC status register definitions */
- #define ECC_STAT_UECNT_MASK		0xF0000
- #define ECC_STAT_UECNT_SHIFT		16
-@@ -341,61 +295,6 @@ struct synps_platform_data {
- 	int quirks;
- };
+ /* ECC error count register definitions */
+ #define ECC_ERRCNT_UECNT_MASK		0xFFFF0000
+ #define ECC_ERRCNT_UECNT_SHIFT		16
+ #define ECC_ERRCNT_CECNT_MASK		0xFFFF
  
--/**
-- * zynq_get_error_info - Get the current ECC error info.
-- * @priv:	DDR memory controller private instance data.
-- *
-- * Return: one if there is no error, otherwise zero.
-- */
--static int zynq_get_error_info(struct synps_edac_priv *priv)
--{
--	struct synps_ecc_status *p;
--	u32 regval, clearval = 0;
--	void __iomem *base;
+-/* DDR QOS Interrupt register definitions */
+-#define DDR_QOS_IRQ_STAT_OFST		0x20200
+-#define DDR_QOSUE_MASK			0x4
+-#define	DDR_QOSCE_MASK			0x2
+-#define	ECC_CE_UE_INTR_MASK		0x6
+-#define DDR_QOS_IRQ_EN_OFST		0x20208
+-#define DDR_QOS_IRQ_DB_OFST		0x2020C
 -
--	base = priv->baseaddr;
--	p = &priv->stat;
+-/* DDR QOS Interrupt register definitions */
+-#define DDR_UE_MASK			BIT(9)
+-#define DDR_CE_MASK			BIT(8)
 -
--	regval = readl(base + STAT_OFST);
--	if (!regval)
--		return 1;
+ /* ECC Corrected Error Register Mask and Shifts*/
+ #define ECC_CEADDR0_RW_MASK		0x3FFFF
+ #define ECC_CEADDR0_RNK_MASK		BIT(24)
+@@ -141,28 +151,11 @@
+ #define ECC_POISON1_ROW_SHIFT		0
+ #define ECC_POISON1_ROW_MASK		0x3FFFF
+ 
+-/* DDR Memory type defines */
+-#define MEM_TYPE_DDR3			0x1
+-#define MEM_TYPE_LPDDR3			0x8
+-#define MEM_TYPE_DDR2			0x4
+-#define MEM_TYPE_DDR4			0x10
+-#define MEM_TYPE_LPDDR4			0x20
 -
--	p->ce_cnt = (regval & STAT_CECNT_MASK) >> STAT_CECNT_SHIFT;
--	p->ue_cnt = regval & STAT_UECNT_MASK;
+-/* DDRC Software control register */
+-#define DDRC_SWCTL			0x320
 -
--	regval = readl(base + CE_LOG_OFST);
--	if (!(p->ce_cnt && (regval & LOG_VALID)))
--		goto ue_err;
+ /* DDRC ECC CE & UE poison mask */
+ #define ECC_CEPOISON_MASK		0x3
+ #define ECC_UEPOISON_MASK		0x1
+ 
+-/* DDRC Device config masks */
+-#define DDRC_MSTR_CFG_MASK		0xC0000000
+-#define DDRC_MSTR_CFG_SHIFT		30
+-#define DDRC_MSTR_CFG_X4_MASK		0x0
+-#define DDRC_MSTR_CFG_X8_MASK		0x1
+-#define DDRC_MSTR_CFG_X16_MASK		0x2
+-#define DDRC_MSTR_CFG_X32_MASK		0x3
 -
--	p->ceinfo.bitpos = (regval & CE_LOG_BITPOS_MASK) >> CE_LOG_BITPOS_SHIFT;
--	regval = readl(base + CE_ADDR_OFST);
--	p->ceinfo.row = (regval & ADDR_ROW_MASK) >> ADDR_ROW_SHIFT;
--	p->ceinfo.col = regval & ADDR_COL_MASK;
--	p->ceinfo.bank = (regval & ADDR_BANK_MASK) >> ADDR_BANK_SHIFT;
--	p->ceinfo.data = readl(base + CE_DATA_31_0_OFST);
--	edac_dbg(3, "CE bit position: %d data: %d\n", p->ceinfo.bitpos,
--		 p->ceinfo.data);
--	clearval = ECC_CTRL_CLR_CE_ERR;
--
--ue_err:
--	regval = readl(base + UE_LOG_OFST);
--	if (!(p->ue_cnt && (regval & LOG_VALID)))
--		goto out;
--
--	regval = readl(base + UE_ADDR_OFST);
--	p->ueinfo.row = (regval & ADDR_ROW_MASK) >> ADDR_ROW_SHIFT;
--	p->ueinfo.col = regval & ADDR_COL_MASK;
--	p->ueinfo.bank = (regval & ADDR_BANK_MASK) >> ADDR_BANK_SHIFT;
--	p->ueinfo.data = readl(base + UE_DATA_31_0_OFST);
--	clearval |= ECC_CTRL_CLR_UE_ERR;
--
--out:
--	writel(clearval, base + ECC_CTRL_OFST);
--	writel(0x0, base + ECC_CTRL_OFST);
--
--	return 0;
--}
--
++/* DDRC Device config shifts/masks */
+ #define DDR_MAX_ROW_SHIFT		18
+ #define DDR_MAX_COL_SHIFT		14
+ #define DDR_MAX_BANK_SHIFT		3
+@@ -215,6 +208,11 @@
+ 
+ #define RANK_B0_BASE			6
+ 
++/* ZynqMP DDR QOS Interrupt register definitions */
++#define ZYNQMP_DDR_QOS_UE_MASK		0x4
++#define ZYNQMP_DDR_QOS_CE_MASK		0x2
++#define ZYNQMP_DDR_QOS_IRQ_MASK		0x6
++
  /**
-  * zynqmp_get_error_info - Get the current ECC error info.
-  * @priv:	DDR memory controller private instance data.
-@@ -614,37 +513,6 @@ static void check_errors(struct mem_ctl_info *mci)
+  * struct ecc_error_info - ECC error log information.
+  * @row:	Row number.
+@@ -397,8 +395,8 @@ static void enable_intr(struct synps_edac_priv *priv)
+ 
+ 	/* Enable UE/CE Interrupts */
+ 	if (priv->p_data->quirks & SYNPS_ZYNQMP_IRQ_REGS) {
+-		writel(DDR_QOSUE_MASK | DDR_QOSCE_MASK,
+-		       priv->baseaddr + DDR_QOS_IRQ_EN_OFST);
++		writel(ZYNQMP_DDR_QOS_UE_MASK | ZYNQMP_DDR_QOS_CE_MASK,
++		       priv->baseaddr + ZYNQMP_DDR_QOS_IRQ_EN_OFST);
+ 
+ 		return;
+ 	}
+@@ -409,7 +407,7 @@ static void enable_intr(struct synps_edac_priv *priv)
+ 	 * IRQs Enable/Disable flags have been available since v3.10a.
+ 	 * This is noop for the older controllers.
+ 	 */
+-	writel(DDR_UE_MASK | DDR_CE_MASK,
++	writel(ECC_CTRL_EN_CE_IRQ | ECC_CTRL_EN_UE_IRQ,
+ 	       priv->baseaddr + ECC_CLR_OFST);
+ 
+ 	spin_unlock_irqrestore(&priv->reglock, flags);
+@@ -421,8 +419,8 @@ static void disable_intr(struct synps_edac_priv *priv)
+ 
+ 	/* Disable UE/CE Interrupts */
+ 	if (priv->p_data->quirks & SYNPS_ZYNQMP_IRQ_REGS) {
+-		writel(DDR_QOSUE_MASK | DDR_QOSCE_MASK,
+-		       priv->baseaddr + DDR_QOS_IRQ_DB_OFST);
++		writel(ZYNQMP_DDR_QOS_UE_MASK | ZYNQMP_DDR_QOS_CE_MASK,
++		       priv->baseaddr + ZYNQMP_DDR_QOS_IRQ_DB_OFST);
+ 
+ 		return;
+ 	}
+@@ -450,9 +448,9 @@ static irqreturn_t intr_handler(int irq, void *dev_id)
+ 	priv = mci->pvt_info;
+ 
+ 	if (priv->p_data->quirks & SYNPS_ZYNQMP_IRQ_REGS) {
+-		regval = readl(priv->baseaddr + DDR_QOS_IRQ_STAT_OFST);
+-		regval &= (DDR_QOSCE_MASK | DDR_QOSUE_MASK);
+-		if (!(regval & ECC_CE_UE_INTR_MASK))
++		regval = readl(priv->baseaddr + ZYNQMP_DDR_QOS_IRQ_STAT_OFST);
++		regval &= (ZYNQMP_DDR_QOS_CE_MASK | ZYNQMP_DDR_QOS_UE_MASK);
++		if (!(regval & ZYNQMP_DDR_QOS_IRQ_MASK))
+ 			return IRQ_NONE;
+ 	}
+ 
+@@ -463,7 +461,7 @@ static irqreturn_t intr_handler(int irq, void *dev_id)
  	handle_error(mci, &priv->stat);
- }
  
--/**
-- * zynq_get_dtype - Return the controller memory width.
-- * @base:	DDR memory controller base address.
-- *
-- * Get the EDAC device type width appropriate for the current controller
-- * configuration.
-- *
-- * Return: a device type width enumeration.
-- */
--static enum dev_type zynq_get_dtype(const void __iomem *base)
--{
--	enum dev_type dt;
--	u32 width;
--
--	width = readl(base + CTRL_OFST);
--	width = (width & CTRL_BW_MASK) >> CTRL_BW_SHIFT;
--
--	switch (width) {
--	case DDRCTL_WDTH_16:
--		dt = DEV_X2;
--		break;
--	case DDRCTL_WDTH_32:
--		dt = DEV_X4;
--		break;
--	default:
--		dt = DEV_UNKNOWN;
--	}
--
--	return dt;
--}
--
- /**
-  * zynqmp_get_dtype - Return the DDR memory chips type.
-  * @base:	DDR memory controller base address.
-@@ -658,7 +526,7 @@ static enum dev_type zynqmp_get_dtype(const void __iomem *base)
- {
+ 	if (priv->p_data->quirks & SYNPS_ZYNQMP_IRQ_REGS)
+-		writel(regval, priv->baseaddr + DDR_QOS_IRQ_STAT_OFST);
++		writel(regval, priv->baseaddr + ZYNQMP_DDR_QOS_IRQ_STAT_OFST);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -482,18 +480,18 @@ static enum dev_type synps_get_dtype(const void __iomem *base)
  	u32 regval;
  
--	regval = readl(base + CTRL_OFST);
-+	regval = readl(base + DDR_MSTR_OFST);
- 	if (!(regval & MEM_TYPE_DDR4))
+ 	regval = readl(base + DDR_MSTR_OFST);
+-	if (!(regval & MEM_TYPE_DDR4))
++	if (!(regval & DDR_MSTR_MEM_DDR4))
  		return DEV_UNKNOWN;
  
-@@ -677,30 +545,6 @@ static enum dev_type zynqmp_get_dtype(const void __iomem *base)
- 	return DEV_UNKNOWN;
- }
+-	regval = (regval & DDRC_MSTR_CFG_MASK) >> DDRC_MSTR_CFG_SHIFT;
++	regval = (regval & DDR_MSTR_DEV_CFG_MASK) >> DDR_MSTR_DEV_CFG_SHIFT;
+ 	switch (regval) {
+-	case DDRC_MSTR_CFG_X4_MASK:
++	case DDR_MSTR_DEV_X4:
+ 		return DEV_X4;
+-	case DDRC_MSTR_CFG_X8_MASK:
++	case DDR_MSTR_DEV_X8:
+ 		return DEV_X8;
+-	case DDRC_MSTR_CFG_X16_MASK:
++	case DDR_MSTR_DEV_X16:
+ 		return DEV_X16;
+-	case DDRC_MSTR_CFG_X32_MASK:
++	case DDR_MSTR_DEV_X32:
+ 		return DEV_X32;
+ 	}
  
--/**
-- * zynq_get_ecc_state - Return the controller ECC enable/disable status.
-- * @base:	DDR memory controller base address.
-- *
-- * Get the ECC enable/disable status of the controller.
-- *
-- * Return: true if enabled, otherwise false.
-- */
--static bool zynq_get_ecc_state(void __iomem *base)
--{
--	enum dev_type dt;
--	u32 ecctype;
--
--	dt = zynq_get_dtype(base);
--	if (dt == DEV_UNKNOWN)
--		return false;
--
--	ecctype = readl(base + SCRUB_OFST) & SCRUB_MODE_MASK;
--	if ((ecctype == SCRUB_MODE_SECDED) && (dt == DEV_X2))
--		return true;
--
--	return false;
--}
--
- /**
-  * zynqmp_get_ecc_state - Return the controller ECC enable/disable status.
-  * @base:	DDR memory controller base address.
-@@ -713,9 +557,9 @@ static bool zynqmp_get_ecc_state(void __iomem *base)
- {
- 	u32 regval;
+@@ -547,11 +545,11 @@ static enum mem_type synps_get_mtype(const void __iomem *base)
  
--	regval = readl(base + ECC_CFG0_OFST) & SCRUB_MODE_MASK;
-+	regval = readl(base + ECC_CFG0_OFST) & ECC_CFG0_MODE_MASK;
+ 	memtype = readl(base + DDR_MSTR_OFST);
  
--	return (regval == SCRUB_MODE_SECDED);
-+	return (regval == ECC_CFG0_MODE_SECDED);
- }
- 
- /**
-@@ -732,30 +576,6 @@ static u32 get_memsize(void)
- 	return inf.totalram * inf.mem_unit;
- }
- 
--/**
-- * zynq_get_mtype - Return the controller memory type.
-- * @base:	Synopsys ECC status structure.
-- *
-- * Get the EDAC memory type appropriate for the current controller
-- * configuration.
-- *
-- * Return: a memory type enumeration.
-- */
--static enum mem_type zynq_get_mtype(const void __iomem *base)
--{
--	enum mem_type mt;
--	u32 memtype;
--
--	memtype = readl(base + T_ZQ_OFST);
--
--	if (memtype & T_ZQ_DDRMODE_MASK)
--		mt = MEM_DDR3;
--	else
--		mt = MEM_DDR2;
--
--	return mt;
--}
--
- /**
-  * zynqmp_get_mtype - Returns controller memory type.
-  * @base:	Synopsys ECC status structure.
-@@ -770,7 +590,7 @@ static enum mem_type zynqmp_get_mtype(const void __iomem *base)
- 	enum mem_type mt;
- 	u32 memtype;
- 
--	memtype = readl(base + CTRL_OFST);
-+	memtype = readl(base + DDR_MSTR_OFST);
- 
- 	if ((memtype & MEM_TYPE_DDR3) || (memtype & MEM_TYPE_LPDDR3))
+-	if ((memtype & MEM_TYPE_DDR3) || (memtype & MEM_TYPE_LPDDR3))
++	if ((memtype & DDR_MSTR_MEM_DDR3) || (memtype & DDR_MSTR_MEM_LPDDR3))
  		mt = MEM_DDR3;
-@@ -882,14 +702,6 @@ static int setup_irq(struct mem_ctl_info *mci,
- 	return 0;
+-	else if (memtype & MEM_TYPE_DDR2)
++	else if (memtype & DDR_MSTR_MEM_DDR2)
+ 		mt = MEM_RDDR2;
+-	else if ((memtype & MEM_TYPE_LPDDR4) || (memtype & MEM_TYPE_DDR4))
++	else if ((memtype & DDR_MSTR_MEM_LPDDR4) || (memtype & DDR_MSTR_MEM_DDR4))
+ 		mt = MEM_DDR4;
+ 	else
+ 		mt = MEM_EMPTY;
+@@ -756,12 +754,12 @@ static ssize_t inject_data_poison_store(struct device *dev,
+ 	struct mem_ctl_info *mci = to_mci(dev);
+ 	struct synps_edac_priv *priv = mci->pvt_info;
+ 
+-	writel(0, priv->baseaddr + DDRC_SWCTL);
++	writel(0, priv->baseaddr + DDR_SWCTL);
+ 	if (strncmp(data, "CE", 2) == 0)
+ 		writel(ECC_CEPOISON_MASK, priv->baseaddr + ECC_CFG1_OFST);
+ 	else
+ 		writel(ECC_UEPOISON_MASK, priv->baseaddr + ECC_CFG1_OFST);
+-	writel(1, priv->baseaddr + DDRC_SWCTL);
++	writel(1, priv->baseaddr + DDR_SWCTL);
+ 
+ 	return count;
  }
+@@ -878,8 +876,8 @@ static void setup_column_address_map(struct synps_edac_priv *priv, u32 *addrmap)
+ 	priv->col_shift[9] = (((addrmap[3] >> 24) & COL_MAX_VAL_MASK) ==
+ 			COL_MAX_VAL_MASK) ? 0 : (((addrmap[3] >> 24) &
+ 					COL_MAX_VAL_MASK) + COL_B9_BASE);
+-	if (width == DDRCTL_EWDTH_64) {
+-		if (memtype & MEM_TYPE_LPDDR3) {
++	if (width == DDR_MSTR_BUSWIDTH_64) {
++		if (memtype & DDR_MSTR_MEM_LPDDR3) {
+ 			priv->col_shift[10] = ((addrmap[4] &
+ 				COL_MAX_VAL_MASK) == COL_MAX_VAL_MASK) ? 0 :
+ 				((addrmap[4] & COL_MAX_VAL_MASK) +
+@@ -898,8 +896,8 @@ static void setup_column_address_map(struct synps_edac_priv *priv, u32 *addrmap)
+ 				(((addrmap[4] >> 8) & COL_MAX_VAL_MASK) +
+ 				 COL_B11_BASE);
+ 		}
+-	} else if (width == DDRCTL_EWDTH_32) {
+-		if (memtype & MEM_TYPE_LPDDR3) {
++	} else if (width == DDR_MSTR_BUSWIDTH_32) {
++		if (memtype & DDR_MSTR_MEM_LPDDR3) {
+ 			priv->col_shift[10] = (((addrmap[3] >> 24) &
+ 				COL_MAX_VAL_MASK) == COL_MAX_VAL_MASK) ? 0 :
+ 				(((addrmap[3] >> 24) & COL_MAX_VAL_MASK) +
+@@ -919,7 +917,7 @@ static void setup_column_address_map(struct synps_edac_priv *priv, u32 *addrmap)
+ 				 COL_B10_BASE);
+ 		}
+ 	} else {
+-		if (memtype & MEM_TYPE_LPDDR3) {
++		if (memtype & DDR_MSTR_MEM_LPDDR3) {
+ 			priv->col_shift[10] = (((addrmap[3] >> 16) &
+ 				COL_MAX_VAL_MASK) == COL_MAX_VAL_MASK) ? 0 :
+ 				(((addrmap[3] >> 16) & COL_MAX_VAL_MASK) +
+@@ -994,7 +992,7 @@ static void setup_address_map(struct synps_edac_priv *priv)
+ 	for (index = 0; index < 12; index++) {
+ 		u32 addrmap_offset;
  
--static const struct synps_platform_data zynq_edac_def = {
--	.get_error_info	= zynq_get_error_info,
--	.get_mtype	= zynq_get_mtype,
--	.get_dtype	= zynq_get_dtype,
--	.get_ecc_state	= zynq_get_ecc_state,
--	.quirks		= 0,
--};
--
- static const struct synps_platform_data zynqmp_edac_def = {
- 	.get_error_info	= zynqmp_get_error_info,
- 	.get_mtype	= zynqmp_get_mtype,
-@@ -916,10 +728,6 @@ static const struct synps_platform_data synopsys_edac_def = {
+-		addrmap_offset = ECC_ADDRMAP0_OFFSET + (index * 4);
++		addrmap_offset = DDR_ADDRMAP0_OFST + (index * 4);
+ 		addrmap[index] = readl(priv->baseaddr + addrmap_offset);
+ 	}
  
- 
- static const struct of_device_id synps_edac_match[] = {
--	{
--		.compatible = "xlnx,zynq-ddrc-a05",
--		.data = (void *)&zynq_edac_def
--	},
- 	{
- 		.compatible = "xlnx,zynqmp-ddrc-2.40a",
- 		.data = (void *)&zynqmp_edac_def
-@@ -1141,8 +949,8 @@ static void setup_column_address_map(struct synps_edac_priv *priv, u32 *addrmap)
- 	u32 width, memtype;
- 	int index;
- 
--	memtype = readl(priv->baseaddr + CTRL_OFST);
--	width = (memtype & ECC_CTRL_BUSWIDTH_MASK) >> ECC_CTRL_BUSWIDTH_SHIFT;
-+	memtype = readl(priv->baseaddr + DDR_MSTR_OFST);
-+	width = (memtype & DDR_MSTR_BUSWIDTH_MASK) >> DDR_MSTR_BUSWIDTH_SHIFT;
- 
- 	priv->col_shift[0] = 0;
- 	priv->col_shift[1] = 1;
-@@ -1337,7 +1145,7 @@ static int mc_probe(struct platform_device *pdev)
- 	layers[1].size = SYNPS_EDAC_NR_CHANS;
- 	layers[1].is_virt_csrow = false;
- 
--	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
-+	mci = edac_mc_alloc(EDAC_AUTO_MC_NUM, ARRAY_SIZE(layers), layers,
- 			    sizeof(struct synps_edac_priv));
- 	if (!mci) {
- 		edac_printk(KERN_ERR, EDAC_MC,
-@@ -1379,13 +1187,6 @@ static int mc_probe(struct platform_device *pdev)
- 		setup_address_map(priv);
- #endif
- 
--	/*
--	 * Start capturing the correctable and uncorrectable errors. A write of
--	 * 0 starts the counters.
--	 */
--	if (!(priv->p_data->quirks & DDR_ECC_INTR_SUPPORT))
--		writel(0x0, baseaddr + ECC_CTRL_OFST);
--
- 	return rc;
- 
- free_edac_mc:
-diff --git a/drivers/edac/zynq_edac.c b/drivers/edac/zynq_edac.c
-new file mode 100644
-index 000000000000..be26934a9c20
---- /dev/null
-+++ b/drivers/edac/zynq_edac.c
-@@ -0,0 +1,501 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Zynq DDR ECC Driver
-+ * This driver is based on ppc4xx_edac.c drivers
-+ *
-+ * Copyright (C) 2012 - 2014 Xilinx, Inc.
-+ */
-+
-+#include <linux/edac.h>
-+#include <linux/interrupt.h>
-+#include <linux/mm.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+
-+#include "edac_module.h"
-+
-+/* Number of cs_rows needed per memory controller */
-+#define ZYNQ_EDAC_NR_CSROWS		1
-+
-+/* Number of channels per memory controller */
-+#define ZYNQ_EDAC_NR_CHANS		1
-+
-+/* Granularity of reported error in bytes */
-+#define ZYNQ_EDAC_ERR_GRAIN		1
-+
-+#define ZYNQ_EDAC_MSG_SIZE		256
-+
-+#define ZYNQ_EDAC_MOD_STRING		"zynq_edac"
-+#define ZYNQ_EDAC_MOD_VER		"1"
-+
-+/* Zynq DDR memory controller ECC registers */
-+#define ZYNQ_CTRL_OFST			0x0
-+#define ZYNQ_T_ZQ_OFST			0xA4
-+
-+/* ECC control register */
-+#define ZYNQ_ECC_CTRL_OFST		0xC4
-+/* ECC log register */
-+#define ZYNQ_CE_LOG_OFST		0xC8
-+/* ECC address register */
-+#define ZYNQ_CE_ADDR_OFST		0xCC
-+/* ECC data[31:0] register */
-+#define ZYNQ_CE_DATA_31_0_OFST		0xD0
-+
-+/* Uncorrectable error info registers */
-+#define ZYNQ_UE_LOG_OFST		0xDC
-+#define ZYNQ_UE_ADDR_OFST		0xE0
-+#define ZYNQ_UE_DATA_31_0_OFST		0xE4
-+
-+#define ZYNQ_STAT_OFST			0xF0
-+#define ZYNQ_SCRUB_OFST			0xF4
-+
-+/* Control register bit field definitions */
-+#define ZYNQ_CTRL_BW_MASK		0xC
-+#define ZYNQ_CTRL_BW_SHIFT		2
-+
-+#define ZYNQ_DDRCTL_WDTH_16		1
-+#define ZYNQ_DDRCTL_WDTH_32		0
-+
-+/* ZQ register bit field definitions */
-+#define ZYNQ_T_ZQ_DDRMODE_MASK		0x2
-+
-+/* ECC control register bit field definitions */
-+#define ZYNQ_ECC_CTRL_CLR_CE_ERR	0x2
-+#define ZYNQ_ECC_CTRL_CLR_UE_ERR	0x1
-+
-+/* ECC correctable/uncorrectable error log register definitions */
-+#define ZYNQ_LOG_VALID			0x1
-+#define ZYNQ_CE_LOG_BITPOS_MASK		0xFE
-+#define ZYNQ_CE_LOG_BITPOS_SHIFT	1
-+
-+/* ECC correctable/uncorrectable error address register definitions */
-+#define ZYNQ_ADDR_COL_MASK		0xFFF
-+#define ZYNQ_ADDR_ROW_MASK		0xFFFF000
-+#define ZYNQ_ADDR_ROW_SHIFT		12
-+#define ZYNQ_ADDR_BANK_MASK		0x70000000
-+#define ZYNQ_ADDR_BANK_SHIFT		28
-+
-+/* ECC statistic register definitions */
-+#define ZYNQ_STAT_UECNT_MASK		0xFF
-+#define ZYNQ_STAT_CECNT_MASK		0xFF00
-+#define ZYNQ_STAT_CECNT_SHIFT		8
-+
-+/* ECC scrub register definitions */
-+#define ZYNQ_SCRUB_MODE_MASK		0x7
-+#define ZYNQ_SCRUB_MODE_SECDED		0x4
-+
-+/**
-+ * struct zynq_ecc_error_info - ECC error log information.
-+ * @row:	Row number.
-+ * @col:	Column number.
-+ * @bank:	Bank number.
-+ * @bitpos:	Bit position.
-+ * @data:	Data causing the error.
-+ */
-+struct zynq_ecc_error_info {
-+	u32 row;
-+	u32 col;
-+	u32 bank;
-+	u32 bitpos;
-+	u32 data;
-+};
-+
-+/**
-+ * struct zynq_ecc_status - ECC status information to report.
-+ * @ce_cnt:	Correctable error count.
-+ * @ue_cnt:	Uncorrectable error count.
-+ * @ceinfo:	Correctable error log information.
-+ * @ueinfo:	Uncorrectable error log information.
-+ */
-+struct zynq_ecc_status {
-+	u32 ce_cnt;
-+	u32 ue_cnt;
-+	struct zynq_ecc_error_info ceinfo;
-+	struct zynq_ecc_error_info ueinfo;
-+};
-+
-+/**
-+ * struct zynq_edac_priv - DDR memory controller private instance data.
-+ * @baseaddr:	Base address of the DDR controller.
-+ * @message:	Buffer for framing the event specific info.
-+ * @stat:	ECC status information.
-+ */
-+struct zynq_edac_priv {
-+	void __iomem *baseaddr;
-+	char message[ZYNQ_EDAC_MSG_SIZE];
-+	struct zynq_ecc_status stat;
-+};
-+
-+/**
-+ * zynq_get_error_info - Get the current ECC error info.
-+ * @priv:	DDR memory controller private instance data.
-+ *
-+ * Return: one if there is no error, otherwise zero.
-+ */
-+static int zynq_get_error_info(struct zynq_edac_priv *priv)
-+{
-+	struct zynq_ecc_status *p;
-+	u32 regval, clearval = 0;
-+	void __iomem *base;
-+
-+	base = priv->baseaddr;
-+	p = &priv->stat;
-+
-+	regval = readl(base + ZYNQ_STAT_OFST);
-+	if (!regval)
-+		return 1;
-+
-+	p->ce_cnt = (regval & ZYNQ_STAT_CECNT_MASK) >> ZYNQ_STAT_CECNT_SHIFT;
-+	p->ue_cnt = regval & ZYNQ_STAT_UECNT_MASK;
-+
-+	regval = readl(base + ZYNQ_CE_LOG_OFST);
-+	if (!(p->ce_cnt && (regval & ZYNQ_LOG_VALID)))
-+		goto ue_err;
-+
-+	p->ceinfo.bitpos = (regval & ZYNQ_CE_LOG_BITPOS_MASK) >> ZYNQ_CE_LOG_BITPOS_SHIFT;
-+	regval = readl(base + ZYNQ_CE_ADDR_OFST);
-+	p->ceinfo.row = (regval & ZYNQ_ADDR_ROW_MASK) >> ZYNQ_ADDR_ROW_SHIFT;
-+	p->ceinfo.col = regval & ZYNQ_ADDR_COL_MASK;
-+	p->ceinfo.bank = (regval & ZYNQ_ADDR_BANK_MASK) >> ZYNQ_ADDR_BANK_SHIFT;
-+	p->ceinfo.data = readl(base + ZYNQ_CE_DATA_31_0_OFST);
-+	edac_dbg(3, "CE bit position: %d data: %d\n", p->ceinfo.bitpos,
-+		 p->ceinfo.data);
-+	clearval = ZYNQ_ECC_CTRL_CLR_CE_ERR;
-+
-+ue_err:
-+	regval = readl(base + ZYNQ_UE_LOG_OFST);
-+	if (!(p->ue_cnt && (regval & ZYNQ_LOG_VALID)))
-+		goto out;
-+
-+	regval = readl(base + ZYNQ_UE_ADDR_OFST);
-+	p->ueinfo.row = (regval & ZYNQ_ADDR_ROW_MASK) >> ZYNQ_ADDR_ROW_SHIFT;
-+	p->ueinfo.col = regval & ZYNQ_ADDR_COL_MASK;
-+	p->ueinfo.bank = (regval & ZYNQ_ADDR_BANK_MASK) >> ZYNQ_ADDR_BANK_SHIFT;
-+	p->ueinfo.data = readl(base + ZYNQ_UE_DATA_31_0_OFST);
-+	clearval |= ZYNQ_ECC_CTRL_CLR_UE_ERR;
-+
-+out:
-+	writel(clearval, base + ZYNQ_ECC_CTRL_OFST);
-+	writel(0x0, base + ZYNQ_ECC_CTRL_OFST);
-+
-+	return 0;
-+}
-+
-+/**
-+ * zynq_handle_error - Handle Correctable and Uncorrectable errors.
-+ * @mci:	EDAC memory controller instance.
-+ * @p:		Zynq ECC status structure.
-+ *
-+ * Handles ECC correctable and uncorrectable errors.
-+ */
-+static void zynq_handle_error(struct mem_ctl_info *mci, struct zynq_ecc_status *p)
-+{
-+	struct zynq_edac_priv *priv = mci->pvt_info;
-+	struct zynq_ecc_error_info *pinf;
-+
-+	if (p->ce_cnt) {
-+		pinf = &p->ceinfo;
-+
-+		snprintf(priv->message, ZYNQ_EDAC_MSG_SIZE,
-+			 "Row %d Bank %d Col %d Bit %d Data 0x%08x",
-+			 pinf->row, pinf->bank, pinf->col,
-+			 pinf->bitpos, pinf->data);
-+
-+		edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci,
-+				     p->ce_cnt, 0, 0, 0, 0, 0, -1,
-+				     priv->message, "");
-+	}
-+
-+	if (p->ue_cnt) {
-+		pinf = &p->ueinfo;
-+
-+		snprintf(priv->message, ZYNQ_EDAC_MSG_SIZE,
-+			 "Row %d Bank %d Col %d",
-+			 pinf->row, pinf->bank, pinf->col);
-+
-+		edac_mc_handle_error(HW_EVENT_ERR_UNCORRECTED, mci,
-+				     p->ue_cnt, 0, 0, 0, 0, 0, -1,
-+				     priv->message, "");
-+	}
-+
-+	memset(p, 0, sizeof(*p));
-+}
-+
-+/**
-+ * zynq_check_errors - Check controller for ECC errors.
-+ * @mci:	EDAC memory controller instance.
-+ *
-+ * Check and post ECC errors. Called by the polling thread.
-+ */
-+static void zynq_check_errors(struct mem_ctl_info *mci)
-+{
-+	struct zynq_edac_priv *priv = mci->pvt_info;
-+	int status;
-+
-+	status = zynq_get_error_info(priv);
-+	if (status)
-+		return;
-+
-+	zynq_handle_error(mci, &priv->stat);
-+}
-+
-+/**
-+ * zynq_get_dtype - Return the controller memory width.
-+ * @base:	DDR memory controller base address.
-+ *
-+ * Get the EDAC device type width appropriate for the current controller
-+ * configuration.
-+ *
-+ * Return: a device type width enumeration.
-+ */
-+static enum dev_type zynq_get_dtype(const void __iomem *base)
-+{
-+	enum dev_type dt;
-+	u32 width;
-+
-+	width = readl(base + ZYNQ_CTRL_OFST);
-+	width = (width & ZYNQ_CTRL_BW_MASK) >> ZYNQ_CTRL_BW_SHIFT;
-+
-+	switch (width) {
-+	case ZYNQ_DDRCTL_WDTH_16:
-+		dt = DEV_X2;
-+		break;
-+	case ZYNQ_DDRCTL_WDTH_32:
-+		dt = DEV_X4;
-+		break;
-+	default:
-+		dt = DEV_UNKNOWN;
-+	}
-+
-+	return dt;
-+}
-+
-+/**
-+ * zynq_get_ecc_state - Return the controller ECC enable/disable status.
-+ * @base:	DDR memory controller base address.
-+ *
-+ * Get the ECC enable/disable status of the controller.
-+ *
-+ * Return: true if enabled, otherwise false.
-+ */
-+static bool zynq_get_ecc_state(void __iomem *base)
-+{
-+	enum dev_type dt;
-+	u32 ecctype;
-+
-+	dt = zynq_get_dtype(base);
-+	if (dt == DEV_UNKNOWN)
-+		return false;
-+
-+	ecctype = readl(base + ZYNQ_SCRUB_OFST) & ZYNQ_SCRUB_MODE_MASK;
-+	if ((ecctype == ZYNQ_SCRUB_MODE_SECDED) && (dt == DEV_X2))
-+		return true;
-+
-+	return false;
-+}
-+
-+/**
-+ * zynq_get_memsize - Read the size of the attached memory device.
-+ *
-+ * Return: the memory size in bytes.
-+ */
-+static u32 zynq_get_memsize(void)
-+{
-+	struct sysinfo inf;
-+
-+	si_meminfo(&inf);
-+
-+	return inf.totalram * inf.mem_unit;
-+}
-+
-+/**
-+ * zynq_get_mtype - Return the controller memory type.
-+ * @base:	Zynq ECC status structure.
-+ *
-+ * Get the EDAC memory type appropriate for the current controller
-+ * configuration.
-+ *
-+ * Return: a memory type enumeration.
-+ */
-+static enum mem_type zynq_get_mtype(const void __iomem *base)
-+{
-+	enum mem_type mt;
-+	u32 memtype;
-+
-+	memtype = readl(base + ZYNQ_T_ZQ_OFST);
-+
-+	if (memtype & ZYNQ_T_ZQ_DDRMODE_MASK)
-+		mt = MEM_DDR3;
-+	else
-+		mt = MEM_DDR2;
-+
-+	return mt;
-+}
-+
-+/**
-+ * zynq_init_csrows - Initialize the csrow data.
-+ * @mci:	EDAC memory controller instance.
-+ *
-+ * Initialize the chip select rows associated with the EDAC memory
-+ * controller instance.
-+ */
-+static void zynq_init_csrows(struct mem_ctl_info *mci)
-+{
-+	struct zynq_edac_priv *priv = mci->pvt_info;
-+	struct csrow_info *csi;
-+	struct dimm_info *dimm;
-+	u32 size, row;
-+	int j;
-+
-+	for (row = 0; row < mci->nr_csrows; row++) {
-+		csi = mci->csrows[row];
-+		size = zynq_get_memsize();
-+
-+		for (j = 0; j < csi->nr_channels; j++) {
-+			dimm		= csi->channels[j]->dimm;
-+			dimm->edac_mode	= EDAC_SECDED;
-+			dimm->mtype	= zynq_get_mtype(priv->baseaddr);
-+			dimm->nr_pages	= (size >> PAGE_SHIFT) / csi->nr_channels;
-+			dimm->grain	= ZYNQ_EDAC_ERR_GRAIN;
-+			dimm->dtype	= zynq_get_dtype(priv->baseaddr);
-+		}
-+	}
-+}
-+
-+/**
-+ * zynq_mc_init - Initialize one driver instance.
-+ * @mci:	EDAC memory controller instance.
-+ * @pdev:	platform device.
-+ *
-+ * Perform initialization of the EDAC memory controller instance and
-+ * related driver-private data associated with the memory controller the
-+ * instance is bound to.
-+ */
-+static void zynq_mc_init(struct mem_ctl_info *mci, struct platform_device *pdev)
-+{
-+	mci->pdev = &pdev->dev;
-+	platform_set_drvdata(pdev, mci);
-+
-+	/* Initialize controller capabilities and configuration */
-+	mci->mtype_cap = MEM_FLAG_DDR3 | MEM_FLAG_DDR2;
-+	mci->edac_ctl_cap = EDAC_FLAG_NONE | EDAC_FLAG_SECDED;
-+	mci->scrub_cap = SCRUB_FLAG_HW_SRC;
-+	mci->scrub_mode = SCRUB_NONE;
-+
-+	mci->edac_cap = EDAC_FLAG_SECDED;
-+	mci->ctl_name = "zynq_ddr_controller";
-+	mci->dev_name = ZYNQ_EDAC_MOD_STRING;
-+	mci->mod_name = ZYNQ_EDAC_MOD_VER;
-+
-+	edac_op_state = EDAC_OPSTATE_POLL;
-+	mci->edac_check = zynq_check_errors;
-+
-+	mci->ctl_page_to_phys = NULL;
-+
-+	zynq_init_csrows(mci);
-+}
-+
-+/**
-+ * zynq_mc_probe - Check controller and bind driver.
-+ * @pdev:	platform device.
-+ *
-+ * Probe a specific controller instance for binding with the driver.
-+ *
-+ * Return: 0 if the controller instance was successfully bound to the
-+ * driver; otherwise, < 0 on error.
-+ */
-+static int zynq_mc_probe(struct platform_device *pdev)
-+{
-+	struct edac_mc_layer layers[2];
-+	struct zynq_edac_priv *priv;
-+	struct mem_ctl_info *mci;
-+	void __iomem *baseaddr;
-+	int rc;
-+
-+	baseaddr = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(baseaddr))
-+		return PTR_ERR(baseaddr);
-+
-+	if (!zynq_get_ecc_state(baseaddr)) {
-+		edac_printk(KERN_INFO, EDAC_MC, "ECC not enabled\n");
-+		return -ENXIO;
-+	}
-+
-+	layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
-+	layers[0].size = ZYNQ_EDAC_NR_CSROWS;
-+	layers[0].is_virt_csrow = true;
-+	layers[1].type = EDAC_MC_LAYER_CHANNEL;
-+	layers[1].size = ZYNQ_EDAC_NR_CHANS;
-+	layers[1].is_virt_csrow = false;
-+
-+	mci = edac_mc_alloc(EDAC_AUTO_MC_NUM, ARRAY_SIZE(layers), layers,
-+			    sizeof(struct zynq_edac_priv));
-+	if (!mci) {
-+		edac_printk(KERN_ERR, EDAC_MC,
-+			    "Failed memory allocation for mc instance\n");
-+		return -ENOMEM;
-+	}
-+
-+	priv = mci->pvt_info;
-+	priv->baseaddr = baseaddr;
-+
-+	zynq_mc_init(mci, pdev);
-+
-+	rc = edac_mc_add_mc(mci);
-+	if (rc) {
-+		edac_printk(KERN_ERR, EDAC_MC,
-+			    "Failed to register with EDAC core\n");
-+		goto free_edac_mc;
-+	}
-+
-+	/*
-+	 * Start capturing the correctable and uncorrectable errors. A write of
-+	 * 0 starts the counters.
-+	 */
-+	writel(0x0, baseaddr + ZYNQ_ECC_CTRL_OFST);
-+
-+	return 0;
-+
-+free_edac_mc:
-+	edac_mc_free(mci);
-+
-+	return rc;
-+}
-+
-+/**
-+ * zynq_mc_remove - Unbind driver from controller.
-+ * @pdev:	Platform device.
-+ *
-+ * Return: Unconditionally 0
-+ */
-+static int zynq_mc_remove(struct platform_device *pdev)
-+{
-+	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
-+
-+	edac_mc_del_mc(&pdev->dev);
-+	edac_mc_free(mci);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id zynq_edac_match[] = {
-+	{ .compatible = "xlnx,zynq-ddrc-a05" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, zynq_edac_match);
-+
-+static struct platform_driver zynq_edac_mc_driver = {
-+	.driver = {
-+		   .name = "zynq-edac",
-+		   .of_match_table = zynq_edac_match,
-+		   },
-+	.probe = zynq_mc_probe,
-+	.remove = zynq_mc_remove,
-+};
-+module_platform_driver(zynq_edac_mc_driver);
-+
-+MODULE_AUTHOR("Xilinx Inc");
-+MODULE_DESCRIPTION("Zynq DDR ECC driver");
-+MODULE_LICENSE("GPL v2");
 -- 
 2.43.0
 
