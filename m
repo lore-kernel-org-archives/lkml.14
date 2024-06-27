@@ -1,149 +1,99 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167923FBA5
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 23:22:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96383FBA5
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 23:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719530567; cv=none; b=mATlzqpG/lycQeYDOmzkvqbiJzswoeGG9qjjQHExE+igyFmRU5a+PqpHuo5xqXB9r735SgL9lJkmyO1SKNMbelNOyLNk9WrFUBV2c6vcdKq/adEx2GooMZKAOt9DVrkLiTYNpoNadzKqnRRrz+mqWVcvw+crQJj1SPiuIbbLrW8=
+	t=1719530916; cv=none; b=EMwV8cJ83BdH4M94KkUJHhfw8Pjife+KHEz+D7j11XVZwdpAUc3pDGFEkBfn9PoCVnycbK6kHD5tiLY+8GFLQPTWmxoeSJETCuFpBt/b68KxvtU3WMT2l/hDZxo48C7jfcYT9TENPIue8NP/bghonh8MAb+/ka+nJW2YazxST2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719530567; c=relaxed/simple;
-	bh=vDn4zbbwQN2LrueYoVu0Wjy6pY1bsY3BKxpWDC1yVf4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F/fLsc3BCzijgpn4yGYLMW6U+QzJo7NxUfuwC3Qh+ujK36+BNk8NfuG57SztX+u8OZ1aO2eNcXZrqR9L1xbjT0p+7H4rnEDegdP7iJw2nxoVlvarF2Oj9InxZfus2XY27QGWk+0y/2V7Arw5sY1bat8d8XToTA2iIOkbK12jaqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bmUPoDIA; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719530916; c=relaxed/simple;
+	bh=ewOcn7yPN+2Yi03I2LV5cAEi/ctmLhHvgxx63HOfURM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AK76UjgPB26Ad6KFwv1xjLJRZ0485ZIo/oS5HhrhEkCW19Nbaq2/d5NsXqbHqL9iyQeS3WfqCLoLFEUI9e/R39XGWnppjXt2pO/sUtWRqb6Fph3ELTWJIf8N9xKpn3zj8n/++BN5egxCsKZBWZibuXsTHAbjW6xCYvjdi2gPdLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=c6mA5vrg; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bmUPoDIA"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6480542003dso122617b3.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 16:22:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719530564; x=1720135364; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0LB7gCAzcMu24VqG7bE0lt079FWwJNySL9zyflCf6kE=;
-        b=bmUPoDIAzjQb0rtfw/fLtbs9m4Mr7h6EluaT+ImdbLFBGVRtBCWonevRj0arUaPRnd
-         3U8W79ziHGW6fvjulS2ij984UO5xxDrHVdreJ+aLjGj8AI/Cai2ZfpoapH065PfAYkcM
-         LgiSQ23CbSYBmef6Dmty8bDgwp/ul1T2Y5kEGxLhT2bzyOKEaSMUUr6cixWSxvb83kXc
-         1eb6/VuHjXUyYh/Oy0ztTl7tY3PBaCnAVwh0+eyj8SqShVrF1FbPJYOUCmEwKwIIsMUi
-         ROk59OsMYmv7FyPOFXLUcu2j84BONA0NCqSq2JU8qNhNcKRIFYQM0HEjm4BC1F0cGO12
-         I//Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719530564; x=1720135364;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0LB7gCAzcMu24VqG7bE0lt079FWwJNySL9zyflCf6kE=;
-        b=C9/dSybBMS83mV3HOzXvoj1rZoID+TiCfQP54aFhl11uqygo2gd5nuAfteiJ0/5VC4
-         f9+dvaHW9nQVFGnfath6NlxyBC06K9u1v74HNuIhLkDJYwkhND9UFF2VxMzRrCm8NU78
-         CtZtBcTcPhR0gSzJu9JwpGY2Ah5aZlVnSyDCnMX7iiDr1+c2T2cLwlbFL3INFf7JZ/hP
-         wkNyxxbd9vAfu3ZrKZQipojPxt2n4/wdF1mzv8e8fn/c8qMCHxnRvUoYRs1bZkYgc+8V
-         gpD+nFCZYLglp/aZbPN0LihYptLU17ydyjlz/8XqMlOvmtTH+B9qooF8awIL5Wn1KSly
-         k9Ug==
-X-Forwarded-Encrypted: i=1; AJvYcCX2n5cazhdKCuNF+GDQ+DGbK5amCy0evVd4Ix7Qma6TMWB4PWbNzAGYtmFYE7nq7f/sBpfPHXfCsH1xyCTwYi9XxSJ+NL6pGmCNYilt
-X-Gm-Message-State: AOJu0YyVJ0kauXl7wmgMkC3c2xy64ZICuIlgsd6C5XzM8duR71wcs7j+
-	2fRleeJGmRZN6lKWPFyJaL1rfOVnj7buJ5v/z6QU9u3MiEbgvg8QwzO2luowtJGuIsK2hJFVaWV
-	dhEOi8Eks469wcIrVb80+cMayAXd8aMZlJmCZJQ==
-X-Google-Smtp-Source: AGHT+IHVr+5tNjDkazfolV1Z/Izc4wyGgRDTTfMMbJrJozuIjcL1Ax1K2NLH9YQJmTc28hAZR6/sL18+n2Y2dm8UqRQ=
-X-Received: by 2002:a05:690c:d8a:b0:627:972f:baba with SMTP id
- 00721157ae682-643aae70b44mr194087277b3.31.1719530564028; Thu, 27 Jun 2024
- 16:22:44 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="c6mA5vrg"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45RNSNhM064430;
+	Thu, 27 Jun 2024 18:28:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1719530903;
+	bh=zyIfLjDtgnWn64vfAgQlRVEExq9e7iB229jkcThO9tE=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=c6mA5vrg41iLGqW4fxOVJlSFvKsAPiplSQ8u9696gBJPC/4Z0w3nNz9ud/fO/+P3v
+	 ncZM1uGx/FZ6j2SuJztnINWCOaSMlrNvkpB5w+f+unZrWk3a5eSjkvyZpye+5RsKSq
+	 2yqHO9sCYaNW8eg1ABOeW4k5qdAO2kTlD4mqIvuo=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45RNSNJt060064
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 27 Jun 2024 18:28:23 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 27
+ Jun 2024 18:28:23 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 27 Jun 2024 18:28:23 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45RNSNXq088931;
+	Thu, 27 Jun 2024 18:28:23 -0500
+From: Nishanth Menon <nm@ti.com>
+To: <ssantosh@kernel.org>, Vasyl Gomonovych <gomonovych@gmail.com>
+CC: Nishanth Menon <nm@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] soc: ti: Fix missing newlines in log statements
+Date: Thu, 27 Jun 2024 18:28:22 -0500
+Message-ID: <171953088527.1077261.13765320042029947916.b4-ty@ti.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240517212930.2019962-1-gomonovych@gmail.com>
+References: <20240517212930.2019962-1-gomonovych@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240627205328.2912859-1-quic_abhinavk@quicinc.com>
- <CAF6AEGuGYG5mO-4KdNFbQFMA4dKj2PWT22xeh-3AFgedAG0uHw@mail.gmail.com> <3749ac14-54d0-fb62-345b-cef62399b6d4@quicinc.com>
-In-Reply-To: <3749ac14-54d0-fb62-345b-cef62399b6d4@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Fri, 28 Jun 2024 02:22:32 +0300
-Message-ID: <CAA8EJppM1429sGzW6hq4QzLEjVX5Cf+8Jt5y94+VocFmPyxz+Q@mail.gmail.com>
-Subject: Re: [RFC PATCH] drm/msm/dpu: check ubwc support before adding
- compressed formats
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Cc: Rob Clark <robdclark@gmail.com>, freedreno@lists.freedesktop.org, 
-	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, 
-	quic_jesszhan@quicinc.com, konrad.dybcio@linaro.org, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Fri, 28 Jun 2024 at 00:21, Abhinav Kumar <quic_abhinavk@quicinc.com> wro=
-te:
->
->
->
-> On 6/27/2024 2:13 PM, Rob Clark wrote:
-> > On Thu, Jun 27, 2024 at 1:53=E2=80=AFPM Abhinav Kumar <quic_abhinavk@qu=
-icinc.com> wrote:
-> >>
-> >> On QCM2290 chipset DPU does not support UBWC.
-> >>
-> >> Add a dpu cap to indicate this and do not expose compressed formats
-> >> in this case.
-> >>
-> >> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
-> >> ---
-> >>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h | 1 +
-> >>   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h          | 2 ++
-> >>   drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c               | 5 ++++-
-> >>   3 files changed, 7 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h b=
-/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h
-> >> index 3cbb2fe8aba2..6671f798bacc 100644
-> >> --- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h
-> >> +++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h
-> >> @@ -12,6 +12,7 @@ static const struct dpu_caps qcm2290_dpu_caps =3D {
-> >>          .max_mixer_blendstages =3D 0x4,
-> >>          .has_dim_layer =3D true,
-> >>          .has_idle_pc =3D true,
-> >> +       .has_no_ubwc =3D true,
-> >>          .max_linewidth =3D 2160,
-> >>          .pixel_ram_size =3D DEFAULT_PIXEL_RAM_SIZE,
-> >>   };
-> >> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/=
-gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-> >> index af2ead1c4886..676d0a283922 100644
-> >> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-> >> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-> >> @@ -342,6 +342,7 @@ struct dpu_rotation_cfg {
-> >>    * @has_dim_layer      dim layer feature status
-> >>    * @has_idle_pc        indicate if idle power collapse feature is su=
-pported
-> >>    * @has_3d_merge       indicate if 3D merge is supported
-> >> + * @has_no_ubwc        indicate if UBWC is supported
-> >>    * @max_linewidth      max linewidth for sspp
-> >>    * @pixel_ram_size     size of latency hiding and de-tiling buffer i=
-n bytes
-> >>    * @max_hdeci_exp      max horizontal decimation supported (max is 2=
-^value)
-> >> @@ -354,6 +355,7 @@ struct dpu_caps {
-> >>          bool has_dim_layer;
-> >>          bool has_idle_pc;
-> >>          bool has_3d_merge;
-> >> +       bool has_no_ubwc;
-> >
-> > has_no_ubwc sounds kinda awkward compared to has_ubwc.  But I guess
-> > you wanted to avoid all that churn..
-> >
->
-> Yes I wanted to avoid modifying all the catalogs.
->
-> > How about instead, if msm_mdss_data::ubwc_{enc,dec}_version are zero,
-> > then we know there is no ubwc support in the display.
-> >
->
-> hmm ... should work .... I can post a v2 with this and avoid touching
-> the catalog altogether.
+Hi Vasyl Gomonovych,
 
-Yes, this sounds much better.
+On Fri, 17 May 2024 14:29:10 -0700, Vasyl Gomonovych wrote:
+> Add the missing newline characters to two pm33xx log statements
+> to ensure proper log formatting.
+> 
+> 
 
---=20
-With best wishes
-Dmitry
+I have applied the following to branch ti-drivers-soc-next on [1].
+Thank you!
+
+[1/1] soc: ti: Fix missing newlines in log statements
+      commit: d77b1befb18ac1fecfdde9110eb1400f0601ca93
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent up the chain during
+the next merge window (or sooner if it is a relevant bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+
