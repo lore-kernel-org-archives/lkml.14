@@ -1,136 +1,115 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E4096BFC0
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 07:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7A37406F
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 07:56:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719474967; cv=none; b=pEgns5z4xbFvdB2oaJn39h9Zyy/Kcyp2bGcOu0Z5XVhZzTwPDVvJJagW3I6qKcE92Gsiw8saU5ZevRnUqs1MqnemrsWqyWv6VzbFQcfBN+RjuR8quiS4342t3WnsGLuCRMrpyDBSfTdV+/ihWsGpozHmPCGq5R4/Cxz9j2pmElI=
+	t=1719474971; cv=none; b=jkLufI1sl82j7VX2pl/oHtoFNmTBveaDcxAUW79hIiRxzlgE3Rr8Yu/wNBZiCOe3LYtcnis5cxOHsl4jgfZjGwLSAae53XdRazRPuEi7+NIL98VsJCC1AimLhTG9IaHSfsV4nJSfzBKdOOcSOzqcUIvkkIRvkq3nQa2qVgCT3Kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719474967; c=relaxed/simple;
-	bh=mxaHLuDbWoxsjLTUcF/2qW2G/2wXCFMW2eh4Egw0AgQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s4EQxsbfTvMEmXX64klk5nkh9TI7p0HvEj6CPxKCaJJuvCA1iDtMpHzPG5SM9oLWhjqPBZd0to4MDmXbsBaKboKFOTZgEJZ0EL9B31+ofT6QgMFS2lKNlJy83fAlN6EGb4AwqFni0GYzkwKJ7C1e2KwEc3GynPMY8xbUkIf6AWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=KGwGJ78C; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	s=arc-20240116; t=1719474971; c=relaxed/simple;
+	bh=A346QiIXS00xNk3ASUpVgw5Wdt0aDVi+VgTddZx6WCg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=DaXHZYZcJNDQ9pYDX74bIE3mR+7yjJ84hamBvcqgPJ+BcMynj/zadvyflzhubIj7Qb5CPupevkRroP2YLTr8Dwe3ACTllxH4bvGyjPl4xEt9h+XfMgaGjSMtblrRqTY9fXgTp2HPWBSTi6yAonRqXnnOSR8TF36TIF0I0Gc2X7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fzE44u76; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="KGwGJ78C"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-367339ddcdeso111741f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 00:56:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fzE44u76"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-356c4e926a3so6733696f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 00:56:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1719474963; x=1720079763; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zbRRYSMsE3x7jzz+DuxS0/G+PVyj8TpMxMrZCFeJdO8=;
-        b=KGwGJ78Ca5722GTIpl6s2Ei/ig57uZOG/lzsmyTjNDIbX/o2fr4nF99yvBNPbDerF3
-         iCWWgoKg7FGwOe212dmE6V3EFTTZGO3nVzl/ru47orFUSfa40jOBYPh+LhQgSCAYK+oB
-         Lawqdb8JtEsoFZ8NBT77FEZcDqJSI7CR6K4yM=
+        d=linaro.org; s=google; t=1719474968; x=1720079768; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rhb8tshU4UTCoUKCJ0uFCvR9IBtcpzLcynFRgzyN5xo=;
+        b=fzE44u76GlrBgDuxaRzaIZVWX/cykXkLr3j53FsgA5Gr/uG30jZUg30B7X8rk54Qk8
+         zTr9vTvYOm8FtyhGDRHkHiG6WfY//OEtayST8JopWwNk8a/ZIcDX3X0mZyzVO6uhh2UJ
+         1AHPkq8G/6k/OWMgY4LuZQV17Fva309L3uNtArTKehaRvgpjRvJWzKDSuB4sKuOIBLjB
+         Q06DbgNFaeWeMcbuk3qNFhmmn43UXv3JLZ4spn03nNOJ2Ja75RAUtXggnoDAXxazv0eQ
+         PqynOOXfVFKm0P6cbifa1VknehLMCp/84LTwSgUVUsE62G5XIBrQX/u+z4b0xyFQIJmy
+         FZXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719474963; x=1720079763;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zbRRYSMsE3x7jzz+DuxS0/G+PVyj8TpMxMrZCFeJdO8=;
-        b=gDzkTQNDj7aQXNDCw04Cxx9MJOEzkUJbVtVq7o1FuFxndt+ZF2wu/n4Yyy05JfbSHg
-         DhZEXmhsj6xSIRZHpgKyQXwCbL4j2Ji5T90l7tT53WLVO+Sksauv0b2niMxb8zXzOQlR
-         mtG1oabpZtGft3Gtm7QXXa3yOc2UXPoapFa4geXF5fFTUufWqp3H+hS4jdHltONvgkVg
-         dJgFWw1Fu6OMYLIcf5u7mRokQdiqKWFei047rlmY3k6SQlPsX3jezbbA/sGn1s1Zxenw
-         lbrCSqZ9PS4iWKtIcxvZQfK353qel2csXptQINdtIAIxbFl4ngedUbxC5QL7cJ/y4/9i
-         xxSg==
-X-Forwarded-Encrypted: i=1; AJvYcCWAofRAwzPHTiJk651O0tXe4cPDCCi/Uj6c2ASq+F0bGMB0hA+sqeVPk3l3Pni/4zsK3+ihuSbvDrpjhAjlq6SWoPsak056krlrNlmX
-X-Gm-Message-State: AOJu0YymNB2jQqaq9LS60MdSBZiQpYX1HFfvuugjoqu+xQAbDdj8y82v
-	PIwzwMMdSM33QB94nUwWxy289TQCcNjR38B+THsojlN/36KAxv7Tq20qhpHuG2A=
-X-Google-Smtp-Source: AGHT+IGQvxwnr72q9jrzc9pPl4mSFg75qw0sFbnT2gJfss9vVHp2SS5JoT/Ulnrj/rNfl6IeiI3z+w==
-X-Received: by 2002:a05:600c:5107:b0:424:7876:b6ca with SMTP id 5b1f17b1804b1-42487ea6784mr111875865e9.1.1719474963385;
-        Thu, 27 Jun 2024 00:56:03 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c82519b0sm53017765e9.14.2024.06.27.00.56.02
+        d=1e100.net; s=20230601; t=1719474968; x=1720079768;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rhb8tshU4UTCoUKCJ0uFCvR9IBtcpzLcynFRgzyN5xo=;
+        b=Tx/Hda0hY2Y5L00v5vPyiWAZJ669+JEDuIJadT3iduaKDxDIsRLKFFWQgIZwvaavgI
+         s0zpEBfqeaaTmLquCEO4zG2OZQfb3Ir+Qe3C9OHNPnW5MKohWkI87Ovwq3Pydpcs+7zb
+         Ie6XGrerkMYLcsc7im3B2Vx13OvmXRaDLAndzgbC721KgfGXMwyCB7AqJKZsuYBsTQBm
+         QqvNM/H84dZfjKtvHuJJKjBcjug4WyxLk4bVMfaQdZjK2HJb/l1o9PMwsF8cfE/AllTd
+         vI5A9+T1UEQHMt8grV+iMwPhU/jplRzQaVsa9C9FucIeqIw8hEzTWarRVn/NgDCW84c5
+         8Qig==
+X-Forwarded-Encrypted: i=1; AJvYcCXc8/7Ps9FXVm6X8Q0qdTQKMH5uyn6vgc74KRpRf+Fhbe3km6G9wX+FXPhvzWQmZHezwFj5gyYRBzep1O8ES9Cm1ua3ARmOZCjhPyr7
+X-Gm-Message-State: AOJu0YyMjAorP6SxrRZ63R7TtQh10zike4lc67dLxM3iJlLAWs5hBl65
+	r4CM/kVlKFfb5IY9u1N2CvS+P9U724Jbht5O+8dLWTQg/icMS6KNUdhdxXSCo/A=
+X-Google-Smtp-Source: AGHT+IHGlNZJk2OgRWQ8EYg2rsbzX9mhgpwNdd4jOMVlOFKRnwWm3q8FMrXLPKl2frkadi+gta/3Gw==
+X-Received: by 2002:a05:6000:24f:b0:367:43ce:9c92 with SMTP id ffacd0b85a97d-36743ce9f2emr425332f8f.20.1719474967330;
+        Thu, 27 Jun 2024 00:56:07 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3674357c089sm1024019f8f.7.2024.06.27.00.56.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 00:56:02 -0700 (PDT)
-Date: Thu, 27 Jun 2024 09:56:00 +0200
-From: Daniel Vetter <daniel@ffwll.ch>
-To: Akhil P Oommen <quic_akhilpo@quicinc.com>
-Cc: Daniel Vetter <daniel@ffwll.ch>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	David Airlie <airlied@gmail.com>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] drm/msm/adreno: De-spaghettify the use of memory
- barriers
-Message-ID: <Zn0bEMMam4_VPFoc@phenom.ffwll.local>
-Mail-Followup-To: Akhil P Oommen <quic_akhilpo@quicinc.com>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	David Airlie <airlied@gmail.com>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20240625-adreno_barriers-v2-0-c01f2ef4b62a@linaro.org>
- <20240625-adreno_barriers-v2-1-c01f2ef4b62a@linaro.org>
- <ZnvKa29EceUyZ62U@phenom.ffwll.local>
- <20240626212457.6io63avdbncuq6hb@hu-akhilpo-hyd.qualcomm.com>
+        Thu, 27 Jun 2024 00:56:06 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Kelvin Zhang <kelvin.zhang@amlogic.com>
+Cc: linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Junyi Zhao <junyi.zhao@amlogic.com>, 
+ George Stark <gnstark@salutedevices.com>
+In-Reply-To: <20240613-s4-pwm-v8-0-b5bd0a768282@amlogic.com>
+References: <20240613-s4-pwm-v8-0-b5bd0a768282@amlogic.com>
+Subject: Re: (subset) [PATCH v8 0/2] Add support for Amlogic S4 PWM
+Message-Id: <171947496641.3255632.14959368201943139429.b4-ty@linaro.org>
+Date: Thu, 27 Jun 2024 09:56:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240626212457.6io63avdbncuq6hb@hu-akhilpo-hyd.qualcomm.com>
-X-Operating-System: Linux phenom 6.8.9-amd64 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Thu, Jun 27, 2024 at 02:54:57AM +0530, Akhil P Oommen wrote:
-> On Wed, Jun 26, 2024 at 09:59:39AM +0200, Daniel Vetter wrote:
-> > On Tue, Jun 25, 2024 at 08:54:41PM +0200, Konrad Dybcio wrote:
-> > > Memory barriers help ensure instruction ordering, NOT time and order
-> > > of actual write arrival at other observers (e.g. memory-mapped IP).
-> > > On architectures employing weak memory ordering, the latter can be a
-> > > giant pain point, and it has been as part of this driver.
-> > > 
-> > > Moreover, the gpu_/gmu_ accessors already use non-relaxed versions of
-> > > readl/writel, which include r/w (respectively) barriers.
-> > > 
-> > > Replace the barriers with a readback (or drop altogether where possible)
-> > > that ensures the previous writes have exited the write buffer (as the CPU
-> > > must flush the write to the register it's trying to read back).
-> > > 
-> > > Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> > 
-> > Some in pci these readbacks are actually part of the spec and called
-> > posting reads. I'd very much recommend drivers create a small wrapper
-> > function for these cases with a void return value, because it makes the
-> > code so much more legible and easier to understand.
+Hi,
+
+On Thu, 13 Jun 2024 19:46:34 +0800, Kelvin Zhang wrote:
+> Add support for Amlogic S4 PWM, including the driver and DTS.
 > 
-> For Adreno which is configured via mmio, we don't need to do this often. GBIF_HALT
-> is a scenario where we need to be extra careful as it can potentially cause some
-> internal lockup. Another scenario I can think of is GPU soft reset where need to
-> keep a delay on cpu side after triggering. We should closely scrutinize any
-> other instance that comes up. So I feel a good justification as a comment here
-> would be enough, to remind the reader. Think of it as a way to discourage the
-> use by making it hard.
 > 
-> This is a bit subjective, I am fine if you have a strong opinion on this.
 
-Eh it's up to you, but "we don't do this often" is a reason to make them
-stand out even more. Similar reasons why cpu memory barriers must all have
-a comment, to explain what they're synchronizing against.
+Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.11/arm64-dt)
 
-Up to you if you just want a comment rule or make them stand out even more
-with an explicit name (and still have the comment rule) that's different
-from normal reads. Again comparing to cpu barriers, the nice thing is that
-they're (in most cases at least, unless you do really scary stuff) very
-easy to spot in the code and the ring alarm bells when doing reviews.
--Sima
+[2/2] arm64: dts: amlogic: Add Amlogic S4 PWM
+      https://git.kernel.org/amlogic/c/e227c1e14dfe06a54844014c076d11e9cdef87e4
+
+These changes has been applied on the intermediate git tree [1].
+
+The v6.11/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+for inclusion in their intermediate git branches in order to be sent to Linus during
+the next merge window, or sooner if it's a set of fixes.
+
+In the cases of fixes, those will be merged in the current release candidate
+kernel and as soon they appear on the Linux master branch they will be
+backported to the previous Stable and Long-Stable kernels [2].
+
+The intermediate git branches are merged daily in the linux-next tree [3],
+people are encouraged testing these pre-release kernels and report issues on the
+relevant mailing-lists.
+
+If problems are discovered on those changes, please submit a signed-off-by revert
+patch followed by a corrective changeset.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Neil
+
