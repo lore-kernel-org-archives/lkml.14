@@ -1,178 +1,168 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB658198A09
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 15:03:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A15A419883C;
+	Thu, 27 Jun 2024 15:04:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719500626; cv=none; b=Tem5tx0sNOO/mUgvowy9B9IIIfi1qDxe8/VcHBRfZ4I8rNarlZwP06aonq02ZFyPS4VmYScugIbDehITslHFxgDpc4g0V0cBC3rHpA6LcndqIVJyvrLL9bHA43RuRvefYdzSalfJUObFJSjs/R/Nprwi83hYUxU5mewKfgFB6bw=
+	t=1719500642; cv=none; b=AYuVD5yED7C+x0YvO+loDWKYn55iSMY+8pvuBPVl/N53v2Piql8M+vGicjnG6WSATsv/s9QtY2dC7IxmrRikov8R0TIsLUPL2GpbGrTcnHmI8FyPXCMbaFHAJ+ec4FYdOFMxdQjxF4g48Zyv1//DWfvHdxJpU829cNRilJ7p2GM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719500626; c=relaxed/simple;
-	bh=hz9vMGQkJCRjJHzyKADPoZQ1+W9Qq2q+0aeL6AyIwwE=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UlKsFgEmItrE9Rnja5XLq0eoh+aCokqD0dR1GUibroulvq03wXtWc7ToNuozQvxJngWSVb9tdeHFNxhmR4iVB3jFkkSmyXRr98h1tfkik/UT0Lq2Ig22MocGHx2FfLrARaIzh9ZEzcppYPlcIhE3mJodEnXstS4KY/O+1huvo5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com; spf=pass smtp.mailfrom=timesys.com; dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b=WXTSZ5gL; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timesys.com
+	s=arc-20240116; t=1719500642; c=relaxed/simple;
+	bh=l73llJCUIKUxRecupdaIxSy64eMLHxkbYexteymENJA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=t8KwU/hoBvS7HfSlq2FGsVFqzv99FM+8bZKUSIpzp9yrLq3RpiWJG2R5jIEwnl0GSFuUxIan3+kBue5DMkKntlmU9fm2j+Nq87Jq4H17ueTYNZz4uwd11NUDXCebXdmxqFJBk2KpUifGR/+cupvg6X3FRHPP8xKmisHXIbvkErs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EGOGnNq7; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b="WXTSZ5gL"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a6fdd947967so632240966b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 08:03:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EGOGnNq7"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-648b9d03552so16761547b3.2;
+        Thu, 27 Jun 2024 08:04:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=timesys-com.20230601.gappssmtp.com; s=20230601; t=1719500623; x=1720105423; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HK3YnwUakD5I0BhgcE6EqxKNTh3E2b909JJ6LJOQWzo=;
-        b=WXTSZ5gLXCbzMHUx9pbcLusKQp5Li61OY1n5N2DlmVJI3KHgxuIGy6lNZPdbPybKEA
-         9o8fKETuWjIXlpFygS1wknH5ECCwz9K+Ifao2ivxt+zaUjnfIXJQmhe9w2CN2TKQXIk7
-         fKq+RmjqYYIV7pGnYUUIaDCDxeiUpOZmr0LlDb97s3UvQR+5zBBJeAPLa1PFnYG0LjWX
-         K30KXX1xNklc7dK9q8dRQOeSxdL7vM6xdHKtmWCcJbtEBUBXw8PWMHB5FH8qQv8U9jU/
-         /SkmO7nZ65XHJAaxzxd7zx7LVrA4CDtey97X2u0DcDiJ8D6SUYjFlPBgzc71Lq2F2Pgw
-         qjQQ==
+        d=gmail.com; s=20230601; t=1719500640; x=1720105440; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8RPqAWJX29gQXV8+Zzq9GyOhgk6BXLzXmKNl8pcyJtY=;
+        b=EGOGnNq73dzcxKg0jp7j98jqlPKBeW6zs9GGC07y7ql2vqhzWdL537oLkm7HshHBIX
+         tS4tu+yelnRJyiw1U29BYZWC3qSv0P5gk6ftG3Cl013Ct2ChI0Q8kMtBiAmQj8DLGfi+
+         UdwTaD30cz5WkixebR9CJdUsgQMAmrMER10mXT6K5Gk6O6dkEkKwKrprdcL139XhoAO3
+         gq7Qy9LMvtt326qnr/amCTJAKh39EWYVDmcYLoc/3GSRMnK8aHBBOpPUNmFUGf+s917Q
+         MS6tHbnF3SsOqTIB3QVNTRoONAUGUsVjqhX9ji0fzYRo/ZqNAJLPyT4vW6UJUiI6KXTO
+         nR8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719500623; x=1720105423;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HK3YnwUakD5I0BhgcE6EqxKNTh3E2b909JJ6LJOQWzo=;
-        b=YfpTmsotTm1AgCjo/UwHV9pvM4ZVz3aNJ/wkNcfy2INf4aiI2Ld4kycmX/IWDyOiuS
-         3xsdEKSFUZlVEsYCghwZAupNfYNx4sd8v9l3NzMnq04j2qVTvzZYMZ3Mg1avH46STPfT
-         sxkV2jHwFp3XLAxdkL2GoyBACvk4bzg6SFv5iQOJzcRsYfdi5oXi75Sutv0v0qURPAFl
-         b9pYscPXUX+4vv89uKH9NrfqDqyKyLPnoEpkOCrBajDz4HWSNewTuHzGbCYihjeuEH+8
-         PKRqsD/S70CIKFW38h4WpQd5rF4Kn4/QvwMzaRciwP5Nm70RxEggF1xx+zIA2mmdLl0o
-         l0jg==
-X-Forwarded-Encrypted: i=1; AJvYcCXu44akY8tF5nWjS2WSmaWSkSSQbOGUSOUYhhqITp4jIKtmmlE1tXqfAadhAwSwW5V4ohr6GPTua+PdXo6McSRVRA2cU9B+q/kftgto
-X-Gm-Message-State: AOJu0Yzr0xaD0BrIryDhNRLSH112lWJjoX+90gIbXX9HaPXlv6sij3UA
-	OuqNctZX/JMJrD/0T4+DdpNIB4KMS0z0VoZ5pN8WDzuH2OLoG/CEVAovdTrV+lU=
-X-Google-Smtp-Source: AGHT+IEAPzD6OW6I5gXrK5R5rKDBnBfIPb8ujVS2DyQUrkTnzInDvDleYelSt4/XGlIg6GkZNz/Tdg==
-X-Received: by 2002:a17:907:d386:b0:a72:8d4f:6720 with SMTP id a640c23a62f3a-a728d4f6df3mr385836766b.69.1719500620657;
-        Thu, 27 Jun 2024 08:03:40 -0700 (PDT)
-Received: from localhost.localdomain ([91.216.213.152])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a729d7ca289sm67189066b.222.2024.06.27.08.03.38
+        d=1e100.net; s=20230601; t=1719500640; x=1720105440;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8RPqAWJX29gQXV8+Zzq9GyOhgk6BXLzXmKNl8pcyJtY=;
+        b=f/IjtuqFqDbuzCf+ZYPX68MBHFUUgaVZivatoBLk4y/kI8efMECGNv1EF7dw8gbIRd
+         szZ2smj9H8/dDQsbPlzjE+vIKgSAwwU9chZF9QMT5XikpQz/Wn7ToLoOUBL89gZTIC6O
+         dCS1cwrf7ggQr6udc+oqkHXUw/TymDUIm53pTxihQDxJob36li4IqSXsHXNCHLA5xE/j
+         m1aDCOJLAb6iA3xy0o+rFLF1ZjzBSvBXyzrrQ0NQy0Q/YKVXM3TzfIqIG0MrtkpVt30R
+         RmchYDIQUfWtyMOxJdi9Yh7gv+ZVI5YoKPpM2rG6CUT/6ZRe3Kg8EG9OC/egP6SjLQs4
+         fdlg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJ21/IsH9qSUQXvWmtxVYkTfT32NsZW0FZAfehHSDQAhCqkhtZvDLjumWi71Ba00XzIiGmpVFEgGbMw0/uoOYz9/gIwB3HN8S8+It7
+X-Gm-Message-State: AOJu0YxSqm9uRAm9lMsoYMHtjTZ5KigUn+jrFJOF7aWbOy5/9j8WloK5
+	V9QufY3eyAPIWPNAlaF9S4QekXfPOZ+o6+bh5lm4GIzAAK8au8lqU58mHy8z
+X-Google-Smtp-Source: AGHT+IHKPiZpyKzGZOIL3xcH+XD1DwotbRWUXOrtZQP4/3YIqhVff++wSdOu73KnfBIM4SnpEwRkxw==
+X-Received: by 2002:a05:690c:6c0d:b0:618:ce10:2fcd with SMTP id 00721157ae682-643aa5a426dmr160071517b3.26.1719500639499;
+        Thu, 27 Jun 2024 08:03:59 -0700 (PDT)
+Received: from [127.0.1.1] (107-197-105-120.lightspeed.sntcca.sbcglobal.net. [107.197.105.120])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6497a755ad2sm2770537b3.76.2024.06.27.08.03.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 08:03:40 -0700 (PDT)
-From: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"J.M.B. Downing" <jonathan.downing@nautel.com>,
-	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Yangtao Li <frank.li@vivo.com>,
-	Li Zetao <lizetao1@huawei.com>,
-	Chancel Liu <chancel.liu@nxp.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Corentin Labbe <clabbe@baylibre.com>,
-	dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	alsa-devel@alsa-project.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-sound@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Subject: [Patch v5 07/12] clk: lpc32xx: initialize regmap using parent syscon
-Date: Thu, 27 Jun 2024 17:00:25 +0200
-Message-Id: <20240627150046.258795-8-piotr.wojtaszczyk@timesys.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240627150046.258795-1-piotr.wojtaszczyk@timesys.com>
-References: <20240627150046.258795-1-piotr.wojtaszczyk@timesys.com>
+        Thu, 27 Jun 2024 08:03:59 -0700 (PDT)
+From: Pei Li <peili.dev@gmail.com>
+Date: Thu, 27 Jun 2024 08:03:56 -0700
+Subject: [PATCH v2] kvm: Fix warning in__kvm_gpc_refresh
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240627-bug5-v2-1-2c63f7ee6739@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAFt/fWYC/13MywrCMBCF4VcpszaSTJ0qrnwP6aJNpumAvZBoU
+ Ere3dily/9w+DaIHIQjXKsNAieJsswl8FCBHbvZsxJXGlDjSTdIqn95UuTqGntiMo2Bcl0DD/L
+ emXtbepT4XMJnV5P5rX9AMsoo1mdkR4PlC9381MnjaJcJ2pzzF1jDf06YAAAA
+To: David Woodhouse <dwmw2@infradead.org>, Paul Durrant <paul@xen.org>, 
+ Sean Christopherson <seanjc@google.com>, 
+ Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+ "H. Peter Anvin" <hpa@zytor.com>, Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <ndesaulniers@google.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ skhan@linuxfoundation.org, linux-kernel-mentees@lists.linuxfoundation.org, 
+ syzkaller-bugs@googlegroups.com, llvm@lists.linux.dev, 
+ syzbot+fd555292a1da3180fc82@syzkaller.appspotmail.com, 
+ Pei Li <peili.dev@gmail.com>
+X-Mailer: b4 0.15-dev-13183
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1719500637; l=3041;
+ i=peili.dev@gmail.com; s=20240625; h=from:subject:message-id;
+ bh=l73llJCUIKUxRecupdaIxSy64eMLHxkbYexteymENJA=;
+ b=Q6AcEfxFpP9UNEK+Is8AMNrTHFxa+L3BtOlJnguHVBEfUlnNBuNoRPOKwzHwnZlGMGU8jDnuP
+ O7DDJoKQC6WBBXgb7f9M59UF437eNqYW1ygW3LzJjccTFadkoS8MP6h
+X-Developer-Key: i=peili.dev@gmail.com; a=ed25519;
+ pk=I6GWb2uGzELGH5iqJTSK9VwaErhEZ2z2abryRD6a+4Q=
 
-This allows to share the regmap with other simple-mfd devices like
-nxp,lpc32xx-dmamux
+Check for invalid hva address stored in data and return -EINVAL before
+calling into __kvm_gpc_activate().
 
-Signed-off-by: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+Reported-by: syzbot+fd555292a1da3180fc82@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=fd555292a1da3180fc82
+Tested-by: syzbot+fd555292a1da3180fc82@syzkaller.appspotmail.com
+Signed-off-by: Pei Li <peili.dev@gmail.com>
 ---
-Changes for v5:
-- Add fallback regmap for previous simple-bus DT entry
+Syzbot reports a warning message in __kvm_gpc_refresh(). This warning
+requires at least one of gpa and uhva to be valid.
+WARNING: CPU: 0 PID: 5090 at arch/x86/kvm/../../../virt/kvm/pfncache.c:259 __kvm_gpc_refresh+0xf17/0x1090 arch/x86/kvm/../../../virt/kvm/pfncache.c:259
 
-Changes for v4:
-- This patch is new in v4
+We are calling it from kvm_gpc_activate_hva(). This function always calls
+__kvm_gpc_activate() with INVALID_GPA. Thus, uhva must be valid to
+disable this warning.
 
- drivers/clk/Kconfig           |  1 +
- drivers/clk/nxp/clk-lpc32xx.c | 26 +++++++++++++++-----------
- 2 files changed, 16 insertions(+), 11 deletions(-)
+This patch checks for invalid hva address and return -EINVAL before
+calling __kvm_gpc_activate().
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 3e9099504fad..85ef57d5cccf 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -346,6 +346,7 @@ config COMMON_CLK_LOONGSON2
- config COMMON_CLK_NXP
- 	def_bool COMMON_CLK && (ARCH_LPC18XX || ARCH_LPC32XX)
- 	select REGMAP_MMIO if ARCH_LPC32XX
-+	select MFD_SYSCON if ARCH_LPC32XX
- 	select MFD_SYSCON if ARCH_LPC18XX
- 	help
- 	  Support for clock providers on NXP platforms.
-diff --git a/drivers/clk/nxp/clk-lpc32xx.c b/drivers/clk/nxp/clk-lpc32xx.c
-index d0f870eff0d6..b8de7f66d1b5 100644
---- a/drivers/clk/nxp/clk-lpc32xx.c
-+++ b/drivers/clk/nxp/clk-lpc32xx.c
-@@ -7,6 +7,7 @@
- #include <linux/clk-provider.h>
- #include <linux/io.h>
- #include <linux/of_address.h>
-+#include <linux/mfd/syscon.h>
- #include <linux/regmap.h>
+syzbot has tested the proposed patch and the reproducer did not trigger
+any issue.
+
+Tested on:
+
+commit:         afcd4813 Merge tag 'mm-hotfixes-stable-2024-06-26-17-2..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1427e301980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e40800950091403a
+dashboard link: https://syzkaller.appspot.com/bug?extid=fd555292a1da3180fc82
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=13838f3e980000
+
+Note: testing is done by a robot and is best-effort only.
+---
+Changes in v2:
+- Adapted Sean's suggestion to check for valid address before calling
+  into __kvm_gpc_activate().
+- Link to v1: https://lore.kernel.org/r/20240625-bug5-v1-1-e072ed5fce85@gmail.com
+---
+ arch/x86/kvm/xen.c  | 2 +-
+ virt/kvm/pfncache.c | 3 +++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kvm/xen.c b/arch/x86/kvm/xen.c
+index f65b35a05d91..67bb4e89c399 100644
+--- a/arch/x86/kvm/xen.c
++++ b/arch/x86/kvm/xen.c
+@@ -741,7 +741,7 @@ int kvm_xen_hvm_set_attr(struct kvm *kvm, struct kvm_xen_hvm_attr *data)
+ 		} else {
+ 			void __user * hva = u64_to_user_ptr(data->u.shared_info.hva);
  
- #include <dt-bindings/clock/lpc32xx-clock.h>
-@@ -1511,18 +1512,21 @@ static void __init lpc32xx_clk_init(struct device_node *np)
- 		return;
- 	}
+-			if (!PAGE_ALIGNED(hva) || !access_ok(hva, PAGE_SIZE)) {
++			if (!PAGE_ALIGNED(hva)) {
+ 				r = -EINVAL;
+ 			} else if (!hva) {
+ 				kvm_gpc_deactivate(&kvm->arch.xen.shinfo_cache);
+diff --git a/virt/kvm/pfncache.c b/virt/kvm/pfncache.c
+index e3453e869e92..f0039efb9e1e 100644
+--- a/virt/kvm/pfncache.c
++++ b/virt/kvm/pfncache.c
+@@ -430,6 +430,9 @@ int kvm_gpc_activate(struct gfn_to_pfn_cache *gpc, gpa_t gpa, unsigned long len)
  
--	base = of_iomap(np, 0);
--	if (!base) {
--		pr_err("failed to map system control block registers\n");
--		return;
--	}
--
--	clk_regmap = regmap_init_mmio(NULL, base, &lpc32xx_scb_regmap_config);
-+	clk_regmap = syscon_node_to_regmap(np->parent);
- 	if (IS_ERR(clk_regmap)) {
--		pr_err("failed to regmap system control block: %ld\n",
--			PTR_ERR(clk_regmap));
--		iounmap(base);
--		return;
-+		/* fallback to mmio if syscon fails */
-+		base = of_iomap(np, 0);
-+		if (!base) {
-+			pr_err("failed to map system control block registers\n");
-+			return;
-+		}
-+		clk_regmap = regmap_init_mmio(NULL, base, &lpc32xx_scb_regmap_config);
-+		if (IS_ERR(clk_regmap)) {
-+			pr_err("failed to regmap system control block: %ld\n",
-+			       PTR_ERR(clk_regmap));
-+			iounmap(base);
-+			return;
-+		}
- 	}
+ int kvm_gpc_activate_hva(struct gfn_to_pfn_cache *gpc, unsigned long uhva, unsigned long len)
+ {
++	if (!access_ok((void __user *)uhva, len))
++		return -EINVAL;
++
+ 	return __kvm_gpc_activate(gpc, INVALID_GPA, uhva, len);
+ }
  
- 	/*
+
+---
+base-commit: 2bfcfd584ff5ccc8bb7acde19b42570414bf880b
+change-id: 20240625-bug5-5d332b5e5161
+
+Best regards,
 -- 
-2.25.1
+Pei Li <peili.dev@gmail.com>
 
