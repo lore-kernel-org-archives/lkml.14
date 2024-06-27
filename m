@@ -1,257 +1,358 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2064.outbound.protection.outlook.com [40.107.223.64])
+Received: from bee.tesarici.cz (bee.tesarici.cz [37.205.15.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F704D8A3;
-	Thu, 27 Jun 2024 07:19:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719472772; cv=fail; b=A/tXssupOq6d8QDz2a1/WLWDxqSi/W1Is0cldABC6WoWwFhYHeP1MqRfvvLmKhEqioEugbEG0HNId+JbnbJ6bJOgMep6EIrcfoi8dx+0smnZxSLjwns05LWAKY89yrAj2tVippEekkHkooRVxcEXxpAwDEZwGvdaxwVemSf9TvU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719472772; c=relaxed/simple;
-	bh=So5HGmoha1cmaGEyyrwK3oGoD9RAccEIwLGiJUHwFv8=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 Content-Type:MIME-Version; b=tKvcqig+ju5LYSMQx7jJVxh460g7a6n3PMgLOWRSyU5FnFydUgwuuFduUzTyTTo/2Phn3epBrAf0tIXhPPuCfh9pHoO3QIkn4x3shSpFtHBMwaWR7FyX8X/DPimCwhy0rvPZqzgaS8hV3ZjjiJ0U5Vewyf/PKQmw7u6Alte4RUo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Wpxa5Cp9; arc=fail smtp.client-ip=40.107.223.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A5A481DB
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 07:20:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.15.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719472855; cv=none; b=fQh9Oq7lamRb/G2GBwBr6rm3OGAcroDZzWWeE/WcpMalD+AkQoO9mIN2fGNe1b+Pe8i7fG0okxWz9PknUjQg0463+ljYEvfl4osh0iNM3kk0e34nRmacsc+GeZ92tlSkHdfIbTTUO3S/O3YhyNDEsVf7CMNj61OcBzjCVwoJDy0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719472855; c=relaxed/simple;
+	bh=cR9FEKCa2gS2z+8cfqQdZ6GM82VUSMMa/7sy/fvCqXQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TZbGYto0Z2ZGq0apoUqYS6mZOXd4mqnAX08MTahMuQO8Zx6YD8RzQiVXl11CUfv8vrpNWcyFfcYqFRfwxc4GBSa6TY3rMJXxT98Jd1cpuOv2zMB1dwaJo4v/d2/wsa4qBhZ3FpFgNEjWE2nsF7u6eOPRtgCfFnH17oGYYhrpW4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=Wy6f4jxC; arc=none smtp.client-ip=37.205.15.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Wpxa5Cp9"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WnKP4plbDngdsvxhoZsO/yWRogbM465GxSgV28Rd65myiaMLgpWs1S5LxmA3fVzv0Ah5Wc1mn5EJo+bWPRpJTzju/GZxDpdeJOa6kFmNvEpVHwNppAw3gJdCw8IS6Agt52LAfTmKRO9UfCOEsys+d1cgl7twYHen33F6DSNeAwTTX573QN5B+/7Ro2LQlUYQb1yf+ENsz5V97j46ETOmB4oO4nNONLUx6XuU9j6Xslm9unbFtsoy3Q7/FbMnz0DSwZGeV35euxieNTll1nx5xQwFc0/Gti0eepIdD9yUuBjgKdF/yhdTj/FKfo8jlBJN6sbjpiLYSm8QYYKdLwjqWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yYsZH2nmxZOUyxSymZSCTUzrvEFbsMZANxYMqle02k8=;
- b=O9qZ7PbiJQGpVHP1WXvr9WlSe9Gj2LFq0x/gZHgN1Jxuve5QiiAhSe5PlPmWP7X2pa2TBGL1MDRVC4GuTxdqi387fWKP1PQ/fcxaChQDa3I9N5tKBHXjHSk7O1MfHrkGGULn9IGzKkqj0Rw9XtTOXxjBh52jb8qA/MshvkU+oAOC6Pbm2fmZSqj9iSZupKDdvfQ2juQOV/st2fIq9P0dyg98TBEpyfinnjgOP+kmOo55AIbkwq2PnGPkB6l38j1CCOG30iG5Y1Ya5crBh/5btEZ50CCu1pNc2ZNmfap3ExtZelO2bzNFeChmB0U0Yz3xhEt0qFVNt2S6fwP7KCmJsg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yYsZH2nmxZOUyxSymZSCTUzrvEFbsMZANxYMqle02k8=;
- b=Wpxa5Cp9+9ns9uIlQRLxahK+8IM322HS82cOpSmhMGadDh4mIk6SYM5hji6NTLk+SinyOgc12ajJNDVs6/SDFOKy+Q8hWMKqIVO9y5eLTJTWiKXL4rXxVLzv0L22BF4Biraza4OyyGH38bNGGC74lRJssmOM24ufnGoOgFeLA8a1KCgm6B13FSv1ATMNA+s5wl4rj6xrXUtAL8n7pIuMkJ9gg8ZWUXqHoaw3F4F7LdTdVNoG4Om0jBYDgT7NVi/VXMfkAdxsPPB69WQ2JQ4PKVC4oHHOW1GMaQ8P9r4/vzI6O6duX9FCAcgEYKaSzz2HkawV/1m2S2sRHykFvZznnQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
- SJ0PR12MB6685.namprd12.prod.outlook.com (2603:10b6:a03:478::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.19; Thu, 27 Jun
- 2024 07:19:26 +0000
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe%6]) with mapi id 15.20.7698.025; Thu, 27 Jun 2024
- 07:19:24 +0000
-References: <cover.66009f59a7fe77320d413011386c3ae5c2ee82eb.1719386613.git-series.apopple@nvidia.com>
- <667d0da3572c_5be92947f@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-User-agent: mu4e 1.10.8; emacs 29.1
-From: Alistair Popple <apopple@nvidia.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
- bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com,
- will@kernel.org, mpe@ellerman.id.au, npiggin@gmail.com,
- dave.hansen@linux.intel.com, ira.weiny@intel.com, willy@infradead.org,
- djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com, david@redhat.com,
- peterx@redhat.com, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
- jhubbard@nvidia.com, hch@lst.de, david@fromorbit.com
-Subject: Re: [PATCH 00/13] fs/dax: Fix FS DAX page reference counts
-Date: Thu, 27 Jun 2024 17:15:28 +1000
-In-reply-to: <667d0da3572c_5be92947f@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Message-ID: <87a5j67szs.fsf@nvdebian.thelocal>
-Content-Type: text/plain
-X-ClientProxiedBy: SY6PR01CA0123.ausprd01.prod.outlook.com
- (2603:10c6:10:1b8::8) To DS0PR12MB7726.namprd12.prod.outlook.com
- (2603:10b6:8:130::6)
+	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="Wy6f4jxC"
+Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by bee.tesarici.cz (Postfix) with ESMTPSA id B4DF91D69E7;
+	Thu, 27 Jun 2024 09:20:49 +0200 (CEST)
+Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
+	t=1719472849; bh=DTI2vKAaPElhD/HmfPpLCB/eYaiu2AD162KN4TedODc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Wy6f4jxCvx2KElFgvo2FeiER2+AWkeP6jmjpKkqw3DKZDFugiJsLOI3l2du2PPKe9
+	 SA0vAxWRN7DHcaCnlWuD/fog4FyFf376PY1FONrJJFz37CstS5k1Kp1N/UrdDtQDK1
+	 lE7AThyFR8O1BtpmNpjbkHNEgMCDMri9S/fW4vT/pK3mlPEsMyVd00wLOoNX5CKz1C
+	 V131ap92UHIUfhKw33g/+OGwxvYTGqjFoy+/2Ntp1lxdxmjc95R3qh6nCzUJshGq/c
+	 VbV7umsqzkHIhWPgeo0flPaFAJRUvhnwB/gYYvfeE9nG1SVCZ+K2dYcj3Kw2vlysRr
+	 vg5aLMmV07ycQ==
+Date: Thu, 27 Jun 2024 09:20:49 +0200
+From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+To: mhkelley58@gmail.com
+Cc: mhklinux@outlook.com, robin.murphy@arm.com, joro@8bytes.org,
+ will@kernel.org, jgross@suse.com, sstabellini@kernel.org,
+ oleksandr_tyshchenko@epam.com, hch@lst.de, m.szyprowski@samsung.com,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+ xen-devel@lists.xenproject.org
+Subject: Re: [RFC 1/1] swiotlb: Reduce calls to swiotlb_find_pool()
+Message-ID: <20240627092049.1dbec746@meshulam.tesarici.cz>
+In-Reply-To: <20240607031421.182589-1-mhklinux@outlook.com>
+References: <20240607031421.182589-1-mhklinux@outlook.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|SJ0PR12MB6685:EE_
-X-MS-Office365-Filtering-Correlation-Id: b2bc0bcb-648b-4661-1b93-08dc9679790e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?GMcZN4/W8334FljVAvaAJHUSYV0kpNMoFF5ek+Vi9KnxDoL65UTETz4wdNqp?=
- =?us-ascii?Q?Vz4PGdGQAg0+U+7xYUcNHU1kfyBAY17i5YtWN92pzoetVW9Z821prAqwX6P1?=
- =?us-ascii?Q?pKgePlIBR7y3jgB0jgMe3PSUo7GmAUWOcZX4WOvGFs9LLkqZl+YCELyRM8z0?=
- =?us-ascii?Q?3XCaB6NMSSjIrjeJUthfAXBeu8jYjjx8RhEQrcqCn420ilTK84jgSknaf04P?=
- =?us-ascii?Q?ZF+kA9cnLNprlyCYvLcI0Y5uIhDYf1V92SEV4O1nQCwz+6W1cJb/t0wNAmX3?=
- =?us-ascii?Q?Wy9ZT0vWLGkdVLq/Eq1zGLplPaIq9SygCNQPsQ1zVYZugnv+Y/twzPyHTUte?=
- =?us-ascii?Q?FVzn6atOWB9GH1Az5JSY0QBk+eoHbgZ2IMrngz4hzdkwk3NJkWWS1+6D0dRe?=
- =?us-ascii?Q?HxyZ0o41JIPoK5vNgnCd5GhkjOHs6L0LTDkbBJryPZr9LLT/+g5j+dCEaO56?=
- =?us-ascii?Q?0LlTW71u7Z4i803ZdX5lbpP8vBfkovgJzgLmHawbe/EJXKJTMR2NHTwNm2ce?=
- =?us-ascii?Q?9KSHAvEJRFsZiGJmlZOZlLBjHD29PfEcTUwozqnuIWr87ZeVshMogFaBldob?=
- =?us-ascii?Q?NObTIXyj3I8iBSz5m2oCaTPH4UJz767uNFxn5Q1OwtRqVO9nPeIjTd1nHqse?=
- =?us-ascii?Q?KekEEVEtO4rxdpVdWcKiNUISw2eaePqYNX6Phr9zxapXpYhqtbpMlkB98iZB?=
- =?us-ascii?Q?CmPoVh5maNzaX3Pk/ZP2Ct27JoHg9I0tk3yZ40s+DeI6EHXQrHErQo/QbvG6?=
- =?us-ascii?Q?CBtosMPrBgXtybs90oq3x8treVeVogoDhIF7MZLfBXSG4haKdcsxq2fX6upj?=
- =?us-ascii?Q?10wKWNBCmy3YQ5uOu26gtLfbIpFMgZPmFUxK5+TM6tymeIVQpcxYlFByWGOw?=
- =?us-ascii?Q?foTlEcJslUWiEhoiHQ9YE4wl15o30wf2lrZ65J1d4xxE2TolhCQCjzCQTq3k?=
- =?us-ascii?Q?MnP56BiAsVKxfaDrNQRGVnIJyAW4l34j68+bsSsKUuzi639tNqvXzihY2LHF?=
- =?us-ascii?Q?4EPn9V17PSweeKXmPmXlnYB5PvD+wsttPlA9SEOHqhCn4aTX8od/56lJd1w1?=
- =?us-ascii?Q?7k3nUkev0/ieZywKoBQ0Eps05urSZ7mu+7It8SxbOjHHHgRucaUTKtyOMNio?=
- =?us-ascii?Q?WnAI8Wet5RhoGhsiqgKg/VsRkUZ3ULHPH/h1M1ubTsQpEXFOBSHPEOUCNxOm?=
- =?us-ascii?Q?d7EjUIMrRjtmioXNTHAKxs9XJksiAlVgzomrSaskYaUvDxqc+MgLeHO8GnaP?=
- =?us-ascii?Q?ez304Dely1JXv06AdaKI0hkZ46S7oR98X82IPu+JbeZpV9mkLnd2KaVCOBex?=
- =?us-ascii?Q?vqoTcIbA7p1yrVEDWOFsdsCfFxaq55jMVF6qSWRyIsz+JKZZhuLL/ZygBarp?=
- =?us-ascii?Q?texhIik=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?jDVQPrxCCNzLs8vERgXp1UmNqr2ankeIiN054PA2udRUDcSgUjm5zc9z9act?=
- =?us-ascii?Q?C/TDLMUGFsuIVjdwipXEp58aHCYQoVvzpgrO//kBsP42I78/DIBKWgGik4SD?=
- =?us-ascii?Q?zH/48ZMbGL/PijwkkMEJRdHihC3FXNUZJC9kp5qP7GuQDHom+7u4Pn8ukv0M?=
- =?us-ascii?Q?1EJtHTAHvz6p7+80xTGBgbrlYrNUzoXE6wXZZGLjbQtforTBolimVecU13kw?=
- =?us-ascii?Q?FKqvdqUMllQGIxahihNLNhfgm3FxTVny4iNq3YQeSV4Z1kk0lvFE6dv84xip?=
- =?us-ascii?Q?Y/qJ48xkzuuuIsMl1bFDhyyrenPnsfWGw37WNBrgBoPbIY/AQOtl+AWQxTUy?=
- =?us-ascii?Q?K6J24WTI5IxzZV06wVClmPma7gWH8E3XUIppsZsH99xZ+G/PRVcoiF13zzEK?=
- =?us-ascii?Q?00lUIeINMv0y3tLVDqsQ/LMMjz0XS5+zlZ86T2QkVKwpMpkvXGTy3OZ5HDcf?=
- =?us-ascii?Q?NKvJkB0vHV8a4WwBF919HW7cqQnS/Z1qzWFp6w9PHNfkLfhpor4mRPJyHr2o?=
- =?us-ascii?Q?wdHuZDTd4eVXqTQs95MquLJCPFsNMtkG3wkBwj0nL8Y9+rg7Yt/F+nlNKx1N?=
- =?us-ascii?Q?e5lhzzrW8a/LSRndagiO9vWxQCg0Ax6CLen+WoZxI2yfsQffDVSf5mH3F7tw?=
- =?us-ascii?Q?urNnsUOfKIYTRB3SBbVjHl1qdlAwbgFNrNX70tuFSTRJS7GqqYAVUyH3DSBx?=
- =?us-ascii?Q?cgR//xgVGerJkIQzW/9ePjsTXJyiW5Ekuy4H9JT9M7fGVTQ2XlEdqpGYcZDy?=
- =?us-ascii?Q?3rbH3+DxZGS4YDaRNeAA0W0YWhzcNRVWm6aDQpQeZccTzCFwDkkLRCPchIrU?=
- =?us-ascii?Q?i28ScmkWj9IciGMMZsESeL/fMG8DGlNY6T4cPK0Yjm3o8XW0hz13eoHNxBKT?=
- =?us-ascii?Q?uKYoxtlKme+UOOQBLeAQ+vyMsULligZcGENZwZeWqDeVYzzRVoZPlgd9XD8m?=
- =?us-ascii?Q?8ZR43ydCWkKXnw3qRdVLgvZbnxij3QCMoQwnvk4DKnKjka5B3aLsv8HUG4QB?=
- =?us-ascii?Q?Kqb8kSEE8NRL8PenBE2tmNzVBokKxJmPS6jRIfmUZY7uNc9k2tmLtajyScmJ?=
- =?us-ascii?Q?8KCDvwzCIA3S9mucETTs70wCjMJrtHdI6Yu90WH9rxA/gu4Otme/Z4Gyu7Je?=
- =?us-ascii?Q?T+O/O0g7eHwp4wzYQitzmFYSqUxY6XVXIHwd6hivx9oF8ykwZLcGhC+ok/Ik?=
- =?us-ascii?Q?973u3aGTTXYk532wFH1hETZByyoCICdOwqGToeCAuPfIAj439HPANo/kJL97?=
- =?us-ascii?Q?JlSNBsMR9/V8yT3PL8TYeEDA3aOWQZipq/1d/lU27sFr15pDQaELmOZWKfDM?=
- =?us-ascii?Q?pnu0xFU1QHujxlQ6/XeOf1fOUsEbdyABro8Ac8XMPZrEPBJTRSWsvx3bsYdP?=
- =?us-ascii?Q?Ka+4xun8v6DxlOA0D6tUz9Is5z95Ra78oGevXwPyOZyULOeM9dIjLZXJBu9j?=
- =?us-ascii?Q?XAd3xHooD0XMZOt8S1CvBZ/Uwm9U+BEYo967+ZyswhAe72d8RMra/J7K4bIP?=
- =?us-ascii?Q?Opz1XKaCxxM2wZfP31BbCdcWU5FepbA/2+R8f6jjp6dI6msaP+hQ0LsYVptw?=
- =?us-ascii?Q?EZxyaR9ERAKNIlKVmMWlXgDvuX7M7cvhkEkmly/V?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b2bc0bcb-648b-4661-1b93-08dc9679790e
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2024 07:19:24.7506
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oXEjKk8xC7qsaqcPmHDn6U9E5GtzFnh2I8+FQJE3DE6BriKjMqLV7sQqHVD/fAgcZwIXAXioig0Uz7Vd9iB8Kg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6685
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Thu,  6 Jun 2024 20:14:21 -0700
+mhkelley58@gmail.com wrote:
 
-Dan Williams <dan.j.williams@intel.com> writes:
+> From: Michael Kelley <mhklinux@outlook.com>
+> 
+> With CONFIG_SWIOTLB_DYNAMIC enabled, each round-trip map/unmap pair
+> in the swiotlb results in 6 calls to swiotlb_find_pool(). In multiple
+> places, the pool is found and used in one function, and then must
+> found again in the next function that is called because only the
+> tlb_addr is passed as an argument. These are the six call sites:
+> 
+> dma_direct_map_page:
+> 1. swiotlb_map->swiotlb_tbl_map_single->swiotlb_bounce
+> 
+> dma_direct_unmap_page:
+> 2. dma_direct_sync_single_for_cpu->is_swiotlb_buffer
+> 3. dma_direct_sync_single_for_cpu->swiotlb_sync_single_for_cpu->
+> 	swiotlb_bounce
+> 4. is_swiotlb_buffer
+> 5. swiotlb_tbl_unmap_single->swiotlb_del_transient
+> 6. swiotlb_tbl_unmap_single->swiotlb_release_slots
+> 
+> Reduce the number of calls by finding the pool at a higher level, and
+> passing it as an argument instead of searching again. A key change is
+> for is_swiotlb_buffer() to return a pool pointer instead of a boolean,
+> and then pass this pool pointer to subsequent swiotlb functions.
+> With these changes, a round-trip map/unmap pair requires only 2 calls
+> to swiotlb_find_pool():
+> 
+> dma_direct_unmap_page:
+> 1. dma_direct_sync_single_for_cpu->is_swiotlb_buffer
+> 2. is_swiotlb_buffer
+> 
+> These changes come from noticing the inefficiencies in a code review,
+> not from performance measurements. With CONFIG_SWIOTLB_DYNAMIC,
+> swiotlb_find_pool() is not trivial, and it uses an RCU read lock,
+> so avoiding the redundant calls helps performance in a hot path.
+> When CONFIG_SWIOTLB_DYNAMIC is *not* set, the code size reduction
+> is minimal and the perf benefits are likely negligible, but no
+> harm is done.
+> 
+> No functional change is intended.
+> 
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> ---
+> This patch trades off making many of the core swiotlb APIs take
+> an additional argument in order to avoid duplicating calls to
+> swiotlb_find_pool(). The current code seems rather wasteful in
+> making 6 calls per round-trip, but I'm happy to accept others'
+> judgment as to whether getting rid of the waste is worth the
+> additional code complexity.
+> 
+>  drivers/iommu/dma-iommu.c | 27 ++++++++++++++------
+>  drivers/xen/swiotlb-xen.c | 25 +++++++++++-------
+>  include/linux/swiotlb.h   | 54 +++++++++++++++++++++------------------
+>  kernel/dma/direct.c       | 12 ++++++---
+>  kernel/dma/direct.h       | 18 ++++++++-----
+>  kernel/dma/swiotlb.c      | 43 ++++++++++++++++---------------
+>  6 files changed, 106 insertions(+), 73 deletions(-)
+> 
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index f731e4b2a417..ab6bc37ecf90 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -1073,6 +1073,7 @@ static void iommu_dma_sync_single_for_cpu(struct device *dev,
+>  		dma_addr_t dma_handle, size_t size, enum dma_data_direction dir)
+>  {
+>  	phys_addr_t phys;
+> +	struct io_tlb_pool *pool;
+>  
+>  	if (dev_is_dma_coherent(dev) && !dev_use_swiotlb(dev, size, dir))
+>  		return;
+> @@ -1081,21 +1082,25 @@ static void iommu_dma_sync_single_for_cpu(struct device *dev,
+>  	if (!dev_is_dma_coherent(dev))
+>  		arch_sync_dma_for_cpu(phys, size, dir);
+>  
+> -	if (is_swiotlb_buffer(dev, phys))
+> -		swiotlb_sync_single_for_cpu(dev, phys, size, dir);
+> +	pool = is_swiotlb_buffer(dev, phys);
+> +	if (pool)
+> +		swiotlb_sync_single_for_cpu(dev, phys, size, dir, pool);
+>  }
+>  
+>  static void iommu_dma_sync_single_for_device(struct device *dev,
+>  		dma_addr_t dma_handle, size_t size, enum dma_data_direction dir)
+>  {
+>  	phys_addr_t phys;
+> +	struct io_tlb_pool *pool;
+>  
+>  	if (dev_is_dma_coherent(dev) && !dev_use_swiotlb(dev, size, dir))
+>  		return;
+>  
+>  	phys = iommu_iova_to_phys(iommu_get_dma_domain(dev), dma_handle);
+> -	if (is_swiotlb_buffer(dev, phys))
+> -		swiotlb_sync_single_for_device(dev, phys, size, dir);
+> +
+> +	pool = is_swiotlb_buffer(dev, phys);
+> +	if (pool)
+> +		swiotlb_sync_single_for_device(dev, phys, size, dir, pool);
+>  
+>  	if (!dev_is_dma_coherent(dev))
+>  		arch_sync_dma_for_device(phys, size, dir);
+> @@ -1189,8 +1194,12 @@ static dma_addr_t iommu_dma_map_page(struct device *dev, struct page *page,
+>  		arch_sync_dma_for_device(phys, size, dir);
+>  
+>  	iova = __iommu_dma_map(dev, phys, size, prot, dma_mask);
+> -	if (iova == DMA_MAPPING_ERROR && is_swiotlb_buffer(dev, phys))
+> -		swiotlb_tbl_unmap_single(dev, phys, size, dir, attrs);
+> +	if (iova == DMA_MAPPING_ERROR) {
+> +		struct io_tlb_pool *pool = is_swiotlb_buffer(dev, phys);
+> +
+> +		if (pool)
+> +			swiotlb_tbl_unmap_single(dev, phys, size, dir, attrs, pool);
+> +	}
+>  	return iova;
+>  }
+>  
+> @@ -1199,6 +1208,7 @@ static void iommu_dma_unmap_page(struct device *dev, dma_addr_t dma_handle,
+>  {
+>  	struct iommu_domain *domain = iommu_get_dma_domain(dev);
+>  	phys_addr_t phys;
+> +	struct io_tlb_pool *pool;
+>  
+>  	phys = iommu_iova_to_phys(domain, dma_handle);
+>  	if (WARN_ON(!phys))
+> @@ -1209,8 +1219,9 @@ static void iommu_dma_unmap_page(struct device *dev, dma_addr_t dma_handle,
+>  
+>  	__iommu_dma_unmap(dev, dma_handle, size);
+>  
+> -	if (unlikely(is_swiotlb_buffer(dev, phys)))
+> -		swiotlb_tbl_unmap_single(dev, phys, size, dir, attrs);
+> +	pool = is_swiotlb_buffer(dev, phys);
+> +	if (unlikely(pool))
+> +		swiotlb_tbl_unmap_single(dev, phys, size, dir, attrs, pool);
+>  }
+>  
+>  /*
+> diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+> index 6579ae3f6dac..7af8c8466e1d 100644
+> --- a/drivers/xen/swiotlb-xen.c
+> +++ b/drivers/xen/swiotlb-xen.c
+> @@ -88,7 +88,7 @@ static inline int range_straddles_page_boundary(phys_addr_t p, size_t size)
+>  	return 0;
+>  }
+>  
+> -static int is_xen_swiotlb_buffer(struct device *dev, dma_addr_t dma_addr)
+> +static struct io_tlb_pool *is_xen_swiotlb_buffer(struct device *dev, dma_addr_t dma_addr)
+>  {
+>  	unsigned long bfn = XEN_PFN_DOWN(dma_to_phys(dev, dma_addr));
+>  	unsigned long xen_pfn = bfn_to_local_pfn(bfn);
+> @@ -100,7 +100,7 @@ static int is_xen_swiotlb_buffer(struct device *dev, dma_addr_t dma_addr)
+>  	 */
+>  	if (pfn_valid(PFN_DOWN(paddr)))
+>  		return is_swiotlb_buffer(dev, paddr);
+> -	return 0;
+> +	return NULL;
+>  }
+>  
+>  #ifdef CONFIG_X86
+> @@ -228,7 +228,8 @@ static dma_addr_t xen_swiotlb_map_page(struct device *dev, struct page *page,
+>  	 */
+>  	if (unlikely(!dma_capable(dev, dev_addr, size, true))) {
+>  		swiotlb_tbl_unmap_single(dev, map, size, dir,
+> -				attrs | DMA_ATTR_SKIP_CPU_SYNC);
+> +				attrs | DMA_ATTR_SKIP_CPU_SYNC,
+> +				swiotlb_find_pool(dev, map));
+>  		return DMA_MAPPING_ERROR;
+>  	}
+>  
+> @@ -254,6 +255,7 @@ static void xen_swiotlb_unmap_page(struct device *hwdev, dma_addr_t dev_addr,
+>  		size_t size, enum dma_data_direction dir, unsigned long attrs)
+>  {
+>  	phys_addr_t paddr = xen_dma_to_phys(hwdev, dev_addr);
+> +	struct io_tlb_pool *pool;
+>  
+>  	BUG_ON(dir == DMA_NONE);
+>  
+> @@ -265,8 +267,9 @@ static void xen_swiotlb_unmap_page(struct device *hwdev, dma_addr_t dev_addr,
+>  	}
+>  
+>  	/* NOTE: We use dev_addr here, not paddr! */
+> -	if (is_xen_swiotlb_buffer(hwdev, dev_addr))
+> -		swiotlb_tbl_unmap_single(hwdev, paddr, size, dir, attrs);
+> +	pool = is_xen_swiotlb_buffer(hwdev, dev_addr);
+> +	if (pool)
+> +		swiotlb_tbl_unmap_single(hwdev, paddr, size, dir, attrs, pool);
+>  }
+>  
+>  static void
+> @@ -274,6 +277,7 @@ xen_swiotlb_sync_single_for_cpu(struct device *dev, dma_addr_t dma_addr,
+>  		size_t size, enum dma_data_direction dir)
+>  {
+>  	phys_addr_t paddr = xen_dma_to_phys(dev, dma_addr);
+> +	struct io_tlb_pool *pool;
+>  
+>  	if (!dev_is_dma_coherent(dev)) {
+>  		if (pfn_valid(PFN_DOWN(dma_to_phys(dev, dma_addr))))
+> @@ -282,8 +286,9 @@ xen_swiotlb_sync_single_for_cpu(struct device *dev, dma_addr_t dma_addr,
+>  			xen_dma_sync_for_cpu(dev, dma_addr, size, dir);
+>  	}
+>  
+> -	if (is_xen_swiotlb_buffer(dev, dma_addr))
+> -		swiotlb_sync_single_for_cpu(dev, paddr, size, dir);
+> +	pool = is_xen_swiotlb_buffer(dev, dma_addr);
+> +	if (pool)
+> +		swiotlb_sync_single_for_cpu(dev, paddr, size, dir, pool);
+>  }
+>  
+>  static void
+> @@ -291,9 +296,11 @@ xen_swiotlb_sync_single_for_device(struct device *dev, dma_addr_t dma_addr,
+>  		size_t size, enum dma_data_direction dir)
+>  {
+>  	phys_addr_t paddr = xen_dma_to_phys(dev, dma_addr);
+> +	struct io_tlb_pool *pool;
+>  
+> -	if (is_xen_swiotlb_buffer(dev, dma_addr))
+> -		swiotlb_sync_single_for_device(dev, paddr, size, dir);
+> +	pool = is_xen_swiotlb_buffer(dev, dma_addr);
+> +	if (pool)
+> +		swiotlb_sync_single_for_device(dev, paddr, size, dir, pool);
+>  
+>  	if (!dev_is_dma_coherent(dev)) {
+>  		if (pfn_valid(PFN_DOWN(dma_to_phys(dev, dma_addr))))
+> diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
+> index 14bc10c1bb23..ce8651949123 100644
+> --- a/include/linux/swiotlb.h
+> +++ b/include/linux/swiotlb.h
+> @@ -42,24 +42,6 @@ int swiotlb_init_late(size_t size, gfp_t gfp_mask,
+>  	int (*remap)(void *tlb, unsigned long nslabs));
+>  extern void __init swiotlb_update_mem_attributes(void);
+>  
+> -phys_addr_t swiotlb_tbl_map_single(struct device *hwdev, phys_addr_t phys,
+> -		size_t mapping_size,
+> -		unsigned int alloc_aligned_mask, enum dma_data_direction dir,
+> -		unsigned long attrs);
+> -
+> -extern void swiotlb_tbl_unmap_single(struct device *hwdev,
+> -				     phys_addr_t tlb_addr,
+> -				     size_t mapping_size,
+> -				     enum dma_data_direction dir,
+> -				     unsigned long attrs);
+> -
+> -void swiotlb_sync_single_for_device(struct device *dev, phys_addr_t tlb_addr,
+> -		size_t size, enum dma_data_direction dir);
+> -void swiotlb_sync_single_for_cpu(struct device *dev, phys_addr_t tlb_addr,
+> -		size_t size, enum dma_data_direction dir);
+> -dma_addr_t swiotlb_map(struct device *dev, phys_addr_t phys,
+> -		size_t size, enum dma_data_direction dir, unsigned long attrs);
+> -
+>  #ifdef CONFIG_SWIOTLB
+>  
+>  /**
+> @@ -168,12 +150,12 @@ static inline struct io_tlb_pool *swiotlb_find_pool(struct device *dev,
+>   * * %true if @paddr points into a bounce buffer
+>   * * %false otherwise
+>   */
+> -static inline bool is_swiotlb_buffer(struct device *dev, phys_addr_t paddr)
+> +static inline struct io_tlb_pool *is_swiotlb_buffer(struct device *dev, phys_addr_t paddr)
+>  {
+>  	struct io_tlb_mem *mem = dev->dma_io_tlb_mem;
+>  
+>  	if (!mem)
+> -		return false;
+> +		return NULL;
+>  
+>  #ifdef CONFIG_SWIOTLB_DYNAMIC
+>  	/*
+> @@ -187,10 +169,13 @@ static inline bool is_swiotlb_buffer(struct device *dev, phys_addr_t paddr)
+>  	 * This barrier pairs with smp_mb() in swiotlb_find_slots().
+>  	 */
+>  	smp_rmb();
+> -	return READ_ONCE(dev->dma_uses_io_tlb) &&
+> -		swiotlb_find_pool(dev, paddr);
+> +	if (READ_ONCE(dev->dma_uses_io_tlb))
+> +		return swiotlb_find_pool(dev, paddr);
+> +	return NULL;
+>  #else
+> -	return paddr >= mem->defpool.start && paddr < mem->defpool.end;
+> +	if (paddr >= mem->defpool.start && paddr < mem->defpool.end)
+> +		return &mem->defpool;
 
-> Alistair Popple wrote:
->> FS DAX pages have always maintained their own page reference counts
->> without following the normal rules for page reference counting. In
->> particular pages are considered free when the refcount hits one rather
->> than zero and refcounts are not added when mapping the page.
->> 
->> Tracking this requires special PTE bits (PTE_DEVMAP) and a secondary
->> mechanism for allowing GUP to hold references on the page (see
->> get_dev_pagemap). However there doesn't seem to be any reason why FS
->> DAX pages need their own reference counting scheme.
->> 
->> By treating the refcounts on these pages the same way as normal pages
->> we can remove a lot of special checks. In particular pXd_trans_huge()
->> becomes the same as pXd_leaf(), although I haven't made that change
->> here. It also frees up a valuable SW define PTE bit on architectures
->> that have devmap PTE bits defined.
->> 
->> It also almost certainly allows further clean-up of the devmap managed
->> functions, but I have left that as a future improvment.
->> 
->> This is an update to the original RFC rebased onto v6.10-rc5. Unlike
->> the original RFC it passes the same number of ndctl test suite
->> (https://github.com/pmem/ndctl) tests as my current development
->> environment does without these patches.
->
-> Are you seeing the 'mmap.sh' test fail even without these patches?
+Why are we open-coding swiotlb_find_pool() here? It does not make a
+difference now, but if swiotlb_find_pool() were to change, both places
+would have to be updated.
 
-No. But I also don't see it failing with these patches :)
+Does it save a reload from dev->dma_io_tlb_mem? IOW is the compiler
+unable to optimize it away?
 
-For reference this is what I see on my test machine with or without:
+What about this (functionally identical) variant:
 
-[1/70] Generating version.h with a custom command
- 1/13 ndctl:dax / daxdev-errors.sh          SKIP             0.06s   exit status 77
- 2/13 ndctl:dax / multi-dax.sh              SKIP             0.05s   exit status 77
- 3/13 ndctl:dax / sub-section.sh            SKIP             0.14s   exit status 77
- 4/13 ndctl:dax / dax-dev                   OK               0.02s
- 5/13 ndctl:dax / dax-ext4.sh               OK              12.97s
- 6/13 ndctl:dax / dax-xfs.sh                OK              12.44s
- 7/13 ndctl:dax / device-dax                OK              13.40s
- 8/13 ndctl:dax / revoke-devmem             FAIL             0.31s   (exit status 250 or signal 122 SIGinvalid)
->>> TEST_PATH=/home/apopple/ndctl/build/test LD_LIBRARY_PATH=/home/apopple/ndctl/build/cxl/lib:/home/apopple/ndctl/build/daxctl/lib:/home/apopple/ndctl/build/ndctl/lib NDCTL=/home/apopple/ndctl/build/ndctl/ndctl MALLOC_PERTURB_=227 DATA_PATH=/home/apopple/ndctl/test DAXCTL=/home/apopple/ndctl/build/daxctl/daxctl /home/apopple/ndctl/build/test/revoke_devmem
+#ifdef CONFIG_SWIOTLB_DYNAMIC
+	smp_rmb();
+	if (!READ_ONCE(dev->dma_uses_io_tlb))
+		return NULL;
+#else
+	if (paddr < mem->defpool.start || paddr >= mem->defpool.end);
+		return NULL;
+#endif
 
- 9/13 ndctl:dax / device-dax-fio.sh         OK              32.43s
-10/13 ndctl:dax / daxctl-devices.sh         SKIP             0.07s   exit status 77
-11/13 ndctl:dax / daxctl-create.sh          SKIP             0.04s   exit status 77
-12/13 ndctl:dax / dm.sh                     FAIL             0.08s   exit status 1
->>> MALLOC_PERTURB_=209 TEST_PATH=/home/apopple/ndctl/build/test LD_LIBRARY_PATH=/home/apopple/ndctl/build/cxl/lib:/home/apopple/ndctl/build/daxctl/lib:/home/apopple/ndctl/build/ndctl/lib NDCTL=/home/apopple/ndctl/build/ndctl/ndctl DATA_PATH=/home/apopple/ndctl/test DAXCTL=/home/apopple/ndctl/build/daxctl/daxctl /home/apopple/ndctl/test/dm.sh
+	return swiotlb_find_pool(dev, paddr);
 
-13/13 ndctl:dax / mmap.sh                   OK             107.57s
-
-Ok:                 6   
-Expected Fail:      0   
-Fail:               2   
-Unexpected Pass:    0   
-Skipped:            5   
-Timeout:            0   
-
-I have been using QEMU for my testing. Maybe I missed some condition in
-the unmap path though so will take another look.
-
-> I see this with the patches, will try without in the morning.
->
->  EXT4-fs (pmem0): unmounting filesystem 26ea1463-343a-464f-9f16-91cb176dbdc7.
->  XFS (pmem0): Mounting V5 Filesystem 554953fd-c9f4-460f-bc37-f43979986b68
->  XFS (pmem0): Ending clean mount
->  Oops: general protection fault, probably for non-canonical address 0xdead000000000518: 00
-> T SMP PTI
->  CPU: 15 PID: 1295 Comm: mmap Tainted: G           OE    N 6.10.0-rc5+ #261
->  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS edk2-20240524-3.fc40 05/24/2024
->  RIP: 0010:folio_mark_dirty+0x25/0x60
->  Code: 90 90 90 90 90 0f 1f 44 00 00 53 48 89 fb e8 22 18 02 00 48 85 c0 74 26 48 89 c7 48
-> 0 02 00 74 05 f0 80 63 02 fd <48> 8b 87 18 01 00 00 48 89 de 5b 48 8b 40 18 e9 77 90 c0 00
->  RSP: 0018:ffffb073022f7b08 EFLAGS: 00010246
->  RAX: 004ffff800002000 RBX: ffffd0d005000300 RCX: 0400000000000040
->  RDX: 0000000000000000 RSI: 00007f4006200000 RDI: dead000000000400
->  RBP: 0000000000000000 R08: ffff9a4b04504a30 R09: 000fffffffffffff
->  R10: ffffd0d005000300 R11: 0000000000000000 R12: 00007f4006200000
->  R13: ffff9a4b7c96c000 R14: ffff9a4b7daba440 R15: ffffb073022f7cb0
->  FS:  00007f4046351740(0000) GS:ffff9a4d77780000(0000) knlGS:0000000000000000
->  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->  CR2: 00007f40461ff000 CR3: 000000027aea6000 CR4: 00000000000006f0
->  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->  Call Trace:
->   <TASK>
->   ? __die_body.cold+0x19/0x26
->   ? die_addr+0x38/0x60
->   ? exc_general_protection+0x143/0x420
->   ? asm_exc_general_protection+0x22/0x30
->   ? folio_mark_dirty+0x25/0x60
->   ? folio_mark_dirty+0xe/0x60
->   unmap_page_range+0xea5/0x1550
->   unmap_vmas+0xf8/0x1e0
->   unmap_region.constprop.0+0xd7/0x150
->   ? lock_is_held_type+0xd5/0x130
->   do_vmi_align_munmap.isra.0+0x3f4/0x580
->   ? mas_walk+0x101/0x1b0
->   __vm_munmap+0xa6/0x170
->   __x64_sys_munmap+0x17/0x20
->   do_syscall_64+0x75/0x190
->   entry_SYSCALL_64_after_hwframe+0x76/0x7e
->
-> $ faddr2line vmlinux folio_mark_dirty+0x25
-> folio_mark_dirty+0x25/0x58:
-> folio_mark_dirty at mm/page-writeback.c:2860
-
+Petr T
