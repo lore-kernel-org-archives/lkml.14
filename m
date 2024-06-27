@@ -1,35 +1,47 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3814A4B5C1;
-	Thu, 27 Jun 2024 19:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B47B33C9;
+	Thu, 27 Jun 2024 19:55:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719518084; cv=none; b=sA62R7oml5xrrpLTWgP5YTZuuMZtufIYsodGBr95whBlYMiiyVXisn/RQjN4BLVF156wvp2yAvd0I4ZWxFSgB0lokTHVpFTTw96oW5KG+Kf4SXubS0sLPZpWVC8kPgR4amZ3NtyvYII+nMoIDGxx5zpS6rlC148S1vt5TS67yyY=
+	t=1719518143; cv=none; b=Ky82NXjRI6kokhVLKFSba4CHav0BWgDbbho8kKyHnY4ZnkYXs6N2jACogI0mpwUa0+tuZxis/FmQOzRxzlPxalxTbVErS3r/uz12t59pLDymhs/BvryiXqlnb8IqBx24M3x2cphZf9gqaVxEIniIEjrHRnopS/BrtXvKyHvCL5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719518084; c=relaxed/simple;
-	bh=RunB0BdrK5QfK3qubVsk9mwavGqYlgg/gcfGgzVJ3zk=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=cV64nYcKQUlk5bn6P8fX9HhZMXuIU4tasFYaT6L9575Frc5x8YOTHwwDw9pZm8RWsiIIy11VW4OWQfT20z1sxtsrO96ALCcVbo8Kz5hxte3+HP1Mktc/A7tONL+RqCU/fwvCJVKT4FbxRX4felr3vtJTxNu5XCX1OE8VAOU/ydU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id 2B59F92009C; Thu, 27 Jun 2024 21:54:39 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id 251BC92009B;
-	Thu, 27 Jun 2024 20:54:39 +0100 (BST)
-Date: Thu, 27 Jun 2024 20:54:39 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-    Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, 
-    "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, 
-    =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-Subject: Re: [PATCH v3] MIPS: Implement ieee754 NAN2008 emulation mode
-In-Reply-To: <9cc26415-9cbc-47fa-a132-7d8c000874a4@app.fastmail.com>
-Message-ID: <alpine.DEB.2.21.2406272053180.43454@angie.orcam.me.uk>
-References: <20240612-mips_ieee754_emul-v3-1-2c21b450abdb@flygoat.com> <Zn1FuxNw2CUttzdg@alpha.franken.de> <9cc26415-9cbc-47fa-a132-7d8c000874a4@app.fastmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1719518143; c=relaxed/simple;
+	bh=W6cqxra8+FO/up23yLnW1643ICKIZwNjxUraKipwBPc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hqsOa0BFadmuZH/MuDQ5LufdLUbiI9PwYsKZIg4F4zBJD0wkthjCGGXf9U5qULhVb+iWVMeWedOAdv9kZZspN8RSx1Qbs/Un0JfkstFW9wL4UHNo0VyHCq6/gWM8AquUSVpHHUqYBvcfiSLZCLTqRGk0JH65yuLtkl2xcMmYkSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PGZgHYGc; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PGZgHYGc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38169C2BBFC;
+	Thu, 27 Jun 2024 19:55:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719518142;
+	bh=W6cqxra8+FO/up23yLnW1643ICKIZwNjxUraKipwBPc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=PGZgHYGciad64FjNtnvO48bagrr4ryGUZQ4xfqR2mLiX/sJxXF1M1w+zBVikB98vl
+	 JWjQqqcBMQPL8yUHdoxQcyzkPtILF+yOnqYxUcjI+jCqi7DV6Kl3UhLxKrO+k4FCy5
+	 u7yy56vRnAhXo/GV8JF8k3gNL7xZNGcea1ddJjie/GwSl5CToBqqtr+iylTChrIHDD
+	 pUX6ORyfEDZP2LaRcEHR1PLBSZ1i61Kja3cO9XFZQW5oFMcDBuc9hYieQLuCdInsQW
+	 EdINUkvMD95xRj2Ef86nKL4spKQFN7uHXFywfk/KMNz8ULyaTqYbG7ERyEfFx3WnN5
+	 PThfjwkd4vxWw==
+Date: Thu, 27 Jun 2024 12:55:41 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, David Ahern
+ <dsahern@kernel.org>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Andrew Lunn
+ <andrew@lunn.ch>, <nex.sw.ncis.osdt.itp.upstreaming@intel.com>,
+ <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next 1/5] netdevice: convert private flags > BIT(31)
+ to bitfields
+Message-ID: <20240627125541.3de68e1f@kernel.org>
+In-Reply-To: <e0b66a74-b32b-4e77-a7f7-8fd9c28cb88b@intel.com>
+References: <20240625114432.1398320-1-aleksander.lobakin@intel.com>
+	<20240625114432.1398320-2-aleksander.lobakin@intel.com>
+	<20240626075117.6a250653@kernel.org>
+	<e0b66a74-b32b-4e77-a7f7-8fd9c28cb88b@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,24 +49,19 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 27 Jun 2024, Jiaxun Yang wrote:
-
-> >> @@ -318,6 +318,10 @@ void mips_set_personality_nan(struct arch_elf_state *state)
-> >>  	t->thread.fpu.fcr31 = c->fpu_csr31;
-> >>  	switch (state->nan_2008) {
-> >>  	case 0:
-> >> +		if (!(c->fpu_msk31 & FPU_CSR_NAN2008))
-> >> +			t->thread.fpu.fcr31 &= ~FPU_CSR_NAN2008;
-> >> +		if (!(c->fpu_msk31 & FPU_CSR_ABS2008))
-> >> +			t->thread.fpu.fcr31 &= ~FPU_CSR_ABS2008;
-> >
-> > why is this needed?
+On Thu, 27 Jun 2024 11:50:40 +0200 Alexander Lobakin wrote:
+> > I don't think we should group them indiscriminately. Better to add the
+> > asserts flag by flag. Neither of the flags you're breaking out in this
+> > patch are used on the fast path.
+> > 
+> > Or is the problem that CACHELINE_ASSERT_GROUP_MEMBER doesn't work on
+> > bitfields?  
 > 
-> Because t->thread.fpu.fcr31 comes from c->fpu_csr31, in this case we the default
-> value of c->fpu_csr31 is read from hardware and we don't know what would that be.
+> It generates sizeof(bitfield) which the compilers don't like and don't
+> want to compile ._.
 
- But it has always been like this.  What has changed with your patch that 
-you need to mask the bit out now?
+Mm. Okay, I have no better ideas then.
 
-  Maciej
+Do consider moving the cold flags next to wol_enabled, tho?
