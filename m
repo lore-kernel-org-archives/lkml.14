@@ -1,183 +1,129 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A62714F119
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 11:56:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0415D15250C
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 11:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719489364; cv=none; b=rFwSc6cROcVSWPXsicEAGuSk3VA0POu+oCIpkPGxyTIhgvyBUYSKVNvxHFw7LVgn6nbEvrPzAWXBzZoq8jdDFTQ7Vg4JHDma69sF4y+zxyHiNAaOmGXSjzYvh4f18ltCsdVzg7QBJQhQdCmDnxYAt5kBOvb45Ew7HQKj4Px8TMo=
+	t=1719489365; cv=none; b=ddSW500IIGm0G/T/9fo9pJHWSVsqmlxuzZNn0dLrIG9sgDt7M4Q8odRKxfU2yLvWwNQZUneepL6YP/lqdRMG9crDonf2n4/HF7Ab+oJ3XqJJBa+onPi+9D4mremh/8ZEnFk3ySubmr4GvgCeaaVWIzdJgVgYq0D00J0lOuxzCP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719489364; c=relaxed/simple;
-	bh=GwnEq4JpqyrzCPOrdEAYPych673yINSKfG5ey35YvTw=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=caEZnWlnbBfG5pCr4heh8XCrgNxuXdXi8fK0B8i/shr6G80bcmdPZPHMi9efncTKcbjtzdBljO0PYWZieyUm5LZYoW8DCBqJafbepLFr9qPvDgSYiwMWOTnZZIHNbchroretHQetUyiu8P17m6Z2INo81jTCrZ6R74KWgz3QHqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uoupIsCr; arc=none smtp.client-ip=209.85.221.53
+	s=arc-20240116; t=1719489365; c=relaxed/simple;
+	bh=UkWKKOsTNz1C80xDz4hBzX/O51GwHLLmPnZ3RZsUr6g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=K8nmQAmCr0u42+oX6imnyF56B4fiBcN6e211I3zAcP1RiOMH55impOPHYoGQoEmLnU4cmPLOc37gEHG2mGihZ6x3vshqGIcPwj4hiMh7/wfhU7IQoO5zmxL3HHxk5REuh5BuU9EX3B+TUKXlqVVM7mWnBvKeoMvkfsHbJniTObA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RtZgseXB; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uoupIsCr"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-362bc731810so6811004f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 04:56:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RtZgseXB"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-421b9068274so66683915e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 04:56:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719489360; x=1720094160; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1719489362; x=1720094162; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=9KU4qzH+h7V/7aVO802pijoB5rQAb96UeWF6ZLoDpqs=;
-        b=uoupIsCrVmBZi12L3EZ3aqzPgcNc1+JL73w79c3c0sPmvNomWA1DOTYPFiAsFr3b9y
-         5BH7Uzq8js9QxBKyeUaPK/hpAaiUE2mKznpADfkYf7WEjDFl+UdR0qormjvPWZ41hCqH
-         x9y5rOCbj7X5ZXgtAjtAgExyFX9i829V7IlI36Tx8MVqbvkpBp+g4X3kR4lNK+ccl3JF
-         ZXqAKC39GaCKmOHKDFimlWbA0Dc2VQtc+n4sbK1yvdF5hkTEJeGY9AWS7RU1EcazHWVf
-         lpUyj3OrIYFl+seScODgsVyQ87+WEpzM5zzMFMGdKbtM9FrPl4EnWQSdGMPnPA+sgNOh
-         BRyg==
+        bh=eB7qTRAxnSkgE7t4FDRl+bpfSSJGxOmGp8nh0Nok6h0=;
+        b=RtZgseXBbYvyIAQx7Fd6NA6axTCq9hMPJgniK+RRFgWhL4hphY5R8rnmDZFl2cJLew
+         36ckxGHa7WRYgdyNxgp0V08/IKITfV0pR7mlfLIYCAcRHoDvKf/8ZNLLzmS8wAaY33jx
+         IHX7GE9q3sVVW0PAyBtLasO/9uYlM2VhHXi8KvgbTAMRebzeTDXQaX1gaXPJ4m1Ei/NV
+         ZpT/g69DGccJazgMgeF4Gga61prR+76WOOLq7rt1HhiJb9XBG+vgQGj7z6l+NwL4R1Bq
+         vqugQV7NK0xBdwOIiSbEv5cvs3uiNF/VfxYHNOzq0A6vjIwtfVpVhgCC+4a0DYpgjNth
+         HubQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719489360; x=1720094160;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9KU4qzH+h7V/7aVO802pijoB5rQAb96UeWF6ZLoDpqs=;
-        b=mef9Q5Rg0saTuZMyIMLaeCiSlc8TMynPccsXzj0eIKRcbVsr+RJwTNDWM8C5GMmQNv
-         7+eUTSHGr7/dt0k+mn1H502wERZ9HwHKCzkCcwGtV5um1oEkcWXonCc437hTZSSr2eMO
-         myWhgsdZWbEyoHWypCj960EFcfIrRt8haM+W3mTrxeHWC3uCvVzBYWEXYlrgclQRcVBT
-         sdTvRBdxn2jNS6TKXk9pp+NkhchdMTS/oGe7/0HKnJeCp1bwt9zFERbcd6XFRXalFG6I
-         Ax8FX0foCdryNhNbbYc4yX/aKnqMIiVxF0eUwJOx75kD6hEbeNQl4QULvi6kEcORyz24
-         NbCA==
-X-Forwarded-Encrypted: i=1; AJvYcCVNSrHjQLc7neDuNm/jczYx0FT2uP9cWtl5893wgco0VsHVzY6vaFSe5gBp/nt+VSf1MfL8bOkMxaUrOXD1EZHUi8CnQtbILQmQQymm
-X-Gm-Message-State: AOJu0YzIEdrZcEch607g5PbSa5rvOZhKANfGXlN2dW+AsALSE9Ivvxhk
-	Y6t7GmMdwr431jw6l5VvQP3Fko3g7Z7mTUrF3e1Rkzp2uYcXQdUtl/QbE03nuJE=
-X-Google-Smtp-Source: AGHT+IGBQCwpcaZZygnFzFlfZfQDzSHbl0uIqHSmT2U3e/bWD6hKD6LiSAzVdptAdejwJkAZgCRqiQ==
-X-Received: by 2002:a5d:410a:0:b0:367:437f:1785 with SMTP id ffacd0b85a97d-367437f198dmr1106036f8f.13.1719489359780;
-        Thu, 27 Jun 2024 04:55:59 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:feeb:faed:66fa:9e6a? ([2a01:e0a:982:cbb0:feeb:faed:66fa:9e6a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3674369eb94sm1595939f8f.98.2024.06.27.04.55.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Jun 2024 04:55:59 -0700 (PDT)
-Message-ID: <6c9a791b-aaef-4ad0-a10d-ec3acb42ac32@linaro.org>
-Date: Thu, 27 Jun 2024 13:55:57 +0200
+        d=1e100.net; s=20230601; t=1719489362; x=1720094162;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eB7qTRAxnSkgE7t4FDRl+bpfSSJGxOmGp8nh0Nok6h0=;
+        b=uU1W0TOSlLtMViPxKFw4Xk5RXAsu2kunhR1vD1lUZMbRrpKq0+vFVbe36HwVIIUCWl
+         UiSNPRXVg1Hjlng86pAIovqscW9oW9eu0zhlWuatICmu7jMfI0GzIbyk8f30s81JbE+X
+         v4rsi4H0ibIp46SHUnR40NWDnlxCf7iFlO67DonBNS3OOhZ7rEj2uCmReorhKyJ0jMWw
+         k4nYe6VsgOi1y2v2hwIcz2UhIe/cs8o1ctKtyaMD1Ox+nAIzhV5AY7+9PgjFj4OvRUqN
+         WqIcSe0QPYeqtgzbz6OVifPtJrLNHEfoFIoByjN4sFhaDEueuLB/6XLvSJ6m1+sTFeGI
+         wz+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUCzFuQAVaXWQpRs6W8m/9DcjOMG6sHWWNmj3kYE9j5aN7Diai+YEBKVLmgUH1T7SheT1+BwryTm6X22COlatgULwgwXZ326hXB8HtH
+X-Gm-Message-State: AOJu0YyATdQmvfpoYfZDzuK6eyyYPhc0/+kiXIMboaxsskWHx30XlTBk
+	L0bpXL/YKJWQPOmC0nGwDzVeQVGNhfv7kKG+zIdjfbJF62JyrUV1PPZULxuaX3I=
+X-Google-Smtp-Source: AGHT+IElItNp3cSHKsJTKvy1VXuKu2eMXWGGPys9ZBSGpHUZHQxdJ4zDKyVCa4+CO6Sc9OuHVdXXdA==
+X-Received: by 2002:a05:600c:6d8e:b0:425:656b:76ae with SMTP id 5b1f17b1804b1-425656b7748mr9686195e9.23.1719489362352;
+        Thu, 27 Jun 2024 04:56:02 -0700 (PDT)
+Received: from [192.168.1.195] ([5.133.47.210])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3674369980asm1597552f8f.80.2024.06.27.04.56.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jun 2024 04:56:01 -0700 (PDT)
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Date: Thu, 27 Jun 2024 12:55:19 +0100
+Subject: [PATCH 3/6] ASoC: dt-bindings: wsa8840: Document port mapping
+ property
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 2/3] pmdomain: amlogic: Add support for A5 power domains
- controller
-To: xianwei.zhao@amlogic.com, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
- Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Jianxin Pan <jianxin.pan@amlogic.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, Hongyu Chen <hongyu.chen1@amlogic.com>
-References: <20240627-a5_secpower-v1-0-1f47dde1270c@amlogic.com>
- <20240627-a5_secpower-v1-2-1f47dde1270c@amlogic.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20240627-a5_secpower-v1-2-1f47dde1270c@amlogic.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240626-port-map-v1-3-bd8987d2b332@linaro.org>
+References: <20240626-port-map-v1-0-bd8987d2b332@linaro.org>
+In-Reply-To: <20240626-port-map-v1-0-bd8987d2b332@linaro.org>
+To: Banajit Goswami <bgoswami@quicinc.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, 
+ Neil Armstrong <neil.armstrong@linaro.org>, alsa-devel@alsa-project.org, 
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1157;
+ i=srinivas.kandagatla@linaro.org; h=from:subject:message-id;
+ bh=UkWKKOsTNz1C80xDz4hBzX/O51GwHLLmPnZ3RZsUr6g=;
+ b=owEBbQGS/pANAwAKAXqh/VnHNFU3AcsmYgBmfVNNzIYgBD4wI/PAjnXHpOZClxrctCQtBgmud
+ GG2+Eky/sSJATMEAAEKAB0WIQQi509axvzi9vce3Y16of1ZxzRVNwUCZn1TTQAKCRB6of1ZxzRV
+ N9iDCACoqrzNg2bonxWWRPIlk9J/1IuSP15wQmt8YcvPWxi9MTepRJQPWXHxS1T+I6Ed6N8E/4N
+ siF4aiQKS7sRkNPP2evMWdyZqxlxlEtpbakw/afA1Kom4IUNmr/PLJb9o6Q2A4d4i5pQmvuCb9L
+ 1qR9Gskw+nZszbxIjsQJPphvXkYJWBig549ZgMhQTIttc7XLohqNPj/pLEXYMzy6QzELCqA70E/
+ SCoeVcc5H/RqwYYDhOJFjBPYFUCPnhHPQsdmZlCNY/qK7QyEFPNBAlpo+FYb17sZl9ey1s0X2o8
+ LZFQxRULxG/4R4NU7W4ixlSBxc8IoPGu9jfwRWfztLfoY7y4
+X-Developer-Key: i=srinivas.kandagatla@linaro.org; a=openpgp;
+ fpr=ED6472765AB36EC43B3EF97AD77E3FC0562560D6
 
-On 27/06/2024 13:47, Xianwei Zhao via B4 Relay wrote:
-> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-> 
-> Add support for the A5 power controller, whose registers are
-> in the secure domain and should be accessed via SMC.
-> 
-> Signed-off-by: Hongyu Chen <hongyu.chen1@amlogic.com>
-> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
-> ---
->   drivers/pmdomain/amlogic/meson-secure-pwrc.c | 26 ++++++++++++++++++++++++++
->   1 file changed, 26 insertions(+)
-> 
-> diff --git a/drivers/pmdomain/amlogic/meson-secure-pwrc.c b/drivers/pmdomain/amlogic/meson-secure-pwrc.c
-> index df5567418226..f6729eea6b8c 100644
-> --- a/drivers/pmdomain/amlogic/meson-secure-pwrc.c
-> +++ b/drivers/pmdomain/amlogic/meson-secure-pwrc.c
-> @@ -15,6 +15,7 @@
->   #include <dt-bindings/power/meson-s4-power.h>
->   #include <dt-bindings/power/amlogic,t7-pwrc.h>
->   #include <dt-bindings/power/amlogic,a4-pwrc.h>
-> +#include <dt-bindings/power/amlogic,a5-pwrc.h>
->   #include <linux/arm-smccc.h>
->   #include <linux/firmware/meson/meson_sm.h>
->   #include <linux/module.h>
-> @@ -155,6 +156,22 @@ static struct meson_secure_pwrc_domain_desc a4_pwrc_domains[] = {
->   	SEC_PD(A4_AO_IR,	GENPD_FLAG_ALWAYS_ON),
->   };
->   
-> +static struct meson_secure_pwrc_domain_desc a5_pwrc_domains[] = {
-> +	SEC_PD(A5_NNA,		0),
-> +	SEC_PD(A5_AUDIO,	0),
-> +	SEC_PD(A5_SDIOA,	0),
-> +	SEC_PD(A5_EMMC,		0),
-> +	SEC_PD(A5_USB_COMB,	0),
-> +	SEC_PD(A5_ETH,		0),
-> +	SEC_PD(A5_RSA,		0),
-> +	SEC_PD(A5_AUDIO_PDM,	0),
-> +	/* DMC is for DDR PHY ana/dig and DMC, and should be always on */
-> +	SEC_PD(A5_DMC,		GENPD_FLAG_ALWAYS_ON),
-> +	/* WRAP is secure_top, a lot of modules are included, and should be always on */
-> +	SEC_PD(A5_SYS_WRAP,	GENPD_FLAG_ALWAYS_ON),
-> +	SEC_PD(A5_DSPA,		0),
-> +};
-> +
->   static struct meson_secure_pwrc_domain_desc c3_pwrc_domains[] = {
->   	SEC_PD(C3_NNA,		0),
->   	SEC_PD(C3_AUDIO,	0),
-> @@ -335,6 +352,11 @@ static struct meson_secure_pwrc_domain_data amlogic_secure_a4_pwrc_data = {
->   	.count = ARRAY_SIZE(a4_pwrc_domains),
->   };
->   
-> +static struct meson_secure_pwrc_domain_data amlogic_secure_a5_pwrc_data = {
-> +	.domains = a5_pwrc_domains,
-> +	.count = ARRAY_SIZE(a5_pwrc_domains),
-> +};
-> +
->   static struct meson_secure_pwrc_domain_data amlogic_secure_c3_pwrc_data = {
->   	.domains = c3_pwrc_domains,
->   	.count = ARRAY_SIZE(c3_pwrc_domains),
-> @@ -359,6 +381,10 @@ static const struct of_device_id meson_secure_pwrc_match_table[] = {
->   		.compatible = "amlogic,a4-pwrc",
->   		.data = &amlogic_secure_a4_pwrc_data,
->   	},
-> +	{
-> +		.compatible = "amlogic,a5-pwrc",
-> +		.data = &amlogic_secure_a5_pwrc_data,
-> +	},
->   	{
->   		.compatible = "amlogic,c3-pwrc",
->   		.data = &amlogic_secure_c3_pwrc_data,
-> 
+Document port mapping property for wsa884x. Port mapping is required
+to be able map correct master ports.
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+All the device ports are not mapped in same order as master ports, so
+there is a need for having static port mapping for WSA codecs.
+
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ Documentation/devicetree/bindings/sound/qcom,wsa8840.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/sound/qcom,wsa8840.yaml b/Documentation/devicetree/bindings/sound/qcom,wsa8840.yaml
+index 22798d22d981..83e0360301e1 100644
+--- a/Documentation/devicetree/bindings/sound/qcom,wsa8840.yaml
++++ b/Documentation/devicetree/bindings/sound/qcom,wsa8840.yaml
+@@ -32,6 +32,14 @@ properties:
+     description: Powerdown/Shutdown line to use (pin SD_N)
+     maxItems: 1
+ 
++  qcom,port-mapping:
++    description: |
++      Specifies static port mapping between slave and master ports.
++      In the order of slave port index.
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    minItems: 6
++    maxItems: 6
++
+   '#sound-dai-cells':
+     const: 0
+ 
+
+-- 
+2.25.1
+
