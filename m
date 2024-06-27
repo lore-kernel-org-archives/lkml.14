@@ -1,235 +1,93 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34F214D6EB;
-	Thu, 27 Jun 2024 17:33:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6BEA19A2B4
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 17:33:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719509584; cv=none; b=fFwLCcjIYr06/4Xtayjjyt36BtRksCEO7RW2CtCpw+eUCuG0iiBP355sbpX2nVw54ZSCuAK4zzt8IQCSixvX9D6N3jH5nro6OlxE4dWdHyVBWR8tFqDOSA8meDf1QgBLna0xEnE3zSVJrKMLTXAON86MNarLX64IgnQpL/1C7pI=
+	t=1719509586; cv=none; b=Vjl73gqv1yTj6LNbYSMaLk8j2AHH7EWOodCqVGLB6l3s69PfMSM4ZJgBkzEeyh8t4JoHtxT5HXbkB8VhSFNb4008OVz8KI+xlQFE0Z9Hw+2kJIWW4pf0lTnLolkcLb9AOSw4jdSRt0NmXmq5ijhEPaksaemGfRBG5FAj65x4f0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719509584; c=relaxed/simple;
-	bh=IGqoI1S+U/xadOXVQGKg1/V6BqAU0zViZUVMBKXGKmU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PurQuO6YGrTx2k4E7VMiI3x0EZMQD2Y05b/eEspw8N1s3C5C3T9TepNCNGFGNvWpxx2CJQMnYH51hlJkpLMOYcBOQQAlJakWakXb8FkNUd8c9Czy1RVAskPzQ9krvNinuAsUwqmTqDHAjUMv/LQWlKIvRTu63fhwK4kqEX1yzp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZjDR7ufs; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719509586; c=relaxed/simple;
+	bh=6KMR7PgsUZzS4Gtw9YtoPUY76plMCLiaA0INtD68ckA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G9YU+ACF5r+u0fhhXEfpWm9NJo5SdOLEyV9tkmCQ4nrDcfkKQyM6npYCgKfZMwHT0TxDSz2B0MxgROrbY00NIfsQVxzdDIpmtCd6z6kNhyGR3w8Wg2CRvm7Etqvr9tsPF497cr6jObHoTsEP2ha9QLhfl0/hVB1nt+LpLPvANIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Ia7Lw250; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZjDR7ufs"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2ec595d0acbso65288351fa.1;
-        Thu, 27 Jun 2024 10:33:02 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Ia7Lw250"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-375deacb3e1so3469105ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 10:33:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719509581; x=1720114381; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YGUmsAPKsf36nNLG3WX1Sp+D1yRbsuEFCsAACInpqbo=;
-        b=ZjDR7ufsR9xY4b2BJjp9GGSKpnrqvoyAlOZWG3AaGcfBJoJ9peNVE2fIMVP5MuR6su
-         eue3Xqa3a+gzZ4sOer4gtlFqYiQDrAAQcCdUedNELesthCIGJTp/EzmU+lTcDFi5vI3l
-         McVbYblE2AdVgRriZ7yyEGb8v65UBggjwR36hg00mxfc9CUFBXgX9q28lwF2E9Sv/SSf
-         L/UMhg5NEFOCccQBI2wkDLX2zA1bfJSsHUOAoMVRZCHM4LAniav6Nm57P1hSUDekdtaG
-         B5gz825GQOjKz7N5iFg9rtF8o8vcfnOeXVSH0MxdRSNFFe5X5cXPDVOFOqeyJ3ax0Hsm
-         LqRA==
+        d=linuxfoundation.org; s=google; t=1719509584; x=1720114384; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6KMR7PgsUZzS4Gtw9YtoPUY76plMCLiaA0INtD68ckA=;
+        b=Ia7Lw250ll0AjoBUjmmpes/Ux3zdHdL2UjDCw1cDD/5QzwO8ktfxpkKSnn1Dqaagk8
+         j8WM/AM8NbqTlsO37pWdY5Po+UtktzxIR4K7EgzjzTC8bMBxLzpXiZm+QuYev+/7j/Am
+         Jty1LxYvzYZLFLlnHpyxkk+6YndfBaciOgvT0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719509581; x=1720114381;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YGUmsAPKsf36nNLG3WX1Sp+D1yRbsuEFCsAACInpqbo=;
-        b=tcYD7ghc36HH+z9QRFfqPfyRJHCarILYq4tje+X6MR4whNejZjEJMGF35kZe6pGcal
-         7G+K1DH7iE/EgUrxpSZj0w8WLWxwOjnwFJd4ZwEZrLqHMmFwm/n9YCr+vaSS5sYEqjGf
-         th8Ur2mNwxFmEy59YgeTAo9Ped3UbzwkZahXKPSBA06ntfhLWEdZOrW/dWBBXxQrFG3f
-         YnqFZL7v73X833wf+DL9SY1mvQbY+vYeukhjRMyCO1j6vBO8B3SJ+GTl/wbjuN1DKjFy
-         gCZr+82PtEfK5VEZIv+pK+Krq1AsAiFNDUZxs2m5am/eJK0QKglYuOzqm86b9yQTlrpA
-         c5tQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZOa7fQu5oN46J3T8sUTxFRTU6S76/EkZrP+pztvhWtsCxk2qeR3TS1KH5S+LAu44ekUc/Gt0XzFtJHeJf35V7tXUfbNdqOqRAqwQsFYtasTSdqXaOAOnoewlFcYH3ih3KtLFM6JarTw==
-X-Gm-Message-State: AOJu0YxgzIOi7IQD5oF5w/La0LD5o89B99+wlY50JrZ32ja6QUNuLY4L
-	JyzNOFdhiduZ7PkLa6ou7aTA6b24KpKZHBgBbaHwVTGZeF0r4ta5
-X-Google-Smtp-Source: AGHT+IGmprKT3Qysp0kTAlE196IhhFvhMCZyhvJXbMat0AkcSp0/SXIjWpvLF2Ogcpd18NH19z/C2A==
-X-Received: by 2002:a2e:8396:0:b0:2ec:558d:4e0a with SMTP id 38308e7fff4ca-2ec5b30bd73mr107833561fa.19.1719509580936;
-        Thu, 27 Jun 2024 10:33:00 -0700 (PDT)
-Received: from localhost ([213.79.110.82])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ee4a35babcsm3131151fa.67.2024.06.27.10.33.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 10:33:00 -0700 (PDT)
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Michal Simek <michal.simek@amd.com>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>,
-	Manish Narani <manish.narani@xilinx.com>
-Cc: Serge Semin <fancer.lancer@gmail.com>,
-	Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
-	Borislav Petkov <bp@suse.de>
-Subject: [PATCH RESEND v6 01/18] EDAC/synopsys: Fix generic device type detection procedure
-Date: Thu, 27 Jun 2024 20:32:08 +0300
-Message-ID: <20240627173251.25718-2-fancer.lancer@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240627173251.25718-1-fancer.lancer@gmail.com>
-References: <20240627173251.25718-1-fancer.lancer@gmail.com>
+        d=1e100.net; s=20230601; t=1719509584; x=1720114384;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6KMR7PgsUZzS4Gtw9YtoPUY76plMCLiaA0INtD68ckA=;
+        b=ocH8psOplcZnsCuMNI3NFr7C3bSnDPzLA0/nZMPkMkM4DUecIBZ1TSd719iLP8UPzL
+         haLatUzYyUoKPI9WhPgR0CqrO7rSWpwyd1DNFSCwBnVnySwsB0g97dpaVsV/ostzzEKQ
+         4SnoV74QzPbwjpB1NEudGRHtCfD+pFGsgdMdIxl4t2fPUZAv1wAV7cCmLxPEKk16G+Q5
+         KXIUjCrUphFmAHpjWA1OCKCBOY5jYc0MVNto1EBGU3mJAeOFNNJ6NAFz5xBr0q4YSoG0
+         k2FTZEyzpRRcKNr1AqIVCwkY/tiLz8atQz0L9H2IiGFS9fTY/8gkWEzbX1QHmwlIxi/0
+         tDZA==
+X-Forwarded-Encrypted: i=1; AJvYcCX7B0JSTR571yKQtJv88wrzKxQIL8ON20LRkm31jjYX8lpe4TuYTeVdhHVjey3hKbMeBSu5gnMOLw7NEYy7IkMfOIOIdcmrnyYyKUm/
+X-Gm-Message-State: AOJu0YxRtWJXw/ayZB5xJx2Dad1uecFk2z4VYWtJjfucMb8QkgzgeLr2
+	fhYTDpFL3LHd2oM0ocP7ZfYBm/PU31pIVNq2jHF1AjrRMSqwM+L9pD+S/aPG0/s=
+X-Google-Smtp-Source: AGHT+IEMU6AcW29OkWVmweJshUFJGfoNdG7kvYlvBcXgW69ACdRZg6teUH2RpIB4m1sqKiImI5XK+g==
+X-Received: by 2002:a05:6e02:925:b0:377:117e:e26f with SMTP id e9e14a558f8ab-377117ee83bmr66551975ab.2.1719509583900;
+        Thu, 27 Jun 2024 10:33:03 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-37ad2982818sm35465ab.36.2024.06.27.10.33.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Jun 2024 10:33:03 -0700 (PDT)
+Message-ID: <c9df6637-6055-4668-b80b-a1a6e6be445e@linuxfoundation.org>
+Date: Thu, 27 Jun 2024 11:33:03 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] cpupower: Make help command available for custom
+ install dir
+To: Roman Storozhenko <romeusmeister@gmail.com>,
+ Thomas Renninger <trenn@suse.com>, Shuah Khan <shuah@kernel.org>
+Cc: Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240627-fix-help-issue-v3-1-85318a3974e4@gmail.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240627-fix-help-issue-v3-1-85318a3974e4@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-First of all the enum dev_type constants describe the memory DRAM chips
-used at the stick, not the entire DQ-bus width (see the enumeration kdoc
-for details). So what is returned from the zynqmp_get_dtype() function and
-then specified to the dimm_info->dtype field is definitely incorrect
-because the DDR controller DQ-bus width doesn't determine a strict
-DDR-chips configuration on the attached memory device.
+On 6/27/24 01:49, Roman Storozhenko wrote:
+> When the 'cpupower' utility installed in the custom dir, it fails to
+> render appropriate help info for a particular subcommand:
+> $ LD_LIBRARY_PATH=lib64/ bin/cpupower help monitor
+> with error message like 'No manual entry for cpupower-monitor.1'
+> The issue is that under the hood it calls 'exec' function with
+> the following args: 'man cpupower-monitor.1'. In turn, 'man' search
+> path is defined in '/etc/manpath.config'. Of course it contains only
+> standard system man paths.
+> Make subcommands help available for a user by setting up 'MANPATH'
+> environment variable to the custom installation man pages dir. That
+> variable value will be prepended to the man pages standard search paths
+> as described in 'SEARCH PATH' section of MANPATH(5).
 
-Secondly the DRAM chips type has nothing to do with the data bus width
-specified in the MSTR.data_bus_width CSR field. The CSR field just
-determines the _part_ of the whole DQ-bus currently used to access the data
-from the all DRAM memory chips. So it doesn't indicate the individual
-chips type.
+What I am asking you is what happens when you set the MANPATH before
+running the command?
 
-Thirdly in case of the DW uMCTL2 controllers the DRAM chips type can be
-firmly determined only in case of the DDR4 protocol by means of the
-MSTR.device_config field state (the field is supposed to be set by the system
-firmware though). From this and the rest of the perspective the
-zynqmp_get_dtype() implementation is incorrect.
-
-Finally the DW uMCTL2 DDRC ECC capability doesn't depend on the memory
-chips type. Moreover it doesn't depend on the utilized data bus width in
-runtime either. The IP-core reference manual says in [1,2] that the ECC
-support can't be enabled during the IP-core synthesis for the DRAM data
-bus widths other than 16, 32 or 64. At the same time the bus width mode
-(MSTR.data_bus_width) doesn't change the ECC feature availability. Thus it
-was wrong to determine the ECC state with respect to the DQ-bus width
-mode. From this perspective the zynqmp_get_ecc_state() implementation is
-incorrect either. It shouldn't rely on the currently utilized DQ-bus
-part or the attached DDR-chip types.
-
-Fix all of the mistakes described above in the zynqmp_get_dtype() and
-zynqmp_get_ecc_state() methods: determine the actual DRAM chips data width
-only for the DDR4 protocol and return that it's UNKNOWN in the rest of the
-cases; determine the ECC availability by the ECCCFG0.ecc_mode field state
-only (that field can't be modified anyway if the IP-core was synthesized
-with no ECC support).
-
-[1] DesignWare® Cores Enhanced Universal DDR Memory Controller (uMCTL2)
-Databook, Version 3.91a, October 2020, p. 421.
-[2] DesignWare® Cores Enhanced Universal DDR Memory Controller (uMCTL2)
-Databook, Version 3.91a, October 2020, p. 633.
-
-Fixes: b500b4a029d5 ("EDAC, synopsys: Add ECC support for ZynqMP DDR controller")
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-Reviewed-by: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
-
----
-
-Changelog v2:
-- Include "linux/bitfield.h" header file to get the FIELD_GET macro
-  definition. (@tbot)
-
-Changelog v6:
-- Fix the zynqmp_get_dtype() method kdoc.
-- Split up the commit log into paragraphs.
----
- drivers/edac/synopsys_edac.c | 55 +++++++++++++++---------------------
- 1 file changed, 23 insertions(+), 32 deletions(-)
-
-diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-index ea7a9a342dd3..b6bdbc1289f3 100644
---- a/drivers/edac/synopsys_edac.c
-+++ b/drivers/edac/synopsys_edac.c
-@@ -664,36 +664,35 @@ static enum dev_type zynq_get_dtype(const void __iomem *base)
- }
- 
- /**
-- * zynqmp_get_dtype - Return the controller memory width.
-+ * zynqmp_get_dtype - Return the DDR memory chips type.
-  * @base:	DDR memory controller base address.
-  *
-- * Get the EDAC device type width appropriate for the current controller
-+ * Get the attached DDR chips type based on the current controller
-  * configuration.
-  *
-- * Return: a device type width enumeration.
-+ * Return: type of the memory DRAM chips.
-  */
- static enum dev_type zynqmp_get_dtype(const void __iomem *base)
- {
--	enum dev_type dt;
--	u32 width;
--
--	width = readl(base + CTRL_OFST);
--	width = (width & ECC_CTRL_BUSWIDTH_MASK) >> ECC_CTRL_BUSWIDTH_SHIFT;
--	switch (width) {
--	case DDRCTL_EWDTH_16:
--		dt = DEV_X2;
--		break;
--	case DDRCTL_EWDTH_32:
--		dt = DEV_X4;
--		break;
--	case DDRCTL_EWDTH_64:
--		dt = DEV_X8;
--		break;
--	default:
--		dt = DEV_UNKNOWN;
-+	u32 regval;
-+
-+	regval = readl(base + CTRL_OFST);
-+	if (!(regval & MEM_TYPE_DDR4))
-+		return DEV_UNKNOWN;
-+
-+	regval = (regval & DDRC_MSTR_CFG_MASK) >> DDRC_MSTR_CFG_SHIFT;
-+	switch (regval) {
-+	case DDRC_MSTR_CFG_X4_MASK:
-+		return DEV_X4;
-+	case DDRC_MSTR_CFG_X8_MASK:
-+		return DEV_X8;
-+	case DDRC_MSTR_CFG_X16_MASK:
-+		return DEV_X16;
-+	case DDRC_MSTR_CFG_X32_MASK:
-+		return DEV_X32;
- 	}
- 
--	return dt;
-+	return DEV_UNKNOWN;
- }
- 
- /**
-@@ -730,19 +729,11 @@ static bool zynq_get_ecc_state(void __iomem *base)
-  */
- static bool zynqmp_get_ecc_state(void __iomem *base)
- {
--	enum dev_type dt;
--	u32 ecctype;
-+	u32 regval;
- 
--	dt = zynqmp_get_dtype(base);
--	if (dt == DEV_UNKNOWN)
--		return false;
-+	regval = readl(base + ECC_CFG0_OFST) & SCRUB_MODE_MASK;
- 
--	ecctype = readl(base + ECC_CFG0_OFST) & SCRUB_MODE_MASK;
--	if ((ecctype == SCRUB_MODE_SECDED) &&
--	    ((dt == DEV_X2) || (dt == DEV_X4) || (dt == DEV_X8)))
--		return true;
--
--	return false;
-+	return (regval == SCRUB_MODE_SECDED);
- }
- 
- /**
--- 
-2.43.0
-
+thanks,
+-- Shuah
