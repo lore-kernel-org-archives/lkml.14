@@ -1,38 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 096C52F41
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 07:15:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0399C2F41;
+	Thu, 27 Jun 2024 07:17:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719472530; cv=none; b=ejRqrf1C11s7UU1F4xFpAyk7eY/lHqRA7M/nGcGQQCRQVS96QxFGFenWig5h9fm/LIZ/5q7JeD6/ndfN2r2B0C7fqNhpXKpwZAoN5lTPHvJNUa1tqo+kbdBXbSpy+Y5nrj2oBBkoSpcy6hFEf+7MbbqsQXaLCfJb0gOyw8wplmY=
+	t=1719472637; cv=none; b=ZFcgP12bJJbQsgOHfndZV5d1P98l7T0/J/34TeXtfr6jAzD6V47MwXjVgeuPsqSbYVe6pNHgH2h0tw7PoCEmjEwLoRAJuA33NOY70/he3LKQy6V2eZbsdG/WSVmkQOqPd0kO4T1+83eh4uKTLWHhZs1GRRogqpdWf9tn79owJhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719472530; c=relaxed/simple;
-	bh=vJTYGJ4aYXC9z7eTs4SAfiTyTPPHXRhEbhAa2JgUdbg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gYM4quYAolLl194HSrkmTE6ewbrmV/pmI5XIfvFHG6aaZTDrgOGW7Sw9VjPmCJAbcQt6LyndYEzgD08SkIMe3T/YxQpPLqFUd+9N66lz7GMpeP4p8e6Cdz+tr+l9oO6p6tepFUToKcZgPdHNy5xleY+aeEUg8eAWGQdcj3tLwow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KPhMUtlz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719472637; c=relaxed/simple;
+	bh=1SaMfD2tmbpfNXEkMAGBWpGso//fdIqXP6/GKH5prbg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PB2zaGb7NUYRRRXZJFc+SQcVkKSPMwz/HhqId0ADC4UnsGksAT3yjtr4yLhFa05NhL7gHgDws4SzX4xpBDVvKzKVkYJ/YZOzW68zhvIuAPYzgJKiN8sh5xgHMxEFAYmFqF+aVCo/S1YFSoOgRp5MdH/FR/rwB70PDXPpLYOaagI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mGLI+EBl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KPhMUtlz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AB8CC32786;
-	Thu, 27 Jun 2024 07:15:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mGLI+EBl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D3A4C2BBFC;
+	Thu, 27 Jun 2024 07:17:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719472529;
-	bh=vJTYGJ4aYXC9z7eTs4SAfiTyTPPHXRhEbhAa2JgUdbg=;
+	s=k20201202; t=1719472636;
+	bh=1SaMfD2tmbpfNXEkMAGBWpGso//fdIqXP6/GKH5prbg=;
 	h=From:To:Cc:Subject:Date:From;
-	b=KPhMUtlzGjvaRXQjc2bknCW4E+BB67tKU3CHeehRuAUOypxQIyHEfLs9Im69pVWZz
-	 B1SGYfCH7cj/X7IZO6UQKOtNXcaWlBCPNEN8+V0pG+3naTTY+S0xyrQcY77+aBW8T5
-	 ueYx8VpyIryfzaC4LspGexGk49DLZ0uWy9/g2AzOg/HA6flwfpUW5P7XAaASQWp8Mz
-	 VdwqByLt7DwVeXDAsGknlzhceyhWqJeWfgwWiLnK/rSr9DmxR5/VCWVrvRxHhdUbY0
-	 luAjPCf1VLyny0L8yTz68iftdoeINc5O1AZ6EztR8mEKmGM+mKsd8oZ5ho2/Koe8yF
-	 JLO0s9e7HUDIA==
+	b=mGLI+EBlhln9XA+39mawyx16KBTyQ4k7eF6f/HqJXaqGmsvFObWROwbURkrjeqIdZ
+	 11MZwSFmAwgPBgvoZB1hCbIiwO9Gy449O98IoL3e6jb1PM+ACTKj1bEIvn9CKMGycz
+	 RYMaL+X0VoyI0VMW8dO8W1zIqwtMhjwwDKFhKa7fQhCggdL44xdGeP3cNoI5Jh+ojD
+	 OIfrz9CLlcM2bzvyh8QRLQfe1/I1Uf5lvec/Fp+b63AUqwrhkXdoerxwuDXMYbB3Vq
+	 lU0D0Rju9+6uhr8QeT1BjsEXJkYUr3ijVcjQVnRuevb+K4HhIRk4QXvy7yJcJsQXI+
+	 0/p+px7G0kr2Q==
 From: Chao Yu <chao@kernel.org>
 To: jaegeuk@kernel.org
 Cc: linux-f2fs-devel@lists.sourceforge.net,
 	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>
-Subject: [PATCH v3] f2fs: fix to avoid racing in between read and OPU dio write
-Date: Thu, 27 Jun 2024 15:15:21 +0800
-Message-Id: <20240627071521.1557830-1-chao@kernel.org>
+	Chao Yu <chao@kernel.org>,
+	stable@vger.kernel.org
+Subject: [PATCH] f2fs: fix to wait dio completion
+Date: Thu, 27 Jun 2024 15:17:11 +0800
+Message-Id: <20240627071711.1563420-1-chao@kernel.org>
 X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -42,60 +43,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If lfs mode is on, buffered read may race w/ OPU dio write as below,
-it may cause buffered read hits unwritten data unexpectly, and for
-dio read, the race condition exists as well.
+It should wait all existing dio write IOs before block removal,
+otherwise, previous direct write IO may overwrite data in the
+block which may be reused by other inode.
 
-Thread A			Thread B
-- f2fs_file_write_iter
- - f2fs_dio_write_iter
-  - __iomap_dio_rw
-   - f2fs_iomap_begin
-    - f2fs_map_blocks
-     - __allocate_data_block
-      - allocated blkaddr #x
-       - iomap_dio_submit_bio
-				- f2fs_file_read_iter
-				 - filemap_read
-				  - f2fs_read_data_folio
-				   - f2fs_mpage_readpages
-				    - f2fs_map_blocks
-				     : get blkaddr #x
-				    - f2fs_submit_read_bio
-				IRQ
-				- f2fs_read_end_io
-				 : read IO on blkaddr #x complete
-IRQ
-- iomap_dio_bio_end_io
- : direct write IO on blkaddr #x complete
-
-In LFS mode, if there is inflight dio, let's wait for its completion,
-this policy won't cover all race cases, however it is a tradeoff which
-avoids abusing lock around IO paths.
-
-Fixes: f847c699cff3 ("f2fs: allow out-place-update for direct IO in LFS mode")
+Cc: stable@vger.kernel.org
 Signed-off-by: Chao Yu <chao@kernel.org>
 ---
-v3:
-- wait for direct IO's completion before read IO.
- fs/f2fs/file.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/f2fs/file.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 9e171e138943..76a6043caf27 100644
+index 76a6043caf27..f2d0e0de775f 100644
 --- a/fs/f2fs/file.c
 +++ b/fs/f2fs/file.c
-@@ -4608,6 +4608,10 @@ static ssize_t f2fs_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
- 		f2fs_trace_rw_file_path(iocb->ki_filp, iocb->ki_pos,
- 					iov_iter_count(to), READ);
+@@ -1056,6 +1056,13 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 				return err;
+ 		}
  
-+	/* In LFS mode, if there is inflight dio, wait for its completion */
-+	if (f2fs_lfs_mode(F2FS_I_SB(inode)))
-+		inode_dio_wait(inode);
++		/*
++		 * wait for inflight dio, blocks should be removed after
++		 * IO completion.
++		 */
++		if (attr->ia_size < old_size)
++			inode_dio_wait(inode);
 +
- 	if (f2fs_should_use_dio(inode, iocb, to)) {
- 		ret = f2fs_dio_read_iter(iocb, to);
- 	} else {
+ 		f2fs_down_write(&fi->i_gc_rwsem[WRITE]);
+ 		filemap_invalidate_lock(inode->i_mapping);
+ 
+@@ -1892,6 +1899,12 @@ static long f2fs_fallocate(struct file *file, int mode,
+ 	if (ret)
+ 		goto out;
+ 
++	/*
++	 * wait for inflight dio, blocks should be removed after IO
++	 * completion.
++	 */
++	inode_dio_wait(inode);
++
+ 	if (mode & FALLOC_FL_PUNCH_HOLE) {
+ 		if (offset >= inode->i_size)
+ 			goto out;
 -- 
 2.40.1
 
