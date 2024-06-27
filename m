@@ -1,242 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7AA1990DD
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 16:25:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 415C61991A9;
+	Thu, 27 Jun 2024 16:25:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719505510; cv=none; b=dFv0tUf46f8p5hlBfjg0q5Lv6RcWUQHEJ8qHmQAwVs9veR+t+ND/eFu3J2etw8gp+VtVps7dY9+PwDWrGPbVAvmmx8Ge4QpIGjVnGTMOfAkC7o4YdoNVoUsuDIKzRMhbauhGkIxMWaF3co1c8HJj0n0spSTaQfiKvYAt+0t5HoE=
+	t=1719505551; cv=none; b=sdRa/fAhr5w97a1O6nVY63rTMdfMP8eDgDS7PvgSdT7ljrvoL9jgg5H27EhSnMDyKGAtE5QAJQod4lfhPVt6Qobe+a12He8LkAd7ZqwnJE4jDApNHvSFoXW0629usIvEbQFmkY+qkGXkbmgQDIgwQ6u1qybknKJnmS0Rtbh8LFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719505510; c=relaxed/simple;
-	bh=b8FGF7FHgiFJgUaljXVANw3hN+FmW1giegzK/EmH7FA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UgTKoj8XmqtjGY2qyDc4OoZAavu0KesTIPbWHV2u38NBRN8LbHRJfoQIK+eadkGxElERSadTJkklz3XroX9SM7w5khdwmkv8KcwZgPO/VYds1sXxN2YOpcFvmk5HtptQILo++04tkm1YhwbkSUmf2fyycY3RZfPtUbfNVfLHf7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ecNPB9Re; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719505551; c=relaxed/simple;
+	bh=qck3a2TrPRKylU8zgABdxPbYDq27HmoZnuVMmuL8KIo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Yxj3sG+jgJ2re3HvKMsAF0RlITEMSN59Bl2sPgEwDt7v5tHjDFFtTainupbcdoD7ZlOYCw8MzNgUAPIzqP3k7Q1XcGZzKhT2REvh4rOK00y0eE5lFRx6/aC0D6HMlGqOirxwkj0L+VmRz87mkoyo/PYatYISkynpnGZDV1RQjAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=aQ4pniGE; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ecNPB9Re"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719505507;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=cFCXHxIWumrFyXD+AI2y3OkZOM6rpiSLbLUEprzBZ1I=;
-	b=ecNPB9ReKPufLqpqdebPzrPtiyXZ9XQYa4U/VFE/kx9dduwwUWj1bOJPUy5AAT81Sy07Lw
-	YYY3Tv+A7Z7a4eJc2HCluBIcsqX2Jz2FX86EyKrXB60MPv4/196r2vAi2Zhs+PdGlPD5ox
-	yl4QCJxlxDoT3cpPYThGjYPRFluaAfY=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-393-r3J2wzq0O9eA2O6CGT3m3Q-1; Thu,
- 27 Jun 2024 12:25:04 -0400
-X-MC-Unique: r3J2wzq0O9eA2O6CGT3m3Q-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6629D19560B5;
-	Thu, 27 Jun 2024 16:25:03 +0000 (UTC)
-Received: from thuth-p1g4.redhat.com (unknown [10.39.192.31])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BF0941955BD4;
-	Thu, 27 Jun 2024 16:25:00 +0000 (UTC)
-From: Thomas Huth <thuth@redhat.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH] Documentation: Remove IA-64 from kernel-parameters
-Date: Thu, 27 Jun 2024 18:24:58 +0200
-Message-ID: <20240627162458.387700-1-thuth@redhat.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aQ4pniGE"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45RGPfn5033152;
+	Thu, 27 Jun 2024 11:25:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1719505541;
+	bh=QWLAeR0SbvPwAQvjXd9TFa3s9O6NKETMaJ1nSHrnJPo=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=aQ4pniGEnPDNfiBTn4vZkkag3fhbzRXtvAGqd9G5uhwcKqneE5DkhMlxpDlZlgX9C
+	 FtgJSh0W3fOQF4s6fRuFW96SBGA3Jqj8AbIdpbcYSE5cHp48h60Ie2INVi0ZTzylgV
+	 38IZfhAdcdgxUCcL0w9T9iRx4xprJTK87p7q/UVk=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45RGPfHQ092933
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 27 Jun 2024 11:25:41 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 27
+ Jun 2024 11:25:41 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 27 Jun 2024 11:25:41 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45RGPfHf095204;
+	Thu, 27 Jun 2024 11:25:41 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Conor Dooley <conor+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>, Vignesh Raghavendra
+	<vigneshr@ti.com>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Tero Kristo <kristo@kernel.org>, Vaishnav Achath <vaishnav.a@ti.com>,
+        Jared McArthur <j-mcarthur@ti.com>, Bryan Brattlof <bb@ti.com>,
+        Dhruva Gole <d-gole@ti.com>, Nishanth Menon
+	<nm@ti.com>
+Subject: [PATCH V2 2/3] arm64: dts: ti: k3-am62p: Add gpio-ranges properties
+Date: Thu, 27 Jun 2024 11:25:38 -0500
+Message-ID: <20240627162539.691223-3-nm@ti.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240627162539.691223-1-nm@ti.com>
+References: <20240627162539.691223-1-nm@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Organization: Texas Instruments, Inc.
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-IA-64 has been removed from the tree, so we should also remove
-the corresponding kernel-parameters documentation now.
+On the AM62P platform we have no single 1:1 relation regarding index
+of GPIO and pin controller. The GPIOs and pin controller registers
+have mapping and holes in the map. These have been extracted from the
+AM62P data sheet.
 
-Signed-off-by: Thomas Huth <thuth@redhat.com>
+MCU pinctrl definition is shared as it is common between AM62P and
+J722S, but that is not the case for main domain.
+
+Ref: AM62P Data sheet https://www.ti.com/lit/gpn/am62p
+
+Signed-off-by: Nishanth Menon <nm@ti.com>
 ---
- Note: Patch is based on linux-next branch (which already contains
-       some other patches to kernel-parameters.txt)
+Changes since V1:
+ - Use PIN_GPIO_RANGE_IOPAD instead of PIN_GPIO_MUX_MODE
+ - Refactored on top of next-20240626 (new common files)
+ - Since the patch had to be refactored as well as new define used, I
+   have skipped picking up Dhruva's Reviewed-by.
 
- .../admin-guide/kernel-parameters.rst         |  1 -
- .../admin-guide/kernel-parameters.txt         | 45 ++-----------------
- 2 files changed, 3 insertions(+), 43 deletions(-)
+V1: https://lore.kernel.org/linux-arm-kernel/20240618173123.2592074-3-nm@ti.com/
 
-diff --git a/Documentation/admin-guide/kernel-parameters.rst b/Documentation/admin-guide/kernel-parameters.rst
-index e8bdf5e86a9b..fdea7c26ef80 100644
---- a/Documentation/admin-guide/kernel-parameters.rst
-+++ b/Documentation/admin-guide/kernel-parameters.rst
-@@ -118,7 +118,6 @@ is applicable::
- 	HIBERNATION HIBERNATION is enabled.
- 	HW	Appropriate hardware is enabled.
- 	HYPER_V HYPERV support is enabled.
--	IA-64	IA-64 architecture is enabled.
- 	IMA     Integrity measurement architecture is enabled.
- 	IP_PNP	IP DHCP, BOOTP, or RARP is enabled.
- 	IPV6	IPv6 support is enabled.
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 86f8f1f464ff..a2d36b622a67 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1738,8 +1738,6 @@
- 			for 64-bit NUMA, off otherwise.
- 			Format: 0 | 1 (for off | on)
+ .../boot/dts/ti/k3-am62p-j722s-common-mcu.dtsi  |  8 ++++++++
+ arch/arm64/boot/dts/ti/k3-am62p-main.dtsi       | 17 +++++++++++++++++
+ 2 files changed, 25 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-mcu.dtsi
+index 1d4e5fc8b4e0..e65db6ce02bf 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-mcu.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-mcu.dtsi
+@@ -12,7 +12,15 @@ mcu_pmx0: pinctrl@4084000 {
+ 		#pinctrl-cells = <1>;
+ 		pinctrl-single,register-width = <32>;
+ 		pinctrl-single,function-mask = <0xffffffff>;
++		pinctrl-single,gpio-range =
++			<&mcu_pmx_range 0 21 PIN_GPIO_RANGE_IOPAD>,
++			<&mcu_pmx_range 23 1 PIN_GPIO_RANGE_IOPAD>,
++			<&mcu_pmx_range 32 2 PIN_GPIO_RANGE_IOPAD>;
+ 		bootph-all;
++
++		mcu_pmx_range: gpio-range {
++			#pinctrl-single,gpio-range-cells = <3>;
++		};
+ 	};
  
--	hcl=		[IA-64] SGI's Hardware Graph compatibility layer
--
- 	hd=		[EIDE] (E)IDE hard drive subsystem geometry
- 			Format: <cyl>,<head>,<sect>
+ 	mcu_esm: esm@4100000 {
+diff --git a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
+index f8a7f0cbd327..57383bd2eaeb 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
+@@ -42,10 +42,27 @@ &inta_main_dmss {
+ 	ti,interrupt-ranges = <5 69 35>;
+ };
  
-@@ -2498,7 +2496,7 @@
++&main_pmx0 {
++	pinctrl-single,gpio-range =
++		<&main_pmx0_range 0 32 PIN_GPIO_RANGE_IOPAD>,
++		<&main_pmx0_range 33 92 PIN_GPIO_RANGE_IOPAD>,
++		<&main_pmx0_range 137 5 PIN_GPIO_RANGE_IOPAD>,
++		<&main_pmx0_range 143 3 PIN_GPIO_RANGE_IOPAD>,
++		<&main_pmx0_range 149 2 PIN_GPIO_RANGE_IOPAD>;
++
++	main_pmx0_range: gpio-range {
++		#pinctrl-single,gpio-range-cells = <3>;
++	};
++};
++
+ &main_gpio0 {
++	gpio-ranges = <&main_pmx0 0 0 32>, <&main_pmx0 32 33 38>,
++			<&main_pmx0 70 72 22>;
+ 	ti,ngpio = <92>;
+ };
  
- 	keepinitrd	[HW,ARM] See retain_initrd.
- 
--	kernelcore=	[KNL,X86,IA-64,PPC,EARLY]
-+	kernelcore=	[KNL,X86,PPC,EARLY]
- 			Format: nn[KMGTPE] | nn% | "mirror"
- 			This parameter specifies the amount of memory usable by
- 			the kernel for non-movable allocations.  The requested
-@@ -3162,17 +3160,10 @@
- 			[SECURITY] Choose order of LSM initialization. This
- 			overrides CONFIG_LSM, and the "security=" parameter.
- 
--	machvec=	[IA-64] Force the use of a particular machine-vector
--			(machvec) in a generic kernel.
--			Example: machvec=hpzx1
--
- 	machtype=	[Loongson] Share the same kernel image file between
- 			different yeeloong laptops.
- 			Example: machtype=lemote-yeeloong-2f-7inch
- 
--	max_addr=nn[KMG]	[KNL,BOOT,IA-64] All physical memory greater
--			than or equal to this physical address is ignored.
--
- 	maxcpus=	[SMP,EARLY] Maximum number of processors that an SMP kernel
- 			will bring up during bootup.  maxcpus=n : n >= 0 limits
- 			the kernel to bring up 'n' processors. Surely after
-@@ -3410,9 +3401,6 @@
- 			Enable or disable the microcode minimal revision
- 			enforcement for the runtime microcode loader.
- 
--	min_addr=nn[KMG]	[KNL,BOOT,IA-64] All physical memory below this
--			physical address is ignored.
--
- 	mini2440=	[ARM,HW,KNL]
- 			Format:[0..2][b][c][t]
- 			Default: "0tb"
-@@ -3577,7 +3565,7 @@
- 	mousedev.yres=	[MOUSE] Vertical screen resolution, used for devices
- 			reporting absolute coordinates, such as tablets
- 
--	movablecore=	[KNL,X86,IA-64,PPC,EARLY]
-+	movablecore=	[KNL,X86,PPC,EARLY]
- 			Format: nn[KMGTPE] | nn%
- 			This parameter is the complement to kernelcore=, it
- 			specifies the amount of memory used for migratable
-@@ -3851,8 +3839,6 @@
- 
- 	no_entry_flush  [PPC,EARLY] Don't flush the L1-D cache when entering the kernel.
- 
--	noexec		[IA-64]
--
- 	noexec32	[X86-64]
- 			This affects only 32-bit executables.
- 			noexec32=on: enable non-executable mappings (default)
-@@ -3872,13 +3858,6 @@
- 			register save and restore. The kernel will only save
- 			legacy floating-point registers on task switch.
- 
--	nohalt		[IA-64] Tells the kernel not to use the power saving
--			function PAL_HALT_LIGHT when idle. This increases
--			power-consumption. On the positive side, it reduces
--			interrupt wake-up latency, which may improve performance
--			in certain environments such as networked servers or
--			real-time systems.
--
- 	no_hash_pointers
- 			[KNL,EARLY]
- 			Force pointers printed to the console or buffers to be
-@@ -3933,8 +3912,6 @@
- 			remapping.
- 			[Deprecated - use intremap=off]
- 
--	nointroute	[IA-64]
--
- 	noinvpcid	[X86,EARLY] Disable the INVPCID cpu feature.
- 
- 	noiotrap	[SH] Disables trapped I/O port accesses.
-@@ -3944,8 +3921,6 @@
- 
- 	noisapnp	[ISAPNP] Disables ISA PnP code.
- 
--	nojitter	[IA-64] Disables jitter checking for ITC timers.
--
- 	nokaslr		[KNL,EARLY]
- 			When CONFIG_RANDOMIZE_BASE is set, this disables
- 			kernel and module base offset ASLR (Address Space
-@@ -3960,8 +3935,6 @@
- 
- 	nolapic_timer	[X86-32,APIC,EARLY] Do not use the local APIC timer.
- 
--	nomca		[IA-64] Disable machine check abort handling
--
- 	nomce		[X86-32] Disable Machine Check Exception
- 
- 	nomfgpt		[X86-32] Disable Multi-Function General Purpose
-@@ -4013,8 +3986,6 @@
- 	noresume	[SWSUSP] Disables resume and restores original swap
- 			space.
- 
--	nosbagart	[IA-64]
--
- 	no-scroll	[VGA] Disables scrollback.
- 			This is required for the Braillex ib80-piezo Braille
- 			reader made by F.H. Papenmeier (Germany).
-@@ -4115,10 +4086,6 @@
- 			parameter, xsave area per process might occupy more
- 			memory on xsaves enabled systems.
- 
--	nptcg=		[IA-64] Override max number of concurrent global TLB
--			purges which is reported from either PAL_VM_SUMMARY or
--			SAL PALO.
--
- 	nr_cpus=	[SMP,EARLY] Maximum number of processors that an SMP kernel
- 			could support.  nr_cpus=n : n >= 1 limits the kernel to
- 			support 'n' processors. It could be larger than the
-@@ -6042,9 +6009,6 @@
- 			apic=verbose is specified.
- 			Example: apic=debug show_lapic=all
- 
--	simeth=		[IA-64]
--	simscsi=
--
- 	slab_debug[=options[,slabs][;[options[,slabs]]...]	[MM]
- 			Enabling slab_debug allows one to determine the
- 			culprit if slab objects become corrupted. Enabling
-@@ -6561,7 +6525,7 @@
- 			This parameter controls use of the Protected
- 			Execution Facility on pSeries.
- 
--	swiotlb=	[ARM,IA-64,PPC,MIPS,X86,S390,EARLY]
-+	swiotlb=	[ARM,PPC,MIPS,X86,S390,EARLY]
- 			Format: { <int> [,<int>] | force | noforce }
- 			<int> -- Number of I/O TLB slabs
- 			<int> -- Second integer after comma. Number of swiotlb
-@@ -7209,9 +7173,6 @@
- 			Try vdso32=0 if you encounter an error that says:
- 			dl_main: Assertion `(void *) ph->p_vaddr == _rtld_local._dl_sysinfo_dso' failed!
- 
--	vector=		[IA-64,SMP]
--			vector=percpu: enable percpu vector domain
--
- 	video=		[FB,EARLY] Frame buffer configuration
- 			See Documentation/fb/modedb.rst.
- 
+ &main_gpio1 {
++	gpio-ranges = <&main_pmx0 0 94 32>, <&main_pmx0 42 137 5>,
++			<&main_pmx0 47 143 3>, <&main_pmx0 50 149 2>;
+ 	ti,ngpio = <52>;
+ };
 -- 
-2.45.2
+2.43.0
 
