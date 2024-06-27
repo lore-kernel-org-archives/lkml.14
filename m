@@ -1,55 +1,45 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6658F15EFB8
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 12:39:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6372F15E5DB
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 12:39:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719491975; cv=none; b=UFryyL2smxNKrQC1aEJ0Wi6SM+QXbGh4mpcXaIPmlu7G7amTvn+PtEJ3al0PQh/EXaFe/uUwptT2kczA5KbfvnYKwoZf6F9A28c/WoZ/9DidkQDDq1AOgGUw+tnJhSvWxlFE97Mv9rVRVdwpEoio0j24CRZwRDEojviSsUxedmw=
+	t=1719491995; cv=none; b=omvQjTXDahNn2aeoNF7rJoVBH5y2zEHVbbiOG6DUwRH8HUKs5DI7an0PIVqXw+pl/gJ3ETuV0M+fTYIBlF0ZbEwzkkwFx+fBRpoU8CfLW1+uFQQ32PDRIxoBPL5fqeCTcJDfkwK8kVKGSL48NMfxHQ7tqjjr4IrJ2HEgGgB78LY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719491975; c=relaxed/simple;
-	bh=4/slF+Rv/3/E6hodmHYTkfxGX2r20IbdIV3tNTbBCT0=;
+	s=arc-20240116; t=1719491995; c=relaxed/simple;
+	bh=XIiN2SU02Qa6IoY68GGkhAS66T4UHBbwG6fx2lujuAg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JS2N2OMyH8VMbum9WrnhhLmElKlPoNMc4dsE4He4PSkEPik7/T9vzXcYEh1ucnkRaZbskb7LujYZXFWRU5y02vJ23w59RP0f+OpQJESqs38A1vK2hTWe5kiBfCNxkRAqhsSxvcHQRkvIZsaRFow9z/BIEFhaLBx5nnNGpMXPSy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1sMoPC-00015B-7g; Thu, 27 Jun 2024 14:39:14 +0200
-Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1sMoPA-005Mws-OT; Thu, 27 Jun 2024 14:39:12 +0200
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1sMoPA-000xBf-2F;
-	Thu, 27 Jun 2024 14:39:12 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: "David S. Miller" <davem@davemloft.net>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Eric Dumazet <edumazet@google.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	Arun Ramadoss <arun.ramadoss@microchip.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	kernel@pengutronix.de,
+	 MIME-Version; b=oIg1/eMOQ9BVFBY4ffF5zV5G/zJCmNaVz84EUebcG4WQ/on2SMXmhq+jSWIHeSOtitY2rXu+5gF7rV2KTDcXPXLOmydT5ahapAv+QX1PI0bNfd4i1RF4r95NgimEs385uxS2gQVTzwxiRk/DGBTefvq/U2qdrvP+Ks9+/U8ogi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ahrCbyoU; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ahrCbyoU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=vkEX8
+	CnABxw6g+6C0/kCh5ySrZHNhjny2P+4xtrVQvM=; b=ahrCbyoULxWhJIuJgH8Iv
+	VP5YQszl65e68JeQy8ymXXc1VGhMW9wIF7+FtuJGzQsNyjVcJ1xhw/meuLrZAB8t
+	pd4v8ynYeEIFRv6FpZVdsvnHU0vhXim9J3AMY66WQrn3ejw8NvRYkJ90vJw9dVEd
+	FqXpcpPrvY4lmzBcdhbEpI=
+Received: from localhost.localdomain (unknown [193.203.214.57])
+	by gzga-smtp-mta-g1-0 (Coremail) with SMTP id _____wD3_4FeXX1m+wa7Ag--.41205S4;
+	Thu, 27 Jun 2024 20:38:55 +0800 (CST)
+From: ran xiaokai <ranxiaokai627@163.com>
+To: lkp@intel.com
+Cc: baohua@kernel.org,
 	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	UNGLinuxDriver@microchip.com
-Subject: [PATCH net-next v1 1/3] net: dsa: microchip: lan9372: add 100BaseTX PHY support
-Date: Thu, 27 Jun 2024 14:39:09 +0200
-Message-Id: <20240627123911.227480-2-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240627123911.227480-1-o.rempel@pengutronix.de>
-References: <20240627123911.227480-1-o.rempel@pengutronix.de>
+	linux-mm@kvack.org,
+	llvm@lists.linux.dev,
+	oe-kbuild-all@lists.linux.dev,
+	peterx@redhat.com,
+	ran.xiaokai@zte.com.cn,
+	ranxiaokai627@163.com,
+	ziy@nvidia.com
+Subject: Re: [PATCH 2/2] kpageflags: fix wrong KPF_THP on non-pmd-mappable compound pages
+Date: Thu, 27 Jun 2024 12:38:54 +0000
+Message-Id: <20240627123854.23205-1-ranxiaokai627@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <202406262300.iAURISyJ-lkp@intel.com>
+References: <202406262300.iAURISyJ-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,62 +47,54 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-CM-TRANSID:_____wD3_4FeXX1m+wa7Ag--.41205S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Cw1kCw17JF15ur47CFWfKrg_yoW5Jr1xpa
+	18GFs8Kr48Gw1rGws7GFWUZa1jqws8Wr1agF18Gw47ZF4YvFyq9r4Ikr13uwnFgrykKrWf
+	Crn7XF9Yqa4UAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUKAp8UUUUU=
+X-CM-SenderInfo: xudq5x5drntxqwsxqiywtou0bp/1tbiqQALTGVOBIg1VwAAsr
 
-From: Lucas Stach <l.stach@pengutronix.de>
+> Hi ran,
+> 
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on akpm-mm/mm-everything]
+> [also build test ERROR on linus/master v6.10-rc5 next-20240625]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/ran-xiaokai/mm-Constify-folio_order-folio_test_pmd_mappable/20240626-113027
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+> patch link:    https://lore.kernel.org/r/20240626024924.1155558-3-ranxiaokai627%40163.com
+> patch subject: [PATCH 2/2] kpageflags: fix wrong KPF_THP on non-pmd-mappable compound pages
+> config: x86_64-allnoconfig (https://download.01.org/0day-ci/archive/20240626/202406262300.iAURISyJ-lkp@intel.com/config)
+> compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240626/202406262300.iAURISyJ-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202406262300.iAURISyJ-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+> >> fs/proc/page.c:151:35: error: passing 'const struct folio *' to parameter of type 'struct folio *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+>      151 |         else if (folio_test_pmd_mappable(folio)) {
+>          |                                          ^~~~~
+>    include/linux/huge_mm.h:438:58: note: passing argument to parameter 'folio' here
+>      438 | static inline bool folio_test_pmd_mappable(struct folio *folio)
+>          |                                                          ^
+>    1 error generated.
 
-On the LAN9372 the 4th internal PHY is a 100BaseTX PHY instead of a 100BaseT1
-PHY. The 100BaseTX PHYs have a different base register offset.
+Hi,
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- drivers/net/dsa/microchip/ksz_common.h   | 1 +
- drivers/net/dsa/microchip/lan937x_main.c | 3 +++
- drivers/net/dsa/microchip/lan937x_reg.h  | 1 +
- 3 files changed, 5 insertions(+)
+This patch is the second patch of the serial:
+https://lore.kernel.org/lkml/20240626024924.1155558-1-ranxiaokai627@163.com/
 
-diff --git a/drivers/net/dsa/microchip/ksz_common.h b/drivers/net/dsa/microchip/ksz_common.h
-index c784fd23a9937..f901cbe7cfdd5 100644
---- a/drivers/net/dsa/microchip/ksz_common.h
-+++ b/drivers/net/dsa/microchip/ksz_common.h
-@@ -22,6 +22,7 @@
- /* all KSZ switches count ports from 1 */
- #define KSZ_PORT_1 0
- #define KSZ_PORT_2 1
-+#define KSZ_PORT_4 3
- 
- struct ksz_device;
- struct ksz_port;
-diff --git a/drivers/net/dsa/microchip/lan937x_main.c b/drivers/net/dsa/microchip/lan937x_main.c
-index b479a628b1ae5..e907a5602035c 100644
---- a/drivers/net/dsa/microchip/lan937x_main.c
-+++ b/drivers/net/dsa/microchip/lan937x_main.c
-@@ -55,6 +55,9 @@ static int lan937x_vphy_ind_addr_wr(struct ksz_device *dev, int addr, int reg)
- 	u16 addr_base = REG_PORT_T1_PHY_CTRL_BASE;
- 	u16 temp;
- 
-+	if (dev->info->chip_id == LAN9372_CHIP_ID && addr == KSZ_PORT_4)
-+		addr_base = REG_PORT_TX_PHY_CTRL_BASE;
-+
- 	/* get register address based on the logical port */
- 	temp = PORT_CTRL_ADDR(addr, (addr_base + (reg << 2)));
- 
-diff --git a/drivers/net/dsa/microchip/lan937x_reg.h b/drivers/net/dsa/microchip/lan937x_reg.h
-index 45b606b6429f6..7ecada9240233 100644
---- a/drivers/net/dsa/microchip/lan937x_reg.h
-+++ b/drivers/net/dsa/microchip/lan937x_reg.h
-@@ -147,6 +147,7 @@
- 
- /* 1 - Phy */
- #define REG_PORT_T1_PHY_CTRL_BASE	0x0100
-+#define REG_PORT_TX_PHY_CTRL_BASE	0x0280
- 
- /* 3 - xMII */
- #define PORT_SGMII_SEL			BIT(7)
--- 
-2.39.2
+and it relies on the first patch:
+https://lore.kernel.org/lkml/20240626024924.1155558-2-ranxiaokai627@163.com/
+
+and it seems the first patch is not applied.
+Or in this case, we should not split these two patches?
 
