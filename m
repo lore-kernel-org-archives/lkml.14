@@ -1,109 +1,89 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.3ffe.de (0001.3ffe.de [159.69.201.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AAB113AA4C
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 17:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 354621C6A1;
+	Thu, 27 Jun 2024 17:19:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.201.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719508704; cv=none; b=Q1bPZmCH64cf1dNSZIgvP3J+Vxm9+tDW1yHgO5x2qsqYe5EXWWYSxKtibly0Cm7PQ8BciB2Z/1kfLXjvY1jSVsSlsg38VLZtW2i5A+iibL0Ktgw/ct4yk6g/HBPgPJT2ts8+qiJoeCGH+Hmnd1NtC5yRF21sTM4VCyXfR5yXyok=
+	t=1719508759; cv=none; b=I3sFKWSLkiJSXaVE3QC3WzkApuZKPCoDbxbgvJioSq4P93upfqbttBD6ejxQRS5nfVyBNCMNyoGQM4JAUSqHObsySwidhtZg7uOAXyAO4+1ZnbKIHCyTZ+MOs91EgigiV6djlqh0AjnUuqckjILpoiWYchzdgVQZGhzwisxNuA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719508704; c=relaxed/simple;
-	bh=VUpcms+2HbkbSImvdbrctU+WfLpEorrjXreqkwiys1k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fw4l8X50Dr3vbArv/rgfu70bYRoEnItNfO5nDONh2CyVdFJZESRszs64dMsFZFheTX8W149LyzwjvTpm03mqxWdkreNor1gu29hoPbaPwyCyk3C7OMzkDuWHWQgp091lO69y0TtBnW8nnz48bBQzdzYxxiLTVzn9dfsqcg53hgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=CXyGTbdG; arc=none smtp.client-ip=209.85.166.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="CXyGTbdG"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7f3d4a92857so5251939f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 10:18:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1719508701; x=1720113501; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6d8l8opJ/oY5eykEPzVftiu0pahNZ/z187byDXg9KXY=;
-        b=CXyGTbdG/yPOiB42fotIupVrA1YH3HNwKQ3Om/ujsQDSEooSRnIRJMpEYo0txfxZgk
-         mASUu9T3IMp5l9UW/rRvt8IQTeV4fejzE60Z9Qxff4u81HatwdGWvFdq391ftPtHoNAg
-         6WyzrU7xzYbNshs41kgsiHXaNme6Lnw8nd9Ls=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719508701; x=1720113501;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6d8l8opJ/oY5eykEPzVftiu0pahNZ/z187byDXg9KXY=;
-        b=BlVDhPvK1RD+wIZ+dwBzFAHSXW1h713RzfVtHiNbrxQJ0SMWsk/gotHjTdxHMb8eNA
-         Aq8GVPOzns0yRNiYccRLbbgDzxI1rRgd5BGLP+UbU9S0cTCgVgMJRPPWolCLVMkZl/pK
-         2vXcTAclF8JcRf5URG0wFaDWZxuHxvPF1kt1KkMhjMbQ9G42jXCUcmwx9rXHP7LLDWL3
-         DwKEfZxSjL6E2SragPsr9EbcSh9B486EojlYUgiiq0mSZXOOHGRIg8MsYicC/PSScLqA
-         6qBXJFbld/7mflUNmDKXqIE5pN402rE73kurqlQXS947XeaxH+steTivfTw+ht8bh0Jm
-         bFPg==
-X-Forwarded-Encrypted: i=1; AJvYcCXtC5ZUg1sdLgN7huxq5P3mk+vj56cmpY6L8RXsHPzJBuGhkiCKxC0vGB63Sp/DW6rKz5/ULKqyosDxucOPI/6UAQrAzP82kUNbxjNM
-X-Gm-Message-State: AOJu0YwGuklTQvX9hP7KVQbn5lg0n35ToI8AbqlWNbEOzOScBAAF4M3/
-	5MkzsA7xUbNYLZ24G75BrDhhJmWKrJo7dKL6de3mXQtVRC7zypwqiag2HoTaAVU=
-X-Google-Smtp-Source: AGHT+IHkROP+Jrqp5yAFBTcNBkq9NFROm+0Jrr/erSz0JMg4pPu8n9tlmNMd1LMXUndX7eLRd8OyBA==
-X-Received: by 2002:a05:6602:3fca:b0:7eb:2c45:4688 with SMTP id ca18e2360f4ac-7f39dd12493mr1834272939f.2.1719508701544;
-        Thu, 27 Jun 2024 10:18:21 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4bb742b68b0sm22265173.127.2024.06.27.10.18.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Jun 2024 10:18:21 -0700 (PDT)
-Message-ID: <0106631b-53b2-4bb2-8b7a-2d1824117edb@linuxfoundation.org>
-Date: Thu, 27 Jun 2024 11:18:20 -0600
+	s=arc-20240116; t=1719508759; c=relaxed/simple;
+	bh=luYSedNdzm4ofXHV31UbQRWYFFZA3S9YbC20XWqdRlM=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Subject:Cc:From:
+	 References:In-Reply-To; b=YimjSkXBelfirtN+x2FWkXzvy1vEe6+iNscHvbt5RbzgKyHA8b34wAwTZWQ0MOZ4CgqMgiblHD4im5rzE7qT8O4alTBxi19hseqE5H5UHhP8xdfRD0+clOGPG12dyZF9UnIHT1hbNY/aUtSWi6nC5IR8Mcsx9hWhwIxYIEk6wJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=walle.cc; arc=none smtp.client-ip=159.69.201.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=walle.cc
+Received: from localhost (unknown [IPv6:2a02:810b:4340:4ee9:4685:ff:fe12:5967])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.3ffe.de (Postfix) with ESMTPSA id AB10F4CC;
+	Thu, 27 Jun 2024 19:12:52 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Correcting all needs work translations, Adding some
- transaltion and changing maintainer of the cpupower tool
-To: Daniel Hejduk <danielhejduk@disroot.org>, trenn@suse.com
-Cc: shuah@kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20240627092159.7724-1-danielhejduk@disroot.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240627092159.7724-1-danielhejduk@disroot.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 27 Jun 2024 19:12:52 +0200
+Message-Id: <D2AYUH4XY0SK.1SYOUCT0PLAKT@kernel.org>
+To: "Ayush Singh" <ayush@beagleboard.org>, "Mark Brown"
+ <broonie@kernel.org>, "Vaishnav M A" <vaishnav@beagleboard.org>, "Rob
+ Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>, "Derek Kiernan"
+ <derek.kiernan@amd.com>, "Dragan Cvetic" <dragan.cvetic@amd.com>, "Arnd
+ Bergmann" <arnd@arndb.de>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Nishanth Menon" <nm@ti.com>, "Vignesh
+ Raghavendra" <vigneshr@ti.com>, "Tero Kristo" <kristo@kernel.org>, "Andrew
+ Lunn" <andrew@lunn.ch>, <jkridner@beagleboard.org>,
+ <robertcnelson@beagleboard.org>
+Subject: Re: [PATCH v5 1/7] dt-bindings: connector: Add mikrobus-connector
+Cc: <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+From: "Michael Walle" <mwalle@kernel.org>
+X-Mailer: aerc 0.16.0
+References: <20240627-mikrobus-scratch-spi-v5-0-9e6c148bf5f0@beagleboard.org> <20240627-mikrobus-scratch-spi-v5-1-9e6c148bf5f0@beagleboard.org>
+In-Reply-To: <20240627-mikrobus-scratch-spi-v5-1-9e6c148bf5f0@beagleboard.org>
 
-On 6/27/24 03:21, Daniel Hejduk wrote:
-> Signed-off-by: Daniel Hejduk <danielhejduk@disroot.org>
+Hi,
 
-Missing changelog
+Could you give us a DT snippet of how this should look like with a
+board?
 
-Be clear about what you are adding - Send spearate patches for
-changing maintainer and adding translations.
+On Thu Jun 27, 2024 at 6:26 PM CEST, Ayush Singh wrote:
+> +  board:
+> +    description: board attached to mikrobus connector
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
 
-> ---
->   tools/power/cpupower/po/cs.mo | Bin 0 -> 12805 bytes
->   tools/power/cpupower/po/cs.po | 172 ++++++++++++++++++----------------
->   2 files changed, 91 insertions(+), 81 deletions(-)
->   create mode 100644 tools/power/cpupower/po/cs.mo
-> 
-> diff --git a/tools/power/cpupower/po/cs.mo b/tools/power/cpupower/po/cs.mo
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..e82a23760d4f26a628d9402f84c20bfda1df4263
-> GIT binary patch
+Shouldn't this be a subnode of the connector?
 
-What's this stuff here?
+i.e.
 
-> literal 12805
-> zcmcJVTWlQHdB?}s*c<0!r%lt`dhA*@DRWmOtx7g!-Aq}R*pg`7>RPpp*_}h~aA#-M
-> zb6ILP2I?RI5};5T2M7|!iBX~`Py->1^sxYqqAT_x4@J@T&4?dV1PIVR1V(DKPwnqJ
-> zXJ&RuE+soiS6KdcX6Kyqo$vd9m-DUOyYKezIlM0N{vz*dw>r+tU~mV2cujxIaXt&q
-> zfOFu<{QB$Q39f$#ehRz}{x0}FcprGzU5@ir@C)E+@cZCA_zUn5IC;0@{5jYJSHNF`
-> z(_m0>oFm|m!CCM<um;}yamRTUJOZ8rzY87%e*u0M+<lMZyauj=N5He6u+M!5JjnIG
-> z=Xn1otvoM*-{$@rDDytSCPcn(gEQd2fPVnq{%Obg68Io^FZd+*1@Hn`1v?;9J8y!Y
-> z0e=Gi5%~9@jQ;=>ReqMi&)kBJLD7%TpBKSbK+*5J;BN4JQ0Dm(fA)hj;O~Jx_#MW7
-> z4P4^-K9v0}un)@mw=v1H;JqNKbQ++@+s^UNa(oRGx&8{2c?aO{fbZt`s~qp(OS%8~
-> z9QS|^aeWMAOHK=v^<Dulg8u~mA^70u9A^SN3Ci`$pzQN|;N#%0LAL1Be&1dn1?yaY
-> z6_kCw2MQ05f8KGRqSF9nKa1c?U<bS({Achs@O`k4UOoUtzLy#NB=`eR=6RPtr@{XQ
-> zMIXm8CL%b`fvC=T8SI1K1fK(M{j%d6055~H;P=5FgFgdfu!-{ag71Qd!A~p8+l3sz
+connector {
+	compatible =3D "mikrobus-connector";
 
-thanks,
--- Shuah
+	// phandles to the parent controllers
 
+	spi {
+		temp-sensor@0 {
+			compatible =3D "maxim,max31855k";
+			reg =3D <0>;
+		};
+	};
+
+	i2c {
+		..
+	};
+};
+
+I don't think you can introduce a new
+  compatible =3D "maxim,max31855k", "mikrobus,spi";
+if there is already a binding for "maxim,max31855k". But I might be
+wrong. Why is this compatible needed at all?
+
+Also, the mikrobus-connector driver could translate the chipselects.
+
+-michael
