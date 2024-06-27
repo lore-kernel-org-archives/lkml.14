@@ -1,347 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A571813DBBC;
-	Thu, 27 Jun 2024 10:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50DB14882B
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 10:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719484575; cv=none; b=o5YNoL+BrFCM09sD9Is4EZZblPc2NagH/yb+0wWeCewQ6OW/IeWQUx/heW6o0pD8MhrgPhhGLn8aBuSwqgWD8kbZtoadYtTtgRVRn5myUAHnMHL+9Gam+oOh1rSKl7oDjZKXxT7lGjn5pX1plLl1KJQ24oDBUZ8zkxeYhrl+1Q8=
+	t=1719484601; cv=none; b=QhYeSwiauffNMsVPJwyyDe9LINYY184MA0Z26SOVwfGSLAYYG88fCYP8wVCYthib5YfYO/BEMRIS4KkeSwBQ5m7msTGvREnT1n8Y6s/nKxHEoglYbmGa+GDlyYsrR7hL29wltd+/0uqHk6MDOCOEVZZ0GnpFpSG21998tbyTFrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719484575; c=relaxed/simple;
-	bh=9dr2O71goYL0Y2jeVans7wbNZNCDIE61bIUBtDFtk0E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KLBYU0uocIIMlww2Q65GwZbLw55B1dfIlSIZI+pFqVBJ5mXqTlsDouKLJTI3XyintaV3ceJE5Svw0Yv5dgyMzl4IezwnhEe6KplA7bmOmNMajMVIW0GrrX0vx/qzNxS+uHxmZJ9UqDDrbSbOcc8MC0G0rvQeSL8kMKAVg5S2Z9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DR1mA6pe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719484601; c=relaxed/simple;
+	bh=LRDgcjgm9BQ9KYarvp9Kg/ax0ZJhFQ/9F1mLVnVY7C0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dLn6kQ7/8Fh8FJm7XqbcALPte/rpoNrTfy9NdbII1HCdVasND1ro1I7DUwKfiMtmQINk4qSN2XH7j8mnIylNyggqpaqrS65z33SU/Zd5MPZt2krc6dmtIiteFj2AfwvuT2/mcbpEMEg2bNIba4VvvrioB5w1IiG7ueq5O+aaWOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OqzerScv; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DR1mA6pe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31D4EC4AF07;
-	Thu, 27 Jun 2024 10:36:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719484575;
-	bh=9dr2O71goYL0Y2jeVans7wbNZNCDIE61bIUBtDFtk0E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DR1mA6peRt/InxmCu95SVVyBu7qPu4rrq4itjGAR3pw14XUtQ3OPv9L07qO7dbO6S
-	 MZibo7r7TUr16dwJ9R525s1DhvQk665Iu2NoWRwLG65uMkkBYuwG4l90KIzKKq+7wB
-	 DjlbzOYtnisTI0k3NJ0PfhUz6Ahb4JPJWz/jCDvE6k+bVJXV6ZEwXVVzThxg+HLxEJ
-	 WMdwcAPmL4VmOLGT53QZuVyv9R+4YYyPc7LxY5xINPHcV+E3FMSbeOg8EPHLHnSDqI
-	 YZlTmgya/1YSDqaUaNQjdoD0VTlXI/bCFniyUycST81Zk/dL4+k/6GLdUNIgkLXWib
-	 llXXeGVGYLzpw==
-Received: from mchehab by mail.kernel.org with local (Exim 4.97.1)
-	(envelope-from <mchehab@kernel.org>)
-	id 1sMmU9-0000000BC91-0phD;
-	Thu, 27 Jun 2024 12:36:13 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Shengwei Luo <luoshengwei@huawei.com>,
-	"Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	"Shiju Jose" <shiju.jose@huawei.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Daniel Ferguson <danielf@os.amperecomputing.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	James Morse <james.morse@arm.com>,
-	Len Brown <lenb@kernel.org>,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Tony Luck <tony.luck@intel.com>,
-	Tyler Baicar <tbaicar@codeaurora.org>,
-	Will Deacon <will@kernel.org>,
-	Xie XiuQi <xiexiuqi@huawei.com>,
-	linux-acpi@vger.kernel.org,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jason Tian <jason@os.amperecomputing.com>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH v2 2/2] RAS: Report all ARM processor CPER information to userspace
-Date: Thu, 27 Jun 2024 12:36:08 +0200
-Message-ID: <75b5c9a47c9caf9490c5eedd85e201b7bdb8bf57.1719484498.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <cover.1719484498.git.mchehab+huawei@kernel.org>
-References: <cover.1719484498.git.mchehab+huawei@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OqzerScv"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2eaea28868dso103860871fa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 03:36:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1719484598; x=1720089398; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LmmTw3VCwIDGot6aMjbOAraGI3hpxG9i1KkAlI0khG8=;
+        b=OqzerScvbocSWXMDTqX7M8Dng2wwwOfD69GIdG9mmGHfozH1ghiegFd6Vhh9mmafAB
+         ftXwMQFFSRswfbEAWZpmz8PLvXoyj1x89Avkca6CHzI6K6OFl69abr7V7IbBXwBMkS77
+         3Dinh7+Sao+fIHSo47EDd9OvRdqCE93l9/5Emty2HPWkufYE6dMNXP0vnul/hPgHQRVu
+         S8EBZlG6n4Bv8A9O7cpLwcprp7ayxuwi38oHmuC1XCsyENQQLRCHQy9tUuOOrjBKRTI6
+         Z3nMG3yUk+yMnvXn/Ij4/IZNgS6gmiIxp4hhPqOUYnvm23xUtGmbvmELRaGTFACOi+7N
+         6Yxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719484598; x=1720089398;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LmmTw3VCwIDGot6aMjbOAraGI3hpxG9i1KkAlI0khG8=;
+        b=KU3Gnv1SKvJsqijE6o//OFxSUoYXZ46aRZbxWIowUAaZiyeijrxOr/NMbnH9NeT5b6
+         EEgsxa3hni8wYAaECcmoQ01h4MzxfqKLDLO/0wcGHo68mNz/FzbSFiSnvsqFr9t4uCf8
+         c+14ASleKKrzoJ3PCaXh/5keSxni835rE+pA5NKyN4afhs/LsMrp+xlWntc4HxfC+xEC
+         wjdnIzR2tdHKgo9Zk1AjbO6cH1efc7BqdlPJ3SKCewVxprjT8bqQ1xkV4mErZk05fOub
+         TlXrQ4XH8z/AhvQiPpl3c3Iz35DGSStayz9bhq55vxLGJrszGRfrucA5dGJB0zWtod6x
+         tQzw==
+X-Forwarded-Encrypted: i=1; AJvYcCVv164W7bRHsyZHhsr74STA2XvndgIoOx5nfIYMcgphGJVe5ZIqiYpwzJY/YNqTGJsR9GzNrEe4DpP32H3RjvPKgR4R7kjh1h6ktTek
+X-Gm-Message-State: AOJu0YzdpvZYi+t0syYtxGzI0kQ0FStUw/jDgzHkn5C8ytVXfEJdqBET
+	BiLDpAOPlcBEczBjmlTIpLZ2iNdw32wBdDFHNrcpFsoPiuPa4Hw+6fXRVEzMg1epLn70cthMsd4
+	rUCSqnRUvapIWXWzN6toHODXdkFkPJCGuGmYH4SykWdF0kIxExki0
+X-Google-Smtp-Source: AGHT+IHRuI3bm5oLeNY23Y3s5LjnQgEJkd2uPyO/1Xl0pgD6QXuNuygP4qwyIwyLSKtflIcqEWxFFIXImPdDuWrJedk=
+X-Received: by 2002:a2e:9213:0:b0:2ec:5843:2fb8 with SMTP id
+ 38308e7fff4ca-2ec5b31d126mr99844701fa.42.1719484597470; Thu, 27 Jun 2024
+ 03:36:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
+References: <a45ggqu6jcve44y7ha6m6cr3pcjc3xgyomu4ml6jbsq3zv7tte@oeovgtwh6ytg>
+ <qolg56e7mjloynou6j7ar7xzefqojp4cagzkb3r6duoj5i54vu@jqhi2chs4ecj>
+ <CAJD7tka0b52zm=SjqxO-gxc0XTib=81c7nMx9MFNttwVkCVmSg@mail.gmail.com>
+ <u3jrec5n42v35f3xiigfqabajjt4onh44eyfajewnzbfqxaekw@5x2daobkkbxh>
+ <CAJD7tkaMeevj2TS_aRj_WXVi26CuuBrprYwUfQmszJnwqqJrHw@mail.gmail.com>
+ <d3b5f10a-2649-446c-a6f9-9311f96e7569@kernel.org> <CAJD7tkZ0ReOjoioACyxQ848qNMh6a93hH616jNPgX3j72thrLg@mail.gmail.com>
+ <zo6shlmgicfgqdjlfbeylpdrckpaqle7gk6ksdik7kqq7axgl6@65q4m73tgnp3>
+ <CAJD7tkZ_aba9N9Qe8WeaLcp_ON_jQvuP9dg4tW0919QbCLLTMA@mail.gmail.com>
+ <ntpnm3kdpqexncc4hz4xmfliay3tmbasxl6zatmsauo3sruwf3@zcmgz7oq5huy>
+ <CAJD7tkYqF0pmnw+PqmzPGh7NLeM2KfCwKLMhkFw3sxBOZ3biAA@mail.gmail.com>
+ <a1e847a6-749b-87e8-221f-f9beb6c2ab59@linux.com> <CAJD7tkbq-dyhmgBOC0+=FeJ19D-fRpE_pz44cH7fCvtHgr45uQ@mail.gmail.com>
+ <43732a44-1f90-4119-9e52-000b5a6a2f99@kernel.org> <CAJD7tkauPM5trAhgYSC5_S_wvOA9gozPeUot-yhAW0fbF+Msag@mail.gmail.com>
+ <cf6eac6b-c75f-4879-a9e5-bb8507879900@kernel.org>
+In-Reply-To: <cf6eac6b-c75f-4879-a9e5-bb8507879900@kernel.org>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Thu, 27 Jun 2024 03:36:01 -0700
+Message-ID: <CAJD7tka+DMQfD2MYWD03cc39cxCAbbEOOfYUi1CH5f6FkVbKMw@mail.gmail.com>
+Subject: Re: [PATCH V2] cgroup/rstat: Avoid thundering herd problem by kswapd
+ across NUMA nodes
+To: Jesper Dangaard Brouer <hawk@kernel.org>
+Cc: "Christoph Lameter (Ampere)" <cl@linux.com>, Shakeel Butt <shakeel.butt@linux.dev>, tj@kernel.org, 
+	cgroups@vger.kernel.org, hannes@cmpxchg.org, lizefan.x@bytedance.com, 
+	longman@redhat.com, kernel-team@cloudflare.com, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Shengwei Luo <luoshengwei@huawei.com>
+On Thu, Jun 27, 2024 at 2:21=E2=80=AFAM Jesper Dangaard Brouer <hawk@kernel=
+.org> wrote:
+>
+>
+> On 27/06/2024 00.07, Yosry Ahmed wrote:
+> > On Wed, Jun 26, 2024 at 2:35=E2=80=AFPM Jesper Dangaard Brouer <hawk@ke=
+rnel.org> wrote:
+> >>
+> >> On 26/06/2024 00.59, Yosry Ahmed wrote:
+> >>> On Tue, Jun 25, 2024 at 3:35=E2=80=AFPM Christoph Lameter (Ampere) <c=
+l@linux.com> wrote:
+> >>>>
+> >>>> On Tue, 25 Jun 2024, Yosry Ahmed wrote:
+> >>>>
+> [...]
+> >>
+> >> I implemented a variant using completions as Yosry asked for:
+> >>
+> >> [V3] https://lore.kernel.org/all/171943668946.1638606.1320095353103578=
+332.stgit@firesoul/
+> >
+> > Thanks! I will take a look at this a little bit later. I am wondering
+> > if you could verify if that solution fixes the problem with kswapd
+> > flushing?
+>
+> I will deploy V3 on some production metals and report back in that thread=
+.
+>
+> For this patch V2, I already have some results that show it solves the
+> kswapd lock contention. Attaching grafana screenshot comparing two
+> machines without/with this V2 patch. Green (16m1253) without patch, and
+> Yellow line (16m1254) with patched kernel.  These machines have 12 NUMA
+> nodes and thus 12 kswapd threads, and CPU time is summed for these thread=
+s.
 
-The ARM processor CPER record was added at UEFI 2.6, and hasn't
-any changes up to UEFI 2.10 on its struct.
+Thanks for the data! Looking forward to whether v3 also fixes the
+problem. I think it should, especially with the timeout, but let's see
+:)
 
-Yet, the original arm_event trace code added on changeset
-e9279e83ad1f ("trace, ras: add ARM processor error trace event") is
-incomplete, as it only traces some fields of UAPI 2.6 table N.16,
-not exporting at all any information from tables N.17 to N.29 of
-the record.
-
-This is not enough for user to take appropriate action or to log
-what exactly happened.
-
-According to UEFI_2_9 specification chapter N2.4.4, the ARM processor
-error section includes:
-
-- several (ERR_INFO_NUM) ARM processor error information structures
-  (Tables N.17 to N.20);
-- several (CONTEXT_INFO_NUM) ARM processor context information
-  structures (Tables N.21 to N.29);
-- several vendor specific error information structures. The
-  size is given by Section Length minus the size of the other
-  fields.
-
-In addition to those data, it also exports two fields that are
-parsed by the GHES driver when firmware reports it, e. g.:
-
-- error severity
-- cpu logical index
-
-Report all of these information to userspace via trace uAPI, So that
-userspace can properly record the error and take decisions related
-to cpu core isolation according to error severity and other info.
-
-After this patch, all the data from ARM Processor record from table
-N.16 are directly or indirectly visible on userspace:
-
-======================================	=============================
-UEFI field on table N.16		ARM Processor trace fields
-======================================	=============================
-Validation				handled when filling data for
-					affinity MPIDR and running
-					state.
-ERR_INFO_NUM				pei_len
-CONTEXT_INFO_NUM			ctx_len
-Section Length				indirectly reported by
-					pei_len, ctx_len and oem_len
-Error affinity level			affinity
-MPIDR_EL1				mpidr
-MIDR_EL1				midr
-Running State				running_state
-PSCI State				psci_state
-Processor Error Information Structure	pei_err - count at pei_len
-Processor Context			ctx_err- count at ctx_len
-Vendor Specific Error Info		oem - count at oem_len
-======================================	=============================
-
-It should be noticed that decoding of tables N.17 to N.29, if needed,
-will be handled on userspace. That gives more flexibility, as there
-won't be any need to flood the Kernel with micro-architecture specific
-error decoding).
-Also, decoding the other fields require a complex logic, and should
-be done for each of the several values inside the record field.
-So, let userspace daemons like rasdaemon decode them, parsing such
-tables and having vendor-specific micro-architecture-specific decoders.
-
-[mchehab: modified patch description and fix coding style]
-Fixes: e9279e83ad1f ("trace, ras: add ARM processor error trace event")
-Signed-off-by: Shengwei Luo <luoshengwei@huawei.com>
-Signed-off-by: Jason Tian <jason@os.amperecomputing.com>
-Signed-off-by: Daniel Ferguson <danielf@os.amperecomputing.com>
-Tested-by: Shiju Jose <shiju.jose@huawei.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Link: https://uefi.org/specs/UEFI/2.10/Apx_N_Common_Platform_Error_Record.html#arm-processor-error-section
----
- drivers/acpi/apei/ghes.c |  3 +--
- drivers/ras/ras.c        | 45 +++++++++++++++++++++++++++++++++++--
- include/linux/ras.h      | 16 ++++++++++----
- include/ras/ras_event.h  | 48 +++++++++++++++++++++++++++++++++++-----
- 4 files changed, 99 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 2589a3536d91..90efca025d27 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -538,9 +538,8 @@ static bool ghes_handle_arm_hw_error(struct acpi_hest_generic_data *gdata,
- 	int sec_sev, i;
- 	char *p;
- 
--	log_arm_hw_error(err);
--
- 	sec_sev = ghes_severity(gdata->error_severity);
-+	log_arm_hw_error(err, sec_sev);
- 	if (sev != GHES_SEV_RECOVERABLE || sec_sev != GHES_SEV_RECOVERABLE)
- 		return false;
- 
-diff --git a/drivers/ras/ras.c b/drivers/ras/ras.c
-index 5d94ab79c8c3..b515659cc8cc 100644
---- a/drivers/ras/ras.c
-+++ b/drivers/ras/ras.c
-@@ -52,10 +52,51 @@ void log_non_standard_event(const guid_t *sec_type, const guid_t *fru_id,
- 	trace_non_standard_event(sec_type, fru_id, fru_text, sev, err, len);
- }
- 
--void log_arm_hw_error(struct cper_sec_proc_arm *err)
-+void log_arm_hw_error(struct cper_sec_proc_arm *err, const u8 sev)
- {
- #if defined(CONFIG_ARM) || defined(CONFIG_ARM64)
--	trace_arm_event(err);
-+	struct cper_arm_err_info *err_info;
-+	struct cper_arm_ctx_info *ctx_info;
-+	u8 *ven_err_data;
-+	u32 ctx_len = 0;
-+	int n, sz, cpu;
-+	s32 vsei_len;
-+	u32 pei_len;
-+	u8 *pei_err;
-+	u8 *ctx_err;
-+
-+	pei_len = sizeof(struct cper_arm_err_info) * err->err_info_num;
-+	pei_err = (u8 *)err + sizeof(struct cper_sec_proc_arm);
-+
-+	err_info = (struct cper_arm_err_info *)(err + 1);
-+	ctx_info = (struct cper_arm_ctx_info *)(err_info + err->err_info_num);
-+	ctx_err = ctx_info;
-+	for (n = 0; n < err->context_info_num; n++) {
-+		sz = sizeof(struct cper_arm_ctx_info) + ctx_info->size;
-+		ctx_info = (struct cper_arm_ctx_info *)((long)ctx_info + sz);
-+		ctx_len += sz;
-+	}
-+
-+	vsei_len = err->section_length - (sizeof(struct cper_sec_proc_arm) +
-+					  pei_len + ctx_len);
-+	if (vsei_len < 0) {
-+		pr_warn(FW_BUG
-+			"section length: %d\n", err->section_length);
-+		pr_warn(FW_BUG
-+			"section length is too small\n");
-+		pr_warn(FW_BUG
-+			"firmware-generated error record is incorrect\n");
-+		vsei_len = 0;
-+	}
-+	ven_err_data = (u8 *)ctx_info;
-+
-+	cpu = GET_LOGICAL_INDEX(err->mpidr);
-+	/* when return value is invalid, set cpu index to -1 */
-+	if (cpu < 0)
-+		cpu = -1;
-+
-+	trace_arm_event(err, pei_err, pei_len, ctx_err, ctx_len,
-+			ven_err_data, (u32)vsei_len, sev, cpu);
- #endif
- }
- 
-diff --git a/include/linux/ras.h b/include/linux/ras.h
-index a64182bc72ad..6025afe5736a 100644
---- a/include/linux/ras.h
-+++ b/include/linux/ras.h
-@@ -24,8 +24,7 @@ int __init parse_cec_param(char *str);
- void log_non_standard_event(const guid_t *sec_type,
- 			    const guid_t *fru_id, const char *fru_text,
- 			    const u8 sev, const u8 *err, const u32 len);
--void log_arm_hw_error(struct cper_sec_proc_arm *err);
--
-+void log_arm_hw_error(struct cper_sec_proc_arm *err, const u8 sev);
- #else
- static inline void
- log_non_standard_event(const guid_t *sec_type,
-@@ -33,7 +32,7 @@ log_non_standard_event(const guid_t *sec_type,
- 		       const u8 sev, const u8 *err, const u32 len)
- { return; }
- static inline void
--log_arm_hw_error(struct cper_sec_proc_arm *err) { return; }
-+log_arm_hw_error(struct cper_sec_proc_arm *err, const u8 sev) { return; }
- #endif
- 
- struct atl_err {
-@@ -52,5 +51,14 @@ static inline void amd_retire_dram_row(struct atl_err *err) { }
- static inline unsigned long
- amd_convert_umc_mca_addr_to_sys_addr(struct atl_err *err) { return -EINVAL; }
- #endif /* CONFIG_AMD_ATL */
--
-+#if defined(CONFIG_ARM) || defined(CONFIG_ARM64)
-+#include <asm/smp_plat.h>
-+/*
-+ * Include ARM specific SMP header which provides a function mapping mpidr to
-+ * cpu logical index.
-+ */
-+#define GET_LOGICAL_INDEX(mpidr) get_logical_index(mpidr & MPIDR_HWID_BITMASK)
-+#else
-+#define GET_LOGICAL_INDEX(mpidr) -EINVAL
-+#endif /* CONFIG_ARM || CONFIG_ARM64 */
- #endif /* __RAS_H__ */
-diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
-index 7c47151d5c72..ce5214f008eb 100644
---- a/include/ras/ras_event.h
-+++ b/include/ras/ras_event.h
-@@ -168,11 +168,24 @@ TRACE_EVENT(mc_event,
-  * This event is generated when hardware detects an ARM processor error
-  * has occurred. UEFI 2.6 spec section N.2.4.4.
-  */
-+#define APEIL "ARM Processor Err Info data len"
-+#define APEID "ARM Processor Err Info raw data"
-+#define APECIL "ARM Processor Err Context Info data len"
-+#define APECID "ARM Processor Err Context Info raw data"
-+#define VSEIL "Vendor Specific Err Info data len"
-+#define VSEID "Vendor Specific Err Info raw data"
- TRACE_EVENT(arm_event,
- 
--	TP_PROTO(const struct cper_sec_proc_arm *proc),
-+	TP_PROTO(const struct cper_sec_proc_arm *proc, const u8 *pei_err,
-+			const u32 pei_len,
-+			const u8 *ctx_err,
-+			const u32 ctx_len,
-+			const u8 *oem,
-+			const u32 oem_len,
-+			u8 sev,
-+			int cpu),
- 
--	TP_ARGS(proc),
-+	TP_ARGS(proc, pei_err, pei_len, ctx_err, ctx_len, oem, oem_len, sev, cpu),
- 
- 	TP_STRUCT__entry(
- 		__field(u64, mpidr)
-@@ -180,6 +193,14 @@ TRACE_EVENT(arm_event,
- 		__field(u32, running_state)
- 		__field(u32, psci_state)
- 		__field(u8, affinity)
-+		__field(u32, pei_len)
-+		__dynamic_array(u8, buf, pei_len)
-+		__field(u32, ctx_len)
-+		__dynamic_array(u8, buf1, ctx_len)
-+		__field(u32, oem_len)
-+		__dynamic_array(u8, buf2, oem_len)
-+		__field(u8, sev)
-+		__field(int, cpu)
- 	),
- 
- 	TP_fast_assign(
-@@ -199,12 +220,29 @@ TRACE_EVENT(arm_event,
- 			__entry->running_state = ~0;
- 			__entry->psci_state = ~0;
- 		}
-+		__entry->pei_len = pei_len;
-+		memcpy(__get_dynamic_array(buf), pei_err, pei_len);
-+		__entry->ctx_len = ctx_len;
-+		memcpy(__get_dynamic_array(buf1), ctx_err, ctx_len);
-+		__entry->oem_len = oem_len;
-+		memcpy(__get_dynamic_array(buf2), oem, oem_len);
-+		__entry->sev = sev;
-+		__entry->cpu = cpu;
- 	),
- 
--	TP_printk("affinity level: %d; MPIDR: %016llx; MIDR: %016llx; "
--		  "running state: %d; PSCI state: %d",
-+	TP_printk("cpu: %d; error: %d; affinity level: %d; MPIDR: %016llx; MIDR: %016llx; "
-+		  "running state: %d; PSCI state: %d; "
-+		  "%s: %d; %s: %s; %s: %d; %s: %s; %s: %d; %s: %s",
-+		  __entry->cpu,
-+		  __entry->sev,
- 		  __entry->affinity, __entry->mpidr, __entry->midr,
--		  __entry->running_state, __entry->psci_state)
-+		  __entry->running_state, __entry->psci_state,
-+		  APEIL, __entry->pei_len, APEID,
-+		  __print_hex(__get_dynamic_array(buf), __entry->pei_len),
-+		  APECIL, __entry->ctx_len, APECID,
-+		  __print_hex(__get_dynamic_array(buf1), __entry->ctx_len),
-+		  VSEIL, __entry->oem_len, VSEID,
-+		  __print_hex(__get_dynamic_array(buf2), __entry->oem_len))
- );
- 
- /*
--- 
-2.45.2
-
+>
+> Zooming in with perf record we can also see the lock contention is gone.
+>   - sudo perf record -g -p $(pgrep -d, kswapd) -F 499 sleep 60
+>   - sudo perf report --no-children  --call-graph graph,0.01,callee
+> --sort symbol
+>
+>
+> On a machine (16m1254) with this V2 patch:
+>
+>   Samples: 7K of event 'cycles:P', Event count (approx.): 61228473670
+>     Overhead  Symbol
+>   +    8.28%  [k] mem_cgroup_css_rstat_flush
+>   +    6.69%  [k] xfs_perag_get_tag
+>   +    6.51%  [k] radix_tree_next_chunk
+>   +    5.09%  [k] queued_spin_lock_slowpath
+>   +    3.94%  [k] srso_alias_safe_ret
+>   +    3.62%  [k] srso_alias_return_thunk
+>   +    3.11%  [k] super_cache_count
+>   +    2.96%  [k] mem_cgroup_iter
+>   +    2.95%  [k] down_read_trylock
+>   +    2.48%  [k] shrink_lruvec
+>   +    2.12%  [k] isolate_lru_folios
+>   +    1.76%  [k] dentry_lru_isolate
+>   +    1.74%  [k] radix_tree_gang_lookup_tag
+>
+>
+> On a machine (16m1253) without patch:
+>
+>   Samples: 65K of event 'cycles:P', Event count (approx.): 492125554022
+>     Overhead  SymbolCoverage]
+>   +   55.84%  [k] queued_spin_lock_slowpath
+>     - 55.80% queued_spin_lock_slowpath
+>        + 53.10% __cgroup_rstat_lock
+>        + 2.63% evict
+>   +    7.06%  [k] mem_cgroup_css_rstat_flush
+>   +    2.07%  [k] page_vma_mapped_walk
+>   +    1.76%  [k] invalid_folio_referenced_vma
+>   +    1.72%  [k] srso_alias_safe_ret
+>   +    1.37%  [k] shrink_lruvec
+>   +    1.23%  [k] srso_alias_return_thunk
+>   +    1.17%  [k] down_read_trylock
+>   +    0.98%  [k] perf_adjust_freq_unthr_context
+>   +    0.97%  [k] super_cache_count
+>
+> I think this (clearly) shows that the patch works and eliminates kswapd
+> lock contention.
+>
+> --Jesper
