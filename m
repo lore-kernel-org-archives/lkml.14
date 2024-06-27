@@ -1,140 +1,371 @@
-Received: from unicorn.mansr.com (unicorn.mansr.com [81.2.72.234])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C300C13AA4C;
-	Thu, 27 Jun 2024 11:45:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.2.72.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F98D4500C
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 11:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719488718; cv=none; b=LWlMjP5rwOnzEUkAe9qPZefcX0cNR7kfStL93sNMLaF5eup10WDMMvbeJgztRRQdb9PTvZAFYqEDkHCK8Krj/TnwmryHHhpBs9gx6q2Ce0Na0vCk1wL4EC2TCdUGENHMobYjt8TM36jNWcmzDs12edUOh6zHmZG9KaOv8moOiTU=
+	t=1719488803; cv=none; b=EsyHCQxP+Zzn2f++rAkXMqICf4KLNOB2ig/5mWl6Z4CX9rhQ3qEPhd65n2cOCcJLf2SHtdrVmlpet+2mBPm3RfZFJxwnv+96UpGci9S4yF2Mm6yQ2z/21W88Xo5MwUELO3ZHU2+omnn7KQpYpMakuMWBN/KHOqm6OGp+ZWd0O6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719488718; c=relaxed/simple;
-	bh=evSv+YzWBzT/rL+Ef3bDS+9leq4NZMD9hE/fznsNY7M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=WvlFmcuH7rXMxZUg1fgWOjox0nqSdImpfUyCcFTq+S+b47pRESJxNJP7SrQta1MQe7K6m1ge0avzEEjJGnd/n4U3lIUjx8xHew5I/owMBEyKpyGDWP3pftQsE6EgMSNqqoSuns+6rzPiNEh9bn0RxAFQVIgfSUAIxwRIGSmKBbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mansr.com; spf=pass smtp.mailfrom=mansr.com; arc=none smtp.client-ip=81.2.72.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mansr.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mansr.com
-Received: from raven.mansr.com (raven.mansr.com [IPv6:2001:8b0:ca0d:1::3])
-	by unicorn.mansr.com (Postfix) with ESMTPS id F14E015360;
-	Thu, 27 Jun 2024 12:39:26 +0100 (BST)
-Received: by raven.mansr.com (Postfix, from userid 51770)
-	id DE143210C01; Thu, 27 Jun 2024 12:39:26 +0100 (BST)
-From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To: Frank Oltmanns <frank@oltmanns.dev>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
- <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, Maxime
- Ripard <mripard@kernel.org>, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-kernel@vger.kernel.org, "Robert J. Pafford"
- <pafford.9@buckeyemail.osu.edu>, stable@vger.kernel.org
-Subject: Re: [PATCH] clk: sunxi-ng: common: Don't call hw_to_ccu_common on
- hw without common
-In-Reply-To: <20240623-sunxi-ng_fix_common_probe-v1-1-7c97e32824a1@oltmanns.dev>
-	(Frank Oltmanns's message of "Sun, 23 Jun 2024 10:45:58 +0200")
-References: <20240623-sunxi-ng_fix_common_probe-v1-1-7c97e32824a1@oltmanns.dev>
-Date: Thu, 27 Jun 2024 12:39:26 +0100
-Message-ID: <yw1x4j9e62dt.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/29.3 (gnu/linux)
+	s=arc-20240116; t=1719488803; c=relaxed/simple;
+	bh=SzFrq0TILRDjzQBuO6AJ7xTCKlWy20Ur3k+v2OyMFhY=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O7ReCTWzkLAPGAYgDSzNc+ucOYLSWDfCp++hM8+fh3Q1QnOK+a6djdFrQFpKA/2vIpsZZKre24jScOe3oIS6Oy8X6hhe34l+5OhZflZ5F6nD45CxNwBTyyOw+y9wqE6LxQQNds7M7Woxhc0bUbNkwpjJuo0UydAvujQxcrNXEJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=nfhQuxTC; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="nfhQuxTC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1719488799; x=1751024799;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=SzFrq0TILRDjzQBuO6AJ7xTCKlWy20Ur3k+v2OyMFhY=;
+  b=nfhQuxTCBlh20eXluX9zx/EobYnmVBnFwqSR3jkT4HBDc3/TWOsLviL3
+   WvmMXhBuEYJp0HYQf37+gq5UrSEBC8g7At0nCQR9Bcf9ViZjEV8VUPItp
+   N07R/o104WrP93SIWp+qQn3zK9LWMCQyz5G0uBS3WR88psHsr9qSBWrz+
+   5sCgLhN9roer4SIg3jJNr8iKB4PmgM1a6fWGa7reXrgjG0wUjlbDqoPbK
+   Roo2s9XzM49kM1daZIlsBxRyt+v4jy8j3Hxdx9+FV7XOUGhzQvwnLRInb
+   ncyofjkEthZ6rXkmHBheS1x1qx+tLUMdoCRU1TZVyxhDEvdwT5s+h50R6
+   Q==;
+X-CSE-ConnectionGUID: 7WmYFEtPTdmoTmTpDnD+YQ==
+X-CSE-MsgGUID: 64FhoZUlSbe1YgKQdzsXqQ==
+X-IronPort-AV: E=Sophos;i="6.09,270,1716274800"; 
+   d="asc'?scan'208";a="259450703"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 27 Jun 2024 04:46:37 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 27 Jun 2024 04:46:02 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Thu, 27 Jun 2024 04:45:58 -0700
+Date: Thu, 27 Jun 2024 12:45:42 +0100
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Jesse Taube <jesse@rivosinc.com>
+CC: <linux-riscv@lists.infradead.org>, Ard Biesheuvel <ardb@kernel.org>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, Alexandre Ghiti
+	<alexghiti@rivosinc.com>, Masahiro Yamada <masahiroy@kernel.org>, Wende Tan
+	<twd2.me@gmail.com>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Sami
+ Tolvanen <samitolvanen@google.com>, Andrew Morton
+	<akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, Chen Jiahao
+	<chenjiahao16@huawei.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>, "Vishal
+ Moola (Oracle)" <vishal.moola@gmail.com>, <linux-kernel@vger.kernel.org>,
+	<llvm@lists.linux.dev>
+Subject: Re: [PATCH v2 3/3] RISC-V: Use Zkr to seed KASLR base address
+Message-ID: <20240627-proven-irritably-33594282739f@wendy>
+References: <20240626171652.366415-1-jesse@rivosinc.com>
+ <20240626171652.366415-3-jesse@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="qEqL5X6qBo6BAuYb"
+Content-Disposition: inline
+In-Reply-To: <20240626171652.366415-3-jesse@rivosinc.com>
+
+--qEqL5X6qBo6BAuYb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Frank Oltmanns <frank@oltmanns.dev> writes:
+Hey Jesse,
 
-> In order to set the rate range of a hw sunxi_ccu_probe calls
-> hw_to_ccu_common() assuming all entries in desc->ccu_clks are contained
-> in a ccu_common struct. This assumption is incorrect and, in
-> consequence, causes invalid pointer de-references.
->
-> Remove the faulty call. Instead, add one more loop that iterates over
-> the ccu_clks and sets the rate range, if required.
->
-> Fixes: b914ec33b391 ("clk: sunxi-ng: common: Support minimum and maximum =
-rate")
-> Reported-by: Robert J. Pafford <pafford.9@buckeyemail.osu.edu>
-> Closes: https://lore.kernel.org/lkml/DM6PR01MB58047C810DDD5D0AE397CADFF7C=
-22@DM6PR01MB5804.prod.exchangelabs.com/
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Frank Oltmanns <frank@oltmanns.dev>
+On Wed, Jun 26, 2024 at 01:16:52PM -0400, Jesse Taube wrote:
+> Parse the device tree for Zkr in isa string.
+> If Zkr is present, use it to seed the kernel base address.
+>=20
+> Signed-off-by: Jesse Taube <jesse@rivosinc.com>
 > ---
-> Robert, could you please test if this fixes the issue you reported.
->
-> I'm CC'ing M=E5ns here, because he observed some strange behavior [1] with
-> the original patch. Is it possible for you to look into if this patch
-> fixes your issue without the need for the following (seemingly
-> unrelated) patches:
->       cedb7dd193f6 "drm/sun4i: hdmi: Convert encoder to atomic"
->       9ca6bc246035 "drm/sun4i: hdmi: Move mode_set into enable"
+>  arch/riscv/kernel/pi/Makefile           |  2 +-
+>  arch/riscv/kernel/pi/archrandom_early.c | 30 ++++++++
+>  arch/riscv/kernel/pi/fdt_early.c        | 94 +++++++++++++++++++++++++
+>  arch/riscv/kernel/pi/pi.h               |  3 +
+>  arch/riscv/mm/init.c                    |  5 +-
+>  5 files changed, 132 insertions(+), 2 deletions(-)
+>  create mode 100644 arch/riscv/kernel/pi/archrandom_early.c
+>=20
+> diff --git a/arch/riscv/kernel/pi/Makefile b/arch/riscv/kernel/pi/Makefile
+> index 1ef7584be0c3..dba902f2a538 100644
+> --- a/arch/riscv/kernel/pi/Makefile
+> +++ b/arch/riscv/kernel/pi/Makefile
+> @@ -33,5 +33,5 @@ $(obj)/string.o: $(srctree)/lib/string.c FORCE
+>  $(obj)/ctype.o: $(srctree)/lib/ctype.c FORCE
+>  	$(call if_changed_rule,cc_o_c)
+> =20
+> -obj-y		:=3D cmdline_early.pi.o fdt_early.pi.o string.pi.o ctype.pi.o lib=
+-fdt.pi.o lib-fdt_ro.pi.o
+> +obj-y		:=3D cmdline_early.pi.o fdt_early.pi.o string.pi.o ctype.pi.o lib=
+-fdt.pi.o lib-fdt_ro.pi.o archrandom_early.pi.o
+>  extra-y		:=3D $(patsubst %.pi.o,%.o,$(obj-y))
+> diff --git a/arch/riscv/kernel/pi/archrandom_early.c b/arch/riscv/kernel/=
+pi/archrandom_early.c
+> new file mode 100644
+> index 000000000000..c6261165e8a6
+> --- /dev/null
+> +++ b/arch/riscv/kernel/pi/archrandom_early.c
+> @@ -0,0 +1,30 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +
+> +#include <asm/csr.h>
+> +#include <linux/processor.h>
+> +
+> +#include "pi.h"
+> +
+> +/*
+> + * To avoid rewriting code include asm/archrandom.h and create macros
+> + * for the functions that won't be included.
+> + */
+> +#undef riscv_has_extension_unlikely
+> +#define riscv_has_extension_likely(...) false
+> +#undef pr_err_once
+> +#define pr_err_once(...)
+> +
+> +#include <asm/archrandom.h>
+> +
+> +u64 get_kaslr_seed_zkr(const uintptr_t dtb_pa)
+> +{
+> +	unsigned long seed =3D 0;
+> +
+> +	if (!early_isa_str((const void *)dtb_pa, "zkr"))
+> +		return 0;
+> +
+> +	if (!csr_seed_long(&seed))
+> +		return 0;
+> +
+> +	return seed;
+> +}
+> diff --git a/arch/riscv/kernel/pi/fdt_early.c b/arch/riscv/kernel/pi/fdt_=
+early.c
+> index 40ee299702bf..ba76197b44d1 100644
+> --- a/arch/riscv/kernel/pi/fdt_early.c
+> +++ b/arch/riscv/kernel/pi/fdt_early.c
+> @@ -23,3 +23,97 @@ u64 get_kaslr_seed(uintptr_t dtb_pa)
+>  	*prop =3D 0;
+>  	return ret;
+>  }
+> +
+> +/* Based off of fdt_stringlist_contains */
+> +static int isa_string_contains(const char *strlist, int listlen, const c=
+har *str)
 
-This does indeed fix it.  6.9 is still broken, though, but that's
-probably for other reasons.
+The variable names here are needlessly confusing IMO. The function also
+returns a bool, not an int.
 
-> Thanks,
->   Frank
->
-> [1]: https://lore.kernel.org/lkml/yw1xo78z8ez0.fsf@mansr.com/
-> ---
->  drivers/clk/sunxi-ng/ccu_common.c | 18 ++++++++++++------
->  1 file changed, 12 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/clk/sunxi-ng/ccu_common.c b/drivers/clk/sunxi-ng/ccu=
-_common.c
-> index ac0091b4ce24..be375ce0149c 100644
-> --- a/drivers/clk/sunxi-ng/ccu_common.c
-> +++ b/drivers/clk/sunxi-ng/ccu_common.c
-> @@ -132,7 +132,6 @@ static int sunxi_ccu_probe(struct sunxi_ccu *ccu, str=
-uct device *dev,
->
->  	for (i =3D 0; i < desc->hw_clks->num ; i++) {
->  		struct clk_hw *hw =3D desc->hw_clks->hws[i];
-> -		struct ccu_common *common =3D hw_to_ccu_common(hw);
->  		const char *name;
->
->  		if (!hw)
-> @@ -147,14 +146,21 @@ static int sunxi_ccu_probe(struct sunxi_ccu *ccu, s=
-truct device *dev,
->  			pr_err("Couldn't register clock %d - %s\n", i, name);
->  			goto err_clk_unreg;
->  		}
+> +{
+> +	int len =3D strlen(str);
+> +	const char *p;
+> +
+> +	while (listlen >=3D len) {
+> +		if (strncasecmp(str, strlist, len) =3D=3D 0)
+> +			return 1;
+
+How does this handle searching a devicetree containing "rv64ima_zksed_zkr"
+for the extension zks? Hint: https://godbolt.org/z/YfhTqe54e
+I think this works for fdt_stringlist_contains() because it also
+compares the null chars - which you're not doing so I think this also
+brakes for something like riscv,isa-extensions =3D "rv64ima\0zksed\0zkr"
+while searching for zks.
+
+> +		p =3D memchr(strlist, '_', listlen);
+
+Or how does this handle searching "rv64imafdczkr" for zkr? It's gonna
+run right off the end of the string without finding anything, right?
+
+Handling "riscv,isa" is not trivial, but at least the search for extension
+approach here skips dealing with some of what has to be done in the "real"
+parser with the version numbers...
+
+Maybe we just say screw "riscv,isa", as it's deprecated anyway, and only
+add this new feature for "riscv,isa-extensions" which is far simpler to
+parse and can be done using off-the-shelf fdt functions?
+
+If not, then I think we should use fdt_stringlist_contains verbatim for
+"riscv,isa-extensions" and introduce a custom function for "riscv,isa"
+only.
+
+> +		if (!p)
+> +			p =3D memchr(strlist, '\0', listlen);
+> +		if (!p)
+> +			return 0; /* malformed strlist.. */
+> +		listlen -=3D (p - strlist) + 1;
+> +		strlist =3D p + 1;
 > +	}
 > +
-> +	for (i =3D 0; i < desc->num_ccu_clks; i++) {
-> +		struct ccu_common *cclk =3D desc->ccu_clks[i];
+> +	return 0;
+> +}
 > +
-> +		if (!cclk)
-> +			continue;
->
-> -		if (common->max_rate)
-> -			clk_hw_set_rate_range(hw, common->min_rate,
-> -					      common->max_rate);
-> +		if (cclk->max_rate)
-> +			clk_hw_set_rate_range(&cclk->hw, cclk->min_rate,
-> +					      cclk->max_rate);
->  		else
-> -			WARN(common->min_rate,
-> +			WARN(cclk->min_rate,
->  			     "No max_rate, ignoring min_rate of clock %d - %s\n",
-> -			     i, name);
-> +			     i, clk_hw_get_name(&cclk->hw));
->  	}
->
->  	ret =3D of_clk_add_hw_provider(node, of_clk_hw_onecell_get,
->
-> ---
-> base-commit: 2607133196c35f31892ee199ce7ffa717bea4ad1
-> change-id: 20240622-sunxi-ng_fix_common_probe-5677c3e487fc
->
-> Best regards,
-> --=20
->
-> Frank Oltmanns <frank@oltmanns.dev>
->
+> +/* Based off of fdt_nodename_eq_ */
 
---=20
-M=E5ns Rullg=E5rd
+Why can't we just use fdt_nodename_eq?
+
+> +static int fdt_node_name_eq(const void *fdt, int offset,
+> +			    const char *s)
+> +{
+> +	int olen;
+> +	int len =3D strlen(s);
+> +	const char *p =3D fdt_get_name(fdt, offset, &olen);
+> +
+> +	if (!p || olen < len)
+> +		/* short match */
+> +		return 0;
+> +
+> +	if (memcmp(p, s, len) !=3D 0)
+> +		return 0;
+> +
+> +	if (p[len] =3D=3D '\0')
+> +		return 1;
+> +	else if (!memchr(s, '@', len) && (p[len] =3D=3D '@'))
+> +		return 1;
+> +	else
+> +		return 0;
+> +}
+> +
+> +/*
+> + * Returns true if the extension is in the isa string
+> + * Returns false if the extension is not found
+> + */
+> +static bool get_ext_named(const void *fdt, int node, const char *name)
+
+Could you rename this function please? Having something named "get" that
+returns a bool, and not an "ext_named" is odd - and it'd be self
+explanatory in that case. Maybe it can just be moved into the sole caller
+and isn't needed?
+
+> +{
+> +	const void *prop;
+> +	int len;
+> +
+> +	prop =3D fdt_getprop(fdt, node, "riscv,isa-base", &len);
+> +	if (prop && isa_string_contains(prop, len, name))
+> +		return true;
+
+This shouldn't be here, there'll not be an extension in this property.
+
+> +	prop =3D fdt_getprop(fdt, node, "riscv,isa-extensions", &len);
+> +	if (prop && isa_string_contains(prop, len, name))
+> +		return true;
+> +
+> +	prop =3D fdt_getprop(fdt, node, "riscv,isa", &len);
+> +	if (prop && isa_string_contains(prop, len, name))
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+> +/*
+> + * Returns true if the extension is in the isa string on all cpus
+
+Shouldn't we only be checking CPUs that are not disabled or reserved,
+rather than all CPUs? To use Zkr for KASLR this is kinda irrelevant
+since really we only care about whether or not the boot CPU has Zkr,
+but in general we only want to consider CPUs that we can actually use.
+For example, if you did this for FPU support with mpfs.dtsi, you'd get
+told that the F/D extensions were not present cos hart 0 doesn't have
+them, even though it's disabled and will not be used by Linux.
+
+> + * Returns false if the extension is not found
+> + */
+> +bool early_isa_str(const void *fdt, const char *ext_name)
+
+Could you try to match the naming of the stuff used outside of pi?
+Maybe early_isa_ext_available()?
+
+Thanks for the update,
+Conor.
+
+> +{
+> +	int node, parent;
+> +	bool ret =3D false;
+> +
+> +	parent =3D fdt_path_offset(fdt, "/cpus");
+> +	if (parent < 0)
+> +		return false;
+> +
+> +	fdt_for_each_subnode(node, fdt, parent) {
+> +		if (!fdt_node_name_eq(fdt, node, "cpu"))
+> +			continue;
+> +
+> +		if (!get_ext_named(fdt, node, ext_name))
+> +			return false;
+> +
+> +		ret =3D true;
+> +	}
+> +
+> +	return ret;
+> +}
+> diff --git a/arch/riscv/kernel/pi/pi.h b/arch/riscv/kernel/pi/pi.h
+> index 65da99466baf..26e7e5f84a30 100644
+> --- a/arch/riscv/kernel/pi/pi.h
+> +++ b/arch/riscv/kernel/pi/pi.h
+> @@ -4,6 +4,8 @@
+> =20
+>  #include <linux/types.h>
+> =20
+> +bool early_isa_str(const void *fdt, const char *ext_name);
+> +
+>  /*
+>   * The folowing functions are exported (but prefixed) declare them here =
+so
+>   * that LLVM does not complain it lacks the 'static' keyword (which, if
+> @@ -11,6 +13,7 @@
+>   */
+> =20
+>  u64 get_kaslr_seed(uintptr_t dtb_pa);
+> +u64 get_kaslr_seed_zkr(const uintptr_t dtb_pa);
+>  bool set_nokaslr_from_cmdline(uintptr_t dtb_pa);
+>  u64 set_satp_mode_from_cmdline(uintptr_t dtb_pa);
+> =20
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index 9940171c79f0..bfb068dc4a64 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -1025,6 +1025,7 @@ static void __init pt_ops_set_late(void)
+>  #ifdef CONFIG_RANDOMIZE_BASE
+>  extern bool __init __pi_set_nokaslr_from_cmdline(uintptr_t dtb_pa);
+>  extern u64 __init __pi_get_kaslr_seed(uintptr_t dtb_pa);
+> +extern u64 __init __pi_get_kaslr_seed_zkr(const uintptr_t dtb_pa);
+> =20
+>  static int __init print_nokaslr(char *p)
+>  {
+> @@ -1045,10 +1046,12 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+> =20
+>  #ifdef CONFIG_RANDOMIZE_BASE
+>  	if (!__pi_set_nokaslr_from_cmdline(dtb_pa)) {
+> -		u64 kaslr_seed =3D __pi_get_kaslr_seed(dtb_pa);
+> +		u64 kaslr_seed =3D __pi_get_kaslr_seed_zkr(dtb_pa);
+>  		u32 kernel_size =3D (uintptr_t)(&_end) - (uintptr_t)(&_start);
+>  		u32 nr_pos;
+> =20
+> +		if (kaslr_seed =3D=3D 0)
+> +			kaslr_seed =3D __pi_get_kaslr_seed(dtb_pa);
+>  		/*
+>  		 * Compute the number of positions available: we are limited
+>  		 * by the early page table that only has one PUD and we must
+> --=20
+> 2.45.2
+>=20
+
+--qEqL5X6qBo6BAuYb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZn1Q5gAKCRB4tDGHoIJi
+0iBVAP0TyL9i1EkBYAZn7jPR7ReYfKTLUdUezvtjJ2hrWWLyNgD8D4R2MvTObyUL
+wirRhv4Tb2aN8Ty7B3OXIijP09EVRAo=
+=oHGR
+-----END PGP SIGNATURE-----
+
+--qEqL5X6qBo6BAuYb--
