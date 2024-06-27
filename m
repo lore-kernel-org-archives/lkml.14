@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B1A7D3E3;
-	Thu, 27 Jun 2024 09:54:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6DD13CA97;
+	Thu, 27 Jun 2024 09:54:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719482064; cv=none; b=t+fyJJHi3j/9IXLeG6ezyNoyWENt69DupE5nqmw8dPMNnK17QAKuKY9kn4OJNz/nAMRL0jnt4H1OmwaYSClmuV5vsnE17a+/Iv/TgcVv8l7qBV0RuGI3tUI+uwPz1s/5LrlyhoMz5ZOCZp1pm6tUuc7/Ya0F11YSwLGowlwJmJg=
+	t=1719482070; cv=none; b=PMStxKOrU5thDQymLZ1EZgSGC5mpeDO8hccOoW1DUetryqBWtz3B/hXMvSCqQJ5O5QO+5ojusTVN5/uRDYCtABz8sPyyjpWiX+YphIu/+ubpkZMNuC9iZpT1Pc/QhSkM0b8LRQ37mlMJ7JH9D2QF36PDrSMoLvOliJQrJOZHvCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719482064; c=relaxed/simple;
-	bh=xjtzYnqKG36+sIlL6ZglMNN0MTUtrgNF5PIFt7d6ks0=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FH+/GdZ6y9to4kE81ovR0MbE5Ql71GHbMuO85gfW+W2mMyO4dg5W7i8jbpDd/VH7vHO5nK0f0KOzuRL5jNE7GOLCI0vlRD6fNUxq4yelXa9beUDegpS1uphpgBjpsyKiw6vJFpS1w8jJLl9iG3wHQKf7UcJrgqY2z9ebHH6PvZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RNJt4Uny; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719482070; c=relaxed/simple;
+	bh=3g3g49tmB4NbXUpNJs7RZb6rQARY30a+Oo/Fn4kSrGc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=PRWQ++RkGNJI3ihTPrcW6oygn0tHMVm2WbvT5ITPjLnNXGXyn5ycci/MeZPQfUJP2QSoo1tkHxKg8CykqTkT+uNe1hjCNWI5p6bSJvkAVPIIAZRFgk+0MdUv9Ytq0mdZLoma6Yz9Gy5H58r7G7GvEnl0PpiFNNLCnFcBvYTXnbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tos99T6z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RNJt4Uny"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8256C2BBFC;
-	Thu, 27 Jun 2024 09:54:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tos99T6z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4E8DC4AF07;
+	Thu, 27 Jun 2024 09:54:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719482064;
-	bh=xjtzYnqKG36+sIlL6ZglMNN0MTUtrgNF5PIFt7d6ks0=;
-	h=From:Subject:Date:To:Cc:From;
-	b=RNJt4UnyIzGtbLspfcLWqceihZvervEv67qhw/r7/wYT/whRp77Jhtj34JCgc1P0L
-	 YtN1l/vKgOhRrMhaNXP98RBs9hM1cIayfga1jAC1XsjQCGRFBlZzgGIpGmnsOOI696
-	 5j2I78FYkZUisQ0qsXN50md5oGu0ckprTxhT9NrGHF4tPsT6unX2zgqGvitYHpt55u
-	 wATXgoe1SXVI7XOSuhOHzf9jVYxtR8HPutjcJ67QBHUxkN6E2+TqSJZXa2R0KrXM8B
-	 N9acy10LWAT+qYkCfXpWpkjEl6AV8gbgc36RCisdPJKyixh/iTrzqacXbqr8eDlPgd
-	 oXBHuZscEx/Aw==
+	s=k20201202; t=1719482069;
+	bh=3g3g49tmB4NbXUpNJs7RZb6rQARY30a+Oo/Fn4kSrGc=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=Tos99T6zcmIjcNYTiUk17gB/ocW6Fduk01Snk/AxIpReOuAjM1/7Qi94Tz05E9IYT
+	 j9eHbQVr1Frg7cPLELrg7wHFfHoYanNq7w7yr4XuYO7GuOxPB/+xvd8FWzTd8Md5fx
+	 QXMoveY7m2KOYC+oWAeDaADjSe+Ou7AM1vaJtUzhehlrBf1KFz4kCLMgghD94bhw4I
+	 QutSwLtTf3jzTdw9o0oW+dQq3zj+ENJDRwFs29Jj+SlLUM3gfkXIdsgbLch/8WSiba
+	 vsIoIMaei/avAjYZg9audoJcPIiSw7AyI1IiuQE56XBf08d9bR0aiHLnknsCiaRhE4
+	 pIb3s+sSMRqTw==
 From: Benjamin Tissoires <bentiss@kernel.org>
-Subject: [PATCH 0/6] HID: bpf: import some more fixes from udev-hid-bpf
-Date: Thu, 27 Jun 2024 11:54:16 +0200
-Message-Id: <20240627-import-bpf-v1-0-0dbcda4a5b1f@kernel.org>
+Date: Thu, 27 Jun 2024 11:54:19 +0200
+Subject: [PATCH 3/6] HID: bpf: move the BIT() macro to hid_bpf_helpers.h
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,64 +36,59 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAMk2fWYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDMyNz3czcgvyiEt2kgjTdNGPTtMRES9Mkc8MUJaCGgqLUtMwKsGHRsbW
- 1ALYa28pcAAAA
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240627-import-bpf-v1-3-0dbcda4a5b1f@kernel.org>
+References: <20240627-import-bpf-v1-0-0dbcda4a5b1f@kernel.org>
+In-Reply-To: <20240627-import-bpf-v1-0-0dbcda4a5b1f@kernel.org>
 To: Jiri Kosina <jikos@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, 
  bpf@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>, 
- Peter Hutterer <peter.hutterer@who-t.net>, 
- =?utf-8?q?Jos=C3=A9_Exp=C3=B3sito?= <jose.exposito89@gmail.com>, 
- K S Iyer <kumar.s.iyer65@gmail.com>
+ =?utf-8?q?Jos=C3=A9_Exp=C3=B3sito?= <jose.exposito89@gmail.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1719482062; l=1778;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1719482062; l=1509;
  i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
- bh=xjtzYnqKG36+sIlL6ZglMNN0MTUtrgNF5PIFt7d6ks0=;
- b=847TuePgVrbLAJhH6/xFhKEe+7jc1GuFCTM8wxb9tL20x+GgdmUH3fpGWUE7K4dBKE5I+3F1w
- bsws6APG3x2DeUPnqcpl0rpujEktjuRLV8uZ22MbHSRElnFOqkFjJME
+ bh=3g3g49tmB4NbXUpNJs7RZb6rQARY30a+Oo/Fn4kSrGc=;
+ b=nDRCBTHZBJGTzHbKaAYeZQ20Q8klVXlctBTyMWIYVOJbv1g1yQSQkKJabkjFljQX2Mpo58R2w
+ 8EKg+JwDexiCNg47xGvjyUDR8Vql9F0vP2n0X+7TLahtGOXQxj8aBDv
 X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
  pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
 
-This is a batch update to sync up the testing directory of udev-hid-bpf
-and the kernel. The development happens there, and once we are happy,
-we merge the bpf there, and then sync up with the kernel.
+This macro can be useful in mopre than one place
 
-I've added all of the signed-off by from the various authors, as we
-require them there as well.
-
-Currently I don't have full testing for those new bpfs, but the current
-test_tablets.py that I'm using for the 2 Artist 16 and 24 are not really
-testing the correct bits, as we are more fixing buttons and plain stylus
-reports than interactions between stylus and buttons.
-
-Cheers,
-Benjamin
-
+Link: https://gitlab.freedesktop.org/libevdev/udev-hid-bpf/-/commit/7970a9c17aa0756bad63e89fccb6ee4f2ec83ccc
+Signed-off-by: José Expósito <jose.exposito89@gmail.com>
 Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
 ---
-Benjamin Tissoires (6):
-      HID: bpf: Add a HID report composition helper macros
-      HID: bpf: add a driver for the Huion Inspiroy 2S (H641P)
-      HID: bpf: move the BIT() macro to hid_bpf_helpers.h
-      HID: bpf: Add support for the XP-PEN Deco Mini 4
-      HID: bpf: Add Huion Dial 2 bpf fixup
-      HID: bpf: Thrustmaster TCA Yoke Boeing joystick fix
+ drivers/hid/bpf/progs/XPPen__Artist24.bpf.c | 2 --
+ drivers/hid/bpf/progs/hid_bpf_helpers.h     | 1 +
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
- drivers/hid/bpf/progs/Huion__Dial-2.bpf.c          |  614 ++++
- drivers/hid/bpf/progs/Huion__Inspiroy-2-S.bpf.c    |  534 ++++
- .../bpf/progs/Thrustmaster__TCA-Yoke-Boeing.bpf.c  |  144 +
- drivers/hid/bpf/progs/XPPen__Artist24.bpf.c        |    2 -
- drivers/hid/bpf/progs/XPPen__DecoMini4.bpf.c       |  231 ++
- drivers/hid/bpf/progs/hid_bpf.h                    |    1 +
- drivers/hid/bpf/progs/hid_bpf_helpers.h            |    1 +
- drivers/hid/bpf/progs/hid_report_helpers.h         | 2960 ++++++++++++++++++++
- 8 files changed, 4485 insertions(+), 2 deletions(-)
----
-base-commit: d3e15189bfd4d0a9d3a7ad8bd0e6ebb1c0419f93
-change-id: 20240627-import-bpf-f35faa95b71d
+diff --git a/drivers/hid/bpf/progs/XPPen__Artist24.bpf.c b/drivers/hid/bpf/progs/XPPen__Artist24.bpf.c
+index d4d062c3a653..c24fe905c50d 100644
+--- a/drivers/hid/bpf/progs/XPPen__Artist24.bpf.c
++++ b/drivers/hid/bpf/progs/XPPen__Artist24.bpf.c
+@@ -78,8 +78,6 @@ static const __u8 fixed_rdesc[] = {
+ 	0xc0,                          // End Collection                      106
+ };
+ 
+-#define BIT(n) (1UL << n)
+-
+ #define TIP_SWITCH		BIT(0)
+ #define BARREL_SWITCH		BIT(1)
+ #define ERASER			BIT(2)
+diff --git a/drivers/hid/bpf/progs/hid_bpf_helpers.h b/drivers/hid/bpf/progs/hid_bpf_helpers.h
+index 8f226f6e886b..3ba24d125a08 100644
+--- a/drivers/hid/bpf/progs/hid_bpf_helpers.h
++++ b/drivers/hid/bpf/progs/hid_bpf_helpers.h
+@@ -66,6 +66,7 @@ extern int hid_bpf_hw_request(struct hid_bpf_ctx *ctx,
+ #define HID_VID_ANY				0x0000
+ #define HID_PID_ANY				0x0000
+ 
++#define BIT(n) (1UL << (n))
+ #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
+ 
+ /* Helper macro to convert (foo, __LINE__)  into foo134 so we can use __LINE__ for
 
-Best regards,
 -- 
-Benjamin Tissoires <bentiss@kernel.org>
+2.44.0
 
