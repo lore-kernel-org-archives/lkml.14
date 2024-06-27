@@ -1,167 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB196132494;
-	Thu, 27 Jun 2024 09:00:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392D44D8B1;
+	Thu, 27 Jun 2024 09:01:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719478810; cv=none; b=JfQC1Sc2y8/Dt1BoNvkOps5P5l3F0qIVb0vylu2IshE3+0nEv40hwIG2TR0DmJH5m4YCnEZNpTsU1RkDgQuLNYM08rHD/Ikx1LywfMwBz6yEfEF7TbJetalNXqH1sKRtoR4KwKALrL9L/wNfNtHpHCAeTCo6Zh4Zs2cCuetlbx8=
+	t=1719478881; cv=none; b=nUldaBQxXMEwPagkvWRaCCvUIJZZ5bIncVPq7sHnbvGroT0jtRExQkMhNfXsZM2w7GI3KiSa803L058wzuo8vVIn/nU2oK2EEQSKDr0Ji+Y/lfOj6fFx8DiZwgMcFKYYCbgOvwOmMSYecsRApHM/WueQ5EpCd4tmk08sy7d58YA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719478810; c=relaxed/simple;
-	bh=LWz6ANUGwLRh/EaS8dYvHM6h2pGxRMZZnYwPlF/QOeQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RfURlqE6XSQd2iaVWgnvOhlo9Epp5vvrxrUXBQ4yVBum6voylWPrEcQjtGUrV4aBmqZQTy+VdAjKptpcIZQg0J4S0XBqg/H55JpN/J0K+Of5RcglFRqvzLj9bck1YYLVlTVKw6ERieaz5TUJwCicwWWlFbsls93J+lolmfBLrF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dqwNbv0f; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719478881; c=relaxed/simple;
+	bh=jo5kbagPfG5zRbGwbJWMSySw76EqebcWrQo4sAkttvQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BucY17hbgUJqovt2t7USHm3j38DMsO5r2t8/mkRRNbTbaxOSJYAEwIxrr/CdnmhpiWUT8qhahrCCoT1zgJZ5jJKaR3n6P6e3DoGbp7EkZj2GbYrIqwtnwW8K4Svd9DMwJ9m9EOf/jX9ITRTyGDxXu7lhWsFKeO1Bo04U2hDLcKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H/FYRl4T; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dqwNbv0f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719478809; x=1751014809;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LWz6ANUGwLRh/EaS8dYvHM6h2pGxRMZZnYwPlF/QOeQ=;
-  b=dqwNbv0f7hIreYD25qrWQp9vxdpzn0E+j2kwaYRMjoG0up9oW5yE/0VS
-   BkXP2HotXnjruPhdfrCtrFd4HBFdWen8iMvtv4Y1VRwE9JVWp38GBPGkj
-   zr0MlIn2TGU20vS8K8oPn2DDq21obL3BqsNeLYU1GC5KdSBSplhTryQ/H
-   FE564b4E0W6jEWrJpxnFCuE5SWb/qmENRdRsOoj7CPgna6+E+q36JFeUQ
-   0HBvN4kdLD4TmUlfnDUGA6HWxX7j6hu5Vx6DdFBnNixnI5FJvZHGiVBLT
-   qOosQZXn1P22+emu/3CzlNSlR1fnkPv5do8mT3G40k+d6V4RujZxDFzS0
-   g==;
-X-CSE-ConnectionGUID: 5A6qeiqlSval/rqMAE43fA==
-X-CSE-MsgGUID: UCHojC5iTn+w79CVjZ6PRQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11115"; a="34129096"
-X-IronPort-AV: E=Sophos;i="6.08,269,1712646000"; 
-   d="scan'208";a="34129096"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 02:00:08 -0700
-X-CSE-ConnectionGUID: 7fmw1N6nSpi5WG9inioS4w==
-X-CSE-MsgGUID: FmcNomYYReyCtM7w8VJWcQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,269,1712646000"; 
-   d="scan'208";a="44433321"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 27 Jun 2024 02:00:03 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sMkz2-000G4q-1U;
-	Thu, 27 Jun 2024 09:00:00 +0000
-Date: Thu, 27 Jun 2024 16:59:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-media@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Shiju Jose <shiju.jose@huawei.com>, Tony Luck <tony.luck@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-	Len Brown <lenb@kernel.org>, Shuai Xue <xueshuai@linux.alibaba.com>,
-	linux-acpi@vger.kernel.org, linux-edac@vger.kernel.org,
-	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/4] efi/cper: align ARM CPER type with UEFI 2.9A/2.10
- specs
-Message-ID: <202406271626.72sHSPJJ-lkp@intel.com>
-References: <b9354882f45a0c600e65df4bacee2f1080c4ba89.1719219886.git.mchehab+huawei@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H/FYRl4T"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52caebc6137so7118755e87.0;
+        Thu, 27 Jun 2024 02:01:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719478878; x=1720083678; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dd4PgV9kEHk407J57+4fyGHkc3MrwqgZyw5fYcht/HE=;
+        b=H/FYRl4Tuef6bJma1/Qxd4+GYvnp7AQIQc5t/hSEj3DEtq8Yq6WeuUA5g0hZ95DVkU
+         efibwYBkezLH7JidwduTBPOqO7EGcIAeRKG+iSnCtWYdmAiYDV7exHBdJcRNWmRddl5h
+         MAIhhrKAafInS06xEcnCnWynMMaegrw3HiYIlnwXWtLcpZyDvjojThs84ASPNRr6xbMY
+         5oGxzYbwIrcMnmZEZDT/EoGKwMh896fHOlRPcBh8i17Q+FgqeE8meku0Gb8dIqGl7t39
+         Wonol9XD4LrIuSHcty6M97dGpQH118Godj2HUkEKqUq0g0ARXyeRA80wzSFyNGcxvQQc
+         24KQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719478878; x=1720083678;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dd4PgV9kEHk407J57+4fyGHkc3MrwqgZyw5fYcht/HE=;
+        b=VZ3WdhbUjb+nsTbfUKIjd5ENB4nyJ0cjK0KksAI5wk+FdtF7wl1p1mgY21OeRDTQfo
+         4Eigwq6ZwLK6pH/fF7UqqRz8kFTe3eBV1FFM6FKQFSviYDRmM0hMA2G41Xcdu4EFOT1r
+         QiywF56SrOeLV00U26emUC4Mzz43oTb2C5YudfhDhbcdFA4wh3dv1M3pMcOAbr7WtyKL
+         BwNg+KblmFac1F1hhA+NI5MKkafQ/gs/W0xTkTxDO0FOkcLZwqHDNL6fOJ4PgDyxPWHU
+         1Fhpnsc3mhtjgGU465iBSng8X2QhUgkelKb5GnpmwY4wZ3F9O0zs0mY4Cm4/j0ke85Af
+         QsPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUjnDHLG/3/+4o5R3hJ40+0Jem2eVuvuhO6Nhfa0ZsIoE+MjoZdGaMk62UUcdS2CZGffM5T21Yu7vp2wPZfGBG5HBPKCJn6AJQIJEh95ZgYE18UzqbzGhmgCYLutuQ8aKsEjTlYB2zyfsRckfL9Ed9g9e6FxC0gpl9kLepGIcNZcTuAb+M2nVmdHJIntmncTorSJdY5SKoPU6hf9ia6Ui4=
+X-Gm-Message-State: AOJu0Ywcpi62DFl4U3CuYghW4fg6Iw5WtsiyEAXToAt2buiyEmZCCDAa
+	/n4Kx0ETK7o1qNcwE5X2lzsPEUB2/FBLwSmiNVsMlbFGze/UzkiA
+X-Google-Smtp-Source: AGHT+IEZttafwpgGmpOq3tc3FXPGW6BezfbQ62nm9ZDNg7kVPe1BZ3lV4obZfHal0dE0mQVZSumCwg==
+X-Received: by 2002:ac2:5639:0:b0:52c:deb3:e3cf with SMTP id 2adb3069b0e04-52ce183504bmr7348270e87.24.1719478877944;
+        Thu, 27 Jun 2024 02:01:17 -0700 (PDT)
+Received: from localhost.localdomain ([195.239.203.83])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52e712a75cbsm128557e87.38.2024.06.27.02.01.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jun 2024 02:01:17 -0700 (PDT)
+From: Alex Vdovydchenko <keromvp@gmail.com>
+X-Google-Original-From: Alex Vdovydchenko <xzeol@yahoo.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sean Anderson <sean.anderson@linux.dev>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Jean Delvare <jdelvare@suse.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Delphine CC Chiu <Delphine_CC_Chiu@Wiwynn.com>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	Alex Vdovydchenko <xzeol@yahoo.com>
+Subject: [PATCH v2 0/2] Add MPS MP5920 Host-Swap controller
+Date: Thu, 27 Jun 2024 12:01:06 +0300
+Message-ID: <20240627090113.391730-1-xzeol@yahoo.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b9354882f45a0c600e65df4bacee2f1080c4ba89.1719219886.git.mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Mauro,
+This series of patches adds the MP5920 Host-swap controller, which is used
+as a protection and control IC for devices that are being inserted into a live
+backplane. MP5920 acts as a voltage regulator (MP5911 etc) supervisor. IC
+utilizes pmbus and provides monitoring, statistics and limits to electrical and
+thermal characteristics such as:
+- input and output voltage
+- output current
+- output power
+- IC temperature
 
-kernel test robot noticed the following build errors:
+One must take into account the nonlinear character of readings, so there will be
+a statistical error in the range 5–10 percents, depending on current passing
+through. In order to use the IC, make sure to specify a valid I2C address
+(consult to datasheet and dts-bindings)
+MP5920 datasheet: https://www.monolithicpower.com/en/mp5920.html
 
-[auto build test ERROR on efi/next]
-[also build test ERROR on rafael-pm/linux-next rafael-pm/bleeding-edge linus/master v6.10-rc5 next-20240626]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Changes in v2:
+  -  fixed typos
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mauro-Carvalho-Chehab/efi-cper-Adjust-infopfx-size-to-accept-an-extra-space/20240625-203952
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git next
-patch link:    https://lore.kernel.org/r/b9354882f45a0c600e65df4bacee2f1080c4ba89.1719219886.git.mchehab%2Bhuawei%40kernel.org
-patch subject: [PATCH v5 3/4] efi/cper: align ARM CPER type with UEFI 2.9A/2.10 specs
-config: i386-randconfig-004-20240627 (https://download.01.org/0day-ci/archive/20240627/202406271626.72sHSPJJ-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240627/202406271626.72sHSPJJ-lkp@intel.com/reproduce)
+Alex Vdovydchenko (2):
+  dt-bindings: hwmon: Add MPS mp5920
+  hwmon: add MP5920 driver
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406271626.72sHSPJJ-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/acpi/apei/ghes.c:566:6: error: call to undeclared function 'FIELD_GET'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     566 |                                  FIELD_GET(CPER_ARM_ERR_TYPE_MASK, err_info->type),
-         |                                  ^
-   1 error generated.
-
-
-vim +/FIELD_GET +566 drivers/acpi/apei/ghes.c
-
-   530	
-   531	static bool ghes_handle_arm_hw_error(struct acpi_hest_generic_data *gdata,
-   532					       int sev, bool sync)
-   533	{
-   534		struct cper_sec_proc_arm *err = acpi_hest_get_payload(gdata);
-   535		int flags = sync ? MF_ACTION_REQUIRED : 0;
-   536		char error_type[120];
-   537		bool queued = false;
-   538		int sec_sev, i;
-   539		char *p;
-   540	
-   541		log_arm_hw_error(err);
-   542	
-   543		sec_sev = ghes_severity(gdata->error_severity);
-   544		if (sev != GHES_SEV_RECOVERABLE || sec_sev != GHES_SEV_RECOVERABLE)
-   545			return false;
-   546	
-   547		p = (char *)(err + 1);
-   548		for (i = 0; i < err->err_info_num; i++) {
-   549			struct cper_arm_err_info *err_info = (struct cper_arm_err_info *)p;
-   550			bool is_cache = err_info->type & CPER_ARM_CACHE_ERROR;
-   551			bool has_pa = (err_info->validation_bits & CPER_ARM_INFO_VALID_PHYSICAL_ADDR);
-   552	
-   553			/*
-   554			 * The field (err_info->error_info & BIT(26)) is fixed to set to
-   555			 * 1 in some old firmware of HiSilicon Kunpeng920. We assume that
-   556			 * firmware won't mix corrected errors in an uncorrected section,
-   557			 * and don't filter out 'corrected' error here.
-   558			 */
-   559			if (is_cache && has_pa) {
-   560				queued = ghes_do_memory_failure(err_info->physical_fault_addr, flags);
-   561				p += err_info->length;
-   562				continue;
-   563			}
-   564	
-   565			cper_bits_to_str(error_type, sizeof(error_type),
- > 566					 FIELD_GET(CPER_ARM_ERR_TYPE_MASK, err_info->type),
-   567					 cper_proc_error_type_strs,
-   568					 ARRAY_SIZE(cper_proc_error_type_strs));
-   569	
-   570			pr_warn_ratelimited(FW_WARN GHES_PFX
-   571					    "Unhandled processor error type 0x%02x: %s%s\n",
-   572					    err_info->type, error_type,
-   573					    (err_info->type & ~CPER_ARM_ERR_TYPE_MASK) ? " with reserved bit(s)" : "");
-   574			p += err_info->length;
-   575		}
-   576	
-   577		return queued;
-   578	}
-   579	
+ .../devicetree/bindings/trivial-devices.yaml  |  2 +
+ Documentation/hwmon/index.rst                 |  1 +
+ Documentation/hwmon/mp5920.rst                | 91 ++++++++++++++++++
+ drivers/hwmon/pmbus/Kconfig                   |  9 ++
+ drivers/hwmon/pmbus/Makefile                  |  1 +
+ drivers/hwmon/pmbus/mp5920.c                  | 93 +++++++++++++++++++
+ 6 files changed, 197 insertions(+)
+ create mode 100644 Documentation/hwmon/mp5920.rst
+ create mode 100644 drivers/hwmon/pmbus/mp5920.c
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
