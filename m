@@ -1,218 +1,173 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70ED017BB5;
-	Thu, 27 Jun 2024 16:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB21317BB5
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 16:28:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719505654; cv=none; b=ecy82L1ZLN8eO/o6290OTGGz1Vgjx4co5FAXdeyYR2yrLHC8cU5qFEq/qjmLOKxuwWDTkXBmQMLZIWYZ0Qfpj8bq1zSWHj3Pl2FP9iOqOoftnmxw6Cy3GhJbyovbdesmdtI05Mc6U3AWfMR16eo3Dwm3Oxnn9x+P7+1YQCBle0s=
+	t=1719505730; cv=none; b=nFeXzNUjjHDTRpj4AiPVflbSHnnd61s4GNCX+8wNxpVBsLz8jd0CAe+WeKvWT6ZSvxROx04eZaV7PwGVG+ebqH0A25ScYIw6KxQ7EnpTXFQy9lpmXnIvYxOzgWsz+/w+AkrYrahkH8hhNmdyFxrXhP6ufNaQh0juJJEUaamoAX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719505654; c=relaxed/simple;
-	bh=t/mlo7YOmJpKfpzQN0RD7EEKMLvicfCC0Lm2qcWAkG0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JYbcEjRHncsUeYiT+7ioVVgzG2vWAvI/rVfbyJDYI5itGUaMYcmITwxYisumjue1ZT5x/Ri1rZsvGR8JC4T08Bburv3p14rTTliHQdOiNrgSHd4fNTV5hTYY47NLVTTLgU8nbx9MgcWWlWZFdyY2jaxrFR4+Axo236OR61e+9Ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LFmB+51L; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719505730; c=relaxed/simple;
+	bh=6L0Sq0uGdlO6s0H2kQb8Zs+pOHHRT5L1lBZlRrwLdjw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=i0Wua2KEN6vyDCyAfvGcY8rA55L0+2CyiuG8/nub1bNFifhhVIFaxp9P5FCiqwwH1CCNUcaa5Z14fyobHWJBYXOxEjp7AS8eVqQo2D5cZYkL0mYJOJT5TKXpqOJ4GGTjW1nbTfjl4/9+4PxM28A7Yj/wF9gCr2FviGW0c5C5kJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org; spf=fail smtp.mailfrom=beagleboard.org; dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b=VBNJIO+g; arc=none smtp.client-ip=209.85.166.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=beagleboard.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LFmB+51L"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e02748b2402so8820631276.0;
-        Thu, 27 Jun 2024 09:27:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b="VBNJIO+g"
+Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7f3d2f12d26so6024239f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 09:28:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719505651; x=1720110451; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=920O8PJb054pqxNaJJIQxYWqrCoZjbSlHkszY3iGPvs=;
-        b=LFmB+51LXMqwVAlUe8ynQIceJ9oQDPbqc0+LMI/4bT8k7TIiS92OA8TjbJj0XbHn9s
-         KW7xnbJkce/QKHeTvkQqxifWH3N3RKEqnVKr2vheyKqZWl+VUDyr5WyyVtw1MBN7wYyM
-         lqvJ6Vgh1rol0KMZ1ktrKRa7Zf8LkUHEutx92PIPy0e1kOgJDiPN6pXNfXMOgSLATuVD
-         TE7daAwAcyAbm3dbtwuTPNYmxVKS0PMO+yVawEkdM28EPelvHsi9dwZMokQ2MMXyXYpz
-         yMZrXfuYmtjT5cAHk9nX8WdqGXF3FKT+k+X7thwOjeKjq8F/o8AZ9Q5dPYUd74UEgtw3
-         iqZg==
+        d=beagleboard-org.20230601.gappssmtp.com; s=20230601; t=1719505727; x=1720110527; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WUpdxD/vt8vb3o0iHNh6vpn1Bo9wZjlrsPnUUEvSog8=;
+        b=VBNJIO+g9xc3AMfhuPvyZoMXy50C4c//b4fNAgjVSbyyqjZ9zz/QKALda+K/MT5/tH
+         7fhkNpGeGfK7y1aNTgC9ATDGBuAg+sHiOP55DCZ1E7MTVbdIeVhFzJFB8VHLEZHbCGjx
+         rhHEDu0synqDmXS+WkPJlA47Q1gaSUj3k8X6ZWS2m3L/4tbMvOWhfXGqTJQjl/gHjtTN
+         ZHjigxJ38IV4nZXdeIw+vFCY7Xjl3Vzw4KFuu8l7ksOS1yOk6Wc3q7FXPEt5V2mKsjeS
+         tGuJdAGBdP2D7JeJVvQSLvbr4wiy4RkpiTQg94BpSDBt7abh0kkJUBJXT0dJI1FN+MUG
+         OLWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719505651; x=1720110451;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1719505727; x=1720110527;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=920O8PJb054pqxNaJJIQxYWqrCoZjbSlHkszY3iGPvs=;
-        b=I16WqC/yo2uU44RR1DSHgQB+GdMjWQlvf/fHoYqgfSkQ2rZJzrdLBLeYIYhEwUu440
-         hn2YhBp2HKu7byVORq1uJ+F9Xd1bIVaake6SBk2wW8S4pOab1GaWkOcx/c3Un2taH1fW
-         t46vSgFnb5hZYkeGP7tAJ43oC9C1R7EkuDjuSRmMObdMIXefDXD9e7UTqmdbGA1AioT0
-         mxpanweYem0rNPXWN+DIYmzyh0mGwOmadK77X4pzChQTIh4j2EoB1WO9F3PWFgfpfWj0
-         km0x/w8rQyBn49NCCGIlp345gOMJoGZWRXCX+TjFl3kyQfn2wbS/B7uwtbgooVNzG0Ic
-         rpSw==
-X-Forwarded-Encrypted: i=1; AJvYcCXZUeI+bggjpP/tcZim4ZyV7dP9cLKwmaiJU/zSD/0C3CKCo3yUik6gBwQcAuaFMQdsb3ROc2RHE2ZxXh+VbKXfg5unenx99ye9nTBZEc8EqnNrk+djAf4s+1qZyLrzkO55khx5db6nmg==
-X-Gm-Message-State: AOJu0Yw3diiVbDxfYdxfNszbRGt4Hfu8w/6kaVxGbLb4KM6LixEyAmbY
-	27kl+/3qCnmSmSIWzZqMjdChSTiT+5pf04XQu94hnO0wFb3aHhNT
-X-Google-Smtp-Source: AGHT+IGwxxdsNJaSRrxxnarDfWOg8gwIpRPpDqBy5+0MsnlygCimQkzcmz4X9ntl94Mzzv8FRU5gdQ==
-X-Received: by 2002:a25:c544:0:b0:df7:9773:4571 with SMTP id 3f1490d57ef6-e0303ed4c67mr13804035276.11.1719505651417;
-        Thu, 27 Jun 2024 09:27:31 -0700 (PDT)
-Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-44641fb7d6esm7172251cf.63.2024.06.27.09.27.30
+        bh=WUpdxD/vt8vb3o0iHNh6vpn1Bo9wZjlrsPnUUEvSog8=;
+        b=wVP57xE+aNwobht7k/1ylWB820jwRIVKz7dy6tWpfvL63vwzelVDi2cJYmYQXKhqEb
+         ulXc/Rc7gntFAHPk2dkOpp3ZCTEA5LwBts9DKqnBa6XRi2CfCfq41xyOo8NrdJpAOzYM
+         HQc6kIy5oFmAh5myrqt50BftOWZB43v4KAgK4wiVMKQ9fziPBVqjxkyVzqEp4EQOt7Ey
+         w/nFtTv3q3bZO6Y5eskqyOS3rTyIuFIDvmoa3LX/6nng7e8puipx55DOWruS+yybksih
+         tzBB8zvraW0AQLWhm/zw16Tq63KnJLD53hCy1Y2hfxqPWa9k3znDn8tJ8s7qcsvGaQrX
+         nK4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU3rE7bfYWihR3rOa9q7M55egePExigYeFQt8g5CporcbhOUrcozdKUW/RQntNUouHM+9paZgXrQLB71k3+euHTkBavoIEK5JcJeKOR
+X-Gm-Message-State: AOJu0YwcWvt0IK70JLDKyM1o5+NJUhGEqFqkLpx08zybQ7RVTyFUcVll
+	AOijVsAqMtk/IltFjVv0PDjHmrCY0AOgWV4ILLVHHG6cCq/QsxfK+K6RLzHRIdNT3zjhIs9IrQy
+	NqutQ
+X-Google-Smtp-Source: AGHT+IG/NP7Q9ndMN8U8905daJyfOiw/jL6qOK9LSfylvJLbvyGyykC23VR8Ye7SCw/wI8bu8sqT2w==
+X-Received: by 2002:a05:6e02:b21:b0:378:cf86:357b with SMTP id e9e14a558f8ab-378cf8636b9mr52805245ab.3.1719505726976;
+        Thu, 27 Jun 2024 09:28:46 -0700 (PDT)
+Received: from [127.0.0.1] ([2401:4900:1f3e:18b0:e4e6:ed1:4c03:dcec])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-706b4a58dbdsm1560739b3a.198.2024.06.27.09.28.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 09:27:31 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id E6C3E1200068;
-	Thu, 27 Jun 2024 12:27:29 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Thu, 27 Jun 2024 12:27:29 -0400
-X-ME-Sender: <xms:8ZJ9ZkwJQn3hGVjppSrTV0IZyrxtIWOEEpPcVprEZGpYEKndneZdBA>
-    <xme:8ZJ9ZoRZfmuNC_KNH9Mloe836UALKfMuxCj6toj6ZkgMcIokFm-s7skTzdbFK2hxF
-    a1FfTrhbD-VSodd5A>
-X-ME-Received: <xmr:8ZJ9ZmUNST7F9h19vO8rHuGtFfi1CieIGpKmgCo01SoAAvDNjb7l9XcSn7VDoQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrtdeggddutddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpeeuohhq
-    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
-    grthhtvghrnhepvefghfeuveekudetgfevudeuudejfeeltdfhgfehgeekkeeigfdukefh
-    gfegleefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    epsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedt
-    ieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfh
-    higihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:8ZJ9ZijeIlsxoOLKTT3HOtZOSh6yMswoZGAqWT-utfHKi1PTqMGvfg>
-    <xmx:8ZJ9ZmBLlNoz_h24bDEAp5hVZIrDBw_SkEIY90BRdzCghwCBifhRrA>
-    <xmx:8ZJ9ZjL0QopEp0Spd6lmQAPYta6FnBpwFrCXWW1ieXd4ByBmUrsDPQ>
-    <xmx:8ZJ9ZtB2nPKWDSX_1IdDt2ch85T0JBrm7Lj26_uwmF-czPtXpHktkQ>
-    <xmx:8ZJ9ZmxDzs_ruGAMdNA72uLCPg_m3GLOZAcirp7AKUUUeM4G9aA8ZuMo>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 27 Jun 2024 12:27:29 -0400 (EDT)
-Date: Thu, 27 Jun 2024 09:26:46 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,	Jason Baron <jbaron@akamai.com>,
- Ard Biesheuvel <ardb@kernel.org>,	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradaed.org>,
-	Sean Christopherson <seanjc@google.com>,	Uros Bizjak <ubizjak@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,	Will Deacon <will@kernel.org>,
- Marc Zyngier <maz@kernel.org>,	Oliver Upton <oliver.upton@linux.dev>,
-	Mark Rutland <mark.rutland@arm.com>,	Ryan Roberts <ryan.roberts@arm.com>,
- Fuad Tabba <tabba@google.com>,	linux-arm-kernel@lists.infradead.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,	Albert Ou <aou@eecs.berkeley.edu>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	linux-riscv@lists.infradead.org,	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
-Subject: Re: [PATCH v3 1/2] rust: add static_key_false
-Message-ID: <Zn2SxvgfbWbmVnYY@boqun-archlinux>
-References: <20240621-tracepoint-v3-0-9e44eeea2b85@google.com>
- <20240621-tracepoint-v3-1-9e44eeea2b85@google.com>
- <ZnrtuaUByT70tJY5@boqun-archlinux>
- <CAH5fLgjCAbz39-8EzBxxrWFXFg6VK=ts98BBvpEk8=RZoMuBSA@mail.gmail.com>
+        Thu, 27 Jun 2024 09:28:46 -0700 (PDT)
+From: Ayush Singh <ayush@beagleboard.org>
+Subject: [PATCH v5 0/7] misc: Add mikroBUS driver
+Date: Thu, 27 Jun 2024 21:56:10 +0530
+Message-Id: <20240627-mikrobus-scratch-spi-v5-0-9e6c148bf5f0@beagleboard.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH5fLgjCAbz39-8EzBxxrWFXFg6VK=ts98BBvpEk8=RZoMuBSA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKKSfWYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyTHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDMyNz3dzM7KL8pNJi3eLkosSS5Azd4oJM3cQUi2RLi5TkVCCpBNRaUJS
+ allkBNjY6trYWAHPgoiJmAAAA
+To: Mark Brown <broonie@kernel.org>, 
+ Vaishnav M A <vaishnav@beagleboard.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Derek Kiernan <derek.kiernan@amd.com>, 
+ Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nishanth Menon <nm@ti.com>, 
+ Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>, 
+ Michael Walle <mwalle@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
+ jkridner@beagleboard.org, robertcnelson@beagleboard.org
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ Ayush Singh <ayush@beagleboard.org>, Ayush Singh <ayushdevel1325@gmail.com>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3133; i=ayush@beagleboard.org;
+ h=from:subject:message-id; bh=6L0Sq0uGdlO6s0H2kQb8Zs+pOHHRT5L1lBZlRrwLdjw=;
+ b=owEBbQKS/ZANAwAIAQXO9ceJ5Vp0AcsmYgBmfZMosT+CUWXVSMJGjq9tKbgX5wbQOfkFSHJzJ
+ M6Lpr4lSvKJAjMEAAEIAB0WIQTfzBMe8k8tZW+lBNYFzvXHieVadAUCZn2TKAAKCRAFzvXHieVa
+ dDPSEADOhdIzmUBFnxSIcJR4m04KytgV7RKB4+4aOmzBOCQ7VbkwIT81Iz7boFGgeAa4jyTCiSc
+ BkNR12LanbOTWCLkV1LBNUKuSz6HbOY1oGPFZl4HlM2e7mmUQofdR1/59gdzgUU53CKYzeIF2F8
+ CcmRMxr9L9SxQsw/N8UQqfBdUovt4BqvYzSeV9J3GBgNHe8BIh0Cpi/ZK7ubJ38dy4Wte+W+HbV
+ uthvOaVphSnAB5kPxQ0oeBYzLSt0eHod2xXB/Q7jEg+aTNdqztzUWkx2FK2OMDXSybaUC1evOjb
+ xLaZoEBZJe2wAynuaKCLIR0PfLyJJCZxNbZC+0Oyc8cnD0K+3gJbt0QYS0OFwWCLN6GqicWarxR
+ OdTbbehcht4bkdVdRpOJ5sI+B7ojEj9HWcrKkKyGPaRinXy83u6E5DlzEXooBXI4zwE7/8bn9WL
+ WllGzUnfMWKs2ElMR183ajbsrftcKrRdFPJ/u80J+RhvLscW0FQrwIRycBybfajWIGPzHs6Qs7y
+ ibm3pVSLRjeI4H6xMH1kXScjNPXaBEUTfip3vAnakuPgNnfwWZXswoGMlWNxeWQm6sIKEevE0vJ
+ K7qmP0BOR0U/wcjPq6By7XGtmUXcYosrbrHYx925AwpbbQLhgqxJPRUw8cG2N3qrEtQ8F651cOO
+ IoSKa6byTSTFmnQ==
+X-Developer-Key: i=ayush@beagleboard.org; a=openpgp;
+ fpr=DFCC131EF24F2D656FA504D605CEF5C789E55A74
 
-On Thu, Jun 27, 2024 at 10:34:39AM +0200, Alice Ryhl wrote:
-> On Tue, Jun 25, 2024 at 6:18 PM Boqun Feng <boqun.feng@gmail.com> wrote:
-> >
-> > Hi Alice,
-> >
-> > On Fri, Jun 21, 2024 at 10:35:26AM +0000, Alice Ryhl wrote:
-> > > Add just enough support for static key so that we can use it from
-> > > tracepoints. Tracepoints rely on `static_key_false` even though it is
-> > > deprecated, so we add the same functionality to Rust.
-> > >
-> > > It is not possible to use the existing C implementation of
-> > > arch_static_branch because it passes the argument `key` to inline
-> > > assembly as an 'i' parameter, so any attempt to add a C helper for this
-> > > function will fail to compile because the value of `key` must be known
-> > > at compile-time.
-> > >
-> > > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> >
-> > [Add linux-arch, and related arch maintainers Cced]
-> >
-> > Since inline asms are touched here, please consider copying linux-arch
-> > and arch maintainers next time ;-)
-> 
-> Will do.
-> 
-> > For x86_64 and arm64 bits:
-> >
-> > Acked-by: Boqun Feng <boqun.feng@gmail.com>
-> >
-> > One thing though, we should split the arch-specific impls into different
-> > files, for example: rust/kernel/arch/arm64.rs or rust/arch/arm64.rs.
-> > That'll be easier for arch maintainers to watch the Rust changes related
-> > to a particular architecture.
-> 
-> Is that how you would prefer to name these files? You don't want
-> static_key somewhere in the filename?
-> 
+MikroBUS is an open standard  developed by MikroElektronika for connecting
+add-on boards to microcontrollers or microprocessors. It essentially
+allows you to easily expand the functionality of your main boards using
+these add-on boards.
 
-I could have been more explicit. My preference is (for example ARM64)
+This patchset adds mikroBUS as a Linux bus type and provides a driver to
+parse and register the mikroBUS board using device tree infrastructure.
 
-*	we have a rust/kernel/arch.rs, where we do:
+The patchset is based on work originally done by Vaishnav.
 
-		#[cfg(CONFIG_ARM64)]
-		mod arm64::*;
+Link: https://www.mikroe.com/mikrobus
+Link: https://docs.beagleboard.org/latest/boards/beagleplay/
+Link: https://lore.kernel.org/all/20240317193714.403132-1-ayushdevel1325@gmail.com/ Patch v4
 
-		#[cfg(CONFIG_ARM64)]
-		pub use arm64::*;
+Changes v5
+- Complete rewrite to use device tree instead of mikroBUS manifest.
+- Only support for SPI.
+- Adds `mikrobus,spi` compatible property.
 
-*	we have a rust/kernel/arch/arm64.rs:
+Changes v4:
+- Better commit messages
+- Remove clickID, serdev, pwm, regulator, clocks etc. Just the basic
+  mikroBUS driver.
+- Fix a lot of memory leaks, unused variables, etc.
+- Create accompanying PR in Greybus Spec repository
+- Switch to 80 columns formatting
+- Some other fixes pointed out in v3
 
-		pub(crate) mod jump_label;
+Changes in v3:
+- Use phandle instead of busname for spi
+- Use spi board info for registering new device
+- Convert dt bindings to yaml
+- Add support for clickID
+- Code cleanup and style changes
+- Additions required to spi, serdev, w1 and regulator subsystems
 
-*	we have a rust/kernel/arch/arm64/jump_label.rs, where we put
-	ARM64 arch_static_branch() there. (or static_key.rs and
-	arch_static_key_false()).
+Changes in v2:
+- support for adding mikroBUS ports from DT overlays,
+- remove debug sysFS interface for adding mikrobus ports,
+- consider extended pin usage/deviations from mikrobus standard
+  specifications
+- use greybus CPort protocol enum instead of new protocol enums
+- Fix cases of wrong indentation, ignoring return values, freeing allocated
+  resources in case of errors and other style suggestions in v1 review.
 
-Then linux-arch can watch:
+Signed-off-by: Ayush Singh <ayush@beagleboard.org>
+---
+Ayush Singh (7):
+      dt-bindings: connector: Add mikrobus-connector
+      dt-bindings: mikrobus: Add mikrobus board base
+      dt-bindings: mikrobus: Add mikrobus-spi binding
+      spi: Make of_find_spi_controller_by_node() available
+      spi: Make of_register_spi_device() available
+      mikrobus: Add mikroBUS driver
+      dts: ti: k3-am625-beagleplay: Add mikroBUS
 
-	rust/kernel/arch.rs
-	rust/kernel/arch/
+ .../bindings/connector/mikrobus-connector.yaml     | 107 ++++++
+ .../bindings/mikrobus/mikrobus-board.yaml          |  20 ++
+ .../devicetree/bindings/mikrobus/mikrobus-spi.yaml |  37 +++
+ MAINTAINERS                                        |   9 +
+ arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts     |  94 +++++-
+ drivers/misc/Kconfig                               |  16 +
+ drivers/misc/Makefile                              |   1 +
+ drivers/misc/mikrobus.c                            | 361 +++++++++++++++++++++
+ drivers/spi/spi.c                                  | 209 ++++++------
+ include/linux/spi/spi.h                            |   7 +
+ 10 files changed, 750 insertions(+), 111 deletions(-)
+---
+base-commit: f76698bd9a8ca01d3581236082d786e9a6b72bb7
+change-id: 20240627-mikrobus-scratch-spi-ad8c98dcec98
 
-And ARM64 maintainers can watch:
+Best regards,
+-- 
+Ayush Singh <ayush@beagleboard.org>
 
-	rust/kernel/arch/arm64.rs
-	rust/kernel/arch/arm64
-
-This is similar to how <asm/*.h> are organized today.
-
-Does this make sense?
-
-Regards,
-Boqun
-
-> > Another thought is that, could you implement an arch_static_branch!()
-> > (instead of _static_key_false!()) and use it for static_key_false!()
-> > similar to what we have in C? The benefit is that at least for myself
-> > it'll be easier to compare the implementation between C and Rust.
-> 
-> I can try to include that.
-> 
-> Alice
