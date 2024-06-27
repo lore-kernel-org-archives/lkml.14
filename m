@@ -1,141 +1,94 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bee.tesarici.cz (bee.tesarici.cz [37.205.15.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922441CFB9
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 07:01:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF2C13AA20
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 07:01:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.15.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719471672; cv=none; b=qRpbclyLqE9D1JN18l6IY05ZRoXVQwvFBRdWrHDDSQaB0GQt34aGdvuY+IVZST84cRAEedetVCmzMJ523dnFn+KbTYgh54pJIJJF42v6Sgc9jSibAmvzttSqTYgqpys1rtXa1KYCAumW/SIQ0BCunsh0bn3gcUo5Ty54ImMLMZU=
+	t=1719471677; cv=none; b=XOYFCKoVSgO1b8CoA4AQwFtreYjfowFzKK8CV/QIjKoCahlLSaoVJgDIm6ANg1ajku0LIEgxwkCkhrvWZotQn6e0ypAcCyzzTZo2tymyVEvMQXDqe67dqMx4zlxxT/LxnCPg0pE/q+7KYuNKNzF4bTcaaLBeUTTz+D306gxnHLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719471672; c=relaxed/simple;
-	bh=oDqZyR+8bfJ3aEt0lEDS/JoaZ2NulptY81c2SiHzGrQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=mkhpvrn56oeDjlGsxeYgxwB0XWAx07XhUJngaIZU9Edyijzivh+KHECjEMTuTKc4JsjZGpecA+yi4V0JGGrvG2Q4jUZdTn9L9Ycz1FpBgTTJtpXGOAt2Ewf/kIcqhTVkTcB/iIZoXA3Sy+zTeiYcFVrXzijJxKnwYIPiFrg0ZSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MVS7MnVZ; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719471677; c=relaxed/simple;
+	bh=8LLGg7bU1CgDIqmPDPN6aaQerMtJh7O58mTQUHcyZS0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kAs1ppdDy1ebbqeR1bLUf+P14Bvw52P5QEew6OK1NHVHya7RszSWxUNAlG9yC/qZnQHPT8NBonwjYbTHuVRG+66AOmIDm8CSbtFFGDWz5xe4p4BeSQWro0s1S9wgOGq2daa56XoF2hOG4yYywh57o7xoQKSSU7i8svITKKMIeL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=p9rfRQ8t; arc=none smtp.client-ip=37.205.15.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MVS7MnVZ"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-364c9ec17d1so4686650f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 00:01:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719471669; x=1720076469; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lCgSGAV6EvGTTLCyg0h0NGRt6XTYg1PY0og0tI+4xAY=;
-        b=MVS7MnVZIFqZMBH5z/fEJW3qvNxfGpNLDZFDjntCzTLig3oydd2AIbvtnvV0UUmtlJ
-         HnhtCFoSkIPl9QcHAOE/cmKd7EGPOuWNOnrsHK7HSqwFYuLjskSLzg14H3rVO/PoaSJL
-         J+NFwxaTjptdDhvbp+UQAJUWc4uNFlIjZaD7MH33jucfhq8lfcwDKWIaC+hMK0RlvrxU
-         Dd1yQqZv6oKrL0Gu/+B+TDKgyrfUBI46urSqfOMpY4useo8fgAA8mIkRLj9sxFu1c0zh
-         c6bzgZd3cAB/yfTUeD4pwu+bhhdX3S1tfWTVHdFmaj2058vNHl4+++FTVmK6xkLZmxz4
-         HH4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719471669; x=1720076469;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lCgSGAV6EvGTTLCyg0h0NGRt6XTYg1PY0og0tI+4xAY=;
-        b=to3SUWXX+bYjBnyTkS7G4ZoXbEedo38KhRI6UO5ZGOFvukG3vP8Z1T+0zyuLpIuRUH
-         T781zk1Hzo7xLYeoi5Jvk/Do6AMnofIgePTvCcvzWQo8Dgsq48kR8zKeJkf53FxR+Kwz
-         Z3V61Oig/ukkpk5m5NGvCEuHTz1S8f1RnR/7fgi2Byi+jhw6YQVWk31FeppwZbbtDG6V
-         RTRw2skx/5uCb+fEnDJkpNig5GWEO2fk8AcmaxcUmRiU06XGNw+Y9lCGRUypHc8n3F0I
-         6d4bNJl5DPOMCqBtBh7qlWJIMt49e2RmJ7jGQSuy8n7KVU8/rLgIhs7x1FIivbRtX+U1
-         XeVA==
-X-Forwarded-Encrypted: i=1; AJvYcCUng6K8d70k6U2f+5rBgnfAJsB/pA5SfF888ffDB4SqPAqqffw2GxcRgM3+X89sP1yuLEsrIP08VKL3IBVLATFZWu8KhMNL0BP4D9pk
-X-Gm-Message-State: AOJu0YwEjb40YFHuGMA22xSF8Wh0KXFlVjdCWhKLec4ggALmDqXJu9ba
-	96tk2SowAJYoOyQbhOuV+9nWOteYw2yTK3CWSH1CsCjCRnZVqBtHCUcnEauNd5s=
-X-Google-Smtp-Source: AGHT+IGH2Dv0dIF+pOWIwNb6TZTGpgJIIEF1h8aEfoHfiYa9OlH1jelIcwVFmpCVUa2tUwQiXCh0Xg==
-X-Received: by 2002:a5d:4c86:0:b0:360:727b:8b47 with SMTP id ffacd0b85a97d-366e9629df0mr8830268f8f.63.1719471668889;
-        Thu, 27 Jun 2024 00:01:08 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.137])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3674358556fsm884793f8f.60.2024.06.27.00.01.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Jun 2024 00:01:08 -0700 (PDT)
-Message-ID: <31ca93a7-865d-4a92-af21-69f15bc688d4@linaro.org>
-Date: Thu, 27 Jun 2024 09:01:06 +0200
+	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="p9rfRQ8t"
+Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by bee.tesarici.cz (Postfix) with ESMTPSA id 7EB9F1D6A67;
+	Thu, 27 Jun 2024 08:52:21 +0200 (CEST)
+Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
+	t=1719471141; bh=JqKNk6DK7c39as3qr7GxZRvQ/NXaR2TqXX/2BAiLjxo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=p9rfRQ8t2qyHzmBjsliZOBTEO2ISxen4UX5Sxsfz8PgsUtI20CIfRJu0MK3VXZ2tm
+	 uHCPZP9NV2nljjajcaLakFHetbrN/pnZeva2u6k4o1+a1EJmcbBYKNZGMEqBiWGaOp
+	 WVpLkfsPIgV/OTuKoph7CFY2HUh9svE+P49yg84fZ5Y4mXWKeXMgeD+4Gw861dYuGb
+	 9uD1JECTBxJoRLsbEK5hyAZzY/Z0MH2l7a4p96XSkbJ6z0JUkR5yuicOZoPOb8FbRT
+	 Sxv5cwOeZTe38weQ/3M+A+xW3dfkOTM8kFKGKQ/i6ckA6KUb8+cY0Np+ry2pt/gJ8R
+	 rAwtsJe8amWTQ==
+Date: Thu, 27 Jun 2024 08:52:16 +0200
+From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+To: "hch@lst.de" <hch@lst.de>
+Cc: Michael Kelley <mhklinux@outlook.com>, "robin.murphy@arm.com"
+ <robin.murphy@arm.com>, "joro@8bytes.org" <joro@8bytes.org>,
+ "will@kernel.org" <will@kernel.org>, "jgross@suse.com" <jgross@suse.com>,
+ "sstabellini@kernel.org" <sstabellini@kernel.org>,
+ "oleksandr_tyshchenko@epam.com" <oleksandr_tyshchenko@epam.com>,
+ "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+Subject: Re: [RFC 1/1] swiotlb: Reduce calls to swiotlb_find_pool()
+Message-ID: <20240627085216.556744c1@meshulam.tesarici.cz>
+In-Reply-To: <20240627060251.GA15590@lst.de>
+References: <20240607031421.182589-1-mhklinux@outlook.com>
+	<SN6PR02MB41577686D72E206DB0084E90D4D62@SN6PR02MB4157.namprd02.prod.outlook.com>
+	<20240627060251.GA15590@lst.de>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mux: MAINTAINERS: drop ADGS1408 driver entry
-To: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
- Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-References: <20240626140343.145440-1-krzysztof.kozlowski@linaro.org>
- <8a3ac03fcdc5c2c6401d0a990af5d6e9f6c6670d.camel@gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <8a3ac03fcdc5c2c6401d0a990af5d6e9f6c6670d.camel@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 27/06/2024 07:43, Nuno Sá wrote:
-> On Wed, 2024-06-26 at 16:03 +0200, Krzysztof Kozlowski wrote:
->> Emails to Mircea Caprioru bounce:
->>
->>   Remote Server returned '550 5.1.10 RESOLVER.ADR.RecipientNotFound; Recipient not
->> found by SMTP address lookup'
->>
->> so clearly this driver is not supported anymore.
->>
->> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> ---
+On Thu, 27 Jun 2024 08:02:51 +0200
+"hch@lst.de" <hch@lst.de> wrote:
+
+> On Wed, Jun 26, 2024 at 11:58:13PM +0000, Michael Kelley wrote:
+> > > This patch trades off making many of the core swiotlb APIs take
+> > > an additional argument in order to avoid duplicating calls to
+> > > swiotlb_find_pool(). The current code seems rather wasteful in
+> > > making 6 calls per round-trip, but I'm happy to accept others'
+> > > judgment as to whether getting rid of the waste is worth the
+> > > additional code complexity.  
+> > 
+> > Quick ping on this RFC.  Is there any interest in moving forward?
+> > Quite a few lines of code are affected because of adding the
+> > additional "pool" argument to several functions, but the change
+> > is conceptually pretty simple.  
 > 
-> Hi Krzysztof,
-> 
-> Mircea is no longer with us and often we just forget to update these entries until
-> someone yells. But we still want to support this. Can you send a v2 putting me as
-> maintainer or should I send a patch myself?
+> Yes, this looks sensible to me.  I'm tempted to apply it.
 
-I'll send a v2, thanks.
+Oh, right. The idea is good, but I was not able to reply immediately
+and then forgot about it.
 
-Best regards,
-Krzysztof
+For the record, I considered an alternative: Call swiotlb_* functions
+unconditionally and bail out early if the pool is NULL. But it's no
+good, because is_swiotlb_buffer() can be inlined, so this approach
+would replace a quick check with a function call. And then there's also
+swiotlb_tbl_unmap_single()...
 
+I have only a very minor suggestion: Could is_swiotlb_buffer() be
+renamed now that it no longer returns a bool? OTOH I have no good
+immediate idea myself.
+
+Petr T
