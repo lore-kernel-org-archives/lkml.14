@@ -1,193 +1,98 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0CC713A259;
-	Thu, 27 Jun 2024 14:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B0E7188CC6;
+	Thu, 27 Jun 2024 14:29:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719498453; cv=none; b=P2b5Q6pTSKfaHCHIS7BcPC4DV/EtNbKE9kciQ7GeQ4mYLTqbDC1hsJrI/cTnpsV1GbkxGVnMTAmA7Y9OpL6Pm1Td7jRSygfvD/OsGX8l0wzAVQXaGY7+9e0+ei36lqCWuhlp24oWjghGALK7u9ZzAVbF2uGH9j0rDbv9nV2DsdY=
+	t=1719498546; cv=none; b=LpiM1kHnA421ZMCVWHPzQYUX1WIZM8Nz97Xj06BC25JHy/CSd+r83IOqePFIEPP25dMCiWpKycy0oRK0jJfgRUwhdSLgtZFMslejhl0ul0rPTuc6Hq7HL6qdUqxd+SXqdeARWLgGRvyAXCxO+IYaLvcaqQp+7CXdZXS93o0e/JM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719498453; c=relaxed/simple;
-	bh=+hA94nBp0Z2NOG+7XiSePdvJo4tjMM+AEioEA4rngWg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=q5Sovy3ud5FOXaNwllGJgskTuDSHHUDvvY2qGGfEt/fgaQIELq5resOK+n3pS40MvFHwvTXDTgsjML3xGd4+mjTufcePF2Q3rOFV0ApISLMlPcFouIGEbQjkH2zIZmw1z+ajoIWAQJazN37Elcjr0aO91UGPEbp8Bl5CmEo2SOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4W919h10fwz4f3jt1;
-	Thu, 27 Jun 2024 22:27:20 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 478F21A0189;
-	Thu, 27 Jun 2024 22:27:27 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP2 (Coremail) with SMTP id Syh0CgBXwIXNdn1mUQAAAg--.25162S4;
-	Thu, 27 Jun 2024 22:27:27 +0800 (CST)
-From: Li Lingfeng <lilingfeng@huaweicloud.com>
-To: tj@kernel.org,
-	josef@toxicpanda.com,
-	hch@lst.de,
-	axboe@kernel.dk,
-	mkoutny@suse.com
-Cc: cgroups@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yangerkun@huawei.com,
-	yukuai1@huaweicloud.com,
-	houtao1@huawei.com,
-	yi.zhang@huawei.com,
-	lilingfeng@huaweicloud.com,
-	lilingfeng3@huawei.com
-Subject: [PATCH v2] block: flush all throttled bios when deleting the cgroup
-Date: Thu, 27 Jun 2024 22:26:06 +0800
-Message-Id: <20240627142606.3709394-1-lilingfeng@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1719498546; c=relaxed/simple;
+	bh=HqnklAZ6RVDF5mJ3H+d0Tpnr4wVwrvGXfYqlEvtzT30=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Z9EzABG/cBBESqbSJxIbpSWvXcgxrBRTPbIrs/Am7UF69M1C1kO2G8WpapL7xWbDoetX7R4iq3zDHUq2mSFLtIpT2BznGXMo+c9lws3CnriHlHr27kyCmDivIpaglfWgXXMthi/kdGV5VZbiSIhrEdjwp5kK4XT6s0s5Ww98RCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gge1m+KQ; arc=none smtp.client-ip=209.85.214.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gge1m+KQ"
+Received: by mail-pl1-f194.google.com with SMTP id d9443c01a7336-1f9b523a15cso13660175ad.0;
+        Thu, 27 Jun 2024 07:29:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719498545; x=1720103345; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1JcNaLWolRs7n14rIRyjHq0Qm/GfqPz8+VFMNKe+dU0=;
+        b=Gge1m+KQEQidh1IaHBcy1B5wXBDG+va5f4Ljtz7kOcjuzUqCgMR1S/UX1Ov/LKz0I5
+         XouarqYbPGnVEE4pxtbNzF/ktorET8mRHXYYx9JqEaNFgVFN1zIzLDSsIwlyoJZWaMox
+         f0AO20yW69mWdS8msAu9oMVW+xHkh5O6SDKmW6hlLplm5A4ms4D/mYDMHfYaOZUwdju5
+         MUZXI0sT+2xWFjaqMmf37wJcA3zHJf3o3mOwj6KWeydve3wXpsJS617gge+joWMLIz5g
+         D3YYfNKbOy1qQC9c4+XSPAyY1HOb6e3BKWBwKb6sGTdH1LSFkyBguKurU3ZJXA14sVLd
+         Zreg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719498545; x=1720103345;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1JcNaLWolRs7n14rIRyjHq0Qm/GfqPz8+VFMNKe+dU0=;
+        b=cd5wc59TJ61v1jpUZ7Y7tOwZmmsEYxDaiJYH+hRuHbM5oJQ5Eim2JT7Ww30FV+TSsw
+         qe+nBENsXAQJHDJFMrK1WuBm6j2s+xQ7Q/hdtke9iLToEmRfqMETaiktaZ+qv5rbbQP2
+         3D55I6VzMl5zEs2FhWFYVHUG/Lb3zcBUFNc1EYViPNVjuzkboC2ReCQecfZ4QSTcQrKu
+         H6KL9p8zz00Vg1SVx6/cyY84zc5m2JTMUsqQ+r12/dtIGDmYle6F3RKnPZ/KDLfstGSM
+         ijvgNflZC6dMa/WBKEnn/8mzjbVAZkZStOosllpEu+3thTpovxe+RImTyahjLZxiDlYA
+         eLNw==
+X-Forwarded-Encrypted: i=1; AJvYcCWhvzWkqLGD5PC1GI3b03Aqd5ig910Oe46119O4ab9/Rt8YDT9yEBBaYPiDokzMuP4gBQkctetG2h8kZf1/EGYJzziHJcVY
+X-Gm-Message-State: AOJu0Yz+dtEAWOqiWJTz2CrlmvjlNhNj1xCR+2M7Rlys57tSyX2IUG+c
+	GcgsD6lvkp4U/3715x5k5ZODxEeX5A85VwM68cpkSRXmk/DqVhATX5QQ+R4RaiI=
+X-Google-Smtp-Source: AGHT+IEG6KOTj12naJO65gSeeuIGUydngcS0AbDsxxcu1iqE1UvUj8yUX43NwPl9NrYcL72FxRQO3g==
+X-Received: by 2002:a17:902:e5ca:b0:1f6:87f:1156 with SMTP id d9443c01a7336-1fa5e4f60d2mr153436935ad.0.1719498544580;
+        Thu, 27 Jun 2024 07:29:04 -0700 (PDT)
+Received: from [127.0.0.1] ([212.107.28.57])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1faac8f2c0csm13941975ad.99.2024.06.27.07.29.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Jun 2024 07:29:04 -0700 (PDT)
+From: Celeste Liu <coelacanthushex@gmail.com>
+X-Google-Original-From: Celeste Liu <CoelacanthusHex@gmail.com>
+Message-ID: <6b8e1e79-5a2e-416c-8fee-878b3f5568a0@gmail.com>
+Date: Thu, 27 Jun 2024 22:29:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv: entry: always initialize regs->a0 to -ENOSYS
+To: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
+ linux-riscv@lists.infradead.org, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@rivosinc.com>, "Dmitry V . Levin" <ldv@strace.io>
+Cc: linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>,
+ Palmer Dabbelt <palmer@rivosinc.com>,
+ Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+ Felix Yan <felixonmars@archlinux.org>, Ruizhe Pan <c141028@gmail.com>,
+ stable@vger.kernel.org
+References: <20240627103205.27914-2-CoelacanthusHex@gmail.com>
+ <87o77mpjgd.fsf@all.your.base.are.belong.to.us>
+Content-Language: en-GB-large
+In-Reply-To: <87o77mpjgd.fsf@all.your.base.are.belong.to.us>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgBXwIXNdn1mUQAAAg--.25162S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxWr4xWF48Gw1xGry3tr47urg_yoWrWF4rpr
-	WS9a4Ykw1Dtr9I9r4agr45JFWSva95XrWav397Ca1ayrWxtw1jqF9Yva48XFWrJFn3Cr4Y
-	vr15tr18uF18G37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvj14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFyl
-	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUF9
-	a9DUUUU
-X-CM-SenderInfo: polox0xjih0w46kxt4xhlfz01xgou0bp/
 
-From: Li Lingfeng <lilingfeng3@huawei.com>
+On 2024-06-27 22:08, Björn Töpel wrote:
 
-When a process migrates to another cgroup and the original cgroup is deleted,
-the restrictions of throttled bios cannot be removed. If the restrictions
-are set too low, it will take a long time to complete these bios.
+> Celeste Liu <coelacanthushex@gmail.com> writes:
+> 
+>> Otherwise when the tracer changes syscall number to -1, the kernel fails
+>> to initialize a0 with -ENOSYS and subsequently fails to return the error
+>> code of the failed syscall to userspace. For example, it will break
+>> strace syscall tampering.
+>>
+>> Fixes: 52449c17bdd1 ("riscv: entry: set a0 = -ENOSYS only when syscall != -1")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Celeste Liu <CoelacanthusHex@gmail.com>
+> 
+> Reported-by: "Dmitry V. Levin" <ldv@strace.io>
+> Reviewed-by: Björn Töpel <bjorn@rivosinc.com>
 
-Refer to the process of deleting a disk to remove the restrictions and
-issue bios when deleting the cgroup.
-
-This makes difference on the behavior of throttled bios:
-Before: the limit of the throttled bios can't be changed and the bios will
-complete under this limit;
-Now: the limit will be canceled and the throttled bios will be flushed
-immediately.
-
-References:
-https://lore.kernel.org/r/20220318130144.1066064-4-ming.lei@redhat.com
-
-Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
----
-  v1->v2:
-    Use "flush" instead of "cancel";
-    Add description of the affect of throttled bios.
- block/blk-throttle.c | 68 ++++++++++++++++++++++++++++----------------
- 1 file changed, 44 insertions(+), 24 deletions(-)
-
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index c1bf73f8c75d..a0e5b28951ca 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -1534,6 +1534,42 @@ static void throtl_shutdown_wq(struct request_queue *q)
- 	cancel_work_sync(&td->dispatch_work);
- }
- 
-+static void tg_cancel_bios(struct throtl_grp *tg)
-+{
-+	struct throtl_service_queue *sq = &tg->service_queue;
-+
-+	if (tg->flags & THROTL_TG_CANCELING)
-+		return;
-+	/*
-+	 * Set the flag to make sure throtl_pending_timer_fn() won't
-+	 * stop until all throttled bios are dispatched.
-+	 */
-+	tg->flags |= THROTL_TG_CANCELING;
-+
-+	/*
-+	 * Do not dispatch cgroup without THROTL_TG_PENDING or cgroup
-+	 * will be inserted to service queue without THROTL_TG_PENDING
-+	 * set in tg_update_disptime below. Then IO dispatched from
-+	 * child in tg_dispatch_one_bio will trigger double insertion
-+	 * and corrupt the tree.
-+	 */
-+	if (!(tg->flags & THROTL_TG_PENDING))
-+		return;
-+
-+	/*
-+	 * Update disptime after setting the above flag to make sure
-+	 * throtl_select_dispatch() won't exit without dispatching.
-+	 */
-+	tg_update_disptime(tg);
-+
-+	throtl_schedule_pending_timer(sq, jiffies + 1);
-+}
-+
-+static void throtl_pd_offline(struct blkg_policy_data *pd)
-+{
-+	tg_cancel_bios(pd_to_tg(pd));
-+}
-+
- struct blkcg_policy blkcg_policy_throtl = {
- 	.dfl_cftypes		= throtl_files,
- 	.legacy_cftypes		= throtl_legacy_files,
-@@ -1541,6 +1577,7 @@ struct blkcg_policy blkcg_policy_throtl = {
- 	.pd_alloc_fn		= throtl_pd_alloc,
- 	.pd_init_fn		= throtl_pd_init,
- 	.pd_online_fn		= throtl_pd_online,
-+	.pd_offline_fn		= throtl_pd_offline,
- 	.pd_free_fn		= throtl_pd_free,
- };
- 
-@@ -1561,32 +1598,15 @@ void blk_throtl_cancel_bios(struct gendisk *disk)
- 	 */
- 	rcu_read_lock();
- 	blkg_for_each_descendant_post(blkg, pos_css, q->root_blkg) {
--		struct throtl_grp *tg = blkg_to_tg(blkg);
--		struct throtl_service_queue *sq = &tg->service_queue;
--
--		/*
--		 * Set the flag to make sure throtl_pending_timer_fn() won't
--		 * stop until all throttled bios are dispatched.
--		 */
--		tg->flags |= THROTL_TG_CANCELING;
--
- 		/*
--		 * Do not dispatch cgroup without THROTL_TG_PENDING or cgroup
--		 * will be inserted to service queue without THROTL_TG_PENDING
--		 * set in tg_update_disptime below. Then IO dispatched from
--		 * child in tg_dispatch_one_bio will trigger double insertion
--		 * and corrupt the tree.
-+		 * disk_release will call pd_offline_fn to cancel bios.
-+		 * However, disk_release can't be called if someone get
-+		 * the refcount of device and issued bios which are
-+		 * inflight after del_gendisk.
-+		 * Cancel bios here to ensure no bios are inflight after
-+		 * del_gendisk.
- 		 */
--		if (!(tg->flags & THROTL_TG_PENDING))
--			continue;
--
--		/*
--		 * Update disptime after setting the above flag to make sure
--		 * throtl_select_dispatch() won't exit without dispatching.
--		 */
--		tg_update_disptime(tg);
--
--		throtl_schedule_pending_timer(sq, jiffies + 1);
-+		tg_cancel_bios(blkg_to_tg(blkg));
- 	}
- 	rcu_read_unlock();
- 	spin_unlock_irq(&q->queue_lock);
--- 
-2.39.2
-
+Patch v2 has been sent.
