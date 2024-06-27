@@ -1,101 +1,100 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08BF9195B18
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 18:59:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB985360;
+	Thu, 27 Jun 2024 19:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719514777; cv=none; b=NZcbTSIPpuN4foqa1WqB6tqmtAIel+DtOhsXAKXxtk0KG9SEX03EiZVV0cBiXCEoa1G5B5D5LRgJ/ZCgFi32BRNE/ONvV6dGn9sIrDwSGXEVt0D5XeefPJjBXP0/3hP0MH86n1Y6K9EVEg+xyCzzKTEbJqtHI+aF3OsIyqk7Tt4=
+	t=1719514996; cv=none; b=Y+o3VCwfqHnoozHZ+niRfNiZBnA+akIQX4LMi3asAXB0pRqL3M97hcYyE+t/IxmmdeLJV9MqDoZWqiRoLQ4GNc4Fnoqgd9bt4NzH+10aaQASr8+iHV+P5NvxPZP2QNOHcC1YUcAN9EuQgWAY0v9IxrxUH6ZSpoFl5Fp2yk0EnEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719514777; c=relaxed/simple;
-	bh=wVWCJIkOk4DfwPRXbdj4ZfIdLLv05Ic6HW/TgXtQy/k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oaVahkF734FQLaDF7uMXMFnbDHMgpMjE88xYKzZI/yKDf61u1bvEfeweHWl2rszFY2PPa6zrnJ0PPrv28Zr0K3dTtcEijT9p1yvBsxP/K2maH32pr+J7LR8F+obZuEE88v9sG7lR3LI+zjKW9ZDQaHr7a5eVizu6PtPqLTDX+B0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=mrKDO9Ib; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1719514996; c=relaxed/simple;
+	bh=s4oEpDuEzHamdfCowVPpqqZfwSmm25BkIYA5zE16y/A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DNCxdVrY2/uncIBrDDCDkNBb9ZAmxwkP+2YM1q+xL8svpYbA36ciK0YqWh+W9zmvc/yhnibCnno9wXr2l+Q5KDVr+CKyefMSwXEzRxhkj2pXu79ds3jcCAI9HWY6HLCYxbRQOcY32DJUXCikc9kRMypRWKNZRnLX52QvyJPGlpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=flFAOU3m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="mrKDO9Ib"
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com [209.85.208.71])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 9C59C40C8C
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 18:50:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1719514213;
-	bh=11NDFrtmzJHVKvXyS2kTgfVMF0uqBKbPDuoBNWc2LAE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
-	b=mrKDO9Ib/7fpe90yYzCqjYWchK0Yrk1fQmPcumsakIj6aOg+dMlLGXPS092T1Za8/
-	 0S3vxnZJ2Paii3gH4iYUnBEtmA6mW+16smEZi9PAHmSgPWlzkdxHGT4Qxo7iUUF7yv
-	 irf3UKOYPH8VYyM5KmEnVIChSRjLYA2gfpHK5N8ODlYL7ZblnuWS9H5NPwHGKy0smE
-	 CWepslFjmDEKzpdAWhvDdgmESmItsRrlg+gyoDpqzFFR60+QjDzRqmWqX8DYpYs/Pt
-	 XibQXmLOrCH/cWwLl1ism31iqHfTGG/ldK9hesyldJCdiZmfYt7c99X3wMA7OqeP8n
-	 SQvMeMO6PqusA==
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-57d22ea3e71so1122562a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 11:50:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719514213; x=1720119013;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=11NDFrtmzJHVKvXyS2kTgfVMF0uqBKbPDuoBNWc2LAE=;
-        b=bCyHKpyJ/mSZXkT1gJV5IARCNaNrQQ54JryzFafhpYuP3pAI7lE7LcNvP88xJFuRfk
-         gXRZN6aFb3ihAlqDTJSWx4MiuKVqqHhvfYakTS+YuRfX6grx5tLmMhpcjxgnMThGFlOa
-         CCKY0EmCb8takuVC70neLWD9ffb/TnDW98mkOd+iRxX4WmCm5qjQqBx9cni5ALtQ/xTo
-         U4NFfzD1ZPr6EX3In7j++b5UjecGkxMmwEpoREcpdbZX19D9GO2NkVDn7cV1q+WQLXTP
-         We6fA/rpAK66IdSC+1vbkw70gH9btLsFrRsg2t8tYPQ/IcamPevaeDxRdzYhWfDOMCZ9
-         8bxQ==
-X-Gm-Message-State: AOJu0YwIQewCwm5MOZVXxCnUrylFD8zykvlWeELPNYzTKqX1Bl1jlCw8
-	/WBwT3tV1raV2d2j9bkZyaYWozJtJ6jTJavBvGf7DWFCdngG8PZgSzwairuVtX/XtF9msAXTBVJ
-	1dEhq+2E/dGm9QWmyDoEt52jC4q9L7EnKSn9r22FXrSSd85kPY2yi2J5kUgp4IRf8y8X0ekj9C0
-	B/Ng==
-X-Received: by 2002:a50:d503:0:b0:57d:4d7:4c06 with SMTP id 4fb4d7f45d1cf-57d4a2815b1mr12472626a12.13.1719514212818;
-        Thu, 27 Jun 2024 11:50:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IErOw2CkJX4hJdCc0yAyqTfxDujvaW8REYWAMMKhgy5+221dtZtH1vjzh2kbveL6yplyOxWwg==
-X-Received: by 2002:a50:d503:0:b0:57d:4d7:4c06 with SMTP id 4fb4d7f45d1cf-57d4a2815b1mr12472614a12.13.1719514212287;
-        Thu, 27 Jun 2024 11:50:12 -0700 (PDT)
-Received: from gpd.homenet.telecomitalia.it (host-79-55-123-4.retail.telecomitalia.it. [79.55.123.4])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-586138163cbsm35751a12.47.2024.06.27.11.50.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 11:50:11 -0700 (PDT)
-From: Andrea Righi <andrea.righi@canonical.com>
-To: Tejun Heo <tj@kernel.org>,
-	David Vernet <void@manifault.com>
-Cc: linux-kernel@vger.kernel.org,
-	Andrea Righi <andrea.righi@canonical.com>
-Subject: [PATCH] sched_ext: fix typo in set_weight() description
-Date: Thu, 27 Jun 2024 20:50:09 +0200
-Message-ID: <20240627185009.1258446-1-andrea.righi@canonical.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="flFAOU3m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35677C2BD10;
+	Thu, 27 Jun 2024 19:03:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719514996;
+	bh=s4oEpDuEzHamdfCowVPpqqZfwSmm25BkIYA5zE16y/A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=flFAOU3mB4XigsWmmjauBMrKEBDeX1+nlGJuXL/zzNIjrrR8INDJFGHsOlpxGYL6c
+	 HkJXVLBdyPfhfYZkeyxZ+ZHDjJ2A3PlidM/rUi02WuqEmqbv3vMi3nSGiTKneEmPG3
+	 tvrM3pY8oH5W1GNqYmBHdKOarQGFHcHIOcxl11ZRa/8V3QBWrIoUsbG5TQsL7gZd36
+	 w7mxcRkJHayxAQQZZuZdBCEF5L++ry71qHbTO/V/NLmteS1q3CrIi7WkohJ4RYnRq7
+	 gHtrPMriQ7oBodIg1RXydoLFmJmtx1D4nH9JZ5KcGSMLGn03FR+wBpRKu7T2bi6YLo
+	 RcD5HI1ktx0zQ==
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2ec595d0acbso66403801fa.1;
+        Thu, 27 Jun 2024 12:03:16 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUPe/Vn3VDzxTwK0h3FlRbFsHBWV87KHrsb8N5wRaiX6sk7EfPMTefDBfBrCFz9/Aao2ZqvrVzadnSbXFOXDwoxwu65wT/NvdBRZE4OYBJ0ZiAkcKt5MC6h5BsGlqn9WbpedCgLwl0qZ7TmwfF1AB0ukodntefj0zchiZB2HPZvZA==
+X-Gm-Message-State: AOJu0YyHX8pXalzqBKN+5y5aXX9b2cy7ajhQudLSXvzvUdTHBfd+kI4U
+	PHeBQEfKNEmgW0BXe/WjkQ1Y8BPnHKCt2UJ1MM09cEOrmEHDbUSIW/HjuC49ay/mEsgbHszEb5F
+	wnnjtQWpfgeSGUjEyoSCeo1TePA==
+X-Google-Smtp-Source: AGHT+IERpqYkHVSBMBLutpKK8Ckx8P+bb/s9EpxdS6FVvg+rabR/H1UO1yWL4pgy8bPuumt8TnDS170ObiA6rFOR7/k=
+X-Received: by 2002:ac2:54a8:0:b0:52c:da18:6187 with SMTP id
+ 2adb3069b0e04-52ce185d05fmr10828916e87.43.1719514994561; Thu, 27 Jun 2024
+ 12:03:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240625215442.190557-2-robh@kernel.org> <gr7rgy7cptnpj2rkeufhgqkve4ytqddpts6gdekeszoq7znwf2@ivyjpaiyxruk>
+In-Reply-To: <gr7rgy7cptnpj2rkeufhgqkve4ytqddpts6gdekeszoq7znwf2@ivyjpaiyxruk>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 27 Jun 2024 13:03:01 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLYHbr=Wqg-S0t_hK3uDATe9KKob9chFGFnoTcyt2ttyg@mail.gmail.com>
+Message-ID: <CAL_JsqLYHbr=Wqg-S0t_hK3uDATe9KKob9chFGFnoTcyt2ttyg@mail.gmail.com>
+Subject: Re: [PATCH net-next] dt-bindings: net: Define properties at top-level
+To: Serge Semin <fancer.lancer@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, 
+	Jose Abreu <joabreu@synopsys.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Correct eight to weight in the description of the .set_weight()
-operation in sched_ext_ops.
+On Wed, Jun 26, 2024 at 9:05=E2=80=AFAM Serge Semin <fancer.lancer@gmail.co=
+m> wrote:
+>
+> Hi Rob
+>
+> On Tue, Jun 25, 2024 at 03:54:41PM -0600, Rob Herring (Arm) wrote:
+> > Convention is DT schemas should define all properties at the top-level
+> > and not inside of if/then schemas. That minimizes the if/then schemas
+> > and is more future proof.
+> >
+> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> > ---
+> >  .../devicetree/bindings/net/mediatek,net.yaml |  28 +--
+>
+> >  .../devicetree/bindings/net/snps,dwmac.yaml   | 167 +++++++++---------
+>
+> For Synopsys DW MACs you can just move the PBL-properties constraints to
+> the top-level schema part with no compatible-based conditional
+> validation left. It's because the DMA PBL settings are available on all t=
+he
+> DW MAC IP-cores (DW MAC, DW GMAC, DW QoS Eth, DW XGMAC, DW XLGMAC).
+> Moreover the STMMAC driver responsible for the DW MAC device handling
+> parses the pbl* properties for all IP-cores irrespective from the
+> device compatible string.
 
-Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
----
- kernel/sched/ext.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+That's definitely better. Will still need the TSO flag part though,
+really, who cares if someone wants to set that on h/w without TSO...
 
-diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index 8e8b44f2c74a..f6e25545bfc0 100644
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -369,7 +369,7 @@ struct sched_ext_ops {
- 	/**
- 	 * set_weight - Set task weight
- 	 * @p: task to set weight for
--	 * @weight: new eight [1..10000]
-+	 * @weight: new weight [1..10000]
- 	 *
- 	 * Update @p's weight to @weight.
- 	 */
--- 
-2.43.0
+>
+> Alternatively you can just merge in the attached patch, which BTW you
+> have already reviewed sometime ago.
 
+Can you send that to the list since it changed from the last version.
+
+Rob
