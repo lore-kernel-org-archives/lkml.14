@@ -1,94 +1,87 @@
-Received: from mblankhorst.nl (lankhorst.se [141.105.120.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62DF199249;
-	Thu, 27 Jun 2024 15:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.105.120.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B751922CD;
+	Thu, 27 Jun 2024 15:49:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719503294; cv=none; b=fSy30mrVa4PicSRSUreAe2CVQMARQpz322AkqNaWnw1je5ptKc/8zfLigNbGqfTE1B23+CympKmq1RsXgsq07ZKcCaQ+djK7F0iThhXSc21Gqc4kXKXKK4UgB4zk0wzV4HeSL2GBQJomBmyANZi2XDKZcb2bC6kr13qm6K61JAY=
+	t=1719503350; cv=none; b=d58KIVza4GXzDqMEtkZZSv8VYT0kkDVPRUmA+GznVH/w5Q1eHmjWp0BIyIPfa5jMoJ85sQlNHQeesIwt4C/JM1ZIXvDCKr7nzCBbdaeAjCNhCBMgqWTscsfzEn+DDPnBZMANMJAl7YlZDTu7dHe3uqUAIYm8wLahvyAeTHNtj48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719503294; c=relaxed/simple;
-	bh=Ug7/0LSxnMXTm6BkMSSPHGcN/GxtqUHC2G1ZRj/ewGI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gjN6/3yYv/Wum7UpHRGV+6S6j2bQdrMF13LWPCVhY7gFf9VodD50zzhy7DoWnljU6LkJODuZOarImOM8PST7enm8R3Xnu5qNclMim4X2aOfeKNotIwsamyrRjc/NRnBtdRqZR37ds4JuxEhzej0ENQpwFjl7v8P+4+nsRV6ksv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=mblankhorst.nl; arc=none smtp.client-ip=141.105.120.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mblankhorst.nl
-From: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-To: intel-xe@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	Tejun Heo <tj@kernel.org>,
-	Zefan Li <lizefan.x@bytedance.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>
-Cc: Friedrich Vock <friedrich.vock@gmx.de>,
-	cgroups@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [RFC PATCH 6/6] drm/xe: Hack to test with mapped pages instead of vram.
-Date: Thu, 27 Jun 2024 17:47:25 +0200
-Message-ID: <20240627154754.74828-7-maarten.lankhorst@linux.intel.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240627154754.74828-1-maarten.lankhorst@linux.intel.com>
-References: <20240627154754.74828-1-maarten.lankhorst@linux.intel.com>
+	s=arc-20240116; t=1719503350; c=relaxed/simple;
+	bh=nqL74ax75pWruU5MiHx4Tv8OQ6oYMWOlYMX7W+QBVFE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Rt9ByiONmeb4U0kKvE9A2haM4t1oIwpFsdDvuxseXxCNpfBQMfsE/VAaqKdrJsh4bSK/LN1WvEjdQitnHR3BGAOZo9eAks2/fhZGTLp4Kg5MIUAlQrCNzC57ar/pVuVERTTOka6WSJvCBYoYpSgpzSuDkxLtxPgZg2IU3/+0KKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BI5FgBqB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BI5FgBqB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20102C4AF09;
+	Thu, 27 Jun 2024 15:49:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719503349;
+	bh=nqL74ax75pWruU5MiHx4Tv8OQ6oYMWOlYMX7W+QBVFE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=BI5FgBqBMP5FKrncNAqqVJtPra5024pG9hl1ijpvcDJsIekV5rUj0JzgScOCtjGC0
+	 5laD6fVdBlHLEWeUuyxwrn5ksk2coCoascyolx4NC/vAs2HdZYYUX2Tv3zXt5dOaAQ
+	 g/vYRl+eXkTjNFPKvtDcIYixM1jrPHLfIUMPyB2m1Ode7rOdm3OD58I/UQIe0IaEAx
+	 ymg23fV285rs5Hl6J7aozM0aLhJacvWpFe12agHVX2mUOGrszB/FCd9Ho9S+dm3Six
+	 oeDjIwOnBBsruFY6DBWptVbcNlbLNQLkM0mQ0YVcnu/0VArqVybhhlCIMursp1Uq8L
+	 qa9g4uHyogXtQ==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-57d06101d76so2026007a12.3;
+        Thu, 27 Jun 2024 08:49:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUAaRjnA2rRDtvYFjyWg+3CBDee8eAXg7PBKEwiYWtkGiFm0SVzz+0JOA0Eh5TitELpJsNAVeBaJdKGRWsfNTkrmxBjjApGQHOL+AQ1oh+UeZKIMskO3z7RwjsdwuHFx0FyAkw3
+X-Gm-Message-State: AOJu0YxanCn9JBI7G+FMMOo9syctf8LJWSwmcW6h48Mb4lrCs37/TZaE
+	XJzhlyp6l+4iY8RueoD2ySVPkAg8SdlizxNgKqE8HQoKFt/3Yzlw1w0Z0ZDojse8JjXu4l0T6eG
+	Fr0meekAftio9bQZnxI0Q8jfW5GE=
+X-Google-Smtp-Source: AGHT+IGMJMc5MnM5ZGkcUNODngcS4Rbq5bn55PsQgrJaAUmsDOl1dWXQyEwf2gvEQISuwOi9m+9gihIbKE4DI1b6frU=
+X-Received: by 2002:a17:906:d509:b0:a6f:5192:6f4d with SMTP id
+ a640c23a62f3a-a7242c4dfd3mr701399466b.8.1719503347692; Thu, 27 Jun 2024
+ 08:49:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240627103205.27914-2-CoelacanthusHex@gmail.com>
+ <87o77mpjgd.fsf@all.your.base.are.belong.to.us> <6b8e1e79-5a2e-416c-8fee-878b3f5568a0@gmail.com>
+In-Reply-To: <6b8e1e79-5a2e-416c-8fee-878b3f5568a0@gmail.com>
+From: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+Date: Thu, 27 Jun 2024 17:48:55 +0200
+X-Gmail-Original-Message-ID: <CAJ+HfNhV2d53G-ZPDXUkSTP-AzhqXs54XZuCiYjR=06A1+oq_A@mail.gmail.com>
+Message-ID: <CAJ+HfNhV2d53G-ZPDXUkSTP-AzhqXs54XZuCiYjR=06A1+oq_A@mail.gmail.com>
+Subject: Re: [PATCH] riscv: entry: always initialize regs->a0 to -ENOSYS
+To: Celeste Liu <coelacanthushex@gmail.com>
+Cc: linux-riscv@lists.infradead.org, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
+	"Dmitry V . Levin" <ldv@strace.io>, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, 
+	Palmer Dabbelt <palmer@rivosinc.com>, 
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>, Felix Yan <felixonmars@archlinux.org>, 
+	Ruizhe Pan <c141028@gmail.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-We will probably want to make this a proper region in TTM for
-everything, so that we can charge VRAM twice, once for mapped
-in sysmem, once for mapped in vram. That way we don't need to
-deal with evict failing from lack of available memory in mapped.
+On Thu, 27 Jun 2024 at 16:29, Celeste Liu <coelacanthushex@gmail.com> wrote=
+:
+>
+> On 2024-06-27 22:08, Bj=C3=B6rn T=C3=B6pel wrote:
+>
+> > Celeste Liu <coelacanthushex@gmail.com> writes:
+> >
+> >> Otherwise when the tracer changes syscall number to -1, the kernel fai=
+ls
+> >> to initialize a0 with -ENOSYS and subsequently fails to return the err=
+or
+> >> code of the failed syscall to userspace. For example, it will break
+> >> strace syscall tampering.
+> >>
+> >> Fixes: 52449c17bdd1 ("riscv: entry: set a0 =3D -ENOSYS only when sysca=
+ll !=3D -1")
+> >> Cc: stable@vger.kernel.org
+> >> Signed-off-by: Celeste Liu <CoelacanthusHex@gmail.com>
+> >
+> > Reported-by: "Dmitry V. Levin" <ldv@strace.io>
+> > Reviewed-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+>
+> Patch v2 has been sent.
 
-Signed-off-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
----
- drivers/gpu/drm/xe/xe_ttm_sys_mgr.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/drivers/gpu/drm/xe/xe_ttm_sys_mgr.c b/drivers/gpu/drm/xe/xe_ttm_sys_mgr.c
-index 9844a8edbfe1..20fa8ec8925e 100644
---- a/drivers/gpu/drm/xe/xe_ttm_sys_mgr.c
-+++ b/drivers/gpu/drm/xe/xe_ttm_sys_mgr.c
-@@ -101,6 +101,18 @@ static void ttm_sys_mgr_fini(struct drm_device *drm, void *arg)
- 	ttm_set_driver_manager(&xe->ttm, XE_PL_TT, NULL);
- }
- 
-+static inline void apply_cg(struct xe_device *xe,
-+			    struct ttm_resource_manager *man,
-+			    u64 gtt_size)
-+{
-+	int cgregion = xe->cg.num_regions++;
-+
-+	xe->cg.regions[cgregion].size = gtt_size;
-+	xe->cg.regions[cgregion].name = "mapped";
-+	man->cgdev = &xe->cg;
-+	man->cgidx = cgregion;
-+
-+}
- int xe_ttm_sys_mgr_init(struct xe_device *xe)
- {
- 	struct ttm_resource_manager *man = &xe->mem.sys_mgr;
-@@ -116,6 +128,8 @@ int xe_ttm_sys_mgr_init(struct xe_device *xe)
- 	man->func = &xe_ttm_sys_mgr_func;
- 	ttm_resource_manager_init(man, &xe->ttm, gtt_size >> PAGE_SHIFT);
- 	ttm_set_driver_manager(&xe->ttm, XE_PL_TT, man);
-+	apply_cg(xe, man, gtt_size);
-+
- 	ttm_resource_manager_set_used(man, true);
- 	return drmm_add_action_or_reset(&xe->drm, ttm_sys_mgr_fini, xe);
- }
--- 
-2.45.2
-
+For future patches; You don't need to respin a patch to add tags. The
+tooling will pick up the tags automatically.
