@@ -1,97 +1,90 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026B81CF8B;
-	Thu, 27 Jun 2024 21:17:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B69F1A08C7
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 21:17:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719523070; cv=none; b=ZuH9f3KecEkvvk52iZpjEZm7sfs7pGio1UigDGR6hKidJSY9XMgxt4f1Brb+kNtMilVKgqjC5EmxTxaoF+05CFy5K3ddTtWv3Hqs5gp8YnFOXCO80cK3epa4Gxd5yl+W7CxRcK986dL/Z6ynP0gIwrShL8dNXAzMH/XMD2dNy4A=
+	t=1719523079; cv=none; b=BC3ETgYq4I8iVSxXyl2khhU4AvQ0pVS5chX0r2yol5VNx2Iu9hY+p8QmYJiy3rmaXLbQFlQ0tm/buvj1gqgRbxgmfwMyjWbcl3uRwPgwrq18DHEmN1WwUJv7YVUn9dJWdWf3fQFCDwqs1y6sWU8Tg1th4pRzp/v6cS2Urp8mVpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719523070; c=relaxed/simple;
-	bh=fIe+WjGyo22eybCG1oWgddFxMBUrGgRXke6p/2u/m0c=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=k04EZR4ul20TbF474SGJI5EY2GZRghLreuTl8W+r7gQEA9cAMTzklc8Idvvv8Yq6X2kYbhduw4NO6RRnjXA9ZjBH2zZYvBZmZ5LLz4I9Ikh1qqk3NeVSNmOkv81nfNGZSqQCnM/13JPMg5BeMVVT1FxU09vIye3Z2m6KRe5mFJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tg+jwLYI; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719523079; c=relaxed/simple;
+	bh=E5x8SPF0o7XVjxRg+/VGBTN0NJl1wamCDzYvuZISHAY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u3TrXIcgjo+ui+UYbwi+V35OPF3OHFRM5ywHxd8p6Wg2wgR1E7hwgT3lL3EfJ6iFXJgtRAZR9P4m6gYLXzsx45MT0lpt0gd9d8PnDFmO18vAoAoDyGo90eswq2vyVyifKO80HxpxwSJxUFeRG8jaEiGvoFvrzf6UiuDLsw2BcP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=iBrZRhn6; arc=none smtp.client-ip=149.28.215.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tg+jwLYI"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-57d1782679fso2459486a12.0;
-        Thu, 27 Jun 2024 14:17:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719523067; x=1720127867; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xnk9uIadAbA+bBaIfSx2BcakWTRFKYQJDJDqca2A88I=;
-        b=Tg+jwLYIL9yRVqcA5FvMceZNzpW5h+2wYVTeld4Cuwg7IiSQPSggrIyO+HfJxzlOaA
-         xJ1ZVseaQHGACMxxYt5950vuILpSCjFvasnHGfa2kJqbUD/Y2ppwqtgIWLo0wyKCgF7J
-         guktLYDtczFxN7rfZH9qD3gkktTGHK3+RH0RCBIb6wAwbJJpz0jl5g7JMw7LJ4UOlnft
-         GXdYKuzlKtvbnBIRIaHvRQrAovSAVABXHtyGpHuISsqyPwjYZf35jmf7XtNzmz2grZgP
-         qspmC06i/yeY+1wYekq0JumB0Pqpa2jB9Wkuugw49eHpiVg4A94nRn55f2IikeXRtbh+
-         DbXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719523067; x=1720127867;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Xnk9uIadAbA+bBaIfSx2BcakWTRFKYQJDJDqca2A88I=;
-        b=tGevrRBtq/6ixgf+SxYXSSapyv3BeHrSYdw/nrAJCr7zfAOZVRNGu0fVbf7fWefML0
-         WekZqh0RgrLkJhW1ToBVLvFdGsenb8vFpSYrxyVPJrTVCG/W3p76kt57rEN8RqU3avS9
-         bh6DHLb2AvE5saXAO6whgiYoyATMXQ6XTXBi9tWte/R0+x0m8VbgXBnvB1FuMXKfkC+V
-         ruGM0HK0tpVyQy4vo2C2MV2j2gqtTJc8Kd5zuXq036M1KooDlonfb5wEBySIjeMPiYl3
-         lM91JpQqyRQj8UE+vamH7SComGRZ9YUNrObbfo5z7JNEVXTSh3FrvHwTtdS2gEtH9tOP
-         AmTA==
-X-Forwarded-Encrypted: i=1; AJvYcCXDpJOBYbjKkcmVxo5wE1AxeV5UFscRXgTHxH/eNIOdB7YfDjkRP3PrWKGKN/wrmQfKTI7ZrNig5kqvmcG7mY3Z3gBUXtfC75zf+j14pcp4yie5Kyv0gTzVJegBxWtOHp1uF3kGGJ6j9Se4uD3kESxg5JusZqenNZE+D4sIiAs+NVg7Ww==
-X-Gm-Message-State: AOJu0YyfDO2A8dYNbCG/6QQejf1MRCuO8rvc7aNylHNZSeCkY2Ie2aOA
-	zfNFt02rzE0UQvNJcZUiJf7WXAv/FTPg0QJ+ecMhoK6mtGRgCMFr6KPkeA==
-X-Google-Smtp-Source: AGHT+IFbtDNlgX18BHhhHB676dlMxYpxY2uD0IhAomzWeFynNtXKV2BsDI/Li5O2s/tR5bnwCUFTRA==
-X-Received: by 2002:a17:906:c309:b0:a6f:64cc:ca2e with SMTP id a640c23a62f3a-a7245b88e46mr977230466b.44.1719523067016;
-        Thu, 27 Jun 2024 14:17:47 -0700 (PDT)
-Received: from ?IPV6:2a02:a449:4071:1:32d0:42ff:fe10:6983? (2a02-a449-4071-1-32d0-42ff-fe10-6983.fixed6.kpn.net. [2a02:a449:4071:1:32d0:42ff:fe10:6983])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72aaf1843fsm12647866b.39.2024.06.27.14.17.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Jun 2024 14:17:46 -0700 (PDT)
-Message-ID: <6f21c09b-e8d2-4749-aca6-572c79df775d@gmail.com>
-Date: Thu, 27 Jun 2024 23:17:45 +0200
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="iBrZRhn6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: MIME-Version: Message-ID: Date: Subject: Cc:
+ To: From; q=dns/txt; s=fe-e1b5cab7be; t=1719523064;
+ bh=rPE+9z//tyfsDsGC0Vy2GcWOo7+pR6Ob+6/gM+fr390=;
+ b=iBrZRhn6S1X72EfwpHyazeggUag0Simvv4eS1pVIMF1f1TeLZDe6HouYEF82rYa8cykQtmAKC
+ 9yx9KzGCrizFWsflyIlihZL+HI8ix3zixIziuNOTcdfSgKXJLUGPqUhivXM1Ri5JtfnLJkHLHlm
+ OlNrS5v56RrpickA+lco9kjT8SVJ55S1FvfFCXxHmC1FwJID9SP6xHcr6ZcsjSV5Uu3k4yNfOWr
+ rHvqy6kS8UpTqdjb/MH9vZDq3DMJ4isgv+GPLzqfpBNDIXE158n56Hqmn0Y8T2YMX6YSCjtQj1Y
+ ZkeLo2ESD5fJpgbEiirpv5AVVEnvYzNZ4QNwhpCBiwPA==
+From: Jonas Karlman <jonas@kwiboo.se>
+To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>
+Cc: FUKAUMI Naoki <naoki@radxa.com>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>
+Subject: [PATCH v3 0/2] arm64: dts: rockchip: Add Radxa ROCK 3B
+Date: Thu, 27 Jun 2024 21:17:29 +0000
+Message-ID: <20240627211737.1985549-1-jonas@kwiboo.se>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Johan Jonker <jbx6244@gmail.com>
-Subject: [PATCH v1] dt-bindings: clock: rk3188-cru-common: remove CLK_NR_CLKS
-To: heiko@sntech.de
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Report-Abuse-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-ForwardEmail-Version: 0.4.40
+X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 149.28.215.223
+X-ForwardEmail-ID: 667dd6f8392543b4ce9ac5db
 
-CLK_NR_CLKS should not be part of the binding.
-Remove since the kernel code no longer uses it.
+This series adds initial support for the Radxa ROCK 3B board.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- include/dt-bindings/clock/rk3188-cru-common.h | 2 --
- 1 file changed, 2 deletions(-)
+The Radxa ROCK 3B is a single-board computer based on the Pico-ITX form
+factor (100mm x 75mm). Two versions of the ROCK 3B exists, a community
+version based on the RK3568 SoC and an industrial version based on the
+RK3568J SoC.
 
-diff --git a/include/dt-bindings/clock/rk3188-cru-common.h b/include/dt-bindings/clock/rk3188-cru-common.h
-index afad90680fce..01e14ab252a7 100644
---- a/include/dt-bindings/clock/rk3188-cru-common.h
-+++ b/include/dt-bindings/clock/rk3188-cru-common.h
-@@ -132,8 +132,6 @@
- #define HCLK_VDPU		472
- #define HCLK_HDMI		473
+Schematic for ROCK 3B can be found at:
+https://dl.radxa.com/rock3/docs/hw/3b/Radxa_ROCK_3B_V1.51_SCH.pdf
 
--#define CLK_NR_CLKS		(HCLK_HDMI + 1)
--
- /* soft-reset indices */
- #define SRST_MCORE		2
- #define SRST_CORE0		3
---
-2.39.2
+Changes in v3:
+- Rename led node and move led pinctrl
+- Add cap-mmc-highspeed to sdhci node
+
+Changes in v2:
+- Drop rk809 dt-bindings patches, replaced by series at [1]
+- Use regulator-.* nodename for fixed regulators
+- Drop rockchip,mic-in-differential prop
+- Shorten Ethernet phy reset-deassert-us to 50 ms
+- Fix pcie pinctrl
+- Add keep-power-in-suspend to sdmmc2
+- Collect a-b tag
+
+[1] https://lore.kernel.org/all/20240622-rk809-fixes-v2-0-c0db420d3639@collabora.com/
+
+Jonas Karlman (2):
+  dt-bindings: arm: rockchip: Add Radxa ROCK 3B
+  arm64: dts: rockchip: Add Radxa ROCK 3B
+
+ .../devicetree/bindings/arm/rockchip.yaml     |   5 +
+ arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+ .../boot/dts/rockchip/rk3568-rock-3b.dts      | 781 ++++++++++++++++++
+ 3 files changed, 787 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3568-rock-3b.dts
+
+-- 
+2.45.2
 
