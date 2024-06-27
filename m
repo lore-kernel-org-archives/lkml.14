@@ -1,346 +1,116 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86AAE13DBA8;
-	Thu, 27 Jun 2024 12:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE2A15A85D
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 12:39:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719491845; cv=none; b=JafW/yx+aUJc+6Yoy5azHMmnYaMmbz+Bo9oxfyZn3DognLR9+2iZtlwuBLLP24Tvwzms0VeMm3q4CjKF6/SYgFztKXAC4B6v5+2G/cZT170bnQ9TUf7tn5JTKg4rtD0vqcGzxxHyecAtPDHOburZ8HbWW1l0UdiOpJvByFz0E5U=
+	t=1719491971; cv=none; b=BW7bTlaTWkmOXbEYzyPMeF+0aITrdW8k0LLVe9yhpbTnhXag6aZhk8y4OSbhuw8WqV3+aFHfRIce3Kc2BsreJ8CgEcixNv5NCIe/06b4KT3DvCwFSHOYcGA6owl7X1AmV4Rb2nzZHfzd2x0evEzPS43vHDvasLOV0ICww4rv1Z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719491845; c=relaxed/simple;
-	bh=eLk8XlJiOIs4iz0E86fFMw9/CBQ5HhjgLZ3eZ42Zjsg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cis5aW4iM8wdRVhhx4nHoNoJybK/soa3ASWQFVaEEL/f2UG+jfZzi0crJWjbNlP1DW/qY46BpzoA+pOZPpX4RDLEFRs/34+S7BTsMmyRLRWfTEe4B6BgpJj21UJlL8X2QkjFfEK9GaIokC/OiedfuDe0qr2z1axWVOh8Il4u0jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=M+9QvEUz; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="M+9QvEUz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1719491841;
-	bh=eLk8XlJiOIs4iz0E86fFMw9/CBQ5HhjgLZ3eZ42Zjsg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=M+9QvEUzLncpybrAFcnNov9UZdsUEsb+28TFPRJrfaEJWgqJlr0luG0uIRRB3/I7a
-	 krX+ixKhyoXwap2tMnXpMC/3lLLgYk6U3OwUfAIx6YoCtLUgdWIIDtp/20sQdCVXRz
-	 0T8X1mey/rzToarSxUJeg5v8nrP805icvNYZkKpCpCYGws+Wx77SqJFx39Vyf9tFNJ
-	 6x+ZqJ7c32gdquQOS/zLWz5OQo0waPl3zghVHlzJdWej6fuNBmPljqSuQnNX7/XI1H
-	 0mQTRTBptoAqKzesnkiaipLf+XI5OrETbQriVjTahHY+2zsHaJFjIoUjvuys5Z1T4I
-	 LpNQUwmA+56ig==
-Received: from [100.74.67.65] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: jmassot)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 331DD37804D4;
-	Thu, 27 Jun 2024 12:37:21 +0000 (UTC)
-Message-ID: <2d1327fb-7301-4e8d-9ea2-07fd6c6420c3@collabora.com>
-Date: Thu, 27 Jun 2024 14:37:20 +0200
+	s=arc-20240116; t=1719491971; c=relaxed/simple;
+	bh=EqB6SmNdeXubFO++XFjnHXgMkng6+TrWjBXTPnVGYUI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=YWyuxEOIEQKew7diaFYHuQRL31nNlNN3zFn8tUe6sJq9M0reyrG61KZZVJex0Lx1w5oN/5wd8UJj/YlXJtHRUwtlZ9hdR+S1soZIhWEe2hgfgJtNo605MxKKFeg6S1T2pJDMst/oEldkdslAlc6eNijI3c6/aWcOVR8KAa29GFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sMoPC-00015D-7f; Thu, 27 Jun 2024 14:39:14 +0200
+Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sMoPA-005Mwu-QG; Thu, 27 Jun 2024 14:39:12 +0200
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sMoPA-000xBz-2M;
+	Thu, 27 Jun 2024 14:39:12 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: "David S. Miller" <davem@davemloft.net>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Eric Dumazet <edumazet@google.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	Arun Ramadoss <arun.ramadoss@microchip.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	UNGLinuxDriver@microchip.com
+Subject: [PATCH net-next v1 3/3] net: dsa: microchip: lan937x: disable VPHY output
+Date: Thu, 27 Jun 2024 14:39:11 +0200
+Message-Id: <20240627123911.227480-4-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240627123911.227480-1-o.rempel@pengutronix.de>
+References: <20240627123911.227480-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] media: i2c: max96717: add test pattern ctrl
-To: Tommaso Merciai <tomm.merciai@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- linuxfancy@googlegroups.com, sakari.ailus@linux.intel.com,
- laurent.pinchart@ideasonboard.com, Mauro Carvalho Chehab
- <mchehab@kernel.org>, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240617145958.1819069-1-tomm.merciai@gmail.com>
- <20240617145958.1819069-2-tomm.merciai@gmail.com>
- <94d58f00-ef6a-4454-b028-bc3b7dcd927d@collabora.com>
- <Znr+2WZv8rUKNiZ+@tom-HP-ZBook-Fury-15-G7-Mobile-Workstation>
- <ZnvTQ2BwTHVJvh6o@tom-HP-ZBook-Fury-15-G7-Mobile-Workstation>
-Content-Language: en-US
-From: Julien Massot <julien.massot@collabora.com>
-In-Reply-To: <ZnvTQ2BwTHVJvh6o@tom-HP-ZBook-Fury-15-G7-Mobile-Workstation>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hi Tommaso,
+From: Lucas Stach <l.stach@pengutronix.de>
 
-On 6/26/24 10:37 AM, Tommaso Merciai wrote:
-> On Tue, Jun 25, 2024 at 07:31:05PM +0200, Tommaso Merciai wrote:
->> On Tue, Jun 25, 2024 at 09:54:18AM +0200, Julien Massot wrote:
->>
->> Hi Julien,
->>
->>> Hi Tommaso,
->>>
->>> Thanks for your patch.
->>>
->>> I tested it on my setup and can capture frames. Here's a link to an example:
->>> https://pasteboard.co/j8yHuE4YdYDV.jpg.
->>
->> Nice! Thanks for sharing and testing.
->>
->>>
->>> I had some trouble with link validation because my sensor doesn't support
->>> the RGB format. Once we have internal pad support, we won't need to worry
->>> about the serializer creating an incompatible video stream for the sensor.
->>>
->>> In the future, it would be great if we could support the serializer without
->>> needing a connected sensor. This way, we can use it as a pattern generator
->>> with this patch. However, not all GMSL2 serializers work this way. For
->>> example, the MAX9295A can't generate an internal PCLK and relies on the
->>> sensor to provide the video stream.
->>
->> Fully agree.
->>
->>>
->>> Overall, this patch is very useful as it lets us receive a pattern from the
->>> serializer, which helps validate the GMSL2 connection.
->>>
->>> It also handles issues related to generator timing, bits per pixel (bpp),
->>> and tunnel mode that users might encounter.
->>
->> Fully agree, in my case enabling this test pattern help me a lot on
->> validating the gmsl2 pipe.
->>
->>>
->>> On 6/17/24 4:59 PM, Tommaso Merciai wrote:
->>>> Add v4l2 test pattern control.
->>>>
->>>> Signed-off-by: Tommaso Merciai <tomm.merciai@gmail.com>
->>>> ---
->>>>    drivers/media/i2c/max96717.c | 210 ++++++++++++++++++++++++++++++++---
->>>>    1 file changed, 194 insertions(+), 16 deletions(-)
->>>>
->>>> diff --git a/drivers/media/i2c/max96717.c b/drivers/media/i2c/max96717.c
->>>> index 949306485873..c263bbca7318 100644
->>>> --- a/drivers/media/i2c/max96717.c
->>>> +++ b/drivers/media/i2c/max96717.c
->>>> @@ -16,6 +16,7 @@
->>>>    #include <linux/regmap.h>
->>>>    #include <media/v4l2-cci.h>
->>>> +#include <media/v4l2-ctrls.h>
->>>>    #include <media/v4l2-fwnode.h>
->>>>    #include <media/v4l2-subdev.h>
->>>> @@ -36,11 +37,37 @@
->>>>    #define MAX96717_DEV_ID  CCI_REG8(0xd)
->>>>    #define MAX96717_DEV_REV CCI_REG8(0xe)
->>>>    #define MAX96717_DEV_REV_MASK GENMASK(3, 0)
->>>> +#define MAX96717_IO_CHK0 CCI_REG8(0x24f)
->>> In MAX96717 datasheet this register is named VTX1.
->>> Can you also move these definitions to the VTX section?
->>>> +#define MAX96717_PATTERN_CLK_FREQ GENMASK(3, 1)
->>>>    /* VID_TX Z */
->>>> +#define MAX96717_VIDEO_TX0 CCI_REG8(0x110)
->>>> +#define MAX96717_VIDEO_AUTO_BPP BIT(3)
->>>>    #define MAX96717_VIDEO_TX2 CCI_REG8(0x112)
->>>>    #define MAX96717_VIDEO_PCLKDET BIT(7)
->>>> +/* VRX_PATGEN_0 */
->>> For serializer these registers are named VTX_Z instead of VRX.
->>>
->>>> +#define MAX96717_PATGEN_0              CCI_REG8(0x24e)
->>> #define MAX96717_VTX_0              CCI_REG8(0x24e)
->>>> +#define MAX96717_PATGEN_1              CCI_REG8(0x26b)
->>> Can you keep this define ordered by address?
->>>> +#define MAX96717_PATGEN_MODE           GENMASK(1, 0)
->>>> +#define MAX96717_PATGEN_VS_DLY         CCI_REG24(0x250)
->>> #define MAX96717_VTX_VS_DLY
->>>> +#define MAX96717_PATGEN_VS_HIGH        CCI_REG24(0x253)
->>>> +#define MAX96717_PATGEN_VS_LOW         CCI_REG24(0x256)
->>>> +#define MAX96717_PATGEN_V2H            CCI_REG24(0x259)
->>>> +#define MAX96717_PATGEN_HS_HIGH        CCI_REG16(0x25c)
->>>> +#define MAX96717_PATGEN_HS_LOW         CCI_REG16(0x25e)
->>>> +#define MAX96717_PATGEN_HS_CNT         CCI_REG16(0x260)
->>>> +#define MAX96717_PATGEN_V2D            CCI_REG24(0x262)
->>>> +#define MAX96717_PATGEN_DE_HIGH        CCI_REG16(0x265)
->>>> +#define MAX96717_PATGEN_DE_LOW         CCI_REG16(0x267)
->>>> +#define MAX96717_PATGEN_DE_CNT         CCI_REG16(0x269)
->>>> +#define MAX96717_PATGEN_GRAD_INC       CCI_REG8(0x26c)
->>>> +#define MAX96717_PATGEN_CHKB_COLOR_A   CCI_REG24(0x26d)
->>>> +#define MAX96717_PATGEN_CHKB_COLOR_B   CCI_REG24(0x270)
->>>> +#define MAX96717_PATGEN_CHKB_RPT_CNT_A CCI_REG8(0x273)
->>>> +#define MAX96717_PATGEN_CHKB_RPT_CNT_B CCI_REG8(0x274)
->>>> +#define MAX96717_PATGEN_CHKB_ALT       CCI_REG8(0x275)
->>>> +
->>
->> So your plan is to move all this stuff here:
->>
->>
->> /* VTX_Z */
->> #define MAX96717_VTX0                  CCI_REG8(0x24e)
->> #define MAX96717_VTX1                  CCI_REG8(0x24f)
->> #define MAX96717_PATTERN_CLK_FREQ      GENMASK(3, 1)
->> #define MAX96717_VTX_VS_DLY            CCI_REG24(0x250)
->> #define MAX96717_VTX_VS_HIGH           CCI_REG24(0x253)
->> #define MAX96717_VTX_VS_LOW            CCI_REG24(0x256)
->> #define MAX96717_VTX_V2H               CCI_REG24(0x259)
->> #define MAX96717_VTX_HS_HIGH           CCI_REG16(0x25c)
->> #define MAX96717_VTX_HS_LOW            CCI_REG16(0x25e)
->> #define MAX96717_VTX_HS_CNT            CCI_REG16(0x260)
->> #define MAX96717_VTX_V2D               CCI_REG24(0x262)
->> #define MAX96717_VTX_DE_HIGH           CCI_REG16(0x265)
->> #define MAX96717_VTX_DE_LOW            CCI_REG16(0x267)
->> #define MAX96717_VTX_DE_CNT            CCI_REG16(0x269)
->> #define MAX96717_VTX29                 CCI_REG8(0x26b)
->> #define MAX96717_VTX_MODE              GENMASK(1, 0)
->> #define MAX96717_VTX_GRAD_INC          CCI_REG8(0x26c)
->> #define MAX96717_VTX_CHKB_COLOR_A      CCI_REG24(0x26d)
->> #define MAX96717_VTX_CHKB_COLOR_B      CCI_REG24(0x270)
->> #define MAX96717_VTX_CHKB_RPT_CNT_A    CCI_REG8(0x273)
->> #define MAX96717_VTX_CHKB_RPT_CNT_B    CCI_REG8(0x274)
->> #define MAX96717_VTX_CHKB_ALT          CCI_REG8(0x275)
->>
->> In a fixed order right? :-)
-Yes sounds good to me
->>
->>
->>
->>>>    /* GPIO */
->>>>    #define MAX96717_NUM_GPIO         11
->>>>    #define MAX96717_GPIO_REG_A(gpio) CCI_REG8(0x2be + (gpio) * 3)
->>>> @@ -82,6 +109,12 @@
->>>>    /* MISC */
->>>>    #define PIO_SLEW_1 CCI_REG8(0x570)
->>>> +enum max96717_vpg_mode {
->>>> +	MAX96717_VPG_DISABLED = 0,
->>>> +	MAX96717_VPG_CHECKERBOARD = 1,
->>>> +	MAX96717_VPG_GRADIENT = 2,
->>>> +};
->>>> +
->>>>    struct max96717_priv {
->>>>    	struct i2c_client		  *client;
->>>>    	struct regmap			  *regmap;
->>>> @@ -89,6 +122,7 @@ struct max96717_priv {
->>>>    	struct v4l2_mbus_config_mipi_csi2 mipi_csi2;
->>>>    	struct v4l2_subdev                sd;
->>>>    	struct media_pad                  pads[MAX96717_PORTS];
->>>> +	struct v4l2_ctrl_handler          ctrl_handler;
->>>>    	struct v4l2_async_notifier        notifier;
->>>>    	struct v4l2_subdev                *source_sd;
->>>>    	u16                               source_sd_pad;
->>>> @@ -96,6 +130,7 @@ struct max96717_priv {
->>>>    	u8                                pll_predef_index;
->>>>    	struct clk_hw                     clk_hw;
->>>>    	struct gpio_chip                  gpio_chip;
->>>> +	enum max96717_vpg_mode            pattern;
->>>>    };
->>>>    static inline struct max96717_priv *sd_to_max96717(struct v4l2_subdev *sd)
->>>> @@ -131,6 +166,115 @@ static inline int max96717_start_csi(struct max96717_priv *priv, bool start)
->>>>    			       start ? MAX96717_START_PORT_B : 0, NULL);
->>>>    }
->>>> +static int max96717_apply_patgen_timing(struct max96717_priv *priv,
->>>> +					struct v4l2_subdev_state *state)
->>>> +{
->>>> +	struct v4l2_mbus_framefmt *fmt =
->>>> +		v4l2_subdev_state_get_format(state, MAX96717_PAD_SOURCE);
->>>> +	const u32 h_active = fmt->width;
->>>> +	const u32 h_fp = 88;
->>>> +	const u32 h_sw = 44;
->>>> +	const u32 h_bp = 148;
->>>> +	u32 h_tot;
->>>> +	const u32 v_active = fmt->height;
->>>> +	const u32 v_fp = 4;
->>>> +	const u32 v_sw = 5;
->>>> +	const u32 v_bp = 36;
->>>> +	u32 v_tot;
->>>> +	int ret = 0;
->>>> +
->>>> +	h_tot = h_active + h_fp + h_sw + h_bp;
->>>> +	v_tot = v_active + v_fp + v_sw + v_bp;
->>>> +
->>>> +	/* 75 Mhz pixel clock */
->>>> +	cci_update_bits(priv->regmap, MAX96717_IO_CHK0,
->>>> +			MAX96717_PATTERN_CLK_FREQ, 0xa, &ret);
->>>> +
->>>> +	dev_info(&priv->client->dev, "height: %d width: %d\n", fmt->height,
->>>> +		 fmt->width);
->>>> +
->>>> +	cci_write(priv->regmap, MAX96717_PATGEN_VS_DLY, 0, &ret);
->>>> +	cci_write(priv->regmap, MAX96717_PATGEN_VS_HIGH, v_sw * h_tot, &ret);
->>>> +	cci_write(priv->regmap, MAX96717_PATGEN_VS_LOW,
->>>> +		  (v_active + v_fp + v_bp) * h_tot, &ret);
->>>> +	cci_write(priv->regmap, MAX96717_PATGEN_HS_HIGH, h_sw, &ret);
->>>> +	cci_write(priv->regmap, MAX96717_PATGEN_HS_LOW, h_active + h_fp + h_bp,
->>>> +		  &ret);
->>>> +	cci_write(priv->regmap, MAX96717_PATGEN_V2D,
->>>> +		  h_tot * (v_sw + v_bp) + (h_sw + h_bp), &ret);
->>>> +	cci_write(priv->regmap, MAX96717_PATGEN_HS_CNT, v_tot, &ret);
->>>> +	cci_write(priv->regmap, MAX96717_PATGEN_DE_HIGH, h_active, &ret);
->>>> +	cci_write(priv->regmap, MAX96717_PATGEN_DE_LOW, h_fp + h_sw + h_bp,
->>>> +		  &ret);
->>>> +	cci_write(priv->regmap, MAX96717_PATGEN_DE_CNT, v_active, &ret);
->>>> +	/* B G R */
->>>> +	cci_write(priv->regmap, MAX96717_PATGEN_CHKB_COLOR_A, 0xfecc00, &ret);
->>>> +	/* B G R */
->>>> +	cci_write(priv->regmap, MAX96717_PATGEN_CHKB_COLOR_B, 0x006aa7, &ret);
->>>> +	cci_write(priv->regmap, MAX96717_PATGEN_CHKB_RPT_CNT_A, 0x3c, &ret);
->>>> +	cci_write(priv->regmap, MAX96717_PATGEN_CHKB_RPT_CNT_B, 0x3c, &ret);
->>>> +	cci_write(priv->regmap, MAX96717_PATGEN_CHKB_ALT, 0x3c, &ret);
->>>> +	cci_write(priv->regmap, MAX96717_PATGEN_GRAD_INC, 0x10, &ret);
->>>> +
->>>> +	return ret;
->>>> +}
->>>> +
->>>> +static int max96717_apply_patgen(struct max96717_priv *priv,
->>>> +				 struct v4l2_subdev_state *state)
->>>> +{
->>>> +	unsigned int val;
->>>> +	int ret = 0;
->>>> +
->>>> +	if (priv->pattern)
->>>> +		ret = max96717_apply_patgen_timing(priv, state);
->>>> +
->>>> +	cci_write(priv->regmap, MAX96717_PATGEN_0, priv->pattern ? 0xfb : 0,
->>>> +		  &ret);
->>>> +
->>>> +	val = FIELD_PREP(MAX96717_PATGEN_MODE, priv->pattern);
->>>> +	cci_update_bits(priv->regmap, MAX96717_PATGEN_1, MAX96717_PATGEN_MODE,
->>>> +			val, &ret);
->>>> +	return ret;
->>>> +}
->>>> +
->>>> +static int max96717_s_ctrl(struct v4l2_ctrl *ctrl)
->>>> +{
->>>> +	struct max96717_priv *priv =
->>>> +		container_of(ctrl->handler, struct max96717_priv, ctrl_handler);
->>>> +	int ret;
->>>> +
->>>> +	switch (ctrl->id) {
->>>> +	case V4L2_CID_TEST_PATTERN:
->>>> +		if (priv->enabled_source_streams)
->>>> +			return -EBUSY;
->>>> +		priv->pattern = ctrl->val;
->>>> +		break;
->>>> +	default:
->>>> +		return -EINVAL;
->>>> +	}
->>>> +
->>>> +	/* Use bpp from bpp register */
->>>> +	ret = cci_update_bits(priv->regmap, MAX96717_VIDEO_TX0,
->>>> +			      MAX96717_VIDEO_AUTO_BPP,
->>>> +			      priv->pattern ? 0 : MAX96717_VIDEO_AUTO_BPP,
->>>> +			      NULL);
->>>> +
->>>> +	/* Pattern generator doesn't work with tunnel mode */
->>> Can you add a comment saying that the deserializer should manage the link in
->>> pixel mode as well.
->>
->> Something like:
->> 	/* Pattern generator doesn't work with tunnel mode.
->> 	   Is mandatory to put also the deserializer into pixel mode.
->>          */
-> 
-> Actually I plan to add to add the following comment:
-> 
-> 	/*
-> 	 * Pattern generator doesn't work with tunnel mode.
-> 	 * Needs RGB color format and deserializer tunnel mode must be disabled.
-> 	 */
-> 	return cci_update_bits(priv->regmap, MAX96717_MIPI_RX_EXT11,
-> 			       MAX96717_TUN_MODE,
-> 			       priv->pattern ? 0 : MAX96717_TUN_MODE, &ret);
-> 
-> Let me know if this can be ok for you.
-Yes perfect
+While the documented VPHY out-of-reset configuration should autonegotiate
+the maximum supported link speed on the CPU interface, that doesn't work
+on RGMII links, where the VPHY negotiates 100MBit speed. This causes the
+RGMII TX interface to run with a wrong clock rate.
 
-Regards,
+Disable the VPHY output altogether, so it doesn't interfere with the
+CPU interface configuration set via fixed-link. The VPHY is a compatibility
+functionality to be able to attach network drivers without fixed-link
+support to the switch, which generally should not be needed with linux
+network drivers.
 
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ drivers/net/dsa/microchip/lan937x_main.c | 3 +++
+ drivers/net/dsa/microchip/lan937x_reg.h  | 4 ++++
+ 2 files changed, 7 insertions(+)
+
+diff --git a/drivers/net/dsa/microchip/lan937x_main.c b/drivers/net/dsa/microchip/lan937x_main.c
+index b6ef48a655735..9cd3ff38ed66b 100644
+--- a/drivers/net/dsa/microchip/lan937x_main.c
++++ b/drivers/net/dsa/microchip/lan937x_main.c
+@@ -400,6 +400,9 @@ int lan937x_setup(struct dsa_switch *ds)
+ 	lan937x_cfg(dev, REG_SW_GLOBAL_OUTPUT_CTRL__1,
+ 		    (SW_CLK125_ENB | SW_CLK25_ENB), true);
+ 
++	/* disable VPHY output*/
++	ksz_rmw32(dev, REG_SW_CFG_STRAP_OVR, SW_VPHY_DISABLE, SW_VPHY_DISABLE);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/net/dsa/microchip/lan937x_reg.h b/drivers/net/dsa/microchip/lan937x_reg.h
+index e36bcb155f545..be553e23a964e 100644
+--- a/drivers/net/dsa/microchip/lan937x_reg.h
++++ b/drivers/net/dsa/microchip/lan937x_reg.h
+@@ -37,6 +37,10 @@
+ #define SW_CLK125_ENB			BIT(1)
+ #define SW_CLK25_ENB			BIT(0)
+ 
++/* 2 - PHY Control */
++#define REG_SW_CFG_STRAP_OVR		0x214
++#define SW_VPHY_DISABLE			BIT(31)
++
+ /* 3 - Operation Control */
+ #define REG_SW_OPERATION		0x0300
+ 
 -- 
-Julien
+2.39.2
+
