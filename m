@@ -1,102 +1,93 @@
-Received: from out198-27.us.a.mail.aliyun.com (out198-27.us.a.mail.aliyun.com [47.90.198.27])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DAFD17E9;
-	Thu, 27 Jun 2024 01:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.198.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90FA5D51E;
+	Thu, 27 Jun 2024 01:05:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719450332; cv=none; b=oWvsRQJH0TfREYJitTfODqAOFQVKfTtaKXQ6nnFvAdAXN5ktkxF37ApVNeZ5uz9wEZAUcOtsdsq4GdECciVAjI3udddqhQwIOfkJyIVMm5zac2EmGuzjDnCvlQxdQ9unGEEZP9MagSROMrfbIzV2c8d9y6pKHQZnG0Jc7wUj8IQ=
+	t=1719450338; cv=none; b=Pzx7lYhqspcmff9qhy7PsKIQvDNfnY3EQrepjIYbx779bp3qpClq6gisnARLC9o3E3RrSNKMYKb9w8jytA5GnFI0Mn7Ia1c/rNbc+kVwRk9XwCX9HvZAOf/8YAZc55vh2axXk0BGi5A0MS1NanuyabUSGqgM2tgTmFoSLld7S50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719450332; c=relaxed/simple;
-	bh=0J0jxoRZ8knfoOrv0tm9C46jVzfdlWNe5MDqy3Cayeo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bUPvOeLLN3FxUsNSz3Vm3wPvIWO9qj7E3ssAuFkvornpcvSEBBMuzk7hb7ZtgyGHlwmYtKcb4Iz4Ui+HjuXOtepAPD58wcKLD/WlIboARfB9Okk63QMLaWiJ8RXmMvBSRHQp1AsUTRwmRsG9IsBUisXVUY4PXQadvePHS4i4LIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com; spf=pass smtp.mailfrom=ttyinfo.com; arc=none smtp.client-ip=47.90.198.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ttyinfo.com
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.08894578|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.00934811-0.000993108-0.989659;FP=0|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033037088118;MF=zhoushengqing@ttyinfo.com;NM=1;PH=DS;RN=7;RT=7;SR=0;TI=SMTPD_---.YB2AYbC_1719449990;
-Received: from tzl..(mailfrom:zhoushengqing@ttyinfo.com fp:SMTPD_---.YB2AYbC_1719449990)
-          by smtp.aliyun-inc.com;
-          Thu, 27 Jun 2024 08:59:51 +0800
-From: Zhou Shengqing <zhoushengqing@ttyinfo.com>
-To: helgaas@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	lkp@intel.com,
-	llvm@lists.linux.dev,
-	oe-kbuild-all@lists.linux.dev,
-	zhoushengqing@ttyinfo.com
-Subject: [PATCH v3] PCI: Enable io space 1k granularity for intel cpu root port
-Date: Thu, 27 Jun 2024 00:58:56 +0000
-Message-Id: <20240627005856.11449-1-zhoushengqing@ttyinfo.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240626152623.GA1467429@bhelgaas>
-References: <20240626152623.GA1467429@bhelgaas>
+	s=arc-20240116; t=1719450338; c=relaxed/simple;
+	bh=u81FSMUN6eqlccWIV8JIHE2+9FvCevMk6DG/OPGYw0o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HtyZJGcMlypVV5uHquQMjza8emycPImY3ur/YhNReA0aAxfdNmvHt3QrrXP0/LkggNTu8QhzmaFN3WW7BOTLkl04SIWJbzdPwCo7vSRqCoWT3GYIbBGasRvv9pRnZStDS0hjrk6nfmHCgPJ9YW+GsYgwLU0183zPEX4igIqVvWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KyRIli9t; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KyRIli9t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719450337; x=1750986337;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=u81FSMUN6eqlccWIV8JIHE2+9FvCevMk6DG/OPGYw0o=;
+  b=KyRIli9t/07S4c7ywaWkpYOO+Yd1yRWm8re2MOsvbzSP4kYSgqztMz8y
+   lAjPBeRNAyo0NuaObc+8f862h9dUrh7RHGdj8KunCLsXeUYzLG+B3sOQx
+   NrIU56xFK/6wQUIaR4L+hu3rREZ9l++giwaqoJAk/l/37zFBCLpVAyZYs
+   LuRWDI6Opj7WEMugQBofH3UDUzbrLmU0CguEG+Dk2DS0Ni+HnKwj0WTyT
+   rzxE6jkTgbdp4+w4Lrp2cImsn2MWLi0ej9mEPQZclSMK8f9HxUzcHPtKi
+   rVAzO5TP4NvXwqAH+u0r0dV65DiGW3c0mlxrWb8DZvQXI9Z4RPNR9qo9E
+   Q==;
+X-CSE-ConnectionGUID: nPgqzjWMT369hc9vQMamyg==
+X-CSE-MsgGUID: nstOnjtlT1iqfTNEPIwhyg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11115"; a="27144193"
+X-IronPort-AV: E=Sophos;i="6.08,268,1712646000"; 
+   d="scan'208";a="27144193"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 18:05:36 -0700
+X-CSE-ConnectionGUID: Jmw9tSW/Qcq/CYhYMcUxLw==
+X-CSE-MsgGUID: rHgAxCIPQD6nSQ87v5mMdA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,268,1712646000"; 
+   d="scan'208";a="44850466"
+Received: from bjrankin-mobl3.amr.corp.intel.com (HELO khuang2-desk.gar.corp.intel.com) ([10.124.222.73])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 18:05:35 -0700
+From: Kai Huang <kai.huang@intel.com>
+To: kvm@vger.kernel.org
+Cc: seanjc@google.com,
+	pbonzini@redhat.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: VMX: Switch __vmx_exit() and kvm_x86_vendor_exit() in vmx_exit()
+Date: Thu, 27 Jun 2024 13:05:24 +1200
+Message-ID: <20240627010524.3732488-1-kai.huang@intel.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This patch add 1k granularity for intel root port bridge.Intel latest
-server CPU support 1K granularity,And there is an BIOS setup item named
-"EN1K",but linux doesn't support it. if an IIO has 5 IOU (SPR has 5 IOUs)
-all are bifurcated 2x8.In a 2P server system,There are 20 P2P bridges
-present.if keep 4K granularity allocation,it need 20*4=80k io space,
-exceeding 64k.I test it in a 16*nvidia 4090s system under intel eaglestrem
-platform.There are six 4090s that cannot be allocated I/O resources.
-So I applied this patch.And I found a similar implementation in quirks.c,
-but it only targets the Intel P64H2 platform.
+In the vmx_init() error handling path, the __vmx_exit() is done before
+kvm_x86_vendor_exit().  They should follow the same order in vmx_exit().
 
-Signed-off-by: Zhou Shengqing <zhoushengqing@ttyinfo.com>
+But currently __vmx_exit() is done after kvm_x86_vendor_exit() in
+vmx_exit().  Switch the order of them to fix.
+
+Fixes: e32b120071ea ("KVM: VMX: Do _all_ initialization before exposing /dev/kvm to userspace")
+Signed-off-by: Kai Huang <kai.huang@intel.com>
 ---
- drivers/pci/probe.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ arch/x86/kvm/vmx/vmx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 5fbabb4e3425..909962795311 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -461,6 +461,9 @@ static void pci_read_bridge_windows(struct pci_dev *bridge)
- 	u32 buses;
- 	u16 io;
- 	u32 pmem, tmp;
-+	u16 ven_id, dev_id;
-+	u16 en1k = 0;
-+	struct pci_dev *dev = NULL;
- 	struct resource res;
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index b3c83c06f826..8e7371c9648a 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -8629,9 +8629,9 @@ static void __vmx_exit(void)
+ static void vmx_exit(void)
+ {
+ 	kvm_exit();
++	__vmx_exit();
+ 	kvm_x86_vendor_exit();
  
- 	pci_read_config_dword(bridge, PCI_PRIMARY_BUS, &buses);
-@@ -478,6 +481,26 @@ static void pci_read_bridge_windows(struct pci_dev *bridge)
- 	}
- 	if (io) {
- 		bridge->io_window = 1;
-+		if (pci_is_root_bus(bridge->bus)) {
-+			list_for_each_entry(dev, &bridge->bus->devices, bus_list) {
-+				pci_read_config_word(dev, PCI_VENDOR_ID, &ven_id);
-+				pci_read_config_word(dev, PCI_DEVICE_ID, &dev_id);
-+				if (ven_id == PCI_VENDOR_ID_INTEL && dev_id == 0x09a2) {
-+					/*IIO MISC Control offset 0x1c0*/
-+					pci_read_config_word(dev, 0x1c0, &en1k);
-+				}
-+			}
-+		/*
-+		 *Intel ICX SPR EMR GNR
-+		 *IIO MISC Control (IIOMISCCTRL_1_5_0_CFG) — Offset 1C0h
-+		 *bit 2:Enable 1K (EN1K)
-+		 *This bit when set, enables 1K granularity for I/O space decode
-+		 *in each of the virtual P2P bridges
-+		 *corresponding to root ports, and DMI ports.
-+		 */
-+		if (en1k & 0x4)
-+			bridge->io_window_1k = 1;
-+		}
- 		pci_read_bridge_io(bridge, &res, true);
- 	}
+-	__vmx_exit();
+ }
+ module_exit(vmx_exit);
  
+
+base-commit: c2f38f75fc89ebd6c0be5856509329390102d8ba
 -- 
-2.39.2
+2.43.2
 
