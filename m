@@ -1,40 +1,58 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B69F1A08C7
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 21:17:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88FE819A2A3
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 21:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719523079; cv=none; b=BC3ETgYq4I8iVSxXyl2khhU4AvQ0pVS5chX0r2yol5VNx2Iu9hY+p8QmYJiy3rmaXLbQFlQ0tm/buvj1gqgRbxgmfwMyjWbcl3uRwPgwrq18DHEmN1WwUJv7YVUn9dJWdWf3fQFCDwqs1y6sWU8Tg1th4pRzp/v6cS2Urp8mVpo=
+	t=1719523081; cv=none; b=BDRQaBbbYNgxEzZINfKfGYd11Muz4+3k1aiS23Bd1fu1BIiDDphwrqHV2dxsb24lbEG0rEj5dCtIQQY7TaSL0lqdeDsXUABYOpw3A0tDUp8iwquq3l6woVND6guTvCbv1mNFXZYKYWKeOY6hE3q6WXDDXwCCl59Gj2SHDd4IXPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719523079; c=relaxed/simple;
-	bh=E5x8SPF0o7XVjxRg+/VGBTN0NJl1wamCDzYvuZISHAY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u3TrXIcgjo+ui+UYbwi+V35OPF3OHFRM5ywHxd8p6Wg2wgR1E7hwgT3lL3EfJ6iFXJgtRAZR9P4m6gYLXzsx45MT0lpt0gd9d8PnDFmO18vAoAoDyGo90eswq2vyVyifKO80HxpxwSJxUFeRG8jaEiGvoFvrzf6UiuDLsw2BcP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=iBrZRhn6; arc=none smtp.client-ip=149.28.215.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	s=arc-20240116; t=1719523081; c=relaxed/simple;
+	bh=hJzu2OKyiD/BxE5kdIigdIzAsQ/SbxnemYMumJ5GtZU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fiV2pARh5urCk5yVp1C15QX+AHi2KOsVGJbvfIRNZ3Jxt51DBscULrwQ9aMyy4uNFZcBqHa8vWq71c9Vzk7U1ozLnMNT+1rWj53UNnUP+5HC1HjDLcVHXrJqwa5xZhZHxJn1KwqsBoZXw8V6jdpWFvibdOujiNdh5MGA36exspI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=AtVvfe78; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="iBrZRhn6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: MIME-Version: Message-ID: Date: Subject: Cc:
- To: From; q=dns/txt; s=fe-e1b5cab7be; t=1719523064;
- bh=rPE+9z//tyfsDsGC0Vy2GcWOo7+pR6Ob+6/gM+fr390=;
- b=iBrZRhn6S1X72EfwpHyazeggUag0Simvv4eS1pVIMF1f1TeLZDe6HouYEF82rYa8cykQtmAKC
- 9yx9KzGCrizFWsflyIlihZL+HI8ix3zixIziuNOTcdfSgKXJLUGPqUhivXM1Ri5JtfnLJkHLHlm
- OlNrS5v56RrpickA+lco9kjT8SVJ55S1FvfFCXxHmC1FwJID9SP6xHcr6ZcsjSV5Uu3k4yNfOWr
- rHvqy6kS8UpTqdjb/MH9vZDq3DMJ4isgv+GPLzqfpBNDIXE158n56Hqmn0Y8T2YMX6YSCjtQj1Y
- ZkeLo2ESD5fJpgbEiirpv5AVVEnvYzNZ4QNwhpCBiwPA==
-From: Jonas Karlman <jonas@kwiboo.se>
-To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>
-Cc: FUKAUMI Naoki <naoki@radxa.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>
-Subject: [PATCH v3 0/2] arm64: dts: rockchip: Add Radxa ROCK 3B
-Date: Thu, 27 Jun 2024 21:17:29 +0000
-Message-ID: <20240627211737.1985549-1-jonas@kwiboo.se>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AtVvfe78"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45RKBTh5026542;
+	Thu, 27 Jun 2024 21:17:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding; s=corp-2023-11-20; bh=7WtqeTWGCwWcoa
+	ZZba6TG+pblrj7SJ6BTUhHhkGGLWU=; b=AtVvfe78hHsAfT7lzuMuToUakNXa69
+	Q25i+9WlpsieO1Fcv98gljfRWTpPFnB7zY8DVVkvqVaoyfgP+WeRaE1FqxYh2UAy
+	HWt0HSfKbP50Lvv8B+kBlmaEeFx80wd466gYtwLMOrnd9ZFKzr1X5stdgACQt/J0
+	C4JzMiBTtbvlb3KCgqmZme0mACSugPpgwBhrlTKbACdHuJg6ZVwnVO7TVTOytpuL
+	zDIX3dMd+oS5lnndKVZlHejUf672xBe6tGP9H7vQhdP84dfr4SmkPeQEBERkjlq5
+	42s9RaasyyefUYESl4s9Ngsy9jtz1DbmpTiEoXtM2Se/tV/homCOHLGQ==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ywnd2q36x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 27 Jun 2024 21:17:40 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45RJtOnq017832;
+	Thu, 27 Jun 2024 21:17:39 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ywn2awm3x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 27 Jun 2024 21:17:38 +0000
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 45RLHct2016897;
+	Thu, 27 Jun 2024 21:17:38 GMT
+Received: from aruramak-dev.osdevelopmeniad.oraclevcn.com (aruramak-dev.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.253.155])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3ywn2awm35-1;
+	Thu, 27 Jun 2024 21:17:38 +0000
+From: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, dave.hansen@linux.intel.com, tglx@linutronix.de,
+        mingo@kernel.org, jeffxu@chromium.org, keith.lucas@oracle.com,
+        aruna.ramakrishna@oracle.com
+Subject: [PATCH v6 0/5] x86/pkeys: update PKRU to enable pkey 0 before
+Date: Thu, 27 Jun 2024 21:17:32 +0000
+Message-Id: <20240627211737.323214-1-aruna.ramakrishna@oracle.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,49 +60,78 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Report-Abuse-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-ForwardEmail-Version: 0.4.40
-X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 149.28.215.223
-X-ForwardEmail-ID: 667dd6f8392543b4ce9ac5db
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-27_14,2024-06-27_03,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 adultscore=0
+ phishscore=0 bulkscore=0 mlxlogscore=834 suspectscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2406180000
+ definitions=main-2406270158
+X-Proofpoint-ORIG-GUID: 7lgl6fz6HIB8SwHARFN58wMF7SiCax4r
+X-Proofpoint-GUID: 7lgl6fz6HIB8SwHARFN58wMF7SiCax4r
 
-This series adds initial support for the Radxa ROCK 3B board.
+v6 updates:
+- Rebased patchset to v6.10.0-rc5
+- Changed sig_prepare_pkru() back to enabling all pkeys, based on
+discussion with Jeff Xu
 
-The Radxa ROCK 3B is a single-board computer based on the Pico-ITX form
-factor (100mm x 75mm). Two versions of the ROCK 3B exists, a community
-version based on the RK3568 SoC and an industrial version based on the
-RK3568J SoC.
+As Jeff mentioned, I'm unsure if we need to retain the changes to the
+32-bit functions. Maintainers - please advise.
 
-Schematic for ROCK 3B can be found at:
-https://dl.radxa.com/rock3/docs/hw/3b/Radxa_ROCK_3B_V1.51_SCH.pdf
+v5 updates:
+- No major changes, mostly a resend of v4 - except for updating the
+  commit description for patch 5/5
 
-Changes in v3:
-- Rename led node and move led pinctrl
-- Add cap-mmc-highspeed to sdhci node
+v4 updates (based on review feedback from Thomas Gleixner):
+- Simplified update_pkru_in_sigframe()
+- Changed sigpkru to enable minimally required keys (init_pkru and
+  current
+  pkru)
+- Modified pkey_sighandler_tests.c to use kselfttest framework
+- Fixed commit descriptions
+- Fixed sigreturn use case (pointed out by Jeff Xu)
+- Added a new sigreturn test case
 
-Changes in v2:
-- Drop rk809 dt-bindings patches, replaced by series at [1]
-- Use regulator-.* nodename for fixed regulators
-- Drop rockchip,mic-in-differential prop
-- Shorten Ethernet phy reset-deassert-us to 50 ms
-- Fix pcie pinctrl
-- Add keep-power-in-suspend to sdmmc2
-- Collect a-b tag
+v3 updates (based on review feedback from Ingo Molnar and Dave Hansen):
+- Split the original patch into 3:
+        - function interface changes
+        - helper functions
+        - functional change to write pkru on sigframe
+- Enabled all pkeys before XSAVE - i.e. wrpkru(0), rather than assuming
+that the alt sig stack is always protected by pkey 0.
+- Added a few test cases in pkey_sighandler_tests.c.
 
-[1] https://lore.kernel.org/all/20240622-rk809-fixes-v2-0-c0db420d3639@collabora.com/
+I had some trouble adding these tests to
+tools/testing/selftests/mm/protection_keys.c, so they're in a separate
+file.
 
-Jonas Karlman (2):
-  dt-bindings: arm: rockchip: Add Radxa ROCK 3B
-  arm64: dts: rockchip: Add Radxa ROCK 3B
+Aruna Ramakrishna (4):
+  x86/pkeys: Add PKRU as a parameter in signal handling functions
+  x86/pkeys: Add helper functions to update PKRU on the sigframe
+  x86/pkeys: Update PKRU to enable all pkeys before XSAVE
+  x86/pkeys: Restore altstack before sigcontext
 
- .../devicetree/bindings/arm/rockchip.yaml     |   5 +
- arch/arm64/boot/dts/rockchip/Makefile         |   1 +
- .../boot/dts/rockchip/rk3568-rock-3b.dts      | 781 ++++++++++++++++++
- 3 files changed, 787 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3568-rock-3b.dts
+Keith Lucas (1):
+  selftests/mm: Add new testcases for pkeys
 
+ arch/x86/include/asm/fpu/signal.h             |   2 +-
+ arch/x86/include/asm/sighandling.h            |  10 +-
+ arch/x86/kernel/fpu/signal.c                  |  27 +-
+ arch/x86/kernel/fpu/xstate.c                  |  13 +
+ arch/x86/kernel/fpu/xstate.h                  |   2 +
+ arch/x86/kernel/signal.c                      |  45 +-
+ arch/x86/kernel/signal_32.c                   |  12 +-
+ arch/x86/kernel/signal_64.c                   |  14 +-
+ tools/testing/selftests/mm/Makefile           |   2 +
+ tools/testing/selftests/mm/pkey-helpers.h     |  11 +-
+ .../selftests/mm/pkey_sighandler_tests.c      | 479 ++++++++++++++++++
+ tools/testing/selftests/mm/protection_keys.c  |  10 -
+ 12 files changed, 583 insertions(+), 44 deletions(-)
+ create mode 100644 tools/testing/selftests/mm/pkey_sighandler_tests.c
+
+
+base-commit: f2661062f16b2de5d7b6a5c42a9a5c96326b8454
+prerequisite-patch-id: fc7cbe9ff3c554d556e2792f9ffaf29e6ad6ee21
 -- 
-2.45.2
+2.39.3
 
