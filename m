@@ -1,133 +1,186 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B0571386D1;
-	Thu, 27 Jun 2024 09:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA2A1386A7
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 09:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719478966; cv=none; b=uCXpn85hMZNb/jb/KLW1U1RJ8I95v4tzz9rdn0TLGSwZt+EZrkbekxWIjzRNOa4anIusSuKcGzmh3K7xN2BV/7nbjKvf85fAmv84yepUFnwx574Hkqi3+QR6gXKLUbALYyBC5hZZcsz+Da/cLPVU1k7W+SSWbGX0bcXnU0YVbjU=
+	t=1719478974; cv=none; b=PGJFhXddlFzPv60JtQCCQ89sKx/8O2gmJVZ6SE+Ljo5zlL6FTlnnUvWuOrLweL5JH1IQ2+JBzUXgxkH9ioUu78GOFPCVlg6rYN4fZdx8afszs10GsWEdg03U/5jYf9lh3HzvLSzmX4kOqG4SZcwmmx/witg6UUAliPBGwEMm4Bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719478966; c=relaxed/simple;
-	bh=BYinFI9Yc/ToOx7KoWT43cxkkp0FbG/qTn0QT7Q6Nu4=;
+	s=arc-20240116; t=1719478974; c=relaxed/simple;
+	bh=/HuA9sIM45rfx+JNeCBr0HYCr6cegkyYM2SAT2mdjuU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UUarUg87SdQFsgQo13Y6e+TQpUgmKD0ZZIHdsntge4YkJBEQFUZ/vt1bczBRSaAJ9Rz7czXoNgA0y/Yb7aSaaLoW2iTc/WXdC4ExHR6s5CqPxq9KPxE0VNUejGJp14qtDCz9W3axdYQ4kpifwPrZenHCbS3NHdfpenwSdSTJuOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1sMl1G-0002g2-00; Thu, 27 Jun 2024 11:02:18 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 468FEC0411; Thu, 27 Jun 2024 11:01:02 +0200 (CEST)
-Date: Thu, 27 Jun 2024 11:01:02 +0200
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Hauke Mehrtens <hauke@hauke-m.de>,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sy4CbU7/Ypm2UqF2savRJOCrQJIVVYN510eFs1s+HHxNvDGsrhjyxfIwi7BxZQxmYg+FzOz7eDHioqZlubGI1wKne+UlSSJv8KD9AIzP7hCcGj2VdNI23cZjnXJl06ZzYrTNH0lZjYSRqXgaR+JJsYQWv9LCnNSljkbcaVK0Q0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ZX+pH7ad; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ZX+pH7ad"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-57cbc66a0a6so1961135a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 02:02:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1719478970; x=1720083770; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wVJHHFxsFGNC+CpTuC7eFD4WHZBpUTVWHAScPtS50r4=;
+        b=ZX+pH7ad1vFBrJ05WRqXbaTO5//O5eDXZzZHoOwP8MCntjw5t8VsVYmi66L6kqfkV5
+         PtJzxvR8N3x9RTQpQal/ezQTDMgbf/JRRDez3dcWyKGCXjTE10mbIZcXSKaWU16p8OpQ
+         w/v5ZPg0pVzKPJqRUBpW9WlfN779oc0OoTDoqYv8Ca956e6Su9HK/jKyJPR6RQgHgd1Z
+         DwxbZMVuwwZKwNH2V3F4h88UOB3TT4b0WgdUEZcJCmSgAxOw9TibOR4EgSp2phNUIQKN
+         1BWhYsDHgnNQX33HqYS3BxFMq8b93QzgpgRdoBQjImoY6XeHUt/gfC/8lM8+NIO31LZf
+         ad8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719478970; x=1720083770;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wVJHHFxsFGNC+CpTuC7eFD4WHZBpUTVWHAScPtS50r4=;
+        b=Cke9QYVWsrKEG18MmWUSJG94PtYoC7y9XyHTOZhv4DGA9YZxXwurn4ORoJzsAuhiI1
+         hnm0RMJHJX5xBCKs9ZJSmrROIKXEUHsIpks7O8Pq08gflCsUyWqnhKiVSF477aXWM5hZ
+         7hOf9WWl/APYyjXv1wkXTBukiTqKnNHY/EWoknzHmqIKsmTCX+LoFCA4QWwhVliWDBSH
+         a5BSN/n8de5eEvVd3Bgu8eI8H/E9dQBm/doRsAGeIgNjn8xpW4FkRmxCEY49WjRD2a+c
+         tqtPMlpzZ5j3VV8vRMHERLTrg7gCbQhyig34daQrKi0xoISuvebnC3TZULEyub2CF9ac
+         +jpA==
+X-Forwarded-Encrypted: i=1; AJvYcCXVbDvp6332uxqb59D/Nxr3PHK1bdx7wp9S4gOgf2TOXcn02Sn2SuA2X0/qIOx2eEgIAGOsWry1IwO3x9w2mghpDtypy/fPDCNu9W5z
+X-Gm-Message-State: AOJu0YyJfBP9UfLycL78SYyJVfZ0rcDy8XwbXIh1DdBRJaP/U7FDo2Th
+	tTA5bFZQy953K6jCkwsgBpCecBVXhwZFpmMYN0ZJ53scdG3zsInbMSyA2zDKjZ4=
+X-Google-Smtp-Source: AGHT+IHT2KA6PAkiA91MD5h1tmv6NnAKlUvPGpZdZnXekYQ9mnXMlsa4UP45mJuWwiuuVg88RoreOA==
+X-Received: by 2002:a50:a6d2:0:b0:57c:614c:56e7 with SMTP id 4fb4d7f45d1cf-5847c19a927mr1651331a12.18.1719478969031;
+        Thu, 27 Jun 2024 02:02:49 -0700 (PDT)
+Received: from localhost (nat2.prg.suse.com. [195.250.132.146])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-584d0c9e36fsm602358a12.8.2024.06.27.02.02.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jun 2024 02:02:48 -0700 (PDT)
+Date: Thu, 27 Jun 2024 11:02:47 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Christian Brauner <brauner@kernel.org>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Jinliang Zheng <alexjlzheng@tencent.com>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Tycho Andersen <tandersen@netflix.com>,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 0/4] mips: bmips: improve handling of RAC and CBR addr
-Message-ID: <Zn0qTnESrqlTy5wL@alpha.franken.de>
-References: <20240620152649.994-1-ansuelsmth@gmail.com>
+Subject: Re: [PATCH 2/2] memcg: mm_update_next_owner: move for_each_thread()
+ into try_to_set_owner()
+Message-ID: <Zn0qt4KY8S4E65IM@tiehlicka>
+References: <20240626152835.GA17910@redhat.com>
+ <20240626152930.GA17936@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240620152649.994-1-ansuelsmth@gmail.com>
+In-Reply-To: <20240626152930.GA17936@redhat.com>
 
-On Thu, Jun 20, 2024 at 05:26:41PM +0200, Christian Marangi wrote:
-> Hi,
+On Wed 26-06-24 17:29:30, Oleg Nesterov wrote:
+> mm_update_next_owner() checks the children / real_parent->children to
+> avoid the "everything else" loop in the likely case, but this won't work
+> if a child/sibling has a zombie leader with ->mm == NULL.
 > 
-> this simple series improve handling of RAC and CBR address and try to
-> upstream these simple patch we have in OpenWrt for a while.
+> Move the for_each_thread() logic into try_to_set_owner(), if nothing else
+> this makes the children/siblings/everything searches more consistent.
 > 
-> The first patch fix a straight kernel panic where some Bootloader might
-> enable RAC but misconfigure the CBR address. The current logic only
-> check if RAC is enabled but doesn't verify if the CBR address is usable.
-> 
-> The DMA sync function cause a kernel panic for invalid write. (as CBR is
-> 0 or something like 0xa)
-> 
-> The second is preparation for making the CBR address configurable in DT.
-> Since this address doesn't change, we can cache it and reference it with
-> a local variable instead of calling the register to access the value.
-> 
-> The 4th patch make it configurable with 2 DT property, one to actually
-> set the reg and the other to force set it.
-> 
-> The first property is used when CBR is set to 0. The second property is
-> to force it if the Bootloader sets it to something wrong.
-> 
-> If the CBR value is not 0 and is not forced with the second property a
-> WARN is printed and the DT value is ignored.
-> 
-> The 4th patch enable RAC on BMIPS4350.
-> 
-> These has been tested on BCM6358 (HG556a) and BCM6368 (VH4032N) and
-> reported correct functionality.
-> 
-> Changes v8:
-> - Drop fix patch (applied to mips-fixes)
-> - Rework CBR cache patch to handle bcm47xx not compiling smp-bmips.c
-> Changes v7:
-> - Add ACK and Reviewed-by tag for dt patch from v5
-> Changes v6:
-> - Add missing patch that got lost in v5
-> - Fix missing header for legacy bcm47xx
-> - Fix compilation error with gcc 10.2.1
-> Changes v5:
-> - Add Ack tags
-> - Improve DT descriptions as suggested by Conor
-> Changes v4:
-> - Fix compilation error with legacy brcm target
-> - Improve property description in DT commit (give
->   CBR meaning and drop reference to linux functions)
-> - Use only __read_mostly as we can't add variable to
->   multiple data sections
-> - In patch 4 use local cbr variable instead of global
->   one.
-> Changes v3:
-> - Drop broken-cbr-reg property
-> - Fix anyOf+const with enum
-> Changes v2:
-> - Prefix brcm vendor in the added property
-> - Drop last patch (cpu switch from DMA sync)
-> - Validate CBR addr from DT to be outside DRAM
-> - Reduce indentation in DT CBR check
-> - Reduce delta and use local variable for CBR where possible
-> - Fix and improve typo and spelling mistake
-> - Use 0xf instead of 0xa for BCM6358 RAC enable
-> 
-> Christian Marangi (3):
->   mips: bmips: rework and cache CBR addr handling
->   dt-bindings: mips: brcm: Document brcm,bmips-cbr-reg property
->   mips: bmips: setup: make CBR address configurable
-> 
-> Daniel González Cabanelas (1):
->   mips: bmips: enable RAC on BMIPS4350
-> 
->  .../devicetree/bindings/mips/brcm/soc.yaml    | 24 +++++++++++++
->  arch/mips/bcm47xx/prom.c                      |  3 ++
->  arch/mips/bcm47xx/setup.c                     |  8 +++++
->  arch/mips/bcm63xx/prom.c                      |  3 ++
->  arch/mips/bcm63xx/setup.c                     |  8 +++++
->  arch/mips/bmips/dma.c                         |  2 +-
->  arch/mips/bmips/setup.c                       | 35 +++++++++++++++++--
->  arch/mips/include/asm/bmips.h                 |  1 +
->  arch/mips/kernel/smp-bmips.c                  | 22 ++++++++++--
->  9 files changed, 101 insertions(+), 5 deletions(-)
+> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
 
-series applied to mips-next.
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-Thomas.
+> ---
+>  kernel/exit.c | 40 ++++++++++++++++++++++++----------------
+>  1 file changed, 24 insertions(+), 16 deletions(-)
+> 
+> diff --git a/kernel/exit.c b/kernel/exit.c
+> index a1ef5f23d5be..cc56edc1103e 100644
+> --- a/kernel/exit.c
+> +++ b/kernel/exit.c
+> @@ -440,7 +440,7 @@ static void coredump_task_exit(struct task_struct *tsk)
+>  
+>  #ifdef CONFIG_MEMCG
+>  /* drops tasklist_lock if succeeds */
+> -static bool try_to_set_owner(struct task_struct *tsk, struct mm_struct *mm)
+> +static bool __try_to_set_owner(struct task_struct *tsk, struct mm_struct *mm)
+>  {
+>  	bool ret = false;
+>  
+> @@ -456,12 +456,28 @@ static bool try_to_set_owner(struct task_struct *tsk, struct mm_struct *mm)
+>  	return ret;
+>  }
+>  
+> +static bool try_to_set_owner(struct task_struct *g, struct mm_struct *mm)
+> +{
+> +	struct task_struct *t;
+> +
+> +	for_each_thread(g, t) {
+> +		struct mm_struct *t_mm = READ_ONCE(t->mm);
+> +		if (t_mm == mm) {
+> +			if (__try_to_set_owner(t, mm))
+> +				return true;
+> +		} else if (t_mm)
+> +			break;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+>  /*
+>   * A task is exiting.   If it owned this mm, find a new owner for the mm.
+>   */
+>  void mm_update_next_owner(struct mm_struct *mm)
+>  {
+> -	struct task_struct *c, *g, *p = current;
+> +	struct task_struct *g, *p = current;
+>  
+>  	/*
+>  	 * If the exiting or execing task is not the owner, it's
+> @@ -483,19 +499,17 @@ void mm_update_next_owner(struct mm_struct *mm)
+>  	/*
+>  	 * Search in the children
+>  	 */
+> -	list_for_each_entry(c, &p->children, sibling) {
+> -		if (c->mm == mm && try_to_set_owner(c, mm))
+> +	list_for_each_entry(g, &p->children, sibling) {
+> +		if (try_to_set_owner(g, mm))
+>  			goto ret;
+>  	}
+> -
+>  	/*
+>  	 * Search in the siblings
+>  	 */
+> -	list_for_each_entry(c, &p->real_parent->children, sibling) {
+> -		if (c->mm == mm && try_to_set_owner(c, mm))
+> +	list_for_each_entry(g, &p->real_parent->children, sibling) {
+> +		if (try_to_set_owner(g, mm))
+>  			goto ret;
+>  	}
+> -
+>  	/*
+>  	 * Search through everything else, we should not get here often.
+>  	 */
+> @@ -504,14 +518,8 @@ void mm_update_next_owner(struct mm_struct *mm)
+>  			break;
+>  		if (g->flags & PF_KTHREAD)
+>  			continue;
+> -		for_each_thread(g, c) {
+> -			struct mm_struct *c_mm = READ_ONCE(c->mm);
+> -			if (c_mm == mm) {
+> -				if (try_to_set_owner(c, mm))
+> -					goto ret;
+> -			} else if (c_mm)
+> -				break;
+> -		}
+> +		if (try_to_set_owner(g, mm))
+> +			goto ret;
+>  	}
+>  	read_unlock(&tasklist_lock);
+>  	/*
+> -- 
+> 2.25.1.362.g51ebf55
 
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+Michal Hocko
+SUSE Labs
