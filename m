@@ -1,108 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.mainlining.org (static.95.144.75.5.clients.your-server.de [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3EB2197A76;
-	Thu, 27 Jun 2024 15:08:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C55FE198E6C;
+	Thu, 27 Jun 2024 15:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719500939; cv=none; b=MhaoV2YKxSB3qRhBDn98uQhZcepUawXStHQmIuZdZpsxsEZqXQ8MDYnshM+kxJpREfGLT5HT2mcABq9j3gpcGMyIZjUQYlVGyMzumsvqD3X4P2d0/zEI4K6PwumdiHimRhwnHiwwK8SNe4C9GR49Dt4EVIZRIp+FyYftEyAXCMI=
+	t=1719500945; cv=none; b=sbSPPkMKCA+Lrwkk2DmiVx2ofL/pv9zVUTJ+XnUIHLW8j+DZb9CLO1zeUouaXxkDF/nfv7LURnsEbowejLvAJyXf3tQNHYSQ23kIpDY8f7tTbl1aNBNaeH0USwsAvVtBLnMf0OLz6UbhO5kwJpaR4WYD9Xkyw27g2W83HzGSUZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719500939; c=relaxed/simple;
-	bh=LVxAoDPFGgZta/AMaaDggih53NHmLZ1I0pcsnqXUfSI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Ic3GMgfAqn2G9JdQudurdY3OFp16E9HTyeW+Q1+kbqIQOGmRXDxOuBj2qXwG+T4smOCZcN6936D6DqEQYrbD9Ri87ZHhyeJ4OECcJt8D/ft0s1qIoD+Lpn7BY+Q10NBBjy3hnhIfJniT5DCGwjjpEf7zdv7A5psn24WzQQJ7znA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AFNSSQXQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719500945; c=relaxed/simple;
+	bh=JoOSiJtZunrz+OCSKVggQNZqebs0k2RruV6S9ufU4ks=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=apF7f6716QjpAY28GZcyWotHuD6bkw0W1DIJqsEpNTDkmdNKYpgM5wv+7Y/d1qlfhOwk522oDi2CS9SvJwoNalUY/rbrj0MZxPpU3tRfddqmVUYA4rfFQycIbs4oLSCkaujh7c3HP+o8gYlLs086CQ48qeeO1Y0G7KZUWP9H8Bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=dYJZRQGE; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AFNSSQXQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01736C2BBFC;
-	Thu, 27 Jun 2024 15:08:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719500938;
-	bh=LVxAoDPFGgZta/AMaaDggih53NHmLZ1I0pcsnqXUfSI=;
-	h=Date:From:To:Cc:Subject:From;
-	b=AFNSSQXQU826EGPSnt8hDGS3yM7ebJ5j6lmsLr+XfXCKcBq29So9Be86QF9u/C6lr
-	 2xl/GOdZ/yvleIuyz9nmJ1KRJpQ6X4wpaPBxQAlDn3Os7Y/PMu+KbTyFmp1d/K8m7G
-	 e15tA01aP9bBg4kR2sf6o333KycCuUtu4XbmCK2dTp45ZtYhDBN0qC7pTu37A/28VH
-	 dvSiuvfEy1hhRAM5xZBNQqY1vYYVCKpdgiMaeHGgDHtKa7p+YxmdCudE6Ih+hBqUam
-	 p9pXUS5dRBmijM8Z/O+bxAWvEq7bc1kZ/Dp49BTeHUYBlqNsJ1rqG4XtSNYXu4wVJH
-	 UXQV/FNn9NPeQ==
-Date: Thu, 27 Jun 2024 16:08:54 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Dave Airlie <airlied@redhat.com>, DRI <dri-devel@lists.freedesktop.org>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
-	Lijo Lazar <lijo.lazar@amd.com>, Li Ma <li.ma@amd.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the drm tree with the drm-fixes tree
-Message-ID: <Zn2Ahpv6za3ef3LT@sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="dYJZRQGE"
+Received: from [192.168.1.130] (BC2492F3.dsl.pool.telekom.hu [188.36.146.243])
+	by mail.mainlining.org (Postfix) with ESMTPSA id A07B1DAC33;
+	Thu, 27 Jun 2024 15:08:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1719500934;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ass3ueSG+2KqItaVWFmW7+4bd32BMf/+ocWnJZumNqA=;
+	b=dYJZRQGET5uu5D1+rvf1tAxQsj1UNTeTd3oQQYCKkrt2IqP9HQ4/mkljv9AoI9EXmHoBUK
+	d4r1OwMFb/z5r/wnQBf4EC2cODMbiKJJ1OLxtYlKsYW8LTg9ClLrF/Pg4smRuKCsmsyfpd
+	uYP3KGCAMuP9TZmrClVMBGwcnnBOGwKlPT7W76/lP7p1O5O32KQCExSqa1RrA8KwZh7lDx
+	fLF04DdIv8TxdTNOfYlEo13BJrdYGY+9bHipLOX3PdfYvgMy2o2W1WTEyOjgYwHepscP4w
+	b2l7Z69ZMM1nFNlYf7uEFnuB665+X8txLi3nggCwA37Rc6TcoOitaI7EhLGmlQ==
+From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
+Subject: [PATCH v2 0/2] Add interconnect driver for MSM8953/SDM450/SDM632
+Date: Thu, 27 Jun 2024 17:08:45 +0200
+Message-Id: <20240627-msm8953-interconnect-v2-0-b4940a8eab69@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="BZArcoZlnFggJHEH"
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAH2AfWYC/22NQQqDMBBFryKzbkoyUbFd9R7FhYlTHagTSURax
+ Ls3Fbrr8j3472+QKDIluBYbRFo5cZAMeCrAj50MpLjPDKix1DVWakpTc6msYlko+iBCflGkrS/
+ JYdPrCvJ0jvTg15G9t5lHTkuI7+NlNV/7C9b/g6tRWhE5azpEa5y+TR3Lk4VlOIc4QLvv+wc1O
+ b2qvQAAAA==
+To: Georgi Djakov <djakov@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+ =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>, 
+ Vladimir Lypak <vladimir.lypak@gmail.com>
+X-Mailer: b4 0.14.0
 
+This patch series add interconnect driver for MSM8953/SDM450/SDM632
+based devices.
 
---BZArcoZlnFggJHEH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+---
+Changes in v2:
+- Make nodes const pointers.
+- Fix schema issues addressed by reviews.
+- Link to v1: https://lore.kernel.org/r/20240626-msm8953-interconnect-v1-0-eeb31a2231b0@mainlining.org
 
-Hi all,
+---
+Vladimir Lypak (2):
+      dt-bindings: interconnect: qcom: Add Qualcomm MSM8953 NoC
+      interconnect: qcom: Add MSM8953 driver
 
-Today's linux-next merge of the drm tree got a conflict in:
+ .../bindings/interconnect/qcom,msm8953.yaml        |  101 ++
+ drivers/interconnect/qcom/Kconfig                  |    9 +
+ drivers/interconnect/qcom/Makefile                 |    2 +
+ drivers/interconnect/qcom/msm8953.c                | 1325 ++++++++++++++++++++
+ include/dt-bindings/interconnect/qcom,msm8953.h    |   93 ++
+ 5 files changed, 1530 insertions(+)
+---
+base-commit: 62c97045b8f720c2eac807a5f38e26c9ed512371
+change-id: 20240625-msm8953-interconnect-e03c4eb28d05
 
-  drivers/gpu/drm/amd/pm/swsmu/inc/smu_types.h
+Best regards,
+-- 
+Barnabás Czémán <barnabas.czeman@mainlining.org>
 
-between commit:
-
-  c223376b3019a ("drm/amd/swsmu: add MALL init support workaround for smu_v=
-14_0_1")
-
-=66rom the drm-fixes tree and commit:
-
-  ec41bdd82e9b0 ("drm/amd/pm: Update PMFW messages for SMUv13.0.6")
-
-=66rom the drm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
-diff --cc drivers/gpu/drm/amd/pm/swsmu/inc/smu_types.h
-index 2e32b085824ae,12a7b0634ed56..0000000000000
---- a/drivers/gpu/drm/amd/pm/swsmu/inc/smu_types.h
-+++ b/drivers/gpu/drm/amd/pm/swsmu/inc/smu_types.h
-@@@ -272,7 -272,8 +272,8 @@@
-  	__SMU_DUMMY_MAP(SetSoftMinVpe), \
-  	__SMU_DUMMY_MAP(GetMetricsVersion), \
-  	__SMU_DUMMY_MAP(EnableUCLKShadow), \
- -	__SMU_DUMMY_MAP(RmaDueToBadPageThreshold),\
- +	__SMU_DUMMY_MAP(RmaDueToBadPageThreshold), \
-+ 	__SMU_DUMMY_MAP(SelectPstatePolicy), \
-  	__SMU_DUMMY_MAP(MALLPowerController), \
-  	__SMU_DUMMY_MAP(MALLPowerState),
- =20
-
---BZArcoZlnFggJHEH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZ9gIUACgkQJNaLcl1U
-h9B9+Af9HWLP9pwG99gRcjfbXtQXiTDTWOqY06cYsdplVD4imfZ8+fVA5i3eFuPW
-nwKu3JTVbVFgB8PRq9mc6HKEAQCfatz+YMMlL911tbENXkeRor5VO65PrKP257G0
-2yD1xGUyLRjacEJrC0CsvmqgZO6xhGbW/j5e+b5bJgZZHxfEOEkHzQj5/O0aoMQ6
-Rd+69PBpIO8DkEoOZH0RfwpAKJp+rVfpHayqzIS3GXQNVrzQ3fQrcAXLEVzrp98e
-EclOk5R/SiQ6z3kpyTgC1YwhSh53JSxsoxdhJnmYrksMBGBKFN6WRT5PJad2s+yS
-zRj4RptDV6O/2+Mpe1mhEqbMvifNxw==
-=1q1J
------END PGP SIGNATURE-----
-
---BZArcoZlnFggJHEH--
