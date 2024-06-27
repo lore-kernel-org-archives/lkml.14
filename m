@@ -1,79 +1,150 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1261179943
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 12:57:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF24E17BB22;
+	Thu, 27 Jun 2024 12:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719493070; cv=none; b=SI2zigQDBAIR5CNeNNt990H/p5d0/u/MHhacNFWcMMqPero9ufcaI647yYdMEzLN6hr5X01+jIazYexWtNNdxsFTuG2TvzCrdJYL9MT50OeNuV3Sv8r0zuZwO2y9GPKurruMmdi7y8GGkrsaMkiv/7Y1Q7/jeGdCPgy4ZZbM+zg=
+	t=1719493074; cv=none; b=ZUlpZAdm5rq7kDQozBeIMdLV42b0DfBj48/ckBtu+3cQg7EkuGynbkSMAMj56D7YT1lbEiUa3uKk7BEaY5o3qK2s9gF4vzLbwwY9kjXMhFGplKy9a2lqqV/2FmNxcclIb5Lhran3ViFEpSx/+e7+CmaYkeIy2mjsrcA5B9RkZAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719493070; c=relaxed/simple;
-	bh=fvR4A9pNXpEIRIY1bBkJd18Tq+Rd3KBrPaSIVfvQWzQ=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=r9mlv8zkKJhUWd471naH5ez1tEI8JpC9EF/k+ugHC4RSQMX50uURrvZseTduGZ9CZ39sUb+wShQgruDYPZUKBNqPZGoi++ejIoC9RID7yfY+zEMHkKl4wuO1wec5Mot4ncAVPTWpqDmM3PWr8D2pqV6FmBPeMN9zoVGOfub5T1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=D5Ow2pba; arc=none smtp.client-ip=162.62.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1719493074; c=relaxed/simple;
+	bh=xg3lHUwKPp7F8eqeG58G3q7W55s5Bo41hz0h9ZzPxFs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HmXzGFnBtpFwL6Ix2uE9w/LfTyEYARFQ9x9/pa5qsvcHi4gOPu7Ch7o1tZWQWIgoqH1zDD0oLFM1l1WRKIsBHwXEtXfR78+T22jYj7HNi4c1YSXu8jdRzJ53+nI8BkFwbK2Z/+iN3r1bOstUoSkMvgiLIve04TzoaWgvgweSfOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HaT6tEOC; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="D5Ow2pba"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1719492757; bh=WSI88o6L/LDt7bMEHCv1PQvxM0hL4VvO3tmEvcA7Of0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=D5Ow2pbadKEijBWjVkelcM8NhQWQPQqN64cDMGWYcQ3zG1TjC3FClm6/Ivoln25hO
-	 /okDnhA1WWihtZ2TZUBTGSNdXA7OxVGPlauvIW5iSs7iJlInnIHpeMxsCTzRppjDwF
-	 rKe0VaAe41sbNHTOrdvabZU0brcJA8aFE3EJY1ic=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.103])
-	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
-	id D23AD02D; Thu, 27 Jun 2024 20:52:35 +0800
-X-QQ-mid: xmsmtpt1719492755tb5sccimd
-Message-ID: <tencent_B71CE90EEE3ECDAC78E66E9C2FC96C1C950A@qq.com>
-X-QQ-XMAILINFO: MW5hkHoBpWXyDGItSESgsV56kq+BspcqhHXVPmEepa/vsF0IHcBEJPvDQ9++G+
-	 pOQsGqspxFtn56nAc/a978QM7m6VMSJiOEIwVy2IMLBu7uiRXwTUwMzsLUkW0KTegbg7CXO1ptOy
-	 uuqXD2EYkqCxO2ICRllgv7PKkzWykp5+Yc+FIsg6+I32Vtf8/wMgAzm9cjcFc4DNfWNJpk5hxDMB
-	 bMl5sHsJ0HwM3ItI3Rc+C0DTlws2Dd3gfgc+h7Mh4S6n9XPVlZYkt+oz795unVIeFr1T+gxlq8nq
-	 ddHjw/xVpAbxAgEYMOmUYBLfuscc/EppiVHe8OljKzrWOEbAdz5syt2L3zgmg4lIhB+UGYVJGYHt
-	 rGMNgO6y10vP7W0GxhkxXblrB9iBPQ30/+L3VzMYr+yvD74TmNEBr09ds5iBZLdKnAJW9IXp90ld
-	 bq2OQWu6zsexR/cGfCoMR2VXMSthCIKPh+5COEeFCSyedzItNy6OiotpNbDbQM2oHmtbRxjXoW9f
-	 xi05zp0TuOOTzA/wx/j5gM2VgvsDJZXweVvC119WXvdwPcqQugAMtyafjlI8JmPdOTR1+VYmczRL
-	 oMOUScsEVEgtKqah1MUKjGsohPrdFBt5bUtlqddp6LUX8Jmuxbs+GMfClxX81e8ovXvx9ktOnmcQ
-	 Z6yfW4UDg1Nfsz9Pb/PjlklPDeOmkmUKiDbuwZzmCzR6SA2XktUKp+xT6F6DVseG3YB+b65thrpl
-	 67iBWALIcrF6hqDKOOPExVjIb+his8KsAjTksmo9nz6WmQ7bFK929b4qTeSer4i4AOV7yV0NCOB7
-	 01PiHEPDgzosl5CEyeS93YTp/GJi9rbD3R8EpEeu1qMcG1htBYrL2s7SCJ+xuz5Y8vWqnk/jB8jz
-	 px8Q4ew4ie3jZIxVa4OIShwnSHk5/NZMDTexwN6pt0aBUw+VooTr/5PFF+ajgRGkpOPaP7Wy2ApN
-	 0KmXQHA3H0BqDGmYXwOY8UyT8Kdzk6B/UR+v24GSc=
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+c041b4ce3a6dfd1e63e2@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: [syzbot] [net?] KASAN: slab-use-after-free Write in l2tp_session_delete
-Date: Thu, 27 Jun 2024 20:52:31 +0800
-X-OQ-MSGID: <20240627125230.731478-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000008405e0061bb6d4d5@google.com>
-References: <0000000000008405e0061bb6d4d5@google.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HaT6tEOC"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 59F27C0005;
+	Thu, 27 Jun 2024 12:57:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1719493070;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MrmQr8hB4InQ3Jl4oyeWJTm4qwkgjrEBNjcKLZTC4CM=;
+	b=HaT6tEOCfC7RAgGp2ovA28C9kcTIIeYHWm6KQQKl1kWTujCU5vpXC0I9LUNE21ViZ145hh
+	XM7dgmLQouzE/a16pDFK1lUW9PcLDCGgEl7OLyXCFvIrJejVRljjCpubOUblgdUiveazmc
+	CsFYQ5n5iboVgsjcImpJ8vRJkUM98UmdtFs6ioelKXqrV48i1l+9i1Sf992TAbJO5FppHn
+	9WrZhUgJ3qXBPTkGyLhn2vyM86SsdNskkXTyOumcZL/emU46P+Q8nrY9Fnn4ZoICkszbyP
+	5laHqenDYuvqox3xhNuyB8stooTsm/ECzmElOWoISgWdb2Tie68D6dcBT3PH3Q==
+Date: Thu, 27 Jun 2024 14:57:47 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bartosz
+ Golaszewski <brgl@bgdev.pl>, Saravana Kannan <saravanak@google.com>,
+ linux-kernel@vger.kernel.org, =?UTF-8?Q?Herv=C3=A9?= Codina
+ <herve.codina@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: Fixing property memory leaks on device tree overlay removal
+Message-ID: <20240627145747.7afb5607@booty>
+In-Reply-To: <5215b589-d00d-4be4-9213-aaf547228fb7@linaro.org>
+References: <20240624232122.3cfe03f8@booty>
+	<CAL_Jsq+=mGEJXsjq1UZFMJtHko_z+doiFMXnx9K7exDuznymSA@mail.gmail.com>
+	<5215b589-d00d-4be4-9213-aaf547228fb7@linaro.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-delete tunnl session list
+On Wed, 26 Jun 2024 09:24:46 +0200
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
 
-#syz test: linux-next 185d72112b95
+> On 25/06/2024 19:02, Rob Herring wrote:
+> > On Mon, Jun 24, 2024 at 3:21=E2=80=AFPM Luca Ceresoli <luca.ceresoli@bo=
+otlin.com> wrote: =20
+...
+> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >> Problem description
+> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>
+> >> In the kernel every 'struct device_node' is refcounted so the OF core
+> >> knows when to free it. There are of course get/put imbalance bugs
+> >> around, but these are "just" bugs that need to be fixed as they are
+> >> found.
+> >>
+> >> On the other hand, there is no refcounting for 'struct property'. Yet
+> >> some of the internal kernel APIs to access properties, e.g.
+> >> of_property_read_string(), return either a 'struct property' pointer or
+> >> a copy of the 'char *value' field. This is not a bug, it is an API
+> >> design flaw: any user (e.g. any OF driver) can take a pointer to
+> >> property data that was allocated and should be deallocated by the OF
+> >> core, but the OF core has no idea of when that pointer will stop being
+> >> used.
+> >>
+> >> Now, when loading a DT overlay there are three possible cases:
+> >>
+> >>  1. both the property and the containing node are in the base tree
+> >>  2. both the property and the containing node are in the same overlay
+> >>  3. the property is in an overlay and the containing node is either
+> >>     in the base tree or in a previously-loaded overlay
+> >>
+> >> Cases 1 and 2 are not problematic. In case 1 the data allocated for the
+> >> properties is never removed. In case 2 the properties are removed when
+> >> removing the parent node, which gets removed when removing the overlay
+> >> thanks to 'struct device_node' refcounting, based on the assumption
+> >> that the property lifetime is a subset of the parent node lifetime. The
+> >> problem exists in case 3. Properties in case 3 are usually a small part
+> >> of all the properties but there can be some (and there are some in the
+> >> product we are working on), and that's what needs to be addressed. =20
+> >=20
+> > I'd like to better understand what are the cases where you need to
+> > change/add properties in a node (other than "status"). I'm not
+> > entirely convinced we should even allow that. =20
+>=20
+> Just to clarify that I understand the problem correctly - we talk only
+> about memory leaks, not about accessing released memory (use-after-free)?
 
-diff --git a/net/l2tp/l2tp_ppp.c b/net/l2tp/l2tp_ppp.c
-index 3596290047b2..1fd27c902d80 100644
---- a/net/l2tp/l2tp_ppp.c
-+++ b/net/l2tp/l2tp_ppp.c
-@@ -446,6 +446,7 @@ static int pppol2tp_release(struct socket *sock)
- 	if (session) {
- 		struct pppol2tp_session *ps;
- 
-+		list_del_init(&session->list);
- 		l2tp_session_delete(session);
- 
- 		ps = l2tp_session_priv(session);
+Well, the "unsafe" property accessors do return a pointer to struct
+property or its values, so they would become use-after-free in case 1)
+the struct property is freed (=3Doverlays) and 2) the caller keeps the
+pointer until after the property is freed.
 
+To avoid use-after-free, all properties falling in case 3 are put into
+a "deadprops" list within the struct device_node and will be released
+only when the node is released, which is never for nodes in the base
+tree. This trades a use-after-free for a memory leak.
+
+> I think that during EOSS 2024 discussions we reached consensus that in
+> general you will not have use-after-free problem with DT properties at
+> all. If all devices are unbound, their resources get released (including
+> some core structures registered in subsystems) thus nothing will use any
+> of properties. With proper kernel code there will be no use of device
+> node properties after device is unbound.
+
+I agree this is the normal situation, but I'm not sure there is
+consensus about that. My reply to Rob in this thread aims at clarifying
+exactly what problem we need to solve. Totally eradicating the "unsafe"
+property accessors would eliminate all possible use-after-free or leak
+of property data. However I agree it would be a large effort to fix a
+small number of issues, which can be avoided by trusting drivers a bit
+more.
+
+> >> Preventing new usages of old accessors will be important. Tools to
+> >> achieve that:
+> >>
+> >>  * Extend checkpatch to report an error on their usage
+> >>  * Add a 'K:' entry to MAINTAINERS so that patches trying to use them
+> >>    will be reported (to me at least) =20
+>=20
+> Or just use lore/lei with proper keywords. I track few misuses of kernel
+> code that way.
+
+Didn't know about lore+lei, interesting. Thanks, it really looks like a
+tool option for this task.
+
+Luca
+
+--=20
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
