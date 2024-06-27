@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63CA13D8AE;
-	Thu, 27 Jun 2024 09:54:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7AE113F00A;
+	Thu, 27 Jun 2024 09:54:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719482071; cv=none; b=FtAzZzoxtl8sHNu7ldg+iczHFOGcnDJA+nOxLhlgsGTIu3XHLveROVmLAk+iuN/jF1u4EexAUGPGQfEsFp4aaVlRXXP2s+MVO1jtDz8esiGsNj4yblnC46SQiRr2IdmVePbugUyHzcxzyejuo/udzEsKUgjPEsGt1G9dqaBYtJ4=
+	t=1719482074; cv=none; b=uc/BO0iZXa1zzaKvSC49Z23FOA3hlK1K0iAWoYxrIUfYZmPld4R83EhJMeNGDlsAOc8ibhwTKBLZyWV9qQnE4IElJ1WHi0/dmZqbTvzPPCOaBNKhWjeDyUvdVwclJb5GGT6Tr1b5mjYfFQ1AsbbEj5IdaLuzR702nxyuX5b4IbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719482071; c=relaxed/simple;
-	bh=9GXsYZ3g+nul0QRkNDYMJ8neksOkpTDDlttRum4aA8M=;
+	s=arc-20240116; t=1719482074; c=relaxed/simple;
+	bh=tu7CIR9pJO3oS0xR2pFICcs+1vj90OEa9Dpv62YlS7o=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=utxSvDsScbUUMwsRWstvZYl/Q1TyfW1801o+WZZOIJdC6y/KwYu7J72fJmRgJ22mzNikt9rncjMHnrpk+DDXi93jnbJomoxINHPbfnIMIdTrJPeYdAU/2tocV8M/0WCwS7qqOBU2FtrSVqGfufIoIeUBqRptUcRgSVtY0cJqvjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H5W7HY4z; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=UWLeKAxCXvchOxwRaRRMfL3+Wy60rLYBJHNaykf75d/8TxAWcjlCqnGqWR2Y1reRGo5XH1nZRqnOemhy3Awpn1GLaMLeIzamZisXun4fHbatzBysAKZ9yKjYoS/k6kD9WUCwg5YYCa2p+qdWYCMSlTuqgc38PRrDaFsWiQho7Ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MG/nmzH0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H5W7HY4z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4637EC32786;
-	Thu, 27 Jun 2024 09:54:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MG/nmzH0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EA50C32786;
+	Thu, 27 Jun 2024 09:54:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719482071;
-	bh=9GXsYZ3g+nul0QRkNDYMJ8neksOkpTDDlttRum4aA8M=;
+	s=k20201202; t=1719482074;
+	bh=tu7CIR9pJO3oS0xR2pFICcs+1vj90OEa9Dpv62YlS7o=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=H5W7HY4z1X67ndZDUBxK1sIDEzPm5F8tEmM29EV2hLWiJsG6RkfMUDkuolgVBMcx3
-	 AgJHDZrgI2Tdde04NRgM87W7y2NJCoNOtjT9YjLnDmMyrbjMS0vVOJXu1hz72uKj1j
-	 IUahmVpNt8RIAtOH6vvLbhjF3bbFODNVoN4GwKxuj3p6MKRtrHhsDIQnpQ6OOpzHCR
-	 lTepgyHprExBKSmwp/j6ZC1b1nxJyDnhYXNd5PmXo7FE4ccuFD6csxtOD2c+FP8euY
-	 N4fzHRwqSEHlFEm8w4jh4eDVAb/18sYIgyPZDwxMRhqKz+RFY9MO/ih/QsFtxI9fuj
-	 wgIHIOn9ejlmQ==
+	b=MG/nmzH0jLt+uuk5C5+QCP3An95pwEUMxMB/IebbofIG8HWc0rmtGbXlV2SvfeA9i
+	 PxO+MF3akJH8o42mHDDJJvEtZSdfbflua4PCzCsTxpvUxjbYSBa6LH+M/L90gMm+gX
+	 4xRRUJnLqKQ069AL5Ltza/GR67uZOJO7Tt6dZRDfzSxHHsrFi1HJ0JRvSQk72jSLly
+	 nGU9L3p52a0oSFjbyyKyd4EGIci84QySjZg5PnCwJbbEi6g/4UwL2kJmC7b/2lDyYS
+	 8KtMtLJTHf9fRr/FmjnALvtWxcgNnqufmj3Pn2QdHl6oQx85U1Wevwv8F+g5LAqnWy
+	 xVUBcvscFsr3A==
 From: Benjamin Tissoires <bentiss@kernel.org>
-Date: Thu, 27 Jun 2024 11:54:20 +0200
-Subject: [PATCH 4/6] HID: bpf: Add support for the XP-PEN Deco Mini 4
+Date: Thu, 27 Jun 2024 11:54:22 +0200
+Subject: [PATCH 6/6] HID: bpf: Thrustmaster TCA Yoke Boeing joystick fix
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,44 +36,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240627-import-bpf-v1-4-0dbcda4a5b1f@kernel.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240627-import-bpf-v1-6-0dbcda4a5b1f@kernel.org>
 References: <20240627-import-bpf-v1-0-0dbcda4a5b1f@kernel.org>
 In-Reply-To: <20240627-import-bpf-v1-0-0dbcda4a5b1f@kernel.org>
 To: Jiri Kosina <jikos@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, 
  bpf@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>, 
- =?utf-8?q?Jos=C3=A9_Exp=C3=B3sito?= <jose.exposito89@gmail.com>
+ K S Iyer <kumar.s.iyer65@gmail.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1719482062; l=10943;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1719482062; l=8756;
  i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
- bh=9GXsYZ3g+nul0QRkNDYMJ8neksOkpTDDlttRum4aA8M=;
- b=hVq4a5nbtLN2opLgC0TLNo7LGFe62wE8pYRqlEb5j9Hzqh4ZZSknmlg1hY8E25TmJ5Q/aC284
- romFPPGwLwwAhdcfMN8fSVOb2f6oLR67G9DZcJcMsEe3TPbWOW5KQJU
+ bh=tu7CIR9pJO3oS0xR2pFICcs+1vj90OEa9Dpv62YlS7o=;
+ b=mPQZRQkzv5KfaHd0G3ucbEmLgqQq1ipOIjB6EAUNl/it6/RyMhXAkR0duAf/OqBTlztnlPGTF
+ hqRJxi3paABA5z720de7anQvk88kqm4YOKEs3w7tUc/xQVN0uFNu+Dy
 X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
  pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
 
-The XP-PEN Deco Mini 4 is a UGEE device with a frame with 6 buttons.
-Its pen has 2 buttons and supports pressure reporting.
+This joystick's original HID descriptor is wrong & it shows a
+ABS_MISC axis in Linux that doesn't exist on the hardware.
 
-Fix their report descriptors and transform the frame button events to
-support it.
-
-Link: https://gitlab.freedesktop.org/libevdev/udev-hid-bpf/-/merge_requests/88
-Signed-off-by: José Expósito <jose.exposito89@gmail.com>
+Link: https://gitlab.freedesktop.org/libevdev/udev-hid-bpf/-/merge_requests/82
+Signed-off-by: K S Iyer <kumar.s.iyer65@gmail.com>
 Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
 ---
- drivers/hid/bpf/progs/XPPen__DecoMini4.bpf.c | 231 +++++++++++++++++++++++++++
- 1 file changed, 231 insertions(+)
+ .../bpf/progs/Thrustmaster__TCA-Yoke-Boeing.bpf.c  | 144 +++++++++++++++++++++
+ 1 file changed, 144 insertions(+)
 
-diff --git a/drivers/hid/bpf/progs/XPPen__DecoMini4.bpf.c b/drivers/hid/bpf/progs/XPPen__DecoMini4.bpf.c
+diff --git a/drivers/hid/bpf/progs/Thrustmaster__TCA-Yoke-Boeing.bpf.c b/drivers/hid/bpf/progs/Thrustmaster__TCA-Yoke-Boeing.bpf.c
 new file mode 100644
-index 000000000000..46d5c459d0c9
+index 000000000000..ecf775a99346
 --- /dev/null
-+++ b/drivers/hid/bpf/progs/XPPen__DecoMini4.bpf.c
-@@ -0,0 +1,231 @@
++++ b/drivers/hid/bpf/progs/Thrustmaster__TCA-Yoke-Boeing.bpf.c
+@@ -0,0 +1,144 @@
 +// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright (c) 2024 José Expósito
++/* Copyright (c) 2024 Kumar Swarnam Iyer (kumar.s.iyer65@gmail.com)
 + */
 +
 +#include "vmlinux.h"
@@ -81,222 +78,135 @@ index 000000000000..46d5c459d0c9
 +#include "hid_bpf_helpers.h"
 +#include <bpf/bpf_tracing.h>
 +
-+#define VID_UGEE	0x28BD
-+#define PID_DECO_MINI_4	0x0929
-+#define RDESC_SIZE_PAD	177
-+#define RDESC_SIZE_PEN	109
-+#define PAD_REPORT_ID	0x06
-+
-+/*
-+ * XP-Pen devices return a descriptor with the values the driver should use when
-+ * one of its interfaces is queried. For this device the descriptor is:
-+ *
-+ * 0E 03 60 4F 88 3B 06 00 FF 1F D8 13
-+ *       ----- -----       ----- -----
-+ *         |     |           |     |
-+ *         |     |           |     `- Resolution: 5080 (13d8)
-+ *         |     |           `- Maximum pressure: 8191 (1FFF)
-+ *         |     `- Logical maximum Y: 15240 (3B88)
-+ *         `- Logical maximum X: 20320 (4F60)
-+ *
-+ * The physical maximum is calculated as (logical_max * 1000) / resolution.
-+ */
-+#define LOGICAL_MAX_X	0x60, 0x4F
-+#define LOGICAL_MAX_Y	0x88, 0x3B
-+#define PHYSICAL_MAX_X	0xA0, 0x0F
-+#define PHYSICAL_MAX_Y	0xB8, 0x0B
-+#define PRESSURE_MAX	0xFF, 0x1F
++#define VID_THRUSTMASTER 0x044F
++#define PID_TCA_YOKE_BOEING 0x0409
 +
 +HID_BPF_CONFIG(
-+	HID_DEVICE(BUS_USB, HID_GROUP_GENERIC, VID_UGEE, PID_DECO_MINI_4)
++	HID_DEVICE(BUS_USB, HID_GROUP_GENERIC, VID_THRUSTMASTER, PID_TCA_YOKE_BOEING)
 +);
 +
-+/*
-+ * The tablet send these values when the pad buttons are pressed individually:
++/*  The original HID descriptor of the Thrustmaster TCA Yoke Boeing joystick contains
++ *  an Input field that shows up as an axis, ABS_MISC in Linux. But it is not possible
++ *  to assign an actual physical control to this axis as they're all taken up. There
++ *  are 2 vendor-defined inputs where the Input type appears to be defined wrongly.
++ *  This bpf attempts to fix this by changing the Inputs so that it doesn't show up in
++ *  Linux at all.
++ *  This version is the short version fix that only changes 2 fields in the descriptor
++ *  instead of the whole report descriptor.
++ *  For reference, this is the original report descriptor:
 + *
-+ *   Buttons released: 06 00 00 00 00 00 00 00
-+ *   Button 1:         06 00 05 00 00 00 00 00 -> b
-+ *   Button 2:         06 00 08 00 00 00 00 00 -> e
-+ *   Button 3:         06 04 00 00 00 00 00 00 -> LAlt
-+ *   Button 4:         06 00 2c 00 00 00 00 00 -> Space
-+ *   Button 5:         06 01 16 00 00 00 00 00 -> LControl + s
-+ *   Button 6:         06 01 1d 00 00 00 00 00 -> LControl + z
-+ *
-+ * When multiple buttons are pressed at the same time, the values used to
-+ * identify the buttons are identical, but they appear in different bytes of the
-+ * record. For example, when button 2 (0x08) and button 1 (0x05) are pressed,
-+ * this is the report:
-+ *
-+ *   Buttons 2 and 1:  06 00 08 05 00 00 00 00 -> e + b
-+ *
-+ * Buttons 1, 2, 4, 5 and 6 can be matched by finding their values in the
-+ * report.
-+ *
-+ * Button 3 is pressed when the 3rd bit is 1. For example, pressing buttons 3
-+ * and 5 generates this report:
-+ *
-+ *   Buttons 3 and 5:  06 05 16 00 00 00 00 00 -> LControl + LAlt + s
-+ *                        -- --
-+ *                         |  |
-+ *                         |  `- Button 5 (0x16)
-+ *                         `- 0x05 = 0101. Button 3 is pressed
-+ *                                    ^
-+ *
-+ * pad_buttons contains a list of buttons that can be matched in
-+ * HID_BPF_DEVICE_EVENT. Button 3 as it has a dedicated bit.
++ *  0x05, 0x01,                    // Usage Page (Generic Desktop)        0
++ *  0x09, 0x04,                    // Usage (Joystick)                    2
++ *  0xa1, 0x01,                    // Collection (Application)            4
++ *  0x85, 0x01,                    //  Report ID (1)                      6
++ *  0x09, 0x39,                    //  Usage (Hat switch)                 8
++ *  0x15, 0x00,                    //  Logical Minimum (0)                10
++ *  0x25, 0x07,                    //  Logical Maximum (7)                12
++ *  0x35, 0x00,                    //  Physical Minimum (0)               14
++ *  0x46, 0x3b, 0x01,              //  Physical Maximum (315)             16
++ *  0x65, 0x14,                    //  Unit (EnglishRotation: deg)        19
++ *  0x75, 0x04,                    //  Report Size (4)                    21
++ *  0x95, 0x01,                    //  Report Count (1)                   23
++ *  0x81, 0x42,                    //  Input (Data,Var,Abs,Null)          25
++ *  0x65, 0x00,                    //  Unit (None)                        27
++ *  0x05, 0x09,                    //  Usage Page (Button)                29
++ *  0x19, 0x01,                    //  Usage Minimum (1)                  31
++ *  0x29, 0x12,                    //  Usage Maximum (18)                 33
++ *  0x15, 0x00,                    //  Logical Minimum (0)                35
++ *  0x25, 0x01,                    //  Logical Maximum (1)                37
++ *  0x75, 0x01,                    //  Report Size (1)                    39
++ *  0x95, 0x12,                    //  Report Count (18)                  41
++ *  0x81, 0x02,                    //  Input (Data,Var,Abs)               43
++ *  0x95, 0x02,                    //  Report Count (2)                   45
++ *  0x81, 0x03,                    //  Input (Cnst,Var,Abs)               47
++ *  0x05, 0x01,                    //  Usage Page (Generic Desktop)       49
++ *  0x09, 0x31,                    //  Usage (Y)                          51
++ *  0x09, 0x30,                    //  Usage (X)                          53
++ *  0x09, 0x32,                    //  Usage (Z)                          55
++ *  0x09, 0x34,                    //  Usage (Ry)                         57
++ *  0x09, 0x33,                    //  Usage (Rx)                         59
++ *  0x09, 0x35,                    //  Usage (Rz)                         61
++ *  0x15, 0x00,                    //  Logical Minimum (0)                63
++ *  0x27, 0xff, 0xff, 0x00, 0x00,  //  Logical Maximum (65535)            65
++ *  0x75, 0x10,                    //  Report Size (16)                   70
++ *  0x95, 0x06,                    //  Report Count (6)                   72
++ *  0x81, 0x02,                    //  Input (Data,Var,Abs)               74
++ *  0x06, 0xf0, 0xff,              //  Usage Page (Vendor Usage Page 0xfff0) 76
++ *  0x09, 0x59,                    //  Usage (Vendor Usage 0x59)          79
++ *  0x15, 0x00,                    //  Logical Minimum (0)                81
++ *  0x26, 0xff, 0x00,              //  Logical Maximum (255)              83
++ *  0x75, 0x08,                    //  Report Size (8)                    86
++ *  0x95, 0x01,                    //  Report Count (1)                   88
++ *  0x81, 0x02,                    //  Input (Data,Var,Abs)               90 --> Needs to be changed
++ *  0x09, 0x51,                    //  Usage (Vendor Usage 0x51)          92
++ *  0x15, 0x00,                    //  Logical Minimum (0)                94
++ *  0x26, 0xff, 0x00,              //  Logical Maximum (255)              96
++ *  0x75, 0x08,                    //  Report Size (8)                    99
++ *  0x95, 0x20,                    //  Report Count (32)                  101 --> Needs to be changed
++ *  0x81, 0x02,                    //  Input (Data,Var,Abs)               103
++ *  0x09, 0x50,                    //  Usage (Vendor Usage 0x50)          105
++ *  0x15, 0x00,                    //  Logical Minimum (0)                107
++ *  0x26, 0xff, 0x00,              //  Logical Maximum (255)              109
++ *  0x75, 0x08,                    //  Report Size (8)                    112
++ *  0x95, 0x0f,                    //  Report Count (15)                  114
++ *  0x81, 0x03,                    //  Input (Cnst,Var,Abs)               116
++ *  0x09, 0x47,                    //  Usage (Vendor Usage 0x47)          118
++ *  0x85, 0xf2,                    //  Report ID (242)                    120
++ *  0x15, 0x00,                    //  Logical Minimum (0)                122
++ *  0x26, 0xff, 0x00,              //  Logical Maximum (255)              124
++ *  0x75, 0x08,                    //  Report Size (8)                    127
++ *  0x95, 0x3f,                    //  Report Count (63)                  129
++ *  0xb1, 0x02,                    //  Feature (Data,Var,Abs)             131
++ *  0x09, 0x48,                    //  Usage (Vendor Usage 0x48)          133
++ *  0x85, 0xf3,                    //  Report ID (243)                    135
++ *  0x15, 0x00,                    //  Logical Minimum (0)                137
++ *  0x26, 0xff, 0x00,              //  Logical Maximum (255)              139
++ *  0x75, 0x08,                    //  Report Size (8)                    142
++ *  0x95, 0x3f,                    //  Report Count (63)                  144
++ *  0xb1, 0x02,                    //  Feature (Data,Var,Abs)             146
++ *  0xc0,                          // End Collection                      148
 + */
-+static const __u8 pad_buttons[] = { 0x05, 0x08, 0x00, 0x2C, 0x16, 0x1D };
-+
-+static const __u8 fixed_pad_rdesc[] = {
-+	0x05, 0x01,           /*  Usage Page (Desktop),                   */
-+	0x09, 0x07,           /*  Usage (Keypad),                         */
-+	0xA1, 0x01,           /*  Collection (Application),               */
-+	0x85, 0x06,           /*      Report ID (6),                      */
-+	0x05, 0x0D,           /*      Usage Page (Digitizer),             */
-+	0x09, 0x39,           /*      Usage (Tablet Function Keys),       */
-+	0xA0,                 /*      Collection (Physical),              */
-+	0x05, 0x09,           /*          Usage Page (Button),            */
-+	0x75, 0x01,           /*          Report Size (1),                */
-+	0x95, 0x06,           /*          Report Count (6),               */
-+	0x19, 0x01,           /*          Usage Minimum (01h),            */
-+	0x29, 0x06,           /*          Usage Maximum (06h),            */
-+	0x14,                 /*          Logical Minimum (0),            */
-+	0x25, 0x01,           /*          Logical Maximum (1),            */
-+	0x81, 0x02,           /*          Input (Variable),               */
-+	0x95, 0x32,           /*          Report Count (50),              */
-+	0x81, 0x01,           /*          Input (Constant),               */
-+	0xC0,                 /*      End Collection,                     */
-+	0xC0                  /*  End Collection                          */
-+};
-+
-+static const __u8 fixed_pen_rdesc[] = {
-+	0x05, 0x0d,           /*  Usage Page (Digitizers),                */
-+	0x09, 0x01,           /*  Usage (Digitizer),                      */
-+	0xa1, 0x01,           /*  Collection (Application),               */
-+	0x85, 0x07,           /*      Report ID (7),                      */
-+	0x09, 0x20,           /*      Usage (Stylus),                     */
-+	0xa1, 0x00,           /*      Collection (Physical),              */
-+	0x09, 0x42,           /*          Usage (Tip Switch),             */
-+	0x09, 0x44,           /*          Usage (Barrel Switch),          */
-+	0x09, 0x46,           /*          Usage (Tablet Pick),            */
-+	0x75, 0x01,           /*          Report Size (1),                */
-+	0x95, 0x03,           /*          Report Count (3),               */
-+	0x14,                 /*          Logical Minimum (0),            */
-+	0x25, 0x01,           /*          Logical Maximum (1),            */
-+	0x81, 0x02,           /*          Input (Variable),               */
-+	0x95, 0x02,           /*          Report Count (2),               */
-+	0x81, 0x03,           /*          Input (Constant, Variable),     */
-+	0x09, 0x32,           /*          Usage (In Range),               */
-+	0x95, 0x01,           /*          Report Count (1),               */
-+	0x81, 0x02,           /*          Input (Variable),               */
-+	0x95, 0x02,           /*          Report Count (2),               */
-+	0x81, 0x03,           /*          Input (Constant, Variable),     */
-+	0x75, 0x10,           /*          Report Size (16),               */
-+	0x95, 0x01,           /*          Report Count (1),               */
-+	0x35, 0x00,           /*          Physical Minimum (0),           */
-+	0xa4,                 /*          Push,                           */
-+	0x05, 0x01,           /*          Usage Page (Desktop),           */
-+	0x09, 0x30,           /*          Usage (X),                      */
-+	0x65, 0x13,           /*          Unit (Inch),                    */
-+	0x55, 0x0d,           /*          Unit Exponent (-3),             */
-+	0x26, LOGICAL_MAX_X,  /*          Logical Maximum,                */
-+	0x46, PHYSICAL_MAX_X, /*          Physical Maximum,               */
-+	0x81, 0x02,           /*          Input (Variable),               */
-+	0x09, 0x31,           /*          Usage (Y),                      */
-+	0x26, LOGICAL_MAX_Y,  /*          Logical Maximum,                */
-+	0x46, PHYSICAL_MAX_Y, /*          Physical Maximum,               */
-+	0x81, 0x02,           /*          Input (Variable),               */
-+	0xb4,                 /*          Pop,                            */
-+	0x09, 0x30,           /*          Usage (Tip Pressure),           */
-+	0x45, 0x00,           /*          Physical Maximum (0),           */
-+	0x26, PRESSURE_MAX,   /*          Logical Maximum,                */
-+	0x75, 0x0D,           /*          Report Size (13),               */
-+	0x95, 0x01,           /*          Report Count (1),               */
-+	0x81, 0x02,           /*          Input (Variable),               */
-+	0x75, 0x01,           /*          Report Size (1),                */
-+	0x95, 0x13,           /*          Report Count (19),              */
-+	0x81, 0x01,           /*          Input (Constant),               */
-+	0xc0,                 /*      End Collection,                     */
-+	0xc0,                 /*  End Collection                          */
-+};
-+
-+static const size_t fixed_pad_rdesc_size = sizeof(fixed_pad_rdesc);
-+static const size_t fixed_pen_rdesc_size = sizeof(fixed_pen_rdesc);
 +
 +SEC(HID_BPF_RDESC_FIXUP)
-+int BPF_PROG(hid_rdesc_fixup_xppen_deco_mini_4, struct hid_bpf_ctx *hctx)
++int BPF_PROG(hid_fix_rdesc_tca_yoke, struct hid_bpf_ctx *hctx)
 +{
-+	__u8 *data = hid_bpf_get_data(hctx, 0, HID_MAX_DESCRIPTOR_SIZE);
++	const int expected_length = 148;
 +
-+	if (!data)
-+		return 0; /* EPERM check */
-+
-+	if (hctx->size == RDESC_SIZE_PAD) {
-+		__builtin_memcpy(data, fixed_pad_rdesc, fixed_pad_rdesc_size);
-+		return fixed_pad_rdesc_size;
-+	} else if (hctx->size == RDESC_SIZE_PEN) {
-+		__builtin_memcpy(data, fixed_pen_rdesc, fixed_pen_rdesc_size);
-+		return fixed_pen_rdesc_size;
-+	}
-+
-+	return 0;
-+}
-+
-+SEC(HID_BPF_DEVICE_EVENT)
-+int BPF_PROG(hid_device_event_xppen_deco_mini_4, struct hid_bpf_ctx *hctx)
-+{
-+	__u8 *data = hid_bpf_get_data(hctx, 0 /* offset */, 8 /* size */);
-+	__u8 button_mask = 0;
-+	int d, b;
-+
-+	if (!data)
-+		return 0; /* EPERM check */
-+
-+	if (data[0] != PAD_REPORT_ID)
++	if (hctx->size != expected_length)
 +		return 0;
 +
-+	/* data[1] stores the status of BTN_2 in the 3rd bit*/
-+	if (data[1] & BIT(2))
-+		button_mask |= BIT(2);
++	__u8 *data = hid_bpf_get_data(hctx, 0 /* offset */, HID_MAX_DESCRIPTOR_SIZE /* size */);
 +
-+	/* The rest of the descriptor stores the buttons as in pad_buttons */
-+	for (d = 2; d < 8; d++) {
-+		for (b = 0; b < sizeof(pad_buttons); b++) {
-+			if (data[d] != 0 && data[d] == pad_buttons[b])
-+				button_mask |= BIT(b);
-+		}
++	if (!data)
++		return 0; /* EPERM */
++
++	/* Safety check, our probe() should take care of this though */
++	if (data[1] != 0x01 /* Generic Desktop */ || data[3] != 0x04 /* Joystick */)
++		return 0;
++
++	/* The report descriptor sets incorrect Input items in 2 places, resulting in a
++	 * non-existing axis showing up.
++	 * This change sets the correct Input which prevents the axis from showing up in Linux.
++	 */
++
++	if (data[90] == 0x81 && /* Input */
++	    data[103] == 0x81) { /* Input */
++		data[91] = 0x03; /* Input set to 0x03 Constant, Variable Absolute */
++		data[104] = 0x03; /* Input set to 0X03 Constant, Variable Absolute */
 +	}
-+
-+	__u8 report[8] = {PAD_REPORT_ID, button_mask, 0x00};
-+
-+	__builtin_memcpy(data, report, sizeof(report));
 +
 +	return 0;
 +}
 +
-+HID_BPF_OPS(deco_mini_4) = {
-+	.hid_device_event = (void *)hid_device_event_xppen_deco_mini_4,
-+	.hid_rdesc_fixup = (void *)hid_rdesc_fixup_xppen_deco_mini_4,
++HID_BPF_OPS(tca_yoke) = {
++	.hid_rdesc_fixup = (void *)hid_fix_rdesc_tca_yoke,
 +};
 +
 +SEC("syscall")
 +int probe(struct hid_bpf_probe_args *ctx)
 +{
-+	/*
-+	 * The device has 2 modes: The compatibility mode, enabled by default,
-+	 * and the raw mode, that can be activated by sending a buffer of magic
-+	 * data to a certain USB endpoint.
-+	 *
-+	 * Depending on the mode, different interfaces of the device are used:
-+	 * - First interface:  Pad in compatibility mode
-+	 * - Second interface: Pen in compatibility mode
-+	 * - Third interface:  Only used in raw mode
-+	 *
-+	 * We'll use the device in compatibility mode.
-+	 */
-+	ctx->retval = ctx->rdesc_size != RDESC_SIZE_PAD &&
-+		      ctx->rdesc_size != RDESC_SIZE_PEN;
-+	if (ctx->retval)
++	/* ensure the kernel isn't fixed already */
++	if (ctx->rdesc[91] != 0x02) /* Input for 0x59 Usage type has changed */
 +		ctx->retval = -EINVAL;
 +
 +	return 0;
