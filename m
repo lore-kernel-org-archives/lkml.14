@@ -1,124 +1,116 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3EA5195FEC;
-	Thu, 27 Jun 2024 14:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD28A197A65
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 14:35:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719498941; cv=none; b=rQxan9zaDbrRVcb586oWBrdNtMBj2MAZAf8DJx5e++9sEizc5cp+enRue2jSVs2pYyRe3FJPCUTSSm4znkXwBM4G7apXNMYHHTofrhO8ne6Yp+OYSIBQG3ksuNQGwONPYXo/xxCrIA5ETlFu56FuLoG4DKgeagXfnuc3wHG+L4s=
+	t=1719498945; cv=none; b=DkxB7Rt/b5z0Q6UHnsoDa2z0E0wRE+E6ogVcjQF455YH0yFWWh7F5nKLsWTDST0KXFBhcyz07HtBdox1pIknDDrCu79ibxtH3c/3qlnh5/OtRnbHJUDxHNoFeIcYdpxk5Qi7CLgx7ryga6oPTKKq2l43qI/sERytX2Hy00DynVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719498941; c=relaxed/simple;
-	bh=3Vi0uGfEuBdcPspVCidcNyOiSGrFtVEnJEsAyuLLmok=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=VHFT3+yCtT3HDWwrBo9Qs+fSVSfMTRjiSnqbWIsBgp20Ad2mYp6u+VRqZVbkdIhWOWmCfJoYkLJUkH66wH5W0Qfy0RcCwYuyg0PsUlkrR+bV3WF4zukgz0uf/i9Dmey4MFBUd34r68NhucpX3ZeXkrIZ0XUFvZVDggTuOXhY8sM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=At8UPRXD; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1719498945; c=relaxed/simple;
+	bh=NQiBXQ9n1hDdkvx74U1VHfRUYjZb3SZE/fC7Kdw6bks=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p7tBJjWC4OW7s0t6t3BxHiA4EeBbMGhkAlqwOyQPYViepxu+XQmUWbynEZCcW+xMz1oxPkzyZ/c5PyXoa4j0O6vs80pe3KtTWblGf97v52xoxRSUo9o5k2DVMsVBZBZdLXMUREqQ/BS8OEaadvj4lVLwFVrp9Htc/E4FNBkyWUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=OnWYtuuN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="At8UPRXD"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45R9aZpk001371;
-	Thu, 27 Jun 2024 16:35:08 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	JZtOepcBSS+kH3b4UBs+hMQyBQdO3T/Rwy2l9o6fnIA=; b=At8UPRXDc6cOjJzL
-	LdgebuAfvq1RI3Q1q6fuQ5fxzM4/cxORPud1Tqc/bSReshwD+d4onUMVZCI6BdE7
-	TVTbzAaW1QDGmrKNaSU4ArrB7cFdtuGuE2sgkbtQVtBHaAk6I53PfyHasZMrhGh8
-	e5qmAq2GpHfsg4JmisbypDmPkZnGco3ow4wgxw41Pl8vw8vvMCWiyleLq6unI6MY
-	+jZcTUNOZDr9lajx2qiwQnQf2d5xvADicI7Isp21EIcsK2JZ0kveYn29woZ7Om3N
-	1A5XtTjWrs4sbXs+ecL0hkfemKp+7z8tY6bnezYlf5Gti/JYHiUmqqxilyawpbOg
-	p8jfwg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ywm1gpfpw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Jun 2024 16:35:08 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5EECA40046;
-	Thu, 27 Jun 2024 16:34:57 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0A9D9220B68;
-	Thu, 27 Jun 2024 16:33:43 +0200 (CEST)
-Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 27 Jun
- 2024 16:33:42 +0200
-Message-ID: <876586b4-3957-4b55-83c4-decf42b05efd@foss.st.com>
-Date: Thu, 27 Jun 2024 16:33:41 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OnWYtuuN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9070DC32786;
+	Thu, 27 Jun 2024 14:35:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1719498944;
+	bh=NQiBXQ9n1hDdkvx74U1VHfRUYjZb3SZE/fC7Kdw6bks=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OnWYtuuN5AuLTHtiribpakK1MkUx0dRC1w8G+Op+DQNH2m4H7X1DMuGk7RJRzsiZo
+	 eRImw1a9Trl3cqZTztsST2Tz7svKZWd9G04rm35aocyPAqoNKfba0r1+1mTpMF9mE9
+	 u/2k1NJuNTX/3DGTs54fLaUWgE8hI4OGQryhg5nM=
+Date: Thu, 27 Jun 2024 16:35:40 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: quic_zijuhu <quic_zijuhu@quicinc.com>
+Cc: rafael@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] devres: Simple code optimization
+Message-ID: <2024062724-bunion-swept-23b9@gregkh>
+References: <d029d754-aeb7-493a-8e48-6acaa53fee1e@quicinc.com>
+ <1719496036-24642-1-git-send-email-quic_zijuhu@quicinc.com>
+ <2024062750-hubcap-parish-7bda@gregkh>
+ <179b5505-f64b-4c29-b2df-2eec9e276904@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] Series DTs to deliver Ethernet for STM32MP25
-To: Christophe Roullier <christophe.roullier@foss.st.com>,
-        "David S . Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Rob Herring
-	<robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Richard Cochran
-	<richardcochran@gmail.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Liam Girdwood
-	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Marek Vasut
-	<marex@denx.de>
-CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20240619125815.358207-1-christophe.roullier@foss.st.com>
-Content-Language: en-US
-From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
-In-Reply-To: <20240619125815.358207-1-christophe.roullier@foss.st.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-27_11,2024-06-27_03,2024-05-17_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <179b5505-f64b-4c29-b2df-2eec9e276904@quicinc.com>
 
-Hi Christophe
+On Thu, Jun 27, 2024 at 10:29:43PM +0800, quic_zijuhu wrote:
+> On 6/27/2024 9:54 PM, Greg KH wrote:
+> > On Thu, Jun 27, 2024 at 09:47:16PM +0800, Zijun Hu wrote:
+> >> Initialize an uninitialized struct member for devres_open_group()
+> >> and simplify devm_percpu_match() implementation.
+> > 
+> > Huge hint, when you say "and" or "also" in a patch, it's a good idea to
+> > split it up into different commits, right?
+> > 
+> you are right.
+> i would like to split this change into two changes within a patchset
+> even if this change is *very* simple.
+> >>
+> >> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+> >> ---
+> >> This change is intend to replace below one:
+> >> https://lore.kernel.org/lkml/1718629765-32720-1-git-send-email-quic_zijuhu@quicinc.com/#t
+> > 
+> > Why?  SHouldn't this be v2 instead?
+> > 
+> this change has different title and maybe be identified as different
+> patch, so i send it as v1.
+> >>  drivers/base/devres.c | 5 +++--
+> >>  1 file changed, 3 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/drivers/base/devres.c b/drivers/base/devres.c
+> >> index 3df0025d12aa..5b1d498e83ab 100644
+> >> --- a/drivers/base/devres.c
+> >> +++ b/drivers/base/devres.c
+> >> @@ -567,6 +567,7 @@ void * devres_open_group(struct device *dev, void *id, gfp_t gfp)
+> >>  	grp->id = grp;
+> >>  	if (id)
+> >>  		grp->id = id;
+> >> +	grp->color = 0;
+> >>  
+> >>  	spin_lock_irqsave(&dev->devres_lock, flags);
+> >>  	add_dr(dev, &grp->node[0]);
+> >> @@ -1172,9 +1173,9 @@ static void devm_percpu_release(struct device *dev, void *pdata)
+> >>  
+> >>  static int devm_percpu_match(struct device *dev, void *data, void *p)
+> >>  {
+> >> -	struct devres *devr = container_of(data, struct devres, data);
+> >> +	void __percpu *ptr = *(void __percpu **)data;
+> >>  
+> >> -	return *(void **)devr->data == p;
+> >> +	return ptr == (void __percpu *)p;
+> > 
+> > What exactly is being "optimized" here?
+> > 
+> 1) remove redundant container_of() and devr->data operations
+>    pointer parameter @data already is address of devr->data.
 
-On 6/19/24 14:58, Christophe Roullier wrote:
-> STM32MP25 is STM32 SOC with 2 GMACs instances.
->      GMAC IP version is SNPS 5.3x.
->      GMAC IP configure with 2 RX and 4 TX queue.
->      DMA HW capability register supported
->      RX Checksum Offload Engine supported
->      TX Checksum insertion supported
->      Wake-Up On Lan supported
->      TSO supported
-> 
-> Delivered Ethernet2 instance for board EV1 which is connected
-> to Realtek PHY in RGMII mode.
-> Ethernet1 instance will be delivered in next step.
-> 
-> V2: - Remark from Marek (sort DT)
-> 
-> Christophe Roullier (3):
->    arm64: dts: st: add ethernet1 and ethernet2 support on stm32mp25
->    arm64: dts: st: add eth2 pinctrl entries in stm32mp25-pinctrl.dtsi
->    arm64: dts: st: enable Ethernet2 on stm32mp257f-ev1 board
-> 
->   arch/arm64/boot/dts/st/stm32mp25-pinctrl.dtsi | 59 +++++++++++++++++++
->   arch/arm64/boot/dts/st/stm32mp251.dtsi        | 49 +++++++++++++++
->   arch/arm64/boot/dts/st/stm32mp253.dtsi        | 51 ++++++++++++++++
->   arch/arm64/boot/dts/st/stm32mp257f-ev1.dts    | 24 ++++++++
->   4 files changed, 183 insertions(+)
-> 
-> 
-> base-commit: 382d1741b5b2feffef7942dd074206372afe1a96
+But do we really know that ahead of time?  If so, how, just by virtue of
+this being the first field?  If so, then no, keep the container_of.
 
-Series applied on stm32-next
+> 2) compare with right data type
+>     original type of @p is void __percpu * returned by
+> __devm_alloc_percpu().
 
-Thanks!!
-Alex
+It's pointer math, no need for types, right?
+
+> @data is storing a pointer type void __percpu * as shown by below
+> statement within __devm_alloc_percpu().
+> *(void __percpu **)p = pcpu;
+
+Again, it's not very obvious so you better document the heck out of it
+in your changelog text.
+
+thanks,
+
+greg k-h
