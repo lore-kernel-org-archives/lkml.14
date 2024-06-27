@@ -1,160 +1,299 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0080C14D6EB;
-	Thu, 27 Jun 2024 18:12:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB8DE2139D6;
+	Thu, 27 Jun 2024 18:12:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719511940; cv=none; b=N9CE103C5wlKIhOycnBH7iUHrDxxHGWtAercF4o6dj4M0g883S6Q1T198TdKRIVHLNTvae5cYXX2nUa7IZaIjCiXMc6Dbe3CENqPaOyRd7T1jhIpbc6vfpP7B/37W81Txa6iypVw/bNZOPExE/ZkiH55DnDk2SPpLWT5MqGqPfg=
+	t=1719511965; cv=none; b=HiRI5KRIIC+xmq4hGvJCjMGnyGEJkPHJW/WIaJCes+1qJHNQkBIr32anUs74nKQpBkIc84e9dCLdHmQBIZgXKGk4IIQz+r9wGYYvysw6jxeB/ad650nZfkFu/RdeKU+tuGCGHXDePsOPuig7Ll2gelXAOT3r3g8mK2vS1WidDWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719511940; c=relaxed/simple;
-	bh=OYVUmimzC+TvNSegkksz4Keghwa/Gc7iuy9ka0pwQKY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ekac0giEJkL+Lyx/Ug+BlfxOqGXlvG1R6pWIKxP3bgo5wl3bKRm8lnQKDFgIAsrXtqLbZW1D0Ncz7ECYa/WbW35RunE5WxP+HcvJ24SoqWHxAmALZoKmMGgIYp1Tt2sQzkTOJ13kFL/mwKwUj4VTnHQwrGHbyfRoh7CXkS56LyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B9/5fsQT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719511965; c=relaxed/simple;
+	bh=vhPFJcTqc1hjlj/vXR4493e6RjWxoxAvbzr8XGRzU4g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o9kOKvi8bYh+1zt+udGM6H0CiK70FD74wP0B2ew6OCBe85LqdJztNalIsmC4FWN0Oo5+NVMi2J16csQZhcsTDUaQU/OFa5LEFxzg17kWb0/8U63iX4JcFyaH8y2Gq2pxEoJw0GtqPIyfv57PxKJaObIULo2fNakJoueWysaOhoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hM+LJySv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B9/5fsQT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F888C2BD10;
-	Thu, 27 Jun 2024 18:12:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hM+LJySv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74762C2BBFC;
+	Thu, 27 Jun 2024 18:12:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719511939;
-	bh=OYVUmimzC+TvNSegkksz4Keghwa/Gc7iuy9ka0pwQKY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=B9/5fsQTTQ3CtM7MDAV1yo8iftTV+exZwWdomIBAZG2/bfKliJv2VKIJs1vw6ut5g
-	 Yy9E+e+DF8o4r96AR6dVT2BQyHeM5eaM6PuuweS4q4CkSEWJURQ6zWEHAbo0dS6FDK
-	 hnWYMvcGh6oc1WHhE6IsZrOHpA9bUMp6oVYfPm3ILewPzkaleOyXISqjE0PDBcU9RG
-	 jgEpRz0EN+/b73bhCvwmABr8VZRJm3vLMbpVzHi87hLdiruK9YDeHu6kZKZjLMJnAT
-	 lIwFv5I6y0q7gpoJ+yzTTsdkXmIGAORACRQCSchRo9wjYqkcUnLTTdBwO8YRGHywRz
-	 MWsAezBfCwVsw==
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a6fe617966fso576190666b.1;
-        Thu, 27 Jun 2024 11:12:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX6QZkB13To1XQ2Pjup1yUXBhT2C6unMAypPYtHNdR1PF0+6RaAAZDcXWBW2VKK3LK4d03Nc+1sU/v63ZIUbg3OLocOZ/jHP+HH1+7Kpn4hg5UM5F/MMQ8LeqanFPINMokmuvh2JnjXaF8=
-X-Gm-Message-State: AOJu0Yx7pdqP4ld2xg1R1t4I4C5LZDqNUFoI/1/a4OSJbSpq/2zG6NdX
-	I+6h6k0LHnr76fbRu9tc3dqrZrnvxLyXI8cXKpt0Aue5ZXaVD+YVSeVVU4N6+qswZ+8Kjves04M
-	5kacYmvjmRp/gDrVrdfc+kw1hSJ0=
-X-Google-Smtp-Source: AGHT+IFHVtQbez85EoPPqQzNHxI1X+g/RnpQVeqJhcVKIcxQ63lpzuzQlEvErvaKluSrBv0VPFDDpfgaNHHzTFo7jwE=
-X-Received: by 2002:a17:906:d99:b0:a6f:5318:b8f0 with SMTP id
- a640c23a62f3a-a7245b80ea1mr868287866b.37.1719511938093; Thu, 27 Jun 2024
- 11:12:18 -0700 (PDT)
+	s=k20201202; t=1719511964;
+	bh=vhPFJcTqc1hjlj/vXR4493e6RjWxoxAvbzr8XGRzU4g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hM+LJySv/sJtCY4jMrldKW9T05O3gboe8oLtzkh4tOKSUMBMeYrQoiN9dLLSEnnkS
+	 h0X68OzCUvAcrxbLkZQkVfLs+PcFWAhrQ4zzsxPEb6mUUPXWLtx72CPQ8Ov8jYhWY/
+	 ugteZ1Dnn9b5GDpRnu4ak8iNBXn6D0E0cOHb22nzTIUgtNgvdESetwMJ+ondLw+d8t
+	 kpxXfXRw6ifI5y+9ICI2MoJumx4YQVfnJmOKzOUkuIQtYkp6DMiQIEYLNrpYbmGSGD
+	 u6S4nJ1SMLBLY433B3BqAmmzDaAIvKbauzHi089DsnTow78OOgCF7kJwTwxfhj3yaD
+	 Zz8QGbnn0HRWg==
+Date: Thu, 27 Jun 2024 11:12:43 -0700
+From: Kees Cook <kees@kernel.org>
+To: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+	Christian Brauner <brauner@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: Paul Moore <paul@paul-moore.com>, Jann Horn <jannh@google.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	syzbot <syzbot+5446fbf332b0602ede0b@syzkaller.appspotmail.com>,
+	jmorris@namei.org, linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org, serge@hallyn.com,
+	syzkaller-bugs@googlegroups.com, linux-fsdevel@vger.kernel.org
+Subject: Re: [syzbot] [lsm?] general protection fault in
+ hook_inode_free_security
+Message-ID: <202406271019.BF8123A5@keescook>
+References: <00000000000076ba3b0617f65cc8@google.com>
+ <CAHC9VhSmbAY8gX=Mh2OT-dkQt+W3xaa9q9LVWkP9q8pnMh+E_w@mail.gmail.com>
+ <20240515.Yoo5chaiNai9@digikod.net>
+ <20240516.doyox6Iengou@digikod.net>
+ <20240627.Voox5yoogeum@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <76d879d2-200d-4b15-8fab-fcd382a4c3e2@gmail.com>
-In-Reply-To: <76d879d2-200d-4b15-8fab-fcd382a4c3e2@gmail.com>
-From: Filipe Manana <fdmanana@kernel.org>
-Date: Thu, 27 Jun 2024 19:11:41 +0100
-X-Gmail-Original-Message-ID: <CAL3q7H7p6EYDG9k66bxDZZrfTQPaiEiZOnFFbov2C3EuRMVLZg@mail.gmail.com>
-Message-ID: <CAL3q7H7p6EYDG9k66bxDZZrfTQPaiEiZOnFFbov2C3EuRMVLZg@mail.gmail.com>
-Subject: =?UTF-8?Q?Re=3A_=5BPROBLEM=5D_make_randconfig=3A_fs=2Fbtrfs=2Fref=2Dverify=2Ec?=
-	=?UTF-8?Q?=3A500=3A16=3A_error=3A_=E2=80=98ret=E2=80=99_may_be_used_uninitialized_in_this_?=
-	=?UTF-8?Q?function_=5B=2DWerror=3Dmaybe=2Duninitialized=5D?=
-To: Mirsad Todorovac <mtodorovac69@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Kernel Build System <linux-kbuild@vger.kernel.org>, Chris Mason <clm@fb.com>, 
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240627.Voox5yoogeum@digikod.net>
 
-On Thu, Jun 27, 2024 at 7:07=E2=80=AFPM Mirsad Todorovac <mtodorovac69@gmai=
-l.com> wrote:
->
-> Hi all,
->
-> After following Boris' advice in https://lore.kernel.org/lkml/20240404134=
-142.GCZg6uFh_ZSzUFLChd@fat_crate.local/
-> on using the randconfig test, this is the second catch:
->
-> KCONFIG_SEED=3D0xEE80059C
->
-> marvin@defiant:~/linux/kernel/linux_torvalds$ time nice make -j 36 bindeb=
--pkg |& tee ../err-6.10-rc5-05a.log; date
->   GEN     debian
-> dpkg-buildpackage --build=3Dbinary --no-pre-clean --unsigned-changes -R'm=
-ake -f debian/rules' -j1 -a$(cat debian/arch)
-> dpkg-buildpackage: info: source package linux-upstream
-> dpkg-buildpackage: info: source version 6.10.0-rc5-gafcd48134c58-27
-> dpkg-buildpackage: info: source distribution jammy
-> dpkg-buildpackage: info: source changed by marvin <marvin@defiant>
-> dpkg-architecture: warning: specified GNU system type i686-linux-gnu does=
- not match CC system type x86_64-linux-gnu, try setting a correct CC enviro=
-nment variable
->  dpkg-source --before-build .
-> dpkg-buildpackage: info: host architecture i386
->  make -f debian/rules binary
-> #
-> # No change to .config
-> #
->   CALL    scripts/checksyscalls.sh
->   UPD     init/utsversion-tmp.h
->   CC      init/version.o
->   AR      init/built-in.a
->   CHK     kernel/kheaders_data.tar.xz
->   CC [M]  fs/btrfs/ref-verify.o
->   AR      fs/built-in.a
-> fs/btrfs/ref-verify.c: In function =E2=80=98process_extent_item.isra=E2=
-=80=99:
-> fs/btrfs/ref-verify.c:500:16: error: =E2=80=98ret=E2=80=99 may be used un=
-initialized in this function [-Werror=3Dmaybe-uninitialized]
->   500 |         return ret;
->       |                ^~~
-> cc1: all warnings being treated as errors
-> make[7]: *** [scripts/Makefile.build:244: fs/btrfs/ref-verify.o] Error 1
-> make[6]: *** [scripts/Makefile.build:485: fs/btrfs] Error 2
-> make[5]: *** [scripts/Makefile.build:485: fs] Error 2
-> make[4]: *** [Makefile:1934: .] Error 2
-> make[3]: *** [debian/rules:74: build-arch] Error 2
-> dpkg-buildpackage: error: make -f debian/rules binary subprocess returned=
- exit status 2
-> make[2]: *** [scripts/Makefile.package:121: bindeb-pkg] Error 2
-> make[1]: *** [/home/marvin/linux/kernel/linux_torvalds/Makefile:1555: bin=
-deb-pkg] Error 2
-> make: *** [Makefile:240: __sub-make] Error 2
->
-> real    0m2.583s
-> user    0m9.943s
-> sys     0m5.607s
-> Thu Jun 27 19:14:55 CEST 2024
-> marvin@defiant:~/linux/kernel/linux_torvalds$
->
-> This fix does nothing to the algorithm, but it silences compiler -Werror=
-=3Dmaybe-uninitialised
+On Thu, Jun 27, 2024 at 03:34:41PM +0200, Mickaël Salaün wrote:
+> I didn't find specific issues with Landlock's code except the extra
+> check in hook_inode_free_security().  It looks like inode->i_security is
+> a dangling pointer, leading to UAF.
+> 
+> Reading security_inode_free() comments, two things looks weird to me:
+> > /**
+> >  * security_inode_free() - Free an inode's LSM blob
+> >  * @inode: the inode
+> >  *
+> >  * Deallocate the inode security structure and set @inode->i_security to NULL.
+> 
+> I don't see where i_security is set to NULL.
 
-You've reported this before, and there's a fix [1] for it in the
-btrfs' github repo, for-next branch. It's not yet in Linus' tree.
+Yeah, I don't either...
 
-[1] https://lore.kernel.org/linux-btrfs/612bf950d478214e8b76bdd7c22dd6a9913=
-37b15.1719143259.git.fdmanana@suse.com/
+> >  */
+> > void security_inode_free(struct inode *inode)
+> > {
+> 
+> Shouldn't we add this check here?
+> if (!inode->i_security)
+> 	return;
 
->
-> ---
-> diff --git a/fs/btrfs/ref-verify.c b/fs/btrfs/ref-verify.c
-> index cf531255ab76..0b5ff30e2d81 100644
-> --- a/fs/btrfs/ref-verify.c
-> +++ b/fs/btrfs/ref-verify.c
-> @@ -459,6 +459,8 @@ static int process_extent_item(struct btrfs_fs_info *=
-fs_info,
->                 iref =3D (struct btrfs_extent_inline_ref *)(ei + 1);
->         }
->
-> +       ret =3D -EINVAL;
-> +
+Probably, yes. The LSMs that check for NULL i_security in the free hook
+all do so right at the beginning...
 
-This is not correct.
-This would result in failure if we have an extent item without any
-inline references (only keyed references following the extent item).
+> 
+> > 	call_void_hook(inode_free_security, inode);
+> > 	/*
+> > 	 * The inode may still be referenced in a path walk and
+> > 	 * a call to security_inode_permission() can be made
+> > 	 * after inode_free_security() is called. Ideally, the VFS
+> > 	 * wouldn't do this, but fixing that is a much harder
+> > 	 * job. For now, simply free the i_security via RCU, and
+> > 	 * leave the current inode->i_security pointer intact.
+> > 	 * The inode will be freed after the RCU grace period too.
+> 
+> It's not clear to me why this should be safe if an LSM try to use the
+> partially-freed blob after the hook calls and before the actual blob
+> free.
 
-Thanks.
+Yeah, it's not clear to me what the expected lifetime is here. How is
+inode_permission() being called if all inode reference counts are 0? It
+does seem intentional, though.
 
->         ptr =3D (unsigned long)iref;
->         end =3D (unsigned long)ei + item_size;
->         while (ptr < end) {
-> ---
->
-> Hope this helps.
->
-> Best regards,
-> Mirsad Todorovac
->
+The RCU logic was introduced in commit 3dc91d4338d6 ("SELinux: Fix possible
+NULL pointer dereference in selinux_inode_permission()"), with much
+discussion:
+https://lore.kernel.org/lkml/20140109101932.0508dec7@gandalf.local.home/
+(This commit seems to remove setting "i_security = NULL", though, which
+the comment implies is intended, but then it also seems to depend on
+finding a NULL?)
+
+LSMs using i_security are:
+
+security/bpf/hooks.c:   .lbs_inode = sizeof(struct bpf_storage_blob),
+security/integrity/evm/evm_main.c:      .lbs_inode = sizeof(struct evm_iint_cache),
+security/integrity/ima/ima_main.c:      .lbs_inode = sizeof(struct ima_iint_cache *),
+security/landlock/setup.c:      .lbs_inode = sizeof(struct landlock_inode_security),
+security/selinux/hooks.c:       .lbs_inode = sizeof(struct inode_security_struct),
+security/smack/smack_lsm.c:     .lbs_inode = sizeof(struct inode_smack),
+
+SELinux is still checking for NULL. See selinux_inode() and
+selinux_inode_free_security(), as do bpf_inode() and
+bpf_inode_storage_free(). evm and ima also check for NULL.
+
+landlock_inode() does not, though.
+
+Smack doesn't hook the free, but it should still check for NULL, and it's not.
+
+So I think this needs fixing in Landlock and Smack.
+
+I kind of think that the LSM infrastructure needs to provide a common
+helper for the "access the blob" action, as we've got it repeated in
+each LSM, and we have 2 implementations that are missing NULL checks...
+
+> 
+> > 	 */
+> > 	if (inode->i_security)
+> > 		call_rcu((struct rcu_head *)inode->i_security,
+> > 			 inode_free_by_rcu);
+> 
+> And then:
+> inode->i_security = NULL;
+> 
+> But why call_rcu()?  i_security is not protected by RCU barriers.
+
+I assume it's because security_inode_free() via __destroy_inode() via
+destroy_inode() via evict() via iput_final() via iput() may be running
+in interrupt context?
+
+But I still don't see where i_security gets set to NULL. This won't fix
+the permissions hook races for Landlock and Smack, but should make
+lifetime a bit more clear?
+
+
+diff --git a/security/security.c b/security/security.c
+index 9c3fb2f60e2a..a8658ebcaf0c 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -1613,7 +1613,8 @@ static void inode_free_by_rcu(struct rcu_head *head)
+  */
+ void security_inode_free(struct inode *inode)
+ {
+-	call_void_hook(inode_free_security, inode);
++	struct rcu_head *inode_blob = inode->i_security;
++
+ 	/*
+ 	 * The inode may still be referenced in a path walk and
+ 	 * a call to security_inode_permission() can be made
+@@ -1623,9 +1624,11 @@ void security_inode_free(struct inode *inode)
+ 	 * leave the current inode->i_security pointer intact.
+ 	 * The inode will be freed after the RCU grace period too.
+ 	 */
+-	if (inode->i_security)
+-		call_rcu((struct rcu_head *)inode->i_security,
+-			 inode_free_by_rcu);
++	if (inode_blob) {
++		call_void_hook(inode_free_security, inode);
++		inode->i_security = NULL;
++		call_rcu(inode_blob, inode_free_by_rcu);
++	}
+ }
+ 
+ /**
+
+
+-Kees
+
+> 
+> > }
+> 
+> 
+> On Thu, May 16, 2024 at 09:31:21AM GMT, Mickaël Salaün wrote:
+> > Adding membarrier experts.
+> > 
+> > On Wed, May 15, 2024 at 05:12:58PM +0200, Mickaël Salaün wrote:
+> > > On Thu, May 09, 2024 at 08:01:49PM -0400, Paul Moore wrote:
+> > > > On Wed, May 8, 2024 at 3:32 PM syzbot
+> > > > <syzbot+5446fbf332b0602ede0b@syzkaller.appspotmail.com> wrote:
+> > > > >
+> > > > > Hello,
+> > > > >
+> > > > > syzbot found the following issue on:
+> > > > >
+> > > > > HEAD commit:    dccb07f2914c Merge tag 'for-6.9-rc7-tag' of git://git.kern..
+> > > > > git tree:       upstream
+> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=14a46760980000
+> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=6d14c12b661fb43
+> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=5446fbf332b0602ede0b
+> > > > > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> > > > >
+> > > > > Unfortunately, I don't have any reproducer for this issue yet.
+> > > > >
+> > > > > Downloadable assets:
+> > > > > disk image: https://storage.googleapis.com/syzbot-assets/39d66018d8ad/disk-dccb07f2.raw.xz
+> > > > > vmlinux: https://storage.googleapis.com/syzbot-assets/c160b651d1bc/vmlinux-dccb07f2.xz
+> > > > > kernel image: https://storage.googleapis.com/syzbot-assets/3662a33ac713/bzImage-dccb07f2.xz
+> > > > >
+> > > > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > > > > Reported-by: syzbot+5446fbf332b0602ede0b@syzkaller.appspotmail.com
+> > > > >
+> > > > > general protection fault, probably for non-canonical address 0xdffffc018f62f515: 0000 [#1] PREEMPT SMP KASAN NOPTI
+> > > > > KASAN: probably user-memory-access in range [0x0000000c7b17a8a8-0x0000000c7b17a8af]
+> > > > > CPU: 1 PID: 5102 Comm: syz-executor.1 Not tainted 6.9.0-rc7-syzkaller-00012-gdccb07f2914c #0
+> > > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
+> > > > > RIP: 0010:hook_inode_free_security+0x5b/0xb0 security/landlock/fs.c:1047
+> > > > 
+> > > > Possibly a Landlock issue, Mickaël?
+> > > 
+> > > It looks like security_inode_free() is called two times on the same
+> > > inode.  This could happen if an inode labeled by Landlock is put
+> > > concurrently with release_inode() for a closed ruleset or with
+> > > hook_sb_delete().  I didn't find any race condition that could lead to
+> > > two calls to iput() though.  Could WRITE_ONCE(object->underobj, NULL)
+> > > change anything even if object->lock is locked?
+> 
+> I don't think so anymore, the issue is with i_security, not the blob
+> content.
+> 
+> > > 
+> > > A bit unrelated but looking at the SELinux code, I see that selinux_inode()
+> > > checks `!inode->i_security`.  In which case could this happen?
+> 
+> I think this shouldn't happen, and that might actually be an issue for
+> SELinux.  See my above comment about security_free_inode().
+> 
+> > > 
+> > > > 
+> > > > > Code: 8a fd 48 8b 1b 48 c7 c0 c4 4e d5 8d 48 c1 e8 03 42 0f b6 04 30 84 c0 75 3e 48 63 05 33 59 65 09 48 01 c3 48 89 d8 48 c1 e8 03 <42> 80 3c 30 00 74 08 48 89 df e8 66 be 8a fd 48 83 3b 00 75 0d e8
+> > > > > RSP: 0018:ffffc9000307f9a8 EFLAGS: 00010212
+> > > > > RAX: 000000018f62f515 RBX: 0000000c7b17a8a8 RCX: ffff888027668000
+> > > > > RDX: 0000000000000000 RSI: 0000000000000040 RDI: ffff88805c0bb270
+> > > > > RBP: ffffffff8c01fb00 R08: ffffffff82132a15 R09: 1ffff1100b81765f
+> > > > > R10: dffffc0000000000 R11: ffffffff846ff540 R12: dffffc0000000000
+> > > > > R13: 1ffff1100b817683 R14: dffffc0000000000 R15: dffffc0000000000
+> > > > > FS:  0000000000000000(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+> > > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > > > CR2: 00007f43c42de000 CR3: 00000000635f8000 CR4: 0000000000350ef0
+> > > > > Call Trace:
+> > > > >  <TASK>
+> > > > >  security_inode_free+0x4a/0xd0 security/security.c:1613
+> > > > >  __destroy_inode+0x2d9/0x650 fs/inode.c:286
+> > > > >  destroy_inode fs/inode.c:309 [inline]
+> > > > >  evict+0x521/0x630 fs/inode.c:682
+> > > > >  dispose_list fs/inode.c:700 [inline]
+> > > > >  evict_inodes+0x5f9/0x690 fs/inode.c:750
+> > > > >  generic_shutdown_super+0x9d/0x2d0 fs/super.c:626
+> > > > >  kill_block_super+0x44/0x90 fs/super.c:1675
+> > > > >  deactivate_locked_super+0xc6/0x130 fs/super.c:472
+> > > > >  cleanup_mnt+0x426/0x4c0 fs/namespace.c:1267
+> > > > >  task_work_run+0x251/0x310 kernel/task_work.c:180
+> > > > >  exit_task_work include/linux/task_work.h:38 [inline]
+> > > > >  do_exit+0xa1b/0x27e0 kernel/exit.c:878
+> > > > >  do_group_exit+0x207/0x2c0 kernel/exit.c:1027
+> > > > >  __do_sys_exit_group kernel/exit.c:1038 [inline]
+> > > > >  __se_sys_exit_group kernel/exit.c:1036 [inline]
+> > > > >  __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1036
+> > > > >  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+> > > > >  do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+> > > > >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> > > > > RIP: 0033:0x7f731567dd69
+> > > > > Code: Unable to access opcode bytes at 0x7f731567dd3f.
+> > > > > RSP: 002b:00007fff4f0804d8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+> > > > > RAX: ffffffffffffffda RBX: 00007f73156c93a3 RCX: 00007f731567dd69
+> > > > > RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+> > > > > RBP: 0000000000000002 R08: 00007fff4f07e277 R09: 00007fff4f081790
+> > > > > R10: 0000000000000000 R11: 0000000000000246 R12: 00007fff4f081790
+> > > > > R13: 00007f73156c937e R14: 00000000000154d0 R15: 000000000000001e
+> > > > >  </TASK>
+> > > > > Modules linked in:
+> > > > > ---[ end trace 0000000000000000 ]---
+> > > > 
+> > > > -- 
+> > > > paul-moore.com
+> > > > 
+
+-- 
+Kees Cook
