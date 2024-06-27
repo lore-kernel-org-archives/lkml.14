@@ -1,74 +1,79 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBFC919AA70;
-	Thu, 27 Jun 2024 17:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A3B19AA7A
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 17:22:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719508971; cv=none; b=bgvLo0hKwwCGc0MYLnWYUKxcvy8WkI8wAJTtpkg267ECQbSCjfCmbIaw3upQojrHehFdoLDd4Amzf13sEBQKrGWf1+Q9IWC1JrHteG7bL8dUlUBe8e+jLW1WM9ig+hTL3CM5nZThWLO4aduq8a+4ad++pDkJ6TY+XDHl3Z6mZvI=
+	t=1719508972; cv=none; b=gZ+Ei3cQh1m0LGg1Q0w72Cpt3+peWtcHZNmeegJUdU+3+8ldzCwyGvIoV2pKXoFB62kleHrO24+Bkch0LpGBm8ugaG7S0Et7nr3TMumyZFc4PPN+6/7E7+g0/UA+otdur3BQzqYtybgh+zcrKeHiqPxAcaiU1sOXLpkVU83VAG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719508971; c=relaxed/simple;
-	bh=klqYSawc9+NGO/zCAp0wyCL7LwvbZptI3bgjMK68bVs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c8SyQMRvbTPJ5nQgpq4SzT/WkG3KEVNQ8ys0hm2Q9YbBYC76Ut6rB/kw1DZmBaIeFBISZyaEYWy1AHohEdZOeGYdxgclUx006D+GDANad9UnDPhx8P93uxz3Odm08A8eXciL/s7rvOtTJSEPeEwTRCPQYP4meFPm6rSsrRWgtsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jrQXA5ac; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719508972; c=relaxed/simple;
+	bh=QzMqgOjIU+dFAf6Rwj4tmC2nJfFLA7zfPOnws87UYz0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Sxa6ZyzM17Y+sTwkpg0STzgfuvq2uQvarvcizx8S6Di559Gd9cS0LnsnaBkAgR7oMFKvjJmUeDt49KFKUvZgmmblyTok9bi0PDPk1/QIoTjcBq5awRlVFl4boUyFBhAZrSYtTusbhbm6BnQ0mRq9C2bt/fRrhytLuUJeX0jd8MA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=f+UDfJ8v; arc=none smtp.client-ip=209.85.167.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jrQXA5ac"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52ce674da85so5290543e87.2;
-        Thu, 27 Jun 2024 10:22:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="f+UDfJ8v"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3d56285aa18so880810b6e.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 10:22:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719508968; x=1720113768; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=siZ4YVoVvwl35AmLdBXelRcytxkQs25RUWuyPVhPzww=;
-        b=jrQXA5achsyVcn5eE910YHsDuwnlBOtTKlYq9ffIYnn9CzBm3sfOYMbViRwWZ+lJeJ
-         dFAcDIZP/qjfjdkZ+R+rCniRbzeTRU7x7AkhDb3hC20y9RALmHkQUC0if7dSTI7mQ1NA
-         RV+c8wZdxHcG2c+22gAuMXfPjASruNRMGnbAXodI4+fqp1/q+QvH77Oaygo6RSF3WaYu
-         jmpYfT3G7TVCthwPXe2smOpnIbnkbLwiJL0nm5C1gw/nu3RcBPDCFpIApdBMFKAtEdHd
-         v75mgDIzlgYwLaySZ3St7s4DjiVp9uRpSnnqBqh9RwtllwT8pfrLZ3YBAMCXbVVVd2XD
-         xqFg==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719508969; x=1720113769; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/OwRRE/tmpPiqQGOJB6aU4vaGReQEfSJOGUq6AR27Vw=;
+        b=f+UDfJ8vZxKlldae4coOnMMo7KaWUrAv1yp2vZlY+f/Dsk5CWrgeD8KMCIQEVENZc3
+         GJoZ73rnK017u6qKxAfhDRPkbZlHkNd1UR1tufjrOpuaQZ+VDk8hzx/ZzuD7Nl7qQcZi
+         cRqT8IbACbHyQCnWhbQr5x0qQgc4YIpDM/4+fzkuNoPoplWDOdchU+ccxtgBzyud+BW2
+         t7gQgCf+nbl8HZapGekcHXTHlUJXR4uAWlltj2xM4Gg+cQB5lV0TzG5GQuVzzuWw/rip
+         g3ZcajT+fHkX+OUWL0Lbun7q/Vwmk8arDqiDUcESz3jXAeaBksxZjqcX85Kso9cH7VwM
+         W8eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719508968; x=1720113768;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=siZ4YVoVvwl35AmLdBXelRcytxkQs25RUWuyPVhPzww=;
-        b=Eup/PuRd5WBWr2yWcplocwaJXleRV5P07EnBbqGkIm2Lsc2k6zy+Jz36obZd8IJae7
-         eaU9HJuowvBY1kLLYUa7uXVaKONsS6tJhuHJLdeHcsYm+eaS7d0R7IY278oB2dVCcIis
-         fNxuoiMVWxvto5+iABUwfQvPKLwpzFHuHyHAn0IbNTgob9GoJ++NE0CiioRgP6PeWlY/
-         E+uipx5jAHscR68FxnYhBQO2hJtRc8M2Bb43ScDnCdg8x4hNTQgXtkKAGmcawS57tawh
-         iycusl2lWL1LDbsRfzsKiBQbj/ZwNM8LRyNfnEKOc8JNbRJQVWKUoEplLh/fGHqDqUER
-         m2kQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWHv2AHGIoH8fA5NQVoLvzgKWNHUTzDpj/IIng+cLSf0dOOMezH7Iv7C4c/YyixYo6psZl7nKQdX0LJb+FmG15TTIp1HzBoGg6VnetHKJzNUgGrEThb32Ipotc29QJ0u+k92ZL0/2keFNLaMqkyA+qfSTAVrItS1xeXE2VLSvsh/j+YJigE
-X-Gm-Message-State: AOJu0YzZmEWYATjILkginUg0NFdKKcNFTkPdnnmfgBuF/bjdL7JGAYqR
-	0c6y7XXkB5hm/bgK4cSuBCmEx7Z9wt3BA7lbv2/no0YreAsZQLIW
-X-Google-Smtp-Source: AGHT+IGh4XkamlP40fuEKOV4BaBgP/JJzsUdce1nGRPuSvsATQK0RszJNSwTndBnKq6e2kHeOW7/gg==
-X-Received: by 2002:a05:6512:acf:b0:52c:8c4d:f8d6 with SMTP id 2adb3069b0e04-52cf50fbcb7mr5778741e87.45.1719508967656;
-        Thu, 27 Jun 2024 10:22:47 -0700 (PDT)
-Received: from localhost ([213.79.110.82])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52e71305d6esm267170e87.167.2024.06.27.10.22.47
+        d=1e100.net; s=20230601; t=1719508969; x=1720113769;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/OwRRE/tmpPiqQGOJB6aU4vaGReQEfSJOGUq6AR27Vw=;
+        b=YS/joc21aRQxjzQ2raIonkIXHG25oHWMX+DMZ3HOuXkvoVXovZ/MEVUfesCJWVcODZ
+         5sUiqh9g8H+w+5KkC6UkkqIIUBJ9MGxkwJ19iw290ItTU1cOYaWugHSEiPasnODL/FPt
+         XMaS+wZ316tWugUyhg4qfm6/hw3T9HqGmmm2VReWmrvvt6gZjJJPbzu/mnFzpSs20CBX
+         tEHjxinUCYVXyFgNMCco+MrMad8+4mNDVdfNRL/asFELbTakE5Gp4GVAoeFH7UyRJQVJ
+         pmVO4/xUGTp0VebDXN7CiZ7vq9lU9pJ1y5Tn8rNUSnVEv/c0GRIfTzt04uBE73lidGr9
+         yHEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBROCBpnJUR726hZuruwthUY4c6X64eVJHkbQKBSMNxZeBnGBP7dl0szherOLJm8+cHlVflwrrWtQcs1p3eb7GQU+CBGrreVsirFYQ
+X-Gm-Message-State: AOJu0Yyyuk1SKpkDL7IG4Rvv2uvMo5VvkAk0bVs9VBLjRHXafVIVF7IN
+	YtlsH9NaY7Rfr0dr0IDKV0tZdwGG5ZbGP6O1xPc5I8nqfAPlzLEwlTZ3BUHsZiw=
+X-Google-Smtp-Source: AGHT+IHErKH2/DsqhBfhbtuV3XHsomNbK5PqNqpsP3gyRzpHI74BA5YQhJ+56xWSAkof/fTCbUywSA==
+X-Received: by 2002:a05:6808:1389:b0:3d2:17c2:8301 with SMTP id 5614622812f47-3d5459cf707mr17529553b6e.30.1719508969365;
+        Thu, 27 Jun 2024 10:22:49 -0700 (PDT)
+Received: from evan.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-706b4a58847sm1617843b3a.186.2024.06.27.10.22.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 10:22:47 -0700 (PDT)
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Viresh Kumar <vireshk@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Vinod Koul <vkoul@kernel.org>
-Cc: Serge Semin <fancer.lancer@gmail.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	dmaengine@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND v3 3/6] dmaengine: dw: Simplify prepare CTL_LO methods
-Date: Thu, 27 Jun 2024 20:22:19 +0300
-Message-ID: <20240627172231.24856-4-fancer.lancer@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240627172231.24856-1-fancer.lancer@gmail.com>
-References: <20240627172231.24856-1-fancer.lancer@gmail.com>
+        Thu, 27 Jun 2024 10:22:48 -0700 (PDT)
+From: Evan Green <evan@rivosinc.com>
+To: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Yangyu Chen <cyy@cyyself.name>,
+	Evan Green <evan@rivosinc.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Andy Chiu <andy.chiu@sifive.com>,
+	Ben Dooks <ben.dooks@codethink.co.uk>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Erick Archer <erick.archer@gmx.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH v3 0/2] RISC-V: hwprobe: Misaligned scalar perf fix and rename
+Date: Thu, 27 Jun 2024 10:22:36 -0700
+Message-Id: <20240627172238.2460840-1-evan@rivosinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,89 +82,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently the CTL LO fields are calculated on the platform-specific basis.
-It's implemented by means of the prepare_ctllo() callbacks using the
-ternary operator within the local variables init block at the beginning of
-the block scope. The functions code currently is relatively hard to
-comprehend and isn't that optimal since implies four conditional
-statements executed and two additional local variables defined. Let's
-simplify the DW AHB DMA prepare_ctllo() method by unrolling the ternary
-operators into the normal if-else statement, dropping redundant
-master-interface ID variables and initializing the local variables based
-on the singly evaluated DMA-transfer direction check. Thus the method will
-look much more readable since now the fields content can be easily
-inferred right from the if-else branch. Provide the same update in the
-Intel DMA32 core driver for the sake of the driver code unification.
 
-Note besides of the effects described above this update is basically a
-preparation before dropping the max burst encoding callback. The dropping
-will require to call the burst fields calculation methods right in the
-prepare_ctllo() callbacks. It would have made the later functions code
-even more complex should they were left in the original state.
+The CPUPERF0 hwprobe key was documented and identified in code as
+a bitmask value, but its contents were an enum. This produced
+incorrect behavior in conjunction with the WHICH_CPUS hwprobe flag.
+The first patch in this series fixes the bitmask/enum problem by
+creating a new hwprobe key that returns the same data, but is
+properly described as a value instead of a bitmask. The second patch
+renames the value definitions in preparation for adding vector misaligned
+access info. As of this version, the old defines are kept in place to
+maintain source compatibility with older userspace programs.
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 
----
+Changes in v3:
+ - Further documentation wordsmithing (Conor)
+ - Leave the old defines in place (Conor, Palmer)
 
-Changelog v2:
-- Group sms+dms and smsize+dmsize variables initializations up. (Andy)
-- Move the zero initializations out to the variables init block. (Andy)
----
- drivers/dma/dw/dw.c     | 21 +++++++++++++++------
- drivers/dma/dw/idma32.c |  8 ++++++--
- 2 files changed, 21 insertions(+), 8 deletions(-)
+Changes in v2:
+ - Clarified the distinction of slow and fast refers to misaligned word
+   accesses. Previously it just said misaligned accesses, leaving it
+   ambiguous as to which type of access was measured.
+ - Removed shifts in values (Andrew)
+ - Renamed key to RISCV_HWPROBE_KEY_MISALIGNED_SCALAR_PERF (Palmer)
+ - Added patch to rename misaligned perf key values (Palmer)
 
-diff --git a/drivers/dma/dw/dw.c b/drivers/dma/dw/dw.c
-index a4862263ff14..e3d2cc3ea68c 100644
---- a/drivers/dma/dw/dw.c
-+++ b/drivers/dma/dw/dw.c
-@@ -67,12 +67,21 @@ static size_t dw_dma_block2bytes(struct dw_dma_chan *dwc, u32 block, u32 width)
- static u32 dw_dma_prepare_ctllo(struct dw_dma_chan *dwc)
- {
- 	struct dma_slave_config	*sconfig = &dwc->dma_sconfig;
--	u8 smsize = (dwc->direction == DMA_DEV_TO_MEM) ? sconfig->src_maxburst : 0;
--	u8 dmsize = (dwc->direction == DMA_MEM_TO_DEV) ? sconfig->dst_maxburst : 0;
--	u8 p_master = dwc->dws.p_master;
--	u8 m_master = dwc->dws.m_master;
--	u8 dms = (dwc->direction == DMA_MEM_TO_DEV) ? p_master : m_master;
--	u8 sms = (dwc->direction == DMA_DEV_TO_MEM) ? p_master : m_master;
-+	u8 smsize = 0, dmsize = 0;
-+	u8 sms, dms;
-+
-+	if (dwc->direction == DMA_MEM_TO_DEV) {
-+		sms = dwc->dws.m_master;
-+		dms = dwc->dws.p_master;
-+		dmsize = sconfig->dst_maxburst;
-+	} else if (dwc->direction == DMA_DEV_TO_MEM) {
-+		sms = dwc->dws.p_master;
-+		dms = dwc->dws.m_master;
-+		smsize = sconfig->src_maxburst;
-+	} else /* DMA_MEM_TO_MEM */ {
-+		sms = dwc->dws.m_master;
-+		dms = dwc->dws.m_master;
-+	}
- 
- 	return DWC_CTLL_LLP_D_EN | DWC_CTLL_LLP_S_EN |
- 	       DWC_CTLL_DST_MSIZE(dmsize) | DWC_CTLL_SRC_MSIZE(smsize) |
-diff --git a/drivers/dma/dw/idma32.c b/drivers/dma/dw/idma32.c
-index 58f4078d83fe..e0c31f77cd0f 100644
---- a/drivers/dma/dw/idma32.c
-+++ b/drivers/dma/dw/idma32.c
-@@ -202,8 +202,12 @@ static size_t idma32_block2bytes(struct dw_dma_chan *dwc, u32 block, u32 width)
- static u32 idma32_prepare_ctllo(struct dw_dma_chan *dwc)
- {
- 	struct dma_slave_config	*sconfig = &dwc->dma_sconfig;
--	u8 smsize = (dwc->direction == DMA_DEV_TO_MEM) ? sconfig->src_maxburst : 0;
--	u8 dmsize = (dwc->direction == DMA_MEM_TO_DEV) ? sconfig->dst_maxburst : 0;
-+	u8 smsize = 0, dmsize = 0;
-+
-+	if (dwc->direction == DMA_MEM_TO_DEV)
-+		dmsize = sconfig->dst_maxburst;
-+	else if (dwc->direction == DMA_DEV_TO_MEM)
-+		smsize = sconfig->src_maxburst;
- 
- 	return DWC_CTLL_LLP_D_EN | DWC_CTLL_LLP_S_EN |
- 	       DWC_CTLL_DST_MSIZE(dmsize) | DWC_CTLL_SRC_MSIZE(smsize);
+Evan Green (2):
+  RISC-V: hwprobe: Add MISALIGNED_PERF key
+  RISC-V: hwprobe: Add SCALAR to misaligned perf defines
+
+ Documentation/arch/riscv/hwprobe.rst       | 30 +++++++++++++---------
+ arch/riscv/include/asm/hwprobe.h           |  2 +-
+ arch/riscv/include/uapi/asm/hwprobe.h      |  6 +++++
+ arch/riscv/kernel/sys_hwprobe.c            | 11 ++++----
+ arch/riscv/kernel/traps_misaligned.c       |  6 ++---
+ arch/riscv/kernel/unaligned_access_speed.c | 12 ++++-----
+ 6 files changed, 40 insertions(+), 27 deletions(-)
+
 -- 
-2.43.0
+2.34.1
 
