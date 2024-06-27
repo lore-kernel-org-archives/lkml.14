@@ -1,62 +1,61 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D50321974FA
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 14:44:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE70119755A
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 14:44:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719499487; cv=none; b=OAmdjlVlvdQb44HmNdI5QKbp97w9Th8f+VlrudoFAhlfjEyDqEMvTKYyVDtmJedddkldmsyO+gR9pWqN490w4swHjEVck/5Vk9heo25D7jhFvdtqGXiL+gh6+k3+AIoilkadqpvqsk8P6Mg9tcJqKk7LIbWaIIzLNy7T+Kv8EKs=
+	t=1719499488; cv=none; b=FiRKe9kNjkh6APsnEFTidfezUqWtaUxq9WCp4ByXlUc3kNbwI+fUm0OfpZxPlGfKtnFC0hWUsB8jBoaxdYagrPgRm5vCYITcPKjAzpEA8vLoEG/O/+zhYuqPfvS7u7t26izF+7CbzRrL4ZeQBbPaiqgkC65G3PkQZqrUls3QpbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719499487; c=relaxed/simple;
-	bh=RCY/4C0+GrYFBzSYId6jLzfsNK5WXotKJnVh4nnnjG0=;
+	s=arc-20240116; t=1719499488; c=relaxed/simple;
+	bh=im24zS9c8NElT+N/gENu7NEwrDfO/2oaS1esQxJvmIE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=r4wz358agqel4HAAIVxd/h3AaEn36dMPEb9hAypT2lJLMYEhOSHB6RacGzwMtw0MHN1oI70U8DAQDdJhf1GmM3HzxQNKBk3rByZO6ZSBDH0CIXqARy8dxTLTlIIxnHA2k2arE7hGJ411xzw99w7ALO+wN/YjE1jvlihVPtbAm04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iI/iXE4o; arc=none smtp.client-ip=209.85.208.171
+	 In-Reply-To:To:Cc; b=eLtt02Pz42aAA407PCXwv8F7P0o87ognOxnJApoh2W1J8hQjlhwEwB6XFrCz+dgBQXXQ1jc9nhl8DwJd260eEBPFRuwBtIAsM5ZSQjq6zWGtiuvCPqg0wnFrO9UyuvH/WK1PRTbiuC9mPVsBX7oEqdjkvubVhhThdOCRKuBxcCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZZTLIT+q; arc=none smtp.client-ip=209.85.208.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iI/iXE4o"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2ec58040f39so55417871fa.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 07:44:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZZTLIT+q"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2ec5fad1984so68985401fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 07:44:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719499484; x=1720104284; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1719499485; x=1720104285; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=gWQEDBR2cvKHd61KPN3Oc0zu2avyS++NhmAlrTQ8dMU=;
-        b=iI/iXE4oZULgFvOOa2KTmIwztrvc1sBqm+2Odc05mhcd968nLqnOjTn9HO//hi2Zh1
-         7MhsDL0u9Wi34xSuoq9252mHbIuy4JR95bJfHbL0aeAbYGTNK+AVgiFBjA+K9TeyOYG7
-         XGZgZAnL74e1uGJJHnhBA9kN8rIoGIZw+Y+UD5xu+y2mVfGLMuGrgu7CHNE8SEuQBY9D
-         ZW7XoTSSotqrxUrSwK/NrplIXFfEkxpPG8l9sBx9tYzpDbG2dwFyEkHx07O2m4DHoVsS
-         1A4szh8REpcHuvjg6LyfylUx4UFhiKQORDKbsiGeeOLtQTCv4sMvIU/Z82pwpgyAvlOd
-         njDQ==
+        bh=9fv7G4wggBcVvOCA5q2uk0HwTlQqcu/RAhSIH1THEBs=;
+        b=ZZTLIT+quCB4DBPh4NlTp0gmI15mMd7fXSR9NpashUDPWz3vZwk8qRDC2z8QL5xym0
+         2WiVtESoGuM+0slfR7uPjYu3vwY8EuABbvs0Jg85cZHQu8K0HB1DEq2+JIvbvPNUni8y
+         2uOdZ2JZM/M0AnQHmqgfyDd/6xcbRi7uWzSKnNsWsHHfFpyRpRu+mD00Fz0pww8T1ES/
+         EqlflQMZwpwqE0AoexZfZpLSi2YtY0CG/DjoUfdYkLL91/l9J4JC1BuTSX6eWR1j+RVz
+         3N34w4m3ziPKZZLj42CPBGL7j6Yz7ZiYnmBSxU/UjZsY4VwGCT8DCJGJEehcOYfmgnt2
+         jE7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719499484; x=1720104284;
+        d=1e100.net; s=20230601; t=1719499485; x=1720104285;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gWQEDBR2cvKHd61KPN3Oc0zu2avyS++NhmAlrTQ8dMU=;
-        b=YphJk4GesyqLt+Hl50BoFFk/pW1pr0FSu+U/6SdXLTEN1PD3gi8BTlAC2/cj/SOdmG
-         3Opx4WbTkGGdFHgtuqxJkJdRqf9iPZJ/y184u1T8x5312T2fa5vrf4XuCjy2+z6u+wJK
-         UsZ0a5VWcdNVzMEnqQfLMRUuwF8AdcRWppuLigh5NFZlbNZefLlxEvnuYubni6uFIbT7
-         kUniKvtGTs0tELe6aZDv8PcJePw4wTIIe4u045jnSqnZmXQ7MRn7LAsxwb2sHdRVuQv9
-         G5ciy1rtsEwmlzmA5nTxMbhZDHq/3AJqXgOlhUPn5eOR5i0frE5w3xUCG4BGhfoEwp5B
-         ChHA==
-X-Forwarded-Encrypted: i=1; AJvYcCUyGRN71f2QkNLaVCkaEuasfJbOp+x9wwwxWcCU4jv4ET/m/hggp1D6hUqzzxtFWTqJ9kX86H8CrNlp6fEiTll5FOHpm7cO5/HV6+nR
-X-Gm-Message-State: AOJu0YyOTgGk8Co82A0BfljRvEVyY2u5FbCGASIWjOy2124osRY4QYiQ
-	Vv53qwbrrWa8TcWSinYoKwsDT0CuxGuaChHwt2L0NMWua1YU/0YlsYFqidk2icgIeQAQacWy2uj
-	FHPI=
-X-Google-Smtp-Source: AGHT+IF8lRY4yxVYxkR4RRTjf0SHogAEtg76W/F0NnLyvHUeyA8JM9QhKMO2Pbyo9TObJ219yDtmqA==
-X-Received: by 2002:a2e:9d81:0:b0:2ec:57ff:92c7 with SMTP id 38308e7fff4ca-2ec593d8613mr85645941fa.14.1719499483920;
-        Thu, 27 Jun 2024 07:44:43 -0700 (PDT)
-Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ee4a34447fsm2775911fa.11.2024.06.27.07.44.43
+        bh=9fv7G4wggBcVvOCA5q2uk0HwTlQqcu/RAhSIH1THEBs=;
+        b=JOKc7iKi3LBnLLKUdSijejpH093AIqxAf+EAU+/LzuTxu+dYAUVBE2HVwRIG4+cvcw
+         yS8MkQrh10qGD9MYqTKn1xT46T5rnd0SM1HN4R0/qbaXMJnN3e59hz9FikL5eBmlJesP
+         0XMAR0wMHJqzznaWO573JJfYGqbdD3sPDXbdQ+uuA67ns6WVpf5N5VLAkbUNySdFGrht
+         EEVrBxZR4KMfoB8eB5gmLeZ0jCLEbgd720COLNpHlARlt6lF+inF35yfPG5BFsD+8hV6
+         2mp99OlitS+jLipso5WW5h9dUWcrRhZRJ2t7v6GVSJqEqoQ8lB8k+bHSLGQu61XM/mFt
+         zGjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXiFnPvE6ifH4YNqc0rAjcoMAhb0BA2HY2+Qfj0fTPu8eacJKfxHhvrhxZhXUYy/Pq7NNkUrlycfD5POVlNnosZbI2mXSdX+DOdSfvM
+X-Gm-Message-State: AOJu0YzDU7JTOs8DVAUXU3Mk25AaRTQIOqiVzuzF7OcUfqeO/8xghCnh
+	aNF/QTriyalgWXq0FsE+jBQkhJ2GiHwLaJupQMFRBHZ9MSlZFRr/hRoC+HaOdo0=
+X-Google-Smtp-Source: AGHT+IEbLn33fk1NZx+p9Ng/LEPBTTHcSVtjsRY8RIe4VyoU34O7xYRjTaOVTRSNTon7MnYbskEVdw==
+X-Received: by 2002:a05:6512:2254:b0:52c:df55:e11a with SMTP id 2adb3069b0e04-52ce18325f3mr13317733e87.9.1719499485122;
+        Thu, 27 Jun 2024 07:44:45 -0700 (PDT)
+Received: from [192.168.1.195] ([5.133.47.210])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42564b7b7c1sm31254075e9.23.2024.06.27.07.44.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 27 Jun 2024 07:44:43 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Thu, 27 Jun 2024 17:44:40 +0300
-Subject: [PATCH v4 1/7] usb: typec: ucsi: move ucsi_acknowledge() from
- ucsi_read_error()
+From: srinivas.kandagatla@linaro.org
+Date: Thu, 27 Jun 2024 15:44:38 +0100
+Subject: [PATCH v2 1/6] ASoC: dt-bindings: wsa883x: Document port mapping
+ property
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,79 +64,72 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240627-ucsi-rework-interface-v4-1-289ddc6874c7@linaro.org>
-References: <20240627-ucsi-rework-interface-v4-0-289ddc6874c7@linaro.org>
-In-Reply-To: <20240627-ucsi-rework-interface-v4-0-289ddc6874c7@linaro.org>
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: Nikita Travkin <nikita@trvn.ru>, 
- Neil Armstrong <neil.armstrong@linaro.org>, linux-usb@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1498;
- i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=RCY/4C0+GrYFBzSYId6jLzfsNK5WXotKJnVh4nnnjG0=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmfXrZ1Gmvzxm4i0ZRKQCtxunw01G50Fjio700n
- 1wqd1wu/bqJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZn162QAKCRCLPIo+Aiko
- 1eSUB/0RSAnq/bhc3trWD1uYPal7bW48CKzEDX0qEHMDzyjk1GJlHlUnP0d00i2vy8nmi4Y1sGn
- JAiSOJ/lwWBwJjTPJX+SM9WsqCMpMe+OhNP0pqyWhqupbTGR/xgmDHGDJN2LlgU/i9TwEYv+syQ
- JtwlhKuXilFvwSmQC0JHXxvdRzCHZ6YbtmckLEsqLLKsM8LmjI52G/ak/FSYcgemaKyXQs/iinQ
- bGgfFtTdVreI1ds55pjr1dCQ02q4k0RWJlgpVVqNAa43/P04n3jC5shcezrTu99ROP34Y0ORwxe
- +6Z9pQxIEgaq8/bd0vT5Eeas2kReYuVdzwWPirdh2qdhBySr
-X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+Message-Id: <20240626-port-map-v2-1-6cc1c5608cdd@linaro.org>
+References: <20240626-port-map-v2-0-6cc1c5608cdd@linaro.org>
+In-Reply-To: <20240626-port-map-v2-0-6cc1c5608cdd@linaro.org>
+To: Banajit Goswami <bgoswami@quicinc.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, 
+ Neil Armstrong <neil.armstrong@linaro.org>, alsa-devel@alsa-project.org, 
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Manikantan R <quic_manrav@quicinc.com>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1352;
+ i=srinivas.kandagatla@linaro.org; h=from:subject:message-id;
+ bh=q2lXJvgATkQ9232ugFsaVN0aY0h1slxdwjETCG0KBuY=;
+ b=owEBbQGS/pANAwAKAXqh/VnHNFU3AcsmYgBmfXrYexE0bCsXqMCoJMK2qX+Svh51N1PDv/q+a
+ oMQdJLI6uWJATMEAAEKAB0WIQQi509axvzi9vce3Y16of1ZxzRVNwUCZn162AAKCRB6of1ZxzRV
+ Nz0nCACuIuRa5RKmZhysyKUIBtuAriVtIlqHhca5rq1Wr1TgcuGQt2d3t2Dpc6p65k9z952Qrsc
+ PF0LonPY3dvyUdhdFAfBB3oYPGdcwkjwq+Az48KLVhIrpmWmvU6FrbF06ynqu+JAI9Ymy5POxJ5
+ t9zEc8dEvJFqxt3K3a3NVsD1BsLKJcN6GA+Ox7LVtqDtr5AQMhBK95yqNQ9argu/vJnbYp4kyKp
+ hJ2dEmDEQtcIu5SF5qia2lLudFGqZZVqyrQ/iPy0EdsgPpTHkoY7FTXSUoj7xAuUHYYFoTkz9DA
+ c7ALvhsGe1nVX9sbecWWyamkZblYNyi7uhv1q1MbEgCYTW7B
+X-Developer-Key: i=srinivas.kandagatla@linaro.org; a=openpgp;
+ fpr=ED6472765AB36EC43B3EF97AD77E3FC0562560D6
 
-As a preparation for reworking UCSI command handling, move
-ucsi_acknowledge() for the failed command from ucsi_read_error() to
-ucsi_exec_command().
+From: Manikantan R <quic_manrav@quicinc.com>
 
-Tested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Document port mapping property for wsa883x. Port mapping is required
+to be able map correct master ports for VI feedback.
+
+All the device ports are not mapped in same order as master ports, so
+there is a need for having static port mapping for WSA codecs.
+
+Signed-off-by: Manikantan R <quic_manrav@quicinc.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8650-HDK
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/usb/typec/ucsi/ucsi.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+ Documentation/devicetree/bindings/sound/qcom,wsa883x.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
-index 59eaa49042f4..651c22473472 100644
---- a/drivers/usb/typec/ucsi/ucsi.c
-+++ b/drivers/usb/typec/ucsi/ucsi.c
-@@ -71,11 +71,6 @@ static int ucsi_read_error(struct ucsi *ucsi, u8 connector_num)
- 	u16 error;
- 	int ret;
+diff --git a/Documentation/devicetree/bindings/sound/qcom,wsa883x.yaml b/Documentation/devicetree/bindings/sound/qcom,wsa883x.yaml
+index 8e462cdf0018..14d312f9c345 100644
+--- a/Documentation/devicetree/bindings/sound/qcom,wsa883x.yaml
++++ b/Documentation/devicetree/bindings/sound/qcom,wsa883x.yaml
+@@ -32,6 +32,14 @@ properties:
+   vdd-supply:
+     description: VDD Supply for the Codec
  
--	/* Acknowledge the command that failed */
--	ret = ucsi_acknowledge(ucsi, false);
--	if (ret)
--		return ret;
--
- 	command = UCSI_GET_ERROR_STATUS | UCSI_CONNECTOR_NUMBER(connector_num);
- 	ret = ucsi_exec_command(ucsi, command);
- 	if (ret < 0)
-@@ -182,13 +177,14 @@ static int ucsi_exec_command(struct ucsi *ucsi, u64 cmd)
- 	}
- 
- 	if (cci & UCSI_CCI_ERROR) {
--		if (cmd == UCSI_GET_ERROR_STATUS) {
--			ret = ucsi_acknowledge(ucsi, false);
--			if (ret)
--				return ret;
-+		/* Acknowledge the command that failed */
-+		ret = ucsi_acknowledge(ucsi, false);
-+		if (ret)
-+			return ret;
- 
-+		if (cmd == UCSI_GET_ERROR_STATUS)
- 			return -EIO;
--		}
++  qcom,port-mapping:
++    description: |
++      Specifies static port mapping between slave and master ports.
++      In the order of slave port index.
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    minItems: 4
++    maxItems: 4
 +
- 		return ucsi_read_error(ucsi, connector_num);
- 	}
+   '#thermal-sensor-cells':
+     const: 0
  
 
 -- 
-2.39.2
+2.25.1
 
