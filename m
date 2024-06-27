@@ -1,165 +1,97 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEE52139AC;
-	Thu, 27 Jun 2024 21:13:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026B81CF8B;
+	Thu, 27 Jun 2024 21:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719522834; cv=none; b=ok0fz+tk6RZhlMLtuI1QUDkDQT3gasyLLLDd5oDMFpnImcKIXiz+GJ5zOUnPq15MqyrOQSC35ZjCZJUh7p2m89uo0GxvpeoZLYr267dpciyJLuASL0AewiHVKBNvv9/mnUQ/eRPvntml+5Hl7cJJjfPEPP6ZoSCrUnJ1/53BTjU=
+	t=1719523070; cv=none; b=ZuH9f3KecEkvvk52iZpjEZm7sfs7pGio1UigDGR6hKidJSY9XMgxt4f1Brb+kNtMilVKgqjC5EmxTxaoF+05CFy5K3ddTtWv3Hqs5gp8YnFOXCO80cK3epa4Gxd5yl+W7CxRcK986dL/Z6ynP0gIwrShL8dNXAzMH/XMD2dNy4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719522834; c=relaxed/simple;
-	bh=LnSiqNX+hbITWwyhDinv1ziWqNgSM3Thc9hUA+Mf0l8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EhMwTfiBYNQdNnXI/gEYwNBPsfTSd/GhmHW+ctlvHiWf3SoolGn6NI9FkuhMfl3Aw4Cr8MVpioH9iuKHCedsSCJryYvcpxSC5oRg92mvExQE5j7BR5EUUbrrVgUZM70X7k4KTfiCdgxNjpbRFxvFRaRv/ltuSQVqaIUwoBk8x9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YAeI6JIJ; arc=none smtp.client-ip=209.85.208.49
+	s=arc-20240116; t=1719523070; c=relaxed/simple;
+	bh=fIe+WjGyo22eybCG1oWgddFxMBUrGgRXke6p/2u/m0c=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=k04EZR4ul20TbF474SGJI5EY2GZRghLreuTl8W+r7gQEA9cAMTzklc8Idvvv8Yq6X2kYbhduw4NO6RRnjXA9ZjBH2zZYvBZmZ5LLz4I9Ikh1qqk3NeVSNmOkv81nfNGZSqQCnM/13JPMg5BeMVVT1FxU09vIye3Z2m6KRe5mFJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tg+jwLYI; arc=none smtp.client-ip=209.85.208.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YAeI6JIJ"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57d106e69a2so696567a12.0;
-        Thu, 27 Jun 2024 14:13:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tg+jwLYI"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-57d1782679fso2459486a12.0;
+        Thu, 27 Jun 2024 14:17:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719522831; x=1720127631; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1719523067; x=1720127867; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-language:cc:to:subject:from
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SdyLy6/EC6n+nWMktm84sF7VQwRPczuMD4vDAUu/UKA=;
-        b=YAeI6JIJeuTIN3cl9A/yCqfHYZAfLKbHw1wwcqxqY8I9ZstNHDGNaxS9uMvKB1f70X
-         o9jbhFfaMaC/7SgobXacr+YfCyTIaQ20txpHC33nYYPtJTqpoWiTeKxZ3EQ57w6lV3uu
-         +N5e6OlwA+OyPD5sugMuW9x7SDLYxfCvitWTmgaZYtejWIplQWeD40PttnVny6TFkHIH
-         PO4WIxW4VZgmKkZyScwGgSpX8cSl9GCqinrGP9F7gJQv4x9zX3+lsaDyeQY5zMBmJ9RI
-         IOgnKDpxFNatygLixoVGJonSKTVoUbI+5QaZmlabY2r2EFQtVekzuKcSRymVr+3wGCiV
-         ojjg==
+        bh=Xnk9uIadAbA+bBaIfSx2BcakWTRFKYQJDJDqca2A88I=;
+        b=Tg+jwLYIL9yRVqcA5FvMceZNzpW5h+2wYVTeld4Cuwg7IiSQPSggrIyO+HfJxzlOaA
+         xJ1ZVseaQHGACMxxYt5950vuILpSCjFvasnHGfa2kJqbUD/Y2ppwqtgIWLo0wyKCgF7J
+         guktLYDtczFxN7rfZH9qD3gkktTGHK3+RH0RCBIb6wAwbJJpz0jl5g7JMw7LJ4UOlnft
+         GXdYKuzlKtvbnBIRIaHvRQrAovSAVABXHtyGpHuISsqyPwjYZf35jmf7XtNzmz2grZgP
+         qspmC06i/yeY+1wYekq0JumB0Pqpa2jB9Wkuugw49eHpiVg4A94nRn55f2IikeXRtbh+
+         DbXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719522831; x=1720127631;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SdyLy6/EC6n+nWMktm84sF7VQwRPczuMD4vDAUu/UKA=;
-        b=mIrlBAvKDPrwhhfLS3qgtEAr0qEbxv4K9BeeCWe5d9rpDigC1I2Cl3RV8Wbh02NOzb
-         UDLR4ondNxXIE7Zf5Sx2dY1/nYToXpEaBfnL5yUaFfMZN1MICLjkECYH1qLR+MGkiTej
-         LtXhb+0cqgLQJntO3JcUo2e+DjXB4IrhzyRIGVHUzVECPLmHXjejKQpbnnfP/cT7thsE
-         Lm+IgYyxRRkZKfA6HX+4swKLx9OS4R8JgLw1A4+JfytkceQsOqWz51MYgo8f0zsqS/es
-         AhqzdD/6OXrEveB0xwUiQN9CnLc2z7qnHx1NAWlZNCWMESzvu4/peoLSbY1x1KN+lSG1
-         OVYA==
-X-Forwarded-Encrypted: i=1; AJvYcCW/mJZiVNv1mrxXq/fktsWCwY6Hdb/QxtdoXKr9kyLDZ3zd5boRSqzrMmKo55ab19rXctAFMBZMFWtyYwVsG32r2Pc4NkpJPISsAVllnXsD9bZnFquef1RNcr6ASH4pvxl6Mf+HEZyeeuM8tA==
-X-Gm-Message-State: AOJu0YwC1cK5vZaSoUi4y6sgcpqLJgVEbvn24taZJQkEVDv2qoyg+TNS
-	m9XKjDMCSPOkPBNZIqMQLHtl2DJSDS0IXUJqMAhNY+YmHckMsBxnsm2w3ZyougCJnbeH4fLZ7IV
-	/JwdNDzwGW3k73NURhVD/iAe6BQc=
-X-Google-Smtp-Source: AGHT+IF1DmPpmZoGMqNyD84MEzafXnIe+fh//3HqVzkuJ6xtrDVjUhmfm2mBoN/JpPHZG6+S6iR8Ztks9DhAPiT79Zc=
-X-Received: by 2002:a05:6402:12c5:b0:584:66eb:7e76 with SMTP id
- 4fb4d7f45d1cf-584bbbf39bdmr2468214a12.8.1719522830484; Thu, 27 Jun 2024
- 14:13:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719523067; x=1720127867;
+        h=content-transfer-encoding:content-language:cc:to:subject:from
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Xnk9uIadAbA+bBaIfSx2BcakWTRFKYQJDJDqca2A88I=;
+        b=tGevrRBtq/6ixgf+SxYXSSapyv3BeHrSYdw/nrAJCr7zfAOZVRNGu0fVbf7fWefML0
+         WekZqh0RgrLkJhW1ToBVLvFdGsenb8vFpSYrxyVPJrTVCG/W3p76kt57rEN8RqU3avS9
+         bh6DHLb2AvE5saXAO6whgiYoyATMXQ6XTXBi9tWte/R0+x0m8VbgXBnvB1FuMXKfkC+V
+         ruGM0HK0tpVyQy4vo2C2MV2j2gqtTJc8Kd5zuXq036M1KooDlonfb5wEBySIjeMPiYl3
+         lM91JpQqyRQj8UE+vamH7SComGRZ9YUNrObbfo5z7JNEVXTSh3FrvHwTtdS2gEtH9tOP
+         AmTA==
+X-Forwarded-Encrypted: i=1; AJvYcCXDpJOBYbjKkcmVxo5wE1AxeV5UFscRXgTHxH/eNIOdB7YfDjkRP3PrWKGKN/wrmQfKTI7ZrNig5kqvmcG7mY3Z3gBUXtfC75zf+j14pcp4yie5Kyv0gTzVJegBxWtOHp1uF3kGGJ6j9Se4uD3kESxg5JusZqenNZE+D4sIiAs+NVg7Ww==
+X-Gm-Message-State: AOJu0YyfDO2A8dYNbCG/6QQejf1MRCuO8rvc7aNylHNZSeCkY2Ie2aOA
+	zfNFt02rzE0UQvNJcZUiJf7WXAv/FTPg0QJ+ecMhoK6mtGRgCMFr6KPkeA==
+X-Google-Smtp-Source: AGHT+IFbtDNlgX18BHhhHB676dlMxYpxY2uD0IhAomzWeFynNtXKV2BsDI/Li5O2s/tR5bnwCUFTRA==
+X-Received: by 2002:a17:906:c309:b0:a6f:64cc:ca2e with SMTP id a640c23a62f3a-a7245b88e46mr977230466b.44.1719523067016;
+        Thu, 27 Jun 2024 14:17:47 -0700 (PDT)
+Received: from ?IPV6:2a02:a449:4071:1:32d0:42ff:fe10:6983? (2a02-a449-4071-1-32d0-42ff-fe10-6983.fixed6.kpn.net. [2a02:a449:4071:1:32d0:42ff:fe10:6983])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72aaf1843fsm12647866b.39.2024.06.27.14.17.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Jun 2024 14:17:46 -0700 (PDT)
+Message-ID: <6f21c09b-e8d2-4749-aca6-572c79df775d@gmail.com>
+Date: Thu, 27 Jun 2024 23:17:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240627205328.2912859-1-quic_abhinavk@quicinc.com>
-In-Reply-To: <20240627205328.2912859-1-quic_abhinavk@quicinc.com>
-From: Rob Clark <robdclark@gmail.com>
-Date: Thu, 27 Jun 2024 14:13:38 -0700
-Message-ID: <CAF6AEGuGYG5mO-4KdNFbQFMA4dKj2PWT22xeh-3AFgedAG0uHw@mail.gmail.com>
-Subject: Re: [RFC PATCH] drm/msm/dpu: check ubwc support before adding
- compressed formats
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Cc: freedreno@lists.freedesktop.org, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, 
-	quic_jesszhan@quicinc.com, konrad.dybcio@linaro.org, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: Johan Jonker <jbx6244@gmail.com>
+Subject: [PATCH v1] dt-bindings: clock: rk3188-cru-common: remove CLK_NR_CLKS
+To: heiko@sntech.de
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 27, 2024 at 1:53=E2=80=AFPM Abhinav Kumar <quic_abhinavk@quicin=
-c.com> wrote:
->
-> On QCM2290 chipset DPU does not support UBWC.
->
-> Add a dpu cap to indicate this and do not expose compressed formats
-> in this case.
->
-> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h | 1 +
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h          | 2 ++
->  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c               | 5 ++++-
->  3 files changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h b/dr=
-ivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h
-> index 3cbb2fe8aba2..6671f798bacc 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h
-> @@ -12,6 +12,7 @@ static const struct dpu_caps qcm2290_dpu_caps =3D {
->         .max_mixer_blendstages =3D 0x4,
->         .has_dim_layer =3D true,
->         .has_idle_pc =3D true,
-> +       .has_no_ubwc =3D true,
->         .max_linewidth =3D 2160,
->         .pixel_ram_size =3D DEFAULT_PIXEL_RAM_SIZE,
->  };
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu=
-/drm/msm/disp/dpu1/dpu_hw_catalog.h
-> index af2ead1c4886..676d0a283922 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-> @@ -342,6 +342,7 @@ struct dpu_rotation_cfg {
->   * @has_dim_layer      dim layer feature status
->   * @has_idle_pc        indicate if idle power collapse feature is suppor=
-ted
->   * @has_3d_merge       indicate if 3D merge is supported
-> + * @has_no_ubwc        indicate if UBWC is supported
->   * @max_linewidth      max linewidth for sspp
->   * @pixel_ram_size     size of latency hiding and de-tiling buffer in by=
-tes
->   * @max_hdeci_exp      max horizontal decimation supported (max is 2^val=
-ue)
-> @@ -354,6 +355,7 @@ struct dpu_caps {
->         bool has_dim_layer;
->         bool has_idle_pc;
->         bool has_3d_merge;
-> +       bool has_no_ubwc;
+CLK_NR_CLKS should not be part of the binding.
+Remove since the kernel code no longer uses it.
 
-has_no_ubwc sounds kinda awkward compared to has_ubwc.  But I guess
-you wanted to avoid all that churn..
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ include/dt-bindings/clock/rk3188-cru-common.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-How about instead, if msm_mdss_data::ubwc_{enc,dec}_version are zero,
-then we know there is no ubwc support in the display.
+diff --git a/include/dt-bindings/clock/rk3188-cru-common.h b/include/dt-bindings/clock/rk3188-cru-common.h
+index afad90680fce..01e14ab252a7 100644
+--- a/include/dt-bindings/clock/rk3188-cru-common.h
++++ b/include/dt-bindings/clock/rk3188-cru-common.h
+@@ -132,8 +132,6 @@
+ #define HCLK_VDPU		472
+ #define HCLK_HDMI		473
 
-BR,
--R
+-#define CLK_NR_CLKS		(HCLK_HDMI + 1)
+-
+ /* soft-reset indices */
+ #define SRST_MCORE		2
+ #define SRST_CORE0		3
+--
+2.39.2
 
-
->         /* SSPP limits */
->         u32 max_linewidth;
->         u32 pixel_ram_size;
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/=
-msm/disp/dpu1/dpu_plane.c
-> index 6000e84598c2..31fe0fc4c02e 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> @@ -1341,10 +1341,13 @@ void dpu_plane_danger_signal_ctrl(struct drm_plan=
-e *plane, bool enable)
->  static bool dpu_plane_format_mod_supported(struct drm_plane *plane,
->                 uint32_t format, uint64_t modifier)
->  {
-> +       struct dpu_plane *pdpu =3D to_dpu_plane(plane);
-> +       const struct dpu_caps *caps =3D pdpu->catalog->caps;
-> +
->         if (modifier =3D=3D DRM_FORMAT_MOD_LINEAR)
->                 return true;
->
-> -       if (modifier =3D=3D DRM_FORMAT_MOD_QCOM_COMPRESSED)
-> +       if (modifier =3D=3D DRM_FORMAT_MOD_QCOM_COMPRESSED && !caps->has_=
-no_ubwc)
->                 return dpu_find_format(format, qcom_compressed_supported_=
-formats,
->                                 ARRAY_SIZE(qcom_compressed_supported_form=
-ats));
->
-> --
-> 2.44.0
->
