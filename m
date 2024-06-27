@@ -1,225 +1,130 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FE2196D9E;
-	Thu, 27 Jun 2024 16:12:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87944196D9E;
+	Thu, 27 Jun 2024 16:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719504725; cv=none; b=KHzKOG2JJ6JgRfBglE/BVXW5COK5Q17i/R9+zxbA+GwIPakQUSz51IS6NRjz3aWu/xKpk/FuueHZkMhgA7m2P7l/4kqfabosTrDX1UEjz7qylfD7y/W5PZI6LjFarSaZwhRNEl0izo0MKKOy2CDsp35R13T9ixM4UVD05pVlM6A=
+	t=1719504801; cv=none; b=LJcer+yqoyFyFDpfeBpYWlVpmxN92BwZO4A2U8R8O4+qrWeeiSQzLPcpwNE3CEZvXBqNlfOLT4uCTIDtxVP3WCwPrRiZ/nLPxycS9fZp6qX5hW28CIm58LTCfDf4LfCBd8rzEYY0JgxXKvnE9gFYfXGAck7XsWo/tIA9L2XVuxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719504725; c=relaxed/simple;
-	bh=6t1hPXDwq6nhiw9cHdmXBhSJAnLSGk6/1kXJ+BFAyf4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UB4BbgMgFnS61JvE0Zj2Se7nXsJy3seq/ekmyvhjOmH+HQjTHyZWjtE4bhzawcmPBPGtIlW925PPTptePGFxTRQ57JWmvD4M6sNNaCWFTCCBSOlCmBo/zalT5oaTlruGoiH0iUSBouFkoM07h8KLCp4uJG4LtYddMK1MCrinudg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aLI1+IL9; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719504801; c=relaxed/simple;
+	bh=Xy8p5tBdXTNSi+VSsPN5KrFq5OpVySTdyBhY1w8K56U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GqlA4Mov2vsOzWfYI4cHZKpKsdVDebrX/xJ2Fe32kF4RkXmuEHeFDBtnH9/Bm5kLSDHEVsPWHduza64ecvDs6+jUtXLJrcknHMh1Ao4bio5IRwNy5KaZaDFV5y0gx0V1Zk8JFsWA3VUVeQZTXjBD/Ho1zQCdRhalir7MyU4IeQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TvbP5fE0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aLI1+IL9"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-57d26a4ee65so1755901a12.2;
-        Thu, 27 Jun 2024 09:12:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719504722; x=1720109522; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BQhvv3Potox166bw4fqLYlWp68a4ZD1pI5VWDFn1bbo=;
-        b=aLI1+IL9YjoXmeYrTvGMebe+cKp43RflzJYcoVpnk7Z++oBL17S8AHwSqtJHNOd2o2
-         nQV+UhXST1LLaNFi8KxdPltwZOoTdNeIMcXx297rufkefVpvOJzDjapQSoUqpzkbF/g7
-         8qV8DhXyvvArYfEk53RJAcbi9Qsl2kg8FnMXculnZtwS6eaSkiAN6wqKr92QsGFqq+VB
-         twKfPcZ78JhuQFkCU+l9ASLAxyeSTG5JpBmdssKwurW98UdBrZ9xiAXNem7SDF2HDLzK
-         SGcDO27oPW0LsgewAa4Ww/K4TmX7ibLhKkgSbQ2sxHBowIgObTbpXYyLVT8aUhUxwpMV
-         KnJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719504722; x=1720109522;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BQhvv3Potox166bw4fqLYlWp68a4ZD1pI5VWDFn1bbo=;
-        b=lInXRwvXxYYJ8VOPsBbncaoCqVTUBbLf4XjeZwoYh4JMpxAHbpe/CkMSFh+qEb9Cy7
-         hz5Rw94R7RX17VjyjuLZ23ljpyVLdgGrNCLeBVeKdjl2tXEztuDNRaNyP6UBndVFbF3h
-         JiBXGYVa9sYQCZYxGn7jhvSY7qnzhoSnd1OMr0hOsIHqK2IhmteloMORMbRiLTBB0TRd
-         JTa4Vp+W9sRZ6U6SEUojZUtUwZv+BgFv8jqvZPSobhl9uJD3jjt9ufB/SuSEy4P57XKm
-         xCVW7+33Fm0TpxE9drT08xxEUDNalBBIibFAIC31nkSwEc0s3L/K0RxrHc2tGgnXmDbE
-         8lBw==
-X-Forwarded-Encrypted: i=1; AJvYcCXfi1kMNwdEq7w/TnAv6Ox5nKw8XR+vGAMsV/E9CvkdoOz9Olzno/w4rHohg43HxZuLq2K5839AlfjmvMkPhy218PZ55380D/zg9uvPN1Kdbr/xFEOm37F6X7ICYu+QrjcM5yyeJdE21GmsCA==
-X-Gm-Message-State: AOJu0YwVMmZeM7JIx2tzH96X83fkQ3C0nfq1IG9qVeFxhPLnCy3OgMwk
-	b9s5cAfCPbVS+YpJJE1UHv+urBt5/AUJpG9ZNh8Sm2aXNuQJWjcs
-X-Google-Smtp-Source: AGHT+IEM5NV77NJF9VUVPKs+69oU2yk4tmCMJHjCJU9I3YD8DvkkLHBBbNqQMXfzviyQaF9UD63drw==
-X-Received: by 2002:a05:6402:35c7:b0:585:f46d:f573 with SMTP id 4fb4d7f45d1cf-585f46df576mr12714a12.0.1719504721630;
-        Thu, 27 Jun 2024 09:12:01 -0700 (PDT)
-Received: from f.. (cst-prg-81-171.cust.vodafone.cz. [46.135.81.171])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-584d17b0334sm1053123a12.46.2024.06.27.09.11.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 09:12:00 -0700 (PDT)
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: brauner@kernel.org
-Cc: viro@zeniv.linux.org.uk,
-	jack@suse.cz,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	Mateusz Guzik <mjguzik@gmail.com>
-Subject: [PATCH] vfs: rename parent_ino to d_parent_ino and make it use RCU
-Date: Thu, 27 Jun 2024 18:11:52 +0200
-Message-ID: <20240627161152.802567-1-mjguzik@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TvbP5fE0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED6F0C2BBFC;
+	Thu, 27 Jun 2024 16:13:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719504801;
+	bh=Xy8p5tBdXTNSi+VSsPN5KrFq5OpVySTdyBhY1w8K56U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TvbP5fE0s7bxXlV/ANoBDW1w2LV+dB4xnZkJcmTZhncZcXM6P2DzUFzoV2oUyLC3j
+	 QDVBT2UwKtx/3Ayl8GIil5t6RHhx1X0/0148KrUS627JT/Ad/08CLLw75ZlLU+gu/C
+	 YXVmozK+WaSkr09x9RARMyZIa17Ky23qmzzb8nCZu3u6Xvrt7rihqnRRPfH9X/aHkL
+	 5bX1ndfP5JOtyoT7RyELKraJSU034fjOrP94AeRFluzZueCrFid8ypTQdkt9dTbC/F
+	 dNtZXVE+kVfFkTFdcFgx5IgfoIOZX68oGI/POaobDlv6+J6Z3kgJK+qNO/yd1YD99L
+	 BUR/ueBnFowXw==
+Date: Thu, 27 Jun 2024 17:13:16 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Olivier MOYSAN <olivier.moysan@foss.st.com>
+Cc: fabrice.gasnier@foss.st.com, Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/8] dt-bindings: iio: add sigma delta modulator
+ backend
+Message-ID: <20240627-identity-enviable-4fda0b3a09c0@spud>
+References: <20240625150717.1038212-1-olivier.moysan@foss.st.com>
+ <20240625150717.1038212-6-olivier.moysan@foss.st.com>
+ <20240625-babied-skies-0722dbdfc524@spud>
+ <eefc746a-2181-41da-b777-b077a4c19b77@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Qjo94KATqhmQaPj6"
+Content-Disposition: inline
+In-Reply-To: <eefc746a-2181-41da-b777-b077a4c19b77@foss.st.com>
 
-The routine is used by procfs through dir_emit_dots.
 
-The combined RCU and lock fallback implementation is too big for an
-inline. Given that the routine takes a dentry argument fs/dcache.c seems
-like the place to put it in.
+--Qjo94KATqhmQaPj6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
----
+On Wed, Jun 26, 2024 at 06:40:58PM +0200, Olivier MOYSAN wrote:
+> Hi Conor,
+>=20
+> On 6/25/24 17:34, Conor Dooley wrote:
+> > On Tue, Jun 25, 2024 at 05:07:13PM +0200, Olivier Moysan wrote:
+> > > Add documentation of device tree bindings to support
+> > > sigma delta modulator backend in IIO framework.
+> > >=20
+> > > Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
+> >=20
+> > I don't review bindings for a job, I can only reliably get to look at
+> > my mail queue in the evenings, please give me a chance to reply to you
+> > before you submit a new version.
+> >=20
+>=20
+> Sorry, the short review delay.
+>=20
+> > > +$id: http://devicetree.org/schemas/iio/adc/sd-modulator-backend.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Sigma delta modulator backend
+> >=20
+> > Same comments about filename and title apply here as the previous
+> > version. "TI $foo Sigma Delta Modulator" and drop the reference to back
+> > ends or the pretence of being generic.
+> >=20
+>=20
+> The logic here is the same as for the former sigma delta modulator driver.
+> (see discussion [1])
+> I mean introducing a generic and minimalist driver to support sd modulato=
+rs,
+> but not dedicated to a specific modulator. The ads1201 is chosen as a bas=
+ic
+> modulator here. But it is rather an arbitrary choice.
+>=20
+> I agree "backend" reference is not really relevant here. I have to think
+> about a way to manage the coexistence of this sigma delta modulator driver
+> with its former version.
 
-this shows up with stress-ng --getdent (as one of many things)
+To be blunt, I don't care about drivers! Well I do, but not in this
+particular context. You can absolutely have a driver that supports
+multiple backends or sigma delta modulators, but right now we are
+talking about a binding and this binding supports exactly one sigma
+delta modulator - and with an explicit compatible. In that context,
+presenting the binding as generic makes little sense.
 
-build-tested with first adding d_parent_ino, then building allmodconfig
-and fixing failures as they pop up. by the end of it grep shows no
-remaining occurences, so i don't believe there will be any build regressions.
+> [1] https://lore.kernel.org/all/6943aaf5-b580-0fd1-7a2e-b99f7a266388@st.c=
+om/
 
-scheme borrowed from dget_parent
+Looking at this though, I question the binding more... The programming
+model of the device is identical as a backend or otherwise, so it
+shouldn't be getting a new compatible. Isn't this actually as simple as
+adding #io-backend-cells to the existing binding and using that to
+determine whether the device is being used as a backend or in isolation?
 
-I cared enough to whip out the patch, but I'm not going to particularly
-strongly defend it. arguably the getdent bench is not that great and I'm
-not confident anything real runs into this as a problem.
+Thanks,
+Conor.
 
- fs/dcache.c            | 30 ++++++++++++++++++++++++++++++
- fs/f2fs/file.c         |  2 +-
- fs/hfsplus/ioctl.c     |  4 ++--
- include/linux/dcache.h |  2 ++
- include/linux/fs.h     | 16 +---------------
- 5 files changed, 36 insertions(+), 18 deletions(-)
+--Qjo94KATqhmQaPj6
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/fs/dcache.c b/fs/dcache.c
-index a0a944fd3a1c..38d42f333b35 100644
---- a/fs/dcache.c
-+++ b/fs/dcache.c
-@@ -3100,6 +3100,36 @@ void d_tmpfile(struct file *file, struct inode *inode)
- }
- EXPORT_SYMBOL(d_tmpfile);
- 
-+/*
-+ * Obtain inode number of the parent dentry.
-+ */
-+ino_t d_parent_ino(struct dentry *dentry)
-+{
-+	struct dentry *parent;
-+	struct inode *iparent;
-+	unsigned seq;
-+	ino_t ret;
-+
-+	rcu_read_lock();
-+	seq = raw_seqcount_begin(&dentry->d_seq);
-+	parent = READ_ONCE(dentry->d_parent);
-+	iparent = d_inode_rcu(parent);
-+	if (likely(iparent)) {
-+		ret = iparent->i_ino;
-+		if (!read_seqcount_retry(&dentry->d_seq, seq)) {
-+			rcu_read_unlock();
-+			return ret;
-+		}
-+	}
-+	rcu_read_unlock();
-+
-+	spin_lock(&dentry->d_lock);
-+	ret = dentry->d_parent->d_inode->i_ino;
-+	spin_unlock(&dentry->d_lock);
-+	return ret;
-+}
-+EXPORT_SYMBOL(d_parent_ino);
-+
- static __initdata unsigned long dhash_entries;
- static int __init set_dhash_entries(char *str)
- {
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index a390b82dd26e..66ab9a859655 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -185,7 +185,7 @@ static int get_parent_ino(struct inode *inode, nid_t *pino)
- 	if (!dentry)
- 		return 0;
- 
--	*pino = parent_ino(dentry);
-+	*pino = d_parent_ino(dentry);
- 	dput(dentry);
- 	return 1;
- }
-diff --git a/fs/hfsplus/ioctl.c b/fs/hfsplus/ioctl.c
-index 5661a2e24d03..40d04dba13ac 100644
---- a/fs/hfsplus/ioctl.c
-+++ b/fs/hfsplus/ioctl.c
-@@ -40,7 +40,7 @@ static int hfsplus_ioctl_bless(struct file *file, int __user *user_flags)
- 
- 	/* Directory containing the bootable system */
- 	vh->finder_info[0] = bvh->finder_info[0] =
--		cpu_to_be32(parent_ino(dentry));
-+		cpu_to_be32(d_parent_ino(dentry));
- 
- 	/*
- 	 * Bootloader. Just using the inode here breaks in the case of
-@@ -51,7 +51,7 @@ static int hfsplus_ioctl_bless(struct file *file, int __user *user_flags)
- 
- 	/* Per spec, the OS X system folder - same as finder_info[0] here */
- 	vh->finder_info[5] = bvh->finder_info[5] =
--		cpu_to_be32(parent_ino(dentry));
-+		cpu_to_be32(d_parent_ino(dentry));
- 
- 	mutex_unlock(&sbi->vh_mutex);
- 	return 0;
-diff --git a/include/linux/dcache.h b/include/linux/dcache.h
-index 58916b3f53ad..bff956f7b2b9 100644
---- a/include/linux/dcache.h
-+++ b/include/linux/dcache.h
-@@ -283,6 +283,8 @@ static inline unsigned d_count(const struct dentry *dentry)
- 	return dentry->d_lockref.count;
- }
- 
-+ino_t d_parent_ino(struct dentry *dentry);
-+
- /*
-  * helper function for dentry_operations.d_dname() members
-  */
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 32cbcb3443e5..04ee7d7c9621 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3463,20 +3463,6 @@ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
- 	return 0;
- }
- 
--static inline ino_t parent_ino(struct dentry *dentry)
--{
--	ino_t res;
--
--	/*
--	 * Don't strictly need d_lock here? If the parent ino could change
--	 * then surely we'd have a deeper race in the caller?
--	 */
--	spin_lock(&dentry->d_lock);
--	res = dentry->d_parent->d_inode->i_ino;
--	spin_unlock(&dentry->d_lock);
--	return res;
--}
--
- /* Transaction based IO helpers */
- 
- /*
-@@ -3601,7 +3587,7 @@ static inline bool dir_emit_dot(struct file *file, struct dir_context *ctx)
- static inline bool dir_emit_dotdot(struct file *file, struct dir_context *ctx)
- {
- 	return ctx->actor(ctx, "..", 2, ctx->pos,
--			  parent_ino(file->f_path.dentry), DT_DIR);
-+			  d_parent_ino(file->f_path.dentry), DT_DIR);
- }
- static inline bool dir_emit_dots(struct file *file, struct dir_context *ctx)
- {
--- 
-2.43.0
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZn2PnAAKCRB4tDGHoIJi
+0o7EAQCyFBPYkFKusgKeZs1ud2wJm+9/kIQha/hizkDF8ymXQgD9EbUe6GulJhrb
+/0Pi6G9SFcNRfPkj1g69k9ejdJ84hAc=
+=6JuI
+-----END PGP SIGNATURE-----
+
+--Qjo94KATqhmQaPj6--
