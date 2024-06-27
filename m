@@ -1,142 +1,112 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90D64EB37;
-	Thu, 27 Jun 2024 20:50:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0EC94EB37;
+	Thu, 27 Jun 2024 20:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719521429; cv=none; b=Iqs+ShZJWOU9NvMQfiq+KHA4RHwJD4mueQBmqZd2rHUXvf8lUWdOw6utg/uSlgtK45ptngSnx+ac4tRMDEqtcCGYpswRSM9LOwBTU5Ffs2lAFflecldSIwqYrQrCZjBybQfK9R7gOD0QiiKPLG2Rb6pi1j+T4wfTIjlp7P44KZ4=
+	t=1719521437; cv=none; b=p+8O4m64zpjnuQLFXJfq97ijY4o3YkYEZWbYrTaZdKdcf41x/1LlfQiPThaG5szw/2j37fGL4HEpVHcy265PswJvH+yQkOQ8S3RwDzyUeHGxttVEeazfuy3cbbcJoiSO0BQ8IBINglhxntCBMTqKi1XHbUg+HSXcWAocckUCavU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719521429; c=relaxed/simple;
-	bh=QO4mqrMGBNCou1YAOdGtl/B4FJn9dLGZV/WpWr0/f7Q=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=elQYTl9nNB8F3bnGs0ypfOdmKRHtdFktYqK91Kv0L88xoWcRXa9GxBcVPya+8r04IgS+DjvomRekcp7jjJ/Y/MjBkX2XwpAT2ipsOtyryDKwiltQZc09FrUl8UMaZ0YOPEc+QZ7SOqe/8HlVCxS5C7KIV+R0zN7IPOd3pOlC2bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.97.1)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1sMw3u-000000007kJ-0D2F;
-	Thu, 27 Jun 2024 20:49:46 +0000
-Date: Thu, 27 Jun 2024 21:49:38 +0100
-From: Daniel Golle <daniel@makrotopia.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>, Jens Axboe <axboe@kernel.dk>,
-	Hauke Mehrtens <hauke@hauke-m.de>, Felix Fietkau <nbd@nbd.name>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Dave Chinner <dchinner@redhat.com>, Jan Kara <jack@suse.cz>,
-	Christian Brauner <brauner@kernel.org>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Li Lingfeng <lilingfeng3@huawei.com>,
-	Christian Heusel <christian@heusel.eu>,
-	Min Li <min15.li@samsung.com>, Avri Altman <avri.altman@wdc.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Hannes Reinecke <hare@suse.de>,
-	Mikko Rapeli <mikko.rapeli@linaro.org>, Yeqi Fu <asuk4.q@gmail.com>,
-	Victor Shih <victor.shih@genesyslogic.com.tw>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Li Zhijian <lizhijian@fujitsu.com>,
-	"Ricardo B. Marliere" <ricardo@marliere.net>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mmc@vger.kernel.org, linux-block@vger.kernel.org
-Subject: [PATCH v4 0/4] block: preparations for NVMEM provider
-Message-ID: <cover.1719520771.git.daniel@makrotopia.org>
+	s=arc-20240116; t=1719521437; c=relaxed/simple;
+	bh=KC4szPB0fnb0qUuOHYRj4CsMOsYpONDRYlGswyk9WqU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JpoA9YaDqAQ5F/zMHRHghwryqushTmxquJqrU3xTm4hKzNC8MJpQTdTynIj8pSmzLk/aEjUA3osinovvanpRU/H/ppgaEjfDcRSCqZuc9mpZBpvx1IXsprqq5cnfkn3OqRwpaH13uasD/irIV91ZSjS/dXkWIF09upSrGRmD7CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=krmQgKKy; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="krmQgKKy"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7066c799382so5633553b3a.3;
+        Thu, 27 Jun 2024 13:50:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719521435; x=1720126235; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MHz9DTPfilK+7WGBA9UwNn6uh6SMAGNR7YQEFRA1WZo=;
+        b=krmQgKKyyUEAg4aY1dltFAoSeQQ3aQ3c80a9JTId3TAlb5EXeAnmiqflxPUwNQi9M7
+         dzICTP1ZKiKJ3hYmmyOa3jbGS9KHr+f5NMLiW0pEk0Xv2TXHcGjHxyhqw0ynwltZsand
+         X9CSUG+mBYB6m6ianwoceAo2k99iBwCWdtbfnLlU05aWGDIqUyBmceeTwnarN+6lTwXi
+         buKqRp4AA6EjgWMa0KIKfUcLmsIsgjF47wSIDK4N1Hr/yylGhUf95xroXxnAN9Ap0Yl4
+         Q+k47F3f6UhWkZAu1wAKVkY4rZf7k9V5LAyRe11oInxtJS1TazlsR7Q/wU04r/F/hF5s
+         5SGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719521435; x=1720126235;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MHz9DTPfilK+7WGBA9UwNn6uh6SMAGNR7YQEFRA1WZo=;
+        b=AE/k1qVFwsMkwPXKz1IOv/lJwg9I0HEhoJdB91DMqAGHuwgkGpgLnRufS/uYwSF1J/
+         P4gESaCGSQ14iTn+hlC8xW5JNz22EQCDJ94ToVJMVFt/spq2Wn/amTaswu1Nolsdjkx5
+         8/eyY3zR/U/IncvPSXSxZAk9q9mjUFy+PHG/TkyfyuZ8lWIvFJmvSGhnQfr8JP+zKTHP
+         0DuXDXH8L7CBG6qzl1nD9scjQPWgZpeA+c3BWstODvLX9qQaY3T4Q+x/pVDSNHYtXFbl
+         yoA844/OqhNGe4i/1kqrsnxPHXToc2hyz+Duosb1kEXknC+ATZj3oEZSiJx/jqFlIx2m
+         fI5w==
+X-Forwarded-Encrypted: i=1; AJvYcCW89JKZbK+m/Y41jMU4KnXODA4j4m6KcQVXz71bSpJdsu7LRvOj2iIr5I+rMBF9rme8T4MsKRrTUZCeiEN4BoVTZKwwOVEZG+q82r6e/rYvyBTvdBTu7d8cvctBEjWBlssNktqCf8lQOAxOKE+M0ywW50UxUVQE7tgyLECAdVBEcA==
+X-Gm-Message-State: AOJu0YxWLKwJkC7PIuuzMuTV/e3jZy1S9bU+38+D79pnxCcw6Vbw/i7O
+	JFre2/skPizop6oH1dx75Mt2JC/jCAvkGHWwvdPlCM3aYTeR/Cr+iSWDyRWnyg3oUaCNOhbf0ji
+	Pi/NGoTAbk2Gas/m7aqcHEUXj7eA=
+X-Google-Smtp-Source: AGHT+IGkOVmVNmOWwBaHCXLri82Ny30fL/zbqbahI9+MDgOiz1A3svsaJXsUNkAM7XRnziT3OAWkPmiXZDiRDy6UwKU=
+X-Received: by 2002:a05:6a20:65a2:b0:1bd:2d53:35d8 with SMTP id
+ adf61e73a8af0-1bd2d539644mr5541216637.49.1719521435007; Thu, 27 Jun 2024
+ 13:50:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240627170900.1672542-1-andrii@kernel.org> <20240627125938.da3541c6babfe046f955df7a@linux-foundation.org>
+In-Reply-To: <20240627125938.da3541c6babfe046f955df7a@linux-foundation.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 27 Jun 2024 13:50:22 -0700
+Message-ID: <CAEf4BzaNOrMWB=nimR-UD8-MrC37kHQi6fh1hBv+aPWvoiSm5A@mail.gmail.com>
+Subject: Re: [PATCH v6 0/6] ioctl()-based API to query VMAs from /proc/<pid>/maps
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-fsdevel@vger.kernel.org, brauner@kernel.org, 
+	viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	gregkh@linuxfoundation.org, linux-mm@kvack.org, liam.howlett@oracle.com, 
+	surenb@google.com, rppt@kernel.org, adobriyan@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On embedded devices using an eMMC it is common that one or more (hw/sw)
-partitions on the eMMC are used to store MAC addresses and Wi-Fi
-calibration EEPROM data.
+On Thu, Jun 27, 2024 at 12:59=E2=80=AFPM Andrew Morton
+<akpm@linux-foundation.org> wrote:
+>
+> On Thu, 27 Jun 2024 10:08:52 -0700 Andrii Nakryiko <andrii@kernel.org> wr=
+ote:
+>
+> > Implement binary ioctl()-based interface to /proc/<pid>/maps file to al=
+low
+> > applications to query VMA information more efficiently than reading *al=
+l* VMAs
+> > nonselectively through text-based interface of /proc/<pid>/maps file.
+>
+> I appreciate the usefulness for monitoring large fleets, so I'll add
+> this version to mm-unstable.  As we're almost at -rc6 I'll await
+> further review before deciding on the next steps.
+>
+> Is it possible/sensible to make this feature Kconfigurable so that people=
+ who
+> don't need it can omit it?
 
-Typically the NVMEM framework is used to have kernel drivers read and
-use binary data from EEPROMs, efuses, flash memory (MTD), ...
+It's just a matter of #ifdef/#endif, so not hard, technically
+speaking. But I'm wondering what's the concern? This is mostly newly
+added code (except factoring out get_vma_name logic, which won't be
+#ifdef'ed anyways), so if no one is using this new API, then it should
+cause no issue.
 
-Using references to NVMEM bits in Device Tree allows the kernel to
-access and apply e.g. the Ethernet MAC address, which can be a requirement
-for userland to come up (e.g. for nfsroot).
+Generally speaking, I'd say if we don't *have to* add the Kconfig
+option, I'd prefer that. But if you feel strongly, it's not hard for
+me to do, of course.
 
-The goal of this series is to prepare the block subsystem to allow for
-the implementation of an NVMEM provider similar to other types of
-non-volatile storage, so the same approach already used for EEPROMs, MTD
-(raw flashes) and UBI-managed NAND can also be used for devices storing
-those bits on an eMMC.
+Or are you concerned with the vmlinux code size increase? It doesn't
+seem to be large enough to warrant a Kconfig, IMO (from
+bloat-o-meter):
 
-Define a device tree schema for block devices and partitions on them,
-which (similar to how it now works also for UBI volumes) can be matched
-by one or more properties.
+do_procmap_query                               -    1308   +1308
+get_vma_name                                   -     283    +283
+procfs_procmap_ioctl                           -      47     +47
+show_map_vma                                 444     274    -170
 
-Also add a simple notification API for other subsystems to be notified
-about additions and removals of block devices, which is going to be used
-by the block-backed NVMEM provider.
-
-Overall, this enables uniform handling across practially all flash
-storage types used for this purpose (MTD, UBI, and soon also MMC or and
-in future maybe also other block devices).
----
-Changes since v3 sent on Jun 26th, addressing comments from Jens Axboe:
- - improve readability and error-handling in fwnode-matching code
- - remove forgotten code from earlier development accessing ddev->parent
- - use '#if defined' instead of '#ifdef' in header
- - provide inline dummies in case of CONFIG_BLOCK_NOTIFIERS not being set
-
-Changes since v2 sent on May 30th 2024 [1] addressing comments from
-Hauke Mehrtens (https://patchwork.kernel.org/comment/25892133/)
- - Check length of UUID and PARTNAME.
- - Remove forgotten fallback to get 'partitions' subnode from parent.
-   It is no longer needed and was a left over from earlier development.
- - Split series into 3 parts, one for each affected subsystem. This is
-   the first part covering only the changes needed in the block
-   subsystem. The second part adds the actual nvmem provider to
-   drivers/nvmem/, the third part is going to make use of it for MMC
-   block devices and cover changes in drivers/mmc.
-
-Changes since v1 sent on March 21st 2024 [2]:
- - introduce notifications for block device addition and removal for
-   in-kernel users. This allows the nvmem driver to be built as a module
-   and avoids using class_interface and block subsystem internals as
-   suggested in https://patchwork.kernel.org/comment/25771998/ and
-   https://patchwork.kernel.org/comment/25770441/
-
-This series has previously been submitted as RFC on July 19th 2023[3]
-and most of the basic idea did not change since. Another round of RFC
-was submitted on March 5th 2024[4].
-
-[1]: https://patchwork.kernel.org/project/linux-block/list/?series=857192
-[2]: https://patchwork.kernel.org/project/linux-block/list/?series=837150&archive=both
-[3]: https://patchwork.kernel.org/project/linux-block/list/?series=767565
-[4]: https://patchwork.kernel.org/project/linux-block/list/?series=832705
-
-
-Daniel Golle (4):
-  dt-bindings: block: add basic bindings for block devices
-  block: partitions: populate fwnode
-  block: add support for notifications
-  block: add new genhd flag GENHD_FL_NVMEM
-
- .../bindings/block/block-device.yaml          | 22 +++++
- .../devicetree/bindings/block/partition.yaml  | 51 +++++++++++
- .../devicetree/bindings/block/partitions.yaml | 20 +++++
- block/Kconfig                                 |  6 ++
- block/Makefile                                |  1 +
- block/blk-notify.c                            | 87 +++++++++++++++++++
- block/partitions/core.c                       | 70 +++++++++++++++
- include/linux/blkdev.h                        | 13 +++
- 8 files changed, 270 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/block/block-device.yaml
- create mode 100644 Documentation/devicetree/bindings/block/partition.yaml
- create mode 100644 Documentation/devicetree/bindings/block/partitions.yaml
- create mode 100644 block/blk-notify.c
-
--- 
-2.45.2
+But again, do let me know if you insist.
