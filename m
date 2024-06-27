@@ -1,64 +1,149 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.15])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B9DF4D8C3;
-	Thu, 27 Jun 2024 10:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.15
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97767381C8;
+	Thu, 27 Jun 2024 10:10:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719482599; cv=none; b=lPVKU8+G1yXSMI9Xz0SgzdVzcG7YSas8510U9ymJuvz2budBlbpWHlYP4jabA61VqMNHe0Zy7dOJjgVDR99ZdGYW5kdnUhtE6dfMCHmGf9erYevCk0iQT/tOJwj3PPTAinBloCu3JNDw74h7tOCOq83GQzFKzIWnpiXNyKSvuKg=
+	t=1719483022; cv=none; b=rko4nCsl266Rr8Qd61O+6JKIBfusv56OTU72cV0E83MATYF1XGTLMxS3RSMxyu69zxeiknotgRN0U5PwSnjEXRCzokioYaapmNtBovA56Kpq5fZZS11PBCXGE7C4ysra0TIBpxgtORjQuXdZTq6FNBd3eYPYhqekiF5nZ9NNJ7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719482599; c=relaxed/simple;
-	bh=sd/Bmg+cTQfe4mxJdiKI08z/ZTvjG8ksqd41kgQzsqg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oP4z7h+ah9493YkQIjzRqWyk4ftEly8Kshta9RCW+Jw67/q+0krlR9Z+b+hQEzt95+2vhbOITU6cWNwkHN+A5azTJE7aV65xzDzbWCWtexRrSrf7b+Z2cu8qeISYUPVxA3kM1GEgJI1tFw+8P+0beCGYy01W57YpHIK0ZHeSh30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=LYzeAr9y; arc=none smtp.client-ip=1.95.21.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1719483022; c=relaxed/simple;
+	bh=YKvSjQO0kBriuXHtpM5S2HDjrcI9aj+U9VFh4zoTZMg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PZOADgPZJLXg8ooaOOnzmp4Bk7zt7E19ExGl9WLMfwIgndkaRT3ZYXhzz9j3s1gJcblGbV5UQNONGTusqz5QiKmS0ormHyLpwafGe7dA9TVzyq88xtL/NrqT7lvLbHGxV8S7hnwbqgYfjzXGTAIgbiLdIulq5M6SHQLNkf+01JA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=CScKeZZ9; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="LYzeAr9y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=hhsRFv2EXZuOOhQ6fkf9E6H06LwU61sWInvDM5ISGq4=;
-	b=LYzeAr9yuaR75d71phnr/Hd8NxQSJXVokySJobyKIyykoyN5ZO0EqJ1NIb9q3b
-	S9A+FnEP9FgDxUAIy8jlJgzn0DpvyMz9/a3kmwVUKKuzUOFu4lp0Qh0WstMrIyg9
-	CCiWKRJGyGSh4ONv+MFw9J6uhECAD3gcVijVnUQZPKB5g=
-Received: from dragon (unknown [114.218.218.47])
-	by gzsmtp3 (Coremail) with SMTP id M88vCgDXX_GwOH1mCz4aAA--.26752S3;
-	Thu, 27 Jun 2024 18:02:26 +0800 (CST)
-Date: Thu, 27 Jun 2024 18:02:24 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
-	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/4] arm64: dts: imx95: add '#address-cells' and
- '#size-cells' for all i2c
-Message-ID: <Zn04sE+HzkmSJr2C@dragon>
-References: <20240620161622.3986692-1-Frank.Li@nxp.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="CScKeZZ9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1719483018;
+	bh=YKvSjQO0kBriuXHtpM5S2HDjrcI9aj+U9VFh4zoTZMg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CScKeZZ9hJayTeQlGW/3Ok8Jm4GshJujZzcM6rXvkfujk1wULJ31eu/DM6dXCEV+c
+	 9Y8tFxvckIKBqnI3OBLFAsYpkUvnDXVZNYInGxb6E0MLL23CfrHvUzjiygG5HsOr7N
+	 Oj6cKI5BerncV4nnf38QoDXaU663019BIcIrXrOQbiUIEHLhnGrd3x8kX6Iegb0Zpm
+	 HDE/Ndh/ZzCPTogp+Gss7PAJxvmIKHinrwj6Y/iSZ1Dhs6wkXhwCjwJrKVb26IFZFo
+	 ytE9nyNJ2Uo7bLy77wrQD/AF1yjKiWsmfJuSwepAqnqcGml/wQMhh75SUmQayfts5L
+	 GcXTqREx2+Yww==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 123B537810CD;
+	Thu, 27 Jun 2024 10:10:18 +0000 (UTC)
+Message-ID: <726f2ed3-675f-45e8-94f0-d392181e7f92@collabora.com>
+Date: Thu, 27 Jun 2024 12:10:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240620161622.3986692-1-Frank.Li@nxp.com>
-X-CM-TRANSID:M88vCgDXX_GwOH1mCz4aAA--.26752S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUV8u4UUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiAhILZWZv-c1HrgAAsu
+User-Agent: Mozilla Thunderbird
+Subject: Re: Aw: [PATCH v3 1/2] arm64: dts: mt7986: add dtbs with applied
+ overlays for bpi-r3
+To: Frank Wunderlich <frank-w@public-files.de>,
+ Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ devicetree@vger.kernel.org, Daniel Golle <daniel@makrotopia.org>,
+ Rob Herring <robh+dt@kernel.org>, Frank Wunderlich <linux@fw-web.de>
+References: <20240608080530.9436-1-linux@fw-web.de>
+ <20240608080530.9436-2-linux@fw-web.de>
+ <trinity-82c94d49-2a78-4470-83cd-3c6747e01849-1719434738199@3c-app-gmx-bs52>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <trinity-82c94d49-2a78-4470-83cd-3c6747e01849-1719434738199@3c-app-gmx-bs52>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 20, 2024 at 12:16:19PM -0400, Frank Li wrote:
-> Add '#address-cells' and '#size-cells' for all I2C to avoid duplicate these
-> at every board files.
+Il 26/06/24 22:45, Frank Wunderlich ha scritto:
+> any suggestions? hoping it does no laying around so long as v2
 > 
-> Reviewed-by: Peng Fan <peng.fan@nxp.com>
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-Applied all, thanks!
+So you're trying to just test that the overlay is valid and can actually be
+overlaid to the base dts?
+
+I'm not sure that this is the right/best way... and I honestly have no time
+to check that *exactly right now*, even though that should be.
+
+I have to be convinced of what I'm doing before applying patches, and I know
+that this was sent a bit of time ago, but I really didn't have any time to
+dig into that... let's see if for some miracle I can do that for this cycle
+otherwise it's going to be the next one.
+
+I mean no disrespect to Rob who suggested this change, but I still want to
+check that on my own before picking it.
+
+Sorry about the delays
+
+Cheers,
+Angelo
+
+
+> regards Frank
+> 
+> 
+>> Gesendet: Samstag, 08. Juni 2024 um 10:05 Uhr
+>> Von: "Frank Wunderlich" <linux@fw-web.de>
+>> An: "Matthias Brugger" <matthias.bgg@gmail.com>, "AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.com>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>
+>> Cc: "Frank Wunderlich" <frank-w@public-files.de>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, "Daniel Golle" <daniel@makrotopia.org>, "Rob Herring" <robh+dt@kernel.org>
+>> Betreff: [PATCH v3 1/2] arm64: dts: mt7986: add dtbs with applied overlays for bpi-r3
+>>
+>> From: Frank Wunderlich <frank-w@public-files.de>
+>>
+>> Build devicetree binaries for testing overlays and providing users
+>> full dtb without using overlays.
+>>
+>> Suggested-by: Rob Herring <robh+dt@kernel.org>
+>> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+>> ---
+>> https://lore.kernel.org/all/CAL_JsqK_3xxD0DFwipXO85P=q=EYjUdjE1_8g1MKtvw3vVzx5A@mail.gmail.com/
+>> https://lore.kernel.org/all/CAL_JsqJSi=kJSix=f3787ULZnaCy_Y26Phdhy5y9fat_vkDuUw@mail.gmail.com/
+>>
+>> v2:
+>> make full dtbs multiline for better readability
+>> ---
+>>   arch/arm64/boot/dts/mediatek/Makefile | 21 +++++++++++++++++++++
+>>   1 file changed, 21 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+>> index 37b4ca3a87c9..0ec5b904d35d 100644
+>> --- a/arch/arm64/boot/dts/mediatek/Makefile
+>> +++ b/arch/arm64/boot/dts/mediatek/Makefile
+>> @@ -15,6 +15,27 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3-emmc.dtbo
+>>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3-nand.dtbo
+>>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3-nor.dtbo
+>>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3-sd.dtbo
+>> +mt7986a-bananapi-bpi-r3-emmc-nand-dtbs := \
+>> +	mt7986a-bananapi-bpi-r3.dtb \
+>> +	mt7986a-bananapi-bpi-r3-emmc.dtbo \
+>> +	mt7986a-bananapi-bpi-r3-nand.dtbo
+>> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3-emmc-nand.dtb
+>> +mt7986a-bananapi-bpi-r3-emmc-nor-dtbs := \
+>> +	mt7986a-bananapi-bpi-r3.dtb \
+>> +	mt7986a-bananapi-bpi-r3-emmc.dtbo \
+>> +	mt7986a-bananapi-bpi-r3-nor.dtbo
+>> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3-emmc-nor.dtb
+>> +mt7986a-bananapi-bpi-r3-sd-nand-dtbs := \
+>> +	mt7986a-bananapi-bpi-r3.dtb \
+>> +	mt7986a-bananapi-bpi-r3-sd.dtbo \
+>> +	mt7986a-bananapi-bpi-r3-nand.dtbo
+>> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3-sd-nand.dtb
+>> +mt7986a-bananapi-bpi-r3-sd-nor-dtbs := \
+>> +	mt7986a-bananapi-bpi-r3.dtb \
+>> +	mt7986a-bananapi-bpi-r3-sd.dtbo \
+>> +	mt7986a-bananapi-bpi-r3-nor.dtbo
+>> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3-sd-nor.dtb
+>> +
+>>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-rfb.dtb
+>>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986b-rfb.dtb
+>>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7988a-bananapi-bpi-r4.dtb
+>> --
+>> 2.34.1
+>>
+>>
 
