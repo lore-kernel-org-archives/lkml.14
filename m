@@ -1,151 +1,155 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D77198E89;
-	Thu, 27 Jun 2024 14:48:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2A2197A76;
+	Thu, 27 Jun 2024 14:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719499731; cv=none; b=e3HD9KxI4SYmx4/Gtn9fu5ek9fXNSn5EXNQ4jc323KKy9XT+McCzlS2UrRKm1F95mi9TO0hJ4ZKGKDZDepAht3wawoEYQpUYeW2NP6c+wu+n3lW0xYP1WfcEKHZOXHfhBswXjLtBO3O+1yfndWJzIOQWNmbyf0YrDBfRp+LKyGU=
+	t=1719499799; cv=none; b=ioU9aK7haC6jVd3uwCGT6y9oFvXlCQftg0g2lnE72K7zoo7PjGvFqjbAuuuNdav/GnJSkzqLaVnRWnXsv9PcnNt6ebyVpU52HL9bZxEbzWkfeArNpz+6LEHQ8SB2xNoi+Hprlgant3yZ6sNNuv3e4SYOJiL1pmkVJNgH5PN2MKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719499731; c=relaxed/simple;
-	bh=LEXAqlk1jN2gNzWyszN/AYSSjGLCjTcYyJ3bECCChY0=;
+	s=arc-20240116; t=1719499799; c=relaxed/simple;
+	bh=MSPWnBepnAe/PUefg7VV7OXpRhMPmlSxkOQzZRLAM/0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ot6SJJ0Rq5WIv8ihhoyNpGGeHAKWbMOaW0rCV3Z8dg891RBvwBK2KUQBfRMpv2oR0kF7t/7HUsEIXDJg9WRyyQdeu78TeWgzSAT8A1w6vLMXKNOmoZsBEp7qPRsqO1R46/LLAjHraJUFUr+xEYyfgpQI4VHHm+WtiKF+6IxDL4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=hs3UUanY; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=oeZW2SuR; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ewC0xyTA9akTFgrmiHKoVAjmGuRye3sR8d8JNPkszvVNAR4phnUpwVzS5029xACRH1BRJ0nvtlib7XSG8LvB4TolArl1w7nhA0CxhFi+RRrb4TXFnltbjOZmGZQdVo655KcDgGae0WejNgGAq/k2gw/kf7hsYR8W2S22pJ8B6vE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i9UaZSgT; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="hs3UUanY";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="oeZW2SuR"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 4D6EF21B0B;
-	Thu, 27 Jun 2024 14:48:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1719499724; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LEXAqlk1jN2gNzWyszN/AYSSjGLCjTcYyJ3bECCChY0=;
-	b=hs3UUanYQuzbd5Yw/z0ZDPOfeOrHbzarp/BWkTYd0cT0+NH9MhC53ex/6VDyUs8nHzN2s9
-	i/m6u3U2vVzuk3FWMcHS+PCG+oBotPWA+l3FCsZvQEFCoxhOCYLd6MqiNsmGOiU2h4w+oQ
-	3d6q5mh74auSMpD2cGya1YoRmizD5Bk=
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=oeZW2SuR
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1719499723; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LEXAqlk1jN2gNzWyszN/AYSSjGLCjTcYyJ3bECCChY0=;
-	b=oeZW2SuR3JUbdUouOLq/N8uJNXjrUBdxE3OpTLKyCzUI2UVWvHC66tNqE6I6Hr6T0ysH1U
-	ovBoyfajFIahTRUtAQZedw1MgrqIz73csv9EJi1WPbqPehrSHEO9V8G+Wuq0rz/VSj+fCp
-	Q3WsfDUSg6vVTmf+WXglLZShQkIhbdw=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3100D1384C;
-	Thu, 27 Jun 2024 14:48:43 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id myTFC8t7fWZGewAAD6G6ig
-	(envelope-from <mkoutny@suse.com>); Thu, 27 Jun 2024 14:48:43 +0000
-Date: Thu, 27 Jun 2024 16:48:42 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Li Lingfeng <lilingfeng@huaweicloud.com>
-Cc: tj@kernel.org, josef@toxicpanda.com, hch@lst.de, axboe@kernel.dk, 
-	cgroups@vger.kernel.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	yangerkun@huawei.com, yukuai1@huaweicloud.com, houtao1@huawei.com, yi.zhang@huawei.com, 
-	lilingfeng3@huawei.com
-Subject: Re: [PATCH] block: cancel all throttled bios when deleting the cgroup
-Message-ID: <lke5obdxztncs2mtbvgylngxspzzzrmlveibye32cqwog7xw5a@bk22ajawnbtn>
-References: <20240624130940.3751791-1-lilingfeng@huaweicloud.com>
- <5emugcorjnrcgczkmi7njfzwbotpqn6heu7acfho2zfkdsajpv@yrztl7hoa6ky>
- <77ed0b42-60ac-0746-9a5b-23676e9668f2@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i9UaZSgT"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-70698bcd19eso2432523b3a.0;
+        Thu, 27 Jun 2024 07:49:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719499797; x=1720104597; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=GwArrcoUCt4AMY/a6jxu0EcRR9rZ/1l8YumaA7fhjtc=;
+        b=i9UaZSgTdzNoNa394d7UbTPGuqhF0WtODBTSRvDgsTLUWJpMdveeww5S4YZ0H0mFg9
+         FR7BnDOjc4VBajNiUmq6TOdEVGLw6smmwaoVhzVGr1mrRsaplOi1BgUHifwPA+10Jvwp
+         XihwpQB7TVc0i8zdoN9R/xQ87+vxcDDRUQpkugfBT4TeBtoGGGN4gv+7cdrWkpg8ztxU
+         PrnwMAR5xcK8X17MtY05+e/1eAvSHJNwbntd9Y3iwmNOnxJ1mBtdLStc88WF0RQhblyB
+         W0zwwj3qr9NSKPpVfVos0kj58JPhGqw5pn4jj/vWZtDUpoKAA8nQ7WNVu3XVgQ+aEX8S
+         mOgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719499797; x=1720104597;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GwArrcoUCt4AMY/a6jxu0EcRR9rZ/1l8YumaA7fhjtc=;
+        b=nqfhqJmySvNI5Wh6Kz/C/dTjx9hRtQ1VJ2/BqVqyzIvcMgQfwqj+Hj7Ec6ILU5jL71
+         /9qf4JmboZv1yzzh3v2JIP47pZ+nq/Z1IoaGi1JDTH8kzSci4X5No2eKkW5sg8A8ciIH
+         YVw5U5VpddLkjeRdc31ULH8oeI8/dvZt7hkIBzalbwGiSnS1ThtTNK7AhzM93/W08U2b
+         oRW17AdihQCDUgXbdNU5jcgUXBPi2ETJoxrh2hTmPBPd85s4EDe1E34kgbcgvCQR8UFs
+         lYcJG2BfjVkmimDTgPkj7VPmgOqsrxhGH0HcBwG5UtBkYodusTV6jbE5fx/YKzoc8pmn
+         hpwg==
+X-Forwarded-Encrypted: i=1; AJvYcCVZqxdL7GHnm7M6jx/+b19X3Q6sNhb0p9hob6YZfI2rnFwuRlDMlp1JUw0ISMYnV5jANxQ5H77OZ2YCPnBasG8pbq5pL57b27s2Vw==
+X-Gm-Message-State: AOJu0Yw3a45mcDkE/F33tyMH4bqq2zgVng9dAsJVMPKQxwGo4Xqpe0NY
+	ydh8Y4T78XT82tpoFtrdKajQiZmO7F1uNke8WvZQzbiXL4FdQ+57JNIg2w==
+X-Google-Smtp-Source: AGHT+IHsQpEkulKV0s/uq4j85FZoxxExQxrxSWQHBrXp7jUigL3AqdqNKxH0omWMI3xDPNhICp7irA==
+X-Received: by 2002:a05:6a20:12c5:b0:1be:c5ab:7388 with SMTP id adf61e73a8af0-1bec5ab74ccmr5035245637.25.1719499796772;
+        Thu, 27 Jun 2024 07:49:56 -0700 (PDT)
+Received: from rigel ([118.209.204.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1faac9a7522sm14094895ad.246.2024.06.27.07.49.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jun 2024 07:49:56 -0700 (PDT)
+Date: Thu, 27 Jun 2024 22:49:52 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linus.walleij@linaro.org
+Subject: Re: [PATCH 2/4] gpiolib: cdev: Ignore reconfiguration without
+ direction
+Message-ID: <20240627144952.GA433043@rigel>
+References: <20240626052925.174272-1-warthog618@gmail.com>
+ <20240626052925.174272-3-warthog618@gmail.com>
+ <CAMRc=Me1_4xjbt51j+gFVzR71VUwMSAm+dT=UtgOY-1xYoAF5g@mail.gmail.com>
+ <20240627142248.GA414403@rigel>
+ <CAMRc=McA2rY=-k83Pkz-P5yu=bT2nE8JhNMiEAP2zFbf95SQqw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="e5n4haic7674hghp"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <77ed0b42-60ac-0746-9a5b-23676e9668f2@huaweicloud.com>
-X-Rspamd-Queue-Id: 4D6EF21B0B
-X-Spam-Score: -6.11
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-6.11 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SIGNED_PGP(-2.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	MX_GOOD(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:dkim,huaweicloud.com:email]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=McA2rY=-k83Pkz-P5yu=bT2nE8JhNMiEAP2zFbf95SQqw@mail.gmail.com>
 
+On Thu, Jun 27, 2024 at 04:44:02PM +0200, Bartosz Golaszewski wrote:
+> On Thu, Jun 27, 2024 at 4:22 PM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > On Thu, Jun 27, 2024 at 04:06:21PM +0200, Bartosz Golaszewski wrote:
+> > > On Wed, Jun 26, 2024 at 7:29 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > > >
+> > > > linereq_set_config() behaves badly when direction is not set.
+> > > > The configuration validation is borrowed from linereq_create(), where,
+> > > > to verify the intent of the user, the direction must be set to in order to
+> > > > effect a change to the electrical configuration of a line. But, when
+> > > > applied to reconfiguration, that validation does not allow for the unset
+> > > > direction case, making it possible to clear flags set previously without
+> > > > specifying the line direction.
+> > > >
+> > > > Adding to the inconsistency, those changes are not immediately applied by
+> > > > linereq_set_config(), but will take effect when the line value is next get
+> > > > or set.
+> > > >
+> > > > For example, by requesting a configuration with no flags set, an output
+> > > > line with GPIO_V2_LINE_FLAG_ACTIVE_LOW and GPIO_V2_LINE_FLAG_OPEN_DRAIN
+> > > > set could have those flags cleared, inverting the sense of the line and
+> > > > changing the line drive to push-pull on the next line value set.
+> > > >
+> > > > Skip the reconfiguration of lines for which the direction is not set, and
+> > > > only reconfigure the lines for which direction is set.
+> > > >
+> > > > Fixes: a54756cb24ea ("gpiolib: cdev: support GPIO_V2_LINE_SET_CONFIG_IOCTL")
+> > > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > > > ---
+> > > >  drivers/gpio/gpiolib-cdev.c | 12 +++++++-----
+> > > >  1 file changed, 7 insertions(+), 5 deletions(-)
+> > > >
+> > > > diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> > > > index f7a129d67b7d..ef08b23a56e2 100644
+> > > > --- a/drivers/gpio/gpiolib-cdev.c
+> > > > +++ b/drivers/gpio/gpiolib-cdev.c
+> > > > @@ -1534,12 +1534,14 @@ static long linereq_set_config(struct linereq *lr, void __user *ip)
+> > > >                 line = &lr->lines[i];
+> > > >                 desc = lr->lines[i].desc;
+> > > >                 flags = gpio_v2_line_config_flags(&lc, i);
+> > > > +               /*
+> > > > +                * Lines not explicitly reconfigured as input or output
+> > > > +                * are left unchanged.
+> > > > +                */
+> > > > +               if (!(flags & GPIO_V2_LINE_DIRECTION_FLAGS))
+> > > > +                       continue;
+> > >
+> > > Series looks good, thanks. I'd say that this bit here calls for at
+> > > least a debug-level message since we don't return an error unlike v1.
+> > > What do you think?
+> > >
+> >
+> > The change to the libgpiod Python bindings makes use of this to support
+> > reconfiguration of subsets, so on its own it isn't an abnormal path and
+> > I'm not sure it warrants even a debug.
+> >
+> > OTOH, I did consider if there should be a check that at least one line
+> > in the reconfig has a direction, returning an error if there are none, but
+> > was on the fence about it and left it out as it added complexity.
+> >
+> > Would that make more sense?
+> > Or do you have a problem with reconfiguring subsets?
+> >
+> > Cheers,
+> > Kent.
+>
+> I see. Ok, I'll take it as is interpreting it as a feature.
+>
 
---e5n4haic7674hghp
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm totally ok with adding a check that direction is set at least once,
+if you would like that. Can be done with a reasonably minor change to
+gpio_v2_line_config_validate().  Though that would probably still double
+the size of this patch.
 
-On Tue, Jun 25, 2024 at 07:38:34PM GMT, Li Lingfeng <lilingfeng@huaweicloud=
-=2Ecom> wrote:
-> Thanks for your advice. It's indeed more appropriate to use "flush" inste=
-ad
-> of "cancel" here, I will change it soon.
+Cheers,
+Kent.
 
-I saw your v2. Didn't you forget to change also the function name?
-
-> I didn't quite get what you mean. Do you mean this patch will cause a cha=
-nge
-> in mechanics, and it is necessary to add an explanation?
->=20
-> (After deleting the original cgroup,
-> =A0Before: the limit of the throttled bios can't be changed and the bios =
-will
-> complete under this limit;
-> =A0Now: the limit will be canceled and the throttled bios will be flushed
-> immediately.)
-
-I mean -- can the new mechanics be exploited to bypass throttling by
-sending IO from a process, migrate it between cgroups and rmdir them?
-That should be covered in the commit log.
-
-Thanks,
-Michal
-
---e5n4haic7674hghp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZn17xwAKCRAt3Wney77B
-SezdAP95BXsHosNRfN2jjr9fIAxjsUPogamYQ3QPCdYAstMlHgEAzphiJpqD/nQo
-teaCw4LZjTAFzrgCrv2kqzg80hEAAwg=
-=Xv+3
------END PGP SIGNATURE-----
-
---e5n4haic7674hghp--
