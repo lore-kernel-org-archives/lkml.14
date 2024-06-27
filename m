@@ -1,78 +1,96 @@
-Received: from out203-205-221-242.mail.qq.com (out203-205-221-242.mail.qq.com [203.205.221.242])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBDC5179663
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 12:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.242
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495B91779A5
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 12:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719492604; cv=none; b=g++X6rvIbKPr7Fr+BLyYjMAG4fMfK1/Q97FxmeHhfPktmTSe7aj/siZDvn9l8Hu6BOlLPuo5npILZxrkjTiNQ6PpbOtCxTP9ahAkLR4YthpGB4vqoszSZZfPHBD7vL+NTIlXn6GwDX2s0AohKd0V6ryBgagWt7QxxONp0K7Q+KE=
+	t=1719492677; cv=none; b=fqTdHWGOBhgP/y661whthvVQVqPFgrt0gET8W9tmVltogDA4tHqgsZwpWyHtG1Hf1bIz39skFN649mTsANUNZy8lxUngWGbnGaMAykJ9lljVUqYQGO4l/hyA1QrdxkNXP1wjq9zU/kNNV5q9rGD3ndJn9yMbQNyou1WpPgHowt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719492604; c=relaxed/simple;
-	bh=1s6KL2A5BxKto0IMZbSrcHTZhim/DFbU3qpH6hFSrMQ=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=iSYintI/TZMKI3b5jqCrKf4/cMeMIO7uyuwFLDJunZM3wZBaWhTid/6PdDMEsw7GWQ4XmNKb8pbai5DtosoTAdLrBtHETlUjv/AIrhdheEwNp2lBg9k04hLO7k4RV3fRFqOdSqq4TEw8L6jtvvJtvE/jv9BquuSw+XzKLTaxzSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=VVPE+XSO; arc=none smtp.client-ip=203.205.221.242
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1719492677; c=relaxed/simple;
+	bh=qnbeZXhBfFJTTPcTPH/ROnaeI+osEUE7a1CoNefn9Iw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=TAzoUeDap9d7iN1MLVe7/EjhDQC4GDTWopEg9dDvIX7vmU3NjrkW6N5tvLsXfP7kfGoHh8HXksXlK9RMJe7nke8z+nQKqgdutX7VKIkqs46IgtwXtlBAoUb/9ocY0ttjooSu0byTh+04tmTG2rU/hN7GwcQrU1JghUAhehp1mJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VjajGwUY; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="VVPE+XSO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1719492293; bh=3vgEVukpScf348J5ES58QzjOcxzTTmMqGrdr9uaReSY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=VVPE+XSOMTiRZra3o7vY8PzErya5zZNIpYLRboOnmH0KOSoJ9HU65EG2CSBwESKjd
-	 8R4Ht5pAeJa1lhxYLJj1tjRdgen1aGA9+NiwE1CWZf5tMmKmIldbqgN+I+gaRvfhB5
-	 Eslf3CcRxq1pt3Gp2fzCqEeJ6YzSOvRTrIfX8O0U=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.103])
-	by newxmesmtplogicsvrszc19-0.qq.com (NewEsmtp) with SMTP
-	id B3381EBD; Thu, 27 Jun 2024 20:44:51 +0800
-X-QQ-mid: xmsmtpt1719492291tnx2pguym
-Message-ID: <tencent_C7923A5DABDDB2191E4F830DC6A58B8DEB07@qq.com>
-X-QQ-XMAILINFO: MBjwNRQMz5zU6FmzQCNFwtLT1jZBSQ9kGjzLaeGXlw23s0kxWHnFWzs8nbqS2a
-	 w+fer0NSyxk1WTJ/jHJwY0jZG9mYLLjccvcYUFYfWhPi+4SxlJ5qz8mRFy8qL8gK8hHF5iFAG077
-	 bQ2avVy2k9xGrgVeCv7ytTj9YQTDpZ2oYx4IYBhgxDZyGAmc4EqtoSiqtkIRYLB8OtuIaWDdCaq0
-	 lge+cwyXg/Xt8QgQ5GAYgXUlWPnI542L4yIfPnVHpY9PBpedHAfe/EcKp5KnV83us1znvUsBOILr
-	 RqxkIUqvPl662JhF+JUchpBRLc5+E90CCHHRCDSPULOgGBcto53bSlFdWUUsTJiSsRgyXNq0t0Kl
-	 Nd/ATy7+Tfml8+tyGN3MjJs8trM/yr5bCijb9XAxXgZ56eWUcLUbBqsIbd9U/MPGaiprgNbW1pGX
-	 zqLtopPsy0VvHdgU44lwQaXgcNL+le0Sn3xhNfY3FnQxAmwEh6wDVb9n7n8xIerDNBd8Uja3++Tl
-	 oZgzqDkTNJsJj8kKsCrH9eJ1neeRk7rzPYWqaS2pKIEfeCOQHM7R6sHqTHmHnpBJMZOpgD9PT6Xp
-	 jHVeodN3BOQ71zj3RekLnMi3V8HWUbg+cRTfrWNsmkKK5LQCJ5HSp1iLf7M9JZ8Acs83AgbVOLSR
-	 f49Wx4QLippxhS6SeRz1a5pRVNC6MLui9Q/9d4CudndJXBs/GYCejlnP09kmkilz9uyiM2MBwOMz
-	 r6lke81Y2NpDE1RdFZCuOz2KJWc8s0BE7zp1Nacy5rcYV/0OkP/LJ3lG0WW2e099afj/7drgM4RG
-	 rTm+Qj3zgX1AWq2lmc688qXDNR0hS4sY5nU8WE/Zbzk/PaLjLJVsXoKokK1YKYo9r4IguNMh+/v0
-	 3/5YvxAHHkliEFg7Q4O/1jBwhnCAX6fH3zLunBjz4OsZl4kHYPJIE=
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+c041b4ce3a6dfd1e63e2@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: [syzbot] [net?] KASAN: slab-use-after-free Write in l2tp_session_delete
-Date: Thu, 27 Jun 2024 20:44:52 +0800
-X-OQ-MSGID: <20240627124451.719448-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000008405e0061bb6d4d5@google.com>
-References: <0000000000008405e0061bb6d4d5@google.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VjajGwUY"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a729da840a8so93011166b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 05:51:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719492675; x=1720097475; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/8RdIwO1AqgATS1rruwHtz31wW4pIJuBMnKzZU+n75c=;
+        b=VjajGwUY9K7ewt2dqbIXSYnD868MYkRsyuSVY0SLcGA5ZWas4K357WVLfhdIDQZtPK
+         TIrgcIt/Vuf+hKzPG4Drq2CVb5I6yPdFyuTjkdl5mYZLYoZXpceVUCHM189pK/z+qxaw
+         vquCe6z4w9BdJ6QxpmsKb2t3ilwMC8AtI8xmlgOVpgQbxq2eJWPvLTsBmzHZDOnx1Egp
+         LaeaPikYP4FyIwltGqZrMT4w7ViV+d97u2BrQKSjSVl6Q5aZ3LengpqGK7DALHkvvOm+
+         Vjhu6hDLgg9BpqexvYXbz74g9+SA/Wli0o7V4x6uNa0UQWVOFJG2ja8L23xLmaZt7F0n
+         9izw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719492675; x=1720097475;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/8RdIwO1AqgATS1rruwHtz31wW4pIJuBMnKzZU+n75c=;
+        b=XuUz7gJQMUIqaFXsWgW4kjDiVDlnUPEZ/NfHvMpPLJo5L9mq+kkzzd7WTeWxVi2jw4
+         /6mmcQbFZsrNh8Ry28jY+2xEH4xaEmKB680MduI1N81T4y7q9j4vIwxJG/F7J7dRAU/r
+         YW7SSNKVcfCpWH6htM6n+uFGucqzMHQpUvjEocyWBo1me7F7TffxMbCj2zvo6SjOyUNb
+         BaDKK6P83ikv8coq0QRdxFfDPYZFVcqfdYrr0G3Z3TEu4ldhbxAaEokYp6NNHP0pNl4C
+         mcQNNInOUCv9DKLPYeLnhDfJP1GKzOuZUWn5nyZCdIrysKHrk5k6sHThd+v1A+9qAC0t
+         Mn1A==
+X-Gm-Message-State: AOJu0Yz+eRqyWmaw9kbJQzyXeBIZfw85AXLA4EhilVo+T3+AEv/WdxtJ
+	/9CS/zpEiZxKtp02mvMJNg4gdFDro61dqV+EUD8MlpK/wpT3IKtejA2mczOy3JM=
+X-Google-Smtp-Source: AGHT+IFB8SbhGNvYE/lAYWgisgvNl1xeZNFWFNCj05aBH7pV/cycVghwpgIH6UIUzmGlcNfVH9hzqg==
+X-Received: by 2002:a17:907:36c6:b0:a72:9ebe:29da with SMTP id a640c23a62f3a-a729ebe44ffmr112781066b.35.1719492674604;
+        Thu, 27 Jun 2024 05:51:14 -0700 (PDT)
+Received: from rayden (h-217-31-164-171.A175.priv.bahnhof.se. [217.31.164.171])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a729d71f54csm57247166b.71.2024.06.27.05.51.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jun 2024 05:51:14 -0700 (PDT)
+Date: Thu, 27 Jun 2024 14:51:12 +0200
+From: Jens Wiklander <jens.wiklander@linaro.org>
+To: arm@kernel.org, soc@kernel.org
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	op-tee@lists.trustedfirmware.org
+Subject: [GIT PULL] OP-TEE fix for v6.11
+Message-ID: <20240627125112.GA2674988@rayden>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-delete tunnl session list
+Hello arm-soc maintainers,
 
-#syz test: linux-next f76698bd9a8c
+Please pull this small patch fixing a few missing-field-initializers warnings
+in the optee driver.
 
-diff --git a/net/l2tp/l2tp_ppp.c b/net/l2tp/l2tp_ppp.c
-index 3596290047b2..1fd27c902d80 100644
---- a/net/l2tp/l2tp_ppp.c
-+++ b/net/l2tp/l2tp_ppp.c
-@@ -446,6 +446,7 @@ static int pppol2tp_release(struct socket *sock)
- 	if (session) {
- 		struct pppol2tp_session *ps;
- 
-+		list_del_init(&session->list);
- 		l2tp_session_delete(session);
- 
- 		ps = l2tp_session_priv(session);
+Thanks,
+Jens
 
+The following changes since commit a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6:
+
+  Linux 6.9 (2024-05-12 14:12:29 -0700)
+
+are available in the Git repository at:
+
+  https://git.linaro.org/people/jens.wiklander/linux-tee.git/ tags/optee-fix-for-v6.11
+
+for you to fetch changes up to e0556255a53d6d3d406a28362dffd972018a997c:
+
+  tee: optee: ffa: Fix missing-field-initializers warning (2024-06-27 10:27:31 +0200)
+
+----------------------------------------------------------------
+Fix optee missing-field-initializers warning
+
+----------------------------------------------------------------
+Mark-PK Tsai (1):
+      tee: optee: ffa: Fix missing-field-initializers warning
+
+ drivers/tee/optee/ffa_abi.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
