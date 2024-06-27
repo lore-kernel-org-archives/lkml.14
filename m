@@ -1,16 +1,15 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C6115ECDF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C1A15ECDB
 	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 12:39:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719491973; cv=none; b=Le7BOPWAFcokpSei9UrT/4BJDPkQEbNRD4Q0DkVxG4YCiyVYxuyfrRc+ZbCIR4Pgakc5/pSjSrRec7J23hO/Hb07BXO5mgfkr4Bt2P6+l82O8HQSofeXBtBBejDhurWhXyY9U3eotUsoXc46WTPpkWwH7Wh1K6jeDXR6vGKHFzQ=
+	t=1719491974; cv=none; b=lnF/LVY8QRjHn/45j6fRtbRjsg87ZrUj9hFbk1iFApPixtw7xITBylOPOIeKLaqiQHAVKuoFz9xB94c0CTjXyLSs19SoOigniTRs449bJUEDsDr9jUTiqYv52uE+VorYGJRd/RvDz7HS9GTwwCPus5KHeNP8+mFedeV1L3DS47Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719491973; c=relaxed/simple;
-	bh=hWjrchSW3EtZiipRWjCmXn4R/h3s55wntgS1ZCXFgzw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AZ7o5fpNNks6LxKXdHUQOWlmF7VJKwXHz1n6sMWxO/LmrmFAWQia7x2J8uwXxL7sCdhMbQmmvohVhRAJGTtiLOCWWDf18PnxrkmdWplYqjdEJk/EP/Qnp+d3rANY/y0YnVERk1U2Rl8WbNQuYheLP3255ocqD7glRtpjv0tyrKg=
+	s=arc-20240116; t=1719491974; c=relaxed/simple;
+	bh=GIWMlaYR05jwrmjmwXUaBfAlmloZULLT6JrTrW07M4E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SDlj9W76ybTK7LTbO0bOHDcK7OblAGMz8aj9YGQYOk/Mb17inBn28W1o4v9Mj4VTXYCULNolYH4Mg8yP7RjWMOvgDCbW8s8NjCoh2XZyJ4UptaNQARzku6nC2+GbE2liv6Mqx0ei8jw9l3Iv5NnjPA97VzMe8RRMNjC6RaN9ypo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,15 +17,15 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1sMoPC-00015C-7g; Thu, 27 Jun 2024 14:39:14 +0200
+	id 1sMoPC-00015A-7f; Thu, 27 Jun 2024 14:39:14 +0200
 Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ore@pengutronix.de>)
-	id 1sMoPA-005Mwt-P6; Thu, 27 Jun 2024 14:39:12 +0200
+	id 1sMoPA-005Mwr-O8; Thu, 27 Jun 2024 14:39:12 +0200
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1sMoPA-000xBp-2J;
+	id 1sMoPA-000xBV-2B;
 	Thu, 27 Jun 2024 14:39:12 +0200
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>,
@@ -38,18 +37,15 @@ To: "David S. Miller" <davem@davemloft.net>,
 	Vladimir Oltean <olteanv@gmail.com>,
 	Woojung Huh <woojung.huh@microchip.com>,
 	Arun Ramadoss <arun.ramadoss@microchip.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	kernel@pengutronix.de,
 	linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org,
 	UNGLinuxDriver@microchip.com
-Subject: [PATCH net-next v1 2/3] net: dsa: microchip: lan937x: force RGMII interface into PHY mode
-Date: Thu, 27 Jun 2024 14:39:10 +0200
-Message-Id: <20240627123911.227480-3-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v1 1/1] net: dsa: microchip: add regmap_range for KSZ9563 chip
+Date: Thu, 27 Jun 2024 14:39:08 +0200
+Message-Id: <20240627123911.227480-1-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240627123911.227480-1-o.rempel@pengutronix.de>
-References: <20240627123911.227480-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,60 +58,152 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+Add register validation for KSZ9563.
 
-The register manual and datasheet documentation for the LAN937x series
-disagree about the polarity of the MII mode strap. As a consequence
-there are hardware designs that have the RGMII interface strapped into
-MAC mode, which is a invalid configuration and will prevent the internal
-clock from being fed into the port TX interface.
-
-Force the MII mode to PHY for RGMII interfaces where this is the only
-valid mode, to override the inproper strapping.
-
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- drivers/net/dsa/microchip/lan937x_main.c | 11 +++++++++++
- drivers/net/dsa/microchip/lan937x_reg.h  |  3 +++
- 2 files changed, 14 insertions(+)
+ drivers/net/dsa/microchip/ksz_common.c | 121 +++++++++++++++++++++++++
+ 1 file changed, 121 insertions(+)
 
-diff --git a/drivers/net/dsa/microchip/lan937x_main.c b/drivers/net/dsa/microchip/lan937x_main.c
-index e907a5602035c..b6ef48a655735 100644
---- a/drivers/net/dsa/microchip/lan937x_main.c
-+++ b/drivers/net/dsa/microchip/lan937x_main.c
-@@ -217,6 +217,17 @@ void lan937x_config_cpu_port(struct dsa_switch *ds)
- 		if (dev->info->cpu_ports & (1 << dp->index)) {
- 			dev->cpu_port = dp->index;
+diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
+index 030b167764b39..2308be3bdc9d8 100644
+--- a/drivers/net/dsa/microchip/ksz_common.c
++++ b/drivers/net/dsa/microchip/ksz_common.c
+@@ -666,6 +666,125 @@ static const struct regmap_access_table ksz8563_register_set = {
+ 	.n_yes_ranges = ARRAY_SIZE(ksz8563_valid_regs),
+ };
  
-+			/*
-+			 * Force RGMII interface into PHY mode, as that's the
-+			 * only valid mode, but it may be in MAC mode due to
-+			 * incorrect strapping.
-+			 */
-+			if (phy_interface_mode_is_rgmii(dev->ports[dp->index].interface)) {
-+				lan937x_port_cfg(dev, dp->index,
-+						 REG_PORT_XMII_CTRL_1,
-+						 PORT_MII_MODE_MAC, false);
-+			}
++static const struct regmap_range ksz9563_valid_regs[] = {
++	regmap_reg_range(0x0000, 0x0003),
++	regmap_reg_range(0x0006, 0x0006),
++	regmap_reg_range(0x000f, 0x000f),
++	regmap_reg_range(0x0010, 0x001f),
++	regmap_reg_range(0x0100, 0x0100),
++	regmap_reg_range(0x0104, 0x0107),
++	regmap_reg_range(0x010d, 0x010d),
++	regmap_reg_range(0x0110, 0x0113),
++	regmap_reg_range(0x0120, 0x012b),
++	regmap_reg_range(0x0201, 0x0201),
++	regmap_reg_range(0x0210, 0x0213),
++	regmap_reg_range(0x0300, 0x0300),
++	regmap_reg_range(0x0302, 0x030b),
++	regmap_reg_range(0x030e, 0x031b),
++	regmap_reg_range(0x0320, 0x032b),
++	regmap_reg_range(0x0330, 0x0336),
++	regmap_reg_range(0x0338, 0x033b),
++	regmap_reg_range(0x033e, 0x033e),
++	regmap_reg_range(0x0340, 0x035f),
++	regmap_reg_range(0x0370, 0x0370),
++	regmap_reg_range(0x0378, 0x0378),
++	regmap_reg_range(0x037c, 0x037d),
++	regmap_reg_range(0x0390, 0x0393),
++	regmap_reg_range(0x0400, 0x040e),
++	regmap_reg_range(0x0410, 0x042f),
++	regmap_reg_range(0x0500, 0x0519),
++	regmap_reg_range(0x0520, 0x054b),
++	regmap_reg_range(0x0550, 0x05b3),
 +
- 			/* enable cpu port */
- 			lan937x_port_setup(dev, dp->index, true);
- 		}
-diff --git a/drivers/net/dsa/microchip/lan937x_reg.h b/drivers/net/dsa/microchip/lan937x_reg.h
-index 7ecada9240233..e36bcb155f545 100644
---- a/drivers/net/dsa/microchip/lan937x_reg.h
-+++ b/drivers/net/dsa/microchip/lan937x_reg.h
-@@ -150,6 +150,9 @@
- #define REG_PORT_TX_PHY_CTRL_BASE	0x0280
- 
- /* 3 - xMII */
-+#define REG_PORT_XMII_CTRL_1		0x0301
-+#define PORT_MII_MODE_MAC		BIT(2)
++	/* port 1 */
++	regmap_reg_range(0x1000, 0x1001),
++	regmap_reg_range(0x1004, 0x100b),
++	regmap_reg_range(0x1013, 0x1013),
++	regmap_reg_range(0x1017, 0x1017),
++	regmap_reg_range(0x101b, 0x101b),
++	regmap_reg_range(0x101f, 0x1021),
++	regmap_reg_range(0x1030, 0x1030),
++	regmap_reg_range(0x1100, 0x1115),
++	regmap_reg_range(0x111a, 0x111f),
++	regmap_reg_range(0x1120, 0x112b),
++	regmap_reg_range(0x1134, 0x113b),
++	regmap_reg_range(0x113c, 0x113f),
++	regmap_reg_range(0x1400, 0x1401),
++	regmap_reg_range(0x1403, 0x1403),
++	regmap_reg_range(0x1410, 0x1417),
++	regmap_reg_range(0x1420, 0x1423),
++	regmap_reg_range(0x1500, 0x1507),
++	regmap_reg_range(0x1600, 0x1612),
++	regmap_reg_range(0x1800, 0x180f),
++	regmap_reg_range(0x1900, 0x1907),
++	regmap_reg_range(0x1914, 0x191b),
++	regmap_reg_range(0x1a00, 0x1a03),
++	regmap_reg_range(0x1a04, 0x1a07),
++	regmap_reg_range(0x1b00, 0x1b01),
++	regmap_reg_range(0x1b04, 0x1b04),
++	regmap_reg_range(0x1c00, 0x1c05),
++	regmap_reg_range(0x1c08, 0x1c1b),
 +
- #define PORT_SGMII_SEL			BIT(7)
- #define PORT_GRXC_ENABLE		BIT(0)
++	/* port 2 */
++	regmap_reg_range(0x2000, 0x2001),
++	regmap_reg_range(0x2004, 0x200b),
++	regmap_reg_range(0x2013, 0x2013),
++	regmap_reg_range(0x2017, 0x2017),
++	regmap_reg_range(0x201b, 0x201b),
++	regmap_reg_range(0x201f, 0x2021),
++	regmap_reg_range(0x2030, 0x2030),
++	regmap_reg_range(0x2100, 0x2115),
++	regmap_reg_range(0x211a, 0x211f),
++	regmap_reg_range(0x2120, 0x212b),
++	regmap_reg_range(0x2134, 0x213b),
++	regmap_reg_range(0x213c, 0x213f),
++	regmap_reg_range(0x2400, 0x2401),
++	regmap_reg_range(0x2403, 0x2403),
++	regmap_reg_range(0x2410, 0x2417),
++	regmap_reg_range(0x2420, 0x2423),
++	regmap_reg_range(0x2500, 0x2507),
++	regmap_reg_range(0x2600, 0x2612),
++	regmap_reg_range(0x2800, 0x280f),
++	regmap_reg_range(0x2900, 0x2907),
++	regmap_reg_range(0x2914, 0x291b),
++	regmap_reg_range(0x2a00, 0x2a03),
++	regmap_reg_range(0x2a04, 0x2a07),
++	regmap_reg_range(0x2b00, 0x2b01),
++	regmap_reg_range(0x2b04, 0x2b04),
++	regmap_reg_range(0x2c00, 0x2c05),
++	regmap_reg_range(0x2c08, 0x2c1b),
++
++	/* port 3 */
++	regmap_reg_range(0x3000, 0x3001),
++	regmap_reg_range(0x3013, 0x3013),
++	regmap_reg_range(0x3017, 0x3017),
++	regmap_reg_range(0x301b, 0x301b),
++	regmap_reg_range(0x301f, 0x3020),
++	regmap_reg_range(0x3030, 0x3030),
++	regmap_reg_range(0x3300, 0x3301),
++	regmap_reg_range(0x3303, 0x3303),
++	regmap_reg_range(0x3400, 0x3401),
++	regmap_reg_range(0x3403, 0x3403),
++	regmap_reg_range(0x3410, 0x3417),
++	regmap_reg_range(0x3420, 0x3423),
++	regmap_reg_range(0x3500, 0x3507),
++	regmap_reg_range(0x3600, 0x3612),
++	regmap_reg_range(0x3800, 0x380f),
++	regmap_reg_range(0x3900, 0x3907),
++	regmap_reg_range(0x3914, 0x391b),
++	regmap_reg_range(0x3a00, 0x3a03),
++	regmap_reg_range(0x3a04, 0x3a07),
++	regmap_reg_range(0x3b00, 0x3b01),
++	regmap_reg_range(0x3b04, 0x3b04),
++	regmap_reg_range(0x3c00, 0x3c05),
++	regmap_reg_range(0x3c08, 0x3c1b),
++};
++
++static const struct regmap_access_table ksz9563_register_set = {
++	.yes_ranges = ksz9563_valid_regs,
++	.n_yes_ranges = ARRAY_SIZE(ksz9563_valid_regs),
++};
++
+ static const struct regmap_range ksz9477_valid_regs[] = {
+ 	regmap_reg_range(0x0000, 0x0003),
+ 	regmap_reg_range(0x0006, 0x0006),
+@@ -1475,6 +1594,8 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 		.supports_rgmii = {false, false, true},
+ 		.internal_phy = {true, true, false},
+ 		.gbit_capable = {true, true, true},
++		.wr_table = &ksz9563_register_set,
++		.rd_table = &ksz9563_register_set,
+ 	},
  
+ 	[KSZ8567] = {
 -- 
 2.39.2
 
