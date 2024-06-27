@@ -1,123 +1,86 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7AC01991C3;
-	Thu, 27 Jun 2024 16:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2529F199252;
+	Thu, 27 Jun 2024 16:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719504294; cv=none; b=W7g1G+aPwJUWAEorbkThg82pgRyVC9BHmD/vwuycDsUIrII5/xCgWZUEgEcBzDilKX1OktaASXraVFY1M1dsB4OmugjLy1VEUxQxoQUTX05Qh/jFUqUjHEzuMGM+P4aXem+0W5FS6B0rdfmn8IIPohqeH2l7ZqORY3ZKeNyuI7k=
+	t=1719504311; cv=none; b=XpC50B23lGurO4MlEu3WzA3BJLWsGpVxrQWjOsLsbX4rUT61TMdVkq9cjejJd4PJSAGRnyCzLHjrIVRLGl8Uq1lfJoMAEq39ob3po/MmZdnHb1M6NpFGjYV9cjcIIzoI9MbOvmn/atrqZnY1QQJMqks3KsldReMcn+g+cc0UGrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719504294; c=relaxed/simple;
-	bh=WXMv8DGovo7IhUKMrCSpcT9xvNeg0bJGp5ZjNFLkin8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dJG9pNE1vVDb0t+PvQdAZ1KfSz+L6B6/Tg20s+LxHhLkQ7BXqeGK4fXTERMZKm3mWHzBbbJJgEHymiK3a+x4hvWJGSXH3I/aDWoT9ARGsZlj3T3v2N5ycvka3+/Raxhj5AsEuAInITSdnwFS9E/OW3NfnXWBFAyhg4PVf0k1KPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dfac121b6a6so1526598276.0;
-        Thu, 27 Jun 2024 09:04:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719504291; x=1720109091;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bJX5K/ZEa2Ih0T0xqVH52hWcckqFO0GZ7ag7aCkhSho=;
-        b=Rce2Q3wUblHWkvfOUX0rLO6P5GtTbuTiDIkiOlyHyd6MztcxRE4oLeVgXNNH2Jfvrc
-         ixDev1U55P/KCqBbqObEJOjfGgkghFechmzZHdW3pm7bOn7EINylavNa52/DPqBYNYdW
-         9O2ioXmaPyLnuhtjv299Qfs64Tng7npm/mGQjCeYXhmBVmf8StojlVR8kfaFHt6K7TNt
-         9kVYzsoEFptopCk6Ho/LXqCeh/xFAZc0ha2wMYbWF90Dc1CPHrtzgd26/3VWUErNJT1F
-         Q+XlrTx7HZNl1tiBs/V9drXpltkn9lzElhJmeHxiVXSeokkRZUKtaCI+cBD6mZWK6m/C
-         tAfA==
-X-Forwarded-Encrypted: i=1; AJvYcCWebe3fr1Nnn8aP2/JvoyNL5pZGYV08iwBkITrPShQrJRs9T7UBldfi2WGbjkjk+xTCl/2wN3PUxrNLF8HONGLb4MWg6dyNh/a+5fk5RWnzc7TKvC8ZTplkWKOWxL5GVwRs3LFreWZLlwtZA4JwGVmTc8+bwBb/W706/73ISbe7lmN6glyjSxbiZNkW
-X-Gm-Message-State: AOJu0YwAhCAPjx9kbp2N6UsYUu5zsD+x9ROMipNHQbnHV7qC5MxqdSCp
-	M7t8sWNhcRQCaMmxN/8XStCloakc5TN4YrtfBj65gd5CF93pTpw9yWu4dCUF
-X-Google-Smtp-Source: AGHT+IGM0wcwkCh1pM7r4umsMK0lxqyt9xLM1Jxb+pu7XYtZIzhIQ1srRD5yUyuqk2DlWwNGrBNS+A==
-X-Received: by 2002:a25:ace3:0:b0:e02:c2b6:8733 with SMTP id 3f1490d57ef6-e031bcb6d99mr6857013276.15.1719504269460;
-        Thu, 27 Jun 2024 09:04:29 -0700 (PDT)
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com. [209.85.128.177])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e0345bd786asm302260276.46.2024.06.27.09.04.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Jun 2024 09:04:29 -0700 (PDT)
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-63bce128c70so16270957b3.0;
-        Thu, 27 Jun 2024 09:04:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWoe/VjaQaeVr2dKmV0fcGDJRLx1RlXHRjHiiWc7ORRQRRN9/lMB9/I4Qm9C+Up2Fv5+y/1HVvi9d9jVw/+Od5lP50NwwwHRuUR71yNt3tvZsLwdNv+1NX7kuVlLXHRYS8moZKpz0egsfIuRA1ftJSwpzcP2yj1mdXqh27nb0NGTQWsOCZ6FbbQNTCe
-X-Received: by 2002:a05:690c:112:b0:618:498f:9dbe with SMTP id
- 00721157ae682-649a06c6660mr16920317b3.10.1719504268794; Thu, 27 Jun 2024
- 09:04:28 -0700 (PDT)
+	s=arc-20240116; t=1719504311; c=relaxed/simple;
+	bh=vYbU5XrYzayikzg8ilGaFgo34fy1Fmk/7IIIIN/2TSo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ttgEJuREzblJKSylMrAqIjIPKhmkow+K8paFtdR1ZxPnnr+/wcQrWzQRDq866HEEA6z+oU4cnZH0I0ywa+PNRD+QsqVuWrAhmVavRFD95i6IoU0UjsQeQJfBI0lvSznOci4PiavxnRpKIXvSrRPWkJRxtUAzef0wklHPjTY8m1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=pb9raDmu; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="pb9raDmu"
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 7E65787C86;
+	Thu, 27 Jun 2024 18:05:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1719504304;
+	bh=EI8n9VHKnUHOFo/BpWoTbJ/7R7Q434MwT6kt2i2MjWI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pb9raDmuwwmxlNJtSUAICUuf3fJbmAP0z+tQHDr3OKraPsedWq7XdDkEbzxx2n200
+	 B/XrxBUkLP2NOp/YQU0+l5Gak5m62prAN2eF+fFy995NVSqxIIJu/uESS/mbZlKdPt
+	 CXtRMz3+uEiB9jVwq1Q9gNN//nwyIpalrMrQEvGxjFEC+xFaR0Kucfhs9SijPCFVqF
+	 i+k0FCIsT0e8wH7em8m/mMKOUK4td2FhL+oc40HdLaNSKizpRf4ClaRj3xViYhH9py
+	 1X5rH8JdLTOwz0VrawR4xwcL3GiGdS/QYvN/UEfPXTqcr4cgJ41Am3/29t9mkMDavH
+	 O/DRTTljjGbog==
+Message-ID: <62322e58-785d-4936-bc80-9858c412621f@denx.de>
+Date: Thu, 27 Jun 2024 17:06:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <bb6b85722d80d665779e3043d1499c4fc38f0ff3.1714562004.git.mirq-linux@rere.qmqm.pl>
- <CAMuHMdUy+e1vQRBUfo2paBJi4pro-tKf9hOe3YaddcB=OtRfJw@mail.gmail.com>
- <ZjOJyGQE1ze2WXh8@qmqm.qmqm.pl> <CAMuHMdWKcxh4TY-4=drdTDegUy_WYHFXm6g7dWaXH_Yh0j+Nvw@mail.gmail.com>
-In-Reply-To: <CAMuHMdWKcxh4TY-4=drdTDegUy_WYHFXm6g7dWaXH_Yh0j+Nvw@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 27 Jun 2024 18:04:16 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXb_qLbZJR7ngNZkOH-XRJ2hYpmnLv3NJp8V5_=tjKS0Q@mail.gmail.com>
-Message-ID: <CAMuHMdXb_qLbZJR7ngNZkOH-XRJ2hYpmnLv3NJp8V5_=tjKS0Q@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: renesas/sh73a0: use rdev_get_drvdata()
-To: =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [net-next,PATCH 1/2] net: stmmac: dwmac-stm32: Add test to verify
+ if ETHCK is used before checking clk rate
+To: Christophe Roullier <christophe.roullier@foss.st.com>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Richard Cochran <richardcochran@gmail.com>, Jose Abreu
+ <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240627084917.327592-1-christophe.roullier@foss.st.com>
+ <20240627084917.327592-2-christophe.roullier@foss.st.com>
+Content-Language: en-US
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <20240627084917.327592-2-christophe.roullier@foss.st.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-On Mon, Jun 24, 2024 at 12:04=E2=80=AFPM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> On Thu, May 2, 2024 at 2:40=E2=80=AFPM Micha=C5=82 Miros=C5=82aw <mirq-li=
-nux@rere.qmqm.pl> wrote:
-> > On Thu, May 02, 2024 at 09:56:39AM +0200, Geert Uytterhoeven wrote:
-> > > On Wed, May 1, 2024 at 1:16=E2=80=AFPM Micha=C5=82 Miros=C5=82aw <mir=
-q-linux@rere.qmqm.pl> wrote:
-> > > > Replace `reg_data` access with the official wrapper. The field is g=
-oing
-> > > > away soon.
-> > >
-> > > Thanks for your patch!
-> > >
-> > > > Reported-by: kernel test robot <lkp@intel.com>
-> > > > Closes: https://lore.kernel.org/oe-kbuild-all/202404301218.URkWO6dj=
--lkp@intel.com/
-> > >
-> > > I am not sure these tags are needed, as the issue is not present in
-> > > any tree yet?
-> > >
-> > > > Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
-> > >
-> > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > >
-> > > Do you want me to pick this up (for v6.11), or do you want to queue
-> > > this with the other patches from the series that removes reg_data?
-> > > Please let me know.
-> > > In case of the latter:
-> > > Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > If you're ok with it going through the regulator tree, then I guess it
-> > would be easier to manage as the series would build without observing
-> > additional dependencies.
->
-> I was wondering how the rest of the series is doing?
->
-> If you want me to queue this for v6.11, the deadline for that is
-> this Friday.
+On 6/27/24 10:49 AM, Christophe Roullier wrote:
+> When we want to use clock from RCC to clock Ethernet PHY (with ETHCK)
+> we need to check if value of clock rate is authorized
 
-I'm just gonna  queue this in renesas-pinctrl for v6.11, as it's good
-to have anyway.
+I think it would be better to add fullstop (.) here , and then continue:
 
-Gr{oetje,eeting}s,
+If ETHCK is unused, the ETHCK frequency is 0 Hz and validation fails. It 
+makes no sense to validate unused ETHCK, so skip the validation.
 
-                        Geert
+> but we must add
+> test before to check if ETHCK is used.
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+With the commit message updated a bit
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Reviewed-by: Marek Vasut <marex@denx.de>
+
+Thanks !
