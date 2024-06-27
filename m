@@ -1,145 +1,105 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F099454918;
-	Thu, 27 Jun 2024 17:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F031865A;
+	Thu, 27 Jun 2024 17:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719509791; cv=none; b=r3HsJ3L91OSyeWcXncd6d+ZzI9aX3JARoVIXTlEsKxcCbEpazMok6I874dp8x5BSl8fBWPL2jz57Qjal2u56rbhjP6Eqnl4wijdDp2zZAPkyvNbqF7BpkDM7dW8+4JDhm54h4yiu6d8nCUw02fxJR3CcV1c3sGvq0ZrNSzw0u9g=
+	t=1719509981; cv=none; b=WjzaAoJk1pFoTblZsCCP0liEDEJX8AmyPAqY8H3fYXt2tWNdyffpXgsV7fasH7Ig0YiEYENJ0YdcugyvKdbAJNsDWGE+YQM5xT09G4jpnVh7ELQKq9TYLYrthKpUPePjvFssLlHJQCJyOXNOHHQrey+NHjvl2D0Yegdb0IFPCWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719509791; c=relaxed/simple;
-	bh=coYaJMIjArGvpQf7g0A/4peXT7vpXorezIIu1Z6s0aI=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=XS6tnIFybSHkkaavXwmU3Z9rDuu9htpeqvpgMXMdBZKb/vGundJPUTRVGTenyzcOQ0NB0Shu/PrXQ82e82fM4Cg626UtQ+8Wmefh1J8dyEHmMnn33XcmuuBqps/HpYWEldERjWyzQ2TNyC9/hAxz+p+0UHpkpVsNFtLsoeMf6co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NzaGOgRJ; arc=none smtp.client-ip=209.85.167.50
+	s=arc-20240116; t=1719509981; c=relaxed/simple;
+	bh=aH1Umnhky55B8t61wZo0gg5wGOk7NzGGWbnnWx0lSoY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LOJZUmisMZCRyGCrVwMA+ZNqdzpkxuknMM4/L68I+dyNs4aVN0Hzrz3qtmKihmdcCrOGsjTO3pSgqI74qXo8Amx7fqGaJneBLBBKFW7R8dU/Nok3CoKe3WWigIc041BM7gLTZIxO7k32aXBQnrXF6CDE5PshVIMbvN5sOsRc4jQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bSC/eHVs; arc=none smtp.client-ip=209.85.161.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NzaGOgRJ"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52cdb0d8107so8349983e87.1;
-        Thu, 27 Jun 2024 10:36:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bSC/eHVs"
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5c2253cb606so975234eaf.2;
+        Thu, 27 Jun 2024 10:39:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719509788; x=1720114588; darn=vger.kernel.org;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3yk4H1RLJJRoCdj5bfi9m2iP6KRHwo3a2/6FIyuZ1rs=;
-        b=NzaGOgRJVp3aMksNUZO8HiGFfQvZDXCYmnH5BJnVkbyXvQmHwEaIcF0ub88hYbLJbM
-         Yx7etLm+EZWotlHV2Ts2HNVnYk1ELr+FlL8AgD6tINpKF2t0bZ6E3XlMS75gT8YEl53F
-         HO4AVtOpDAfDZWmPJdnvCiVqk7sBDG3PWI3kQ9l9hqJdUtLCigxoCF6g6gROvKsIbaeQ
-         k/JoZChOd8fHb34cpm6i+LoGVcpbHPxrALJIpTPvax35i7zgFT37CeHn9YD3zY4xseQk
-         SizVA585SVfC2IK7aZmsbEDnWws7l3FlDgHhQHiNTKbeNipMtXiSKQTDhl62CRdWdxvC
-         Jkjw==
+        d=gmail.com; s=20230601; t=1719509978; x=1720114778; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=s7WOcecaaOZ3rsj+Ub16kvTDYOxYiGT65TR4mfDnqck=;
+        b=bSC/eHVsFdJB11sbmUzd3AZ1I1yU5Hy5Ir7ausBQv8sPgdq0lT9dcMQwaXC1dJs6Gt
+         vkXxWmGj2Uz9XS7WKo0ojY4+LmYILTB6FBuRFfh6JVkGmkyY9yPZYaW5D/y4HU1yPSgq
+         r2wOo+EjhNH6gyDJZQJleXdD1QL1zxQM9T3pF4qSxMC7hzPPWuVwxvNQeqGlSF7Fxkoz
+         8GkDculgxYEd8sKb+cRC0zoL1gy+Ps69zKlyy90YjI1fo/hb5wGOIGGIxM6h2q6qC+JV
+         dczG+aJEsaSZ0X//TkUBnYlzX/EbgRdE1q40DIaWAKsTvxxTB2x7qa2/PIyOswOFA8GH
+         22/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719509788; x=1720114588;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3yk4H1RLJJRoCdj5bfi9m2iP6KRHwo3a2/6FIyuZ1rs=;
-        b=rjv/IwZuyb0HDAjb5sG3N+JH7JRFJ237+qVMCbvvFCJITx8xr3pkCCw+DnBWExQ3Uo
-         O7ssGiQCnCLiLegToqtKfSFw1kFuhx79sURhFoqDoCPp9s8LZ+u41W2L4d4bHUJQ9Kvr
-         RIzpiWUIDVhZtTKHZaJ5a4tkZl8aEW8aJ6SPBsHWX1b2KXlmohk5s5EZCZ8KyZfufJH9
-         a7DysbaPomB72bbGJnY7Sd6L+VVP9tmPr+bzYqV+mzzShpt/DuPxT8kZOt50jQZnDuMB
-         LL75/6kuiPKa+FUHD7T5Z3He7Wox2cN56vQqrWfc12/toGTRh0es06PpP6rqg5UdAu62
-         HL2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVj0WrN8X9fChIZtU6p3GrIdWOYaIKHdz17B/FL/hXTIcY8YbYFa99bkTnFgGyROGMSMEJIrJX/Vh1zsODLlTRnD6OiHXUiMYmUcF4=
-X-Gm-Message-State: AOJu0YztWFF4vmri5CmvlOl3CTROdrhLQ3pJXJTwv5RonYkAtOPYlBch
-	IP5iFCMfNHZhSQi6d4xX9jxAdaiiGH9bc/mIbEkBSGCPYM/7NLmIzgagWQ==
-X-Google-Smtp-Source: AGHT+IFD6a/P2HZh8/mK6o8zcolkgZvVGoo6nIFU70BTOQq/I5nXvKizgLOvUa/6DxvCFFFkIGrfdw==
-X-Received: by 2002:a19:384b:0:b0:52b:c1cc:51f1 with SMTP id 2adb3069b0e04-52cdf7f10ddmr10035006e87.23.1719509785473;
-        Thu, 27 Jun 2024 10:36:25 -0700 (PDT)
-Received: from [192.168.178.20] (dh207-41-166.xnet.hr. [88.207.41.166])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a729d6fdfc5sm80206166b.10.2024.06.27.10.36.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Jun 2024 10:36:25 -0700 (PDT)
-Message-ID: <76d879d2-200d-4b15-8fab-fcd382a4c3e2@gmail.com>
-Date: Thu, 27 Jun 2024 19:36:23 +0200
+        d=1e100.net; s=20230601; t=1719509978; x=1720114778;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s7WOcecaaOZ3rsj+Ub16kvTDYOxYiGT65TR4mfDnqck=;
+        b=nKw9E/dn1OWoxY6k1qennFLzr9lpR7bFQf85yr6FdTRI5P6b54XYuljyp86hhzqQVE
+         XlKc7aMSLPfuJb34mZy8F4MhtnI0EEdYYTI0MVqaRVpN3impg03EERscwWUElPcOTP7x
+         NDAcTtr0wEDT3csFaaXLQy6VlPwM+qZkZbTu2k1QJHqfuoPSh2D01qebHR8DtCr7CiaN
+         EmJOU20Yf82q0oDvi5wCZ/ryzQGwTTzw+74GVqtm4VR4nqujFXdMv8FBldHlRVf3TmRk
+         gZoop6b0pmFSKdADf6PnPohR0Bvr132X6r2C8+CMCJ864CfACUFAzYBu8A5H1tM5Cin5
+         eDlA==
+X-Forwarded-Encrypted: i=1; AJvYcCWtX8PqXxEICJlX62BLHaB460//ZEEttXjImMIE4ZSI1AHhbXTHZXdcCHuHPnRWAxS3QShjtjRkM+rJq6hL1UNaKBFJkGcc8+7IgsGMBZ0KecUfvNsWLe4S+a8i0Qa8wEpHIcPCS/yTT332YTui7Y1CJGL+gO8Ph467WhYnOkn/X4GCUq8WMgcnr+2PDz9BFZm7+6t9AIfAqawMN5kcPn+CH9UydTlFP2CW5YL7VLgC2ug4BwWgiulRXQ==
+X-Gm-Message-State: AOJu0YzrkQaYur3hAaF271Dm6HFgdTyYvtctYS0NWJ+mGQQYoNwTX0dl
+	jUL34SjItvQpSK5+zUhl1W3+YE6oBUSYENLyG2eIqTHElZzAsnhP
+X-Google-Smtp-Source: AGHT+IEGlLzYhJ39db3MWWvG5uOUIm3HV5EiLIKlEss/+fCmWIiT934iZZ4Ky2YFWCnOMl3U2dQAzw==
+X-Received: by 2002:a05:6358:9211:b0:1a6:7c93:963c with SMTP id e5c5f4694b2df-1a67c93ac03mr215407955d.14.1719509978504;
+        Thu, 27 Jun 2024 10:39:38 -0700 (PDT)
+Received: from localhost ([2804:30c:96b:f700:cc1d:c0ae:96c9:c934])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-72749854a9fsm1314642a12.92.2024.06.27.10.39.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jun 2024 10:39:37 -0700 (PDT)
+Date: Thu, 27 Jun 2024 14:41:05 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>,
+	Marcelo Schmitt <marcelo.schmitt@analog.com>, lars@metafoo.de,
+	Michael.Hennerich@analog.com, jic23@kernel.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	nuno.sa@analog.com, corbet@lwn.net, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/7] spi: Enable controllers to extend the SPI
+ protocol with MOSI idle configuration
+Message-ID: <Zn2kMVDn5k1OFogA@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1719351923.git.marcelo.schmitt@analog.com>
+ <add14694c64b574af742a5dcd5c9461e0ef5210a.1719351923.git.marcelo.schmitt@analog.com>
+ <1d2cde40-ad55-4136-bc72-3d71515f7023@baylibre.com>
+ <7ed7f957-3e07-42ce-894a-f3f9dcf512ea@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc: Linux Kernel Build System <linux-kbuild@vger.kernel.org>,
- Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
- David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
-From: Mirsad Todorovac <mtodorovac69@gmail.com>
-Subject: =?UTF-8?Q?=5BPROBLEM=5D_make_randconfig=3A_fs/btrfs/ref-verify=2Ec?=
- =?UTF-8?B?OjUwMDoxNjogZXJyb3I6IOKAmHJldOKAmSBtYXkgYmUgdXNlZCB1bmluaXRpYWxp?=
- =?UTF-8?Q?zed_in_this_function_=5B-Werror=3Dmaybe-uninitialized=5D?=
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7ed7f957-3e07-42ce-894a-f3f9dcf512ea@sirena.org.uk>
 
-Hi all,
+On 06/26, Mark Brown wrote:
+> On Wed, Jun 26, 2024 at 09:57:32AM -0500, David Lechner wrote:
+> > On 6/25/24 4:53 PM, Marcelo Schmitt wrote:
+> 
+> > > +#define SPI_CONTROLLER_MOSI_IDLE_LOW    BIT(8)  /* Can idle MOSI low */
+> > > +#define SPI_CONTROLLER_MOSI_IDLE_HIGH   BIT(9)  /* Can idle MOSI high */
+> 
+> > These two flags above are still not used anywhere and are redundant with
+> > the SPI_MOSI_IDLE_LOW/HIGH flags below so I don't think we should be adding
+> > these.
+> 
+> Yes.
 
-After following Boris' advice in https://lore.kernel.org/lkml/20240404134142.GCZg6uFh_ZSzUFLChd@fat_crate.local/
-on using the randconfig test, this is the second catch:
+Oops, my bad. Removed them now for v6.
 
-KCONFIG_SEED=0xEE80059C
-
-marvin@defiant:~/linux/kernel/linux_torvalds$ time nice make -j 36 bindeb-pkg |& tee ../err-6.10-rc5-05a.log; date
-  GEN     debian
-dpkg-buildpackage --build=binary --no-pre-clean --unsigned-changes -R'make -f debian/rules' -j1 -a$(cat debian/arch)
-dpkg-buildpackage: info: source package linux-upstream
-dpkg-buildpackage: info: source version 6.10.0-rc5-gafcd48134c58-27
-dpkg-buildpackage: info: source distribution jammy
-dpkg-buildpackage: info: source changed by marvin <marvin@defiant>
-dpkg-architecture: warning: specified GNU system type i686-linux-gnu does not match CC system type x86_64-linux-gnu, try setting a correct CC environment variable
- dpkg-source --before-build .
-dpkg-buildpackage: info: host architecture i386
- make -f debian/rules binary
-#
-# No change to .config
-#
-  CALL    scripts/checksyscalls.sh
-  UPD     init/utsversion-tmp.h
-  CC      init/version.o
-  AR      init/built-in.a
-  CHK     kernel/kheaders_data.tar.xz
-  CC [M]  fs/btrfs/ref-verify.o
-  AR      fs/built-in.a
-fs/btrfs/ref-verify.c: In function ‘process_extent_item.isra’:
-fs/btrfs/ref-verify.c:500:16: error: ‘ret’ may be used uninitialized in this function [-Werror=maybe-uninitialized]
-  500 |         return ret;
-      |                ^~~
-cc1: all warnings being treated as errors
-make[7]: *** [scripts/Makefile.build:244: fs/btrfs/ref-verify.o] Error 1
-make[6]: *** [scripts/Makefile.build:485: fs/btrfs] Error 2
-make[5]: *** [scripts/Makefile.build:485: fs] Error 2
-make[4]: *** [Makefile:1934: .] Error 2
-make[3]: *** [debian/rules:74: build-arch] Error 2
-dpkg-buildpackage: error: make -f debian/rules binary subprocess returned exit status 2
-make[2]: *** [scripts/Makefile.package:121: bindeb-pkg] Error 2
-make[1]: *** [/home/marvin/linux/kernel/linux_torvalds/Makefile:1555: bindeb-pkg] Error 2
-make: *** [Makefile:240: __sub-make] Error 2
-
-real	0m2.583s
-user	0m9.943s
-sys	0m5.607s
-Thu Jun 27 19:14:55 CEST 2024
-marvin@defiant:~/linux/kernel/linux_torvalds$ 
-
-This fix does nothing to the algorithm, but it silences compiler -Werror=maybe-uninitialised
-
----
-diff --git a/fs/btrfs/ref-verify.c b/fs/btrfs/ref-verify.c
-index cf531255ab76..0b5ff30e2d81 100644
---- a/fs/btrfs/ref-verify.c
-+++ b/fs/btrfs/ref-verify.c
-@@ -459,6 +459,8 @@ static int process_extent_item(struct btrfs_fs_info *fs_info,
-                iref = (struct btrfs_extent_inline_ref *)(ei + 1);
-        }
- 
-+       ret = -EINVAL;
-+
-        ptr = (unsigned long)iref;
-        end = (unsigned long)ei + item_size;
-        while (ptr < end) {
----
-
-Hope this helps.
-
-Best regards,
-Mirsad Todorovac
+> 
+> > Also, what is the plan for adding these flags to other SPI controllers. For
+> > example, the IMX controller in [1] sounds like it should also support 
+> > SPI_MOSI_IDLE_HIGH. And your comments on an earlier version of this series
+> > made it sound like Raspberry Pi is always SPI_MOSI_IDLE_LOW, so should
+> > have that flag.
+> 
+> I don't think we need a specific plan there, obviously it'd be nice for
+> people to go through and enable but it's also fine to just leave this
+> for someone who needs the support to implement.
