@@ -1,57 +1,57 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9541A2FCE;
-	Thu, 27 Jun 2024 17:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866BE1A38D8;
+	Thu, 27 Jun 2024 17:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719509619; cv=none; b=VwMGsFyNdp/RCk6aSdxX+kpTzMyG5fIToRV2Y/acR/Hc+j16h6Xep0FJ+QRfe8w++qZAq76yWhd/ipfX932A4LGmp/KIJqUbaI3yoanuud2fDlq9CBHtiK4ixcfPWIKWTmqbrQ9eG9ASJomc3/9vIEVys+ANDHNbYgT5J8EbF4k=
+	t=1719509623; cv=none; b=QFOdqRknHYNOk1KykNuA1P9Bgf0HohfMaiX748eqQWnbbOFB7jtvNrPUw4J+Ec/8GiO6icsiWnbYL63k0gOIZ6X5IirOuEbZfkj2VWkHsnYWqEExsj4TqTwrSE7wIicMOVjSt5yVxoh9JiNxNs/3u3SeBhPi7ewjHp2m9Kmn/ME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719509619; c=relaxed/simple;
-	bh=u+PmNdptXMwR5KPv1GAroKgDqv5Lz1l/qDx4/H6Axe0=;
+	s=arc-20240116; t=1719509623; c=relaxed/simple;
+	bh=Hd2s8AfFE3wQZiYOSzA+dYngteQN7ky9F88W/G67Eps=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fHEfVWHbO2B/+FkJMH9vdvEOOVRUhFlawWGtghhnaxKxKBDStze6D0bWUMYqmHWe22UNc7KFHILi6yuKJr8YHsSWon9/TnHRPh29Qy/VVZXNuSkpnb/BFYK+snHXrbGdTJd1mhT09pV9/bqnw6iNlfMuFisQNF7oJSMWSd0Awyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aUQp5YUz; arc=none smtp.client-ip=209.85.167.42
+	 MIME-Version; b=BWgoKpdZ73LH8gpmRry7wReiKPP6uAzD3R1pnznv5u7mDOL71AXyhK7dFdM5TMwW9GOAtJC9KOstE3hmzJNQtL0ebgAmbPhVdL5HPpSeahbZfeHnTRpLRDQd3cd6BE9pXUDCUl5NWQ9qNAWzlmJZSuwQ+zT1bq8FFyHVryMZKCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hffL7pJN; arc=none smtp.client-ip=209.85.208.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aUQp5YUz"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52cdb0d8107so8346198e87.1;
-        Thu, 27 Jun 2024 10:33:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hffL7pJN"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2ee4ae13aabso10273621fa.2;
+        Thu, 27 Jun 2024 10:33:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719509616; x=1720114416; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719509620; x=1720114420; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TZa91h6JHbvpzFhbsgcXRu/FV0fHLPTukVYlit5Rupc=;
-        b=aUQp5YUzvlnzQy3jRdUaCPJG20siHZp69o5h/GsI9DY8KUPUVofIvcYVUw2K1Hl7Cc
-         6HwQxHuZnTO0d8TF3ONVlqfoiV4rEYYGSX5dPYWUQe4vaGxrP7/ejPOA4L5RDqfguXzM
-         DOFYNSjPq7xERIZSnxEL0IwCm5ho1Zrdzldz0oiA0iMm70u9TjbP4fXzpueglKJpEz8/
-         EbgfWasMrTBeEkdypUpTk94JXtEYUQ7stSj9I9ZxvXJiupHMPGlJAZJkQJApoHkjCCbw
-         9wXWhBEwhpGqKaUIz5Rs3vpDUdOLUucEbzzknDvixz2PG3Z1A2iHvM15Z7rjzKQQyaGi
-         ezVA==
+        bh=XFceC9k/SWGjg8dRwo2cAnXd0jTuMUdobUgZvaDcYQg=;
+        b=hffL7pJNPRxMuezCuT3IGVvLEjKuPFjOL9JOVp5OxxBFDBkK/Bi0CiUYkZj355L2oK
+         4x0X5mFMp2Oo2leWvDD7QbNL33qmGp5jLhh+uvjmJYK6gwj0X1lc4xN+WvoRzqXgHksk
+         I/dn2uDT/g/aK98s1zBZwJXFml0rTLfqhU1dLqxE78D+glZjn7Qq3UhjDVpwJCjiqjxY
+         IQyX7Onw32TraRg9i/hpEPDGh+5mrxe8LPVfOlXyXglGvR6FE3+N4KD35UNyHJrGuHpu
+         s//hdN1YbqdpqwFd6mFUhQEuqP4H51UgNJYrOWxMTjjeLzNgZ1dZams3fhNg21tcaRxo
+         85UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719509616; x=1720114416;
+        d=1e100.net; s=20230601; t=1719509620; x=1720114420;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TZa91h6JHbvpzFhbsgcXRu/FV0fHLPTukVYlit5Rupc=;
-        b=sUhLkuzmRIrJxq9mVFUQ5Qmeld7tKA3oAyW/zUJzuiuZA4LnQlnkY9BHRjijslj3T5
-         5ybAKTZ+PlGVTskMfzDqt7FXlQbBQuZzK01iZ3JM/qtjf2Kb0vqLRU32ErDABBNNeM1c
-         tx6/iOoeva2SM9/qgfzv59o2PJLLn2dvgUwuSAYbKDC0p5NEUzt/NHdA+1Jmh7Zz7HlJ
-         HP0F5DORnHidJcM340Z8vi2gXqCA8gFpoh7Q7GclNsu2LVVjzaG1kd1WTP5ykW2YICxo
-         ih+0wYQISGXfkUjIvFqL1mDU386gWLJ1RqtMjZRP79AuArTB3Fp09B1OCMx7WDUS9CE0
-         +ktA==
-X-Forwarded-Encrypted: i=1; AJvYcCWTWwE1du8NUBdj5k3gNpy9d/dxU9sUfrnuhxlnAJ820hPaUl8SR70eoNGxyjPqE6LCiTLPxU93Wi0raLuXuHfhQMjF6q779kC1xXh74VkDOhaCMMbrWXRsmL6pIQno5fplMpu40phYkA==
-X-Gm-Message-State: AOJu0YyRJbL8bG/6xj+EVW/J/iYgqFfL9GmqHGNvGGLW7V5dphnX+r5Y
-	U49z+l1q4p3bwtArsJK0CLR1EWmTI0eOBFVBpr1AGk2DxL2R7Qw4DbNTwgNI
-X-Google-Smtp-Source: AGHT+IFQPd2z7z8/jzojDMq3jNKV/pXbP52IPlrBLwBzxdJ/4vsV6ETxbhRdstJb5WoQAIqbExN8+A==
-X-Received: by 2002:a05:6512:1590:b0:52e:7a2c:96ee with SMTP id 2adb3069b0e04-52e7a2c987amr207372e87.34.1719509613733;
-        Thu, 27 Jun 2024 10:33:33 -0700 (PDT)
+        bh=XFceC9k/SWGjg8dRwo2cAnXd0jTuMUdobUgZvaDcYQg=;
+        b=YXN9fEkjDhH0ZbXy1cabzOf9eKM812vDxkHdrCGArwcdKx6ogg27J8vRwfUJk6VVvo
+         DIPwcAenslLca/1e+QwjXwJtTEkTVU6cLx9k57OPSvJzfmDmcSjAHlJHsWJbcjE9x1DK
+         SSLge4q0VHD37safgt/ea9Gcl/tL463xDfbTVMKH9oJ15Ns5UFbRQLikHGm21fIxDaDO
+         tGjdov/tqaGNWw+y2kPL4enIvf0zRAeDBrdpwUj+oG1oa6b3IQ9S6AlsMa2uRfqzewGp
+         25jzioGuPxsoGwLlilm3VbpQqTrMr5/cJJTGIGmSb//VoSSpkjNaQHkZ38awQ8sHq8kd
+         7URg==
+X-Forwarded-Encrypted: i=1; AJvYcCVmn/a/R5NjopjI2b8CPLZLNTVvk7sTARGn6q9CLliqkChCNUEH9ozKlegebiDkAIQDC3CEDneUfbYw+4lK0A6JPS/uGarfESJlP4NM1UJmllHmP9g1EP0w+D4y3EIWtuFt8GdGCD0xeg==
+X-Gm-Message-State: AOJu0Yx0ffsM5KyLJqKazy2jjuf5gfur7b37ln8f7t9g2dfX4eTUx6Yg
+	BKCq2o3LUrfNmw64yV5FNlJORnittufsEMNwVYHyJydq3e+ywqGMFXypeM9d
+X-Google-Smtp-Source: AGHT+IFDX5ETi+NTfq/h1mbPkNcDWWzhjBhCGxB0z8L1mTvHRy3oXTej0hr9XE8A3FPo5759/awYPw==
+X-Received: by 2002:a2e:9ed7:0:b0:2ec:58e8:d7a6 with SMTP id 38308e7fff4ca-2ec5b36b765mr82400631fa.5.1719509619654;
+        Thu, 27 Jun 2024 10:33:39 -0700 (PDT)
 Received: from localhost ([213.79.110.82])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52e7ab0bbf0sm1339e87.25.2024.06.27.10.33.33
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ee4a4bf66fsm3176561fa.128.2024.06.27.10.33.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 10:33:33 -0700 (PDT)
+        Thu, 27 Jun 2024 10:33:39 -0700 (PDT)
 From: Serge Semin <fancer.lancer@gmail.com>
 To: Michal Simek <michal.simek@amd.com>,
 	Alexander Stein <alexander.stein@ew.tq-group.com>,
@@ -69,9 +69,9 @@ Cc: Serge Semin <fancer.lancer@gmail.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-edac@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND v6 16/18] EDAC/synopsys: Unify CSRs macro declarations
-Date: Thu, 27 Jun 2024 20:32:23 +0300
-Message-ID: <20240627173251.25718-17-fancer.lancer@gmail.com>
+Subject: [PATCH RESEND v6 18/18] EDAC/synopsys: Convert to using BIT/GENMASK/FIELD_x macros
+Date: Thu, 27 Jun 2024 20:32:25 +0300
+Message-ID: <20240627173251.25718-19-fancer.lancer@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240627173251.25718-1-fancer.lancer@gmail.com>
 References: <20240627173251.25718-1-fancer.lancer@gmail.com>
@@ -83,307 +83,266 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Originally the device CSR macros were supposed to be defined following the
-next local convention: first CSR offsets are listed, then their fields and
-flags are described in the same order; CSRs offset macros are supposed to
-have _OFST suffix; ECC-related macros shall have ECC_ prefix, generic
-DDR-related macros - DDR_ prefix. After all the years the driver has been
-living in kernel the CSRs macros have turned to be partly deviated away
-from the denoted convention.
-
-Fix all the related inconsistencies: move several CSRs offset macros to be
-defined before the CSRs fields and flags macros; replace OFFSET suffix
-with OFST; replace DDRC_ prefix with DDR_ and ECC_ with DDR_ where it's
-appropriate; group DDR_MSTR and ECC_CTRL (ECC_CLR) sibling fields macros
-together and make sure their prefixes match to the CSRs offset macros. In
-addition to that drop _MASK suffix from the macros which aren't used as
-masks and add ZYNQMP_ prefix to the ZYNQMP-specific macros to distinguish
-them from the generic Synopsys memory controller macros.
+Instead of using the very handy helpers denoted in the subject the driver
+has been created with the open-coded {mask,shift} statements. It makes the
+code bulky, prone to mistakes and much harder to read. Seeing there are
+many places in the driver implementing the CSR fields get/set pattern use
+the FIELD_GET()/FIELD_PREP() macros introduced in the kernel specifically
+for that case. In addition use the BIT() and GENMASK() macros to generate
+the CSR flags/masks. While at it unify the row, column, rank, bank and
+bank group macros names to be having a suffix similar to the
+snps_ecc_error_info structure fields name.
 
 Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-
 ---
-
-Changelog v4:
-- This is a new patch collected from the rest of the series to simplify
-  the review process.
----
- drivers/edac/synopsys_edac.c | 134 +++++++++++++++++------------------
- 1 file changed, 66 insertions(+), 68 deletions(-)
+ drivers/edac/synopsys_edac.c | 137 +++++++++++++++++------------------
+ 1 file changed, 67 insertions(+), 70 deletions(-)
 
 diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-index 8ed942735e23..6d2fc8a53447 100644
+index a17d1a2bf388..8c233cd8bf8f 100644
 --- a/drivers/edac/synopsys_edac.c
 +++ b/drivers/edac/synopsys_edac.c
-@@ -77,20 +77,34 @@
- #define ECC_POISON0_OFST		0xB8
- #define ECC_POISON1_OFST		0xBC
+@@ -6,6 +6,8 @@
+  * Copyright (C) 2012 - 2014 Xilinx, Inc.
+  */
  
--#define ECC_ADDRMAP0_OFFSET		0x200
--
--/* Control register bitfield definitions */
--#define ECC_CTRL_CLR_CE_ERR		BIT(0)
--#define ECC_CTRL_CLR_UE_ERR		BIT(1)
--#define ECC_CTRL_CLR_CE_ERRCNT		BIT(2)
--#define ECC_CTRL_CLR_UE_ERRCNT		BIT(3)
--
--/* DDR Control Register width definitions  */
-+/* DDR Address Map Registers */
-+#define DDR_ADDRMAP0_OFST		0x200
-+
-+/* DDR Software Control Register */
-+#define DDR_SWCTL			0x320
-+
-+/* ZynqMP DDR QOS Registers */
-+#define ZYNQMP_DDR_QOS_IRQ_STAT_OFST	0x20200
-+#define ZYNQMP_DDR_QOS_IRQ_EN_OFST	0x20208
-+#define ZYNQMP_DDR_QOS_IRQ_DB_OFST	0x2020C
-+
-+/* DDR Master register definitions */
-+#define DDR_MSTR_DEV_CFG_MASK		0xC0000000
-+#define DDR_MSTR_DEV_CFG_SHIFT		30
-+#define DDR_MSTR_DEV_X4			0
-+#define DDR_MSTR_DEV_X8			1
-+#define DDR_MSTR_DEV_X16		2
-+#define DDR_MSTR_DEV_X32		3
- #define DDR_MSTR_BUSWIDTH_MASK		0x3000
- #define DDR_MSTR_BUSWIDTH_SHIFT		12
--#define DDRCTL_EWDTH_16			2
--#define DDRCTL_EWDTH_32			1
--#define DDRCTL_EWDTH_64			0
-+#define DDR_MSTR_BUSWIDTH_16		2
-+#define DDR_MSTR_BUSWIDTH_32		1
-+#define DDR_MSTR_BUSWIDTH_64		0
-+#define DDR_MSTR_MEM_LPDDR4		0x20
-+#define DDR_MSTR_MEM_DDR4		0x10
-+#define DDR_MSTR_MEM_LPDDR3		0x8
-+#define DDR_MSTR_MEM_DDR2		0x4
-+#define DDR_MSTR_MEM_DDR3		0x1
++#include <linux/bitfield.h>
++#include <linux/bits.h>
+ #include <linux/edac.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+@@ -89,33 +91,29 @@
+ #define ZYNQMP_DDR_QOS_IRQ_DB_OFST	0x2020C
+ 
+ /* DDR Master register definitions */
+-#define DDR_MSTR_DEV_CFG_MASK		0xC0000000
+-#define DDR_MSTR_DEV_CFG_SHIFT		30
++#define DDR_MSTR_DEV_CFG_MASK		GENMASK(31, 30)
+ #define DDR_MSTR_DEV_X4			0
+ #define DDR_MSTR_DEV_X8			1
+ #define DDR_MSTR_DEV_X16		2
+ #define DDR_MSTR_DEV_X32		3
+-#define DDR_MSTR_BUSWIDTH_MASK		0x3000
+-#define DDR_MSTR_BUSWIDTH_SHIFT		12
++#define DDR_MSTR_BUSWIDTH_MASK		GENMASK(13, 12)
+ #define DDR_MSTR_BUSWIDTH_16		2
+ #define DDR_MSTR_BUSWIDTH_32		1
+ #define DDR_MSTR_BUSWIDTH_64		0
+-#define DDR_MSTR_MEM_LPDDR4		0x20
+-#define DDR_MSTR_MEM_DDR4		0x10
+-#define DDR_MSTR_MEM_LPDDR3		0x8
+-#define DDR_MSTR_MEM_DDR2		0x4
+-#define DDR_MSTR_MEM_DDR3		0x1
++#define DDR_MSTR_MEM_LPDDR4		BIT(5)
++#define DDR_MSTR_MEM_DDR4		BIT(4)
++#define DDR_MSTR_MEM_LPDDR3		BIT(3)
++#define DDR_MSTR_MEM_DDR2		BIT(2)
++#define DDR_MSTR_MEM_DDR3		BIT(0)
  
  /* ECC CFG0 register definitions */
- #define ECC_CFG0_MODE_MASK		0x7
-@@ -103,23 +117,19 @@
- #define ECC_STAT_CECNT_SHIFT		8
- #define ECC_STAT_BITNUM_MASK		0x7F
+-#define ECC_CFG0_MODE_MASK		0x7
++#define ECC_CFG0_MODE_MASK		GENMASK(2, 0)
+ #define ECC_CFG0_MODE_SECDED		0x4
  
-+/* ECC control/clear register definitions */
-+#define ECC_CTRL_CLR_CE_ERR		BIT(0)
-+#define ECC_CTRL_CLR_UE_ERR		BIT(1)
-+#define ECC_CTRL_CLR_CE_ERRCNT		BIT(2)
-+#define ECC_CTRL_CLR_UE_ERRCNT		BIT(3)
-+#define ECC_CTRL_EN_CE_IRQ		BIT(8)
-+#define ECC_CTRL_EN_UE_IRQ		BIT(9)
-+
+ /* ECC status register definitions */
+-#define ECC_STAT_UECNT_MASK		0xF0000
+-#define ECC_STAT_UECNT_SHIFT		16
+-#define ECC_STAT_CECNT_MASK		0xF00
+-#define ECC_STAT_CECNT_SHIFT		8
+-#define ECC_STAT_BITNUM_MASK		0x7F
++#define ECC_STAT_UE_MASK		GENMASK(23, 16)
++#define ECC_STAT_CE_MASK		GENMASK(15, 8)
++#define ECC_STAT_BITNUM_MASK		GENMASK(6, 0)
+ 
+ /* ECC control/clear register definitions */
+ #define ECC_CTRL_CLR_CE_ERR		BIT(0)
+@@ -126,34 +124,26 @@
+ #define ECC_CTRL_EN_UE_IRQ		BIT(9)
+ 
  /* ECC error count register definitions */
- #define ECC_ERRCNT_UECNT_MASK		0xFFFF0000
- #define ECC_ERRCNT_UECNT_SHIFT		16
- #define ECC_ERRCNT_CECNT_MASK		0xFFFF
+-#define ECC_ERRCNT_UECNT_MASK		0xFFFF0000
+-#define ECC_ERRCNT_UECNT_SHIFT		16
+-#define ECC_ERRCNT_CECNT_MASK		0xFFFF
+-
+-/* ECC Corrected Error Register Mask and Shifts*/
+-#define ECC_CEADDR0_RW_MASK		0x3FFFF
+-#define ECC_CEADDR0_RNK_MASK		BIT(24)
+-#define ECC_CEADDR1_BNKGRP_MASK		0x3000000
+-#define ECC_CEADDR1_BNKNR_MASK		0x70000
+-#define ECC_CEADDR1_COL_MASK		0xFFF
+-#define ECC_CEADDR1_BNKGRP_SHIFT	24
+-#define ECC_CEADDR1_BNKNR_SHIFT		16
+-
+-/* ECC Poison register shifts */
+-#define ECC_POISON0_RANK_SHIFT		24
+-#define ECC_POISON0_RANK_MASK		BIT(24)
+-#define ECC_POISON0_COLUMN_SHIFT	0
+-#define ECC_POISON0_COLUMN_MASK		0xFFF
+-#define ECC_POISON1_BG_SHIFT		28
+-#define ECC_POISON1_BG_MASK		0x30000000
+-#define ECC_POISON1_BANKNR_SHIFT	24
+-#define ECC_POISON1_BANKNR_MASK		0x7000000
+-#define ECC_POISON1_ROW_SHIFT		0
+-#define ECC_POISON1_ROW_MASK		0x3FFFF
++#define ECC_ERRCNT_UECNT_MASK		GENMASK(31, 16)
++#define ECC_ERRCNT_CECNT_MASK		GENMASK(15, 0)
++
++/* ECC Corrected Error register definitions */
++#define ECC_CEADDR0_RANK_MASK		GENMASK(27, 24)
++#define ECC_CEADDR0_ROW_MASK		GENMASK(17, 0)
++#define ECC_CEADDR1_BANKGRP_MASK	GENMASK(25, 24)
++#define ECC_CEADDR1_BANK_MASK		GENMASK(23, 16)
++#define ECC_CEADDR1_COL_MASK		GENMASK(11, 0)
++
++/* ECC Poison register definitions */
++#define ECC_POISON0_RANK_MASK		GENMASK(27, 24)
++#define ECC_POISON0_COL_MASK		GENMASK(11, 0)
++#define ECC_POISON1_BANKGRP_MASK	GENMASK(29, 28)
++#define ECC_POISON1_BANK_MASK		GENMASK(26, 24)
++#define ECC_POISON1_ROW_MASK		GENMASK(17, 0)
  
--/* DDR QOS Interrupt register definitions */
--#define DDR_QOS_IRQ_STAT_OFST		0x20200
--#define DDR_QOSUE_MASK			0x4
--#define	DDR_QOSCE_MASK			0x2
--#define	ECC_CE_UE_INTR_MASK		0x6
--#define DDR_QOS_IRQ_EN_OFST		0x20208
--#define DDR_QOS_IRQ_DB_OFST		0x2020C
--
--/* DDR QOS Interrupt register definitions */
--#define DDR_UE_MASK			BIT(9)
--#define DDR_CE_MASK			BIT(8)
--
- /* ECC Corrected Error Register Mask and Shifts*/
- #define ECC_CEADDR0_RW_MASK		0x3FFFF
- #define ECC_CEADDR0_RNK_MASK		BIT(24)
-@@ -141,28 +151,11 @@
- #define ECC_POISON1_ROW_SHIFT		0
- #define ECC_POISON1_ROW_MASK		0x3FFFF
- 
--/* DDR Memory type defines */
--#define MEM_TYPE_DDR3			0x1
--#define MEM_TYPE_LPDDR3			0x8
--#define MEM_TYPE_DDR2			0x4
--#define MEM_TYPE_DDR4			0x10
--#define MEM_TYPE_LPDDR4			0x20
--
--/* DDRC Software control register */
--#define DDRC_SWCTL			0x320
--
  /* DDRC ECC CE & UE poison mask */
- #define ECC_CEPOISON_MASK		0x3
- #define ECC_UEPOISON_MASK		0x1
+-#define ECC_CEPOISON_MASK		0x3
+-#define ECC_UEPOISON_MASK		0x1
++#define ECC_CEPOISON_MASK		GENMASK(1, 0)
++#define ECC_UEPOISON_MASK		BIT(0)
  
--/* DDRC Device config masks */
--#define DDRC_MSTR_CFG_MASK		0xC0000000
--#define DDRC_MSTR_CFG_SHIFT		30
--#define DDRC_MSTR_CFG_X4_MASK		0x0
--#define DDRC_MSTR_CFG_X8_MASK		0x1
--#define DDRC_MSTR_CFG_X16_MASK		0x2
--#define DDRC_MSTR_CFG_X32_MASK		0x3
--
-+/* DDRC Device config shifts/masks */
+ /* DDRC Device config shifts/masks */
  #define DDR_MAX_ROW_SHIFT		18
- #define DDR_MAX_COL_SHIFT		14
- #define DDR_MAX_BANK_SHIFT		3
-@@ -215,6 +208,11 @@
- 
+@@ -209,9 +199,9 @@
  #define RANK_B0_BASE			6
  
-+/* ZynqMP DDR QOS Interrupt register definitions */
-+#define ZYNQMP_DDR_QOS_UE_MASK		0x4
-+#define ZYNQMP_DDR_QOS_CE_MASK		0x2
-+#define ZYNQMP_DDR_QOS_IRQ_MASK		0x6
-+
+ /* ZynqMP DDR QOS Interrupt register definitions */
+-#define ZYNQMP_DDR_QOS_UE_MASK		0x4
+-#define ZYNQMP_DDR_QOS_CE_MASK		0x2
+-#define ZYNQMP_DDR_QOS_IRQ_MASK		0x6
++#define ZYNQMP_DDR_QOS_UE_MASK		BIT(2)
++#define ZYNQMP_DDR_QOS_CE_MASK		BIT(1)
++#define ZYNQMP_DDR_QOS_IRQ_MASK		(ZYNQMP_DDR_QOS_UE_MASK | ZYNQMP_DDR_QOS_CE_MASK)
+ 
  /**
-  * struct ecc_error_info - ECC error log information.
-  * @row:	Row number.
-@@ -397,8 +395,8 @@ static void enable_intr(struct synps_edac_priv *priv)
+  * struct snps_ecc_error_info - ECC error log information.
+@@ -303,38 +293,40 @@ static int snps_get_error_info(struct snps_edac_priv *priv)
+ 	if (!regval)
+ 		return 1;
  
- 	/* Enable UE/CE Interrupts */
- 	if (priv->p_data->quirks & SYNPS_ZYNQMP_IRQ_REGS) {
--		writel(DDR_QOSUE_MASK | DDR_QOSCE_MASK,
--		       priv->baseaddr + DDR_QOS_IRQ_EN_OFST);
-+		writel(ZYNQMP_DDR_QOS_UE_MASK | ZYNQMP_DDR_QOS_CE_MASK,
-+		       priv->baseaddr + ZYNQMP_DDR_QOS_IRQ_EN_OFST);
+-	p->ceinfo.bitpos = (regval & ECC_STAT_BITNUM_MASK);
++	p->ceinfo.bitpos = FIELD_GET(ECC_STAT_BITNUM_MASK, regval);
  
- 		return;
- 	}
-@@ -409,7 +407,7 @@ static void enable_intr(struct synps_edac_priv *priv)
- 	 * IRQs Enable/Disable flags have been available since v3.10a.
- 	 * This is noop for the older controllers.
- 	 */
--	writel(DDR_UE_MASK | DDR_CE_MASK,
-+	writel(ECC_CTRL_EN_CE_IRQ | ECC_CTRL_EN_UE_IRQ,
- 	       priv->baseaddr + ECC_CLR_OFST);
+ 	regval = readl(base + ECC_ERRCNT_OFST);
+-	p->ce_cnt = regval & ECC_ERRCNT_CECNT_MASK;
+-	p->ue_cnt = (regval & ECC_ERRCNT_UECNT_MASK) >> ECC_ERRCNT_UECNT_SHIFT;
++	p->ce_cnt = FIELD_GET(ECC_ERRCNT_CECNT_MASK, regval);
++	p->ue_cnt = FIELD_GET(ECC_ERRCNT_UECNT_MASK, regval);
+ 	if (!p->ce_cnt)
+ 		goto ue_err;
  
- 	spin_unlock_irqrestore(&priv->reglock, flags);
-@@ -421,8 +419,8 @@ static void disable_intr(struct synps_edac_priv *priv)
+ 	regval = readl(base + ECC_CEADDR0_OFST);
+-	p->ceinfo.row = (regval & ECC_CEADDR0_RW_MASK);
++	p->ceinfo.row = FIELD_GET(ECC_CEADDR0_ROW_MASK, regval);
++
+ 	regval = readl(base + ECC_CEADDR1_OFST);
+-	p->ceinfo.bank = (regval & ECC_CEADDR1_BNKNR_MASK) >>
+-					ECC_CEADDR1_BNKNR_SHIFT;
+-	p->ceinfo.bankgrp = (regval & ECC_CEADDR1_BNKGRP_MASK) >>
+-					ECC_CEADDR1_BNKGRP_SHIFT;
+-	p->ceinfo.col = (regval & ECC_CEADDR1_COL_MASK);
++	p->ceinfo.bank = FIELD_GET(ECC_CEADDR1_BANK_MASK, regval);
++	p->ceinfo.bankgrp = FIELD_GET(ECC_CEADDR1_BANKGRP_MASK, regval);
++	p->ceinfo.col = FIELD_GET(ECC_CEADDR1_COL_MASK, regval);
++
+ 	p->ceinfo.data = readl(base + ECC_CSYND0_OFST);
++
+ 	edac_dbg(2, "ECCCSYN0: 0x%08X ECCCSYN1: 0x%08X ECCCSYN2: 0x%08X\n",
+ 		 readl(base + ECC_CSYND0_OFST), readl(base + ECC_CSYND1_OFST),
+ 		 readl(base + ECC_CSYND2_OFST));
++
+ ue_err:
+ 	if (!p->ue_cnt)
+ 		goto out;
  
- 	/* Disable UE/CE Interrupts */
- 	if (priv->p_data->quirks & SYNPS_ZYNQMP_IRQ_REGS) {
--		writel(DDR_QOSUE_MASK | DDR_QOSCE_MASK,
--		       priv->baseaddr + DDR_QOS_IRQ_DB_OFST);
-+		writel(ZYNQMP_DDR_QOS_UE_MASK | ZYNQMP_DDR_QOS_CE_MASK,
-+		       priv->baseaddr + ZYNQMP_DDR_QOS_IRQ_DB_OFST);
- 
- 		return;
- 	}
-@@ -450,9 +448,9 @@ static irqreturn_t intr_handler(int irq, void *dev_id)
- 	priv = mci->pvt_info;
- 
- 	if (priv->p_data->quirks & SYNPS_ZYNQMP_IRQ_REGS) {
--		regval = readl(priv->baseaddr + DDR_QOS_IRQ_STAT_OFST);
--		regval &= (DDR_QOSCE_MASK | DDR_QOSUE_MASK);
--		if (!(regval & ECC_CE_UE_INTR_MASK))
-+		regval = readl(priv->baseaddr + ZYNQMP_DDR_QOS_IRQ_STAT_OFST);
-+		regval &= (ZYNQMP_DDR_QOS_CE_MASK | ZYNQMP_DDR_QOS_UE_MASK);
-+		if (!(regval & ZYNQMP_DDR_QOS_IRQ_MASK))
- 			return IRQ_NONE;
- 	}
- 
-@@ -463,7 +461,7 @@ static irqreturn_t intr_handler(int irq, void *dev_id)
- 	handle_error(mci, &priv->stat);
- 
- 	if (priv->p_data->quirks & SYNPS_ZYNQMP_IRQ_REGS)
--		writel(regval, priv->baseaddr + DDR_QOS_IRQ_STAT_OFST);
-+		writel(regval, priv->baseaddr + ZYNQMP_DDR_QOS_IRQ_STAT_OFST);
- 
- 	return IRQ_HANDLED;
- }
-@@ -482,18 +480,18 @@ static enum dev_type synps_get_dtype(const void __iomem *base)
- 	u32 regval;
- 
- 	regval = readl(base + DDR_MSTR_OFST);
--	if (!(regval & MEM_TYPE_DDR4))
-+	if (!(regval & DDR_MSTR_MEM_DDR4))
+ 	regval = readl(base + ECC_UEADDR0_OFST);
+-	p->ueinfo.row = (regval & ECC_CEADDR0_RW_MASK);
++	p->ueinfo.row = FIELD_GET(ECC_CEADDR0_ROW_MASK, regval);
++
+ 	regval = readl(base + ECC_UEADDR1_OFST);
+-	p->ueinfo.bankgrp = (regval & ECC_CEADDR1_BNKGRP_MASK) >>
+-					ECC_CEADDR1_BNKGRP_SHIFT;
+-	p->ueinfo.bank = (regval & ECC_CEADDR1_BNKNR_MASK) >>
+-					ECC_CEADDR1_BNKNR_SHIFT;
+-	p->ueinfo.col = (regval & ECC_CEADDR1_COL_MASK);
++	p->ueinfo.bankgrp = FIELD_GET(ECC_CEADDR1_BANKGRP_MASK, regval);
++	p->ueinfo.bank = FIELD_GET(ECC_CEADDR1_BANK_MASK, regval);
++	p->ueinfo.col = FIELD_GET(ECC_CEADDR1_COL_MASK, regval);
++
+ 	p->ueinfo.data = readl(base + ECC_UESYND0_OFST);
+ out:
+ 	spin_lock_irqsave(&priv->reglock, flags);
+@@ -483,7 +475,7 @@ static enum dev_type snps_get_dtype(const void __iomem *base)
+ 	if (!(regval & DDR_MSTR_MEM_DDR4))
  		return DEV_UNKNOWN;
  
--	regval = (regval & DDRC_MSTR_CFG_MASK) >> DDRC_MSTR_CFG_SHIFT;
-+	regval = (regval & DDR_MSTR_DEV_CFG_MASK) >> DDR_MSTR_DEV_CFG_SHIFT;
+-	regval = (regval & DDR_MSTR_DEV_CFG_MASK) >> DDR_MSTR_DEV_CFG_SHIFT;
++	regval = FIELD_GET(DDR_MSTR_DEV_CFG_MASK, regval);
  	switch (regval) {
--	case DDRC_MSTR_CFG_X4_MASK:
-+	case DDR_MSTR_DEV_X4:
+ 	case DDR_MSTR_DEV_X4:
  		return DEV_X4;
--	case DDRC_MSTR_CFG_X8_MASK:
-+	case DDR_MSTR_DEV_X8:
- 		return DEV_X8;
--	case DDRC_MSTR_CFG_X16_MASK:
-+	case DDR_MSTR_DEV_X16:
- 		return DEV_X16;
--	case DDRC_MSTR_CFG_X32_MASK:
-+	case DDR_MSTR_DEV_X32:
- 		return DEV_X32;
- 	}
+@@ -510,7 +502,8 @@ static bool snps_get_ecc_state(void __iomem *base)
+ {
+ 	u32 regval;
  
-@@ -547,11 +545,11 @@ static enum mem_type synps_get_mtype(const void __iomem *base)
+-	regval = readl(base + ECC_CFG0_OFST) & ECC_CFG0_MODE_MASK;
++	regval = readl(base + ECC_CFG0_OFST);
++	regval = FIELD_GET(ECC_CFG0_MODE_MASK, regval);
  
- 	memtype = readl(base + DDR_MSTR_OFST);
- 
--	if ((memtype & MEM_TYPE_DDR3) || (memtype & MEM_TYPE_LPDDR3))
-+	if ((memtype & DDR_MSTR_MEM_DDR3) || (memtype & DDR_MSTR_MEM_LPDDR3))
- 		mt = MEM_DDR3;
--	else if (memtype & MEM_TYPE_DDR2)
-+	else if (memtype & DDR_MSTR_MEM_DDR2)
- 		mt = MEM_RDDR2;
--	else if ((memtype & MEM_TYPE_LPDDR4) || (memtype & MEM_TYPE_DDR4))
-+	else if ((memtype & DDR_MSTR_MEM_LPDDR4) || (memtype & DDR_MSTR_MEM_DDR4))
- 		mt = MEM_DDR4;
- 	else
- 		mt = MEM_EMPTY;
-@@ -756,12 +754,12 @@ static ssize_t inject_data_poison_store(struct device *dev,
- 	struct mem_ctl_info *mci = to_mci(dev);
- 	struct synps_edac_priv *priv = mci->pvt_info;
- 
--	writel(0, priv->baseaddr + DDRC_SWCTL);
-+	writel(0, priv->baseaddr + DDR_SWCTL);
- 	if (strncmp(data, "CE", 2) == 0)
- 		writel(ECC_CEPOISON_MASK, priv->baseaddr + ECC_CFG1_OFST);
- 	else
- 		writel(ECC_UEPOISON_MASK, priv->baseaddr + ECC_CFG1_OFST);
--	writel(1, priv->baseaddr + DDRC_SWCTL);
-+	writel(1, priv->baseaddr + DDR_SWCTL);
- 
- 	return count;
+ 	return (regval == ECC_CFG0_MODE_SECDED);
  }
-@@ -878,8 +876,8 @@ static void setup_column_address_map(struct synps_edac_priv *priv, u32 *addrmap)
- 	priv->col_shift[9] = (((addrmap[3] >> 24) & COL_MAX_VAL_MASK) ==
- 			COL_MAX_VAL_MASK) ? 0 : (((addrmap[3] >> 24) &
- 					COL_MAX_VAL_MASK) + COL_B9_BASE);
--	if (width == DDRCTL_EWDTH_64) {
--		if (memtype & MEM_TYPE_LPDDR3) {
-+	if (width == DDR_MSTR_BUSWIDTH_64) {
-+		if (memtype & DDR_MSTR_MEM_LPDDR3) {
- 			priv->col_shift[10] = ((addrmap[4] &
- 				COL_MAX_VAL_MASK) == COL_MAX_VAL_MASK) ? 0 :
- 				((addrmap[4] & COL_MAX_VAL_MASK) +
-@@ -898,8 +896,8 @@ static void setup_column_address_map(struct synps_edac_priv *priv, u32 *addrmap)
- 				(((addrmap[4] >> 8) & COL_MAX_VAL_MASK) +
- 				 COL_B11_BASE);
- 		}
--	} else if (width == DDRCTL_EWDTH_32) {
--		if (memtype & MEM_TYPE_LPDDR3) {
-+	} else if (width == DDR_MSTR_BUSWIDTH_32) {
-+		if (memtype & DDR_MSTR_MEM_LPDDR3) {
- 			priv->col_shift[10] = (((addrmap[3] >> 24) &
- 				COL_MAX_VAL_MASK) == COL_MAX_VAL_MASK) ? 0 :
- 				(((addrmap[3] >> 24) & COL_MAX_VAL_MASK) +
-@@ -919,7 +917,7 @@ static void setup_column_address_map(struct synps_edac_priv *priv, u32 *addrmap)
- 				 COL_B10_BASE);
- 		}
- 	} else {
--		if (memtype & MEM_TYPE_LPDDR3) {
-+		if (memtype & DDR_MSTR_MEM_LPDDR3) {
- 			priv->col_shift[10] = (((addrmap[3] >> 16) &
- 				COL_MAX_VAL_MASK) == COL_MAX_VAL_MASK) ? 0 :
- 				(((addrmap[3] >> 16) & COL_MAX_VAL_MASK) +
-@@ -994,7 +992,7 @@ static void setup_address_map(struct synps_edac_priv *priv)
- 	for (index = 0; index < 12; index++) {
- 		u32 addrmap_offset;
+@@ -697,13 +690,13 @@ static void snps_data_poison_setup(struct snps_edac_priv *priv)
+ 	if (priv->rank_shift[0])
+ 		rank = (hif_addr >> priv->rank_shift[0]) & BIT(0);
  
--		addrmap_offset = ECC_ADDRMAP0_OFFSET + (index * 4);
-+		addrmap_offset = DDR_ADDRMAP0_OFST + (index * 4);
- 		addrmap[index] = readl(priv->baseaddr + addrmap_offset);
- 	}
+-	regval = (rank << ECC_POISON0_RANK_SHIFT) & ECC_POISON0_RANK_MASK;
+-	regval |= (col << ECC_POISON0_COLUMN_SHIFT) & ECC_POISON0_COLUMN_MASK;
++	regval = FIELD_PREP(ECC_POISON0_RANK_MASK, rank) |
++		 FIELD_PREP(ECC_POISON0_COL_MASK, col);
+ 	writel(regval, priv->baseaddr + ECC_POISON0_OFST);
  
+-	regval = (bankgrp << ECC_POISON1_BG_SHIFT) & ECC_POISON1_BG_MASK;
+-	regval |= (bank << ECC_POISON1_BANKNR_SHIFT) & ECC_POISON1_BANKNR_MASK;
+-	regval |= (row << ECC_POISON1_ROW_SHIFT) & ECC_POISON1_ROW_MASK;
++	regval = FIELD_PREP(ECC_POISON1_BANKGRP_MASK, bankgrp) |
++		 FIELD_PREP(ECC_POISON1_BANK_MASK, bank) |
++		 FIELD_PREP(ECC_POISON1_ROW_MASK, row);
+ 	writel(regval, priv->baseaddr + ECC_POISON1_OFST);
+ }
+ 
+@@ -742,10 +735,14 @@ static ssize_t inject_data_poison_show(struct device *dev,
+ {
+ 	struct mem_ctl_info *mci = to_mci(dev);
+ 	struct snps_edac_priv *priv = mci->pvt_info;
++	const char *errstr;
++	u32 regval;
++
++	regval = readl(priv->baseaddr + ECC_CFG1_OFST);
++	errstr = FIELD_GET(ECC_CEPOISON_MASK, regval) == ECC_CEPOISON_MASK ?
++		 "Correctable Error" : "UnCorrectable Error";
+ 
+-	return sprintf(data, "Data Poisoning: %s\n\r",
+-			(((readl(priv->baseaddr + ECC_CFG1_OFST)) & 0x3) == 0x3)
+-			? ("Correctable Error") : ("UnCorrectable Error"));
++	return sprintf(data, "Data Poisoning: %s\n\r", errstr);
+ }
+ 
+ static ssize_t inject_data_poison_store(struct device *dev,
+@@ -852,7 +849,7 @@ static void snps_setup_column_address_map(struct snps_edac_priv *priv, u32 *addr
+ 	int index;
+ 
+ 	memtype = readl(priv->baseaddr + DDR_MSTR_OFST);
+-	width = (memtype & DDR_MSTR_BUSWIDTH_MASK) >> DDR_MSTR_BUSWIDTH_SHIFT;
++	width = FIELD_GET(DDR_MSTR_BUSWIDTH_MASK, memtype);
+ 
+ 	priv->col_shift[0] = 0;
+ 	priv->col_shift[1] = 1;
 -- 
 2.43.0
 
