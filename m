@@ -1,107 +1,164 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from forward501a.mail.yandex.net (forward501a.mail.yandex.net [178.154.239.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 312B280600;
-	Thu, 27 Jun 2024 08:38:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 098567C097;
+	Thu, 27 Jun 2024 08:38:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719477507; cv=none; b=nSDod86CqBn00QCd0Wx4DFNHlcJVIQMSmVLTov2bUxO0h7vsWROBpEXFVrnEIusIK0gZrhRNZQT96Pqt1976apTPSABUPt5SYpQdkfh3BxD36ua2KZPbcWCVIlRuA2BwgMPYDOmnIA9SGobv2acbrrsQVbpW/8Zn8lnJgGCTU7E=
+	t=1719477511; cv=none; b=XLNDhkbXr/dR4DMCd2JJCE0Qos3YV1HJSo9TwBxPLpIe8LHWu2abh5dEEi45PfsYzuS7kNyTBW2QHB7iDxizNypSUmTiDIfxGPCdifQT0w0TZjVEorG+8pAxXQLPg9s6cVDlMby6Jo5bz5Wra7zERwQ9HcvGLFo+JiF9kkLrjdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719477507; c=relaxed/simple;
-	bh=kh3BvM1UYLJbgnRm0wk8tVIY19VqIuh2seSAOWDNjek=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=RFqBCqRkjLyvWASEmpR1OZDWEDf4x6ZOu0J031WRiXM0fp2TgUMtSRXJfJlXfCn7GKWbMhY/MruAg6ldGNDrrc5v5ilEOK+ou3WRCfkXweVUTVLCTN0woWfgPgjf78+MwNcexGu34rW3bGDvEiTQx39gLfmyN52sDJMqNVYk+TY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pHa5Q4zd; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1719477511; c=relaxed/simple;
+	bh=sncecviZ4oVzyaqVg6LU/TKkhzMCJcCvnENYdLedhDQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=lCDDAcTYqAJfIwhLmscFk8xCyAW78PCjg/OoxkpdL++WvW/lVLcesjayHlKCKoa4pkxbpud7JcrwQZakAcKhWt4DSKa7DPLev6bpqsSraYWpficcmpSoHluYlKKsPP9D1+0knk07Mb5V2mNqZmeWPZNPVxLS704pF+/1M844NYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me; spf=pass smtp.mailfrom=maquefel.me; dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b=fYt77sep; arc=none smtp.client-ip=178.154.239.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maquefel.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pHa5Q4zd"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45R1mPr5022654;
-	Thu, 27 Jun 2024 08:38:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:date:from:in-reply-to:message-id:references:subject:to; s=
-	qcppdkim1; bh=/8PbBjaENy3mbbV95BuGAhcwyL8sMrqxjHV3mlbulEA=; b=pH
-	a5Q4zdxYonEIAgUOqodamCFPxjqnYyINj/6wnFT1KCYuUZFXkl5ZNLJOG+fb36bQ
-	dWC5XIiUQvO/KVqFP7DAT0yjDyZrZz0QJ4gg13hWjljf8LqOpah5bL/FDx26gvuo
-	Ir757Il2AMiwKyYN4y7LMOVdyblG+l0rvJx2uo4kd0+w6MaLS+Fray4Dko4cOPhu
-	hoaop8yLWzjK+IFcSJEowVWgUPy66QVjyHFS4Gl7wnKHqd1Z+ApqCRXi4BatmYlG
-	8cIOyJ4J1V4cXWa192wwhRjsU9o4+hvywWf2DJmRJqjJV4Q7AHEGAoDhhtYl61UX
-	bzly/eq9/9QQydB8cc8g==
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ywqw9k87b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Jun 2024 08:38:08 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTP id 45R8c4n4030671;
-	Thu, 27 Jun 2024 08:38:04 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 3ywqpmddgq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 27 Jun 2024 08:38:04 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 45R8c4nW030658;
-	Thu, 27 Jun 2024 08:38:04 GMT
-Received: from hu-maiyas-hyd.qualcomm.com (hu-rampraka-hyd.qualcomm.com [10.213.109.119])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 45R8c4f6030653;
-	Thu, 27 Jun 2024 08:38:04 +0000
-Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 2305851)
-	id 23F0352B08F; Thu, 27 Jun 2024 14:08:02 +0530 (+0530)
-From: Ram Prakash Gupta <quic_rampraka@quicinc.com>
-To: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        quic_cang@quicinc.com, quic_nguyenb@quicinc.com,
-        quic_rampraka@quicinc.com, quic_pragalla@quicinc.com,
-        quic_nitirawa@quicinc.com
-Subject: [PATCH v2 2/2] scsi: ufs: qcom: Enable suspending clk scaling on no request
-Date: Thu, 27 Jun 2024 14:07:56 +0530
-Message-Id: <20240627083756.25340-3-quic_rampraka@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240627083756.25340-1-quic_rampraka@quicinc.com>
-References: <20240627083756.25340-1-quic_rampraka@quicinc.com>
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: n8FFsEVu6fw-16fLYKiKxRFkmINht5Zg
-X-Proofpoint-GUID: n8FFsEVu6fw-16fLYKiKxRFkmINht5Zg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-27_04,2024-06-25_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 clxscore=1015 impostorscore=0 mlxscore=0
- lowpriorityscore=0 malwarescore=0 mlxlogscore=999 phishscore=0 bulkscore=0
- adultscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2406140001 definitions=main-2406270065
+	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="fYt77sep"
+Received: from mail-nwsmtp-smtp-production-main-54.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-54.vla.yp-c.yandex.net [IPv6:2a02:6b8:c1f:6289:0:640:5fc6:0])
+	by forward501a.mail.yandex.net (Yandex) with ESMTPS id 62E6D62860;
+	Thu, 27 Jun 2024 11:29:53 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-54.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id hTMqF50OgeA0-419Dn7dc;
+	Thu, 27 Jun 2024 11:29:51 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail;
+	t=1719476991; bh=sncecviZ4oVzyaqVg6LU/TKkhzMCJcCvnENYdLedhDQ=;
+	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
+	b=fYt77sepJb6Dz5nNn3wvLM2BcROhwWdG7wRisBkqtF3/hXtLy8lIDdb5a9wki+xgj
+	 m+gfMLnWml2khZDKWnsANuhxBC4XcH3KBbc8wli7qPcKfOBKMiiokOznOQZASnsShb
+	 uhxbpxZgH1kBKx/Vy2qTDCDcjYAISNAwQklonyaU=
+Authentication-Results: mail-nwsmtp-smtp-production-main-54.vla.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
+Message-ID: <241a4cf9830b0118f01e8fcf2853c62527636049.camel@maquefel.me>
+Subject: Re: [PATCH v10 00/38] ep93xx device tree conversion
+From: Nikita Shubin <nikita.shubin@maquefel.me>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann
+ <arnd@arndb.de>,  Stephen Boyd <sboyd@kernel.org>
+Cc: Hartley Sweeten <hsweeten@visionengravers.com>, Alexander Sverdlin
+ <alexander.sverdlin@gmail.com>, Russell King <linux@armlinux.org.uk>,
+ Lukasz Majewski <lukma@denx.de>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Sebastian Reichel
+ <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>,  Conor Dooley <conor+dt@kernel.org>,
+ Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck
+ <linux@roeck-us.net>, Thierry Reding <thierry.reding@gmail.com>, Uwe
+ =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Mark
+ Brown <broonie@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,  Paolo
+ Abeni <pabeni@redhat.com>, Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Damien Le Moal <dlemoal@kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Liam Girdwood
+ <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
+ <tiwai@suse.com>, Ralf Baechle <ralf@linux-mips.org>,  "Wu, Aaron"
+ <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>, Olof Johansson
+ <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-pm@vger.kernel.org,  devicetree@vger.kernel.org,
+ dmaengine@vger.kernel.org,  linux-watchdog@vger.kernel.org,
+ linux-pwm@vger.kernel.org,  linux-spi@vger.kernel.org,
+ netdev@vger.kernel.org, linux-mtd@lists.infradead.org, 
+ linux-ide@vger.kernel.org, linux-input@vger.kernel.org, 
+ linux-sound@vger.kernel.org, Bartosz Golaszewski
+ <bartosz.golaszewski@linaro.org>,  Krzysztof Kozlowski
+ <krzysztof.kozlowski@linaro.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>, Vinod
+ Koul <vkoul@kernel.org>
+Date: Thu, 27 Jun 2024 11:29:44 +0300
+In-Reply-To: <48c242838c77034485a9e667dc0e867207c5beed.camel@maquefel.me>
+References: <20240617-ep93xx-v10-0-662e640ed811@maquefel.me>
+	 <CAHp75VfSC9gAD9ipeWRPdQOxUp4FXqYYei-cJTs38nbz0cHpkg@mail.gmail.com>
+	 <48c242838c77034485a9e667dc0e867207c5beed.camel@maquefel.me>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
 
-Enable suspending clk scaling on no request for Qualcomm SoC.
+On Tue, 2024-06-18 at 19:20 +0300, Nikita Shubin wrote:
+> Hello Andy!
+> On Mon, 2024-06-17 at 12:58 +0200, Andy Shevchenko wrote:
+> > On Mon, Jun 17, 2024 at 11:38=E2=80=AFAM Nikita Shubin via B4 Relay
+> > <devnull+nikita.shubin.maquefel.me@kernel.org> wrote:
+> > >=20
+> > > The goal is to recieve ACKs for all patches in series to merge it
+> > > via Arnd branch.
+> >=20
+> > 'receive'
+> >=20
+> > > Unfortunately, CLK subsystem suddenly went silent on clk portion
+> > > of
+> > > series V2 reroll,
+> > > tried to ping them for about a month but no luck.
+> > >=20
+> > > Link:
+> > > https://lore.kernel.org/r/20240408-ep93xx-clk-v2-1-adcd68c13753@maque=
+fel.me
+> > >=20
+> > > Some changes since last version (v9) - see "Changes in v10",
+> > > mostly
+> > > cosmetic.
+> >=20
+> > ...
+> >=20
+> > > Patches should be formated with '--histogram'
+> >=20
+> > 'formatted'
+> >=20
+> > ...
+> >=20
+> > > Changes in v10:
+> > >=20
+> > > Reordered SoB tags to make sure they appear before Rb and Acked
+> > > tags.
+> >=20
+> > This is not required. The importance is only the order of SoBs
+> > themselves. If they are interleaved with other tags, it's fine.
+>=20
+> Ah - ok. Just saw someone was complaining about b4 reordering them.=20
+>=20
+> >=20
+> > ...
+> >=20
+> >=20
+> > Hopefully to see this series being eventually applied soon.
+> > Arnd? (Do we have all necessary subsystem maintainers' tags, btw?)
+> >=20
+> >=20
+>=20
+> As i see from my perspective only three left:
+>=20
+> Clk subsystem:
+>=20
+> - clk: ep93xx: add DT support for Cirrus EP93xx
+>=20
+> DMA subsystem (but the only request from Vinod, as far as i remember,
+> was fixing commits titles):
+>=20
+> - dmaengine: cirrus: Convert to DT for Cirrus EP93xx
+> - dmaengine: cirrus: remove platform code
+>=20
+> Beside that tags missing on platform code removal (which can be Acked
+> by Arnd himself i believe) and dtsi/dts files (same ?).
 
-Signed-off-by: Ram Prakash Gupta <quic_rampraka@quicinc.com>
----
- drivers/ufs/host/ufs-qcom.c | 2 ++
- 1 file changed, 2 insertions(+)
+Vinod acked the above two patches:
 
-diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
-index cca190d1c577..9041ffab152c 100644
---- a/drivers/ufs/host/ufs-qcom.c
-+++ b/drivers/ufs/host/ufs-qcom.c
-@@ -1548,6 +1548,8 @@ static void ufs_qcom_config_scaling_param(struct ufs_hba *hba,
- 	p->timer = DEVFREQ_TIMER_DELAYED;
- 	d->upthreshold = 70;
- 	d->downdifferential = 5;
-+
-+	hba->clk_scaling.suspend_on_no_request = true;
- }
- #else
- static void ufs_qcom_config_scaling_param(struct ufs_hba *hba,
--- 
-2.17.1
+https://lore.kernel.org/all/ZnkIp8bOcZK3yVKP@matsya/
+https://lore.kernel.org/all/ZnkImp8BtTdxl7O3@matsya/
+
+so only:
+
+- clk: ep93xx: add DT support for Cirrus EP93xx
+
+https://lore.kernel.org/all/20240617-ep93xx-v10-3-662e640ed811@maquefel.me/
+
+left.
+
+Hope Stephen will find some time for this one.
 
