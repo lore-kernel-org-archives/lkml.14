@@ -1,187 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C30F757FC;
-	Thu, 27 Jun 2024 07:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.17])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 554B66D1A8;
+	Thu, 27 Jun 2024 07:52:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719474730; cv=none; b=O3HoZlpPD5Rbs5dCqjWvAjDh8Oc1eU6KxXz3QB7AJQD5n7bFY9tlYfSayL5g0FXVmX+bylZmNfo+7bVUwTgnabzhzttY4qoUQnXPlevb4gI0rN7Vo6Hjs5U0F7ajN37c7obgouP/h/Z13Le+GI2JhiRFBxflu8OYyWAQG/WpLTA=
+	t=1719474738; cv=none; b=GCEhPwIEt9JcteoG6pekRDelu4tNYe0hgT+/BWd3yNI9kF86BDBjIh9JjB6+lnW0Xj2d8VzomYvSzIsGDaMdcc1R9ZWmN/aTAuwOWXIh7+rKah6ZFGIp89pKVMNVPac5c2VBo/ubKyLtitDIH3yzAunzMYNU8i4sk4uavf2jhOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719474730; c=relaxed/simple;
-	bh=r5Ora7NJm4b3J7GjnuLYbXtVWjEwJaLXHlU1alQnOjI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mVyG9MZxMUKU1W0nM+QLdu8sjeSAxZFYnYMwohb7BT5pQ2Ab16QFUHXwjySwHmrVnd6NwMaUazm4nNVEdT1vSbeDtcHoq3SccNMq1TfaYZqWc9Ruq9lQt+4e71m4QpYRk3mH7W2CBB2PdMEenjYZubmR+ocZK3Jh0Rv/trcBnhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T0BJLXhi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719474738; c=relaxed/simple;
+	bh=PNvkEYWCL5PovGD0P2qF3krIDcXGXZcIfYxxUFEFQTE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hrhdroNsHCEBWYxstyU7DmMyo0kGSniDYEdIzY+lwMGqHKYUHxf3JxsO1kntFgUBI02ibXLeq23IL+gOiOSHQXYdvQYAQmQm743TKkDCxTwnFHu0kvxZksU1LjAN494fP0/sCrysOPgSPrdGF/cxSVcTGHCSK7KE+qMLMM8eBck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=e9L6GaKk; arc=none smtp.client-ip=1.95.21.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T0BJLXhi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ED32C2BBFC;
-	Thu, 27 Jun 2024 07:52:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719474729;
-	bh=r5Ora7NJm4b3J7GjnuLYbXtVWjEwJaLXHlU1alQnOjI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=T0BJLXhiXRb9DbrbTspDGsQjO0PI7KosIa+rz25J0sUmCsZzEo3OgvT+CrMDyUZXe
-	 JvO2Ef7TABX/cK6J5zj3ko4HGJNK0TWy8j+F9wIngUnVgcApPu9YkPZm2HPmYCYwrH
-	 nqzdhq50eTqD5G06GOdDWjLCVGj3HpK4IFanAuh179oDpWXLqtHHJoLuX9MKHE3tN0
-	 R4yuBaSLWLSG1RKqiSLE+8JwvRM/CT4vAaiJzEnRQ7eJgV1OzAJnrtHcqbRN2NNntz
-	 yoL0vIJztIaDKJ9s7PebElUX8NrxiC9ByzIdJl7aDkPnypPZ8oxj+x5O4EQ8LV2VId
-	 mOh14BuSVoVUg==
-Message-ID: <ea14d6d0-e31e-48fc-a568-126178f82390@kernel.org>
-Date: Thu, 27 Jun 2024 09:52:03 +0200
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="e9L6GaKk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=dwSrd4rEFtEbvg8UIqDAYpLCFNz8AxorAioAjY9AB2U=;
+	b=e9L6GaKk0FJRkRWTlFa2/kLOeWBiVXXeniM8D6BAmaQdgOHFPbJFrHFniw4ML9
+	g8BTNs24OyHmuWfMUFM1YarqzxfOSCjtVjx/ABtJQBDF/MLeT68VrJWSyfVfVzjW
+	IYqUaycrcskp6PzpuiZ4buTt4GOUduudk+I9eKjuWTSmM=
+Received: from dragon (unknown [114.218.218.47])
+	by gzsmtp2 (Coremail) with SMTP id Ms8vCgD3v5nXGX1mma0aAA--.27519S3;
+	Thu, 27 Jun 2024 15:50:49 +0800 (CST)
+Date: Thu, 27 Jun 2024 15:50:47 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Tim Harvey <tharvey@gateworks.com>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: imx8mp-venice-gw702x: add support for PHY
+ LED's
+Message-ID: <Zn0Z1/LULtTmF4/t@dragon>
+References: <20240618200551.1740178-1-tharvey@gateworks.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: interconnect: qcom: Add Qualcomm MSM8953
- NoC
-To: =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>,
- Georgi Djakov <djakov@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- Vladimir Lypak <vladimir.lypak@gmail.com>
-References: <20240626-msm8953-interconnect-v1-0-eeb31a2231b0@mainlining.org>
- <20240626-msm8953-interconnect-v1-1-eeb31a2231b0@mainlining.org>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240626-msm8953-interconnect-v1-1-eeb31a2231b0@mainlining.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240618200551.1740178-1-tharvey@gateworks.com>
+X-CM-TRANSID:Ms8vCgD3v5nXGX1mma0aAA--.27519S3
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUV9mRUUUUU
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiCRkLZWZv-cxxIAAAsX
 
-On 26/06/2024 22:35, Barnabás Czémán wrote:
-> From: Vladimir Lypak <vladimir.lypak@gmail.com>
+On Tue, Jun 18, 2024 at 01:05:52PM -0700, Tim Harvey wrote:
+> The GW702x SoM has an onboard DP83867 RGMII GbE PHY that drives two
+> LED's (LED1 and LED2, skipping LED0). Add the appropriate dt bindings to
+> allow these PHY LED's to be controlled via a netdev trigger.
 > 
-> Add the device-tree bindings for interconnect providers
-> used on MSM8953 platform.
-> 
-> Signed-off-by: Vladimir Lypak <vladimir.lypak@gmail.com>
-> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
-> ---
->  .../bindings/interconnect/qcom,msm8953.yaml        | 100 +++++++++++++++++++++
->  include/dt-bindings/interconnect/qcom,msm8953.h    |  93 +++++++++++++++++++
->  2 files changed, 193 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,msm8953.yaml b/Documentation/devicetree/bindings/interconnect/qcom,msm8953.yaml
-> new file mode 100644
-> index 000000000000..c24339f37233
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interconnect/qcom,msm8953.yaml
-> @@ -0,0 +1,100 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/interconnect/qcom,msm8953.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm MSM8953 Network-On-Chip interconnect
-> +
-> +maintainers:
-> +  - Barnabas Czeman <barnabas.czeman@mainlining.org>
-> +
-> +description: |
-> +  The Qualcomm MSM8953 interconnect providers support adjusting the
-> +  bandwidth requirements between the various NoC fabrics.
-> +
-> +  See also:
-> +  - dt-bindings/interconnect/qcom,msm8953.h
-> +
-> +allOf:
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
 
-Please move this entire "allOf:" after "required:" block.
-
-> +  - $ref: qcom,rpm-common.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          const: qcom,msm8953-pcnoc
-> +
-> +    then:
-> +      properties:
-> +        clocks:
-> +          items:
-> +            - description: PCNOC USB3 AXI Clock.
-> +
-> +        clock-names:
-> +          const: pcnoc_usb3_axi
-> +
-> +      required:
-> +        - compatible
-
-Drop
-
-> +        - reg
-
-Drop
-
-> +        - clocks
-> +        - clock-names
-> +        - '#interconnect-cells'
-
-Drop
-
-
-    else:
-      properties:
-        clocks: false
-        clocks-names: false
-
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,msm8953-bimc
-> +      - qcom,msm8953-pcnoc
-> +      - qcom,msm8953-snoc
-> +
-
-> 
-
-Best regards,
-Krzysztof
+Applied, thanks!
 
