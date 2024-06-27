@@ -1,192 +1,96 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9030D198E9A
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 15:22:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E845D198A32;
+	Thu, 27 Jun 2024 15:23:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719501758; cv=none; b=C5c7n3ALiD+0JxmguvltGboKgNQiaqy3HBiWqvP8wLhBI29btaTRkPP8eBt/gIpT6aMdcleuLSlm9QU4G3l6AtuMzxDkgDhjClFehjkCO2coE1s5jj63gAb5plhx6VSL8ncblGOLtt+4ckQKcg9o5Z0ne9KCegmcK3FVOqguQYA=
+	t=1719501791; cv=none; b=eF3XYtM0zVMS5s+4UcBdw2Q0Wx8D9qednqmXPD5H92sbxzPK72yXbSDrLv8GECAYhdkYPyqmzdSYdNusYHADRfW5jzjaOyck8nh3fDkP7+CBn1QjsYjCxD4ZKOede89fcdeaacqL+sUOvi7XewSAJpVxo1xYTZQJn5xLA+a8SZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719501758; c=relaxed/simple;
-	bh=VnAXUe4bS2tugzY1r84uIJLO1rUfNcDiyqv4SDfcYGc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OVtkIleK3lA5mhFn5hbGK/E46FtVWI+yHxEh/XrOkZ2y2qLAyztVBt2Ejr9lAmmRVA4A2woTJZYwDfiKpScLYuDwsQtkr/BgzCjGL1X5LLx+I/qzwvjWqA6HRvXdia8a5xeruMENfI+kSN+5kAQez9lbD5nTBq/aNg6AdV6hO5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Date: Thu, 27 Jun 2024 17:22:31 +0200
-From: Guilherme Amadio <amadio@gentoo.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@x1.gentoo.org
-Subject: Re: [PATCH 1/2] perf build: Use pkg-config for feature check for
- libtrace{event,fs}
-Message-ID: <Zn2DtyyYpoViIJ-S@gentoo.org>
-References: <20240606153625.2255470-1-amadio@gentoo.org>
- <20240606153625.2255470-2-amadio@gentoo.org>
- <171925142502.1926937.5367954849470450249.b4-ty@kernel.org>
- <ZnscQ_nrxWTLHh8k@gentoo.org>
- <ZnxpvZE3dX-IwTLy@x1>
- <Znxp3bpc-5tvaa3m@x1>
+	s=arc-20240116; t=1719501791; c=relaxed/simple;
+	bh=yP+LIbKJrOeA3BYfx1Pv/DUs/vsdWYAxVDdeHfKVSFk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=scQyhGOkeOLY/aDbZZ/cv8vsJBa1bDBwCIXxcfvQABJdw0Xg5po1zbTz64dzdL6X2asMzAIvLw28kzX3eeLgARGojHcucKRDYoycRkaA8j/FoyL4Js4Cd04Z9OLte7cuUbGQ6ihFJC2Or26uOPWBkHvn0jnoi9Ltx2OT5E2qtrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=WVApRjuN; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="WVApRjuN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1719501788;
+	bh=yP+LIbKJrOeA3BYfx1Pv/DUs/vsdWYAxVDdeHfKVSFk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=WVApRjuNzI7mkNMOWnZzOrNyniOnx7SHsAPSLjnD/kUAyGAckoDv5e93toQ7Do2ct
+	 P2QUAyL+f/TNNFAJD0VICh7oKUc/wq64fX3N/sXX+dDS7R5P/+WCtOUZ6nQw1CgTW4
+	 XyfmTWmo/soO9g96hwGCKECoM/xze+OvdkLOyln6pivOED+arCqCv8zb/ceamOGCIk
+	 LYhDQMmT0Rq5tQWT6MlmxI4JvSg1apHF9oNrwDMm4NclYsHY3Jb1rl5lnisWGdxv81
+	 pK/Y/YlMFUJ7B9KfCEgkauA+1Hpql7dNKqm7SRQgYqGxtxXnQJe4FnpQL9FrsJUZXj
+	 kD7Og+DXghl6A==
+Received: from thinkos.internal.efficios.com (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4W92Q41Zmhz17dF;
+	Thu, 27 Jun 2024 11:23:08 -0400 (EDT)
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Yonghong Song <yhs@fb.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	bpf@vger.kernel.org,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH v5 1/8] cleanup.h: Header include guard should match header name
+Date: Thu, 27 Jun 2024 11:23:33 -0400
+Message-Id: <20240627152340.82413-2-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240627152340.82413-1-mathieu.desnoyers@efficios.com>
+References: <20240627152340.82413-1-mathieu.desnoyers@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Znxp3bpc-5tvaa3m@x1>
 
-Hi Arnaldo,
+The include guard should match the header name. Rename __LINUX_GUARDS_H
+to __LINUX_CLEANUP_H.
 
-On Wed, Jun 26, 2024 at 04:19:57PM -0300, Arnaldo Carvalho de Melo wrote:
-> Sorry, forgot to CC the mailing lists.
->
-> On Wed, Jun 26, 2024 at 04:19:29PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Tue, Jun 25, 2024 at 09:36:35PM +0200, Guilherme Amadio wrote:
-> > > On Mon, Jun 24, 2024 at 10:50:56AM -0700, Namhyung Kim wrote:
-> > > > On Thu, 06 Jun 2024 17:33:01 +0200, amadio@gentoo.org wrote:
-> > > >
-> > > > > Needed to add required include directories for the feature detection
-> > > > > to succeed. The header tracefs.h is installed either into the include
-> > > > > directory /usr/include/tracefs/tracefs.h when using the Makefile, or
-> > > > > into /usr/include/libtracefs/tracefs.h when using meson to build
-> > > > > libtracefs. The header tracefs.h uses #include <event-parse.h> from
-> > > > > libtraceevent, so pkg-config needs to pick the correct include directory
-> > > > > for libtracefs and add the one for libtraceevent to succeed.
-> > > > >
-> > > > > [...]
-> > > >
-> > > > Applied both to perf-tools-next, thanks!
-> > >
-> > > Thank you very much!
-> >
-> > So now when we don't libtracefs installed we get (with current
-> > perf-tools-next):
-> >
-> > ⬢[acme@toolbox perf-tools-next]$ m
-> > make: Entering directory '/home/acme/git/perf-tools-next/tools/perf'
-> >   BUILD:   Doing 'make -j28' parallel build
-> >   HOSTCC  /tmp/build/perf-tools-next/fixdep.o
-> >   HOSTLD  /tmp/build/perf-tools-next/fixdep-in.o
-> >   LINK    /tmp/build/perf-tools-next/fixdep
-> > Warning: Kernel ABI header differences:
-> >   diff -u tools/include/uapi/drm/i915_drm.h include/uapi/drm/i915_drm.h
-> >   diff -u tools/include/uapi/linux/kvm.h include/uapi/linux/kvm.h
-> >   diff -u tools/include/uapi/linux/stat.h include/uapi/linux/stat.h
-> >   diff -u tools/arch/x86/include/asm/msr-index.h arch/x86/include/asm/msr-index.h
-> >   diff -u tools/arch/x86/include/uapi/asm/kvm.h arch/x86/include/uapi/asm/kvm.h
-> >   diff -u tools/include/uapi/asm-generic/unistd.h include/uapi/asm-generic/unistd.h
-> >   diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cputype.h
-> >   diff -u tools/perf/arch/x86/entry/syscalls/syscall_64.tbl arch/x86/entry/syscalls/syscall_64.tbl
-> >   diff -u tools/perf/arch/powerpc/entry/syscalls/syscall.tbl arch/powerpc/kernel/syscalls/syscall.tbl
-> >   diff -u tools/perf/arch/s390/entry/syscalls/syscall.tbl arch/s390/kernel/syscalls/syscall.tbl
-> >   diff -u tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl arch/mips/kernel/syscalls/syscall_n64.tbl
-> >   diff -u tools/perf/trace/beauty/arch/x86/include/asm/irq_vectors.h arch/x86/include/asm/irq_vectors.h
-> >   diff -u tools/perf/trace/beauty/include/linux/socket.h include/linux/socket.h
-> >   diff -u tools/perf/trace/beauty/include/uapi/linux/fcntl.h include/uapi/linux/fcntl.h
-> >   diff -u tools/perf/trace/beauty/include/uapi/linux/prctl.h include/uapi/linux/prctl.h
-> >   diff -u tools/perf/trace/beauty/include/uapi/linux/stat.h include/uapi/linux/stat.h
-> > Package libtracefs was not found in the pkg-config search path.
-> > Perhaps you should add the directory containing `libtracefs.pc'
-> > to the PKG_CONFIG_PATH environment variable
-> > Package 'libtracefs', required by 'virtual:world', not found
-> > Package libtracefs was not found in the pkg-config search path.
-> > Perhaps you should add the directory containing `libtracefs.pc'
-> > to the PKG_CONFIG_PATH environment variable
-> > Package 'libtracefs', required by 'virtual:world', not found
-> >
-> > Auto-detecting system features:
-> > ...                                   dwarf: [ on  ]
-> > ...                      dwarf_getlocations: [ on  ]
-> > ...                                   glibc: [ on  ]
-> > ...                                  libbfd: [ on  ]
-> > ...                          libbfd-buildid: [ on  ]
-> > ...                                  libcap: [ on  ]
-> > ...                                  libelf: [ on  ]
-> > ...                                 libnuma: [ on  ]
-> > ...                  numa_num_possible_cpus: [ on  ]
-> > ...                                 libperl: [ on  ]
-> > ...                               libpython: [ on  ]
-> > ...                               libcrypto: [ on  ]
-> > ...                               libunwind: [ on  ]
-> > ...                      libdw-dwarf-unwind: [ on  ]
-> > ...                             libcapstone: [ on  ]
-> > ...                                    zlib: [ on  ]
-> > ...                                    lzma: [ on  ]
-> > ...                               get_cpuid: [ on  ]
-> > ...                                     bpf: [ on  ]
-> > ...                                  libaio: [ on  ]
-> > ...                                 libzstd: [ on  ]
-> >
-> >   GEN     /tmp/build/perf-tools-next/common-cmds.h
-> >   GEN     /tmp/build/perf-tools-next/arch/arm64/include/generated/asm/sysreg-defs.h
-> >
-> > Which is a new behaviour, we never had those kinds of warnings from
-> > pkg-config, and when something wasn´t available we would reflect that
-> > somehow in the "Auto-detecting system features", additionally telling
-> > the users which set of features would not be available due to some
-> > system component not being available.
-> >
-> > Further more we would suggest the name of the package to install.
-> >
-> > Now I have this "virtual:world" thing that I never heard about (what is
-> > that)?
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+---
+ include/linux/cleanup.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-We are calling, e.g. pkg-config --libs libtraceevent, but the package is
-not there. I changed the Makefile to only add these calls for the
-feature check if the package is actually installed, by calling first
-pkg-config --exists libtraceevent.
+diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
+index c2d09bc4f976..4cf8ad5d27a3 100644
+--- a/include/linux/cleanup.h
++++ b/include/linux/cleanup.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __LINUX_GUARDS_H
+-#define __LINUX_GUARDS_H
++#ifndef __LINUX_CLEANUP_H
++#define __LINUX_CLEANUP_H
+ 
+ #include <linux/compiler.h>
+ 
+@@ -247,4 +247,4 @@ __DEFINE_LOCK_GUARD_0(_name, _lock)
+ 	{ return class_##_name##_lock_ptr(_T); }
+ 
+ 
+-#endif /* __LINUX_GUARDS_H */
++#endif /* __LINUX_CLEANUP_H */
+-- 
+2.39.2
 
-> > Ditto for PKG_CONFIG_PATH, I probably guess what this is about, but then
-> > it is a novelty for people with just enough muscle memory to build the
-> > kernel, build perf and use it.
-> >
-> > If I try:
-> >
-> > $ sudo dnf install libtracefs
-> >
-> > Cool:
-> >
-> > Installed:
-> >   libtracefs-1.6.4-3.fc39.x86_64
-> >
-> > Complete!
-> > $
-> >
-> > but then when I try to build perf again I get those warnings again, but
-> > a full build neverthless:
-> >
-> > Package libtracefs was not found in the pkg-config search path.
-> > Perhaps you should add the directory containing `libtracefs.pc'
-> > to the PKG_CONFIG_PATH environment variable
-> > Package 'libtracefs', required by 'virtual:world', not found
-> > Package libtracefs was not found in the pkg-config search path.
-> > Perhaps you should add the directory containing `libtracefs.pc'
-> > to the PKG_CONFIG_PATH environment variable
-> > Package 'libtracefs', required by 'virtual:world', not found
-> >
-> > Its only when I try:
-> >
-> > $ sudo dnf install libtracefs-devel
-> >
-> > That I get a build without warnings.
-> >
-> > So, what is the feature detection that is failing when libtracefs-devel
-> > isn't installed? What are the features that we lose in such a situation?
-
-I added a warning for when libtraceevent-devel is installed, but not
-libtracefs-devel. So if someone forgets to install the latter, there
-will be a message to remind them now.
-
-Indeed, this was not very nice behavior which was introduced. I've sent
-the patches to address this to the list. I tried to set the reply-to to
-this message, but it doesn't seem to have worked, unfortunately. Please
-let me know if the new patches are ok or if you have any suggestions for
-improvement.
-
-Best regards,
--Guilherme
