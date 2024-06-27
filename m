@@ -1,46 +1,45 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2086.outbound.protection.outlook.com [40.107.237.86])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2050.outbound.protection.outlook.com [40.107.244.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211431A0B0C;
-	Thu, 27 Jun 2024 22:46:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E891A2FD3;
+	Thu, 27 Jun 2024 22:47:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.50
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719528422; cv=fail; b=ecOlnrH4TM1HR8Ehm+fowIsW7+KnHlYccZ6yVNVI5swlu1aTz9YTEHLT2LhBpbctKovq+iFDX6CHXQScCV0XTblV4RzWvNS8AS3Hm5sD+Y/dCNwqwR4sSjGdaJJLqoNXfMCZzzQFva/Tg1psMdq3DGCYOmMD/Z50F6Zz8QGYEw0=
+	t=1719528426; cv=fail; b=ZpzIogrZq9tvq+9oF8DMXCsDdOPaWV5ef22nE/DStn8nczZd7VYKqyuhdSlGELqRhFYWUhC+N8yq11wA9Fbvnc5MILOJe7CAEFrYS/Zil0phA1ekZYTgZJx5RBOiy1x2OBd6J91nPHy5omVM+QjlcHxG8k0TO9WsO64p+FPqxqA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719528422; c=relaxed/simple;
-	bh=vxi2BveKx2d72IInQNT4V8klhjcRw+VnsVtOaZTJ/mc=;
+	s=arc-20240116; t=1719528426; c=relaxed/simple;
+	bh=i1Isd+rAPjpLFj73cHX5Iy78ewxgsubyerpMCUB8Exg=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kDzWy7eyfXFgI6h7IUuolaChrBvPKnS2Nu7PbVF7SsQoNF0gMm6NQdsLINPHlaxRYg/a2hF33moz9L9l80qyESwgo3X2l9Tj+P6I2g0LoAz9LVIUCnsSqLJr1Jgdbbbrp7/gNEdNNyqRfa8avCQSPwJB27CobTw6/rJ7H6XnwQU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pVDxEGcw; arc=fail smtp.client-ip=40.107.237.86
+	 MIME-Version:Content-Type; b=QNqo//UP/FPOiTFU1rIEsXSZ+vC2FKiTWvjjXlbk6P2IBcBq1r5hEck5i8uaic16Xue4442kQTB980Mo5jcbzHnVRXhXNe+46irWW2PrW7KIPkSB/gKCI+OYUWGYiFyM+xY9eaGIh+8FcJ8VziaaPrMi0P+L+0ZA6IhpkAvaL2A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ezSCwgum; arc=fail smtp.client-ip=40.107.244.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pVDxEGcw"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ezSCwgum"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EhW2nrtpH7BetPIomAdd1EJV9P0oxaqqvuS8P1fYfZcKmgLXMhYw0e2VDCW9CPUKCRku5GjzPRTtLxgQGa3dP0Twslkfemv3riIPV55+hFPWE57NG6Y/cquONWPWYGDLwn8VeaUKGWomMa+b1u2QCiBCgZkFPlNC6H444cOat5xYKhaRmYWNYLpxI7z4SSMHYpnJP7jbm+s8I8PRoEDNvYI9ipqMXp9v6Hy0rp44Qfwl4MNnZi5pbBFNLo55U7wfTqe9x7CGFfHWajs6VUYjO9nPmDTm6eByohCfXhQeoud+8FusApXnCPDXy8nH1CzgXgi6PUa9kfgtEVeSmHQpnw==
+ b=cfyaHs/jkmgOeSeXMQWUKP0I4pPmGKpwcfT7aY7Xnw0TnWMNJ38O3wpgJQb2svJcJ8zk/b8an+RzJKKszkoPBtGDarz4AXVoB8b36qpZ02fuT9O5eTOjxhaZD8QbT7h79KWlGD4GRpXVHW5TBt2yU3GkJxbFukw0PzIr9xDN507iIST3awxBlgR5XUwwjnz8mq4MuquCam5tvg+3OROMbpbm71IrxSdIYRuz2Q/Ced3N2ZTHIbzMcJBs2GOj4DXvLZgQ/nVGxfmWqGEsLHTFi3OQmHRzyt4WXXQ/PB8IEUj/HP0feC8mGzXp9z6M/MwFNMsuXnRw3Go4i/A+pw3huQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NPrE16HyJfyTGkyDchmZus+YzDNBhVyxLDSXdh1TC3s=;
- b=Gt/gC56v6oyT5L6lKNK7F5iZaTga+zNaFD0yBgmz4JLTGctgBG9YajzUJIB0s8gXA0EI27HzXi4RGQJqD7c7xLPNeN+XgBtJ3K9vemfT9DggUA5Ov1b8b2/zJRV9TmtqWqoNCE6WoB45Q+f3/7x2BiFGc414Mv2akqt+t/c5JgDvx4LDTgr3pRrG/7qOI/eJkPlKvgyzoJ6wWPfD70ePTf0zvTTMiEiOPwTVkE/Nayg16ghVhzTSNWpVE8cc+k2mtxE2Ln86YCFSgku++1npPiiNkGVrRc/9QUwoLOgCL3cPNR1/DJkqc2rVM7Wz75EqrRky6Sw+0YTbB38+M4GoJA==
+ bh=Xgrn84JS7zg+8EfybpCUjXN8siRMFlFrd5niEZIv09s=;
+ b=Q/BSEUecu0Y0LGA3Q99ZgiZm1FGEbFSFv3cZV9EhlbiUucyFLqrBlxPNqwqKPp7kNZLvuq85C8J2gSlxWlN264HVlxH0yqM02dAH9nQBa7seXimWZvHQXrQK3BKMDH9OGQhQ9iqWlZz+Ug98Ia46fBE91vwPVzrBlX0KAhnG3gwKdNtRVipv4ZBKBT/X1eGQUoIpG5LdPgok5BGSorSV5+lUN+J5e5e/IE8iuKk2zNiMY0aJH8oBRggSy7GvQJranJZCxgZhPtNf9LY6D96E9OYX3oYdi6USwP1W69wCcVw5Cm2OnY7i/43tQIxTar63dR4Q75bWt42NnC9tiaCIEA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NPrE16HyJfyTGkyDchmZus+YzDNBhVyxLDSXdh1TC3s=;
- b=pVDxEGcwFvj1qBBMnTwbFtZsR8aLZmUbhY5pUlvY4QQbW1asNJ3/jLh1lK7q840bLA4AdT4wckNKjNfzWbodhSWbTRoOp3A0XkQDVlSQYZhu4dC3gTMR8LKRbGjVIwHk8je/uW4PBj8zGyinOiT76CCARArThBVvwUc8dmDM9m4=
-Received: from CH0PR04CA0063.namprd04.prod.outlook.com (2603:10b6:610:74::8)
- by PH7PR12MB6761.namprd12.prod.outlook.com (2603:10b6:510:1ab::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.36; Thu, 27 Jun
- 2024 22:46:51 +0000
-Received: from CH2PEPF00000146.namprd02.prod.outlook.com
- (2603:10b6:610:74:cafe::b5) by CH0PR04CA0063.outlook.office365.com
- (2603:10b6:610:74::8) with Microsoft SMTP Server (version=TLS1_2,
+ bh=Xgrn84JS7zg+8EfybpCUjXN8siRMFlFrd5niEZIv09s=;
+ b=ezSCwgumanMiabPa/jc6+mnkp/zuN2/s4cK7Q6FXiAjWwAW2kwyoNoct47KWa+b5GS/278cggXr9KbJ+lq3gEjqdz+MJEEzXRvnnYIqhc3S09rIA4LW9WQ2m2nXUX0xo70+Mx+/tzCydb24twxZhvzuLSr0RwRWtxc1X7S/SNrg=
+Received: from DS7PR03CA0271.namprd03.prod.outlook.com (2603:10b6:5:3ad::6) by
+ DM4PR12MB6133.namprd12.prod.outlook.com (2603:10b6:8:ae::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7719.25; Thu, 27 Jun 2024 22:47:01 +0000
+Received: from CH2PEPF0000014A.namprd02.prod.outlook.com
+ (2603:10b6:5:3ad:cafe::56) by DS7PR03CA0271.outlook.office365.com
+ (2603:10b6:5:3ad::6) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.26 via Frontend
- Transport; Thu, 27 Jun 2024 22:46:51 +0000
+ Transport; Thu, 27 Jun 2024 22:47:01 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,13 +47,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH2PEPF00000146.mail.protection.outlook.com (10.167.244.103) with Microsoft
+ CH2PEPF0000014A.mail.protection.outlook.com (10.167.244.107) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7677.15 via Frontend Transport; Thu, 27 Jun 2024 22:46:51 +0000
+ 15.20.7677.15 via Frontend Transport; Thu, 27 Jun 2024 22:47:01 +0000
 Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 27 Jun
- 2024 17:46:47 -0500
+ 2024 17:46:58 -0500
 From: Robert Richter <rrichter@amd.com>
 To: Dan Williams <dan.j.williams@intel.com>, Davidlohr Bueso
 	<dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, "Dave
@@ -62,9 +61,9 @@ To: Dan Williams <dan.j.williams@intel.com>, Davidlohr Bueso
 	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>
 CC: <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>, "Robert
  Richter" <rrichter@amd.com>
-Subject: [PATCH 1/5] cxl/hdm: Moving HDM specific code to core/hdm.c.
-Date: Fri, 28 Jun 2024 00:46:10 +0200
-Message-ID: <20240627224615.854162-2-rrichter@amd.com>
+Subject: [PATCH 4/5] cxl/hdm: Setup HPA base for address translation using the HPA window in CFMWS
+Date: Fri, 28 Jun 2024 00:46:13 +0200
+Message-ID: <20240627224615.854162-5-rrichter@amd.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240627224615.854162-1-rrichter@amd.com>
 References: <20240627224615.854162-1-rrichter@amd.com>
@@ -80,377 +79,170 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF00000146:EE_|PH7PR12MB6761:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4032ff15-8960-4feb-dc6f-08dc96fb08fd
+X-MS-TrafficTypeDiagnostic: CH2PEPF0000014A:EE_|DM4PR12MB6133:EE_
+X-MS-Office365-Filtering-Correlation-Id: cd70183d-29b8-4c37-daba-08dc96fb0f3e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|376014|82310400026;
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Tc6XYdmDOhdoz7xnEwYgigFPdp7tfZBbZ1yZf/Yc+Z93BDCBg4OnatMs7t1q?=
- =?us-ascii?Q?s+LLP1dhCD/AtlPxh/UdW5/rWU3DZ+Y889IsbglrDctoi4Wt6DfCDGs6PtBR?=
- =?us-ascii?Q?8zTDpTFZdqchRhJW7556TMzOmIbKM3qPNpKjtAf7y8BcQiQ0mxInjihkJJR+?=
- =?us-ascii?Q?UjgxImzk+Sh3Chcdzh9EZolvq7ZbQbmJs9wdKeH21akfBpLqNwayM46V8zlC?=
- =?us-ascii?Q?2Uqn4FPi+XA3yx3sqsqb8cGJj4QG4bSv0XJDQQ7HIvoSKHZIYiId1hc8VKpg?=
- =?us-ascii?Q?WeWE0QL9JXs9AdXrQARJ2C0sR/Kf6R0QNDfSQGq583emnRfvN+AMrbJZz+Kc?=
- =?us-ascii?Q?ubnPFRMDs+30obkl7tlNpts30YK+x0JvQMnXh4OuB1yoZK8jyMo9cNKP0o66?=
- =?us-ascii?Q?cZJzkELwLY453yee6lyTxN/EKbvTLiO+RCMCs/PZHhOt3vltt2mavyZ6SVjm?=
- =?us-ascii?Q?FtO0AUe9jr8b+zzKUyajt+3v7X689RmPwpdX93EwvdUZij7JShgak6D1uddG?=
- =?us-ascii?Q?w2QcQ8NkRs9bNHTc/Aj56xS1E3BDmxe+/txyACVsWkCg1eStwTN/XBPda+Hn?=
- =?us-ascii?Q?VeMyj7hM3eUQE/aCdKGQMP6Ce+TPgUGcm5mVCzG+VWfRSTiSqsWqJCvoneT5?=
- =?us-ascii?Q?pJuHfjk9blOBVUyISuWynZeWIUNyLNmD7RVztq79CQpGgqeQRoaJiR5FElV7?=
- =?us-ascii?Q?iBjvrTiKO2j417qYttD5TDdMeR9xy/wBM6g3m+l5Wf889rSgb5JazDaHIp3s?=
- =?us-ascii?Q?sICs6/0ljRtqcirDWVMxMraDlixEA2fhdrJhjt9k9f6hTEklNdBbr1Dse4/i?=
- =?us-ascii?Q?dxnKS2hNZgASZPRhT5MeggWrnMXDOv3LOgFYemoTwd02tm2ovd6G37APeFIr?=
- =?us-ascii?Q?tJDwixpwi0//wJmMzMJLYQdTTJoXJs2/ukYnCR/sr5MqvaeeG79Ud5whbOiI?=
- =?us-ascii?Q?QnCfG9ofuhQzruoL5iScX92S8YPCB10qI4lpjreiVJGiB17lkt3JDELHX4Jy?=
- =?us-ascii?Q?HsDK+hYDKQhrlwaleiw7tzefpQmbzWKqAfPEB4RlqpAHBA4q68IX3O6Nuywi?=
- =?us-ascii?Q?Cj7BeeWqAlZ4Pza1xPL8QAscJ55bLFLTezmAIfuvlXgxDcFTCp1pw0MPEl5P?=
- =?us-ascii?Q?IAdOM5JcLCdM45f3HJgkQO/QV8XYm64ZYbXHbFKR10UFtPy8af1YcK6ydOGt?=
- =?us-ascii?Q?8K3596qzLLbmrR6pnsrjYgdObPoGPg1ypgFtw8FS7UaA5AGfg1yXYeqPmT5t?=
- =?us-ascii?Q?IMWLkbV8wY50Vlony3Bozfz1Oy15fAZFVzLM1yDVYv40BPbC8o/rqPOKeMCw?=
- =?us-ascii?Q?lnMyzCSlutvHjtU8OMT1ytle1a51hAVf2k97c1cA+cqTM1NlMJ/FxAVWtYnK?=
- =?us-ascii?Q?jtt/jJU52KKMDPq9jCVvV0nrWc9CoahRJyb5T/Esd5pfzoHEGjR312iwqzIj?=
- =?us-ascii?Q?q3CQliq91BZ47POTYuzXP33qbThrmzYJ?=
+	=?us-ascii?Q?HxHaHLsBLiTidAXOtXEnukSnW0trQCa7753p+fAr0wVMzzKjdXB4hJscvAHP?=
+ =?us-ascii?Q?LYYz2iWJYCeq/j2Ei0Vd9SYjNILOpHO427gq8Lf8d6BbocHojxDN2kOzyn7X?=
+ =?us-ascii?Q?5XmeaOnE/UjSCdX2zU3hRu2XsJgLCmea9VWcK0oAa2NlqKrP2m932yaeqdJB?=
+ =?us-ascii?Q?SxirihlcLr8znpjqNpGTRi+HBv1tnonKqIvRG+/OfzAGi7BpSyHVzTTQbCIK?=
+ =?us-ascii?Q?qDWQxn4M7QsEzvo/FjylCWCzWywKoatoBDB69SsoHovKRJEyv1JmFM7p/0uF?=
+ =?us-ascii?Q?CTvQMQSjSw4EbdQzOsPvYv4VkQX4SYYKQ9x5Srevl+jxiGh386RABU9akqTs?=
+ =?us-ascii?Q?qmx1RLkwq77R4FTaOVlcs2n+y8abOi0lz60J+VgnjJyyGuUCVbPnvUWmTypF?=
+ =?us-ascii?Q?lW86VhegzQDFOTZbXrG0o0JStAH+DJ3HDWsjuxS9QJjZgVoYMKpqvnMKBGvh?=
+ =?us-ascii?Q?VIRjUzmF+8eNw72KYEdghFpicDUlC8aTHtImF3TfgrDb+sIZlf43vRVfX2Gw?=
+ =?us-ascii?Q?rVI+YlXoH0n7bZc4kIsMcuEakorOIFsAm7piocxoWj9Uc6/Z7mapdyIxeJ8Q?=
+ =?us-ascii?Q?694m7EzP+nQGLUF9n3Uu4WVPtDvyf6LgeqX+xPAQn9gnDeqcREKVapXaIN5x?=
+ =?us-ascii?Q?F5sPV2M4zHFwEE02Z70x7CDp73ZHnv2nF4u9/VFwo4SZpZUiC0vJM6hVje9a?=
+ =?us-ascii?Q?ZS4m1jrmi9uqc0VjDdsf2XmjmB7ZN6zo+O9rvd0kq2YAA8IbFgorYcpywhNP?=
+ =?us-ascii?Q?VuI2XkiH1jJk6HRUJGjfz+N+Y9VcuuK631dSSYzVsa/dZYF05QqTVEamUrqK?=
+ =?us-ascii?Q?+991UU1pwAut8ML0xKrC742fOn9+bmSlquvEgBQEd0Z/7XlfyvJr87+FfFJr?=
+ =?us-ascii?Q?1JARsx8sjqEr3Fxlk65gnu1XzJJlOSnGywFZGYIyxU1FBRDykf1Ns3Q+pT/b?=
+ =?us-ascii?Q?ib7VzSqLlc48CIVlddaSIYG67cPhrB9pmhnh5rCgJEOZiwRwC/d6r6SwSBX8?=
+ =?us-ascii?Q?mi08cy80L2y/zLi9M3ROrCJnHYuo3oPvqyD7aLeSz/hz518FvEAYuwr5xXws?=
+ =?us-ascii?Q?yAPscTOw8vysR2H4pdX7qzfOj+5gDsBxsNHWtIXdQ6XLdn0hwApIItmX+A+r?=
+ =?us-ascii?Q?pTc+LhsI1f9P5M5l8x+P5BJW84rHmTsuYGpbUS+zmw8zuy+PkqXnIAAN4hpg?=
+ =?us-ascii?Q?x+oM0PpcNsTfEE7fwDyFW84CiJMwFBqaUl7Mnef3tmWW0pi6j2mce0U3068J?=
+ =?us-ascii?Q?v6EbuS4eBix43aoOcj79QxJrEWqqJvLufWutaHtCvFwR2vdTlT7ea7D+6rQU?=
+ =?us-ascii?Q?hqNJ3cjZdBTWO4U6SZEhyYJOx1uHJuIV67jSeazQ7NOqoBtHss0iWDa4NfNc?=
+ =?us-ascii?Q?G6tH2CgwIHKb987nOYOFwsCHjAZIi/pUbGR0lyvbwBfmnppL2baODig38vgA?=
+ =?us-ascii?Q?W4ZE89kyxB/X6Pm5unxGlDUWZfSk2/KX?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(82310400026);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2024 22:46:51.0799
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2024 22:47:01.5565
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4032ff15-8960-4feb-dc6f-08dc96fb08fd
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd70183d-29b8-4c37-daba-08dc96fb0f3e
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF00000146.namprd02.prod.outlook.com
+	CH2PEPF0000014A.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6761
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6133
 
-Code to handle HDM specifics is implemented in core/pci.c and
-core/hdm.c. In both files helper functions will be needed for address
-translation. To simplify the introduction of static helper functions,
-move all HDM code to core/hdm.c.
+There are platforms where an address translation between decoder's
+(HPA) and the system's physical addresses (SPA) is needed. The HPA
+window in the CFMWS can be used to determine the address offset for
+the translation. Each CXL endpoint or switch is uniquely attached to a
+CXL host bridge. The host bridge is assigned a unique HPA window in an
+CFMWS entry of the CEDT (host bridge is in target list). The hardware
+base addresses of a CFMWS is an SPA. With that, the offset can be
+determined using the HDM decoder's base address from the registers and
+the HPA window in the CFMWS entry of the corresponding CXL host
+bridge.
 
-The function devm_cxl_enable_mem() is no longer static and is shared
-now within the core module. No functional changes otherwise.
+The CFMWS entries are parsed during host bridge enablement and set up
+in the CXL root decoder during CXL decoder enumeration before a CXL
+endpoint is enabled. That is, the endpoint's host bridge's root
+decoder can be determined. The HPA range of it marks the beginning of
+the HDM decoder's base address and the offset between both can be used
+for later address translation.
+
+Setup HPA base address (@base_hpa) of a struct cxl_hdm by determining
+the offset as described. Use the port's host bridge and CXL root port
+to find the corresponding CXL root decoder containing the HPA window
+in the bridge's CFMWS entry. Only enable this for platforms with the
+@hpa_xlat_enable flag set.
 
 Signed-off-by: Robert Richter <rrichter@amd.com>
 ---
- drivers/cxl/core/core.h |   2 +
- drivers/cxl/core/hdm.c  | 117 +++++++++++++++++++++++++++++++++++++++
- drivers/cxl/core/pci.c  | 119 +---------------------------------------
- drivers/cxl/cxlmem.h    |   3 +
- drivers/cxl/cxlpci.h    |   3 -
- 5 files changed, 123 insertions(+), 121 deletions(-)
+ drivers/cxl/core/hdm.c | 69 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
 
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 625394486459..d8c3c27ce100 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -70,6 +70,8 @@ int cxl_query_cmd(struct cxl_memdev *cxlmd,
- int cxl_send_cmd(struct cxl_memdev *cxlmd, struct cxl_send_command __user *s);
- void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
- 				   resource_size_t length);
-+struct cxl_dev_state;
-+int devm_cxl_enable_mem(struct device *host, struct cxl_dev_state *cxlds);
- 
- struct dentry *cxl_debugfs_create_dir(const char *dir);
- int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
 diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 784843fa2a22..605da9a55d89 100644
+index 50078013f4e3..5164ff807537 100644
 --- a/drivers/cxl/core/hdm.c
 +++ b/drivers/cxl/core/hdm.c
-@@ -1027,3 +1027,120 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
- 	return 0;
+@@ -125,8 +125,73 @@ static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+ 	return true;
  }
- EXPORT_SYMBOL_NS_GPL(devm_cxl_enumerate_decoders, CXL);
-+
-+/* require dvsec ranges to be covered by a locked platform window */
-+static int dvsec_range_allowed(struct device *dev, void *arg)
+ 
++static int match_root_decoder(struct device *dev, void *dport_dev)
 +{
-+	struct range *dev_range = arg;
-+	struct cxl_decoder *cxld;
++	struct cxl_switch_decoder *cxlsd;
 +
-+	if (!is_root_decoder(dev))
++	if (!is_switch_decoder(dev))
 +		return 0;
 +
-+	cxld = to_cxl_decoder(dev);
++	cxlsd = to_cxl_switch_decoder(dev);
 +
-+	if (!(cxld->flags & CXL_DECODER_F_RAM))
-+		return 0;
++	guard(rwsem_read)(&cxl_region_rwsem);
 +
-+	return range_contains(&cxld->hpa_range, dev_range);
++	for (int i = 0; i < cxlsd->nr_targets; i++) {
++		if (dport_dev == cxlsd->target[i]->dport_dev)
++			return 1;
++	}
++
++	return 0;
 +}
 +
-+static void disable_hdm(void *_cxlhdm)
++static struct cxl_decoder *find_root_decoder(struct cxl_port *port,
++					     struct device *dport_dev)
 +{
-+	u32 global_ctrl;
-+	struct cxl_hdm *cxlhdm = _cxlhdm;
-+	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
++	struct device *dev;
 +
-+	global_ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
-+	writel(global_ctrl & ~CXL_HDM_DECODER_ENABLE,
-+	       hdm + CXL_HDM_DECODER_CTRL_OFFSET);
++	dev = device_find_child(&port->dev, dport_dev, match_root_decoder);
++
++	return dev ? to_cxl_decoder(dev) : NULL;
 +}
 +
-+static int devm_cxl_enable_hdm(struct device *host, struct cxl_hdm *cxlhdm)
++static void setup_base_hpa_cfmws(struct cxl_hdm *cxlhdm,
++				 struct cxl_root *cxl_root)
 +{
-+	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
-+	u32 global_ctrl;
-+
-+	global_ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
-+	writel(global_ctrl | CXL_HDM_DECODER_ENABLE,
-+	       hdm + CXL_HDM_DECODER_CTRL_OFFSET);
-+
-+	return devm_add_action_or_reset(host, disable_hdm, cxlhdm);
-+}
-+
-+/**
-+ * cxl_hdm_decode_init() - Setup HDM decoding for the endpoint
-+ * @cxlds: Device state
-+ * @cxlhdm: Mapped HDM decoder Capability
-+ * @info: Cached DVSEC range registers info
-+ *
-+ * Try to enable the endpoint's HDM Decoder Capability
-+ */
-+int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
-+			struct cxl_endpoint_dvsec_info *info)
-+{
-+	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
 +	struct cxl_port *port = cxlhdm->port;
-+	struct device *dev = cxlds->dev;
-+	struct cxl_port *root;
-+	int i, rc, allowed;
-+	u32 global_ctrl = 0;
++	struct cxl_decoder *cxld;
++	u64 base;
 +
-+	if (hdm)
-+		global_ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
-+
-+	/*
-+	 * If the HDM Decoder Capability is already enabled then assume
-+	 * that some other agent like platform firmware set it up.
-+	 */
-+	if (global_ctrl & CXL_HDM_DECODER_ENABLE || (!hdm && info->mem_enabled))
-+		return devm_cxl_enable_mem(&port->dev, cxlds);
-+	else if (!hdm)
-+		return -ENODEV;
-+
-+	root = to_cxl_port(port->dev.parent);
-+	while (!is_cxl_root(root) && is_cxl_port(root->dev.parent))
-+		root = to_cxl_port(root->dev.parent);
-+	if (!is_cxl_root(root)) {
-+		dev_err(dev, "Failed to acquire root port for HDM enable\n");
-+		return -ENODEV;
++	if (!port->host_bridge) {
++		dev_dbg(&port->dev, "No host bridge found for port.\n");
++		return;
 +	}
 +
-+	for (i = 0, allowed = 0; info->mem_enabled && i < info->ranges; i++) {
-+		struct device *cxld_dev;
-+
-+		cxld_dev = device_find_child(&root->dev, &info->dvsec_range[i],
-+					     dvsec_range_allowed);
-+		if (!cxld_dev) {
-+			dev_dbg(dev, "DVSEC Range%d denied by platform\n", i);
-+			continue;
-+		}
-+		dev_dbg(dev, "DVSEC Range%d allowed by platform\n", i);
-+		put_device(cxld_dev);
-+		allowed++;
++	cxld = find_root_decoder(&cxl_root->port, port->host_bridge);
++	if (!cxld) {
++		dev_dbg(&port->dev,
++			"CFMWS missing for host bridge %s, HPA range not found.\n",
++			dev_name(port->host_bridge));
++		return;
 +	}
 +
-+	if (!allowed && info->mem_enabled) {
-+		dev_err(dev, "Range register decodes outside platform defined CXL ranges.\n");
-+		return -ENXIO;
-+	}
++	base = cxld->hpa_range.start;
++	dev_dbg(&port->dev,
++		"HPA translation for decoders enabled, base 0x%08llx\n",
++		base);
++	put_device(&cxld->dev);
 +
-+	/*
-+	 * Per CXL 2.0 Section 8.1.3.8.3 and 8.1.3.8.4 DVSEC CXL Range 1 Base
-+	 * [High,Low] when HDM operation is enabled the range register values
-+	 * are ignored by the device, but the spec also recommends matching the
-+	 * DVSEC Range 1,2 to HDM Decoder Range 0,1. So, non-zero info->ranges
-+	 * are expected even though Linux does not require or maintain that
-+	 * match. If at least one DVSEC range is enabled and allowed, skip HDM
-+	 * Decoder Capability Enable.
-+	 */
-+	if (info->mem_enabled)
-+		return 0;
-+
-+	rc = devm_cxl_enable_hdm(&port->dev, cxlhdm);
-+	if (rc)
-+		return rc;
-+
-+	return devm_cxl_enable_mem(&port->dev, cxlds);
++	cxlhdm->base_hpa = base;
 +}
-+EXPORT_SYMBOL_NS_GPL(cxl_hdm_decode_init, CXL);
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 8567dd11eaac..4f67e3ae7a05 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -270,7 +270,7 @@ static void clear_mem_enable(void *cxlds)
- 	cxl_set_mem_enable(cxlds, 0);
- }
- 
--static int devm_cxl_enable_mem(struct device *host, struct cxl_dev_state *cxlds)
-+int devm_cxl_enable_mem(struct device *host, struct cxl_dev_state *cxlds)
- {
- 	int rc;
- 
-@@ -282,46 +282,6 @@ static int devm_cxl_enable_mem(struct device *host, struct cxl_dev_state *cxlds)
- 	return devm_add_action_or_reset(host, clear_mem_enable, cxlds);
- }
- 
--/* require dvsec ranges to be covered by a locked platform window */
--static int dvsec_range_allowed(struct device *dev, void *arg)
--{
--	struct range *dev_range = arg;
--	struct cxl_decoder *cxld;
--
--	if (!is_root_decoder(dev))
--		return 0;
--
--	cxld = to_cxl_decoder(dev);
--
--	if (!(cxld->flags & CXL_DECODER_F_RAM))
--		return 0;
--
--	return range_contains(&cxld->hpa_range, dev_range);
--}
--
--static void disable_hdm(void *_cxlhdm)
--{
--	u32 global_ctrl;
--	struct cxl_hdm *cxlhdm = _cxlhdm;
--	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
--
--	global_ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
--	writel(global_ctrl & ~CXL_HDM_DECODER_ENABLE,
--	       hdm + CXL_HDM_DECODER_CTRL_OFFSET);
--}
--
--static int devm_cxl_enable_hdm(struct device *host, struct cxl_hdm *cxlhdm)
--{
--	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
--	u32 global_ctrl;
--
--	global_ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
--	writel(global_ctrl | CXL_HDM_DECODER_ENABLE,
--	       hdm + CXL_HDM_DECODER_CTRL_OFFSET);
--
--	return devm_add_action_or_reset(host, disable_hdm, cxlhdm);
--}
--
- int cxl_dvsec_rr_decode(struct device *dev, int d,
- 			struct cxl_endpoint_dvsec_info *info)
- {
-@@ -425,83 +385,6 @@ int cxl_dvsec_rr_decode(struct device *dev, int d,
- }
- EXPORT_SYMBOL_NS_GPL(cxl_dvsec_rr_decode, CXL);
- 
--/**
-- * cxl_hdm_decode_init() - Setup HDM decoding for the endpoint
-- * @cxlds: Device state
-- * @cxlhdm: Mapped HDM decoder Capability
-- * @info: Cached DVSEC range registers info
-- *
-- * Try to enable the endpoint's HDM Decoder Capability
-- */
--int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
--			struct cxl_endpoint_dvsec_info *info)
--{
--	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
--	struct cxl_port *port = cxlhdm->port;
--	struct device *dev = cxlds->dev;
--	struct cxl_port *root;
--	int i, rc, allowed;
--	u32 global_ctrl = 0;
--
--	if (hdm)
--		global_ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
--
--	/*
--	 * If the HDM Decoder Capability is already enabled then assume
--	 * that some other agent like platform firmware set it up.
--	 */
--	if (global_ctrl & CXL_HDM_DECODER_ENABLE || (!hdm && info->mem_enabled))
--		return devm_cxl_enable_mem(&port->dev, cxlds);
--	else if (!hdm)
--		return -ENODEV;
--
--	root = to_cxl_port(port->dev.parent);
--	while (!is_cxl_root(root) && is_cxl_port(root->dev.parent))
--		root = to_cxl_port(root->dev.parent);
--	if (!is_cxl_root(root)) {
--		dev_err(dev, "Failed to acquire root port for HDM enable\n");
--		return -ENODEV;
--	}
--
--	for (i = 0, allowed = 0; info->mem_enabled && i < info->ranges; i++) {
--		struct device *cxld_dev;
--
--		cxld_dev = device_find_child(&root->dev, &info->dvsec_range[i],
--					     dvsec_range_allowed);
--		if (!cxld_dev) {
--			dev_dbg(dev, "DVSEC Range%d denied by platform\n", i);
--			continue;
--		}
--		dev_dbg(dev, "DVSEC Range%d allowed by platform\n", i);
--		put_device(cxld_dev);
--		allowed++;
--	}
--
--	if (!allowed && info->mem_enabled) {
--		dev_err(dev, "Range register decodes outside platform defined CXL ranges.\n");
--		return -ENXIO;
--	}
--
--	/*
--	 * Per CXL 2.0 Section 8.1.3.8.3 and 8.1.3.8.4 DVSEC CXL Range 1 Base
--	 * [High,Low] when HDM operation is enabled the range register values
--	 * are ignored by the device, but the spec also recommends matching the
--	 * DVSEC Range 1,2 to HDM Decoder Range 0,1. So, non-zero info->ranges
--	 * are expected even though Linux does not require or maintain that
--	 * match. If at least one DVSEC range is enabled and allowed, skip HDM
--	 * Decoder Capability Enable.
--	 */
--	if (info->mem_enabled)
--		return 0;
--
--	rc = devm_cxl_enable_hdm(&port->dev, cxlhdm);
--	if (rc)
--		return rc;
--
--	return devm_cxl_enable_mem(&port->dev, cxlds);
--}
--EXPORT_SYMBOL_NS_GPL(cxl_hdm_decode_init, CXL);
--
- #define CXL_DOE_TABLE_ACCESS_REQ_CODE		0x000000ff
- #define   CXL_DOE_TABLE_ACCESS_REQ_CODE_READ	0
- #define CXL_DOE_TABLE_ACCESS_TABLE_TYPE		0x0000ff00
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 19aba81cdf13..61d9f4e00921 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -862,4 +862,7 @@ struct cxl_hdm {
- struct seq_file;
- struct dentry *cxl_debugfs_create_dir(const char *dir);
- void cxl_dpa_debug(struct seq_file *file, struct cxl_dev_state *cxlds);
-+int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
-+			struct cxl_endpoint_dvsec_info *info);
 +
- #endif /* __CXL_MEM_H__ */
-diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-index 4da07727ab9c..fe01793af1cb 100644
---- a/drivers/cxl/cxlpci.h
-+++ b/drivers/cxl/cxlpci.h
-@@ -122,9 +122,6 @@ static inline bool cxl_pci_flit_256(struct pci_dev *pdev)
+ static void setup_base_hpa(struct cxl_hdm *cxlhdm)
+ {
++	struct cxl_port *port = cxlhdm->port;
++
++	struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(port);
++
++	if (!cxl_root)
++		return;
++
+ 	/*
+ 	 * Address translation is not needed on platforms with HPA ==
+ 	 * SPA. HDM decoder addresses all base on system addresses,
+@@ -134,6 +199,10 @@ static void setup_base_hpa(struct cxl_hdm *cxlhdm)
+ 	 * == 0). Nothing to do here as it is already pre-initialized
+ 	 * zero.
+ 	 */
++	if (!cxl_root->hpa_xlat_enable)
++		return;
++
++	setup_base_hpa_cfmws(cxlhdm, cxl_root);
  }
  
- int devm_cxl_port_enumerate_dports(struct cxl_port *port);
--struct cxl_dev_state;
--int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
--			struct cxl_endpoint_dvsec_info *info);
- void read_cdat_data(struct cxl_port *port);
- void cxl_cor_error_detected(struct pci_dev *pdev);
- pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+ /**
 -- 
 2.39.2
 
