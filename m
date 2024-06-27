@@ -1,74 +1,79 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ADBF19CD05;
-	Thu, 27 Jun 2024 17:22:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 791E519D8AA
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 17:22:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719508977; cv=none; b=NralfEYFdtzv9KCKx4VWYFyMCFCxN0zOtOuwTMqSqbhxMbiyRf33UmLmra5BiS4gzD5HgjCUKoLkx+WcaYg9DggyexXGNEFORUkgpWdV50eWDw/KJs7PREl4vHf+PXW235WJELrFIV6GnNZb98NS1uIro3pBPUReyFQuSjvTcEg=
+	t=1719508980; cv=none; b=Z4fWZ3dmlPPDr2uFVpFxR/sLJ/nAV9PY00YPNp1i/ORdAnRzWSeShw0mG52Bj+7T/aXDB+kt6ZMc3UmoWEQSOkTq4xqb1JG5poB1N7koEX/oh8B5isaCRC81bn4470Uf7kGG48WqRPYvR08IGkrFKzgoe6cng+9NJxFZvG58pdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719508977; c=relaxed/simple;
-	bh=9trPxT7067agZJig5NFIevW79dFHtTF0XpemZk9R2eE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p7MfCPBitI0XGPMdtjFNoffL7MPSh2OK0jRvStevWVkPWlM59as5mC4tOuT7kIvYcT1TOsdOl5AF4fmUIJqAlNLSacZSO/sDUmE2riyDBew/VwOXIIZuLZ36aumeATryvWUr10f+ZC2T7yduzOucVH96qs1RND97dNTL5otY52M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E7kjvhJu; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719508980; c=relaxed/simple;
+	bh=i4ZaFghgO+Lt6ofSiczvE8yLB1Ot2zvxfE6Ayg/1ZT8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=giXuPXHoOE3v0gNl2oZWG5dtz/maviWl65aMHKVnDNFNQAKKFnNr7oCsvSc6vzcb9yBwzvFehFd7U3q/9NC8ShX3R9TaZaqW9LnomUrYbfQn6PhA9ZgJmVFVBFosuv7Bod5ygXb5f78yEl/QxX9T1JmwwKjNESuOWFv5MRtzZ6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=IvHRAUbz; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E7kjvhJu"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2ec58040f39so57325321fa.2;
-        Thu, 27 Jun 2024 10:22:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="IvHRAUbz"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-706683e5249so4501285b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 10:22:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719508974; x=1720113774; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719508977; x=1720113777; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Q8jv7DlUuWmwKBFAeDpE74984/WTEdS+lAt5ksO5mUc=;
-        b=E7kjvhJuyxv7J5TBtvDvdiTVfOfGW9ylxHih3tHOngN7AF6OyyOlceH6Uy/V5d7aEL
-         zxtU+TKYt7ICEKeT154ZSP7zeOlLXyD7zMnde33V7CCTd3rBqcx3CVgtuu38M9yRSF4X
-         p6cOxJ5a69sKo8JJo4/FYqhpmNcTWAyQDIdX6Mj2OVcak4Hs37yA2nX2zl9lxr50IMZS
-         wr2oy/IviUWe3ChX+HghgK7vS4p2adUdWi7PavQxuw38cl4AsES0UmJGShMGRDD87Hej
-         HUMaJelB0NvkeC0tO9t1J+dy3gvIa8BBG1SviFCXOt319ZMAzjYR9I3Yj7j1gNu6Cccq
-         qSlQ==
+        bh=WP7jtD8GMMYgLKsWgQuz0MWj++7gT6SNnVpQZDX9lDo=;
+        b=IvHRAUbzS1Bb9upUW8x7px7S9DPNPt8K3TayLLmDa+UCJ22cTKgXvNFFULQLddkWVs
+         nf3YkB3Ws49aUIx9pkvUIowlt/TKxH/iWy0nWsuVko7X4El7a9wG4ZghLgetZ8cdgxJo
+         za+gMDTFvnQ0S77NoC63AFFI3hC256s0oIvZHdNEvelkap8T7PIQ7e6SYaQK+U2l2YiS
+         IdSWalRH/PH1YapBk4AkLnlUrduqh/cktZouDk6x25NI6sgNxB4QelyGg0KdMHhR2aVm
+         CSorUQHxC0aBI6mB+VU31Zhsv2Tu7rZfVu3Efcu5q0dY1nzF4N3EjBts3SjUITsfv0/S
+         Zwfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719508974; x=1720113774;
+        d=1e100.net; s=20230601; t=1719508977; x=1720113777;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Q8jv7DlUuWmwKBFAeDpE74984/WTEdS+lAt5ksO5mUc=;
-        b=wqEtA/MNtRfsxm/rJ8zq/4T8LtmxyTgQPVGxubYv7kcQ5l06CIuz6sf9OBGg8SLz2Z
-         ufmDyXnJo8ZHpi5XuOH0ZD8Pk2oyfv3eAuKJEcBBHCKMa0xVkU7tqX3/DE2U8NrkYsR0
-         rL081P32xtf9jekMzo7P5V0GJTalODbK0UpAb0N6YS/QVzN+5ssJd6df2V1uoUkbWM3U
-         BsSIDepRRhHhivgzvw8MvirK6K3bqJrHA+FcJYJB2sPWrv8wr16hR9Pt43WBFcchmGgT
-         mGjf/GQkIXyTt5G1enniVN56ZtxBzaR80yfFV/lwpLBTR+XDvYsXy575plJyAkNOl1C+
-         MsgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUYZBlRmgfneszwN3Z2GFQk5fX3Xdi56q2Om9vWWdtO+nPoNKyT+tIgs5br+YIgDiiuFhy4BJjHdIBk1i2Vekv6AHoAXhcSQsm8jp2uVW+UpmVj0bKMCWXQoXwcoBGU3Iy1DY2VMdWFMsEntxKU2NJ/T5/5dHxkvuGw4Q2uxewIL05j2ZlZ
-X-Gm-Message-State: AOJu0YxH0EmSNosTlbnWKFi2j3794Z6x31bbqR9u3Opegl1yZXE5V6UG
-	4gazJYLJYDlEDsxvNbUTp5RLe04UpjSWlFlRXzZ/zoAlc5EFZiFP
-X-Google-Smtp-Source: AGHT+IHGcnWVU3uZWrJira+2rU/QndOHq6hMw0pexfkmq6Vfs0ZRtEfHJDto+HPL5wXmLCqgkqqfrA==
-X-Received: by 2002:a2e:3a13:0:b0:2ec:5019:bec3 with SMTP id 38308e7fff4ca-2ec593e0cd9mr95407421fa.21.1719508973571;
-        Thu, 27 Jun 2024 10:22:53 -0700 (PDT)
-Received: from localhost ([213.79.110.82])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ee4a34447fsm3237781fa.11.2024.06.27.10.22.52
+        bh=WP7jtD8GMMYgLKsWgQuz0MWj++7gT6SNnVpQZDX9lDo=;
+        b=TzdDusglmXC+jX0gMtfZkuoPzHjmmaAGAEjn+Hkf6kEXR+nTtzgogyHJhbXyIH16tW
+         grMdyMHUIV1oot7Cfm7uMt8LzBDpU4F1E+JrubZa/JVAlhWpV+13dtd+2i7lPEbB5Laz
+         8QJcDDABIV9RHZqtan2viFWAuHOEqlHykn1nGlklmJNuRZ7vayQA86QKjDnr/eTpkFVJ
+         UUQiKzQHte3H04O2Juj3awDY4coDo3QqY7AHNuekJIXsDiR/4dDp47TDyHVFARHcf7Bx
+         qB0iZNG9FAC4DyELy3BgAT2Gve6YIY8VXRidlqSzSsKkwFcKXjbv5OPWue5acWoZuvyq
+         75Bw==
+X-Forwarded-Encrypted: i=1; AJvYcCV+67ltWCITZIEFwBEIGbcM1T9B0lxbq0H15HnMFOAbag9I6Rp3DLOwsd2C6wv8yS1kybsWVg+S5sgW+nxhSBlsz0WdfQJzN4O7v1/U
+X-Gm-Message-State: AOJu0Yx3YMRaPaf06jcEDBS3G8eTk9ay4y6CF41TI/c9+4fey8CzjZyt
+	pro9iJ+DASOTa0fTQjrrqvJCMeB8GeDOVGRM5hoaSTqGh2vdbnw9BiRzW4qvg60=
+X-Google-Smtp-Source: AGHT+IHWlzW7b9dIzeFM1UaPGPNDnj9mj0+synWhNkTAZT9w3SowrsNm8Dr6wgU1vaHYW9dDDvMM4Q==
+X-Received: by 2002:a05:6a00:bf0:b0:705:9aac:ffb8 with SMTP id d2e1a72fcca58-70674582b1bmr13224247b3a.9.1719508976537;
+        Thu, 27 Jun 2024 10:22:56 -0700 (PDT)
+Received: from evan.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-706b4a58847sm1617843b3a.186.2024.06.27.10.22.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 10:22:53 -0700 (PDT)
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Viresh Kumar <vireshk@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Vinod Koul <vkoul@kernel.org>
-Cc: Serge Semin <fancer.lancer@gmail.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	dmaengine@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND v3 6/6] dmaengine: dw: Unify ret-val local variables naming
-Date: Thu, 27 Jun 2024 20:22:22 +0300
-Message-ID: <20240627172231.24856-7-fancer.lancer@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240627172231.24856-1-fancer.lancer@gmail.com>
-References: <20240627172231.24856-1-fancer.lancer@gmail.com>
+        Thu, 27 Jun 2024 10:22:55 -0700 (PDT)
+From: Evan Green <evan@rivosinc.com>
+To: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Yangyu Chen <cyy@cyyself.name>,
+	Evan Green <evan@rivosinc.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Andy Chiu <andy.chiu@sifive.com>,
+	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH v3 1/2] RISC-V: hwprobe: Add MISALIGNED_PERF key
+Date: Thu, 27 Jun 2024 10:22:37 -0700
+Message-Id: <20240627172238.2460840-2-evan@rivosinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240627172238.2460840-1-evan@rivosinc.com>
+References: <20240627172238.2460840-1-evan@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,155 +82,122 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently there are two names utilized in the driver to keep the functions
-call status: ret and err. For the sake of unification convert to using the
-first version only.
+RISCV_HWPROBE_KEY_CPUPERF_0 was mistakenly flagged as a bitmask in
+hwprobe_key_is_bitmask(), when in reality it was an enum value. This
+causes problems when used in conjunction with RISCV_HWPROBE_WHICH_CPUS,
+since SLOW, FAST, and EMULATED have values whose bits overlap with
+each other. If the caller asked for the set of CPUs that was SLOW or
+EMULATED, the returned set would also include CPUs that were FAST.
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+Introduce a new hwprobe key, RISCV_HWPROBE_KEY_MISALIGNED_PERF, which
+returns the same values in response to a direct query (with no flags),
+but is properly handled as an enumerated value. As a result, SLOW,
+FAST, and EMULATED are all correctly treated as distinct values under
+the new key when queried with the WHICH_CPUS flag.
+
+Leave the old key in place to avoid disturbing applications which may
+have already come to rely on the key, with or without its broken
+behavior with respect to the WHICH_CPUS flag.
+
+Fixes: e178bf146e4b ("RISC-V: hwprobe: Introduce which-cpus flag")
+Signed-off-by: Evan Green <evan@rivosinc.com>
+Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
 
 ---
 
-Changelog v2:
-- New patch created on v2 review stage. (Andy)
----
- drivers/dma/dw/core.c     | 20 ++++++++++----------
- drivers/dma/dw/platform.c | 20 ++++++++++----------
- 2 files changed, 20 insertions(+), 20 deletions(-)
+Changes in v3:
+ - Further documentation wordsmithing (Conor)
 
-diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-index 32a66f9effd9..dd75f97a33b3 100644
---- a/drivers/dma/dw/core.c
-+++ b/drivers/dma/dw/core.c
-@@ -1155,7 +1155,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 	bool			autocfg = false;
- 	unsigned int		dw_params;
- 	unsigned int		i;
--	int			err;
-+	int			ret;
+Changes in v2:
+ - Clarified the distinction of slow and fast refers to misaligned word
+   accesses. Previously it just said misaligned accesses, leaving it
+   ambiguous as to which type of access was measured.
+ - Removed shifts in values (Andrew)
+ - Renamed key to RISCV_HWPROBE_KEY_MISALIGNED_SCALAR_PERF (Palmer)
+
+ Documentation/arch/riscv/hwprobe.rst  | 20 +++++++++++++-------
+ arch/riscv/include/asm/hwprobe.h      |  2 +-
+ arch/riscv/include/uapi/asm/hwprobe.h |  1 +
+ arch/riscv/kernel/sys_hwprobe.c       |  1 +
+ 4 files changed, 16 insertions(+), 8 deletions(-)
+
+diff --git a/Documentation/arch/riscv/hwprobe.rst b/Documentation/arch/riscv/hwprobe.rst
+index 25d783be2878..7121a00a8464 100644
+--- a/Documentation/arch/riscv/hwprobe.rst
++++ b/Documentation/arch/riscv/hwprobe.rst
+@@ -235,8 +235,13 @@ The following keys are defined:
+        supported as defined in the RISC-V ISA manual starting from commit
+        c732a4f39a4 ("Zcmop is ratified/1.0").
  
- 	dw->pdata = devm_kzalloc(chip->dev, sizeof(*dw->pdata), GFP_KERNEL);
- 	if (!dw->pdata)
-@@ -1171,7 +1171,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
+-* :c:macro:`RISCV_HWPROBE_KEY_CPUPERF_0`: A bitmask that contains performance
+-  information about the selected set of processors.
++* :c:macro:`RISCV_HWPROBE_KEY_CPUPERF_0`: Deprecated.  Returns similar values to
++     :c:macro:`RISCV_HWPROBE_KEY_MISALIGNED_SCALAR_PERF`, but the key was
++     mistakenly classified as a bitmask rather than a value.
++
++* :c:macro:`RISCV_HWPROBE_KEY_MISALIGNED_SCALAR_PERF`: An enum value describing
++  the performance of misaligned scalar native word accesses on the selected set
++  of processors.
  
- 		autocfg = dw_params >> DW_PARAMS_EN & 1;
- 		if (!autocfg) {
--			err = -EINVAL;
-+			ret = -EINVAL;
- 			goto err_pdata;
- 		}
+   * :c:macro:`RISCV_HWPROBE_MISALIGNED_UNKNOWN`: The performance of misaligned
+     accesses is unknown.
+@@ -245,12 +250,13 @@ The following keys are defined:
+     emulated via software, either in or below the kernel.  These accesses are
+     always extremely slow.
  
-@@ -1191,7 +1191,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 		pdata->chan_allocation_order = CHAN_ALLOCATION_ASCENDING;
- 		pdata->chan_priority = CHAN_PRIORITY_ASCENDING;
- 	} else if (chip->pdata->nr_channels > DW_DMA_MAX_NR_CHANNELS) {
--		err = -EINVAL;
-+		ret = -EINVAL;
- 		goto err_pdata;
- 	} else {
- 		memcpy(dw->pdata, chip->pdata, sizeof(*dw->pdata));
-@@ -1203,7 +1203,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 	dw->chan = devm_kcalloc(chip->dev, pdata->nr_channels, sizeof(*dw->chan),
- 				GFP_KERNEL);
- 	if (!dw->chan) {
--		err = -ENOMEM;
-+		ret = -ENOMEM;
- 		goto err_pdata;
- 	}
+-  * :c:macro:`RISCV_HWPROBE_MISALIGNED_SLOW`: Misaligned accesses are slower
+-    than equivalent byte accesses.  Misaligned accesses may be supported
+-    directly in hardware, or trapped and emulated by software.
++  * :c:macro:`RISCV_HWPROBE_MISALIGNED_SLOW`: Misaligned native word
++    sized accesses are slower than the equivalent quantity of byte accesses.
++    Misaligned accesses may be supported directly in hardware, or trapped and
++    emulated by software.
  
-@@ -1221,15 +1221,15 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 					 sizeof(struct dw_desc), 4, 0);
- 	if (!dw->desc_pool) {
- 		dev_err(chip->dev, "No memory for descriptors dma pool\n");
--		err = -ENOMEM;
-+		ret = -ENOMEM;
- 		goto err_pdata;
- 	}
+-  * :c:macro:`RISCV_HWPROBE_MISALIGNED_FAST`: Misaligned accesses are faster
+-    than equivalent byte accesses.
++  * :c:macro:`RISCV_HWPROBE_MISALIGNED_FAST`: Misaligned native word
++    sized accesses are faster than the equivalent quantity of byte accesses.
  
- 	tasklet_setup(&dw->tasklet, dw_dma_tasklet);
+   * :c:macro:`RISCV_HWPROBE_MISALIGNED_UNSUPPORTED`: Misaligned accesses are
+     not supported at all and will generate a misaligned address fault.
+diff --git a/arch/riscv/include/asm/hwprobe.h b/arch/riscv/include/asm/hwprobe.h
+index 630507dff5ea..150a9877b0af 100644
+--- a/arch/riscv/include/asm/hwprobe.h
++++ b/arch/riscv/include/asm/hwprobe.h
+@@ -8,7 +8,7 @@
  
--	err = request_irq(chip->irq, dw_dma_interrupt, IRQF_SHARED,
-+	ret = request_irq(chip->irq, dw_dma_interrupt, IRQF_SHARED,
- 			  dw->name, dw);
--	if (err)
-+	if (ret)
- 		goto err_pdata;
+ #include <uapi/asm/hwprobe.h>
  
- 	INIT_LIST_HEAD(&dw->dma.channels);
-@@ -1341,8 +1341,8 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 	 */
- 	dma_set_max_seg_size(dw->dma.dev, dw->chan[0].block_size);
+-#define RISCV_HWPROBE_MAX_KEY 6
++#define RISCV_HWPROBE_MAX_KEY 7
  
--	err = dma_async_device_register(&dw->dma);
--	if (err)
-+	ret = dma_async_device_register(&dw->dma);
-+	if (ret)
- 		goto err_dma_register;
+ static inline bool riscv_hwprobe_key_is_valid(__s64 key)
+ {
+diff --git a/arch/riscv/include/uapi/asm/hwprobe.h b/arch/riscv/include/uapi/asm/hwprobe.h
+index 920fc6a586c9..7ebb2f2cc4cf 100644
+--- a/arch/riscv/include/uapi/asm/hwprobe.h
++++ b/arch/riscv/include/uapi/asm/hwprobe.h
+@@ -79,6 +79,7 @@ struct riscv_hwprobe {
+ #define		RISCV_HWPROBE_MISALIGNED_UNSUPPORTED	(4 << 0)
+ #define		RISCV_HWPROBE_MISALIGNED_MASK		(7 << 0)
+ #define RISCV_HWPROBE_KEY_ZICBOZ_BLOCK_SIZE	6
++#define RISCV_HWPROBE_KEY_MISALIGNED_SCALAR_PERF	7
+ /* Increase RISCV_HWPROBE_MAX_KEY when adding items. */
  
- 	dev_info(chip->dev, "DesignWare DMA Controller, %d channels\n",
-@@ -1356,7 +1356,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 	free_irq(chip->irq, dw);
- err_pdata:
- 	pm_runtime_put_sync_suspend(chip->dev);
--	return err;
-+	return ret;
- }
+ /* Flags */
+diff --git a/arch/riscv/kernel/sys_hwprobe.c b/arch/riscv/kernel/sys_hwprobe.c
+index 3d1aa13a0bb2..b18639020c61 100644
+--- a/arch/riscv/kernel/sys_hwprobe.c
++++ b/arch/riscv/kernel/sys_hwprobe.c
+@@ -223,6 +223,7 @@ static void hwprobe_one_pair(struct riscv_hwprobe *pair,
+ 		break;
  
- int do_dma_remove(struct dw_dma_chip *chip)
-diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
-index 7d9d4c951724..47c58ad468cb 100644
---- a/drivers/dma/dw/platform.c
-+++ b/drivers/dma/dw/platform.c
-@@ -29,7 +29,7 @@ static int dw_probe(struct platform_device *pdev)
- 	struct dw_dma_chip_pdata *data;
- 	struct dw_dma_chip *chip;
- 	struct device *dev = &pdev->dev;
--	int err;
-+	int ret;
+ 	case RISCV_HWPROBE_KEY_CPUPERF_0:
++	case RISCV_HWPROBE_KEY_MISALIGNED_SCALAR_PERF:
+ 		pair->value = hwprobe_misaligned(cpus);
+ 		break;
  
- 	match = device_get_match_data(dev);
- 	if (!match)
-@@ -51,9 +51,9 @@ static int dw_probe(struct platform_device *pdev)
- 	if (IS_ERR(chip->regs))
- 		return PTR_ERR(chip->regs);
- 
--	err = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
--	if (err)
--		return err;
-+	ret = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-+	if (ret)
-+		return ret;
- 
- 	if (!data->pdata)
- 		data->pdata = dev_get_platdata(dev);
-@@ -69,14 +69,14 @@ static int dw_probe(struct platform_device *pdev)
- 	chip->clk = devm_clk_get_optional(chip->dev, "hclk");
- 	if (IS_ERR(chip->clk))
- 		return PTR_ERR(chip->clk);
--	err = clk_prepare_enable(chip->clk);
--	if (err)
--		return err;
-+	ret = clk_prepare_enable(chip->clk);
-+	if (ret)
-+		return ret;
- 
- 	pm_runtime_enable(&pdev->dev);
- 
--	err = data->probe(chip);
--	if (err)
-+	ret = data->probe(chip);
-+	if (ret)
- 		goto err_dw_dma_probe;
- 
- 	platform_set_drvdata(pdev, data);
-@@ -90,7 +90,7 @@ static int dw_probe(struct platform_device *pdev)
- err_dw_dma_probe:
- 	pm_runtime_disable(&pdev->dev);
- 	clk_disable_unprepare(chip->clk);
--	return err;
-+	return ret;
- }
- 
- static void dw_remove(struct platform_device *pdev)
 -- 
-2.43.0
+2.34.1
 
