@@ -1,57 +1,57 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF9114D439
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 11:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F6F152E1C
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 11:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719488548; cv=none; b=njIpQrjPi9Xy4qCvSUUTQrfzW9BElHnNbQ9+834N6ftmrKSDMU/AvvTpN7ZEu2rr+PtRFendq/WyiCtTyKseqT0buuvcGwsRuc6ooMDnEwVEloQbch/6Lihu2B6wHCtIPINvQvjWi6FtOElfrKN9BihhdwvrEFdCardyM0wAeWI=
+	t=1719488557; cv=none; b=Wf/FGNuyDz+FTG7CABs+9Og6jGiYgQ0vYJr5EtXfyZ+1c2NmGED3AdzLvbpMdwKr9SZlf3s1+mwyZAUCQZF+diVGvmyDKdC6E9iAwxc5MtKehkuAZ1J4IyTJOdGBXxLaxAcqH03kqVO0WaeCA0RW6GkJ1hcFGkcHBO4YXd0ixyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719488548; c=relaxed/simple;
-	bh=6oEPaSCChudDdQl5CoJDofrXFQKG94CulRBD/mPvurQ=;
+	s=arc-20240116; t=1719488557; c=relaxed/simple;
+	bh=Cp32Pu1b4qdvwG4MqaQJjhA91oKfXkdPNuaQC8YNSYY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=T9minGRxZ/ooCyUtmORvXd12Pb+n1yHjHkPgwgx8YNMqWwuUUjEYBsNQ437Czp3oFlN1ZQAFAYLlYJcF6S7oTc4skEi2pDG7sgmuubjrCs1HFmQNPjSWBzx3e56I0tOpHvq1XtmAXpGml0Wk+q0Hibo02i8/lU2fu13gAuRk9No=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=BfXNPBdM; arc=none smtp.client-ip=209.85.221.48
+	 MIME-Version; b=UIQx2e8xKxigOqAxQv8B5KuUltvzk++DoLRmeip7ufgovXVYdCuICRuBbMYabk5cXR4TddUR0PR01z1jWM62r/UxzoC67XM65ugq3D0iuxXVFUHUI+TszLDxX3plPqJtmUgPxKU2v3LWEvSjGIqGOTfNHgE3xb9w5HvilFugYe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=GVfJ7Xx9; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="BfXNPBdM"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-35f090093d8so5117108f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 04:42:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="GVfJ7Xx9"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4248e28de9eso40171025e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 04:42:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719488545; x=1720093345; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719488554; x=1720093354; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wW5TgJTLJvnOUoVv5AkY93z+u1qC4NhO9SwlIzEGESI=;
-        b=BfXNPBdMOpIJnoK2N/EQlW53pJlZZTq/m2iy78wpOZVqJqusGavXa82zeAewo9rI9T
-         cfCm/WYeiobdqVsBFEXX4n707R/gXHQqzmjC0Qy4a/RDJ1YkMts6juca8rgyKeuPaiLl
-         rAC2md2omUxaZorfFAJCHaBewB6bfvG6M6WeFiJdllmZdPQcgxUnHm8Y/6oAPSGw+3nk
-         4IZ5lQLOaBRFElyy6a+zQGzYZqTWkm8y6G4avF/2jhFNj9Jti8fTv+zR26cSUYcSm0DW
-         BunS+bqVfqwKk53fBg8Z/0cZFTAmDpznmtXBoaE18WVPCYWryNYvFfRg1bxUltenZaPE
-         YR1g==
+        bh=Utu62SipIuGJMuPgvDsQSrOMyAYgRR9Y4Q5dZdj1qKs=;
+        b=GVfJ7Xx9m+lLkplnoSK6ha+2aeQE8xL2CUoJZ1oTjzbgYfQoymmoHAhLgjAAvecYcY
+         i1gojht6LZYTsQ/MklHPxh4H3OZiVfUtNQb3+H0/1lkfnjEiM1Ijm9WYgaAkY1xPsZBK
+         HMQ8w3s3chsA+xaAmWlHKWCTY+O8bsXK5nR0wlKDXI4IlBD9RMEHUVFRoxiX69TSW1BG
+         BEISXWCoab1qDvkv8gi02LHQ19ZOD8o3DuRLLsuO7u9y6RXMm8SjAh/bWKA5DdNeOkOy
+         UptSlrV9pGYvJio4wmpgjshTkYWPvgoFYqD15XSFaqg7RFwmT2Fe15SaYXW4WQHqh9qj
+         n4tQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719488545; x=1720093345;
+        d=1e100.net; s=20230601; t=1719488554; x=1720093354;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wW5TgJTLJvnOUoVv5AkY93z+u1qC4NhO9SwlIzEGESI=;
-        b=ZdpMyJtkO7jc88CrqpKi6JL+pJWE6CUGTZQJNPQXyiA66bjNjXFKnziteWx9jMGJt9
-         rbzo/At9mlUU2m6m9AjyeFRc3C2EJKw6oRykRpZoSOibulVWBv7lPerdH/lgHNeXhWzQ
-         +BsJneX0/72VdF7yTrBmz+sJThs6vzuPdDdmQrOzjWEWrpfOKtDXsyMr+We9GVbyTJtw
-         N3EEN0QzQEtEheJ8WWHgCg4uH7nL4ydcGhPIOZwcLWvsSKF9KcSfe+cdQCrkOsxeE5hA
-         cVbB0ji3epUY7quCcs/BPBT0REBfVxBiJLYAH4IC83320XaEN9JhYXWFgIxIGgWmqOfO
-         fXqg==
-X-Forwarded-Encrypted: i=1; AJvYcCXif9vGPEd3YLiX2gK5dShwj9FBk6Xt1OUHj+CzvXqLTwaQ7LvciIwCwmx9ib9d7ed2XYt8ddOv32vzm2tWafx893mnjIaqt1fOLQZ+
-X-Gm-Message-State: AOJu0YyGdmGnEMqWJiPLVxTIMPXq4NGybLTlEysUlRRVC8Zc93ffhr1I
-	L0TjWnsgt5I6fWRmrqxSb/sAMNe1MHzRwkv6ePORsi/YvCq+5etrmN1z472YdCg=
-X-Google-Smtp-Source: AGHT+IEvpC0QWOSLfFowkg+q3L3PVTJh511qVzvF1jMYGQWw3+qmqIAw5pksjwKTEnW7pydZK/liKw==
-X-Received: by 2002:adf:f50d:0:b0:366:e7aa:7fa5 with SMTP id ffacd0b85a97d-366e7aa803amr10088266f8f.1.1719488545563;
-        Thu, 27 Jun 2024 04:42:25 -0700 (PDT)
+        bh=Utu62SipIuGJMuPgvDsQSrOMyAYgRR9Y4Q5dZdj1qKs=;
+        b=qgkgoZ+PRtUTCaKA6m5//Nt2zt60DA0o3ua0O5CriCeE38bBwbdduhvlhIn+M4iz6a
+         NDjRXa+5yhe5mi8ftQJ/5TOfpQotsoFlrt1WxkLNthItZdPJD2E8Ji272Yv7TdGF03Dd
+         WDKbFYOm7xtGxhVjFuqhbyskGECdT5UIVROlhk/378kbz7LkTfrllH9msCOWMCwVxnhF
+         b/2+unbQV6pTWCp3zL9uKAs0UgdW+Pw13hGUUBPMHpMNpk2vpwm1/sT2QHPAtdeEiOd3
+         vwFLl+3ENQwGUo7+9or5rEalYtU24KMH9lFYfK0egiiQLgG9jGNnjDTBUnif0cXS8eN5
+         g+dg==
+X-Forwarded-Encrypted: i=1; AJvYcCV3ylFoXst8iKnuZgTpCkyJ9qH92jdzGfkqdeCIY0opMlBbPOtWqPgoemQ9hjGptpcKNHTKKGf4ctPOv9GQxlsVmuV/uWCEhF/aB9qH
+X-Gm-Message-State: AOJu0Yx+cDp+JRXecx/OJk2HvTgKImH18/eHjJXSFX381bhTfBmLeYxD
+	+K/zJeTta2tpwblpeWmW2Ymlrajg9KI4qqZ2ZqpSKLqJPSFqQI3HzLJsJX1TZ1Y=
+X-Google-Smtp-Source: AGHT+IF8YHiS2tWoyurxK/8FcnUpN/pdGQ/FxdIdmrzhm6Hnznyd2lXDWq+qrtt7fdmt8eKX4v9HTw==
+X-Received: by 2002:a05:600c:4fcb:b0:421:c211:a57e with SMTP id 5b1f17b1804b1-4248cc6673emr83042835e9.35.1719488553848;
+        Thu, 27 Jun 2024 04:42:33 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:7fe5:47e9:28c5:7f25])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36743585276sm1554749f8f.62.2024.06.27.04.42.22
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36743585276sm1554749f8f.62.2024.06.27.04.42.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 04:42:23 -0700 (PDT)
+        Thu, 27 Jun 2024 04:42:30 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konrad.dybcio@linaro.org>,
@@ -63,9 +63,9 @@ Cc: linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v3 1/3] dt-bindings: arm: qcom: add sa8775p-ride Rev 3
-Date: Thu, 27 Jun 2024 13:42:10 +0200
-Message-ID: <20240627114212.25400-2-brgl@bgdev.pl>
+Subject: [PATCH v3 3/3] arm64: dts: qcom: sa8775p-ride-r3: add new board file
+Date: Thu, 27 Jun 2024 13:42:12 +0200
+Message-ID: <20240627114212.25400-4-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240627114212.25400-1-brgl@bgdev.pl>
 References: <20240627114212.25400-1-brgl@bgdev.pl>
@@ -79,25 +79,83 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Document the compatible for revision 3 of the sa8775p-ride board.
+Revision 3 of the sa8775p-ride board uses a different PHY for the two
+ethernet ports and supports 2.5G speed. Create a new file for the board
+reflecting the changes.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 ---
- Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/qcom/Makefile            |  1 +
+ arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dts | 47 ++++++++++++++++++++
+ 2 files changed, 48 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dts
 
-diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
-index ec1c10a12470..000037f4a712 100644
---- a/Documentation/devicetree/bindings/arm/qcom.yaml
-+++ b/Documentation/devicetree/bindings/arm/qcom.yaml
-@@ -895,6 +895,7 @@ properties:
-       - items:
-           - enum:
-               - qcom,sa8775p-ride
-+              - qcom,sa8775p-ride-r3
-           - const: qcom,sa8775p
- 
-       - items:
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 5576c7d6ea06..8b7a81b82213 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -113,6 +113,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sa8155p-adp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sa8295p-adp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sa8540p-ride.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sa8775p-ride.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= sa8775p-ride-r3.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-acer-aspire1.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-idp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-trogdor-coachz-r1.dtb
+diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dts b/arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dts
+new file mode 100644
+index 000000000000..ae065ae92478
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dts
+@@ -0,0 +1,47 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * Copyright (c) 2023, Linaro Limited
++ */
++
++/dts-v1/;
++
++#include "sa8775p-ride.dtsi"
++
++/ {
++	model = "Qualcomm SA8775P Ride Rev3";
++	compatible = "qcom,sa8775p-ride-r3", "qcom,sa8775p";
++};
++
++&ethernet0 {
++	phy-mode = "2500base-x";
++};
++
++&ethernet1 {
++	phy-mode = "2500base-x";
++};
++
++&mdio {
++	compatible = "snps,dwmac-mdio";
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	sgmii_phy0: phy@8 {
++		compatible = "ethernet-phy-id31c3.1c33";
++		reg = <0x8>;
++		device_type = "ethernet-phy";
++		interrupts-extended = <&tlmm 7 IRQ_TYPE_EDGE_FALLING>;
++		reset-gpios = <&pmm8654au_2_gpios 8 GPIO_ACTIVE_LOW>;
++		reset-assert-us = <11000>;
++		reset-deassert-us = <70000>;
++	};
++
++	sgmii_phy1: phy@0 {
++		compatible = "ethernet-phy-id31c3.1c33";
++		reg = <0x0>;
++		device_type = "ethernet-phy";
++		interrupts-extended = <&tlmm 26 IRQ_TYPE_EDGE_FALLING>;
++		reset-gpios = <&pmm8654au_2_gpios 9 GPIO_ACTIVE_LOW>;
++		reset-assert-us = <11000>;
++		reset-deassert-us = <70000>;
++	};
++};
 -- 
 2.43.0
 
