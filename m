@@ -1,111 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3584C145A1F;
-	Thu, 27 Jun 2024 11:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BEF5149009
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 11:39:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719488221; cv=none; b=Bcqsp+0HsXbSYydasTcTN5eOlj5OuPLVYtUKVACBqxXgKTCrNxDJ7KRRdW7cN1abf9taNFZECScVS4yVTDBaiIPmNOf3iP1QfER442GfUEP0jEePmAepFfjqWIqhK2h5d+xLorN5ljuKX5TWWx2JYo9G0X5tEf3nybcrgwYPpNU=
+	t=1719488400; cv=none; b=Q6Pj+cs32u70uPLMORvphtfykHX2WLhvY+GG3oVWg8/ludumSPMwTe7JTvuXDAMUXHQkWHhVMU6hPVza+CjkzXs051E/fPbXyWlCr9Ez3/wwQatDxepZxKK6ZdWkUytQYYGA/0KuBFGAxz0b+GvceAM5TVQuLNQctPXJgfcV1B8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719488221; c=relaxed/simple;
-	bh=g9+JV0OyTnYbPDCsS7diUampG4fyAenIEqpuHSG0kTs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q1xHCIGj+5SK4Kd3Uu6d651qSr04L1DNO2tSe2XEM38rXpp2PKt4ORSFV1THmv8n02xFSTaRCWIop0qI5KdEkzhIfY6Da31BqV99Xhbi23xbIH874vjQ6RDo6azdXupWDokPMEqd5WfuH2dRKksRO4ye3OzsIVOaSedhRzbIPjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TRE+NORz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719488400; c=relaxed/simple;
+	bh=H2oINYv1RisztMZ/1SAqTZYHs/1i3Urmq4+NkMvMiMc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M39AW3N6KyZExMPm3EobdT/WJwRcIEnZcVxcdyDSuAU9B7Yj5ON7tjlTsY6qKt5saWwY/cRLqomgxiEVqp3FG8fMtbPolbjbg3NdiU4F6M6rAwWikvGPiehNSf/COCBaAefZKyCqD2u/jqLHf1MEryz+9KTkOcHiybcYiHbaJXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Thtjle8C; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TRE+NORz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72BE1C2BBFC;
-	Thu, 27 Jun 2024 11:37:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719488220;
-	bh=g9+JV0OyTnYbPDCsS7diUampG4fyAenIEqpuHSG0kTs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TRE+NORzJtd55ElcYsgfJk8zc1UWhQ1/PwbW5PnXbK10EpPesOdUb2Ll7Rg4AOlM5
-	 PVcuXYUnUGzv7euon5DqetSfcqtlSHTzmpcDita8L6upWOL6jK+w8J94zzlNUowGNd
-	 e/iHIZdW+OebxCAvrb/l8EArrM8bREJVrMt4YyW0LAB89slDBIOsusqPusOCtaFhf+
-	 GyA5w8a1xtnXsIc3egR7VrFL2x6TmDTVriZfVnrjg3em9IMLmQJ466nAUfLgrNR0cg
-	 jRu9lM3Dv3+/5Y5wQNBlTmBBX46nHxbST9/1q0qAbZzPSGGrkqoBn0J4k76EINQ/LB
-	 oyOaCgdsQkb7A==
-Date: Thu, 27 Jun 2024 13:36:58 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	rostedt@goodmis.org
-Subject: [PATCH rcu 3/6 v2] rcu/exp: Remove superfluous full memory barrier
- upon first EQS snapshot
-Message-ID: <Zn1O2qKaIVOXniYH@pavilion.home>
-References: <81f4e616-8125-4934-a8e2-fd5beae90995@paulmck-laptop>
- <20240604222652.2370998-3-paulmck@kernel.org>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Thtjle8C"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2ec595d0acbso59881881fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 04:39:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719488396; x=1720093196; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZbI7/sd74idfi/XMipln9/gNNA6hsJvdqtzVYepkGFg=;
+        b=Thtjle8CV8sAZ48bIIqpc7edKv32ptt4YMAdb8nLauRmRbVzyrF4rAd0bP9wXsv3QP
+         r0l9sY6A4LmbmYizqFVH3nvsSW8Q+K1GRV4RUhpwqP0WtaS1o15S3TfAceDGKJtFaKVR
+         i8vz41XhVaP+YR/484dkjsjVkHTg3jFijCNol1rQ8pRRLYquDEdYaiKPQyeOrxvzWk3Z
+         LX9G56MHG4E9AMq39rugx17tjoZsBurACY5DdWVSwvPO98apD72uvm+05eFk2wrSaJfn
+         SKn4LM/bm7P3alUpJF42+JTs3nEh++eX4yDgZna4IrdL4BN+6RsN+QA+Jjb3STxxoB74
+         lNzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719488396; x=1720093196;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZbI7/sd74idfi/XMipln9/gNNA6hsJvdqtzVYepkGFg=;
+        b=S+JSEty5m5LQ7Ox7S+1LdUf7dwppOmSoECvh3zdpz520Cvc5KgiBo6Kt4ieMg3qhJR
+         hZH6WZHijw87Sb0MdsT+GIvRGD0EOXLMHLWatKG6Vt+k0r6d6L82y5/2SdTTaIyHBcA7
+         OYBwqbcsbJQ/ekNWW3//B5cBialEVifdHOK37s2UNOrBNfNdt6P8Kic5a5HJZNSxPqzg
+         KFiWHlIg9MQe6NL0u3ArkOuWREjDhi7w/rkdDcIeph+VjJ/1ZN64DhjYt6KPnAYgqZBO
+         064v5xJ8+HleYmN/X6zgvXfy/Jf4E2LGfgaGuFeW7BHF0oNGZjoqEuiP96nM9jxCqHK/
+         qZZw==
+X-Forwarded-Encrypted: i=1; AJvYcCVduZnWN5sR7Th9EXLBjXuVvav/kOM8llpVGtNNmWjIExQ2cOasy1fTc7Gwg9LrG0kH6CIUQXUy+9BEkHkLgWTeMqtQXDLCBNR7NxVL
+X-Gm-Message-State: AOJu0Yz7rJBQ6n/oH0NEBYO17YCkkA2rT/mkBnZHuhMk8MAWgRPrRGHh
+	8wiD9B4GZhxJedKUPh9sIV9667mZVjY6JrS9y/YCaLw5aSiz7yg6E20MzBHKZVY=
+X-Google-Smtp-Source: AGHT+IHFDzARAto2HLAI3TxjHyub50L0O0Jnjrz9yXwhDePCwserMcflGKVLOY5zTOX5jsXXhqzpcQ==
+X-Received: by 2002:a2e:a442:0:b0:2ec:5019:8fa4 with SMTP id 38308e7fff4ca-2ec7278a341mr44969421fa.49.1719488396147;
+        Thu, 27 Jun 2024 04:39:56 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:7fe5:47e9:28c5:7f25])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c8468613sm62081815e9.39.2024.06.27.04.39.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jun 2024 04:39:55 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Vinod Koul <vkoul@kernel.org>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v2 net-next 0/2] net: stmmac: qcom-ethqos: enable 2.5G ethernet on sa8775p-ride
+Date: Thu, 27 Jun 2024 13:39:45 +0200
+Message-ID: <20240627113948.25358-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240604222652.2370998-3-paulmck@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-When the grace period kthread checks the extended quiescent state
-counter of a CPU, full ordering is necessary to ensure that either:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-* If the GP kthread observes the remote target in an extended quiescent
-  state, then that target must observe all accesses prior to the current
-  grace period, including the current grace period sequence number, once
-  it exits that extended quiescent state.
+Here are the changes required to enable 2.5G ethernet on sa8775p-ride.
+As advised by Andrew Lunn and Russell King, I am reusing the existing
+stmmac infrastructure to enable the SGMII loopback and so I dropped the
+patches adding new callbacks to the driver core. This no longer has any
+build-time dependencies on the PHY changes so sending it out separately.
 
-or:
+Changes since v1:
+- split out the stmmac patches into their own series
+- don't add new callbacks to the stmmac core, reuse existing
+  infrastructure instead
+- don't try to add a new PHY mode (OCSGMII) but reuse 2500BASEX instead
+Link to v1: https://lore.kernel.org/linux-arm-kernel/20240619184550.34524-1-brgl@bgdev.pl/T/
 
-* If the GP kthread observes the remote target NOT in an extended
-  quiescent state, then the target further entering in an extended
-  quiescent state must observe all accesses prior to the current
-  grace period, including the current grace period sequence number, once
-  it enters that extended quiescent state.
+Bartosz Golaszewski (2):
+  net: stmmac: qcom-ethqos: add support for 2.5G BASEX mode
+  net: stmmac: qcom-ethqos: add a DMA-reset quirk for sa8775p-ride
 
-This ordering is enforced through a full memory barrier placed right
-before taking the first EQS snapshot. However this is superfluous
-because the snapshot is taken while holding the target's rnp lock which
-provides the necessary ordering through its chain of
-smp_mb__after_unlock_lock().
+ .../stmicro/stmmac/dwmac-qcom-ethqos.c        | 33 +++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-Remove the needless explicit barrier before the snapshot and put a
-comment about the implicit barrier newly relied upon here.
-
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-Reviewed-by: Neeraj Upadhyay <neeraj.upadhyay@kernel.org>
----
- kernel/rcu/tree_exp.h | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-index 8a1d9c8bd9f7..1dbad2442e8d 100644
---- a/kernel/rcu/tree_exp.h
-+++ b/kernel/rcu/tree_exp.h
-@@ -357,7 +357,21 @@ static void __sync_rcu_exp_select_node_cpus(struct rcu_exp_work *rewp)
- 		    !(rnp->qsmaskinitnext & mask)) {
- 			mask_ofl_test |= mask;
- 		} else {
--			snap = rcu_dynticks_snap(cpu);
-+			/*
-+			 * Full ordering between remote CPU's post idle accesses
-+			 * and updater's accesses prior to current GP (and also
-+			 * the started GP sequence number) is enforced by
-+			 * rcu_seq_start() implicit barrier, relayed by kworkers
-+			 * locking and even further by smp_mb__after_unlock_lock()
-+			 * barriers chained all the way throughout the rnp locking
-+			 * tree since sync_exp_reset_tree() and up to the current
-+			 * leaf rnp locking.
-+			 *
-+			 * Ordering between remote CPU's pre idle accesses and
-+			 * post grace period updater's accesses is enforced by the
-+			 * below acquire semantic.
-+			 */
-+			snap = ct_dynticks_cpu_acquire(cpu);
- 			if (rcu_dynticks_in_eqs(snap))
- 				mask_ofl_test |= mask;
- 			else
 -- 
-2.45.2
+2.43.0
 
