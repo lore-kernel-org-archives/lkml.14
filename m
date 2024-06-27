@@ -1,90 +1,119 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mblankhorst.nl (lankhorst.se [141.105.120.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 045FA1991BB;
-	Thu, 27 Jun 2024 15:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB3451991C9;
+	Thu, 27 Jun 2024 15:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.105.120.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719503788; cv=none; b=Z2/Cjtzq1sD5eHfJjN6aKEE1XIYaRQgh4sGvG83go4IKuL2Ydt8Mrt7KPk5itAE4vhtYazIxFTp8UICKxTTo/hLsPwqODKP8JhxDW6AZyrC8oNHj7qjRQe5ilWjurexxhIVNThp3RKHVQsUk3D1k4MXNq6IxAG0/wJat8Nc1saU=
+	t=1719503874; cv=none; b=VnrAX87LHVBLxFJXt2kaLxwVKOJ6fXnpMHosyoEnSgROXIbmPJwrmEe3tNbV+d387A/AfmN+F6lqDnfVwPpAAhYPLykowUjuKUkSV82KIhKvG5Cj0LXu/xo8GRoDV9A7kT/XG0FoVdVMeAJ1KGrYykps6k1XH26OfBJbcRw+D6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719503788; c=relaxed/simple;
-	bh=6dZaJznz0z/Um3prps8njOwBk/YYpaBXEvp4VEuRNjQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Otz7pWHJgu3XhM1CFtVjliqliU6fX5A3bfRluElF+bpmffufjrG4uEnTJPpSwFZKXNB+GYd1m7OLrLG13roZlweX6Uc2b/m1p7bBoBbTEodR7067U98xz+2X0A4ITzNRTcaN7xhkhT3aG6yiMGvlelTwlCm1E5tToJ/6vougp8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Date: Thu, 27 Jun 2024 15:56:20 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Conor Dooley <conor@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Palmer Dabbelt <palmer@sifive.com>, linux-riscv@lists.infradead.org,
-	linux-serial@vger.kernel.org, Inochi Amaoto <inochiama@outlook.com>,
-	Meng Zhang <zhangmeng.kevin@spacemit.com>,
-	Yangyu Chen <cyy@cyyself.name>
-Subject: Re: [PATCH v2 00/10] riscv: add initial support for SpacemiT K1
-Message-ID: <20240627155620.GA1622265@ofsar>
-References: <20240627-k1-01-basic-dt-v2-0-cc06c7555f07@gentoo.org>
- <20240627-flinch-rented-1f2a2e5d73ca@spud>
+	s=arc-20240116; t=1719503874; c=relaxed/simple;
+	bh=fkv99D0lVc7kZeZmF+D68WSywx12m1T0X27+aOLqWVw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Nw2LPu08Z+cRYEb9jKUCtdz03tEZ0jLjdORJGKLjz4kNp6z6sj0iXbxvQA2E9B+FLdf9e0OFuOXzJB4tIbJSdAejuZFiFzjgOFmicNhOOcSVwtzLQhxn7slSuHLk8IJ7C/2BKYnju8g//+tfkS0wh0KzpxWqSTvK1fvzmedgJCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=mblankhorst.nl; arc=none smtp.client-ip=141.105.120.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mblankhorst.nl
+From: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+To: intel-xe@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	Tejun Heo <tj@kernel.org>,
+	Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Friedrich Vock <friedrich.vock@gmx.de>,
+	cgroups@vger.kernel.org,
+	linux-mm@kvack.org,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Subject: [RFC PATCH 0/6] DRM resource management cgroup, try 2.
+Date: Thu, 27 Jun 2024 17:47:19 +0200
+Message-ID: <20240627154754.74828-1-maarten.lankhorst@linux.intel.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240627-flinch-rented-1f2a2e5d73ca@spud>
+Content-Transfer-Encoding: 8bit
 
-Hi Conor:
+Hey,
 
-On 16:39 Thu 27 Jun     , Conor Dooley wrote:
-> On Thu, Jun 27, 2024 at 03:31:14PM +0000, Yixun Lan wrote:
-> > SpacemiT K1 is an ideal chip for some new extension such as RISC-V Vector
-> > 1.0 and Zicond evaluation now. Add initial support for it to allow more
-> > people to participate in building drivers to mainline for it.
-> > 
-> > This kernel has been tested upon Banana Pi BPI-F3 board on vendor U-Boot
-> > bootflow generated by Armbian SDK[1] and patched OpenSBI[2] to enable
-> > Zicboz, which does not in the vendor dts on its U-Boot. Then successfully
-> > booted to busybox on initrd with this log[3].
-> > 
-> > As previous discussion in patch v1[4], maintainer expect more basic drivers
-> > ready before really merging it, which would be fine. For other follow-up patches, 
-> > that are clk, pinctrl/gpio, reset.. My current goal would target at a headless
-> > system including SD card, emmc, and ethernet.
-> > 
-> > P.S: talked to Yangyu, I will help and take care of this patch series, thanks
-> > ---
-> > Changes in v2:
-> >  - fix timebase-frequency according to current setting
-> >  - add other uart dt nodes, fix input frequency
-> >  - introduce new uart compatible for K1 SoC
-> >  - add 'k1' prefix to bananapi-f3.dts
-> >  - fix k1-clint compatible
-> >  - fix some typos
-> >  - Link to v1: https://lore.kernel.org/r/tencent_BC64B7B1876F5D10479BD19112F73F262505@qq.com
-> 
-> I will take a closer look at this series later, but there's a few
-> patches here missing Acks that I gave alongside some nitpick remarks.
-> Could you look at v1 again and add those to whatever other comments I
-> leave when I take a closer look?
-> 
-sure, thanks for your quick reply, I will do this tomorrow, and potentially
-wait all reviews, combine all tags I receive in v2, and address them in v3..
+A new version of my attempt at managing VRAM through cgroups.
+Even though it's called the DRM resource management cgroup, it would be trivial
+to rename it to devmem or whatever, since there is nothing DRM specific about it.
+
+This series allows setting limits on VRAM similar to system memory,
+with min/low/max limits.
+This allows various cgroups to have their own limits for usage.
+
+It sounds very abstract, but it can be used to prioritise the foreground
+application (by setting low), or hard partition memory so multiple processes
+sharing a single GPU use a proportional amount of memory each in a fair way,
+or to prevent long running compute jobs from having their memory evicted.
+
+This is a minimal proof of concept to get discussion going again. It works,
+but it only tracks active use of VRAM. In the ideal world, we would track
+it better in a way that also integrates better with the memory cgroup
+controller. Ideally for every VRAM allocation, we would know we could push
+it out to swap if needed, charging the original process not the process evicting.
+
+I'm hoping to restart the discussion, so that we can plug the holes and finally move forward.
+
+New in this version:
+- Complete rewrite using page_counter.
+- Support setting min/low/max, respected in the same way as memory cgroup.
+  (Could be useful to add/allow high? To go over limit for temporary bindings
+   during eviction on GART.)
+- Locking reworked. Fastpath should now be lockless with RCU.
+- Add a second implementation for AMD, to show how easy it is to make it work.
+  (Should we completely move this to TTM instead?)
+- TTM now always respects min/low when evicting, bailing out with -ENOSPC instead
+  where required.
+
+I'm hoping for some good feedback on the path forward for upstreaming. I feel this
+version has a lot better chance of being upstreamed than the previous. It should
+be a lot more scalable thanks to the usage of RCU and page_counter.
+
+Cheers,
+Maarten
+
+Maarten Lankhorst (6):
+  mm/page_counter: Move calculating protection values to page_counter
+  drm/cgroup: Add memory accounting DRM cgroup
+  drm/ttm: Handle cgroup based eviction in TTM
+  drm/xe: Implement cgroup for vram
+  drm/amdgpu: Add cgroups implementation
+  drm/xe: Hack to test with mapped pages instead of vram.
+
+ Documentation/admin-guide/cgroup-v2.rst       |  51 ++
+ Documentation/gpu/drm-compute.rst             |  54 ++
+ drivers/gpu/drm/amd/amdgpu/amdgpu.h           |   2 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c       |   6 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c  |   6 +
+ drivers/gpu/drm/ttm/tests/ttm_bo_test.c       |  18 +-
+ drivers/gpu/drm/ttm/tests/ttm_resource_test.c |   2 +-
+ drivers/gpu/drm/ttm/ttm_bo.c                  |  38 +-
+ drivers/gpu/drm/ttm/ttm_resource.c            |  28 +-
+ drivers/gpu/drm/xe/xe_device.c                |   4 +
+ drivers/gpu/drm/xe/xe_device_types.h          |   4 +
+ drivers/gpu/drm/xe/xe_ttm_sys_mgr.c           |  14 +
+ drivers/gpu/drm/xe/xe_ttm_vram_mgr.c          |  10 +
+ include/drm/ttm/ttm_bo.h                      |   3 +-
+ include/drm/ttm/ttm_resource.h                |  16 +-
+ include/linux/cgroup_drm.h                    | 115 +++
+ include/linux/cgroup_subsys.h                 |   4 +
+ include/linux/page_counter.h                  |   4 +
+ init/Kconfig                                  |   7 +
+ kernel/cgroup/Makefile                        |   1 +
+ kernel/cgroup/drm.c                           | 813 ++++++++++++++++++
+ mm/memcontrol.c                               | 154 +---
+ mm/page_counter.c                             | 173 ++++
+ 23 files changed, 1355 insertions(+), 172 deletions(-)
+ create mode 100644 Documentation/gpu/drm-compute.rst
+ create mode 100644 include/linux/cgroup_drm.h
+ create mode 100644 kernel/cgroup/drm.c
 
 -- 
-Yixun Lan (dlan)
-Gentoo Linux Developer
-GPG Key ID AABEFD55
+2.45.2
+
