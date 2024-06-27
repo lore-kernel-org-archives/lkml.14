@@ -1,61 +1,60 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE3914884B
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 10:32:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E83614AD10
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 10:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719484369; cv=none; b=o8tcstB6ukMFyFA0LFf6X5+c0rC8elolEqQO/GYWETUJbNTXiSGOPKUcnUGVKUQEm1AmFf4C48VgPDYM1VznU89GuPrpcuOzlOT/LdFpXyB1LF+JOKnzU0/G4+49fWv74dePN1fa4RbgEV1NeKJ4LupuWNBMRPfpj7uHnhVtZJw=
+	t=1719484373; cv=none; b=ockk61ROi8lCkJ/waC18lsA5McdxaCNZClQgkPcfR3HjBANS13MoeNToxTZnKNuOaUnJWag7HTF/SEWEHjJ4KCMEJeMCLjuCfZr4kLzw2HdI4VMg9aGxvLem4/9pWOTRJQbotIMtk1fuF54QWx7tt91YObtd2tK6jfM3kov5P+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719484369; c=relaxed/simple;
-	bh=8MLHDWyReLz5qqD7wVSiIOMBs4CdtSdIOqFJ3Bu/4Os=;
+	s=arc-20240116; t=1719484373; c=relaxed/simple;
+	bh=eBkgDNh4pHGUWCoUfl/IlA17qsQPFNuKObA7QeUtfcs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WNb9lv/GVrIAEOkLptyfjsjb9/mCH8P+iUrbHUlfquAm14dmNGicziyrF9s4pWpIUu2oeYAK/v4ldJP0GHk45+X0pO9ZMqwCkeOzrlmXjt3DaFMoHJAhp0pnmZvqTCcncOu1QvlC5gP7cAi7QB4WsIah8O34jnM9QbUr++q5P9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A6buyNxD; arc=none smtp.client-ip=209.85.167.43
+	 In-Reply-To:To:Cc; b=mKqxh8f8lHD9BOHLeBv+RJ9oCL5RF5H67sDYu2HLUsK2CdMVwvCDAAiF51mx4WzK/LPG2CWFJC1FqWdg2Xak9wTfQf7PY4vwF3Jq4wNfCQnz6dc0OIB5FJ+UtWkuyEHIRGvCQ59+n+7pdeh2yCmLtlr6R8HZhlEMYTuphg7gipE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XUVOiFSx; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A6buyNxD"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52cd717ec07so7241376e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 03:32:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XUVOiFSx"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-42122ac2f38so10296795e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 03:32:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719484366; x=1720089166; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1719484370; x=1720089170; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=m+6/jw2l8WbHbxp3JGZOU8peyFUqkM87CC9BxxmyKfM=;
-        b=A6buyNxDwjAQvzD7w1517mprbNIYiDd0lwueD7t+iIqrMZ4aO4pya7d7+NPSvsqMQf
-         //0nWGzxASnKp/DrQISaVP18KVSlBWsgEGAtF8ef20SrfkNfuVS/OwoYI+fONIpAXAf2
-         nuHsehw81N3qR0clSf6U9iz6gnqnHHoPJe2aBF5h+0jpM+MOHQ6Nddedv3IardmDnuOv
-         Wk5GPgVoWZ79XQkcKRi1tzW3Fe9HzCZ5Yc8tGDM3n031jFHlG/dFbrAiN/PGCQWtaT/l
-         tw+/pvqQmsmwsXnIhYAQIWmaGbZf9mUlMlgWORrNu9ntY/XzBw6mOaKjX7JsdG7iE0ek
-         kh8w==
+        bh=moMeCjYqhEN2XITayIt62CdfKAiqtD6Tk3XXyMm1xxs=;
+        b=XUVOiFSxSKhZuh6qKj203CSmQIt8kq+cNdZUCiEO4LoNMbOtbLL0O+ggebGuodB74D
+         f/V4YRUpfY5lHGBeS9zPPcHA5Pv1LXFfBGUIpyFcOiVOHHZvPY5N/s2il7hzYlXQl09O
+         rs3fidbCMT45dLwaXvSauEd07nnkQqsM5nUCxtsv0T5Dy5Yj/itcvDmhfQHlWKX5iPrg
+         8K3LRgfJqVJK/InAcDq6HkEkS6rUQf+pFCusc1cqvMaQd5M13/GdAkkCjwRHg5+VSwp3
+         Qrdk6fI4nPG2MWdqF7CVpEZVuAC16rC4D6tfBGgEo8iS1Jv2W+ZySUashfMyx3+UJ7Nr
+         9cAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719484366; x=1720089166;
+        d=1e100.net; s=20230601; t=1719484370; x=1720089170;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=m+6/jw2l8WbHbxp3JGZOU8peyFUqkM87CC9BxxmyKfM=;
-        b=R9UfHuiu4p+dbEUvZzmgeOfE9bYrpXVvug7HWHTc/JqcGOv03JKWtiq9JhFyyYcxDu
-         YIVtCuKxHBOZOpUcv/ZrZ8GU2Y0S3Zj++XKACn3TcCVPZVJRQiZ63MuetfyuKCGrx6dY
-         9+riX1ameereqq0oisoYj2IH2UoBrICx9GqSj3iUvy/uPZe4xCx/pxDy8H04/H//gjnv
-         Sy56cid3k2VsV2d+VJSmt9ySTmyyHkN+6DEQoO2awL4VET+PxiV4M5NOVkBkGZEdbD8i
-         KMQ3dYAF6jjys4KLWcReHwmkzjSsV3ed2fnblgIHRWZE9KSXXSWeAE6VhLwsy2CfaFNO
-         m3MA==
-X-Forwarded-Encrypted: i=1; AJvYcCVsQ/Gvw4kcp50Yt0KoE/Mql/FVw9tjiZBkDueS8JOZ8vN05eJioj2W8/POrrUAu0HiQ5iLvTPwVgooapYlm2D3hKvjeOIADg7ndE+y
-X-Gm-Message-State: AOJu0Yw9MI1pBu98HPvLK7WG8IuqBQdoWlD2L8aRXP/2gmz4dxmf6/wl
-	nbM5O3Mw9MDUBHlPoBHE4PfYMcYF9XBsFbX7zaWvBGwhHRZN7Zd+pCsV2raaPoI=
-X-Google-Smtp-Source: AGHT+IEoS3M9/3U4NjfBgJrciMQw7opzkhWp4q6gkv+HvLfxXQBP/1gIhzOQ1/YNBvMXx8utt1dJpw==
-X-Received: by 2002:a05:6512:e95:b0:52c:8a3a:fe2c with SMTP id 2adb3069b0e04-52ce185d049mr9830460e87.45.1719484366212;
-        Thu, 27 Jun 2024 03:32:46 -0700 (PDT)
+        bh=moMeCjYqhEN2XITayIt62CdfKAiqtD6Tk3XXyMm1xxs=;
+        b=m8D0Do8bOOCe+ZsIzhiLV67coU66XVu+aE7ywGksN8Oc4PXs4jBv46z1sh7A7/Mo7v
+         ZcCAEjgAN/iwA/qYTw/iExEDATpywM42bvMmi6AZpEf6HwvC8gbO+kItsQx+wuzmtfrx
+         8tcvESFHHmi5g22RL9fk6Phbdv2KjGgfzdBqYg+1Zk4NBsfbsDrb6LSfGAgDJQC1oumk
+         imrebDvBWGQ/vpna63+pV9guTxoHmB2j6sxAy0RDygFL3Zg5g8BsIHg4evqJVQAr3euO
+         zXRRoxVrQPBbWhLYwKyPRlcTiD5Bzuht3jsd5tt0UVuU+XL3/KTtRezDVaLY6jJvcOUA
+         BVlg==
+X-Forwarded-Encrypted: i=1; AJvYcCUWviJ5OgAGi/dlXrJVT7uoY5MmCAk+hKEsbFPzhRAx/oT8j72S3RsixF1HO7aUnuvJtioVuyWz5DHKEDY620Yjz9+EGc0d9HYMmJr1
+X-Gm-Message-State: AOJu0Yy5tayxjGuBN+BYjsqRI6WAxzqjfcY1NSiwervPTEyEvnpE3nvi
+	2Y3tr/1aZjpX6H0WwFtaQ4ugHORtmG613H69VDHc0MtxKzFhKP6isfFPLEzrhl0=
+X-Google-Smtp-Source: AGHT+IHfThQWcTK8yhGvLnXD3SYkW/snFLoh2VKnBj7XvwVZXHgftyUMlS4e8tS9d8NirOXboCgLnA==
+X-Received: by 2002:a05:600c:692:b0:421:7ab8:59c with SMTP id 5b1f17b1804b1-425630fced7mr22138845e9.10.1719484370073;
+        Thu, 27 Jun 2024 03:32:50 -0700 (PDT)
 Received: from [127.0.1.1] ([178.197.219.137])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367435852afsm1384352f8f.53.2024.06.27.03.32.44
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367435852afsm1384352f8f.53.2024.06.27.03.32.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 03:32:45 -0700 (PDT)
+        Thu, 27 Jun 2024 03:32:49 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Thu, 27 Jun 2024 12:32:21 +0200
-Subject: [PATCH v4 5/7] dt-bindings: soc: ti: am654-serdes-ctrl: Move to
- dedicated schema
+Date: Thu, 27 Jun 2024 12:32:23 +0200
+Subject: [PATCH v4 7/7] dt-bindings: mfd: syscon: Add APM poweroff mailbox
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,7 +63,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240627-dt-bindings-mfd-syscon-split-v4-5-dc6699a9f3e4@linaro.org>
+Message-Id: <20240627-dt-bindings-mfd-syscon-split-v4-7-dc6699a9f3e4@linaro.org>
 References: <20240627-dt-bindings-mfd-syscon-split-v4-0-dc6699a9f3e4@linaro.org>
 In-Reply-To: <20240627-dt-bindings-mfd-syscon-split-v4-0-dc6699a9f3e4@linaro.org>
 To: Orson Zhai <orsonzhai@gmail.com>, 
@@ -85,99 +84,54 @@ Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, devicetree@vger.kernel.org,
  linux-mediatek@lists.infradead.org, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2452;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1201;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=8MLHDWyReLz5qqD7wVSiIOMBs4CdtSdIOqFJ3Bu/4Os=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmfT++cwdCKsMdwI34XqMjKV+VEq2ZPnBb8whmj
- V0GmiqiL/WJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZn0/vgAKCRDBN2bmhouD
- 1xqZD/9sRU1DY0+8YUNfIxhuMHDSblSlLWagDywLBIZGUHc2JGkTM3ZDq8UMCH3TCob9i4hHvDs
- caEBDFAV6jT3db5RF7euDLG5eaKkRkxBYFaEG6Z3frqUvm0q+Lf9ORvceA7+cDwkoQDfcRd5+3D
- YTY0UI1NShe72ad9B2k6wnNyZ51kKke/SXW31dwWvtktsF7JIZQcTjM8jvvCWxdJaUURfi/kWtc
- cwbFf8mjHy4bgob7jgWSeYeUoBt6Qh6FzqvEYmJOX4Ub7CqL5cVWgUAd20eDFNJJujyBW3iBCq2
- bJ7fsTQRUlTDJCjW76Z6tL+X+rtKDiTYlU+a9yHfKiC8fcsEt/lCBcDaiwCuuIkVUedG2CtmKhE
- mNHw1jspPphCtsc/nkJmcX2UaPliRHOtUwWpXtQCxCV54G8gU3OKN9HNbI/oYDRzh+MUpxCLQR3
- u1IVGZNOUZFIkTQWa4MW4taT4GFe71Dgk3aFqB1X+NZUEB/DiNHKiYEbDetjNhLk3obLiKt8YtU
- zP4tFl8gMuqnhOmXHHXYalIh5ou1abuXnuxiFi474eOf3xs0qm3UYEFUZk6+pZT4QtZj19Psfql
- P+464fNd8jx+MH0wKWB4CIqPjUnbRkXfFKTusvVRevwlWpwdOQfq3pRw5WyY9O0xLBV0NodRwcH
- wclR31GK76zyBrw==
+ bh=eBkgDNh4pHGUWCoUfl/IlA17qsQPFNuKObA7QeUtfcs=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmfT/AfKoJu5OgzBj46/nykZpwckUbMSiTIyPia
+ OhyT1Qn0KiJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZn0/wAAKCRDBN2bmhouD
+ 1+onD/kBwIHKwA1zJIARnF0HNDBQtLZo6xmpXFjybHv3nlswlF607d+riKqd5L8Z0a6lezEa8J/
+ keLOo7ycWmGTfvOT4KBybbdkVmkXrtYQzfb2ywDZDC2VBrE1k3rUAnJKj3m3lgJE9chNn5BSzMq
+ CfegzIPkGnmRmS6MZ2wE0M5rIqJILvswpNvTId+kxuqJLbYyX6rN5XbzoydB4+Xw6zSSZ4TjkzL
+ KM6T6Xo7fpBog1/OR1XdSGjq9IuSNJQqQadSRzcC725RErseufXcUMZmEkU3tS+ag7J2dMnW/SU
+ hZU7jE9+oBq/j0ZWSC9wiFZR++CHVYADbc943gioqncA7mi3gyNi8/TlEPHj92Ij26wQcwlgmwD
+ kU9KDWDDv8Nu/QgDZx29PnbFtPyGXyhlselpcMLtUuEee+KJLAhXkH6M+CtpscQHQyYsbffEOli
+ Sp9K6FKb5byhaeMnNsT/HUmtAg+TiU0rVl+4o8lm24qBSCFCqDVOPpT9eF6MpBAti2z5DZvDkoT
+ AkqxW8HC34j5nCq/5bQIRtIqxqREhJEc8piHjTAsnzRSO8G0rtYejVqtaDAreVz4OS8tN7ek7iy
+ 8fTiTjpfERDYq1oymiG+Mdb6zW3VQO/24sGwFTCsMe+ZypYPaEpSjV0flXX+sx2c7IhX0tZNZyV
+ UvU+hFFU/j96kdA==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-ti,am654-serdes-ctrl is not a simple syscon device - it has children -
-thus it should be fully documented in its own binding.
+Add compatible for an already used syscon poweroff/mailbox block in APM.
 
 Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
-
-Context might depend on patch in Lee's MFD tree:
-https://lore.kernel.org/all/171828959006.2643902.8308227314531523435.b4-ty@kernel.org/
-and also further patches here depend on this one.
----
- Documentation/devicetree/bindings/mfd/syscon.yaml  |  1 -
- .../bindings/soc/ti/ti,am654-serdes-ctrl.yaml      | 42 ++++++++++++++++++++++
- 2 files changed, 42 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/mfd/syscon.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
-index 49bf85e8f220..0f6fd1a41dd8 100644
+index aa1c2608d326..9dc594ea3654 100644
 --- a/Documentation/devicetree/bindings/mfd/syscon.yaml
 +++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
-@@ -118,7 +118,6 @@ properties:
-               - ti,am625-dss-oldi-io-ctrl
-               - ti,am62p-cpsw-mac-efuse
-               - ti,am654-dss-oldi-io-ctrl
--              - ti,am654-serdes-ctrl
-               - ti,j784s4-pcie-ctrl
-               - ti,keystone-pllctrl
- 
-diff --git a/Documentation/devicetree/bindings/soc/ti/ti,am654-serdes-ctrl.yaml b/Documentation/devicetree/bindings/soc/ti/ti,am654-serdes-ctrl.yaml
-new file mode 100644
-index 000000000000..a10a3b89ae05
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/ti/ti,am654-serdes-ctrl.yaml
-@@ -0,0 +1,42 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/soc/ti/ti,am654-serdes-ctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Texas Instruments AM654 Serdes Control Syscon
-+
-+maintainers:
-+  - Nishanth Menon <nm@ti.com>
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: ti,am654-serdes-ctrl
-+      - const: syscon
-+
-+  reg:
-+    maxItems: 1
-+
-+  mux-controller:
-+    $ref: /schemas/mux/reg-mux.yaml#
-+
-+required:
-+  - compatible
-+  - reg
-+  - mux-controller
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clock@4080 {
-+        compatible = "ti,am654-serdes-ctrl", "syscon";
-+        reg = <0x4080 0x4>;
-+
-+        mux-controller {
-+            compatible = "mmio-mux";
-+            #mux-control-cells = <1>;
-+            mux-reg-masks = <0x0 0x3>; /* lane select */
-+        };
-+    };
+@@ -41,6 +41,8 @@ select:
+           - amlogic,meson8b-analog-top
+           - amlogic,meson8-pmu
+           - amlogic,meson8b-pmu
++          - apm,merlin-poweroff-mailbox
++          - apm,mustang-poweroff-mailbox
+           - apm,xgene-csw
+           - apm,xgene-efuse
+           - apm,xgene-mcb
+@@ -134,6 +136,8 @@ properties:
+           - amlogic,meson8b-analog-top
+           - amlogic,meson8-pmu
+           - amlogic,meson8b-pmu
++          - apm,merlin-poweroff-mailbox
++          - apm,mustang-poweroff-mailbox
+           - apm,xgene-csw
+           - apm,xgene-efuse
+           - apm,xgene-mcb
 
 -- 
 2.43.0
