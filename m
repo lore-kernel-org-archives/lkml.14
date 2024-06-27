@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB3319AD54
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 17:50:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAAE919AA52;
+	Thu, 27 Jun 2024 17:50:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719510656; cv=none; b=YnNyXdJqtm5d5qqbN9HP3rWXx2YBrO5Q5IEtzycjiKhTShHwUNwDPNIDIelA9/j9CNvIRUXyNpM+2nMBFLbul9U/sZou9HC6QQNl6ScTY1ok/9um5uWUG4O68TTG8N9EPMaQkrn+HszjrsSLGsc/kDov+0Nx4XHDuL7r1o8qJZo=
+	t=1719510656; cv=none; b=KJduMup4fsBmBZmS1ljvvcMSPr8URfJKZNpFW+NPyq+0Z7Ovf9d58gJleSTCflZWNKYhK47tQ6isJdnhmv8C0HJmrLkVsIW3e/j7eBiidM71qLUmDv40vkX23zg1HOMDe1XXBDq8iWpvkSBeR0xN4WvT937Z8BLJ07WJPDOBQ/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719510656; c=relaxed/simple;
-	bh=FhBU8A5+Q8J0OeOT+PjkesYLZH9n5p6zVNLOC80zmBw=;
+	bh=1xNe1u/aXvULtcQUTH3SvYXu4kNm78KffnqOzZDJdnw=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=QEezlp/btyxpulMlQqyouQLcCoVuavoAzjrJy4XxMtHdXLf5AXOrAfP0mlUwYebQ5VqfxtsfZIl7jeFyeCVJxZgyZxvgKrQO0kpHgXPXDAUIIoSZI1D8OZrH9eS8vnIdc4Oe+cqS0xQA/kXGM3HbDItKfcrFpx9nnO8EZAKgc/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CYAi0p2Z; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=SE/cIlJH5q63hAn9i7tcTmszZYrZZf8gAqN41y3WHRra7XeA4BLR2JvwykkzbI3sbhHa+OkB6JvVNpegg7KnB95l7IpFlsXOc8sqJ7SWSuK1Zcjb/mvkWgj6Tw7lweg3+R9k4KfEWUwNTgGwgECfvvR3v//zPgcbmBgdwvVVUrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QHV9svyz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CYAi0p2Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6C44CC4AF07;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QHV9svyz"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 771DEC4AF09;
 	Thu, 27 Jun 2024 17:50:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1719510656;
-	bh=FhBU8A5+Q8J0OeOT+PjkesYLZH9n5p6zVNLOC80zmBw=;
+	bh=1xNe1u/aXvULtcQUTH3SvYXu4kNm78KffnqOzZDJdnw=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=CYAi0p2ZyCgc3Y/ccqYLug+F9ztYsbxWr9w6tr695saFcQn6YidUwXIq9K0ak9EJs
-	 sk1lKUr5cTZvu27kL+fNxzb5Qy9/QclYZW3qiXhDFBS3YEgSgzOrPnXlnxeBrofhP2
-	 at+jqHsN682VCLNaiPv3cQvb2ugk6DRlkH/0ceAOjETSb85P5DKXJUP3cGqpMTYXir
-	 +ETVxwIBD5O16Ve54x/LvN5tBB6xToPZyGosRt4nz+/Wah2fD5Fl1L8I1/ZQTEnEKe
-	 HzMCD9GQzDfNOZvkt3T+TosAQEGCbpNsFvr5eTd/7xXGx2wtLrXz7Vtt//bb+Zjefh
-	 CJRGBd1/xNnbw==
+	b=QHV9svyzahf3yrCqi8QXPqwP7zRiUAZbQFiqWK8HM/+ZV9P16PfYVUDWyJ7BUNJ7b
+	 IbAR+uVQMHlr1anDnrYhx1vGkb0K9rZRcHJLmboDNT6J17AW9gvgcWSkbSkZ+Wc0vu
+	 VTuKgfjLl5SRafkJYXPGUuRzRGJ43fxoKmwxAcv0GGSFITi6Gxrbc94V+qEOunslE5
+	 oxPXyrYrtXAbxGSeD2r1RKaHo647/dnOgSIVyIbt/MzYtXbToM6G8yPuM4j9n4TRyx
+	 me3AjXcPr6MZOpX0BzgGjHQOAjVpmah+oiu0JL55XjAYJw/H3d9xHxngGU9L8Z+BGn
+	 V/EQlZlQfCwIA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3DE1FC433A2;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 52547C43443;
 	Thu, 27 Jun 2024 17:50:56 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,61 +37,50 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v4 00/11] riscv: Memory Hot(Un)Plug support
+Subject: Re: [PATCH v2 0/7] riscv: Various text patching improvements
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <171951065622.6762.1200021343450740838.git-patchwork-notify@kernel.org>
+ <171951065633.6762.12967635589292912560.git-patchwork-notify@kernel.org>
 Date: Thu, 27 Jun 2024 17:50:56 +0000
-References: <20240605114100.315918-1-bjorn@kernel.org>
-In-Reply-To: <20240605114100.315918-1-bjorn@kernel.org>
-To: =?utf-8?b?QmrDtnJuIFTDtnBlbCA8Ympvcm5Aa2VybmVsLm9yZz4=?=@ci.codeaurora.org
-Cc: linux-riscv@lists.infradead.org, alexghiti@rivosinc.com,
- aou@eecs.berkeley.edu, david@redhat.com, palmer@dabbelt.com,
- paul.walmsley@sifive.com, osalvador@suse.de, lstoakes@gmail.com,
- Chethan.Seshadri@catalinasystems.io, linux-kernel@vger.kernel.org,
- abrestic@rivosinc.com, bjorn@rivosinc.com, santosh.mamila@catalinasystems.io,
- linux-mm@kvack.org, siva.munnangi@catalinasystems.io,
- virtualization@lists.linux-foundation.org
+References: <20240327160520.791322-1-samuel.holland@sifive.com>
+In-Reply-To: <20240327160520.791322-1-samuel.holland@sifive.com>
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: linux-riscv@lists.infradead.org, palmer@dabbelt.com, bjorn@rivosinc.com,
+ linux-kernel@vger.kernel.org, ardb@kernel.org, daniel@iogearbox.net,
+ jbaron@akamai.com, jpoimboe@kernel.org, peterz@infradead.org,
+ rostedt@goodmis.org, bpf@vger.kernel.org
 
 Hello:
 
 This series was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Wed,  5 Jun 2024 13:40:43 +0200 you wrote:
-> From: Björn Töpel <bjorn@rivosinc.com>
+On Wed, 27 Mar 2024 09:04:39 -0700 you wrote:
+> Here are a few changes to minimize calls to stop_machine() and
+> flush_icache_*() in the various text patching functions, as well as
+> to simplify the code.
 > 
-> ================================================================
-> Memory Hot(Un)Plug support (and ZONE_DEVICE) for the RISC-V port
-> ================================================================
+> This series is based on "[PATCH v3 0/2] riscv: fix patching with IPI"[1].
 > 
-> (For the restless folks: change log in the bottom!)
+> [1]: https://lore.kernel.org/linux-riscv/20240229121056.203419-1-alexghiti@rivosinc.com/
 > 
 > [...]
 
 Here is the summary with links:
-  - [v4,01/11] riscv: mm: Properly forward vmemmap_populate() altmap parameter
-    https://git.kernel.org/riscv/c/e3ecf2fdc8f3
-  - [v4,02/11] riscv: mm: Pre-allocate vmemmap/direct map/kasan PGD entries
-    https://git.kernel.org/riscv/c/66673099f734
-  - [v4,03/11] riscv: mm: Change attribute from __init to __meminit for page functions
-    https://git.kernel.org/riscv/c/fe122b89da67
-  - [v4,04/11] riscv: mm: Refactor create_linear_mapping_range() for memory hot add
-    https://git.kernel.org/riscv/c/007480fe84a9
-  - [v4,05/11] riscv: mm: Add pfn_to_kaddr() implementation
-    https://git.kernel.org/riscv/c/6e6c5e21b8cb
-  - [v4,06/11] riscv: mm: Add memory hotplugging support
-    https://git.kernel.org/riscv/c/c75a74f4ba19
-  - [v4,07/11] riscv: mm: Take memory hotplug read-lock during kernel page table dump
-    https://git.kernel.org/riscv/c/37992b7f1097
-  - [v4,08/11] riscv: Enable memory hotplugging for RISC-V
-    https://git.kernel.org/riscv/c/f8c2a240556e
-  - [v4,09/11] virtio-mem: Enable virtio-mem for RISC-V
-    https://git.kernel.org/riscv/c/0546d7043e55
-  - [v4,10/11] riscv: mm: Add support for ZONE_DEVICE
-    https://git.kernel.org/riscv/c/216e04bf1e4d
-  - [v4,11/11] riscv: Enable DAX VMEMMAP optimization
-    https://git.kernel.org/riscv/c/4705c1571ad3
+  - [v2,1/7] riscv: jump_label: Batch icache maintenance
+    https://git.kernel.org/riscv/c/652b56b18439
+  - [v2,2/7] riscv: jump_label: Simplify assembly syntax
+    https://git.kernel.org/riscv/c/2aa30d19cfbb
+  - [v2,3/7] riscv: kprobes: Use patch_text_nosync() for insn slots
+    https://git.kernel.org/riscv/c/b1756750a397
+  - [v2,4/7] riscv: Simplify text patching loops
+    https://git.kernel.org/riscv/c/5080ca0fe9b5
+  - [v2,5/7] riscv: Pass patch_text() the length in bytes
+    https://git.kernel.org/riscv/c/51781ce8f448
+  - [v2,6/7] riscv: Use offset_in_page() in text patching functions
+    https://git.kernel.org/riscv/c/eaee54875630
+  - [v2,7/7] riscv: Remove extra variable in patch_text_nosync()
+    https://git.kernel.org/riscv/c/47742484ee16
 
 You are awesome, thank you!
 -- 
