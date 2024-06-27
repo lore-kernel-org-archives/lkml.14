@@ -1,131 +1,157 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE4550285;
-	Thu, 27 Jun 2024 08:24:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1391750285;
+	Thu, 27 Jun 2024 08:26:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719476679; cv=none; b=leRF0FqBqzIhGGWH1jFNInzvisgZxqA17rIrFEZlmvi02aCoAwcK5y+/FhlguZn0dCyzX8baKsP4Mr9ACnn/OVBDKRZifpqmFq3Un63iWky9Pr5rgkyW9dGe7/BjWhDudergEQXEpZq5YHMRGuBCVM2P/uRB3/hvRcCIPV4Qnf8=
+	t=1719476761; cv=none; b=bw2pzo+hK8eL2FpIqHylgo7GIlDh6wfx3RGaTyuW7jMS5qBOCbBmQovnbnFTS58X3TYgpI/mDRtF0Qii6dD9C/uumFnklahJWWgSSs7bUPcjWonYtjQ53jczacEFke4W76K+Ae6PZ3N89KuLc+K395ZHcYvDRmQI2PH4mVhWUVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719476679; c=relaxed/simple;
-	bh=nrcED+kfNOJnZI80OvRQZgPNWlUT47kK8X+bKOmviCM=;
+	s=arc-20240116; t=1719476761; c=relaxed/simple;
+	bh=tyRWnrE1fa5NtRnSuPCKd87wxhWzS76tHz0gF9ThlcA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rbVBsi4eE63PMXtXRmXFbsh2WUhQDNj7OZTK0E3SuaxToShJTSbNy6mIC064YcEmcppIoR/TmuRxzCB1bv+QQSfCYnKklcHulhwwj0eNbennJm27wMHa6A9kLNr3KA+mgwEclsI+q03jeS2n9oWrmfGpO0tMXJo5d6a/hmnMu5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eg6xybTK; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=FSFiRsq2WPnGJsgZWqqLEg87XOq/ZtsQLlc1E1fvt8SCwdUvFo2rCbGtkzdNNnKSLZXXhCIiyGv5GD2ChEEUznNXj2NQ5ZAQ+3Fbg7FVMQQJrXnhcW6lXa0uESKPfmBtV04jIjeBLpOXTg+kQL8H5Tv79vw+6hqvVCkPPUNNJUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AVG1apyv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eg6xybTK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719476676; x=1751012676;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nrcED+kfNOJnZI80OvRQZgPNWlUT47kK8X+bKOmviCM=;
-  b=eg6xybTKYGhPZMv/ujzj2LmgCaDKyQ7yQtGDYVmdaEF8bW87ZsvSevRG
-   uNIdrIuQECQ0npH/39VLojTk14yxbWiXFTozUOIGTlwbef4gaG8a3fEAY
-   nsz7G2jlj+0Dka5FIN7AE0kU8ShtUGin247Aelda4RWBTrJGsvtXDPvLq
-   XX9U+saeJZmLCrRvWf43F12EaQ8IQ1QDrOGcL1GB/Y5urucs5sddmFa9D
-   pNdQjKTMUQeiJaSwIO9iuNVSaoItW+rgUyED9pIuTHecXWgv5svTE3ldy
-   rY6WTDyY41nL6vyqo/0fP/QwjLwNiA5SBe9iFY2Qwq2iM3AyAjMiadAuA
-   Q==;
-X-CSE-ConnectionGUID: DnqKiHpPQaOky7xircWvfg==
-X-CSE-MsgGUID: z1GxZ3QHQMGMzSI0W+HN8g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11115"; a="16732457"
-X-IronPort-AV: E=Sophos;i="6.08,269,1712646000"; 
-   d="scan'208";a="16732457"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 01:24:36 -0700
-X-CSE-ConnectionGUID: glugGBpTT1yyzfQ3hLwEGA==
-X-CSE-MsgGUID: T9QHmxmfQZW2EwUhcgfaTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,269,1712646000"; 
-   d="scan'208";a="44944816"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 27 Jun 2024 01:24:31 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sMkQf-000G3N-1Q;
-	Thu, 27 Jun 2024 08:24:29 +0000
-Date: Thu, 27 Jun 2024 16:23:56 +0800
-From: kernel test robot <lkp@intel.com>
-To: Raphael Gallais-Pou <rgallaispou@gmail.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Patrice Chotard <patrice.chotard@foss.st.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AVG1apyv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8396C2BBFC;
+	Thu, 27 Jun 2024 08:25:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719476760;
+	bh=tyRWnrE1fa5NtRnSuPCKd87wxhWzS76tHz0gF9ThlcA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AVG1apyvIO3GqBc0CIMXk3H4Cg2mJ2JSjpnpnI9Y6i9DTFFo4DrdzDiWveRFEwx8I
+	 RaqsgI/m/0FxLQRCpDLiAMIJ8Ij5aSQOEudplU7JoOD1v14LtFSEYdXKUVu/xTLIuq
+	 Tir9zGG55Kai4CJuellwXZlFbnHkYqFUh4NqLsxLnKq7kgNbE1DQY3T3tlFW29h2kP
+	 TJJBkH5hXCAQQ1dAxCa+RIQ8AMQsmNxMa77lB7RXWH129yrwz0PeCEE6ScXfK1g1Ut
+	 Jd6aaFsWTAw0uADnGJlADR8WvmY55ohQhpX4XRBYZXOrrJ8kYpBsVAJusmcqEPsXV9
+	 LQlRNlUuIkmnw==
+Date: Thu, 27 Jun 2024 09:25:55 +0100
+From: Lee Jones <lee@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
 	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] ARM: dts: sti: add thermal-zones support on
- stih418
-Message-ID: <202406271638.0fz7OuJT-lkp@intel.com>
-References: <20240625-thermal-v2-3-bf8354ed51ee@gmail.com>
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH v5 0/6] Support ROHM BD96801 Scalable PMIC
+Message-ID: <20240627082555.GH2532839@google.com>
+References: <cover.1719473802.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240625-thermal-v2-3-bf8354ed51ee@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1719473802.git.mazziesaccount@gmail.com>
 
-Hi Raphael,
+On Thu, 27 Jun 2024, Matti Vaittinen wrote:
 
-kernel test robot noticed the following build warnings:
+> Support ROHM BD96801 Scalable PMIC
+> 
+> The ROHM BD96801 is automotive grade PMIC, intended to be usable in
+> multiple solutions. The BD96801 can be used as a stand-alone, or together
+> with separate 'companion PMICs'. This modular approach aims to make this
+> PMIC suitable for various use-cases.
+> 
+> This series brings only limited support. The more complete set of
+> features was sent in the RFC:
+> https://lore.kernel.org/lkml/cover.1712058690.git.mazziesaccount@gmail.com/
+> 
+> The v3: implemented also support for ERRB interrupt and setting a name
+> suffix to IRQ domains. That work was postponed and will be continued
+> after some unrelated changes to irqdomain code are completed as
+> discussed here:
+> https://lore.kernel.org/all/87plst28yk.ffs@tglx/
+> 
+> Revision history still tries to summarize changes from the RFC for the
+> reviewers.
+> 
+> Revision history:
+> v4 => v5:
+> 	- Drop unintended Makefile change from regulator Makefile
+> 
+> v3 => v4:
+> 	- Drop patches 7 to 10 (inclusive) until preparatory irqdomain changes
+> 	   are done.
+> 	- Cleanups as suggested by Lee.
+> 	- Change the regulator subdevice name. (MFD and regulators).
+> 	- Minor styling in MFD driver
+> 
+> v2 => v3: Mostly based on feedback from Thomas Gleixner
+> 	- Added acks from Krzysztof and Mark
+> 	- Rebased on v6.10-rc2
+> 	- Drop name suffix support for legacy IRQ domains (both
+> 	  irqdomain and regmap)
+> 	- Improve the commit message for patch 7/10
+> 
+> v1 => v2:
+> 	- Add support for setting a name suffix for fwnode backed IRQ domains.
+> 	- Add support for setting a domain name suffix for regmap-IRQ.
+> 	- Add handling of ERRB IRQs.
+> 	- Small fixes based on feedback.
+> 
+> RFCv2 => v1:
+> 	- Drop ERRB IRQ from drivers (but not DT bindings).
+> 	- Drop configuration which requires STBY - state.
+> 	- Fix the register lock race by moving it from the regulator
+> 	  driver to the MFD driver.
+> 
+> RFCv1 => RFCv2:
+> 	- Tidying code based on feedback form Krzysztof Kozlowski and
+> 	  Lee Jones.
+> 	- Documented undocumented watchdog related DT properties.
+> 	- Added usage of the watchdog IRQ.
+> 	- Use irq_domain_update_bus_token() to work-around debugFS name
+> 	  collision for IRQ domains.
+> 
+> ---
+> 
+> 
+> Matti Vaittinen (6):
+>   dt-bindings: ROHM BD96801 PMIC regulators
+>   dt-bindings: mfd: bd96801 PMIC core
+>   mfd: support ROHM BD96801 PMIC core
+>   regulator: bd96801: ROHM BD96801 PMIC regulators
+>   watchdog: ROHM BD96801 PMIC WDG driver
+>   MAINTAINERS: Add ROHM BD96801 'scalable PMIC' entries
+> 
+>  .../bindings/mfd/rohm,bd96801-pmic.yaml       | 173 ++++
+>  .../regulator/rohm,bd96801-regulator.yaml     |  63 ++
+>  MAINTAINERS                                   |   4 +
+>  drivers/mfd/Kconfig                           |  13 +
+>  drivers/mfd/Makefile                          |   1 +
+>  drivers/mfd/rohm-bd96801.c                    | 273 ++++++
+>  drivers/regulator/Kconfig                     |  12 +
+>  drivers/regulator/Makefile                    |   1 +
+>  drivers/regulator/bd96801-regulator.c         | 908 ++++++++++++++++++
+>  drivers/watchdog/Kconfig                      |  13 +
+>  drivers/watchdog/Makefile                     |   1 +
+>  drivers/watchdog/bd96801_wdt.c                | 416 ++++++++
+>  include/linux/mfd/rohm-bd96801.h              | 215 +++++
+>  include/linux/mfd/rohm-generic.h              |   1 +
+>  14 files changed, 2094 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd96801-pmic.yaml
+>  create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd96801-regulator.yaml
+>  create mode 100644 drivers/mfd/rohm-bd96801.c
+>  create mode 100644 drivers/regulator/bd96801-regulator.c
+>  create mode 100644 drivers/watchdog/bd96801_wdt.c
+>  create mode 100644 include/linux/mfd/rohm-bd96801.h
 
-[auto build test WARNING on 0fc4bfab2cd45f9acb86c4f04b5191e114e901ed]
+Applied and submitted for build testing.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Raphael-Gallais-Pou/thermal-st-switch-from-CONFIG_PM_SLEEP-guards-to-pm_sleep_ptr/20240626-090203
-base:   0fc4bfab2cd45f9acb86c4f04b5191e114e901ed
-patch link:    https://lore.kernel.org/r/20240625-thermal-v2-3-bf8354ed51ee%40gmail.com
-patch subject: [PATCH v2 3/3] ARM: dts: sti: add thermal-zones support on stih418
-config: arm-randconfig-051-20240627 (https://download.01.org/0day-ci/archive/20240627/202406271638.0fz7OuJT-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project ad79a14c9e5ec4a369eed4adf567c22cc029863f)
-dtschema version: 2024.6.dev1+g833054f
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240627/202406271638.0fz7OuJT-lkp@intel.com/reproduce)
+If all is good, I'll follow-up with a PR for the other maintainers.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406271638.0fz7OuJT-lkp@intel.com/
-
-dtcheck warnings: (new ones prefixed by >>)
->> arch/arm/boot/dts/st/stih418.dtsi:51.28-79.5: Warning (thermal_sensors_property): /thermal-zones/cpu-thermal: Missing property '#thermal-sensor-cells' in node /soc/thermal@91a0000 or bad phandle (referred from thermal-sensors[0])
-   arch/arm/boot/dts/st/stih418-b2199.dtb: /clocks: failed to match any schema with compatible: ['st,stih418-clk', 'simple-bus']
-   arch/arm/boot/dts/st/stih418-b2199.dtb: /clocks/clockgen-a9@92b0000: failed to match any schema with compatible: ['st,clkgen-c32']
-   arch/arm/boot/dts/st/stih418-b2199.dtb: /clocks/clockgen-a9@92b0000/clockgen-a9-pll: failed to match any schema with compatible: ['st,stih418-clkgen-plla9']
-   arch/arm/boot/dts/st/stih418-b2199.dtb: /clocks/clockgen-a9@92b0000/clk-m-a9: failed to match any schema with compatible: ['st,stih407-clkgen-a9-mux', 'st,clkgen-mux']
-   arch/arm/boot/dts/st/stih418-b2199.dtb: /clocks/clockgen-a9@92b0000/clk-m-a9: failed to match any schema with compatible: ['st,stih407-clkgen-a9-mux', 'st,clkgen-mux']
-   arch/arm/boot/dts/st/stih418-b2199.dtb: /clocks/clockgen-a@90ff000: failed to match any schema with compatible: ['st,clkgen-c32']
-   arch/arm/boot/dts/st/stih418-b2199.dtb: /clocks/clockgen-a@90ff000/clk-s-a0-pll: failed to match any schema with compatible: ['st,clkgen-pll0-a0']
-   arch/arm/boot/dts/st/stih418-b2199.dtb: /clocks/clockgen-a@90ff000/clk-s-a0-flexgen: failed to match any schema with compatible: ['st,flexgen', 'st,flexgen-stih410-a0']
-   arch/arm/boot/dts/st/stih418-b2199.dtb: /clocks/clockgen-a@90ff000/clk-s-a0-flexgen: failed to match any schema with compatible: ['st,flexgen', 'st,flexgen-stih410-a0']
-   arch/arm/boot/dts/st/stih418-b2199.dtb: /clocks/clockgen-c@9103000: failed to match any schema with compatible: ['st,clkgen-c32']
---
->> arch/arm/boot/dts/st/stih418.dtsi:51.28-79.5: Warning (thermal_sensors_property): /thermal-zones/cpu-thermal: Missing property '#thermal-sensor-cells' in node /soc/thermal@91a0000 or bad phandle (referred from thermal-sensors[0])
-   arch/arm/boot/dts/st/stih418-b2264.dtb: /clocks: failed to match any schema with compatible: ['st,stih418-clk', 'simple-bus']
-   arch/arm/boot/dts/st/stih418-b2264.dtb: /clocks/clockgen-a9@92b0000: failed to match any schema with compatible: ['st,clkgen-c32']
-   arch/arm/boot/dts/st/stih418-b2264.dtb: /clocks/clockgen-a9@92b0000/clockgen-a9-pll: failed to match any schema with compatible: ['st,stih418-clkgen-plla9']
-   arch/arm/boot/dts/st/stih418-b2264.dtb: /clocks/clockgen-a9@92b0000/clk-m-a9: failed to match any schema with compatible: ['st,stih407-clkgen-a9-mux', 'st,clkgen-mux']
-   arch/arm/boot/dts/st/stih418-b2264.dtb: /clocks/clockgen-a9@92b0000/clk-m-a9: failed to match any schema with compatible: ['st,stih407-clkgen-a9-mux', 'st,clkgen-mux']
-   arch/arm/boot/dts/st/stih418-b2264.dtb: /clocks/clockgen-a@90ff000: failed to match any schema with compatible: ['st,clkgen-c32']
-   arch/arm/boot/dts/st/stih418-b2264.dtb: /clocks/clockgen-a@90ff000/clk-s-a0-pll: failed to match any schema with compatible: ['st,clkgen-pll0-a0']
-   arch/arm/boot/dts/st/stih418-b2264.dtb: /clocks/clockgen-a@90ff000/clk-s-a0-flexgen: failed to match any schema with compatible: ['st,flexgen', 'st,flexgen-stih410-a0']
-   arch/arm/boot/dts/st/stih418-b2264.dtb: /clocks/clockgen-a@90ff000/clk-s-a0-flexgen: failed to match any schema with compatible: ['st,flexgen', 'st,flexgen-stih410-a0']
-   arch/arm/boot/dts/st/stih418-b2264.dtb: /clocks/clockgen-c@9103000: failed to match any schema with compatible: ['st,clkgen-c32']
-
-vim +51 arch/arm/boot/dts/st/stih418.dtsi
-
-  > 51			cpu_thermal: cpu-thermal {
+Note to self: ib-mfd-regulator-watchdog-6.11
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Lee Jones [李琼斯]
