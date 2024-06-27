@@ -1,84 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A264D8B9;
-	Thu, 27 Jun 2024 07:14:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A12547A76;
+	Thu, 27 Jun 2024 07:14:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719472456; cv=none; b=FChjuQO6YUqAd07ZeeiqdzoytMsgaEbrOW5LyfMh+yoZs4K1gdqNmRwoguB+w41kiA2IIIL4QVBmtZYKaul4FWakzYf61KTYf5SPpGMJawPuCqoJbwQ7HrgJC+wQ2npbXQHR7UQwpk5UQqV6WhILbBGsTLPA+gYI+4Z3gUGw3f0=
+	t=1719472469; cv=none; b=KkE3AYhtoLoQRbS5ioRwOv1M/NQiqqRBMB8DY2a2wFxr0ry42XCQ2RA5gAyrkTi2a/NfASxzQ9UAAHfymbYtyejAivvV2/UmUKWtKroJmbp1Trxpa5yvhhQp3NsfZSxJmvilB3QejlXAZM2ST3BLxmckiCrc6WHgzuvLfpKDiiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719472456; c=relaxed/simple;
-	bh=heO+CZ9nver405szEFaA0YnWPRyUevAoU0f9yFseYgk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tw1pJv2YaBzJXpum/TO8aV8N90XzcAKkYnoNZZyBB0poxTT09jmI8BgLb9nd6Oorz0suLBHz88AUkJ0PzJW+6d2SXunH4J8ZzMnsfepqanWN9tFeKy2DKcGJoJz8h7JH1Rwa8PCTjLXziX6+VLH93Kka7mR3wdiUFkbFyRdg6ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LEeZNoq8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719472469; c=relaxed/simple;
+	bh=Ukpmztnf7gHPfXlZ5ClJbEOf3EzmK3mshVOwXdnDOZY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=H+GakoZ9GFOL0205C3BnRcM96zR0Epto+pacu6fi+Iq+x3D8PFQkqOQ4C5Wk3ZeG3FxGDeOxSpkrmdSlIQeKS/HHP2V2sejrQtnDxE2gy80KoWAifrTCa96F6o4GR4jOQhivCrEX5QgyJrMODtTfJ8aKCr8JE/Cp7hsMc2cnx0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gfQlUuQy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LEeZNoq8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CB8FC2BBFC;
-	Thu, 27 Jun 2024 07:14:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gfQlUuQy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7514C2BBFC;
+	Thu, 27 Jun 2024 07:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719472455;
-	bh=heO+CZ9nver405szEFaA0YnWPRyUevAoU0f9yFseYgk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LEeZNoq8B5DHK64YBtURZYLowmWNjZI8Vziu2frq0t+7j0v3Nh9CHz2o0CM3B8/yD
-	 uNJWUqVBuryBm7Y+8TqQTPP7MJHkVXFsRV8f9aZmddUcWViRIgMyssJFWe+nCQpxsN
-	 LJygEWRUmQxN4WX6w5WjYfzKALxZQirliNfttoM3aZMDvJnpp7tJ+ovR2YStIkqbvi
-	 nunRziwlMIQ8Vx/jeLF+MkqCTpWY+JEKrA20TA8PeejqJwCXssjeGe/dgrATFw+3GT
-	 OGMncN2TmasNDz5cbXvvLC0rU2ypaY/2pQyDbaCYrRcnEvEBcopKqalBw1QoypjRns
-	 iElluEN5NVaVA==
-Date: Thu, 27 Jun 2024 09:14:09 +0200
-From: Benjamin Tissoires <bentiss@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Thinker Li <thinker.li@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>, 
-	Jiri Kosina <jikos@kernel.org>, Martin KaFai Lau <martin.lau@kernel.org>, 
-	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the bpf-next tree
-Message-ID: <pe5rcpwxdb7rrnpdifpenjavfnhmtjekd5wdtq27nn4lqz377g@pox5yp25ukli>
-References: <ZnB9X1Jj6c04ufC0@sirena.org.uk>
- <CAFVMQ6R8ZZE+9jWM1vhEuz2PsLyCgKhpaVD377TKEu4AfGO_iA@mail.gmail.com>
- <ud5j6hbozgg6em43volidpffykdtd2lpf32etmdiyksorl2cb4@whtseaibw2xw>
- <CAADnVQ+cJ5bga7tX9BSTC150CgXM8KQT+Z21zYE-VY-8fts6kg@mail.gmail.com>
+	s=k20201202; t=1719472469;
+	bh=Ukpmztnf7gHPfXlZ5ClJbEOf3EzmK3mshVOwXdnDOZY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=gfQlUuQyk4lVo1c6OQ9NNpAs+LStz2XaPuk3gezHAC28yBPfzN8ngjjtgfkwmuFSJ
+	 gpOAw/PdpV97gsoAtzcPpZvCZDoSyNvTf8n4bzq1HnnAJtLMwQlEoCkDmCCDcIDrOe
+	 nAEUX1T9MkOgUx3K/Ul6xToHbPKakhkEEKNrLk0vD6+MLyBimy4D74n6WgElBvo01G
+	 ZDMy73meflLYWP4ANXudkGAj5OgQl+t62Zlteow6CSBkXQ1I3yCFJJfP3gnI7CBCgh
+	 8LeeIRn2MBCnkVw0awbK5PfR6UculhGZN/GWm/ClPtRhOjtCo6aC1C3/v6TA0eoZvu
+	 Lw6w3AslrBGKA==
+From: Lee Jones <lee@kernel.org>
+To: Tony Lindgren <tony@atomide.com>, Lee Jones <lee@kernel.org>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org
+In-Reply-To: <20240626-omap-usb-tll-counted_by-v2-1-4bedf20d1b51@gmail.com>
+References: <20240626-omap-usb-tll-counted_by-v2-1-4bedf20d1b51@gmail.com>
+Subject: Re: (subset) [PATCH v2] mfd: omap-usb-tll: use struct_size to
+ allocate tll
+Message-Id: <171947246746.2843649.11720740745426236243.b4-ty@kernel.org>
+Date: Thu, 27 Jun 2024 08:14:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAADnVQ+cJ5bga7tX9BSTC150CgXM8KQT+Z21zYE-VY-8fts6kg@mail.gmail.com>
+X-Mailer: b4 0.13.0
 
-On Jun 25 2024, Alexei Starovoitov wrote:
-> On Tue, Jun 25, 2024 at 8:54 AM Benjamin Tissoires <bentiss@kernel.org> wrote:
-> >
-> > On Jun 24 2024, Thinker Li wrote:
-> > > Hi Mark,
-> > >
-> > > I'm sorry for not getting back to you sooner. I have been traveling
-> > > since my last message.
-> > > I guess this patch is for the HID tree. The changes in this patch are great.
-> >
-> > Ok, thanks for the review. However, the need appears because there is a
-> > conflicting update in the bpf tree.
-> >
-> > May I ask the bpf maintainers (Daniel/Alexei/Andrii) for an immutable
-> > tag I could merge to so I can take this patch from Mark?
+On Wed, 26 Jun 2024 21:37:03 +0200, Javier Carrasco wrote:
+> Commit 16c2004d9e4d ("mfd: omap-usb-tll: Allocate driver data at once")
+> changed the memory allocation of 'tll' to consolidate it into a single
+> allocation, introducing an incorrect size calculation.
 > 
-> I'm not sure how that would look like.
-> imo conflict is minor enough.
-> When net-next/bpf-next lands in the upcoming merge window
-> just provide Mark's patch as a conflict resolution suggestion
-> in the cover letter of hid PR ?
+> In particular, the allocation for the array of pointers was converted
+> into a single-pointer allocation.
+> 
+> [...]
 
-I guess I can also wait for the bpf PR to come in, merge with it and add
-Mark's patch at that time. It's not so much of a conflict but 2
-independant changes in 2 different trees.
+Applied, thanks!
 
-Anyway, we'll figure it out when we need :)
+[1/1] mfd: omap-usb-tll: use struct_size to allocate tll
+      commit: 1938e6882b89d1d01926ed3e0bbdd8346263c317
 
-Cheers,
-Benjamin
+--
+Lee Jones [李琼斯]
+
