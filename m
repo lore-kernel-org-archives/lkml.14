@@ -1,65 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.nearlyone.de (mail.nearlyone.de [49.12.199.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D26195B33;
-	Thu, 27 Jun 2024 14:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1735419599C;
+	Thu, 27 Jun 2024 14:11:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.199.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719497465; cv=none; b=SM7CwWt/8d+3kGSE3CvGt+0DuAAQ24cp5lgHVgp3paPy+q1ZA/JgBZF8o/t7WeNCTRcfz1MbbMMaj6iBoX6neW4ke3XlY2+m1pfASySJpsP4Vm946e2rwDq56CyD1aiNUBmweTxLnzqPeW8CgFNaI4efdLJKEGQxPrHMIqTzkds=
+	t=1719497485; cv=none; b=HzEKe0/U628VofpxkaEPHdW6k67bZ9JT1LFwM5CNhY6IoFjg1DjMM6GjYK/dN7bv+oBHYw8+FixxPsPmS2YfROCxaopSjlXa8jo+2LTKgwIo8yYJ5T+3Ha5XtFTfhzwG7P9c+XKAjCt+fioZgvDV8qx4dtM27cFQvD7MTPJ+DWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719497465; c=relaxed/simple;
-	bh=4pyKeghgWQAKtrX0/RiOwcJJoKa0Ods4Nme4C33tAR0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iAYn5ip014BN4MIarJJj23KSQTKgUwievrEGOR2GgGpDckjURiwsicZ2jd5C3FnMh1hwEyG22RJSYAGqD1wL/N/+vccWKsWHadIz2EuWBeX7d0Y6OU0Z98hWZDiiw7Bcsu/yMuDJQQ0mHXNhCKTLPStmcSAzqYprOpDkCn+FTLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Q8WArM9O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719497485; c=relaxed/simple;
+	bh=2SBOoMtiJ54DPGGVHAq7iv2C4pFRN2GgpRpH94Lztm8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=tdMAyAIBg+cgwOIvu5r5GYlZ2UXxpLxmG/tQL4SCKqQznja/mpao/gjxG5nxuYcny4p0wa4Mi24BSiBMxuW2BXtETW4EAZYSb2spEGG1wNKnLHh/9PBK6/akDnAPEE9q045axgg+CHlRhvsRi4TJGAHdXnJeXQBNBEKh/4aXmgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=monom.org; dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b=TOv9ofVQ; arc=none smtp.client-ip=49.12.199.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=monom.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Q8WArM9O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4421BC32786;
-	Thu, 27 Jun 2024 14:11:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1719497464;
-	bh=4pyKeghgWQAKtrX0/RiOwcJJoKa0Ods4Nme4C33tAR0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q8WArM9O4a6jLSPyHq5pSrM9W2+3PSUywjYNcvCUH0MWl/8jg4hlvlAOwetA75RP8
-	 vWTN2P5qaad7xuT73/etb59KL3O8Z+Z/wM22Ml0qhqLMFs9cGHfqiLBx1slWDb9WU0
-	 /o9O3cw6Bw2Z5DnHIPTy/sKJbcGscg+zTOgXXmWo=
-Date: Thu, 27 Jun 2024 16:11:01 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: typec: ucsi: glink: use
- device_for_each_child_node_scoped()
-Message-ID: <2024062735-railway-stoning-566a@gregkh>
-References: <20240623-ucsi_glink-scoped-v1-1-f0fdcfec69bb@gmail.com>
+	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b="TOv9ofVQ"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 13CF2DAD4C;
+	Thu, 27 Jun 2024 16:11:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monom.org; s=dkim;
+	t=1719497474; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=BNoWuT7UuG2Nbrf+bgTkJFKZb6gx8cFnWOjFFjkii6s=;
+	b=TOv9ofVQ1gOF3fSkFSbOab6RiJ5vO26sBn9Hu5tJIhE7rQaK0GUz4k2D3kl86fHi+BZ+R9
+	cDbnih4Y432teCGAXpn5Z2hiVZKGVWbgW+af/r+Myz+rj8GtSP8YqcaQ+983d3Msdn0FsM
+	yfQqo+Btm7Ms27KEmHVWLfYBrQfmS/YgFB6trKQ/E5SN7eIl/q0DzjKvH8i4hlKNWvu+a4
+	QjWYihlNS+drQSFWEilX734flAsOs29QmaM4d1j2FrmlcnVhvhXl4h1AfZYrJ6QGdugpGf
+	RQXX9EDIXZMVNk1wKXsiCFfGlaGy75abK0RgA28ZZhV9HlzK7UFyu5DiDEm6IQ==
+From: Daniel Wagner <dwagner@suse.de>
+Date: Thu, 27 Jun 2024 16:10:51 +0200
+Subject: [PATCH v2 1/3] blk-mq: add blk_mq_num_possible_queues helper
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240623-ucsi_glink-scoped-v1-1-f0fdcfec69bb@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240627-isolcpus-io-queues-v2-1-26a32e3c4f75@suse.de>
+References: <20240627-isolcpus-io-queues-v2-0-26a32e3c4f75@suse.de>
+In-Reply-To: <20240627-isolcpus-io-queues-v2-0-26a32e3c4f75@suse.de>
+To: Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>, 
+ Sagi Grimberg <sagi@grimberg.me>, Thomas Gleixner <tglx@linutronix.de>, 
+ Christoph Hellwig <hch@lst.de>
+Cc: Frederic Weisbecker <fweisbecker@suse.com>, 
+ Mel Gorman <mgorman@suse.de>, Hannes Reinecke <hare@suse.de>, 
+ Sridhar Balaraman <sbalaraman@parallelwireless.com>, 
+ "brookxu.cn" <brookxu.cn@gmail.com>, Ming Lei <ming.lei@redhat.com>, 
+ linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
+ linux-nvme@lists.infradead.org, Daniel Wagner <dwagner@suse.de>
+X-Mailer: b4 0.14.0
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Sun, Jun 23, 2024 at 12:35:11PM +0200, Javier Carrasco wrote:
-> Use the scoped variant of `device_for_each_child_node()` to
-> automatically handle early exits.
-> 
-> This prevents memory leaks if new error paths are introduced,
-> as no explicit refcount decrement via `fwnode_handle_put()` is needed.
-> 
-> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-> ---
-> This patch is a follow-up to the recently introduced commit c68942624e25
-> ("usb: typec: ucsi: glink: fix child node release in probe function")
-> to account for a safer approach to iterating over child nodes.
+Multi queue devices which use managed IRQs should only allocate queues
+for the housekeeping CPUs when isolcpus is set. This avoids that the
+isolated CPUs get disturbed with OS workload.
 
-What branch/tree is this against?  It fails to apply to my usb-testing
-branch at all :(
+Add a helper which calculates the correct number of queues which should
+be used.
 
-Can you rebase and resubmit?
+Signed-off-by: Daniel Wagner <dwagner@suse.de>
+---
+ block/blk-mq-cpumap.c  | 20 ++++++++++++++++++++
+ include/linux/blk-mq.h |  1 +
+ 2 files changed, 21 insertions(+)
 
-thanks,
+diff --git a/block/blk-mq-cpumap.c b/block/blk-mq-cpumap.c
+index 9638b25fd521..9717e323f308 100644
+--- a/block/blk-mq-cpumap.c
++++ b/block/blk-mq-cpumap.c
+@@ -11,10 +11,30 @@
+ #include <linux/smp.h>
+ #include <linux/cpu.h>
+ #include <linux/group_cpus.h>
++#include <linux/sched/isolation.h>
+ 
+ #include "blk.h"
+ #include "blk-mq.h"
+ 
++/**
++ * blk_mq_num_possible_queues - Calc nr of queues for managed devices
++ *
++ * Calculate the number of queues which should be used for a multiqueue
++ * device which uses the managed IRQ API. The helper is considering
++ * isolcpus settings.
++ */
++unsigned int blk_mq_num_possible_queues(void)
++{
++	const struct cpumask *hk_mask;
++
++	hk_mask = housekeeping_cpumask(HK_TYPE_MANAGED_IRQ);
++	if (!cpumask_empty(hk_mask))
++		return cpumask_weight(hk_mask);
++
++	return num_possible_cpus();
++}
++EXPORT_SYMBOL_GPL(blk_mq_num_possible_queues);
++
+ void blk_mq_map_queues(struct blk_mq_queue_map *qmap)
+ {
+ 	const struct cpumask *masks;
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index 89ba6b16fe8b..2105cc78ca67 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -900,6 +900,7 @@ void blk_mq_freeze_queue_wait(struct request_queue *q);
+ int blk_mq_freeze_queue_wait_timeout(struct request_queue *q,
+ 				     unsigned long timeout);
+ 
++unsigned int blk_mq_num_possible_queues(void);
+ void blk_mq_map_queues(struct blk_mq_queue_map *qmap);
+ void blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set, int nr_hw_queues);
+ 
 
-greg k-h
+-- 
+2.45.2
+
