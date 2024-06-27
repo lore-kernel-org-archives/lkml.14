@@ -1,186 +1,335 @@
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01rlnn2043.outbound.protection.outlook.com [40.95.54.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D5314D6EB;
-	Thu, 27 Jun 2024 20:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.95.54.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719521759; cv=fail; b=RZPuDi/ANoykT6uBOcGHwQDpVBe2xfKCiUHxqrFaQUyn7TzJW1QRZ8Un5PZvV+A/HTXK9YdX0akJwz7QDCeaPslpa0z1H8CUZPoJsRAAikT4n0f+H8ejAco4WqvgfAg74HYDkzRuF04ztN2CXLj993bYs30eNRpwNvBqIYRpneE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719521759; c=relaxed/simple;
-	bh=405koqkFLItgqfZWzqnAgNocH96nFaeX4lUWVJeXyFg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MNixyestvd5/Mkjszu6rQS6NXwREO9fFqMQaA0Wa/FlrPltGbtXAMR8A8b/m0iezehgftZggVytUDxGoNZwruoBOAYxBndWvAahzxossLD669claCR/e0y6BqcsXExqMXAOKO0y51wOloHyVtmDcE7o+mEvZfY4CcuffE2ubWl8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=none smtp.mailfrom=taln60.nuvoton.co.il; dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b=V0zMNYqW; arc=fail smtp.client-ip=40.95.54.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=taln60.nuvoton.co.il
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9254F19FA9F
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 20:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719521764; cv=none; b=cYHcB+QSMLvNBbXIpfpO7QsJ2M3a1hXFXfH1BZDDkNH6NiC7uJFkyqOHkX1e3uczVFj8XnF7vV7lsFjICbVA/OpWfanTdpmDTJVvbtKbn9/clTkTECuMvg88cZy8X5vuNxEv2/3RXSa79aEM4U7wTfwryTGz3ZHXip1lENcV3eM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719521764; c=relaxed/simple;
+	bh=h/gokKA/eL9d3uvQ86iiXmtz9Do5OKwAUovd4O2lEvM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OBepie/Xpx31T7U+JRIAUqSxaYO2wsbGmFCm1kzam8dlmNQQvqFNYHC7j13OEtLyxGBVt7e5ftAtPKFmW0060tBPAiv1sypDECqC2WjUMm4xqFuGMPPUhYhrzWdjn+vdN4f7p3kohXohLarZgVD2oPhLyW8ZkbC5r+1YT8EqG20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gRGXa/+0; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b="V0zMNYqW"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fCv7STDAIpmQebJwic405gIMu5WBVS7wXWkupGyRztZgxdX6HIwRtzHfJmq92Nnf+y3H4+K1NpwHU6CFdK/can/gedtc6ACGluUcRs/atoaEl4sR26BTdBDTutIuekhMZdm+nBL+m1ILPOXKJZ/ft6EbZBcfu8He9L+zgo+4+9w7u+BwbZkWcnbGQjBQSHBFe5rakEmZ2YfcwMmdL9x1NWIMACZrvGT1XjE6MmeVJ6CjeHV1e84CkgtM8TZZDk9ut1c8Yb9PjHuMdnZcl3aIsHUiD4kwUzx5xjqwgxTopk7fLxEsY3i36Ui2Ocis+nWpTGZ8e4adreftERvRp8BzAA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SphcdK9iAYR8pvG763Yp4p1Pc8+L78yo/9jOfl5U3YU=;
- b=EU3UKtxQvw4xHoiUrqZNEfyxwVyacIeZDXrGBT5XRrrQDApjcRiqAa4RlkyyNRV3PQnuVWAi5HMPKpM1SudrzCBYKcgpJfBq9L6rrNwkb1JMgqUAApnSXMtnb/w1HYewIXxZkepjj0ogmboon4Cf6qalOpjHvzZdQ5I0bTtJ3Qqn+6OuKoRSrl2XyKKTl1O8tzMze0kCSfdAktch2Vom9G2NOZt1iYF60U4d4PeagNro+jfU4TyQOz6UmfEk3yhPF4i/II7DgJiMwJP7qh87PfoqrDt9VIVyaEjAC05Mz9iiKFHvbD/3U1IrQRiep0JJXxS4qzHwe5bjM8arp2mmiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=temperror (sender ip
- is 211.75.126.7) smtp.rcpttodomain=gmail.com
- smtp.mailfrom=taln60.nuvoton.co.il; dmarc=fail (p=none sp=quarantine pct=100)
- action=none header.from=gmail.com; dkim=none (message not signed); arc=none
- (0)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gRGXa/+0"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2c7c61f7ee3so6507490a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 13:56:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=nuvoton.onmicrosoft.com; s=selector2-nuvoton-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SphcdK9iAYR8pvG763Yp4p1Pc8+L78yo/9jOfl5U3YU=;
- b=V0zMNYqWWCn4459/XAzk6dy4YHas+SEokSe7+Q1w6t+2VeTBf3C+8rPGpZuOkV0kdJxJtfgicqvCy2UDFFtuiocK812Od4H5ngxXKNk+cIgCR5gU2CMZxi2cutA4k0Ar8wwTycLemB5Rii03wvMICPvY1gBpmp+lX5JhN08FkoM=
-Received: from SG2PR02CA0122.apcprd02.prod.outlook.com (2603:1096:4:188::10)
- by KL1PR03MB8775.apcprd03.prod.outlook.com (2603:1096:820:139::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.35; Thu, 27 Jun
- 2024 18:23:22 +0000
-Received: from SG1PEPF000082E7.apcprd02.prod.outlook.com
- (2603:1096:4:188:cafe::1) by SG2PR02CA0122.outlook.office365.com
- (2603:1096:4:188::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.25 via Frontend
- Transport; Thu, 27 Jun 2024 18:23:22 +0000
-X-MS-Exchange-Authentication-Results: spf=temperror (sender IP is
- 211.75.126.7) smtp.mailfrom=taln60.nuvoton.co.il; dkim=none (message not
- signed) header.d=none;dmarc=fail action=none header.from=gmail.com;
-Received-SPF: TempError (protection.outlook.com: error in processing during
- lookup of taln60.nuvoton.co.il: DNS Timeout)
-Received: from NTHCCAS01.nuvoton.com (211.75.126.7) by
- SG1PEPF000082E7.mail.protection.outlook.com (10.167.240.10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7677.15 via Frontend Transport; Thu, 27 Jun 2024 18:23:20 +0000
-Received: from NTHCCAS01.nuvoton.com (10.1.8.28) by NTHCCAS01.nuvoton.com
- (10.1.8.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 28 Jun
- 2024 02:23:20 +0800
-Received: from taln58.nuvoton.co.il (10.191.1.178) by NTHCCAS01.nuvoton.com
- (10.1.8.28) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Fri, 28 Jun 2024 02:23:19 +0800
-Received: from taln60.nuvoton.co.il (taln60 [10.191.1.180])
-	by taln58.nuvoton.co.il (Postfix) with ESMTP id EA8AC5F64B;
-	Thu, 27 Jun 2024 21:23:18 +0300 (IDT)
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
-	id DB5D4DC0726; Thu, 27 Jun 2024 21:23:18 +0300 (IDT)
-From: Tomer Maimon <tmaimon77@gmail.com>
-To: <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <tali.perry1@gmail.com>,
-	<joel@jms.id.au>, <venture@google.com>, <yuenn@google.com>,
-	<benjaminfair@google.com>
-CC: <openbmc@lists.ozlabs.org>, <linux-clk@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>, Tomer Maimon
-	<tmaimon77@gmail.com>
-Subject: [PATCH v1] dt-bindings: pinctrl: npcm8xx: add missing pin group and mux function
-Date: Thu, 27 Jun 2024 21:23:12 +0300
-Message-ID: <20240627182312.86382-1-tmaimon77@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=google.com; s=20230601; t=1719521762; x=1720126562; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cco6EZF2j8OQE92+f3MjOu4YjycnA9o3NZCPpc89uj0=;
+        b=gRGXa/+0aR1gF89enX3KWKGCqIbDrPobmugyQEvZup5PAzfcJ2SIuRuRTPqtciNEUE
+         MAxK2k8601X4g1lBheNge7Qnl+r3YaD6cRbJZSL/cJsvbUON15syAykt4kZJO6+C1ymE
+         s/uqegLwJwCtW1yphJWyJsxsVmKTiZXCXQPwc1GvgFTSoitj9in6xYPH6/FRe3EguHEZ
+         6BcyPQuEg1AjgVcy3qfS9AWC+AzvOH5b40R3DUUCJFVqKfaRhZp6Y1HOhK+VoikV0SwE
+         UdVE/10LYYS8Oe2XZ7UMmz6Jw9UYMpJF/e3GekE0TCEv5lMT/Arzt776eWY+R0En5EJZ
+         4EvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719521762; x=1720126562;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Cco6EZF2j8OQE92+f3MjOu4YjycnA9o3NZCPpc89uj0=;
+        b=c4TPnJrGho4bqF2FjqTeQ69g1rGU+c3LaL7QEW3c6qFpSZMvtOTfEJpKdwsCfeA7dB
+         mFP9opjpVufox0SjCS3cf6F2faJEVwAmi0GjtiUKgnC6jETgNmiKHGPg9YLUxxcAKmlG
+         GyYauJSEnwFm42gPx0S+PrXocm4vyM8YJ/lgTsBde3RkeQAMoV5n/LY7LcVttLrjY/C/
+         uto5BVgt3aR9ewBghZ1qMTYeXdmI02xwNSJ6cP8xxZLLo3X+3rKKDYGyAScglssZtEmA
+         d8pB63Txts1myXpkvwMR50PfO9SoiXcAaFa83p/1eMNqhftpXkLRql3dDyjTYs4J1NnI
+         7mog==
+X-Forwarded-Encrypted: i=1; AJvYcCWTd9Y0BVbfcbkwmUcUa7e6UxK2gHgf5seZt7k2MkpXk6zoJN1/6vUw8UKhyo1HQHrNzOWy25M9W7zSoSwFkohzJoNeitsUcxM2bMEL
+X-Gm-Message-State: AOJu0YxIcpAAi320sd0O5oX4b4Hlzk45R/Jh6g0pp/K3Z/FoIvx+6hIi
+	5LYMJkwQYUESKt0LDKHHB7TCScTYdH7rpmkrWkLgcRCiC6JDyt6jSgBFPaNb8yPZyeXeLCRzuI4
+	DsQ==
+X-Google-Smtp-Source: AGHT+IFyz4ki9aGX3jIOrnOMaNPh+xuHBl7iGaMrFplV07Nj7dERB0ologZJCqMGgVX9qvWYMslwrg==
+X-Received: by 2002:a17:90a:348b:b0:2c4:aae7:e27 with SMTP id 98e67ed59e1d1-2c8612dbde6mr13756693a91.23.1719521761469;
+        Thu, 27 Jun 2024 13:56:01 -0700 (PDT)
+Received: from google.com (148.98.83.34.bc.googleusercontent.com. [34.83.98.148])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c91d3bc525sm228563a91.45.2024.06.27.13.56.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jun 2024 13:56:00 -0700 (PDT)
+Date: Thu, 27 Jun 2024 20:55:57 +0000
+From: Igor Pylypiv <ipylypiv@google.com>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Niklas Cassel <cassel@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Hannes Reinecke <hare@suse.de>, linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v3 2/6] ata: libata-scsi: Do not overwrite valid sense
+ data when CK_COND=1
+Message-ID: <Zn3R3R_xJFvyNJU-@google.com>
+References: <20240626230411.3471543-1-ipylypiv@google.com>
+ <20240626230411.3471543-3-ipylypiv@google.com>
+ <785a0460-36d5-4e4a-99ea-114081c55bc7@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NotSetDelaration: True
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG1PEPF000082E7:EE_|KL1PR03MB8775:EE_
-X-MS-Office365-Filtering-Correlation-Id: c9953d63-cce5-4351-4c72-08dc96d6395a
-X-MS-Exchange-SenderADCheck: 2
-X-MS-Exchange-AntiSpam-Relay: 1
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|7416014|35950700016|61400799027|7093399012|48200799018|35450700002;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?KT5FMkxVkXtvOM3ctkn6quhzhrjNdJAkxzOIpTmu6WaU79QpNFVRWGsAsyNO?=
- =?us-ascii?Q?Ovu1NXeiNcKXoiKUIUDNrU1Mv24Cbxd2k2Rzku2XCQ7mRhNe9kSfrk3P2k3I?=
- =?us-ascii?Q?7Ra4KJshDgyzpalxDe+xk6lw4teHY/WyE6Rc877Uyd8AAlf2m0eyuhvqfyU+?=
- =?us-ascii?Q?Ixxj4Pfcxe6XVy7t6ZZiZRIiOcMBraATZ2my8NzIDmuI2iI5L9ZPkk6GBTUm?=
- =?us-ascii?Q?+sLZGcy0UDfioQ1Q/gAH3IXpNAxZkmvvI/zvm4avk1C0i+5i/T7LDbmTv2X5?=
- =?us-ascii?Q?Jy7sI2cUUgM/1krOYk0QFBlxUbrtAVXblm63f6ZuaKhq7wy1W29I6qK9QlZJ?=
- =?us-ascii?Q?pf3qKV5JXmJth+SjUcWaQXyBHxqltj20EI/BhBiKahyn476Fs/61RcuKKurW?=
- =?us-ascii?Q?Om+GIJnp/o36dVxRzmtp/raN8XYS3039CRyZ5cQckOwBtjFiWdUAy9AvKDG6?=
- =?us-ascii?Q?3u9nwzGjuBcCswiirHBiqUpcneDrPJ8q1SetDePjhxYsgyCWM/zX+O+HZYxd?=
- =?us-ascii?Q?m5I/HQ1fjwX5drjs7pPETy6DWaKlfjt/QGUUwtvpwade16fX41vVbd4jehHh?=
- =?us-ascii?Q?D+XqnJAKrf7rsUkKxvHZK1nexbzFlxNk9SEyQY2xMZ9dpx6AdIfhipTaaJ59?=
- =?us-ascii?Q?h0N+ize7JsjZImtBBOJdEJQbGoLAG599Ufn5XTM0XlvCuSzhX1nu4XVTGb0k?=
- =?us-ascii?Q?SPg0ZRUxbR/IqXEXcadBak/rqyWrkx5HAvB/0dvnYzE2PXTY2XrtqkedM8NO?=
- =?us-ascii?Q?Pa2r6s4S9Y4LBkg+Vq7p0sjFleGibIopwC0m5urBQ8vxxMO1iNfEcsaA0pHU?=
- =?us-ascii?Q?68RMSrrZF9uBHXpi4xHxsx5Hwy/P1HkekR1IGaECYUtc7Xm1jyONxFCXpHxU?=
- =?us-ascii?Q?XzHenn11QgcLdYxuNOjmDiLH9wFlmt9BRj+M9XVJk5fRZWvLR4LuTRcIZFdj?=
- =?us-ascii?Q?ABHQOWWPxyIx/RYYftxKFAwqF+jFIrlpU0kg8Dpu59SI3upjXnfw7PvRL8Kj?=
- =?us-ascii?Q?PpM9shtv3E84sifcWvKBiRBT1dGAXmocNtyDQd75Ngri0mDTVeBf0QU5rloq?=
- =?us-ascii?Q?2fwyMrQXfJ+FlX6bffrdZSTCL25SBPvOSy1afdkeIGtlLL9Bs22GzCtZyWvy?=
- =?us-ascii?Q?spWwxaIr5m7r/CXBuibjzq2axBMZEC+3HZy69NYOsw3uUBfA2jjmpjH4kkR8?=
- =?us-ascii?Q?Z0UY7Ezf2IXmzirFt6DUQRxCkmxR/WI4P36fRVDoRUyWNbsT8MaqzSWbM3l1?=
- =?us-ascii?Q?bAv09la0GcVadiOng33PRrPBqyZYv576aCTABjx4n1tjrAjiKfT8uzFDdvuQ?=
- =?us-ascii?Q?l7yCzYS3hZwSxyE7XPEGQkzuvrW4Xv/G7UMIb7E9Lo107NjOxPJGz0Z3+FlL?=
- =?us-ascii?Q?EoySxNJlLFeyTiDlyR5ggy6YLHaw+TJ5SAKi6FMxawaaSTmbTyR8YKavh48N?=
- =?us-ascii?Q?LtALBLPLon/0szi2n08bv7vQNmRLaMXTJaFu48KP6NGMNyiIBxO3dA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:211.75.126.7;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:NTHCCAS01.nuvoton.com;PTR:211-75-126-7.hinet-ip.hinet.net;CAT:NONE;SFS:(13230040)(376014)(82310400026)(7416014)(35950700016)(61400799027)(7093399012)(48200799018)(35450700002);DIR:OUT;SFP:1022;
-X-OriginatorOrg: nuvoton.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2024 18:23:20.8060
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c9953d63-cce5-4351-4c72-08dc96d6395a
-X-MS-Exchange-CrossTenant-Id: a3f24931-d403-4b4a-94f1-7d83ac638e07
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a3f24931-d403-4b4a-94f1-7d83ac638e07;Ip=[211.75.126.7];Helo=[NTHCCAS01.nuvoton.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SG1PEPF000082E7.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR03MB8775
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <785a0460-36d5-4e4a-99ea-114081c55bc7@kernel.org>
 
-Add the following missing pin group and mux function:
-smb6b, smb6c, smb6d, smb7b, smb7c, smb7d, bu4, bu4b, bu5, bu5b, bu6,
-gpo187.
+On Thu, Jun 27, 2024 at 09:16:09AM +0900, Damien Le Moal wrote:
+> On 6/27/24 08:04, Igor Pylypiv wrote:
+> > Current ata_gen_passthru_sense() code performs two actions:
+> > 1. Generates sense data based on the ATA 'status' and ATA 'error' fields.
+> > 2. Populates "ATA Status Return sense data descriptor" / "Fixed format
+> >    sense data" with ATA taskfile fields.
+> > 
+> > The problem is that #1 generates sense data even when a valid sense data
+> > is already present (ATA_QCFLAG_SENSE_VALID is set). Factoring out #2 into
+> > a separate function allows us to generate sense data only when there is
+> > no valid sense data (ATA_QCFLAG_SENSE_VALID is not set).
+> > 
+> > As a bonus, we can now delete a FIXME comment in atapi_qc_complete()
+> > which states that we don't want to translate taskfile registers into
+> > sense descriptors for ATAPI.
+> > 
+> > Cc: stable@vger.kernel.org
+> > Reviewed-by: Hannes Reinecke <hare@suse.de>
+> > Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+> > Signed-off-by: Igor Pylypiv <ipylypiv@google.com>
+> 
+> I wonder if we can find the patch that introduced the bug in the first place so
+> that we can add a Fixes tag. I have not checked. This may have been wrong since
+> a long time ago...
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
----
- .../pinctrl/nuvoton,npcm845-pinctrl.yaml      | 22 ++++++++++---------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+This code was first introduced in 2005 in commit b095518ef51c3 ("[libata]
+ATA passthru (arbitrary ATA command execution)").
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
-index b55d9c316659..f3c3f910a51f 100644
---- a/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
-@@ -85,11 +85,12 @@ patternProperties:
-                   smb2c, smb2b, smb1c, smb1b, smb8, smb9, smb10, smb11, sd1,
-                   sd1pwr, pwm4, pwm5, pwm6, pwm7, pwm8, pwm9, pwm10, pwm11,
-                   mmc8, mmc, mmcwp, mmccd, mmcrst, clkout, serirq, lpcclk,
--                  scipme, smi, smb6, smb7, spi1, faninx, r1, spi3, spi3cs1,
--                  spi3quad, spi3cs2, spi3cs3, nprd_smi, smb0b, smb0c, smb0den,
--                  smb0d, ddc, rg2mdio, wdog1, wdog2, smb12, smb13, spix,
--                  spixcs1, clkreq, hgpio0, hgpio1, hgpio2, hgpio3, hgpio4,
--                  hgpio5, hgpio6, hgpio7 ]
-+                  scipme, smi, smb6, smb6b, smb6c, smb6d, smb7, smb7b, smb7c,
-+                  smb7d, spi1, faninx, r1, spi3, spi3cs1, spi3quad, spi3cs2,
-+	  	  spi3cs3, nprd_smi, smb0b, smb0c, smb0den, smb0d, ddc, rg2mdio,
-+		  wdog1, wdog2, smb12, smb13, spix, spixcs1, clkreq, hgpio0,
-+		  hgpio1, hgpio2, hgpio3, hgpio4, hgpio5, hgpio6, hgpio7, bu4,
-+		  bu4b, bu5, bu5b, bu6, gpo187 ]
- 
-       function:
-         description:
-@@ -109,11 +110,12 @@ patternProperties:
-                 smb2c, smb2b, smb1c, smb1b, smb8, smb9, smb10, smb11, sd1,
-                 sd1pwr, pwm4, pwm5, pwm6, pwm7, pwm8, pwm9, pwm10, pwm11,
-                 mmc8, mmc, mmcwp, mmccd, mmcrst, clkout, serirq, lpcclk,
--                scipme, smi, smb6, smb7, spi1, faninx, r1, spi3, spi3cs1,
--                spi3quad, spi3cs2, spi3cs3, nprd_smi, smb0b, smb0c, smb0den,
--                smb0d, ddc, rg2mdio, wdog1, wdog2, smb12, smb13, spix,
--                spixcs1, clkreq, hgpio0, hgpio1, hgpio2, hgpio3, hgpio4,
--                hgpio5, hgpio6, hgpio7 ]
-+                scipme, smi, smb6, smb6b, smb6c, smb6d, smb7, smb7b, smb7c,
-+                smb7d, spi1, faninx, r1, spi3, spi3cs1, spi3quad, spi3cs2,
-+	  	spi3cs3, nprd_smi, smb0b, smb0c, smb0den, smb0d, ddc, rg2mdio,
-+		wdog1, wdog2, smb12, smb13, spix, spixcs1, clkreq, hgpio0,
-+		hgpio1, hgpio2, hgpio3, hgpio4, hgpio5, hgpio6, hgpio7, bu4,
-+		bu4b, bu5, bu5b, bu6, gpo187 ]
- 
-     dependencies:
-       groups: [ function ]
--- 
-2.34.1
+ATA_QCFLAG_SENSE_VALID was introduced a year later in commit 9ec957f2002b
+("[PATCH] libata-eh-fw: add flags and operations for new EH").
 
+IIUC, ATA_QCFLAG_SENSE_VALID has not been set for ATA drives until 2016
+when the support for fetching the sense data was added in 5b01e4b9efa0
+("libata: Implement NCQ autosense") and commit e87fd28cf9a2d ("libata:
+Implement support for sense data reporting").
+
+To me none of the commits looks like a good candidate for the Fixes tag.
+What are your thoughts on this?
+
+> 
+> > ---
+> >  drivers/ata/libata-scsi.c | 158 +++++++++++++++++++++-----------------
+> >  1 file changed, 86 insertions(+), 72 deletions(-)
+> > 
+> > diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
+> > index a9e44ad4c2de..26b1263f5c7c 100644
+> > --- a/drivers/ata/libata-scsi.c
+> > +++ b/drivers/ata/libata-scsi.c
+> > @@ -230,6 +230,80 @@ void ata_scsi_set_sense_information(struct ata_device *dev,
+> >  				   SCSI_SENSE_BUFFERSIZE, information);
+> >  }
+> >  
+> > +/**
+> > + *	ata_scsi_set_passthru_sense_fields - Set ATA fields in sense buffer
+> > + *	@qc: ATA PASS-THROUGH command.
+> > + *
+> > + *	Populates "ATA Status Return sense data descriptor" / "Fixed format
+> > + *	sense data" with ATA taskfile fields.
+> > + *
+> > + *	LOCKING:
+> > + *	None.
+> > + */
+> > +static void ata_scsi_set_passthru_sense_fields(struct ata_queued_cmd *qc)
+> > +{
+> > +	struct scsi_cmnd *cmd = qc->scsicmd;
+> > +	struct ata_taskfile *tf = &qc->result_tf;
+> > +	unsigned char *sb = cmd->sense_buffer;
+> > +
+> > +	if ((sb[0] & 0x7f) >= 0x72) {
+> > +		unsigned char *desc;
+> > +		u8 len;
+> > +
+> > +		/* descriptor format */
+> > +		len = sb[7];
+> > +		desc = (char *)scsi_sense_desc_find(sb, len + 8, 9);
+> > +		if (!desc) {
+> > +			if (SCSI_SENSE_BUFFERSIZE < len + 14)
+> > +				return;
+> > +			sb[7] = len + 14;
+> > +			desc = sb + 8 + len;
+> > +		}
+> > +		desc[0] = 9;
+> > +		desc[1] = 12;
+> > +		/*
+> > +		 * Copy registers into sense buffer.
+> > +		 */
+> > +		desc[2] = 0x00;
+> > +		desc[3] = tf->error;
+> > +		desc[5] = tf->nsect;
+> > +		desc[7] = tf->lbal;
+> > +		desc[9] = tf->lbam;
+> > +		desc[11] = tf->lbah;
+> > +		desc[12] = tf->device;
+> > +		desc[13] = tf->status;
+> > +
+> > +		/*
+> > +		 * Fill in Extend bit, and the high order bytes
+> > +		 * if applicable.
+> > +		 */
+> > +		if (tf->flags & ATA_TFLAG_LBA48) {
+> > +			desc[2] |= 0x01;
+> > +			desc[4] = tf->hob_nsect;
+> > +			desc[6] = tf->hob_lbal;
+> > +			desc[8] = tf->hob_lbam;
+> > +			desc[10] = tf->hob_lbah;
+> > +		}
+> > +	} else {
+> > +		/* Fixed sense format */
+> > +		sb[0] |= 0x80;
+> > +		sb[3] = tf->error;
+> > +		sb[4] = tf->status;
+> > +		sb[5] = tf->device;
+> > +		sb[6] = tf->nsect;
+> > +		if (tf->flags & ATA_TFLAG_LBA48)  {
+> > +			sb[8] |= 0x80;
+> > +			if (tf->hob_nsect)
+> > +				sb[8] |= 0x40;
+> > +			if (tf->hob_lbal || tf->hob_lbam || tf->hob_lbah)
+> > +				sb[8] |= 0x20;
+> > +		}
+> > +		sb[9] = tf->lbal;
+> > +		sb[10] = tf->lbam;
+> > +		sb[11] = tf->lbah;
+> > +	}
+> > +}
+> > +
+> >  static void ata_scsi_set_invalid_field(struct ata_device *dev,
+> >  				       struct scsi_cmnd *cmd, u16 field, u8 bit)
+> >  {
+> > @@ -837,10 +911,8 @@ static void ata_to_sense_error(unsigned id, u8 drv_stat, u8 drv_err, u8 *sk,
+> >   *	ata_gen_passthru_sense - Generate check condition sense block.
+> >   *	@qc: Command that completed.
+> >   *
+> > - *	This function is specific to the ATA descriptor format sense
+> > - *	block specified for the ATA pass through commands.  Regardless
+> > - *	of whether the command errored or not, return a sense
+> > - *	block. Copy all controller registers into the sense
+> > + *	This function is specific to the ATA pass through commands.
+> > + *	Regardless of whether the command errored or not, return a sense
+> >   *	block. If there was no error, we get the request from an ATA
+> >   *	passthrough command, so we use the following sense data:
+> >   *	sk = RECOVERED ERROR
+> > @@ -875,63 +947,6 @@ static void ata_gen_passthru_sense(struct ata_queued_cmd *qc)
+> >  		 */
+> >  		scsi_build_sense(cmd, 1, RECOVERED_ERROR, 0, 0x1D);
+> >  	}
+> > -
+> > -	if ((sb[0] & 0x7f) >= 0x72) {
+> > -		unsigned char *desc;
+> > -		u8 len;
+> > -
+> > -		/* descriptor format */
+> > -		len = sb[7];
+> > -		desc = (char *)scsi_sense_desc_find(sb, len + 8, 9);
+> > -		if (!desc) {
+> > -			if (SCSI_SENSE_BUFFERSIZE < len + 14)
+> > -				return;
+> > -			sb[7] = len + 14;
+> > -			desc = sb + 8 + len;
+> > -		}
+> > -		desc[0] = 9;
+> > -		desc[1] = 12;
+> > -		/*
+> > -		 * Copy registers into sense buffer.
+> > -		 */
+> > -		desc[2] = 0x00;
+> > -		desc[3] = tf->error;
+> > -		desc[5] = tf->nsect;
+> > -		desc[7] = tf->lbal;
+> > -		desc[9] = tf->lbam;
+> > -		desc[11] = tf->lbah;
+> > -		desc[12] = tf->device;
+> > -		desc[13] = tf->status;
+> > -
+> > -		/*
+> > -		 * Fill in Extend bit, and the high order bytes
+> > -		 * if applicable.
+> > -		 */
+> > -		if (tf->flags & ATA_TFLAG_LBA48) {
+> > -			desc[2] |= 0x01;
+> > -			desc[4] = tf->hob_nsect;
+> > -			desc[6] = tf->hob_lbal;
+> > -			desc[8] = tf->hob_lbam;
+> > -			desc[10] = tf->hob_lbah;
+> > -		}
+> > -	} else {
+> > -		/* Fixed sense format */
+> > -		sb[0] |= 0x80;
+> > -		sb[3] = tf->error;
+> > -		sb[4] = tf->status;
+> > -		sb[5] = tf->device;
+> > -		sb[6] = tf->nsect;
+> > -		if (tf->flags & ATA_TFLAG_LBA48)  {
+> > -			sb[8] |= 0x80;
+> > -			if (tf->hob_nsect)
+> > -				sb[8] |= 0x40;
+> > -			if (tf->hob_lbal || tf->hob_lbam || tf->hob_lbah)
+> > -				sb[8] |= 0x20;
+> > -		}
+> > -		sb[9] = tf->lbal;
+> > -		sb[10] = tf->lbam;
+> > -		sb[11] = tf->lbah;
+> > -	}
+> >  }
+> >  
+> >  /**
+> > @@ -1634,6 +1649,8 @@ static void ata_scsi_qc_complete(struct ata_queued_cmd *qc)
+> >  	u8 *cdb = cmd->cmnd;
+> >  	int need_sense = (qc->err_mask != 0) &&
+> >  		!(qc->flags & ATA_QCFLAG_SENSE_VALID);
+> > +	int need_passthru_sense = (qc->err_mask != 0) ||
+> > +		(qc->flags & ATA_QCFLAG_SENSE_VALID);
+> >  
+> >  	/* For ATA pass thru (SAT) commands, generate a sense block if
+> >  	 * user mandated it or if there's an error.  Note that if we
+> > @@ -1645,13 +1662,16 @@ static void ata_scsi_qc_complete(struct ata_queued_cmd *qc)
+> >  	 * asc,ascq = ATA PASS-THROUGH INFORMATION AVAILABLE
+> >  	 */
+> >  	if (((cdb[0] == ATA_16) || (cdb[0] == ATA_12)) &&
+> > -	    ((cdb[2] & 0x20) || need_sense))
+> > -		ata_gen_passthru_sense(qc);
+> > -	else if (need_sense)
+> > +	    ((cdb[2] & 0x20) || need_passthru_sense)) {
+> > +		if (!(qc->flags & ATA_QCFLAG_SENSE_VALID))
+> > +			ata_gen_passthru_sense(qc);
+> > +		ata_scsi_set_passthru_sense_fields(qc);
+> > +	} else if (need_sense) {
+> >  		ata_gen_ata_sense(qc);
+> > -	else
+> > +	} else {
+> >  		/* Keep the SCSI ML and status byte, clear host byte. */
+> >  		cmd->result &= 0x0000ffff;
+> > +	}
+> >  
+> >  	ata_qc_done(qc);
+> >  }
+> > @@ -2590,14 +2610,8 @@ static void atapi_qc_complete(struct ata_queued_cmd *qc)
+> >  	/* handle completion from EH */
+> >  	if (unlikely(err_mask || qc->flags & ATA_QCFLAG_SENSE_VALID)) {
+> >  
+> > -		if (!(qc->flags & ATA_QCFLAG_SENSE_VALID)) {
+> > -			/* FIXME: not quite right; we don't want the
+> > -			 * translation of taskfile registers into a
+> > -			 * sense descriptors, since that's only
+> > -			 * correct for ATA, not ATAPI
+> > -			 */
+> > +		if (!(qc->flags & ATA_QCFLAG_SENSE_VALID))
+> >  			ata_gen_passthru_sense(qc);
+> > -		}
+> >  
+> >  		/* SCSI EH automatically locks door if sdev->locked is
+> >  		 * set.  Sometimes door lock request continues to
+> 
+> -- 
+> Damien Le Moal
+> Western Digital Research
+> 
+Thanks,
+Igor
