@@ -1,187 +1,162 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10olkn2096.outbound.protection.outlook.com [40.92.40.96])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A76A198841
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 15:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719500663; cv=none; b=bUg87GjHSeVIj4kxa9BvrQj7l5VVrqzdrUQwqrDdntPB3/lO45IhWpde49PdTwySH/MpRYa3Pl20VLXfpbD8/7fycJs7cDagRFdE+mR5vhjASz6xkD2Eqj+4mTVkD5xil++r/mYUXfigwpbyVNdxetmVN5IReaK3ghWYHFD5fGc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719500663; c=relaxed/simple;
-	bh=+MoA5T7a5GTI46GqiwhJRXiMixeE8zhFLC4/mfXz7cs=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HZY770/vkK4diCIUwrSmht3tG/fkvSf1UCo6Y5XvXajZHBji6BzyE/NFjebC6rng902B4h3sDXsGFLtWtx0uly0/BbbrTjgqMnp3GhsumQ3I0hVchlGMRsMiT9vr3hrjcpWY7oHpK3uj5UvsUq6Nxbf5e6avlRsZf9Q+evTipDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com; spf=pass smtp.mailfrom=timesys.com; dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b=KDNRYZPN; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timesys.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D2B198A06
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 15:04:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.40.96
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719500681; cv=fail; b=LPrLZKvTDQqt3zBkZkU2QPJkkK1c8Ez2HEtBT61rRzHTcAQsUp0fg7n0IEfxCxaifAz5Yoluv3RbbNrOBR82PX0P+G2N+CvcBWqZhcLoGS5qdnRCUqevW7t+ywzsUDtw/ayELnWUyXQnA1WsZrURKwveRkjY00r/J2EEuhfmAqs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719500681; c=relaxed/simple;
+	bh=nfGoEgJ3FOYm/QXzy9PWVVk31fZFJYfsp5yvnCh5hjU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ozm2Mm462lenXYeyNUVbBPEX0lThFMefVYkubJL/oY5Q18VN7M0EgkQZ+vIymMij+hGhg4iTjFAa3kvHLWnznIBy5kDmQ8xtkYULtvAhXmV98Hwa8RVXmAA/voodoEsvePdOE7Qk9d+dFEApbLyxlzQ0ERlw+cHcUOMw8rMdeQE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=f9iOte9B; arc=fail smtp.client-ip=40.92.40.96
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b="KDNRYZPN"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a727d9dd367so366491966b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 08:04:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=timesys-com.20230601.gappssmtp.com; s=20230601; t=1719500660; x=1720105460; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SAbEFx8Qx1jb1E3qZFdMOF6RPU8ZJ7qI5KSjiERwRt4=;
-        b=KDNRYZPNjCdE/a8aHxe0SI9052OK0fqwQ1L0jX6uMxj+QnImKmMzbAjLDFQUIgZweo
-         DdUvgCtdel6TMbEniZnr4KhRPeAyYV7wKmfxN6rqXpaSHFU/+Tv7O/LnVDOO39u5ogIg
-         7zYBlgFlmX+c4t4Exv0/M1lSmgapMXmTIZ8VjyW05E9Dky/ZpoO3FWL9VsKHovyHVfZD
-         mRTVMNcMLx38cy7VK1YZJZ+gTSE2fLgD5BLY5GhoT51PLbmCOX76ToENc5y6AWVdhbfT
-         VGkzBXFmNS0i7ac5EAoR7FBHnCrbbyQgD/SmS45tgKYhqXAZ4nnF5aa2qVIPY45yzTUM
-         AYRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719500660; x=1720105460;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SAbEFx8Qx1jb1E3qZFdMOF6RPU8ZJ7qI5KSjiERwRt4=;
-        b=IVMth0OZ39lvCB21X1ouHvYsr6gEiqpEWKL7p88CS7eyJbidGP5IIHDB80n+IZEfoD
-         zQ3kfj9NxlWjJKRGJXTqzhC4WmZFProlucx9Ni6V4oWLoSxY+hJ2SmIuFbmACoYTpvoA
-         9i5j8DANeo3cs63QRHnDLXsZTCXBFH6S3GTsjeaqcjy06qrA1TrdLwHno65nZEoxMNND
-         Qllgk9Fh5V551NTeY1d1Nf/pahV99msFq/QB4rtKcZnIb6e24XPJ9oM0fbPvePAZlXOQ
-         9Cd0Ol5JUrIh9CAXk6l68XVCH96vDabFnxRzOxEUmt3u7OxpQyUbmxyx/zn3Dvtvnse1
-         YmGA==
-X-Forwarded-Encrypted: i=1; AJvYcCUdcl0FOKlt3+SUhtUCG5Yo7MnkiFV5xUJkwqUDLeyJV50IvQyuG/DQbO+441GIC3IcwHoSw7BwqJl0QJZETwW7cms4L376aG4WoQBK
-X-Gm-Message-State: AOJu0YzDnuShdCkxOC7rimVqNDhITwlCKJ8tIkk+4RKDY4o9dPflJGBN
-	lS7OWljs13E+mpEZjDG+97QqtFpfaIXI831sMit1Z/CckgfjMoM7AOeyx9C3Qdo=
-X-Google-Smtp-Source: AGHT+IGWWjdS8xPoV3qLbjKKjfLtKfd3PYZl/5ZuwXyyzk52xq360p0PA+fjmtbO1v8hyBEWixy7Fw==
-X-Received: by 2002:a17:906:c44d:b0:a72:548a:6f42 with SMTP id a640c23a62f3a-a72548a702emr877880166b.18.1719500659616;
-        Thu, 27 Jun 2024 08:04:19 -0700 (PDT)
-Received: from localhost.localdomain ([91.216.213.152])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a729d7ca289sm67189066b.222.2024.06.27.08.04.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 08:04:18 -0700 (PDT)
-From: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"J.M.B. Downing" <jonathan.downing@nautel.com>,
-	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Yangtao Li <frank.li@vivo.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Li Zetao <lizetao1@huawei.com>,
-	Chancel Liu <chancel.liu@nxp.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Corentin Labbe <clabbe@baylibre.com>,
-	dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	alsa-devel@alsa-project.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-sound@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Subject: [Patch v5 09/12] ARM: lpc32xx: Remove pl08x platform data in favor for device tree
-Date: Thu, 27 Jun 2024 17:00:27 +0200
-Message-Id: <20240627150046.258795-10-piotr.wojtaszczyk@timesys.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240627150046.258795-1-piotr.wojtaszczyk@timesys.com>
-References: <20240627150046.258795-1-piotr.wojtaszczyk@timesys.com>
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="f9iOte9B"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=junSST0Oet99976p1kU7/GaJlYJroYc6b7SLrTRZt6eolD60vjysh08sFSuJwWJ69EDreIqbdQDbpLYDSgzl7KBLfEBODNxTpXYwFEH/2PTVZV+l1GP3eg5Zb3Fb1nC3z8RdolCN7cMV3NJ/BVyRUz3F2Ff1zwngcNGqRBAjGL0s1GGLtxJVnLewIL2EmCqTui//l5kEl+vhkFNz5m6XCBTr3fnhZsyJgFWGEA/eDGTPjCNJa6LIOt664I30oHLr/mpyH1gxnnBBAyneC0atWng5VIcrLxoheKlzRVshjh/wVy7jM4757zKndit520aMyoeeQA14G2a7e3rvzNMrrg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=raNG0jVWFpSJwFielu6FwfYrMP8/HWhkBSOCMgEBgYM=;
+ b=OXeHoEv6nwKM334GfD571hdH3afo5GikHpgA7fN/cC3x7lUyc7eUqkFA3pOvdfqQPDA2v/ZttIht87/7yLndcvaAFIjJc7HexkEa/+lJX0/p41zVvMxruIWK2B37pkIil7v+9MgM2QTJ/TlVeRGcMeun9qp4DPGvRvbVnonVM94+63bn0CGenq61mtDpQbsZFBQm3K64rqPTQVI+K1pjQx2FQK6clIrzSTBkxJ7yQ0BxX5P7WggXkP5/2l9OpcbTqcKr9RekIzS2owv+3QMhkMsfB2nQ/P+OL7JQhf1btqLXycAMvNi7sNdkktGipb4aSyCBFW9VMmZBqkkK095aBA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=raNG0jVWFpSJwFielu6FwfYrMP8/HWhkBSOCMgEBgYM=;
+ b=f9iOte9BsmltkGsn8IdYrqhZX8zwOu4/Y9RLlzjmr6/QavC0p999C6kIvFpy4yL/Unadzh1MYU/56+arIdnHk81gy+GOzsJvuYCZ7Nh0Y0fUhREhc0k3TJX9mhE7gB8Kflwh+J//a1EJsJqVxv0FYt4wlc+3GTCa3AyrsSt2sHpWnVdVxTaE/LikkDmm234qbPMryNwWinmi1kGjCfnZ4GYsBNu9DtGUXuD6aczoOe5XEsb0GFPIbkH+qur75n3iy2Ngb0MgHNtW2gfZ5YPB428ANcqG3QoqIoMitHXuGCy3KTHJqEDl6GKaKTKvKqkH8SmQpIxq4m7rGwj5aC2q6A==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by IA0PR02MB9702.namprd02.prod.outlook.com (2603:10b6:208:487::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.34; Thu, 27 Jun
+ 2024 15:04:35 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%2]) with mapi id 15.20.7698.033; Thu, 27 Jun 2024
+ 15:04:35 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: =?iso-8859-2?Q?Petr_Tesa=F8=EDk?= <petr@tesarici.cz>,
+	"mhkelley58@gmail.com" <mhkelley58@gmail.com>
+CC: "robin.murphy@arm.com" <robin.murphy@arm.com>, "joro@8bytes.org"
+	<joro@8bytes.org>, "will@kernel.org" <will@kernel.org>, "jgross@suse.com"
+	<jgross@suse.com>, "sstabellini@kernel.org" <sstabellini@kernel.org>,
+	"oleksandr_tyshchenko@epam.com" <oleksandr_tyshchenko@epam.com>, "hch@lst.de"
+	<hch@lst.de>, "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+Subject: RE: [RFC 1/1] swiotlb: Reduce calls to swiotlb_find_pool()
+Thread-Topic: [RFC 1/1] swiotlb: Reduce calls to swiotlb_find_pool()
+Thread-Index: AQHauIjoJBWSrCyO6UWzcncSceBiMLHbU/+AgACADXA=
+Date: Thu, 27 Jun 2024 15:04:35 +0000
+Message-ID:
+ <SN6PR02MB4157CF368284CA48061E35E9D4D72@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20240607031421.182589-1-mhklinux@outlook.com>
+ <20240627092049.1dbec746@meshulam.tesarici.cz>
+In-Reply-To: <20240627092049.1dbec746@meshulam.tesarici.cz>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tmn: [AKhZ4FTPcx0HfZye0qhnHyABc3sw1wYl]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|IA0PR02MB9702:EE_
+x-ms-office365-filtering-correlation-id: edd5232c-f037-4bde-a2e4-08dc96ba7522
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|461199028|3412199025|440099028|102099032;
+x-microsoft-antispam-message-info:
+ C4w+6zLY5M7Vk3uroWbqkWyXGC/J79Dm3JF+VD8WwfvRbg6juRPuQm8IhWQNj+zmpc4pKMwvuDJV3V91oAJ7fZSMkw0SkuXgN71A1tuONyrOY2A5qoZ0rU7wV4wEh2Jvq5i9DJE/QWgR8p1hMVT0qx1ix4OhEl+tPPVosUR+HklI9k/Qy90CGkQ3UEdtP1lrvR3YT22WO5/pDotqpu/69fo+7okeDRfIFyxjsHQVQMws1jr2/uPStj1wFuRVRivaKVhZN9HsX6toKK6Vv5sWqXB/A6dpOHOr3hHJZnqLXOAOTnAOy7E1aPkKRqbQQaI8OJ8TFsfX5uDsywyWTvkuekbQaJpejkgjcJSmkHRQnv4yL4y2RIWnxBB0CBIH/5bj4wwvl8+mIYa3nwl/Df4OcUW8qE9aTCVX8ElNlowyw832/Q+bhTdGzBHF0oOmZZSk3H69M91QxJxpMcH2LRUPx5t64Zy6BsIiRxvZoTEfxbG4rtP79E1MmD/WrNMSl/aHIoiJIdGeCp4Qy+3jXcvFNyC+vN/t6uGMfpybgaX4r9Yiu3Hb1g1YmreLYk0g9N4p
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-2?Q?TVNMMdrcwSsBtZ9+85O93RYN9thGCKdgW6DFpEwdGDNHimWfW1bHVKMKlm?=
+ =?iso-8859-2?Q?9o3eDUT9g5d/PnTGCTn3B1yopqSeNACJCXTUClJdr3N7iM7pzoLcxNbzct?=
+ =?iso-8859-2?Q?4KHjH9PP4JFJreFu6vBfuZsMj+d8AojebRkCfrx5ocKfxWsnYM1sJwawjY?=
+ =?iso-8859-2?Q?DOnLbOwwr42c6pfLcjcBUn7+ly8n9bnAZxSm5yk6LPTIKTNdS56rhyUutk?=
+ =?iso-8859-2?Q?kFDOJ+uaygp1OvTFoXDUIdcCxyZLArIyUZcrjKLrHBBtyFtG0rP2jdYVF/?=
+ =?iso-8859-2?Q?TMpNLq9thmqc2eIVuZqULCNWNqwhawfoo7gOsMIljfSVGTJpVDLSpMQYcJ?=
+ =?iso-8859-2?Q?tOhoxaCsGg3buoiS3UmxVxrc1kCBTfAMxaH8LGzEgfmrD2WJrSRzxkldcH?=
+ =?iso-8859-2?Q?J+9R9py5O5e0kzAq4WC11CDH5WaId4iWqz8/XSS2SlqvQDMN5oogwB854B?=
+ =?iso-8859-2?Q?WTHqVLHE4FLDDhkPg6YbFX+dPn/2FLVYWh7u0CHjxn3JuzFc1jaaJnUr0F?=
+ =?iso-8859-2?Q?t/fTiJ9STvPUWY2v11rcf3XPRXa5GWThR6mGa8n+3jFFVfk5o0IYWUMy9i?=
+ =?iso-8859-2?Q?MgzgUhrXNIDW2Fg43mziZru2MkUWTbcVBKJ0ZsfYcsZqUXREOwOcPm9k1I?=
+ =?iso-8859-2?Q?w7pOfZa/qI3nNU6hx0SczoIN2NLf+p5y5wgEJE9iQNaxr7VGI4LBoEq8A8?=
+ =?iso-8859-2?Q?0s+W22Gm/lvgGfDwCv3h+Aij2/iBGIAKGmWzuNNe9AWZ4B0UGv3Dc63LRT?=
+ =?iso-8859-2?Q?JFdV1ED27t7sF8yL087Nj3zDwI6coUulRrjuIYsWpF7L+gRZMh1/2nPf4T?=
+ =?iso-8859-2?Q?mtVUd2y/KeiEafeTptsOOe2d+2291rr1UURbkF1wgFOFAkBX1z/LhZgb6k?=
+ =?iso-8859-2?Q?NXO9dkFRvxYEyJYM8EZx9Ev2RReC4yieq/S78VrQOgjkMKkgU2pStdg2ko?=
+ =?iso-8859-2?Q?lNY3/Vtp2VaLsy5Pmh+KtWPKnsm1BuCnhKJzlku1Z68LnNTW7YG7IF8tD4?=
+ =?iso-8859-2?Q?9HhLQnOHSQx+gj5GV+VQ3HvAna4Oa9fydnYmeSbmaI//PkSv/sf0zEluNW?=
+ =?iso-8859-2?Q?cl2WSpWRDVhmS07tD8zJAwYiwTaQ1vg2ltlL57bat5BFpWdLjZ85q3THtX?=
+ =?iso-8859-2?Q?dLyWP43i7RMsnOmpNDlqWxWIbsJmGQpOOUbgOO3BIcgxZFjcbGHe6y/w7Q?=
+ =?iso-8859-2?Q?7AuLf4TDMiTQ6kKMkYLFC6ghsZkOmceH1NwRvOu5S+wVJAtPHXb2WJUWPr?=
+ =?iso-8859-2?Q?UYM7R50V3Rbg64dHQa1aoZjNWAoek57FvkCcqDCnY=3D?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: edd5232c-f037-4bde-a2e4-08dc96ba7522
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2024 15:04:35.2725
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR02MB9702
 
-With the driver for nxp,lpc3220-dmamux we can remove the pl08x platform
-data and let pl08x driver to create peripheral channels from the DT
-properties.
+From: Petr Tesa=F8=EDk <petr@tesarici.cz> Sent: Thursday, June 27, 2024 12:=
+21 AM
 
-Signed-off-by: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
----
-Changes for v4:
-- This patch is new in v4
+[...]
 
- arch/arm/mach-lpc32xx/phy3250.c | 54 ---------------------------------
- 1 file changed, 54 deletions(-)
+> > @@ -187,10 +169,13 @@ static inline bool is_swiotlb_buffer(struct devic=
+e *dev, phys_addr_t paddr)
+> >  	 * This barrier pairs with smp_mb() in swiotlb_find_slots().
+> >  	 */
+> >  	smp_rmb();
+> > -	return READ_ONCE(dev->dma_uses_io_tlb) &&
+> > -		swiotlb_find_pool(dev, paddr);
+> > +	if (READ_ONCE(dev->dma_uses_io_tlb))
+> > +		return swiotlb_find_pool(dev, paddr);
+> > +	return NULL;
+> >  #else
+> > -	return paddr >=3D mem->defpool.start && paddr < mem->defpool.end;
+> > +	if (paddr >=3D mem->defpool.start && paddr < mem->defpool.end)
+> > +		return &mem->defpool;
+>=20
+> Why are we open-coding swiotlb_find_pool() here? It does not make a
+> difference now, but if swiotlb_find_pool() were to change, both places
+> would have to be updated.
+>=20
+> Does it save a reload from dev->dma_io_tlb_mem? IOW is the compiler
+> unable to optimize it away?
+>=20
+> What about this (functionally identical) variant:
+>=20
+> #ifdef CONFIG_SWIOTLB_DYNAMIC
+> 	smp_rmb();
+> 	if (!READ_ONCE(dev->dma_uses_io_tlb))
+> 		return NULL;
+> #else
+> 	if (paddr < mem->defpool.start || paddr >=3D mem->defpool.end);
+> 		return NULL;
+> #endif
+>=20
+> 	return swiotlb_find_pool(dev, paddr);
+>=20
 
-diff --git a/arch/arm/mach-lpc32xx/phy3250.c b/arch/arm/mach-lpc32xx/phy3250.c
-index 66701bf43248..0c7797a0e44e 100644
---- a/arch/arm/mach-lpc32xx/phy3250.c
-+++ b/arch/arm/mach-lpc32xx/phy3250.c
-@@ -16,64 +16,10 @@
- #include <asm/mach/arch.h>
- #include "common.h"
- 
--static struct pl08x_channel_data pl08x_slave_channels[] = {
--	{
--		.bus_id = "nand-slc",
--		.min_signal = 1, /* SLC NAND Flash */
--		.max_signal = 1,
--		.periph_buses = PL08X_AHB1,
--	},
--	{
--		.bus_id = "nand-mlc",
--		.min_signal = 12, /* MLC NAND Flash */
--		.max_signal = 12,
--		.periph_buses = PL08X_AHB1,
--	},
--};
--
--static int pl08x_get_signal(const struct pl08x_channel_data *cd)
--{
--	return cd->min_signal;
--}
--
--static void pl08x_put_signal(const struct pl08x_channel_data *cd, int ch)
--{
--}
--
--static struct pl08x_platform_data pl08x_pd = {
--	/* Some reasonable memcpy defaults */
--	.memcpy_burst_size = PL08X_BURST_SZ_256,
--	.memcpy_bus_width = PL08X_BUS_WIDTH_32_BITS,
--	.slave_channels = &pl08x_slave_channels[0],
--	.num_slave_channels = ARRAY_SIZE(pl08x_slave_channels),
--	.get_xfer_signal = pl08x_get_signal,
--	.put_xfer_signal = pl08x_put_signal,
--	.lli_buses = PL08X_AHB1,
--	.mem_buses = PL08X_AHB1,
--};
--
--static struct lpc32xx_slc_platform_data lpc32xx_slc_data = {
--	.dma_filter = pl08x_filter_id,
--};
--
--static struct lpc32xx_mlc_platform_data lpc32xx_mlc_data = {
--	.dma_filter = pl08x_filter_id,
--};
--
--static const struct of_dev_auxdata lpc32xx_auxdata_lookup[] __initconst = {
--	OF_DEV_AUXDATA("arm,pl080", 0x31000000, "pl08xdmac", &pl08x_pd),
--	OF_DEV_AUXDATA("nxp,lpc3220-slc", 0x20020000, "20020000.flash",
--		       &lpc32xx_slc_data),
--	OF_DEV_AUXDATA("nxp,lpc3220-mlc", 0x200a8000, "200a8000.flash",
--		       &lpc32xx_mlc_data),
--	{ }
--};
--
- static void __init lpc3250_machine_init(void)
- {
- 	lpc32xx_serial_init();
- 
--	of_platform_default_populate(NULL, lpc32xx_auxdata_lookup, NULL);
- }
- 
- static const char *const lpc32xx_dt_compat[] __initconst = {
--- 
-2.25.1
+Yeah, I see your point. I'll try this and see what the generated code
+looks like. It might take me a couple of days to get to it.
 
+Michael
