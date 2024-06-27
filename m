@@ -1,58 +1,128 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.15])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39C636BFC0;
-	Thu, 27 Jun 2024 07:53:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.15
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143EF6F068;
+	Thu, 27 Jun 2024 07:54:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719474843; cv=none; b=PMFH3FWfZkcxIxCmHvzoDZv77rtQq15TvcQARdaAKXreirLTMKIJWUQgpUVCCZR2/4d1y7a840KYxN7gUXPpVuvrrtewmQhTWtUkeQNZHZzsFxBOfeQCBnRMcgmuqDqbSjno+XRMm/RX2W2vaeqJGQergUOj1C4RpbI7TVkmIAo=
+	t=1719474865; cv=none; b=J5YiZRKr4AjWsx1wBs89Q7XVbBDjzft6h9617+L/vTk2BePNYPWKcTTt3JDL6IqWTR/3zwGYzQUKrXj6pJgIajCjd8ZpGjSIasX3guHOsTWWpGt6OL1KKQxFGW09G/9xyNOVCmTWTZEDPoC0taLt7sT1DnwkZxXV055JKixpaxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719474843; c=relaxed/simple;
-	bh=niWifPxthY5pGSj0MPq+gFtzhUAaPd89u2s14QYBBds=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ALs3mlCc8zqQCQelS7a1CW8RQL6R/+JmGaK+nlxJfm4oQl0m14i+mTRHVWlrohZQTijIgG39YLIxGeJPsMlpTg/HiVywS4bL8IPC7TM4KoL+Lnsk2AvPcbYy2m4JiVVkL0llnxvoQWfuC0tlq41TvzAu3m7vVJ3JOlOysdRmwvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=o1Dmlyfc; arc=none smtp.client-ip=1.95.21.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1719474865; c=relaxed/simple;
+	bh=L2wvfNen88kR7YkI2VEzmpHm32Dw1o7lR/g1kJg4XZQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=URP+RZkFluQ+R44tJd5ZVLqpJ12qqZKftfjKdMFqK6gJPpTDR0u2VvEaXrGMlGQGCnsoyHtem4d5yICFwHSdX1Q4ssNKbS43HPrHoPhcPgZZ3PLL1tQZqcppgYE3IiHFxi9mXkIPH67HGpFAH6DWwvR0rCpnGeluZfvZEI/ry28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qPmNEd/F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="o1Dmlyfc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=K/1iSBKlF5A20UDlARtUeGLpv4GEubEh9JBHFml2Ows=;
-	b=o1DmlyfcjqqUdXfNYnY3nFYhnI/mw80C/oiJGotW+iWgIDKQZwwSjl1avS2h55
-	ModLw6PrC/dH9m2+j1h0MKFTzjO7Jgv9BXO3vne3hFt5sisZE92ohsIIIPv8WmkM
-	KBWECYLMNSLiGeS+UkMiaKcyWqTcazvbvmVM0UTsrZpBg=
-Received: from dragon (unknown [114.218.218.47])
-	by gzsmtp2 (Coremail) with SMTP id Ms8vCgDXD8rZF31mmaMaAA--.52532S3;
-	Thu, 27 Jun 2024 15:42:19 +0800 (CST)
-Date: Thu, 27 Jun 2024 15:42:17 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, festevam@gmail.com,
-	imx@lists.linux.dev, kernel@pengutronix.de, krzk+dt@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	robh@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org
-Subject: Re: [PATCH v2 1/1] arm64: dts: imx8dxl-evk: add imx8dxl_cm4, lsio
- mu5, related memory region
-Message-ID: <Zn0X2dMZaQ93vwHC@dragon>
-References: <20240617184707.1058995-1-Frank.Li@nxp.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qPmNEd/F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5114C2BBFC;
+	Thu, 27 Jun 2024 07:54:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719474864;
+	bh=L2wvfNen88kR7YkI2VEzmpHm32Dw1o7lR/g1kJg4XZQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qPmNEd/FRrV03WBEN/qOGI3vTVgfxZWEb/97rfzbWLlPwrlAUrNMY4RZFfwq6Gf2g
+	 h7j2SVvDWsYmf6SqTcjcF1zShjJuvsiLgtAs9rRaFwwmSZtj2OaIREknpW/bf6K3+G
+	 uu6aYhNMdMzgtHbSXaITWKkiqXRDoLrUuv0I66BavwWGco7Y7B5jdxHNSK72BVkhMB
+	 ndShL3QmQd6I/VxumkXJ4tlgKEjRc3VbPo4nnZ1dJgomMt7BkVx3l51llT8rOHZhfO
+	 Oue8PQ18EfRNwEXZE0syXug9lI5TqoMo9f+zeiKQKpaxbGHrgcHO+CAREOqEO0nIcn
+	 iyLijm4CIJc2A==
+Message-ID: <7f278851-8c7b-4bb7-a967-fff477dc26eb@kernel.org>
+Date: Thu, 27 Jun 2024 09:54:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240617184707.1058995-1-Frank.Li@nxp.com>
-X-CM-TRANSID:Ms8vCgDXD8rZF31mmaMaAA--.52532S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxU3oGQUUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiCRsLZWZv-cxqVAAAs6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] interconnect: qcom: Add MSM8953 driver
+To: =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>,
+ Georgi Djakov <djakov@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ Vladimir Lypak <vladimir.lypak@gmail.com>
+References: <20240626-msm8953-interconnect-v1-0-eeb31a2231b0@mainlining.org>
+ <20240626-msm8953-interconnect-v1-2-eeb31a2231b0@mainlining.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240626-msm8953-interconnect-v1-2-eeb31a2231b0@mainlining.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 17, 2024 at 02:47:07PM -0400, Frank Li wrote:
-> Add imx8dxl_cm4, lsio mu5 and related memory region.
-> 
-> Reviewed-by: Peng Fan <peng.fan@nxp.com>
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+On 26/06/2024 22:35, Barnabás Czémán wrote:
+> From: Vladimir Lypak <vladimir.lypak@gmail.com>
 
-Applied, thanks!
+
+Thank you for your patch. There is something to discuss/improve.
+
+
+> +
+> +static const struct regmap_config msm8953_bimc_regmap_config = {
+> +	.fast_io = true,
+> +	.max_register = 0x5a000,
+> +	.reg_bits = 32,
+> +	.reg_stride = 4,
+> +	.val_bits = 32,
+> +};
+> +
+> +static const struct qcom_icc_desc msm8953_bimc = {
+> +	.type = QCOM_ICC_BIMC,
+> +	.bus_clk_desc = &bimc_clk,
+> +	.nodes = msm8953_bimc_nodes,
+> +	.num_nodes = ARRAY_SIZE(msm8953_bimc_nodes),
+> +	.qos_offset = 0x8000,
+> +	.regmap_cfg = &msm8953_bimc_regmap_config
+> +};
+> +
+> +static struct qcom_icc_node *msm8953_pcnoc_nodes[] = {
+
+This should be '* const '
+
+
+Best regards,
+Krzysztof
 
