@@ -1,164 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from ganesha.gnumonks.org (ganesha.gnumonks.org [213.95.27.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD2C1A0729;
-	Thu, 27 Jun 2024 20:44:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B3C1A3BC6;
+	Thu, 27 Jun 2024 20:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.27.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719521085; cv=none; b=OnwGiC9SnpUdHwsT0eN0RwZNwrSaO8W4/RcZsLNZLbCY1qkVKcTXeFFIz5i7c7+s7dqig69je7sKLBw1J7nwAe+6vfxwcnxoXjewnMFHUB/DclBOo0hKvusjBUoOYa2TZ6tt57E+36IGRCVzKeGYn7KFxXGLlnEKXk0FszHm1nk=
+	t=1719521093; cv=none; b=RBpR9T8b/+1OirJxnHAZXJO/REE3KYYrAipdUUZJE9Ded9rfGnW4oQiXRUyaHql6p9WCiYn34cPdnltyZAkMfrbSROUvGB6SnhRgM+1plpvSWTRGRi1lBFKX+PniCUA5RwhV+ejD0xQxZYepLT13Nh8gCrv2KCjrHT0dSSTaj4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719521085; c=relaxed/simple;
-	bh=OEfQqdYgE2tBKPCJz5LhDneI5bGCQKBVyCZ/vbzQ2HI=;
+	s=arc-20240116; t=1719521093; c=relaxed/simple;
+	bh=LLl79xyUmSxvDDQb0rFblZjzQKy3uOIjEbcE7GTPJ6c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VabCmDDkfWDM4bAbeut4DJhoTIU05gCU8cPJXjwcE/YV26DgSRsGseC9H5e/npx9+N+qNMZ3KS2p3HuG+OFSU9wlfkaKoFYRWZ0Mz+U0ZuMebJOm3XemnfYXkAU8C9EwNsOOvYHfcLowNVh+JBnH/PmXFQtLjwhu4btkwbDRPRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a5R7rCs3; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a5R7rCs3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719521084; x=1751057084;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OEfQqdYgE2tBKPCJz5LhDneI5bGCQKBVyCZ/vbzQ2HI=;
-  b=a5R7rCs3hk0hY/96kuvT2Mhibo4GUYCGBOb82r0rFJyJA60cPI/HI7JI
-   ZAJvyxQYLfFNeNct3PWN1zPPjY9ai99t987r6vbloAP3v2gcWclXXPbUg
-   X8Y7MEALFJMYkkkW/CkBNdT6HIyPK2ao8vMqZ/QwFyXyzCXhvWowTSsLR
-   Cqq+GS1hv73eoNPyQThPc4bBoIcL67GtL+6u7xY2gfZokKUaJdxSStIbu
-   BK5JhqJql2j7r47Zs3pyLLIuPq8Oq9keFK5gOtbybwQsDNewF8crE8X1t
-   W0eLXoIIDqDbh7eyRkdiFKwF3XVSk2S/LdjFp3WNgrZvhU4lWcgTFbb7s
-   g==;
-X-CSE-ConnectionGUID: 1hd+rOotR3KMh9GTSPB0qQ==
-X-CSE-MsgGUID: cng/CrTvTlyg+mb74/JiZw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="16563610"
-X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
-   d="scan'208";a="16563610"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 13:44:44 -0700
-X-CSE-ConnectionGUID: OAi7GxMSS8+IqGidXt9Jpw==
-X-CSE-MsgGUID: gOQGXh4ySCuRwLVThLfr/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
-   d="scan'208";a="67703792"
-Received: from gbpfeiff-mobl.amr.corp.intel.com (HELO desk) ([10.255.229.132])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 13:44:43 -0700
-Date: Thu, 27 Jun 2024 13:44:42 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
-Cc: daniel.sneddon@linux.intel.com, tony.luck@intel.com,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Brice Goglin <brice.goglin@gmail.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Perry Yuan <Perry.Yuan@amd.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH PATCH v2 7/9] x86/cpu: Update x86_match_cpu() to also use
- cpu-type
-Message-ID: <20240627-add-cpu-type-v2-7-f927bde83ad0@linux.intel.com>
-X-Mailer: b4 0.12.3
-References: <20240627-add-cpu-type-v2-0-f927bde83ad0@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=RdXbpfZFHMftJcCMmyKLPCCtQhoz1g6hpQtthNgsCTkHidGVaTYbLoUDcvy79qtoUC/1XKMQPqAMBOOSI0hp9xvMkk9SM6+FnS5GQ8NStp8j0U5cNKvfTCEsWCLkyR+MdV7ReUzX2a5D3dusxC3z0vogmVA2XeBzk+1l1P9f33w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org; spf=pass smtp.mailfrom=gnumonks.org; arc=none smtp.client-ip=213.95.27.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnumonks.org
+Received: from [78.30.37.63] (port=54896 helo=gnumonks.org)
+	by ganesha.gnumonks.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <pablo@gnumonks.org>)
+	id 1sMvyv-00ABVs-Ph; Thu, 27 Jun 2024 22:44:40 +0200
+Date: Thu, 27 Jun 2024 22:44:36 +0200
+From: Pablo Neira Ayuso <pablo@netfilter.org>
+To: Mirsad Todorovac <mtodorovac69@gmail.com>
+Cc: Linux Kernel Build System <linux-kbuild@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+	netdev@vger.kernel.org
+Subject: Re: [PROBLEM] make randconfig: net/netfilter/core.c:830: undefined
+ reference to `netfilter_lwtunnel_fini'
+Message-ID: <Zn3PNGFkg6jqU9wc@calendula>
+References: <7a472130-d9c4-4fda-840b-093308f73d3d@gmail.com>
+ <Znc4931wlIgvqrfP@calendula>
+ <6cdb1346-75ca-472e-8d96-d58a1eaab172@gmail.com>
+ <b50bb0bf-4d35-4334-a721-2a092210aecc@gmail.com>
+ <Znw78PpYwAgFZiaB@calendula>
+ <3d7b5916-c462-49cb-af32-e43f6d6ebfec@gmail.com>
+ <d3f8254f-0f53-47ee-a363-b14e9991a6e9@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240627-add-cpu-type-v2-0-f927bde83ad0@linux.intel.com>
+In-Reply-To: <d3f8254f-0f53-47ee-a363-b14e9991a6e9@gmail.com>
+X-Spam-Score: -1.9 (-)
 
-Non-hybrid CPU variants that share the same Family/Model could be
-differentiated by their cpu-type. x86_match_cpu() currently does not use
-cpu-type for CPU matching.
+On Thu, Jun 27, 2024 at 10:30:24PM +0200, Mirsad Todorovac wrote:
+> On 6/26/24 20:34, Mirsad Todorovac wrote:
+> > 
+> > 
+> > On 6/26/24 18:04, Pablo Neira Ayuso wrote:
+> >> On Sun, Jun 23, 2024 at 12:51:49AM +0200, Mirsad Todorovac wrote:
+> >>> On 6/23/24 00:48, Mirsad Todorovac wrote:
+> >>>> On 6/22/24 22:49, Pablo Neira Ayuso wrote:
+> >>>>> Hi,
+> >>>>>
+> >>>>> There is a fix on the table address this, I will submit is in the next
+> >>>>> pull request.
+> >>>>
+> >>>> Thank you very much.
+> >>>>
+> >>>> Please consider adding Reported-by: Mirsad Todorovac <mtodorovac69@gmail.com>
+> >>>>  
+> >>>>> Thanks for reporting
+> >>>>
+> >>>> No big deal. Anytime :-)
+> >>>
+> >>> P.S.
+> >>>
+> >>> Please notify when I could test the same .config with your fix.
+> >>
+> >> Patch is here:
+> >>
+> >> https://git.kernel.org/pub/scm/linux/kernel/git/netfilter/nf.git/commit/?id=aef5daa2c49d510436b733827d4f0bab79fcc4a0
+> > 
+> > Build error has gone, tested in the same environment. Please find the build output attached.
+> > 
+> > Tested-by: Mirsad Todorovac <mtodorov@69@gmail.com>
+> 
+> Apology, please, the right email is this:
+> 
+> Tested-by: Mirsad Todorovac <mtodorovac69@gmail.com>
 
-Dave Hansen suggested to use below conditions to match CPU-type:
+Thanks a lot for testing.
 
-  1. If CPU_TYPE_ANY (the wildcard), then matched
-  2. If hybrid, then matched
-  3. If !hybrid, look at the boot CPU and compare the cpu-type to determine
-     if it is a match.
-
-  This special case for hybrid systems allows more compact vulnerability
-  list.  Imagine that "Haswell" CPUs might or might not be hybrid and that
-  only Atom cores are vulnerable to Meltdown.  That means there are three
-  possibilities:
-
-  	1. P-core only
-  	2. Atom only
-  	3. Atom + P-core (aka. hybrid)
-
-  One might be tempted to code up the vulnerability list like this:
-
-  	MATCH(     HASWELL, X86_FEATURE_HYBRID, MELTDOWN)
-  	MATCH_TYPE(HASWELL, ATOM,               MELTDOWN)
-
-  Logically, this matches #2 and #3. But that's a little silly. You would
-  only ask for the "ATOM" match in cases where there *WERE* hybrid cores in
-  play. You shouldn't have to _also_ ask for hybrid cores explicitly.
-
-  In short, assume that processors that enumerate Hybrid==1 have a
-  vulnerable core type.
-
-Update x86_match_cpu() to also match cpu-type. Also treat hybrid systems as
-special, and match them to any cpu-type.
-
-Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
----
- arch/x86/kernel/cpu/match.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
-
-diff --git a/arch/x86/kernel/cpu/match.c b/arch/x86/kernel/cpu/match.c
-index 8e7de733320a..85ef17325c06 100644
---- a/arch/x86/kernel/cpu/match.c
-+++ b/arch/x86/kernel/cpu/match.c
-@@ -5,6 +5,26 @@
- #include <linux/export.h>
- #include <linux/slab.h>
- 
-+/**
-+ * x86_match_hw_cpu_type - helper function to match the hardware defined
-+ *                         cpu-type for a single entry in the x86_cpu_id table.
-+ * @c: Pointer to the cpuinfo_x86 structure of the CPU to match.
-+ * @m: Pointer to the x86_cpu_id entry to match against.
-+ *
-+ * Return: true if the cpu-type matches, false otherwise.
-+ */
-+static bool x86_match_hw_cpu_type(struct cpuinfo_x86 *c, const struct x86_cpu_id *m)
-+{
-+	if (m->cpu_type == X86_CPU_TYPE_ANY)
-+		return true;
-+
-+	/* Hybrid CPUs are special, they are assumed to match all cpu-types */
-+	if (boot_cpu_has(X86_FEATURE_HYBRID_CPU))
-+		return true;
-+
-+	return c->topo.hw_cpu_type == m->cpu_type;
-+}
-+
- /**
-  * x86_match_cpu - match current CPU again an array of x86_cpu_ids
-  * @match: Pointer to array of x86_cpu_ids. Last entry terminated with
-@@ -50,6 +70,8 @@ const struct x86_cpu_id *x86_match_cpu(const struct x86_cpu_id *match)
- 			continue;
- 		if (m->feature != X86_FEATURE_ANY && !cpu_has(c, m->feature))
- 			continue;
-+		if (!x86_match_hw_cpu_type(c, m))
-+			continue;
- 		return m;
- 	}
- 	return NULL;
-
--- 
-2.34.1
-
-
+Patch is already flying upstream, I missed adding this tag. But I
+could include your Reported-by: tag.
