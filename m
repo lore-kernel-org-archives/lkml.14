@@ -1,91 +1,131 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB44523BE;
-	Thu, 27 Jun 2024 15:33:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DFA5199EBE
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 15:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719502417; cv=none; b=dT9XlOKXcb7QENXFx5cH4FlMdPScpVXOsaO/vXZXwMadrQvF6vjc9L2WNvonR9zaHrL7dZVTIiQ/poRy8gjhjrTqaG31ZI2EpAROcpwpX8uEXipZczYKhbfU9rYrAw10p1IQk44nBGh31IZVtmJYOBAoK9OJUAFtu3HT/2kzWGw=
+	t=1719502504; cv=none; b=U2lsm04RkO/zba3Mtbco4RIbP44fReLatfS6oTAVP+ZafqALDZ0wWHu/fSzxjoGV9y0pWNxaCUDb6u98jvQia774DNv92IrgTrvG2oQBVbeWdMALJ/lfIKHry3uqOxAfnJYy1/FgdiiagnT+cax8I3NtTPU2HWlLGKPdIHuOUIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719502417; c=relaxed/simple;
-	bh=sjhvfdn3QVidrXxxOLsJ8Iays3T/xDMwydCui3MqP+g=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=poT+OgS+LQUjqSvfgQjiCLPIbLLyzui/b4OLe8mw0UzYexoUMjpQXaIbG5W5HMybCvRScubVe0iPJrIF21EQCSo0TZvaYSKZL2HIBwqpKSzA735BOJt3nWzE96XO23t2Ws2dCxBCwPvya60vYJMaNwlcjKMGZKR2zCYdezNDdbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-From: Yixun Lan <dlan@gentoo.org>
-Date: Thu, 27 Jun 2024 15:31:24 +0000
-Subject: [PATCH v2 10/10] riscv: defconfig: enable SpacemiT SoC
+	s=arc-20240116; t=1719502504; c=relaxed/simple;
+	bh=B4B+7Qegfc8xqRAIl73gUCcFR/R5LPG8JWLBvTTX94w=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=eXYft0SRNQHte4WyLCa3cm/Qx0GLAae2dvcEGpf10KfyNF8125PfN8VPNbT5GUgo2CJuuFIS5EK+uVKcXOnw1DcjnxacmgpWSUaRDUv348XM/EacsoBvPIYnK/v5iq+xysR6jYZfLYVIGxpolFToejti/fBe3VRVa/taBafG+40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NrVxTj/C; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NrVxTj/C"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-62f8a1b2969so179556687b3.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 08:35:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1719502502; x=1720107302; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jwfQmZ9NIpbsBfaBGly2IYRr+v7gRdeIIwzA8stq+iM=;
+        b=NrVxTj/CixlZIZjkRuWYlFSJ0OjE8IU0QnuLch/D4wEe0T+X/btVuXMnX+xghyxLlu
+         q8F8RlZng1sttVbHGf+3JmBGZ7ff09pzGS7lIDP1+WoqSVnIgssvp2V53jIhAWYFW1m3
+         aYWcrVLnxhh4d6eeVHZbGozAgVZ2wxnms4IJinL75u2I1v4VnByCTNFeA/r3FyWdYOat
+         hDsJ86j55TaNuXJAZP6U7Uf5JFygWt4Dm6uHzmYGk0HSDxq4N6U+Hm/Kg0oxHH6V34lb
+         tTPTMWChkqNExFjMjVjJ/502o/TpFliar6hh4ZCkBb3Jg0D5gBswNrrKpk6ibs25dfxe
+         5udg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719502502; x=1720107302;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jwfQmZ9NIpbsBfaBGly2IYRr+v7gRdeIIwzA8stq+iM=;
+        b=F2A0t4K/2HiclDOBqLF9XhgmgW/lHcxE7npQ+mzP0YxnSR5tJa6BicsVkyL5RR4WPp
+         j2WFidSd3IciUuQ85rgVGm6sVqevlfaOI8kbZGcwOGmx0itt4hyGKiLXc3vRiqYBICGN
+         pKTXnLnoqQWgcrlPiFAsYp5wo+R5PZv1RqknlD70PAGBL5V2/WkRQEYjEu7Jb+qf9GvH
+         XaP/gNa/BzgbjyGCCGA5yGWk0sAnP3FvfQ76VCOjpR+AUottfwC2njht4enwA6TPZg2m
+         topR1De+45YsqaLqGAyG+4/p0BTuKelXGMgP3Dj2RbuTjC1uyRUuT8kfbdwwaCIFiJOZ
+         Sxcw==
+X-Forwarded-Encrypted: i=1; AJvYcCWpUaDXa10wxqrzDbLJQZmN/IteHwif/rKlJwqE6WGncEXk042RJuot91j9WCtVGbRPl6QivoAdB12fjrF42FfWtTzYO2vpk+ZSZvMz
+X-Gm-Message-State: AOJu0YxPrRPBjKP/IzYX2FVHBng51bQy7WU3MJHrgJNUPVSmjAmhhA32
+	7ODlH2/IOgZhaGVx0/tRWb/kXpGwc3TyOtMTk30cRtX1T9+Vsi7nXlzYN9LBv7XvXtRWi7w0VRS
+	0nA==
+X-Google-Smtp-Source: AGHT+IHEi2Jyn7G4AkqbarTu97kFAUKrcEOi465mYHsg50AqIgEPtVFdPWfoFGoEoYmptmXIFg5d8pn8ivU=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:2b84:b0:e02:c739:367 with SMTP id
+ 3f1490d57ef6-e0303fe4816mr697575276.13.1719502502278; Thu, 27 Jun 2024
+ 08:35:02 -0700 (PDT)
+Date: Thu, 27 Jun 2024 08:35:00 -0700
+In-Reply-To: <87320ee5-8a66-6437-8c91-c6de1b7d80c1@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240627-k1-01-basic-dt-v2-10-cc06c7555f07@gentoo.org>
-References: <20240627-k1-01-basic-dt-v2-0-cc06c7555f07@gentoo.org>
-In-Reply-To: <20240627-k1-01-basic-dt-v2-0-cc06c7555f07@gentoo.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, 
- Thomas Gleixner <tglx@linutronix.de>, 
- Samuel Holland <samuel.holland@sifive.com>, 
- Anup Patel <anup@brainfault.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Jiri Slaby <jirislaby@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Palmer Dabbelt <palmer@sifive.com>, linux-riscv@lists.infradead.org, 
- linux-serial@vger.kernel.org, Inochi Amaoto <inochiama@outlook.com>, 
- Meng Zhang <zhangmeng.kevin@spacemit.com>, Yangyu Chen <cyy@cyyself.name>, 
- Yixun Lan <dlan@gentoo.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=694; i=dlan@gentoo.org;
- h=from:subject:message-id; bh=0K4ao+VU11AdvF+9uh5x4EN2IBtmFYnrwob9vqhF5jE=;
- b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBmfYX95TEqSfytY8nhsyKLbPKKtiu66fvm/DZGw
- igFFx7X+taJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZn2F/V8UgAAAAAAuAChp
- c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
- CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277Z0PEACbVCFa7pvmng4Xz0
- 58UY88QmMGAR0UL/tB5Ag4oPNQKQX0VdrLoYcRsv84toABHKLJJ02XgfR/xBKC6TmcFid+m8rro
- 5FDSCQxgNZgDCZJST95bu1b+90Z2F7lkZ0CeD6LiJ4WPSb8zUNbjg3EUFQ3z1i47vEnWSbi3Nv2
- 9Lep8tCguQudnUxrTUrSC+BckMqD6MZmvOxUwFu2qDahl7KFEIGklpwAX/8p4Qs9447MPdyGb7D
- jJO4znTG7VKvIyuLV6AcpanVkdNmr2+9346yhbKFCsNlX4t94cAW9+xjjbCuFDKTRoPG0PBgeNn
- f2dQc8GdrkjUUvqVIyJcd0TpwCIsQ+NQ0byZS1rZnXxAakNt1d1y0gixI2tUcZEek4eVAv+8gGZ
- YcGpF2CXHWfCoeQBEgUosB8GY+jiH7/8UG37ug3zuUZDWzaKxgZ5+jMjpb8oN/OaziKQoNwkjUp
- A2mcHuob7zMTgcgrTb3A6RSt1HRPruSyXpv8kVwLaWzasFZaKpUgKL2f2F8AxrSIJzKZFUMBRcZ
- ca9qPPkJ6oPJMSX/EyYkoBgQdsDV6eQtwlrOflRPYYOO0U0t3GBiUd3VN5MdAlblPZp0EZoAfZ1
- MYiDvhsUVmTIkfuiv6I77pyQ5F+p5etJoK6N5BnfHVzp6k2XOKIt/GFe+cEWV0TkbTdQ==
-X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
- fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
+Mime-Version: 1.0
+References: <20240621134041.3170480-1-michael.roth@amd.com>
+ <20240621134041.3170480-2-michael.roth@amd.com> <ZnwecZ5SZ8MrTRRT@google.com>
+ <6sczq2nmoefcociyffssdtoav2zjtuenzmhybgdtqyyvk5zps6@nnkw2u74j7pu>
+ <ZnxMSEVR_2NRKMRy@google.com> <fbzi5bals5rmva3efgdpnljsfzdbehg4akwli7b5io7kqs3ikw@qfpdpxfec7ks>
+ <ZnxyAWmKIu680R_5@google.com> <87320ee5-8a66-6437-8c91-c6de1b7d80c1@amd.com>
+Message-ID: <Zn2GpHFZkXciuJOw@google.com>
+Subject: Re: [PATCH v1 1/5] KVM: SEV: Provide support for SNP_GUEST_REQUEST
+ NAE event
+From: Sean Christopherson <seanjc@google.com>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Michael Roth <michael.roth@amd.com>, kvm@vger.kernel.org, linux-coco@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, pbonzini@redhat.com, 
+	jroedel@suse.de, pgonda@google.com, ashish.kalra@amd.com, bp@alien8.de, 
+	pankaj.gupta@amd.com, liam.merwick@oracle.com, 
+	Brijesh Singh <brijesh.singh@amd.com>, Alexey Kardashevskiy <aik@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-From: Yangyu Chen <cyy@cyyself.name>
+On Thu, Jun 27, 2024, Tom Lendacky wrote:
+> On 6/26/24 14:54, Sean Christopherson wrote:
+> > On Wed, Jun 26, 2024, Michael Roth wrote:
+> >>> What about the host kernel though?  I don't see anything here that ensures resp_pfn
+> >>> isn't "regular" memory, i.e. that ensure the page isn't being concurrently accessed
+> >>> by the host kernel (or some other userspace process).
+> >>>
+> >>> Or is the "private" memory still accessible by the host?
+> >>
+> >> It's accessible, but it is immutable according to RMP table, so so it would
+> >> require KVM to be elsewhere doing a write to the page,
+> > 
+> > I take it "immutable" means "read-only"?  If so, it would be super helpful to
+> > document that in the APM.  I assumed "immutable" only meant that the RMP entry
+> > itself is immutable, and that Assigned=AMD-SP is what prevented host accesses.
+> 
+> Not quite. It depends on the page state associated with the page. For
+> example, Hypervisor-Fixed pages have the immutable bit set, but can be
+> read and written.
+> 
+> The page states are documented in the SNP API (Chapter 5, Page
+> Management):
 
-Enable SpacemiT SoC config in defconfig to allow the default upstream
-kernel to boot on Banana Pi BPI-F3 board.
+Heh, but then that section says:
 
-Signed-off-by: Yangyu Chen <cyy@cyyself.name>
-Signed-off-by: Yixun Lan <dlan@gentoo.org>
----
- arch/riscv/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+  Pages in the Firmware state are owned by the firmware. Because the RMP.Immutable
+                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  bit is set, the hypervisor cannot write to Firmware pages nor alter the RMP entry
+  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  with the RMPUPDATE instruction.
 
-diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-index 12dc8c73a8acf..5287ae81bbb78 100644
---- a/arch/riscv/configs/defconfig
-+++ b/arch/riscv/configs/defconfig
-@@ -29,6 +29,7 @@ CONFIG_ARCH_MICROCHIP=y
- CONFIG_ARCH_RENESAS=y
- CONFIG_ARCH_SIFIVE=y
- CONFIG_ARCH_SOPHGO=y
-+CONFIG_ARCH_SPACEMIT=y
- CONFIG_SOC_STARFIVE=y
- CONFIG_ARCH_SUNXI=y
- CONFIG_ARCH_THEAD=y
+which to me very clearly suggests that the RMP.Immutable bit is what makes the
+page read-only.
 
--- 
-2.45.2
+Can you ask^Wbribe someone to add a "Table 11. Page State Properties" or something?
+E.g. to explicitly list out the read vs. write protections and the state of the
+page's data (encrypted, integrity-protected, zeroed?, etc).  I've read through
+all of "5.2 Page States" and genuinely have no clue as to what protections most
+of the states have.
 
+Ah, never mind, I found "Table 15-39. RMP Memory Access Checks" in the APM.  FWIW,
+that somewhat contradicts this blurb from the SNP ABI spec:
+
+  The content of a Context page is encrypted and integrity protected so that the
+  hypervisor cannot read or write to it.
+
+I also find that statement confusing.  IIUC, the fact that the Context page is
+encrypted and integrity protected doesn't actually have anything to do with the
+host's ability to access the data.  The host _can_ read the data, but it will get
+ciphertext.  But the host can't write the data because the page isn't HV-owned.
+
+Actually, isn't the intregrity protected part wrong?  I thought one of the benefits
+of SNP vs. ES is that the RMP means the VMSA doesn't have to be integrity protected,
+and so VMRUN and #VMEXIT transitions are faster because the CPU doesn't need to do
+as much work.
