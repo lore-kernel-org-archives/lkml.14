@@ -1,77 +1,177 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C86DDA0;
-	Thu, 27 Jun 2024 04:29:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98C51BF24;
+	Thu, 27 Jun 2024 04:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719462580; cv=none; b=rjVB7gjXa9oMLOWY+Zkq3AOtmd0RlgXB6tMinElgMpeRiglF44hqunDul3cSyhvThFXVZBT99yXvHO6KkITQRSyXXQ5L2RkeY5tERIRBkeYKLh90vBg/Q74+uZQ3uyz9s0RjOH4WKd5KQ4cghJ1UJ/I4ZSolLtuxZ6FYTGnHnuU=
+	t=1719462784; cv=none; b=b8FMREU9/yHdL9AmbocrAPua4h1LZDm8c6pBqKR7JkS5UuOS/NKpPRHAAvaMtTZUDsJV9UU6zDKFt9kQ2HRwzQNqJep94xfWY4mpJmhaRGIX2xdVo59aJ+KDB2L5T6X52tXErZIOIvJSIk9KgbGena4qzPXwrTurxtT8jy2cyQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719462580; c=relaxed/simple;
-	bh=KtcWo65waXRGSPn0iqCOjDZmJvKqRvvSIQ3mV+65De4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L4fKYUDUAQvIMiiJl8m4zT5Zf4j9FuyvuUWAKWV3q+oPEyI3GHTvS+qq69RMYQVMeM1ajq96wl+YedJSYFGeXC+5/84ocDKlTrBxByIBbNyCwSXm/86HhTIplf3I6KDkUSeMAQ8nv+WxdMeAjlj0WkRxcqeRvTwJnjuqn4agh2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=CiuzSJaQ; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1719462784; c=relaxed/simple;
+	bh=WD7ygdR68fxGerBxzAyZ9F2yuKfXe8eASuhKeQ3vInM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RhQrN47CpsCP70uUCU3AR7TdS48oaeJq9lLAyZLkuekMcfzUBuy8ZE2Em0QtaPtMFeT1tYPos0jl7QqSzjfaFA8wpTQKuVvVmoJB/vDvtDuSYzpwnTt3Ej7QZ6qPC85s/0eZsimdVzg6TpKS1jtHXZcqj4JjSvYp7hsRQBYBzWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MUmvprrI; arc=none smtp.client-ip=209.85.210.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="CiuzSJaQ"
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-	(No client certificate requested)
-	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 057C588027;
-	Thu, 27 Jun 2024 06:29:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1719462576;
-	bh=hLwf+KWvZOIT/6XX6OUmEpBoC6+4FW5Mca6/c3/zNwM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CiuzSJaQ3ScejEUYdbVfyF/PgSdfOWVqB0VGVCJliM7PWME+a0x7vrP+4+6bwhMp8
-	 GEjryXy4vmaoj7KYFMUG+0UbAUO910mlbZcLzigRPie3/Z5QT0krTIGanJQZymWSaF
-	 CmnPHZhw+M3TVKJlTZeLCR8zqgNt0Ragnt1LAHhuycDLjx8ovqxXL71Vbqb65i1HSa
-	 b0cDzjC2pa3n/ZSAduLJ4PjVOxqROP6yp2p3cKWaZdsRDFT4Mcun0+9yq3XnBYna5u
-	 pCXMAuBgfmxS+9Od9a0qfd3q/57TLJKC/53EGphJiPS0vxn3QEmxHgIjkibFwm7iat
-	 ArqQaA0DtXrEg==
-Message-ID: <36f46cea-0811-47dc-8741-042d9b88df88@denx.de>
-Date: Wed, 26 Jun 2024 21:47:38 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MUmvprrI"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6fa11ac8695so4436038a34.3;
+        Wed, 26 Jun 2024 21:33:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719462782; x=1720067582; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=jlc5LgsXr7L99X3k84Y8N6qLtAVEf7V0a7Hh7lgRJ00=;
+        b=MUmvprrIfp0qA4vs0vHoJT0QAyd9Vd9d3ujfXTlhUevmI1gLrUaPDq28DsYaBQI+YB
+         ugA4X3FjU8eTKMJFpaWWgheeFzfLkpqTPtRGsG3qGqskTzENBjGvBvmozQYyxWL2wQrl
+         fM4++VheDiMZ9thvaKpRq+8bwRb9zeFuwGUAe1mmuaIPvjatm5VIIIqRw7BFUWCYB+xQ
+         66KdxMuivluwddYw01W8mLCm2kBysY003MgV7TDKQADKl30RgfAcax7xhPajer752Hg2
+         JIMa1qiba75meYhBoQOS4zHq0ovbebk5R/jeBQtbvLFMC08+ExZxAGy9m8cqTTpD3l6t
+         lodQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719462782; x=1720067582;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jlc5LgsXr7L99X3k84Y8N6qLtAVEf7V0a7Hh7lgRJ00=;
+        b=nuPp/1SGqCrGFfexTPaxuIPH11NzVvEHdPIjWUpjFC+o0DJ03g+QrCAuVROuEvES0m
+         r0Bu3TLUZfxKgvEWOxaasEjpbhUJzQCtBR3a0RnYZcrQbMqRqHcfhgAdpk+EFyK9fEAK
+         AtfbZdHwLCHaHmwyzpSnnFvi7gki+Cc2+s4t/AVVE+rjVIAM7r7LLnp/1wYDBg4NB6Ii
+         8md4fKn9z4YSavd7xz2+Eex17+61kLgFZxj1xMx9P54pr+mBcxrXQc/JzZAi7MN61Gft
+         YvEGXgrnhNZCw8VExWmG6sStIZ79S5INv9ysr8hwoCpbeeGSaUK5f0lrMVyYHeLci/gv
+         zJtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVPTVbmiCYtpxgARrCRikUbM7OnJ7NJE70vQSmneTsyWyobxkNN6YSi7uORnupYf3O9XiYJQsvNvp4J17XDOI8AIhCmX9eCt2yz2q1nCnEhDcYPztyAymJuxeAGeR/H4ORG
+X-Gm-Message-State: AOJu0YzOus7Lm6MFJZ0zjK+zyGN33ylnn5xxEVbJRNyMgvx79xwXFMBM
+	0/kX62YeKKzvd7hBxwi4Socu42ZD2Yk2vBoxHALYl6ulXyzq9F3l
+X-Google-Smtp-Source: AGHT+IH+fV5+BoybY7N3LWHXzO46q6X8FmrZYM08XafaolZE1UQamSNMo9xYPVyx0z78L6CPS1aW7w==
+X-Received: by 2002:a05:6830:1449:b0:6f9:9540:76a8 with SMTP id 46e09a7af769-700b11f0eedmr14010345a34.13.1719462781861;
+        Wed, 26 Jun 2024 21:33:01 -0700 (PDT)
+Received: from ubuntu-linux-22-04-02-desktop (107-197-105-120.lightspeed.sntcca.sbcglobal.net. [107.197.105.120])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-701efc09e51sm157847a34.18.2024.06.26.21.33.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jun 2024 21:33:01 -0700 (PDT)
+Date: Wed, 26 Jun 2024 21:32:58 -0700
+From: Pei Li <peili.dev@gmail.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, Paul Durrant <paul@xen.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linuxfoundation.org,
+	syzkaller-bugs@googlegroups.com, llvm@lists.linux.dev,
+	syzbot+fd555292a1da3180fc82@syzkaller.appspotmail.com
+Subject: Re: [PATCH] kvm: Fix warning in__kvm_gpc_refresh
+Message-ID: <ZnzrekGQc24r0Gny@ubuntu-linux-22-04-02-desktop>
+References: <20240625-bug5-v1-1-e072ed5fce85@gmail.com>
+ <Znx1T_hHNA_uThf2@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net: phy: phy_device: Fix PHY LED blinking code comment
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: netdev@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
- Russell King <linux@armlinux.org.uk>, kernel@dh-electronics.com,
- linux-kernel@vger.kernel.org
-References: <20240626030638.512069-1-marex@denx.de>
- <9656eb1a-921b-4f2e-b01f-7df7d890254e@lunn.ch>
-Content-Language: en-US
-From: Marek Vasut <marex@denx.de>
-In-Reply-To: <9656eb1a-921b-4f2e-b01f-7df7d890254e@lunn.ch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Znx1T_hHNA_uThf2@google.com>
 
-On 6/26/24 7:32 PM, Andrew Lunn wrote:
-> On Wed, Jun 26, 2024 at 05:06:17AM +0200, Marek Vasut wrote:
->> Fix copy-paste error in the code comment. The code refers to
->> LED blinking configuration, not brightness configuration. It
->> was likely copied from comment above this one which does
->> refer to brightness configuration.
->>
->> Fixes: 4e901018432e ("net: phy: phy_device: Call into the PHY driver to set LED blinking")
->> Signed-off-by: Marek Vasut <marex@denx.de>
+On Wed, Jun 26, 2024 at 01:08:47PM -0700, Sean Christopherson wrote:
+> On Tue, Jun 25, 2024, Pei Li wrote:
+> > Check for invalid hva address stored in data before calling
+> > kvm_gpc_activate_hva() instead of only compare with 0.
+> > 
+> > Reported-by: syzbot+fd555292a1da3180fc82@syzkaller.appspotmail.com
+> > Closes: https://syzkaller.appspot.com/bug?extid=fd555292a1da3180fc82
+> > Tested-by: syzbot+fd555292a1da3180fc82@syzkaller.appspotmail.com
+> > Signed-off-by: Pei Li <peili.dev@gmail.com>
+> > ---
+> > Syzbot reports a warning message in __kvm_gpc_refresh(). This warning
+> > requires at least one of gpa and uhva to be valid.
+> > WARNING: CPU: 0 PID: 5090 at arch/x86/kvm/../../../virt/kvm/pfncache.c:259 __kvm_gpc_refresh+0xf17/0x1090 arch/x86/kvm/../../../virt/kvm/pfncache.c:259
+> > 
+> > We are calling it from kvm_gpc_activate_hva(). This function always calls
+> > __kvm_gpc_activate() with INVALID_GPA. Thus, uhva must be valid to
+> > disable this warning.
+> > 
+> > This patch checks for invalid hva address as well instead of only
+> > comparing hva with 0 before calling kvm_gpc_activate_hva()
+> > 
+> > syzbot has tested the proposed patch and the reproducer did not trigger
+> > any issue.
+> > 
+> > Tested on:
+> > 
+> > commit:         55027e68 Merge tag 'input-for-v6.10-rc5' of git://git...
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=16ea803a980000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=e40800950091403a
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=fd555292a1da3180fc82
+> > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> > patch:          https://syzkaller.appspot.com/x/patch.diff?x=16eeb53e980000
+> > 
+> > Note: testing is done by a robot and is best-effort only.
+> > ---
+> >  arch/x86/kvm/xen.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/kvm/xen.c b/arch/x86/kvm/xen.c
+> > index f65b35a05d91..de5f34492405 100644
+> > --- a/arch/x86/kvm/xen.c
+> > +++ b/arch/x86/kvm/xen.c
+> > @@ -881,7 +881,7 @@ int kvm_xen_vcpu_set_attr(struct kvm_vcpu *vcpu, struct kvm_xen_vcpu_attr *data)
+> >  			r = kvm_gpc_activate(&vcpu->arch.xen.vcpu_info_cache,
+> >  					     data->u.gpa, sizeof(struct vcpu_info));
+> >  		} else {
+> > -			if (data->u.hva == 0) {
+> > +			if (data->u.hva == 0 || kvm_is_error_hva(data->u.hva)) {
+> >  				kvm_gpc_deactivate(&vcpu->arch.xen.vcpu_info_cache);
+> >  				r = 0;
+> >  				break;
 > 
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Hmm, I think what we want is to return -EINVAL in this case, not deactivate the
+> region.   I could have sworn KVM does that.  Gah, I caught
+> KVM_XEN_ATTR_TYPE_SHARED_INFO_HVA during review, but missed this one.  So to fix
+> this immediate bug, and avoid similar issues in the future, this?
 > 
-> There is a lot of context in this patch. Do you have some odd git diff
-> settings?
+> diff --git a/arch/x86/kvm/xen.c b/arch/x86/kvm/xen.c
+> index 93814d3850eb..622fe24da910 100644
+> --- a/arch/x86/kvm/xen.c
+> +++ b/arch/x86/kvm/xen.c
+> @@ -741,7 +741,7 @@ int kvm_xen_hvm_set_attr(struct kvm *kvm, struct kvm_xen_hvm_attr *data)
+>                 } else {
+>                         void __user * hva = u64_to_user_ptr(data->u.shared_info.hva);
+>  
+> -                       if (!PAGE_ALIGNED(hva) || !access_ok(hva, PAGE_SIZE)) {
+> +                       if (!PAGE_ALIGNED(hva)) {
+>                                 r = -EINVAL;
+>                         } else if (!hva) {
+>                                 kvm_gpc_deactivate(&kvm->arch.xen.shinfo_cache);
+> diff --git a/virt/kvm/pfncache.c b/virt/kvm/pfncache.c
+> index 0ab90f45db37..728d2c1b488a 100644
+> --- a/virt/kvm/pfncache.c
+> +++ b/virt/kvm/pfncache.c
+> @@ -438,6 +438,9 @@ int kvm_gpc_activate(struct gfn_to_pfn_cache *gpc, gpa_t gpa, unsigned long len)
+>  
+>  int kvm_gpc_activate_hva(struct gfn_to_pfn_cache *gpc, unsigned long uhva, unsigned long len)
+>  {
+> +       if (!access_ok((void __user *)uhva, len))
+> +               return -EINVAL;
+> +
+>         return __kvm_gpc_activate(gpc, INVALID_GPA, uhva, len);
+>  }
+> 
+Thanks Sean. I’ll test and work on v2 based on your suggestions.
 
-I did use git format-patch -U10 this time, to make sure that context is 
-visible. With regular git format-patch, the diff contained only part of 
-the comment and it wasn't clear from the diff that it does modify 
-comment above (*led_blink_set)() and not e.g. (*led_brightness_set)() .
+Best regards,
+
+Pei
+
