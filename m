@@ -1,119 +1,212 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09AB413E05F;
-	Thu, 27 Jun 2024 10:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2889E13C67E
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 10:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719483045; cv=none; b=owHwPyX7pH2MV6fsD9aE6jTr77sC/gED75WJ6q2w4e2JmYei10PtjFhuJ0UUPslJAEV5AMAafmYkByEPQAxQ8FmPUaZHvhgl2YzF5im3Wl6GmjgAU+hBranxTM0nEtJsn5OICKc250wBqB3K7R8hbfSZKc5gCvkRfPJLe1ywh98=
+	t=1719483088; cv=none; b=HtFn+9Ds8pdBFBRongmh0fy1CpNty8ssThXNe4ZrBCRWBe3keSFRGMb7VNvi1p6uTy+gAlqRMlQNvAvBJCAp0Or3g1kf7LQlWutHxA4njFfdSFUxH/AsvIOcp7pETVgqUT3h9CWhbvm0QOVcWG5u2PvBjOQ27kerAHxujNpBpLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719483045; c=relaxed/simple;
-	bh=JumFjepAK5BceEeoilJQ1Y3XfINuUODu8VGkkHsJI0E=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=niwmGEUl5Qr0CaboTxco0Ls11MEIv+H9oDkfAdlF5DUjyz204kwcGOaeSqESgsiLJUYkrxnOvxTkaWjuX9A+huTWluhAlEGwgzhHaM5QJgrE6LigEv06GuiL3GPvoRPze9/94nujZp4o8VrlnxZMMUkX9zc19W6AGYb9B5y/RQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id AE3501A0868;
-	Thu, 27 Jun 2024 12:10:36 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 75CB11A0738;
-	Thu, 27 Jun 2024 12:10:36 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 9FEC3180222F;
-	Thu, 27 Jun 2024 18:10:34 +0800 (+08)
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	shengjiu.wang@gmail.com,
-	linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 3/3] arm64: dts: imx8mp-evk: Add audio XCVR sound card
-Date: Thu, 27 Jun 2024 17:53:01 +0800
-Message-Id: <1719481981-4069-4-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1719481981-4069-1-git-send-email-shengjiu.wang@nxp.com>
-References: <1719481981-4069-1-git-send-email-shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+	s=arc-20240116; t=1719483088; c=relaxed/simple;
+	bh=RGQHQzMvAJJ18phcQUWNK57PO0eaJhXWjGhWhoMgHaA=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Owrslgy0H2leq5Lw7yVWdF5OoCxIfEW8gLx6XcD84O4BgW90FZd0MR7MlGQRMOzI4sgw7xO9EOREDHkjo2lAwE/03kwEnkDb+sZqSJ1JdCjKVV+hH65PHMOKaekSHyUolsVAi6x0vQIafwha4V1VqcP5BTf6q92VZd85oqV53oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lY7ROG+w; arc=none smtp.client-ip=209.85.214.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lY7ROG+w"
+Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-1f6a837e9a3so47667215ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 03:11:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719483086; x=1720087886; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nhaug2EPx+qEgt62m3ojcCaUyh05yCww5PDEVq+nvig=;
+        b=lY7ROG+w/9tNuLqYEyq25EG9KAM3PVXiCvYea8WoL91cqi9pU0XPfKpjh4jwAJe0SH
+         BYETufNFBjQT5sV5PI67WBcV9JW4Pq9zRdNV9aDZPyxVENQPw9b+wnM60C/SSXT+VihW
+         6bAV5086OcJqqyJQMpSzUToa/+zW1KhtpCGV+JKetnKzIlNLXUvGLrtmyNOCl18eg8HT
+         XYfLhWO47hDDuN4xkI0QHbxBptj3/bqeaFPcrdjxOKawMfTeDcm+gHy4phaltzuhhSKD
+         Gu7eGmr/Hcf/pxQAmiNTATPOrQodoNJjcaXRgkU7rtiAkaduX7BodtH7GcQIz9+hKEZ7
+         onKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719483086; x=1720087886;
+        h=content-transfer-encoding:in-reply-to:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nhaug2EPx+qEgt62m3ojcCaUyh05yCww5PDEVq+nvig=;
+        b=h7dfVG5d0gfA3OG4n1/yEj7hDNudJLXy0bNAv/XBz9JCwK0BpE7rFeHFDMdVqgMRAf
+         8jYGfdJ3paOnbc2y07odL2RO9HUd35FPIINEXQBFscCzg9H8UqBNbGVmhApIk2cv1Qzy
+         s1VXdMYlAbmDmSAM3FgM1F19+XpcasLx9RqV3GhlHKmqTNLALvcECJofAAbjtEVKPuKZ
+         7ghzTtMfqwfLvoNkFNLpb5Uyv6O0TrTr9ryUFj9gblLI/mzCcWVQW0dOa13ch/MB8cYw
+         Lhqes2cUb7nf0L/U4KwWjyKnm+bU/keGAmPJbWz/TIz2U7gPEU4mUCWdWSimkLeUmL5Q
+         zTwA==
+X-Forwarded-Encrypted: i=1; AJvYcCUdpWfS+hHF64aqL51rv+PWr+4+rfn18Vh8TQ+gHwsivlWWuIgrKvy9rcUtH1vvAICH7DOgCR+q4no+/7EDJzuhl8KiIvomrAVBjmuk
+X-Gm-Message-State: AOJu0YxdplyulrpVfOfjJewiZxgOpgNiDdbgLi+aCswZqciyHQ0Fq9tl
+	hrpecWeNVFfV7wrzIbyoL04RxcABksPDv28huxT5gQDj3uKECUX1
+X-Google-Smtp-Source: AGHT+IFL/5dOdrZlFA7z1Hme4OgjQs+yGKzHZKmAuRfJKku11yeI6TkI4Fbw35ApU3NgfKrtdnA0IQ==
+X-Received: by 2002:a17:902:6bc3:b0:1f8:68b8:3736 with SMTP id d9443c01a7336-1fa23f89653mr94251095ad.35.1719483086201;
+        Thu, 27 Jun 2024 03:11:26 -0700 (PDT)
+Received: from [127.0.0.1] ([212.107.28.57])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1faac8e194asm9744445ad.11.2024.06.27.03.11.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Jun 2024 03:11:25 -0700 (PDT)
+From: Celeste Liu <coelacanthushex@gmail.com>
+X-Google-Original-From: Celeste Liu <CoelacanthusHex@gmail.com>
+Message-ID: <ccf089fd-613d-475c-aeb1-8abc92873a90@gmail.com>
+Date: Thu, 27 Jun 2024 18:11:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] riscv: entry: set a0 = -ENOSYS only when syscall != -1
+Content-Language: en-GB-large
+To: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>
+Cc: "Dmitry V. Levin" <ldv@strace.io>, Palmer Dabbelt <palmer@rivosinc.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Guo Ren <guoren@kernel.org>, Conor Dooley <conor.dooley@microchip.com>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Andreas Schwab <schwab@suse.de>, David Laight <David.Laight@aculab.com>,
+ Felix Yan <felixonmars@archlinux.org>, Ruizhe Pan <c141028@gmail.com>,
+ Shiqi Zhang <shiqi@isrc.iscas.ac.cn>,
+ Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+ "Ivan A. Melnikov" <iv@altlinux.org>
+References: <20230801141607.435192-1-CoelacanthusHex@gmail.com>
+ <20240627071422.GA2626@altlinux.org>
+ <9c102328-6bb3-46b6-bc2f-d011a284d5b0@gmail.com>
+ <CA+FstbVf7TJx==WsY5fBoFrdeY8php5ETn8kMq5s6YScy-2O=A@mail.gmail.com>
+In-Reply-To: <CA+FstbVf7TJx==WsY5fBoFrdeY8php5ETn8kMq5s6YScy-2O=A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Add audio XCVR sound card, which supports SPDIF TX & RX,
-eARC RX, ARC RX functions.
 
-HDMI_HPD is shared with the HDMI module so use pinctrl_hog.
+On 2024-06-27 17:43, Björn Töpel wrote:
+> On Thu, Jun 27, 2024 at 9:47 AM Celeste Liu <coelacanthushex@gmail.com> wrote:
+>>
+>> On 2024-06-27 15:14, Dmitry V. Levin wrote:
+>>
+>>> Hi,
+>>>
+>>> On Tue, Aug 01, 2023 at 10:15:16PM +0800, Celeste Liu wrote:
+>>>> When we test seccomp with 6.4 kernel, we found errno has wrong value.
+>>>> If we deny NETLINK_AUDIT with EAFNOSUPPORT, after f0bddf50586d, we will
+>>>> get ENOSYS instead. We got same result with commit 9c2598d43510 ("riscv:
+>>>> entry: Save a0 prior syscall_enter_from_user_mode()").
+>>>>
+>>>> After analysing code, we think that regs->a0 = -ENOSYS should only be
+>>>> executed when syscall != -1. In __seccomp_filter, when seccomp rejected
+>>>> this syscall with specified errno, they will set a0 to return number as
+>>>> syscall ABI, and then return -1. This return number is finally pass as
+>>>> return number of syscall_enter_from_user_mode, and then is compared with
+>>>> NR_syscalls after converted to ulong (so it will be ULONG_MAX). The
+>>>> condition syscall < NR_syscalls will always be false, so regs->a0 = -ENOSYS
+>>>> is always executed. It covered a0 set by seccomp, so we always get
+>>>> ENOSYS when match seccomp RET_ERRNO rule.
+>>>>
+>>>> Fixes: f0bddf50586d ("riscv: entry: Convert to generic entry")
+>>>> Reported-by: Felix Yan <felixonmars@archlinux.org>
+>>>> Co-developed-by: Ruizhe Pan <c141028@gmail.com>
+>>>> Signed-off-by: Ruizhe Pan <c141028@gmail.com>
+>>>> Co-developed-by: Shiqi Zhang <shiqi@isrc.iscas.ac.cn>
+>>>> Signed-off-by: Shiqi Zhang <shiqi@isrc.iscas.ac.cn>
+>>>> Signed-off-by: Celeste Liu <CoelacanthusHex@gmail.com>
+>>>> Tested-by: Felix Yan <felixonmars@archlinux.org>
+>>>> Tested-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+>>>> Reviewed-by: Björn Töpel <bjorn@rivosinc.com>
+>>>> Reviewed-by: Guo Ren <guoren@kernel.org>
+>>>> ---
+>>>>
+>>>> v4 -> v5: add Tested-by Emil Renner Berthing <emil.renner.berthing@canonical.com>
+>>>> v3 -> v4: use long instead of ulong to reduce type cast and avoid
+>>>>           implementation-defined behavior, and make the judgment of syscall
+>>>>           invalid more explicit
+>>>> v2 -> v3: use if-statement instead of set default value,
+>>>>           clarify the type of syscall
+>>>> v1 -> v2: added explanation on why always got ENOSYS
+>>>>
+>>>>  arch/riscv/kernel/traps.c | 6 +++---
+>>>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+>>>> index f910dfccbf5d2..729f79c97e2bf 100644
+>>>> --- a/arch/riscv/kernel/traps.c
+>>>> +++ b/arch/riscv/kernel/traps.c
+>>>> @@ -297,7 +297,7 @@ asmlinkage __visible __trap_section void do_trap_break(struct pt_regs *regs)
+>>>>  asmlinkage __visible __trap_section void do_trap_ecall_u(struct pt_regs *regs)
+>>>>  {
+>>>>      if (user_mode(regs)) {
+>>>> -            ulong syscall = regs->a7;
+>>>> +            long syscall = regs->a7;
+>>>>
+>>>>              regs->epc += 4;
+>>>>              regs->orig_a0 = regs->a0;
+>>>> @@ -306,9 +306,9 @@ asmlinkage __visible __trap_section void do_trap_ecall_u(struct pt_regs *regs)
+>>>>
+>>>>              syscall = syscall_enter_from_user_mode(regs, syscall);
+>>>>
+>>>> -            if (syscall < NR_syscalls)
+>>>> +            if (syscall >= 0 && syscall < NR_syscalls)
+>>>>                      syscall_handler(regs, syscall);
+>>>> -            else
+>>>> +            else if (syscall != -1)
+>>>>                      regs->a0 = -ENOSYS;
+>>>>
+>>>>              syscall_exit_to_user_mode(regs);
+>>>
+>>> Unfortunately, this change introduced a regression: it broke strace
+>>> syscall tampering on riscv.  When the tracer changes syscall number to -1,
+>>> the kernel fails to initialize a0 with -ENOSYS and subsequently fails to
+>>> return the error code of the failed syscall to userspace.
+>>
+>> In the patch v2, we actually do the right thing. But as Björn Töpel's
+>> suggestion and we found cast long to ulong is implementation-defined
+>> behavior in C, so we change it to current form. So revert this patch and
+>> apply patch v2 should fix this issue. Patch v2 uses ths same way with
+>> other architectures.
+>>
+>> [1]: https://lore.kernel.org/all/20230718162940.226118-1-CoelacanthusHex@gmail.com/
+> 
+> Not reverting, but a fix to make sure that a0 is initialized to -ENOSYS, e.g.:
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mp-evk.dts | 27 ++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+Oh. I just want to describe what change we need, not to say actual 'git revert'.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-index c2c708c492c0..a64e8a6c830d 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-@@ -209,6 +209,19 @@ cpu {
- 		};
- 	};
- 
-+	sound-xcvr {
-+		compatible = "fsl,imx-audio-card";
-+		model = "imx-audio-xcvr";
-+
-+		pri-dai-link {
-+			link-name = "XCVR PCM";
-+
-+			cpu {
-+				sound-dai = <&xcvr>;
-+			};
-+		};
-+	};
-+
- 	reserved-memory {
- 		#address-cells = <2>;
- 		#size-cells = <2>;
-@@ -748,7 +761,15 @@ &wdog1 {
- 	status = "okay";
- };
- 
-+&xcvr {
-+	#sound-dai-cells = <0>;
-+	status = "okay";
-+};
-+
- &iomuxc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_hog>;
-+
- 	pinctrl_audio_pwr_reg: audiopwrreggrp {
- 		fsl,pins = <
- 			MX8MP_IOMUXC_SAI3_RXC__GPIO4_IO29		0xd6
-@@ -838,6 +859,12 @@ MX8MP_IOMUXC_NAND_READY_B__GPIO3_IO16	0x140
- 		>;
- 	};
- 
-+	pinctrl_hog: hoggrp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_HDMI_HPD__HDMIMIX_HDMI_HPD		0x40000010
-+		>;
-+	};
-+
- 	pinctrl_i2c1: i2c1grp {
- 		fsl,pins = <
- 			MX8MP_IOMUXC_I2C1_SCL__I2C1_SCL		0x400001c2
--- 
-2.34.1
+> 
+> --8<--
+> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+> index 05a16b1f0aee..51ebfd23e007 100644
+> --- a/arch/riscv/kernel/traps.c
+> +++ b/arch/riscv/kernel/traps.c
+> @@ -319,6 +319,7 @@ void do_trap_ecall_u(struct pt_regs *regs)
+> 
+>   regs->epc += 4;
+>   regs->orig_a0 = regs->a0;
+> + regs->a0 = -ENOSYS;
+> 
+>   riscv_v_vstate_discard(regs);
+> 
+> @@ -328,8 +329,7 @@ void do_trap_ecall_u(struct pt_regs *regs)
+> 
+>   if (syscall >= 0 && syscall < NR_syscalls)
+>   syscall_handler(regs, syscall);
+> - else if (syscall != -1)
+> - regs->a0 = -ENOSYS;
+> +
+>   /*
+>   * Ultimately, this value will get limited by KSTACK_OFFSET_MAX(),
+>   * so the maximum stack offset is 1k bytes (10 bits).
+> --8<--
+
+This is also what I think.
+
+> Celeste, do you want to cook that fix properly?
+
+Yeah. I will sent patch to mail list soon.
+
+> 
+> 
+> Björn
 
