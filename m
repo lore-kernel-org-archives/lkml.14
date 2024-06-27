@@ -1,105 +1,139 @@
-Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F4B19883C
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 15:10:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B80198A09
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 15:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719501057; cv=none; b=P8/Ni3FwayzWJfxWcWg2vVL8vomT4Ge56KKOLysu6qBYhB0Sh4wUsCRIsS0hjCAW+eU44v6IclDi0lrqJkNGtOZGVcFkEOk8uIZGLdIJK30Mno47MVJLmfrHVxNElQDVXzfBsHHB8Es0rbUmqGg8Y5EBRxzGJStaZXTdQV84Xgw=
+	t=1719501102; cv=none; b=RUI46j3g1WUOns0J8zOwnOsmwlQL7gLFwjHQo4HoVySb6SOHj3+3yihHfqjiKAzyYie4MiXz0clSUJoptaxPc2ei7FIV7FNy8Y+sNFC3eboggFRtOv6pQ1h+8blf0C2t3RboabikmetgS1hQgr0jia7IPSOyLGM/bPjZWgElr0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719501057; c=relaxed/simple;
-	bh=27xZMW4OLaqCo5WWzj5gYLre9StpGphZ4TqAVIGKaN8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=QQ7dlfWsKIa6zmltuJnEYaUqaT+/08XjN42Us1Z2GLf6LS5l04q+a9zNc6jc4nDNn1ool5Tm6EtzxpIFUCAakTqTenlUYZlJQtI+FjQjHWy8vDbVSWLIsS8BGjjGxJ3pM1RR/yrGsvWVc28YPxM16NEOb3jkPaJaXAu1/r/VCkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tLiwRSPW; arc=none smtp.client-ip=91.218.175.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1719501102; c=relaxed/simple;
+	bh=pDBuML2E1f5ix9l+LrF/TBBSl3qcVEyxGqQ4XE4J3dA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JjOeUxbDdt3I4XFW3FCelv09ErxOh9fFid8IpCiwwVMPsLc1qg975VdjSI7rYMIyH/DHw1v95X4M91YPhLlbYonJHUIiI4mRhMIPIQL0vE5J01xM+dI2jV7XxqR56CIBL4v1+VM8+RuTzsE3xtU5Ac99KCIq47jJ1P5NqqMpCXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NZv4bgoa; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tLiwRSPW"
-X-Envelope-To: tytso@mit.edu
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1719501051;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XNm3WawALojtYQ9z1+eU4F6+/xmdHrF/f+BTxtDjPwU=;
-	b=tLiwRSPWfbepm7CVg0u1b/ItZvNyqzaHi22n2chnAxIlSib17q7agRmFxw/2Z85sdwOPbv
-	WY9DEv2SqD+WPvqqyLmiBNvR9EqK6extEJMcSYOz7FtfHkUU0LEzBrt5uwmPWg981a4MEB
-	uDXZa49DuW7P3SaUJqK/azkbkzvWssE=
-X-Envelope-To: luis.henriques@linux.dev
-X-Envelope-To: adilger@dilger.ca
-X-Envelope-To: jack@suse.cz
-X-Envelope-To: harshadshirwadkar@gmail.com
-X-Envelope-To: linux-ext4@vger.kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Luis Henriques <luis.henriques@linux.dev>
-To: "Theodore Ts'o" <tytso@mit.edu>
-Cc: Luis Henriques <luis.henriques@linux.dev>,  Andreas Dilger
- <adilger@dilger.ca>,  Jan Kara <jack@suse.cz>,  Harshad Shirwadkar
- <harshadshirwadkar@gmail.com>,  linux-ext4@vger.kernel.org,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] ext4: fix fast commit inode enqueueing during a
- full journal commit
-In-Reply-To: <20240627145836.GA439391@mit.edu> (Theodore Ts'o's message of
-	"Thu, 27 Jun 2024 10:58:36 -0400")
-References: <20240529092030.9557-1-luis.henriques@linux.dev>
-	<875xtu7aow.fsf@brahms.olymp> <20240627145836.GA439391@mit.edu>
-Date: Thu, 27 Jun 2024 16:10:41 +0100
-Message-ID: <871q4i7766.fsf@brahms.olymp>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NZv4bgoa"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6499c9af728so5386407b3.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 08:11:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719501100; x=1720105900; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=eKrz5JnDYe7CFRd5tpf8rGwprLDwDWvC7s8h12MoL2Q=;
+        b=NZv4bgoaiMF31VOSfa78mzMVx7FPjA1WD0E8D6Dn3+42nqRPomqF2a3BkeTgpjxbbN
+         NF22yjXQftftcKxOZKDVXUh5+2xI/TtZ2uZ7YdCGtnutMkZfp5sc6rVf3LilZQ/1/Xpv
+         J4JLPykrGrIZEYOMcjC27rBa23TbQONrQHoLiqfMR1bgDzURRKLuoisMt7mn/QH1IXQk
+         l2CEk3yxxZfecEpQJrnL+2PavphBTLNn/ylnPNA5xZvuDVtENPdeh7C8m7HTo3nKst+5
+         pS11IALcxo5fW/lbTex1czLV9VPhrhoYqahwtfg9beJ0A2JnPq5srZ9jbBkD/qMkwz4s
+         mRoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719501100; x=1720105900;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eKrz5JnDYe7CFRd5tpf8rGwprLDwDWvC7s8h12MoL2Q=;
+        b=Tc+02pe8AXkNIrgh9mNcQyNjIOG3/iVqFtwcmDoqFVWVcuI9EMrs82L+kE+HDZ81wp
+         EDVvNB5wB2MODq5dmHVR1KfcvucLvxo1RaXMtrqSV7mUd6JiQN3uhcIhWUNGoHURWaAK
+         BLwPcDTMbGWRkyCHytxcZbqTd+DhjG50P7Z/NqeEo+ykDWe2GJr/aWRa1fss2S2DLu7M
+         p3+GJsH8ibhz8QlZxhIJACGW9BtE7+wfgx6ZMzGesS0g+42f2+MYgMDCpRB/XIrIdDYS
+         xTJr8Lmi3nNUbWsvkDQtyX48ZckMLUZUgDfpB8Av1vDxdOCTJO77Nt9P1PmmpM/pOonU
+         M/YQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWA8xYm4sqBIG4+QpgUZ4TiWY6vE+czt8aTfKxGSbHKbP/PiiLP6M/uwIGIZVSK76Nns8NRxmyLXQ2W/v3s1yoh5blunsqev8AyT3oX
+X-Gm-Message-State: AOJu0YzilGJfJYdC1W3h2Bnpvfcz/WN5GYkTXaB1V64GVYMnfE6RMRx3
+	Z9t4idofaE2gaHN+BiE89GRzWRPRVaSDeJbSsCOT38r9Jx0xUQink/pZhzzwpiqlqADi/KYFZkC
+	uxvh/a5WLEJUEsh+ONgvPFV1LsqrNZ8fHeQo+uQ==
+X-Google-Smtp-Source: AGHT+IF+4VnbD/5IKiEA7MzcB8Bhjepz8rzkvxe5mUJa9AmOxnk+Npwkq8GtkrvrJQZDda9LBk+CGA0iDZFfuAQ/anw=
+X-Received: by 2002:a05:690c:1c:b0:62f:aa9a:93c6 with SMTP id
+ 00721157ae682-649a05ce6e6mr13057017b3.8.1719501099578; Thu, 27 Jun 2024
+ 08:11:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Migadu-Flow: FLOW_OUT
+References: <20240626-port-map-v1-0-bd8987d2b332@linaro.org>
+ <20240626-port-map-v1-4-bd8987d2b332@linaro.org> <tlaykv4bx6uizimz3jnprevwbuvygitvacbbdixzrwq4llaz6e@6qpswvidl4iq>
+ <da3e3b46-d8fd-4938-baa3-a7f95ec19d95@linaro.org>
+In-Reply-To: <da3e3b46-d8fd-4938-baa3-a7f95ec19d95@linaro.org>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Thu, 27 Jun 2024 18:11:28 +0300
+Message-ID: <CAA8EJprK8scCfCkZTi1auK16SYM_Y-JntuijYyjkYd5LZYbAXg@mail.gmail.com>
+Subject: Re: [PATCH 4/6] ASoC: codecs: wsa884x: parse port-mapping information
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Banajit Goswami <bgoswami@quicinc.com>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, linux-arm-msm@vger.kernel.org, 
+	Neil Armstrong <neil.armstrong@linaro.org>, alsa-devel@alsa-project.org, 
+	linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jun 27 2024, Theodore Ts'o wrote:
-
-> On Thu, Jun 27, 2024 at 02:54:39PM +0100, Luis Henriques wrote:
->> On Wed, May 29 2024, Luis Henriques (SUSE) wrote:
->>=20
->> > Hi!
->> >
->> > Here's v3 of this fix to the fast commit enqueuing bug triggered by fs=
-test
->> > generic/047.  This version simplifies the previous patch version by re=
--using
->> > the i_sync_tid field in struct ext4_inode_info instead of adding a new=
- one.
->> >
->> > The extra patch includes a few extra fixes to the tid_t type handling.=
-  Jan
->> > brought to my attention the fact that this sequence number may wrap, a=
-nd I
->> > quickly found a few places in the code where the tid_geq() and tid_gt()
->> > helpers had to be used.
->> >
->> > Again, please note that this fix requires [1] to be applied too.
->> >
->> > [1] https://lore.kernel.org/all/20240515082857.32730-1-luis.henriques@=
-linux.dev
->> >
->> > Luis Henriques (SUSE) (2):
->> >   ext4: fix fast commit inode enqueueing during a full journal commit
->> >   ext4: fix possible tid_t sequence overflows
->>=20
->> Gentle ping...  Has this fell through the cracks?
+On Thu, 27 Jun 2024 at 17:34, Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
 >
-> Sorry, I'm still catching up after being on vacation.  There is a
-> batch of commits which I've reviewed (up to May 17th) which is
-> currently undergoing testing.  So that doesn't include this patch yet,
-> but it's on the list of patches to be reviewed at
-> patchworks.ozlabs.org/project/linux-ext4 so it won't fall through the
-> cracks.
+>
+>
+> On 27/06/2024 14:38, Dmitry Baryshkov wrote:
+> > On Thu, Jun 27, 2024 at 12:55:20PM GMT, Srinivas Kandagatla wrote:
+> >> Add support to parse static master port map information from device tree.
+> >> This is required for correct port mapping between soundwire device and
+> >> master ports.
+> >>
+> >> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> >> ---
+> >>   sound/soc/codecs/wsa884x.c | 8 ++++++++
+> >>   1 file changed, 8 insertions(+)
+> >>
+> >> diff --git a/sound/soc/codecs/wsa884x.c b/sound/soc/codecs/wsa884x.c
+> >> index a9767ef0e39d..72ff71bfb827 100644
+> >> --- a/sound/soc/codecs/wsa884x.c
+> >> +++ b/sound/soc/codecs/wsa884x.c
+> >> @@ -1887,6 +1887,14 @@ static int wsa884x_probe(struct sdw_slave *pdev,
+> >>      wsa884x->sconfig.direction = SDW_DATA_DIR_RX;
+> >>      wsa884x->sconfig.type = SDW_STREAM_PDM;
+> >>
+> >> +    /**
+> >> +     * Port map index starts with 0, however the data port for this codec
+> >> +     * are from index 1
+> >> +     */
+> >> +    if (of_property_read_u32_array(dev->of_node, "qcom,port-mapping", &pdev->m_port_map[1],
+> >> +                                    WSA884X_MAX_SWR_PORTS))
+> >> +            dev_info(dev, "Static Port mapping not specified\n");
+> >
+> > Same comment. Either dev_warn (if it's something to warn about) or
+> > dev_info.
+> >
+> > Or, as your commit message mentions that it is required, it should be an
+> > error if the port mapping is not specified.
+>
+> This is an optional property for older SoCs which have 1:1 port map
+> between device and master.
 
-Awesome, thanks for the update.  And sorry for being impatient.
-/me goes back under his rock.
+Then the commit message is inaccurate. Could you please fix it?
 
-Cheers,
---=20
-Lu=C3=ADs
+>
+>
+> --srini
+> >
+> >> +
+> >>      pdev->prop.sink_ports = GENMASK(WSA884X_MAX_SWR_PORTS, 0);
+> >>      pdev->prop.simple_clk_stop_capable = true;
+> >>      pdev->prop.sink_dpn_prop = wsa884x_sink_dpn_prop;
+> >>
+> >> --
+> >> 2.25.1
+> >>
+> >
+
+
+
+-- 
+With best wishes
+Dmitry
