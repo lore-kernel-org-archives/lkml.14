@@ -1,77 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F29D43AA8;
-	Thu, 27 Jun 2024 19:06:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E9743AA8;
+	Thu, 27 Jun 2024 19:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719515172; cv=none; b=cg2alCgf53ibKDzelkGlp7YQPr+KEMp3VoR1MsuCwpRj8BqtQny5Zv9067CPLJ+uhd3xLRjoH1DsdFwEaMUIu09i9MKYZRGJereptF0KSeRi28LY0sGmvQmlTHMnPebiql6P3Dsbf7IkdyO4ZNeoiIJLawtyO5lE8ld6tm/+XBY=
+	t=1719515220; cv=none; b=AOFusGldLX3Rp+hNGZeJk6UmyitVIibNjfkKUUjoHEMcM0E9gVVkoTONh8QRKEy9uhR6Kolgs1MBLkRApqRbWD6vZJPiEjpLhaZ60OczRi2WODHa4zNKigKiX9/5T/wbvm2xqc6VRwR0F8a9So0fjx2u8T2RdHwQDi90cdcLOqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719515172; c=relaxed/simple;
-	bh=qYyuyZyLemINvciwUPmxD+lZf3PlWNhp2SzlF8nutXY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BQQeWIZeQtITT4Xx4K8Jo2bgh+kP9bAsRzzbxNU7oNXDNuxYz29IvimAaGhrflSUO3FSCRGWptNX+ex7PzR+q41tf2F1BsSJiafx+dHhc9J7xKOeV5XWxbvuQ+owruFYuzjSIc0QwNvdgeIOqHHmXl/zkJYef2jYoMUEk5E/7/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XBE8Aixl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719515220; c=relaxed/simple;
+	bh=O3UAnwLqiXF1HevzG0iNPWunY1PZOIAzI9fMywd+2Yk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cRZev/s9nR3ik9cd4sYQG2IwrF/C8BXpPxGQSDJmFao/eoPS6HCgxsj9wud+EKxa5TqLWxYhWHYIHOVh8FGiMK4ITEDJuzdtvHPiK6vjZtANsxOi4ghHJrMb/qj0Rut6ehVf7orNGmCNodlU0nLreiVmJVMSEtQNFMsTparTOb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=cuMYuhMz; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XBE8Aixl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A5EAC4AF09;
-	Thu, 27 Jun 2024 19:06:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719515172;
-	bh=qYyuyZyLemINvciwUPmxD+lZf3PlWNhp2SzlF8nutXY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=XBE8AixloLd1iiARrLilV5u0wjswL07nDhMi9g1vb0sBxWovT4cJifI7ElW8qTWai
-	 LJCD7d6eqmoE0vW47M0fO7YQS7MKz5LRNLujR+x+GPtP6N+TlGSzysbB2pGp4pcTBu
-	 Ir7B9Yt3VsJ6tAdufKXYOQIES8XcQ2f7O1ZDAUsJee/nnQXUdlLiFSBpjR02v3q2Ow
-	 vWMfQrVdgGuxAeyB/o8peffcpkXBD/SVkCfuH2DMct7yooJYcMxG+4orPSG0ZS65k8
-	 aVukMpUAa9LTKM8m6UGRKdmnd4eShMPddzp2IfypQOPuevUhSjmyrUSUiPSLbFPe1i
-	 t0hwGVxlHeFJQ==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52cdb0d816bso1877389e87.1;
-        Thu, 27 Jun 2024 12:06:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWi5cS1Of0lx9Lqcg8ba5eHALXHaHM3uvwbDc7f3wl8YbxpMy2KhLOUWL/vXbAKTPENH3cnXCo3O2e5l4oODH8kd9mGPY2YDPLF8LYZIAY+3X+CyqAhYxzlWR8nZEewKaHhjVn+wNlkxw==
-X-Gm-Message-State: AOJu0Yzy+n8BUAC7w64PDsBVbFdIZsyf64ndPNyyF1cTD1pEc6vZGXJ0
-	zgzVagFHwflNwYE44RHERaVOC/9ZCnaXShPSiZg3G/sSSJvVMDFbNOueaVkxGQWnqTtFjWNO2ji
-	eeyYOIc2golg+VdR17mgU76kC9w==
-X-Google-Smtp-Source: AGHT+IGfP9KoRm8CMwkTM1fbQMTanmBRhRy4ZLQAosQsk4uhF1VRbF52kp+LpWwAH6YFqg7QjYtHTnnk8iS3F07Tudc=
-X-Received: by 2002:a05:6512:3e26:b0:52b:c14e:3b5a with SMTP id
- 2adb3069b0e04-52e703aef94mr955517e87.31.1719515170504; Thu, 27 Jun 2024
- 12:06:10 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="cuMYuhMz"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=lCV7ImW4mZ83RIzV4l9OBdCxKN+5Cb89l/YQC0k0wvs=; b=cuMYuhMz895WZVuxV6m14bQL4h
+	ofp+tz9PeZjdqGyXaX5xOSm/oKCZ0o/Hlrmluz8/W7j1UTAm3Tvh4ST9PqRvXwM06URWj+4TVehbo
+	fjQ1koT2BWpO5n4NGvd2a3ULgFdmGsWJrr5vIVKwJQLg/X4yQN39yAV08LAvKl+NpM2U=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1sMuSJ-001CZ3-9T; Thu, 27 Jun 2024 21:06:51 +0200
+Date: Thu, 27 Jun 2024 21:06:51 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Marek Vasut <marex@denx.de>
+Cc: linux-arm-kernel@lists.infradead.org,
+	Conor Dooley <conor+dt@kernel.org>,
+	Fabio Estevam <festevam@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, kernel@dh-electronics.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: imx8mp: Update Fast ethernet PHY MDIO
+ addresses to match DH i.MX8MP DHCOM rev.200
+Message-ID: <1ae34d3f-a44d-47ab-8bf1-d87366d24fc8@lunn.ch>
+References: <20240627005913.326662-1-marex@denx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240528191536.1444649-1-robh@kernel.org> <CACRpkdZznuUSAKZx-BLgt+smaTDt8fVtJ-xRzL_0u7uYMDGJog@mail.gmail.com>
-In-Reply-To: <CACRpkdZznuUSAKZx-BLgt+smaTDt8fVtJ-xRzL_0u7uYMDGJog@mail.gmail.com>
-From: Rob Herring <robh@kernel.org>
-Date: Thu, 27 Jun 2024 13:05:58 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKAXnu=CDsOAOoxF0sBnzMxaCDVUU4Z+2k8kseTMvc+eA@mail.gmail.com>
-Message-ID: <CAL_JsqKAXnu=CDsOAOoxF0sBnzMxaCDVUU4Z+2k8kseTMvc+eA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arm: dts: arm: Drop redundant fixed-factor clocks
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, linux-arm-kernel@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240627005913.326662-1-marex@denx.de>
 
-On Wed, May 29, 2024 at 2:47=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
->
-> On Tue, May 28, 2024 at 9:15=E2=80=AFPM Rob Herring (Arm) <robh@kernel.or=
-g> wrote:
->
-> > There's not much reason to have multiple fixed-factor-clock instances
-> > which are all the same factor and clock input. Drop the nodes, but keep
-> > the labels to minimize the changes and keep some distinction of the
-> > different clocks.
-> >
-> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
->
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+On Thu, Jun 27, 2024 at 02:58:33AM +0200, Marek Vasut wrote:
+> The production DH i.MX8MP DHCOM SoM rev.200 uses updated PHY MDIO addresses
+> for the Fast ethernet PHYs. Update the base SoM DT to cater for this change.
 
-Someone going to pick this up?
+Where did the original values come from? Did they never work? A
+pre-production device? Do we need to be worried about regressions?
 
-Rob
+It would be good if the commit message explained why this is safe.
+
+   Andrew
