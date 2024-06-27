@@ -1,161 +1,183 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831AB13E04F;
-	Thu, 27 Jun 2024 23:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B3113E04F;
+	Thu, 27 Jun 2024 23:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719532332; cv=none; b=HMdfRF2L9rOobcGRDEX7eoraXKnzurt9zVTJEHp/mThI56BhfMA8AXzgSXP18mNi/6JPpnW1E+FXxJoQQCnIlPFALJTHaMd+XVB+zAyngKJKvcNiZSKDuKG/YBa9H7umBHxIYF8QpkP/nYpQCRVQVCcej5Ujgc6UPrnr2dOi4eM=
+	t=1719532401; cv=none; b=oF+dTE0uBlIZEMvOZwqg/XIzDp73dETjMs4wSErMSN8ZVRAFP4eoRWWIGAIUL8N6OOliKpUF2foMy0F05cCF1FkCjET7+w93NRvmJQlA8pnNkdQYQsIQAE3cGaZ67ZNc8PsalpZIW/2lYGN/s6tbyoJ0Rd7OI3QkNcrCX3WhY0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719532332; c=relaxed/simple;
-	bh=u38JLSHzD1+j6hw07Aux9vRUyRiyqV13h4plh5RUfJ0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j8rvYgALwXSCWSZAEuLhK/WvE1H/Wn+UbTBvrLnBkbE7XYk0HIxQbP8J6ANA+NxftCGm9HaWRnCefjh5gqbIF367LM3ooVj3/JKqG4rCiDbrTgj0J4ERRvaKOidk7Lt0OysYokeqDaLRKsZ3vPqlUDKh4u7877cGXGE8LCNbMys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KIwpHbD+; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719532401; c=relaxed/simple;
+	bh=2Jc74u8zqMtpyZa6rfWUbAVGrZ5Inv4IOZxhPgIBgnc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UE+9HHL/ZRkb3yDaHKwp4G9DZ4rxook8vAP0fj0ReUrVWvbtedYtCq9g6JJ0S7kH+M1iYvYpLhjqdX3rN6oRwk0X1/1urGZmuS+JyMklRvKeF6oLelMoFnawJqFBtAXIOzzAGvzDu6HxBJDk5joB7q9v1x4HvM//DnAk+kLSZW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SjVsghK1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KIwpHbD+"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a6fdd947967so4016566b.2;
-        Thu, 27 Jun 2024 16:52:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719532329; x=1720137129; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ks8Ee873v/YWDfaAZSbPbf4GZ92SmbzoFMAWI2lsj4Q=;
-        b=KIwpHbD+RU8d0/pa8ZSiOYA3ByFU+dNaO6mwNDrfTH6/BYswKUT09oEJImOXvli4wY
-         YtWgOSBbsaVtkEosDuts9Qd4OU9jZ0KfSS7q8ndDWGTMfal9gOZiSdbrJY0sfv97FCDd
-         YMaVJ+1v7e2Y7VKcXSGAu6Y+XBV3d/TVZilH6nJUh5/6mq2xAiqPFZqqVxB1Q+4zXYqf
-         rLkyWNMKulS4nEsHXUyiid8wSWs3R7B6moSMVYuPZSK8DL8mFU0wGJFluUSd1poi3r6v
-         J555pnOvxNRc3dp9v/SVnBp+a9F7vwtm8glvhrrNa7n5BMc4LDnx1FBPAgHxIx1+ACFd
-         c1UA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719532329; x=1720137129;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ks8Ee873v/YWDfaAZSbPbf4GZ92SmbzoFMAWI2lsj4Q=;
-        b=IX2OXyMWIKdMq2XvoZpJAsjUyl8WfVrwPQc5SYm403ITuI0XDIs3SoejC5eu8UWVBQ
-         cG8SZD5Dvr/1iZ9RU7ivgsC5vZZzfN3wWqx7ol6+E0AXfU61Q7sNxUl+qw7uvZS5oRe3
-         L2YYjjsHDi/vjnGPJtcBALkFPer6jJ28wmHN4iV0XY0uK3PGtnas6Rr25P4ZVDcHV2X3
-         DyzpXLCG7TRNU2FJna8rCGRZP1JNSSUWTK+VitVBEoEzmDOXgNy7U+f/2VZxCNnZlD9C
-         bVxpROraDe4xiz0OuM4tfrN7PN2YFufBeHblQdjbsAMzQrx0q3InswCUqnDFoN4hafhm
-         YsYA==
-X-Forwarded-Encrypted: i=1; AJvYcCWWf4n+aLqH4asPPStD9U3Yh9K6/2ey2/gKvcy4brgjhb5wCKWxHTfE3+DWamSxwXxvUmOSJchM6ZrwD2YFt6UzfxvunRCxWlayEwxUIsWI1nggRTDcHjlRiGkfBptPqbzZr3Zs
-X-Gm-Message-State: AOJu0Yy78g+XVMhTFt/FbJIkEniF94bYfDfievPo/p2ilVlx6AYPBXt9
-	Up2CoFnEVgftHv8WeGmg2Oufe03gNdzdGsEiCCXQii6jc+1l7jlfMTZolD6l2sAhDtW49DIlP2t
-	VaU8Bm/3P1PRDAuJIrofBvswxgQM=
-X-Google-Smtp-Source: AGHT+IEIbNWJLrlBds5DDA5KvyeLOgGoa5YaIEliXBuL3Tt1oSxXNhF1Ocn8nV8jTme0NtiwPywLvN7eTEdQ4CUuh2w=
-X-Received: by 2002:a17:907:cbc7:b0:a72:44d8:3051 with SMTP id
- a640c23a62f3a-a727f6678a5mr625278966b.16.1719532328655; Thu, 27 Jun 2024
- 16:52:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SjVsghK1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F06BCC2BBFC;
+	Thu, 27 Jun 2024 23:53:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719532400;
+	bh=2Jc74u8zqMtpyZa6rfWUbAVGrZ5Inv4IOZxhPgIBgnc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SjVsghK1G8sKmUjRTt8AewGite3J7sFm9+zlIBLfOT0bCRojIzfuclmz21voco4Xw
+	 0DdS43K5tjYwfL2FIYD6b96x+6id8OEgYDqVb1joUzYRVi9b3uw7vW/rLMvhkhD/ZY
+	 JYEMGYzRKFBH/8emZuaWc9P0UaxEN0vh4pHXPIjrzJ9ivfkKtbevcVonKiRSDhXuFt
+	 ndX8hFLtHB8O/Z3fo5cpFqb1+N9j+7ouMcS020up8qBBW51eRx/AlUOtmbpP+YJTEM
+	 gJiphFZfZYxNKVlNMsQj7BGs7OT2FAgYHKqMlsNzCTa5H1/AIyxAt4NUdfcGNs7zDc
+	 JPTN1JUsApXiQ==
+Date: Thu, 27 Jun 2024 16:53:18 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: duchangbin <changbin.du@huawei.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"llvm@lists.linux.dev" <llvm@lists.linux.dev>
+Subject: Re: [PATCH v4 1/5] perf: support specify vdso path in cmdline
+Message-ID: <Zn37bj4LER_A1bX1@google.com>
+References: <20240625033740.223009-1-changbin.du@huawei.com>
+ <20240625033740.223009-2-changbin.du@huawei.com>
+ <5a9e8dae-e9d9-4a97-98f5-d76be9068342@intel.com>
+ <7eef4826a2f3494ea1dc92ed98d543fb@huawei.com>
+ <05f95eb8-9b4c-4327-a97f-a15654278c41@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240627231601.1713119-1-yang@os.amperecomputing.com> <20240627164240.47ae4e1d0e7b1ddb11aedaf3@linux-foundation.org>
-In-Reply-To: <20240627164240.47ae4e1d0e7b1ddb11aedaf3@linux-foundation.org>
-From: Yang Shi <shy828301@gmail.com>
-Date: Thu, 27 Jun 2024 16:51:56 -0700
-Message-ID: <CAHbLzkqy-jyMHp6w96H5mVw4mWf=wQ6f4FNd+3o4O8JBzMSnfA@mail.gmail.com>
-Subject: Re: [v2 linus-tree PATCH] mm: gup: do not call try_grab_folio() in
- slow path
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Yang Shi <yang@os.amperecomputing.com>, peterx@redhat.com, yangge1116@126.com, 
-	david@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org, Vivek Kasireddy <vivek.kasireddy@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <05f95eb8-9b4c-4327-a97f-a15654278c41@intel.com>
 
-On Thu, Jun 27, 2024 at 4:42=E2=80=AFPM Andrew Morton <akpm@linux-foundatio=
-n.org> wrote:
->
-> On Thu, 27 Jun 2024 16:16:01 -0700 Yang Shi <yang@os.amperecomputing.com>=
- wrote:
->
-> > The try_grab_folio() is supposed to be used in fast path and it elevate=
-s
-> > folio refcount by using add ref unless zero.  We are guaranteed to have
-> > at least one stable reference in slow path, so the simple atomic add
-> > could be used.  The performance difference should be trivial, but the
-> > misuse may be confusing and misleading.
-> >
-> > In another thread [1] a kernel warning was reported when pinning folio
-> > in CMA memory when launching SEV virtual machine.  The splat looks like=
-:
-> >
-> > [  464.325306] WARNING: CPU: 13 PID: 6734 at mm/gup.c:1313 __get_user_p=
-ages+0x423/0x520
-> > [  464.325464] CPU: 13 PID: 6734 Comm: qemu-kvm Kdump: loaded Not taint=
-ed 6.6.33+ #6
-> > [  464.325477] RIP: 0010:__get_user_pages+0x423/0x520
-> > [  464.325515] Call Trace:
-> > [  464.325520]  <TASK>
-> > [  464.325523]  ? __get_user_pages+0x423/0x520
-> > [  464.325528]  ? __warn+0x81/0x130
-> > [  464.325536]  ? __get_user_pages+0x423/0x520
-> > [  464.325541]  ? report_bug+0x171/0x1a0
-> > [  464.325549]  ? handle_bug+0x3c/0x70
-> > [  464.325554]  ? exc_invalid_op+0x17/0x70
-> > [  464.325558]  ? asm_exc_invalid_op+0x1a/0x20
-> > [  464.325567]  ? __get_user_pages+0x423/0x520
-> > [  464.325575]  __gup_longterm_locked+0x212/0x7a0
-> > [  464.325583]  internal_get_user_pages_fast+0xfb/0x190
-> > [  464.325590]  pin_user_pages_fast+0x47/0x60
-> > [  464.325598]  sev_pin_memory+0xca/0x170 [kvm_amd]
-> > [  464.325616]  sev_mem_enc_register_region+0x81/0x130 [kvm_amd]
-> >
-> > Per the analysis done by yangge, when starting the SEV virtual machine,
-> > it will call pin_user_pages_fast(..., FOLL_LONGTERM, ...) to pin the
-> > memory.  But the page is in CMA area, so fast GUP will fail then
-> > fallback to the slow path due to the longterm pinnalbe check in
-> > try_grab_folio().
-> > The slow path will try to pin the pages then migrate them out of CMA
-> > area.  But the slow path also uses try_grab_folio() to pin the page,
-> > it will also fail due to the same check then the above warning
-> > is triggered.
-> >
->
-> The remainder of mm-unstable actually applies OK on top of this.
->
-> I applied the below as a fixup to Vivek's "mm/gup: introduce
-> memfd_pin_folios() for pinning memfd folios".  After this, your v1
-> patch reverts cleanly.
+Hello guys,
 
-Thanks for taking care of this. Yeah, it is not bad. I actually
-removed the memfd hunk then the patch can be applied to Linus's tree
-cleanly.
+On Wed, Jun 26, 2024 at 01:32:42PM +0300, Adrian Hunter wrote:
+> On 26/06/24 05:26, duchangbin wrote:
+> > On Tue, Jun 25, 2024 at 04:20:49PM +0300, Adrian Hunter wrote:
+> >> On 25/06/24 06:37, Changbin Du wrote:
+> >>> The vdso dumped from process memory (in buildid-cache) lacks debugging
+> >>> info. To annotate vdso symbols with source lines we need specify a
+> >>> debugging version.
+> >>>
+> >>> For x86, we can find them from your local build as
+> >>> arch/x86/entry/vdso/vdso{32,64}.so.dbg. Or they may reside in
+> >>> /lib/modules/<version>/vdso/vdso{32,64}.so on Ubuntu. But notice that
+> >>> the buildid has to match.
+> >>>
+> >>> $ sudo perf record -a
+> >>> $ sudo perf report --objdump=llvm-objdump \
+> >>>   --vdso arch/x86/entry/vdso/vdso64.so.dbg,arch/x86/entry/vdso/vdso32.so.dbg
+> >>>
+> >>> Samples: 17K of event 'cycles:P', 4000 Hz, Event count (approx.): 1760
+> >>> __vdso_clock_gettime  /work/linux-host/arch/x86/entry/vdso/vdso64.so.d
+> >>> Percent│       movq    -48(%rbp),%rsi
+> >>>        │       testq   %rax,%rax
+> >>>        │     ;               return vread_hvclock();
+> >>>        │       movq    %rax,%rdx
+> >>>        │     ;               if (unlikely(!vdso_cycles_ok(cycles)))
+> >>>        │     ↑ js      eb
+> >>>        │     ↑ jmp     74
+> >>>        │     ;               ts->tv_sec = vdso_ts->sec;
+> >>>   0.02 │147:   leaq    2(%rbx),%rax
+> >>>        │       shlq    $4, %rax
+> >>>        │       addq    %r10,%rax
+> >>>        │     ;               while ((seq = READ_ONCE(vd->seq)) & 1) {
+> >>>   9.38 │152:   movl    (%r10),%ecx
+> >>>
+> >>> When doing cross platform analysis, we also need specify the vdso path if
+> >>> we are interested in its symbols.
+> >>
+> >> Would it be possible to add vdso and vdso debug to the build-id
+> >> cache and ensure perf can find it there?
+> >>
+> >> Typically, getting dsos from another machine is handled via
+> >> build-id cache e.g. what perf-archive does
+> >>
+> > Hmm. I agree this is better alternative approach for cross-machine analysis.
+> > When collecting vdsos to buildid cache, I think we can use the local searched
+> > objects (with debug symbols) instead if its build-id matches vdsos from process
+> > dumping (the real code ran).
+> > 
+> > Currently I just follow what perf does for vmlinux so to reuse most of existing
+> > code. Maybe vmlinux is too big to add to buildid-cahce?
+> > 
+> > Can we keep our current strategy for now? I'll think about above options when
+> > I have more time.
+> > 
+> 
+> I tried adding vdso via perf buildid-cache.  It doesn't work only
+> because the lookup expects the basename to be "vdso" but it is
+> "elf".
+> 
+> Adding a link from "vdso" to "elf" made it work e.g.
+> 
+> $ cat gettimeofday-test.c
+> #include <stdio.h>
+> #include <sys/time.h>
+> 
+> int main()
+> {
+>         struct timeval tv;
+>         int ret;
+> 
+>         ret = gettimeofday(&tv, NULL);
+>         if (ret == -1) {
+>                 fprintf(stderr, "gettimeofday failed\n");
+>                 return 1;
+>         }
+> 
+>         printf("%lu.%lu\n", (unsigned long)tv.tv_sec, (unsigned long)tv.tv_usec);
+> 
+>         return 0;
+> $ perf record -e intel_pt//u ./gettimeofday-test
+> 1719397042.892837
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.026 MB perf.data ]
+> $ perf script --itrace=e
+> $ perf buildid-cache --remove /lib/modules/6.5.0-41-generic/vdso/vdso64.so
+> $ perf script --itrace=e
+> Warning:
+> 2 instruction trace errors
+>  instruction trace error type 1 time 525345.386424204 cpu 4 pid 198976 tid 198976 ip 0x7ffddb0e8e00 code 5: Failed to get instruction
+>  instruction trace error type 1 time 525345.386424829 cpu 4 pid 198976 tid 198976 ip 0x7ffddb0e884d code 5: Failed to get instruction
+> $ perf buildid-cache --add /lib/modules/6.5.0-41-generic/vdso/vdso64.so
+> $ perf script --itrace=e
+> Warning:
+> 2 instruction trace errors
+>  instruction trace error type 1 time 525345.386424204 cpu 4 pid 198976 tid 198976 ip 0x7ffddb0e8e00 code 5: Failed to get instruction
+>  instruction trace error type 1 time 525345.386424829 cpu 4 pid 198976 tid 198976 ip 0x7ffddb0e884d code 5: Failed to get instruction
+> $ cd ~/.debug/.build-id/c3/530aed66e71bfd10af66039f58cc7c4d2eaba8
+> ~/.debug/.build-id/c3/530aed66e71bfd10af66039f58cc7c4d2eaba8$ ln -s elf vdso
+> ~/.debug/.build-id/c3/530aed66e71bfd10af66039f58cc7c4d2eaba8$ ls -l
+> total 36
+> -rw-r--r-- 1 ahunter ahunter 33272 Jun 26 13:17 elf
+> -rw-r----- 1 ahunter ahunter     0 Jun 26 13:17 probes
+> lrwxrwxrwx 1 ahunter ahunter     3 Jun 26 13:18 vdso -> elf
+> /.debug/.build-id/c3/530aed66e71bfd10af66039f58cc7c4d2eaba8$ cd
+> $ perf script --itrace=e
+> $ 
+> 
+> So maybe a change could be made to build_id_cache__add() to add
+> the extra link if the file name matches vdso
+ 
+Thanks for doing this!  I noticed buildid_cache__basename() will handle
+the name properly once it realizes the file is a vdso.  Maybe we can
+check the filepath with some patterns, or simply add an command line
+option to say it's a vdso.
 
->
-> --- a/mm/gup.c~mm-gup-introduce-memfd_pin_folios-for-pinning-memfd-folios=
--fix
-> +++ a/mm/gup.c
-> @@ -3856,14 +3856,15 @@ long memfd_pin_folios(struct file *memfd
->                                     next_idx !=3D folio_index(fbatch.foli=
-os[i]))
->                                         continue;
->
-> -                               folio =3D try_grab_folio(&fbatch.folios[i=
-]->page,
-> -                                                      1, FOLL_PIN);
-> -                               if (!folio) {
-> +                               if (try_grab_folio(fbatch.folios[i],
-> +                                                      1, FOLL_PIN)) {
->                                         folio_batch_release(&fbatch);
->                                         ret =3D -EINVAL;
->                                         goto err;
->                                 }
->
-> +                               folio =3D fbatch.folios[i];
-> +
->                                 if (nr_folios =3D=3D 0)
->                                         *offset =3D offset_in_folio(folio=
-, start);
->
-> _
->
->
->
+Thanks,
+Namhyung
+
