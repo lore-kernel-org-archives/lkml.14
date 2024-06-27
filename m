@@ -1,39 +1,72 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.14])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60CA46F30B;
-	Thu, 27 Jun 2024 07:56:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.14
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04316F2F7
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 07:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719474999; cv=none; b=knj82im27eq1b6ma1z4CQtQi1aM6wUImdhGl5TyPn/pgpqBx6MZwKpO707/PtJ7bOf9jrMt1WDChypTtfhO4D1Kz1FGQuNoqi0iyS9y++YgOjSoWIBJyMJTNGwx7OtF0bpbx6FoPxPKt5kUV7FBJsMcB2qxcxOyC7P9kJomzBKQ=
+	t=1719475011; cv=none; b=P5sbXdf0arsk3DWvWCFFAu+ESiqqYuOgf6DXyct5+dulKTADRT0O0It+TwBhXb7zFMqwV3tc3OsogpyzMJO6lXH32IBkh2whlkxnv1sxFTSjx/WFCsmGUru4tfqCz4e5JvBbOsLEngmkmc3oF53Y9TzC+pBv1GMBeDIHcLCiii4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719474999; c=relaxed/simple;
-	bh=pmh2WPEGH93NRjf9Mx0zSTtzvhQAcUIo7vgaooEg9rQ=;
+	s=arc-20240116; t=1719475011; c=relaxed/simple;
+	bh=YvK0YOGglF6B3qVLLvjIk3198NBvybzRxx+tGQ3ZOBQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UVHwRE83abGrV293+6IW5aRIPULq0QaRi6En+f6EbFGr/lBgeEEN2CE9AxU6Np7UqJBnlSZq4DqMTaGd23F5uF9tcjINLEzki2+2rTjFbgVctOuAbYFtNyw8e4pU7sDPEhVwABNCn7LvhvGlO/L7Q/qFTnWDhp+hRuxbZAeCd0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=WcJEYMWY; arc=none smtp.client-ip=1.95.21.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dw7dE34T+7tiEiQ00IZtUjzW39lxJtvVlLzt2UWTnioDmKaj4X/I71ryE12CDM3zSZfDLr2ONnDds7gkD999njWmoMNNdgi/X895td01w19/fEPOfmtpvCZPTIqzuxxn7iIoDwfv1yUSBMV2lhlanoB9fYQ/Fuu2ncQB6nohlEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=b/W57GPb; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="WcJEYMWY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=sp8KZdlX3RPDhtLx6ynzr5IonFdRIlNIab79h3NFXaM=;
-	b=WcJEYMWYQ9vVXCutrY7Klxkm8Ev4MpSZGszXHCl8J/JX5tTXnjtOC0XGFBno91
-	vMTYQR3wD/Vy2Pvlop81NotNidMSoxJDf2gIF4Axfa7HUrRCduMFlw0sJQxPokdF
-	jjGDEn6KXAE9XKmN4r8Fvx2jwsVIme6UHqgCaxm70/nak=
-Received: from dragon (unknown [114.218.218.47])
-	by gzsmtp3 (Coremail) with SMTP id M88vCgD33_AVG31mPrkZAA--.25823S3;
-	Thu, 27 Jun 2024 15:56:06 +0800 (CST)
-Date: Thu, 27 Jun 2024 15:56:04 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Joy Zou <joy.zou@nxp.com>
-Cc: frank.li@nxp.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-	kernel@pengutronix.de, festevam@gmail.com, imx@lists.linux.dev,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] remove and reorder labels
-Message-ID: <Zn0bFMhDlK5agGjT@dragon>
-References: <20240620022637.2494329-1-joy.zou@nxp.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="b/W57GPb"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-362bc731810so6653210f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 00:56:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1719475007; x=1720079807; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BeKAKFTiJoXvGxvP+5QpWS6/6iqSauWGWG3EsM7sPNU=;
+        b=b/W57GPbGTbKuojJ+2xWHjRH7l0reXezR30bDZDITRZEbYwkqreYPpZ/En9AmuwMy9
+         ULoup91gRO9PM7wdV2meiufYLdj46276URQJCNypequsZ7FqwuGP4cVYljHN8+gCn3Us
+         YtJ4V6MxHEitnY15WV+oMkg5Ontc9wER9Ap3flew7LHPKRGcdxgZGA5oS+iproUylwNN
+         w4BPvJGboYztns2kWDyGFIjZdesZo7i/BYMNbUi8N+8bzFC9ok27p7ag6mIR3BJYBt+Z
+         MnWXCbtDXLGPJWzyiIXhxhMxnBYr0yDt/MxCg7B4HIsTHbhT3bNnTlO+r+Clm6D5Crtj
+         0Hvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719475007; x=1720079807;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BeKAKFTiJoXvGxvP+5QpWS6/6iqSauWGWG3EsM7sPNU=;
+        b=pWCfBaoMmTGMUsywtSWA89LXmbddUCIRVH74Wcessn0lz41EnoGdbq7Si1E5lzGp4R
+         +1lRHFPz3Us732uUncFXUoKmEHKvs814BDTiiKrRsW/dr7RdR1QohuUrn22dISGNtZgJ
+         WWYCMmf2pW8c2WCY7PLoXR7eIV3ubf4Q28nCdQf6fbvd3wKnESiZgtkEtRmPD6si9tTC
+         yFb2un8E2Rn9/PTyK3DWxXpFmIeswiKtyoJY8IXVcZSOCrSzpcKh8WzNfAPt0XbdYgL7
+         FIXieK1jo/ZXwceRZzVzaC431ztHqlVCP3gRXAX8M13x68PNXVH4y7ggx+FH2DRB8n9b
+         Xysw==
+X-Forwarded-Encrypted: i=1; AJvYcCVWhhXO6SYv4mG5AtQ/aPcGXem9I8URgowdZFoyw3vGSFDpdst3gvAUnYPwMi+2ESwaN+iaD8dXw6QyMs6w3FMuxqb+/RfaaJnNKFmO
+X-Gm-Message-State: AOJu0YxRl/DYJGq8aslkXkLKKmzdNgljvKC+ghZ7q4hIY8oh0n4cbsPs
+	8x8jEiuFkBxos2+fQcDV+GNPYxJketechyGIC9P8TlIswRjrOa7cng26b3BiQ/0=
+X-Google-Smtp-Source: AGHT+IEuZ1HDaPcVZDfQybhQ/xjKpMr79NpY7GSaA/6MF2nq1gD76fXLybEUy+vkW/wVK3o9l0m8Iw==
+X-Received: by 2002:a05:6000:1863:b0:366:ec30:adcd with SMTP id ffacd0b85a97d-366ec30ae93mr12260267f8f.7.1719475007239;
+        Thu, 27 Jun 2024 00:56:47 -0700 (PDT)
+Received: from localhost (nat2.prg.suse.com. [195.250.132.146])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a729d72032csm34726766b.83.2024.06.27.00.56.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jun 2024 00:56:47 -0700 (PDT)
+Date: Thu, 27 Jun 2024 09:56:46 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Christian Brauner <brauner@kernel.org>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Jinliang Zheng <alexjlzheng@tencent.com>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Tycho Andersen <tandersen@netflix.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] memcg: mm_update_next_owner: kill the "retry" logic
+Message-ID: <Zn0bPrHrBGwdrGwU@tiehlicka>
+References: <20240626152835.GA17910@redhat.com>
+ <20240626152924.GA17933@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,24 +75,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240620022637.2494329-1-joy.zou@nxp.com>
-X-CM-TRANSID:M88vCgD33_AVG31mPrkZAA--.25823S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxU-o7KDUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiCRcLZWZv-cx1LgAAsT
+In-Reply-To: <20240626152924.GA17933@redhat.com>
 
-On Thu, Jun 20, 2024 at 10:26:35AM +0800, Joy Zou wrote:
-> For the details, please check the patch commit log.
-> 
-> ---
-> Changes for v2:
-> 1. separate the remove label patch from reorder patch.
-> 2. change the child device order in lpi2c3.
-> 3. modify the commit message.
-> 
-> Joy Zou (2):
->   arm64: dts: imx93-11x11-evk: fix duplicated lpi2c3 labels
->   arm64: dts: imx93-11x11-evk: reorder lpi2c2, lpi2c3, mu1 and mu2 label
+On Wed 26-06-24 17:29:24, Oleg Nesterov wrote:
+> @@ -446,7 +463,6 @@ void mm_update_next_owner(struct mm_struct *mm)
+>  {
+>  	struct task_struct *c, *g, *p = current;
+>  
+> -retry:
+>  	/*
+>  	 * If the exiting or execing task is not the owner, it's
+>  	 * someone else's problem.
+> @@ -468,16 +484,16 @@ void mm_update_next_owner(struct mm_struct *mm)
+>  	 * Search in the children
+>  	 */
+>  	list_for_each_entry(c, &p->children, sibling) {
+> -		if (c->mm == mm)
+> -			goto assign_new_owner;
+> +		if (c->mm == mm && try_to_set_owner(c, mm))
+> +			goto ret;
 
-Applied both, thanks!
+You need to unlock tasklist_lock, right? Same for other goto ret.
 
+Other than that the cleanup makes sense and it makes the code much more
+easier to follow. It should still die but it can do so in a better
+shape.
+-- 
+Michal Hocko
+SUSE Labs
