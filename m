@@ -1,64 +1,49 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4FB71CFB9
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 07:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7789C1CFB9;
+	Thu, 27 Jun 2024 07:05:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719471920; cv=none; b=ied411GKseKBfTjS6rYrJpxh1+zo+9Hs4LK3MLpnGzJZSQWoGjfuHEaxkXjmHwvKK0w2QIj4ckB3deGJeiK8vkyl+bOiNeZKEATJo3+NZ/vSb3cQ7LO9o3wayZmSyb/vvDWrqjTakrsOToI2Jjgt5ViIegk+yW+akjHAK0cu0t8=
+	t=1719471958; cv=none; b=UFjAuvRbKjPd/K0TGOuLOz1qDxDo6O1svnFpadAdPNL7dw/us5hPto8+8sZEQI5muLCyA5Fg5MKSPTPkJAi+EXKekuNRUBCVixp/KXgaCKcl+zTOj3wl/465oLgmewc91jCVPjyAPtq2cyrXDkBZxuAcUbOUgO0x4LHaDtcnRZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719471920; c=relaxed/simple;
-	bh=SfGPplS57WScGXBN40BeXsqibzVwnphT1MKGE65OULo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V3ClgBy56dfLvC0TN4kk4XfhfQ4tp8YRvkUZv6vk14d9APW2IQwZyjGPoSUQ+a0nlKy3xvmkco+agQJXwb6Hdgxm0nTtyX0C2U4Ucycy5bd58bliCaJxxYy8GqyhuGfcIXU2xsa0hhaZNWKw1Blu9++45GQgjmAV4HlGUyeLJ/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VgDl+wO0; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719471958; c=relaxed/simple;
+	bh=unxppICjsOj38X3hg+dykNAKfgScPhTx9LRl/jrcpGE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oYAh62n+xqIX+x3NkKjkHcFu5/iGXJmJgXNPMJrmL9X3gM0Kk4x2t5VH2hrkIK7wQRMzARlhRdnZleInmRcdG3V4sTo2xkUnAz5mosVI90z2WdrHOmjPtQmDo72bakaUuaai1aXra/MvkWiiD86moO5ppq35ladtUl9JLX0/fik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uDnl84jt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VgDl+wO0"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-366df217347so4384459f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 00:05:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719471917; x=1720076717; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pj2osXrnixhyuo9N3L5LtfI/DN1t+YPtQJ0C1hVfcfo=;
-        b=VgDl+wO0PRborvoWvKL1zOIxVB9Z4x22KxDUgnf78Q36qLQoDn0eb1xMOm6FCJHq6/
-         vhpHZAsDfWAk5jmoyo0Fmy7zzRT2tgWoucE5sLqUOOpD4om9Az3LLwf+3Cue56UjzqyZ
-         eEqrrf3Ba37dhtkTTgb5zwRbSKbrkrJvsdriUe3DZeha06YAqJYTF3dcuyFHO1K8SA79
-         sAk2u+gsCcLRmSSRIwelzESbB2nEES1tz0RgFnm6tLhas0dFbAH374nW+mOXnPrB4bzp
-         DPUl4Q37dFW6rO/7SmTwd0O3RRYTWX2CFXCeXFAlko/nKxi31OM2oWSoYT8RrC/KpMd8
-         FH7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719471917; x=1720076717;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pj2osXrnixhyuo9N3L5LtfI/DN1t+YPtQJ0C1hVfcfo=;
-        b=Bs9kCLAPsg8WoEmISX38tlH0A13HBU4/YlhfADuxJFa6j3xpMYQ6iXFHPlGU33yxiE
-         Fw+Z4+YqB2XAjjNY2YXanIYZS+wMUcth1c69QXtfSwnfIJYdciv8aS9+LpzIl/EVCAxh
-         qbMfNoKE0bAMSu6gy779cvwuWhDy73c/KJbv24aBoRonZ909wnTXqp8il150FUHwKI1d
-         DZiI3HaQILVqGi/Rm+bk0sjQW3JfqsdQUJJs8wf6w6mV6vntpItl39Jf0kJGFzJtm8YX
-         UuEXhsge2Cx5RL5JKbRUseMO7Qr06wfd0bhIZLQc76VI3tbUx0ZlZ7of+HlTPdMk1c6H
-         5BMw==
-X-Forwarded-Encrypted: i=1; AJvYcCWa4949J8chUqXelbnq6JP/61YCrVyY0HmApBhRttELJZx1pFhFXjdeljW7FYkkOR+wbM4gLthrriimJNfnrj0CU9oM5Xr0DPt3YLii
-X-Gm-Message-State: AOJu0YwBG8FOW34AvBUobbdpWJVOIom7Wploy3xfaWry+6T4CPZuhaIv
-	5t0u8BQ4YLrmzE58ZoD9oOWkGlEQ3dcsNKuKxefEZAopr1nYNUtCOeq2cE/gztM=
-X-Google-Smtp-Source: AGHT+IFkE2qRmgXJmAGSrvTQ3RdwQ8OYe+TP2dMaPtIWsmzevgxn5sR40qAYbG1trnJE5WKwLjTryQ==
-X-Received: by 2002:a5d:58d2:0:b0:367:437f:1774 with SMTP id ffacd0b85a97d-367437f1ae7mr602082f8f.14.1719471916938;
-        Thu, 27 Jun 2024 00:05:16 -0700 (PDT)
-Received: from krzk-bin.. ([178.197.219.137])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3674357fe1bsm901028f8f.33.2024.06.27.00.05.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 00:05:16 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Nuno Sa <nuno.sa@analog.com>,
-	Peter Rosin <peda@axentia.se>,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v2] mux: MAINTAINERS: change ADGS1408 maintainer to Nuno Sa
-Date: Thu, 27 Jun 2024 09:05:12 +0200
-Message-ID: <20240627070512.6577-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uDnl84jt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45295C2BBFC;
+	Thu, 27 Jun 2024 07:05:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719471958;
+	bh=unxppICjsOj38X3hg+dykNAKfgScPhTx9LRl/jrcpGE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=uDnl84jttNaIBNsvNoQoZ4ae/ks34b6ZzHnKSnVKdu0yjhrqaLAHtizZ/Oxf5KiO0
+	 jtcplnq9VV8hdaADJCO+p3nkgai0P1GaGr8QuGRMs1vOPD6qb0yihGjg9mLKphltc/
+	 /1LU2RY02iRb9cnf3s0ZmNZ+TBehZUoTRoFbl8xK8vDgyV1BoqbVJnIbHKEUqUzHF9
+	 zDP7cSYgxOuOLt8kaw2FWNSTKstiHbdKJzo3E+Gy7aSEZwpW5AkQjsGDRGb5rNKLjS
+	 QE0EJL4APm9MHspaHplUHphZEEGFoIunYBJFXixYxxyVeUUVF16vMY952hrEFZdXVF
+	 JcRrDWsDecLOg==
+Received: from mchehab by mail.kernel.org with local (Exim 4.97.1)
+	(envelope-from <mchehab@kernel.org>)
+	id 1sMjCe-0000000B02K-0O3E;
+	Thu, 27 Jun 2024 09:05:56 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Len Brown <lenb@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	linux-acpi@vger.kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Shiju Jose <shiju.jose@huawei.com>
+Subject: [PATCH 0/2] Add other fields to ARM trace event
+Date: Thu, 27 Jun 2024 09:01:07 +0200
+Message-ID: <cover.1719471257.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,32 +51,67 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 
-Emails to Mircea Caprioru bounce:
+This series was previously sent at:
+https://lore.kernel.org/all/20240321-b4-arm-ras-error-vendor-info-v5-rc3-v5-0-850f9bfb97a8@os.amperecomputing.com/
 
-  Remote Server returned '550 5.1.10 RESOLVER.ADR.RecipientNotFound; Recipient not found by SMTP address lookup'
+Those patches that fix UEFI 2.6+ implementation of the ARM trace event,
+as the original implementation was incomplete.
 
-and Nuno Sa offered to keep maintenance of this driver.
+In summary:
+changeset e9279e83ad1f ("trace, ras: add ARM processor error trace event")
+was incomplete: it added a trace event that was reporting only some fields
+of the CPER record generated for ARM processor from UEFI 2.6 spec.
 
-Link: https://lore.kernel.org/all/8a3ac03fcdc5c2c6401d0a990af5d6e9f6c6670d.camel@gmail.com/
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Those are not enough there to actually parse such events on userspace,
+for it to properly report/record the error nor to take appropriate measures
+to prevent future problems, like poisoning problematic CPU cores and taking
+them offline.
+
+The patch was validated with the help of an ARM EINJ code for QEMU:
+
+	https://github.com/mchehab/rasdaemon/wiki/error-injection
+
+I tested the ghes and cper reports both with and without this change,
+using different versions of rasdaemon, with and without support for
+the extended trace event. Those are a summary of the test results:
+
+- adding more fields to the trace events didn't break userspace API:
+  both versions of rasdaemon handled it;
+
+- the rasdaemon patches to handle the new trace report was missing
+  a backward-compatibility logic. I fixed already. With that, rasdaemon
+  can handle both old and new trace events.
+
+Btw, rasdaemon has gained support for the extended trace since its
+version 0.5.8 (released in 2021). I didn't saw any issues there
+complain about troubles on it, so either distros used on ARM servers
+are using an old version of rasdaemon, or they're carrying on the trace
+event changes as well.
+
 ---
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c675fc296b19..b72c4676846d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1291,7 +1291,7 @@ F:	Documentation/devicetree/bindings/iio/frequency/adi,adf4377.yaml
- F:	drivers/iio/frequency/adf4377.c
- 
- ANALOG DEVICES INC ADGS1408 DRIVER
--M:	Mircea Caprioru <mircea.caprioru@analog.com>
-+M:	Nuno Sa <nuno.sa@analog.com>
- S:	Supported
- F:	Documentation/devicetree/bindings/mux/adi,adgs1408.txt
- F:	drivers/mux/adgs1408.c
+- Changes over the original changeset:
+  - First patch was simplified to avoid too many #ifdefs;
+  - reordered local vars using reverse xmas tree;
+  - removed uneeded typecasts;
+  - some coding style fixes.
+
+Daniel Ferguson (1):
+  RAS: ACPI: APEI: add conditional compilation to ARM error report
+    functions
+
+Shengwei Luo (1):
+  RAS: Report all ARM processor CPER information to userspace
+
+ drivers/acpi/apei/ghes.c | 14 +++++-------
+ drivers/ras/ras.c        | 47 +++++++++++++++++++++++++++++++++++++--
+ include/linux/ras.h      | 16 ++++++++++----
+ include/ras/ras_event.h  | 48 +++++++++++++++++++++++++++++++++++-----
+ 4 files changed, 106 insertions(+), 19 deletions(-)
+
 -- 
-2.43.0
+2.45.2
+
 
