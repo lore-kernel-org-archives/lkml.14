@@ -1,68 +1,51 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090C6198A2C
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 15:30:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F06198E71;
+	Thu, 27 Jun 2024 15:31:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719502260; cv=none; b=XfNudIEQ3VcqXUz8P7oaKLfFs5cUYo1OESZxV24eKbZBo2SlL4jtWOJU1n/P3ib56mOs+al7qN9N2Ue8Y3R8dswlM1HrnIHHgANZ1PkH1SurV6RpRiW24FYYKnT/fYxOedH6dACz2iQxHFplptBUojch0a/fcS6WgJhZO0HWQEQ=
+	t=1719502287; cv=none; b=YyILKoaAEPtCp4a3V6ZFXtZi+LD7pbzIGl4gAuHuLRTtUF7RXBrvFxTLLItevk394gQKpt1gePqkRn8s6z6/v7ZjIhRw568jY/P44SEfrDthYsYBsvDN34IbXvIRVfbVeEGIxi6PbiHwZ4qNLl2VKJvy99lY+vOZbUG0ch+EpWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719502260; c=relaxed/simple;
-	bh=ST574pguHikK10RThvE3ToWvprmcnKje0BV9CfOw4cw=;
+	s=arc-20240116; t=1719502287; c=relaxed/simple;
+	bh=wxLzTDpEy7fEUqTDhRZsA8Ui7D8BuLYyJagL/PF5qUo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oUEoZlPvPfO+SeMB320vafGVV8pEcKDxamqpiwM5QAaMkERrJLBf91muIoOyDkDUpQ9AmZiMeIm9dtUjHXQgMiFPKZbmk5fFQhMPlKi7et5xsENOhylHch+PVO/Aze6GxIWS334HgZzoU0wgc1NLJtjNLRfyr/08PVj/pF2fkpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DGcMzJ3i; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=j1YlaZvhylbORHR12W/3FO85Lm9b/PwGPc77J1pcUx2D5mMmhQ6cQvNK34lSD1GgITTt+id0Li1knAi8luTvmpMC0KXxzeRfB2oQ4LX/4RsIXkFC4ZwkFDwLo/fjWX3ardVF/6Z4UALWLh6EiUH8IKpgvIYmco7/P/32h276TZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JU13wlmS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DGcMzJ3i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719502257;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ST574pguHikK10RThvE3ToWvprmcnKje0BV9CfOw4cw=;
-	b=DGcMzJ3iqw7hhvpUKDGM1xhMNjxcv7OoOWSwxhsgdxYCna37un1hZqOP6A4O8QIXjdB1Gx
-	YHOKbYE+2YNXizt0OxXLrr5pdMPDBBlrI8iD9krB4mr+2CQeA6pkMrE03aIIkNCwbutZ9O
-	trHmxd9rYsiSoPhKjp2Hpl0m2/BWwmI=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-665-uEjw7J6ZMOCFvC6FClU9cg-1; Thu,
- 27 Jun 2024 11:30:53 -0400
-X-MC-Unique: uEjw7J6ZMOCFvC6FClU9cg-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C014D195609E;
-	Thu, 27 Jun 2024 15:30:50 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.18])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 4FFBB19560A3;
-	Thu, 27 Jun 2024 15:30:46 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 27 Jun 2024 17:29:17 +0200 (CEST)
-Date: Thu, 27 Jun 2024 17:29:11 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH] uprobe: Do not use UPROBE_SWBP_INSN as static initializer
-Message-ID: <20240627152910.GB21813@redhat.com>
-References: <20240618194306.1577022-1-jolsa@kernel.org>
- <CAEf4BzbN4Li2iesQm28ZYEV2nXsLre8_qknmvkSy510EV7h=SA@mail.gmail.com>
- <20240620193846.GA7165@redhat.com>
- <CAEf4BzaqgbjPfxKmzF-M7nzGroOwKikA0BM7Tnw7dKzKS+x9ZQ@mail.gmail.com>
- <20240621120149.GB12521@redhat.com>
- <ZnV9hvOP5388YJtw@krava>
- <Zn1ssLPeMj-On_uT@krava>
- <20240627232032.a202e546f59a0290c615510f@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JU13wlmS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE721C2BBFC;
+	Thu, 27 Jun 2024 15:31:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719502287;
+	bh=wxLzTDpEy7fEUqTDhRZsA8Ui7D8BuLYyJagL/PF5qUo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JU13wlmSWUBHxHsfZ97TRsc/9fMuDshO44IMPpp5wIVEhfFOk/NTH1Qv/qetpmluT
+	 1kx1VpMufyQFVyxfq1WQuVE9lZW25YRoetH8leXKF5od+/O+UgJv8Tnw0CVI5eQhZf
+	 nqnpTt4O/bMpKPv6lfKtapMytVnhDUEqGxLG/EyVZ6wF/J/5ljxC+Hv96l9BM1lVX8
+	 7wXTLZJKwecarQF0i6EbEXHpIyC3GLT8tyS3AMfsqbs1XUMYwrcdlbRSsD8nUpWJWD
+	 rcPf8bYAV9FZXEBBA/3EZxi6rkyLp29xghivlitweBUQJObhUj1gn+iK82E3j6SIxh
+	 YTrEH/BDjxzFQ==
+Date: Thu, 27 Jun 2024 09:31:25 -0600
+From: Rob Herring <robh@kernel.org>
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Jingoo Han <jingoohan1@gmail.com>, quic_vbadigan@quicinc.com,
+	quic_skananth@quicinc.com, quic_nitegupt@quicinc.com,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 1/7] dt: bindings: add qcom,qps615.yaml
+Message-ID: <20240627153125.GA3469266-robh@kernel.org>
+References: <20240626-qps615-v1-0-2ade7bd91e02@quicinc.com>
+ <20240626-qps615-v1-1-2ade7bd91e02@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,25 +54,109 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240627232032.a202e546f59a0290c615510f@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+In-Reply-To: <20240626-qps615-v1-1-2ade7bd91e02@quicinc.com>
 
-On 06/27, Masami Hiramatsu wrote:
->
-> On Thu, 27 Jun 2024 15:44:16 +0200
-> Jiri Olsa <olsajiri@gmail.com> wrote:
->
-> > Oleg, do you want to send formal patch?
-> >
-> > thanks,
-> > jirka
->
-> Yes, can you send v2 patch?
+On Wed, Jun 26, 2024 at 06:07:49PM +0530, Krishna chaitanya chundru wrote:
+> qps615 is a driver for Qualcomm PCIe switch driver which controls
+> power & configuration of the hardware.
+> Add a bindings document for the driver.
+> 
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> ---
+>  .../devicetree/bindings/pci/qcom,qps615.yaml       | 73 ++++++++++++++++++++++
+>  1 file changed, 73 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,qps615.yaml b/Documentation/devicetree/bindings/pci/qcom,qps615.yaml
+> new file mode 100644
+> index 000000000000..f090683f9e2f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/qcom,qps615.yaml
+> @@ -0,0 +1,73 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/qcom,pcie-qps615.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm QPS615 PCIe switch
+> +
+> +maintainers:
+> +  - Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> +
+> +description: |
+> +  Qualcomm QPS615 PCIe switch has one upstream and three downstream
+> +  ports. One of the downstream ports is used as endpoint device of
+> +  Ethernet MAC. Other two downstream ports are supposed to connect
+> +  to external device.
+> +
+> +  The power controlled by the GPIO's, if we enable the GPIO's the
+> +  power to the switch will be on.
+> +
+> +  The QPS615 PCIe switch is configured through I2C interface before
+> +  PCIe link is established.
+> +
 
-I was waiting for the comments from loongarch maintainers...
+As a PCI device and implementing a PCI bus, you need to reference 
+pci-pci-bridge.yaml. And you'll need to fix your example when you add 
+that.
 
-OK, will do today, but the patch won't be even compile tested.
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - pci1179,0623
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  vdd-supply:
+> +    description: |
+> +      Phandle to the vdd input voltage which are fixed regulators which
+> +      in are mapped to the GPIO's.
+> +
+> +  switch-i2c-cntrl:
+> +    description: |
+> +      phandle to i2c controller which is used to configure the PCIe
+> +      switch.
 
-Oleg.
+There's a somewhat standard property for this purpose: i2c-bus
 
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - vdd-supply
+> +  - switch-i2c-cntrl
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    pcie {
+> +        #address-cells = <3>;
+> +        #size-cells = <2>;
+> +
+> +        pcie@0 {
+> +            device_type = "pci";
+> +            reg = <0x0 0x0 0x0 0x0 0x0>;
+> +            #address-cells = <3>;
+> +            #size-cells = <2>;
+> +            ranges;
+> +
+> +            bus-range = <0x01 0xff>;
+
+Unless there's a h/w limitation, you don't need this.
+
+> +
+> +            qps615@0 {
+> +                compatible = "pci1179,0623";
+> +                reg = <0x10000 0x0 0x0 0x0 0x0>;
+> +
+> +                vdd-supply = <&vdd>;
+> +		switch-i2c-cntrl = <&foo>;
+> +            };
+> +        };
+> +    };
+> 
+> -- 
+> 2.42.0
+> 
