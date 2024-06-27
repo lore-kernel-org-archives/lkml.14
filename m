@@ -1,118 +1,77 @@
-Received: from wfhigh2-smtp.messagingengine.com (wfhigh2-smtp.messagingengine.com [64.147.123.153])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1591513BACC;
-	Thu, 27 Jun 2024 11:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82AA613E8B0
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 11:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719486889; cv=none; b=ei3Z8/XOwAFpWIehtQhbTrOpoG8FKg6uNdhcHHy+bixsCaky/K1nU7OzVepAWS215XixKiTbMwDesfZzc99pv0F7NbIyeE9g944s+YhBIeF7NzYfimyLX3hvasAELhabLepHw0CLsLtM2qza8C85zMDd8Uf6V/H/b+vSrwqcPRI=
+	t=1719486913; cv=none; b=MQU3FPjuK83Bz0zwak5hoffR0RaDC1dIFiCrX4xTZc+DFso8D4ktJUOqm0Z8IXTRGQVVW0qAbK+GJBCngLIElCTeszP3dr+eBBhHbqLPzi13z+s+66QP+lgSVmBw7mHL1X0sdNE9ykwhfmAF/iOpKHw+ZQFi9MNRJ1eSGrsX0ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719486889; c=relaxed/simple;
-	bh=cYYR+xWpqfebO9yx3aTeOVdvVZYNJ+j942X0/SW/VSE=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=iuq5A29bEkZGC5ix9WKbZamsfvbOZe+8HaPuI8S8Dkm5Z1zfHtWKcNJZK1DXX1w/PDGRnv9ECiEOMARBjWHInOqtp/gRMWtefW4+JKV91ZHM/Not6huUbazHRfvpK/wX6NY/GXuFIjd0goCZmgIMSo8ZV73OWUhdR82XRwIkrO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=eWoA35Ie; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=utL5o6d+; arc=none smtp.client-ip=64.147.123.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1719486913; c=relaxed/simple;
+	bh=RAbZbjeBtc6a7qu4AxdmmKvnZivhLbCxSUQNFtQiqM4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lfRw/EPT3zThQ3SnwfCmVk9MRx5IKajwNmlToKYUgsSIM5ek1OzwKcx+m1scTgfenYLFYFGt7C09LiusiC2eDpKN+oj+lzCVdngrNDdLMj1fwFrjMhGItvuAKHIYVV8cj6+e0GJuYZ4qZYrJKuzQZzwNxAlKE1aVIyDZXbZSX9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=lYJfzuvK; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="eWoA35Ie";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="utL5o6d+"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfhigh.west.internal (Postfix) with ESMTP id E97A5180008D;
-	Thu, 27 Jun 2024 07:14:46 -0400 (EDT)
-Received: from imap44 ([10.202.2.94])
-  by compute3.internal (MEProxy); Thu, 27 Jun 2024 07:14:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1719486886;
-	 x=1719573286; bh=ibMZBiUawSovWXeMUq73em+annDobAZMXPCgXk00oSA=; b=
-	eWoA35IennGyeb3QyvcOTGSCBc1+iLoGsl5D4uIA1sLI+I6R2F0c/xw+EPiBOp6f
-	WqjJbkIitHuBQMdnkBldaTYnX5UUy/9tvlAR5qVsfs+wHtYIjxnZ+gGFgPDeKQ6D
-	I/gn7gMySG6nZLIVKvu29xvXdibGOuj+vuuIjyezxVotCYasWJrephUVAs6IiSKO
-	PE8kfBcWPFjZ3/GJsnLNlPoNbGAs5IqjPh4FYt8pX5e61T691TvMb0XzneuXHjZZ
-	yNnaGtb5of+sgFtiNgjp5MwfBsrGZQpmTrWjY28IMgk2dHZ91LpBZKNXsr0LZ/6X
-	rZr6yycjMXZSooesbeljng==
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="lYJfzuvK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1719486886; x=
-	1719573286; bh=ibMZBiUawSovWXeMUq73em+annDobAZMXPCgXk00oSA=; b=u
-	tL5o6d+44YnaJM6023MRfejQ2Eojqwg50vEVYqq05f2xCUsSzus7pwhk9tVqLpu1
-	epWFnA55JHLddAQNWng3dsxz+cLgxNPigpaogGeJr63uEbDGEu0rad0PMeLh8QB8
-	SRKV4Rgz9z9Aj0CCaUOolDBKgTiwUNvrO0XEyV8eMj8XIOZfmO5fe0FusKPayh1G
-	4f3qlW0bKYYe2Rpva4qALxk1Cz+As06sCOK651utO1u1JAkT2HLmNMYmnZxZZaWn
-	1HUuWFTh+vwuGoK8icXy+IDCqJIbTyX2GC7dChy4lSxk7Jtg1kyzEOxw3npMJFVY
-	IGisRQ4cvQ8LKNIfbiUKg==
-X-ME-Sender: <xms:pkl9ZhVx-dxHbsCbpRR6aH177i96XHUguQx2Y_rogscP8rRbFA2MXQ>
-    <xme:pkl9ZhkgIO9ERSBpK7On9uVaUwqmIPdKMPpW_AhAEBvPK1zr-iFYY_BtMkFTlPK0v
-    5R5dShbszKFj6SbPq4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrtdeggdefkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedflfhi
-    rgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-    eqnecuggftrfgrthhtvghrnhepudefgeeftedugeehffdtheefgfevffelfefghefhjeeu
-    geevtefhudduvdeihefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-X-ME-Proxy: <xmx:pkl9ZtZ48OmvURA4lXgsM_JPHFttZBs82YwbEmGN74_QrbWSugAngA>
-    <xmx:pkl9ZkUjH-b5nTtm7BmvhoSDdooxfMjb9tFCZZHgWwsNlks82KAVbQ>
-    <xmx:pkl9ZrnG0Yp6C4e6c8OhRgCqor0imlDIfcWo_6ucvyEhLGff_EBJbA>
-    <xmx:pkl9ZhdvTrVuexl7eGQelRn8scPjcX4tXVaRnQcjObcD9DrkrLarzQ>
-    <xmx:pkl9ZpgAF1Nx1ilnQSINakixhdYTHn54iIPnPIlqVq8NNrvtal2Y3RCu>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 415D036A0074; Thu, 27 Jun 2024 07:14:46 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-538-g1508afaa2-fm-20240616.001-g1508afaa
+	sang-engineering.com; h=from:to:cc:subject:date:message-id
+	:in-reply-to:references:mime-version:content-transfer-encoding;
+	 s=k1; bh=KluZUpbtf9AhXUF1zfxrw1TrFjuQLu2ulyUBXImrMrA=; b=lYJfzu
+	vKdllx0ND0MeXG4Cvb5rcQYYZKk0B0U7KLWUN6KpWlS/YJ6kG29BEQ7Psdm+nJ49
+	hixcyY4AywFTlpbJXhO67uzYggOpZEPga3fHyJEEZxTTPf0FjYUjX7+mMjJn6pe8
+	Vq0bISRWTkjJQQ8zlAbt9qaQ549FrFyqhKgydyE+Sz9UKV5Qb8rrWYKpRfnabqih
+	LXzohesDzE+iLXMf/gX/46vDN3dauzEtYNcSlYyIZO/utzIC2XCYxLBKVQc3jLA+
+	58udCzZjqpqckq/Efzmr8/Gzy5cELejBPNVuRd2u6TiZiBgtyyL15iyDQktV9VIi
+	hAxtHSzRhJbYHHXA==
+Received: (qmail 884566 invoked from network); 27 Jun 2024 13:15:02 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 27 Jun 2024 13:15:02 +0200
+X-UD-Smtp-Session: l3s3148p1@NUn7Pd0b5MMgAwDPXys0AFWnEn9dr4bp
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: linux-renesas-soc@vger.kernel.org
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] i2c: testunit: don't erase registers after STOP
+Date: Thu, 27 Jun 2024 13:14:47 +0200
+Message-ID: <20240627111445.29751-5-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240627111445.29751-4-wsa+renesas@sang-engineering.com>
+References: <20240627111445.29751-4-wsa+renesas@sang-engineering.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <394042b6-37ef-4011-b799-454036d8bc34@app.fastmail.com>
-In-Reply-To: <Zn0qG5tsMBYcSWW+@alpha.franken.de>
-References: <20240616-mips-mt-fixes-v1-0-83913e0e60fc@flygoat.com>
- <20240616-mips-mt-fixes-v1-3-83913e0e60fc@flygoat.com>
- <Zn0qG5tsMBYcSWW+@alpha.franken.de>
-Date: Thu, 27 Jun 2024 12:14:24 +0100
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
-Cc: "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- linux-kernel@vger.kernel.org,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH fixes 3/4] MIPS: cps-vec: Replace MT instructions with macros
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
+STOP fallsthrough to WRITE_REQUESTED but this became problematic when
+clearing the testunit registers was added to the latter. Actually, there
+is no reason to clear the testunit state after STOP. Doing it when a new
+WRITE_REQUESTED arrives is enough. So, no need to fallthrough, at all.
 
+Fixes: b39ab96aa894 ("i2c: testunit: add support for block process calls")
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
+ drivers/i2c/i2c-slave-testunit.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-=E5=9C=A82024=E5=B9=B46=E6=9C=8827=E6=97=A5=E5=85=AD=E6=9C=88 =E4=B8=8A=E5=
-=8D=8810:00=EF=BC=8CThomas Bogendoerfer=E5=86=99=E9=81=93=EF=BC=9A
-> On Sun, Jun 16, 2024 at 02:25:04PM +0100, Jiaxun Yang wrote:
->> Replace MT instructions with macros to deal with assemblers
->> not supporting MT ASE properly.
->
-> how about simply enforcing the need for a correct toolchain instead
-> of making the code ugly ?
+diff --git a/drivers/i2c/i2c-slave-testunit.c b/drivers/i2c/i2c-slave-testunit.c
+index a49642bbae4b..a5dcbc3c2c14 100644
+--- a/drivers/i2c/i2c-slave-testunit.c
++++ b/drivers/i2c/i2c-slave-testunit.c
+@@ -118,7 +118,7 @@ static int i2c_slave_testunit_slave_cb(struct i2c_client *client,
+ 			queue_delayed_work(system_long_wq, &tu->worker,
+ 					   msecs_to_jiffies(10 * tu->regs[TU_REG_DELAY]));
+ 		}
+-		fallthrough;
++		break;
+ 
+ 	case I2C_SLAVE_WRITE_REQUESTED:
+ 		memset(tu->regs, 0, TU_NUM_REGS);
+-- 
+2.43.0
 
-Unfortunately, MT for microMIPS which I'm trying to bring up is only in
-binutils master, it's not in any binutils release yet.
-
-LLVM support is also pending.
-
-Thanks
->
-> Thomas.
->
-> --=20
-> Crap can work. Given enough thrust pigs will fly, but it's not necessa=
-rily a
-> good idea.                                                [ RFC1925, 2=
-.3 ]
-
---=20
-- Jiaxun
