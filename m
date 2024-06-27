@@ -1,117 +1,89 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD4F13A259
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 14:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA71197531
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 14:59:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719500265; cv=none; b=G2DybRSs/HGyhOrLhFBIC+MtAEJ+nDcyC1wI6xmjYcy0Z6BY5T4GOOkE94rWpMmAmSGHVUp2+NDoWOcxfKD1oG/n+JFGCvT1YNuVihMvl80gpzJ2Uns0CkSTUl550WHJ9ue57uOo92+AamlCfsGuNJ2ow4/K/vz+OBilN7DKx84=
+	t=1719500344; cv=none; b=KYuyA2nLn0kVNeRaeQ53aB3+GIkXU9wrsE5DpaXtvNzgkpUVj43IkdefUvu13nzLQwY0RViKHbXZtmZRGoMVd8CAAxMKNKWvi34obGa0FhLNlDi1+oNZo7RlKo3wVoXgBzvQd2qcvhiDrCN+VQm7sseTvGaIocaVs7JoyjHIv20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719500265; c=relaxed/simple;
-	bh=8bfhVpFtKte0q0LpK6Z+2fZ0kVuSuHR8xlPRmGLhw34=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UphTBw6eIN6ArynmmS6OJqKkdB5ervC1WfgH9NYDBhTRxaQiHQ+XMl2Jv92DqR8tN+KfNZzfcVUHv6NHEzXtD5cVLYlB2hdbh31Mr+XmbNsJPbetGIBNNOEY8ABycLvAZ3XGlMcZzyjeUxhCeu1ykwCLAVotnA6Z/L1a1ZwSgTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rPDAQeut; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719500344; c=relaxed/simple;
+	bh=aAzQsT0oQ9vbbBXrJvB+fEyAFrOdEyRHswJRXal7oKY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F5VHV3wwWhf6LyzuE9RhrCTDtq+l/o5U5aIKTtoG93TZ9P/myrbvQ6V6BQmsFY/fLS5+8sMALSpoCb0Zu49K99k09weEIWjoef3rgALt3E+mrenUBDOqgJfL1csYAK9c2syUWuUwmXJwZuwJFh1pvKRqBQxNthd/b7QCJAAZ8hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=Go24WEA2; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rPDAQeut"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-718354c17e4so4383023a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 07:57:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719500263; x=1720105063; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=y6zgDkxzVTCfp8FYBsiMFrOvxs4mrOqUQpxmdnl71g0=;
-        b=rPDAQeutUjKIoaTCnoEUv6J1nnRNo8hGYEf/EiqP7IjMpmKx6BixUAs62KWXSZkfZy
-         OLsPe9eC2/H/oDhJ9WkIiOeiyA/Q1X6iahJ8idDPJmAGwTOP1XMCSf54gOvH5L9khyd7
-         3hc947UXOwTZgWsKX5BEt76oxHpsDg7Ng0CuNCDOejSmwul9vLDiq10hqJXHRPXhvgk3
-         ZjwxM/YUWJv9aElVdof3z9ilzQjHNoYlIIjmUdadpArY9/C+GISae+ydgi6TeuYmElmh
-         68fa0sWSg++/50Osh8SzoXWDNZ+SAyllIjtExInKDrIqXFm0OphN4a8vO7uWTWrqZ1J4
-         YcmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719500263; x=1720105063;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=y6zgDkxzVTCfp8FYBsiMFrOvxs4mrOqUQpxmdnl71g0=;
-        b=r6ldsXIu2Dro2OLyzPPAj/TwT8nVQFOHKM8r+hmgfl179UZEzt3ErzqSx7tkFcQ8o1
-         sHd2RumFD6b5K+M5lDmwvVlpHdDN77ZLsWVp3ecJP5qkcua4UaD13Uoxqmah85Gaq0NZ
-         0mtP9tnRdu9FYe8hdis8ug2ik8qtIkvcQK+aH0+Hz9JpDMmWIVY4gFoYAHR4W/ns7jwO
-         OjHjAubRDhhvOAW5+nE+zYSBDR3MTTBCURqUo7MDHRAhDYcRY3df1cWPnV17oL2ze5bu
-         kk5igUA1yAiYQMXJ3PlAQRELDv5EGlbIOZJ1mwmPGAT4Rf5dU+ks5cKTLOFb6g8Z5ml7
-         F+5w==
-X-Forwarded-Encrypted: i=1; AJvYcCXZ+Rb6Yj8bywl9CSW+02PTyxdQZSSpzkLR/tVBWNt27XO0+xytd8+YYzTIYMhdfav5lQd2eTM5qqnI0qrAC0z/NQtI6xrY7e6z8zsq
-X-Gm-Message-State: AOJu0YzpshMywi2lDVPfr7eQW+nD8YgJn11SlBoH9j1RH5R9LcVEFdny
-	i91/OCfIEV0z6ZdV6459tTKX/j8gMNcLaiphL2N4JUMx30pqQ6EYHMcw74N2mZeAETa7GBMVtiZ
-	rvPtgAEV12gHWAEgjDzs7EDNDZbaTLJdv6I4BYQ==
-X-Google-Smtp-Source: AGHT+IGNBAyVWF3V0HW17I0OZdNRl6+47JMbaP/xlj33W1liN9Mo6xOSEbxabe4bXHVGH7BG/VewhSmaNEbyO6I8V/k=
-X-Received: by 2002:a05:6a20:6521:b0:1bd:2358:8c8d with SMTP id
- adf61e73a8af0-1bd23588dc9mr6921778637.29.1719500263272; Thu, 27 Jun 2024
- 07:57:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="Go24WEA2"
+Received: from cwcc.thunk.org (pool-173-48-120-63.bstnma.fios.verizon.net [173.48.120.63])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 45REwaEl022257
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Jun 2024 10:58:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1719500320; bh=45z46S1vlPy3Zb8mXGWMskv+A9Ox8+WXrBmVToToIEg=;
+	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
+	b=Go24WEA2gC+HB7aPbZh9n7FoNJq53ESvbUpUE3RzFeSWKsY9YnGD84spwQi1jF32n
+	 LhbnhEJkQlbB/OxHFoBg56/qQ9A75TieMsLHh9PiRl65uFltajfa+scLHD8U0sCwjw
+	 hzW+uUJ1/ke48VQIFnhutQlV8i1Zv6tsLD5FJ1XedypcxFRNxLRodnK9u6saDNBd6x
+	 qFYSnDboi0Eg++QZj3L+QZA3ks4jSzy+LwFB4svr6K4SpLH5F0xVIuDiqri2evF0eJ
+	 gpZNdJwqB1dL4CGc/KjVzviWJkywTyP58yYO5sRpe5R662hmw6nlHxME3ivhKPCO39
+	 2SNDsGiU35eqA==
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+	id A517615C626C; Thu, 27 Jun 2024 10:58:36 -0400 (EDT)
+Date: Thu, 27 Jun 2024 10:58:36 -0400
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Luis Henriques <luis.henriques@linux.dev>
+Cc: Andreas Dilger <adilger@dilger.ca>, Jan Kara <jack@suse.cz>,
+        Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] ext4: fix fast commit inode enqueueing during a
+ full journal commit
+Message-ID: <20240627145836.GA439391@mit.edu>
+References: <20240529092030.9557-1-luis.henriques@linux.dev>
+ <875xtu7aow.fsf@brahms.olymp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240627-ucsi-rework-interface-v4-0-289ddc6874c7@linaro.org> <2024062717-foster-document-eb2f@gregkh>
-In-Reply-To: <2024062717-foster-document-eb2f@gregkh>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Thu, 27 Jun 2024 17:57:30 +0300
-Message-ID: <CAA8EJprAshnt3YchBv0ssi4Vet9b6oMcf3z8nuRkoZVYNBq64w@mail.gmail.com>
-Subject: Re: [PATCH v4 0/7] usb: typec: ucsi: rework glue driver interface
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Nikita Travkin <nikita@trvn.ru>, Neil Armstrong <neil.armstrong@linaro.org>, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <875xtu7aow.fsf@brahms.olymp>
 
-On Thu, 27 Jun 2024 at 17:54, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Jun 27, 2024 at 05:44:39PM +0300, Dmitry Baryshkov wrote:
-> > The interface between UCSI and the glue driver is very low-level. It
-> > allows reading the UCSI data from any offset (but in reality the UCSI
-> > driver reads only VERSION, CCI an MESSAGE_IN data). All event handling
-> > is to be done by the glue driver (which already resulted in several
-> > similar-but-slightly different implementations). It leaves no place to
-> > optimize the write-read-read sequence for the command execution (which
-> > might be beneficial for some of the drivers), etc.
+On Thu, Jun 27, 2024 at 02:54:39PM +0100, Luis Henriques wrote:
+> On Wed, May 29 2024, Luis Henriques (SUSE) wrote:
+> 
+> > Hi!
 > >
-> > The patchseries attempts to restructure the UCSI glue driver interface
-> > in order to provide sensible operations instead of a low-level read /
-> > write calls.
+> > Here's v3 of this fix to the fast commit enqueuing bug triggered by fstest
+> > generic/047.  This version simplifies the previous patch version by re-using
+> > the i_sync_tid field in struct ext4_inode_info instead of adding a new one.
 > >
-> > If this approach is found to be acceptable, I plan to further rework the
-> > command interface, moving reading CCI and MESSAGE_IN to the common
-> > control code, which should simplify driver's implementation and remove
-> > necessity to split quirks between sync_control and read_message_in e.g.
-> > as implemented in the ucsi_ccg.c.
+> > The extra patch includes a few extra fixes to the tid_t type handling.  Jan
+> > brought to my attention the fact that this sequence number may wrap, and I
+> > quickly found a few places in the code where the tid_geq() and tid_gt()
+> > helpers had to be used.
 > >
-> > Note, the series was tested only on the ucsi_glink platforms. Further
-> > testing is appreciated.
+> > Again, please note that this fix requires [1] to be applied too.
 > >
-> > Depends: [1], [2]
+> > [1] https://lore.kernel.org/all/20240515082857.32730-1-luis.henriques@linux.dev
 > >
-> > [1] https://lore.kernel.org/linux-usb/20240612124656.2305603-1-fabrice.gasnier@foss.st.com/
-> >
-> > [2] https://lore.kernel.org/linux-usb/20240621-ucsi-yoga-ec-driver-v8-1-e03f3536b8c6@linaro.org/
-> >
-> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > ---
-> > Changes in v4:
-> > - Rebased on top of Greg's tree to resolve conflicts.
->
-> Nope, still got conflicts, are you sure you updated properly?  Patch 1
-> applied, but #2 did not.
+> > Luis Henriques (SUSE) (2):
+> >   ext4: fix fast commit inode enqueueing during a full journal commit
+> >   ext4: fix possible tid_t sequence overflows
+> 
+> Gentle ping...  Has this fell through the cracks?
 
-I feel stupid enough now. I rebased on top of usb-next instead of
-usb-testing. Let me spam it once again
+Sorry, I'm still catching up after being on vacation.  There is a
+batch of commits which I've reviewed (up to May 17th) which is
+currently undergoing testing.  So that doesn't include this patch yet,
+but it's on the list of patches to be reviewed at
+patchworks.ozlabs.org/project/linux-ext4 so it won't fall through the
+cracks.
 
-
--- 
-With best wishes
-Dmitry
+					- Ted
+					
