@@ -1,144 +1,115 @@
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1C917758;
-	Thu, 27 Jun 2024 03:37:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28FC1171B6;
+	Thu, 27 Jun 2024 03:37:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719459461; cv=none; b=JB7foHW8B1bS74LT0xo8HayM0DknZNfa7agqtBsnXDTLbtAKEReA7LNHTM9GP3bRfhWkCNCEOgyTICFqIctQpqmC2NBcMIuuiQzkpfm4euVs0+Cz0BFfAwSwCfZlVp1bh3FaOEm2kvv2SOLXhCPT/4NUC9o3AZPPr03Fd7FRulQ=
+	t=1719459472; cv=none; b=dBNSfDhrnOmeP0MY3LgsFUK00J/SYYtQ/4sedPU2zOj274waulQw65pXLG099jKAl66PRh+wKPwTsx2+ohp7PV0IAEQ+I6cotwA0KbcOiF085jD/KuAjrxVUufjC73yXPJa7B3x2RJv8+Zy/aSR0VwfqnQmSP5PxK6Y8GkD7LhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719459461; c=relaxed/simple;
-	bh=wJ7aj6V02RGQPLH6KMM+51qFYpgYMN3gYv3bgJwF+FM=;
-	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
-	 Cc:In-Reply-To:To; b=ruuFZEP4h2986Zh5YSDN4cXgsjD8PCqKLz6srefKv2c1IWj6+EhmFafEAEiyOxT8JkrT6X2YBm8M3UxrMtx2iaz+4ynE8W0+ARTT3sg2C5sYHWl+y0DFqaFAP3240mr5bUH0wo7R5z3SziaKvNm331n59pD3VcJScNcEDmIrFBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nlUiITei; arc=none smtp.client-ip=209.85.167.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719459472; c=relaxed/simple;
+	bh=0ctTLc1gOa3X5ypY3vb2iTsmCTV8Fs/g16AnX5CYyG4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eRZcb0zJqkxwCuqHhjVunTVHAhIw+0CKByszu9YKdt2PGQObQo/+ph5dRk5fkATDZg2BNz2z65qvbnfVitic6Wy9j8V+CQISa/jnGzXZRPLnUcrsOh/bGpEfvjZcOKU6JgjN1sY4kvY58pjEjLA/LueUZ9VsvlQ/VkO7fxcy6UY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=LFsMQtzD; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nlUiITei"
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3d566d5eda9so190857b6e.0;
-        Wed, 26 Jun 2024 20:37:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719459458; x=1720064258; darn=vger.kernel.org;
-        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
-         :from:content-transfer-encoding:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=btL9frXHn5bucfqfBQ8J86OleIxFKMIHqIH1Tkvc2+Y=;
-        b=nlUiITeimMEvjKNuFcVeDnY8pw51Ib27QCj/hsDT7W9TwOlCT9MWlRFqAggt7kyHUZ
-         dZMGF3CEVmbQ5a5aEUzO5PzawJT5uO1yaeEvclnGSKx9u9c4ALUqKU/RCEoCHClcRTgl
-         MNFxRUzvqUU1owHQVrdokHSZrBnUDTMiFxaKpHJam8mHd7nxPuy1seRSZ+TbKo2tWMTQ
-         CGxysnZUwynMRIEpGnN95Jy8YunwVoh7mYduOZZocE/XxdVzujd55ftwkBG0hFLe1Sg3
-         b6VZNQzwweZIDsrPosINiobQLNUMLELS0IHcL0VD4zJup1wfTglyfWGIp4Uh/tUs3PbU
-         sreQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719459458; x=1720064258;
-        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
-         :from:content-transfer-encoding:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=btL9frXHn5bucfqfBQ8J86OleIxFKMIHqIH1Tkvc2+Y=;
-        b=Ws+4izpzFaObv+CYr2ISy/0y6Z8y6vUX9NgL7MXUyrz6DakCABxXYIIx4BbEXiRox8
-         ItLAeKtLm/4IH//E1lnVU5owT7rU1O2bK/JeTw2mggdiyTzZb9w7Na80MV+MqP0W4pZX
-         PWLkQ+g272vEw6LqmHRgKFWICnGH96SD0Q1A1E4LkZtgj9f6d+ZqVdcMlJbBW5g2BTZ6
-         G2BiiXbbqrephhNc1xpUZfV71uJLIcSLwT4WQXO8eh9ZvhFBDIAecQO87oadlWLcI7ZW
-         JeJJtJcZkwe2sNeyzSmg0G54RXK6XZcgKUldcMDPNHPbejA3YLU3UuBKmAH+zbiO9t3g
-         qYpA==
-X-Forwarded-Encrypted: i=1; AJvYcCWvQElgaEh9KORdWnQFsMeEzTIVisD3LZiLhW6l97rOldoHI9ABivDiCnCn+JK1s1q6yf+btX8DF2CKdLRuKN0f47UF7YxqD7BsjVQqMKX05XCBbH+O4m10wsKB
-X-Gm-Message-State: AOJu0YxyxDbnNhYyucW80d4KK+1xEUqBQ3cXWk4OBPEaPUZuFs7n4ExL
-	JcTjMuhpBLiO5KvFjyElAtl11LHySQw1VE/TwZ8NpB3bqQWUO5UhibYFy/jFM5Y=
-X-Google-Smtp-Source: AGHT+IGVDdwvf48/nQa5AnQqEU/GPUM5E0o40jNlS5HJEw1xlJF7yk1hxW3f5GLk6bzUTo1BS4p2uQ==
-X-Received: by 2002:a05:6808:170f:b0:3d5:1bd8:ab18 with SMTP id 5614622812f47-3d545979603mr13684952b6e.24.1719459457698;
-        Wed, 26 Jun 2024 20:37:37 -0700 (PDT)
-Received: from smtpclient.apple ([2001:e60:a809:eceb:bd02:cb72:6ee8:4792])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-706b4a07a30sm252681b3a.139.2024.06.26.20.37.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Jun 2024 20:37:37 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From: =?utf-8?B?67CV7KCV7KSA?= <aha310510@gmail.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LFsMQtzD"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45QLMtVb011191;
+	Thu, 27 Jun 2024 03:37:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-type:content-transfer-encoding; s=
+	corp-2023-11-20; bh=gZCIqUdsRlF4jkuGcHN42qFJiptbarME3rW3jxaP5XQ=; b=
+	LFsMQtzDXd3LRKK/1wpNKwfJFCYOZ+1tSyGxmjErKs26UlF7fuSiN1elXOrerOcA
+	iPj0qQkAFb5DSBoMIxi4EkhEiV0LDKJPfcrDXRyzQA1GNwugSteX7fwP0YkMGZjM
+	PS04eGZykuv0Meqa04FGrcypdg0AW7ofe5o4N59dtKSFdSnOOd7UYrWJMuQSAAwi
+	K27eirc3aiiFKij71y01qra++Qc6BCsFRdL26r5WCHC1p30HFr4wxwlcSpAi2HyI
+	iUssDdJ2IhotM1GsLd7sdZNUVIOXhT4/6k/hWnPYsKJjKh7dHTjU8hRzrXHe4K6V
+	0fQ2jni1buRcGcRAYyfxWw==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ywq5t4xfc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 27 Jun 2024 03:37:31 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45R1LngZ037140;
+	Thu, 27 Jun 2024 03:37:31 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ywn2ac4dn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 27 Jun 2024 03:37:31 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 45R3ax0B020028;
+	Thu, 27 Jun 2024 03:37:30 GMT
+Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3ywn2ac4c4-2;
+	Thu, 27 Jun 2024 03:37:30 +0000
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+To: john.g.garry@oracle.com, yanaijie@huawei.com, jejb@linux.ibm.com,
+        damien.lemoal@opensource.wdc.com, Xingui Yang <yangxingui@huawei.com>
+Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com, prime.zeng@hisilicon.com,
+        chenxiang66@hisilicon.com, kangfenglong@huawei.com
+Subject: Re: [PATCH v5] scsi: libsas: Fix exp-attached end device cannot be scanned in again after probe failed
+Date: Wed, 26 Jun 2024 23:36:50 -0400
+Message-ID: <171945940411.1436776.443944070004554375.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240619091742.25465-1-yangxingui@huawei.com>
+References: <20240619091742.25465-1-yangxingui@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] vhost/vsock: always initialize seqpacket_allow
-Date: Thu, 27 Jun 2024 12:37:24 +0900
-Message-Id: <4C39A362-74E3-4762-82AD-D8B15AA38B10@gmail.com>
-References: <bcc17a060d93b198d8a17a9b87b593f41337ee28.1715785488.git.mst@redhat.com>
-Cc: linux-kernel@vger.kernel.org,
- syzbot+6c21aeb59d0e82eb2782@syzkaller.appspotmail.com,
- Arseny Krasnov <arseny.krasnov@kaspersky.com>,
- "David S . Miller" <davem@davemloft.net>,
- Stefan Hajnoczi <stefanha@redhat.com>,
- Stefano Garzarella <sgarzare@redhat.com>, Jason Wang <jasowang@redhat.com>,
- =?utf-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, kvm@vger.kernel.org,
- virtualization@lists.linux.dev, netdev@vger.kernel.org
-In-Reply-To: <bcc17a060d93b198d8a17a9b87b593f41337ee28.1715785488.git.mst@redhat.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-X-Mailer: iPhone Mail (21F90)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-26_17,2024-06-25_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=886 mlxscore=0
+ spamscore=0 malwarescore=0 adultscore=0 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2406180000
+ definitions=main-2406270025
+X-Proofpoint-GUID: 4SczOlptWWl9kAeQhrNEMIhN8a52SVxc
+X-Proofpoint-ORIG-GUID: 4SczOlptWWl9kAeQhrNEMIhN8a52SVxc
 
-nice patch
+On Wed, 19 Jun 2024 09:17:42 +0000, Xingui Yang wrote:
 
-> 2024. 5. 16. =EC=98=A4=EC=A0=84 12:05, Michael S. Tsirkin <mst@redhat.com>=
- =EC=9E=91=EC=84=B1:
->=20
-> =EF=BB=BFThere are two issues around seqpacket_allow:
-> 1. seqpacket_allow is not initialized when socket is
->   created. Thus if features are never set, it will be
->   read uninitialized.
-> 2. if VIRTIO_VSOCK_F_SEQPACKET is set and then cleared,
->   then seqpacket_allow will not be cleared appropriately
->   (existing apps I know about don't usually do this but
->    it's legal and there's no way to be sure no one relies
->    on this).
->=20
-> To fix:
->    - initialize seqpacket_allow after allocation
->    - set it unconditionally in set_features
->=20
-> Reported-by: syzbot+6c21aeb59d0e82eb2782@syzkaller.appspotmail.com
-> Reported-by: Jeongjun Park <aha310510@gmail.com>
-> Fixes: ced7b713711f ("vhost/vsock: support SEQPACKET for transport").
-> Cc: Arseny Krasnov <arseny.krasnov@kaspersky.com>
-> Cc: David S. Miller <davem@davemloft.net>
-> Cc: Stefan Hajnoczi <stefanha@redhat.com>
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> Acked-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
-> Tested-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
->=20
-> ---
->=20
->=20
-> Reposting now it's been tested.
->=20
-> drivers/vhost/vsock.c | 4 ++--
-> 1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-> index ec20ecff85c7..bf664ec9341b 100644
-> --- a/drivers/vhost/vsock.c
-> +++ b/drivers/vhost/vsock.c
-> @@ -667,6 +667,7 @@ static int vhost_vsock_dev_open(struct inode *inode, s=
-truct file *file)
->    }
->=20
->    vsock->guest_cid =3D 0; /* no CID assigned yet */
-> +    vsock->seqpacket_allow =3D false;
->=20
->    atomic_set(&vsock->queued_replies, 0);
->=20
-> @@ -810,8 +811,7 @@ static int vhost_vsock_set_features(struct vhost_vsock=
- *vsock, u64 features)
->            goto err;
->    }
->=20
-> -    if (features & (1ULL << VIRTIO_VSOCK_F_SEQPACKET))
-> -        vsock->seqpacket_allow =3D true;
-> +    vsock->seqpacket_allow =3D features & (1ULL << VIRTIO_VSOCK_F_SEQPACK=
-ET);
->=20
->    for (i =3D 0; i < ARRAY_SIZE(vsock->vqs); i++) {
->        vq =3D &vsock->vqs[i];
-> --
-> MST
->=20
+> The expander phy will be treated as broadcast flutter in the next
+> revalidation after the exp-attached end device probe failed, as follows:
+> 
+> [78779.654026] sas: broadcast received: 0
+> [78779.654037] sas: REVALIDATING DOMAIN on port 0, pid:10
+> [78779.654680] sas: ex 500e004aaaaaaa1f phy05 change count has changed
+> [78779.662977] sas: ex 500e004aaaaaaa1f phy05 originated BROADCAST(CHANGE)
+> [78779.662986] sas: ex 500e004aaaaaaa1f phy05 new device attached
+> [78779.663079] sas: ex 500e004aaaaaaa1f phy05:U:8 attached: 500e004aaaaaaa05 (stp)
+> [78779.693542] hisi_sas_v3_hw 0000:b4:02.0: dev[16:5] found
+> [78779.701155] sas: done REVALIDATING DOMAIN on port 0, pid:10, res 0x0
+> [78779.707864] sas: Enter sas_scsi_recover_host busy: 0 failed: 0
+> ...
+> [78835.161307] sas: --- Exit sas_scsi_recover_host: busy: 0 failed: 0 tries: 1
+> [78835.171344] sas: sas_probe_sata: for exp-attached device 500e004aaaaaaa05 returned -19
+> [78835.180879] hisi_sas_v3_hw 0000:b4:02.0: dev[16:5] is gone
+> [78835.187487] sas: broadcast received: 0
+> [78835.187504] sas: REVALIDATING DOMAIN on port 0, pid:10
+> [78835.188263] sas: ex 500e004aaaaaaa1f phy05 change count has changed
+> [78835.195870] sas: ex 500e004aaaaaaa1f phy05 originated BROADCAST(CHANGE)
+> [78835.195875] sas: ex 500e004aaaaaaa1f rediscovering phy05
+> [78835.196022] sas: ex 500e004aaaaaaa1f phy05:U:A attached: 500e004aaaaaaa05 (stp)
+> [78835.196026] sas: ex 500e004aaaaaaa1f phy05 broadcast flutter
+> [78835.197615] sas: done REVALIDATING DOMAIN on port 0, pid:10, res 0x0
+> 
+> [...]
+
+Applied to 6.10/scsi-fixes, thanks!
+
+[1/1] scsi: libsas: Fix exp-attached end device cannot be scanned in again after probe failed
+      https://git.kernel.org/mkp/scsi/c/ab2068a6fb84
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
