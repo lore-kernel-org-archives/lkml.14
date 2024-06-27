@@ -1,281 +1,142 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE4C31C6A3;
-	Thu, 27 Jun 2024 03:52:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DBA17722;
+	Thu, 27 Jun 2024 04:10:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719460362; cv=none; b=k5MbohiARufu1iWJVStKAoCY8h9OTAsGfKfJ82MKXm9+2rftP+emUIfR95mFaSwgzPSQmEg6KCcNBo5GDOy8CYONoxvD9EkF3qzr7J5HTffeYrgcaNtfZAJX/W/Ga44dlOnUjoXXL8hcS5q0TZVdM4fDvD+Nlrj4VVGxatwDQZI=
+	t=1719461440; cv=none; b=Alv2TpwJ1S0MAEm2LANtI+5WjsvQfgSggqgIdgc4sSYXKXHRomTVDMGX9GvzyYY0dAFQ2U7Hn5j/AbkuNoYQII1kRESXlCrlVROQWcB5CKMDYjYgvurUzsoC1OpJ33Ig60XysaJT9wGd3b4u0r5zA8Vg6kkwolLt5fPXYZ/mNbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719460362; c=relaxed/simple;
-	bh=gG7YQvin5fXpKR/Oe1/r5p4kyhN6HoTtV++/9CmrAA0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Cqh5XE0u6qLmfjSiju31boIlW1BkAIOkPpSdsLm5SfOpm5SOQk6Hh6RNhxn9/naSfIbbBtke/IzwhrO8G9eDXlK9aVz5Bkdk27qDebdEGIvfIdqx4BmHFVqg4NwyLJ7dPZgKoeTU+QpeDA0/rR18MmOxdla1/p/H8aJ06zBSwxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A53E339;
-	Wed, 26 Jun 2024 20:53:05 -0700 (PDT)
-Received: from e116581.blr.arm.com (e116581.arm.com [10.162.41.7])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3E4D13F6A8;
-	Wed, 26 Jun 2024 20:52:34 -0700 (PDT)
-From: Dev Jain <dev.jain@arm.com>
-To: shuah@kernel.org,
-	oleg@redhat.com
-Cc: mingo@kernel.org,
-	tglx@linutronix.de,
-	mark.rutland@arm.com,
-	ryan.roberts@arm.com,
-	broonie@kernel.org,
-	suzuki.poulose@arm.com,
-	Anshuman.Khandual@arm.com,
-	DeepakKumar.Mishra@arm.com,
-	aneesh.kumar@kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH v4 2/2] selftests: Add a test mangling with uc_sigmask
-Date: Thu, 27 Jun 2024 09:22:15 +0530
-Message-Id: <20240627035215.1527279-3-dev.jain@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240627035215.1527279-1-dev.jain@arm.com>
-References: <20240627035215.1527279-1-dev.jain@arm.com>
+	s=arc-20240116; t=1719461440; c=relaxed/simple;
+	bh=CKv1BGQlGCFVLvOVKWpNiKGwYCGjD+/PCEgX8Jk6DiE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Y9IrlbTOIQ/F72IuinHxPU6Ad+T7ulztgWB/36gdQltGOpCDNCnkeXpMCSxGH16otc+E/FuzmmBHWaXEsBnLCvO6jBuSaeflgWgEF5NWTi+KMWtxGiL4r9/Qmh5w5HaydSCNRkITZtN+SuDJCNPUIHBTuxvqrwZp2npLEED1VWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=geJVSRib; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="geJVSRib"
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-80fbfeecca1so530215241.1;
+        Wed, 26 Jun 2024 21:10:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719461438; x=1720066238; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CKv1BGQlGCFVLvOVKWpNiKGwYCGjD+/PCEgX8Jk6DiE=;
+        b=geJVSRibs2EoErxaM7q0TM65Tsa8UtooRVDM4UsFhfCbqeaGZJ+G515jftXtwa/+u+
+         lvUWsxyRlx/oJQalpjD5kF8QwPCMC+4mA/Ncyo0cN3DhLBoAoef93R254qFvZOK/dLpH
+         FapaJ4RK7+YxgNPHsu2Cz6rPwzLU0F5vol6e0I4jTp9ntKZUwR96QU+Mr149aOwqnsID
+         WGlVXqtUeway4w9izO4cil+h/uqkBYvvQNQ1XoncSWL3EiRzf0TwqJgPB9PKctQ80Led
+         Mal1bnHwVeUy64+K3tXqK2OoJXMqQyfLQ7gx7VkkDJ1rJtj48DeFvPyvgCUMclZXte3W
+         4aUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719461438; x=1720066238;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CKv1BGQlGCFVLvOVKWpNiKGwYCGjD+/PCEgX8Jk6DiE=;
+        b=NtAiW6Q6n+A8hNJIUIMmtH7eOfV8Eq5Q2t8RQV+iYeCSm09iuC+FEYFaVXS/J0tzti
+         Hdmx9moOODsD50XpvkjRLZJ/f3/0NAdoj5tVL+1FEc7yI2pkBVR01Lik0XcqTowdl1uV
+         ClznVdjhX2Iej7VRJiNmkxxRnmPilE/n9Y5I6kuqSVhISBunHx0ov2kUZkBFhAhlQnAm
+         9Pv0wtnSCMIkpA2kYWI6jd38XT++7kijmFafC7EbJ5/22dQSvlGjlBYenOLPbjaER//6
+         GYYZFgOtggPkJibH3sR19npunMt9wbj5aQR1pRywKltZUkGIs2xInrU2z7Mw4N0cLAN3
+         xtkA==
+X-Forwarded-Encrypted: i=1; AJvYcCUxGIaqLmN6IH50OhnFlas5Th6/tGmagBDmcont47d8XT1oALSMkdHtCZQe7VyDKwlAJ2pBFQUKOk+BjH6e24GW1mtHsQW8B4avp8W6BwLbOzsGJNVcoXy0gueuwILsnfARKAMkd1bInAe8Tw==
+X-Gm-Message-State: AOJu0Yzdgx4QTrKa1HszNyibKUuKrX6PIVgQ/BGc5CZxJ/adUlxYbZ5/
+	aiaZh1L9u0BemM1NUdX1gck6jEWYBQeUSoE3smjidfwmIP0llRJPrRjHKI+voZHpahYyi91E0GT
+	IK2LZ3XASgAr1WWDVMIfIWOJitQ0=
+X-Google-Smtp-Source: AGHT+IFfDa0ktIOys1TJVi0P9n6zh5dH5AKUYvUR9DtrBG4sqPeS33t4v0IsNlc0T9/CdRCN55Qh60RRnXX/dZ6KYyI=
+X-Received: by 2002:a67:bb03:0:b0:48f:8c83:dce9 with SMTP id
+ ada2fe7eead31-48f8c83de6bmr929007137.29.1719461438197; Wed, 26 Jun 2024
+ 21:10:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240626024924.1155558-1-ranxiaokai627@163.com>
+ <20240626024924.1155558-3-ranxiaokai627@163.com> <D29M7U8SPSYJ.39VMTRSKXW140@nvidia.com>
+ <1907a8c0-9860-4ca0-be59-bec0e772332b@arm.com> <D2A0ZD1AOJDA.3OLNZCHJAXRK8@nvidia.com>
+In-Reply-To: <D2A0ZD1AOJDA.3OLNZCHJAXRK8@nvidia.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Thu, 27 Jun 2024 16:10:26 +1200
+Message-ID: <CAGsJ_4wCymN=YQt7cDBZ-xB8Kr4C7hSnDaWNevnhiNC76pXd-A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] kpageflags: fix wrong KPF_THP on non-pmd-mappable
+ compound pages
+To: Zi Yan <ziy@nvidia.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>, ran xiaokai <ranxiaokai627@163.com>, 
+	akpm@linux-foundation.org, willy@infradead.org, vbabka@suse.cz, 
+	svetly.todorov@memverge.com, ran.xiaokai@zte.com.cn, peterx@redhat.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-fsdevel@vger.kernel.org, David Hildenbrand <david@redhat.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, 
+	Lance Yang <ioworker0@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This test asserts the relation between blocked signal, delivered signal,
-and ucontext. The ucontext is mangled with, by adding a signal mask to
-it; on return from the handler, the thread must block the corresponding
-signal.
+On Thu, Jun 27, 2024 at 2:40=E2=80=AFAM Zi Yan <ziy@nvidia.com> wrote:
+>
+> On Wed Jun 26, 2024 at 7:07 AM EDT, Ryan Roberts wrote:
+> > On 26/06/2024 04:06, Zi Yan wrote:
+> > > On Tue Jun 25, 2024 at 10:49 PM EDT, ran xiaokai wrote:
+> > >> From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+> > >>
+> > >> KPF_COMPOUND_HEAD and KPF_COMPOUND_TAIL are set on "common" compound
+> > >> pages, which means of any order, but KPF_THP should only be set
+> > >> when the folio is a 2M pmd mappable THP.
+> >
+> > Why should KPF_THP only be set on 2M THP? What problem does it cause as=
+ it is
+> > currently configured?
+> >
+> > I would argue that mTHP is still THP so should still have the flag. And=
+ since
+> > these smaller mTHP sizes are disabled by default, only mTHP-aware user =
+space
+> > will be enabling them, so I'll naively state that it should not cause c=
+ompat
+> > issues as is.
+> >
+> > Also, the script at tools/mm/thpmaps relies on KPF_THP being set for al=
+l mTHP
+> > sizes to function correctly. So that would need to be reworked if makin=
+g this
+> > change.
+>
+> + more folks working on mTHP
+>
+> I agree that mTHP is still THP, but we might want different
+> stats/counters for it, since people might want to keep the old THP counte=
+rs
+> consistent. See recent commits on adding mTHP counters:
+> ec33687c6749 ("mm: add per-order mTHP anon_fault_alloc and anon_fault_fal=
+lback
+> counters"), 1f97fd042f38 ("mm: shmem: add mTHP counters for anonymous shm=
+em")
+>
+> and changes to make THP counter to only count PMD THP:
+> 835c3a25aa37 ("mm: huge_memory: add the missing folio_test_pmd_mappable()=
+ for
+> THP split statistics")
+>
+> In this case, I wonder if we want a new KPF_MTHP bit for mTHP and some
+> adjustment on tools/mm/thpmaps.
 
-In the test description, I have also described signal delivery and blockage,
-for ease of understanding what the test does.
+It seems we have to do this though I think keeping KPF_THP and adding a
+separate bit like KPF_PMD_MAPPED makes more sense. but those tools
+relying on KPF_THP need to realize this and check the new bit , which is
+not done now.
+whether the mTHP's name is mTHP or THP will make no difference for
+this case:-)
 
-Signed-off-by: Dev Jain <dev.jain@arm.com>
----
- tools/testing/selftests/signal/.gitignore     |   1 +
- tools/testing/selftests/signal/Makefile       |   3 +-
- .../selftests/signal/mangle_uc_sigmask.c      | 186 ++++++++++++++++++
- 3 files changed, 189 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/signal/mangle_uc_sigmask.c
+>
+>
+> --
+> Best Regards,
+> Yan, Zi
+>
 
-diff --git a/tools/testing/selftests/signal/.gitignore b/tools/testing/selftests/signal/.gitignore
-index 98a7bbc4f325..397fef11c89f 100644
---- a/tools/testing/selftests/signal/.gitignore
-+++ b/tools/testing/selftests/signal/.gitignore
-@@ -1,2 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0-only
-+mangle_uc_sigmask
- sigaltstack
-diff --git a/tools/testing/selftests/signal/Makefile b/tools/testing/selftests/signal/Makefile
-index dd6be992fd81..735387a53114 100644
---- a/tools/testing/selftests/signal/Makefile
-+++ b/tools/testing/selftests/signal/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- CFLAGS = -Wall
--TEST_GEN_PROGS = sigaltstack
-+TEST_GEN_PROGS = mangle_uc_sigmask
-+TEST_GEN_PROGS += sigaltstack
- 
- include ../lib.mk
- 
-diff --git a/tools/testing/selftests/signal/mangle_uc_sigmask.c b/tools/testing/selftests/signal/mangle_uc_sigmask.c
-new file mode 100644
-index 000000000000..d32e2e05d363
---- /dev/null
-+++ b/tools/testing/selftests/signal/mangle_uc_sigmask.c
-@@ -0,0 +1,186 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2024 ARM Ltd.
-+ *
-+ * Author: Dev Jain <dev.jain@arm.com>
-+ *
-+ * Test describing a clear distinction between signal states - delivered and
-+ * blocked, and their relation with ucontext.
-+ *
-+ * A process can request blocking of a signal by masking it into its set of
-+ * blocked signals; such a signal, when sent to the process by the kernel,
-+ * will get blocked by the process and it may later unblock it and take an
-+ * action. At that point, the signal will be delivered.
-+ *
-+ * We test the following functionalities of the kernel:
-+ *
-+ * ucontext_t describes the interrupted context of the thread; this implies
-+ * that, in case of registering a handler and catching the corresponding
-+ * signal, that state is before what was jumping into the handler.
-+ *
-+ * The thread's mask of blocked signals can be permanently changed, i.e, not
-+ * just during the execution of the handler, by mangling with uc_sigmask
-+ * from inside the handler.
-+ *
-+ * Assume that we block the set of signals, S1, by sigaction(), and say, the
-+ * signal for which the handler was installed, is S2. When S2 is sent to the
-+ * program, it will be considered "delivered", since we will act on the
-+ * signal and jump to the handler. Any instances of S1 or S2 raised, while the
-+ * program is executing inside the handler, will be blocked; they will be
-+ * delivered immediately upon termination of the handler.
-+ *
-+ * For standard signals (also see real-time signals in the man page), multiple
-+ * blocked instances of the same signal are not queued; such a signal will
-+ * be delivered just once.
-+ */
-+
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <signal.h>
-+#include <ucontext.h>
-+
-+#include "../kselftest.h"
-+
-+void handler_verify_ucontext(int signo, siginfo_t *info, void *uc)
-+{
-+	int ret;
-+
-+	/* Kernel dumps ucontext with USR2 blocked */
-+	ret = sigismember(&(((ucontext_t *)uc)->uc_sigmask), SIGUSR2);
-+	ksft_test_result(ret == 1, "USR2 blocked in ucontext\n");
-+
-+	/*
-+	 * USR2 is blocked; can be delivered neither here, nor after
-+	 * exit from handler
-+	 */
-+	if (raise(SIGUSR2))
-+		ksft_exit_fail_perror("raise");
-+}
-+
-+void handler_segv(int signo, siginfo_t *info, void *uc)
-+{
-+	/*
-+	 * Three cases possible:
-+	 * 1. Program already terminated due to segmentation fault.
-+	 * 2. SEGV was blocked even after returning from handler_usr.
-+	 * 3. SEGV was delivered on returning from handler_usr.
-+	 * The last option must happen.
-+	 */
-+	ksft_test_result_pass("SEGV delivered\n");
-+}
-+
-+static int cnt;
-+
-+void handler_usr(int signo, siginfo_t *info, void *uc)
-+{
-+	int ret;
-+
-+	/*
-+	 * Break out of infinite recursion caused by raise(SIGUSR1) invoked
-+	 * from inside the handler
-+	 */
-+	++cnt;
-+	if (cnt > 1)
-+		return;
-+
-+	ksft_print_msg("In handler_usr\n");
-+
-+	/* SEGV blocked during handler execution, delivered on return */
-+	if (raise(SIGSEGV))
-+		ksft_exit_fail_perror("raise");
-+
-+	ksft_print_msg("SEGV bypassed successfully\n");
-+
-+	/*
-+	 * Signal responsible for handler invocation is blocked by default;
-+	 * delivered on return, leading to recursion
-+	 */
-+	if (raise(SIGUSR1))
-+		ksft_exit_fail_perror("raise");
-+
-+	ksft_test_result(cnt == 1,
-+			 "USR1 is blocked, cannot invoke handler right now\n");
-+
-+	/* Raise USR1 again; only one instance must be delivered upon exit */
-+	if (raise(SIGUSR1))
-+		ksft_exit_fail_perror("raise");
-+
-+	/* SEGV has been blocked in sa_mask, but ucontext is empty */
-+	ret = sigismember(&(((ucontext_t *)uc)->uc_sigmask), SIGSEGV);
-+	ksft_test_result(ret == 0, "SEGV not blocked in ucontext\n");
-+
-+	/* USR1 has been blocked, but ucontext is empty */
-+	ret = sigismember(&(((ucontext_t *)uc)->uc_sigmask), SIGUSR1);
-+	ksft_test_result(ret == 0, "USR1 not blocked in ucontext\n");
-+
-+	/*
-+	 * Mangle ucontext; this will be copied back into &current->blocked
-+	 * on return from the handler.
-+	 */
-+	if (sigaddset(&((ucontext_t *)uc)->uc_sigmask, SIGUSR2))
-+		ksft_exit_fail_perror("sigaddset");
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	struct sigaction act, act2;
-+	sigset_t set, oldset;
-+
-+	ksft_print_header();
-+	ksft_set_plan(7);
-+
-+	act.sa_flags = SA_SIGINFO;
-+	act.sa_sigaction = &handler_usr;
-+
-+	/* Add SEGV to blocked mask */
-+	if (sigemptyset(&act.sa_mask) || sigaddset(&act.sa_mask, SIGSEGV)
-+	    || (sigismember(&act.sa_mask, SIGSEGV) != 1))
-+		ksft_exit_fail_msg("Cannot add SEGV to blocked mask\n");
-+
-+	if (sigaction(SIGUSR1, &act, NULL))
-+		ksft_exit_fail_perror("Cannot install handler");
-+
-+	act2.sa_flags = SA_SIGINFO;
-+	act2.sa_sigaction = &handler_segv;
-+
-+	if (sigaction(SIGSEGV, &act2, NULL))
-+		ksft_exit_fail_perror("Cannot install handler");
-+
-+	/* Invoke handler */
-+	if (raise(SIGUSR1))
-+		ksft_exit_fail_perror("raise");
-+
-+	/* USR1 must not be queued */
-+	ksft_test_result(cnt == 2, "handler invoked only twice\n");
-+
-+	/* Mangled ucontext implies USR2 is blocked for current thread */
-+	if (raise(SIGUSR2))
-+		ksft_exit_fail_perror("raise");
-+
-+	ksft_print_msg("USR2 bypassed successfully\n");
-+
-+	act.sa_sigaction = &handler_verify_ucontext;
-+	if (sigaction(SIGUSR1, &act, NULL))
-+		ksft_exit_fail_perror("Cannot install handler");
-+
-+	if (raise(SIGUSR1))
-+		ksft_exit_fail_perror("raise");
-+
-+	/*
-+	 * Raising USR2 in handler_verify_ucontext is redundant since it
-+	 * is blocked
-+	 */
-+	ksft_print_msg("USR2 still blocked on return from handler\n");
-+
-+	/* Confirm USR2 blockage by sigprocmask() too */
-+	if (sigemptyset(&set))
-+		ksft_exit_fail_perror("sigemptyset");
-+
-+	if (sigprocmask(SIG_BLOCK, &set, &oldset))
-+		ksft_exit_fail_perror("sigprocmask");
-+
-+	ksft_test_result(sigismember(&oldset, SIGUSR2) == 1,
-+			 "USR2 present in &current->blocked\n");
-+
-+	ksft_finished();
-+}
--- 
-2.34.1
-
+Thanks
+Barry
