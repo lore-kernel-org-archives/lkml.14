@@ -1,153 +1,83 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E67619D8AA;
-	Thu, 27 Jun 2024 17:33:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 696CD19D8B0
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 17:33:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719509595; cv=none; b=oxznQDwK0wkrVU52yzLAKLUQ3woTaQUNVM/Auj7Cr/8A7fUN+tgAdjE+zaVBcSKyBQvSUNw37N87Obm7Vo1wpbixDJjQYquIH8awujAvdDd4cSlHv0+qNP7X0MSgT1WE++i0IqAWVcqnqq9dgSzPXsnm2jojJ8jCaN5EuPIipvE=
+	t=1719509595; cv=none; b=PHTv5LE1hg6nvMEYZNj9jABIt1V/QgUSNdrmgsoQ1sOuP17ECTCaNt+m/glXqdagfm0MTvYAPNFuACWl9OuSl2xeFOJCopsZdVoNBRevZL03gexsIcOoSBf3UiYln/Dvpek+/3PM45j32wSMuK7Zjx8LehdQsHLPJNc/4KTCC94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719509595; c=relaxed/simple;
-	bh=mWwGGM3T7flFv7fScT23U3dBjyUQBkyuSUomwoujOQ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mkhQdSkGA6+qq7Zy0ULLj2Qx42cT6u4YVzSRipqb3E0DoAxnboza9Dqg3fqhCKqSSet5mMOBNK91BkWJsHdImju4ugihykxLtLTvTxI3LWlyBR1CcutqYeGw2WjCIaPxS5fI4HmAybdsfvws+WdqIF67ML8FFHLAeejMzdqcqh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iGqeaiKY; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=ilNgfoUNhiqDFM7H9poy1i0P6oEaujTeCAqucYSt1cU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V46GWiyYH147xtjcdcFJpjI5+XXsybDHQc6W3UqEigYhL1zHIIQpDHLVPwha2LF3JBSffC2JqRKSGoBnnxNZAfxzjVr7a+f4z0BmLkhUkqI5d+nc45biusIYOI/UA9nQlmbtUq6XUKCVr3ZFlcpqzki5NH/LNe2BIHcATj+h8K8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fLKsoOZf; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iGqeaiKY"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52cd8897c73so7382336e87.2;
-        Thu, 27 Jun 2024 10:33:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719509591; x=1720114391; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mdV0Lvy+a5+SJqvS1WBCJ7JSWbjxGckHrHXUW7MVCSc=;
-        b=iGqeaiKYoRE2NT8BL2Nmog8t3h1267MTSJW+AQu1kwOIU/fjL5oGc3VLjwfOUfpfVY
-         BsLn61wi3e2f4lHv++uOd2bFTNW6EuDH7vDF9QH3Rr6SvXSYZHFd7llouMYpNDB49j6D
-         e+D38zMlRt/GX7vJuJGU5I6/FMkKk+CG3Zqp8RHCMN5SIU3a5njEpD0X7yHOoIrbC4ML
-         Sokf7LO4MD0hDJBBhlR6FReJRIthzkkF1M+vGoKCO3CZ8NEN4eehgNySWPkDGxcCQm6D
-         wst0iyQ5MnXrDA7cdPOGgDoqOlL7XSPJdMk5wtAVsI3VKlbsV5GA0MD/io0nmtwq7hQy
-         quSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719509591; x=1720114391;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mdV0Lvy+a5+SJqvS1WBCJ7JSWbjxGckHrHXUW7MVCSc=;
-        b=QStX/riTuXMk4/wayJwAxaFzEAzxX7GqtUWwgQedlgL2RB0ETfVumZnVUWUp9syZNE
-         B0G+ckJoYUjeX8oCaQfdoIXLDXDwnPR1hRM5Y+bNNxDb2UX3neWTO1BRrPvrKDy05Td4
-         6E4kejnFbS8ZbqztdBVM4Rx1Fp7ZR0a0eAW1AnX+D5ehD14D64lrxksm6J9SLWYqESfg
-         tSf39G7xsd9XKZ+Ck99ThpevzvsCLtCtyHsDoM/IAxFjb3bHlmguZk/TsY6WqUOI7UsV
-         df/uk2z7OtB39F8u80uDHyivV4SNJiGysxa6hnXblfx72HXFMA8lBq/AZRqCGsiKdsYV
-         /Evg==
-X-Forwarded-Encrypted: i=1; AJvYcCVMlDHaJqjJG6tlHGUD3SnXlJstmDYyapQ/kA3xroYqCyN+awtnSDOAxipEzZgQLTdZezHoVUIvgCMILBfM8aIwbURZThQ3zSL5oCxtzeerFQaL8xUpLNEzsywSaNq1TT2vnaqiXlk6zw==
-X-Gm-Message-State: AOJu0YzP2yDMYxNPQSo0NN2vtS00gXM8R5SWs5E8aJcFfsoY/xHONNjP
-	m4D80XwFV8097MO7zvtY/JBlgJIoVHCILo8pcGvh5t9o+0m1gCxv
-X-Google-Smtp-Source: AGHT+IFCW/oubEhvjv3B0kTePpucrzDUADEFWBF5xh655sCuWndfx77nKhIg84IyaO3jxlPiEXlPZQ==
-X-Received: by 2002:ac2:5490:0:b0:52c:dcea:86e2 with SMTP id 2adb3069b0e04-52ce183259fmr8591235e87.1.1719509591505;
-        Thu, 27 Jun 2024 10:33:11 -0700 (PDT)
-Received: from localhost ([213.79.110.82])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52e71329ea0sm266215e87.303.2024.06.27.10.33.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 10:33:11 -0700 (PDT)
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Michal Simek <michal.simek@amd.com>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>
-Cc: Serge Semin <fancer.lancer@gmail.com>,
-	Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND v6 06/18] EDAC/synopsys: Drop internal CE and UE counters
-Date: Thu, 27 Jun 2024 20:32:13 +0300
-Message-ID: <20240627173251.25718-7-fancer.lancer@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240627173251.25718-1-fancer.lancer@gmail.com>
-References: <20240627173251.25718-1-fancer.lancer@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fLKsoOZf"
+X-Envelope-To: maarten.lankhorst@linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1719509591;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Xr0TR/1FJaHH3ED2Gg8EsjtN43r2N2jhIFfaVjK+ReM=;
+	b=fLKsoOZfoseTaxxUSUzJuxD+k9IEgMWnvbjjxqtg/OrcnHyqUX9qp1tbvuE8zcJlwqiwQb
+	84rRJrF4qI1qsDXzbtV+ThZCYs8lI+Ylmi1meFS5UblE2HzVtFJajNDNU+DdfCJqO9mafK
+	np2J+8e1AKLwM0WPMmrijVaBEje7zWo=
+X-Envelope-To: intel-xe@lists.freedesktop.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: dri-devel@lists.freedesktop.org
+X-Envelope-To: tj@kernel.org
+X-Envelope-To: lizefan.x@bytedance.com
+X-Envelope-To: hannes@cmpxchg.org
+X-Envelope-To: akpm@linux-foundation.org
+X-Envelope-To: mhocko@kernel.org
+X-Envelope-To: shakeel.butt@linux.dev
+X-Envelope-To: muchun.song@linux.dev
+X-Envelope-To: friedrich.vock@gmx.de
+X-Envelope-To: cgroups@vger.kernel.org
+X-Envelope-To: linux-mm@kvack.org
+Date: Thu, 27 Jun 2024 17:33:05 +0000
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Roman Gushchin <roman.gushchin@linux.dev>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: intel-xe@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, Tejun Heo <tj@kernel.org>,
+	Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Friedrich Vock <friedrich.vock@gmx.de>, cgroups@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [RFC PATCH 1/6] mm/page_counter: Move calculating protection
+ values to page_counter
+Message-ID: <Zn2iUQ4xj0ANHHs6@google.com>
+References: <20240627154754.74828-1-maarten.lankhorst@linux.intel.com>
+ <20240627154754.74828-2-maarten.lankhorst@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240627154754.74828-2-maarten.lankhorst@linux.intel.com>
+X-Migadu-Flow: FLOW_OUT
 
-First of all these counters aren't exposed anyhow from the driver.
-Secondly the EDAC core already tracks the total amount of the correctable
-and uncorrectable errors (see mem_ctl_info.{ce_mc,ue_mc} fields usage).
-Drop the useless internal counters then for good.
+On Thu, Jun 27, 2024 at 05:47:20PM +0200, Maarten Lankhorst wrote:
+> It's a lot of math, and there is nothing memcontrol specific about it.
+> This makes it easier to use inside of the drm cgroup controller.
+> 
+> Signed-off-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+LGTM and I believe it's a good thing to do even without taking the rest
+of the series into account.
 
----
+Acked-by: Roman Gushchin <roman.gushchin@linux.dev>
 
-Changelog v4:
-- Drop redundant empty line.
-- Drop private counters access from the check_errors() method too.
----
- drivers/edac/synopsys_edac.c | 14 --------------
- 1 file changed, 14 deletions(-)
-
-diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-index 3e98e907e2b9..07aaf4562847 100644
---- a/drivers/edac/synopsys_edac.c
-+++ b/drivers/edac/synopsys_edac.c
-@@ -304,8 +304,6 @@ struct synps_ecc_status {
-  * @message:		Buffer for framing the event specific info.
-  * @stat:		ECC status information.
-  * @p_data:		Platform data.
-- * @ce_cnt:		Correctable Error count.
-- * @ue_cnt:		Uncorrectable Error count.
-  * @poison_addr:	Data poison address.
-  * @row_shift:		Bit shifts for row bit.
-  * @col_shift:		Bit shifts for column bit.
-@@ -319,8 +317,6 @@ struct synps_edac_priv {
- 	char message[SYNPS_EDAC_MSG_SIZE];
- 	struct synps_ecc_status stat;
- 	const struct synps_platform_data *p_data;
--	u32 ce_cnt;
--	u32 ue_cnt;
- #ifdef CONFIG_EDAC_DEBUG
- 	ulong poison_addr;
- 	u32 row_shift[18];
-@@ -592,13 +588,8 @@ static irqreturn_t intr_handler(int irq, void *dev_id)
- 	if (status)
- 		return IRQ_NONE;
- 
--	priv->ce_cnt += priv->stat.ce_cnt;
--	priv->ue_cnt += priv->stat.ue_cnt;
- 	handle_error(mci, &priv->stat);
- 
--	edac_dbg(3, "Total error count CE %d UE %d\n",
--		 priv->ce_cnt, priv->ue_cnt);
--
- 	if (priv->p_data->quirks & SYNPS_ZYNQMP_IRQ_REGS)
- 		writel(regval, priv->baseaddr + DDR_QOS_IRQ_STAT_OFST);
- 
-@@ -624,12 +615,7 @@ static void check_errors(struct mem_ctl_info *mci)
- 	if (status)
- 		return;
- 
--	priv->ce_cnt += priv->stat.ce_cnt;
--	priv->ue_cnt += priv->stat.ue_cnt;
- 	handle_error(mci, &priv->stat);
--
--	edac_dbg(3, "Total error count CE %d UE %d\n",
--		 priv->ce_cnt, priv->ue_cnt);
- }
- 
- /**
--- 
-2.43.0
-
+Thanks!
