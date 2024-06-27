@@ -1,96 +1,97 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A6219A288;
-	Thu, 27 Jun 2024 17:11:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD6A197549;
+	Thu, 27 Jun 2024 17:12:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719508297; cv=none; b=baZi6hmNXRVhDKAgtzFr9GOoCUU/oBttU8v3pKBQqdr7Yd0Se1cLZOEjlryqR+CV7BmbIu5TnDSeGDgM3bhRnZM2WSkjCKiXCA1kLJY/jgUwDDkBZ0fvRMkCHzS7AGbsotDmfqVM4drlCSqtloJN9CShWdJsDQ0D06g0iVfFHxs=
+	t=1719508378; cv=none; b=bipoJO2JYMufXLZLR3oNmHzECnyOyaS7gPf8Dh+qjRjaz+T/eH0n9YodiZcLglMM7LaqIOJp/mwS1W9pfcAu0et1d9h2T4uhTSupnIGrK/HARJHjVo7PCLkUg+LHk7gSP9fMQLTWh1HJH2mRe64fkzS44NNZI2ZuX7u7665AaOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719508297; c=relaxed/simple;
-	bh=QxkEVdlf8zyk1RIA+/TdGzvbc2WpIDBuALqYaPUC+r8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=TqDVpAKeQ0K29XpDnlHmMS+HtaBdMCya4QJRNsiNEyOXUw8sreGhkb7JKrWzzFRa8B039Ss2++YEG6+4Bny9UQWHY8JkXd4I/NzNBZOr6TaX7lnhzu7aFCL8KRktT8o4pkPoI+rdfUcb0sfVe2a1AQlExWhb1c0ilSP4tS/JmhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GIEA9/f3; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719508378; c=relaxed/simple;
+	bh=x0paNmrzPbz/jmBMj25p+GgQaoamDJejk56BVcITTBQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sGtt2M1TrjDHRCDIVbhxsvxETaxwY3c5iyzIr072f5wpYoPWSki72Se8I/ImTdcClkcxhQ+stg9lRmXDCY0Zw54/RsXRbM2uYbWK//5L/qZiS8CzyPyXLu5xyzny+sKkyobrt11ARwYjlv1wiuMBpXdpWIzk/I688J1Sb8Jif0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=UyJF5CEt; arc=none smtp.client-ip=23.155.224.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GIEA9/f3"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-424ad991c1cso25352545e9.1;
-        Thu, 27 Jun 2024 10:11:35 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="UyJF5CEt"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 3899C82871B7;
+	Thu, 27 Jun 2024 12:04:05 -0500 (CDT)
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id Z0AZFKoChWpd; Thu, 27 Jun 2024 12:04:04 -0500 (CDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 759F482871F3;
+	Thu, 27 Jun 2024 12:04:04 -0500 (CDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 759F482871F3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719508294; x=1720113094; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cqg+cB0tsKwYbj2AdR+1t235Rjir/+bGbK9C4esMo/Y=;
-        b=GIEA9/f3CNGaZ+M5VqS7A0ET6NxJYXaZiQX82tceAnj9bJ51kH8gfzxmwhNylM77uT
-         nO40Y9MP4rB9EyqsfqZbkDdz7xv+4cjF3Jq5MNbToa6DSR7vt4R7vsrSeHIWgJWlGBmG
-         5cv4HFjNa5DHUQVq3B+1mUTy57zkv3gk0KeVyjab28MD8cWYnjKzaC5Xl+gK8WVRg5ZL
-         h6+hezqPW8FxKAjjDNxxFpN3QAIEKbVLOuqSGM8Zmd1yrMGX3NbyfFSO+XoDbyrLTIkI
-         DNCpvpFDBIvDD4z9JxkpYXxA46Nxml2QvZpMwF0tJla9IxclGfe4vgoHepLYhgHrXjAm
-         US2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719508294; x=1720113094;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cqg+cB0tsKwYbj2AdR+1t235Rjir/+bGbK9C4esMo/Y=;
-        b=sPxfQruRAhzx+EzEv9x68bZ1iKfRCWuzi4xfx701iSN+XRIBpD4BkMqqDg/MRvczm+
-         jrBxYlJxvCMJW1rEaoTbXyDfXjbfyzay2aW8aJqUD2dA8WKtxLi/mDjBR1t6S/V0Yz/J
-         PnwGFaqcRNATipkwzrgAuXgynH1apgunkhweYIETFQhmNiwxR3GMMyU6BAUdGS9QeisZ
-         QAauPdUtmNGqsw9T7riYoYOKxP0fU1jYpWG7M0kP0/TlLV4UlMryYUAb2/aAUMSRVYqh
-         5p9U/g5sDGSUNMGHvX3k1l/7dSd4DbnFVDyNpG7jrRJOxbxxuErOJzd8In+t/e1z4Yah
-         dOmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWqgDAZAEeJAK5c1s3mduw1P8+/r+46Oi8BfCviWoXkbxdEKH3OnpxE4094Y1nIOkM0mVMM7+wS2BbgRfybzyTvCyTgk0re9spSpYer
-X-Gm-Message-State: AOJu0YzmwNTfZkemqX8PpdqVIjdQhxrO/I9ynXqIL4GEwmj3BsSjuh0w
-	rDH9eqS6QoTHwoDvQfucsUZ7+bDLlYeQG/w+SMStmlrQzEeN7xCB97bJig==
-X-Google-Smtp-Source: AGHT+IEQyc28xXl89nzT+yHLn1As7BSXret+foZ1FqJN1HcCzTFQPzttZkYpnClu1IgjIjaR2UqD2g==
-X-Received: by 2002:a05:6000:1844:b0:366:eb4b:4e74 with SMTP id ffacd0b85a97d-366eb4b4f40mr14405736f8f.1.1719508293966;
-        Thu, 27 Jun 2024 10:11:33 -0700 (PDT)
-Received: from localhost (craw-09-b2-v4wan-169726-cust2117.vm24.cable.virginm.net. [92.238.24.70])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36743585528sm2499212f8f.65.2024.06.27.10.11.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 10:11:33 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Tejun Heo <tj@kernel.org>,
-	David Vernet <void@manifault.com>,
-	Josh Don <joshdon@google.com>,
-	Barret Rhoden <brho@google.com>,
-	Hao Luo <haoluo@google.com>
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] sched_ext: Fix spelling mistake: "intead" -> "instead"
-Date: Thu, 27 Jun 2024 18:11:32 +0100
-Message-Id: <20240627171132.127421-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.39.2
+	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
+	t=1719507844; bh=lxG8sC0/ltpBtPDS3WyH/p3fZxyBFAQa4wHnHvd9qOQ=;
+	h=Message-ID:Date:MIME-Version:To:From;
+	b=UyJF5CEtwodZS0AOmdl/Xe0uxiSxyqQJHRJ5WHGh794xkqqwdOw0GKBPwrDxZ+8eX
+	 3yO3V2HpVP1xLj4cvvlxmVk0QV3aTYmnq//UqGpCtjyKTkNfTIf2fiJFfd+rdW80Yq
+	 bI9E/iHQvuaAvotGXRWxmvkZBEDw24oMyhr/h8VU=
+X-Virus-Scanned: amavisd-new at rptsys.com
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id nqNGWJcLLn22; Thu, 27 Jun 2024 12:04:04 -0500 (CDT)
+Received: from [10.11.0.2] (5.edge.rptsys.com [23.155.224.38])
+	by mail.rptsys.com (Postfix) with ESMTPSA id C6C9682871B7;
+	Thu, 27 Jun 2024 12:04:03 -0500 (CDT)
+Message-ID: <4826c905-720d-43bf-98a8-c4be076a3ebe@raptorengineering.com>
+Date: Thu, 27 Jun 2024 12:04:03 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] pci/hotplug/pnv_php: Fix hotplug driver crash on
+ Powernv
+To: Krishna Kumar <krishnak@linux.ibm.com>, mpe@ellerman.id.au,
+ npiggin@gmail.com
+Cc: nathanl@linux.ibm.com, aneesh.kumar@kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ gbatra@linux.ibm.com, bhelgaas@google.com, tpearson@raptorengineering.com,
+ oohall@gmail.com, brking@linux.vnet.ibm.com, mahesh.salgaonkar@in.ibm.com,
+ linuxppc-dev@lists.ozlabs.org
+References: <20240509120644.653577-1-krishnak@linux.ibm.com>
+ <20240509120644.653577-2-krishnak@linux.ibm.com>
+Content-Language: en-US
+From: Shawn Anastasio <sanastasio@raptorengineering.com>
+In-Reply-To: <20240509120644.653577-2-krishnak@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-There is a spelling mistake in the help text. Fix it.
+Hi Krishna,
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- tools/sched_ext/scx_qmap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 5/9/24 7:05 AM, Krishna Kumar wrote:
+> Description of the problem: The hotplug driver for powerpc
+> (pci/hotplug/pnv_php.c) gives kernel crash when we try to
+> hot-unplug/disable the PCIe switch/bridge from the PHB.
+> 
+> 
+> Root Cause of Crash: The crash is due to the reason that, though the msi
+> data structure has been released during disable/hot-unplug path and it
+> has been assigned with NULL, still during unregistartion the code was
+> again trying to explicitly disable the msi which causes the Null pointer
+> dereference and kernel crash.
+> 
+> 
+> Proposed Fix : The fix is to correct the check during unregistration path
+> so that the code should not  try to invoke pci_disable_msi/msix() if its
+> data structure is already freed.
+> 
+> 
+> Signed-off-by: Krishna Kumar <krishnak@linux.ibm.com>
 
-diff --git a/tools/sched_ext/scx_qmap.c b/tools/sched_ext/scx_qmap.c
-index 4d41c0cb1dab..e4e3ecffc4cf 100644
---- a/tools/sched_ext/scx_qmap.c
-+++ b/tools/sched_ext/scx_qmap.c
-@@ -31,7 +31,7 @@ const char help_fmt[] =
- "  -d PID        Disallow a process from switching into SCHED_EXT (-1 for self)\n"
- "  -D LEN        Set scx_exit_info.dump buffer length\n"
- "  -S            Suppress qmap-specific debug dump\n"
--"  -p            Switch only tasks on SCHED_EXT policy intead of all\n"
-+"  -p            Switch only tasks on SCHED_EXT policy instead of all\n"
- "  -v            Print libbpf debug messages\n"
- "  -h            Display this help and exit\n";
- 
--- 
-2.39.2
+I've tested this on a POWER9 box and can confirm that it fixes the panics
+when hotplugging PCIe bridges.
 
+Tested-by: Shawn Anastasio <sanastasio@raptorengineering.com>
+
+Thanks,
+Shawn
