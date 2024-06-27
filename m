@@ -1,131 +1,55 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F57143C7D;
-	Thu, 27 Jun 2024 11:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3F36148310;
+	Thu, 27 Jun 2024 11:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719486327; cv=none; b=oQM0hCZ1khoFBeeFH15QnXfNL00fys91qm3IQ0w3xsTuKlXhaMOjmAWVSXFH9dm2K2wC/Q6I7Endu9NBbFcbkqVt+pEKw8+SIUTMu0rW64Rb+/f3M1v17ICNg7h3+kKfb2Ks0ZyzHVBpMGUdRV2qg8lGy96eFPj8AJagErsI/bk=
+	t=1719486333; cv=none; b=Uog4+0HVEuC2fpyxEfedS0wJ/nc4QtQsvGM/rzRBxeDXxEvpUD3wm/Mb/O9p5Gj0Hbc75MPRAE4/9rd/XpeLCSxPfCal6zllGoxH3iJkjL70lT67vmSgNAQ1Ff2Au8poMTO4TtSn6PA8oV8WZzyXpRj04zs9Py8lftyG3zPW9pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719486327; c=relaxed/simple;
-	bh=c7jsOFQzV36u+51vLMvJodzB3phULjcBajRLyloChBo=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=V5FhubBeZ4NTDcfovnGSNoUKDwBUXwUgGTtlpuhp8V94/INZnee5evIWoiqyELVrKCRVib/tkHAN7x9wfj7txmq/VTgpZjLs0kZ8GZ9sr1PyatH7YOca80qPSYLFewRXuE8jY4LnkJL0W0IhrIq6/M12hMPNrbn88A8p1ZzNXLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tZ7xDtsV; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tZ7xDtsV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD3BEC2BBFC;
-	Thu, 27 Jun 2024 11:05:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719486326;
-	bh=c7jsOFQzV36u+51vLMvJodzB3phULjcBajRLyloChBo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=tZ7xDtsVrNzkC6mNmdFJLLHzTclq8PEkWrF1/7N/s7MForbXDvB+2yeHIbhCij9tf
-	 tJ+oIjOqkY/XCns5uv1YYyA3GiFjCiZiHFQAX7sqgb/WbY5bhOGD0MoN5Z+N5RyzCV
-	 MtMDq0iC3s1UldQXBi4SVqQ0OXyeeOiZ9DHeGl3PST1lSzLqaCnvPaGAfJFHBWS306
-	 g+Xc+8PTn55qHIKi+g6CfEM/ymLGaM1AKygSGy22vUKJ79tTt3hXeKY1A0WjIpW1E9
-	 TiLWXk1ceKrtDUE+ikMJr2y8uJ61GsjJ+NTtJV2KYh8XqUL3Ebf1kyw+i3RM+rns5g
-	 oFiTj7HFwqXuw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1sMmwO-007m6d-DN;
-	Thu, 27 Jun 2024 12:05:24 +0100
-Date: Thu, 27 Jun 2024 12:05:23 +0100
-Message-ID: <86ikxuir2k.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Will Deacon <will@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	James Clark <james.clark@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH v2 06/12] perf: arm_pmu: Remove event index to counter remapping
-In-Reply-To: <20240626-arm-pmu-3-9-icntr-v2-6-c9784b4f4065@kernel.org>
-References: <20240626-arm-pmu-3-9-icntr-v2-0-c9784b4f4065@kernel.org>
-	<20240626-arm-pmu-3-9-icntr-v2-6-c9784b4f4065@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1719486333; c=relaxed/simple;
+	bh=B8HlRHtRvGCLPcANh6rc9BTx0hDMXgw8LgJnHLFEqu8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M6CdC0uiLAp5x3E0+BhP+gc1RrXwcbYAAH5x/WNbxBYnQYBNQ7ddBf5M6xD+C/U5ieP+kyIe+QkKHluaFjUVDY8qC9nuavzboVaPSDhwWRfOtg8HvTYk1GS5yXeEW2w2HmPWDzblg0F95nVv3zsa+mA5FrLvsiySs1AqBJieZGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1sMmwE-0003Wq-00; Thu, 27 Jun 2024 13:05:14 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id EC248C0120; Thu, 27 Jun 2024 12:58:03 +0200 (CEST)
+Date: Thu, 27 Jun 2024 12:58:03 +0200
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>
+Subject: Re: [PATCH v3] MIPS: Implement ieee754 NAN2008 emulation mode
+Message-ID: <Zn1FuxNw2CUttzdg@alpha.franken.de>
+References: <20240612-mips_ieee754_emul-v3-1-2c21b450abdb@flygoat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: robh@kernel.org, linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, will@kernel.org, oliver.upton@linux.dev, james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, james.clark@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240612-mips_ieee754_emul-v3-1-2c21b450abdb@flygoat.com>
 
-On Wed, 26 Jun 2024 23:32:30 +0100,
-"Rob Herring (Arm)" <robh@kernel.org> wrote:
-> 
-> Xscale and Armv6 PMUs defined the cycle counter at 0 and event counters
-> starting at 1 and had 1:1 event index to counter numbering. On Armv7 and
-> later, this changed the cycle counter to 31 and event counters start at
-> 0. The drivers for Armv7 and PMUv3 kept the old event index numbering
-> and introduced an event index to counter conversion. The conversion uses
-> masking to convert from event index to a counter number. This operation
-> relies on having at most 32 counters so that the cycle counter index 0
-> can be transformed to counter number 31.
-> 
-> Armv9.4 adds support for an additional fixed function counter
-> (instructions) which increases possible counters to more than 32, and
-> the conversion won't work anymore as a simple subtract and mask. The
-> primary reason for the translation (other than history) seems to be to
-> have a contiguous mask of counters 0-N. Keeping that would result in
-> more complicated index to counter conversions. Instead, store a mask of
-> available counters rather than just number of events. That provides more
-> information in addition to the number of events.
-> 
-> No (intended) functional changes.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+On Wed, Jun 12, 2024 at 09:38:19AM +0100, Jiaxun Yang wrote:
+> +++ b/arch/mips/kernel/elf.c
+> @@ -318,6 +318,10 @@ void mips_set_personality_nan(struct arch_elf_state *state)
+>  	t->thread.fpu.fcr31 = c->fpu_csr31;
+>  	switch (state->nan_2008) {
+>  	case 0:
+> +		if (!(c->fpu_msk31 & FPU_CSR_NAN2008))
+> +			t->thread.fpu.fcr31 &= ~FPU_CSR_NAN2008;
+> +		if (!(c->fpu_msk31 & FPU_CSR_ABS2008))
+> +			t->thread.fpu.fcr31 &= ~FPU_CSR_ABS2008;
 
-[...]
+why is this needed ?
 
-> diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
-> index b3b34f6670cf..e5d6d204beab 100644
-> --- a/include/linux/perf/arm_pmu.h
-> +++ b/include/linux/perf/arm_pmu.h
-> @@ -96,7 +96,7 @@ struct arm_pmu {
->  	void		(*stop)(struct arm_pmu *);
->  	void		(*reset)(void *);
->  	int		(*map_event)(struct perf_event *event);
-> -	int		num_events;
-> +	DECLARE_BITMAP(cntr_mask, ARMPMU_MAX_HWEVENTS);
-
-I'm slightly worried by this, as this size is never used, let alone
-checked by the individual drivers. I can perfectly picture some new
-(non-architectural) PMU driver having more counters than that, and
-blindly setting bits outside of the allowed range.
-
-One way to make it a bit safer would be to add a helper replacing the
-various bitmap_set() calls, and enforcing that we never overflow this
-bitmap.
-
-Thanks,
-
-	M.
+Thomas.
 
 -- 
-Without deviation from the norm, progress is not possible.
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
