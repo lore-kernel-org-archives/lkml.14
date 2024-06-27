@@ -1,63 +1,118 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.19])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 295F113BC31;
-	Thu, 27 Jun 2024 09:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.19
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6D913A245;
+	Thu, 27 Jun 2024 09:59:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719482195; cv=none; b=DvSKmBDKm+tCKppXbi58HakPYgGjCHaWmOGN5K4DMePphhdLYErf+fsys5SJk4qQiJIx9G61fQvPyI56NnQkGVoQGY4oCK0OPbVJurVxgUQAP/uKt0e5IVkdefpr1e7TDzi9uJDfHYRpl/VFUOdViON48Tn8h2gOp4ti87b65Lw=
+	t=1719482367; cv=none; b=KzFbr1o+uxHLeqKJAD02xjA6gqX9ydQVF+RYxR1s/sR2/Hb9PC3kWT+iZJ/bHc6QB0K4saAsRiP236H3z+2bYWDvVoisZsFf1JFjW18id7cfeOVU9dfJ5bGBxOShsJVEqPPQu3MLnA4XXj0up6C7ZeGykdchTXC6QCFnSAK6MRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719482195; c=relaxed/simple;
-	bh=g111cGAkJJTUrT6/h3T0ahXLLEM8F6CtuB/wl8swSwg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rARsAumL7mFljwIjghr+ZIx8e568eE2JeRnQRpxeYd6RdVDL2xa4IltGjTyAO2aEkTPluynt/WglF20KBz7dIcp+qWByljrCYfjaXOBI0TvzZOjaP+MqxKD6LBb7a7yhLJ8teh7GpXOi52SJSa6JosLVsY7psdiaiL61T/oDZq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=dEcwHAM4; arc=none smtp.client-ip=220.197.32.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1719482367; c=relaxed/simple;
+	bh=a9Mxfd606of0B4EqCbsaptQNWRMBax7xX9L9ksTGFQE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FEe0JD8zr7N+nMFEBaw167rPjE+jCg9hitQEev+kO/P66amYdeHXabfgrFftHG+6ECld+Sg0aZrK03gArDGv9XlXno8l0WDcKOvDj6K2VpFEB8cx1UT4mr/6uuTPCqNMZXrm2BPr89HGMdEkvCqQk2Qgbkhn4Yk4YLvA7jaDKu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gUga8pSX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="dEcwHAM4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=QgffzqFvBeb2vCh8ycMNWRHSaKdYSTlWByp7ExuDxWc=;
-	b=dEcwHAM4Wwu7kzOdABbHPJ5sxhgJ2mFAWpGLyeuQCXD1QVZpoazQi+YYxs2BPY
-	R63YQxC3a3nmBlGsTzKjknJRfa1RBqfsgTS84jBEvQE6u0Z7hl/uyZFB6Uyn2M+U
-	R1ThYetEeLkD33Y2OJW5FgIAUvMc8IPwRzQxep0BsXJWg=
-Received: from dragon (unknown [114.218.218.47])
-	by gzsmtp3 (Coremail) with SMTP id M88vCgD33x0wN31mYjcaAA--.52891S3;
-	Thu, 27 Jun 2024 17:56:02 +0800 (CST)
-Date: Thu, 27 Jun 2024 17:56:00 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev
-Subject: Re: [PATCH v4 3/3] arm64: dts: fsl-ls1043a-rdb: use common
- spi-cs-setup(hold)-delay-ns
-Message-ID: <Zn03MAkHz4sqWYfk@dragon>
-References: <20240624-ls_qspi-v4-0-3d1c6f5005bf@nxp.com>
- <20240624-ls_qspi-v4-3-3d1c6f5005bf@nxp.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gUga8pSX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE76BC2BBFC;
+	Thu, 27 Jun 2024 09:59:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719482366;
+	bh=a9Mxfd606of0B4EqCbsaptQNWRMBax7xX9L9ksTGFQE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=gUga8pSX1ohH5+wjutqBGqU1EbmbBj1YzyxXG1aPJ7+/k37KssBUcmvBIxsos2OzO
+	 7+PcGgTqMpwzol0322lSIIh3e3OKwFAgKXqFZWMi+VTxTbUpv0JihPw4SSWHD7h3Lx
+	 2AvibcADONJRut0pNsoXaJwoxFp5/Cgo4eXUzKOCBORzx/BTPfJ0kBfvRdCEVJQCtv
+	 aZKd5mMSRyxnnUgvWg485+2iEpzmDlKVjH8lQPdHgJZv0qQxKJFD5TCgtbnzW8aoD0
+	 JLWyS/ULporuwExs8UyW7NbkCI39oLJISoYZnPSt50OeXcSAWdPY8nPeidulMXYyK7
+	 xgNWGA8FcydKg==
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-25cb5ee9d2dso819216fac.1;
+        Thu, 27 Jun 2024 02:59:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXru/Xoh8SlsmR8iyYli2LDaVLIWtyaaOnHxDfELpHMhDcPDmK8lmNKUVnpP4AUcnsR0m/SuvPu2IpPS0Xk/jWcpzkcJzoJDN02FkIa
+X-Gm-Message-State: AOJu0YzeB/UHkGZyrdmtaVepsVrxFWtFF4C0CPYouiIYjSYPjZvpAbB7
+	x3/p3zNDf+Ec8BSgfx9vSnzMVypwM4hkIkbQCJYQ+uUHx/Z5qxrF683kYkhmRAiKT4vPa1n6/FB
+	sQtCaUNR4PnaZkujGMfNoy64tMbI=
+X-Google-Smtp-Source: AGHT+IHnNcgdDe52A+VEKS8n77D4vOj3SjGftsyRxdtqqYFndTXSlX02flgrQRWfoQPxv/NpEri8XwrKHe2CGsr0yms=
+X-Received: by 2002:a05:6820:826:b0:5ba:ca86:a025 with SMTP id
+ 006d021491bc7-5c1e5ca2a82mr18128298eaf.0.1719482366137; Thu, 27 Jun 2024
+ 02:59:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240624-ls_qspi-v4-3-3d1c6f5005bf@nxp.com>
-X-CM-TRANSID:M88vCgD33x0wN31mYjcaAA--.52891S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUVeTYUUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiEQYLZWZv-cysUwABs-
+References: <20240626204723.6237-1-mario.limonciello@amd.com>
+In-Reply-To: <20240626204723.6237-1-mario.limonciello@amd.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 27 Jun 2024 11:59:14 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hu1rVOLycx5K4YWOGhtC8YfSYupc8D6qygtXVGtvxJrQ@mail.gmail.com>
+Message-ID: <CAJZ5v0hu1rVOLycx5K4YWOGhtC8YfSYupc8D6qygtXVGtvxJrQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] cpufreq: Allow drivers to advertise boost enabled
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Sibi Sankar <quic_sibis@quicinc.com>, Dhruva Gole <d-gole@ti.com>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, "Gautham R . Shenoy" <gautham.shenoy@amd.com>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Yipeng Zou <zouyipeng@huawei.com>, 
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 24, 2024 at 02:55:29PM -0400, Frank Li wrote:
-> Use SPI common properties 'spi-cs-setup-delay-ns' and
-> 'spi-cs-hold-delay-ns', mark private properties 'fsl,spi-cs-sck-delay'
-> and 'fsl,spi-sck-cs-delay' as deprecated.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+On Wed, Jun 26, 2024 at 10:47=E2=80=AFPM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> The behavior introduced in commit f37a4d6b4a2c ("cpufreq: Fix per-policy
+> boost behavior on SoCs using cpufreq_boost_set_sw()") sets up the boost
+> policy incorrectly when boost has been enabled by the platform firmware
+> initially even if a driver sets the policy up.
+>
+> This is because policy_has_boost_freq() assumes that there is a frequency
+> table set up by the driver and that the boost frequencies are advertised
+> in that table. This assumption doesn't work for acpi-cpufreq or
+> amd-pstate. Only use this check to enable boost if it's not already
+> enabled instead of also disabling it if alreayd enabled.
+>
+> Reviewed-by: Sibi Sankar <quic_sibis@quicinc.com>
+> Reviewed-by: Dhruva Gole <d-gole@ti.com>
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
+> Fixes: f37a4d6b4a2c ("cpufreq: Fix per-policy boost behavior on SoCs usin=
+g cpufreq_boost_set_sw()")
 
-Applied, thanks!
+CC: stable I suppose?
 
+> Suggested-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Suggested-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> Cc: Sibi Sankar <quic_sibis@quicinc.com>
+> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: Dhruva Gole <d-gole@ti.com>
+> Cc: Yipeng Zou <zouyipeng@huawei.com>
+> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> v1->v2
+>  * Pick up tags
+> ---
+>  drivers/cpufreq/cpufreq.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index 1fdabb660231..270ea04fb616 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -1430,7 +1430,8 @@ static int cpufreq_online(unsigned int cpu)
+>                 }
+>
+>                 /* Let the per-policy boost flag mirror the cpufreq_drive=
+r boost during init */
+> -               policy->boost_enabled =3D cpufreq_boost_enabled() && poli=
+cy_has_boost_freq(policy);
+> +               if (cpufreq_boost_enabled() && policy_has_boost_freq(poli=
+cy))
+> +                       policy->boost_enabled =3D true;
+>
+>                 /*
+>                  * The initialization has succeeded and the policy is onl=
+ine.
+> --
