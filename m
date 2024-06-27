@@ -1,169 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2965113E3F5
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 10:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E4971386BF;
+	Thu, 27 Jun 2024 10:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719484741; cv=none; b=b/z9JIIqWYd6pp2fI13MOgtLXc/lDiRx0TrjIWb95ts/VL9cTC8k4ENwuYov4m15eKOz8RNbhf1TSi2ahDq5IU6IfFdvp/UQXai7G0EttGFedSIuGkdbzv4XbtvyIyFRIkpJ8LGgpA6zbmJe92ot9laUgqX4yeBnXT2LOiS+5To=
+	t=1719484781; cv=none; b=STMVE++3gl38ZlXmtoVv2lNjI8mYiyKTIFHru8bF3x+iiFtahl0ShvHrs7vsBZYqLTEsx6dkyaMB4++I0X9/uumHHX+Sq9REhIrk8qNqMZKVQQnx50BZdkTzo3naZwxipz0ltgJVl7YCli/h4PtNwXsj4xLzD7PmPw98bVsaUD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719484741; c=relaxed/simple;
-	bh=WubQr97XkKQxDef1ONFTgfZ93YpzYjUnPEIOIt//c7k=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Sm7NFk8erjpnYjNo3d+kxRzW//iursQ2rFR/uNv4bJ9BNomYa92dqcwCsMPFj0V8u452UHfb4aZmRP8ZcENnwzy/OM67bZ9A2+J5wGDuVKgfOSzlS/e7BBTPqFpycAiVx4QHi9tyccOlFPC5LCrf7K/NWf6kWDrZMnIvDBdWzq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ME56jqv2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719484781; c=relaxed/simple;
+	bh=AkpBiq6QZeCkJ2ClHXInJEXgeTHY7jWKyNdh3XWD5TA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f3pCTa99R6etBm5Vc8QjmSXmaBa4rddVpvsn94z7KNIrW/GGcEvQhboYTeHfIuA4OoywayqrON32jkXeXG7k7x607HECCXYnz4rzXddyV/6r+fG8WgxLcv5zFUrMAUoSvlfeArMm+Ht79upspMQrIexTcv3ggAMpnB1bwktXDMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=cX98TkMG; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ME56jqv2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEED8C2BBFC;
-	Thu, 27 Jun 2024 10:39:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719484741;
-	bh=WubQr97XkKQxDef1ONFTgfZ93YpzYjUnPEIOIt//c7k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ME56jqv29QoKGjg5W1KoJJ1bfR/2/VlPpc55dL9F3+lIHqFYxxK3WDv8aSwGs0s+a
-	 krS/Xzcr4dMlmqo51nq4g3TWKTh+GRJDzlk5n/hQo2AbIm56ZQsK3tDtDv2EiFsro9
-	 CDUsmZBk0Q1EnCuMD0/Ry+fAVhCTiTAHoZlWoJMzXyIbXKw0v3dtULUCBcvCRnN4m7
-	 pIlcNeFDzJTWbZETLBw1MwbvBeGabMSgvU2SMk108rdQE6Qh33UryVKQigx7AzEcnF
-	 2HOxIVqrVeh/1ESPYg3FMMCAX4sMsPuCNrumo12sf/TGcXb988XGA0Xk+x36wQw84y
-	 k6GD0iTsAqhsQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1sMmWo-007lfM-LL;
-	Thu, 27 Jun 2024 11:38:58 +0100
-Date: Thu, 27 Jun 2024 11:38:58 +0100
-Message-ID: <86pls2isal.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: richard clark <richard.xnu.clark@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	will@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	"Russell King (Oracle)" <linux@armlinux.org.uk>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: Will smp_call_function_single(cpu, ...) broadcast IPI to all other cpus?
-In-Reply-To: <CAJNi4rMfRmWoYdsyH6ibNKN8DSCL_DO8Wa08mWbe8t7vH21Dpw@mail.gmail.com>
-References: <CAJNi4rMfRmWoYdsyH6ibNKN8DSCL_DO8Wa08mWbe8t7vH21Dpw@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="cX98TkMG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1719484778;
+	bh=AkpBiq6QZeCkJ2ClHXInJEXgeTHY7jWKyNdh3XWD5TA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=cX98TkMGmatIeQULfWhOZfq2FjpRtak7sKXJiJSqbf9dJHSdOAnuGdZM8zQI1noMV
+	 tOGMq7ToTvFPMbbJAjPra82svkgAGTgM+/PZxJ5Svl303Ak4/LvURi8NAS5WLiEyOT
+	 YKbI9CxpBzEQx+qACcnBs1xWFln19SbOM6r9JNi8mk7oIae3Twu1GIi6SsdVyF9pd2
+	 CNLFBADqz0un4ihuzORpLjUHC7YIP7lrjvLZlnYGy/S8HzShuQhFVbXQ5W7kvO+VvT
+	 7sqIbTAdIcNSskvyuS7zhZtd8+aM/Ro1R07OWKyQU30o8HwZm1v+x1/bQ81As8lACU
+	 4bJPMia6C1Cgw==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C3C4F3780029;
+	Thu, 27 Jun 2024 10:39:36 +0000 (UTC)
+Message-ID: <3d54c64b-e1cd-4034-b0dd-e5d6607c3ef1@collabora.com>
+Date: Thu, 27 Jun 2024 12:39:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: richard.xnu.clark@gmail.com, mark.rutland@arm.com, will@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk, rostedt@goodmis.org, torvalds@linux-foundation.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 6/7] dt-bindings: mfd: syscon: Split and enforce
+ documenting MFD children
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Orson Zhai <orsonzhai@gmail.com>, Baolin Wang
+ <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>,
+ Jacky Huang <ychuang3@nuvoton.com>, Shan-Chun Hung <schung@nuvoton.com>,
+ Khuong Dinh <khuong@os.amperecomputing.com>, Lee Jones <lee@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Chuanhua Lei <lchuanhua@maxlinear.com>,
+ Rahul Tanwar <rtanwar@maxlinear.com>,
+ Lars Povlsen <lars.povlsen@microchip.com>,
+ Steen Hegelund <Steen.Hegelund@microchip.com>,
+ Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com,
+ Nishanth Menon <nm@ti.com>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, Conor Dooley
+ <conor.dooley@microchip.com>, Maxime Ripard <mripard@kernel.org>
+References: <20240627-dt-bindings-mfd-syscon-split-v4-0-dc6699a9f3e4@linaro.org>
+ <20240627-dt-bindings-mfd-syscon-split-v4-6-dc6699a9f3e4@linaro.org>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240627-dt-bindings-mfd-syscon-split-v4-6-dc6699a9f3e4@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 27 Jun 2024 10:26:05 +0100,
-richard clark <richard.xnu.clark@gmail.com> wrote:
+Il 27/06/24 12:32, Krzysztof Kozlowski ha scritto:
+> Simple syscon nodes can be documented in common syscon.yaml, however
+> devices with simple-mfd compatible, thus with some children, should have
+> their own schema listing these children.  Such listing makes the binding
+> specific, allows better validation (so the incorrect child would not
+> appear in the simple-mfd node) and actually enforces repeated rule for
+> simple-mfd devices:
 > 
-> Hi,
-> There's a smp_call_function_single(10, ipi_cb_func, &data_info, 1)
-> called by the init function of my kmod, then I ipi traces this
-> smp_call_function_single(...) with below cmdline:
+>    "simple-mfd" is only for simple devices, where the children do not
+>    depend on the parent.
 > 
-> # echo 0 > /sys/kernel/debug/tracing/tracing_on; echo >
-> /sys/kernel/debug/tracing/trace; echo 'reason=="Function call
-> interrupts"' > /sys/kernel/debug/tracing/events/ipi/filter; echo 1 >
-> /sys/kernel/debug/tracing/events/ipi/ipi_raise/enable; echo 1 >
-> /sys/kernel/debug/tracing/events/ipi/ipi_entry/enable; echo 1 >
-> /sys/kernel/debug/tracing/tracing_on; taskset -c 0 insmod
-> /kmods/ipi_test.ko; echo 0 > /sys/kernel/debug/tracing/tracing_on;
-> echo 0 > /sys/kernel/debug/tracing/events/ipi/ipi_raise/enable; echo 0
-> > /sys/kernel/debug/tracing/events/ipi/ipi_entry/enable; echo >
-> /sys/kernel/debug/tracing/events/ipi/filter; cat
-> /sys/kernel/debug/tracing/trace
+> Currently the syscon+simple-mfd binding is quite broad and allows
+> any child or property, thus above rule cannot be enforced.
 > 
-> The trace output as below:
+> Split the syscon.yaml binding into:
+> 1. Common syscon properties, used potentially by many bindings.
+> 2. Simple syscon devices (NO simple-mfd!).
 > 
-> # tracer: nop
-> #
-> # entries-in-buffer/entries-written: 28/28   #P:12
-> #
-> #                                _-------=> irqs-off/BH-disabled
-> #                               / _------=> need-resched
-> #                              | / _-----=> need-resched-lazy
-> #                              || / _----=> hardirq/softirq
-> #                              ||| / _---=> preempt-depth
-> #                              |||| / _--=> preempt-lazy-depth
-> #                              ||||| / _-=> migrate-disable
-> #                              |||||| /     delay
-> #           TASK-PID     CPU#  |||||||  TIMESTAMP  FUNCTION
-> #              | |         |   |||||||      |         |
-> 
->           <idle>-0       [009] dn.h2..   555.400822: ipi_raise:
-> target_mask=00000000,00000002 (Function call interrupts)
->           <idle>-0       [001] d..h1..   555.400832: ipi_entry:
-> (Function call interrupts)
->           insmod-1644    [000] ....1..   555.401628: ipi_raise:
-> target_mask=00000000,00000ffe (Function call interrupts)
->           <idle>-0       [001] d..h1..   555.401630: ipi_entry:
-> (Function call interrupts)
->           <idle>-0       [009] d..h1..   555.401631: ipi_entry:
-> (Function call interrupts)
->           <idle>-0       [011] d..h1..   555.401633: ipi_entry:
-> (Function call interrupts)
->           <idle>-0       [003] d..h1..   555.401633: ipi_entry:
-> (Function call interrupts)
->           <idle>-0       [008] d..h1..   555.401633: ipi_entry:
-> (Function call interrupts)
->           <idle>-0       [002] d..h1..   555.401634: ipi_entry:
-> (Function call interrupts)
->           <idle>-0       [010] d..h1..   555.401634: ipi_entry:
-> (Function call interrupts)
->           <idle>-0       [004] d..h1..   555.401635: ipi_entry:
-> (Function call interrupts)
->           <idle>-0       [005] d..h1..   555.401635: ipi_entry:
-> (Function call interrupts)
->           <idle>-0       [006] d..h1..   555.401635: ipi_entry:
-> (Function call interrupts)
->           <idle>-0       [007] d..h1..   555.401635: ipi_entry:
-> (Function call interrupts)
->           insmod-1644    [000] ....1..   555.401643: ipi_raise:
-> target_mask=00000000,00000ffe (Function call interrupts)
->           <idle>-0       [001] d..h1..   555.401644: ipi_entry:
-> (Function call interrupts)
->           <idle>-0       [002] d..h1..   555.401645: ipi_entry:
-> (Function call interrupts)
->           <idle>-0       [003] d..h1..   555.401645: ipi_entry:
-> (Function call interrupts)
->           <idle>-0       [004] d..h1..   555.401645: ipi_entry:
-> (Function call interrupts)
->           <idle>-0       [006] d..h1..   555.401645: ipi_entry:
-> (Function call interrupts)
->           <idle>-0       [005] d..h1..   555.401645: ipi_entry:
-> (Function call interrupts)
->           <idle>-0       [007] d..h1..   555.401645: ipi_entry:
-> (Function call interrupts)
->           <idle>-0       [008] d..h1..   555.401645: ipi_entry:
-> (Function call interrupts)
->           <idle>-0       [009] d..h1..   555.401645: ipi_entry:
-> (Function call interrupts)
->           <idle>-0       [010] d..h1..   555.401645: ipi_entry:
-> (Function call interrupts)
->           <idle>-0       [011] d..h1..   555.401646: ipi_entry:
-> (Function call interrupts)
->           insmod-1644    [000] ....1..   555.401908: ipi_raise:
-> target_mask=00000000,00000400 (Function call interrupts)
->           <idle>-0       [010] d..h1..   555.401911: ipi_entry:
-> (Function call interrupts)
-> 
-> I am curious why there're two IPI broadcasts to all the other
-> cpus(1-11) before the real smp_call_function_single(10) trace
-> event(the last two lines of the above trace output), any comments
-> about that?
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-You may want to enable stack trace recording and find out for yourself
-where these ipi_raise() calls are coming from.
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-	M.
 
--- 
-Without deviation from the norm, progress is not possible.
