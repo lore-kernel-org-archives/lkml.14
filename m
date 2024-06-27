@@ -1,115 +1,221 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D951BF3A;
-	Thu, 27 Jun 2024 08:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83DB9819
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 08:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719478368; cv=none; b=tEXpBcmfMZia0lrTB1JSbYOdF2XG494zVIFN8FrSiozcgmWmHEbtgXOlnw4zD9mIaRK8M1Z/M4k0FWr+va4xfHdI9eKtkp9pT6MZ0dThIHezGS4XUi9PEINfO1FUb53rx8aG91iMgk7Qg5jMOsZRMjx/EL20vPXqght/DJLWLgY=
+	t=1719478512; cv=none; b=d/tW6R4zRcHG0k+6aAZMLHFqk//xQVByfJJY6KRAtB30NVXi1lXXB71O9VZVoaG65D1ws8gtOPNHP0ZqGtMzp/ZZ4Y7ZWDdf/2uObusFFQNeXiyFE6RwlsNFSaLIhazO9+OJ845h60zYfwtUGD6Hpt7pXg1YVphp5Qb4QmpyvQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719478368; c=relaxed/simple;
-	bh=SsONSSD7pAnkGcOJLk3dkURzGX57lmCijAUlTKRAQFc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tr80HO1/nhxsn8+bP9BifrwF6ZaJexwTHuz93lzhQz0lMnFP1Z63+otqZXfs1uXErAviQ8mUqUkd7rpviKbTRB57UVUDd9flkPqtAp916qu0gKHPr8m1F4C/vdN7ibFDLp2faEtjZ5TGtQaXE542GtKUJ9OdYHvKW3INBdPTlYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=onYVcOHe; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1719478512; c=relaxed/simple;
+	bh=SI2NAcJ6q+eLkk/ZtOIC2QQh9qcIfBfjVIAfw9BpKPA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I0Oi0LM0sV1iquIIYAP6DJ8ycHZGA37U5zDY6N8gmLQSCoxXE2dDhuFX8GFWbv+2aE0I16Awh3NXZKLH09Naelu5eJsiRtkxFZ/jbAc832hHyDiXoY0r4cfi44DdiImLNJNGwV5Mljyp6BfhgYLSXILq+BJNIk0O87Xxoa+YTvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C4yNgCQQ; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="onYVcOHe"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45R7ohBg009985;
-	Thu, 27 Jun 2024 10:50:55 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	kfYZ2gkK9VCqIVUh4OLEdbTiAXaU0YJT9q5BaZZNaJY=; b=onYVcOHekXslD15N
-	+o4fkLSStepfc0dMbHrF5dgYaWpEN4nXMxRzBMrMK7Nbt8jkg5YffCbD0TzYuQk+
-	Sl65HboCSrVL9BE9LrEDZ74Bfk3KYiZf8ZLUaAs9SNHAylLaBwNQGhJnLG0Fy1fA
-	Z1OKmAI9ZxtECTT/2IDjH61q8NE5vlMKXi6gfgdMa5F2cmy9E8vSShLssd0e30sE
-	RudZ9xnzxzPuT5U022sKuWGwk2OeH+Z/2B2ZuuSzH0SOpoKFNg5w22tc2eQEHKsT
-	L/h3w82QzypTIJO97SqQ2w/1wpNk0cSxjbkmUN0yV+SxVjniLlwMItAh7G2vpikg
-	LCUuFw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yx9jjhynh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Jun 2024 10:50:55 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 0FE9540055;
-	Thu, 27 Jun 2024 10:50:41 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 30E022138EF;
-	Thu, 27 Jun 2024 10:49:27 +0200 (CEST)
-Received: from localhost (10.48.86.164) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 27 Jun
- 2024 10:49:26 +0200
-From: Christophe Roullier <christophe.roullier@foss.st.com>
-To: "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni
-	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark
- Brown <broonie@kernel.org>,
-        Christophe Roullier
-	<christophe.roullier@foss.st.com>,
-        Marek Vasut <marex@denx.de>
-CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [net-next,PATCH 1/2] net: stmmac: dwmac-stm32: Add test to verify if ETHCK is used before checking clk rate
-Date: Thu, 27 Jun 2024 10:49:16 +0200
-Message-ID: <20240627084917.327592-2-christophe.roullier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240627084917.327592-1-christophe.roullier@foss.st.com>
-References: <20240627084917.327592-1-christophe.roullier@foss.st.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C4yNgCQQ"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3651ee582cfso4142677f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 01:55:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719478508; x=1720083308; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vKY1wHGd2jQTX6s0Vwl5LhsVj1svO/w7qYtrjohC76E=;
+        b=C4yNgCQQcqwK8sYUN+inyelMWAvifdIvOUc4qrfbDoP1PpbqnlOwCqoZUItl9WwE8v
+         0u5yjd9HqJ9JceERD65hiU6VX8T0dODaxI262VV2u6CHndgEgDcAu+lcz9aoarItc8NK
+         RPqG6EECZCCoevIWVGVx/2268d82LYm1OzxZIhN5JlPzbncJzbaD0IZ2FwvVhSeLLL9u
+         0MzGQ857N7PJM9SGfhv+0uKemFJC6d7alZwZ9xih/lZLkuqU328JVEO/lEe3NW0vq4xE
+         iieL8+ihkJi2Rwk1XPYXHLf9zUj0hQ2tT6fKkb681Q02MT37eNw6gr6uSnfGhI7e6YDG
+         lQTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719478508; x=1720083308;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vKY1wHGd2jQTX6s0Vwl5LhsVj1svO/w7qYtrjohC76E=;
+        b=EdTsKz8Fr4N8HNaqztnX2XLTR2wFL3Zv44jt0dnuxnfUFPs3O1BiZG3RtgmUh4gbHS
+         9Fex/zSC5y8D+oVY6E4H5n9qvyWnfJOp7xtvLIls0+rQdZrMg0A3LEMc2WDnUbhmtHZR
+         3j30eIqu37ejIort0l0MXKugVV2QDNpOSW3ngDn7Lb/nfttZ0ZLLRS+eieFeyu0R91xD
+         Mb70zVpS1Dw5/lRK4BMQW2OkTT/PtiFuhFSCB5159s5sReNWBniBSuOKFUJ8OP3zoeht
+         QeeyC9Z9DSblm/kcF2EXiieP++0CRaUuEPvDNvIxRFixrn0WBytY1JEafdqnhbr9ujCf
+         YD7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXLtTdlsG46S7lD+bpcdA3+omNij9UoKKRzZRk9XNEg3AOX0QtIi89ifPY5jyIuuZqRFeGks7kAbCw4SovpiP4RqWOvivUpuIBIZ+NT
+X-Gm-Message-State: AOJu0Yy7tNtifGv5DdtAxfYumhHzKlywBSGhA8kiin0Plv5JZhwMvWe+
+	UGxy2Hnc6egZytN9prd4Y7iB0/r2FP8eTnecWM/OTu/dp+OqZrY6fZHAvnqOUtA=
+X-Google-Smtp-Source: AGHT+IHEWMZlrh+0IzebfjKN3mv79RoRRsGd5oIJLnGSgpvqNtF686X76HGwtDXthWglJFJExrD3Xw==
+X-Received: by 2002:a5d:4c86:0:b0:360:727b:8b47 with SMTP id ffacd0b85a97d-366e9629df0mr9071070f8f.63.1719478507878;
+        Thu, 27 Jun 2024 01:55:07 -0700 (PDT)
+Received: from mai.box.freepro.com ([2a05:6e02:1041:c10:c49e:e1a5:3210:b8c0])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36743699a70sm1138883f8f.82.2024.06.27.01.55.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jun 2024 01:55:07 -0700 (PDT)
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: daniel.lezcano@linaro.org,
+	rafael@kernel.org
+Cc: linux-pm@vger.kernel.org,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] thermal/core: Introduce user trip points
+Date: Thu, 27 Jun 2024 10:54:50 +0200
+Message-ID: <20240627085451.3813989-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-27_04,2024-06-25_01,2024-05-17_01
 
-When we want to use clock from RCC to clock Ethernet PHY (with ETHCK)
-we need to check if value of clock rate is authorized but we must add
-test before to check if ETHCK is used.
+Currently the thermal framework has 4 trip point types:
 
-Fixes: 582ac134963e ("net: stmmac: dwmac-stm32: Separate out external clock rate validation")
+- active : basically for fans (or anything requiring energy to cool
+  down)
 
-Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
+- passive : a performance limiter
+
+- hot : for a last action before reaching critical
+
+- critical : a without return threshold leading to a system shutdown
+
+A thermal zone monitors the temperature regarding these trip
+points. The old way to do that is actively polling the temperature
+which is very bad for embedded systems, especially mobile and it is
+even worse today as we can have more than fifty thermal zones. The
+modern way is to rely on the driver to send an interrupt when the trip
+points are crossed, so the system can sleep while the temperature
+monitoring is offloaded to a dedicated hardware.
+
+However, the thermal aspect is also managed from userspace to protect
+the user, especially tracking down the skin temperature sensor. The
+logic is more complex than what we found in the kernel because it
+needs multiple sources indicating the thermal situation of the entire
+system.
+
+For this reason it needs to setup trip points at different levels in
+order to get informed about what is going on with some thermal zones
+when running some specific application.
+
+For instance, the skin temperature must be limited to 43°C on a long
+run but can go to 48°C for 10 minutes, or 60°C for 1 minute.
+
+The thermal engine must then rely on trip points to monitor those
+temperatures. Unfortunately, today there is only 'active' and
+'passive' trip points which has a specific meaning for the kernel, not
+the userspace. That leads to hacks in different platforms for mobile
+and embedded systems where 'active' trip points are used to send
+notification to the userspace. This is obviously not right because
+these trip are handled by the kernel.
+
+This patch introduces the 'user' trip point type where its semantic is
+simple: do nothing at the kernel level, just send a notification to
+the user space.
+
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c | 3 +++
- 1 file changed, 3 insertions(+)
+ .../devicetree/bindings/thermal/thermal-zones.yaml        | 1 +
+ drivers/thermal/thermal_core.c                            | 8 ++++++++
+ drivers/thermal/thermal_of.c                              | 1 +
+ drivers/thermal/thermal_trace.h                           | 4 +++-
+ drivers/thermal/thermal_trip.c                            | 1 +
+ include/uapi/linux/thermal.h                              | 1 +
+ 6 files changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-index b2db0e26c4e4..8b85265ca6cf 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-@@ -195,6 +195,9 @@ static int stm32mp1_validate_ethck_rate(struct plat_stmmacenet_data *plat_dat)
- 	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
- 	const u32 clk_rate = clk_get_rate(dwmac->clk_eth_ck);
+diff --git a/Documentation/devicetree/bindings/thermal/thermal-zones.yaml b/Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+index 68398e7e8655..cb9ea54a192e 100644
+--- a/Documentation/devicetree/bindings/thermal/thermal-zones.yaml
++++ b/Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+@@ -153,6 +153,7 @@ patternProperties:
+               type:
+                 $ref: /schemas/types.yaml#/definitions/string
+                 enum:
++                  - user     # enable user notification
+                   - active   # enable active cooling e.g. fans
+                   - passive  # enable passive cooling e.g. throttling cpu
+                   - hot      # send notification to driver
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index 2aa04c46a425..506f880d9aa9 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -734,6 +734,14 @@ int thermal_bind_cdev_to_trip(struct thermal_zone_device *tz,
+ 	if (tz != pos1 || cdev != pos2)
+ 		return -EINVAL;
  
-+	if (!dwmac->enable_eth_ck)
-+		return 0;
++	/*
++	 * It is not allowed to bind a cooling device with a trip
++	 * point user type because no mitigation should happen from
++	 * the kernel with these trip points
++	 */
++	if (trip->type == THERMAL_TRIP_USER)
++		return -EINVAL;
 +
- 	switch (plat_dat->mac_interface) {
- 	case PHY_INTERFACE_MODE_MII:
- 	case PHY_INTERFACE_MODE_GMII:
+ 	/* lower default 0, upper default max_state */
+ 	lower = lower == THERMAL_NO_LIMIT ? 0 : lower;
+ 
+diff --git a/drivers/thermal/thermal_of.c b/drivers/thermal/thermal_of.c
+index aa34b6e82e26..f6daf921a136 100644
+--- a/drivers/thermal/thermal_of.c
++++ b/drivers/thermal/thermal_of.c
+@@ -60,6 +60,7 @@ static const char * const trip_types[] = {
+ 	[THERMAL_TRIP_PASSIVE]	= "passive",
+ 	[THERMAL_TRIP_HOT]	= "hot",
+ 	[THERMAL_TRIP_CRITICAL]	= "critical",
++	[THERMAL_TRIP_USER]	= "user",
+ };
+ 
+ /**
+diff --git a/drivers/thermal/thermal_trace.h b/drivers/thermal/thermal_trace.h
+index df8f4edd6068..739228ecc2e2 100644
+--- a/drivers/thermal/thermal_trace.h
++++ b/drivers/thermal/thermal_trace.h
+@@ -15,13 +15,15 @@ TRACE_DEFINE_ENUM(THERMAL_TRIP_CRITICAL);
+ TRACE_DEFINE_ENUM(THERMAL_TRIP_HOT);
+ TRACE_DEFINE_ENUM(THERMAL_TRIP_PASSIVE);
+ TRACE_DEFINE_ENUM(THERMAL_TRIP_ACTIVE);
++TRACE_DEFINE_ENUM(THERMAL_TRIP_USER);
+ 
+ #define show_tzt_type(type)					\
+ 	__print_symbolic(type,					\
+ 			 { THERMAL_TRIP_CRITICAL, "CRITICAL"},	\
+ 			 { THERMAL_TRIP_HOT,      "HOT"},	\
+ 			 { THERMAL_TRIP_PASSIVE,  "PASSIVE"},	\
+-			 { THERMAL_TRIP_ACTIVE,   "ACTIVE"})
++			 { THERMAL_TRIP_ACTIVE,   "ACTIVE"}),	\
++			 { THERMAL_TRIP_USER,     "USER"})
+ 
+ TRACE_EVENT(thermal_temperature,
+ 
+diff --git a/drivers/thermal/thermal_trip.c b/drivers/thermal/thermal_trip.c
+index 2a876d3b93aa..a0780bb4ff0d 100644
+--- a/drivers/thermal/thermal_trip.c
++++ b/drivers/thermal/thermal_trip.c
+@@ -10,6 +10,7 @@
+ #include "thermal_core.h"
+ 
+ static const char *trip_type_names[] = {
++	[THERMAL_TRIP_USER] = "user",
+ 	[THERMAL_TRIP_ACTIVE] = "active",
+ 	[THERMAL_TRIP_PASSIVE] = "passive",
+ 	[THERMAL_TRIP_HOT] = "hot",
+diff --git a/include/uapi/linux/thermal.h b/include/uapi/linux/thermal.h
+index fc78bf3aead7..84e556ace5f5 100644
+--- a/include/uapi/linux/thermal.h
++++ b/include/uapi/linux/thermal.h
+@@ -14,6 +14,7 @@ enum thermal_trip_type {
+ 	THERMAL_TRIP_PASSIVE,
+ 	THERMAL_TRIP_HOT,
+ 	THERMAL_TRIP_CRITICAL,
++	THERMAL_TRIP_USER,
+ };
+ 
+ /* Adding event notification support elements */
 -- 
-2.25.1
+2.43.0
 
