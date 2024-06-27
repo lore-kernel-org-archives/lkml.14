@@ -1,144 +1,79 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB76E179965
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 12:57:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1261179943
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 12:57:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719493049; cv=none; b=gWfov2poB4UWyF1Xkn2F3XNG2tedYscCx2GEQVdSQi4tB7z89cZ2fyimUV4gxhXA53OlXtKqraDP3veKbwxPVBa3O0N3nTckeR/ixgs5yAr3jXwJOlazAsJa/5I1hri8SHKWdNHlvcGYZDtpEGZC5a5a83jtzdcJQk4KCZPmbp4=
+	t=1719493070; cv=none; b=SI2zigQDBAIR5CNeNNt990H/p5d0/u/MHhacNFWcMMqPero9ufcaI647yYdMEzLN6hr5X01+jIazYexWtNNdxsFTuG2TvzCrdJYL9MT50OeNuV3Sv8r0zuZwO2y9GPKurruMmdi7y8GGkrsaMkiv/7Y1Q7/jeGdCPgy4ZZbM+zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719493049; c=relaxed/simple;
-	bh=NyS3TLZdFohVfLQ5bqtioaXNOjd/oLz6cpJ7e11ZJ7U=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NV0yu14XSIU4pZ3PjvxF3QL+HZ4tU+YGwhoYEzxlAmCreJ6Gol72n2zVpOQS3ubUiYXzGQFER0KKSN/DzczolEpYwdCPYFkyqBqHYOLkUxhD2c2pJ8juyz1QYmQhxtsc6+6RxzkhJ7ciEbQl6vkspmVmnT0Oi4s31vh2Ro21aYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rHChTwNA; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719493070; c=relaxed/simple;
+	bh=fvR4A9pNXpEIRIY1bBkJd18Tq+Rd3KBrPaSIVfvQWzQ=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=r9mlv8zkKJhUWd471naH5ez1tEI8JpC9EF/k+ugHC4RSQMX50uURrvZseTduGZ9CZ39sUb+wShQgruDYPZUKBNqPZGoi++ejIoC9RID7yfY+zEMHkKl4wuO1wec5Mot4ncAVPTWpqDmM3PWr8D2pqV6FmBPeMN9zoVGOfub5T1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=D5Ow2pba; arc=none smtp.client-ip=162.62.58.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rHChTwNA"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4248e28de9eso40815865e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 05:57:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719493045; x=1720097845; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Te6g76k8XNkEaZHqMN4hQzbVVFxq2CbJOANJNvJMA+w=;
-        b=rHChTwNAwEgYdw0OG3LW66N95OHxH6baL/u1XKNaSBEX/UAMjRxcP2m/+4IegV040q
-         DdOR/fbWvLIbP9/rT01GoiSLY6qavZ4K8vYhrN2whoeSiTWMi8qKG1VwKapKFi+TX9eN
-         RE1H32xAufRPFc6xJIHvDSK8rc1dBWlxFHU6YI0aacZMvqsOaUkBuPUXapbHp/f7TFKp
-         hBkCjoE/1VDblTj+7m/cd/d5oYzsXJ/WsMcfog/5iu4qXqTMLu1cie6Kvpl7058HsdU1
-         imf8MnQQsWZVBjgmi1EydvWkMxbOGWYaO70XO8Lhpb4EaOVq5MfMIDDKnZmXNQWTLO1C
-         /LuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719493045; x=1720097845;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Te6g76k8XNkEaZHqMN4hQzbVVFxq2CbJOANJNvJMA+w=;
-        b=FylgtEohUMFkj4OIPaqDiJWtUrBWDh4VZ4+WkbyNsmIxBrQ6VpStR4WKfgRH+3aGSV
-         TqSN6rVXui1qvrO4hCyxsUzeG0zPQaoafNzqk4PpGBnbmQQRVVHIIAsA/qWyMuYmvJuv
-         SSIQGJyVJcjZu4w9MnAJ2+cd4eaKRSXWD7SifPF/EMngQcd4eXQEK4k96NI1dcpbklsi
-         vI8az3HAZjOIJpdUgfbEjITkru3NbA3oNw3iTPMadS06hUWvdgc6aJxcehtwrLmj0WXZ
-         nqrn/U72fRFgaK40GR1MDD1jzuPtxTxyrOaNctfRB8RF67B9UtQ8GILEjpRGm5EcwOA1
-         P3yw==
-X-Forwarded-Encrypted: i=1; AJvYcCV4dSDwinP7sUNXfcovQsa8hmGpPVCNmqSzTQK7dd3tMU5ZyGxQXGa0Ku8I6lR8OAge7RiNaRuJfL1ydzO2Tx8C+0VONKjese4yisfA
-X-Gm-Message-State: AOJu0YwmjApqKhi5480fH3FfE6sHGJzbrnXjyp/jgxFBoH3gwnnqTwOi
-	NaUwT7l7wY7ZfzuzOquiYpiwZXLhrHmSo0AtVezfb4SUvOEVFnnX8Db3KLL2uBOmkYXBvVB7tXS
-	FNFI=
-X-Google-Smtp-Source: AGHT+IFBnAk/qN/L3JWjCwHZN/xfyMXbj6Qd6jXyAHhIu3H2hS3NCKaHjU/ZqsHMpoDfIu2ZxGcesQ==
-X-Received: by 2002:a5d:5f8f:0:b0:366:f41f:8cc7 with SMTP id ffacd0b85a97d-366f41f8d56mr9555673f8f.46.1719493044795;
-        Thu, 27 Jun 2024 05:57:24 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3674357fcecsm1800752f8f.26.2024.06.27.05.57.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 05:57:24 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Date: Thu, 27 Jun 2024 14:57:16 +0200
-Subject: [PATCH 3/3] arm64: dts: qcom: sm8650-qrd: add port mapping to
- speakers
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="D5Ow2pba"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1719492757; bh=WSI88o6L/LDt7bMEHCv1PQvxM0hL4VvO3tmEvcA7Of0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=D5Ow2pbadKEijBWjVkelcM8NhQWQPQqN64cDMGWYcQ3zG1TjC3FClm6/Ivoln25hO
+	 /okDnhA1WWihtZ2TZUBTGSNdXA7OxVGPlauvIW5iSs7iJlInnIHpeMxsCTzRppjDwF
+	 rKe0VaAe41sbNHTOrdvabZU0brcJA8aFE3EJY1ic=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.103])
+	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
+	id D23AD02D; Thu, 27 Jun 2024 20:52:35 +0800
+X-QQ-mid: xmsmtpt1719492755tb5sccimd
+Message-ID: <tencent_B71CE90EEE3ECDAC78E66E9C2FC96C1C950A@qq.com>
+X-QQ-XMAILINFO: MW5hkHoBpWXyDGItSESgsV56kq+BspcqhHXVPmEepa/vsF0IHcBEJPvDQ9++G+
+	 pOQsGqspxFtn56nAc/a978QM7m6VMSJiOEIwVy2IMLBu7uiRXwTUwMzsLUkW0KTegbg7CXO1ptOy
+	 uuqXD2EYkqCxO2ICRllgv7PKkzWykp5+Yc+FIsg6+I32Vtf8/wMgAzm9cjcFc4DNfWNJpk5hxDMB
+	 bMl5sHsJ0HwM3ItI3Rc+C0DTlws2Dd3gfgc+h7Mh4S6n9XPVlZYkt+oz795unVIeFr1T+gxlq8nq
+	 ddHjw/xVpAbxAgEYMOmUYBLfuscc/EppiVHe8OljKzrWOEbAdz5syt2L3zgmg4lIhB+UGYVJGYHt
+	 rGMNgO6y10vP7W0GxhkxXblrB9iBPQ30/+L3VzMYr+yvD74TmNEBr09ds5iBZLdKnAJW9IXp90ld
+	 bq2OQWu6zsexR/cGfCoMR2VXMSthCIKPh+5COEeFCSyedzItNy6OiotpNbDbQM2oHmtbRxjXoW9f
+	 xi05zp0TuOOTzA/wx/j5gM2VgvsDJZXweVvC119WXvdwPcqQugAMtyafjlI8JmPdOTR1+VYmczRL
+	 oMOUScsEVEgtKqah1MUKjGsohPrdFBt5bUtlqddp6LUX8Jmuxbs+GMfClxX81e8ovXvx9ktOnmcQ
+	 Z6yfW4UDg1Nfsz9Pb/PjlklPDeOmkmUKiDbuwZzmCzR6SA2XktUKp+xT6F6DVseG3YB+b65thrpl
+	 67iBWALIcrF6hqDKOOPExVjIb+his8KsAjTksmo9nz6WmQ7bFK929b4qTeSer4i4AOV7yV0NCOB7
+	 01PiHEPDgzosl5CEyeS93YTp/GJi9rbD3R8EpEeu1qMcG1htBYrL2s7SCJ+xuz5Y8vWqnk/jB8jz
+	 px8Q4ew4ie3jZIxVa4OIShwnSHk5/NZMDTexwN6pt0aBUw+VooTr/5PFF+ajgRGkpOPaP7Wy2ApN
+	 0KmXQHA3H0BqDGmYXwOY8UyT8Kdzk6B/UR+v24GSc=
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+c041b4ce3a6dfd1e63e2@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: [syzbot] [net?] KASAN: slab-use-after-free Write in l2tp_session_delete
+Date: Thu, 27 Jun 2024 20:52:31 +0800
+X-OQ-MSGID: <20240627125230.731478-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <0000000000008405e0061bb6d4d5@google.com>
+References: <0000000000008405e0061bb6d4d5@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240627-topic-sm8650-upstream-was-port-mapping-v1-3-4700bcc2489a@linaro.org>
-References: <20240627-topic-sm8650-upstream-was-port-mapping-v1-0-4700bcc2489a@linaro.org>
-In-Reply-To: <20240627-topic-sm8650-upstream-was-port-mapping-v1-0-4700bcc2489a@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1742;
- i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=NyS3TLZdFohVfLQ5bqtioaXNOjd/oLz6cpJ7e11ZJ7U=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBmfWGwOJO9+ISZb4i5cZ9u+tTfMObpcRWR5nBDMMS9
- oSn5o8KJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZn1hsAAKCRB33NvayMhJ0UMnD/
- 0Rpuro+D1aA8cM4/FNDFr2dRklfDJDjISR9dxszySGW1J/7E0jO54HEbwZmtXYBSB2Jclu533WMB+u
- JF/ZBlFyo2TxUnIu+2P5RMYeoQUFr2B7fDG8aM3ROQw9MjnO1TOb3lYVJcKjSyL58Pl+F6Z8NNyS8b
- VAb3N3CeSrTpaITIkpMYNcLo9rgKFXxD/8/J6yMavlfKPY2MQEtPBvIZ8WOwKwI3n2tGhSqHD5qZ+L
- 9Mik1uwBpeAthGtEPRvaGHWOEkUS+PnD+adqLm6yv9qhbBQRcZkxABGa8dxMf0ktGD31+2F7E5WiPn
- h1LsC1y3/KIB/6G12QQUnVbmsw4Yx7yveirKR1u9isQNqVD0QFVC+eZmL8rjd9JQJhv8fAuA7hkCdf
- TsgIhIrZCE2UcqUkZJaRUxuujgBOmxk6MYEQ4XFxK1UXSzNp5lPB/8rqbCy/fYGKDhgXRnh70JKVpr
- XqFZppJC6NMouInC1ZK3hJdlsR2Hdt0GygRRRMDrHYXgp4NsinS3ncHP+9uKI5CPBzme/Xt2SWBZGs
- sHkEOXexD7jr8RLhny7Hk6swWn/xvaajpqUtyzmb6avbanYApWXBm1O1B+20qMoNvZ5PWyA9yK2z8v
- AXseo6hH9+zDVlvoKTH9LNO4ILPy5A0p0ADAgZtiKeLCzwrw9h2euKxPF/lQ==
-X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
- fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
+Content-Transfer-Encoding: 8bit
 
-Add appropriate mappings of Soundwire ports of WSA8845 speaker
-to correctly map the Speaker ports to the WSA macro ports.
+delete tunnl session list
 
-Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
----
- arch/arm64/boot/dts/qcom/sm8650-qrd.dts | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+#syz test: linux-next 185d72112b95
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8650-qrd.dts b/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
-index 6e3c4d8dcc19..b0d7927b708f 100644
---- a/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
-@@ -1089,6 +1089,16 @@ left_spkr: speaker@0,0 {
- 		sound-name-prefix = "SpkrLeft";
- 		vdd-1p8-supply = <&vreg_l15b_1p8>;
- 		vdd-io-supply = <&vreg_l3c_1p2>;
-+
-+		/*
-+		 * WSA8845 Port 1 (DAC)     <=> SWR0 Port 1 (SPKR_L)
-+		 * WSA8845 Port 2 (COMP)    <=> SWR0 Port 2 (SPKR_L_COMP)
-+		 * WSA8845 Port 3 (BOOST)   <=> SWR0 Port 3 (SPKR_L_BOOST)
-+		 * WSA8845 Port 4 (PBR)     <=> SWR0 Port 7 (PBR)
-+		 * WSA8845 Port 5 (VISENSE) <=> SWR0 Port 10 (SPKR_L_VI)
-+		 * WSA8845 Port 6 (CPS)     <=> SWR0 Port 13 (CPS)
-+		 */
-+		qcom,port-mapping = <1 2 3 7 10 13>;
- 	};
+diff --git a/net/l2tp/l2tp_ppp.c b/net/l2tp/l2tp_ppp.c
+index 3596290047b2..1fd27c902d80 100644
+--- a/net/l2tp/l2tp_ppp.c
++++ b/net/l2tp/l2tp_ppp.c
+@@ -446,6 +446,7 @@ static int pppol2tp_release(struct socket *sock)
+ 	if (session) {
+ 		struct pppol2tp_session *ps;
  
- 	/* WSA8845, Speaker Right */
-@@ -1102,6 +1112,16 @@ right_spkr: speaker@0,1 {
- 		sound-name-prefix = "SpkrRight";
- 		vdd-1p8-supply = <&vreg_l15b_1p8>;
- 		vdd-io-supply = <&vreg_l3c_1p2>;
-+
-+		/*
-+		 * WSA8845 Port 1 (DAC)     <=> SWR0 Port 4 (SPKR_R)
-+		 * WSA8845 Port 2 (COMP)    <=> SWR0 Port 5 (SPKR_R_COMP)
-+		 * WSA8845 Port 3 (BOOST)   <=> SWR0 Port 6 (SPKR_R_BOOST)
-+		 * WSA8845 Port 4 (PBR)     <=> SWR0 Port 7 (PBR)
-+		 * WSA8845 Port 5 (VISENSE) <=> SWR0 Port 11 (SPKR_R_VI)
-+		 * WSA8845 Port 6 (CPS)     <=> SWR0 Port 13 (CPS)
-+		 */
-+		qcom,port-mapping = <4 5 6 7 11 13>;
- 	};
- };
++		list_del_init(&session->list);
+ 		l2tp_session_delete(session);
  
-
--- 
-2.34.1
+ 		ps = l2tp_session_priv(session);
 
