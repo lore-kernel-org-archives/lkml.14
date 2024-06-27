@@ -1,271 +1,131 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D978473451;
-	Thu, 27 Jun 2024 07:45:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168DC6BFB5
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 07:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719474306; cv=none; b=mvxVW+D5rjyRJNzHxfqL0IrI3rsO4TReJdDY+okz0VkV6PxpBLA9YoiiFmUgs8ghg0PdPUyZ6qqY0tn/knk5y2HTzF5rcYIoaJIw2drbCAPeV4bgcQtOzbcME2gb8ALoIgkgNWswhsPqO10R4CacAonCqWyKI2OJAqQI/68XxSc=
+	t=1719474398; cv=none; b=cfTSvRCh2YBksz4poPfvMVnxVr2FqL4UF/mxjHg3xBMaWuqvFMYuhg8RBcnTrOqjGfquShXs1WmiyjBeXRVKOEAS0jayBrmCNBVcEHFK6y2EjjBV4tR5+bU18J04YpOzfVcaEhqBdZbIzHjXZXk9ARF5lNh0NgLe8geM4xan3Cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719474306; c=relaxed/simple;
-	bh=WGBUIcHN5qfrKcNJCDUcCejZX2LrCxsIOaj/7Ggttls=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=R8rypiYQo1RU6RetXKXi/nLZG319Fk2IqwlAdPY5p07Afv6FV7Cxq//FoPW4Dmvy0cT/7dJpzql6/psnmbswp06vUKQuOhvyAdBld8H+QSSFm/CsvDcWQOz6jo18KZYm+lnKrUSFQJCV7mtL1Y/anxZI4bz3GA0UfgG8R0hWorA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ovn.org; spf=pass smtp.mailfrom=ovn.org; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ovn.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ovn.org
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D1CDA1C0007;
-	Thu, 27 Jun 2024 07:44:58 +0000 (UTC)
-Message-ID: <bfae2a96-82f4-4aa4-865f-2619fccd286f@ovn.org>
-Date: Thu, 27 Jun 2024 09:44:57 +0200
+	s=arc-20240116; t=1719474398; c=relaxed/simple;
+	bh=BuvD71Fm5avvNowlEzPzilZrwxjVi5dfYmvQRQGc2qU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Wk2bzef0ScBZqim8iM0K6UEzv4zGq+IZyVBttm0ThpXocssFr69/MHQJyxWQIPtWcMxhyp0wbEDDIYTo4dOo2Q4Mc5HpJ44y8swvxtnk6M0lQiqJdDNWQC3z2jOzcQuqy5XxdnxK8YAA/Qf9oVsrtuJ4RwekPFaX+qBPA2ePz58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=lGziGwo0; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="lGziGwo0"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57cc1c00b97so1266775a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 00:46:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google; t=1719474395; x=1720079195; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=36vwLOKZuveqM3zMEra5hrjPPxMTRF7K2+z2HyelWyc=;
+        b=lGziGwo0Zlu8lyc4vn1kKtDDgz+Vr7F/ueYjl1J8iAATczq4cRdVd3PY4ozcjg8NvL
+         lcauMwwZ1uUpUcfgfyFg70RpQBBK/WEi//6jDnk6bAAk47dkLOwutvFUkbGJTxue5B4O
+         KQdJ7/ny4vCZYuYRW+TWlKrbCUpsn+/k9kpuY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719474395; x=1720079195;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=36vwLOKZuveqM3zMEra5hrjPPxMTRF7K2+z2HyelWyc=;
+        b=gXpzIJnuATD7XNzCLH5xndBDMSjWMVswDr5AEqhMfT7DnW50J7cp72bKTMjC9zVwJo
+         T5F2/Ix1gv+hJJgaYsDg5MRwOxWgBOcI+uAM3Ylc5KuxBdyDWQYiASR/SuJH2k96ljK0
+         ie2nMl17Q2WU6RNQOGhHOsaLwNutCURBHg3kehHUrA3tFLyUb2bWdFcX0BagJjKgWmXI
+         i/x9AYCBH0QuqV15dXZ0uVKQB2bvBk5O5J2SUo2Xe1pCBf/qAFMIpo7XOqx7xxpirEtR
+         rEOA4XCbF95ciE0ZYP+BlFwOu/2UcZ4Oh4zWnwkS8nmMBhyFELUjWGpYoxURkxnJYDlS
+         qOdw==
+X-Forwarded-Encrypted: i=1; AJvYcCWZLIjYuvT0CYW1NDwX96ctH3pNjyy2HXDGJjJoVKjjzekOPDYyIPbVfbipQ75sNuSFHixITRKowDDvbGZCvMa4Jm79YY93ZEKl0KVl
+X-Gm-Message-State: AOJu0Yw3m9CDhnVmx8xr1pi5cJiZC9FlQBuVilPCqVo+F2Dghb/6Tani
+	uoS9iETPsDcgqizzSAAsib6eGM457GTVeOjaGL4YRP9rqbpLw4P/MEsxStwAaGQwWhwABUuybTk
+	lyUTRQ4Sm7B/kEug5n5Tza/6Md+7DnHvLl79svA==
+X-Google-Smtp-Source: AGHT+IF4QvA9OtmRLrKwo2Cra+HYMRi41YHuKkon7kVtS8vWKKWTl2KUd2TDtum+AMvzINHaOIuUg75ZsU7H8McLgJg=
+X-Received: by 2002:a50:9501:0:b0:579:ca97:da1b with SMTP id
+ 4fb4d7f45d1cf-57d4bd56be9mr8784780a12.6.1719474395273; Thu, 27 Jun 2024
+ 00:46:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: i.maximets@ovn.org, netdev@vger.kernel.org, aconole@redhat.com,
- echaudro@redhat.com, horms@kernel.org, dev@openvswitch.org,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Donald Hunter <donald.hunter@gmail.com>, Pravin B Shelar <pshelar@ovn.org>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v5 05/10] net: openvswitch: add emit_sample
- action
-To: =?UTF-8?Q?Adri=C3=A1n_Moreno?= <amorenoz@redhat.com>
-References: <20240625205204.3199050-1-amorenoz@redhat.com>
- <20240625205204.3199050-6-amorenoz@redhat.com>
- <f4e9f3db-d9bf-49a9-aa2d-db40b472c82f@ovn.org>
- <CAG=2xmPcLgTFK+o-A9HL4sPcLFqD_DS=H+T2woVLTvoAzU8ajQ@mail.gmail.com>
-Content-Language: en-US
-From: Ilya Maximets <i.maximets@ovn.org>
-Autocrypt: addr=i.maximets@ovn.org; keydata=
- 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
-In-Reply-To: <CAG=2xmPcLgTFK+o-A9HL4sPcLFqD_DS=H+T2woVLTvoAzU8ajQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: i.maximets@ovn.org
+References: <20230211064527.3481754-1-jstultz@google.com> <20230211064527.3481754-2-jstultz@google.com>
+ <CAOf5uwnW1u=nfFnj3C8kCVmhgwRaVh6sHZR1RGnXdbrCNpkGVg@mail.gmail.com>
+ <87o7porea9.ffs@tglx> <CAOf5uwmhtQ8GXhMiE-Y3-wgL5=xfjOv0Tpq1vqPB8p=LyZHBmw@mail.gmail.com>
+ <CAOf5uwmpayJwpAFzUS6qsCgdpyek1f-2t2t9YNr76vnRjSC8=w@mail.gmail.com>
+ <87a618qlcp.ffs@tglx> <CAOf5uw=a2RYYFj+4_WOX+KaF_FCXSsUgfM+T2m2XjVuqKMdooA@mail.gmail.com>
+ <87sff0ox1a.ffs@tglx> <CAJZ5v0iWZqAcbqdTuKbo35Gk6vNS0h9De20GDNZeZvqfhQiSWA@mail.gmail.com>
+ <87zg8ukd54.ffs@tglx> <87wn3ykbfa.ffs@tglx>
+In-Reply-To: <87wn3ykbfa.ffs@tglx>
+From: Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
+Date: Thu, 27 Jun 2024 09:46:24 +0200
+Message-ID: <CAOf5uwkR2TpXN=+D2Gz1M8MDfZn51g1Dqv6eFxSfciBSVA-f=A@mail.gmail.com>
+Subject: Re: [RFC][PATCH 2/2] time: alarmtimer: Use TASK_FREEZABLE to cleanup
+ freezer handling
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, John Stultz <jstultz@google.com>, 
+	LKML <linux-kernel@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Michael <michael@mipisi.de>, kernel-team@android.com, 
+	Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/26/24 22:07, Adrián Moreno wrote:
-> On Wed, Jun 26, 2024 at 12:51:19PM GMT, Ilya Maximets wrote:
->> On 6/25/24 22:51, Adrian Moreno wrote:
->>> Add support for a new action: emit_sample.
->>>
->>> This action accepts a u32 group id and a variable-length cookie and uses
->>> the psample multicast group to make the packet available for
->>> observability.
->>>
->>> The maximum length of the user-defined cookie is set to 16, same as
->>> tc_cookie, to discourage using cookies that will not be offloadable.
->>>
->>> Signed-off-by: Adrian Moreno <amorenoz@redhat.com>
->>> ---
->>>  Documentation/netlink/specs/ovs_flow.yaml | 17 +++++++++
->>>  include/uapi/linux/openvswitch.h          | 28 ++++++++++++++
->>>  net/openvswitch/Kconfig                   |  1 +
->>>  net/openvswitch/actions.c                 | 45 +++++++++++++++++++++++
->>>  net/openvswitch/flow_netlink.c            | 33 ++++++++++++++++-
->>>  5 files changed, 123 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/netlink/specs/ovs_flow.yaml b/Documentation/netlink/specs/ovs_flow.yaml
->>> index 4fdfc6b5cae9..a7ab5593a24f 100644
->>> --- a/Documentation/netlink/specs/ovs_flow.yaml
->>> +++ b/Documentation/netlink/specs/ovs_flow.yaml
->>> @@ -727,6 +727,12 @@ attribute-sets:
->>>          name: dec-ttl
->>>          type: nest
->>>          nested-attributes: dec-ttl-attrs
->>> +      -
->>> +        name: emit-sample
->>> +        type: nest
->>> +        nested-attributes: emit-sample-attrs
->>> +        doc: |
->>> +          Sends a packet sample to psample for external observation.
->>>    -
->>>      name: tunnel-key-attrs
->>>      enum-name: ovs-tunnel-key-attr
->>> @@ -938,6 +944,17 @@ attribute-sets:
->>>        -
->>>          name: gbp
->>>          type: u32
->>> +  -
->>> +    name: emit-sample-attrs
->>> +    enum-name: ovs-emit-sample-attr
->>> +    name-prefix: ovs-emit-sample-attr-
->>> +    attributes:
->>> +      -
->>> +        name: group
->>> +        type: u32
->>> +      -
->>> +        name: cookie
->>> +        type: binary
->>>
->>>  operations:
->>>    name-prefix: ovs-flow-cmd-
->>> diff --git a/include/uapi/linux/openvswitch.h b/include/uapi/linux/openvswitch.h
->>> index efc82c318fa2..8cfa1b3f6b06 100644
->>> --- a/include/uapi/linux/openvswitch.h
->>> +++ b/include/uapi/linux/openvswitch.h
->>> @@ -914,6 +914,31 @@ struct check_pkt_len_arg {
->>>  };
->>>  #endif
->>>
->>> +#define OVS_EMIT_SAMPLE_COOKIE_MAX_SIZE 16
->>> +/**
->>> + * enum ovs_emit_sample_attr - Attributes for %OVS_ACTION_ATTR_EMIT_SAMPLE
->>> + * action.
->>> + *
->>> + * @OVS_EMIT_SAMPLE_ATTR_GROUP: 32-bit number to identify the source of the
->>> + * sample.
->>> + * @OVS_EMIT_SAMPLE_ATTR_COOKIE: A variable-length binary cookie that contains
->>> + * user-defined metadata. The maximum length is OVS_EMIT_SAMPLE_COOKIE_MAX_SIZE
->>> + * bytes.
->>> + *
->>> + * Sends the packet to the psample multicast group with the specified group and
->>> + * cookie. It is possible to combine this action with the
->>> + * %OVS_ACTION_ATTR_TRUNC action to limit the size of the packet being emitted.
->>> + */
->>> +enum ovs_emit_sample_attr {
->>> +	OVS_EMIT_SAMPLE_ATTR_GROUP = 1,	/* u32 number. */
->>> +	OVS_EMIT_SAMPLE_ATTR_COOKIE,	/* Optional, user specified cookie. */
->>> +
->>> +	/* private: */
->>> +	__OVS_EMIT_SAMPLE_ATTR_MAX
->>> +};
->>> +
->>> +#define OVS_EMIT_SAMPLE_ATTR_MAX (__OVS_EMIT_SAMPLE_ATTR_MAX - 1)
->>> +
->>>  /**
->>>   * enum ovs_action_attr - Action types.
->>>   *
->>> @@ -966,6 +991,8 @@ struct check_pkt_len_arg {
->>>   * of l3 tunnel flag in the tun_flags field of OVS_ACTION_ATTR_ADD_MPLS
->>>   * argument.
->>>   * @OVS_ACTION_ATTR_DROP: Explicit drop action.
->>> + * @OVS_ACTION_ATTR_EMIT_SAMPLE: Send a sample of the packet to external
->>> + * observers via psample.
->>>   *
->>>   * Only a single header can be set with a single %OVS_ACTION_ATTR_SET.  Not all
->>>   * fields within a header are modifiable, e.g. the IPv4 protocol and fragment
->>> @@ -1004,6 +1031,7 @@ enum ovs_action_attr {
->>>  	OVS_ACTION_ATTR_ADD_MPLS,     /* struct ovs_action_add_mpls. */
->>>  	OVS_ACTION_ATTR_DEC_TTL,      /* Nested OVS_DEC_TTL_ATTR_*. */
->>>  	OVS_ACTION_ATTR_DROP,         /* u32 error code. */
->>> +	OVS_ACTION_ATTR_EMIT_SAMPLE,  /* Nested OVS_EMIT_SAMPLE_ATTR_*. */
->>>
->>>  	__OVS_ACTION_ATTR_MAX,	      /* Nothing past this will be accepted
->>>  				       * from userspace. */
->>> diff --git a/net/openvswitch/Kconfig b/net/openvswitch/Kconfig
->>> index 29a7081858cd..2535f3f9f462 100644
->>> --- a/net/openvswitch/Kconfig
->>> +++ b/net/openvswitch/Kconfig
->>> @@ -10,6 +10,7 @@ config OPENVSWITCH
->>>  		   (NF_CONNTRACK && ((!NF_DEFRAG_IPV6 || NF_DEFRAG_IPV6) && \
->>>  				     (!NF_NAT || NF_NAT) && \
->>>  				     (!NETFILTER_CONNCOUNT || NETFILTER_CONNCOUNT)))
->>> +	depends on PSAMPLE || !PSAMPLE
->>>  	select LIBCRC32C
->>>  	select MPLS
->>>  	select NET_MPLS_GSO
->>> diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
->>> index 964225580824..1f555cbba312 100644
->>> --- a/net/openvswitch/actions.c
->>> +++ b/net/openvswitch/actions.c
->>> @@ -24,6 +24,11 @@
->>>  #include <net/checksum.h>
->>>  #include <net/dsfield.h>
->>>  #include <net/mpls.h>
->>> +
->>> +#if IS_ENABLED(CONFIG_PSAMPLE)
->>> +#include <net/psample.h>
->>> +#endif
->>> +
->>>  #include <net/sctp/checksum.h>
->>>
->>>  #include "datapath.h"
->>> @@ -1299,6 +1304,37 @@ static int execute_dec_ttl(struct sk_buff *skb, struct sw_flow_key *key)
->>>  	return 0;
->>>  }
->>>
->>> +static void execute_emit_sample(struct datapath *dp, struct sk_buff *skb,
->>> +				const struct sw_flow_key *key,
->>
->> The 'key' is not used in the function.
->>
->>> +				const struct nlattr *attr)
->>> +{
->>> +#if IS_ENABLED(CONFIG_PSAMPLE)
->>
->> IIUC, the general coding style guideline is to compile out the whole
->> function, instead of only the parts.  i.e. something like:
->>
->> #if IS_ENABLED(CONFIG_PSAMPLE)
->> static void execute_emit_sample(...) {
->>     <body>
->> }
->> #else
->> #define execute_emit_sample(dp, skb, attr)
->> #endif
->>
->>
->> Otherwise, we'll also need to mark the arguments with __maybe_unused.
-> 
-> Thanks for the suggestion, will submit another version with this fix.
+Hi Thomas
 
-It seems like current coding style document prefers static inline
-functions over macros in this case.  So, that might be a better
-choice.  So, up to you, unless maintainers have a strong opinion one
-way or another.
+On Thu, Mar 2, 2023 at 11:58=E2=80=AFPM Thomas Gleixner <tglx@linutronix.de=
+> wrote:
+>
+> On Thu, Mar 02 2023 at 23:21, Thomas Gleixner wrote:
+> > On Thu, Mar 02 2023 at 15:32, Rafael J. Wysocki wrote:
+> >> On Mon, Feb 20, 2023 at 10:19 PM Thomas Gleixner <tglx@linutronix.de> =
+wrote:
+> >>> +static atomic_t alarmtimer_wakeup;
+> >>>
+> >>>  /**
+> >>>   * alarmtimer_fired - Handles alarm hrtimer being fired.
+> >>> @@ -194,6 +196,8 @@ static enum hrtimer_restart alarmtimer_f
+> >>>         int ret =3D HRTIMER_NORESTART;
+> >>>         int restart =3D ALARMTIMER_NORESTART;
+> >>>
+> >>> +       atomic_inc(&alarmtimer_wakeup);
+> >>> +
+> >>
+> >> This appears to be still somewhat racy, because the notifier can run
+> >> at this point AFAICS.
+> >
+> > Indeed it is. Let me think more about this.
+>
+> All of this is inherently racy as there is zero feedback whether the
+> event has been consumed or not. Making this feedback based is not
+> necessarily trivial, but let me stare into that.
+>
 
-> 
-> Adrián
-> 
->>
->> The rest of the patch looks good to me.
->>
->> Best regards, Ilya Maximets.
->>
-> 
+Sorry to come back on this topic but I would like to know, if we can
+find a way to be sure
+to not lost wakeup or if you have already addressed in some series
 
+Michael
+
+
+> Thanks,
+>
+>         tglx
+>
+
+
+--=20
+Michael Nazzareno Trimarchi
+Co-Founder & Chief Executive Officer
+M. +39 347 913 2170
+michael@amarulasolutions.com
+__________________________________
+
+Amarula Solutions BV
+Joop Geesinkweg 125, 1114 AB, Amsterdam, NL
+T. +31 (0)85 111 9172
+info@amarulasolutions.com
+www.amarulasolutions.com
