@@ -1,183 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B3113E04F;
-	Thu, 27 Jun 2024 23:53:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F561A2549
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 23:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719532401; cv=none; b=oF+dTE0uBlIZEMvOZwqg/XIzDp73dETjMs4wSErMSN8ZVRAFP4eoRWWIGAIUL8N6OOliKpUF2foMy0F05cCF1FkCjET7+w93NRvmJQlA8pnNkdQYQsIQAE3cGaZ67ZNc8PsalpZIW/2lYGN/s6tbyoJ0Rd7OI3QkNcrCX3WhY0c=
+	t=1719532426; cv=none; b=ioLejMGPR4398rOUKjUNp93KqRi8HB7y+R7cK8deuRsQA83Z7RR5kXcodSBvGg2IhmDk7wCn7Y2LZzzuzArGH0jRbw3avirkeGjpXmZeCz7XbwJ58nmKP/2o2wellEe9ZYZNghUJ/gCefWbka1nCRY5mF/O/ATXYi1NT9nvDrJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719532401; c=relaxed/simple;
-	bh=2Jc74u8zqMtpyZa6rfWUbAVGrZ5Inv4IOZxhPgIBgnc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UE+9HHL/ZRkb3yDaHKwp4G9DZ4rxook8vAP0fj0ReUrVWvbtedYtCq9g6JJ0S7kH+M1iYvYpLhjqdX3rN6oRwk0X1/1urGZmuS+JyMklRvKeF6oLelMoFnawJqFBtAXIOzzAGvzDu6HxBJDk5joB7q9v1x4HvM//DnAk+kLSZW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SjVsghK1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719532426; c=relaxed/simple;
+	bh=8TDzL4LG+A2ddCLi6fgg9V+G2E1PrISrQcbK/zNYedM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rcAka5z1UThvuHUCTwVxoSANszMvWyI4Cxq7YSUUdJADsZ04r2VqMBmiFT/UmsAX3wzc63CYD83uYXk7R7IhExfOsxW/XUAEqrRNFB88cQCyln/WqKb6nkcR8MGPIM53ZJVYhWWc49jxJCo4AvZ71jLI0Nq+PmBW6ub0vu3VDSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ANg6MnLv; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SjVsghK1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F06BCC2BBFC;
-	Thu, 27 Jun 2024 23:53:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719532400;
-	bh=2Jc74u8zqMtpyZa6rfWUbAVGrZ5Inv4IOZxhPgIBgnc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SjVsghK1G8sKmUjRTt8AewGite3J7sFm9+zlIBLfOT0bCRojIzfuclmz21voco4Xw
-	 0DdS43K5tjYwfL2FIYD6b96x+6id8OEgYDqVb1joUzYRVi9b3uw7vW/rLMvhkhD/ZY
-	 JYEMGYzRKFBH/8emZuaWc9P0UaxEN0vh4pHXPIjrzJ9ivfkKtbevcVonKiRSDhXuFt
-	 ndX8hFLtHB8O/Z3fo5cpFqb1+N9j+7ouMcS020up8qBBW51eRx/AlUOtmbpP+YJTEM
-	 gJiphFZfZYxNKVlNMsQj7BGs7OT2FAgYHKqMlsNzCTa5H1/AIyxAt4NUdfcGNs7zDc
-	 JPTN1JUsApXiQ==
-Date: Thu, 27 Jun 2024 16:53:18 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: duchangbin <changbin.du@huawei.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"llvm@lists.linux.dev" <llvm@lists.linux.dev>
-Subject: Re: [PATCH v4 1/5] perf: support specify vdso path in cmdline
-Message-ID: <Zn37bj4LER_A1bX1@google.com>
-References: <20240625033740.223009-1-changbin.du@huawei.com>
- <20240625033740.223009-2-changbin.du@huawei.com>
- <5a9e8dae-e9d9-4a97-98f5-d76be9068342@intel.com>
- <7eef4826a2f3494ea1dc92ed98d543fb@huawei.com>
- <05f95eb8-9b4c-4327-a97f-a15654278c41@intel.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ANg6MnLv"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1f4c7b022f8so40615ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 16:53:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1719532424; x=1720137224; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GvgNRfUrYC3vDPSHgELOXCgco+1ty8Hri5LXWyU0EuU=;
+        b=ANg6MnLv9Nt+cvvg85p7tHx6wWPzblkE5JkOrwBtxxh7KZzqH0/h8E0lN1BGqnCYSv
+         hbsR3B9eeSWxC10BuGLA32B0N63v3ewnnBwazfYnhz0mKDgcGBTqV6ovY5uj3oK0U9GB
+         TUFDgcSof5vgtRJuvtX2ZO1bqUvbbbQ3xUMmI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719532424; x=1720137224;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GvgNRfUrYC3vDPSHgELOXCgco+1ty8Hri5LXWyU0EuU=;
+        b=qYPF77w78SwsJXQVvgF8Kf7BfN3XjmK1/qxQPCac8CfRwwrDufWMrPV6ZoQw6EnhOv
+         bD+AY+N53mwOobe0IqbPNUcqrBFKmtmL7vGxB5+/KDbk4MCxNgsUi+nWc9UTlg9Ap1Zm
+         KW6IqB/jqW7nZQtnvCmlVEHGpIyhO92mGJFeEIxR4GOJ+Ie5nNUWNoA/FmFQoirdxuDD
+         ISr6ESKH2+/UovaMZnTZh83ABnePdb/VEy62mIcenDGlL/iezbeD7850JGkENOLFk8nO
+         NIBsKtfCfqqxGz3VJRMXLTeym6jKWGmOUPqTSIVx0bisnNyuS79mh9rf2j2w9mI7hC1z
+         jcZw==
+X-Forwarded-Encrypted: i=1; AJvYcCWoZF+kQrUVABVTyZT3hQY36GMA2oCwIJ5xivaSHYZbuUkOZTmcE4PCYlbeKWCoQFCwtRGAqMW+WcvPJRSJWnFPsht+Oi1lYgAxDS2q
+X-Gm-Message-State: AOJu0Yy39VcMrsfbIyamH+quLynrz9lXhZGZSKnp/f3zvWghtYU0Rg5/
+	NclbNUSf0oe30vcjFIKNNz2Q8DImlHIpDKviFqhRBXCug9N9qjg6/7UgNRo+iA==
+X-Google-Smtp-Source: AGHT+IFTGJHi0WhKn1jfdIqcqfPQxr8jYnm7Tq2RVmaHgug3fRpbKxlPiPDM9y6uifF4i205XhWnMg==
+X-Received: by 2002:a17:902:ea08:b0:1f6:5013:7842 with SMTP id d9443c01a7336-1fa23cd95edmr158375265ad.27.1719532424505;
+        Thu, 27 Jun 2024 16:53:44 -0700 (PDT)
+Received: from pc98uv11.mtv.corp.google.com ([2620:15c:9d:2:cf5d:cb26:248e:ee00])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac11d8cd2sm3366595ad.107.2024.06.27.16.53.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jun 2024 16:53:44 -0700 (PDT)
+From: Daisuke Nojiri <dnojiri@chromium.org>
+To: 
+Cc: Benson Leung <bleung@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Reka Norman <rekanorman@chromium.org>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	Gwendal Grignou <gwendal@chromium.org>,
+	Pavan Holla <pholla@chromium.org>,
+	Lukasz Majczak <lma@chromium.org>,
+	Ching-Kang Yen <chingkang@chromium.org>,
+	Daisuke Nojiri <dnojiri@chromium.org>,
+	Stephen Boyd <swboyd@chromium.org>,
+	Prashant Malani <pmalani@chromium.org>,
+	chrome-platform@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v5 0/2] Consolidate ec_response_get_next_event
+Date: Thu, 27 Jun 2024 16:53:06 -0700
+Message-ID: <cover.1719531519.git.dnojiri@chromium.org>
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <05f95eb8-9b4c-4327-a97f-a15654278c41@intel.com>
 
-Hello guys,
+---
+Changes in v5:
+ - Merged changes in cros_ec_commands.h and cros_ec_proto.c
 
-On Wed, Jun 26, 2024 at 01:32:42PM +0300, Adrian Hunter wrote:
-> On 26/06/24 05:26, duchangbin wrote:
-> > On Tue, Jun 25, 2024 at 04:20:49PM +0300, Adrian Hunter wrote:
-> >> On 25/06/24 06:37, Changbin Du wrote:
-> >>> The vdso dumped from process memory (in buildid-cache) lacks debugging
-> >>> info. To annotate vdso symbols with source lines we need specify a
-> >>> debugging version.
-> >>>
-> >>> For x86, we can find them from your local build as
-> >>> arch/x86/entry/vdso/vdso{32,64}.so.dbg. Or they may reside in
-> >>> /lib/modules/<version>/vdso/vdso{32,64}.so on Ubuntu. But notice that
-> >>> the buildid has to match.
-> >>>
-> >>> $ sudo perf record -a
-> >>> $ sudo perf report --objdump=llvm-objdump \
-> >>>   --vdso arch/x86/entry/vdso/vdso64.so.dbg,arch/x86/entry/vdso/vdso32.so.dbg
-> >>>
-> >>> Samples: 17K of event 'cycles:P', 4000 Hz, Event count (approx.): 1760
-> >>> __vdso_clock_gettime  /work/linux-host/arch/x86/entry/vdso/vdso64.so.d
-> >>> Percent│       movq    -48(%rbp),%rsi
-> >>>        │       testq   %rax,%rax
-> >>>        │     ;               return vread_hvclock();
-> >>>        │       movq    %rax,%rdx
-> >>>        │     ;               if (unlikely(!vdso_cycles_ok(cycles)))
-> >>>        │     ↑ js      eb
-> >>>        │     ↑ jmp     74
-> >>>        │     ;               ts->tv_sec = vdso_ts->sec;
-> >>>   0.02 │147:   leaq    2(%rbx),%rax
-> >>>        │       shlq    $4, %rax
-> >>>        │       addq    %r10,%rax
-> >>>        │     ;               while ((seq = READ_ONCE(vd->seq)) & 1) {
-> >>>   9.38 │152:   movl    (%r10),%ecx
-> >>>
-> >>> When doing cross platform analysis, we also need specify the vdso path if
-> >>> we are interested in its symbols.
-> >>
-> >> Would it be possible to add vdso and vdso debug to the build-id
-> >> cache and ensure perf can find it there?
-> >>
-> >> Typically, getting dsos from another machine is handled via
-> >> build-id cache e.g. what perf-archive does
-> >>
-> > Hmm. I agree this is better alternative approach for cross-machine analysis.
-> > When collecting vdsos to buildid cache, I think we can use the local searched
-> > objects (with debug symbols) instead if its build-id matches vdsos from process
-> > dumping (the real code ran).
-> > 
-> > Currently I just follow what perf does for vmlinux so to reuse most of existing
-> > code. Maybe vmlinux is too big to add to buildid-cahce?
-> > 
-> > Can we keep our current strategy for now? I'll think about above options when
-> > I have more time.
-> > 
-> 
-> I tried adding vdso via perf buildid-cache.  It doesn't work only
-> because the lookup expects the basename to be "vdso" but it is
-> "elf".
-> 
-> Adding a link from "vdso" to "elf" made it work e.g.
-> 
-> $ cat gettimeofday-test.c
-> #include <stdio.h>
-> #include <sys/time.h>
-> 
-> int main()
-> {
->         struct timeval tv;
->         int ret;
-> 
->         ret = gettimeofday(&tv, NULL);
->         if (ret == -1) {
->                 fprintf(stderr, "gettimeofday failed\n");
->                 return 1;
->         }
-> 
->         printf("%lu.%lu\n", (unsigned long)tv.tv_sec, (unsigned long)tv.tv_usec);
-> 
->         return 0;
-> $ perf record -e intel_pt//u ./gettimeofday-test
-> 1719397042.892837
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.026 MB perf.data ]
-> $ perf script --itrace=e
-> $ perf buildid-cache --remove /lib/modules/6.5.0-41-generic/vdso/vdso64.so
-> $ perf script --itrace=e
-> Warning:
-> 2 instruction trace errors
->  instruction trace error type 1 time 525345.386424204 cpu 4 pid 198976 tid 198976 ip 0x7ffddb0e8e00 code 5: Failed to get instruction
->  instruction trace error type 1 time 525345.386424829 cpu 4 pid 198976 tid 198976 ip 0x7ffddb0e884d code 5: Failed to get instruction
-> $ perf buildid-cache --add /lib/modules/6.5.0-41-generic/vdso/vdso64.so
-> $ perf script --itrace=e
-> Warning:
-> 2 instruction trace errors
->  instruction trace error type 1 time 525345.386424204 cpu 4 pid 198976 tid 198976 ip 0x7ffddb0e8e00 code 5: Failed to get instruction
->  instruction trace error type 1 time 525345.386424829 cpu 4 pid 198976 tid 198976 ip 0x7ffddb0e884d code 5: Failed to get instruction
-> $ cd ~/.debug/.build-id/c3/530aed66e71bfd10af66039f58cc7c4d2eaba8
-> ~/.debug/.build-id/c3/530aed66e71bfd10af66039f58cc7c4d2eaba8$ ln -s elf vdso
-> ~/.debug/.build-id/c3/530aed66e71bfd10af66039f58cc7c4d2eaba8$ ls -l
-> total 36
-> -rw-r--r-- 1 ahunter ahunter 33272 Jun 26 13:17 elf
-> -rw-r----- 1 ahunter ahunter     0 Jun 26 13:17 probes
-> lrwxrwxrwx 1 ahunter ahunter     3 Jun 26 13:18 vdso -> elf
-> /.debug/.build-id/c3/530aed66e71bfd10af66039f58cc7c4d2eaba8$ cd
-> $ perf script --itrace=e
-> $ 
-> 
-> So maybe a change could be made to build_id_cache__add() to add
-> the extra link if the file name matches vdso
- 
-Thanks for doing this!  I noticed buildid_cache__basename() will handle
-the name properly once it realizes the file is a vdso.  Maybe we can
-check the filepath with some patterns, or simply add an command line
-option to say it's a vdso.
+Changes in v4:
+ - Change subject line: ARM:... to dt-bindings:...
+ - Add description about keyboard matrix v3.0.
+ - Add cover letter.
 
-Thanks,
-Namhyung
+---
+Changes in v3:
+ - Remove CROS_KBD_V30 in Kconfig and macros conditionally set in
+   cros-ec-keyboard.dtsi.
+
+---
+Changes in v2:
+ - Separate cros_ec_commands.h from cros_ec_proto.{c.h}.
+ - Remove Change-Id, TEST=, BUG= lines.
+
+---
+Daisuke Nojiri (2):
+  cros_ec_proto: Consolidate ec_response_get_next_event
+  dt-bindings: cros-ec-keyboard: Add keyboard matrix v3.0
+
+ drivers/platform/chrome/cros_ec_proto.c       |  16 +--
+ include/dt-bindings/input/cros-ec-keyboard.h  | 104 ++++++++++++++++++
+ .../linux/platform_data/cros_ec_commands.h    |  34 +-----
+ include/linux/platform_data/cros_ec_proto.h   |   2 +-
+ 4 files changed, 114 insertions(+), 42 deletions(-)
+
+-- 
+2.45.2.803.g4e1b14247a-goog
 
