@@ -1,101 +1,89 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E921494A1;
-	Thu, 27 Jun 2024 16:42:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866D3E56A;
+	Thu, 27 Jun 2024 16:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719506561; cv=none; b=kb39prL+wnl7BpWaLFpXIFbDYcrn4E4tWnuFgFwh7hymsEPVaqvV3C01uQhGoxGPBmh1xoDQ7tGB6fH1ppElOex2QCckBjyg1cws9nM1b+aLrdk6Iu6h7L6lL8xmHWmQV3mvf9wcy4uW5fP6yvLg8XxzczFH6SZRQ3rqkiFXspM=
+	t=1719506748; cv=none; b=a8IYQMZrZ83M+fAu1UkxP055ThVreObb2sq+gpqFTY2AhKeH9ZJP7qwAyV5egjRC99XhXL/Mv9KZFRAukjYCxagw0ws8D1dn3t5zX1GMdmNmx+2jVlaBnQSXNTZ3Uv1TqhFSxpVkS7bEoOR/kNgiUXapwuwRnKgvOLS4/A3B5yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719506561; c=relaxed/simple;
-	bh=3oH4rqYKfd0K+WONRYcAnuUAoWbfKb8KPqDdjkxEPCM=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=trMgfCyaWLGZvGJ+qZhfL8EtFczMH/N9Rn5vJ3zeMdZcF83ylrJSs+KAcwl1hPdLTY2E+rpceeydtF9PQF9j+LE1fOA2FxvCgLAAi+C7bLlQQROzH5ERbRi0PZXsDEqTVP/o/2Df2iwNlMST5BgI7lx+UD35MR7X1ODqitgks1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=SeYKmVWZ; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1719506748; c=relaxed/simple;
+	bh=ehLBHgvsMjTLKrA3lXsAqbSSXkOgpaBtl+CYynRuFlA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=KByiqk8r36Ln1bqbF71pVidA+dDrg/79/FCiWGkoWvoNWD3vX/a3KfohrrvYiGNJhkH0wcX5OBrjz1FXO8HKmdKjGJYd8n4pFe8j72DNSHpCZeOdEKYxtDOCA6G8g4Qos0KxG/3Mu9puu1/whujDfX4TVBF6AclMmQruyGz5MH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DbuUJ1Pl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SeYKmVWZ"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45RGgL5J036299;
-	Thu, 27 Jun 2024 11:42:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1719506541;
-	bh=JjK4z9ZpwyGeBOi7X80aP2waEJDLXA1nIRzMg8HKCVs=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=SeYKmVWZ1o5UwKPhH19tvtNkpOZ6jvWe389EcFJ9AdKq0XceYHNFc5G0Lw1azNH7b
-	 yEFdmN3cXRkQp2a10Sy1S3s2FcCqxNuQyS4wcmVZmNkwU3dxFmkV06LIjWaH/CH+q8
-	 eAGXuQxurw6qnVrs1L1ItuCBCJavPQVVzdrr9ruY=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45RGgLo8102258
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 27 Jun 2024 11:42:21 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 27
- Jun 2024 11:42:21 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 27 Jun 2024 11:42:21 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45RGgLKx026188;
-	Thu, 27 Jun 2024 11:42:21 -0500
-Date: Thu, 27 Jun 2024 11:42:21 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Ayush Singh <ayush@beagleboard.org>
-CC: Mark Brown <broonie@kernel.org>, Vaishnav M A <vaishnav@beagleboard.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Derek Kiernan <derek.kiernan@amd.com>,
-        Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>, Michael Walle
-	<mwalle@kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>, <jkridner@beagleboard.org>,
-        <robertcnelson@beagleboard.org>, <linux-spi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v5 7/7] dts: ti: k3-am625-beagleplay: Add mikroBUS
-Message-ID: <20240627164221.st5ugtn2n7bctj7g@justify>
-References: <20240627-mikrobus-scratch-spi-v5-0-9e6c148bf5f0@beagleboard.org>
- <20240627-mikrobus-scratch-spi-v5-7-9e6c148bf5f0@beagleboard.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DbuUJ1Pl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C67DC2BD10;
+	Thu, 27 Jun 2024 16:45:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719506748;
+	bh=ehLBHgvsMjTLKrA3lXsAqbSSXkOgpaBtl+CYynRuFlA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=DbuUJ1PlPIIoo+Ox/XQ3LxKNfHNeNaeqoZkEuN1kb9pGpETQn4Xnz1vQBv1mg9WTY
+	 C87F0PYkVWt3lmpMuDJJeoJ2SxbQXmFDpytTbNZP+Z9q1buiqCsnalkBa9gP/JeZvy
+	 Y5piS1uTNxStYgawXieNEadJiYKkVAVcPeO7BKAcWruiGgoukD1bBRFbq3c4/slN4b
+	 ghhycZpWpl/zsXILJsMWbtsJ0IAoGa/q5mIvn8+LhbtfoFKrd36oCZtdzanVslkfsi
+	 DKjPK1gBveECNutZMcVUt1ucHpZlMD/9Z5R9KKRHpHIOyCO0dEW3L4VTyCGzjCYk5V
+	 WZIuYOfSvH9sg==
+From: Mark Brown <broonie@kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: kernel test robot <lkp@intel.com>
+In-Reply-To: <20240627125203.171048-1-krzysztof.kozlowski@linaro.org>
+References: <20240627125203.171048-1-krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH] ASoC: codecs: lpass-wsa-macro: add missing select of
+ common code
+Message-Id: <171950674603.332147.2643144849799962522.b4-ty@kernel.org>
+Date: Thu, 27 Jun 2024 17:45:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240627-mikrobus-scratch-spi-v5-7-9e6c148bf5f0@beagleboard.org>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14-dev-d4707
 
-On 21:56-20240627, Ayush Singh wrote:
-> DONOTMERGE
-^^ might be better off in the diffstat and explain why DONOT MERGE :)
-[...]
+On Thu, 27 Jun 2024 14:52:03 +0200, Krzysztof Kozlowski wrote:
+> The Qualcomm LPASS WSA macro codec driver uses now parts of common
+> module, so it has to select SND_SOC_LPASS_MACRO_COMMON.
+> 
+>   sound/soc/codecs/lpass-wsa-macro.o: in function `wsa_macro_probe':
+>   sound/soc/codecs/lpass-wsa-macro.c:2767:(.text+0x1c9c): undefined reference to `lpass_macro_get_codec_version'
+> 
+> 
+> [...]
 
-> +	mikrobus_spi_pins_gpio: mikrobus-spi-gpio-pins {
-> +		pinctrl-single,pins = <
-> +			AM62X_IOPAD(0x0194, PIN_INPUT, 7) /* (B19) MCASP0_AXR3.GPIO1_7 */
-> +			AM62X_IOPAD(0x0198, PIN_INPUT, 7) /* (A19) MCASP0_AXR2.GPIO1_8 */
-> +			AM62X_IOPAD(0x01ac, PIN_INPUT, 7) /* (E19) MCASP0_AFSR.GPIO1_13 */
-> +			AM62X_IOPAD(0x01b0, PIN_INPUT, 7) /* (A20) MCASP0_ACLKR.GPIO1_14 */
-> +		>;
-> +	};
+Applied to
 
-we could potentially get rid of these if we get the gpio-ranges correct
-on pinctrl? I have not gotten around to am62x yet - but see this:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-https://lore.kernel.org/linux-arm-kernel/20240627162539.691223-1-nm@ti.com/T/#t
+Thanks!
 
-[...]
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+[1/1] ASoC: codecs: lpass-wsa-macro: add missing select of common code
+      commit: 36ac1e29f49ff4cbf1500465db311b17d8ba9213
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
