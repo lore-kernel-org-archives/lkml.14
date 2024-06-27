@@ -1,181 +1,118 @@
-Received: from mail-pj1-f66.google.com (mail-pj1-f66.google.com [209.85.216.66])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E3859164
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 07:47:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A38936134
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 07:49:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719474480; cv=none; b=MJjMj7UZPJLHPVjc0+1Cauukui/glpYJS9H2q32hIKd2GYhUvLKPZgrHIQGV0IRVlG9K1COCxxoysDV7ri+xmZbQbEIvuDQv2QRAZsEzwTzkYkls9F67YFfNgnkrtJWwiUlx9XKIramWJG8m7uen0rXVtWKWQ+zhnD64aPzmb8o=
+	t=1719474550; cv=none; b=Xq5Hqo53ni5YzkLR5p3wZCtaxf9P+T/RanHnGidMNRDcxYkk3TkoorAU1j5lZEKVgj2N8h7NaWL1zAIrzhBVUv1OC0YjEHiGJ0mbPi2iX94Q7WHUe3NCsPXtjrNKBiBhDSAZrK5AvH91Nsn3hlU5oxYJwgnQgtz5/UkJ7k9aJhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719474480; c=relaxed/simple;
-	bh=sJSW65hxf170gFopGtuxc1EzaMM0gmFvA7ZMada+bkM=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=pUDqGo+HcjvXwPiD5sFCJbaS++i5KqTVvxl8QHp9ySFcOV46z8aBYeFvaGIH1DZ2kOwkkJ+MtZORiN+tnPoa9KI7gQ1G1/p1bOFTgb5Qy+YriPcFA/FE2GrYoy61N1jFEOAe7LQt/HJzYguy3sSWQX9YOt+tuAfWu12W8uCWq5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DtYwAV4w; arc=none smtp.client-ip=209.85.216.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719474550; c=relaxed/simple;
+	bh=zrC4+12RUb0agQa6jKlw3FI0NsxKRHWfNJL8To7AV1c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dR5r1BQL+lzS+/z7zeMvd/2d5iKusgFEvNKm35NKcFchceKrpBFomRLmcm1ZmAYX22p3CGezFT9iiPevrnMNHpsbPD/Rca/SoNLWvSFx3ETOxQrQRlPQlV7Egd3rtljhQnpObpO/Q4cKlmDnGTLJyqC3NueVMf+NU86wZu++4hE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=L0MhL9l6; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DtYwAV4w"
-Received: by mail-pj1-f66.google.com with SMTP id 98e67ed59e1d1-2c7dd4586afso5947331a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 00:47:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="L0MhL9l6"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-57d07673185so1379767a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 00:49:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719474478; x=1720079278; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1VniVF/Cma/D69twcQIBZj8lIAajcHSZqsODsZ7jwnI=;
-        b=DtYwAV4wUKouqFscOJgOYuXW78VUHH3RzDg7PkhzqGEV94HnS14uv5SBZFAOLRK0ec
-         BTyDoiF+jBQb56QUrBbe/HyLqhiYPS5lkqFSBvE0LTdPY7/b3kKQn5FYK2thYJxy/M1k
-         Kgk53fOFcFzkf4EKTmBRZVPKfbxA2kbRTPfUMp1NbHVvSinHXVwDv1RGeqGLbRoKuCjO
-         ZuYC2AhAW8Ii8UmiCbu7bIfmlXL9gsFcmKKNc+/ul9N1SWFW4gmsRoyD3obN88Zp9a+P
-         rGdzpdNWB6qdyHOGj/VbVWcqg9a0Bq9OJEtdbW5+vKn0Wv0aXsxyfOwS7DBOZa9dY1Xb
-         PQjQ==
+        d=suse.com; s=google; t=1719474546; x=1720079346; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=D0qr1g3J2CoiFAeYg4LCEdk8NhgStrl4piJOqO3A1/Y=;
+        b=L0MhL9l6w1exO5hKrl8bed/0JvZ7Eci9/QcrGh2TQVW7IrHOcIG/foQ7ISnG5yoaxl
+         R+gAylStHN60OT2z9n43ya4NpCSQCmKru+oOyvY+MdXu0eJLW1PbFcjVBeC7aw8NCgcQ
+         zsazIwr3uW8jcsIxKyXACa3e9mU86i3FabxPKZg3q3wuwL0eqmpppOSVbgurH+fnjj8g
+         sl/+hJdsgGzi9hmyU32qncUdBUQmw4GdaWQ2i6jc3hHkkfFdDwR4sFypLlc1rtFSGjpV
+         MSlXDhwZtPhjJpv9vp77eYlENWVuDxTmowlSA8QjJBaXhG3UHm69vqyAlaTbhpoQxMj9
+         PbHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719474478; x=1720079278;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1VniVF/Cma/D69twcQIBZj8lIAajcHSZqsODsZ7jwnI=;
-        b=caUvJ93F/tf1LJI8N0wNhVZvD3w0daZzWPToirww/EBqpVA4mWejzrfDkTrPZRCMLk
-         osSyKbAD2jZh6mGVRsp1GPxhDhL+SpqeE0CSuKpte6tNUZB9SnjMP6qy33sJmsMK2jAL
-         orJKrXKS4/TCGobkE3qlW6MUL2b3ItxnujkVSqI2ISaUAJ4d0xhl7nemh5ctUXNaKO7C
-         Ic5wIgScxhsl0ebhVire3VwS+xqVPr241mVAvV92JwO/BIvshs9+q1Y+0t55dCILntJb
-         CwcUsLFXWELNAV6snh9eHB3+M5qIXZAgPjCN2sWSEwjZ3hWI1KheVqQG1QsE1VsSlLwM
-         rU4A==
-X-Forwarded-Encrypted: i=1; AJvYcCVkFK8+pN4kV0qXiE7rVPaugrGbdXnJ56Tw0Kmt5D/pDS+kQtTxFovZltpXzBga7Szl3tQ8nN5+QeHu6AKpDV//WR5jD6zf3kwwhccc
-X-Gm-Message-State: AOJu0YwfQkg44UJvUfT/TdZWDLR50ZFN4xGYrnI2baSPx2YNT8V/xSrk
-	vcIS+MPvOS6olk5MthSumsBVIrRWKTqU+8+ihIXXRgc5wJErSgE0
-X-Google-Smtp-Source: AGHT+IEL1xLC2GJqJfnIsftcppBDozb/ub7R/JIjyrWfp+cD3gnjoeGw9JF3AhLkTejjcdKjubEaoA==
-X-Received: by 2002:a17:90b:2382:b0:2c8:e1f6:7d84 with SMTP id 98e67ed59e1d1-2c8e1f67da9mr2696347a91.25.1719474478000;
-        Thu, 27 Jun 2024 00:47:58 -0700 (PDT)
-Received: from [127.0.0.1] ([45.62.172.115])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c8d81d2ae1sm2929963a91.50.2024.06.27.00.47.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Jun 2024 00:47:57 -0700 (PDT)
-From: Celeste Liu <coelacanthushex@gmail.com>
-X-Google-Original-From: Celeste Liu <CoelacanthusHex@gmail.com>
-Message-ID: <9c102328-6bb3-46b6-bc2f-d011a284d5b0@gmail.com>
-Date: Thu, 27 Jun 2024 15:47:47 +0800
+        d=1e100.net; s=20230601; t=1719474546; x=1720079346;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D0qr1g3J2CoiFAeYg4LCEdk8NhgStrl4piJOqO3A1/Y=;
+        b=fsGPPtjBU2F35x9Ex4oExyrLq0bzmcg69LEtWyEzSJl4HIwyt0E0oNwtkbyTyZwXJ7
+         iB9t+a0DOJJmbvScs/LssD4SH3R1Wn/uDnl5yPk6SXMEPHWSB6cCF9l2xbYvRK0eXP6/
+         tEzycpT91gkehQgGsVPGGo9ydYcMS0Bn8va2Mkgq+9avC8KCrtRJDMx2zJaA+vc+gAmy
+         kPAYqUIVwDxJAqPkv07LSkQFCoLQV4ljHuKL6xmZLwuZRCR5JBuGukrRk+XqvE3qqFEM
+         Z3T939HuZaFjlH/NtXHa1+FhfltomUNn14jvybw3urSxEKKh16cs6bmBqmAFF7QjAkB4
+         1CBA==
+X-Forwarded-Encrypted: i=1; AJvYcCVqNk9/zKqY0PqorfJW6zXK+3t+jA2hye5dD2rnpxvo6QmVWnALV9FBqmdgUNIwV8On9DrMlfjanhZEJiBR8eaULcgWunsL7F30SuNP
+X-Gm-Message-State: AOJu0YwrjZrAWBb0HKo/hJVcZNk6SsC8uq78gcyROT/xyk6tnxWpUHV9
+	zyA1Z5j/k6XS8TVS9xOrBn6ibJ8yinVOUr0sn70JpkhIHF2PUpHPDIm4E1rGsH2O6FYFBj3mKcb
+	x
+X-Google-Smtp-Source: AGHT+IEVVfYndGynimeWdaFvn9OJeXU2JhXBIcI34eGLJMdck+CXu/uVwQBuXXs4Rt9mcsHqdg5iFg==
+X-Received: by 2002:a05:6402:1d52:b0:57d:5e33:371a with SMTP id 4fb4d7f45d1cf-57d5e3337cfmr11499744a12.39.1719474546316;
+        Thu, 27 Jun 2024 00:49:06 -0700 (PDT)
+Received: from localhost (nat2.prg.suse.com. [195.250.132.146])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-584d0c9df6fsm527707a12.6.2024.06.27.00.49.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jun 2024 00:49:06 -0700 (PDT)
+Date: Thu, 27 Jun 2024 09:49:05 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] get_task_mm: check PF_KTHREAD lockless
+Message-ID: <Zn0ZcZRqejmSRqsZ@tiehlicka>
+References: <20240626191017.GA20031@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] riscv: entry: set a0 = -ENOSYS only when syscall != -1
-To: "Dmitry V. Levin" <ldv@strace.io>
-Cc: Palmer Dabbelt <palmer@rivosinc.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Guo Ren <guoren@kernel.org>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
- <bjorn@rivosinc.com>, Conor Dooley <conor.dooley@microchip.com>,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- Andreas Schwab <schwab@suse.de>, David Laight <David.Laight@ACULAB.COM>,
- Felix Yan <felixonmars@archlinux.org>, Ruizhe Pan <c141028@gmail.com>,
- Shiqi Zhang <shiqi@isrc.iscas.ac.cn>,
- Emil Renner Berthing <emil.renner.berthing@canonical.com>,
- "Ivan A. Melnikov" <iv@altlinux.org>
-References: <20230801141607.435192-1-CoelacanthusHex@gmail.com>
- <20240627071422.GA2626@altlinux.org>
-Content-Language: en-GB-large
-In-Reply-To: <20240627071422.GA2626@altlinux.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240626191017.GA20031@redhat.com>
 
-On 2024-06-27 15:14, Dmitry V. Levin wrote:
+On Wed 26-06-24 21:10:17, Oleg Nesterov wrote:
+> Nowadays PF_KTHREAD is sticky and it was never protected by ->alloc_lock.
+> Move the PF_KTHREAD check outside of task_lock() section to make this code
+> more understandable.
+> 
+> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
 
-> Hi,
-> 
-> On Tue, Aug 01, 2023 at 10:15:16PM +0800, Celeste Liu wrote:
->> When we test seccomp with 6.4 kernel, we found errno has wrong value.
->> If we deny NETLINK_AUDIT with EAFNOSUPPORT, after f0bddf50586d, we will
->> get ENOSYS instead. We got same result with commit 9c2598d43510 ("riscv:
->> entry: Save a0 prior syscall_enter_from_user_mode()").
->>
->> After analysing code, we think that regs->a0 = -ENOSYS should only be
->> executed when syscall != -1. In __seccomp_filter, when seccomp rejected
->> this syscall with specified errno, they will set a0 to return number as
->> syscall ABI, and then return -1. This return number is finally pass as
->> return number of syscall_enter_from_user_mode, and then is compared with
->> NR_syscalls after converted to ulong (so it will be ULONG_MAX). The
->> condition syscall < NR_syscalls will always be false, so regs->a0 = -ENOSYS
->> is always executed. It covered a0 set by seccomp, so we always get
->> ENOSYS when match seccomp RET_ERRNO rule.
->>
->> Fixes: f0bddf50586d ("riscv: entry: Convert to generic entry")
->> Reported-by: Felix Yan <felixonmars@archlinux.org>
->> Co-developed-by: Ruizhe Pan <c141028@gmail.com>
->> Signed-off-by: Ruizhe Pan <c141028@gmail.com>
->> Co-developed-by: Shiqi Zhang <shiqi@isrc.iscas.ac.cn>
->> Signed-off-by: Shiqi Zhang <shiqi@isrc.iscas.ac.cn>
->> Signed-off-by: Celeste Liu <CoelacanthusHex@gmail.com>
->> Tested-by: Felix Yan <felixonmars@archlinux.org>
->> Tested-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
->> Reviewed-by: Björn Töpel <bjorn@rivosinc.com>
->> Reviewed-by: Guo Ren <guoren@kernel.org>
->> ---
->>
->> v4 -> v5: add Tested-by Emil Renner Berthing <emil.renner.berthing@canonical.com>
->> v3 -> v4: use long instead of ulong to reduce type cast and avoid
->>           implementation-defined behavior, and make the judgment of syscall
->>           invalid more explicit
->> v2 -> v3: use if-statement instead of set default value,
->>           clarify the type of syscall
->> v1 -> v2: added explanation on why always got ENOSYS
->>
->>  arch/riscv/kernel/traps.c | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
->> index f910dfccbf5d2..729f79c97e2bf 100644
->> --- a/arch/riscv/kernel/traps.c
->> +++ b/arch/riscv/kernel/traps.c
->> @@ -297,7 +297,7 @@ asmlinkage __visible __trap_section void do_trap_break(struct pt_regs *regs)
->>  asmlinkage __visible __trap_section void do_trap_ecall_u(struct pt_regs *regs)
->>  {
->>  	if (user_mode(regs)) {
->> -		ulong syscall = regs->a7;
->> +		long syscall = regs->a7;
->>  
->>  		regs->epc += 4;
->>  		regs->orig_a0 = regs->a0;
->> @@ -306,9 +306,9 @@ asmlinkage __visible __trap_section void do_trap_ecall_u(struct pt_regs *regs)
->>  
->>  		syscall = syscall_enter_from_user_mode(regs, syscall);
->>  
->> -		if (syscall < NR_syscalls)
->> +		if (syscall >= 0 && syscall < NR_syscalls)
->>  			syscall_handler(regs, syscall);
->> -		else
->> +		else if (syscall != -1)
->>  			regs->a0 = -ENOSYS;
->>  
->>  		syscall_exit_to_user_mode(regs);
-> 
-> Unfortunately, this change introduced a regression: it broke strace
-> syscall tampering on riscv.  When the tracer changes syscall number to -1,
-> the kernel fails to initialize a0 with -ENOSYS and subsequently fails to
-> return the error code of the failed syscall to userspace.
+Acked-by: Michal Hocko <mhocko@suse.com>
+Thanks!
 
-In the patch v2, we actually do the right thing. But as Björn Töpel's
-suggestion and we found cast long to ulong is implementation-defined
-behavior in C, so we change it to current form. So revert this patch and
-apply patch v2 should fix this issue. Patch v2 uses ths same way with
-other architectures.
-
-[1]: https://lore.kernel.org/all/20230718162940.226118-1-CoelacanthusHex@gmail.com/
-
+> ---
+>  kernel/fork.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
 > 
-> I wish you were running strace test suite before changing this part of the
-> kernel.  Now I'm going to apply a workaround [1] in strace, but please
-> note that riscv seems to be the only linux architecture where such a
-> workaround is currently required.
-> 
-> There was a similar kernel bug once on parisc, but it was fixed [2]
-> several years ago by commit b7dc5a071ddf.
-> 
-> [1] https://github.com/strace/strace/commit/c3ae2b27732952663a3600269884e363cb77a024
-> [2] https://git.kernel.org/torvalds/c/b7dc5a071ddf69c0350396b203cba32fe5bab510
-> 
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 4c361d2bdc12..d3dc623a1247 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -1536,14 +1536,13 @@ struct mm_struct *get_task_mm(struct task_struct *task)
+>  {
+>  	struct mm_struct *mm;
+>  
+> +	if (task->flags & PF_KTHREAD)
+> +		return NULL;
+> +
+>  	task_lock(task);
+>  	mm = task->mm;
+> -	if (mm) {
+> -		if (task->flags & PF_KTHREAD)
+> -			mm = NULL;
+> -		else
+> -			mmget(mm);
+> -	}
+> +	if (mm)
+> +		mmget(mm);
+>  	task_unlock(task);
+>  	return mm;
+>  }
+> -- 
+> 2.25.1.362.g51ebf55
 > 
 
+-- 
+Michal Hocko
+SUSE Labs
