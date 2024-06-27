@@ -1,94 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 155FA2837F;
-	Thu, 27 Jun 2024 22:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3C12837F
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 22:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719526907; cv=none; b=R4q+d32QN5Hzq8Udan72dqHTfg8b5HUJ6K/kFTsTKmQw4VUYdSZlGe23MtOMANjHwMKUFggbex2Cem6kcgT2KBHfMmTMJzKymA4JW2ZbRvksquCFtLugJJgupeKNhB7pk9O1q9B93IpxQtS6RB5dPFZB4V97xfQ+9i6MhCQAqpA=
+	t=1719526920; cv=none; b=kqNvwHNXx1t5HSLoqPcfK4Y9Mw98CVZUNfI+l9Bax3STb3bFwAU6WZXNo4OQv+eRLBMLYdK3jfsktAr5TQkWmF+RrDd3C+dllvtqpZiF63HBEqscEyW4yjLegamAtg1huLDp9T/l0p27TxVsaYGpZTUujKMS7fd88XI4MJJvAJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719526907; c=relaxed/simple;
-	bh=SmASSkNIQUG8VLWsW1zspcVeuBuoZnFMDAEdYCsTYBs=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=J1hc5l7a5/QT2CTI9d0NJZGwzHMJJNActvqFZ7gmdHDecw6m8df0eQs6VnBIptHjup8JHtKasE5ya7PobjrYNKMOsubOjdm+mJfA4BbqjksxD7J5IIAxa1wli9zQCeGQsnJXRPJinbQsI8V80sKjzfcSRhXWeWAxftnFmzbcpIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ASJTHe7v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719526920; c=relaxed/simple;
+	bh=zn8lfLzQJcEVfOPwFtoRRtd5nzs2IXz9qLLhKZhn3xQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P1mEviWpiiQDAzN0VS43kyX1r6XOEVbQhHLxshEFgzeFveSSPO2mc76lHRdt1JcQlUFyd6VWYS6KC4r+312n7y/AROSJe3zzF2hiEL378mIwyjj478G3UB1X5u9JHVCCbzD6M0Km1JW/oaSVDy8AQgVjkZqnnUDDKOqvBBWMDBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RXUKvX11; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ASJTHe7v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F891C2BBFC;
-	Thu, 27 Jun 2024 22:21:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719526906;
-	bh=SmASSkNIQUG8VLWsW1zspcVeuBuoZnFMDAEdYCsTYBs=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=ASJTHe7vt4y9L8Iu4knPDGP7pRfaBnA5Z1mUInqj4snW5blWqtw3tlkAo7Io0Q2xP
-	 a34gjjD75dqr1K+JD8W6ZL11+G5CaT1zbK03uZsLqGew1yjRTDC0eEFJ7nRCJcokOb
-	 Ex+VFojXTf6vItVZzcuMZMj/Rstm4RSBodu/FATJKXOIIgp2L7uNPdw4fZX09OesSB
-	 MpMlDGRLMlwmHjrIjb+WcxET1GIcGk2fWcTUwRka6D3ksrIxaluPs0isJNp/hM0lrF
-	 Yn+MuDhesEHHDtD4nVSgc3uZa6TikiraaBwZ/JqqOZjPOZ7wuE1Sjvu3lTbUVbs59l
-	 C8qtdeKu/FYrQ==
-Date: Thu, 27 Jun 2024 16:21:45 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RXUKvX11"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719526919; x=1751062919;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=zn8lfLzQJcEVfOPwFtoRRtd5nzs2IXz9qLLhKZhn3xQ=;
+  b=RXUKvX115hY+Vtx7xfAMbiP+kdC1wyPWee/JfyJBue7bfcI+6izC4CaJ
+   o0sW1XbVz2ku5EW8TDsgCmGi8Z9Yywqo6rtyTDUOT05YQtBOfz+8oW8ad
+   JE0x7KabXKmoIrLml91Ka3UlXAFqpvS5QFYFFAEhI19YRvU2EuDOXlpCe
+   eOEMJdoBfQOLcYHIGP/HPIvr/96Ea6LxKdhRDZ8a8RqtnH/OJe8CD2Xw4
+   isbHmNf8ZbBDGY0vMMpJboSztGet+NoMBwqdWLtTSoPWLVEw/KcglxKgN
+   RU2Sexead8gUhwBJC1AkI+hH0lxrg8FHL7vQcFqGgZva7ouG9DoYmU714
+   g==;
+X-CSE-ConnectionGUID: uiXdvsPdQR6mxoNHg6ZO/Q==
+X-CSE-MsgGUID: DzK6iOunRQ6yRQLMuDnvrg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="12289789"
+X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
+   d="scan'208";a="12289789"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 15:21:58 -0700
+X-CSE-ConnectionGUID: fHLI4vk5Tx6+VLIMNkgHpg==
+X-CSE-MsgGUID: ynAhg5cUQm2ElqTGqZVFGg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
+   d="scan'208";a="44517236"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 15:21:58 -0700
+Date: Thu, 27 Jun 2024 15:27:08 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: Sohil Mehta <sohil.mehta@intel.com>
+Cc: x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>,
+ linux-kernel@vger.kernel.org, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v2] x86/irq: Fix comment on IRQ vector layout
+Message-ID: <20240627152708.3abda399@jacob-builder>
+In-Reply-To: <20240626194324.110388-1-sohil.mehta@intel.com>
+References: <20240626194324.110388-1-sohil.mehta@intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-clk@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Stephen Boyd <sboyd@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Conor Dooley <conor+dt@kernel.org>, 
- =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, 
- linux-arm-kernel@lists.infradead.org, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- linux-mediatek@lists.infradead.org, 
- Matthias Brugger <matthias.bgg@gmail.com>
-In-Reply-To: <20240627205309.28742-2-ansuelsmth@gmail.com>
-References: <20240627205309.28742-1-ansuelsmth@gmail.com>
- <20240627205309.28742-2-ansuelsmth@gmail.com>
-Message-Id: <171952690505.706895.16327382675464090624.robh@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: clock: mediatek: add syscon
- compatible for mt7622 pciesys
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
 
-On Thu, 27 Jun 2024 22:52:57 +0200, Christian Marangi wrote:
-> Add required syscon compatible for mt7622 pciesys. This is required for
-> SATA interface as the regs are shared.
+On Wed, 26 Jun 2024 19:43:24 +0000, Sohil Mehta <sohil.mehta@intel.com>
+wrote:
+
+> commit f5a3562ec9dd ("x86/irq: Reserve a per CPU IDT vector for posted
+> MSIs") changed the first system vector from LOCAL_TIMER_VECTOR to
+> POSTED_MSI_NOTIFICATION_VECTOR. Reflect this change in the vector layout
+> comment as well.
 > 
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> However, instead of pointing to the specific vector, use the
+> FIRST_SYSTEM_VECTOR indirection which essentially refers to the same.
+> This would avoid unnecessary modifications to the same comment whenever
+> additional system vectors get added.
+> 
+> Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
 > ---
->  .../bindings/clock/mediatek,mt7622-pciesys.yaml           | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
+> v2: Update the table to denote the other device interrupts range. [Jacob
+> Pan]
 > 
+> v1:
+> https://lore.kernel.org/lkml/20240618201320.2066726-1-sohil.mehta@intel.com/
+> 
+>  arch/x86/include/asm/irq_vectors.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/irq_vectors.h
+> b/arch/x86/include/asm/irq_vectors.h index 13aea8fc3d45..47051871b436
+> 100644 --- a/arch/x86/include/asm/irq_vectors.h
+> +++ b/arch/x86/include/asm/irq_vectors.h
+> @@ -18,8 +18,8 @@
+>   *  Vectors   0 ...  31 : system traps and exceptions - hardcoded events
+>   *  Vectors  32 ... 127 : device interrupts
+>   *  Vector  128         : legacy int80 syscall interface
+> - *  Vectors 129 ... LOCAL_TIMER_VECTOR-1
+> - *  Vectors LOCAL_TIMER_VECTOR ... 255 : special interrupts
+> + *  Vectors 129 ... FIRST_SYSTEM_VECTOR-1 : device interrupts
+> + *  Vectors FIRST_SYSTEM_VECTOR ... 255   : special interrupts
+>   *
+>   * 64-bit x86 has per CPU IDT tables, 32-bit has one shared IDT table.
+>   *
+Reviewed-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Thanks,
 
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/clock/mediatek,mt7622-pciesys.example.dtb: clock-controller@1a100800: compatible: 'oneOf' conditional failed, one must be fixed:
-	['mediatek,mt7622-pciesys'] is too short
-	'mediatek,mt7629-pciesys' was expected
-	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt7622-pciesys.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240627205309.28742-2-ansuelsmth@gmail.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Jacob
