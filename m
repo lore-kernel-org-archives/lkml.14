@@ -1,124 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from out203-205-221-242.mail.qq.com (out203-205-221-242.mail.qq.com [203.205.221.242])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF437178CCB;
-	Thu, 27 Jun 2024 12:49:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBDC5179663
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 12:50:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.242
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719492585; cv=none; b=VD8++7S6/XoQKa4+H2mfYw+StLXkEs2JkgjNLN6GIcBQOVgT6WmB/FD15R7IKzXdblYzi48+sCEveqDZrEI1TfuJYdcTuQ9j2m/R8nm6ExSCbcgD4kA5Bq5JGGftUtGjZKzmmU+/zFbF+nLRkCioCdtyrY5yYECPjM8LkhktPgg=
+	t=1719492604; cv=none; b=g++X6rvIbKPr7Fr+BLyYjMAG4fMfK1/Q97FxmeHhfPktmTSe7aj/siZDvn9l8Hu6BOlLPuo5npILZxrkjTiNQ6PpbOtCxTP9ahAkLR4YthpGB4vqoszSZZfPHBD7vL+NTIlXn6GwDX2s0AohKd0V6ryBgagWt7QxxONp0K7Q+KE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719492585; c=relaxed/simple;
-	bh=8x1y/BA5HEpl3H5PIsYbNzWqptF+ddQo7TG0proyfUc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uU0hxls/THXHYdLhhwP6EWqZXQ7mRs6ewcQVFSPEjrWPe44vTFufFDbaNVoX+JrP/0M9mjneY/o6zXvscLbYJFy3wl/7ZpwA9W3cvzLqtYQChKwKgyRsIhBVLlN4le8S7ZbOnqRLoIHwaPV29z6IlwBvrZ0Y/IBiRZsUMrfpQbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K85+EMsw; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719492604; c=relaxed/simple;
+	bh=1s6KL2A5BxKto0IMZbSrcHTZhim/DFbU3qpH6hFSrMQ=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=iSYintI/TZMKI3b5jqCrKf4/cMeMIO7uyuwFLDJunZM3wZBaWhTid/6PdDMEsw7GWQ4XmNKb8pbai5DtosoTAdLrBtHETlUjv/AIrhdheEwNp2lBg9k04hLO7k4RV3fRFqOdSqq4TEw8L6jtvvJtvE/jv9BquuSw+XzKLTaxzSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=VVPE+XSO; arc=none smtp.client-ip=203.205.221.242
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K85+EMsw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719492584; x=1751028584;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=8x1y/BA5HEpl3H5PIsYbNzWqptF+ddQo7TG0proyfUc=;
-  b=K85+EMsw8MfwP4MzDXcZvoIhJGABSy1HqMMaQMzLTiy1HXhzGcr3UkHO
-   i0tuzKsVxtXsFsbrwMlqwkRBDKNQbupQU26Gmr49f4OfT8Z29hNRHBAGm
-   vDZQPhFkmHVvjxzg4h0qKHR/hNtuhyyj1UlvektkfGdsY1vWcO7eBJvT9
-   iogMrBr8w0C8x4OhDjULaWCNo8EO7z5RjmTciaeWd0ddHlsxZfmK6FxAK
-   J3zFuFJcU1fp9lhyh5S28zPxEGwTAfyToap/WF3CaxPV+1kxlo53bBP09
-   /q/3ZR/RH5TLdPRD1XkkEGxRe+IZNRSIJCXTvO02O2HGsbLCLdLCNYGct
-   w==;
-X-CSE-ConnectionGUID: bmGNYaU5QEaB2+Bq2sH6Pw==
-X-CSE-MsgGUID: ZSNaYqgDRXi3LKFGDXJXKw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11115"; a="20497855"
-X-IronPort-AV: E=Sophos;i="6.09,166,1716274800"; 
-   d="scan'208";a="20497855"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 05:49:43 -0700
-X-CSE-ConnectionGUID: MqMx0kdTTweZIqkpI365OA==
-X-CSE-MsgGUID: Kt0pFqHxQXO/fF/VvyTNgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,166,1716274800"; 
-   d="scan'208";a="49537549"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 05:49:42 -0700
-Date: Thu, 27 Jun 2024 05:55:47 -0700
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: Brice Goglin <brice.goglin@gmail.com>
-Cc: Dave Hansen <dave.hansen@intel.com>,
-	srinivas pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: Re: [PATCH 0/9] Add CPU-type to topology
-Message-ID: <20240627125547.GC4743@ranerica-svr.sc.intel.com>
-References: <20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com>
- <8d757ea3-87a3-4663-ac76-66b04e33e6b3@gmail.com>
- <20240619015315.3ei5f6rovzdnxovo@desk>
- <bc75ff55161671e4470849ed51baa547f619889d.camel@linux.intel.com>
- <0021f5f2-67c5-4b20-939d-48c9c1c60cdb@gmail.com>
- <1b99017a-6964-46de-ba3a-09552e7cf072@intel.com>
- <ec4eeab6-ce32-4a2f-a32c-dfd95cdd9ccd@gmail.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="VVPE+XSO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1719492293; bh=3vgEVukpScf348J5ES58QzjOcxzTTmMqGrdr9uaReSY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=VVPE+XSOMTiRZra3o7vY8PzErya5zZNIpYLRboOnmH0KOSoJ9HU65EG2CSBwESKjd
+	 8R4Ht5pAeJa1lhxYLJj1tjRdgen1aGA9+NiwE1CWZf5tMmKmIldbqgN+I+gaRvfhB5
+	 Eslf3CcRxq1pt3Gp2fzCqEeJ6YzSOvRTrIfX8O0U=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.103])
+	by newxmesmtplogicsvrszc19-0.qq.com (NewEsmtp) with SMTP
+	id B3381EBD; Thu, 27 Jun 2024 20:44:51 +0800
+X-QQ-mid: xmsmtpt1719492291tnx2pguym
+Message-ID: <tencent_C7923A5DABDDB2191E4F830DC6A58B8DEB07@qq.com>
+X-QQ-XMAILINFO: MBjwNRQMz5zU6FmzQCNFwtLT1jZBSQ9kGjzLaeGXlw23s0kxWHnFWzs8nbqS2a
+	 w+fer0NSyxk1WTJ/jHJwY0jZG9mYLLjccvcYUFYfWhPi+4SxlJ5qz8mRFy8qL8gK8hHF5iFAG077
+	 bQ2avVy2k9xGrgVeCv7ytTj9YQTDpZ2oYx4IYBhgxDZyGAmc4EqtoSiqtkIRYLB8OtuIaWDdCaq0
+	 lge+cwyXg/Xt8QgQ5GAYgXUlWPnI542L4yIfPnVHpY9PBpedHAfe/EcKp5KnV83us1znvUsBOILr
+	 RqxkIUqvPl662JhF+JUchpBRLc5+E90CCHHRCDSPULOgGBcto53bSlFdWUUsTJiSsRgyXNq0t0Kl
+	 Nd/ATy7+Tfml8+tyGN3MjJs8trM/yr5bCijb9XAxXgZ56eWUcLUbBqsIbd9U/MPGaiprgNbW1pGX
+	 zqLtopPsy0VvHdgU44lwQaXgcNL+le0Sn3xhNfY3FnQxAmwEh6wDVb9n7n8xIerDNBd8Uja3++Tl
+	 oZgzqDkTNJsJj8kKsCrH9eJ1neeRk7rzPYWqaS2pKIEfeCOQHM7R6sHqTHmHnpBJMZOpgD9PT6Xp
+	 jHVeodN3BOQ71zj3RekLnMi3V8HWUbg+cRTfrWNsmkKK5LQCJ5HSp1iLf7M9JZ8Acs83AgbVOLSR
+	 f49Wx4QLippxhS6SeRz1a5pRVNC6MLui9Q/9d4CudndJXBs/GYCejlnP09kmkilz9uyiM2MBwOMz
+	 r6lke81Y2NpDE1RdFZCuOz2KJWc8s0BE7zp1Nacy5rcYV/0OkP/LJ3lG0WW2e099afj/7drgM4RG
+	 rTm+Qj3zgX1AWq2lmc688qXDNR0hS4sY5nU8WE/Zbzk/PaLjLJVsXoKokK1YKYo9r4IguNMh+/v0
+	 3/5YvxAHHkliEFg7Q4O/1jBwhnCAX6fH3zLunBjz4OsZl4kHYPJIE=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+c041b4ce3a6dfd1e63e2@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: [syzbot] [net?] KASAN: slab-use-after-free Write in l2tp_session_delete
+Date: Thu, 27 Jun 2024 20:44:52 +0800
+X-OQ-MSGID: <20240627124451.719448-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <0000000000008405e0061bb6d4d5@google.com>
+References: <0000000000008405e0061bb6d4d5@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ec4eeab6-ce32-4a2f-a32c-dfd95cdd9ccd@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 
-On Thu, Jun 20, 2024 at 05:22:59PM +0200, Brice Goglin wrote:
-> Le 20/06/2024 à 17:06, Dave Hansen a écrit :
-> 
-> > On 6/19/24 14:25, Brice Goglin wrote:
-> > > Good point. From this patch series, I understand that the current kernel
-> > > side doesn't care about these different E-cores. However it might be
-> > > good to expose them as different cpu-types (or better name) to userspace ?
-> > > 
-> > > Something like type 0 = P-core, 1 = normal E-core, 2 = low power E-core ?
-> > The first priority here is getting the kernel to comprehend these types
-> > for architectural purposes: when there are functional differences
-> > between the cores.
-> > 
-> > Let's get that in place, first.  Then we can discuss the possibility of
-> > new ABI in the area.
-> 
-> Agreed.
-> 
-> > Did the ARM folks ever do a sysfs ABI for big.LITTLE?  I don't see
-> > anything obvious in Documentation/ABI/testing/sysfs-devices-system-cpu.
-> 
-> As far as I know, they only have the "capacity" field in sysfs cpu files
-> that reports a higher number for the equivalent of P-core:
-> 
-> From testing/sysfs-devices-system-cpu:
-> 
-> What:           /sys/devices/system/cpu/cpuX/cpu_capacity
-> Date:           December 2016
-> Contact:        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-> Description:    information about CPUs heterogeneity.
-> 
->                 cpu_capacity: capacity of cpuX.
-> 
-> I don't know how it's calculated but I've never seen it report something wrong.
-> On Android/ARM phones, big cores usually have 1024 and small cores something
-> between 400 and 500.
-> Where there are 3 types of cores, they report 1024, 500-800 about ~250.
+delete tunnl session list
 
-I *think* this information comes from firmware tables, but you cannot reliably
-infer CPU types from capacity (e.g., Intel's Ecores vs Low Power Ecores).
+#syz test: linux-next f76698bd9a8c
 
-Also, it is not useful to identify "performance" vs "efficient" CPUs.
+diff --git a/net/l2tp/l2tp_ppp.c b/net/l2tp/l2tp_ppp.c
+index 3596290047b2..1fd27c902d80 100644
+--- a/net/l2tp/l2tp_ppp.c
++++ b/net/l2tp/l2tp_ppp.c
+@@ -446,6 +446,7 @@ static int pppol2tp_release(struct socket *sock)
+ 	if (session) {
+ 		struct pppol2tp_session *ps;
+ 
++		list_del_init(&session->list);
+ 		l2tp_session_delete(session);
+ 
+ 		ps = l2tp_session_priv(session);
+
