@@ -1,68 +1,73 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.17])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2398481DB;
-	Thu, 27 Jun 2024 07:17:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.17
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A921F5F6;
+	Thu, 27 Jun 2024 07:17:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719472640; cv=none; b=OOX4kQWeYlMtVlGpOmzqQE7CIzGuXRSrU6nOugT9Q80CtqG6+D0vVs26XgV62KjGyHxavh0cSd1HcTTjEri+esP6iym8VjPQ014F/aPJXzJ5DRXJQH7sMoRUW3B4TW19Atghq7VeotJ5VpPquoYz19NYmNVqYbeOMvF9nAfBiLY=
+	t=1719472648; cv=none; b=SITSCqyfcdyIeejkUD+G8XJqzEkvDQ80DxK7jX73B+cTrfgOiL+i4TBnZE/xM1yLG7JMqwrsJ6uLI+X4QqmikJ5z0iXtw32b5DMth7GMAwanOZ0YHDuuzcFFiXP6VOVHbmgE7XinNloTdTZ3sa/QY/dpIC/bmnS4ST/QFowLzfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719472640; c=relaxed/simple;
-	bh=VZd1DTMsV4Y6GkhYKBwj5DfAYkl/FIXvXfestO3BbMA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IWZpFrZnUqzBkgIPwsIx98nZttQqGgyfSCxRrbjpMJcTpTCMh+/Ku8RxpZBSIfgXE5pdKhc91n2L4a+51ayeD7g76aYQYTjdZG3loyOMyBh957TAig3vj+qqB+K4prr+pIJ6ysxG0YsNw8WB8PFCvKpeP/zZU6bSKAK16oeBsL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=nO3n3JOu; arc=none smtp.client-ip=220.197.32.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1719472648; c=relaxed/simple;
+	bh=wMJcr2AWNXAAqsBo+j58KGQEpUUJMlJJ71UaBYzBD/0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=CbjoUqJycZjfzjGe85B6wzr/lTdcOSjO8onil2qbCjn8sjOT7P/zw6zOdAkJyMX8WgB1Gog/bYBmF0eqZx3h4FG+dpWolbL7GNuAUn9atR6pM6N1xpcZ+ycigGTyqJZ6kDSs+jFHsKAa7CuOZCk9mH/R4cIAWt78/XXjdnyEsdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HERNeb5T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="nO3n3JOu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=YfzRT/YahaCVfCZjCVbpbtKPLzjuLKP7xH/d0hodVsY=;
-	b=nO3n3JOurca8Hv+kmfFWjTkQxKgHDcm4gOLb/cTbLiq0TocaEQp01vxKfkAOxc
-	1CF7UcpBTGGgphtGYNDAuhY1YYmMiGAIXg0MVnazDQqqhGblHP9c7FTPOBQS5bse
-	dR3/bDRW+A7ULMVSjCIk/vZSW3gtJ+BPmXm6lAZwaywp0=
-Received: from dragon (unknown [114.218.218.47])
-	by gzsmtp1 (Coremail) with SMTP id Mc8vCgD3H47bEX1mGbYZAA--.52899S3;
-	Thu, 27 Jun 2024 15:16:45 +0800 (CST)
-Date: Thu, 27 Jun 2024 15:16:43 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Dong Aisheng <aisheng.dong@nxp.com>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v3 0/9] arm64: dts: imx8qm: add subsystem lvds and mipi
-Message-ID: <Zn0R2/lcgcSG03CM@dragon>
-References: <20240614-imx8qm-dts-usb-v3-0-8ecc30678e1c@nxp.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HERNeb5T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0E36C2BBFC;
+	Thu, 27 Jun 2024 07:17:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719472648;
+	bh=wMJcr2AWNXAAqsBo+j58KGQEpUUJMlJJ71UaBYzBD/0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=HERNeb5TFl8wr6/bUfHVUH53eTiaDWeEyKLJokpGnAdBM+PnVnvwt5MA7klY17/5Q
+	 GGn4I/pBdr9thz4SDFbRldbx77fbw5wkKMPd1kq9eVSpc2SkluIawQc2088xXs9TSj
+	 Xgx6cLPeCCam+aV2I/tQx+N+X0I5PfS4h2rmIG0F6MIXrq23huuv4UmeeJSRlzPe96
+	 w9iul2HYRPEOzl8nVVKeAaGoWdlB3kOzx8eI2YCioEy7VPI+fD5B/D18BD+omx0jKm
+	 s78cSBo3FIIGIDS/b3H8wR69hfbwydRIDjOK96D9LNytEg/ss67x0hzwXTRmfREnjh
+	 jzH0FD4lyoIOw==
+From: Lee Jones <lee@kernel.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>, 
+ Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>, 
+ Bryan Brattlof <bb@ti.com>
+Cc: Vibhore Vardhan <vibhore@ti.com>, linux-pm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20240621-ti-opp-updates-v3-3-d857be6dac8b@ti.com>
+References: <20240621-ti-opp-updates-v3-0-d857be6dac8b@ti.com>
+ <20240621-ti-opp-updates-v3-3-d857be6dac8b@ti.com>
+Subject: Re: (subset) [PATCH v3 3/5] dt-bindings: mfd: syscon: add TI's opp
+ table compatible
+Message-Id: <171947264540.2846153.16605174762988368253.b4-ty@kernel.org>
+Date: Thu, 27 Jun 2024 08:17:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240614-imx8qm-dts-usb-v3-0-8ecc30678e1c@nxp.com>
-X-CM-TRANSID:Mc8vCgD3H47bEX1mGbYZAA--.52899S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUxEdyUUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiEh0LZWZv-cwvZQAAsT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.13.0
 
-On Fri, Jun 14, 2024 at 11:06:24AM -0400, Frank Li wrote:
-> Frank Li (9):
->       arm64: dts: imx8: add basic lvds0 and lvds1 subsystem
->       arm64: dts: imx8qm: add lvds subsystem
->       arm64: dts: imx8: add basic mipi subsystem
->       arm64: dts: imx8qm: add mipi subsystem
->       arm64: dts: imx8qm-mek: add cm4 remote-proc and related memory region
->       arm64: dts: imx8qm-mek: add pwm and i2c in lvds subsystem
->       arm64: dts: imx8qm-mek: add i2c in mipi[0,1] subsystem
->       arm64: dts: imx8qm-mek: fix gpio number for reg_usdhc2_vmmc
->       arm64: dts: imx8qm-mek: add usb 3.0 and related type C nodes
+On Fri, 21 Jun 2024 11:39:39 -0500, Bryan Brattlof wrote:
+> The JTAG_USER_ID_USERCODE efuse address, which is located inside the
+> WKUP_CTRL_MMR0 range holds information to identify the speed grades of
+> various components on TI's K3 SoCs. Add a compatible to allow the
+> cpufreq driver to obtain the data to limit the maximum frequency for the
+> CPUs under Linux control.
+> 
+> 
+> [...]
 
-Applied all, thanks!
+Applied, thanks!
+
+[3/5] dt-bindings: mfd: syscon: add TI's opp table compatible
+      commit: ba5901bc8fd7206fb0db445fa405c72e93e36e46
+
+--
+Lee Jones [李琼斯]
 
