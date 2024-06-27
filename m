@@ -1,115 +1,113 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E0E152190
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 12:18:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A09815573B
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 12:20:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719490701; cv=none; b=UHu8PoT81qjCY0HRLJQW98e5M3MICYP64rmqRZ6oOooXinB/i/jCZXKiFfNpUpmXTiQD/74ZnpD+MAwznMXmN1R8gLHOte1ABMa7WwFAjUshewBNtqRyOiuAPZ1Ir9sRc36ozdxh1Tn+lEBcPbbtnXqg/mf/vx3aeVGnt0rJ0cU=
+	t=1719490822; cv=none; b=uaxRk2JNe5o+lbMzdE6QVwxl72ba+H35WftAe0hfUrwqffTasw20rS8tZtlgGaOH7YvqYw5QMefBc9w1vn1ucID6SzDz454tJQ70+dQ5LS1GtRMchzWMF2wvX6B3cNcFlUwsilk/hvuo4rSCfydca1KFVZv9G8ZDRZA101sXh00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719490701; c=relaxed/simple;
-	bh=Fm8Lc5p1A5H70/b2jqUsL4oBjkyBytvMJYfYPNEtcv4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OWSWDDoZUyuV2ejzDfiIgg7lxsJPtIEfnSj3tic/+LtFKRZubDTP4WqGGNeTKnOZSOdgU0U05TG3USALKM9EnRLgJyZrWZhthQW2j0zHgDija2KSlvEJykhrp8O87z0ZlCkLurUqAHnyp6Ykiv96s1AisvKvkmtBiPiWbN0d6XE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=tagTi9za; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1719490822; c=relaxed/simple;
+	bh=u2/HAV/gDAWYYrxO+MtmBPhj4wnBMG1L0geWz37aGhk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oj/xOSzWF9E3Gyc3gjfvzG6xdmeXTwz71SY0bFU5sZ5YCVgq8tbSG2B2iPLxXUxGrkVBvUBhdAoF2lh+0K3brBlZLWzvElDNEwivFcthVzmnSchhBn7Rgyn02dfsDbthJln9ZmkoDHmnO4fvx2pzORvjCPG84n3orQ4XFQRGITQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ULwP3mfF; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="tagTi9za"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2eaa89464a3so88740281fa.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 05:18:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ULwP3mfF"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2ec6635aa43so40227951fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 05:20:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719490698; x=1720095498; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Wx0CgMn6jluyyz8Lb+06cQAt1KaCnUk56+5xBtg2eeo=;
-        b=tagTi9za7JNHZkzf+w7VHt5HNGxF6kDkdmePl08/AKsc17tV+aLWI+k1xB7tSivh9Q
-         MbOR70IZrurqSsBg76suzrAlbntdJSUvTqYquWZNngpakEh2tkJFWzpvAG0mA2+wpq/N
-         cEKW38jjpK79DWyrrSZkRjL1458P3YT78B4ch0DKxEgHI1qyGhDaga4UaluSME1rG/FJ
-         D4p5+hyu/lRFHp3LazSY/p8DKwjH0IkxX1Ttb5UAhTkDnHA0hPCTQjLs/WvRfLzxg7CK
-         FP6IKArFwmvf8Yg5tpAuEP0yaKKaOh8Jsiu1i+JtupHwYAERbQH26QIOA1R/prldE3TV
-         9U4w==
+        d=linaro.org; s=google; t=1719490819; x=1720095619; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yhSivaXZKihoS605ifan7I9eYS7gJmggBMZ70sBGD/k=;
+        b=ULwP3mfFL7h9CrIK80pdfoYGF4PUeghXYcNIRv6UZaLqhjpZSfnpm57so3f9YUpoUq
+         VYU6XvNNosBWYurYNi67lcwwHSZwvoSKmex2fH3RdOi+YmhdBYLAQ+rvUi4KAjxzdW9K
+         gyBWG7itJTgBD/iwqqjQ3UVaOeAgnnRejjPWN3kgq7zHi6GoFby30MdVTjBmDsgYIuzc
+         oO6tSnEeKQNC3/wxU3sYo4HlPlDiWQnHD5/8qt6o/8TksGUP/ThOPGzN1IJa/dzbfk+s
+         /65vZmg0IdYIW/xSPaN2mfFGP3jAlROnLJ7DcwFzitt+nR6tKgSa87r9+O4ULqTY9dd7
+         Phzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719490698; x=1720095498;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Wx0CgMn6jluyyz8Lb+06cQAt1KaCnUk56+5xBtg2eeo=;
-        b=DjJLO2g8ESuaOyZ47p4buTCJhg9k8f3NmVtoh/pZVyyvTQgInumHz4YTYHuSpfU9OI
-         fdGeheh2JuiHWaWITFjTBgnf3poN2wxJf03bKJEQR0uE1CK1rvo2QJjGZ++ET/e6L/Wv
-         Oahl0s4OoDP93QYOBYXqEN7kdDWSeNUguO9kPaqISioFAJwZ3WvzTuteYC+Tb8nreOK2
-         e6un6iAT43c+yVvGNaC+KbZfQSm8dEjU8UzMxVk3slxV6l7PH4e3OjHv3MCw9zTxZEDc
-         +gKBQyNcjG2bEHrwZJXyaTvA9CALf1nl/me+IEyTiQQ2fKws33lrtOhqEIS5QMqJg6r9
-         5i+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUauISEHxipQLnM+HwOC9kFY74L9vaKTT4a63dQMgAj6OfwbYtRu6Pq1mmpbi3GjVUwD68KGgDcGM0BdkGt4xdfTJmG1FGar71eprhf
-X-Gm-Message-State: AOJu0Yz/+17Mta4Dc1urMDfSfuMSr2HZF8dNV8eq2lUfFz72dHXQG2mH
-	nDmqik5uQInBHxKlBm08/ZLMzSUmSlnkzJVsdyByWSHOcp1eLMikntyWwze7V7z7IRZRf+BdZhv
-	JCiBjrnAuXKgKp2Wj1CWia+XmdDr8CttPtu7tlA==
-X-Google-Smtp-Source: AGHT+IFoXRdB/Inu8lFN9nuGotr9Qb3Ng9uwIeH8T3OCKFP0OTUnuvV1f/leNMSuHwCZB1jD8YWlv09Pw3eh4/iuVdY=
-X-Received: by 2002:a2e:7207:0:b0:2eb:f7a4:7289 with SMTP id
- 38308e7fff4ca-2ec579ffb0fmr79246121fa.51.1719490698327; Thu, 27 Jun 2024
- 05:18:18 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719490819; x=1720095619;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yhSivaXZKihoS605ifan7I9eYS7gJmggBMZ70sBGD/k=;
+        b=efIPL61LS2eYrS4q6LOvPHb73qlUck4PJA+xWYnzHyCgR2W+zk90GjhGVqg2J5N9t6
+         dfd/GoBjWxyjHOXyN1HcQI3Q8kZHky2dlI4mutqvP7/0Fnjzf09J6/IAeKE/L6i9WJFv
+         pkzQN7uWe0+h/yIYe8XyVZouOACCLie1Y5RRpbZnYBfSLfj+9a9lUg6QJP2vjlUATzmp
+         WRlua6kx+Kc55CcHjZb/GCvPWHFfabe0yHGZzHlR+5KwKGe3JuwSnEY4Bjlnl9BbJiRy
+         /7LkJX5jRplmo+8GQr9fYmB7mDmyh5wf3SYvoNqEvFbgZEIPozuDphY+XxwUaPuGORmm
+         P2NA==
+X-Forwarded-Encrypted: i=1; AJvYcCWrWTucCGS46WV+yxgaD7wj38GWYKzsb+c/8sYU2tePRt5Soj9OlpjB8W96DX+fWaL/CrSyeL4scv+leZCCPMP4deEgvReUziamdbjg
+X-Gm-Message-State: AOJu0Yy1LykTVXSbgfg+e49MQcQS9VHnIHXV3vyL8+/KaiIDlbbO2ae6
+	HKVO6kFrl3JKJBJj3tDYd4tV5onCPFz1Rby67H4U+MD0xvg0NCHR/84m+ToiUi2xDgmbBU0zQBF
+	I
+X-Google-Smtp-Source: AGHT+IH4NLpzb67D/rvvNbEMdptd0qnGPx5LLkjSIOnw+1o5piYWPYgVjm09hta6ZrYoMHWqng745A==
+X-Received: by 2002:a05:6512:60b:b0:52c:c5c4:43d2 with SMTP id 2adb3069b0e04-52cdf8209b9mr9697972e87.47.1719490818637;
+        Thu, 27 Jun 2024 05:20:18 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.219.137])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c8424b43sm62692885e9.32.2024.06.27.05.20.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jun 2024 05:20:18 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 1/3] arm64: dts: qcom: sm8550-hdk: add port mapping to speakers
+Date: Thu, 27 Jun 2024 14:20:13 +0200
+Message-ID: <20240627122015.30945-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240627113018.25083-1-brgl@bgdev.pl> <20240627113018.25083-4-brgl@bgdev.pl>
- <Zn1WgpC58nbYfLVF@shell.armlinux.org.uk>
-In-Reply-To: <Zn1WgpC58nbYfLVF@shell.armlinux.org.uk>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 27 Jun 2024 14:18:06 +0200
-Message-ID: <CAMRc=Mdn6gXhgoWwpztXDKzix_+Ad1_rNUWP7O6HDyLXAJev6Q@mail.gmail.com>
-Subject: Re: [PATCH v2 net-next 3/3] net: phy: aquantia: add support for aqr115c
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
-	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 27, 2024 at 2:09=E2=80=AFPM Russell King (Oracle)
-<linux@armlinux.org.uk> wrote:
->
-> On Thu, Jun 27, 2024 at 01:30:17PM +0200, Bartosz Golaszewski wrote:
-> > +static int aqr115c_config_init(struct phy_device *phydev)
-> > +{
-> > +     /* Check that the PHY interface type is compatible */
-> > +     if (phydev->interface !=3D PHY_INTERFACE_MODE_SGMII &&
-> > +         phydev->interface !=3D PHY_INTERFACE_MODE_2500BASEX)
-> > +             return -ENODEV;
-> > +
-> > +     phy_set_max_speed(phydev, SPEED_2500);
->
-> Please can you explain why this is necessary? Does the PHY report that
-> it incorrectly supports faster speeds than 2500base-X ?
->
-> If phylib is incorrectly detecting the PHYs features, then this should
-> be corrected via the .get_features method, not in the .config_init
-> method.
->
-> (The same should be true of the other Aquantia PHYs.)
->
-> Note that phy_set_max_speed() is documented as:
->
->  * The PHY might be more capable than the MAC. For example a Fast Etherne=
-t
->  * is connected to a 1G PHY. This function allows the MAC to indicate its
->  * maximum speed, and so limit what the PHY will advertise.
->
+Add appropriate mappings of Soundwire ports of WSA8845 speaker.  This
+solves second (south) speaker sound distortions when playing audio.
 
-Well I should have RTFM. You're right, I'll drop it.
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Bart
+---
 
-> Aquantia seems to be the only PHY driver that calls this function.
->
-> Thanks.
->
-> --
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Bindings:
+https://lore.kernel.org/all/20240626-port-map-v1-3-bd8987d2b332@linaro.org/
+
+Can be applied independently, if bindings are fine.
+---
+ arch/arm64/boot/dts/qcom/sm8550-hdk.dts | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
+index e0dc03a97771..2e12219006c9 100644
+--- a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
++++ b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
+@@ -1106,6 +1106,7 @@ north_spkr: speaker@0,0 {
+ 
+ 		#sound-dai-cells = <0>;
+ 		sound-name-prefix = "SpkrLeft";
++		qcom,port-mapping = <1 2 3 7 10 13>;
+ 	};
+ 
+ 	/* WSA8845, Speaker South */
+@@ -1123,6 +1124,7 @@ south_spkr: speaker@0,1 {
+ 
+ 		#sound-dai-cells = <0>;
+ 		sound-name-prefix = "SpkrRight";
++		qcom,port-mapping = <4 5 6 7 11 13>;
+ 	};
+ };
+ 
+-- 
+2.43.0
+
