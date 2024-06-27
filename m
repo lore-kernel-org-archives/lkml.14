@@ -1,35 +1,35 @@
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387C413C9CA;
-	Thu, 27 Jun 2024 09:12:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BE821411EE;
+	Thu, 27 Jun 2024 09:12:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719479543; cv=none; b=M2qTPntWZpJKXuwgE56zIDIdn92bIUWkhwCrzzkeOF19cZJrVyGUHnBjmWBlJxORw77XJol8YL0zoyjUFUtDCALbv1C3VSIrrZHbF8RlfuJwD/6s/2W6K6k3p0kQvUfbIoaPiMv2UBW8wGcrev7AMlPkQ/mGKi3S7AXWV+Y8ewM=
+	t=1719479546; cv=none; b=QxwFEl/nZLu8ck87lJdAdK6nbbCOWGP3bU4Zk94qYDlih5J81cfZnFveHYqzHEz+FzSwQS59aBKLbqdzvHGaeYnPsiolYu4IkEiqHDR4FeMWIayxBs1hjTd5js0HQ6iknybUKgToC+0oqFM4bhYOF8r/DrYeXTxMFOQV6fqadio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719479543; c=relaxed/simple;
-	bh=nhPkf7wgseJDhZAtkhb42G6JXubPm9Ki2AQx9/jbUDc=;
+	s=arc-20240116; t=1719479546; c=relaxed/simple;
+	bh=chCtCkqI/NY4Vy2ffwwkDxwHFQRfFlMjA49T/JZ0V2I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CekabRYpf6hB6W8BreaO+b4Tba5mWLsm+QGavPjcKOeZiK+B/5Nmp1WJq4XSLMYEjLgSeASNtJnv+l+UwkQGS76GPEzb7kXTg5Fhvm2OtvmvHMKgO5G1AQjnghhcor5vuNI2+AlOx7XYtieN9AcRWl5t3nolGMu3YKE/pXhugtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QYuH1w86; arc=none smtp.client-ip=217.70.183.200
+	 MIME-Version; b=fJJT3f7Wk8uSqHJWnibCFQck6BxGpXBxvUB+7C6pbDLhTHPoMNbrcov49DYW/v8x3aAuHb9jdYCiVPjGtMQWXOk6KYZvOHEyuovLBKwpfMzzukoqFlrnukTn/guyR/I4HoYvRoYHJfzP8ESgvCHX1YZDfMQyqacka+5/lksn84E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=cuGm4i9F; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QYuH1w86"
-Received: by mail.gandi.net (Postfix) with ESMTPA id 2B76C20003;
-	Thu, 27 Jun 2024 09:12:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="cuGm4i9F"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 3DC5620002;
+	Thu, 27 Jun 2024 09:12:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1719479539;
+	t=1719479542;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9I+0v1qx7CVrOS1djilPmB0cdboViIJolbKDdwWOXOM=;
-	b=QYuH1w866emXytITZ+5ma+JAlPzWd6MSWV0GpLVavK/MMbDYTurpgsZ+WWCQgCcnMyAdDJ
-	B9kwiExRSWUG78kmvLio3XoUufjzkfFzB8YdH/ZRjXUgcfqnZRXnmCOKoKafp4gGIiZHM6
-	y+zUwjBDav+xBw1yxdrLJxnZGpMTEY8a+SvnQE2KFl75MtKO5Q0uvEb2SkqgJ5pUfbx4Oz
-	0CfJzo643wong26sQSEit+FuzBlA9o+OCmNZMatVqTI+weP7qo/IdvZxvBSg5nXxBScg1+
-	PUQVK1Hqh7KqG8UkckTTRrMcCRoIAwCUJ4MN1TgbY/UuhE2dNhEy1Sl1+d9Cbw==
+	bh=S5EWnWVm8Boacgm88RxHxweJ58Kbq8GGMqtCde3uKZI=;
+	b=cuGm4i9FdV0sht3lBmtqJjNqJuzHBROL0Oqt4/NWUQRHmcWJ5lWDug7PWkPwxdfrLV41fF
+	7ErFCO9TkR+SnLIeZ0kU5JqT9aVUC7GZtGdQapA7wkTVsZblla4AXmtt8tbEgJGiwQf6PA
+	A/vVnnfexU9TQ/PHU3EMjDkfgSh4LWit382UOIY4h4gnyIMV9ob1zOzILI9mTy/ZO4heks
+	BCmVHfPlarK+8wBVyNY2JpB2q7fwPmOeTGgH91AJNNTqWEywe1GJD2SZufX8yQhBxUd5RS
+	CGWqikGOU9cO+ddHrTPjgc+CzQzlJxLMF8H4xsjkp7MKNQnFJombwu3IkGrFmg==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Andy Shevchenko <andy.shevchenko@gmail.com>,
 	Simon Horman <horms@kernel.org>,
@@ -60,11 +60,10 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Allan Nielsen <allan.nielsen@microchip.com>,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <clement.leger@bootlin.com>
-Subject: [PATCH v3 5/7] reset: mchp: sparx5: set the dev member of the reset controller
-Date: Thu, 27 Jun 2024 11:11:34 +0200
-Message-ID: <20240627091137.370572-6-herve.codina@bootlin.com>
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: [PATCH v3 7/7] MAINTAINERS: Add the Microchip LAN966x PCI driver entry
+Date: Thu, 27 Jun 2024 11:11:36 +0200
+Message-ID: <20240627091137.370572-8-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240627091137.370572-1-herve.codina@bootlin.com>
 References: <20240627091137.370572-1-herve.codina@bootlin.com>
@@ -74,33 +73,34 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-From: Clément Léger <clement.leger@bootlin.com>
+After contributing the driver, add myself as the maintainer for the
+Microchip LAN966x PCI driver.
 
-In order to guarantee the device will not be deleted by the reset
-controller consumer, set the dev member of the reset controller.
-
-Signed-off-by: Clément Léger <clement.leger@bootlin.com>
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- drivers/reset/reset-microchip-sparx5.c | 1 +
- 1 file changed, 1 insertion(+)
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/reset/reset-microchip-sparx5.c b/drivers/reset/reset-microchip-sparx5.c
-index c4fe65291a43..1ef2aa1602e3 100644
---- a/drivers/reset/reset-microchip-sparx5.c
-+++ b/drivers/reset/reset-microchip-sparx5.c
-@@ -117,6 +117,7 @@ static int mchp_sparx5_reset_probe(struct platform_device *pdev)
- 		return err;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index baeb307344cd..c84ec27ccbe4 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14733,6 +14733,12 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml
+ F:	drivers/irqchip/irq-lan966x-oic.c
  
- 	ctx->rcdev.owner = THIS_MODULE;
-+	ctx->rcdev.dev = &pdev->dev;
- 	ctx->rcdev.nr_resets = 1;
- 	ctx->rcdev.ops = &sparx5_reset_ops;
- 	ctx->rcdev.of_node = dn;
++MICROCHIP LAN966X PCI DRIVER
++M:	Herve Codina <herve.codina@bootlin.com>
++S:	Maintained
++F:	drivers/mfd/lan966x_pci.c
++F:	drivers/mfd/lan966x_pci.dtso
++
+ MICROCHIP LCDFB DRIVER
+ M:	Nicolas Ferre <nicolas.ferre@microchip.com>
+ L:	linux-fbdev@vger.kernel.org
 -- 
 2.45.0
 
