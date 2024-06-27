@@ -1,42 +1,25 @@
-Received: from mickerik.phytec.de (mickerik.phytec.de [91.26.50.163])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A742541A94
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 08:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.26.50.163
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0BA041A94
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 08:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719478147; cv=none; b=W1fnaIo7tQk8iGIZlVhpkiVHlr+dfnhBkgFwL3I4hocV5s2YBA8rmO/mHxdeQp40T3n1IBGHt3Hg9TU2Bh8faYYgcDFhRyzbFG2WyBH+PuXaxLdmdxiOjyqnO4RRcd0GMj9bo1JgSijLhcB56MB1h5tGcrTVMdugQDcEH2d0Zzo=
+	t=1719478265; cv=none; b=bRLIxjKzhzCA/ZOFNyz79muyDoIFfL8MMIEv+06XAc9laCmLemWcAv9aKqasusH3zI34Rby4vcI0qHpi4lzTH26mrnaaAjsiKHm4MEA79CeyJtJiWveYlhim/8jgIXs8LMXVaD1HLp6cXmgQlNxrEUj2vsCsKJSOockeMi9z7+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719478147; c=relaxed/simple;
-	bh=4nfPIA4XuybkZw8ISeYiVQcxB7Y6UFRZfyi9NuCV7kQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=cW9aycRg/5GbuxTwNyEdutFN/jpOvKzWWtew/aJyKpTwAOauqyeneF/P1T6iUVyDsk63oqPDhgoU3SwYY8ipAA3rlBcmflQ1MTo4gzBV9c88y6eAHNFpyDV8BWYPIEb4uDDv5+gJZRyeZvPpChGaUsg1v+gNpvkiO6FgR/jHT5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b=ZJ3oWUXH; arc=none smtp.client-ip=91.26.50.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b="ZJ3oWUXH"
-DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a4; c=relaxed/simple;
-	q=dns/txt; i=@phytec.de; t=1719478142; x=1722070142;
-	h=From:Sender:Reply-To:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=4nfPIA4XuybkZw8ISeYiVQcxB7Y6UFRZfyi9NuCV7kQ=;
-	b=ZJ3oWUXHpL7BrGIEBuU8PiamTjQ+K5bHPhNgbr3h+eBUFovNj/8mbDMD4cV8Pmda
-	gRbEVVb/9VPN8gsb/oROMzE6iCRq9/o1aI4ySIPjRaecXkSW8sgDX2GEPxvFLJ/P
-	pnNNQ8l4MbVZvkLcKimxyxV4fIB4zQr47YQ2gQAPiN4=;
-X-AuditID: ac14000a-03251700000021bc-a7-667d277e62c5
-Received: from berlix.phytec.de (Unknown_Domain [172.25.0.12])
-	(using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(Client did not present a certificate)
-	by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id 2D.74.08636.E772D766; Thu, 27 Jun 2024 10:49:02 +0200 (CEST)
-Received: from [172.25.39.28] (172.25.0.11) by Berlix.phytec.de (172.25.0.12)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.6; Thu, 27 Jun
- 2024 10:49:01 +0200
-Message-ID: <cd3d1e1b-7243-4b51-bb4d-3a5aa2d20bb6@phytec.de>
-Date: Thu, 27 Jun 2024 10:49:00 +0200
+	s=arc-20240116; t=1719478265; c=relaxed/simple;
+	bh=4UI9Svt0caV422+4S3MFg+wkDVFxsisYrmbqSJU9OBI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VFtuVcAUOPAWVuH8DVaVUQRnUYH8lLgjFyi0zfvVPOl1pUu8I8xPAwvTcYDcO9oZPTadRFcko5Pc1WkLzXgmNpOlXQSGo4zSSqN+rQJRJrexbllBHff6yH6YNdUHAMLTcJnBoWESTO8rYft/wMGCAPVt2VnAyMjw4Kj9btZDILY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E645367;
+	Thu, 27 Jun 2024 01:51:25 -0700 (PDT)
+Received: from [10.1.32.171] (XHFQ2J9959.cambridge.arm.com [10.1.32.171])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 304DC3F766;
+	Thu, 27 Jun 2024 01:50:59 -0700 (PDT)
+Message-ID: <fba6439c-9710-4b0a-873c-334058166c03@arm.com>
+Date: Thu, 27 Jun 2024 09:50:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,455 +27,541 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] arm64: dts: ti: Add basic support for
- phyBOARD-Lyra-AM62Ax
-To: Garrett Giordano <ggiordano@phytec.com>, <nm@ti.com>, <vigneshr@ti.com>,
-	<kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <upstream@lists.phytec.de>
-References: <20240626155244.3311436-1-ggiordano@phytec.com>
- <20240626155244.3311436-4-ggiordano@phytec.com>
-Content-Language: en-US
-From: Wadim Egorov <w.egorov@phytec.de>
-In-Reply-To: <20240626155244.3311436-4-ggiordano@phytec.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: Florix.phytec.de (172.25.0.13) To Berlix.phytec.de
- (172.25.0.12)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMIsWRmVeSWpSXmKPExsWyRpKBR7dOvTbN4PUiA4s1e88xWcw/co7V
-	Yv2W32wWyz/PZrd4Oesem8Wmx9dYLS7vmsNm8ebHWSaL/3t2sFt0v1O3+H/2A7sDt8emVZ1s
-	HpuX1Hv0d7ewevy5+I7V4/iN7UwenzfJBbBFcdmkpOZklqUW6dslcGVs+naWvWB/WsWKSxuZ
-	GhgvBnQxcnJICJhIbP24k62LkYtDSGAJk8SRFZsYIZy7jBJ3tnWxg1TxCthIdC9/AZTg4GAR
-	UJX4MCsVIiwocXLmExYQW1RAXuL+rRlg5cICERI/X59hB5kjIrCEUWJS50KwDcwCbYwSTx4e
-	YAapEhLIlbi7/gMbiM0sIC5x68l8JhCbTUBd4s6Gb6wgNifQ4j/77jBD1FhILH5zkB3ClpfY
-	/nYO1Bx5iReXlrNAvCMvMe3ca2YIO1TiyKbVTBMYhWchOXYWknWzkIydhWTsAkaWVYxCuZnJ
-	2alFmdl6BRmVJanJeimpmxhBESfCwLWDsW+OxyFGJg7GQ4wSHMxKIryhJVVpQrwpiZVVqUX5
-	8UWlOanFhxilOViUxHlXdwSnCgmkJ5akZqemFqQWwWSZODilGhi7/u62DTN1aReJqu+oOvI6
-	x+ew7AKV+RfslvvGGmf+Knnz7fZ2ma/bFvyd/uPJw4eXeqpjpmj7zX5W/efL5J/9rDPC24R/
-	n/Y65qL/3qynWzkzpPFXwou/yTNX/myO13j8f2GNmpG73S5esYrLO9VrypcX/kt7+lW0kaHi
-	S+eUupkmfWf4+ycrsRRnJBpqMRcVJwIAYxtI3aYCAAA=
+Subject: Re: [PATCH v2 0/1] tools/mm: Introduce a tool to assess swap entry
+ allocation for thp_swapout
+Content-Language: en-GB
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, chrisl@kernel.org, linux-mm@kvack.org,
+ david@redhat.com, hughd@google.com, kaleshsingh@google.com,
+ kasong@tencent.com, linux-kernel@vger.kernel.org, v-songbaohua@oppo.com,
+ ying.huang@intel.com
+References: <20240622071231.576056-1-21cnbao@gmail.com>
+ <557d7f05-6ba9-482d-b3fb-29eb72cdf09c@arm.com>
+ <CAGsJ_4zQ0vjX1UM62o0Wsgh9XYW0SGv2cyG5gUpbP_+Tx3WZLg@mail.gmail.com>
+ <76876c5f-f769-43f1-ad53-a4af288af467@arm.com>
+ <CAGsJ_4zpn5dMNNNcVcMngT-mJpWV-bzUV+RfQaLLjxMC73xfig@mail.gmail.com>
+ <f9fde05b-0340-49fc-92f9-7fa091580444@arm.com>
+ <CAGsJ_4xf_s57g5NmxbzFSZqyU05n4CoF5PFTZO73CE4CmB9fEw@mail.gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <CAGsJ_4xf_s57g5NmxbzFSZqyU05n4CoF5PFTZO73CE4CmB9fEw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+On 27/06/2024 01:02, Barry Song wrote:
+> On Tue, Jun 25, 2024 at 8:11 PM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>
+>> On 25/06/2024 01:11, Barry Song wrote:
+>>> On Mon, Jun 24, 2024 at 10:35 PM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>>>
+>>>> On 24/06/2024 09:42, Barry Song wrote:
+>>>>> On Mon, Jun 24, 2024 at 8:26 PM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>>>>>
+>>>>>> On 22/06/2024 08:12, Barry Song wrote:
+>>>>>>> From: Barry Song <v-songbaohua@oppo.com>
+>>>>>>>
+>>>>>>> -v2:
+>>>>>>>  * add swap-in which can either be aligned or not aligned, by "-a";
+>>>>>>>    Ying;
+>>>>>>>  * move the program to tools/mm; Ryan;
+>>>>>>>  * try to simulate the scenarios swap is full. Chris;
+>>>>>>>
+>>>>>>> -v1:
+>>>>>>>  https://lore.kernel.org/linux-mm/20240620002648.75204-1-21cnbao@gmail.com/
+>>>>>>>
+>>>>>>> I tested Ryan's RFC patchset[1] and Chris's v3[2] using this v2 tool:
+>>>>>>> [1] https://lore.kernel.org/linux-mm/20240618232648.4090299-1-ryan.roberts@arm.com/
+>>>>>>> [2] https://lore.kernel.org/linux-mm/20240614-swap-allocator-v2-0-2a513b4a7f2f@kernel.org/
+>>>>>>>
+>>>>>>> Obviously, we're rarely hitting 100% even in the worst case without "-a" and with
+>>>>>>> "-s," which is good news!
+>>>>>>> If swapin is aligned w/ "-a" and w/o "-s", both Chris's and Ryan's patches show
+>>>>>>> a low fallback ratio though Chris's has the numbers above 0% but Ryan's are 0%
+>>>>>>> (value A).
+>>>>>>>
+>>>>>>> The bad news is that unaligned swapin can significantly increase the fallback ratio,
+>>>>>>> reaching up to 85% for Ryan's patch and 95% for Chris's patchset without "-s." Both
+>>>>>>> approaches approach 100% without "-a" and with "-s" (value B).
+>>>>>>>
+>>>>>>> I believe real workloads should yield a value between A and B. Without "-a," and
+>>>>>>> lacking large folios swap-in, this tool randomly swaps in small folios without
+>>>>>>> considering spatial locality, which is a factor present in real workloads. This
+>>>>>>> typically results in values higher than A and lower than B.
+>>>>>>>
+>>>>>>> Based on the below results, I believe that:
+>>>>>>
+>>>>>> Thanks for putting this together and providing such detailed results!
+>>>>>>
+>>>>>>> 1. We truly require large folio swap-in to achieve comparable results with
+>>>>>>> aligned swap-in(based on the result w/o and w/ "-a")
+>>>>>>
+>>>>>> I certainly agree that as long as we require a high order swap entry to be
+>>>>>> contiguous in the backing store then it looks like we are going to need large
+>>>>>> folio swap-in to prevent enormous fragmentation. I guess Chris's proposed layer
+>>>>>> of indirection to allow pages to be scattered in the backing store would also
+>>>>>> solve the problem? Although, I'm not sure this would work well for zRam?
+>>>>>
+>>>>> The challenge is that we also want to take advantage of improving zsmalloc
+>>>>> to save compressed multi-pages. However, it seems quite impossible for
+>>>>> zsmalloc to achieve this for a mTHP is scattered but not put together in
+>>>>> zRAM.
+>>>>
+>>>> Yes understood. I finally got around to watching the lsfmm videos; I believe the
+>>>> suggested solution with a fs-like approach would be to let the fs handle the
+>>>> compression, which means compressing extents? So even with that approach,
+>>>> presumably its still valuable to be able to allocate the biggest extents possible.
+>>>>
+>>>>>
+>>>>>>
+>>>>>> Perhaps another way of looking at this is that we are doing a bad job of
+>>>>>> selecting when to use an mTHP and when not to use one in the first place;
+>>>>>> ideally the workload would access the data across the entire mTHP with high
+>>>>>> temporal locality? In that case, we would expect the whole mTHP to be swapped in
+>>>>>> even with the current page-by-page approach. Figuring out this "auto sizing"
+>>>>>> seems like an incredibly complex problem to solve though.
+>>>>>
+>>>>> The good news is that this is exactly what we're implementing in our products,
+>>>>> and it has been deployed on millions of phones.
+>>>>>
+>>>>>   *  Allocate mTHP and swap in the entire mTHP  in do_swap_page();
+>>>>>   *  If mTHP allocation fails, allocate 16 pages to swap-in in do_swap_page();
+>>>>
+>>>> I think we were talking cross-purposes here. What I meant was that in an ideal
+>>>> world we would only allocate a (64K) mTHP for a page fault if we had confidence
+>>>> (via some heuristic) that the virtual 64K area was likely to always be accessed
+>>>> together, else just allocate a small folio. i.e. choose the folio size to cover
+>>>> a single object from user space's PoV. That would have the side effect that a
+>>>> page-by-page swap-in approach (the current approach in mainline) would still
+>>>> effectively result in swapping in the whole folio and therefore reduce
+>>>> fragementation in the swap file. (Or thinking about it slightly differently, it
+>>>> would give us confidence to always swap-in a large folio at a time, because we
+>>>> know its all highly likely to get used in the near future).
+>>>>
+>>>> I suspect this is a moot point though, because divinging a suitable heuristic
+>>>> with low overhead is basically impossible.
+>>>>
+>>>>>
+>>>>> To be honest, we haven't noticed a visible increase in memory footprint. This is
+>>>>> likely because Android's anonymous memory exhibits good spatial locality, and
+>>>>> 64KiB strikes a good balance—neither too large nor too small.
+>>>>
+>>>> Indeed.
+>>>>
+>>>>>
+>>>>> The bad news is that I haven't found a way to convince the community this
+>>>>> is universally correct.
+>>>>
+>>>> I think we will want to be pragmatic and at least implement an option (sysfs?)
+>>>> to swap-in a large folio up to a certain size; These test results clearly show
+>>>> the value. And I believe you have real-world data for Android that shows the
+>>>> same thing.
+>>>>
+>>>> Just to creep the scope of this thread slightly, after watching yours and Yu
+>>>> Zhou's presentations around TAO, IIUC, even with TAO enabled, 64K folio
+>>>> allocation fallback is still above 50%? I still believe that once the Android
+>>>> filesystems are converted to use large folios that number will improve
+>>>> substantially; especially if the page cache can be convinced to only allocate
+>>>> 64K folios (with 4K fallback). At that point you're predominantly using 64K
+>>>> folios so intuitively there will be less fragmentation.
+>>>
+>>> Absolutely agreed. Currently, I reported an allocation fallback rate
+>>> slightly above 50%, but
+>>> this is not because TAO is ineffective. It's simply because, in the
+>>> test, we set up a
+>>> conservative 15% virtzone for mTHP. If we increase the zone, we would definitely
+>>> achieve a lower fallback ratio. However, the issue arises when we need
+>>> a large number
+>>> of small folios— for example, for the page cache—because they might
+>>> suffer. However,
+>>> we should be able to increase the percentage of the virtzone after
+>>> some fine-tuning, as
+>>> the report was based on an initial test to demonstrate that TAO can
+>>> provide guaranteed
+>>> mTHP coverage.
+>>>
+>>> If we can somehow unify the mTHP size for both the page cache and anon, things
+>>> might improve.
+>>
+>> Indeed. And that implies we might need extra controls for the page cache, which
+>> I don't think Willy will be a fan of. It would be good to get some fragmentation
+>> data for Android with a file system that supports large folios, both with the
+>> page cache folio allocation scheme as it is today, and constrained to 64K and
+>> 4K. Rather than waiting for all the Android file systems to land support for
+>> large folios, is it possible to hand roll all the Android partitions as XFS?
+>> I've done that in the past for the user data partition at least.
+> 
+> It might be a good idea to evaluate page cache large folios without
+> waiting for EROFS
+> and F2FS.
+> I need to do more research on deploying XFS on Android before getting
+> back to you.
+
+In the past, I've hacked the Android userdata.img like this. I'm sure there are
+better ways, but it worked (as long as the kernel was also compiled with the XFS
+driver enabled), and I guess it should work for the other partitions too:
+
+# Install tools, inflate userdata.img and mount.
+sudo apt install android-sdk-libsparse-utils
+simg2img userdata.img userdata.ext4.raw
+mkdir ext4_mount
+sudo mount -o ro userdata.ext4.raw ext4_mount
+
+# Create empty file for xfs raw image (size is the same as userdata.ext4.raw).
+# loopback the file as blk device and format it for xfs.
+dd if=/dev/zero of=userdata.xfs.raw bs=1MiB count=11250
+sudo losetup /dev/loop4 userdata.xfs.raw
+sudo mkfs -t xfs /dev/loop4
+mkdir xfs_mount
+sudo mount userdata.xfs.raw xfs_mount
+
+# If there is anything on the userdata.img (mounted above) copy the contents
+(e.g. cp -r ...).
+
+# Unmount and remove the loopback.
+sudo umount xfs_mount
+sudo losetup --detach /dev/loop4
+
+# Convert raw image to a sparse image ready for flashing.
+img2simg userdata.xfs.raw userdata.xfs.img
 
 
+> 
+>>
+>>>
+>>> Xiang promised to deliver EROFS large folio support. If we also get
+>>> this in f2fs, things
+>>> will be quite different.
+>>
+>> Excellent! So Oppo is using only erofs and f2fs? What about ext4? And all the
+>> ancillary things like fscrypt and fsverity, etc? (I've been hand waving a bit to
+>> this point, but it would be good to build a full list of all the components that
+>> need large folio support for large folio file-backed memory to be viable on
+>> Android, if you can help enumerate that?)
+> 
+> We get all of tmpfs, ext4, f2fs, erofs, vfat and fuse for different folders.
 
-Am 26.06.24 um 17:52 schrieb Garrett Giordano:
-> The phyCORE-AM62Ax [1] is a SoM (System on Module) featuring TI's AM62Ax SoC.
-> It can be used in combination with different carrier boards.
-> This module can come with different sizes and models for
-> DDR, eMMC, SPI NOR Flash and various SoCs from the AM62Ax family.
-> 
-> A development Kit, called phyBOARD-Lyra [2] is used as a carrier board
-> reference design with a mapper board being used to allow the phyCORE-AM62Ax
-> to fit the phyBOARD-Lyra.
-> 
-> Supported features:
->    * Debug UART
->    * SPI NOR Flash
->    * eMMC
->    * 2x Ethernet
->    * Micro SD card
->    * I2C EEPROM
->    * I2C RTC
->    * GPIO Expander
->    * LEDs
->    * USB
->    * HDMI
->    * USB-C
->    * Audio
-> 
-> For more details, see:
-> 
-> [1] Product page SoM: https://www.phytec.com/product/phycore-am62a
-> [2] Product page CB: https://www.phytec.com/product/phyboard-am62a
-> 
-> Signed-off-by: Garrett Giordano <ggiordano@phytec.com>
-Reviewed-by: Wadim Egorov <w.egorov@phytec.de>
+OK, but I think there are also other components like fsverity and fscrypt that
+would need to support large folios too? And possibly overlayfs? (you can
+probably tell by now that I know very little about file systems :) )
 
-> ---
->   arch/arm64/boot/dts/ti/Makefile               |   2 +
->   .../boot/dts/ti/k3-am62a-phycore-som.dtsi     | 330 ++++++++++++++++++
->   .../dts/ti/k3-am62a7-phyboard-lyra-rdk.dts    |  18 +
->   3 files changed, 350 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/ti/k3-am62a-phycore-som.dtsi
->   create mode 100644 arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dts
 > 
-> diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-> index 2c327cc320cf..cd6e14edbbea 100644
-> --- a/arch/arm64/boot/dts/ti/Makefile
-> +++ b/arch/arm64/boot/dts/ti/Makefile
-> @@ -27,6 +27,7 @@ dtb-$(CONFIG_ARCH_K3) += k3-am62-lp-sk.dtb
->   
->   # Boards with AM62Ax SoC
->   dtb-$(CONFIG_ARCH_K3) += k3-am62a7-sk.dtb
-> +dtb-$(CONFIG_ARCH_K3) += k3-am62a7-phyboard-lyra-rdk.dtb
->   
->   # Boards with AM62Px SoC
->   dtb-$(CONFIG_ARCH_K3) += k3-am62p5-sk.dtb
-> @@ -173,6 +174,7 @@ dtb- += k3-am625-beagleplay-csi2-ov5640.dtb \
->   # Enable support for device-tree overlays
->   DTC_FLAGS_k3-am625-beagleplay += -@
->   DTC_FLAGS_k3-am625-phyboard-lyra-rdk += -@
-> +DTC_FLAGS_k3-am62a7-phyboard-lyra-rdk += -@
->   DTC_FLAGS_k3-am625-sk += -@
->   DTC_FLAGS_k3-am62-lp-sk += -@
->   DTC_FLAGS_k3-am62a7-sk += -@
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62a-phycore-som.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-phycore-som.dtsi
-> new file mode 100644
-> index 000000000000..a5aceaa39670
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/ti/k3-am62a-phycore-som.dtsi
-> @@ -0,0 +1,330 @@
-> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
-> +/*
-> + * Copyright (C) 2023 - 2024 PHYTEC America LLC
-> + * Author: Garrett Giordano <ggiordano@phytec.com>
-> + *
-> + * Product homepage:
-> + * https://www.phytec.com/product/phycore-am62a
-> + */
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/leds/common.h>
-> +#include <dt-bindings/net/ti-dp83867.h>
-> +
-> +/ {
-> +	model = "PHYTEC phyCORE-AM62Ax";
-> +	compatible = "phytec,am62a-phycore-som", "ti,am62a7";
-> +
-> +	aliases {
-> +		ethernet0 = &cpsw_port1;
-> +		gpio0 = &main_gpio0;
-> +		gpio1 = &main_gpio1;
-> +		i2c0 = &main_i2c0;
-> +		mmc0 = &sdhci0;
-> +		rtc0 = &i2c_som_rtc;
-> +		spi0 = &ospi0;
-> +	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&leds_pins_default>;
-> +
-> +		led-0 {
-> +			color = <LED_COLOR_ID_GREEN>;
-> +			gpios = <&main_gpio0 13 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "heartbeat";
-> +			function = LED_FUNCTION_HEARTBEAT;
-> +		};
-> +	};
-> +
-> +	memory@80000000 {
-> +		device_type = "memory";
-> +		/* 2G RAM */
-> +		reg = <0x00000000 0x80000000 0x00000000 0x80000000>;
-> +	};
-> +
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		/* global cma region */
-> +		linux,cma {
-> +			compatible = "shared-dma-pool";
-> +			reusable;
-> +			size = <0x00 0x24000000>;
-> +			alloc-ranges = <0x00 0xc0000000 0x00 0x24000000>;
-> +			linux,cma-default;
-> +		};
-> +
-> +		secure_tfa_ddr: tfa@9e780000 {
-> +			reg = <0x00 0x9e780000 0x00 0x80000>;
-> +			alignment = <0x1000>;
-> +			no-map;
-> +		};
-> +
-> +		secure_ddr: optee@9e800000 {
-> +			reg = <0x00 0x9e800000 0x00 0x01800000>; /* for OP-TEE */
-> +			alignment = <0x1000>;
-> +			no-map;
-> +		};
-> +
-> +		wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x00 0x9c900000 0x00 0x01e00000>;
-> +			no-map;
-> +		};
-> +	};
-> +
-> +	vcc_5v0_som: regulator-vcc-5v0-som {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VCC_5V0_SOM";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
-> +};
-> +
-> +&main_pmx0 {
-> +	leds_pins_default: leds-default-pins {
-> +		pinctrl-single,pins = <
-> +			AM62AX_IOPAD(0x034, PIN_OUTPUT, 7) /* (K20) OSPI0_CSN2.GPIO0_13 */
-> +		>;
-> +	};
-> +
-> +	main_i2c0_pins_default: main-i2c0-default-pins {
-> +		pinctrl-single,pins = <
-> +			AM62AX_IOPAD(0x1e0, PIN_INPUT_PULLUP, 0) /* (D17) I2C0_SCL */
-> +			AM62AX_IOPAD(0x1e4, PIN_INPUT_PULLUP, 0) /* (E16) I2C0_SDA */
-> +		>;
-> +	};
-> +
-> +	main_mdio1_pins_default: main-mdio1-default-pins {
-> +		pinctrl-single,pins = <
-> +			AM62AX_IOPAD(0x160, PIN_OUTPUT, 0) /* (V12) MDIO0_MDC */
-> +			AM62AX_IOPAD(0x15c, PIN_INPUT, 0) /* (V13) MDIO0_MDIO */
-> +		>;
-> +	};
-> +
-> +	main_mmc0_pins_default: main-mmc0-default-pins {
-> +		pinctrl-single,pins = <
-> +			AM62AX_IOPAD(0x220, PIN_INPUT_PULLUP, 0) /* (Y6) MMC0_CMD */
-> +			AM62AX_IOPAD(0x218, PIN_INPUT_PULLDOWN, 0) /* (AB7) MMC0_CLK */
-> +			AM62AX_IOPAD(0x214, PIN_INPUT_PULLUP, 0) /* (AA6) MMC0_DAT0 */
-> +			AM62AX_IOPAD(0x210, PIN_INPUT_PULLUP, 0) /* (AB6) MMC0_DAT1 */
-> +			AM62AX_IOPAD(0x20c, PIN_INPUT_PULLUP, 0) /* (Y7) MMC0_DAT2 */
-> +			AM62AX_IOPAD(0x208, PIN_INPUT_PULLUP, 0) /* (AA7) MMC0_DAT3 */
-> +			AM62AX_IOPAD(0x204, PIN_INPUT_PULLUP, 0) /* (Y8) MMC0_DAT4 */
-> +			AM62AX_IOPAD(0x200, PIN_INPUT_PULLUP, 0) /* (W7) MMC0_DAT5 */
-> +			AM62AX_IOPAD(0x1fc, PIN_INPUT_PULLUP, 0) /* (W9) MMC0_DAT6 */
-> +			AM62AX_IOPAD(0x1f8, PIN_INPUT_PULLUP, 0) /* (AB8) MMC0_DAT7 */
-> +		>;
-> +	};
-> +
-> +	main_rgmii1_pins_default: main-rgmii1-default-pins {
-> +		pinctrl-single,pins = <
-> +			AM62AX_IOPAD(0x14c, PIN_INPUT, 0) /* (AB16) RGMII1_RD0 */
-> +			AM62AX_IOPAD(0x150, PIN_INPUT, 0) /* (V15) RGMII1_RD1 */
-> +			AM62AX_IOPAD(0x154, PIN_INPUT, 0) /* (W15) RGMII1_RD2 */
-> +			AM62AX_IOPAD(0x158, PIN_INPUT, 0) /* (V14) RGMII1_RD3 */
-> +			AM62AX_IOPAD(0x148, PIN_INPUT, 0) /* (AA16) RGMII1_RXC */
-> +			AM62AX_IOPAD(0x144, PIN_INPUT, 0) /* (AA15) RGMII1_RX_CTL */
-> +			AM62AX_IOPAD(0x134, PIN_OUTPUT, 0) /* (Y17) RGMII1_TD0 */
-> +			AM62AX_IOPAD(0x138, PIN_OUTPUT, 0) /* (V16) RGMII1_TD1 */
-> +			AM62AX_IOPAD(0x13c, PIN_OUTPUT, 0) /* (Y16) RGMII1_TD2 */
-> +			AM62AX_IOPAD(0x140, PIN_OUTPUT, 0) /* (AA17) RGMII1_TD3 */
-> +			AM62AX_IOPAD(0x130, PIN_OUTPUT, 0) /* (AB17) RGMII1_TXC */
-> +			AM62AX_IOPAD(0x12c, PIN_OUTPUT, 0) /* (W16) RGMII1_TX_CTL */
-> +		>;
-> +	};
-> +
-> +	ospi0_pins_default: ospi0-default-pins {
-> +		pinctrl-single,pins = <
-> +			AM62AX_IOPAD(0x000, PIN_OUTPUT, 0) /* (L22) OSPI0_CLK */
-> +			AM62AX_IOPAD(0x02c, PIN_OUTPUT, 0) /* (H21) OSPI0_CSn0 */
-> +			AM62AX_IOPAD(0x038, PIN_OUTPUT, 0) /* (G20) OSPI0_CSn3 */
-> +			AM62AX_IOPAD(0x00c, PIN_INPUT, 0) /* (J21) OSPI0_D0 */
-> +			AM62AX_IOPAD(0x010, PIN_INPUT, 0) /* (J18) OSPI0_D1 */
-> +			AM62AX_IOPAD(0x014, PIN_INPUT, 0) /* (J19) OSPI0_D2 */
-> +			AM62AX_IOPAD(0x018, PIN_INPUT, 0) /* (H18) OSPI0_D3 */
-> +			AM62AX_IOPAD(0x01c, PIN_INPUT, 0) /* (K21) OSPI0_D4 */
-> +			AM62AX_IOPAD(0x020, PIN_INPUT, 0) /* (H19) OSPI0_D5 */
-> +			AM62AX_IOPAD(0x024, PIN_INPUT, 0) /* (J20) OSPI0_D6 */
-> +			AM62AX_IOPAD(0x028, PIN_INPUT, 0) /* (J22) OSPI0_D7 */
-> +			AM62AX_IOPAD(0x008, PIN_INPUT, 0) /* (L21) OSPI0_DQS */
-> +		>;
-> +	};
-> +
-> +	pmic_irq_pins_default: pmic-irq-default-pins {
-> +		pinctrl-single,pins = <
-> +			AM62AX_IOPAD(0x1f4, PIN_INPUT, 0) /* (D16) EXTINTn */
-> +		>;
-> +	};
-> +};
-> +
-> +&cpsw3g {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&main_rgmii1_pins_default>;
-> +};
-> +
-> +&cpsw_port1 {
-> +	phy-mode = "rgmii-rxid";
-> +	phy-handle = <&cpsw3g_phy1>;
-> +};
-> +
-> +&cpsw3g_mdio {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&main_mdio1_pins_default>;
-> +
-> +	cpsw3g_phy1: ethernet-phy@1 {
-> +		compatible = "ethernet-phy-id2000.a231", "ethernet-phy-ieee802.3-c22";
-> +		reg = <1>;
-> +		ti,clk-output-sel = <DP83867_CLK_O_SEL_OFF>;
-> +		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
-> +		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
-> +	};
-> +};
-> +
-> +&fss {
-> +	status = "okay";
-> +};
-> +
-> +&main_i2c0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&main_i2c0_pins_default>;
-> +	clock-frequency = <400000>;
-> +	status = "okay";
-> +
-> +	pmic@30 {
-> +		compatible = "ti,tps65219";
-> +		reg = <0x30>;
-> +		buck1-supply = <&vcc_5v0_som>;
-> +		buck2-supply = <&vcc_5v0_som>;
-> +		buck3-supply = <&vcc_5v0_som>;
-> +		ldo1-supply = <&vdd_3v3>;
-> +		ldo2-supply = <&vdd_1v8>;
-> +		ldo3-supply = <&vcc_5v0_som>;
-> +		ldo4-supply = <&vcc_5v0_som>;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pmic_irq_pins_default>;
-> +		interrupt-parent = <&gic500>;
-> +		interrupts = <GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <1>;
-> +		ti,power-button;
-> +		system-power-controller;
-> +
-> +		regulators {
-> +			vdd_3v3: buck1 {
-> +				regulator-name = "VDD_3V3";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vdd_1v8: buck2 {
-> +				regulator-name = "VDD_1V8";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vdd_lpddr4: buck3 {
-> +				regulator-name = "VDD_LPDDR4";
-> +				regulator-min-microvolt = <1100000>;
-> +				regulator-max-microvolt = <1100000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vddshv5_sdio: ldo1 {
-> +				regulator-name = "VDDSHV5_SDIO";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-allow-bypass;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vddr_core: ldo2 {
-> +				regulator-name = "VDDR_CORE";
-> +				regulator-min-microvolt = <850000>;
-> +				regulator-max-microvolt = <850000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vdda_1v8: ldo3 {
-> +				regulator-name = "VDDA_1V8";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vdd_2v5: ldo4 {
-> +				regulator-name = "VDD_2V5";
-> +				regulator-min-microvolt = <2500000>;
-> +				regulator-max-microvolt = <2500000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +		};
-> +	};
-> +
-> +	eeprom@50 {
-> +		compatible = "atmel,24c32";
-> +		pagesize = <32>;
-> +		reg = <0x50>;
-> +	};
-> +
-> +	i2c_som_rtc: rtc@52 {
-> +		compatible = "microcrystal,rv3028";
-> +		reg = <0x52>;
-> +	};
-> +};
-> +
-> +&main_gpio0 {
-> +	status = "okay";
-> +};
-> +
-> +&main_gpio1 {
-> +	status = "okay";
-> +};
-> +
-> +&main_gpio_intr {
-> +	status = "okay";
-> +};
-> +
-> +&ospi0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&ospi0_pins_default>;
-> +	status = "okay";
-> +
-> +	serial_flash: flash@0 {
-> +		compatible = "jedec,spi-nor";
-> +		reg = <0x0>;
-> +		spi-tx-bus-width = <8>;
-> +		spi-rx-bus-width = <8>;
-> +		spi-max-frequency = <25000000>;
-> +		cdns,tshsl-ns = <60>;
-> +		cdns,tsd2d-ns = <60>;
-> +		cdns,tchsh-ns = <60>;
-> +		cdns,tslch-ns = <60>;
-> +		cdns,read-delay = <0>;
-> +	};
-> +};
-> +
-> +&sdhci0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&main_mmc0_pins_default>;
-> +	disable-wp;
-> +	non-removable;
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dts b/arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dts
-> new file mode 100644
-> index 000000000000..3b93409b23e7
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dts
-> @@ -0,0 +1,18 @@
-> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
-> +/*
-> + * Copyright (C) 2023 - 2024 PHYTEC America LLC
-> + * Author: Garrett Giordano <ggiordano@phytec.com>
-> + *
-> + * Product homepage:
-> + * https://www.phytec.com/product/phyboard-am62a
-> + */
-> +
-> +#include "k3-am62a7.dtsi"
-> +#include "k3-am62a-phycore-som.dtsi"
-> +#include "k3-am62x-phyboard-lyra.dtsi"
-> +
-> +/ {
-> +	compatible = "phytec,am62a7-phyboard-lyra-rdk",
-> +		     "phytec,am62a-phycore-som", "ti,am62a7";
-> +	model = "PHYTEC phyBOARD-Lyra AM62A7";
-> +};
+>>
+>>>
+>>>>
+>>>> But allocations by the page cache today start at 16K and increment by 2 orders
+>>>> for every new readahead IIRC. So we end up with lots of large folio sizes, and
+>>>> presumably the potential for lots of fallbacks.
+>>>>
+>>>> All of this is just to suggest that we may end up wanting controls to specify
+>>>> which folio sizes the page cache can attempt to use. At that point, adding
+>>>> similar controls for swap-in doesn't feel unreasonable to me.
+>>>>
+>>>> Just my 2 cents!
+>>>>
+>>>>>
+>>>>>>
+>>>>>>> 2. We need a method to prevent small folios from scattering indiscriminately
+>>>>>>> (based on the result "-a -s")
+>>>>>>
+>>>>>> I'm confused by this statement; as I undersand it, both my and Chris's patches
+>>>>>> already try to do this. Certainly for mine, when searching for order-0 space, I
+>>>>>> search the non-full order-0 clusters first (just like for other orders).
+>>>>>> Although for order-0 I will still fallback to searching any cluster if no space
+>>>>>> is found in an order-0 cluster. What more can we do?
+>>>>>>
+>>>>>> When run against your v1 of the tool with "-s" (v1 always implicily behaves as
+>>>>>> if "-a" is specified, right?) my patch gives 0% fallback. So what's the
+>>>>>> difference in v2 that causes higher fallback rate? Possibly just that
+>>>>>> MEMSIZE_SMALLFOLIO has grown by 3MB so that the total memory matches the swap
+>>>>>> size (64M)?
+>>>>>
+>>>>> Exactly. From my understanding, we've reached a point where small folios are
+>>>>> struggling to find swap slots. Note that I always swap out mTHP before swapping
+>>>>> out small folios. Additionally, I have already swapped in 1MB small
+>>>>> folios before
+>>>>> swapping out, which means zRAM has 1MB-4KB of redundant space available
+>>>>> for mTHP to swap out.
+>>>>>
+>>>>>>
+>>>>>> Thanks,
+>>>>>> Ryan
+>>>>>>
+>>>>>>>
+>>>>>>> *
+>>>>>>> *  Test results on Ryan's patchset:
+>>>>>>> *
+>>>>>>>
+>>>>>>> 1. w/ -a
+>>>>>>> ./thp_swap_allocator_test -a
+>>>>>>> Iteration 1: swpout inc: 224, swpout fallback inc: 0, Fallback percentage: 0.00%
+>>>>>>> Iteration 2: swpout inc: 231, swpout fallback inc: 0, Fallback percentage: 0.00%
+>>>>>>> Iteration 3: swpout inc: 227, swpout fallback inc: 0, Fallback percentage: 0.00%
+>>>>>>> Iteration 4: swpout inc: 222, swpout fallback inc: 0, Fallback percentage: 0.00%
+>>>>>>> ...
+>>>>>>> Iteration 100: swpout inc: 228, swpout fallback inc: 0, Fallback percentage: 0.00%
+>>>>>>>
+>>>>>>> 2. w/o -a
+>>>>>>> ./thp_swap_allocator_test
+>>>>>>>
+>>>>>>> Iteration 1: swpout inc: 208, swpout fallback inc: 25, Fallback percentage: 10.73%
+>>>>>>> Iteration 2: swpout inc: 118, swpout fallback inc: 114, Fallback percentage: 49.14%
+>>>>>>> Iteration 3: swpout inc: 63, swpout fallback inc: 163, Fallback percentage: 72.12%
+>>>>>>> Iteration 4: swpout inc: 45, swpout fallback inc: 178, Fallback percentage: 79.82%
+>>>>>>> Iteration 5: swpout inc: 42, swpout fallback inc: 184, Fallback percentage: 81.42%
+>>>>>>> Iteration 6: swpout inc: 31, swpout fallback inc: 193, Fallback percentage: 86.16%
+>>>>>>> Iteration 7: swpout inc: 27, swpout fallback inc: 201, Fallback percentage: 88.16%
+>>>>>>> Iteration 8: swpout inc: 30, swpout fallback inc: 198, Fallback percentage: 86.84%
+>>>>>>> Iteration 9: swpout inc: 32, swpout fallback inc: 194, Fallback percentage: 85.84%
+>>>>>>> ...
+>>>>>>> Iteration 91: swpout inc: 26, swpout fallback inc: 194, Fallback percentage: 88.18%
+>>>>>>> Iteration 92: swpout inc: 35, swpout fallback inc: 196, Fallback percentage: 84.85%
+>>>>>>> Iteration 93: swpout inc: 33, swpout fallback inc: 191, Fallback percentage: 85.27%
+>>>>>>> Iteration 94: swpout inc: 26, swpout fallback inc: 193, Fallback percentage: 88.13%
+>>>>>>> Iteration 95: swpout inc: 39, swpout fallback inc: 189, Fallback percentage: 82.89%
+>>>>>>> Iteration 96: swpout inc: 28, swpout fallback inc: 196, Fallback percentage: 87.50%
+>>>>>>> Iteration 97: swpout inc: 25, swpout fallback inc: 194, Fallback percentage: 88.58%
+>>>>>>> Iteration 98: swpout inc: 31, swpout fallback inc: 196, Fallback percentage: 86.34%
+>>>>>>> Iteration 99: swpout inc: 32, swpout fallback inc: 202, Fallback percentage: 86.32%
+>>>>>>> Iteration 100: swpout inc: 33, swpout fallback inc: 195, Fallback percentage: 85.53%
+>>>>>>>
+>>>>>>> 3. w/ -a and -s
+>>>>>>> ./thp_swap_allocator_test -a -s
+>>>>>>> Iteration 1: swpout inc: 224, swpout fallback inc: 0, Fallback percentage: 0.00%
+>>>>>>> Iteration 2: swpout inc: 218, swpout fallback inc: 0, Fallback percentage: 0.00%
+>>>>>>> Iteration 3: swpout inc: 222, swpout fallback inc: 0, Fallback percentage: 0.00%
+>>>>>>> Iteration 4: swpout inc: 220, swpout fallback inc: 6, Fallback percentage: 2.65%
+>>>>>>> Iteration 5: swpout inc: 206, swpout fallback inc: 16, Fallback percentage: 7.21%
+>>>>>>> Iteration 6: swpout inc: 233, swpout fallback inc: 0, Fallback percentage: 0.00%
+>>>>>>> Iteration 7: swpout inc: 224, swpout fallback inc: 0, Fallback percentage: 0.00%
+>>>>>>> Iteration 8: swpout inc: 228, swpout fallback inc: 0, Fallback percentage: 0.00%
+>>>>>>> Iteration 9: swpout inc: 217, swpout fallback inc: 0, Fallback percentage: 0.00%
+>>>>>>> Iteration 10: swpout inc: 224, swpout fallback inc: 3, Fallback percentage: 1.32%
+>>>>>>> Iteration 11: swpout inc: 211, swpout fallback inc: 12, Fallback percentage: 5.38%
+>>>>>>> Iteration 12: swpout inc: 200, swpout fallback inc: 32, Fallback percentage: 13.79%
+>>>>>>> Iteration 13: swpout inc: 189, swpout fallback inc: 29, Fallback percentage: 13.30%
+>>>>>>> Iteration 14: swpout inc: 195, swpout fallback inc: 31, Fallback percentage: 13.72%
+>>>>>>> Iteration 15: swpout inc: 198, swpout fallback inc: 27, Fallback percentage: 12.00%
+>>>>>>> Iteration 16: swpout inc: 201, swpout fallback inc: 17, Fallback percentage: 7.80%
+>>>>>>> Iteration 17: swpout inc: 206, swpout fallback inc: 6, Fallback percentage: 2.83%
+>>>>>>> Iteration 18: swpout inc: 220, swpout fallback inc: 14, Fallback percentage: 5.98%
+>>>>>>> Iteration 19: swpout inc: 181, swpout fallback inc: 45, Fallback percentage: 19.91%
+>>>>>>> Iteration 20: swpout inc: 223, swpout fallback inc: 8, Fallback percentage: 3.46%
+>>>>>>> Iteration 21: swpout inc: 214, swpout fallback inc: 14, Fallback percentage: 6.14%
+>>>>>>> Iteration 22: swpout inc: 195, swpout fallback inc: 31, Fallback percentage: 13.72%
+>>>>>>> Iteration 23: swpout inc: 223, swpout fallback inc: 0, Fallback percentage: 0.00%
+>>>>>>> Iteration 24: swpout inc: 233, swpout fallback inc: 0, Fallback percentage: 0.00%
+>>>>>>> Iteration 25: swpout inc: 214, swpout fallback inc: 1, Fallback percentage: 0.47%
+>>>>>>> Iteration 26: swpout inc: 229, swpout fallback inc: 1, Fallback percentage: 0.43%
+>>>>>>> Iteration 27: swpout inc: 214, swpout fallback inc: 5, Fallback percentage: 2.28%
+>>>>>>> Iteration 28: swpout inc: 211, swpout fallback inc: 15, Fallback percentage: 6.64%
+>>>>>>> Iteration 29: swpout inc: 188, swpout fallback inc: 40, Fallback percentage: 17.54%
+>>>>>>> Iteration 30: swpout inc: 207, swpout fallback inc: 18, Fallback percentage: 8.00%
+>>>>>>> Iteration 31: swpout inc: 215, swpout fallback inc: 10, Fallback percentage: 4.44%
+>>>>>>> Iteration 32: swpout inc: 202, swpout fallback inc: 22, Fallback percentage: 9.82%
+>>>>>>> Iteration 33: swpout inc: 223, swpout fallback inc: 0, Fallback percentage: 0.00%
+>>>>>>> Iteration 34: swpout inc: 218, swpout fallback inc: 10, Fallback percentage: 4.39%
+>>>>>>> Iteration 35: swpout inc: 203, swpout fallback inc: 30, Fallback percentage: 12.88%
+>>>>>>> Iteration 36: swpout inc: 214, swpout fallback inc: 14, Fallback percentage: 6.14%
+>>>>>>> Iteration 37: swpout inc: 211, swpout fallback inc: 14, Fallback percentage: 6.22%
+>>>>>>> Iteration 38: swpout inc: 193, swpout fallback inc: 28, Fallback percentage: 12.67%
+>>>>>>> Iteration 39: swpout inc: 210, swpout fallback inc: 20, Fallback percentage: 8.70%
+>>>>>>> Iteration 40: swpout inc: 223, swpout fallback inc: 5, Fallback percentage: 2.19%
+>>>>>>> Iteration 41: swpout inc: 224, swpout fallback inc: 7, Fallback percentage: 3.03%
+>>>>>>> Iteration 42: swpout inc: 200, swpout fallback inc: 23, Fallback percentage: 10.31%
+>>>>>>> Iteration 43: swpout inc: 217, swpout fallback inc: 5, Fallback percentage: 2.25%
+>>>>>>> Iteration 44: swpout inc: 206, swpout fallback inc: 18, Fallback percentage: 8.04%
+>>>>>>> Iteration 45: swpout inc: 210, swpout fallback inc: 11, Fallback percentage: 4.98%
+>>>>>>> Iteration 46: swpout inc: 204, swpout fallback inc: 19, Fallback percentage: 8.52%
+>>>>>>> Iteration 47: swpout inc: 228, swpout fallback inc: 0, Fallback percentage: 0.00%
+>>>>>>> Iteration 48: swpout inc: 219, swpout fallback inc: 2, Fallback percentage: 0.90%
+>>>>>>> Iteration 49: swpout inc: 212, swpout fallback inc: 6, Fallback percentage: 2.75%
+>>>>>>> Iteration 50: swpout inc: 207, swpout fallback inc: 15, Fallback percentage: 6.76%
+>>>>>>> Iteration 51: swpout inc: 190, swpout fallback inc: 36, Fallback percentage: 15.93%
+>>>>>>> Iteration 52: swpout inc: 212, swpout fallback inc: 17, Fallback percentage: 7.42%
+>>>>>>> Iteration 53: swpout inc: 179, swpout fallback inc: 43, Fallback percentage: 19.37%
+>>>>>>> Iteration 54: swpout inc: 225, swpout fallback inc: 0, Fallback percentage: 0.00%
+>>>>>>> Iteration 55: swpout inc: 224, swpout fallback inc: 2, Fallback percentage: 0.88%
+>>>>>>> Iteration 56: swpout inc: 220, swpout fallback inc: 8, Fallback percentage: 3.51%
+>>>>>>> Iteration 57: swpout inc: 203, swpout fallback inc: 25, Fallback percentage: 10.96%
+>>>>>>> Iteration 58: swpout inc: 213, swpout fallback inc: 6, Fallback percentage: 2.74%
+>>>>>>> Iteration 59: swpout inc: 207, swpout fallback inc: 18, Fallback percentage: 8.00%
+>>>>>>> Iteration 60: swpout inc: 216, swpout fallback inc: 14, Fallback percentage: 6.09%
+>>>>>>> Iteration 61: swpout inc: 183, swpout fallback inc: 34, Fallback percentage: 15.67%
+>>>>>>> Iteration 62: swpout inc: 184, swpout fallback inc: 39, Fallback percentage: 17.49%
+>>>>>>> Iteration 63: swpout inc: 184, swpout fallback inc: 39, Fallback percentage: 17.49%
+>>>>>>> Iteration 64: swpout inc: 210, swpout fallback inc: 15, Fallback percentage: 6.67%
+>>>>>>> Iteration 65: swpout inc: 178, swpout fallback inc: 48, Fallback percentage: 21.24%
+>>>>>>> Iteration 66: swpout inc: 188, swpout fallback inc: 30, Fallback percentage: 13.76%
+>>>>>>> Iteration 67: swpout inc: 193, swpout fallback inc: 29, Fallback percentage: 13.06%
+>>>>>>> Iteration 68: swpout inc: 202, swpout fallback inc: 22, Fallback percentage: 9.82%
+>>>>>>> Iteration 69: swpout inc: 213, swpout fallback inc: 5, Fallback percentage: 2.29%
+>>>>>>> Iteration 70: swpout inc: 204, swpout fallback inc: 15, Fallback percentage: 6.85%
+>>>>>>> Iteration 71: swpout inc: 180, swpout fallback inc: 45, Fallback percentage: 20.00%
+>>>>>>> Iteration 72: swpout inc: 210, swpout fallback inc: 21, Fallback percentage: 9.09%
+>>>>>>> Iteration 73: swpout inc: 216, swpout fallback inc: 7, Fallback percentage: 3.14%
+>>>>>>> Iteration 74: swpout inc: 209, swpout fallback inc: 19, Fallback percentage: 8.33%
+>>>>>>> Iteration 75: swpout inc: 222, swpout fallback inc: 7, Fallback percentage: 3.06%
+>>>>>>> Iteration 76: swpout inc: 212, swpout fallback inc: 14, Fallback percentage: 6.19%
+>>>>>>> Iteration 77: swpout inc: 188, swpout fallback inc: 41, Fallback percentage: 17.90%
+>>>>>>> Iteration 78: swpout inc: 198, swpout fallback inc: 17, Fallback percentage: 7.91%
+>>>>>>> Iteration 79: swpout inc: 209, swpout fallback inc: 16, Fallback percentage: 7.11%
+>>>>>>> Iteration 80: swpout inc: 182, swpout fallback inc: 41, Fallback percentage: 18.39%
+>>>>>>> Iteration 81: swpout inc: 217, swpout fallback inc: 1, Fallback percentage: 0.46%
+>>>>>>> Iteration 82: swpout inc: 225, swpout fallback inc: 3, Fallback percentage: 1.32%
+>>>>>>> Iteration 83: swpout inc: 222, swpout fallback inc: 8, Fallback percentage: 3.48%
+>>>>>>> Iteration 84: swpout inc: 201, swpout fallback inc: 21, Fallback percentage: 9.46%
+>>>>>>> Iteration 85: swpout inc: 211, swpout fallback inc: 3, Fallback percentage: 1.40%
+>>>>>>> Iteration 86: swpout inc: 209, swpout fallback inc: 14, Fallback percentage: 6.28%
+>>>>>>> Iteration 87: swpout inc: 181, swpout fallback inc: 42, Fallback percentage: 18.83%
+>>>>>>> Iteration 88: swpout inc: 223, swpout fallback inc: 4, Fallback percentage: 1.76%
+>>>>>>> Iteration 89: swpout inc: 214, swpout fallback inc: 14, Fallback percentage: 6.14%
+>>>>>>> Iteration 90: swpout inc: 192, swpout fallback inc: 33, Fallback percentage: 14.67%
+>>>>>>> Iteration 91: swpout inc: 184, swpout fallback inc: 31, Fallback percentage: 14.42%
+>>>>>>> Iteration 92: swpout inc: 201, swpout fallback inc: 32, Fallback percentage: 13.73%
+>>>>>>> Iteration 93: swpout inc: 181, swpout fallback inc: 40, Fallback percentage: 18.10%
+>>>>>>> Iteration 94: swpout inc: 211, swpout fallback inc: 14, Fallback percentage: 6.22%
+>>>>>>> Iteration 95: swpout inc: 198, swpout fallback inc: 25, Fallback percentage: 11.21%
+>>>>>>> Iteration 96: swpout inc: 205, swpout fallback inc: 22, Fallback percentage: 9.69%
+>>>>>>> Iteration 97: swpout inc: 218, swpout fallback inc: 12, Fallback percentage: 5.22%
+>>>>>>> Iteration 98: swpout inc: 203, swpout fallback inc: 25, Fallback percentage: 10.96%
+>>>>>>> Iteration 99: swpout inc: 218, swpout fallback inc: 12, Fallback percentage: 5.22%
+>>>>>>> Iteration 100: swpout inc: 195, swpout fallback inc: 34, Fallback percentage: 14.85%
+>>>>>>>
+>>>>>>> 4. w/o -a and w/ -s
+>>>>>>> thp_swap_allocator_test  -s
+>>>>>>> Iteration 1: swpout inc: 173, swpout fallback inc: 60, Fallback percentage: 25.75%
+>>>>>>> Iteration 2: swpout inc: 85, swpout fallback inc: 147, Fallback percentage: 63.36%
+>>>>>>> Iteration 3: swpout inc: 39, swpout fallback inc: 195, Fallback percentage: 83.33%
+>>>>>>> Iteration 4: swpout inc: 13, swpout fallback inc: 220, Fallback percentage: 94.42%
+>>>>>>> Iteration 5: swpout inc: 10, swpout fallback inc: 215, Fallback percentage: 95.56%
+>>>>>>> Iteration 6: swpout inc: 9, swpout fallback inc: 219, Fallback percentage: 96.05%
+>>>>>>> Iteration 7: swpout inc: 6, swpout fallback inc: 217, Fallback percentage: 97.31%
+>>>>>>> Iteration 8: swpout inc: 6, swpout fallback inc: 215, Fallback percentage: 97.29%
+>>>>>>> Iteration 9: swpout inc: 0, swpout fallback inc: 225, Fallback percentage: 100.00%
+>>>>>>> Iteration 10: swpout inc: 1, swpout fallback inc: 229, Fallback percentage: 99.57%
+>>>>>>> Iteration 11: swpout inc: 2, swpout fallback inc: 216, Fallback percentage: 99.08%
+>>>>>>> Iteration 12: swpout inc: 2, swpout fallback inc: 229, Fallback percentage: 99.13%
+>>>>>>> Iteration 13: swpout inc: 4, swpout fallback inc: 211, Fallback percentage: 98.14%
+>>>>>>> Iteration 14: swpout inc: 1, swpout fallback inc: 221, Fallback percentage: 99.55%
+>>>>>>> Iteration 15: swpout inc: 2, swpout fallback inc: 223, Fallback percentage: 99.11%
+>>>>>>> Iteration 16: swpout inc: 3, swpout fallback inc: 224, Fallback percentage: 98.68%
+>>>>>>> Iteration 17: swpout inc: 2, swpout fallback inc: 231, Fallback percentage: 99.14%
+>>>>>>> ...
+>>>>>>>
+>>>>>>> *
+>>>>>>> *  Test results on Chris's v3 patchset:
+>>>>>>> *
+>>>>>>> 1. w/ -a
+>>>>>>> ./thp_swap_allocator_test -a
+>>>>>>> Iteration 1: swpout inc: 224, swpout fallback inc: 0, Fallback percentage: 0.00%
+>>>>>>> Iteration 2: swpout inc: 231, swpout fallback inc: 0, Fallback percentage: 0.00%
+>>>>>>> Iteration 3: swpout inc: 227, swpout fallback inc: 0, Fallback percentage: 0.00%
+>>>>>>> Iteration 4: swpout inc: 217, swpout fallback inc: 5, Fallback percentage: 2.25%
+>>>>>>> Iteration 5: swpout inc: 215, swpout fallback inc: 12, Fallback percentage: 5.29%
+>>>>>>> Iteration 6: swpout inc: 213, swpout fallback inc: 14, Fallback percentage: 6.17%
+>>>>>>> Iteration 7: swpout inc: 207, swpout fallback inc: 15, Fallback percentage: 6.76%
+>>>>>>> Iteration 8: swpout inc: 193, swpout fallback inc: 33, Fallback percentage: 14.60%
+>>>>>>> Iteration 9: swpout inc: 214, swpout fallback inc: 13, Fallback percentage: 5.73%
+>>>>>>> Iteration 10: swpout inc: 199, swpout fallback inc: 25, Fallback percentage: 11.16%
+>>>>>>> Iteration 11: swpout inc: 208, swpout fallback inc: 14, Fallback percentage: 6.31%
+>>>>>>> Iteration 12: swpout inc: 203, swpout fallback inc: 31, Fallback percentage: 13.25%
+>>>>>>> Iteration 13: swpout inc: 192, swpout fallback inc: 25, Fallback percentage: 11.52%
+>>>>>>> Iteration 14: swpout inc: 193, swpout fallback inc: 36, Fallback percentage: 15.72%
+>>>>>>> Iteration 15: swpout inc: 188, swpout fallback inc: 33, Fallback percentage: 14.93%
+>>>>>>> ...
+>>>>>>>
+>>>>>>> It seems Chris's approach can be negatively affected even by aligned swapin,
+>>>>>>> having a low fallback ratio but not 0% while Ryan's patchset hasn't this
+>>>>>>> issue.
+>>>>>>>
+>>>>>>> 2. w/o -a
+>>>>>>> ./thp_swap_allocator_test
+>>>>>>> Iteration 1: swpout inc: 209, swpout fallback inc: 24, Fallback percentage: 10.30%
+>>>>>>> Iteration 2: swpout inc: 100, swpout fallback inc: 132, Fallback percentage: 56.90%
+>>>>>>> Iteration 3: swpout inc: 43, swpout fallback inc: 183, Fallback percentage: 80.97%
+>>>>>>> Iteration 4: swpout inc: 30, swpout fallback inc: 193, Fallback percentage: 86.55%
+>>>>>>> Iteration 5: swpout inc: 21, swpout fallback inc: 205, Fallback percentage: 90.71%
+>>>>>>> Iteration 6: swpout inc: 10, swpout fallback inc: 214, Fallback percentage: 95.54%
+>>>>>>> Iteration 7: swpout inc: 16, swpout fallback inc: 212, Fallback percentage: 92.98%
+>>>>>>> Iteration 8: swpout inc: 9, swpout fallback inc: 219, Fallback percentage: 96.05%
+>>>>>>> Iteration 9: swpout inc: 6, swpout fallback inc: 220, Fallback percentage: 97.35%
+>>>>>>> Iteration 10: swpout inc: 7, swpout fallback inc: 221, Fallback percentage: 96.93%
+>>>>>>> Iteration 11: swpout inc: 7, swpout fallback inc: 222, Fallback percentage: 96.94%
+>>>>>>> Iteration 12: swpout inc: 8, swpout fallback inc: 212, Fallback percentage: 96.36%
+>>>>>>> ..
+>>>>>>>
+>>>>>>> Ryan's fallback ratio(around 85%) seems to be a little better while both are much
+>>>>>>> worse than "-a".
+>>>>>>>
+>>>>>>> 3. w/ -a and -s
+>>>>>>> ./thp_swap_allocator_test -a -s
+>>>>>>> Iteration 1: swpout inc: 224, swpout fallback inc: 0, Fallback percentage: 0.00%
+>>>>>>> Iteration 2: swpout inc: 213, swpout fallback inc: 5, Fallback percentage: 2.29%
+>>>>>>> Iteration 3: swpout inc: 215, swpout fallback inc: 7, Fallback percentage: 3.15%
+>>>>>>> Iteration 4: swpout inc: 210, swpout fallback inc: 16, Fallback percentage: 7.08%
+>>>>>>> Iteration 5: swpout inc: 212, swpout fallback inc: 10, Fallback percentage: 4.50%
+>>>>>>> Iteration 6: swpout inc: 215, swpout fallback inc: 18, Fallback percentage: 7.73%
+>>>>>>> Iteration 7: swpout inc: 181, swpout fallback inc: 43, Fallback percentage: 19.20%
+>>>>>>> Iteration 8: swpout inc: 173, swpout fallback inc: 55, Fallback percentage: 24.12%
+>>>>>>> Iteration 9: swpout inc: 163, swpout fallback inc: 54, Fallback percentage: 24.88%
+>>>>>>> Iteration 10: swpout inc: 168, swpout fallback inc: 59, Fallback percentage: 25.99%
+>>>>>>> Iteration 11: swpout inc: 154, swpout fallback inc: 69, Fallback percentage: 30.94%
+>>>>>>> Iteration 12: swpout inc: 166, swpout fallback inc: 66, Fallback percentage: 28.45%
+>>>>>>> Iteration 13: swpout inc: 165, swpout fallback inc: 53, Fallback percentage: 24.31%
+>>>>>>> Iteration 14: swpout inc: 158, swpout fallback inc: 68, Fallback percentage: 30.09%
+>>>>>>> Iteration 15: swpout inc: 168, swpout fallback inc: 57, Fallback percentage: 25.33%
+>>>>>>> Iteration 16: swpout inc: 165, swpout fallback inc: 53, Fallback percentage: 24.31%
+>>>>>>> Iteration 17: swpout inc: 163, swpout fallback inc: 49, Fallback percentage: 23.11%
+>>>>>>> Iteration 18: swpout inc: 172, swpout fallback inc: 62, Fallback percentage: 26.50%
+>>>>>>> Iteration 19: swpout inc: 183, swpout fallback inc: 43, Fallback percentage: 19.03%
+>>>>>>> Iteration 20: swpout inc: 158, swpout fallback inc: 73, Fallback percentage: 31.60%
+>>>>>>> Iteration 21: swpout inc: 147, swpout fallback inc: 81, Fallback percentage: 35.53%
+>>>>>>> Iteration 22: swpout inc: 140, swpout fallback inc: 86, Fallback percentage: 38.05%
+>>>>>>> Iteration 23: swpout inc: 144, swpout fallback inc: 79, Fallback percentage: 35.43%
+>>>>>>> Iteration 24: swpout inc: 132, swpout fallback inc: 101, Fallback percentage: 43.35%
+>>>>>>> Iteration 25: swpout inc: 133, swpout fallback inc: 82, Fallback percentage: 38.14%
+>>>>>>> Iteration 26: swpout inc: 152, swpout fallback inc: 78, Fallback percentage: 33.91%
+>>>>>>> Iteration 27: swpout inc: 138, swpout fallback inc: 81, Fallback percentage: 36.99%
+>>>>>>> Iteration 28: swpout inc: 152, swpout fallback inc: 74, Fallback percentage: 32.74%
+>>>>>>> Iteration 29: swpout inc: 153, swpout fallback inc: 75, Fallback percentage: 32.89%
+>>>>>>> Iteration 30: swpout inc: 151, swpout fallback inc: 74, Fallback percentage: 32.89%
+>>>>>>> ...
+>>>>>>>
+>>>>>>> Chris's approach appears to be more susceptible to negative effects from
+>>>>>>> small folios.
+>>>>>>>
+>>>>>>> 4. w/o -a and w/ -s
+>>>>>>> ./thp_swap_allocator_test -s
+>>>>>>> Iteration 1: swpout inc: 183, swpout fallback inc: 50, Fallback percentage: 21.46%
+>>>>>>> Iteration 2: swpout inc: 75, swpout fallback inc: 157, Fallback percentage: 67.67%
+>>>>>>> Iteration 3: swpout inc: 33, swpout fallback inc: 201, Fallback percentage: 85.90%
+>>>>>>> Iteration 4: swpout inc: 11, swpout fallback inc: 222, Fallback percentage: 95.28%
+>>>>>>> Iteration 5: swpout inc: 10, swpout fallback inc: 215, Fallback percentage: 95.56%
+>>>>>>> Iteration 6: swpout inc: 7, swpout fallback inc: 221, Fallback percentage: 96.93%
+>>>>>>> Iteration 7: swpout inc: 2, swpout fallback inc: 221, Fallback percentage: 99.10%
+>>>>>>> Iteration 8: swpout inc: 4, swpout fallback inc: 217, Fallback percentage: 98.19%
+>>>>>>> Iteration 9: swpout inc: 0, swpout fallback inc: 225, Fallback percentage: 100.00%
+>>>>>>> Iteration 10: swpout inc: 3, swpout fallback inc: 227, Fallback percentage: 98.70%
+>>>>>>> Iteration 11: swpout inc: 1, swpout fallback inc: 217, Fallback percentage: 99.54%
+>>>>>>> Iteration 12: swpout inc: 2, swpout fallback inc: 229, Fallback percentage: 99.13%
+>>>>>>> Iteration 13: swpout inc: 1, swpout fallback inc: 214, Fallback percentage: 99.53%
+>>>>>>> Iteration 14: swpout inc: 2, swpout fallback inc: 220, Fallback percentage: 99.10%
+>>>>>>> Iteration 15: swpout inc: 1, swpout fallback inc: 224, Fallback percentage: 99.56%
+>>>>>>> Iteration 16: swpout inc: 3, swpout fallback inc: 224, Fallback percentage: 98.68%
+>>>>>>> ...
+>>>>>>>
+>>>>>>> Barry Song (1):
+>>>>>>>   tools/mm: Introduce a tool to assess swap entry allocation for
+>>>>>>>     thp_swapout
+>>>>>>>
+>>>>>>>  tools/mm/Makefile                  |   2 +-
+>>>>>>>  tools/mm/thp_swap_allocator_test.c | 233 +++++++++++++++++++++++++++++
+>>>>>>>  2 files changed, 234 insertions(+), 1 deletion(-)
+>>>>>>>  create mode 100644 tools/mm/thp_swap_allocator_test.c
+>>>>>>>
+>>>>>>
+>>>>>
+>>>
+> 
+> Thanks
+> Barry
+
