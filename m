@@ -1,106 +1,119 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED29519A290
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 17:26:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4FA19A287
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 17:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719509195; cv=none; b=qap67eQCQpwKdw6VHTzq98elfSlCvRuJKEGIAUkbqmnMXT+NZvXnZLtDvrGMSekmHNDjqwdvHb4HgcyRLi2olzvlhewa6ySwwozJKeRfwl2vJ0BLt2pGw/TFvcaFsTocZ55sqmVXkGCzZPdMakwFBrKqWcu6OoJZnISrgBZ88Zo=
+	t=1719509395; cv=none; b=krkiT2rlgsFaPna0k2qM1yNz5CD4iYiocH8eBjYxYkjCxSciF95U7tPuRFJQydU7NYzNIqliFGdll2HHBjJWtN+8mIHa2VI6UPbMJvbY8VMqaHPa2tzZ3eAuTeYEAw2uK3+3tNnwa7Q9CBPphdLqglD7XZLS+ayi9MtNs4S8CBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719509195; c=relaxed/simple;
-	bh=+JSD7zPCyP+seLtEHsOyOFtvu0SipabmuDyxuqRoZXY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 Cc:Content-Type; b=qI6ME+U6/ewLm+1A5NxyAESTs9/9od8eiN145ipeHklmZmh1Wg4M0J/Hxvx3b9gOA9Yk6cTdkY0AnqEbl7je2QB25A969xWEyMTz21s/o9NWtMSSfrZeatoPmYKozrhjbc0iGik6cewmxdleNAeSbpR4HVqyKczscbdkRf31RyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ml9rmd4w; arc=none smtp.client-ip=209.85.166.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1719509395; c=relaxed/simple;
+	bh=zWsElhqpj4fMB+iLijGBpbu+QyUcM22M9Gs8UsyVQ+4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qfQ/mtnvqNzO23hy3djtQt2WkqWRwF0jM/D2PG1m+encsNuv42QTTWFfdOA3fVY+Md8BQqgq+DDiU+1jMrcxeK9G9wo9vQlOaxPWCQ7GjXbUHnMbQtLhnFks2I4HINEYcmr1apk9RXr1indtU/Zd2sBto0KyOOf3CF29ZDnWV3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LTDrlDZb; arc=none smtp.client-ip=209.85.166.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ml9rmd4w"
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-375bb80e5b8so4755ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 10:26:33 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LTDrlDZb"
+Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-7f3d614419bso4104239f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 10:29:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719509193; x=1720113993; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NG0d9P09i9DuBsLa5XC/aW7vKh1cVtfIv4ydt8vzMS8=;
-        b=Ml9rmd4wfgoQcqIPl5Jr1+mSuTSCIdMVInt1qHTdEH0cxC8QEG0dKuTcX3YUiJPmVG
-         4AnWkIy7rSA0kPM2qmW7zt225E9gY+HlqDCLVZ2VxTF2mn+W/zqCbz6Ib4x2i90+OWqd
-         PNKmEz31ulMo9b707mD48f/hI1LMrXtsuGyCpLJzPdF/g9II81fZkoYB3PtrQn2ZwCIj
-         DOO9FT8/19skUCMhJu0r04U5XXPzzAdp2NdJfh5anPhXh8ZzJzCuhZqHp3L6Xps2Jc0G
-         ySuwk/xZwhwzexgcl8oF2qaJnqlJVayF9RPeB/5PF6Kdb5K7fMnJnva6Ztd9LiHdvhWU
-         O4ew==
+        d=linuxfoundation.org; s=google; t=1719509393; x=1720114193; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TE7XfWBRNZhzVuyF1wDQxkJAMsIzL6P4kt13AjBK80I=;
+        b=LTDrlDZbYAUGwe0++UQvffpkWM2BTpjWdp2i7Y/GzEdHk+EQUTT3lnv7hEwXE4OWI4
+         br7xEs4erwWPXVaCBFZ1mD2MVFKf7bOtbhHi58HHLupWL/XxXfS/BF7LUhOvdj2Vy1uI
+         htMGZBx0l15VJMLG1Er4xdEPcsSMDF3je2Xr0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719509193; x=1720113993;
-        h=content-transfer-encoding:cc:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NG0d9P09i9DuBsLa5XC/aW7vKh1cVtfIv4ydt8vzMS8=;
-        b=iKC5NakJjp6YgqOtHO28RM5w1NH8n/E7mccgvkjymc4iZG81M4yVMlgZzW1VYTifhW
-         aokvaiPKDTPnetKddk2VFFTttpBPlIpxcr8ji6j42hDH+Uy3gZ8bo0dvnG0ymrQNWL1z
-         O74JSazj68EQYsSOe20ZlkY0SsMmEWedszoXIBQC6veWpOS58FvLfVVetegT/S8yY7IU
-         6LnizcUp7RQNfmmRle5buextlN3Toaf8lYyiZSDyVWwioeCbWBAkcUZJsSmCMe3Zib6E
-         AOGU7wQ1Oh+tC3+crZws066fs93Enr0fr6/MAqKB4ef6h7VYrc5pXP9pjgpO96civs19
-         42OA==
-X-Forwarded-Encrypted: i=1; AJvYcCVpXOsw0litPIi1d6CYOmFQDQURINJOETe8tXubFzNRZKhxWpa0HgZFcTAiEWgV/UCSoeVpeVc+lg1hxoNwertFqY4w7o1MOoRMN5jW
-X-Gm-Message-State: AOJu0YwBM9efn+SPpNlb79bnW8IPySOOQKWGZ1L1CBRcRiEVZvrBVkpR
-	dgGY6vtjlLi58Wh21l1KqvYgO6IIZ/vovmD4AzfYq4qnxlDMuzzWuO3O8PNK7Vu+iM+TGs1szuT
-	lTrbvSnuhoCMoovoLDdzZPmsalIvkE8npePRM
-X-Received: by 2002:a05:6e02:12e9:b0:375:bb49:930d with SMTP id
- e9e14a558f8ab-379897f6cd4mt5415515ab.23.1719509192944; Thu, 27 Jun 2024
- 10:26:32 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719509393; x=1720114193;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TE7XfWBRNZhzVuyF1wDQxkJAMsIzL6P4kt13AjBK80I=;
+        b=tour5GFZFjjeCmX8rOw6yz72SEOe7APgRX/NYRSi3wCcFbzv/LDVxbI+KUtULuPcS2
+         gOYbYZalrL+Fm3bPiPmSEaR9JhrNYHZJ5to7J4Q04S8rBA/2adCdSi4/PoHn5d+KfNEc
+         ipuKUstXAWfrMyjUR28gH/EJwznC5esWDLZ+a1/NEXhw+STnym8PZIWdUV8TdI6hPwQg
+         +Q3xQrBYLsf1i9kPozDQOTTgI9lBRujcuEup1gPyzXbXPnFeXy9b8hpFYbsBktoJySnQ
+         NG+LVpVtr4+p2DW9VJvMu5QHGf/OLdrMviwQdXg94rXl9V0oOwS2holIEb2ZyNEe+eqg
+         aC8w==
+X-Forwarded-Encrypted: i=1; AJvYcCWkj/JHvIhQ/RuofudFdQzPLGuDX5BN3CwzkxUD3QIzfU9/1Rmw7WexQkvS2QyogEv4OZk1H526T4OY7XBqte/M0464YiaTSPnZz28y
+X-Gm-Message-State: AOJu0Ywpo/h1Tcbv5oeh0U6PTUPqihF+A45Tef3+OtqJljTvEvkgKmdo
+	jRLXAePpRkEmFlJNv4PgscnU2jm62zKi91U0u+a5oFdUDLaDRp0MNad0GFvEyf0=
+X-Google-Smtp-Source: AGHT+IGuv22TRRCkg0w93q8TXiGPUGSAq+F4m8yDrb26yLn3ifVMjUoHjcL8Je5l13wqAxyS4FmOOg==
+X-Received: by 2002:a05:6e02:4b2:b0:379:2b4d:d5de with SMTP id e9e14a558f8ab-3792b4dd9cdmr38555345ab.2.1719509393382;
+        Thu, 27 Jun 2024 10:29:53 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-37ad4370c46sm10305ab.64.2024.06.27.10.29.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Jun 2024 10:29:53 -0700 (PDT)
+Message-ID: <8b040e83-5eda-4b59-96a9-d76cb4f80d70@linuxfoundation.org>
+Date: Thu, 27 Jun 2024 11:29:52 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240627150606.2224888-1-amadio@gentoo.org> <20240627150606.2224888-2-amadio@gentoo.org>
-In-Reply-To: <20240627150606.2224888-2-amadio@gentoo.org>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 27 Jun 2024 10:26:21 -0700
-Message-ID: <CAP-5=fVvc612rGoE3xXYqRornKZgTLgnyQH8jfJ2D9x0pDDcPQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf build: warn if libtracefs is not found
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	Guilherme Amadio <amadio@gentoo.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] selftests/capabilities: Fix possible file leak in
+ copy_fromat_to
+To: Ma Ke <make24@iscas.ac.cn>, shuah@kernel.org, usama.anjum@collabora.com,
+ swarupkotikalapudi@gmail.com, amer.shanawany@gmail.com, kees@kernel.org,
+ akpm@linux-foundation.org, luto@kernel.org
+Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240627015732.2974078-1-make24@iscas.ac.cn>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240627015732.2974078-1-make24@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 27, 2024 at 8:07=E2=80=AFAM Guilherme Amadio <amadio@gentoo.org=
-> wrote:
->
-> Signed-off-by: Guilherme Amadio <amadio@gentoo.org>
+On 6/26/24 19:57, Ma Ke wrote:
+> The open() function returns -1 on error. openat() and open() initialize
+> 'from' and 'to', and only 'from' validated with 'if' statement. If the
+> initialization of variable 'to' fails, we should better check the value
+> of 'to' and close 'from' to avoid possible file leak. Improve the checking
+> of 'from' additionally.
+> 
+> Fixes: 32ae976ed3b5 ("selftests/capabilities: Add tests for capability evolution")
+> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
 > ---
->  tools/perf/Makefile.config | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 987b48f242d3..e99afc7eb4b5 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -1204,6 +1204,8 @@ ifneq ($(NO_LIBTRACEEVENT),1)
->      LIBTRACEFS_VERSION_3 :=3D $(word 3, $(subst ., ,$(LIBTRACEFS_VERSION=
-)))
->      LIBTRACEFS_VERSION_CPP :=3D $(shell expr $(LIBTRACEFS_VERSION_1) \* =
-255 \* 255 + $(LIBTRACEFS_VERSION_2) \* 255 + $(LIBTRACEFS_VERSION_3))
->      CFLAGS +=3D -DLIBTRACEFS_VERSION=3D$(LIBTRACEFS_VERSION_CPP)
-> +  else
-> +    $(warning libtracefs is missing. Please install libtracefs-dev/libtr=
-acefs-devel)
+> Changes in v2:
+> - modified the patch according to suggestions;
+> - found by customized static analysis tool.
 
-This all makes sense and looks good to me. I believe perf isn't
-directly depending on libtracefs and gets the dependency from
-libtraceevent. Older libtraceevents didn't have libtracefs so just
-warning in this case makes sense to me. I just wanted to speak my
-thoughts out loud in case I was missing something.
+Care to give more details on this customized static analysis
+tool?
 
-Thanks,
-Ian
+> ---
+>   tools/testing/selftests/capabilities/test_execve.c | 6 +++++-
+>   1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/capabilities/test_execve.c b/tools/testing/selftests/capabilities/test_execve.c
+> index 47bad7ddc5bc..6406ab6aa1f5 100644
+> --- a/tools/testing/selftests/capabilities/test_execve.c
+> +++ b/tools/testing/selftests/capabilities/test_execve.c
+> @@ -145,10 +145,14 @@ static void chdir_to_tmpfs(void)
+>   static void copy_fromat_to(int fromfd, const char *fromname, const char *toname)
+>   {
+>   	int from = openat(fromfd, fromname, O_RDONLY);
+> -	if (from == -1)
+> +	if (from < 0)
+>   		ksft_exit_fail_msg("open copy source - %s\n", strerror(errno));
+>   
+>   	int to = open(toname, O_CREAT | O_WRONLY | O_EXCL, 0700);
+> +	if (to < 0) {
+> +		close(from);
+> +		ksft_exit_fail_msg("open copy destination - %s\n", strerror(errno));
+> +	}
+>   
+>   	while (true) {
+>   		char buf[4096];
 
->    endif
->  endif
->
-> --
-> 2.45.2
->
+thanks,
+-- Shuah
+
