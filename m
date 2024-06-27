@@ -1,145 +1,124 @@
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306FA178CF5
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 12:49:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF437178CCB;
+	Thu, 27 Jun 2024 12:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719492577; cv=none; b=kUwjfSK0N/lPOlecVa0kP86Np8Vrtj1m+ytc6TRe8PW3W7w3fNkbdcOO+POR1X/LTNY5VJprqAfm/wH/ex8m9/IRRFTMEGNSOB7DVVbGM0ctM/eDcOv9jO4zuVxo0SrZ4CzUdNBvmA1FsyDWZO8v7ftB3Qov6xZm2v0av5Nr+yQ=
+	t=1719492585; cv=none; b=VD8++7S6/XoQKa4+H2mfYw+StLXkEs2JkgjNLN6GIcBQOVgT6WmB/FD15R7IKzXdblYzi48+sCEveqDZrEI1TfuJYdcTuQ9j2m/R8nm6ExSCbcgD4kA5Bq5JGGftUtGjZKzmmU+/zFbF+nLRkCioCdtyrY5yYECPjM8LkhktPgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719492577; c=relaxed/simple;
-	bh=Cu5bT6sPCCfDQjQRjkhShbiDXjp7BjV1vPvAfCQyeCg=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Ohd4fhaYiH+6rlmU3EQkk5baBT+/cfCvi+fpDSqWEMj8Q+yrDIhrKlTizQ2bXUkpMlKusqCDtN1zbBd1XzcL3Taw+OsAq7doRL/eJi3aqsZxkpMhYTUG36cwzZF+GAK2bTO2erqHnl3gJ2nNlxnqzyqpFNL9oC3lh/1h09R9ACM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bPXB2iCJ; arc=none smtp.client-ip=209.85.221.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719492585; c=relaxed/simple;
+	bh=8x1y/BA5HEpl3H5PIsYbNzWqptF+ddQo7TG0proyfUc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uU0hxls/THXHYdLhhwP6EWqZXQ7mRs6ewcQVFSPEjrWPe44vTFufFDbaNVoX+JrP/0M9mjneY/o6zXvscLbYJFy3wl/7ZpwA9W3cvzLqtYQChKwKgyRsIhBVLlN4le8S7ZbOnqRLoIHwaPV29z6IlwBvrZ0Y/IBiRZsUMrfpQbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K85+EMsw; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bPXB2iCJ"
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-4ef7fc70bdeso1534491e0c.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 05:49:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719492575; x=1720097375; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=+7Qni7r/WgAD7DkgtwtmtiwAZVFbDMDzC460DmWWyAc=;
-        b=bPXB2iCJJYWOqJqk5/CjKxWEp18LMeco28Q99Kb4U9kTv9M6a1cFYrR8o00VWAfJIi
-         U8hJq1AOHRJtOvFbMwzUH4M5n9ix1/KnRCB6TEWo5L040BM/TjL8HP/uFQjWmGQ0d2HO
-         pHTI3EQ6XDN4QAA/n6oFmPDUVg8/QCVUlc9BKmABzCmuxkgkMKgvk0p0Jxj/1oQrPaI0
-         rFBR1whsr4oiH0VcAyMla7GnMxkTPn6VOdclEGVZb0Fh5GBtzI9kIi3W359OzXGufYAb
-         VQ/TEzTUd0r33Jsrlz2pMa1pKBur36YqRi93lNREDTVYq6kz3HOzdRVnWUyzHPyoHWv5
-         HAmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719492575; x=1720097375;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+7Qni7r/WgAD7DkgtwtmtiwAZVFbDMDzC460DmWWyAc=;
-        b=IQl5M4+uLIKhTz539XK/vVlJFRI4NIVrJhTC6oMC72z6L21wl6NyjW+LcEEDo8kjjf
-         DWnr3ikiIhTeG3zON6zW0CGMVFF78p6A3CmGa/UgwqdjC1C5r6Bi3yvQYOh+ALAHTUmX
-         SV1XwkONFBH431UeJ6RKL/p+l5sTy/7OMaCXqsOIjpOz1wX9iL8X+qn4zFTt6GW0DhNA
-         QhXv/bfc++8cL2sIrtg+xS8VnBLy+ORkdoQgePIW2boHl9FIVNvzJZ+RchEN58rb8Avq
-         ANrkpFwel02RlMIBHIIfhf7EOcqwMD1fyxWoS+dTOH5DDRJ+f/McAMVEC0TkSArh+b2e
-         MmYQ==
-X-Gm-Message-State: AOJu0YwxbOxj0Twj1M4nj9+8z9H47TvFkmsjEWqO42h2dN/fJAMlPql4
-	KdrwuITuLOYAboZJ71LX6FPgmWcTMn6k0MfeCuiobMum2vwsLh6I7pfQqY0ywpHAN7YxNW8fBdV
-	lJDO98FAhLGHZ3XIny4uyqj5ApJ1bt1XI9O55kMhoBGMCIhmTkeSIFQ==
-X-Google-Smtp-Source: AGHT+IGiITpyURlNbsXp5GME0V7s81ygGcIa99Yj2pi1rna6IbK6cbK7/bfy993EzWRjVk+838aCUMLn0wBd+QXyZjY=
-X-Received: by 2002:a05:6122:921:b0:4ec:f758:e514 with SMTP id
- 71dfb90a1353d-4ef6d8ad6e8mr11872712e0c.11.1719492574631; Thu, 27 Jun 2024
- 05:49:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K85+EMsw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719492584; x=1751028584;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=8x1y/BA5HEpl3H5PIsYbNzWqptF+ddQo7TG0proyfUc=;
+  b=K85+EMsw8MfwP4MzDXcZvoIhJGABSy1HqMMaQMzLTiy1HXhzGcr3UkHO
+   i0tuzKsVxtXsFsbrwMlqwkRBDKNQbupQU26Gmr49f4OfT8Z29hNRHBAGm
+   vDZQPhFkmHVvjxzg4h0qKHR/hNtuhyyj1UlvektkfGdsY1vWcO7eBJvT9
+   iogMrBr8w0C8x4OhDjULaWCNo8EO7z5RjmTciaeWd0ddHlsxZfmK6FxAK
+   J3zFuFJcU1fp9lhyh5S28zPxEGwTAfyToap/WF3CaxPV+1kxlo53bBP09
+   /q/3ZR/RH5TLdPRD1XkkEGxRe+IZNRSIJCXTvO02O2HGsbLCLdLCNYGct
+   w==;
+X-CSE-ConnectionGUID: bmGNYaU5QEaB2+Bq2sH6Pw==
+X-CSE-MsgGUID: ZSNaYqgDRXi3LKFGDXJXKw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11115"; a="20497855"
+X-IronPort-AV: E=Sophos;i="6.09,166,1716274800"; 
+   d="scan'208";a="20497855"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 05:49:43 -0700
+X-CSE-ConnectionGUID: MqMx0kdTTweZIqkpI365OA==
+X-CSE-MsgGUID: Kt0pFqHxQXO/fF/VvyTNgA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,166,1716274800"; 
+   d="scan'208";a="49537549"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 05:49:42 -0700
+Date: Thu, 27 Jun 2024 05:55:47 -0700
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: Brice Goglin <brice.goglin@gmail.com>
+Cc: Dave Hansen <dave.hansen@intel.com>,
+	srinivas pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: Re: [PATCH 0/9] Add CPU-type to topology
+Message-ID: <20240627125547.GC4743@ranerica-svr.sc.intel.com>
+References: <20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com>
+ <8d757ea3-87a3-4663-ac76-66b04e33e6b3@gmail.com>
+ <20240619015315.3ei5f6rovzdnxovo@desk>
+ <bc75ff55161671e4470849ed51baa547f619889d.camel@linux.intel.com>
+ <0021f5f2-67c5-4b20-939d-48c9c1c60cdb@gmail.com>
+ <1b99017a-6964-46de-ba3a-09552e7cf072@intel.com>
+ <ec4eeab6-ce32-4a2f-a32c-dfd95cdd9ccd@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 27 Jun 2024 18:19:23 +0530
-Message-ID: <CA+G9fYtiWKuQzwoBVaBA6zp304uCw5SsHKf3484CY-kuuOgnFA@mail.gmail.com>
-Subject: powerpc: nvram_64.c:75:13: error: 'oops_to_nvram' used but never
- defined [-Werror]
-To: open list <linux-kernel@vger.kernel.org>, 
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-mm <linux-mm@kvack.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Jocelyn Falempe <jfalempe@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Nicholas Piggin <npiggin@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ec4eeab6-ce32-4a2f-a32c-dfd95cdd9ccd@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-The powerpc builds failed on Linux next-20240626 tag due to following warnings
-and errors with gcc-13, gcc-8 and clang-18.
+On Thu, Jun 20, 2024 at 05:22:59PM +0200, Brice Goglin wrote:
+> Le 20/06/2024 à 17:06, Dave Hansen a écrit :
+> 
+> > On 6/19/24 14:25, Brice Goglin wrote:
+> > > Good point. From this patch series, I understand that the current kernel
+> > > side doesn't care about these different E-cores. However it might be
+> > > good to expose them as different cpu-types (or better name) to userspace ?
+> > > 
+> > > Something like type 0 = P-core, 1 = normal E-core, 2 = low power E-core ?
+> > The first priority here is getting the kernel to comprehend these types
+> > for architectural purposes: when there are functional differences
+> > between the cores.
+> > 
+> > Let's get that in place, first.  Then we can discuss the possibility of
+> > new ABI in the area.
+> 
+> Agreed.
+> 
+> > Did the ARM folks ever do a sysfs ABI for big.LITTLE?  I don't see
+> > anything obvious in Documentation/ABI/testing/sysfs-devices-system-cpu.
+> 
+> As far as I know, they only have the "capacity" field in sysfs cpu files
+> that reports a higher number for the equivalent of P-core:
+> 
+> From testing/sysfs-devices-system-cpu:
+> 
+> What:           /sys/devices/system/cpu/cpuX/cpu_capacity
+> Date:           December 2016
+> Contact:        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+> Description:    information about CPUs heterogeneity.
+> 
+>                 cpu_capacity: capacity of cpuX.
+> 
+> I don't know how it's calculated but I've never seen it report something wrong.
+> On Android/ARM phones, big cores usually have 1024 and small cores something
+> between 400 and 500.
+> Where there are 3 types of cores, they report 1024, 500-800 about ~250.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+I *think* this information comes from firmware tables, but you cannot reliably
+infer CPU types from capacity (e.g., Intel's Ecores vs Low Power Ecores).
 
-Regressions found on powerpc:
-
-  - clang-nightly-ppc64e_defconfig
-  - clang-18-maple_defconfig
-  - clang-nightly-defconfig
-  - clang-18-defconfig
-  - gcc-13-maple_defconfig
-  - gcc-8-cell_defconfig
-  - gcc-8-maple_defconfig
-  - clang-18-ppc64e_defconfig
-  - clang-nightly-cell_defconfig
-  - clang-nightly-maple_defconfig
-  - gcc-8-ppc64e_defconfig
-  - gcc-13-cell_defconfig
-  - gcc-13-defconfig
-  - gcc-13-ppc64e_defconfig
-  - clang-18-cell_defconfig
-  - gcc-8-defconfig
-
-Build errors:
-----
-arch/powerpc/kernel/nvram_64.c:79:17: error: initialization of 'void
-(*)(struct kmsg_dumper *, enum kmsg_dump_reason,  const char *)' from
-incompatible pointer type 'void (*)(struct kmsg_dumper *, enum
-kmsg_dump_reason)' [-Werror=incompatible-pointer-types]
-   79 |         .dump = oops_to_nvram
-      |                 ^~~~~~~~~~~~~
-arch/powerpc/kernel/nvram_64.c:79:17: note: (near initialization for
-'nvram_kmsg_dumper.dump')
-arch/powerpc/kernel/nvram_64.c:645:13: error: conflicting types for
-'oops_to_nvram'; have 'void(struct kmsg_dumper *, enum
-kmsg_dump_reason,  const char *)'
-  645 | static void oops_to_nvram(struct kmsg_dumper *dumper,
-      |             ^~~~~~~~~~~~~
-arch/powerpc/kernel/nvram_64.c:75:13: note: previous declaration of
-'oops_to_nvram' with type 'void(struct kmsg_dumper *, enum
-kmsg_dump_reason)'
-   75 | static void oops_to_nvram(struct kmsg_dumper *dumper,
-      |             ^~~~~~~~~~~~~
-arch/powerpc/kernel/nvram_64.c:75:13: error: 'oops_to_nvram' used but
-never defined [-Werror]
-arch/powerpc/kernel/nvram_64.c:645:13: error: 'oops_to_nvram' defined
-but not used [-Werror=unused-function]
-  645 | static void oops_to_nvram(struct kmsg_dumper *dumper,
-      |             ^~~~~~~~~~~~~
-cc1: all warnings being treated as errors
-
-metadata:
---
-  git_describe: next-20240626
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-  git_short_log: df9574a57d02 ("Add linux-next specific files for 20240626")
-  arch: powerpc
-  toolchain: gcc-13, gcc-8 and clang-18
-
-Steps to reproduce:
----------
-
-# tuxmake --runtime podman --target-arch powerpc --toolchain gcc-13
---kconfig ppc64e_defconfig
-
-
-Links:
---
- - https://storage.tuxsuite.com/public/linaro/lkft/builds/2iQqkMfvFPihkYnvWC7UxrVhb1X/
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240626/testrun/24453163/suite/build/test/gcc-13-ppc64e_defconfig/details/
-- https://storage.tuxsuite.com/public/linaro/lkft/builds/2iQqkMfvFPihkYnvWC7UxrVhb1X/config
-
---
-Linaro LKFT
-https://lkft.linaro.org
+Also, it is not useful to identify "performance" vs "efficient" CPUs.
