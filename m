@@ -1,401 +1,156 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9D51EB40;
-	Thu, 27 Jun 2024 22:16:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ADE02837F;
+	Thu, 27 Jun 2024 22:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719526585; cv=none; b=oMu2WZB0ibNKK6pw/6fkdJItXXJnVfwMf4/cHBemSYRQN2phiG5pG3jDaI5BA0x1D3RKlDy/2VBUjWFPIQ1ejQ8PHAGmRUAcT9oJbj/OHH4o1220BMI/qKUK0hHpvGjWkFHqHkdSnXd17z8EMP6iIS3awOW9wWibY7kozb9dKbs=
+	t=1719526694; cv=none; b=Yx0roPm6w3NpyE5fhOmACJi6Ndbc12bkphWzQkXOGRj7ig5PIBTxLCJYFjAnLkezrb1x4t6LoCIZEi9wzF5W6LGQvIg2PnR27SeJoHV/0s2Xz9z5UWvzWv8b5jGNiueNOhx7czo2GxJR8fEG6TDG/+/HurNYAYafTgajkNQlROA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719526585; c=relaxed/simple;
-	bh=m8bVllx/nLVMVsBGj69yMYzJkceFkXa+iQDUWGuoX5U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ePW9mBH0YmCwffxWXeAmzfcz5/F2AqgbylY+YkGANY8ij12GLdbeytoCZmCz3bpgEkoLx1+7kn81EOmuAm9xLlW7WKQHnfJA9SEcmgElXI90ktsZTmORnglSRh4n3kkVubQzy2Lq6/5KarIUuRqw6+iOu4PVuPtL4ikfAk111QQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kreUrFEn; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719526694; c=relaxed/simple;
+	bh=798SLS/Iw0zEG0OBQgbocKIte0Gk95Vl9PG1Bk3w/U0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HKjeLu65TE5gBRLaxZcdPx+xBRZeyqivXNbRCx/nq5QQtAsCkZRE7omtZihRKXsR7G7TfcptccBPPNJ6eE/5Hg0RLkDfqn0g+6802fAVcGHBzUA1TblNu7KLED40cdk2wYYM/qVOm75oz+oHxKABC76Pu0vCnkUrcTI32VkkaHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L46nkxfl; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kreUrFEn"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-72b070c377aso5864a12.1;
-        Thu, 27 Jun 2024 15:16:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719526583; x=1720131383; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=irwpOc2Hf1wvjl7oHm37Us7J1GWyzttF2I5IYFfC3Ys=;
-        b=kreUrFEnxMVPblo70eSQ2VBvfYKJvDiXF6Rg+mD/A5BrKZ/8oCMNNi0JTtl+W48vf+
-         r2lobhGfPmx2lkPZ1lWspD6QWSxqHy2SLAW2V+FeQlO0IV6H8G2+cv6UnV7WtF5jP6qs
-         eoyqfwt/OKo9aGcEPiCntkSmD1Q37T4xWZwJpZ7cJ62OOrOGOBPKyblaz7QgUMM+BF8m
-         1MywljUsVueKpqfmu2I06O83/dSeB+mVP/r8n2hyJMWnfRSrG072hHRWTHcE/o9Wz207
-         cBCxCgcJkMPb7r4tEs8hYyyVub/PSGIN3nL4ZADeEaeZwrwd7Ig5bEPTsgLvlzO59na3
-         k0uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719526583; x=1720131383;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=irwpOc2Hf1wvjl7oHm37Us7J1GWyzttF2I5IYFfC3Ys=;
-        b=wjqK41+fkJr6qLOG1PsV5md4YzztEIBvqpLh+RNlFIDsQY+O/cWGB70SenZYgBoc6U
-         fpkUGpb8f7qMlAqeNYy1nh90CIR1841jNPI5Du0ICn+zhJm6vClFHcygpe88cdU/lWLO
-         iLe/4tVe9Cy4DXfVHSXyOw9t8hPn+ZTFVAUe45xo68FcgxJ4mh0dxHRtAVlIbSbK3ouP
-         5Eo2S/Rt5GF4xjGz1BXkXE62GAwoqJy6TO0wcNuCX1cUVk+X0zpHpvEDV4prekltp6XO
-         DBeATsyxAFMENTBv7leBa6aIL9f2z7TLgSgUuIV0qStoxNuYEMTTYOy7dk1uyzRK7epu
-         7vRg==
-X-Forwarded-Encrypted: i=1; AJvYcCUcdG/PY2F2YKrXucTTlJkBk1GYvzghnEOjo6JRGUgLxA4pRwDlK8R+GCTt/UAR5sJjJ2XQKS/vTPiqwhO3PNWfvYLeZ5WtdvGXTr3P
-X-Gm-Message-State: AOJu0YxV3hN+JihyjS2gf60rQg74j7S56yY1VHVflrMRWaOWlntxD45G
-	m8Qivpy+iWHnl3VHmkeu1IfkZomrmjLKXlDrSzEBBl+SQVIf7hrm
-X-Google-Smtp-Source: AGHT+IE6iKcxcL2UWgUzJoVoh9tDerL+8j5mIX3PUPZmbly2QI5PJjQqRuYbZCWcgScmSQuiQ/eYRw==
-X-Received: by 2002:a17:90a:5792:b0:2c8:4f4e:d438 with SMTP id 98e67ed59e1d1-2c8fcf71313mr4248137a91.4.1719526582823;
-        Thu, 27 Jun 2024 15:16:22 -0700 (PDT)
-Received: from localhost ([2a00:79e1:2e00:1301:e1c5:6354:b45d:8ffc])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c91ce76935sm297528a91.34.2024.06.27.15.16.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 15:16:22 -0700 (PDT)
-From: Rob Clark <robdclark@gmail.com>
-To: iommu@lists.linux.dev
-Cc: linux-arm-msm@vger.kernel.org,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Pranjal Shrivastava <praan@google.com>,
-	Rob Clark <robdclark@chromium.org>,
-	Rob Clark <robdclark@gmail.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Jerry Snitselaar <jsnitsel@redhat.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Georgi Djakov <quic_c_gdjako@quicinc.com>,
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM SMMU DRIVERS),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3] iommu/arm-smmu: Pretty-print context fault related regs
-Date: Thu, 27 Jun 2024 15:16:08 -0700
-Message-ID: <20240627221613.393060-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L46nkxfl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719526692; x=1751062692;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=798SLS/Iw0zEG0OBQgbocKIte0Gk95Vl9PG1Bk3w/U0=;
+  b=L46nkxfl15WPn4S5IyCOwfPiisXoK6Q6HxeHVWWkymT045Zn71FK4Cxs
+   jwzll/8OgjHH3uBrkxQH9LkmkiJlHpfSW9dcw4tS5lPWpxTaIsSiyvm6k
+   Q5+Lnok9LZUO36tubCVMYC3nok8mv6IZYUYM9e9btmpj0p0S2RFZsUvIf
+   YrRWcoxXVyI83QHTQDWSUwLIJ0zqyvLJszVUfNwjAO7//cMWMkTQQ6cg9
+   T+L1Br5HEt16ohpFebDTA5SUcPD1gIqJjchd9qdU3cv76Dd18bALn+0uE
+   803AymsvmtUrhBqqo5MzOM3ivxVWFRKQoe6P6ztATD2NZ9muXeWUN59my
+   w==;
+X-CSE-ConnectionGUID: Jz59CrcGQ8i6xkGmjbiqQQ==
+X-CSE-MsgGUID: BgeJWbpvROabnjw1WTn5iQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="16572803"
+X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
+   d="scan'208";a="16572803"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 15:18:12 -0700
+X-CSE-ConnectionGUID: yfUl4xnVS+qufN3l1zUNQA==
+X-CSE-MsgGUID: czu3RS6BQRSCCwsTHeJP0Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
+   d="scan'208";a="82078302"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 15:18:11 -0700
+Date: Thu, 27 Jun 2024 15:23:22 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: Sohil Mehta <sohil.mehta@intel.com>
+Cc: X86 Kernel <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ "Thomas Gleixner" <tglx@linutronix.de>, Dave Hansen
+ <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ <linux-perf-users@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Andi Kleen <andi.kleen@intel.com>, Xin Li <xin3.li@intel.com>,
+ jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v2 1/6] x86/irq: Add enumeration of NMI source reporting
+ CPU feature
+Message-ID: <20240627152102.592a20f5@jacob-builder>
+In-Reply-To: <004f6400-0d35-4c5e-ad31-094be8860f08@intel.com>
+References: <20240611165457.156364-1-jacob.jun.pan@linux.intel.com>
+ <20240611165457.156364-2-jacob.jun.pan@linux.intel.com>
+ <b3b10d29-857e-402b-95b9-1696baa88e81@intel.com>
+ <20240621164615.051217c4@jacob-builder>
+ <004f6400-0d35-4c5e-ad31-094be8860f08@intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Rob Clark <robdclark@chromium.org>
 
-Parse out the bitfields for easier-to-read fault messages.
+On Fri, 21 Jun 2024 18:08:14 -0700, Sohil Mehta <sohil.mehta@intel.com>
+wrote:
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
- .../iommu/arm/arm-smmu/arm-smmu-qcom-debug.c  | 62 ++++++----------
- drivers/iommu/arm/arm-smmu/arm-smmu.c         | 70 +++++++++++++++----
- drivers/iommu/arm/arm-smmu/arm-smmu.h         | 67 ++++++++++++------
- 3 files changed, 119 insertions(+), 80 deletions(-)
+> >> diff --git a/arch/x86/kernel/cpu/cpuid-deps.c
+> >> b/arch/x86/kernel/cpu/cpuid-deps.c
+> >> index b7d9f530ae16..39526041e91a 100644
+> >> --- a/arch/x86/kernel/cpu/cpuid-deps.c
+> >> +++ b/arch/x86/kernel/cpu/cpuid-deps.c
+> >> @@ -84,6 +84,7 @@ static const struct cpuid_dep cpuid_deps[] = {
+> >>         { X86_FEATURE_SHSTK,                    X86_FEATURE_XSAVES
+> >> }, { X86_FEATURE_FRED,                     X86_FEATURE_LKGS      },
+> >>         { X86_FEATURE_FRED,                     X86_FEATURE_WRMSRNS
+> >> },
+> >> +       { X86_FEATURE_NMI_SOURCE,		X86_FEATURE_FRED
+> >> }, {}
+> >>  };  
+> > If FRED is never reported by CPUID, then there would not be any calls to
+> > setup_clear_cpu_cap(X86_FEATURE_FRED), so this table does not help clear
+> > the dependent NMI_SOURCE, right?
+> >   
+> 
+> I thought there was a common function for all features. I expected it to
+> go through each feature and clear the ones whose dependency is missing.
+> But I can't find it easily. Maybe someone else knows this better.
+> 
+> However, anytime do_clear_cpu_cap() is called for any feature it does
+> the below and scans the cpuid_deps table to clear all features with
+> missing dependencies. That would cause X86_FEATURE_NMI_SOURCE to be
+> cleared one way or another.
+I don't think this is true. For a simplified example:
+cpuid_deps has the following feature-depends pairs.
+[1, 3]
+[2, 3]
+now, do_clear_cpu_cap(c, 2)
 
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom-debug.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom-debug.c
-index 552199cbd9e2..da2e605014a5 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom-debug.c
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom-debug.c
-@@ -141,7 +141,7 @@ static int qcom_tbu_halt(struct qcom_tbu *tbu, struct arm_smmu_domain *smmu_doma
- 	writel_relaxed(val, tbu->base + DEBUG_SID_HALT_REG);
- 
- 	fsr = arm_smmu_cb_read(smmu, idx, ARM_SMMU_CB_FSR);
--	if ((fsr & ARM_SMMU_FSR_FAULT) && (fsr & ARM_SMMU_FSR_SS)) {
-+	if ((fsr & ARM_SMMU_FSR_FAULT) && (fsr & ARM_SMMU_CB_FSR_SS)) {
- 		u32 sctlr_orig, sctlr;
- 
- 		/*
-@@ -306,7 +306,7 @@ static phys_addr_t qcom_iova_to_phys(struct arm_smmu_domain *smmu_domain,
- 		 * TBU halt takes care of resuming any stalled transcation.
- 		 * Kept it here for completeness sake.
- 		 */
--		if (fsr & ARM_SMMU_FSR_SS)
-+		if (fsr & ARM_SMMU_CB_FSR_SS)
- 			arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_RESUME,
- 					  ARM_SMMU_RESUME_TERMINATE);
- 	}
-@@ -324,7 +324,7 @@ static phys_addr_t qcom_iova_to_phys(struct arm_smmu_domain *smmu_domain,
- 				/* Clear pending interrupts */
- 				arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_FSR, fsr);
- 
--				if (fsr & ARM_SMMU_FSR_SS)
-+				if (fsr & ARM_SMMU_CB_FSR_SS)
- 					arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_RESUME,
- 							  ARM_SMMU_RESUME_TERMINATE);
- 			}
-@@ -383,68 +383,46 @@ irqreturn_t qcom_smmu_context_fault(int irq, void *dev)
- 	struct arm_smmu_domain *smmu_domain = dev;
- 	struct io_pgtable_ops *ops = smmu_domain->pgtbl_ops;
- 	struct arm_smmu_device *smmu = smmu_domain->smmu;
--	u32 fsr, fsynr, cbfrsynra, resume = 0;
-+	struct arm_smmu_context_fault_info cfi;
-+	u32 resume = 0;
- 	int idx = smmu_domain->cfg.cbndx;
- 	phys_addr_t phys_soft;
--	unsigned long iova;
- 	int ret, tmp;
- 
- 	static DEFINE_RATELIMIT_STATE(_rs,
- 				      DEFAULT_RATELIMIT_INTERVAL,
- 				      DEFAULT_RATELIMIT_BURST);
- 
--	fsr = arm_smmu_cb_read(smmu, idx, ARM_SMMU_CB_FSR);
--	if (!(fsr & ARM_SMMU_FSR_FAULT))
--		return IRQ_NONE;
-+	arm_smmu_read_context_fault_info(smmu, idx, &cfi);
- 
--	fsynr = arm_smmu_cb_read(smmu, idx, ARM_SMMU_CB_FSYNR0);
--	iova = arm_smmu_cb_readq(smmu, idx, ARM_SMMU_CB_FAR);
--	cbfrsynra = arm_smmu_gr1_read(smmu, ARM_SMMU_GR1_CBFRSYNRA(idx));
-+	if (!(cfi.fsr & ARM_SMMU_FSR_FAULT))
-+		return IRQ_NONE;
- 
- 	if (list_empty(&tbu_list)) {
--		ret = report_iommu_fault(&smmu_domain->domain, NULL, iova,
--					 fsynr & ARM_SMMU_FSYNR0_WNR ? IOMMU_FAULT_WRITE : IOMMU_FAULT_READ);
-+		ret = report_iommu_fault(&smmu_domain->domain, NULL, cfi.iova,
-+					 cfi.fsynr & ARM_SMMU_CB_FSYNR0_WNR ? IOMMU_FAULT_WRITE : IOMMU_FAULT_READ);
- 
- 		if (ret == -ENOSYS)
--			dev_err_ratelimited(smmu->dev,
--					    "Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cbfrsynra=0x%x, cb=%d\n",
--					    fsr, iova, fsynr, cbfrsynra, idx);
-+			arm_smmu_print_context_fault_info(smmu, idx, &cfi);
- 
--		arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_FSR, fsr);
-+		arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_FSR, cfi.fsr);
- 		return IRQ_HANDLED;
- 	}
- 
--	phys_soft = ops->iova_to_phys(ops, iova);
-+	phys_soft = ops->iova_to_phys(ops, cfi.iova);
- 
--	tmp = report_iommu_fault(&smmu_domain->domain, NULL, iova,
--				 fsynr & ARM_SMMU_FSYNR0_WNR ? IOMMU_FAULT_WRITE : IOMMU_FAULT_READ);
-+	tmp = report_iommu_fault(&smmu_domain->domain, NULL, cfi.iova,
-+				 cfi.fsynr & ARM_SMMU_CB_FSYNR0_WNR ? IOMMU_FAULT_WRITE : IOMMU_FAULT_READ);
- 	if (!tmp || tmp == -EBUSY) {
--		dev_dbg(smmu->dev,
--			"Context fault handled by client: iova=0x%08lx, fsr=0x%x, fsynr=0x%x, cb=%d\n",
--			iova, fsr, fsynr, idx);
-+		arm_smmu_print_context_fault_info(smmu, idx, &cfi);
- 		dev_dbg(smmu->dev, "soft iova-to-phys=%pa\n", &phys_soft);
- 		ret = IRQ_HANDLED;
- 		resume = ARM_SMMU_RESUME_TERMINATE;
- 	} else {
--		phys_addr_t phys_atos = qcom_smmu_verify_fault(smmu_domain, iova, fsr);
-+		phys_addr_t phys_atos = qcom_smmu_verify_fault(smmu_domain, cfi.iova, cfi.fsr);
- 
- 		if (__ratelimit(&_rs)) {
--			dev_err(smmu->dev,
--				"Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cbfrsynra=0x%x, cb=%d\n",
--				fsr, iova, fsynr, cbfrsynra, idx);
--			dev_err(smmu->dev,
--				"FSR    = %08x [%s%s%s%s%s%s%s%s%s], SID=0x%x\n",
--				fsr,
--				(fsr & 0x02) ? "TF " : "",
--				(fsr & 0x04) ? "AFF " : "",
--				(fsr & 0x08) ? "PF " : "",
--				(fsr & 0x10) ? "EF " : "",
--				(fsr & 0x20) ? "TLBMCF " : "",
--				(fsr & 0x40) ? "TLBLKF " : "",
--				(fsr & 0x80) ? "MHF " : "",
--				(fsr & 0x40000000) ? "SS " : "",
--				(fsr & 0x80000000) ? "MULTI " : "",
--				cbfrsynra);
-+			arm_smmu_print_context_fault_info(smmu, idx, &cfi);
- 
- 			dev_err(smmu->dev,
- 				"soft iova-to-phys=%pa\n", &phys_soft);
-@@ -478,10 +456,10 @@ irqreturn_t qcom_smmu_context_fault(int irq, void *dev)
- 	 */
- 	if (tmp != -EBUSY) {
- 		/* Clear the faulting FSR */
--		arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_FSR, fsr);
-+		arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_FSR, cfi.fsr);
- 
- 		/* Retry or terminate any stalled transactions */
--		if (fsr & ARM_SMMU_FSR_SS)
-+		if (cfi.fsr & ARM_SMMU_CB_FSR_SS)
- 			arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_RESUME, resume);
- 	}
- 
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.c b/drivers/iommu/arm/arm-smmu/arm-smmu.c
-index 87c81f75cf84..246a39081879 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu.c
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu.c
-@@ -405,32 +405,72 @@ static const struct iommu_flush_ops arm_smmu_s2_tlb_ops_v1 = {
- 	.tlb_add_page	= arm_smmu_tlb_add_page_s2_v1,
- };
- 
-+
-+void arm_smmu_read_context_fault_info(struct arm_smmu_device *smmu, int idx,
-+				      struct arm_smmu_context_fault_info *cfi)
-+{
-+	cfi->iova = arm_smmu_cb_readq(smmu, idx, ARM_SMMU_CB_FAR);
-+	cfi->fsr = arm_smmu_cb_read(smmu, idx, ARM_SMMU_CB_FSR);
-+	cfi->fsynr = arm_smmu_cb_read(smmu, idx, ARM_SMMU_CB_FSYNR0);
-+	cfi->cbfrsynra = arm_smmu_gr1_read(smmu, ARM_SMMU_GR1_CBFRSYNRA(idx));
-+}
-+
-+void arm_smmu_print_context_fault_info(struct arm_smmu_device *smmu, int idx,
-+				       const struct arm_smmu_context_fault_info *cfi)
-+{
-+	dev_dbg(smmu->dev,
-+		"Context fault handled by client: iova=0x%08lx, fsr=0x%x, fsynr=0x%x, cb=%d\n",
-+		cfi->iova, cfi->fsr, cfi->fsynr, idx);
-+
-+	dev_err(smmu->dev, "FSR    = %08x [%s%sFormat=%u%s%s%s%s%s%s%s%s], SID=0x%x\n",
-+		cfi->fsr,
-+		(cfi->fsr & ARM_SMMU_CB_FSR_MULTI)  ? "MULTI " : "",
-+		(cfi->fsr & ARM_SMMU_CB_FSR_SS)     ? "SS " : "",
-+		(u32)FIELD_GET(ARM_SMMU_CB_FSR_FORMAT, cfi->fsr),
-+		(cfi->fsr & ARM_SMMU_CB_FSR_UUT)    ? " UUT" : "",
-+		(cfi->fsr & ARM_SMMU_CB_FSR_ASF)    ? " ASF" : "",
-+		(cfi->fsr & ARM_SMMU_CB_FSR_TLBLKF) ? " TLBLKF" : "",
-+		(cfi->fsr & ARM_SMMU_CB_FSR_TLBMCF) ? " TLBMCF" : "",
-+		(cfi->fsr & ARM_SMMU_CB_FSR_EF)     ? " EF" : "",
-+		(cfi->fsr & ARM_SMMU_CB_FSR_PF)     ? " PF" : "",
-+		(cfi->fsr & ARM_SMMU_CB_FSR_AFF)    ? " AFF" : "",
-+		(cfi->fsr & ARM_SMMU_CB_FSR_TF)     ? " TF" : "",
-+		cfi->cbfrsynra);
-+
-+	dev_err(smmu->dev, "FSYNR0 = %08x [S1CBNDX=%u%s%s%s%s%s%s PLVL=%u]\n",
-+		cfi->fsynr,
-+		(u32)FIELD_GET(ARM_SMMU_CB_FSYNR0_S1CBNDX, cfi->fsynr),
-+		(cfi->fsynr & ARM_SMMU_CB_FSYNR0_AFR) ? " AFR" : "",
-+		(cfi->fsynr & ARM_SMMU_CB_FSYNR0_PTWF) ? " PTWF" : "",
-+		(cfi->fsynr & ARM_SMMU_CB_FSYNR0_NSATTR) ? " NSATTR" : "",
-+		(cfi->fsynr & ARM_SMMU_CB_FSYNR0_IND) ? " IND" : "",
-+		(cfi->fsynr & ARM_SMMU_CB_FSYNR0_PNU) ? " PNU" : "",
-+		(cfi->fsynr & ARM_SMMU_CB_FSYNR0_WNR) ? " WNR" : "",
-+		(u32)FIELD_GET(ARM_SMMU_CB_FSYNR0_PLVL, cfi->fsynr));
-+}
-+
- static irqreturn_t arm_smmu_context_fault(int irq, void *dev)
- {
--	u32 fsr, fsynr, cbfrsynra;
--	unsigned long iova;
-+	struct arm_smmu_context_fault_info cfi;
- 	struct arm_smmu_domain *smmu_domain = dev;
- 	struct arm_smmu_device *smmu = smmu_domain->smmu;
-+	static DEFINE_RATELIMIT_STATE(rs, DEFAULT_RATELIMIT_INTERVAL,
-+				      DEFAULT_RATELIMIT_BURST);
- 	int idx = smmu_domain->cfg.cbndx;
- 	int ret;
- 
--	fsr = arm_smmu_cb_read(smmu, idx, ARM_SMMU_CB_FSR);
--	if (!(fsr & ARM_SMMU_FSR_FAULT))
--		return IRQ_NONE;
-+	arm_smmu_read_context_fault_info(smmu, idx, &cfi);
- 
--	fsynr = arm_smmu_cb_read(smmu, idx, ARM_SMMU_CB_FSYNR0);
--	iova = arm_smmu_cb_readq(smmu, idx, ARM_SMMU_CB_FAR);
--	cbfrsynra = arm_smmu_gr1_read(smmu, ARM_SMMU_GR1_CBFRSYNRA(idx));
-+	if (!(cfi.fsr & ARM_SMMU_FSR_FAULT))
-+		return IRQ_NONE;
- 
--	ret = report_iommu_fault(&smmu_domain->domain, NULL, iova,
--		fsynr & ARM_SMMU_FSYNR0_WNR ? IOMMU_FAULT_WRITE : IOMMU_FAULT_READ);
-+	ret = report_iommu_fault(&smmu_domain->domain, NULL, cfi.iova,
-+		cfi.fsynr & ARM_SMMU_CB_FSYNR0_WNR ? IOMMU_FAULT_WRITE : IOMMU_FAULT_READ);
- 
--	if (ret == -ENOSYS)
--		dev_err_ratelimited(smmu->dev,
--		"Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cbfrsynra=0x%x, cb=%d\n",
--			    fsr, iova, fsynr, cbfrsynra, idx);
-+	if (ret == -ENOSYS && __ratelimit(&rs))
-+		arm_smmu_print_context_fault_info(smmu, idx, &cfi);
- 
--	arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_FSR, fsr);
-+	arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_FSR, cfi.fsr);
- 	return IRQ_HANDLED;
- }
- 
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.h b/drivers/iommu/arm/arm-smmu/arm-smmu.h
-index 4765c6945c34..faf475366d4d 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu.h
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu.h
-@@ -196,34 +196,42 @@ enum arm_smmu_cbar_type {
- #define ARM_SMMU_CB_PAR_F		BIT(0)
- 
- #define ARM_SMMU_CB_FSR			0x58
--#define ARM_SMMU_FSR_MULTI		BIT(31)
--#define ARM_SMMU_FSR_SS			BIT(30)
--#define ARM_SMMU_FSR_UUT		BIT(8)
--#define ARM_SMMU_FSR_ASF		BIT(7)
--#define ARM_SMMU_FSR_TLBLKF		BIT(6)
--#define ARM_SMMU_FSR_TLBMCF		BIT(5)
--#define ARM_SMMU_FSR_EF			BIT(4)
--#define ARM_SMMU_FSR_PF			BIT(3)
--#define ARM_SMMU_FSR_AFF		BIT(2)
--#define ARM_SMMU_FSR_TF			BIT(1)
--
--#define ARM_SMMU_FSR_IGN		(ARM_SMMU_FSR_AFF |		\
--					 ARM_SMMU_FSR_ASF |		\
--					 ARM_SMMU_FSR_TLBMCF |		\
--					 ARM_SMMU_FSR_TLBLKF)
--
--#define ARM_SMMU_FSR_FAULT		(ARM_SMMU_FSR_MULTI |		\
--					 ARM_SMMU_FSR_SS |		\
--					 ARM_SMMU_FSR_UUT |		\
--					 ARM_SMMU_FSR_EF |		\
--					 ARM_SMMU_FSR_PF |		\
--					 ARM_SMMU_FSR_TF |		\
-+#define ARM_SMMU_CB_FSR_MULTI		BIT(31)
-+#define ARM_SMMU_CB_FSR_SS		BIT(30)
-+#define ARM_SMMU_CB_FSR_FORMAT		GENMASK(10, 9)
-+#define ARM_SMMU_CB_FSR_UUT		BIT(8)
-+#define ARM_SMMU_CB_FSR_ASF		BIT(7)
-+#define ARM_SMMU_CB_FSR_TLBLKF		BIT(6)
-+#define ARM_SMMU_CB_FSR_TLBMCF		BIT(5)
-+#define ARM_SMMU_CB_FSR_EF		BIT(4)
-+#define ARM_SMMU_CB_FSR_PF		BIT(3)
-+#define ARM_SMMU_CB_FSR_AFF		BIT(2)
-+#define ARM_SMMU_CB_FSR_TF		BIT(1)
-+
-+#define ARM_SMMU_FSR_IGN		(ARM_SMMU_CB_FSR_AFF |		\
-+					 ARM_SMMU_CB_FSR_ASF |		\
-+					 ARM_SMMU_CB_FSR_TLBMCF |	\
-+					 ARM_SMMU_CB_FSR_TLBLKF)
-+
-+#define ARM_SMMU_FSR_FAULT		(ARM_SMMU_CB_FSR_MULTI |	\
-+					 ARM_SMMU_CB_FSR_SS |		\
-+					 ARM_SMMU_CB_FSR_UUT |		\
-+					 ARM_SMMU_CB_FSR_EF |		\
-+					 ARM_SMMU_CB_FSR_PF |		\
-+					 ARM_SMMU_CB_FSR_TF |		\
- 					 ARM_SMMU_FSR_IGN)
- 
- #define ARM_SMMU_CB_FAR			0x60
- 
- #define ARM_SMMU_CB_FSYNR0		0x68
--#define ARM_SMMU_FSYNR0_WNR		BIT(4)
-+#define ARM_SMMU_CB_FSYNR0_PLVL		GENMASK(1, 0)
-+#define ARM_SMMU_CB_FSYNR0_WNR		BIT(4)
-+#define ARM_SMMU_CB_FSYNR0_PNU		BIT(5)
-+#define ARM_SMMU_CB_FSYNR0_IND		BIT(6)
-+#define ARM_SMMU_CB_FSYNR0_NSATTR	BIT(8)
-+#define ARM_SMMU_CB_FSYNR0_PTWF		BIT(10)
-+#define ARM_SMMU_CB_FSYNR0_AFR		BIT(11)
-+#define ARM_SMMU_CB_FSYNR0_S1CBNDX	GENMASK(23, 16)
- 
- #define ARM_SMMU_CB_FSYNR1		0x6c
- 
-@@ -533,4 +541,17 @@ struct arm_smmu_device *qcom_smmu_impl_init(struct arm_smmu_device *smmu);
- void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx);
- int arm_mmu500_reset(struct arm_smmu_device *smmu);
- 
-+struct arm_smmu_context_fault_info {
-+	unsigned long iova;
-+	u32 fsr;
-+	u32 fsynr;
-+	u32 cbfrsynra;
-+};
-+
-+void arm_smmu_read_context_fault_info(struct arm_smmu_device *smmu, int idx,
-+				      struct arm_smmu_context_fault_info *cfi);
-+
-+void arm_smmu_print_context_fault_info(struct arm_smmu_device *smmu, int idx,
-+				       const struct arm_smmu_context_fault_info *cfi);
-+
- #endif /* _ARM_SMMU_H */
--- 
-2.45.2
+Before the loop below __set_bit(feature, disable), bit 2 is set. 
 
+Since there is no other features depend on 2, the loop below will not clear
+any other features. no?
+
+> 
+> 
+> 	/* Loop until we get a stable state. */
+> 	do {
+> 		changed = false;
+> 		for (d = cpuid_deps; d->feature; d++) {
+> 			if (!test_bit(d->depends, disable))
+> 				continue;
+> 			if (__test_and_set_bit(d->feature, disable))
+> 				continue;
+> 
+> 			changed = true;
+> 			clear_feature(c, d->feature);
+> 		}
+> 	} while (changed);
+> 
+> 
+> > In the next version, I will add runtime disable if HW malfunctions.
+> > i.e. no valid bitmask.
+> >   
+> 
+> I don't think we do this for other features that have a missing
+> dependency. It doesn't seem NMI source is any different from them.
+> 
+NMI source is an optimization with a fallback path *always* available. In
+that sense, it can be disabled at runtime without losing functionality.
+
+The closest analogy I can think of are timers for clocksources where we use
+higher ranking/cheaper timers first, and only resort to other timers in
+case the primary/optimal one fails.
+
+e.g.
+root@984fee003c4f:~/jacob# cat
+/sys/devices/system/clocksource/clocksource0/available_clocksource  
+tsc hpet acpi_pm
+
+
+Thanks,
+
+Jacob
