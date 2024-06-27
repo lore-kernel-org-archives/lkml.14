@@ -1,112 +1,121 @@
-Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.220])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED24A187541
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 13:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.220
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B741922F4;
+	Thu, 27 Jun 2024 13:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719494274; cv=none; b=h4txzHPgf3u0Nph67dcU71iRnChrmIZWsh2xwxgZjAVPk8+D7Z29HGspOl4O+58MYCKqBM6fkeIZjUqNZ/p98bSWxploTum7FlCoevc/4OjZXK4Vk6DXex08tyeE+i572WV+AhYB9flfJTcn0g7mEyMpAI4+LBEv7MB+/xAgJ6A=
+	t=1719494426; cv=none; b=s2cIGg/QAJ1Z1xSxV6fFkSh6mY5+rpwJTJz6bm7UzDUqE+phpM1x5cq7rJHt3lygDyVHLR4oW3h1ZASfIm0ouYLJTpBBTOdk4/pRO1Z2nigGxVt4N8Jsr7AP28mS/ll5ROJ4IKXnT2EO+B5shs9vpbtC+PEdTOa2zPf9ppKZPq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719494274; c=relaxed/simple;
-	bh=370pLVgH43l7QVAvTccXXK1/Sk+pJeLSfVCugZ/Pibo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OwaRYm3fR+Z37zCh8+HkiaXxsmpqpKr8tT03NEj4XtgF9O3yOlvhEeYRsc3YHjNGFesfiDWiF6jE+jQxOJ0gx4WAj45sU47jNZven7Ff7fLW/z2v4X9ULvlhmnRGsCK/ESe6cUUuF4OR1w1CQzjOu2K9nCrW3l/osMEHqKTLAEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=N2IHBIPr; arc=none smtp.client-ip=45.254.50.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1719494426; c=relaxed/simple;
+	bh=ecpLC43kFB3CYyVlJl5+YEUB1QqT90ETR7ab91rVC+M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=n4hFsqsEkfYv/k8iWB++HWKTqfZ/kJye7mX0+eVU+9vNLGNindTmZy5T7A9GbIWd6insTm0dkPdCHV5wL4G3TI84S5Fq7qpVRuKSFLjVO5CHDmpFAKuogE1r0e23P/vWFIxGR1CKSLJSTY72KqWdPhe7Vt9Zm9hHed/x1CLSTFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=cWVTLFjY; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="N2IHBIPr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Fk602
-	xZpwxu8hEFijAI24Vfb9FDwk9rs/d9oKAbmeVY=; b=N2IHBIPrjKfOgTmzvLsRv
-	3ptBqeOjMZh5kRFSqqkdn5oMFelqpFR02q/vREfuFLsz/aHX1UQNV1tzBmZLu57C
-	7lBiK3tg6+Dbc0Kyb0Zsm8zjXXu5ugZ+q94VxU8++QnMuQbnba863wFiB88aMvwc
-	FgdjnVi2cF5fq+D2byvfcc=
-Received: from localhost.localdomain (unknown [193.203.214.57])
-	by gzga-smtp-mta-g0-1 (Coremail) with SMTP id _____wDXjylHZn1mTc7GAg--.20362S4;
-	Thu, 27 Jun 2024 21:16:57 +0800 (CST)
-From: ran xiaokai <ranxiaokai627@163.com>
-To: ziy@nvidia.com
-Cc: baohua@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	lkp@intel.com,
-	llvm@lists.linux.dev,
-	oe-kbuild-all@lists.linux.dev,
-	peterx@redhat.com,
-	ran.xiaokai@zte.com.cn,
-	ranxiaokai627@163.com
-Subject: Re: [PATCH 2/2] kpageflags: fix wrong KPF_THP on non-pmd-mappable compound pages
-Date: Thu, 27 Jun 2024 13:16:55 +0000
-Message-Id: <20240627131655.23524-1-ranxiaokai627@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <D2ATJC1R3T10.14DE626BQO28Y@nvidia.com>
-References: <D2ATJC1R3T10.14DE626BQO28Y@nvidia.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cWVTLFjY"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45RDK103112486;
+	Thu, 27 Jun 2024 08:20:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1719494401;
+	bh=MweCfJaxnH2SO8CuzOOrmYpHxuetL+U+V3vgylpajt4=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=cWVTLFjYcrl0sHqLwoBFJWvirTY0ulDHlLDF6AfnPB1MCJ04oe8XQPS4PCTpTzrxT
+	 aO+ykNxKvTI4CN/oFCijNA+UU1sIt/MDYRHf0FNxdZDFnXSz2W+5HAcIj0iZ5/s5sN
+	 SLyJYHXHqnxpTCb0oYw69o+k4voefeCwXHJoAwGA=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45RDK1gj114996
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 27 Jun 2024 08:20:01 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 27
+ Jun 2024 08:20:01 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 27 Jun 2024 08:20:01 -0500
+Received: from [10.249.135.225] ([10.249.135.225])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45RDJsoX052505;
+	Thu, 27 Jun 2024 08:19:54 -0500
+Message-ID: <2e6a4d73-7438-4f00-8b6e-74aa327ae3c5@ti.com>
+Date: Thu, 27 Jun 2024 18:49:53 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDXjylHZn1mTc7GAg--.20362S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGFWDCr48Zr4xKryrXr1xGrg_yoW5XFWfpa
-	y8GFs8KF48Wr1rGw4xKF1DZa1jqws8WryagF18Cw47ZFs0vF9Fgr4Ikr15uwnrur1kCrW8
-	Crn3XF9Yqa4UAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUKtCwUUUUU=
-X-CM-SenderInfo: xudq5x5drntxqwsxqiywtou0bp/1tbiqRILTGVOBIjUegAAs1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v4 5/5] arm64: dts: ti: iot2050: Add IEP
+ interrupts for SR1.0 devices
+To: Diogo Ivo <diogo.ivo@siemens.com>, MD Danish Anwar <danishanwar@ti.com>,
+        Roger Quadros <rogerq@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo
+ Abeni <pabeni@redhat.com>,
+        Richard Cochran <richardcochran@gmail.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero
+ Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Jan
+ Kiszka <jan.kiszka@siemens.com>,
+        Jacob Keller <jacob.e.keller@intel.com>,
+        Simon Horman <horms@kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20240617-iep-v4-0-fa20ff4141a3@siemens.com>
+ <20240617-iep-v4-5-fa20ff4141a3@siemens.com>
+Content-Language: en-US
+From: "Anwar, Md Danish" <a0501179@ti.com>
+In-Reply-To: <20240617-iep-v4-5-fa20ff4141a3@siemens.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
->On Thu Jun 27, 2024 at 8:38 AM EDT, ran xiaokai wrote:
->> > Hi ran,
->> > 
->> > kernel test robot noticed the following build errors:
->> > 
->> > [auto build test ERROR on akpm-mm/mm-everything]
->> > [also build test ERROR on linus/master v6.10-rc5 next-20240625]
->> > [If your patch is applied to the wrong git tree, kindly drop us a note.
->> > And when submitting patch, we suggest to use '--base' as documented in
->> > https://git-scm.com/docs/git-format-patch#_base_tree_information]
->> > 
->> > url:    https://github.com/intel-lab-lkp/linux/commits/ran-xiaokai/mm-Constify-folio_order-folio_test_pmd_mappable/20240626-113027
->> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
->> > patch link:    https://lore.kernel.org/r/20240626024924.1155558-3-ranxiaokai627%40163.com
->> > patch subject: [PATCH 2/2] kpageflags: fix wrong KPF_THP on non-pmd-mappable compound pages
->> > config: x86_64-allnoconfig (https://download.01.org/0day-ci/archive/20240626/202406262300.iAURISyJ-lkp@intel.com/config)
->> > compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
->> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240626/202406262300.iAURISyJ-lkp@intel.com/reproduce)
->> > 
->> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
->> > the same patch/commit), kindly add following tags
->> > | Reported-by: kernel test robot <lkp@intel.com>
->> > | Closes: https://lore.kernel.org/oe-kbuild-all/202406262300.iAURISyJ-lkp@intel.com/
->> > 
->> > All errors (new ones prefixed by >>):
->> > 
->> > >> fs/proc/page.c:151:35: error: passing 'const struct folio *' to parameter of type 'struct folio *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
->> >      151 |         else if (folio_test_pmd_mappable(folio)) {
->> >          |                                          ^~~~~
->> >    include/linux/huge_mm.h:438:58: note: passing argument to parameter 'folio' here
->> >      438 | static inline bool folio_test_pmd_mappable(struct folio *folio)
->> >          |                                                          ^
->> >    1 error generated.
->>
->> Hi,
->>
->> This patch is the second patch of the serial:
->> https://lore.kernel.org/lkml/20240626024924.1155558-1-ranxiaokai627@163.com/
->>
->> and it relies on the first patch:
->> https://lore.kernel.org/lkml/20240626024924.1155558-2-ranxiaokai627@163.com/
->>
->> and it seems the first patch is not applied.
->> Or in this case, we should not split these two patches?
->
->No, this is the definition when THP is disabled. You only changed the
->definition when THP is enabled.
 
-Thanks for reminding. 
-Will fix this.
 
->-- 
->Best Regards,
->Yan, Zi
->
+On 6/17/2024 8:51 PM, Diogo Ivo wrote:
+> Add the interrupts needed for PTP Hardware Clock support via IEP
+> in SR1.0 devices.
+> 
+> Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+> Signed-off-by: Diogo Ivo <diogo.ivo@siemens.com>
+> ---
+>  arch/arm64/boot/dts/ti/k3-am65-iot2050-common-pg1.dtsi | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am65-iot2050-common-pg1.dtsi b/arch/arm64/boot/dts/ti/k3-am65-iot2050-common-pg1.dtsi
+> index ef7897763ef8..0a29ed172215 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am65-iot2050-common-pg1.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am65-iot2050-common-pg1.dtsi
+> @@ -73,3 +73,15 @@ &icssg0_eth {
+>  		    "rx0", "rx1",
+>  		    "rxmgm0", "rxmgm1";
+>  };
+> +
+> +&icssg0_iep0 {
+> +	interrupt-parent = <&icssg0_intc>;
+> +	interrupts = <7 7 7>;
+> +	interrupt-names = "iep_cap_cmp";
+> +};
+> +
+> +&icssg0_iep1 {
+> +	interrupt-parent = <&icssg0_intc>;
+> +	interrupts = <56 8 8>;
+> +	interrupt-names = "iep_cap_cmp";
+> +};
+> 
 
+Reviewed-by: MD Danish Anwar <danishanwar@ti.com>
+
+-- 
+Thanks and Regards,
+Md Danish Anwar
