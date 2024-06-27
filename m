@@ -1,57 +1,57 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA591CAB8;
-	Thu, 27 Jun 2024 00:42:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D03B2139B5;
+	Thu, 27 Jun 2024 00:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719448933; cv=none; b=k3dE6vtuuY2cI1GHd68ATKV6BHf5Opjr2KbNiHKuGSjU2XKRhi97/tLXGoz3ZNzTzQ/q/wM8rt2TqDobVm3nEBKB6jVQqENug522FhtoWLdNML8eyvESK8WpThqr3eL57lyyrdJxOnO8mGQg0VWMTwN83wd2oNTXDy8zQ3QJ1jY=
+	t=1719448940; cv=none; b=XQXkPbR5qVK9VKJ4Z0EbhNAO0HH8rSB0RhYV4atRSrdZqZYBUCQxEkbgGORj0xN8FFCG+rDzZ+BhARPxvwUuRvk3nufs5jn5CGotsqEWTkVp01RQH9W3K1/KgRRx52Tar4SW/RteODg6hulHATZ6qtWrXELHwqE17CQ3jUEdKxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719448933; c=relaxed/simple;
-	bh=BtXiWse5a98o65/eZVQPb0b2C5Vyuh7oDFMyfxrKP6Q=;
+	s=arc-20240116; t=1719448940; c=relaxed/simple;
+	bh=M0U/WpQ9anDx+P6LnmY92tN825PYOEhUfi6QJstY/pU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PuIEjKot9iP3DUyNLSAKC/8Bkf9h3pK083wwNkR3eaxiar81UOAuU850djnaf6dR96V1TgmQ4u0ELfEqilQpMTJzY7MKwDMpgFC2r7ocvfdzzamlaVZAAgWZkfHgQRJrhfq3XKHVbo6+fubAJ1rjqWuIh8XiODkYAZDmWDWXE8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QOqb6FeS; arc=none smtp.client-ip=209.85.167.54
+	 MIME-Version; b=SOJaWUdj9/1Pydm6fSdjswuYYjl8oUGMpOV5y7fuKxGE1djFE3bj8JOVe9hpaqZ5hDWZ02Ld8RiQqHcsstxvohk6qDGWNsKm0axs3En3u/7LjvzDgGPARO39tUUyVh52W9sfDzVOKrF2LeF0RGvkWQqS2GLajYwDJXtlddUGb5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q9dd10ER; arc=none smtp.client-ip=209.85.208.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QOqb6FeS"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-52ce9ba0cedso5078493e87.2;
-        Wed, 26 Jun 2024 17:42:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q9dd10ER"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2e72224c395so84817471fa.3;
+        Wed, 26 Jun 2024 17:42:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719448928; x=1720053728; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719448936; x=1720053736; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sluU/GzQocR6QDFGF+L1FupcjsbjyxVkgp7GVqXJiqo=;
-        b=QOqb6FeSsB9VVKoHwRGIdp7gpmiYPFOOlYhO5uVGcyDIihRQFjcHUbROl51EE5gZvb
-         gA5VZiyN4R/sHagBkZG11G/De6O0nUc3WjAvgyI3rCgzzQFsDjQYWgOvYT8FM3PKxZr0
-         2sRMSOv76f674vaLIR3qC6gdKC644rGmw+I8AIOHuKwtpJdIoq/GYrEOKYgHeoCCeg4C
-         h/QmdEjPlu2ryi97qgIgVZgREQKwN/bcZ82Gb6D6Ch/3kkuD6rSeyA9dYfxWHA57nLDB
-         YuFtsub/qf2AO8U+q1iMU6sUuPdlrwCFOwk9j7SovgqgQuYePfYWLHlpipjNgi22jAdY
-         w9Cg==
+        bh=meRcVrx/K8/sJerdBBTH157b52QfYejAtE/mSM/skqM=;
+        b=Q9dd10ER29JAI+XqkDZao/2sXrqP317jrNKZCOI+8R59mLf6zLCPpirIpnN6IP1Vqm
+         kktJXyV9Ed++XU5ydqF62nzsc+9oBXbMlZgUxd6z1Q3vXazl7xWRfnuovQMfRCMqGIG7
+         dK+l2oRUb3faHr4bKDlE/COAyVGyHyRjnGNc9AVnPnc3pKJiybaCWSrbYzrPGW9H4dfX
+         gU9edz/CzxBHmDgqpyU67AtQDHX88ofaeby+UOX/Xm7vA8biDYtS8bWoIV2P+2KBLT+T
+         u/Tf8TDhHMTgfUIobRzdmUYq/h3EJf0nViMGDEDRVAOLZCluY0WuCUebkNII63yvxy3m
+         Pu0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719448928; x=1720053728;
+        d=1e100.net; s=20230601; t=1719448936; x=1720053736;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=sluU/GzQocR6QDFGF+L1FupcjsbjyxVkgp7GVqXJiqo=;
-        b=CORnU3JuWDwgiE7lIcc6dzuy0E2pDrw8WF7jQ2OA0DmwON6g+FhN+7sqhhCCZJuXZT
-         882N3/tWgxAWLVKtf6u0x4UaGAYmgIgSHYU0ic/rKiCkEx05hnKmnpFK9YMcncsJM67D
-         8aIeZaHNlu1lubK4OV0hcya8XRvmMRnP0PlFv6jwTX99nn3qIQioxP7iDXFhgiPBkNw8
-         laKr3CnEG78V4D9Dg8uKAW5VnqmmNeMN6kVIvUNvZMN3l9GQ23B+UnpGeOxnvQ4kItZu
-         EIl8iI33eZhFAAyMojUaX6r/BRIPqQzDGtfso2jl98hIP1pRSS4zdTBw4mtg9/Pgl89K
-         VcRw==
-X-Forwarded-Encrypted: i=1; AJvYcCVcrMwDYq2FLnzwBLf8/R3Whz8qYrNY8knGcmjQM1mmNNqTfmlbL00TGMLEY8PHIrUhEPa4hAwUzxPbL9LpUaLXLbciyhhEfhSGPezYLi93xWqGaRu76RfaFiku4W/JYEaiGIb1vC5VOGwP8JedC4DaTNWurTUKhPqsP07WBBzxNA==
-X-Gm-Message-State: AOJu0YzeLD6ieyNU925GIQEx49DdIdYL77tOyvKUe/nZiXWE5pwGFvSb
-	R1aPnUV+V5VMSF90STZ/YDQ3XUBAE6wWTl64bb9Y1kEQDP82EZRW
-X-Google-Smtp-Source: AGHT+IH/sFKlKiclYptlD5g6EMH+IfqUiJQ2oppdovVvXz/PCeqJa/8zBei5kHUoeLDCLgkh7vdY2A==
-X-Received: by 2002:a05:6512:3056:b0:52c:e10b:cb33 with SMTP id 2adb3069b0e04-52ce18523bbmr11334696e87.50.1719448927963;
-        Wed, 26 Jun 2024 17:42:07 -0700 (PDT)
+        bh=meRcVrx/K8/sJerdBBTH157b52QfYejAtE/mSM/skqM=;
+        b=Jjd7t+r5bagFqGuOLwjIytVqyXr4w10hqvgqln8GzrMWCtKyv9jmdjzYbs2s9UmBvz
+         Y7zGB7XQyrcK0Zvf+LakTt3T9ietHCnz4VM142g2b6sewd4l+plsWGLIU+DLLgGnadTm
+         tPXr6WWn6LFmHobOXerwIVDnaDgcNgY0Bt75H93wFEg8a1bLvrpTDu5orueM1z7v2H7k
+         whcEKlJ8js2TxkckwStwST/qzBW7+XiDHk+/4PSRHqHHf1/+yjDcfZ9b5n0mQ+VOjqPo
+         cyqz8ufz5jHDglC7nohK/Q2pAHCmBpaaOdthT9TPhBjthEkAznE3yIADVFOGUnfeXBpk
+         THNw==
+X-Forwarded-Encrypted: i=1; AJvYcCXRVpXyK17APG6RMf6VVFAcjtaoTgbDUdE86GKj8Av3+nYH0lbjyiPVjhtEykeEKK0akoZbgaWm/birIQNJgdjJikwj7GEM1u7usXTTrojlHyb+jD3OyekULdcZAFwaVwO8Y1LlbtHvUrguj4GurSeqKQMaHbJQSwtj/LL+3gf5Yg==
+X-Gm-Message-State: AOJu0Yz7kuRR1KNKpNJ6PLMWZylCBRu5SDPOjU3Le75uEGjmdZWYUbvc
+	MXUDW5KSvTWStA/LWiQAKp2PzTYz+T27lbsTUddU4/Rw9G/U2sXv
+X-Google-Smtp-Source: AGHT+IGn7wSsgabnJX4LHqU2k9E0zw7bvYkA0kaErRgC3cSC1Sz3JRD4SdluOe4K7TmTCVGfdo85Yw==
+X-Received: by 2002:a05:651c:154e:b0:2ee:4ab4:f752 with SMTP id 38308e7fff4ca-2ee4ab4f7damr990181fa.49.1719448936422;
+        Wed, 26 Jun 2024 17:42:16 -0700 (PDT)
 Received: from localhost ([89.113.147.248])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52e712a764fsm20196e87.25.2024.06.26.17.42.07
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ee4a34f68csm491251fa.29.2024.06.26.17.42.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 17:42:07 -0700 (PDT)
+        Wed, 26 Jun 2024 17:42:15 -0700 (PDT)
 From: Serge Semin <fancer.lancer@gmail.com>
 To: Andrew Lunn <andrew@lunn.ch>,
 	Heiner Kallweit <hkallweit1@gmail.com>,
@@ -68,9 +68,7 @@ To: Andrew Lunn <andrew@lunn.ch>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>
+	Paolo Abeni <pabeni@redhat.com>
 Cc: Serge Semin <fancer.lancer@gmail.com>,
 	Sagar Cheluvegowda <quic_scheluve@quicinc.com>,
 	Abhishek Chauhan <quic_abchauha@quicinc.com>,
@@ -82,9 +80,9 @@ Cc: Serge Semin <fancer.lancer@gmail.com>,
 	netdev@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v3 06/10] dt-bindings: net: Add Synopsys DW xPCS bindings
-Date: Thu, 27 Jun 2024 03:41:26 +0300
-Message-ID: <20240627004142.8106-7-fancer.lancer@gmail.com>
+Subject: [PATCH net-next v3 08/10] net: pcs: xpcs: Add fwnode-based descriptor creation method
+Date: Thu, 27 Jun 2024 03:41:28 +0300
+Message-ID: <20240627004142.8106-9-fancer.lancer@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240627004142.8106-1-fancer.lancer@gmail.com>
 References: <20240627004142.8106-1-fancer.lancer@gmail.com>
@@ -96,187 +94,135 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Synopsys DesignWare XPCS IP-core is a Physical Coding Sublayer (PCS) layer
-providing an interface between the Media Access Control (MAC) and Physical
-Medium Attachment Sublayer (PMA) through a Media independent interface.
-From software point of view it exposes IEEE std. Clause 45 CSR space and
-can be accessible either by MDIO or MCI/APB3 bus interfaces. In the former
-case the PCS device is supposed to be defined under the respective MDIO
-bus DT-node. In the later case the DW xPCS will be just a normal IO
-memory-mapped device.
+It's now possible to have the DW XPCS device defined as a standard
+platform device for instance in the platform DT-file. Although that
+functionality is useless unless there is a way to have the device found by
+the client drivers (STMMAC/DW *MAC, NXP SJA1105 Eth Switch, etc). Provide
+such ability by means of the xpcs_create_fwnode() method. It needs to be
+called with the device DW XPCS fwnode instance passed. That node will be
+then used to find the MDIO-device instance in order to create the DW XPCS
+descriptor.
 
-Besides of that DW XPCS DT-nodes can have an interrupt signal and clock
-source properties specified. The former one indicates the Clause 73/37
-auto-negotiation events like: negotiation page received, AN is completed
-or incompatible link partner. The clock DT-properties can describe up to
-three clock sources: peripheral bus clock source, internal reference clock
-and the externally connected reference clock.
-
-Finally the DW XPCS IP-core can be optionally synthesized with a
-vendor-specific interface connected to the Synopsys PMA (also called
-DesignWare Consumer/Enterprise PHY). Alas that isn't auto-detectable in a
-portable way. So if the DW XPCS device has the respective PMA attached
-then it should be reflected in the DT-node compatible string so the driver
-would be aware of the PMA-specific device capabilities (mainly connected
-with CSRs available for the fine-tunings).
+Note the method semantics and name is similar to what has been recently
+introduced in the Lynx PCS driver.
 
 Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 
 ---
 
 Changelog v2:
-- Drop the Management Interface DT-node bindings. DW xPCS with MCI/APB3
-  interface is just a normal memory-mapped device.
+- Use the function name and semantics similar to the Lynx PCS driver.
+- Add kdoc describing the DW XPCS create functions.
 
 Changelog v3:
-- Implement the ordered clocks constraint. (@Rob)
+- Add the "@interface" argument kdoc to the xpcs_create_mdiodev()
+  function. (@Simon)
+- Fix the "@fwnode" argument name in the xpcs_create_fwnode() method kdoc.
+  (@Simon)
+- Move the return value descriptions to the "Return:" section of the
+  xpcs_create_mdiodev() and xpcs_create_fwnode() kdoc. (@Simon)
 ---
- .../bindings/net/pcs/snps,dw-xpcs.yaml        | 136 ++++++++++++++++++
- 1 file changed, 136 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/pcs/snps,dw-xpcs.yaml
+ drivers/net/pcs/pcs-xpcs.c   | 50 ++++++++++++++++++++++++++++++++++++
+ include/linux/pcs/pcs-xpcs.h |  3 +++
+ 2 files changed, 53 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/pcs/snps,dw-xpcs.yaml b/Documentation/devicetree/bindings/net/pcs/snps,dw-xpcs.yaml
-new file mode 100644
-index 000000000000..d0f2c2bfbf35
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/pcs/snps,dw-xpcs.yaml
-@@ -0,0 +1,136 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/pcs/snps,dw-xpcs.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/net/pcs/pcs-xpcs.c b/drivers/net/pcs/pcs-xpcs.c
+index 8f7e3af64fcc..94f2f95ef425 100644
+--- a/drivers/net/pcs/pcs-xpcs.c
++++ b/drivers/net/pcs/pcs-xpcs.c
+@@ -10,7 +10,9 @@
+ #include <linux/delay.h>
+ #include <linux/pcs/pcs-xpcs.h>
+ #include <linux/mdio.h>
++#include <linux/phy.h>
+ #include <linux/phylink.h>
++#include <linux/property.h>
+ 
+ #include "pcs-xpcs.h"
+ 
+@@ -1505,6 +1507,16 @@ static struct dw_xpcs *xpcs_create(struct mdio_device *mdiodev,
+ 	return ERR_PTR(ret);
+ }
+ 
++/**
++ * xpcs_create_mdiodev() - create a DW xPCS instance with the MDIO @addr
++ * @bus: pointer to the MDIO-bus descriptor for the device to be looked at
++ * @addr: device MDIO-bus ID
++ * @interface: requested PHY interface
++ *
++ * Return: a pointer to the DW XPCS handle if successful, otherwise -ENODEV if
++ * the PCS device couldn't be found on the bus and other negative errno related
++ * to the data allocation and MDIO-bus communications.
++ */
+ struct dw_xpcs *xpcs_create_mdiodev(struct mii_bus *bus, int addr,
+ 				    phy_interface_t interface)
+ {
+@@ -1529,6 +1541,44 @@ struct dw_xpcs *xpcs_create_mdiodev(struct mii_bus *bus, int addr,
+ }
+ EXPORT_SYMBOL_GPL(xpcs_create_mdiodev);
+ 
++/**
++ * xpcs_create_fwnode() - Create a DW xPCS instance from @fwnode
++ * @fwnode: fwnode handle poining to the DW XPCS device
++ * @interface: requested PHY interface
++ *
++ * Return: a pointer to the DW XPCS handle if successful, otherwise -ENODEV if
++ * the fwnode device is unavailable or the PCS device couldn't be found on the
++ * bus, -EPROBE_DEFER if the respective MDIO-device instance couldn't be found,
++ * other negative errno related to the data allocations and MDIO-bus
++ * communications.
++ */
++struct dw_xpcs *xpcs_create_fwnode(struct fwnode_handle *fwnode,
++				   phy_interface_t interface)
++{
++	struct mdio_device *mdiodev;
++	struct dw_xpcs *xpcs;
 +
-+title: Synopsys DesignWare Ethernet PCS
++	if (!fwnode_device_is_available(fwnode))
++		return ERR_PTR(-ENODEV);
 +
-+maintainers:
-+  - Serge Semin <fancer.lancer@gmail.com>
++	mdiodev = fwnode_mdio_find_device(fwnode);
++	if (!mdiodev)
++		return ERR_PTR(-EPROBE_DEFER);
 +
-+description:
-+  Synopsys DesignWare Ethernet Physical Coding Sublayer provides an interface
-+  between Media Access Control and Physical Medium Attachment Sublayer through
-+  the Media Independent Interface (XGMII, USXGMII, XLGMII, GMII, etc)
-+  controlled by means of the IEEE std. Clause 45 registers set. The PCS can be
-+  optionally synthesized with a vendor-specific interface connected to
-+  Synopsys PMA (also called DesignWare Consumer/Enterprise PHY) although in
-+  general it can be used to communicate with any compatible PHY.
++	xpcs = xpcs_create(mdiodev, interface);
 +
-+  The PCS CSRs can be accessible either over the Ethernet MDIO bus or directly
-+  by means of the APB3/MCI interfaces. In the later case the XPCS can be mapped
-+  right to the system IO memory space.
++	/* xpcs_create() has taken a refcount on the mdiodev if it was
++	 * successful. If xpcs_create() fails, this will free the mdio
++	 * device here. In any case, we don't need to hold our reference
++	 * anymore, and putting it here will allow mdio_device_put() in
++	 * xpcs_destroy() to automatically free the mdio device.
++	 */
++	mdio_device_put(mdiodev);
 +
-+properties:
-+  compatible:
-+    oneOf:
-+      - description: Synopsys DesignWare XPCS with none or unknown PMA
-+        const: snps,dw-xpcs
-+      - description: Synopsys DesignWare XPCS with Consumer Gen1 3G PMA
-+        const: snps,dw-xpcs-gen1-3g
-+      - description: Synopsys DesignWare XPCS with Consumer Gen2 3G PMA
-+        const: snps,dw-xpcs-gen2-3g
-+      - description: Synopsys DesignWare XPCS with Consumer Gen2 6G PMA
-+        const: snps,dw-xpcs-gen2-6g
-+      - description: Synopsys DesignWare XPCS with Consumer Gen4 3G PMA
-+        const: snps,dw-xpcs-gen4-3g
-+      - description: Synopsys DesignWare XPCS with Consumer Gen4 6G PMA
-+        const: snps,dw-xpcs-gen4-6g
-+      - description: Synopsys DesignWare XPCS with Consumer Gen5 10G PMA
-+        const: snps,dw-xpcs-gen5-10g
-+      - description: Synopsys DesignWare XPCS with Consumer Gen5 12G PMA
-+        const: snps,dw-xpcs-gen5-12g
++	return xpcs;
++}
++EXPORT_SYMBOL_GPL(xpcs_create_fwnode);
 +
-+  reg:
-+    items:
-+      - description:
-+          In case of the MDIO management interface this just a 5-bits ID
-+          of the MDIO bus device. If DW XPCS CSRs space is accessed over the
-+          MCI or APB3 management interfaces, then the space mapping can be
-+          either 'direct' or 'indirect'. In the former case all Clause 45
-+          registers are contiguously mapped within the address space
-+          MMD '[20:16]', Reg '[15:0]'. In the later case the space is divided
-+          to the multiple 256 register sets. There is a special viewport CSR
-+          which is responsible for the set selection. The upper part of
-+          the CSR address MMD+REG[20:8] is supposed to be written in there
-+          so the corresponding subset would be mapped to the lowest 255 CSRs.
-+
-+  reg-names:
-+    items:
-+      - enum: [ direct, indirect ]
-+
-+  reg-io-width:
-+    description:
-+      The way the CSRs are mapped to the memory is platform depended. Since
-+      each Clause 45 CSR is of 16-bits wide the access instructions must be
-+      two bytes aligned at least.
-+    default: 2
-+    enum: [ 2, 4 ]
-+
-+  interrupts:
-+    description:
-+      System interface interrupt output (sbd_intr_o) indicating Clause 73/37
-+      auto-negotiation events':' Page received, AN is completed or incompatible
-+      link partner.
-+    maxItems: 1
-+
-+  clocks:
-+    description:
-+      Both MCI and APB3 interfaces are supposed to be equipped with a clock
-+      source connected via the clk_csr_i line.
-+
-+      PCS/PMA layer can be clocked by an internal reference clock source
-+      (phyN_core_refclk) or by an externally connected (phyN_pad_refclk) clock
-+      generator. Both clocks can be supplied at a time.
-+    minItems: 1
-+    maxItems: 3
-+
-+  clock-names:
-+    oneOf:
-+      - minItems: 1
-+        items:
-+          - enum: [core, pad]
-+          - const: pad
-+      - minItems: 1
-+        items:
-+          - const: pclk
-+          - enum: [core, pad]
-+          - const: pad
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    ethernet-pcs@1f05d000 {
-+      compatible = "snps,dw-xpcs";
-+      reg = <0x1f05d000 0x1000>;
-+      reg-names = "indirect";
-+
-+      reg-io-width = <4>;
-+
-+      interrupts = <79 IRQ_TYPE_LEVEL_HIGH>;
-+
-+      clocks = <&ccu_pclk>, <&ccu_core>, <&ccu_pad>;
-+      clock-names = "pclk", "core", "pad";
-+    };
-+  - |
-+    mdio-bus {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      ethernet-pcs@0 {
-+        compatible = "snps,dw-xpcs";
-+        reg = <0>;
-+
-+        clocks = <&ccu_core>, <&ccu_pad>;
-+        clock-names = "core", "pad";
-+      };
-+    };
-+...
+ void xpcs_destroy(struct dw_xpcs *xpcs)
+ {
+ 	if (!xpcs)
+diff --git a/include/linux/pcs/pcs-xpcs.h b/include/linux/pcs/pcs-xpcs.h
+index 813be644647f..b4a4eb6c8866 100644
+--- a/include/linux/pcs/pcs-xpcs.h
++++ b/include/linux/pcs/pcs-xpcs.h
+@@ -8,6 +8,7 @@
+ #define __LINUX_PCS_XPCS_H
+ 
+ #include <linux/clk.h>
++#include <linux/fwnode.h>
+ #include <linux/mdio.h>
+ #include <linux/phy.h>
+ #include <linux/phylink.h>
+@@ -72,6 +73,8 @@ int xpcs_config_eee(struct dw_xpcs *xpcs, int mult_fact_100ns,
+ 		    int enable);
+ struct dw_xpcs *xpcs_create_mdiodev(struct mii_bus *bus, int addr,
+ 				    phy_interface_t interface);
++struct dw_xpcs *xpcs_create_fwnode(struct fwnode_handle *fwnode,
++				   phy_interface_t interface);
+ void xpcs_destroy(struct dw_xpcs *xpcs);
+ 
+ #endif /* __LINUX_PCS_XPCS_H */
 -- 
 2.43.0
 
