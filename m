@@ -1,194 +1,171 @@
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2077.outbound.protection.outlook.com [40.107.21.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5A933FD;
-	Thu, 27 Jun 2024 20:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719519461; cv=none; b=OHIBlrBchw5QAeQGISlZAN601eEqmBm9pKvIcx0RufkPfClAeAZrDP5pNmrJIo9M2BKkpniXIk+C0cB/6o7FND/P0L4Yy5kMxIMBDZFiF0vH+nHstwE5dVlsUhmrzKskt1Uyk1M3LFb3GjorSThJ4gedZOYXS4+vQ39upU3XsqI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719519461; c=relaxed/simple;
-	bh=FChDSKktOd/AYanIA7EevJUZD2WcFV4/Er++/7flXhQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YSXusQFJxudx3Dvl4oweWVfSwvFyKllv9Qlujj4gSMliDrOLv6eOFUX10agPOLlnPw1DktlNjTQ8iYHCLToUkkZ4y60Nm3H/iWqxvZxAancK4S4IQuAr2kBKV3WqIju2IJ1IiUpMkwzZYWUk+MgFYwnp0fonOycPTcvxecU3h6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GAAtSPj6; arc=none smtp.client-ip=209.85.222.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7187619D098;
+	Thu, 27 Jun 2024 20:22:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719519734; cv=fail; b=Ng4Uod0r12Dfqr+YdKjlnVKf24u/2MhDkNEGidGG/jHhh4bwTP/jeZmPiRdq/c/0SYTWKlQIu50GxxFrg6IZIjLtmfKmR7/RntbWqmFvMpEXukh3jGrC5cP23+JZZvlvP+ICjMRZAx0jMjXleQw7XCCYwf9tsZhL0qVB+ZBqV3A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719519734; c=relaxed/simple;
+	bh=57ODplZgXwK1ub+nXMsbsM1eOlex1U8NeJHLMoFm//Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=VUbnOhRJI2SNI3akiQLSgzmyTSi7h/Yvm/vy5Xozb9pC7i0EYnWyrC+tKhbq9p+PfiQPsEi/aVJzfx1SKXmhdXmdFp2to4FUsPWzhcWLGq0dDi26V3hOX6HrZJA8xiiIyKr3ZqTSiVXxWz3MHx0ARVrUX0aElOQE1W20IRrds70=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=E/RDcrEo; arc=fail smtp.client-ip=40.107.21.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GAAtSPj6"
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-80f6521eeddso1907639241.0;
-        Thu, 27 Jun 2024 13:17:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719519458; x=1720124258; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SfWTtRmgo1E8I0TtuekVypKcxx4UC0A4xdyehBHx0NE=;
-        b=GAAtSPj67kHLnW/X6kO0l7H1MJB9dBYL+2uIeub3S7tmQaZgEyqU+CHEnBoF4s6Dmr
-         H8qRmK++yXFtcBf4L/FWGoibASdlUqsA2F8HnZ0oXfq1M9sf703+uDqAXUmyA6P0HuhB
-         J0fZTsGLfS0QkgNiX4dbVAji7outloLXgnR5azLkFn644el+L9ziKXm3UKTTvys7qr6p
-         25n124vgCGXMQwZmDmpwb7otzvBcxmM9Bj4vvqfaPirBOIJVzGT50iunWvN9R46suU4j
-         HhN2Y76gQQOHm5+/E4lrS/57JUm46NWhFcE3OKb7zy48AqzLrWrnzPz1VQGd/5qRF0lp
-         udcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719519458; x=1720124258;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SfWTtRmgo1E8I0TtuekVypKcxx4UC0A4xdyehBHx0NE=;
-        b=ffZVDjHqICPAMqrzZKEXmtFBUonSwcavMlsLZUp1YzdPZ9wSWUJfBcKNXMy9ok/1jg
-         H0aj3Iukw3G676tCK+RgAL8uydy9wF2a2QTg9X3sy5zo6ysZ01vVz5OC7nZyEo2ur9Ax
-         NIQb+R7wxTEJnYgnG7HfgnNJtWKvsgcxYcBv/IHp3WvpV46CQY8AmgJ+E6iGAvG/0+Gv
-         97ZD6QXfqsPYtdSQtpxduTC20JZE49uV7LB17Vt5aYkRDUG8n994jupYdT8zuGLXVmOC
-         QXsel+EOW5gHqTCt+jIFyU9vJ/9dAx2JMWnAH+I/R+px7TYilsg+5PcfOKhFgkz8ESBp
-         9Tyg==
-X-Forwarded-Encrypted: i=1; AJvYcCW/41FEZVUmmC9wxZFSzpwcY3j4FH2vdzF/PSADULu9/dc2MeB+Z150915sYebanWAgSfr0clvZ67pLmtpWwghMXIzMSu5WRT0ursrB6MyhSQbcuUrKfoRvYlZXX0ryNcjNnbjmKYUqwOam6SN23OZ+47NHRBzMjiNz6EIjvR26zGbOVQ==
-X-Gm-Message-State: AOJu0YyuDFFuyxAy5RjAUFbngYhz2vU+Mu0uFTzoxbKdAj0FPBFHz+hJ
-	3n+ngbajbB9Zf2jcJDZCWB1hjUqcVsfWsDA7lOQk+7WOw1jKP/f3oM1R4A==
-X-Google-Smtp-Source: AGHT+IHR0tAYDBylwArb4Spu8TCeyDyzv0vW6zgLAt6R2VTvPr0551huRj1vxUJvSv/B9E8w/0zdIw==
-X-Received: by 2002:a05:6122:4592:b0:4d4:21cc:5f4f with SMTP id 71dfb90a1353d-4ef6a73950emr12317938e0c.11.1719519457919;
-        Thu, 27 Jun 2024 13:17:37 -0700 (PDT)
-Received: from localhost (fwdproxy-nao-115.fbsv.net. [2a03:2880:23ff:73::face:b00c])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b59e609b9asm1691706d6.106.2024.06.27.13.17.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 13:17:37 -0700 (PDT)
-From: Nhat Pham <nphamcs@gmail.com>
-To: akpm@linux-foundation.org
-Cc: hannes@cmpxchg.org,
-	kernel-team@meta.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	willy@infradead.org,
-	david@redhat.com,
-	ryan.roberts@arm.com,
-	ying.huang@intel.com,
-	viro@zeniv.linux.org.uk,
-	kasong@tencent.com,
-	yosryahmed@google.com,
-	shakeel.butt@linux.dev,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH] cachestat: do not flush stats in recency check
-Date: Thu, 27 Jun 2024 13:17:37 -0700
-Message-ID: <20240627201737.3506959-1-nphamcs@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000f71227061bdf97e0@google.com>
-References: <000000000000f71227061bdf97e0@google.com>
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="E/RDcrEo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=knSX65UMmEf+KRrxAJ1GOaKRX5HcOWJel3StWptDDGlf6p4rtLCmfpB74ZdGK2BFbESJPWPT7uYWAhxUOO63wEyVDR4yt+1eSARxluXWgKmAjA8cJlmZZfU0nP6e6aEJzvyW0QtHVL0c7IppzsFkhYL964QomaaFAXdfNXOlW3ma9kHp+BvQYsz2AqGSrrj2xu3xyI/7A+XeY2q2+8jVun49ei4UOE7Kj+YGROWjknOBF19qKMw+euCGbecP8k+YtQtpnFISeWga5SJZCy5iOWiVI36nnCgzzALWRFlTcaSniEG5M/2MXwRYKcD+T3yhjEKBfq9HxOPLAck4y0j7Dw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ICKQg+IySjDYG9GxaSSijFXE2DRET/5j+1XjskO95Cw=;
+ b=SjtpCVOB74Zc7VosQeTffZ7zMvcOpReHQgN9lioaayF6dXtQNLYxKi9+nhpa9/1lEMFVPmyB3HWOEqT6UYbB3tJeXuKKJ0d/wjd4sUNvqwaCM9NeY35hGha+GufJhd1IpQfqG78HakI2oFCWydMDZFaHlDJwlYfqN5FCX39rkb0TvOD74aKD0f0FCEt5c1mbkS5uXeLnlMIQDWLcEcqSO0WOR+VpN2tg2g0/PPgV6tCb7Lfsn6ZVdA+p1mKneP+F0yT+JRR799+COM3/OwY7i0sWBhTTwKQWXJlbDcLRNUQZm6yYlKaLlqnnqlXiUp7/rqwmGR3N8IIjIZhAFq3Ukg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ICKQg+IySjDYG9GxaSSijFXE2DRET/5j+1XjskO95Cw=;
+ b=E/RDcrEoCEwgel9Mri+8Wn9pRDKh78tKafaGJpR6fDPCc+Q4XzH3zZQTtKWUh7VttTdsTizVSSVzqjJVrVH2STCI8/LKOlLmdd1I20Qtjuh5BM5X+Smg/GJlGmE5m1z99AKd4OpGlBcLm5KGeWgRNvZ/WpCaP51xORjzbg8VcdQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DU2PR04MB8824.eurprd04.prod.outlook.com (2603:10a6:10:2e3::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.35; Thu, 27 Jun
+ 2024 20:22:09 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7698.025; Thu, 27 Jun 2024
+ 20:22:09 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM),
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-kernel@vger.kernel.org (open list)
+Cc: imx@lists.linux.dev
+Subject: [PATCH 1/1] dt-bindings: gpio: fsl,qoriq-gpio: add common property gpio-line-names
+Date: Thu, 27 Jun 2024 16:21:51 -0400
+Message-Id: <20240627202151.456812-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR13CA0043.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c2::18) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DU2PR04MB8824:EE_
+X-MS-Office365-Filtering-Correlation-Id: d916b432-153d-488d-3bc8-08dc96e6d1f5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?l0K2wpByLZ1qmOIIiWtMLEZltPA8t+5Qpqd2gZY86kWDyFY8gwxiv5o4ZEWi?=
+ =?us-ascii?Q?pmhyfwQMZOGX3BEpv/1qOqMR0zZNa92wJ74w/0r6XBkwL97merplH+YAaDX4?=
+ =?us-ascii?Q?16QR2HWsrzEjOeVX5LzI91HZNFXXGHMuVwJ46j5yhKu+4vmyqDoOnJLrxUpD?=
+ =?us-ascii?Q?HgeOmk9e0s0p0U5/vHO5PM5wYIXCauGKpJqLaLBztyQtrVLrQdlWFiCPyvH2?=
+ =?us-ascii?Q?Pa/xVSPOixrhF4XTanZ47nR1cYumsxqD7m0SHQQAEV/wCwSIEVvQJSzIMyW1?=
+ =?us-ascii?Q?oiVooXja6FBVB52RcDIs0nWsLDtv8PAlsM7OUvU/zExrHewsdCwNA6nCrPLN?=
+ =?us-ascii?Q?UqWfFk7q3K8SLFjqDMRHCtLE/vUVGBwWE1lvg6OyCD9dH4KU+C16+bfOmHJT?=
+ =?us-ascii?Q?lekjjqzXCgFtszPselXDazOzStzTY7Ri9l3my/+uUBiEmvgmnSDF3ZX8h4ve?=
+ =?us-ascii?Q?iRVkolS59evOY5VCkYO1+i0LEbyR2GhegajA6ySp//9ZVijpOsp29uYP2Y6F?=
+ =?us-ascii?Q?6HXbymNZcucu9QGcRe6XXVpHFzCTnAa14I0tv8beI5gUTGRDikwLdK/+V4RU?=
+ =?us-ascii?Q?4+XPWCXr5EYFZLGrki1dk0Y21Tlv8gnmqsFe2/dDyhqzF3HQBkslTgt2iVD/?=
+ =?us-ascii?Q?01ViS5JGwQH98ZyFACA28EWv7BBwWfATF8+z258uXln+eYy7mbc0AW5hKug3?=
+ =?us-ascii?Q?K1fi2VAkEqW+5WYp86t4MLkRAmC6Hdcue5oSMIBGg86OD0W+qcp8UqVWP2PC?=
+ =?us-ascii?Q?VL2VHtpziMbXZuME8/tUTur6O1et+2jqKtYgVUi20M+BGhDiG8nZTx71CJ2E?=
+ =?us-ascii?Q?R0vi9Jq4PqfSNiaTK4Zz4MI0adTW/9VX+QwCYgJimFHqoUl6lckmJjWBQhHV?=
+ =?us-ascii?Q?D0yIHo6jSqMkok2+kz9CJZuS4J+WANf480B2H4QepF99+pbOmjLV65/fpuYo?=
+ =?us-ascii?Q?qfxTaPYB68JfGyolWduEEEqLsKlnJhX38VW03zKXj/R9+/LwzE6wAsFmHN6x?=
+ =?us-ascii?Q?cBdNrFxDtCu+ZUAFkM3rm/9G6mizGcficG/yX4bOziXSpeWbh6B5MB9Vsfj8?=
+ =?us-ascii?Q?O7N1RVkgJhS//ADu9g87lQlH+ede0BuDliwdQ++LuxZaomjsLsB3MfUhwKBE?=
+ =?us-ascii?Q?kTZ1Ts/nJ4RRd3oX3r+FNYR8VAqRl8mBlT199V0U/YGxZyc9zS7p6m1o6izy?=
+ =?us-ascii?Q?QZ+Fkp+0jTlH6+urQX+bMEoXjHDckDDsODBwbTkI8fYAb3+EfKe94Pl4Xexg?=
+ =?us-ascii?Q?81ixJZpluIqNKp1B+1KKDwHmlhk90y2jdVBNfZ37KgHnBBhxEaw07muQPE7G?=
+ =?us-ascii?Q?pf2bZTKEYa+V0FN7a8xgFG8PsVxnDhsxl6evLNwA0pS8s2hMsUIX3zTOr7Q2?=
+ =?us-ascii?Q?mrAI0So=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?A70bR9ZrOIab5CtW7wFE9h51rdhhyRR7zj3qzfy2xdmsarkr3WM/HWkHaiGR?=
+ =?us-ascii?Q?Tb6/S3epWJ74IcScTG+DMly9GqXvjholHmhXotLam3CS7ORihMzuIA7TTgII?=
+ =?us-ascii?Q?JaPYdjbsZBsgEkZPWeDsNjHfjs0qIM6oG0mx72FEEnR/uVZT7dAxvwq43Fgj?=
+ =?us-ascii?Q?7p3PHPNH+d+fNURHWaIT7sDjao4vnbz/3j6O5UCXFexa2WbtAcfxcGGh23ao?=
+ =?us-ascii?Q?d7cf9KPfKZ6reDVV/Rcl6hJk2x4ZOeZwJLqgvUKy9+TiM4qurvRDKcaSKRJm?=
+ =?us-ascii?Q?fRCYQ4lg5yzVIIaMknWOdu63LLLemxm/IrP4zs01OoLhVYCc1h/VTuLRoU0b?=
+ =?us-ascii?Q?kRAdx7JVrQ/DgXr4tA22PT5/3lObbcLnZ5VGysfnV/19eAiZ41cWgyCeGmhZ?=
+ =?us-ascii?Q?iJV7jlFQbmlwGWATBUVl79NUad0+4PeyGIJLf7gBcq7em7WY7S20ipK2h9ej?=
+ =?us-ascii?Q?qjX4ZSjfKy5sHTZ1jzxyoPV5R/CI7er6YoFZFjMWB17Sr+IjKCRkbuIehCgV?=
+ =?us-ascii?Q?Cedk4s/HtoCTWOp1oo8fKMGLBPrcmZ+qODPATP2jMwyvMOz1SKk3OPVRs3t+?=
+ =?us-ascii?Q?ow/nEmbyI/M5AcypocKTxPA/xqnsi7089sq7jnRlmGlnDMZqfJVQf23Ue/gK?=
+ =?us-ascii?Q?MDrs1axespk0X4xXEtBEUchNT5Z72lQHMSFHRXvsYvYSsvd56vtYcQqW8PzZ?=
+ =?us-ascii?Q?Rbop66M0eGJ/3Z3PQcpGfVSRB9OpdE47Vp+EsxofabAzcK52DV/fMfVPJk6+?=
+ =?us-ascii?Q?y82JKzJn7KcSgD5I720BSvoqX8soZhd26AWC91pE9FihFOf4paRZmdGoydWv?=
+ =?us-ascii?Q?jryhTqMPsVrDn1TUSLtoi4g5ZqvnO3SKT1BlvbgN9Wrp+AcdqeINxeuw7UIV?=
+ =?us-ascii?Q?Xvje4q99Om6xpKP5xp8s6hyzXQDb7p5E9QngccuJmrqjXTV04xOclcEXpIKU?=
+ =?us-ascii?Q?CmUKwgecMnCYej57G/assh6Tk4t0ucakXEUADHy2iq26J9PioH8a6PKZsIda?=
+ =?us-ascii?Q?H8Kls7+t5WNLuyAkqQ/0I3eSsT0LFLFSR4DdfitZ7MHPxiBHUYIhyz9ep+Ln?=
+ =?us-ascii?Q?bBx5zak7+l/GGL+KdPk8RWjJhu6TZAANVzda83p+jhe4FyW1fWyOhgpEf5gO?=
+ =?us-ascii?Q?EPs/VVfnIgu7yhOIm3cn5Nd1Y0IIkvxE141EKanlohUw5ge8+lntyZyNxvUU?=
+ =?us-ascii?Q?cOKAHBivoXMjuN/GzH5Jp60b5yNW6i56m63bqoqyXb3+dc66/vJ3TOXVneVQ?=
+ =?us-ascii?Q?qf5Eeh27QlfXcTDBlibgKKDMUCz5HcyrNLi38NJzZ6nHfePY02P0hGWuVw53?=
+ =?us-ascii?Q?ZivflzII+tdB96qoNF/v91IHtFofbpLqsU6wfCvTnp9qSnOYxOZ/wVMeCOtr?=
+ =?us-ascii?Q?Yc/3quX5N8vRrLWqqTNruJrHVwbLNH+ddZvF/NCNF53b5922bLuS58fEXgxv?=
+ =?us-ascii?Q?o9pTxj3BuzXwdAh99kKWhJ3JKyqCoqrWqbK6OQ1cFRMfmY/A2ivwim/60GIA?=
+ =?us-ascii?Q?tp+GdpAOeqqrIOJQ7PHEpae8Zj/4DuTz8Yx8eUarETDzHvcENuSmVAHg4+E/?=
+ =?us-ascii?Q?OHDcsMu5Wa1iCuTmcHc=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d916b432-153d-488d-3bc8-08dc96e6d1f5
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2024 20:22:09.1682
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +pv2aIA8djz5XhiCC3BBO/HPFCT9NZ8QQ+d0ih7PyaxEocyMdl9k+00+fTTwecrY7vynwJRb/swsZO2VNTKYvw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8824
 
-syzbot detects that cachestat() is flushing stats, which can sleep, in
-its RCU read section (see [1]). This is done in the
-workingset_test_recent() step (which checks if the folio's eviction is
-recent).
+Add common gpio-line-names property for fsl,qoriq-gpio to fix below
+warning.
 
-Move the stat flushing step to before the RCU read section of cachestat,
-and skip stat flushing during the recency check.
+arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dtb: gpio@2300000: 'gpio-line-names' does not match any of the regexes: 'pinctrl-[0-9]+'
+        from schema $id: http://devicetree.org/schemas/gpio/fsl,qoriq-gpio.yaml
 
-[1]: https://lore.kernel.org/cgroups/000000000000f71227061bdf97e0@google.com/
-
-Reported-by: syzbot+b7f13b2d0cc156edf61a@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/cgroups/000000000000f71227061bdf97e0@google.com/
-Debugged-by: Johannes Weiner <hannes@cmpxchg.org>
-Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
-Signed-off-by: Nhat Pham <nphamcs@gmail.com>
-Fixes: b00684722262 ("mm: workingset: move the stats flush into workingset_test_recent()")
-Cc: stable@vger.kernel.org # v6.8+
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- include/linux/swap.h |  3 ++-
- mm/filemap.c         |  5 ++++-
- mm/workingset.c      | 14 +++++++++++---
- 3 files changed, 17 insertions(+), 5 deletions(-)
+ Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index bd450023b9a4..e685e93ba354 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -354,7 +354,8 @@ static inline swp_entry_t page_swap_entry(struct page *page)
- }
+diff --git a/Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml
+index d5f056b35d805..84fd82291ee40 100644
+--- a/Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml
++++ b/Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml
+@@ -45,6 +45,10 @@ properties:
+   "#interrupt-cells":
+     const: 2
  
- /* linux/mm/workingset.c */
--bool workingset_test_recent(void *shadow, bool file, bool *workingset);
-+bool workingset_test_recent(void *shadow, bool file, bool *workingset,
-+				bool flush);
- void workingset_age_nonresident(struct lruvec *lruvec, unsigned long nr_pages);
- void *workingset_eviction(struct folio *folio, struct mem_cgroup *target_memcg);
- void workingset_refault(struct folio *folio, void *shadow);
-diff --git a/mm/filemap.c b/mm/filemap.c
-index fedefb10d947..298485d4b992 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -4248,6 +4248,9 @@ static void filemap_cachestat(struct address_space *mapping,
- 	XA_STATE(xas, &mapping->i_pages, first_index);
- 	struct folio *folio;
- 
-+	/* Flush stats (and potentially sleep) outside the RCU read section. */
-+	mem_cgroup_flush_stats_ratelimited(NULL);
++  gpio-line-names:
++    minItems: 1
++    maxItems: 32
 +
- 	rcu_read_lock();
- 	xas_for_each(&xas, folio, last_index) {
- 		int order;
-@@ -4311,7 +4314,7 @@ static void filemap_cachestat(struct address_space *mapping,
- 					goto resched;
- 			}
- #endif
--			if (workingset_test_recent(shadow, true, &workingset))
-+			if (workingset_test_recent(shadow, true, &workingset, false))
- 				cs->nr_recently_evicted += nr_pages;
- 
- 			goto resched;
-diff --git a/mm/workingset.c b/mm/workingset.c
-index c22adb93622a..a2b28e356e68 100644
---- a/mm/workingset.c
-+++ b/mm/workingset.c
-@@ -412,10 +412,12 @@ void *workingset_eviction(struct folio *folio, struct mem_cgroup *target_memcg)
-  * @file: whether the corresponding folio is from the file lru.
-  * @workingset: where the workingset value unpacked from shadow should
-  * be stored.
-+ * @flush: whether to flush cgroup rstat.
-  *
-  * Return: true if the shadow is for a recently evicted folio; false otherwise.
-  */
--bool workingset_test_recent(void *shadow, bool file, bool *workingset)
-+bool workingset_test_recent(void *shadow, bool file, bool *workingset,
-+				bool flush)
- {
- 	struct mem_cgroup *eviction_memcg;
- 	struct lruvec *eviction_lruvec;
-@@ -467,10 +469,16 @@ bool workingset_test_recent(void *shadow, bool file, bool *workingset)
- 
- 	/*
- 	 * Flush stats (and potentially sleep) outside the RCU read section.
-+	 *
-+	 * Note that workingset_test_recent() itself might be called in RCU read
-+	 * section (for e.g, in cachestat) - these callers need to skip flushing
-+	 * stats (via the flush argument).
-+	 *
- 	 * XXX: With per-memcg flushing and thresholding, is ratelimiting
- 	 * still needed here?
- 	 */
--	mem_cgroup_flush_stats_ratelimited(eviction_memcg);
-+	if (flush)
-+		mem_cgroup_flush_stats_ratelimited(eviction_memcg);
- 
- 	eviction_lruvec = mem_cgroup_lruvec(eviction_memcg, pgdat);
- 	refault = atomic_long_read(&eviction_lruvec->nonresident_age);
-@@ -558,7 +566,7 @@ void workingset_refault(struct folio *folio, void *shadow)
- 
- 	mod_lruvec_state(lruvec, WORKINGSET_REFAULT_BASE + file, nr);
- 
--	if (!workingset_test_recent(shadow, file, &workingset))
-+	if (!workingset_test_recent(shadow, file, &workingset, true))
- 		return;
- 
- 	folio_set_active(folio);
-
-base-commit: a5c6fededf806aba1ff9b0f01278f7d089da5725
+   little-endian:
+     $ref: /schemas/types.yaml#/definitions/flag
+     description:
 -- 
-2.43.0
+2.34.1
 
