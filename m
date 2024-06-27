@@ -1,108 +1,152 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7613C433B3;
-	Thu, 27 Jun 2024 17:06:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BF09199EB2;
+	Thu, 27 Jun 2024 17:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719508006; cv=none; b=o8wPcCQvnUdf3fmeyIdSiL8eJ41XjUPpkXi44LLCTcIg9GkSavxcf2dlYeNWcVzsmoBn+Rz12wiSnbHIPAQZzZ3tiYMc7BemMl4U0pLAAtaR8DVExtpHDwSobVOv2DUiAteQq/ZbeFQXIlYASCvHlNTRkoWWllgAjIIjLJbJK1g=
+	t=1719508043; cv=none; b=RE4trZWUkQKUkRCuewBXbo8E5Mlt1jqijW5/hYY5bIGg0G8Nvhe9G3oIsDcqQEvesSuC8pbi86zGptpSo7mStrq0lo0CXZu4QtgeaAxKIH98LcsaS0qnsOPhy2JgKuCEwvYYg3w+aZa+vmrLQMPSzBSHWHFuGehG3QRfEwOn6yI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719508006; c=relaxed/simple;
-	bh=hgNJCnxBiMqPaye3s3z7C88onRAx5EJASz+v8yIwNjU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=VdDOwv1F23caaLAJr4rIb+ujrsVjuDvgqoMLZTMvA/BMcM7ZzBspATPd5JulFXm/VT5mMXEh+04sVbMW1eGED+lPAZGUdVq3hW9EJRT0mkhKyCSH5yWoJBY1+pqPMjVKbg1SGY72O/n+xe5oC1jpkfUMOuiyw0KXgJCYTcvUvBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NKCt8F+S; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1719508043; c=relaxed/simple;
+	bh=dCecJH51CViqti7qWLv13tYkYfTd/WBIfPitvC5HPdc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q8Nln0Z4LNNqhR2RhlWgOfHC7bpHyRIRgj16uQraDUDtNcqZadm8MWgp6FxFLWQURPEpLA5M1NzWpdvC2rJZs0nrcNvElK1O6svIaxYB3NinXn6L9UyrYvnxe/iw6YzaYdo7/UBR5HS9lsqKCN+XreORpSdsTzyWBhtZZk6BBlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M8ppLUtD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NKCt8F+S"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45R9Y2gU018096;
-	Thu, 27 Jun 2024 17:06:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	BD1SMUYBK0O3vgvTkPA3LPzdQgFAJsqJME8HG71np6o=; b=NKCt8F+S1pUg5N4p
-	N3E1sMEFs6yuyzGSphE3Jz7wUt7yiOaDqE3b9QbupPoS2CQTbM4eOkhj1AIcNUCN
-	ZGe8f0Ms6VVNkrisyzRj/ToEXp+H+m+qjYW0kSrZ5IngDK0LydR/hJjFtrr1Bw94
-	IZkvmjQBmMMctJ9NAoe5c+diVCqou850pBVUu5vhSH+MnX4ptuTvhOKWZlOWV9mY
-	Al1iqhWEoRxAIuWREnLNTfRTew8T9ANTUwCiJijqygFkftSsk/6orjOUpbs3bK5u
-	cJVVIv5qSeMIM/HL9CwQ4RInbDdFij5+s/3vlP1G/sdzH1VrHQCGp12+O20uEJEi
-	KddoKQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ywnm6vhx5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Jun 2024 17:06:15 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45RH6E5Y024546
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Jun 2024 17:06:14 GMT
-Received: from [10.216.16.130] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 27 Jun
- 2024 10:06:08 -0700
-Message-ID: <66648233-43f1-c61e-fccc-2c5a150d0bb0@quicinc.com>
-Date: Thu, 27 Jun 2024 22:36:03 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M8ppLUtD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6822C2BD10;
+	Thu, 27 Jun 2024 17:07:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719508042;
+	bh=dCecJH51CViqti7qWLv13tYkYfTd/WBIfPitvC5HPdc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M8ppLUtDZSj40GoxCJkBdtnipmTOwT7siZJmIBCDzKP6WEeYPpYN+KQAeBHBZMZnV
+	 xHigF/m20LEu2obCWRbRKgLfI0WMFHW6UiFs1rTqK0EApwkJiLx0hyxKaOFwJCSevk
+	 mOxmr0nCMEUbkOCW90BDdUFpUWqa6nuwcW3lIo4JtwZmiCF7511gnHOVCeX1dsMg0A
+	 ay8JjnIvgjtKyn4QrkgLRqi2TKn8BZLljfDLZeUJuuZNJgDJmVPYX4fy7sb0f7TE1l
+	 nsRROyftHTyOJc0Gilaq2rbz5jXeh7knp42xLlYyoCr9NkF2CPj1Aad8ixc03adTNY
+	 Pt0RxZ7375R8A==
+Date: Thu, 27 Jun 2024 10:07:22 -0700
+From: Kees Cook <kees@kernel.org>
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Rae Moar <rmoar@google.com>, kernel test robot <lkp@intel.com>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] kunit/usercopy: Disable testing on !CONFIG_MMU
+Message-ID: <202406271005.4E767DAE@keescook>
+References: <20240619202511.it.861-kees@kernel.org>
+ <CA+GJov5ZpFxKxK44SAb_B8SzWUF9uQV13A8BcVPijo0CV0mStg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH V2 0/2] Suspend clk scaling when there is no request
-Content-Language: en-US
-To: Bart Van Assche <bvanassche@acm.org>,
-        "James E.J. Bottomley"
-	<James.Bottomley@HansenPartnership.com>,
-        "Martin K. Petersen"
-	<martin.petersen@oracle.com>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>
-CC: Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>,
-        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <quic_cang@quicinc.com>,
-        <quic_nguyenb@quicinc.com>, <quic_pragalla@quicinc.com>,
-        <quic_nitirawa@quicinc.com>
-References: <20240627083756.25340-1-quic_rampraka@quicinc.com>
- <036f0300-e55f-4f12-a416-93f54be025a8@acm.org>
-From: Ram Prakash Gupta <quic_rampraka@quicinc.com>
-In-Reply-To: <036f0300-e55f-4f12-a416-93f54be025a8@acm.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: pj9XH36FQ-zZgN57bYka5b4ZFCFMOaj7
-X-Proofpoint-ORIG-GUID: pj9XH36FQ-zZgN57bYka5b4ZFCFMOaj7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-27_12,2024-06-27_03,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 suspectscore=0 phishscore=0 clxscore=1015 spamscore=0
- mlxscore=0 malwarescore=0 mlxlogscore=799 lowpriorityscore=0
- impostorscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2406140001 definitions=main-2406270129
+In-Reply-To: <CA+GJov5ZpFxKxK44SAb_B8SzWUF9uQV13A8BcVPijo0CV0mStg@mail.gmail.com>
 
+Hi Shuah,
 
+Can you please add this to your -next tree since it fixes test failures
+on non-MMU systems, after commit cf6219ee889f ("usercopy: Convert
+test_user_copy to KUnit test").
 
-On 6/27/2024 10:06 PM, Bart Van Assche wrote:
-> On 6/27/24 1:37 AM, Ram Prakash Gupta wrote:
->> Changes since V1:
->>     - Address minor review comment.
+Thanks!
+
+-Kees
+
+On Thu, Jun 20, 2024 at 05:13:35PM -0400, Rae Moar wrote:
+> On Wed, Jun 19, 2024 at 4:25 PM Kees Cook <kees@kernel.org> wrote:
+> >
+> > Since arch_pick_mmap_layout() is an inline for non-MMU systems, disable
+> > this test there.
+> >
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Closes: https://lore.kernel.org/oe-kbuild-all/202406160505.uBge6TMY-lkp@intel.com/
+> > Signed-off-by: Kees Cook <kees@kernel.org>
 > 
-> This is too vague. Please be more specific in patch changelogs.
+> Hello!
 > 
-> Thanks,
+> This looks good to me. And seems to fix the problem. Thanks for the fix!
 > 
-> Bart.
+> Reviewed-by: Rae Moar <rmoar@google.com>
 > 
-My Bad - will update it properly if next patchset is required.
-By the way here I addressed code review comment from Dmitry.
+> -Rae
+> 
+> > ---
+> > Resending as v2 with Shuah in To:
+> > ---
+> > Cc: Shuah Khan <skhan@linuxfoundation.org>
+> > Cc: Brendan Higgins <brendan.higgins@linux.dev>
+> > Cc: David Gow <davidgow@google.com>
+> > Cc: Rae Moar <rmoar@google.com>
+> > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: linux-kselftest@vger.kernel.org
+> > Cc: kunit-dev@googlegroups.com
+> > Cc: linux-hardening@vger.kernel.org
+> > Cc: linux-mm@kvack.org
+> > ---
+> >  lib/kunit/user_alloc.c | 4 ++++
+> >  lib/usercopy_kunit.c   | 5 +++++
+> >  mm/util.c              | 2 ++
+> >  3 files changed, 11 insertions(+)
+> >
+> > diff --git a/lib/kunit/user_alloc.c b/lib/kunit/user_alloc.c
+> > index 76d3d1345ed7..ae935df09a5e 100644
+> > --- a/lib/kunit/user_alloc.c
+> > +++ b/lib/kunit/user_alloc.c
+> > @@ -30,6 +30,10 @@ static int kunit_attach_mm(void)
+> >         if (current->mm)
+> >                 return 0;
+> >
+> > +       /* arch_pick_mmap_layout() is only sane with MMU systems. */
+> > +       if (!IS_ENABLED(CONFIG_MMU))
+> > +               return -EINVAL;
+> > +
+> >         mm = mm_alloc();
+> >         if (!mm)
+> >                 return -ENOMEM;
+> > diff --git a/lib/usercopy_kunit.c b/lib/usercopy_kunit.c
+> > index 45f1e558c464..e819561a540d 100644
+> > --- a/lib/usercopy_kunit.c
+> > +++ b/lib/usercopy_kunit.c
+> > @@ -290,6 +290,11 @@ static int usercopy_test_init(struct kunit *test)
+> >         struct usercopy_test_priv *priv;
+> >         unsigned long user_addr;
+> >
+> > +       if (!IS_ENABLED(CONFIG_MMU)) {
+> > +               kunit_skip(test, "Userspace allocation testing not available on non-MMU systems");
+> > +               return 0;
+> > +       }
+> > +
+> >         priv = kunit_kzalloc(test, sizeof(*priv), GFP_KERNEL);
+> >         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, priv);
+> >         test->priv = priv;
+> > diff --git a/mm/util.c b/mm/util.c
+> > index df37c47d9374..e70e8e439258 100644
+> > --- a/mm/util.c
+> > +++ b/mm/util.c
+> > @@ -484,7 +484,9 @@ void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
+> >         clear_bit(MMF_TOPDOWN, &mm->flags);
+> >  }
+> >  #endif
+> > +#ifdef CONFIG_MMU
+> >  EXPORT_SYMBOL_IF_KUNIT(arch_pick_mmap_layout);
+> > +#endif
+> >
+> >  /**
+> >   * __account_locked_vm - account locked pages to an mm's locked_vm
+> > --
+> > 2.34.1
+> >
 
-https://www.spinics.net/lists/kernel/msg5268621.html
-
-Thanks,
-Ram
+-- 
+Kees Cook
