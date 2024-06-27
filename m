@@ -1,76 +1,74 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F287F179647;
-	Thu, 27 Jun 2024 15:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA17D179647;
+	Thu, 27 Jun 2024 15:20:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719501571; cv=none; b=s/r3rDcNdZ8EfhRXq87jiijT9m1Cls1IyKT70SfuqRWS+CEtjOH/xnW8f0SyLQYOjwUCi2AG/NGi/Ms+SiKDfQkESXu9MMcxS5+bWrib1Z6EahHrVxtlE1JkT7YXeNes1gdu0Mu2PxrYOPtl0qsm6AP7CX4Zb/X9cmnT8r7j/y0=
+	t=1719501658; cv=none; b=jPzKGdSwXEj/Ok9uB8DaxKw/rI09I3UtpaEDBtDrC7okPWL4TuW8R1EhYiLBMc0Z6wXdyZmGSWVnCzGbEZaaQg7GXUhwYQ/HfeIhrjl7eEYZbvZMTLla8Np9zjybY+4sbLvQ20whBMD8OujW9p69jJgIdKo8JKQ8rkytST/lIhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719501571; c=relaxed/simple;
-	bh=G+cBBek3drSnZL96hhiqkV5Q1WRRlmeLdd9tUoZQnXY=;
+	s=arc-20240116; t=1719501658; c=relaxed/simple;
+	bh=NkvMMppuUbS6id5yTyzLodQXYpLnaEoYzmCfyXpSxOU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZEUUAft/L2mIqCuvKyBvWccyaZvvwMqQjAZ394ImVsLXe7sVBaTJjdM6iQkfdv1JEjt7XeIC4l9b0rDHztc1+tAHkPPGL8aSQiKH2kOuiqA9pxA19ltIcdPE969rUKd0jyrnb/KJLxTloj+RyEb855pLkhDG4uGB4PWrBCaFQPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JBJB2U3D; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=d7ZEv/HnUfS2UAPuqf89+JfNsDyMiP3YI8d6iMW8TqzuiAfpvtHh4CuuIVxg6s5yARbK4QkhSsvm08YzZBnoD0gIPP3qDVdMKfbXEQhjiRIK5V0V9e0JUeOAa5Qwa5CmuysKaANf1DkIalYOql+xldpjfXslZSw/370x3BA8caU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q5b4zUYw; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JBJB2U3D"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a7241b2fe79so693462666b.1;
-        Thu, 27 Jun 2024 08:19:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719501568; x=1720106368; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=01JArmtEkWVzaNdRWksyS14M/NQjqvFDPF5Dykw99yM=;
-        b=JBJB2U3Dj8xYSSgOLiqrgpR099s+1xzgt3tCe6r/SJPMEHCwypvbF7xVqgXEUNp86o
-         hmC4Y5Iw5XS4u1wgK442NbcoOIoDwMAxjPWDLZhRKASSJ1LGGqojRSB3sEPuCdNt2X+n
-         EZudZBz/G9oq1ImJvH/YkvwmhdZiMUETlDc0brCIrKZK/yBikCy2M/WzaxRY1ZlKqUJP
-         kHOD2qF39qhlxrAv028Y/2nMki5VCZValaKIUwPwxkzaiLYMpv96WfB9NLk1rwIeAlhB
-         h+n8lLDbETtxgRNA0oZ0S3LwYO83KDCe0K3EWSowJ05uJmX2hF6DQiVSkN8IKtzHYLFJ
-         RN/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719501568; x=1720106368;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=01JArmtEkWVzaNdRWksyS14M/NQjqvFDPF5Dykw99yM=;
-        b=i0+0GUjOVjdjpCtzI/E3x9Ds4FZ8kbWgBGzYGr0tYPQk06acADUAsFR1gHgkXNcwu6
-         UdBTqOWEXWiNcxcKcktd9Ras/4mu/91Q9J5QST4PonPPRF1LSqVkv2V+aw7rITeqrMyQ
-         EZqaoZVoYxhbBC3nLJfh5HKRhpidNke5MDI9hCZXIJgiEuRo8e9DJHCFYCu7SwH+oqHx
-         kTPVDsEV2Ji7/jwP0/N+4haHuA0hkW87XdWucYxaXUPtCDVOc+FSg74/ZFlMKJQ1rZSG
-         GTO1drgLq2f9NagGi/S4mCp5MDe7KEpfHqMc7lXTfuxYkL4FkgMUhKCpSGqOgJYNz6NI
-         PNoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXiXUjm1/MTeUEX6Fl/+Aod9ZX0VoeQ6ah7nkGwjZ1x6qIIBiCJFRKJMF/cjcoJydh+aLLCabJMyrTZSEaXfm64vSxnZ5VjD1hfJf/HX93+AKvzbLgmDjSMqHVNaFntaQNQgvVssenRsa1tAYVqG5iDUhz+wf+WGZ7Na4omfet2Y7yoDA==
-X-Gm-Message-State: AOJu0YwLrQli72+WH+wglLjYiDGdFT3dvLBYnMC9O+/jcpsEFJsKI5+y
-	Ok+EmWug0bou3JFzqL9ZAfsKlc5D9RLchdwx4paivB3n6/qXckN5
-X-Google-Smtp-Source: AGHT+IEAOJUUs4P5drce/yyI9yJaU8OuENn0jnZdouzCEJ6K8miFIV+B/HogjWpoIlxwTsUQCgDECA==
-X-Received: by 2002:a17:907:d043:b0:a72:7bf4:694c with SMTP id a640c23a62f3a-a727bf469d6mr670678066b.16.1719501567509;
-        Thu, 27 Jun 2024 08:19:27 -0700 (PDT)
-Received: from andrea ([217.201.220.159])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a729d7c88cdsm68292766b.195.2024.06.27.08.19.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 08:19:27 -0700 (PDT)
-Date: Thu, 27 Jun 2024 17:19:20 +0200
-From: Andrea Parri <parri.andrea@gmail.com>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>, Leonardo Bras <leobras@redhat.com>,
-	Guo Ren <guoren@kernel.org>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-arch@vger.kernel.org
-Subject: Re: [PATCH v2 10/10] riscv: Add qspinlock support based on Zabha
- extension
-Message-ID: <Zn2C+NXNZ/sj0wI6@andrea>
-References: <20240626130347.520750-1-alexghiti@rivosinc.com>
- <20240626130347.520750-11-alexghiti@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q5b4zUYw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719501658; x=1751037658;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NkvMMppuUbS6id5yTyzLodQXYpLnaEoYzmCfyXpSxOU=;
+  b=Q5b4zUYwJYVnGwccwyMvrKeodErxBCvwm375jUTlEjmkOtygaXpV3lnp
+   LmiQMi7p637UToz4cbkxsqWF3TdlDUAcOYNvJIK5Oq7ZDqnAbPx3fsqIU
+   fZnxYtclpvR4PYk/1Ko0Bg8B9ZmMUgaQn/43aRRBs/NxWyjdZYjxgKIna
+   18G/9g74rVcsWAskn/UWc5YCKO8dOI4iZr+e3NaYQ3iUnWBmDvbrZ2ZRv
+   h0NIff658P6ND0iNsg08xgk5+GCGC08duV+FUgTSgyhP3YSgkqYXlMNHL
+   CZtFaqKIV4Ulvqp+7rR5h516JGYOgWH/KFNEYbw/raItKyXuridLCyveA
+   w==;
+X-CSE-ConnectionGUID: eUBS5FRVSwK8jIVKpyhM0A==
+X-CSE-MsgGUID: L6eJ8QnVQ+yNKfELxv7PXg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="16598246"
+X-IronPort-AV: E=Sophos;i="6.09,166,1716274800"; 
+   d="scan'208";a="16598246"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 08:20:05 -0700
+X-CSE-ConnectionGUID: laF0R0DCS324PwXm2xKZAA==
+X-CSE-MsgGUID: yXj6WzGcSD6YukqcR3Unrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,166,1716274800"; 
+   d="scan'208";a="49580365"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 08:20:04 -0700
+Date: Thu, 27 Jun 2024 08:26:09 -0700
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>,
+	Brice Goglin <brice.goglin@gmail.com>,
+	srinivas pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: Re: [PATCH 0/9] Add CPU-type to topology
+Message-ID: <20240627152609.GC5201@ranerica-svr.sc.intel.com>
+References: <20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com>
+ <8d757ea3-87a3-4663-ac76-66b04e33e6b3@gmail.com>
+ <20240619015315.3ei5f6rovzdnxovo@desk>
+ <bc75ff55161671e4470849ed51baa547f619889d.camel@linux.intel.com>
+ <0021f5f2-67c5-4b20-939d-48c9c1c60cdb@gmail.com>
+ <1b99017a-6964-46de-ba3a-09552e7cf072@intel.com>
+ <20240627125154.GA4743@ranerica-svr.sc.intel.com>
+ <20240627132230.hondzls5bt3jspay@desk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,20 +77,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240626130347.520750-11-alexghiti@rivosinc.com>
+In-Reply-To: <20240627132230.hondzls5bt3jspay@desk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-> This is largely based on Guo's work and Leonardo reviews at [1].
+On Thu, Jun 27, 2024 at 06:22:30AM -0700, Pawan Gupta wrote:
+> On Thu, Jun 27, 2024 at 05:51:54AM -0700, Ricardo Neri wrote:
+> > ARM gives userspace specific details. This makes more sense to me. Instead
+> > of reading these details, user space would have to infer these details if
+> > a CPU type was given in sysfs.
+> > 
+> > Having said that, Intel does have a CPUID leaf that gives the CPU type. Such
+> > leaf also has a "Native Model ID". Exposing only the CPU type may not be
+> > sufficient.
+> 
+> Do we know if there are applications that would benefit from this information?
 
-Guo, could/should this have your Co-developed-by:/Signed-off-by:?
+Probably not, but exposing it would follow ARM's approach of exposing the
+raw details and let user space consume it as it wishes instead of having
+kernel give an answer that could probably be imcomplete.
 
-(disclaimer: I haven't looked at the last three patches of this submission
-with due calm and probably won't before ~mid-July...)
+> 
+> We agreed to leave sysfs for another series. I will be sending v2 soon.
 
-
-> Link: https://lore.kernel.org/linux-riscv/20231225125847.2778638-1-guoren@kernel.org/ [1]
-
-There seems to be a distinct lack of experimental results, compared to the
-previous/cited submission (and numbers are good to have!!  ;-)). Maybe Guo
-/others can provide some? to confirm this is going in the right direction.
-
-  Andrea
+It is fine, just wanted to express some opinions. :)
