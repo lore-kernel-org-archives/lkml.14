@@ -1,204 +1,195 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2072.outbound.protection.outlook.com [40.107.244.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ED27197A87;
-	Thu, 27 Jun 2024 18:11:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719511906; cv=none; b=iZzXMy9FXmx2HulZXd2GIe1fGTutvAq28PQa68X8WPRLyX2V008HlJIH6rc3OdmwxD5jkytHEWWDaQGOJ0SiyCRob5gC++WOOgoHbh04o3eGToB074MtjggAJqnDLgsS6SQAEgdmafuWnuEHYZ54v9nsF5859MVHyIrL71+nGyk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719511906; c=relaxed/simple;
-	bh=tGr5k+UOROok+owllKktrHzabgkRJenLZBubo0DTG0s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iDbThCbackWPHxF2o37vwFXvdeA6SGKVMmEJiF4whJl6zKzWdmkHszSX3WddNnjJXZyygQFVjQwOU9l9Oq/Q3BwAhkT31wbo+nnFuMIVAckT9MmvrVpdTk3sfVyAFQ4hWP0VtH3OOjYFAwGtvWLAqxdAweREmJY7/WHfea4ohZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vOcG71iL; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899E019AA47
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 18:12:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.72
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719511933; cv=fail; b=HUzAVGWnxx6FicEG3dNACQumeRtQgrG6AzGyZjS352rDRNKkgPFEhh62GA2rOBwfMYLNnsofvHpoG7tfto7flI+eVJ6CfRKKbs4sp3Q6H7yY6Rd7+IqjWJ1J9TNEQzj041fgwNXarCAnYDB7QM+2/IKUxpn72H44tUoMtje3En8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719511933; c=relaxed/simple;
+	bh=YyDRk+DlOkIfZqW72gcgAWIc1OvTiYwLnDgJokIwsmg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=LjVexTcK0iviVg8S4gTxIZiDdWLZ/qfef3eUQKNool1+9vOh+bkSb3j9S8CFbrWQD6fkNh25EOO5XLNps86LA9rDqgGxEKnl77ydjOCDKvTth9t3giWe197GYr8OV4b5dBY8WNdeGycmYE98qt+WP5IVtWA+kE1MCx0Uvfc8b0M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=FcAXaklG; arc=fail smtp.client-ip=40.107.244.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vOcG71iL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E493DC2BBFC;
-	Thu, 27 Jun 2024 18:11:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719511905;
-	bh=tGr5k+UOROok+owllKktrHzabgkRJenLZBubo0DTG0s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vOcG71iLpKz+8wzdjAeKoZo7nbkQl95XMMfEZxdbS4o7jPa+lB+lWeK4f9WmX2PhI
-	 ruGfWLpb2elb+eUFkecEt1ZgWHPDQjOlNM7Ep1cA2HoZhykr2jVnbsTvCkbtdc4SFX
-	 q3Pf8Eca+NRGe8O1VQmMmccnPrAxQKPyrLQg0uB0yewqr8MGqP7nHyFSU0eshQVb36
-	 qGHsTgY8zReYc1tNSIwFIi+n10kKIfbH4lwPvJ7ydhpSrWCJ0gYEWcujBwD5FVRFdX
-	 28AuCIeN4JVkB0xg7D6c4hfIWbBAMt6ISKkRGnILp5jActD5QhtV5my0aUutf7g0gS
-	 TYHXz/hg/69IQ==
-Date: Thu, 27 Jun 2024 19:11:38 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Jesse Taube <jesse@rivosinc.com>
-Cc: Conor Dooley <conor.dooley@microchip.com>,
-	linux-riscv@lists.infradead.org, Ard Biesheuvel <ardb@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Wende Tan <twd2.me@gmail.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>, Chen Jiahao <chenjiahao16@huawei.com>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v2 3/3] RISC-V: Use Zkr to seed KASLR base address
-Message-ID: <20240627-wispy-reconfirm-75fd034e62ce@spud>
-References: <20240626171652.366415-1-jesse@rivosinc.com>
- <20240626171652.366415-3-jesse@rivosinc.com>
- <20240627-proven-irritably-33594282739f@wendy>
- <762bb09d-af48-47e0-9d65-f530ff37cbc9@rivosinc.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FcAXaklG"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Pff5uj+X9uVgvG5m+qnyePemeH0quXbCsclI4/MIcNbtD+FniBMC0w36qHuurOTLp+iy1DHKCeGqb35cDuySkF8amD+ES/nk89krm9anO0s8E6qRN7Y9+3ahRhkfxvAUB8Kr5lyh6NqdnqSiKHtmK6ljSNNNIFpfhad6DdPsd9wn7V1734cvOP8FFCK1OPd88GImwfy3hXYkFmvbPjvVqB9KZpnd75CVt0bBSMMQKsxlvAFcZqRxkTAHmGHe7vfVWBHntqn4dZNYDoEqcCofzhCnRW2hUljy70mJ6B6qGkadSgma7m1tmyh76eODXYbd62crfNdrF7oQ9198LG/Ubg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=T2BPNNUadCRPbQLrIK/kCMJkKLYAmIoSxte0NY3tqGI=;
+ b=UOYEF7r/72nHAdmTCAA11mWPLAXTse5mDtMlZdZ4sZn8Fb+cjLyQGiiaiAP8fyFtddjJ7wB2fj6uTbVWYp0LjDDAOywhd34C3caQgKoiAlqnH+vUYE7JGSFBGq8E5bwVmsE9HD4t/FZYcYd+Mw8HK5lSUxNo+5vJ+ZpwS0FTs3aN10WL5Lc0TFBCPrjwHcxvGUHgIgMcRpJGP4Vf7rVJ881p8YRZFurELp6x7Gg2RLEQhGbjujq6aTNfgEjwNhc7RhAvvCzRyo3c7aM25y6Fth9KilCyHcEnSQHk8Uxo5fBYfk+xeirPzU2kt+FUhTAasmV7glMhU5kh48iCuRDz4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=T2BPNNUadCRPbQLrIK/kCMJkKLYAmIoSxte0NY3tqGI=;
+ b=FcAXaklGbmZraLZWBR1J/anhDqFgEENBe78+7JdeO9bFe+4BZowC1eR6qOdpFm7bYl/wzi1yVpum3ct1KQBX5J4JkttpXeGLb+kPDvQMmiUhf37wMPUF5ZIYGLbKSlDvvv6fAC8QCjyrPHaNI1G8TigUG2sxUZ3lzsHUOEFF/nU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by SA1PR12MB8886.namprd12.prod.outlook.com (2603:10b6:806:375::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.26; Thu, 27 Jun
+ 2024 18:12:08 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.7719.022; Thu, 27 Jun 2024
+ 18:12:06 +0000
+Message-ID: <6d8209e3-eb68-474f-bb98-ef321acf97e5@amd.com>
+Date: Thu, 27 Jun 2024 13:12:04 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] drm: panel-orientation-quirks: Add labels for both
+ Valve Steam Deck revisions
+To: Matthew Schwartz <mattschwartz@gwmail.gwu.edu>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
+Cc: John Schoenick <johns@valvesoftware.com>,
+ Kyle Gospodnetich <me@kylegospodneti.ch>, Hans de Goede
+ <hdegoede@redhat.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, Matthew Schwartz <mattschwartz@gwu.edu>
+References: <20240627175947.65513-1-mattschwartz@gwu.edu>
+ <20240627175947.65513-3-mattschwartz@gwu.edu>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20240627175947.65513-3-mattschwartz@gwu.edu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR16CA0059.namprd16.prod.outlook.com
+ (2603:10b6:805:ca::36) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="CKxq9ZugmAw+mCd4"
-Content-Disposition: inline
-In-Reply-To: <762bb09d-af48-47e0-9d65-f530ff37cbc9@rivosinc.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SA1PR12MB8886:EE_
+X-MS-Office365-Filtering-Correlation-Id: cd8d8102-c8a8-4ad1-9466-08dc96d4a740
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OXV1Q1JFRjdBS2N6NVFZc2NnYS9WN29nc044R0o1dzRCam1uTm5OZWhBRVBs?=
+ =?utf-8?B?RFVuakNjYjJGdU15L0o2c1h4L3ZscFF1aS9TclNkemtkQzdIL1VqS0Evc3Jy?=
+ =?utf-8?B?bHZlWDdVZmxpbTlJK1NDdUFQYS9KRGI1T1dBTnpGMm9wYW01bmNuZ3dEUnI1?=
+ =?utf-8?B?QlBjZzRyNFZqNk5pcEhESFM2aHNnUWFKUUUzUzRJVDY0TG0wWHY1Ry9rd1dW?=
+ =?utf-8?B?Q1Y2QTlLNmFYZE1GT1RVTG94R0NsSGc1WDhLTlRIcmwvajBMVm1tS3cwSVcz?=
+ =?utf-8?B?Y3VwQWQxZ2hjYVBpUHpBQW9lQ3dxYW5UYmw0Sktobm5xM1hzL1RLTGFqVEhJ?=
+ =?utf-8?B?eWVoU0kzZnplZ0UzM3psTXZSQU5sUzdkMzFBU0o3SmcxRzZVMFYycmhQSDJa?=
+ =?utf-8?B?eHIrOEcyU29jdkVRcEh1OXE5TlpGNVRqV2UwNnVwSHgrOGhPbm94d25mbktU?=
+ =?utf-8?B?RncwQWdYbHgzSzlFNjlHZnJtSXhCbVhoY0t2VGk3Y3VReTdWV1c2OGVxaytN?=
+ =?utf-8?B?bzZ0UVpuU1Z6cXdTQ2FZelh3ZXZZbVBYb2hJeGtDQ3B1RjRsN0htc0Q4R2lr?=
+ =?utf-8?B?WXhTdmxTQXF6RDJBVU9lVi9OU1JpdFp0YTV3T3Nyc1dhME9PTGZwUkVkNnhU?=
+ =?utf-8?B?VzRpK3dJdmxoaDBRZHJ4cVdLbU5rSEVSc3JLT0VkOUlmaHFSV1pLR1p1M2Fj?=
+ =?utf-8?B?L3V2MHZYdnBqbURINmM2dk1xNW5BUnlVREpKUTRsZXVaelhUdlRQeDJDWHZl?=
+ =?utf-8?B?NEV1ZldXYW9PaTl6eitWTC9MQmt3UkN6M2xjWEhkZk5PdVZRT3NLcm0wSGlZ?=
+ =?utf-8?B?elFTaWd1elludnRhcUNDYXFlYnNSOE05eDFvMTg4ZHRrU2hQOThlS2dSQ3pF?=
+ =?utf-8?B?RzVNczRXckpHaUNsdU9kR3ZvSEtzNkMxczNDK3BDYys2L0tSWUFld3dDUWZP?=
+ =?utf-8?B?TEYyUmZHZjRXU001Mm52bE9McmdwMjhxcUV4MjZKN3B4ZWxVM1FqN29vZEh5?=
+ =?utf-8?B?ck1zQlBtejFkM3p5bm9NOEppeHFtK2h3VWd5Z2d2MWFsalpjdXhDSGo5bElY?=
+ =?utf-8?B?V3lzRUdwWEN5cnBaSVFkUUQyRmx6MTZZNTdCZk1uLzI3NnpNSTNpOFIrWGhj?=
+ =?utf-8?B?YUxlcm1LUjZaNkk4YWRhdHZpd3J1eGlLZjBxQzlaUFM3clhxbEhyd3J2akpF?=
+ =?utf-8?B?eGdHQ0s3aEVKd1NrcG1LaVdOL2hQajVpRFJTQnRhM2EvUlJLRDlBOWhSMEJG?=
+ =?utf-8?B?bVVrbHRHRHhONVdISHo4OEx1ODFReHY0eWw3alBtUm9DZG5SNk12Z2cyWFVs?=
+ =?utf-8?B?ZXVjZ2ZFYUozelpWbWRYczBSamxqc3JKOTRxc2IzY2U2RGZYSkFESFUrQTNU?=
+ =?utf-8?B?M1dyVXp0SkdyNFY0K29VMUJobGxwNkF0NEZrNnBKcGh4aUowbElhSWtucFNj?=
+ =?utf-8?B?dWZ4OHdLeXBhUENxdFZvV1FlOVp0NU0vMUN4RlhIRlhNcitQdkJFclF6dkJz?=
+ =?utf-8?B?L1JpL3hFSUJpNCsxdGlPcGxkbXl2dER4QjhUV2YzcktxdUFSejhEbDhHRWlX?=
+ =?utf-8?B?WXUzcG1waFBlV1lJbXNRSmxWcmdIK2QxWWcwSSsvL3NuYzdIb3lPZTJRMzZE?=
+ =?utf-8?B?QmxpcmJjb3FZRG9iRW81aVV1MEw2KzFvYXZjRDJuSXFSTXNlQzZZMUZVNkdO?=
+ =?utf-8?B?azZXTmVDbXgrSDBkVVk1clhidlNSNEVqZEdKV3BPa1ZLbGhMV29SVlZmQjNi?=
+ =?utf-8?B?TzZGTGlKbzNwancrU04vYStMZjJPRng5ZHcrSDRCOGpwSFpPVk00R3lUc25j?=
+ =?utf-8?B?RjRKU1d1QnJxV3l3UHhFdz09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZzRxQWJKcVJVcUNKM0xxNjR5Vy9jeDlWbHpDSm14bUo1M050K2hsSzloTzND?=
+ =?utf-8?B?K3grTklmWkUvQlZEa01KVFY3RHpRY3krVEZ1V29LTThSbzFSM0RwWDBMR1oy?=
+ =?utf-8?B?WXdXY1FqZ2RnZmZWekxYcEJ1SldZSXBRUC9haitzYTVkUHZsbldTWE9JUFBP?=
+ =?utf-8?B?UEpqK21PYlBnTXpaYUR3eUlVMDcrdDB0NDVSczM4eVpEbXpJNGt3OEdGWjVJ?=
+ =?utf-8?B?dnF0eUhiUHM0ZzkyOEdHYmVoem9PUEtMQlFwTXVROGhwcEVkWnVCQTluSFlP?=
+ =?utf-8?B?dFhsczM5MDlXNWVVMXRqblZLV3RPdXlFMzVML1g0MUd6bWZoaFRabHFMM1cr?=
+ =?utf-8?B?RDVLTUNxT0pWOUIzU2VKU1ZpM0NPK0NpTEpZQlpoM3NjTHQvQkNHbVl5eTJ6?=
+ =?utf-8?B?OWI1M0l4Mkc2elFFdTN6VG05UlhUUTdXQzJaVUdzbTlSOE1RUnZGcEVkNmFs?=
+ =?utf-8?B?dVVyVTJCWDZBWnZJdEVIU3ErTG9TNnJGT2ZNZVhtbll2VXJ0ZFdFRjQvM3B3?=
+ =?utf-8?B?VERmZm5kQVB3bUJXR1hxbGJ6eS9KMlBqTnRKQXlHU3hUZEJodmxZd0VvaXBS?=
+ =?utf-8?B?VTNXYStKa1VhdTdqYXFBbWlXYVhlK1RJVDVGb0NHUUE4K0tMVkUwOWlvb0l0?=
+ =?utf-8?B?cS90dW5DSDh0QjhrOU5vbjdzVDcwMmlzYlRPNk5EOE1seXN2dkpOcjRqUW1S?=
+ =?utf-8?B?c0NJQ3NmQWVNU05zbXd2dVJPZGZONXVhRE85ejQ5T2RLanljV3pBWUpDNGFi?=
+ =?utf-8?B?Ums5clVHZ05FdmtvSnJmdlkxU0puV2tGMGQ4R1lpOG5DU3VPNThTb2dzMmZI?=
+ =?utf-8?B?MW1nL3kvS3hGQUJ3bVo1L2RKZ1pMUmhkVG5HYTZ1NzVUV1RyMmtkeTdGT3RQ?=
+ =?utf-8?B?ZU1ucUR4cUlFVWVRYTFXbnhFNHFlMHBwd3piM2M5L3VUQ2k0cEwrazNvNlJw?=
+ =?utf-8?B?Y08wN1QyRmFkQ0VkMk9obGhJL3BOcmtBTHMvd05vbTE2dG1ZVDRxRzc2Tjdt?=
+ =?utf-8?B?YWdvaFZJNEEvWDY5djh1SkVpWER0SXhCNjFnZGtBWHN0bitjVWFBcFlPYUJV?=
+ =?utf-8?B?TTZnU2FPc1pITFNTMWdmd25rQ2NDYXgrOUU4c2tnSG5KNEh3RkUzcWgxUnBE?=
+ =?utf-8?B?aUs3Zk1qWG1HS3oyb0xHNUNuWkFNV2ZNc2RQUW83TCs3K0RENXZwNStVMUNL?=
+ =?utf-8?B?QW5rOENZTEVnWWhJZHV4aDJuV1duUXRGUjJaTUROQjZDN0hzeitjeWM2MGcy?=
+ =?utf-8?B?MFJ6dlNlMnN2Yng1eW9ob1F3Nlh5NUR3aDVHZmFqZForMXpDVTZNTUdyUy9u?=
+ =?utf-8?B?b2xIV3crcml2TTRSYXIwaUovNHJLWUlOeTVDZWF4Z0krbHk3VUs1aEVienl5?=
+ =?utf-8?B?djd0WURmRitSb2IxbVRFdms5MWVkUEtEZ2tMRkc4N29BbWRVMHkvV241WVov?=
+ =?utf-8?B?M2hrMytDNHFxcnVtOUVlZWJiNmxZc250a3orTmNuNmt5dVZyazFIOVRTNE01?=
+ =?utf-8?B?MEFqRSt2bmxjZWd5RGRCNWdBTVVsMlViTVlyL1BFdzFrRlF5bEJHb3cxVGdh?=
+ =?utf-8?B?cFZaRGZnblhPY1F1cTJwMEtpWTRXNDdBQUYzcWV4eWNpME9WMStjL29nQVlE?=
+ =?utf-8?B?WHJyM1hsdFp6OWZQaVllS2xLa3hET2g1K0x2Z290dmJTMlVrZHYrQytpSGFh?=
+ =?utf-8?B?MHlOZk9YRGNTVzVqVVo1aU9lbjJ3bUMrTFVaQzNiSUZjV3M3SkY2Y1lxNjEx?=
+ =?utf-8?B?VDZUeEM0ZmxlZ1JDbE9YM040VCtRaXpqOUJNWXpMNGl4MUVHQ0N1OEJWME4r?=
+ =?utf-8?B?Y2l2Q2tRcmw0bENHb2NEUndtWEYzY3F2bFlyQWFWd2lXY08xMWc1aUhYOFZC?=
+ =?utf-8?B?RE1FRVZQaWNSaFFqQVpDUkMxQUxSYkZ4Y2JtVXNOQ1NCRWRJbE5FcEdaK2R0?=
+ =?utf-8?B?cUxzNmRiUU1hR3hOdFYyUDJyUkhpcVZXMVpRL0dhTkN6NUFlSWNpTmo0NWxU?=
+ =?utf-8?B?emFuQTJkbWRNM2pmSHRhMG1UM0QvU3pDV1AzZmw0THd4VjJicUFWTm4vUFJL?=
+ =?utf-8?B?WmdyV0VuU1hmelZnWkxYcGFIblpYSnYveHFzQ2JRTkQycncvMFBRWW5XaEZ6?=
+ =?utf-8?Q?LLGWjZabtyV81UmQSxiPcqmH+?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd8d8102-c8a8-4ad1-9466-08dc96d4a740
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2024 18:12:06.4360
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oLqJuXemofOhB9dGaRGKkOU8ob3myfxTUhRksezkSzmNUHw6/shuXUfAX9UuxgaiU4YHqjE897oa9KT5bGeOmg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8886
 
+On 6/27/2024 12:59, Matthew Schwartz wrote:
+> This accounts for the existence of two Steam Deck revisions
+> instead of a single revision
+> 
+> Signed-off-by: Matthew Schwartz <mattschwartz@gwu.edu>
 
---CKxq9ZugmAw+mCd4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 
-On Thu, Jun 27, 2024 at 01:55:19PM -0400, Jesse Taube wrote:
-> On 6/27/24 07:45, Conor Dooley wrote:
-> > On Wed, Jun 26, 2024 at 01:16:52PM -0400, Jesse Taube wrote:
+> ---
+>   drivers/gpu/drm/drm_panel_orientation_quirks.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+> index ac8319d38e37..3f84d7527793 100644
+> --- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
+> +++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+> @@ -420,14 +420,14 @@ static const struct dmi_system_id orientation_data[] = {
+>   		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Galaxy Book 10.6"),
+>   		},
+>   		.driver_data = (void *)&lcd1280x1920_rightside_up,
+> -	}, {	/* Valve Steam Deck */
+> +	}, {	/* Valve Steam Deck (Jupiter) */
+>   		.matches = {
+>   		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Valve"),
+>   		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Jupiter"),
+>   		  DMI_EXACT_MATCH(DMI_PRODUCT_VERSION, "1"),
+>   		},
+>   		.driver_data = (void *)&lcd800x1280_rightside_up,
+> -	}, {	/* Valve Steam Deck */
+> +	}, {	/* Valve Steam Deck (Galileo) */
+>   		.matches = {
+>   		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Valve"),
+>   		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Galileo"),
 
-> > > +/* Based off of fdt_stringlist_contains */
-> > > +static int isa_string_contains(const char *strlist, int listlen, con=
-st char *str)
-> > > +{
-> > > +	int len =3D strlen(str);
-> > > +	const char *p;
-> > > +
-> > > +	while (listlen >=3D len) {
-> > > +		if (strncasecmp(str, strlist, len) =3D=3D 0)
-> > > +			return 1;
-> >=20
-> > How does this handle searching a devicetree containing "rv64ima_zksed_z=
-kr"
-> > for the extension zks? Hint: https://godbolt.org/z/YfhTqe54e
-> > I think this works for fdt_stringlist_contains() because it also
-> > compares the null chars - which you're not doing so I think this also
-> > brakes for something like riscv,isa-extensions =3D "rv64ima\0zksed\0zkr"
-> > while searching for zks.
-> >=20
-> > > +		p =3D memchr(strlist, '_', listlen);
-> >=20
-> > Or how does this handle searching "rv64imafdczkr" for zkr? It's gonna
-> > run right off the end of the string without finding anything, right?
->=20
-> Yes...
->=20
-> Is that a valid isa,string?
-
-It is. I wish I had just not allowed it, but I was more naive then and
-figured we should allow whatever the spec did. Technically versioning of
-the extension isn't allowed, but in the wild people do put it in, so I
-believe that a parser shouldn't break when it encounters versioning,
-even if the regex for the property doesn't permit them:
-^rv(?:64|32)imaf?d?q?c?b?k?j?p?v?h?(?:[hsxz](?:[0-9a-z])+)?(?:_[hsxz](?:[0-=
-9a-z])+)*$
-
-> I will try to copy how cpufeature.c as close as
-> posible.
-
-The comments there should be fairly understandable, but that parser has
-a different goal to the one here, so you should be able to make things
-simpler. I hope at least.
-
-> > Handling "riscv,isa" is not trivial, but at least the search for extens=
-ion
-> > approach here skips dealing with some of what has to be done in the "re=
-al"
-> > parser with the version numbers...
-> >=20
-> > Maybe we just say screw "riscv,isa", as it's deprecated anyway, and onl=
-y.
-> I think it's important to have.
->=20
-> > add this new feature for "riscv,isa-extensions" which is far simpler to
-> > parse and can be done using off-the-shelf fdt functions?
-> >=20
-> > If not, then I think we should use fdt_stringlist_contains verbatim for
-> > "riscv,isa-extensions".
->=20
-> Ok I had a notion that riscv,isa-extensions could be upercase they
-> cant/wont. I will use fdt_stringlist_contains.
->=20
-> > and introduce a custom function for "riscv,isa"
-> > only.
->=20
-> That was my original thought I will do that.
->=20
-> >=20
-> > > +		if (!p)
-> > > +			p =3D memchr(strlist, '\0', listlen);
-> > > +		if (!p)
-> > > +			return 0; /* malformed strlist.. */
-> > > +		listlen -=3D (p - strlist) + 1;
-> > > +		strlist =3D p + 1;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +/* Based off of fdt_nodename_eq_ */
-> >=20
-> > Why can't we just use fdt_nodename_eq?
->=20
-> Because fdt_nodename_eq_ is static.
-> I will change the comment to "copy of fdt_nodename_eq_".
-> Oddly there is `of_node_name_eq` but not `fdt_nodename_eq`
-
-of_node_name_eq comes from the kernel, fdt_nodename_eq comes from
-libfdt. I figure the former cannot be used this early since we've not
-extracted the dtb and parsed it yet...
-
-> > > +/*
-> > > + * Returns true if the extension is in the isa string on all cpus
-> >=20
-> > Shouldn't we only be checking CPUs that are not disabled or reserved,
-> > rather than all CPUs?
->=20
-> Its way easier to just check all the cpus rather then make sure we are
-> runing on one thats has the extention. I will add a continue for
-> dissabled/reserved cpus.
->=20
-> > To use Zkr for KASLR this is kinda irrelevant
-> > since really we only care about whether or not the boot CPU has Zkr,
-> > but in general we only want to consider CPUs that we can actually use.
-> > For example, if you did this for FPU support with mpfs.dtsi, you'd get
-> > told that the F/D extensions were not present cos hart 0
->=20
-> Can we assume that the boot hart is always 0?
-
-Nah, You cannot assume that the boot hart is hart 0, in the example I gave
-here hart 0 is not available to Linux.
-
-> > doesn't have
-> > them, even though it's disabled and will not be used by Linux.
-
---CKxq9ZugmAw+mCd4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZn2rWgAKCRB4tDGHoIJi
-0pWXAQDJV/bVVnD9ChN+ne/BYsY76hcJyFnXGcsb19WWlTuwLQD6AsVXQpESVWJR
-BTr7LWT8JXfZoRCczrvBZCSqNsVMvwE=
-=MvYD
------END PGP SIGNATURE-----
-
---CKxq9ZugmAw+mCd4--
