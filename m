@@ -1,123 +1,141 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49342211C;
-	Thu, 27 Jun 2024 00:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374E24C62;
+	Thu, 27 Jun 2024 01:00:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719449990; cv=none; b=s2m0HPbCm7si/zyICKx6M3/yGyzoU3xvYTfdHoGUKpnXia/W0JQ6PMmDqPtKqkO3Ju3nR94lDYeQSqvpe3j2vp9rN6qBElQlncUlxm93qYXvvqS8wAxTNP3mcFZvLHF6nEpltloFE4xUBg5KKNuOA/oSzO0noYFqMjoi544pCUA=
+	t=1719450034; cv=none; b=He0RPVxCXXEtnYX0+BUOySTuxvgF5nMxG1Z7mDwuf+k+8ogogIXpQprqOl48w5qG47nkLWXNKLmbe6Czr9aPu5ZDDhnUgowZiP66o1zjZa/4kVQRozDMv/z1wtSFneuWuOjeHWxnySWKhEqrFTDjDeOZmjjJS8IiYXrQkWLNd04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719449990; c=relaxed/simple;
-	bh=9fYE1HBswViCYV0y+jxuGrMG4f2awfEsQnVMXDNZN3U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YAJ+CUdEYccJdC0HzmLObEO/08CMz97ReEECp2pDJGX4EXhG7Shj2j6HhfH3ypX4C78uiIjoxAUFARBfHdrwH4yENcnWr5PZo16oYc/qc0XDkiawNTTHruD/rOTFaA8HYyqIYPC7G2YZZuQpz0nDn4VO3ezZ4r+sAuXn4Siz//Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=P1niESfD; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1719450034; c=relaxed/simple;
+	bh=LUacYIlT79rW04FeLla3/n41llR1qlk2oIplHlsSCo8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=C+V4ZHKdhToK6fhXbpM1oPUEjO4AJ4DwN7v5FvcWb4fl/4ajfSeMNgsn/JjeFivqnuHpPxEne/b9/AQ/hq3gVCGOKP4fZUks/rQPTl6gPgm2mRLcC+QEBlxgSr9tnepo3Jp7i5+6TPMACZx7WSfQ/t0QkWuybE4hqlQGd/L/K78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X9ba/YQc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="P1niESfD"
-Received: from tr.lan (ip-86-49-120-218.bb.vodafone.cz [86.49.120.218])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 1880688495;
-	Thu, 27 Jun 2024 02:59:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1719449981;
-	bh=nRRMgVYz5K221YS3EHiDdmRYJ/Cn0uzB+xd7+Lhx9eU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=P1niESfDnRF6termPh465JrMUGDWB2ib+XYW9uOtEH6gHeuqVoaxJOPKes8SSo3Im
-	 dkvRrMqPkA0x2zhXnXMlTKDquDUOCm+0tlbzAVWvhEJtBbVD4mLau2cYBNN+PvqcPa
-	 9tcamKLWu1BC5IgD/yADhvGdh+VYpjShhoRGF39GNHy5IYBnD7ShlTolTFUMxJID4w
-	 5+Tn2/mcnv9vGIl/E9s7N+m9M8O9a1dUZQ6a8gA/lTlMCV7TnCf5mX3pVHY8DnDCSr
-	 LuvoLf9eL240GBcn9wyG8gukuh2Wba7yx1XUf4gxdXUIWyv4gdVcNly4gUp9RJ6rsB
-	 BP8Zk4zbS/KJA==
-From: Marek Vasut <marex@denx.de>
-To: linux-arm-kernel@lists.infradead.org
-Cc: Marek Vasut <marex@denx.de>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Fabio Estevam <festevam@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	kernel@dh-electronics.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: imx8mp: Update Fast ethernet PHY MDIO addresses to match DH i.MX8MP DHCOM rev.200
-Date: Thu, 27 Jun 2024 02:58:33 +0200
-Message-ID: <20240627005913.326662-1-marex@denx.de>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X9ba/YQc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01C54C116B1;
+	Thu, 27 Jun 2024 01:00:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719450034;
+	bh=LUacYIlT79rW04FeLla3/n41llR1qlk2oIplHlsSCo8=;
+	h=From:Subject:Date:To:Cc:From;
+	b=X9ba/YQcgXhwCm8/TJ8Uh4mp258noDC2rr0AaFBl0BEPkB9XQSpA9M/tEdKbW40tB
+	 X+Z6OGP+Si5nRlkpsVLibkf4AiJAhojO5s5V4kpdXBIJSvoviXwiDj2FaKW9uWMIAF
+	 4MJe8FP26sA3j5dAvuApRF0se7CFUhvx/9I/7Ypf06bwRsiLc+H3ZydlyzSjxhuOQy
+	 R4nTwxqZPHonjDzgUF/boDRbHPm/GCueYfwTcNMQfuNdRA6mEcLGkfR/cpyvCK45yD
+	 JEtcOJ0ldQB1gqsLGla+o6eQDD+OE0qG0jN1ui8Y+8pFdGfOAeReIE+TaGQIdyro9B
+	 lzDTU8RbwnwwQ==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH 00/10] fs: multigrain timestamp redux
+Date: Wed, 26 Jun 2024 21:00:20 -0400
+Message-Id: <20240626-mgtime-v1-0-a189352d0f8f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKS5fGYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDMyMz3dz0kszcVF3T5BQLgyRDixQLQwMloOKCotS0zAqwQdGxtbUA/AJ
+ kIFgAAAA=
+To: Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Chandan Babu R <chandan.babu@oracle.com>, 
+ "Darrick J. Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
+ Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, 
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
+ Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: kernel-team@fb.com, linux-fsdevel@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org, 
+ linux-btrfs@vger.kernel.org, linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3126; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=LUacYIlT79rW04FeLla3/n41llR1qlk2oIplHlsSCo8=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmfLmuyaAFpK8/qwLflf3v4ChVsLVE+AkNZRWYo
+ JubBGmnD9+JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZny5rgAKCRAADmhBGVaC
+ FcVxEACn53hnX+vD8wOy1qsZk+3QM/qqzDCO7uy8RgExJI106gkJfuFX8+lcL+HRdrW2QfOGSw+
+ hO7Mt3G37n3x1PsLI2i2L3wKymPJkPtkN0gCUDRhqkHhXfjGWMiAYKcupUoOQgd3/5sUw/wVOCn
+ gxb4joKDPQjyDOuFdQP/iiNryS6CSID8IXYPqpgksIsTrI82/iB6MW5X0/XiO53z+TGnMEIyLHy
+ P62o2CEnPUm77LjIIamrxVwCpX1qLDDUt4zXOf5PU+KQq+Cmo+3hFTZEYW1qFsWUOPaKoGLW2vc
+ cCHBezSmioQNmG4EyshecGnFRdqkKvZM69d9AXpw0PjJOpF1X90HsqY9e46vLExXidPMU3sOo01
+ dFvdrSLUHmDnX7cmaEakCVuKv+EQRzodyHNKI12T9IsuPl0cXsJVgWTlunlLF2nnHPp4uGiC0K6
+ Dx0bk6gvhtz/eH66y2wnXWr0Q3xAMJ/SxYdqWfIArsqDw7LBA40+erE6CKTDPAf9VRsfTcO0ura
+ SaHhLn470dWvbxOVa/L15AfDgNL+Y24+RWVrD3UYAOmDIKDyj3Ki+s8359EemA9FRV8FGJhjUhL
+ ij+SmnVh0io7cDczz/QZh+y5Cy/DLAd3/lDWZuSoTZVLrvn5tepmBjcI0URpN1uvHG6ODJ3s/3M
+ vO1R8IE1b5/DaDA==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-The production DH i.MX8MP DHCOM SoM rev.200 uses updated PHY MDIO addresses
-for the Fast ethernet PHYs. Update the base SoM DT to cater for this change.
+At LSF/MM this year, we had a discussion about the inode change
+attribute. At the time I mentioned that I thought I could salvage the
+multigrain timestamp work that had to be reverted last year [1].  That
+version had to be reverted because it was possible for a file to get a
+coarse grained timestamp that appeared to be earlier than another file
+that had recently gotten a fine-grained stamp.
 
-Signed-off-by: Marek Vasut <marex@denx.de>
+This version corrects the problem by establishing a global ctime_floor
+value that should prevent this from occurring. In the above situation
+that was problematic before, the two files might end up with the same
+timestamp value, but they won't appear to have been modified in the
+wrong order.
+
+That problem was discovered by the test-stat-time gnulib test. Note that
+that test still fails on multigrain timestamps, but that's because its
+method of determining the minimum delay that will show a timestamp
+change will no longer work with multigrain timestamps. I have a patch to
+change the testcase to use a different method that I will post soon.
+
+The big question with this set is whether the performance will be
+suitable. The testing I've done seems to show performance parity with
+multigrain timestamps enabled, but it's hard to rule this out regressing
+some workload.
+
+This set is based on top of Christian's vfs.misc branch (which has the
+earlier change to track inode timestamps as discrete integers). If there
+are no major objections, I'd like to let this soak in linux-next for a
+bit to see if any problems shake out.
+
+[1]: https://lore.kernel.org/linux-fsdevel/20230807-mgctime-v7-0-d1dec143a704@kernel.org/
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-Cc: Conor Dooley <conor+dt@kernel.org>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: imx@lists.linux.dev
-Cc: kernel@dh-electronics.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- arch/arm64/boot/dts/freescale/imx8mp-dhcom-som.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Jeff Layton (10):
+      fs: turn inode ctime fields into a single ktime_t
+      fs: uninline inode_get_ctime and inode_set_ctime_to_ts
+      fs: tracepoints for inode_needs_update_time and inode_set_ctime_to_ts
+      fs: add infrastructure for multigrain timestamps
+      fs: add percpu counters to count fine vs. coarse timestamps
+      fs: have setattr_copy handle multigrain timestamps appropriately
+      xfs: switch to multigrain timestamps
+      ext4: switch to multigrain timestamps
+      btrfs: convert to multigrain timestamps
+      tmpfs: add support for multigrain timestamps
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-dhcom-som.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-dhcom-som.dtsi
-index 848df53c48685..4f7721a44daaa 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-dhcom-som.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-dhcom-som.dtsi
-@@ -110,14 +110,14 @@ mdio {
- 		#size-cells = <0>;
- 
- 		/* Up to one of these two PHYs may be populated. */
--		ethphy0f: ethernet-phy@0 { /* SMSC LAN8740Ai */
-+		ethphy0f: ethernet-phy@1 { /* SMSC LAN8740Ai */
- 			compatible = "ethernet-phy-id0007.c110",
- 				     "ethernet-phy-ieee802.3-c22";
- 			interrupt-parent = <&gpio3>;
- 			interrupts = <19 IRQ_TYPE_LEVEL_LOW>;
- 			pinctrl-0 = <&pinctrl_ethphy0>;
- 			pinctrl-names = "default";
--			reg = <0>;
-+			reg = <1>;
- 			reset-assert-us = <1000>;
- 			reset-deassert-us = <1000>;
- 			reset-gpios = <&ioexp 4 GPIO_ACTIVE_LOW>;
-@@ -156,14 +156,14 @@ mdio {
- 		#size-cells = <0>;
- 
- 		/* Up to one PHY may be populated. */
--		ethphy1f: ethernet-phy@1 { /* SMSC LAN8740Ai */
-+		ethphy1f: ethernet-phy@2 { /* SMSC LAN8740Ai */
- 			compatible = "ethernet-phy-id0007.c110",
- 				     "ethernet-phy-ieee802.3-c22";
- 			interrupt-parent = <&gpio4>;
- 			interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
- 			pinctrl-0 = <&pinctrl_ethphy1>;
- 			pinctrl-names = "default";
--			reg = <1>;
-+			reg = <2>;
- 			reset-assert-us = <1000>;
- 			reset-deassert-us = <1000>;
- 			reset-gpios = <&gpio4 2 GPIO_ACTIVE_LOW>;
+ fs/attr.c                        |  52 +++++++--
+ fs/btrfs/file.c                  |  25 +----
+ fs/btrfs/super.c                 |   3 +-
+ fs/ext4/super.c                  |   2 +-
+ fs/inode.c                       | 222 +++++++++++++++++++++++++++++++++++----
+ fs/stat.c                        |  39 ++++++-
+ fs/xfs/libxfs/xfs_trans_inode.c  |   6 +-
+ fs/xfs/xfs_iops.c                |   6 +-
+ fs/xfs/xfs_super.c               |   2 +-
+ include/linux/fs.h               |  61 +++++++----
+ include/trace/events/timestamp.h | 173 ++++++++++++++++++++++++++++++
+ mm/shmem.c                       |   2 +-
+ 12 files changed, 514 insertions(+), 79 deletions(-)
+---
+base-commit: 33b321ac3a51e590225585f41c7412b86e987a0d
+change-id: 20240626-mgtime-5cd80b18d810
+
+Best regards,
 -- 
-2.43.0
+Jeff Layton <jlayton@kernel.org>
 
