@@ -1,100 +1,116 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E363219A287;
-	Thu, 27 Jun 2024 17:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D8E19DF8B;
+	Thu, 27 Jun 2024 17:48:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719510501; cv=none; b=fnAiC3qn/TF4+80ZLhLpzELOj6VF22BKo7zibFslJfA6OtImE4xEdHC1jNNkoiMXCX5EPLa8LrlZ3Pg1kAIUkwAZ4FW4FeR3eRECvmQ9NZdd4ZBCN9jNIOXY3PLSB7SjoPq9kfS2tWeDUflCk0R+ee2dboKdRj4rS/wmt4X9T/0=
+	t=1719510536; cv=none; b=aYAYyNdclL6QmyjIVS5aKAng17+1VcPJwXhaaSIP07vdf8nXFSfOXJ/LG2iYpZ/vLWp+uwSJm/2U6Hehn8ZPGW4ie/EIX9HExLxFXydsiMEZMpROoHvJ6wlhExKxFe4pIJhi7V/KLFEil6LLD09uRZugylh8YIi0Q7nHjRsAu1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719510501; c=relaxed/simple;
-	bh=o4UpHb2puBTPOuuRLwTC7QarroJ7D0jptmVsMPvv8wo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ATb0kTF4/WZamvaMJEX9NAZ8+mTW62T3ai/CRtywCxCoiJcSXh0Vte+aE1LNkslTFB1rE+NxMGHGWygyykpf82Rocpm+lz5CaqLQ+/I6Q89IgzRsETixDzyV+Q6lmZz0kAj1z9W1cRUpZlcr/C2m+iX7ABHQ82X6j/udOfPYnCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=bsirJEYy; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1719510536; c=relaxed/simple;
+	bh=8gVzBekE2oyh3Wr+wM9bjtLGi+3aTY8+Iej1gUuNYTI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=bJihqm8q4y0R+ljUM0W/FvtFAi/SxpIp5Op49/EM4wmBo/a38qA9myDKaj9tKOH6tZz2g+eYAjSFPdDyO3r19TUaSOPADuZft70z/KkVduQYczGwc9P2yXCj8ULLDTGY61FtjNACK57Vl9FuEDA7cVTXCZVSd3TvTFoxWOLIJM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nYWlA3na; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="bsirJEYy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1719510495;
-	bh=o4UpHb2puBTPOuuRLwTC7QarroJ7D0jptmVsMPvv8wo=;
-	h=From:Subject:Date:To:Cc:From;
-	b=bsirJEYyResexD4MRysQhu1ZURx1W0hawLJ93+FzItaAfLJK1ihjaaALxyapMEpoi
-	 AxiyRIV+kBDbQ4H+ILrCruK9hA7L1IEBlqVVkxBGLhIzjdMhR5d4s9cPPHMQ1HlpJ+
-	 R2NgsGCr442Edj0rwqNMwhyRgAdsIiLmFJ50IOVI=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Subject: [PATCH v2 0/4] i2c: smbus cleanups and SPD support for piix4
-Date: Thu, 27 Jun 2024 19:48:10 +0200
-Message-Id: <20240627-piix4-spd-v2-0-617ce47b8ff4@weissschuh.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nYWlA3na"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3E5EC2BBFC;
+	Thu, 27 Jun 2024 17:48:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719510535;
+	bh=8gVzBekE2oyh3Wr+wM9bjtLGi+3aTY8+Iej1gUuNYTI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=nYWlA3naWyEy4jbCxEIqtUCy1CZvU1CtcEXb/UwnZq+wykJnE6+uWFy47eTcUj7Qz
+	 sEufNB853c6mCPWbF8HengG6rpMwBY7xeloX0G3OUVvF2ITWurEDbm4N1+GFCvJL7c
+	 +vK6EcryevJutRoMFQn3PcImhz0ZeniaiKjBdebvJje9kfuYLzpOclpIARkFgVdFwv
+	 034IQNEzxx5hGYL0DjXSJWmtqFWelWAUKqegpxiAb60WxPISSYj7Q9ltZcmRMCjXYh
+	 bJHd1i4LsVlSP05phimYeZljCMk0Zok9Q6lSEPQRk3gYFByQuLhyhYs4qy7X6wbBBO
+	 drbNaviiiTw0g==
+Date: Thu, 27 Jun 2024 18:48:52 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Tree for Jun 27
+Message-ID: <Zn2mBPrQHe4k1TXC@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIANqlfWYC/23MQQ6DIBCF4auYWZcGUJrQVe/RuBAcymzUMEptD
- Hcvdd3l//LyHcCYCBnuzQEJMzHNUw19acDHYXqhoLE2aKk7aVopFqK9E7yMorVemZvT2hoL9b8
- kDLSf1rOvHYnXOX1OOqvf+k/JSihhvQtqcOhCpx5vJGb2cYvXCVfoSylfA+v1MKcAAAA=
-To: Andi Shyti <andi.shyti@kernel.org>, Jean Delvare <jdelvare@suse.com>
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Guenter Roeck <linux@roeck-us.net>, 
- Wolfram Sang <wsa+renesas@sang-engineering.com>, 
- Heiner Kallweit <hkallweit1@gmail.com>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1719510495; l=1612;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=o4UpHb2puBTPOuuRLwTC7QarroJ7D0jptmVsMPvv8wo=;
- b=CAzp/20nA8S25tNONecmUf7ThD2TG6CqN3WxGWGA7OYunTjPb2el/N5wUDcTRnaNNo7VmRe6k
- 8L9ulSgk0EfCWm0G4YmqlCq29X0AG41293oRumAMLj4iLA6LIuQHfwK
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="6R/g9yWYluo+aSeQ"
+Content-Disposition: inline
 
-Patches 1-3 are preparation patches, with patch 1 being a fix.
-Patch 4 is the actual change to piix4.
 
-Patch 3 drops the warning about muxed busses.
-I didn't feel that the warning only would warrant the additional
-complexity it introduces with multiple callers of i2c_register_spd().
+--6R/g9yWYluo+aSeQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-If other feel different, maybe a more generic warning/info or a source
-code comment would suffice.
+Hi all,
 
-On a machine with 32 slots of which 16 are populated only the first 8
-slots are addressable, half of which are empty.
-Unfortunately I couldn't run a custom kernel for testing.
-But manually instantiating ee1004 devices worked as expected,
-so the proposed changes should also work.
+Changes since 20240626:
 
-Tested with spd5118 and two DIMMs.
+The rpmsg tree gained a build failure, I used the version from 20240626
+instead.
 
-Guenter, I dropped your Tested-by as the piix4 patch changed.
+The vfs-brauner tree gained a build failure, I used the version from
+20240626 instead.
 
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
----
-Changes in v2:
-- Add new i2c-smbus prep patches
-- Only register SPD for port 0
-- Link to v1: https://lore.kernel.org/r/20240530-piix4-spd-v1-1-9cbf1abebf41@weissschuh.net
+The drm tree gained multiple conflicts with the drm-fixes tree.
 
----
-Thomas Weißschuh (4):
-      i2c: smbus: only limit max banks to eight
-      i2c: smbus: probe SPDs on a best-effort basis
-      i2c: smbus: drop warning about muxed segments requirement
-      i2c: piix4: Register SPDs
+The drm tree gained a conflict with Linus' tree.
 
- drivers/i2c/busses/Kconfig     |  1 +
- drivers/i2c/busses/i2c-piix4.c |  4 ++++
- drivers/i2c/i2c-smbus.c        | 15 ++++-----------
- 3 files changed, 9 insertions(+), 11 deletions(-)
----
-base-commit: 4e2600bca665197acb537ae63f24d3075e6bac8b
-change-id: 20240530-piix4-spd-39c156b22959
+The leds-lj tree gained a conflict with the chrome-platform tree.
 
-Best regards,
--- 
-Thomas Weißschuh <linux@weissschuh.net>
+Non-merge commits (relative to Linus' tree): 8127
+ 8860 files changed, 765288 insertions(+), 152271 deletions(-)
 
+----------------------------------------------------------------------------
+
+I have created today's linux-next tree at
+git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+(patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
+are tracking the linux-next tree using git, you should not use "git pull"
+to do so as that will try to merge the new linux-next release with the
+old one.  You should use "git fetch" and checkout or reset to the new
+master.
+
+You can see which trees have been included by looking in the Next/Trees
+file in the source.  There is also the merge.log file in the Next
+directory.  Between each merge, the tree was built with a defconfig
+for arm64, an allmodconfig for x86_64, a multi_v7_defconfig for arm
+and a native build of tools/perf.
+
+Below is a summary of the state of the merge.
+
+I am currently merging 378 trees (counting Linus' and 106 trees of bug
+fix patches pending for the current merge release).
+
+Stats about the size of the tree over time can be seen at
+http://neuling.org/linux-next-size.html .
+
+Status of my local build tests will be at
+http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
+advice about cross compilers/configs that work, we are always open to add
+more builds.
+
+Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
+Gortmaker for triage and bug fixes.
+
+--6R/g9yWYluo+aSeQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZ9pgMACgkQJNaLcl1U
+h9BnAwf+LfsBtV8Fi/SWpoMLJltuLYyK4Cq5O1h3prZYUvjM1DX4pRDdNLkr57NU
+E8A9KIHdf8ptE3Dc1wt7df/uJdmfGtu18t1sQyQqmlpXzpgyKnAUJsBf3l52CI2s
+v1kOku3GrxktF1UyoaAm1Vku8nVWNuT4wy/bGWS/s9QBO27ZhB76bKFoRrmUKdqD
+g8K3xvksjKYIiQbpBQ4DrQRVCtaSOviaoXY8dyJukGb2PON+ede6QSaLvdqM/q0w
+f9OHByQsnFkmQUBNPCkDX9q/M+6IqUoM2jT01Qiuokuv5csU4BFwqYVNKTo1uLh0
+a3y8grm9uArLzO13A564zD8y0x9jig==
+=m0PV
+-----END PGP SIGNATURE-----
+
+--6R/g9yWYluo+aSeQ--
