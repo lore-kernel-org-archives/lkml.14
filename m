@@ -1,46 +1,48 @@
 Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6429819;
-	Thu, 27 Jun 2024 08:52:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 664034D8B1;
+	Thu, 27 Jun 2024 08:52:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719478347; cv=none; b=LSzHxA601w1AWO4OWAcU+FU3Y2ZN7rrcLtHpjqw+ZOi+rLhr3XKbCdW3F8kJO+4Hy7ZepLriJyiGNTCb/AgMiMISxIIfD3pR0XKBMtbyXY0HS3121tO3Ka4VEhUk+DEiU1AIHL0HPhaotYmDmqPC3d0lLJ6oJskFylnBfmFyHdE=
+	t=1719478348; cv=none; b=JA0TuZig17TgR0zOIR6mut0ChHj+6+dYCfxqpW9/gnCrvMRTswTISeRClV5bHNMJYfqcYTAnZsPA5nj8npzoMmsPeZjbNzH9oW3Y5Q4ejczMHF8qQiyWm+Ku80zxSj/haAD008UzhozCSDuYdR5yWC0wvCSVOFg+dottagqOaXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719478347; c=relaxed/simple;
-	bh=rDV19PZw70n7byzylmXZn+TImYd3qQsvAQ6zaSifIWY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HTV+KOz6EeIF5vwfTqEDU9rDolDkI47IgNgWESEbLVsbEkhTe86N6pkkGAl24j2jMb0eiiOR+oOozef1jrT/CSukdLNhmItNZ2YuFpWt4+DBLDnAWz/PWk5LnVSNj2q0mZFJGax+ssaRGjl4un1bua5W2bFEiVz5rNEwKuOHpRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=BUUDFCyW; arc=none smtp.client-ip=185.132.182.106
+	s=arc-20240116; t=1719478348; c=relaxed/simple;
+	bh=2OU/D4MwEEpr+Ms7lIt5coeFYREWXBVBzXE6bjkzJR8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Mp3b3e8X3jlx73QG04WqaD0CssQ98JX9vfMbWBPWtlIJjw8QEUyRHwuJLfOJjgkmZHc5aXRIEGHrwy2gLvePI2Wso14qnNlbZUX/kFNphpHiTsIbUWogLv0qWONJJ7j+R0ehUNLb0y3t3i3guLWX8xROxkAD/op2Zkfi+xvGRqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=H8sDeZYl; arc=none smtp.client-ip=185.132.182.106
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="BUUDFCyW"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="H8sDeZYl"
 Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45R6suEc025136;
-	Thu, 27 Jun 2024 10:50:53 +0200
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45R7QdSC008977;
+	Thu, 27 Jun 2024 10:50:50 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=UEPDtkwS6mWQxqmVu+aQzn
-	Nw+twWmzwbU06XGY49NsQ=; b=BUUDFCyWmif/XpmyOVTOfW0kNwDNQ/AfzhHnwS
-	GwvCmHFguF5wM0+QycdeniiC8hwLqKzLuXiqEMh9P/gBnSV/Mj97TXgaGj7aXO+Y
-	Z7gUoa8lX9zsPgoIvjATGV9F/2JIo9caF6oVWKsD3JVJ07AfiwJhGSpONwoU/cBr
-	09qqkoi9iTruFfzL8WK7rygh+Dk+aYR9KDY7r7YwYuGqt0apM2hQyWz9mpKm3RBf
-	JC+dJOm7HE+eiH5iyZEB5RVhpj0JPB3duA80y4drfG1595Zb+bYn9yRxJ2r9O830
-	4TbbDGSMmCzbkYo1XHGilnP1n/EZkb5gJTveG3QQq3qLY+yQ==
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	lTOpN87EXBOPrm4lUPfEQRrOiTJrMQBvfm4Jw+7hbeo=; b=H8sDeZYlIV9GVw28
+	BfhA7y+fFFNdyaVxphpgNYFj7XXTgKJ4be86ZtGaFfbveV9pD5TglLkMsHL7Sno3
+	EZ6Kr4wJvUXTFWu2VxHHj3Q3bxJwHFs6B4RP4uKgLQI5+8QfQECnCuXMniecdTD+
+	DM7EC44FwTeFj+1jRUcWcOS48knpXElOwVkuxvs1AR3sqv0pvft0atemMdynwy+z
+	FSF0dwSMmIhMhWmXt92/7APQfSXnj9feBIfrXKfBpRdvzCG1yoySpyj0T8GczT2b
+	DSxCOjQ5HNmaRVjOazJsMeJsGtgmfl02vzgD0yq+XpyuzLR96J/9eiCyHmADHMPL
+	Ufi2FA==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yx860tbfv-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yx860tbfk-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Jun 2024 10:50:53 +0200 (MEST)
+	Thu, 27 Jun 2024 10:50:50 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id B238E40054;
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id AE75740053;
 	Thu, 27 Jun 2024 10:50:40 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 686BA2138E3;
-	Thu, 27 Jun 2024 10:49:26 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 56D702138F1;
+	Thu, 27 Jun 2024 10:49:27 +0200 (CEST)
 Received: from localhost (10.48.86.164) by SHFDAG1NODE2.st.com (10.75.129.70)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 27 Jun
- 2024 10:49:25 +0200
+ 2024 10:49:27 +0200
 From: Christophe Roullier <christophe.roullier@foss.st.com>
 To: "David S . Miller" <davem@davemloft.net>,
         Eric Dumazet
@@ -63,10 +65,12 @@ To: "David S . Miller" <davem@davemloft.net>,
 CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [net-next,PATCH 0/2] Fixes for stm32-dwmac driver fails to probe
-Date: Thu, 27 Jun 2024 10:49:15 +0200
-Message-ID: <20240627084917.327592-1-christophe.roullier@foss.st.com>
+Subject: [net-next,PATCH 2/2] net: stmmac: dwmac-stm32: update err status in case different of stm32mp13
+Date: Thu, 27 Jun 2024 10:49:17 +0200
+Message-ID: <20240627084917.327592-3-christophe.roullier@foss.st.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240627084917.327592-1-christophe.roullier@foss.st.com>
+References: <20240627084917.327592-1-christophe.roullier@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,41 +85,36 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-27_05,2024-06-25_01,2024-05-17_01
 
-Mark Brown found issue during stm32-dwmac probe:
+Second parameter of syscfg property (mask) is mandatory for MP13 but
+optional for all other cases so need to re init err to 0 for this case
+to avoid parse issue.
 
-For the past few days networking has been broken on the Avenger 96, a
-stm32mp157a based platform.  The stm32-dwmac driver fails to probe:
+Fixes: 50bbc0393114 ("net: stmmac: dwmac-stm32: add management of stm32mp13 for stm32")
 
-<6>[    1.894271] stm32-dwmac 5800a000.ethernet: IRQ eth_wake_irq not found
-<6>[    1.899694] stm32-dwmac 5800a000.ethernet: IRQ eth_lpi not found
-<6>[    1.905849] stm32-dwmac 5800a000.ethernet: IRQ sfty not found
-<3>[    1.912304] stm32-dwmac 5800a000.ethernet: Unable to parse OF data
-<3>[    1.918393] stm32-dwmac 5800a000.ethernet: probe with driver stm32-dwmac failed with error -75
+Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-which looks a bit odd given the commit contents but I didn't look at the
-driver code at all.
-
-Full boot log here:
-
-   https://lava.sirena.org.uk/scheduler/job/467150
-
-A working equivalent is here:
-
-   https://lava.sirena.org.uk/scheduler/job/466518
-
-I delivered 2 fixes to solve issue.
-
-Christophe Roullier (2):
-  net: stmmac: dwmac-stm32: Add test to verify if ETHCK is used before
-    checking clk rate
-  net: stmmac: dwmac-stm32: update err status in case different of
-    stm32mp13
-
- drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-
-base-commit: f261aa15b2ca73d4f9dbb8b116b16743237edad9
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+index 8b85265ca6cf..d060d1d8bfc6 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+@@ -371,10 +371,12 @@ static int stm32_dwmac_parse_data(struct stm32_dwmac *dwmac,
+ 	dwmac->mode_mask = SYSCFG_MP1_ETH_MASK;
+ 	err = of_property_read_u32_index(np, "st,syscon", 2, &dwmac->mode_mask);
+ 	if (err) {
+-		if (dwmac->ops->is_mp13)
++		if (dwmac->ops->is_mp13) {
+ 			dev_err(dev, "Sysconfig register mask must be set (%d)\n", err);
+-		else
++		} else {
+ 			dev_dbg(dev, "Warning sysconfig register mask not set\n");
++			err = 0;
++		}
+ 	}
+ 
+ 	return err;
 -- 
 2.25.1
 
