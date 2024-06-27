@@ -1,200 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7AA61A2C29
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 20:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B732E1A2C25;
+	Thu, 27 Jun 2024 20:39:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719520760; cv=none; b=a+4MuIEqnQKaTF6svXfaIPundMYgwJnlCTO7gGeCQPtWD9zx8C4ZdbSJdq4udXlNrE8NirtaoHrJx9VE0X7JCnP2+8JWyjrU8jlcSavYcMTyo2iocMYuilGw82ASdRD2KXbM1N65ixNFYfV18Jag6R3F9b86hQkTIsQlTYd4a2k=
+	t=1719520760; cv=none; b=bctYBOpwDNlMTjvMQ3uUcIcDi6hAXq6+1X+kMogEIE091FPpUpyDHmAtXRIHWK+NHbOKQo0M2unmcQ3qOuG2c5BBJiKqpUJnlGijnurRu7u8UY98YkGhhAs4TFrgCNDn5B07Ixj9Y3E4fKz+1bpGTkXdQ7nNKxjuP8HJNf9cVCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719520760; c=relaxed/simple;
-	bh=ZAP1w0D+klf/vYnoc7RYPNBvlo727Y55tNDt7G/JNeg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ixniudm0Et1OTMq7EmH6c947v+YGBa4RojbKU+F064PMPybwpTgSg20+aBk9gzs3DcD5+Ro0FAAG183RsneFOOh3kWLNYKjrYb8MIz1f01VUOVEk5fq0Am1c8E3ey0VMfZe/uFwbTa5kEiKo0SlN3Z0e0knTThAK6R2+9t7Kzcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IwBWOVWZ; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	bh=ygOXSRJbnNQdyHCECIvl37zEXo8k5jpFmObJDlhAErw=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MpVcAahewqOVmj5V6UQMjaq7hFYUS43bpGpHszI5H/ZvW0YQ6T2BIjibM9FPfqc5PAs5mCsQS54hbNfc1d9xMyCbgHFkDiw5JqBP6OhkK9bU9dxManxwOSwMIj0VwQVmAXqv33G9eeW08yLNlOcurSS6i9JxrrT1XOeWaWjpykE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B1yALOX3; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IwBWOVWZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719520758; x=1751056758;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ZAP1w0D+klf/vYnoc7RYPNBvlo727Y55tNDt7G/JNeg=;
-  b=IwBWOVWZL+7mhnd3jyCqRK27UsUlYyT2wGWa+A1YY0fxckdZk/Rm40Vk
-   QuDVxjrBDcSxdEJIc+iEo2nBscFmmeo/OvF9cs76VY1orI907xL2qRapf
-   XBbXpSFdcCve5t/mfGqNxWYDYs6NFuUMqrJJBStuun1vssNSjq1jvOQHZ
-   G+l6TOWdJpcN4bWPbDrmNQsAAmaLaoWnOUAkU6O6dQezHhlTrkoeFfNNu
-   pWQ2YvyyzEEM+cKhNIbeeJC2V4UHlWe568wk1iKzvW8wBYBoELvGiorhe
-   +PVLtJYjlznQxiV3h+K970OOVvot8Sp66gduil+QvEudob9mRd035eIuq
-   Q==;
-X-CSE-ConnectionGUID: Ib3dXl36RnmLZdel0978qg==
-X-CSE-MsgGUID: lG+TORGgQVCNI+MciDMhEA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="16809835"
-X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
-   d="scan'208";a="16809835"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 13:39:11 -0700
-X-CSE-ConnectionGUID: aWI2Nt6FTo2CgaJuDWV+kw==
-X-CSE-MsgGUID: 95lagScQQj+ZzPttSy9B/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
-   d="scan'208";a="82052919"
-Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 13:39:10 -0700
-From: Tony Luck <tony.luck@intel.com>
-To: Fenghua Yu <fenghua.yu@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>,
-	Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>
-Cc: x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v22 14/18] x86/resctrl: Fill out rmid_read structure for smp_call*() to read a counter
-Date: Thu, 27 Jun 2024 13:38:52 -0700
-Message-ID: <20240627203856.66628-15-tony.luck@intel.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240627203856.66628-1-tony.luck@intel.com>
-References: <20240627203856.66628-1-tony.luck@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B1yALOX3"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4217c7eb6b4so68357665e9.2;
+        Thu, 27 Jun 2024 13:39:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719520756; x=1720125556; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hxkqSPLSZ8WVJ8qA/5pMZTxdnGoTZa9LTxkjHCNUlZg=;
+        b=B1yALOX3QkXX8Z6BG33wNzJKsBnV5l7wZUSgYbTRPs4w0ObcZCRQdeNWhLinmg8JMK
+         ASCTC0ENiIvn5aWbZ9l6LxJS3WtPcR0//iPYctNHBm8s6mYQuCEt5LJQJYAcHi/6Iejt
+         rlnpovxZsRiFOYR4yFs5A4CQbFbzB1HTAEahcKdJpVOr2E6znJsscEZq/08ekc51rFMS
+         eigMJrVhdZRBUV8XGBDwmAtONcijC1b0DDChhm/Gx2w0z+fMcNCN6umoeqTmenCsAYY+
+         3rk9VCKAdzWwJrYmPOI0SzYGOd72F3yDKQykGFuuCyOHORPS0WLaW+a3Hm2LpUDeO9xm
+         uYYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719520756; x=1720125556;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hxkqSPLSZ8WVJ8qA/5pMZTxdnGoTZa9LTxkjHCNUlZg=;
+        b=jhpooLdUPR2XV7Emp+i6nIYpBBVGeQADIjzZOrXV3wgDWNL8HHoKreW3VVN87pxXiH
+         9K/9s7MYYwebcchtBuRkhkru37TQ4dA+lI3AO+TnPdKJPyxbFP/DDE8MlrLqtRRn7xBp
+         Lf3KzX4ujcW7FinITifX+zQ6HFFwMYT1LB8foseIVzxdHLc+Jq+XjUiugJyk88gAnZYf
+         kLF8tgKsWMP2N0OpMqR0hHX8s3SiQgxb85LzH8eVT+davuo+ExcpK8TRL9yLFCbLxDLi
+         LoGcbDob1mZduGJZCJ/YgklnE50svbIzO0PHCZ9yQ5zcaN8uvXC0VQoIWkWUZeJqMja1
+         aSxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWy/+d8S63jLYOd8s9mr2e8MZfnHmJ9fEjFqq/S8O/biq8+Zg35kHbPiPUZmYSukICgkiC+znI1hzqemgt+N6pbyVmjTPZ85AIMUtXr2DpPILbaXQhFbMF6G7D4uLq6W6pV+hQedHSeFJzJcg==
+X-Gm-Message-State: AOJu0YyDmfpVjN+hLH6YrjMXKu+TSSQKF1CtIZLKVUja7fdRGHY7D1Tw
+	8Bj7k5lOX4/aZdrNfXy2BasbQzH5YpDA3Q0w+G5uNK+wQAVa1E/P
+X-Google-Smtp-Source: AGHT+IFp6wy4V+XJozxcZ1RwiAljDE5gB959PiYO/3inJwovYyKVDd1cYakxkcuEl7/1ZPYf6tfKpg==
+X-Received: by 2002:a05:600c:3b16:b0:425:52c7:1f14 with SMTP id 5b1f17b1804b1-42552c71f73mr37988875e9.24.1719520755859;
+        Thu, 27 Jun 2024 13:39:15 -0700 (PDT)
+Received: from localhost ([2a00:23cc:d20f:ba01:bb66:f8b2:a0e8:6447])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256b097bd6sm6892345e9.30.2024.06.27.13.39.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jun 2024 13:39:14 -0700 (PDT)
+Date: Thu, 27 Jun 2024 21:39:14 +0100
+From: Lorenzo Stoakes <lstoakes@gmail.com>
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>,
+	Matthew Wilcox <willy@infradead.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [RFC PATCH 6/7] tools: separate out shared radix-tree components
+Message-ID: <4b4361cc-3a29-4dbf-ad47-a1d8d05e7781@lucifer.local>
+References: <cover.1719481836.git.lstoakes@gmail.com>
+ <c23f1b80c62bc906267a8b144befe7ac96daa88c.1719481836.git.lstoakes@gmail.com>
+ <3kswdhugo2jmlkejboymem4yhakird5fvmnbschicaldwjwu7x@6c6z5lk4ctvy>
+ <c2797b55-59cd-4731-899f-015631c1e553@lucifer.local>
+ <mqqoj4c2777ypdmj2o5xyofvitytijfuxwjqujnaww7y22zrob@rof2tmdb7hwl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <mqqoj4c2777ypdmj2o5xyofvitytijfuxwjqujnaww7y22zrob@rof2tmdb7hwl>
 
-mon_event_read() fills out most fields of the struct rmid_read that is
-passed via an smp_call*() function to a CPU that is part of the correct
-domain to read the monitor counters.
+On Thu, Jun 27, 2024 at 04:03:21PM -0400, Liam R. Howlett wrote:
+> * Lorenzo Stoakes <lstoakes@gmail.com> [240627 15:47]:
+> > On Thu, Jun 27, 2024 at 01:59:18PM -0400, Liam R. Howlett wrote:
+> > > * Lorenzo Stoakes <lstoakes@gmail.com> [240627 06:39]:
+> > > > The core components contained within the radix-tree tests which provide
+> > > > shims for kernel headers and access to the maple tree are useful for
+> > > > testing other things, so separate them out and make the radix tree tests
+> > > > dependent on the shared components.
+> > > >
+> > > > This lays the groundwork for us to add VMA tests of the newly introduced
+> > > > vma.c file.
+> > >
+> > > This separation and subsequent patch requires building the
+> > > xarray-hsared, radix-tree, idr, find_bit, and bitmap .o files which are
+> > > unneeded for the target 'main'.  I'm not a build expert on how to fix
+> > > this, but could that be reduced to the minimum set somehow?
+> >
+> > I'm confused, the existing Makefile specified:
+> >
+> > CORE_OFILES := xarray.o radix-tree.o idr.o linux.o test.o find_bit.o bitmap.o \
+> > 			 slab.o maple.o
+> >
+> > OFILES = main.o $(CORE_OFILES) regression1.o regression2.o regression3.o \
+> > 	 regression4.o tag_check.o multiorder.o idr-test.o iteration_check.o \
+> > 	 iteration_check_2.o benchmark.o
+> >
+> > main:	$(OFILES)
+> >
+> > Making all of the files you mentioned dependencies of main no? (xarray-shared
+> > being a subset of xarray.o which requires it anyway)
+>
+> After replacing main with vma and dropping the vma.c, I can generate the
+> vma executable. I had to generate map-shift.h and bit-lenght.h, then
+> execute:
+>
+> cc -O2 -g -Wall -I../shared -I. -I../../include -I../../../lib -g -Og -Wall -D_LGPL_SOURCE -fsanitize=address -fsanitize=undefined -c -o vma.o vma.c
+> cc -c -O2 -g -Wall -I../shared -I. -I../../include -I../../../lib -g -Og -Wall -D_LGPL_SOURCE -fsanitize=address -fsanitize=undefined ../shared/linux.c -o linux.o
+> cc -O2 -g -Wall -I../shared -I. -I../../include -I../../../lib -g -Og -Wall -D_LGPL_SOURCE -fsanitize=address -fsanitize=undefined -c -o slab.o ../../lib/slab.c
+> cc -c -O2 -g -Wall -I../shared -I. -I../../include -I../../../lib -g -Og -Wall -D_LGPL_SOURCE -fsanitize=address -fsanitize=undefined ../shared/maple-shim.c -o maple-shim.o
+> cc -O2 -g -Wall -I../shared -I. -I../../include -I../../../lib -g -Og -Wall -D_LGPL_SOURCE -fsanitize=address -fsanitize=undefined -c -o vma_stub.o vma_stub.c
+> cc -fsanitize=address -fsanitize=undefined vma.o linux.o slab.o maple-shim.o vma_stub.o -lpthread -lurcu -o vma
+>
+> Dropping a number of the pre-built items.  When I looked at the list, it
+> seemed too numerous for what we were doing (why do we need idr, and
+> radix-tree?)  So I tried removing as many as I could.
 
-With Sub-NUMA Cluster (SNC) mode there are now two cases to handle:
+I did see link errors at some point when radix-tree wasn't included there,
+I'll take another look and see if we can reduce to a smaller subset if
+posible.
 
-1) Reading a file that returns a value for a single domain.
-   + Choose the CPU to execute from the domain cpu_mask
-
-2) Reading a file that must sum across domains sharing an L3 cache
-   instance.
-   + Indicate to called code that a sum is needed by passing a NULL
-     rdt_mon_domain pointer.
-   + Choose the CPU from the L3 shared_cpu_map.
-
-Signed-off-by: Tony Luck <tony.luck@intel.com>
----
- arch/x86/kernel/cpu/resctrl/internal.h    |  2 +-
- arch/x86/kernel/cpu/resctrl/ctrlmondata.c | 40 ++++++++++++++++++-----
- arch/x86/kernel/cpu/resctrl/rdtgroup.c    |  2 +-
- 3 files changed, 34 insertions(+), 10 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index 13d862221f9c..16982d1baf99 100644
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -632,7 +632,7 @@ void mon_event_count(void *info);
- int rdtgroup_mondata_show(struct seq_file *m, void *arg);
- void mon_event_read(struct rmid_read *rr, struct rdt_resource *r,
- 		    struct rdt_mon_domain *d, struct rdtgroup *rdtgrp,
--		    int evtid, int first);
-+		    cpumask_t *cpumask, int evtid, int first);
- void mbm_setup_overflow_handler(struct rdt_mon_domain *dom,
- 				unsigned long delay_ms,
- 				int exclude_cpu);
-diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-index 4d76ff31a9e0..50fa1fe9a073 100644
---- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-+++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-@@ -515,7 +515,7 @@ static int smp_mon_event_count(void *arg)
- 
- void mon_event_read(struct rmid_read *rr, struct rdt_resource *r,
- 		    struct rdt_mon_domain *d, struct rdtgroup *rdtgrp,
--		    int evtid, int first)
-+		    cpumask_t *cpumask, int evtid, int first)
- {
- 	int cpu;
- 
-@@ -536,7 +536,7 @@ void mon_event_read(struct rmid_read *rr, struct rdt_resource *r,
- 		return;
- 	}
- 
--	cpu = cpumask_any_housekeeping(&d->hdr.cpu_mask, RESCTRL_PICK_ANY_CPU);
-+	cpu = cpumask_any_housekeeping(cpumask, RESCTRL_PICK_ANY_CPU);
- 
- 	/*
- 	 * cpumask_any_housekeeping() prefers housekeeping CPUs, but
-@@ -545,7 +545,7 @@ void mon_event_read(struct rmid_read *rr, struct rdt_resource *r,
- 	 * counters on some platforms if its called in IRQ context.
- 	 */
- 	if (tick_nohz_full_cpu(cpu))
--		smp_call_function_any(&d->hdr.cpu_mask, mon_event_count, rr, 1);
-+		smp_call_function_any(cpumask, mon_event_count, rr, 1);
- 	else
- 		smp_call_on_cpu(cpu, smp_mon_event_count, rr, false);
- 
-@@ -574,16 +574,40 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
- 	resid = md.u.rid;
- 	domid = md.u.domid;
- 	evtid = md.u.evtid;
--
- 	r = &rdt_resources_all[resid].r_resctrl;
--	hdr = rdt_find_domain(&r->mon_domains, domid, NULL);
--	if (!hdr || WARN_ON_ONCE(hdr->type != RESCTRL_MON_DOMAIN)) {
-+
-+	if (md.u.sum) {
-+		/*
-+		 * This file requires summing across all domains that share
-+		 * the L3 cache id that was provided in the "domid" field of the
-+		 * mon_data_bits union. Search all domains in the resource for
-+		 * one that matches this cache id.
-+		 */
-+		list_for_each_entry(d, &r->mon_domains, hdr.list) {
-+			if (d->ci->id == domid) {
-+				rr.ci = d->ci;
-+				mon_event_read(&rr, r, NULL, rdtgrp,
-+					       &d->ci->shared_cpu_map, evtid, false);
-+				goto checkresult;
-+			}
-+		}
- 		ret = -ENOENT;
- 		goto out;
-+	} else {
-+		/*
-+		 * This file provides data from a single domain. Search
-+		 * the resource to find the domain with "domid".
-+		 */
-+		hdr = rdt_find_domain(&r->mon_domains, domid, NULL);
-+		if (!hdr || WARN_ON_ONCE(hdr->type != RESCTRL_MON_DOMAIN)) {
-+			ret = -ENOENT;
-+			goto out;
-+		}
-+		d = container_of(hdr, struct rdt_mon_domain, hdr);
-+		mon_event_read(&rr, r, d, rdtgrp, &d->hdr.cpu_mask, evtid, false);
- 	}
--	d = container_of(hdr, struct rdt_mon_domain, hdr);
- 
--	mon_event_read(&rr, r, d, rdtgrp, evtid, false);
-+checkresult:
- 
- 	if (rr.err == -EIO)
- 		seq_puts(m, "Error\n");
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 67a8188c6d8f..cd0229f7c30e 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -3073,7 +3073,7 @@ static int mon_add_all_files(struct kernfs_node *kn, struct rdt_mon_domain *d,
- 			return ret;
- 
- 		if (!do_sum && is_mbm_event(mevt->evtid))
--			mon_event_read(&rr, r, d, prgrp, mevt->evtid, true);
-+			mon_event_read(&rr, r, d, prgrp, &d->hdr.cpu_mask, mevt->evtid, true);
- 	}
- 
- 	return 0;
--- 
-2.45.2
-
+>
+> >
+> > I'm not sure this is a huge big deal as these are all rather small :)
+>
+> Yeah, maybe not worth the effort.
+>
+> Cheers,
+> Liam
