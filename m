@@ -1,57 +1,57 @@
 Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15FA0199384;
-	Thu, 27 Jun 2024 16:14:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81608199EAA;
+	Thu, 27 Jun 2024 16:14:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719504851; cv=none; b=CGBs1+dRZjyCiaIQA49mMXvbkeYkS4PK0mdbB9ThgucUZg6Xy/WZBv1L+/ptIkgBPgawENLSPTFCRgLNW787xZfV53u+rAleK2x4LKLAZ0yQk7buT3fCK7No9CNZ5NwNEaiGUNbU7J3aOzMksN7OjRPegO/FnVFuFojLoiA3w3k=
+	t=1719504856; cv=none; b=BVNOc0r4koPmb0f1pn6gUBmKJhTGehBfNmwsjXZQuPbKpRLDmLex/tpgvEywrtRokwz+cAFPzBFC3LotrsGZfjcyFgghAy9mqNY00lrN7w7DdHFWT+ufCziG2dCX6EOM+NNtFpTlH7m/j9vpe4yWlMgJAZEizMKOgnuCrZsYdV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719504851; c=relaxed/simple;
-	bh=uHYfA0VsmKtgVxhtleGgOQnfTZlvQIDE0KLvAcgdeL0=;
+	s=arc-20240116; t=1719504856; c=relaxed/simple;
+	bh=VmosaxgaS0o8LoFf3WLqjfjuVvyq+aacDXrIWp5C9yE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=E1KTnrmuBppryjG38F0OHKgFTqZAh6fbAjfMqKZgw3fn4InGGCcaCFR4Aij7/fTXDU923++K6Gc/8pxYCmkjgmUdtRySAJ8F17gl26KQpBXbrEtw0loxT7tvYIgsxCG1ufU+1MDbihJPjrJB49V4pBXz3ZlUEnMNVOrNNsepsiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ktkmUcDn; arc=none smtp.client-ip=209.85.208.172
+	 MIME-Version; b=PQyauNXnIoe66qhXCGDlwkNm6d6KgqkTU0SbHHW4h5VextWpM6ixK1aWDOcEfibopl4BCvABoBWyGfuw4lNw5m5fu6yPIiRcznbXigtUw4pGXNP40ijyjckMl1q7Rm8wdi3JgXlugcd88jTAom8nFWMpLS9kXyvJMeeto7tzFGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CVb12VqS; arc=none smtp.client-ip=209.85.208.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ktkmUcDn"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2ec5fad1984so70467181fa.0;
-        Thu, 27 Jun 2024 09:14:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CVb12VqS"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2ec17eb4493so112202181fa.2;
+        Thu, 27 Jun 2024 09:14:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719504848; x=1720109648; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719504853; x=1720109653; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JFUyKc2jnvtsvH+YO9xtQTlSpfOXet6znjU39rch4oc=;
-        b=ktkmUcDnFkHt0p30jNm/B1ASFDO1xG8TQrgvqdQDQjQnVwiki39LLEqLhuFzLvdERz
-         Hzei4pRXUpjuZJ/vQG/Fn8l3KIalGUsS22JYvmxynr0bnPkXK/DYgwATjdgJTrBrajvF
-         YQbcyRhNsuquhBRNUUxotzTztSPWm2ZKFaxEUHGQKBen5HmXdqyfXBj1a5w4kOEgI61T
-         mgow0hefeN+6FURvmePDxVuMr2KCWFFvjLGzbTlEPAg6jCFVlFZpzlkGW6NvYCC27RGR
-         iTAuL45iAl8WXHIE5IcPDpbGAeeaVcs0P72KWyoz9CfBeJKMw20ncSKsnsd52xKNgP3g
-         uKZA==
+        bh=xtzEFPqxvnj/6dq6Oj8GZmky1NmT3+KaFgmIR1T+jb8=;
+        b=CVb12VqSFvlewu9lGYbqBST94tO9RzSBt62f9H0H+RQRl6X5peq7xYfiYAm/bZ/EfP
+         kD8viYxA62EmbaIu5maudh9w0DouMhUb1tgj+YiJtCRui1gL/smCHgCWF7+enPppMJJ+
+         VxXMlTpHaLNasoGzZPLUmXugtdeAvAANfqs55y+IAD0Ozmpx6x3rieQb1UlYeZ2H2FoT
+         Zo4dYEx8PUXWsDtzlcoRzXhx6JUBd9PcyVev2yzpglNJnfiLa025AT/69Q8nUNsoz37i
+         I1pCQsLPf/FqGFe/LsQfTiWvluiPkq3PJyXW1B/A9TVxBWj8Usco6QK0i4kTWuvjgotU
+         2jaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719504848; x=1720109648;
+        d=1e100.net; s=20230601; t=1719504853; x=1720109653;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JFUyKc2jnvtsvH+YO9xtQTlSpfOXet6znjU39rch4oc=;
-        b=cZZTKR8BSbvFK1zC2naMZgTTflUtl175970LihnhnCc1hHax96YsJiMQXudYD5c7FS
-         TjNNufXuLCzYhJMNJxEY0ksOurryz20rRo+2fPm7LbqLnKBOG9ExFNzMXOg4So53zunv
-         N8998PBnoyUg4j6nOHHaGTinZwh1UCFeSTHVM88PWuA6QiKrFc2xYAitM4m/+1YCZhBH
-         Derr1hDadUndn9oSOIqsFZAld3ce2/eN36pzP/tFXSgPIJQuberwStVUMriCr3vTy8E3
-         ZhrMMA2SF5PcoGnK42hFr2VnpvW8vEQwE56P6xLX+lpZBi/7CA8g3uXi8RbQzDUXtdTJ
-         riAA==
-X-Forwarded-Encrypted: i=1; AJvYcCX8ETaUwX3kzza1FizfaWR3hZZ4dcv1EXvtGmRSPprCqd1VVjVHh8HGQXkjSuTQmuZYdLN6LA/PeLJrqycF9qA0yCEZ5wSsxFbmChvd0D7Uh9F5udQJF4pmNFX3QhPbeuXabZLdq2XpRpKqLK00u3ypobnOpbubK4y9qs/aq34gWULMsFDtpaKEyhE=
-X-Gm-Message-State: AOJu0YziGw45Mt9AXtnDTHUM2Hp766Im4Yva38UoZ24hRezKMFxy9wz2
-	BCruQJVXXLf1LKrFeMFrrImF8kSEiEWxRBKEkjTS3z5mXHth5iwu
-X-Google-Smtp-Source: AGHT+IEWBiRKQXLD1furQnUzd/8DquiUPZvt9G7ZPBH4TxbTqSLcYKhCOUN2U+bPkEfHWAEPnlfZWw==
-X-Received: by 2002:a2e:7a0a:0:b0:2ec:63f:fe91 with SMTP id 38308e7fff4ca-2ec5b357921mr101577831fa.38.1719504847747;
-        Thu, 27 Jun 2024 09:14:07 -0700 (PDT)
+        bh=xtzEFPqxvnj/6dq6Oj8GZmky1NmT3+KaFgmIR1T+jb8=;
+        b=Iel7Q/rmbPNl4Je68U5fuf9slY7O3h+1dgevEvvXD115eVw+H2b0PoXo/+g6WFDZ/P
+         Yb8hFnqu9OOWp/aGJmWtC8QUGuHpE0dVGYphwQhXsKbc2t4hLbVoe6qgKyYgwp5SjT1B
+         k6z8hWOuhnfihcHiRk2os0T2QT2Ne6cYlNgWV+4LInFIS1aZSXg+pXvVJ75vBd2Na3wU
+         LgniCmS8W5ArQ7ho0e2z+8zdHpLKYzau+BU9wFegMwlWs4HIWZ4oKhIKlosqrA0+eyBb
+         VVw813L6oGQwuMztXQbbZ8HHgT+gZctUTnfg83X/OkYnygruq7UeKNfC5tj4Xxr8xaWx
+         PYNw==
+X-Forwarded-Encrypted: i=1; AJvYcCUC6tF/pkHXeIwPOuyq3h4A+Kn4IAMRAB2XGEWwcl6cN9prSKjkvGF9vIEMEnc53tbG2/YWVGK0rkGFXlCUSFCU0HXheblzVxNh7D8zSGMEprBW2vUsqStM29oIC1DYJM2wormC0EZsKJxFVDtI9saHqpAxDwMtnHkjC4gj+46ivHmqQYIHaSLG7r4=
+X-Gm-Message-State: AOJu0YyZ5NdwmhZVYSG3a7llpYcUQll84uIk/QrGzIB9GZErCp4r7FZV
+	+9ki1j4Xtjbz4g2WiFxzrFmESfd5MLOM/o9WU13crICfvAOlg1O6
+X-Google-Smtp-Source: AGHT+IEaXWzhWXBL7SXPzl6/eOhxaLpTsPTDQeEdBcSZhfYpKiG+KBCJNjVyqcJnMlumfjdCZDLCJg==
+X-Received: by 2002:a2e:9ecd:0:b0:2ec:51b5:27be with SMTP id 38308e7fff4ca-2ec5b2d4619mr112186951fa.12.1719504850705;
+        Thu, 27 Jun 2024 09:14:10 -0700 (PDT)
 Received: from prasmi.home ([2a00:23c8:2500:a01:9638:4c3:829:6df3])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c8424677sm72372435e9.35.2024.06.27.09.14.06
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c8424677sm72372435e9.35.2024.06.27.09.14.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 09:14:07 -0700 (PDT)
+        Thu, 27 Jun 2024 09:14:09 -0700 (PDT)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -70,9 +70,9 @@ Cc: devicetree@vger.kernel.org,
 	Biju Das <biju.das.jz@bp.renesas.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v3 1/3] dt-bindings: clock: renesas: Document RZ/V2H(P) SoC CPG
-Date: Thu, 27 Jun 2024 17:13:13 +0100
-Message-Id: <20240627161315.98143-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v3 3/3] clk: renesas: Add RZ/V2H(P) CPG driver
+Date: Thu, 27 Jun 2024 17:13:15 +0100
+Message-Id: <20240627161315.98143-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240627161315.98143-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20240627161315.98143-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -86,157 +86,175 @@ Content-Transfer-Encoding: 8bit
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Document the device tree bindings for the Renesas RZ/V2H(P) SoC
-Clock Pulse Generator (CPG).
-
-CPG block handles the below operations:
-- Generation and control of clock signals for the IP modules
-- Generation and control of resets
-- Control over booting
-- Low power consumption and power supply domains
-
-Also define constants for the core clocks of the RZ/V2H(P) SoC. Note the
-core clocks are a subset of the ones which are listed as part of section
-4.4.2 of HW manual Rev.1.01 which cannot be controlled by CLKON register.
+Add RZ/V2H(P) CPG driver.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
 v2->v3
-- Dropped '|' for CPG description
-- Dropped description for '#power-domain-cells' property
-- Added 3 clock inputs for CPG
-- Dropped label in example node
-- Used 4 spaces for example node
-- Renamed r9a09g057-cpg.h -> renesas,r9a09g057-cpg.h
-- Merged adding renesas,r9a09g057-cpg.h in DT binding patch
-- Updated commit message
+- Added CLK_PLLDTY
+- Added core clocks sys_0_pclk and iotop_0_shclk
+- Dropped r9a09g057_crit_mod_clks
 
 v1->v2
-- Updated commit message
-- Updated description for binding as suggested by Geert
-- Updated descriptions for clocks and resets property
-- Renamed extal->qextal
-- Updated '#power-domain-cells' value
+- Updated commit description
+- Dropped pll_clk1/clk2_offset
+- Made r9a09g057_mod_clks/r9a09g057_resets as static const
+- Now using register indexes
 ---
- .../bindings/clock/renesas,rzv2h-cpg.yaml     | 80 +++++++++++++++++++
- .../dt-bindings/clock/renesas,r9a09g057-cpg.h | 21 +++++
- 2 files changed, 101 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/renesas,rzv2h-cpg.yaml
- create mode 100644 include/dt-bindings/clock/renesas,r9a09g057-cpg.h
+ drivers/clk/renesas/Kconfig         |  5 ++
+ drivers/clk/renesas/Makefile        |  1 +
+ drivers/clk/renesas/r9a09g057-cpg.c | 79 +++++++++++++++++++++++++++++
+ drivers/clk/renesas/rzv2h-cpg.c     |  4 ++
+ drivers/clk/renesas/rzv2h-cpg.h     |  2 +
+ 5 files changed, 91 insertions(+)
+ create mode 100644 drivers/clk/renesas/r9a09g057-cpg.c
 
-diff --git a/Documentation/devicetree/bindings/clock/renesas,rzv2h-cpg.yaml b/Documentation/devicetree/bindings/clock/renesas,rzv2h-cpg.yaml
+diff --git a/drivers/clk/renesas/Kconfig b/drivers/clk/renesas/Kconfig
+index f078ccb635bb..76791a1c50ac 100644
+--- a/drivers/clk/renesas/Kconfig
++++ b/drivers/clk/renesas/Kconfig
+@@ -40,6 +40,7 @@ config CLK_RENESAS
+ 	select CLK_R9A07G054 if ARCH_R9A07G054
+ 	select CLK_R9A08G045 if ARCH_R9A08G045
+ 	select CLK_R9A09G011 if ARCH_R9A09G011
++	select CLK_R9A09G057 if ARCH_R9A09G057
+ 	select CLK_SH73A0 if ARCH_SH73A0
+ 
+ if CLK_RENESAS
+@@ -193,6 +194,10 @@ config CLK_R9A09G011
+ 	bool "RZ/V2M clock support" if COMPILE_TEST
+ 	select CLK_RZG2L
+ 
++config CLK_R9A09G057
++       bool "RZ/V2H(P) clock support" if COMPILE_TEST
++       select CLK_RZV2H
++
+ config CLK_SH73A0
+ 	bool "SH-Mobile AG5 clock support" if COMPILE_TEST
+ 	select CLK_RENESAS_CPG_MSTP
+diff --git a/drivers/clk/renesas/Makefile b/drivers/clk/renesas/Makefile
+index d81a62e78345..23d2e26051c8 100644
+--- a/drivers/clk/renesas/Makefile
++++ b/drivers/clk/renesas/Makefile
+@@ -37,6 +37,7 @@ obj-$(CONFIG_CLK_R9A07G044)		+= r9a07g044-cpg.o
+ obj-$(CONFIG_CLK_R9A07G054)		+= r9a07g044-cpg.o
+ obj-$(CONFIG_CLK_R9A08G045)		+= r9a08g045-cpg.o
+ obj-$(CONFIG_CLK_R9A09G011)		+= r9a09g011-cpg.o
++obj-$(CONFIG_CLK_R9A09G057)		+= r9a09g057-cpg.o
+ obj-$(CONFIG_CLK_SH73A0)		+= clk-sh73a0.o
+ 
+ # Family
+diff --git a/drivers/clk/renesas/r9a09g057-cpg.c b/drivers/clk/renesas/r9a09g057-cpg.c
 new file mode 100644
-index 000000000000..dbc2705b3529
+index 000000000000..8b2be17901b2
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/renesas,rzv2h-cpg.yaml
-@@ -0,0 +1,80 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/renesas,rzv2h-cpg.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas RZ/V2H(P) Clock Pulse Generator (CPG)
-+
-+maintainers:
-+  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-+
-+description:
-+  On Renesas RZ/V2H(P) SoCs, the CPG (Clock Pulse Generator) handles generation
-+  and control of clock signals for the IP modules, generation and control of resets,
-+  and control over booting, low power consumption and power supply domains.
-+
-+properties:
-+  compatible:
-+    const: renesas,r9a09g057-cpg
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: AUDIO_EXTAL clock input
-+      - description: RTXIN clock input
-+      - description: QEXTAL clock input
-+
-+  clock-names:
-+    items:
-+      - const: audio_extal
-+      - const: rtxin
-+      - const: qextal
-+
-+  '#clock-cells':
-+    description: |
-+      - For CPG core clocks, the two clock specifier cells must be "CPG_CORE"
-+        and a core clock reference, as defined in
-+        <dt-bindings/clock/renesas,r9a09g057-cpg.h>,
-+      - For module clocks, the two clock specifier cells must be "CPG_MOD" and
-+        a module number.  The module number is calculated as the CLKON register
-+        offset index multiplied by 16, plus the actual bit in the register
-+        used to turn the CLK ON. For example, for CGC_GIC_0_GICCLK, the
-+        calculation is (1 * 16 + 3) = 19.
-+    const: 2
-+
-+  '#power-domain-cells':
-+    const: 0
-+
-+  '#reset-cells':
-+    description:
-+      The single reset specifier cell must be the reset number. The reset number
-+      is calculated as the reset register offset index multiplied by 16, plus the
-+      actual bit in the register used to reset the specific IP block. For example,
-+      for SYS_0_PRESETN, the calculation is (3 * 16 + 0) = 48.
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - '#clock-cells'
-+  - '#power-domain-cells'
-+  - '#reset-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clock-controller@10420000 {
-+        compatible = "renesas,r9a09g057-cpg";
-+        reg = <0x10420000 0x10000>;
-+        clocks = <&audio_extal_clk>, <&rtxin_clk>, <&qextal_clk>;
-+        clock-names = "audio_extal", "rtxin", "qextal";
-+        #clock-cells = <2>;
-+        #power-domain-cells = <0>;
-+        #reset-cells = <1>;
-+    };
-diff --git a/include/dt-bindings/clock/renesas,r9a09g057-cpg.h b/include/dt-bindings/clock/renesas,r9a09g057-cpg.h
-new file mode 100644
-index 000000000000..04653d90d78d
---- /dev/null
-+++ b/include/dt-bindings/clock/renesas,r9a09g057-cpg.h
-@@ -0,0 +1,21 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++++ b/drivers/clk/renesas/r9a09g057-cpg.c
+@@ -0,0 +1,79 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Renesas RZ/V2H(P) CPG driver
 + *
 + * Copyright (C) 2024 Renesas Electronics Corp.
 + */
-+#ifndef __DT_BINDINGS_CLOCK_R9A09G057_CPG_H__
-+#define __DT_BINDINGS_CLOCK_R9A09G057_CPG_H__
 +
-+#include <dt-bindings/clock/renesas-cpg-mssr.h>
++#include <linux/clk-provider.h>
++#include <linux/device.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
 +
-+/* Core Clock list */
-+#define R9A09G057_SYS_0_PCLK			0
-+#define R9A09G057_CA55_0_CORE_CLK0		1
-+#define R9A09G057_CA55_0_CORE_CLK1		2
-+#define R9A09G057_CA55_0_CORE_CLK2		3
-+#define R9A09G057_CA55_0_CORE_CLK3		4
-+#define R9A09G057_CA55_0_PERIPHCLK		5
-+#define R9A09G057_CM33_CLK0			6
-+#define R9A09G057_CST_0_SWCLKTCK		7
-+#define R9A09G057_IOTOP_0_SHCLK			8
++#include <dt-bindings/clock/renesas,r9a09g057-cpg.h>
 +
-+#endif /* __DT_BINDINGS_CLOCK_R9A09G057_CPG_H__ */
++#include "rzv2h-cpg.h"
++
++enum clk_ids {
++	/* Core Clock Outputs exported to DT */
++	LAST_DT_CORE_CLK = R9A09G057_IOTOP_0_SHCLK,
++
++	/* External Input Clocks */
++	CLK_AUDIO_EXTAL,
++	CLK_RTXIN,
++	CLK_QEXTAL,
++
++	/* PLL Clocks */
++	CLK_PLLCM33,
++	CLK_PLLDTY,
++	CLK_PLLCA55,
++
++	/* Internal Core Clocks */
++	CLK_PLLCM33_DIV16,
++
++	/* Module Clocks */
++	MOD_CLK_BASE,
++};
++
++static const struct cpg_core_clk r9a09g057_core_clks[] __initconst = {
++	/* External Clock Inputs */
++	DEF_INPUT("audio_extal", CLK_AUDIO_EXTAL),
++	DEF_INPUT("rtxin", CLK_RTXIN),
++	DEF_INPUT("qextal", CLK_QEXTAL),
++
++	/* PLL Clocks */
++	DEF_FIXED(".pllcm33", CLK_PLLCM33, CLK_QEXTAL, 200, 3),
++	DEF_FIXED(".plldty", CLK_PLLDTY, CLK_QEXTAL, 200, 3),
++	DEF_PLL(".pllca55", CLK_PLLCA55, CLK_QEXTAL, PLL_CONF(0x64)),
++
++	/* Internal Core Clocks */
++	DEF_FIXED(".pllcm33_div16", CLK_PLLCM33_DIV16, CLK_PLLCM33, 1, 16),
++
++	DEF_FIXED("sys_0_pclk", R9A09G057_SYS_0_PCLK, CLK_QEXTAL, 1, 1),
++	DEF_FIXED("iotop_0_shclk", R9A09G057_IOTOP_0_SHCLK, CLK_PLLCM33_DIV16, 1, 1),
++};
++
++static const struct rzv2h_mod_clk r9a09g057_mod_clks[] = {
++	DEF_MOD("scif_0_clk_pck",		CLK_PLLCM33_DIV16, 8, 15, 4, 15),
++};
++
++static const struct rzv2h_reset r9a09g057_resets[] = {
++	DEF_RST(9, 5, 4, 6),		/* SCIF_0_RST_SYSTEM_N */
++};
++
++const struct rzv2h_cpg_info r9a09g057_cpg_info = {
++	/* Core Clocks */
++	.core_clks = r9a09g057_core_clks,
++	.num_core_clks = ARRAY_SIZE(r9a09g057_core_clks),
++	.last_dt_core_clk = LAST_DT_CORE_CLK,
++	.num_total_core_clks = MOD_CLK_BASE,
++
++	/* Module Clocks */
++	.mod_clks = r9a09g057_mod_clks,
++	.num_mod_clks = ARRAY_SIZE(r9a09g057_mod_clks),
++	.num_hw_mod_clks = 25 * 16,
++
++	/* Resets */
++	.resets = r9a09g057_resets,
++	.num_resets = ARRAY_SIZE(r9a09g057_resets),
++};
+diff --git a/drivers/clk/renesas/rzv2h-cpg.c b/drivers/clk/renesas/rzv2h-cpg.c
+index 058d79673ae6..6d5427d82412 100644
+--- a/drivers/clk/renesas/rzv2h-cpg.c
++++ b/drivers/clk/renesas/rzv2h-cpg.c
+@@ -643,6 +643,10 @@ static int __init rzv2h_cpg_probe(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id rzv2h_cpg_match[] = {
++	{
++		.compatible = "renesas,r9a09g057-cpg",
++		.data = &r9a09g057_cpg_info,
++	},
+ 	{ /* sentinel */ }
+ };
+ 
+diff --git a/drivers/clk/renesas/rzv2h-cpg.h b/drivers/clk/renesas/rzv2h-cpg.h
+index 2358782388c4..17a3c02528d6 100644
+--- a/drivers/clk/renesas/rzv2h-cpg.h
++++ b/drivers/clk/renesas/rzv2h-cpg.h
+@@ -156,4 +156,6 @@ struct rzv2h_cpg_info {
+ 	unsigned int num_resets;
+ };
+ 
++extern const struct rzv2h_cpg_info r9a09g057_cpg_info;
++
+ #endif	/* __RENESAS_RZV2H_CPG_H__ */
 -- 
 2.34.1
 
