@@ -1,47 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D385029A0;
-	Fri, 28 Jun 2024 00:06:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E5AB191;
+	Fri, 28 Jun 2024 00:10:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719533165; cv=none; b=T0bCp5W4dJyt00CjtsHR+XdNSHRgLLUrf4p1D0SvboqGhY2PAhXvcVPkKf7FN9Otw0skrbZkAhTJK0Rf0MLMQccZ6+OAjZAWIpUKztS+ff5p8/umPDijGhrHbnbb0vOUTmXkVabqKXmM5yixSc1SX0XXDRaav0l24jvDTtuLeAk=
+	t=1719533429; cv=none; b=HQf6+yu9iDSJqwvi03QHdsR5kEMtmTcd2V8T4SHXknkI4ZLV8QkqPRysCC0lV3XeUz/Wsq6SRFDwBnRikU2D8CqHEM2EBx3eTe/qoFKzWVDZ5F5kQ+bpk8LN2TjQjSIEinzkIFYBeRRpJSD7Fg9NubOHbD7IZDZkVj3rUkbrv4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719533165; c=relaxed/simple;
-	bh=0CyfdFxIwNPXXscTyygI74xUEUEhVUnmTakcgjIn3rg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CQOni8SJzTETJRYNpxPfdUAWjBnlTSoOFTcssN/xRKMj8b3Zf07dFa6tHHFet+9GDnpgskAHSmhoRjG4PxRLG4aN/OE6JZUDIClVtOZiUvUBsGOYzHzGx9LJT3jyxw/QkEE3LwaIANWp/PpYbcr+oEJSj0mqAO4Zoi4wzXYSPhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PEnR3Eqq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719533429; c=relaxed/simple;
+	bh=3GHMMp2TTP4bxQLBDw4fiztif1SW1cL0IEHns4AvqOo=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=t8S8AXcI4Xcx1cWe575kKxEDsuX664Xk4vGsgdqHiPf5a1JrNiv6tAB5B51a0VjsSDuaWW1DJuUbbbkrs4vOwdUgicYwNTuhRmxgGizoSvEhgYuakqiZzS/UF0t+IUOWsaaI80PEgp7EDJNo40Lub9qEBE11RsykuUgdiOk9LKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RiDnM8FG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PEnR3Eqq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EEC2C32786;
-	Fri, 28 Jun 2024 00:06:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RiDnM8FG"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 27EBBC32789;
+	Fri, 28 Jun 2024 00:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719533165;
-	bh=0CyfdFxIwNPXXscTyygI74xUEUEhVUnmTakcgjIn3rg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PEnR3EqqXFCcFhvGEm55uemDB45fA1WlZVMl/AvDkNBZRc02OQB56osOUjBoYkOk2
-	 4288ZXR81JuISqdSil7XeCpz1+uQZvm0YaULfoINaKlwPWJ8eZhPIgPMX5csQBWiYp
-	 P+y7QTs2AfFfgH9pZ0Qp+5FDLdKsU+GCxE3fUJxKQxU7qtmHiEZdzdHfwxHkPnDc2f
-	 gH4T1bpqWRD/5NuUT4w2/sFkJJyv8R0q74b1p84D+5xOliZSfVbIBAsP7OxTUmE3oq
-	 EOIwBgkKcaPsGaeYnEbDtpmluSQZ5z5zh0Aa7nYmk+YBKcPWqloOLFPMyI8oYSLBdc
-	 2x0F+Mrg9xlMA==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 2/2] perf stat: Use field separator in the metric header
-Date: Thu, 27 Jun 2024 17:06:04 -0700
-Message-ID: <20240628000604.1296808-2-namhyung@kernel.org>
-X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
-In-Reply-To: <20240628000604.1296808-1-namhyung@kernel.org>
-References: <20240628000604.1296808-1-namhyung@kernel.org>
+	s=k20201202; t=1719533429;
+	bh=3GHMMp2TTP4bxQLBDw4fiztif1SW1cL0IEHns4AvqOo=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=RiDnM8FG2yKnOg3/0pOpMBb/HS8t1Wc685A2zYiXT3EpV6fJfincqYrnGSwkZpUOh
+	 0Bd19t2K0iJO4etdEmLJrMIguWmPfSxM1FJRMhzmOu3iK0UHZPvODQpKlB/sofaITu
+	 R1WYocvzroD5OHS3veoNFG7xVMcHcQ3egPC9UO+b4tpnIi5YT7KWY2o41Pghl4EEhQ
+	 3HL+G6UGXNevV5kMnU50YaB9R9PvZFs4VVJ66Q80stjRvv+yikYvYB9TmmDaaZnbtB
+	 QZJlV7wtzGO8MppSSzfMCODV5I52hcKutxCnTmCZtPhDPCwwGPqKRCaJCMG6RKCjMN
+	 6IqW3CItcxokg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 14981C43336;
+	Fri, 28 Jun 2024 00:10:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,60 +37,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v2] net: thunderx: Unembed netdev structure
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171953342907.1107.6780824030224917954.git-patchwork-notify@kernel.org>
+Date: Fri, 28 Jun 2024 00:10:29 +0000
+References: <20240626173503.87636-1-leitao@debian.org>
+In-Reply-To: <20240626173503.87636-1-leitao@debian.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: kuba@kernel.org, sgoutham@marvell.com, davem@davemloft.net,
+ edumazet@google.com, pabeni@redhat.com, horms@kernel.org,
+ linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
-It didn't use the passed field separator (using -x option) when it
-prints the metric headers and always put "," between the fields.
+Hello:
 
-Before:
-  $ sudo ./perf stat -a -x : --per-core -M tma_core_bound --metric-only true
-  core,cpus,%  tma_core_bound:     <<<--- here: "core,cpus," but ":" expected
-  S0-D0-C0:2:10.5:
-  S0-D0-C1:2:14.8:
-  S0-D0-C2:2:9.9:
-  S0-D0-C3:2:13.2:
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-After:
-  $ sudo ./perf stat -a -x : --per-core -M tma_core_bound --metric-only true
-  core:cpus:%  tma_core_bound:
-  S0-D0-C0:2:10.5:
-  S0-D0-C1:2:15.0:
-  S0-D0-C2:2:16.5:
-  S0-D0-C3:2:12.5:
+On Wed, 26 Jun 2024 10:35:02 -0700 you wrote:
+> Embedding net_device into structures prohibits the usage of flexible
+> arrays in the net_device structure. For more details, see the discussion
+> at [1].
+> 
+> Un-embed the net_devices from struct lmac by converting them
+> into pointers, and allocating them dynamically. Use the leverage
+> alloc_netdev() to allocate the net_device object at
+> bgx_lmac_enable().
+> 
+> [...]
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/stat-display.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+Here is the summary with links:
+  - [net-next,v2] net: thunderx: Unembed netdev structure
+    https://git.kernel.org/netdev/net-next/c/94833addfaba
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 186305fd2d0e..c38bcb6f4c78 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -1186,10 +1186,21 @@ static void print_metric_headers_std(struct perf_stat_config *config,
- static void print_metric_headers_csv(struct perf_stat_config *config,
- 				     bool no_indent __maybe_unused)
- {
-+	const char *p;
-+
- 	if (config->interval)
--		fputs("time,", config->output);
--	if (!config->iostat_run)
--		fputs(aggr_header_csv[config->aggr_mode], config->output);
-+		fprintf(config->output, "time%s", config->csv_sep);
-+	if (config->iostat_run)
-+		return;
-+
-+	p = aggr_header_csv[config->aggr_mode];
-+	while (*p) {
-+		if (*p == ',')
-+			fputs(config->csv_sep, config->output);
-+		else
-+			fputc(*p, config->output);
-+		p++;
-+	}
- }
- 
- static void print_metric_headers_json(struct perf_stat_config *config __maybe_unused,
+You are awesome, thank you!
 -- 
-2.45.2.803.g4e1b14247a-goog
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
