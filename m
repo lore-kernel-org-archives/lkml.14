@@ -1,535 +1,216 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12FC91509AC;
-	Fri, 28 Jun 2024 09:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719566748; cv=none; b=PQ3XO3Sjc68o0X8BgyWlYc1sKTKIxWbVsfPN91nL4ID5dmmST5NkvtKYo2w5gERlXUUK3Y6hP4K/r2QsdAGqYQE5GV4LxLWyyPOzXHLv3GsbkChbVlTp0ORJ736leVAb4iM/WRKhOPG/m8eiNb7WtvYZoNc6P19sZ+9EcXAyPYg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719566748; c=relaxed/simple;
-	bh=MdoznMXqPEhcbUlW/pz5NEY7NEbaaBp33xqwQY8bkoI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tk1KUFrdVTeV50WuLmUQVgqXrlrZaqH5SAaHuwN/iuJvEHZ/P05VhDT5KztzntotRCWiZUtHEizfHGlXHKiqevHFMa+MDrxBW0vgOADVx5MvpKP1HmhdnEs38o6iVz6+qM3+vBE4RMv21VgQ6IGiZz9TbXBHl+8uvGd5YB0DpnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=bUMThw2A; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5CD2139A8;
+	Fri, 28 Jun 2024 09:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719566763; cv=fail; b=gESGKPgd/oMQuWeVPQfLbSkkkqlx1vv89+yNpZALEc9qQy9/3sLlxK37UbGKMErYFXhQHVXvobgToLpTPP2slpisPqcUDXKOWU6TF9eN71PHoSt6Mne9sGO0sv0zS6e7+jAPxsGTHFiV+MyeTpq7ktGEWOKP55QVojBBC60u13I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719566763; c=relaxed/simple;
+	bh=ffKD9OyAzUvfs8JDOPWD7mYnhFKbKbZugLpJcS54gIY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=G3o9ymRz9hghugWD+fq1w0ggEg4xmN3P3CVdJ9sYS+UhVi92h6xqbLyt2iI6J0GRNAI5lxo3dRZJ/pXSeLXMYgMzGOnhv4b3Ay/HZY3g+2zOd4OE2UkHCC+j2iRsKyzY0ex/nlHNX8ZmOnXuD2ASVeyg+8Wo22c8ldloJNbkLQc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=PaailPW7; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=CVSQV6fl; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="bUMThw2A"
-X-Virus-Scanned: SPAM Filter at disroot.org
-From: Daniel Hejduk <danielhejduk@disroot.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1719566742; bh=MdoznMXqPEhcbUlW/pz5NEY7NEbaaBp33xqwQY8bkoI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=bUMThw2A+621XgMzlmDpPwVk6t1SR+aTGGKmrEZckCG28LVhm+C+duCHAx9Lq54d3
-	 lYE3JZX/DSeZtrqEP/aUYSjohuKo7mFbIInUjaCt9X4HNQX6W353HptbfQQ7FrtPpx
-	 OQNVwkHlAx58q8ZtqDKI3HYQuSQhDVNN7lDJravYP28FcyeCYYkJL7M/ORBVR28iBC
-	 osXXwpTLMouqPngOc8Ke6zlKeY4TdeKHN5Bqea2emaD532ucWGMsn9G8dKkK5bFCtz
-	 i84lCTh/jny7piYrShr1UoJbYBeopCPh1bDYx+34FMI9C3fFu6HCR2NwlvwJ4nDTPp
-	 y9teoj1ioxF+Q==
-To: shuah@kernel.org,
-	trenn@suse.com,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Daniel Hejduk <danielhejduk@disroot.org>
-Subject: [PATCH 2/4] Signed-off-by: Daniel Hejduk <danielhejduk@disroot.org>
-Date: Fri, 28 Jun 2024 11:25:02 +0200
-Message-ID: <20240628092508.3664-3-danielhejduk@disroot.org>
-In-Reply-To: <20240627135437.2301-1-danielhejduk@disroot.org>
-References: <20240627135437.2301-1-danielhejduk@disroot.org>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PaailPW7";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="CVSQV6fl"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45S8MV2L009179;
+	Fri, 28 Jun 2024 09:25:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	from:to:cc:subject:date:message-id:references:in-reply-to
+	:content-type:content-transfer-encoding:mime-version; s=
+	corp-2023-11-20; bh=ffKD9OyAzUvfs8JDOPWD7mYnhFKbKbZugLpJcS54gIY=; b=
+	PaailPW7muhdGFeK1BnpwlYuzLYa9TmLeNCjkyPTb3BwFz/IXOYS3ZzO9VmZXT6v
+	om2dRsdMcIseUauF3hXRt6+WqqVKqTeHtFNYlprTctsynFkJZexgpb4N9Q/cNEbM
+	f9Xe7ZBnrOacwxoupUYvFzxswM7LI+wh8Nb5320oJj7KaNOl/MIVIX5n8SECbjc4
+	6p4YV27SpCWnu7ELMKbpSb7bPkRLowHbklevWklNvl8858ntKXbsnGQCX9ceIpvN
+	67CQkorVvhq/iJu48akLnzUU8fCw2aFaBNDxv7uknbd6Xk29qf0B2qk6miW1915D
+	9DL6pQzvEO65kwtA/Qt3/A==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ywp7sqtx4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 28 Jun 2024 09:25:51 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45S9Ivp1023309;
+	Fri, 28 Jun 2024 09:25:51 GMT
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2041.outbound.protection.outlook.com [104.47.73.41])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3ywn2j3892-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 28 Jun 2024 09:25:51 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RUcH5hJWNIYMnq0KI2sricUa039bKWMIXaYlR7Pc0dvNdX6zAfGUIJoEFgi9W7YHtABLGvrPDSNSPFOi7tSH2oZeo7ca6eKCiLZdqW1C82yU8SIupjvHJr+CNi0OidqCgo+vtfOIIxNfUSZa08hbSTkx08GDbUqbBABHsCXCoL+9g8SV83zhJSUih9z8M2681HjrdGB2cf7a3C3XFG7Vjqqt6r38AyvLdk9pbodE+CAzYeQ9nnvugPLXOURCrF2h0MyIBvaGcfpn84PJLMLu2XVaHhdhA8PR5K5L3ufYduFSv5A1MvsvjikUbTJ2LGwGMxte6ifcEGm2KHHuce8XMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ffKD9OyAzUvfs8JDOPWD7mYnhFKbKbZugLpJcS54gIY=;
+ b=gwlAtghjD07bJiJQlAWmEEGRCgFpVoWcAMT0YCJpDk4j5CeM8PfNTIzY1xnahL5KW637qwYHoqD+WWYuZIptKNnTecQbegoIVLOfAqeXDMEPJB9O370kl8W7iSL9PsoipvxOtXqyOAfDRXefAWpaQB3FQFgiHG5i9AQpQoCwffFvcTXHXJ/Li85Is4YMHipISK0ZWj3QSNOArMxgK3Xs5VobOkFOjSkiFvLrgsHkclKYBP3zt+JLTNJ6hsBoZN8zs/Du/jSxqNw+EXcGKWSO88LuuojrXt38lP4xq2SFt1C5ldHI9Ry3kcxWXL+uHHM2OXSStFOAyToeCR/5WfOojg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ffKD9OyAzUvfs8JDOPWD7mYnhFKbKbZugLpJcS54gIY=;
+ b=CVSQV6flVt9HfhMnx+uFTc/rHNU/uG3tpyKOB5YqyvCjN0cf9RsyAEgj9hQONeYmBbQTijw7ANmxnRhViCoLiCy7XwHaGfMUCDnQXXuU5ernU1c/FsQMAxseBRzJU5ShGiKzv77I8A/4//3UP14ThegnXf3/pbCYW8JC2w7I8UY=
+Received: from IA1PR10MB7240.namprd10.prod.outlook.com (2603:10b6:208:3f5::9)
+ by DM4PR10MB6840.namprd10.prod.outlook.com (2603:10b6:8:104::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.26; Fri, 28 Jun
+ 2024 09:25:49 +0000
+Received: from IA1PR10MB7240.namprd10.prod.outlook.com
+ ([fe80::962f:da30:466c:6a1]) by IA1PR10MB7240.namprd10.prod.outlook.com
+ ([fe80::962f:da30:466c:6a1%2]) with mapi id 15.20.7698.025; Fri, 28 Jun 2024
+ 09:25:48 +0000
+From: Gulam Mohamed <gulam.mohamed@oracle.com>
+To: Jens Axboe <axboe@kernel.dk>
+CC: "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "yukuai1@huaweicloud.com" <yukuai1@huaweicloud.com>,
+        Christoph Hellwig
+	<hch@lst.de>
+Subject: RE: [PATCH V6 for-6.11/block] loop: Fix a race between loop detach
+ and loop open
+Thread-Topic: [PATCH V6 for-6.11/block] loop: Fix a race between loop detach
+ and loop open
+Thread-Index: AQHawiDxSOf+1W/UnkG1CxXEGa2wWbHcF+oAgAAhzgCAALwrMA==
+Date: Fri, 28 Jun 2024 09:25:48 +0000
+Message-ID: 
+ <IA1PR10MB72402551956A99124643E89298D02@IA1PR10MB7240.namprd10.prod.outlook.com>
+References: <20240618164042.343777-1-gulam.mohamed@oracle.com>
+ <20240619081601.GA5434@lst.de>
+ <IA1PR10MB72407980A58E57E91F80777F98D72@IA1PR10MB7240.namprd10.prod.outlook.com>
+ <dd7ab5dc-51f7-446e-8250-ddc62f6f66ff@kernel.dk>
+In-Reply-To: <dd7ab5dc-51f7-446e-8250-ddc62f6f66ff@kernel.dk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA1PR10MB7240:EE_|DM4PR10MB6840:EE_
+x-ms-office365-filtering-correlation-id: a1323441-1fd3-4493-738a-08dc97544bf3
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info: 
+ =?utf-8?B?dnBoZkh0U1UxQmZXYm9yUndJWFQ2R2VtYTFmVXNURnJSYUtRNWhrczgvZlQ3?=
+ =?utf-8?B?SHQwdVB4TlgxaUF6cGJSTkZUeXVNNnh2WnFZdUhOUnh5ZjA0S3luRm5UdkJx?=
+ =?utf-8?B?eU1HbVg2ZDBDVGRRZ0hQNEZGVThvd0tTL01TT2IvenlwY0NNdWowRFVwSlFj?=
+ =?utf-8?B?d0FKSjFNeXRLYVE1TExsQmV4WWtON3BvYnpna0ZQZUk3L1lXZkdaR3VuelFD?=
+ =?utf-8?B?MDVPV2F0Z2R5azRneTdYMXhBd3AxSzJZN3hodWQwM095dW1NR2NSTC9tbVhz?=
+ =?utf-8?B?ZC9Ud1J2Q3YvYy9kYTFJZk13Y0orUmlCdnRUTkxRb1VhdUlQUnprNWVjT3ll?=
+ =?utf-8?B?YzYvWTNvNkwzdDBEMVN1U1o2U1FId3F6T29MKzlMRFBMeGdITlM2VVI3NnNh?=
+ =?utf-8?B?NHEvaTMvL0N4ZEQvRUtvNVBVS0VoRElpcnJxaFJGYkpjUFVNdU5XdW5Lc3V1?=
+ =?utf-8?B?SHN5NmJ3UEh5Ujh0QVp0WTk5d3hBbG5zNXNqVFZGMUJNcFNoV0JteXU0WCtw?=
+ =?utf-8?B?UXNtcFRWL2R0VmRBUTBoL3hwVEVtQUZ6UzdWWmdlVGVjUU5iR0FieFVVWDBI?=
+ =?utf-8?B?L2tZeVJPOHE3elNqODU1UXh1UHlkaHhhUTM5OGRlcytHdDFyc2Y2ZnQzQnli?=
+ =?utf-8?B?L0xjR0J3Wk5MaDVhZytOL3dKZlh0Nnd4aGJCUFU1WXc2cU5mdENJOStRS29U?=
+ =?utf-8?B?cXdVZG1rMEg0UkM5MkFNdXpXSjN6bTZjaFF3WEs4MDlyc1BWakVNVXBxb0FW?=
+ =?utf-8?B?TmloZHZhdktMZ2lNU0ZXcmJweDFVMkZwRUttWEI2dkVPbFpXa1o3MXM1V0hL?=
+ =?utf-8?B?ZWp0eFdvaWlBSEhJamlaMkl2SHZLcGVDbm5ONmhQdjF5eVBBVngxU2FmSHJR?=
+ =?utf-8?B?eDZoU0V2WHpxdGhxeVcvQW9BY2swZklTWi92U0RZaWcxeTFTeEtreDRvTTAz?=
+ =?utf-8?B?Zmk4SGc3L1lWVVhXWmd4WlJQNEtkZTU0MkJsUlZkMlo1RmUvYnJRcUhNQjdB?=
+ =?utf-8?B?ajE2c3oxM3lTVWJ2N05NTlRzNzRXQkxWeGtsclhCRGRrRG4wVEUrSm9Da3pM?=
+ =?utf-8?B?c2hRNnM1eWZvTUNPS3dMVVM3NjJBd1lCdnRTWitZSWhVM2RmdXE1RjMxQnRs?=
+ =?utf-8?B?bTdKSjhZb2JRM2VKZDFJNHMydmZINzBPenhFejhpdUlyWmJEeUlYSnIwWXhI?=
+ =?utf-8?B?MjcySnc5a1EyeVdoOHBSRGFOMStqOGVyYk9LR1RRTFFhMEl0SjVFMEkxOVVZ?=
+ =?utf-8?B?QzNQVnV1bjcvWjI2bFZGWTF6NnkyRjF5Q2xJNHcvUUppYlZpNEtDdWpGVVAr?=
+ =?utf-8?B?ckRGQS9lK0RHaVNVaHIrL0s3V0xRekJaYjZCWnhJRU83YnJSUHJUUSswMzky?=
+ =?utf-8?B?NURNOWpFMDBFeWZYR1dzNk1WaFdjc2ZHOUxQbTlLVTZTTU9ONGQ0TDZvMHVy?=
+ =?utf-8?B?cEIzaVR3bEQwUU9uVGRqNVdGUGJ3M0NiY1RlendXQlZJVHhOeHpielUrcitw?=
+ =?utf-8?B?UHh0NjE5cU82blVqRUx1VkpZaGpsU0dOekoxYW96VFJJdHREVnlqRDRrc1Fp?=
+ =?utf-8?B?cG13cWV6OGNBUUZzVWUzM1VKQ0k1RHpON0o0RTdXdVQ0bFgzYWVIR2FncnRP?=
+ =?utf-8?B?ZjRPNlpQQmVRYnFWT1pvd0kyWTloWUdhcXpqMjk4U0ZZdENuTFRNRlRXbXVR?=
+ =?utf-8?B?WURRK21lOHpkdVFyLzlMU0E1T0Y0V2dxaDN4VHNRKy9reGhWTHJjNDllb0hP?=
+ =?utf-8?B?ZjFKanhIdXBMejZUSDFGckRTdnJaQzZOa1NtazZ5ODQ5cnNTVGVtZm1JckVp?=
+ =?utf-8?B?S1JIUmMveVlnaGw3b3cwY3dPTjBQT0dsMGxFSDRkNTR5eGlDckkvek1rbkx0?=
+ =?utf-8?Q?Z7EnyL2zXn1gd?=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR10MB7240.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?utf-8?B?aVd5dHJHbXc1SVZFdTVZRkI2T0swODNuRlo5dXNIU2EvOE5zdFFHdVdkNzVz?=
+ =?utf-8?B?WE1IZk1icHMxeXFuTm0xTTNid29Qa1g3bkNiVVZwS1RTeHo2ZjhmaFZRNWo2?=
+ =?utf-8?B?ZGphVi9oTzlpNWNER3hMY0FBNFBRblZaSTh5M04vdFppc1hndTNnclkrNWI0?=
+ =?utf-8?B?UGpvMHdnNEF5eVRBNjc5S0hBL1BrdCsxYmp0NnprTU45UjJFUk9tbk9rS0JI?=
+ =?utf-8?B?cG1lS1UwN0dRYTdNUm1qRXNEL0ZlNE1JMlhCdnYxK0ZQazBWTms5cG4vVm9F?=
+ =?utf-8?B?TjFna2RyQ0pCWWZqMEk2cFNySUk1c2hvM0FMUUdwWXkxeC9qaWxJMTh0U0Fu?=
+ =?utf-8?B?Ynl6SGpqNUVwbFpKNlBuNThsbzdHRGsxR1lQSmJZSkVRVzQvKzFLUU9CS0t4?=
+ =?utf-8?B?RkVFZ0ZtYnkrd1dtb0lLLzQraDYrak9pRU4wQ2ZjSXdzM21WZlNNeW1Ybjhu?=
+ =?utf-8?B?ZVlQb1l4WHFmTC9tNC9iQm5BVlRrQmFoWHpuY1hYQ1B6Ti8wVytLVS9WY29Z?=
+ =?utf-8?B?djJjMHRRK2FuRU5zcmFjUU1TSzB2TTNwK1djUmhuT3NxRjhUUStqYlA1ZVZq?=
+ =?utf-8?B?UFNGQ3JMZlcwMk11TDZFcUJuOHNwTURCdTNoZG1wclRTc3hqQVdqUk9yMVBj?=
+ =?utf-8?B?aGFmY2xvSldteS83MTFZWTdYYXlOK0JjWFNhZVV3aEZhZlgzVGRZMlNXTklM?=
+ =?utf-8?B?S3lBNWt1end1dE9TZXFORG5WQ0UxN1Joa0hsVGI4NzJxRUZYVGt3RU9DUjBw?=
+ =?utf-8?B?WG02TXdPNUQ0N0tWSHdtZTdZUnFjWmY4c053ZTZ3VzdFTFBEeUdzRzdFRkEr?=
+ =?utf-8?B?b0hRMGtJVnRKUjNSVFJlUEJiTWc2cDhNOE50QUQ2elYvWkU5TWhWVnhKdjEx?=
+ =?utf-8?B?SXlnd1J2TzVQMUNySFArRENoWVh2b3MzdVpiamUxVEtJWjB3Z1VDN3RoOFMy?=
+ =?utf-8?B?V3N5WUpEMndpaXhQS295cW9Id1BRaW5mMVM5RGN3RWdYRFVLeDF6eXp4RnI1?=
+ =?utf-8?B?ejhsZjNGV3lNZ2pRY2hpNlBxYVZFb2g1VWlhYllMVDd5eExiUHY4eHM2NzJq?=
+ =?utf-8?B?bkdXZTlJRGlmMWxoNG5WRWlhcXVjMkU4YzJYVFdGYzZTVm5YdXBNSkdCNGkz?=
+ =?utf-8?B?WXo2YVk1ZnBSL2J5MDhKTUg5YkNWQlJLa1p3U0hGZG12b0J1NVJQMUdhQkFP?=
+ =?utf-8?B?QzRRS0RhaDMrWkZodDNnTWlBc1BDQnl6T0luTDVCTEtRazBRMXJnYXRhYXNZ?=
+ =?utf-8?B?OVY2NW5XVDYzUjg5UE9YNWUvc3ZrSHA0Sk9zN3FiNW54bHRRSC95TWVvcW9y?=
+ =?utf-8?B?YVdBK0JFdnJUYWRlSVh1TnlzU0poZUVJV1NqL25MS3ozYVVzejlGNXBVemhK?=
+ =?utf-8?B?S0gwTVpUTHMvckZybnpuak1HZDh6LzlDek94aFdtQW0vRVFuZVoraC9ydld6?=
+ =?utf-8?B?UjY0RnhGWmx5TkJPTmh5dE52ZWdqS3NMSjVnK0RZWWxKRHh6azA1YnltSmVT?=
+ =?utf-8?B?TkxvSENvbDlUcTZNclZJdFNFTHBXN2Fqdkl5bmJGTG5GM0NDbVpaVW5HM0JU?=
+ =?utf-8?B?TzNMVVlZa0pYcHZkT3JZdXhtc1JtYitPZXBjanFzMWJ2N2wxOHloSitDZENF?=
+ =?utf-8?B?VVRueWovOW9pVjVQeGFWUnR1NXpOU0cwQWFjOE12VGY4QU0rSXdYN2grVmUx?=
+ =?utf-8?B?c2JuSzF3UFJGTmRYVDR1REowTEtQcEVjQTV0Q1V2aXdLaTJhc1duSzVwYW5I?=
+ =?utf-8?B?TkQyNFlmOUFVbGVWNHhvNnVQNzdldW9sS3EyV1U0dWVTd0lkOUNLVmNydkQ1?=
+ =?utf-8?B?NVQ2ZlRpdVJ5SzJZMTcyaE5GeVd2OFNOZEVYUVMvdU5Kbk90NXZaY3VVZTVE?=
+ =?utf-8?B?SWlqNzRLTW1PcmdTajBDckFRTjJhK0pFTDgyaW4zelhtbmlJUG5PMlRTVmpi?=
+ =?utf-8?B?RnJkLzYwQ0ozRjJTaWNRR2c0Rm1SOFM3LzdNOU1rRXFqMEdZTVhWNzROaGJu?=
+ =?utf-8?B?cjRLdVlSbHkxL2poMjF4NFRPeEpmeTZobUFmZHdtdkU2TzQrYkU5MHE2VDA2?=
+ =?utf-8?B?c3NDRCsycmpkdXZmWkNMZGQ1VXRtQVdzL01uNlc4eG1VejU5UnZ5NFFpdk4w?=
+ =?utf-8?Q?RDzvtrPW0pAaUkSFhEg7iNZ2z?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	V3VcjyOJ3MpExwt3NZx9J7oVdu3+uctuisOQ1GNQn2cfIwXRAzLm8Sypk39/9xovEFij/Kbx8Bd+4qw71HWi7u4zH7prmEBbaZ3b/teWicryvSNly7HFj2K9wkYqLgLsPQ+PMWHGWz5M0fe6zPMDWXCApPAVUkhUWQghn0CpM3c1HefeHFR6/S6gtbkKwuxVJivuj+Iu8lpyO41wqj6IrfEvoTbQ8F/z9Pm3Sb0r3LRRdqnVVFhHC4jRARVvRnH5R1SrEzheJSknBBBolQvl2k5e7A1qv8yVSBnkj9dXz/pmJO2RhEnC1pOeq5l79QOgF9U4siU0L42OkS7F69ZUneubQJFszb2u/CCWn7za/coY18Kx/NWv646oz7R106vJoYU0HQmYcaIFQl5BAtHHvrBmmIqWhHLCZsx/a8+XvbLFLhziKOY4RaDkeoSSREltny8n99EQ3m07b6DFv5Y/UDj73qj7XSZbgoOoH3SKM+KSJwvqIbYH+gtcAqlPUwmQQRXZOQN/aIi58eq+KuFIazFRZwfQkEYwaM7NwBD2SuDJBaE8RTTakuPeCyoHqTKcbxOY82tsUfALmRBgjcl1U6OhrXZ8U8jVcHK7MRyX9YU=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR10MB7240.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a1323441-1fd3-4493-738a-08dc97544bf3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2024 09:25:48.6969
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ttBatAuMyroSL8mFImriYhDEFbFkwZ5cMcoTg9+8KoJN7odKCooDOpwVoygPcFn9naePqNal9W8F0X3OU+Z7+Yvxu+iY+q3s9lQWToRLzTw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB6840
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-28_05,2024-06-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 suspectscore=0
+ phishscore=0 adultscore=0 malwarescore=0 mlxscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2406180000
+ definitions=main-2406280069
+X-Proofpoint-GUID: hOhQ-9GJMfsPlUCuXFvbB9hRbtkRz88L
+X-Proofpoint-ORIG-GUID: hOhQ-9GJMfsPlUCuXFvbB9hRbtkRz88L
 
-Fixing needs work strings and adding new strings
-
-This translation is just uncomplete, the translation was probably done
-by program. I fixed it all.
----
- tools/power/cpupower/po/cs.po | 162 ++++++++++++++++++----------------
- 1 file changed, 86 insertions(+), 76 deletions(-)
-
-diff --git a/tools/power/cpupower/po/cs.po b/tools/power/cpupower/po/cs.po
-index 64fe78861..8c6e254a1 100644
---- a/tools/power/cpupower/po/cs.po
-+++ b/tools/power/cpupower/po/cs.po
-@@ -18,35 +18,35 @@ msgstr ""
- "Content-Type: text/plain; charset=UTF-8\n"
- "Content-Transfer-Encoding: 8bit\n"
- "Plural-Forms:  nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
--"X-Generator: KBabel 1.11.4\n"
-+"X-Generator: Poedit 3.4.4\n"
- 
- #: utils/idle_monitor/nhm_idle.c:36
- msgid "Processor Core C3"
--msgstr ""
-+msgstr "Procesor Core C3"
- 
- #: utils/idle_monitor/nhm_idle.c:43
- msgid "Processor Core C6"
--msgstr ""
-+msgstr "Procesor Core C6"
- 
- #: utils/idle_monitor/nhm_idle.c:51
- msgid "Processor Package C3"
--msgstr ""
-+msgstr "Procesorový balíček C3"
- 
- #: utils/idle_monitor/nhm_idle.c:58 utils/idle_monitor/amd_fam14h_idle.c:70
- msgid "Processor Package C6"
--msgstr ""
-+msgstr "Procesorový balíček C6"
- 
- #: utils/idle_monitor/snb_idle.c:33
- msgid "Processor Core C7"
--msgstr ""
-+msgstr "Procesor Core C7"
- 
- #: utils/idle_monitor/snb_idle.c:40
- msgid "Processor Package C2"
--msgstr ""
-+msgstr "Procesorový balíček C2"
- 
- #: utils/idle_monitor/snb_idle.c:47
- msgid "Processor Package C7"
--msgstr ""
-+msgstr "Procesorový balíček C7"
- 
- #: utils/idle_monitor/amd_fam14h_idle.c:56
- msgid "Package in sleep state (PC1 or deeper)"
-@@ -54,7 +54,7 @@ msgstr ""
- 
- #: utils/idle_monitor/amd_fam14h_idle.c:63
- msgid "Processor Package C1"
--msgstr ""
-+msgstr "Procesorový balíček C1"
- 
- #: utils/idle_monitor/amd_fam14h_idle.c:77
- msgid "North Bridge P1 boolean counter (returns 0 or 1)"
-@@ -62,15 +62,15 @@ msgstr ""
- 
- #: utils/idle_monitor/mperf_monitor.c:35
- msgid "Processor Core not idle"
--msgstr ""
-+msgstr "Procesor Core není v klidovém stavu"
- 
- #: utils/idle_monitor/mperf_monitor.c:42
- msgid "Processor Core in an idle state"
--msgstr ""
-+msgstr "Procesor Core je v klidovém stavu"
- 
- #: utils/idle_monitor/mperf_monitor.c:50
- msgid "Average Frequency (including boost) in MHz"
--msgstr ""
-+msgstr "Průměrná frekvence (včetně boostu) v MHz"
- 
- #: utils/idle_monitor/cpupower-monitor.c:66
- #, c-format
-@@ -78,6 +78,8 @@ msgid ""
- "cpupower monitor: [-h] [ [-t] | [-l] | [-m <mon1>,[<mon2>] ] ] [-i "
- "interval_sec | -c command ...]\n"
- msgstr ""
-+"cpupower monitor: [-h] [ [-t] | [-l] | [-m <mon1>,[<mon2>] ] ] [-i "
-+"interní_sekundy | -c příkaz ...]\n"
- 
- #: utils/idle_monitor/cpupower-monitor.c:69
- #, c-format
-@@ -85,21 +87,23 @@ msgid ""
- "cpupower monitor: [-v] [-h] [ [-t] | [-l] | [-m <mon1>,[<mon2>] ] ] [-i "
- "interval_sec | -c command ...]\n"
- msgstr ""
-+"cpupower monitor: [-v] [-h] [ [-t] | [-l] | [-m <mon1>,[<mon2>] ] ] [-i "
-+"interní_sekundy | -c příkaz ...]\n"
- 
- #: utils/idle_monitor/cpupower-monitor.c:71
- #, c-format
- msgid "\t -v: be more verbose\n"
--msgstr ""
-+msgstr "\t -v: být víc upovídaný\n"
- 
- #: utils/idle_monitor/cpupower-monitor.c:73
- #, c-format
- msgid "\t -h: print this help\n"
--msgstr ""
-+msgstr "\t-h, --help: Vypíše tuto nápovědu\n"
- 
- #: utils/idle_monitor/cpupower-monitor.c:74
- #, c-format
- msgid "\t -i: time interval to measure for in seconds (default 1)\n"
--msgstr ""
-+msgstr "\t -i: časové intervaly pro měření v sekundách (výchozí 1)\n"
- 
- #: utils/idle_monitor/cpupower-monitor.c:75
- #, c-format
-@@ -222,7 +226,7 @@ msgstr ""
- #: utils/cpupower.c:114
- #, c-format
- msgid "Error parsing cpu list\n"
--msgstr ""
-+msgstr "Chyba v parsování procesorového listu\n"
- 
- #: utils/cpupower.c:172
- #, c-format
-@@ -259,25 +263,25 @@ msgstr ""
- #: utils/cpufreq-info.c:163
- #, c-format
- msgid "    Supported: %s\n"
--msgstr ""
-+msgstr "    Podporováno: %s\n"
- 
- #: utils/cpufreq-info.c:163 utils/cpufreq-info.c:164
- msgid "yes"
--msgstr ""
-+msgstr "ano"
- 
- #: utils/cpufreq-info.c:163 utils/cpufreq-info.c:164
- msgid "no"
--msgstr ""
-+msgstr "ne"
- 
- #: utils/cpufreq-info.c:164
--#, fuzzy, c-format
-+#, c-format
- msgid "    Active: %s\n"
--msgstr "  ovladač: %s\n"
-+msgstr "    Aktivní: %s\n"
- 
- #: utils/cpufreq-info.c:177
- #, c-format
- msgid "    Boost States: %d\n"
--msgstr ""
-+msgstr "    Boostové stavy: %d\n"
- 
- #: utils/cpufreq-info.c:178
- #, c-format
-@@ -305,14 +309,14 @@ msgid "  driver: %s\n"
- msgstr "  ovladač: %s\n"
- 
- #: utils/cpufreq-info.c:219
--#, fuzzy, c-format
-+#, c-format
- msgid "  CPUs which run at the same hardware frequency: "
--msgstr "  CPU, které musí měnit frekvenci zároveň: "
-+msgstr "  Procesory, které jsou na stejné hardwarové frekvenci: "
- 
- #: utils/cpufreq-info.c:230
--#, fuzzy, c-format
-+#, c-format
- msgid "  CPUs which need to have their frequency coordinated by software: "
--msgstr "  CPU, které musí měnit frekvenci zároveň: "
-+msgstr "  Procesory, které musí mít jejich frekvenci ovládanou softwarem: "
- 
- #: utils/cpufreq-info.c:241
- #, c-format
-@@ -350,7 +354,7 @@ msgid ""
- "The governor \"%s\" may decide which speed to use\n"
- "                  within this range.\n"
- msgstr ""
--"  Regulátor \"%s\" může rozhodnout jakou frekvenci použít\n"
-+"Regulátor \"%s\" může rozhodnout jakou frekvenci použít\n"
- "                    v těchto mezích.\n"
- 
- #: utils/cpufreq-info.c:293
-@@ -369,9 +373,9 @@ msgid "  cpufreq stats: "
- msgstr "  statistika cpufreq: "
- 
- #: utils/cpufreq-info.c:472
--#, fuzzy, c-format
-+#, c-format
- msgid "Usage: cpupower freqinfo [options]\n"
--msgstr "Užití: cpufreq-info [přepínače]\n"
-+msgstr "Užití: cpupower freqinfo [přepínače]\n"
- 
- #: utils/cpufreq-info.c:473 utils/cpufreq-set.c:26 utils/cpupower-set.c:23
- #: utils/cpupower-info.c:22 utils/cpuidle-info.c:148
-@@ -380,7 +384,7 @@ msgid "Options:\n"
- msgstr "Přepínače:\n"
- 
- #: utils/cpufreq-info.c:474
--#, fuzzy, c-format
-+#, c-format
- msgid "  -e, --debug          Prints out debug information [default]\n"
- msgstr "  -e, --debug          Vypíše ladicí informace\n"
- 
-@@ -427,20 +431,21 @@ msgid "  -g, --governors      Determines available cpufreq governors *\n"
- msgstr "  -g, --governors      Zjistí dostupné regulátory cpufreq *\n"
- 
- #: utils/cpufreq-info.c:483
--#, fuzzy, c-format
-+#, c-format
- msgid ""
- "  -r, --related-cpus   Determines which CPUs run at the same hardware "
- "frequency *\n"
- msgstr ""
--"  -a, --affected-cpus  Zjistí, které CPU musí měnit frekvenci zároveň *\n"
-+"  -r, --related-cpus  Zjistí, které procesory jsou na stejné frekvenci *\n"
- 
- #: utils/cpufreq-info.c:484
--#, fuzzy, c-format
-+#, c-format
- msgid ""
- "  -a, --affected-cpus  Determines which CPUs need to have their frequency\n"
- "                       coordinated by software *\n"
- msgstr ""
--"  -a, --affected-cpus  Zjistí, které CPU musí měnit frekvenci zároveň *\n"
-+"  -a, --affected-cpus  Zjistí, které procesory musí mít svoji frekvenci\n"
-+"                       ovládanou softwarem *\n"
- 
- #: utils/cpufreq-info.c:486
- #, c-format
-@@ -448,13 +453,13 @@ msgid "  -s, --stats          Shows cpufreq statistics if available\n"
- msgstr "  -s, --stats          Zobrazí statistiku cpufreq, je-li dostupná\n"
- 
- #: utils/cpufreq-info.c:487
--#, fuzzy, c-format
-+#, c-format
- msgid ""
- "  -y, --latency        Determines the maximum latency on CPU frequency "
- "changes *\n"
- msgstr ""
--"  -l, --hwlimits       Zjistí minimální a maximální dostupnou frekvenci CPU "
--"*\n"
-+"  -y, --latency        Zjistí maximální latenci na změně procesorové "
-+"frekvence *\n"
- 
- #: utils/cpufreq-info.c:488
- #, c-format
-@@ -468,16 +473,17 @@ msgid ""
- "cpufreq\n"
- "                       interface in 2.4. and early 2.6. kernels\n"
- msgstr ""
--"  -o, --proc           Vypíše informace ve formátu, jaký používalo rozhraní\n"
-+"  -o, --proc           Vypíše informace ve formátu, jaký používalo "
-+"rozhraní\n"
- "                       /proc/cpufreq v kernelech řady 2.4 a časné 2.6\n"
- 
- #: utils/cpufreq-info.c:491
--#, fuzzy, c-format
-+#, c-format
- msgid ""
- "  -m, --human          human-readable output for the -f, -w, -s and -y "
- "parameters\n"
- msgstr ""
--"  -m, --human          Výstup parametrů -f, -w a -s v „lidmi čitelném“ "
-+"  -m, --human          Výstup parametrů -f, -w a -s a -y v „lidmi čitelném“ "
- "formátu\n"
- 
- #: utils/cpufreq-info.c:492 utils/cpuidle-info.c:152
-@@ -488,12 +494,14 @@ msgstr "  -h, --help           Vypíše tuto nápovědu\n"
- #: utils/cpufreq-info.c:495
- #, c-format
- msgid ""
--"If no argument or only the -c, --cpu parameter is given, debug output about\n"
-+"If no argument or only the -c, --cpu parameter is given, debug output "
-+"about\n"
- "cpufreq is printed which is useful e.g. for reporting bugs.\n"
- msgstr ""
- "Není-li zadán žádný parametr nebo je-li zadán pouze přepínač -c, --cpu, "
- "jsou\n"
--"vypsány ladicí informace, což může být užitečné například při hlášení chyb.\n"
-+"vypsány ladicí informace, což může být užitečné například při hlášení "
-+"chyb.\n"
- 
- #: utils/cpufreq-info.c:497
- #, c-format
-@@ -509,7 +517,8 @@ msgstr ""
- msgid ""
- "The argument passed to this tool can't be combined with passing a --cpu "
- "argument\n"
--msgstr "Zadaný parametr nemůže být použit zároveň s přepínačem -c nebo --cpu\n"
-+msgstr ""
-+"Zadaný parametr nemůže být použit zároveň s přepínačem -c nebo --cpu\n"
- 
- #: utils/cpufreq-info.c:596
- #, c-format
-@@ -537,9 +546,9 @@ msgid "analyzing CPU %d:\n"
- msgstr "analyzuji CPU %d:\n"
- 
- #: utils/cpufreq-set.c:25
--#, fuzzy, c-format
-+#, c-format
- msgid "Usage: cpupower frequency-set [options]\n"
--msgstr "Užití: cpufreq-set [přepínače]\n"
-+msgstr "Užití: cpupower frequency-set [přepínače]\n"
- 
- #: utils/cpufreq-set.c:27
- #, c-format
-@@ -567,7 +576,8 @@ msgstr "  -g GOV, --governors GOV  Nový regulátor cpufreq\n"
- #: utils/cpufreq-set.c:30
- #, c-format
- msgid ""
--"  -f FREQ, --freq FREQ     specific frequency to be set. Requires userspace\n"
-+"  -f FREQ, --freq FREQ     specific frequency to be set. Requires "
-+"userspace\n"
- "                           governor to be available and loaded\n"
- msgstr ""
- "  -f FREQ, --freq FREQ     Frekvence, která má být nastavena. Vyžaduje, aby "
-@@ -580,21 +590,22 @@ msgid "  -r, --related            Switches all hardware-related CPUs\n"
- msgstr ""
- 
- #: utils/cpufreq-set.c:33 utils/cpupower-set.c:28 utils/cpupower-info.c:27
--#, fuzzy, c-format
-+#, c-format
- msgid "  -h, --help               Prints out this screen\n"
- msgstr "  -h, --help           Vypíše tuto nápovědu\n"
- 
- #: utils/cpufreq-set.c:35
--#, fuzzy, c-format
-+#, c-format
- msgid ""
- "Notes:\n"
--"1. Omitting the -c or --cpu argument is equivalent to setting it to \"all\"\n"
-+"1. Omitting the -c or --cpu argument is equivalent to setting it to "
-+"\"all\"\n"
- msgstr ""
--"Není-li při použití přepínačů označených * zadán parametr -c nebo --cpu,\n"
--"předpokládá se jeho hodnota 0.\n"
-+"Poznámky:\n"
-+"1. Vynechání -c nebo --cpu přepínače je ekvivalent na nastavení \"all\"\n"
- 
- #: utils/cpufreq-set.c:37
--#, fuzzy, c-format
-+#, c-format
- msgid ""
- "2. The -f FREQ, --freq FREQ parameter cannot be combined with any other "
- "parameter\n"
-@@ -603,12 +614,11 @@ msgid ""
- "   by postfixing the value with the wanted unit name, without any space\n"
- "   (FREQuency in kHz =^ Hz * 0.001 =^ MHz * 1000 =^ GHz * 1000000).\n"
- msgstr ""
--"Poznámky:\n"
--"1. Vynechání parametru -c nebo --cpu je ekvivalentní jeho nastavení na 0\n"
- "2. Přepínač -f nebo --freq nemůže být použit zároveň s žádným jiným vyjma -"
- "c\n"
- "   nebo --cpu\n"
--"3. Frekvence (FREQ) mohou být zadány v Hz, kHz (výchozí), MHz, GHz nebo THz\n"
-+"3. Frekvence (FREQ) mohou být zadány v Hz, kHz (výchozí), MHz, GHz nebo "
-+"THz\n"
- "   připojením názvu jednotky bez mezery mezi číslem a jednotkou\n"
- "   (FREQ v kHz =^ Hz * 0,001 = ^ MHz * 1000 =^ GHz * 1000000)\n"
- 
-@@ -659,7 +669,7 @@ msgstr ""
- #: utils/cpufreq-set.c:347
- #, c-format
- msgid "Setting cpu: %d\n"
--msgstr ""
-+msgstr "Nastavuji procesor:%d\n"
- 
- #: utils/cpupower-set.c:22
- #, c-format
-@@ -729,9 +739,9 @@ msgid ""
- msgstr ""
- 
- #: utils/cpupower-info.c:25
--#, fuzzy, c-format
-+#, c-format
- msgid "  -m, --sched-mc     Gets the kernel's multi core scheduler policy.\n"
--msgstr "  -p, --policy         Zjistí aktuální taktiku cpufreq *\n"
-+msgstr "  -m, --sched-mc     Zjistí pravidla pro multi jádrové plánování\n"
- 
- #: utils/cpupower-info.c:26
- #, c-format
-@@ -783,9 +793,9 @@ msgid "perf-bias: %d\n"
- msgstr ""
- 
- #: utils/cpuidle-info.c:28
--#, fuzzy, c-format
-+#, c-format
- msgid "Analyzing CPU %d:\n"
--msgstr "analyzuji CPU %d:\n"
-+msgstr "Analyzování procesoru %d:\n"
- 
- #: utils/cpuidle-info.c:32
- #, c-format
-@@ -808,9 +818,9 @@ msgid "Number of idle states: %d\n"
- msgstr ""
- 
- #: utils/cpuidle-info.c:48
--#, fuzzy, c-format
-+#, c-format
- msgid "Available idle states:"
--msgstr "  dostupné frekvence: "
-+msgstr "Dostupné frekvence:"
- 
- #: utils/cpuidle-info.c:71
- #, c-format
-@@ -820,7 +830,7 @@ msgstr ""
- #: utils/cpuidle-info.c:74
- #, c-format
- msgid "Latency: %lu\n"
--msgstr ""
-+msgstr "Latence: %lu\n"
- 
- #: utils/cpuidle-info.c:76
- #, c-format
-@@ -838,9 +848,9 @@ msgid "Could not determine cpuidle driver\n"
- msgstr ""
- 
- #: utils/cpuidle-info.c:94
--#, fuzzy, c-format
-+#, c-format
- msgid "CPUidle driver: %s\n"
--msgstr "  ovladač: %s\n"
-+msgstr "ovladač: %s\n"
- 
- #: utils/cpuidle-info.c:99
- #, c-format
-@@ -876,7 +886,7 @@ msgstr ""
- #: utils/cpuidle-info.c:130
- #, c-format
- msgid "states:\t\n"
--msgstr ""
-+msgstr "stavy:\t\n"
- 
- #: utils/cpuidle-info.c:132
- #, c-format
-@@ -904,31 +914,31 @@ msgid "duration[%020Lu] \n"
- msgstr ""
- 
- #: utils/cpuidle-info.c:147
--#, fuzzy, c-format
-+#, c-format
- msgid "Usage: cpupower idleinfo [options]\n"
--msgstr "Užití: cpufreq-info [přepínače]\n"
-+msgstr "Užití: cpupower idleinfo [přepínače]\n"
- 
- #: utils/cpuidle-info.c:149
--#, fuzzy, c-format
-+#, c-format
- msgid "  -s, --silent         Only show general C-state information\n"
--msgstr "  -e, --debug          Vypíše ladicí informace\n"
-+msgstr "  -s, --silent          Ukáže pouze základní informace o C-stavech\n"
- 
- #: utils/cpuidle-info.c:150
--#, fuzzy, c-format
-+#, c-format
- msgid ""
- "  -o, --proc           Prints out information like provided by the /proc/"
- "acpi/processor/*/power\n"
- "                       interface in older kernels\n"
- msgstr ""
--"  -o, --proc           Vypíše informace ve formátu, jaký používalo rozhraní\n"
--"                       /proc/cpufreq v kernelech řady 2.4 a časné 2.6\n"
-+"  -o, --proc           Vypíše informace které jsou obsaženy v /proc/acpi/"
-+"processor/*/power\n"
-+"                       rozhraní ve starších verzích jádra\n"
- 
- #: utils/cpuidle-info.c:209
--#, fuzzy, c-format
-+#, c-format
- msgid "You can't specify more than one output-specific argument\n"
- msgstr ""
--"Nelze zadat více než jeden parametr -c nebo --cpu\n"
--"anebo více než jeden parametr určující výstup\n"
-+"Nemůžeš specifikovat více jak jeden přepínač pro nastavování vypisování\n"
- 
- #~ msgid ""
- #~ "  -c CPU, --cpu CPU    CPU number which information shall be determined "
--- 
-2.45.2
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSmVucyBBeGJvZSA8YXhi
+b2VAa2VybmVsLmRrPg0KPiBTZW50OiBGcmlkYXksIEp1bmUgMjgsIDIwMjQgMzo0MiBBTQ0KPiBU
+bzogR3VsYW0gTW9oYW1lZCA8Z3VsYW0ubW9oYW1lZEBvcmFjbGUuY29tPg0KPiBDYzogbGludXgt
+YmxvY2tAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiB5
+dWt1YWkxQGh1YXdlaWNsb3VkLmNvbTsgQ2hyaXN0b3BoIEhlbGx3aWcgPGhjaEBsc3QuZGU+DQo+
+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjYgZm9yLTYuMTEvYmxvY2tdIGxvb3A6IEZpeCBhIHJhY2Ug
+YmV0d2VlbiBsb29wIGRldGFjaA0KPiBhbmQgbG9vcCBvcGVuDQo+IA0KPiBPbiA2LzI3LzI0IDI6
+MTMgUE0sIEd1bGFtIE1vaGFtZWQgd3JvdGU6DQo+ID4gSGkgSmVucywNCj4gPg0KPiA+ICAgICAg
+VGhpcyBwYXRjaCBpcyByZXZpZXdlZCBieSBDaGlyc3RvcGgsIGNhbiB5b3UgcGxlYXNlIHRha2Ug
+YSBsb29rDQo+ID4gICAgICBhbmQgcHVsbCBpdCBpZiBpdCBpcyBnb29kIHRvIHlvdT8NCj4gDQo+
+IEluIHRoZSBmdXR1cmUsIGlmIHlvdSBmaW5kIHNvbWV0aGluZyBub3QgYmVpbmcgYXBwbGllZCwg
+ZG8gY2hlY2sgaWYgaXQgc3RpbGwNCj4gYXBwbGllcy4gQmVjYXVzZSBpdCBkaWQgbm90LCBJIGhh
+ZCB0byBmaXggaXQgdXAgYnkgaGFuZC4NCj4gDQo+IC0tDQo+IEplbnMgQXhib2UNCg0KU3VyZSBK
+ZW5zLiBUaGFuayB5b3UgdmVyeSBtdWNoLg0KDQpSZWdhcmRzLA0KR3VsYW0gTW9oYW1lZC4NCg0K
