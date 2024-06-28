@@ -1,95 +1,155 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A01461C9EAC
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 15:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDF11C2336;
+	Fri, 28 Jun 2024 15:19:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719587971; cv=none; b=Wuos31lt4nTofH57/KEGo8cbAs8KobzkV7I3c9rxaG9kpwgMGoxaBlMl4cw0JzFlHCaq2SxqAZO2rWxadv7DIjmyof2iXsgmLCQsBlURHCF7KFauUPLFLu7bQLjC3NImQQ+u6Cd8N2q5icapL6QL70XBmlKEbhwz1ozXrQcjE6c=
+	t=1719588001; cv=none; b=PTOlQjg9GB2BFMbejZMQPAqyPnfhMJDqSiJumMd/SaJdVOxxqjm3BZeQ6GxK8lNIx3oSNXIlKYsj5cbubDUeTPUO/siulm9aMNhiT/mkPlSL2vdKVjKCUBRs5pWkq8N95eKGokCFNTRESaico+fIeEWDpuSZZ0pxCdd42BafRAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719587971; c=relaxed/simple;
-	bh=Pmjri7yaLe7QXW9juAdGl9QopQ/cO6H/4cwPORHxTGQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qhFl1tSsrRVx+z99oBtilSoxeBBHYQeFA6bxW3CNuNz7wz6TovmIk3+TrhubJnORb0Q4WQKBzosg7Nh/q/R8aHilfEY2Kfftotjuhg1K6Xfp800dYynQwDCvq9gMcS14uhNvlPgjNHtHGRlvdIOFAkf8yWrcZyhrQqrAFyq+9HM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zh4PM90K; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719588001; c=relaxed/simple;
+	bh=3I4qytfU1UkShz8BnwuREmBojQJIahzWA24/ByvF5Os=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IPLppcf4kO8romoKbCWBH1fQU/tb/XB5iNtMWMqlhLqQ3y+zWFUxqCl55XLgH+tSbny/XwoBCzddusQv43yGXpdbogBbSAjZDM+zW9YBoYf2+X935DYyfH4Xmm/rWV3hiNo0riadiwb5qXakxCXrN6E13lIJINTs9jkwzGFNsiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L281UsoW; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zh4PM90K"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2c7bf925764so547307a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 08:19:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719587969; x=1720192769; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pmjri7yaLe7QXW9juAdGl9QopQ/cO6H/4cwPORHxTGQ=;
-        b=Zh4PM90K8Os5aOk5d1RmK6q4pOMGMHqg1JfzJDVYIfpiCxI3jVen/8BZcR5ao/sHHc
-         bRXdImGjZG6dP+iPZ4gVfLze0YV5NraThdIq1h+yuyXcAY3iFyT1jtozk9XlvhrJebR3
-         ayHg7Bet05N1L+zkh67lbTsLqc5F1wb84/SniBX+8L1jIeEUN00PUrrGxvbcgVR2nnFU
-         x7fCL/3GGRNtx8wz7o38zehA8lfuRZiMSo54XUjIsudz5Y28JRM8doaO8p4WVf7sMw8S
-         yVDq/WhvgbTrpbk0au4BcYq+ETq8lm0hvJNYisg8GfBCuf2kLwpipKO0Oc7MbXEBJehz
-         W9zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719587969; x=1720192769;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Pmjri7yaLe7QXW9juAdGl9QopQ/cO6H/4cwPORHxTGQ=;
-        b=BENey3l4wvHy56ZjHqfYVdBD73WDNvOPvWKqLAx7hW9nZvzaEyrYajOnuWvI7OPoo9
-         RBSlqh6Ps0dezgzUG4LZYzBlCwTbn9m7nw+sTQzo0hX6CsXlG0/3Y1wWxtw4aAl96qsC
-         dSAGBmA7L8Gkij74Z/hXOf23r0CaHVHEmfJqAefqNN31uEt7KRdH5Gg8lYfuPqJKEQ1X
-         8YOQ0RZi1JtGepnMbC0+ownic8JwSCgun9dYW30TQez2WRHQbWtPU/Hx9oXAKudfSBkw
-         Ig2KYMh24yLvOmEyMdlqhmHg79h7IDatT7LJJLlBmw9OTWgrYJtl8wiD+u8Zer9B3cQx
-         jPqA==
-X-Forwarded-Encrypted: i=1; AJvYcCWiHTL5wlMR0yQt6ZJtdzhrqsQAUF7OWG+uRDzjjJp/IpUKJacGWq5gBijC8cZDF67PzzeUjsioAHINFwUhPvec0OEz22B+abVsnu8l
-X-Gm-Message-State: AOJu0YwEQSAiIQLNJK7QUagVy6z6spFUlwvbrDxYkCrvQ8NNrOB9K45Q
-	t9W/Q4+tywN1jbtJRz8PkmLRD4Wttvpuu3cmdUGeTiCCTSyIYWo1QbFA+BeSAaTB9VsNb2bCNJY
-	h8x4/HN2fLoUkAfzmvyA7176sOzo=
-X-Google-Smtp-Source: AGHT+IFl/ePdhUfWsByY453UJoZtJx+hjy/QQ0/MmsxXqE51xtMz7GT1s16IgCAaFz1nVwJbQE6MR1Er5Iz8x1FG1QA=
-X-Received: by 2002:a17:90a:6885:b0:2c7:e24d:f695 with SMTP id
- 98e67ed59e1d1-2c861246b47mr15446562a91.12.1719587968869; Fri, 28 Jun 2024
- 08:19:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L281UsoW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719588000; x=1751124000;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=3I4qytfU1UkShz8BnwuREmBojQJIahzWA24/ByvF5Os=;
+  b=L281UsoWVssHfMl+PfA04aEGS84eiFvZd2O6v6/dy2XcFprt+wszWpz9
+   DvgAB+Oqc7vDLQPMlqlvLiHgTS+RISU/hjOK61wTjh4P548SDE5VfPnyt
+   zn4wzTev9imAWDOapcMLtUTZ+Pnt5rd3d/v6JSAgkeXDv0SWKf3LdK1fg
+   jCiaxSDI5bvhrUNhH7dAzgcP9dOM1E0v1GK8tz2gYny/ygqz0hHqHmURZ
+   XglTTzg6bQy3bz/PfSKJTD5xKpgWs9Ldhx2/YVdahopcmrmJx3XRCpunD
+   rbBalrwP+Hj87kd7TE0rp5ruGPXmBOG8IYld18XLIbxZF63WFsT5j3+mY
+   Q==;
+X-CSE-ConnectionGUID: MGoOhvq6QNih6FoaftcOOw==
+X-CSE-MsgGUID: Kdv8Vbm7QridZPxGg8PBXw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11117"; a="42195707"
+X-IronPort-AV: E=Sophos;i="6.09,169,1716274800"; 
+   d="scan'208";a="42195707"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 08:19:59 -0700
+X-CSE-ConnectionGUID: w/00j5kkSKC7Ae7PujqBPQ==
+X-CSE-MsgGUID: rb0JCCsZRNiSX+Z+MEO3yQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,169,1716274800"; 
+   d="scan'208";a="75972129"
+Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 08:19:57 -0700
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: alex.williamson@redhat.com,
+	kevin.tian@intel.com,
+	jgg@nvidia.com,
+	yi.l.liu@intel.com,
+	Yan Zhao <yan.y.zhao@intel.com>
+Subject: [PATCH] vfio: Get/put KVM only for the first/last vfio_df_open/close in cdev path
+Date: Fri, 28 Jun 2024 23:18:45 +0800
+Message-ID: <20240628151845.22166-1-yan.y.zhao@intel.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CABXGCsNptxsQO=5=qi-JYiFX=rX8Ok5inK80Gn0qrUFWbtBGng@mail.gmail.com>
- <CADnq5_PDxJ8O1JUQ9RBYRFB9G1WZJos05ZAM4jUKuPBwPxjNkA@mail.gmail.com>
- <CABXGCsNN9LwHc2x2AAEH=5UNwpvkWkBqRYz3OP8MZ6Woy+HDXA@mail.gmail.com>
- <b6c440ca-e63e-429b-af41-5f27d4b8b2a2@leemhuis.info> <CABXGCsNoFfMn7LaqqFgEPg-ECyUPN=f=SXVrFi=GZk6c69-Gqw@mail.gmail.com>
-In-Reply-To: <CABXGCsNoFfMn7LaqqFgEPg-ECyUPN=f=SXVrFi=GZk6c69-Gqw@mail.gmail.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Fri, 28 Jun 2024 11:19:16 -0400
-Message-ID: <CADnq5_PDSkr4hOHJmb1J30UC0a7sXsm5-TPkEmjzffMK_A+7ug@mail.gmail.com>
-Subject: Re: 6.10/bisected/regression - commits bc87d666c05 and 6d4279cb99ac
- cause appearing green flashing bar on top of screen on Radeon 6900XT and 120Hz
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, "Mahfooz, Hamza" <Hamza.Mahfooz@amd.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Rodrigo.Siqueira@amd.com, 
-	"Deucher, Alexander" <alexander.deucher@amd.com>, amd-gfx list <amd-gfx@lists.freedesktop.org>, 
-	dri-devel <dri-devel@lists.freedesktop.org>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 21, 2024 at 6:45=E2=80=AFAM Mikhail Gavrilov
-<mikhail.v.gavrilov@gmail.com> wrote:
->
-> On Fri, Jun 21, 2024 at 12:56=E2=80=AFPM Linux regression tracking (Thors=
-ten
-> Leemhuis) <regressions@leemhuis.info> wrote:
-> > Hmmm, I might have missed something, but it looks like nothing happened
-> > here since then. What's the status? Is the issue still happening?
->
-> Yes. Tested on e5b3efbe1ab1.
->
-> I spotted that the problem disappears after forcing the TV to sleep
-> (activate screensaver <Super> + <L>) and then wake it up by pressing
-> any button and entering a password.
-> Hope this information can't help figure out how to fix it.
+In the device cdev path, adjust the handling of the KVM reference count to
+only increment with the first vfio_df_open() and decrement after the final
+vfio_df_close(). This change addresses a KVM reference leak that occurs
+when a device cdev file is opened multiple times and attempts to bind to
+iommufd repeatedly.
 
-@Siqueira, Rodrigo @Mahfooz, Hamza any ideas?
+Currently, vfio_df_get_kvm_safe() is invoked prior to each vfio_df_open()
+in the cdev path during iommufd binding. The corresponding
+vfio_device_put_kvm() is executed either when iommufd is unbound or if an
+error occurs during the binding process.
 
-Alex
+However, issues arise when a device binds to iommufd more than once. The
+second vfio_df_open() will fail during iommufd binding, and
+vfio_device_put_kvm() will be triggered, setting device->kvm to NULL.
+Consequently, when iommufd is unbound from the first successfully bound
+device, vfio_device_put_kvm() becomes ineffective, leading to a leak in the
+KVM reference count.
+
+Below is the calltrace that will be produced in this scenario when the KVM
+module is unloaded afterwards, reporting "BUG kvm_vcpu (Tainted: G S):
+Objects remaining in kvm_vcpu on __kmem_cache_shutdown()".
+
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x80/0xc0
+ slab_err+0xb0/0xf0
+ ? __kmem_cache_shutdown+0xc1/0x4e0
+ ? rcu_is_watching+0x11/0x50
+ ? lock_acquired+0x144/0x3c0
+ __kmem_cache_shutdown+0x1b7/0x4e0
+ kmem_cache_destroy+0xa6/0x260
+ kvm_exit+0x80/0xc0 [kvm]
+ vmx_exit+0xe/0x20 [kvm_intel]
+ __x64_sys_delete_module+0x143/0x250
+ ? ktime_get_coarse_real_ts64+0xd3/0xe0
+ ? syscall_trace_enter+0x143/0x210
+ do_syscall_64+0x6f/0x140
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e
+
+Fixes: 5fcc26969a16 ("vfio: Add VFIO_DEVICE_BIND_IOMMUFD")
+Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+---
+ drivers/vfio/device_cdev.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/vfio/device_cdev.c b/drivers/vfio/device_cdev.c
+index bb1817bd4ff3..3b85d01d1b27 100644
+--- a/drivers/vfio/device_cdev.c
++++ b/drivers/vfio/device_cdev.c
+@@ -65,6 +65,7 @@ long vfio_df_ioctl_bind_iommufd(struct vfio_device_file *df,
+ {
+ 	struct vfio_device *device = df->device;
+ 	struct vfio_device_bind_iommufd bind;
++	bool put_kvm = false;
+ 	unsigned long minsz;
+ 	int ret;
+ 
+@@ -101,12 +102,15 @@ long vfio_df_ioctl_bind_iommufd(struct vfio_device_file *df,
+ 	}
+ 
+ 	/*
+-	 * Before the device open, get the KVM pointer currently
++	 * Before the device's first open, get the KVM pointer currently
+ 	 * associated with the device file (if there is) and obtain
+-	 * a reference.  This reference is held until device closed.
++	 * a reference.  This reference is held until device's last closed.
+ 	 * Save the pointer in the device for use by drivers.
+ 	 */
+-	vfio_df_get_kvm_safe(df);
++	if (device->open_count == 0) {
++		vfio_df_get_kvm_safe(df);
++		put_kvm = true;
++	}
+ 
+ 	ret = vfio_df_open(df);
+ 	if (ret)
+@@ -129,7 +133,8 @@ long vfio_df_ioctl_bind_iommufd(struct vfio_device_file *df,
+ out_close_device:
+ 	vfio_df_close(df);
+ out_put_kvm:
+-	vfio_device_put_kvm(device);
++	if (put_kvm)
++		vfio_device_put_kvm(device);
+ 	iommufd_ctx_put(df->iommufd);
+ 	df->iommufd = NULL;
+ out_unlock:
+
+base-commit: 6ba59ff4227927d3a8530fc2973b80e94b54d58f
+-- 
+2.43.2
+
