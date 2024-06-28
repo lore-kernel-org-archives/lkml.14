@@ -1,163 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39CAC1C232D;
-	Fri, 28 Jun 2024 16:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF461BE25A
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 16:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719590908; cv=none; b=GBuunNvbOvnclFPp32/bIDGXV9yU5XNXOP/f4tA9SiI3hwz7qv1UFane9LLuvYQwLfzJVMW+otXVVKpBeCd/8Vn4B5eh3M2EnPbHbD1nAIYhFcf4O54Yl18Q/gDatjB+d2aEETtW0J5pXmAUsrb1T/p5CkWbC9IpjjQL1SXELX8=
+	t=1719590959; cv=none; b=OPrNRMl6DxvDRrIz0+/NsJeyM4hXFyXKYS77dKmkedFMltjAd1EF75O/h2pISnfjOcIdP2/FGmEAyGgiJOmMMY3U2zUoGle2oYYaX+Gc2QBhmcFLFoa14xA9Fmu2pxtz6pwWdJeEYtanVOsz1Mnsimr3Hkv9gUFTTWhhOnqhVOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719590908; c=relaxed/simple;
-	bh=R4kwb7inTePxkXUgwaD3xEPqRk0IkjAOzJgUSxQSk00=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pr0poQakTh3LtNv/7UWdT9LuoG1U1M0yMjfh5TuIL7cVYCF7hmPIJXFCIEpTLQkjiPz2+aYw3lKrgdPUi7aYT7WZV+/YRq2xYaQ1Opug9Zf7lC/w0zNH7ctgF03u5/MV2JI1Xg1KFrohppuJidrdcFGlB91nvtPBoGQrYn9oO+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ARCEWVTT; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719590959; c=relaxed/simple;
+	bh=xSiS5VbBTWtHkMjKE2FM2x8QgKqasXrVFPcpXxJBCgY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=mocUPUB7smI9EO4j69yov+hRBcaqxyuAfSTdZONUMBv0HAhnWSQzcOD0C0w560o909uXA+k+Dp1zfxEZZcP0Dp7k20FRzKTi1Rq/oNbino+xJBwOgm2/jVTibEDCYL80c80PyKMFnSfThY5+fOZvqMg2iXUqtEP0xxvFSTKTcWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ACrxuD85; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ARCEWVTT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719590907; x=1751126907;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=R4kwb7inTePxkXUgwaD3xEPqRk0IkjAOzJgUSxQSk00=;
-  b=ARCEWVTTn80jzUOJgvLz+xJf0DgTmYLTcZ8tgGWR1KDqWlskOwtKp7HP
-   Oqhh6axS8XdECp3nhSov70lxQaZcnZ3cTZeNKuCCxriH+BiGpwHVYglxW
-   UEmveG0WHVelQ8dMczbkoTDO1H1dI+K0nSXPOf2kBzOPj/U36WW19F47Z
-   VQXM34CVTuAJnBqhAa/HPVfw/ImuAQTeklYS4yiicb1lB+bvGxIBODbDR
-   S7beqfEvzSatYD88jDnMQYYpFrcJMPkHbQ0+E1GSE7nnqxN1qqwJfwAZ1
-   RiRYi7fr7O47CtEbAvvJqPEoWSDo5kqJhDCjDVMwj2vNcAmmA5TLWGrSk
-   g==;
-X-CSE-ConnectionGUID: ra/4F/mLT2C+CwQG5nqZRQ==
-X-CSE-MsgGUID: 3S3G5/IrSb2oQ7szdIlQFw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11117"; a="17005111"
-X-IronPort-AV: E=Sophos;i="6.09,169,1716274800"; 
-   d="scan'208";a="17005111"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 09:08:26 -0700
-X-CSE-ConnectionGUID: WSVqjr6pQbaADbCz/moyeQ==
-X-CSE-MsgGUID: pbgkgWDkQlKzrfXSbQu4ug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,169,1716274800"; 
-   d="scan'208";a="75979078"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 28 Jun 2024 09:08:18 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sNE8w-000HJq-1l;
-	Fri, 28 Jun 2024 16:08:10 +0000
-Date: Sat, 29 Jun 2024 00:07:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: Roman Kagan <rkagan@amazon.de>, linux-arm-kernel@lists.infradead.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, nh-open-source@amazon.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH] irqchip/gicv3-its: Workaround for GIC-700 erratum 2195890
-Message-ID: <202406282359.98P8jJ4c-lkp@intel.com>
-References: <20240624165541.1286227-1-rkagan@amazon.de>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ACrxuD85"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-63bf44b87d4so8334627b3.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 09:09:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1719590957; x=1720195757; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+dLquM4FkT/DoL6SKER0hksUwO28Urfz4ARvtIF4KV8=;
+        b=ACrxuD85npxF2sDckIotp0Zetm0RVFfhRzm4nDfgqWP7MfB5RWNKnL3J3Bn+qZ+kFS
+         56ywuwwvhT6HMl0wfQEqxdAmuiEejUEVc7JdR+04ABJUbzxX1KfIhzhJqaLZa8umEio2
+         QLNHTSbART3obQGDdUu8AJ3bEaLvfsIvRfDawauPfY1+bQaNxm6pgeNXczdhws4xkQ+x
+         bYx0F/f/HO6bDM8MK0MMUdv0tLPvhpASLf3tNhqOZjO0tsHcH0EUDwzhRf/ZbmGRqAEp
+         xp1RQS8xy7KWipIAzMqX1jB19PYmMYIQRHnfrNQuxqrckYQ8Jscjfre4O88ayU+GCfG2
+         4o6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719590957; x=1720195757;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+dLquM4FkT/DoL6SKER0hksUwO28Urfz4ARvtIF4KV8=;
+        b=e8i5GwbBB62CKyIJAZq9xi//reUJWklqdOE3NDK5O+ywobt0AfogsvgsP3hEV0Fdcb
+         mUmbEUIZm5sAFaAvk21FMyuSEklCwqS1cnHpYxZJ0Dl3MmANvpUY4LE7m96jEgL68i/J
+         LJX4ofprVXgFPGYOhYZYsAG7rMAq5IZGNbjal4k1qTNSQjQz2SR6DiZtKrvlxg31MdeH
+         hO2WAgwtWIl73ffNLNksMScOLt++k+05b34ZTeRNx8Jxwi58qNAQWtnD+NNIT41tzrXv
+         +9dpbfRBDLMciIILT3bUwLX7lPT7cYEI+hQyl7b9Ylvg1yx+S7yKB9wqDC2LXxUIfMzk
+         moPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUfbayi61BZhaXfT92DiRVOuglQVMIoFmCp6NI/6VpWNvaKhOnCl7GVFK/6NN37hBSGK/lt03mxe+1q7y7XY2rWxBw3bu/9EY2gnXbD
+X-Gm-Message-State: AOJu0YwwrDV5Sn6P/wAJ1wgY37CHe5Lb6MhkEyAnNFlB2Ys+NTHL8R63
+	+s06B8Oy/CJkUMVy/D77utEULkjed/AISnQaop8rNOoN2IbLecY9GPeM7duoQyb0dBjfVc92q+E
+	J/g==
+X-Google-Smtp-Source: AGHT+IHJY/lTxp/95vjfGeiS7oXbM4P6tRf14ezu1AV3VayEqpmqGBX9AHi66wPOpt9anlmG2eQslSmpJn4=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a81:8451:0:b0:627:edcb:cbe2 with SMTP id
+ 00721157ae682-64af5dfeb07mr216687b3.5.1719590957359; Fri, 28 Jun 2024
+ 09:09:17 -0700 (PDT)
+Date: Fri, 28 Jun 2024 09:09:15 -0700
+In-Reply-To: <20240626073719.5246-1-amit@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240624165541.1286227-1-rkagan@amazon.de>
+Mime-Version: 1.0
+References: <20240626073719.5246-1-amit@kernel.org>
+Message-ID: <Zn7gK9KZKxBwgVc_@google.com>
+Subject: Re: [PATCH v2] KVM: SVM: let alternatives handle the cases when RSB
+ filling is required
+From: Sean Christopherson <seanjc@google.com>
+To: Amit Shah <amit@kernel.org>
+Cc: pbonzini@redhat.com, x86@kernel.org, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, amit.shah@amd.com, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
+	kim.phillips@amd.com, david.kaplan@amd.com
+Content-Type: text/plain; charset="us-ascii"
 
-Hi Roman,
+On Wed, Jun 26, 2024, Amit Shah wrote:
+> ---
+>  arch/x86/kvm/svm/vmenter.S | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/svm/vmenter.S b/arch/x86/kvm/svm/vmenter.S
+> index a0c8eb37d3e1..2ed80aea3bb1 100644
+> --- a/arch/x86/kvm/svm/vmenter.S
+> +++ b/arch/x86/kvm/svm/vmenter.S
+> @@ -209,10 +209,8 @@ SYM_FUNC_START(__svm_vcpu_run)
+>  7:	vmload %_ASM_AX
+>  8:
+>  
+> -#ifdef CONFIG_MITIGATION_RETPOLINE
+>  	/* IMPORTANT: Stuff the RSB immediately after VM-Exit, before RET! */
+> -	FILL_RETURN_BUFFER %_ASM_AX, RSB_CLEAR_LOOPS, X86_FEATURE_RETPOLINE
+> -#endif
+> +	FILL_RETURN_BUFFER %_ASM_AX, RSB_CLEAR_LOOPS, X86_FEATURE_RSB_VMEXIT
 
-kernel test robot noticed the following build warnings:
+Out of an abundance of paranoia, shouldn't this be?
 
-[auto build test WARNING on arm64/for-next/core]
-[also build test WARNING on soc/for-next tip/irq/core linus/master v6.10-rc5 next-20240627]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+	FILL_RETURN_BUFFER %_ASM_CX, RSB_CLEAR_LOOPS, X86_FEATURE_RSB_VMEXIT,\
+			   X86_FEATURE_RSB_VMEXIT_LITE
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Roman-Kagan/irqchip-gicv3-its-Workaround-for-GIC-700-erratum-2195890/20240625-212945
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
-patch link:    https://lore.kernel.org/r/20240624165541.1286227-1-rkagan%40amazon.de
-patch subject: [PATCH] irqchip/gicv3-its: Workaround for GIC-700 erratum 2195890
-config: arm64-randconfig-004-20240628 (https://download.01.org/0day-ci/archive/20240628/202406282359.98P8jJ4c-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240628/202406282359.98P8jJ4c-lkp@intel.com/reproduce)
+Hmm, but it looks like that would incorrectly trigger the "lite" flavor for
+families 0xf - 0x12.  I assume those old CPUs aren't affected by whatever on earth
+EIBRS_PBRSB is.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406282359.98P8jJ4c-lkp@intel.com/
+	/* AMD Family 0xf - 0x12 */
+	VULNWL_AMD(0x0f,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT | NO_MMIO | NO_BHI),
+	VULNWL_AMD(0x10,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT | NO_MMIO | NO_BHI),
+	VULNWL_AMD(0x11,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT | NO_MMIO | NO_BHI),
+	VULNWL_AMD(0x12,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT | NO_MMIO | NO_BHI),
 
-All warnings (new ones prefixed by >>, old ones prefixed by <<):
+	/* FAMILY_ANY must be last, otherwise 0x0f - 0x12 matches won't work */
+	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT | NO_MMIO | NO_EIBRS_PBRSB | NO_BHI),
+	VULNWL_HYGON(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT | NO_MMIO | NO_EIBRS_PBRSB | NO_BHI),
 
->> WARNING: modpost: vmlinux: section mismatch in reference: its_enable_quirk_gic700_2195890+0x24 (section: .text) -> lpi_id_base (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: its_enable_quirk_gic700_2195890+0x34 (section: .text) -> lpi_id_base (section: .init.data)
-WARNING: modpost: vmlinux: section mismatch in reference: its_enable_quirk_gic700_2195890+0x44 (section: .text) -> lpi_id_base (section: .init.data)
-WARNING: modpost: missing MODULE_DESCRIPTION() in arch/arm64/crypto/crct10dif-ce.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in arch/arm64/crypto/aes-neon-bs.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/locking/test-ww_mutex.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/time/test_udelay.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp850.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp860.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp862.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp863.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp949.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp950.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp1251.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_iso8859-7.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-centeuro.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-gaelic.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/binfmt_misc.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/cramfs/cramfs.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/fat/fat.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/ufs/ufs.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/efs/efs.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/adfs/adfs.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/btrfs/btrfs.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in security/keys/trusted-keys/trusted.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in crypto/algif_hash.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in crypto/algif_skcipher.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in crypto/xor.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/crypto/libdes.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_hexdump.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_bpf.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_firmware.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test-kstrtox.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_module.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_user_copy.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_blackhole_dev.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/atomic64_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/asn1_encoder.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pinctrl/pinctrl-mcp23s08_i2c.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pinctrl/pinctrl-mcp23s08.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/video/backlight/platform_lcd.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/qcom/hdma.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/tty/serial/8250/8250_base.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/tty/serial/serial_mctrl_gpio.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/tty/n_hdlc.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/tty/n_gsm.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/tty/ttynull.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/hw_random/omap-rng.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/hw_random/omap3-rom-rng.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/hw_random/arm_smccc_trng.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/ppdev.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/misc/fastrpc.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/auxdisplay/line-display.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/tuners/tda9887.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/dvb-frontends/au8522_decoder.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/dvb-frontends/mb86a16.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mmc/core/pwrseq_emmc.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mmc/core/sdio_uart.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/perf/arm-ccn.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/uio/uio.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/greybus/greybus.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/rpmsg/rpmsg_char.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/iio/buffer/kfifo_buf.o
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>  
+>  	/* Clobbers RAX, RCX, RDX.  */
+>  	RESTORE_HOST_SPEC_CTRL
+> @@ -348,10 +346,8 @@ SYM_FUNC_START(__svm_sev_es_vcpu_run)
+>  
+>  2:	cli
+>  
+> -#ifdef CONFIG_MITIGATION_RETPOLINE
+>  	/* IMPORTANT: Stuff the RSB immediately after VM-Exit, before RET! */
+> -	FILL_RETURN_BUFFER %rax, RSB_CLEAR_LOOPS, X86_FEATURE_RETPOLINE
+> -#endif
+> +	FILL_RETURN_BUFFER %rax, RSB_CLEAR_LOOPS, X86_FEATURE_RSB_VMEXIT
+>  
+>  	/* Clobbers RAX, RCX, RDX, consumes RDI (@svm) and RSI (@spec_ctrl_intercepted). */
+>  	RESTORE_HOST_SPEC_CTRL
+> -- 
+> 2.45.2
+> 
