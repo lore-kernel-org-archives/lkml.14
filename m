@@ -1,105 +1,237 @@
-Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636C9158A10
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 12:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDF615956C;
+	Fri, 28 Jun 2024 12:02:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719576137; cv=none; b=r7PfFcgqoG9u7O8lCZFCuyEj8OG5ojjhdIDtQJKMSE9AYUaQx9XzS9ds6SOw36wCnubusb68JFi4GYMc5DdA8wj1wzf74qpXhKVWZns6JfiBgWR7oibnDCmfwz991+5/Xg+JuF7lS3/PD5zYVU5axZtl5bMFo3nekUm0n8bObJ4=
+	t=1719576139; cv=none; b=SX0/mTE0qmpJmClUqysos0VmfRN8OlvUd7754WSI+3oCOzreYFa+n4Pplw3kdxeTgzA6xHRR40LK4uudgFEKFSQIyMn9L8o1UspGOGvABSmGGNGrtO8w+8fwIeNThVE4Mq7CCMrJ+brxbpgTjjyaT7Er14jxQu/PH1gjoD0hpOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719576137; c=relaxed/simple;
-	bh=1uSrJkD5Zjfn20B0+Voqc1tYBBjAIlt32I1fxB4N9J8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QmfddFg615cGq2j/eqm344etEZTY3jFC/xvFTfFwGtZdfSN3i14MRT0GuELmgHrg1bbwt02W8v/Q66+sQse6SxcqpHoiXNo7mokJBZsZte3wG8+lNfseIgoVc0H2lMvUrfk8PRpX5MJJuD78vqlWy9jz9Gx7l9p0V/iyJ16dITc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=lHdl2hyM; arc=none smtp.client-ip=91.218.175.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1719576139; c=relaxed/simple;
+	bh=3k9ZkwgGpMPZn2tsQoz44Is7MxHK8Dik11rJoEG98i8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=G5d3TMYJ0Nt5e33mbDSw2/xtfEpPvSTcM/+r8hEsgWS8BBHhh6gvSSsU3iurYiJx9hJN3zEU0yfV9caflHU1firEqhnqL7mXtgMRTHkA+JTWVacbFRL+QiLc9uAYVQigdGwvjTZ64ABCsO9fBDH7bpqJblP3PLm4v8ojUt2V4VE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oSaA8PPu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="lHdl2hyM"
-X-Envelope-To: heiko@sntech.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1719576129;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=sfuZFBB5M5HzceMLfENqUVqIXCu7nq+4d20hGrJdaF0=;
-	b=lHdl2hyMNHhzITHZTrrKvZs6BqdIjLJ1EeebRI2kMoTaXbH1Ai41zCDEcFyzPAe6ciIQf1
-	Fu0MOS6RM05zY2Kbbs3J9UDQLNtSOMbzpzaanoMBNoW1+9YlzQ/Ns9r3sVqpRcdagPz0KB
-	4gZE8wD7CsHrJ8AAGJLwAZ5M2XOhIrRVwSGn0xYpchIHZIHySemtwvaPInSko7O6WXdDx8
-	Iyc0L8mU6YGhl7N0BqLaqNB69LOG1iwPWJ4HrX0+TkUJpwV8DbItjeuk6WloPQnD+tOiLy
-	1tLoHDDGudWPu2jNz9ycny1D+m070dru7LJdXar5XJBVPqkbLKIY/2EsDuCHmw==
-X-Envelope-To: didi.debian@cknow.org
-X-Envelope-To: jonas@kwiboo.se
-X-Envelope-To: dsimic@manjaro.org
-X-Envelope-To: ukleinek@debian.org
-X-Envelope-To: wens@kernel.org
-X-Envelope-To: linux-rockchip@lists.infradead.org
-X-Envelope-To: devicetree@vger.kernel.org
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Diederik de Haas <didi.debian@cknow.org>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Diederik de Haas <didi.debian@cknow.org>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Dragan Simic <dsimic@manjaro.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@debian.org>,
-	Chen-Yu Tsai <wens@kernel.org>,
-	linux-rockchip@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: rockchip: Add dma-names to uart1 on quartz64-b
-Date: Fri, 28 Jun 2024 14:00:43 +0200
-Message-ID: <20240628120130.24076-1-didi.debian@cknow.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oSaA8PPu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32CA7C4AF0A;
+	Fri, 28 Jun 2024 12:02:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719576139;
+	bh=3k9ZkwgGpMPZn2tsQoz44Is7MxHK8Dik11rJoEG98i8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=oSaA8PPuU8Boh8baTcIZ8MpdGH8oP+d2K2R2rTirZOXjez8qfAtCHkEN2xaxLkZE3
+	 rkskWQIOfKpLvJbW7qI7Gy435AaXELUciQJ8VIV+L4Qqqm9SJVGnoFODDQ2FUuyNMu
+	 HCplFiQj3BuvezwaD02c7OlwPoXVqPk5Gx7+EL0NRsh+B0jduQbuAtIya18hsLqVhK
+	 kqKVcc3oSU2wlbRLuCVfX+MnbwcbdwDfuMJ8/Civc5huK3n+bDEjpVMzejKbR79yDj
+	 qprfxe704/2aDWZcztYYDButdfOCJ5RfWq7d01eAHgcqO8uXDxlTepNYOOJEinIjAX
+	 ry2I20WjWAb7Q==
+From: Roger Quadros <rogerq@kernel.org>
+Date: Fri, 28 Jun 2024 15:01:53 +0300
+Subject: [PATCH net-next v2 4/7] net: ethernet: ti: cpsw_ale: add Policer
+ and Thread control register fields
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240628-am65-cpsw-multi-rx-v2-4-c399cb77db56@kernel.org>
+References: <20240628-am65-cpsw-multi-rx-v2-0-c399cb77db56@kernel.org>
+In-Reply-To: <20240628-am65-cpsw-multi-rx-v2-0-c399cb77db56@kernel.org>
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Siddharth Vadapalli <s-vadapalli@ti.com>, 
+ Julien Panis <jpanis@baylibre.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, srk@ti.com, vigneshr@ti.com, 
+ danishanwar@ti.com, pekka Varis <p-varis@ti.com>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, 
+ Roger Quadros <rogerq@kernel.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5932; i=rogerq@kernel.org;
+ h=from:subject:message-id; bh=3k9ZkwgGpMPZn2tsQoz44Is7MxHK8Dik11rJoEG98i8=;
+ b=owEBbQKS/ZANAwAIAdJaa9O+djCTAcsmYgBmfqY4kQ1AO5a5vgA7hzp1QCN2xuUctz8iLY8RX
+ 6PyNuSH2UWJAjMEAAEIAB0WIQRBIWXUTJ9SeA+rEFjSWmvTvnYwkwUCZn6mOAAKCRDSWmvTvnYw
+ kyuuD/9AnEZuAQ1uue9Fx76eZAAuKt6E02b5VBtQqm9/SBp9cZCFU3bv8QG6FnkqRW4Bb4NIUGB
+ P5A+TFfjUzMtd7fUtgZA2C/mEj3fW1/9DTZtLh5UQkjxzjaqs2AXLgqU9DRUCVfOjqqSJs5/ouV
+ zKhJTGG95EUYAHOjHo8aXvTZ6Z4EZFi8t4C4aek9h5OzLafsl+NFyO2tklmYee9nV4qZt9DRikz
+ YiMP1OPDEGAoI3pXz8a4gjyPhzJrDebT0IHK8lHM1m2L2MNBudGCHr5/aeAzl41NKALcBwscY36
+ mqnz5OU2oSp881BeLJ6GT0BOr/pQwk7ZEZUPKNzxGDd4Ei3/yFVbJ4i3vurK0fHss3lDK/0JHGs
+ jJNHJGu6cusT3e717InE8OELjaIGCdE6K3/p3gZpBbCmdMVjcr/qiSiQC2cewmO29NOpRb80kSC
+ b9Q9pKxspbLL6RQ2B05iHd1n88qB2B8bGTQmXDJkqNAPaRu1Pc6mCphnJQM9OBWWMWe9xzMFlWO
+ 0TL6Dx4He6tBPo1hEXFPplnErd02rRSzT0QTGsTggRNUZfZ1l/XX0x7vasE9zUzYXOruuV+Dt24
+ QOGTsZ2FLnTMg5IsAYe+j2jA0O5Jt1WGSxC3ziNBdAyimbMhzIrGjB1zBnkMzD8ljBmi1d6xaLY
+ jDl+wrucbWgdsGA==
+X-Developer-Key: i=rogerq@kernel.org; a=openpgp;
+ fpr=412165D44C9F52780FAB1058D25A6BD3BE763093
 
-There have been several attempts to set the dma-names property on the
-SoC level (in rk356x.dtsi), but that appears to cause problems when set
-on channels without flow control.
+Adds regfileds for Policer registers and Thread mapping/control registers.
 
-Quoting part of a previous attempt for clarification:
-
-> Nah, enabling it for bluetooth is fine because you have flow control.
-> My issues have been on channels without flow control. Without DMA it
-> simply drops messages or the channel hangs until you close and reopen
-> it. With DMA, when an overflow locks up the channel it is usually
-> unavailable until the board is rebooted.
-
-Setting it on the board level for the bluetooth connection was deemed
-safe, so do so for the Quartz64 Model B.
-
-This fixes the following error/warning:
-
-  of_dma_request_slave_channel: dma-names property of node
-      '/serial@fe650000' missing or empty
-  dw-apb-uart fe650000.serial: failed to request DMA
-
-Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
-Link: https://libera.irclog.whitequark.org/armlinux/2024-02-29
-Link: https://lore.kernel.org/linux-rockchip/18284546.sWSEgdgrri@diego/
+Signed-off-by: Roger Quadros <rogerq@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3566-quartz64-b.dts | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/ti/cpsw_ale.c | 86 ++++++++++++++++++++++++++++++++++++++
+ drivers/net/ethernet/ti/cpsw_ale.h | 41 ++++++++++++++++++
+ 2 files changed, 127 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3566-quartz64-b.dts b/arch/arm64/boot/dts/rockchip/rk3566-quartz64-b.dts
-index b908ce006c26..13e599a85eb8 100644
---- a/arch/arm64/boot/dts/rockchip/rk3566-quartz64-b.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3566-quartz64-b.dts
-@@ -652,6 +652,7 @@ &tsadc {
+diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
+index ca66c89c1f12..7bd0dc20f894 100644
+--- a/drivers/net/ethernet/ti/cpsw_ale.c
++++ b/drivers/net/ethernet/ti/cpsw_ale.c
+@@ -46,6 +46,24 @@
+ #define ALE_UNKNOWNVLAN_FORCE_UNTAG_EGRESS	0x9C
+ #define ALE_VLAN_MASK_MUX(reg)			(0xc0 + (0x4 * (reg)))
+ 
++#define ALE_POLICER_PORT_OUI		0x100
++#define ALE_POLICER_DA_SA		0x104
++#define ALE_POLICER_VLAN		0x108
++#define ALE_POLICER_ETHERTYPE_IPSA	0x10c
++#define ALE_POLICER_IPDA		0x110
++#define ALE_POLICER_PIR			0x118
++#define ALE_POLICER_CIR			0x11c
++#define ALE_POLICER_TBL_CTL		0x120
++#define ALE_POLICER_CTL			0x124
++#define ALE_POLICER_TEST_CTL		0x128
++#define ALE_POLICER_HIT_STATUS		0x12c
++#define ALE_THREAD_DEF			0x134
++#define ALE_THREAD_CTL			0x138
++#define ALE_THREAD_VAL			0x13c
++
++#define ALE_POLICER_TBL_WRITE_ENABLE	BIT(31)
++#define ALE_POLICER_TBL_INDEX_MASK	GENMASK(4, 0)
++
+ #define AM65_CPSW_ALE_THREAD_DEF_REG 0x134
+ 
+ /* ALE_AGING_TIMER */
+@@ -1306,6 +1324,74 @@ static const struct reg_field ale_fields_cpsw_nu[] = {
+ 	/* CPSW_ALE_STATUS_REG */
+ 	[ALE_ENTRIES]	= REG_FIELD(ALE_STATUS, 0, 7),
+ 	[ALE_POLICERS]	= REG_FIELD(ALE_STATUS, 8, 15),
++	/* CPSW_ALE_POLICER_PORT_OUI_REG */
++	[POL_PORT_MEN]	= REG_FIELD(ALE_POLICER_PORT_OUI, 31, 31),
++	[POL_TRUNK_ID]	= REG_FIELD(ALE_POLICER_PORT_OUI, 30, 30),
++	[POL_PORT_NUM]	= REG_FIELD(ALE_POLICER_PORT_OUI, 25, 25),
++	[POL_PRI_MEN]	= REG_FIELD(ALE_POLICER_PORT_OUI, 19, 19),
++	[POL_PRI_VAL]	= REG_FIELD(ALE_POLICER_PORT_OUI, 16, 18),
++	[POL_OUI_MEN]	= REG_FIELD(ALE_POLICER_PORT_OUI, 15, 15),
++	[POL_OUI_INDEX]	= REG_FIELD(ALE_POLICER_PORT_OUI, 0, 5),
++
++	/* CPSW_ALE_POLICER_DA_SA_REG */
++	[POL_DST_MEN]	= REG_FIELD(ALE_POLICER_DA_SA, 31, 31),
++	[POL_DST_INDEX]	= REG_FIELD(ALE_POLICER_DA_SA, 16, 21),
++	[POL_SRC_MEN]	= REG_FIELD(ALE_POLICER_DA_SA, 15, 15),
++	[POL_SRC_INDEX]	= REG_FIELD(ALE_POLICER_DA_SA, 0, 5),
++
++	/* CPSW_ALE_POLICER_VLAN_REG */
++	[POL_OVLAN_MEN]		= REG_FIELD(ALE_POLICER_VLAN, 31, 31),
++	[POL_OVLAN_INDEX]	= REG_FIELD(ALE_POLICER_VLAN, 16, 21),
++	[POL_IVLAN_MEN]		= REG_FIELD(ALE_POLICER_VLAN, 15, 15),
++	[POL_IVLAN_INDEX]	= REG_FIELD(ALE_POLICER_VLAN, 0, 5),
++
++	/* CPSW_ALE_POLICER_ETHERTYPE_IPSA_REG */
++	[POL_ETHERTYPE_MEN]	= REG_FIELD(ALE_POLICER_ETHERTYPE_IPSA, 31, 31),
++	[POL_ETHERTYPE_INDEX]	= REG_FIELD(ALE_POLICER_ETHERTYPE_IPSA, 16, 21),
++	[POL_IPSRC_MEN]		= REG_FIELD(ALE_POLICER_ETHERTYPE_IPSA, 15, 15),
++	[POL_IPSRC_INDEX]	= REG_FIELD(ALE_POLICER_ETHERTYPE_IPSA, 0, 5),
++
++	/* CPSW_ALE_POLICER_IPDA_REG */
++	[POL_IPDST_MEN]		= REG_FIELD(ALE_POLICER_IPDA, 31, 31),
++	[POL_IPDST_INDEX]	= REG_FIELD(ALE_POLICER_IPDA, 16, 21),
++
++	/* CPSW_ALE_POLICER_TBL_CTL_REG */
++	/**
++	 * REG_FIELDS not defined for this as fields cannot be correctly
++	 * used independently
++	 */
++
++	/* CPSW_ALE_POLICER_CTL_REG */
++	[POL_EN]		= REG_FIELD(ALE_POLICER_CTL, 31, 31),
++	[POL_RED_DROP_EN]	= REG_FIELD(ALE_POLICER_CTL, 29, 29),
++	[POL_YELLOW_DROP_EN]	= REG_FIELD(ALE_POLICER_CTL, 28, 28),
++	[POL_YELLOW_THRESH]	= REG_FIELD(ALE_POLICER_CTL, 24, 26),
++	[POL_POL_MATCH_MODE]	= REG_FIELD(ALE_POLICER_CTL, 22, 23),
++	[POL_PRIORITY_THREAD_EN] = REG_FIELD(ALE_POLICER_CTL, 21, 21),
++	[POL_MAC_ONLY_DEF_DIS]	= REG_FIELD(ALE_POLICER_CTL, 20, 20),
++
++	/* CPSW_ALE_POLICER_TEST_CTL_REG */
++	[POL_TEST_CLR]		= REG_FIELD(ALE_POLICER_TEST_CTL, 31, 31),
++	[POL_TEST_CLR_RED]	= REG_FIELD(ALE_POLICER_TEST_CTL, 30, 30),
++	[POL_TEST_CLR_YELLOW]	= REG_FIELD(ALE_POLICER_TEST_CTL, 29, 29),
++	[POL_TEST_CLR_SELECTED]	= REG_FIELD(ALE_POLICER_TEST_CTL, 28, 28),
++	[POL_TEST_ENTRY]	= REG_FIELD(ALE_POLICER_TEST_CTL, 0, 4),
++
++	/* CPSW_ALE_POLICER_HIT_STATUS_REG */
++	[POL_STATUS_HIT]	= REG_FIELD(ALE_POLICER_HIT_STATUS, 31, 31),
++	[POL_STATUS_HIT_RED]	= REG_FIELD(ALE_POLICER_HIT_STATUS, 30, 30),
++	[POL_STATUS_HIT_YELLOW]	= REG_FIELD(ALE_POLICER_HIT_STATUS, 29, 29),
++
++	/* CPSW_ALE_THREAD_DEF_REG */
++	[ALE_DEFAULT_THREAD_EN]		= REG_FIELD(ALE_THREAD_DEF, 15, 15),
++	[ALE_DEFAULT_THREAD_VAL]	= REG_FIELD(ALE_THREAD_DEF, 0, 5),
++
++	/* CPSW_ALE_THREAD_CTL_REG */
++	[ALE_THREAD_CLASS_INDEX] = REG_FIELD(ALE_THREAD_CTL, 0, 4),
++
++	/* CPSW_ALE_THREAD_VAL_REG */
++	[ALE_THREAD_ENABLE]	= REG_FIELD(ALE_THREAD_VAL, 15, 15),
++	[ALE_THREAD_VALUE]	= REG_FIELD(ALE_THREAD_VAL, 0, 5),
  };
  
- &uart1 {
-+	dma-names = "tx", "rx";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart1m0_xfer &uart1m0_ctsn &uart1m0_rtsn>;
- 	status = "okay";
+ static const struct cpsw_ale_dev_id cpsw_ale_id_match[] = {
+diff --git a/drivers/net/ethernet/ti/cpsw_ale.h b/drivers/net/ethernet/ti/cpsw_ale.h
+index e12bb2caf016..2cb76acc6d16 100644
+--- a/drivers/net/ethernet/ti/cpsw_ale.h
++++ b/drivers/net/ethernet/ti/cpsw_ale.h
+@@ -36,6 +36,47 @@ enum ale_fields {
+ 	MAJOR_VER,
+ 	ALE_ENTRIES,
+ 	ALE_POLICERS,
++	POL_PORT_MEN,
++	POL_TRUNK_ID,
++	POL_PORT_NUM,
++	POL_PRI_MEN,
++	POL_PRI_VAL,
++	POL_OUI_MEN,
++	POL_OUI_INDEX,
++	POL_DST_MEN,
++	POL_DST_INDEX,
++	POL_SRC_MEN,
++	POL_SRC_INDEX,
++	POL_OVLAN_MEN,
++	POL_OVLAN_INDEX,
++	POL_IVLAN_MEN,
++	POL_IVLAN_INDEX,
++	POL_ETHERTYPE_MEN,
++	POL_ETHERTYPE_INDEX,
++	POL_IPSRC_MEN,
++	POL_IPSRC_INDEX,
++	POL_IPDST_MEN,
++	POL_IPDST_INDEX,
++	POL_EN,
++	POL_RED_DROP_EN,
++	POL_YELLOW_DROP_EN,
++	POL_YELLOW_THRESH,
++	POL_POL_MATCH_MODE,
++	POL_PRIORITY_THREAD_EN,
++	POL_MAC_ONLY_DEF_DIS,
++	POL_TEST_CLR,
++	POL_TEST_CLR_RED,
++	POL_TEST_CLR_YELLOW,
++	POL_TEST_CLR_SELECTED,
++	POL_TEST_ENTRY,
++	POL_STATUS_HIT,
++	POL_STATUS_HIT_RED,
++	POL_STATUS_HIT_YELLOW,
++	ALE_DEFAULT_THREAD_EN,
++	ALE_DEFAULT_THREAD_VAL,
++	ALE_THREAD_CLASS_INDEX,
++	ALE_THREAD_ENABLE,
++	ALE_THREAD_VALUE,
+ 	/* terminator */
+ 	ALE_FIELDS_MAX,
+ };
+
 -- 
-2.45.2
+2.34.1
 
