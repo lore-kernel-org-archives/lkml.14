@@ -1,201 +1,209 @@
 Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D641C20;
-	Fri, 28 Jun 2024 22:34:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA5F7B3F3;
+	Fri, 28 Jun 2024 22:35:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719614055; cv=none; b=lu+dlmfeM2uvZ6mWgoMES23bAk2JR1oIcnFv7KLy7zYR+N1x8W8wRUshGrg/zX8n35WWTofl6LZV5XJY9bdKnWnUJFJoKzx+sj282wDqmtQ4tqlaUYjDWrPx57/NX/nW24LohaHJ1fyTw3sTv4S/sWi+eMaL3CNk9zEgO1xfsHw=
+	t=1719614108; cv=none; b=E9HF7Jsxd/QyYwfs5j8zBOz37FWsX7qqqnaDdqGg+/Rik7+q/ZKcrjEteqx+mD+IKejCHTXqPpScs5CGFSDak9kRtOs/U0vBo8pjOxhmRRSBvBwG+DeQCuviFch/WWdFLfMX/y1HBUwrKV83b8FS0LZ4HY1G2b8j/Ey7rCjf+DU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719614055; c=relaxed/simple;
-	bh=Ys4CQ1Ee2XYd9Z+q+G+O2Q2yPZBTN4YABcJ7Izhsah0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HSMAneV3aoDJ6fnDr8R4Gr3lT7muNOFvoXhJ099SWb2nXXrKV1260xNrTptOzxQkYT/9nFD3FSoC9IN8VzPZw1vrk4tvrz1axVyBDEjK3kqa9zwyscH6x6OkPuTpj4n3Vn89FqqQsRGZ6fj0HrsZ7Pz9mmJQb8Avrak8bn+PPa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YcqTidOD; arc=none smtp.client-ip=209.85.210.180
+	s=arc-20240116; t=1719614108; c=relaxed/simple;
+	bh=07DYTvr+1cJJnnI4lcrtI01YvZ/CoNFQl7uUpMSlcko=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ivxGN39If3kcnGJxMkyT5cvRVFID1XvqtQZG2GXugHyc9+ITcdrDpLr9HzbkiT5Y5jH9U3+DOWiTNX3aYnGvigsFBaiFlYWQ9OovF+litJHu2Iji4jtLyEryxIkZpGaXdI4VhtLhLvsew7RmOhafm6NUi9AQeuI/mxjq9RL8g+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jINno7Nt; arc=none smtp.client-ip=209.85.210.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YcqTidOD"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-706a1711ee5so774928b3a.0;
-        Fri, 28 Jun 2024 15:34:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jINno7Nt"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-706b53ee183so1617604b3a.1;
+        Fri, 28 Jun 2024 15:35:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719614053; x=1720218853; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qQBqKzyhVeiycVhfYsHaCb9v2lQ1K0Xn265nIuEvVp0=;
-        b=YcqTidODzPkXd9/yCmy9L6bRGYvcXeo6YduEbqmxcrhCRVUeErUfZMWIdx1UAKiZLP
-         C0KNuLlSJCcdAiJZpsWP5/bm6LQZkTpbJt2KZPRRYvqXMPeujYDYupUAVHyMr0M+RTom
-         TL9iOoOx9LKs7PRMTtUuvSnMxq84CndrXLiJjhxWNwnA/2EOvhisDi2vxdmYywz1EG7t
-         4fJxRlFBChjDL2tJwGln1HNSQW79THn9QW4xZBI0OcJhV3r5jwkxr0KZjmwv/9Ip/Fn2
-         XAElhVOy9RDAC4sr0lYEDLhziy/P0+auiFfAFTXAWZe8T59Uy9qnExSRE0CydG9XFLy2
-         luwQ==
+        d=gmail.com; s=20230601; t=1719614106; x=1720218906; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=k/Il0CyJ05RUxTJn8nhYPqyFFh/jRSTkpMyOabX2+KY=;
+        b=jINno7NtvDkk2buiveCWRx26AE1Z52u8j3DodteTCeygfxTX4nKdEDw319s9UAmbU1
+         yV3sQpcuWNN4JZgZSDPBpWcMi5FqQGofIgLFpO5oxwFF0KlBHRyVXEWqhSNancZE1uvQ
+         5IUrlKTj1450oxPskmxZJ6KBTk+ELdOxWH+L2Ciqw3UXAt7X/Ps/rXbo5IgQBXv2/jZX
+         pWDPVQp1li4feqBBk/myo/8DFA1lmP38ciIxh0S5bJuPX8o5jZNd70mBbyNoQj9gvYv+
+         B63GCWSQPEH2ykRcvMwMGcqluOffCleCzms5QpHQEOtY5lBLxclWgc2EtBwF3pBWJ0Vg
+         UhLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719614053; x=1720218853;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qQBqKzyhVeiycVhfYsHaCb9v2lQ1K0Xn265nIuEvVp0=;
-        b=hLitysttOoSJrUQ3tRxMrM6ETol0blymCrcDOFsRLuoDeNEMnYH+pXPasmHjbjhVqb
-         58ExeMc4NjtAjZBiX6p207RQuv7sGsRjHrZsBY04zDeSlPq3AYKO9aCdT+EdEvgDBYkD
-         kj2AmwIwzZGF9rP9mMJXo+bxuJeygqg/FHK4Z64kXNF5VlCXlcXLuJzwFmYi2TCJMEAm
-         Ty+vZ3aM07/Vzi3iSp5HMG5+2rPxX+B8DmA/tMTau+aV8ySIIJtpiKTXRsEWd/qOI4FW
-         CiYsJBvDbb6ENI62VXSILXtqXI4M+gQ1pODLqUExt4syJQHL9C5494cHGfyYPRR94Wwc
-         2gug==
-X-Forwarded-Encrypted: i=1; AJvYcCWbyuH4SbT7RD6dxghNva8eotPO4Gp6q4SBNZSEip1x6jiRFItbkSwZoawfbbyrmvZ1xUGnZ4DM6O6bAL9LXoiAelYf3xg0mf+JYAIMLHGUoacTdY1nvbrCVtnt5kxDzPYR
-X-Gm-Message-State: AOJu0Yx74wwoctpTeyq78PIuIbyD1LNDoOuBXQFNBQlFPVEpPFWFGLvN
-	qKNeF1aAoKdimfCDMrjXBr2BW/nVgvvPwFCi+0aaflMjih/bDTFXHq028fZ5Q4f6c9NZSjMq6ju
-	eArW612ykUHX7T2I6UjIo72oqkQ8=
-X-Google-Smtp-Source: AGHT+IHTY9Owf6xC5jDO6UPJdtqx50t9WifUnOdpzkHoj9aogzuhEeIZynfa0rooaNoAygxxbhxYmkWzBmP2pnkBAPQ=
-X-Received: by 2002:a62:e70b:0:b0:706:5a4a:dcd0 with SMTP id
- d2e1a72fcca58-7067475f15bmr16864830b3a.34.1719614053427; Fri, 28 Jun 2024
- 15:34:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719614106; x=1720218906;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=k/Il0CyJ05RUxTJn8nhYPqyFFh/jRSTkpMyOabX2+KY=;
+        b=mooDNJawvp1Gua9L8TbegRJvWkfVcCgCSwuqABTNo2pjjJ95Z5+0EGWGiECk2qHMBU
+         go4ilv3r6LhSiDPATmJUKZOpZM+v7yhkYOMk/d22bTnlMHgQTArAmeB9TGxdB3asvmap
+         zi0gXHhQQFUOJTJF/GOti3x/Azoo+oxPa2hBY/J/4q6elVj9Wc0M8h0MDzgqCXyaUh1/
+         wPR5M1DR1XRKuT6EO3/1bUXZU9ANimlsoeco31VyqiFZDag6lsAmTSHdC7arIzyEnbQR
+         v95fs8ltnLrqMAkUWYSvzDkFJzE6mMEaEYEbpI4W3z5ydC4CgWq85F5p5jeYiX5KI6FT
+         Z1VA==
+X-Forwarded-Encrypted: i=1; AJvYcCWjdOCsfREIEwVRhwGUbRo51hyGjUqEIByt57ywiUO0GLj/2svB/cu32mTAF8OpPsJiMoriFDWp7M6GlpXJ9cN/f8exR+SakfO8KigC
+X-Gm-Message-State: AOJu0Yx3hD1HkndhkV8du6TiuvMDuDNnWEqFd51TX/nF7XTuQqXEOCLS
+	p+EOFmqAx0Tl7kViAdMYU6zTZb3lcTCiuNFt8UeJNmQMP+c6OeGjxIYkUQ==
+X-Google-Smtp-Source: AGHT+IFdAI8lVdgvZ8QDwW9Tb7xEOZPV/kOLSX7mFxiYpppyd+S5/RqWY2OwYARoewQLD24aY4u95A==
+X-Received: by 2002:a05:6a21:1a1:b0:1be:bfc9:dbcf with SMTP id adf61e73a8af0-1bee4926c47mr4315795637.13.1719614105892;
+        Fri, 28 Jun 2024 15:35:05 -0700 (PDT)
+Received: from ?IPv6:2605:59c8:829:4c00:82ee:73ff:fe41:9a02? ([2605:59c8:829:4c00:82ee:73ff:fe41:9a02])
+        by smtp.googlemail.com with ESMTPSA id 41be03b00d2f7-72c69b53e3dsm1769146a12.9.2024.06.28.15.35.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Jun 2024 15:35:05 -0700 (PDT)
+Message-ID: <33c3c7fc00d2385e741dc6c9be0eade26c30bd12.camel@gmail.com>
+Subject: Re: [PATCH net-next v9 10/13] mm: page_frag: introduce
+ prepare/probe/commit API
+From: Alexander H Duyck <alexander.duyck@gmail.com>
+To: Yunsheng Lin <linyunsheng@huawei.com>, davem@davemloft.net,
+ kuba@kernel.org,  pabeni@redhat.com
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton
+	 <akpm@linux-foundation.org>, linux-mm@kvack.org
+Date: Fri, 28 Jun 2024 15:35:04 -0700
+In-Reply-To: <20240625135216.47007-11-linyunsheng@huawei.com>
+References: <20240625135216.47007-1-linyunsheng@huawei.com>
+	 <20240625135216.47007-11-linyunsheng@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Zn4BupVa65CVayqQ@slm.duckdns.org> <Zn4Cw4FDTmvXnhaf@slm.duckdns.org>
- <CAADnVQJym9sDF1xo1hw3NCn9XVPJzC1RfqtS4m2yY+YMOZEJYA@mail.gmail.com> <Zn8xzgG4f8vByVL3@slm.duckdns.org>
-In-Reply-To: <Zn8xzgG4f8vByVL3@slm.duckdns.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 28 Jun 2024 15:34:01 -0700
-Message-ID: <CAEf4BzbVorxvJdGA0eLviRhboaisxe4Ng=VErZVh3MG9YrRaKw@mail.gmail.com>
-Subject: Re: [PATCH sched_ext/for-6.11 2/2] sched_ext: Implement scx_bpf_consume_task()
-To: Tejun Heo <tj@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	David Vernet <void@manifault.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 28, 2024 at 3:08=E2=80=AFPM Tejun Heo <tj@kernel.org> wrote:
->
-> Hello, Alexei.
->
-> On Thu, Jun 27, 2024 at 06:34:14PM -0700, Alexei Starovoitov wrote:
-> ...
-> > > +__bpf_kfunc bool __scx_bpf_consume_task(unsigned long it, struct tas=
-k_struct *p)
-> > > +{
-> > > +       struct bpf_iter_scx_dsq_kern *kit =3D (void *)it;
-> > > +       struct scx_dispatch_q *dsq, *kit_dsq;
-> > > +       struct scx_dsp_ctx *dspc =3D this_cpu_ptr(scx_dsp_ctx);
-> > > +       struct rq *task_rq;
-> > > +       u64 kit_dsq_seq;
-> > > +
-> > > +       /* can't trust @kit, carefully fetch the values we need */
-> > > +       if (get_kernel_nofault(kit_dsq, &kit->dsq) ||
-> > > +           get_kernel_nofault(kit_dsq_seq, &kit->dsq_seq)) {
-> > > +               scx_ops_error("invalid @it 0x%lx", it);
-> > > +               return false;
-> > > +       }
-> >
-> > With scx_bpf_consume_task() it's only a compile time protection from bu=
-gs.
-> > Since kfunc doesn't dereference any field in kit_dsq it won't crash
-> > immediately, but let's figure out how to make it work properly.
-> >
-> > Since kit_dsq and kit_dsq_seq are pretty much anything in this implemen=
-tation
-> > can they be passed as two scalars instead ?
-> > I guess not, since tricking dsq !=3D kit_dsq and
-> > time_after64(..,kit_dsq_seq) can lead to real issues ?
->
-> That actually should be okay. It can lead to real but not crashing issues=
-.
-> The system integrity is going to be fine no matter what the passed in seq
-> value is. It can just lead to confusing behaviors from the BPF scheduler'=
-s
-> POV, so it's fine to put the onus on the BPF scheduler.
->
-> > Can some of it be mitigated by passing dsq into kfunc that
-> > was used to init the iter ?
-> > Then kfunc will read dsq->seq from it instead of kit->dsq_seq ?
->
-> I don't quite follow this part. bpf_iter_scx_dsq_new() takes @dsq_id. The
-> function looks up the matching DSQ and then the iterator remembers the
-> current dsq->seq which serves as the threshold (tasks queued afterwards a=
-re
-> ignored). ie. The value needs to be copied at that point to guarantee tha=
-t
-> iteration ignores tasks that are queued after the iteration started.
->
-> > > +       /*
-> > > +        * Did someone else get to it? @p could have already left $ds=
-q, got
-> > > +        * re-enqueud, or be in the process of being consumed by some=
-one else.
-> > > +        */
-> > > +       if (unlikely(p->scx.dsq !=3D dsq ||
-> > > +                    time_after64(p->scx.dsq_seq, kit_dsq_seq) ||
-> >
-> > In the previous patch you do:
-> > (s32)(p->scx.dsq_seq - kit->dsq_seq) > 0
-> > and here
-> > time_after64().
-> > Close enough, but 32 vs 64 and equality difference?
->
-> Sorry about the sloppiness. It was originally u64 and then I forgot to
-> update here after changing them to u32. I'll add a helper for the compari=
-son
-> and update both sites.
->
-> Going back to the sequence number barrier, it's a sort of scoping and one
-> way to solve it is adding an explicit helper to fetch the target DSQ's
-> sequence number and then pass it to the consume_task function. ie. sth li=
-ke:
->
->         barrier_seq =3D scx_bpf_dsq_seq(dsq_id);
->         bpf_for_each(scx_dsq, p, dsq_id, 0) {
->                 ...
->                 scx_bpf_consume_task(p, dsq_id, barrier_seq);
->         }
->
-> This should work but it's not as neat in that it now involves three dsq_i=
-d
-> -> DSQ lookups. Also, there's extra subtlety arising from @barrier_seq be=
-ing
-> different from the barrier seq that the scx_dsq iterator would be using.
+On Tue, 2024-06-25 at 21:52 +0800, Yunsheng Lin wrote:
+> There are many use cases that need minimum memory in order
+> for forward progress, but more performant if more memory is
+> available or need to probe the cache info to use any memory
+> available for frag caoleasing reason.
+>=20
+> Currently skb_page_frag_refill() API is used to solve the
+> above use cases, but caller needs to know about the internal
+> detail and access the data field of 'struct page_frag' to
+> meet the requirement of the above use cases and its
+> implementation is similar to the one in mm subsystem.
+>=20
+> To unify those two page_frag implementations, introduce a
+> prepare API to ensure minimum memory is satisfied and return
+> how much the actual memory is available to the caller and a
+> probe API to report the current available memory to caller
+> without doing cache refilling. The caller needs to either call
+> the commit API to report how much memory it actually uses, or
+> not do so if deciding to not use any memory.
+>=20
+> As next patch is about to replace 'struct page_frag' with
+> 'struct page_frag_cache' in linux/sched.h, which is included
+> by the asm-offsets.s, using the virt_to_page() in the inline
+> helper of page_frag_cache.h cause a "'vmemmap' undeclared"
+> compiling error for asm-offsets.s, use a macro for probe API
+> to avoid that compiling error.
+>=20
+> CC: Alexander Duyck <alexander.duyck@gmail.com>
+> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+> ---
+>  include/linux/page_frag_cache.h |  82 +++++++++++++++++++++++
+>  mm/page_frag_cache.c            | 114 ++++++++++++++++++++++++++++++++
+>  2 files changed, 196 insertions(+)
+>=20
+> diff --git a/include/linux/page_frag_cache.h b/include/linux/page_frag_ca=
+che.h
+> index b33904d4494f..e95d44a36ec9 100644
+> --- a/include/linux/page_frag_cache.h
+> +++ b/include/linux/page_frag_cache.h
+> @@ -4,6 +4,7 @@
+>  #define _LINUX_PAGE_FRAG_CACHE_H
+> =20
+>  #include <linux/gfp_types.h>
+> +#include <linux/mmdebug.h>
+> =20
+>  #define PAGE_FRAG_CACHE_MAX_SIZE	__ALIGN_MASK(32768, ~PAGE_MASK)
+>  #define PAGE_FRAG_CACHE_MAX_ORDER	get_order(PAGE_FRAG_CACHE_MAX_SIZE)
+> @@ -87,6 +88,9 @@ static inline unsigned int page_frag_cache_page_size(st=
+ruct encoded_va *encoded_
+> =20
+>  void page_frag_cache_drain(struct page_frag_cache *nc);
+>  void __page_frag_cache_drain(struct page *page, unsigned int count);
+> +struct page *page_frag_alloc_pg(struct page_frag_cache *nc,
+> +				unsigned int *offset, unsigned int fragsz,
+> +				gfp_t gfp);
+>  void *__page_frag_alloc_va_align(struct page_frag_cache *nc,
+>  				 unsigned int fragsz, gfp_t gfp_mask,
+>  				 unsigned int align_mask);
+> @@ -99,12 +103,90 @@ static inline void *page_frag_alloc_va_align(struct =
+page_frag_cache *nc,
+>  	return __page_frag_alloc_va_align(nc, fragsz, gfp_mask, -align);
+>  }
+> =20
+> +static inline unsigned int page_frag_cache_page_offset(const struct page=
+_frag_cache *nc)
+> +{
+> +	return page_frag_cache_page_size(nc->encoded_va) - nc->remaining;
+> +}
+> +
+>  static inline void *page_frag_alloc_va(struct page_frag_cache *nc,
+>  				       unsigned int fragsz, gfp_t gfp_mask)
+>  {
+>  	return __page_frag_alloc_va_align(nc, fragsz, gfp_mask, ~0u);
+>  }
+> =20
+> +void *page_frag_alloc_va_prepare(struct page_frag_cache *nc, unsigned in=
+t *fragsz,
+> +				 gfp_t gfp);
+> +
+> +static inline void *page_frag_alloc_va_prepare_align(struct page_frag_ca=
+che *nc,
+> +						     unsigned int *fragsz,
+> +						     gfp_t gfp,
+> +						     unsigned int align)
+> +{
+> +	WARN_ON_ONCE(!is_power_of_2(align) || align > PAGE_SIZE);
+> +	nc->remaining =3D nc->remaining & -align;
+> +	return page_frag_alloc_va_prepare(nc, fragsz, gfp);
+> +}
+> +
+> +struct page *page_frag_alloc_pg_prepare(struct page_frag_cache *nc,
+> +					unsigned int *offset,
+> +					unsigned int *fragsz, gfp_t gfp);
+> +
+> +struct page *page_frag_alloc_prepare(struct page_frag_cache *nc,
+> +				     unsigned int *offset,
+> +				     unsigned int *fragsz,
+> +				     void **va, gfp_t gfp);
+> +
+> +static inline struct encoded_va *__page_frag_alloc_probe(struct page_fra=
+g_cache *nc,
+> +							 unsigned int *offset,
+> +							 unsigned int *fragsz,
+> +							 void **va)
+> +{
+> +	struct encoded_va *encoded_va;
+> +
+> +	*fragsz =3D nc->remaining;
+> +	encoded_va =3D nc->encoded_va;
+> +	*offset =3D page_frag_cache_page_size(encoded_va) - *fragsz;
+> +	*va =3D encoded_page_address(encoded_va) + *offset;
+> +
+> +	return encoded_va;
+> +}
+> +
+> +#define page_frag_alloc_probe(nc, offset, fragsz, va)			\
+> +({									\
+> +	struct page *__page =3D NULL;					\
+> +									\
+> +	VM_BUG_ON(!*(fragsz));						\
+> +	if (likely((nc)->remaining >=3D *(fragsz)))			\
+> +		__page =3D virt_to_page(__page_frag_alloc_probe(nc,	\
+> +							      offset,	\
+> +							      fragsz,	\
+> +							      va));	\
+> +									\
+> +	__page;								\
+> +})
+> +
 
-maybe a stupid question, but why scx_dsq iterator cannot accept
-scx_dispatch_q pointer directly instead of dsq_id and then doing
-lookup? I.e., what if you had a kfunc to do dsq_id -> scx_dispatch_q
-lookup (returning PTR_TRUSTED instance), and then you can pass that to
-iterator, you can pass that to scx_bpf_consume_task() kfunc.
+Why is this a macro instead of just being an inline? Are you trying to
+avoid having to include a header due to the virt_to_page?
 
-Technically, you can also have another kfunc accepting scx_dispatch_q
-and returning current "timestamp" as some special type (TRUSTED and
-all), which will be passed into consume_task() as well.
-
-Is this too explicit in terms of types?
-
->
-> As a DSQ iteration needs to have its own barrier sequence, maybe the answ=
-er
-> is to require passing it in as an explicit parameter. ie.:
->
->         barrier_seq =3D scx_bpf_dsq_seq(dsq_id);
->         bpf_for_each(scx_dsq, p, dsq_id, barrier_seq, 0) {
->                 ...
->                 scx_bpf_consume_task(p, dsq_id, barrier_seq);
->         }
->
-> There still are three dsq_id lookups but at least there is just one seque=
-nce
-> number in play. It is more cumbersome tho compared to the current interfa=
-ce:
->
->         bpf_for_each(scx_dsq, p, dsq_id, 0) {
->                 ...
->                 scx_bpf_consume_task(BPF_FOR_EACH_ITER, p);
->         }
->
-> What do you think?
->
-> Thanks.
->
-> --
-> tejun
->
