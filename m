@@ -1,151 +1,128 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4F0481D7;
-	Fri, 28 Jun 2024 10:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738F72139A8
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 10:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719571821; cv=none; b=sUZtRLDGVFSKzrXdNPVBQjw1HobQVA5aZ3eaVsX9n8ZIThJTLlxfansr3YTYl8jq850ehs6LCk8cCwdAW4kJ5dzWK3yaNvido3kT3MO/qSNzY5l7GIAU3etoQKePYk6/1kX88RW8ni+yOGwl9r9jK0yQs+hPpgHxPnpbT9AWGuo=
+	t=1719571908; cv=none; b=nicW7yhDsoo57KNZZl20PIczl/c4hgtO4K2ayBEGSsPC9rPULja4lDo8bPIantHLF0rAwfUF1MNTcLoaI7dI2lkLOktrCYNSwj8pquio0/Xa73w7TeXBA4tLroTWkrYRfCrkAV5YqgfFrI58qvQrlNuSbiRG2RshvYjCfS8R3tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719571821; c=relaxed/simple;
-	bh=ewJYo5B5Gn5p+bUGXnTqJoyHMt2jjLTs26XZMLBY5ts=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mkfFLgWN5laBbNdzXB1bHEiWeE2zgE6kRmLul8WiORFgkdlPEHGDDTTMjaIFRroKpc2w6DZ2im6ODRAW3oXOwa4smGSUZg0gTMqL+38dQXXVqBe4QdVN5KAJrDdtGzYqM4o8PXjZ6TgYgQTaAhO2lkWcCOOH11AvAL46B6+/NRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=JlRLMEk8; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1719571908; c=relaxed/simple;
+	bh=yC3zrmJsDFn4NNsURX00uMCRtNgsdOVTIJqhvdm5cQQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mpKAFojxJYT4rrsTShC+KB5zF8GFCnzaKCNeOeipeqtQbwt9qLXA1CRVw1oFOFdhp+9QZ/FaaN+ECXCZORthhXp6PSqquGzx2bHPgB9OHkiKSec3KftGlrIji1BC5ro6MxF0A+NZ+5jUUQapcQObB7GGZppCrxZzTky9TWwnuG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=KeHDYMX6; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="JlRLMEk8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1719571818; x=1751107818;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ewJYo5B5Gn5p+bUGXnTqJoyHMt2jjLTs26XZMLBY5ts=;
-  b=JlRLMEk838rFfCJCz65dqELDlrDMmS7cWmpSd5Zy2HVsEilZZ8kEe5Y4
-   eRmF0pU+VNkKHMyPZGpvOEUh3NHkXAJRUfvJ5F9Y9jOi6nu/qO8h6U/9v
-   shH8G/QrMtcQ+o803kX5b4Isb22iUDvRmuROZZNpvQYEecdNZHV6nrkwc
-   BDeJnIeQtp0FqV3PDYOY7gqNNIqGx6GoaK+v+JqQQgsI8FsQgTLqaE0HG
-   9W0OkUJc/ORPIqYj1E4X+GwCPcX7z/ejIZLzXhjb4tisRvC8v+albtArK
-   vse7Zs3AxNzwT+gXVO46NdBFQP+FtA0lzwanYDAFLI0UkD2i6wXRiubrp
-   g==;
-X-CSE-ConnectionGUID: 1fcM70mTSxeGp3bdmK8x+A==
-X-CSE-MsgGUID: 6jb0hYoOSIuLQoRgVTRgyQ==
-X-IronPort-AV: E=Sophos;i="6.09,168,1716274800"; 
-   d="asc'?scan'208";a="196017444"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 28 Jun 2024 03:50:16 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 28 Jun 2024 03:49:43 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Fri, 28 Jun 2024 03:49:39 -0700
-Date: Fri, 28 Jun 2024 11:49:23 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Andi Shyti <andi.shyti@kernel.org>
-CC: Thomas Bonnefille <thomas.bonnefille@bootlin.com>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Jisheng Zhang <jszhang@kernel.org>, Guo Ren
-	<guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Drew Fustini
-	<dfustini@tenstorrent.com>, Emil Renner Berthing
-	<emil.renner.berthing@canonical.com>, Conor Dooley <conor@kernel.org>, Jarkko
- Nikula <jarkko.nikula@linux.intel.com>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Paul Walmsley <paul.walmsley@sifive.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, =?iso-8859-1?Q?Miqu=E8l?=
- Raynal <miquel.raynal@bootlin.com>, <linux-i2c@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH v3 0/3] Add I2C support on TH1520
-Message-ID: <20240628-joining-blooming-64aefbfd9897@wendy>
-References: <20240618-i2c-th1520-v3-0-3042590a16b1@bootlin.com>
- <xkdmrmtiizoqo6mpc7i6iyhilxlw57nawn6ogv6dryaveyqddc@ach3rwy4abpe>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="KeHDYMX6"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-425624255f3so2994995e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 03:51:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719571905; x=1720176705; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=24rzTIfM+vOUQFqHFBXjGKtWGaOLrsXGcAgDzPUbzu4=;
+        b=KeHDYMX6sQHen7GTIcU1mBqop+EEf9dirb6BXudSsp0MJhwdeSSBkzShPfDBCqcPLp
+         rMUC0tp+ExwNPUYJ03ULsuoF0h1JLbWLHgTLmCMimR+rjCSa4LdgnYZ/+FAxS2EuO5Ai
+         oTZ/a3aFE4ge5NGdiVRBNQVydkpAo8jEG64BfqK3Am4MNOzLdewBryW6oDyg4hAT5WOi
+         +Mk1kGmJgjPllI80jERykJ+VmQdAyiHZ9dACo0unenWC9RzIP/kGNxAV9Thn0ifIkYot
+         UdYOMTowTQTMGVF5GoCxLRzU5MoRSvizg0/YQFc/QAtZxWW71n+/ZaBYADPm5eGp2Ayg
+         +GyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719571905; x=1720176705;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=24rzTIfM+vOUQFqHFBXjGKtWGaOLrsXGcAgDzPUbzu4=;
+        b=J1OdbroM8nBlOX1JRGEdghDpwZfcQ97oFKPeLEcqhN9j4Cb6S1DmtuevQYX2uYrzAe
+         Bt85O8ZgXbORoToe0veKsWxptWO82+fQmRJYhRAVLHRDFxVkNelncA5Lp7xAC6NvsKs5
+         8ZSblvysQyEnkaQm5ioTDTI55eRSKzdAJxEWlL2tRT4NaJQ9QSk4xreCeDrqzhnGnCO/
+         ZADy0TQ61xlJisWGiIYGEc2r4AkIBf7CRMC6yb2VbTedaxSzScXvQXwOPwmX4RPHfvp9
+         9GHy2Teud0ZMlJmdUm/Uy/lhdP+1S8Xv7Q3eqmwedc8Yc/Jul+pegwvmnoQz9TONjcdL
+         3xbg==
+X-Forwarded-Encrypted: i=1; AJvYcCXSmoTTsNHMb3gkc7fQvXVwRAw0qemNhaApSVawNMTf8X1wdSYh3pyNEdBfAalZxm+bejAp1P6fnKV0qbU1UCAh2zJRnU2N7DgFlx+n
+X-Gm-Message-State: AOJu0YwrSCVqfG+T1lXyxCXqdi0c8GBnVQr26wYroJake8hiAYPfOvtW
+	Y2ZgSCM/758R93jOCks/zAN0jdk11Z3hD9MCHN/q5++8YVcyJQhsbXIjzG+va/E=
+X-Google-Smtp-Source: AGHT+IEk/iGdd84gJ4j2qvNNhASVwVZ9UV0L9RuSnlH6TwRAjAnRiiHru5Ptw881AQ0IzfYy6F1GzQ==
+X-Received: by 2002:a05:600c:1616:b0:421:b65d:2235 with SMTP id 5b1f17b1804b1-4256d4246f3mr13155895e9.0.1719571904866;
+        Fri, 28 Jun 2024 03:51:44 -0700 (PDT)
+Received: from localhost (p50915e7b.dip0.t-ipconnect.de. [80.145.94.123])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4249b4233b3sm84824425e9.0.2024.06.28.03.51.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Jun 2024 03:51:44 -0700 (PDT)
+Date: Fri, 28 Jun 2024 12:51:43 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: linus.walleij@linaro.org, dan.carpenter@linaro.org, 
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org, 
+	kernel@pengutronix.de, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH V3 1/3] pinctrl: ti: iodelay: Use scope based
+ of_node_put() cleanups
+Message-ID: <dldl7dkdcsuajjjpg2pczfnupqrsghmpz27i45xi5beeou5ntg@y2ysounw3pqq>
+References: <20240627131721.678727-1-peng.fan@oss.nxp.com>
+ <20240627131721.678727-2-peng.fan@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="TjGWQMt2mYPYXnt4"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="fbfmjvvswzyejj4y"
 Content-Disposition: inline
-In-Reply-To: <xkdmrmtiizoqo6mpc7i6iyhilxlw57nawn6ogv6dryaveyqddc@ach3rwy4abpe>
+In-Reply-To: <20240627131721.678727-2-peng.fan@oss.nxp.com>
 
---TjGWQMt2mYPYXnt4
+
+--fbfmjvvswzyejj4y
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 28, 2024 at 11:30:28AM +0200, Andi Shyti wrote:
-> Hi,
->=20
-> On Tue, Jun 18, 2024 at 09:42:37AM GMT, Thomas Bonnefille wrote:
-> > This adds I2C support in the device tree of the T-Head TH1520 RISCV-SoC
-> > and a default configuration for the BeagleV-Ahead. It appears that the
-> > TH1520 I2C is already supported in the upstream kernel through the
-> > Synopsis Designware I2C adapter driver.
-> >=20
-> > This patch depends on the clock patch from Drew Fustini
-> > Link: https://lore.kernel.org/linux-riscv/20240615-th1520-clk-v1-0-3ba4=
-978c4d6b@tenstorrent.com
-> > and the pinctrl patch from Emil Renner Berthing
-> > Link: https://lore.kernel.org/linux-riscv/20240103132852.298964-1-emil.=
-renner.berthing@canonical.com
->=20
-> I think after these two go in...
->=20
-> > Changed from v1:
-> > 1. Remove redundant example for Synopsis DesignWare-I2C bindings
-> > 2. Remove Node Ordering commit as it has already been taken
-> > 3. Remove EEPROM label
-> > 4. Rebase on pinctrl and clock driver patches
-> > 5. Add pinctrl configuration
-> > 6. Replaced the fixed-clock with a correct configuration
-> >=20
-> > Changed from v2:
-> > 1. Reorder nodes to conserve ascending register node ordering
-> > 2. Add support for I2C2 as it probably use the same controller
-> > 3. Format comments to match kernel coding style
-> > 4. Reorder nodes to conserve alphabetical node ordering
-> > 6. Declare I2C2
-> > 6. Set pinctrl pull-up resistor to the highest value
-> >=20
-> > Signed-off-by: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-> > ---
-> > Thomas Bonnefille (3):
-> >       dt-bindings: i2c: dw: Document compatible thead,th1520-i2c
->=20
-> ... this goes throught i2c...
->=20
-> >       riscv: dts: thead: Add TH1520 I2C nodes
-> >       riscv: dts: thead: Enable I2C on the BeagleV-Ahead
->=20
-> ... and these two go thrhough Conor's branches.
->=20
-> Do you mind sending a ping when Drew's patches are included in
-> the merge window? I can put the first patch on a special branch
-> to keep it under my watch.
+Hello Peng,
 
-I think you can apply the binding whenever you want actually, there's no
-need for the i2c binding (or driver changes, were there to be any) to
-be held until the clock binding/driver is accepted.
+On Thu, Jun 27, 2024 at 09:17:19PM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+>=20
+> Use scope based of_node_put() cleanup to simplify code.
+>=20
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  drivers/pinctrl/ti/pinctrl-ti-iodelay.c | 43 +++++++++----------------
+>  1 file changed, 15 insertions(+), 28 deletions(-)
+>=20
+> diff --git a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c b/drivers/pinctrl/ti=
+/pinctrl-ti-iodelay.c
+> index ef9758638501..f5e5a23d2226 100644
+> --- a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
+> +++ b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
+> @@ -822,53 +822,48 @@ MODULE_DEVICE_TABLE(of, ti_iodelay_of_match);
+>  static int ti_iodelay_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev =3D &pdev->dev;
+> -	struct device_node *np =3D of_node_get(dev->of_node);
+> +	struct device_node *np __free(device_node) =3D of_node_get(dev->of_node=
+);
 
-Thanks,
-Conor.
+of_node_put? -------------------------------------------^
 
---TjGWQMt2mYPYXnt4
+Best regards
+Uwe
+
+--fbfmjvvswzyejj4y
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZn6VMwAKCRB4tDGHoIJi
-0jNHAP4m1oXXhAI8AJklzSf40W3ivqUXLHUeMZ8nHNOHB8i0pQD8CfKBFliZjMqv
-1e2iWkfTxBaM5iXO5IGnLhbQWp5W1gw=
-=AKI+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZ+lbwACgkQj4D7WH0S
+/k507QgAp3CUpkL3MAeTxcSbGb2q3fYllnUF2w6t16mJ9xh6+hDLS9FBcJ6O4AyY
+kfpU0V1qpde9069gwMOiEFDkWetC+p0oivQ5VP5/+qesfrOrP/Xlr+TRL1zTtv84
+OoV+pxdYC5nFaHgtymb4Sj9ixL4HpxAdlZ1gwF99BtJK/qW9JymS3K/DOVzsvmwe
+7uIdatoBkLDNIf+QsByESnmWnWsdv0qeUq00WBUCX62TlAcZuzjLhROUz1Odgy75
+no4hamGZVW4Q/fXIFEyWWgAu5YLTGDZx5c5bI4nKYuwscGDwRbQ7xiGfjIcYgEOZ
+AfMzaxHv9AbFEoueeQ6q0rfMts8XsA==
+=uBDP
 -----END PGP SIGNATURE-----
 
---TjGWQMt2mYPYXnt4--
+--fbfmjvvswzyejj4y--
