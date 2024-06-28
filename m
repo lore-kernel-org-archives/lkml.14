@@ -1,110 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E3748788;
-	Fri, 28 Jun 2024 07:44:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA925C89;
+	Fri, 28 Jun 2024 07:45:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719560649; cv=none; b=XicOETAP+vi3FBFon9GRnVvqQylVkeHlcL+j/MaulznkfaaK+ZDFF0+s611ec9u1ZuAWMc2eMQqBIKB3sgScUcp38nrLThcfwEecnDvTNFKW4299qAMB0RGxATV7yztQfSFFYDHB2PzqXcjZFwss80lsO3jFzC51oNWrfV7KhOQ=
+	t=1719560711; cv=none; b=nCIEYye7WbS+fr+7YMJAEJPZGv7B8uEGiola2kJLLIaWtM6UsB5cWGN53vTq5esEpfstlAGcwq9q2+I+EHR95kSlfD2Dd7uVotlezXULNh1g9RctzRp1aNM+wyzUcEbY6p4n7KyPVOqRGrACILPKbw2YnCDYY92YPtLVn8QfZ+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719560649; c=relaxed/simple;
-	bh=QOeIsWSJ98jNBCeKEpi9wSDKCZFBLYX7OBvTI8XAcRk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vEvfr77kXyi+LSgeUpRKAlL8hUBlUbtPv/kIoAKAmdweBYu4pYzQ/n8cblXIrXqlnakpsCzSt1w4CQKcg8x6pmBL9Ob2jbjTKC2Rp24bRtUnPcJbiImxHA38mXW8AgPXqV4W3UJ2ZDAk/GkLx+8CE5AtS5cNF4IIPSmlNMbLvEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CzEZYGFq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719560711; c=relaxed/simple;
+	bh=p0jV8ElzLovC8PJpEjbIBYA1mtu9/RdPJD4TfKMl0XE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R6L0FvJ6wxVjTw2+7pMluzV/gM9M+1roYPEMvsGm1BWQJ0OvBS6edai/FLTyc0WZlEsRxlmAYN+WHK94uN7jZEzpFfuF6zqHmvZYDR8XM28eNNCce24w/qzTeaKmE3pfAgDy9UeDotBKDCn/UWRXeUPXfMWmoBbf6pxiSbSM0vA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=T15y8IUk reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CzEZYGFq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A73DC116B1;
-	Fri, 28 Jun 2024 07:44:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719560648;
-	bh=QOeIsWSJ98jNBCeKEpi9wSDKCZFBLYX7OBvTI8XAcRk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CzEZYGFqPTORPWbSrIZILcw45UObLVIlXry3yV9oH2lw1jz5s9re8o7ed/vPuS1mm
-	 c4XowgdVX5fVAvi8wtVaOllJ8JOD/zY9hjt48rMJk7Mjt+xM954Ctf9igGx4dNjhO3
-	 PIz9EZQP8VZD60+oTXyQ+irfKvWwCwMG818IAwa368Uj3Zm8GhDvtmC6gkq8BFJ8wq
-	 uU9Imp8gqmgHr7Shju69aBpPdwxH3+p48v/nf0mB8+Qn/bEojXSJHN5KILrsV3pfcm
-	 dLO07ePG4vGI3JcIUAQpP1H+wAcKwHJ0rfsd0tJjrOJzEVEIwMJW3GtgLV8PWca97V
-	 Gm57GI1//G98w==
-Message-ID: <79840ef5-d80a-46f8-9cb8-bf34bef0404a@kernel.org>
-Date: Fri, 28 Jun 2024 09:44:03 +0200
+	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="T15y8IUk"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id F07A140E0192;
+	Fri, 28 Jun 2024 07:45:06 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
+	reason="fail (body has been altered)" header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id sSMyDzu3hfvb; Fri, 28 Jun 2024 07:45:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1719560702; bh=7ldIwKtvzJ9yyJaNutYVVLJe0u6aE/RpeHC5fXaXUi4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T15y8IUk+bsQfYjGmcY6To0pwblhcpGHNswc+3j5JXhvAbRzNuPlqQSefH/AHnwCc
+	 eOMQextITsSwFSnuTNoE9ab/AKH1XQn/07Y25ZVWhUisN6nzF7/LwFFb/eSuOSUxOe
+	 e8/I1A91o32iVgoTaRyjnNmIqNW1NRiathWQAr5S/njI/LQEgxrRrFBqgnd9yT5OSq
+	 92CkTxXPPdPY4E8pwZohAFPu1rEQE/pvgCyptIHRXVIlJDe6G6mqW/87VUvDVIKb7J
+	 qj0LrRfo3Fod96P3U0aDYzK9H0SdH90izxcANNjyDdXOwmo25pfDqUC4jNrLczlwpQ
+	 2smMW5CWnky12/0duRZKbNiQvj7vTrA6cM/xtJBNv3YLJaIRqkZLSTI3C/QLjiDdLA
+	 JeLJIhCYWHrxCWVNr/F6KlbGUIEzL4UsuCUESovO1GQ0bgYtUPSgS52SjZzltvvU+D
+	 AYbw7wvJsnHv/9UN8GjUzPSqDB/NJHZs2UAyEbkYE1hZQSVopJ526hncioN2IDsFNN
+	 xzkXkGijGLzCq3+SjZwJDCeBkZuvOvQxIUczCy5zRhIsRt57hL6r4jnmJyGlAfmT8+
+	 M459T/gYSYKXbnif4ygRocX5If+eZoqGGJeUR18T0vAuvQ2cWnmHjCim6x4GvncNGT
+	 r5KcbGjeg1Wf22a5cNHvvm3w=
+Received: from nazgul.tnic (business-24-134-159-81.pool2.vodafone-ip.de [24.134.159.81])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4FB9340E021A;
+	Fri, 28 Jun 2024 07:44:55 +0000 (UTC)
+Date: Fri, 28 Jun 2024 09:45:22 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: John Allen <john.allen@amd.com>
+Cc: rafael@kernel.org, lenb@kernel.org, yazen.ghannam@amd.com,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-edac@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] RAS/AMD/ATL: Translate normalized to system
+ physical addresses using PRM
+Message-ID: <20240628074522.GDZn5qEkTXG0EvQ4Lv@fat_crate.local>
+References: <20240506174721.72018-1-john.allen@amd.com>
+ <20240506174721.72018-3-john.allen@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] dt-bindings: usb: Convert fsl-usb to yaml
-To: Frank Li <Frank.Li@nxp.com>
-Cc: conor+dt@kernel.org, devicetree@vger.kernel.org,
- gregkh@linuxfoundation.org, imx@lists.linux.dev, krzk+dt@kernel.org,
- linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, robh@kernel.org
-References: <20240627144815.4014179-1-Frank.Li@nxp.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240627144815.4014179-1-Frank.Li@nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240506174721.72018-3-john.allen@amd.com>
+Content-Transfer-Encoding: quoted-printable
 
-On 27/06/2024 16:48, Frank Li wrote:
-> Convert fsl-usb binding doc to yaml format.
-> 
-> Additional change:
-> - Remove port0 and port1 from required list.
-> - Use common usb-drd.yaml for dr_mode property
-> - Keep two difference examples.
-> - Add interrupts to required property list.
-> - Remove #address-cells and #size-cells in example.
-> - Use predefined irq type macro.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+On Mon, May 06, 2024 at 05:47:21PM +0000, John Allen wrote:
+> Future AMD platforms will provide a UEFI PRM module that implements a
+> number of address translation PRM handlers. This will provide an
+> interface for the OS to call platform specific code without requiring
+> the use of SMM or other heavy firmware operations.
+>=20
+> AMD Zen-based systems report memory error addresses through Machine
+> Check banks representing Unified Memory Controllers (UMCs) in the form
+> of UMC relative "normalized" addresses. A normalized address must be
+> converted to a system physical address to be usable by the OS.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+This should be your first paragraph.
 
-Best regards,
-Krzysztof
+> Add support for the normalized to system physical address translation
+> PRM handler in the AMD Address Translation Library and prefer it over
+> native code if available. The GUID and parameter buffer structure are
+> specific to the normalized to system physical address handler provided
+> by the address translation PRM module included in future AMD systems.
+>=20
+> The address translation PRM module is documented in chapter 22 of the
+> publicly available "AMD Family 1Ah Models 00h=E2=80=930Fh and Models 10=
+h=E2=80=931Fh
+> ACPI v6.5 Porting Guide":
+> https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/pr=
+ogrammer-references/58088-0.75-pub.pdf
 
+Those URLs are flaky and become invalid over time. When you quote
+a document, quote it in such a way so that searching for it on the web,
+can find it. The name above works for me so that's good.
+
+> +#include "internal.h"
+> +
+> +#if defined(CONFIG_ACPI_PRMT)
+
+Instead of that ifdeffery you could do:
+
+config AMD_ATL_PRM
+	depends on AMD_ATL && ACPI_PRMT
+
+and it'll get enabled automatically and then you don't need the empty
+stub either.
+
+> +#include <linux/prmt.h>
+> +
+> +struct prm_umc_param_buffer_norm {
+
+What's a prm_umc_param_buffer_norm?
+
+> +	u64 norm_addr;
+> +	u8 socket;
+> +	u64 umc_bank_inst_id;
+> +	void *output_buffer;
+
+Use the usual short versions for such standard names: "out_buf"
+
+> +} __packed;
+> +
+> +static const guid_t norm_to_sys_prm_handler_guid =3D GUID_INIT(0xE7180=
+659, 0xA65D,
+> +							     0x451D, 0x92, 0xCD,
+> +							     0x2B, 0x56, 0xF1, 0x2B,
+> +							     0xEB, 0xA6);
+
+When you define such long variable names, your lines stick out
+unnecessarily. Shorten pls.
+
+> +unsigned long prm_umc_norm_to_sys_addr(u8 socket_id, u64 umc_bank_inst=
+_id, unsigned long addr)
+
+bank_id is fine.
+
+> +{
+> +	struct prm_umc_param_buffer_norm param_buffer;
+
+... p_buf;
+
+> +	unsigned long ret_addr;
+> +	int ret;
+> +
+> +	param_buffer.norm_addr        =3D addr;
+> +	param_buffer.socket           =3D socket_id;
+> +	param_buffer.umc_bank_inst_id =3D umc_bank_inst_id;
+> +	param_buffer.output_buffer    =3D &ret_addr;
+> +
+> +	ret =3D acpi_call_prm_handler(norm_to_sys_prm_handler_guid, &param_bu=
+ffer);
+> +	if (!ret)
+> +		return ret_addr;
+> +
+> +	if (ret =3D=3D -ENODEV)
+> +		pr_debug("PRM module/handler not available\n");
+> +	else
+> +		pr_notice_once("PRM address translation failed\n");
+> +
+> +	return ret;
+> +}
+
+--=20
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
