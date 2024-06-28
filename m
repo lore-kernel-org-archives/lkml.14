@@ -1,55 +1,58 @@
 Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17A829B0;
-	Fri, 28 Jun 2024 13:35:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0941A1DA23;
+	Fri, 28 Jun 2024 13:35:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719581743; cv=none; b=fp2yPbmlkSDTojLlCK0deTVJlbF88xLpDmoRRoeo0LVOZH78vz30Xqpd+bM7QBCoMmdeIHYPMzAzCEqhnkie6R7cm/GDxTCEUZdD3kRj2iOMmMBaQguc1K12b4j7tXaYbEHYToOu+sf3E97Ui3gyQlC+krpx/lV5589o652GBI8=
+	t=1719581744; cv=none; b=FVabwyVo/sKTeAGZiFNptrLnFLX1n7wX+J70gH3c3FlDssNFUumcdOwPUcE/3Y3z9GShc1YuOzs1eQ6ElFxfBXlT9TVQr2AJgpizuvThCEzjnb3BKU9491br8ewkfTRgvTcvw/rBPwVOhuml4jK360IOTrFIWctUcQcJRV5Eoqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719581743; c=relaxed/simple;
-	bh=vxepn1OELtQLJxgDaXvCAEeWK/4QuhD+gbAMDXntklM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mo8sMQTIE0GyLxFWHNCZeAzF4alLfQ0jISGVjd4HKi0Si7/savDC6vGDWyZ3jL0hwcGpDeWOaAutrsykkFmPwi3bwUzaE3SiTcwNsEXF+ImngU06lzUsLtOnJ6ZzwMk9uS79o6tGzvZ8Ueu4aGXiXcKqgVOXEYYMMUqGh2c+nzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=ju0ciyei; arc=none smtp.client-ip=67.231.156.173
+	s=arc-20240116; t=1719581744; c=relaxed/simple;
+	bh=MahMOmX8HNP65jj6E2OAEjkH7EUdqwUC4Dkre658DyU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=j8/5ouqWN6TKuIOkSk8z/Ksm9J64Qej2TdeI+T4bCscUvhNl2eukkEzMpzXS1T1HdPB8GBSnT2n3V5loe7RC/8zAXnfPI4dABa/4Jj+1S0R8Cq5AaEg2tef3xsiDKpyMIfu1731r6sDJHDijqYzvjgNq7DP0yemigA+S9YvcbuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=K68GecTG; arc=none smtp.client-ip=67.231.156.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="ju0ciyei"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="K68GecTG"
 Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45SA18wT027510;
-	Fri, 28 Jun 2024 06:35:23 -0700
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45SA1AlW027569;
+	Fri, 28 Jun 2024 06:35:37 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:message-id:mime-version:subject:to; s=
-	pfpt0220; bh=omEZVOBCcp8+CSUlgFa39jtiTPNXYzqmJa6zdpIsYO4=; b=ju0
-	ciyeiL89qJliZMqxD7NcdieOVWs6DynHGo+2/t226UKPCnoZIl3+prPGeMH4/aWV
-	JrRQXYEgBrFMadnDWVyy3z1xghwu7It8yr2/+2zcfyFPH/n8uPlJSVV/BmPi7aHD
-	zQBObrejbZkDyzXDPZl6qITDXlkIat42tKBbIHn932QxzzsfzYHuazsaVUPdYBRW
-	HjdjrkDwSS2ScM4K+9Eg6/U/p+lm/vWm3BRFrgmR8hB3Rv2Lppd/XnxOZKP9JBLi
-	quel6X0DjuCM02jruaFk6m0M8aOADm3cOMcZDT/pz6OcTkniABmt9nJE3Uo1oj6c
-	RhqCBs0X00C8m/j+t3g==
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pfpt0220; bh=dc/mnP7nN44RCxG4zWwLeF+xD
+	Itw2bObWXT4Mq5plgI=; b=K68GecTGYv6aTyf5v/LEDsTxQyg50clPL1YGlar56
+	gC4/avlxHNfE6WMtOsFyXdL3vq/MqIgme5njGBNbGCpQlnmBEYBDE9jnS5dyGgkc
+	ELQuX97JhRvGtMJa0lk25mOAeMZIN+wIl7rLt+aoFEwSBtbrMnhAWPOiKEqalNKD
+	zFdg3mYYjZJqQ77FH53EyHx0nVBOMPUE5uy9nSlzFBVjoqWJyup3k2aLP/a60qbp
+	SMzYhz12S6cC0Nng1GaTwEztCFPSKgHmrm3sOuqbgtM/CT71L2c1Uy/lUGQSXTY9
+	HFXarK0Kn1u98lIiY+gK+RS90N2ZQgB9/F7OmGunX1ffw==
 Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 401c8hubm1-1
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 401c8hubmr-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Jun 2024 06:35:22 -0700 (PDT)
+	Fri, 28 Jun 2024 06:35:36 -0700 (PDT)
 Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
  DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Fri, 28 Jun 2024 06:35:21 -0700
+ 15.2.1544.4; Fri, 28 Jun 2024 06:35:35 -0700
 Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
  (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Fri, 28 Jun 2024 06:35:21 -0700
+ Transport; Fri, 28 Jun 2024 06:35:35 -0700
 Received: from hyd1soter3.marvell.com (unknown [10.29.37.12])
-	by maili.marvell.com (Postfix) with ESMTP id 7246E3F704E;
-	Fri, 28 Jun 2024 06:35:18 -0700 (PDT)
+	by maili.marvell.com (Postfix) with ESMTP id 7C1F33F704E;
+	Fri, 28 Jun 2024 06:35:32 -0700 (PDT)
 From: Geetha sowjanya <gakula@marvell.com>
 To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <kuba@kernel.org>, <davem@davemloft.net>, <pabeni@redhat.com>,
         <edumazet@google.com>, <sgoutham@marvell.com>, <gakula@marvell.com>,
         <sbhatta@marvell.com>, <hkelam@marvell.com>
-Subject: [net-next PATCH v7 00/10] Introduce RVU representors  
-Date: Fri, 28 Jun 2024 19:05:07 +0530
-Message-ID: <20240628133517.8591-1-gakula@marvell.com>
+Subject: [net-next PATCH v7 04/10] octeontx2-pf: Add basic net_device_ops
+Date: Fri, 28 Jun 2024 19:05:11 +0530
+Message-ID: <20240628133517.8591-5-gakula@marvell.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240628133517.8591-1-gakula@marvell.com>
+References: <20240628133517.8591-1-gakula@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,130 +60,83 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Proofpoint-GUID: Ok1I-PtgNUx8-OpgDvECxP6ccK3YHSCF
-X-Proofpoint-ORIG-GUID: Ok1I-PtgNUx8-OpgDvECxP6ccK3YHSCF
+X-Proofpoint-GUID: pN3bQFyfwghN1N3O16QBL0iFFZFsmEBr
+X-Proofpoint-ORIG-GUID: pN3bQFyfwghN1N3O16QBL0iFFZFsmEBr
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-28_09,2024-06-28_01,2024-05-17_01
 
-This series adds representor support for each rvu devices.
-When switchdev mode is enabled, representor netdev is registered
-for each rvu device. In implementation of representor model, 
-one NIX HW LF with multiple SQ and RQ is reserved, where each
-RQ and SQ of the LF are mapped to a representor. A loopback channel
-is reserved to support packet path between representors and VFs.
-CN10K silicon supports 2 types of MACs, RPM and SDP. This
-patch set adds representor support for both RPM and SDP MAC
-interfaces.
+Implements basic set of net_device_ops.
 
-- Patch 1: Refactors and exports the shared service functions.
-- Patch 2: Implements basic representor driver.
-- Patch 3: Add devlink support to create representor netdevs that
-  can be used to manage VFs.
-- Patch 4: Implements basec netdev_ndo_ops.
-- Patch 5: Installs tcam rules to route packets between representor and
-	   VFs.
-- Patch 6: Enables fetching VF stats via representor interface
-- Patch 7: Adds support to sync link state between representors and VFs .
-- Patch 8: Enables configuring VF MTU via representor netdevs.
-- Patch 9: Add representors for sdp MAC.
-- Patch 10: Add devlink port support.
+Signed-off-by: Geetha sowjanya <gakula@marvell.com>
+---
+ .../net/ethernet/marvell/octeontx2/nic/rep.c  | 46 +++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-Command to create VF representor
-#devlink dev eswitch set pci/0002:1c:00.0 mode switchdev
-VF representors are created for each VF when switch mode is set switchdev on representor PCI device
-# devlink dev eswitch set pci/0002:1c:00.0  mode switchdev 
-# ip link show
-25: r0p1: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
-    link/ether 32:0f:0f:f0:60:f1 brd ff:ff:ff:ff:ff:ff
-26: r1p1: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
-    link/ether 3e:5d:9a:4d:e7:7b brd ff:ff:ff:ff:ff:ff
-
-#devlink dev
-pci/0002:01:00.0
-pci/0002:02:00.0
-pci/0002:03:00.0
-pci/0002:04:00.0
-pci/0002:05:00.0
-pci/0002:06:00.0
-pci/0002:07:00.0
-
-~# devlink port
-pci/0002:1c:00.0/0: type eth netdev r0p1v0 flavour pcipf controller 0 pfnum 1 vfnum 0 external false splittable false
-pci/0002:1c:00.0/1: type eth netdev r1p1v1 flavour pcivf controller 0 pfnum 1 vfnum 1 external false splittable false
-pci/0002:1c:00.0/2: type eth netdev r2p1v2 flavour pcivf controller 0 pfnum 1 vfnum 2 external false splittable false
-pci/0002:1c:00.0/3: type eth netdev r3p1v3 flavour pcivf controller 0 pfnum 1 vfnum 3 external false splittable false
-
------------
-v1-v2:
- -Fixed build warnings.
- -Address review comments provided by "Kalesh Anakkur Purayil".
-
-v2-v3:
- - Used extack for error messages.
- - As suggested reworked commit messages.
- - Fixed sparse warning.
-
-v3-v4: 
- - Patch 2 & 3: Fixed coccinelle reported warnings.
- - Patch 10: Added devlink port support.
-
-v4-v5:
-  - Patch 3: Removed devm_* usage in rvu_rep_create()
-  - Patch 3: Fixed build warnings.
-
-v5-v6:
-  - Addressed review comments provided by "Simon Horman".
-  - Added review tag. 
-
-v6-v7:
-  - Rebased on top net-next branch.
-
-Geetha sowjanya (10):
-  octeontx2-pf: Refactoring RVU driver
-  octeontx2-pf: RVU representor driver
-  octeontx2-pf: Create representor netdev
-  octeontx2-pf: Add basic net_device_ops
-  octeontx2-af: Add packet path between representor and VF
-  octeontx2-pf: Get VF stats via representor
-  octeontx2-pf: Add support to sync link state between representor and
-    VFs
-  octeontx2-pf: Configure VF mtu via representor
-  octeontx2-pf: Add representors for sdp MAC
-  octeontx2-pf: Add devlink port support
-
- .../net/ethernet/marvell/octeontx2/Kconfig    |   8 +
- .../ethernet/marvell/octeontx2/af/Makefile    |   3 +-
- .../ethernet/marvell/octeontx2/af/common.h    |   2 +
- .../net/ethernet/marvell/octeontx2/af/mbox.h  |  74 ++
- .../net/ethernet/marvell/octeontx2/af/npc.h   |   1 +
- .../net/ethernet/marvell/octeontx2/af/rvu.c   |  11 +
- .../net/ethernet/marvell/octeontx2/af/rvu.h   |  30 +-
- .../marvell/octeontx2/af/rvu_debugfs.c        |  27 -
- .../marvell/octeontx2/af/rvu_devlink.c        |   6 +
- .../ethernet/marvell/octeontx2/af/rvu_nix.c   |  81 ++-
- .../marvell/octeontx2/af/rvu_npc_fs.c         |   5 +
- .../ethernet/marvell/octeontx2/af/rvu_reg.h   |   4 +
- .../ethernet/marvell/octeontx2/af/rvu_rep.c   | 464 ++++++++++++
- .../marvell/octeontx2/af/rvu_struct.h         |  26 +
- .../marvell/octeontx2/af/rvu_switch.c         |  20 +-
- .../ethernet/marvell/octeontx2/nic/Makefile   |   2 +
- .../ethernet/marvell/octeontx2/nic/cn10k.c    |   4 +-
- .../ethernet/marvell/octeontx2/nic/cn10k.h    |   2 +-
- .../marvell/octeontx2/nic/otx2_common.c       |  56 +-
- .../marvell/octeontx2/nic/otx2_common.h       |  84 ++-
- .../marvell/octeontx2/nic/otx2_devlink.c      |  49 ++
- .../ethernet/marvell/octeontx2/nic/otx2_pf.c  | 305 +++++---
- .../marvell/octeontx2/nic/otx2_txrx.c         |  38 +-
- .../marvell/octeontx2/nic/otx2_txrx.h         |   3 +-
- .../ethernet/marvell/octeontx2/nic/otx2_vf.c  |  19 +-
- .../net/ethernet/marvell/octeontx2/nic/rep.c  | 684 ++++++++++++++++++
- .../net/ethernet/marvell/octeontx2/nic/rep.h  |  53 ++
- 27 files changed, 1834 insertions(+), 227 deletions(-)
- create mode 100644 drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c
- create mode 100644 drivers/net/ethernet/marvell/octeontx2/nic/rep.c
- create mode 100644 drivers/net/ethernet/marvell/octeontx2/nic/rep.h
-
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/rep.c b/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
+index 6ea5b4904a7c..a021350fe83a 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
+@@ -28,6 +28,51 @@ MODULE_DESCRIPTION(DRV_STRING);
+ MODULE_LICENSE("GPL");
+ MODULE_DEVICE_TABLE(pci, rvu_rep_id_table);
+ 
++static netdev_tx_t rvu_rep_xmit(struct sk_buff *skb, struct net_device *dev)
++{
++	struct rep_dev *rep = netdev_priv(dev);
++	struct otx2_nic *pf = rep->mdev;
++	struct otx2_snd_queue *sq;
++	struct netdev_queue *txq;
++
++	sq = &pf->qset.sq[rep->rep_id];
++	txq = netdev_get_tx_queue(dev, 0);
++
++	if (!otx2_sq_append_skb(pf, txq, sq, skb, rep->rep_id)) {
++		netif_tx_stop_queue(txq);
++
++		/* Check again, in case SQBs got freed up */
++		smp_mb();
++		if (((sq->num_sqbs - *sq->aura_fc_addr) * sq->sqe_per_sqb)
++							> sq->sqe_thresh)
++			netif_tx_wake_queue(txq);
++
++		return NETDEV_TX_BUSY;
++	}
++	return NETDEV_TX_OK;
++}
++
++static int rvu_rep_open(struct net_device *dev)
++{
++	netif_carrier_on(dev);
++	netif_tx_start_all_queues(dev);
++	return 0;
++}
++
++static int rvu_rep_stop(struct net_device *dev)
++{
++	netif_carrier_off(dev);
++	netif_tx_disable(dev);
++
++	return 0;
++}
++
++static const struct net_device_ops rvu_rep_netdev_ops = {
++	.ndo_open		= rvu_rep_open,
++	.ndo_stop		= rvu_rep_stop,
++	.ndo_start_xmit		= rvu_rep_xmit,
++};
++
+ static int rvu_rep_napi_init(struct otx2_nic *priv,
+ 			     struct netlink_ext_ack *extack)
+ {
+@@ -156,6 +201,7 @@ int rvu_rep_create(struct otx2_nic *priv, struct netlink_ext_ack *extack)
+ 
+ 		ndev->min_mtu = OTX2_MIN_MTU;
+ 		ndev->max_mtu = priv->hw.max_mtu;
++		ndev->netdev_ops = &rvu_rep_netdev_ops;
+ 		pcifunc = priv->rep_pf_map[rep_id];
+ 		rep->pcifunc = pcifunc;
+ 
 -- 
 2.25.1
 
