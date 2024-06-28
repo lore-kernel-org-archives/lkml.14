@@ -1,39 +1,42 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B5014E2DA
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 08:56:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1E714AD35;
+	Fri, 28 Jun 2024 08:58:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719565004; cv=none; b=syLs77jdquoMrWwGA34nj2uPhQbzQyvqTqhk5YktiyJ7k+RNA2Shc6Rfl9q3SkSKUS/4X+oXuOfWa4ubBOQ84uXIU0HNgXockxQ96ltRNj71J6T32h12853hBR2TJgxIGzt/uKmrhLAHMxlqZxDHHaL7R/eySJSskC4XDValyhw=
+	t=1719565118; cv=none; b=qvXzPi1ix4Awg9ir72FB845A/pGPEuRkVRpoeALPpsebI1PDdNllBKvfvuA6aLy0qZtLqP4k93+xif2n/+FEk2MeNPvLv2Fc7QjJukHdQxMwFr/cNsfN1S0/NQBDxkh7UJPS9hsK//OVOf+TNiWeU8JFbya89POcIT7sDgsMfoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719565004; c=relaxed/simple;
-	bh=znXyHZwpRegc3NlJkQFlZs+vsfwKbAj6NOxYYmocGbQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=myknmk7tGV8xbTIhq+UnxyMXDH8nVHnlGRk4AKrECP2/P+bPSU8BPX5ev9wLMSDzhyTfUmn3iQW3F/Hfsw8xp5v2Sc6bevatY/ccqjvGTqnAGrMvOOA7TI0qW021sNomFqyzxN7YcGcbtdaw9KQsXLi8n6iZ8wa8hBiq6kP4HUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=UBDbLBJL; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1719565118; c=relaxed/simple;
+	bh=PWL6hEvqmZKsuBznvNlNI6WklKd2ODvQV6+yRxLHbIY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=O3VjKRrX9VkmhHmwRa/eg723OTZg0Bi+pobzxoj2piNHd2u5sLDM+QBrkfpqxDOgFEVCbGSP3+9TgGLdiSsujCZBW20HpJTH+6rCUJugs69vJrMt4Ftx+hpKMNi9rYCqOW2Nv8jSyeGJFHOheleeUGpGLvCa50e2hit6HRwbpIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=Q8CFy1US; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="UBDbLBJL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ABLvUC/ePHzSEuBbp1KLhmP8GQstWD4khOur3Y/Z+Is=; b=UBDbLBJLDaySytJdd/gG1JXQEK
-	LUqoxxEwnrvLmfKs0klpIjjoUNPz66cElli4bZRd5uRmnrV9bs5GfoYvqtzdpLggOFlMfiT5N1DXv
-	9imsnlKes9ddmUi4du72f9ekeb0kDCGIHENUjobK8hr1QOUUhvB86rRTnizukPD7NJgNhvr/fXn/A
-	BsQqOXtms4TFyeztfb7NHID60EduJg3EwagzX7Y4soBxDPFkKEpjzEN31ze2/v1LVc1atm3GeiLsh
-	g5LVCOMgCR6v5ftR9Pc+wRftfYg3HhFuLgebl7xxxIBCMdtJmQeoAZqFsulKch6I4QzTN3ROtYT5H
-	NA9PT2bA==;
-Received: from [84.69.19.168] (helo=[192.168.0.101])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1sN7Oo-008XRH-Hh; Fri, 28 Jun 2024 10:56:06 +0200
-Message-ID: <22e9cd24-1ed4-4f1d-b7de-b44cefca6009@igalia.com>
-Date: Fri, 28 Jun 2024 09:56:05 +0100
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="Q8CFy1US"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 308FEA0608;
+	Fri, 28 Jun 2024 10:58:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=DgXaLxXe1xWsWcx5Us3s
+	/TGr8c82QL8Uqd0FFIZe7oY=; b=Q8CFy1USBcGokTohSzsQs3WnV//gszXH6ymY
+	E9FQe610W6zZa1CAjPyXNFz3cs5lEn4tOiLo5xBpcVVd9XPrmnl+muzhzH6vxY9z
+	dmtQjfAT+T7ywDIJwz0zFF9dj2wRMHePMPn2aQT266nSr9xO8wTddU4UOdAOCP68
+	epxJEmWcpmD7lNSYBPryG6PPnFJ/5HqcaAMr+nzOUHF5iBgLAkuEdyKdxLGcY69N
+	Kczmjevk+IHxregefwyKo/ekUCsK1WFo2PLTr7ZAZYsQ8qbOx6DKSbmdOm4kCskG
+	wuH8vlMMv3UKf5E/mF7Xmy49eSzTD+0/oUyuvLxMHkdKWHv2PYfSNj7UM8XYTtLG
+	zZ6DqXdnepr4CQghdnM+/LPy5ZqscmWpuSbXWfOQqJxsJPxY3DsprsuPWlL18Hp6
+	1kdGDqIOjf1e3P0RgXdl/EVtBzMyDAzCJY1d4Wt2zQk9SiZLAP91zS5X1UP1I8id
+	SbeJPNfFqDUSAdmd7Xonh1Z0rDLKgyzTpeUFCELXZTU9NdlgU9hF7o1SQtHvYfqe
+	x17JUDxp7rnMaPDb+i/NI+RjDRNTcmVV4t+8TBdUUNroDkFEFCo8wrrHmcZ56Lh6
+	qqb7JKWcCM8SRobBaHhEmEklneXT3dwOVDDbg3lO4SliirsvItQEiq/W7LxgIVB5
+	jVIw82g=
+Message-ID: <83e2d171-86b0-4d51-8481-dc5b482b97a3@prolan.hu>
+Date: Fri, 28 Jun 2024 10:58:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,76 +44,56 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/numa_balancing: Teach mpol_to_str about the balancing
- mode
-To: "Huang, Ying" <ying.huang@intel.com>, Matthew Wilcox <willy@infradead.org>
-Cc: Tvrtko Ursulin <tursulin@igalia.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, kernel-dev@igalia.com,
- Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Rik van Riel <riel@surriel.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Dave Hansen <dave.hansen@intel.com>,
- Andi Kleen <ak@linux.intel.com>, Michal Hocko <mhocko@suse.com>,
- David Rientjes <rientjes@google.com>
-References: <20240625132605.38428-1-tursulin@igalia.com>
- <Zn3eBbJ377VeZGcc@casper.infradead.org>
- <87bk3lpxp1.fsf@yhuang6-desk2.ccr.corp.intel.com>
-Content-Language: en-GB
-From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-In-Reply-To: <87bk3lpxp1.fsf@yhuang6-desk2.ccr.corp.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH resubmit] rtc: ds1307: Detect oscillator fail on mcp794xx
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC: <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	=?UTF-8?Q?Szentendrei=2C_Tam=C3=A1s?= <szentendrei.tamas@prolan.hu>
+References: <20240621080512.2916664-1-csokas.bence@prolan.hu>
+ <202406272237033260538e@mail.local>
+Content-Language: en-US
+From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+In-Reply-To: <202406272237033260538e@mail.local>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
+ ATLAS.intranet.prolan.hu (10.254.0.229)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2945A129576C7D63
 
+Hi!
 
-On 28/06/2024 04:12, Huang, Ying wrote:
-> Hi, Matthew,
+On 6/28/24 00:37, Alexandre Belloni wrote:
+> Hello,
 > 
-> Matthew Wilcox <willy@infradead.org> writes:
-> 
->> On Tue, Jun 25, 2024 at 02:26:05PM +0100, Tvrtko Ursulin wrote:
->>>   		/*
->>> -		 * Currently, the only defined flags are mutually exclusive
->>> +		 * The below two flags are mutually exclusive:
->>>   		 */
->>>   		if (flags & MPOL_F_STATIC_NODES)
->>>   			p += snprintf(p, buffer + maxlen - p, "static");
->>>   		else if (flags & MPOL_F_RELATIVE_NODES)
->>>   			p += snprintf(p, buffer + maxlen - p, "relative");
->>> +
->>> +		if (flags & MPOL_F_NUMA_BALANCING)
->>> +			p += snprintf(p, buffer + maxlen - p, "balancing");
->>>   	}
+> It is not clear to me why your resent this one but not the other one,
+> can you elaborate?
+
+It was kind of an unrelated patch, I'll send it after I get this one 
+merged. But so far, there hasn't been any movements on this series at all.
+
+> On 21/06/2024 10:05:13+0200, Csókás, Bence wrote:
+>> This patch enables the detection of the oscillator failure
+>> on mcp794xx chips.
 >>
->> So if MPOL_F_STATIC_NODES and MPOL_F_NUMA_BALANCING are set, then we
->> get a string "staticbalancing"?  Is that intended?
->>
->> Or are these three all mutually exclusive and that should have been
->> as "else if"?
-> 
-> Yes, this is an issue!
+>> Co-developed-by: Szentendrei, Tamás <szentendrei.tamas@prolan.hu>
+>> Signed-off-by: Szentendrei, Tamás <szentendrei.tamas@prolan.hu>
+>> Signed-off-by: Csókás, Bence <csokas.bence@prolan.hu>
 
-Sigh, my apologies. I was sure I tested it as this patch was part of a 
-larger series I have, but then I decided to extract it and send out and 
-the problems obviously go deeper. What I think happened is that I 
-probably only tested the other direction, setting of via mpol_parse_str().
+The "other one", I assume, refers to this:
 
-Andrew please dequeue it if you haven't already?
+On 6/11/24 09:24, Csókás, Bence wrote:
+ > `tm_year` may go up to 299 if the device supports the
+ > century bit. Therefore, subtracting may not give us
+ > a valid 2-digit number, but modulo does.
+ >
+ > Co-developed-by: Szentendrei, Tamás <szentendrei.tamas@prolan.hu>
+ > Signed-off-by: Szentendrei, Tamás <szentendrei.tamas@prolan.hu>
+ > Signed-off-by: Csókás, Bence <csokas.bence@prolan.hu>
 
-> Dig the git history, in commit 2291990ab36b ("mempolicy: clean-up
-> mpol-to-str() mempolicy formatting"), the support for multiple flags are
-> removed.  I think that we need to restore it.
-> 
-> Done some basic testing.  It was found that when MPOL_F_NUMA_BALANCING
-> is set, /proc/PID/numa_maps always display "default".  That is wrong.
-> 
-> This make me think that this patch has never been tested!
-> 
-> The "default" displaying is introduced in commit 8790c71a18e5
-> ("mm/mempolicy.c: fix mempolicy printing in numa_maps").  We need to fix
-> it firstly for MPOL_F_NUMA_BALANCING with more accurate filtering.  The
-> fix needs to be backported to -stable kernel.
+And the only thing they had in common is that they were in the same 
+file, which my colleague, Tamás, put into one commit in our tree, that I 
+split for upstreaming purposes. But really, they are not really related 
+or interdependent on one another.
 
-Will you work on this or I can follow up if you want?
+Bence
 
-Regards,
-
-Tvrtko
