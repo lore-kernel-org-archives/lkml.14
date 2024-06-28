@@ -1,117 +1,136 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEBA4155A56;
-	Fri, 28 Jun 2024 10:02:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713091509B6;
+	Fri, 28 Jun 2024 10:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719568941; cv=none; b=q4WW5lulrjVZbPmNmUHghcsvIZ3wxZ4gpbsjytHKmTPCmvH98oB/QugWg7Tc4RmEQoSUTEvkU5Lb3rukbBTp6Bgo9LtUbJK18mYmhfQUvv4aDo6s7fYbaOpyMnOAZlI2Y1da/6pQYcnlhdpIslURnzsPN773bxkgAiXto8Xhbog=
+	t=1719569089; cv=none; b=bl9RGBqLpHNFuJYcMneoqdc3/8pZScyJuXUdFwKpw+3yAlITiPpfhpZlp2066IaYuy4KKXL9hrjk4uzTYLSDya+5YGEvNpgfW5dkIge2rtZWegBoZBB+Ct46D6WB+kxeiAeAoOZrZdyayNWGWc6jKAP2e6vxRMNnmVWmGDWLB0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719568941; c=relaxed/simple;
-	bh=29kCV+CJLP8fntZRWSEc1dp7bszj8uq+wEEOZDlnIhs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YOFxUiYcgGoGyMnfBTlElVObqHVd8ldBfRvwlLZnbALGoS2lLvrbTtpSTJWcHS8ZrmhbZ0+PmwhA/HfsJ0Xv5gzyR4ZHM7bYPQK0g+IjvKBAu7kcrfqJGmhx53vPhGexXTY/9b4SAz+ZDuxocV4j/2HdvqpQ/bTXn/2OLFw0nhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D4A0106F;
-	Fri, 28 Jun 2024 03:02:44 -0700 (PDT)
-Received: from e127648.cambridge.arm.com (e127648.arm.com [10.1.30.21])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0BE753F6A8;
-	Fri, 28 Jun 2024 03:02:15 -0700 (PDT)
-From: Christian Loehle <christian.loehle@arm.com>
-To: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	rafael@kernel.org
-Cc: vincent.guittot@linaro.org,
-	qyousef@layalina.io,
-	peterz@infradead.org,
-	daniel.lezcano@linaro.org,
-	ulf.hansson@linaro.org,
-	anna-maria@linutronix.de,
-	dsmythies@telus.net,
-	kajetan.puchalski@arm.com,
-	lukasz.luba@arm.com,
-	dietmar.eggemann@arm.com,
-	Christian Loehle <christian.loehle@arm.com>
-Subject: [PATCH 3/3] cpuidle: teo: Don't count non-existent intercepts
-Date: Fri, 28 Jun 2024 10:59:55 +0100
-Message-Id: <20240628095955.34096-4-christian.loehle@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240628095955.34096-1-christian.loehle@arm.com>
-References: <20240628095955.34096-1-christian.loehle@arm.com>
+	s=arc-20240116; t=1719569089; c=relaxed/simple;
+	bh=27RE7aMAeMSuXKrXKtMiDDZRYnA99jnOQEs5p75D+vQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fJm2xzgbk3zN1HI9kJJghnPUTDeDDm2yMDPJ2FHwWy4XTZQNsOXym1sym1vTkLe/Lsc6otB6J5MtP6p33VFVEsBpBy9PyHVUJG1BLTjkFALXKraZgS8coj6Scsid/PeCSZb3NZ1aehXV/v2oKVTeUdvtK9EQ4Ye6DwwvZff1q2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AJsz0jr0; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AJsz0jr0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719569088; x=1751105088;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=27RE7aMAeMSuXKrXKtMiDDZRYnA99jnOQEs5p75D+vQ=;
+  b=AJsz0jr0bpFxl+QCT2gblBayhRwEtv9RfyrDYyAHNir2HgMApjaz0hdQ
+   XuuDdkmTETWva4wM1ajfm0lrB3+mx6fiheP0V4nDprHXVH3JnmW3Pgds7
+   XPgLjH4DHtGafvTe0fapYRzznf50/7pJ4uAyBgHi4J5z9d8tkw7pihLgq
+   euODGkDVf3f/HefV8Uv30mdHpY4si8sM8rgpsmSchhREg1j8vLeoqI8oa
+   iTmD/XD6P+1V+FuprYUTJQ0ZbCFVT531FPjkrAA7AN+vdU8kfsu2qMV+i
+   JpwPmA12al1DnsWSRsVS0DgV5ypF6Q51ntvVWGP1PyFpPqYpHldu2uiWi
+   w==;
+X-CSE-ConnectionGUID: jxq2vWX0S36zn5L9Ql1KsA==
+X-CSE-MsgGUID: gAbxT1ZsTACYYnFroCVe7w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="34282929"
+X-IronPort-AV: E=Sophos;i="6.09,168,1716274800"; 
+   d="scan'208";a="34282929"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 03:04:47 -0700
+X-CSE-ConnectionGUID: Kil1170XTI+k0keiXikvKA==
+X-CSE-MsgGUID: /CtWA+6ATAqABZBcEzIDUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,168,1716274800"; 
+   d="scan'208";a="75890944"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa001.fm.intel.com with ESMTP; 28 Jun 2024 03:04:39 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 91FCB1C7; Fri, 28 Jun 2024 13:04:38 +0300 (EEST)
+Date: Fri, 28 Jun 2024 13:04:38 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Dexuan Cui <decui@microsoft.com>
+Cc: x86@kernel.org, linux-coco@lists.linux.dev, ak@linux.intel.com, 
+	arnd@arndb.de, bp@alien8.de, brijesh.singh@amd.com, dan.j.williams@intel.com, 
+	dave.hansen@intel.com, dave.hansen@linux.intel.com, haiyangz@microsoft.com, 
+	hpa@zytor.com, jane.chu@oracle.com, kys@microsoft.com, luto@kernel.org, 
+	mingo@redhat.com, peterz@infradead.org, rostedt@goodmis.org, 
+	sathyanarayanan.kuppuswamy@linux.intel.com, seanjc@google.com, tglx@linutronix.de, tony.luck@intel.com, 
+	wei.liu@kernel.org, Jason@zx2c4.com, nik.borisov@suse.com, mhklinux@outlook.com, 
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, Tianyu.Lan@microsoft.com, 
+	rick.p.edgecombe@intel.com, andavis@redhat.com, mheslin@redhat.com, vkuznets@redhat.com, 
+	xiaoyao.li@intel.com, stable@vger.kernel.org
+Subject: Re: [PATCH] x86/tdx: Support vmalloc() for tdx_enc_status_changed()
+Message-ID: <kjt2m2aqnhmwqgn3ox6bkqtn5qurxawgnx3xyh42pu5sp3mwyj@qwyjttwubfck>
+References: <20240521021238.1803-1-decui@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240521021238.1803-1-decui@microsoft.com>
 
-When bailing out early, teo will not query the sleep length anymore
-since commit 6da8f9ba5a87 ("cpuidle: teo:
-Skip tick_nohz_get_sleep_length() call in some cases") with an
-expected sleep_length_ns value of KTIME_MAX.
-This lead to state0 accumulating lots of 'intercepts' because
-the actually measured sleep length was < KTIME_MAX, so query the sleep
-length instead for teo to recognize if it still is in an
-intercept-likely scenario without alternating between the two modes.
+On Mon, May 20, 2024 at 07:12:38PM -0700, Dexuan Cui wrote:
+> @@ -785,15 +799,22 @@ static bool tdx_map_gpa(phys_addr_t start, phys_addr_t end, bool enc)
+>   */
+>  static bool tdx_enc_status_changed(unsigned long vaddr, int numpages, bool enc)
+>  {
+> -	phys_addr_t start = __pa(vaddr);
+> -	phys_addr_t end   = __pa(vaddr + numpages * PAGE_SIZE);
+> +	unsigned long start = vaddr;
+> +	unsigned long end = start + numpages * PAGE_SIZE;
+> +	unsigned long step = end - start;
+> +	unsigned long addr;
+>  
+> -	if (!tdx_map_gpa(start, end, enc))
+> -		return false;
+> +	/* Step through page-by-page for vmalloc() mappings */
+> +	if (is_vmalloc_addr((void *)vaddr))
+> +		step = PAGE_SIZE;
+>  
+> -	/* shared->private conversion requires memory to be accepted before use */
+> -	if (enc)
+> -		return tdx_accept_memory(start, end);
+> +	for (addr = start; addr < end; addr += step) {
+> +		phys_addr_t start_pa = slow_virt_to_phys((void *)addr);
+> +		phys_addr_t end_pa   = start_pa + step;
+> +
+> +		if (!tdx_enc_status_changed_phys(start_pa, end_pa, enc))
+> +			return false;
+> +	}
+>  
+>  	return true;
+>  }
 
-Fundamentally we can only do one of the two:
-1. Skip sleep_length_ns query when we think intercept is likely
-2. Have accurate data if sleep_length_ns is actually intercepted when
-we believe it is currently intercepted.
+This patch collied with kexec changes. tdx_kexec_finish() calls
+tdx_enc_status_changed() after clearing pte, so slow_virt_to_phys()
+crashes on in.
 
-Previously teo did the former while this patch chooses the latter as
-the additional time it takes to query the sleep length was found to be
-negligible and the variants of option 1 (count all unknowns as misses
-or count all unknown as hits) had significant regressions (as misses
-had lots of too shallow idle state selections and as hits had terrible
-performance in intercept-heavy workloads).
+Daxuan, could you check if the fixup below works for you on vmalloc
+addresses?
 
-Fixes: 6da8f9ba5a87 ("cpuidle: teo: Skip tick_nohz_get_sleep_length() call in some cases")
-Signed-off-by: Christian Loehle <christian.loehle@arm.com>
----
-v3:
-Drop counting KTIME_MAX as hit and reword commit accordingly
-
- drivers/cpuidle/governors/teo.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/cpuidle/governors/teo.c b/drivers/cpuidle/governors/teo.c
-index 200a3598cbcf..c2d73507d23b 100644
---- a/drivers/cpuidle/governors/teo.c
-+++ b/drivers/cpuidle/governors/teo.c
-@@ -287,6 +287,7 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
- 	unsigned int hit_sum = 0;
- 	int constraint_idx = 0;
- 	int idx0 = 0, idx = -1;
-+	int prev_intercept_idx;
- 	s64 duration_ns;
- 	int i;
-
-@@ -364,6 +365,7 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
- 	 * all of the deeper states a shallower idle state is likely to be a
- 	 * better choice.
- 	 */
-+	prev_intercept_idx = idx;
- 	if (2 * idx_intercept_sum > cpu_data->total - idx_hit_sum) {
- 		int first_suitable_idx = idx;
-
-@@ -415,6 +417,14 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
- 			first_suitable_idx = i;
- 		}
- 	}
-+	if (!idx && prev_intercept_idx) {
-+		/*
-+		 * We have to query the sleep length here otherwise we don't
-+		 * know after wakeup if our guess was correct.
-+		 */
-+		duration_ns = tick_nohz_get_sleep_length(&delta_tick);
-+		cpu_data->sleep_length_ns = duration_ns;
-+	}
-
- 	/*
- 	 * If there is a latency constraint, it may be necessary to select an
---
-2.34.1
-
+diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
+index ef8ec2425998..5e455c883bcc 100644
+--- a/arch/x86/coco/tdx/tdx.c
++++ b/arch/x86/coco/tdx/tdx.c
+@@ -813,8 +813,15 @@ static bool tdx_enc_status_changed(unsigned long vaddr, int numpages, bool enc)
+ 		step = PAGE_SIZE;
+ 
+ 	for (addr = start; addr < end; addr += step) {
+-		phys_addr_t start_pa = slow_virt_to_phys((void *)addr);
+-		phys_addr_t end_pa   = start_pa + step;
++		phys_addr_t start_pa;
++		phys_addr_t end_pa;
++
++		if (virt_addr_valid(addr))
++			start_pa = __pa(addr);
++		else
++			start_pa = slow_virt_to_phys((void *)addr);
++
++		end_pa = start_pa + step;
+ 
+ 		if (!tdx_enc_status_changed_phys(start_pa, end_pa, enc))
+ 			return false;
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
