@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9DED85270
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A244884FAD
 	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 21:56:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719611796; cv=none; b=YWlzF/MLLUYLWy+zXNa04PNmtI1tJ+y0mhpbA3eFwjaG9gD8TG8nKrUQDap3vd193j9dY3K1/FqPxKm0fWPrhd2R0CpmLdpG72mKWzb3wRuW8lIwNFRfA3RGNAlZKj/5amSrWhQJLU9nrauVs0uQ1ruTvSRj5KXd5ujGN9EgToM=
+	t=1719611796; cv=none; b=ZDsR7Dq7GllWIx42oWNEZxz2DpCIPshOI7SAOqKJfYcanM8Q+WmcRRN9Lm4q576MZoDWLh7MmBziujqb/u8REPPrWd9Gn7HgyBtYzDksYDXBirPULi4Mkn8aQnSRPMv+xKL8umZtL6ALKihSWQzPRlXbjRVxquMcBqpeM9pXOj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719611796; c=relaxed/simple;
-	bh=fJdyJmm169ahsAE7AU4WeTiO841LkwbRErK0K/CR60c=;
+	bh=Furc6t8HDNdOr+Vqn7XeiivEWdd2/Lb1p01l7EFsXv4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u3DsssueOgbGYFd9Sty145J88qpAFwJk7xXg4RCmAerD5k+g8XyXDfGxvPg1D6FtvgjBJ/PFJcvbvRQtHpn2cdFGm6iLG8/0d2PwqE7Kye06ShsYY6e05e63OK/bxpduk7ZNofAhojw82c4VT8LcbU252972QAs9cGvnjUB5Bhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eL+4dBpu; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version:Content-Type; b=SeHOW+tjV1dimVkMrpuB8IPkjDo3IuTX4jkJ9rE128vyi5FnE0cePsojI40wUrASTCfCQUsKfIXMSf5rFb+2lt39JEOnc1BGFsoFKMeJonFBssUZ3GZjIWnpn2jyq4JSiJJ1wi2IAIYhlbWryxsPDKj6RMH2UFjC0TsGbB9O/U8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VWS2Lfay; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eL+4dBpu"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VWS2Lfay"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1719611795; x=1751147795;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=fJdyJmm169ahsAE7AU4WeTiO841LkwbRErK0K/CR60c=;
-  b=eL+4dBpu8FmXiVdYFMWq8QeUq/DCpINtSQGRzNXUO/IlMiyD6xVco7Vl
-   JTbTNXoYs6wuE4TfBvGW+Jx0qS91tRW1OcHIUfOXPjNhfKP+aQ9xldXHs
-   UZWXbPIOTCKK35Guoxe1G6zYa3xJ4a5DT7TEJplS6L6lbJpzMy50FgKIk
-   h0HQ72gF2QoLqZa9S56SGO4o6DIUAaXAXzOrMCla9tefWUyvyYSrwq+c/
-   tk9FmTpdSizwrWi0R2vZM3/AnCz4212UENzyIin1bXALEvB8uVKlNWRWE
-   u/tZ87OXIWqoW7genLhCEv+84Lqgvy8oEIJ+XyG4HH/QaETp8DyD25cWp
+  bh=Furc6t8HDNdOr+Vqn7XeiivEWdd2/Lb1p01l7EFsXv4=;
+  b=VWS2Lfay0NTcsmqBYH2HehGqNedGq3YpeHo7ySRbCO5+7ekytDDh63xD
+   hBZDe95z7oYOIep+E28vzNdU4IJ6/rgOieYsrCQ8xtBBL3vEjP0RaZmfd
+   deOCSb1jiTne3k3PSLf0Lo/c1bEHIQWrJ5ylZ3K0nhidaMq1qizIhwHaB
+   y2LUzzW4MjOkL9j8k/6RmuoVYIfijKF4ZwFmG7GBImogWWQA+HA1qM1Pt
+   iiXJ0nMyFbwLORS75FQPThQ0rwEtbp++LrzUKtITwMMu/R3Ubemen6wZM
+   EWcMIKkX87W2gPMPcxscTkT36qI40VLeVXcVqbgRQAwv9Gs06YHJRZhz0
    Q==;
-X-CSE-ConnectionGUID: Ed38s9HERPSRJU3ugKKuJQ==
-X-CSE-MsgGUID: YrQ+tqfTS+axx+TNaclOsQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11117"; a="16762600"
+X-CSE-ConnectionGUID: iNtX/D0yQbuxRSf/hC/GBQ==
+X-CSE-MsgGUID: Kqn82jHETwS40UPHAQSxpg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11117"; a="16762577"
 X-IronPort-AV: E=Sophos;i="6.09,170,1716274800"; 
-   d="scan'208";a="16762600"
+   d="scan'208";a="16762577"
 Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 14:56:28 -0700
-X-CSE-ConnectionGUID: 4wtQ1trrTLqlAJ4amq0hMA==
-X-CSE-MsgGUID: 6iY7GJ+QSei8td+K2IZEDA==
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 14:56:27 -0700
+X-CSE-ConnectionGUID: KBdONxdWTd2QpsIjLWJqBg==
+X-CSE-MsgGUID: zGmrPBTpRsGnBWpzOPP3kg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,170,1716274800"; 
-   d="scan'208";a="68065669"
+   d="scan'208";a="68065657"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
   by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 14:56:27 -0700
 From: Tony Luck <tony.luck@intel.com>
@@ -56,9 +56,9 @@ Cc: x86@kernel.org,
 	linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v23 12/19] x86/resctrl: Allocate a new field in union mon_data_bits
-Date: Fri, 28 Jun 2024 14:56:12 -0700
-Message-ID: <20240628215619.76401-13-tony.luck@intel.com>
+Subject: [PATCH v23 08/19] x86/resctrl: Prepare for new Sub-NUMA Cluster (SNC) monitor files
+Date: Fri, 28 Jun 2024 14:56:08 -0700
+Message-ID: <20240628215619.76401-9-tony.luck@intel.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240628215619.76401-1-tony.luck@intel.com>
 References: <20240628215619.76401-1-tony.luck@intel.com>
@@ -68,73 +68,129 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-When Sub-NUMA Cluster (SNC) mode is enabled the legacy monitor reporting
-files must report the sum of the data from all of the SNC nodes that
-share the L3 cache that is referenced by the monitor file.
+When SNC is enabled monitoring data is collected at the SNC node
+granularity, but must be reported at L3-cache granularity for
+backwards compatibility in addition to reporting at the node
+level.
 
-Resctrl squeezes all the attributes of these files into 32-bits so they
-can be stored in the "priv" field of struct kernfs_node.
+Add a "ci" field to the rdt_mon_domain structure to save the
+cache information about the enclosing L3 cache for the domain.
+This provides:
 
-Currently only three monitor events are defined by enum resctrl_event_id
-so reducing it from 8-bits to 7-bits still provides more than enough
-space to represent all the known event types. But note that this choice
-was arbitrary. The "rid" field is also far wider than needed for the
-current number of resource id types.  This structure is purely internal
-to resctrl, no ABI issues with modifying it. Subsequent changes may
-rearrange the allocation of bits between each of the fields as needed.
+1) The cache id which is needed to compose the name of the legacy
+monitoring directory, and to determine which domains should be
+summed to provide L3-scoped data.
 
-Give the bit to a new "sum" field that indicates that reading this file
-must sum across SNC nodes. This bit also indicates that the domid field
-is the id of an L3 cache (instead of a domain id) to find which domains
-must be summed.
+2) The shared_cpu_map which is needed to determine which CPUs can
+be used to read the RMID counters with the MSR interface.
 
-Fix up other issues in the kerneldoc description for mon_data_bits.
+This is the first step to an eventual goal of monitor reporting files
+like this (for a system with two SNC nodes per L3):
+
+$ cd /sys/fs/resctrl/mon_data
+$ tree mon_L3_00
+mon_L3_00			<- 00 here is L3 cache id
+├── llc_occupancy		\  These files provide legacy support
+├── mbm_local_bytes		 > for non-SNC aware monitor apps
+├── mbm_total_bytes		/  that expect data at L3 cache level
+├── mon_sub_L3_00		<- 00 here is SNC node id
+│   ├── llc_occupancy		\  These files are finer grained
+│   ├── mbm_local_bytes		 > data from each SNC node
+│   └── mbm_total_bytes		/
+└── mon_sub_L3_01
+    ├── llc_occupancy		\
+    ├── mbm_local_bytes		 > As above, but for node 1.
+    └── mbm_total_bytes		/
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
 ---
- arch/x86/kernel/cpu/resctrl/internal.h | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+ include/linux/resctrl.h                   | 3 +++
+ arch/x86/kernel/cpu/resctrl/core.c        | 7 ++++++-
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 1 -
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 1 -
+ 4 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index 681b5bdcd2f9..13d862221f9c 100644
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -127,19 +127,25 @@ struct mon_evt {
- };
+diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+index 64b6ad1b22a1..b0875b99e811 100644
+--- a/include/linux/resctrl.h
++++ b/include/linux/resctrl.h
+@@ -2,6 +2,7 @@
+ #ifndef _RESCTRL_H
+ #define _RESCTRL_H
  
++#include <linux/cacheinfo.h>
+ #include <linux/kernel.h>
+ #include <linux/list.h>
+ #include <linux/pid.h>
+@@ -96,6 +97,7 @@ struct rdt_ctrl_domain {
  /**
-- * union mon_data_bits - Monitoring details for each event file
-+ * union mon_data_bits - Monitoring details for each event file.
-  * @priv:              Used to store monitoring event data in @u
-- *                     as kernfs private data
-- * @rid:               Resource id associated with the event file
-- * @evtid:             Event id associated with the event file
-- * @domid:             The domain to which the event file belongs
-- * @u:                 Name of the bit fields struct
-+ *                     as kernfs private data.
-+ * @u.rid:             Resource id associated with the event file.
-+ * @u.evtid:           Event id associated with the event file.
-+ * @u.sum:             Set when event must be summed across multiple
-+ *                     domains.
-+ * @u.domid:           When @u.sum is zero this is the domain to which
-+ *                     the event file belongs. When @sum is one this
-+ *                     is the id of the L3 cache that all domains to be
-+ *                     summed share.
-+ * @u:                 Name of the bit fields struct.
+  * struct rdt_mon_domain - group of CPUs sharing a resctrl monitor resource
+  * @hdr:		common header for different domain types
++ * @ci:			cache info for this domain
+  * @rmid_busy_llc:	bitmap of which limbo RMIDs are above threshold
+  * @mbm_total:		saved state for MBM total bandwidth
+  * @mbm_local:		saved state for MBM local bandwidth
+@@ -106,6 +108,7 @@ struct rdt_ctrl_domain {
   */
- union mon_data_bits {
- 	void *priv;
- 	struct {
- 		unsigned int rid		: 10;
--		enum resctrl_event_id evtid	: 8;
-+		enum resctrl_event_id evtid	: 7;
-+		unsigned int sum		: 1;
- 		unsigned int domid		: 14;
- 	} u;
- };
+ struct rdt_mon_domain {
+ 	struct rdt_domain_hdr		hdr;
++	struct cacheinfo		*ci;
+ 	unsigned long			*rmid_busy_llc;
+ 	struct mbm_state		*mbm_total;
+ 	struct mbm_state		*mbm_local;
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index b86c525d0620..95ef8fe3cb50 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -19,7 +19,6 @@
+ #include <linux/cpu.h>
+ #include <linux/slab.h>
+ #include <linux/err.h>
+-#include <linux/cacheinfo.h>
+ #include <linux/cpuhotplug.h>
+ 
+ #include <asm/cpu_device_id.h>
+@@ -608,6 +607,12 @@ static void domain_add_cpu_mon(int cpu, struct rdt_resource *r)
+ 	d = &hw_dom->d_resctrl;
+ 	d->hdr.id = id;
+ 	d->hdr.type = RESCTRL_MON_DOMAIN;
++	d->ci = get_cpu_cacheinfo_level(cpu, RESCTRL_L3_CACHE);
++	if (!d->ci) {
++		pr_warn_once("Can't find L3 cache for CPU:%d resource %s\n", cpu, r->name);
++		mon_domain_free(hw_dom);
++		return;
++	}
+ 	cpumask_set_cpu(cpu, &d->hdr.cpu_mask);
+ 
+ 	if (arch_domain_mbm_alloc(r->num_rmid, hw_dom)) {
+diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+index 70f0069b87d8..e69489d48625 100644
+--- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
++++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+@@ -11,7 +11,6 @@
+ 
+ #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
+ 
+-#include <linux/cacheinfo.h>
+ #include <linux/cpu.h>
+ #include <linux/cpumask.h>
+ #include <linux/debugfs.h>
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index d3b0fa958266..70d41a8fd788 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -12,7 +12,6 @@
+ 
+ #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
+ 
+-#include <linux/cacheinfo.h>
+ #include <linux/cpu.h>
+ #include <linux/debugfs.h>
+ #include <linux/fs.h>
 -- 
 2.45.2
 
