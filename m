@@ -1,115 +1,88 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCB11864C;
-	Fri, 28 Jun 2024 03:34:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351A92032D
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 03:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719545678; cv=none; b=aacTKMNL7Ceh6RhbX8IuwlAL5ALMhmeoaknE21j9XoeJ76aao4gBdu9V7ftXPBqvJqb8KPMD6KrfRRPjE58iT4VTMfZGLsm4gmEdZpgYQZ1lJtbGm99sTVLVPCVJl13ovv2SYXWHnsyNOirn5hvRRbm80PTDniG4EYKN9J0Dz80=
+	t=1719545724; cv=none; b=YzcR/+1ASFSOY3a5LV4IFA5v2drDxWo7woWNnUoRoDcCcCI8wW90b1BGlVeEGq77eSZ1Vmot01KiWBJ8yL+hBVA/Af8+R/0N/dMCF1AbrAuFKpmpYeCkGxrDozeahlgc6WE2MWZA05dEL/ss+CVMqh3bq2sIYh5xX6r7hTVA7MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719545678; c=relaxed/simple;
-	bh=6/RKlUp2gvVHc6BtNL7Ra0pEQmPGmmm4ZXbXIocCvjI=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=l4u9qtBqZFIVAYkGD2SYqhSV0XEu1bFoIenllbDcwfhcunvEg2bFrKxh7munH4ZhHrn6NSikRLJuTi+WHPGKdoewKTgmgA4DSKvJu1GzdQWk8Rm4ZxOVonyuQdTwbq/5/LWllafmXoAUHRQ52HSLu8WDmAVjNHlG6viL7LSHNuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4W9Ldm6qk6z4f3kvv;
-	Fri, 28 Jun 2024 11:34:20 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 3388B1A058E;
-	Fri, 28 Jun 2024 11:34:33 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP2 (Coremail) with SMTP id Syh0CgCXAYdIL35mX7Q0Ag--.48902S3;
-	Fri, 28 Jun 2024 11:34:33 +0800 (CST)
-Subject: Re: [PATCH v2] blk-throttle: fix lower control under super low iops
- limit
-To: Yu Kuai <yukuai1@huaweicloud.com>, tj@kernel.org, josef@toxicpanda.com,
- axboe@kernel.dk
-Cc: cgroups@vger.kernel.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20240618062108.3680835-1-yukuai1@huaweicloud.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <19568a6b-66a8-bb93-7c8c-3b523972535a@huaweicloud.com>
-Date: Fri, 28 Jun 2024 11:34:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1719545724; c=relaxed/simple;
+	bh=REUx32kKeMtCto0Mt3ND8IG9iuZqZCs/a/m3ZE+QVRA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=S7jHRcwX4EZceExrnNGGuA6Nsc6laZX5Pcbz6XSIXXEZ7gpd3LqSesCkS4AMzj2vRt//rz1ioB4KOm+9zxgOp651h8IcOgvCSZtjgdqWrWVH5RO6JaJSd3O5YPROfi2lIjsTf4/PCdiM2DbNHI8OAxsqy8k9Hg60DQOLp907Uk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=KpCF54BF; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="KpCF54BF"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1719545714; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=1w+8Hz62/OAiOuIAShxlhOWk3yei/75Rw/aW5MatOU4=;
+	b=KpCF54BFZL+JGfyxfFx7RiFfmu+gYKGFxmkgdmN6yit5DXri+t93u48W+PogbfAuYGBOmmcev8x3dMzIic6RVb2knrk9s/g/JeWeFR6tcAdvhYCHOP3UnjLhgMSGp57E8ghJDJDNC3zcTKtiJFPbFvpiPst57/OGYxV5D3bPVM0=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R851e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=tianruidong@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0W9OqxVW_1719545710;
+Received: from localhost(mailfrom:tianruidong@linux.alibaba.com fp:SMTPD_---0W9OqxVW_1719545710)
+          by smtp.aliyun-inc.com;
+          Fri, 28 Jun 2024 11:35:13 +0800
+From: Ruidong Tian <tianruidong@linux.alibaba.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	akpm@linux-foundation.org,
+	nao.horiguchi@gmail.com,
+	linmiaohe@huawei.com,
+	tianruidong@alibaba.linux.com,
+	xueshuai@linux.alibaba.com,
+	Ruidong Tian <tianruidong@linux.alibaba.com>
+Subject: [PATCH] mm/hwpoison: avoid speculation access after soft/hard offline
+Date: Fri, 28 Jun 2024 11:35:09 +0800
+Message-Id: <20240628033509.27612-1-tianruidong@linux.alibaba.com>
+X-Mailer: git-send-email 2.33.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240618062108.3680835-1-yukuai1@huaweicloud.com>
-Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgCXAYdIL35mX7Q0Ag--.48902S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ww1ftrW3Ar13ArWDJw45trb_yoW8XrWfpF
-	W3Kw4UCFsFqFn7KF43G3WayFy8C3y8Zr98J3s8Xr1ayr13CF1DKrn3CF4Yyw4IvFsa9FW0
-	gr1ktas7Ar1UuaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWU
-	JwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-	nIWIevJa73UjIFyTuYvjfUouWlDUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Hi,
+Page that offlined can report CE/UE event due to speculation access.
+Delete kernel 1:1 linner mapping after soft/hard offline to avoid it.
 
-ÔÚ 2024/06/18 14:21, Yu Kuai Ð´µÀ:
-> From: Yu Kuai <yukuai3@huawei.com>
-> 
-> User will configure allowed iops limit in 1s, and calculate_io_allowed()
-> will calculate allowed iops in the slice by:
-> 
-> limit * HZ / throtl_slice
-> 
-> However, if limit is quite low, the result can be 0, then
-> allowed IO in the slice is 0, this will cause missing dispatch and
-> control will be lower than limit.
-> 
-> For example, set iops_limit to 5 with HD disk, and test will found that
-> iops will be 3.
-> 
-> This is usually not a big deal, because user will unlikely to configure
-> such low iops limit, however, this is still a problem in the extreme
-> scene.
-> 
-> Fix the problem by making sure the wait time calculated by
-> tg_within_iops_limit() should allow at least one IO to be dispatched.
+Signed-off-by: Ruidong Tian <tianruidong@linux.alibaba.com>
+---
+ drivers/base/memory.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Friendly ping ...
-> 
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-> ---
-> Changes in v2:
->   - instead of extend thorlt_slice, extend wait time;
->   block/blk-throttle.c | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-> index c1bf73f8c75d..dc6140fa3de0 100644
-> --- a/block/blk-throttle.c
-> +++ b/block/blk-throttle.c
-> @@ -704,6 +704,9 @@ static unsigned long tg_within_iops_limit(struct throtl_grp *tg, struct bio *bio
->   
->   	/* Calc approx time to dispatch */
->   	jiffy_wait = jiffy_elapsed_rnd - jiffy_elapsed;
-> +
-> +	/* make sure at least one io can be dispatched after waiting */
-> +	jiffy_wait = max(jiffy_wait, HZ / iops_limit + 1);
->   	return jiffy_wait;
->   }
->   
-> 
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index 67858eeb92ed..502ee1107ac6 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -22,6 +22,7 @@
+ #include <linux/stat.h>
+ #include <linux/slab.h>
+ #include <linux/xarray.h>
++#include <linux/set_memory.h>
+ 
+ #include <linux/atomic.h>
+ #include <linux/uaccess.h>
+@@ -600,6 +601,8 @@ static ssize_t soft_offline_page_store(struct device *dev,
+ 		return -EINVAL;
+ 	pfn >>= PAGE_SHIFT;
+ 	ret = soft_offline_page(pfn, 0);
++	if (!ret)
++		set_mce_nospec(pfn);
+ 	return ret == 0 ? count : ret;
+ }
+ 
+@@ -616,6 +619,8 @@ static ssize_t hard_offline_page_store(struct device *dev,
+ 		return -EINVAL;
+ 	pfn >>= PAGE_SHIFT;
+ 	ret = memory_failure(pfn, MF_SW_SIMULATED);
++	if (!ret)
++		set_mce_nospec(pfn);
+ 	if (ret == -EOPNOTSUPP)
+ 		ret = 0;
+ 	return ret ? ret : count;
+-- 
+2.39.3
 
