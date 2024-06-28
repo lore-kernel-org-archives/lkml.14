@@ -1,28 +1,28 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DAA6F2EE;
-	Fri, 28 Jun 2024 06:31:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442236F2E6;
+	Fri, 28 Jun 2024 06:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719556268; cv=none; b=bW11sa5VCUDDvr4jnHb9RibxLFml2iQfKFBHjQpjpWcQnjahY0HgjEtC2qT9DlEGKKHCOrIwmhY/MyxV0kA0PKS3ycOCXIWrmp3kx/yUGvdOOG7x5lRuifzxOdUlUCow+31qSiynIDIb9iSnCtPA+3nJ0Ce07ybdWSZvnUnkib8=
+	t=1719556269; cv=none; b=DmF7oHjf1zXZiX/nNK36kdlFH+4mK5c5ITMfL7GVi0V40rq9O+vbSt93absEndEwDcD5z3peiD6UyLOJy3ngv08ZPIXAGDr2RTIjhvBbLXWeGfjzCOl3MVpZnnhvRFe2Z3xom/cjOAszK+eKvc1pZV/qxSK/YNZLUFqUG0+7dHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719556268; c=relaxed/simple;
-	bh=I03n63Enr5OlS78YvfATdR4Ec/sB3MIoVnj8hRtoKrw=;
+	s=arc-20240116; t=1719556269; c=relaxed/simple;
+	bh=nft+9d/YjFcA3nqWZSNMApWV16/FmIhqW5jCfnBGGM0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qoC8usR8rZjqXne40s84KppYKsFfmHv305Z6VhP9lPe32a3ib+w3I5oZp21tM+8yHKZTI34VNgKBYBInGDTaJIQVOnM1S/eEEOGlkN3phz0fyTqL1WyUEpj6Q5KQUuP3PUL1uYDo04ZGyu4A+RnOGuiSBhzytmrY3qOFxC/ppew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	 MIME-Version; b=cYTeEomf363mlwbq9rqy8zpy2iE9ni7GZ+2WjpQHQYPjTx9AC5LXGQstWLkJcQmf5DU4GQFjgcMQuEQij8iFBolp7ahkeeigB8waDdwsIaj/caMJJg83l/HuHj/wMD6nTB2rX04NnlZP7Q1/780OaVRDDpwEzMfkX/W7c2bRQEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4W9QYS134zz4f3jsb;
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4W9QYS0fpnz4f3kw4;
 	Fri, 28 Jun 2024 14:30:52 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 14A0E1A0181;
-	Fri, 28 Jun 2024 14:31:03 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 54B241A0572;
+	Fri, 28 Jun 2024 14:31:04 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP2 (Coremail) with SMTP id Syh0CgBXwIWfWH5mZZVAAg--.52859S9;
-	Fri, 28 Jun 2024 14:31:02 +0800 (CST)
+	by APP2 (Coremail) with SMTP id Syh0CgBXwIWfWH5mZZVAAg--.52859S11;
+	Fri, 28 Jun 2024 14:31:04 +0800 (CST)
 From: libaokun@huaweicloud.com
 To: netfs@lists.linux.dev,
 	dhowells@redhat.com,
@@ -40,9 +40,9 @@ Cc: hsiangkao@linux.alibaba.com,
 	yukuai3@huawei.com,
 	wozizhi@huawei.com,
 	Baokun Li <libaokun1@huawei.com>
-Subject: [PATCH v3 5/9] cachefiles: stop sending new request when dropping object
-Date: Fri, 28 Jun 2024 14:29:26 +0800
-Message-Id: <20240628062930.2467993-6-libaokun@huaweicloud.com>
+Subject: [PATCH v3 7/9] cachefiles: wait for ondemand_object_worker to finish when dropping object
+Date: Fri, 28 Jun 2024 14:29:28 +0800
+Message-Id: <20240628062930.2467993-8-libaokun@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240628062930.2467993-1-libaokun@huaweicloud.com>
 References: <20240628062930.2467993-1-libaokun@huaweicloud.com>
@@ -53,11 +53,11 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgBXwIWfWH5mZZVAAg--.52859S9
-X-Coremail-Antispam: 1UD129KBjvJXoWxAF47Zw4DAFW5XFyfWF4Durg_yoW5uryfpF
-	WayFy3Kry8Wr17G3ykZa95JrySy3ykZrnrWFyYq3W5AanIqF4rZr1ktr1DuF1UA3yxXr47
-	tw48Casxt3y2y3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmj14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+X-CM-TRANSID:Syh0CgBXwIWfWH5mZZVAAg--.52859S11
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ww4kur4fJF1DXFy7Zw1UKFg_yoW8uF4fpF
+	WakFy7KrWxWF4UCrWkZFs5XryrK3ykZFnrWFyYqrZ8Ar90qr4rZr12y3ZxZF15Aw1IgrZr
+	tw4UCr9xt34qy3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUm014x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
 	z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr1j6r
@@ -68,84 +68,71 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxAF47Zw4DAFW5XFyfWF4Durg_yoW5uryfpF
 	IY04v7M4kE6xkIj40Ew7xC0wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8
 	JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1V
 	AFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xII
-	jxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I
-	8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2Kfnx
-	nUUI43ZEXa7VUbfcTJUUUUU==
-X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/1tbiAQAIBV1jkH-xJgABsL
+	jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
+	C2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVj
+	vjDU0xZFpf9x0JUB89_UUUUU=
+X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/1tbiAQAIBV1jkH-xJwAAsL
 
-From: Baokun Li <libaokun1@huawei.com>
+From: Hou Tao <houtao1@huawei.com>
 
-Added CACHEFILES_ONDEMAND_OBJSTATE_DROPPING indicates that the cachefiles
-object is being dropped, and is set after the close request for the dropped
-object completes, and no new requests are allowed to be sent after this
-state.
+When queuing ondemand_object_worker() to re-open the object,
+cachefiles_object is not pinned. The cachefiles_object may be freed when
+the pending read request is completed intentionally and the related
+erofs is umounted. If ondemand_object_worker() runs after the object is
+freed, it will incur use-after-free problem as shown below.
 
-This prepares for the later addition of cancel_work_sync(). It prevents
-leftover reopen requests from being sent, to avoid processing unnecessary
-requests and to avoid cancel_work_sync() blocking by waiting for daemon to
-complete the reopen requests.
+process A  processs B  process C  process D
 
+cachefiles_ondemand_send_req()
+// send a read req X
+// wait for its completion
+
+           // close ondemand fd
+           cachefiles_ondemand_fd_release()
+           // set object as CLOSE
+
+                       cachefiles_ondemand_daemon_read()
+                       // set object as REOPENING
+                       queue_work(fscache_wq, &info->ondemand_work)
+
+                                // close /dev/cachefiles
+                                cachefiles_daemon_release
+                                cachefiles_flush_reqs
+                                complete(&req->done)
+
+// read req X is completed
+// umount the erofs fs
+cachefiles_put_object()
+// object will be freed
+cachefiles_ondemand_deinit_obj_info()
+kmem_cache_free(object)
+                       // both info and object are freed
+                       ondemand_object_worker()
+
+When dropping an object, it is no longer necessary to reopen the object,
+so use cancel_work_sync() to cancel or wait for ondemand_object_worker()
+to finish.
+
+Fixes: 0a7e54c1959c ("cachefiles: resend an open request if the read request's object is closed")
+Signed-off-by: Hou Tao <houtao1@huawei.com>
 Signed-off-by: Baokun Li <libaokun1@huawei.com>
+Reviewed-by: Jia Zhu <zhujia.zj@bytedance.com>
 Acked-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/cachefiles/internal.h |  2 ++
- fs/cachefiles/ondemand.c | 10 ++++++++--
- 2 files changed, 10 insertions(+), 2 deletions(-)
+ fs/cachefiles/ondemand.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
-index 6845a90cdfcc..a1a1d25e9514 100644
---- a/fs/cachefiles/internal.h
-+++ b/fs/cachefiles/internal.h
-@@ -48,6 +48,7 @@ enum cachefiles_object_state {
- 	CACHEFILES_ONDEMAND_OBJSTATE_CLOSE, /* Anonymous fd closed by daemon or initial state */
- 	CACHEFILES_ONDEMAND_OBJSTATE_OPEN, /* Anonymous fd associated with object is available */
- 	CACHEFILES_ONDEMAND_OBJSTATE_REOPENING, /* Object that was closed and is being reopened. */
-+	CACHEFILES_ONDEMAND_OBJSTATE_DROPPING, /* Object is being dropped. */
- };
- 
- struct cachefiles_ondemand_info {
-@@ -335,6 +336,7 @@ cachefiles_ondemand_set_object_##_state(struct cachefiles_object *object) \
- CACHEFILES_OBJECT_STATE_FUNCS(open, OPEN);
- CACHEFILES_OBJECT_STATE_FUNCS(close, CLOSE);
- CACHEFILES_OBJECT_STATE_FUNCS(reopening, REOPENING);
-+CACHEFILES_OBJECT_STATE_FUNCS(dropping, DROPPING);
- 
- static inline bool cachefiles_ondemand_is_reopening_read(struct cachefiles_req *req)
- {
 diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
-index bce005f2b456..8a3b52c3ebba 100644
+index 36b97ded16b4..1d5b970206d0 100644
 --- a/fs/cachefiles/ondemand.c
 +++ b/fs/cachefiles/ondemand.c
-@@ -517,7 +517,8 @@ static int cachefiles_ondemand_send_req(struct cachefiles_object *object,
- 		 */
- 		xas_lock(&xas);
- 
--		if (test_bit(CACHEFILES_DEAD, &cache->flags)) {
-+		if (test_bit(CACHEFILES_DEAD, &cache->flags) ||
-+		    cachefiles_ondemand_object_is_dropping(object)) {
- 			xas_unlock(&xas);
- 			ret = -EIO;
- 			goto out;
-@@ -568,7 +569,8 @@ static int cachefiles_ondemand_send_req(struct cachefiles_object *object,
- 	 * If error occurs after creating the anonymous fd,
- 	 * cachefiles_ondemand_fd_release() will set object to close.
- 	 */
--	if (opcode == CACHEFILES_OP_OPEN)
-+	if (opcode == CACHEFILES_OP_OPEN &&
-+	    !cachefiles_ondemand_object_is_dropping(object))
- 		cachefiles_ondemand_set_object_close(object);
- 	kfree(req);
- 	return ret;
-@@ -667,8 +669,12 @@ int cachefiles_ondemand_init_object(struct cachefiles_object *object)
- 
- void cachefiles_ondemand_clean_object(struct cachefiles_object *object)
- {
-+	if (!object->ondemand)
-+		return;
+@@ -694,6 +694,9 @@ void cachefiles_ondemand_clean_object(struct cachefiles_object *object)
+ 		}
+ 	}
+ 	xa_unlock(&cache->reqs);
 +
- 	cachefiles_ondemand_send_req(object, CACHEFILES_OP_CLOSE, 0,
- 			cachefiles_ondemand_init_close_req, NULL);
-+	cachefiles_ondemand_set_object_dropping(object);
++	/* Wait for ondemand_object_worker() to finish to avoid UAF. */
++	cancel_work_sync(&object->ondemand->ondemand_work);
  }
  
  int cachefiles_ondemand_init_obj_info(struct cachefiles_object *object,
