@@ -1,128 +1,100 @@
-Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6A1C1586FE
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 12:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719578460; cv=none; b=jKHv9lXmNLBMFp5IXZ0LLNRVgzfsJfW0dnFOv2zijcFXeglcT82CyaK9lu86Oe5WrCf5LAlIGFZWbZo9Vdvmto01VFSAWDHT47uvPXp6e4AtF6b+hgiaQf56Rsb4yPrSSXnJtFV3RbZzgs+Z6llXyN0mXtxLXeN3C59nwoKIPS0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719578460; c=relaxed/simple;
-	bh=bICnReZls0MrKkjCA8zJ3u+312ywetkt85F00cBM/Uk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=AJFgTfFWHYpuv5xakzZDlinZVjvGlbj6Xrs1mV1TXJSQmjCAPWBgpTf1sn1Nxyi0CB8QsUl5Z8OY5h5BFm8RvluXbZOgQJGzEUEyzyxcJKiogFCeq1GwxNFjj3VtcKh+O6JHsq4PCCbLOmpgS1ra+dewxgfA6RH8b6Tz9RrwKPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=jsoxR+dJ; arc=none smtp.client-ip=85.214.250.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="jsoxR+dJ"
-Received: from 8bytes.org (pd9fe9dd8.dip0.t-ipconnect.de [217.254.157.216])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.8bytes.org (Postfix) with ESMTPSA id BBB541C8929;
-	Fri, 28 Jun 2024 14:40:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
-	s=default; t=1719578457;
-	bh=bICnReZls0MrKkjCA8zJ3u+312ywetkt85F00cBM/Uk=;
-	h=Date:From:To:Cc:Subject:From;
-	b=jsoxR+dJiA7+31ql8zhFfpfx1G+LXZIzAI/XMmSMjQbrI8K2o0DIveWltbAxwdXJC
-	 QaCgrrNErNbl3eEPFXvB+wTgRHKB87eJELnANTjox8HagmNdiQJweCHrImZtM3RN4D
-	 EJ50QcQwPmwEtFbtHuwm5YjFmy5LMe50d2vg2MCru5FvQVPU4cFgEk6zC7ktbm3PpG
-	 KzRDgHUHmZ7TF8xE6zWMaOeZtJNiF7k0vh/s4BKgZO0gZImZzvy+lEVFbjjRF/CJ1B
-	 9TmAHOhhvt+TGY3UQICiLRwMBnAFI+9LaX6qtHn8stExLjQvPB+2gO9QJSiwdFURwh
-	 wWO8IMwMQ3Jng==
-Date: Fri, 28 Jun 2024 14:40:56 +0200
-From: Joerg Roedel <joro@8bytes.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev
-Subject: [git pull] IOMMU Fixes for Linux v6.10-rc5
-Message-ID: <Zn6vWO1Caf6R998K@8bytes.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A6D13E029;
+	Fri, 28 Jun 2024 12:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719578532; cv=none; b=uRN61714HHt0I7dmuB6M493y8Xha0bl2UaiMZSu623xg6rZxjX3/GZOP9qeGERUYOmlLK6wPRZlPA+2ibUUb7Y4NfkdofxCxHZygI0XDz7zy9+n+0EjyJy/lhTwWSodtMbyAtUZi+hXp1nuE2rWjwih6+pulLw9ey1jVYFI4HJA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719578532; c=relaxed/simple;
+	bh=C5ObWTNXLfzCZasTtKx8inESnd8H/PFX95IOQz3bASI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D18/qMoFraA5BvebzRl9W4oYnTjid+QNDBN4I7wPPHsVylEJ8zqttAcq4BX5KOxk78pmIBTc2xvf7/R5mJffMDagpQFKd0wKDy8qdXMoYQ/qz0LxvYpRgMWCqPsReY49wo3MTvSykORBBAtAgRdYDtVcTbtjyyIomIrFxIWnrg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VrmM3xJo; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VrmM3xJo"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=4oAc/X7cngP3Cawle+vTIhf1va3SXMhGGdRju0o8W1k=; b=VrmM3xJo5IOH3EcYcRTQBgkmvc
+	uA7pP0AMsTqyT3ni2ImBU38XpclLVulClJ25GKrYNJlEaTuZvSvuZfXv22c7D0I+wFz0nSGK419Ya
+	2XEJ4M+Lt6fzLv1vxMCXtULXcDdQjX7bRW4Kbr/4pqq0uxh3J+9PqlJnzvygyXYQHga1SOf4FY2t6
+	YbKIdvXZcQnZVzEbIchBYkLSWM7sYc8RbdA0U9i4bG9IkMSuH0GVbVQtby9Hy1/8HUw+gm2ZUMjHS
+	W+BQiGmWxShocMCqlXnpOg1wPPAKvUeU6ceHaWrT9sm/bd/dZCQZ4a94BDQs+l2eJJT6ZbAHR+uhv
+	05fDjz2w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sNAvG-0000000Dijs-16qK;
+	Fri, 28 Jun 2024 12:41:50 +0000
+Date: Fri, 28 Jun 2024 05:41:50 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: Christoph Hellwig <hch@infradead.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>, Jens Axboe <axboe@kernel.dk>,
+	Hauke Mehrtens <hauke@hauke-m.de>, Felix Fietkau <nbd@nbd.name>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Dave Chinner <dchinner@redhat.com>, Jan Kara <jack@suse.cz>,
+	Christian Brauner <brauner@kernel.org>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Li Lingfeng <lilingfeng3@huawei.com>,
+	Christian Heusel <christian@heusel.eu>,
+	Min Li <min15.li@samsung.com>, Avri Altman <avri.altman@wdc.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Hannes Reinecke <hare@suse.de>,
+	Mikko Rapeli <mikko.rapeli@linaro.org>, Yeqi Fu <asuk4.q@gmail.com>,
+	Victor Shih <victor.shih@genesyslogic.com.tw>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Li Zhijian <lizhijian@fujitsu.com>,
+	"Ricardo B. Marliere" <ricardo@marliere.net>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mmc@vger.kernel.org, linux-block@vger.kernel.org
+Subject: Re: [PATCH v4 2/4] block: partitions: populate fwnode
+Message-ID: <Zn6vjmNf4QjBkqh6@infradead.org>
+References: <cover.1719520771.git.daniel@makrotopia.org>
+ <6acc459a392d562abc58f7e55c6f04dba8073257.1719520771.git.daniel@makrotopia.org>
+ <Zn4_rMJVm6cpIEZV@infradead.org>
+ <Zn6pje4DcAYEk6Kw@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="WUFP6s1EtIXwIMDM"
-Content-Disposition: inline
-
-
---WUFP6s1EtIXwIMDM
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <Zn6pje4DcAYEk6Kw@makrotopia.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Hi Linus,
+On Fri, Jun 28, 2024 at 01:16:13PM +0100, Daniel Golle wrote:
+> > Overly long lines, which is really annyoing for block comments.
+> 
+> Should I use 80 chars as limit everywhere?
 
-A note: I will be off for the next two weeks and Will Deacon takes over
-IOMMU maintenance during that time. I should be back in time for the
-next merge window.
+In my opinion that makes things easier.  The coding style allows to
+exceed it for individual lines where it improves readability, which
+is a bit of an odd case.
 
-With that being said, here is a bunch of fixes:
+> > Can we please not use the crazy part_meta stuff for anything new?
+> > We should never have merge it, and right now it is at least isolated
+> > to the boot time root dev_t partsing, and I'd really prefer to keep it
+> > in that corner.
+> > 
+> 
+> At least up to my understanding there isn't any other to know a
+> partitions UUID or volume name.
+> 
+> If there is another way to access this information I'd happily make
+> use of it, but I couldn't find any.
 
-The following changes since commit f2661062f16b2de5d7b6a5c42a9a5c96326b8454:
-
-  Linux 6.10-rc5 (2024-06-23 17:08:54 -0400)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/iommu/linux.git tags/iommu-fixes-v6.10-rc5
-
-for you to fetch changes up to 09aaa2d0642359fddae607b6950b2ca7bd1cf04f:
-
-  MAINTAINERS: Update IOMMU tree location (2024-06-28 14:31:50 +0200)
-
-----------------------------------------------------------------
-IOMMU Fixes for Linux v6.10-rc5
-
-Including:
-
-	- Two cache flushing fixes for Intel and AMD drivers
-	- AMD guest translation enabling fix
-	- Update IOMMU tree location in MAINTAINERS file
-
-----------------------------------------------------------------
-Joerg Roedel (1):
-      MAINTAINERS: Update IOMMU tree location
-
-Lu Baolu (1):
-      iommu/vt-d: Fix missed device TLB cache tag
-
-Vasant Hegde (2):
-      iommu/amd: Invalidate cache before removing device from domain list
-      iommu/amd: Fix GT feature enablement again
-
- MAINTAINERS                 |  8 ++++----
- drivers/iommu/amd/init.c    |  1 +
- drivers/iommu/amd/iommu.c   | 12 ++++++------
- drivers/iommu/intel/iommu.c | 20 ++++++++++----------
- 4 files changed, 21 insertions(+), 20 deletions(-)
-
-Please pull.
-
-Thanks,
-
-	Joerg
-
---WUFP6s1EtIXwIMDM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEr9jSbILcajRFYWYyK/BELZcBGuMFAmZ+r1gACgkQK/BELZcB
-GuPYIw/+JMjA1uBV/L2txL/ZPCTjYwPpqYreORkJuaW/Oi1UMptvedBFbBqRczhb
-5uLGsMzlEMEG0I+OJWgsCWf6O8IefVoY9x25y/DMl0EqkCn8vlh+3gpbjt6FPUVN
-Nip5G+gXf/T/k/6CCrDL/At0B6Gz457ve5buxfauyxYnLeVCwGjDo0yqjqtnOlF2
-AcEZZ4i3gyHuc1GRSIlEKuwM1Sjy0GP+H/T5CxpTVBVNKrT5/nRJtWHq4Dv3NnWo
-X7h5z/AfFQZdroeNho/+5+3JUZ28sjtoRb3qlxVlTffMVQrVJW1cCaWC+hQlrhlq
-K9FWFyAXBwqA3tPV2QLgXeacJ+tDTOBIqCzdRLe2xlDkdPAK7lmnCiRCBC6wN9kw
-2wZfY8t4Iefq1B4rI7arIXAAwcoyS4Zsq9i+rdMQv9mrHcNzB169/w1ld/Vne3Z+
-h+HI5u6DrJA1ufS+mIpf2hol0JsAAcd1H/yG6lk6BFfnFFMCZeghf10F2HcClrKI
-wWAx7ZSRjVhwcNeDMfchneHkP9JfoEbCh5igLSSx4bGb5lEpqhUoG/zuvPnm7JSW
-kGghta33hXUjzuRKaqtPauz8EJnyWF6j05wdFq1uoZVrLQi86Xk3L/5DP7f9SCpK
-N/84kOSF6aJ/RyXHaOfm1TsFVPBmi4ka+BQnQBhw6qfNTbUpUb0=
-=opjv
------END PGP SIGNATURE-----
-
---WUFP6s1EtIXwIMDM--
+That is true, but except for the early dev_t parsing we actually never
+use these partition uuids in the kernel at all.  Also in all the
+normal file system references either use the file system uuid,
+or the device provided one for devices that support them.  Most of
+that is handled entirely in userspace, though - the kernel largely
+operates just on the dev_t.
