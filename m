@@ -1,86 +1,95 @@
-Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B1C43AC0;
-	Fri, 28 Jun 2024 08:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0D314D6FF
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 08:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719564193; cv=none; b=jH+HsuMAgEpxKhQKoR9x5Pd3eGWWkE0G/rA4BUjI5ev8JdB+LF9rqno0BvZAcHZeNc1AEZodM7gun04tuugCwNapEytiPR74twUhTlibVAjoVOxMeSLWdTtbU7btHtY8Hyxnfj4bDG0oULNv+p+f8M0wpLGPUNTeA1h+jFdYJUs=
+	t=1719564197; cv=none; b=C5eiMMOSYV3Rti76yd0sLpNCdJfVNDcw2kIvicSe4UljrDuDM9D0UdDJh+jF0BDLfNQLmaJU4h0i1an2I2nxwYGUSVrf801rLY/vJhBiITvgjAmSj0PRrWcODjhb8/J1gkzGY9J9newhAKV8t7tSC28OLD7YkQE+fj1vbRQiMd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719564193; c=relaxed/simple;
-	bh=VPCR6B+q/ze+0k8/a5//nsllEdjBibCOi2hB+YOPY7M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YliSfFXdC60gYXBb4QZQcU8gKMJZzBcPg4maYizAyi532XNae7QSRG7uY/PCbBzX77b4Exp8kmeWrynPB4PqZdsEYlnw++QUuDDOSkpY0Vl+wLhM0y5ogzKug6HtSQ5pyK5nhAQEBi4bdslSiT7wdZowI8I7xlzSQNuSnZsGf2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=54.206.34.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-X-QQ-mid: bizesmtpsz9t1719564106tkrjopl
-X-QQ-Originating-IP: f/kOEM2Glu4JL+oCsb/LBSQoNQjNX+nOQd0jJxI2XXc=
-Received: from localhost.localdomain ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 28 Jun 2024 16:41:44 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 2146255387032920080
-From: WangYuli <wangyuli@uniontech.com>
-To: herbert@gondor.apana.org.au,
-	davem@davemloft.net,
-	tsbogend@alpha.franken.de
-Cc: linux-crypto@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	WangYuli <wangyuli@uniontech.com>,
-	Guan Wentao <guanwentao@uniontech.com>
-Subject: [PATCH] MIPS: crypto: Clean up useless assignment operations
-Date: Fri, 28 Jun 2024 16:41:17 +0800
-Message-ID: <1D248893502B75F5+20240628084117.84264-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.43.4
+	s=arc-20240116; t=1719564197; c=relaxed/simple;
+	bh=5gJYdAxMiPtWI/amBZbj1a4YrOnZfQKoCzdv8ypltqo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M7z1gJDi7O3v6T0TDa0RkXhRtU3YyeZu8O+bnHl2/DR2GzB9zZZhmYADH0PpuKB5ajFe+zh3ccUh0W2blkyImrB9Vwfrzmna3NcW1ncJmQUij4GVAINpZa49lpqa4lHo5lx9nY3TMrT5ZWshxBpVEOhJPbuqMyO1wnDARBtLzHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DsgJBdtC; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DsgJBdtC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=1EajT2M7HiMVKYWzNmxeXjdvYgdqYyWDRfjFgTSXgxo=; b=DsgJBdtCbCk9i/2m/DxGvr9/G9
+	cZ6iMhJi3B1Zbau9jDnWY9MlLaqVTsuKyxRjkgOXZI+/mIjbLluz75jfCjQXD5LdF9T/v8iTovHLL
+	D/6THAbz22wR5HMa8LGEpZyj8vMhXS6HzpbwY2hUil6T+tgNfpRh4FW/rpt+Rb2LeGoUsM7bak09q
+	DqenFAVjmybxspOVpIZr3cWDPp4xqG8zX6JuX6DafCXFO3qp0j1NS1Kwd7VGNjrokyvk1aWvA3Slo
+	nKkcrspz4dWx6z11QAFDeefkhRtMScB6dVP8vhbg6Hlr13qLbc+M/DRln05REg8c2JATnOrxiwjBR
+	DHX6goSA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sN7Bz-000000090d8-2nbG;
+	Fri, 28 Jun 2024 08:42:54 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 89F6D300400; Fri, 28 Jun 2024 10:42:48 +0200 (CEST)
+Date: Fri, 28 Jun 2024 10:42:48 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: kan.liang@linux.intel.com
+Cc: mingo@kernel.org, acme@kernel.org, namhyung@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
+	ak@linux.intel.com, eranian@google.com
+Subject: Re: [PATCH V3 01/13] perf/x86/intel: Support the PEBS event mask
+Message-ID: <20240628084248.GE31592@noisy.programming.kicks-ass.net>
+References: <20240626143545.480761-1-kan.liang@linux.intel.com>
+ <20240626143545.480761-2-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240626143545.480761-2-kan.liang@linux.intel.com>
 
-When entering the "len & sizeof(u32)" branch, len must be less than 8.
-So after one operation, len must be less than 4.
-At this time, "len -= sizeof(u32)" is not necessary for 64-bit CPUs.
+On Wed, Jun 26, 2024 at 07:35:33AM -0700, kan.liang@linux.intel.com wrote:
 
-A similar issue has been solved at Loongarch.
+> @@ -1661,6 +1661,16 @@ static inline int is_ht_workaround_enabled(void)
+>  	return !!(x86_pmu.flags & PMU_FL_EXCL_ENABLED);
+>  }
+>  
+> +static inline u64 intel_pmu_pebs_mask(u64 cntr_mask)
+> +{
+> +	return MAX_PEBS_EVENTS_MASK & cntr_mask;
+> +}
+> +
+> +static inline int intel_pmu_max_num_pebs(struct pmu *pmu)
+> +{
+> +	return find_last_bit((unsigned long *)&hybrid(pmu, pebs_events_mask), MAX_PEBS_EVENTS) + 1;
 
-Link: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=v6.10-rc5&id=fea1c949f6ca5059e12de00d0483645debc5b206
-Signed-off-by: Guan Wentao <guanwentao@uniontech.com>
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
- arch/mips/crypto/crc32-mips.c | 4 ++++
- 1 file changed, 4 insertions(+)
+I'll write that like:
 
-diff --git a/arch/mips/crypto/crc32-mips.c b/arch/mips/crypto/crc32-mips.c
-index ec6d58008f8e..505d2d897849 100644
---- a/arch/mips/crypto/crc32-mips.c
-+++ b/arch/mips/crypto/crc32-mips.c
-@@ -94,7 +94,9 @@ static u32 crc32_mips_le_hw(u32 crc_, const u8 *p, unsigned int len)
- 
- 		CRC32(crc, value, w);
- 		p += sizeof(u32);
-+#ifndef CONFIG_64BIT
- 		len -= sizeof(u32);
-+#endif
- 	}
- 
- 	if (len & sizeof(u16)) {
-@@ -134,7 +136,9 @@ static u32 crc32c_mips_le_hw(u32 crc_, const u8 *p, unsigned int len)
- 
- 		CRC32C(crc, value, w);
- 		p += sizeof(u32);
-+#ifndef CONFIG_64BIT
- 		len -= sizeof(u32);
-+#endif
- 	}
- 
- 	if (len & sizeof(u16)) {
--- 
-2.43.4
+	static_assert(MAX_PEBS_EVENTS == 32);
+	return fls((u32)hybrid(pmu, pebs_events_mask));
 
+> +}
+> +
+>  #else /* CONFIG_CPU_SUP_INTEL */
+>  
+>  static inline void reserve_ds_buffers(void)
+> diff --git a/arch/x86/include/asm/intel_ds.h b/arch/x86/include/asm/intel_ds.h
+> index 2f9eeb5c3069..5dbeac48a5b9 100644
+> --- a/arch/x86/include/asm/intel_ds.h
+> +++ b/arch/x86/include/asm/intel_ds.h
+> @@ -9,6 +9,7 @@
+>  /* The maximal number of PEBS events: */
+>  #define MAX_PEBS_EVENTS_FMT4	8
+>  #define MAX_PEBS_EVENTS		32
+> +#define MAX_PEBS_EVENTS_MASK	GENMASK_ULL(MAX_PEBS_EVENTS - 1, 0)
+>  #define MAX_FIXED_PEBS_EVENTS	16
+>  
+>  /*
+> -- 
+> 2.38.1
+> 
