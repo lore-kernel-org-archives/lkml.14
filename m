@@ -1,161 +1,114 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 405074CB37
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 19:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17BFC757FD
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 19:55:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719604416; cv=none; b=alTylEBooMeYU+rx3OnFz8omfc4gKfuzarxuEN6wIfPRaEeXETbuxv2/+WXxVqNlqMiekebGrNcgtYLa2OwyxKHG8rxUWtx9UxIFDifu8bQFa0bwe2X/cpMcCXghDPzVNtaIFNYyulQ4N+k9AQqRSP/x55xq7u0hthE5x3h1VFI=
+	t=1719604528; cv=none; b=deS7jQLJPEDYBQKPD5UWdCrbHBvRlw7nVXwpmpuUeun4B91sGg2fcWgQ6c7JMCSxurNUHhPjBknL4BVNTn+ytph42OV7zeENRLpfwIoLp2eUplOVK8WCtOG0MzZYq9Fy7htxmOqpr4WrR2N5m67qKAlN7t4pqZbfnkBdl5rReak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719604416; c=relaxed/simple;
-	bh=/CKACYWLUIqjV38aqh2m2zOYGnLhG7wNTvhY4HFHgYY=;
-	h=Date:From:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f07WuwSLtKsrPnBtMmkeMPEcWeLo0g6iQaLB7ZID5zxYxTv9/MK0yXldg540IYEh5cPhBug+DPGL6BsPECdF7DDEQTo6YboOPnfeYC3j9i+XtSDZf3L/YZpKwl5dS/pVQwcoJeN6SvViB1bZfBlFSWY28DKOsugSL1JdSFjiwqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DCEmaBr0; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719604528; c=relaxed/simple;
+	bh=LeF6+VIbsZR4AZNnzSW7q90MGWi7owkHEiFGjX3ZIZQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OiY/TNHhMlYjv3pK38/b0KzGygnjqZrDXyEfaQaU99g4bsDCGWSdMyIXwLu3tFLtOfkNnW4tLPtttE7DrP3AkQfcvI8PFeKoLVc3MZxDVof4sx5tilDF0MSDPUoEPaT/PUc+mgossn6W1hDBWbGjh66aEwligIvYGtuTtgyd5nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hETK/qhs; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DCEmaBr0"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7065a2f4573so814477b3a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 12:53:35 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hETK/qhs"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3762c172d99so603945ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 12:55:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719604414; x=1720209214; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=b/jH00phhVWAYucey8EridRtG9VCd7OvweCgJMd7i18=;
-        b=DCEmaBr0LLBA3eALClfeInde0qF5lERaAhmaAWgQDZizmcNqqiiA3vQaU46YnJTZwr
-         2//1vXNUTvkhOYs6RmawHwruIuwYmz1V1SJgkaf0Ty7UAV2cU41xIVzeDSod8WF89As1
-         hleEh+iV0qWjRMUSMZxsz8cnYWmU+Da56zgtB8kuC7hlVm0F+2VU3ZDpN8W2Cv76dc1i
-         uF4tqUUBiNr7BlHyed/RY/ivCx7inNyIVzFV5BHOZj+y+C3Bxf+S+L686ZEn0/XpSEmk
-         YwEanWE61l50lmfqU9FJYgKJJKHvfSR1+NTuMcWZRhg5TFmcs/1lg/kyTv2fOXPww2VX
-         YSQw==
+        d=linuxfoundation.org; s=google; t=1719604525; x=1720209325; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DIV6yJjX8GB41D6fmmUZ7FkjneyetoEI+QshUrjZeMs=;
+        b=hETK/qhsd1TrEIRlHCnTyWW5DqQLiqHYPx2AgOZ6cfgOr/QSRDW+cYkku2BbRsLAvc
+         hRXf04Xh4qHRNupvGncCc4gbjAvDPBLP3F0Ae48cb1WDXEPKbuLWhbCd9URRe3pWN0ev
+         57EM1LJMURQYK+Voc05VAY2EbLFce+z44lyjo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719604414; x=1720209214;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b/jH00phhVWAYucey8EridRtG9VCd7OvweCgJMd7i18=;
-        b=psATVtP17F7+5gzSZKvmO2VRyfWWYvpN8FV0NWMUJaeNZ/kUggdlppWrUwIDo9elkx
-         4des1TMRix0bP/CyBCfGgx3mmjH86zEPk2ShEYRG9L7dey7gelL6PxMbj9aVzYjdCUGf
-         AXRCv+SQ8ieDnGsvkFXiZAO3ptzWdyrpBq0heI6jgKeGBf1y/tRUCldnC7pgKrCBb5E3
-         bajTDMvCX6XOFhRqNiWFephQKRH8dseQ9z2jPk4X+Yi89NiVp73QOARJwrq2jFjYGzIE
-         74GW/C1RzI/D9Ye5l1jjXT40q9eyFdAldb25jwSOCRPMfs9mW8Lp/fttAQtBUZPqxHZT
-         r8bg==
-X-Forwarded-Encrypted: i=1; AJvYcCV/vV0ap6Cnp856GcuL9BoecLzryWmRdDxT8DVYmD2qpF5VoyMbX9VFkx6SpUxGRcKEHTut7+6+rCeEgmNeGEzMPwQp0bxP4JTdA1WN
-X-Gm-Message-State: AOJu0YxR9jdTF2k9r0Lr4HherlJHEehIL/yr+NbOfHh7uGB4i4ohCEaW
-	dwdPreoqVD/do1qUZfiOi4ttg8SoTm2xOyZJthOfvHgSC5RCsLgHFUEY31rVSEc=
-X-Google-Smtp-Source: AGHT+IGGVpZm0QgAO8OiY/RswohPQdDDzJOJzZYPS1dn9RuOsBpSkWpHg7go+YNF2koi9gk2JWcBsw==
-X-Received: by 2002:aa7:9d85:0:b0:706:5bf1:586f with SMTP id d2e1a72fcca58-70674363825mr17052236b3a.0.1719604414459;
-        Fri, 28 Jun 2024 12:53:34 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:e53e:a53d:f473:181e])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70801e53b47sm2022516b3a.37.2024.06.28.12.53.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 12:53:34 -0700 (PDT)
-Date: Fri, 28 Jun 2024 13:53:30 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>, Suman Anna <s-anna@ti.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Udit Kumar <u-kumar1@ti.com>,
-	Thomas Richard <thomas.richard@bootlin.com>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>,
-	Hari Nagalla <hnagalla@ti.com>,
-	=?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
-	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] remoteproc: k3-r5: Fix IPC-only mode detection
-Message-ID: <Zn8UumUllbGS4/p9@p14s>
-References: <20240621150058.319524-1-richard.genoud@bootlin.com>
- <20240621150058.319524-2-richard.genoud@bootlin.com>
+        d=1e100.net; s=20230601; t=1719604525; x=1720209325;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DIV6yJjX8GB41D6fmmUZ7FkjneyetoEI+QshUrjZeMs=;
+        b=dsrFZKIcVX+iYtdI8jzOUTFclYXBQdAbblMdBryGU4mPg8tr4s0LRKev7wDyOeZt5Q
+         nHp04oKzHP/05VJAzm446O0v7TrddvHh3tX37bdM0LJBoc2Uwh/u+xXbwjB6oBEXU1/Z
+         0CwkcVRjfbZUlR/WqatT45XBCS/UMrHelYnzkSvWhXfCXY3n0T0WJ0fob66db7bRpzLz
+         C6uhe3RkUTe1ZPKrZwvcqRROUgdW5PA1WsJxkkDp8yB0FyrgPz1ZIeXzpmoAZaCpnZA1
+         QPbgS8aHqz+GDm2NN/ybh7IzzyvgZwFF9WVxEEBwTjtWvoz09GRAXV5BVAJKtdwpV4UK
+         opMw==
+X-Forwarded-Encrypted: i=1; AJvYcCXAWBSUbEFmMNrKRCXIpJEukZeLR71tVpMobCC0d9ejsyVLwCUbD0PxE9Ecrwcd4SPj1WBXvRsdZql3qVijbmHJyJ/U8t3b7XvIxW4b
+X-Gm-Message-State: AOJu0YydQC2ybx7Xe0g2QEvQG9goFV3gFOgEpvH8a6EAxNa37iNNtpBH
+	wexO+VNziRhDC7/CJt4cvWv7cLa9gp2UE6UgHKMXcM7CupYKD00XioNA8Q7Dx5R5q/iqpd5YYam
+	s
+X-Google-Smtp-Source: AGHT+IFz9Lf6O9yuRq0VsVMlK9RemhcCia+W9fPEx+U6wQpkhZkPBYq+Qo+rrlbwCfPjinAaSIg7mw==
+X-Received: by 2002:a05:6602:3fca:b0:7eb:2c45:4688 with SMTP id ca18e2360f4ac-7f39dd12493mr2254867939f.2.1719604525171;
+        Fri, 28 Jun 2024 12:55:25 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4bb73bb3a32sm683825173.13.2024.06.28.12.55.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Jun 2024 12:55:24 -0700 (PDT)
+Message-ID: <88d70179-1a7b-4960-ab1d-55652a7822bc@linuxfoundation.org>
+Date: Fri, 28 Jun 2024 13:55:24 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240621150058.319524-2-richard.genoud@bootlin.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] cpupower: Add 'help' target to the 'bench' subproject
+ makefile
+To: Roman Storozhenko <romeusmeister@gmail.com>,
+ Thomas Renninger <trenn@suse.com>, Shuah Khan <shuah@kernel.org>
+Cc: Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240623-make_help_rest-v1-0-4bd3fd51064b@gmail.com>
+ <20240623-make_help_rest-v1-1-4bd3fd51064b@gmail.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240623-make_help_rest-v1-1-4bd3fd51064b@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Good day,
-
-On Fri, Jun 21, 2024 at 05:00:55PM +0200, Richard Genoud wrote:
-> ret variable was used to test reset status, get from
-> reset_control_status() call. But this variable was overwritten by
-> ti_sci_proc_get_status() a few lines bellow.
-> And as ti_sci_proc_get_status() returns 0 or a negative value (in this
-> latter case, followed by a return), the expression !ret was always true,
+On 6/23/24 13:19, Roman Storozhenko wrote:
+> Add 'help' target, describing all user-available targets, to the
+> 'bench' subproject makefile.
 > 
-> Clearly, this was not what was intended:
-> In the comment above it's said that "requires both local and module
-> resets to be deasserted"; if reset_control_status() returns 0 it means
-> that the reset line is deasserted.
-> So, it's pretty clear that the return value of reset_control_status()
-> was intended to be used instead of ti_sci_proc_get_status() return
-> value.
-> 
-> This could lead in an incorrect IPC-only mode detection if reset line is
-> asserted (so reset_control_status() return > 0) and c_state != 0 and
-> halted == 0.
-> In this case, the old code would have detected an IPC-only mode instead
-> of a mismatched mode.
-> 
-
-Your assessment seems to be correct.  That said I'd like to have an RB or a TB
-from someone in the TI delegation - guys please have a look.
-
-Thanks,
-Mathieu
-
-> Fixes: 1168af40b1ad ("remoteproc: k3-r5: Add support for IPC-only mode for all R5Fs")
-> Signed-off-by: Richard Genoud <richard.genoud@bootlin.com>
+> Signed-off-by: Roman Storozhenko <romeusmeister@gmail.com>
 > ---
->  drivers/remoteproc/ti_k3_r5_remoteproc.c | 13 +++++++------
->  1 file changed, 7 insertions(+), 6 deletions(-)
+>   tools/power/cpupower/bench/Makefile | 12 ++++++++++++
+>   1 file changed, 12 insertions(+)
 > 
-> diff --git a/drivers/remoteproc/ti_k3_r5_remoteproc.c b/drivers/remoteproc/ti_k3_r5_remoteproc.c
-> index 50e486bcfa10..39a47540c590 100644
-> --- a/drivers/remoteproc/ti_k3_r5_remoteproc.c
-> +++ b/drivers/remoteproc/ti_k3_r5_remoteproc.c
-> @@ -1144,6 +1144,7 @@ static int k3_r5_rproc_configure_mode(struct k3_r5_rproc *kproc)
->  	u32 atcm_enable, btcm_enable, loczrama;
->  	struct k3_r5_core *core0;
->  	enum cluster_mode mode = cluster->mode;
-> +	int reset_ctrl_status;
->  	int ret;
->  
->  	core0 = list_first_entry(&cluster->cores, struct k3_r5_core, elem);
-> @@ -1160,11 +1161,11 @@ static int k3_r5_rproc_configure_mode(struct k3_r5_rproc *kproc)
->  			 r_state, c_state);
->  	}
->  
-> -	ret = reset_control_status(core->reset);
-> -	if (ret < 0) {
-> +	reset_ctrl_status = reset_control_status(core->reset);
-> +	if (reset_ctrl_status < 0) {
->  		dev_err(cdev, "failed to get initial local reset status, ret = %d\n",
-> -			ret);
-> -		return ret;
-> +			reset_ctrl_status);
-> +		return reset_ctrl_status;
->  	}
->  
->  	/*
-> @@ -1199,7 +1200,7 @@ static int k3_r5_rproc_configure_mode(struct k3_r5_rproc *kproc)
->  	 * irrelevant if module reset is asserted (POR value has local reset
->  	 * deasserted), and is deemed as remoteproc mode
->  	 */
-> -	if (c_state && !ret && !halted) {
-> +	if (c_state && !reset_ctrl_status && !halted) {
->  		dev_info(cdev, "configured R5F for IPC-only mode\n");
->  		kproc->rproc->state = RPROC_DETACHED;
->  		ret = 1;
-> @@ -1217,7 +1218,7 @@ static int k3_r5_rproc_configure_mode(struct k3_r5_rproc *kproc)
->  		ret = 0;
->  	} else {
->  		dev_err(cdev, "mismatched mode: local_reset = %s, module_reset = %s, core_state = %s\n",
-> -			!ret ? "deasserted" : "asserted",
-> +			!reset_ctrl_status ? "deasserted" : "asserted",
->  			c_state ? "deasserted" : "asserted",
->  			halted ? "halted" : "unhalted");
->  		ret = -EINVAL;
+> diff --git a/tools/power/cpupower/bench/Makefile b/tools/power/cpupower/bench/Makefile
+> index a4b902f9e1c4..81c862297782 100644
+> --- a/tools/power/cpupower/bench/Makefile
+> +++ b/tools/power/cpupower/bench/Makefile
+> @@ -41,3 +41,15 @@ install: $(OUTPUT)cpufreq-bench
+>   clean:
+>   	rm -f $(OUTPUT)*.o
+>   	rm -f $(OUTPUT)cpufreq-bench
+> +
+> +help:
+> +	@echo  'Build targets:'
+> +	@echo  '  all		  - Default target. Could be omitted. Put build artifacts'
+> +	@echo  '                    to "O" cmdline option dir (default: current dir)'
+> +	@echo  '  install	  - Install previously built project files from the output'
+> +	@echo  '                    dir defined by "O" cmdline option (default: current dir)'
+> +	@echo  '                    to the install dir  defined by "DESTDIR" cmdline'
+> +	@echo  ''
+> +	@echo  'Clean targets:'
+> +	@echo  '  clean		  - Clean build artifacts from the dir defined by "O" cmdline'
+> +	@echo  '                    option (default: current dir)'
+> 
+
+Is this help message necessary if bench can't be built standalone?
+
+cpupower: Disable direct build of the 'bench' subproject
+https://patchwork.kernel.org/project/linux-pm/patch/20240626-fix_bench_compilation-v1-1-d039bd5fa551@gmail.com/
+
+thanks,
+-- Shuah
