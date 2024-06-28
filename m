@@ -1,213 +1,202 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8DB31BF301;
-	Fri, 28 Jun 2024 13:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395F11BE256;
+	Fri, 28 Jun 2024 13:12:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719580272; cv=none; b=BrOvpTJSIN3iup6TIz48oiMOVWak6U1e01+tNcm/YlKY6a+w75Pg4YFtcWiu5E5YLPgBIMSd+WxBGTh19EkskyAwUKsIB4JgxZW4d/Gg/baNxK+p0BUbcXF9GhtLf1n6pmDx9SfWZK7lzcyYUCuUekYhfJYwXr4YW9oN14sf3T4=
+	t=1719580329; cv=none; b=f3/QQcVug1FP02qIFudlqxQX4U/bZ4y60rfh47AYZmsVXmoa0FlmVrieS5UdI6qZxivE0sdov8gJUcAJAX28IwrgpSSUyVDALKr60lxNHSziUFGH4OY2ZeyJcY8DrzQfE/QgQUdSXZAXYs3Z5u3K5pbh/Zdk9DlGvtzR8BcExpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719580272; c=relaxed/simple;
-	bh=Iy4lVS+XinkulkfhkDEkz58JE0QmHQASnzw/PsYpTEw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SbIPt5cYlcqvbZqBm7//Gg5rQOFa0X3gqXfz4k37f3/U5xFavWEY0ygqzptRUaQQAaj0crj3FHnn40gjWDrU3blDy4P2mbKA28W6HEnJDcySv94a6DGBqG33KNr6LWs0ipwxSSvl+z5djVIZR2+LEj50a0LgBYOOeaj643bDe1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IeNDGi82; arc=none smtp.client-ip=209.85.128.53
+	s=arc-20240116; t=1719580329; c=relaxed/simple;
+	bh=tXQ1rt497o6BQpkuOjONP8FV37VQ5yPs1pf6RVIa8YY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gkjMLK+he5c2o84ZN4jNm0hCO9DnLh6r+7PbAOP8RydNtCxLUPhEyqEXDCaDwVhO+swOsE0XFeP8MaHAzrnbqHIVCJao7bjmMztzsoTGoKioc2z83pFgkAKWNylOv/1QHTECShTCYTkGIm0dTac6cI4pff/WMmsiipwFNAMwiyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ND5IZnY0; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IeNDGi82"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-42565697036so10627335e9.1;
-        Fri, 28 Jun 2024 06:11:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ND5IZnY0"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4256aee6e4dso4565205e9.1;
+        Fri, 28 Jun 2024 06:12:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719580269; x=1720185069; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=raokwMIVVU25776pO8kkmuMQ/NGZYJ6MwDxiM/GSAiw=;
-        b=IeNDGi82KElqUiM+uK3qZibtdNLM6I1BiNh/HoR2JJf7uDfK6oV2b8nsfFQCYBP8gi
-         tU8M1gS6WIprUSt3quvg6GuA2hcaaZtBkp/8SjEUIL1nte1m2Yotz3CD+4dU6aqXi81k
-         8Z5+x4DTjGi37wwBcSDIXwLoWKA2opjn69/p58xZg/ugs5TwO3z+lQd7aREGqo+z+BPY
-         wv0ixI1u2pHTCkJ0n89kLoqzHD6wksjtsS6eGAlwkwO214wdjNDdIAvHpILocoGUcEFq
-         6LYPA/MENz14wUKTXYnRhE/yTOnOatuGdGtrob+ABO+EdWdjrul9WX5MWWMJp8rKdXA0
-         PJ1Q==
+        d=gmail.com; s=20230601; t=1719580326; x=1720185126; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=4JwrHWmo6S97xr7gBwMVuIiPbffTWGOCUOEM7k7oU8E=;
+        b=ND5IZnY0mw6UWYDac+c0EeJ9RRu0qoRXupqMtyg4n8myyRiwp7Qt+waCki8+lUV/yZ
+         cvK/7WaWbuMmI7j1TfdcUg+UOoKprNw4R21XOP9ohg+5KnK0yMaG9y65q6I67ys45D/4
+         km85FjPOuNxKwYcueV5sKGAeCh+YtDp5DVMD6Wp2OU8pLoXviueAQlGSz7xUF6VGxelu
+         ZBasy3Com9juTkCMX7jkUC8sZK2gYwKufF2nVQb/VcEv2G8nfYTLGJY5WdPQ0mLdPG8N
+         Mm4F7sfPrrAuGvVcuQMzUlCINPnQFPOLWLpiqc/6SV8+gQZ974iaWWKnxl0pw00ejBE4
+         W85w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719580269; x=1720185069;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=raokwMIVVU25776pO8kkmuMQ/NGZYJ6MwDxiM/GSAiw=;
-        b=VWzHKBZgeuHOy903dBR3kcwDRtahdDIv9ld81MMz0p0TAfZbB4GwKDz0YzYaQzdld3
-         +BXAG9H+qR4dmfnRjsNY827++km5AUD25HhnWGr2lJV6EzFEk4S5EYC8iYsFHNEOR2Hj
-         XpW2q4njadJuR1xYzmyIGlJzQXhk4GFGqY8pSP9zWNQmpzfO2B+SC9X4Pga36iMKHIp5
-         p3qt8XWtvor8iI9x24c59VsPIfxvt4nmo9EdiSGEs4greJ/VCHCXbWCqbuKWqOPq3kBL
-         1IgxAk72qQyqWfrjNYzg5m7ia/pcq62JK+b5kyx/+asKJ34EzrF5qqtHlRB9MZqmdHwF
-         s4Mg==
-X-Forwarded-Encrypted: i=1; AJvYcCWmMXz6FjaqPfTyI9qOSDObYoPVQZxcwcA8Cwn/wQFiBbvn9UzUb5rewUvg5/S+dAvgCIj4Jhltv5sutaxqW9Ph+9qvlW5m2M8ciKZ7NvOae4mWgkBCS8fE2z3N2XGvIgCcYX4xQbdiXX07PJg=
-X-Gm-Message-State: AOJu0Yyx9WIV5kJh8dAN2xbBxOAwU5B0SZjKVlz1Ayiuw447Y8IicHmS
-	mROImL3CdhPoJez0Ef4v7Sw/Aig7mVd+DrxNoqz2tpYBhTQjDCni
-X-Google-Smtp-Source: AGHT+IEQaIuVZKSUAD417Em/IG6HwsnyfoJV3LTJa6Sqrhfe+8WNw6/kN/oeveM3+00MdfDBpBkpVA==
-X-Received: by 2002:a05:6000:1846:b0:365:aec0:e191 with SMTP id ffacd0b85a97d-36760a7c1demr2051339f8f.21.1719580269187;
-        Fri, 28 Jun 2024 06:11:09 -0700 (PDT)
-Received: from prasmi.home ([2a00:23c8:2500:a01:2595:4364:d152:dff3])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256af557fesm35298865e9.11.2024.06.28.06.11.07
+        d=1e100.net; s=20230601; t=1719580326; x=1720185126;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4JwrHWmo6S97xr7gBwMVuIiPbffTWGOCUOEM7k7oU8E=;
+        b=klfCXXNMRz3Mfpy7RmA295tEoHw3MQPNMsJumdkCHe/kvQvfZ9toYSDDopgHwf6hDg
+         3XnQJvAEflamVR4QkW3EAL2dgFt5tT5jUz0HZiy0XfXXa1DktCQ8wgd/JeMVauZ4U97O
+         6zfiQMTzHMZkXkVudBu75sqbIDGwCrKJdYYY8VgCfRb3kZjsdNJYe8uolvrPzVhJJWKY
+         Sufif+zwlWDMxbWrTLm9umzn47SH3eUshY6XaOTNJxf+9ew+lRWvbmOzM1LBnAt3GT+F
+         X2aW4PDmM8fQHZZpDzPlflvZudtQv7lCmW8z8ifGZvIwu4T1/UEv+weSRumBMe1fUyC9
+         Uo1w==
+X-Forwarded-Encrypted: i=1; AJvYcCX8TlJJQXic2xlSNHFEHD7BcXXFFBX4PSbVbwMf3aI5gJvuDi+dSQaCHa3oYA1DiE4NVfQm8rHKyqBKs+kyqZ2Ad/Gv1BkqxWISrwG6ZwyMYAxjCD5r6Q5WAAFkafA8yQO8Q59bIwoGXJU=
+X-Gm-Message-State: AOJu0YwmYQjoHQcFjAFGgdMPNPCQvLgvz7e920xFgjrcRha6fudnqcRg
+	zfhCvtbCZktL1lBUp9fPiwfu1OY6ZI88uKq1UQ5P5rUQcz6alg5/
+X-Google-Smtp-Source: AGHT+IEBUpRwdSTIhnSB1tU0xG2657LQQCXuGTehPEC0xYrXlbDugJWnU6WyHfQzoBzeoeKvgE/wwA==
+X-Received: by 2002:a5d:64ca:0:b0:366:efab:2fb1 with SMTP id ffacd0b85a97d-366efab327cmr14606908f8f.38.1719580326225;
+        Fri, 28 Jun 2024 06:12:06 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:994e:fbde:478:1ce1? (p200300f6ef1cc500994efbde04781ce1.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:994e:fbde:478:1ce1])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0d91fesm2313070f8f.40.2024.06.28.06.12.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 06:11:08 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	linux-clk@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 4/4] clk: renesas: rzg2l-cpg: Refactor to use priv for clks and base in clock register functions
-Date: Fri, 28 Jun 2024 14:10:21 +0100
-Message-Id: <20240628131021.177866-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240628131021.177866-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20240628131021.177866-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Fri, 28 Jun 2024 06:12:05 -0700 (PDT)
+Message-ID: <1fc545709ad2aee0b70a8d1c561516d94cb6fb1e.camel@gmail.com>
+Subject: Re: [PATCH v2] adp5588-keys: Support for dedicated gpio operation
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: "Agarwal, Utsav" <Utsav.Agarwal@analog.com>, "Hennerich, Michael"
+	 <Michael.Hennerich@analog.com>, "dmitry.torokhov@gmail.com"
+	 <dmitry.torokhov@gmail.com>, "linux-input@vger.kernel.org"
+	 <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>
+Cc: "Artamonovs, Arturs" <Arturs.Artamonovs@analog.com>, "Bimpikas,
+ Vasileios" <Vasileios.Bimpikas@analog.com>, "Gaskell, Oliver"
+ <Oliver.Gaskell@analog.com>
+Date: Fri, 28 Jun 2024 15:15:57 +0200
+In-Reply-To: <SJ0PR03MB6343CAFA976656052DD10F5D9BD02@SJ0PR03MB6343.namprd03.prod.outlook.com>
+References: 
+	<SJ0PR03MB6343CAFA976656052DD10F5D9BD02@SJ0PR03MB6343.namprd03.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Hi Utsav,
 
-Simplify the `rzg2l-cpg` driver by removing explicit passing of `clks` and
-`base` parameters in various clock registration functions. These values
-are now accessed directly from the `priv` structure.
+On Fri, 2024-06-28 at 12:57 +0000, Agarwal, Utsav wrote:
+> From: Utsav Agarwal <utsav.agarwal@analog.com>
+>=20
+> Current state of the driver for the ADP5588/87 only allows partial
+> I/O to be used as GPIO. This support was previously present as a
+> separate gpio driver, which was dropped with the commit
+> 5ddc896088b0 ("gpio: gpio-adp5588: drop the driver") since the
+> functionality was deemed to have been merged with adp5588-keys.
+>=20
+> To restore this, keypad specific checks in the probe
+> function are relaxed if the following conditions are met:
+> 	1) "gpio-only" property has been specified for the node
+> 	2) No keypad rows/columns are specified
+>=20
+> The "gpio-only" property is introduced to simplify usage since it
+> serves as a clear indication of the user's intention as opposed to being
+> inferred from the number of rows and columns specified. This=20
+> also adds simplicity for the accompanying dt binding update as well
+> as interpretation of the same.=20
+>=20
+> In such a case, additional checks are also introduced to make sure=20
+> that keypad and pure GPIO operation are mutually exclusive by=20
+> checking for keypad specific properties (keypad,num-rows and=20
+> keypad,num-columns).
+>=20
+> Signed-off-by: Utsav Agarwal <utsav.agarwal@analog.com>
+> ---
+> =C2=A0drivers/input/keyboard/adp5588-keys.c | 33 ++++++++++++++++++++++++=
++++
+> =C2=A01 file changed, 33 insertions(+)
+>=20
+> diff --git a/drivers/input/keyboard/adp5588-keys.c
+> b/drivers/input/keyboard/adp5588-keys.c
+> index 1b0279393df4..6bfe748797df 100644
+> --- a/drivers/input/keyboard/adp5588-keys.c
+> +++ b/drivers/input/keyboard/adp5588-keys.c
+> @@ -188,6 +188,7 @@ struct adp5588_kpad {
+> =C2=A0	u32 cols;
+> =C2=A0	u32 unlock_keys[2];
+> =C2=A0	int nkeys_unlock;
+> +	bool gpio_only;
+> =C2=A0	unsigned short keycode[ADP5588_KEYMAPSIZE];
+> =C2=A0	unsigned char gpiomap[ADP5588_MAXGPIO];
+> =C2=A0	struct gpio_chip gc;
+> @@ -647,6 +648,25 @@ static int adp5588_fw_parse(struct adp5588_kpad *kpa=
+d)
+> =C2=A0	struct i2c_client *client =3D kpad->client;
+> =C2=A0	int ret, i;
+> =C2=A0
+> +	/*
+> +	 * Check if the device is to be operated purely in GPIO mode. If
+> +	 * so, confirm that no keypad rows or columns have been specified,
+> since
+> +	 * all GPINS should be configured as GPIO.
+> +	 */
+> +	if (kpad->gpio_only) {
+> +		ret =3D device_property_present(&client->dev,
+> +				"keypad,num-rows");
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/clk/renesas/rzg2l-cpg.c | 31 +++++++++++++------------------
- 1 file changed, 13 insertions(+), 18 deletions(-)
+Should align with open parenthesis...
 
-diff --git a/drivers/clk/renesas/rzg2l-cpg.c b/drivers/clk/renesas/rzg2l-cpg.c
-index d72d95e0a7ca..37c986ecdcbc 100644
---- a/drivers/clk/renesas/rzg2l-cpg.c
-+++ b/drivers/clk/renesas/rzg2l-cpg.c
-@@ -400,10 +400,10 @@ rzg3s_cpg_div_clk_register(const struct cpg_core_clk *core, struct rzg2l_cpg_pri
- 
- static struct clk * __init
- rzg2l_cpg_div_clk_register(const struct cpg_core_clk *core,
--			   struct clk **clks,
--			   void __iomem *base,
- 			   struct rzg2l_cpg_priv *priv)
- {
-+	void __iomem *base = priv->base;
-+	struct clk **clks = priv->clks;
- 	struct device *dev = priv->dev;
- 	const struct clk *parent;
- 	const char *parent_name;
-@@ -440,7 +440,6 @@ rzg2l_cpg_div_clk_register(const struct cpg_core_clk *core,
- 
- static struct clk * __init
- rzg2l_cpg_mux_clk_register(const struct cpg_core_clk *core,
--			   void __iomem *base,
- 			   struct rzg2l_cpg_priv *priv)
- {
- 	const struct clk_hw *clk_hw;
-@@ -448,7 +447,7 @@ rzg2l_cpg_mux_clk_register(const struct cpg_core_clk *core,
- 	clk_hw = devm_clk_hw_register_mux(priv->dev, core->name,
- 					  core->parent_names, core->num_parents,
- 					  core->flag,
--					  base + GET_REG_OFFSET(core->conf),
-+					  priv->base + GET_REG_OFFSET(core->conf),
- 					  GET_SHIFT(core->conf),
- 					  GET_WIDTH(core->conf),
- 					  core->mux_flags, &priv->rmw_lock);
-@@ -651,10 +650,10 @@ static const struct clk_ops rzg2l_cpg_dsi_div_ops = {
- 
- static struct clk * __init
- rzg2l_cpg_dsi_div_clk_register(const struct cpg_core_clk *core,
--			       struct clk **clks,
- 			       struct rzg2l_cpg_priv *priv)
- {
- 	struct dsi_div_hw_data *clk_hw_data;
-+	struct clk **clks = priv->clks;
- 	const struct clk *parent;
- 	const char *parent_name;
- 	struct clk_init_data init;
-@@ -899,9 +898,9 @@ static const struct clk_ops rzg2l_cpg_sipll5_ops = {
- 
- static struct clk * __init
- rzg2l_cpg_sipll5_register(const struct cpg_core_clk *core,
--			  struct clk **clks,
- 			  struct rzg2l_cpg_priv *priv)
- {
-+	struct clk **clks = priv->clks;
- 	const struct clk *parent;
- 	struct clk_init_data init;
- 	const char *parent_name;
-@@ -1012,11 +1011,10 @@ static const struct clk_ops rzg3s_cpg_pll_ops = {
- 
- static struct clk * __init
- rzg2l_cpg_pll_clk_register(const struct cpg_core_clk *core,
--			   struct clk **clks,
--			   void __iomem *base,
- 			   struct rzg2l_cpg_priv *priv,
- 			   const struct clk_ops *ops)
- {
-+	struct clk **clks = priv->clks;
- 	struct device *dev = priv->dev;
- 	const struct clk *parent;
- 	struct clk_init_data init;
-@@ -1041,7 +1039,7 @@ rzg2l_cpg_pll_clk_register(const struct cpg_core_clk *core,
- 
- 	pll_clk->hw.init = &init;
- 	pll_clk->conf = core->conf;
--	pll_clk->base = base;
-+	pll_clk->base = priv->base;
- 	pll_clk->priv = priv;
- 	pll_clk->type = core->type;
- 
-@@ -1133,25 +1131,22 @@ rzg2l_cpg_register_core_clk(const struct cpg_core_clk *core,
- 						core->mult, div);
- 		break;
- 	case CLK_TYPE_SAM_PLL:
--		clk = rzg2l_cpg_pll_clk_register(core, priv->clks, priv->base, priv,
--						 &rzg2l_cpg_pll_ops);
-+		clk = rzg2l_cpg_pll_clk_register(core, priv, &rzg2l_cpg_pll_ops);
- 		break;
- 	case CLK_TYPE_G3S_PLL:
--		clk = rzg2l_cpg_pll_clk_register(core, priv->clks, priv->base, priv,
--						 &rzg3s_cpg_pll_ops);
-+		clk = rzg2l_cpg_pll_clk_register(core, priv, &rzg3s_cpg_pll_ops);
- 		break;
- 	case CLK_TYPE_SIPLL5:
--		clk = rzg2l_cpg_sipll5_register(core, priv->clks, priv);
-+		clk = rzg2l_cpg_sipll5_register(core, priv);
- 		break;
- 	case CLK_TYPE_DIV:
--		clk = rzg2l_cpg_div_clk_register(core, priv->clks,
--						 priv->base, priv);
-+		clk = rzg2l_cpg_div_clk_register(core, priv);
- 		break;
- 	case CLK_TYPE_G3S_DIV:
- 		clk = rzg3s_cpg_div_clk_register(core, priv);
- 		break;
- 	case CLK_TYPE_MUX:
--		clk = rzg2l_cpg_mux_clk_register(core, priv->base, priv);
-+		clk = rzg2l_cpg_mux_clk_register(core, priv);
- 		break;
- 	case CLK_TYPE_SD_MUX:
- 		clk = rzg2l_cpg_sd_mux_clk_register(core, priv);
-@@ -1160,7 +1155,7 @@ rzg2l_cpg_register_core_clk(const struct cpg_core_clk *core,
- 		clk = rzg2l_cpg_pll5_4_mux_clk_register(core, priv);
- 		break;
- 	case CLK_TYPE_DSI_DIV:
--		clk = rzg2l_cpg_dsi_div_clk_register(core, priv->clks, priv);
-+		clk = rzg2l_cpg_dsi_div_clk_register(core, priv);
- 		break;
- 	default:
- 		goto fail;
--- 
-2.34.1
+> +		if (ret)
+> +			return -EINVAL;
+> +
+
+dev_err_probe() with a message should be helpful...
+
+> +		ret =3D device_property_present(&client->dev,
+> +				"keypad,num-columns");
+> +		if (ret)
+> +			return -EINVAL;
+
+Alternatively, you could just:
+
+if (kpad->gpio_only)
+	return 0;
+
+And ignore the other properties...
+
+> +
+> +		return 0;
+> +	}
+> +
+> =C2=A0	ret =3D matrix_keypad_parse_properties(&client->dev, &kpad->rows,
+> =C2=A0					=C2=A0=C2=A0=C2=A0=C2=A0 &kpad->cols);
+> =C2=A0	if (ret)
+> @@ -739,6 +759,7 @@ static int adp5588_probe(struct i2c_client *client)
+> =C2=A0	kpad->client =3D client;
+> =C2=A0	kpad->input =3D input;
+> =C2=A0
+> +	kpad->gpio_only =3D device_property_present(&client->dev, "gpio-only");
+
+Since the above is also FW properties it could go inside adp5588_fw_parse()=
+.
+It's also missing the bindings patch.
+
+> =C2=A0	error =3D adp5588_fw_parse(kpad);
+> =C2=A0	if (error)
+> =C2=A0		return error;
+> @@ -790,6 +811,11 @@ static int adp5588_probe(struct i2c_client *client)
+> =C2=A0	if (error)
+> =C2=A0		return error;
+> =C2=A0
+> +	if (!client->irq && kpad->gpio_only) {
+> +		dev_info(&client->dev, "Rev.%d, started as GPIO only\n",
+> revid);
+> +		return 0;
+> +	}
+> +
+
+Note that in case there are no IRQ, you should not make the gpiochip an irq=
+chip
+capable:
+
+https://elixir.bootlin.com/linux/v6.10-rc5/source/drivers/input/keyboard/ad=
+p5588-keys.c#L449
+
+
+- Nuno S=C3=A1
+
 
