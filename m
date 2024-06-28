@@ -1,266 +1,130 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C16F7155756;
-	Fri, 28 Jun 2024 17:25:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A841CCCB0;
+	Fri, 28 Jun 2024 17:25:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719595508; cv=none; b=VFzP4Ej8H4cIXCgsAsTcxZF/EbRH9xpbRt7SbNF/A9l5EGsaFSYcqfnsrl8/bJcuNrd43WtX5AOjoBk0xKyx9DMNy5m3hp9NTWWwBbhVgqzDMNLrj2b2frv1yQAF2G3Il84OmUEYZwAyxJxPRfmqPgj+Kk9E7eBr4Cgllt+Rb1U=
+	t=1719595521; cv=none; b=lyi+JErPZp/4wilRWKJFtYBWQambhwTkak3MjYKW7Xd51peJGc9tIWAS2mYNyaqAeNmTX9XkdSoqh+yALnZ34TZxMK5OYVr2IhP/rY1PSl/UkrU7sbdAJHSQsDR70VClMANxWIyjO1lz84qFC66LrGWIxfDdIKjJXWzvLhG3AeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719595508; c=relaxed/simple;
-	bh=DJhP7GoIk/qt5X5kuqeZpGRybx/3RYS6nV2Cp6S/YM4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nq46esdGepfS6fMeXwm5hhpkDEaX5QvbJHtIXyDcvbk8inBKZgSbXju7E6kLZiePS8J2wAYpFwGlQj1t+u4W1RLetddoBDsqZt4XedeAInPZHScDpmTZiQKMpvjcq8BlRm3muyG2dD8fO3pwvgO71Nr7ZRZ8iwlGyh2SC4uMluY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TngJkhIB; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1719595521; c=relaxed/simple;
+	bh=x6j73uoCRrZ14yA3p55yPP6y7FL+Uk8sLbq29Ko5E/4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HedZ2xHMs36f7H2YZ4FWRqPi96fp4JFIzYQsQxwXacdvC+JqO7jzVupvYGt7uvkM6OsQlwGVyxvWUZF4fhsW5rpO983w2K5B9lwwRQgtb4LElIMzW9AdCaf1OrNq3U1BABGEN1JLFNNj+jM9u5F+CrM2aaoqdWbAOYRsqgLJ+P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GVgXdC7E; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TngJkhIB"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45SCokmo032524;
-	Fri, 28 Jun 2024 17:24:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=6/Uy8PhucSMAV+NNEij24RhK
-	OX5VL7DwO9C6xpr1cEk=; b=TngJkhIBBZc0LaAcBv6/k3xI3RSj+k+7nYKe9h3i
-	3SuyvM9MisY36SSNU8OhcekG9P3Ouek5M4hjpfNJ4Ey3iVsdKux1rqRabMFQ/iE+
-	KYiArjdrn9U5KVUXD0HRU6rD/guPmM6czUnXJLy7V2sPQv5C00XH63lYo40qHN2v
-	LfMZb6kYiFDY4Rp2BPVIUpMLwBmjKmFZpojmubLN3gXte14v0gH3QxRW1i6mOPpe
-	wLtoVXRVEyt4cuf6MSqMElo5sFJ4c90RCKk6rbkRZ4OyEh2sCkelAQTT/ZxoYbzb
-	vA7tyQ/tIVuI1A7YI+8SlcGJNkdImKMKVeGASVNZZVQHQQ==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 401pm5ab1s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Jun 2024 17:24:54 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45SHOrn2005949
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Jun 2024 17:24:53 GMT
-Received: from hu-eberman-lv.qualcomm.com (10.49.16.6) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 28 Jun 2024 10:24:53 -0700
-Date: Fri, 28 Jun 2024 10:24:52 -0700
-From: Elliot Berman <quic_eberman@quicinc.com>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-CC: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        "Abhinav
- Kumar" <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>,
-        David Airlie <airlied@gmail.com>, "Daniel
- Vetter" <daniel@ffwll.ch>,
-        Bjorn Andersson <andersson@kernel.org>, Rob
- Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor
- Dooley <conor+dt@kernel.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v4 1/5] drm/msm/adreno: Implement SMEM-based speed bin
-Message-ID: <20240628101549127-0700.eberman@hu-eberman-lv.qualcomm.com>
-References: <20240625-topic-smem_speedbin-v4-0-f6f8493ab814@linaro.org>
- <20240625-topic-smem_speedbin-v4-1-f6f8493ab814@linaro.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GVgXdC7E"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=O7+BgIEUquUKXJpFeq9QGAUW5FT/jrmi5BFL0thD5sA=; b=GVgXdC7EJuEzd74wgwyZ5FwRom
+	dzWhaI0TFTg/RWPZ+R3b6EEsG3B3UforTugwa1SO0oraiF/+YqoUFOOYopUs3BGleJffU1gcXDGGn
+	VQIniY7lH6eBBxlrPo8sYWNOmwmZlNy+iI9jeWIo2yoPeOQbKviosSx2+sYxMe0QgxLRXW4PrXlQ/
+	B0IzjGnrfr/eakrN1gykJWkBssEPEJ8OjcR7bD5UCChFfsnVkE/1jd69G5v687id+7Rf9TtvvG1Cl
+	F9DdDmd0TIIMelYcvmaybgXf6q+1ib4nv0ssa+PI0IxkA51zRo1TmjUBCkfyRSdXXN1tfStoxfgv1
+	vjjZNb2w==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sNFLc-0000000EUqx-0579;
+	Fri, 28 Jun 2024 17:25:20 +0000
+Date: Fri, 28 Jun 2024 10:25:19 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Daniel von Kirschten <danielkirschten@gmail.com>
+Cc: linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6.10.0-rc2] kernel/module: avoid panic on loading broken
+ module
+Message-ID: <Zn7x_9BpJLwYSORn@bombadil.infradead.org>
+References: <230772fc-1076-4afb-8f7a-e7c402548c3b@gmail.com>
+ <ZnHm-5oljP8_5dFB@bombadil.infradead.org>
+ <82da9ad9-6a79-4edf-b38f-ef000b68c50a@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240625-topic-smem_speedbin-v4-1-f6f8493ab814@linaro.org>
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: PPP3ksJZvVXfBVo3D8j7YEhxqeIO6Mey
-X-Proofpoint-ORIG-GUID: PPP3ksJZvVXfBVo3D8j7YEhxqeIO6Mey
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-28_12,2024-06-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
- priorityscore=1501 phishscore=0 adultscore=0 suspectscore=0 spamscore=0
- malwarescore=0 lowpriorityscore=0 bulkscore=0 impostorscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406280129
+In-Reply-To: <82da9ad9-6a79-4edf-b38f-ef000b68c50a@gmail.com>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-On Tue, Jun 25, 2024 at 08:28:06PM +0200, Konrad Dybcio wrote:
-> On recent (SM8550+) Snapdragon platforms, the GPU speed bin data is
-> abstracted through SMEM, instead of being directly available in a fuse.
+On Fri, Jun 21, 2024 at 04:05:27PM +0200, Daniel von Kirschten wrote:
+> Am 18.06.2024 um 21:58 schrieb Luis Chamberlain:
+> > On Thu, Jun 06, 2024 at 03:31:49PM +0200, Daniel v. Kirschten wrote:
+> > > If a module is being loaded, and the .gnu.linkonce.this_module section
+> > > in the module's ELF file does not have the WRITE flag, the kernel will
+> > > map the finished module struct of that module as read-only.
+> > > This causes a kernel panic when the struct is written to the first time
+> > > after it has been marked read-only. Currently this happens in
+> > > complete_formation in kernel/module/main.c:2765 when the module's state is
+> > > set to MODULE_STATE_COMING, just after setting up the memory protections.
+> > 
+> > How did you find this issue?
 > 
-> Add support for SMEM-based speed binning, which includes getting
-> "feature code" and "product code" from said source and parsing them
-> to form something that lets us match OPPs against.
+> In a university course I got the assignment to manually craft a loadable .ko
+> file, given only a regular object file, without using Kbuild. During testing
+> my module files, most of them were simply (correctly) rejected by the kernel
+> with an appropriate error message, but at some point I ran into this exact
+> kernel panic, and investigated it to understand why my module file was
+> invalid.
+
+OK, then the commit log should describe that this doesn't fix any known
+real world issue, but rather a custom crafted module without the regular
+module build system.
+
+> > > Down the line, this seems to lead to unpredictable freezes when trying to
+> > > load other modules - I guess this is due to some structures not being
+> > > cleaned up properly, but I didn't investigate this further.
+> > > 
+> > > A check already exists which verifies that .gnu.linkonce.this_module
+> > > is ALLOC. This patch simply adds an analogous check for WRITE.
+> > 
+> > Can you check to ensure our modules generated have a respective check to
+> > ensure this check exists at build time? That would proactively inform
+> > userspace when a built module is not built correctly, and the tool
+> > responsible can be identified.
 > 
-> Due to the product code being ignored in the context of Adreno on
-> production parts (as of SM8650), hardcode it to SOCINFO_PC_UNKNOWN.
-> 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> ---
->  drivers/gpu/drm/msm/adreno/a6xx_gpu.c      |  8 +++---
->  drivers/gpu/drm/msm/adreno/adreno_device.c |  2 ++
->  drivers/gpu/drm/msm/adreno/adreno_gpu.c    | 41 +++++++++++++++++++++++++++---
->  drivers/gpu/drm/msm/adreno/adreno_gpu.h    |  7 ++++-
->  4 files changed, 50 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> index c98cdb1e9326..8ace096bb68c 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> @@ -2124,13 +2124,15 @@ static u32 fuse_to_supp_hw(const struct adreno_info *info, u32 fuse)
->  	return UINT_MAX;
->  }
->  
-> -static int a6xx_set_supported_hw(struct device *dev, const struct adreno_info *info)
-> +static int a6xx_set_supported_hw(struct adreno_gpu *adreno_gpu,
-> +				 struct device *dev,
-> +				 const struct adreno_info *info)
->  {
->  	u32 supp_hw;
->  	u32 speedbin;
->  	int ret;
->  
-> -	ret = adreno_read_speedbin(dev, &speedbin);
-> +	ret = adreno_read_speedbin(adreno_gpu, dev, &speedbin);
->  	/*
->  	 * -ENOENT means that the platform doesn't support speedbin which is
->  	 * fine
-> @@ -2290,7 +2292,7 @@ struct msm_gpu *a6xx_gpu_init(struct drm_device *dev)
->  
->  	a6xx_llc_slices_init(pdev, a6xx_gpu, is_a7xx);
->  
-> -	ret = a6xx_set_supported_hw(&pdev->dev, config->info);
-> +	ret = a6xx_set_supported_hw(adreno_gpu, &pdev->dev, config->info);
->  	if (ret) {
->  		a6xx_llc_slices_destroy(a6xx_gpu);
->  		kfree(a6xx_gpu);
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
-> index 1e789ff6945e..e514346088f9 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_device.c
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
-> @@ -6,6 +6,8 @@
->   * Copyright (c) 2014,2017 The Linux Foundation. All rights reserved.
->   */
->  
-> +#include <linux/soc/qcom/socinfo.h>
-> +
->  #include "adreno_gpu.h"
->  
->  bool hang_debug = false;
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> index 1c6626747b98..6ffd02f38499 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> @@ -21,6 +21,9 @@
->  #include "msm_gem.h"
->  #include "msm_mmu.h"
->  
-> +#include <linux/soc/qcom/smem.h>
-> +#include <linux/soc/qcom/socinfo.h>
-> +
->  static u64 address_space_size = 0;
->  MODULE_PARM_DESC(address_space_size, "Override for size of processes private GPU address space");
->  module_param(address_space_size, ullong, 0600);
-> @@ -1061,9 +1064,39 @@ void adreno_gpu_ocmem_cleanup(struct adreno_ocmem *adreno_ocmem)
->  			   adreno_ocmem->hdl);
->  }
->  
-> -int adreno_read_speedbin(struct device *dev, u32 *speedbin)
-> +int adreno_read_speedbin(struct adreno_gpu *adreno_gpu,
-> +			 struct device *dev, u32 *fuse)
->  {
-> -	return nvmem_cell_read_variable_le_u32(dev, "speed_bin", speedbin);
-> +	u32 fcode;
-> +	int ret;
-> +
-> +	/*
-> +	 * Try reading the speedbin via a nvmem cell first
-> +	 * -ENOENT means "no nvmem-cells" and essentially means "old DT" or
-> +	 * "nvmem fuse is irrelevant", simply assume it's fine.
-> +	 */
-> +	ret = nvmem_cell_read_variable_le_u32(dev, "speed_bin", fuse);
-> +	if (!ret)
-> +		return 0;
-> +	else if (ret != -ENOENT)
-> +		return dev_err_probe(dev, ret, "Couldn't read the speed bin fuse value\n");
-> +
-> +#ifdef CONFIG_QCOM_SMEM
-> +	/*
-> +	 * Only check the feature code - the product code only matters for
-> +	 * proto SoCs unavailable outside Qualcomm labs, as far as GPU bin
-> +	 * matching is concerned.
-> +	 *
-> +	 * Ignore EOPNOTSUPP, as not all SoCs expose this info through SMEM.
-> +	 */
-> +	ret = qcom_smem_get_feature_code(&fcode);
-> +	if (!ret)
-> +		*fuse = ADRENO_SKU_ID(fcode);
-> +	else if (ret != -EOPNOTSUPP)
-> +		return dev_err_probe(dev, ret, "Couldn't get feature code from SMEM\n");
+> See above - I don't think it's possible to create such a broken module file
+> with any of "official" tools.
 
-Probably want to update a6xx_set_supported_hw() error handling to ignore
--EOPNOTSUPP or do:
+That should be clearly stated on the commit log.
 
-	else /* ret == -EOPNOTSUPP */
-		return -ENOENT;
+> I haven't looked too deeply into how Kbuild
+> actually builds modules, but as far as I know, the user doesn't even come
+> into contact with this_module w
 
+Consider that a next level university assignment and is more useful to the world
+than this debug message. Because above you suggest "I don't think", go
+out and now be sure.
 
+> hen using the regular toolchain, because
+> Kbuild is responsible for creating the .this_module section. And Kbuild of
+> course creates it with the correct flags. So if I understand correctly,
 
-> +#endif
-> +
-> +	return 0;
+...
 
-I noticed that if SMEM isn't enabled and nvmem returns -ENOENT, we still
-return 0. That could lead to uninitialized access of speedbin in both
-users of adreno_read_speedbin(). Maybe:
+> this
+> problem can only occur when the module was built by some external tooling
+> (or manually, in my case).
 
-	return ret;
+Who would create custom modules without the Linux kernel module build
+system, and what uses does that provide? It seems you are proving why
+this would be terribly silly thing to do.
 
->  }
->  
->  int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
-> @@ -1102,9 +1135,9 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
->  			devm_pm_opp_set_clkname(dev, "core");
->  	}
->  
-> -	if (adreno_read_speedbin(dev, &speedbin) || !speedbin)
-> +	if (adreno_read_speedbin(adreno_gpu, dev, &speedbin) || !speedbin)
->  		speedbin = 0xffff;
-> -	adreno_gpu->speedbin = (uint16_t) (0xffff & speedbin);
-> +	adreno_gpu->speedbin = speedbin;
->  
->  	gpu_name = devm_kasprintf(dev, GFP_KERNEL, "%"ADRENO_CHIPID_FMT,
->  			ADRENO_CHIPID_ARGS(config->chip_id));
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-> index cff8ce541d2c..563c08b44624 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-> @@ -79,6 +79,10 @@ struct adreno_reglist {
->  
->  struct adreno_speedbin {
->  	uint16_t fuse;
-> +/* As of SM8650, PCODE on production SoCs is meaningless wrt the GPU bin */
-> +#define ADRENO_SKU_ID_FCODE		GENMASK(15, 0)
-> +#define ADRENO_SKU_ID(fcode)	(fcode)
-> +
->  	uint16_t speedbin;
->  };
->  
-> @@ -545,7 +549,8 @@ int adreno_fault_handler(struct msm_gpu *gpu, unsigned long iova, int flags,
->  			 struct adreno_smmu_fault_info *info, const char *block,
->  			 u32 scratch[4]);
->  
-> -int adreno_read_speedbin(struct device *dev, u32 *speedbin);
-> +int adreno_read_speedbin(struct adreno_gpu *adreno_gpu,
-> +			 struct device *dev, u32 *speedbin);
->  
->  /*
->   * For a5xx and a6xx targets load the zap shader that is used to pull the GPU
-> 
-> -- 
-> 2.45.2
-> 
-> 
+Now, the *value* your change has is it can prevent a crash in case of a
+corrupted module, which *can* occur, consider an odd filesystem
+live corruption, at least this would be caught at module load attempt
+and not crash. That's worth committing for this reason but your commit
+log really needs much more clarity. Why? Because stupid bots want to
+assign stupid CVEs for anything that seems like a security issue and
+this could escalate to such type of things. Providing clarity helps
+system integrators decide if they want to backport this sort of patch.
+Providing clarify on the chances of this happening and how we think it
+can happen helps a lot.
+
+If you want to be more proactive, try to enhance userspace kmod modprobe
+so that this is also verified.
+
+  Luis
