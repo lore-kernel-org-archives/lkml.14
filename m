@@ -1,77 +1,92 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2887314277;
-	Fri, 28 Jun 2024 08:35:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0B114EC4D
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 08:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719563744; cv=none; b=NMVk4GifXVxcZrNdKlTn1UZBAQ1oIhmqCQXu+wWL1UF4E+Km+v6uyRN0QXowatYmxkTHQgFe8Vt5ep5xYy0b9lgbSYRO+kbxz8y6pBMknH/R2W8qtzgoj4xTElhP2r76cDbkKZ8mgm42uUc2oQiWrwjMAWltHi9Ox4BcvBCmsjs=
+	t=1719563748; cv=none; b=a6LVbRkl8xf61tc1bE61lOCAyOONa8sqpsqqx0e7zikQUqFK3UvU156aCBX9mP+GFVzWyslsMC2YzKYe4b22j1ck6V0eEb8emad14okRGRD4Og4ZDRTaME3KDjfzUx/1k0elSk/NM9PdV+7RT546aZhw3UnjPeBmLKxeq5CxkqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719563744; c=relaxed/simple;
-	bh=yU0L8hd1qTtVIidU9yDSM5GnDT4YcJLlrVytBk3QuD8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=bAgBY904i9IqZ+gwcMjpraclD6gRw9rdP9FxB2ee9h2SUungn0yg/5qZi8mI4fmQd6hhQPFYecedEYK32xuKCzitvzfzXOjn+o1Rel5dovMtOypgk1DCeg/5zk6diljNt9eTV8PfN7zm92XIjlD007eajnfbW+BgNS8qAaEUGXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=ZHVlouOf reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1719563748; c=relaxed/simple;
+	bh=Aeqbd8mZF5g0gMvxy8MT2FkZAI51t9W3BeDBDhRYKN4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QSh9WXEbVkELNuo3c96tjGuMGD4bd9jjUoXXv1U1I8RzoRjKm+uZZn8WBH8umLGOEh3XFyyljfD91W0X46oGNYMU+u8uM+QeFyw0XnYHAkB0nKsV8+YhuUHeqkppMt9U+GVH45oMt1griVS51KtX9AUD/67FbEPEBfHC3BVyI/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NfQ0KTPi; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="ZHVlouOf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=ZiUMtmAN3sFzFkSH6GXbbDKqYCyaXiS81zeG68633VI=; b=Z
-	HVlouOfyIn+NDo0NCVjps7lzw/RKen8MnLEvwzB3XJvR+RIrdZ9qx+MIXWCsdeHW
-	TqzINoIYvx+Wxu+yOczDZumQGBzsJltKKbPi7jDXocck8RFeZJnL9Nq8qt5gTYSP
-	Q36cWaPAtqYEZUsjUOsvPQbR6++GkDkAGEDatIqOoU=
-Received: from slark_xiao$163.com ( [112.97.61.84] ) by
- ajax-webmail-wmsvr-40-137 (Coremail) ; Fri, 28 Jun 2024 16:35:21 +0800
- (CST)
-Date: Fri, 28 Jun 2024 16:35:21 +0800 (CST)
-From: "Slark Xiao" <slark_xiao@163.com>
-To: "Dmitry Baryshkov" <dmitry.baryshkov@linaro.org>
-Cc: manivannan.sadhasivam@linaro.org, loic.poulain@linaro.org, 
-	ryazanov.s.a@gmail.com, johannes@sipsolutions.net, 
-	quic_jhugo@quicinc.com, netdev@vger.kernel.org, mhi@lists.linux.dev, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re:Re:Re: [PATCH v3 1/3] bus: mhi: host: Add Foxconn SDX72 related
- support
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
- Copyright (c) 2002-2024 www.mailtech.cn 163com
-In-Reply-To: <455cd5ee.86ad.1905df8bbab.Coremail.slark_xiao@163.com>
-References: <20240628073605.1447218-1-slark_xiao@163.com>
- <2xbnsvtzh23al43njugtqpihocyo5gtyuzu4wbd5gmizhs2utf@d2x2gxust3w5>
- <455cd5ee.86ad.1905df8bbab.Coremail.slark_xiao@163.com>
-X-NTES-SC: AL_Qu2aC/mdvE8p5yibZekfmk8Sg+84W8K3v/0v1YVQOpF8jBLo0w4rRVxgI2Hp/cKNLi6tlzu0ViZu0OhWXqpzZ7oofJl3jeIpx5Z9qKSrwQcHTQ==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NfQ0KTPi"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52cecba8d11so388064e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 01:35:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719563744; x=1720168544; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kW8kDPyCelVzk0XP+f0C1TOEkGrqmmm6HbfYVtTsZyA=;
+        b=NfQ0KTPifBwF4t6W3AUoHCV4ne4NxDOjpqwKEXJrzzthgBwpel/q7rg3ht7cKRQ0aX
+         lFcrmMGgEVm/IhB5HkUjaV+GOaSiEWlV/xOlmXfxiYnZmzoxxx7RjmWPqBGR5EMStl/J
+         ufwfLmLKWy8cizY/i32gp7BPb1LkD2WOebAak713r5VUhVPkhbaYvGJocwyXamtqoTJK
+         OTg4GWyx0bLzpD074D3LbZU9dmp+Nt0Sm4HRn0nyt/ar+FqrG4EtOUySeyObI9IvIn7F
+         0CJJd9bsj045ZeTuyLnaeHxVq6grrnyYIlWEVB8Dwt+mX3rlQ/Qr8VRaE5q/04lsgVI+
+         eMwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719563744; x=1720168544;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kW8kDPyCelVzk0XP+f0C1TOEkGrqmmm6HbfYVtTsZyA=;
+        b=Lbkk3/FFuYGU0kfUt3EGxr1pJLSXkeek8SmE+sMAH9s1+f4Qd12mA+w1WK7YDAvSxz
+         d6v4T4s8ZzlQgpgVvI2oyx6TIVnbQNVkNUwGhoegdgtW6XsekSKfKdIDoctVGTzLF2p0
+         Tw988JH/2917xJhndQWb6fxDm75eEusaqTx0OYNNpzkMxbuD0hEnCNc8Is7OlOFQfOII
+         iYFaNNWyT3dQNt+KyzW2iT57Nf7UIWl2tPGfGbBVA0KCYtPq5GsEAnUSnG81FGgYTEab
+         YQsK26VaKoHTnYEtdHbPsCtV29HoEa1G2of7g1yKCiTxS0gNjY/hnlIPHGB5bjHn6B3N
+         kung==
+X-Forwarded-Encrypted: i=1; AJvYcCUvCZP/aOcWmeiR/cWW5RbiCcOIJChN7+nRMW/i/lYtPZZgP1RHYaFeQuFuAITMSfnASppWkBCp2k9XCNKDN7SKEfdzHuWdB9JWPY+e
+X-Gm-Message-State: AOJu0YwhOkHai0RtmKgsgp/LmX0LfXPm4nhDfByq5c5WsTTkzPg+2NDy
+	eVYTk1r1yDFny38vEHKRhp6Uez6vnG4a9hTOPQ1sHRLUwRdv5YEZOP10IABRTOA=
+X-Google-Smtp-Source: AGHT+IHTiAZIPdDFBY86RLx+OqmRRF+qtx5Trn2TYV6LbMTMP6YvfamTxpc4oxDTByLWmHsNlvA5Vw==
+X-Received: by 2002:a05:6512:281:b0:52c:e10b:cb36 with SMTP id 2adb3069b0e04-52ce183add6mr9396478e87.33.1719563744009;
+        Fri, 28 Jun 2024 01:35:44 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52e7ab3b37asm209380e87.275.2024.06.28.01.35.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Jun 2024 01:35:43 -0700 (PDT)
+Date: Fri, 28 Jun 2024 11:35:41 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Banajit Goswami <bgoswami@quicinc.com>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] ASoC: codecs: lpass-rx-macro: Use unsigned for
+ number of widgets
+Message-ID: <ojokmx4l5eaeclemszd4esgyfcov4gcqteegh3vqpbk7cdfmgn@yayrzbbaire5>
+References: <20240627-b4-qcom-audio-lpass-codec-cleanups-v1-0-ede31891d238@linaro.org>
+ <20240627-b4-qcom-audio-lpass-codec-cleanups-v1-4-ede31891d238@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <31b6372e.8805.1905dfc1c6e.Coremail.slark_xiao@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:_____wD3PzbJdX5m0zQLAA--.29137W
-X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/1tbioxsMZGVOEH3Z8wAEs4
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240627-b4-qcom-audio-lpass-codec-cleanups-v1-4-ede31891d238@linaro.org>
 
-CkF0IDIwMjQtMDYtMjggMTY6MzE6NDAsICJTbGFyayBYaWFvIiA8c2xhcmtfeGlhb0AxNjMuY29t
-PiB3cm90ZToKPgo+QXQgMjAyNC0wNi0yOCAxNTo1MTo1NCwgIkRtaXRyeSBCYXJ5c2hrb3YiIDxk
-bWl0cnkuYmFyeXNoa292QGxpbmFyby5vcmc+IHdyb3RlOgo+Pk9uIEZyaSwgSnVuIDI4LCAyMDI0
-IGF0IDAzOjM2OjA1UE0gR01ULCBTbGFyayBYaWFvIHdyb3RlOgo+Pj4gQWxpZ24gd2l0aCBRY29t
-IFNEWDcyLCBhZGQgcmVhZHkgdGltZW91dCBpdGVtIGZvciBGb3hjb25uIFNEWDcyLgo+Pj4gQW5k
-IGFsc28sIGFkZCBmaXJlaG9zZSBzdXBwb3J0IHNpbmNlIFNEWDcyLgo+Pj4gCj4+PiBTaWduZWQt
-b2ZmLWJ5OiBTbGFyayBYaWFvIDxzbGFya194aWFvQDE2My5jb20+Cj4+PiAtLS0KPj4+IHYyOiAo
-MSkuIFVwZGF0ZSB0aGUgZWRsIGZpbGUgcGF0aCBhbmQgbmFtZSAoMikuIFNldCBTRFg3MiBzdXBw
-b3J0Cj4+PiB0cmlnZ2VyIGVkbCBtb2RlIGJ5IGRlZmF1bHQKPj4+IHYzOiBEaXZpZGUgaW50byAy
-IHBhcnRzIGZvciBGb3hjb25uIHNkeDcyIHBsYXRmb3JtCj4+Cj4+R2VuZXJpYyBjb21tZW50OiBw
-bGVhc2Ugc2VuZCBhbGwgdGhlIHBhdGNoZXMgdXNpbmcgYSBzaW5nbGUKPj5naXQtc2VuZC1lbWFp
-bCBjb21tYW5kLiBUaGlzIHdheSBpdCB3aWxsIHRocmVhZCB0aGVtIHByb3Blcmx5LCBzbyB0aGF0
-Cj4+dGhleSBmb3JtIGEgc2luZ2xlIHBhdGNoc2VyaWVzIGluIGRldmVsb3BlcnMncyBtYWlsIGNs
-aWVudHMuIE9yIHlvdSBjYW4KPj5qdXN0IHVzZSAnYjQnIHRvb2wgdG8gbWFuYWdlIGFuZCBzZW5k
-IHRoZSBwYXRjaHNldC4KPj4KPgo+U2VuZCBhZ2FpbiB3aXRoIGNvbW1hbmQgImdpdCBzZW5kLWVt
-YWlsIHYzLSoucGF0Y2ggLi4uIi4gUGxlYXNlIHRha2UgYSB2aWV3IG9uIHRoYXQuCj5UaGFua3Mu
-Cj4KClNlZW1zIG5vIGRpZmZlcmVuY2UgaW4gbXkgc2lkZS4gQW55IGRpZmZlcmVuY2UgaW4geW91
-ciBzaWRlPwoKPj4+IC0tLQo+Pj4gIGRyaXZlcnMvYnVzL21oaS9ob3N0L3BjaV9nZW5lcmljLmMg
-fCA0MyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPj4+ICAxIGZpbGUgY2hhbmdlZCwg
-NDMgaW5zZXJ0aW9ucygrKQo+Pj4gCj4+Cj4+Cj4+LS0gCj4+V2l0aCBiZXN0IHdpc2hlcwo+PkRt
-aXRyeQo=
+On Thu, Jun 27, 2024 at 05:23:46PM GMT, Krzysztof Kozlowski wrote:
+> Driver uses ARRAY_SIZE() to get number of widgets later passed to
+> snd_soc_dapm_new_controls(), which is an 'unsigned int'.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  sound/soc/codecs/lpass-rx-macro.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+
+
+-- 
+With best wishes
+Dmitry
