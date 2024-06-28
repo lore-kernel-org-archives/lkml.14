@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC7513C676
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C607C13DDDA
 	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 21:56:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719611800; cv=none; b=eRumBS1/kzNu+On3awAzhZjmWUghzPF2xaO7P8cBPOa5+sBfC14gn6167Y4Oh60Sd2BCND9CvbMwplXENUV8HJyehg6aJ3aTj+U2g5c4n/MiWDZqSsZqgQj+6zZb8tXTV7gKs5sxnzp9MdDRavOF2jo9P3ycqoiqvBABtk8yH00=
+	t=1719611800; cv=none; b=I7qcYJnuVRGxjtkQd2qcXE9CwN5uSBs4ueHjHVcUOBA+FoLLo6335fdT/N2bEHMrH68zLg6DdkTUbZApi3PD3iin/+BMUULiHSaHyMkbW6jzPSXcnglKDfSGTEB7SpjMIEZzPTEd/Ibu8xEZEavJdoBg5yAsExFWFq2l03iODTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719611800; c=relaxed/simple;
-	bh=7gwzf/trQEcQpsp3Q62b5pMAB6BI8DFeIhWQ/vV4hOM=;
+	bh=2l7f6lDOELlYeE6YGD7wOuDWjXUX38xsa3dzLbcLFzk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FiPvXQfiHQ0H+CTgHLH3ncIYgGGTa6KOq89V1Zop6YOL4T4Eec+5IqDDB+VONggUQZO+vKsQeRNGn+V3NKkB6R1Niam0qEjL4lMpa2Rbef+9W9+D/6sqWhZsowLRvj9RuktFtmxM6TAQGJHQk2Upw/OMpiM5e/env9xzyg33TjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DLmb8Ydf; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version; b=self+mOd5WM4l+MZpHSz0EiE89rgqcQzPp7+Um3IbXxzBI1+a8FShpyCNGlokmTgsGmt9EGu0TAGH3o6e6ZPUrymBmn8ucXTCF9LqB8vjhwgt3x7aay1azRitpHafIWDw6KXTq7ucWiWDkZsXZfC4nCPW0Ruc4q0TrT9J179nE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mhA/bwOQ; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DLmb8Ydf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mhA/bwOQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719611798; x=1751147798;
+  t=1719611799; x=1751147799;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=7gwzf/trQEcQpsp3Q62b5pMAB6BI8DFeIhWQ/vV4hOM=;
-  b=DLmb8YdfXbnVQhDFD7KgxCJr9Wgfdz/QDd9bH44x0rywuMaZ1BHIj14O
-   PfkHkDn1ZHO6g3qYzjbhxAhXVm7/jU6uXP2ZvI+vWPZybb4oBKx9SLJXp
-   wc6aXtZ8iTiXLFnigRKwI4y6lOH6ektdb9Cy8cOo95FvMES+3vjcfWIKF
-   nBwAX2bjF2H7J4e8cNNdSFECgPWV7BPdjoLWQ7mCi5v1/UZ09rvVSm9wh
-   IZq3IgYJO08PQ4d7KQRVH8BmjNDxwNC0uINyIkeWHxavYAZzCK3u4XkEz
-   jPoVaeu9ywMefQ3J73TE0RimWYmx4ZtV2rjuZ/eWFUHmbqacQwVcsRu5p
-   Q==;
-X-CSE-ConnectionGUID: hNUSp6v+SyqrFB0SvkJ/lw==
-X-CSE-MsgGUID: HWVplntUQYGKomyzdtsatw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11117"; a="16762615"
+  bh=2l7f6lDOELlYeE6YGD7wOuDWjXUX38xsa3dzLbcLFzk=;
+  b=mhA/bwOQvdbRcKijhWQV9/vn95bnMprKM4dPXMaH5kg2FTPqiaYy278Y
+   7PBQmuWjm6pQYYWwkYheWCRGLOaSYNEWnRHv7LvpF+funGEqa6iYOfrHa
+   YGv3/UtBmWecXjYuk8jtwzRJXlrO5H7TdXVH6+VpWGsGdx3a5F1tUL2mi
+   oLNsKAyheKiGB4PqNFkBLzqr+J/fHzkvd0veyYN98Aoxci84Qtl/g1Ul6
+   HIdAeaZIQRV1GVdubG+I/ImKIDTcS/huh8UKk3mLX5G7HVXxY4c7OWb2a
+   FAVPXNv2zyQy7ltvzuqj0Mb+8bqVPxoJO9fz+5ivOfFG3IYR+SDyl4eY2
+   A==;
+X-CSE-ConnectionGUID: xr+W5cWNTCCOWbNsdm/OMg==
+X-CSE-MsgGUID: DOLlrOdMQCGmMoN2VNxDNw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11117"; a="16762656"
 X-IronPort-AV: E=Sophos;i="6.09,170,1716274800"; 
-   d="scan'208";a="16762615"
+   d="scan'208";a="16762656"
 Received: from fmviesa002.fm.intel.com ([10.60.135.142])
   by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 14:56:28 -0700
-X-CSE-ConnectionGUID: QWV9m6F7T/6zO3o57zoSuQ==
-X-CSE-MsgGUID: Yy/X5S/ZSg6ntkxze2J4xQ==
+X-CSE-ConnectionGUID: CiKeyujKT6mFC6FPuFRhAA==
+X-CSE-MsgGUID: 5XLIWAw+T32RV/vwacZ9tw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,170,1716274800"; 
-   d="scan'208";a="68065672"
+   d="scan'208";a="68065690"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 14:56:27 -0700
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 14:56:28 -0700
 From: Tony Luck <tony.luck@intel.com>
 To: Fenghua Yu <fenghua.yu@intel.com>,
 	Reinette Chatre <reinette.chatre@intel.com>,
@@ -56,9 +56,9 @@ Cc: x86@kernel.org,
 	linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v23 13/19] x86/resctrl: Create Sub-NUMA Cluster (SNC) monitor files
-Date: Fri, 28 Jun 2024 14:56:13 -0700
-Message-ID: <20240628215619.76401-14-tony.luck@intel.com>
+Subject: [PATCH v23 19/19] x86/resctrl: Update documentation with Sub-NUMA cluster changes
+Date: Fri, 28 Jun 2024 14:56:19 -0700
+Message-ID: <20240628215619.76401-20-tony.luck@intel.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240628215619.76401-1-tony.luck@intel.com>
 References: <20240628215619.76401-1-tony.luck@intel.com>
@@ -70,123 +70,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When SNC mode is enabled, create subdirectories and files to monitor
-at the SNC node granularity. Legacy behavior is preserved by tagging
-the monitor files at the L3 granularity with the "sum" attribute.
-When the user reads these files the kernel will read monitor data
-from all SNC nodes that share the same L3 cache instance and return
-the aggregated value to the user.
+With Sub-NUMA Cluster (SNC) mode enabled the scope of monitoring resources
+is per-NODE instead of per-L3 cache. Backwards compatibility is maintained
+by providing files in the mon_L3_XX directories that sum event counts
+for all SNC nodes sharing an L3 cache.
 
-Note that the "domid" field for files that must sum across SNC domains
-has the L3 cache instance id, while non-summing files use the domain id.
+New files provide per-SNC node event counts.
 
-The "sum" files do not need to make a call to mon_event_read() to
-initialize the MBM counters. This will be handled by initializing the
-individual SNC nodes that share the L3.
+Users should be aware that SNC mode also affects the amount of L3 cache
+available for allocation within each SNC node.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 62 +++++++++++++++++++-------
- 1 file changed, 46 insertions(+), 16 deletions(-)
+ Documentation/arch/x86/resctrl.rst | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 9c38ddcfe150..8502385e389f 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -3026,7 +3026,8 @@ static void rmdir_mondata_subdir_allrdtgrp(struct rdt_resource *r,
- }
+diff --git a/Documentation/arch/x86/resctrl.rst b/Documentation/arch/x86/resctrl.rst
+index 627e23869bca..a824affd741d 100644
+--- a/Documentation/arch/x86/resctrl.rst
++++ b/Documentation/arch/x86/resctrl.rst
+@@ -375,6 +375,10 @@ When monitoring is enabled all MON groups will also contain:
+ 	all tasks in the group. In CTRL_MON groups these files provide
+ 	the sum for all tasks in the CTRL_MON group and all tasks in
+ 	MON groups. Please see example section for more details on usage.
++	On systems with Sub-NUMA Cluster (SNC) enabled there are extra
++	directories for each node (located within the "mon_L3_XX" directory
++	for the L3 cache they occupy). These are named "mon_sub_L3_YY"
++	where "YY" is the node number.
  
- static int mon_add_all_files(struct kernfs_node *kn, struct rdt_mon_domain *d,
--			     struct rdt_resource *r, struct rdtgroup *prgrp)
-+			     struct rdt_resource *r, struct rdtgroup *prgrp,
-+			     bool do_sum)
- {
- 	struct rmid_read rr = {0};
- 	union mon_data_bits priv;
-@@ -3037,14 +3038,15 @@ static int mon_add_all_files(struct kernfs_node *kn, struct rdt_mon_domain *d,
- 		return -EPERM;
+ "mon_hw_id":
+ 	Available only with debug option. The identifier used by hardware
+@@ -484,6 +488,29 @@ if non-contiguous 1s value is supported. On a system with a 20-bit mask
+ each bit represents 5% of the capacity of the cache. You could partition
+ the cache into four equal parts with masks: 0x1f, 0x3e0, 0x7c00, 0xf8000.
  
- 	priv.u.rid = r->rid;
--	priv.u.domid = d->hdr.id;
-+	priv.u.domid = do_sum ? d->ci->id : d->hdr.id;
-+	priv.u.sum = do_sum;
- 	list_for_each_entry(mevt, &r->evt_list, list) {
- 		priv.u.evtid = mevt->evtid;
- 		ret = mon_addfile(kn, mevt->name, priv.priv);
- 		if (ret)
- 			return ret;
- 
--		if (is_mbm_event(mevt->evtid))
-+		if (!do_sum && is_mbm_event(mevt->evtid))
- 			mon_event_read(&rr, r, d, prgrp, mevt->evtid, true);
- 	}
- 
-@@ -3055,23 +3057,51 @@ static int mkdir_mondata_subdir(struct kernfs_node *parent_kn,
- 				struct rdt_mon_domain *d,
- 				struct rdt_resource *r, struct rdtgroup *prgrp)
- {
--	struct kernfs_node *kn;
-+	struct kernfs_node *kn, *ckn;
- 	char name[32];
--	int ret;
-+	bool snc_mode;
-+	int ret = 0;
- 
--	sprintf(name, "mon_%s_%02d", r->name, d->hdr.id);
--	/* create the directory */
--	kn = kernfs_create_dir(parent_kn, name, parent_kn->mode, prgrp);
--	if (IS_ERR(kn))
--		return PTR_ERR(kn);
-+	lockdep_assert_held(&rdtgroup_mutex);
- 
--	ret = rdtgroup_kn_set_ugid(kn);
--	if (ret)
--		goto out_destroy;
-+	snc_mode = r->mon_scope == RESCTRL_L3_NODE;
-+	sprintf(name, "mon_%s_%02d", r->name, snc_mode ? d->ci->id : d->hdr.id);
-+	kn = kernfs_find_and_get(parent_kn, name);
-+	if (kn) {
-+		/*
-+		 * rdtgroup_mutex will prevent this directory from being
-+		 * removed. No need to keep this hold.
-+		 */
-+		kernfs_put(kn);
-+	} else {
-+		kn = kernfs_create_dir(parent_kn, name, parent_kn->mode, prgrp);
-+		if (IS_ERR(kn))
-+			return PTR_ERR(kn);
- 
--	ret = mon_add_all_files(kn, d, r, prgrp);
--	if (ret)
--		goto out_destroy;
-+		ret = rdtgroup_kn_set_ugid(kn);
-+		if (ret)
-+			goto out_destroy;
-+		ret = mon_add_all_files(kn, d, r, prgrp, snc_mode);
-+		if (ret)
-+			goto out_destroy;
-+	}
++Notes on Sub-NUMA Cluster mode
++==============================
++When SNC mode is enabled, Linux may load balance tasks between Sub-NUMA
++nodes much more readily than between regular NUMA nodes since the CPUs
++on Sub-NUMA nodes share the same L3 cache and the system may report
++the NUMA distance between Sub-NUMA nodes with a lower value than used
++for regular NUMA nodes.
 +
-+	if (snc_mode) {
-+		sprintf(name, "mon_sub_%s_%02d", r->name, d->hdr.id);
-+		ckn = kernfs_create_dir(kn, name, parent_kn->mode, prgrp);
-+		if (IS_ERR(ckn)) {
-+			ret = -EINVAL;
-+			goto out_destroy;
-+		}
++The top-level monitoring files in each "mon_L3_XX" directory provide
++the sum of data across all SNC nodes sharing an L3 cache instance.
++Users who bind tasks to the CPUs of a specific Sub-NUMA node can read
++the "llc_occupancy", "mbm_total_bytes", and "mbm_local_bytes" in the
++"mon_sub_L3_YY" directories to get node local data.
 +
-+		ret = rdtgroup_kn_set_ugid(ckn);
-+		if (ret)
-+			goto out_destroy;
++Memory bandwidth allocation is still performed at the L3 cache
++level. I.e. throttling controls are applied to all SNC nodes.
 +
-+		ret = mon_add_all_files(ckn, d, r, prgrp, false);
-+		if (ret)
-+			goto out_destroy;
-+	}
++L3 cache allocation bitmaps also apply to all SNC nodes. But note that
++the amount of L3 cache represented by each bit is divided by the number
++of SNC nodes per L3 cache. E.g. with a 100MB cache on a system with 10-bit
++allocation masks each bit normally represents 10MB. With SNC mode enabled
++with two SNC nodes per L3 cache, each bit only represents 5MB.
++
+ Memory bandwidth Allocation and monitoring
+ ==========================================
  
- 	kernfs_activate(kn);
- 	return 0;
 -- 
 2.45.2
 
