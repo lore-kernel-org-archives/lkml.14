@@ -1,96 +1,104 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5E7D15572B
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 12:39:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E670E156967
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 12:40:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719578400; cv=none; b=naGwCmzJujLFjIr092IDcpSiCsbNE0k7/gidXNYyoNyvAIXos8Lnk2CoL1LcFG3+TYdnCPBv5UxUAWYd3iqE2t98qszt1M7kDbHtW20Jcto8fpxTTa15wlhASWnfgAU+MYi9jeFTtqTSilVB6YDYoWOIjSm1GIViAxqmrs4t6Rc=
+	t=1719578445; cv=none; b=H1q4o6vTgczpArMF/Xqv43Frl/qFB8OjPh8h70asXPHN+aO5EX6+jKTcLj00H23NyM6kEBMaEebqlh/bXx9fMM71kmUgvHCikfB+mlym7majzyLQgqZnxyCwkt77hf3hP463E8EEPpzcI5mmLpskd1nW5jGI8mhE2PzqLGCcwLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719578400; c=relaxed/simple;
-	bh=UyRqRzbJ9Nie3cIoqfa8TIBdZp5bApSAkz6k3dwlxm4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QB4unSt78tm8ZEPJEAhCqRL47PTp8YgoEyk++cVbakwYn0AD+lwMAeQ1M8x39x5PNuhWnqdsi8cUFUwd6RhCFSsHEID1KUL8GW5LwEoH7416q667fjr6Hh7Cht4p2FvYbBLDkEBvyho67QMRam3RDgIuKYVkhJ4tnQCGH3rictQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D7215106F;
-	Fri, 28 Jun 2024 05:40:21 -0700 (PDT)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 79DD13F6A8;
-	Fri, 28 Jun 2024 05:39:54 -0700 (PDT)
-Message-ID: <f2fee806-09bc-4b0a-a77e-3bf12c329ecb@arm.com>
-Date: Fri, 28 Jun 2024 13:39:48 +0100
+	s=arc-20240116; t=1719578445; c=relaxed/simple;
+	bh=k+tHhvsXLqC0pkWc1z2zD5HL9oEtyeNTJH18mQOk0Bc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ejYrpfa+jjt4jAw7WczUwo7Wo+mCAAJ8fLyaDi2nZc34/mRL+GGbl8XDmrorhfaUqrk0FUmhxLf3AVXurixmSMEamhseJJ/Gadg4PcZmAaWOk08lHN+Bi8gqHa2GRFQcnEjNdWvAldPfJuZ8pv3Oyn44zVTUYgKlKgEIr6K9eew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89E85C116B1;
+	Fri, 28 Jun 2024 12:40:44 +0000 (UTC)
+Date: Fri, 28 Jun 2024 08:41:37 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: richard clark <richard.xnu.clark@gmail.com>
+Cc: Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ will@kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, "Russell King (Oracle)"
+ <linux@armlinux.org.uk>, Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: Will smp_call_function_single(cpu, ...) broadcast IPI to all
+ other cpus?
+Message-ID: <20240628084137.3338ab75@gandalf.local.home>
+In-Reply-To: <CAJNi4rMeDgDJbN0jjPguU_v5uoscJJN=5bZaShXpu7Q8X60hcg@mail.gmail.com>
+References: <CAJNi4rMfRmWoYdsyH6ibNKN8DSCL_DO8Wa08mWbe8t7vH21Dpw@mail.gmail.com>
+	<86pls2isal.wl-maz@kernel.org>
+	<20240627101207.0bbbead0@rorschach.local.home>
+	<CAJNi4rMeDgDJbN0jjPguU_v5uoscJJN=5bZaShXpu7Q8X60hcg@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] MAINTAINERS: Update IOMMU tree location
-To: Joerg Roedel <joro@8bytes.org>, iommu@lists.linux.dev
-Cc: Will Deacon <will@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
- Kevin Tian <kevin.tian@intel.com>, Lu Baolu <baolu.lu@linux.intel.com>,
- linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
-References: <20240628123132.8690-1-joro@8bytes.org>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20240628123132.8690-1-joro@8bytes.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On 28/06/2024 1:31 pm, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> Update the maintainers entries to the new location of the
-> IOMMU tree.
+On Fri, 28 Jun 2024 18:21:25 +0800
+richard clark <richard.xnu.clark@gmail.com> wrote:
 
-FWIW that's working for me;
+> Hi Steven,
+>=20
+> On Thu, Jun 27, 2024 at 10:12=E2=80=AFPM Steven Rostedt <rostedt@goodmis.=
+org> wrote:
+> >
+> > On Thu, 27 Jun 2024 11:38:58 +0100
+> > Marc Zyngier <maz@kernel.org> wrote:
+> > =20
+> > > You may want to enable stack trace recording and find out for yourself
+> > > where these ipi_raise() calls are coming from. =20
+> >
+> > Try trace-cmd:
+> >
+> >   # trace-cmd start -e ipi_raise -R 'stacktrace if reason=3D=3D"Functio=
+n call interrupts"'
+> >   # taskset -c 0 insmod /kmods/ipi_test.ko
+> >   # trace-cmd stop
+> >   # trace-cmd show
+> > =20
+> I found that the 'stacktrace' seems like a stick bit. Run the above
+> '# trace-cmd start -e ipi_raise -R 'stacktrace if reason=3D=3D"Function
+> call interrupts"' ... command sequence, then
+> # trace-cmd start -e ipi -f 'reason=3D=3D"Function call interrupts"' -v -e
+> ipi_exit; taskset -c 0 insmod /kmods/ipi_lat.ko; trace-cmd stop;
+> trace-cmd show; trace-cmd clear;
+> The output is:
+>=20
+>           insmod-1746    [000] dn.h1..   928.400039: ipi_raise:
+> target_mask=3D00000000,000000ffe (Function call interrupts)
+>           insmod-1746    [000] dn.h2..   928.400042: <stack trace>
+>  =3D> trace_event_raw_event_ipi_raise
+>  =3D> smp_cross_call
+>  =3D> arch_send_call_function_single_ipi
+>  =3D> send_call_function_single_ipi =20
+> ...
+> Actually, the behavior hoped like this(no stacktrace):
+>=20
+>           insmod-1677    [000] ....1..   473.474846: ipi_raise:
+> target_mask=3D00000000,00000ffe (Function call interrupts)
+>           <idle>-0       [002] d..h1..   473.474848: ipi_entry:
+> (Function call interrupts)
+>           <idle>-0       [003] d..h1..   473.474849: ipi_entry:
+> (Function call interrupts)
+>           ...
+>           insmod-1677    [000] ....1..   473.474859: ipi_raise:
+> target_mask=3D00000000,00000ffe (Function call interrupts)
+>           <idle>-0       [001] d..h1..   473.474861: ipi_entry:
+> (Function call interrupts) magic=3D0x55aa55aa
+>           ...
+>=20
+> I tried to add '# trace-cmd stack --stop/reset' before the above
+> command, but it did not work. Any help to disable the 'stacktrace' in
+> this scenario?
 
-Acked-by: Robin Murphy <robin.murphy@arm.com>
+ trace-cmd reset
 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->   MAINTAINERS | 8 ++++----
->   1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index aacccb376c28..c48c9e772517 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1044,7 +1044,7 @@ M:	Joerg Roedel <joro@8bytes.org>
->   R:	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
->   L:	iommu@lists.linux.dev
->   S:	Maintained
-> -T:	git git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git
-> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/iommu/linux.git
->   F:	drivers/iommu/amd/
->   F:	include/linux/amd-iommu.h
->   
-> @@ -11156,7 +11156,7 @@ M:	David Woodhouse <dwmw2@infradead.org>
->   M:	Lu Baolu <baolu.lu@linux.intel.com>
->   L:	iommu@lists.linux.dev
->   S:	Supported
-> -T:	git git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git
-> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/iommu/linux.git
->   F:	drivers/iommu/intel/
->   
->   INTEL IPU3 CSI-2 CIO2 DRIVER
-> @@ -11529,7 +11529,7 @@ IOMMU DMA-API LAYER
->   M:	Robin Murphy <robin.murphy@arm.com>
->   L:	iommu@lists.linux.dev
->   S:	Maintained
-> -T:	git git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git
-> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/iommu/linux.git
->   F:	drivers/iommu/dma-iommu.c
->   F:	drivers/iommu/dma-iommu.h
->   F:	drivers/iommu/iova.c
-> @@ -11541,7 +11541,7 @@ M:	Will Deacon <will@kernel.org>
->   R:	Robin Murphy <robin.murphy@arm.com>
->   L:	iommu@lists.linux.dev
->   S:	Maintained
-> -T:	git git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git
-> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/iommu/linux.git
->   F:	Documentation/devicetree/bindings/iommu/
->   F:	Documentation/userspace-api/iommu.rst
->   F:	drivers/iommu/
+will put everything back. But yeah, I need to fix it so that it's easier to
+reset triggers.
+
+-- Steve
