@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442588172A
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 21:56:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F085080C0C
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 21:56:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719611792; cv=none; b=AIBY84h4uvEIrz++s1oqNNTNOePZWNS2Aj6NOipWDP6L0rXhtc1/XojweK1naY+OBt0pemS10mP+WjZmM9yWzfRMCBu1KXyigd2AoPWvX9JFcI1yPdD0lNB4xHvK4CRUPT00uBnw9uauEaEOKKUBsDPK8q7iSFfYnoQYALHxq2o=
+	t=1719611794; cv=none; b=E18hXmNwuQFHYzWmRRtl4mIAMwQLcoTGr1ePGgHKhFUwu2n90DZFYAsyGrC7yTEqTTNgtwK7r1mdZNW4k7hW5prsrBmqu7FU3ZH2DMtsoTUAxu3B4ciI4V7ZHbEpYNf4GVdWmBCJ08xTBILXmlhf/eDpTvB8gdwmf635YUQ1608=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719611792; c=relaxed/simple;
-	bh=UvIfSDsXNSkpE8HdTCsK3woWdj4Uetp4PIewuXeA0AQ=;
+	s=arc-20240116; t=1719611794; c=relaxed/simple;
+	bh=fm2QZisifdMg+3x+dqCxv5EqypsHdl6yyTP9VR+uJyY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YZRKEP2Qb8AvwBOSC46mJybHp31ZlNxX22WaAXZTt5G/51sHa3Wn8rpwGo/h5ild2n9GKmILc8vcCTYqZirWh3uI78QTEeRZyDe9gvjxiW5YhaG8zuGlCMaSDIHfprX+HZ5kRVFHs3iMZfQyyqJBgMOTm37Kl2ef6g6dBHt0C7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kUVEV8aZ; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version; b=fpPNVzRos9XHUIoU3nBnjlPzYtMa2lNbaO5nHQto9PNLeli9zPT9ElLJ2NrRZ5QXGZC4ih1AME3T9xKBWL1mrps9R9s8L8/etGwtX74p7PG6nlC7G/EuArdmMcB0It82TnJ5SzlCneFfHk5ttmaZCm4qcKpW0n+qlqUn/dMFBsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BWNdF6xw; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kUVEV8aZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BWNdF6xw"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719611791; x=1751147791;
+  t=1719611793; x=1751147793;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=UvIfSDsXNSkpE8HdTCsK3woWdj4Uetp4PIewuXeA0AQ=;
-  b=kUVEV8aZPQ6eEj4lYZOHDmHV5GjApg4tJfKwODSMShjOONqCYR8ObEVJ
-   Kfd0KpchRNcILlLiBAHDAMr1F8U9YM8+ZN4MS7zFgvyafmoFpxG5huY3v
-   /RDzrPH3wX63bL+0krvpGkquFQuxg0uEVMSF1H9P/SyywTOB7AmsmIBXX
-   t8hTHyXiGloAYCRY7fpSxAyY6R8bwajAUYOPR8cWd5i/fOLw7daJ1aRzd
-   CF507NKBvxC0kdovqaUK20LmNnJUWyUXonXoFXwze6oZ6LykdSYBohRXn
-   Olc3GlCr9nho9lyUBtirSLZyS3I8WQ4rS1IKVY1wSvpV71Hjp8F8/CE8x
-   Q==;
-X-CSE-ConnectionGUID: xe4yJi7ZS3Gu6juW1rdDtQ==
-X-CSE-MsgGUID: xeM4grvRSSW1symlY+fKeA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11117"; a="16762572"
+  bh=fm2QZisifdMg+3x+dqCxv5EqypsHdl6yyTP9VR+uJyY=;
+  b=BWNdF6xwRjwZgGJ5bPSYeXRC7CNwCesIVbCL3sjdLkWjUq7+G9w+cBAp
+   snmk3+lPFIr+6VNeVORuIPJ3BrRS74KQxbL0l3Mb+ruqhXaT4Ml1rDCL5
+   XdYQVSAGcBv7Z5c8ad5tteZO7efMD7YDMp9jQ5SlJ6N9Jd88YJg8JCQfA
+   dmNguoq0cWQlX2QM+Y9WK2kLPR6YsjbxsHXcnHv7kA1krrsVHqYome0js
+   WSIezHeqSSUwJPBO/U+rO8hTyS+8cCgBi9kYDlzXQLVWWjqeK0WCA7sGs
+   1emcvo/6+avH4fCStYU2lruYmpF5un4qYWrtI/knlPqa5OAbwYWDP17A7
+   w==;
+X-CSE-ConnectionGUID: U/93V12KR6qIxSygjXEQWg==
+X-CSE-MsgGUID: q0UeCca8SBW2dl9i+eK44w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11117"; a="16762587"
 X-IronPort-AV: E=Sophos;i="6.09,170,1716274800"; 
-   d="scan'208";a="16762572"
+   d="scan'208";a="16762587"
 Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 14:56:27 -0700
-X-CSE-ConnectionGUID: cgduWIhdTsOVkAwsQjrhRw==
-X-CSE-MsgGUID: saQPrqvxSHqNARJQh718lQ==
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 14:56:28 -0700
+X-CSE-ConnectionGUID: uWBR2WMUSv65y3+vnd5c5w==
+X-CSE-MsgGUID: LXqVnXS9RXmzsxcXaL+iUA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,170,1716274800"; 
-   d="scan'208";a="68065654"
+   d="scan'208";a="68065660"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
   by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 14:56:27 -0700
 From: Tony Luck <tony.luck@intel.com>
@@ -56,9 +56,9 @@ Cc: x86@kernel.org,
 	linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v23 07/19] x86/resctrl: Block use of mba_MBps mount option on Sub-NUMA Cluster (SNC) systems
-Date: Fri, 28 Jun 2024 14:56:07 -0700
-Message-ID: <20240628215619.76401-8-tony.luck@intel.com>
+Subject: [PATCH v23 09/19] x86/resctrl: Add a new field to struct rmid_read for summation of domains
+Date: Fri, 28 Jun 2024 14:56:09 -0700
+Message-ID: <20240628215619.76401-10-tony.luck@intel.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240628215619.76401-1-tony.luck@intel.com>
 References: <20240628215619.76401-1-tony.luck@intel.com>
@@ -70,65 +70,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When SNC is enabled there is a mismatch between the MBA control function
-which operates at L3 cache scope and the MBM monitor functions which
-measure memory bandwidth on each SNC node.
+When a user reads a monitor file rdtgroup_mondata_show() calls
+mon_event_read() to package up all the required details into an rmid_read
+structure which is passed across the smp_call*() infrastructure to code
+that will read data from hardware and return the value (or error status)
+in the rmid_read structure.
 
-Block use of the mba_MBps when scopes for MBA/MBM do not match.
+Sub-NUMA Cluster (SNC) mode adds files with new semantics. These require
+the smp_call-ed code to sum event data from all domains that share an
+L3 cache.
 
-Improve user diagnostics by adding invalfc() message when mba_MBps
-is not supported.
+Add a pointer to the L3 "cacheinfo" structure to struct rmid_read
+for the data collection routines to use to pick the domains to be
+summed.
 
+Reinette suggested that the rmid_read structure has become complex enough
+to warrant documentation of each of its fields and provided the kerneldoc
+documentation for struct rmid_read.
+
+Co-developed-by: Reinette Chatre <reinette.chatre@intel.com>
+Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
 Signed-off-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ arch/x86/kernel/cpu/resctrl/internal.h | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index eb3bbfa96d5a..d3b0fa958266 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -2335,14 +2335,18 @@ static void mba_sc_domain_destroy(struct rdt_resource *r,
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 135190e0711c..681b5bdcd2f9 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -144,12 +144,31 @@ union mon_data_bits {
+ 	} u;
+ };
  
- /*
-  * MBA software controller is supported only if
-- * MBM is supported and MBA is in linear scale.
-+ * MBM is supported and MBA is in linear scale,
-+ * and the MBM monitor scope is the same as MBA
-+ * control scope.
-  */
- static bool supports_mba_mbps(void)
- {
-+	struct rdt_resource *rmbm = &rdt_resources_all[RDT_RESOURCE_L3].r_resctrl;
- 	struct rdt_resource *r = &rdt_resources_all[RDT_RESOURCE_MBA].r_resctrl;
- 
- 	return (is_mbm_local_enabled() &&
--		r->alloc_capable && is_mba_linear());
-+		r->alloc_capable && is_mba_linear() &&
-+		r->ctrl_scope == rmbm->mon_scope);
- }
- 
- /*
-@@ -2750,6 +2754,7 @@ static int rdt_parse_param(struct fs_context *fc, struct fs_parameter *param)
- {
- 	struct rdt_fs_context *ctx = rdt_fc2context(fc);
- 	struct fs_parse_result result;
-+	const char *msg;
- 	int opt;
- 
- 	opt = fs_parse(fc, rdt_fs_parameters, param, &result);
-@@ -2764,8 +2769,9 @@ static int rdt_parse_param(struct fs_context *fc, struct fs_parameter *param)
- 		ctx->enable_cdpl2 = true;
- 		return 0;
- 	case Opt_mba_mbps:
-+		msg = "mba_MBps requires local MBM and linear scale MBA at L3 scope";
- 		if (!supports_mba_mbps())
--			return -EINVAL;
-+			return invalfc(fc, msg);
- 		ctx->enable_mba_mbps = true;
- 		return 0;
- 	case Opt_debug:
++/**
++ * struct rmid_read - Data passed across smp_call*() to read event count.
++ * @rgrp:  Resource group for which the counter is being read. If it is a parent
++ *	   resource group then its event count is summed with the count from all
++ *	   its child resource groups.
++ * @r:	   Resource describing the properties of the event being read.
++ * @d:	   Domain that the counter should be read from. If NULL then sum all
++ *	   domains in @r sharing L3 @ci.id
++ * @evtid: Which monitor event to read.
++ * @first: Initialize MBM counter when true.
++ * @ci:    Cacheinfo for L3. Only set when @d is NULL. Used when summing domains.
++ * @err:   Error encountered when reading counter.
++ * @val:   Returned value of event counter. If @rgrp is a parent resource group,
++ *	   @val includes the sum of event counts from its child resource groups.
++ *	   If @d is NULL, @val includes the sum of all domains in @r sharing @ci.id,
++ *	   (summed across child resource groups if @rgrp is a parent resource group).
++ * @arch_mon_ctx: Hardware monitor allocated for this read request (MPAM only).
++ */
+ struct rmid_read {
+ 	struct rdtgroup		*rgrp;
+ 	struct rdt_resource	*r;
+ 	struct rdt_mon_domain	*d;
+ 	enum resctrl_event_id	evtid;
+ 	bool			first;
++	struct cacheinfo	*ci;
+ 	int			err;
+ 	u64			val;
+ 	void			*arch_mon_ctx;
 -- 
 2.45.2
 
