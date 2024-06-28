@@ -1,163 +1,211 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE69B1C0046
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 14:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8874D1BE25D;
+	Fri, 28 Jun 2024 14:17:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719584254; cv=none; b=udTvveERp9XOZo5Mktb15a10jZrpasDThmgY9zIIakYt/3bOZZjV5aCDYT0SnNc8Tl3sUcZXf+td5nKqDRzMZ9CU7fLx0G34ojiK49o6eQ0O7WsWgKifl85YbVQVwZ/VJI4BqMZIMrf7EIPXINg3O7A24CWpYC3CS+IOSAn1UqA=
+	t=1719584264; cv=none; b=VO434kKtte+qHFynUB7v/6TDH+esJhA8inaSR7LKGu59nriXdU5mla2n45kOK27CUNwWQ67zVdRhXM3MdkVxiOufOymH3SoGnbOuyQjFY0p0Xf7b9BGxdbJ0UesqBUjRdCNnWVco/mmsMI3vYUTTiqiS24pn6EM/U65x1ziFct8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719584254; c=relaxed/simple;
-	bh=X5an3abTWdvL8qtlTK3g1nKT+T6J9UFiLnTAbmQhG/I=;
+	s=arc-20240116; t=1719584264; c=relaxed/simple;
+	bh=K7djxqbJRnfY/csWr9JHDiStjYDCtWu0pGMD/kq7c7s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=teOdZSzZOep2NcU/I/oITkOcAr6orf0qA5VuHfz/G7DVrk/WLKitUsBz0LT/N8qQVdaCYnCy5JiVZY8bmD8PMbJiVqopzBJNSTQsf4WzQkQQ1xATimWiZtpV2UnkhLnulF93DnMeJCA0nZQmd481X4RaW9lJPesFT0aN2MHgXLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BHlT5rxF; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=GI1/cA1/2RrL2KIyeXIJV9XzFyHe+56fU5dISXKrjcoE1BynGaLre9Xbkf8LpKi7fM3KoUPLkWSaCYs7my9W1fZxpVJjNh0CIT7yv/NBSAmkH0hwYVUeWvC7yqU+S20ru+mT72Y0hRGhKKuNADtdOV90KgeXl5bGU2+cCXCKl7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YJbuH6el; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BHlT5rxF"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-643f1ee4b3cso6809917b3.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 07:17:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YJbuH6el"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e03515ca876so621180276.2;
+        Fri, 28 Jun 2024 07:17:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719584251; x=1720189051; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=DGMldhhxstZD2VHINPtgUkJtig9Dn80WfHZSFwMmp2Q=;
-        b=BHlT5rxFHSWv8sv4ru8q0rkky44r4ZlHhYBkqNNJ20WkX2JHeZtr+OQioKivAjB3/I
-         phXINjdp+vtyWvJXjFEesmy4d+4tLq6q1P6gLej/3idYnVj0HSAy+8iIZJAyjI9gRwup
-         FPpM8TGz0ygI8QIlxfizj5lTpg7+XFOmJYUkx+QDaL/Mx0Rzclyt9K6lP0uny4Pt3Dax
-         iR1hqKU9AWGGXj2+gVzePLrTBvpehgRI1wTnb6X5H3M1T6psO5uSrSQxIMKBHCEOl9CI
-         +mDyo9m1GH/tslLRM4WpHe1ml56Sfwzd7n+HsTZvFVIXgT57pC7zLxD306guYUt3oCmh
-         f64Q==
+        d=gmail.com; s=20230601; t=1719584260; x=1720189060; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oVxPLRHxokrpHZYPE0M6S9KYwgunJ95NoJ0PB9rmg6U=;
+        b=YJbuH6eliX5CvmwnonN3NfL4bGCDqTDKtkec90NMTglIRUJoK/xr5pIlOyAPQHagk9
+         k1RzU/2MPiv5NjDVPUgOUn2H1AXqCzZKVzVbpk5Ys5cR7F73lSAMt4AQF4jXJlMLxJA0
+         LxFMQ0KTH3A2HhS0wrkwHWWDMdhvGhA1LBixaeVp1HhCe3kFpWOwlnpCPwjs6LSwvgWk
+         HG4UE1Wdsy2F3J6sAibFo1U3cwhW9uWYvTAyFOl66zIXTnKkXI0G+FmEIHr/bU7iY0/+
+         GFzskurfqGLsp8/4J1/S9ffCI1mDGtXbKhHN6C5KvjaX6ICB4nalXfwpgVsoR8SkuYjp
+         /kUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719584251; x=1720189051;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DGMldhhxstZD2VHINPtgUkJtig9Dn80WfHZSFwMmp2Q=;
-        b=q8X//QI58ZzvIB4OljYZgoxDvMP8vcLpXk0G3BrhsjyAmSFfC9FV+kQobxNhyMc8GE
-         4kyoMVoEVqVmAKni/KPKcb3ae1mXS2jx6U8D6BlUUcPX+nt3xgkhh2VqNhuVz2R6FHpg
-         QNPMmxi16/HGEvevmZTmWJnretnlSQsCCDbTCGlEP6/OCIfhoeQRkpD3aklwikbQ4MfU
-         xUxSw8PFFSLy1iY9xGBlvyMaR2AQ1Or72fz1V78lLEDea0yFiErxE58SFElKKNHyw7B1
-         TU1pIf7hb1gHn0JmKEX6VvVt6cJR1YtOOr+/LqMQuRtN5UrEI3xSp4I/2jYrHTP6ekmJ
-         iVaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV7E1Ksq2DfcKjJe7oLpbjW+F0BavvfxuUHBvtGDEBqyqvBoYlICJyGJvxm4ob1lrAISGd6dVQgHulZUv4UH+SBMbXxreoIRIvHO+MA
-X-Gm-Message-State: AOJu0Yyxbmx7ZjZhejKyamn4GG+gb7G1zywYecFLkR+g9URBnjFhHO+g
-	WXRto34kZhL32/Si1OUAPsaC6lClxqrnDwD3gJql+AF4CFx6YiiUpQauJfPqz8C72IzQrxlktPu
-	u34156YdHbce/5BuuFh6CWDDinFkRxHpXuzPWdw==
-X-Google-Smtp-Source: AGHT+IEnqc4gKd8d3/4CtY+9Z2dX/nIjYsaIb1fXkGgwuAAIIiovBHfJVK2XUUGwxWXGgo5SDGMIF1irekTJMnwHlS8=
-X-Received: by 2002:a81:de4d:0:b0:627:778f:b0a8 with SMTP id
- 00721157ae682-643aba4654bmr165212747b3.42.1719584250582; Fri, 28 Jun 2024
- 07:17:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719584260; x=1720189060;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oVxPLRHxokrpHZYPE0M6S9KYwgunJ95NoJ0PB9rmg6U=;
+        b=q6sKFcJyE2nMoWRIMQHL7OcrnEEoc0w05rHEFSfTdZN4Ht4c8X91E2GunEJqTP624e
+         Rvgctk/ndgweQa5rRp0+6JOkClz4eur1iXI4N2dlmXUF2x/QivE0uJbLnzAjna2GWMEp
+         TV0yrk9lUTVbsM+jcJ0ll/kauwtVIlGPDuKhPRol4PptJ8yRX1H1yFxXY1766IogyQIM
+         Jg51O0780yWJb+7f7IDnzNUHQer66UWHKl6CL86amarYO5YYECwkOyu9syjKmj6zKZyV
+         1Ipc4iXgx9RhFGX8/iEFcLU/Qyrgn+bueH9lASrgVNwiMciTmKN0YfLb2vl+CE02+EAH
+         Pm9A==
+X-Forwarded-Encrypted: i=1; AJvYcCVw7vTlG6xcEztW0iF73GVyluq2mG2aDp/3bMpcY2QsW1RZbKP6uo/NLz6DyD4/VoRm9oknQaAP0hGO91Hy5+BluOX/RjyxesyalO4t59N1sRiyQTidDluYvO+xzUmDK1ReJ5SDk19NidPHl6wN1Cvq3bz0HbqpEdtkvHNIcaNFuMdQDgQfacGDzjb/q5qwhoU1Qfa/6761stcC08o3UhreWqram8gT
+X-Gm-Message-State: AOJu0YxiSjaexNVLBpvldIlQYoAabPkKHxeb/wiIx+6LK6COdKL5Eyf5
+	wdixfEnSWY+/AkMVDFnxa2aAnt7nZpVAKJlthA5g8gtwGo8OFEL58YTzNt88ns8XowaopalHIEA
+	9sx8mr8vcL9Og64j8Bc6dIqGtwHA=
+X-Google-Smtp-Source: AGHT+IEtEDI9FerpTgSstAJXGuQxZh+N3aHReNVa62xpxzlqq9CFIMBvZ/eDFQ4BRdJTi+7rtK9E5Z+q+QkAmnupLlQ=
+X-Received: by 2002:a25:df52:0:b0:dff:3058:e30f with SMTP id
+ 3f1490d57ef6-e0303ee20cfmr16754290276.21.1719584260283; Fri, 28 Jun 2024
+ 07:17:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240627-b4-qcom-audio-lpass-codec-cleanups-v1-0-ede31891d238@linaro.org>
- <20240627-b4-qcom-audio-lpass-codec-cleanups-v1-2-ede31891d238@linaro.org>
- <grpb57rhum4auor3n66mqd2tpmd52gzofbdog3vlmxlamfxv5a@2mhfkigl6ek2> <1fa1da22-07a5-4d76-b4c7-fc16e3df4b32@linaro.org>
-In-Reply-To: <1fa1da22-07a5-4d76-b4c7-fc16e3df4b32@linaro.org>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Fri, 28 Jun 2024 17:17:20 +0300
-Message-ID: <CAA8EJpq_2RUs3go6JZ+uVuJ5PJKzv0e2T8uS5QJMrB_JUAtNPw@mail.gmail.com>
-Subject: Re: [PATCH 2/4] ASoC: codecs: lpass-rx-macro: Keep static
- regmap_config as const
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Banajit Goswami <bgoswami@quicinc.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, 
-	linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20240613091721.525266-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240613091721.525266-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <prdvmtsp35yy2naohivbrya3go6vh5ji2cdjoebw3ovditcujo@bhck6tca6mhj>
+ <CA+V-a8u6KAFp1pox+emszjCHqvNRYrkOPpsv5XBdkAVJQMxjmA@mail.gmail.com>
+ <o7tswznmyk6gxoqfqvbvzxdndvf5ggkyc54nwafypquxjlvdrv@3ncwl5i5wyy3>
+ <CA+V-a8spwd82a3BTS-u-w-JY859YCRxCi0Os6XRn27-mkWz6WA@mail.gmail.com>
+ <4lypqqf4o2wk22kzpyutlaarare5kurdrlokbm6mb4re3mstam@qo7c3d4tcpll> <CAMuHMdXeDTof+aPJVUma78DgxP8vuWjJHoiBTcX_mKjX9WduZA@mail.gmail.com>
+In-Reply-To: <CAMuHMdXeDTof+aPJVUma78DgxP8vuWjJHoiBTcX_mKjX9WduZA@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Fri, 28 Jun 2024 15:17:12 +0100
+Message-ID: <CA+V-a8uepnPCgbEtsxL+hMcGcS-X4hEXZsd7Q2+fpqMyF=cCGA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 3/3] mmc: renesas_sdhi: Add support for RZ/V2H(P) SoC
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, linux-kernel@vger.kernel.org, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, 
+	Conor Dooley <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 28 Jun 2024 at 11:39, Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+Hi All,
+
+On Fri, Jun 21, 2024 at 12:58=E2=80=AFPM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
 >
-> On 28/06/2024 10:34, Dmitry Baryshkov wrote:
-> > On Thu, Jun 27, 2024 at 05:23:44PM GMT, Krzysztof Kozlowski wrote:
-> >> The driver has static 'struct regmap_config', which is then customized
-> >> depending on device version.  This works fine, because there should not
-> >> be two devices in a system simultaneously and even less likely that such
-> >> two devices would have different versions, thus different regmap config.
-> >> However code is cleaner and more obvious when static data in the driver
-> >> is also const - it serves as a template.
-> >>
-> >> Mark the 'struct regmap_config' as const and duplicate it in the probe()
-> >> with devm_kmemdup to allow customizing per detected device variant.
-> >>
-> >> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> >> ---
-> >>  sound/soc/codecs/lpass-rx-macro.c | 17 +++++++++++++----
-> >>  1 file changed, 13 insertions(+), 4 deletions(-)
-> >
-> > Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> >
-> >>
-> >> diff --git a/sound/soc/codecs/lpass-rx-macro.c b/sound/soc/codecs/lpass-rx-macro.c
-> >> index 59fe76b13cdb..3d8149665439 100644
-> >> --- a/sound/soc/codecs/lpass-rx-macro.c
-> >> +++ b/sound/soc/codecs/lpass-rx-macro.c
-> >> @@ -1662,7 +1662,7 @@ static bool rx_is_readable_register(struct device *dev, unsigned int reg)
-> >>      return rx_is_rw_register(dev, reg);
-> >>  }
-> >>
-> >> -static struct regmap_config rx_regmap_config = {
-> >> +static const struct regmap_config rx_regmap_config = {
-> >>      .name = "rx_macro",
-> >>      .reg_bits = 16,
-> >>      .val_bits = 32, /* 8 but with 32 bit read/write */
-> >> @@ -3765,6 +3765,7 @@ static const struct snd_soc_component_driver rx_macro_component_drv = {
-> >>  static int rx_macro_probe(struct platform_device *pdev)
-> >>  {
-> >>      struct reg_default *reg_defaults;
-> >> +    struct regmap_config *reg_config;
-> >>      struct device *dev = &pdev->dev;
-> >>      kernel_ulong_t flags;
-> >>      struct rx_macro *rx;
-> >> @@ -3851,14 +3852,22 @@ static int rx_macro_probe(struct platform_device *pdev)
-> >>              goto err;
-> >>      }
-> >>
-> >> -    rx_regmap_config.reg_defaults = reg_defaults;
-> >> -    rx_regmap_config.num_reg_defaults = def_count;
-> >> +    reg_config = devm_kmemdup(dev, &rx_regmap_config, sizeof(*reg_config),
-> >> +                              GFP_KERNEL);
-> >> +    if (!reg_config) {
-> >> +            ret = -ENOMEM;
-> >> +            goto err;
-> >> +    }
-> >>
-> >> -    rx->regmap = devm_regmap_init_mmio(dev, base, &rx_regmap_config);
-> >> +    reg_config->reg_defaults = reg_defaults;
-> >> +    reg_config->num_reg_defaults = def_count;
-> >> +
-> >> +    rx->regmap = devm_regmap_init_mmio(dev, base, reg_config);
-> >>      if (IS_ERR(rx->regmap)) {
-> >>              ret = PTR_ERR(rx->regmap);
-> >>              goto err;
-> >>      }
-> >> +    devm_kfree(dev, reg_config);
-> >>      devm_kfree(dev, reg_defaults);
-> >
-> > Seeing devm_kfree in the non-error path makes me feel strange. Maybe
-> > it's one of the rare occasions when I can say that __free is suitable
-> > here.
+> Hi all,
 >
-> These would have a bit different meaning in such case. The __free would
-> not clean it in this spot, but on exit from the scope. I wanted to
-> kfree() here, because the config (and reg_defaults) are not used by past
-> regmap_init. I mentioned it briefly in previous patch msg.
+> On Fri, Jun 21, 2024 at 9:54=E2=80=AFAM Wolfram Sang
+> <wsa+renesas@sang-engineering.com> wrote:
+> > > Based on the feedback from Rob I have now changed it to below, i.e.
+> > > the regulator now probes based on regulator-compatible property value
+> > > "vqmmc-r9a09g057-regulator" instead of regulator node name as the
+> > > driver has of_match in regulator_desc.
+> >
+> > I like this a lot! One minor comment.
+> >
+> > > static struct regulator_desc r9a09g057_vqmmc_regulator =3D {
+> > >     .of_match    =3D of_match_ptr("vqmmc-r9a09g057-regulator"),
+> > >     .owner        =3D THIS_MODULE,
+> > >     .type        =3D REGULATOR_VOLTAGE,
+> > >     .ops        =3D &r9a09g057_regulator_voltage_ops,
+> > >     .volt_table    =3D r9a09g057_vqmmc_voltages,
+> > >     .n_voltages    =3D ARRAY_SIZE(r9a09g057_vqmmc_voltages),
+> > > };
+> > >
+> > > SoC DTSI:
+> > >         sdhi1: mmc@15c10000 {
+> > >             compatible =3D "renesas,sdhi-r9a09g057";
+> > >             reg =3D <0x0 0x15c10000 0 0x10000>;
+> > >             interrupts =3D <GIC_SPI 737 IRQ_TYPE_LEVEL_HIGH>,
+> > >                      <GIC_SPI 738 IRQ_TYPE_LEVEL_HIGH>;
+> > >             clocks =3D <&cpg CPG_MOD 167>,
+> > >                  <&cpg CPG_MOD 169>,
+> > >                  <&cpg CPG_MOD 168>,
+> > >                  <&cpg CPG_MOD 170>;
+> > >             clock-names =3D "core", "clkh", "cd", "aclk";
+> > >             resets =3D <&cpg 168>;
+> > >             power-domains =3D <&cpg>;
+> > >             status =3D "disabled";
+> > >
+> > >             vqmmc_sdhi1: vqmmc-regulator {
+> > >                 regulator-compatible =3D "vqmmc-r9a09g057-regulator";
 >
-> To me this code is readable and obvious - past this point nothing uses
-> that allocation. However maybe instead of devm(), the code would be
-> easier to read if non-devm-malloc + __free()?
+> renesas,r9a09g057-vqmmc-regulator?
+>
+> > >                 regulator-name =3D "vqmmc-regulator";
+> >
+> > This should have "sdhi<X>" somewhere in the name?
+>
+> Indeed.
+>
+> >
+> > >                 regulator-min-microvolt =3D <1800000>;
+> > >                 regulator-max-microvolt =3D <3300000>;
+> > >                 status =3D "disabled";
+> > >             };
+> > >         };
+> > >
+> > > Board DTS:
+> > >
+> > > &sdhi1 {
+> > >     pinctrl-0 =3D <&sdhi1_pins>;
+> > >     pinctrl-1 =3D <&sdhi1_pins>;
+> > >     pinctrl-names =3D "default", "state_uhs";
+> > >     vmmc-supply =3D <&reg_3p3v>;
+> > >     vqmmc-supply =3D <&vqmmc_sdhi1>;
+> > >     bus-width =3D <4>;
+> > >     sd-uhs-sdr50;
+> > >     sd-uhs-sdr104;
+> > >     status =3D "okay";
+> > > };
+> > >
+> > > &vqmmc_sdhi1 {
+> > >     status =3D "okay";
+> > > };
+> >
+> > Again, I like this. It looks like proper HW description to me.
+> >
+> > > Based on the feedback provided Geert ie to use set_pwr callback to se=
+t
+> > > PWEN bit and handle IOVS bit in voltage switch callback by dropping
+> > > the regulator altogether. In this case we will have to introduce just
+> > > a single "use-internal-regulator" property and if set make the vqmmc
+> > > regulator optional?
+> >
+> > Let's discuss with Geert. But I am quite convinced of your approach
+> > above.
+> >
+> > > > > Let me know if I have missed something obvious here.
+> > > >
+> > > > Nope, all good.
+> >
+> > Don't give up, I think we are close...
+>
+> The above indeed starts looking good to me.
+> IIUIC, the use of the special vqmmc-r9a09g057-regulator is still
+> optional, and the subnode can be left disabled? E.g. the board
+> designer may still use a (different) GPIO to control the regulator,
+> using "regulator-gpio"?
+>
+> Which brings me to another question: as both the SDmIOVS and SDmPWEN
+> pins can be configured as GPIOs, why not ignore the special handling
+> using the SDm_SD_STATUS register, and use "regulator-gpio" instead?
+> We usually do the same for CD/WP, using "{cd,wp}-gpios" instead.
+> Exceptions are old SH/R-Mobile and R-Car Gen1 boards:
+>
+>   arch/arm/boot/dts/renesas/r8a73a4-ape6evm.dts:          groups =3D
+> "sdhi0_data4", "sdhi0_ctrl", "sdhi0_cd";
+>   arch/arm/boot/dts/renesas/r8a7740-armadillo800eva.dts:
+> groups =3D "sdhi0_data4", "sdhi0_ctrl", "sdhi0_wp";
+>   arch/arm/boot/dts/renesas/r8a7778-bockw.dts:            groups =3D
+> "sdhi0_cd", "sdhi0_wp";
+>   arch/arm/boot/dts/renesas/r8a7779-marzen.dts:           groups =3D
+> "sdhi0_data4", "sdhi0_ctrl", "sdhi0_cd";
+>   arch/arm/boot/dts/renesas/sh73a0-kzm9g.dts:             groups =3D
+> "sdhi0_data4", "sdhi0_ctrl", "sdhi0_cd", "sdhi0_wp";
+>
+Based on the special handling required to handle the IOVS and PWEN pin
+by bypassing the core regulator by function pointers in v4 [0] doesn't
+seem an elegant solution.
 
-Yes, that's what I was thinking about. But it's definitely an optional
-topic. Your code is correct.
+On the RZ/V2H SoC IOVS and PWEN pins can be used as GPIO and a similar
+approach has been used on the other Renesas SoCs. I will withhold
+internal regulator support for RZ/V2H SoC and fallback to GPIOs.
 
+[0] https://patchwork.kernel.org/project/linux-renesas-soc/patch/2024062613=
+2341.342963-4-prabhakar.mahadev-lad.rj@bp.renesas.com/
 
--- 
-With best wishes
-Dmitry
+Cheers,
+Prabhakar
