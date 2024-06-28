@@ -1,169 +1,167 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60BA157478
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 09:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D14B153812
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 09:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719565608; cv=none; b=CzsyZ9EJhNRFUden+77oIOl/Yi6djLcNw5U2cKiTd0GYNMlyaFvXaNTkNqHm7j2Mhw0+/YxPc47mGBdcmsiOE/GQJh9PM4fsMBpSEob/z/PeNeQXeonYtdnBT35ceJ7MwoFGlU2EXi3f2Giy6Cvp4NnXBdh1pmTKpB3FXemv1l8=
+	t=1719565621; cv=none; b=Of+s8A1tu7Ia3GmSq0+vnVVYXpsdStS0WPmqmG5rup4iLRWGL0bW1qL5RiPa1QqgXYe9MgLy0QTjHwes24STbU1GukdAIjBlb86Yp04fjn6uwbdJrbRK3IeeHT+RsN03M1LentMH9FLA549mp2h4n4Oi0khJIBYXyARPVyX4llU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719565608; c=relaxed/simple;
-	bh=4Dsj9ayn2Oa78jorOX6zSODmYZsKhMC24a4bT2nQZFA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PbX2pcSt43H0rQgfb+2qaHG/IBX4mVswfRkuxlH3kr8c2cw+edc9D/FQrwnwCoxvlLriufNZqnGmdie/8EBxhjuokMc+ICsTLo9Gp+yIk7ouGD9tPHiusBYxbl6BP/XFJqA2SCPMv9Wg14myN73v0N6X170J1ZHgRFJFrDtSjDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=imTUli1q; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719565621; c=relaxed/simple;
+	bh=6lILPXsSnuRcIB/1aRICDr7E5gU8xTfXClxW1Kv+tcQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cNLZs9AQRBj1500Evmg6tE1DtSq7wc2aqi1rK7F7LbX+J9Lky8NxcHLHgOhRbRdc1DYHDlMZB66oUMsj84RY4w/gU8dfzoY2zvR3FATyP5slm3+bDxtmeqS86YW5tx4Od7PaTtMVy9HqHDsVjZ+m6l1QNS4MDvngeGRPIMQo57o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3tt+TQqm; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="imTUli1q"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7065a2f4573so302253b3a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 02:06:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3tt+TQqm"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-424720e73e1so3233675e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 02:06:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719565606; x=1720170406; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1719565618; x=1720170418; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KE+GAHekiqQQ+6g1wyBk2AinFm8Z+Wz7HeNtPOPPiPc=;
-        b=imTUli1qDpU+B/VfgGHrP3hb7zRAQU9cT7U27dyWCrzW6TUz5ufo1CKPsf5wJBiIHa
-         +8mRh6hY4BTL6Gq5rXdewkTOXipjpvfuG9c4d2HNdhPTbh3kTBPBg/4x+W/nZBeJvctE
-         EE1QrH4W2IKRWqRn0tRUN3g1VYDx/AjcWjke9C+urVciS6BfOVppHVYO7dy9XZNSmj6x
-         uuB3E9rkuDn9d10uQJlGyeCq0mJHvIdHgyXS/3rcgnYUwLk5pNuav+dOmp8twIORKOg1
-         frAg6Cke0wcm58t6f1GzGmUzu2PNWaDS4gHFOl47773rRnoPpk3ppZU/EVfelT91d/Ec
-         5vSw==
+        bh=E9XuEmOGKQmnl44REDZJmwUjYzwybPJMiDqkTMARv5k=;
+        b=3tt+TQqm9H+hvHvRw7ccI2Oo6nQXQQE9yu9wC+Q+iSLf5Zc0iE2Bl912zkjMiBJnqk
+         VWRSr3ymgsntgvf3zCENLNYs5XAdQq5SmQ6v7mRQ7CAUVxS5mrVLxD1OQj66s5JP9XLu
+         UoHlmpyacSOr+/mwdjricc6g5hm+F6B0Iink9vuz9c6ThNtwiJ3Hs//S2uSrYveRAQv9
+         QnkrYMAyav1DT0mnEWhc8Coj1ULXG9D/ioYzCtxZgTADvJ3C08NHX+KozSURWF3i6AZN
+         K7x0EgCE7OeiRmDcV2vv01fOp8F64tP9WkdX19MnAi5U++lBU/8x6POmbHubaOrveG4G
+         aShg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719565606; x=1720170406;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1719565618; x=1720170418;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KE+GAHekiqQQ+6g1wyBk2AinFm8Z+Wz7HeNtPOPPiPc=;
-        b=Eb9vFup/H2Dct6zoJzv2mwz3WswRwQoaGDajjqc4LSHxgLmioVXGnfuEo54lGhXFEI
-         lq2Sit9HXn8gRnlxiPOTeCpkIh/OgGpCrjCARjguB9eqPPJnel6A1aLgzrqwz67JbHtQ
-         TFc7aEsuLsQcf7Dlu+0mk5fDPzLv/R7RKtbIjsbsDmdyfOvH1iRId/F1X7749RWl/495
-         f7hzg+/+UIAjkrT613/GTdEm+pT1AznPRBV9cVOjyofH6x3o1579PP/s4B8hz+37hPnX
-         zhuUnncOiSnPSHnoEwjB/RiIyVDz41DdExsB3muA9Q7gs2I+3cmi3BcIzzSoLjaGAKMX
-         N5QA==
-X-Forwarded-Encrypted: i=1; AJvYcCVYt6BSrfeFFM160iLz96WQTccoKWB9rHGZD0LecTzK+ODUwRDmwEoRIjC9Y+8DvI0DBzLCVVP1bs5/82FLN1FqcSj/6rZgehebO3wI
-X-Gm-Message-State: AOJu0Yyotbg8Tt9nq9Wk1iqe6EQgrIVsey/U9XFsOCNlXU96gDxY5AIo
-	wbUVwJdXBSDZB4XDWzyWD12Q0xdLjL8aekcj7kVjwx7pCfq3Tu7P
-X-Google-Smtp-Source: AGHT+IH7O3ceew/tSG3NDVJpYlbtMuwR5IFLdkA8b8eK+PcdH6NneHqE1C+XNacGpenvZxl/Ayl5vA==
-X-Received: by 2002:a05:6a00:2d93:b0:706:8066:5cd6 with SMTP id d2e1a72fcca58-70680665df3mr17761645b3a.32.1719565605922;
-        Fri, 28 Jun 2024 02:06:45 -0700 (PDT)
-Received: from twhmp6px (mxsmtp211.mxic.com.tw. [211.75.127.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70801e63250sm1086981b3a.29.2024.06.28.02.06.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 02:06:45 -0700 (PDT)
-Received: from hqs-appsw-a2o.mp600.macronix.com (linux-patcher [172.17.236.67])
-	by twhmp6px (Postfix) with ESMTPS id 3A8A180570;
-	Fri, 28 Jun 2024 17:09:00 +0800 (CST)
-From: Cheng Ming Lin <linchengming884@gmail.com>
-To: miquel.raynal@bootlin.com,
-	vigneshr@ti.com
-Cc: richard@nod.at,
-	linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	alvinzhou@mxic.com.tw,
-	leoyu@mxic.com.tw,
-	Cheng Ming Lin <chengminglin@mxic.com.tw>
-Subject: [PATCH 2/2] mtd: spinand: macronix: Add support for serial NAND flash
-Date: Fri, 28 Jun 2024 16:54:44 +0800
-Message-Id: <20240628085444.132714-3-linchengming884@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240628085444.132714-1-linchengming884@gmail.com>
-References: <20240628085444.132714-1-linchengming884@gmail.com>
+        bh=E9XuEmOGKQmnl44REDZJmwUjYzwybPJMiDqkTMARv5k=;
+        b=FoYvIJfsq8kY0ICBNAsL8GUJZf3wrll2oTIgwq7Tfeq0DsQHgo5kfguv1WT/n3wzVn
+         EybH5ehJg3Rt+KpK6Qi2j63eJZeTz59Yr3BQ35LXbRQDCUs5i/bkfbRRrpbd2JjKDhVH
+         jrbYuiy3TWAYLRU6dnJqZ3pTMlpJ/NJb4kyLUD2czO9cla3BB9JKpJsO6FAPDt9OjZLT
+         LxHGBfcpcxXT4gq1+lKupkbRm+L+Q53a+ntC3t8u/n1MIEY7rvzxPumrJm2zTAo09GLQ
+         VSLYHXepI00hhIEnjTWkOifT6VhhI4qmlrYrt0TbqjFK/gukASIdQLulO8hH2KSHhogu
+         ak8A==
+X-Forwarded-Encrypted: i=1; AJvYcCVRg3uC5qo9CecCvxeL8he5GL3eHEDhEhnrNUxQs1ZXd3ILDj58PyBH5Iyqgkw610h6wj9pmkP6i7YRYc0dBhOjmTok3FMzs3euh4ge
+X-Gm-Message-State: AOJu0YyBoTrHGWS8kSyTkl4hFTLsBJsehdZHPNNBhig3j9V72RC0NZ9c
+	zlWiahT/xCDwEhLizF2l0BYNAzx5oeEuhTcmC4LgKL3j7jHjChlAQ2GvDF+5SlwjHY08i7GC545
+	HPCl6st6g94uYXeE3UNmlkUlFYQFflGwDeO6zAx7FC35jtIEwMErUKR6miw==
+X-Google-Smtp-Source: AGHT+IH7t15ZxEn2LETHAyDOXDZSewj9x0ofxPVWbHBdCjBgMBIveOKBhoflOM22vJXoMJ9CySG9QwFCPP9ol/FJosc=
+X-Received: by 2002:a05:6000:dcd:b0:35f:1c34:adfc with SMTP id
+ ffacd0b85a97d-366e96bf06bmr10949760f8f.67.1719565618293; Fri, 28 Jun 2024
+ 02:06:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240619192131.do.115-kees@kernel.org> <20240619193357.1333772-4-kees@kernel.org>
+ <cc301463-da43-4991-b001-d92521384253@suse.cz> <202406201147.8152CECFF@keescook>
+ <1917c5a5-62af-4017-8cd0-80446d9f35d3@suse.cz> <Zn5LqMlnbuSMx7H3@Boquns-Mac-mini.home>
+ <c5934f76-3ce8-466e-80d1-c56ebb5a158e@suse.cz>
+In-Reply-To: <c5934f76-3ce8-466e-80d1-c56ebb5a158e@suse.cz>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Fri, 28 Jun 2024 11:06:45 +0200
+Message-ID: <CAH5fLggjrbdUuT-H-5vbQfMazjRDpp2+k3=YhPyS17ezEqxwcw@mail.gmail.com>
+Subject: Re: [PATCH v5 4/6] mm/slab: Introduce kmem_buckets_create() and family
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Kees Cook <kees@kernel.org>, 
+	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>, Christoph Lameter <cl@linux.com>, 
+	Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, 
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>, jvoisin <julien.voisin@dustri.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, Xiu Jianfeng <xiujianfeng@huawei.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Kent Overstreet <kent.overstreet@linux.dev>, 
+	Jann Horn <jannh@google.com>, Matteo Rizzo <matteorizzo@google.com>, Thomas Graf <tgraf@suug.ch>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-hardening@vger.kernel.org, netdev@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Cheng Ming Lin <chengminglin@mxic.com.tw>
+On Fri, Jun 28, 2024 at 10:40=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> w=
+rote:
+>
+> On 6/28/24 7:35 AM, Boqun Feng wrote:
+> > On Thu, Jun 20, 2024 at 10:43:39PM +0200, Vlastimil Babka wrote:
+> >> On 6/20/24 8:54 PM, Kees Cook wrote:
+> >> > On Thu, Jun 20, 2024 at 03:56:27PM +0200, Vlastimil Babka wrote:
+> >> >> > @@ -549,6 +549,11 @@ void *kmem_cache_alloc_lru_noprof(struct kme=
+m_cache *s, struct list_lru *lru,
+> >> >> >
+> >> >> >  void kmem_cache_free(struct kmem_cache *s, void *objp);
+> >> >> >
+> >> >> > +kmem_buckets *kmem_buckets_create(const char *name, unsigned int=
+ align,
+> >> >> > +                                 slab_flags_t flags,
+> >> >> > +                                 unsigned int useroffset, unsign=
+ed int usersize,
+> >> >> > +                                 void (*ctor)(void *));
+> >> >>
+> >> >> I'd drop the ctor, I can't imagine how it would be used with variab=
+le-sized
+> >> >> allocations.
+> >> >
+> >> > I've kept it because for "kmalloc wrapper" APIs, e.g. devm_kmalloc()=
+,
+> >> > there is some "housekeeping" that gets done explicitly right now tha=
+t I
+> >> > think would be better served by using a ctor in the future. These AP=
+Is
+> >> > are variable-sized, but have a fixed size header, so they have a
+> >> > "minimum size" that the ctor can still operate on, etc.
+> >> >
+> >> >> Probably also "align" doesn't make much sense since we're just
+> >> >> copying the kmalloc cache sizes and its implicit alignment of any
+> >> >> power-of-two allocations.
+> >> >
+> >> > Yeah, that's probably true. I kept it since I wanted to mirror
+> >> > kmem_cache_create() to make this API more familiar looking.
+> >>
+> >> Rust people were asking about kmalloc alignment (but I forgot the deta=
+ils)
+> >
+> > It was me! The ask is whether we can specify the alignment for the
+> > allocation API, for example, requesting a size=3D96 and align=3D32 memo=
+ry,
+> > or the allocation API could do a "best alignment", for example,
+> > allocating a size=3D96 will give a align=3D32 memory. As far as I
+> > understand, kmalloc() doesn't support this.
+>
+> Hm yeah we only have guarantees for power-or-2 allocations.
+>
+> >> so maybe this could be useful for them? CC rust-for-linux.
+> >>
+> >
+> > I took a quick look as what kmem_buckets is, and seems to me that align
+> > doesn't make sense here (and probably not useful in Rust as well)
+> > because a kmem_buckets is a set of kmem_caches, each has its own object
+> > size, making them share the same alignment is probably not what you
+> > want. But I could be missing something.
+>
+> How flexible do you need those alignments to be? Besides the power-of-two
+> guarantees, we currently have only two odd sizes with 96 and 192. If thos=
+e
+> were guaranteed to be aligned 32 bytes, would that be sufficient? Also do
+> you ever allocate anything smaller than 32 bytes then?
+>
+> To summarize, if Rust's requirements can be summarized by some rules and
+> it's not completely ad-hoc per-allocation alignment requirement (or if it
+> is, does it have an upper bound?) we could perhaps figure out the creatio=
+n
+> of rust-specific kmem_buckets to give it what's needed?
 
-MX35{U,L}F{2,4}G24AD-Z4I8 are Macronix serial NAND flashes.
+Rust's allocator API can take any size and alignment as long as:
 
-Their main difference from MX35{U,L}F{2,4}G24AD lies in
-the plane number. The plane number for those with the
-postfix Z4I8 is 1.
+1. The alignment is a power of two.
+2. The size is non-zero.
+3. When you round up the size to the next multiple of the alignment,
+then it must not overflow the signed type isize / ssize_t.
 
-These flashes have been validated on Xilinx zynq-picozed
-board which include Macronix SPI Host.
+What happens right now is that when Rust wants an allocation with a
+higher alignment than ARCH_SLAB_MINALIGN, then it will increase size
+until it becomes a power of two so that the power-of-two guarantee
+gives a properly aligned allocation.
 
-Signed-off-by: Cheng Ming Lin <chengminglin@mxic.com.tw>
----
- drivers/mtd/nand/spi/macronix.c | 38 +++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
-
-diff --git a/drivers/mtd/nand/spi/macronix.c b/drivers/mtd/nand/spi/macronix.c
-index ffcaf1a6947e..ae33bdca94e0 100644
---- a/drivers/mtd/nand/spi/macronix.c
-+++ b/drivers/mtd/nand/spi/macronix.c
-@@ -158,6 +158,15 @@ static const struct spinand_info macronix_spinand_table[] = {
- 					      &update_cache_variants),
- 		     SPINAND_HAS_QE_BIT,
- 		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout, NULL)),
-+	SPINAND_INFO("MX35LF2G24AD-Z4I8",
-+		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0x64, 0x03),
-+		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout, NULL)),
- 	SPINAND_INFO("MX35LF4G24AD",
- 		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0x35, 0x03),
- 		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 2, 1, 1),
-@@ -167,6 +176,15 @@ static const struct spinand_info macronix_spinand_table[] = {
- 					      &update_cache_variants),
- 		     SPINAND_HAS_QE_BIT,
- 		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout, NULL)),
-+	SPINAND_INFO("MX35LF4G24AD-Z4I8",
-+		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0x75, 0x03),
-+		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout, NULL)),
- 	SPINAND_INFO("MX31LF1GE4BC",
- 		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0x1e),
- 		     NAND_MEMORG(1, 2048, 64, 64, 1024, 20, 1, 1, 1),
-@@ -207,6 +225,16 @@ static const struct spinand_info macronix_spinand_table[] = {
- 		     SPINAND_HAS_QE_BIT,
- 		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
- 				     mx35lf1ge4ab_ecc_get_status)),
-+	SPINAND_INFO("MX35UF4G24AD-Z4I8",
-+		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0xf5, 0x03),
-+		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
-+				     mx35lf1ge4ab_ecc_get_status)),
- 	SPINAND_INFO("MX35UF4GE4AD",
- 		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0xb7, 0x03),
- 		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
-@@ -237,6 +265,16 @@ static const struct spinand_info macronix_spinand_table[] = {
- 		     SPINAND_HAS_QE_BIT,
- 		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
- 				     mx35lf1ge4ab_ecc_get_status)),
-+	SPINAND_INFO("MX35UF2G24AD-Z4I8",
-+		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0xe4, 0x03),
-+		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
-+				     mx35lf1ge4ab_ecc_get_status)),
- 	SPINAND_INFO("MX35UF2GE4AD",
- 		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0xa6, 0x03),
- 		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 1, 1, 1),
--- 
-2.25.1
-
+Alice
