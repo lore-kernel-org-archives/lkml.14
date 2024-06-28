@@ -1,71 +1,102 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B9C224CC
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 03:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DB01BF47
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 03:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.0.225.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719544976; cv=none; b=DKWobBJK/CZwEmd0xPCn16iLt7XRoJyUICEOvUHb846O5HxhLcRNHnZEPIwkE0hoGI5TIjyYh3/4xdmnwz9Uxgi+y29K4uVs/8C0xBHa10EDOHNJVaTgtFcl35p+ENDlWhDsfKqz+iMIZ19D4aREaejGyMTVxLETLOQqmRe5jXI=
+	t=1719545255; cv=none; b=TkGIFioYecfPUNW5yuxZwzz1Peq/JvjTfI/LknnqjEVMsj+n65zRn/LDtLmmuONB/Rsphz+/+NzKIemInLnjfftOZv0KSBAl6GD3IGY2jeTk6veJEr7DoRY/2CLCqPaBN02HLA3NTcP2E6SRelhtbCjCAe5Ob6e032kHce1a96c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719544976; c=relaxed/simple;
-	bh=3DUUtBPRxTtvJOlbJoNG47TbMiWx3qFShWLO8MlOlSU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D/sSz/KrFdwS17QB7qBtdb8F1n6tcBaa2gizg/pm9s3gx05+yCUoA3pi+P81r5nPgAE1gr45ezDxfXVO2OaK8UbHPO2bZj7f8NMjfl7IIGXsK8vOXHmaulKMComyNZ+avDsjKpnAen3jqGFN0Yr9DzY+sfPpxW43srOjkuu5Puk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DQOdodv8; arc=none smtp.client-ip=95.215.58.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DQOdodv8"
-X-Envelope-To: senozhatsky@chromium.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1719544973;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4wyVmhtzRgXjKmN/+2ILYIJ53nf9dPoYBTf1xl1b9vM=;
-	b=DQOdodv8LJ635EwBC5usDhHWawNtFtwWM175C06AD9nRL1ZRL3yxS0khFiUmtDlhHYAAko
-	BdPDEWx0WT3YcGcd4DtJ959lyYC08jz1xvMHRsjiovafy5q7ZUUa/pu3CZ4h0kf5yCwXVa
-	Pc9epzyvXGJwJVy+8qu+Y/DnNFFHAOM=
-X-Envelope-To: akpm@linux-foundation.org
-X-Envelope-To: minchan@kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-Message-ID: <fa282bea-4639-4d04-9d99-b9e2838a6b7a@linux.dev>
-Date: Fri, 28 Jun 2024 11:22:48 +0800
+	s=arc-20240116; t=1719545255; c=relaxed/simple;
+	bh=a3olSj8nVDgW4q/EBPpehEZzXrNx6E2BpkN/BcooknI=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=HmQakiCcVzhduNSxzGNTAezYZ80kyDqsQ0hS4oN45lEwV7wmtxxleWIc7ib/dxQkVC4y7BfLfvm+ajsNhUp9StioZPXj/ueRGluqTTrOXxBNq9/dOfT3Fl+Q0ulgip/utO48zak2UY66vj/Wa8rV+xkTe80XCx2FOMshP1Si3bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=210.0.225.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
+X-ASG-Debug-ID: 1719545240-086e231108138f50001-xx1T2L
+Received: from ZXSHMBX1.zhaoxin.com (ZXSHMBX1.zhaoxin.com [10.28.252.163]) by mx1.zhaoxin.com with ESMTP id tbdnvh16gC4lZJdo (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Fri, 28 Jun 2024 11:27:20 +0800 (CST)
+X-Barracuda-Envelope-From: LindaChai@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHMBX1.zhaoxin.com
+ (10.28.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 28 Jun
+ 2024 11:27:20 +0800
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by zxbjmbx1.zhaoxin.com
+ (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 28 Jun
+ 2024 11:27:19 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
+Received: from zxbjmbx1.zhaoxin.com ([fe80::2c4a:ac53:52a8:1a13]) by
+ zxbjmbx1.zhaoxin.com ([fe80::2c4a:ac53:52a8:1a13%3]) with mapi id
+ 15.01.2507.039; Fri, 28 Jun 2024 11:27:19 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.29.252.163
+From: "Linda Chai(BJ-RD)" <LindaChai@zhaoxin.com>
+To: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+CC: "Cobe Chen(BJ-RD)" <CobeChen@zhaoxin.com>, LeoLiu-oc
+	<LeoLiu-oc@zhaoxin.com>, "Linda Chai(BJ-RD)" <LindaChai@zhaoxin.com>, "Tim
+ Guo(BJ-RD)" <TimGuo@zhaoxin.com>, "acpica-devel@lists.linux.dev"
+	<acpica-devel@lists.linux.dev>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com"
+	<hpa@zytor.com>, "j.granados@samsung.com" <j.granados@samsung.com>,
+	"lenb@kernel.org" <lenb@kernel.org>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org"
+	<linux-pm@vger.kernel.org>, "mcgrof@kernel.org" <mcgrof@kernel.org>,
+	"mingo@redhat.com" <mingo@redhat.com>, "peterz@infradead.org"
+	<peterz@infradead.org>, "rafael@kernel.org" <rafael@kernel.org>,
+	"ricardo.neri-calderon@linux.intel.com"
+	<ricardo.neri-calderon@linux.intel.com>, "robert.moore@intel.com"
+	<robert.moore@intel.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
+	"viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "x86@kernel.org"
+	<x86@kernel.org>
+Subject: Re: [PATCH 3/3] ACPI: cpufreq: Add ITMT support when CPPC enabled for
+ Zhaoxin CPUs
+Thread-Topic: Re: [PATCH 3/3] ACPI: cpufreq: Add ITMT support when CPPC
+ enabled for Zhaoxin CPUs
+X-ASG-Orig-Subj: Re: [PATCH 3/3] ACPI: cpufreq: Add ITMT support when CPPC enabled for
+ Zhaoxin CPUs
+Thread-Index: AdrJCJizLp8Sv9dXStirpjor4h554A==
+Date: Fri, 28 Jun 2024 03:27:19 +0000
+Message-ID: <4bee9e6ac2c84311ad7f7654d398f62a@zhaoxin.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] zsmalloc: rename class stat mutators
-To: Sergey Senozhatsky <senozhatsky@chromium.org>,
- Andrew Morton <akpm@linux-foundation.org>, Minchan Kim <minchan@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-References: <20240628015154.3230389-1-senozhatsky@chromium.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <20240628015154.3230389-1-senozhatsky@chromium.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+X-Barracuda-Connect: ZXSHMBX1.zhaoxin.com[10.28.252.163]
+X-Barracuda-Start-Time: 1719545240
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 574
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
+X-Barracuda-Spam-Score: -1.99
+X-Barracuda-Spam-Status: No, SCORE=-1.99 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=BSF_SC0_SA_TO_FROM_DOMAIN_MATCH, THREAD_INDEX, THREAD_TOPIC
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.126861
+	Rule breakdown below
+	 pts rule name              description
+	---- ---------------------- --------------------------------------------------
+	0.01 THREAD_INDEX           thread-index: AcO7Y8iR61tzADqsRmmc5wNiFHEOig==
+	0.01 THREAD_TOPIC           Thread-Topic: ...(Japanese Subject)...
+	0.01 BSF_SC0_SA_TO_FROM_DOMAIN_MATCH Sender Domain Matches Recipient
+	                           Domain
 
-On 2024/6/28 09:42, Sergey Senozhatsky wrote:
-> A cosmetic change.
-> 
-> o Rename class_stat_inc() and class_stat_dec() to class_stat_add()
->    and class_stat_sub() correspondingly. inc/dec are usually associated
->    with +1/-1 modifications, while zsmlloc can modify stats by up
->    to ->objs_per_zspage. Use add/sub (follow atomics naming).
-> 
-> o Rename zs_stat_get() to class_stat_read()
->    get() is usually associated with ref-counting and is paired with put().
->    zs_stat_get() simply reads class stat so rename to reflect it.
->    (This also follows atomics naming).
-> 
-> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-
-Looks good to me.
-
-Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
-
+SGmjrEFsbA0KSSBoYXZlbid0IHJlY2VpdmVkIGFueSByZXBseSBhYm91dCB0aGlzIG1haWwgZm9y
+IGEgbG9uZyB0aW1lLiBJIGRvdWJ0IGlmIHlvdSBoYXZlIG5vdGljZWQgaXQ/DQpJIHJlYWxseSBs
+b29rIGZvcndhcmQgdG8gcmVjZWl2aW5nIHlvdXIgc3VnZ2VzdGlvbiBhYm91dCB0aGlzIG5ldyBw
+YXRjaC4NCg0KQlJzDQpMaW5kYQ0KDQoNCrGjw9zJ+cP3o7oNCrG+08q8/rqs09Cxo8Pcu/LXqNPQ
+0MXPoqOsvfa5qda4tqjK1bz+yMvKudPDoaPRz737ttSxvtPKvP678sbkxNrI3df2yM66zs60vq3K
+2siotcSy6dTEoaLKudPDoaK4tNbGu/LXqreioaMNCkNPTkZJREVOVElBTCBOT1RFOg0KVGhpcyBl
+bWFpbCBjb250YWlucyBjb25maWRlbnRpYWwgb3IgbGVnYWxseSBwcml2aWxlZ2VkIGluZm9ybWF0
+aW9uIGFuZCBpcyBmb3IgdGhlIHNvbGUgdXNlIG9mIGl0cyBpbnRlbmRlZCByZWNpcGllbnQuIEFu
+eSB1bmF1dGhvcml6ZWQgcmV2aWV3LCB1c2UsIGNvcHlpbmcgb3IgZm9yd2FyZGluZyBvZiB0aGlz
+IGVtYWlsIG9yIHRoZSBjb250ZW50IG9mIHRoaXMgZW1haWwgaXMgc3RyaWN0bHkgcHJvaGliaXRl
+ZC4NCg==
