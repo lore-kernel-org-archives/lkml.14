@@ -1,113 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CCA254BD4;
-	Fri, 28 Jun 2024 07:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95CD14373F;
+	Fri, 28 Jun 2024 07:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719559902; cv=none; b=XdsbN4JtpvhtjsH1FWALmqBNh1+0n0eGLK5nTOm9U2DN6dms6A1/plMcfyQLEzcZQ47WsJ7iH+HImPggJN16UIw/KNPJySw4eNbkqhaxd086ZaczD6xEFazQZgod0WEhjSis4eEho+BKuYd2oNHsUcjrdt/AFyaz0XP77StwOAM=
+	t=1719559912; cv=none; b=VWDl/E6XT5nFb6hDdIq0R5gyFfUnoYXjNlMlnvF0W64HlKM9E2cNO2s6zGkgS7wNnlLXJmN5uZNW8cuZVKm6APEtFTekWAELyja54E9xObpFvFTRxHfPo7MzkBo1v2TZcUDDhKpHbC1XYj6Gge4dDRBXgT/AF0j+9yLzJDACfZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719559902; c=relaxed/simple;
-	bh=KWadJWEycDJn9mnW33hPUERovexnNMMEh2BaERDMNlg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fhb1xSnOh2ZStyOVsiY+Z6y7FtyUzGnHgmSxtYh24TgKvfheLUOg1XHFozw7wYRz6rVmw/AH070axCsUh19fqlf2YUjBa430GOztvXt9ooNyU5Ep1CWNQw/pYdHu9r3pnXOsJQiF3sW7h46hdFficWxlnssfP/ix8Iu5YRNImJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pp7W09Jb; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pp7W09Jb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E465C116B1;
-	Fri, 28 Jun 2024 07:31:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719559901;
-	bh=KWadJWEycDJn9mnW33hPUERovexnNMMEh2BaERDMNlg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pp7W09JbAdaZP67OFGIThO5eVticdeiin8hft557ABXV9bysa2nvWOSNqnpjAe1Jg
-	 gju2po4CemZTbJiJZFGzHtXMR3160Vf+EV04e4LwuK8EAMhQwu6cT05sLMDtjpiKbT
-	 fELnygZXm8+Zb1FLP1xeDt96RoJ7+EZxOptnsU2KS9S8WX9UiUZ1BNXdc+zkOpH4+9
-	 cu8z4PBJ1uqMC6+Qbc9UZE6fAOrNtYsOYaCdvvz2zRsJRZNk/1eFipAPrdq3ITcq4M
-	 Z2a3Kus1K6HkqqvujizOCmPloTSTAX3EDaLVuka5I/bVtlC52aIsr9237yf72R9G31
-	 DCCtxq1cfVoEQ==
-Date: Fri, 28 Jun 2024 13:01:37 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Joy Zou <joy.zou@nxp.com>
-Cc: Frank.Li@nxp.com, imx@lists.linux.dev, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] dmaengine: fsl-edma: add edma src ID check at
- request channel
-Message-ID: <Zn5m2Wadskni-4az@matsya>
-References: <20240621104932.4116137-1-joy.zou@nxp.com>
- <20240621104932.4116137-3-joy.zou@nxp.com>
+	s=arc-20240116; t=1719559912; c=relaxed/simple;
+	bh=W8hIukQv0ev9fNxEyLp2AafwZ6u5tbSJgL++dWX7JPQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GPMsUUv6SLZuWBPbQn2Dm86ZPfvBdiwcdZHmMxHQsbkMZV1wAYAnqQl+PcQ+Fv57x7C4AwHv+2CguDt4r1VHv5VKDxDdT8qkmOPHJNc5OMsAmfLazrW4vGu/HZ0YanSfUG15ZpMR6y9ABxteH4+ux6iQqbh/dJULDjKIaGnxf2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4W9Rsv3S7Lz1xt4G;
+	Fri, 28 Jun 2024 15:30:11 +0800 (CST)
+Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
+	by mail.maildlp.com (Postfix) with ESMTPS id D2DCE1A016C;
+	Fri, 28 Jun 2024 15:31:41 +0800 (CST)
+Received: from hulk-vt.huawei.com (10.67.174.26) by
+ dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 28 Jun 2024 15:31:41 +0800
+From: Xiu Jianfeng <xiujianfeng@huawei.com>
+To: <hannes@cmpxchg.org>, <mhocko@kernel.org>, <roman.gushchin@linux.dev>,
+	<shakeel.butt@linux.dev>, <muchun.song@linux.dev>,
+	<akpm@linux-foundation.org>
+CC: <cgroups@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] mm: memcg: adjust the warning when seq_buf overflows
+Date: Fri, 28 Jun 2024 07:23:33 +0000
+Message-ID: <20240628072333.2496527-1-xiujianfeng@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240621104932.4116137-3-joy.zou@nxp.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpeml500023.china.huawei.com (7.185.36.114)
 
-On 21-06-24, 18:49, Joy Zou wrote:
-> Check src ID to detect misuse of same src ID for multiple DMA channels.
-> 
-> Signed-off-by: Joy Zou <joy.zou@nxp.com>
-> ---
->  drivers/dma/fsl-edma-main.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/drivers/dma/fsl-edma-main.c b/drivers/dma/fsl-edma-main.c
-> index d4f29ece69f5..47939d010e59 100644
-> --- a/drivers/dma/fsl-edma-main.c
-> +++ b/drivers/dma/fsl-edma-main.c
-> @@ -100,6 +100,22 @@ static irqreturn_t fsl_edma_irq_handler(int irq, void *dev_id)
->  	return fsl_edma_err_handler(irq, dev_id);
->  }
->  
-> +static bool fsl_edma_srcid_in_use(struct fsl_edma_engine *fsl_edma, u32 srcid)
-> +{
-> +	struct fsl_edma_chan *fsl_chan;
-> +	int i;
-> +
-> +	for (i = 0; i < fsl_edma->n_chans; i++) {
-> +		fsl_chan = &fsl_edma->chans[i];
-> +
-> +		if (fsl_chan->srcid && srcid == fsl_chan->srcid) {
-> +			dev_err(&fsl_chan->pdev->dev, "The srcid is using! Can't use repeatly.");
+Currently it uses WARN_ON_ONCE() if seq_buf overflows when user reads
+memory.stat, the only advantage of WARN_ON_ONCE is that the splat is
+so verbose that it gets noticed. And also it panics the system if
+panic_on_warn is enabled. It seems like the warning is just an over
+reaction and a simple pr_warn should just achieve the similar effect.
 
-Better message would be: "The srcid is in use, cant use!"
+Suggested-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+---
+ mm/memcontrol.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-wdyt?
-
-> +			return true;
-> +		}
-> +	}
-> +	return false;
-> +}
-> +
->  static struct dma_chan *fsl_edma_xlate(struct of_phandle_args *dma_spec,
->  		struct of_dma *ofdma)
->  {
-> @@ -117,6 +133,10 @@ static struct dma_chan *fsl_edma_xlate(struct of_phandle_args *dma_spec,
->  	list_for_each_entry_safe(chan, _chan, &fsl_edma->dma_dev.channels, device_node) {
->  		if (chan->client_count)
->  			continue;
-> +
-> +		if (fsl_edma_srcid_in_use(fsl_edma, dma_spec->args[1]))
-> +			return NULL;
-> +
->  		if ((chan->chan_id / chans_per_mux) == dma_spec->args[0]) {
->  			chan = dma_get_slave_channel(chan);
->  			if (chan) {
-> @@ -161,6 +181,8 @@ static struct dma_chan *fsl_edma3_xlate(struct of_phandle_args *dma_spec,
->  			continue;
->  
->  		fsl_chan = to_fsl_edma_chan(chan);
-> +		if (fsl_edma_srcid_in_use(fsl_edma, dma_spec->args[0]))
-> +			return NULL;
->  		i = fsl_chan - fsl_edma->chans;
->  
->  		fsl_chan->priority = dma_spec->args[1];
-> -- 
-> 2.37.1
-
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index c251bbe35f4b..8e5590ac43d7 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1484,7 +1484,8 @@ static void memory_stat_format(struct mem_cgroup *memcg, struct seq_buf *s)
+ 		memcg_stat_format(memcg, s);
+ 	else
+ 		memcg1_stat_format(memcg, s);
+-	WARN_ON_ONCE(seq_buf_has_overflowed(s));
++	if (seq_buf_has_overflowed(s))
++		pr_warn("%s: Warning, stat buffer overflow, please report\n", __func__);
+ }
+ 
+ /**
 -- 
-~Vinod
+2.34.1
+
