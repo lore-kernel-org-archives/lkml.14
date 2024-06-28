@@ -1,79 +1,125 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7308619B5A2;
-	Fri, 28 Jun 2024 14:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF8819B5A2
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 14:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719583800; cv=none; b=h2ffSy3fu+QKMcZqyipBw7r8VNyHn9WzQq+ji7XiSJenhGk+H8VdvCwlVOQR8Z4JdyHmKdmOU2m/dYh9GsfavLllKwVKNvtSoDvu9XucZLFnyQQ02WkrjtCLJ3AvabPO8zInsIYnLh415fsdyj7ZsAev9dVQPfBAHdSXsiwrpbI=
+	t=1719583877; cv=none; b=NUM/i/JPIHRThmNzBsIp62knj2fgeY6pfHSIciqd3+Iswxyibd4fUhBeNIldgKPVZIAb2F4REgN+gs5CYiPnB5AE2uygbxdJLv1tR8Oji5MBPK41XxIkGbu9sXa3Gh8HVKZFDWXBJfuYoU6TIX5rMHd3xFOPrKLZpuLUIh3LZHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719583800; c=relaxed/simple;
-	bh=uOtQMuL1X1bCXgLRk8CEj7G6Dj5LK1iiftQXY+Rv9Lk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t1omIVBGRdVtnLPTrt8BKY8z2/S214iMGylhI6a2nK5V/scEPFa+dZDWkKN5sWOlvuitvd3MyOlZYviK1wRYtDVOzSH88mGM/Q++G+ONQ23nFZNubvaaGjPnPfjhdRP1Sqcrl1wNNpQn+sKg0w4Gt3JuG0JabTQuxbck87X42uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Ahnfd0qh; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1719583877; c=relaxed/simple;
+	bh=z0Z6+L/8dFrrvyR8eVGAuh87cInBmCHWpD/EUJPQNFA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=HUaNup6Wy0R2xRlELzP+GJMvnfcBgnORV4x6z08DBUJJztwEx9msyAUFAKrdFMCENIkbSIG6Prb1ABpkULpuovRDGXUMw4dGCRlqedwbng0sGvg5G4cI3H42F11T5F/dSYZMSEdaVXXNw1WefjcCrvrIXlisnePpQRG2N0VfMgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HEqMAkNO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/tv6x01s; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Ahnfd0qh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=p9/TdaF6sDe7VwbrSuMbzC40JZtDM24SJtp78alf1DY=; b=Ahnfd0qh/15hFWKLitt7TYAlxC
-	qlfisPoWXjQK5TrxnqMA34GdmjB78L1VZufe8mes3tP3D0HqwL8NsJB8dQLCd6xaTNwebKYge8dhQ
-	9VtTKjAP/uETAaHtjbITw3pVgalTT1z0gQD8yL7eB0DQEhh4eaSCQlFFbreP826Nmops=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sNCIS-001HzG-5N; Fri, 28 Jun 2024 16:09:52 +0200
-Date: Fri, 28 Jun 2024 16:09:52 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: Marek Vasut <marex@denx.de>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Fabio Estevam <festevam@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"kernel@dh-electronics.com" <kernel@dh-electronics.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] arm64: dts: imx8mp: Update Fast ethernet PHY MDIO
- addresses to match DH i.MX8MP DHCOM rev.200
-Message-ID: <6687963b-1cbf-4093-aa8d-b90ce9ba7c0b@lunn.ch>
-References: <20240627233045.80551-1-marex@denx.de>
- <AM6PR04MB5941804BFE1CC6F72E776F9588D02@AM6PR04MB5941.eurprd04.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HEqMAkNO";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/tv6x01s"
+From: John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1719583874;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WfnJBJaJKRfMnoTosqnImnuIvhFpBT55UVzSmIC18b0=;
+	b=HEqMAkNOsIxlX+e8E9AxdPhoSapNz5c7ZfBzaTJ/xAEZwIVd5o8PI1iKavrpmahfpxU4EU
+	kYbpLSf0IBVhYhHoNvzBI/EFz2AwXEURu5RbhHF94b0yAs4noNmBAtJAumgZPANdfjVQCh
+	Hv7gWDwJ4+wTW8wu4bo8MPPgBzMDXwToNuJ5kCa+PDqTsyMybT9lOn8JOE8ZeoevfsOpza
+	G9fG6rO3WRmiyc6quHQCol3j9V7CedvOvk2aSUSoA97aOYjOwRHJpvIkFQzzzmDNTJF98g
+	TvdHP67OwbavmkqPHMEb36b/HbXalhSmwN/CyZUskvVhsHdyXOKDXTeJHDsw8g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1719583874;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WfnJBJaJKRfMnoTosqnImnuIvhFpBT55UVzSmIC18b0=;
+	b=/tv6x01s1EgwEJdiM5wenpXhkXhHl1sxyr4md1mp5i1qa5A3aCkR+q6EvMKFICSvGf+s1j
+	zspQVUWx+sAGZQDg==
+To: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH printk v2 12/18] printk: Add kthread for all legacy
+ consoles
+In-Reply-To: <Zn67hDCEHdgtYPv3@pathway.suse.cz>
+References: <20240603232453.33992-1-john.ogness@linutronix.de>
+ <20240603232453.33992-13-john.ogness@linutronix.de>
+ <Zn6iq3n2ggL138Gs@pathway.suse.cz> <87cyo1xnmw.fsf@jogness.linutronix.de>
+ <Zn67hDCEHdgtYPv3@pathway.suse.cz>
+Date: Fri, 28 Jun 2024 16:17:13 +0206
+Message-ID: <877ce9xim6.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM6PR04MB5941804BFE1CC6F72E776F9588D02@AM6PR04MB5941.eurprd04.prod.outlook.com>
+Content-Type: text/plain
 
-On Fri, Jun 28, 2024 at 01:01:49AM +0000, Peng Fan wrote:
-> > Subject: [PATCH v2] arm64: dts: imx8mp: Update Fast ethernet PHY
-> > MDIO addresses to match DH i.MX8MP DHCOM rev.200
-> > 
-> > The production DH i.MX8MP DHCOM SoM rev.200 uses updated PHY
-> > MDIO addresses for the Fast ethernet PHYs. Update the base SoM DT
-> > to cater for this change.
-> > Prototype rev.100 SoM was never publicly available and was
-> > manufactured in limited series, anything currently available is rev.200
-> > or newer, so it is safe to update the DT this way.
-> > 
-> > Signed-off-by: Marek Vasut <marex@denx.de>
-> > ---
-> 
-> Reviewed-by: Peng Fan <peng.fan@nxp.com>
+On 2024-06-28, Petr Mladek <pmladek@suse.com> wrote:
+> On Fri 2024-06-28 14:28:47, John Ogness wrote:
+>> On 2024-06-28, Petr Mladek <pmladek@suse.com> wrote:
+>> >> @@ -1494,7 +1508,9 @@ void nbcon_cpu_emergency_exit(void)
+>> >>  		 * to handle it.
+>> >>  		 */
+>> >>  		do_trigger_flush = true;
+>> >> -		if (printing_via_unlock && !is_printk_deferred()) {
+>> >> +		if (!force_printkthreads() &&
+>> >
+>> > Is this correct? We still need to flush the messages directly
+>> > when the legacy kthread is not ready yet.
+>> 
+>> No! If force_printkthreads() is set, messages will never flush directly
+>> except for console_flush_on_panic().
+>
+> But this is an _emergency_ context! This would be inconsistent with
+> the nbcon consoles where the messages are flushed directly.
+>
+> Is RT sheduling quaranteed when the system reached emergency state?
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+No.
 
-    Andrew
+> In fact, we probably should not check force_printkthreads() here at
+> all. It would be only for NBCON_PRIO_NORMAL context.
+
+On PREEMPT_RT, legacy consoles are not allowed to print from
+non-preemptible contexts because they use spinlocks (rtmutexes).
+
+This is a disadvantage for legacy consoles on PREEMPT_RT. If people want
+a legacy console to gain the reliability attribute on PREEMPT_RT, then
+that console _must_ be converted to nbcon.
+
+force_printkthreads() is used to establish the same console printing
+behavior as PREEMPT_RT. (A later patch makes this behavior available to
+all preemption models so that users can enjoy the non-interference
+attribute of the rework.)
+
+>> For the next version, any failed
+>> thread creation leads to unregistering the console. In the case of the
+>> legacy thread, it will mean unregistering all legacy consoles on
+>> failure.
+>
+> It means that the system would become silent. Is this a good idea?
+
+In the threaded model, the thread is a critical component of the
+console. If the thread cannot start, it is the same as if memory could
+not be allocated. The registration must fail. And just as it is now, the
+user will only see that it failed via dmesg (or some other console that
+did not fail).
+
+> IMHO, we have a fundamental problem here.
+> Are RT guarantees more important than printk() or vice versa?
+
+That is not the issue. The problem is that you want legacy consoles in
+RT to print without the printing thread. That is not possible. Those
+drivers are not RT compatible and will cause deadlocks. They _must_ be
+modified i.e. converted to nbcon consoles.
+
+We have worked really hard to allow legacy consoles to work "as is" for
+!PREEMPT_RT. But when PREEMPT_RT is enabled legacy consoles must be
+forced into the thread (except for panic, where we close our eyes and
+hope for the best).
+
+John
