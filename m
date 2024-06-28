@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A6D1514DC
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 21:56:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F33419CCEE
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 21:56:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719611802; cv=none; b=YnZIPrGz/Bwmq/lUw1EffJqpjePP1LqqHxWxjkxE8zX0bW4w1QTwufS9AfE4BkCReLsu2Gu6RZ9oukEPD13ukbbg5FrHcwIpCiKO/gfMe+qBKNrcq8KU3b6AZD1Vr30YtkW5kYJb0tPALIQMUvrAHWMB5G/rMLAcgF8kGqJYZbA=
+	t=1719611802; cv=none; b=U9KOI1XkKMByj9qwU6q9fIN+KTba2ykJAGeIY5e1Csa9kUvLmqeVYh42MDFexZiFwWMlb3zy+KaPZQ96c4ePBr0zZk/CMoxTFXW7jyM8IyctVNJoVbPPWcbNdDU8fD8jeP8B+lhXkajI3xPC1Zk6Tobz/332EQCDFwceBDg2krA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719611802; c=relaxed/simple;
-	bh=vM+3tzSSnqnmtLQ7I5Kq1E3nWSgcu98rwL7vm2afEB0=;
+	bh=QyDHWOy1sSaunKLVu4tBjbfGSBLpsHu64tRbyDPgVm0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QVplD2acZrtYBJGI6xkQu2RSJ1UVl/InsjqJdWs8onQTNw907no7RerAmB9GcAxxlSBCT0Ez3fNXNvoXP6mvW+TYhkXAUaK5svhKzXa+EhmjyU1YmnG30EAuWfqy32D2U7wc4W27R0rWNaH5nkCaKluvH5TdURc/AME9DLlDciw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e5dgGk4B; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version; b=eZuWu3WB3lJ8gS6cZz0KG+seVbG/hvlcS2348BB3nP15t5nP892RjpO7bhLH3gwmtJrvQ2KYxPZqff2iusnFGg1mwGmvn+pPwaDZX3QYqnQ6tuex9yX6OGg04mo9U+H2kAQ9GXDtPnMhUrGoRZBR1nZKy9xydTPmJkp7oNtdO7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bhxSTZ4z; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e5dgGk4B"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bhxSTZ4z"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719611800; x=1751147800;
+  t=1719611801; x=1751147801;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=vM+3tzSSnqnmtLQ7I5Kq1E3nWSgcu98rwL7vm2afEB0=;
-  b=e5dgGk4BzA0SrBhJ057Ux4dCJ5a5Hfyk8IPw4dcj8XlZkRfN/gv1XTXa
-   pDy1nMkMFURvgoGImc1bEP1A+jZqickZGNPoj436i2XSZcJ4V5XirzjKO
-   +uJiUkR2PaQ/a+Rdoo3MTzEfKz2rqmeXN1IpUVdkeRZRkGFKcPVaFxuh1
-   4IaSi1f8EM/YcNcRDBR4zhDm2JZUEJA+nMyK6+lNOmqnVqVHn7+JkyEkW
-   N4RtrfUWTuvHABOoTpYhTXw+lj7HDuGtpu0KOyVeqPrfOSxJw6pT2C/h9
-   YIvEPzJSCq2f862UqQxlP9hyjFVIm06Hgrd4prWMKAGYk0jz34zOAbzPk
-   A==;
-X-CSE-ConnectionGUID: UxGuW56rTAqKeVAT4jzEQw==
-X-CSE-MsgGUID: n05hFUT7Riy+Pc4arOq7KQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11117"; a="16762651"
+  bh=QyDHWOy1sSaunKLVu4tBjbfGSBLpsHu64tRbyDPgVm0=;
+  b=bhxSTZ4zG9FWjNMKoE2ShfxSKr29AcejLG+20WvQR1Raxn3PE4w1765Z
+   4+Ds83rxOr9tMQDkDpdnDeByzKnuMqrrrNRCv1hmrIhFu9kS3JoSwjqUq
+   NhnPeX1Tj15yTxk0cjF2WU8DAL2Vp6BriHK+mdFpAC47JBAghqObuzdWW
+   Ooq8cniV0V8ZBpPRMpAqYm+jFM9oQbQIPtxZLW8UPWkojtrIptSnDIE0U
+   Ql8L9CZw7ixUPH6C+u0L54PIYbioRSOlXDOg4CgWEaMjILkrQ0zvITjRX
+   i7/Mq3PUGNd9WTP0+PfpgiVnkQ13TltHy7oDp9BSsVvJirE+mRywcYOOA
+   g==;
+X-CSE-ConnectionGUID: j2REQj79Q9uOgGocBysp7g==
+X-CSE-MsgGUID: RPXMTuUaSYqxBqkdP34txQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11117"; a="16762614"
 X-IronPort-AV: E=Sophos;i="6.09,170,1716274800"; 
-   d="scan'208";a="16762651"
+   d="scan'208";a="16762614"
 Received: from fmviesa002.fm.intel.com ([10.60.135.142])
   by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 14:56:28 -0700
-X-CSE-ConnectionGUID: sF9rm35ZSFKs+kWpC2pfSg==
-X-CSE-MsgGUID: KNyP2hV6QsKe/rV0XLBPZA==
+X-CSE-ConnectionGUID: XQsGcYONTjy06IfSTT68Dw==
+X-CSE-MsgGUID: SZxMM9bySyio/9i37oLp1w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,170,1716274800"; 
-   d="scan'208";a="68065687"
+   d="scan'208";a="68065675"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 14:56:28 -0700
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 14:56:27 -0700
 From: Tony Luck <tony.luck@intel.com>
 To: Fenghua Yu <fenghua.yu@intel.com>,
 	Reinette Chatre <reinette.chatre@intel.com>,
@@ -56,9 +56,9 @@ Cc: x86@kernel.org,
 	linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v23 18/19] x86/resctrl: Sub-NUMA Cluster (SNC) detection
-Date: Fri, 28 Jun 2024 14:56:18 -0700
-Message-ID: <20240628215619.76401-19-tony.luck@intel.com>
+Subject: [PATCH v23 14/19] x86/resctrl: Handle removing directories in Sub-NUMA Cluster (SNC) mode
+Date: Fri, 28 Jun 2024 14:56:14 -0700
+Message-ID: <20240628215619.76401-15-tony.luck@intel.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240628215619.76401-1-tony.luck@intel.com>
 References: <20240628215619.76401-1-tony.luck@intel.com>
@@ -70,115 +70,84 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There isn't a simple hardware bit that indicates whether a CPU is
-running in Sub-NUMA Cluster (SNC) mode. Infer the state by comparing
-the number of CPUs sharing the L3 cache with CPU0 to the number of CPUs in
-the same NUMA node as CPU0.
-
-If SNC mode is detected, print a single informational message to the
-console.
-
-Add the missing definition of pr_fmt() to monitor.c. This wasn't
-noticed before as there are only "can't happen" console messages
-from this file.
+In SNC mode there are multiple subdirectories in each L3 level monitor
+directory (one for each SNC node). If all the CPUs in an SNC node are
+taken offline, just remove the SNC directory for that node. In
+non-SNC mode, or when the last SNC node directory is removed,
+remove the L3 monitor directory.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
 ---
- arch/x86/kernel/cpu/resctrl/monitor.c | 66 +++++++++++++++++++++++++++
- 1 file changed, 66 insertions(+)
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 40 +++++++++++++++++++++-----
+ 1 file changed, 33 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index 2d9b0bad678d..00e5c0e5424f 100644
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -15,6 +15,8 @@
-  * Software Developer Manual June 2016, volume 3, section 17.17.
-  */
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 8502385e389f..67a8188c6d8f 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -3008,20 +3008,46 @@ static int mon_addfile(struct kernfs_node *parent_kn, const char *name,
  
-+#define pr_fmt(fmt)	"resctrl: " fmt
+ /*
+  * Remove all subdirectories of mon_data of ctrl_mon groups
+- * and monitor groups with given domain id.
++ * and monitor groups for the given domain.
++ * Remove files and directories containing "sum" of domain data
++ * when last domain being summed is removed.
+  */
+ static void rmdir_mondata_subdir_allrdtgrp(struct rdt_resource *r,
+-					   unsigned int dom_id)
++					   struct rdt_mon_domain *d)
+ {
+ 	struct rdtgroup *prgrp, *crgrp;
++	struct kernfs_node *kn;
++	char subname[32];
++	bool snc_mode;
+ 	char name[32];
+ 
++	snc_mode = r->mon_scope == RESCTRL_L3_NODE;
++	sprintf(name, "mon_%s_%02d", r->name, snc_mode ? d->ci->id : d->hdr.id);
++	if (snc_mode)
++		sprintf(subname, "mon_sub_%s_%02d", r->name, d->hdr.id);
 +
- #include <linux/cpu.h>
- #include <linux/module.h>
- #include <linux/sizes.h>
-@@ -1116,6 +1118,68 @@ void arch_mon_domain_online(struct rdt_resource *r, struct rdt_mon_domain *d)
- 	wrmsrl(MSR_RMID_SNC_CONFIG, val);
+ 	list_for_each_entry(prgrp, &rdt_all_groups, rdtgroup_list) {
+-		sprintf(name, "mon_%s_%02d", r->name, dom_id);
+-		kernfs_remove_by_name(prgrp->mon.mon_data_kn, name);
++		kn = kernfs_find_and_get(prgrp->mon.mon_data_kn, name);
++		if (!kn)
++			continue;
++		kernfs_put(kn);
++
++		if (kn->dir.subdirs <= 1)
++			kernfs_remove(kn);
++		else
++			kernfs_remove_by_name(kn, subname);
+ 
+-		list_for_each_entry(crgrp, &prgrp->mon.crdtgrp_list, mon.crdtgrp_list)
+-			kernfs_remove_by_name(crgrp->mon.mon_data_kn, name);
++		list_for_each_entry(crgrp, &prgrp->mon.crdtgrp_list, mon.crdtgrp_list) {
++			kn = kernfs_find_and_get(crgrp->mon.mon_data_kn, name);
++			if (!kn)
++				continue;
++			kernfs_put(kn);
++
++			if (kn->dir.subdirs <= 1)
++				kernfs_remove(kn);
++			else
++				kernfs_remove_by_name(kn, subname);
++		}
+ 	}
  }
  
-+/* CPU models that support MSR_RMID_SNC_CONFIG */
-+static const struct x86_cpu_id snc_cpu_ids[] __initconst = {
-+	X86_MATCH_VFM(INTEL_ICELAKE_X, 0),
-+	X86_MATCH_VFM(INTEL_SAPPHIRERAPIDS_X, 0),
-+	X86_MATCH_VFM(INTEL_EMERALDRAPIDS_X, 0),
-+	X86_MATCH_VFM(INTEL_GRANITERAPIDS_X, 0),
-+	X86_MATCH_VFM(INTEL_ATOM_CRESTMONT_X, 0),
-+	{}
-+};
-+
-+/*
-+ * There isn't a simple hardware bit that indicates whether a CPU is running
-+ * in Sub-NUMA Cluster (SNC) mode. Infer the state by comparing the
-+ * number of CPUs sharing the L3 cache with CPU0 to the number of CPUs in
-+ * the same NUMA node as CPU0.
-+ * It is not possible to accurately determine SNC state if the system is
-+ * booted with a maxcpus=N parameter. That distorts the ratio of SNC nodes
-+ * to L3 caches. It will be OK if system is booted with hyperthreading
-+ * disabled (since this doesn't affect the ratio).
-+ */
-+static __init int snc_get_config(void)
-+{
-+	struct cacheinfo *ci = get_cpu_cacheinfo_level(0, RESCTRL_L3_CACHE);
-+	const cpumask_t *node0_cpumask;
-+	int cpus_per_node, cpus_per_l3;
-+	int ret;
-+
-+	if (!x86_match_cpu(snc_cpu_ids) || !ci)
-+		return 1;
-+
-+	cpus_read_lock();
-+	if (num_online_cpus() != num_present_cpus())
-+		pr_warn("Some CPUs offline, SNC detection may be incorrect\n");
-+	cpus_read_unlock();
-+
-+	node0_cpumask = cpumask_of_node(cpu_to_node(0));
-+
-+	cpus_per_node = cpumask_weight(node0_cpumask);
-+	cpus_per_l3 = cpumask_weight(&ci->shared_cpu_map);
-+
-+	if (!cpus_per_node || !cpus_per_l3)
-+		return 1;
-+
-+	ret = cpus_per_l3 / cpus_per_node;
-+
-+	/* sanity check: Only valid results are 1, 2, 3, 4 */
-+	switch (ret) {
-+	case 1:
-+		break;
-+	case 2 ... 4:
-+		pr_info("Sub-NUMA Cluster mode detected with %d nodes per L3 cache\n", ret);
-+		rdt_resources_all[RDT_RESOURCE_L3].r_resctrl.mon_scope = RESCTRL_L3_NODE;
-+		break;
-+	default:
-+		pr_warn("Ignore improbable SNC node count %d\n", ret);
-+		ret = 1;
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
- int __init rdt_get_mon_l3_config(struct rdt_resource *r)
- {
- 	unsigned int mbm_offset = boot_cpu_data.x86_cache_mbm_width_offset;
-@@ -1123,6 +1187,8 @@ int __init rdt_get_mon_l3_config(struct rdt_resource *r)
- 	unsigned int threshold;
- 	int ret;
+@@ -3991,7 +4017,7 @@ void resctrl_offline_mon_domain(struct rdt_resource *r, struct rdt_mon_domain *d
+ 	 * per domain monitor data directories.
+ 	 */
+ 	if (resctrl_mounted && resctrl_arch_mon_capable())
+-		rmdir_mondata_subdir_allrdtgrp(r, d->hdr.id);
++		rmdir_mondata_subdir_allrdtgrp(r, d);
  
-+	snc_nodes_per_l3_cache = snc_get_config();
-+
- 	resctrl_rmid_realloc_limit = boot_cpu_data.x86_cache_size * 1024;
- 	hw_res->mon_scale = boot_cpu_data.x86_cache_occ_scale / snc_nodes_per_l3_cache;
- 	r->num_rmid = (boot_cpu_data.x86_cache_max_rmid + 1) / snc_nodes_per_l3_cache;
+ 	if (is_mbm_enabled())
+ 		cancel_delayed_work(&d->mbm_over);
 -- 
 2.45.2
 
