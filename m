@@ -1,63 +1,62 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5B91878;
-	Fri, 28 Jun 2024 22:47:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318F581ADB;
+	Fri, 28 Jun 2024 22:47:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719614860; cv=none; b=Lgf1pjGDMyu2XBKHxHcJeZtfBLxk5rmFW+/Ys7ag4CDwao9b1W9cF6xUAEvEfZecZDuI657v8d0YV6RbTd/MAd1aFdys0gKYO1m4ZL5VfTcknRfNQ2JBnglKlXm+gvcUuUpiPr6Iz02E5Qzp5EAWZLFarqGZGxP+sKuXGAnRJa4=
+	t=1719614861; cv=none; b=i14HiMlxwejWANLDcxcwtg2ATXnE9jOnhInVO5+brRcqdHlw2FZgiXmluntmd5DxRb36R6HIMxOi6h0sdox0Bz/39Wx0AqBaJ+TXsxQtje5FI3W3fjZufTLUqckzDO+Tq8NLtAHqzTGsYC+JcNFgNpYTaOKZCsCLGgELW4WnKGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719614860; c=relaxed/simple;
-	bh=3HIqvIYUAQL50HyfJ4OI6Kxr8Eqop7cMJtS61eP4Sck=;
+	s=arc-20240116; t=1719614861; c=relaxed/simple;
+	bh=bxWyiBWYPW2+buNmHaUgN3u/vnNpNcPGkK464MtKleM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SRZ9qmBHU04fde2x7kVMvQ9WwjLLj98/m8oNXjXdltDBWYJKmAO3+FuqKp4MGCCFiTT9mkQ342fKm+0SXhsQ8sgTKbZ0S/yCyl45ItM8UmoUjQHam+vOEk+V+2TjnKpvJaQ22ZV7ObhCpslzAP1cVc+Z5LA+xSnvHED1ePGATYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=glDK0p7p; arc=none smtp.client-ip=209.85.214.173
+	 MIME-Version; b=JGW+nTTvTzLerYw0wLQofkzK0l3QGnHZEYchZpzSu9Vi5Pijd6n1h8htD7KKgtRGAdHXyQifKJRumDYDpEMrgp4GsRltsN5r58d/jJjGf0OU71JNvMMs86t43fJN/c/zLQjDZcmFGw7Ml7pwYfxfBWLacvziRmDVOaXukzwbZLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bb+chhMb; arc=none smtp.client-ip=209.85.216.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="glDK0p7p"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1f65a3abd01so8016375ad.3;
-        Fri, 28 Jun 2024 15:47:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bb+chhMb"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2c7b3c513f9so743094a91.3;
+        Fri, 28 Jun 2024 15:47:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719614857; x=1720219657; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719614859; x=1720219659; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=eru8IeZwD6XePaAEBRnTFg580BiWX6RJC2I+6NuvGFY=;
-        b=glDK0p7pitK1kkNqx6o8UwmMDpvXQY+T/v4agcNnQIncNcmCVANCG614cwTRC7Br+N
-         gZt7SBFwjTPQIksV/PcjkgQFZx60jEnZ/P2Z+a/y7og/l9k7ShW2aRD9mSZOxT9LOVly
-         9OxIks8+8s3SQrUEp1fLN6NIVci58R4DLjP7DoPCT+kUc28jRWN8R+IgkJv/0EzE+l/I
-         cDJ3bKDPwfw0bVkENM+ETC9ANUiXJ3KCrACnJJVNga4WsxtnyQiqEoy1pY+zs2u6n0YO
-         Y5BwbmC+mOKHVSvMAqUaNw8PhQxxziLQTjTI1apr00LBrsP2nlgUkK66vsX/fgFdoxq5
-         VNCw==
+        bh=grngmqCY15ZFkaN4yPlMDR3cMPW3TlCebrSNgkV3ENk=;
+        b=Bb+chhMbmcEMyy/Q8sdQM17DpjBa9u+O4qNdRX5Xbj9sk/UXkpKhx6mfPm1f8aiDQN
+         H6vsRCCL33e1b2SIJuYA6ph4AwUUJLZBW+IJtRJ9iPsldNHXUWU4lahwqqM0HHzFazKR
+         Eqeb7i7uexB9tKChhp8VpkHgPxEYOzg9Zzh2TuVvo81nVSm6Bi8y3KhbkJvdTbMH2uKT
+         5UKewVvSEcGuaYYZJ5a5XAXqR6c0xZ0MAR3FJpP0LrgssJyYjlFbP33dR3vEx05QOHPF
+         f+vBDeLsEKB/ypdA7uwsJoK/Wd3g5sbOumi0gBAevsKFQZ3Vm3mDFwLeygVqcXEtCAAA
+         Vqqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719614857; x=1720219657;
+        d=1e100.net; s=20230601; t=1719614859; x=1720219659;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=eru8IeZwD6XePaAEBRnTFg580BiWX6RJC2I+6NuvGFY=;
-        b=ie4lkF2gmPu2hh+mzX2PToKzDwG3hlizfO3faMf9uX1z3g50jLaUe8ZNMgK75N+2ef
-         LpV90VG5FObLzogK01ybjOqGRkrujfs6wdS0jxOB1hw++YJfV6ZnGNIJ4/xoFORzuu/A
-         /aTkXkWLQ5JXkMcNPiDlk5afzUCjbUmSl7/Y8iSbBE0R/ZHZAQ0dRdcerZIhnRXmNFZT
-         vuQo/5pFYMfQqccNFo9nt+ZTqeTR8jaO3jGPGC8pjETt/rtaO0SLzhAb25k50gUXoNDc
-         xKCx4axiW6moBuEFXFlVpqocYiMG69VaOU8EEoVG5VZK7XMkYyyGu5LlnGp5zy725Ydg
-         21Mg==
-X-Gm-Message-State: AOJu0YzI36alv5I888DIuD3l1NvBMsYIKV86pliXSjw0loiQWrZpgryv
-	o73//jqa7jfjmcdZDZ1eB1XRIDu1TxBFUNHnGX3d3R1ejj8DmiZWG6T0AQ==
-X-Google-Smtp-Source: AGHT+IGdczk/zd9Cfyxa9Tm4aTvvfasnp2SxFSkrROiPFSDGPpPOAQkOXAnR492T0B/wLaubwvtIAg==
-X-Received: by 2002:a05:6a21:99a7:b0:1bd:2d02:b219 with SMTP id adf61e73a8af0-1becd4c0663mr10103866637.1.1719614857163;
-        Fri, 28 Jun 2024 15:47:37 -0700 (PDT)
+        bh=grngmqCY15ZFkaN4yPlMDR3cMPW3TlCebrSNgkV3ENk=;
+        b=G0uUcWHUUUNXqmpfc4B5U+zVdN1lqjPNxmMpAHVOgAG4m2vfxrIBoEKlJ1u30J2e8A
+         C/jzCzsCkv70zXFHodR92L5rSAJsama7LffpkImFexUYR3S8lHY+tAwAm/TKqx2OYkIv
+         YryShXvx0kXrDH8lzOVTa9dc0Yl9icTuS9PVHPIoOV7TOgdi0DgBhHbJBdBphEKioF0F
+         zONSGdbNqJBdcWv7cGf/E+zY3Wca+bo0T3EsTPrt+FGjiAWq2Rkt4c8svjSQ6Jj7Tkyu
+         5BhpJWCRT/Fd/HNZB6CVeduzE535qiAU0oYHmXd8sIkDLaHLbyZixXVvTzjdp6hPmfej
+         qyTw==
+X-Gm-Message-State: AOJu0YzmNsGRXzKz+00Wz6e9kJbJhAko5TPqT7Ihp0fajXo+yMjjCWXh
+	Ln4dcn/k1o6TQDtHMUBcB7PgYnVeC3LZOwBjt0+nA1ImtxuAPqNefPJ7ig==
+X-Google-Smtp-Source: AGHT+IFErHAjL8SN0MVSSUbo2xu2yuSye8VDkA/wXgIw9DoTE0ztbxvz5WvoFCTpkA55oUWttegjxw==
+X-Received: by 2002:a17:90a:3fc6:b0:2c7:da20:524b with SMTP id 98e67ed59e1d1-2c8504c7dbamr15211307a91.10.1719614859146;
+        Fri, 28 Jun 2024 15:47:39 -0700 (PDT)
 Received: from dtor-ws.sjc.corp.google.com ([2620:15c:9d:2:9c98:1988:ce15:c0ac])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c91ce58877sm2187163a91.24.2024.06.28.15.47.36
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c91ce58877sm2187163a91.24.2024.06.28.15.47.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 15:47:36 -0700 (PDT)
+        Fri, 28 Jun 2024 15:47:38 -0700 (PDT)
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To: linux-input@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Igor Artemiev <Igor.A.Artemiev@mcst.ru>
-Subject: [PATCH 2/5] Input: cypress_ps2 - fix error handling when sending command fails
-Date: Fri, 28 Jun 2024 15:47:24 -0700
-Message-ID: <20240628224728.2180126-2-dmitry.torokhov@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH 4/5] Input: cypress_ps2 - propagate errors from lower layers
+Date: Fri, 28 Jun 2024 15:47:26 -0700
+Message-ID: <20240628224728.2180126-4-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
 In-Reply-To: <20240628224728.2180126-1-dmitry.torokhov@gmail.com>
 References: <20240628224728.2180126-1-dmitry.torokhov@gmail.com>
@@ -69,93 +68,171 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Stop layering error handling in cypress_ps2_sendbyte() and simply
-pass on error code from ps2_sendbyte() and use it in the callers.
+Do not override errors reported by lower layers with generic "-1",
+but propagate them to the callers. Change the checks for errors to be
+in the form of "if (error)" to maintain consistency.
 
-This fixes mishandling of error condition in
-cypress_ps2_read_cmd_status() which expects errors to be negative.
-
-Reported-by: Igor Artemiev <Igor.A.Artemiev@mcst.ru>
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/input/mouse/cypress_ps2.c | 32 +++++++++++++++----------------
- drivers/input/mouse/cypress_ps2.h |  6 ------
- 2 files changed, 15 insertions(+), 23 deletions(-)
+ drivers/input/mouse/cypress_ps2.c | 62 +++++++++++++++++--------------
+ 1 file changed, 35 insertions(+), 27 deletions(-)
 
 diff --git a/drivers/input/mouse/cypress_ps2.c b/drivers/input/mouse/cypress_ps2.c
-index 32b55b2b9b76..fcc3921e49e0 100644
+index 8e17cd0bc437..87b87f14e749 100644
 --- a/drivers/input/mouse/cypress_ps2.c
 +++ b/drivers/input/mouse/cypress_ps2.c
-@@ -38,15 +38,14 @@ static const unsigned char cytp_resolution[] = {0x00, 0x01, 0x02, 0x03};
- static int cypress_ps2_sendbyte(struct psmouse *psmouse, int value)
+@@ -97,10 +97,10 @@ static int cypress_ps2_read_cmd_status(struct psmouse *psmouse,
+ 				       unsigned char cmd,
+ 				       unsigned char *param)
  {
+-	int rc;
  	struct ps2dev *ps2dev = &psmouse->ps2dev;
+ 	enum psmouse_state old_state;
+ 	int pktsize;
++	int rc;
+ 
+ 	ps2_begin_command(ps2dev);
+ 
+@@ -112,7 +112,7 @@ static int cypress_ps2_read_cmd_status(struct psmouse *psmouse,
+ 	memset(param, 0, pktsize);
+ 
+ 	rc = cypress_ps2_sendbyte(psmouse, 0xe9);
+-	if (rc < 0)
++	if (rc)
+ 		goto out;
+ 
+ 	if (!wait_event_timeout(ps2dev->wait,
+@@ -322,15 +322,15 @@ static int cypress_read_tp_metrics(struct psmouse *psmouse)
+ 
+ static int cypress_query_hardware(struct psmouse *psmouse)
+ {
+-	int ret;
 +	int error;
  
--	if (ps2_sendbyte(ps2dev, value & 0xff, CYTP_CMD_TIMEOUT) < 0) {
-+	error = ps2_sendbyte(ps2dev, value & 0xff, CYTP_CMD_TIMEOUT);
+-	ret = cypress_read_fw_version(psmouse);
+-	if (ret)
+-		return ret;
++	error = cypress_read_fw_version(psmouse);
++	if (error)
++		return error;
+ 
+-	ret = cypress_read_tp_metrics(psmouse);
+-	if (ret)
+-		return ret;
++	error = cypress_read_tp_metrics(psmouse);
++	if (error)
++		return error;
+ 
+ 	return 0;
+ }
+@@ -339,9 +339,12 @@ static int cypress_set_absolute_mode(struct psmouse *psmouse)
+ {
+ 	struct cytp_data *cytp = psmouse->private;
+ 	unsigned char param[3];
++	int error;
+ 
+-	if (cypress_send_ext_cmd(psmouse, CYTP_CMD_ABS_WITH_PRESSURE_MODE, param) < 0)
+-		return -1;
++	error = cypress_send_ext_cmd(psmouse, CYTP_CMD_ABS_WITH_PRESSURE_MODE,
++				     param);
++	if (error)
++		return error;
+ 
+ 	cytp->mode = (cytp->mode & ~CYTP_BIT_ABS_REL_MASK)
+ 			| CYTP_BIT_ABS_PRESSURE;
+@@ -366,7 +369,7 @@ static void cypress_reset(struct psmouse *psmouse)
+ static int cypress_set_input_params(struct input_dev *input,
+ 				    struct cytp_data *cytp)
+ {
+-	int ret;
++	int error;
+ 
+ 	if (!cytp->tp_res_x || !cytp->tp_res_y)
+ 		return -EINVAL;
+@@ -383,10 +386,10 @@ static int cypress_set_input_params(struct input_dev *input,
+ 	input_set_abs_params(input, ABS_MT_POSITION_Y, 0, cytp->tp_max_abs_y, 0, 0);
+ 	input_set_abs_params(input, ABS_MT_PRESSURE, 0, 255, 0, 0);
+ 
+-	ret = input_mt_init_slots(input, CYTP_MAX_MT_SLOTS,
+-			INPUT_MT_DROP_UNUSED|INPUT_MT_TRACK);
+-	if (ret < 0)
+-		return ret;
++	error = input_mt_init_slots(input, CYTP_MAX_MT_SLOTS,
++				    INPUT_MT_DROP_UNUSED | INPUT_MT_TRACK);
++	if (error)
++		return error;
+ 
+ 	__set_bit(INPUT_PROP_SEMI_MT, input->propbit);
+ 
+@@ -637,21 +640,22 @@ static void cypress_disconnect(struct psmouse *psmouse)
+ static int cypress_reconnect(struct psmouse *psmouse)
+ {
+ 	int tries = CYTP_PS2_CMD_TRIES;
+-	int rc;
++	int error;
+ 
+ 	do {
+ 		cypress_reset(psmouse);
+-		rc = cypress_detect(psmouse, false);
+-	} while (rc && (--tries > 0));
++		error = cypress_detect(psmouse, false);
++	} while (error && (--tries > 0));
+ 
+-	if (rc) {
 +	if (error) {
- 		psmouse_dbg(psmouse,
--				"sending command 0x%02x failed, resp 0x%02x\n",
--				value & 0xff, ps2dev->nak);
--		if (ps2dev->nak == CYTP_PS2_RETRY)
--			return CYTP_PS2_RETRY;
--		else
--			return CYTP_PS2_ERROR;
-+			    "sending command 0x%02x failed, resp 0x%02x, error %d\n",
-+			    value & 0xff, ps2dev->nak, error);
+ 		psmouse_err(psmouse, "Reconnect: unable to detect trackpad.\n");
+-		return -1;
 +		return error;
  	}
  
- #ifdef CYTP_DEBUG_VERBOSE
-@@ -73,21 +72,20 @@ static int cypress_ps2_ext_cmd(struct psmouse *psmouse, unsigned short cmd,
- 		 * to make the device return to the ready state.
- 		 */
- 		rc = cypress_ps2_sendbyte(psmouse, cmd & 0xff);
--		if (rc == CYTP_PS2_RETRY) {
-+		if (rc == -EAGAIN) {
- 			rc = cypress_ps2_sendbyte(psmouse, 0x00);
--			if (rc == CYTP_PS2_RETRY)
-+			if (rc == -EAGAIN)
- 				rc = cypress_ps2_sendbyte(psmouse, 0x0a);
- 		}
--		if (rc == CYTP_PS2_ERROR)
--			continue;
+-	if (cypress_set_absolute_mode(psmouse)) {
++	error = cypress_set_absolute_mode(psmouse);
++	if (error) {
+ 		psmouse_err(psmouse, "Reconnect: Unable to initialize Cypress absolute mode.\n");
+-		return -1;
++		return error;
+ 	}
  
--		rc = cypress_ps2_sendbyte(psmouse, data);
--		if (rc == CYTP_PS2_RETRY)
-+		if (!rc) {
- 			rc = cypress_ps2_sendbyte(psmouse, data);
--		if (rc == CYTP_PS2_ERROR)
--			continue;
--		else
--			break;
-+			if (rc == -EAGAIN)
-+				rc = cypress_ps2_sendbyte(psmouse, data);
-+
-+			if (!rc)
-+				break;
-+		}
- 	} while (--tries > 0);
+ 	return 0;
+@@ -660,6 +664,7 @@ static int cypress_reconnect(struct psmouse *psmouse)
+ int cypress_init(struct psmouse *psmouse)
+ {
+ 	struct cytp_data *cytp;
++	int error;
  
- 	ps2_end_command(ps2dev);
-diff --git a/drivers/input/mouse/cypress_ps2.h b/drivers/input/mouse/cypress_ps2.h
-index bb4979d06bf9..47d538a49089 100644
---- a/drivers/input/mouse/cypress_ps2.h
-+++ b/drivers/input/mouse/cypress_ps2.h
-@@ -72,12 +72,6 @@
- #define CYTP_DATA_TIMEOUT 30
+ 	cytp = kzalloc(sizeof(*cytp), GFP_KERNEL);
+ 	if (!cytp)
+@@ -670,17 +675,20 @@ int cypress_init(struct psmouse *psmouse)
  
- #define CYTP_EXT_CMD   0xe8
--#define CYTP_PS2_RETRY 0xfe
--#define CYTP_PS2_ERROR 0xfc
--
--#define CYTP_RESP_RETRY 0x01
--#define CYTP_RESP_ERROR 0xfe
--
+ 	cypress_reset(psmouse);
  
- #define CYTP_105001_WIDTH  97   /* Dell XPS 13 */
- #define CYTP_105001_HIGH   59
+-	if (cypress_query_hardware(psmouse)) {
++	error = cypress_query_hardware(psmouse);
++	if (error) {
+ 		psmouse_err(psmouse, "Unable to query Trackpad hardware.\n");
+ 		goto err_exit;
+ 	}
+ 
+-	if (cypress_set_absolute_mode(psmouse)) {
++	error = cypress_set_absolute_mode(psmouse);
++	if (error) {
+ 		psmouse_err(psmouse, "init: Unable to initialize Cypress absolute mode.\n");
+ 		goto err_exit;
+ 	}
+ 
+-	if (cypress_set_input_params(psmouse->dev, cytp) < 0) {
++	error = cypress_set_input_params(psmouse->dev, cytp);
++	if (error) {
+ 		psmouse_err(psmouse, "init: Unable to set input params.\n");
+ 		goto err_exit;
+ 	}
+@@ -705,5 +713,5 @@ int cypress_init(struct psmouse *psmouse)
+ 	psmouse->private = NULL;
+ 	kfree(cytp);
+ 
+-	return -1;
++	return error;
+ }
 -- 
 2.45.2.803.g4e1b14247a-goog
 
