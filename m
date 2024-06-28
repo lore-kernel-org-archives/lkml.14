@@ -1,60 +1,37 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 733C1158DA7
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 11:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8DA155A58;
+	Fri, 28 Jun 2024 11:49:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719575322; cv=none; b=Ez6+Wfc+vJmcv8HelSxx+hZEcOA/1gwXZ9vIORfLnJaARs4h1tmlOBoznpIR28BzdYg94kaFp8Nch/VPOL+10AqWd0ljkrQKGFlNc4sGJMUyj+xh+YRAp3hLBKtDDQWD27EFgrq3pu2CN9AendwxLPinoD8782CfakbLTXLFQKM=
+	t=1719575384; cv=none; b=lXiMV9EBd2X1GeJ8ODNgegJHDeEmc1m1PqJqpYegTycGaC+tcZMyYgyKEDE+52DcxxRBXuuzS7kxpBXV+jz1StpAWc4B0iCtD7cs1od4Jvk0Adh/nahHnpkZ/1u4fX4ziwVb1Ghpi9E1B+qXv0FdkImB3SU8WooDAiR3Oh7r6eU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719575322; c=relaxed/simple;
-	bh=EqvmK9erXdF03YXwNF5KKlTIlFwBGkwfT2afCjCPw2M=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=R65fKqcQBYBatf+WT3dryKiALxiV0UJ2j3t3leAnEjEOIgXIxuq3tTG4IdjWJ0lhkR6E727hMCJlZIjbW8dMr561WQZq73jgmKJF+Ix8gg0WAzKHJneQbOp6aVDyRORMisTBMLzncW1x96obS1uZjNMtYfo8ERUUyZvPqLgXN2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=KS5YUiOC; arc=none smtp.client-ip=209.85.160.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1719575384; c=relaxed/simple;
+	bh=0I+r8Bzyzaqu9bFb0Ty+lOwGyBNGIZfkjaSm1li3Tqw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nkhWOvuq78+AewQJ6SUKi6AEy2mB9Or2xvyApkNULN2TNGxRNnRwxqoqi0nNgfyWeBADlLiW8yb8mDAw4F5Wzv2zSmeHYqr0UfD8gUcKMKif9//NkwcspjZhb7aLtHoxQDf/R9YqoJ5g5bbDj5P8ytpdlqLWaQcAE43RAB3YPEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uoJmuPSm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="KS5YUiOC"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-25c9786835eso264150fac.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 04:48:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1719575318; x=1720180118; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cVz6x8zHD2e0o5+zukG3kv+msINNXHhJ2RLc+xaoywE=;
-        b=KS5YUiOCKXmH6/KkTDKyoiJiK90z3pggHKwTtomy/mC+J6ijlWoqmiXDSULgcFxxHY
-         vr7BJcihIHYFX1yEfRbHhvpa6VgYTdfvfC55Vz93rX9Ia6PLjFuwC8Vj4XXnCAFza5Ux
-         McEvf8AyafLDP11tseDn5HLZpoxDhkOuEQKUiQ/xCMfpzyWmyY1ZCGDePcESY6NNjF5N
-         7lTrp2oOzD4nU0jJd3zHFaONbENRO5o3ZV8jTUQZQU070ANwknf35uj6mPp7GETQbrwf
-         YEW8nwxxCYif/1FkHYQ1W5BhXZge+zT0emFrj1v1doTOM4wy23saXNPnEjdoAx6pM2vu
-         jS8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719575318; x=1720180118;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cVz6x8zHD2e0o5+zukG3kv+msINNXHhJ2RLc+xaoywE=;
-        b=qPLfOITwFBr41hiV6iMyi09rbpggpTY2tcl4e8JdYjnMv7usoCNg6IrdnhAfTVLOXY
-         JX4JDmYKVzbLqS9fv4W30qybhT46O5ef5IZu0+eI2MxgEimI2qOcBQqew+JhVRA4RQkK
-         DM5fAXwtt5u/Ccv9b8fKRFdJd880pI+vS4AEikVrKYOoViO2Z82yycOaTa2FlhxYFr3e
-         JWM2nx6HKufXkwX/DHeWHsZ7yU7hJJsYBIc1HW1G/g58sXlyAutzEafC83AyghFKEGER
-         mkppJfhczLHJufSmHZBHO8SrzXHeImihpOOgVE58QPJaMEkEGWlN5XPSJusVXyjMx/fh
-         9yMw==
-X-Forwarded-Encrypted: i=1; AJvYcCUfl6XSdRv0DUxmonVPhUFSIyqRAYHaFlPzhhPU2vTHwgaQEOfalw5yFt8PetnusQmtwoPvKcwTTHIFKklV6Wz80x88x2PlAwv8yW8f
-X-Gm-Message-State: AOJu0YxjhxurEb53gI/DYGzjCHtToS3NZ+wFUSKKO4cLJO55Jmf07VTe
-	oS0J/xKoV2AbBFrjDSI9rb2G5mb13UXiNd1Wa3e2QWj4tI5W41UKIxK8nvS2Kvk=
-X-Google-Smtp-Source: AGHT+IFOBKDdLVvGH5/U1B4nvMFkuWHQzKcK9o5xnO1lPmAh4a3+NRC7pmcUXvg9Bib/B2yboEQX6w==
-X-Received: by 2002:a05:6871:3a11:b0:259:8671:2530 with SMTP id 586e51a60fabf-25d06c5118bmr17606779fac.25.1719575318592;
-        Fri, 28 Jun 2024 04:48:38 -0700 (PDT)
-Received: from [127.0.1.1] (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70803ecfb90sm1377775b3a.139.2024.06.28.04.48.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 04:48:38 -0700 (PDT)
-From: Andy Chiu <andy.chiu@sifive.com>
-Date: Fri, 28 Jun 2024 19:47:49 +0800
-Subject: [PATCH v2 6/6] riscv: ftrace: support PREEMPT
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uoJmuPSm"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D0CACC116B1;
+	Fri, 28 Jun 2024 11:49:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719575383;
+	bh=0I+r8Bzyzaqu9bFb0Ty+lOwGyBNGIZfkjaSm1li3Tqw=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=uoJmuPSm/SEplLF3/31rtJPsP4MypgYbnXSzRyyJArYeWNB8H5VIix7p2ryscI/Oa
+	 xSBjrsuaqR15jzxikpn3B5vNoEOwf70aG3IzomWdDuuFAFV4XXLjjRtSUO1fafERBq
+	 J2wfhZRrhgWL53yamu1lQLYbCrjmuWkqb4SaAd4b57gVOOBGvq2cIlt9+5hoS2uWOZ
+	 8kfpBb627xReI3tpiMOGvhYTN1lPXOtQmsy2vllA9t8gNXLD4HKYuVs3rCx4RLqOGH
+	 z7nzCD/UdirfqNIEuXXExLdyBvnPGhQpEzjrgDaYOUMAugQtvBu/PFwQhTlhG+Kh/A
+	 EAaAs3B+Ov0Kw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B09C2BD09;
+	Fri, 28 Jun 2024 11:49:43 +0000 (UTC)
+From: Xilin Wu via B4 Relay <devnull+wuxilin123.gmail.com@kernel.org>
+Subject: [PATCH RESEND 0/2] Introduce ASUS Vivobook S 15
+Date: Fri, 28 Jun 2024 19:49:33 +0800
+Message-Id: <20240628-asus-vivobook-s15-v1-0-92cb39f3f166@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,44 +40,87 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240628-dev-andyc-dyn-ftrace-v4-v2-6-1e5f4cb1f049@sifive.com>
-References: <20240628-dev-andyc-dyn-ftrace-v4-v2-0-1e5f4cb1f049@sifive.com>
-In-Reply-To: <20240628-dev-andyc-dyn-ftrace-v4-v2-0-1e5f4cb1f049@sifive.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alexghiti@rivosinc.com>, Zong Li <zong.li@sifive.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <ndesaulniers@google.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
- Puranjay Mohan <puranjay@kernel.org>
-Cc: Palmer Dabbelt <palmer@rivosinc.com>, linux-riscv@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- llvm@lists.linux.dev, Andy Chiu <andy.chiu@sifive.com>
-X-Mailer: b4 0.12.4
+X-B4-Tracking: v=1; b=H4sIAE2jfmYC/32NOw7CMBBErxJtzaKsycdQUZCWAkqUwgkmWUFi5
+ AULFOXuWDkA5ZvRvJlArGcrsEsm8DawsBsj0CqBtjdjZ5GvkUGlKksLpdHIWzBwcI1zdxTKsVQ
+ m25a62FChIe6e3t74szgvcKrO1fEAdcx7lpfz3+Uq0NL+sQbCFJUhm+UlNdo0+24w/Fi3boB6n
+ ucfFpZhJboAAAA=
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>, 
+ Johan Hovold <johan+linaro@kernel.org>, Xilin Wu <wuxilin123@gmail.com>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1719575382; l=2004;
+ i=wuxilin123@gmail.com; s=20240424; h=from:subject:message-id;
+ bh=0I+r8Bzyzaqu9bFb0Ty+lOwGyBNGIZfkjaSm1li3Tqw=;
+ b=dMP0dS6tpEfExHXKCM/hZ1/UTrzeOPPfyohGLUbAmAqKk71rHky9+KiO1IJlmHmD7oLBvWemF
+ igusOgcO45XAcjtCaktvIC0gDoiW39l5ZF+R5oJYw1V0p0v6ZqGFdMb
+X-Developer-Key: i=wuxilin123@gmail.com; a=ed25519;
+ pk=vPnxeJnlD/PfEbyQPZzaay5ezxI/lMrke7qXy31lSM8=
+X-Endpoint-Received: by B4 Relay for wuxilin123@gmail.com/20240424 with
+ auth_id=157
+X-Original-From: Xilin Wu <wuxilin123@gmail.com>
+Reply-To: wuxilin123@gmail.com
 
-Now, we can safely enable dynamic ftrace with kernel preemption.
+ASUS Vivobook S 15 is a laptop based on the Qualcomm Snapdragon X Elite
+SoC (X1E78100). This series adds initial support for the device.
 
-Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
+Currently working features:
+
+- CPU frequency scaling up to 3.4GHz
+- NVMe storage on PCIe 6a (capable of Gen4x4, currently limited to Gen4x2)
+- Keyboard and touchpad
+- WCN7850 Wi-Fi
+- Two Type-C ports on the left side
+- internal eDP display
+- ADSP and CDSP remoteprocs
+
+Some features which can get working with out of tree patches:
+
+- GPU [1]
+- Bluetooth [2]
+
+Notably not working features:
+
+- Battery monitoring via battmgr
+- Orientation switching and altmode on the Type-C ports (USB4 retimer driver needed?)
+- Two USB Type-A ports on the right side (dwc3 multiport controller)
+- Front camera
+- SD card slot
+- HDMI connector (using a Parade PS186 DP 1.4 to HDMI 2.0 converter) 
+- USB4 and the retimer (Parade PS8830?)
+- Anything using the EC
+
+Dump of the ACPI tables could be found here: [3]
+
+[1] https://lore.kernel.org/all/20240623110753.141400-1-quic_akhilpo@quicinc.com/
+[2] https://git.codelinaro.org/abel.vesa/linux/-/commits/topic/b4/x1e80100-bt
+[3] https://github.com/aarch64-laptops/build/pull/103
+
+Signed-off-by: Xilin Wu <wuxilin123@gmail.com>
 ---
- arch/riscv/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v2:
+- EDITME: describe what is new in this series revision.
+- EDITME: use bulletpoints and terse descriptions.
+- Link to v1: https://lore.kernel.org/r/20240628-asus-vivobook-s15-v1-0-2a1e4571b8ab@gmail.com
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 55c70efbad0a..881ea466ff52 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -139,7 +139,7 @@ config RISCV
- 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
- 	select HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
--	select HAVE_FUNCTION_TRACER if !XIP_KERNEL && !PREEMPTION
-+	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
- 	select HAVE_EBPF_JIT if MMU
- 	select HAVE_GUP_FAST if MMU
- 	select HAVE_FUNCTION_ARG_ACCESS_API
+---
+Xilin Wu (2):
+      dt-bindings: arm: qcom: Add ASUS Vivobook S 15
+      arm64: dts: qcom: Add device tree for ASUS Vivobook S 15
 
+ Documentation/devicetree/bindings/arm/qcom.yaml    |   1 +
+ arch/arm64/boot/dts/qcom/Makefile                  |   1 +
+ .../boot/dts/qcom/x1e80100-asus-vivobook-s15.dts   | 613 +++++++++++++++++++++
+ 3 files changed, 615 insertions(+)
+---
+base-commit: 642a16ca7994a50d7de85715996a8ce171a5bdfb
+change-id: 20240628-asus-vivobook-s15-72a497863168
+
+Best regards,
 -- 
-2.43.0
+Xilin Wu <wuxilin123@gmail.com>
+
 
