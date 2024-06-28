@@ -1,48 +1,58 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D20214F9FF;
-	Fri, 28 Jun 2024 09:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D4011465A1;
+	Fri, 28 Jun 2024 09:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719566573; cv=none; b=UXowbGbhKbkB23Q3g7iVvsd2ocsvng7ingj+QJQDbZ3HvMUW5JwLJsHdVNniVE+np0q5VobsOzX3pOTH0SxsGalER3VB5EMFjaCNFw9eB9ItBpbshEd0CCCJM8QUfLfMgKB2Rp6qaVkyKcfNsrQhUv9xdEfwGtIoKNCkU9z4OgM=
+	t=1719566625; cv=none; b=Y19GQWUDCYfkP7JR15FhkovVSApBQs13refui5buwRXhmiQcwn1Ek+uvZgZl2ptNxNRFJWVVpkdY0+uoisqmPUH6ZssXy22Pi6hpVNnXDILUm6bWNjy/3Pfx6HxH4Rk4toLrjIFTKBwxH2f3JTrF/0keMGno0H1etaavU82vnew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719566573; c=relaxed/simple;
-	bh=ji3kYAAiZDeNMyOTvUchwFM6v2WJ4stp4je4nHMyTuc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=p90lINS8PhTvc0Dkng9UcepzlEAk/CU7WzlT4fwR0vAdQnBCYXSKgeUSoiqIEiBlHRVG1PKmX6Lc4khYwMEgJ2xl0XLIVkF0uhlQM14qIcmw7fk6gGEFln+FnFxgg8AtZGqV5F0DmO5Btt4lhbYpWFy4Wd5HGg+59MWD8vtVS24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=I8fGdIb8; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1719566625; c=relaxed/simple;
+	bh=SSys5MIYknqoTKv0F0mO251fQHgQ4iwR5eIb018WPZ0=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=TMQzBvGi8qmQVsrgygxgt6seHNL1R2odCw5py9jbr+CrHnbixclTP3olimFnV2D5UUwCRv5t9aCD+v35GL3hDn6cSkKh6R6R8aKQCwkTIqTqbYKF9ejw8G9ZUH6Ty1MHHnfUCqGTEWkzSN6zbPwrjmEIcEQRj9q19HS12TQf6KY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dDwcqVPE; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="I8fGdIb8"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45S7x9BC029750;
-	Fri, 28 Jun 2024 09:22:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	0w1okXQKkQ+Gyg0vlX2pD+pzMSgGZ5fM5jZ85tnSM2M=; b=I8fGdIb8gWvI/L3u
-	BGtP/5bK3tYQwIPQnv47/xNyAZz5tprBARD5CX1iwx44LZ717xNmB5qvUfmFpt3J
-	TRzKcpz4M09H1oUsjE8UQFhSyIkA3UFqwJe2ITFyh+CeK0+npOeQe3U1a2BWkvaw
-	wHBcDMozhKXqItk7pYXttHsSK81E6oVPEwDX2R71IwCRTC8TBrwWHegoi7vUM9bf
-	3WXD+TF5n9h52sD4nHihALytel2D33e381+8OF/tXQmQaDNIun5b7E98wEqY+CUA
-	ito/N3Q/FSXN+MsiYRpFuFsRI1w6aUI+WDsyC884kG+BNUtJ2dW6b2mij/qqfMCv
-	O0zqJg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 400c46f0t0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Jun 2024 09:22:47 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45S9Mj5Y019309
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Jun 2024 09:22:45 GMT
-Received: from [10.217.239.82] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 28 Jun
- 2024 02:22:42 -0700
-Message-ID: <ef5d4b87-76c7-4ff3-84ed-7f4743ec052c@quicinc.com>
-Date: Fri, 28 Jun 2024 14:52:39 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dDwcqVPE"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-57d10354955so466733a12.1;
+        Fri, 28 Jun 2024 02:23:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719566622; x=1720171422; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-language:cc:to:subject:from
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=baYtxBYZ7pjEtPz9CdjikSrYOvBcpn6u3FQ2N+5TP40=;
+        b=dDwcqVPEsx6t/vQoPF1+LXyBhdzJlzxzAD03AiqMe77TificERKNkR4aHVzKjCJNdO
+         Hz/mMS4rhIx0Z+z/b3y8xGsmVL1aayKtmQ/iut+5ciPMROGc2k3N982ZhjMltkkLTdEp
+         vUDGgD69F2S3tg9CQaG4BCT2JOBK6e4+JJqAPGyHUSr589q6EntlyY1NeTozVSVHuXky
+         ZFJdJ6biVGh1rn1U0MkR6iyi4uRw1+KgbxmeviZCjyq/8WBUn2ncG2JEctkLxaOHXOiP
+         eGuuMAQ6fdFj0UMCohDbmtNZvL3jkYolDfL0srQxHNwmkY+y72cQ19g+EBZZdML6kT4t
+         VdBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719566622; x=1720171422;
+        h=content-transfer-encoding:content-language:cc:to:subject:from
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=baYtxBYZ7pjEtPz9CdjikSrYOvBcpn6u3FQ2N+5TP40=;
+        b=MA2U7L8djAhVSSVvqJQi+9NWZZVVV2RUOj2bflkjRC46xEQoPlK3s0zL/AZIPWhZNj
+         peVISUNLym1xI+NO53oh3I0uBuotalXT7WGnwxWq7C7hShktzpndXN0Qck7FpE+tnMAw
+         FVopy4J4NFO7LSgqPs/uKgfjrCa4M8vqfsEJvtRrmB9i5yMwHpwME7Zki/dEFEJkXvPB
+         Rf2RkFXd8ggx4P//f0r9ePgY9OmdY2KSgasRUIfvx/M08SLdbrkqWWtLuVMwweVwoYzq
+         WN2FsIcyrav/aqyiHSdgXFLT83C/qZ4gdz9BYFLJq3WEeV+fFurGQlwN3Vnjfd9mpumi
+         dp8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVuEug2flzmQ8W6MKvMQlG8khqp5FGcTC0pVEqwgiHu1Iqfs4hhV2iD2z5ZyljUXhSG8nNgwVU94gNWnr9KFJkZ/dkcIXQAxnI6BtlOIiZURyXFxxOPPYS2CUNvUZxj/e6rIiSLLp48Dpw=
+X-Gm-Message-State: AOJu0Yw2CDJLKtrk+/UDqAVI0+ygSHxiuY37nMcRsI2+Ipt/RV+NbHuL
+	WF+XaxP/DYxdIl3SYUTzPyJgguDeWvuAwe4SatdaNmkhU1NB0lBV
+X-Google-Smtp-Source: AGHT+IE/3Afs9vHxmzvsl3H9DsS1V7bwU/VSy6NAflbuOWuaWkgoVTgn8QbmHhY5fbqaugsJqQRbZA==
+X-Received: by 2002:a50:d7cf:0:b0:57c:84fe:1acf with SMTP id 4fb4d7f45d1cf-57d49cb4600mr10197228a12.17.1719566621565;
+        Fri, 28 Jun 2024 02:23:41 -0700 (PDT)
+Received: from ?IPV6:2a02:a449:4071:1:32d0:42ff:fe10:6983? (2a02-a449-4071-1-32d0-42ff-fe10-6983.fixed6.kpn.net. [2a02:a449:4071:1:32d0:42ff:fe10:6983])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-58612c835f7sm747284a12.8.2024.06.28.02.23.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Jun 2024 02:23:40 -0700 (PDT)
+Message-ID: <5c651b3f-fe30-4874-98ed-044f7c62dd97@gmail.com>
+Date: Fri, 28 Jun 2024 11:23:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,215 +60,398 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 2/2] soc: qcom: smp2p: Introduce tracepoint support
-To: Sudeepgoud Patil <quic_sudeepgo@quicinc.com>, <quic_bjorande@quicinc.com>,
-        <andersson@kernel.org>, <quic_clew@quicinc.com>,
-        <mathieu.poirier@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>
-References: <20240627104831.4176799-1-quic_sudeepgo@quicinc.com>
- <20240627104831.4176799-3-quic_sudeepgo@quicinc.com>
+From: Johan Jonker <jbx6244@gmail.com>
+Subject: [PATCH v7] drm/rockchip: rk3066_hdmi: add sound support
+To: heiko@sntech.de
+Cc: hjc@rock-chips.com, andy.yan@rock-chips.com,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ airlied@gmail.com, daniel@ffwll.ch, lgirdwood@gmail.com, broonie@kernel.org,
+ linux-sound@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org
 Content-Language: en-US
-From: Deepak Kumar Singh <quic_deesin@quicinc.com>
-In-Reply-To: <20240627104831.4176799-3-quic_sudeepgo@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: XbCY66zaB6fOR7SKbK055UrE5LPEag8o
-X-Proofpoint-GUID: XbCY66zaB6fOR7SKbK055UrE5LPEag8o
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-28_05,2024-06-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- mlxscore=0 lowpriorityscore=0 phishscore=0 mlxlogscore=999 adultscore=0
- priorityscore=1501 malwarescore=0 clxscore=1011 suspectscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
- definitions=main-2406280068
 
+Add sound support to the RK3066 HDMI driver.
+The HDMI TX audio source is connected to I2S_8CH.
 
+Signed-off-by: Zheng Yang <zhengyang@rock-chips.com>
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
 
-On 6/27/2024 4:18 PM, Sudeepgoud Patil wrote:
-> This commit introduces tracepoint support for smp2p, enabling
-> logging of communication between local and remote processors.
-> These tracepoints include information about the remote subsystem
-> name, negotiation details, supported features, bit change
-> notifications, and ssr activity. These logs are useful for
-> debugging issues between subsystems.
-> 
-> Signed-off-by: Sudeepgoud Patil <quic_sudeepgo@quicinc.com>
-Reviewed-by: Deepak Kumar Singh <quic_deesin@quicinc.com>
-> ---
->   drivers/soc/qcom/Makefile      |  1 +
->   drivers/soc/qcom/smp2p.c       |  9 ++++
->   drivers/soc/qcom/trace-smp2p.h | 98 ++++++++++++++++++++++++++++++++++
->   3 files changed, 108 insertions(+)
->   create mode 100644 drivers/soc/qcom/trace-smp2p.h
-> 
-> diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-> index ca0bece0dfff..30c1bf645501 100644
-> --- a/drivers/soc/qcom/Makefile
-> +++ b/drivers/soc/qcom/Makefile
-> @@ -23,6 +23,7 @@ qcom_rpmh-y			+= rpmh.o
->   obj-$(CONFIG_QCOM_SMD_RPM)	+= rpm-proc.o smd-rpm.o
->   obj-$(CONFIG_QCOM_SMEM) +=	smem.o
->   obj-$(CONFIG_QCOM_SMEM_STATE) += smem_state.o
-> +CFLAGS_smp2p.o := -I$(src)
->   obj-$(CONFIG_QCOM_SMP2P)	+= smp2p.o
->   obj-$(CONFIG_QCOM_SMSM)	+= smsm.o
->   obj-$(CONFIG_QCOM_SOCINFO)	+= socinfo.o
-> diff --git a/drivers/soc/qcom/smp2p.c b/drivers/soc/qcom/smp2p.c
-> index 696c2a8387d0..4aa61b0f11ad 100644
-> --- a/drivers/soc/qcom/smp2p.c
-> +++ b/drivers/soc/qcom/smp2p.c
-> @@ -161,6 +161,9 @@ struct qcom_smp2p {
->   	struct list_head outbound;
->   };
->   
-> +#define CREATE_TRACE_POINTS
-> +#include "trace-smp2p.h"
-> +
->   static void qcom_smp2p_kick(struct qcom_smp2p *smp2p)
->   {
->   	/* Make sure any updated data is written before the kick */
-> @@ -192,6 +195,7 @@ static void qcom_smp2p_do_ssr_ack(struct qcom_smp2p *smp2p)
->   	struct smp2p_smem_item *out = smp2p->out;
->   	u32 val;
->   
-> +	trace_smp2p_ssr_ack(smp2p->dev);
->   	smp2p->ssr_ack = !smp2p->ssr_ack;
->   
->   	val = out->flags & ~BIT(SMP2P_FLAGS_RESTART_ACK_BIT);
-> @@ -214,6 +218,7 @@ static void qcom_smp2p_negotiate(struct qcom_smp2p *smp2p)
->   			smp2p->ssr_ack_enabled = true;
->   
->   		smp2p->negotiation_done = true;
-> +		trace_smp2p_negotiate(smp2p->dev, out->features);
->   	}
->   }
->   
-> @@ -252,6 +257,8 @@ static void qcom_smp2p_notify_in(struct qcom_smp2p *smp2p)
->   		status = val ^ entry->last_value;
->   		entry->last_value = val;
->   
-> +		trace_smp2p_notify_in(entry, status, val);
-> +
->   		/* No changes of this entry? */
->   		if (!status)
->   			continue;
-> @@ -415,6 +422,8 @@ static int smp2p_update_bits(void *data, u32 mask, u32 value)
->   	writel(val, entry->value);
->   	spin_unlock_irqrestore(&entry->lock, flags);
->   
-> +	trace_smp2p_update_bits(entry, orig, val);
-> +
->   	if (val != orig)
->   		qcom_smp2p_kick(entry->smp2p);
->   
-> diff --git a/drivers/soc/qcom/trace-smp2p.h b/drivers/soc/qcom/trace-smp2p.h
-> new file mode 100644
-> index 000000000000..fa985a0d7615
-> --- /dev/null
-> +++ b/drivers/soc/qcom/trace-smp2p.h
-> @@ -0,0 +1,98 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
-> + */
-> +
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM qcom_smp2p
-> +
-> +#if !defined(__QCOM_SMP2P_TRACE_H__) || defined(TRACE_HEADER_MULTI_READ)
-> +#define __QCOM_SMP2P_TRACE_H__
-> +
-> +#include <linux/device.h>
-> +#include <linux/tracepoint.h>
-> +
-> +TRACE_EVENT(smp2p_ssr_ack,
-> +	TP_PROTO(const struct device *dev),
-> +	TP_ARGS(dev),
-> +	TP_STRUCT__entry(
-> +		__string(dev_name, dev_name(dev))
-> +	),
-> +	TP_fast_assign(
-> +		__assign_str(dev_name, dev_name(dev));
-> +	),
-> +	TP_printk("%s: SSR detected", __get_str(dev_name))
-> +);
-> +
-> +TRACE_EVENT(smp2p_negotiate,
-> +	TP_PROTO(const struct device *dev, unsigned int features),
-> +	TP_ARGS(dev, features),
-> +	TP_STRUCT__entry(
-> +		__string(dev_name, dev_name(dev))
-> +		__field(u32, out_features)
-> +	),
-> +	TP_fast_assign(
-> +		__assign_str(dev_name, dev_name(dev));
-> +		__entry->out_features = features;
-> +	),
-> +	TP_printk("%s: state=open out_features=%s", __get_str(dev_name),
-> +		__print_flags(__entry->out_features, "|",
-> +			{SMP2P_FEATURE_SSR_ACK, "SMP2P_FEATURE_SSR_ACK"})
-> +	)
-> +);
-> +
-> +TRACE_EVENT(smp2p_notify_in,
-> +	TP_PROTO(struct smp2p_entry *smp2p_entry, unsigned long status, u32 val),
-> +	TP_ARGS(smp2p_entry, status, val),
-> +	TP_STRUCT__entry(
-> +		__string(dev_name, dev_name(smp2p_entry->smp2p->dev))
-> +		__string(client_name, smp2p_entry->name)
-> +		__field(unsigned long, status)
-> +		__field(u32, val)
-> +	),
-> +	TP_fast_assign(
-> +		__assign_str(dev_name, dev_name(smp2p_entry->smp2p->dev));
-> +		__assign_str(client_name, smp2p_entry->name);
-> +		__entry->status = status;
-> +		__entry->val = val;
-> +	),
-> +	TP_printk("%s: %s: status:0x%0lx val:0x%0x",
-> +		__get_str(dev_name),
-> +		__get_str(client_name),
-> +		__entry->status,
-> +		__entry->val
-> +	)
-> +);
-> +
-> +TRACE_EVENT(smp2p_update_bits,
-> +	TP_PROTO(struct smp2p_entry *smp2p_entry, u32 orig, u32 val),
-> +	TP_ARGS(smp2p_entry, orig, val),
-> +	TP_STRUCT__entry(
-> +		__string(dev_name, dev_name(smp2p_entry->smp2p->dev))
-> +		__string(client_name, smp2p_entry->name)
-> +		__field(u32, orig)
-> +		__field(u32, val)
-> +	),
-> +	TP_fast_assign(
-> +		__assign_str(dev_name, dev_name(smp2p_entry->smp2p->dev));
-> +		__assign_str(client_name, smp2p_entry->name);
-> +		__entry->orig = orig;
-> +		__entry->val = val;
-> +	),
-> +	TP_printk("%s: %s: orig:0x%0x new:0x%0x",
-> +		__get_str(dev_name),
-> +		__get_str(client_name),
-> +		__entry->orig,
-> +		__entry->val
-> +	)
-> +);
-> +
-> +#endif /* __QCOM_SMP2P_TRACE_H__ */
-> +
-> +#undef TRACE_INCLUDE_PATH
-> +#define TRACE_INCLUDE_PATH .
-> +
-> +#undef TRACE_INCLUDE_FILE
-> +#define TRACE_INCLUDE_FILE trace-smp2p
-> +
-> +#include <trace/define_trace.h>
+Changed V7:
+  rebase
+---
+ drivers/gpu/drm/rockchip/Kconfig       |   2 +
+ drivers/gpu/drm/rockchip/rk3066_hdmi.c | 274 ++++++++++++++++++++++++-
+ 2 files changed, 275 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/rockchip/Kconfig b/drivers/gpu/drm/rockchip/Kconfig
+index 1bf3e2829cd0..a32ee558408c 100644
+--- a/drivers/gpu/drm/rockchip/Kconfig
++++ b/drivers/gpu/drm/rockchip/Kconfig
+@@ -102,6 +102,8 @@ config ROCKCHIP_RGB
+ config ROCKCHIP_RK3066_HDMI
+ 	bool "Rockchip specific extensions for RK3066 HDMI"
+ 	depends on DRM_ROCKCHIP
++	select SND_SOC_HDMI_CODEC if SND_SOC
++	select SND_SOC_ROCKCHIP_I2S if SND_SOC
+ 	help
+ 	  This selects support for Rockchip SoC specific extensions
+ 	  for the RK3066 HDMI driver. If you want to enable
+diff --git a/drivers/gpu/drm/rockchip/rk3066_hdmi.c b/drivers/gpu/drm/rockchip/rk3066_hdmi.c
+index 784de990da1b..d3128b787629 100644
+--- a/drivers/gpu/drm/rockchip/rk3066_hdmi.c
++++ b/drivers/gpu/drm/rockchip/rk3066_hdmi.c
+@@ -15,12 +15,20 @@
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+
++#include <sound/hdmi-codec.h>
++
+ #include "rk3066_hdmi.h"
+
+ #include "rockchip_drm_drv.h"
+
+ #define DEFAULT_PLLA_RATE 30000000
+
++struct audio_info {
++	int channels;
++	int sample_rate;
++	int sample_width;
++};
++
+ struct hdmi_data_info {
+ 	int vic; /* The CEA Video ID (VIC) of the current drm display mode. */
+ 	unsigned int enc_out_format;
+@@ -54,9 +62,16 @@ struct rk3066_hdmi {
+
+ 	unsigned int tmdsclk;
+
++	struct platform_device *audio_pdev;
++	struct audio_info audio;
++	bool audio_enable;
++
+ 	struct hdmi_data_info hdmi_data;
+ };
+
++static int
++rk3066_hdmi_config_audio(struct rk3066_hdmi *hdmi, struct audio_info *audio);
++
+ static struct rk3066_hdmi *encoder_to_rk3066_hdmi(struct drm_encoder *encoder)
+ {
+ 	struct rockchip_encoder *rkencoder = to_rockchip_encoder(encoder);
+@@ -214,6 +229,23 @@ static int rk3066_hdmi_config_avi(struct rk3066_hdmi *hdmi,
+ 					HDMI_INFOFRAME_AVI, 0, 0, 0);
+ }
+
++static int rk3066_hdmi_config_aai(struct rk3066_hdmi *hdmi,
++				  struct audio_info *audio)
++{
++	union hdmi_infoframe frame;
++	int rc;
++
++	rc = hdmi_audio_infoframe_init(&frame.audio);
++
++	frame.audio.coding_type = HDMI_AUDIO_CODING_TYPE_STREAM;
++	frame.audio.sample_frequency = HDMI_AUDIO_SAMPLE_FREQUENCY_STREAM;
++	frame.audio.sample_size = HDMI_AUDIO_SAMPLE_SIZE_STREAM;
++	frame.audio.channels = hdmi->audio.channels;
++
++	return rk3066_hdmi_upload_frame(hdmi, rc, &frame,
++					HDMI_INFOFRAME_AAI, 0, 0, 0);
++}
++
+ static int rk3066_hdmi_config_video_timing(struct rk3066_hdmi *hdmi,
+ 					   struct drm_display_mode *mode)
+ {
+@@ -364,6 +396,7 @@ static int rk3066_hdmi_setup(struct rk3066_hdmi *hdmi,
+ 		hdmi_modb(hdmi, HDMI_HDCP_CTRL, HDMI_VIDEO_MODE_MASK,
+ 			  HDMI_VIDEO_MODE_HDMI);
+ 		rk3066_hdmi_config_avi(hdmi, mode);
++		rk3066_hdmi_config_audio(hdmi, &hdmi->audio);
+ 	} else {
+ 		hdmi_modb(hdmi, HDMI_HDCP_CTRL, HDMI_VIDEO_MODE_MASK, 0);
+ 	}
+@@ -380,9 +413,20 @@ static int rk3066_hdmi_setup(struct rk3066_hdmi *hdmi,
+ 	 */
+ 	rk3066_hdmi_i2c_init(hdmi);
+
+-	/* Unmute video output. */
++	/* Unmute video and audio output. */
+ 	hdmi_modb(hdmi, HDMI_VIDEO_CTRL2,
+ 		  HDMI_VIDEO_AUDIO_DISABLE_MASK, HDMI_AUDIO_DISABLE);
++	if (hdmi->audio_enable) {
++		hdmi_modb(hdmi, HDMI_VIDEO_CTRL2, HDMI_AUDIO_DISABLE, 0);
++		/* Reset audio capture logic. */
++		hdmi_modb(hdmi, HDMI_VIDEO_CTRL2,
++			  HDMI_AUDIO_CP_LOGIC_RESET_MASK,
++			  HDMI_AUDIO_CP_LOGIC_RESET);
++		usleep_range(900, 1000);
++		hdmi_modb(hdmi, HDMI_VIDEO_CTRL2,
++			  HDMI_AUDIO_CP_LOGIC_RESET_MASK, 0);
++	}
++
+ 	return 0;
+ }
+
+@@ -534,6 +578,230 @@ struct drm_connector_helper_funcs rk3066_hdmi_connector_helper_funcs = {
+ 	.best_encoder = rk3066_hdmi_connector_best_encoder,
+ };
+
++static int
++rk3066_hdmi_config_audio(struct rk3066_hdmi *hdmi, struct audio_info *audio)
++{
++	u32 rate, channel, word_length, N, CTS;
++	u64 tmp;
++
++	if (audio->channels < 3)
++		channel = HDMI_AUDIO_I2S_CHANNEL_1_2;
++	else if (audio->channels < 5)
++		channel = HDMI_AUDIO_I2S_CHANNEL_3_4;
++	else if (audio->channels < 7)
++		channel = HDMI_AUDIO_I2S_CHANNEL_5_6;
++	else
++		channel = HDMI_AUDIO_I2S_CHANNEL_7_8;
++
++	switch (audio->sample_rate) {
++	case 32000:
++		rate = HDMI_AUDIO_SAMPLE_FRE_32000;
++		N = N_32K;
++		break;
++	case 44100:
++		rate = HDMI_AUDIO_SAMPLE_FRE_44100;
++		N = N_441K;
++		break;
++	case 48000:
++		rate = HDMI_AUDIO_SAMPLE_FRE_48000;
++		N = N_48K;
++		break;
++	case 88200:
++		rate = HDMI_AUDIO_SAMPLE_FRE_88200;
++		N = N_882K;
++		break;
++	case 96000:
++		rate = HDMI_AUDIO_SAMPLE_FRE_96000;
++		N = N_96K;
++		break;
++	case 176400:
++		rate = HDMI_AUDIO_SAMPLE_FRE_176400;
++		N = N_1764K;
++		break;
++	case 192000:
++		rate = HDMI_AUDIO_SAMPLE_FRE_192000;
++		N = N_192K;
++		break;
++	default:
++		DRM_DEV_ERROR(hdmi->dev, "no support for sample rate %d\n",
++			      audio->sample_rate);
++		return -ENOENT;
++	}
++
++	switch (audio->sample_width) {
++	case 16:
++		word_length = 0x02;
++		break;
++	case 20:
++		word_length = 0x0a;
++		break;
++	case 24:
++		word_length = 0x0b;
++		break;
++	default:
++		DRM_DEV_ERROR(hdmi->dev, "no support for word length %d\n",
++			      audio->sample_width);
++		return -ENOENT;
++	}
++
++	tmp = (u64)hdmi->tmdsclk * N;
++	do_div(tmp, 128 * audio->sample_rate);
++	CTS = tmp;
++
++	/* Set_audio source I2S. */
++	hdmi_writeb(hdmi, HDMI_AUDIO_CTRL1, 0x00);
++	hdmi_writeb(hdmi, HDMI_AUDIO_CTRL2, 0x40);
++	hdmi_writeb(hdmi, HDMI_I2S_AUDIO_CTRL,
++		    HDMI_AUDIO_I2S_FORMAT_STANDARD | channel);
++	hdmi_writeb(hdmi, HDMI_I2S_SWAP, 0x00);
++	hdmi_modb(hdmi, HDMI_AV_CTRL1, HDMI_AUDIO_SAMPLE_FRE_MASK, rate);
++	hdmi_writeb(hdmi, HDMI_AUDIO_SRC_NUM_AND_LENGTH, word_length);
++
++	/* Set N value. */
++	hdmi_modb(hdmi, HDMI_LR_SWAP_N3,
++		  HDMI_AUDIO_N_19_16_MASK, (N >> 16) & 0x0F);
++	hdmi_writeb(hdmi, HDMI_N2, (N >> 8) & 0xFF);
++	hdmi_writeb(hdmi, HDMI_N1, N & 0xFF);
++
++	/* Set CTS value. */
++	hdmi_writeb(hdmi, HDMI_CTS_EXT1, CTS & 0xff);
++	hdmi_writeb(hdmi, HDMI_CTS_EXT2, (CTS >> 8) & 0xff);
++	hdmi_writeb(hdmi, HDMI_CTS_EXT3, (CTS >> 16) & 0xff);
++
++	if (audio->channels > 2)
++		hdmi_modb(hdmi, HDMI_LR_SWAP_N3,
++			  HDMI_AUDIO_LR_SWAP_MASK,
++			  HDMI_AUDIO_LR_SWAP_SUBPACKET1);
++	rate = (~(rate >> 4)) & 0x0f;
++	hdmi_writeb(hdmi, HDMI_AUDIO_STA_BIT_CTRL1, rate);
++	hdmi_writeb(hdmi, HDMI_AUDIO_STA_BIT_CTRL2, 0);
++
++	return rk3066_hdmi_config_aai(hdmi, audio);
++}
++
++static int rk3066_hdmi_audio_hw_params(struct device *dev, void *d,
++				       struct hdmi_codec_daifmt *daifmt,
++				       struct hdmi_codec_params *params)
++{
++	struct rk3066_hdmi *hdmi = dev_get_drvdata(dev);
++	struct drm_display_info *display = &hdmi->connector.display_info;
++
++	if (!display->has_audio) {
++		DRM_DEV_ERROR(hdmi->dev, "no audio support\n");
++		return -ENODEV;
++	}
++
++	if (!hdmi->encoder.encoder.crtc)
++		return -ENODEV;
++
++	switch (daifmt->fmt) {
++	case HDMI_I2S:
++		break;
++	default:
++		DRM_DEV_ERROR(dev, "invalid format %d\n", daifmt->fmt);
++		return -EINVAL;
++	}
++
++	hdmi->audio.channels = params->channels;
++	hdmi->audio.sample_rate = params->sample_rate;
++	hdmi->audio.sample_width = params->sample_width;
++
++	return rk3066_hdmi_config_audio(hdmi, &hdmi->audio);
++}
++
++static void rk3066_hdmi_audio_shutdown(struct device *dev, void *d)
++{
++	/* do nothing */
++}
++
++static int
++rk3066_hdmi_audio_mute_stream(struct device *dev, void *d,
++			      bool mute, int direction)
++{
++	struct rk3066_hdmi *hdmi = dev_get_drvdata(dev);
++	struct drm_display_info *display = &hdmi->connector.display_info;
++
++	if (!display->has_audio) {
++		DRM_DEV_ERROR(hdmi->dev, "no audio support\n");
++		return -ENODEV;
++	}
++
++	hdmi->audio_enable = !mute;
++
++	if (mute)
++		hdmi_modb(hdmi, HDMI_VIDEO_CTRL2,
++			  HDMI_AUDIO_DISABLE, HDMI_AUDIO_DISABLE);
++	else
++		hdmi_modb(hdmi, HDMI_VIDEO_CTRL2, HDMI_AUDIO_DISABLE, 0);
++
++	/*
++	 * Under power mode E we need to reset the audio capture logic to
++	 * make the audio setting update.
++	 */
++	if (rk3066_hdmi_get_power_mode(hdmi) == HDMI_SYS_POWER_MODE_E) {
++		hdmi_modb(hdmi, HDMI_VIDEO_CTRL2,
++			  HDMI_AUDIO_CP_LOGIC_RESET_MASK,
++			  HDMI_AUDIO_CP_LOGIC_RESET);
++		usleep_range(900, 1000);
++		hdmi_modb(hdmi, HDMI_VIDEO_CTRL2,
++			  HDMI_AUDIO_CP_LOGIC_RESET_MASK, 0);
++	}
++
++	return 0;
++}
++
++static int rk3066_hdmi_audio_get_eld(struct device *dev, void *d,
++				     u8 *buf, size_t len)
++{
++	struct rk3066_hdmi *hdmi = dev_get_drvdata(dev);
++	struct drm_mode_config *config = &hdmi->encoder.encoder.dev->mode_config;
++	struct drm_connector *connector;
++	int ret = -ENODEV;
++
++	mutex_lock(&config->mutex);
++	list_for_each_entry(connector, &config->connector_list, head) {
++		if (&hdmi->encoder.encoder == connector->encoder) {
++			memcpy(buf, connector->eld,
++			       min(sizeof(connector->eld), len));
++			ret = 0;
++		}
++	}
++	mutex_unlock(&config->mutex);
++
++	return ret;
++}
++
++static const struct hdmi_codec_ops audio_codec_ops = {
++	.hw_params = rk3066_hdmi_audio_hw_params,
++	.audio_shutdown = rk3066_hdmi_audio_shutdown,
++	.mute_stream = rk3066_hdmi_audio_mute_stream,
++	.get_eld = rk3066_hdmi_audio_get_eld,
++	.no_capture_mute = 1,
++};
++
++static int rk3066_hdmi_audio_codec_init(struct rk3066_hdmi *hdmi,
++					struct device *dev)
++{
++	struct hdmi_codec_pdata codec_data = {
++		.i2s = 1,
++		.ops = &audio_codec_ops,
++		.max_i2s_channels = 8,
++	};
++
++	hdmi->audio.channels = 2;
++	hdmi->audio.sample_rate = 48000;
++	hdmi->audio.sample_width = 16;
++	hdmi->audio_enable = false;
++	hdmi->audio_pdev =
++		platform_device_register_data(dev,
++					      HDMI_CODEC_DRV_NAME,
++					      PLATFORM_DEVID_NONE,
++					      &codec_data,
++					      sizeof(codec_data));
++
++	return PTR_ERR_OR_ZERO(hdmi->audio_pdev);
++}
++
+ static int
+ rk3066_hdmi_register(struct drm_device *drm, struct rk3066_hdmi *hdmi)
+ {
+@@ -566,6 +834,8 @@ rk3066_hdmi_register(struct drm_device *drm, struct rk3066_hdmi *hdmi)
+
+ 	drm_connector_attach_encoder(&hdmi->connector, encoder);
+
++	rk3066_hdmi_audio_codec_init(hdmi, dev);
++
+ 	return 0;
+ }
+
+@@ -813,6 +1083,7 @@ static int rk3066_hdmi_bind(struct device *dev, struct device *master,
+ 	return 0;
+
+ err_cleanup_hdmi:
++	platform_device_unregister(hdmi->audio_pdev);
+ 	hdmi->connector.funcs->destroy(&hdmi->connector);
+ 	hdmi->encoder.encoder.funcs->destroy(&hdmi->encoder.encoder);
+ err_disable_i2c:
+@@ -828,6 +1099,7 @@ static void rk3066_hdmi_unbind(struct device *dev, struct device *master,
+ {
+ 	struct rk3066_hdmi *hdmi = dev_get_drvdata(dev);
+
++	platform_device_unregister(hdmi->audio_pdev);
+ 	hdmi->connector.funcs->destroy(&hdmi->connector);
+ 	hdmi->encoder.encoder.funcs->destroy(&hdmi->encoder.encoder);
+
+--
+2.39.2
+
