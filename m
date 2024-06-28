@@ -1,52 +1,53 @@
 Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA6251C004C;
-	Fri, 28 Jun 2024 14:09:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7308619B5A2;
+	Fri, 28 Jun 2024 14:09:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719583759; cv=none; b=sDKngAiivVhhjyLtPzzf3TWjqZjqrxRnn/gD8h4sn8ezQq45GtmMclKOQy7QqklAzt1ZATrgnuOdk5fHtvOC70Apnivuwb8Ithrg/O2m04ynz9D4AEtLDTnrwecB3Q88EZy2FYCrvs7fJfMUh+HVi8YLKMtBtuSBJQ/AkIA6AIs=
+	t=1719583800; cv=none; b=h2ffSy3fu+QKMcZqyipBw7r8VNyHn9WzQq+ji7XiSJenhGk+H8VdvCwlVOQR8Z4JdyHmKdmOU2m/dYh9GsfavLllKwVKNvtSoDvu9XucZLFnyQQ02WkrjtCLJ3AvabPO8zInsIYnLh415fsdyj7ZsAev9dVQPfBAHdSXsiwrpbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719583759; c=relaxed/simple;
-	bh=fiTFD6LjLZevOhP5yqiiJPUwf69YV0v89D1EEDrdqn8=;
+	s=arc-20240116; t=1719583800; c=relaxed/simple;
+	bh=uOtQMuL1X1bCXgLRk8CEj7G6Dj5LK1iiftQXY+Rv9Lk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OJgxQ9W0C2MlwBvjTrl/0fmxAm1MKVqWJ8KMa8ZEfON44PFVFFT06EcVI8cKkBWo96t040ywUugX+wf4bFYqDGpcH9r55EnRgIoOBTw+IQxMFqMgELxkRE5ZLJIj8bNreomiMPBE2p3Lv9eVTttauXt/o9qGwu+s17UVwkKhPdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=eVhylS6i; arc=none smtp.client-ip=156.67.10.101
+	 Content-Type:Content-Disposition:In-Reply-To; b=t1omIVBGRdVtnLPTrt8BKY8z2/S214iMGylhI6a2nK5V/scEPFa+dZDWkKN5sWOlvuitvd3MyOlZYviK1wRYtDVOzSH88mGM/Q++G+ONQ23nFZNubvaaGjPnPfjhdRP1Sqcrl1wNNpQn+sKg0w4Gt3JuG0JabTQuxbck87X42uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Ahnfd0qh; arc=none smtp.client-ip=156.67.10.101
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="eVhylS6i"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Ahnfd0qh"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
 	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
 	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=PUFq+r93SMKyXpphr8wL2rk6f2o0adTTc3NqfeVDy4s=; b=eVhylS6ivpR1cr0iVh/m1c4tFC
-	VHJsE5NfuUL+8ls44uXWFvgaBFmbOgUVNm9WekxIdE98o88NQHhLhBttw+R09fo3AxOko7a3GKlnw
-	82iWfEpMWNyCIA8EZtQAu5BafQw0HtucAPo7LzRWQf4X2f+53As19LApQi/f8WGkjPZQ=;
+	bh=p9/TdaF6sDe7VwbrSuMbzC40JZtDM24SJtp78alf1DY=; b=Ahnfd0qh/15hFWKLitt7TYAlxC
+	qlfisPoWXjQK5TrxnqMA34GdmjB78L1VZufe8mes3tP3D0HqwL8NsJB8dQLCd6xaTNwebKYge8dhQ
+	9VtTKjAP/uETAaHtjbITw3pVgalTT1z0gQD8yL7eB0DQEhh4eaSCQlFFbreP826Nmops=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
 	(envelope-from <andrew@lunn.ch>)
-	id 1sNCHd-001HyW-W0; Fri, 28 Jun 2024 16:09:01 +0200
-Date: Fri, 28 Jun 2024 16:09:01 +0200
+	id 1sNCIS-001HzG-5N; Fri, 28 Jun 2024 16:09:52 +0200
+Date: Fri, 28 Jun 2024 16:09:52 +0200
 From: Andrew Lunn <andrew@lunn.ch>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Daniel Golle <daniel@makrotopia.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 net-next 3/3] net: phy: aquantia: add support for
- aqr115c
-Message-ID: <92078d5d-3b10-4651-a42b-4b2ffd23daca@lunn.ch>
-References: <20240627113018.25083-1-brgl@bgdev.pl>
- <20240627113018.25083-4-brgl@bgdev.pl>
- <Zn3q5f5yWznMjAXd@makrotopia.org>
- <d227011a-b4bf-427f-85c2-5db61ad0086c@lunn.ch>
- <Zn4Nq1QvhjAUaogb@makrotopia.org>
- <CAMRc=Mcftb9MRAP50ZNMfQpsjLzc-=OKvxo5Xkeqdgs-rZFNug@mail.gmail.com>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: Marek Vasut <marex@denx.de>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Fabio Estevam <festevam@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"kernel@dh-electronics.com" <kernel@dh-electronics.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] arm64: dts: imx8mp: Update Fast ethernet PHY MDIO
+ addresses to match DH i.MX8MP DHCOM rev.200
+Message-ID: <6687963b-1cbf-4093-aa8d-b90ce9ba7c0b@lunn.ch>
+References: <20240627233045.80551-1-marex@denx.de>
+ <AM6PR04MB5941804BFE1CC6F72E776F9588D02@AM6PR04MB5941.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,16 +56,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMRc=Mcftb9MRAP50ZNMfQpsjLzc-=OKvxo5Xkeqdgs-rZFNug@mail.gmail.com>
+In-Reply-To: <AM6PR04MB5941804BFE1CC6F72E776F9588D02@AM6PR04MB5941.eurprd04.prod.outlook.com>
 
-> Not sure what to do, should I still be adding a new mode here or is it
-> fine to just explain in the commit message that this really is
-> "2500Base-X-sans-in-band-signalling" and keep the code as is? Or maybe
-> some quirk disallowing `managed = "in-band-status"`?
+On Fri, Jun 28, 2024 at 01:01:49AM +0000, Peng Fan wrote:
+> > Subject: [PATCH v2] arm64: dts: imx8mp: Update Fast ethernet PHY
+> > MDIO addresses to match DH i.MX8MP DHCOM rev.200
+> > 
+> > The production DH i.MX8MP DHCOM SoM rev.200 uses updated PHY
+> > MDIO addresses for the Fast ethernet PHYs. Update the base SoM DT
+> > to cater for this change.
+> > Prototype rev.100 SoM was never publicly available and was
+> > manufactured in limited series, anything currently available is rev.200
+> > or newer, so it is safe to update the DT this way.
+> > 
+> > Signed-off-by: Marek Vasut <marex@denx.de>
+> > ---
+> 
+> Reviewed-by: Peng Fan <peng.fan@nxp.com>
 
-Yes, please do make it clear in the commit message. It is good to have
-a full commit message explaining all the messy details to help the
-next person who needs to modify this code, or has the same issue with
-another vendor specific glue driver for stmmac, etc.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-	Andrew
+    Andrew
