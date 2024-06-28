@@ -1,61 +1,61 @@
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75274101F7
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 01:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E2613AF9
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 01:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719623512; cv=none; b=K3aRE8z3ll850zi31udMVwcmf1uwlqERhPWj+S0/v1y55WoIGojYcGeAixWNQ/RnYeej+Z6rz02MNQg6cd57IrKeyM2saFWfo+d46Qlo/QVYdW8caRmgyRASlZT2RUR5AUjofxckIJ83LelsD3xqZay6ie3WHvrWsNCmRMVfQ/w=
+	t=1719623514; cv=none; b=NFqDnzs3L41fNqffaJEjuxiOor8Uy7zl7ppe5q7uPHAZzk+SjCVArwVzPSq7wRHus2N26SrSslPN14RCdD7PnlfbDFCkK8CrUeiA3nJdAhm8dmftdzST9E5RWsAxoVNA9Rwm8Ko0jsSXuHRDRllmvOvzu3yhlAUrA3zAFAMOFT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719623512; c=relaxed/simple;
-	bh=4J+wv41/qTOW/XeXcWFye1zeMVG+o14N+SygBRQYWno=;
+	s=arc-20240116; t=1719623514; c=relaxed/simple;
+	bh=6F/k6dwYH218Hyi1PGuaEb/Ijjso6ev6K6yn6UDiB3w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=awKlIJxNl/t638W54hVNu6dnnELglbm2QmTv2FqfSxg5Hre7wlOy+KZLobVMbh9Ev4XBe9NiLFwmb22Bq5dzkCSVu+PtMZUfrLFutBF5NLsV3NO81QnhFhQGN5hAR1fARBp9H8kAWiaV+drkO2HGq0sY2ITOhmDJ44x8wf/JoOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=GUZy00Yh; arc=none smtp.client-ip=209.85.167.179
+	 Content-Type:Content-Disposition:In-Reply-To; b=fxZkNHAbCK8vlZOBOld6E+4zDjsEA3O4kZ6jPSVquo5ByU7tuZvDsCuJ9Jy+T5o94JYedMfqNtn0CcuIe08B2jqvYG5csPBD0msbWTwwQwCfN0sYOJpjOb1n4VMuyCQ/yO59+Ll7wWNM0f3XZhkbc6Z1+LjA2ls2o/oEjGoZ5H4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=OFv5uden; arc=none smtp.client-ip=209.85.166.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="GUZy00Yh"
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3d566b147ffso778722b6e.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 18:11:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="OFv5uden"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-376069031c7so4957685ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 18:11:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1719623510; x=1720228310; darn=vger.kernel.org;
+        d=ziepe.ca; s=google; t=1719623512; x=1720228312; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CxuCmnV0ZWEWENto9tfINCmCrw1xBxkvM+e/Do3ps+0=;
-        b=GUZy00YhvFa9/YAgRRDy+0bvVR8iodCVgrP3Vl9eGdNaume8sfN6JRkrO48Z/DfEcW
-         a7w5l8sysBQewOh/CuYJDQum1do6i/3mde/R+rcBuLvppGMTpiaRuYKqvCPNXZBWEUC3
-         OeXpggPw1uAqO6nlYvWQjqGT+Mo6YmRd+wRUP+qS90f1tLVwzVrGIAq1IqqAZGBLPrFi
-         S6p/GgA4NZSncRaSZKsc21vSDrA/igaZ0OZKztvq2jB5DqXWt1BdwGslV8aWjbqZzNoJ
-         fUFZOevsEuLzCnvVHnqoH/pkoVub3uvTMjM9fsg49Xu3ncGRDSRjj5EVkCaooNmSn6WN
-         WYLA==
+        bh=zmaMdKg0RidMIfRNkaCLQQUn8DgSGfF9Lh4khZx7QZA=;
+        b=OFv5udenEcKgF16Y+HBYr9MZHcwY7RYcczrSH6WLqP5mF63vKTpjGH8KTAbPLAxr2o
+         APVfcDdP3CZwsOSQ6RiQiOOqoXjqE99HkNEE/CVBu8VhGXlGY0HtfrsGaX8SYkjNjW4Z
+         pXl6bdJnrqfUCnZkx4ne+XQHH6+n/gI52zDiLYuij1U6BA4W9d+TPZSJlP+oS51/Ltv6
+         cKvR9knTKh58FhYIQFBAZVhWgxi7t9PTTDXuLj60CwbjJcABYHRaAhFpvOUrHavs2aZG
+         Z+OYk4wAWGEc36kakav0QZZ8p4k0QeI3IFQsdpY1nLc9XgceQ9IYcJC1gwQIktdP4ecd
+         JJ4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719623510; x=1720228310;
+        d=1e100.net; s=20230601; t=1719623512; x=1720228312;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CxuCmnV0ZWEWENto9tfINCmCrw1xBxkvM+e/Do3ps+0=;
-        b=ZQBBjGA8EDrYPD9IPBbPzttKJTOOXgrczoSgNeJcHxknXd/6QuOXFdn2JauleW0K9G
-         JWYMKT5CN8n6q06TsQWjtLUXKNGjQR5MP1pdtmV1Em2A80qMP1MZVTz/ABniQfa4hi5o
-         8uSGZmSG0DK3aoFsqRqKfcNH0UD4GIq5RvTEBiREh3EbpX8sgU8F8NzGKB3dustw6+li
-         B5WdA8Gu2Cvzca7S1EH/xYvGIJT1+tHfWZNITTLKkGWvfe2rkXdRZ+3Ma8czEnpjtKJZ
-         heSf6baZB28OwLwkIItq56DZWP/BTiSASY+XXQuK8Hdda5qRMYHCYPbUmOusgsHIiN7C
-         Aa9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVVZb0aRoPTbrVn198jNPYzIhDeiVNq2gi/yxTvhjNFfF8kRMM6NLDHKXBrlLgxG7BnS/l158VanM0VHdBXNKbwduHj/nQWUz4uGujG
-X-Gm-Message-State: AOJu0YylkpJXmKc/pNpyRLzO9ge210qG45rU7BQgf3HEEwRjLc3M/HX/
-	WOUDJIzLitxcOeD0cyb97Hl/syzXUQMMiqO2V8WjxXqdL5khjn1hOk0rUOtqZOI=
-X-Google-Smtp-Source: AGHT+IE5gW6TwhDu3dVXkufILwe5Riqxu4x8VUh+MyIJSeF3+uS0xeub7USzPp5b3oOGLO8VOeb/KQ==
-X-Received: by 2002:a05:6808:1783:b0:3d6:7726:a4c6 with SMTP id 5614622812f47-3d67726a926mr283479b6e.10.1719623510666;
-        Fri, 28 Jun 2024 18:11:50 -0700 (PDT)
+        bh=zmaMdKg0RidMIfRNkaCLQQUn8DgSGfF9Lh4khZx7QZA=;
+        b=lFSnFbnBv5nfMcT0BZ4UgsH6gubzYX66+aG2SCrUfzUzf7hJViX2435UVRtr/rceBl
+         z8Yn9rWkjhY6O2c3bOO8LfEwiuNls4UCzOWp/TF1KobrTraxGCBxrmJ9QU7Yn9IqQUX8
+         OvxrrGALJO/TDHXcu/+Z2g9i9KzgrAs0CZHYtT+7VREBkq0u1aCLw9hCE5BGUuwAEnGE
+         Nt8FCABc13stw7BSTihm08+VrH3UnrvwvGa/zxhlf1M8SLgh0nqGOO2MY3LfEoWbFZ6s
+         x1K9gpMESHmEXhEfjAb5/NjxiMYC6Ys0R5ILvdxxuIEe93dTNtpwBjDhvUDPlWoDoxlo
+         sw+w==
+X-Forwarded-Encrypted: i=1; AJvYcCWPl3LYofT0AqTHxoXSg3y/QLCbJT384s9MVDdPWOdCf4NrVlUy/S1isrpjlDDrg58Q5MKTIBGDcUkaFDiP3gqCRgvvHs2YntQXg3fp
+X-Gm-Message-State: AOJu0YzkWMKe8bHRR75v6wHq82TVZ0T9CuSAUsn2hPfcTtAz8WfUxQJR
+	myNOt4AX0Jby2GlzgAcgCeBh3xIlOLWEicV/qS5uMjtyB4japUJCFc+6Sdp9jMA=
+X-Google-Smtp-Source: AGHT+IEt4WuI6UUriXHM21a/iZG/YuB8wOThjfEiLBUbcEKDogKRn2+UhIh8HyJ2Q/QTwEKSXlIHrw==
+X-Received: by 2002:a05:6e02:20e7:b0:376:492e:a13b with SMTP id e9e14a558f8ab-376492ea27amr214270955ab.28.1719623511924;
+        Fri, 28 Jun 2024 18:11:51 -0700 (PDT)
 Received: from ziepe.ca ([24.114.37.55])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-72c69b53be5sm1784142a12.16.2024.06.28.18.11.49
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-72c69b53be5sm1784142a12.16.2024.06.28.18.11.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 18:11:50 -0700 (PDT)
+        Fri, 28 Jun 2024 18:11:51 -0700 (PDT)
 Received: from jgg by jggl with local (Exim 4.95)
 	(envelope-from <jgg@ziepe.ca>)
-	id 1sNJqL-0004ne-OK;
-	Fri, 28 Jun 2024 19:13:21 -0300
-Date: Fri, 28 Jun 2024 19:13:21 -0300
+	id 1sNIw0-0004UM-BR;
+	Fri, 28 Jun 2024 18:15:08 -0300
+Date: Fri, 28 Jun 2024 18:15:08 -0300
 From: Jason Gunthorpe <jgg@ziepe.ca>
 To: Lu Baolu <baolu.lu@linux.intel.com>
 Cc: Kevin Tian <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
@@ -66,11 +66,10 @@ Cc: Kevin Tian <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
 	Joel Granados <j.granados@samsung.com>, iommu@lists.linux.dev,
 	virtualization@lists.linux-foundation.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 08/10] iommufd: Associate fault object with
- iommufd_hw_pgtable
-Message-ID: <Zn81gdjwJBfjXekJ@ziepe.ca>
+Subject: Re: [PATCH v7 02/10] iommu: Remove sva handle list
+Message-ID: <Zn8n3Cs7JDxzpRPf@ziepe.ca>
 References: <20240616061155.169343-1-baolu.lu@linux.intel.com>
- <20240616061155.169343-9-baolu.lu@linux.intel.com>
+ <20240616061155.169343-3-baolu.lu@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,75 +78,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240616061155.169343-9-baolu.lu@linux.intel.com>
+In-Reply-To: <20240616061155.169343-3-baolu.lu@linux.intel.com>
 
-On Sun, Jun 16, 2024 at 02:11:53PM +0800, Lu Baolu wrote:
+On Sun, Jun 16, 2024 at 02:11:47PM +0800, Lu Baolu wrote:
+> The struct sva_iommu represents an association between an SVA domain and
+> a PASID of a device. It's stored in the iommu group's pasid array and also
+> tracked by a list in the per-mm data structure. Removes duplicate tracking
+> of sva_iommu by eliminating the list.
+> 
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> ---
+>  include/linux/iommu.h      |  2 --
+>  drivers/iommu/iommu-priv.h |  3 +++
+>  drivers/iommu/iommu-sva.c  | 30 ++++++++++++++++++++----------
+>  drivers/iommu/iommu.c      | 31 +++++++++++++++++++++++++++++++
+>  4 files changed, 54 insertions(+), 12 deletions(-)
 
-> @@ -308,13 +315,29 @@ int iommufd_hwpt_alloc(struct iommufd_ucmd *ucmd)
->  		goto out_put_pt;
->  	}
->  
-> +	if (cmd->flags & IOMMU_HWPT_FAULT_ID_VALID) {
-> +		struct iommufd_fault *fault;
-> +
-> +		fault = iommufd_get_fault(ucmd, cmd->fault_id);
-> +		if (IS_ERR(fault)) {
-> +			rc = PTR_ERR(fault);
-> +			goto out_hwpt;
-> +		}
-> +		hwpt->fault = fault;
-> +		hwpt->domain->iopf_handler = iommufd_fault_iopf_handler;
-> +		hwpt->domain->fault_data = hwpt;
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
-This is not the right refcounting for a longterm reference... The PT
-above shows the pattern:
-
-	pt_obj = iommufd_get_object(ucmd->ictx, cmd->pt_id, IOMMUFD_OBJ_ANY);
-	hwpt_paging = iommufd_hwpt_paging_alloc()
-            	refcount_inc(&ioas->obj.users);
-
-	iommufd_put_object(ucmd->ictx, pt_obj);
-
-Which is to say you need to incr users and then do the put object. And
-iommufd_object_abort_and_destroy() will always destroy the ref on the
-fault if the fault is non-null so the error handling will double free.
-
-fail_nth is intended to catch this, but you have to add enough inputs
-to cover the new cases when you add them, it seems like that is
-missing in this series. ie add a fault object and hwpt alloc to a
-fail_nth test and see we execute the iommufd_ucmd_respond() failure
-path.
-
---- a/drivers/iommu/iommufd/hw_pagetable.c
-+++ b/drivers/iommu/iommufd/hw_pagetable.c
-@@ -14,7 +14,7 @@ static void __iommufd_hwpt_destroy(struct iommufd_hw_pagetable *hwpt)
-                iommu_domain_free(hwpt->domain);
- 
-        if (hwpt->fault)
--               iommufd_put_object(hwpt->fault->ictx, &hwpt->fault->obj);
-+               refcount_dec(&hwpt->fault->obj.users);
- }
- 
- void iommufd_hwpt_paging_destroy(struct iommufd_object *obj)
-@@ -326,18 +326,17 @@ int iommufd_hwpt_alloc(struct iommufd_ucmd *ucmd)
-                hwpt->fault = fault;
-                hwpt->domain->iopf_handler = iommufd_fault_iopf_handler;
-                hwpt->domain->fault_data = hwpt;
-+               refcount_inc(&fault->obj.users);
-+               iommufd_put_object(ucmd->ictx, &fault->obj);
-        }
- 
-        cmd->out_hwpt_id = hwpt->obj.id;
-        rc = iommufd_ucmd_respond(ucmd, sizeof(*cmd));
-        if (rc)
--               goto out_put_fault;
-+               goto out_hwpt;
-        iommufd_object_finalize(ucmd->ictx, &hwpt->obj);
-        goto out_unlock;
- 
--out_put_fault:
--       if (cmd->flags & IOMMU_HWPT_FAULT_ID_VALID)
--               iommufd_put_object(ucmd->ictx, &hwpt->fault->obj);
- out_hwpt:
-        iommufd_object_abort_and_destroy(ucmd->ictx, &hwpt->obj);
- out_unlock:
+Jason
