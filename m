@@ -1,125 +1,73 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4389444374;
-	Fri, 28 Jun 2024 11:18:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD141865A;
+	Fri, 28 Jun 2024 11:20:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719573497; cv=none; b=JZ2A0rnPdekn0PFnN8coPea8hwK2IDUSwGfjI2xHutzcmPRTzsKauaCuOfmcv/SzGTUe+YfkGuiRMawY8LNCQ25J55wVRwr3WjLi3m+3/QxuqS8A/MomIc7jHT7P22tQxnIudAXU+QDNp+tgMDhR4NYWrA62qAGeDDN0o06peb4=
+	t=1719573658; cv=none; b=QtDAokJbUkOzeAaSQaVTuTT+Rxb3ENKI5vh8kxngEULbjewk0xyYWxRf57fSixpjLEEMWed2ZuvoTQSAtDyx6806xFYN93pnm2WhgxokZsEwsRxvZ+u5HTBIdW4NpbM3lrxaGHYJSuxjnpgxC/TOymINuAyYM88+POQbpBfZscI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719573497; c=relaxed/simple;
-	bh=jjoqqDqblGrGqFau/qCZ/+dyhF/oGX1o7bJOsP/hCcI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EdVoaYtuSmi1Ul2k7VdxdRx5SzzVy0jO53TcLWJPNWoYFN+SqFLRPgb49cF7wN4s/XQgeSR52wsMqzh2djIUM6YdkPK48Y55KXV2sN3jkPhezRyvr+e1K3EC70CgGBmaOQK/pJRVpluswpW6TptvfbV+qptXNiMCBclCYXXgksU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BYoK0saa; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719573658; c=relaxed/simple;
+	bh=gQeYH+LG8291IRJvEG/1gi0BWNeiPp2grvRZNYZzpOs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ItDIYOMJra87GW4WRVzAWXl+nSw3e+962k53EbmR/TRoLaavYm+WwyMqNV8RJrrVzdUMl1YPpZOP4N5qcfvuvO2u4VlZMfde4P3JXl/eEXZS8XrBzZK/2w75vvbrhmcTCGkfjgFtdpmh/TQmY8fk/22ne7Za8DpAE0TnNrUklMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tR2BmwAe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BYoK0saa"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-367339bd00aso412358f8f.3;
-        Fri, 28 Jun 2024 04:18:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719573494; x=1720178294; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jGjvAzjDwlAq0rCpEO+mGer2SS+9hXiF0BPt0Wfq6d0=;
-        b=BYoK0saakmAwJf6/GJhrxpqg7vlHdCromvqMhm0jGTQsD1Dxhaut9rC93kKZ1x5qcI
-         3S8KJythO6h2wdZLZ60I3I49h0qE1/J1GWxyULP1M3usN/MbdznDuw5B/lAa5KwqVnj9
-         FE4+MXT6SQ29cvhTfxTQgY3oQJHgbQ70pqSWnNuEnbl88nioE348bvIzVrWVPHwsuA8T
-         8XUVyKrmMnH6Pewk12S7DeEuKlxrTJG+tF5sWdJxJB7Xv+7JpvJUoxmrh95bgSU950Iu
-         LX+nRw21hO5z8xNKQJKb4QRVDmexq/LKu+Lg2cYC86Wqn7YfKbUSIpCbClPOKgk5mF7p
-         ieJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719573494; x=1720178294;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jGjvAzjDwlAq0rCpEO+mGer2SS+9hXiF0BPt0Wfq6d0=;
-        b=X+oVe0OuTLL0vwTV80jVtvN1dUPMN8yxjBB6iBHjbqUqmTqNhY4ONmw1XMdfedCM0G
-         UORPbFArvxO3zcvqpVkIAN3dUwzObm65YLdFvk4mmp7hBpgXbp0bdrY183ZiRXCwkNZI
-         Fj4tKcqb40HfOq2F4Us7aqbkQB0qRhaYCacnPOblMBA9osHYmRaPzBEnnNKwh2c5iGQl
-         t5hgohQn6ERKyHqyjYJyE35C27QN8/fCxUY9BeL2ctsWzOP4pzqx4IBkWUiix47YzJbe
-         9eZ3aMem3b+sesBxjQXz9SJZ5RIn4fkcifUjh0fzBom7mGIfdW3eIAvU/5YlojkX7Z3i
-         AoBA==
-X-Forwarded-Encrypted: i=1; AJvYcCUzeHNi/AqjynFKqNTjqdrFtRn0JMcp/j3sV6Z+urRcb2rfwv6S7It9mGO6ohwjHAFglwiZEmiVKI7gfFv0ccHWld3lcTVGX+cLZc/bpm3GNxfKTDCUTi9/w61z3CeZn2SJzYSOP0NUVnmJVUZVusg3NvNIl2Bkh2kQ213/hCNUQ9KbhQ==
-X-Gm-Message-State: AOJu0YxxqXmdkIr8n6o7FKUgh/iquGE7adcyHZmhS16AyZ+4JiNJZBqy
-	/x3LSxpTdfYkdVNw/DFUEnzF9tCbNDWUuN+KSxBg636/4hn9L5UO2U5Viw==
-X-Google-Smtp-Source: AGHT+IGpmgVVWhDU6L0Eg9bKaM5Un6mfYJKGEM6lzS/aXInSUCuH83Z2b5aWXKfw/hIZ/mcUBgHX5w==
-X-Received: by 2002:adf:e507:0:b0:367:4165:ad4 with SMTP id ffacd0b85a97d-36741650be0mr3754348f8f.16.1719573494282;
-        Fri, 28 Jun 2024 04:18:14 -0700 (PDT)
-Received: from localhost.localdomain (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3675a1055b9sm1979495f8f.95.2024.06.28.04.18.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 04:18:13 -0700 (PDT)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Cc: Christian Marangi <ansuelsmth@gmail.com>
-Subject: [PATCH v2 2/2] dt-bindings: clock: mediatek: add syscon compatible for mt7622 pciesys
-Date: Fri, 28 Jun 2024 12:55:41 +0200
-Message-ID: <20240628105542.5456-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240628105542.5456-1-ansuelsmth@gmail.com>
-References: <20240628105542.5456-1-ansuelsmth@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tR2BmwAe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D509BC116B1;
+	Fri, 28 Jun 2024 11:20:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719573658;
+	bh=gQeYH+LG8291IRJvEG/1gi0BWNeiPp2grvRZNYZzpOs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tR2BmwAebw8/TRARIoz2TlXoGi4+WTnplk7PaCbcJOuu7t/Xl5eGVJgBTFl3xq2A4
+	 9f/Hw5mPB1P2pNkTdjR27vTBdPH6pA35j2R/gSqo8KWMTREJb2vLxndLhIscjERriW
+	 LtLPvECmB+RVriTMRBQDsHEjWDuqd1mksfUlw6/UFSu6HSn12qOgXy+DUl6w3qmpqb
+	 4xSLzgZCr8rJ5q8adbSRQ7WX/UpK+xt0C9PgvnDhrTeVALat1KGv5l1gUCKKwGa5iF
+	 6IEljwao4XARLmKWZ1Fp/fIut0MFe8mu5HUVU4fUgIZce+SK7DBiC97T4ulTaQ4gS0
+	 ilErjw0iGoIfA==
+Date: Fri, 28 Jun 2024 13:20:55 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	rostedt@goodmis.org
+Subject: Re: [PATCH rcu 3/6 v2] rcu/exp: Remove superfluous full memory
+ barrier upon first EQS snapshot
+Message-ID: <Zn6cl8PJWd8hWS_R@localhost.localdomain>
+References: <81f4e616-8125-4934-a8e2-fd5beae90995@paulmck-laptop>
+ <20240604222652.2370998-3-paulmck@kernel.org>
+ <Zn1O2qKaIVOXniYH@pavilion.home>
+ <4a11271a-d873-4f1c-87e6-38874e38ac13@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <4a11271a-d873-4f1c-87e6-38874e38ac13@paulmck-laptop>
 
-Add required syscon compatible for mt7622 pciesys. This is required for
-SATA interface as the regs are shared.
+Le Thu, Jun 27, 2024 at 11:53:29AM -0700, Paul E. McKenney a écrit :
+> On Thu, Jun 27, 2024 at 01:36:58PM +0200, Frederic Weisbecker wrote:
+> > When the grace period kthread checks the extended quiescent state
+> > counter of a CPU, full ordering is necessary to ensure that either:
+> 
+> Just to make sure that I understand...
+> 
+> I need to replace these commits in -rcu:
+> 
+> da979d0162fc6 rcu: Remove full ordering on second EQS snapshot
+> 6411f4185f657 rcu: Remove superfluous full memory barrier upon first EQS snapshot
+> dec56ca5f1c34 rcu/exp: Remove superfluous full memory barrier upon first EQS snapshot
+> 
+> With these three patches, and keep these three commits as they are?
+> 
+> d43a302fc08a5 rcu: Remove full memory barrier on boot time eqs sanity check
+> b1c36aa90cbf1 rcu: Remove full memory barrier on RCU stall printout
+> 64d68f1d53f77 rcu/exp: Remove redundant full memory barrier at the end of GP
 
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
----
-Changes v2:
-- Fix broken schema example
+Exactly! Those were the precisions I forgot to mention.
 
- .../bindings/clock/mediatek,mt7622-pciesys.yaml        | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/clock/mediatek,mt7622-pciesys.yaml b/Documentation/devicetree/bindings/clock/mediatek,mt7622-pciesys.yaml
-index c77111d10f90..9c3913f9092c 100644
---- a/Documentation/devicetree/bindings/clock/mediatek,mt7622-pciesys.yaml
-+++ b/Documentation/devicetree/bindings/clock/mediatek,mt7622-pciesys.yaml
-@@ -14,9 +14,11 @@ maintainers:
- 
- properties:
-   compatible:
--    enum:
--      - mediatek,mt7622-pciesys
--      - mediatek,mt7629-pciesys
-+    oneOf:
-+      - items:
-+          - const: mediatek,mt7622-pciesys
-+          - const: syscon
-+      - const: mediatek,mt7629-pciesys
- 
-   reg:
-     maxItems: 1
-@@ -38,7 +40,7 @@ additionalProperties: false
- examples:
-   - |
-     clock-controller@1a100800 {
--        compatible = "mediatek,mt7622-pciesys";
-+        compatible = "mediatek,mt7622-pciesys", "syscon";
-         reg = <0x1a100800 0x1000>;
-         #clock-cells = <1>;
-         #reset-cells = <1>;
--- 
-2.45.1
-
+Thanks.
