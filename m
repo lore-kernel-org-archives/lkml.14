@@ -1,61 +1,61 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E2613AF9
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 01:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6DA217C9E
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 01:11:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719623514; cv=none; b=NFqDnzs3L41fNqffaJEjuxiOor8Uy7zl7ppe5q7uPHAZzk+SjCVArwVzPSq7wRHus2N26SrSslPN14RCdD7PnlfbDFCkK8CrUeiA3nJdAhm8dmftdzST9E5RWsAxoVNA9Rwm8Ko0jsSXuHRDRllmvOvzu3yhlAUrA3zAFAMOFT0=
+	t=1719623515; cv=none; b=oU24Bt3g8XPtppTpoaiP4edEWPS1w7k8t414Ed5Ra1G3wLwOjLkjqF9yZGc7YMTgmRHDSxtLdYIbg93yncICU49CQB8RV0h47Vfz5LZVMmWCcI80HgiuKq7iMq8rttbLMRLjoDIjRBTO8LMm5KCdgOPGiNI/WCU5c+W7g/FoWVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719623514; c=relaxed/simple;
-	bh=6F/k6dwYH218Hyi1PGuaEb/Ijjso6ev6K6yn6UDiB3w=;
+	s=arc-20240116; t=1719623515; c=relaxed/simple;
+	bh=aef4F0Bvpd2E+ekA6aOSsipc4x6PfNlwGk26KdC5swY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fxZkNHAbCK8vlZOBOld6E+4zDjsEA3O4kZ6jPSVquo5ByU7tuZvDsCuJ9Jy+T5o94JYedMfqNtn0CcuIe08B2jqvYG5csPBD0msbWTwwQwCfN0sYOJpjOb1n4VMuyCQ/yO59+Ll7wWNM0f3XZhkbc6Z1+LjA2ls2o/oEjGoZ5H4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=OFv5uden; arc=none smtp.client-ip=209.85.166.175
+	 Content-Type:Content-Disposition:In-Reply-To; b=BIemQDYCuOygAPbazM0Fv9JTOvCMxBfZ3JqZNaTO/LgUwBHfU1/gXTAnwd9D052XFFoSD9MzbsfEPWYbxKBtBu47zfigfqpEYf8YSAoK1hO5I066iE2Rn0e3fhWeABkvlN9Qm3ngWPB26b90oA2U0MoGtcUdNHLcNwwIGrsMN7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=MkFWT+YU; arc=none smtp.client-ip=209.85.167.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="OFv5uden"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-376069031c7so4957685ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 18:11:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="MkFWT+YU"
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3d562b35fb6so696451b6e.3
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 18:11:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1719623512; x=1720228312; darn=vger.kernel.org;
+        d=ziepe.ca; s=google; t=1719623513; x=1720228313; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zmaMdKg0RidMIfRNkaCLQQUn8DgSGfF9Lh4khZx7QZA=;
-        b=OFv5udenEcKgF16Y+HBYr9MZHcwY7RYcczrSH6WLqP5mF63vKTpjGH8KTAbPLAxr2o
-         APVfcDdP3CZwsOSQ6RiQiOOqoXjqE99HkNEE/CVBu8VhGXlGY0HtfrsGaX8SYkjNjW4Z
-         pXl6bdJnrqfUCnZkx4ne+XQHH6+n/gI52zDiLYuij1U6BA4W9d+TPZSJlP+oS51/Ltv6
-         cKvR9knTKh58FhYIQFBAZVhWgxi7t9PTTDXuLj60CwbjJcABYHRaAhFpvOUrHavs2aZG
-         Z+OYk4wAWGEc36kakav0QZZ8p4k0QeI3IFQsdpY1nLc9XgceQ9IYcJC1gwQIktdP4ecd
-         JJ4g==
+        bh=T+KbwleecXN3riScVDyiugaIffNMxefx2YjUriSCAW8=;
+        b=MkFWT+YUt22312FSKDNpkKlD8daLvbvO66OQtcq1uBUuJ606yHlAeJi7HZ22/1poeI
+         jtyh03vnuYBFa+F8KynhAq3Tkf66mfkh8vypaZMUw5NCprtu1Yi2bgVaF83U3XP7uQAw
+         /NAPRLigCNsRpZdzu4WeeeCVzVNelFqFfpcgG6Aspzb/PGKq10exTuOddUPtPJk3mNeb
+         kKuWCr8DOhCLr1+DWjwW/UNfviGvOFI84ucwtTNyoljx9U9axDsffIm+Jf75BeHvEh8c
+         mtasUlSYRpeSbwEzyBv3lFqLrd1CN2vTMg8c63Mtpjh8gzDZHxRhO/Tn2u1tePU6RpFn
+         uarg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719623512; x=1720228312;
+        d=1e100.net; s=20230601; t=1719623513; x=1720228313;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zmaMdKg0RidMIfRNkaCLQQUn8DgSGfF9Lh4khZx7QZA=;
-        b=lFSnFbnBv5nfMcT0BZ4UgsH6gubzYX66+aG2SCrUfzUzf7hJViX2435UVRtr/rceBl
-         z8Yn9rWkjhY6O2c3bOO8LfEwiuNls4UCzOWp/TF1KobrTraxGCBxrmJ9QU7Yn9IqQUX8
-         OvxrrGALJO/TDHXcu/+Z2g9i9KzgrAs0CZHYtT+7VREBkq0u1aCLw9hCE5BGUuwAEnGE
-         Nt8FCABc13stw7BSTihm08+VrH3UnrvwvGa/zxhlf1M8SLgh0nqGOO2MY3LfEoWbFZ6s
-         x1K9gpMESHmEXhEfjAb5/NjxiMYC6Ys0R5ILvdxxuIEe93dTNtpwBjDhvUDPlWoDoxlo
-         sw+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWPl3LYofT0AqTHxoXSg3y/QLCbJT384s9MVDdPWOdCf4NrVlUy/S1isrpjlDDrg58Q5MKTIBGDcUkaFDiP3gqCRgvvHs2YntQXg3fp
-X-Gm-Message-State: AOJu0YzkWMKe8bHRR75v6wHq82TVZ0T9CuSAUsn2hPfcTtAz8WfUxQJR
-	myNOt4AX0Jby2GlzgAcgCeBh3xIlOLWEicV/qS5uMjtyB4japUJCFc+6Sdp9jMA=
-X-Google-Smtp-Source: AGHT+IEt4WuI6UUriXHM21a/iZG/YuB8wOThjfEiLBUbcEKDogKRn2+UhIh8HyJ2Q/QTwEKSXlIHrw==
-X-Received: by 2002:a05:6e02:20e7:b0:376:492e:a13b with SMTP id e9e14a558f8ab-376492ea27amr214270955ab.28.1719623511924;
-        Fri, 28 Jun 2024 18:11:51 -0700 (PDT)
+        bh=T+KbwleecXN3riScVDyiugaIffNMxefx2YjUriSCAW8=;
+        b=HqS6acUL8nTsgQE/7NQDoshrEjhjwVoG3QqPiZ6+nj75SWhG3yv6WbyEfXlyaH/6K9
+         2YxvUIRjw4LasQBj4tNrzcl0AwosbQs14XbesB5af6Lm5npeYfThAFrU8+IqXypBEFUP
+         kNryw2qnE/WPhukftv0cOOKYuiUbr1bx3vtm/myqB2pcgZ8v2zld+H39SeX7lT41TMD0
+         WRNmmf8QrBIhte1My/X+wt/O7SNLdNUsXUHrNosnMz3DeqIr36qVWsRe5bypYCuhiSFs
+         vj5YHgklt0oa8kaXbhxR/utzoPaG4yg+P5CeyCuMZx2n0PWgMDvndoCpVzbuYpCgwlFl
+         QweA==
+X-Forwarded-Encrypted: i=1; AJvYcCXD1hCm2WRf7emJA40+aGEN7fqhl6JDmzv+YvXREFULGJv/E1ScCfRP+qE8jINKgESq4n1+WTWP4/rlFsTdq/WdWma3YBMrVMvoiKOu
+X-Gm-Message-State: AOJu0YxdN1IQFQVrpxQ/2b628kOBhdBgfg12ywG938VO6wcQ4hfEEIw0
+	E0ZGw3dvBVt4YHmNGzfVsPqY3r4/o3zQd60TQez7EjC5F0ApzXA/0xsjhCZSSEY=
+X-Google-Smtp-Source: AGHT+IGI3SD8A1N5RAQhEKo93yRDR33fQ3JlDGvi7EAwNp2DA4Cb9gac0LEseC9mjRgt/U5qth10Jw==
+X-Received: by 2002:a05:6808:17a7:b0:3d6:342b:d7f3 with SMTP id 5614622812f47-3d6342bdbb0mr2109008b6e.52.1719623513063;
+        Fri, 28 Jun 2024 18:11:53 -0700 (PDT)
 Received: from ziepe.ca ([24.114.37.55])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-72c69b53be5sm1784142a12.16.2024.06.28.18.11.50
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-72c69b53be5sm1784142a12.16.2024.06.28.18.11.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 18:11:51 -0700 (PDT)
+        Fri, 28 Jun 2024 18:11:52 -0700 (PDT)
 Received: from jgg by jggl with local (Exim 4.95)
 	(envelope-from <jgg@ziepe.ca>)
-	id 1sNIw0-0004UM-BR;
-	Fri, 28 Jun 2024 18:15:08 -0300
-Date: Fri, 28 Jun 2024 18:15:08 -0300
+	id 1sNJrv-0004oI-S0;
+	Fri, 28 Jun 2024 19:14:59 -0300
+Date: Fri, 28 Jun 2024 19:14:59 -0300
 From: Jason Gunthorpe <jgg@ziepe.ca>
 To: Lu Baolu <baolu.lu@linux.intel.com>
 Cc: Kevin Tian <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
@@ -66,10 +66,9 @@ Cc: Kevin Tian <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
 	Joel Granados <j.granados@samsung.com>, iommu@lists.linux.dev,
 	virtualization@lists.linux-foundation.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 02/10] iommu: Remove sva handle list
-Message-ID: <Zn8n3Cs7JDxzpRPf@ziepe.ca>
+Subject: Re: [PATCH v7 00/10] IOMMUFD: Deliver IO page faults to user space
+Message-ID: <Zn814+VwyCJ/okax@ziepe.ca>
 References: <20240616061155.169343-1-baolu.lu@linux.intel.com>
- <20240616061155.169343-3-baolu.lu@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,22 +77,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240616061155.169343-3-baolu.lu@linux.intel.com>
+In-Reply-To: <20240616061155.169343-1-baolu.lu@linux.intel.com>
 
-On Sun, Jun 16, 2024 at 02:11:47PM +0800, Lu Baolu wrote:
-> The struct sva_iommu represents an association between an SVA domain and
-> a PASID of a device. It's stored in the iommu group's pasid array and also
-> tracked by a list in the per-mm data structure. Removes duplicate tracking
-> of sva_iommu by eliminating the list.
-> 
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> ---
->  include/linux/iommu.h      |  2 --
->  drivers/iommu/iommu-priv.h |  3 +++
->  drivers/iommu/iommu-sva.c  | 30 ++++++++++++++++++++----------
->  drivers/iommu/iommu.c      | 31 +++++++++++++++++++++++++++++++
->  4 files changed, 54 insertions(+), 12 deletions(-)
+On Sun, Jun 16, 2024 at 02:11:45PM +0800, Lu Baolu wrote:
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> Lu Baolu (10):
+>   iommu: Introduce domain attachment handle
+>   iommu: Remove sva handle list
+>   iommu: Add attach handle to struct iopf_group
+>   iommu: Extend domain attach group with handle support
+>   iommufd: Add fault and response message definitions
+>   iommufd: Add iommufd fault object
+>   iommufd: Fault-capable hwpt attach/detach/replace
+>   iommufd: Associate fault object with iommufd_hw_pgtable
+>   iommufd/selftest: Add IOPF support for mock device
+>   iommufd/selftest: Add coverage for IOPF test
 
+Small remarks aside this all looks fine to me, send a v8 and I'll try
+to pick it up next week
+
+Thanks,
 Jason
