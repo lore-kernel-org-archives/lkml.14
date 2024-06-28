@@ -1,125 +1,129 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15CBB21105;
-	Fri, 28 Jun 2024 09:22:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB82D1465A1;
+	Fri, 28 Jun 2024 09:22:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719566542; cv=none; b=KSCNkEpeiq82p0uRNJvB+mJHVTGXP2MzvIZ5uKBphKNpQSGS9C+7yrdGPvj2gO+D0AHvnbYBkS5PpOQO8mlD6QvC3yE4ZOQ52fJmKRlaMXFG+IueyFQU2WAwRf/CQBIHEJzLJr4dTXRAtWOw3StRo2h419ICM47BVN3MtDivR7g=
+	t=1719566544; cv=none; b=uSi8jlDumBtOCDLb/7fAzmD67ChEbDa8dxJ3SFjHz0B9htcK1OvEgHvnxGlyYa1Ign/oUhlIKFhso/+KUbkbrkKmioUAzKMKtsDlD4QgBtI9cn1eIUD4onzxpIv8hhSnVt1gfvt261kk0dtdBhAnY90S56Dr/ampBo0imtrR6BM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719566542; c=relaxed/simple;
-	bh=s2v0SCtuLdBGXTNA/pzfiqK5TXKCGtl+5CoWL2zIOrM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eN+xzs3lu1kIkacXjhQIxPQbLol6vpYITnYTLFNZFgP8wl2EZ2LDjlWIGXY+2EnE6ynUUtJxEu+NMFC9YOhE9IvAjbHFN08IoKfZd0ldlCap5UdzDVpsAUfaHACDslwKZuzVWnBNXcZG4WGcMz5jYrcidyasD2Bl9Wwmu9HiVbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6327e303739so3517797b3.2;
-        Fri, 28 Jun 2024 02:22:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719566537; x=1720171337;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lPkiiuvvTvf4U3Ro8IqPKqYL9PdIgEp2Zf9jQK+VOus=;
-        b=oMPO7I0L4R2LYjIdQ4c6u7uRtIxsaDSbtyiwhlqlOXaTukyIi4HXkXlLTEEX8NtN64
-         BqOv5l1aep5FsWmB9kejIAFb4eJdLxjAY9AaCENEjoRJ5MoZCcmJXZ5EzJ9O+pof8Zoz
-         SqWcKIFZh47e+CFHSOTcoNLJgZIWnpohM6Q89sVX0XQGExJUbD8OxbWmA6DBtQdn9q4g
-         OGgxvQS3dAbEiQerXF26W5A9Hov1ikGspGG2j87X95n6OR44MmOOE4Vo2BVtWr2EatBs
-         TZuKq10xs3BPACE2Up2G4UZaqVeV6vA+e2WfRFbrUnY9DfwcRnF9h3/sU7/hdXX0Nh3m
-         ldQA==
-X-Forwarded-Encrypted: i=1; AJvYcCWI5l5WrCna+LLwqqcEEDE5omLEa/QAz8ip/niAqT9BElXA13rVeh+SNoyn9H0Z8dW5dRDTXVguvzPoeBpN7USxN9IZhwsFz1g6hMNn0sLLF7+JspYAcnkdnnxzwDyePhgzyi1J7uMmnVylhxba2NDz3Et82Z5FEOK9M0cOR25tgwhozMVrLFmgOCZUVr8mo184JxqUJAXOkC1xUzhoxlypUWeDvZiQPD7I7T/Qlua955Pf2zSHBVBmql3k3G7m99gk
-X-Gm-Message-State: AOJu0Yy7wVItFMjFayVGbBX7KXO8V4d3WseyuavraBCmGQsFwBGY3MvY
-	eZA7PSYGvsASepsyC9CZnNc7tjsKLY2J0lHBxjrHIpgLRMXDc+QhH0sijoNn
-X-Google-Smtp-Source: AGHT+IF2U2yL59gFoBHuaQ1ZeXCm8HFBJrGLAq524F2DrTFgDuSmurln8J3OH7v2V5dlY6M32jQHNg==
-X-Received: by 2002:a05:690c:360e:b0:64b:69f0:f900 with SMTP id 00721157ae682-64b69f10411mr2105477b3.23.1719566537524;
-        Fri, 28 Jun 2024 02:22:17 -0700 (PDT)
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com. [209.85.128.176])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-64a9a803a15sm2695677b3.68.2024.06.28.02.22.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Jun 2024 02:22:16 -0700 (PDT)
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-64b0d45a7aaso3209207b3.0;
-        Fri, 28 Jun 2024 02:22:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUL63FHWF6lOdRcp1BfDlfvNIi9cp+9pS8PiPfA0oh3J48DMFWP+gmmw/2+Yll302Lmr6niy/6qJBgGip53budHEU60ekm+uXj7cq8HY0wcUFmCWcCh6YHTVwKh9igcertpXBYRhj9RR4kVAleBDeQkk0SxVLDBf14oz7B4lka8bGnC6Fby/URj6UmseXjkpyG467OFDKoTXQktBKEFnYiH+DtMXkeVtEF/qhHOoScO72jO09eY96cfcd00HO0RsP7t
-X-Received: by 2002:a81:a20a:0:b0:61b:33c8:7bce with SMTP id
- 00721157ae682-643aab82cc5mr155916427b3.31.1719566536472; Fri, 28 Jun 2024
- 02:22:16 -0700 (PDT)
+	s=arc-20240116; t=1719566544; c=relaxed/simple;
+	bh=No5kI0JbClGdXNXP6BWBYQzHDNI+RX4pElyDv6jIUJA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HWtZBHtxX++TjmS+oHby0Nbn4Ez/NIhcgqCrpX5p4TD1rwxswt64oZAVJcREeHGGGJCL/c0RG3/6d6sGZUnyo1P2zE/0YOAXmaEpzUv8Phi1rEjiHPJLneMa3NbVFj4xN2tZmNv2PT6Y5fqKzo3hHYseJsbGG3RdhS/osBtPo6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Oi2XBDoD; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Oi2XBDoD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1719566534;
+	bh=No5kI0JbClGdXNXP6BWBYQzHDNI+RX4pElyDv6jIUJA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Oi2XBDoDzH2H+YQXkPHfnOkemXC9QZbvBVlFnBLw6Q97qvHa6qQXc7udTWCgYKmgZ
+	 jF55LXYylWhWXofaB0DsqvVer3PwsOo6fcuBUh4jIK2pGC9iL0FT0pjN8wxXbsfj6B
+	 xmaUNxGKAMPONbxrBy7kLtkilkge8Saa0mbUC7lhHSY064t77UnA+NhpYixH4xnE3Q
+	 M7SBnp8i2w/zD2t7DoZI0udFlfXU1n1vmAQbODPk8VMSJJfpQC8VFwBrE+6kYGhwIv
+	 Xg0sV1vHJGljnueAtB2wggcx5i7iKsWySqLqohIQ3ZoVBVL9aCoC7H2rgTmK5lFwif
+	 PpNr40bE2KAaA==
+Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: laura.nao)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 0B6B837821A8;
+	Fri, 28 Jun 2024 09:22:13 +0000 (UTC)
+From: Laura Nao <laura.nao@collabora.com>
+To: kernelci@lists.linux.dev
+Cc: linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Testing Quality Call notes - 2024-06-27
+Date: Fri, 28 Jun 2024 11:22:49 +0200
+Message-Id: <20240628092249.26582-1-laura.nao@collabora.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240625121358.590547-1-claudiu.beznea.uj@bp.renesas.com> <20240625121358.590547-10-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20240625121358.590547-10-claudiu.beznea.uj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 28 Jun 2024 11:22:05 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdX4hWou9OtdE8XgU7-U0ghJ6vk2kVqgT90U0ZjsxzR5DA@mail.gmail.com>
-Message-ID: <CAMuHMdX4hWou9OtdE8XgU7-U0ghJ6vk2kVqgT90U0ZjsxzR5DA@mail.gmail.com>
-Subject: Re: [PATCH v2 09/12] i2c: riic: Add support for fast mode plus
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: chris.brandt@renesas.com, andi.shyti@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, magnus.damm@gmail.com, 
-	mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de, 
-	wsa+renesas@sang-engineering.com, linux-renesas-soc@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Claudiu,
+Hello,
 
-On Tue, Jun 25, 2024 at 2:14=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev> =
-wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> Fast mode plus is available on most of the IP variants that RIIC driver
-> is working with. The exception is (according to HW manuals of the SoCs
-> where this IP is available) the Renesas RZ/A1H. For this, patch
-> introduces the struct riic_of_data::fast_mode_plus.
->
-> Fast mode plus was tested on RZ/G3S, RZ/G2{L,UL,LC}, RZ/Five by
-> instantiating the RIIC frequency to 1MHz and issuing i2c reads on the
-> fast mode plus capable devices (and the i2c clock frequency was checked o=
-n
-> RZ/G3S).
->
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+KernelCI is hosting a bi-weekly call on Thursday to discuss improvements 
+to existing upstream tests, the development of new tests to increase 
+kernel testing coverage, and the enablement of these tests in KernelCI. 
+In recent months, we at Collabora have focused on various kernel areas,
+assessing the tests already available upstream and contributing patches 
+to make them easily runnable in CIs.
 
-Thanks for your patch!
+Below is a list of the tests we've been working on and their latest 
+status updates, as discussed in the last meeting held on 2024-06-27:
 
-> --- a/drivers/i2c/busses/i2c-riic.c
-> +++ b/drivers/i2c/busses/i2c-riic.c
-> @@ -407,6 +413,9 @@ static int riic_init_hw(struct riic_dev *riic)
->         riic_writeb(riic, 0, RIIC_ICSER);
->         riic_writeb(riic, ICMR3_ACKWP | ICMR3_RDRFS, RIIC_ICMR3);
->
-> +       if (info->fast_mode_plus && t->bus_freq_hz =3D=3D I2C_MAX_FAST_MO=
-DE_PLUS_FREQ)
-> +               riic_clear_set_bit(riic, 0, ICFER_FMPE, RIIC_ICFER);
+*USB/PCI devices kselftest*
 
-Unless FM+ is specified, RIIC_ICFER is never written to.
-Probably the register should always be initialized, also to make sure
-the FMPE bit is cleared when it was set by the boot loader, but FM+
-is not to be used.
+- Upstream test to detect unprobed devices on discoverable buses:
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=dacf1d7a78bf8a131346c47bfba7fe1f3ff44beb 
+- Kernel patches to allow running the test on more platforms on KernelCI 
+  were merged:
+  https://lore.kernel.org/all/20240613-kselftest-discoverable-probe-mt8195-kci-v1-0-7b396a9b032d@collabora.com
+- Waiting for KernelCI PRs to be merged:
+  https://github.com/kernelci/kernelci-core/pull/2577 and https://github.com/kernelci/kernelci-pipeline/pull/642
 
+*Error log test*
 
-> +
->         riic_clear_set_bit(riic, ICCR1_IICRST, 0, RIIC_ICCR1);
->
->         pm_runtime_mark_last_busy(dev);
+- Proposing new kselftest to report device log errors: 
+  https://lore.kernel.org/all/20240423-dev-err-log-selftest-v1-0-690c1741d68b@collabora.com/
+- Currently fixing test failures in KernelCI
 
-Gr{oetje,eeting}s,
+*Suspend/resume in cpufreq kselftest*
 
-                        Geert
+- Enabling suspend/resume test within the cpufreq kselftest in KernelCI
+- Parameter support for running subtests in a kselftest was merged: 
+  https://github.com/Linaro/test-definitions/pull/511
+- Added rtcwake support in the test to enable automated resume, currently 
+  testing/debugging solution
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+*Boot time test*
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+- Investigating possibility of adding new test upstream to measure the 
+  kernel boot time and detect regressions
+- Currently looking into boot tracing with ftrace events and kprobes 
+  (see: https://www.kernel.org/doc/html/latest/trace/boottime-trace.html)
+- Idea for potential kselftest: insert explicit tracepoints in strategic 
+  places, let the user configure which times to measure. The test could 
+  provide a bootconfig file and a fragment to enable the required configs.
+  This could be an alternative to using external tools (e.g. grabserial 
+  w/ early serial port init).
+- Need a list of functions to track in order to measure key metrics 
+  (e.g. device tree overhead, probe overhead, module load overhead)
+- Identify key drivers that need to be loaded early, for potentially 
+  supporting a two-phase boot: (1) time-critical, and (2) rest of the 
+  system
+
+*Other interesting updates*
+
+- Flaky serial on sc7180 was recently fixed: 
+  https://github.com/kernelci/kernelci-project/issues/380 and https://lore.kernel.org/all/20240610222515.3023730-1-dianders@chromium.org/#t
+
+*Strategy for test enablement in KernelCI*
+
+- Guidance on test quality: KernelCI should set the standard for test 
+  quality, providing guidance on which tests to enable from various 
+  projects (e.g., kselftest, LTP). By doing so, KernelCI can serve as a 
+  model for other CI systems.
+- Develop mechanisms to automatically detect which tests should run on a
+  specific platform
+- Embed metadata in the test themselves to facilitate the test selection
+  process
+- Leverage device tree info to determine the appropriate tests for each 
+  platform
+
+Please reply to this thread if you'd like to join the call or discuss 
+any of the topics further. We look forward to collaborating with the 
+community to improve upstream tests and expand coverage to more areas 
+of interest within the kernel.
+
+Best regards,
+
+Laura Nao
