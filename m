@@ -1,169 +1,104 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA4B1DFFB
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 02:10:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1653C0B;
+	Fri, 28 Jun 2024 02:13:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719540623; cv=none; b=A4gZLf9E7IZNWagIECSTua+dhMgrBBdOdRj9ItEkVnJBTbwYh5mffxMfJbReO6Yq1OxcQYFQXjofElgc3zlWL7u3WlQZ0/SebImm+rV3GqsyDlkinKnHRsElsf6kMxcUW7RwpdhkL30ptRDKaabCoKCyHNDWMjpNgqmCUFB5j4I=
+	t=1719540797; cv=none; b=SPAqf0EqqgHnWSYQxqF+be5I0bkbC9RYtqdS7nzM0YtvaDlSEgCileKZXxhVJHIw0r7n9v1I2lRV5ANvv/IchRLHKuRN229wX4cyi45Wm5uCLfHKMHUKEX4Eyj9dmxC/Z/EhOQWFvLoDVQa2+k4kHmpAlOBbxWyn1S2b1LkzR9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719540623; c=relaxed/simple;
-	bh=WENDZcP8N/LxqpPFeFbXSpD17nZKdUoSCPD3rZP7z/4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=KWRgKlVIvJcFNuTamaezFtswx8RoOZh7F04Q2K0HU8tx+HyZE2pBYmh5wIM3Ny55J4lSJv2Wp5XTpy1bcgDGJEBefOOyFgQoLCeNT9RLCHG6gTJcUMFlIvwwtUi1Llj/UV/aJSFes8rnRcundbie8gFXw7IRW4cmIRNsWyG3yR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--avagin.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vjNU8hNj; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--avagin.bounces.google.com
+	s=arc-20240116; t=1719540797; c=relaxed/simple;
+	bh=/Ub6zta+0SAXKh9uiet4CqS+rN7kBLSnTuCB14Q2Lo4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FAiCGQv2rIHQSt9wR94FCVUMFKDJTDFmd2a/H/COzwZPDz0yZ8OGqNO+Tbr0gQp/zvxRxrcpGEkGHCxkZFi9tgHQbdWvaT4rjZ5cWRZepSgAz2gk5EqH9Dhq9lvpZGkd9EZfLq5qMKqlADgfelRvuBh19ZVaDlB4XTA2zbAuHSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XhjvSnq+; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vjNU8hNj"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dfa73db88dcso209172276.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 19:10:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719540621; x=1720145421; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3+q5Yudne0apm40w9a/NrughomiVS9st32ZmfN+LWk8=;
-        b=vjNU8hNjRTIwBKueXomX94VOHx4bjgLlIvCCksTjU3bVDxvmSRQ8qQ7gzMorhv+RtP
-         ZETTW1ShQbRmh+m1UY+qA5KPEaBn2Oqc+Nw3B4wVOF6wgs9U6P+LbQPOYIcsi3I8trui
-         8v78Yvv957SN6F65+/UM0K6OELJAdK1pFOD/rbhGVOHVDhs3WU3iFTskNnn6/d+5R5oQ
-         RmZWpXF5124ie9T6fUftfUkWBw+XNjc0lQqc3xzewXsPyf63uZI5vkj7HTYmAm5s+1H5
-         HGH6E75feblxasGbq9JAwW4Ia64IplknPk+7Mlqjxb8RnISf4wz5Uf14lRU46gx16dtU
-         HNlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719540621; x=1720145421;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3+q5Yudne0apm40w9a/NrughomiVS9st32ZmfN+LWk8=;
-        b=RCZzG4gRxha5nGDHbz+i54kKlRGBRCtn5LA6r0WkIN3MecWVg7yYi+Q24eoQkeopf3
-         rbKhIQG0psHqzN/fLlPu7Tp2rLdsQMO7EZKTA41w+CLlxkLonf0k0TZsptlC2e0pWsyq
-         cGjvHuUEG3nERd6mJswgXQT2I4Ek4ZHjzHiliJDrjzQAV/rEks0rLCID3wEpjp2aW3nB
-         gvKkV2jxCUO4lkMxXMACrLViqaKS+2SZ21r0xQG1AsIUZ9Qz2dvuBHbGbqk5+YCm0qYB
-         modHx3znCmsEYR3N7khmVnFkge63Yi8qe8rqNAxB9Wavb9xp2D3EDoi35lCdYVyvb/2j
-         xXSg==
-X-Gm-Message-State: AOJu0YyJCjwprqjEeV0s5kAUtqDzzddDZgrQvFBn7aXdJ6PGhQ8uDNcq
-	2H7FKstR9j+LCg7cLQWExQlYaJjayB1ES4vEUIOa0SSckRlFtnkQYDn1VTrV3IM5yDB51nIPThr
-	XUA==
-X-Google-Smtp-Source: AGHT+IFeZp+OKnBr03iY/sVg8Bm8WE9n5a0TRPt0/ahgfiqmGEwYv7yfgX7jncSzfInGJlJsU77XXD1DtRI=
-X-Received: from avagin.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:b84])
- (user=avagin job=sendgmr) by 2002:a05:6902:120d:b0:dfb:fb2:ebd with SMTP id
- 3f1490d57ef6-e0303fdc528mr43728276.8.1719540621021; Thu, 27 Jun 2024 19:10:21
- -0700 (PDT)
-Date: Fri, 28 Jun 2024 02:10:14 +0000
-In-Reply-To: <20240628021014.231976-1-avagin@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XhjvSnq+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719540796; x=1751076796;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/Ub6zta+0SAXKh9uiet4CqS+rN7kBLSnTuCB14Q2Lo4=;
+  b=XhjvSnq+A2QeoaWq+AjSSzwEey7T6tAhvUwV8gKZ7xkUSiPK7bj64mLL
+   MIfoafPqvqWgb6fvbDkCcfxQitRsjwn6T3GgDy1FHFs/BidmLXqJN91i0
+   J7F8GKzBNXhy17NzGJjziMrmtCmcSqcX3hxRJF81vObkhq+ZlGfI34Lyl
+   x+k6emQH7q5hREPaHmkl2ubzoC6Q+QD0dn/KppOhfZ/6tJ+puVOZOj33n
+   M0cYQvrPldJNa3JOjo5jPY+zM29WBiveFoJBsNeIrB/qM6+XQufOKQXww
+   UhDgixs6BkhOyCz7fUmimbgbNusf1v2Pj7Gyse8m5HDLY8KltXrIhc8cp
+   A==;
+X-CSE-ConnectionGUID: zi9jAKOZT6q7iUOYkX0suQ==
+X-CSE-MsgGUID: oOxRWSD+RLWpiU1tGjr7+Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="16528808"
+X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
+   d="scan'208";a="16528808"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 19:13:15 -0700
+X-CSE-ConnectionGUID: RELGioelQiOx8PUEyU8xUQ==
+X-CSE-MsgGUID: w2oGwSiMSb6HzN3VDjLTeQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
+   d="scan'208";a="44993921"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 27 Jun 2024 19:13:12 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sN16r-000Gie-2N;
+	Fri, 28 Jun 2024 02:13:09 +0000
+Date: Fri, 28 Jun 2024 10:12:17 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jonas Karlman <jonas@kwiboo.se>, Heiko Stuebner <heiko@sntech.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, FUKAUMI Naoki <naoki@radxa.com>,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Jonas Karlman <jonas@kwiboo.se>
+Subject: Re: [PATCH v2 2/2] arm64: dts: rockchip: Add Radxa ROCK 3B
+Message-ID: <202406280948.sZf64ONz-lkp@intel.com>
+References: <20240626201502.1384123-3-jonas@kwiboo.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240628021014.231976-1-avagin@google.com>
-X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
-Message-ID: <20240628021014.231976-5-avagin@google.com>
-Subject: [PATCH 4/4] selftests/seccomp: check that a zombie leader doesn't
- affect others
-From: Andrei Vagin <avagin@google.com>
-To: Kees Cook <keescook@chromium.org>
-Cc: linux-kernel@vger.kernel.org, Tycho Andersen <tandersen@netflix.com>, 
-	Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Christian Brauner <brauner@kernel.org>, Andrei Vagin <avagin@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240626201502.1384123-3-jonas@kwiboo.se>
 
-Ensure that a dead thread leader doesn't prevent installing new filters
-with SECCOMP_FILTER_FLAG_TSYNC from other threads.
+Hi Jonas,
 
-Signed-off-by: Andrei Vagin <avagin@google.com>
----
- tools/testing/selftests/seccomp/seccomp_bpf.c | 77 +++++++++++++++++++
- 1 file changed, 77 insertions(+)
+kernel test robot noticed the following build warnings:
 
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index 390781d7c951..e3f97f90d8db 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -4809,6 +4809,83 @@ TEST(user_notification_wait_killable_fatal)
- 	EXPECT_EQ(SIGTERM, WTERMSIG(status));
- }
- 
-+struct tsync_vs_thread_leader_args {
-+	pthread_t leader;
-+};
-+
-+static void *tsync_vs_dead_thread_leader_sibling(void *_args)
-+{
-+	struct sock_filter allow_filter[] = {
-+		BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ALLOW),
-+	};
-+	struct sock_fprog allow_prog = {
-+		.len = (unsigned short)ARRAY_SIZE(allow_filter),
-+		.filter = allow_filter,
-+	};
-+	struct tsync_vs_thread_leader_args *args = _args;
-+	void *retval;
-+	long ret;
-+
-+	ret = pthread_join(args->leader, &retval);
-+	if (ret)
-+		exit(1);
-+	if (retval != _args)
-+		exit(2);
-+	ret = seccomp(SECCOMP_SET_MODE_FILTER, SECCOMP_FILTER_FLAG_TSYNC, &allow_prog);
-+	if (ret)
-+		exit(3);
-+
-+	exit(0);
-+}
-+
-+/*
-+ * Ensure that a dead thread leader doesn't prevent installing new filters with
-+ * SECCOMP_FILTER_FLAG_TSYNC from other threads.
-+ */
-+TEST(tsync_vs_dead_thread_leader)
-+{
-+	int status;
-+	pid_t pid;
-+	long ret;
-+
-+	ret = prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
-+	ASSERT_EQ(0, ret) {
-+		TH_LOG("Kernel does not support PR_SET_NO_NEW_PRIVS!");
-+	}
-+
-+	pid = fork();
-+	ASSERT_GE(pid, 0);
-+
-+	if (pid == 0) {
-+		struct sock_filter allow_filter[] = {
-+			BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ALLOW),
-+		};
-+		struct sock_fprog allow_prog = {
-+			.len = (unsigned short)ARRAY_SIZE(allow_filter),
-+			.filter = allow_filter,
-+		};
-+		struct  tsync_vs_thread_leader_args *args;
-+		pthread_t sibling;
-+
-+		args = malloc(sizeof(*args));
-+		ASSERT_NE(NULL, args);
-+		args->leader = pthread_self();
-+
-+		ret = pthread_create(&sibling, NULL,
-+				     tsync_vs_dead_thread_leader_sibling, args);
-+		ASSERT_EQ(0, ret);
-+
-+		/* Install a new filter just to the leader thread. */
-+		ret = seccomp(SECCOMP_SET_MODE_FILTER, 0, &allow_prog);
-+		ASSERT_EQ(0, ret);
-+		pthread_exit(args);
-+		exit(1);
-+	}
-+
-+	EXPECT_EQ(pid, waitpid(pid, &status, 0));
-+	EXPECT_EQ(0, status);
-+}
-+
- /*
-  * TODO:
-  * - expand NNP testing
+[auto build test WARNING on rockchip/for-next]
+[also build test WARNING on krzk/for-next krzk-dt/for-next krzk-mem-ctrl/for-next linus/master v6.10-rc5 next-20240627]
+[cannot apply to robh/for-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Jonas-Karlman/dt-bindings-arm-rockchip-Add-Radxa-ROCK-3B/20240627-160354
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git for-next
+patch link:    https://lore.kernel.org/r/20240626201502.1384123-3-jonas%40kwiboo.se
+patch subject: [PATCH v2 2/2] arm64: dts: rockchip: Add Radxa ROCK 3B
+config: arm64-randconfig-051-20240628 (https://download.01.org/0day-ci/archive/20240628/202406280948.sZf64ONz-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 13.2.0
+dtschema version: 2024.6.dev2+g3b69bad
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240628/202406280948.sZf64ONz-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406280948.sZf64ONz-lkp@intel.com/
+
+dtcheck warnings: (new ones prefixed by >>)
+>> arch/arm64/boot/dts/rockchip/rk3568-rock-3b.dtb: pmic@20: '#sound-dai-cells', 'assigned-clock-parents', 'assigned-clocks', 'clock-names', 'clocks' do not match any of the regexes: 'pinctrl-[0-9]+'
+   	from schema $id: http://devicetree.org/schemas/mfd/rockchip,rk809.yaml#
+
 -- 
-2.45.2.803.g4e1b14247a-goog
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
