@@ -1,75 +1,95 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95CD14373F;
-	Fri, 28 Jun 2024 07:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7FA54BD4;
+	Fri, 28 Jun 2024 07:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719559912; cv=none; b=VWDl/E6XT5nFb6hDdIq0R5gyFfUnoYXjNlMlnvF0W64HlKM9E2cNO2s6zGkgS7wNnlLXJmN5uZNW8cuZVKm6APEtFTekWAELyja54E9xObpFvFTRxHfPo7MzkBo1v2TZcUDDhKpHbC1XYj6Gge4dDRBXgT/AF0j+9yLzJDACfZA=
+	t=1719559943; cv=none; b=KIR/WF0JdaRwSgd3xPCZKtqkgxGTi6L4wTzEloAZ1WWSp8KzNRGdHicVNLeazEf264lqwAQDFfL35DrhXElXj3nkIpFTq6F7WsC8INuMN5h2+nvPq9BWsHhnsq1X3yOf1E11DOY3ynE+VL+iHYGOJTUk/1684fcc91jgI4Nx9co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719559912; c=relaxed/simple;
-	bh=W8hIukQv0ev9fNxEyLp2AafwZ6u5tbSJgL++dWX7JPQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GPMsUUv6SLZuWBPbQn2Dm86ZPfvBdiwcdZHmMxHQsbkMZV1wAYAnqQl+PcQ+Fv57x7C4AwHv+2CguDt4r1VHv5VKDxDdT8qkmOPHJNc5OMsAmfLazrW4vGu/HZ0YanSfUG15ZpMR6y9ABxteH4+ux6iQqbh/dJULDjKIaGnxf2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4W9Rsv3S7Lz1xt4G;
-	Fri, 28 Jun 2024 15:30:11 +0800 (CST)
-Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
-	by mail.maildlp.com (Postfix) with ESMTPS id D2DCE1A016C;
-	Fri, 28 Jun 2024 15:31:41 +0800 (CST)
-Received: from hulk-vt.huawei.com (10.67.174.26) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 28 Jun 2024 15:31:41 +0800
-From: Xiu Jianfeng <xiujianfeng@huawei.com>
-To: <hannes@cmpxchg.org>, <mhocko@kernel.org>, <roman.gushchin@linux.dev>,
-	<shakeel.butt@linux.dev>, <muchun.song@linux.dev>,
-	<akpm@linux-foundation.org>
-CC: <cgroups@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] mm: memcg: adjust the warning when seq_buf overflows
-Date: Fri, 28 Jun 2024 07:23:33 +0000
-Message-ID: <20240628072333.2496527-1-xiujianfeng@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1719559943; c=relaxed/simple;
+	bh=9N1/mMfhqW8BsLENyLyD7c7i6dJuKlyiYhTst7s+czw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b4tWyhknmaRn5p1BFbI74UeLhjQGF57J0/texR6bl6pVeGgqSbr6PJ5H7ybhbE61FfB/lLqhy7EHLX3rQs2Gniynw8HaR7YIhGOz5kegeTVTgVnZA/fJGS6hCOygNXYe93TVGjeiWyg4ZtljH4kVxlPMql7Qd+t7bfHNa0ocWkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-64b0d45a7aaso2168257b3.0;
+        Fri, 28 Jun 2024 00:32:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719559940; x=1720164740;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0VL+b3JwtyGCROTdqN/X9hyaMABG/pi++AqRbfpAIVA=;
+        b=MJ4DlzyXLvkBh+WFvkM0ONe6xZLJIXpRRIIb1q4gvUWbddUFzZmqpyh8TvnOstvjiZ
+         i3LdKh19P4kii1pBBPXpJop6lcjtankEqu1WERO8DuTOHeDLtSsnJFGIpx6rJLRHqSHN
+         ZZa02SqN7SfZHLwMN75nbT9Q+mvWoEAQVk5wXmUr5J2NSfzc6i5ZEIgcl9itR7PQLXSY
+         mUo9gCMXSPQwDb4RX+w4ERcQGc8N23f/YCDTuSsou+M+w3pncvWNvvRr0LlADDah/X9S
+         sUQ56Qwjt999VJlZAtNiC0lIo7Vd74tHe3FvQVtpYQ7EQU10GtW/OKw8ZfcUqaG6io21
+         3FkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVs1m3BvBGtigESARaHlRiFlVCz0YKpGxMZcdcReOOvMKhLakGH44OZ+brse+OVZPKwOkJUwvsjbMraGXWnKJXCQgRiz1G4/8Q2t3CgIQrNfKgBJUDf4uPgGYgXgyTvJL9R8nFYwPAGJdTEt2FEA4A=
+X-Gm-Message-State: AOJu0YwZ6tr9Unu0jPsa+iMPFUWkYDXXlOuKf9bHa7nYulCC1NQeFu8t
+	dTVBGZkjsw4tiP1pxbYRCMOCVnhcLOGJTSJqkDo6DTVWtMlKgcZr7++wHQum
+X-Google-Smtp-Source: AGHT+IGJOcCsYEhYIc4LmSevQtP72dxECeLth/LhDLGWRUe4feAG+E5MU/YALBjDOOSrhANvfVkySQ==
+X-Received: by 2002:a81:8408:0:b0:62c:c660:72af with SMTP id 00721157ae682-643aa69a068mr142953687b3.24.1719559939905;
+        Fri, 28 Jun 2024 00:32:19 -0700 (PDT)
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com. [209.85.128.180])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-64a9ba5a2e7sm2483997b3.80.2024.06.28.00.32.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Jun 2024 00:32:19 -0700 (PDT)
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6327e303739so2662137b3.2;
+        Fri, 28 Jun 2024 00:32:19 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUV0qwn1RLJX38gasgI/GADLKJ7VcYyPLXSgVcrWQcKNe+j7cxsK3G7H5+xwrlO5YoWQPt2iJw7puCKgh4dfKVzf9lcOzMrL2caW69t8bs5OGFyzZdNwhDErXfGmGW9rnjGUF+hf3WZnsUVsIaVqlI=
+X-Received: by 2002:a0d:ea0d:0:b0:64a:ce78:4f7b with SMTP id
+ 00721157ae682-64ace785075mr12441037b3.12.1719559939460; Fri, 28 Jun 2024
+ 00:32:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpeml500023.china.huawei.com (7.185.36.114)
+References: <20240628052010.31856-1-yang.lee@linux.alibaba.com> <CAMuHMdXyqSHAo4LTy6t7=KSmi8Po0Cmp-U35py32RmCA-_spJg@mail.gmail.com>
+In-Reply-To: <CAMuHMdXyqSHAo4LTy6t7=KSmi8Po0Cmp-U35py32RmCA-_spJg@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 28 Jun 2024 09:32:07 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWbZaq0h=ObJnC-atvMo6H3J=ZNM1zZBTTcjV-SjZJHLw@mail.gmail.com>
+Message-ID: <CAMuHMdWbZaq0h=ObJnC-atvMo6H3J=ZNM1zZBTTcjV-SjZJHLw@mail.gmail.com>
+Subject: Re: [PATCH -next] soc: renesas: Remove unneeded semicolon
+To: Yang Li <yang.lee@linux.alibaba.com>
+Cc: magnus.damm@gmail.com, linux-renesas-soc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Currently it uses WARN_ON_ONCE() if seq_buf overflows when user reads
-memory.stat, the only advantage of WARN_ON_ONCE is that the splat is
-so verbose that it gets noticed. And also it panics the system if
-panic_on_warn is enabled. It seems like the warning is just an over
-reaction and a simple pr_warn should just achieve the similar effect.
+On Fri, Jun 28, 2024 at 9:28=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+> On Fri, Jun 28, 2024 at 7:20=E2=80=AFAM Yang Li <yang.lee@linux.alibaba.c=
+om> wrote:
+> > ./drivers/soc/renesas/rcar-fuse.c:124:2-3: Unneeded semicolon
+> >
+> > Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> > Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=3D9441
+> > Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> As I haven't sent a PR for this yet, I will fix up the offending commit.
 
-Suggested-by: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
----
- mm/memcontrol.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Oops, I forgot the offending commit is part of an immutable branch,
+so I will just queue the fix in renesas-devel for v6.11.
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index c251bbe35f4b..8e5590ac43d7 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1484,7 +1484,8 @@ static void memory_stat_format(struct mem_cgroup *memcg, struct seq_buf *s)
- 		memcg_stat_format(memcg, s);
- 	else
- 		memcg1_stat_format(memcg, s);
--	WARN_ON_ONCE(seq_buf_has_overflowed(s));
-+	if (seq_buf_has_overflowed(s))
-+		pr_warn("%s: Warning, stat buffer overflow, please report\n", __func__);
- }
- 
- /**
--- 
-2.34.1
+Gr{oetje,eeting}s,
 
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
