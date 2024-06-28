@@ -1,177 +1,188 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2086.outbound.protection.outlook.com [40.107.22.86])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ADEAFBEA;
-	Fri, 28 Jun 2024 02:54:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.86
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719543261; cv=fail; b=YtAqMzLFAQsVznRSLwwrrY1mMDW3YbbMypGVKpRlWNuIbW07pzsEdJUuJcPTohgtw6VUsVkCuWFzTphIDKBai92lgYKcUS9w6+ZqzQbx7NowCDn6xReXfUVHlxov059kvWTJnB2YTiEopCEjWomZADCaA4wSmn94N8TOAuQ4vA0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719543261; c=relaxed/simple;
-	bh=8/15Si8pwemn36wC1W1RjiQydivnkipRg12o4w7HrHI=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=KjTaZrasL3ugdh0KrohvTdzk9s8uYj7fZ3l3meuf+lCaF9hOMqKUtB17tpi3xfsr/jTkpAqI7Gx8xUCX08ivRt5/2nP6ugDGOyOUK+RgC2F7cxPBWigD/ylv7piiwK9Ilwj967cADO6FvDK6BiBpVcKTmDND2bOXyWBQHlyadC0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=jIXz9Uq+; arc=fail smtp.client-ip=40.107.22.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97BAF1CD24
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 02:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719543549; cv=none; b=Vb2onC2F/ND2kb5jSoGsOsS2SUePqI63T/R3jedzuQIrCvZ9ESfh6s8UEPk8oQ+2uJkDMNQCPcI3DbjB8wF9CUNiKWlNuRpgQuyh7HMWTh6asxHwcfYYmhaOttQwG8ZfG5V1q4uaTxdlvxtSgzD9mT5S4M5FPS6aoQKPPoaXC6c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719543549; c=relaxed/simple;
+	bh=uUQlxhRTskzeW0nHdsykPQfsJ0DPWdSqgSJcwBKjSaw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=el0Tkj9qkUNpr84n6WNHoUw8dzBoRSlH2xZPE1/NDT3GOz/lG1/GozKDxlhYy35eFa/vNEvHctiH/9NlPv/7QwjPnkgvbCm8HgIJjOmb4yS+eH770cozT9K8362ICKIgWfGgZApXsIHoi8rNSBkkZOJ/4I0oIQqaPU4ykRlv/FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F9KOVqmy; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="jIXz9Uq+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oQvwrXncmRxUdl7BhZufJzeHliZs473lHGqrSd9anT/ucL3g2hNcsHADOna4hvb9ozFTZ8aRhZ3LrENBQvwW0tziGBvYHYPTlrLS92dkZeExsCHAySVXsJOCA4JmrKO6yuDuTb1Gs5CjtzwCIbgqYu6627G0MBspfUMEG/wc/ibDXLDlem4Xs5+2IWc36gfuG22FRkVgjEQGDTw+F9LyxvNvr+uDMcYDhQPY3QgJlamdr72xfWKfuoqgcAy8D+injr309xjt/r99hxS4Qhp1qJoSGPG5M0XlV6Gq+abGy/hKE3+A61EzHrpCP6aj8eXpi0bGJoSailMazESzC2Dlwg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2KZsKeciv5xpE3sq4kTqRJTP0CKZAuvHGGGSo0d0/Y0=;
- b=a/0SLMfU/Xs38pOeLTB8dlTlf93SBrMayomOWLXT/STp18HN8daMzd1DKE9SNFv+F2bsR+cMHwFNkOPPOn/3bI/zpdt3vB9elOuF31JRNKcmcgVbDkqKzEwy9EBETrSaZdeA+uyvEtPf2DXuXRNG3KZpVjDtUpQbwZBykxCb2HdRfngDQJx4Jp3YyEsrBc1C0h8Y74dBaXaKsZRtjmz6UpaQhWHXL4F993ob8Pu9VS1VaH3oufs2SOVwdXLj68+Z4wT0uuF+Upf/Gi872u+Ky8zAJEtuQxwvGaRhjUY8MEoXtT7gKBHT3vVNZVH43vUzXAdVqdWiHa8dvJ+cq+sFKw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2KZsKeciv5xpE3sq4kTqRJTP0CKZAuvHGGGSo0d0/Y0=;
- b=jIXz9Uq+ta+yNcdsXhiId/dIb9gVO0eBF+Y42A9FP54OKteV2xydTcYj6STdTQyIHcjcRwn1HeHoWijq2S9jOcUaWSIEsR1lei9Rvvzk08ghaGdtQmGG7lkETla7AUFAXk7ebEVgQKg1GUxnd1mo+32Heu+EcBFlzCVlQFMJD1c=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from AM6PR04MB5941.eurprd04.prod.outlook.com (2603:10a6:20b:9e::16)
- by AM9PR04MB8129.eurprd04.prod.outlook.com (2603:10a6:20b:3ea::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.25; Fri, 28 Jun
- 2024 02:54:16 +0000
-Received: from AM6PR04MB5941.eurprd04.prod.outlook.com
- ([fe80::9f4e:b695:f5f0:5256]) by AM6PR04MB5941.eurprd04.prod.outlook.com
- ([fe80::9f4e:b695:f5f0:5256%4]) with mapi id 15.20.7698.025; Fri, 28 Jun 2024
- 02:54:16 +0000
-From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-To: sudeep.holla@arm.com,
-	cristian.marussi@arm.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	arm-scmi@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH RESEND] dt-bindings: firmware: arm,scmi: support system power protocol
-Date: Fri, 28 Jun 2024 11:03:09 +0800
-Message-Id: <20240628030309.1162012-1-peng.fan@oss.nxp.com>
-X-Mailer: git-send-email 2.37.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2P153CA0009.APCP153.PROD.OUTLOOK.COM
- (2603:1096:4:140::18) To AM6PR04MB5941.eurprd04.prod.outlook.com
- (2603:10a6:20b:9e::16)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F9KOVqmy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719543546;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=wTWqNUFe0jhgdWWAx5g8lPLHs1U0amawC/luxDuNleA=;
+	b=F9KOVqmyvP5LeA4iSG28oDW4hptLYYAHxG0nU9W7JQjSByBaUSa3johCs9dcXdTMgpH4nZ
+	LHzosvYo0Ds/QfcdB7DkH8XdWfTk6drNyAWy+aS8ubUyQetGJJxK17H087aWM0KUsnCgCS
+	39WnxiMM7Yc2njpyKNcycf5MNCEqKso=
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
+ [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-22-13N0rGCyM7qae-4RAf2PNw-1; Thu, 27 Jun 2024 22:59:04 -0400
+X-MC-Unique: 13N0rGCyM7qae-4RAf2PNw-1
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-70679e6722aso180502b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 19:59:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719543542; x=1720148342;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wTWqNUFe0jhgdWWAx5g8lPLHs1U0amawC/luxDuNleA=;
+        b=eYy04R/GKeMU700wxOUpIIurKqn3UyPLBNEMFo+vb3HbCJfW2Nkfonn/cnAbhFS1V6
+         CKbKyqDJIpKF+S+PV+d++LKQtT12jJvAT+qFA8SCH8YFzrJyTVgF1g4Mjo5wUuU/ckjq
+         tsvHXBmxESZlMWqshiOi5aXZPTXILp5R1jKFA95yr6m2Aj7tIIrxZsOiEwRsX52ClcoW
+         oAhi+p1LQAAX7sIutb2ZOiYwJJeoxk0/iuQqTNYdkU0XATxycQWyAusraGPHrg68omcC
+         VD4rmFFudMnVA5IY00n9Jhk6FL6AvY4s6x6kEqycjaSbZdM8eAEODfoGiMMyxxTO67SN
+         Kfbw==
+X-Forwarded-Encrypted: i=1; AJvYcCX9UUIHQJAbZ6NzTfQFsG/cOn6aH5rTPoiGipT+rxjjf5jioAGdcVyvrjtfpbIS+MRk0S7Rb0ZVYHI25qTZ0whVGVfNJig4v1b5bSGz
+X-Gm-Message-State: AOJu0Yyj7FHlsKyEeR3J5x1h33Y41EZ8aPpCoX73QYfWCDXX/w1WRws+
+	hceA4DECC4shK/s/j9bFn2xxtTVgPGLK3+fi5zt90/wCooqZYw04UMTPx9NBzxzrjgUGK2oZR+/
+	ZtC4TiB58t+Of7VtysupSKKHiBojB/KFeYzlqx6vQLaeHi7ZmqJh8rHA9NF4eGA==
+X-Received: by 2002:a05:6a00:3a97:b0:706:a97d:ca1c with SMTP id d2e1a72fcca58-70851875a26mr588932b3a.6.1719543542576;
+        Thu, 27 Jun 2024 19:59:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHeF2/Tinx+HVN33bkOB1PvYuITR5Qo3RZ7vXGnlAJGot10mD/CU/82vWyAQyfF0QbzPrKZGg==
+X-Received: by 2002:a05:6a00:3a97:b0:706:a97d:ca1c with SMTP id d2e1a72fcca58-70851875a26mr588913b3a.6.1719543542182;
+        Thu, 27 Jun 2024 19:59:02 -0700 (PDT)
+Received: from ?IPV6:2403:580f:7fe0:0:ae49:39b9:2ee8:2187? (2403-580f-7fe0-0-ae49-39b9-2ee8-2187.ip6.aussiebb.net. [2403:580f:7fe0:0:ae49:39b9:2ee8:2187])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-708043b7100sm460702b3a.142.2024.06.27.19.58.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Jun 2024 19:59:01 -0700 (PDT)
+Message-ID: <cfda4682-34b4-462c-acf6-976b0d79ba06@redhat.com>
+Date: Fri, 28 Jun 2024 10:58:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR04MB5941:EE_|AM9PR04MB8129:EE_
-X-MS-Office365-Filtering-Correlation-Id: 47878b49-3a77-4262-281f-08dc971d97fd
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|376014|1800799024|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Hg5xWlurL9LXDAAtXnFmbG8U3qTbJn7ikfjM5xykse8wTIBb+eqCmN6hr1rD?=
- =?us-ascii?Q?vO8nN+1NkNVoDKONWG1SWGe6AiAsOcDJ4sfRhRdhm0rtrI6NAljw2QFszSdI?=
- =?us-ascii?Q?WrMrBPo4iFfMG+nZBRzEGWlkafEbofgOtr0/SNCbe+8OCNheORntGEKfKRrp?=
- =?us-ascii?Q?UShkE7uKb9JBCz2DVlpewT6RDOl2usbbRxOEtFusxWWPlhWhvNtCYvTZTj0V?=
- =?us-ascii?Q?/oOocGiXXs6l0mg+MG2ckQTG7WSCzS3OVHwjit9Er+yfULOyv+Zc4AvPFF1q?=
- =?us-ascii?Q?pF5PTR0FmfJHe3IvxDVEcKop1PrPHKZOZA1YKq1F3ZnhIHOp9N91n2VtEtTA?=
- =?us-ascii?Q?264OWSOKdahZ7QrboViuJXts1ZCMaZ11uaCurMN+LYw+yswaGu9KVCVdzliL?=
- =?us-ascii?Q?2ir/FCd+YnoJcyqweo6fDhY4IE4drOvCN0f3lWTjpKP84OLLngaYpTYubYpE?=
- =?us-ascii?Q?BBDNxpwWbRusvNBjCsGth703EnLk0MFprXfaEe1iFjXVu5MNj45IE8mKq3XK?=
- =?us-ascii?Q?aSGNN9nXHeCbLIcTkOzCik7Tc9NVU0hiJLwhrXwRNgHIdzs302gPpNnh5Am6?=
- =?us-ascii?Q?mYuoo35W61o8uc8li4/IWR9hcY91nZKEEHxVhw7Yd8QWbuC/j67eV4/aJkHF?=
- =?us-ascii?Q?LKqkq/e6nGE1ZcwH2jXW1vko7Gp/JtpDzTj6YpxKQW6YXifSFcuEGcDpgkDe?=
- =?us-ascii?Q?CZxzF7CLSU/zagvv7zu9feRvXsL0jOfFLiCdHU0jts68GdQEyG49AQVou8qZ?=
- =?us-ascii?Q?a8hASVSd4g15NHobe+TqAkmnN08fmi+pHrrBsLrouKZMrcFuEenaOA5hj2xf?=
- =?us-ascii?Q?ha3uNyH6Fat3Yn2txXD5lb/+wa6ECo5QdcxjMSXiWpQXbqjAqODDQozN5UYl?=
- =?us-ascii?Q?VvWE+IdzmmriHIDSm70NfVUKgLs00k71zvQRqgTAXq+EJH2EEzcwf+Uosdnj?=
- =?us-ascii?Q?f4Sxc+c4bGrdMnJMIuFxI96dZsbEdWRWzwzrvFesT5ebby+m2vm1XmOr1Rcy?=
- =?us-ascii?Q?DCPJrXv/GGD5YuSzVwkhjS6SKwgNHSDScqpFqTpyFphSiNUwTuX/jNC7PDGO?=
- =?us-ascii?Q?pt+2DLhA77YS/xRKh+Oh8hU4uLU+vhQqKdJj4fkmEyQUsZ+kAcRB7ss0ZW38?=
- =?us-ascii?Q?A5OrFIHuNvXiagQesv+r/iGyuyMqVYZ1qSAWi1umtOEEme5t9OFStpn8Dd9E?=
- =?us-ascii?Q?9p2SvH82xbXDdSTygSLCn6xOcrmk6CpPJcem8vw48h1aVKbOmMHqyxn0a/pL?=
- =?us-ascii?Q?Mm3jFHGWYCd87zl0+VmdJ/yaSI8rMe0VqN1UrxxQN9lErpBT5fM1vhqsBf2I?=
- =?us-ascii?Q?7U6CvF3Ht5JbsnY3dc+lCYqJgS2xa52FR6nSLDJcZ9Dz5hPNvDk+IWFH1cYr?=
- =?us-ascii?Q?LxNMnSENOpn2paWS1+4AWnipgGdv2hBqP8G7xN1+1jaYxUT67w=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB5941.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?G9flGG1bNcuc+NuYE8XbqfuBnhrpWB2g4u7f7yNpo0uWLUXJVq3hZJJhLPYc?=
- =?us-ascii?Q?Kxi1Yn6l2pWFicQhE72MAqHLLazX3g1xkmj5noLKHUDwlOc2FakBOv9HdXLu?=
- =?us-ascii?Q?hswwCfcBNamvURW/Zq6FhWb3MdrwNURITrzfIayOILYV0koO3n0OvHYLrGMn?=
- =?us-ascii?Q?GGsg4Qi6Z+kwenebklFpwuBrQc0OU0ON5wu5j3SdQXaB0Mkjg6qx/YcMp2Q6?=
- =?us-ascii?Q?TSPwh3cVcF8l8Cy2z3w+bwHDsPNvcC57bbUsbRUwAXH9PBj7XZbKbjnlb2pX?=
- =?us-ascii?Q?5zpCAxwjoNi4PQYM8BjkGjLijr8DBzEtWfRXsw0Lp6I3poMwGbeLrSR+ULsI?=
- =?us-ascii?Q?afQ+utfU4lkwhMLSuib5rR24+/cEb+YL9Uv3HqI7zcMpz0gpTPc75SzdfY19?=
- =?us-ascii?Q?ituxhBS3wPJew1FRsy3eRWOjYgBeSdHZOZqfZJi784CmHOfUC9EOgBz3JYfG?=
- =?us-ascii?Q?yhi4Y1aE0CRpEwrecagaGr8QxucL8IXuspnrZn1oeNIIh2q49JWIWv7ZsMls?=
- =?us-ascii?Q?CSzt6DwNJ/K3UnN+LOFQQEc71Exd2eVl5VOOBw7PCRWzlhjMuOxOGsDwGOYo?=
- =?us-ascii?Q?M15ODfWCa9sjMF+HTPxun1zGdniHEC1LAmBCwSqoJ42j4DJKAY38fk9/MQRH?=
- =?us-ascii?Q?p2s4fLv2vWKFMkw/hirH1gvbtcOmYHHDm4FiQ8Bl8d7HyOjoYCUwmIG2kAzT?=
- =?us-ascii?Q?//HOA6Y0dlFG/v0f9CVYk3vSBjd49tEzv3A07Gtm2ecR5bxWnudz6g9afDmL?=
- =?us-ascii?Q?Ekb8ALW5Fw0+kHjNAJSEOpwq7BmNZgCZzgFsv5Y+JHfRgvnEIdQYtUvthgtW?=
- =?us-ascii?Q?JAJB15f53zV+iDYKHPXb8NvFyr8SS1D4qLEkqr9WkB80lkesittWFCM5jvyF?=
- =?us-ascii?Q?wb/uMjMAutOnJKL8CXDxgiJiArp9TcwIQNeRN1INa7CjWvb7Xy7C6JWAkhjL?=
- =?us-ascii?Q?pFzbOwI2zLvyc+ciXUUChphUqVpoJ00VRH9wopB+SDOkO/Nr5mpa1apaNx6/?=
- =?us-ascii?Q?20v+iabEp379o/inz12DEhJDfiU87z0ldM+klSVd3MijgLjRnXpptaZaSjxR?=
- =?us-ascii?Q?w14IALCckg47p9nZth94ulqMzK98v5lVfXFDtE1+wlZfkvdl67uYKxn71Jhl?=
- =?us-ascii?Q?8oqeDP8l2FfbLJ53dM+wAnUpsnK0KYLA0BDpyaeN9XVQ/eKrS5+++pajXWP4?=
- =?us-ascii?Q?VQD1ytIKD6HgpOP1tbiTZw0mgZRLyPXNrKPhql5+IrzYsdOfr/+ej6acJ2m9?=
- =?us-ascii?Q?VEFUhVCE/4Lmd9PFiqd/NycwdJP+KtokxG8y31wqRPUOg8H3A8tSaA/O74aF?=
- =?us-ascii?Q?K+gthH6mM0lxvda7pRdR1ANkxC/CHsZNSTELj2G5IhsNWJzyF11f5YvopnZe?=
- =?us-ascii?Q?I9eGw8KzrWwvc8bJ3JrCTH+sUnUuB/23kmerre/D/4cubU5SZ3h+1GlMzwF7?=
- =?us-ascii?Q?wjOOSswADpgTcefPfYx8+iRfyPViRw7O88aKGbgZsvKuxyK8fONtvW4+r1nE?=
- =?us-ascii?Q?WWJ5TQJKw355h9UCJvKNmvNh3XlK8/httbzwkNPzyg0undJzsXrTPSI8jN7v?=
- =?us-ascii?Q?51xKeVH3IjN6XSzGmt6pk8uSYk30T1B5Qp/DKou6?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 47878b49-3a77-4262-281f-08dc971d97fd
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB5941.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2024 02:54:16.0201
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: J7dI9eSAQvsQrso0IGmaWm1k1jwdgxb0ToJ/IKljrK68oy1pmdLXI/Tp45MQiT4ug9Yx8pGwHnhvKBiJDk1jlg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8129
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v3 1/1] fs/namespace: remove RCU sync for MNT_DETACH umount
+To: Jan Kara <jack@suse.cz>
+Cc: Matthew Wilcox <willy@infradead.org>,
+ Lucas Karpinski <lkarpins@redhat.com>, viro@zeniv.linux.org.uk,
+ brauner@kernel.org, raven@themaw.net, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Alexander Larsson <alexl@redhat.com>,
+ Eric Chanudet <echanude@redhat.com>
+References: <20240626201129.272750-2-lkarpins@redhat.com>
+ <20240626201129.272750-3-lkarpins@redhat.com>
+ <Znx-WGU5Wx6RaJyD@casper.infradead.org>
+ <50512ec3-da6d-4140-9659-58e0514a4970@redhat.com>
+ <20240627115418.lcnpctgailhlaffc@quack3>
+Content-Language: en-US
+From: Ian Kent <ikent@redhat.com>
+Autocrypt: addr=ikent@redhat.com; keydata=
+ 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
+In-Reply-To: <20240627115418.lcnpctgailhlaffc@quack3>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Peng Fan <peng.fan@nxp.com>
 
-Add SCMI System Power Protocol bindings, and the protocol id is 0x12.
+On 27/6/24 19:54, Jan Kara wrote:
+> On Thu 27-06-24 09:11:14, Ian Kent wrote:
+>> On 27/6/24 04:47, Matthew Wilcox wrote:
+>>> On Wed, Jun 26, 2024 at 04:07:49PM -0400, Lucas Karpinski wrote:
+>>>> +++ b/fs/namespace.c
+>>>> @@ -78,6 +78,7 @@ static struct kmem_cache *mnt_cache __ro_after_init;
+>>>>    static DECLARE_RWSEM(namespace_sem);
+>>>>    static HLIST_HEAD(unmounted);	/* protected by namespace_sem */
+>>>>    static LIST_HEAD(ex_mountpoints); /* protected by namespace_sem */
+>>>> +static bool lazy_unlock = false; /* protected by namespace_sem */
+>>> That's a pretty ugly way of doing it.  How about this?
+>> Ha!
+>>
+>> That was my original thought but I also didn't much like changing all the
+>> callers.
+>>
+>> I don't really like the proliferation of these small helper functions either
+>> but if everyone
+>>
+>> is happy to do this I think it's a great idea.
+> So I know you've suggested removing synchronize_rcu_expedited() call in
+> your comment to v2. But I wonder why is it safe? I *thought*
+> synchronize_rcu_expedited() is there to synchronize the dropping of the
+> last mnt reference (and maybe something else) - see the comment at the
+> beginning of mntput_no_expire() - and this change would break that?
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- Documentation/devicetree/bindings/firmware/arm,scmi.yaml | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Interesting, because of the definition of lazy umount I didn't look closely
 
-diff --git a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
-index 4d823f3b1f0e..ebf384e76df1 100644
---- a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
-+++ b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
-@@ -145,6 +145,14 @@ properties:
-     required:
-       - '#power-domain-cells'
- 
-+  protocol@12:
-+    $ref: '#/$defs/protocol-node'
-+    unevaluatedProperties: false
-+
-+    properties:
-+      reg:
-+        const: 0x12
-+
-   protocol@13:
-     $ref: '#/$defs/protocol-node'
-     unevaluatedProperties: false
--- 
-2.37.1
+enough at that.
+
+
+But I wonder, how exactly would that race occur, is holding the rcu read 
+lock
+
+sufficient since the rcu'd mount free won't be done until it's released (at
+
+least I think that's how rcu works).
+
+
+In this case, when lazy is true, the mount will have been detached in 
+umount_tree()
+
+and mnt->mnt_ns set to NULL under the namespace sem write lock. So that 
+condition
+
+in mntput_no_expre() won't be true and the mount will no longer be found 
+by the VFS.
+
+I guess the question then becomes will any outstanding lockless path 
+walks race with
+
+this with only the rcu read lock to protect it, Christian?
+
+
+Ian
+
 
