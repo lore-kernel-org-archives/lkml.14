@@ -1,89 +1,69 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A361C8FCE;
-	Fri, 28 Jun 2024 15:15:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91ED015539F;
+	Fri, 28 Jun 2024 15:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719587721; cv=none; b=OhezIhmnHQghRVYIAY+O84LaNYW4GT2Au63oMa5+6D+v2BY7w//e9WlO/PTD++Q0AAEMN9E8+9jT1IbNFHoaC54mNXOBie7W+1HCV1pB0hHIAOYlzou/QZaq7Ktg8pIjCzVHDtRBtOTE2LFa84GEJq4vZpJlLWqgvQqv9K8uw00=
+	t=1719587727; cv=none; b=Yk7+mq2jEa8w/qzoiNn4n2KbVcBMTotVL8p3IyAeAl8TAgY6eMqFEL+HkmueC6ukAxp261Q0aV7LZz+kNLXEkRZgR17XruGHTC5g2wp7Fui7dl344yvn9PugtOrESGmDt3ZfXNlOWVevPGouLHZYG1pgsQ6G7RDhZJ00IZ7BeZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719587721; c=relaxed/simple;
-	bh=yjFmRpgDAS3R6oGLA+UA1eypPW4Ck9gGInaHnul7eFg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qy77slqsgHRtBn3QsH3qlMKqDQE5u6uCke3sGJ/+AlVTmsnu4t+QoERfpKrTJt3lq7fYiOi/5Svi6Vj0RBrjg71Oy432fl0IrmR8RcrhuUlmDbLywLNtWgiMj5owMNJmMc/De3YYcVcadcmxPKemWY0J+fvl9f+xv2HQudvENO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=001M5uWH; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1719587727; c=relaxed/simple;
+	bh=DDENOZzeHl+kBVs4BKNGyc6D6XpemEBqKAxdWnYJtOA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=A2qW5k98AVJKNDmbJzEi5NSU0GgcgW+oo81LsiHHQGGHhqHjA5Z2uiHbF5PFceZJqv5gTeXS7lVun3y23nt0o4RNTL25vRjLJ61tA5wcxrCkk3Ttd7LQ3PPiEu67J0sfMf26AtNDvE0O2rE/cPuAt20QyhyVUxpV+tvh13wH2ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X3vG/TLa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="001M5uWH"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=G2/bfVMPW6wWEoHKBdj/DTCoqOlBKV5ZXSF8CE6Ej8k=;
-	t=1719587719; x=1720019719; b=001M5uWHvIQ4S2mEmRjW3hD3sqaiJjhLf/ziElg9hkyjGgT
-	VEM+GBzIgMKtMjge5+V/x+zKdZCHn64bYxnlhH6b4Yi3XnPbwmphC7xKrwIR3vHy79WsS1/QKG1Hl
-	yrMfTPGH6x2r8qiC/3W68h4pQJmTl4vCl1Ii2uw3lW2+OlLHLpuOgfenPgM3memrvzO0WRens0oRR
-	+yI4FtbGP03Tx8TVJSTpSPr8HD1NqahazjGrwbK3yfc7CH73UB41jYvHYi+gf0RZ6K8TiXOGlwqwJ
-	n81ItYGz4y88sAhqKOp50uERTdJaxfU1zuJ3rTVbQpmacq+isZ1mIFBTnzee4hJw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sNDJj-0002QN-Kf; Fri, 28 Jun 2024 17:15:15 +0200
-Message-ID: <61f43bdd-7f73-4605-96e7-843483a53bca@leemhuis.info>
-Date: Fri, 28 Jun 2024 17:15:15 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X3vG/TLa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02DD4C116B1;
+	Fri, 28 Jun 2024 15:15:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719587727;
+	bh=DDENOZzeHl+kBVs4BKNGyc6D6XpemEBqKAxdWnYJtOA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=X3vG/TLar+MiwX17rkYmtJ3PgB1s+uJ+Y/6i873DtsmGpfz5ZmgzlT5nV5yRNkskI
+	 58zMGhdPnuL5NL0ZSKvuK0G63iIlSkdH/vRHCl1Dnx9DihsiOV9uuu5eWh3gfHxcUe
+	 B3XSzq1OMLkLm4AcZ2X50gtBihEIaNtItvtfRv5aV3Yz3Zo2Nl53YnMRlYlTS4uVTD
+	 MfF5UQGgWY0AB32+mwiCqPLnXW/CnUcMtg1BN1xJfAZvDrx3JuDUVEquTkOglYnmn0
+	 74xE+uQDmHBqZJVZhCmt1EQSS1sGenazgAeudPyIPEcBQa+DaDvd7TE0y2FFZR15dj
+	 ZBPLPoEjyr9Zg==
+Date: Fri, 28 Jun 2024 08:15:26 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Aaron Conole <aconole@redhat.com>
+Cc: netdev@vger.kernel.org, dev@openvswitch.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, Pravin B
+ Shelar <pshelar@ovn.org>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Shuah Khan
+ <shuah@kernel.org>, Stefano Brivio <sbrivio@redhat.com>, =?UTF-8?B?QWRy?=
+ =?UTF-8?B?acOhbg==?= Moreno <amorenoz@redhat.com>, Simon Horman
+ <horms@kernel.org>
+Subject: Re: [PATCH net-next v3 0/7] selftests: net: Switch pmtu.sh to use
+ the internal ovs script.
+Message-ID: <20240628081526.66a6b5c6@kernel.org>
+In-Reply-To: <20240625172245.233874-1-aconole@redhat.com>
+References: <20240625172245.233874-1-aconole@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH 2/2] lib/sort: Optimize heapsort with double-pop variation
-To: visitorckw@gmail.com, akpm@linux-foundation.org
-Cc: jserv@ccns.ncku.edu.tw, linux-kernel@vger.kernel.org, lkml@sdf.org,
- alexdeucher@gmail.com,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Julian Sikorski <belegdol@gmail.com>
-References: <20240113031352.2395118-3-visitorckw@gmail.com>
- <70674dc7-5586-4183-8953-8095567e73df@gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <70674dc7-5586-4183-8953-8095567e73df@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1719587719;94508700;
-X-HE-SMSGID: 1sNDJj-0002QN-Kf
 
-On 20.06.24 17:36, Julian Sikorski wrote:
-> 
-> it appears that this patch has caused suspend-to-idle regression:
-> 
-> https://gitlab.freedesktop.org/drm/amd/-/issues/3436
-> 
-> In brief, my laptop fails to suspend completely with the following error
-> in the log:
-> 
-> Jun 18 12:42:20 kernel: amd_pmc AMDI0005:00: Last suspend didn't reach
-> deepest state
-> 
-> Power consumption remains high enough that my battery has already
-> unexpectedly drained twice before I noticed something was off.
-> I am not entirely sure how changes to sorting function can influence
-> suspend, but it is what it is. 6.9.5 as shipped by Fedora 40 exhibits
-> the issue, 6.9.5 as shipped by Fedora with the patch reverted does not.
+On Tue, 25 Jun 2024 13:22:38 -0400 Aaron Conole wrote:
+> Currently, if a user wants to run pmtu.sh and cover all the provided test
+> cases, they need to install the Open vSwitch userspace utilities.  This
+> dependency is difficult for users as well as CI environments, because the
+> userspace build and setup may require lots of support and devel packages
+> to be installed, system setup to be correct, and things like permissions
+> and selinux policies to be properly configured.
 
-Andrew, could you maybe help out here or point us in the direction of
-somewhat that might be able to help? I'm asking, as from a quick search
-on lore it seems Kuan-Wei Chiu has not posted anything since nearly four
-weeks and thus also did not reply to Julian's regression report.
+Hi Aaron!
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+I merged this yesterday (with slight alphabetical reshuffling of
+the config options). The pmtu.sh test is solid now, which is great!
 
-#regzbot poke
+I also added the OvS tests themselves, and those are not passing, yet:
+https://netdev.bots.linux.dev/contest.html?test=openvswitch-sh
+Could you take a look and LMK if these are likely env issues or
+something bad in the test itself?
