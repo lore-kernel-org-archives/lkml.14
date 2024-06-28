@@ -1,123 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5167E1CE087;
-	Fri, 28 Jun 2024 18:44:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C6B3FD4;
+	Fri, 28 Jun 2024 18:45:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719600286; cv=none; b=ZvMdQHqHKyalz80Io6rMJjF4Nj1Vi42AwZ2JhNErq8xqJrq1NlPT7QqjtuJyNBeCoT/QdQriOnsvbVF4lQdUSNhu0M6Oyn5T4usxK9ENijoAIEZ8oL08Q1hSbP3NpiIN5mnn/1acPNRZPHA7ofUbRETHL4iILCZaL9kDj9Am8GI=
+	t=1719600358; cv=none; b=sEttK9/LW1d4O5plJmYZR/NmrTej9IalOwLRqvbh7/ZtzoN/Arx/A4c6F4Suwa7YX1nCX79VnggsaVEfdfz9aQiMT5wnNIc8zmQT3BHUFpoihVm5BZStbWOIp5pPEnusX9raZXBk+xEjvGc5Arn+FpwuWaQTkyNoFPpuMsHyM7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719600286; c=relaxed/simple;
-	bh=TojJnQL9RaBjm4QgGb02q4GOqfk8aC6iXrl2HScJwXw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J991ihSYEVIkVq8yTucv6la3gibVExfPqqCLbiwjOGDo6T36jThr3GP85DXMCOJR+3/VJXNl1qFe9SuWOUaw81Wvv/Ll5Mhf0yfcJtrjigpsREdwRtFwTRn54Nl7YWOkzkIRS5pAJj6hrMhmi5MElWGBsTlbc4BQbB5nJvyGod4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kQJx335b; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719600358; c=relaxed/simple;
+	bh=/mwc2Nc8rtpwxZIhFIwLRHd1dQzbsiCmJJdqjFgkEg8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kj+VBNqTL95YlcefA4FeSZp/gp3N7jj+3pINvsBU4RJNP2aZAIsjwzl79zH8/LcSS1v16jyf6selA4PJgoh2zTSjtjChizNC4hJvnatKyAhdlAwfp35T1B2+qlzJdbnhnv6mxsr6ZNwVYCYyZhjCuAMvsOzn1Q+5n+gfOpRrE4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qELlGLO6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kQJx335b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46313C116B1;
-	Fri, 28 Jun 2024 18:44:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qELlGLO6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37EC5C116B1;
+	Fri, 28 Jun 2024 18:45:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719600285;
-	bh=TojJnQL9RaBjm4QgGb02q4GOqfk8aC6iXrl2HScJwXw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kQJx335budzDjbxiJmgE8ap98NyXQ39VbGjrPcOUYHNg57UCVY1ot/cDtE0FMqjnU
-	 x+9hUpMZdwEP5LC4HnTo+yqOb1XNN8ELJtrvPo1zR44DlDpfM0T6zaozstVa3AWHGt
-	 qxye3+r3kT+BmY7/4OJazOhdlDZUErsaQHktHINxmzAOlOMbmf00mC42neGxAp95bu
-	 dj6kvVEblhVcJBKU+PwZdbguEMSMi/tI4J47SaoQ/Ni+vOJrZ2EaZyzjEJN+c2AOlg
-	 SOYBguHOmA4wykK86YpS6y+XizW7aMrfkMCBgIYtah0vkcdnsE+gY9xVs8Na6wECsf
-	 7Xrntfb4eJV5A==
-Date: Fri, 28 Jun 2024 20:44:41 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Igor Pylypiv <ipylypiv@google.com>
-Cc: Damien Le Moal <dlemoal@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Hannes Reinecke <hare@suse.de>, linux-ide@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v3 2/6] ata: libata-scsi: Do not overwrite valid sense
- data when CK_COND=1
-Message-ID: <Zn8EmT1fefVzgy0F@ryzen.lan>
-References: <20240626230411.3471543-1-ipylypiv@google.com>
- <20240626230411.3471543-3-ipylypiv@google.com>
- <Zn1zsaTLE3hYbSsK@ryzen.lan>
- <Zn3ffnqsN4pVZA4m@google.com>
+	s=k20201202; t=1719600357;
+	bh=/mwc2Nc8rtpwxZIhFIwLRHd1dQzbsiCmJJdqjFgkEg8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qELlGLO6AiYwfACawIgVdT4RtXGZ0bUMCq0yJ6wUpJVau7UpUduunUqFnbpWbQqJw
+	 /SkGEpt8mz7Qf/BmU/qRWJoACWAOzncg+H157H6sNR8523nmh+toMpluCDL3tUqNFq
+	 cFsX5ChjxQ+QJy4pqzgjLoUFrNZd3T9kMQkZt+XOQ7Wocz5bZB/UUr2WCG0oqlJ1KE
+	 3TVB40NnSOGiDicIGlg2guVsQRs+VT+mLCxtz4hXZI5t85jHOaLFRjXF5UJ3kjMryW
+	 j4aYUE0QWL40OEeCGvbZYup1BcPisK+0Cxjp822abLv73FAODZQ3HJqGk8Ufis5rxC
+	 kF7ky+OFIdI/A==
+Date: Fri, 28 Jun 2024 19:45:46 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: "Tinaco, Mariel" <Mariel.Tinaco@analog.com>
+Cc: "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lars-Peter
+ Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Liam
+ Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ "Hennerich, Michael" <Michael.Hennerich@analog.com>, Marcelo Schmitt
+ <marcelo.schmitt1@gmail.com>, Dimitri Fedrau <dima.fedrau@gmail.com>,
+ Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 2/2] iio: dac: support the ad8460 Waveform DAC
+Message-ID: <20240628194546.2f608365@jic23-huawei>
+In-Reply-To: <SJ0PR03MB62241801F72B21EEC9CDCCBD91D42@SJ0PR03MB6224.namprd03.prod.outlook.com>
+References: <20240510064053.278257-1-Mariel.Tinaco@analog.com>
+	<20240510064053.278257-3-Mariel.Tinaco@analog.com>
+	<20240511174405.10d7fce8@jic23-huawei>
+	<SJ0PR03MB62241801F72B21EEC9CDCCBD91D42@SJ0PR03MB6224.namprd03.prod.outlook.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zn3ffnqsN4pVZA4m@google.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 27, 2024 at 09:54:06PM +0000, Igor Pylypiv wrote:
+> > > +};
+> > > +
+> > > +static int ad8460_get_powerdown_mode(struct iio_dev *indio_dev,
+> > > +				     const struct iio_chan_spec *chan) {
+> > > +	return 0;  
+> > 
+> > Why have the stubs in here?  
 > 
-> Thank you, Niklas! I agree that this code is too complicated and should be
-> simplified. I don't think we should change the code too much in this patch
-> since it is going to be backported to stable releases.
+> Should I move the stubs to a different place in the code or remove them
+> altogether since there is only a single powerdown mode available
+Ah. I'd not really understood what was going on here.  This is fine as
+is.
+
+> > AD8460_HVDAC_DATA_WORD_HIGH(index),  
+> > > +			    ((val >> 8) & 0xFF));  
+> > 
+> > bulk write? or do these need to be ordered?  
 > 
-> Would you mind sending a patch for the proposed simplifications following
-> this patch series?
+> For this I used bulk read/write this way.
 > 
+> static int ad8460_set_hvdac_word(struct ad8460_state *state,
+> 				 int index,
+> 				 int val)
+> {
+> 	u8 regvals[AD8460_DATA_BYTE_WORD_LENGTH];
+regmap bulk accesses (when spi anyway) should be provided with DMA safe buffers.
+Easiest way to do that is add one with __aligned(IIO_DMA_MINALIGN) to the end
+of the ad8460_state structure.  Possibly you'll need a lock to protect it - I haven't
+checked.
+> 
+> 	regvals[0] = val & 0xFF;
+> 	regvals[1] = (val >> 8) & 0xFF;
 
-I would prefer if we changed it as part of this commit to be honest.
+That is an endian conversion so use appropriate endian function to fill it efficiently
+and document clearly what is going on.
 
 
-I also re-read the SAT spec, and found that it says that:
-"""
-If the CK_COND bit is set to:
-a) one, then the SATL shall return a status of CHECK CONDITION upon ATA command completion,
-without interpreting the contents of the STATUS field and returning the ATA fields from the request
-completion in the sense data as specified in table 209; and
-b) zero, then the SATL shall terminate the command with CHECK CONDITION status only if an error
-occurs in processing the command. See clause 11 for a description of ATA error conditions.
-"""
+	put_unaligned_le16()
 
-So it seems quite clear that if CK_COND == 1, we should set CHECK CONDITION,
-so that answers the question/uncertainty I asked/expressed in earlier emails.
+> 
+> 	return regmap_bulk_write(state->regmap, AD8460_HVDAC_DATA_WORD_LOW(index),
+> 				 regvals, AD8460_DATA_BYTE_WORD_LENGTH);
+> }
+> 
+> 
+> > > +}
+
+> > > +	state->regmap = devm_regmap_init_spi(spi, &ad8460_regmap_config);
+> > > +	if (IS_ERR(state->regmap))
+> > > +		return dev_err_probe(&spi->dev, PTR_ERR(state->regmap),
+> > > +				     "Failed to initialize regmap");
+> > > +
+> > > +	ret = devm_iio_dmaengine_buffer_setup_ext(&spi->dev, indio_dev, "tx",
+> > > +  
+> > IIO_BUFFER_DIRECTION_OUT);
+> > 
+> > Ah. I take back my binding comment. I assume this is mapping some non
+> > standard interface for the parallel data flow?  
+> 
+> Yes, the HDL side doesn't follow yet the standard IIO backend from which this
+> driver was tested
+
+Hmm. I'd like to see this brought inline with the other iio backend
+drivers if possible.
+
+Jonathan
 
 
-I think this patch (which should be applied on top of your v3 series),
-makes the code way easier to read/understand:
-
-diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
-index d5874d4b9253..5b211551ac10 100644
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -1659,26 +1656,27 @@ static void ata_scsi_qc_complete(struct ata_queued_cmd *qc)
- {
-        struct scsi_cmnd *cmd = qc->scsicmd;
-        u8 *cdb = cmd->cmnd;
--       int need_sense = (qc->err_mask != 0) &&
--               !(qc->flags & ATA_QCFLAG_SENSE_VALID);
--       int need_passthru_sense = (qc->err_mask != 0) ||
--               (qc->flags & ATA_QCFLAG_SENSE_VALID);
-+       bool have_sense = qc->flags & ATA_QCFLAG_SENSE_VALID;
-+       bool is_ata_passthru = cdb[0] == ATA_16 || cdb[0] == ATA_12;
-+       bool is_ck_cond_request = cdb[2] & 0x20;
-+       bool is_error = qc->err_mask != 0;
- 
-        /* For ATA pass thru (SAT) commands, generate a sense block if
-         * user mandated it or if there's an error.  Note that if we
--        * generate because the user forced us to [CK_COND =1], a check
-+        * generate because the user forced us to [CK_COND=1], a check
-         * condition is generated and the ATA register values are returned
-         * whether the command completed successfully or not. If there
--        * was no error, we use the following sense data:
-+        * was no error, and CK_COND=1, we use the following sense data:
-         * sk = RECOVERED ERROR
-         * asc,ascq = ATA PASS-THROUGH INFORMATION AVAILABLE
-         */
--       if (((cdb[0] == ATA_16) || (cdb[0] == ATA_12)) &&
--           ((cdb[2] & 0x20) || need_passthru_sense)) {
--               if (!(qc->flags & ATA_QCFLAG_SENSE_VALID))
-+       if (is_ata_passthru && (is_ck_cond_request || is_error || have_sense)) {
-+               if (!have_sense)
-                        ata_gen_passthru_sense(qc);
-                ata_scsi_set_passthru_sense_fields(qc);
--       } else if (need_sense) {
-+               if (is_ck_cond_request)
-+                       set_status_byte(qc->scsicmd, SAM_STAT_CHECK_CONDITION);
-+       } else if (is_error && !have_sense) {
-                ata_gen_ata_sense(qc);
-        } else {
-                /* Keep the SCSI ML and status byte, clear host byte. */
