@@ -1,22 +1,22 @@
-Received: from mail-m49198.qiye.163.com (mail-m49198.qiye.163.com [45.254.49.198])
+Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7207C1BF316;
-	Fri, 28 Jun 2024 14:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02E201C0DF5;
+	Fri, 28 Jun 2024 14:07:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719583649; cv=none; b=nHQWSbmwUZCXYIfJXvt4hn6uhHokmS5Dw6+h9nrGojiwNOVRzTzf40iqqNmB+ivTlu3KcgTEeYrcgm9287GDlpANBuUzpuWEhl51+NN8Ql4nvua0KQxZRDhYmM+2pNx6jZK2rV/TC+bO33cm2lQ0aeSkQFLkFpgyN5PDwmi1xMM=
+	t=1719583654; cv=none; b=GwI/SWG6FaJAlchi7G9UbNUkGrq/ZLPolQ2YXAi3t9lNPAybloUIgmaR1y38Yx4Y+Kq+6ZqCcNUZGmm2Z/XulRw09gO2KmD4fXWdFDVu/S80pq88GcQ4KMTfLlk1lq5VTx8g7UUBQfrYya/7mTLKMXjnEFcByThzY/OiS1ioscw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719583649; c=relaxed/simple;
-	bh=5TL/db0r9UCbXvYk8ktxP6nVpiMZ9Ea5n3gbuYPqBao=;
+	s=arc-20240116; t=1719583654; c=relaxed/simple;
+	bh=BsVSA6P+76cM9MVmtEFklGoe9kwKGfKnRaoDQlumoBw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=E2dfEimQ4fvvIWVAUmpEh50adFD2UjKZkzogvjauoa8hyBvYIstr/j0+Bx9Z02dLGE+Oy09BbwfObWOPVmBmNfwdgewDw2uOsPctR7swBIa13nxdaBpGk1ukm2S5YuPUcaS8dgR2/cqc7XqdnJa97iblr7BczNGxrASwE+Vlv7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.254.49.198
+	 MIME-Version; b=SEvs7dds+7N0YAmVL52gHpNPrCVNBRDfyiEbJE8ui84LgNh5L0i9WxuvYQ/BxPH2rL3QuWJvlxtTb021wxlQfgy6HZdeO0y3z+/+vOxVTC+pg9GGnp4eZIzu4ZYJn2r1ikpZBjHEW3yCc0prLRTQhskRxZbLDbVcj48H9s34r/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.254.49.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
 Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c01:1720:7e27:c507:902f:f5f3])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 351B27E0163;
-	Fri, 28 Jun 2024 22:01:17 +0800 (CST)
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 92AB27E012B;
+	Fri, 28 Jun 2024 22:01:16 +0800 (CST)
 From: Chukun Pan <amadeus@jmu.edu.cn>
 To: Heiko Stuebner <heiko@sntech.de>
 Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -27,9 +27,9 @@ Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	Chukun Pan <amadeus@jmu.edu.cn>
-Subject: [PATCH 4/5] arm64: dts: rockchip: use generic Ethernet PHY reset bindings for Lunzn Fastrhino R68S
-Date: Fri, 28 Jun 2024 22:01:03 +0800
-Message-Id: <20240628140104.551760-4-amadeus@jmu.edu.cn>
+Subject: [PATCH 3/5] arm64: dts: rockchip: disable display subsystem for Lunzn Fastrhino R6xS
+Date: Fri, 28 Jun 2024 22:01:02 +0800
+Message-Id: <20240628140104.551760-3-amadeus@jmu.edu.cn>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240628140104.551760-1-amadeus@jmu.edu.cn>
 References: <20240628140104.551760-1-amadeus@jmu.edu.cn>
@@ -41,84 +41,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZQ01MVkhJSx4eSklJTRhDTFYeHw5VEwETFhoSFy
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZThhOVh8fQkIdSEhMTRgYHlYeHw5VEwETFhoSFy
 	QUDg9ZV1kYEgtZQVlJT0seQUgZSEFJGEtKQUpMSUtBTB5JTEEYTktMQUJLSR1BHU4dSFlXWRYaDx
 	IVHRRZQVlPS0hVSktJT09PS1VKS0tVS1kG
-X-HM-Tid: 0a905f26819203a2kunm351b27e0163
+X-HM-Tid: 0a905f267f2903a2kunm92ab27e012b
 X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MUk6MTo6EzMMQhozCQgLDzco
-	Cw4wFC9VSlVKTEpCTkNISUxMQ0tIVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
-	Sx5BSBlIQUkYS0pBSkxJS0FMHklMQRhOS0xBQktJHUEdTh1IWVdZCAFZQUhNTkM3Bg++
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NAg6CBw*PjNWDRopGQg3Dz1P
+	FRIwFBhVSlVKTEpCTkNISUxMSk5NVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
+	Sx5BSBlIQUkYS0pBSkxJS0FMHklMQRhOS0xBQktJHUEdTh1IWVdZCAFZQUlKQ0s3Bg++
 
-Replace the deprecated snps,reset-xxx bindings to the generic Ethernet PHY
-reset GPIO bindings. Also fixed the PHY address and reset GPIOs (does not
-match the corresponding pinctrl). Since we use rgmii-id as the phy mode,
-remove the useless tx_delay and rx_delay.
+The R66S and R68S boards do not have HDMI output, so disable
+the display subsystem.
 
-Fixes: b9f8ca655d80 ("arm64: dts: rockchip: Add Lunzn Fastrhino R68S")
+Fixes: c79dab407afd ("arm64: dts: rockchip: Add Lunzn Fastrhino R66S")
 Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
 ---
- .../dts/rockchip/rk3568-fastrhino-r68s.dts    | 26 +++++++------------
- 1 file changed, 10 insertions(+), 16 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r66s.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r68s.dts b/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r68s.dts
-index a3339186e89c..d27eb37b5b35 100644
---- a/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r68s.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r68s.dts
-@@ -39,12 +39,6 @@ &gmac0_tx_bus2
- 		     &gmac0_rx_bus2
- 		     &gmac0_rgmii_clk
- 		     &gmac0_rgmii_bus>;
--	snps,reset-gpio = <&gpio0 RK_PB0 GPIO_ACTIVE_LOW>;
--	snps,reset-active-low;
--	/* Reset time is 15ms, 50ms for rtl8211f */
--	snps,reset-delays-us = <0 15000 50000>;
--	tx_delay = <0x3c>;
--	rx_delay = <0x2f>;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r66s.dtsi b/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r66s.dtsi
+index e08c9eab6f17..25c49bdbadbc 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r66s.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r66s.dtsi
+@@ -115,6 +115,10 @@ &cpu3 {
+ 	cpu-supply = <&vdd_cpu>;
+ };
+ 
++&display_subsystem {
++	status = "disabled";
++};
++
+ &gpu {
+ 	mali-supply = <&vdd_gpu>;
  	status = "okay";
- };
- 
-@@ -61,30 +55,30 @@ &gmac1m1_tx_bus2
- 		     &gmac1m1_rx_bus2
- 		     &gmac1m1_rgmii_clk
- 		     &gmac1m1_rgmii_bus>;
--	snps,reset-gpio = <&gpio0 RK_PB1 GPIO_ACTIVE_LOW>;
--	snps,reset-active-low;
--	/* Reset time is 15ms, 50ms for rtl8211f */
--	snps,reset-delays-us = <0 15000 50000>;
--	tx_delay = <0x4f>;
--	rx_delay = <0x26>;
- 	status = "okay";
- };
- 
- &mdio0 {
--	rgmii_phy0: ethernet-phy@0 {
-+	rgmii_phy0: ethernet-phy@1 {
- 		compatible = "ethernet-phy-ieee802.3-c22";
--		reg = <0>;
-+		reg = <0x1>;
- 		pinctrl-0 = <&eth_phy0_reset_pin>;
- 		pinctrl-names = "default";
-+		reset-assert-us = <20000>;
-+		reset-deassert-us = <100000>;
-+		reset-gpios = <&gpio1 RK_PB0 GPIO_ACTIVE_LOW>;
- 	};
- };
- 
- &mdio1 {
--	rgmii_phy1: ethernet-phy@0 {
-+	rgmii_phy1: ethernet-phy@1 {
- 		compatible = "ethernet-phy-ieee802.3-c22";
--		reg = <0>;
-+		reg = <0x1>;
- 		pinctrl-0 = <&eth_phy1_reset_pin>;
- 		pinctrl-names = "default";
-+		reset-assert-us = <20000>;
-+		reset-deassert-us = <100000>;
-+		reset-gpios = <&gpio1 RK_PB1 GPIO_ACTIVE_LOW>;
- 	};
- };
- 
 -- 
 2.25.1
 
