@@ -1,102 +1,150 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE171CD32;
-	Fri, 28 Jun 2024 09:30:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92BA14B97E;
+	Fri, 28 Jun 2024 09:32:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719567033; cv=none; b=q8ZlJpFq1pisvqbnA5Dpc2XXbT7qiB7ZwphazetUHxAtqgd9cDxbcOnrQgm9SY30qBzSvvA91d0olP0KTdNsxg09EAxfqBPz90YfC4A03pJo0OyL9LwJ7VENrDMiV/wlekqlvse4Vr0yAVu+QS96WGZz6WnvJmnQXWSqWifY5OA=
+	t=1719567142; cv=none; b=CzDTffc4X6lCe8D7UYDceIjDPbSoq4RlkVqfPIknKjkHGr7I63EJdf8Uj2lxW4G22wMOvShW3fYxelPWihYz/FP0mu6Ac1LayaFGcNVCZrNR4rtJ1FndNivFJOsesVRw2HJsPqta8AHKNxQZbGGrzU0pJfryHpRyl27MHVTaoRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719567033; c=relaxed/simple;
-	bh=VmYjwKp6mlAJ1kzDY8yon8mWRyRJ52jWM6niGqaHDo8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k8HnPj+V0cl37OK0JnpRyyDI/YM3ERjlwmUUnck+G+6HrQmmCsDlIbZZ+9yYDox/jM936F8j4wzGXzIRAuuvKk4KsTA45fCGt9RcSPWjDSHyTnTRIlnDrpvqwzcpQ2CL8xx/i1A9fmXHm8Z6fgtkJHjcvVPSNx1gTBmNDAwxeoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aXKyTlJv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719567142; c=relaxed/simple;
+	bh=tZ4mnqBxiyX3UIhp44aHn7n1X6SzClOpCAotFkByDYA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TNrGvDdbbjCn12uvL/fbOyj1/pmkZVYt4xDEd3pN1q4D1JKTG7AJeSgf0I3zXi6v3tr2aYsRP1jwgAt2eUS6JBYJxZXUGD4PS748Gr7dB0kYbQNNT1v6FOvq1yU93wu5pNSwl7yjkQcGbkW3AppPSLCED+aseTuHEB+3D21IMQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MWqw/d7m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aXKyTlJv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A45BC2BD10;
-	Fri, 28 Jun 2024 09:30:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MWqw/d7m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E96AC32781;
+	Fri, 28 Jun 2024 09:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719567032;
-	bh=VmYjwKp6mlAJ1kzDY8yon8mWRyRJ52jWM6niGqaHDo8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aXKyTlJvGFF4l0YoEAgw1mg6eLOctUu4JfxelD5BGvoLP4KW1ofc+zd9L+DopGwYT
-	 2vYCSXxt1UOqrggvJ5hVYtje9EoUIcHFCrOnXQ4I3St7MyeeWSyGpmDTyvsmS2Q8kf
-	 zIzEMELR+jo0Ab2N5U4McKq+O0jkamZ9i/FbS/jQ/9S4uT/w5+tAA9Sr0UFx8Jq81Z
-	 c7T7JOdphvQiPlparHZOn7FEBI4l+Gb7e9pGnSf9lHI926SwTLJZGVltvjEMyzcf61
-	 2lQalOEORVTJi8qVuebUSf2KNJhlS1qsKqSIsJvmRu4qq0U4QBQWBoZNT31QrpQlIn
-	 oWwgCQ1sFA1VQ==
-Date: Fri, 28 Jun 2024 11:30:28 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
-	Drew Fustini <dfustini@tenstorrent.com>, Emil Renner Berthing <emil.renner.berthing@canonical.com>, 
-	Conor Dooley <conor@kernel.org>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	=?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH v3 0/3] Add I2C support on TH1520
-Message-ID: <xkdmrmtiizoqo6mpc7i6iyhilxlw57nawn6ogv6dryaveyqddc@ach3rwy4abpe>
-References: <20240618-i2c-th1520-v3-0-3042590a16b1@bootlin.com>
+	s=k20201202; t=1719567142;
+	bh=tZ4mnqBxiyX3UIhp44aHn7n1X6SzClOpCAotFkByDYA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MWqw/d7mONr2rdDnz+55RluFb39+8ksf6cbjudE5jfKJOtZf4P+aMeY8kCeDl/3Yq
+	 XqwFmC4pqL2TSfBLEPG0GXJiL+Guakcb9wN0U59RX7pKpmMiW8LAQtm124j/ltpgXe
+	 tinmMKlOzd8E9vci/XzDGumcZo7DjK0BsyNL3Ae8phoojPdS9bD28TXcXIRQlv4TuB
+	 ysccbjc9tUuNYxHn/FLaa2J3YgIoftEvmNJ0HmAhjM7c5blhm5hT9TXeNLlQdd+XAz
+	 z4MNTUrFRxtcBvhIzouXoCyb7/dCQFiSSoffJStc3Wgna1OKHNproz6Tfh2Jrq1xfo
+	 3p9mdYB6le9WA==
+Message-ID: <88588f06-66e1-47a9-b5ab-7849b1c53fb0@kernel.org>
+Date: Fri, 28 Jun 2024 12:32:17 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240618-i2c-th1520-v3-0-3042590a16b1@bootlin.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] interconnect: qcom: Add MSM8953 driver
+To: =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, Vladimir Lypak <vladimir.lypak@gmail.com>
+References: <20240627-msm8953-interconnect-v2-0-b4940a8eab69@mainlining.org>
+ <20240627-msm8953-interconnect-v2-2-b4940a8eab69@mainlining.org>
+Content-Language: en-US
+From: Georgi Djakov <djakov@kernel.org>
+In-Reply-To: <20240627-msm8953-interconnect-v2-2-b4940a8eab69@mainlining.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi,
-
-On Tue, Jun 18, 2024 at 09:42:37AM GMT, Thomas Bonnefille wrote:
-> This adds I2C support in the device tree of the T-Head TH1520 RISCV-SoC
-> and a default configuration for the BeagleV-Ahead. It appears that the
-> TH1520 I2C is already supported in the upstream kernel through the
-> Synopsis Designware I2C adapter driver.
+On 27.06.24 18:08, Barnabás Czémán wrote:
+> From: Vladimir Lypak <vladimir.lypak@gmail.com>
 > 
-> This patch depends on the clock patch from Drew Fustini
-> Link: https://lore.kernel.org/linux-riscv/20240615-th1520-clk-v1-0-3ba4978c4d6b@tenstorrent.com
-> and the pinctrl patch from Emil Renner Berthing
-> Link: https://lore.kernel.org/linux-riscv/20240103132852.298964-1-emil.renner.berthing@canonical.com
-
-I think after these two go in...
-
-> Changed from v1:
-> 1. Remove redundant example for Synopsis DesignWare-I2C bindings
-> 2. Remove Node Ordering commit as it has already been taken
-> 3. Remove EEPROM label
-> 4. Rebase on pinctrl and clock driver patches
-> 5. Add pinctrl configuration
-> 6. Replaced the fixed-clock with a correct configuration
+> Add driver for interconnect busses found in MSM8953 based platforms.
+> The topology consists of four NoCs that are partially controlled by a
+> RPM processor.
 > 
-> Changed from v2:
-> 1. Reorder nodes to conserve ascending register node ordering
-> 2. Add support for I2C2 as it probably use the same controller
-> 3. Format comments to match kernel coding style
-> 4. Reorder nodes to conserve alphabetical node ordering
-> 6. Declare I2C2
-> 6. Set pinctrl pull-up resistor to the highest value
+> Note that one of NoCs (System NoC) has a counterpart (System NoC MM)
+> that is modelled as child device to avoid resource conflicts, since it
+> uses same MMIO space for configuration.
 > 
-> Signed-off-by: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+> Signed-off-by: Vladimir Lypak <vladimir.lypak@gmail.com>
+> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
 > ---
-> Thomas Bonnefille (3):
->       dt-bindings: i2c: dw: Document compatible thead,th1520-i2c
+>   drivers/interconnect/qcom/Kconfig   |    9 +
+>   drivers/interconnect/qcom/Makefile  |    2 +
+>   drivers/interconnect/qcom/msm8953.c | 1325 +++++++++++++++++++++++++++++++++++
+>   3 files changed, 1336 insertions(+)
+> 
+[..]
+> +
+> +static struct qcom_icc_node * const msm8953_pcnoc_nodes[] = {
+> +	[MAS_SPDM] = &mas_spdm,
+> +	[MAS_BLSP_1] = &mas_blsp_1,
+> +	[MAS_BLSP_2] = &mas_blsp_2,
+> +	[MAS_USB3] = &mas_usb3,
+> +	[MAS_CRYPTO] = &mas_crypto,
+> +	[MAS_SDCC_1] = &mas_sdcc_1,
+> +	[MAS_SDCC_2] = &mas_sdcc_2,
+> +	[MAS_SNOC_PCNOC] = &mas_snoc_pcnoc,
+> +	[PCNOC_M_0] = &pcnoc_m_0,
+> +	[PCNOC_M_1] = &pcnoc_m_1,
+> +	[PCNOC_INT_1] = &pcnoc_int_1,
+> +	[PCNOC_INT_2] = &pcnoc_int_2,
+> +	[PCNOC_S_0] = &pcnoc_s_0,
+> +	[PCNOC_S_1] = &pcnoc_s_1,
+> +	[PCNOC_S_2] = &pcnoc_s_2,
+> +	[PCNOC_S_3] = &pcnoc_s_3,
+> +	[PCNOC_S_4] = &pcnoc_s_4,
+> +	[PCNOC_S_6] = &pcnoc_s_6,
+> +	[PCNOC_S_7] = &pcnoc_s_7,
+> +	[PCNOC_S_8] = &pcnoc_s_8,
+> +	[PCNOC_S_9] = &pcnoc_s_9,
+> +	[SLV_SPDM] = &slv_spdm,
+> +	[SLV_PDM] = &slv_pdm,
+> +	[SLV_TCSR] = &slv_tcsr,
+> +	[SLV_SNOC_CFG] = &slv_snoc_cfg,
+> +	[SLV_TLMM] = &slv_tlmm,
+> +	[SLV_MESSAGE_RAM] = &slv_message_ram,
+> +	[SLV_BLSP_1] = &slv_blsp_1,
+> +	[SLV_BLSP_2] = &slv_blsp_2,
+> +	[SLV_PRNG] = &slv_prng,
+> +	[SLV_CAMERA_SS_CFG] = &slv_camera_ss_cfg,
+> +	[SLV_DISP_SS_CFG] = &slv_disp_ss_cfg,
+> +	[SLV_VENUS_CFG] = &slv_venus_cfg,
+> +	[SLV_GPU_CFG] = &slv_gpu_cfg,
+> +	[SLV_SDCC_1] = &slv_sdcc_1,
+> +	[SLV_SDCC_2] = &slv_sdcc_2,
+> +	[SLV_CRYPTO_0_CFG] = &slv_crypto_0_cfg,
+> +	[SLV_PMIC_ARB] = &slv_pmic_arb,
+> +	[SLV_USB3] = &slv_usb3,
+> +	[SLV_IPA_CFG] = &slv_ipa_cfg,
+> +	[SLV_TCU] = &slv_tcu,
+> +	[SLV_PCNOC_SNOC] = &slv_pcnoc_snoc,
+> +};
+> +
+> +static const char * const msm8953_pcnoc_bus_clocks[] = {
+> +	"bus", "bus_a"
+> +};
 
-... this goes throught i2c...
+This seems to be unused?
 
->       riscv: dts: thead: Add TH1520 I2C nodes
->       riscv: dts: thead: Enable I2C on the BeagleV-Ahead
+BR,
+Georgi
 
-... and these two go thrhough Conor's branches.
+> +
+> +static const char * const msm8953_pcnoc_intf_clocks[] = {
+> +	"pcnoc_usb3_axi"
+> +};
+> +
+> +static const struct regmap_config msm8953_pcnoc_regmap_config = {
+> +	.fast_io = true,
+> +	.max_register = 0x12080,
+> +	.reg_bits = 32,
+> +	.reg_stride = 4,
+> +	.val_bits = 32,
+> +};
+> +
+> +static const struct qcom_icc_desc msm8953_pcnoc = {
+> +	.type = QCOM_ICC_NOC,
+> +	.bus_clk_desc = &bus_0_clk,
+> +	.intf_clocks = msm8953_pcnoc_intf_clocks,
+> +	.num_intf_clocks = ARRAY_SIZE(msm8953_pcnoc_intf_clocks),
+> +	.nodes = msm8953_pcnoc_nodes,
+> +	.num_nodes = ARRAY_SIZE(msm8953_pcnoc_nodes),
+> +	.qos_offset = 0x7000,
+> +	.regmap_cfg = &msm8953_pcnoc_regmap_config,
+> +};
 
-Do you mind sending a ping when Drew's patches are included in
-the merge window? I can put the first patch on a special branch
-to keep it under my watch.
-
-Andi
