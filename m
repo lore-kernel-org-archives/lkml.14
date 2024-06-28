@@ -1,213 +1,200 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C7F12E75
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 01:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C8918C31
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 01:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719539525; cv=none; b=cBUvsdcA7gxyKtQsKuNpBAOGFZpRjDUeNM+3soh5wTwHEPX6mDcNPgwBCQ+vsvPaMLpfqQUsJ43d3Ry77QHHbMezKxu8EahxAt44bgJW8/5QCaocOuwG6YLkXbCLTTJykbZBshlY9NQ6yARDiGIeQTGI4rzi+QppmOQHibM7X+4=
+	t=1719539531; cv=none; b=XR/i/WoVRSEzZyQxTra2OE+RTHqKtKKZIDCivfZps8v6JDBOzzL8djyBYvaFXBhIApPEQaOaDwZqCdIaajx2GaDNHw9089fdrrySZYuTHKSyqvjtCEj8lOUZ9brvaadxI1gM1H+XAn0BazrkJugL9XLogscrunwGX7kYG8hJ5vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719539525; c=relaxed/simple;
-	bh=NpbEpSTdbFRJ9jSFWZ/I6EHnZGo1rDdUX9yvuPzZo9A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nvvvaGm1i7Ho8QyS6fxrwQ3CxXMsxTI8nUD/XtilfqF3EXp+XXDpeNjLTd2PPwTyhxJm1Dw8ibYzSlLHARmkVt0qwr7WfHdA/3K4uEzwCKGYXxOFmAWv1H842I33nsYM0yiMkJMPZ24PBnU3RZLHBzvvvabrYYNwjYFjGmNuE+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=kJmtjvL+; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
+	s=arc-20240116; t=1719539531; c=relaxed/simple;
+	bh=C7mvTYLKP5rULxzvk+Q/UI/35lIUUm/C/Ad04ubtNZ0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YNYjWaDq+FmcCY3aKqKpbah0+7yOErSNeHWNkQyer/zkbWdMpLbdOB6NyQVjXbaimlzcy901laoeJgPkUtv+LdLfcbKVymmJ1mWMyRPmBnuKQlRdYtQwsikNp8JONO8JxENwWy5GnHijaqc3sqQUvQcag2ZjvfAxMhYfgj6J4a4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=affTk2i3; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="kJmtjvL+"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4256aee6d4fso674705e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 18:52:03 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="affTk2i3"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-707f9c3bd02so131712b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 18:52:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1719539522; x=1720144322; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lvyvL7sSYnWF73nZZ2R616gtm5dM5S1yjRMp5jsz2YI=;
-        b=kJmtjvL+kVCEkCfyC1ayjD/WwmfNnhKUAR4bq3uhhKNc7YHljTeOTM4hyvbejxo9ds
-         Fd04uOYUIDWMglySRWlSqcP/B8P6tGkHkw5AaTFmp5IYyF1/oiuEHm3zubFW09+ZQ1tS
-         bRiH7xmNjvzE4tfQkEpMKOpu3nvzZOP7RWilRuFvjuUyzB10kGKKdhoG3gZdak6p7yVD
-         fOn/a7TgG20Ut6aOLRq0TVFV4+zyvxVKvMoToU8dRsmKdQcRStEG7TsTGPnC45EtGqu0
-         zEnCkySaxXmDWE5IRDETh76XkyWKoUv4/nRSZfLeS2m4NI2Kugdh9eJ0wJl6qZNCbKaC
-         13Ew==
+        d=chromium.org; s=google; t=1719539529; x=1720144329; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/Y2Wdd7VeB8iNHqPvhHv3M3aV5Mu8Y1ATzVFTOMbY10=;
+        b=affTk2i3soc82yt0NKXX8CK97clvM4aMjiNPEHtUlvH/3Ckppo9/QIXP/fHQu87Lih
+         nvY5PuCye7NufAk5mp7NcHWdBEczxHyhW5h3IuCX0+/vBqT7rYHi20RQLB2yhCRwNstr
+         TljBkeBcAY7qvtdTTIz9HCj+hcoF+qKtEA/4A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719539522; x=1720144322;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lvyvL7sSYnWF73nZZ2R616gtm5dM5S1yjRMp5jsz2YI=;
-        b=DJLXw3GPDcXQbWoUvtt7rBJsmlSeHxt/VqsKXYorLBEc7POQGpCSa/Gf4bCfczEyaK
-         Qsi0CQl4IF3iL1HcA337fVr2kPYo3hefxreYTTWD3AC1YO3hfZFNgIvg47q6PRBeaWXo
-         k4cLgWz8zwDe4RKzT0wVdmOhnSSzYjHGG0LBOCTJCUAwW6/KTHXxMVVU/METdLVAf3wo
-         vXbDsACR+1MgI2GCTBbdBeAg7K7yWWTy4VsanPz/V5L4O/4Tn3CCcr+z/v0ZUgpIsEjn
-         6tctOK/30TJq53AxqD4ZSmiE8Fs/DcYd1PeurdYjv5rnR3bAD3vNFYM5pnWvIaDUr/pt
-         Tcag==
-X-Forwarded-Encrypted: i=1; AJvYcCXUqbnfoPKxxYQy+sL3UXZEIuk3btKuch/P3ypxYyGZekDji3jDqgyzVg+5TZmONirAeRa0Lv1QwzduM1USuOL+6MFtnZMrkFNP5qmP
-X-Gm-Message-State: AOJu0YxTBw/ov/s4KBRW6A87Bf4CwycmH7d5Bofcy6r5mNJMC49ryLck
-	IYMNWw0+Cy1bWss8v3TxyGXQZB5iSEhgqzQujF3na/RuK4Dj9gmYgTgyznonMl4=
-X-Google-Smtp-Source: AGHT+IHTJZg+LuweCmL8WGATnVT0JLoi2AWTzn3z8vnE4MboAjk01OaoXqEm1/sLrVCaDrDFi6rfbQ==
-X-Received: by 2002:a05:600c:19d3:b0:425:6b77:f5e0 with SMTP id 5b1f17b1804b1-4256b77f81cmr6169465e9.31.1719539522295;
-        Thu, 27 Jun 2024 18:52:02 -0700 (PDT)
-Received: from airbuntu (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256b097bcbsm13809025e9.35.2024.06.27.18.52.01
+        d=1e100.net; s=20230601; t=1719539529; x=1720144329;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/Y2Wdd7VeB8iNHqPvhHv3M3aV5Mu8Y1ATzVFTOMbY10=;
+        b=bzKY0BWnQrvhgLg11Dbve8BvJKhYqIxZJVfHqiyUCY7HfxCODkCUsq0kGM6n9H8RfE
+         hfGZfhJ0oez2fJXp1elaSXvt13xkUCfgbD14Bci2c3J+FeMPVFGJaVB/hIsZ/YU0cPV1
+         heTTlDRKUH/F7w7xV8SzDz+idzmqcinGp2qlC10oR8Dmjn6MD0cSR6pmGV9v8cNbWL8X
+         k6vBg1L0SJyOhKzLrcBMK9Fv/b9zu0RdDNLI/JuZcbg890fyW0i5Ig77q4ngZFD3EOyI
+         hxA9ib0lCWpmBaVi/pomJDRQYLB3NHNR6i1XFLWjX5V0K2c0wXJTHKKE3YtVl5aynHPA
+         ei4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUq2kvtQHEvI5AjOHFLR0BeWiNVn/VTKr3j70yV+N0pnclT+y0ni3kiO+aY7Aq66eukFqGNyhox3eTu989SreSiSDY6XeobExFpNyDG
+X-Gm-Message-State: AOJu0YyNZ7PG9RYM2Cmc1EmiviGnEOnotsnDyAQWkcKmYr5wjejCvuT4
+	aSZ1FNOebdqRfp5QfLCqr1dcqSFCjT42Qn1F5C/iS097CmdyUHxCp9dTUkW4EA==
+X-Google-Smtp-Source: AGHT+IFkQ+P3o8JhNlfXXJ3DTmdGuu1dXdBmx+jdWfrWXF8acBg2QGOM6vQP9wmCgvxhVl5eDn+lBw==
+X-Received: by 2002:a05:6a00:99e:b0:705:9b04:71b with SMTP id d2e1a72fcca58-7067471bf13mr19564882b3a.31.1719539528941;
+        Thu, 27 Jun 2024 18:52:08 -0700 (PDT)
+Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:c19a:b9a8:4bd1:72c0])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-708045aac85sm393354b3a.174.2024.06.27.18.52.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 18:52:01 -0700 (PDT)
-Date: Fri, 28 Jun 2024 02:52:00 +0100
-From: Qais Yousef <qyousef@layalina.io>
-To: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Christian Loehle <christian.loehle@arm.com>,
-	Hongyan Xia <hongyan.xia2@arm.com>,
-	John Stultz <jstultz@google.com>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6] sched: Consolidate cpufreq updates
-Message-ID: <20240628015200.vw75huo53redgkzf@airbuntu>
-References: <20240619201409.2071728-1-qyousef@layalina.io>
- <f281ba07-d54a-460a-8f78-f7eb6bd8ed88@arm.com>
+        Thu, 27 Jun 2024 18:52:08 -0700 (PDT)
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Minchan Kim <minchan@kernel.org>
+Cc: Chengming Zhou <chengming.zhou@linux.dev>,
+	linux-kernel@vger.kernel.org,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [PATCH] zsmalloc: rename class stat mutators
+Date: Fri, 28 Jun 2024 10:42:52 +0900
+Message-ID: <20240628015154.3230389-1-senozhatsky@chromium.org>
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <f281ba07-d54a-460a-8f78-f7eb6bd8ed88@arm.com>
+Content-Transfer-Encoding: 8bit
 
-On 06/25/24 14:58, Dietmar Eggemann wrote:
+A cosmetic change.
 
-> > @@ -4917,6 +4927,84 @@ static inline void __balance_callbacks(struct rq *rq)
-> >  
-> >  #endif
-> >  
-> > +static __always_inline void
-> > +__update_cpufreq_ctx_switch(struct rq *rq, struct task_struct *prev)
-> > +{
-> > +#ifdef CONFIG_CPU_FREQ
-> > +	if (prev && prev->dl.flags & SCHED_FLAG_SUGOV) {
-> > +		/* Sugov just did an update, don't be too aggressive */
-> > +		return;
-> > +	}
-> > +
-> > +	/*
-> > +	 * RT and DL should always send a freq update. But we can do some
-> > +	 * simple checks to avoid it when we know it's not necessary.
-> > +	 *
-> > +	 * iowait_boost will always trigger a freq update too.
-> > +	 *
-> > +	 * Fair tasks will only trigger an update if the root cfs_rq has
-> > +	 * decayed.
-> > +	 *
-> > +	 * Everything else should do nothing.
-> > +	 */
-> > +	switch (current->policy) {
-> > +	case SCHED_NORMAL:
-> > +	case SCHED_BATCH:
-> 
-> What about SCHED_IDLE tasks?
+o Rename class_stat_inc() and class_stat_dec() to class_stat_add()
+  and class_stat_sub() correspondingly. inc/dec are usually associated
+  with +1/-1 modifications, while zsmlloc can modify stats by up
+  to ->objs_per_zspage. Use add/sub (follow atomics naming).
 
-I didn't think they matter from cpufreq perspective. These tasks will just run
-at whatever the idle system is happen to be at and have no specific perf
-requirement since they should only run when the system is idle which a recipe
-for starvation anyway?
+o Rename zs_stat_get() to class_stat_read()
+  get() is usually associated with ref-counting and is paired with put().
+  zs_stat_get() simply reads class stat so rename to reflect it.
+  (This also follows atomics naming).
 
-> 
-> > +		if (unlikely(current->in_iowait)) {
-> > +			cpufreq_update_util(rq, SCHED_CPUFREQ_IOWAIT | SCHED_CPUFREQ_FORCE_UPDATE);
-> > +			return;
-> > +		}
-> > +
-> > +#ifdef CONFIG_SMP
-> > +		if (unlikely(rq->cfs.decayed)) {
-> > +			rq->cfs.decayed = false;
-> > +			cpufreq_update_util(rq, 0);
-> > +			return;
-> > +		}
-> > +#else
-> > +		cpufreq_update_util(rq, 0);
-> > +#endif
-> 
-> We can have !CONFIG_SMP and CONFIG_FAIR_GROUP_SCHED systems. Does this
-> mean on those systems we call cpufreq_update_util() for each cfs_rq of
-> the hierarchy where on CONFIG_SMP we only do this for the root cfs_rq?
+Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+---
+ mm/zsmalloc.c | 36 ++++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
-No. This is called on context switch only and hierarchy doesn't matter here. We
-just do it unconditionally for UP since we only track the decayed at cfs_rq
-level and I didn't think it's worth trying to make it at rq level.
+diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
+index fec1a39e5bbe..17a8304504cc 100644
+--- a/mm/zsmalloc.c
++++ b/mm/zsmalloc.c
+@@ -512,19 +512,19 @@ static int get_size_class_index(int size)
+ 	return min_t(int, ZS_SIZE_CLASSES - 1, idx);
+ }
+ 
+-static inline void class_stat_inc(struct size_class *class,
+-				int type, unsigned long cnt)
++static inline void class_stat_add(struct size_class *class, int type,
++				  unsigned long cnt)
+ {
+ 	class->stats.objs[type] += cnt;
+ }
+ 
+-static inline void class_stat_dec(struct size_class *class,
+-				int type, unsigned long cnt)
++static inline void class_stat_sub(struct size_class *class, int type,
++				  unsigned long cnt)
+ {
+ 	class->stats.objs[type] -= cnt;
+ }
+ 
+-static inline unsigned long zs_stat_get(struct size_class *class, int type)
++static inline unsigned long class_stat_read(struct size_class *class, int type)
+ {
+ 	return class->stats.objs[type];
+ }
+@@ -576,12 +576,12 @@ static int zs_stats_size_show(struct seq_file *s, void *v)
+ 
+ 		seq_printf(s, " %5u %5u ", i, class->size);
+ 		for (fg = ZS_INUSE_RATIO_10; fg < NR_FULLNESS_GROUPS; fg++) {
+-			inuse_totals[fg] += zs_stat_get(class, fg);
+-			seq_printf(s, "%9lu ", zs_stat_get(class, fg));
++			inuse_totals[fg] += class_stat_read(class, fg);
++			seq_printf(s, "%9lu ", class_stat_read(class, fg));
+ 		}
+ 
+-		obj_allocated = zs_stat_get(class, ZS_OBJS_ALLOCATED);
+-		obj_used = zs_stat_get(class, ZS_OBJS_INUSE);
++		obj_allocated = class_stat_read(class, ZS_OBJS_ALLOCATED);
++		obj_used = class_stat_read(class, ZS_OBJS_INUSE);
+ 		freeable = zs_can_compact(class);
+ 		spin_unlock(&class->lock);
+ 
+@@ -686,7 +686,7 @@ static void insert_zspage(struct size_class *class,
+ 				struct zspage *zspage,
+ 				int fullness)
+ {
+-	class_stat_inc(class, fullness, 1);
++	class_stat_add(class, fullness, 1);
+ 	list_add(&zspage->list, &class->fullness_list[fullness]);
+ 	zspage->fullness = fullness;
+ }
+@@ -702,7 +702,7 @@ static void remove_zspage(struct size_class *class, struct zspage *zspage)
+ 	VM_BUG_ON(list_empty(&class->fullness_list[fullness]));
+ 
+ 	list_del_init(&zspage->list);
+-	class_stat_dec(class, fullness, 1);
++	class_stat_sub(class, fullness, 1);
+ }
+ 
+ /*
+@@ -858,7 +858,7 @@ static void __free_zspage(struct zs_pool *pool, struct size_class *class,
+ 
+ 	cache_free_zspage(pool, zspage);
+ 
+-	class_stat_dec(class, ZS_OBJS_ALLOCATED, class->objs_per_zspage);
++	class_stat_sub(class, ZS_OBJS_ALLOCATED, class->objs_per_zspage);
+ 	atomic_long_sub(class->pages_per_zspage, &pool->pages_allocated);
+ }
+ 
+@@ -1375,7 +1375,7 @@ unsigned long zs_malloc(struct zs_pool *pool, size_t size, gfp_t gfp)
+ 		/* Now move the zspage to another fullness group, if required */
+ 		fix_fullness_group(class, zspage);
+ 		record_obj(handle, obj);
+-		class_stat_inc(class, ZS_OBJS_INUSE, 1);
++		class_stat_add(class, ZS_OBJS_INUSE, 1);
+ 
+ 		goto out;
+ 	}
+@@ -1394,8 +1394,8 @@ unsigned long zs_malloc(struct zs_pool *pool, size_t size, gfp_t gfp)
+ 	insert_zspage(class, zspage, newfg);
+ 	record_obj(handle, obj);
+ 	atomic_long_add(class->pages_per_zspage, &pool->pages_allocated);
+-	class_stat_inc(class, ZS_OBJS_ALLOCATED, class->objs_per_zspage);
+-	class_stat_inc(class, ZS_OBJS_INUSE, 1);
++	class_stat_add(class, ZS_OBJS_ALLOCATED, class->objs_per_zspage);
++	class_stat_add(class, ZS_OBJS_INUSE, 1);
+ 
+ 	/* We completely set up zspage so mark them as movable */
+ 	SetZsPageMovable(pool, zspage);
+@@ -1456,7 +1456,7 @@ void zs_free(struct zs_pool *pool, unsigned long handle)
+ 	spin_lock(&class->lock);
+ 	read_unlock(&pool->migrate_lock);
+ 
+-	class_stat_dec(class, ZS_OBJS_INUSE, 1);
++	class_stat_sub(class, ZS_OBJS_INUSE, 1);
+ 	obj_free(class->size, obj);
+ 
+ 	fullness = fix_fullness_group(class, zspage);
+@@ -1925,8 +1925,8 @@ static inline void zs_flush_migration(struct zs_pool *pool) { }
+ static unsigned long zs_can_compact(struct size_class *class)
+ {
+ 	unsigned long obj_wasted;
+-	unsigned long obj_allocated = zs_stat_get(class, ZS_OBJS_ALLOCATED);
+-	unsigned long obj_used = zs_stat_get(class, ZS_OBJS_INUSE);
++	unsigned long obj_allocated = class_stat_read(class, ZS_OBJS_ALLOCATED);
++	unsigned long obj_used = class_stat_read(class, ZS_OBJS_INUSE);
+ 
+ 	if (obj_allocated <= obj_used)
+ 		return 0;
+-- 
+2.45.2.803.g4e1b14247a-goog
 
-> 
-> [...]
-> 
-> > @@ -4744,8 +4716,8 @@ static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
-> >  	if (se->avg.last_update_time && !(flags & SKIP_AGE_LOAD))
-> >  		__update_load_avg_se(now, cfs_rq, se);
-> >  
-> > -	decayed  = update_cfs_rq_load_avg(now, cfs_rq);
-> > -	decayed |= propagate_entity_load_avg(se);
-> > +	cfs_rq->decayed |= update_cfs_rq_load_avg(now, cfs_rq);
-> > +	cfs_rq->decayed |= propagate_entity_load_avg(se);
-> >  
-> >  	if (!se->avg.last_update_time && (flags & DO_ATTACH)) {
-> >  
-> > @@ -4766,11 +4738,8 @@ static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
-> >  		 */
-> >  		detach_entity_load_avg(cfs_rq, se);
-> >  		update_tg_load_avg(cfs_rq);
-> > -	} else if (decayed) {
-> > -		cfs_rq_util_change(cfs_rq, 0);
-> > -
-> > -		if (flags & UPDATE_TG)
-> > -			update_tg_load_avg(cfs_rq);
-> > +	} else if (cfs_rq->decayed && (flags & UPDATE_TG)) {
-> > +		update_tg_load_avg(cfs_rq);
-> >  	}
-> >  }
-> 
-> You set cfs_rq->decayed for each taskgroup level but you only reset it
-> for the root cfs_rq in __update_cpufreq_ctx_switch() and task_tick_fair()?
-
-Yes. We only care about using it for root level. Tracking the information at
-cfs_rq level is the most natural way to do it as this is what update_load_avg()
-is acting on.
-
-> 
-> [...]
-> 
-> > @@ -8418,6 +8378,14 @@ static void check_preempt_wakeup_fair(struct rq *rq, struct task_struct *p, int
-> >  	if (pick_eevdf(cfs_rq) == pse)
-> >  		goto preempt;
-> >  
-> > +nopreempt:
-> > +#ifdef CONFIG_SMP
-> > +	if (rq->cfs.decayed && rq->cfs.h_nr_running > 1)
-> > +		cpufreq_update_util(rq, SCHED_CPUFREQ_TASK_ENQUEUED);
-> 
-> Why don't you set rq->cfs.decayed to false here as well?
-> 
-> Is it because the request might fail in sugov_should_update_freq() in
-> case 'delta_ns < sysctl_sched_base_slice'?
-
-Yes. This call is likely to fail and we don't have a way to get a feedback to
-know whether it went through or not.
-
-FWIW I already have a patch that I considered sending along this submission
-but opted not to as it'll make things too complicated.
-
-But FWIW, I make cpufreq_update_util() return a bool to indicate whether
-cpufreq update has happened or not and this helps to reset rq->cfs.decayed more
-accurately in all call site like this one. But I think this should be another
-independent patch.
-
-
-Thanks!
-
---
-Qais Yousef
