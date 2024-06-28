@@ -1,128 +1,234 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A821103
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 10:21:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E741C683
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 10:25:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719570096; cv=none; b=DJuFGGAJbcarapaHFJ6LAm4SPojzu0Z+AcOK/LtZjLgP5UckpwIcGOkEPQUXzcD4STZSNw/8IdU3hTwpJCxCu5bHDCNY9RMUDOUt8aGzfIA1urCTpawjijHN04WQcdGWXF3isUPvLRCEzQqB/Ea/kP2tSB9/aY2kZ7mz4DSONb4=
+	t=1719570307; cv=none; b=JSNSmHs6ISVNRxgKHEc8g8e/sPc/BATrb9VkqJedLuEyKff20no+L4GRgfAmqNuFOyPVwXzpqIxk3M1T7Xwz+alsYvjjQGnfURcoCwNGZRv1YFDvsJfAKU8eHlsqfNGaB/b84nRrGMufVm8fHen3LUrvsrkUjhSfUi9m//z48tQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719570096; c=relaxed/simple;
-	bh=4noTiBTuRJIBasprkGtDXC3pzOiAKK7p5eZyUiUQ79o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qGYdpIeQ2VnStlPh+v5fSmr8chKTE/NlZXJWbJDYS3aPmuXDhgeY7bAlXpVdAGCnU7qWYjuizbgU+vCuGDTf0E9teOUEaibh5TMLs6RvHbHqhP8kbYOBWH81XWsdKYPj+x9JgyezxWR3QL9erBjWGEalBralVJ6sRtm0LaX0TjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WN+zxccN; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719570307; c=relaxed/simple;
+	bh=MVyx2NMoaPvHZCjJ1KTjnoPDy9zuh97wN1Tq2drBNvs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o1q2aovyC5BdEUNFaBWQEMXU4NzbXsHl414fsVOq2CgmXdsm+lJyKHVcxAlslHz5tux9hLdR5+59aGEdjana5ssrUwQ1K5qzF71V+md08la2CZYKl4PV5M838W90dBLMBDlp4xsfFrVadoerrihp6ZrI6hePO7fWHK9pLIb7o/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=QOIo8kNK; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WN+zxccN"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52d259dbe3cso456356e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 03:21:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="QOIo8kNK"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4256742f67fso3472535e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 03:25:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719570093; x=1720174893; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=toVPkOVmbaOowz/vXyMujJeijcs/XV50D4pxSeTHmo0=;
-        b=WN+zxccNbGVvLPmB4ddTYnNEhXmdiEuMj2MFPxJ9WlnT7t2e441PowPVZyfwl6fDiS
-         zvN9Za445suVnivRZ35YMD8ukSKvbfAp7944+CxBepFrk6VdGYnwYAgNKW4jk1o1PY/g
-         zNUUTgdS3g+7ajKbpKtJ/hnvhqYYd6F0O80e9zlSCIry55RgZT+02yp5yVQn1YgtEkfi
-         Ga6sCwuHONRLKazwk+CyTTGjGhjA1zHFsyK9gr4wFIM0f3wEEK6zoc7+07Saxhhnu0fC
-         NFdWg+ql+6plS2RmJItpBUYef5KFbytSxz6iy1oEv050ePaYWgzxE2RaJc3Nj9BFIoAc
-         6qIw==
+        d=tuxon.dev; s=google; t=1719570305; x=1720175105; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Nx+ADCri5fDjbQqI/n1BCN4tgTo26I/0S6XiQblv+fE=;
+        b=QOIo8kNKjOXfcLyvqzGniNagnIzAh5pB+Dm22li7mP+r7r1lgCQUD4tyIm4YE8TlKW
+         lYp7DKP0TnhTIOtzm6MxN56cQVsLwfApCBCtf6BW5Hi9hCM7KG98coMPdSDwdN1fTiSM
+         HPEphyYCsdPksBvoJjB7tkyzPZRacYsDLe9DYNTAkrIrLo9aje03dEqyckO5wC9iir51
+         WOXpoFcpnQykJ3rXt/gbX3v6vuGcI3Ka/SNEWCb62BCujmSfUtnBagzbiQNiuBPq3T/9
+         wFgV9dgW91JbRt8ZNJZBznGJ53xYqulx8Bi5bLyiKzFo5aruTh99vTtPKfCNeZkVVAJF
+         C5tQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719570093; x=1720174893;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=toVPkOVmbaOowz/vXyMujJeijcs/XV50D4pxSeTHmo0=;
-        b=vqYtcGH8CA+YPHrvlzFDiHflrdlKjg3LJuHQJgYB9lmyjlEkwiXUdQi3lqwZ8OuFS1
-         Dcp80kgdBmbsrfQgqXd9yjrfed6S+zeDbYFunwdfypnjRPUfmy1uaycdtZDThbHRcg6K
-         PF426bYGnWhXUKiDI+36J0Va5gBcB99ckyBhYOzWzulVcJPoRnTOUIHKKk0nyrUIGVBM
-         5i30HMWScBwyXBiFg7yHTKWMIvYN1mJ0hJYq4ow1hcGSbh4i2wYIBSiDVptJhCXcriRM
-         kwIN0UxRCmnXVaSl5j8bFASi/S9rgCUwxWL+XFk2EEIBLWtLRr3T3BwYkklDzXDoa3Zh
-         90nQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVKzOafPVEMd6a5Pkvhpgbv83mK5hM+E2ba+DGKo/pWIMUsLqbfSiRyeXcUrAziJjhyJHE8vMqDkzqU60nZZ1/O75yw87yBOS8/INru
-X-Gm-Message-State: AOJu0YxXQZ6A2T2uMAv+2o6V+UZVPaiBGbFmOWsZFOuSgmXscl2n1bTC
-	f7adOQvypD2kNjDbTdAdOemWrldhsKv6Liz0swhzN+rn4ldPxT9D/xY7EmZG7zdp7fwxM54Q8H+
-	hMra9aYJJi/W+K+s5ws9flEDslYA=
-X-Google-Smtp-Source: AGHT+IHEOHLUfclUMbaNJLdqI2SYM1TMiamxu0Nbh3QlfW5c1kRXgDYdE9DKeYAN6zJO+r1OHy6e1m79KNaqcWAt5K0=
-X-Received: by 2002:a05:6512:2311:b0:52e:74d5:89ae with SMTP id
- 2adb3069b0e04-52e74d58afamr2949893e87.39.1719570092485; Fri, 28 Jun 2024
- 03:21:32 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719570305; x=1720175105;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nx+ADCri5fDjbQqI/n1BCN4tgTo26I/0S6XiQblv+fE=;
+        b=d36mwwRNLZsGoeiuX3PVGOM3ejfB6hvqmFB1dzXEJLJCN6Y4tNV9Qq7gTy7dPPFNwG
+         lkGgwbMo0o1EKNCCiZcrjV59DK8SaMdLAQbDTP6pZGUp4dnbbdBC586+eF3w95kAQlM4
+         lcdLl01RY9tFIva7HMdQUEjw+Cg5+ALtB6vp9LU/eQuE6tCXpFxr97SrpJYg1FkED+xA
+         CrC0N6t6WtdUPsba6bmKHOCdo5YJcnwXKDNcgELfwnj28W/6hCEo33cA1vf8PR5cFdWC
+         AFeRsCcwtjOaQc04ORp8WoKfA4ZyjO24ZLDIDafyxb8YxG7FcfAFMiao84IImORb1HFc
+         iuaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXDQhUm7oCjbssqezHO1QgGJZRt+rPZB1xVx+MaohkHySEoD9QD3JaNCBhFsFZd0LoRyd/bUjebzrEGt9+dfcWU5+T6c44QjZ2xL1GU
+X-Gm-Message-State: AOJu0YwniGKNjNScRqx0DlR6B/uyVnlditfS0/q3gw3a3SCEh/ioQy07
+	zElx4J3pMS/EanyHgwPdUiJA+Q0qWM1i/JGOuwefja+0pWpLdylaBP4vte5YRfE=
+X-Google-Smtp-Source: AGHT+IGUDm5010syq/xgTlajOkXN6zAoeyuTKEY0ravbOpM9vA1f4/yUpyZq5hWbTISTc4r4z0fWqA==
+X-Received: by 2002:a05:600c:3016:b0:424:a721:1d0f with SMTP id 5b1f17b1804b1-424a7211e6bmr61113515e9.29.1719570304552;
+        Fri, 28 Jun 2024 03:25:04 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.70])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4249b133b44sm89189805e9.0.2024.06.28.03.25.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Jun 2024 03:25:04 -0700 (PDT)
+Message-ID: <20ff64a8-e619-4281-894f-1aa08ea67f18@tuxon.dev>
+Date: Fri, 28 Jun 2024 13:25:02 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJNi4rMfRmWoYdsyH6ibNKN8DSCL_DO8Wa08mWbe8t7vH21Dpw@mail.gmail.com>
- <86pls2isal.wl-maz@kernel.org> <20240627101207.0bbbead0@rorschach.local.home>
-In-Reply-To: <20240627101207.0bbbead0@rorschach.local.home>
-From: richard clark <richard.xnu.clark@gmail.com>
-Date: Fri, 28 Jun 2024 18:21:25 +0800
-Message-ID: <CAJNi4rMeDgDJbN0jjPguU_v5uoscJJN=5bZaShXpu7Q8X60hcg@mail.gmail.com>
-Subject: Re: Will smp_call_function_single(cpu, ...) broadcast IPI to all
- other cpus?
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>, will@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	"Russell King (Oracle)" <linux@armlinux.org.uk>, Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 07/12] i2c: riic: Define individual arrays to describe
+ the register offsets
+Content-Language: en-US
+To: Biju Das <biju.das.jz@bp.renesas.com>,
+ Chris Brandt <Chris.Brandt@renesas.com>,
+ "andi.shyti@kernel.org" <andi.shyti@kernel.org>,
+ "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "geert+renesas@glider.be" <geert+renesas@glider.be>,
+ "magnus.damm@gmail.com" <magnus.damm@gmail.com>,
+ "mturquette@baylibre.com" <mturquette@baylibre.com>,
+ "sboyd@kernel.org" <sboyd@kernel.org>,
+ "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+ "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>
+Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+ "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20240625121358.590547-1-claudiu.beznea.uj@bp.renesas.com>
+ <20240625121358.590547-8-claudiu.beznea.uj@bp.renesas.com>
+ <TY3PR01MB11346EF9A001F68162148B70F86D02@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+ <6289f329-118f-4970-a525-75c3a48bd28b@tuxon.dev>
+ <TY3PR01MB1134603F92C72D9B6C6C3733C86D02@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+ <2f162986-33c5-4d80-958c-4f857adaad20@tuxon.dev>
+ <TY3PR01MB11346CA73575CF61B2024F3B386D02@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+ <79c26030-4b92-4ef3-b8ce-d011f492161b@tuxon.dev>
+ <TY3PR01MB11346A2DFBD7FE81337A748D386D02@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+From: claudiu beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <TY3PR01MB11346A2DFBD7FE81337A748D386D02@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Steven,
 
-On Thu, Jun 27, 2024 at 10:12=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
->
-> On Thu, 27 Jun 2024 11:38:58 +0100
-> Marc Zyngier <maz@kernel.org> wrote:
->
-> > You may want to enable stack trace recording and find out for yourself
-> > where these ipi_raise() calls are coming from.
->
-> Try trace-cmd:
->
->   # trace-cmd start -e ipi_raise -R 'stacktrace if reason=3D=3D"Function =
-call interrupts"'
->   # taskset -c 0 insmod /kmods/ipi_test.ko
->   # trace-cmd stop
->   # trace-cmd show
->
-I found that the 'stacktrace' seems like a stick bit. Run the above
-'# trace-cmd start -e ipi_raise -R 'stacktrace if reason=3D=3D"Function
-call interrupts"' ... command sequence, then
-# trace-cmd start -e ipi -f 'reason=3D=3D"Function call interrupts"' -v -e
-ipi_exit; taskset -c 0 insmod /kmods/ipi_lat.ko; trace-cmd stop;
-trace-cmd show; trace-cmd clear;
-The output is:
 
-          insmod-1746    [000] dn.h1..   928.400039: ipi_raise:
-target_mask=3D00000000,000000ffe (Function call interrupts)
-          insmod-1746    [000] dn.h2..   928.400042: <stack trace>
- =3D> trace_event_raw_event_ipi_raise
- =3D> smp_cross_call
- =3D> arch_send_call_function_single_ipi
- =3D> send_call_function_single_ipi
-...
-Actually, the behavior hoped like this(no stacktrace):
+On 28.06.2024 11:24, Biju Das wrote:
+> Hi Claudiu,
+> 
+>> -----Original Message-----
+>> From: claudiu beznea <claudiu.beznea@tuxon.dev>
+>> Sent: Friday, June 28, 2024 9:13 AM
+>> Subject: Re: [PATCH v2 07/12] i2c: riic: Define individual arrays to describe the register offsets
+>>
+>>
+>>
+>> On 28.06.2024 11:09, Biju Das wrote:
+>>>
+>>> Hi Claudiu,
+>>>
+>>>> -----Original Message-----
+>>>> From: claudiu beznea <claudiu.beznea@tuxon.dev>
+>>>> Sent: Friday, June 28, 2024 9:03 AM
+>>>> Subject: Re: [PATCH v2 07/12] i2c: riic: Define individual arrays to
+>>>> describe the register offsets
+>>>>
+>>>>
+>>>>
+>>>> On 28.06.2024 10:55, Biju Das wrote:
+>>>>> Hi Claudiu,
+>>>>>
+>>>>>> -----Original Message-----
+>>>>>> From: claudiu beznea <claudiu.beznea@tuxon.dev>
+>>>>>> Sent: Friday, June 28, 2024 8:32 AM
+>>>>>> Subject: Re: [PATCH v2 07/12] i2c: riic: Define individual arrays
+>>>>>> to describe the register offsets
+>>>>>>
+>>>>>> Hi, Biju,
+>>>>>>
+>>>>>> On 28.06.2024 08:59, Biju Das wrote:
+>>>>>>> Hi Claudiu,
+>>>>>>>
+>>>>>>>> -----Original Message-----
+>>>>>>>> From: Claudiu <claudiu.beznea@tuxon.dev>
+>>>>>>>> Sent: Tuesday, June 25, 2024 1:14 PM
+>>>>>>>> Subject: [PATCH v2 07/12] i2c: riic: Define individual arrays to
+>>>>>>>> describe the register offsets
+>>>>>>>>
+>>>>>>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>>>>>>>
+>>>>>>>> Define individual arrays to describe the register offsets. In
+>>>>>>>> this way we can describe different IP variants that share the
+>>>>>>>> same register offsets but have differences in other characteristics.
+>>>>>>>> Commit prepares for the addition
+>>>>>> of fast mode plus.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>>>>>>> ---
+>>>>>>>>
+>>>>>>>> Changes in v2:
+>>>>>>>> - none
+>>>>>>>>
+>>>>>>>>  drivers/i2c/busses/i2c-riic.c | 58
+>>>>>>>> +++++++++++++++++++----------------
+>>>>>>>>  1 file changed, 31 insertions(+), 27 deletions(-)
+>>>>>>>>
+>>>>>>>> diff --git a/drivers/i2c/busses/i2c-riic.c
+>>>>>>>> b/drivers/i2c/busses/i2c-riic.c index
+>>>>>>>> 9fe007609076..8ffbead95492 100644
+>>>>>>>> --- a/drivers/i2c/busses/i2c-riic.c
+>>>>>>>> +++ b/drivers/i2c/busses/i2c-riic.c
+>>>>>>>> @@ -91,7 +91,7 @@ enum riic_reg_list {  };
+>>>>>>>>
+>>>>>>>>  struct riic_of_data {
+>>>>>>>> -	u8 regs[RIIC_REG_END];
+>>>>>>>> +	const u8 *regs;
+>>>>>>>
+>>>>>>>
+>>>>>>> Since you are touching this part, can we drop struct and Use u8*
+>>>>>>> as device_data instead?
+>>>>>>
+>>>>>> Patch 09/12 "i2c: riic: Add support for fast mode plus" adds a new
+>>>>>> member to struct
+>>>> riic_of_data.
+>>>>>> That new member is needed to differentiate b/w hardware versions
+>>>>>> supporting fast mode plus based on compatible.
+>>>>>
+>>>>> Are we sure RZ/A does not support fast mode plus?
+>>>>
+>>>> From commit description of patch 09/12:
+>>>>
+>>>> Fast mode plus is available on most of the IP variants that RIIC
+>>>> driver is working with. The exception is (according to HW manuals of the SoCs where this IP is
+>> available) the Renesas RZ/A1H.
+>>>> For this, patch introduces the struct riic_of_data::fast_mode_plus.
+>>>>
+>>>> I checked the manuals of all the SoCs where this driver is used.
+>>>>
+>>>> I haven't checked the H/W manual?
+>>>>
+>>>> On the manual I've downloaded from Renesas web site the FMPE bit of
+>>>> RIICnFER is not available on RZ/A1H.
+>>>
+>>> I just found RZ/A2M manual, it supports FMP and register layout looks similar to RZ/G2L.
+>>
+>> I introduced struct riic_of_data::fast_mode_plus because of RZ/A1H.
+> 
+> Maybe make the register layout as per SoC
+> 
+> RZ/A1 --> &riic_rz_a_info
+> RZ/A2 and RZ/{G2L,G2LC,V2L,G2UL,FIVE} --> &riic_rz_g2_info
+> RZ/G3S and RZ/V2H --> &riic_rz_v2h_info
 
-          insmod-1677    [000] ....1..   473.474846: ipi_raise:
-target_mask=3D00000000,00000ffe (Function call interrupts)
-          <idle>-0       [002] d..h1..   473.474848: ipi_entry:
-(Function call interrupts)
-          <idle>-0       [003] d..h1..   473.474849: ipi_entry:
-(Function call interrupts)
-          ...
-          insmod-1677    [000] ....1..   473.474859: ipi_raise:
-target_mask=3D00000000,00000ffe (Function call interrupts)
-          <idle>-0       [001] d..h1..   473.474861: ipi_entry:
-(Function call interrupts) magic=3D0x55aa55aa
-          ...
+Sorry, but I don't understand. Patch 09/12 already does that but a bit
+differently:
 
-I tried to add '# trace-cmd stack --stop/reset' before the above
-command, but it did not work. Any help to disable the 'stacktrace' in
-this scenario?
+RZ/{G2L, G2LC, G2UL, V2L, FIVE} -> riic_rz_g2_info
+RZ/G3S and RZ/V2H -> riic_rz_v2h_info
+Everything else: riic_rz_a_info
 
-> -- Steve
+I don't have anything at hand to test the "everything else" thus I enabled
+it for RZ/{G2L, G2LC, G2UL, V2L, FIVE}, RZ/G3S and RZ/V2H.
+
+> 
+> Then except RZ/A1, set FMP. 
+
+I cannot test all these.
+
+> 
+> Currently register layout of RZ/A2 is not matching with
+> Hardware manual.
+
+I cannot test this either. Also, I think this is not the purpose of this
+series.
+
+Thank you,
+Claudiu Beznea
+
+> 
+> Cheers,
+> Biju
