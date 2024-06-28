@@ -1,114 +1,91 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0AB4D58A
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 09:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D776015278C
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 09:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719568099; cv=none; b=Xb9L18H2efmKOwcxyghoswWtF8zMX1F3ZThTcC3of8J92yDXLuyhTTrmTxbbaYYqVCB2OZ2WSei/7+PWrBJtKvgmSiYde7NekZ6PWJfAYluP/rlP09NZu1fOcQ2B9GugRgseI1Fvs6sTZm94UkYSP8nzcn7WDSoUD5qfKV/WcTs=
+	t=1719568189; cv=none; b=ckwnTJK4KeIcSEnYzv6ZjNRjS5A90ZJjlGc2BPDoN6O5Gg53L6339Uw5QftOUzPnqAhaBSFppG6D9iirfkUnSfYyqBhOYOOToS3Tiipga/vmyd78vXIrs6XQYjS8+LQPH1jyiB+e4NSLiivPV46OSuTpCnVjQU/7M+UYCpN/VIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719568099; c=relaxed/simple;
-	bh=N9ul7sciE4TWD5ZCzRMXkQo/BW8Bk2N6jU2ho5gBxDc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gWuBtkwMGBTpvslnzUT0jvlIMGYLvizShK5vARVSvOkObrw0Zi3d4Xh1djsIqOaQJmhHI7jvnLz7btJKYgxnKR6bIl/enAMCXAfpwvmYjJuE2n9v3ADkyprB1yUzXOvby4Qb/Q5BHYxVs0is0sEn0z/lweoy50SZnDM+pn6npkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com; spf=pass smtp.mailfrom=timesys.com; dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b=roGrKEXk; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timesys.com
+	s=arc-20240116; t=1719568189; c=relaxed/simple;
+	bh=hP2esbqwbSfw80i/Jbzy0M1Ko0/3HN1DJ4B3HcGWSlc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u4I9riSXYOVu4o9FTO48BSwnoyK+QDQ4VZuLHaychIm4diydzj7TiiWvioMXMM+zOw75i6Q2n62yS+7bJT58Rs1un/K8DeyvdomVl/VSSfU6DIKiPhY7LxaaXauMrEcPwPuEE3LCMT7frX2uQGcmB0CdwgUXix0ZpL4jFtykLHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zFZUKFBD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5hz3Z5ll; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b="roGrKEXk"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6b4fced5999so1922206d6.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 02:48:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=timesys-com.20230601.gappssmtp.com; s=20230601; t=1719568096; x=1720172896; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N9ul7sciE4TWD5ZCzRMXkQo/BW8Bk2N6jU2ho5gBxDc=;
-        b=roGrKEXkgOuPWGP4cWrlmSIWtFKzZUMt/15MXOuALr8KGNJE1YO3wVAWVZu3iSZxRw
-         wuqPWO5hyH+sD8X9dnOugrOuGfQqeIUlQQfSoO53sr7dhsL9gAYvgaTwlDoOjK3TrsKz
-         pW3SITw6ZzfyLIxP7VYnRJbGxpaqmUCcOsoZ99tCa5vMBHTz9Nz59b3J5rW4VhXDlv44
-         o68Fdybl/gAnIDW9Lj5XGd37qlosTD9ZY/aDs71rZ5XJJnMPYmEQ3lAvzt2p3unTcFGS
-         XxEKLSphs55AZl+kAHqoZeAIeXUPrkVBWEHp+p9q/x0ZAXwzmdBSZZvgYXDSSe6soziH
-         HhSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719568096; x=1720172896;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N9ul7sciE4TWD5ZCzRMXkQo/BW8Bk2N6jU2ho5gBxDc=;
-        b=ijfRTU16BfXJ7cq+nsZ/PY9PJdCBTf68UZT85CG2vXc3qJ1kfNPVu5gyp6QCZTdDk3
-         z2MR9dHHXnz/IdWnZiOXvL6eZWhhidm/ElGL0ibThlbNlSxC3c5smTXkQgfuC8td5M46
-         5tQwvvsStXp4bJwCryp4YK02uYsTeiy2LYm/+xtQdgAceCFmhdaPD6vCpJ6so++cc3uQ
-         tfXRYTLp6p2/5PIoYd0ejz9+MHkIWV0TOdQRZZiL4ae5/VODDlkNACycDPQU2OrYh7tH
-         YrC63A9RX8PXsz+xtbTqJ31MmwtmkljDWu2QwYCs0YA1EL0PEvaV1uMkInAWFyRGiKGY
-         qpCw==
-X-Forwarded-Encrypted: i=1; AJvYcCUUA4w4ZWINy/sLTY7vl+9XWPzOAbqqMfWIvK3TT33wK9XP9z0cKYy5DOBSfNfIq6K8w4NSX3Wo43Ycrg7Wiv2Fgmfx3OLWrwEXoYNh
-X-Gm-Message-State: AOJu0YzsaB7Z/s5GNA9HwGNiJ7iAarw7kuNT0iL0P2G/xSNWWvK7nlkI
-	5Coao7UvmE6jmbqW94CWDe6fGNn+SQW3tQ7FnJ3qgzKFjzz94K9qOuAeSXX3oYp+22rx9A31eFK
-	bYap4iQWhKhRMkkjufentHolMdKo2TFUb7Ln5Ww==
-X-Google-Smtp-Source: AGHT+IGKbXGa8tFRoUBtX9jPFSaA/HXwNQUkn5EBHWhOJnFoUnmXEc3piUEvQv5r8Xh65vaIT9hG5Yzp9EElL8Q42qY=
-X-Received: by 2002:a05:6214:230d:b0:6b5:468e:d413 with SMTP id
- 6a1803df08f44-6b5468ed608mr190751986d6.40.1719568096583; Fri, 28 Jun 2024
- 02:48:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zFZUKFBD";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5hz3Z5ll"
+Date: Fri, 28 Jun 2024 11:49:44 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1719568185;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MRTTaQMWsKNu0RAP3ZI6MFRNxnChl+5ZQXlF75X+APs=;
+	b=zFZUKFBDBKe8wJAVPU3rtJndgnbfwdk4iOY0YDtlGBoje+5TtFtm++Jh3weufcYuiK56LB
+	KQh5vG447NbYrW4NhN8y6TfQb+Vn3GEKOWT67ojj9nbJE5wJMCB2fwIgarzq7B9D9nToVf
+	e73isXlIBp2cX+0Zn2iOpE9L/ruEOMYncYPayHtNctEHce/iJK1/sq7dB2E6NxUyJ/3lNK
+	sWksUD+qXTPegSHh/SBMcajqyKSab2o2z6lRV28I6G7lWK/R/U3CWqkuc9ueyYoM+n2Ljz
+	iQ3P67dMEctnN1cKzirkOuqmw+cBr127Dx3GVlafSkO+ICYxs4evbSUEIlurWg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1719568185;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MRTTaQMWsKNu0RAP3ZI6MFRNxnChl+5ZQXlF75X+APs=;
+	b=5hz3Z5llDJwqxv2R+8ZK/iuAI/paKRwd/5drxPDCxhTiq4aUXCLKVmW9A9mJ2wb8aUa03g
+	iM7H7Pt3Pb8mqaAg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Ben Segall <bsegall@google.com>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Klara Modin <klarasmodin@gmail.com>, Mel Gorman <mgorman@suse.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH] sched/task_struct: Move alloc_tag to the end of the
+ struct.
+Message-ID: <20240628094944.QwcHkf8J@linutronix.de>
+References: <20240621102750.oH9p1FQq@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240620175657.358273-1-piotr.wojtaszczyk@timesys.com>
- <20240620175657.358273-9-piotr.wojtaszczyk@timesys.com> <20240621103019.783271f4@xps-13>
- <CAG+cZ06GSxPsTzRLXSk23qWXMkp-qxYq7Z9av5-2cPHSJmVAHg@mail.gmail.com> <20240624083900.14e38d82@xps-13>
-In-Reply-To: <20240624083900.14e38d82@xps-13>
-From: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-Date: Fri, 28 Jun 2024 11:48:05 +0200
-Message-ID: <CAG+cZ06j4XACKtgwkTyjK0jhFTt+-EYTN+qFKO20ow3sjK84BA@mail.gmail.com>
-Subject: Re: [Patch v4 08/10] mtd: rawnand: lpx32xx: Request DMA channels
- using DT entries
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: "J.M.B. Downing" <jonathan.downing@nautel.com>, Vladimir Zapolskiy <vz@mleia.com>, dmaengine@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-mtd@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240621102750.oH9p1FQq@linutronix.de>
 
-On Mon, Jun 24, 2024 at 8:39=E2=80=AFAM Miquel Raynal <miquel.raynal@bootli=
-n.com> wrote:
-> > > I don't see any change regarding the NAND controller node in the devi=
-ce
-> > > tree, is there any dependency with other patches from the same patchs=
-et
-> > > or may I apply this directly to nand/next?
-> > >
-> > > Thanks,
-> > > Miqu=C3=A8l
-> >
-> > Yes, this patch depends on "[v4,04/10] ARM: dts: lpc32xx: Add missing
-> > dma and i2s properties"
-> > which will be splitted into two or more separate patches per request
-> > in the comments.
-> > I'd like to keep driver changes and corresponding changes in DTS in
-> > the same patch
-> > but I've made a separate patch for DTS per request from v2 of the patch=
- set.
->
-> These changes won't be applied to the same tries so they must be split.
->
-> So I will not take this patch for the next merge window and instead
-> will take it for the one after, if the DT patches have been applied.
-> Please ping me at -rc1 again if the DT patches have gone through.
->
-> Thanks,
-> Miqu=C3=A8l
+On 2024-06-21 12:27:52 [+0200], To linux-mm@kvack.org wrote:
+> The alloc_tag member has been added to task_struct at the very
+> beginning. This is a pointer and on 64bit architectures it forces 4 byte
+> padding after `ptrace' and then forcing another another 4 byte padding
+> after `on_cpu'. A few members later, `se' requires a cacheline aligned
+> due to struct sched_avg resulting in 52 hole before `se'.
+> 
+> This is the case on 64bit-SMP architectures.
+> The 52 byte hole can be avoided by moving alloc_tag away where it
+> currently resides.
+> 
+> Move alloc_tag to the end of task_struct. There is likely a hole before
+> `thread' due to its alignment requirement and the previous members are
+> likely to be already pointer-aligned.
+> 
+> Fixes: 22d407b164ff7 ("lib: add allocation tagging support for memory allocation profiling")
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-Hi Miqu=C3=A8l, please check v5 of the patch, I've added fallback if a DMA =
-can't be
-requested using DT, this is backward compatible with platform data and no
-longer depends on the DT changes.
-https://patchwork.ozlabs.org/project/linuxppc-dev/patch/20240627150046.2587=
-95-11-piotr.wojtaszczyk@timesys.com/
+Could we please get this merged and worry about possible performance
+regression later? Or once there is a test case or an idea where this
+pointer might fit better but clearly the current situation is worse.
 
---
-Piotr Wojtaszczyk
-Timesys
+Sebastian
