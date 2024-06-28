@@ -1,55 +1,57 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538D41E522;
-	Fri, 28 Jun 2024 14:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 500191C0077;
+	Fri, 28 Jun 2024 14:35:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719585339; cv=none; b=Jrn7Y0Z37HiJJVvvHrY1Agei5fbx57QeiZn9PFXv6QcXbLTMgqFVGlkPFDDbzrQSRi1MljyHm65cnBfesqs+oY7awEjrbspKhvI6+ltPy2XfOySW8IB+RnsAirekdGk+bbqTUFjnXLN2vDPX0CqJKAEfNymlZNVhAAKOp1T5ONo=
+	t=1719585343; cv=none; b=sww2ohFzrMm1eDKIpifA6zJ1fyCSccW9pLRD1/i62BtkmGK3TXh+mtgR4P8VhRACNMB+908MUTzsqdrjDEpwub5Zh0XA3pGyHJYFVt0aqrfP6T6iPUl3J8VAoeFsG2hG9pq/2SSLkUFys7iYnpzINAzADL+2NOvoDx5cleZdsWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719585339; c=relaxed/simple;
-	bh=M+mmVeOL6m8FmyDokJNplwZhot9fKY++AbP2+IWbHMY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dios3HIzqA97wmYm/45LpMgC5YISg/qtpHah/kFhqvK16KAZGEehsyUB+lZn2Ufo5F6FbvW8OhCHq6EM1OSPqLKXs0ZjfSxo4sW7dkTM+JkAfAPaJUf0FXOssccupySZCN4o3R7mVYhIvlk3ctlYtZfDj2kYyXzfbrSmlOI6bBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UMi6VGBQ; arc=none smtp.client-ip=209.85.128.48
+	s=arc-20240116; t=1719585343; c=relaxed/simple;
+	bh=8F3m9fKSqJJe9qt0jLUm8kyWx0T6msjogjdAw34IZhA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ucMhIFC0yydX36w/iVKVhuZimXpYYgALT/Jol+XYr6BRYZfYXaAWHgxhoVvMcBqJBgIP2U9IVp0wtxRAvjpeZftZeReABaz9xGGGNTrioV5aeKjmSULkOBoxZlYGafep2/t5nyLlyh0mVT0bwSBDQ2IzXyPfZzjSb/HLki5wAyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aWhXfAOz; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UMi6VGBQ"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4217c7eb6b4so5799865e9.2;
-        Fri, 28 Jun 2024 07:35:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aWhXfAOz"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-42573d3f7e4so2256145e9.0;
+        Fri, 28 Jun 2024 07:35:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719585335; x=1720190135; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/0NwxkLlbP9jgFl/TCIElmahbD3Db/e8/WdXfIoQlZs=;
-        b=UMi6VGBQcI/UNQIdjh2NLS+O1ZmcOvGX/dWVKWtO/GY5t60y6nTaVS1zi16RGW+scF
-         UPAS7TtziZvusUj7xIIUtzFUy4gKARfbkVm5U9J2UP4jIn0GEPgt/QYZTLiPKO4ohQLr
-         wPXlGcB4Qud6o+DDdndr0bb3tv3AzF7iwbvyJq5x5VMCM05DReufFsnzappf9C3Q5teL
-         LrTvOK5cyQSGAErvX3hWHmYpClGhPh9lD/yrVyIbYp72KiwwEV5rvnuOQ7zYpbjjLUpV
-         5hiLEMtLqpt94mXqkiFoiPZs/ARq3fP2+5giPb7QM3IZ+mRNVL9eh2L6m0TRxzPcu6RW
-         CqwA==
+        d=gmail.com; s=20230601; t=1719585340; x=1720190140; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z4tIycn76980srpS0Qx+f5aSwAYnJlMpkjRvY7J5k/M=;
+        b=aWhXfAOz6SJMUu0+3ucf3hQAoM2zwbhcbCFPHa/9m9uu9VR8bfxb6Q0w6La1RySNcz
+         GJc9OIuOb6Z56hCllGptq/qPz+PKski8QKj9OK1c2zhAaLjKi+DVnUHkobHYB5Wi2ThD
+         jy1fTot/Kq9Lj2RGVB0K1TdeQ92g4JL2FrlBw6cVpr8WyyXGRT+qYGyXwb0tn07AswTM
+         K7zdqgFA0dhc7EzVQNANtfA7N7DHJ6HWlm+lquM6u3JsQxf7q5TuUA4YzYclwVOnYA/s
+         h+b7pbnrTGO1x9nYMcsf7KWfjIgmZ7CoDPOBk6FUnfOTLy+XP2ra2S5MqoVY/tXin01J
+         nlwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719585335; x=1720190135;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/0NwxkLlbP9jgFl/TCIElmahbD3Db/e8/WdXfIoQlZs=;
-        b=gIozTOJl20ijst3Zd0bPb5t1OxzTSU3whRFvQTjkwRZewFAmW2+x8NVr96f5dxtuHQ
-         m9rk4E8DDyxxllfVLkCV23pSinVP3b4+lLWSuSpe1IOCjcmIiFGJ44IWzI4YYt7AS1pO
-         HWms7wzIMhMWT74IVj1pRVk/aELhqKpM6Ggg+JOaLU2XqeHt5qRjOZ8MSWwy2O7onJvn
-         B8bq/OaqyWBHZFgyeD4q+9oH5kuBAq13IDHsfHw5TmyX+AD5UFmZoXYskSKJIKXzC38x
-         JUfJRMU1v74PwnpoSrfxKmqtHyUjQFxybPpRlkSBnJybhr6oWkQxfQf8oqXz7/DfygtL
-         Nm3g==
-X-Forwarded-Encrypted: i=1; AJvYcCUJog5bypIxDRiAtsfHYu6OubCa2iJGSZYQIeOCl4OsZxnjMmfkBGOrxevgkhmGpPUY5MKm4Hueyg3eCvtIEBbiEYqs94ndTwFf2e4E
-X-Gm-Message-State: AOJu0Ywldg4b1eq7IhINIAnredP4iqbvwcTZk2gBwjIMiY9TCj8SnpT5
-	9ms1NX12g9C+M8gk4cXE4Srjq08gOPkz/c1Js5q0msG8Cf8kchQG
-X-Google-Smtp-Source: AGHT+IFnUVHgnwtaOakrbDqmh5eSI+bbvM1Nnux4SzQbNuyj7GLBzZnPk6NITvp02lKAV3Zib0BtvA==
-X-Received: by 2002:a05:600c:2212:b0:424:a2d9:67c5 with SMTP id 5b1f17b1804b1-424a2d96a8emr74770535e9.16.1719585335320;
-        Fri, 28 Jun 2024 07:35:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719585340; x=1720190140;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z4tIycn76980srpS0Qx+f5aSwAYnJlMpkjRvY7J5k/M=;
+        b=pdwLpnkqJ2aWJXqo8waaMJX/8jzkwsDEQexTadIb4+N22oy42l7w+Pk6Qj6sGcA0mU
+         +szdLRpxPe8Pv52J4d5YayZ7OgaoX9Ny/5dLV0z51VhoXbjChrJ97WJX7BQ2y0zzhc8V
+         nXAysotCy92ASiGxkj8lX1MZS7WsorgMe6WQKD1nyhmpzdqG2om8LgbHz4XjtgzV6pJL
+         0mRXgi6mEyrTrvOZbHNymIxLDXPhxwJOLPSfRMku7zxhWCoUjYiJOIFRnMS2R7J2G+GR
+         peOoBQEa+ivHgTl4qeebG7kTUtq0d+NiQKHqeWND+Zvl2qNdVZWgxf/zVXMFXnItgYWh
+         +bJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVhLJQfCbq8FVo1/dokOL4SfIw39rGPNqxm6FT8GLHYegcKX7IGsPrCV3tH4sR39xMTer3EbNhBABx22MNfLPSAKL+9GISvhlYwcBKj
+X-Gm-Message-State: AOJu0YyDwadOZsTbFKB5fwvuvqcbrlyqljDdzUsTr/S5B3V2fvPtsYS1
+	CQ3EL7m/iamiuDAgdeofnYHn+eL5UBe8vI0neuXzdMmpSfR8oTE8
+X-Google-Smtp-Source: AGHT+IFhBGe8jyb5W7chS9Spyqsf3A8ZCwGCMKmUS7z29i0piJQ3aiKvCg0rr0Q6ubvs+Umxr5BHGQ==
+X-Received: by 2002:a05:600c:1608:b0:425:6498:3b6c with SMTP id 5b1f17b1804b1-42564983cd8mr40449895e9.26.1719585339378;
+        Fri, 28 Jun 2024 07:35:39 -0700 (PDT)
 Received: from lucifer.home ([2a00:23cc:d20f:ba01:bb66:f8b2:a0e8:6447])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4256af37828sm38985485e9.9.2024.06.28.07.35.33
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4256af37828sm38985485e9.9.2024.06.28.07.35.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 07:35:34 -0700 (PDT)
+        Fri, 28 Jun 2024 07:35:38 -0700 (PDT)
 From: Lorenzo Stoakes <lstoakes@gmail.com>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-fsdevel@vger.kernel.org,
@@ -65,10 +67,12 @@ Cc: linux-fsdevel@vger.kernel.org,
 	Kees Cook <kees@kernel.org>,
 	Suren Baghdasaryan <surenb@google.com>,
 	Lorenzo Stoakes <lstoakes@gmail.com>
-Subject: [RFC PATCH v2 0/7] Make core VMA operations internal and testable
-Date: Fri, 28 Jun 2024 15:35:21 +0100
-Message-ID: <cover.1719584707.git.lstoakes@gmail.com>
+Subject: [RFC PATCH v2 2/7] mm: move vma_modify() and helpers to internal header
+Date: Fri, 28 Jun 2024 15:35:23 +0100
+Message-ID: <0e048500da5cfd51647699c244b1575229856bd1.1719584707.git.lstoakes@gmail.com>
 X-Mailer: git-send-email 2.45.1
+In-Reply-To: <cover.1719584707.git.lstoakes@gmail.com>
+References: <cover.1719584707.git.lstoakes@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,153 +81,158 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There are a number of "core" VMA manipulation functions implemented in
-mm/mmap.c, notably those concerning VMA merging, splitting, modifying,
-expanding and shrinking, which logically don't belong there.
+These are core VMA manipulation functions which invoke VMA splitting and
+merging and should not be directly accessed from outside of mm/.
 
-More importantly this functionality represents an internal implementation
-detail of memory management and should not be exposed outside of mm/
-itself.
+Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
+---
+ include/linux/mm.h | 60 ---------------------------------------------
+ mm/internal.h      | 61 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 61 insertions(+), 60 deletions(-)
 
-This patch series isolates core VMA manipulation functionality into its own
-file, mm/vma.c, and provides an API to the rest of the mm code in mm/vma.h.
-
-Importantly, it also carefully implements mm/vma_internal.h, which
-specifies which headers need to be imported by vma.c, leading to the very
-useful property that vma.c depends only on mm/vma.h and mm/vma_internal.h.
-
-This is useful, because we can then re-implement vma_internal.h in
-userland, stubbing out and adding shims for kernel mechanisms as required,
-and then can directly and very easily unit test internal VMA functionality.
-
-This patch series takes advantage of existing shim logic and full userland
-maple tree support contained in tools/testing/radix-tree/ and
-tools/include/linux/, separating out shared components of the radix tree
-implementation to provide this testing.
-
-Kernel functionality is stubbed and shimmed as needed in tools/testing/vma/
-which contains a fully functional userland vma_internal.h file and which
-imports mm/vma.c and mm/vma.h to be directly tested from userland.
-
-A simple, skeleton testing implementation is provided in
-tools/testing/vma/vma.c as a proof-of-concept, asserting that simple VMA
-merge, modify (testing split), expand and shrink functionality work
-correctly.
-
-v2:
-* Reword commit messages.
-* Replace vma_expand() / vma_shrink() wrappers with relocate_vma().
-* Make move_page_tables() internal too.
-* Have internal.h import vma.h.
-* Use header guards to more cleanly implement userland testing code.
-* Rename main.c to vma.c.
-* Update mm/vma_internal.h to have fewer superfluous comments.
-* Rework testing logic so we count test failures, and output test results.
-* Correct some SPDX license prefixes.
-* Make VM_xxx_ON() debug asserts forward to xxx_ON() macros.
-* Update VMA tests to correctly free memory, and re-enable ASAN leak
-  detection.
-
-v1:
-https://lore.kernel.org/all/cover.1719481836.git.lstoakes@gmail.com/
-
-Lorenzo Stoakes (7):
-  userfaultfd: move core VMA manipulation logic to mm/userfaultfd.c
-  mm: move vma_modify() and helpers to internal header
-  mm: move vma_shrink(), vma_expand() to internal header
-  mm: move internal core VMA manipulation functions to own file
-  MAINTAINERS: Add entry for new VMA files
-  tools: separate out shared radix-tree components
-  tools: add skeleton code for userland testing of VMA logic
-
- MAINTAINERS                                   |   14 +
- fs/exec.c                                     |   68 +-
- fs/userfaultfd.c                              |  160 +-
- include/linux/atomic.h                        |    2 +-
- include/linux/mm.h                            |  112 +-
- include/linux/mmzone.h                        |    3 +-
- include/linux/userfaultfd_k.h                 |   19 +
- mm/Makefile                                   |    2 +-
- mm/internal.h                                 |  167 +-
- mm/mmap.c                                     | 2070 ++---------------
- mm/mmu_notifier.c                             |    2 +
- mm/userfaultfd.c                              |  168 ++
- mm/vma.c                                      | 1766 ++++++++++++++
- mm/vma.h                                      |  362 +++
- mm/vma_internal.h                             |   52 +
- tools/testing/radix-tree/Makefile             |   68 +-
- tools/testing/radix-tree/maple.c              |   14 +-
- tools/testing/radix-tree/xarray.c             |    9 +-
- tools/testing/shared/autoconf.h               |    2 +
- tools/testing/{radix-tree => shared}/bitmap.c |    0
- tools/testing/{radix-tree => shared}/linux.c  |    0
- .../{radix-tree => shared}/linux/bug.h        |    0
- .../{radix-tree => shared}/linux/cpu.h        |    0
- .../{radix-tree => shared}/linux/idr.h        |    0
- .../{radix-tree => shared}/linux/init.h       |    0
- .../{radix-tree => shared}/linux/kconfig.h    |    0
- .../{radix-tree => shared}/linux/kernel.h     |    0
- .../{radix-tree => shared}/linux/kmemleak.h   |    0
- .../{radix-tree => shared}/linux/local_lock.h |    0
- .../{radix-tree => shared}/linux/lockdep.h    |    0
- .../{radix-tree => shared}/linux/maple_tree.h |    0
- .../{radix-tree => shared}/linux/percpu.h     |    0
- .../{radix-tree => shared}/linux/preempt.h    |    0
- .../{radix-tree => shared}/linux/radix-tree.h |    0
- .../{radix-tree => shared}/linux/rcupdate.h   |    0
- .../{radix-tree => shared}/linux/xarray.h     |    0
- tools/testing/shared/maple-shared.h           |    9 +
- tools/testing/shared/maple-shim.c             |    7 +
- tools/testing/shared/shared.h                 |   34 +
- tools/testing/shared/shared.mk                |   68 +
- .../testing/shared/trace/events/maple_tree.h  |    5 +
- tools/testing/shared/xarray-shared.c          |    5 +
- tools/testing/shared/xarray-shared.h          |    4 +
- tools/testing/vma/.gitignore                  |    6 +
- tools/testing/vma/Makefile                    |   15 +
- tools/testing/vma/errors.txt                  |    0
- tools/testing/vma/generated/autoconf.h        |    2 +
- tools/testing/vma/linux/atomic.h              |   12 +
- tools/testing/vma/linux/mmzone.h              |   38 +
- tools/testing/vma/vma.c                       |  207 ++
- tools/testing/vma/vma_internal.h              |  882 +++++++
- 51 files changed, 3910 insertions(+), 2444 deletions(-)
- create mode 100644 mm/vma.c
- create mode 100644 mm/vma.h
- create mode 100644 mm/vma_internal.h
- create mode 100644 tools/testing/shared/autoconf.h
- rename tools/testing/{radix-tree => shared}/bitmap.c (100%)
- rename tools/testing/{radix-tree => shared}/linux.c (100%)
- rename tools/testing/{radix-tree => shared}/linux/bug.h (100%)
- rename tools/testing/{radix-tree => shared}/linux/cpu.h (100%)
- rename tools/testing/{radix-tree => shared}/linux/idr.h (100%)
- rename tools/testing/{radix-tree => shared}/linux/init.h (100%)
- rename tools/testing/{radix-tree => shared}/linux/kconfig.h (100%)
- rename tools/testing/{radix-tree => shared}/linux/kernel.h (100%)
- rename tools/testing/{radix-tree => shared}/linux/kmemleak.h (100%)
- rename tools/testing/{radix-tree => shared}/linux/local_lock.h (100%)
- rename tools/testing/{radix-tree => shared}/linux/lockdep.h (100%)
- rename tools/testing/{radix-tree => shared}/linux/maple_tree.h (100%)
- rename tools/testing/{radix-tree => shared}/linux/percpu.h (100%)
- rename tools/testing/{radix-tree => shared}/linux/preempt.h (100%)
- rename tools/testing/{radix-tree => shared}/linux/radix-tree.h (100%)
- rename tools/testing/{radix-tree => shared}/linux/rcupdate.h (100%)
- rename tools/testing/{radix-tree => shared}/linux/xarray.h (100%)
- create mode 100644 tools/testing/shared/maple-shared.h
- create mode 100644 tools/testing/shared/maple-shim.c
- create mode 100644 tools/testing/shared/shared.h
- create mode 100644 tools/testing/shared/shared.mk
- create mode 100644 tools/testing/shared/trace/events/maple_tree.h
- create mode 100644 tools/testing/shared/xarray-shared.c
- create mode 100644 tools/testing/shared/xarray-shared.h
- create mode 100644 tools/testing/vma/.gitignore
- create mode 100644 tools/testing/vma/Makefile
- create mode 100644 tools/testing/vma/errors.txt
- create mode 100644 tools/testing/vma/generated/autoconf.h
- create mode 100644 tools/testing/vma/linux/atomic.h
- create mode 100644 tools/testing/vma/linux/mmzone.h
- create mode 100644 tools/testing/vma/vma.c
- create mode 100644 tools/testing/vma/vma_internal.h
-
---
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 5f1075d19600..4d2b5538925b 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -3285,66 +3285,6 @@ extern struct vm_area_struct *copy_vma(struct vm_area_struct **,
+ 	unsigned long addr, unsigned long len, pgoff_t pgoff,
+ 	bool *need_rmap_locks);
+ extern void exit_mmap(struct mm_struct *);
+-struct vm_area_struct *vma_modify(struct vma_iterator *vmi,
+-				  struct vm_area_struct *prev,
+-				  struct vm_area_struct *vma,
+-				  unsigned long start, unsigned long end,
+-				  unsigned long vm_flags,
+-				  struct mempolicy *policy,
+-				  struct vm_userfaultfd_ctx uffd_ctx,
+-				  struct anon_vma_name *anon_name);
+-
+-/* We are about to modify the VMA's flags. */
+-static inline struct vm_area_struct
+-*vma_modify_flags(struct vma_iterator *vmi,
+-		  struct vm_area_struct *prev,
+-		  struct vm_area_struct *vma,
+-		  unsigned long start, unsigned long end,
+-		  unsigned long new_flags)
+-{
+-	return vma_modify(vmi, prev, vma, start, end, new_flags,
+-			  vma_policy(vma), vma->vm_userfaultfd_ctx,
+-			  anon_vma_name(vma));
+-}
+-
+-/* We are about to modify the VMA's flags and/or anon_name. */
+-static inline struct vm_area_struct
+-*vma_modify_flags_name(struct vma_iterator *vmi,
+-		       struct vm_area_struct *prev,
+-		       struct vm_area_struct *vma,
+-		       unsigned long start,
+-		       unsigned long end,
+-		       unsigned long new_flags,
+-		       struct anon_vma_name *new_name)
+-{
+-	return vma_modify(vmi, prev, vma, start, end, new_flags,
+-			  vma_policy(vma), vma->vm_userfaultfd_ctx, new_name);
+-}
+-
+-/* We are about to modify the VMA's memory policy. */
+-static inline struct vm_area_struct
+-*vma_modify_policy(struct vma_iterator *vmi,
+-		   struct vm_area_struct *prev,
+-		   struct vm_area_struct *vma,
+-		   unsigned long start, unsigned long end,
+-		   struct mempolicy *new_pol)
+-{
+-	return vma_modify(vmi, prev, vma, start, end, vma->vm_flags,
+-			  new_pol, vma->vm_userfaultfd_ctx, anon_vma_name(vma));
+-}
+-
+-/* We are about to modify the VMA's flags and/or uffd context. */
+-static inline struct vm_area_struct
+-*vma_modify_flags_uffd(struct vma_iterator *vmi,
+-		       struct vm_area_struct *prev,
+-		       struct vm_area_struct *vma,
+-		       unsigned long start, unsigned long end,
+-		       unsigned long new_flags,
+-		       struct vm_userfaultfd_ctx new_ctx)
+-{
+-	return vma_modify(vmi, prev, vma, start, end, new_flags,
+-			  vma_policy(vma), new_ctx, anon_vma_name(vma));
+-}
+ 
+ static inline int check_data_rlimit(unsigned long rlim,
+ 				    unsigned long new,
+diff --git a/mm/internal.h b/mm/internal.h
+index b264a7dabefe..164f03c6bce2 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -1243,6 +1243,67 @@ struct vm_area_struct *vma_merge_extend(struct vma_iterator *vmi,
+ 					struct vm_area_struct *vma,
+ 					unsigned long delta);
+ 
++struct vm_area_struct *vma_modify(struct vma_iterator *vmi,
++				  struct vm_area_struct *prev,
++				  struct vm_area_struct *vma,
++				  unsigned long start, unsigned long end,
++				  unsigned long vm_flags,
++				  struct mempolicy *policy,
++				  struct vm_userfaultfd_ctx uffd_ctx,
++				  struct anon_vma_name *anon_name);
++
++/* We are about to modify the VMA's flags. */
++static inline struct vm_area_struct
++*vma_modify_flags(struct vma_iterator *vmi,
++		  struct vm_area_struct *prev,
++		  struct vm_area_struct *vma,
++		  unsigned long start, unsigned long end,
++		  unsigned long new_flags)
++{
++	return vma_modify(vmi, prev, vma, start, end, new_flags,
++			  vma_policy(vma), vma->vm_userfaultfd_ctx,
++			  anon_vma_name(vma));
++}
++
++/* We are about to modify the VMA's flags and/or anon_name. */
++static inline struct vm_area_struct
++*vma_modify_flags_name(struct vma_iterator *vmi,
++		       struct vm_area_struct *prev,
++		       struct vm_area_struct *vma,
++		       unsigned long start,
++		       unsigned long end,
++		       unsigned long new_flags,
++		       struct anon_vma_name *new_name)
++{
++	return vma_modify(vmi, prev, vma, start, end, new_flags,
++			  vma_policy(vma), vma->vm_userfaultfd_ctx, new_name);
++}
++
++/* We are about to modify the VMA's memory policy. */
++static inline struct vm_area_struct
++*vma_modify_policy(struct vma_iterator *vmi,
++		   struct vm_area_struct *prev,
++		   struct vm_area_struct *vma,
++		   unsigned long start, unsigned long end,
++		   struct mempolicy *new_pol)
++{
++	return vma_modify(vmi, prev, vma, start, end, vma->vm_flags,
++			  new_pol, vma->vm_userfaultfd_ctx, anon_vma_name(vma));
++}
++
++/* We are about to modify the VMA's flags and/or uffd context. */
++static inline struct vm_area_struct
++*vma_modify_flags_uffd(struct vma_iterator *vmi,
++		       struct vm_area_struct *prev,
++		       struct vm_area_struct *vma,
++		       unsigned long start, unsigned long end,
++		       unsigned long new_flags,
++		       struct vm_userfaultfd_ctx new_ctx)
++{
++	return vma_modify(vmi, prev, vma, start, end, new_flags,
++			  vma_policy(vma), new_ctx, anon_vma_name(vma));
++}
++
+ enum {
+ 	/* mark page accessed */
+ 	FOLL_TOUCH = 1 << 16,
+-- 
 2.45.1
+
