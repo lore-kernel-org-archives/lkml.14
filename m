@@ -1,187 +1,436 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B82770F5;
-	Fri, 28 Jun 2024 06:31:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA946F2E1
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 06:31:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719556270; cv=none; b=L/SoEPpzHwrYkZRJ3bDYYCxewUNjMVYGaDbXm3qVfauF1cl8yEybkrUbB8C2kW/EjKIrI5/WQdD/b7kuMNUfPKDCPj+d2l6SYPpZMaXUariBpmNHXZBbFw9PX8UDu07ppcEnEY5qsV0u56nsF/W+xq2bTiapTCwHOTFh90gSjhA=
+	t=1719556321; cv=none; b=U2tcOUjuHrXny8SYgbBCrOb2bbYu/UnhpKD4GB55lgxqNDyQoRTZ9rcmYv9rQIZ5DGQfJ+KY+pPOtfYsI71Xz7ZjM/sUjIkC7ExiSnu0Nhymx+OlFQ87Pkm0MBYCNDoa8P4frMwngFwxuCWhZBIpLs3BhzPxedDdQUOMVzXH0vA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719556270; c=relaxed/simple;
-	bh=2oK8p6D9E7vE9uXM0b7++79I+OHhoWnjg6/l/u616OA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ub8qq8i9Y3ElN3D+lHdMaFnc0XKqWGMylAvMt1nZC/wP3YKjpBrLjs9eYN8FGcJeZMB0ywlfzjO3sJKK7Jz8xZv2J9kNgHergQ0TalR7JKb0Fd6lKIexdP49J+HTiGaUJheF0DhnBE8YyJIf2panTzsLir0i58feI43XkOmTHis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4W9QYY5Z9kz4f3jYr;
-	Fri, 28 Jun 2024 14:30:57 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id E8E211A0572;
-	Fri, 28 Jun 2024 14:31:04 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP2 (Coremail) with SMTP id Syh0CgBXwIWfWH5mZZVAAg--.52859S12;
-	Fri, 28 Jun 2024 14:31:04 +0800 (CST)
-From: libaokun@huaweicloud.com
-To: netfs@lists.linux.dev,
-	dhowells@redhat.com,
-	jlayton@kernel.org
-Cc: hsiangkao@linux.alibaba.com,
-	jefflexu@linux.alibaba.com,
-	zhujia.zj@bytedance.com,
-	linux-erofs@lists.ozlabs.org,
-	brauner@kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	libaokun@huaweicloud.com,
-	yangerkun@huawei.com,
-	houtao1@huawei.com,
-	yukuai3@huawei.com,
-	wozizhi@huawei.com,
-	Baokun Li <libaokun1@huawei.com>
-Subject: [PATCH v3 8/9] cachefiles: cyclic allocation of msg_id to avoid reuse
-Date: Fri, 28 Jun 2024 14:29:29 +0800
-Message-Id: <20240628062930.2467993-9-libaokun@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240628062930.2467993-1-libaokun@huaweicloud.com>
-References: <20240628062930.2467993-1-libaokun@huaweicloud.com>
+	s=arc-20240116; t=1719556321; c=relaxed/simple;
+	bh=aX//4o/Tq4Tz+SaoAGwZ7f5tQ5wwCCxE3I4G6vcuH0c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Cf4tBHaKMI2RT0LUuwQUXHkg7dH7o0xSrYxYb1tHhi78dc8E8i39IgpE5XI4t9PwoAAg9mfbhm1J1dc3Va3NmGB1ZVX8LqjRhGqNr6K6pCPaLd8cQxEn7GywwoIbTVKjjBSKB0TyKr9o26UEOVJbN3bZ6mGVD/tusAdwFsiiz9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org; spf=fail smtp.mailfrom=beagleboard.org; dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b=xujbwfzG; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=beagleboard.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b="xujbwfzG"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1fa782ff72aso47215ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 23:31:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20230601.gappssmtp.com; s=20230601; t=1719556319; x=1720161119; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=a1rocusKmAnlUOu+jeOdiCmd2Vg30LydUcfBNbSGYx0=;
+        b=xujbwfzGYL3OfdTErrN40dcUKy0qpXlEoKFCtqnsxLYdAs1LQus3s1axVqX/H4mP5C
+         7mAswgqJ4jJ1mVf6h52GOwSfwFbqfKC8KP3civchqcZiZNseyVy84brW4VidzEztkDfb
+         Mwf8AlOspRV3HJFL6gAu0Ll2cspeOCOq0Pff0Veps9QKl4BNatG+mSea3l0Qn8VsakUF
+         JJ67ktWWJASVkOvT2itYA4hcGR+4DEfEAdIJSJwJLNWT/p7YICcW8yfnfK20pilYFBU+
+         L2pNCWG5+olw6JbuDx+UhMUEEbRIGCQxXEchO8ikHtbbX+C23CXWgJFUElcuVDBueQx8
+         +RuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719556319; x=1720161119;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=a1rocusKmAnlUOu+jeOdiCmd2Vg30LydUcfBNbSGYx0=;
+        b=ZTr1AtbFOOj7YIRRtKJMVDAAF0LrUdAQAAfJcaYW7L+qSzDTWvQhp2U4OyjkOfZhje
+         GAJtmQg4BJLehUKTk+10FCKihISJCyL/6iobn/nGikRz+RlnI4HP2ZceD+s9aB+OoN8q
+         mvom5qAwxzPbRhjSKYgWPaYFDKjPt6sno/ZrPtHSS5VVbH3cBPrELLeLdEK7QXZfb2nW
+         evc7fszXtTHEdwWl/cSrPtJc67d0TTx8WadS5cpaFw307+7FKBuih74oyPCBx+DbxUbz
+         73zOpGXJdhG8UmOwSNxMzYO8hPkTJKSkuIZHVDPU0CrZCp1ra9LbVAWdjJPb4g1CXuJU
+         u9XQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXvxecA4dTKUqyjpbmFQQxizbdkLkXVi1jf+1j7jCokRoqJtYzFYjvBEQ1nXepOYV9XFho0Bii5jGkZ+37SmMyCWzjVNeE/j9V9OVKN
+X-Gm-Message-State: AOJu0Yz3bOGiO7eQKidijGOAlgvszcS/paX5zqoQkq3NP4mK5W/RkyUV
+	SekklfOgI8DRCyNwz2lJq+1DisLN+Q7C1UHA9XW3kP8NZU+hqFS92/gvMb2W9g==
+X-Google-Smtp-Source: AGHT+IFcxfyCEs2tEm+0lAKNbpfgXmBQL9yXbPzPjqzGe4rSBB1rmH9O8H9n1tmBPnBxymCV2u50MA==
+X-Received: by 2002:a17:902:e54e:b0:1f9:b19b:4255 with SMTP id d9443c01a7336-1fa0d817757mr199471545ad.4.1719556318653;
+        Thu, 27 Jun 2024 23:31:58 -0700 (PDT)
+Received: from ?IPV6:2401:4900:53e1:8b89:31db:554e:9fb2:8c06? ([2401:4900:53e1:8b89:31db:554e:9fb2:8c06])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac10c7067sm7808945ad.51.2024.06.27.23.31.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Jun 2024 23:31:58 -0700 (PDT)
+Message-ID: <1edcfd98-e73c-477e-a4ce-98cb41e66ab6@beagleboard.org>
+Date: Fri, 28 Jun 2024 12:01:47 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/7] misc: Add mikroBUS driver
+Content-Language: en-US
+To: Mark Brown <broonie@kernel.org>, Vaishnav M A <vaishnav@beagleboard.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Derek Kiernan <derek.kiernan@amd.com>,
+ Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nishanth Menon <nm@ti.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
+ Michael Walle <mwalle@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+ jkridner@beagleboard.org, robertcnelson@beagleboard.org
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Ayush Singh <ayushdevel1325@gmail.com>
+References: <20240627-mikrobus-scratch-spi-v5-0-9e6c148bf5f0@beagleboard.org>
+From: Ayush Singh <ayush@beagleboard.org>
+In-Reply-To: <20240627-mikrobus-scratch-spi-v5-0-9e6c148bf5f0@beagleboard.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgBXwIWfWH5mZZVAAg--.52859S12
-X-Coremail-Antispam: 1UD129KBjvJXoWxCrWUurW3Ary8Cr17KrykXwb_yoWrGF18pF
-	WakFy7Kry8WF42krZ7ZF4kJrWrG34kZFsrWrWFqryvyrn0vr1rZr1Utr1rXFyUA3ySgF42
-	qw48uasrt342y3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUm014x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr1j6r
-	xdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0D
-	M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjx
-	v20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1l
-	F7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2
-	IY04v7M4kE6xkIj40Ew7xC0wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8
-	JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1V
-	AFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xII
-	jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
-	C2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVj
-	vjDU0xZFpf9x0JUB89_UUUUU=
-X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/1tbiAQAIBV1jkH-xKAABsF
 
-From: Baokun Li <libaokun1@huawei.com>
+On 6/27/24 21:56, Ayush Singh wrote:
 
-Reusing the msg_id after a maliciously completed reopen request may cause
-a read request to remain unprocessed and result in a hung, as shown below:
+> MikroBUS is an open standard  developed by MikroElektronika for connecting
+> add-on boards to microcontrollers or microprocessors. It essentially
+> allows you to easily expand the functionality of your main boards using
+> these add-on boards.
+>
+> This patchset adds mikroBUS as a Linux bus type and provides a driver to
+> parse and register the mikroBUS board using device tree infrastructure.
+>
+> The patchset is based on work originally done by Vaishnav.
+>
+> Link: https://www.mikroe.com/mikrobus
+> Link: https://docs.beagleboard.org/latest/boards/beagleplay/
+> Link: https://lore.kernel.org/all/20240317193714.403132-1-ayushdevel1325@gmail.com/ Patch v4
+>
+> Changes v5
+> - Complete rewrite to use device tree instead of mikroBUS manifest.
+> - Only support for SPI.
+> - Adds `mikrobus,spi` compatible property.
+>
+> Changes v4:
+> - Better commit messages
+> - Remove clickID, serdev, pwm, regulator, clocks etc. Just the basic
+>    mikroBUS driver.
+> - Fix a lot of memory leaks, unused variables, etc.
+> - Create accompanying PR in Greybus Spec repository
+> - Switch to 80 columns formatting
+> - Some other fixes pointed out in v3
+>
+> Changes in v3:
+> - Use phandle instead of busname for spi
+> - Use spi board info for registering new device
+> - Convert dt bindings to yaml
+> - Add support for clickID
+> - Code cleanup and style changes
+> - Additions required to spi, serdev, w1 and regulator subsystems
+>
+> Changes in v2:
+> - support for adding mikroBUS ports from DT overlays,
+> - remove debug sysFS interface for adding mikrobus ports,
+> - consider extended pin usage/deviations from mikrobus standard
+>    specifications
+> - use greybus CPort protocol enum instead of new protocol enums
+> - Fix cases of wrong indentation, ignoring return values, freeing allocated
+>    resources in case of errors and other style suggestions in v1 review.
+>
+> Signed-off-by: Ayush Singh <ayush@beagleboard.org>
+> ---
+> Ayush Singh (7):
+>        dt-bindings: connector: Add mikrobus-connector
+>        dt-bindings: mikrobus: Add mikrobus board base
+>        dt-bindings: mikrobus: Add mikrobus-spi binding
+>        spi: Make of_find_spi_controller_by_node() available
+>        spi: Make of_register_spi_device() available
+>        mikrobus: Add mikroBUS driver
+>        dts: ti: k3-am625-beagleplay: Add mikroBUS
+>
+>   .../bindings/connector/mikrobus-connector.yaml     | 107 ++++++
+>   .../bindings/mikrobus/mikrobus-board.yaml          |  20 ++
+>   .../devicetree/bindings/mikrobus/mikrobus-spi.yaml |  37 +++
+>   MAINTAINERS                                        |   9 +
+>   arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts     |  94 +++++-
+>   drivers/misc/Kconfig                               |  16 +
+>   drivers/misc/Makefile                              |   1 +
+>   drivers/misc/mikrobus.c                            | 361 +++++++++++++++++++++
+>   drivers/spi/spi.c                                  | 209 ++++++------
+>   include/linux/spi/spi.h                            |   7 +
+>   10 files changed, 750 insertions(+), 111 deletions(-)
+> ---
+> base-commit: f76698bd9a8ca01d3581236082d786e9a6b72bb7
+> change-id: 20240627-mikrobus-scratch-spi-ad8c98dcec98
+>
+> Best regards,
 
-       t1       |      t2       |      t3
--------------------------------------------------
-cachefiles_ondemand_select_req
- cachefiles_ondemand_object_is_close(A)
- cachefiles_ondemand_set_object_reopening(A)
- queue_work(fscache_object_wq, &info->work)
-                ondemand_object_worker
-                 cachefiles_ondemand_init_object(A)
-                  cachefiles_ondemand_send_req(OPEN)
-                    // get msg_id 6
-                    wait_for_completion(&req_A->done)
-cachefiles_ondemand_daemon_read
- // read msg_id 6 req_A
- cachefiles_ondemand_get_fd
- copy_to_user
-                                // Malicious completion msg_id 6
-                                copen 6,-1
-                                cachefiles_ondemand_copen
-                                 complete(&req_A->done)
-                                 // will not set the object to close
-                                 // because ondemand_id && fd is valid.
 
-                // ondemand_object_worker() is done
-                // but the object is still reopening.
+I would just like to summarize the discussions on different patches here 
+to give information regarding why the board is not subnode of 
+mikrobus-connector along with what questions need to be answered for a 
+subnode based architecture.
 
-                                // new open req_B
-                                cachefiles_ondemand_init_object(B)
-                                 cachefiles_ondemand_send_req(OPEN)
-                                 // reuse msg_id 6
-process_open_req
- copen 6,A.size
- // The expected failed copen was executed successfully
+I will be using (```) to differentiate between code section and non-code 
+section. It is just for seperation not for any formatting since I am 
+using plaintext.
 
-Expect copen to fail, and when it does, it closes fd, which sets the
-object to close, and then close triggers reopen again. However, due to
-msg_id reuse resulting in a successful copen, the anonymous fd is not
-closed until the daemon exits. Therefore read requests waiting for reopen
-to complete may trigger hung task.
 
-To avoid this issue, allocate the msg_id cyclically to avoid reusing the
-msg_id for a very short duration of time.
+Let me first summarise the goals that should be possible with any 
+architecture chosen.
 
-Fixes: c8383054506c ("cachefiles: notify the user daemon when looking up cookie")
-Signed-off-by: Baokun Li <libaokun1@huawei.com>
-Acked-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- fs/cachefiles/internal.h |  1 +
- fs/cachefiles/ondemand.c | 20 ++++++++++++++++----
- 2 files changed, 17 insertions(+), 4 deletions(-)
+1. Keeping the device tree properties upstream in a system independent way.
 
-diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
-index a1a1d25e9514..7b99bd98de75 100644
---- a/fs/cachefiles/internal.h
-+++ b/fs/cachefiles/internal.h
-@@ -129,6 +129,7 @@ struct cachefiles_cache {
- 	unsigned long			req_id_next;
- 	struct xarray			ondemand_ids;	/* xarray for ondemand_id allocation */
- 	u32				ondemand_id_next;
-+	u32				msg_id_next;
- };
- 
- static inline bool cachefiles_in_ondemand_mode(struct cachefiles_cache *cache)
-diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
-index 1d5b970206d0..470c96658385 100644
---- a/fs/cachefiles/ondemand.c
-+++ b/fs/cachefiles/ondemand.c
-@@ -528,20 +528,32 @@ static int cachefiles_ondemand_send_req(struct cachefiles_object *object,
- 		smp_mb();
- 
- 		if (opcode == CACHEFILES_OP_CLOSE &&
--			!cachefiles_ondemand_object_is_open(object)) {
-+		    !cachefiles_ondemand_object_is_open(object)) {
- 			WARN_ON_ONCE(object->ondemand->ondemand_id == 0);
- 			xas_unlock(&xas);
- 			ret = -EIO;
- 			goto out;
- 		}
- 
--		xas.xa_index = 0;
-+		/*
-+		 * Cyclically find a free xas to avoid msg_id reuse that would
-+		 * cause the daemon to successfully copen a stale msg_id.
-+		 */
-+		xas.xa_index = cache->msg_id_next;
- 		xas_find_marked(&xas, UINT_MAX, XA_FREE_MARK);
-+		if (xas.xa_node == XAS_RESTART) {
-+			xas.xa_index = 0;
-+			xas_find_marked(&xas, cache->msg_id_next - 1, XA_FREE_MARK);
-+		}
- 		if (xas.xa_node == XAS_RESTART)
- 			xas_set_err(&xas, -EBUSY);
-+
- 		xas_store(&xas, req);
--		xas_clear_mark(&xas, XA_FREE_MARK);
--		xas_set_mark(&xas, CACHEFILES_REQ_NEW);
-+		if (xas_valid(&xas)) {
-+			cache->msg_id_next = xas.xa_index + 1;
-+			xas_clear_mark(&xas, XA_FREE_MARK);
-+			xas_set_mark(&xas, CACHEFILES_REQ_NEW);
-+		}
- 		xas_unlock(&xas);
- 	} while (xas_nomem(&xas, GFP_KERNEL));
- 
--- 
-2.39.2
+2. Editing system dt at kernel build time to add the pre-defined board 
+or applying dt overlay using uboot or dynamic overlays.
+
+3. Allowing creation of sysfs entries `new_device` and `delete_device` 
+similar to what already exists for I2C, etc.
+
+4. Allow using 1-wire-eeprom in a fashion that allows automatic board 
+discovery.
+
+
+Let me now introduce the 2 architectures we will be discussing:
+
+1. mikrobus-connector has phandle to mikrobus-board:
+
+```
+
+\ {
+
+     connector1 {
+
+         board = <&board1>;
+
+     };
+
+
+     mikrobus_boards {
+
+         board1 {
+
+             ...
+
+         };
+
+     };
+
+};
+
+```
+
+
+2. mikrobus board is a child node of mikrobus-connector:
+
+```
+
+\ {
+
+     connector1 {
+
+         ...
+
+         spi {
+
+             board1 {
+
+                 ...
+
+             };
+
+         };
+
+     };
+
+};
+
+```
+
+
+I will now go over how each of these goals might look like in both of 
+the architecture.
+
+1. Keeping the device tree properties upstream in a system independent way:
+
+a. mikrobus-connector has phandle to mikrobus-board
+
+It is possible to create an overlay as follows which will work with any 
+system that defines the `mikrobus_boards` node. This node is completely 
+independent of mikroBUS connector and thus does not need to be rewritten 
+(or generated) for each board. There are no problems for system with 
+more than 1 mikrobus connector.
+
+```
+
+&mikrobus_boards {
+
+     board2 {
+
+         ...
+
+     };
+
+
+     board3 {
+
+         ...
+
+     };
+
+};
+
+```
+
+
+b. mikrobus board is a child node of mikrobus-connector:
+
+Not sure how to do something similar here. The overlay needs to be 
+rewritten (or generated) for each board. Systems with multiple mikrobus 
+connectors will need multiple overlays adding the boards as child node 
+of each connector (with status = "disabled"). Considering how many 
+mikrobus boards are available, this can also lead to problem (especially 
+in embeded Linux) with the dt binary size since each connector is 
+replicating the same overlay.
+
+```
+
+&connector1 {
+
+     spi = {
+
+         board 2 {
+
+             ...
+
+         };
+
+         board 3 {
+
+             ...
+
+         };
+
+     };
+
+};
+
+
+&connector2 {
+
+     spi = {
+
+         board 2 {
+
+             ...
+
+         };
+
+         board 3 {
+
+             ...
+
+         };
+
+     };
+
+};
+
+```
+
+Maybe it is possible to have special behavior for mikrobus-connector 
+nodes in dt overlay but that will break compatibility with exisiting 
+infrastructure which isn't great.
+
+
+2. Editing system dt at kernel build time to add the pre-defined board 
+or applying dt overlay using uboot or dynamic overlays.
+
+a. mikrobus-connector has phandle to mikrobus-board
+
+```
+
+&connector1 {
+
+     board = <&board1>;
+
+};
+
+```
+
+
+b. mikrobus board is a child node of mikrobus-connector:
+
+```
+
+&connector1 {
+
+     spi = {
+
+         board 2 {
+
+             ...
+
+         };
+
+     };
+
+};
+
+```
+
+Both the cases will need to generate these overlays at build time. 
+However, in case (a), the overlay will be much smaller than case (b). 
+This is important for embeded Linux.
+
+
+3. Allowing creation of sysfs entries `new_device` and `delete_device` 
+similar to what already exists for I2C, etc.
+
+a. mikrobus-connector has phandle to mikrobus-board
+
+It is quite simple with the current changeset APIs. I have an example 
+implementation here: 
+https://github.com/Ayush1325/linux/blob/c4e3d5138b7ad5c24bdbc1dd02d89720d3a5de82/drivers/misc/mikrobus.c#L59 
+.
+
+Essentially, it is possible to pass the mikroBUS board name or id to 
+create changeset as long as the board has been defined in dt. The boards 
+definition can be added using overlay in uboot of dynamic overlays using 
+configfs patch.
+
+
+b. mikrobus board is a child node of mikrobus-connector:
+
+Since even the board definition overlay is now dependent on the 
+connector, any person writing the board overlay needs to know the name's 
+of the connector nodes and generate overlays for all connectors. We can 
+toggle a `status` property to `okay` based on the board id passed 
+through sysfs.
+
+
+4. Allow using 1-wire-eeprom in a fashion that allows automatic board 
+discovery.
+
+a. mikrobus-connector has phandle to mikrobus-board
+
+1-wire-eeprom only needs to contain the board definition overlay which 
+is not dependent on the connector. The connector can generate the 
+changeset of add `board` property to itself. The board should work 
+irrespective of if the dt overlay is actually present in the kernel 
+config since we can read the overlay from 1-wire-eeprom and apply it 
+using `of_overlay_fdt_apply()`.
+
+
+b. mikrobus board is a child node of mikrobus-connector:
+
+Cannot really use the normal dt overlay. Maybe we can use the mikroBUS 
+manifest to dynamically create the overlay, but well, I do not wish to 
+support both the manifest and devicetree at the same time.
+
+Maybe we can introduce something like partial device tree which only 
+contains properties to be applied to a target device node? Since 
+`of_overlay_fdt_apply` does contain target node property, maybe it is 
+already possible to have an overlay that is generic over a type of node 
+instead of the exact node?
+
+
+I will also go through the overlay kernel internals to see if there are 
+any better ways to use child-nodes. Feel free to chime in if you have 
+any ideas.
+
+
+Yours Sincerely,
+
+Ayush Singh
 
