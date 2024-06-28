@@ -1,142 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A601422AD;
-	Fri, 28 Jun 2024 06:52:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5D16A022
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 06:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719557570; cv=none; b=OqRVIpo92N8RotZigtjoTSlzs8/NGlByM4X5egQhbf8GJzYeJw6SBIQ4XMPsy84/lsUQc7AbFRLk7U5lgWpYw4dlQFF8AdiW6Eb9OowybnXNASd5Q/QS+eZ6DqI4u2bwN05e27rwtcy8S+Std2WcJZhiQnqoj+CcckZXh4V14PU=
+	t=1719557632; cv=none; b=JUtXaSjKnQhcKWXDLPFHa/1w4OW3j1dcVgauNH5WeQBttTxQWwM4r1QJVsBX2VPEYez3vA9CmJNE3rGnpSLKvB//g5/CnRqI9Sz2aNFdvu62PIAN5sqcbume1T+1RK3NqyIMXhoTfvUwY0qyZaBMm4qVkFPdsw6WzhTlhU8HpFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719557570; c=relaxed/simple;
-	bh=T3lYCZNDTOox5kJQOOR6Dbvex/BUJB0U27xJgGtdjGk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DXz3BHjLD+afDLPngIuMQ7yNxACrzZw4Tfm51w4YqwmhaDBrLYs52rjBGchhDu7Gx/CMAxkF4pqb1MK5kTpiVeKGysvFQjFgUbDXI1WCHzWvLEbGrXAs3FvKNYUdsMoh7T0Ua0yjbTmQgYD/dVLius1uyjugKCItTNCvf0hziRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=beQaqVMI; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719557632; c=relaxed/simple;
+	bh=d/6wducofChoiWZvHDjq7iFfEt1pLDvMGVrrbiCq/7I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TGgKVLeCLQMFTaOqE4JXxAlt8oKlI076sl/vxXAJkL/VY263s22N/eAxTQZgFj9YbwTioPcUFHnNG4ix/UMNswAuXa9r2pZ5QlkRppMlHnQLYA6StYzUCEi3/vOop3Wb4oxcHVtjDOGy2ima+wPICiSKdrDcjmOLc+P7OMkG9f8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LtGqpOIg; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="beQaqVMI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719557569; x=1751093569;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=T3lYCZNDTOox5kJQOOR6Dbvex/BUJB0U27xJgGtdjGk=;
-  b=beQaqVMIYhS7Y9d/EAJk4ZmXsquiBpdeYV654UJ1iZ3Qtag7d+7hIN+j
-   1iPpe0wlkZ5xdYOXuPOuHfGBmvR4TM7JtkOz9b8O+nn6OX5Qgtaz7Dalq
-   OkO/gr6+dhpJohX5FVLwhVJDrvv4+jbqqPDXWzRzcUuquZmO2m3svzGFX
-   izDhnoK7D/6M8inYqNMWmBiqt7/oPYWnEdh1gb+caJXXiT2BKf6nsu43Q
-   3kyHvp6BKtKezbMueT6mY6WCCCiSErRlVlHcsAz9ukmwl0EyGjoRAFrb3
-   32iJnoU77J6TxOB2/6m6kR4PAT4+HOmt98HuEfFFi11XkQ1LiyptEFBcY
-   g==;
-X-CSE-ConnectionGUID: Zd+kpprNTl+QD4DpTHIlrQ==
-X-CSE-MsgGUID: S81UhgB2SJKLn4Sz+4+CsA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="16857297"
-X-IronPort-AV: E=Sophos;i="6.09,168,1716274800"; 
-   d="scan'208";a="16857297"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 23:52:47 -0700
-X-CSE-ConnectionGUID: DrufGUwaQPOYEdcNzMZCYQ==
-X-CSE-MsgGUID: MBME6hPKQbmI3zRCAiqadw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,168,1716274800"; 
-   d="scan'208";a="75386750"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO localhost.localdomain) ([10.246.49.253])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 23:52:41 -0700
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Hendrik Brueckner <brueckner@linux.ibm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@arm.com>,
-	coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Will Deacon <will@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH V8 12/12] perf intel-pt: Add a test for pause / resume
-Date: Fri, 28 Jun 2024 09:51:11 +0300
-Message-Id: <20240628065111.59718-13-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240628065111.59718-1-adrian.hunter@intel.com>
-References: <20240628065111.59718-1-adrian.hunter@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LtGqpOIg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719557629;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VTYbIiL1+jqU9PJ1oaxz7hIoPa2Vj4NQeHxl7H52P1E=;
+	b=LtGqpOIgTeqXQ6PElBaDWnpjSh/SG9sOSH7u3e7TjjSkl4XSL6HpWcxZ46T9MsoXly3c8w
+	uWvtbuZV4mZElSsrWYao3BQqA9DRuSK2eZpAe8Cjp3dIUSxsLNv091dY6zyPJ66ksrhYmM
+	x5phRqDTeQG+wxvT0Drq0we2unLE2a0=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-346-RMp3hwoiOHef_8GBP9Qcyw-1; Fri,
+ 28 Jun 2024 02:53:45 -0400
+X-MC-Unique: RMp3hwoiOHef_8GBP9Qcyw-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DE8B01944D31;
+	Fri, 28 Jun 2024 06:53:43 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.3])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 159D919560A3;
+	Fri, 28 Jun 2024 06:53:40 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri, 28 Jun 2024 08:52:09 +0200 (CEST)
+Date: Fri, 28 Jun 2024 08:52:05 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrei Vagin <avagin@google.com>
+Cc: Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
+	Tycho Andersen <tandersen@netflix.com>,
+	Andy Lutomirski <luto@amacapital.net>,
+	Will Drewry <wad@chromium.org>,
+	Christian Brauner <brauner@kernel.org>
+Subject: Re: [PATCH 1/4] seccomp: interrupt SECCOMP_IOCTL_NOTIF_RECV when all
+ users have exited
+Message-ID: <20240628065204.GA29300@redhat.com>
+References: <20240628021014.231976-1-avagin@google.com>
+ <20240628021014.231976-2-avagin@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240628021014.231976-2-avagin@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Add a simple sub-test to the "Miscellaneous Intel PT testing" test to
-check pause / resume.
+On 06/28, Andrei Vagin wrote:
+>
+> SECCOMP_IOCTL_NOTIF_RECV promptly returns when a seccomp filter becomes
+> unused, as a filter without users can't trigger any events.
+> 
+> Previously, event listeners had to rely on epoll to detect when all
+> processes had exited.
+> 
+> The change is based on the 'commit 99cdb8b9a573 ("seccomp: notify about
+> unused filter")' which implemented (E)POLLHUP notifications.
+> 
+> Reviewed-by: Christian Brauner <brauner@kernel.org>
+> Signed-off-by: Andrei Vagin <avagin@google.com>
+> ---
+>  kernel/seccomp.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Acked-by: Ian Rogers <irogers@google.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
----
- tools/perf/tests/shell/test_intel_pt.sh | 28 +++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
-diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
-index 723ec501f99a..e359db0d0ff2 100755
---- a/tools/perf/tests/shell/test_intel_pt.sh
-+++ b/tools/perf/tests/shell/test_intel_pt.sh
-@@ -644,6 +644,33 @@ test_pipe()
- 	return 0
- }
- 
-+test_pause_resume()
-+{
-+	echo "--- Test with pause / resume ---"
-+	if ! perf_record_no_decode -o "${perfdatafile}" -e intel_pt/aux-action=start-paused/u uname ; then
-+		echo "SKIP: pause / resume is not supported"
-+		return 2
-+	fi
-+	if ! perf_record_no_bpf -o "${perfdatafile}" \
-+			-e intel_pt/aux-action=start-paused/u \
-+			-e instructions/period=50000,aux-action=resume,name=Resume/u \
-+			-e instructions/period=100000,aux-action=pause,name=Pause/u uname  ; then
-+		echo "perf record with pause / resume failed"
-+		return 1
-+	fi
-+	if ! perf script -i "${perfdatafile}" --itrace=b -Fperiod,event | \
-+			awk 'BEGIN {paused=1;branches=0}
-+			     /Resume/ {paused=0}
-+			     /branches/ {if (paused) exit 1;branches=1}
-+			     /Pause/ {paused=1}
-+			     END {if (!branches) exit 1}' ; then
-+		echo "perf record with pause / resume failed"
-+		return 1
-+	fi
-+	echo OK
-+	return 0
-+}
-+
- count_result()
- {
- 	if [ "$1" -eq 2 ] ; then
-@@ -672,6 +699,7 @@ test_power_event			|| ret=$? ; count_result $ret ; ret=0
- test_no_tnt				|| ret=$? ; count_result $ret ; ret=0
- test_event_trace			|| ret=$? ; count_result $ret ; ret=0
- test_pipe				|| ret=$? ; count_result $ret ; ret=0
-+test_pause_resume			|| ret=$? ; count_result $ret ; ret=0
- 
- cleanup
- 
--- 
-2.34.1
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
 
