@@ -1,67 +1,70 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CD61420D0
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 07:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB64F143752
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 07:45:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719560725; cv=none; b=SML63J/Bwymmxn1VYOT6ePdGUQmlbeJXn4zIjl4NtmcZ1m2Xv3KaGlU6XPE2A9MyHNDya3Zn6f01QnM8s2ma8TxzyGRDuXQ9FD2mhEiXknJB8YxI3jl7Y9Rhige0nnBh/iyjAa9Bie4C4afrvcvzXJd+UFQe/FOcKTp5U6R27Sc=
+	t=1719560736; cv=none; b=O3bsnltvd8aXK/z4yYD6bKHU/9w05hA6eZD6O1LvNNuOR2I2e9C/70idGuRmk7eMivIvIMf0/R8SRpapjQq8pnOIRzs1pHBbcsg/Jo3lwJDhUGcVgzJEnWJ4nWajsDW5u0ulY1QqhXuCgy+y60N6p4VllIHKaIPj5t1htkv+9y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719560725; c=relaxed/simple;
-	bh=JUSBkqtlFZlGM2xrcHSRfAoIIHT2J2BMiHSuf0F3BaQ=;
+	s=arc-20240116; t=1719560736; c=relaxed/simple;
+	bh=TIn3dSD9Y/O5J9F3VJziLjzKGSBP8XVxfPmWbVXuIdg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=roW5l2KWrCRLS8572uS8aqZoBDbCOQN8Q/x5xraZNaeyOsPVASJENJfWZRVPpbDO6w1Mk3yPSd89jg8z7tVqkd0k7zdA3tY3ruUHZGTEOGItibD8VERqmA2UUB7r8lX5SFnbZXzcocNmpbstvflYBS1nvwcSGIGDh5phTRkB7GA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=cBik3OzG; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=tYijNpdBSernaLs7qqx/Ni0CcoXDcjjJaSWgDpa6W7AEnOmvCAo/rNlkY+tx6khOQ3agy41cD+8mJ8fTlJz7ggG+rEzvRnIJUijBAvN3Aj4+ZiyOlVekYp+eJJ40d66P47f29R5IvzCR3pKPPU8o8ryZaIltqCY23uQVzqXtJoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZKxRiur2; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="cBik3OzG"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57d1782679fso380638a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 00:45:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZKxRiur2"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2eabd22d3f4so2612381fa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 00:45:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1719560721; x=1720165521; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1719560732; x=1720165532; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zK0IyvrzgL+xOXZeNs6NwkiIfLaj+g1X1XQRxC3Lni0=;
-        b=cBik3OzGJhPIfXH8ZDw6Rsg6uKBh2TKOAnZJdhIkhmOREobaEpOkdYKA3wilgcsmry
-         TV3PTsM094JRHfmM9GjObGYRWFQNf/WPsRBpESm5aWg879Nrx9qodMZWV6Kk6YjNgBlh
-         Z1WeQhQYfjEDwwQ2xf58mkxBop9MdC/JtAeT+sMPsmtp6GvTD24tYljAlmKcnbcnwZln
-         VQxebrsW+iPlz0N3qXWXdRpbZNUHC72939tIz97Ssg89coFNTbEWYoHrUr0xSXyaHHRg
-         HWtl925Qv169EZcVIx1f6L4C9oJNx68jIdicHLNEcuByKEfk+wLn5x/nyGqXVDgMyWLa
-         G6Ow==
+        bh=ta6pOQl7Ba5DSAPgv+iFZZAffaH8uQvfzLUSjfY48d8=;
+        b=ZKxRiur2uw+Ob41YMzaY+MPU0HMX/paXToRlgrM2EhGXcaJMFkR1TXlkW+dEjskXEi
+         pIu1jl60kAOodXrv2fWITfEQJyVZG1cT8LkVnweKmYYh5tyI+90dce0ZDARHIWsiWv8q
+         sSQKTO4005xNTZGqs9bMsNTrqalXQRKp9liFFty5jMsRHZ3op0G0pshgpj0C/fCVTCli
+         Vc6TY6pu0RScd2KBfQ6S6rsHIzLYfjE1FGWDys/FAdHKgJEGG/YzRYoVgNLbZ61RYW4S
+         1HVBCA00AtehjpYta1O0c7USQFcJ4gc2sE/ElVuxOAfka7kcLfqwEDY0lpIvq98rmkOk
+         c5Aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719560721; x=1720165521;
+        d=1e100.net; s=20230601; t=1719560732; x=1720165532;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zK0IyvrzgL+xOXZeNs6NwkiIfLaj+g1X1XQRxC3Lni0=;
-        b=STH8o+ljC620lwxkwdNvAPPH1+YNz/PXjEhRCv+z+ehUZMjsrRt6Q+eBOTMWyzDA3U
-         h2g0tgUSdK1zwP5i4oeZGtZf7oorEJzlkF6EDogEL/qtRsrA3dJ9WSQz7Vzh5yGTETR4
-         UODbvg7WaAfOluXomWq7ufIKy3KH2rTadSpNLdVg07F01Nqcy5x8lYptOuA+ZFw1qtvB
-         CHdU3b8h/RNW6qSbo5tfLmu+dy+m3iwK0VnQcPVzHsCfqbVAT9zzccl/ppGFFzQi2iA5
-         hE9x1qrBIoj/QItBCiyVHj7wa3kLJydzvljeeM8t6mvZMAe3e5RH4DoSsYjZTHmp3HWf
-         qsmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVAvOSC59aukzg8JDuWssj3LVC0UPnk/BT2Cz37aiOYxSF0arz/4437ZebDVTxbmLUzSoXFqcNg6AvAvejOrqLkzIKUQnxau/tCFPah
-X-Gm-Message-State: AOJu0Yz5HbFxop1XItlVysVKZfmDCZTQUb+SM2TdT6+8SEFvwrvopNVK
-	V5d9Ow3kRbk9S/+DR7dcB9GbnDfJ757VryGHVUSzyc0S8ugTBI9DBr+HuLvTLko=
-X-Google-Smtp-Source: AGHT+IFbVaxM0DAkYtocL0zgPx+w3Uad0KAy3J9JWLJJFEoXMfvodZvIMdiV5+OAEx1nZLaxrud7Kw==
-X-Received: by 2002:a50:cd9e:0:b0:57d:785:7cc2 with SMTP id 4fb4d7f45d1cf-57d4bdcc05bmr9343309a12.28.1719560721489;
-        Fri, 28 Jun 2024 00:45:21 -0700 (PDT)
-Received: from localhost (109-81-86-16.rct.o2.cz. [109.81.86.16])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5861503b52esm610372a12.89.2024.06.28.00.45.21
+        bh=ta6pOQl7Ba5DSAPgv+iFZZAffaH8uQvfzLUSjfY48d8=;
+        b=bf1eqRgPt/gzHmBQ8rWgmIXdUZlGiAkqc8liH7yTOAOg2Xs3BHKnP+Ycp8zAxZpznm
+         pRCo9hOKJqSuJ7mcI+BsTgNVZF7Eq2lx2TWoo4Wq8snLyMou6RfP/ADNCCTEC2FvFwyE
+         mlTg0T/cNNj4NB2oJc8QwM44YjEZMo1RtZEiAFxUm3dK7NTMCs6KXz+LMz5CTbSheDdg
+         jwzKhOhjmyWsFHMlsnnWKFU1EB7tLCTUfFTBEBYg9p/jqt4acY6cp1qrtZ4DhGvyTFI7
+         vfUYbxJx0AMiXQ26w5FjPF4YKrvtQIrvfbLLALVNbCAG96gI8LYhXIcT8LHZZ5fD2zIZ
+         QM9w==
+X-Forwarded-Encrypted: i=1; AJvYcCXD2QKB/5coUPAf3ZhRFrpFy+WpYIk7Zu46w6Zzn+YC5DYQu+hj3reDqJI/W3FEmO53ZsG0WCHwdisD6tIccdn7gmRxPmXSb0iWgMs1
+X-Gm-Message-State: AOJu0YwEnKMU/PmlEnaefv9K+CY6yEoIINtC7m76Uq1gm0lxZipuVsDA
+	DWIW5ti665CzmVaSkBHVc0fsGAGI6OcHvtiF5LyJ0QjBWbVThYbTkVF/plg2PIY=
+X-Google-Smtp-Source: AGHT+IHqmAR6Aan/s3t39wcFt4NqZCBUJkjEf/RYG6yrSKTVA4mH3xmpTPmcNJL1Afj2I7QNcp83Kw==
+X-Received: by 2002:a05:651c:1046:b0:2ec:6756:e3ea with SMTP id 38308e7fff4ca-2ec6756e4d7mr71538561fa.43.1719560732156;
+        Fri, 28 Jun 2024 00:45:32 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ee51680450sm2017551fa.76.2024.06.28.00.45.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 00:45:21 -0700 (PDT)
-Date: Fri, 28 Jun 2024 09:45:20 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Xiu Jianfeng <xiujianfeng@huawei.com>
-Cc: hannes@cmpxchg.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev,
-	muchun.song@linux.dev, akpm@linux-foundation.org,
-	cgroups@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] mm: memcg: adjust the warning when seq_buf
- overflows
-Message-ID: <Zn5qELsJZ0CrdlZA@tiehlicka>
-References: <20240628072333.2496527-1-xiujianfeng@huawei.com>
+        Fri, 28 Jun 2024 00:45:31 -0700 (PDT)
+Date: Fri, 28 Jun 2024 10:45:30 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Alexey Klimov <alexey.klimov@linaro.org>
+Cc: linux-sound@vger.kernel.org, srinivas.kandagatla@linaro.org, 
+	bgoswami@quicinc.com, lgirdwood@gmail.com, broonie@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, andersson@kernel.org, 
+	konrad.dybcio@linaro.org, perex@perex.cz, tiwai@suse.com, linux-arm-msm@vger.kernel.org, 
+	alsa-devel@alsa-project.org, devicetree@vger.kernel.org, elder@linaro.org, 
+	krzysztof.kozlowski@linaro.org, caleb.connolly@linaro.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/7] arm64: dts: qcom: sm6115: add description of
+ lpi_i2s2 pins
+Message-ID: <qe62q5k7r3wwlceqkapwntdwhpngbwtvpwhq5wxwslhke3h6lt@kaveepinffka>
+References: <20240628010715.438471-1-alexey.klimov@linaro.org>
+ <20240628010715.438471-7-alexey.klimov@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,47 +73,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240628072333.2496527-1-xiujianfeng@huawei.com>
+In-Reply-To: <20240628010715.438471-7-alexey.klimov@linaro.org>
 
-On Fri 28-06-24 07:23:33, Xiu Jianfeng wrote:
-> Currently it uses WARN_ON_ONCE() if seq_buf overflows when user reads
-> memory.stat, the only advantage of WARN_ON_ONCE is that the splat is
-> so verbose that it gets noticed. And also it panics the system if
-> panic_on_warn is enabled. It seems like the warning is just an over
-> reaction and a simple pr_warn should just achieve the similar effect.
+On Fri, Jun 28, 2024 at 02:07:14AM GMT, Alexey Klimov wrote:
+> This is required to enable to HDMI audio playback on
+> QRB4210 RB2 board.
+
+Are they SoC-specific or board-specific? In the latter case it might be
+more suitable to move them to the board DT file.
+
 > 
-> Suggested-by: Michal Hocko <mhocko@suse.com>
-> Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-I would just squash this with other patch removing it from
-memcg_stat_format. But this is up to you.
-
-Thanks!
-
+> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
 > ---
->  mm/memcontrol.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  arch/arm64/boot/dts/qcom/sm6115.dtsi | 34 ++++++++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
 > 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index c251bbe35f4b..8e5590ac43d7 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -1484,7 +1484,8 @@ static void memory_stat_format(struct mem_cgroup *memcg, struct seq_buf *s)
->  		memcg_stat_format(memcg, s);
->  	else
->  		memcg1_stat_format(memcg, s);
-> -	WARN_ON_ONCE(seq_buf_has_overflowed(s));
-> +	if (seq_buf_has_overflowed(s))
-> +		pr_warn("%s: Warning, stat buffer overflow, please report\n", __func__);
->  }
->  
->  /**
-> -- 
-> 2.34.1
-> 
+
 
 -- 
-Michal Hocko
-SUSE Labs
+With best wishes
+Dmitry
