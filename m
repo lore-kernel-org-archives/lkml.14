@@ -1,90 +1,110 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17CDB823CD
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 22:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E30626CB;
+	Fri, 28 Jun 2024 23:03:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719615460; cv=none; b=YzAe9TzIw8FaueT6pk6B36sh3BToGPG/INlX1+O7+9qYSqrUgA+iYQJl4v7iFDv79GspQFRY/066QNIkmQoa42GXyWoYuMfOJ0aYe+KVoSbICZwD+Yp6A9dbvogw8Nw4r1GkTwbK8AwYhEFdqRoP+D1jTF+juXHjuH0Bp3piqCM=
+	t=1719615841; cv=none; b=lIkgHIu7uI8gbL/N7+fJxEYIgjcMSdz+Z+OOg1DOrFq1RAtqj827jpSDzbklxubn9A+LHlLuxn31+l/OD3J4XtDCx5RUOXQqREhvaIypwlUGbs0PWlnpc5XAmfLzbp9ovbag4hXs/frRyKL00eS7hGVH2KRV9W65gYjP4RsK2N0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719615460; c=relaxed/simple;
-	bh=WjMKn5uEj1LIJ6AN+A/19mDRCFsJrX/XyLiyQ/Yfku0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=fEMFW1WXqVCOcn26JtInQsQ2HA3J73EuagD3twqHt1GbjMfSc/lEaTenYxxz+RF+jAgMFZSKGrzKdj5HkGaCiPlUc+0hnkOGKBCNIAIBj04aA5VTOvqTkyXQUrID353mBzCgwprjVnFBsmwrAhisOFFruFEcwnNd9KQgUC8tgwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=smZVfRNO; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1719615841; c=relaxed/simple;
+	bh=wZfauyp79Jdmtph/xEdmahuQwGRjmdF6s7bdzha4HeE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=M9OTqxhch4ekARsSoEUuX9k/SaNiaIePYVzS+0yLr5Z0MoXh2rroCqs/HOU0Py1iAuWKMbxTKG0IdVUQ1Um79Uv+yqAD98x7QppjR+PoOLlEQY5YKyTeb4/pUyiWLdpLfih8QUh0R934sluiAffwQkv8jdBx4uxMlpwFMJBwgxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nHMml38v; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="smZVfRNO"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-643f57e2f0fso20354027b3.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 15:57:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nHMml38v"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2c927152b4bso794829a91.2;
+        Fri, 28 Jun 2024 16:03:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719615458; x=1720220258; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KrpP6qQrU8fwGfbAxZj1kCfHoKM3rWUQ2GVR+L6ptXo=;
-        b=smZVfRNOOs9HquLsHhV1k27hlpI6F9hhMWsBhp8b+9OkK58tbDGCikRDa4oa5Aijwj
-         C7e21sRWLagF396Dwc5nJnm1JZFvHfbSMXu+Qg/bQHfLpP0dPIWrHBbUkhhtnD2Fcw0K
-         d2Mg734YuCvy4q0EhrNWceThBarBHYlaFNpIBLlWdKcIzGeJzUSKLHPQqfXjk2NPRiDS
-         371cbUTL41gsgInH/PV+PNn6BpuMJah87+CTqsqexqSKToTy/q/H9IVwCxI9PR/Y5wp7
-         QFkBMZlSdG0gQODztvdwVZitx8jpym6YHXDxbTx6a3nZW2Vsu3RIovq417wPjg8xeiox
-         mkiw==
+        d=gmail.com; s=20230601; t=1719615839; x=1720220639; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wZfauyp79Jdmtph/xEdmahuQwGRjmdF6s7bdzha4HeE=;
+        b=nHMml38vSx6sGryhOqsVXkGfFt4rkE5m+6z6LWGYrJGMug5GHcf2j3BRGgx5oxMkm6
+         7aSQS7YPpVisoK2Rdzt2P+G9Qi5EEq+2PgbF3Y9IMEAndC+dM9gclXTBUcX49RWC8xZv
+         Fh/GbdC72OVn+zk2OvuycYJgUWdzzn7RioF9Dp2VSqOXSAGzp982WepO9mObZMw/7j9i
+         sDQUJw2vz63E9macAlXiR/SgTFD4gTnKDHfxU7eW1trLzUJU2jkPlXQjrC2iWTRexbY9
+         rUZPkWECbBAmOERPZVVkMs6RVUW9dTzR0O4gy0DmxsvwmKFgqbmIYW4nNFp3wt8EfHoO
+         t8wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719615458; x=1720220258;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KrpP6qQrU8fwGfbAxZj1kCfHoKM3rWUQ2GVR+L6ptXo=;
-        b=Lukov+3N7bREmHzvRUtNlUuv12ho6Gw0Fu3ErfbrM5vkZIGFcWqB4XeL1a3BzRUipr
-         Dc9A7KRsmLYbZh8I+ZIuQUJScThv0oDqWBCh8Y3f97UQDbUU+M1V3c9EUVGUhSjiygBP
-         E+h21XoFZgENp69ORLbt107HFx1J9xKxRjmMi5lsjUOFfbP0JjqBJ8nAcz+RjQRN0m5s
-         bMr2Dwda5CRQE5ILPqbFs7KPgxb0Zvw1qA4HNJlnNT8FakB01Oz8fMCLK5SuaQnrF5x6
-         YgP3NMB4LwWCdgaI1isKZ6ZjG/HHLfuAty5/2IPprBILd6yisO8dZA1RlSC5JxdVR75O
-         nzIA==
-X-Forwarded-Encrypted: i=1; AJvYcCVrbo+I+SvrfFsEcwZFEXwIGmPVpD8K5XWgyThdqV0jJf1fCiVX+SyynEJUWwMpGvWv38+Wdcn/1oPihq6xjTfQSjicXCi+xXdkxQSB
-X-Gm-Message-State: AOJu0YwmBNqV1v7Il89hnLH2ctPdCLpCEM8OFN2xSAes7WYXvlhzavfX
-	HNBNpYGgDZuluN7OzGPrg7j8yLIR0jHsXKOc11PqLfdfb98iXyDWgU3hPxPnRnmPX1w6pkM6nEn
-	0ww==
-X-Google-Smtp-Source: AGHT+IHvwxb6nltTExSjWzmALM+jHFJlhzr072YZUjLtHoeSx4tpz0rVThAhdOzrZa8ViSzkBFZ3bBs2iu4=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:690c:6401:b0:62f:22cd:7082 with SMTP id
- 00721157ae682-643adb9489emr3645307b3.5.1719615458156; Fri, 28 Jun 2024
- 15:57:38 -0700 (PDT)
-Date: Fri, 28 Jun 2024 15:55:42 -0700
-In-Reply-To: <20240608001003.3296640-1-seanjc@google.com>
+        d=1e100.net; s=20230601; t=1719615839; x=1720220639;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wZfauyp79Jdmtph/xEdmahuQwGRjmdF6s7bdzha4HeE=;
+        b=Nfmf74qNCwnlVd7S1KmgixzvtRoHI7CVT68kruNTv3PNOvX55VLYNHbgeO1/lT5PQ9
+         bVNafNoZOlmL4b86M/BnAhSLOjraUgPe7rj6xLmhV4RBcyJS6ArRHE687JdDH+lt2Cp1
+         k+1lOoQ7EeorhcdSL0bIJO+LoRtNfJY7YkbAjroUDV7bJJEzBvHMiDc1Fa730priKvfL
+         uSfJnmc1xrIspPkXqgQPMsFCYup5hLUIccCWPkqRrvwABBPm8s65dUBV7bqsceuS8gaC
+         AXgxWlN4JimU3B8TjiYXzOKsePVxu0Id32Lx60fYjTPPi8C417BllGBS7HyNeUR0Qz3c
+         ef6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU/ZXHwbsv7Srk3FCezlYAeV3n1R4BQRD5jFB54SItnplIOFLtxK5a87opazp7saPWE2URg8ilNDAyiYChZRHK5qUb8ftoiiNLJl9WU5tbB/3cuc1HYU07HsQqHOBBQ/oBIKqAgEG/J5aEYsSORTWBY6PqSUSSIwQMS6UX5Y3ETNA==
+X-Gm-Message-State: AOJu0YzabO4l8fsUwk6GGPxYIFLeLO1KRjqsl9RpEiweURyPPMuXiC/G
+	Q0C3lJeX4WnxDwLb5OylFkSc+IvkIMIVPp540slP5K4naFVb3wcS64ojxo8d00LIlWTu28ww7V+
+	oRUw3G0rv82xl8oWiuYLwhodWEiQ=
+X-Google-Smtp-Source: AGHT+IGQJATCcwut6IdbTB0yrcfOAh393EyBxn430jIUYzX/w6k1wH1j5dkfojeHwptNnJVG2CWfMoITxzCs1HlsK64=
+X-Received: by 2002:a17:90a:7447:b0:2c7:aba6:d32f with SMTP id
+ 98e67ed59e1d1-2c861267638mr16266664a91.22.1719615839179; Fri, 28 Jun 2024
+ 16:03:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240608001003.3296640-1-seanjc@google.com>
-X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
-Message-ID: <171961446147.237951.4273132233545629028.b4-ty@google.com>
-Subject: Re: [PATCH] KVM: VMX: Remove unnecessary INVEPT[GLOBAL] from hardware
- enable path
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20240627170900.1672542-1-andrii@kernel.org> <20240627170900.1672542-4-andrii@kernel.org>
+ <878qyqyorq.fsf@linux.intel.com> <CAEf4BzZHOhruFGinsRoPLtOsCzbEJyf2hSW=-F67hEHhvAsNZQ@mail.gmail.com>
+ <Zn86IUVaFh7rqS2I@tassilo>
+In-Reply-To: <Zn86IUVaFh7rqS2I@tassilo>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 28 Jun 2024 16:03:47 -0700
+Message-ID: <CAEf4Bzb3CnCKZi-kZ21F=qM0BHvJnexgajP0mHanRfEOzzES6A@mail.gmail.com>
+Subject: Re: [PATCH v6 3/6] fs/procfs: add build ID fetching to PROCMAP_QUERY API
+To: Andi Kleen <ak@linux.intel.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-fsdevel@vger.kernel.org, brauner@kernel.org, 
+	viro@zeniv.linux.org.uk, akpm@linux-foundation.org, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, gregkh@linuxfoundation.org, 
+	linux-mm@kvack.org, liam.howlett@oracle.com, surenb@google.com, 
+	rppt@kernel.org, adobriyan@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 07 Jun 2024 17:10:03 -0700, Sean Christopherson wrote:
-> Remove the completely pointess global INVEPT, i.e. EPT TLB flush, from
-> KVM's VMX enablement path.  KVM always does a targeted TLB flush when
-> using a "new" EPT root, in quotes because "new" simply means a root that
-> isn't currently being used by the vCPU.
-> 
-> KVM also _deliberately_ runs with stale TLB entries for defunct roots,
-> i.e. doesn't do a TLB flush when vCPUs stop using roots, precisely because
-> KVM does the flush on first use.  As called out by the comment in
-> kvm_mmu_load(), the reason KVM flushes on first use is because KVM can't
-> guarantee the correctness of past hypervisors.
-> 
-> [...]
+On Fri, Jun 28, 2024 at 3:33=E2=80=AFPM Andi Kleen <ak@linux.intel.com> wro=
+te:
+>
+> > Yep, makes sense. I'm currently reworking this whole lib/buildid.c
+> > implementation to remove all the restrictions on data being in the
+> > first page only, and making it work in a faultable context more
+> > reliably. I can audit the code for TOCTOU issues and incorporate your
+> > feedback. I'll probably post the patch set next week, will cc you as
+> > well.
+>
+> Please also add checks that the mapping is executable, to
+> close the obscure "can check the first 4 bytes of every mapped
+> file is ELF\0" hole.
+>
+> But it will still need the hardening because mappings from
+> ld.so are not EBUSY for writes.
 
-Applied to kvm-x86 vmx, thanks!
+I'm a bit confused. Two things:
 
-[1/1] KVM: VMX: Remove unnecessary INVEPT[GLOBAL] from hardware enable path
-      https://github.com/kvm-x86/linux/commit/23b2c5088d01
+1) non-executable file-backed VMA still has build ID associated with
+it. Note, build ID is extracted from the backing file's content, not
+from VMA itself. The part of ELF file that contains build ID isn't
+necessarily mmap()'ed at all
 
---
-https://github.com/kvm-x86/linux/tree/next
+2) What sort of exploitation are we talking about here? it's not
+enough for backing file to have correct 4 starting bytes (0x7f"ELF"),
+we still have to find correct PT_NOTE segment, and .note.gnu.build-id
+section within it, that has correct type (3) and key name "GNU".
+
+I'm trying to understand what we are protecting against here.
+Especially that opening /proc/<pid>/maps already requires
+PTRACE_MODE_READ permissions anyways (or pid should be self).
+
+>
+> -Andi
