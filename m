@@ -1,120 +1,81 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from norbury.hmeau.com (helcar.hmeau.com [216.24.177.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0570115886E
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 10:11:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A1F154444;
+	Fri, 28 Jun 2024 10:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.24.177.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719569508; cv=none; b=JgDjy0P5rQxW6woQ/j3KcZ81lKyimRe/jDlIl3IYwfPj+D8w51Po6ar3KcjqUqXjtEAN8m7nlQ3MXURNTfAnr5JzzruuLXmE55z4vW+AEWRwkLgaK1WZ1oAUseO333xxccyx1Dsu28+mLOfJdHY63q/O0hr1l10muXZQqynb93c=
+	t=1719569575; cv=none; b=YrhU3RFToRbn6sFDpfrp6IukI0D28IXCOXXA2imWUfd3jXK6f4KGluRxUSFO/aP3rr79K98RqohbD5c7ZFWhxqD+k9fHPkLvJSTCVwKEmli2Jyfi+aT80wAjNrjcAL24/sPDOySgsRVaKv0WDf3/gLJ3+ImfNmV0tlnC1hX31+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719569508; c=relaxed/simple;
-	bh=typWC4rPgvkMNHZP8pTloCLl29F5JtXSoQZOOaQJYYM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EfAqUV1SAl4PKBw+ZFPV4E+6ZHGs0ISqc4t3XIcaMckOLmXrWX+b48JBBWNOq1lstLzXmoBPnWKrSOJ04Wxnm8RuJ9zNRWYdTtdmP/2FPybuLQXQobqmmipOw3nCnn0T0Wmo0Br0iGbGs0qYBaSq37gTb8TfzCEGIYI70MWTjjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=lgkQozZf; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="lgkQozZf"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52e743307a2so539299e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 03:11:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719569504; x=1720174304; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hdl3PSGh9S35qMafYON8RkQ3hcQRYs7QhYzWmfguxkE=;
-        b=lgkQozZf7NjIHf2QY+Wcul8Wg9FG1le+YzpaX5wKrHNS1JKv0hfB62altafh33ooBZ
-         GJse1fTEFO91ZtvYm/oelnXPeUpUALiPlOhsrxhjNYbYk0cYtYQmHnNVnOxBVgnbEmxf
-         yiersIckzN1PhqpUnUsTTv6mEz4GYRzsJNWVjDtSifoX8tq6GfqQeuErUxrOrqNIX1HL
-         HaSal/gzrAkC61pa1S4pMZ93lUhxmubQnaKxdJBuEr2/yPMrntP2I4PtyfY0e9ot5nr0
-         fjZmt9VM12iCN5k9YB0jUwiIFFqI3UAl524HBUrj60HbPxlX6d+Y1ABPtRnFnSyyDBgJ
-         sb8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719569504; x=1720174304;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hdl3PSGh9S35qMafYON8RkQ3hcQRYs7QhYzWmfguxkE=;
-        b=m4272PMOBlJtLLwazAE7OP5L4mv2l2S1wpQPvuyk/h2rfc3/ZxMiHtEGA3AqNRLbOt
-         nJygF1fQma7H0RizMU/hUYrUETSXtKPMq7JIr+Hz8wZgLBV1qsFfqRejA5dJf/SJXKzU
-         sw+vDLOc9ZLTiW4so4YJ5TJcZHe1EhWk3nq5arBTqnb9In2KuVbZkHbZVYTiDcNR6CPz
-         QkWPCfPASNYHzzqnQGx2BLcgIMPPviBuAc9MCKfhiVvARqgEQfhIA5y3PNmjtsKtWuGs
-         1zNM+++8CdljvRj9EETmsE3rNKdRmsZlqu4Wpe9F2MQ9N8hxmS2YYbdejosjewyC0yIF
-         slgw==
-X-Forwarded-Encrypted: i=1; AJvYcCVh/OBxu15YS9/sQcV9P0ccNX0N0c38Wo4epka2UyG2OWIPY0XuVsvCR+aNIpbsqQpx7Ux3drdEEoW/yfiXiF9M13Z9HyDyFOHKXE5R
-X-Gm-Message-State: AOJu0Yy4Jlhl03lSc6naMgbJaBEvL99esF+s1/qBRdZgO5fe3Jafq15y
-	vezAMz6eCjPtyS31wa7ir/u0Q5dDxys3tL6BTxdqpIsPn/Pd+iinMb1DfnmDmgg=
-X-Google-Smtp-Source: AGHT+IE1Jbfv4vSYbSR7uNEWi1U7MEHfMoI5hKODYdtbPQiRI+uquKnCoEotcjusij8xGEohrV3uEg==
-X-Received: by 2002:ac2:4d97:0:b0:52c:e170:9d38 with SMTP id 2adb3069b0e04-52ce183ad20mr10824150e87.31.1719569503961;
-        Fri, 28 Jun 2024 03:11:43 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:cb0e:590a:642a:e1f9])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0fc434sm1770895f8f.76.2024.06.28.03.11.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 03:11:43 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-X-Google-Original-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] gpio: fixes for v6.10-rc6
-Date: Fri, 28 Jun 2024 12:11:42 +0200
-Message-ID: <20240628101142.33339-1-bartosz.golaszewski@linaro.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1719569575; c=relaxed/simple;
+	bh=pzwr6heChKxBnt2X3WfkhfOjAnEHnig9DA7aY1PlUp4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hTKAjQ/DDBTNUFaOKQScy0WVsgL/bixWHB/9WHtCDSleWH0UN+TMKRXHioIpdeJhKvQgFD7h2snBh0xdZ2XRKF33xjASxwQkEastbmZheDy1+M592Gd/ShnFN5je3KiPkcpw2fFU1gFBf9sZ7PJoYNCWd8WxL7ZgLEzOgoLfioM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=216.24.177.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.103.7])
+	by norbury.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1sN8ag-004LRC-0i;
+	Fri, 28 Jun 2024 20:12:27 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 28 Jun 2024 20:12:26 +1000
+Date: Fri, 28 Jun 2024 20:12:26 +1000
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: WangYuli <wangyuli@uniontech.com>
+Cc: davem@davemloft.net, tsbogend@alpha.franken.de,
+	linux-crypto@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Guan Wentao <guanwentao@uniontech.com>
+Subject: Re: [PATCH] MIPS: crypto: Clean up useless assignment operations
+Message-ID: <Zn6MiqGOD6p6YEul@gondor.apana.org.au>
+References: <1D248893502B75F5+20240628084117.84264-1-wangyuli@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1D248893502B75F5+20240628084117.84264-1-wangyuli@uniontech.com>
 
-Linus,
+On Fri, Jun 28, 2024 at 04:41:17PM +0800, WangYuli wrote:
+> When entering the "len & sizeof(u32)" branch, len must be less than 8.
+> So after one operation, len must be less than 4.
+> At this time, "len -= sizeof(u32)" is not necessary for 64-bit CPUs.
+> 
+> A similar issue has been solved at Loongarch.
+> 
+> Link: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=v6.10-rc5&id=fea1c949f6ca5059e12de00d0483645debc5b206
+> Signed-off-by: Guan Wentao <guanwentao@uniontech.com>
+> Signed-off-by: WangYuli <wangyuli@uniontech.com>
+> ---
+>  arch/mips/crypto/crc32-mips.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/mips/crypto/crc32-mips.c b/arch/mips/crypto/crc32-mips.c
+> index ec6d58008f8e..505d2d897849 100644
+> --- a/arch/mips/crypto/crc32-mips.c
+> +++ b/arch/mips/crypto/crc32-mips.c
+> @@ -94,7 +94,9 @@ static u32 crc32_mips_le_hw(u32 crc_, const u8 *p, unsigned int len)
+>  
+>  		CRC32(crc, value, w);
+>  		p += sizeof(u32);
+> +#ifndef CONFIG_64BIT
+>  		len -= sizeof(u32);
+> +#endif
 
-Please pull the following set of GPIO fixes for the next RC. We have an
-assortment of driver fixes and two commits addressing a bad behavior of
-the GPIO uAPI when reconfiguring requested lines.
+First of all, did you verify that this actually makes a difference?
+Please post the actual assembly output with and without this patch.
 
-Best Regards,
-Bartosz Golaszewski
+If it does make a difference, you should avoid doing ifdefs as they
+are more likely to cause build failures.  Instead do something like
 
-The following changes since commit 83a7eefedc9b56fe7bfeff13b6c7356688ffa670:
+		if (!IS_ENABLED(CONFIG_64BIT))
+			len -= sizeof(u32);
 
-  Linux 6.10-rc3 (2024-06-09 14:19:43 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.10-rc6
-
-for you to fetch changes up to b440396387418fe2feaacd41ca16080e7a8bc9ad:
-
-  gpiolib: cdev: Ignore reconfiguration without direction (2024-06-27 17:21:28 +0200)
-
-----------------------------------------------------------------
-gpio fixes for v6.10-rc6
-
-- fix a race condition in i2c transfers by adding a missing i2c lock
-  section in gpio-pca953x
-- validate the number of obtained interrupts in gpio-davinci
-- add missing raw_spinlock_init() in gpio-graniterapids
-- fix bad character device behavior: disallow GPIO line reconfiguration
-  without set direction both in v1 and v2 uAPI
-
-----------------------------------------------------------------
-Aapo Vienamo (1):
-      gpio: graniterapids: Add missing raw_spinlock_init()
-
-Aleksandr Mishin (1):
-      gpio: davinci: Validate the obtained number of IRQs
-
-Ian Ray (1):
-      gpio: pca953x: fix pca953x_irq_bus_sync_unlock race
-
-Kent Gibson (2):
-      gpiolib: cdev: Disallow reconfiguration without direction (uAPI v1)
-      gpiolib: cdev: Ignore reconfiguration without direction
-
- drivers/gpio/gpio-davinci.c       |  5 +++++
- drivers/gpio/gpio-graniterapids.c |  2 ++
- drivers/gpio/gpio-pca953x.c       |  2 ++
- drivers/gpio/gpiolib-cdev.c       | 28 +++++++++++++++++-----------
- 4 files changed, 26 insertions(+), 11 deletions(-)
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
