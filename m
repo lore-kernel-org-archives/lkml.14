@@ -1,95 +1,118 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18361CD5A9
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 17:18:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2946A1CF3C4;
+	Fri, 28 Jun 2024 17:18:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719595099; cv=none; b=eUDqv3G/tg16oBwscIhh6HSIvPnh4fxoFBc7A/aNDWIWF7nNA5DzmOpbLPOBZYD30aFivinj56cGOHxCrbNxGCZKERv+qOvN8oqokwA6xuhM5kEuWJm8hYxKJg9tjNNJpaJObZGdBW0IIwP9G9kzN48pNv/rMMY217OtL++suvI=
+	t=1719595103; cv=none; b=HMxy9zTgv88AtvJirQNztIyKsMWKb6QL5LCwBr00SPjseZg70Hn2bU+tj342ajE1YQkUWhHB9TdVLUHtM+moAzJG2YnURIbzfvPilMzbTAn79rHpsIUTpxbFU2QtuvUdFCaZA5ssuKrxOYUswYy7cJ2h6gHq1/UuOKlATm7OfrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719595099; c=relaxed/simple;
-	bh=9U9k9NSLSB1eaU9tAU7rHEi84QCAIMfQDGygGimoTTY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LwfbBgB1W3B/5c7Tw0n2GgfYiI58/BkO/2VPGftP8zCDREmjajgT4zSYX8iMa/9I2V/d7Z0iVhqDGiqT5CmT7tUKpDjaHnK1gF/pHpTwj8ianUf7GDZaJcFLoq+1EYlfX2FcmH8Jffpx0puCjqbb1gXf0Kb8Xuc6G55kRqMRUjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=gp6vUw2J; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+	s=arc-20240116; t=1719595103; c=relaxed/simple;
+	bh=0kDYpLaDUluAMzQIp88EZDW06QTvh4nYNM1WCMKD7L8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bNPrnq9aZzcHbns2KDHRwqgUHdkna2Rs+xFYU9nWliF/0F7zx2OSw0ktRBrN8zKjO1/prOwBKnqFD3VRr8TYS34oGC7xst2iP471UtAke9d4gwdReMxNHodsKZouAxHW1EAXca2uTGl4+sgNKHMfnTOVUoeURb0FA20tAG6AOqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aMS1qgSC; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="gp6vUw2J"
-Received: from cwcc.thunk.org (pool-173-48-120-63.bstnma.fios.verizon.net [173.48.120.63])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 45SHHtdM024132
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Jun 2024 13:17:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1719595076; bh=Fk2dZVoYeN9for80TCHwR5kaMnR/2N5A+vQVBu9xFoQ=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=gp6vUw2Jyd32+ukMpFeLhaVktJEa/1LANd4FcDn8XUH2j9Nd24oxrx9VjWIH4k9WS
-	 IZLFWTIGsJT5shBCo97hqiOXeZLBaL85fjzffoVqWxZq48K37wpGhc8T3h29BKRBLy
-	 pps2EGKmFCLxOdWSzcqodhcqXk67wSAh1J+ES0OMcidh+5eXcBmP3qO+UQFbPeDgFc
-	 nv0SJWMGM+bHm28bbL287H0DOLkLt1zm1VKivEmFbymuHkCExjDUKh/JisxVuDvpJx
-	 XbuSlRNae9WDPUdq1qm+ognNq9kCWWiw2V2AOXxnCME4KSDTFcsy50Dqi0aqSLEWTe
-	 tbLMIKn2MzKHw==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id D6E2515C02D8; Fri, 28 Jun 2024 13:17:54 -0400 (EDT)
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: jack@suse.com, yi.zhang@huaweicloud.com,
-        Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/9] A fix and some cleanups to jbd2
-Date: Fri, 28 Jun 2024 13:17:48 -0400
-Message-ID: <171959506218.737463.5581686485417028321.b4-ty@mit.edu>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240514112438.1269037-1-shikemeng@huaweicloud.com>
-References: <20240514112438.1269037-1-shikemeng@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aMS1qgSC"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a724a8097deso105385366b.1;
+        Fri, 28 Jun 2024 10:18:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719595100; x=1720199900; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=o3nvsIkFRTprl2veHnwGjNIAA2Gwnu2oo8W5vdGeBr8=;
+        b=aMS1qgSCsi7K57kBaSo0vpqpIS1t6Sr4afMde5WrWOChVrCEsBEODP8wfLIyjawjg0
+         Oz51N2o5TwP1SwkfrZstjkakePHFp08QEYg7CFmLO6AbF3m5bP3scdrGDjvFH3pbNmnC
+         oOLCji2c0B7nDiQ0vIy3ZOFvHUumV3PcITIk6SroziclGu8N6iUVHTsuslsBLY6Zfpla
+         TjOTlPP7FFlCYXoTLZhiRH0qexbDHlrfWPXe7Q52Bl5KOHzkrePSezdy/K48i9TpxKlA
+         AFbXQD6V9GdndhodRNsRYRVg4MDUmzyQV9TmtJzpWlgtnhwN3R0mjUppCP4oiBNk5VPk
+         g6Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719595100; x=1720199900;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=o3nvsIkFRTprl2veHnwGjNIAA2Gwnu2oo8W5vdGeBr8=;
+        b=aTFtFif3Ebb7kpSPEcthy7dUNhmXpSrYXyD1kuS9S8jWPYDQLCyNLMoBC1i6d6LhVR
+         OFIZcjpzJN3jhFQlPwfDk9G6XQcs5Cj3pvfN1gpvwihA1UViWQueLSJ9APJ0mlyTJmnD
+         e4oL5aLdEyIUJ+P3lsUV23tL3FYcKZhzcc0zhHlvKmih/n0BYLrn2q/9vYU2CgYAZGLd
+         YQtPGp5+Usc2vWre5xvJjwtzAV2hXdBMjwUL55nbzVHoMYe2PIqCkG7JABLayp5Pup68
+         vxzT78CuEa/ddGF6lmP6blBXuHs+Eyl6l8XikgNoxWuMBwVLp3or1/3U/FkBFsN6kb3S
+         lF7w==
+X-Forwarded-Encrypted: i=1; AJvYcCURoH/A+Cb9gR0oNKHvMbfvbnmPrp0lybQMOMU6AR4Arq5KXSAQS4hhjemtumsAegcs/tkWgnFr8akEUmi8q9paOE9prMKrqJ5jjn5cC/2XggnQad9kqRVzCouxCJj52t9xD2wfCspaHw==
+X-Gm-Message-State: AOJu0YxmV02U8mk59B4GK4k2xuSsNQTR906i0CqRX7jHtBkujykQtDJz
+	eRgBDEXBn/wLBTZ6KxLyE7nr5gW2aMplKRsJNhe8nDQQsrcwfmXApL4Mq+fn32+VrlOl1lStuH2
+	X1NnDQYxHrcFHPkh5/GUb7NX4uw==
+X-Google-Smtp-Source: AGHT+IFTZVskAjk2l5yWcH1+gZhoO6yQpm6ONFChSoLYbpKIhZVBVjX6P7gzsYaRUL4jBvTsbM8BFPkV4wxIIQ+MkWQ=
+X-Received: by 2002:a17:907:c78e:b0:a6f:bc02:a008 with SMTP id
+ a640c23a62f3a-a7242c4de49mr1349695666b.4.1719595100397; Fri, 28 Jun 2024
+ 10:18:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20240628140328.279792-1-erezgeva@nwtime.org> <20240628140328.279792-4-erezgeva@nwtime.org>
+ <20240628-refuse-actress-b76985aa020c@spud> <D2BS0YMA48BG.1PEPFC3KMFV8N@kernel.org>
+ <CANeKEMMrXK=mw=n=9DuTnprkTs3ct446oaC2QTJyst8Nd+D6rw@mail.gmail.com> <D2BT0DT9UQ66.2L497FSY7GMAL@kernel.org>
+In-Reply-To: <D2BT0DT9UQ66.2L497FSY7GMAL@kernel.org>
+From: Erez <erezgeva2@gmail.com>
+Date: Fri, 28 Jun 2024 19:17:42 +0200
+Message-ID: <CANeKEMO9hBhBs91nZkZRht9J29iRC2Tgf6ucWq=nbO7XAqzzng@mail.gmail.com>
+Subject: Re: [PATCH 3/4] dt-bindings: mtd: macronix,mx25l12833f: add SPI-NOR chip
+To: Michael Walle <mwalle@kernel.org>
+Cc: Conor Dooley <conor@kernel.org>, Erez Geva <erezgeva@nwtime.org>, linux-mtd@lists.infradead.org, 
+	Tudor Ambarus <tudor.ambarus@linaro.org>, Pratyush Yadav <pratyush@kernel.org>, 
+	linux-kernel@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, devicetree@vger.kernel.org, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
+On Fri, 28 Jun 2024 at 18:51, Michael Walle <mwalle@kernel.org> wrote:
+>
+> On Fri Jun 28, 2024 at 6:30 PM CEST, Erez wrote:
+> > I do not know why they decided to use the same JEDEC ID for two chips.
+> > Your guess is as good as mine.
+>
+> That's a common pattern and we try hard to figure that out during
+> probe time instead of hardcoding it. E.g. by looking at the SFDP
+> data. Have a look at various fixups in drivers/mtd/spi-nor/.
 
-On Tue, 14 May 2024 19:24:29 +0800, Kemeng Shi wrote:
-> v1->v2:
-> -Collect RVB from Yi and Jan
-> -remove rename "flags" to "escape" in patch 2/9
-> -goto new copy_done tag in patch 4/9
-> -add more comment in patch 5/9
-> 
-> Patch 1 fixes memleak in jbd2_journal_write_metadata_buffer.
-> Patch 2-6 contain some cleanups to jbd2_journal_write_metadata_buffer().
-> Patch 7-9 contain some cleanups to kjournald2()
-> All tests in "kvm-xfstest smoke" survive. Please let me konw if more tests
-> should be ran. Thanks.
-> 
-> [...]
+That's a good approach.
+The obsolete mx25l12805d does not support the SFDP table.
+The new mx25l12833f does.
 
-Applied, thanks!
+What is the kernel policy regarding obsolete flash chips?
+Macronix annonce on end of life of mx25l12805d in 2010.
+Perhaps we should remove mx25l12805d,
+ and leave the mx25l12833f configuration in mtd/spi-nor/macronix.c?
 
-[1/9] jbd2: avoid memleak in jbd2_journal_write_metadata_buffer
-      commit: cc102aa24638b90e04364d64e4f58a1fa91a1976
-[2/9] jbd2: remove unused return info from jbd2_journal_write_metadata_buffer
-      commit: abe48a52250a91f0d1f9b5052a246c63cb845827
-[3/9] jbd2: remove unnedded "need_copy_out" in jbd2_journal_write_metadata_buffer
-      commit: 5dd3e8c0758a7c7a8c8f3002b2632a3c9d31c808
-[4/9] jbd2: jump to new copy_done tag when b_frozen_data is created concurrently
-      commit: 4c15129aaad54af2df4665ddde9245788ee9fa9c
-[5/9] jbd2: remove unneeded kmap to do escape in jbd2_journal_write_metadata_buffer
-      commit: daabedd664021afa9e7e3225489888a4fee99bad
-[6/9] jbd2: use bh_in instead of jh2bh(jh_in) to simplify code
-      commit: 4eb9bd13eba3c168e91460972a76ddd53ac3b2b0
-[7/9] jbd2: remove dead equality check of j_commit_[sequence/request] in kjournald2
-      commit: d5c545735aa0d6443460ac407d35f8fa235d5102
-[8/9] jbd2: remove dead check of JBD2_UNMOUNT in kjournald2
-      commit: 136d3e0703e807b14ed6f9b8a5a544b6ba08d940
-[9/9] jbd2: remove unnecessary "should_sleep" in kjournald2
-      commit: b07855348b305c234d9fabb7ab9b50fa9b3a7759
+>
+> compatibles are really the last resort to distinguish flash devices.
 
-Best regards,
--- 
-Theodore Ts'o <tytso@mit.edu>
+I totally agree. Use JEDEC ID a lot better.
+In this case Macronix decided to reuse an obsolete chip ID.
+
+>
+> Next time, please mention such information in the commit message,
+> please.
+
+Thanks for the tip.
+I did write it in the fourth patch, but I can add it in part 3 as well.
+
+> Also please have a look at
+> https://docs.kernel.org/driver-api/mtd/spi-nor.html
+
+The new mx25l12833f supports SFDP, the obsolete mx25l12805d does not.
+I did manage to read the SFDP, though I do not have a copy of it (I do
+not have the hardware any more).
+To my best knowledge SFDP table do not contain information on OTP,
+
+Thanks
+  Erez Geva
+
+>
+> -michael
