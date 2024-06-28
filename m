@@ -1,165 +1,172 @@
-Received: from smtp.priv.miraclelinux.com (202x210x215x66.ap202.ftth.ucom.ne.jp [202.210.215.66])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2FC5381A;
-	Fri, 28 Jun 2024 05:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.210.215.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F673C08A;
+	Fri, 28 Jun 2024 05:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719553276; cv=none; b=FzcJpfPUtS3FM5DBZZqwBpvxe/himiQj41/pw6pcvyOT/E50RmfHyZxo16SWawc9KyyqsF+u2r4xlX9VaBkzvLCtZBWeRhj0o0r8aGRr2DbWYvbCJQSwvo/Yk3fYT7FsNPAN2z1poUeif5+ykmvrKqc0KvK9t5a0EVhf5kNySBc=
+	t=1719553318; cv=none; b=WEkd6ctvnb0Y7rOyrmLu+mr22lKfqbYSgBPPvbub95u7JqkzjhT6AhiCyOL3esuTNcO7jHGilrzM5jKb4XZ7H0ZEHbMlPpxwH1DhlhftpQ6Fp2DJ8E5/VtxhS9RSUGL7yEimwWu6g/JdsIFEhjFaEqNXDFtYhZ9Z1iHHP0IeX3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719553276; c=relaxed/simple;
-	bh=nE/ahYicu+soLj105oY080IJ/4x7ZIh8LDeXBhJqLrE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=mDyXJtHWvh0GVX/R/DPS9R3uyvcgaHHAGW4FvjQN6Y1GUq/rSZrW2jF5N9FZZmPdZz+nVjA/dxQ53+KEvesfIELXPstE+4gnOpk6cyw8K5ZZXvT/Bjc3LyDGShJvtFiEyA2m7gsJ0r7xOPazwsQcw6zE50vFcuSTULe6jwGHODw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=miraclelinux.com; spf=pass smtp.mailfrom=miraclelinux.com; arc=none smtp.client-ip=202.210.215.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=miraclelinux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=miraclelinux.com
-Received: from cip-lava-a.miraclelinux.com (cip-lava-a.miraclelinux.com [10.2.1.116])
-	by smtp.priv.miraclelinux.com (Postfix) with ESMTP id 42DA61400F0;
-	Fri, 28 Jun 2024 14:41:13 +0900 (JST)
-From: Kazunori Kobayashi <kazunori.kobayashi@miraclelinux.com>
-To: netdev@vger.kernel.org
-Cc: stable@vger.kernel.org,
+	s=arc-20240116; t=1719553318; c=relaxed/simple;
+	bh=csJqhxOzCeto3DBvtcGzR+6z5HcyLrbiBa9C1wvpq5c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C6hBtaNETB1hy52BusXdbHSJoz9d/nWaP4Ap61uUYfzz9lw9DqY8qCDS9jPhTK89Nz+ZtX13iAdxgslpp53yQu6XBalDAmLYpEyP4dtG2U3YV0gooImW65Dhq8RJ2KtALzm6whRjuRP235KYET454D+ByXTf8SdkvXOdLQTmm+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cwt+1Ngt; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cwt+1Ngt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719553317; x=1751089317;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=csJqhxOzCeto3DBvtcGzR+6z5HcyLrbiBa9C1wvpq5c=;
+  b=Cwt+1NgtGmQlLrFr8ljqqsB4IXEOqH68k9flA9Ao2lJvD7kv9t7ai5+S
+   RjGdRhnjunKJdn75iva06wPc2JG/I9T7vbIWJWcUn67C+vMO1MTO1Tc4R
+   bsa4ERy3TwNyCj2xdqzRx5Nvqlo5G4pFysEcHeMnXziKBoFipIl19LDTP
+   MjS26YEi7E3aXOPEntsIYRyzAj8uTnnpgDDaPcmkNEaM6sx3tABemSYAE
+   B0S7mYLeq34gRe1zVyEqJvUOtuL+DwiT5PUJkBGINLiOIvohkrC9gezCQ
+   xzo6pIjSd/ipXAV3PwbO5aBi7ff7eer016hoxYHka3m8In8k1SA1GIuhy
+   A==;
+X-CSE-ConnectionGUID: WVyxPPIFRZGstV5YKH4MmA==
+X-CSE-MsgGUID: ifCWdn+QQ+SdzR/9M2f6DQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="16602534"
+X-IronPort-AV: E=Sophos;i="6.09,168,1716274800"; 
+   d="scan'208";a="16602534"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 22:41:56 -0700
+X-CSE-ConnectionGUID: 9FcuFt56QNinwr1mxyaTnw==
+X-CSE-MsgGUID: suthwj7KRoCiMxuLu2BjKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,168,1716274800"; 
+   d="scan'208";a="44514689"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 27 Jun 2024 22:41:51 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sN4Mn-000GqH-1g;
+	Fri, 28 Jun 2024 05:41:49 +0000
+Date: Fri, 28 Jun 2024 13:41:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-media@vger.kernel.org,
+	Shengwei Luo <luoshengwei@huawei.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Daniel Ferguson <danielf@os.amperecomputing.com>,
+	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	James Morse <james.morse@arm.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Len Brown <lenb@kernel.org>, Shiju Jose <shiju.jose@huawei.com>,
+	Shuai Xue <xueshuai@linux.alibaba.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Tony Luck <tony.luck@intel.com>,
+	Tyler Baicar <tbaicar@codeaurora.org>,
+	Will Deacon <will@kernel.org>, Xie XiuQi <xiexiuqi@huawei.com>,
+	linux-acpi@vger.kernel.org, linux-edac@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	hiraku.toyooka@miraclelinux.com,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Kazunori Kobayashi <kazunori.kobayashi@miraclelinux.com>
-Subject: [PATCH 4.19 3/3] tcp: Fix data races around icsk->icsk_af_ops.
-Date: Mon, 17 Apr 2023 16:54:28 +0000
-Message-Id: <20230417165428.26284-4-kazunori.kobayashi@miraclelinux.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230417165428.26284-1-kazunori.kobayashi@miraclelinux.com>
-References: <20230417165428.26284-1-kazunori.kobayashi@miraclelinux.com>
+	Jason Tian <jason@os.amperecomputing.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH 2/2] RAS: Report all ARM processor CPER information to
+ userspace
+Message-ID: <202406281339.b9yJADtu-lkp@intel.com>
+References: <eed2c4a4fbbb71226ca1944bc7e319bfa9f8aec0.1719471257.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eed2c4a4fbbb71226ca1944bc7e319bfa9f8aec0.1719471257.git.mchehab+huawei@kernel.org>
 
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
+Hi Mauro,
 
-commit f49cd2f4d6170d27a2c61f1fecb03d8a70c91f57 upstream.
+kernel test robot noticed the following build errors:
 
-setsockopt(IPV6_ADDRFORM) and tcp_v6_connect() change icsk->icsk_af_ops
-under lock_sock(), but tcp_(get|set)sockopt() read it locklessly.  To
-avoid load/store tearing, we need to add READ_ONCE() and WRITE_ONCE()
-for the reads and writes.
+[auto build test ERROR on rafael-pm/linux-next]
+[also build test ERROR on rafael-pm/bleeding-edge linus/master v6.10-rc5 next-20240627]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Thanks to Eric Dumazet for providing the syzbot report:
+url:    https://github.com/intel-lab-lkp/linux/commits/Mauro-Carvalho-Chehab/RAS-ACPI-APEI-add-conditional-compilation-to-ARM-error-report-functions/20240627-225843
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
+patch link:    https://lore.kernel.org/r/eed2c4a4fbbb71226ca1944bc7e319bfa9f8aec0.1719471257.git.mchehab%2Bhuawei%40kernel.org
+patch subject: [PATCH 2/2] RAS: Report all ARM processor CPER information to userspace
+config: arm64-randconfig-002-20240628 (https://download.01.org/0day-ci/archive/20240628/202406281339.b9yJADtu-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240628/202406281339.b9yJADtu-lkp@intel.com/reproduce)
 
-BUG: KCSAN: data-race in tcp_setsockopt / tcp_v6_connect
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406281339.b9yJADtu-lkp@intel.com/
 
-write to 0xffff88813c624518 of 8 bytes by task 23936 on cpu 0:
-tcp_v6_connect+0x5b3/0xce0 net/ipv6/tcp_ipv6.c:240
-__inet_stream_connect+0x159/0x6d0 net/ipv4/af_inet.c:660
-inet_stream_connect+0x44/0x70 net/ipv4/af_inet.c:724
-__sys_connect_file net/socket.c:1976 [inline]
-__sys_connect+0x197/0x1b0 net/socket.c:1993
-__do_sys_connect net/socket.c:2003 [inline]
-__se_sys_connect net/socket.c:2000 [inline]
-__x64_sys_connect+0x3d/0x50 net/socket.c:2000
-do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-do_syscall_64+0x2b/0x70 arch/x86/entry/common.c:80
-entry_SYSCALL_64_after_hwframe+0x63/0xcd
+All errors (new ones prefixed by >>):
 
-read to 0xffff88813c624518 of 8 bytes by task 23937 on cpu 1:
-tcp_setsockopt+0x147/0x1c80 net/ipv4/tcp.c:3789
-sock_common_setsockopt+0x5d/0x70 net/core/sock.c:3585
-__sys_setsockopt+0x212/0x2b0 net/socket.c:2252
-__do_sys_setsockopt net/socket.c:2263 [inline]
-__se_sys_setsockopt net/socket.c:2260 [inline]
-__x64_sys_setsockopt+0x62/0x70 net/socket.c:2260
-do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-do_syscall_64+0x2b/0x70 arch/x86/entry/common.c:80
-entry_SYSCALL_64_after_hwframe+0x63/0xcd
+   drivers/ras/ras.c: In function 'log_arm_hw_error':
+>> drivers/ras/ras.c:73:17: error: assignment to 'u8 *' {aka 'unsigned char *'} from incompatible pointer type 'struct cper_arm_ctx_info *' [-Werror=incompatible-pointer-types]
+      73 |         ctx_err = ctx_info;
+         |                 ^
+   cc1: some warnings being treated as errors
 
-value changed: 0xffffffff8539af68 -> 0xffffffff8539aff8
 
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 23937 Comm: syz-executor.5 Not tainted
-6.0.0-rc4-syzkaller-00331-g4ed9c1e971b1-dirty #0
+vim +73 drivers/ras/ras.c
 
-Hardware name: Google Google Compute Engine/Google Compute Engine,
-BIOS Google 08/26/2022
+    54	
+    55	void log_arm_hw_error(struct cper_sec_proc_arm *err, const u8 sev)
+    56	{
+    57	#if defined(CONFIG_ARM) || defined(CONFIG_ARM64)
+    58		struct cper_arm_err_info *err_info;
+    59		struct cper_arm_ctx_info *ctx_info;
+    60		u8 *ven_err_data;
+    61		u32 ctx_len = 0;
+    62		int n, sz, cpu;
+    63		s32 vsei_len;
+    64		u32 pei_len;
+    65		u8 *pei_err;
+    66		u8 *ctx_err;
+    67	
+    68		pei_len = sizeof(struct cper_arm_err_info) * err->err_info_num;
+    69		pei_err = (u8 *)err + sizeof(struct cper_sec_proc_arm);
+    70	
+    71		err_info = (struct cper_arm_err_info *)(err + 1);
+    72		ctx_info = (struct cper_arm_ctx_info *)(err_info + err->err_info_num);
+  > 73		ctx_err = ctx_info;
+    74		for (n = 0; n < err->context_info_num; n++) {
+    75			sz = sizeof(struct cper_arm_ctx_info) + ctx_info->size;
+    76			ctx_info = (struct cper_arm_ctx_info *)((long)ctx_info + sz);
+    77			ctx_len += sz;
+    78		}
+    79	
+    80		vsei_len = err->section_length - (sizeof(struct cper_sec_proc_arm) +
+    81						  pei_len + ctx_len);
+    82		if (vsei_len < 0) {
+    83			pr_warn(FW_BUG
+    84				"section length: %d\n", err->section_length);
+    85			pr_warn(FW_BUG
+    86				"section length is too small\n");
+    87			pr_warn(FW_BUG
+    88				"firmware-generated error record is incorrect\n");
+    89			vsei_len = 0;
+    90		}
+    91		ven_err_data = (u8 *)ctx_info;
+    92	
+    93		cpu = GET_LOGICAL_INDEX(err->mpidr);
+    94		/* when return value is invalid, set cpu index to -1 */
+    95		if (cpu < 0)
+    96			cpu = -1;
+    97	
+    98		trace_arm_event(err, pei_err, pei_len, ctx_err, ctx_len,
+    99				ven_err_data, (u32)vsei_len, sev, cpu);
+   100	#endif
+   101	}
+   102	
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Reported-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Kazunori Kobayashi <kazunori.kobayashi@miraclelinux.com>
----
- net/ipv4/tcp.c           | 10 ++++++----
- net/ipv6/ipv6_sockglue.c |  3 ++-
- net/ipv6/tcp_ipv6.c      |  6 ++++--
- 3 files changed, 12 insertions(+), 7 deletions(-)
-
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index e3475f833f8fe..c863be23ac4db 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -3126,8 +3126,9 @@ int tcp_setsockopt(struct sock *sk, int level, int optname, char __user *optval,
- 	const struct inet_connection_sock *icsk = inet_csk(sk);
- 
- 	if (level != SOL_TCP)
--		return icsk->icsk_af_ops->setsockopt(sk, level, optname,
--						     optval, optlen);
-+		/* Paired with WRITE_ONCE() in do_ipv6_setsockopt() and tcp_v6_connect() */
-+		return READ_ONCE(icsk->icsk_af_ops)->setsockopt(sk, level, optname,
-+								optval, optlen);
- 	return do_tcp_setsockopt(sk, level, optname, optval, optlen);
- }
- EXPORT_SYMBOL(tcp_setsockopt);
-@@ -3649,8 +3650,9 @@ int tcp_getsockopt(struct sock *sk, int level, int optname, char __user *optval,
- 	struct inet_connection_sock *icsk = inet_csk(sk);
- 
- 	if (level != SOL_TCP)
--		return icsk->icsk_af_ops->getsockopt(sk, level, optname,
--						     optval, optlen);
-+		/* Paired with WRITE_ONCE() in do_ipv6_setsockopt() and tcp_v6_connect() */
-+		return READ_ONCE(icsk->icsk_af_ops)->getsockopt(sk, level, optname,
-+								optval, optlen);
- 	return do_tcp_getsockopt(sk, level, optname, optval, optlen);
- }
- EXPORT_SYMBOL(tcp_getsockopt);
-diff --git a/net/ipv6/ipv6_sockglue.c b/net/ipv6/ipv6_sockglue.c
-index 625cece87c122..caa7b59c819ee 100644
---- a/net/ipv6/ipv6_sockglue.c
-+++ b/net/ipv6/ipv6_sockglue.c
-@@ -226,7 +226,8 @@ static int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
- 				local_bh_enable();
- 				/* Paired with READ_ONCE(sk->sk_prot) in inet6_stream_ops */
- 				WRITE_ONCE(sk->sk_prot, &tcp_prot);
--				icsk->icsk_af_ops = &ipv4_specific;
-+				/* Paired with READ_ONCE() in tcp_(get|set)sockopt() */
-+				WRITE_ONCE(icsk->icsk_af_ops, &ipv4_specific);
- 				sk->sk_socket->ops = &inet_stream_ops;
- 				sk->sk_family = PF_INET;
- 				tcp_sync_mss(sk, icsk->icsk_pmtu_cookie);
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index 033cf81f34837..78eaaf59c15e2 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -229,7 +229,8 @@ static int tcp_v6_connect(struct sock *sk, struct sockaddr *uaddr,
- 		sin.sin_port = usin->sin6_port;
- 		sin.sin_addr.s_addr = usin->sin6_addr.s6_addr32[3];
- 
--		icsk->icsk_af_ops = &ipv6_mapped;
-+		/* Paired with READ_ONCE() in tcp_(get|set)sockopt() */
-+		WRITE_ONCE(icsk->icsk_af_ops, &ipv6_mapped);
- 		sk->sk_backlog_rcv = tcp_v4_do_rcv;
- #ifdef CONFIG_TCP_MD5SIG
- 		tp->af_specific = &tcp_sock_ipv6_mapped_specific;
-@@ -239,7 +240,8 @@ static int tcp_v6_connect(struct sock *sk, struct sockaddr *uaddr,
- 
- 		if (err) {
- 			icsk->icsk_ext_hdr_len = exthdrlen;
--			icsk->icsk_af_ops = &ipv6_specific;
-+			/* Paired with READ_ONCE() in tcp_(get|set)sockopt() */
-+			WRITE_ONCE(icsk->icsk_af_ops, &ipv6_specific);
- 			sk->sk_backlog_rcv = tcp_v6_do_rcv;
- #ifdef CONFIG_TCP_MD5SIG
- 			tp->af_specific = &tcp_sock_ipv6_specific;
 -- 
-2.39.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
