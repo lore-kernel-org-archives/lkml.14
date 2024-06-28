@@ -1,247 +1,212 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1E457C9F
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 18:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D292F3FB88
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 18:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719600394; cv=none; b=jGd2q9x/aUZnbONrJVlFuW8SxndOR1QnlrD75e/TN8HuaeO2htCFe3NdZxXxITJBLxYPTP9J/vKRyhoEJIyCVPFDtN+C13eQoEh1PJoTtZSSqjGxKtTZ6Rf9IyEHoW4BjNxUvCdRHEdHRGnRhKWUi2UoMPBM6GgV0JJuYKkgwII=
+	t=1719600494; cv=none; b=uSwYeB5Xx9QnU0cLslJG1GScOY9APHLWnkoO50MwBzqwChicJZwW+fTODH29NNEDiXtHAhgZ+T2FTcLgiLtQQ6sNC3bkgm0fYYX+1I00OiEJVhWzNGSoJHhqQk4qUU52UtcKXP6EHsRok55o7qEhtOltQcHU8RD5n6ffprr2Cyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719600394; c=relaxed/simple;
-	bh=DwKrj950LqieQk+fbHw4JLEU1NPChmdIiVc7nrYmDNI=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=eupMdn/9fp0e9krypYUODNrUIgpF4NSkvlMtMybs8nDZreoktmuGevCceUIyNqWtHx/zuf4rLtIAIBopDAuLoYUxV8sfPmpasorwrJAk2wRQkxxVF5OtI5tZ9LzftKMwx7KI9iDkdMZQofQrO4dJIt2j8C9NivQmmJgP/p+Pipg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lw29LH26; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719600494; c=relaxed/simple;
+	bh=7QRMtpyROH1I0Ue3wwqfR+H6npMHbd5QT1sp7Y7YZJU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EpHFJeFkp6j0HKe2bg2NwPaQ/gxSMNTo4Odtgk8w83Hag+FR2my3GxdRgWLWI2e66ZR7T3Z7vJ6qVeyW0tniR+OqHJ6GID0Ltkq1X0CoBfqtSqmF1FXm0fYxMtGpL9dZQkiDFg5MNscRLHVcBbokotcCsYoZs/4WQjSqEeTHCto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Qn80jnZ+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lw29LH26"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719600393; x=1751136393;
-  h=date:from:to:cc:subject:message-id;
-  bh=DwKrj950LqieQk+fbHw4JLEU1NPChmdIiVc7nrYmDNI=;
-  b=Lw29LH26GeyA3PxKfx2gv6DH+HC9eBx+4BRKimKguHI4rWIEJ2kA6u0v
-   td83+iO0e8ZG6U2fhlcKVLkecKwoLTTSD5EM9nEfd3e3ufpKzJIq082/E
-   gAIt1yp0IynuIt1XPZECoveWf3t0RNSaeIIxD5Cf3lrcr0EbE9lro7Iq7
-   KjzjhZObl3MP0bvthMviFDd+yRkNLQDNytJzziiLCL1a9grRfPMVkV3iQ
-   Hn88RZ+OMtT77qn2W6Sq0PFIw4orcnGdGz1SC3IqxDwb81+3s+rJ0uZxA
-   1X0aYGfLsaMgsztWPh7vV1F3tGvKLCDaRvUWBfmEF6xeKKgQK7Y3s7s65
-   g==;
-X-CSE-ConnectionGUID: Wui9ru7JTLqgZ7z41LzgXQ==
-X-CSE-MsgGUID: hjDRwaZWSn+GNPZt0B3ghg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11117"; a="16531905"
-X-IronPort-AV: E=Sophos;i="6.09,170,1716274800"; 
-   d="scan'208";a="16531905"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 11:46:32 -0700
-X-CSE-ConnectionGUID: K9ddv40dQhSItvzrj4KmoQ==
-X-CSE-MsgGUID: IJunQ/QcS7qZKhWbxeiU4Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,170,1716274800"; 
-   d="scan'208";a="76010557"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 28 Jun 2024 11:46:31 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sNGc9-000Hla-0D;
-	Fri, 28 Jun 2024 18:46:29 +0000
-Date: Sat, 29 Jun 2024 02:45:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:irq/urgent] BUILD SUCCESS
- 9eee5330656bf92f51cb1f09b2dc9f8cf975b3d1
-Message-ID: <202406290241.y3nXRZGL-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qn80jnZ+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719600491;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BPNBPdx6rKTE521JsYRdhS1BYG1MBCkTdE7R8C6b+Es=;
+	b=Qn80jnZ+rwKUNc4FXbrdInzboNpjaFSfixJHvIuDUDTeGlx6gTTLBLLBflmIIaCjhRFZ1p
+	ZOjFlY66sgPtA/avRT+FzALyYEfWxcbaM92L330O6ZiNodpobiXxEpxgoCpf5454MwfMos
+	yEp5GHf9akZg5NE8i6YkWizRcBIbarg=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-210-ev6LzQVgNKmG0zzlGO3LLA-1; Fri,
+ 28 Jun 2024 14:48:06 -0400
+X-MC-Unique: ev6LzQVgNKmG0zzlGO3LLA-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4F6E419560AA;
+	Fri, 28 Jun 2024 18:48:03 +0000 (UTC)
+Received: from tpad.localdomain (unknown [10.96.133.3])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3EB9E1955BD4;
+	Fri, 28 Jun 2024 18:48:01 +0000 (UTC)
+Received: by tpad.localdomain (Postfix, from userid 1000)
+	id E1B78400E5C3B; Fri, 28 Jun 2024 15:47:38 -0300 (-03)
+Date: Fri, 28 Jun 2024 15:47:38 -0300
+From: Marcelo Tosatti <mtosatti@redhat.com>
+To: Leonardo Bras <leobras@redhat.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Vlastimil Babka <vbabka@suse.cz>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v1 0/4] Introduce QPW for per-cpu operations
+Message-ID: <Zn8FSqqoLIIB/LnG@tpad>
+References: <20240622035815.569665-1-leobras@redhat.com>
+ <261612b9-e975-4c02-a493-7b83fa17c607@suse.cz>
+ <Znn5FgqoCAUAfQhu@boqun-archlinux>
+ <ZnoyNQLQdyAcMxjP@LeoBras>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZnoyNQLQdyAcMxjP@LeoBras>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/urgent
-branch HEAD: 9eee5330656bf92f51cb1f09b2dc9f8cf975b3d1  PCI/MSI: Fix UAF in msi_capability_init
+On Mon, Jun 24, 2024 at 11:57:57PM -0300, Leonardo Bras wrote:
+> On Mon, Jun 24, 2024 at 03:54:14PM -0700, Boqun Feng wrote:
+> > On Mon, Jun 24, 2024 at 09:31:51AM +0200, Vlastimil Babka wrote:
+> > > Hi,
+> > > 
+> > > you've included tglx, which is great, but there's also LOCKING PRIMITIVES
+> > > section in MAINTAINERS so I've added folks from there in my reply.
+> > 
+> > Thanks!
+> > 
+> > > Link to full series:
+> > > https://lore.kernel.org/all/20240622035815.569665-1-leobras@redhat.com/
+> > > 
+> > 
+> > And apologies to Leonardo... I think this is a follow-up of:
+> > 
+> > 	https://lpc.events/event/17/contributions/1484/
+> > 
+> > and I did remember we had a quick chat after that which I suggested it's
+> > better to change to a different name, sorry that I never found time to
+> > write a proper rely to your previous seriese [1] as promised.
+> > 
+> > [1]: https://lore.kernel.org/lkml/20230729083737.38699-2-leobras@redhat.com/
+> 
+> That's correct, I commented about this in the end of above presentation.
+> Don't worry, and thanks for suggesting the per-cpu naming, it was very 
+> helpful on designing this solution.
+> 
+> > 
+> > > On 6/22/24 5:58 AM, Leonardo Bras wrote:
+> > > > The problem:
+> > > > Some places in the kernel implement a parallel programming strategy
+> > > > consisting on local_locks() for most of the work, and some rare remote
+> > > > operations are scheduled on target cpu. This keeps cache bouncing low since
+> > > > cacheline tends to be mostly local, and avoids the cost of locks in non-RT
+> > > > kernels, even though the very few remote operations will be expensive due
+> > > > to scheduling overhead.
+> > > > 
+> > > > On the other hand, for RT workloads this can represent a problem: getting
+> > > > an important workload scheduled out to deal with remote requests is
+> > > > sure to introduce unexpected deadline misses.
+> > > > 
+> > > > The idea:
+> > > > Currently with PREEMPT_RT=y, local_locks() become per-cpu spinlocks.
+> > > > In this case, instead of scheduling work on a remote cpu, it should
+> > > > be safe to grab that remote cpu's per-cpu spinlock and run the required
+> > > > work locally. Tha major cost, which is un/locking in every local function,
+> > > > already happens in PREEMPT_RT.
+> > > 
+> > > I've also noticed this a while ago (likely in the context of rewriting SLUB
+> > > to use local_lock) and asked about it on IRC, and IIRC tglx wasn't fond of
+> > > the idea. But I forgot the details about why, so I'll let the the locking
+> > > experts reply...
+> > > 
+> > 
+> > I think it's a good idea, especially the new name is less confusing ;-)
+> > So I wonder Thomas' thoughts as well.
+> 
+> Thanks!
+> 
+> > 
+> > And I think a few (micro-)benchmark numbers will help.
+> 
+> Last year I got some numbers on how replacing local_locks with 
+> spinlocks would impact memcontrol.c cache operations:
+> 
+> https://lore.kernel.org/all/20230125073502.743446-1-leobras@redhat.com/
+> 
+> tl;dr: It increased clocks spent in the most common this_cpu operations, 
+> while reducing clocks spent in remote operations (drain_all_stock).
+> 
+> In RT case, since local locks are already spinlocks, this cost is 
+> already paid, so we can get results like these:
+> 
+> drain_all_stock
+> cpus	Upstream 	Patched		Diff (cycles)	Diff(%)
+> 1	44331.10831	38978.03581	-5353.072507	-12.07520567
+> 8	43992.96512	39026.76654	-4966.198572	-11.2886198
+> 128	156274.6634	58053.87421	-98220.78915	-62.85138425
+> 
+> Upstream: Clocks to schedule work on remote CPU (performing not accounted)
+> Patched:  Clocks to grab remote cpu's spinlock and perform the needed work 
+> 	  locally.
+> 
+> Do you have other suggestions to use as (micro-) benchmarking?
+> 
+> Thanks!
+> Leo
 
-elapsed time: 5562m
+One improvement which was noted when mm/page_alloc.c was converted to 
+spinlock + remote drain was that, it can bypass waiting for kwork 
+to be scheduled (on heavily loaded CPUs).
 
-configs tested: 170
-configs skipped: 2
+commit 443c2accd1b6679a1320167f8f56eed6536b806e
+Author: Nicolas Saenz Julienne <nsaenzju@redhat.com>
+Date:   Fri Jun 24 13:54:22 2022 +0100
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+    mm/page_alloc: remotely drain per-cpu lists
+    
+    Some setups, notably NOHZ_FULL CPUs, are too busy to handle the per-cpu
+    drain work queued by __drain_all_pages().  So introduce a new mechanism to
+    remotely drain the per-cpu lists.  It is made possible by remotely locking
+    'struct per_cpu_pages' new per-cpu spinlocks.  A benefit of this new
+    scheme is that drain operations are now migration safe.
+    
+    There was no observed performance degradation vs.  the previous scheme.
+    Both netperf and hackbench were run in parallel to triggering the
+    __drain_all_pages(NULL, true) code path around ~100 times per second.  The
+    new scheme performs a bit better (~5%), although the important point here
+    is there are no performance regressions vs.  the previous mechanism.
+    Per-cpu lists draining happens only in slow paths.
+    
+    Minchan Kim tested an earlier version and reported;
+    
+            My workload is not NOHZ CPUs but run apps under heavy memory
+            pressure so they goes to direct reclaim and be stuck on
+            drain_all_pages until work on workqueue run.
+    
+            unit: nanosecond
+            max(dur)        avg(dur)                count(dur)
+            166713013       487511.77786438033      1283
+    
+            From traces, system encountered the drain_all_pages 1283 times and
+            worst case was 166ms and avg was 487us.
+    
+            The other problem was alloc_contig_range in CMA. The PCP draining
+            takes several hundred millisecond sometimes though there is no
+            memory pressure or a few of pages to be migrated out but CPU were
+            fully booked.
+    
+            Your patch perfectly removed those wasted time.
 
-tested configs:
-alpha                             allnoconfig   gcc-13.2.0
-alpha                               defconfig   gcc-13.2.0
-arc                              allmodconfig   gcc-13.2.0
-arc                               allnoconfig   gcc-13.2.0
-arc                              allyesconfig   gcc-13.2.0
-arc                                 defconfig   gcc-13.2.0
-arc                   randconfig-001-20240628   gcc-13.2.0
-arc                   randconfig-002-20240628   gcc-13.2.0
-arm                              allmodconfig   gcc-13.2.0
-arm                               allnoconfig   gcc-13.2.0
-arm                              allyesconfig   gcc-13.2.0
-arm                     am200epdkit_defconfig   gcc-13.2.0
-arm                         bcm2835_defconfig   gcc-13.2.0
-arm                     davinci_all_defconfig   gcc-13.2.0
-arm                                 defconfig   gcc-13.2.0
-arm                        multi_v5_defconfig   gcc-13.2.0
-arm                         mv78xx0_defconfig   gcc-13.2.0
-arm                        mvebu_v7_defconfig   gcc-13.2.0
-arm                           omap1_defconfig   gcc-13.2.0
-arm                   randconfig-001-20240628   gcc-13.2.0
-arm                   randconfig-002-20240628   gcc-13.2.0
-arm                   randconfig-003-20240628   gcc-13.2.0
-arm                   randconfig-004-20240628   gcc-13.2.0
-arm                           tegra_defconfig   gcc-13.2.0
-arm64                            allmodconfig   gcc-13.2.0
-arm64                             allnoconfig   gcc-13.2.0
-arm64                            allyesconfig   clang-19
-arm64                               defconfig   gcc-13.2.0
-arm64                 randconfig-001-20240628   gcc-13.2.0
-arm64                 randconfig-002-20240628   gcc-13.2.0
-arm64                 randconfig-003-20240628   gcc-13.2.0
-arm64                 randconfig-004-20240628   gcc-13.2.0
-csky                              allnoconfig   gcc-13.2.0
-csky                                defconfig   gcc-13.2.0
-csky                  randconfig-001-20240628   gcc-13.2.0
-csky                  randconfig-002-20240628   gcc-13.2.0
-i386                             allmodconfig   clang-18
-i386                              allnoconfig   clang-18
-i386                             allyesconfig   clang-18
-i386         buildonly-randconfig-001-20240628   gcc-10
-i386         buildonly-randconfig-002-20240628   gcc-10
-i386         buildonly-randconfig-003-20240628   gcc-10
-i386         buildonly-randconfig-004-20240628   gcc-10
-i386         buildonly-randconfig-005-20240628   gcc-10
-i386         buildonly-randconfig-006-20240628   gcc-10
-i386                                defconfig   clang-18
-i386                  randconfig-001-20240628   gcc-10
-i386                  randconfig-002-20240628   gcc-10
-i386                  randconfig-003-20240628   gcc-10
-i386                  randconfig-004-20240628   gcc-10
-i386                  randconfig-005-20240628   gcc-10
-i386                  randconfig-006-20240628   gcc-10
-i386                  randconfig-011-20240628   gcc-10
-i386                  randconfig-012-20240628   gcc-10
-i386                  randconfig-013-20240628   gcc-10
-i386                  randconfig-014-20240628   gcc-10
-i386                  randconfig-015-20240628   gcc-10
-i386                  randconfig-016-20240628   gcc-10
-loongarch                        allmodconfig   gcc-13.2.0
-loongarch                         allnoconfig   gcc-13.2.0
-loongarch                           defconfig   gcc-13.2.0
-loongarch             randconfig-001-20240628   gcc-13.2.0
-loongarch             randconfig-002-20240628   gcc-13.2.0
-m68k                             allmodconfig   gcc-13.2.0
-m68k                              allnoconfig   gcc-13.2.0
-m68k                             allyesconfig   gcc-13.2.0
-m68k                                defconfig   gcc-13.2.0
-microblaze                       allmodconfig   gcc-13.2.0
-microblaze                        allnoconfig   gcc-13.2.0
-microblaze                       allyesconfig   gcc-13.2.0
-microblaze                          defconfig   gcc-13.2.0
-mips                             allmodconfig   clang-19
-mips                              allnoconfig   gcc-13.2.0
-mips                             allyesconfig   clang-19
-mips                          ath79_defconfig   gcc-13.2.0
-mips                        qi_lb60_defconfig   gcc-13.2.0
-nios2                            allmodconfig   gcc-13.2.0
-nios2                             allnoconfig   gcc-13.2.0
-nios2                            allyesconfig   gcc-13.2.0
-nios2                               defconfig   gcc-13.2.0
-nios2                 randconfig-001-20240628   gcc-13.2.0
-nios2                 randconfig-002-20240628   gcc-13.2.0
-openrisc                         allmodconfig   gcc-13.2.0
-openrisc                          allnoconfig   gcc-13.2.0
-openrisc                         allyesconfig   gcc-13.2.0
-openrisc                            defconfig   gcc-13.2.0
-parisc                           allmodconfig   gcc-13.2.0
-parisc                            allnoconfig   gcc-13.2.0
-parisc                           allyesconfig   gcc-13.2.0
-parisc                              defconfig   gcc-13.2.0
-parisc                randconfig-001-20240628   gcc-13.2.0
-parisc                randconfig-002-20240628   gcc-13.2.0
-parisc64                            defconfig   gcc-13.2.0
-powerpc                          allmodconfig   gcc-13.2.0
-powerpc                           allnoconfig   gcc-13.2.0
-powerpc                          allyesconfig   gcc-13.2.0
-powerpc                    amigaone_defconfig   gcc-13.2.0
-powerpc                    klondike_defconfig   gcc-13.2.0
-powerpc                    mvme5100_defconfig   gcc-13.2.0
-powerpc                      ppc44x_defconfig   gcc-13.2.0
-powerpc               randconfig-001-20240628   gcc-13.2.0
-powerpc               randconfig-002-20240628   gcc-13.2.0
-powerpc               randconfig-003-20240628   gcc-13.2.0
-powerpc64             randconfig-001-20240628   gcc-13.2.0
-powerpc64             randconfig-002-20240628   gcc-13.2.0
-powerpc64             randconfig-003-20240628   gcc-13.2.0
-riscv                            allmodconfig   gcc-13.2.0
-riscv                             allnoconfig   gcc-13.2.0
-riscv                            allyesconfig   gcc-13.2.0
-riscv                               defconfig   gcc-13.2.0
-riscv                 randconfig-001-20240628   gcc-13.2.0
-riscv                 randconfig-002-20240628   gcc-13.2.0
-s390                              allnoconfig   gcc-13.2.0
-s390                                defconfig   gcc-13.2.0
-s390                  randconfig-001-20240628   gcc-13.2.0
-s390                  randconfig-002-20240628   gcc-13.2.0
-sh                                allnoconfig   gcc-13.2.0
-sh                                  defconfig   gcc-13.2.0
-sh                          lboxre2_defconfig   gcc-13.2.0
-sh                    randconfig-001-20240628   gcc-13.2.0
-sh                    randconfig-002-20240628   gcc-13.2.0
-sh                          rsk7264_defconfig   gcc-13.2.0
-sh                        sh7785lcr_defconfig   gcc-13.2.0
-sparc                            allyesconfig   gcc-13.2.0
-sparc64                          allmodconfig   gcc-13.2.0
-sparc64                          allyesconfig   gcc-13.2.0
-sparc64                             defconfig   gcc-13.2.0
-sparc64               randconfig-001-20240628   gcc-13.2.0
-sparc64               randconfig-002-20240628   gcc-13.2.0
-um                                allnoconfig   gcc-13.2.0
-um                                  defconfig   gcc-13.2.0
-um                             i386_defconfig   gcc-13.2.0
-um                    randconfig-001-20240628   gcc-13.2.0
-um                    randconfig-002-20240628   gcc-13.2.0
-um                           x86_64_defconfig   gcc-13.2.0
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64       buildonly-randconfig-001-20240628   gcc-13
-x86_64       buildonly-randconfig-002-20240628   gcc-13
-x86_64       buildonly-randconfig-003-20240628   gcc-13
-x86_64       buildonly-randconfig-004-20240628   gcc-13
-x86_64       buildonly-randconfig-005-20240628   gcc-13
-x86_64       buildonly-randconfig-006-20240628   gcc-13
-x86_64                              defconfig   clang-18
-x86_64                                  kexec   clang-18
-x86_64                randconfig-001-20240628   gcc-13
-x86_64                randconfig-002-20240628   gcc-13
-x86_64                randconfig-003-20240628   gcc-13
-x86_64                randconfig-004-20240628   gcc-13
-x86_64                randconfig-005-20240628   gcc-13
-x86_64                randconfig-006-20240628   gcc-13
-x86_64                randconfig-011-20240628   gcc-13
-x86_64                randconfig-012-20240628   gcc-13
-x86_64                randconfig-013-20240628   gcc-13
-x86_64                randconfig-014-20240628   gcc-13
-x86_64                randconfig-015-20240628   gcc-13
-x86_64                randconfig-016-20240628   gcc-13
-x86_64                randconfig-071-20240628   gcc-13
-x86_64                randconfig-072-20240628   gcc-13
-x86_64                randconfig-073-20240628   gcc-13
-x86_64                randconfig-074-20240628   gcc-13
-x86_64                randconfig-075-20240628   gcc-13
-x86_64                randconfig-076-20240628   gcc-13
-x86_64                          rhel-8.3-func   clang-18
-x86_64                          rhel-8.3-rust   clang-18
-x86_64                               rhel-8.3   clang-18
-xtensa                            allnoconfig   gcc-13.2.0
-xtensa                           allyesconfig   gcc-13.2.0
-xtensa                randconfig-001-20240628   gcc-13.2.0
-xtensa                randconfig-002-20240628   gcc-13.2.0
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
