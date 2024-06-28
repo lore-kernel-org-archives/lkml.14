@@ -1,226 +1,264 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1094513E058;
-	Fri, 28 Jun 2024 07:22:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269A913DDC9
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 07:22:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719559344; cv=none; b=IS5Q9CWw+Do+o3KIyWBrLKajyInyOvoewyQqtnTkbPw1HWf2NzI9st+/2Hq+pDo31t6TsH88+swSQBv0mbunpnhQuxkw0NXoTnNUWcslOFHIbrsxaf85/O9W/7AFoWcsb8JZedrWkf8uT3nDNn6uk5BJB+Mxdzw8BzfusQJyoRw=
+	t=1719559363; cv=none; b=p90g/1x5VXw28VYjYrdgDcQ5m2z/lKwrAsSW+2iCfyuQ+T9p3yIN7vjzALKo6oK/V4aMTlI6gwsCIhz3ahh1UTiPgK2icWZDAdo+S/Epk8ZmVkSAFa+T7Ywas1YksbZDbfHm895DhGAUclv/gzYv+xaPw+aQB+R2L9kEY2PRExo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719559344; c=relaxed/simple;
-	bh=kk0jS6Zn/eajs/D76BtMMEDKGhKMcCaj28YrpERS6qw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jp6YA1zWCZd24i78WGnC+r4D7fKAgtY/2r1xQbSvj6UBxnCnRgJ1Em7xxu2hP26LVj82abNhgrmDRni+Bphcp+FR1pEWpHXLuk8CBW8TVyggokF4rjtKTPQsIipoySjW8RMxRZFBs0JhSFZE6+1SXTWdFqOKEMc9szrPRQCnODY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nxu+xklR; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719559363; c=relaxed/simple;
+	bh=7Tf/vh/e+w/9J9xee3TIyV/7qBN7BrlX5VjWSwNArMw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tovi0PjFBsAKR9l8ScEtV4GhSOqqcJRzWPC3vP5Lao3i88M5SZe7kzvV9xWcmlcjYwKN6J05cBd6jxYjt6a+4Ak0YXwG9UEZWzZIzwfzAvZ2k6TwkOlpH8WB38KhkdMnhWC3bpUqnrGrW77N84S4rJo2b7ju5DXRSI/vwAQPAhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=htCjFchI; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nxu+xklR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719559341; x=1751095341;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kk0jS6Zn/eajs/D76BtMMEDKGhKMcCaj28YrpERS6qw=;
-  b=Nxu+xklRrCKBuy4TN8nVFGR5fUyyEcjxeNiUc1ouICMzL1piC3u1xQUR
-   pKcudj6F6+Bcxn35IJcbbOJhgxPhtpo3IVlt8zVAfSx+i9VqyqMb3qG6P
-   wVEBNpL9Igtp5I4MOjWgkDRJl5pKOVaIwSM7hzzMiK9on2etzkdR7nvqF
-   YERuROWgzYceIqJ8W0qaCNxKmjEzqax85mUGj949raG8RPyPUItztk02B
-   H2G3KLYqJRf7KYUD85yAPaxb8aJ0GuYE1K+ZIZwkhZZTx6ajzU6WWRPTg
-   a+6LtaEj+u/7rbtSwZzuYk8u0z77Vyzz9xopZ9wXBylUSwaPNOBswfpSR
-   w==;
-X-CSE-ConnectionGUID: oVioolhhSpGwNY3UavbQmQ==
-X-CSE-MsgGUID: T69KE4ovQAOqd9nUukrP3A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="16468202"
-X-IronPort-AV: E=Sophos;i="6.09,168,1716274800"; 
-   d="scan'208";a="16468202"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 00:22:20 -0700
-X-CSE-ConnectionGUID: CBI4nw8NSwuGvrqeMakrxQ==
-X-CSE-MsgGUID: VaE3baFuSwybmyPTgbBtPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,168,1716274800"; 
-   d="scan'208";a="49567540"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 28 Jun 2024 00:22:17 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sN5vx-000Gti-2j;
-	Fri, 28 Jun 2024 07:22:13 +0000
-Date: Fri, 28 Jun 2024 15:21:15 +0800
-From: kernel test robot <lkp@intel.com>
-To: Alex Vdovydchenko <keromvp@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sean Anderson <sean.anderson@linux.dev>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
-	Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-i2c@vger.kernel.org, Alex Vdovydchenko <xzeol@yahoo.com>
-Subject: Re: [PATCH v2 2/2] hwmon: add MP5920 driver
-Message-ID: <202406281512.NAdadCZX-lkp@intel.com>
-References: <20240627090113.391730-3-xzeol@yahoo.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="htCjFchI"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2eaae2a6dc1so3397011fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 00:22:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719559359; x=1720164159; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=l4pD304JwMKa83pcEpFZevIuB7X5ddSXjfbIN66nvoM=;
+        b=htCjFchIMzI3ogvZMaRM9NRSAfh088a9WbirHWTM3jLoNpAjPhPdwhMzI+FLRDY+TQ
+         BGSuEyaI7ovqgPPSW4JGUm90EA6r0VOOzkUKOCPqdwChF9EUGPlTyuodGSEfHw5m93Js
+         TKh6amJn8cydYmwkyGShUAsR9paqRvgzCj3+hbFRtHqZGJ+lsfPOTlfByiyHd7o+feDH
+         Y8Q2TcAg3AXq5BuGhUmN6CpOGEyL8+ng3wcaY4kkepTVO/TP3XFMk5Eoj7107Bv+UzFI
+         3UY46HQ9aqDwcEjze9gUthKAf5vTDNS5UkPGFEsrMXzD90RIWyuuVQ5fBSJ0miz/dKdf
+         vhOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719559359; x=1720164159;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=l4pD304JwMKa83pcEpFZevIuB7X5ddSXjfbIN66nvoM=;
+        b=jOT7Kj3QO+ZWpB4L3SZYk9XOxmf964aHLD1+ummANntdLZHqwEOj9p6sl2yLB1JHKb
+         UG2VAVtMVBkC6pSaQ3B2k2ji40P76G4mScKfEHhaXyB1/JZHaLewcfGtQfnN8H2ycYbF
+         8Zk42Wj36eL1iplez+4fCtlJgzj2rq2KypPdLm7pz3wmpUlSSX5v94jqPj4/g/zm8gkG
+         /Q8RYgQCWT8Vt8LKIQ1smBJmoCca52K1Ltym/DjQvqI/+58JgsMreWUs4gECM8UIN8hH
+         TA7G+Nj443nQY0DPc+PkRQ1EiW9CGJ+ztQxMdTS2bqOm6ADXrK6uv63Y3CIGBVJKjoih
+         cwsw==
+X-Gm-Message-State: AOJu0YzI8SWYnALK3lDfwCp56iI98gDFv7sUJngfn0jipewYs0B+3+Y3
+	aLQh7r+iXxIw/l1CFOxrLcybb4OEVxqhKw2NQoVliGd9Lr9GIaZXdnlErTHfDLM=
+X-Google-Smtp-Source: AGHT+IE4XozIpNLrCIvjHr5Z0ToDUvimNW3x7D5/7u0wxrN3EaX/yFN+S5mO6lhru7jzTa1nW+PrZQ==
+X-Received: by 2002:a2e:8048:0:b0:2ee:4f58:7738 with SMTP id 38308e7fff4ca-2ee4f5878f3mr15444911fa.17.1719559359206;
+        Fri, 28 Jun 2024 00:22:39 -0700 (PDT)
+Received: from ?IPV6:2a05:6e02:1041:c10:c49e:e1a5:3210:b8c0? ([2a05:6e02:1041:c10:c49e:e1a5:3210:b8c0])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4256b097bcbsm21904385e9.35.2024.06.28.00.22.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Jun 2024 00:22:38 -0700 (PDT)
+Message-ID: <835d5847-1aa0-4852-89c7-6a6996b3eb65@linaro.org>
+Date: Fri, 28 Jun 2024 09:22:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240627090113.391730-3-xzeol@yahoo.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [External Mail]Re: Race condition when replacing the broadcast
+ timer
+To: =?UTF-8?B?5pyx5oG65Lm+?= <zhukaiqian@xiaomi.com>,
+ Thomas Gleixner <tglx@linutronix.de>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ =?UTF-8?B?546L6Z+s?= <lingyue@xiaomi.com>, =?UTF-8?B?54aK5Lqu?=
+ <xiongliang@xiaomi.com>,
+ "isaacmanjarres@google.com" <isaacmanjarres@google.com>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>
+References: <042520850d394f0bb0004a226db63d0d@xiaomi.com>
+ <87o77m1v9r.ffs@tglx> <b07f9746a58d46919b1600b22f5dff05@xiaomi.com>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <b07f9746a58d46919b1600b22f5dff05@xiaomi.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Alex,
+On 28/06/2024 03:59, 朱恺乾 wrote:
+> Thanks for the fast reply.
+> May I know when there'll be a formal patch on the mainline?
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on groeck-staging/hwmon-next]
-[also build test ERROR on next-20240627]
-[cannot apply to robh/for-next krzk-dt/for-next linus/master v6.10-rc5]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Alex-Vdovydchenko/dt-bindings-hwmon-Add-MPS-mp5920/20240628-021125
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
-patch link:    https://lore.kernel.org/r/20240627090113.391730-3-xzeol%40yahoo.com
-patch subject: [PATCH v2 2/2] hwmon: add MP5920 driver
-config: arm64-allmodconfig (https://download.01.org/0day-ci/archive/20240628/202406281512.NAdadCZX-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 326ba38a991250a8587a399a260b0f7af2c9166a)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240628/202406281512.NAdadCZX-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406281512.NAdadCZX-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from drivers/hwmon/pmbus/mp5920.c:18:
-   In file included from include/linux/i2c.h:13:
-   In file included from include/linux/acpi.h:39:
-   In file included from include/acpi/acpi_io.h:7:
-   In file included from arch/arm64/include/asm/acpi.h:14:
-   In file included from include/linux/memblock.h:12:
-   In file included from include/linux/mm.h:2253:
-   include/linux/vmstat.h:500:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     500 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     501 |                            item];
-         |                            ~~~~
-   include/linux/vmstat.h:507:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     507 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     508 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:514:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     514 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   include/linux/vmstat.h:519:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     519 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     520 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:528:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     528 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     529 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
->> drivers/hwmon/pmbus/mp5920.c:26:2: error: use of undeclared identifier 'pages'
-      26 |         pages = 1,
-         |         ^
->> drivers/hwmon/pmbus/mp5920.c:27:2: error: use of undeclared identifier 'format'
-      27 |         format[PSC_VOLTAGE_IN] = direct,
-         |         ^
-   drivers/hwmon/pmbus/mp5920.c:28:2: error: use of undeclared identifier 'format'
-      28 |         format[PSC_VOLTAGE_OUT] = direct,
-         |         ^
-   drivers/hwmon/pmbus/mp5920.c:29:2: error: use of undeclared identifier 'format'
-      29 |         format[PSC_CURRENT_OUT] = direct,
-         |         ^
-   drivers/hwmon/pmbus/mp5920.c:30:2: error: use of undeclared identifier 'format'
-      30 |         format[PSC_POWER] = direct,
-         |         ^
-   drivers/hwmon/pmbus/mp5920.c:31:2: error: use of undeclared identifier 'format'
-      31 |         format[PSC_TEMPERATURE] = direct,
-         |         ^
->> drivers/hwmon/pmbus/mp5920.c:32:2: error: use of undeclared identifier 'm'
-      32 |         m[PSC_VOLTAGE_IN] = 2266,
-         |         ^
->> drivers/hwmon/pmbus/mp5920.c:33:2: error: use of undeclared identifier 'b'
-      33 |         b[PSC_VOLTAGE_IN] = 0,
-         |         ^
->> drivers/hwmon/pmbus/mp5920.c:34:2: error: use of undeclared identifier 'R'
-      34 |         R[PSC_VOLTAGE_IN] = -1,
-         |         ^
-   drivers/hwmon/pmbus/mp5920.c:35:2: error: use of undeclared identifier 'm'
-      35 |         m[PSC_VOLTAGE_OUT] = 2266,
-         |         ^
-   drivers/hwmon/pmbus/mp5920.c:36:2: error: use of undeclared identifier 'b'
-      36 |         b[PSC_VOLTAGE_OUT] = 0,
-         |         ^
-   drivers/hwmon/pmbus/mp5920.c:37:2: error: use of undeclared identifier 'R'
-      37 |         R[PSC_VOLTAGE_OUT] = -1,
-         |         ^
-   drivers/hwmon/pmbus/mp5920.c:38:2: error: use of undeclared identifier 'm'
-      38 |         m[PSC_CURRENT_OUT] = 546,
-         |         ^
-   drivers/hwmon/pmbus/mp5920.c:39:2: error: use of undeclared identifier 'b'
-      39 |         b[PSC_CURRENT_OUT] = 0,
-         |         ^
-   drivers/hwmon/pmbus/mp5920.c:40:2: error: use of undeclared identifier 'R'
-      40 |         R[PSC_CURRENT_OUT] = -2,
-         |         ^
-   drivers/hwmon/pmbus/mp5920.c:41:2: error: use of undeclared identifier 'm'
-      41 |         m[PSC_POWER] = 5840,
-         |         ^
-   drivers/hwmon/pmbus/mp5920.c:42:2: error: use of undeclared identifier 'b'
-      42 |         b[PSC_POWER] = 0,
-         |         ^
-   drivers/hwmon/pmbus/mp5920.c:43:2: error: use of undeclared identifier 'R'
-      43 |         R[PSC_POWER] = -3,
-         |         ^
-   drivers/hwmon/pmbus/mp5920.c:44:2: error: use of undeclared identifier 'm'
-      44 |         m[PSC_TEMPERATURE] = 1067,
-         |         ^
-   fatal error: too many errors emitted, stopping now [-ferror-limit=]
-   5 warnings and 20 errors generated.
+Do you confirm the patch fixes the issue ?
 
 
-vim +/pages +26 drivers/hwmon/pmbus/mp5920.c
-
-    24	
-    25	static struct pmbus_driver_info mp5920_info = {
-  > 26		pages = 1,
-  > 27		format[PSC_VOLTAGE_IN] = direct,
-    28		format[PSC_VOLTAGE_OUT] = direct,
-    29		format[PSC_CURRENT_OUT] = direct,
-    30		format[PSC_POWER] = direct,
-    31		format[PSC_TEMPERATURE] = direct,
-  > 32		m[PSC_VOLTAGE_IN] = 2266,
-  > 33		b[PSC_VOLTAGE_IN] = 0,
-  > 34		R[PSC_VOLTAGE_IN] = -1,
-    35		m[PSC_VOLTAGE_OUT] = 2266,
-    36		b[PSC_VOLTAGE_OUT] = 0,
-    37		R[PSC_VOLTAGE_OUT] = -1,
-    38		m[PSC_CURRENT_OUT] = 546,
-    39		b[PSC_CURRENT_OUT] = 0,
-    40		R[PSC_CURRENT_OUT] = -2,
-    41		m[PSC_POWER] = 5840,
-    42		b[PSC_POWER] = 0,
-    43		R[PSC_POWER] = -3,
-    44		m[PSC_TEMPERATURE] = 1067,
-    45		b[PSC_TEMPERATURE] = 20500,
-    46		R[PSC_TEMPERATURE] = -2,
-    47		func[0] = PMBUS_HAVE_VIN  | PMBUS_HAVE_VOUT |
-    48			PMBUS_HAVE_IOUT | PMBUS_HAVE_POUT |
-    49			PMBUS_HAVE_TEMP,
-    50	};
-    51	
+> -----Original Message-----
+> From: Thomas Gleixner <tglx@linutronix.de>
+> Sent: Thursday, June 27, 2024 7:27 PM
+> To: 朱恺乾 <zhukaiqian@xiaomi.com>; Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: linux-kernel@vger.kernel.org; 王韬 <lingyue@xiaomi.com>; 熊亮 <xiongliang@xiaomi.com>; isaacmanjarres@google.com; Frederic Weisbecker <frederic@kernel.org>; Anna-Maria Behnsen <anna-maria@linutronix.de>
+> Subject: [External Mail]Re: Race condition when replacing the broadcast timer
+> 
+> [外部邮件] 此邮件来源于小米公司外部，请谨慎处理。若对邮件安全性存疑，请将邮件转发给misec@xiaomi.com进行反馈
+> 
+> On Wed, Jun 26 2024 at 02:17, 朱恺乾 wrote:
+>> We find a possible race condition when replacing the broadcast timer.
+>> Here is how the race happend,
+> 
+>> 1. In thread 0, ___tick_broadcast_oneshot_control, timer 0 as a
+>> broadcast timer is updating the next_event.
+> 
+>> 2. In thread 1, tick_install_broadcast_device, timer 0 is going to be
+>> replaced by a new timer 1.
+> 
+>> 3. If thread 0 gets the broadcast timer first, it would have the old
+>> timer returned (timer 0). When thread 1 shuts the old timer down and
+>> marks it as detached, Thread 0 still have the chance to re-enable the
+>> old timer with a noop handler if it executes slower than thread 1.
+> 
+>> 4. As the old timer is binded to a CPU, when plug out that CPU, kernel
+>> fails at clockevents.c:653
+> 
+> Clearly tick_install_broadcast_device() lacks serialization.
+> 
+> The untested patch below should cure that.
+> 
+> Thanks,
+> 
+>          tglx
+> ---
+>   kernel/time/clockevents.c    |   31 +++++++++++++++++++------------
+>   kernel/time/tick-broadcast.c |   36 ++++++++++++++++++++++--------------
+>   kernel/time/tick-internal.h  |    2 ++
+>   3 files changed, 43 insertions(+), 26 deletions(-)
+> 
+> --- a/kernel/time/clockevents.c
+> +++ b/kernel/time/clockevents.c
+> @@ -557,23 +557,14 @@ void clockevents_handle_noop(struct cloc  {  }
+> 
+> -/**
+> - * clockevents_exchange_device - release and request clock devices
+> - * @old:       device to release (can be NULL)
+> - * @new:       device to request (can be NULL)
+> - *
+> - * Called from various tick functions with clockevents_lock held and
+> - * interrupts disabled.
+> - */
+> -void clockevents_exchange_device(struct clock_event_device *old,
+> -                                struct clock_event_device *new)
+> +void __clockevents_exchange_device(struct clock_event_device *old,
+> +                                  struct clock_event_device *new)
+>   {
+>          /*
+>           * Caller releases a clock event device. We queue it into the
+>           * released list and do a notify add later.
+>           */
+>          if (old) {
+> -               module_put(old->owner);
+>                  clockevents_switch_state(old, CLOCK_EVT_STATE_DETACHED);
+>                  list_move(&old->list, &clockevents_released);
+>          }
+> @@ -585,6 +576,22 @@ void clockevents_exchange_device(struct
+>   }
+> 
+>   /**
+> + * clockevents_exchange_device - release and request clock devices
+> + * @old:       device to release (can be NULL)
+> + * @new:       device to request (can be NULL)
+> + *
+> + * Called from various tick functions with clockevents_lock held and
+> + * interrupts disabled.
+> + */
+> +void clockevents_exchange_device(struct clock_event_device *old,
+> +                                struct clock_event_device *new) {
+> +       if (old)
+> +               module_put(old->owner);
+> +       __clockevents_exchange_device(old, new); }
+> +
+> +/**
+>    * clockevents_suspend - suspend clock devices
+>    */
+>   void clockevents_suspend(void)
+> @@ -650,7 +657,7 @@ void tick_cleanup_dead_cpu(int cpu)
+>                  if (cpumask_test_cpu(cpu, dev->cpumask) &&
+>                      cpumask_weight(dev->cpumask) == 1 &&
+>                      !tick_is_broadcast_device(dev)) {
+> -                       BUG_ON(!clockevent_state_detached(dev));
+> +                       WARN_ON(!clockevent_state_detached(dev));
+>                          list_del(&dev->list);
+>                  }
+>          }
+> --- a/kernel/time/tick-broadcast.c
+> +++ b/kernel/time/tick-broadcast.c
+> @@ -162,23 +162,31 @@ static bool tick_set_oneshot_wakeup_devi
+>    */
+>   void tick_install_broadcast_device(struct clock_event_device *dev, int cpu)  {
+> -       struct clock_event_device *cur = tick_broadcast_device.evtdev;
+> +       struct clock_event_device *cur;
+> 
+> -       if (tick_set_oneshot_wakeup_device(dev, cpu))
+> -               return;
+> +       scoped_guard(raw_spinlock_irqsave, &tick_broadcast_lock) {
+> 
+> -       if (!tick_check_broadcast_device(cur, dev))
+> -               return;
+> +               if (tick_set_oneshot_wakeup_device(dev, cpu))
+> +                       return;
+> 
+> -       if (!try_module_get(dev->owner))
+> -               return;
+> +               cur = tick_broadcast_device.evtdev;
+> +               if (!tick_check_broadcast_device(cur, dev))
+> +                       return;
+> 
+> -       clockevents_exchange_device(cur, dev);
+> +               if (!try_module_get(dev->owner))
+> +                       return;
+> +
+> +               __clockevents_exchange_device(cur, dev);
+> +               if (cur)
+> +                       cur->event_handler = clockevents_handle_noop;
+> +               WRITE_ONCE(tick_broadcast_device.evtdev, dev);
+> +               if (!cpumask_empty(tick_broadcast_mask))
+> +                       tick_broadcast_start_periodic(dev);
+> +       }
+> +
+> +       /* Module release must be outside of the lock */
+>          if (cur)
+> -               cur->event_handler = clockevents_handle_noop;
+> -       tick_broadcast_device.evtdev = dev;
+> -       if (!cpumask_empty(tick_broadcast_mask))
+> -               tick_broadcast_start_periodic(dev);
+> +               module_put(old->owner);
+> 
+>          if (!(dev->features & CLOCK_EVT_FEAT_ONESHOT))
+>                  return;
+> @@ -1185,7 +1193,7 @@ int tick_broadcast_oneshot_active(void)
+>    */
+>   bool tick_broadcast_oneshot_available(void)
+>   {
+> -       struct clock_event_device *bc = tick_broadcast_device.evtdev;
+> +       struct clock_event_device *bc =
+> + READ_ONCE(tick_broadcast_device.evtdev);
+> 
+>          return bc ? bc->features & CLOCK_EVT_FEAT_ONESHOT : false;  } @@ -1193,7 +1201,7 @@ bool tick_broadcast_oneshot_available(vo
+>   #else
+>   int __tick_broadcast_oneshot_control(enum tick_broadcast_state state)  {
+> -       struct clock_event_device *bc = tick_broadcast_device.evtdev;
+> +       struct clock_event_device *bc =
+> + READ_ONCE(tick_broadcast_device.evtdev);
+> 
+>          if (!bc || (bc->features & CLOCK_EVT_FEAT_HRTIMER))
+>                  return -EBUSY;
+> --- a/kernel/time/tick-internal.h
+> +++ b/kernel/time/tick-internal.h
+> @@ -53,6 +53,8 @@ static inline void clockevent_set_state(  }
+> 
+>   extern void clockevents_shutdown(struct clock_event_device *dev);
+> +extern void __clockevents_exchange_device(struct clock_event_device *old,
+> +                                         struct clock_event_device
+> +*new);
+>   extern void clockevents_exchange_device(struct clock_event_device *old,
+>                                          struct clock_event_device *new);  extern void clockevents_switch_state(struct clock_event_device *dev,
+> #/******本邮件及其附件含有小米公司的保密信息，仅限于发送给上面地址中列出的个人或群组。禁止任何其他人以任何形式使用（包括但不限于全部或部分地泄露、复制、或散发）本邮件中的信息。如果您错收了本邮件，请您立即电话或邮件通知发件人并删除本邮件！ This e-mail and its attachments contain confidential information from XIAOMI, which is intended only for the person or entity whose address is listed above. Any use of the information contained herein in any way (including, but not limited to, total or partial disclosure, reproduction, or dissemination) by persons other than the intended recipient(s) is prohibited. If you receive this e-mail in error, please notify the sender by phone or email immediately and delete it!******/#
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
