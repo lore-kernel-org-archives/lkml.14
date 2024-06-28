@@ -1,112 +1,133 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD082DDC0;
-	Fri, 28 Jun 2024 18:27:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 513B31CCCD7
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 18:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719599251; cv=none; b=X8bSIZzq31sj1NeAn85Oy0XfnTtgsqwVqS10+fZjmXUXnQX4PmUej0zk6GH0/81IaET9FjtvERiwNHFHq0OUJh0yKSiVbYGZy0l6iKqde89DyOupsqKghLPiTCo/7D2m4Mjr352dQjN2t/osxnuSQI53zCXQ9B+1xs8TX/llDgc=
+	t=1719599311; cv=none; b=uhg2u4t3wgY4q5PJUj4Reep4GascAY/Q5ZCZn64Fqpeua+FIQlH3DSlMFdIg+cg3SS4/1v8Xol8nh8Zq5anHUR4JM570INnVfyuHbpGqm6B5R1mOCdJwQsF76kXzUBg3ccUAaAxBZOWJw6K3SIPHwEuYGg25B9w9iP5cowzIilo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719599251; c=relaxed/simple;
-	bh=EoIMkdip0Jqkq5yLw0PSMZmQ3Q58+ZzMoc5HAn1XXLs=;
+	s=arc-20240116; t=1719599311; c=relaxed/simple;
+	bh=0/bcKF9yNwfrpBcaWqzxl2cNtLLSxiplYVtthlumbnA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BbIm2Wuia+lgFy94Ka1j/jB02c2vN1ehdcXvPOcM/8JgPSh9r15z/BAl+wA5dbfy4FN3QDJ608N0AOE+sYnuxFpsoYTEZqgRM80BK8NTJXilSxTrgotCfBWlOt81e/UXqfs011nCu6ADQb1+3wK+flnn9nLJFd2QpsRoLoi0BCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GI30o1qA; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=CEqZhoA0ySrVbCaBBDC+izjfGsLfftr8Sv6TvLofroKdQvOsMvOZIuNXoaZ78gDhHnihEx4X6YMZY75qvoPrGXd+S0RrtWIosyj2TfonGrTdM1FF7S7dedbL9mkDkGTv0Bu5szgDBzH++TpyU0EUZV8nK7muFBnR+s8rvO+bcM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PhbSAKqy; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GI30o1qA"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2ec58040f39so8868281fa.2;
-        Fri, 28 Jun 2024 11:27:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PhbSAKqy"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1fad076cd9cso19625ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 11:28:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719599248; x=1720204048; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1719599310; x=1720204110; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dgGUkmn1jPeeQuMXMcfk1hTstH8mcemeot+l8YFexZY=;
-        b=GI30o1qAMbHkJLUO5EW5BTAZ3xJa6KaguK7UJ9zEidYrgO0EI9hEUclEwctgjRPRoB
-         Hdzq81WTikfhnJU05GBLg5TOYFBGZqgCyhrsYaQv5pqRQDYQQkF4ykpeZsSqK39bhMVl
-         E/B8UeF6PNTyy/00+v06quOEQM/YbrfraevBf1meIdfJWIajrpe47sbFdc55ZU+5IvZm
-         q2EVKkdKAVXSCo22gMZuyhZUp48ySdhCFu4prp1RWKEdlJuq7rFLXGZiLj+Tvs9lcYmJ
-         ediAf3qorZ/eX1xHBzA0qYeE39YyC14kNhYZL8VYx4+bLjScO5kzyWyd1ojLej3crKlS
-         z0wQ==
+        bh=Cn/pRXgSi6IDLKLvgPYyyG0DNITGu/ajABHfGH5hZAM=;
+        b=PhbSAKqy0k60uxTtbytGIRNtUcX+zkjuzi9B3bhchLMyttjmE2kGO9YyHbei6VfjJu
+         zoy5SHpX1ZieN86IRKfhzRWF2NERQF0U16Ti28sLUmPaw6RGEd5/0pjx6S7s78UQp+bv
+         PXc7jKCUI8wif/CHt9dXPFudG1YiAzAsv7SRyvvTslUqyE5W47Hpw9r/rd7zCTpx5iae
+         s0bom6g9FDBrKmG5i9xCSJtPmEvo6vGiPSmF9X2I/CVbekJV4VOi7s9gBDWCP2GeAJRB
+         ReBtU5r5UEDUcQY8ubkho42+cvn8vHzWNpuIOO+OgHSlR1xFmP7ORfO2Iko9svYHCH6P
+         R4fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719599248; x=1720204048;
+        d=1e100.net; s=20230601; t=1719599310; x=1720204110;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dgGUkmn1jPeeQuMXMcfk1hTstH8mcemeot+l8YFexZY=;
-        b=XZm20R3yE+g3jDkUXza+GwxmMezLCK6WEjPH3uYEVgr1lrkcODl2GixLxyztpHSF4u
-         KngAqIA/C1qyQdEGyZ6hNLI72ICQ0n1S/K4mZts1/zM+/tzbOl1TaXwMhXkYpsGt/epm
-         s4NK60Q5qf6VJyhlIvqeul9Dsx8zvdL7+L89IyqIHrfvk/4sXAc/hfNBUqC7P6cO8VS8
-         JnIHofcsDD5Ju7rG3Y0tQPIB8lil37ucKfX4Hhki5JyDyFoB0LYdhJ/vCRC+hZvHj+F0
-         N1YSui13+zkaPFXRvgHpXb2aizSuPHdJc6r/mUpL3cW2OkeSa7ABET5yaCYSpStFP8kN
-         JAIA==
-X-Forwarded-Encrypted: i=1; AJvYcCW7T4Fg/8a+yJOu7pUigMLsXj63v2W47fAXOHjiS8dHjMyaCYJlTcUxRuMD7E0kBtyrHIF2IT1lszb0ESc81YAqarFl/THD7zekCROMPs/pqmFVpDoNDIKclLTPBErQDwFCrqIZ
-X-Gm-Message-State: AOJu0YzTkkUAyIb/wcNWJCvPeB3ZjozvcF0ooIayzkH9+++y83Bsnd8M
-	kKrvyES6K6Rm6tPTeQXAv853An5TEACyNk9gexyWd+bwpW8BkJ561mstPKgtSLND0nCMNI8PJoR
-	+0ccDr25M3n0HVkfMy50ykwUYTZwWkQ==
-X-Google-Smtp-Source: AGHT+IHS2YMlbAwnhePYHqSgke0BKfxRk6YNzoY3zHWvbGGz8ba49/3S2DgaqWbp8u3oQrZOZoMWNMsUfdQVPv11hRU=
-X-Received: by 2002:a2e:87d3:0:b0:2ec:500c:b2e0 with SMTP id
- 38308e7fff4ca-2ec593e0cc0mr112746701fa.22.1719599247749; Fri, 28 Jun 2024
- 11:27:27 -0700 (PDT)
+        bh=Cn/pRXgSi6IDLKLvgPYyyG0DNITGu/ajABHfGH5hZAM=;
+        b=PxY2RvQrvqVj9rADTncJsWH4Tf+QGLl7UUQAR86nAT2KRGFWsFwFPKDNPGXOUrNHx0
+         YY4aOsII0Q0Tlhv/2vN/AfZ9sLMtAgIBBVugrb8hSq9EVhSUu369fYDwuQAJ8UJN3fnI
+         J/IU/pu62lDR6Wvezcp9Z3WqJcqtmnJuaSzVkmZZPCkXGIi/xTNNepL45KIi6lHSior/
+         9f4LF8Q3lkyRY1EQs08WsY/4kFCPZvne/2xXsv9+4yZoz76Q3rEZUDfK85lzOeybTh3K
+         wZI9BAVK6ZQ9uelIclFv2F7X0lbJpCI6zpgg7m42dwByW0zSgP4M/K1Tvl0A/+Xzr4qk
+         I3pw==
+X-Forwarded-Encrypted: i=1; AJvYcCUETJWEteArAiBZGh04UUGRIayxz5CYJd/4W98FfC1r+qzCTilOToA5joBLFfadaZvznbO6o5roHbfBZYv1oO6p4f15150gY5S3EPrR
+X-Gm-Message-State: AOJu0YwH1qwwN4lQ3OPyodDpvRP0M6kabF9i+HphP3631eP0rA2shIra
+	WLo9izUkzeymig0kShb+hFrTaFa0rkVqR3bztcFpD33BV/B/sfCSHgzR5rYNIMp451Q+UsqE8mw
+	ZAQAI4hVXCY7gVcAwRQ9Z/SsTnhybg50L+uVS
+X-Google-Smtp-Source: AGHT+IGU3wvTawYw9ntraj8PCsXlOmTXouULiPhu9QOzt/Ei3RLpE5rVuu+G1M6oo9apNtNxArt+uBCaH7CKFlkDwoE=
+X-Received: by 2002:a17:903:3103:b0:1f7:3764:1e19 with SMTP id
+ d9443c01a7336-1fad81f2d2fmr214315ad.20.1719599309187; Fri, 28 Jun 2024
+ 11:28:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240627221413.671680-1-yang@os.amperecomputing.com> <Zn5ZmPQCdvHTCwAn@infradead.org>
-In-Reply-To: <Zn5ZmPQCdvHTCwAn@infradead.org>
-From: Yang Shi <shy828301@gmail.com>
-Date: Fri, 28 Jun 2024 11:27:15 -0700
-Message-ID: <CAHbLzkodRFsBWvZ8zZZVeFTNzrwV0PNpT2XmUwFxL1KygPmd4Q@mail.gmail.com>
-Subject: Re: [v2 PATCH] mm: gup: do not call try_grab_folio() in slow path
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Yang Shi <yang@os.amperecomputing.com>, peterx@redhat.com, yangge1116@126.com, 
-	david@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20240614213908.352840-1-dapeng1.mi@linux.intel.com>
+ <df56c6e1-5d99-4cbe-abd4-772e7ff948af@linux.intel.com> <4f5dbf6f-3805-43b6-867c-2503ccec7c1a@linux.intel.com>
+In-Reply-To: <4f5dbf6f-3805-43b6-867c-2503ccec7c1a@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 28 Jun 2024 11:28:17 -0700
+Message-ID: <CAP-5=fVYmUvYawOBtUc_-PVzsTQhpOuMx4wxA7bHjwaZejii8Q@mail.gmail.com>
+Subject: Re: [PATCH] perf topdown: Correct leader selection with sample_read enabled
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Cc: "Liang, Kan" <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 27, 2024 at 11:35=E2=80=AFPM Christoph Hellwig <hch@infradead.o=
-rg> wrote:
+On Thu, Jun 27, 2024 at 11:17=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linux.intel=
+.com> wrote:
+> On 6/27/2024 11:11 PM, Liang, Kan wrote:
+> > On 2024-06-14 5:39 p.m., Dapeng Mi wrote:
+> >
+> > Besides, we need a test for the sampling read as well.
+> > Ian has provided a very good base. Please add a topdown sampling read
+> > case on top of it as well.
+> > https://lore.kernel.org/lkml/CAP-5=3DfUkg-cAXTb+3wbFOQCfdXgpQeZw40XHjfr=
+NFbnBD=3DNMXg@mail.gmail.com/
 >
-> > +int __must_check try_grab_folio(struct folio *folio, int refs, unsigne=
-d int flags)
->
-> Overly long line (same for the external declaration)
->
-> > +     struct page *page =3D &folio->page;
->
-> Page is only used for is_pci_p2pdma_page and is_zero_page, and for
-> the latter a is_zero_folio already exist.  Maybe remove the local
-> variable, use is_zero_folio and just open code the dereference in the
-> is_pci_p2pdma_page call?
+> Sure. I would look at it and add a test case.
 
-Thanks, Christoph. Good point, I think we can use is_zero_folio and
-open coeded it in is_pci_p2pdma_page.
+Thanks Dapeng and thanks Kan too! I wonder if we can do a regular
+counter and a leader sample counter then compare the counts are
+reasonably consistent. Something like this:
 
-And all the format problems will be solved in v3.
+```
+$ perf stat -e instructions perf test -w noploop
 
->
-> > +             ret =3D gup_hugepte(vma, ptep, sz, addr, end, flags, page=
-s, nr, fast);
->
-> Overly lone line.
->
-> > +             folio_ref_add(folio,
-> > +                             refs * (GUP_PIN_COUNTING_BIAS - 1));
->
-> Nit: this easily fits onto a single line.
->
-> >                       if (gup_hugepd(NULL, __hugepd(pmd_val(pmd)), addr=
-,
-> > -                                    PMD_SHIFT, next, flags, pages, nr)=
- !=3D 1)
-> > +                                    PMD_SHIFT, next, flags, pages, nr,=
- true) !=3D 1)
->
-> Overly long lin (same in the similar calls below)
->
->
+Performance counter stats for '/tmp/perf/perf test -w noploop':
+
+   25,779,785,496      instructions
+
+      1.008047696 seconds time elapsed
+
+      1.003754000 seconds user
+      0.003999000 seconds sys
+```
+
+```
+cat << "_end_of_file_" > a.py
+last_count =3D None
+
+def process_event(param_dict):
+   if ("ev_name" in param_dict and "sample" in param_dict and
+       param_dict["ev_name"] =3D=3D "instructions"):
+       sample =3D param_dict["sample"]
+       if "values" in sample:
+           global last_count
+           last_count =3D sample["values"][1][1]
+
+def trace_end():
+   global last_count
+   print(last_count)
+_end_of_file_
+$ sudo perf record -o -  -e "{cycles,instructions}:S" perf test -w
+noploop|perf script -i - -s ./a.py
+[ perf record: Woken up 2 times to write data ]
+[ perf record: Captured and wrote 0.459 MB - ]
+22195356100
+```
+
+I didn't see a simpler way to get count and I don't think it is right.
+There's some similar perf script checking of data in
+tools/perf/tests/shell/test_intel_pt.sh.
+
+Thanks,
+Ian
