@@ -1,92 +1,136 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD243140395;
-	Fri, 28 Jun 2024 07:28:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C102D05E;
+	Fri, 28 Jun 2024 07:30:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719559701; cv=none; b=VeirB5vKAUxb/kgwG0o+snEgKtN07aAPibmb1hVGs/xT0my7u+PiDpnyhAc6ZDnyRxlqid0ki1Lpo8QabhFu5500aKNWFX1DplEYHtOkMyt/8V2N6scTM595Gx7y2LG532u2qC5neJCs69r4vZjhrJXKn8N6qfgMV69EyjWvRNc=
+	t=1719559801; cv=none; b=tFupC6/hjL2kcRYfWjtRGdVLD6/fjb5CcGbMgjsjNcbKNY95D9z8r0b6GeFWbI9t/iNhWUpvMPdQrAwDb1J9YE6onkSIJTONMN+JpwZtIZtdkBFZtor3gQCa1fxeIjLzhuOclEXlWMaqBDPVqAc6x/Cbcn96Gily2h5+EZB6WFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719559701; c=relaxed/simple;
-	bh=3MZpXyOu73Fasw3IIRVGXYRsvoswceUbswoCfP0Z9mo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R9odEqcDPaIozRV31o2flEh/Wlo7zGx0upMLhIysMg3W/Xo7kUd8JOEMECyrSRiEnHxBTprEfk6pEor4/yqqyXmrPVoMMshtQKP5DStlD/rJUsDByAqBP4DFPYKv+E2bRK8m8cYyTsiVVslqAaxvE+GrUMoYs5lnfV6AdVng4XA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-632597a42b8so3350477b3.3;
-        Fri, 28 Jun 2024 00:28:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719559698; x=1720164498;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gyxC+GBJtHsOF6k6IM0Q8IHAoGfupC4Wy/5il2gwhW8=;
-        b=AgUwIhIvA3GQrxc6zCf0XylFNH6oEJ0ucPX42SP/UnIXpVA2xJPZ2mC05Z3Xti9mll
-         DbsTVgYgtdP/X/lAwXPe+LifzmQ4iN50RhxcbZhE8HI8NN9lgRnDJCrGUafoIYKBLu5D
-         lVchYnbegRrKHA4sujFwQrDkWaeVoCQVfupzZkEXXP5gWHCmC3SMEvpIDXXVR3RZ/06N
-         8rVYRtA6NcdEuZ9MZLh8qJfgNtrA2U2+9WkdHpSR5ms6/GKqx/CXebR2SaB3V6kblRqs
-         TNuTAV3gFLYnTzQvF/QC9N5fndNFWef+4OlbQrMDusAD6H8KvFlI9QCpI18R9YezsAL/
-         Peow==
-X-Forwarded-Encrypted: i=1; AJvYcCUp0XHgJha/j4GgzWq1eQhW2iapgA+k5429taqM+5SBV+YncHyYt8UOVaQTiyam8rCWsmX11m5GE6771qidvUQ+cWBT64U6pC3qjacRr3qLuelPq1nU+T+EdC/M8+NpKIoKaOm8Oqt4shR/S4Unpkc=
-X-Gm-Message-State: AOJu0YzSj32XV/jZMgL+aUXWq1wU4TI515IFo3ct/GY9y/rlDXRjzbRJ
-	nLSCOn1g0DY3Uh3UPPPhs/XnRjP2Do9EMpxbhc9c0o1uHEQR+fASk3H1Gx0T
-X-Google-Smtp-Source: AGHT+IHbqJk8YO5spYSoW8TU2DTdQnM2QdeXijlvmAl4YhXNF9HbIWFZd3/Oh6GLG2kEGkNGqAbWBQ==
-X-Received: by 2002:a81:fe04:0:b0:64b:3246:cc24 with SMTP id 00721157ae682-64b3246db8amr3524667b3.29.1719559698364;
-        Fri, 28 Jun 2024 00:28:18 -0700 (PDT)
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com. [209.85.128.177])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-64a9a8037c4sm2475247b3.65.2024.06.28.00.28.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Jun 2024 00:28:17 -0700 (PDT)
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6480542003dso2703607b3.0;
-        Fri, 28 Jun 2024 00:28:17 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWnfC33rh9kIItBF7WECTJG6jSoLLpNhf7UJdL0hz6x4mnfFecMQXYXHSzc0/i4oiU/nf+gSM1mQLUvDMIVkfJikb+CMYxcpso2FV9VUHAVOAdljLY0fUEZWUzeEIfdNnhIl0avdiFWmAVQllz+qAk=
-X-Received: by 2002:a81:a785:0:b0:63b:b3b8:e834 with SMTP id
- 00721157ae682-649744c0ae3mr45367857b3.32.1719559697160; Fri, 28 Jun 2024
- 00:28:17 -0700 (PDT)
+	s=arc-20240116; t=1719559801; c=relaxed/simple;
+	bh=v7HCpoRE++zio/wxE3XZnrIfncfD7RXHvoaxUiF9O8k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kAE5qWyrL5evpxdDV19UAE36fCGAVXNoJ/5uajKxphCA2oiDht4QovWQTAVC8bjsOo0fwBFx1OWJHEmqpcuyvjHMgV1lEDlxU8I+f2IfhO4k+ZMD2A9m+BiQOyZa66ZyJbv5Vmfb3KaiKKmc+RyrST1c+Dz5dh7bwDV4BoNyZgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UtEoMJkU; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UtEoMJkU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD58BC116B1;
+	Fri, 28 Jun 2024 07:29:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719559800;
+	bh=v7HCpoRE++zio/wxE3XZnrIfncfD7RXHvoaxUiF9O8k=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UtEoMJkUhbvPcX7xbb0iBOrd96ZqMmhHwG2TLpnByf6UNa9mt9TYlcAJ9wPJHLdE/
+	 sTA3lxxpvMsiXON+/ZXaMo/Vftl4DW5azdoRL+naK4MA/jaFYDm7C6xiTucbp85eva
+	 scuVeNuFFkd6CQdl5lQh5lMnrYA2AS02WW18V1NxHHFFSEYGXhkDZSkDUlWM9bAQCv
+	 oTQfdu0UBjG4kToSiul4alsE6dd1IqdwGJiGDvfbDOkNAfF3Kkp6/1aCeIG0mh0ne0
+	 UmiNEDElpScpCBSb3ze3Uw0gKiSq9diYKKl/XK1GceGJVsfSrk9diAj21isIjqeVK0
+	 xyfM8rYdB2ZTQ==
+Message-ID: <ccf4c88c-50ba-46ad-9af7-b9e0d72f2ec2@kernel.org>
+Date: Fri, 28 Jun 2024 09:29:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240628052010.31856-1-yang.lee@linux.alibaba.com>
-In-Reply-To: <20240628052010.31856-1-yang.lee@linux.alibaba.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 28 Jun 2024 09:28:05 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXyqSHAo4LTy6t7=KSmi8Po0Cmp-U35py32RmCA-_spJg@mail.gmail.com>
-Message-ID: <CAMuHMdXyqSHAo4LTy6t7=KSmi8Po0Cmp-U35py32RmCA-_spJg@mail.gmail.com>
-Subject: Re: [PATCH -next] soc: renesas: Remove unneeded semicolon
-To: Yang Li <yang.lee@linux.alibaba.com>
-Cc: magnus.damm@gmail.com, linux-renesas-soc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: mmc: nuvoton,ma35d1-sdhci: Document
+ MA35D1 SDHCI controller
+To: Shan-Chun Hung <shanchun1218@gmail.com>, ulf.hansson@linaro.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ adrian.hunter@intel.com, p.zabel@pengutronix.de, pbrobinson@gmail.com,
+ serghox@gmail.com, mcgrof@kernel.org,
+ prabhakar.mahadev-lad.rj@bp.renesas.com, forbidden405@outlook.com,
+ tmaimon77@gmail.com, andy.shevchenko@gmail.com,
+ linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: ychuang3@nuvoton.com, schung@nuvoton.com
+References: <20240626094900.581552-1-shanchun1218@gmail.com>
+ <20240626094900.581552-2-shanchun1218@gmail.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240626094900.581552-2-shanchun1218@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Yang,
+On 26/06/2024 11:48, Shan-Chun Hung wrote:
 
-On Fri, Jun 28, 2024 at 7:20=E2=80=AFAM Yang Li <yang.lee@linux.alibaba.com=
-> wrote:
-> ./drivers/soc/renesas/rcar-fuse.c:124:2-3: Unneeded semicolon
->
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=3D9441
-> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+> +    soc {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +        mmc@40190000 {
+> +            compatible = "nuvoton,ma35d1-sdhci";
+> +            reg = <0x0 0x40190000 0x0 0x2000>;
+> +            interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+> +            clocks = <&clk SDH1_GATE>;
+> +            pinctrl-names = "default", "state_uhs";
+> +            pinctrl-0 = <&pinctrl_sdhci1>;
+> +            pinctrl-1 = <&pinctrl_sdhci1_uhs>;
+> +            resets = <&sys MA35D1_RESET_SDH1>;
+> +            nuvoton,sys = <&sys>;
+> +            vqmmc-supply = <&sdhci1_vqmmc_regulator>;
+> +            bus-width = <8>;
+> +            max-frequency = <200000000>;
+> +            status = "disabled";
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Again: Drop
 
-As I haven't sent a PR for this yet, I will fix up the offending commit.
+<form letter>
+This is a friendly reminder during the review process.
 
-Gr{oetje,eeting}s,
+It seems my or other reviewer's previous comments were not fully
+addressed. Maybe the feedback got lost between the quotes, maybe you
+just forgot to apply it. Please go back to the previous discussion and
+either implement all requested changes or keep discussing them.
 
-                        Geert
+Thank you.
+</form letter>
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Best regards,
+Krzysztof
+
