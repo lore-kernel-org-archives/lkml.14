@@ -1,192 +1,139 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38B71849D7;
-	Fri, 28 Jun 2024 12:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 403421AC244;
+	Fri, 28 Jun 2024 12:47:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719578836; cv=none; b=ocGk2SqT6DojuGRcxEvkJ/g34czANLXhcpwbrF3sCbhz9uhbC+Sf3trzT2sx1jKnTYlFGHaocy2GRTlfyhQ1qLKhBSOD+8LRj5aveyIstoICCKV4KIn60omZG4Zn/YqIJobEBC8kaSUyll/UaF5EAm/gT2rhdAZgiynBHkd9Cbk=
+	t=1719578854; cv=none; b=QgXwEd5OmMGxYmN/BL6oCzJe7Xe5rIxlAD059NoPXJKLD8egkuQ7M6QTiozHMdCX1shccuSddRxnsk6P1QzJ5yNUDLdE+PQdm3NtOE4auIKpAFPkHqryCYTyAnYExYm8HASkI79mMnJJ4hNaQodEOkuw9bvy/9f2o8xANxJzYWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719578836; c=relaxed/simple;
-	bh=bcZMB1c7CmPlLmZB/s8yu9lZdO29tt6eQ0KPulOWE9Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mfaz8EauQoM//X3PhCT2vYe/pGiZtIVgJYV7jBlVZzNqhcNlK3OtsbfcWImvIcTsE16teWMVj5q5Yvmynv8P1pC7yTbOQKuigLOMzHGK5xiBCkkPuSezWL64SDk/Kywuvx/jHqzf50ZD5gVJvauLAnhZA9DSvlHeI1xg1QHFSZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=JtSd36/M; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1719578854; c=relaxed/simple;
+	bh=LHijR0kl7hNylO84H4MwHL6n5jNx5enYAaT3OgCdYX0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FpNsc1Q9auiuWvDKm+7LWtAS5xEUynOkuWuxv+JV6So32M36KQurS80oABlZ0vYMwD+J9Vdg+X4aM9f/ixN377uniA/IqkdY1vQR0Sgqdcy7rtyhZWD+Lq9izzHpcBP+Zze4NiAzETSEZDkL8MxBYhOIKi6u553icb/9ZH2CIA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OKMyiVYs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="JtSd36/M"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45S8sB1T016273;
-	Fri, 28 Jun 2024 14:46:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	qGjl6eaDmBGNoa5xPDUSWRlAlN5BydjJMGHNZtDEO74=; b=JtSd36/MXla3MJZo
-	gL09bV0JtR3H1M4bdIwLdPzXRVxItr+zIDlXR7LdtOzuJWiY0WZPkSRkWHnfaPLy
-	IQhqqknX6cOpVYDIzpVon3cBZkH3CbZ0p7OGJ42WVBUvfPxU04ckZfdoELqn4qzO
-	1tReypOqHYbSB/LFGWv9PwRUv04NUEpAfzLjGTdVTGgjGFwUxIRAMbiWsPnLzcqQ
-	TcRDpjs0w7vPxixS+h78M0BkR1iTzOieLHpKCAkKyNGrOJQ4VCUYMSkGCb3wIFtp
-	e3eI/q64fR/j2LmaI7xy5FvP//16Gg4l2/3eDwTXkjgNKcFQ7dk1Rv95Rmk3w6+a
-	9+cIKQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yx860yxds-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Jun 2024 14:46:44 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 839E74002D;
-	Fri, 28 Jun 2024 14:46:38 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DDD6B2248DA;
-	Fri, 28 Jun 2024 14:45:35 +0200 (CEST)
-Received: from [10.48.86.145] (10.48.86.145) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 28 Jun
- 2024 14:45:35 +0200
-Message-ID: <422a643f-1035-6be1-607c-85c43e2cf148@foss.st.com>
-Date: Fri, 28 Jun 2024 14:45:34 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OKMyiVYs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 679CFC116B1;
+	Fri, 28 Jun 2024 12:47:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719578853;
+	bh=LHijR0kl7hNylO84H4MwHL6n5jNx5enYAaT3OgCdYX0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OKMyiVYsyRe1/pt43HihCWtQxR3ZEwpB9M7ibE6ziN+SrgD+Ss8kcyDdkoBGAfhQr
+	 FawZLNmO6T64KgF9Xqi8r/UbCSZQR9FA6lgsPKMEC/ssBGwSYAIbJJXUy73oq2MFTf
+	 jeAqUpcOaBM5MSEgl7KhA6NdMXKkrhsyy6DI2fkRAUANbA2l969qNLYm7+UTJK5Kzo
+	 ZENn2tWegXElhOjphbcLlGGU2rQEbNq27K07KUUBkfC26K7qnu6WWJZk2xmmx+W8p0
+	 Ayzt97AC1lmzfnhyUXMoxJYJL38XGrDRm+6Emw3S/F+9RLZW7OQUUa0KUI1eu2XAaH
+	 uGx/YqiBu/K0w==
+Date: Fri, 28 Jun 2024 09:47:30 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Yicong Yang <yangyicong@hisilicon.com>
+Subject: Re: [PATCH 2/2] perf stat: Fix a segfault with --per-cluster
+ --metric-only
+Message-ID: <Zn6w4pO7VkU4IFYm@x1>
+References: <20240627200353.1230407-1-namhyung@kernel.org>
+ <20240627200353.1230407-2-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v6 3/3] drm/stm: ltdc: add lvds pixel clock
-Content-Language: en-US
-To: Yannick FERTRE <yannick.fertre@foss.st.com>,
-        Raphael Gallais-Pou
-	<raphael.gallais-pou@foss.st.com>,
-        David Airlie <airlied@gmail.com>, Daniel
- Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre
- Torgue <alexandre.torgue@foss.st.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20240226-lvds-v6-0-15e3463fbe70@foss.st.com>
- <20240226-lvds-v6-3-15e3463fbe70@foss.st.com>
- <7cdeaaab-ab8f-4b0c-89ec-cb61764a4abb@foss.st.com>
-From: Philippe CORNU <philippe.cornu@foss.st.com>
-In-Reply-To: <7cdeaaab-ab8f-4b0c-89ec-cb61764a4abb@foss.st.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-28_08,2024-06-28_01,2024-05-17_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240627200353.1230407-2-namhyung@kernel.org>
 
+On Thu, Jun 27, 2024 at 01:03:53PM -0700, Namhyung Kim wrote:
+> The new --per-cluster option was added recently but it forgot to update
+> the aggr_header fields which are used for --metric-only option.  And it
+> resulted in a segfault due to NULL string in fputs().
 
-On 6/21/24 16:55, Yannick FERTRE wrote:
-> Hi Raphaël,
-> 
-> Thanks for your patch, it will not merged due to a new clock management.
-> 
-> Philippe,
-> 
-> this patch will be replaced by another which manages all clocks that the 
-> display controller
-> 
->   will need (pixel clock, bus clock reference clock).
+Before:
 
-Hi Raphaël & Yannick,
-I applied 1 & 2 on drm-misc-next.
-Many thanks,
-Philippe :-)
+acme@number:~$ sudo ~acme/bin/perf stat -a -x : --per-cluster -M tma_core_bound --metric-only true
+Segmentation fault
+acme@number:~$ 
+acme@number:~$ sudo su -
+root@number:~# gdb perf
+(gdb) run stat -a -x : --per-cluster -M tma_core_bound --metric-only true
+Starting program: /root/bin/perf stat -a -x : --per-cluster -M tma_core_bound --metric-only true
 
+Program received signal SIGSEGV, Segmentation fault.
+0x00007ffff6f7f8dd in __strlen_avx2 () from /lib64/libc.so.6
+(gdb) bt
+#0  0x00007ffff6f7f8dd in __strlen_avx2 () from /lib64/libc.so.6
+#1  0x00007ffff6e97a3a in fputs () from /lib64/libc.so.6
+#2  0x000000000056b805 in print_metric_headers ()
+#3  0x000000000056e084 in evlist.print_counters ()
+#4  0x0000000000432513 in cmd_stat ()
+#5  0x00000000004c5fb9 in run_builtin ()
+#6  0x00000000004c62c9 in handle_internal_command ()
+#7  0x0000000000410e57 in main ()
+(gdb)
 
+After:
+
+acme@number:~$ sudo ~acme/bin/perf stat -a -x : --per-cluster -M tma_core_bound --metric-only true
+cluster:cpus:%  tma_core_bound:%  tma_core_bound:
+S0-D0-CLS0:2:18.2::::
+S0-D0-CLS8:2:26.7::::
+S0-D0-CLS16:2:14.2::::
+S0-D0-CLS24:2:10.6::::
+S0-D0-CLS32:2:0.6::::
+S0-D0-CLS40:2:42.5::::
+S0-D0-CLS48:2:21.1::::
+S0-D0-CLS56:2:36.8::::
+S0-D0-CLS64:0:::::::1.0:
+S0-D0-CLS72:0:::::::0.8:
+S0-D0-CLS80:0:::::::1.0:
+acme@number:~$
+
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+- Arnaldo
+ 
+> Fixes: cbc917a1b03b ("perf stat: Support per-cluster aggregation")
+> Cc: Yicong Yang <yangyicong@hisilicon.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/stat-display.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> 
-> Best regards
-> 
-> 
-> Le 26/02/2024 à 11:48, Raphael Gallais-Pou a écrit :
->> The STM32MP25x display subsystem presents a mux which feeds the loopback
->> pixel clock of the current bridge in use into the LTDC. This mux is only
->> accessible through sysconfig registers which is not yet available in the
->> STM32MP25x common clock framework.
->>
->> While waiting for a complete update of the clock framework, this would
->> allow to use the LVDS.
->>
->> Signed-off-by: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
->> Signed-off-by: Yannick Fertre <yannick.fertre@foss.st.com>
->> ---
->> Changes in v2:
->>     - Fixed my address
->>     - Fixed smatch warning
->> ---
->>   drivers/gpu/drm/stm/ltdc.c | 19 +++++++++++++++++++
->>   drivers/gpu/drm/stm/ltdc.h |  1 +
->>   2 files changed, 20 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
->> index 5576fdae4962..23011a8913bd 100644
->> --- a/drivers/gpu/drm/stm/ltdc.c
->> +++ b/drivers/gpu/drm/stm/ltdc.c
->> @@ -838,6 +838,12 @@ ltdc_crtc_mode_valid(struct drm_crtc *crtc,
->>       int target_max = target + CLK_TOLERANCE_HZ;
->>       int result;
->> +    if (ldev->lvds_clk) {
->> +        result = clk_round_rate(ldev->lvds_clk, target);
->> +        DRM_DEBUG_DRIVER("lvds pixclk rate target %d, available %d\n",
->> +                 target, result);
->> +    }
->> +
->>       result = clk_round_rate(ldev->pixel_clk, target);
->>       DRM_DEBUG_DRIVER("clk rate target %d, available %d\n", target, 
->> result);
->> @@ -1896,6 +1902,8 @@ void ltdc_suspend(struct drm_device *ddev)
->>       DRM_DEBUG_DRIVER("\n");
->>       clk_disable_unprepare(ldev->pixel_clk);
->> +    if (ldev->lvds_clk)
->> +        clk_disable_unprepare(ldev->lvds_clk);
->>   }
->>   int ltdc_resume(struct drm_device *ddev)
->> @@ -1910,6 +1918,13 @@ int ltdc_resume(struct drm_device *ddev)
->>           DRM_ERROR("failed to enable pixel clock (%d)\n", ret);
->>           return ret;
->>       }
->> +    if (ldev->lvds_clk) {
->> +        if (clk_prepare_enable(ldev->lvds_clk)) {
->> +            clk_disable_unprepare(ldev->pixel_clk);
->> +            DRM_ERROR("Unable to prepare lvds clock\n");
->> +            return -ENODEV;
->> +        }
->> +    }
->>       return 0;
->>   }
->> @@ -1981,6 +1996,10 @@ int ltdc_load(struct drm_device *ddev)
->>           }
->>       }
->> +    ldev->lvds_clk = devm_clk_get(dev, "lvds");
->> +    if (IS_ERR(ldev->lvds_clk))
->> +        ldev->lvds_clk = NULL;
->> +
->>       rstc = devm_reset_control_get_exclusive(dev, NULL);
->>       mutex_init(&ldev->err_lock);
->> diff --git a/drivers/gpu/drm/stm/ltdc.h b/drivers/gpu/drm/stm/ltdc.h
->> index 9d488043ffdb..4a60ce5b610c 100644
->> --- a/drivers/gpu/drm/stm/ltdc.h
->> +++ b/drivers/gpu/drm/stm/ltdc.h
->> @@ -44,6 +44,7 @@ struct ltdc_device {
->>       void __iomem *regs;
->>       struct regmap *regmap;
->>       struct clk *pixel_clk;    /* lcd pixel clock */
->> +    struct clk *lvds_clk;    /* lvds pixel clock */
->>       struct mutex err_lock;    /* protecting error_status */
->>       struct ltdc_caps caps;
->>       u32 irq_status;
->>
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index e8673c9f6b49..462227f663cb 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -38,6 +38,7 @@
+>  static int aggr_header_lens[] = {
+>  	[AGGR_CORE] 	= 18,
+>  	[AGGR_CACHE]	= 22,
+> +	[AGGR_CLUSTER]	= 20,
+>  	[AGGR_DIE] 	= 12,
+>  	[AGGR_SOCKET] 	= 6,
+>  	[AGGR_NODE] 	= 6,
+> @@ -49,6 +50,7 @@ static int aggr_header_lens[] = {
+>  static const char *aggr_header_csv[] = {
+>  	[AGGR_CORE] 	= 	"core%scpus%s",
+>  	[AGGR_CACHE]	= 	"cache%scpus%s",
+> +	[AGGR_CLUSTER]	= 	"cluster%scpus%s",
+>  	[AGGR_DIE] 	= 	"die%scpus%s",
+>  	[AGGR_SOCKET] 	= 	"socket%scpus%s",
+>  	[AGGR_NONE] 	= 	"cpu%s",
+> @@ -60,6 +62,7 @@ static const char *aggr_header_csv[] = {
+>  static int aggr_header_num[] = {
+>  	[AGGR_CORE] 	= 	2,
+>  	[AGGR_CACHE]	= 	2,
+> +	[AGGR_CLUSTER]	= 	2,
+>  	[AGGR_DIE] 	= 	2,
+>  	[AGGR_SOCKET] 	= 	2,
+>  	[AGGR_NONE] 	= 	1,
+> -- 
+> 2.45.2.803.g4e1b14247a-goog
