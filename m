@@ -1,128 +1,111 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mail.valinux.co.jp (mail.valinux.co.jp [210.128.90.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D2131CAA2;
-	Fri, 28 Jun 2024 03:52:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E533F1CAA2;
+	Fri, 28 Jun 2024 04:18:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.128.90.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719546765; cv=none; b=fy5b9Cfa5cF6CGBOOkSwZouMJFGcLCL+KXgw9AvV6cDlPSmd43nNah7yOKUFQaPMcY1W/Law8VO6TUlBFVmlnDHmL15ElCJcyq3vV2yZlVb0tUOIW/RKCImQUAPj91XLEIctQYStv1S+ax1McRO8zjMfer3Bl5wHngVjklwPBVc=
+	t=1719548317; cv=none; b=ld9g1Gtuo2ziCTzowYrwQ8tDstyV8g3VB0H+rhliRuJIdsn+tPT6ClTRQYG0/e08V2KXMdv2YmOfbV9Dxwl5DSescas59rc2537+SnYE/V4RuWlW21gFK2SPQnOu138rqcjYRjDBGmcexknfCKb3U/YSWo6arCKXn3ftdCedhSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719546765; c=relaxed/simple;
-	bh=8jD4cOobXcm+/H4yDXHO7QwI3+XbZcZhIqYdMwDDK0A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JZo+tzas53yYmrdb8U7pxBXHPLttxV5A15hQ0y6NFpp/C2Nj4FjtMbUEYfxcGZZuOqK6T9oCiCF840GdpK6JAcUyGLsdHXk8mXCKKloovUP7nKoaTYAjg12vVCCbCTxqg4U9vVPMW6/XuuARJDBnC62RV467xUjOsw2CSscSLMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=IuHhMlTZ; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="IuHhMlTZ"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id B87FB40E0194;
-	Fri, 28 Jun 2024 03:52:38 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id fmL6Lq6c0wLz; Fri, 28 Jun 2024 03:52:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1719546755; bh=HmPUn1KTX13hXMNtZOsiZL1UCOVmOMvqRxVnbVqEKGQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IuHhMlTZzQDDnRTtlF8xzFUiHfjHxBvwTq7eAK6B/ultaI239YFnMdUP2u9aLyBRi
-	 di1B2L9F3UWENbeqCNKm7duWW2raC8G/n0GD2GCVMG2gT07H7rOpoiEl/gKQYMcjG0
-	 niYA2hxVVQetMCQJ+NWBZd/Qnxi9Y758IqM3CMDtMO4ah9Yh8iX9ZFFU5gy5vaHsMZ
-	 qfZQecvubfIYc1zPU53My7ma6xe7nR8kDikQ+sAbgevpTPODSGBXlELVt/e1DkrVp8
-	 FAbbtqFO7Hfue4sRby7WldrFu2+QjN7wZ5xWKm6piJfi4xRXUSC0juIOIbsk0R9igg
-	 +3pqMB+RCX5gseZpLrOzYKcVrnWehetHzjatYlL9a8R4Y8XXI7ShV6fwMeN6+H/iNM
-	 Jxtxe8GdCx/zHrN9+ND8/RxYB0VuD82VB0ebVXwr/Jl0QW85Dk+gefORlxAul84hw8
-	 +8qV/XntsDjt9Gtn7YUT7cqnf3JFGEiXBmdV8SXLI21XSvyzRFqAM48Vjtq/uQrq+/
-	 6j0dp5EP5qFJkR7DxMHkCaocaLokZbZ4H8PHZqH9/xiMVRvbQZQRpRTfLwFimqpaWI
-	 OXgrZlM0XImladLufDaWNUAknuGAWPqkZnlmTaNYdxVbm11nv9Qq/Sr4ej2giVkdQm
-	 CzJyGIAOSnyD+s82Khdhim4Q=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	s=arc-20240116; t=1719548317; c=relaxed/simple;
+	bh=50jqPzDkQUKz1c/SNwg9W6ZkdpOJ1yleTDACudrtGuU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VHak9V9qNZ8S2VOZjvx0bjNctWdvjhiQdHX4WDPgNlqij9metzBXZ83BJ0ymB+XECIioQDNBXTlDL+RiTSZkRO6IsIVEYmtK2nAWr1jsvZqakVIqDBsgvflkBkoAk6qrQPuB4H/93JXefAuiwfCOC+zZ4JjrshmA6H6HpKfJjRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; arc=none smtp.client-ip=210.128.90.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valinux.co.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
+Received: from localhost (localhost [127.0.0.1])
+	by mail.valinux.co.jp (Postfix) with ESMTP id DEB54A9CFE;
+	Fri, 28 Jun 2024 13:18:29 +0900 (JST)
+X-Virus-Scanned: Debian amavisd-new at valinux.co.jp
+Received: from mail.valinux.co.jp ([127.0.0.1])
+	by localhost (mail.valinux.co.jp [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id WCCd8UzDQ9nd; Fri, 28 Jun 2024 13:18:29 +0900 (JST)
+Received: from DESKTOP-NBGHJ1C.local.valinux.co.jp (vagw.valinux.co.jp [210.128.90.14])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1DDFE40E0192;
-	Fri, 28 Jun 2024 03:52:24 +0000 (UTC)
-Date: Fri, 28 Jun 2024 05:52:17 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Nikunj A Dadhania <nikunj@amd.com>
-Cc: linux-kernel@vger.kernel.org, thomas.lendacky@amd.com, x86@kernel.org,
-	kvm@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
-	dave.hansen@linux.intel.com, pgonda@google.com, seanjc@google.com,
-	pbonzini@redhat.com
-Subject: Re: [PATCH v10 07/24] virt: sev-guest: Store VMPCK index to SNP
- guest device structure
-Message-ID: <20240628035217.GAZn4zcWMZy3mgCKky@fat_crate.local>
-References: <20240621123903.2411843-1-nikunj@amd.com>
- <20240621123903.2411843-8-nikunj@amd.com>
+	by mail.valinux.co.jp (Postfix) with ESMTPSA id A7B3FA9CF4;
+	Fri, 28 Jun 2024 13:18:29 +0900 (JST)
+From: takakura@valinux.co.jp
+To: paulmck@kernel.org,
+	frederic@kernel.org,
+	neeraj.upadhyay@kernel.org,
+	joel@joelfernandes.org,
+	josh@joshtriplett.org,
+	boqun.feng@gmail.com,
+	rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com,
+	jiangshanlai@gmail.com,
+	qiang.zhang1211@gmail.com,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	bsegall@google.com,
+	mgorman@suse.de,
+	bristot@redhat.com,
+	vschneid@redhat.com
+Cc: rcu@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ryo Takakura <takakura@valinux.co.jp>
+Subject: [PATCH] rcu: Let rcu_dump_task() be used without preemption disabled
+Date: Fri, 28 Jun 2024 13:18:26 +0900
+Message-Id: <20240628041826.68587-1-takakura@valinux.co.jp>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240621123903.2411843-8-nikunj@amd.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 21, 2024 at 06:08:46PM +0530, Nikunj A Dadhania wrote:
-> Currently, SEV guest driver retrieves the pointers to VMPCK and
-> os_area_msg_seqno from the secrets page. In order to get rid of this
-> dependency,
+From: Ryo Takakura <takakura@valinux.co.jp>
 
-And we do this because...?
+The commit 2d7f00b2f0130 ("rcu: Suppress smp_processor_id() complaint
+in synchronize_rcu_expedited_wait()") disabled preemption around
+dump_cpu_task() to suppress warning on its usage within preemtible context.
 
-> use vmpck_id to index the appropriate key and the corresponding
-> message sequence number.
-> 
-> Signed-off-by: Nikunj A Dadhania <nikunj@amd.com>
-> ---
->  drivers/virt/coco/sev-guest/sev-guest.c | 74 ++++++++++++-------------
->  1 file changed, 37 insertions(+), 37 deletions(-)
+Calling dump_cpu_task() doesn't required to be in non-preemptible context
+except for suppressing the smp_processor_id() warning.
+As the smp_processor_id() is evaluated along with in_hardirq()
+to check if it's in interrupt context, this patch removes the need
+for its preemtion disablement by reordering the condition so that
+smp_processor_id() only gets evaluated when it's in interrupt context.
 
-...
+Signed-off-by: Ryo Takakura <takakura@valinux.co.jp>
+---
+ kernel/rcu/tree_exp.h | 2 --
+ kernel/sched/core.c   | 2 +-
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
->  static bool is_vmpck_empty(struct snp_guest_dev *snp_dev)
->  {
->  	char zero_key[VMPCK_KEY_LEN] = {0};
-> +	u8 *key = get_vmpck(snp_dev);
->  
-> -	if (snp_dev->vmpck)
-> -		return !memcmp(snp_dev->vmpck, zero_key, VMPCK_KEY_LEN);
-> -
-> -	return true;
-> +	return !memcmp(key, zero_key, VMPCK_KEY_LEN);
-
-There's a count_nonzero_bytes() function which you can export and use here
-instead of expanding the stack unnecessarily.
-
-In any case, there are multiple methods how to check whether a buffer is
-zeroes, which are cheaper than this.
-
-> -static u8 *get_vmpck(int id, struct snp_secrets_page *secrets, u32 **seqno)
-> +static bool assign_vmpck(struct snp_guest_dev *dev, unsigned int vmpck_id)
->  {
-> -	if (!(id < VMPCK_MAX_NUM))
-> -		return NULL;
-> +	if (!(vmpck_id < VMPCK_MAX_NUM))
-
-Yeah, flip that logic.
-
-> +		return false;
-> +
-> +	dev->vmpck_id = vmpck_id;
->  
-> -	*seqno = &secrets->os_area.msg_seqno[id];
-> -	return secrets->vmpck[id];
-> +	return true;
->  }
-
-...
-
+diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+index 8a1d9c8bd9f7..80c461b26144 100644
+--- a/kernel/rcu/tree_exp.h
++++ b/kernel/rcu/tree_exp.h
+@@ -617,9 +617,7 @@ static void synchronize_rcu_expedited_wait(void)
+ 				mask = leaf_node_cpu_bit(rnp, cpu);
+ 				if (!(READ_ONCE(rnp->expmask) & mask))
+ 					continue;
+-				preempt_disable(); // For smp_processor_id() in dump_cpu_task().
+ 				dump_cpu_task(cpu);
+-				preempt_enable();
+ 			}
+ 			rcu_exp_print_detail_task_stall_rnp(rnp);
+ 		}
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index bcf2c4cc0522..38efbdafe3d4 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -11485,7 +11485,7 @@ struct cgroup_subsys cpu_cgrp_subsys = {
+ 
+ void dump_cpu_task(int cpu)
+ {
+-	if (cpu == smp_processor_id() && in_hardirq()) {
++	if (in_hardirq() && cpu == smp_processor_id()) {
+ 		struct pt_regs *regs;
+ 
+ 		regs = get_irq_regs();
 -- 
-Regards/Gruss,
-    Boris.
+2.34.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
