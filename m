@@ -1,163 +1,83 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60BC41514DC;
-	Fri, 28 Jun 2024 08:59:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BFA6405E6
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 09:00:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719565175; cv=none; b=OQmqt48wEmljHYKFgQZRh+KiP9uqlJtt8X+YDz7CmyDNanUpGX3acv3pajUzzu/GglDpT8zqJWpNurTscaKZc5jTtXidBi3XBv3KTVWMn68aoY5KDYGkPfh7d5C3zwvFAqETfc0rET2aScFpjIWQtQ+53zEk9oV+sDltzoChle8=
+	t=1719565242; cv=none; b=di+YSTgZ1HQkENoy/0klJCbnvIEztQPLYTOOxJi6vTSobzm1XE+ZcBuvM6S/OqV5szRLqqb6hcmlDdTyih/8uX4GpJuHH0tMAunaBaZd5NLSGVadW/sjtY6BrOBuSVhSxNx92FuN6q8yzla2uZJCIULf9wN6McWT1AXgikopa5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719565175; c=relaxed/simple;
-	bh=eKmEApCLtrBXoEas0MfyfelglNHo/OxwLXCHMlRaR9E=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bWJF2/My2Gaw3KWui1GaFSsl8/S+WyU+SkS3CNlCXcGvfyFQDzsyZCrDaL5OiRuGsQf44IO4zA4ugGDpk3styoCMwNDEkD6Ys0X8+2BXCaOD1VpKYaWxyuiD9wkgiD+6TVzXxrZ/2IUIB63r8KeOKTVGb7Pha1slByJuiE407ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=P3M/44Po; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="P3M/44Po"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45S118of023905;
-	Fri, 28 Jun 2024 10:59:15 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	KZgWttku0OrDv1E5xjjSYd/Hd42fWLcFhwhUgXT4EB4=; b=P3M/44PoIDL1suJP
-	i65AUpyBxkZYT97XQVPoorppLfIXee1fke/WYu246bSGVIqns65jXebh0qfl9ONo
-	Ul0cvsyd2vHAJoYOlBr+5lQXquVli/Lsh40wFFsw0s+YED7WMl7rFcBZC2hXT1P5
-	SngCh3VHQ+1YqNhNS6a7MCwNanm0ikczQpIeOpKz2Hptz+kOd90/RiIK/vq/P1G0
-	XvM6pl+2uFGxh3qFqfpPTSNiNSKDqM3PpBBayzOjvUdbby9yj8UScrShH6gKX3fz
-	o+Sdd/zWGkBG8xoNjJDC+NHymLKM16hnC+9vK1+Ez02zH4iDnVn5xs3KdGTLxC1n
-	fz2Hlg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ywngdrmcw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Jun 2024 10:59:15 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 242E840046;
-	Fri, 28 Jun 2024 10:59:11 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7FD1421ADA7;
-	Fri, 28 Jun 2024 10:58:22 +0200 (CEST)
-Received: from localhost (10.252.26.109) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 28 Jun
- 2024 10:58:21 +0200
-From: Pascal Paillet <p.paillet@foss.st.com>
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-CC: <p.paillet@foss.st.com>, Etienne Carriere <etienne.carriere@foss.st.com>
-Subject: [PATCH v2 3/4] arm64: dts: st: describe power supplies for stm32mp257f-ev1 board
-Date: Fri, 28 Jun 2024 10:58:13 +0200
-Message-ID: <20240628085814.1586186-4-p.paillet@foss.st.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240628085814.1586186-1-p.paillet@foss.st.com>
-References: <20240628085814.1586186-1-p.paillet@foss.st.com>
+	s=arc-20240116; t=1719565242; c=relaxed/simple;
+	bh=1kmTYq8rgl5jWz1Nbpy6TdwYJmr2R6u5TKl7kwjNSLg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fSvYP0ixmb0EXqF+rEafVu/5yOS+G4s+ysUYB0RDNOmod8h3ezAOzfpN40NsfD9LOxkl/hmLrTJvzkfjdxhPl4fdN+qT52wJkz+G0sXqrM/ayTrshmMEvCv1Pkf4TzYXwZdbPEyrD9KhWh7eGVP/sFv4U/aZgkMecPivxT2EjpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sN7T5-0003c4-Pb; Fri, 28 Jun 2024 11:00:31 +0200
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sN7T4-005ZJi-U7; Fri, 28 Jun 2024 11:00:30 +0200
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sN7T4-002PIf-2g;
+	Fri, 28 Jun 2024 11:00:30 +0200
+Date: Fri, 28 Jun 2024 11:00:30 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	Dent Project <dentproject@linuxfoundation.org>,
+	kernel@pengutronix.de, linux-doc@vger.kernel.org
+Subject: Re: [PATCH net-next v5 5/7] net: ethtool: Add new power limit get
+ and set features
+Message-ID: <Zn57rqFgDq7rg1pA@pengutronix.de>
+References: <20240628-feature_poe_power_cap-v5-0-5e1375d3817a@bootlin.com>
+ <20240628-feature_poe_power_cap-v5-5-5e1375d3817a@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-28_05,2024-06-28_01,2024-05-17_01
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240628-feature_poe_power_cap-v5-5-5e1375d3817a@bootlin.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Describe power supplies for stm32mp257f-ev1 board.
+On Fri, Jun 28, 2024 at 10:31:58AM +0200, Kory Maincent wrote:
+> From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+> 
+> This patch expands the status information provided by ethtool for PSE c33
+> with available power limit and available power limit ranges. It also adds
+> a call to pse_ethtool_set_pw_limit() to configure the PSE control power
+> limit.
+> 
+> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 
-Signed-off-by: Pascal Paillet <p.paillet@foss.st.com>
----
- arch/arm64/boot/dts/st/stm32mp257f-ev1.dts | 43 +++++++++++++++++-----
- 1 file changed, 34 insertions(+), 9 deletions(-)
+Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
-diff --git a/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts b/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-index 18c6266532b2..979847e0ea05 100644
---- a/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-+++ b/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-@@ -7,6 +7,7 @@
- /dts-v1/;
- 
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/regulator/st,stm32mp25-regulator.h>
- #include "stm32mp257.dtsi"
- #include "stm32mp25xf.dtsi"
- #include "stm32mp25-pinctrl.dtsi"
-@@ -41,14 +42,6 @@ fw@80000000 {
- 			no-map;
- 		};
- 	};
--
--	vdd_sdcard: vdd-sdcard {
--		compatible = "regulator-fixed";
--		regulator-name = "vdd_sdcard";
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
--		regulator-always-on;
--	};
- };
- 
- &arm_wdt {
-@@ -56,6 +49,37 @@ &arm_wdt {
- 	status = "okay";
- };
- 
-+&scmi_regu {
-+	scmi_vddio1: regulator@0 {
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+	scmi_vddcore: regulator@11  {
-+		reg = <VOLTD_SCMI_STPMIC2_BUCK2>;
-+		regulator-name = "vddcore";
-+	};
-+	scmi_v1v8: regulator@14  {
-+		reg = <VOLTD_SCMI_STPMIC2_BUCK5>;
-+		regulator-name = "v1v8";
-+	};
-+	scmi_v3v3: regulator@16 {
-+		reg = <VOLTD_SCMI_STPMIC2_BUCK7>;
-+		regulator-name = "v3v3";
-+	};
-+	scmi_vdd_emmc: regulator@18 {
-+		reg = <VOLTD_SCMI_STPMIC2_LDO2>;
-+		regulator-name = "vdd_emmc";
-+	};
-+	scmi_vdd3v3_usb: regulator@20 {
-+		reg = <VOLTD_SCMI_STPMIC2_LDO4>;
-+		regulator-name = "vdd3v3_usb";
-+	};
-+	scmi_vdd_sdcard: regulator@23 {
-+		reg = <VOLTD_SCMI_STPMIC2_LDO7>;
-+		regulator-name = "vdd_sdcard";
-+	};
-+};
-+
- &i2c2 {
- 	pinctrl-names = "default", "sleep";
- 	pinctrl-0 = <&i2c2_pins_a>;
-@@ -85,7 +109,8 @@ &sdmmc1 {
- 	disable-wp;
- 	st,neg-edge;
- 	bus-width = <4>;
--	vmmc-supply = <&vdd_sdcard>;
-+	vmmc-supply = <&scmi_vdd_sdcard>;
-+	vqmmc-supply = <&scmi_vddio1>;
- 	status = "okay";
- };
- 
+Thank you!
 -- 
-2.34.1
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
