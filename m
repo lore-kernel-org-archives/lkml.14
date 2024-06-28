@@ -1,198 +1,94 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70DCC1C9ECF
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 17:38:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495BC1B94F;
+	Fri, 28 Jun 2024 17:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719596293; cv=none; b=QqOBbQZE02KshYATjQdEHQfMatjYltrKiMTM5FxNYMWx0bGBnGWp78UtXEkL/gCr97iOX9Uy77FikanP5H8zDivpsQ9rAmUfnFuuV74NgA40yOcQobDwJh8EOumXBJTpSJUyKH9FpyG/kFHMbfyggqNbSUNGAaHKpNRvAGN3h6Y=
+	t=1719596344; cv=none; b=beKKzF6b9qhYfbd16TWObao1uifTx0tE9fTCkj2UaRVKzNmkrTgokbt2r48eHk5CrZULefcqOZkn/Q8W86i/NtQUdpuLU8Ar8CvSOi3Lj65WKcZNR/aNQzH6cBXqYBwRIE6qjO4roQGdSPOoFQu24lURxCaHkOCwsxdnwkqlQzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719596293; c=relaxed/simple;
-	bh=m4fUe9aaj4TOFlCepZRFIJXwB4CGuQ8OTm/7XSW9YaA=;
-	h=From:References:MIME-Version:In-Reply-To:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uZahbwJlqM/zF260pKhMOZPAqkKyM4z7556+rEgQImAt+8xYmDOzaT7ufdN39ayJlQwv9bfdOWsCIvMcgEL1tAwCuq467QZxKu8NRVPf5B5Dgz/3MbYZ2qDULnhRhIDbQj6CedMH6prHFo9M7qWs+4aEWtdzRbuhN1J27W9wLtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XQlmC1rR; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719596344; c=relaxed/simple;
+	bh=BK09IPXEmALm8Gdo89s3fQ9e2NwgJoDJ3gLuk1S/nic=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=QvH67ISuL3lSiolYlxv2XSJbRqmR7SMMtoKVsCvmqfZefWxGalP+B8z66o10hcH47hoW1m6u4jgdL866GTRuhl2kGuw3ASV818/x2cbEswkE+/LXGuob/YNXm74bq7zw44l5rso6xkiuHgGLy6uuH1SwycR7ltMSXN9cnBN5FLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=VT1AtZqs; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lucaweiss.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XQlmC1rR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719596290;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FG7X97i4qW1z+GDWPEv3aIODEGnqEtsm7as7nCoOOqE=;
-	b=XQlmC1rRY3UKLjNPd/l3CeOp3RRLHE3W2WmM5X4ck9cuocay0CaR5xSPe5mkK1oHnJRfH8
-	GkKGHMEa/5b9p2NJc8ly+32+x21i8ktcivxpDzX3zDbcUnYbwCMa+dVAGesUnOgQxvNLFO
-	e0LTSbk3eeYQvYPiLD4KY2DE+XiIki8=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-330-vyD8xV7rNGyAZeAu7Qj39g-1; Fri, 28 Jun 2024 13:38:08 -0400
-X-MC-Unique: vyD8xV7rNGyAZeAu7Qj39g-1
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6b593236489so38781176d6.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 10:38:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719596288; x=1720201088;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:in-reply-to
-         :mime-version:references:from:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=FG7X97i4qW1z+GDWPEv3aIODEGnqEtsm7as7nCoOOqE=;
-        b=T24IBjubKKjlPr6gmOp/HdfHanZATzTaAEwbyE+JB356Y0Q3r0bjSrLkcJ8XxU5eDa
-         4WqJIlsgKmJp52MC4kAXhmJ/4LcHYp8rjuofo8Pej62JZbtkIY+2UbTwZquWgL9y7w1M
-         bggjJQHJ5wU9VTUFqCGhD9+cNiSlb4vXI5Qxix2SJRRqrFf3CwLE7UE6vWZBdNSWWqh+
-         i1iSqsak6z0fG6q1plJDFH0n+61wazKPyDMoHMPHtKsINIaRJ3TnAnJbw5hfxmD69qIM
-         hC8aG1NOTseju+fMHbMCv/hXyUGHUuexgfyGgP4HWlrQ1SYzkzSEYeGBl1usl5BRlxkU
-         flOA==
-X-Forwarded-Encrypted: i=1; AJvYcCVftvjVJDvH2Hz6wSSTfPTBk2CWwfHCsZKK8kAX84rvgBfvc0rJsFokvVbO0o7cQdrxUoAF9q9mR4JGum1QHckfxwe8DJ1hokiQw2R7
-X-Gm-Message-State: AOJu0YzobN+EsGW4BnaHrdJ3VSPYkgX7Q4zZz430x4iKbGi7u/bPfFJd
-	faAQemy0820KSIkY/Q+5P/2TP1IM0WF2LCpvElzkRVIYinqNAen9ohJkI1guydTOl8dfzHrQR7a
-	t16Pi6Xw7aUq4k5RvXi4Jk/7Wcc3eAVmeD7OGAXK6DDF57cJQDaO3SUi3AgtQ0W9ppKrLeXq7em
-	XlhN6205iI+SMJoowYsTtxJwD9vTk4snFME8PI
-X-Received: by 2002:a05:6214:2426:b0:6b5:81ac:6b84 with SMTP id 6a1803df08f44-6b5a543aecfmr33787556d6.14.1719596288438;
-        Fri, 28 Jun 2024 10:38:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEWTYtV7gIpxyVZKHipinFNRKEVPmLzoCNCAXu+gjnA+zxXXpUvizyXL+8OfyBOweK9SgBFIISpcquha9V/fdo=
-X-Received: by 2002:a05:6214:2426:b0:6b5:81ac:6b84 with SMTP id
- 6a1803df08f44-6b5a543aecfmr33787376d6.14.1719596288113; Fri, 28 Jun 2024
- 10:38:08 -0700 (PDT)
-Received: from 311643009450 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 28 Jun 2024 17:38:07 +0000
-From: =?UTF-8?Q?Adri=C3=A1n_Moreno?= <amorenoz@redhat.com>
-References: <20240628110559.3893562-1-amorenoz@redhat.com>
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="VT1AtZqs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
+	t=1719595832; bh=BK09IPXEmALm8Gdo89s3fQ9e2NwgJoDJ3gLuk1S/nic=;
+	h=From:Date:Subject:To:Cc;
+	b=VT1AtZqs98/uwP3P/YU+QlUlrx2apHg/XRtP93isHjKOssLUdW2wv/AylrG8s0qDo
+	 ng00yWuMFzNCor7IWpr42mf2i5Yhmp7pukkOIq1w3S8I81Ch3qyBRwdVThG1fiA2DN
+	 yhYNGfZrvCdOagURC7HXXd5YzGvw6gqr2JIxwdAs=
+From: Luca Weiss <luca@lucaweiss.eu>
+Date: Fri, 28 Jun 2024 19:30:23 +0200
+Subject: [PATCH] soc: qcom: smsm: Add missing mailbox dependency to Kconfig
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240628110559.3893562-1-amorenoz@redhat.com>
-Date: Fri, 28 Jun 2024 17:38:07 +0000
-Message-ID: <CAG=2xmPnqMJzoPuzBRGfjqVRwispcsuPo32hKoko4=hwYZrFTg@mail.gmail.com>
-Subject: Re: [PATCH net-next v6 00/10] net: openvswitch: Add sample multicasting.
-To: netdev@vger.kernel.org
-Cc: aconole@redhat.com, echaudro@redhat.com, horms@kernel.org, 
-	i.maximets@ovn.org, dev@openvswitch.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240628-smsm-kconfig-v1-1-117d5af4ba1f@lucaweiss.eu>
+X-B4-Tracking: v=1; b=H4sIAC7zfmYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDMyML3eLc4lzd7OT8vLTMdF2zRANDcwtjE3OjNAMloJaCotS0zAqwcdG
+ xtbUAekLAmV4AAAA=
+To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel test robot <lkp@intel.com>, Luca Weiss <luca@lucaweiss.eu>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1060; i=luca@lucaweiss.eu;
+ h=from:subject:message-id; bh=BK09IPXEmALm8Gdo89s3fQ9e2NwgJoDJ3gLuk1S/nic=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBmfvM3tko9blewzgTgzwAB70K9tcux67YW7REKU
+ PsY/V5ShRGJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZn7zNwAKCRBy2EO4nU3X
+ VieMD/9au88RKFA4PK6YLlLbYdyrPrBvMGbLvmKLtcckx5TS22ylMYJmWaMo4KgZ8uus5uv/WfO
+ tmq+HgRkj379eqOWElufsHZs6AIXEzacyYhgux6ZgQW00dQUvcCa1jKEUIKlyARu7Ed8QB0yxTR
+ MEDogu7pK8U4a/s5+6v1bd/qnRb1Ay/91DNUbOeH7L2UOTz5vxCzOPKgR1WwC8leNGce5jBPj7O
+ DWpr62ht0sxuejANoelemC+Mx3bJkyD3Nl23lwkZF3kKdocwolPcp4r/vym8vYTJuHILl/jSH8U
+ pu+uTbAIG+czpMyVeBOr99IPqFR0jD7NZ8veB9rlSLLvkjBaR44Z9FHbuZ8EVojf/DVRrPL4rrx
+ S/LwmRqO7u/BoKGedzDsNiU3eyW/YROUjV8pnaOTIv6GKAAAjIjEpM4D/fud8MqvTgDazsPDGiR
+ YiZEMA3gMQvWsbjXLwgXS61qDV2j1iIyUuuoHw3DvqUm5I4J66Xs9XzZlR63uBjIXnVZrjRizhH
+ mLNSQ1vA4ObpwGpwHmybrnesp6mtAe0UtV1gAU8QwjM0YO4it5HsiFbPj2gOzgHqa7fpn1oJfCY
+ a7iMrsASR+yKu4L9y2WWM0tpTmHfnDWsJjeE2pW3k2KqeDcnuc6LmIVNB1w/pUWdMue5wxYgDgY
+ yZTz5kqoWem1HMw==
+X-Developer-Key: i=luca@lucaweiss.eu; a=openpgp;
+ fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
-On Fri, Jun 28, 2024 at 01:05:36PM GMT, Adrian Moreno wrote:
-> ** Background **
-> Currently, OVS supports several packet sampling mechanisms (sFlow,
-> per-bridge IPFIX, per-flow IPFIX). These end up being translated into a
-> userspace action that needs to be handled by ovs-vswitchd's handler
-> threads only to be forwarded to some third party application that
-> will somehow process the sample and provide observability on the
-> datapath.
->
-> A particularly interesting use-case is controller-driven
-> per-flow IPFIX sampling where the OpenFlow controller can add metadata
-> to samples (via two 32bit integers) and this metadata is then available
-> to the sample-collecting system for correlation.
->
-> ** Problem **
-> The fact that sampled traffic share netlink sockets and handler thread
-> time with upcalls, apart from being a performance bottleneck in the
-> sample extraction itself, can severely compromise the datapath,
-> yielding this solution unfit for highly loaded production systems.
->
-> Users are left with little options other than guessing what sampling
-> rate will be OK for their traffic pattern and system load and dealing
-> with the lost accuracy.
->
-> Looking at available infrastructure, an obvious candidated would be
-> to use psample. However, it's current state does not help with the
-> use-case at stake because sampled packets do not contain user-defined
-> metadata.
->
-> ** Proposal **
-> This series is an attempt to fix this situation by extending the
-> existing psample infrastructure to carry a variable length
-> user-defined cookie.
->
-> The main existing user of psample is tc's act_sample. It is also
-> extended to forward the action's cookie to psample.
->
-> Finally, a new OVS action (OVS_SAMPLE_ATTR_EMIT_SAMPLE) is created.
-> It accepts a group and an optional cookie and uses psample to
-> multicast the packet and the metadata.
->
-> --
-> v5 -> v6:
-> - Renamed emit_sample -> psample
-> - Addressed unused variable and conditionally compilation of function.
->
-> v4 -> v5:
-> - Rebased.
-> - Removed lefover enum value and wrapped some long lines in selftests.
->
-> v3 -> v4:
-> - Rebased.
-> - Addressed Jakub's comment on private and unused nla attributes.
->
-> v2 -> v3:
-> - Addressed comments from Simon, Aaron and Ilya.
-> - Dropped probability propagation in nested sample actions.
-> - Dropped patch v2's 7/9 in favor of a userspace implementation and
-> consume skb if emit_sample is the last action, same as we do with
-> userspace.
-> - Split ovs-dpctl.py features in independent patches.
->
-> v1 -> v2:
-> - Create a new action ("emit_sample") rather than reuse existing
->   "sample" one.
-> - Add probability semantics to psample's sampling rate.
-> - Store sampling probability in skb's cb area and use it in emit_sample.
-> - Test combining "emit_sample" with "trunc"
-> - Drop group_id filtering and tracepoint in psample.
->
-> rfc_v2 -> v1:
-> - Accommodate Ilya's comments.
-> - Split OVS's attribute in two attributes and simplify internal
-> handling of psample arguments.
-> - Extend psample and tc with a user-defined cookie.
-> - Add a tracepoint to psample to facilitate troubleshooting.
->
-> rfc_v1 -> rfc_v2:
-> - Use psample instead of a new OVS-only multicast group.
-> - Extend psample and tc with a user-defined cookie.
->
->
-> Adrian Moreno (10):
->   net: psample: add user cookie
->   net: sched: act_sample: add action cookie to sample
->   net: psample: skip packet copy if no listeners
->   net: psample: allow using rate as probability
->   net: openvswitch: add psample action
->   net: openvswitch: store sampling probability in cb.
->   selftests: openvswitch: add psample action
->   selftests: openvswitch: add userspace parsing
->   selftests: openvswitch: parse trunc action
->   selftests: openvswitch: add psample test
->
->  Documentation/netlink/specs/ovs_flow.yaml     |  17 ++
->  include/net/psample.h                         |   5 +-
->  include/uapi/linux/openvswitch.h              |  31 +-
->  include/uapi/linux/psample.h                  |  11 +-
->  net/openvswitch/Kconfig                       |   1 +
->  net/openvswitch/actions.c                     |  65 ++++-
->  net/openvswitch/datapath.h                    |   3 +
->  net/openvswitch/flow_netlink.c                |  32 ++-
->  net/openvswitch/vport.c                       |   1 +
->  net/psample/psample.c                         |  16 +-
->  net/sched/act_sample.c                        |  12 +
->  .../selftests/net/openvswitch/openvswitch.sh  | 115 +++++++-
->  .../selftests/net/openvswitch/ovs-dpctl.py    | 272 +++++++++++++++++-
->  13 files changed, 565 insertions(+), 16 deletions(-)
->
-> --
-> 2.45.2
->
+Since the smsm driver got the ability to interact with the mailbox using
+the mailbox subsystem and not just syscon, we need to add the dependency
+to kconfig as well to avoid compile errors.
 
-Patchwork says this patch is not applying on net-next. I'll wait for
-some reviews and rebase+resubmit it later tonight or tomorrow.
+Fixes: 75287992f58a ("soc: qcom: smsm: Support using mailbox interface")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202406180006.Z397C67h-lkp@intel.com/
+Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+---
+ drivers/soc/qcom/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks.
-Adri=C3=A1n
+diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+index 5af33b0e3470..60efecd16380 100644
+--- a/drivers/soc/qcom/Kconfig
++++ b/drivers/soc/qcom/Kconfig
+@@ -194,6 +194,7 @@ config QCOM_SMP2P
+ 
+ config QCOM_SMSM
+ 	tristate "Qualcomm Shared Memory State Machine"
++	depends on MAILBOX
+ 	depends on QCOM_SMEM
+ 	select QCOM_SMEM_STATE
+ 	select IRQ_DOMAIN
+
+---
+base-commit: 642a16ca7994a50d7de85715996a8ce171a5bdfb
+change-id: 20240628-smsm-kconfig-6a01783472f0
+
+Best regards,
+-- 
+Luca Weiss <luca@lucaweiss.eu>
 
