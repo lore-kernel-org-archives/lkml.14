@@ -1,59 +1,60 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38C9405E6
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 05:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08CA544384
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 05:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719552031; cv=none; b=fWA0zkogRzMJEiSLmLKM27kJ8WVT88PHRfElANwCqf0f/+fhKYTpI7FO+QH0y32/OytS2eZXJUXA87jXsxMtjOsXZAg0DdpyLwsTMB6fPU5g6jk7Hkt1JYkilj5goGILv2GUt0DuzYs0RthZYM9/ZLGYWdFlIELyHliJjyZIRKo=
+	t=1719552032; cv=none; b=gnRm9/wJYNzaWMqIzFG0ZxlWUsMYvM1NsFaByI8uaTwAWOFrr9EWe3EGfCXo7y574d59fQS8T8aXbUQiTwkvv17JzSdwKJpeKf9p1ynIsuOuKT/Xxm1KDMZLg0p9ND7URelxKiDoGzb7W/y2UYpDz1AspX6W0/9TTYMo4tg2IF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719552031; c=relaxed/simple;
-	bh=nozoIUcXI4qDBNkbxpqvRvoom0g8ypFap+QSsXv/xZs=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bERz0l3FUCFQYTtZHGMtg4hnQ7E0FlGn2K1cFB+IZPYGREyAVzh+ON1uHQe9gZ7IcpJhsbyd00cadciwBLGf8JxTEThwSnGCsLJZ6n73GKPgd2POXu5y+dZQ3fZszNEWyG2VbfDB3k6ADL9ZPpV0UyNPFHGqWGfSAFJPu5WoyeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jA0AB05C; arc=none smtp.client-ip=209.85.167.43
+	s=arc-20240116; t=1719552032; c=relaxed/simple;
+	bh=1bGciu1Uk/4GERHUYF3OlGIdZfgztwypx+e0LXmmIIc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=pjjlqF9HrHstbbGdSjiIwu+ET3VuPu7gv7uzesM5Kb7Hbl4gKMR5mY6FpMWs988cDeuNwH3Er1jHrmgFsTG8jSAjy1QHh18HVI6tts+p9MVNowkXit7W2PzyzMPzXcB6uRAZ8KPTzBG8e+gLCO5mgp3jKAibz7U8Hy4KcEjZn1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BxTrCIyh; arc=none smtp.client-ip=209.85.167.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jA0AB05C"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52cecba8d11so217609e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 22:20:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BxTrCIyh"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52cdf579dd2so189232e87.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 22:20:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719552027; x=1720156827; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vpefSJiaGnqEfIeGrIWUX7KpqJ2img/BwDRlYR/iXXw=;
-        b=jA0AB05CeMDAx1oQb8NBTtAuKbiI887UGYs7wzeops1nRb5GDdHwnEcsp/KAvU3yqv
-         4X5b11bnn+dQwxiWbK+Ko6+j3X5u+lOkiW5wXfzzqYeZZMyRCaX9tH+Hzmy/FEJyyHWN
-         HXvzAX39B4gaTKHDZQnZoHZ0CDt72BJNZLI1XYT2nRkhXHn5lnoxd7zzjIhXswXInriI
-         7+8Xpgw0+60QTc7eYfIdRURhT1fDgjFSobI21/uo0Cn9fc7xRBJY1p8ZS96Wg7UCPb/5
-         UcmJStzLlw5HcSiKDUUuJAJmUT0uodjvLiQ4ABSU7lIXl7bk6wh9bjZijQa3UfUrOOzM
-         PfXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719552027; x=1720156827;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1719552028; x=1720156828; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=vpefSJiaGnqEfIeGrIWUX7KpqJ2img/BwDRlYR/iXXw=;
-        b=hxM6Lqz6deB5fz+mDvJqO39LAQYnX6C/SKzujHQy0jQ6DkVXOt7ncURjQM46Whi7+Q
-         X58gKNYepZRO08bJpNskfXtA8gv8O66ss+Tlt7ylSy7GKpae9vjEB9Nl0lT72fp4C/pi
-         GhyAdnwon7NoKyd1QfebAlsGoZa6X2z9wL+b5+/d9PSBL0bxI8sxpmzxcNYIQzY8aYzs
-         uyA1CSx2/FvTnP8+YJM+QWlQ7YbyqDxe0uSySbn4PxHaK4OU6x/ZjZZGfxW2+3kGK5/C
-         UAmFu/Uq5DTA36Zzb1Z9chqDkYR/mwCgIvVd3n/aK9BRSRYqlJLnpCJTFPQ4f3f4+Ef8
-         8Osw==
-X-Forwarded-Encrypted: i=1; AJvYcCUe3sTpXaDmxqcUF4GBV93qImIrVXki7Fu4aClVSqrpXeVOCHs2HFjG+I00siT/3MLwabyIdzyZwhTe4aI1yLnQm9hsQRmenebDp3mH
-X-Gm-Message-State: AOJu0YweFKnt8dG55bh28AXmEYXK49IzUtIp5JYuiquzH3hFW2yAWkmx
-	2XTSrRdnQOkjIVvWAcbo58e0Dq6ExA2+5LUpZ7VaTTCcl9DHOOkNOTb5KRBqWoY=
-X-Google-Smtp-Source: AGHT+IFxae/ZOWmakYzI1aE7tdFOnmCfK6pLehwC0xpC1CEJL44IXUw0l2cwjQo8TT3azIyHySknEA==
-X-Received: by 2002:a05:6512:220c:b0:52c:ddce:4fda with SMTP id 2adb3069b0e04-52ce183250emr11796358e87.2.1719552026893;
-        Thu, 27 Jun 2024 22:20:26 -0700 (PDT)
+        bh=mlBuOCd228OEzTi+Lw7sdjUybkFAFwm+zLxjPBpTo+8=;
+        b=BxTrCIyhsQFKWyfJQH7aCDQel/Mcj116qgFC1f0r/0YNOh+lZNwt9clnLjYsuh/hTS
+         bA++35HH2KTksRmaS5dyyhzNhW+e+qt2UX+jSusPXZDZ061x9oJAlleL6CVcO14TQOLj
+         RTkqHA0YD4eOWOju6XTv8FFA+mVqOhdfBCxAqEDJb6HmnZNUn/wQRkvWWP0B41bjMNn4
+         sI+jqOBxs77kzu6KBVNv6KEHhRWw2l332dWz2YJbdZQL/450sidn1OFFsBKCm8fF7sx4
+         3iRYHYuPfm0F1XonWmIoVQTvPNrPB6JHHUS+0o5gVyGkDM8hKL7Oqx78HawlrFxYFO9j
+         KAww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719552028; x=1720156828;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mlBuOCd228OEzTi+Lw7sdjUybkFAFwm+zLxjPBpTo+8=;
+        b=Xql2GlR6CxAgzeiqCSLHsS1g0UbwWJopgxIW0jt7vryBi2x9dONlbsdfEYmIItrifm
+         7EVWMXu4RDnnN3gYltlCT+0/yIIO7eXkLSEkqfc0r+KQhsAqKgiA66ngOVHw6SzvXoP2
+         ihTffvWvEaIo6MlvR0YVGWXOIPwy0LeAI6iRlNchqtF/ZVPcEEBb3U8DqJ0y8W+j0AOO
+         oJgEUS6i6YXhVW7lGEQGvsjo4yyMqx2sZTpxQD8BW6Z1OG8g5tYrJpB7wWN3A3Z6Js49
+         6hsOkUO74404Q7lZBPGRjWymrfHM3JSYppdJ68CyiXVLbSpxNZthDGzYP1YLy9MGSX28
+         VCFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXcXBVqid9IjrqlDQ4Tgho05Mo6JDxYfl0kOOUArS2tGMa6pD833HlQ3kT81+LDv4cBNC0Fc911CGO+J0u/nDgsrZdq4opy76fH6Zvu
+X-Gm-Message-State: AOJu0Yyb4LZDGam8FLqFa8A7wsiwvGtNm5Uvhf5lYx1VuVLHYqq9kDa2
+	60Ij2NHbGUDBcyVI3DDdCjov8K7LvMtZnjhHQUMDCjBTvsLioQ03Pjh91BrlhPw=
+X-Google-Smtp-Source: AGHT+IHdmwUv1L4uOgagl5p7XUPby7N5Y24wsABGjreWma06d+9L1p8cL+OwF8s138CWYo/vGvbJpw==
+X-Received: by 2002:a05:6512:480c:b0:52c:ab88:6340 with SMTP id 2adb3069b0e04-52cdf8261a9mr10051298e87.65.1719552028156;
+        Thu, 27 Jun 2024 22:20:28 -0700 (PDT)
 Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52e7ab101c5sm167736e87.79.2024.06.27.22.20.26
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52e7ab101c5sm167736e87.79.2024.06.27.22.20.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 22:20:26 -0700 (PDT)
+        Thu, 27 Jun 2024 22:20:27 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: [PATCH 0/2] clk: qcom: gpucc-*: stop requesting register resource
-Date: Fri, 28 Jun 2024 08:20:21 +0300
-Message-Id: <20240628-gpucc-no-request-v1-0-b680c2f90817@linaro.org>
+Date: Fri, 28 Jun 2024 08:20:23 +0300
+Subject: [PATCH 2/2] clk: qcom: gpucc-*: use qcom_cc_map_norequest
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,9 +63,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABVIfmYC/x3MQQqAIBBA0avIrBsoKYuuEi3MRpuNlVYE4t2Tl
- m/xf4JIgSnCKBIEejjy7guaSoDZtHeEvBaDrGVbK9mjO25j0O8Y6LwpXmgWtXS2lzSsGkp2BLL
- 8/stpzvkDURVnzWIAAAA=
+Message-Id: <20240628-gpucc-no-request-v1-2-b680c2f90817@linaro.org>
+References: <20240628-gpucc-no-request-v1-0-b680c2f90817@linaro.org>
+In-Reply-To: <20240628-gpucc-no-request-v1-0-b680c2f90817@linaro.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
  Michael Turquette <mturquette@baylibre.com>, 
  Stephen Boyd <sboyd@kernel.org>
@@ -72,59 +73,270 @@ Cc: Rob Clark <robdclark@gmail.com>, linux-arm-msm@vger.kernel.org,
  linux-clk@vger.kernel.org, freedreno@lists.freedesktop.org, 
  linux-kernel@vger.kernel.org
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1748;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9724;
  i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=nozoIUcXI4qDBNkbxpqvRvoom0g8ypFap+QSsXv/xZs=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmfkgZCO1i8MgCYMFMkelu5PazNJg+YyIXN7oPT
- 6Jo+hBxdRWJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZn5IGQAKCRCLPIo+Aiko
- 1Qu+B/977z/5JNUU8bWElQL0CjlvFvUdulyiVMSBTJrs0GiUb+G2RUlPm6Jl6I82DlbMOcj5rv2
- nurFFvlR3i9LkQqpC+VWYznTq/5Iu1R3XM7Ss5e4twHFkwZXD3fiaDqK+/9f2jB1OAVYT2MMkSA
- hsRxYxev+GUNbn7HuJ9YVDJScUO8azF4iUEn5KOSbETc1AM/paaeVXS1OkDrT56wpmv079cgQxI
- D86NIsaljIOBks0ADHdAkgbuDF9ut23aufyeRNtt77c/R18/a8wEii48qn803Bl5tFmMwbiVOYv
- BnuawaTtmdeXMKVptadsyUHxRH8zv1a/Smw4qHuGN54BuF7p
+ bh=1bGciu1Uk/4GERHUYF3OlGIdZfgztwypx+e0LXmmIIc=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmfkgaBW3ISFsbQGMeb/kfZiOArwWQw8Fwqkl/K
+ RH5x/vnUG2JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZn5IGgAKCRCLPIo+Aiko
+ 1QOYB/9khv9fUYZ27iWVrv3evKiaqXr+DDIJQDuZVl2gqZGyJCumcKKx7+qeB4SZzj1WbpbNWdR
+ kwreBfaMxWMVLLMGsRobtgAnANE5kXMt2SsN7qfCGgPk0gfFnFGtgjtyxyBjsL0xLR9yxPWYnV8
+ Ryds0kkGOt9DGxstVs9Cg0Pr5dHqoR7IyzT2AyItMU+YocHyQU/eLniw8S1zRpLzfHBh8KhBIvq
+ IbbfjS3HUjbVfSjorzyqE0/K+k33asbJ49MLo6zEMe96fTCz74zvyaRzAHC/gQvog2pVDeKBNq7
+ oV43fb2d33itTvNPjX5m/cscIrcmcb31t8K5Ubkat3wLWwB0
 X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-Testing of [1] pointed out that on all modern Qualcomm platforms GPU
-clock controller shares regiser space with the GMU. All gpucc drivers
-use (internally) devm_platform_ioremap_resource(), preventing the GPU
-driver from using devm_ioremap_resource() on its own. As GMU register
-space includes gpucc's one, make gpucc drivers use non-requesting
-helper, allowing GPU to take over the bigger memory region.
+On most of the Qualcomm platforms GPU clock controller registers are
+located inside the GMU's register space. By using qcom_cc_map() gpucc
+drivers mark the region as used, prevening GMU driver from claiming the
+bigger region.
 
-[1] https://patchwork.freedesktop.org/series/134401/
+Make affected GPU clock controller drivers use qcom_cc_map_norequest(),
+allowing GMU driver to use devm_ioremap_resource().
 
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
-Dmitry Baryshkov (2):
-      clk: qocm: add qcom_cc_map_norequest
-      clk: qcom: gpucc-*: use qcom_cc_map_norequest
+ drivers/clk/qcom/gpucc-qcm2290.c  | 2 +-
+ drivers/clk/qcom/gpucc-sa8775p.c  | 2 +-
+ drivers/clk/qcom/gpucc-sc7180.c   | 2 +-
+ drivers/clk/qcom/gpucc-sc7280.c   | 2 +-
+ drivers/clk/qcom/gpucc-sc8280xp.c | 2 +-
+ drivers/clk/qcom/gpucc-sdm845.c   | 2 +-
+ drivers/clk/qcom/gpucc-sm6115.c   | 2 +-
+ drivers/clk/qcom/gpucc-sm6125.c   | 2 +-
+ drivers/clk/qcom/gpucc-sm6350.c   | 2 +-
+ drivers/clk/qcom/gpucc-sm6375.c   | 2 +-
+ drivers/clk/qcom/gpucc-sm8150.c   | 2 +-
+ drivers/clk/qcom/gpucc-sm8250.c   | 2 +-
+ drivers/clk/qcom/gpucc-sm8350.c   | 2 +-
+ drivers/clk/qcom/gpucc-sm8450.c   | 2 +-
+ drivers/clk/qcom/gpucc-sm8550.c   | 2 +-
+ drivers/clk/qcom/gpucc-sm8650.c   | 2 +-
+ drivers/clk/qcom/gpucc-x1e80100.c | 2 +-
+ 17 files changed, 17 insertions(+), 17 deletions(-)
 
- drivers/clk/qcom/common.c         | 20 ++++++++++++++++++++
- drivers/clk/qcom/common.h         |  2 ++
- drivers/clk/qcom/gpucc-qcm2290.c  |  2 +-
- drivers/clk/qcom/gpucc-sa8775p.c  |  2 +-
- drivers/clk/qcom/gpucc-sc7180.c   |  2 +-
- drivers/clk/qcom/gpucc-sc7280.c   |  2 +-
- drivers/clk/qcom/gpucc-sc8280xp.c |  2 +-
- drivers/clk/qcom/gpucc-sdm845.c   |  2 +-
- drivers/clk/qcom/gpucc-sm6115.c   |  2 +-
- drivers/clk/qcom/gpucc-sm6125.c   |  2 +-
- drivers/clk/qcom/gpucc-sm6350.c   |  2 +-
- drivers/clk/qcom/gpucc-sm6375.c   |  2 +-
- drivers/clk/qcom/gpucc-sm8150.c   |  2 +-
- drivers/clk/qcom/gpucc-sm8250.c   |  2 +-
- drivers/clk/qcom/gpucc-sm8350.c   |  2 +-
- drivers/clk/qcom/gpucc-sm8450.c   |  2 +-
- drivers/clk/qcom/gpucc-sm8550.c   |  2 +-
- drivers/clk/qcom/gpucc-sm8650.c   |  2 +-
- drivers/clk/qcom/gpucc-x1e80100.c |  2 +-
- 19 files changed, 39 insertions(+), 17 deletions(-)
----
-base-commit: 5d98d5e70f505b7278336de493eba94cde5526b3
-change-id: 20240627-gpucc-no-request-cb6b5f72e8da
+diff --git a/drivers/clk/qcom/gpucc-qcm2290.c b/drivers/clk/qcom/gpucc-qcm2290.c
+index dc369dff882e..2a886b3d6ab4 100644
+--- a/drivers/clk/qcom/gpucc-qcm2290.c
++++ b/drivers/clk/qcom/gpucc-qcm2290.c
+@@ -372,7 +372,7 @@ static int gpu_cc_qcm2290_probe(struct platform_device *pdev)
+ 	struct regmap *regmap;
+ 	int ret;
+ 
+-	regmap = qcom_cc_map(pdev, &gpu_cc_qcm2290_desc);
++	regmap = qcom_cc_map_norequest(pdev, &gpu_cc_qcm2290_desc);
+ 	if (IS_ERR(regmap))
+ 		return PTR_ERR(regmap);
+ 
+diff --git a/drivers/clk/qcom/gpucc-sa8775p.c b/drivers/clk/qcom/gpucc-sa8775p.c
+index f8a8ac343d70..312b45e6fc29 100644
+--- a/drivers/clk/qcom/gpucc-sa8775p.c
++++ b/drivers/clk/qcom/gpucc-sa8775p.c
+@@ -592,7 +592,7 @@ static int gpu_cc_sa8775p_probe(struct platform_device *pdev)
+ {
+ 	struct regmap *regmap;
+ 
+-	regmap = qcom_cc_map(pdev, &gpu_cc_sa8775p_desc);
++	regmap = qcom_cc_map_norequest(pdev, &gpu_cc_sa8775p_desc);
+ 	if (IS_ERR(regmap))
+ 		return PTR_ERR(regmap);
+ 
+diff --git a/drivers/clk/qcom/gpucc-sc7180.c b/drivers/clk/qcom/gpucc-sc7180.c
+index 08f3983d016f..03480a2fa78c 100644
+--- a/drivers/clk/qcom/gpucc-sc7180.c
++++ b/drivers/clk/qcom/gpucc-sc7180.c
+@@ -220,7 +220,7 @@ static int gpu_cc_sc7180_probe(struct platform_device *pdev)
+ 	struct alpha_pll_config gpu_cc_pll_config = {};
+ 	unsigned int value, mask;
+ 
+-	regmap = qcom_cc_map(pdev, &gpu_cc_sc7180_desc);
++	regmap = qcom_cc_map_norequest(pdev, &gpu_cc_sc7180_desc);
+ 	if (IS_ERR(regmap))
+ 		return PTR_ERR(regmap);
+ 
+diff --git a/drivers/clk/qcom/gpucc-sc7280.c b/drivers/clk/qcom/gpucc-sc7280.c
+index bd699a624517..86f89fbb4aec 100644
+--- a/drivers/clk/qcom/gpucc-sc7280.c
++++ b/drivers/clk/qcom/gpucc-sc7280.c
+@@ -458,7 +458,7 @@ static int gpu_cc_sc7280_probe(struct platform_device *pdev)
+ {
+ 	struct regmap *regmap;
+ 
+-	regmap = qcom_cc_map(pdev, &gpu_cc_sc7280_desc);
++	regmap = qcom_cc_map_norequest(pdev, &gpu_cc_sc7280_desc);
+ 	if (IS_ERR(regmap))
+ 		return PTR_ERR(regmap);
+ 
+diff --git a/drivers/clk/qcom/gpucc-sc8280xp.c b/drivers/clk/qcom/gpucc-sc8280xp.c
+index c96be61e3f47..519940dc99eb 100644
+--- a/drivers/clk/qcom/gpucc-sc8280xp.c
++++ b/drivers/clk/qcom/gpucc-sc8280xp.c
+@@ -436,7 +436,7 @@ static int gpu_cc_sc8280xp_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	regmap = qcom_cc_map(pdev, &gpu_cc_sc8280xp_desc);
++	regmap = qcom_cc_map_norequest(pdev, &gpu_cc_sc8280xp_desc);
+ 	if (IS_ERR(regmap)) {
+ 		pm_runtime_put(&pdev->dev);
+ 		return PTR_ERR(regmap);
+diff --git a/drivers/clk/qcom/gpucc-sdm845.c b/drivers/clk/qcom/gpucc-sdm845.c
+index ef26690cf504..b78f8b632601 100644
+--- a/drivers/clk/qcom/gpucc-sdm845.c
++++ b/drivers/clk/qcom/gpucc-sdm845.c
+@@ -177,7 +177,7 @@ static int gpu_cc_sdm845_probe(struct platform_device *pdev)
+ 	struct regmap *regmap;
+ 	unsigned int value, mask;
+ 
+-	regmap = qcom_cc_map(pdev, &gpu_cc_sdm845_desc);
++	regmap = qcom_cc_map_norequest(pdev, &gpu_cc_sdm845_desc);
+ 	if (IS_ERR(regmap))
+ 		return PTR_ERR(regmap);
+ 
+diff --git a/drivers/clk/qcom/gpucc-sm6115.c b/drivers/clk/qcom/gpucc-sm6115.c
+index d43c86cf73a5..ab3e33fbe401 100644
+--- a/drivers/clk/qcom/gpucc-sm6115.c
++++ b/drivers/clk/qcom/gpucc-sm6115.c
+@@ -474,7 +474,7 @@ static int gpu_cc_sm6115_probe(struct platform_device *pdev)
+ {
+ 	struct regmap *regmap;
+ 
+-	regmap = qcom_cc_map(pdev, &gpu_cc_sm6115_desc);
++	regmap = qcom_cc_map_norequest(pdev, &gpu_cc_sm6115_desc);
+ 	if (IS_ERR(regmap))
+ 		return PTR_ERR(regmap);
+ 
+diff --git a/drivers/clk/qcom/gpucc-sm6125.c b/drivers/clk/qcom/gpucc-sm6125.c
+index ed6a6e505801..14dc75b3771a 100644
+--- a/drivers/clk/qcom/gpucc-sm6125.c
++++ b/drivers/clk/qcom/gpucc-sm6125.c
+@@ -395,7 +395,7 @@ static int gpu_cc_sm6125_probe(struct platform_device *pdev)
+ {
+ 	struct regmap *regmap;
+ 
+-	regmap = qcom_cc_map(pdev, &gpu_cc_sm6125_desc);
++	regmap = qcom_cc_map_norequest(pdev, &gpu_cc_sm6125_desc);
+ 	if (IS_ERR(regmap))
+ 		return PTR_ERR(regmap);
+ 
+diff --git a/drivers/clk/qcom/gpucc-sm6350.c b/drivers/clk/qcom/gpucc-sm6350.c
+index 1e12ad8948db..f0a6a6fb693f 100644
+--- a/drivers/clk/qcom/gpucc-sm6350.c
++++ b/drivers/clk/qcom/gpucc-sm6350.c
+@@ -489,7 +489,7 @@ static int gpu_cc_sm6350_probe(struct platform_device *pdev)
+ 	struct regmap *regmap;
+ 	unsigned int value, mask;
+ 
+-	regmap = qcom_cc_map(pdev, &gpu_cc_sm6350_desc);
++	regmap = qcom_cc_map_norequest(pdev, &gpu_cc_sm6350_desc);
+ 	if (IS_ERR(regmap))
+ 		return PTR_ERR(regmap);
+ 
+diff --git a/drivers/clk/qcom/gpucc-sm6375.c b/drivers/clk/qcom/gpucc-sm6375.c
+index 41f59024143e..4ec7399f8fc4 100644
+--- a/drivers/clk/qcom/gpucc-sm6375.c
++++ b/drivers/clk/qcom/gpucc-sm6375.c
+@@ -446,7 +446,7 @@ static int gpucc_sm6375_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	regmap = qcom_cc_map(pdev, &gpucc_sm6375_desc);
++	regmap = qcom_cc_map_norequest(pdev, &gpucc_sm6375_desc);
+ 	if (IS_ERR(regmap)) {
+ 		pm_runtime_put(&pdev->dev);
+ 		return PTR_ERR(regmap);
+diff --git a/drivers/clk/qcom/gpucc-sm8150.c b/drivers/clk/qcom/gpucc-sm8150.c
+index d711464a71b6..b01531ca13d9 100644
+--- a/drivers/clk/qcom/gpucc-sm8150.c
++++ b/drivers/clk/qcom/gpucc-sm8150.c
+@@ -295,7 +295,7 @@ static int gpu_cc_sm8150_probe(struct platform_device *pdev)
+ {
+ 	struct regmap *regmap;
+ 
+-	regmap = qcom_cc_map(pdev, &gpu_cc_sm8150_desc);
++	regmap = qcom_cc_map_norequest(pdev, &gpu_cc_sm8150_desc);
+ 	if (IS_ERR(regmap))
+ 		return PTR_ERR(regmap);
+ 
+diff --git a/drivers/clk/qcom/gpucc-sm8250.c b/drivers/clk/qcom/gpucc-sm8250.c
+index 113b486a6d2f..ded2faff96ce 100644
+--- a/drivers/clk/qcom/gpucc-sm8250.c
++++ b/drivers/clk/qcom/gpucc-sm8250.c
+@@ -305,7 +305,7 @@ static int gpu_cc_sm8250_probe(struct platform_device *pdev)
+ 	struct regmap *regmap;
+ 	unsigned int value, mask;
+ 
+-	regmap = qcom_cc_map(pdev, &gpu_cc_sm8250_desc);
++	regmap = qcom_cc_map_norequest_norequest(pdev, &gpu_cc_sm8250_desc);
+ 	if (IS_ERR(regmap))
+ 		return PTR_ERR(regmap);
+ 
+diff --git a/drivers/clk/qcom/gpucc-sm8350.c b/drivers/clk/qcom/gpucc-sm8350.c
+index f3b6bdc24485..c11ba4c5f254 100644
+--- a/drivers/clk/qcom/gpucc-sm8350.c
++++ b/drivers/clk/qcom/gpucc-sm8350.c
+@@ -596,7 +596,7 @@ static int gpu_cc_sm8350_probe(struct platform_device *pdev)
+ {
+ 	struct regmap *regmap;
+ 
+-	regmap = qcom_cc_map(pdev, &gpu_cc_sm8350_desc);
++	regmap = qcom_cc_map_norequest(pdev, &gpu_cc_sm8350_desc);
+ 	if (IS_ERR(regmap)) {
+ 		dev_err(&pdev->dev, "Failed to map gpu cc registers\n");
+ 		return PTR_ERR(regmap);
+diff --git a/drivers/clk/qcom/gpucc-sm8450.c b/drivers/clk/qcom/gpucc-sm8450.c
+index b3c5d6923cd2..34c709baeefa 100644
+--- a/drivers/clk/qcom/gpucc-sm8450.c
++++ b/drivers/clk/qcom/gpucc-sm8450.c
+@@ -744,7 +744,7 @@ static int gpu_cc_sm8450_probe(struct platform_device *pdev)
+ {
+ 	struct regmap *regmap;
+ 
+-	regmap = qcom_cc_map(pdev, &gpu_cc_sm8450_desc);
++	regmap = qcom_cc_map_norequest(pdev, &gpu_cc_sm8450_desc);
+ 	if (IS_ERR(regmap))
+ 		return PTR_ERR(regmap);
+ 
+diff --git a/drivers/clk/qcom/gpucc-sm8550.c b/drivers/clk/qcom/gpucc-sm8550.c
+index 7486edf56160..e77c287604e6 100644
+--- a/drivers/clk/qcom/gpucc-sm8550.c
++++ b/drivers/clk/qcom/gpucc-sm8550.c
+@@ -568,7 +568,7 @@ static int gpu_cc_sm8550_probe(struct platform_device *pdev)
+ {
+ 	struct regmap *regmap;
+ 
+-	regmap = qcom_cc_map(pdev, &gpu_cc_sm8550_desc);
++	regmap = qcom_cc_map_norequest(pdev, &gpu_cc_sm8550_desc);
+ 	if (IS_ERR(regmap))
+ 		return PTR_ERR(regmap);
+ 
+diff --git a/drivers/clk/qcom/gpucc-sm8650.c b/drivers/clk/qcom/gpucc-sm8650.c
+index f15aeecc512d..f7370ec3bac2 100644
+--- a/drivers/clk/qcom/gpucc-sm8650.c
++++ b/drivers/clk/qcom/gpucc-sm8650.c
+@@ -640,7 +640,7 @@ static int gpu_cc_sm8650_probe(struct platform_device *pdev)
+ {
+ 	struct regmap *regmap;
+ 
+-	regmap = qcom_cc_map(pdev, &gpu_cc_sm8650_desc);
++	regmap = qcom_cc_map_norequest(pdev, &gpu_cc_sm8650_desc);
+ 	if (IS_ERR(regmap))
+ 		return PTR_ERR(regmap);
+ 
+diff --git a/drivers/clk/qcom/gpucc-x1e80100.c b/drivers/clk/qcom/gpucc-x1e80100.c
+index 2eec20dd0254..e583a4a96629 100644
+--- a/drivers/clk/qcom/gpucc-x1e80100.c
++++ b/drivers/clk/qcom/gpucc-x1e80100.c
+@@ -630,7 +630,7 @@ static int gpu_cc_x1e80100_probe(struct platform_device *pdev)
+ {
+ 	struct regmap *regmap;
+ 
+-	regmap = qcom_cc_map(pdev, &gpu_cc_x1e80100_desc);
++	regmap = qcom_cc_map_norequest(pdev, &gpu_cc_x1e80100_desc);
+ 	if (IS_ERR(regmap))
+ 		return PTR_ERR(regmap);
+ 
 
-Best regards,
 -- 
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+2.39.2
 
