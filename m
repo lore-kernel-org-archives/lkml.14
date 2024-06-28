@@ -1,120 +1,121 @@
-Received: from fallback25.i.mail.ru (fallback25.i.mail.ru [79.137.243.79])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B392139D4;
-	Fri, 28 Jun 2024 08:52:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.137.243.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1986A14D422;
+	Fri, 28 Jun 2024 08:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719564748; cv=none; b=Ys4hO11ltYWq0bxtxqgAY8K2cLsPx7VnOPQ2VA+0tgcR+Tar9gjyOu3G5wztotjkHm7dF87NsrPlKTaMh0eDZuFxEGCRkFD0ajNHSf+Y3fATcAS1Kif1UnTIoelsR0WfniQ8e4zuNHQtOw6Klp7LTWNAXwUOZZtnbOvDMi9YIJk=
+	t=1719564816; cv=none; b=NgpAX1vjvb0r8dItTeeQFW8EsCSS3CG283g1/Qb8b0xgBLe8ftOw9tdogEr+pcnogBstNj1aJETcEyApe+PB3Muzzo2XjW3FsHdC5oh6B8L55HOveVCuP3BWzBhfbdl5dN/0u8nF5AxsVfYVQ/DgMQUCAtA4XrvNsnSoJ/w4aQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719564748; c=relaxed/simple;
-	bh=6E4ocIGFk0AHL75T3W9lW9HCOpVyOKPovV88BDYLM28=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XIPj4rcAWLdApj59VaZ53+/X+BMqNfqjrLa0NVQSQD/VLiZBtNf1Dv7Y0K/xvp1Bxk42P8EM625W+YD9bKgL3LAptTv58NMYf6ztto+gNFxQFU4Qlteu3gIOIlPumL/21TG6tv4m1ldxLcEXNOObxMZEJfAlzd7CNk3zgaRu+Qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com; spf=pass smtp.mailfrom=jiaxyga.com; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=kAGiZzqp; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=Kq5MbfVp; arc=none smtp.client-ip=79.137.243.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jiaxyga.com
+	s=arc-20240116; t=1719564816; c=relaxed/simple;
+	bh=oxTnH17qDngqxivrM5yoTjoI0FurZB5eV9GU0Bc8qMc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Dg6YvXetZh5QVQxo38y2WINbh/ODSGhmtul7I58jPVKb+XvPePqj2swkL8V0+1Wa98TW2SQpsaCOUGpLq4cN/8OSdBDyT0BY7rL/OF0IBCEdGUAxYqIFOUgalsrJKyV2qUYQcb6hgB6W0SheEv/puE36e8VhGnxNU1oLXksgMMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Pso5GkyE; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="kAGiZzqp";
-	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="Kq5MbfVp"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com; s=mailru;
-	h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=3Ar3P+hPbqFiwyl7C4MmzgFJnQ8mK59RRMKBQofsVJM=;
-	t=1719564746;x=1719654746; 
-	b=kAGiZzqpfr83stsIPy5sZitnz1oMd+cYu4h/WvKm6ALapJep3U2ymk3rFZm2U7c1TOjscpewcDW4T2U++//pJvdg2je8fPWBRCquvIPgzRnH1lrnZJRkDLncEZ071gMhm0N6/uiKmCPGkwGClZUCE5LNumsCvTQo/m/EAXO7E6Y=;
-Received: from [10.12.4.31] (port=35656 helo=smtp56.i.mail.ru)
-	by fallback25.i.mail.ru with esmtp (envelope-from <danila@jiaxyga.com>)
-	id 1sN6tv-002UQQ-5V; Fri, 28 Jun 2024 11:24:11 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
-	; s=mailru; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:To:Cc:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive:
-	X-Cloud-Ids:Disposition-Notification-To;
-	bh=3Ar3P+hPbqFiwyl7C4MmzgFJnQ8mK59RRMKBQofsVJM=; t=1719563051; x=1719653051; 
-	b=Kq5MbfVpGRXh4FIw6ecs5/C5wHgnrhYQJwODC1NPMibd7SN8pHhrgMp7UKqkNTM/0+xmN9Was9+
-	NpFNsuu27di+XClPxxaSfEXCLiFZwbGWDRyW8i5ZIJCL4V4RSevxY8GcC5eQ4PIhwiDMneAVeMbbj
-	xvAj5mVoWpxYHQdwe5k=;
-Received: by exim-smtp-84f7fbf7d8-dklnz with esmtpa (envelope-from <danila@jiaxyga.com>)
-	id 1sN6tf-00000000a5W-1OeS; Fri, 28 Jun 2024 11:23:56 +0300
-From: Danila Tikhonov <danila@jiaxyga.com>
-To: Rob Clark <robdclark@gmail.com>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krishna Manikandan <quic_mkrishn@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Danila Tikhonov <danila@jiaxyga.com>
-Subject: [PATCH 1/1] dt-bindings: display/msm: dsi-controller-main: Add SM7150
-Date: Fri, 28 Jun 2024 11:23:43 +0300
-Message-ID: <20240628082343.28341-2-danila@jiaxyga.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240628082343.28341-1-danila@jiaxyga.com>
-References: <20240628082343.28341-1-danila@jiaxyga.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Pso5GkyE"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45S4vs7J026976;
+	Fri, 28 Jun 2024 08:53:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	+Kq22wU7wwsGYjhBl9xtahOdtEa8X2tZidLfwDtYSi0=; b=Pso5GkyEZP2QbA+o
+	fveJJtbnmUXFiuhuivdKvTBD5SIsLlvwes7hPiSvkmqvKyBTn/IfmTjca661wAit
+	SRNUz5gN/h5M6kX8gqqyopVn+Y+nZflMTjm6cPFVGmCESIPJ8YaEQGWiqOsUFkyu
+	GixmaNnVqoJHMW/5XiDjGIIoo73K601XUpV6OQGx8nYSsJi1mWApzG2OoKkddnYB
+	GHRTyN8bvKJqevREb+NQeJavaJKYpT8IyCw+aphDbz9ZSidnhEoIKBauPxJvlhnz
+	S3La1x9nKhpiaVyHNMxoBD/Q4nsJFGQ1MjQTYe/2OuVYxzDAv9FLM/e8Nn7EVV0x
+	MQg2mg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 401pm30nhc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Jun 2024 08:53:31 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45S8rT7x006124
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Jun 2024 08:53:29 GMT
+Received: from [10.217.216.152] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 28 Jun
+ 2024 01:53:25 -0700
+Message-ID: <18458d55-0ba9-4cee-85ca-88b38cebee0f@quicinc.com>
+Date: Fri, 28 Jun 2024 14:23:21 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mailru-Src: smtp
-X-7564579A: B8F34718100C35BD
-X-77F55803: 4F1203BC0FB41BD9749DDC91F62168F91C3F39031358981B86C3857216B5FE61182A05F538085040266675009EE866ED3DE06ABAFEAF6705D562D5882173DA45D4BAB75C247D3C8DC9EA2F84C7A79465
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7F1942E6D70B4A2F0EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F7900637D07BBD2EBFB7BF888638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D8AE1116DAEA21A0C27927E4C5451573B7D1122D665F0F1390CC7F00164DA146DAFE8445B8C89999728AA50765F79006371FEB031537767747389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC878444BBB7636F62AF6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA73AA81AA40904B5D9A18204E546F3947CA5ED62E35AC703CCC0837EA9F3D197644AD6D5ED66289B523666184CF4C3C14F6136E347CC761E07725E5C173C3A84C3C9F4304F34B30F1CBA3038C0950A5D36B5C8C57E37DE458B330BD67F2E7D9AF16D1867E19FE14079C09775C1D3CA48CF7EF884183F8E4D671DD303D21008E298D5E8D9A59859A8B6F459A8243F1D1D4475ECD9A6C639B01B78DA827A17800CE70012B0FBE38D23AE731C566533BA786AA5CC5B56E945C8DA
-X-C1DE0DAB: 0D63561A33F958A5889123BB9B3B997C5002B1117B3ED696CB36F49F8B669AAF1E49B01306B5E3AD823CB91A9FED034534781492E4B8EEADB71243024C627CEAC79554A2A72441328621D336A7BC284946AD531847A6065A535571D14F44ED41
-X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF77DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CF36A14396D54525BDFCDE2E49122C30FF6C598CC6315F652C104649BAC6307798F61CD9246542D0C444A12D68860EECB72109D5ECE7ACAD65A6FFEC9055B244E7DD66B608A8CD852E8100E6DA90CB805802C26D483E81D6BE72B480F99247062FEE42F474E8A1C6FD34D382445848F2F3
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojOl9CAQoHe3nPTCPlbcxNAw==
-X-Mailru-Sender: 0A26D9779F8DDEABFA5A783B5DB0061BCEEDF7D08FB5E6CAB951B70A5BD4BD8EA324EEE37D5E021EE5E949923882BAAD210985D6C440852E55B4A2144138A88088F510C62CFD139357C462056C5AD9112068022A3E05D37EB4A721A3011E896F
-X-Mras: Ok
-X-7564579A: B8F34718100C35BD
-X-77F55803: 6242723A09DB00B44E72EF7427BD9C0864826EF222902C20EF4D8836E9D6F665049FFFDB7839CE9EFDED2BF4F082F19585E326172A2798C9750E2D464EE520454CD3A696AC839CB2
-X-7FA49CB5: 0D63561A33F958A50CFCECB03F50D42B4106A91E8D6475368FB3DB30C04BE50E8941B15DA834481FA18204E546F3947C30C7C91C97108465F6B57BC7E64490618DEB871D839B7333395957E7521B51C2DFABB839C843B9C08941B15DA834481F8AA50765F7900637A4BA495B1E3EA588389733CBF5DBD5E9B5C8C57E37DE458BD96E472CDF7238E0725E5C173C3A84C35CB5556AFF48B99435872C767BF85DA2F004C90652538430E4A6367B16DE6309
-X-87b9d050: 1
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojOl9CAQoHe3mulkcZqffUFA==
-X-Mailru-MI: 8000000000000800
-X-Mras: Ok
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] clk: qcom: gcc-x1e80100: Fix halt_check for all pipe
+ clocks
+To: Abel Vesa <abel.vesa@linaro.org>, Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rajendra Nayak <quic_rjendra@quicinc.com>,
+        Bryan O'Donoghue
+	<bryan.odonoghue@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>
+CC: Johan Hovold <johan@kernel.org>, Sibi Sankar <quic_sibis@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20240628-x1e80100-clk-gcc-fix-halt-check-for-usb-phy-pipe-clks-v2-1-db3be54b1143@linaro.org>
+Content-Language: en-US
+From: Taniya Das <quic_tdas@quicinc.com>
+In-Reply-To: <20240628-x1e80100-clk-gcc-fix-halt-check-for-usb-phy-pipe-clks-v2-1-db3be54b1143@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: ddnQDAzrZO6JdrBG3p-rRsy007guMOy2
+X-Proofpoint-GUID: ddnQDAzrZO6JdrBG3p-rRsy007guMOy2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-28_05,2024-06-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ impostorscore=0 adultscore=0 phishscore=0 lowpriorityscore=0
+ malwarescore=0 priorityscore=1501 suspectscore=0 mlxscore=0 bulkscore=0
+ clxscore=1011 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406280065
 
-Add the DSI host found on SM7150.
 
-Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
----
- .../devicetree/bindings/display/msm/dsi-controller-main.yaml    | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/msm/dsi-controller-main.yaml b/Documentation/devicetree/bindings/display/msm/dsi-controller-main.yaml
-index e1cb3a1fe..b0fd96b76 100644
---- a/Documentation/devicetree/bindings/display/msm/dsi-controller-main.yaml
-+++ b/Documentation/devicetree/bindings/display/msm/dsi-controller-main.yaml
-@@ -32,6 +32,7 @@ properties:
-               - qcom,sm6125-dsi-ctrl
-               - qcom,sm6350-dsi-ctrl
-               - qcom,sm6375-dsi-ctrl
-+              - qcom,sm7150-dsi-ctrl
-               - qcom,sm8150-dsi-ctrl
-               - qcom,sm8250-dsi-ctrl
-               - qcom,sm8350-dsi-ctrl
-@@ -348,6 +349,7 @@ allOf:
-             enum:
-               - qcom,sc7180-dsi-ctrl
-               - qcom,sc7280-dsi-ctrl
-+              - qcom,sm7150-dsi-ctrl
-               - qcom,sm8150-dsi-ctrl
-               - qcom,sm8250-dsi-ctrl
-               - qcom,sm8350-dsi-ctrl
+On 6/28/2024 1:38 PM, Abel Vesa wrote:
+> In case of all pipe clocks, there is a QMP PHY clock that is feeding them.
+> If, for whatever reason, the clock from the PHY is not enabled, halt bit
+> will not get set, and the clock controller driver will assume the clock
+> is stuck in a specific state. The way this is supposed to be properly
+> fixed is to defer the checking of the halt bit until after the PHY clock
+> has been initialized, but doing so complicates the clock controller
+> driver. In fact, since these pipe clocks are consumed by the PHY, while
+> the PHY is also the one providing the source, if clock gets stuck, the PHY
+> driver would be to blame. So instead of checking the halt bit in here,
+> just skip it and assume the PHY driver is handling the source clock
+> correctly.
+> 
+> Fixes: 161b7c401f4b ("clk: qcom: Add Global Clock controller (GCC) driver for X1E80100")
+> Signed-off-by: Abel Vesa<abel.vesa@linaro.org>
+> ---
+> Changes in v2:
+> - Re-worded the commit message from scratch.
+> - Changed all pipe clocks halt_check to skip.
+> - Link to v1:https://lore.kernel.org/r/20240530-x1e80100-clk-gcc-fix-halt-check-for-usb-phy-pipe-clks-v1-1-16c6f4dccbd5@linaro.org
+> ---
+>   drivers/clk/qcom/gcc-x1e80100.c | 44 ++++++++++++++++++++---------------------
+>   1 file changed, 22 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/clk/qcom/gcc-x1e80100.c b/drivers/clk/qcom/gcc-x1e80100.c
+> index eb7e36ebd7ae..fc80011342da 100644
+> --- a/drivers/clk/qcom/gcc-x1e80100.c
+> +++ b/drivers/clk/qcom/gcc-x1e80100.c
+
+Reviewed-by: Taniya Das <quic_tdas@quicinc.com>
+
 -- 
-2.44.0
-
+Thanks & Regards,
+Taniya Das.
