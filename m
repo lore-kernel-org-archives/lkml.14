@@ -1,37 +1,38 @@
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D55F1C2328;
-	Fri, 28 Jun 2024 16:11:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29439158DDC;
+	Fri, 28 Jun 2024 16:12:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719591121; cv=none; b=tavoI4y1KVQx3c8gDOwFeeV0Tmxo1bNRTYb60ZcsJc0F7I040VKkc9Uv/hH+ffYBXibAhB4HnwBrNQE/EYGJA4z4jXzRlnRw8QAfEFMclpoIyBmYf1699KLPPk4t/kgbqisJTmO5adAT++4mltH/oY7+QSeONkuDca4I/Iv+GLU=
+	t=1719591123; cv=none; b=WZOQkGTbwHv+e5UosobdWIhkc1jlcmTE3cPNABr1ZnqFGlmESIvo5gaGDYP9baMzm22XfBAjcnhiHbvoVlES8YQOYFz1ViSTaRwXqPm12wjK0t8amfKShqckk4zoitFImL6OWCvSAmEwwrvVjKOhmW53leBr3lSBRIVRqk/B3ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719591121; c=relaxed/simple;
-	bh=WCpPTY6hVz1rGadArmb9ve2eLH4oOG1hs3HYHr8WtPQ=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=fVMZrUuTIz6a5VynEpvFROTDbow9pIvoTx4yrY6+MFm2DKt1Q5bvtO4yZQQnDVuDR4v8se6bnJISieh+Euu7rtyrDxmedQA9rtU+dVnQCkOPXkE8bvygwUcdWQDq/D93Q0yyzS37rAoPZmNMFDMqKENYOGoqn0E/LaOLT5IcLco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=avkLpDCE; arc=none smtp.client-ip=217.70.183.201
+	s=arc-20240116; t=1719591123; c=relaxed/simple;
+	bh=nvuGFq7viiCmUzzdZASK97mwCpK0qNQUOS8MBZluUkU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Es3NOFJZs9z1wTt6KrdSLRTE9uFcuozIjVphk7hxS90vra6Dt6QSMbgX52CDYIfP3u5oBxqOAM7dpliFTfYz+0fT1T71UkwfrMRAyRwTdJSIHdf4bJGK5xlBLipS8p8a0j30LiqMWPmoF9ooKLArGQvmfI2VgYJPH0R4Dv9G9h4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=VoJAHBvY; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="avkLpDCE"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 09BB01BF20B;
-	Fri, 28 Jun 2024 16:11:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="VoJAHBvY"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CFEA41BF204;
+	Fri, 28 Jun 2024 16:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1719591112;
+	t=1719591114;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=0+XZ/J7ChAoDDnmgTOp5O552jiS9D3wRjEpJyYaEgKg=;
-	b=avkLpDCEk04mH/baQvo2E/lGrJTDbpP+TDvGkPMvwW1GbGE6rCDV9IjHMNh+3vKnDr5Ckz
-	pLMnvydTy/CWmJNDSuEsVTEYKXDM8htZvBOPq+jvBSVEot4SeR+KHgjGLvRdrdGScyD2KP
-	peffJYw8SrC+byjJpeCBt7ForyGIZafsPnEVaVkvIwZ7UhH1/by9n1fc7x0acWRNVfnGJy
-	7WK/z/cEjiam7M87N8+5nRVUAX/mHKlj4eWhs625v6zypt9UE9F2PNr3B6RmfgVdEU4X9M
-	tyvaX6l1CyrWAyjn+DLFDdXkVZ1yJ6vtjT3lhWUsI1vIdAJpDyMcolmLBRcNWA==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Tz2vT/oZG6SWYh6OdnXILH4h+RDaqZezQzWQ9iPCvbw=;
+	b=VoJAHBvYfj2mrNJ8NlPxptnNHkabiZRfSWe33h6I5K0kQzb94En2Yq5J0TyrLFXwnpc0/+
+	Z8edMApK/lkh8G7duZNlseWKwj2ZjS7MwJJ8aM8HSc4J1tauunL97NnyUUsf9GogBQg7zO
+	YxwcdrBU/FmlLV6YmwduCHcXCrmuHv9FOXRhASiWsN3FNlPr9hiLY3eytu83r3Y7+aUqw9
+	pHQSAa70vjGmLAjj9yB2O85Pz0FPqZsCChcRV/nfhsNVLIARHggAcnviWML3/NUvAXqpc4
+	PJeRA1N/EsWXWRe2IXoimklirtTAkD9KzCe60xWp/adO16lgbQgzKE54+yZ/DQ==
 From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: [PATCH 0/3] MIPS: Add Mobileye EyeQ OLB system-controller
-Date: Fri, 28 Jun 2024 18:11:49 +0200
-Message-Id: <20240628-mbly-mips-v1-0-f53f5e4c422b@bootlin.com>
+Date: Fri, 28 Jun 2024 18:11:52 +0200
+Subject: [PATCH 3/3] MAINTAINERS: Mobileye: add OLB drivers and dt-bindings
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,9 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAMXgfmYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDMyML3dyknErd3MyCYt00kzRT07RkI3MLE3MloPqCotS0zAqwWdGxtbU
- Av6w+OFsAAAA=
+Message-Id: <20240628-mbly-mips-v1-3-f53f5e4c422b@bootlin.com>
+References: <20240628-mbly-mips-v1-0-f53f5e4c422b@bootlin.com>
+In-Reply-To: <20240628-mbly-mips-v1-0-f53f5e4c422b@bootlin.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, 
  Thomas Bogendoerfer <tsbogend@alpha.franken.de>
@@ -56,50 +57,38 @@ Cc: linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
 X-Mailer: b4 0.15-dev-13183
 X-GND-Sasl: theo.lebrun@bootlin.com
 
-This is a new iteration on the Mobileye system-controller series [0].
-It has been split into separate series to facilitate merging.
+Register OLB-related files part of the "MOBILEYE MIPS SOCS" MAINTAINERS
+section. Those include:
 
-This series contains a dt-bindings defining the system-controller
-(called OLB) used on EyeQ5, EyeQ6L and EyeQ6H. It then modifies the
-EyeQ5 devicetree to exploit that system-controller.
-
-The last patch adds entries in MAINTAINERS for all related files. This
-is done in a single commit to avoid conflicts across trees.
-
-Related series are targeted at clk [1], reset [2] and pinctrl [3].
-
-Have a nice day,
-Théo
-
-[0]: https://lore.kernel.org/lkml/20240620-mbly-olb-v3-0-5f29f8ca289c@bootlin.com/
-[1]: https://lore.kernel.org/lkml/20240628-mbly-clk-v1-0-edb1e29ea4c1@bootlin.com/
-[2]: https://lore.kernel.org/lkml/20240628-mbly-reset-v1-0-2a8294fd4392@bootlin.com/
-[3]: https://lore.kernel.org/lkml/20240628-mbly-pinctrl-v1-0-c878192d6b0a@bootlin.com/
+ - drivers (clk-eyeq, reset-eyeq, pinctrl-eyeq5),
+ - dt-bindings (mobileye,eyeq5-olb.yaml file),
+ - bindings includes file <dt-bindings/clock/mobileye,eyeq5-clk.h>.
 
 Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 ---
-Changes since OLB v3 [0]:
- - MAINTAINERS: Move changes into a separate commit to avoid merge
-   conflicts. This commit is in the present series.
- - dt-bindings: Take Reviewed-by: Rob Herring.
+ MAINTAINERS | 5 +++++
+ 1 file changed, 5 insertions(+)
 
----
-Théo Lebrun (3):
-      dt-bindings: soc: mobileye: add EyeQ OLB system controller
-      MIPS: mobileye: eyeq5: add OLB system-controller node
-      MAINTAINERS: Mobileye: add OLB drivers and dt-bindings
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2ca8f35dfe03..b3732165b824 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15194,9 +15194,14 @@ M:	Théo Lebrun <theo.lebrun@bootlin.com>
+ L:	linux-mips@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/mips/mobileye.yaml
++F:	Documentation/devicetree/bindings/soc/mobileye/
+ F:	arch/mips/boot/dts/mobileye/
+ F:	arch/mips/configs/eyeq5_defconfig
+ F:	arch/mips/mobileye/board-epm5.its.S
++F:	drivers/clk/clk-eyeq.c
++F:	drivers/pinctrl/pinctrl-eyeq5.c
++F:	drivers/reset/reset-eyeq.c
++F:	include/dt-bindings/clock/mobileye,eyeq5-clk.h
+ 
+ MODULE SUPPORT
+ M:	Luis Chamberlain <mcgrof@kernel.org>
 
- .../bindings/soc/mobileye/mobileye,eyeq5-olb.yaml  | 374 +++++++++++++++++++++
- MAINTAINERS                                        |   5 +
- .../{eyeq5-fixed-clocks.dtsi => eyeq5-clocks.dtsi} |  54 +--
- arch/mips/boot/dts/mobileye/eyeq5-pins.dtsi        | 125 +++++++
- arch/mips/boot/dts/mobileye/eyeq5.dtsi             |  22 +-
- 5 files changed, 541 insertions(+), 39 deletions(-)
----
-base-commit: f2661062f16b2de5d7b6a5c42a9a5c96326b8454
-change-id: 20240628-mbly-mips-f4f55fc27847
-
-Best regards,
 -- 
-Théo Lebrun <theo.lebrun@bootlin.com>
+2.45.2
 
