@@ -1,50 +1,110 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768BD3EA86;
-	Fri, 28 Jun 2024 06:03:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+Received: from mail.nfschina.com (unknown [42.101.60.195])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 529A752F7A;
+	Fri, 28 Jun 2024 06:04:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719554616; cv=none; b=qMO3i/lkT783H8ostisovfG7fNc3KtdP7E9azNWspbFOyBh2K0FresifmPlMw7FsLHs4FzZ/q1YM0LdD9MrRa5T3u6WJohgq8h53S62212CcaWo3kOOPfuLufoXRIvCyygReI+JD8woMWPg5Yfb3flnKWI2I0w5XaWvKgSsFX7c=
+	t=1719554646; cv=none; b=tpZBEv/J0rIH9Xp1f80PstMy5tKwTpGyNzqWxxze3Oiv9F81yXYNI1CKQxkJxSHdFKtU0tMv131T44FlLZn0FrjCb8jPy2NTkWio9igIHNj51ZlMuW3bA2wp/PzWbfeGqkQWeNFWz6qs8netm3uuctk3AnUtvq+tAlGwqHCMPEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719554616; c=relaxed/simple;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tBiTR2U/IhFXdJIhXLCAWg8jtNFSUqUc9lIWGLVJDoLcYYtz+nUDW0G9jx2d6mexdemWUhaJYhEDcd/WYF138Y3PUG2T2u8eIq42DFRMAqbBNJGX3EFk9eygh8MxWCDMU3VXxjGqLV/YffBRib9EUOuG9ULAsp5Wr2ktg52dvvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 1AC8768D05; Fri, 28 Jun 2024 08:03:32 +0200 (CEST)
-Date: Fri, 28 Jun 2024 08:03:31 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Daniel Wagner <dwagner@suse.de>
-Cc: Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Christoph Hellwig <hch@lst.de>,
-	Frederic Weisbecker <fweisbecker@suse.com>,
-	Mel Gorman <mgorman@suse.de>, Hannes Reinecke <hare@suse.de>,
-	Sridhar Balaraman <sbalaraman@parallelwireless.com>,
-	"brookxu.cn" <brookxu.cn@gmail.com>, Ming Lei <ming.lei@redhat.com>,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-nvme@lists.infradead.org
-Subject: Re: [PATCH v2 3/3] lib/group_cpus.c: honor housekeeping config
- when grouping CPUs
-Message-ID: <20240628060331.GC26297@lst.de>
-References: <20240627-isolcpus-io-queues-v2-0-26a32e3c4f75@suse.de> <20240627-isolcpus-io-queues-v2-3-26a32e3c4f75@suse.de>
+	s=arc-20240116; t=1719554646; c=relaxed/simple;
+	bh=c//nUK97LhQ4i/gqtAJZzEghbJ3QsRwBqd/pKLM7OAI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=me5c+KWPnx0PASd04coC4vebyfmByb5WujLDvAy92+VkyAlElFNzv8nbSXcByC+egO9QSbZIh8GEDp0dJeC69Nbo0txsU2+rNdWEcUZ44Ig+cSkgm9ttihy0xGIfgjrLLcfIFOfzccveR8PS+E+i/Oo73VBIzeol8Ka6WhAAsfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
+Received: from localhost.localdomain (unknown [103.163.180.2])
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPA id 6725D612A4BD4;
+	Fri, 28 Jun 2024 14:03:28 +0800 (CST)
+X-MD-Sfrom: youwan@nfschina.com
+X-MD-SrcIP: 103.163.180.2
+From: Youwan Wang <youwan@nfschina.com>
+To: andrew@lunn.ch
+Cc: hkallweit1@gmail.com,
+	linux@armlinux.org.uk,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Youwan Wang <youwan@nfschina.com>
+Subject: [PATCH] net: phy: phy_device: fix PHY WOL enabled, PM failed to suspend
+Date: Fri, 28 Jun 2024 14:03:18 +0800
+Message-Id: <20240628060318.458925-1-youwan@nfschina.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240627-isolcpus-io-queues-v2-3-26a32e3c4f75@suse.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 
-Looks good:
+If the PHY of the mido bus is enabled with Wake-on-LAN (WOL),
+we cannot suspend the PHY. Although the WOL status has been
+checked in phy_suspend(), returning -EBUSY(-16) would cause
+the Power Management (PM) to fail to suspend. Since
+phy_suspend() is an exported symbol (EXPORT_SYMBOL),
+timely error reporting is needed. Therefore, an additional
+check is performed here. If the PHY of the mido bus is enabled
+with WOL, we skip calling phy_suspend() to avoid PM failure.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+log:
+[  322.631362] OOM killer disabled.
+[  322.631364] Freezing remaining freezable tasks
+[  322.632536] Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
+[  322.632540] printk: Suspending console(s) (use no_console_suspend to debug)
+[  322.633052] YT8521 Gigabit Ethernet stmmac-0:01:
+PM: dpm_run_callback(): mdio_bus_phy_suspend+0x0/0x110 [libphy] returns -16
+[  322.633071] YT8521 Gigabit Ethernet stmmac-0:01:
+PM: failed to suspend: error -16
+[  322.669699] PM: Some devices failed to suspend, or early wake event detected
+[  322.669949] OOM killer enabled.
+[  322.669951] Restarting tasks ... done.
+[  322.671008] random: crng reseeded on system resumption
+[  322.671014] PM: suspend exit
+
+If the YT8521 driver adds phydrv->flags, ask the YT8521 driver to process
+WOL at suspend and resume time, the phydev->suspended_by_mdio_bus=1
+flag would cause the resume failure.
+
+log:
+[  260.814763] YT8521 Gigabit Ethernet stmmac-0:01:
+PM: dpm_run_callback():mdio_bus_phy_resume+0x0/0x160 [libphy] returns -95
+[  260.814782] YT8521 Gigabit Ethernet stmmac-0:01:
+PM: failed to resume: error -95
+
+Signed-off-by: Youwan Wang <youwan@nfschina.com>
+---
+ drivers/net/phy/phy_device.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 2ce74593d6e4..c766130e2c41 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -270,6 +270,7 @@ static DEFINE_MUTEX(phy_fixup_lock);
+ 
+ static bool mdio_bus_phy_may_suspend(struct phy_device *phydev)
+ {
++	struct ethtool_wolinfo wol = { .cmd = ETHTOOL_GWOL };
+ 	struct device_driver *drv = phydev->mdio.dev.driver;
+ 	struct phy_driver *phydrv = to_phy_driver(drv);
+ 	struct net_device *netdev = phydev->attached_dev;
+@@ -277,6 +278,14 @@ static bool mdio_bus_phy_may_suspend(struct phy_device *phydev)
+ 	if (!drv || !phydrv->suspend)
+ 		return false;
+ 
++	/* If the PHY of the mido bus is enabled with Wake-on-LAN (WOL),
++	 * we cannot suspend the PHY.
++	 */
++	phy_ethtool_get_wol(phydev, &wol);
++	phydev->wol_enabled = !!(wol.wolopts);
++	if (phydev->wol_enabled && !(phydrv->flags & PHY_ALWAYS_CALL_SUSPEND))
++		return false;
++
+ 	/* PHY not attached? May suspend if the PHY has not already been
+ 	 * suspended as part of a prior call to phy_disconnect() ->
+ 	 * phy_detach() -> phy_suspend() because the parent netdev might be the
+-- 
+2.25.1
 
