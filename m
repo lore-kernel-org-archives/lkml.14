@@ -1,82 +1,115 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04921BE852
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 15:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21651BE86B
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 15:04:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719586916; cv=none; b=OXgsD+m3w6drdjeJ/cWUTp/GcpoVUDFi8X7wwaWs2fiOfZspemTkcAwmBCejOYzrXehbw24c7DKhrbhIvyEcbmgZkNIIW9OBYjhOjxrxqzzPucd2iBQv6dMcxji9wMpGIB9u9PdAVaG2VcoBofjl/6Kw+lbbvzf3bFgFZnwSoys=
+	t=1719587081; cv=none; b=UcMF4HwPgEi8MzZBIaxLhHeLN1avoYr1Bwnf/YlrFEsjhJvuNpLQO5wYuEkpvhUOQtqYLGLgtq0OfssOqUSl5oN4fwTUkVwoVP31wkWh4fo2OtJmNEwTtGKAUidDnYUOqLJ/HLLhcfVvh9uQYiOMin3c4kSVRlg0FVLlkWcKhkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719586916; c=relaxed/simple;
-	bh=5AM+ks3kbuAODFXCbuJgrzHkfUbhDJpA2xaseF4KDew=;
+	s=arc-20240116; t=1719587081; c=relaxed/simple;
+	bh=4HrWgrMVq1i/YjC4ut2igeIH8gX5s35Ldos/IW/06ec=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b/sQ5tUbVAcGsEpD1NZ9Obo50vu5HxgNk9tq1l5wla30JlCso2FJj+4k4EG4ZdFo7MvhCJ+tLyrbsqbtHP4wjCrnYvqUKCjf6HsBwMZYUIP6g6xJmUlor9gDdJ31eX26GLMhuIIGvd9dx02opsaYERYdAVZ+L3WtT0klsM3adlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wK1GDIo5; arc=none smtp.client-ip=209.85.160.178
+	 To:Cc:Content-Type; b=rxg5Kwv/nNDrNVv7/XI1hW5dzJDZOilBp3h+5NIKqzAWsE56luFab824KpCCVrX5Xi4kBGVKSX58C1zsQK0o+sJQrNtaO06N5yXh7VVHM14zAwiaeZiOkHGZDjrP+xobKoFPOgsWCX7a3VUO5lNzu43w7Z/+/tRmHoSYHUwkGfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SEDp4h/8; arc=none smtp.client-ip=209.85.210.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wK1GDIo5"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-444fe7e9f11so273671cf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 08:01:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SEDp4h/8"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-700cd43564eso349433a34.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 08:04:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719586914; x=1720191714; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1719587079; x=1720191879; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=pV4F7RdKKxqX+CEk9cel20GI2s9HbIhc31hrc3gEuKM=;
-        b=wK1GDIo5+rV1ElkTMa3g/cXHF9rdL0NHTKrsWu7T+0HbKqEoU0BHhGiIc/OHdQAZPE
-         C0CugS7G76cv+qRFiCTQT7yQafzdurKme7RNZKw9IL/UPTfI2lmjJkc2J/QtnlVcky3z
-         vNJGUF8X95ZfXoaBuqBgr0geQpFmgFLN3WQHEra9uSqEEX6KKIvpUp23RyM4UPkDKHtC
-         M2QiwVkz2wsAKnys789voUWJTCla1EW21bmEH18vdXAwfbq0+PO1DEQMO+zw2swFhWuQ
-         f94PCz9RO8njPOqCFsSLIfaCXvOibL2T6NvhEZse8EOWjJ08J6z5gCyhFdunw+CkujkK
-         4Cfw==
+        bh=IdPgPHdqxoeiATTbOh8/ckCue/94/+WvA2r7sPESkkk=;
+        b=SEDp4h/8bpLTcONdgeGAz6GxYAeJZD2nhb9NfUTBCnnF6k2jk5oCVkYt8sJnEIbXse
+         ho8ViCVYFlDg3ABrUvkm5dnVg5H8tGtKhT5drak4wWI4TuCIlTFT/fzQsBLzOn9k0458
+         RWq7g7/ouztAHMSwuhjvIlwvgYoZqApvaMlKxYjKv0qZg4DeO8GCy5yyaqX3v0559+as
+         ndbVT6+zXfXFhR2b1OjfbmMfCiKzDiRkvU/VBy3USpK3Q8PKUfAoNgnExmikhQID+Xkn
+         CEYZxCC/3Gn1ssGs8XfPG2ep4OWtjxUAdPkuh9xJpFpkoLegFKl2IGrA8SlveK2Stc+v
+         2uyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719586914; x=1720191714;
+        d=1e100.net; s=20230601; t=1719587079; x=1720191879;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pV4F7RdKKxqX+CEk9cel20GI2s9HbIhc31hrc3gEuKM=;
-        b=v7J/BXQyiChSC9WeR4tT7j/zxgd4pgdS1oLBc9+lJGYZGxDVS8/BFRO3wliGawIsdq
-         4WRWyn+hEMpFsp9piQABZkeOC803LUxeEW4zJCz3RQ51AI4oZ076EZEwgqx19ZLxcQAh
-         rmuql4QajO6QiYwzhZnVgXDx7i432Hz/mYGfLP/U1w219ykX3srSYxRYjSUvWobdqHVJ
-         9OBMJep74H57DMtOT8KPcVU6eLS7fzaeayK5/9sHlu0Ojc75m0uTB9ZG8DukAprMyf8h
-         I0c9tXEePTdBpIky0Rk6TvwztpW91TvEyFPJL7em/vqew7DBG5L+Avobf3I4/BNgs3mA
-         e6Yg==
-X-Forwarded-Encrypted: i=1; AJvYcCV0rPoRhEpaKtq7wnKklSlRQyyN34KFz3MUnGhedTJ94eNc7XtmV6sA7vjZkrr4g3SiR/R5Lvja15ixW7EzxzXTz20ftOelyRP1TJNk
-X-Gm-Message-State: AOJu0YxxWZYIzNDhG1eSFI8WFDRR34iV35fJ1sV4nPFYhTlUTZQgH9Uy
-	jTk0KSCXyok5imrE2tVEcmew1mXPrUcTkG7XSAOhCLgDqctI+a6sj3vag2b0ERoouZpwq5kTUd6
-	B1myaOIg2XNYE93VUdKgOpUyCHeJGQD9klYvb
-X-Google-Smtp-Source: AGHT+IFSa8ePRVVy+0pw+2BgpZBsYhEdqdOqUKgO/gqHs/9djL6GlfhMWqhA6kA1DlyLbQRpSh8UWRI6Jz7YD4+eot8=
-X-Received: by 2002:ac8:45d4:0:b0:444:aba7:8c07 with SMTP id
- d75a77b69052e-44651b1dac0mr3382951cf.18.1719586913372; Fri, 28 Jun 2024
- 08:01:53 -0700 (PDT)
+        bh=IdPgPHdqxoeiATTbOh8/ckCue/94/+WvA2r7sPESkkk=;
+        b=vO7l5lewoRj+OJkYJMcfDG9ipyyDvyj3Nf0NwRbgZeQfibonAEeUTSJpkO6gpf+9Xp
+         2wU0aPJ/nc1/XPM1ug67lXm+44t/LbfsnisFfjCMdWnn7bJaK4pDgNzq7UCv/jjrbn6+
+         ac/A6/zfu+WIj0Qy4qvskRkeydOO03El74P1E+NgUxh/S8Mvbdt+smE1WMimKSFtuHZ3
+         66COXGgTXSydX7euUah59m/cwdtPuI0Yv3nyXPw3fAenJ5MuLFwefozKLGK19DF5LyYn
+         DKHDTwBxLXEYI4UBYGrhaCh+fJpYiWhIxx4T55fM3rrnfoWmvLD0rxeyHC7BUEfg4t2s
+         HT6w==
+X-Forwarded-Encrypted: i=1; AJvYcCXc2SapSjWmr5fVGc/W4jMENQX/J7l2kS9JvAJLFfLlYN6wCkoCyQ/YMWlmcpsNdJyvLVxju5oTZBWpetsp9thiDHwXxw6Q+6pqLqMB
+X-Gm-Message-State: AOJu0YzkqElt3/zpeHSDJrtLSw/FLC7tuezHqNdWkWEwonzGEbuU5koh
+	1QIwHKGFF9ejlr2LMTHd+A6YKLDC6j9ITeXpBPzP529bSlwrZaGI2EXwZ4m6jEYhLPY332d9EOF
+	3aYujpxl60usP6FNSFvg4a+8YmqUTFSzdKhTP
+X-Google-Smtp-Source: AGHT+IFIH5GSIlejCaeZJUlzf/wdLPoHO3nRreBGVb8Lrricv/ZEiUvWttJ1AzkoFkrRhwDOgnR87ijjJyZ0O8134lM=
+X-Received: by 2002:a05:6808:1307:b0:3d6:2d2f:d03b with SMTP id
+ 5614622812f47-3d62d2fd33cmr4988807b6e.10.1719587078322; Fri, 28 Jun 2024
+ 08:04:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240611171600.1105124-1-aniketmaurya@google.com>
- <20240624052851.1030799-1-aniketmaurya@google.com> <20240627221225e3517e4e@mail.local>
-In-Reply-To: <20240627221225e3517e4e@mail.local>
-From: "Aniket ." <aniketmaurya@google.com>
-Date: Fri, 28 Jun 2024 20:31:42 +0530
-Message-ID: <CAMmmMt0GKHaTbPbY_qubw09TGnAkVO+M_EAZB1bLZBQ3Ev3iJw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] i3c: dw: Add apb clk
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Jeremy Kerr <jk@codeconstruct.com.au>, Joel Stanley <joel@jms.id.au>, 
-	Billy Tsai <billy_tsai@aspeedtech.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, linux-i3c@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20240623220606.134718-2-thorsten.blum@toblux.com>
+ <CANpmjNMHPt7UvcZBDf-rbxP=Jm4+Ews+oYeT4b2D_nxWoN9a+g@mail.gmail.com> <1bebf2e8a8a64b4aa4097fd045993106@AcuMS.aculab.com>
+In-Reply-To: <1bebf2e8a8a64b4aa4097fd045993106@AcuMS.aculab.com>
+From: Marco Elver <elver@google.com>
+Date: Fri, 28 Jun 2024 17:03:59 +0200
+Message-ID: <CANpmjNPoYaCVTHONGhN3ZJgd_yzUSMmjib+EBKbHG14xLnrQwg@mail.gmail.com>
+Subject: Re: [PATCH] kcsan: Use min() to fix Coccinelle warning
+To: David Laight <David.Laight@aculab.com>
+Cc: Thorsten Blum <thorsten.blum@toblux.com>, "dvyukov@google.com" <dvyukov@google.com>, 
+	"kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-> >   dt-bindings: i3c: dw: Add apb clock binding
-> >   i3c: dw: Add optional apb clock
-> >   i3c: dw: Use new *_enabled clk APIs
+On Fri, 28 Jun 2024 at 16:52, David Laight <David.Laight@aculab.com> wrote:
 >
-> You should reorder your patches to have 3/3 before 2/3, else you
-> introduce code that you immediately remove.
+> From: Marco Elver
+> > Sent: 24 June 2024 08:03
+> > >
+> > > Fixes the following Coccinelle/coccicheck warning reported by
+> > > minmax.cocci:
+> > >
+> > >         WARNING opportunity for min()
+> > >
+> > > Use size_t instead of int for the result of min().
+> > >
+> > > Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+> >
+> > Reviewed-by: Marco Elver <elver@google.com>
+> >
+> > Thanks for polishing (but see below). Please compile-test with
+> > CONFIG_KCSAN=y if you haven't.
+> >
+> > > ---
+> > >  kernel/kcsan/debugfs.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/kernel/kcsan/debugfs.c b/kernel/kcsan/debugfs.c
+> > > index 1d1d1b0e4248..11b891fe6f7a 100644
+> > > --- a/kernel/kcsan/debugfs.c
+> > > +++ b/kernel/kcsan/debugfs.c
+> > > @@ -225,7 +225,7 @@ debugfs_write(struct file *file, const char __user *buf, size_t count, loff_t *o
+> > >  {
+> > >         char kbuf[KSYM_NAME_LEN];
+> > >         char *arg;
+> > > -       int read_len = count < (sizeof(kbuf) - 1) ? count : (sizeof(kbuf) - 1);
+> > > +       size_t read_len = min(count, (sizeof(kbuf) - 1));
+> >
+> > While we're here polishing things this could be:
+> >
+> > const size_t read_len = min(count, sizeof(kbuf) - 1);
+> >
+> > ( +const, remove redundant () )
+>
+> Pretty much no one makes variables 'const', it mostly just makes the code harder to read.
 
-Ahh! Sorry, let me fix this.
-
-Thanks,
-Aniket.
+This is very much subjective. In my subjective opinion, it makes the
+code easier to understand and it'll be harder to introduce accidental
+mistakes. For trivial cases like this it really doesn't matter though.
