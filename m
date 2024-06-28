@@ -1,148 +1,153 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F021C9ED4;
-	Fri, 28 Jun 2024 16:48:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC72D2E5;
+	Fri, 28 Jun 2024 16:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719593340; cv=none; b=scN0GqSrVKj6+dMZtPJQoDLZt/Ub82+eCPhq9p9B0q241hnTWa+dXcCRDULHi4gA7ZdpDwv3x6oZau9Psrjo4X5YtV/3R57xRoWuEBQughFkEBA5vAdD85NFB8xVxspet1ZOsfg1cQpb0/RWYbM/BvTPGqnTTaMWUJQWmbXhHnQ=
+	t=1719593405; cv=none; b=K9OanpYrAHyLxpBWePCfPr1kKHLWurDhAFzJ12EDVNw0O8raUI20dwdFXdaOJ4z6aFAvG62PiX1XzNqPTkD3f2TNMucf6rthAw5iZgc8mBSFPYYIssKtTTHjYuj+F6tr6aAp6+40FCl/E1BDThn0KNcd9rESx2jgmdKQt+oBu4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719593340; c=relaxed/simple;
-	bh=j95cM/d5z9HKqvFhw36xElRJ+ODwQKK1fG8Z1dNQmps=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LXd5uyx/Owg3rq5pO1cNzxA6XpPui/c/MCbrvvkrU1Ng1YHpqLwZsk5Av3SW0jKvA3kyGkDACntuJKz50EoHhBjhKTXL987XQSDTwuBwL0rjqe42Jc+ZxWc4fFgLvJ2pPXRKktTp+M8kTHj2Pv1jdYdGcKp36b62BPX8vBCI1jE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=miOjVDyz; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+	s=arc-20240116; t=1719593405; c=relaxed/simple;
+	bh=G8DqdW0trZFUQupStjt8vVkzmJRjh9xErUsIAV7fWGc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=eooraNT5BzAlfnrajIHCwkQAL/yDxLuE8RAMj/fKtHViNG2lrurqH54qM2rSs6v8+ysgMWqaR5mGoep3enR5PDILi4rBuLzb5FpX4N9Rrvg72IG5WV36uydopen71yNaK3TpizPPlfxxbD9SKSS8/zf1VngLwrRaY5+6BJ4ddtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cjCVicOi; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="miOjVDyz"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1f70c457823so4516035ad.3;
-        Fri, 28 Jun 2024 09:48:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cjCVicOi"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7067435d376so621635b3a.0;
+        Fri, 28 Jun 2024 09:50:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719593338; x=1720198138; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=5uI4LJfJFV/GBlsW5LjFsGjuX2Y/XiOBvRyUaPOHrnA=;
-        b=miOjVDyzTFsbZSz66N+O0v780QxYYZqn+1raTH05qC868YD5NL36MvPk2z5ujE2yLM
-         ABGlpshUVCF/QhEl4OB9Oo9hRZFqizkUGc578TtBvqWhn7VngIzO5+pGex2U/Lj7lwow
-         g5+TWi8V/SBRdSutMqPSdeabIplNheWF3ao0OmTH+RWxXEkkPM3cexMJNhDj8OHXYlhw
-         rSP1/U/JDncgoQ7uLVTKFi7NwIDO3A+u3e5Hhv5KHaGoMX2TqgTd3/8sqWesMGAfUFDF
-         yUAjTxT4t6WbzYpSUE/RTJ26wB333HkaG4XPXHIMDjCRq4R/GvB2LvTBdSL8PoIvx7mk
-         p3+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719593338; x=1720198138;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1719593403; x=1720198203; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5uI4LJfJFV/GBlsW5LjFsGjuX2Y/XiOBvRyUaPOHrnA=;
-        b=S0/X1iSSWzreODa9nsRLg3oclFJ02ySsHJWDrxPUkXjxT1zsd519BzK7qgmWlh0MoQ
-         1Ohe/bCGdI33ubWnpxXQQVZBK/4R4OUIWUm3Il6X77G3YKy5OrhOb/Rc0XKW/RAUl/XR
-         Hd6aVgSSzgEBZE7z/rPhQjte5pTl92xd7qYBwFiKzFdo6urlkLGrtZ7E7/EN2Ffzom+H
-         Z7VaMopaYxV6B8Xd7N76TDc7q7IrYE4ywDz2Fq/+btebzf+EWybiTnv0xIM0YySV8toM
-         OoA2fVGu0fDeiI4M5Ip0Od428CXeJINmjZvb9DuJjBIX2ST6Ee+QUPut3yjj3QiVYuOU
-         HOqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWwyz2gTTgNjFG4noqsyG6uKoy5js8Xjg4pUBlUkJkdIyHMXCnl4ywqEEzN4IVk67yHkrpZ6NCKM6dpu09c2QKTjb4bHwsCl3+60g2q
-X-Gm-Message-State: AOJu0Yzk+LC5AMrwL/I9pOR42JFxupadCb6lbghL+2j4fMn83xZ/bsCQ
-	bKoLRWSvEUNzwtd2xozBvs1bLmKD3L/esv0BDmrXiLw2YhN6w8Nyb5gnRw==
-X-Google-Smtp-Source: AGHT+IHczgOa70F6xEmF0Dn6XS+XVyH3jpRZ1YiH5gYe8q6e1Qdf1xnaYBVpoM/6J20eliGbCAMicg==
-X-Received: by 2002:a17:902:ecc7:b0:1f7:42c6:50a5 with SMTP id d9443c01a7336-1fa23ed9805mr166122915ad.28.1719593338483;
-        Fri, 28 Jun 2024 09:48:58 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac10e392asm17532875ad.78.2024.06.28.09.48.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Jun 2024 09:48:57 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <f6f15268-e2e4-4ee2-9e17-40785b9861c9@roeck-us.net>
-Date: Fri, 28 Jun 2024 09:48:55 -0700
+        bh=4Sai30B2m2oMAFo6GShhCdpzgtuTKYbcDM5PCHgdK/E=;
+        b=cjCVicOiq7ys/CLxt+56boRgg6GAineGyvTnM+4frCcvPWB+LBVdKY4kUbekfh267T
+         I983ZJ5FjShEt2IU8IL49sifXcYoi7YhDxU02E6pXBIr8nw4hSs4X0zq9OXi0ii9JXVI
+         GXEGb6n8IHGFRSZcFAGX9d2UxlcExFuDVk4MS4sQ2lwZx7YT13xMZ5dITudJXkjbdj90
+         hsvzEaHFW7dRZ8OSUyrCVS8r/EkYIE+T58wSXGXVIharTpB1jKEjnu7Z59kaCApEfmAI
+         ewEEzSiz09CAi+i/lDd9/vlv3rt1KpIDnsd0HRP25JZ3tR5FZJ6sIHdLbP1EHQIwynjT
+         PpZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719593403; x=1720198203;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4Sai30B2m2oMAFo6GShhCdpzgtuTKYbcDM5PCHgdK/E=;
+        b=gbxmbpAcYL1ZDOHlITm5K5V4jzsFPqYwoowu0KIl/7ge/YdT9pkxVuYCAMr2Jq3RZL
+         8go5GzM/RH0vvxCtmsL9ZO8hpYADMicKz4E6yIEux8vB+ldyMpzagwNiBc6SuoJnAFJw
+         qFArwvHGhiymLhSsEMcruDM6ayw6oOxk47Gz3gu5LX0SiYPcNm1fxD/xS12fNVffAf3A
+         YAOzXiMxHNhmZ0HcZDQSkKj2N9H9Gj2gWfzTrSmwRMzop99g3RFaxbX7ZgIOaKDb9gQd
+         ru4SDeoVz4ztNs7HuH5rfJ9unYrB++Xnnc9npgFfb+akDFs+wW7QpOqwBFh9iJ+ryuHe
+         FzCg==
+X-Forwarded-Encrypted: i=1; AJvYcCVXaZl6+V+e51sGLh9hSvxwrKIPVcdX7AKUpgeNbFX1VggranBYS3qt6oG2cNzl/EfvtqB0hPCj97wWX8ML2bartn4z90p4+g6Rlyse
+X-Gm-Message-State: AOJu0YywSd4jnBepPZrtQ41UxiQpSnSpozlK73VwEazS/26MU4T1+F5e
+	owK5zpkyx+wi9ntQKo8xCRBrlmLkvUbh8RN7GMMp1HkohtAlhtTt
+X-Google-Smtp-Source: AGHT+IG7FBBAz50J+1PFvwI0HOFkFmVVr1ZgKD18MFU3u1JUmFFVaxoC3Ga0nwWFX4ys9XykVWm3pQ==
+X-Received: by 2002:aa7:91d3:0:b0:706:5daf:efa5 with SMTP id d2e1a72fcca58-70851f55b1bmr2832674b3a.9.1719593403189;
+        Fri, 28 Jun 2024 09:50:03 -0700 (PDT)
+Received: from carrot.. (i114-180-52-104.s42.a014.ap.plala.or.jp. [114.180.52.104])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70804a95402sm1827690b3a.198.2024.06.28.09.50.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Jun 2024 09:50:02 -0700 (PDT)
+From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-nilfs <linux-nilfs@vger.kernel.org>,
+	syzbot <syzbot+d3abed1ad3d367fa2627@syzkaller.appspotmail.com>,
+	syzkaller-bugs@googlegroups.com,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH] nilfs2: fix kernel bug on rename operation of broken directory
+Date: Sat, 29 Jun 2024 01:51:07 +0900
+Message-Id: <20240628165107.9006-1-konishi.ryusuke@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <0000000000003002be06179e2f61@google.com>
+References: <0000000000003002be06179e2f61@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] watchdog: starfive: Add missing clk_disable_unprepare()
-To: Chen Ni <nichen@iscas.ac.cn>, xingyu.wu@starfivetech.com,
- samin.guo@starfivetech.com, wim@linux-watchdog.org
-Cc: linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240628033508.281058-1-nichen@iscas.ac.cn>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20240628033508.281058-1-nichen@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/27/24 20:35, Chen Ni wrote:
-> Add the missing clk_disable_unprepare() before return in
-> starfive_wdt_enable_clock().
-> 
-> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+Syzbot reported that in rename directory operation on broken directory
+on nilfs2, __block_write_begin_int() called to prepare block write may
+fail BUG_ON check for access exceeding the folio/page size.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+This is because nilfs_dotdot(), which gets parent directory reference
+entry ("..") of the directory to be moved or renamed, does not check
+consistency enough, and may return location exceeding folio/page size
+for broken directories.
 
-> ---
->   drivers/watchdog/starfive-wdt.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/watchdog/starfive-wdt.c b/drivers/watchdog/starfive-wdt.c
-> index b4b059883618..19a2620d3d38 100644
-> --- a/drivers/watchdog/starfive-wdt.c
-> +++ b/drivers/watchdog/starfive-wdt.c
-> @@ -152,8 +152,10 @@ static int starfive_wdt_enable_clock(struct starfive_wdt *wdt)
->   		return dev_err_probe(wdt->wdd.parent, ret, "failed to enable apb clock\n");
->   
->   	ret = clk_prepare_enable(wdt->core_clk);
-> -	if (ret)
-> +	if (ret) {
-> +		clk_disable_unprepare(wdt->apb_clk);
->   		return dev_err_probe(wdt->wdd.parent, ret, "failed to enable core clock\n");
-> +	}
->   
->   	return 0;
->   }
+Fix this issue by checking required directory entries ("." and "..")
+in the first chunk of the directory in nilfs_dotdot().
+
+Signed-off-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Reported-by: syzbot+d3abed1ad3d367fa2627@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=d3abed1ad3d367fa2627
+Fixes: 2ba466d74ed7 ("nilfs2: directory entry operations")
+Tested-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Cc: stable@vger.kernel.org
+---
+Hi Andrew, please apply this as a bug fix.
+
+This fixes a potential kernel bug reported by syzbot regarding broken
+directory rename operations.
+
+Thanks,
+Ryusuke Konishi
+
+ fs/nilfs2/dir.c | 32 ++++++++++++++++++++++++++++++--
+ 1 file changed, 30 insertions(+), 2 deletions(-)
+
+diff --git a/fs/nilfs2/dir.c b/fs/nilfs2/dir.c
+index dddfa604491a..4a29b0138d75 100644
+--- a/fs/nilfs2/dir.c
++++ b/fs/nilfs2/dir.c
+@@ -383,11 +383,39 @@ struct nilfs_dir_entry *nilfs_find_entry(struct inode *dir,
+ 
+ struct nilfs_dir_entry *nilfs_dotdot(struct inode *dir, struct folio **foliop)
+ {
+-	struct nilfs_dir_entry *de = nilfs_get_folio(dir, 0, foliop);
++	struct folio *folio;
++	struct nilfs_dir_entry *de, *next_de;
++	size_t limit;
++	char *msg;
+ 
++	de = nilfs_get_folio(dir, 0, &folio);
+ 	if (IS_ERR(de))
+ 		return NULL;
+-	return nilfs_next_entry(de);
++
++	limit = nilfs_last_byte(dir, 0);  /* is a multiple of chunk size */
++	if (unlikely(!limit || le64_to_cpu(de->inode) != dir->i_ino ||
++		     !nilfs_match(1, ".", de))) {
++		msg = "missing '.'";
++		goto fail;
++	}
++
++	next_de = nilfs_next_entry(de);
++	/*
++	 * If "next_de" has not reached the end of the chunk, there is
++	 * at least one more record.  Check whether it matches "..".
++	 */
++	if (unlikely((char *)next_de == (char *)de + nilfs_chunk_size(dir) ||
++		     !nilfs_match(2, "..", next_de))) {
++		msg = "missing '..'";
++		goto fail;
++	}
++	*foliop = folio;
++	return next_de;
++
++fail:
++	nilfs_error(dir->i_sb, "directory #%lu %s", dir->i_ino, msg);
++	folio_release_kmap(folio, de);
++	return NULL;
+ }
+ 
+ ino_t nilfs_inode_by_name(struct inode *dir, const struct qstr *qstr)
+-- 
+2.34.1
 
