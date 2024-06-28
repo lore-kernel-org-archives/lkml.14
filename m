@@ -1,229 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6211CA8A;
-	Fri, 28 Jun 2024 02:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 403E818046;
+	Fri, 28 Jun 2024 02:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719540805; cv=none; b=ANJZUuJnI1ph1yZfwr0aFZHjH3iODC0JnZqm58nGCoftBvgHox+UlRO7UQKKbSNWihjxrELWiEBza6c1YPN3Xi540RyD2NvWCU9v3zTjx4zlWrWae9NVH0H9aRpTbs6oKyP77dc+oMi0CimQ3Yb1he2lSkV7bU2goeePwE+1QM4=
+	t=1719540836; cv=none; b=KFukUJeI1pEoAjygl4RNahZzWSqo1XnBkfEnv3cVMW3l653POVY5u0UdRzqF2bk1+oEe8RDBcXb/qkaA7JTNInH86F0ZTPH8Q1j3NhYNs1R/93q7S0ZAER4UfNOUkGdelXPzCvbuztCrETcZACW2+gZ9r7TwJqNv90aLQGBsuPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719540805; c=relaxed/simple;
-	bh=obqsFiB7moqSeHvfW5MvPa6iwrDiRwuIwVJo+bxnyTE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dHAeAoFLgnH+VCSKf/j6ZiL8DA2qYGddQ1OQGRgnxuuPFGMBOGbpyId/6L+W9NVU8tqQYXxxQ0jEMzFrs7LDiVOaSmnmyZMUqaN919Kci+oXZ9yLL3LQWnxmrI7uq3d4VFlknyUHEUX4gUxa9oA/6xG8fbL3+01yjNFM468yTRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zm16U8C0; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719540836; c=relaxed/simple;
+	bh=1QZMjqfr5KF1bfI3lvjjy/2VD24ylLZNVuIb/71bNPk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X5k5u0Y4mZcxJJx8Ow05v5OHFi5lhVsZPsYCXZ/HICZPFRmD9q4w0VtISeAybZUDgc/xjkqE0UTFmoiKn8Qt51B3R88loY/cfg+pY9FRMCri+yL+qREu4ys3GwP1Uq4fgC9tElKtbJXOK5sha/YrqrAZ1RdMcvGfZcne5kxhvLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vPB3T6pE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zm16U8C0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719540804; x=1751076804;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=obqsFiB7moqSeHvfW5MvPa6iwrDiRwuIwVJo+bxnyTE=;
-  b=Zm16U8C0MEB8XwvPsuvHlfcKt5Hhs7FECS2JvRJw+Ye+fkt9OUkS2Y+S
-   hjPprj4ViNzNxeAHSme+p7kGvQw1c1ESmqSlbn1bBxdpmH8LPfUVnZPC+
-   g/4J68kHyleV541xF/2UB3drbqe6/PgIIL0znFqh4ouuF2QE4rgUs5+6H
-   1VdIpoegqBz/dyXCt+fBd8m6R6uRcy4SKcIMcpChBF8KWU8bH4mqgPBXT
-   MfmgIPOnsalqLM1QRA43z9ndHSZPDcgDV1OLb37NWMsaC713WtqUgSACT
-   ijYRMAXYWCgaLUFHMnIukHoKKDA3SO13Vt7QzAETSa2ex02Srqe6XbRli
-   A==;
-X-CSE-ConnectionGUID: PxNRixVMQqepwmJdDmIOmw==
-X-CSE-MsgGUID: 1uuE+jmARKGZAT5vkVuacQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="16528820"
-X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
-   d="scan'208";a="16528820"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 19:13:21 -0700
-X-CSE-ConnectionGUID: pmOPOqgFR+mj/xA3+uz33w==
-X-CSE-MsgGUID: vu/s+JTeTQGDYAeESN28AA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
-   d="scan'208";a="44993946"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 27 Jun 2024 19:13:12 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sN16r-000Gic-2H;
-	Fri, 28 Jun 2024 02:13:09 +0000
-Date: Fri, 28 Jun 2024 10:12:15 +0800
-From: kernel test robot <lkp@intel.com>
-To: Alistair Popple <apopple@nvidia.com>, dan.j.williams@intel.com,
-	vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
-	bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
-	npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com,
-	willy@infradead.org, djwong@kernel.org, tytso@mit.edu,
-	linmiaohe@huawei.com, david@redhat.com, peterx@redhat.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-	jhubbard@nvidia.com
-Subject: Re: [PATCH 13/13] mm: Remove devmap related functions and page table
- bits
-Message-ID: <202406280920.VNwSTzZT-lkp@intel.com>
-References: <47c26640cd85f3db2e0a2796047199bb984d1b3f.1719386613.git-series.apopple@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vPB3T6pE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8FEAC4AF09;
+	Fri, 28 Jun 2024 02:13:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719540835;
+	bh=1QZMjqfr5KF1bfI3lvjjy/2VD24ylLZNVuIb/71bNPk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=vPB3T6pENwWubEYz4+H3s4o7QkZpZbX3vVFuIUvqx0Otrq5yl7HqRxs4e55ST45Me
+	 wkV7VXfL7NtVPwoxhiB67qegN0SoPxy/IAnTujCggRXTWh4FZ2E6QY7qoIZsNxDQ4r
+	 kyVrEH5DjuJt4SeersxFysWDaH/WdpL5shGuAOnFunL21tKJa5OACN/2UIn3jqKS7z
+	 Qro65m4c1C++1yKiS/Ve7zIURoT0NvrHqPapCB2txydyhVwcIuia1qjdP3iZ91ohZe
+	 9AwL6sTfLx1M5Wa/O+STZ5MMCTn5ejUZRWhpTOTRlx/D5zZ4hEAyxxEyQ6emf/tL9I
+	 EqJbNy9tZZrpA==
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2eaa89464a3so773391fa.3;
+        Thu, 27 Jun 2024 19:13:55 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVk6Qt3xiWPOfDB0BFCttNQIrvJg3enWqkxE6jyQ7v3tSRTSrhWY7D5gh3OOXy+AptMc/eA4v1n43aifX/DHll3WBVinKNK9KSqvBqGA6GtaeGvea16CVivR4WMW10GAGFLHqrCcgqTw7VeSDCHUZdSFI0jbkmR97e0QDW3RQu3LqHLqAeP1A==
+X-Gm-Message-State: AOJu0YyKZDjGIPHO29RHc3qmQYM2VrHMBActlTfvyJiEfXfx6tKeqbHe
+	1TEhXJh+Vgl/rs17BpzBHkErFTv0/XRi1isPxYlLsyCeMnIdyXHAxpMPXmgym35Zxj0h01Akrz4
+	YhQoHxMPbTb1Awnv4foRAg80UDis=
+X-Google-Smtp-Source: AGHT+IH6vcsYs/f2tBTsB2l/yZmtIVQ+iwQAeqaKwBBrQfT2k1vyIQgzg8OwSIo6A3510Z6MhvuCGIs9TLh+uhflC5Y=
+X-Received: by 2002:a2e:b0f3:0:b0:2ec:5785:ee94 with SMTP id
+ 38308e7fff4ca-2ec579fefd8mr92910221fa.52.1719540834420; Thu, 27 Jun 2024
+ 19:13:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <47c26640cd85f3db2e0a2796047199bb984d1b3f.1719386613.git-series.apopple@nvidia.com>
+References: <20240427145502.2804311-1-masahiroy@kernel.org>
+ <20240427145502.2804311-5-masahiroy@kernel.org> <ea24aa9b-291d-47bc-98cf-5893926ff8da@kernel.org>
+ <CAK7LNAT5_pDn1ZOfm8TzubH-s2HR4DQu9eEx0RgdJ3s4Cmxqow@mail.gmail.com> <9771d50d95e508bf8971a36b6475c782c42b46a1.camel@intel.com>
+In-Reply-To: <9771d50d95e508bf8971a36b6475c782c42b46a1.camel@intel.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Fri, 28 Jun 2024 11:13:18 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATGGibmjZzYX_A2SkJthmOPbKw2K3R7JYuHTWzgGL2Zjg@mail.gmail.com>
+Message-ID: <CAK7LNATGGibmjZzYX_A2SkJthmOPbKw2K3R7JYuHTWzgGL2Zjg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] kbuild: use $(src) instead of $(srctree)/$(src)
+ for source directory
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc: "krzk@kernel.org" <krzk@kernel.org>, "nicolas@fjasle.eu" <nicolas@fjasle.eu>, 
+	"conor@kernel.org" <conor@kernel.org>, "robh@kernel.org" <robh@kernel.org>, 
+	"linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Alistair,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on f2661062f16b2de5d7b6a5c42a9a5c96326b8454]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Alistair-Popple/mm-gup-c-Remove-redundant-check-for-PCI-P2PDMA-page/20240627-191709
-base:   f2661062f16b2de5d7b6a5c42a9a5c96326b8454
-patch link:    https://lore.kernel.org/r/47c26640cd85f3db2e0a2796047199bb984d1b3f.1719386613.git-series.apopple%40nvidia.com
-patch subject: [PATCH 13/13] mm: Remove devmap related functions and page table bits
-config: powerpc-allyesconfig (https://download.01.org/0day-ci/archive/20240628/202406280920.VNwSTzZT-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 326ba38a991250a8587a399a260b0f7af2c9166a)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240628/202406280920.VNwSTzZT-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406280920.VNwSTzZT-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from arch/powerpc/kernel/asm-offsets.c:12:
-   In file included from include/linux/compat.h:14:
-   In file included from include/linux/sem.h:5:
-   In file included from include/uapi/linux/sem.h:5:
-   In file included from include/linux/ipc.h:7:
-   In file included from include/linux/rhashtable-types.h:12:
-   In file included from include/linux/alloc_tag.h:11:
-   In file included from include/linux/preempt.h:79:
-   In file included from ./arch/powerpc/include/generated/asm/preempt.h:1:
-   In file included from include/asm-generic/preempt.h:5:
-   In file included from include/linux/thread_info.h:23:
-   In file included from arch/powerpc/include/asm/current.h:13:
-   In file included from arch/powerpc/include/asm/paca.h:18:
-   In file included from arch/powerpc/include/asm/mmu.h:385:
-   In file included from arch/powerpc/include/asm/book3s/64/mmu.h:32:
-   In file included from arch/powerpc/include/asm/book3s/64/mmu-hash.h:20:
->> arch/powerpc/include/asm/book3s/64/pgtable.h:1371:1: error: extraneous closing brace ('}')
-    1371 | }
-         | ^
-   In file included from arch/powerpc/kernel/asm-offsets.c:12:
-   In file included from include/linux/compat.h:17:
-   In file included from include/linux/fs.h:33:
-   In file included from include/linux/percpu-rwsem.h:7:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:98:11: warning: array index 3 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-      98 |                 return (set->sig[3] | set->sig[2] |
-         |                         ^        ~
-   arch/powerpc/include/uapi/asm/signal.h:18:2: note: array 'sig' declared here
-      18 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/powerpc/kernel/asm-offsets.c:12:
-   In file included from include/linux/compat.h:17:
-   In file included from include/linux/fs.h:33:
-   In file included from include/linux/percpu-rwsem.h:7:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:98:25: warning: array index 2 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-      98 |                 return (set->sig[3] | set->sig[2] |
-         |                                       ^        ~
-   arch/powerpc/include/uapi/asm/signal.h:18:2: note: array 'sig' declared here
-      18 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/powerpc/kernel/asm-offsets.c:12:
-   In file included from include/linux/compat.h:17:
-   In file included from include/linux/fs.h:33:
-   In file included from include/linux/percpu-rwsem.h:7:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:99:4: warning: array index 1 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-      99 |                         set->sig[1] | set->sig[0]) == 0;
-         |                         ^        ~
-   arch/powerpc/include/uapi/asm/signal.h:18:2: note: array 'sig' declared here
-      18 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/powerpc/kernel/asm-offsets.c:12:
-   In file included from include/linux/compat.h:17:
-   In file included from include/linux/fs.h:33:
-   In file included from include/linux/percpu-rwsem.h:7:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:101:11: warning: array index 1 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
-     101 |                 return (set->sig[1] | set->sig[0]) == 0;
-         |                         ^        ~
-   arch/powerpc/include/uapi/asm/signal.h:18:2: note: array 'sig' declared here
-      18 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/powerpc/kernel/asm-offsets.c:12:
-   In file included from include/linux/compat.h:17:
-   In file included from include/linux/fs.h:33:
-   In file included from include/linux/percpu-rwsem.h:7:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:114:11: warning: array index 3 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     114 |                 return  (set1->sig[3] == set2->sig[3]) &&
-         |                          ^         ~
-   arch/powerpc/include/uapi/asm/signal.h:18:2: note: array 'sig' declared here
-      18 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/powerpc/kernel/asm-offsets.c:12:
-   In file included from include/linux/compat.h:17:
-   In file included from include/linux/fs.h:33:
-   In file included from include/linux/percpu-rwsem.h:7:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:114:27: warning: array index 3 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     114 |                 return  (set1->sig[3] == set2->sig[3]) &&
-         |                                          ^         ~
-   arch/powerpc/include/uapi/asm/signal.h:18:2: note: array 'sig' declared here
-      18 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/powerpc/kernel/asm-offsets.c:12:
-   In file included from include/linux/compat.h:17:
-   In file included from include/linux/fs.h:33:
-   In file included from include/linux/percpu-rwsem.h:7:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:115:5: warning: array index 2 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     115 |                         (set1->sig[2] == set2->sig[2]) &&
-         |                          ^         ~
-   arch/powerpc/include/uapi/asm/signal.h:18:2: note: array 'sig' declared here
-      18 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/powerpc/kernel/asm-offsets.c:12:
-   In file included from include/linux/compat.h:17:
-   In file included from include/linux/fs.h:33:
-   In file included from include/linux/percpu-rwsem.h:7:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:115:21: warning: array index 2 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-     115 |                         (set1->sig[2] == set2->sig[2]) &&
-         |                                          ^         ~
-   arch/powerpc/include/uapi/asm/signal.h:18:2: note: array 'sig' declared here
-      18 |         unsigned long sig[_NSIG_WORDS];
-         |         ^
-   In file included from arch/powerpc/kernel/asm-offsets.c:12:
-   In file included from include/linux/compat.h:17:
+On Fri, Jun 28, 2024 at 2:14=E2=80=AFAM Edgecombe, Rick P
+<rick.p.edgecombe@intel.com> wrote:
+>
+> On Fri, 2024-05-10 at 04:36 +0900, Masahiro Yamada wrote:
+> >
+> > Or, fix the code.
+> >
+> >
+> > Now fixed. Thanks for the report.
+> >
+>
+> Hi,
+>
+> This commit broke my build in a similar way:
+> make ARCH=3Dx86_64 O=3D../linux-tdx-kvm-out/ -j36 M=3Darch/x86/kvm/
+> make[1]: Entering directory '/home/rpedgeco/repos/linux-tdx-kvm-out'
+> /home/rpedgeco/repos/linux/scripts/Makefile.build:41: arch/x86/kvm/Makefi=
+le: No
+> such file or directory
+> make[3]: *** No rule to make target 'arch/x86/kvm/Makefile'.  Stop.
+> make[2]: *** [/home/rpedgeco/repos/linux/Makefile:1934: arch/x86/kvm] Err=
+or 2
+> make[1]: *** [/home/rpedgeco/repos/linux/Makefile:240: __sub-make] Error =
+2
+> make[1]: Leaving directory '/home/rpedgeco/repos/linux-tdx-kvm-out'
+> make: *** [Makefile:240: __sub-make] Error 2
+>
+> This patch didn=E2=80=99t fix it:
+> https://lore.kernel.org/lkml/20240624-kbuild-fix-xconfig-v1-1-7c06eae6d3a=
+a@avm.de/
+>
+> But reverting b1992c3772e6 ("kbuild: use $(src) instead of $(srctree)/$(s=
+rc) for
+> source directory") does.
+>
+> I'm guess it has something to do with the "M=3D" option because:
+> make ARCH=3Dx86_64 O=3D../linux-tdx-kvm-out/ -j36 arch/x86/kvm/kvm.ko
+> arch/x86/kvm/kvm-intel.ko
+>
+> ...works.
 
 
-vim +1371 arch/powerpc/include/asm/book3s/64/pgtable.h
 
-953c66c2b22a30 Aneesh Kumar K.V  2016-12-12  1370  
-ebd31197931d75 Oliver O'Halloran 2017-06-28 @1371  }
-6a1ea36260f69f Aneesh Kumar K.V  2016-04-29  1372  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
-ebd31197931d75 Oliver O'Halloran 2017-06-28  1373  
+There are two solutions, depending on what you want to achieve.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+The official way is to pass the absolute path to M=3D
+(or relative path to ../linux-tdm-kvm-out)
+
+The other unofficial way is to pass VPATH.
+The external module build does not officially support
+the separate output directory, but you can still
+do it in this case.
+
+[1] will work like before.
+
+
+
+[1] Output module objects to linux-tdm-kvm-out/arch/x86/kvm/ (unofficial)
+
+
+$ make ARCH=3Dx86_64 O=3D../linux-tdx-kvm-out/ -j36 M=3Darch/x86/kvm VPATH=
+=3D$(pwd)
+
+
+[2] Output the module objects into arch/x86/kvm/ of the source tree (offici=
+al)
+
+
+$ make ARCH=3Dx86_64 O=3D../linux-tdx-kvm-out/ -j36 M=3D$(realpath arch/x86=
+/kvm)
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
