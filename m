@@ -1,49 +1,75 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1F5370
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 00:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A4C964C
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 01:11:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719622561; cv=none; b=JiiWdGHCDUi4VQrO7X3M890HsDPA7fDuQ2onsYv77aoBw0/0wo6xuNeJyg9+6aeJQYxRet6zax/cKo7E4y6qZaczLRjhbHPhBUSKDW9K9f3HiHmhy7IF3tF6iRg5nXq398F+Rvnykeyr8ogjeKSAVjD6KaI6NUkaMMuqxa0ufZ8=
+	t=1719623506; cv=none; b=Ju3rgORCx92YgZjFNQkTxw1HL0UPaJJ8J39NkjjqGt1aghKG1ds8oGcr6HolvckFJC87nrfLB/cP0z4s4JVZ9DGBRAyiszJ+9Hk2ukYxzR8Iy8Sh2MtpJMBl7UzeO4wg3/RIhK3b3DI5o+rUxjODWY6NdWTPCJoHJBsfEKAkHtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719622561; c=relaxed/simple;
-	bh=dkhGLgAccySiIKVbklYHFO8xjLALQqshVUa3PnAXc28=;
+	s=arc-20240116; t=1719623506; c=relaxed/simple;
+	bh=0pwjsTBXu5vUAsTUcdG/YYnH05yQf7NBN6ieRkQ1bpo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RHDlMP5WLBvN9mCXTaGuPbBAgRPTnTH/YzhU1ttb3YzCVIWGoqpdN4uxZub9guGsS7kqZLWjbwrtYZTZvplq9DaMM4t7HNNhJ1n+IQhd1/TIJccfy4cQp6tNouOPdzlUdumWk5nHgwwJal0C0pgybJ+nnUENNQdSod9FBGAl9Gk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FjhVUncZ; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=SMt2A3uCMnOMy0VMRQp2fMiZrDwu547uc8UglVIP4wnDCKu1XnipGE3oVS925dwemfX2fmHRofl9w0C98qn54QyEX1/qIgiteyqli/WGxyrM6rjMSSehTQpkL3d2mgPYITFmb0jcUkscpWCGNsTPSTtHEbg2rX3Cf1YlrjO0gcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=SRF5M711; arc=none smtp.client-ip=209.85.210.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FjhVUncZ"
-X-Envelope-To: roman.gushchin@linux.dev
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1719622558;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qg+0EfJ2yo59aUyKXNYz9D5YZ0EGg0i1iOZsN2rcOIA=;
-	b=FjhVUncZBpiIOvlGmhx7Zjo3SMrQ0LCehibWREL2JdFB0JaHHVXAKXPbNw4uRGMxTaoWIx
-	+fKuBRYRSByIv4FyRk+fpoIWCnTfl1NBRuLXTDGRGWf5xJer8r5zTObVzuhoyF/tTnZxfc
-	YnOTpPBJIIAzCJ7L7CEW8Ct/gPvtaTA=
-X-Envelope-To: akpm@linux-foundation.org
-X-Envelope-To: linux-mm@kvack.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: hannes@cmpxchg.org
-X-Envelope-To: mhocko@kernel.org
-X-Envelope-To: muchun.song@linux.dev
-Date: Fri, 28 Jun 2024 17:55:54 -0700
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Muchun Song <muchun.song@linux.dev>
-Subject: Re: [PATCH v1 9/9] mm: memcg: put struct task_struct::in_user_fault
- under CONFIG_MEMCG_V1
-Message-ID: <6arslsp6asbcvz6igp5argwhfmtf7xknsnvsdcfgxsjhlbacy4@xj6itmt5bfn7>
-References: <20240628210317.272856-1-roman.gushchin@linux.dev>
- <20240628210317.272856-10-roman.gushchin@linux.dev>
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="SRF5M711"
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-702052976f7so47263a34.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 18:11:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1719623504; x=1720228304; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=18khvwf4h1DwFim0s+8NOwCXvsGKrMBWRxVL6/hqfpk=;
+        b=SRF5M7117L8nXrIaEpeqix5jZnjE1mR/WMLzqbUi3icy7/S2CIMD8VAZmFJBRmEfuP
+         igp2Ly9i/U+f1Rz8/gkXUlScasv2UkmzrmmnCYN24n9EWo3SPzsBk/vgFKOHgT7dQYmG
+         NKvUEvzxMAOGs1pxuyBkjRH+00K+UDQ2vCth4AMmvo5JUQ3hMkJZTPnWfUv/BY7jkKS2
+         m1boHJfq5fg3FAAvb68+YXNavrEWk0kdCoArVTquAf6MJEuZg+YIP+hS15I+bp1sNWob
+         jIZGmCZkyE0hhJZYRvUkGh+xajFGGMy8woEJg6K/cbnLjrkFlQPRRSTMkCW4vA+1NdRp
+         CFIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719623504; x=1720228304;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=18khvwf4h1DwFim0s+8NOwCXvsGKrMBWRxVL6/hqfpk=;
+        b=qZA1Wyy1TG4wZf/qps02U2mkbHgovvMDCKfYMh0ansrTV09EHR8XYmdZCFrGpuTS8F
+         JJGvSB5U+8xvWh24W6Tn5+GSdKPIvcpKyWcxh/DPUx9mDbFPWau5Knny3fC2HKPOkVKk
+         f0k8sj2DaCkSqMESxzjoNbb+7VCon5ZWwUJd/V2v72BuBr1T3YJel+K8MRTPupjMd/MO
+         pq9VY13l4KVlZlugKOKif2ib50qofiLA2NxKFAiG+pfhwot1nCDuOc0WbrbgDI3ssLf6
+         OlDEFei2nBIDlTf1bXNdlClRSl0EkRIv8QDjUtTUPTYk6XELoM5flj8LEt7G2lifIRWE
+         ohbg==
+X-Forwarded-Encrypted: i=1; AJvYcCVtayI9h8ly9P18lNkZgWM6HcudiKgXia8E2BPg/D39MP01Yiov71UAj+l6Wlhj40gOcjE8nbXEgIH0jpWDKv9xV67p5sUsKImbJ5qX
+X-Gm-Message-State: AOJu0YwmTxCnbCpM9wV9tAd13otYJsrHpD82ybSy3vO/4FZDZvzMUWmt
+	Si5mW/a95NWV3d4Hf1V0CoUDKX0TyfX5uxXisFcUjLoCPQxxsk1nICNhaAAinDw=
+X-Google-Smtp-Source: AGHT+IGyyW5KndiFNz+epN7jJRTXH3ZBYGRiXtHZ+r8Fe0tboO3Y2/PcZ2TNfI9i03f3ztbYgwYyLg==
+X-Received: by 2002:a05:6870:3294:b0:24f:cd06:c811 with SMTP id 586e51a60fabf-25d06eddeebmr18624565fac.54.1719623504024;
+        Fri, 28 Jun 2024 18:11:44 -0700 (PDT)
+Received: from ziepe.ca ([24.114.37.55])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-72c69b53be5sm1784142a12.16.2024.06.28.18.11.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Jun 2024 18:11:43 -0700 (PDT)
+Received: from jgg by jggl with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1sNK8e-0004rF-Jn;
+	Fri, 28 Jun 2024 19:32:16 -0300
+Date: Fri, 28 Jun 2024 19:32:16 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Zong Li <zong.li@sifive.com>
+Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
+	tjeznach@rivosinc.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
+	aou@eecs.berkeley.edu, kevin.tian@intel.com,
+	linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+	linux-riscv@lists.infradead.org
+Subject: Re: [RFC PATCH v2 07/10] iommu/riscv: support nested iommu for
+ creating domains owned by userspace
+Message-ID: <Zn858MB9/t1qltV2@ziepe.ca>
+References: <20240614142156.29420-1-zong.li@sifive.com>
+ <20240614142156.29420-8-zong.li@sifive.com>
+ <20240619160211.GO1091770@ziepe.ca>
+ <CANXhq0qqrU8xbTecFOcRNLqm2=DbTYsN2YBX5K_O1ha530bu_A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,16 +78,71 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240628210317.272856-10-roman.gushchin@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <CANXhq0qqrU8xbTecFOcRNLqm2=DbTYsN2YBX5K_O1ha530bu_A@mail.gmail.com>
 
-On Fri, Jun 28, 2024 at 09:03:17PM GMT, Roman Gushchin wrote:
-> The struct task_struct's in_user_fault member is not used by the
-> cgroup v2's memory controller, so it can be put under the
-> CONFIG_MEMCG_V1 config option. To do so, mem_cgroup_enter_user_fault()
-> and mem_cgroup_exit_user_fault() are moved under the CONFIG_MEMCG_V1
-> option as well.
+On Fri, Jun 28, 2024 at 05:03:41PM +0800, Zong Li wrote:
+> > > +
+> > > +             if (!dc.fsc || dc.iohgatp) {
+> > > +                     dev_dbg(dev, "Wrong page table from user data\n");
+> > > +                     if (copy_to_user(event_user, &event, event_len))
+> > > +                             return -EFAULT;
+> > > +             }
+> > > +
+> > > +             /* Save DC of stage-1 from user data */
+> > > +             memcpy(&info->dc_user,
+> > > +                    riscv_iommu_get_dc(iommu, fwspec->ids[i]),
+> >
+> > This does not seem right, the fwspec shouldn't be part of domain
+> > allocation, even arguably for nesting. The nesting domain should
+> > represent the user_dc only. Any customization of kernel controlled bits
+> > should be done during attach only, nor do I really understand why this
+> > is looping over all the fwspecs but only memcpying the last one..
+> >
 > 
-> Signed-off-by: Roman Gushchin <roman.gushchin@linux.dev>
+> The fwspec is used to get the value of current dc, because we want to
+> also back up the address of second stage table (i.e. iohgatp), The
+> reason is that this value will be cleaned when device is attached to
+> the blocking domain, before the device attaches to s1 domain, we can't
+> get the original value of iohgatp anymore when attach device to s1
+> domain.
 
-Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
+This is wrong, you get the value of iohgatp from the S2 domain the
+nest knows directly. You must never make assumptions about domain
+attach order or rely on the current value of the HW tables to
+construct any attachment.
+
+Follow the design like ARM has now where the value of the device table
+entry is computed wholly from scratch using only the contents of the
+domain pointer, including combining the S1 and S2 domain information.
+
+And then you need to refactor and use the programmer I wrote for ARM
+to be able to do the correct hitless transitions without a V=0
+step. It is not too hard but will clean this all up.
+
+> > > +/**
+> > > + * struct iommu_hwpt_riscv_iommu - RISCV IOMMU stage-1 device context table
+> > > + *                                 info (IOMMU_HWPT_TYPE_RISCV_IOMMU)
+> > > + * @dc_len: Length of device context
+> > > + * @dc_uptr: User pointer to the address of device context
+> > > + * @event_len: Length of an event record
+> > > + * @out_event_uptr: User pointer to the address of event record
+> > > + */
+> > > +struct iommu_hwpt_riscv_iommu {
+> > > +     __aligned_u64 dc_len;
+> > > +     __aligned_u64 dc_uptr;
+> >
+> > Do we really want this to be a pointer? ARM just inlined it in the
+> > struct, why not do that?
+> >
+> > > +     __aligned_u64 event_len;
+> > > +     __aligned_u64 out_event_uptr;
+> > > +};
+> >
+> > Similar here too, why not just inline the response memory?
+> 
+> I think we can just inline them, just like what we do in the
+> 'iommu_hwpt_riscv_iommu_invalidate'. does I understand correctly?
+
+Yeah I think so
+
+Jason
