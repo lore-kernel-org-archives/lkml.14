@@ -1,161 +1,134 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B61B013DDD9
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 07:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4DC125AC
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 07:10:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719558561; cv=none; b=Bq8JB5bhlPGSDS/L5g1KVeFtSxUI/YmaimZpCBRhuvMEQPjxR4bJjCYo3GGjPCfZ0VjlVYZ02vmiOgcc13JfQgaGBJhSHVlrhb6Vdc/GVbgNIbe21wccmIiGelJ+YRVa2gPYileE94/p8QiSE9ehaDIMlZYIfP0ibDP+t7DDKZ4=
+	t=1719558616; cv=none; b=uMnbZDDyrhES2e3t0i5LGtIdusyYPZ2QLdvMpSls9aqfk8gpHxwRK68gxYHtaWSeV+ucdU2AtFpzDPVpFaqwJ5sDpgARwEx/RAVQK+NaBriG6nQDMotXcNo8MF/EK4L6hxa4yzGyqYjCLg8PNitObLwbwHglYddtjy9lCixIB+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719558561; c=relaxed/simple;
-	bh=jmkqfXaHVKyVHT3TgRBCSqe08GGcFE1IfnnRPRkO9G4=;
+	s=arc-20240116; t=1719558616; c=relaxed/simple;
+	bh=nf5rb/48jsspwKFlqnW2lDafPBBOtGlJGSJpAH2LFDs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nzqhr8oVHbbQTR35p99y0rbw4Y6HuXCQ9SRW9SrZsq2ahIwQFTGqj7fQujhFgW3x/m/Cm11RrwUY406uTSzSpjHQlMY16CTNxUriug/QYlNkQ7yUODKH2Z+aA+RIrRdBluQ7YvHqdpgCylu+K5N337NPNP4YgPudA7IOxhPFIBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=gqWRMLf/; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="gqWRMLf/"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a689ad8d1f6so31821766b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 00:09:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1719558557; x=1720163357; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=If0iq5oLy+eiIvzlGQNRLUuZgZ1JLzU6wSKruP4/9Eg=;
-        b=gqWRMLf/NX3cGZidAZx8SJUoLNhx0y0kBDeWvBt8VDQAW1FpnA2O0I7Tswihyg8EkP
-         ZiEXF++PZFofLLSDMeLl/NpN7NIIOTnGziD6PrMP3RqPOlYx0yPF/OwY0RZB+0uxvyZZ
-         mRGZEwOJzugdOX2fLHxmSJ35yxEGrys7SPJce7JmTJhiHlSd9C7KAiafc6zfRHaMAbaC
-         Ki84cIOPjiO89LrNy2y9DT1ap+SDI7m47FOsNyQ+OMw9fCot9EI7tbWQDQLuBkTTxdTG
-         yFWB8emT3atrbrVtWBMaWRR9Mx4KnmM6eR6psvCJdgaSLV9rtUjitSOhfvAn+Ch54GZT
-         W8+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719558557; x=1720163357;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=If0iq5oLy+eiIvzlGQNRLUuZgZ1JLzU6wSKruP4/9Eg=;
-        b=GxAvdjwXypwbWCzvi6rKlDbjsyjhYr6DDGXRtHfkFHOLydrdzN6pw/ZYMzkFkeQDTK
-         Ywj4u7y7gSqgbuHdrJ63lNey9kfnTpKbi4xsgh/hRPdlgnAJh2yJ3Wi3rzE6bhPvyQ3q
-         ZNHdU1mo60dML6TrfLYrmjvbPE1ttmchbPxj1CMXMc7rc//iefXUXOhKPOk7sE0zLqqq
-         o0g0LkWV168azgbBVIlxapvPbYHTQhpsXmIMkjJbWtTxdfpFnVlkHwfyh33PaSWcBqiT
-         FP7TwU2c4uZA1AmSymUNy5NCUOXkBrCHcYKXWXq5kCHJwkhpIWscJxBqK7Fysjcp/W71
-         y/kw==
-X-Forwarded-Encrypted: i=1; AJvYcCWBhgi3weblyq4zJxnkYeYcGawhHxrH3xbN5/vxd32PsiaXjgr+zR87R/m8BEOmB15nrmLBVTIUw/qK6bdtEnrQ7fAtauXg3nipQJSl
-X-Gm-Message-State: AOJu0YyHhAA53SOnngNtnqAGDj9aj35Tw5lalipE5IjWOxjWz7oGsN+i
-	6w8rpik4W6h0oCNjPFWuvm5agfD1AbwDsotk8r6GDRhlnnIC4rXdQtXWJVSjbBs=
-X-Google-Smtp-Source: AGHT+IHI8uJ1o7wEPXjrRlqBMAxE/hZW7hfP6KthuUiDb9dgFhsbRFiAQwu4+lO0LtbeeWla+b5xVw==
-X-Received: by 2002:a17:906:3383:b0:a72:438b:2dfe with SMTP id a640c23a62f3a-a7245cf26e7mr845900966b.40.1719558556886;
-        Fri, 28 Jun 2024 00:09:16 -0700 (PDT)
-Received: from localhost (109-81-86-16.rct.o2.cz. [109.81.86.16])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72ab0651dfsm47940966b.142.2024.06.28.00.09.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 00:09:16 -0700 (PDT)
-Date: Fri, 28 Jun 2024 09:09:15 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: xiujianfeng <xiujianfeng@huawei.com>
-Cc: hannes@cmpxchg.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev,
-	muchun.song@linux.dev, akpm@linux-foundation.org,
-	cgroups@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] mm: memcg: remove redundant
- seq_buf_has_overflowed()
-Message-ID: <Zn5hm4HHYIUVZ3O3@tiehlicka>
-References: <20240626094232.2432891-1-xiujianfeng@huawei.com>
- <Zn0RGTZxrEUnI1KZ@tiehlicka>
- <a351c609-4968-398a-9316-2ad19d934e9c@huawei.com>
- <Zn1LFyO_cww9W758@tiehlicka>
- <10b948cd-5fbf-78e7-c3e8-6867661fa50b@huawei.com>
- <Zn1S70yo4VQ24UNT@tiehlicka>
- <ad7cfc60-d6d5-ca16-c93a-d200febccc9b@huawei.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=gPaq5FmATrJj66BaNyF5Kz/YGvwQzPhsYyLErvWPvHctqF01oGB9CGMSfJ0RZNZBgVGq3CWvRVlfEJ8RD29tPlMRAZlUmc9KmCs/4E8EQVCMwjUxicGBuc3flrEUoRMv4Ladn94vP6rl4U9MIWmJrbeO515nzAPNYUZjsLsq7uU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sN5kB-00056V-62; Fri, 28 Jun 2024 09:10:03 +0200
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sN5k9-005Y2z-B2; Fri, 28 Jun 2024 09:10:01 +0200
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sN5k9-002N6S-0l;
+	Fri, 28 Jun 2024 09:10:01 +0200
+Date: Fri, 28 Jun 2024 09:10:01 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Vladimir Oltean <olteanv@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>,
+	Eric Dumazet <edumazet@google.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	Arun Ramadoss <arun.ramadoss@microchip.com>,
+	Lucas Stach <l.stach@pengutronix.de>, kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	UNGLinuxDriver@microchip.com
+Subject: Re: [PATCH net-next v1 2/3] net: dsa: microchip: lan937x: force
+ RGMII interface into PHY mode
+Message-ID: <Zn5hyR1AKV81nulo@pengutronix.de>
+References: <20240627123911.227480-1-o.rempel@pengutronix.de>
+ <20240627123911.227480-3-o.rempel@pengutronix.de>
+ <20240627222543.rcx3i5o43toopwcm@skbuf>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ad7cfc60-d6d5-ca16-c93a-d200febccc9b@huawei.com>
+In-Reply-To: <20240627222543.rcx3i5o43toopwcm@skbuf>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Fri 28-06-24 10:20:23, xiujianfeng wrote:
-> 
-> 
-> On 2024/6/27 19:54, Michal Hocko wrote:
-> > On Thu 27-06-24 19:43:06, xiujianfeng wrote:
-> >>
-> >>
-> >> On 2024/6/27 19:20, Michal Hocko wrote:
-> >>> On Thu 27-06-24 16:33:00, xiujianfeng wrote:
-> >>>>
-> >>>>
-> >>>> On 2024/6/27 15:13, Michal Hocko wrote:
-> >>>>> On Wed 26-06-24 09:42:32, Xiu Jianfeng wrote:
-> >>>>>> Both the end of memory_stat_format() and memcg_stat_format() will call
-> >>>>>> WARN_ON_ONCE(seq_buf_has_overflowed()). However, memory_stat_format()
-> >>>>>> is the only caller of memcg_stat_format(), when memcg is on the default
-> >>>>>> hierarchy, seq_buf_has_overflowed() will be executed twice, so remove
-> >>>>>> the reduntant one.
-> >>>>>
-> >>>>> Shouldn't we rather remove both? Are they giving us anything useful
-> >>>>> actually? Would a simpl pr_warn be sufficient? Afterall all we care
-> >>>>> about is to learn that we need to grow the buffer size because our stats
-> >>>>> do not fit anymore. It is not really important whether that is an OOM or
-> >>>>> cgroupfs interface path.
-> >>>>
-> >>>> I did a test, when I removed both of them and added a lot of prints in
-> >>>> memcg_stat_format() to make the seq_buf overflow, and then cat
-> >>>> memory.stat in user mode, no OOM occurred, and there were no warning
-> >>>> logs in the kernel.
-> >>>
-> >>> The default buffer size is PAGE_SIZE.
-> >>
-> >> Hi Michal,
-> >>
-> >> I'm sorry, I didn't understand what you meant by this sentence. What I
-> >> mean is that we can't remove both, otherwise, neither the kernel nor
-> >> user space would be aware of a buffer overflow. From my test, there was
-> >> no OOM or other exceptions when the overflow occurred; it just resulted
-> >> in the displayed information being truncated. Therefore, we need to keep
-> >> one.
+On Fri, Jun 28, 2024 at 01:25:43AM +0300, Vladimir Oltean wrote:
+> On Thu, Jun 27, 2024 at 02:39:10PM +0200, Oleksij Rempel wrote:
+> > From: Lucas Stach <l.stach@pengutronix.de>
 > > 
-> > I've had this in mind
+> > The register manual and datasheet documentation for the LAN937x series
+> > disagree about the polarity of the MII mode strap. As a consequence
+> > there are hardware designs that have the RGMII interface strapped into
+> > MAC mode, which is a invalid configuration and will prevent the internal
+> > clock from being fed into the port TX interface.
 > > 
-> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> > index 71fe2a95b8bd..3e17b9c3a27a 100644
-> > --- a/mm/memcontrol.c
-> > +++ b/mm/memcontrol.c
-> > @@ -1845,9 +1845,6 @@ static void memcg_stat_format(struct mem_cgroup *memcg, struct seq_buf *s)
-> >  			       vm_event_name(memcg_vm_event_stat[i]),
-> >  			       memcg_events(memcg, memcg_vm_event_stat[i]));
-> >  	}
-> > -
-> > -	/* The above should easily fit into one page */
-> > -	WARN_ON_ONCE(seq_buf_has_overflowed(s));
-> >  }
-> >  
-> >  static void memcg1_stat_format(struct mem_cgroup *memcg, struct seq_buf *s);
-> > @@ -1858,7 +1855,8 @@ static void memory_stat_format(struct mem_cgroup *memcg, struct seq_buf *s)
-> >  		memcg_stat_format(memcg, s);
-> >  	else
-> >  		memcg1_stat_format(memcg, s);
-> > -	WARN_ON_ONCE(seq_buf_has_overflowed(s));
-> > +	if (seq_buf_has_overflowed(s))
-> > +		pr_warn("%s: Stat buffer insufficient please report\n", __FUNCTION__);
+> > Force the MII mode to PHY for RGMII interfaces where this is the only
+> > valid mode, to override the inproper strapping.
+> > 
+> > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> > ---
 > 
-> I found that after the change, the effect is as follows:
-> 
-> # dmesg
-> [   51.028327] memory_stat_format: Stat buffer insufficient please report
-> 
-> with no keywords such as "Failed", "Warning" to draw attention to this
-> printout. Should we change it to the following?
-> 
-> if (seq_buf_has_overflowed(s))
->       pr_warn("%s: Warning, Stat buffer overflow, please report\n",
-> __FUNCTION__);
+> What's the difference between MAC mode and PHY mode with RGMII for this switch?
 
-LGTM.
+Let's take a step back. I'll describe first my initial findings, the symptoms,
+and my new findings from today, so my argumentation and the patch itself should
+be updated.
+
+Initially, we identified that the RGMIIx_MODE[1,0] strap pins select between
+RGMII, RMII, and MII. The MIIx_PHY_MODE pin configures PHY mode for MII or
+clock direction in RMII but should have no effect in RGMII mode. However, if
+MIIx_PHY_MODE = 1, RGMII exhibits the following symptoms:
+
+- No signal on RGMII TXD[]
+- No TX counters increase on the related MAC port.
+- RX interface works, and data from the CPU through the switch is properly
+  accounted for.
+
+Due to the absence of TX counters even for broadcast traffic, we interpreted
+this as a disabled MAC TX functionality or disabled TX clock for the MAC. This
+issue was resolved by unsetting Bit 2 on register 0x301, which is undocumented
+for RGMII.
+
+Now, comparing LAN937x documentation with publicly available documentation for
+other switches, for example KSZ9893R, may give some clue on the undocumented
+part in the LAN937x datasheet:
+RGMII Interface:
+ 1 = In-Band Status (IBS) enabled (requires IBS-capable PHY)
+ 0 = IBS disabled
+
+The issue likely stems from active IBS mode, confirmed by an article
+recommending IBS disablement via register 0x302.
+https://microchip.my.site.com/s/article/LAN937X-The-required-configuration-for-the-external-MAC-port-to-operate-at-RGMII-to-RGMII-1Gbps-link-speed
+
+The same effect seems to be achieved by toggling the undocumented 0x301 bit 2.
+The ksz_set_xmii() function contains existing code to handle this:
+	case PHY_INTERFACE_MODE_RGMII_RXID:
+	    data8 |= bitval[P_RGMII_SEL];
+	    /* On KSZ9893, disable RGMII in-band status support */
+	    if (dev->chip_id == KSZ9893_CHIP_ID ||
+		dev->chip_id == KSZ8563_CHIP_ID ||
+		dev->chip_id == KSZ9563_CHIP_ID)
+		data8 &= ~P_MII_MAC_MODE;
+	    break;
+	default:
+
+Regards,
+Oleksij
 -- 
-Michal Hocko
-SUSE Labs
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
