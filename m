@@ -1,160 +1,110 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92DD03CF5E;
-	Fri, 28 Jun 2024 06:31:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03CC15C8FC;
+	Fri, 28 Jun 2024 06:31:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719556266; cv=none; b=tq99sza4ZoX+LpSSLfxTwCIj2/cNpGss49C4i7ZzHe9u6qgaICaS3GyMG/Hr75W9vFOQ8FnijMixPKJyDDbJAJuDd9rkDrRP1wykWfRN2xl861QvyVTRrBvr0jCnjjNynvuA64N+JLZyEnkpg9R1TQrQ9DLZ2GAJ9lbkHeyeMJE=
+	t=1719556265; cv=none; b=ktKIXfqJf4XhAwoU5FwJ7pmo4nQrW6geKtzUbT6k60iKY7kHL2E3q/uZjzKI5xo/04tZ+ZOcwXwZpoWc4h0OBxRe02OjN05rehr4niocqlrqI/uouRxbdBICutfF3L9k7BEsGm85/ZwO/6Z1187oGQ9U2oUAoeO6NHBcDgEf45w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719556266; c=relaxed/simple;
-	bh=/qW2MuuB3RZb8IXPiuO7taQ5Qaqf5OtKnSYrRlwCHUY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qwLaNj5qJMceWNawrxC/4AggpEuQ+kVvooUZ/coTG+JLjlZZ+gR8f3I9n9JoeEYcLaQ2SU7H9nVEIyAJubdTVxZWh+mvw/A8YDKiUhp4GKEJ69xujnoooHBsxSZEpaneogn1poPSTrllgHlFB2AwWKT2pXobURjzrkfdZVzkO+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4W9QYT2qYmz4f3jkJ;
-	Fri, 28 Jun 2024 14:30:53 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 8A4FC1A0568;
-	Fri, 28 Jun 2024 14:31:00 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP2 (Coremail) with SMTP id Syh0CgBXwIWfWH5mZZVAAg--.52859S5;
-	Fri, 28 Jun 2024 14:31:00 +0800 (CST)
-From: libaokun@huaweicloud.com
-To: netfs@lists.linux.dev,
-	dhowells@redhat.com,
-	jlayton@kernel.org
-Cc: hsiangkao@linux.alibaba.com,
-	jefflexu@linux.alibaba.com,
-	zhujia.zj@bytedance.com,
-	linux-erofs@lists.ozlabs.org,
-	brauner@kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	libaokun@huaweicloud.com,
-	yangerkun@huawei.com,
-	houtao1@huawei.com,
-	yukuai3@huawei.com,
-	wozizhi@huawei.com,
-	Baokun Li <libaokun1@huawei.com>
-Subject: [PATCH v3 1/9] netfs, fscache: export fscache_put_volume() and add fscache_try_get_volume()
-Date: Fri, 28 Jun 2024 14:29:22 +0800
-Message-Id: <20240628062930.2467993-2-libaokun@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240628062930.2467993-1-libaokun@huaweicloud.com>
-References: <20240628062930.2467993-1-libaokun@huaweicloud.com>
+	s=arc-20240116; t=1719556265; c=relaxed/simple;
+	bh=IPj8V9mOlzMvkFpYjYiurmdx0muqxFevIN9X8P91Vl8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=WjEqZXH03Znh5Ch/NXugnZVxszuqhwMTs6236Hq81cyK7qgDez/Ab0jClvGVcF6hDKzwfzP7TCj4x3t2C2a2ChhSjXzYF0wzmOyiHCduj7RzQRkXKZbDigiRW33zUl79vE2TjyDM5jqbU5mA0GtfnNHSx0iW8Ky/nxAyj7qDng8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cMyGMCQO; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cMyGMCQO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F322C116B1;
+	Fri, 28 Jun 2024 06:30:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719556264;
+	bh=IPj8V9mOlzMvkFpYjYiurmdx0muqxFevIN9X8P91Vl8=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=cMyGMCQOprns2pIdaIZj37zwI8hTvjo+tYhz8559I85aTA/p5N3txDY7Jw1tkfxYD
+	 D+nbApsY344CtLCtW0ooI7NkWnCtloB5coBQjwEcN6IAXyY6/9hNzF6AtDVx1BuPTs
+	 zGnLM6AsLjuboobWtKLU9GrkPG+giKIYzm9EtttMp0cg4Y0a2EpmMC8RQs8BJF8Opk
+	 aU28amPDBdX1utJT92Fdcv3HMnzFICkRe4GjHjNGJZEzoQA4IasjDbCDMaldnwMVQr
+	 0F3+pZsLnN/D2rWI6iixulqGyqMHrlgtfzdQ6byh4/9C6XLB+QmtOA5u3YKsUsWqYz
+	 X/4HKz5Ls1OaA==
+Message-ID: <68684d06-0c37-4238-b709-ffecc40fb17b@kernel.org>
+Date: Fri, 28 Jun 2024 08:30:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgBXwIWfWH5mZZVAAg--.52859S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxGw17ur1rJw1kWw1rCr1rWFg_yoW5Cr1Dp3
-	srCrn7KF48Xw1xGw45Xw47Zrn3Z3ykKan7G34UGw15Cw4xtr15XF12yw15AF13A34UJrWI
-	yF1Utryjgw1UZr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPG14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwAKzVCY07xG64k0F24l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l
-	x2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14
-	v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IY
-	x2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87
-	Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIF
-	yTuYvjfU8UDGUUUUU
-X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/1tbiAQAIBV1jkH-YcwADs1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] ASoC: dt-bindings: fsl,xcvr: Adjust the number of
+ interrupts
+To: Shengjiu Wang <shengjiu.wang@nxp.com>, lgirdwood@gmail.com,
+ broonie@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, shengjiu.wang@gmail.com, linux-sound@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+ festevam@gmail.com, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+References: <1719481981-4069-1-git-send-email-shengjiu.wang@nxp.com>
+ <1719481981-4069-2-git-send-email-shengjiu.wang@nxp.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <1719481981-4069-2-git-send-email-shengjiu.wang@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Baokun Li <libaokun1@huawei.com>
+On 27/06/2024 11:52, Shengjiu Wang wrote:
+> On i.MX8MP, there are 3 interrupts, the third interrupt is
+> SPDIF wakeup interrupt from PHY
+> 
+> Add ref: dai-common.yaml for #sound-dai-cells is needed and
+> XCVR is a DAI device.
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-Export fscache_put_volume() and add fscache_try_get_volume()
-helper function to allow cachefiles to get/put fscache_volume
-via linux/fscache-cache.h.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Signed-off-by: Baokun Li <libaokun1@huawei.com>
----
- fs/netfs/fscache_volume.c     | 14 ++++++++++++++
- fs/netfs/internal.h           |  2 --
- include/linux/fscache-cache.h |  6 ++++++
- 3 files changed, 20 insertions(+), 2 deletions(-)
-
-diff --git a/fs/netfs/fscache_volume.c b/fs/netfs/fscache_volume.c
-index fbdc428aaea9..2e2a405ca9b0 100644
---- a/fs/netfs/fscache_volume.c
-+++ b/fs/netfs/fscache_volume.c
-@@ -27,6 +27,19 @@ struct fscache_volume *fscache_get_volume(struct fscache_volume *volume,
- 	return volume;
- }
- 
-+struct fscache_volume *fscache_try_get_volume(struct fscache_volume *volume,
-+					      enum fscache_volume_trace where)
-+{
-+	int ref;
-+
-+	if (!__refcount_inc_not_zero(&volume->ref, &ref))
-+		return NULL;
-+
-+	trace_fscache_volume(volume->debug_id, ref + 1, where);
-+	return volume;
-+}
-+EXPORT_SYMBOL(fscache_try_get_volume);
-+
- static void fscache_see_volume(struct fscache_volume *volume,
- 			       enum fscache_volume_trace where)
- {
-@@ -420,6 +433,7 @@ void fscache_put_volume(struct fscache_volume *volume,
- 			fscache_free_volume(volume);
- 	}
- }
-+EXPORT_SYMBOL(fscache_put_volume);
- 
- /*
-  * Relinquish a volume representation cookie.
-diff --git a/fs/netfs/internal.h b/fs/netfs/internal.h
-index 9e3e11234e0b..21e46bc9aa49 100644
---- a/fs/netfs/internal.h
-+++ b/fs/netfs/internal.h
-@@ -343,8 +343,6 @@ extern const struct seq_operations fscache_volumes_seq_ops;
- 
- struct fscache_volume *fscache_get_volume(struct fscache_volume *volume,
- 					  enum fscache_volume_trace where);
--void fscache_put_volume(struct fscache_volume *volume,
--			enum fscache_volume_trace where);
- bool fscache_begin_volume_access(struct fscache_volume *volume,
- 				 struct fscache_cookie *cookie,
- 				 enum fscache_access_trace why);
-diff --git a/include/linux/fscache-cache.h b/include/linux/fscache-cache.h
-index bdf7f3eddf0a..4c91a019972b 100644
---- a/include/linux/fscache-cache.h
-+++ b/include/linux/fscache-cache.h
-@@ -19,6 +19,7 @@
- enum fscache_cache_trace;
- enum fscache_cookie_trace;
- enum fscache_access_trace;
-+enum fscache_volume_trace;
- 
- enum fscache_cache_state {
- 	FSCACHE_CACHE_IS_NOT_PRESENT,	/* No cache is present for this name */
-@@ -97,6 +98,11 @@ extern void fscache_withdraw_cookie(struct fscache_cookie *cookie);
- 
- extern void fscache_io_error(struct fscache_cache *cache);
- 
-+extern struct fscache_volume *
-+fscache_try_get_volume(struct fscache_volume *volume,
-+		       enum fscache_volume_trace where);
-+extern void fscache_put_volume(struct fscache_volume *volume,
-+			       enum fscache_volume_trace where);
- extern void fscache_end_volume_access(struct fscache_volume *volume,
- 				      struct fscache_cookie *cookie,
- 				      enum fscache_access_trace why);
--- 
-2.39.2
+Best regards,
+Krzysztof
 
