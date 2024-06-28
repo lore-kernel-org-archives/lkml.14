@@ -1,91 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440632E64A;
-	Fri, 28 Jun 2024 12:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 500352E64A
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 12:33:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719577953; cv=none; b=NHB0hVTaUKZjwTI4GgIvnE+WjgCaVY1wVUX3FJXFZ2Zrapqf18cJvM0OqzNdoA7a5y7sU1+UGfkHBsrd93FTE9tyjNduYmFe6xG7ISC+BXpEogUjPJajXKuL8qBfmDUmFqHZEdIern454yJbmpcOOcydBb17Rmnn4+fVKZ845hU=
+	t=1719577987; cv=none; b=rZUygNzmhXh74ZJtqToaCls2EQPaGmDHz9cUuCgYp0s2AEszoHVJTdq2hKGIE+Ur5K0kSbgfgl7aLQb3h9Cseuey6CK7tuEJzWQ/BlSFLcCu3fe8T0dfsuFIJ6/7uCvPCaRLRPrn7IENowZtMsCPS35rkLGcgM8ZT+A7jKXM8MA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719577953; c=relaxed/simple;
-	bh=Ha43aO+O5jHdoZI+1kv9nzT9FAFVWm3/7jHE5V8OCXY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZlXI17UZFot7pjHrdqwMm/8kGgeQfKxYpGHRcW+hwFQkShMXsPybQfBJcd9zu8e6h3GGiDP7hazgXcI2XRLZ5pDBzGr4Sg5m2J676VDwELBRnFGj5x2I2x8o1XCgvJ/bzGn2vPrgtrSDLrjFfoMaFdmaEKALZeNbpEXeqq274oA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PNPKf4A3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719577987; c=relaxed/simple;
+	bh=iP72sjx0dw/MwgE+xmP0d2ItZCoMMkXEZyU0W+SEO5o=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=p3lZoIsFWKyzsVnG5QsibsR2XNUj0/AuJ+GKZkvHJaaTcfDC/zNqVnlpg3KwxQGGw6+vaAfXgTAbN7KaQAbzwepJgS6iQUvbjEfYXZ7M2qvb4e+yqq3hamUZ9AQHq/4R9ZsVVQCtINpDFnEsKFhnbVQirsKDASG/yDasZThRe3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j5H7dNBw; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PNPKf4A3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECABCC116B1;
-	Fri, 28 Jun 2024 12:32:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719577952;
-	bh=Ha43aO+O5jHdoZI+1kv9nzT9FAFVWm3/7jHE5V8OCXY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PNPKf4A3iaA4hrrfixyi1OWjwPgHYUaY1LFb8Pm4Sg0TYfYKhzBCnz9+hQ7RJoUXc
-	 QDrZythMOX33/6XE5rYDTKnOkXE6pp1/xNjJbYOzAM7KncKCnCI3OChJofq2PZDIre
-	 SN7Ut8akfoc/TvlECnDXTmf3QLQSSPtBEcYcZ0l8+KmUTXZFp7c2YUwWPjqWlsfZVJ
-	 lCxixFKZBfRKja+UI2zZS0brv0cM7pZQtpWvFi3znwFk8SSCUbpzx0JfplhbYBTUMv
-	 THtRwfklkivGpVtAWdhTTIxVSlKPefFDv8IMIAvVas0E5rBYkHdlbPV59HLZySU4X5
-	 IJSElGLWfQs/Q==
-Date: Fri, 28 Jun 2024 13:32:27 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Pascal Paillet <p.paillet@foss.st.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	Etienne Carriere <etienne.carriere@foss.st.com>
-Subject: Re: [PATCH v2 1/4] regulators: dt-bindings: add STM32MP25 regulator
- bindings
-Message-ID: <e0e23cac-504b-4e93-bcdc-5c7b3c81ab6f@sirena.org.uk>
-References: <20240628085814.1586186-1-p.paillet@foss.st.com>
- <20240628085814.1586186-2-p.paillet@foss.st.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j5H7dNBw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719577986; x=1751113986;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=iP72sjx0dw/MwgE+xmP0d2ItZCoMMkXEZyU0W+SEO5o=;
+  b=j5H7dNBwT5k8Ju9xJo+tNe0mGaMxEhVwVktQi/ioU9Far072qobBVysA
+   lhZnE1PX8swjsCmE/hfsw3Le12ft338q7SQQ2I9rpx0igsSiPgfDm0SOA
+   OM5Pjddeu/l4kkKuHE7Ez+2ql6Fmqh91hCI8bnJIqPud5l+m3Gof7r0Z7
+   E1QoDwMmQZEh2+w82GhiuyETWo3lRLPXIxLQiG0XXScF3Gsli3QLaWKXX
+   NdsLhiukgMrAlVlaV+HLmfirKpH10aIr0ycqJd28rDuWLANxPJ57o/hto
+   Y/pkYXNbZCdMM8hJGmJqpb4nALIm7aOPwp7+Prei5QQtxT2VZZbEfPZnc
+   Q==;
+X-CSE-ConnectionGUID: DI1Je+qvTKSocW8jgDDzkw==
+X-CSE-MsgGUID: y/KAE3DzSLKYC3m8YZq+NQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="12299774"
+X-IronPort-AV: E=Sophos;i="6.09,169,1716274800"; 
+   d="scan'208";a="12299774"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 05:33:05 -0700
+X-CSE-ConnectionGUID: 8ZksAHdgQ3upAMxwF8GTzw==
+X-CSE-MsgGUID: rZ8Cq3WYRyyuvf5sMQtcqA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,169,1716274800"; 
+   d="scan'208";a="44563171"
+Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.125.248.220]) ([10.125.248.220])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 05:33:03 -0700
+Message-ID: <fbede9a0-cfbc-4782-99c1-803f611c28b1@linux.intel.com>
+Date: Fri, 28 Jun 2024 20:33:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="eoY9nVURtqN3+AEo"
-Content-Disposition: inline
-In-Reply-To: <20240628085814.1586186-2-p.paillet@foss.st.com>
-X-Cookie: divorce, n:
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, yj.chiang@mediatek.com, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH] iommu: Remove iommu_sva_unbind_gpasid
+To: Mark-PK Tsai <mark-pk.tsai@mediatek.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+References: <20240628113011.3535-1-mark-pk.tsai@mediatek.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20240628113011.3535-1-mark-pk.tsai@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 2024/6/28 19:30, Mark-PK Tsai wrote:
+> This is a left over of commit 0c9f17877891
+> ("iommu: Remove guest pasid related interfaces and definitions")
+> 
+> Signed-off-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+> ---
+>   include/linux/iommu.h | 2 --
+>   1 file changed, 2 deletions(-)
+> 
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 17b3f36ad843..225403cfe614 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -785,8 +785,6 @@ extern int iommu_attach_device(struct iommu_domain *domain,
+>   			       struct device *dev);
+>   extern void iommu_detach_device(struct iommu_domain *domain,
+>   				struct device *dev);
+> -extern int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
+> -				   struct device *dev, ioasid_t pasid);
 
---eoY9nVURtqN3+AEo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Not sure why this still remains there. But it seems not alone.
 
-On Fri, Jun 28, 2024 at 10:58:11AM +0200, Pascal Paillet wrote:
-> These bindings will be used for the SCMI voltage domain.
+$ git grep iommu_sva_unbind_gpasid
+Documentation/userspace-api/iommu.rst:  int 
+iommu_sva_unbind_gpasid(struct iommu_domain *domain,
+include/linux/iommu.h:extern int iommu_sva_unbind_gpasid(struct 
+iommu_domain *domain,
 
-Acked-by: Mark Brown <broonie@kernel.org>
+I believe the document should also be removed.
 
-Please submit patches using subject lines reflecting the style for the
-subsystem, this makes it easier for people to identify relevant patches.
-Look at what existing commits in the area you're changing are doing and
-make sure your subject lines visually resemble what they're doing.
-There's no need to resubmit to fix this alone.
+>   extern struct iommu_domain *iommu_get_domain_for_dev(struct device *dev);
+>   extern struct iommu_domain *iommu_get_dma_domain(struct device *dev);
+>   extern int iommu_map(struct iommu_domain *domain, unsigned long iova,
 
---eoY9nVURtqN3+AEo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZ+rVoACgkQJNaLcl1U
-h9BpGQf/fa9sDNcNB2MjTj0pf6Qf86Jsu58QRpw3XnmGOn1DGmAXoyo4L23ZaY8G
-Y67ci3z3Sm25LXxrd5sILbJYtnuFjTYfrMeakvn6/Xf3c8OQCidTNHCi4OxOKILk
-9punv8ZLiOVe7RSxLQtITSp8xhaRlCdITuHOhEvEdfdX6Z5V5YJzcRNclyRSs25U
-lenNDd0LfCP3k8rYo5i1MqAzCwfOXD/sjPmsFYW7YvZ6aSSIy2kmcQKY5aJpKtzM
-fe5R4XBE3bmW91/csh40cnIehZvFChKPBi95E5F38Q6YbWW+uJevWd3/CR9NyPtj
-JaQ+yNriTki2RyRC1bS43VbslCM9vg==
-=mBUI
------END PGP SIGNATURE-----
-
---eoY9nVURtqN3+AEo--
+Best regards,
+baolu
