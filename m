@@ -1,133 +1,128 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E481C0DE7
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 14:39:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B551E53A
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 14:39:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719585560; cv=none; b=h/StwMf/lzlygrahfeA3gnooN9EMoMwk3FEk3bezFo02PUm6CvJ8E+Lc68WFaZMS7zhbD86nL6B6m0aAou62KFxsAuOaowwy2D2XMTO2RN5UmlLioYG0kPW/frKLwY+HyKrhneWVnl/6aYd6+QBSu9hWhV+CNVbAaDkv4dZZ0Uw=
+	t=1719585598; cv=none; b=g0MATWP397LomBzKu7mUWu2a67HdMl/okLgWkOGsq+BX+8CtincrtY20CwnIYGY3t3jf9dI1LFeMCNiq/U+RRtlTBun8xXsdxkZUCYzzrkC1bVTKf4Ens0H3Bu+g32E06eHnm63zP3YdziRwvTSv6pMEBBtkWFJyvGqV4MrgFHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719585560; c=relaxed/simple;
-	bh=DnPbeFhnpqo7ICi6RF3F2geQeT0KbWfD+cwPIsOtWoc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=OCU1fEtgxhiXHeD6LVsHqj2t/PFQqD2QP9RCKEmUcSnNlQk8Doqb4jKKTOfOa1eGUxB1Hn1bcfCb/GXd5aNLWp+BokdcXV2ShGmD4E17ghZ9KXhKtVj1ttC0E0XOMs47OhIoVKqNtN8VX4BHgwl1fSk0TPgPPgdmn2cgnWsPiic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uGUhr/Q+; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1719585598; c=relaxed/simple;
+	bh=Zkc0OU91HUSJKg9h2HoiHVtFijVhqu/DfMdfPlf7dRk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M14l+659pER+9iIJevr+ipKR3zv1HghumFT32/B7ovJvMTkK1nJijX8vhir/n48LWokn/tvbwrNR83keS/cZ2tzF7LQcrB+VLoKZy55psyjZkm4hDPd5JxfE2d7kkhp9g6UAldxMukcZvHP318cgGQG/mH5wzGoJ2UVau1PdoMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mBUKDczh; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uGUhr/Q+"
-X-Envelope-To: torvalds@linux-foundation.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1719585555;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=d/hVC8tJYHzflhtDbd2o075Ru39jFiSORBp8C8axaVU=;
-	b=uGUhr/Q+8TWgW3+NPJRnDhMwJ0tl9QM0ehv4wnF5gt//Y//SfZPyLBjMmny6GW5n5y2wux
-	8KY6zSCJvn49wSBD4oCVoC7of+QCTwVZeHXLItRyOCbQQoa2M1svIpyz4Z/Jlzhv6ttkco
-	eS8OTEOfHhKU6J7v/vZWTj1GKLb6ftM=
-X-Envelope-To: linux-bcachefs@vger.kernel.org
-X-Envelope-To: linux-fsdevel@vger.kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-Date: Fri, 28 Jun 2024 10:39:11 -0400
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] bcachefs fixes for 6.10-rc6
-Message-ID: <2taurilom54hdpzwsk5qwfln3elficdoarykhakvmhaoneg455@iylhhiq7mauv>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mBUKDczh"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4217c7eb6b4so5836105e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 07:39:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719585594; x=1720190394; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5fX1MMnIpDBOm77iDLoe1RG1qLzLS5Do9mpyDQwOVT4=;
+        b=mBUKDczhZciHkQUM2cLJ3nUm9wdmNJZKTe8kgmEVTpNbfTXkem+hmQzEJJ41F6/FJd
+         VdrQ/91S1jsYeOQTF5fCUNo6b1eNRAC1QzbAHR7CVK830OiYdWOgzAO3mMdiSEMnTGmw
+         xA5eooNyQ+Oa8KsBzxPVirqfuvVWHOW4RkLAPqFHUliulIEA34P2wbhKR67muIho0OzH
+         3ip3ibF+aDQoGE1k9Q4zg5bxQS/EByXlu54KwT5Vc/53Fly4qUEcSCbtWlBJP5S7vBPp
+         dhk0xgcZW254ijzVynpALLORYjWBYtTaeqzf4CgxIcgkHR3FkWhiHLOndtXDwg02i5rs
+         kxsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719585594; x=1720190394;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5fX1MMnIpDBOm77iDLoe1RG1qLzLS5Do9mpyDQwOVT4=;
+        b=U3Wn48f7nDndyb6AtuqCGzdWxjyohDJI/wNCvAfG9c1vqX6nd+nKzr3HtPz+EB2fnV
+         6niJJQ0mFhiCq9V7rYEKAv6xxqoirV9TqYwGJzIdaCHShBauC1ZYfezNP7/mnVeXn81f
+         NYfFzTwSDD4679vpCVMYlkE4J6ZMUo+d9fP8SCQdpePw14U77Sd6U4jSq/nO6zblMpPs
+         hYjRC9i22OMDUU61lJiqW/Q7ugHIzLnkMpWGQXMIWSjM7d6S3FU8xY+LgxHFaFr84pN+
+         NVH6gebuvVIUrBn6oigSxhDsdGHtnfmfLDXoSqtdsMESREFjZUYMfskESntdR6+OAuXW
+         gPeg==
+X-Gm-Message-State: AOJu0Yx4zsrjbq6vj06RlOB/VKlon5h29C7r9BxrisDaUJXmh+XRhQAl
+	48Y+VPts8HideL7NBd8C1tbEgZMgDit9ifQxcKch4zs8CxLlQcXtleBOM8TqEXA=
+X-Google-Smtp-Source: AGHT+IFiwW/g9bMvX363nZWYpupjIfTEXXcoSHzUKGy6GKc+YaQcE+dP2/YqcheNmOHdUbTm/7lcFw==
+X-Received: by 2002:a05:600c:4da1:b0:425:65c5:9af4 with SMTP id 5b1f17b1804b1-42565c59c70mr28348295e9.41.1719585594358;
+        Fri, 28 Jun 2024 07:39:54 -0700 (PDT)
+Received: from [192.168.0.107] ([79.115.63.178])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256b061006sm37150835e9.22.2024.06.28.07.39.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Jun 2024 07:39:53 -0700 (PDT)
+Message-ID: <aa4df0e5-bbd4-46f7-8e58-b42a8c909327@linaro.org>
+Date: Fri, 28 Jun 2024 15:39:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] Add generic functions for accessing the SPI-NOR chip.
+To: Erez Geva <erezgeva@nwtime.org>, linux-mtd@lists.infradead.org,
+ Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Erez Geva <ErezGeva2@gmail.com>
+References: <20240628140328.279792-1-erezgeva@nwtime.org>
+ <20240628140328.279792-2-erezgeva@nwtime.org>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20240628140328.279792-2-erezgeva@nwtime.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Linus, fresh batch of fixes for you...
+Hi, Erez,
+
+On 6/28/24 3:03 PM, Erez Geva wrote:
+> From: Erez Geva <ErezGeva2@gmail.com>
+> 
+> Functions:
+> 
+>  - Send a opcode
+> 
+>  - Read a register
+> 
+>  - Write a register
+> 
+
+Please describe your changes. You may want to re-read:
+
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#submitting-patches-the-essential-guide-to-getting-your-code-into-the-kernel
+
+> Signed-off-by: Erez Geva <ErezGeva2@gmail.com>
+> ---
+>  drivers/mtd/spi-nor/core.c | 130 +++++++++++++++++++++++++++----------
+>  drivers/mtd/spi-nor/core.h |  27 +-------
+>  2 files changed, 99 insertions(+), 58 deletions(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
+> index 028514c6996f..0f267da339a4 100644
+> --- a/drivers/mtd/spi-nor/core.c
+> +++ b/drivers/mtd/spi-nor/core.c
+> @@ -354,53 +354,134 @@ int spi_nor_write_any_volatile_reg(struct spi_nor *nor, struct spi_mem_op *op,
+>  }
+>  
+>  /**
+> - * spi_nor_write_enable() - Set write enable latch with Write Enable command.
+> + * _nor_send_cmd() - Send instruction without address or data to the chip.
+>   * @nor:	pointer to 'struct spi_nor'.
+> + * @opcode:	Command to send
+>   *
+>   * Return: 0 on success, -errno otherwise.
+>   */
+> -int spi_nor_write_enable(struct spi_nor *nor)
+> +static inline int _nor_send_cmd(struct spi_nor *nor, u8 opcode)
+
+and my review stops here. Why did you think it is good to introduce a
+_nor* method and not an spi_nor* one?
+
+I'm not going to review the rest of the patches. Please send a v2 that
+convinces me to spend more than 2 minutes on it.
 
 Cheers,
-Kent
-
-The following changes since commit bd4da0462ea7bf26b2a5df5528ec20c550f7ec41:
-
-  bcachefs: Move the ei_flags setting to after initialization (2024-06-21 10:17:07 -0400)
-
-are available in the Git repository at:
-
-  https://evilpiepirate.org/git/bcachefs.git tags/bcachefs-2024-06-28
-
-for you to fetch changes up to 64cd7de998f393e73981e2aa4ee13e4e887f01ea:
-
-  bcachefs: Fix kmalloc bug in __snapshot_t_mut (2024-06-25 20:51:14 -0400)
-
-----------------------------------------------------------------
-bcachefs fixes for 6.10-rc6
-
-simple stuff:
-- null ptr/err ptr deref fixes
-- fix for getting wedged on shutdown after journal error
-
-- fix missing recalc_capacity() call, capacity now changes correctly
-  after a device goes read only
-
-  however: our capacity calculation still doesn't take into account when
-  we have mixed ro/rw devices and the ro devices have data on them,
-  that's going to be a more involved fix to separate accounting for
-  "capacity used on ro devices" and "capacity used on rw devices"
-
-- boring syzbot stuff
-
-slightly more involved:
-- discard, invalidate workers are now per device
-  this has the effect of simplifying how we take device refs in these
-  paths, and the device ref cleanup fixes a longstanding race between
-  the device removal path and the discard path
-
-- fixes for how the debugfs code takes refs on btree_trans objects
-  we have debugfs code that prints in use btree_trans objects. It uses
-  closure_get() on trans->ref, which is mainly for the cycle detector,
-  but the debugfs code was using it on a closure that may have hit 0,
-  which is not allowed; for performance reasons we cannot avoid having
-  not-in-use transactions on the global list.
-
-  introduce some new primitives to fix this and make the synchronization
-  here a whole lot saner
-
-----------------------------------------------------------------
-Kent Overstreet (10):
-      bcachefs: Fix freeing of error pointers
-      bcachefs: fix seqmutex_relock()
-      bcachefs: Make btree_deadlock_to_text() clearer
-      closures: closure_get_not_zero(), closure_return_sync()
-      bcachefs: Fix race between trans_put() and btree_transactions_read()
-      bcachefs: Fix btree_trans list ordering
-      bcachefs: Add missing recalc_capacity() call
-      bcachefs: Fix null ptr deref in journal_pins_to_text()
-      bcachefs: Add missing bch2_journal_do_writes() call
-      bcachefs: Discard, invalidate workers are now per device
-
-Pei Li (3):
-      bcachefs: slab-use-after-free Read in bch2_sb_errors_from_cpu
-      bcachefs: Fix shift-out-of-bounds in bch2_blacklist_entries_gc
-      bcachefs: Fix kmalloc bug in __snapshot_t_mut
-
- fs/bcachefs/alloc_background.c      | 263 +++++++++++++++++++-----------------
- fs/bcachefs/alloc_background.h      |   6 +-
- fs/bcachefs/alloc_foreground.c      |   4 +-
- fs/bcachefs/bcachefs.h              |  16 ++-
- fs/bcachefs/btree_iter.c            |  19 +--
- fs/bcachefs/chardev.c               |   9 +-
- fs/bcachefs/debug.c                 | 109 +++++++++------
- fs/bcachefs/journal.c               |   5 +
- fs/bcachefs/journal_io.c            |   7 +
- fs/bcachefs/journal_seq_blacklist.c |   2 +-
- fs/bcachefs/sb-errors.c             |  14 +-
- fs/bcachefs/seqmutex.h              |  11 +-
- fs/bcachefs/snapshot.c              |   3 +
- fs/bcachefs/super.c                 |   6 +-
- include/linux/closure.h             |  23 ++++
- lib/closure.c                       |  52 ++++++-
- 16 files changed, 342 insertions(+), 207 deletions(-)
+ta
