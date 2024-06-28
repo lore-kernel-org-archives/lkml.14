@@ -1,64 +1,71 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB501C0059;
-	Fri, 28 Jun 2024 14:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F341E53A;
+	Fri, 28 Jun 2024 14:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719585411; cv=none; b=lpJHI3tN4ru0jwFMivFRM6Z9iiVeByqZahUeA+296gU2/yPo87eiGti4aj8DS423n0K81Nyy7IsgTjPT6rqEsg2t+F4N8rbWkMuTZBH1C+ygpdc3ma7mo2qfvhRb/W4Q1Q9gbxvxBqmCIVCwDHeJMcw0svRDGttaQaYLwhlAClg=
+	t=1719585521; cv=none; b=H88hTUMc9WZdrvHYDoujfZWepCcKS5ryMMvydn6PJ2fUcEwDXGm8vYHYEqe/Kd/kh/ETCZRwq/lmBr7YzzeuwZ0XWKquAwZ/79zOzxy39f5+7UuaQN6bhex0QXECA1Twlxs/eWOtgN52q5INfzD5r2ijY7mXl48qG7/LXT9gZGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719585411; c=relaxed/simple;
-	bh=JiZfq3gwz1YV7mDlLny5qXHSDcF//x9Y1YtC1MMYgLM=;
+	s=arc-20240116; t=1719585521; c=relaxed/simple;
+	bh=UnQJTA1Uho8wfMRllPRQMtJTW9ui2+eIhxm9q+jTY9A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bx/g81DwUk/vm17679BRUC2S1tnPK6Ifdmo7T0aF4Cdcd6qM4En28DGQpn4sflHA51eG4Rgj1xoSDzOwj26GF6hcvK3NfZHUXmG+G2WzjGqJibvte2lXjhegJn5gnT7F93Fw2q0fFu36FkWIhG2nUwUHQmRF9BFffiFRCKBHRQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=Cqv4ThO5; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=blirdbgRKLQMAIclXHDg1mgt30SPpIJS8njJBR663T1qkBcVD5h/zzNUjWhI9ujqysCY7KfvIO1KBhlrJKE0hkjJt5sB4Ju5c6Hk4f46xt1696UxsugC9h6Q5AhLz27kcWLsqXAfCRzw4XWiqHSLjJeBhJQoW6p+vC0rdseN4I0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SPQWxdGH; arc=none smtp.client-ip=209.85.166.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Cqv4ThO5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Dn8dd9XofEX3Uhxe0baYs+HlRiMw0xmll7rakGvzy50=; b=Cqv4ThO5K430oyZ2P6/0xKye2t
-	dcVwpn/gglUa0CJqhAN+opJSD6fX3NJv+GbcL5k/c4EwzwND43nPnDy+bpoIqtGo+vLKI2FOubIqs
-	Fvk74xjycJ9/p6rbCTdrQngllERV7m92ztiQsm0d5x2t2e3LC6gMsCLiGO/ckIZnQ2AprJa5/Ve1x
-	7nVuXuVCk1Eck2s+1es8VUVhYFZ/5YC8VxXfqplKesv5yRcQRzKkv9urI632OyjgKKQdtyERinlCZ
-	hOSoxViS6lcjxxxu6qSstM5r1CijGBQv3xhaYtMKdyTxvuyOVdXATGeQwcfbbru1AsdTgVxxnG0YD
-	DgriEQQw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:57500)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1sNCi4-0006kX-1r;
-	Fri, 28 Jun 2024 15:36:20 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1sNCi4-0006Zb-BR; Fri, 28 Jun 2024 15:36:20 +0100
-Date: Fri, 28 Jun 2024 15:36:20 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Serge Semin <fancer.lancer@gmail.com>
-Cc: Andrew Halaney <ahalaney@redhat.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com, bpf@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC net-next v2 16/17] net: stmmac: Move internal PCS
- init method to stmmac_pcs.c
-Message-ID: <Zn7KZG+KDU01APar@shell.armlinux.org.uk>
-References: <Zlmzu7/ANyZxOOQL@shell.armlinux.org.uk>
- <20240624132802.14238-8-fancer.lancer@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SPQWxdGH"
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-7f3c878d6d4so27251039f.0;
+        Fri, 28 Jun 2024 07:38:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719585519; x=1720190319; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VcQyE0yYDNTSkXwDduYitSPJ1KKImtXfpamQ+jJEONA=;
+        b=SPQWxdGHZS7cBj7J+Bjk/jPv8+wLO4TW9877MJ4gr0j7QypcVJQ42KdsXV6TckmKAz
+         n1GbOtofbbOdjo+GwcXnEYc/XUuBtNNQAoTgDtCQzeqJ36GooMBdZ4In/fhrP4Luu+vA
+         IUMzCBH1kQ2xV9e2Lx6I2rkLWQuzckuaD1nvm4M8/Yz1pRXFfmJjx72tYZ9jTxQNmY67
+         Kj6ffmSyevjsTQic5hwiuDZzQJkmwlYs61hy0+yv7KgCh+Mj1JbR4Y4eBAw9Mf+vLBc5
+         jz/Fx5Y4V0ANhOm8mBLtj3cmFok0rNYrAlEokEtyaAjPsSW/jMnbzQv/QCSL2q5obbsH
+         OmwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719585519; x=1720190319;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VcQyE0yYDNTSkXwDduYitSPJ1KKImtXfpamQ+jJEONA=;
+        b=eBKQNQyw3drzlYA6GDia24sdrCUsKJDx5DPfZLoD8Egr4WHkUqcApwI8J4w08MTsVQ
+         Zk8/Fj49LLGyKObWCUFU2hrtJ9RLhmc3llSknEh14UJ3Ahy2CcYzRvzZPZNBV/XuRJ9X
+         Z+zcn1oFhfHwctQlSjS5C3Fr3B1jfdB3QXN8a2NuWarq9Wu/dYNDVKkmjTV7CjpcnLsQ
+         GNzVL0O7GK1OIJrVoYBkzVBceHMNlKjYXSCRZdBJfULq+r8xSdvoyYbAxz47GvYx9uqv
+         f4gblYkP30Autva6ejiONbjspUdLtVJpBJY/266R/2BqxL0OH3o7jjjnlOjJtaJIkJQc
+         lDYA==
+X-Forwarded-Encrypted: i=1; AJvYcCX93dbdbSqJYEwWrUuWpqLvWl5RTZkZu5AOT7HZpkZQwwQrQ9cUU6t9kMyl/OrXipLfd5JsuskxkL5UuPr63DjzQrRpD0kC0lH5K1LDd9IJ9OZet8KKI+2RpummMMSwBCGpEDwddSqMVOEihEbNFvmLec7OGfMcdZvUxk5nARoccC6QheBkdeQwnOe+VL+XWgdHqNP5VM09tjSCG4nnPh4k/U+h29E0xtMjra9MInbw5FquKxqwEvWVXA==
+X-Gm-Message-State: AOJu0YyC/L5vVDnxivFcWN16UIMk4XFu0N3REVZ5M6JfErYGzXHeUVek
+	FJJJ0e1bIQ1X6Cey2vdu2seIPPqZDo81XeYU5iEkL+aK7GpRQkoa
+X-Google-Smtp-Source: AGHT+IHz9FFo+xEdO4eMyfNJdkl4np8V035GYfOzDC08kq0lJxY+ZuMnFlw/XDfGatIYJ2F8lUlsOg==
+X-Received: by 2002:a05:6602:1602:b0:7f3:d759:8fc2 with SMTP id ca18e2360f4ac-7f3d7599379mr765481339f.17.1719585518489;
+        Fri, 28 Jun 2024 07:38:38 -0700 (PDT)
+Received: from localhost ([2804:30c:96b:f700:cc1d:c0ae:96c9:c934])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-72c6d1f77bcsm1380841a12.79.2024.06.28.07.38.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Jun 2024 07:38:37 -0700 (PDT)
+Date: Fri, 28 Jun 2024 11:40:03 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, broonie@kernel.org,
+	lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, nuno.sa@analog.com, corbet@lwn.net,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 7/7] docs: iio: Add documentation for AD4000
+Message-ID: <Zn7LQ8AJo0U1pzN7@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1719351923.git.marcelo.schmitt@analog.com>
+ <e553a7c6ba88b3d8ae2db0963212fdce0919805a.1719351923.git.marcelo.schmitt@analog.com>
+ <55d0cc07-c877-4510-a052-4458ee964615@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,89 +74,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240624132802.14238-8-fancer.lancer@gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <55d0cc07-c877-4510-a052-4458ee964615@baylibre.com>
 
-On Mon, Jun 24, 2024 at 04:26:33PM +0300, Serge Semin wrote:
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> index 72c2d3e2c121..743d356f6d12 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> @@ -950,13 +950,16 @@ static struct phylink_pcs *stmmac_mac_select_pcs(struct phylink_config *config,
->  {
->  	struct stmmac_priv *priv = netdev_priv(to_net_dev(config->dev));
->  
-> +	if (priv->hw->pcs)
-> +		return &priv->hw->mac_pcs;
-> +
->  	if (priv->hw->xpcs)
->  		return &priv->hw->xpcs->pcs;
->  
->  	if (priv->hw->phylink_pcs)
->  		return priv->hw->phylink_pcs;
->  
-> -	return stmmac_mac_phylink_select_pcs(priv, interface);
-> +	return NULL;
+On 06/26, David Lechner wrote:
+> On 6/25/24 4:55 PM, Marcelo Schmitt wrote:
+> > Document wiring configurations for the AD4000 series of ADCs.
+> > 
+> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> > ---
+> >  Documentation/iio/ad4000.rst | 131 +++++++++++++++++++++++++++++++++++
+> >  Documentation/iio/index.rst  |   1 +
+> >  MAINTAINERS                  |   1 +
+...
+> > +Wiring connections
+> > +------------------
+> > +
+> > +Devices of the AD4000 series can be connected to the SPI host controller in a
+> > +few different modes.
+> > +
+> > +CS mode, 3-wire turbo mode
+> > +^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+> The datasheet also has the same diagram in _Figure 55. CS Mode, 4-Wire Turbo Mode
+> Connection Diagram_. So maybe we should call this "register support mode" or
+> something like that instead of mentioning 3 or 4-wire?
+> 
+Humm, ADAQ4003 datasheet has the same figure for CS Mode, 4-wire turbo mode
+and CS mode, 4-wire with busy indicator although other datasheets have MOSI
+to SDI in 4-wire turbo as you said. The register read/write functionality
+sections say CNV must be brought low to access the configuration register.
+I'll leave it as it is for now as I have not tested reg access with CNV high.
+We can update this in the future if find out reg access to work in 4-wire mode.
 
-I really really don't like this due to:
-
-1. I spent a long time working out what the priority here should be, and
-you've just thrown all that work away by changing it - to something that
-I believe is incorrect.
-
-2. I want to eventually see this function checking the interface type
-before just handing out a random PCS, and it was my intention to
-eventually that into the MACs own select_pcs() methods. Getting rid of
-those methods means that the MACs themselves now can't make the
-decision which is where that should be.
-
-3. When operating in RGMII "inband" mode, the .pcs_config etc doesn't
-make much sense (we're probably accessing registers that don't exist)
-and I had plans to split this into a RGMII "PCS" which was just a PCS
-that implemented .pcs_get_state(), a stub .pcs_config(), and a separate
-fully-featured "SGMII PCS".
-
-So, I would like to eventually see here something like:
-
-	if (priv->hw->xpcs)
-		return &priv->hw->xpcs->pcs;
-
-	if (priv->hw->phylink_pcs)
-		return priv->hw->phylink_pcs;
-
-	if (!(priv->plat->flags & STMMAC_FLAG_HAS_INTEGRATED_PCS)) {
-		if (phy_interface_mode_is_rgmii(priv->plat->mac_interface))
-			return &priv->hw->mac_rgmii_pcs;
-
-		if (priv->dma_cap.pcs &&
-		    priv->plat->mac_interface == PHY_INTERFACE_MODE_SGMII)
-			return &priv->hw->mac_sgmii_pcs;
-	}
-
-	return NULL;
-
-> +void dwmac_pcs_init(struct mac_device_info *hw)
-> +{
-> +	struct stmmac_priv *priv = hw->priv;
-> +	int interface = priv->plat->mac_interface;
-> +
-> +	if (priv->plat->flags & STMMAC_FLAG_HAS_INTEGRATED_PCS)
-> +		return;
-> +	else if (phy_interface_mode_is_rgmii(interface))
-> +		hw->pcs = STMMAC_PCS_RGMII;
-> +	else if (priv->dma_cap.pcs && interface == PHY_INTERFACE_MODE_SGMII)
-> +		hw->pcs = STMMAC_PCS_SGMII;
-> +
-> +	hw->mac_pcs.neg_mode = true;
-> +}
-
-Please move "hw->mac_pcs.neg_mode = true;" to where the PCS method
-functions are implemented - it determines whether the PCS method
-functions take the AN mode or the neg mode, and this is a property of
-their implementations. It should not be split away from them.
-
-Thanks.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+> > +
+> > +Datasheet "3-wire" mode is what most resembles standard SPI connection which,
+> > +for these devices, comprises of connecting the controller CS line to device CNV
+> > +pin and other SPI lines as usual. This configuration is (misleadingly) called
+> > +"CS Mode, 3-Wire Turbo Mode" connection in datasheets.
+> > +NOTE: The datasheet definition of 3-wire mode for the AD4000 series is NOT the
+> > +same of standard spi-3wire mode.
+> > +This is the only connection mode that allows configuration register access but
+> > +it requires the SPI controller to support the ``SPI_MOSI_IDLE_HIGH`` feature.
+> > +
+> > +Omit the ``adi,sdi-pin`` property in device tree to select this mode.
+> > +
+> > +::
+> > +
+> > +                                         +-------------+
+> > +     + ----------------------------------| SDO         |
+> > +     |                                   |             |
+> > +     |               +-------------------| CS          |
+> > +     |               v                   |             |
+> > +     |    +--------------------+         |     HOST    |
+> > +     |    |        CNV         |         |             |
+> > +     +--->| SDI   AD4000   SDO |-------->| SDI         |
+> > +          |        SCK         |         |             |
+> > +          +--------------------+         |             |
+> > +                    ^                    |             |
+> > +                    +--------------------| SCLK        |
+> > +                                         +-------------+
+> > +
+> 
+> I think the rest of the explanations are good.
+> 
