@@ -1,113 +1,77 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301591B94F
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 19:29:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 171F9FC0E;
+	Fri, 28 Jun 2024 19:30:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719602962; cv=none; b=syb7gvY/QniQutXKeNuKQA+aPxPCBja/KwQDjlS8YGMYPW1q8yDimR1a/aY2EDfWemerpVO1FdJ/lN9Gb2ictgN7RdEncPQ9Y/GkVaG9g8jYtJBq6bFtcxpL1zxPUIrJcVEBZy/c9UBkkXoIao7grAP+MaRgayRtCUVZGrNH8rU=
+	t=1719603024; cv=none; b=qs/OhD7S2ZWDGwfkACeBDHOilqmNKLlstvZ9U243YXrESEDQ01Dh0nmD960TkMszmCb9zeT0S6BPiMkLvnHf1fODOX2jzJ0S5IRLHsSXocdgSo+gI48ekDpl39jlKwb8wV7SqUhbikNHfqYVHVVPLttBoxxLP66yMDMDNN7CPN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719602962; c=relaxed/simple;
-	bh=2COqgV8Z6yYne9fkPjb0q11LPjnQF04bfLYp3PbwNMs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=As+5w1Nak1LPyTMdagCrw9uDZvfPLPd4eu2hpcuO9o3AUEtvLmi5ZleawBQJV+kvosUr1EqxGgexJmK3HmNC/jmtZVbVP/o7u2J84yBZ0BLtHu0YNgzp3VKdFVu5d2vcQxSpHiguLy4aoqd66rAN4QE1aWoshR/PrDoenxzovlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=DXWpEGv2; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1719603024; c=relaxed/simple;
+	bh=ye6Xuii5TXxpYf0CfrgPnALJ0r4UWESs4M4nurh1zfg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dfkE2ANFbSBqv9zBQOw2CSuhy4ohkxiWLMEFYnfvrB9U9ysMfTdyULbexgj3d5ZPswsJJVT/VHzmQus2rLt3LWDJewIZusFPpn9qaPVzvaPPysz/7bK7YgodymVBg/sZzh+3iCJluW1VJojTqS14h62oxzpyWDfAPyiu2A795Wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jnJn2U9V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="DXWpEGv2"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1f9cd92b146so6115415ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 12:29:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1719602960; x=1720207760; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5xPRpsgl/H+8pkY47exDM4qJKohWo7yc1tfpOseq8z8=;
-        b=DXWpEGv29Cb4R+6l2MfqIDK9dHKOuPrbQAzI485L2Ev4ko6o9zynFerVo4nuWQvb3M
-         MPxiQMctZyzR3G0v1f3o2Lr7YdLSvEwL7Br+VJnAqFwPgQeBUh3T9R3acLU9rgsJ/Z5a
-         +lsiofwvi2doFifwjaiMQ/roRmUziaNvBAWPzVIME8klQ+s3kpTfAGZbAuEgqe/IlAZ2
-         nCmqLTasENbh48U216fbAApSp0mz06Z4EqkkKgPoMlKLFR5q+mFSTgS8grLp+CEi3rf2
-         Ln2SEsuB9vEZ72hFwTMg4zWajZiZ9oy9xEsFHD8r9UcHOk2DWGpFT0iMfSffUky29JLD
-         sLjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719602960; x=1720207760;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5xPRpsgl/H+8pkY47exDM4qJKohWo7yc1tfpOseq8z8=;
-        b=ou50KOI/iAAiLadpbvG1ln59Sy4oN3eMtceF7puK6E3YiMPtjQGCFzpzdiwzx444kt
-         3ovL0Hk5RSzxMYSPohDe2omJEyAGC8xI2vXqLAMdPNvLGZ3H9KLXegdw/J1hH57PaToC
-         0vFKvhQaVngMmX4eTzd7/jhes5K/WkT0pErOWV3+RxOyFDl1JY3FUOBKsGR30E8aLdFp
-         afLzp2jGBE6QaDqoGct8NYHkLyP4kRopoPcwtjoHSGGAZcOaMNL+JOE8a7bJK71cLg1E
-         VhQak6oADZu2M/uOXBYDU9wU0jHY+Dl4qBpUFnaZ9yH1GIHjo03uVhVj9kZja4oXKevU
-         DLxg==
-X-Gm-Message-State: AOJu0YyWDeyckSPMy3TwcU9zOnsKEIzgmFfGibkLUqClvOXgMiyT0nlb
-	9JTkkcdTQ+ZUXv36PGDjrLUZDZE3axVXW7l2DXjqTsdMKf0i2o3WMArDZMwXw5g=
-X-Google-Smtp-Source: AGHT+IGN4V3WQ+bZg/hIDvfL1eE+CSZDNCRpj2FF5oibFSD0nwx2qai+UXKuqCwfy67ORNtNAQbdyg==
-X-Received: by 2002:a17:902:f685:b0:1f7:2050:9a76 with SMTP id d9443c01a7336-1fa1d3de5bcmr216527205ad.8.1719602960477;
-        Fri, 28 Jun 2024 12:29:20 -0700 (PDT)
-Received: from fedora.vc.shawcable.net (S0106c09435b54ab9.vc.shawcable.net. [24.85.107.15])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac10c8f1asm19095985ad.48.2024.06.28.12.29.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 12:29:20 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	will@kernel.org,
-	longman@redhat.com,
-	boqun.feng@gmail.com
-Cc: linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [RESEND PATCH] locking/ww_mutex/test: Use swap() macro
-Date: Fri, 28 Jun 2024 21:29:00 +0200
-Message-ID: <20240628192900.542196-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jnJn2U9V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24724C116B1;
+	Fri, 28 Jun 2024 19:30:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719603023;
+	bh=ye6Xuii5TXxpYf0CfrgPnALJ0r4UWESs4M4nurh1zfg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jnJn2U9V3pDIUpRXYaeIfLw1l6cV3DfVRKA/3+Jdf37cZ87Nde7z7zzhHz4as9er+
+	 sLdqQqjQQWGd8XreetEX3Of3AOEy+16BL5FQ02VYNZBiB8dArs3U//NRLikBH0dNob
+	 pQ+uT8TsOve5+Unv6/9Alb0op2B2x2AaFW2KlzL+4Kf+IrKrGT3RkkiRAi1Q8pe/q1
+	 PBCvqCbcLFPAvGnIQXj9lG3IV4HKM+wA8IYDFgzC2auQTO5neRAzaOmrJLg9L1Nl7w
+	 1ZOTggS7ptyJOV46/D35n11s1nUpiRiMqJviV61K0p1tIJOtSzdvrv5jZBea7VVplz
+	 GTIb74DjEUydg==
+Date: Fri, 28 Jun 2024 16:30:20 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: namhyung@kernel.org, Yang Li <yang.lee@linux.alibaba.com>
+Cc: peterz@infradead.org, mingo@redhat.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Abaci Robot <abaci@linux.alibaba.com>
+Subject: Re: [PATCH -next] perf: pmus: Remove unneeded semicolon
+Message-ID: <Zn8PTKYPAehGaZ2D@x1>
+References: <20240628053049.44521-1-yang.lee@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240628053049.44521-1-yang.lee@linux.alibaba.com>
 
-Fixes the following Coccinelle/coccicheck warning reported by
-swap.cocci:
+On Fri, Jun 28, 2024 at 01:30:49PM +0800, Yang Li wrote:
+> ./tools/perf/util/pmu.c:1776:49-50: Unneeded semicolon
 
-  WARNING opportunity for swap()
+Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Compile-tested only.
-
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- kernel/locking/test-ww_mutex.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/locking/test-ww_mutex.c b/kernel/locking/test-ww_mutex.c
-index 78719e1ef1b1..252bef786aef 100644
---- a/kernel/locking/test-ww_mutex.c
-+++ b/kernel/locking/test-ww_mutex.c
-@@ -402,7 +402,7 @@ static inline u32 prandom_u32_below(u32 ceil)
- static int *get_random_order(int count)
- {
- 	int *order;
--	int n, r, tmp;
-+	int n, r;
+- Arnaldo
  
- 	order = kmalloc_array(count, sizeof(*order), GFP_KERNEL);
- 	if (!order)
-@@ -413,11 +413,8 @@ static int *get_random_order(int count)
- 
- 	for (n = count - 1; n > 1; n--) {
- 		r = prandom_u32_below(n + 1);
--		if (r != n) {
--			tmp = order[n];
--			order[n] = order[r];
--			order[r] = tmp;
--		}
-+		if (r != n)
-+			swap(order[n], order[r]);
- 	}
- 
- 	return order;
--- 
-2.45.2
-
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9443
+> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+> ---
+>  tools/perf/util/pmu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index c94a91645b21..884eb23445e4 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -1773,7 +1773,7 @@ size_t perf_pmu__num_events(struct perf_pmu *pmu)
+>  	size_t nr;
+>  
+>  	pmu_aliases_parse(pmu);
+> -	nr = pmu->sysfs_aliases + pmu->sys_json_aliases;;
+> +	nr = pmu->sysfs_aliases + pmu->sys_json_aliases;
+>  
+>  	if (pmu->cpu_aliases_added)
+>  		 nr += pmu->cpu_json_aliases;
+> -- 
+> 2.20.1.7.g153144c
+> 
