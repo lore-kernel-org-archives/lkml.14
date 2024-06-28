@@ -1,121 +1,110 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B51B780034;
-	Fri, 28 Jun 2024 21:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971CB7F7FD;
+	Fri, 28 Jun 2024 21:49:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719611273; cv=none; b=PjVVZnBwNO54K3h8SeGgyTxVDRVOa9c1PkzMaXbA5WtG1LyM8tNwvgwz4LRBbQFNESNmaIJl41zbKnXd1S/G4+r7UTH9Hrl17SUhNjcUremnnKtFPXHmsjRuzRW/HE8rWtFeRWinih+bWVkXa1YooxpYwpgEoX9yl5RFow37zDE=
+	t=1719611358; cv=none; b=RUe+lwUk9ewvyKNE606ZFm+nN07kZH8K1RGn1wvpdZPQXPWMOYjdfOKocBn6/0yLUNlsLiEGWdI7B37CYaIw5RAx9/o7IiFUggRycW0KIGujAXzc7cGGvvFjJ3czxoQonb4c4UUH9YWlTuUTfmbMyXxFl57fZrIRWemirIimzFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719611273; c=relaxed/simple;
-	bh=B/8tZDJsGVsaLODreD1PIpyCj/+GdBxQ3ATGY0y3Po0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kBwJ37KsXR8QhElszE+kRSEkygvlV3DoA6FfK96cOcUPIanzyyikvds/Cw0SzKX3ztpepxMXNCKstXW8I55ACXXcEUtQRLGz2cqGR2R0a+VVBdvvPFvmmU0gMdHeovumtj8MXQkELSRfNmZaqO+JKs8zGxojc3BDKDgcyExybDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=pdyKr325; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1719611358; c=relaxed/simple;
+	bh=Gm3uzSK01WHfzpCFwX1j3v9baN6wsVz03pWs1rR44j0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OiAXUXXJY6ed4zPyKR/eD9fTikHyDiuSYZVqAGrHWrQ5aaQr90DmrTMb6TPro0xZVUKoptBi/ocoojU+5HKDT4DiAxZm7ULPVzxu79iwruNDDMk6ZlSrXEcT0n5FlLETRekwwLNREG+WQgv0cXbCqbn2nGOTpbvG3wPnkQpCkU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PCa9YJm0; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="pdyKr325"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1719611250; x=1720216050; i=w_armin@gmx.de;
-	bh=VA8OHoFyFxNsoLyIQwYK59+hH83W2X16hxmTj+3risE=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=pdyKr325ds91WRMkamNsTr/XbH63AkeSgMqcGq9nMyOrAAQEnNgI6taCXeVHSC5d
-	 7QLqICg4m3ORyeSlhF1gbr05STf+po9DKbRDSdoLou4jwaQZ4KZfomaAW+jDMZMEI
-	 VKxWfQjpzkDQBluKDlgiJI7iBz8xoEWk12VRjbXIMtAgeCNpRutd7BNMb5DG9vH3y
-	 GrdIefFXPsTsQv6X4QCA+QlmzG7ZhzpKdPVwoTUrfKfLno+D6Mrai3uPUmzVPTOCI
-	 BtDkSXNfGAvhmriEPLPddOLVHySVdcAj4Wta48dFaS+38R0ezVUY+mwHDV0NSkPUz
-	 FK8WTgiEKrzVWr76GQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MulqN-1seI1h1KUt-00t7wm; Fri, 28 Jun 2024 23:47:30 +0200
-From: Armin Wolf <W_Armin@gmx.de>
-To: pali@kernel.org
-Cc: jdelvare@suse.com,
-	linux@roeck-us.net,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] hwmon: (dell-smm) Add Dell OptiPlex 7060 to DMI table
-Date: Fri, 28 Jun 2024 23:47:23 +0200
-Message-Id: <20240628214723.19665-1-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PCa9YJm0"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45SHUJfW000516;
+	Fri, 28 Jun 2024 21:49:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	c+eqiZZZBJlTVcEWYk6Ms1fjTZb6pA2VJtBXo4e5ldA=; b=PCa9YJm0Fh8wgnn+
+	hNoXXsEpXu5iHuwB5+XwK0IPO+MuPUzbOgnn2QV4kxIruGsw4NW3BU9OTtvyQB+a
+	elScOBsUmquLKFR4+6SVOxyRu30ntro0zuGkLuVvCxHlz2Zxg2XqDqKya4FScp6R
+	E6L6Pv1onCtKKZc+ntr48ZL3X2JHs/SHNulBNjsjvh6C+MOTQW+oG0MZ+kehzj4x
+	IXyPPyUsWIPYuaHYhp2MXZzu8XgWI+VfXx4iYdcTNRn8qJdG9l7mlndBl29V1lyI
+	oYTY1LPHKsVl7U9r7mVSgo1twglViSJExrV0z3bFQWGADUByMcbaoqylKrmLRQyz
+	5agqxA==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 401ubvsxyb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Jun 2024 21:49:06 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45SLn6ng029591
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Jun 2024 21:49:06 GMT
+Received: from abhinavk-linux1.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Fri, 28 Jun 2024 14:49:05 -0700
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+To: <freedreno@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@linaro.org>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, "Daniel
+ Vetter" <daniel@ffwll.ch>
+CC: <dri-devel@lists.freedesktop.org>, <quic_jesszhan@quicinc.com>,
+        <swboyd@chromium.org>, <dianders@chromium.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 4/5] drm/msm: switch msm_kms to use msm_iommu_disp_new()
+Date: Fri, 28 Jun 2024 14:48:46 -0700
+Message-ID: <20240628214848.4075651-5-quic_abhinavk@quicinc.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240628214848.4075651-1-quic_abhinavk@quicinc.com>
+References: <20240628214848.4075651-1-quic_abhinavk@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:edCRx5YbhlfbA5nZqBnVML37Fv32WAzxjXHbspgsi0Io7Z+yFC4
- l+VmUGRSOddmhnPeGHXVA/tVTaLp2svvZO8FYTFqzqzjh/6eWjwazfOHL0gwoHyqzjl5F4/
- BNn10veGLkZnv2vjLigKQd/rpbjL/7X9AGhz7xbY5vrE+bykCoSx1tAifD4r5a09eFnAxFg
- UxldkEJsc6bgTD8/EAM3g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:e3gYM6X2Pmw=;rWgXJM43Zx8LD6ixVfTkZpEFFcc
- Lju95X/jBfQwzwS6JtuZ2vK8iuRhXpLbZZMozycgVApGiNx5o4qALm8uM/OXbv0GCrgw7XHOs
- /SUo/2EZAVVYRIc2n+SZZa4MA+yKQGkC91WkSNVfrvda2VEn1ePFrxkD4Hz1vlZ5iI4wG8NT+
- 5ODFp1QifXes6J7W9iTanWJxOyN3aeWUB/MQ5S3lJM9bo5pTvzEL/OGD1tfiXzm6A9F1SM9r4
- rMHalKHXmOHZ50dIQmBtTu8AMClTl0YfPiHH9zjvgmGhEeIZ3bTDPxl39pYmYRVTxxP10xgfi
- mbGoTQqFdwDcQzYDxL8VBLfBX1atRKNp6cQIaLZildShX59BuGKVZkLPUw6lpqKlav+RcSYuT
- Dfi65nAXTPYxTT1yE6EU/ZaI4eHQB2cAeIGt1c8GHQQY7il+yACjx/Xj2aX0qDZk+Dmel9NCt
- EU0AY+vvi+95Vbqpm/bFmYPruVRdVCWPEW/xhmg9wMM5w2pZ8/2fjHZwojtI10MgK+1E4JWZI
- 6NWVh/8LVhlBeu+xZFHh+k96xAPbNCt1mERpS09jLZP9CXPz6c4I0Xp6mFZ47Dz2W3L7sFS4T
- OEJsg3a4dEuhMLA0w+2JwW6doIaAWej4E86d9OZ7HB/tb0zcpu2oLiiE22DIsLTmm0E/cLxx8
- lrVhKyff6OKHd1RhibqMnNejEWNprHtP7s+gG9khc6WE31srMywNUnHgoFHX3MB/hxn46hYtY
- CA2hnRpfQhbUwMFZVr1VANdA/LAS5tI91Ka3c4YK2mYhVFTZZkQqX7mujFTfOfgHJJfKYRVP5
- YmCtzB0sComymoyM6LAh6MnrGK7R21Iy4OusZ70gNDl54=
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: LWQpNDELOL2zwqhZv22QO_0HS1FMfJi_
+X-Proofpoint-GUID: LWQpNDELOL2zwqhZv22QO_0HS1FMfJi_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-28_16,2024-06-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ bulkscore=0 clxscore=1015 suspectscore=0 spamscore=0 mlxlogscore=999
+ adultscore=0 impostorscore=0 lowpriorityscore=0 priorityscore=1501
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406280164
 
-The BIOS on this machine is buggy and will in some cases return
-an error when trying to get the fan state, but reading of the
-RPM values and the temperature sensors still works.
+Switch msm_kms to use msm_iommu_disp_new() so that the newly
+registered fault handler will kick-in during any mmu faults.
 
-Closes: https://github.com/vitorafsr/i8kutils/issues/38
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- Documentation/hwmon/dell-smm-hwmon.rst | 2 ++
- drivers/hwmon/dell-smm-hwmon.c         | 7 +++++++
- 2 files changed, 9 insertions(+)
+Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+ drivers/gpu/drm/msm/msm_kms.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/hwmon/dell-smm-hwmon.rst b/Documentation/hwmon/=
-dell-smm-hwmon.rst
-index 977263cb57a8..74905675d71f 100644
-=2D-- a/Documentation/hwmon/dell-smm-hwmon.rst
-+++ b/Documentation/hwmon/dell-smm-hwmon.rst
-@@ -360,6 +360,8 @@ Firmware Bug                                          =
-  Affected Machines
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
- Reading of fan states return spurious errors.           Precision 490
-
-+                                                        OptiPlex 7060
-+
- Reading of fan types causes erratic fan behaviour.      Studio XPS 8000
-
-                                                         Studio XPS 8100
-diff --git a/drivers/hwmon/dell-smm-hwmon.c b/drivers/hwmon/dell-smm-hwmon=
-.c
-index 48a81c64f00d..c75bfe93f2f6 100644
-=2D-- a/drivers/hwmon/dell-smm-hwmon.c
-+++ b/drivers/hwmon/dell-smm-hwmon.c
-@@ -1263,6 +1263,13 @@ static const struct dmi_system_id i8k_dmi_table[] _=
-_initconst =3D {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "MP061"),
- 		},
- 	},
-+	{
-+		.ident =3D "Dell OptiPlex 7060",
-+		.matches =3D {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "OptiPlex 7060"),
-+		},
-+	},
- 	{
- 		.ident =3D "Dell Precision",
- 		.matches =3D {
-=2D-
-2.39.2
+diff --git a/drivers/gpu/drm/msm/msm_kms.c b/drivers/gpu/drm/msm/msm_kms.c
+index 2d7c5a5e22e0..d5d3117259cf 100644
+--- a/drivers/gpu/drm/msm/msm_kms.c
++++ b/drivers/gpu/drm/msm/msm_kms.c
+@@ -192,7 +192,7 @@ struct msm_gem_address_space *msm_kms_init_aspace(struct drm_device *dev)
+ 	else
+ 		iommu_dev = mdss_dev;
+ 
+-	mmu = msm_iommu_new(iommu_dev, 0);
++	mmu = msm_iommu_disp_new(iommu_dev, 0);
+ 	if (IS_ERR(mmu))
+ 		return ERR_CAST(mmu);
+ 
+-- 
+2.44.0
 
