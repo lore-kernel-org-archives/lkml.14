@@ -1,250 +1,289 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2084.outbound.protection.outlook.com [40.107.236.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3A9D27E;
-	Fri, 28 Jun 2024 19:07:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719601628; cv=none; b=cVrYQH3iDIz+aw6ppBHGAYJSj1OuLGJuCAbj1+Of6nCTppMmi2g+tbYYb7GQdmHN41XFoFe6bfxRs9l5NeraeU8zrHtqzs+7MocC7JyJyqE2HFE8gJuWGJi0y+paHCvgN4NGVAGBpk0vHH8Fmn/C4tNzgjOLUpxMiyPkeDpWDDI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719601628; c=relaxed/simple;
-	bh=RyPLhi7w8OO9gyuCrd5ByF7VZMJeWMWpNRSDkOtxo5c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fj3tjldOmk+3BkGHl7RUKI1ee3s4I8eC2op4QZf/GkOYDauwAY/pMyhkhhY0Sh2+A47HcoB1F3APHnH7sD/57pISFq7ZJfknLT8c9zgJpskGKuCLdDUI5lsCQnfiS9tMhPUpJGgNNfmyx8+35NfBZi6eRatAC0RG3r7he+cc3TA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oCgugXBT; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21DF7407D;
+	Fri, 28 Jun 2024 19:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719601635; cv=fail; b=rj2cNdrJ76/RLKwKKIfbeqAvteHRPe4+A08tdRxWFT8aSHuphiNoqMKA1y5YQxEMEMVcuUXOczvQgfq2bh56M08DYYVKop4nw7XLYewzdjVaweIbrPFhVxzfeGg48PUQkp8Z3K4u5iA0nX206Y6r0Lmp/XWlgnz8Ou2cFZxqQS4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719601635; c=relaxed/simple;
+	bh=vZFv3KZ6ihnKKNTwhHm2QXa7biBRbfN8WP/JwPgZV0I=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ApS4UMMG21SlIDBoUe+5LdFNh/rodMBPZgx3bRV/c4+HbMc61+llmXncnOXe9lnvoTF2PpdH83WEN9DXHgdlBEunKTavrY4RU6goKTKfQVdpNRDoHVYt3n9cmhqaMxyztmCLRtlusjOqkJKNZtwPWTEGWQE7C2SWEGzZ7gyq3Ic=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=5fPqxj77; arc=fail smtp.client-ip=40.107.236.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oCgugXBT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33532C4AF0D;
-	Fri, 28 Jun 2024 19:07:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719601628;
-	bh=RyPLhi7w8OO9gyuCrd5ByF7VZMJeWMWpNRSDkOtxo5c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=oCgugXBTOWJhoHrdKScGOZEezZxFxvQ17x9WgEa9sdniy5b4IQ4VQqGmxYC1Eo/+T
-	 crDc0D6eNycyjbvXwca0AfcoySWqEexYQfIa2P+JJHraI5aTdOZWaesE76PdRQ8zCT
-	 TQX6D96uKVJhDkhShqHhwRCY9oOwv5qc/vW5DKGAFmpO0Bi7O+VGLDJ/wn1+pkxhRZ
-	 zVagycpmhn10DAtJWybzRSQPA30B4bl/Cfs0LK0nStF4eC8cRL/R3jPIfYh/YtJkap
-	 OCjZmEMdJYvpaunfsOxrNtWv3jsF9yewPq12KlUg93BJMwJ+uVjDm36bROXvK/tKwi
-	 i/f2Wk71o9vNA==
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-24c582673a5so131802fac.2;
-        Fri, 28 Jun 2024 12:07:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW4+/fxSnPOd7N2gQ4NERUy5ur1COv6xM1nTUO9PnjQpmkA9SLBFlYccazLrVCHCX2gVctFD1alueVW2GJJ/WGEUeuwoIa0TlAfwiTz
-X-Gm-Message-State: AOJu0YyT3DPc022gLg9o3suwmHWzRirQP//HhicIevUCeCYWod88pshw
-	3uVsoH4oeoKTPwAZMobWIYKL7KlBAUzZNO1oPKAbocteq6hgIoDR/aoVfG37D3WVvY05bKq4P0t
-	yM8xXoF4vzvt6RuxNqtO7rYgKWV8=
-X-Google-Smtp-Source: AGHT+IHgptNGEYMDc8VZ8L/UAWHsLquuhFvV/QDBvFlP2qT6gSAJeDmhjr3fHia7sZmPfECMkzWFulECjLdiiktMCqs=
-X-Received: by 2002:a05:6870:4208:b0:25c:ad1f:b335 with SMTP id
- 586e51a60fabf-25cf3fdb5f6mr20290991fac.4.1719601627441; Fri, 28 Jun 2024
- 12:07:07 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="5fPqxj77"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZkTEbhvmhJDHuxDxBLyc3Ie+47x3+Dmz594psLNMInehzt5qPvUaB7WZ9xQfnJpatuaI9Z53q8yGHIg2prYLtP3kH47HUD5fL3Lxa5fydAPg5BhLnYMgDWKSszngAl/aIadn0mx3eEnl4bu8XycauRRo0zA8FVkdKhMHrXlB3HZ6rJ7ONREZwMbplGYkxclw5gHbE0lmDidZNTyisvs69srZjMpXeBxFJZ6ptoD4bOdjEA/oF7KqT1aqR/aZdo9DFBBaOgbP2JpWORw0YaFXKYm7rL8jH0c+JDTJZtcreY+tBDHUMTOCSaqrBW0V+rdpcQWaCFhlLn20eteMyN9THw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8pb1E/sJeQuEWq+xtS85vWCPlEeOuQlEq0PYaVOdGhI=;
+ b=K+V7FaO7v0NbbMaA1cGqP33gPpArNA+dl+3+1gK/dadspq/EjIyrvYjQ+riqBeWRAK0xnzcbV8s6eWBoW9VWWLf609deHS50bnf+47zM8tXvwgPQX0jPvzrNnZ4GujbR43a2bLhGrXjXwBaMmyqsYBVP3dmZjRgoqpJfAL4sRWnluFZRnfemEaj8xKR8M/QpswjlR2+3Naj6ewl2gT66YGy6tkl2+LB0A0PbFqbp4rq7GZXIffus32Yv0tQH6cC5CgB1GJ5gcHVrsu2BQ3fIwxrzyVVjSgWdhow2YrUeL8v+IibUJ3no6OlvyUo0POFDsvF+48yDFKa2s7UGaASyXw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8pb1E/sJeQuEWq+xtS85vWCPlEeOuQlEq0PYaVOdGhI=;
+ b=5fPqxj77uj5OwSCdWZeH91bJPWh0JxHdpSyKPxxLoje9YnjM3rj/JT7UfoJsCXC5Dk85OzgUbKsks0X4N4+swQl9b72vHL9hqONBPzbUeqot6JI5tkkbsDQEZ3K3KuZAqtFRa0bpQCIxbkbrKZTjuNraV1nUoZ61VF1Wvm58GnU=
+Received: from CH0P221CA0030.NAMP221.PROD.OUTLOOK.COM (2603:10b6:610:11d::18)
+ by MN0PR12MB5978.namprd12.prod.outlook.com (2603:10b6:208:37d::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.32; Fri, 28 Jun
+ 2024 19:07:09 +0000
+Received: from CH1PEPF0000AD78.namprd04.prod.outlook.com
+ (2603:10b6:610:11d:cafe::2f) by CH0P221CA0030.outlook.office365.com
+ (2603:10b6:610:11d::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.28 via Frontend
+ Transport; Fri, 28 Jun 2024 19:07:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CH1PEPF0000AD78.mail.protection.outlook.com (10.167.244.56) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7677.15 via Frontend Transport; Fri, 28 Jun 2024 19:07:08 +0000
+Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 28 Jun
+ 2024 14:07:08 -0500
+From: Michael Roth <michael.roth@amd.com>
+To: <kvm@vger.kernel.org>
+CC: <linux-coco@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<x86@kernel.org>, <pbonzini@redhat.com>, <seanjc@google.com>,
+	<jroedel@suse.de>, <thomas.lendacky@amd.com>, <pgonda@google.com>,
+	<ashish.kalra@amd.com>, <bp@alien8.de>, <pankaj.gupta@amd.com>,
+	<liam.merwick@oracle.com>
+Subject: [PATCH v2 2/3] x86/sev: Move sev_guest.h into common SEV header
+Date: Fri, 28 Jun 2024 13:52:43 -0500
+Message-ID: <20240628185244.3615928-3-michael.roth@amd.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240628185244.3615928-1-michael.roth@amd.com>
+References: <20240628185244.3615928-1-michael.roth@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240628095955.34096-1-christian.loehle@arm.com>
-In-Reply-To: <20240628095955.34096-1-christian.loehle@arm.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 28 Jun 2024 21:06:56 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jPyy0HgtQcSt=7ZO-khSGex2uAxL1x6HZFkFbvpbxcmA@mail.gmail.com>
-Message-ID: <CAJZ5v0jPyy0HgtQcSt=7ZO-khSGex2uAxL1x6HZFkFbvpbxcmA@mail.gmail.com>
-Subject: Re: [PATCHv3 0/3] cpuidle: teo: Fixing utilization and intercept logic
-To: Christian Loehle <christian.loehle@arm.com>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, rafael@kernel.org, 
-	vincent.guittot@linaro.org, qyousef@layalina.io, peterz@infradead.org, 
-	daniel.lezcano@linaro.org, ulf.hansson@linaro.org, anna-maria@linutronix.de, 
-	dsmythies@telus.net, kajetan.puchalski@arm.com, lukasz.luba@arm.com, 
-	dietmar.eggemann@arm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD78:EE_|MN0PR12MB5978:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4df05f16-5a00-46c9-3b60-08dc97a58238
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|36860700013|376014|1800799024|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?YHIWuxZ62Sj95EY6a9B3lyqoxypQxdXS9X1xP8ZmjpqzuHur5Dd9Lzd3BZUS?=
+ =?us-ascii?Q?5yJCwKl08Y6fSGvoWkZIXRJbki5e72FFWW3HWMM1pMKZPVVJYBBibdoh60u+?=
+ =?us-ascii?Q?nQtUHCRG9TbfnINq5xTfEarx5UDEpeyVxmVwVLR3wLZAG0lpEW0D/PKGQuQ4?=
+ =?us-ascii?Q?5dDbmXcEubuG00KgnShCJoJlAs1jqFBIDt/EYDD2PuN3856ryr6U9+L2dLi4?=
+ =?us-ascii?Q?+KA5nEbActEv+rn4cJ/KdJdXt7K4kReHgLsIwoQ0jOrQuhqE7PumzERoH5ci?=
+ =?us-ascii?Q?txS3k6KW64s1PRNyarZsB9CmVCaM2n2Yt2QhPMMxoLSCJWsdX12fl6sgMtU/?=
+ =?us-ascii?Q?jiXmagAg65EV7hcp3NyuyjzmwvqrKlC7e8VoITtcs7GyIscIfDNLRqRn01OG?=
+ =?us-ascii?Q?b+e8FJnHcHbhSaiOmxQi6mi49NRt+k5ZZ68XPlwCMajYJrFQ5iXXwYSuV5fx?=
+ =?us-ascii?Q?+SsEJpK0i1ozJ/qC9ySp8PGVTVctWe2C57YVdnJF2Uk8vfLqLaAoVigXZoJk?=
+ =?us-ascii?Q?BJMX+bPJXJrKKEJnewJwwmCeesE1bpiIgblJ3jaDfkDkSxmKQyfrC4bHcQFh?=
+ =?us-ascii?Q?04X5q2xKdBYd9j2K69TLewmRDziFwRN48gmZq1lDsuUnILUQJMoiCQyU2fKe?=
+ =?us-ascii?Q?k29JGUDwHMHSlQdAZgVvP+Ra6jgCA4FGqBAA87UxjV8ByXCydn96ILrl8Ivt?=
+ =?us-ascii?Q?GKDBjCEvJFwFEUvUP5D3S2fWFFgATNTDqBFMVRGTakwLgCUSqmXDZtgw/NyG?=
+ =?us-ascii?Q?DBpbIHz330DJqPy2bkgttZ9U6ABsgniPzpThccMHP6+eUUqmrcpZjCrJ1POt?=
+ =?us-ascii?Q?t83MTYar2j/ozBRnSptsFmhA6/1P1ELZ3IqmA++swuSO5/j6Biwq16M6vADe?=
+ =?us-ascii?Q?WncXS65zz+c+bkplIQjWfMiS1EmyHADWzyU1vA7QcOnj9NNNz+5AykhHD+N+?=
+ =?us-ascii?Q?YQJOr/frA4Qry4vjEW5pt4kcYE0xElvg2puuSmObiwdDMEh4zkr0nawwd4w7?=
+ =?us-ascii?Q?H0vLNFYK584GVj+r3vZZEN25ir5JKQ5nqsmAlxnCcFAy+8nWqAi7/X23HmKx?=
+ =?us-ascii?Q?+cN5S4L3pGbd2iPCv6l21fP5GmS0kHwk31s5zdV0VRu4vap56Z0VTNPHZPLf?=
+ =?us-ascii?Q?iuc3HdWHIOQbcwYS54b34KbHGFOVICVkkkmIFGInFltF6bfhqaE9Jb317Ogw?=
+ =?us-ascii?Q?rmR7cstCy78/s4D6H31S/UoWHJNByK8Jiqj2dBkGsabl/vV+mwvb0s8ITneK?=
+ =?us-ascii?Q?YevJBGwkN32sMs8k2dBRYa8EmY3tteIKMGFh47RpHcRMvLxNapMkVJf3P7kn?=
+ =?us-ascii?Q?j4PLYtj+ENIXZbsxW3pyKH3NSUNat0r6CpFq6PTv+RXuhIFkokS3Pxw+z3Gq?=
+ =?us-ascii?Q?9/7b/PIjPJ+/6khJ7EGoMUBMf/yhozGxr+MaOK9FUmWjkJuc0w=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(36860700013)(376014)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2024 19:07:08.9107
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4df05f16-5a00-46c9-3b60-08dc97a58238
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000AD78.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5978
 
-On Fri, Jun 28, 2024 at 12:02=E2=80=AFPM Christian Loehle
-<christian.loehle@arm.com> wrote:
->
-> Hi all,
-> so my investigation into teo lead to the following fixes.
->
-> 1/3:
-> As discussed the utilization threshold is too high while
-> there are benefits in certain workloads, there are quite a few
-> regressions, too. Revert the Util-awareness patch.
-> This in itself leads to regressions, but part of it can be offset
-> by the later patches.
-> See
-> https://lore.kernel.org/lkml/CAKfTPtA6ZzRR-zMN7sodOW+N_P+GqwNv4tGR+aMB5VX=
-RT2b5bg@mail.gmail.com/
-> 2/3:
-> Remove the 'recent' intercept logic, see my findings in:
-> https://lore.kernel.org/lkml/0ce2d536-1125-4df8-9a5b-0d5e389cd8af@arm.com=
-/
-> I haven't found a way to salvage this properly, so I removed it.
-> The regular intercept seems to decay fast enough to not need this, but
-> we could change it if that turns out that we need this to be faster in
-> ramp-up and decaying.
-> 3/3:
-> The rest of the intercept logic had issues, too.
-> See the commit.
->
-> Happy for anyone to take a look and test as well.
->
-> Some numbers for context, comparing:
-> - IO workload (intercept heavy).
-> - Timer workload very low utilization (check for deepest state)
-> - hackbench (high utilization)
-> - Geekbench 5 on Pixel6 (high utilization)
-> Tests 1 to 3 are on RK3399 with CONFIG_HZ=3D100.
-> target_residencies: 1, 900, 2000
->
-> 1. IO workload, 5 runs, results sorted, in read IOPS.
-> fio --minimal --time_based --name=3Dfiotest --filename=3D/dev/nvme0n1 --r=
-untime=3D30 --rw=3Drandread --bs=3D4k --ioengine=3Dpsync --iodepth=3D1 --di=
-rect=3D1 | cut -d \; -f 8;
->
-> teo fixed v2:
-> /dev/nvme0n1
-> [4599, 4658, 4692, 4694, 4720]
-> /dev/mmcblk2
-> [5700, 5730, 5735, 5747, 5977]
-> /dev/mmcblk1
-> [2052, 2054, 2066, 2067, 2073]
->
-> teo mainline:
-> /dev/nvme0n1
-> [3793, 3825, 3846, 3865, 3964]
-> /dev/mmcblk2
-> [3831, 4110, 4154, 4203, 4228]
-> /dev/mmcblk1
-> [1559, 1564, 1596, 1611, 1618]
->
-> menu:
-> /dev/nvme0n1
-> [2571, 2630, 2804, 2813, 2917]
-> /dev/mmcblk2
-> [4181, 4260, 5062, 5260, 5329]
-> /dev/mmcblk1
-> [1567, 1581, 1585, 1603, 1769]
->
->
-> 2. Timer workload (through IO for my convenience =F0=9F=98=89 )
-> Results in read IOPS, fio same as above.
-> echo "0 2097152 zero" | dmsetup create dm-zeros
-> echo "0 2097152 delay /dev/mapper/dm-zeros 0 50" | dmsetup create dm-slow
-> (Each IO is delayed by timer of 50ms, should be mostly in state2, for 5s =
-total)
->
-> teo fixed v2:
-> idle_state time
-> 2.0     4.807025
-> -1.0    0.219766
-> 0.0     0.072007
-> 1.0     0.169570
->
-> 3199 cpu_idle total
-> 38 cpu_idle_miss
-> 31 cpu_idle_miss above
-> 7 cpu_idle_miss below
->
-> teo mainline:
-> idle_state time
-> 1.0     4.897942
-> -1.0    0.095375
-> 0.0     0.253581
->
-> 3221 cpu_idle total
-> 1269 cpu_idle_miss
-> 22 cpu_idle_miss above
-> 1247 cpu_idle_miss below
->
-> menu:
-> idle_state time
-> 2.0     4.295546
-> -1.0    0.234164
-> 1.0     0.356344
-> 0.0     0.401507
->
-> 3421 cpu_idle total
-> 129 cpu_idle_miss
-> 52 cpu_idle_miss above
-> 77 cpu_idle_miss below
->
-> Residencies:
-> teo mainline isn't in state2 at all, teo fixed is more in state2 than men=
-u, but
-> both are in state2 the vast majority of the time as expected.
->
-> tldr: overall teo fixed spends more time in state2 while having
-> fewer idle_miss than menu.
-> teo mainline was just way too aggressive at selecting shallow states.
->
-> 3. Hackbench, 5 runs
-> for i in $(seq 0 4); do hackbench -l 100 -g 100 ; sleep 1; done
->
-> teo fixed v2:
-> Time: 4.937
-> Time: 4.898
-> Time: 4.871
-> Time: 4.833
-> Time: 4.898
->
-> teo mainline:
-> Time: 4.945
-> Time: 5.021
-> Time: 4.927
-> Time: 4.923
-> Time: 5.137
->
-> menu:
-> Time: 4.964
-> Time: 4.847
-> Time: 4.914
-> Time: 4.841
-> Time: 4.800
->
-> tldr: all comparable, teo mainline slightly worse
->
-> 4. Geekbench 5 (multi-core) on Pixel6
-> (Device is cooled for each iteration separately)
-> teo mainline:
-> 3113, 3068, 3079
-> mean 3086.66
->
-> teo revert util-awareness:
-> 2947, 2941, 2952
-> mean 2946.66 (-4.54%)
->
-> teo fixed v2:
-> 3032, 3066, 3019
-> mean 3039 (-1.54%)
->
->
-> Changes since v2:
-> - Reworded commits according to Dietmar's comments
-> - Dropped the KTIME_MAX as hit part from 3/3 according to Dietmar's
-> remark.
->
-> Changes since v1:
-> - Removed all non-fixes.
-> - Do a full revert of Util-awareness instead of increasing thresholds.
-> - Address Dietmar's comments.
-> https://lore.kernel.org/linux-kernel/20240606090050.327614-2-christian.lo=
-ehle@arm.com/T/
->
-> Kind Regards,
-> Christian
->
-> Christian Loehle (3):
->   Revert: "cpuidle: teo: Introduce util-awareness"
->   cpuidle: teo: Remove recent intercepts metric
->   cpuidle: teo: Don't count non-existent intercepts
->
->  drivers/cpuidle/governors/teo.c | 189 +++++---------------------------
->  1 file changed, 27 insertions(+), 162 deletions(-)
->
-> --
+sev_guest.h currently contains various definitions relating to the
+format of SNP_GUEST_REQUEST commands to SNP firmware. Currently only the
+sev-guest driver makes use of them, but when the KVM side of this is
+implemented there's a need to parse the SNP_GUEST_REQUEST header to
+determine whether additional information needs to be provided to the
+guest. Prepare for this by moving those definitions to a common header
+that's shared by host/guest code so that KVM can also make use of them.
 
-Patches [1-2/3] have been applied as 6.11 material.
+Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+Reviewed-by: Liam Merwick <liam.merwick@oracle.com>
+Signed-off-by: Michael Roth <michael.roth@amd.com>
+---
+ arch/x86/include/asm/sev.h              | 48 +++++++++++++++++++
+ drivers/virt/coco/sev-guest/sev-guest.c |  2 -
+ drivers/virt/coco/sev-guest/sev-guest.h | 63 -------------------------
+ 3 files changed, 48 insertions(+), 65 deletions(-)
+ delete mode 100644 drivers/virt/coco/sev-guest/sev-guest.h
 
-Patch [3/3] looks like it may be improved slightly, see my reply to that pa=
-tch.
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index 1936f37e3371..72f9ba3a2fee 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -119,6 +119,54 @@ struct snp_req_data {
+ 	unsigned int data_npages;
+ };
+ 
++#define MAX_AUTHTAG_LEN		32
++
++/* See SNP spec SNP_GUEST_REQUEST section for the structure */
++enum msg_type {
++	SNP_MSG_TYPE_INVALID = 0,
++	SNP_MSG_CPUID_REQ,
++	SNP_MSG_CPUID_RSP,
++	SNP_MSG_KEY_REQ,
++	SNP_MSG_KEY_RSP,
++	SNP_MSG_REPORT_REQ,
++	SNP_MSG_REPORT_RSP,
++	SNP_MSG_EXPORT_REQ,
++	SNP_MSG_EXPORT_RSP,
++	SNP_MSG_IMPORT_REQ,
++	SNP_MSG_IMPORT_RSP,
++	SNP_MSG_ABSORB_REQ,
++	SNP_MSG_ABSORB_RSP,
++	SNP_MSG_VMRK_REQ,
++	SNP_MSG_VMRK_RSP,
++
++	SNP_MSG_TYPE_MAX
++};
++
++enum aead_algo {
++	SNP_AEAD_INVALID,
++	SNP_AEAD_AES_256_GCM,
++};
++
++struct snp_guest_msg_hdr {
++	u8 authtag[MAX_AUTHTAG_LEN];
++	u64 msg_seqno;
++	u8 rsvd1[8];
++	u8 algo;
++	u8 hdr_version;
++	u16 hdr_sz;
++	u8 msg_type;
++	u8 msg_version;
++	u16 msg_sz;
++	u32 rsvd2;
++	u8 msg_vmpck;
++	u8 rsvd3[35];
++} __packed;
++
++struct snp_guest_msg {
++	struct snp_guest_msg_hdr hdr;
++	u8 payload[4000];
++} __packed;
++
+ struct sev_guest_platform_data {
+ 	u64 secrets_gpa;
+ };
+diff --git a/drivers/virt/coco/sev-guest/sev-guest.c b/drivers/virt/coco/sev-guest/sev-guest.c
+index 654290a8e1ba..f0ea26f18cbf 100644
+--- a/drivers/virt/coco/sev-guest/sev-guest.c
++++ b/drivers/virt/coco/sev-guest/sev-guest.c
+@@ -29,8 +29,6 @@
+ #include <asm/svm.h>
+ #include <asm/sev.h>
+ 
+-#include "sev-guest.h"
+-
+ #define DEVICE_NAME	"sev-guest"
+ #define AAD_LEN		48
+ #define MSG_HDR_VER	1
+diff --git a/drivers/virt/coco/sev-guest/sev-guest.h b/drivers/virt/coco/sev-guest/sev-guest.h
+deleted file mode 100644
+index 21bda26fdb95..000000000000
+--- a/drivers/virt/coco/sev-guest/sev-guest.h
++++ /dev/null
+@@ -1,63 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * Copyright (C) 2021 Advanced Micro Devices, Inc.
+- *
+- * Author: Brijesh Singh <brijesh.singh@amd.com>
+- *
+- * SEV-SNP API spec is available at https://developer.amd.com/sev
+- */
+-
+-#ifndef __VIRT_SEVGUEST_H__
+-#define __VIRT_SEVGUEST_H__
+-
+-#include <linux/types.h>
+-
+-#define MAX_AUTHTAG_LEN		32
+-
+-/* See SNP spec SNP_GUEST_REQUEST section for the structure */
+-enum msg_type {
+-	SNP_MSG_TYPE_INVALID = 0,
+-	SNP_MSG_CPUID_REQ,
+-	SNP_MSG_CPUID_RSP,
+-	SNP_MSG_KEY_REQ,
+-	SNP_MSG_KEY_RSP,
+-	SNP_MSG_REPORT_REQ,
+-	SNP_MSG_REPORT_RSP,
+-	SNP_MSG_EXPORT_REQ,
+-	SNP_MSG_EXPORT_RSP,
+-	SNP_MSG_IMPORT_REQ,
+-	SNP_MSG_IMPORT_RSP,
+-	SNP_MSG_ABSORB_REQ,
+-	SNP_MSG_ABSORB_RSP,
+-	SNP_MSG_VMRK_REQ,
+-	SNP_MSG_VMRK_RSP,
+-
+-	SNP_MSG_TYPE_MAX
+-};
+-
+-enum aead_algo {
+-	SNP_AEAD_INVALID,
+-	SNP_AEAD_AES_256_GCM,
+-};
+-
+-struct snp_guest_msg_hdr {
+-	u8 authtag[MAX_AUTHTAG_LEN];
+-	u64 msg_seqno;
+-	u8 rsvd1[8];
+-	u8 algo;
+-	u8 hdr_version;
+-	u16 hdr_sz;
+-	u8 msg_type;
+-	u8 msg_version;
+-	u16 msg_sz;
+-	u32 rsvd2;
+-	u8 msg_vmpck;
+-	u8 rsvd3[35];
+-} __packed;
+-
+-struct snp_guest_msg {
+-	struct snp_guest_msg_hdr hdr;
+-	u8 payload[4000];
+-} __packed;
+-
+-#endif /* __VIRT_SEVGUEST_H__ */
+-- 
+2.25.1
 
-Thanks!
