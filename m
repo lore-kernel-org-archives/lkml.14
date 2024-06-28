@@ -1,61 +1,61 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABDB41879
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 01:11:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E624C99
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 01:11:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719623509; cv=none; b=HueDC4hWgjfVuqJS/IvqqeQwMVOnV2nznS9blSXKXy2A4eIYXA0UKfRTXakVCLKg8TQZ9ZyCVntvtQV8HCILsf9uBtz+B1Tgc/i+Rk2o6oB8OfHof9ZkL1yTaa2gjSBSAqIXxQP17J5iT8Iql4wR5IzZ9x4ktXou3fJxMHURVoc=
+	t=1719623509; cv=none; b=d4SysKhGMBNR0Ft3Ft2smQSWwp24juKjxdYXbiQLtF9l4xIXO/dR5p5XejiACGT12npgYIO6Tz5RJWIBLqXSd3fJWdQgdJTruCnTlDJoUHIz400MGOqkpCVzzGWHidOnkrpl1ioREAVSOul1P7y0Cul39i8G64sGD0ebJTmcymI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719623509; c=relaxed/simple;
-	bh=NmWmB8xJkdpQ6+qsRZ3yNW+0DCBVDLk7Mf7CANqDZmY=;
+	bh=0qHl+0DqNRpvSKTfp02INWgx8IbLG3jiIbFjAdPVnaA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lWv4Pwl3SPo43J3oLDvi2mkmHdckVAdFqVoJvGw3aB4AUEJ3iQOyoeL3NJv0so6MDZSZngEQqT6NNUCaMA6OIuualy/lQDi5GN2SFa2Pu1L3VHesy7k/0z5Rx0eY5eJxqzrB1xWewui4Yi8JPFHRDd6cf7hk0VkFXpXOFzKwMr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=RqSX1oTy; arc=none smtp.client-ip=209.85.166.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZprcFCyyVUNxap5XnFgStas0JNH4+4I2LO0KeY+BD/Tn51rhdhigQ5akW6DTBy+1okLw+qD6EKKVqXHZy/pTDtK0/jHpWsGGRx1t5dVTv9T+5JBWq55CziLuKC94nPgf7ifcfMvl9pQqAR8A7GP9OpLmVQh7zbaTveXaQPzAcIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=dNe2wlNI; arc=none smtp.client-ip=209.85.210.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="RqSX1oTy"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3762c172d93so5456055ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 18:11:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="dNe2wlNI"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7066c9741fbso992758b3a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 18:11:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1719623507; x=1720228307; darn=vger.kernel.org;
+        d=ziepe.ca; s=google; t=1719623508; x=1720228308; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EBVtd4lNh6ldbTw81Bxi6NFxymecp4v8R1CgV33/re8=;
-        b=RqSX1oTy+NnCo89bN4kXTn8OzWyqR/j3I10CZgo3mrpB2ghJ1NWL/T2JMh4MVMM/VG
-         eLhl9KnSr/J8EwlB/0qxvSpDj+VK4WBMBNJbm5UmRaZaggPCYEZYNv9LpYdL7F56XJmG
-         oLCyz7xVtNpmOKxiRCeYrHlEbBp3L+WMEqc5RRX5iXtmgJ2dG+bcrmuMg0kfwdEAsL7G
-         ILHl8pZ+jClGZdwcwZeU40rjHQi51ZuR6eOwf5r0snTOZ/z9keSC0BsNmUsAVRu+w9bB
-         1pIUrCixm3jIdBcyKGC2LZko6n38lSUbCE7qaCBSRtnTbmTy16D6i4vvY294lMAKJDdN
-         6AIA==
+        bh=nhWMM+W00ZGyNJkSp9eBep0aP7iOumSA6mBp+eSCZ4g=;
+        b=dNe2wlNIZgVEMjnOwAvHbfu47LZ1CelvTCch/fdEufOlaiImGSD7yFpLlajmSeD0Ic
+         anWJacao4cVVfBBkLbw0iUu6CjRZt5dFtdu1bZ3JZ9uB8csGi8jYDzXR5lvALs7qk3HM
+         JasB1Ih5bdYP97zahvRJSyfRctcHxtyhSmNwlfiW6PMXx6988O29K61UhzphmMYZXwyz
+         32GN07oii8dL/RZPk3Wv3A4nNE/wr8gl/HrbLxKRh8yxzGM07mWyOrnArhFI6orx6p6K
+         i9PVPjoW5YVZhuvnBso5PIj88zs3MOq/WZHCMK630cvU9JA6jxZD46U5O23j1NsXdMSi
+         l2QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719623507; x=1720228307;
+        d=1e100.net; s=20230601; t=1719623508; x=1720228308;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EBVtd4lNh6ldbTw81Bxi6NFxymecp4v8R1CgV33/re8=;
-        b=aklOx5Bg4r15Efzfj7Pep2qh14mc2a7KOVonJ0P0EAfRT5d6LyfV7i/CyzjM+wprrg
-         5CIKazJhK+aAxAD41LthGSkmXyCZ1vw9x4hrtSkyptk0Y84kLCs1jBX+c23JBS+ELq08
-         KJNF+axHUWhB74BMfhQgmJQ646VLp0zCBCjKyZcK0ymCuWkJcOkDLGUUEOVLJC7BcVTx
-         gEytwTrqGfwtPLCBrwrsV9rzi7AOMhsFWk8DCNiuWf/K+FBe/lmMAo9QEXTLQhYfJH5X
-         KR4VBOtqR7RmsM4XKfO4+u2k+bnehuIvReRHeh3Ii4NFpuLF8xqFKiAu4512txqc4cRQ
-         59sA==
-X-Forwarded-Encrypted: i=1; AJvYcCVklu5KooUNAdrPkTY1IVX/JLarTJKclK9mUHwSPxclm61M0OiOWjiITLbNuH39qZBxvuzOm0cL6mXVXKq7vVx799ueYxCezKjIrlYS
-X-Gm-Message-State: AOJu0YxPiI1IGnBBZ4bGI+Mbh1WMq76piG4HpD9ybRjSnG4+3rX14GoZ
-	zNofwipOIPQvUx2ckLGCGwF17WhYuJxhX0ga1wbaSLGnOpe9sTxQc3TF3fVCCqM=
-X-Google-Smtp-Source: AGHT+IE4QgUFrWMp+tH+7fcsNM5wNf5R+mcyUObJCqnJg+lJpDagM/8QA1d89wQbwLfqFUo7RgzINQ==
-X-Received: by 2002:a05:6e02:20e2:b0:377:14a7:fc99 with SMTP id e9e14a558f8ab-37714a7ff6bmr145245465ab.24.1719623506847;
-        Fri, 28 Jun 2024 18:11:46 -0700 (PDT)
+        bh=nhWMM+W00ZGyNJkSp9eBep0aP7iOumSA6mBp+eSCZ4g=;
+        b=UUmuPGqbnMg8PbjEYQESXJnQbsnTHGYli8YZnIszgeNTpSVtgsMp3LjB57HNGlIDUF
+         vOCCV5A/+tg6SZlQU3m+bODt6UXXsM40J9VVYcSz4gMXIBS0MgSHQdzRnTEsPOEheKzH
+         nBELHbQVd3QcKTjCi4rsMZI9KDDBySVATmRMbf+Ui0NwQB8sk/KmvWTlthI7Usstym8c
+         igcOKUd9QkI2387P6AKwboYW2rA6Z1KxBqDbM3Dq7CjmeGiEqTJcZ9LUS6DGfEzrP4n2
+         1Y1fSKeJrBJVtA44/ZmcneZSfs2plZMxwk0g9Xa91FWApG4psesiN/P26rRd+kxf+wW3
+         pFBA==
+X-Forwarded-Encrypted: i=1; AJvYcCW8EjWPeGVXbD+xJs8rxCTIwItRW01DqS1JEWXR5CPrsf7oybIeFE0+dDssdWLb5QajKO+mwwLmsvOKagg/ktgOCBiG1c+hABBH1m+7
+X-Gm-Message-State: AOJu0YytR1CY5Uka7ChhGU4OUkh+lOexEO0tVSZm2kmWv2uZdWDdqSQH
+	ucmgNy7m7AJTqAG2qsNf9SEiwLhEdgpv05uAj/8nWvQ4yUo6lrbb7inZj91ogs0=
+X-Google-Smtp-Source: AGHT+IFV8W1dqzQexTf6L4R/t2BuL68I/iJC437XoQYe9jmo2sb2vcOp8E1T0SgaT9dJjMWIhEFnUw==
+X-Received: by 2002:a05:6a00:9283:b0:705:d805:2168 with SMTP id d2e1a72fcca58-706745beb1fmr26156318b3a.10.1719623507953;
+        Fri, 28 Jun 2024 18:11:47 -0700 (PDT)
 Received: from ziepe.ca ([24.114.37.55])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-72c69b53be5sm1784142a12.16.2024.06.28.18.11.45
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-72c69b53be5sm1784142a12.16.2024.06.28.18.11.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 18:11:45 -0700 (PDT)
+        Fri, 28 Jun 2024 18:11:47 -0700 (PDT)
 Received: from jgg by jggl with local (Exim 4.95)
 	(envelope-from <jgg@ziepe.ca>)
-	id 1sNInD-0004RY-K3;
-	Fri, 28 Jun 2024 18:06:03 -0300
-Date: Fri, 28 Jun 2024 18:06:03 -0300
+	id 1sNIyF-0004Uj-H8;
+	Fri, 28 Jun 2024 18:17:27 -0300
+Date: Fri, 28 Jun 2024 18:17:27 -0300
 From: Jason Gunthorpe <jgg@ziepe.ca>
 To: Lu Baolu <baolu.lu@linux.intel.com>
 Cc: Kevin Tian <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
@@ -66,11 +66,11 @@ Cc: Kevin Tian <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
 	Joel Granados <j.granados@samsung.com>, iommu@lists.linux.dev,
 	virtualization@lists.linux-foundation.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 04/10] iommu: Extend domain attach group with handle
- support
-Message-ID: <Zn8luxc+RLBOIIX0@ziepe.ca>
+Subject: Re: [PATCH v7 07/10] iommufd: Fault-capable hwpt
+ attach/detach/replace
+Message-ID: <Zn8oZ80p0p1bHgBC@ziepe.ca>
 References: <20240616061155.169343-1-baolu.lu@linux.intel.com>
- <20240616061155.169343-5-baolu.lu@linux.intel.com>
+ <20240616061155.169343-8-baolu.lu@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,72 +79,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240616061155.169343-5-baolu.lu@linux.intel.com>
+In-Reply-To: <20240616061155.169343-8-baolu.lu@linux.intel.com>
 
-On Sun, Jun 16, 2024 at 02:11:49PM +0800, Lu Baolu wrote:
-
-> +int iommu_replace_group_handle(struct iommu_group *group,
-> +			       struct iommu_domain *new_domain,
-> +			       struct iommu_attach_handle *handle)
+On Sun, Jun 16, 2024 at 02:11:52PM +0800, Lu Baolu wrote:
+> +static int iommufd_fault_iopf_enable(struct iommufd_device *idev)
 > +{
-> +	struct iommu_domain *old_domain = group->domain;
-> +	void *curr;
+> +	struct device *dev = idev->dev;
 > +	int ret;
 > +
-> +	if (!new_domain)
+> +	/*
+> +	 * Once we turn on PCI/PRI support for VF, the response failure code
+> +	 * should not be forwarded to the hardware due to PRI being a shared
+> +	 * resource between PF and VFs. There is no coordination for this
+> +	 * shared capability. This waits for a vPRI reset to recover.
+> +	 */
+> +	if (dev_is_pci(dev) && to_pci_dev(dev)->is_virtfn)
 > +		return -EINVAL;
-> +
-> +	mutex_lock(&group->mutex);
-> +	ret = __iommu_group_set_domain(group, new_domain);
-> +	if (ret)
-> +		goto err_unlock;
-> +	xa_erase(&group->pasid_array, IOMMU_NO_PASID);
-> +	if (handle) {
-> +		curr = xa_store(&group->pasid_array, IOMMU_NO_PASID, handle, GFP_KERNEL);
-> +		if (xa_err(curr)) {
-> +			ret = xa_err(curr);
-> +			goto err_restore;
 
-But this error unwind doesn't work because the xa_erase() already
-happened and there may have been a handle there that we don't put
-back.
-
-Something like this - store to a reserved entry cannot fail:
-
-int iommu_replace_group_handle(struct iommu_group *group,
-			       struct iommu_domain *new_domain,
-			       struct iommu_attach_handle *handle)
-{
-	void *curr;
-	int ret;
-
-	if (!new_domain)
-		return -EINVAL;
-
-	mutex_lock(&group->mutex);
-	if (handle) {
-		ret = xa_reserve(&group->pasid_array, IOMMU_NO_PASID,
-				 GFP_KERNEL);
-		if (ret)
-			goto err_unlock;
-	}
-
-	ret = __iommu_group_set_domain(group, new_domain);
-	if (ret)
-		goto err_release;
-
-	curr = xa_store(&group->pasid_array, IOMMU_NO_PASID, handle,
-			GFP_KERNEL);
-	WARN_ON(xa_is_err(curr));
-
-	mutex_unlock(&group->mutex);
-
-	return 0;
-err_release:
-	xa_release(&group->pasid_array, IOMMU_NO_PASID);
-err_unlock:
-	mutex_unlock(&group->mutex);
-	return ret;
-}
+I don't quite get this remark, isn't not supporting PRI on VFs kind of
+useless? What is the story here?
 
 Jason
