@@ -1,201 +1,234 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439262139D4;
-	Fri, 28 Jun 2024 08:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C2592139D4;
+	Fri, 28 Jun 2024 08:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719564521; cv=none; b=X9JsLWq0H6mygTjMk5R8BCm1AGz7yhqnYjcZtF7isoAbDnW5Iyj1Y4Ihiq3Taw/Yc1YF3GrXlKgb7lFzxygniy+XNgJzisLuYE0T9AykxhJCFJpWF6KClx/UeKnsruHbFr9l+sAwdId6/nDxAB+hKCAXYvhXNsxiDdbKLm43t+4=
+	t=1719564607; cv=none; b=KNo1E/ZKMJzhw3+KJDkVXasYW4xZpX5GpEVoJ6BGgCxjr3m3Jj6Urty50W5n6BgFsDi3kiyTH6wPiuX/8uqCJafdMyrtPastbFCefRi/oGVBe66HfaDCZj76rxCd+3Jf4jGRJp5hHGfkq7n0pcKr3HBtvqKVP4xubyvhlOkNNgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719564521; c=relaxed/simple;
-	bh=A6px550VytGofjT3+jVBAMJXX1t+sC2mLVSUSTZRS8I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OYOT393kH1bq/Evv0EykwhdimXLSKLsyRs6jCLx9k6rQbDbNZW2TiqYnB/jTlLkQohwJLkjC3Ha2qaBhY72XqX07ekpceOT7JCeizZodSompeycBFaOWYycTRv55oZ8HhIt9ICbC2PQ4I0OwmOFTudGZfmSLNiNzTfWYwxx10YY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B0anQbRd; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719564607; c=relaxed/simple;
+	bh=XUflaohcWvYShUnMWniTitLP78sYs5dsruzLHvueNWk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jVTIq8tmorP8CttbTQGk+aVqS1DEkTPBb6P88/nkP79yDwSuaIFNbA+of/p2qdAh63yEfNYECc3zIcZn5hY0XcqpF1LtGBMHjiALCq4piq9GI6Mmkbfhay4SccLUQUJDBia3gff8dgOqTLvaWOSuXOfiFCx6dhS18T7/+1qWo0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cB3DcOzg; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B0anQbRd"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-79c084adaf4so25003085a.0;
-        Fri, 28 Jun 2024 01:48:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719564519; x=1720169319; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=FC5inub+a2gTo101EG65k6awbFwbIe494mAOJlTq0k8=;
-        b=B0anQbRdRuKLHGpScAOK621qdSaw+cF017tNcw1wjVQyvsf1A5LDfX5BLXooaOXS3S
-         XOYhzdfgkwofRsjjI3ZDtia2k9iYU3bWIDcIRT/GT//3YNcDllhDqaOm2qs7VM6TTmYW
-         m62RYMAe8xV6xm71+WW/oJbVqXncfFIJS6YzMt1dTCFS80TKdZPW4xQznLRw7uOU6LnO
-         eUSEJMMADKLTQCRgZ/Jj5UZjEy5X5tEVAFA9W1lhvWXA4ClrRxPd/4fO3u8RvvyYU12e
-         e2mdbWT+O9dArDuFPNehQu6iXicuJMgBV20WqRkwy32aH/V7WnSRtDlJkAOyaNWMdYof
-         /dVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719564519; x=1720169319;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FC5inub+a2gTo101EG65k6awbFwbIe494mAOJlTq0k8=;
-        b=XrY44ih4yo7lbZy/PHjznh5GxBxRJeVU8W+9/m2DfMoYWbugAWGT2Pp04V3NEW4u4G
-         RWAMgkksleQjvYaoeTuS2qsp5AHOmwDFBiHhfX8sgMH3r52tQVYvB3NLhP1TQA4yj6H0
-         TMc1z+cReQvD7/1KF7wTa3CD5+t8hmMgPWvWYTMyVZM/DWDNi7aKa74+ydKnpXDAnbO1
-         S0PA6jsIUCj9/Be1N04HdXj0pvbi2RCt1KQTnnaG8Fni40lMF0CmuDeZ5YlcHlFMB19W
-         6DBShs58jLRmnwmfL0EIT9tI+KLSIZvsT7G+K+8WJIJ88XRqTbSArHuKzl+90J2UlXaX
-         PwQA==
-X-Forwarded-Encrypted: i=1; AJvYcCWQJn+hxiuuXPp/sscZBfkaKwuCpYcH4Ms0BTP/UyHwN12ycXgxQKH3rux5+TExQmmAUeS75z64FdIEBrJPrPjc8Yvc95LAFbGfYIZghQ17gTg76sgz9lvYj7uCtTjOiIo5G/at
-X-Gm-Message-State: AOJu0YxX7sA6CYf9okUG7Es+RRChDsNcdHAiH4Z9a29c87+rZ5F4otLq
-	c7Gvvfpn8LXY9HfQ/sfDFeIgWO4mqyVgCdeDvug3FisH57WKTnR3
-X-Google-Smtp-Source: AGHT+IEPNxHOG1Ol9emvU7ROgWNd/bp8LmGHMbFRD0zXeZVqdhJ8tRao5DUAIa+tpnrPb0FVhQxDpw==
-X-Received: by 2002:a05:6214:d63:b0:6b2:b060:c7d3 with SMTP id 6a1803df08f44-6b540aaa499mr246008546d6.52.1719564518914;
-        Fri, 28 Jun 2024 01:48:38 -0700 (PDT)
-Received: from [192.168.3.22] (89-145-235-100.xdsl.murphx.net. [89.145.235.100])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b59e5f3693sm6137886d6.96.2024.06.28.01.48.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Jun 2024 01:48:38 -0700 (PDT)
-Message-ID: <76b863f1-1e5f-4d7c-9f39-aabb35865f69@gmail.com>
-Date: Fri, 28 Jun 2024 09:48:34 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cB3DcOzg"
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45S8QsVF005995;
+	Fri, 28 Jun 2024 08:49:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:subject:from:to:cc:date:in-reply-to:references
+	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
+	1LiVLh/4t2TyA15F3OgW+0GLmMUkAbdoUNd2a2a2vN0=; b=cB3DcOzg+Rn2BYEs
+	8Jsvqu6pIQ0GA4l1n+2+Xray4mjS4FslAEo6mKlpOZAcreGqNnrGFYSH3n4053zH
+	WP/ET5zvhzoiCiIkIP4BWRjgXEGqhUsaU5eDU5g4ZHupJcppmWfCwF52wNmLv8BN
+	8EONMDXT3FlPM5OzOBmc8NaGAYrJgM2L3atvo7VLuAhVVq7JxskuttyCFEn9kxno
+	PcyBNbn+iGEve1VfIhP2p4TfNCNGGn1N+7fmxJcdjbjH2+rKw/DXLWHLsnIi6ylY
+	6fkRmBVeOPjVgY1m5UJncBERTiBpdc3ElVWunimjJlI8iPVIZHYsF6VIsop2B/te
+	kR3odA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 401pm6rerj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Jun 2024 08:49:48 +0000 (GMT)
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45S8nmMM009041;
+	Fri, 28 Jun 2024 08:49:48 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 401pm6rerg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Jun 2024 08:49:48 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45S7mDxJ000402;
+	Fri, 28 Jun 2024 08:49:47 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yxbn3q2xm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Jun 2024 08:49:47 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45S8ni301638992
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 28 Jun 2024 08:49:46 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8BAB65805A;
+	Fri, 28 Jun 2024 08:49:44 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 22A5858051;
+	Fri, 28 Jun 2024 08:49:42 +0000 (GMT)
+Received: from [9.171.12.251] (unknown [9.171.12.251])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 28 Jun 2024 08:49:41 +0000 (GMT)
+Message-ID: <d63e329056954e1e211b8215773c1fb7861dc014.camel@linux.ibm.com>
+Subject: Re: [PATCH v4 3/4] vfio/pci: Disable mmap() non-compliant BARs
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Christoph Hellwig <hch@lst.de>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Heiko Carstens
+ <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev
+ <agordeev@linux.ibm.com>,
+        Christian Borntraeger
+ <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Gerd
+ Bayer <gbayer@linux.ibm.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Date: Fri, 28 Jun 2024 10:49:41 +0200
+In-Reply-To: <20240627160547.2879c6b3.alex.williamson@redhat.com>
+References: <20240626-vfio_pci_mmap-v4-0-7f038870f022@linux.ibm.com>
+	 <20240626-vfio_pci_mmap-v4-3-7f038870f022@linux.ibm.com>
+	 <20240627160547.2879c6b3.alex.williamson@redhat.com>
+Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 (3.52.2-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net: phy: phy_device: fix PHY WOL enabled, PM failed to
- suspend
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Youwan Wang <youwan@nfschina.com>, andrew@lunn.ch, hkallweit1@gmail.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240628060318.458925-1-youwan@nfschina.com>
- <Zn5xmMpTLK/fRoYh@shell.armlinux.org.uk>
- <249879ad-aa97-452c-a173-65255818d2d4@gmail.com>
- <Zn52fU7FbTwj67dq@shell.armlinux.org.uk>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- HGuUuzv+GKZ6nsysJw==
-In-Reply-To: <Zn52fU7FbTwj67dq@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Wyw7XCPKsEFmwF33OycVkpQCjW14s_Fx
+X-Proofpoint-GUID: wjfoI3cJNvfIR70fEyirB0vCuv2P-zvA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-28_04,2024-06-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 suspectscore=0 spamscore=0 malwarescore=0 clxscore=1015
+ impostorscore=0 mlxlogscore=893 mlxscore=0 adultscore=0 lowpriorityscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406280061
 
+On Thu, 2024-06-27 at 16:05 -0600, Alex Williamson wrote:
+> On Wed, 26 Jun 2024 13:15:50 +0200
+> Niklas Schnelle <schnelle@linux.ibm.com> wrote:
+>=20
+> > When VFIO_PCI_MMAP is enabled for s390 in a future commit and the ISM
+> > device is passed-through to a KVM guest QEMU attempts to eagerly mmap()
+> > its BAR. This fails because the 256 TiB large BAR does not fit in the
+> > virtual map. Besides this issue mmap() of the ISM device's BAR is not
+> > useful either as even a partial mapping won't be usable from user-space
+> > without a vfio-pci variant driver. A previous commit ensures that pdev-=
+>
+> > non_compliant_bars is set for ISM so use this to disallow mmap() with
+> > the expecation that mmap() of non-compliant BARs is not advisable in th=
+e
+> > general case either.
+> >=20
+> > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> > ---
+> >  drivers/vfio/pci/vfio_pci_core.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_p=
+ci_core.c
+> > index 987c7921affa..0e9d46575776 100644
+> > --- a/drivers/vfio/pci/vfio_pci_core.c
+> > +++ b/drivers/vfio/pci/vfio_pci_core.c
+> > @@ -128,10 +128,9 @@ static void vfio_pci_probe_mmaps(struct vfio_pci_c=
+ore_device *vdev)
+> > =20
+> >  		/*
+> >  		 * The PCI core shouldn't set up a resource with a
+> > -		 * type but zero size. But there may be bugs that
+> > -		 * cause us to do that.
+> > +		 * type but zero size or non-compliant BARs.
+> >  		 */
+> > -		if (!resource_size(res))
+> > +		if (!resource_size(res) || vdev->pdev->non_compliant_bars)
+> >  			goto no_mmap;
+> > =20
+> >  		if (resource_size(res) >=3D PAGE_SIZE) {
+> >=20
+>=20
+> The non_compliant_bars flag causes pci_read_bases() to exit, shouldn't
+> that mean the resource is not setup and resource_size() is zero and
+> explicitly testing the non_compliant_bars flag is redundant?  Or does
+> s390 do this somewhere else?
+>=20
+> The non_compliant_bars flag is defined as /* Broken BARs; ignore them */
+> so it'd be pretty strange if they had a resource size and we chose to
+> still expose them with read-write access... why wouldn't we just
+> deny-list the device from use with vfio-pci?
+>=20
+> Also probably worth an explicit comment in the commit log why pci-sysfs
+> mmap support doesn't need to be bypassed on s390.  Thanks,
+>=20
+> Alex
+>=20
 
+Uhh, you're right. With pdev->non_compliant_bars we don't get the
+resources filled in at all due to the check in pci_read_bases(), the
+structs are however still allocated. Consequently IORESOURCE_MEM is
+unset (and resource_size(res) is 0) and the existing IORESOURCE_MEM
+check already ignores the ISM device here. Funnily enough this doesn't
+seem to cause issues for the ISM driver itself because of the way it
+bypasses normal PCI access and doesn't use ioremap() nor the MMIO
+access helpers. Honestlym I think pdev->non_compliant_bars might still
+be the right thing. This BAR is special enough that anything other than
+the ISM driver is probably served best by just ignoring it. We could
+then just drop this patch. I think this would also take care of pci-
+sysfs mmap ignoring ISM if s390x were to set HAVE_PCI_MMAP.
 
-On 6/28/2024 9:38 AM, Russell King (Oracle) wrote:
-> On Fri, Jun 28, 2024 at 09:25:54AM +0100, Florian Fainelli wrote:
->>
->>
->> On 6/28/2024 9:17 AM, Russell King (Oracle) wrote:
->>> On Fri, Jun 28, 2024 at 02:03:18PM +0800, Youwan Wang wrote:
->>>> If the PHY of the mido bus is enabled with Wake-on-LAN (WOL),
->>>> we cannot suspend the PHY. Although the WOL status has been
->>>> checked in phy_suspend(), returning -EBUSY(-16) would cause
->>>> the Power Management (PM) to fail to suspend. Since
->>>> phy_suspend() is an exported symbol (EXPORT_SYMBOL),
->>>> timely error reporting is needed. Therefore, an additional
->>>> check is performed here. If the PHY of the mido bus is enabled
->>>> with WOL, we skip calling phy_suspend() to avoid PM failure.
->>>>
->>>> log:
->>>> [  322.631362] OOM killer disabled.
->>>> [  322.631364] Freezing remaining freezable tasks
->>>> [  322.632536] Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
->>>> [  322.632540] printk: Suspending console(s) (use no_console_suspend to debug)
->>>> [  322.633052] YT8521 Gigabit Ethernet stmmac-0:01:
->>>> PM: dpm_run_callback(): mdio_bus_phy_suspend+0x0/0x110 [libphy] returns -16
->>>> [  322.633071] YT8521 Gigabit Ethernet stmmac-0:01:
->>>> PM: failed to suspend: error -16
->>>> [  322.669699] PM: Some devices failed to suspend, or early wake event detected
->>>> [  322.669949] OOM killer enabled.
->>>> [  322.669951] Restarting tasks ... done.
->>>> [  322.671008] random: crng reseeded on system resumption
->>>> [  322.671014] PM: suspend exit
->>>>
->>>> If the YT8521 driver adds phydrv->flags, ask the YT8521 driver to process
->>>> WOL at suspend and resume time, the phydev->suspended_by_mdio_bus=1
->>>> flag would cause the resume failure.
->>
->> Did you mean to write that if the YT8521 PHY driver entry set the
->> PHY_ALWAYS_CALL_SUSPEND flag, then it would cause an error during resume? If
->> so, why is that?
-> 
-> It doesn't appear to do that - at least not in net-next, and not in
-> mainline.
-> 
->>> I think the reason this is happening is because the PHY has WoL enabled
->>> on it without the kernel/netdev driver being aware that WoL is enabled.
->>> Thus, mdio_bus_phy_may_suspend() returns true, allowing the suspend to
->>> happen, but then we find unexpectedly that WoL is enabled on the PHY.
->>>
->>> However, whenever a user configures WoL, netdev->wol_enabled will be
->>> set when _any_ WoL mode is enabled and cleared only if all WoL modes
->>> are disabled.
->>>
->>> Thus, what we have is a de-sync between the kernel state and hardware
->>> state, leading to the suspend failing.
->>>
->>> I don't see anything in the motorcomm driver that requires suspend
->>> if WoL is enabled - yt8521_suspend() first checks to see whether WoL
->>> is enabled, and exits if it is.
->>>
->>> Andrew - how do you feel about reading the WoL state from the PHY and
->>> setting netdev->wol_enabled if any WoL is enabled on the PHY? That
->>> would mean that the netdev's WoL state is consistent with the PHY
->>> whether or not the user has configured WoL.
->>
->> Would not the situation described here be solved by having the Motorcomm PHY
->> driver set PHY_ALWAYS_CALL_SUSPEND since it deals with checking whether WoL
->> is enabled or not and will just return then.
-> 
-> Is there a reason that netdev->wol_enabled shouldn't reflect the
-> hardware configuration?
-
-Unless there is some sort of Ethernet MAC driver bug that we are not 
-being made aware of, the only thing that I can of is happening here, is 
-that a SW/FW agent other than Linux would have enabled the PHY for 
-Wake-on-LAN, and there was no configuration done by the user via the 
-Ethernet MAC driver that attempted to enable Wake-on-LAN. In that case 
-only can I think of a disconnect between the HW and SW states?
-
-> 
-> If netdev->wol_enabled is appropriately set, then it seems to me
-> that there's little reason for motorcomm to be checking whether
-> WoL is enabled in its suspend function - which means less driver
-> specific code and driver specific behaviour.
-> 
-
-That should work, too.
--- 
-Florian
+Thanks,
+Niklas
