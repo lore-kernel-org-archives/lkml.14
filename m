@@ -1,423 +1,230 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2949B1C9ED5;
-	Fri, 28 Jun 2024 16:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AD42158DDC;
+	Fri, 28 Jun 2024 16:14:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719591123; cv=none; b=l4dqPvxJhSqi7JBCNgYk6AYn00WGGWXxGr6UnSNRhqU2VitJSGpMxwisCGoAbr6cvOXuhh15vWf5sQriKSIrIogm42INgrIDbQfUH0Kb+saL9A9Xxqy6xy+P4bxqUFgFVudPrg+0iazhRL7pgu9Y62jkVIUQlEaSplVJ2+iWM6I=
+	t=1719591251; cv=none; b=bYOfqV8GFJc/WuoTqd1FcO/IZ6XR6vXG4xi2hWpE/7NjGye5Tl7+uPS1Lqt2OnMqnJ2Uojvf3F7MPwHt+sKVFkZHewh1gG/pbQg474nJH/oGBhH4D5Y8FHdCdJSedq7nmmQZLAQB8O+XS5jyhWLh9BR91X6v/ozTnckMKvjvUi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719591123; c=relaxed/simple;
-	bh=6lyeIV5XuebcqycSfmRbIddp2M0F1kdXKtMAmKYG12M=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=N5AV/cJnNIww0mZjOoDX17P/9fLSbzP8kctnm/Rjs6Ru508DHr5e8h5IhxnU3jDg5R+/cke7u/jky1MZe4RSJoUnyON/7zBwqL74iQUoQNsb1zxPmUjULpZo1DudeIu0s6OhJjWnkXJEnRc7bhGSxDB4kgrKmlwnAgXu//qHzt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fPrZF1Y+; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1719591251; c=relaxed/simple;
+	bh=/ZLjV4AtG6PE9RE64qHOYEVdhdNaKhQgUm25uI4izAI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=q4snwVZLlMRNwz4vPt0Jy5hlYOu6vm4sjZ1UVXGZYQZr1SxjW/jOgvNCNUqXeajAG+WF52Bbvi3dqb5Pwvrwmo96VwdC47igZs3tV9zlp1q4f3PDZBltnA2+kOX3DwRZT79tknx1Yn9HlcjLchwLfaAMMfFYrY242dNJ0odHuG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=pSQNcblq; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fPrZF1Y+"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 51D1C1BF203;
-	Fri, 28 Jun 2024 16:11:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1719591113;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MgbXxMZ0jIn6/AB4fQ+7gQsAr/ZppqYc7pzl8m+uUAM=;
-	b=fPrZF1Y+jc4XSmbkuFFFl+WnPYvtaMDqBx37g63QLCzevqMxi5ldKU5lQpfg2rYKXsaCIe
-	KbA+KNeubVGnLO4i+vXo17Cmj53JFcoIOz+/X9C4xf+RLXr+LaXSr/itKrjLty2/pZ+jJf
-	tqZ/9/Jw1upHcYKwiAFR5SkwonM8UCn+N40fZPv9Ngw+gDjKYuoKXOvUDLc2Zv7PMD8shS
-	2Ai7VfQhGp5pD+h0RZ9mm4ctd6uct3zulmaB9SLJHzGHUdOIjdqQr40SuEWmt1lKmDfuNU
-	nTIB9zTTHNa9EnUyNqu70CZk6lEIWGobcZieTEvTKyi75D94gc/M6geM6jQIoA==
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Fri, 28 Jun 2024 18:11:51 +0200
-Subject: [PATCH 2/3] MIPS: mobileye: eyeq5: add OLB system-controller node
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="pSQNcblq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=e26+2
+	q+3hBU2DBzF5851MuqgEXt4Q/cdEKTEV/s7sag=; b=pSQNcblqjulPYUuVA1ewP
+	bWx080z7JFM3P2O9bxeinUlDmYzbrJrm5dLbggXVXuQeQ1wDWcw9ycoWKjAg1S/h
+	ChMqJ2UsMDooZJce0bHBm8jKxN9oFrlmXbOnsEoYelo5eVrJQgbaxHJcHdBKREbj
+	0J42/kHedGtk1ZAFIlCfR8=
+Received: from localhost (unknown [101.132.132.191])
+	by gzga-smtp-mta-g3-5 (Coremail) with SMTP id _____wDX_yoR4X5m0+qRAw--.37690S2;
+	Sat, 29 Jun 2024 00:13:05 +0800 (CST)
+From: Xavier <xavier_qy@163.com>
+To: tj@kernel.org
+Cc: longman@redhat.com,
+	mkoutny@suse.com,
+	lizefan.x@bytedance.com,
+	hannes@cmpxchg.org,
+	cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org,
+	akpm@linux-foundation.org,
+	Xavier <xavier_qy@163.com>
+Subject: [PATCH-cpuset v8 2/2] cpuset: use Union-Find to optimize the merging of cpumasks
+Date: Sat, 29 Jun 2024 00:13:02 +0800
+Message-Id: <20240628161302.240043-3-xavier_qy@163.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240628161302.240043-1-xavier_qy@163.com>
+References: <Zn3UaMouBYYIMQr_@slm.duckdns.org>
+ <20240628161302.240043-1-xavier_qy@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240628-mbly-mips-v1-2-f53f5e4c422b@bootlin.com>
-References: <20240628-mbly-mips-v1-0-f53f5e4c422b@bootlin.com>
-In-Reply-To: <20240628-mbly-mips-v1-0-f53f5e4c422b@bootlin.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: linux-mips@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-X-Mailer: b4 0.15-dev-13183
-X-GND-Sasl: theo.lebrun@bootlin.com
+X-CM-TRANSID:_____wDX_yoR4X5m0+qRAw--.37690S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAFWfur4kKFyUZFWUJrW3Awb_yoWruF1fpF
+	sakay2qrWrJryUGwsakay8Zw1ak3ykJayUtwnxGw1rtr17A3Z29a40qFs3KFWUZrWq9F1U
+	uF9Igr47Wr18KFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07Ubo7tUUUUU=
+X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/xtbBchAMEGWXv5R4dgABso
 
-The OLB ("Other Logic Block") is a system-controller region hosting
-clock, reset and pin controllers. It contains registers such as I2C
-speed mode that need to be accessible by other nodes.
+The process of constructing scheduling domains
+ involves multiple loops and repeated evaluations, leading to numerous
+ redundant and ineffective assessments that impact code efficiency.
 
-Remove fixed-clocks previously used; replace references.
-Add parent crystal clock, fixed at 30MHz.
-Add pin nodes for all functions.
-Add mobileye,eyeq5-olb compatible node, hosting clk, reset and pinctrl.
-Add reset and pinctrl references to UART nodes.
+Here, we use Union-Find to optimize the merging of cpumasks. By employing
+path compression and union by rank, we effectively reduce the number of
+lookups and merge comparisons.
 
-Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+Signed-off-by: Xavier <xavier_qy@163.com>
 ---
- .../{eyeq5-fixed-clocks.dtsi => eyeq5-clocks.dtsi} |  54 +++------
- arch/mips/boot/dts/mobileye/eyeq5-pins.dtsi        | 125 +++++++++++++++++++++
- arch/mips/boot/dts/mobileye/eyeq5.dtsi             |  22 +++-
- 3 files changed, 162 insertions(+), 39 deletions(-)
+ kernel/cgroup/cpuset.c | 96 ++++++++++++++++--------------------------
+ 1 file changed, 37 insertions(+), 59 deletions(-)
 
-diff --git a/arch/mips/boot/dts/mobileye/eyeq5-fixed-clocks.dtsi b/arch/mips/boot/dts/mobileye/eyeq5-clocks.dtsi
-similarity index 88%
-rename from arch/mips/boot/dts/mobileye/eyeq5-fixed-clocks.dtsi
-rename to arch/mips/boot/dts/mobileye/eyeq5-clocks.dtsi
-index 78f5533a95c6..17a342cc744e 100644
---- a/arch/mips/boot/dts/mobileye/eyeq5-fixed-clocks.dtsi
-+++ b/arch/mips/boot/dts/mobileye/eyeq5-clocks.dtsi
-@@ -3,42 +3,20 @@
-  * Copyright 2023 Mobileye Vision Technologies Ltd.
-  */
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index fe76045aa5..c435814ba8 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -45,6 +45,8 @@
+ #include <linux/cgroup.h>
+ #include <linux/wait.h>
+ #include <linux/workqueue.h>
++#include <linux/union_find.h>
++#include <linux/vmalloc.h>
  
-+#include <dt-bindings/clock/mobileye,eyeq5-clk.h>
-+
- / {
- 	/* Fixed clock */
--	pll_cpu: pll-cpu {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <1500000000>;
--	};
+ DEFINE_STATIC_KEY_FALSE(cpusets_pre_enable_key);
+ DEFINE_STATIC_KEY_FALSE(cpusets_enabled_key);
+@@ -172,9 +174,6 @@ struct cpuset {
+ 	 */
+ 	int attach_in_progress;
+ 
+-	/* partition number for rebuild_sched_domains() */
+-	int pn;
 -
--	pll_vdi: pll-vdi {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <1280000000>;
--	};
--
--	pll_per: pll-per {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <2000000000>;
--	};
--
--	pll_ddr0: pll-ddr0 {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <1857210000>;
--	};
--
--	pll_ddr1: pll-ddr1 {
-+	xtal: xtal {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
--		clock-frequency = <1857210000>;
-+		clock-frequency = <30000000>;
- 	};
+ 	/* for custom sched domain */
+ 	int relax_domain_level;
  
- /* PLL_CPU derivatives */
- 	occ_cpu: occ-cpu {
- 		compatible = "fixed-factor-clock";
--		clocks = <&pll_cpu>;
-+		clocks = <&olb EQ5C_PLL_CPU>;
- 		#clock-cells = <0>;
- 		clock-div = <1>;
- 		clock-mult = <1>;
-@@ -101,7 +79,7 @@ mem_clk: mem-clk {
- 	};
- 	occ_isram: occ-isram {
- 		compatible = "fixed-factor-clock";
--		clocks = <&pll_cpu>;
-+		clocks = <&olb EQ5C_PLL_CPU>;
- 		#clock-cells = <0>;
- 		clock-div = <2>;
- 		clock-mult = <1>;
-@@ -115,7 +93,7 @@ isram_clk: isram-clk { /* gate ClkRstGen_isram */
- 	};
- 	occ_dbu: occ-dbu {
- 		compatible = "fixed-factor-clock";
--		clocks = <&pll_cpu>;
-+		clocks = <&olb EQ5C_PLL_CPU>;
- 		#clock-cells = <0>;
- 		clock-div = <10>;
- 		clock-mult = <1>;
-@@ -130,7 +108,7 @@ si_dbu_tp_pclk: si-dbu-tp-pclk { /* gate ClkRstGen_dbu */
- /* PLL_VDI derivatives */
- 	occ_vdi: occ-vdi {
- 		compatible = "fixed-factor-clock";
--		clocks = <&pll_vdi>;
-+		clocks = <&olb EQ5C_PLL_VDI>;
- 		#clock-cells = <0>;
- 		clock-div = <2>;
- 		clock-mult = <1>;
-@@ -144,7 +122,7 @@ vdi_clk: vdi-clk { /* gate ClkRstGen_vdi */
- 	};
- 	occ_can_ser: occ-can-ser {
- 		compatible = "fixed-factor-clock";
--		clocks = <&pll_vdi>;
-+		clocks = <&olb EQ5C_PLL_VDI>;
- 		#clock-cells = <0>;
- 		clock-div = <16>;
- 		clock-mult = <1>;
-@@ -158,7 +136,7 @@ can_ser_clk: can-ser-clk { /* gate ClkRstGen_can_ser */
- 	};
- 	i2c_ser_clk: i2c-ser-clk {
- 		compatible = "fixed-factor-clock";
--		clocks = <&pll_vdi>;
-+		clocks = <&olb EQ5C_PLL_VDI>;
- 		#clock-cells = <0>;
- 		clock-div = <20>;
- 		clock-mult = <1>;
-@@ -166,7 +144,7 @@ i2c_ser_clk: i2c-ser-clk {
- /* PLL_PER derivatives */
- 	occ_periph: occ-periph {
- 		compatible = "fixed-factor-clock";
--		clocks = <&pll_per>;
-+		clocks = <&olb EQ5C_PLL_PER>;
- 		#clock-cells = <0>;
- 		clock-div = <16>;
- 		clock-mult = <1>;
-@@ -225,7 +203,7 @@ gpio_clk: gpio-clk {
- 	};
- 	emmc_sys_clk: emmc-sys-clk {
- 		compatible = "fixed-factor-clock";
--		clocks = <&pll_per>;
-+		clocks = <&olb EQ5C_PLL_PER>;
- 		#clock-cells = <0>;
- 		clock-div = <10>;
- 		clock-mult = <1>;
-@@ -233,7 +211,7 @@ emmc_sys_clk: emmc-sys-clk {
- 	};
- 	ccf_ctrl_clk: ccf-ctrl-clk {
- 		compatible = "fixed-factor-clock";
--		clocks = <&pll_per>;
-+		clocks = <&olb EQ5C_PLL_PER>;
- 		#clock-cells = <0>;
- 		clock-div = <4>;
- 		clock-mult = <1>;
-@@ -241,7 +219,7 @@ ccf_ctrl_clk: ccf-ctrl-clk {
- 	};
- 	occ_mjpeg_core: occ-mjpeg-core {
- 		compatible = "fixed-factor-clock";
--		clocks = <&pll_per>;
-+		clocks = <&olb EQ5C_PLL_PER>;
- 		#clock-cells = <0>;
- 		clock-div = <2>;
- 		clock-mult = <1>;
-@@ -265,7 +243,7 @@ mjpeg_core_clk: mjpeg-core-clk { /* gate ClkRstGen_mjpeg_gen */
- 	};
- 	fcmu_a_clk: fcmu-a-clk {
- 		compatible = "fixed-factor-clock";
--		clocks = <&pll_per>;
-+		clocks = <&olb EQ5C_PLL_PER>;
- 		#clock-cells = <0>;
- 		clock-div = <20>;
- 		clock-mult = <1>;
-@@ -273,7 +251,7 @@ fcmu_a_clk: fcmu-a-clk {
- 	};
- 	occ_pci_sys: occ-pci-sys {
- 		compatible = "fixed-factor-clock";
--		clocks = <&pll_per>;
-+		clocks = <&olb EQ5C_PLL_PER>;
- 		#clock-cells = <0>;
- 		clock-div = <8>;
- 		clock-mult = <1>;
-diff --git a/arch/mips/boot/dts/mobileye/eyeq5-pins.dtsi b/arch/mips/boot/dts/mobileye/eyeq5-pins.dtsi
-new file mode 100644
-index 000000000000..0b3671013ab4
---- /dev/null
-+++ b/arch/mips/boot/dts/mobileye/eyeq5-pins.dtsi
-@@ -0,0 +1,125 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+@@ -208,6 +207,9 @@ struct cpuset {
+ 
+ 	/* Remote partition silbling list anchored at remote_children */
+ 	struct list_head remote_sibling;
 +
-+/*
-+ * Default pin configuration for Mobileye EyeQ5 boards. We mostly create one
-+ * pin configuration node per function.
-+ */
-+
-+&olb {
-+	timer0_pins: timer0-pins {
-+		function = "timer0";
-+		pins = "PA0", "PA1";
-+	};
-+	timer1_pins: timer1-pins {
-+		function = "timer1";
-+		pins = "PA2", "PA3";
-+	};
-+	timer2_pins: timer2-pins {
-+		function = "timer2";
-+		pins = "PA4", "PA5";
-+	};
-+	pps0_pins: pps0-pin {
-+		function = "timer2";
-+		pins = "PA4";
-+	};
-+	pps1_pins: pps1-pin {
-+		function = "timer2";
-+		pins = "PA5";
-+	};
-+	timer5_ext_pins: timer5-ext-pins {
-+		function = "timer5";
-+		pins = "PA6", "PA7", "PA8", "PA9";
-+	};
-+	timer5_ext_input_pins: timer5-ext-input-pins {
-+		function = "timer5";
-+		pins = "PA6", "PA7";
-+	};
-+	timer5_ext_incap_a_pins: timer5-ext-incap-a-pin {
-+		function = "timer5";
-+		pins = "PA6";
-+	};
-+	timer5_ext_incap_b_pins: timer5-ext-incap-b-pin {
-+		function = "timer5";
-+		pins = "PA7";
-+	};
-+	can0_pins: can0-pins {
-+		function = "can0";
-+		pins = "PA14", "PA15";
-+	};
-+	can1_pins: can1-pins {
-+		function = "can1";
-+		pins = "PA16", "PA17";
-+	};
-+	uart0_pins: uart0-pins {
-+		function = "uart0";
-+		pins = "PA10", "PA11";
-+	};
-+	uart1_pins: uart1-pins {
-+		function = "uart1";
-+		pins = "PA12", "PA13";
-+	};
-+	spi0_pins: spi0-pins {
-+		function = "spi0";
-+		pins = "PA18", "PA19", "PA20", "PA21", "PA22";
-+	};
-+	spi1_pins: spi1-pins {
-+		function = "spi1";
-+		pins = "PA23", "PA24", "PA25", "PA26", "PA27";
-+	};
-+	spi1_slave_pins: spi1-slave-pins {
-+		function = "spi1";
-+		pins = "PA24", "PA25", "PA26";
-+	};
-+	refclk0_pins: refclk0-pin {
-+		function = "refclk0";
-+		pins = "PA28";
-+	};
-+	timer3_pins: timer3-pins {
-+		function = "timer3";
-+		pins = "PB0", "PB1";
-+	};
-+	timer4_pins: timer4-pins {
-+		function = "timer4";
-+		pins = "PB2", "PB3";
-+	};
-+	timer6_ext_pins: timer6-ext-pins {
-+		function = "timer6";
-+		pins = "PB4", "PB5", "PB6", "PB7";
-+	};
-+	timer6_ext_input_pins: timer6-ext-input-pins {
-+		function = "timer6";
-+		pins = "PB4", "PB5";
-+	};
-+	timer6_ext_incap_a_pins: timer6-ext-incap-a-pin {
-+		function = "timer6";
-+		pins = "PB4";
-+	};
-+	timer6_ext_incap_b_pins: timer6-ext-incap-b-pin {
-+		function = "timer6";
-+		pins = "PB5";
-+	};
-+	can2_pins: can2-pins {
-+		function = "can2";
-+		pins = "PB10", "PB11";
-+	};
-+	uart2_pins: uart2-pins {
-+		function = "uart2";
-+		pins = "PB8", "PB9";
-+	};
-+	spi2_pins: spi2-pins {
-+		function = "spi2";
-+		pins = "PB12", "PB13", "PB14", "PB15", "PB16";
-+	};
-+	spi3_pins: spi3-pins {
-+		function = "spi3";
-+		pins = "PB17", "PB18", "PB19", "PB20", "PB21";
-+	};
-+	spi3_slave_pins: spi3-slave-pins {
-+		function = "spi3";
-+		pins = "PB18", "PB19", "PB20";
-+	};
-+	mclk0_pins: mclk0-pin {
-+		function = "mclk0";
-+		pins = "PB22";
-+	};
-+};
-diff --git a/arch/mips/boot/dts/mobileye/eyeq5.dtsi b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-index 6cc5980e2fa1..0708771c193d 100644
---- a/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-+++ b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-@@ -5,7 +5,7 @@
- 
- #include <dt-bindings/interrupt-controller/mips-gic.h>
- 
--#include "eyeq5-fixed-clocks.dtsi"
-+#include "eyeq5-clocks.dtsi"
- 
- / {
- 	#address-cells = <2>;
-@@ -78,6 +78,9 @@ uart0: serial@800000 {
- 			interrupts = <GIC_SHARED 6 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks  = <&uart_clk>, <&occ_periph>;
- 			clock-names = "uartclk", "apb_pclk";
-+			resets = <&olb 0 10>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart0_pins>;
- 		};
- 
- 		uart1: serial@900000 {
-@@ -88,6 +91,9 @@ uart1: serial@900000 {
- 			interrupts = <GIC_SHARED 6 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks  = <&uart_clk>, <&occ_periph>;
- 			clock-names = "uartclk", "apb_pclk";
-+			resets = <&olb 0 11>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart1_pins>;
- 		};
- 
- 		uart2: serial@a00000 {
-@@ -98,6 +104,18 @@ uart2: serial@a00000 {
- 			interrupts = <GIC_SHARED 6 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks  = <&uart_clk>, <&occ_periph>;
- 			clock-names = "uartclk", "apb_pclk";
-+			resets = <&olb 0 12>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart2_pins>;
-+		};
-+
-+		olb: system-controller@e00000 {
-+			compatible = "mobileye,eyeq5-olb", "syscon";
-+			reg = <0 0xe00000 0x0 0x400>;
-+			#reset-cells = <2>;
-+			#clock-cells = <1>;
-+			clocks = <&xtal>;
-+			clock-names = "ref";
- 		};
- 
- 		gic: interrupt-controller@140000 {
-@@ -122,3 +140,5 @@ timer {
- 		};
- 	};
++	/* Used to merge intersecting subsets for generate_sched_domains*/
++	struct uf_node node;
  };
+ 
+ /*
+@@ -1007,7 +1009,7 @@ static int generate_sched_domains(cpumask_var_t **domains,
+ 	struct cpuset *cp;	/* top-down scan of cpusets */
+ 	struct cpuset **csa;	/* array of all cpuset ptrs */
+ 	int csn;		/* how many cpuset ptrs in csa so far */
+-	int i, j, k;		/* indices for partition finding loops */
++	int i, j;		/* indices for partition finding loops */
+ 	cpumask_var_t *doms;	/* resulting partition; i.e. sched domains */
+ 	struct sched_domain_attr *dattr;  /* attributes for custom domains */
+ 	int ndoms = 0;		/* number of sched domains in result */
+@@ -1015,6 +1017,7 @@ static int generate_sched_domains(cpumask_var_t **domains,
+ 	struct cgroup_subsys_state *pos_css;
+ 	bool root_load_balance = is_sched_load_balance(&top_cpuset);
+ 	bool cgrpv2 = cgroup_subsys_on_dfl(cpuset_cgrp_subsys);
++	int nslot_update;
+ 
+ 	doms = NULL;
+ 	dattr = NULL;
+@@ -1102,31 +1105,25 @@ static int generate_sched_domains(cpumask_var_t **domains,
+ 	if (root_load_balance && (csn == 1))
+ 		goto single_root_domain;
+ 
+-	for (i = 0; i < csn; i++)
+-		csa[i]->pn = i;
+-	ndoms = csn;
+-
+-restart:
+-	/* Find the best partition (set of sched domains) */
+-	for (i = 0; i < csn; i++) {
+-		struct cpuset *a = csa[i];
+-		int apn = a->pn;
++	if (!cgrpv2) {
++		for (i = 0; i < csn; i++)
++			uf_nodes_init(&csa[i]->node);
+ 
+-		for (j = 0; j < csn; j++) {
+-			struct cpuset *b = csa[j];
+-			int bpn = b->pn;
+-
+-			if (apn != bpn && cpusets_overlap(a, b)) {
+-				for (k = 0; k < csn; k++) {
+-					struct cpuset *c = csa[k];
+-
+-					if (c->pn == bpn)
+-						c->pn = apn;
+-				}
+-				ndoms--;	/* one less element */
+-				goto restart;
++		/* Merge overlapping cpusets */
++		for (i = 0; i < csn; i++) {
++			for (j = i + 1; j < csn; j++) {
++				if (cpusets_overlap(csa[i], csa[j]))
++					uf_union(&csa[i]->node, &csa[j]->node);
+ 			}
+ 		}
 +
-+#include "eyeq5-pins.dtsi"
-
++		/* Count the total number of domains */
++		for (i = 0; i < csn; i++) {
++			if (csa[i]->node.parent == &csa[i]->node)
++				ndoms++;
++		}
++	} else {
++		ndoms = csn;
+ 	}
+ 
+ 	/*
+@@ -1159,44 +1156,25 @@ static int generate_sched_domains(cpumask_var_t **domains,
+ 	}
+ 
+ 	for (nslot = 0, i = 0; i < csn; i++) {
+-		struct cpuset *a = csa[i];
+-		struct cpumask *dp;
+-		int apn = a->pn;
+-
+-		if (apn < 0) {
+-			/* Skip completed partitions */
+-			continue;
+-		}
+-
+-		dp = doms[nslot];
+-
+-		if (nslot == ndoms) {
+-			static int warnings = 10;
+-			if (warnings) {
+-				pr_warn("rebuild_sched_domains confused: nslot %d, ndoms %d, csn %d, i %d, apn %d\n",
+-					nslot, ndoms, csn, i, apn);
+-				warnings--;
+-			}
+-			continue;
+-		}
+-
+-		cpumask_clear(dp);
+-		if (dattr)
+-			*(dattr + nslot) = SD_ATTR_INIT;
++		nslot_update = 0;
+ 		for (j = i; j < csn; j++) {
+-			struct cpuset *b = csa[j];
+-
+-			if (apn == b->pn) {
+-				cpumask_or(dp, dp, b->effective_cpus);
++			if (uf_find(&csa[j]->node) == &csa[i]->node) {
++				struct cpumask *dp = doms[nslot];
++
++				if (i == j) {
++					nslot_update = 1;
++					cpumask_clear(dp);
++					if (dattr)
++						*(dattr + nslot) = SD_ATTR_INIT;
++				}
++				cpumask_or(dp, dp, csa[j]->effective_cpus);
+ 				cpumask_and(dp, dp, housekeeping_cpumask(HK_TYPE_DOMAIN));
+ 				if (dattr)
+-					update_domain_attr_tree(dattr + nslot, b);
+-
+-				/* Done with this partition */
+-				b->pn = -1;
++					update_domain_attr_tree(dattr + nslot, csa[j]);
+ 			}
+ 		}
+-		nslot++;
++		if (nslot_update)
++			nslot++;
+ 	}
+ 	BUG_ON(nslot != ndoms);
+ 
 -- 
 2.45.2
 
