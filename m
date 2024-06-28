@@ -1,140 +1,105 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53026481D7;
-	Fri, 28 Jun 2024 10:42:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032A67FF;
+	Fri, 28 Jun 2024 10:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719571346; cv=none; b=RKKGCkTk+R+TgCG0A+xUlu/iQ8W+9a4Azt4ss3DVbctvNl0RlW2cTOSkzit47bO1qKkE2DfW5ZIKUHHDXBO8/kPc6rSoIPm1Y7IztL8jCwdEx0CWF9+jhS7//oD3GiXuELwafAvJVZUzqlPiwfRTuWtThlRZdkaPRV+RYSUMvfU=
+	t=1719571591; cv=none; b=c94e99fRWlbdSX8YEGc4+fS19civWj2HjbbZDZ4aJiMe7/nFX4NXSrjoIFXizgpdbaVT1JlKysS+K2c+l39O6f+s9+Hzfpa8u35GjLbCXWhdw9WcrNq6kgub4/AeK+ue9PCfIl/+6wudMRDpthcGE8+I1ZIxpD/BLO2rXFk4ZuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719571346; c=relaxed/simple;
-	bh=AzOtQSoVkCtblWVNNPo8qEl2mtmDEBqIe4BKHapTH4o=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=SevW1/RnAr3HH3BPoZpdz3wzm6im5dW3FdVPSaJtr5S6i4XBt9OjeonDLyXTSQ008hZXQSz+f09WPSOx7gy9gc2/wxqjDmu1Fayx8PKK0NJJxYzP0kYhBTe5uNKCamFX6W6xs1IbEQ4R4e5B0owc4lGEsW02bWfwd4UF6j8t/F4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bocju44g; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1719571591; c=relaxed/simple;
+	bh=c6QoyFA9ADx1gLHzH0Fs1PQsrqu8LB1FKRLPrvNXZbY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=T1MBCb7LO2W9odB+I3bw+0D2kAqWLWHMND7dgkC8qKgoxE5lZPC8ws3JGXUQI+IAzY7LuJAghfjMwMq7Uni4ccubX/kO76/GtGRzaHwzkwyrGnN/Wbh7DVoEI/5i5sWb2vogfa3kuiJ/M8t93wODkAGjzt2hQEM+T7zXyHFkPdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W8pAmTUF; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bocju44g"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45S8OfIU018773;
-	Fri, 28 Jun 2024 10:42:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	EgwCA/TiZVVdeqFn6kvzVH+Az0KWAmJVNHcyk6T7iY8=; b=bocju44gSCOKZxwL
-	0PNUklMcnTka++S29PJsEQ++r5Tym2QWJw8k/hPe6SvAY/rPaI3lU4zmb6gWIB81
-	iu+eZJ9myaZj0QwZbwJvvFuqBhPGVaNV95IqzbQ+hbehEy6dmXZTc0cAXywVatfj
-	wO2DEEl4lm/JYP823zC7ziTLwkOfWfMTflUn/fedduw8mtrMbKSfxDpJS+9dqn+6
-	sdrjRs2iOqcpgjEWHvfswhLCLXZDiBWOHzaUgAns2Y9wS7DqJRvQKErKPXWaPwTY
-	4wZw2UqtjLyg40vxv6tgMg7V30LePspazYitCU+bcoicXVIq/Dehbgra5Cad5Lit
-	JeW3fw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 400f90pngq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Jun 2024 10:42:18 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45SAgHcI012151
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Jun 2024 10:42:17 GMT
-Received: from [10.204.65.49] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 28 Jun
- 2024 03:42:13 -0700
-Message-ID: <a5e69a5e-b882-4f36-b023-f85da430fa2f@quicinc.com>
-Date: Fri, 28 Jun 2024 16:12:10 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W8pAmTUF"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-6eab07ae82bso295843a12.3;
+        Fri, 28 Jun 2024 03:46:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719571589; x=1720176389; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kYBiaqmHhwOqCZ7OFoximhfKm+TupOADl4NgyIMy5+s=;
+        b=W8pAmTUFv31uw7sOA5pFPUHvQO+iv0wPymSaMXDqSniC16wVNLKESye5AaRR6fPmBu
+         fTbZFTkHsHRbZftftWtb7z34nv1wYy7abAF8fyLirbTtFwgMI9+2aEElOJXZm2rHJn9E
+         taAvEePMYKkZYRVxZyFO4kQxGfFHEto6AcNvEtX+gmYEc4ermsbimtqW5h0NaIClIcsJ
+         1VKmRLFj7UwGjBq6E09aHzqKMvWMEez2yGkIcvh7jbiAKwqVn4pQxH9kUW6DAI/EMuVl
+         CygEoxv4aPfDqjxaoQb6EoE+Dtm5eP3OWPJ54L4N+VqLUiokbXDDhev343VXRpBZtgHk
+         mjCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719571589; x=1720176389;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kYBiaqmHhwOqCZ7OFoximhfKm+TupOADl4NgyIMy5+s=;
+        b=KaN0g/ASFenrjvEzF5/gSXJKstyN3iB80A+bT8KaavgDLnI/KvbQbbY6Qrpv9TJ/IC
+         N+OeNcS2N7a41ZGaLUhmup33I4kIRRLlEqEl+WRW1NmijVBfCwCEKPwTt9i3WtjzzsZT
+         jvcbkgIMOb88IJdPkB6nbhhbQcjhlbEQwXHXsV+/Mx4KpOFXQPI1XlgL4EsZC37UjNtA
+         2muCsAe2g7PqeCIPOfqmEIAn7olpVNBELRYlcAFaAtZ3u379c3XYY1I26J4kygZwddHR
+         Q/MmeKmaGymrm+lS5hO53OgZWQIktQc9s8oGV7fRxAklgIKg5jiWpk2ccqZHPc5cdUYg
+         R9GQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPJQM6JPARvnFzGZEgumsurQRgxj+PWMYcD124rnPMh4BrJ7hHupiCBi4JPi41S0XVrDR1di5AAhQncg1o70xk9eEzbo42a8jhj3xG1NHueRdpUUtyP2LB2pTQ3E+vw+Hoj3C3LKGJ
+X-Gm-Message-State: AOJu0YzOXz9z67wDfJ8UJt/pkxYkvxFFW9KbZtmu+rbQWo+saRBdRaQV
+	2KgRnb52dg++BPcMI78qHabVo1tLWxpsnpHyH6AAelzC846DPCtF
+X-Google-Smtp-Source: AGHT+IGx6SuIilwAWmhuNyghVvvr/9oosciV10FkHb+UhKExkhbhWHwsGT0A9YwqLEJ90v4iJr8utA==
+X-Received: by 2002:a17:90b:4f41:b0:2c9:3562:dd32 with SMTP id 98e67ed59e1d1-2c93562ddadmr134915a91.24.1719571588851;
+        Fri, 28 Jun 2024 03:46:28 -0700 (PDT)
+Received: from localhost.localdomain (ec2-54-95-11-209.ap-northeast-1.compute.amazonaws.com. [54.95.11.209])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c91ce53c01sm1295417a91.22.2024.06.28.03.46.25
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Fri, 28 Jun 2024 03:46:28 -0700 (PDT)
+From: Xiaobo Liu <cppcoffee@gmail.com>
+To: valentina.manea.m@gmail.com,
+	shuah@kernel.org,
+	i@zenithal.me
+Cc: gregkh@linuxfoundation.org,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	cppcoffee@gmail.com
+Subject: [PATCH] usb: usbip: remove unnecessary cmd variable
+Date: Fri, 28 Jun 2024 18:46:16 +0800
+Message-Id: <20240628104616.16441-1-cppcoffee@gmail.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] misc: fastrpc: Remove user PD initmem size check
-Content-Language: en-US
-From: Ekansh Gupta <quic_ekangupt@quicinc.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: <srinivas.kandagatla@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <gregkh@linuxfoundation.org>, <quic_bkumar@quicinc.com>,
-        <linux-kernel@vger.kernel.org>, <quic_chennak@quicinc.com>,
-        <dri-devel@lists.freedesktop.org>, <arnd@arndb.de>,
-        stable
-	<stable@kernel.org>
-References: <20240627060518.1510124-1-quic_ekangupt@quicinc.com>
- <62dzilcvsp3efxpxulzkf6e62rzcrhp55k6yjk5fymkqthdfzw@yageexbx6ddz>
- <f3d502ca-228e-4be4-b296-a9073975d34b@quicinc.com>
-In-Reply-To: <f3d502ca-228e-4be4-b296-a9073975d34b@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 1-igBpI_D-oKidRGSadCBSKs2h787c6F
-X-Proofpoint-GUID: 1-igBpI_D-oKidRGSadCBSKs2h787c6F
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-28_06,2024-06-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
- spamscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 adultscore=0
- impostorscore=0 lowpriorityscore=0 phishscore=0 priorityscore=1501
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406280079
+Content-Transfer-Encoding: 8bit
 
+There are two redundant if conditions that can be simplified to directly use pdu->u.cmd_submit.
 
+Signed-off-by: Xiaobo Liu <cppcoffee@gmail.com>
+---
+ drivers/usb/usbip/usbip_common.c | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
-On 6/28/2024 3:59 PM, Ekansh Gupta wrote:
->
-> On 6/27/2024 4:43 PM, Dmitry Baryshkov wrote:
->> On Thu, Jun 27, 2024 at 11:35:18AM GMT, Ekansh Gupta wrote:
->>> For user PD initialization, initmem is allocated and sent to DSP for
->>> initial memory requirements like shell loading. This size is passed
->>> by user space and is checked against a max size. For unsigned PD
->>> offloading, more than 2MB size could be passed by user which would
->>> result in PD initialization failure. Remove the user PD initmem size
->>> check and allow buffer allocation for user passed size. Any additional
->>> memory sent to DSP during PD init is used as the PD heap.
->> Would it allow malicious userspace to allocate big enough buffers and
->> reduce the amount of memory available to the system? To other DSP
->> programs?
-> The allocation here is happening from SMMU context bank which is uniquely assigned
-> to processes going to DSP. As per my understanding process can allocate maximum
-> 4GB of memory from the context bank and the memory availability will be taken care
-> by kernel memory management. Please correct me if my understanding is incorrect.
-Just wanted to add 1 question here:
-User space can also directly allocate memory. Wouldn't that be a problem if any malicious userspace
-allocated huge memory? Is there any bound check or is it handled differently? Please help me with
-some information here.
-> --Ekansh
->>> Fixes: 7f1f481263c3 ("misc: fastrpc: check before loading process to the DSP")
->>> Cc: stable <stable@kernel.org>
->>> Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
->>> ---
->>> Changes in v2:
->>>   - Modified commit text.
->>>   - Removed size check instead of updating max file size.
->>>
->>>  drivers/misc/fastrpc.c | 5 -----
->>>  1 file changed, 5 deletions(-)
->>>
->>> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
->>> index 5204fda51da3..9d064deeac89 100644
->>> --- a/drivers/misc/fastrpc.c
->>> +++ b/drivers/misc/fastrpc.c
->>> @@ -1389,11 +1389,6 @@ static int fastrpc_init_create_process(struct fastrpc_user *fl,
->>>  		goto err;
->>>  	}
->>>  
->>> -	if (init.filelen > INIT_FILELEN_MAX) {
->>> -		err = -EINVAL;
->>> -		goto err;
->>> -	}
->>> -
->>>  	inbuf.pgid = fl->tgid;
->>>  	inbuf.namelen = strlen(current->comm) + 1;
->>>  	inbuf.filelen = init.filelen;
->>> -- 
->>> 2.34.1
->>>
->
+diff --git a/drivers/usb/usbip/usbip_common.c b/drivers/usb/usbip/usbip_common.c
+index a2b2da125..74a01a265 100644
+--- a/drivers/usb/usbip/usbip_common.c
++++ b/drivers/usb/usbip/usbip_common.c
+@@ -568,17 +568,9 @@ static void correct_endian_ret_unlink(struct usbip_header_ret_unlink *pdu,
+ 
+ void usbip_header_correct_endian(struct usbip_header *pdu, int send)
+ {
+-	__u32 cmd = 0;
+-
+-	if (send)
+-		cmd = pdu->base.command;
+-
+ 	correct_endian_basic(&pdu->base, send);
+ 
+-	if (!send)
+-		cmd = pdu->base.command;
+-
+-	switch (cmd) {
++	switch (pdu->base.command) {
+ 	case USBIP_CMD_SUBMIT:
+ 		correct_endian_cmd_submit(&pdu->u.cmd_submit, send);
+ 		break;
+-- 
+2.34.1
 
