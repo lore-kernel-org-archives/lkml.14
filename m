@@ -1,220 +1,92 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69478002A;
-	Fri, 28 Jun 2024 22:56:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2163824B2
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 22:56:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719615378; cv=none; b=RBwei/aVOedlYQpe0TI8eNTUFBr7Q+OEmEpTURMCmvGgGYOGDQALuxe77k11cVa3OrVLyZ6dkZpWGeuy7ZBviYUMGORJyKymNEPO3S3utE1ur4UBwJJSZIasvKwJ6634iIMVdDTMhLFjL3xAN8A7cs6brZSKoIa2Ua4AhHR45ww=
+	t=1719615379; cv=none; b=cURfgG+YtPuw7Hrkf8qhVO5C7du6lCTKbyZqp+Vht6Bm2LFTQtI3DHY284F18gO4XGIwbIswkqvXFpOKpS37UvEsj9hgZHXHNq/W1QQM1RiwZNF2s5a1aE70OL81bnx14mqFG423trW7rUj9aDK1SUHmJMBiaUe2h5I84d6bO8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719615378; c=relaxed/simple;
-	bh=jqYFSUT/a2n7uSZLnvdv9HsDOXaAO27gYxryHNzeCEI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Fj26knmwE/kz3l4rEnLmFl5sEprsT2lKNmxFgHxjuZJMsF7qz/mfe2LTqkY455FT3PkU+EC1Sll9Q8RdV/cwdunp7lJ2vNQ7m/s2Vc0nPNySrTPGYIu7xaY2Ojwgvkw/BIZFWK7abbGgIeni9u5K7VNIuhzvm5rsJdXlIoQ97Bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nipEa4aN; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719615379; c=relaxed/simple;
+	bh=tYHwGPzeAgpklCMmG17VwiaX8VetjCTGdecbXelbbUs=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=kWxySbq3Yv4GZuCtf9wxflCJUl2JEtbEiKT55+os89jywzwB1U6hvBVIJSl3NpxRNRBjaF6c6mhswlvZpEu7EA48PKnXxsohb9P3g3/cPpyqrUQN3FE+VynJ0AhlbzNcSQdAZr88gjQ1YZ3w1OE2eZEqKNVgkBCvbh98cp53GXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1i3w6crr; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nipEa4aN"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-7180308e90bso795686a12.1;
-        Fri, 28 Jun 2024 15:56:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1i3w6crr"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-72c1d0fafb3so927198a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 15:56:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719615376; x=1720220176; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xUcQS852IggxOCmKXqE3YJJNYXGvn0FPbNBN8y1e0Sc=;
-        b=nipEa4aN5/DRpNre/mZ2R3kmiAOak4l0cFdUZCyJPXH/8FWqZUlREizPRDky/YM4GT
-         moL+8cnhvVEEN/MoWb0UceOvZ7S2erjY35Gr8L5tStFaA6FdBTIXNv5pwSGjkLLV8mKb
-         sWYsed9upcfWBGGYHe/O+P527djykRFA6rVpVyq/LlLt1ltw+uPPuoV6AcXcglhVhceX
-         MGT7Cci2zGsOIcKJ21pbAB5CW48PE6KDoLyKje6L9JfQI7QZK8uxfa03r77KAm/efmZy
-         S64Lq+O0Qm/8+medi6OE4AAsOGbXgofJPQOWYXmCcCkP0QiuziIKpIgX18YWPY2RGjhk
-         UY1A==
+        d=google.com; s=20230601; t=1719615378; x=1720220178; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XDxiiVVnrl82x4ZZMEBuMnAQFf8fEn2Km8Ydtn4qydE=;
+        b=1i3w6crrMOB3lD6fXWDCjvcdEBG/t9q/Ziwz48DilkxHBwZ8Ybljy28mD/meJPcElU
+         EI1tAjboUQ9dUUpTjy/ZZtNFOpmVzFK6s2nJw0qjX7DQlfNt6wOoIS09fp4e2ynF5rQ6
+         1xBMr6fiOaFBxN9uehfgYF3SoenJU385lb2ksZ55z8Kc9qmfgZq/Oi2U1wjNEjMfwOfL
+         RhKbz/jnslXFgWwxluvVG3ReBJ2WHWev8zMzhtRr90WT1zD4si9MKUZNJgmbpEB7Y/0V
+         HNDpnDYw3AKTfT5N3kWsjPNpiD5SaEUamTxVwZCUJbPgsyjpT9Jrp6CCrm0mRSNzzKPN
+         evRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719615376; x=1720220176;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xUcQS852IggxOCmKXqE3YJJNYXGvn0FPbNBN8y1e0Sc=;
-        b=vKLMkS81V2GQRBuvxlzWXSRzuNcHMfdvKG08tFUPvHuIFpDHpEzTSMSU2Ng4BmD4ES
-         C0B8rKKU0LNDPyhGq5oX3/C7Wlj0IY50mg59bg2uaI2jo5uZs0379wHfdcVsH9XrF+AO
-         NAhADk/9X5hte8nzavw0a/okpcCMPF5Wlor+qIOphAszB53ZPy1oJxSMqnvCnOzzGUR4
-         0HjE2CI+WjO8EyLwFO64zJrp6y/Y2Ewbbg7Z7iNm9MwYQiyHeDBLXMUfNNVVB0IjhquL
-         n3Kt8BvQeZrg1TO8pkiPyPuDVGxHj8Y0MWD0dHHQD/cN2fBu6X3ep7NYaGZ96xX0oPIr
-         4VNA==
-X-Forwarded-Encrypted: i=1; AJvYcCVDZ7Z1LQoxXG1txwEhBAxJgHQsYmZbmEHzKcKSvzmYBEGVq0AR97rrL1A4MpUtbc5AVp7WpnO1eXKwqXY2NtypSSxncSSBIAOgCy4SsvYlemCCBpdiuonJ/R6oXoamg/PqeZUUv1YJgg==
-X-Gm-Message-State: AOJu0Yx5YaqqV8Wdrb2VO/X/2gcMIKgXGRkiQhYAsgQKw/iZn+thxmT8
-	cJIiMu7OEtbpJ+d0ksgrYhQTT+9S3fxrCoN70qhJR8St7/iFe1cf
-X-Google-Smtp-Source: AGHT+IEZnjxDA5OCNYz7pbDMXf6iKykKThrzOkcD/z8qiGIfTDi72Ed5E+eRlHQkwB0H36m+T2fExA==
-X-Received: by 2002:a05:6a20:c123:b0:1bd:2994:b5bc with SMTP id adf61e73a8af0-1bd2994b984mr9724732637.58.1719615376114;
-        Fri, 28 Jun 2024 15:56:16 -0700 (PDT)
-Received: from localhost.localdomain ([177.194.39.94])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c91ce17a5fsm2176711a91.3.2024.06.28.15.56.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 15:56:15 -0700 (PDT)
-From: Lucca fachinetti <luccafachinetti@gmail.com>
-To: pavel@ucw.cz,
-	dmurphy@ti.com,
-	robh+dt@kernel.org,
-	lee@kernel.org
-Cc: linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	g.luiztrevisan@gmail.com,
-	Lucca Fachinetti <luccafachinetti@gmail.com>
-Subject: [PATCH 1/1] dt-bindings: leds: max77650: convert the binding document to yaml
-Date: Fri, 28 Jun 2024 19:55:51 -0300
-Message-Id: <20240628225551.107833-1-luccafachinetti@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1719615378; x=1720220178;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XDxiiVVnrl82x4ZZMEBuMnAQFf8fEn2Km8Ydtn4qydE=;
+        b=HG5hxm0siCriI3ehg0TgfYtvZmbLqK5x/RDrGvCle8BMAddyNU9/TL8TRafRPpK13Z
+         xIn75c1LgaqisApfMUIKYlxOjO+m2xsUqPuSizUCWY/QNw0vwHbWNcwHvmDT/kB0dTzA
+         nhJsAtr/xnYfYTMoLcV46gzcCPGQErYPZFTyXHsu8e/0lSwe9kyKvKr45dzkin/WHLZS
+         DRzx+PL4wpED5lePVDFiOXZDlst91eWaQk08Qs4j+PdNLneCYSeI//2xzok9GeamUsK2
+         4oJwvpbOvKyk7R3dbqviCo6PNQ01ZIht85B/K7qmgYM5PKTIxXYnuusl2urg4ROBZGHv
+         rJvA==
+X-Forwarded-Encrypted: i=1; AJvYcCVG2E+eUKLqInSBLOX9XiccCy3jz9kml+9qMU9QrFcH8T5fu5425E1AyXro8Wxct/FD3J8crrLSL3x//jsprB1nIdgSU233Z4Yyr2FN
+X-Gm-Message-State: AOJu0YwGAosghb7t1KZdf+ojfvV8mBZ82PEZIG/r9i7XdO913KAGdL3c
+	C00vVyfSWvJSMgH8DxYq2yIQ4eiozBRN1a3EtydKo1rjrNgPzpCgETaAgequJ8HFLNPZEgF0xxC
+	U1Q==
+X-Google-Smtp-Source: AGHT+IFuclu+QRiL03Nr/e3Jt+cogkBXUNrfgJqbhX0E0zDCMxVddXN2gK9vtSiGxK0P1fMNG/gRlzq8QuI=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6a02:117:b0:659:23db:a4b2 with SMTP id
+ 41be03b00d2f7-71b5f3516f0mr48811a12.8.1719615377866; Fri, 28 Jun 2024
+ 15:56:17 -0700 (PDT)
+Date: Fri, 28 Jun 2024 15:55:26 -0700
+In-Reply-To: <20240622-md-kvm-v2-1-29a60f7c48b1@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240622-md-kvm-v2-1-29a60f7c48b1@quicinc.com>
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
+Message-ID: <171961376508.228791.6632768103700293303.b4-ty@google.com>
+Subject: Re: [PATCH v2] KVM: x86: add missing MODULE_DESCRIPTION() macros
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-From: Lucca Fachinetti <luccafachinetti@gmail.com>
+On Sat, 22 Jun 2024 22:44:55 -0700, Jeff Johnson wrote:
+> Fix the following allmodconfig 'make W=1' warnings when building for x86:
+> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/x86/kvm/kvm.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/x86/kvm/kvm-intel.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/x86/kvm/kvm-amd.o
 
-Convert the binding document for max77650 LED module to yaml.
+I split this into two commits.  The x86 changes went to `kvm-x86 misc`, and the
+generic KVM one went to `kvm-x86 generic`.  I split them partly so that I could
+opportunistically delete the VT-x comment from kvm_main.c, which was comically
+stale.
 
-Signed-off-by: Lucca Fachinetti <luccafachinetti@gmail.com>
----
- .../bindings/leds/leds-is31fl32xx.txt         | 52 --------------
- .../bindings/leds/leds-is31fl32xx.yaml        | 67 +++++++++++++++++++
- 2 files changed, 67 insertions(+), 52 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
- create mode 100644 Documentation/devicetree/bindings/leds/leds-is31fl32xx.yaml
+Holler if anything looks wrong.  Thanks!
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt b/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
-deleted file mode 100644
-index 926c2117942c..000000000000
---- a/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
-+++ /dev/null
-@@ -1,52 +0,0 @@
--Binding for ISSI IS31FL32xx and Si-En SN32xx LED Drivers
--
--The IS31FL32xx/SN32xx family of LED drivers are I2C devices with multiple
--constant-current channels, each with independent 256-level PWM control.
--Each LED is represented as a sub-node of the device.
--
--Required properties:
--- compatible: one of
--	issi,is31fl3236
--	issi,is31fl3235
--	issi,is31fl3218
--	issi,is31fl3216
--	si-en,sn3218
--	si-en,sn3216
--- reg: I2C slave address
--- address-cells : must be 1
--- size-cells : must be 0
--
--LED sub-node properties:
--- reg : LED channel number (1..N)
--- label :  (optional)
--  see Documentation/devicetree/bindings/leds/common.txt
--- linux,default-trigger :  (optional)
--  see Documentation/devicetree/bindings/leds/common.txt
--
--
--Example:
--
--is31fl3236: led-controller@3c {
--	compatible = "issi,is31fl3236";
--	reg = <0x3c>;
--	#address-cells = <1>;
--	#size-cells = <0>;
--
--	led@1 {
--		reg = <1>;
--		label = "EB:blue:usr0";
--	};
--	led@2 {
--		reg = <2>;
--		label = "EB:blue:usr1";
--	};
--	...
--	led@36 {
--		reg = <36>;
--		label = "EB:blue:usr35";
--	};
--};
--
--For more product information please see the links below:
--http://www.issi.com/US/product-analog-fxled-driver.shtml
--http://www.si-en.com/product.asp?parentid=890
-diff --git a/Documentation/devicetree/bindings/leds/leds-is31fl32xx.yaml b/Documentation/devicetree/bindings/leds/leds-is31fl32xx.yaml
-new file mode 100644
-index 000000000000..0f4c7c3440c6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-is31fl32xx.yaml
-@@ -0,0 +1,67 @@
-+ # SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/leds-is31fl32xx.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: LED driver for is31fl32xx and Si-En SN32xx.
-+
-+maintainers:
-+  - Pavel Machek <pavel@ucw.cz>
-+  - Lee Jones <lee@kernel.org>
-+
-+description: |
-+  Binding for ISSI is31fl32xx and Si-En SN32xx LED Drivers
-+
-+  The is31fl32xx/SN32xx family of LED drivers are I2C devices with multiple
-+  constant-current channels, each with independent 256-level PWM control.
-+  Each LED is represented as a sub-node of the device.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - issi,is31fl3236
-+      - issi,is31fl3235
-+      - issi,is31fl3218
-+      - issi,is31fl3216
-+      - si-en,sn3218
-+      - si-en,sn3216
-+
-+  reg:
-+    maxItems: 1
-+    description:
-+      I2C slave address
-+
-+  '#address-cells':
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+patternProperties:
-+  "^led@[1-9][0-9]*$":
-+    type: object
-+    description: |
-+      Properties for a single subnode LED.
-+    additionalProperties: false
-+
-+    properties:
-+      reg:
-+        minItems: 1
-+        description:
-+          LED channel number (1..N)
-+
-+      label: true
-+
-+      linux,default-trigger: true
-+
-+    required:
-+      - reg
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#size-cells"
-+  - "#address-cells"
-+
-+additionalProperties: false
--- 
-2.34.1
+[1/1] KVM: x86: add missing MODULE_DESCRIPTION() macros
+      https://github.com/kvm-x86/linux/commit/8815d77cbc99
 
+[1/1] KVM: Add missing MODULE_DESCRIPTION()
+      https://github.com/kvm-x86/linux/commit/25bc6af60f61
+
+--
+https://github.com/kvm-x86/linux/tree/next
