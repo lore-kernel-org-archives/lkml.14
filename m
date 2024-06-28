@@ -1,70 +1,146 @@
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80D3422EE5;
-	Fri, 28 Jun 2024 05:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDD04436B
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 05:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719552018; cv=none; b=KhraCoq05ZIIwcIZYPwKEPCvwDRpvxsuj2ONNdobDH8zq2lGW+D1Wj9G4tdgXrONmN3UVf+rPJMXW1c0AiJTbYIZbL1iH1UeEFvQAaKyo5z10Cp0sbe3EIL4F7Arvt//JUDZtq6hdQEdZ6BpbF/TVlMRMWQPjjlL2PgkCaMa2Wc=
+	t=1719552031; cv=none; b=jmQtGjdBA4t15AKa1rQRXUeo8CJVmmAyK3dvYsEGYcbEKOyJRsv9dFg0A7L9bFzNBQWr5OdDMutIy7JoC1HZPgoMn4BUqWYmrRMDzGOl8XPiCysQ/l1s6JRnp+Arc3aBRqaBuZGI0l66+sUuCVQ36qDYnIKdUQ8cbYMTHcPF7z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719552018; c=relaxed/simple;
-	bh=uk8lVFe1GMhlZm8thQQUhVGTFYSkxhX0O3YrfzVsaKc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NIJA4e9bS1FfRRid2+V1a3GFEdR7NNaRE5PXACv6KJmER1WAwa7aXhFR4c70IUn85qt4Ky+j/Xg5YKoNopIFr1x0L3gPk0+IE3qdlCvnZRjZHGQOjq1wM+kxAMqoFTJ+HDVV9SSaXOVFNBLzIGTcHKYD+LKwc6Q9BMwGIMAoBeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ezeilidM; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1719552031; c=relaxed/simple;
+	bh=FEeU+ilaz87za6zCPoFOaXlZVVMvh4npbKUCi8WeMY8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=tJHxNPokjk7J/Soyohy4wY2TtYmz6SFYhBye15pWydVNnTcKZIoQyAa34nfBo7mbRf4aWjF5IVSHP4zfRT6AyJWOjYhzfkUxMtuxtqfRpAr57mIEQSveHYA2USJM8LLzrxOlibtEQc7OBTLAU4FN+9dVlkzJxcBVrx+OOKwGx6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WP//koJZ; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ezeilidM"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1719552012; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=OnHi57XgkduSSpmmFaQ+BITXaOPXtSLnOYlN1StK5UI=;
-	b=ezeilidMNPn4JrHsN+rbJEL4Fqt+6OB4/zQQP1jaVXG7usPlsKnp93nKr96WVZ4/NNiL4apmZ2a5XYVFq7YOTJYNwQ1MeM6jk0RucohwXOUeI8zpqkkBnK2Hm6sZeX5aW8tFEdR0Bf30GhMoxQlkJ3CKYMGP0m7VFoPSuhzeNI8=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=yang.lee@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W9P6E2b_1719552011;
-Received: from localhost(mailfrom:yang.lee@linux.alibaba.com fp:SMTPD_---0W9P6E2b_1719552011)
-          by smtp.aliyun-inc.com;
-          Fri, 28 Jun 2024 13:20:11 +0800
-From: Yang Li <yang.lee@linux.alibaba.com>
-To: geert+renesas@glider.be,
-	magnus.damm@gmail.com
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yang Li <yang.lee@linux.alibaba.com>,
-	Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH -next] soc: renesas:  Remove unneeded semicolon
-Date: Fri, 28 Jun 2024 13:20:10 +0800
-Message-Id: <20240628052010.31856-1-yang.lee@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WP//koJZ"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52cdebf9f53so176660e87.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 22:20:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719552027; x=1720156827; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CE116OZhrAVtMTDLnoQyRJAzaM6771HphQwBOF0FA8Y=;
+        b=WP//koJZyAchgYrt88VAsD8Auu+edhF5AIqLLaU2a4PKvA3s9+GXL4lTOuVFAwmF9c
+         dbJHJVppKko10srTytpdn+CB/yuToyM3BEREGHbMHi7gx1Uqlqx92Ngre/uUEcJNEdqb
+         JlWaJvCgi2WTZ9GiQ19yGcc+vbHRJdBUqnenOhnaZK7zQcnKopl1SIkcuvEJJbCCU2ux
+         GNMprBX1veZbgOLa/C/CAIb6VABhq+yFZh54j9zYUCmrBRqLrtvyG8+NMA8vZZI54z7Y
+         +V38fjTc7coHKM57QQsevGH1Y0an53HLIMpR6HCj2T0ucYSjzh6xuQz8h0nuJEbu1Scy
+         z1Vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719552027; x=1720156827;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CE116OZhrAVtMTDLnoQyRJAzaM6771HphQwBOF0FA8Y=;
+        b=c988Bly2mEo7jYWdb4GjGK2n2xlYBjmIDql7llciY/KJvPKx7brSN482QW0zZ48S11
+         AAc+Wf6TR4RoKaAt5ByHNS9KbS3704U94ZujzhR3+H5WCobqzo0TBAALcsXshBOK1VDm
+         LAMp6FJCMQ+1vd1KlkNrl7fYPpZr/S1+TIGPSCIpBQKq2C362oeve9wMkXBNh7p5e6lR
+         VPpD4beLseyxGAwdJVSUQz3+2UjL3lSd9NyXSh7GCenA/KHuMUEUfZy6kG/tIWEVckFx
+         jR7nGbSKvn622SZz61+uXQ3C1TWx4i9hw9R1F/GAQ83EWombggeoHDHBbab9xxdXSbeY
+         7ZRw==
+X-Forwarded-Encrypted: i=1; AJvYcCWzAt1/fEYRNa4znYgvZvVIPI0kRTlELDkJ42r+7C/wWpSUODjAB8gZaRlYL2HJSp0Epyn+HZPvrBZ4qc5eVxWRAItXQoxZXulTVzma
+X-Gm-Message-State: AOJu0YyhbrpCscXeNulXNATdbxuDDbzX5vF7AMvOHgk4hvrCpgKdgnuq
+	iWUcugavvUF7+MmEw1EDIX8qtMP0T8h7xBEvqpp6nUC6KlKe+TT/ggu6U3KSN6A=
+X-Google-Smtp-Source: AGHT+IF4eRuRBZixOvQGuZCBjBcZCcjgRAouzf5T2iMOhKSrhskvdlh7B9lkuHj35Rhv+diaJJm5Xw==
+X-Received: by 2002:ac2:4c84:0:b0:52e:7125:c70a with SMTP id 2adb3069b0e04-52e7125c847mr2357345e87.47.1719552027519;
+        Thu, 27 Jun 2024 22:20:27 -0700 (PDT)
+Received: from umbar.lan ([192.130.178.91])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52e7ab101c5sm167736e87.79.2024.06.27.22.20.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jun 2024 22:20:27 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Fri, 28 Jun 2024 08:20:22 +0300
+Subject: [PATCH 1/2] clk: qocm: add qcom_cc_map_norequest
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240628-gpucc-no-request-v1-1-b680c2f90817@linaro.org>
+References: <20240628-gpucc-no-request-v1-0-b680c2f90817@linaro.org>
+In-Reply-To: <20240628-gpucc-no-request-v1-0-b680c2f90817@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>
+Cc: Rob Clark <robdclark@gmail.com>, linux-arm-msm@vger.kernel.org, 
+ linux-clk@vger.kernel.org, freedreno@lists.freedesktop.org, 
+ linux-kernel@vger.kernel.org
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2058;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=FEeU+ilaz87za6zCPoFOaXlZVVMvh4npbKUCi8WeMY8=;
+ b=owGbwMvMwMXYbdNlx6SpcZXxtFoSQ1qdh1RGtLDqrSahc1eU78cyaX6fMsk2Ms1cU3jH+5Mnr
+ 3jPjJ/YyWjMwsDIxSArpsjiU9AyNWZTctiHHVPrYQaxMoFMYeDiFICJ5Exi/6en+kjt9wSPSSc/
+ v3DbN6/GxTHnVxK//+UQj21NK55PelrscvGXSN5NZ5aDAdZ1EZEOFx7NyMiT2Pow/6S56eZqtwu
+ a6hfquOV5D3suq7grr1S8Z5Zm4J4Im6xIoSr9bvGmlvV8sjF2mzk/v1/sH+MinDzDnrc28kXT8g
+ snlOR+Gy08ZCx89p59/NzM5+EMgRI+ywMbfHUbJsv+0JwhmvnbbmfFYYdKEX3HuV31jkwuzGu4Y
+ xd0eZhouamI7JpY2G21Pqgut1OukDU7zS3njblriP2avWJJLB1ys3li1N6wP77Wz2p1Kkw18+4X
+ l+T0d+ekTFuzY1TOXNx0v9wj3bnDZ4sO942MF1tNrwAA
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-./drivers/soc/renesas/rcar-fuse.c:124:2-3: Unneeded semicolon
+The GPU clock controllers use memory region that is a part of the GMU's
+memory region. Add qcom_cc_map_norequest() to be used by GPUCC, so that
+GPU driver can use devm_ioremap_resource for GMU resources.
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9441
-Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- drivers/soc/renesas/rcar-fuse.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/qcom/common.c | 20 ++++++++++++++++++++
+ drivers/clk/qcom/common.h |  2 ++
+ 2 files changed, 22 insertions(+)
 
-diff --git a/drivers/soc/renesas/rcar-fuse.c b/drivers/soc/renesas/rcar-fuse.c
-index 8fb2374f919b..cf665f2e4a9d 100644
---- a/drivers/soc/renesas/rcar-fuse.c
-+++ b/drivers/soc/renesas/rcar-fuse.c
-@@ -121,7 +121,7 @@ static int rcar_fuse_probe(struct platform_device *pdev)
+diff --git a/drivers/clk/qcom/common.c b/drivers/clk/qcom/common.c
+index c92e10c60322..dcc73bc22606 100644
+--- a/drivers/clk/qcom/common.c
++++ b/drivers/clk/qcom/common.c
+@@ -113,6 +113,26 @@ qcom_cc_map(struct platform_device *pdev, const struct qcom_cc_desc *desc)
+ }
+ EXPORT_SYMBOL_GPL(qcom_cc_map);
  
- 		fuse->offset = data->offset;
- 		fuse->nregs = data->nregs;
--	};
-+	}
++/* gpucc shares memory region with GMU, don't request the region */
++struct regmap *
++qcom_cc_map_norequest(struct platform_device *pdev, const struct qcom_cc_desc *desc)
++{
++	struct device *dev = &pdev->dev;
++	struct resource *r;
++	void __iomem *base;
++
++	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!r)
++		return ERR_PTR(dev_err_probe(dev, -EINVAL, "resource not found\n"));
++
++	base = devm_ioremap(dev, r->start, resource_size(r));
++	if (IS_ERR(base))
++		return ERR_CAST(base);
++
++	return devm_regmap_init_mmio(dev, base, desc->config);
++}
++EXPORT_SYMBOL_GPL(qcom_cc_map_norequest);
++
+ void
+ qcom_pll_set_fsm_mode(struct regmap *map, u32 reg, u8 bias_count, u8 lock_count)
+ {
+diff --git a/drivers/clk/qcom/common.h b/drivers/clk/qcom/common.h
+index d048bdeeba10..6cab7805a92c 100644
+--- a/drivers/clk/qcom/common.h
++++ b/drivers/clk/qcom/common.h
+@@ -60,6 +60,8 @@ extern int qcom_cc_register_sleep_clk(struct device *dev);
  
- 	memset(&nvmem, 0, sizeof(nvmem));
- 	nvmem.dev = dev;
+ extern struct regmap *qcom_cc_map(struct platform_device *pdev,
+ 				  const struct qcom_cc_desc *desc);
++extern struct regmap *qcom_cc_map_norequest(struct platform_device *pdev,
++					    const struct qcom_cc_desc *desc);
+ extern int qcom_cc_really_probe(struct device *dev,
+ 				const struct qcom_cc_desc *desc,
+ 				struct regmap *regmap);
+
 -- 
-2.20.1.7.g153144c
+2.39.2
 
