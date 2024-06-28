@@ -1,41 +1,33 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 757B013E3FD;
-	Fri, 28 Jun 2024 07:27:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD3F2D05E;
+	Fri, 28 Jun 2024 07:28:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719559647; cv=none; b=I2FSN1F51a31kfb5JN+mxIjBEKN1+tS1ye7c5BOUgKtE0r8YdZSw6l/QeUNEd6U+HxwQAHqNTmKz1KitEmKgWR4OtSem3s+pthA0Lp7ZdttWQai5MlA+QvdPVZnsnX9kvUQ2U6soQUh9ud7+tH0bjbfolwDcxy9DLddQaPy5+us=
+	t=1719559698; cv=none; b=o7bdTxU4vJn0po2/bg9mf8t0I4nZttRpQGxcfmi0MZtj08li1ZCjOaeP8/eQ9Lvm2EooVHNT/c5H8hLunh50u9bt7b28SM1EVcFmnVNZgZ3gXsSx2dygQofhSq39r4a4NPU2VnUcGnUmFBwhzJ4QYBDBc3/9ZHROfe75gUq2/5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719559647; c=relaxed/simple;
-	bh=GzFaYYQU3q+oka/5f4J6D9YJgYGUys2RDo5EPNs7WLs=;
+	s=arc-20240116; t=1719559698; c=relaxed/simple;
+	bh=P1rkD1ZLttF6haWdELRr7ZVi3OVnI20vQQSBpE8Bt1g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KtdDJhh25y7wWa5HjBwAJT3zjpu94msSwyWw0gvUFG4ZMR01lNjxG9t4IOeexW8L4yrVz0kAbuOk1uNUbdEpsylv2XsXWmpRb6L2awbGobJ7RinAWKluKDnCRCpl0J4KinubKZlhb6vUyyZiO10LZEcKm7WK+6+NSGaiaVSTRsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=GvNIrfqu; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	 In-Reply-To:Content-Type; b=mZfQO8HVJm/Srj8De6tWBwU/xd2Hb7PYejMw6BC8SZ6DPg44blh6/EJo4948gV5ZG4/pAF0/DIFtuaVQNddRh0/7BkBD/ZI0ZK3Pc30ARYFA5ovljXogISVEvA0Af7JaX9sTv8lJx4+eWCRqmizTGCTt8Kp6eyOFmvC5kqqKtcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oGXpFF0K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="GvNIrfqu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1719559620; x=1720164420; i=markus.elfring@web.de;
-	bh=nl0CL9GDIaeTPnglvyjXELGMdmLp+0wQCRgVbrDa0Xc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=GvNIrfquwx4IxnfzelRFzL06vT+ZrXCBp8ECAZhYWDDJke7/sN2mpOOyAAEQZy9f
-	 G6ZgRL0v+nV7ll3aneE+TBVb0dwvJRptMY+Rnutx9kZXdPE0xDiKX+3wVsoiWmPhQ
-	 pFRHgunBu6n35lX24q/5rZn3WphUz2ataWOd2Mrzs18t0AUns7w/OPGoNFH8Smify
-	 om5wq6ZiEW2GK+h3ViMpwjy5cH0k6gtUMMbywXNbpGd19jBNkNGbftnRFwrsBIe9v
-	 z2AMvGJrj3gq2fuSAL9tNhlKDhyD2X4JUhfDaMw+v9QiSOE1JUxPOwwfJDa5Dh3Mb
-	 cU1vgnWKsiGKWGGzdw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1M5j1c-1sFyTW3WiA-009URR; Fri, 28
- Jun 2024 09:27:00 +0200
-Message-ID: <0d2704d9-202c-457b-a83d-75a427966564@web.de>
-Date: Fri, 28 Jun 2024 09:26:47 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oGXpFF0K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29D08C116B1;
+	Fri, 28 Jun 2024 07:28:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719559698;
+	bh=P1rkD1ZLttF6haWdELRr7ZVi3OVnI20vQQSBpE8Bt1g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=oGXpFF0KO6sH+ORQiqWd2VaIQHoPKHscfNL6tL6UgBDDP7y2I6fCoN/qmHHLudDAc
+	 P8B5VAywvNqQtf7TOBmJTxly+zWLrtkWTwNvekNcqCHSR+3Jr1CUDlEChPJzaCQyqp
+	 iL/I88XvGusxUDaiBUB1cn+4S7+fmllBRk7vXD2c2GQsc+Ea6jPDOyP5OBmeeFX01O
+	 9K7IuYyz4UQSXC+NNmoUcVRExvnRtMsBUM1Z4U5rIw0n97PPa04VvftmXle4d90Un4
+	 hwm9hTcLHpXNxAlOMUkplAVpMP32DeJm9AkuOLaU0PF44tt+ji/E4u8Z84lWVdnXZs
+	 jctb5wkqUeE7w==
+Message-ID: <ead8926a-f56f-4102-b7de-4464dc087d3d@kernel.org>
+Date: Fri, 28 Jun 2024 09:28:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,134 +35,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: [PATCH 2] usb: typec: anx7411: Use scope-based resource management in
- anx7411_typec_port_probe()
-To: linux-usb@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Jonathan Cameron <Jonathan.Cameron@Huawei.com>, Xin Ji <xji@analogixsemi.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Julia Lawall <julia.lawall@inria.fr>
-References: <889729ac-3fc5-4666-b9f5-ce6e588a341a@web.de>
- <20240606101757.0000331f@Huawei.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240606101757.0000331f@Huawei.com>
+Subject: Re: [PATCH 1/1] dt-bindings: gpio: fsl,qoriq-gpio: add common
+ property gpio-line-names
+To: Frank Li <Frank.Li@nxp.com>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, "open list:GPIO SUBSYSTEM"
+ <linux-gpio@vger.kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: imx@lists.linux.dev
+References: <20240627202151.456812-1-Frank.Li@nxp.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240627202151.456812-1-Frank.Li@nxp.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:iGRJMg3HVVWt+ehkSA2MzkeVAPv/Hn5WVwelrW7NtILx9T7WsC2
- zI86UvidMu9tiMK2rVoK6Ia0f7fDMn77Yw31x7afp97lDWE87HPembl1DydWP4PeiJ3UtdL
- z8bVAL8GaUICf7cfoCzglJ/ucWJv4WmSQcEcAga6yaw/TXCHPJ46UAWTIeeUvIGOvcs43Zk
- rctE3izcHnYeEMYymzniA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:WMNp1tp+eX0=;7SG/gANxHI2ek2gitqo80qqvDDd
- GTmzPe8GerRu2Au6/GL13hP605zrf0Kyi8Qq2dyFs9QT+55WH8FJQiLvmSsbxyh/OaCLS3BOc
- 3+QfP0YHl6o5iK3u4Zr6yxRMxA93aak6ALYs+HDd7iHoojzJAiWlnMoQ1AeREwgZkCVG8L6E6
- yH0sNpnFs3vseBKEbedZjt0/ut10xcfkpeL2rP68OvL15ujQtaik+a4ePACZ9aBzwhwMUF2jZ
- 4ANraoppJG9YJsh4CP58S7R3pmcdfJ1W+wYqTeGYgPyt7oobGtXhAQpbiKDuBFP5p9PlbhJyh
- amIqGuEjoPDSYlNgm8hKWS2Iq+G+KEaAyMqzMRw4H0lhEHZxviGoxX1hE0LnEgvte/hI0L/hJ
- ktmE2PPtIvIrbBvwlKwQSur2TTgK9VNptS3xeB4Uc00vNrk5CqRnu+Gi9WLLDvfFfxpM5fHjE
- e1Jvi0LG9bISmh85oqs8h0MDyCxH0yQcIY13EL1xnpANLvAbCfqabQC8Ew/tHHvS4Fms5HPAL
- ZFLtP8ws/Kua3DCksaRLLjP9rvkBWugFyDAuN91/DfTdifUWoXQ5NPZHSnSMzaw5l/u5CNDTW
- QaneYLeceuxLYdGMTmr2rT7ylEJHZywlQ8KiMXuJc89NqY16800d0RAgMQqDv+ohBhR6fg8DR
- r+DMxFJGxjGjjK1VOxjEcDqK6EqMZshWsD5uXOFH/7GmG8M1qi4xrY4G995HVqLZYyhVB6bnc
- gHKO/iQxi/iJ26D7Le9Mzkkp6b9FUHbEHSS6xEZk97yu1d+DQfqhtBPFFZNgUbDV1aiQwpQtO
- LeM2aeDJLllpOxeTi79Ca8HT+7dqGGS2amrhtSLbyHDYI=
+Content-Transfer-Encoding: 7bit
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Fri, 28 Jun 2024 08:25:34 +0200
+On 27/06/2024 22:21, Frank Li wrote:
+> Add common gpio-line-names property for fsl,qoriq-gpio to fix below
+> warning.
+> 
+> arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dtb: gpio@2300000: 'gpio-line-names' does not match any of the regexes: 'pinctrl-[0-9]+'
+>         from schema $id: http://devicetree.org/schemas/gpio/fsl,qoriq-gpio.yaml
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-The API documentation for the function =E2=80=9Cdevice_get_named_child_nod=
-e=E2=80=9D
-contains the following information:
-=E2=80=9C=E2=80=A6
-The caller is responsible for calling fwnode_handle_put()
-on the returned fwnode pointer.
-=E2=80=A6=E2=80=9D
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-The mentioned requirement was not fulfilled so that a resource leak
-will occur in some error cases after a device_get_named_child_node() call
-succeeded in this function implementation.
-
-Thus apply scope-based resource management which became supported also
-for this programming interface by contributions of Jonathan Cameron
-on 2024-02-17.
-See also the commit 59ed5e2d505bf5f9b4af64d0021cd0c96aec1f7c ("device
-property: Add cleanup.h based fwnode_handle_put() scope based cleanup.").
-
-* Use the attribute =E2=80=9C__free(fwnode_handle)=E2=80=9D accordingly.
-
-* Reduce the scope for the local variable =E2=80=9Cfwnode=E2=80=9D.
-
-Cc: stable@vger.kernel.org
-Fixes: fe6d8a9c8e64 ("usb: typec: anx7411: Add Analogix PD ANX7411 support=
-")
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
-
-V2:
-* The change description was extended as requested by patch reviewers.
-
-* The tag =E2=80=9CReviewed-by=E2=80=9D was added according to feedback by=
- Heikki Krogerus.
-
-* A =E2=80=9Cstable tag=E2=80=9D was added.
-
-
-V1:
-Initial patch review
-https://lore.kernel.org/r/889729ac-3fc5-4666-b9f5-ce6e588a341a@web.de/
-https://lkml.org/lkml/2024/6/5/1276
-
-
-
-I guess that clarifications can become interesting also for backporting co=
-ncerns
-because of the proposed software transformation.
-
-
-
- drivers/usb/typec/anx7411.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/usb/typec/anx7411.c b/drivers/usb/typec/anx7411.c
-index b12a07edc71b..9fb52f233a30 100644
-=2D-- a/drivers/usb/typec/anx7411.c
-+++ b/drivers/usb/typec/anx7411.c
-@@ -16,6 +16,7 @@
- #include <linux/of_graph.h>
- #include <linux/of_platform.h>
- #include <linux/pm_runtime.h>
-+#include <linux/property.h>
- #include <linux/regulator/consumer.h>
- #include <linux/slab.h>
- #include <linux/types.h>
-@@ -1142,11 +1143,11 @@ static int anx7411_typec_port_probe(struct anx7411=
-_data *ctx,
- {
- 	struct typec_capability *cap =3D &ctx->typec.caps;
- 	struct typec_params *typecp =3D &ctx->typec;
--	struct fwnode_handle *fwnode;
- 	const char *buf;
- 	int ret, i;
-
--	fwnode =3D device_get_named_child_node(dev, "connector");
-+	struct fwnode_handle *fwnode __free(fwnode_handle)
-+				     =3D device_get_named_child_node(dev, "connector");
- 	if (!fwnode)
- 		return -EINVAL;
-
-@@ -1237,7 +1238,7 @@ static int anx7411_typec_port_probe(struct anx7411_d=
-ata *ctx,
- 		typecp->caps_flags |=3D HAS_SINK_WATT;
- 	}
-
--	cap->fwnode =3D fwnode;
-+	cap->fwnode =3D no_free_ptr(fwnode);
-
- 	ctx->typec.role_sw =3D usb_role_switch_get(dev);
- 	if (IS_ERR(ctx->typec.role_sw)) {
-=2D-
-2.45.2
-
+Best regards,
+Krzysztof
 
