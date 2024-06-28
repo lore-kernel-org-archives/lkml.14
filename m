@@ -1,100 +1,465 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C0E14F9C9
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 08:32:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 569AC558B9;
+	Fri, 28 Jun 2024 08:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719563549; cv=none; b=m6Mbqpp4jeNhnqoojPW02xUz/F7wyk64MzVLyBWeWmrDZV1OoUSB0ikPl3doiLSNfd95EMcQfvcFKzz1WJLnfrSkDoh+ouy1UiJeAjX13HyYqGmRAUDYA4GW40GCkDzzAfyDIIMEa7lSvKcHTIS0EwGpX4prwNfUbgxGw0sDiHE=
+	t=1719563545; cv=none; b=fU4svC3jQar7UmL8I8tD99yQEwTED36yiloekfVsoIiGLIk+/65AZPvGw/G//sISgYHSmSU9+7mu/yBW3nAI2iOT83RCsFGM6V9ECONqhe0EZgzKUBeojyoMvXcyzkbjr9N7HjlYOBhrUAIPEQ9eGHtJYrgjKta14w8/kvqmYYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719563549; c=relaxed/simple;
-	bh=r7+eakRvT7ZiZ9WyL9rTTM6ysWPSIZYFNimdjEgNIJM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gI3NrZJivY7BWW9YEOGc1NsvOMdb9mZNUnaWijvPN6Rvpr1HAHW43l6Z5CxGr8+nVWMeC8CltIWFOY1j2QJsk0yjqju5xZxIv9kPThm2+qdolqN0PdbtIUqiVk45c1Ku9IanDtOuRlc3X3RoV6kYubHcTE7dP33ptyuGAob1zVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hfKvL5gl; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719563545; c=relaxed/simple;
+	bh=iV8e/iNJfFZyeRmDS0V5Nug4fIzG9Upx9tvQ6kFaleg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=GNFF5gxnE1CsTKMnhZ8FUc31vSRbr10/7gs2BZm2jC3OgNLBeZKNYCXhaEwOT/lPW/nBYnFBO39WRUE93ScAPG/0vIHVUnb/epE0LSSGOY2C0yc/Pmab5ZEt4tS9W2Mwvq5lsfI9pK9vEQBTCigzwqOOfhiXgttf51nZOMS/vNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UhfT6H7j; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hfKvL5gl"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52e7693c369so446785e87.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 01:32:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719563545; x=1720168345; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RJwxeW+GDgd+YjrwH0bRPELomJst4fhgHNABgR77E/Q=;
-        b=hfKvL5glJDWnkKCm3Pt3eedbEmaBuw/7vyCk3OJF9HGv9Ejiav107XtJRaoLPNwhCL
-         iFXdyy1BmoZHSSLowdvwOqnsHlrIYE+f43kdkrUWdAitJHMZIVrf2ZQ1BgjZSAT3/FCa
-         l959aEQhv82XzlWxSnBKtmAHNBiYuP/1Rd0nBSDKcxJfBhIMaDuNkNspmTQv2RsqKnu+
-         Ep4QlT78UaLmdgzKIzK5uqem0ABVikJ+s7OodD7AaLuynb4Ee9sOci+QAm5sphY6il77
-         F5yIBE6DgooLxFKvsmsCL9ghj80UidYQTSr+KXPfvwQrPp0B7ETLJKhItPKXt6HDtLN3
-         xNJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719563545; x=1720168345;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RJwxeW+GDgd+YjrwH0bRPELomJst4fhgHNABgR77E/Q=;
-        b=Dy7g5WeVlzkkZyteW4MKy3Y2UROS4xOdmXX4wTb572/SD0mRvkb0lqxsY6JT9c0cAM
-         7UwWHikqsPNQA7qaKW7c9+TxH2iIMo25iUYhV4qA95aqesTHGB26JuOJnofkn3+GmUmD
-         TlK4JuIQ3QTdlh3VNl5EcS+9DxJrdcDvDFqlSKlprQ6VBZKWoIRXl/ynF/OIkXuP8aW4
-         WrU4xuFQjJthRjmlm4X7x3wkR5ekWlN5D0fo9ET/Wkk1+SwWdM/TulBTwopA6vPwtQ1M
-         sZTTNjOn9TW796epwPJS3+rofhPuNtjCBmZMtCy0+EzoI3RflGTV880iu13N00glQdZD
-         YiEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWTtje8f3qI1zqsvhXJCLscUnlCbW/PcjJTF27IHxrZDogbkuchp5bgfThyP57Ki2tixYMQF+ovg2K3xZ1UtQEwtFdM3KoOPTggUikq
-X-Gm-Message-State: AOJu0YwYEV2VxCuDf7dMHozkB0j7CSgtRPPeUZ3wWqe1YOqI0bmya5Xv
-	MFxnQp6r1jyix8fz0WBQ4uUsmDX5Nn0WeJM0CVjf+KdbQ4FUAGebCz1Ux1oJXLM5eJdsb1YGixv
-	Edls0dA==
-X-Google-Smtp-Source: AGHT+IEBqgq8/ijDLYuWtZgrlxH0PdT/BNEB0C1UNr460C7LtzL4BXpKkJbR3oMqpmu0RY60Od9/Ag==
-X-Received: by 2002:a19:ee17:0:b0:52c:def6:7c97 with SMTP id 2adb3069b0e04-52ce064146emr10914325e87.45.1719563545317;
-        Fri, 28 Jun 2024 01:32:25 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52e7ab3b4cdsm208851e87.294.2024.06.28.01.32.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 01:32:24 -0700 (PDT)
-Date: Fri, 28 Jun 2024 11:32:23 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Abel Vesa <abel.vesa@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] clk: qcom: gcc-x1e80100: Set parent rate for USB3 sec
- and tert PHY pipe clks
-Message-ID: <6fr22a5ehq2vcd2ueeaphtzhauscpaj4llt2j62cj5m5wydw32@6ma244renp33>
-References: <20240530-x1e80100-clk-gcc-usb3-sec-tert-set-parent-rate-v1-1-7b2b04cad545@linaro.org>
- <3ukguewuqqm5gmbd3afl62ihysdzkk44j3f2nuqht4gjuf5ruo@zu7jmmnbrpdj>
- <Zn5w9zKxIT/2OvB4@linaro.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UhfT6H7j"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2859740007;
+	Fri, 28 Jun 2024 08:32:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1719563540;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FgZcZ153YAY1OrOhrWd5+TkjidCCHEsQqHXktMn9jjM=;
+	b=UhfT6H7j+7Y9kdHi+pzokuqusvUoJdrxtpcRZnNJw8e4LMNsLpfrF2YUILGVQSPlqiy02H
+	9fqqRsGGMpqiwcoAHa+pUx4b0eKBd8ZO5x66I9V8e1yl+RvXpNuQ32lyIo3b3DrY3GpwbU
+	oORiUdTNVe2dAgWYcWRXFL816ei2Pcr0cB98sVXgliZXSs6LdNQG8SlaM+TUX6RB2tEB6r
+	+vaJuYsPCiOLjEmwXhhGwFDx3I7w4OexdsXyF+W6o7UMi8aaQV6cjb0d+5p4sgrXZh3BzU
+	+2cSW8GJDYK+1BO1qZ2BVzXvwN4h4IdCQ8OcKsKFXvH+edZsQmCmEWPqFH+bkA==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Date: Fri, 28 Jun 2024 10:31:54 +0200
+Subject: [PATCH net-next v5 1/7] net: ethtool: pse-pd: Expand C33 PSE
+ status with class, power and extended state
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zn5w9zKxIT/2OvB4@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240628-feature_poe_power_cap-v5-1-5e1375d3817a@bootlin.com>
+References: <20240628-feature_poe_power_cap-v5-0-5e1375d3817a@bootlin.com>
+In-Reply-To: <20240628-feature_poe_power_cap-v5-0-5e1375d3817a@bootlin.com>
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>, 
+ Oleksij Rempel <o.rempel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ Dent Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, 
+ linux-doc@vger.kernel.org, Kory Maincent <kory.maincent@bootlin.com>
+X-Mailer: b4 0.15-dev-8cb71
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Fri, Jun 28, 2024 at 11:14:47AM GMT, Abel Vesa wrote:
-> On 24-05-31 02:56:12, Dmitry Baryshkov wrote:
-> > On Thu, May 30, 2024 at 05:05:24PM +0300, Abel Vesa wrote:
-> > > Allow the USB3 second and third GCC PHY pipe clocks to propagate the
-> > > rate to the pipe clocks provided by the QMP combo PHYs. The first
-> > > instance is already doing that.
-> > 
-> > Which driver changes the rate of those clocks?
-> 
-> Sorry for the late reply.
-> 
-> These clocks are consumed by the combo PHYs, so driver is
-> phy-qcom-qmp-combo. This driver doesn't change the rates of the pipe
-> clocks as of yet.
-> 
-> The fix is still good, even if it's just to align all three clocks.
-> 
+From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+This update expands the status information provided by ethtool for PSE c33.
+It includes details such as the detected class, current power delivered,
+and extended state information.
 
+Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+---
+
+Change in v2:
+- Move on PSE string error messages to ETHTOOL_LINK_EXT_STATE and
+  ETHTOOL_LINK_EXT_SUBSTATE with fixed enumeration in aim to unify
+  interface diagnostic.
+
+Change in v3:
+- Add ethtool netlink documentation and kdoc.
+- Move on to u32 for state and substate.
+- Update C33 pse extended state and substate following Oleksij proposal.
+
+Change in v4:
+- Made few changes in the c33 pse extended state and substate enumerations.
+- Update pse_reply to send extended substate only if extended state is present.
+---
+ Documentation/networking/ethtool-netlink.rst |  37 ++++++
+ include/linux/ethtool.h                      |  15 +++
+ include/linux/pse-pd/pse.h                   |   8 ++
+ include/uapi/linux/ethtool.h                 | 191 +++++++++++++++++++++++++++
+ include/uapi/linux/ethtool_netlink.h         |   4 +
+ net/ethtool/pse-pd.c                         |  32 ++++-
+ 6 files changed, 286 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation/networking/ethtool-netlink.rst
+index 7ec08e903bab..dacbc087b697 100644
+--- a/Documentation/networking/ethtool-netlink.rst
++++ b/Documentation/networking/ethtool-netlink.rst
+@@ -1738,6 +1738,13 @@ Kernel response contents:
+                                                   PSE functions.
+   ``ETHTOOL_A_C33_PSE_PW_D_STATUS``          u32  power detection status of the
+                                                   PoE PSE.
++  ``ETHTOOL_A_C33_PSE_PW_CLASS``             u32  power class of the PoE PSE.
++  ``ETHTOOL_A_C33_PSE_ACTUAL_PW``            u32  actual power drawn on the
++                                                  PoE PSE.
++  ``ETHTOOL_A_C33_PSE_EXT_STATE``            u32  power extended state of the
++                                                  PoE PSE.
++  ``ETHTOOL_A_C33_PSE_EXT_SUBSTATE``         u32  power extended substatus of
++                                                  the PoE PSE.
+   ======================================  ======  =============================
+ 
+ When set, the optional ``ETHTOOL_A_PODL_PSE_ADMIN_STATE`` attribute identifies
+@@ -1770,6 +1777,36 @@ The same goes for ``ETHTOOL_A_C33_PSE_ADMIN_PW_D_STATUS`` implementing
+ .. kernel-doc:: include/uapi/linux/ethtool.h
+     :identifiers: ethtool_c33_pse_pw_d_status
+ 
++When set, the optional ``ETHTOOL_A_C33_PSE_PW_CLASS`` attribute identifies
++the power class of the C33 PSE. It depends on the class negotiated between
++the PSE and the PD. This option is corresponding to ``IEEE 802.3-2022``
++30.9.1.1.8 aPSEPowerClassification.
++
++When set, the optional ``ETHTOOL_A_C33_PSE_ACTUAL_PW`` attribute identifies
++This option is corresponding to ``IEEE 802.3-2022`` 30.9.1.1.23 aPSEActualPower.
++Actual power is reported in mW.
++
++When set, the optional ``ETHTOOL_A_C33_PSE_EXT_STATE`` attribute identifies
++the extended error state of the C33 PSE. Possible values are:
++
++.. kernel-doc:: include/uapi/linux/ethtool.h
++    :identifiers: ethtool_c33_pse_ext_state
++
++When set, the optional ``ETHTOOL_A_C33_PSE_EXT_SUBSTATE`` attribute identifies
++the extended error state of the C33 PSE. Possible values are:
++Possible values are:
++
++.. kernel-doc:: include/uapi/linux/ethtool.h
++    :identifiers: ethtool_c33_pse_ext_substate_class_num_events
++		  ethtool_c33_pse_ext_substate_error_condition
++		  ethtool_c33_pse_ext_substate_mr_pse_enable
++		  ethtool_c33_pse_ext_substate_option_detect_ted
++		  ethtool_c33_pse_ext_substate_option_vport_lim
++		  ethtool_c33_pse_ext_substate_ovld_detected
++		  ethtool_c33_pse_ext_substate_pd_dll_power_type
++		  ethtool_c33_pse_ext_substate_power_not_available
++		  ethtool_c33_pse_ext_substate_short_detected
++
+ PSE_SET
+ =======
+ 
+diff --git a/include/linux/ethtool.h b/include/linux/ethtool.h
+index 959196af7f5a..b5c6b941afaf 100644
+--- a/include/linux/ethtool.h
++++ b/include/linux/ethtool.h
+@@ -1157,4 +1157,19 @@ struct ethtool_forced_speed_map {
+ 
+ void
+ ethtool_forced_speed_maps_init(struct ethtool_forced_speed_map *maps, u32 size);
++
++/* C33 PSE extended state and substate. */
++struct ethtool_c33_pse_ext_state_info {
++	enum ethtool_c33_pse_ext_state c33_pse_ext_state;
++	union {
++		enum ethtool_c33_pse_ext_substate_error_condition error_condition;
++		enum ethtool_c33_pse_ext_substate_mr_pse_enable mr_pse_enable;
++		enum ethtool_c33_pse_ext_substate_option_detect_ted option_detect_ted;
++		enum ethtool_c33_pse_ext_substate_option_vport_lim option_vport_lim;
++		enum ethtool_c33_pse_ext_substate_ovld_detected ovld_detected;
++		enum ethtool_c33_pse_ext_substate_power_not_available power_not_available;
++		enum ethtool_c33_pse_ext_substate_short_detected short_detected;
++		u32 __c33_pse_ext_substate;
++	};
++};
+ #endif /* _LINUX_ETHTOOL_H */
+diff --git a/include/linux/pse-pd/pse.h b/include/linux/pse-pd/pse.h
+index 6eec24ffa866..38b9308e5e7a 100644
+--- a/include/linux/pse-pd/pse.h
++++ b/include/linux/pse-pd/pse.h
+@@ -36,12 +36,20 @@ struct pse_control_config {
+  *	functions. IEEE 802.3-2022 30.9.1.1.2 aPSEAdminState
+  * @c33_pw_status: power detection status of the PSE.
+  *	IEEE 802.3-2022 30.9.1.1.5 aPSEPowerDetectionStatus:
++ * @c33_pw_class: detected class of a powered PD
++ *	IEEE 802.3-2022 30.9.1.1.8 aPSEPowerClassification
++ * @c33_actual_pw: power currently delivered by the PSE in mW
++ *	IEEE 802.3-2022 30.9.1.1.23 aPSEActualPower
++ * @c33_ext_state_info: extended state information of the PSE
+  */
+ struct pse_control_status {
+ 	enum ethtool_podl_pse_admin_state podl_admin_state;
+ 	enum ethtool_podl_pse_pw_d_status podl_pw_status;
+ 	enum ethtool_c33_pse_admin_state c33_admin_state;
+ 	enum ethtool_c33_pse_pw_d_status c33_pw_status;
++	u32 c33_pw_class;
++	u32 c33_actual_pw;
++	struct ethtool_c33_pse_ext_state_info c33_ext_state_info;
+ };
+ 
+ /**
+diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
+index 8733a3117902..36b488780f20 100644
+--- a/include/uapi/linux/ethtool.h
++++ b/include/uapi/linux/ethtool.h
+@@ -752,6 +752,197 @@ enum ethtool_module_power_mode {
+ 	ETHTOOL_MODULE_POWER_MODE_HIGH,
+ };
+ 
++/**
++ * enum ethtool_c33_pse_ext_state - groups of PSE extended states
++ *      functions. IEEE 802.3-2022 33.2.4.4 Variables
++ *
++ * @ETHTOOL_C33_PSE_EXT_STATE_ERROR_CONDITION: Group of error_condition states
++ * @ETHTOOL_C33_PSE_EXT_STATE_MR_MPS_VALID: Group of mr_mps_valid states
++ * @ETHTOOL_C33_PSE_EXT_STATE_MR_PSE_ENABLE: Group of mr_pse_enable states
++ * @ETHTOOL_C33_PSE_EXT_STATE_OPTION_DETECT_TED: Group of option_detect_ted
++ *	states
++ * @ETHTOOL_C33_PSE_EXT_STATE_OPTION_VPORT_LIM: Group of option_vport_lim states
++ * @ETHTOOL_C33_PSE_EXT_STATE_OVLD_DETECTED: Group of ovld_detected states
++ * @ETHTOOL_C33_PSE_EXT_STATE_PD_DLL_POWER_TYPE: Group of pd_dll_power_type
++ *	states
++ * @ETHTOOL_C33_PSE_EXT_STATE_POWER_NOT_AVAILABLE: Group of power_not_available
++ *	states
++ * @ETHTOOL_C33_PSE_EXT_STATE_SHORT_DETECTED: Group of short_detected states
++ */
++enum ethtool_c33_pse_ext_state {
++	ETHTOOL_C33_PSE_EXT_STATE_ERROR_CONDITION = 1,
++	ETHTOOL_C33_PSE_EXT_STATE_MR_MPS_VALID,
++	ETHTOOL_C33_PSE_EXT_STATE_MR_PSE_ENABLE,
++	ETHTOOL_C33_PSE_EXT_STATE_OPTION_DETECT_TED,
++	ETHTOOL_C33_PSE_EXT_STATE_OPTION_VPORT_LIM,
++	ETHTOOL_C33_PSE_EXT_STATE_OVLD_DETECTED,
++	ETHTOOL_C33_PSE_EXT_STATE_PD_DLL_POWER_TYPE,
++	ETHTOOL_C33_PSE_EXT_STATE_POWER_NOT_AVAILABLE,
++	ETHTOOL_C33_PSE_EXT_STATE_SHORT_DETECTED,
++};
++
++/**
++ * enum ethtool_c33_pse_ext_substate_mr_mps_valid - mr_mps_valid states
++ *      functions. IEEE 802.3-2022 33.2.4.4 Variables
++ *
++ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_MR_MPS_VALID_DETECTED_UNDERLOAD: Underload
++ *	state
++ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_MR_MPS_VALID_CONNECTION_OPEN: Port is not
++ *	connected
++ *
++ * The PSE monitors either the DC or AC Maintain Power Signature
++ * (MPS, see 33.2.9.1). This variable indicates the presence or absence of
++ * a valid MPS.
++ */
++enum ethtool_c33_pse_ext_substate_mr_mps_valid {
++	ETHTOOL_C33_PSE_EXT_SUBSTATE_MR_MPS_VALID_DETECTED_UNDERLOAD = 1,
++	ETHTOOL_C33_PSE_EXT_SUBSTATE_MR_MPS_VALID_CONNECTION_OPEN,
++};
++
++/**
++ * enum ethtool_c33_pse_ext_substate_error_condition - error_condition states
++ *      functions. IEEE 802.3-2022 33.2.4.4 Variables
++ *
++ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_NON_EXISTING_PORT: Non-existing
++ *	port number
++ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_UNDEFINED_PORT: Undefined port
++ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_INTERNAL_HW_FAULT: Internal
++ *	hardware fault
++ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_COMM_ERROR_AFTER_FORCE_ON:
++ *	Communication error after force on
++ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_UNKNOWN_PORT_STATUS: Unknown
++ *	port status
++ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_HOST_CRASH_TURN_OFF: Host
++ *	crash turn off
++ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_HOST_CRASH_FORCE_SHUTDOWN:
++ *	Host crash force shutdown
++ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_CONFIG_CHANGE: Configuration
++ *	change
++ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_DETECTED_OVER_TEMP: Over
++ *	temperature detected
++ *
++ * error_condition is a variable indicating the status of
++ * implementation-specific fault conditions or optionally other system faults
++ * that prevent the PSE from meeting the specifications in Table 33–11 and that
++ * require the PSE not to source power. These error conditions are different
++ * from those monitored by the state diagrams in Figure 33–10.
++ */
++enum ethtool_c33_pse_ext_substate_error_condition {
++	ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_NON_EXISTING_PORT = 1,
++	ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_UNDEFINED_PORT,
++	ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_INTERNAL_HW_FAULT,
++	ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_COMM_ERROR_AFTER_FORCE_ON,
++	ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_UNKNOWN_PORT_STATUS,
++	ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_HOST_CRASH_TURN_OFF,
++	ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_HOST_CRASH_FORCE_SHUTDOWN,
++	ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_CONFIG_CHANGE,
++	ETHTOOL_C33_PSE_EXT_SUBSTATE_ERROR_CONDITION_DETECTED_OVER_TEMP,
++};
++
++/**
++ * enum ethtool_c33_pse_ext_substate_mr_pse_enable - mr_pse_enable states
++ *      functions. IEEE 802.3-2022 33.2.4.4 Variables
++ *
++ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_MR_PSE_ENABLE_DISABLE_PIN_ACTIVE: Disable
++ *	pin active
++ *
++ * mr_pse_enable is control variable that selects PSE operation and test
++ * functions.
++ */
++enum ethtool_c33_pse_ext_substate_mr_pse_enable {
++	ETHTOOL_C33_PSE_EXT_SUBSTATE_MR_PSE_ENABLE_DISABLE_PIN_ACTIVE = 1,
++};
++
++/**
++ * enum ethtool_c33_pse_ext_substate_option_detect_ted - option_detect_ted
++ *	states functions. IEEE 802.3-2022 33.2.4.4 Variables
++ *
++ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_OPTION_DETECT_TED_DET_IN_PROCESS: Detection
++ *	in process
++ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_OPTION_DETECT_TED_CONNECTION_CHECK_ERROR:
++ *	Connection check error
++ *
++ * option_detect_ted is a variable indicating if detection can be performed
++ * by the PSE during the ted_timer interval.
++ */
++enum ethtool_c33_pse_ext_substate_option_detect_ted {
++	ETHTOOL_C33_PSE_EXT_SUBSTATE_OPTION_DETECT_TED_DET_IN_PROCESS = 1,
++	ETHTOOL_C33_PSE_EXT_SUBSTATE_OPTION_DETECT_TED_CONNECTION_CHECK_ERROR,
++};
++
++/**
++ * enum ethtool_c33_pse_ext_substate_option_vport_lim - option_vport_lim states
++ *      functions. IEEE 802.3-2022 33.2.4.4 Variables
++ *
++ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_OPTION_VPORT_LIM_HIGH_VOLTAGE: Main supply
++ *	voltage is high
++ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_OPTION_VPORT_LIM_LOW_VOLTAGE: Main supply
++ *	voltage is low
++ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_OPTION_VPORT_LIM_VOLTAGE_INJECTION: Voltage
++ *	injection into the port
++ *
++ * option_vport_lim is an optional variable indicates if VPSE is out of the
++ * operating range during normal operating state.
++ */
++enum ethtool_c33_pse_ext_substate_option_vport_lim {
++	ETHTOOL_C33_PSE_EXT_SUBSTATE_OPTION_VPORT_LIM_HIGH_VOLTAGE = 1,
++	ETHTOOL_C33_PSE_EXT_SUBSTATE_OPTION_VPORT_LIM_LOW_VOLTAGE,
++	ETHTOOL_C33_PSE_EXT_SUBSTATE_OPTION_VPORT_LIM_VOLTAGE_INJECTION,
++};
++
++/**
++ * enum ethtool_c33_pse_ext_substate_ovld_detected - ovld_detected states
++ *      functions. IEEE 802.3-2022 33.2.4.4 Variables
++ *
++ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_OVLD_DETECTED_OVERLOAD: Overload state
++ *
++ * ovld_detected is a variable indicating if the PSE output current has been
++ * in an overload condition (see 33.2.7.6) for at least TCUT of a one-second
++ * sliding time.
++ */
++enum ethtool_c33_pse_ext_substate_ovld_detected {
++	ETHTOOL_C33_PSE_EXT_SUBSTATE_OVLD_DETECTED_OVERLOAD = 1,
++};
++
++/**
++ * enum ethtool_c33_pse_ext_substate_power_not_available - power_not_available
++ *	states functions. IEEE 802.3-2022 33.2.4.4 Variables
++ *
++ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_POWER_NOT_AVAILABLE_BUDGET_EXCEEDED: Power
++ *	budget exceeded for the controller
++ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_POWER_NOT_AVAILABLE_PORT_PW_LIMIT_EXCEEDS_CONTROLLER_BUDGET:
++ *	Configured port power limit exceeded controller power budget
++ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_POWER_NOT_AVAILABLE_PD_REQUEST_EXCEEDS_PORT_LIMIT:
++ *	Power request from PD exceeds port limit
++ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_POWER_NOT_AVAILABLE_HW_PW_LIMIT: Power
++ *	denied due to Hardware power limit
++ *
++ * power_not_available is a variable that is asserted in an
++ * implementation-dependent manner when the PSE is no longer capable of
++ * sourcing sufficient power to support the attached PD. Sufficient power
++ * is defined by classification; see 33.2.6.
++ */
++enum ethtool_c33_pse_ext_substate_power_not_available {
++	ETHTOOL_C33_PSE_EXT_SUBSTATE_POWER_NOT_AVAILABLE_BUDGET_EXCEEDED =  1,
++	ETHTOOL_C33_PSE_EXT_SUBSTATE_POWER_NOT_AVAILABLE_PORT_PW_LIMIT_EXCEEDS_CONTROLLER_BUDGET,
++	ETHTOOL_C33_PSE_EXT_SUBSTATE_POWER_NOT_AVAILABLE_PD_REQUEST_EXCEEDS_PORT_LIMIT,
++	ETHTOOL_C33_PSE_EXT_SUBSTATE_POWER_NOT_AVAILABLE_HW_PW_LIMIT,
++};
++
++/**
++ * enum ethtool_c33_pse_ext_substate_short_detected - short_detected states
++ *      functions. IEEE 802.3-2022 33.2.4.4 Variables
++ *
++ * @ETHTOOL_C33_PSE_EXT_SUBSTATE_SHORT_DETECTED_SHORT_CONDITION: Short
++ *	condition was detected
++ *
++ * short_detected is a variable indicating if the PSE output current has been
++ * in a short circuit condition for TLIM within a sliding window (see 33.2.7.7).
++ */
++enum ethtool_c33_pse_ext_substate_short_detected {
++	ETHTOOL_C33_PSE_EXT_SUBSTATE_SHORT_DETECTED_SHORT_CONDITION = 1,
++};
++
+ /**
+  * enum ethtool_pse_types - Types of PSE controller.
+  * @ETHTOOL_PSE_UNKNOWN: Type of PSE controller is unknown
+diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
+index d15856c7e001..e11ae4012eb9 100644
+--- a/include/uapi/linux/ethtool_netlink.h
++++ b/include/uapi/linux/ethtool_netlink.h
+@@ -937,6 +937,10 @@ enum {
+ 	ETHTOOL_A_C33_PSE_ADMIN_STATE,		/* u32 */
+ 	ETHTOOL_A_C33_PSE_ADMIN_CONTROL,	/* u32 */
+ 	ETHTOOL_A_C33_PSE_PW_D_STATUS,		/* u32 */
++	ETHTOOL_A_C33_PSE_PW_CLASS,		/* u32 */
++	ETHTOOL_A_C33_PSE_ACTUAL_PW,		/* u32 */
++	ETHTOOL_A_C33_PSE_EXT_STATE,		/* u32 */
++	ETHTOOL_A_C33_PSE_EXT_SUBSTATE,		/* u32 */
+ 
+ 	/* add new constants above here */
+ 	__ETHTOOL_A_PSE_CNT,
+diff --git a/net/ethtool/pse-pd.c b/net/ethtool/pse-pd.c
+index 2c981d443f27..d2a1c14d789f 100644
+--- a/net/ethtool/pse-pd.c
++++ b/net/ethtool/pse-pd.c
+@@ -86,7 +86,16 @@ static int pse_reply_size(const struct ethnl_req_info *req_base,
+ 		len += nla_total_size(sizeof(u32)); /* _C33_PSE_ADMIN_STATE */
+ 	if (st->c33_pw_status > 0)
+ 		len += nla_total_size(sizeof(u32)); /* _C33_PSE_PW_D_STATUS */
+-
++	if (st->c33_pw_class > 0)
++		len += nla_total_size(sizeof(u32)); /* _C33_PSE_PW_CLASS */
++	if (st->c33_actual_pw > 0)
++		len += nla_total_size(sizeof(u32)); /* _C33_PSE_ACTUAL_PW */
++	if (st->c33_ext_state_info.c33_pse_ext_state > 0) {
++		len += nla_total_size(sizeof(u32)); /* _C33_PSE_EXT_STATE */
++		if (st->c33_ext_state_info.__c33_pse_ext_substate > 0)
++			/* _C33_PSE_EXT_SUBSTATE */
++			len += nla_total_size(sizeof(u32));
++	}
+ 	return len;
+ }
+ 
+@@ -117,6 +126,27 @@ static int pse_fill_reply(struct sk_buff *skb,
+ 			st->c33_pw_status))
+ 		return -EMSGSIZE;
+ 
++	if (st->c33_pw_class > 0 &&
++	    nla_put_u32(skb, ETHTOOL_A_C33_PSE_PW_CLASS,
++			st->c33_pw_class))
++		return -EMSGSIZE;
++
++	if (st->c33_actual_pw > 0 &&
++	    nla_put_u32(skb, ETHTOOL_A_C33_PSE_ACTUAL_PW,
++			st->c33_actual_pw))
++		return -EMSGSIZE;
++
++	if (st->c33_ext_state_info.c33_pse_ext_state > 0) {
++		if (nla_put_u32(skb, ETHTOOL_A_C33_PSE_EXT_STATE,
++				st->c33_ext_state_info.c33_pse_ext_state))
++			return -EMSGSIZE;
++
++		if (st->c33_ext_state_info.__c33_pse_ext_substate > 0 &&
++		    nla_put_u32(skb, ETHTOOL_A_C33_PSE_EXT_SUBSTATE,
++				st->c33_ext_state_info.__c33_pse_ext_substate))
++			return -EMSGSIZE;
++	}
++
+ 	return 0;
+ }
+ 
 
 -- 
-With best wishes
-Dmitry
+2.34.1
+
