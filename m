@@ -1,150 +1,114 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA11914277;
-	Fri, 28 Jun 2024 03:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32CC01CA9F
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 03:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719544457; cv=none; b=J8iKtvZCodkZCBC9O3CVc+9H4Jw9ygyfuksdQjcYOdfgqkzoXeTOaAk3J++nYUssKBd7M/37PLwB5x3MjS32yzssskTSvqASwajiqmvcHKixzoc4oT/7PvPma15Mz5HMiXrkELevDne9vlNqyu25hoe9n8eDYeUQ7T8XAp53rXA=
+	t=1719544478; cv=none; b=deLggnFRTW0HqZc1WNWOaUY6h52aYh3orzWE4SXl3Pwt+3QkSX7LOsTPGRMkWhyZDGzFCxJjlMQUMw03+nN3GIrwcySAE2Xbm5TNKK5dXusm4c2vMeut0B6rKv1MRAbVrs0iqOhrLHWtViC/KO5hW48gc74WW35GyLWgYw3Kvn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719544457; c=relaxed/simple;
-	bh=p73zFRFe8BwwOuJ6OMG41rHa6cFeVxYFp2tdGWNRmwk=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=gLG5krHHpKhdtJjpmOiMfsBc0FWimZ3oWtF+oRLeX381knUhM/g2RgZqLf8ICJu4JL2XDrsM0JNdVjfc6B68WC8TA9FIRRnHcJX5PXCI4z4ezbkdrPcYpWaxw6Kk2OxOFcznCc4KewtwqySUFkk2mYPPdfK5ljBWuI8cRwa2YG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4W9LBM6TN6z4f3jYb;
-	Fri, 28 Jun 2024 11:14:03 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 13B251A0199;
-	Fri, 28 Jun 2024 11:14:11 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP2 (Coremail) with SMTP id Syh0CgB34YaAKn5mclozAg--.48443S3;
-	Fri, 28 Jun 2024 11:14:10 +0800 (CST)
-Subject: Re: [PATCH] blk-cgroup: don't clear stat in blkcg_reset_stats()
-To: Tejun Heo <tj@kernel.org>, Li Lingfeng <lilingfeng@huaweicloud.com>
-Cc: josef@toxicpanda.com, hch@lst.de, axboe@kernel.dk, longman@redhat.com,
- ming.lei@redhat.com, cgroups@vger.kernel.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, yangerkun@huawei.com, yukuai1@huaweicloud.com,
- houtao1@huawei.com, yi.zhang@huawei.com, lilingfeng3@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20240627090856.2345018-1-lilingfeng@huaweicloud.com>
- <Zn3HHvcgZruLkMdn@slm.duckdns.org>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <97e5374a-d083-2602-f632-3de546458ac0@huaweicloud.com>
-Date: Fri, 28 Jun 2024 11:14:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1719544478; c=relaxed/simple;
+	bh=Bzq47XhevB6u5PJXXfvJm5NF4hcYGfBkxsvTtTkm0s4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=WvmNqTyQr2+zBcE/aCz8dNB1CLvEm9IRu1z+gOZB/Zm886NNCdr95Tjo/OFAj5gVWmTYh7I0SmRIA+xaStHDc+b0dPx16Pn+MMOBa7UCQUYDwWpVtJio/PbWbvv3bLk8McGxMOpWjETrCv//QkG7eLhPMxfjI/rTsv1rl096nFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J7U0Ea3Y; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J7U0Ea3Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719544477; x=1751080477;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=Bzq47XhevB6u5PJXXfvJm5NF4hcYGfBkxsvTtTkm0s4=;
+  b=J7U0Ea3YfbuQOtJ5BMhaZpQvo3GvWCD6z6ozdfR5c/ExRNCmM5d5iS/W
+   V2P0vkvGIY1QjHC/Mld/tK74ixMo5e6tnQ0oC5vMH9RqsOkKlBn9R3AAU
+   riXmmQqzsyqPRc7GlLj2DYBSnWKQoa0+HylUqDik5Ogl4RM7R2WfUcybv
+   tyeMx3RQ0dRFHqdIfkNvq2syLAiNzV+yWoLcSxk1jIW/VpBR973y0VUUC
+   eiZM/W3H6Kdksi880pRTYRGIYswnZlvzcw2OxjKW2A+QtiNkASTSmyY2F
+   hi4uIeFB92uVfpIr+YVY7yUu3Bo6kutcpnRnHzuqJ8GNRZ0uWK57IBKQZ
+   A==;
+X-CSE-ConnectionGUID: lR9H9zSYQe6mDhirHjvhtA==
+X-CSE-MsgGUID: Mkb+IyNqTKaz5TWXoelG+g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="20586201"
+X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
+   d="scan'208";a="20586201"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 20:14:36 -0700
+X-CSE-ConnectionGUID: C5ITdqycQzubiTvSB+KJKA==
+X-CSE-MsgGUID: nj28SOedSDuH1xIg37Yopg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
+   d="scan'208";a="67799095"
+Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 20:14:33 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Tvrtko Ursulin <tursulin@igalia.com>,  linux-mm@kvack.org,
+  linux-kernel@vger.kernel.org,  kernel-dev@igalia.com,  Tvrtko Ursulin
+ <tvrtko.ursulin@igalia.com>,  Mel Gorman <mgorman@suse.de>,  Peter
+ Zijlstra <peterz@infradead.org>,  Ingo Molnar <mingo@redhat.com>,  Rik van
+ Riel <riel@surriel.com>,  Johannes Weiner <hannes@cmpxchg.org>,  Dave
+ Hansen <dave.hansen@intel.com>,  Andi Kleen <ak@linux.intel.com>,  Michal
+ Hocko <mhocko@suse.com>,  David Rientjes <rientjes@google.com>
+Subject: Re: [PATCH] mm/numa_balancing: Teach mpol_to_str about the
+ balancing mode
+In-Reply-To: <Zn3eBbJ377VeZGcc@casper.infradead.org> (Matthew Wilcox's message
+	of "Thu, 27 Jun 2024 22:47:49 +0100")
+References: <20240625132605.38428-1-tursulin@igalia.com>
+	<Zn3eBbJ377VeZGcc@casper.infradead.org>
+Date: Fri, 28 Jun 2024 11:12:42 +0800
+Message-ID: <87bk3lpxp1.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <Zn3HHvcgZruLkMdn@slm.duckdns.org>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgB34YaAKn5mclozAg--.48443S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxJw1rtF1rJw15CrykGFy5XFb_yoW5AFykpF
-	Z5K3W3Aw4vqrWv9r17uw1IgFyFkws5t345XrZ8Gw45GF1UWr98tr1IyrWYya47CFyxKr17
-	Xw4YkrZ5Zw4jyaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
-	JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
-	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-	17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq
-	3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-	nIWIevJa73UjIFyTuYvjfUOmhFUUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset=ascii
 
-Hi,
+Hi, Matthew,
 
-ÔÚ 2024/06/28 4:10, Tejun Heo Ð´µÀ:
-> Hello,
-> 
-> On Thu, Jun 27, 2024 at 05:08:56PM +0800, Li Lingfeng wrote:
->> The list corruption described in commit 6da668063279 ("blk-cgroup: fix
->> list corruption from resetting io stat") has no effect. It's unnecessary
->> to fix it.
-> 
-> I find this paragraph a bit confusing. At the time, it was broken, right?
-> And if we were to memset() now, it'd break again.
-> 
->> As for cgroup v1, it does not use iostat any more after commit
->> ad7c3b41e86b("blk-throttle: Fix io statistics for cgroup v1"), so using
->> memset to clear iostat has no real effect.
-> 
-> Ah, okay, this is because we made the stats blk-throtl specific but didn't
-> implement ->pd_reset_stat_fn(), right?
+Matthew Wilcox <willy@infradead.org> writes:
 
-I'm afraid not... Implement pd_reset_stat_fn() or not is another
-problem, this patch should be just code cleanup, not fixing any real
-problems.
+> On Tue, Jun 25, 2024 at 02:26:05PM +0100, Tvrtko Ursulin wrote:
+>>  		/*
+>> -		 * Currently, the only defined flags are mutually exclusive
+>> +		 * The below two flags are mutually exclusive:
+>>  		 */
+>>  		if (flags & MPOL_F_STATIC_NODES)
+>>  			p += snprintf(p, buffer + maxlen - p, "static");
+>>  		else if (flags & MPOL_F_RELATIVE_NODES)
+>>  			p += snprintf(p, buffer + maxlen - p, "relative");
+>> +
+>> +		if (flags & MPOL_F_NUMA_BALANCING)
+>> +			p += snprintf(p, buffer + maxlen - p, "balancing");
+>>  	}
+>
+> So if MPOL_F_STATIC_NODES and MPOL_F_NUMA_BALANCING are set, then we
+> get a string "staticbalancing"?  Is that intended?
+>
+> Or are these three all mutually exclusive and that should have been
+> as "else if"?
 
-> 
->> As for cgroup v2, it will not call blkcg_reset_stats() to corrupt the
->> list.
->>
->> The list of root cgroup can be used by both cgroup v1 and v2 while
->> non-root cgroup can't since it must be removed before switch between
->> cgroup v1 and v2.
->> So it may has effect if the list of root used by cgroup v2 was corrupted
->> after switching to cgroup v1, and switch back to cgroup v2 to use the
->> corrupted list again.
->> However, the root cgroup will not use the list any more after commit
->> ef45fe470e1e("blk-cgroup: show global disk stats in root cgroup io.stat").
-> 
-> Hmm... I'm still having a bit of trouble following this line of argument
-> given that all the patch does is dropping stat clearing.
-> 
->> @@ -668,7 +645,6 @@ static int blkcg_reset_stats(struct cgroup_subsys_state *css,
->>   	 * anyway.  If you get hit by a race, retry.
->>   	 */
->>   	hlist_for_each_entry(blkg, &blkcg->blkg_list, blkcg_node) {
->> -		blkg_clear_stat(blkg);
->>   		for (i = 0; i < BLKCG_MAX_POLS; i++) {
->>   			struct blkcg_policy *pol = blkcg_policy[i];
-> 
-> The patch looks fine to me although it'd be nice to follow up with a patch
-> to implement ->pd_reset_stat_fn() for blk-throtl. I'm not quite following
-> the list corruption part of argument.
+Yes, this is an issue!
 
-The code deleted by this patch was claimed to fix a lsit corruption,
-however, the list corruption does not exist now hence related code can
-be removed:
+Dig the git history, in commit 2291990ab36b ("mempolicy: clean-up
+mpol-to-str() mempolicy formatting"), the support for multiple flags are
+removed.  I think that we need to restore it.
 
-1) Take a look at blk_cgroup_bio_start, now there are two conditions
-before this blkg can be added to the per_cpu list:
+Done some basic testing.  It was found that when MPOL_F_NUMA_BALANCING
+is set, /proc/PID/numa_maps always display "default".  That is wrong.
 
-blk_cgroup_bio_start
-  if (!cgroup_subsys_on_dfl(io_cgrp_subsys))
-  -> the list will always be empty for cgroup v1
-   return;
-  if (!cgroup_parent(blkcg->css.cgroup))
-  -> the list will always be empty for root blkg
-   return;
-  ...
-  llist_add()
+This make me think that this patch has never been tested!
 
-2) blkcg_reset_stats can only be called from cgroup v1 api, hence
-there is nothing to be cleared for blkg_clear_stat();
+The "default" displaying is introduced in commit 8790c71a18e5
+("mm/mempolicy.c: fix mempolicy printing in numa_maps").  We need to fix
+it firstly for MPOL_F_NUMA_BALANCING with more accurate filtering.  The
+fix needs to be backported to -stable kernel.
 
-3) Noted that user can switch from cgroup v2 to v1, however, we found
-that user must delete all the child cg to do that, hence only root blkg
-can be kept after switching to v1. And root blkg is bypassed from
-blk_cgroup_bio_start(), hence no problem.
-
-Thanks,
-Kuai
-> 
-> Thanks.
-> 
-
+--
+Best Regards,
+Huang, Ying
