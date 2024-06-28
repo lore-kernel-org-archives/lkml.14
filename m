@@ -1,143 +1,222 @@
-Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.219])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B28C2143751;
-	Fri, 28 Jun 2024 08:30:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.219
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E101C2A8
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 08:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719563428; cv=none; b=Igo305vFRhAxW8PPbiFlpDcViOX9puuVuNLd07mLmiTCeraFne429kBLALXx6Ct9SHQQhIRiBy/24ByyYjrFAUuE3C7H/5dI+Lj3XM/GPKsOffqW0nrjWPdkoCNN+9U4gne4xMxwSiALRc1Lwnc5fp6O0gVh9OuTT4Fi3EKOA2w=
+	t=1719563456; cv=none; b=Si1TTMOMlJHUo/UirZOgnFGJgaKhfF2svW9gpsrWH1AkRsTCr15p4tMVjjOCW9Lbk8EqHLBUEsIQKHd84KE5SX0y9Le8FCfBsEtBjO3W030nSIqIt1LtIQ3lEq8pmI/s60uy3kIIthjjP+Ei6LMDqOw3hxsGAFB89QByER1ahMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719563428; c=relaxed/simple;
-	bh=92AGGsrcbotljDKeMUOW1yDTBBo1NNwetVgmd8RhVRo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SkQjhcw/5ITNHjFz+hv/ob4LieCJDFZnkHOTiazd80djpnHG/nOH5i1iBe+mohXcpY60HCYb2wGEOuCnU6aw+g5rY1SWrLemHoXTmXZQHfIa1wFTFjhRNK1z47thQ7W+Exrz/tHAlWP+n8axv77wgpDcw3hp/NhPYvDNbKXTeqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=kz0DJCWM; arc=none smtp.client-ip=45.254.50.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1719563456; c=relaxed/simple;
+	bh=EtCc0Ulsm6d96qthMRZWYhCWk2z6+bTuRaI6iwHhKFQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k2X3CyYV4tY7TxllV9826ZVYeaVIQqZimi8UO9V7bnZm10QY6KHScL5ZVg8fNd7TJgj8ijBA1QDdZDd694zwd0tTJdHVtxlBN6CmDnyBHd1SQLc1y+ecPcFXauytYqN2d513moncF1E6gzb74XCHpyFbSR6HcXnd7S6VbfO9PAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=gobbGhOZ; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="kz0DJCWM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=qOVWR
-	6aXQqry3nItjJ+e8OBR8po78qC5/g5g+JfJjCI=; b=kz0DJCWM+Fi2tK32ADffB
-	U5aU1g6HRZgqc+pZPk2HKk09/yQrgNDQAqJs+5SMHUX48b1ixCrs2IxIN/2TlKNb
-	BLyqTSdIicpoMbkV0yOlL9N9rlJj5w85ak4UKBLCW7KgaHtq5IiVOTDbbbl5IgHS
-	S3siijhF2OrF6q1lmGbNI0=
-Received: from localhost.localdomain (unknown [112.97.61.84])
-	by gzga-smtp-mta-g0-4 (Coremail) with SMTP id _____wD3v7BzdH5mWbI3Aw--.3813S2;
-	Fri, 28 Jun 2024 16:29:40 +0800 (CST)
-From: Slark Xiao <slark_xiao@163.com>
-To: manivannan.sadhasivam@linaro.org,
-	loic.poulain@linaro.org,
-	ryazanov.s.a@gmail.com,
-	johannes@sipsolutions.net,
-	quic_jhugo@quicinc.com
-Cc: netdev@vger.kernel.org,
-	mhi@lists.linux.dev,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Slark Xiao <slark_xiao@163.com>
-Subject: [PATCH v3 1/3] bus: mhi: host: Add Foxconn SDX72 related support
-Date: Fri, 28 Jun 2024 16:29:19 +0800
-Message-Id: <20240628082921.1449860-1-slark_xiao@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="gobbGhOZ"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2ebe3fb5d4dso3590851fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 01:30:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719563453; x=1720168253; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SDHbCx3I4IqNsab1QxiDVhaxw/hy3+YvdSsikSHLnDU=;
+        b=gobbGhOZb6RJr73TGRZ4dyk3FWaCb3TgQd2XkNqBlrafrQhJpcOgl5XtNouQ/TXfl4
+         fGwbIwcxsB+pZpWhv8eNUhV0ydQdEFykmLTtx8oDHWmHInmlzLc9zd1WcXC8pb+X26AP
+         fUmEpSDjdXRJKHySR6qxEuXiA1v0jJPyr6PjlYTAiEFXDOlpztzmvfZT1qTLMHQ5ut3Y
+         1eG+CljaP0DYdFuKfIBBv7b+5bfhBzrBwSGdkDNsLlJ0nbt+KLXXaV1M2smgzcxznJZc
+         oUFN6IH9C9OUl/cZKLS5GB/2hMklgFuToXcV6dtOIFsJSyQWU+QY8ZVHqF6KnN+uSgkq
+         +Tfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719563453; x=1720168253;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SDHbCx3I4IqNsab1QxiDVhaxw/hy3+YvdSsikSHLnDU=;
+        b=MrY4ZXUZiw0jNwfA8KfSvRKpHNqWjwsRrQVw00aKuBwK20MDHXK01ADVaWDMjKMyAj
+         LC8jVyWbWEz4NtymGyNrn54tGZ+bi7M2M7osk84youbKIHjdnyAqrsvswlTDyKdp8O4J
+         79yvLD/bXHidAl1yYMh2UY+prRqulZQ5V4MnpyVH6GFJjhXaOvPF/iJZItWT5dwI9Z5J
+         RVYtZoRP/dYhrdNXkDkDdGpz2j/mYtwMcIGsw+h6BfJT7P9Nkhw9hFYNmmtp9Hxmejy6
+         1AStb7q+9kxXOjqsYSYB+jQVFX4atCHDEfyzvD7OMf4MIXbYSAprirz8R6u3fXVEe2f7
+         zI4g==
+X-Forwarded-Encrypted: i=1; AJvYcCW8bMRWA6NeE0G1GHoAYniHWoeuSZ1Pr42pXGq+9vEssjLtXzQYWQ4tbcGrRyy/7tsj7OLKUEdMc7L0mYCziMtlhVhk1Syu7IMOwmmG
+X-Gm-Message-State: AOJu0YykSCIBtmbASpRjOpqpCwySxQhRWdAM69CLFhs9r9ovJjN1yTib
+	wHkItDfposzs8W2ttxrqMlJs3j3Xu+ozdbHbc1hWwtS/zMUI2jPsd+5IGaYRztz4dCdwp+WwTwB
+	edsBdXuw3a8DKB0zJzBdCJODvbAd3piuwSUk8xw==
+X-Google-Smtp-Source: AGHT+IHb15w1FOtsGlWaJj9fWqGVe0N7kzwCaQNEYTDO29ju0a0N9wPtmITOGOKtvPQV4WaTFtEpXrJjavnwY3sDN2o=
+X-Received: by 2002:a2e:9947:0:b0:2ec:4e05:8d99 with SMTP id
+ 38308e7fff4ca-2ee53ca7c10mr2641601fa.20.1719563452671; Fri, 28 Jun 2024
+ 01:30:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3v7BzdH5mWbI3Aw--.3813S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxur15Kry7Zw47JF4rKw4UArb_yoW5KrykpF
-	s3Z3yUta1kJFWrKFW8A34DG3Z5GrsxCr93KFnrKw1Igw1Yy3yYqFZ7K342kryYy3sFqryS
-	yF95WFy293ZrJF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pRuBT5UUUUU=
-X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/1tbioxYMZGVOEH3ZdwAAs1
+References: <20240628080146.49545-1-andrei.simion@microchip.com> <20240628080146.49545-2-andrei.simion@microchip.com>
+In-Reply-To: <20240628080146.49545-2-andrei.simion@microchip.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 28 Jun 2024 10:30:41 +0200
+Message-ID: <CAMRc=MeJyByMvcFT2aJDK87bz4=+UXEuMtQ4G4MZUAUt39SS1Q@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] eeprom: at24: avoid adjusting offset for
+ 24AA025E{48, 64}
+To: Andrei Simion <andrei.simion@microchip.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
+	claudiu.beznea@tuxon.dev, arnd@arndb.de, gregkh@linuxfoundation.org, 
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	Claudiu Beznea <claudiu.beznea@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Align with Qcom SDX72, add ready timeout item for Foxconn SDX72.
-And also, add firehose support since SDX72.
+On Fri, Jun 28, 2024 at 10:02=E2=80=AFAM Andrei Simion
+<andrei.simion@microchip.com> wrote:
+>
+> From: Claudiu Beznea <claudiu.beznea@microchip.com>
+>
+> The EEPROMs could be used only for MAC storage. In this case the
+> EEPROM areas where MACs resides could be modeled as NVMEM cells
+> (directly via DT bindings) such that the already available networking
+> infrastructure to read properly the MAC addresses (via
+> of_get_mac_address()). The previously available compatibles needs the
+> offset adjustment probably for compatibility w/ old DT bindings.
+> Add "microchip,24aa025e48", "microchip,24aa025e64" compatible for the
+> usage w/ 24AA025E{48, 64} type of EEPROMs where "24aa025e48" stands
+> for EUI-48 address and "24aa025e64" stands for EUI-64 address.
+>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> [andrei.simion@microchip.com: Add extended macros to initialize the struc=
+ture
+> with explicit value to adjusting offset. Add extra description for the co=
+mmit
+> message.]
+> Signed-off-by: Andrei Simion <andrei.simion@microchip.com>
+> ---
+> v2 -> v3:
+> - add specific compatible names according with
+> https://ww1.microchip.com/downloads/en/DeviceDoc/24AA02E48-24AA025E48-24A=
+A02E64-24AA025E64-Data-Sheet-20002124H.pdf
+> - add extended macros to initialize the structure with explicit value for=
+ adjoff
+> - drop co-developed-by to maintain the commit history
+>  (chronological order of modifications)
+>
+> v1 -> v2:
+> - no change
+> ---
+>  drivers/misc/eeprom/at24.c | 28 +++++++++++++++++++++++-----
+>  1 file changed, 23 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+> index 4bd4f32bcdab..e2ac08f656cf 100644
+> --- a/drivers/misc/eeprom/at24.c
+> +++ b/drivers/misc/eeprom/at24.c
+> @@ -121,20 +121,29 @@ struct at24_chip_data {
+>         u32 byte_len;
+>         u8 flags;
+>         u8 bank_addr_shift;
+> +       u8 adjoff;
+>         void (*read_post)(unsigned int off, char *buf, size_t count);
+>  };
+>
+> -#define AT24_CHIP_DATA(_name, _len, _flags)                            \
+> +#define AT24_CHIP_DATA_AO(_name, _len, _flags, _ao)                    \
 
-Signed-off-by: Slark Xiao <slark_xiao@163.com>
----
-v2: (1). Update the edl file path and name (2). Set SDX72 support
-trigger edl mode by default
-v3: Divide into 2 parts for Foxconn sdx72 platform
----
- drivers/bus/mhi/host/pci_generic.c | 43 ++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+Please, don't try to save space on a few letters, call it
+AT24_CHIP_DATA_ADJOFF() for better readability.
 
-diff --git a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/pci_generic.c
-index 35ae7cd0711f..1fb1c2f2fe12 100644
---- a/drivers/bus/mhi/host/pci_generic.c
-+++ b/drivers/bus/mhi/host/pci_generic.c
-@@ -399,6 +399,8 @@ static const struct mhi_channel_config mhi_foxconn_sdx55_channels[] = {
- 	MHI_CHANNEL_CONFIG_DL(13, "MBIM", 32, 0),
- 	MHI_CHANNEL_CONFIG_UL(32, "DUN", 32, 0),
- 	MHI_CHANNEL_CONFIG_DL(33, "DUN", 32, 0),
-+	MHI_CHANNEL_CONFIG_UL_FP(34, "FIREHOSE", 32, 0),
-+	MHI_CHANNEL_CONFIG_DL_FP(35, "FIREHOSE", 32, 0),
- 	MHI_CHANNEL_CONFIG_HW_UL(100, "IP_HW0_MBIM", 128, 2),
- 	MHI_CHANNEL_CONFIG_HW_DL(101, "IP_HW0_MBIM", 128, 3),
- };
-@@ -419,6 +421,16 @@ static const struct mhi_controller_config modem_foxconn_sdx55_config = {
- 	.event_cfg = mhi_foxconn_sdx55_events,
- };
- 
-+static const struct mhi_controller_config modem_foxconn_sdx72_config = {
-+	.max_channels = 128,
-+	.timeout_ms = 20000,
-+	.ready_timeout_ms = 50000,
-+	.num_channels = ARRAY_SIZE(mhi_foxconn_sdx55_channels),
-+	.ch_cfg = mhi_foxconn_sdx55_channels,
-+	.num_events = ARRAY_SIZE(mhi_foxconn_sdx55_events),
-+	.event_cfg = mhi_foxconn_sdx55_events,
-+};
-+
- static const struct mhi_pci_dev_info mhi_foxconn_sdx55_info = {
- 	.name = "foxconn-sdx55",
- 	.fw = "qcom/sdx55m/sbl1.mbn",
-@@ -488,6 +500,28 @@ static const struct mhi_pci_dev_info mhi_foxconn_dw5932e_info = {
- 	.sideband_wake = false,
- };
- 
-+static const struct mhi_pci_dev_info mhi_foxconn_t99w515_info = {
-+	.name = "foxconn-t99w515",
-+	.edl = "fox/sdx72m/edl.mbn",
-+	.edl_trigger = true,
-+	.config = &modem_foxconn_sdx72_config,
-+	.bar_num = MHI_PCI_DEFAULT_BAR_NUM,
-+	.dma_data_width = 32,
-+	.mru_default = 32768,
-+	.sideband_wake = false,
-+};
-+
-+static const struct mhi_pci_dev_info mhi_foxconn_dw5934e_info = {
-+	.name = "foxconn-dw5934e",
-+	.edl = "fox/sdx72m/edl.mbn",
-+	.edl_trigger = true,
-+	.config = &modem_foxconn_sdx72_config,
-+	.bar_num = MHI_PCI_DEFAULT_BAR_NUM,
-+	.dma_data_width = 32,
-+	.mru_default = 32768,
-+	.sideband_wake = false,
-+};
-+
- static const struct mhi_channel_config mhi_mv3x_channels[] = {
- 	MHI_CHANNEL_CONFIG_UL(0, "LOOPBACK", 64, 0),
- 	MHI_CHANNEL_CONFIG_DL(1, "LOOPBACK", 64, 0),
-@@ -720,6 +754,15 @@ static const struct pci_device_id mhi_pci_id_table[] = {
- 	/* DW5932e (sdx62), Non-eSIM */
- 	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xe0f9),
- 		.driver_data = (kernel_ulong_t) &mhi_foxconn_dw5932e_info },
-+	/* T99W515 (sdx72) */
-+	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xe118),
-+		.driver_data = (kernel_ulong_t) &mhi_foxconn_t99w515_info },
-+	/* DW5934e(sdx72), With eSIM */
-+	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xe11d),
-+		.driver_data = (kernel_ulong_t) &mhi_foxconn_dw5934e_info },
-+	/* DW5934e(sdx72), Non-eSIM */
-+	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xe11e),
-+		.driver_data = (kernel_ulong_t) &mhi_foxconn_dw5934e_info },
- 	/* MV31-W (Cinterion) */
- 	{ PCI_DEVICE(PCI_VENDOR_ID_THALES, 0x00b3),
- 		.driver_data = (kernel_ulong_t) &mhi_mv31_info },
--- 
-2.25.1
+>         static const struct at24_chip_data _name =3D {                   =
+ \
+>                 .byte_len =3D _len, .flags =3D _flags,                   =
+   \
+> +               .adjoff =3D _ao                                          =
+ \
+>         }
+>
+> -#define AT24_CHIP_DATA_CB(_name, _len, _flags, _read_post)             \
+> +#define AT24_CHIP_DATA(_name, _len, _flags)                            \
+> +       AT24_CHIP_DATA_AO(_name, _len, _flags, 0)
+> +
+> +#define AT24_CHIP_DATA_CB_AO(_name, _len, _flags, _ao, _read_post)     \
+>         static const struct at24_chip_data _name =3D {                   =
+ \
+>                 .byte_len =3D _len, .flags =3D _flags,                   =
+   \
+> +               .adjoff =3D _ao,                                         =
+ \
+>                 .read_post =3D _read_post,                               =
+ \
+>         }
+>
+> +#define AT24_CHIP_DATA_CB(_name, _len, _flags, _read_post)             \
+> +       AT24_CHIP_DATA_CB_AO(_name, _len, _flags, 0, _read_post)
+> +
+>  #define AT24_CHIP_DATA_BS(_name, _len, _flags, _bank_addr_shift)       \
+>         static const struct at24_chip_data _name =3D {                   =
+ \
+>                 .byte_len =3D _len, .flags =3D _flags,                   =
+   \
+> @@ -170,9 +179,13 @@ AT24_CHIP_DATA(at24_data_24cs01, 16,
+>  AT24_CHIP_DATA(at24_data_24c02, 2048 / 8, 0);
+>  AT24_CHIP_DATA(at24_data_24cs02, 16,
+>         AT24_FLAG_SERIAL | AT24_FLAG_READONLY);
+> -AT24_CHIP_DATA(at24_data_24mac402, 48 / 8,
+> +AT24_CHIP_DATA_AO(at24_data_24mac402, 48 / 8,
+> +       AT24_FLAG_MAC | AT24_FLAG_READONLY, 1);
 
+And this will not break existing users? I guess you refer to these
+changes in your commit message but it's not very clear what you're
+doing and why.
+
+> +AT24_CHIP_DATA_AO(at24_data_24mac602, 64 / 8,
+> +       AT24_FLAG_MAC | AT24_FLAG_READONLY, 1);
+> +AT24_CHIP_DATA(at24_data_24aa025e48, 48 / 8,
+>         AT24_FLAG_MAC | AT24_FLAG_READONLY);
+> -AT24_CHIP_DATA(at24_data_24mac602, 64 / 8,
+> +AT24_CHIP_DATA(at24_data_24aa025e64, 64 / 8,
+>         AT24_FLAG_MAC | AT24_FLAG_READONLY);
+>  /* spd is a 24c02 in memory DIMMs */
+>  AT24_CHIP_DATA(at24_data_spd, 2048 / 8,
+> @@ -218,6 +231,8 @@ static const struct i2c_device_id at24_ids[] =3D {
+>         { "24cs02",     (kernel_ulong_t)&at24_data_24cs02 },
+>         { "24mac402",   (kernel_ulong_t)&at24_data_24mac402 },
+>         { "24mac602",   (kernel_ulong_t)&at24_data_24mac602 },
+> +       { "24aa025e48", (kernel_ulong_t)&at24_data_24aa025e48 },
+> +       { "24aa025e64", (kernel_ulong_t)&at24_data_24aa025e64 },
+>         { "spd",        (kernel_ulong_t)&at24_data_spd },
+>         { "24c02-vaio", (kernel_ulong_t)&at24_data_24c02_vaio },
+>         { "24c04",      (kernel_ulong_t)&at24_data_24c04 },
+> @@ -270,6 +285,8 @@ static const struct of_device_id __maybe_unused at24_=
+of_match[] =3D {
+>         { .compatible =3D "atmel,24c1024",        .data =3D &at24_data_24=
+c1024 },
+>         { .compatible =3D "atmel,24c1025",        .data =3D &at24_data_24=
+c1025 },
+>         { .compatible =3D "atmel,24c2048",        .data =3D &at24_data_24=
+c2048 },
+> +       { .compatible =3D "microchip,24aa025e48", .data =3D &at24_data_24=
+aa025e48 },
+> +       { .compatible =3D "microchip,24aa025e64", .data =3D &at24_data_24=
+aa025e64 },
+>         { /* END OF LIST */ },
+>  };
+>  MODULE_DEVICE_TABLE(of, at24_of_match);
+> @@ -690,7 +707,8 @@ static int at24_probe(struct i2c_client *client)
+>         at24->read_post =3D cdata->read_post;
+>         at24->bank_addr_shift =3D cdata->bank_addr_shift;
+>         at24->num_addresses =3D num_addresses;
+> -       at24->offset_adj =3D at24_get_offset_adj(flags, byte_len);
+> +       at24->offset_adj =3D cdata->adjoff ?
+> +                               at24_get_offset_adj(flags, byte_len) : 0;
+>         at24->client_regmaps[0] =3D regmap;
+>
+>         at24->vcc_reg =3D devm_regulator_get(dev, "vcc");
+> --
+> 2.34.1
+>
+
+Bart
