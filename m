@@ -1,190 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24AFA15253B;
-	Fri, 28 Jun 2024 17:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B18815253B;
+	Fri, 28 Jun 2024 17:56:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719597347; cv=none; b=BNDGGt3rEcT/eStqsauqm1mF7CNa7DBL800pOD1CVOw/N/d/F+Sd8smH0Dcn1MiTSmqkjWsq844rg6iFjs+Myk+Z6w2usFglp0EcuvweeSBMwiz7YC/3EYUbqlykKqTO7ohiVY7grvlyW55HHpgoFnbm1whsormGPmDP4ILuw0I=
+	t=1719597399; cv=none; b=Af22rg3dW6eqT0hnSs8A4eez5iLFqpxuBjF4FSfgPLIxJag83nvTsLCZF4l7AcVA0a30tRr4N9kqbZPvTVnjBpF9kJ4j35DgAGNdTpkprjaeU0YYF4HslikjLJPpsZjzJoYjvQ4/zITU3ho66fs6YY0bzvs/jDrlTve2ruDOgAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719597347; c=relaxed/simple;
-	bh=RbeZW0Wlzc0mLCx/jtbjh/TrjzaKWO+6tkhNz/h4y+8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gwhIxugs5u9FpiyNWjk4DYrPoJ2rYG1RrOzMhayi9d3lu5lL0hTU0Rf8w4iIXv6qSQxFfDjzj0vLn3kjrIN0H3TsB9zg5ws/eouUFrevj/q3KWXsH0r9czJ2frzz3OpH0z9Ltax43LxUBNOpmDUNyQ8gdlubQG7hI9FS+hzS+Pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NuPWh2x2; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NuPWh2x2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719597345; x=1751133345;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=RbeZW0Wlzc0mLCx/jtbjh/TrjzaKWO+6tkhNz/h4y+8=;
-  b=NuPWh2x2SYPj0f11ipmINegpjQtVxo8V+BDCCkbJ1dhTloe7VDqtnuRK
-   h0O7/yIYH1D4Ri5FQ4ujXPhNIn5o6n6bRE/2py27pSBqKphjK53IkwjP0
-   M8xICpgEhs6w19Sv7jpICPUVcmVfRjc1RkFMwr+1uDkj8GlumjoP6gLiR
-   F0HZX4+aVpgQcI1aI+756G03vyJRVYNglcPuGYl/eNO9LoLOjBAyMtRjF
-   l5VjuZdqYAFEcmy/DcHGte2dJYb3FKvPpoXgkwzqYOwqtbAmhmspuqboV
-   ejNh3iUD5JN+aE6y48mmleNKGJSsSxHbcNg5PS9ZfGaR42jj1Xc9nBMiz
-   g==;
-X-CSE-ConnectionGUID: I9Pq51a7S5ODjdonZlbTGQ==
-X-CSE-MsgGUID: I0x0uvSxTcOWNI8OsRMVog==
-X-IronPort-AV: E=McAfee;i="6700,10204,11117"; a="16627256"
-X-IronPort-AV: E=Sophos;i="6.09,169,1716274800"; 
-   d="scan'208";a="16627256"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 10:55:45 -0700
-X-CSE-ConnectionGUID: 3rCB9qDUSVq2D8cyHLbvxQ==
-X-CSE-MsgGUID: y0B9bD+/RC2agQ9iyCQe/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,169,1716274800"; 
-   d="scan'208";a="45473920"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.245.246.5])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 10:55:41 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
+	s=arc-20240116; t=1719597399; c=relaxed/simple;
+	bh=oYS7jmYESQRNo05AqB51F3nXEy6uK/Kv0yx6spSKe/o=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Aq7n43jp/31Fjqz7YX1+eij7oNbVxTwbSGkpgiQj6vRbXaJxknUzd6rujOORRwUWrTLfaWU4GbY3gEhpKlcvSxxGmWsEKs6EsA6FDBpVqvDZuRR/7UJ7rz4F7JTQmIMdRaF7U9RiS9HOktj23D6ead7gEBDeV2LW+SG6TNpNEZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8572C116B1;
+	Fri, 28 Jun 2024 17:56:33 +0000 (UTC)
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Marc Zyngier <maz@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org
-Cc: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Subject: [PATCH v2] cxl/acpi: Warn on mixed CXL VH and RCH/RCD Hierarchy
-Date: Fri, 28 Jun 2024 19:48:07 +0200
-Message-ID: <20240628175535.272472-1-fabio.m.de.francesco@linux.intel.com>
-X-Mailer: git-send-email 2.45.2
+	linux-arm-kernel@lists.infradead.org,
+	linux-pm@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	loongarch@lists.linux.dev,
+	x86@kernel.org,
+	Russell King <linux@armlinux.org.uk>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Miguel Luis <miguel.luis@oracle.com>,
+	James Morse <james.morse@arm.com>,
+	Salil Mehta <salil.mehta@huawei.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	Hanjun Guo <guohanjun@huawei.com>,
+	Gavin Shan <gshan@redhat.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	linuxarm@huawei.com,
+	justin.he@arm.com,
+	jianyong.wu@arm.com
+Subject: Re: [PATCH v10 00/19] ACPI/arm64: add support for virtual cpu hotplug
+Date: Fri, 28 Jun 2024 18:56:31 +0100
+Message-Id: <171959723432.44645.7883276197359651212.b4-ty@arm.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240529133446.28446-1-Jonathan.Cameron@huawei.com>
+References: <20240529133446.28446-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Each Host Bridge instance has a corresponding CXL Host Bridge Structure
-(CHBS) ACPI table that identifies its capabilities. CHBS tables can be
-two types (CXL 3.1 Table 9-21): The PCIe Root Complex Register Block
-(RCRB) and CXL Host Bridge Component Registers (CHBCR).
+On Wed, 29 May 2024 14:34:27 +0100, Jonathan Cameron wrote:
+> v10:
+> - Make acpi_processor_set_per_cpu() return 0 / error rather than bool
+>   to simplify error handling at the call sites.
+>   (Thanks to both Rafael and Gavin who commented on this)
+> - Gather tags.
+> - Rebase on v6.10-rc1
+> 
+> [...]
 
-If a Host Bridge is attached to a device that is operating in Restricted
-CXL Device Mode (RCD), BIOS publishes an RCRB with the base address of
-registers that describe its capabilities (CXL 3.1 sec. 9.11).
+Applied to arm64 (for-next/vcpu-hotplug), thanks! If nothing falls
+apart, it should end up in mainline for 6.11.
 
-Instead, the new (CXL 2.0+) Component registers can only be accessed
-by means of a base address published with a CHBCR (CXL 3.1 sec. 9.12).
+Thomas, the GICv3 patches have been acked by Marc but they are missing
+your ack. If you want it added, I can refresh the series in the next day
+or so, otherwise the branch should remain stable. Thanks.
 
-If an eRCD (a device that forces the host-bridge into CXL 1.1 Restricted
-CXL Host mode) is attached to a CXL 2.0+ Host-Bridge, the current CXL
-specification does not define a mechanism for finding CXL-2.0-only
-root-port component registers like HDM decoders and Extended Security
-capability.
+[01/19] ACPI: processor: Simplify initial onlining to use same path for cold and hotplug
+        https://git.kernel.org/arm64/c/c1385c1f0ba3
+[02/19] cpu: Do not warn on arch_register_cpu() returning -EPROBE_DEFER
+        https://git.kernel.org/arm64/c/d830ef3ac569
+[03/19] ACPI: processor: Drop duplicated check on _STA (enabled + present)
+        https://git.kernel.org/arm64/c/157080f03c7a
+[04/19] ACPI: processor: Return an error if acpi_processor_get_info() fails in processor_add()
+        https://git.kernel.org/arm64/c/fadf231f0a06
+[05/19] ACPI: processor: Fix memory leaks in error paths of processor_add()
+        https://git.kernel.org/arm64/c/47ec9b417ed9
+[06/19] ACPI: processor: Move checks and availability of acpi_processor earlier
+        https://git.kernel.org/arm64/c/cd9239660b8c
+[07/19] ACPI: processor: Add acpi_get_processor_handle() helper
+        https://git.kernel.org/arm64/c/36b921637e90
+[08/19] ACPI: processor: Register deferred CPUs from acpi_processor_get_info()
+        https://git.kernel.org/arm64/c/b398a91decd9
+[09/19] ACPI: scan: switch to flags for acpi_scan_check_and_detach()
+        https://git.kernel.org/arm64/c/1859a671bdb9
+[10/19] ACPI: Add post_eject to struct acpi_scan_handler for cpu hotplug
+        https://git.kernel.org/arm64/c/3b9d0a78aeda
+[11/19] arm64: acpi: Move get_cpu_for_acpi_id() to a header
+        https://git.kernel.org/arm64/c/8d34b6f17b9a
+[12/19] arm64: acpi: Harden get_cpu_for_acpi_id() against missing CPU entry
+        https://git.kernel.org/arm64/c/2488444274c7
+[13/19] irqchip/gic-v3: Don't return errors from gic_acpi_match_gicc()
+        https://git.kernel.org/arm64/c/fa2dabe57220
+[14/19] irqchip/gic-v3: Add support for ACPI's disabled but 'online capable' CPUs
+        https://git.kernel.org/arm64/c/d633da5d3ab1
+[15/19] arm64: psci: Ignore DENIED CPUs
+        https://git.kernel.org/arm64/c/643e12da4a49
+[16/19] arm64: arch_register_cpu() variant to check if an ACPI handle is now available.
+        https://git.kernel.org/arm64/c/eba4675008a6
+[17/19] arm64: Kconfig: Enable hotplug CPU on arm64 if ACPI_PROCESSOR is enabled.
+        https://git.kernel.org/arm64/c/9d0873892f4d
+[18/19] arm64: document virtual CPU hotplug's expectations
+        https://git.kernel.org/arm64/c/828ce929d1c3
+[19/19] cpumask: Add enabled cpumask for present CPUs that can be brought online
+        https://git.kernel.org/arm64/c/4e1a7df45480
 
-An algorithm to locate a CHBCR associated with an RCRB, would be too
-invasive to land without some concrete motivation.
-
-Therefore, just print a message to inform of unsupported config.
-
-Count how many different CHBS "Version" types are detected by
-cxl_get_chbs_iter(). Then make cxl_get_chbs() print a warning if that sum
-is greater than 1.
-
-Tested-by: Alison Schofield <alison.schofield@intel.com>
-Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
----
-
---- Changes for v2 ---
-
-	- Rewrite the Subject line (Alison)
-	- Address a bug found by Alison while testing (thanks!)
-	- Add reference to CXL 3.1 Spec. (Alison)
-	- Extend the commit messages by borrowing comments to v1 (Dan)
-	- Rename field "count" to "nr_versions" (Alison)
-	- Add brackets to oneline 'if' statement in precence of comments
-	  (Dan)
-
---- Link to v1 ---
-
-https://lore.kernel.org/linux-cxl/20240619125949.167936-1-fabio.m.de.francesco@linux.intel.com/
-
- drivers/cxl/acpi.c | 34 +++++++++++++++++++++++++++-------
- 1 file changed, 27 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 571069863c62..f9035dbabb1c 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -482,6 +482,8 @@ struct cxl_chbs_context {
- 	unsigned long long uid;
- 	resource_size_t base;
- 	u32 cxl_version;
-+	int nr_versions;
-+	u32 saved_version;
- };
- 
- static int cxl_get_chbs_iter(union acpi_subtable_headers *header, void *arg,
-@@ -490,22 +492,31 @@ static int cxl_get_chbs_iter(union acpi_subtable_headers *header, void *arg,
- 	struct cxl_chbs_context *ctx = arg;
- 	struct acpi_cedt_chbs *chbs;
- 
--	if (ctx->base != CXL_RESOURCE_NONE)
--		return 0;
--
- 	chbs = (struct acpi_cedt_chbs *) header;
- 
--	if (ctx->uid != chbs->uid)
-+	if (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11 &&
-+	    chbs->length != CXL_RCRB_SIZE)
- 		return 0;
- 
--	ctx->cxl_version = chbs->cxl_version;
- 	if (!chbs->base)
- 		return 0;
- 
--	if (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11 &&
--	    chbs->length != CXL_RCRB_SIZE)
-+	if (ctx->saved_version != chbs->cxl_version) {
-+		/*
-+		 * cxl_version cannot be overwritten before the next two
-+		 * checks, then use saved_version
-+		 */
-+		ctx->saved_version = chbs->cxl_version;
-+		ctx->nr_versions++;
-+	}
-+
-+	if (ctx->base != CXL_RESOURCE_NONE)
-+		return 0;
-+
-+	if (ctx->uid != chbs->uid)
- 		return 0;
- 
-+	ctx->cxl_version = chbs->cxl_version;
- 	ctx->base = chbs->base;
- 
- 	return 0;
-@@ -529,10 +540,19 @@ static int cxl_get_chbs(struct device *dev, struct acpi_device *hb,
- 		.uid = uid,
- 		.base = CXL_RESOURCE_NONE,
- 		.cxl_version = UINT_MAX,
-+		.saved_version = UINT_MAX,
- 	};
- 
- 	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CHBS, cxl_get_chbs_iter, ctx);
- 
-+	if (ctx->nr_versions > 1) {
-+		/*
-+		 * Disclaim eRCD support given some component register may
-+		 * only be found via CHBCR
-+		 */
-+		dev_info(dev, "Unsupported platform config, mixed Virtual Host and Restricted CXL Host hierarchy.");
-+	}
-+
- 	return 0;
- }
- 
 -- 
-2.45.2
+Catalin
 
