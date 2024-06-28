@@ -1,122 +1,227 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F2D1BF37
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 12:24:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68EA227733;
+	Fri, 28 Jun 2024 12:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719577482; cv=none; b=mY1vnfXA8mof9PykRkwo9t3YjNGiwYTjQ2nyl8K9OK4bOZqnPByqeCSdfw0X+IRCbbnkJ7tSN40n0a/YwuXQH5FY4luUgyddLmJdZFQgp+INlJDqMhWhhT+cwwsTY92XKcmMzMMw+FkdFjVtQTBpATbGnex5tumhWeOgTouJz/E=
+	t=1719577611; cv=none; b=tGQxgBOm1BwbzAuTtzH0J3dOLXE1pJ/1EVnuFqfA3jn2imE1NNr03lNtMpitXd11rYzoTa4rVgJ0Nc58Us/z31ziGTUmkKj1n5XRq9YcI5rijcYRKKEmaYM6E+3wUKp6OithM45XohNhVwgXic3eguJfNmtPbSGmk5K+SLMA1g0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719577482; c=relaxed/simple;
-	bh=3ts2gQuK9q5ifIXWwqQcZskJHVRf4IEqgfVfvltT1No=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lHvMLnQTX8xpPhGtIlOoVf4Fv2OKDU0/Cf4mJ8MD13YhwKL3Gksr67brRow8+IvKxpu9A3qYDIyGS3FeDnukiJNL2a/tzkA5HvQOa2R/eW7eX609TNOjWaCw3sf51nR7UL31Kf20+gVlct5VuqI1ipU/PTSkyLv1vRuHVgw4l98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=RQBHqawW; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1719577611; c=relaxed/simple;
+	bh=YPKCuva5yc7nfP31SvW35rb0gFaqHrsQTKPB7tuh//E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rOkahW/QZ5sdXkQrJ0k9CbL8RcZF/khInuMCM994syXZsXLvhMppjfnG8Cl1PT9RZHkhaeR3+47Lh0fjXVvnxT2w7wlogF5o6XjZuKIMn8UEUgn/R4VXfFG9mJSc4Wco1t1uM2xDI6mEG2JntjVRSMX31rKd4YFesx1SW4crv68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EiPZLjGY; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="RQBHqawW"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52cdebf9f53so544199e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 05:24:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EiPZLjGY"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-364a39824baso360513f8f.1;
+        Fri, 28 Jun 2024 05:26:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719577478; x=1720182278; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d8ilixuBZasrX5oPlMOZzvZHztGbrS/qDv+nWurvrjo=;
-        b=RQBHqawWaRMbZ3L4RJaibrt2prb/8YtYuKsw1ExyOjwIKHdiOHkDmrhc/gLM7NtHJ2
-         M/wWBm3cAwZMruEktftYWVmFgvNdJMKFDHnsFBlUa6YeQk1RxfCiQ6e8zEAoe0kMGZuB
-         g+CkJa4K8KWjx0aA1j56jlwpJ/yTeHRbfZmDhdpDcImR6kCaSZsltviGJyu8IYuHWaIw
-         Qg3hGQt1ZHLt8BgQRQln5s8noI8x2baZRxMEDWMyv7n8QSEcWKLE5zQ46wkcOe81U7wR
-         MJHvQBAA3t1MiUObK846Wib1TK+17YrKvxab4xzFWO4s2jRkf+9JvVUlz2zQ8pYiWGmP
-         SCVA==
+        d=gmail.com; s=20230601; t=1719577608; x=1720182408; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=X/VQJz2hM3Y4F448nQxVS0VxqvpF+TwhJySiPDWqGzs=;
+        b=EiPZLjGYhWetQI2V8GaYtXjYa3QVInAAkJIJxuRunhbWD/Xua2qgg21gTArC8p4vmt
+         VpceqtxLwiiM/JzFfPtJmrdI/2V+JKdqNOlXwZu2Bwfn+pcmA1KEICJAvgqqW797QMJn
+         3DAfJEUbaoQwRJPp5xWblUd3MmRffsggQMGX7CWwbhUpr2BVakYDI8l+f7E00o/rrDeD
+         PWyyfXQz5EZzE8foy9IislijFvp3fQ0cWL1wPwo46CwctcfpWgmGDbx+JOQs57A3Yar7
+         P8lhuYP29VmgPm7N2yGPdINH0zQV2OWh5pWWg8NcietBHpP/hHwGKMrcsuJWqjldchPn
+         kg7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719577478; x=1720182278;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=d8ilixuBZasrX5oPlMOZzvZHztGbrS/qDv+nWurvrjo=;
-        b=Vwr7MdN8/wM3LXEgQlgqAx2uVZBOggJyl3gvLNI+Q0ztu7c9iz9JGy1KMxjZk/VjzT
-         le08+K0lHPkmEwYW+kwtaqXwl+9PV/NIAjLmmyD9T9iqL+qzMQdu4Jt3ZKfP9YOseO0H
-         /SOk+/biG9TpHlFYkB3PRXDWYPtqvS4bLpXvxZKC0ZQoLBHJ04eaowoPwzw7CheE+gSk
-         m/6XvHJRBQa2Q/3xYoIM4NGXYqfPh93/UfPCbsfMr19gCUoUoWnfhxIkgpPO6kVaoPYy
-         t9NNpxzW0vTN0yIpsad+6T5TRHZ3shTCcb3s3UBsqN+9whhC9o7+5qs2p5uS5OGsjVNs
-         LcSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUz1FChk7+LMHkeJvhU9s+7XSOcCbgrCzJO6Ou3Yfu0wjSb6X6k/mxvlXF1cZMi9Khw4uuLnVM62R6tTc+JwQbrCqBXXN/3naWwe+uY
-X-Gm-Message-State: AOJu0YweITI9mIKXSluGiixy9vaFfUHVG35GtUK4FzaKmjs+bF46/HRA
-	zPvPCKxhe17yCedqRxreVN4JQApgRExxVW8mINK1KSlhOlWKO19gd3WJ3GtAVB4=
-X-Google-Smtp-Source: AGHT+IHQNBdkp5sVhDZMNMGLlSLyCBg5ncNtuAz2wpbbCQJUMGI2AenlpBNeQiXbs7+OnFlxLeSLDQ==
-X-Received: by 2002:ac2:4c84:0:b0:52e:7125:c70a with SMTP id 2adb3069b0e04-52e7125c847mr3014350e87.47.1719577478429;
-        Fri, 28 Jun 2024 05:24:38 -0700 (PDT)
-Received: from toaster.lan ([2a01:e0a:3c5:5fb1:78b7:4c75:7e6e:807f])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3675a0cd623sm2179013f8f.16.2024.06.28.05.24.37
+        d=1e100.net; s=20230601; t=1719577608; x=1720182408;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X/VQJz2hM3Y4F448nQxVS0VxqvpF+TwhJySiPDWqGzs=;
+        b=OyxnhqptaizwRl3dH7BLQczG13jROuBdYsIpEeWloSZENjIM+t1k0qUkJkKcNYke/I
+         Pkz2Hdt0cSY4i81MMQhjxqKzz4gVpF01wm47NeasJYh1yCqSuZ1YVh3hnLsZPzPqJSQI
+         ILXiuxFrotu0H0CRiaiepM1ZVKnUTlK+yo3lm7s63t/2MocNej35KE9rcyDqiLAX9de/
+         QwykPECTzdmZDABGbUzy2loy2eoBDDNYIQkNvERzM4Jc5WK7cFk2PFhl4Fs/XUZNe2yV
+         7Zax3iYHeOnMsGjZcvgsqJrSp1XQoPBZmnskF3+Gka48Mjp1lyLThFjLKJfR35jVG4rd
+         vsfw==
+X-Forwarded-Encrypted: i=1; AJvYcCXrG6gCJafn3mEbVKzgYsnIeBQs9aPfET7q2ConB5GFLHPUpGgzZn1ruC4p2AWNdF/md6DVLmNva3oc2OkUQST3XYwfm9d0rCv19QXrIfXnhXQCz38zyooGu9F1QNOEjHlk9UXF27RjDKZwd6yFOEMf1/jzxno0p+8raJt+m4aeGJPUOJUr
+X-Gm-Message-State: AOJu0YwGuOHpA4ZY34OqDuj+RW6i52cXwFqe5whaiT+MXSuxZb2J1TjJ
+	3BZteUWZjbATadVxBTuIbbwnjwR2Kh7ClcVpyFwAZ+T2wrb+Sh5l
+X-Google-Smtp-Source: AGHT+IEBnJj0jcIPr2SKFxa+XB8hdZdf8p61oiEXssLzKDdbv2pquDD9+yIevx/3N4QZrH7J7OMy0Q==
+X-Received: by 2002:a5d:4c43:0:b0:367:403d:a1ef with SMTP id ffacd0b85a97d-36742bd156cmr2987417f8f.62.1719577607204;
+        Fri, 28 Jun 2024 05:26:47 -0700 (PDT)
+Received: from orome (p200300e41f162000f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f16:2000:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0cd784sm2204336f8f.7.2024.06.28.05.26.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 05:24:37 -0700 (PDT)
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Mark Brown <broonie@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Takashi Iwai <tiwai@suse.com>,
-	Jaroslav Kysela <perex@perex.cz>
-Cc: Jerome Brunet <jbrunet@baylibre.com>,
-	alsa-devel@alsa-project.org,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] ALSA: IEC958 definition for consumer status channel update
-Date: Fri, 28 Jun 2024 14:23:07 +0200
-Message-ID: <20240628122429.2018059-3-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240628122429.2018059-1-jbrunet@baylibre.com>
-References: <20240628122429.2018059-1-jbrunet@baylibre.com>
+        Fri, 28 Jun 2024 05:26:46 -0700 (PDT)
+Date: Fri, 28 Jun 2024 14:26:44 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Yong Wu <yong.wu@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, christian.koenig@amd.com, Sumit Semwal <sumit.semwal@linaro.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
+	Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, tjmercier@google.com, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	Robin Murphy <robin.murphy@arm.com>, Vijayanand Jitta <quic_vjitta@quicinc.com>, 
+	Joakim Bech <joakim.bech@linaro.org>, Jeffrey Kardatzke <jkardatzke@google.com>, 
+	Pavel Machek <pavel@ucw.cz>, Simon Ser <contact@emersion.fr>, 
+	Pekka Paalanen <ppaalanen@gmail.com>, willy@infradead.org, Logan Gunthorpe <logang@deltatee.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, jianjiao.zeng@mediatek.com, kuohong.wang@mediatek.com, 
+	youlin.pei@mediatek.com
+Subject: Re: [PATCH v5 5/9] dma-buf: heaps: restricted_heap: Add private heap
+ ops
+Message-ID: <gbj6vakab74yuhbkazlxvrz3x3bia3nb7loo7c74fadlh4wc2q@qjf44kr3mrqe>
+References: <20240515112308.10171-1-yong.wu@mediatek.com>
+ <20240515112308.10171-6-yong.wu@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="vbf3vgeqgslvvuj2"
+Content-Disposition: inline
+In-Reply-To: <20240515112308.10171-6-yong.wu@mediatek.com>
 
-Add 128kHz, 352.4kHz, 384kHz and 705.6kHz.
-These definitions have been found working on eARC using a Murideo
-Seven Generator.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
+--vbf3vgeqgslvvuj2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- NOTE: This patch needs to be reviewed/acked by someone with access
-       to the IEC958 spec, to confirm the values inserted below.
+On Wed, May 15, 2024 at 07:23:04PM GMT, Yong Wu wrote:
+> Add "struct restricted_heap_ops". For the restricted memory, totally there
+> are two steps:
+> a) alloc: Allocate the buffer in kernel;
+> b) restrict_buf: Restrict/Protect/Secure that buffer.
+> The "alloc" is mandatory while "restrict_buf" is optional since it may
+> be part of "alloc".
+>=20
+> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> ---
+>  drivers/dma-buf/heaps/restricted_heap.c | 41 ++++++++++++++++++++++++-
+>  drivers/dma-buf/heaps/restricted_heap.h | 12 ++++++++
+>  2 files changed, 52 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/dma-buf/heaps/restricted_heap.c b/drivers/dma-buf/he=
+aps/restricted_heap.c
+> index c2ae19ba7d7e..8bb3c1876a69 100644
+> --- a/drivers/dma-buf/heaps/restricted_heap.c
+> +++ b/drivers/dma-buf/heaps/restricted_heap.c
+> @@ -12,10 +12,44 @@
+> =20
+>  #include "restricted_heap.h"
+> =20
+> +static int
+> +restricted_heap_memory_allocate(struct restricted_heap *rheap, struct re=
+stricted_buffer *buf)
+> +{
+> +	const struct restricted_heap_ops *ops =3D rheap->ops;
+> +	int ret;
+> +
+> +	ret =3D ops->alloc(rheap, buf);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (ops->restrict_buf) {
+> +		ret =3D ops->restrict_buf(rheap, buf);
+> +		if (ret)
+> +			goto buf_free;
+> +	}
+> +	return 0;
+> +
+> +buf_free:
+> +	ops->free(rheap, buf);
+> +	return ret;
+> +}
+> +
+> +static void
+> +restricted_heap_memory_free(struct restricted_heap *rheap, struct restri=
+cted_buffer *buf)
+> +{
+> +	const struct restricted_heap_ops *ops =3D rheap->ops;
+> +
+> +	if (ops->unrestrict_buf)
+> +		ops->unrestrict_buf(rheap, buf);
+> +
+> +	ops->free(rheap, buf);
+> +}
+> +
+>  static struct dma_buf *
+>  restricted_heap_allocate(struct dma_heap *heap, unsigned long size,
+>  			 unsigned long fd_flags, unsigned long heap_flags)
+>  {
+> +	struct restricted_heap *rheap =3D dma_heap_get_drvdata(heap);
+>  	struct restricted_buffer *restricted_buf;
+>  	DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
+>  	struct dma_buf *dmabuf;
+> @@ -28,6 +62,9 @@ restricted_heap_allocate(struct dma_heap *heap, unsigne=
+d long size,
+>  	restricted_buf->size =3D ALIGN(size, PAGE_SIZE);
+>  	restricted_buf->heap =3D heap;
+> =20
+> +	ret =3D restricted_heap_memory_allocate(rheap, restricted_buf);
+> +	if (ret)
+> +		goto err_free_buf;
+>  	exp_info.exp_name =3D dma_heap_get_name(heap);
+>  	exp_info.size =3D restricted_buf->size;
+>  	exp_info.flags =3D fd_flags;
+> @@ -36,11 +73,13 @@ restricted_heap_allocate(struct dma_heap *heap, unsig=
+ned long size,
+>  	dmabuf =3D dma_buf_export(&exp_info);
+>  	if (IS_ERR(dmabuf)) {
+>  		ret =3D PTR_ERR(dmabuf);
+> -		goto err_free_buf;
+> +		goto err_free_rstrd_mem;
+>  	}
+> =20
+>  	return dmabuf;
+> =20
+> +err_free_rstrd_mem:
+> +	restricted_heap_memory_free(rheap, restricted_buf);
+>  err_free_buf:
+>  	kfree(restricted_buf);
+>  	return ERR_PTR(ret);
+> diff --git a/drivers/dma-buf/heaps/restricted_heap.h b/drivers/dma-buf/he=
+aps/restricted_heap.h
+> index b448f77616ac..5783275d5714 100644
+> --- a/drivers/dma-buf/heaps/restricted_heap.h
+> +++ b/drivers/dma-buf/heaps/restricted_heap.h
+> @@ -15,6 +15,18 @@ struct restricted_buffer {
+> =20
+>  struct restricted_heap {
+>  	const char		*name;
+> +
+> +	const struct restricted_heap_ops *ops;
+> +};
+> +
+> +struct restricted_heap_ops {
+> +	int	(*heap_init)(struct restricted_heap *rheap);
 
- include/sound/asoundef.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+It might be worth moving this to a later patch when it's actually
+getting used.
 
-diff --git a/include/sound/asoundef.h b/include/sound/asoundef.h
-index 9fdeac19dadb..09b2c3dffb30 100644
---- a/include/sound/asoundef.h
-+++ b/include/sound/asoundef.h
-@@ -110,18 +110,22 @@
- #define IEC958_AES2_CON_SOURCE_UNSPEC	(0<<0)	/* unspecified */
- #define IEC958_AES2_CON_CHANNEL		(15<<4)	/* mask - channel number */
- #define IEC958_AES2_CON_CHANNEL_UNSPEC	(0<<4)	/* unspecified */
--#define IEC958_AES3_CON_FS		(15<<0)	/* mask - sample frequency */
-+#define IEC958_AES3_CON_FS		((1<<7) | (15<<0)) /* mask - sample frequency */
- #define IEC958_AES3_CON_FS_44100	(0<<0)	/* 44.1kHz */
- #define IEC958_AES3_CON_FS_NOTID	(1<<0)	/* non indicated */
- #define IEC958_AES3_CON_FS_48000	(2<<0)	/* 48kHz */
- #define IEC958_AES3_CON_FS_32000	(3<<0)	/* 32kHz */
- #define IEC958_AES3_CON_FS_22050	(4<<0)	/* 22.05kHz */
-+#define IEC958_AES3_CON_FS_384000	(5<<0)	/* 384kHz */
- #define IEC958_AES3_CON_FS_24000	(6<<0)	/* 24kHz */
- #define IEC958_AES3_CON_FS_88200	(8<<0)	/* 88.2kHz */
- #define IEC958_AES3_CON_FS_768000	(9<<0)	/* 768kHz */
- #define IEC958_AES3_CON_FS_96000	(10<<0)	/* 96kHz */
- #define IEC958_AES3_CON_FS_176400	(12<<0)	/* 176.4kHz */
-+#define IEC958_AES3_CON_FS_352400	(13<<0) /* 352.4kHz */
- #define IEC958_AES3_CON_FS_192000	(14<<0)	/* 192kHz */
-+#define IEC958_AES3_CON_FS_128000	((1<<7) | (11<<0)) /* 128kHz */
-+#define IEC958_AES3_CON_FS_705600	((1<<7) | (13<<0)) /* 705.6kHz */
- #define IEC958_AES3_CON_CLOCK		(3<<4)	/* mask - clock accuracy */
- #define IEC958_AES3_CON_CLOCK_1000PPM	(0<<4)	/* 1000 ppm */
- #define IEC958_AES3_CON_CLOCK_50PPM	(1<<4)	/* 50 ppm */
--- 
-2.43.0
+Thierry
 
+--vbf3vgeqgslvvuj2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmZ+rAQACgkQ3SOs138+
+s6EcbxAAiZuHIyjN3NZQtDif4ifUoMPGxGZ4nEdFZbnDVkpJtKmk85RLLw6vq+8j
+DggReAg+weGgbc+4qVdxZP8GKJvRcXUi9RIwQIj7/9U+R+VG+YCBwkoY81PnkYFF
+DDCTn9dfvf/r6SaJPj8mWase4q61go1K7R79XU7SwJ5SbCz7BC0RI89lSiUShJQ4
+PGDa1AQgNlKaYlMR6qjs9RFD6IHFt2Shge4S2/lbKcMgHxy3nbAZOULriFyPtkkg
+PYKZlsje5AAUR4pnABwU6qhZMp7svIiuUJX1+zldt+LCsyqMScvBnUfe1QijtiBn
+gg4sL1TTb1PVuUHPg15eyS5K9GHQilys2UXzCf+V8WT0Crr0gFz9+ClLYSSZh9NV
+phSCQY9YRUhAC0c7xwc8Ov1IxgJ0nqL6Ig8BoeZnhQkVf3wPzPk9B8hVvJMVZ13s
+blUxWO8qPdIzT6NsFK+A4RhN30gfqC8uy4DzyvhQR7+OWywHEaCZm3EdUZg0VHJp
+U51n4uVREXlO8/a4GwgvwWmc6Y7oiHjH9n9iYM2ua6EYc0HW+YvmJp4FbWBa3VRL
+e/ta+yMQWQYH1jfTqeQE1DJhBYEsKsgDjL7wv3USp+yMCkURiKWkos4b7ZXzCNVG
+Z6xBSJbmND7bujopIY7A81K15p0SM787q9XHn1MaAMJrk2Xd0lY=
+=OWnB
+-----END PGP SIGNATURE-----
+
+--vbf3vgeqgslvvuj2--
