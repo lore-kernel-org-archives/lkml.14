@@ -1,200 +1,115 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from norbury.hmeau.com (helcar.hmeau.com [216.24.177.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C8918C31
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 01:52:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792FB1CF8D;
+	Fri, 28 Jun 2024 01:52:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.24.177.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719539531; cv=none; b=XR/i/WoVRSEzZyQxTra2OE+RTHqKtKKZIDCivfZps8v6JDBOzzL8djyBYvaFXBhIApPEQaOaDwZqCdIaajx2GaDNHw9089fdrrySZYuTHKSyqvjtCEj8lOUZ9brvaadxI1gM1H+XAn0BazrkJugL9XLogscrunwGX7kYG8hJ5vk=
+	t=1719539541; cv=none; b=m+OSniTPk8Yw2qlgQeacPf+TDPK1aZrHxE7dXGvWB1xndinrYnt6izzKHbadsf8wfuyTjmk4E8Jwl/bALZE4elrn0bLyiRFH+XCuERKMlV1cwc4Te4YUPjHsrgbDbkR3u/wBqJGwlKZRdfAKKoWbQS0BbFFgMU/zegGopC6g7/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719539531; c=relaxed/simple;
-	bh=C7mvTYLKP5rULxzvk+Q/UI/35lIUUm/C/Ad04ubtNZ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YNYjWaDq+FmcCY3aKqKpbah0+7yOErSNeHWNkQyer/zkbWdMpLbdOB6NyQVjXbaimlzcy901laoeJgPkUtv+LdLfcbKVymmJ1mWMyRPmBnuKQlRdYtQwsikNp8JONO8JxENwWy5GnHijaqc3sqQUvQcag2ZjvfAxMhYfgj6J4a4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=affTk2i3; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="affTk2i3"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-707f9c3bd02so131712b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 18:52:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1719539529; x=1720144329; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Y2Wdd7VeB8iNHqPvhHv3M3aV5Mu8Y1ATzVFTOMbY10=;
-        b=affTk2i3soc82yt0NKXX8CK97clvM4aMjiNPEHtUlvH/3Ckppo9/QIXP/fHQu87Lih
-         nvY5PuCye7NufAk5mp7NcHWdBEczxHyhW5h3IuCX0+/vBqT7rYHi20RQLB2yhCRwNstr
-         TljBkeBcAY7qvtdTTIz9HCj+hcoF+qKtEA/4A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719539529; x=1720144329;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/Y2Wdd7VeB8iNHqPvhHv3M3aV5Mu8Y1ATzVFTOMbY10=;
-        b=bzKY0BWnQrvhgLg11Dbve8BvJKhYqIxZJVfHqiyUCY7HfxCODkCUsq0kGM6n9H8RfE
-         hfGZfhJ0oez2fJXp1elaSXvt13xkUCfgbD14Bci2c3J+FeMPVFGJaVB/hIsZ/YU0cPV1
-         heTTlDRKUH/F7w7xV8SzDz+idzmqcinGp2qlC10oR8Dmjn6MD0cSR6pmGV9v8cNbWL8X
-         k6vBg1L0SJyOhKzLrcBMK9Fv/b9zu0RdDNLI/JuZcbg890fyW0i5Ig77q4ngZFD3EOyI
-         hxA9ib0lCWpmBaVi/pomJDRQYLB3NHNR6i1XFLWjX5V0K2c0wXJTHKKE3YtVl5aynHPA
-         ei4w==
-X-Forwarded-Encrypted: i=1; AJvYcCUq2kvtQHEvI5AjOHFLR0BeWiNVn/VTKr3j70yV+N0pnclT+y0ni3kiO+aY7Aq66eukFqGNyhox3eTu989SreSiSDY6XeobExFpNyDG
-X-Gm-Message-State: AOJu0YyNZ7PG9RYM2Cmc1EmiviGnEOnotsnDyAQWkcKmYr5wjejCvuT4
-	aSZ1FNOebdqRfp5QfLCqr1dcqSFCjT42Qn1F5C/iS097CmdyUHxCp9dTUkW4EA==
-X-Google-Smtp-Source: AGHT+IFkQ+P3o8JhNlfXXJ3DTmdGuu1dXdBmx+jdWfrWXF8acBg2QGOM6vQP9wmCgvxhVl5eDn+lBw==
-X-Received: by 2002:a05:6a00:99e:b0:705:9b04:71b with SMTP id d2e1a72fcca58-7067471bf13mr19564882b3a.31.1719539528941;
-        Thu, 27 Jun 2024 18:52:08 -0700 (PDT)
-Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:c19a:b9a8:4bd1:72c0])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-708045aac85sm393354b3a.174.2024.06.27.18.52.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 18:52:08 -0700 (PDT)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Minchan Kim <minchan@kernel.org>
-Cc: Chengming Zhou <chengming.zhou@linux.dev>,
-	linux-kernel@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCH] zsmalloc: rename class stat mutators
-Date: Fri, 28 Jun 2024 10:42:52 +0900
-Message-ID: <20240628015154.3230389-1-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
+	s=arc-20240116; t=1719539541; c=relaxed/simple;
+	bh=Rc7AeiG/odYTKnCHOfENoLw8Fc9nSy6jV4jQ9YhzV5U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QDprqGg6yzMoT9PfnzT7NpwN7eoQabEGmpIAIkcVPqVmUqSoMU2ogZNge1W3YKDJ8GGEVmyY+Ly1GjQwQb+HJfx7CVdUU02V2S0h31xw+WZK4mDHA9c7j1L9SyFTOS+mCT9xqCUUOFtvoDOTGB+g7XIHysDiHTcKLCwlgDr58No=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=216.24.177.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.103.7])
+	by norbury.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1sN0mL-004GFg-2g;
+	Fri, 28 Jun 2024 11:51:58 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 28 Jun 2024 11:51:58 +1000
+Date: Fri, 28 Jun 2024 11:51:58 +1000
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Jiwei Sun <sunjw10@outlook.com>
+Cc: giovanni.cabiddu@intel.com, davem@davemloft.net,
+	damian.muszynski@intel.com, tero.kristo@linux.intel.com,
+	siming.wan@intel.com, adam.guerin@intel.com,
+	ciunas.bennett@intel.com, qat-linux@intel.com,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	sunjw10@lenovo.com, ahuang12@lenovo.com
+Subject: Re: [PATCH] crypto: qat - initialize user_input.lock for
+ rate_limiting
+Message-ID: <Zn4XPseiC4hR6rbM@gondor.apana.org.au>
+References: <SEZPR01MB45275F2F7A32D2DE4D6E2C9BA8C82@SEZPR01MB4527.apcprd01.prod.exchangelabs.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SEZPR01MB45275F2F7A32D2DE4D6E2C9BA8C82@SEZPR01MB4527.apcprd01.prod.exchangelabs.com>
 
-A cosmetic change.
+On Thu, Jun 20, 2024 at 04:51:10PM +0800, Jiwei Sun wrote:
+> From: Jiwei Sun <sunjw10@lenovo.com>
+> 
+> If the following configurations are set,
+> CONFIG_DEBUG_RWSEMS=y
+> CONFIG_DEBUG_LOCK_ALLOC=y
+> CONFIG_RWSEM_SPIN_ON_OWNER=y
+> 
+> And run the following command,
+> [root@localhost sys]# cat /sys/devices/pci0000:6b/0000:6b:00.0/qat_rl/pir
+> The following warning log appears,
+> 
+> ------------[ cut here ]------------
+> DEBUG_RWSEMS_WARN_ON(sem->magic != sem): count = 0x0, magic = 0x0, owner = 0x1, curr 0xff11000119288040, list not empty
+> WARNING: CPU: 131 PID: 1254984 at kernel/locking/rwsem.c:1280 down_read+0x439/0x7f0
+> CPU: 131 PID: 1254984 Comm: cat Kdump: loaded Tainted: G        W          6.10.0-rc4+ #86 b2ae60c8ceabed15f4fd2dba03c1c5a5f7f4040c
+> Hardware name: Lenovo ThinkServer SR660 V3/SR660 V3, BIOS T8E166X-2.54 05/30/2024
+> RIP: 0010:down_read+0x439/0x7f0
+> Code: 44 24 10 80 3c 02 00 0f 85 05 03 00 00 48 8b 13 41 54 48 c7 c6 a0 3e 0e b4 48 c7 c7 e0 3e 0e b4 4c 8b 4c 24 08 e8 77 d5 40 fd <0f> 0b 59 e9 bc fc ff ff 0f 1f 44 00 00 e9 e2 fd ff ff 4c 8d 7b 08
+> RSP: 0018:ffa0000035f67a78 EFLAGS: 00010286
+> RAX: 0000000000000000 RBX: ff1100012b03a658 RCX: 0000000000000000
+> RDX: 0000000080000002 RSI: 0000000000000008 RDI: 0000000000000001
+> RBP: 1ff4000006becf53 R08: fff3fc0006becf17 R09: fff3fc0006becf17
+> R10: fff3fc0006becf16 R11: ffa0000035f678b7 R12: ffffffffb40e3e60
+> R13: ffffffffb627d1f4 R14: ff1100012b03a6d0 R15: ff1100012b03a6c8
+> FS:  00007fa9ff9a6740(0000) GS:ff1100081e600000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007fa9ff984000 CR3: 00000002118ae006 CR4: 0000000000771ef0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 0000000000000400
+> PKRU: 55555554
+> Call Trace:
+>  <TASK>
+>  pir_show+0x5d/0xe0 [intel_qat 9e297e249ab040329cf58b657b06f418fd5c5855]
+>  dev_attr_show+0x3f/0xc0
+>  sysfs_kf_seq_show+0x1ce/0x400
+>  seq_read_iter+0x3fa/0x10b0
+>  vfs_read+0x6f5/0xb20
+>  ksys_read+0xe9/0x1d0
+>  do_syscall_64+0x8a/0x170
+>  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> RIP: 0033:0x7fa9ff6fd9b2
+> Code: c0 e9 b2 fe ff ff 50 48 8d 3d ea 1d 0c 00 e8 c5 fd 01 00 0f 1f 44 00 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 0f 05 <48> 3d 00 f0 ff ff 77 56 c3 0f 1f 44 00 00 48 83 ec 28 48 89 54 24
+> RSP: 002b:00007ffc0616b968 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+> RAX: ffffffffffffffda RBX: 0000000000020000 RCX: 00007fa9ff6fd9b2
+> RDX: 0000000000020000 RSI: 00007fa9ff985000 RDI: 0000000000000003
+> RBP: 00007fa9ff985000 R08: 00007fa9ff984010 R09: 0000000000000000
+> R10: 0000000000000022 R11: 0000000000000246 R12: 0000000000022000
+> R13: 0000000000000003 R14: 0000000000020000 R15: 0000000000020000
+>  </TASK>
+> irq event stamp: 0
+> hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+> hardirqs last disabled at (0): [<ffffffffb102c126>] copy_process+0x21e6/0x6e70
+> softirqs last  enabled at (0): [<ffffffffb102c176>] copy_process+0x2236/0x6e70
+> softirqs last disabled at (0): [<0000000000000000>] 0x0
+> ---[ end trace 0000000000000000 ]---
+> 
+> The rate_limiting->user_input.lock rwsem lock is not initialized before
+> use. Let's initialize it.
+> 
+> Signed-off-by: Jiwei Sun <sunjw10@lenovo.com>
+> Reviewed-by: Adrian Huang <ahuang12@lenovo.com>
+> ---
+>  drivers/crypto/intel/qat/qat_common/adf_rl.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-o Rename class_stat_inc() and class_stat_dec() to class_stat_add()
-  and class_stat_sub() correspondingly. inc/dec are usually associated
-  with +1/-1 modifications, while zsmlloc can modify stats by up
-  to ->objs_per_zspage. Use add/sub (follow atomics naming).
-
-o Rename zs_stat_get() to class_stat_read()
-  get() is usually associated with ref-counting and is paired with put().
-  zs_stat_get() simply reads class stat so rename to reflect it.
-  (This also follows atomics naming).
-
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
----
- mm/zsmalloc.c | 36 ++++++++++++++++++------------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
-
-diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
-index fec1a39e5bbe..17a8304504cc 100644
---- a/mm/zsmalloc.c
-+++ b/mm/zsmalloc.c
-@@ -512,19 +512,19 @@ static int get_size_class_index(int size)
- 	return min_t(int, ZS_SIZE_CLASSES - 1, idx);
- }
- 
--static inline void class_stat_inc(struct size_class *class,
--				int type, unsigned long cnt)
-+static inline void class_stat_add(struct size_class *class, int type,
-+				  unsigned long cnt)
- {
- 	class->stats.objs[type] += cnt;
- }
- 
--static inline void class_stat_dec(struct size_class *class,
--				int type, unsigned long cnt)
-+static inline void class_stat_sub(struct size_class *class, int type,
-+				  unsigned long cnt)
- {
- 	class->stats.objs[type] -= cnt;
- }
- 
--static inline unsigned long zs_stat_get(struct size_class *class, int type)
-+static inline unsigned long class_stat_read(struct size_class *class, int type)
- {
- 	return class->stats.objs[type];
- }
-@@ -576,12 +576,12 @@ static int zs_stats_size_show(struct seq_file *s, void *v)
- 
- 		seq_printf(s, " %5u %5u ", i, class->size);
- 		for (fg = ZS_INUSE_RATIO_10; fg < NR_FULLNESS_GROUPS; fg++) {
--			inuse_totals[fg] += zs_stat_get(class, fg);
--			seq_printf(s, "%9lu ", zs_stat_get(class, fg));
-+			inuse_totals[fg] += class_stat_read(class, fg);
-+			seq_printf(s, "%9lu ", class_stat_read(class, fg));
- 		}
- 
--		obj_allocated = zs_stat_get(class, ZS_OBJS_ALLOCATED);
--		obj_used = zs_stat_get(class, ZS_OBJS_INUSE);
-+		obj_allocated = class_stat_read(class, ZS_OBJS_ALLOCATED);
-+		obj_used = class_stat_read(class, ZS_OBJS_INUSE);
- 		freeable = zs_can_compact(class);
- 		spin_unlock(&class->lock);
- 
-@@ -686,7 +686,7 @@ static void insert_zspage(struct size_class *class,
- 				struct zspage *zspage,
- 				int fullness)
- {
--	class_stat_inc(class, fullness, 1);
-+	class_stat_add(class, fullness, 1);
- 	list_add(&zspage->list, &class->fullness_list[fullness]);
- 	zspage->fullness = fullness;
- }
-@@ -702,7 +702,7 @@ static void remove_zspage(struct size_class *class, struct zspage *zspage)
- 	VM_BUG_ON(list_empty(&class->fullness_list[fullness]));
- 
- 	list_del_init(&zspage->list);
--	class_stat_dec(class, fullness, 1);
-+	class_stat_sub(class, fullness, 1);
- }
- 
- /*
-@@ -858,7 +858,7 @@ static void __free_zspage(struct zs_pool *pool, struct size_class *class,
- 
- 	cache_free_zspage(pool, zspage);
- 
--	class_stat_dec(class, ZS_OBJS_ALLOCATED, class->objs_per_zspage);
-+	class_stat_sub(class, ZS_OBJS_ALLOCATED, class->objs_per_zspage);
- 	atomic_long_sub(class->pages_per_zspage, &pool->pages_allocated);
- }
- 
-@@ -1375,7 +1375,7 @@ unsigned long zs_malloc(struct zs_pool *pool, size_t size, gfp_t gfp)
- 		/* Now move the zspage to another fullness group, if required */
- 		fix_fullness_group(class, zspage);
- 		record_obj(handle, obj);
--		class_stat_inc(class, ZS_OBJS_INUSE, 1);
-+		class_stat_add(class, ZS_OBJS_INUSE, 1);
- 
- 		goto out;
- 	}
-@@ -1394,8 +1394,8 @@ unsigned long zs_malloc(struct zs_pool *pool, size_t size, gfp_t gfp)
- 	insert_zspage(class, zspage, newfg);
- 	record_obj(handle, obj);
- 	atomic_long_add(class->pages_per_zspage, &pool->pages_allocated);
--	class_stat_inc(class, ZS_OBJS_ALLOCATED, class->objs_per_zspage);
--	class_stat_inc(class, ZS_OBJS_INUSE, 1);
-+	class_stat_add(class, ZS_OBJS_ALLOCATED, class->objs_per_zspage);
-+	class_stat_add(class, ZS_OBJS_INUSE, 1);
- 
- 	/* We completely set up zspage so mark them as movable */
- 	SetZsPageMovable(pool, zspage);
-@@ -1456,7 +1456,7 @@ void zs_free(struct zs_pool *pool, unsigned long handle)
- 	spin_lock(&class->lock);
- 	read_unlock(&pool->migrate_lock);
- 
--	class_stat_dec(class, ZS_OBJS_INUSE, 1);
-+	class_stat_sub(class, ZS_OBJS_INUSE, 1);
- 	obj_free(class->size, obj);
- 
- 	fullness = fix_fullness_group(class, zspage);
-@@ -1925,8 +1925,8 @@ static inline void zs_flush_migration(struct zs_pool *pool) { }
- static unsigned long zs_can_compact(struct size_class *class)
- {
- 	unsigned long obj_wasted;
--	unsigned long obj_allocated = zs_stat_get(class, ZS_OBJS_ALLOCATED);
--	unsigned long obj_used = zs_stat_get(class, ZS_OBJS_INUSE);
-+	unsigned long obj_allocated = class_stat_read(class, ZS_OBJS_ALLOCATED);
-+	unsigned long obj_used = class_stat_read(class, ZS_OBJS_INUSE);
- 
- 	if (obj_allocated <= obj_used)
- 		return 0;
+Patch applied.  Thanks.
 -- 
-2.45.2.803.g4e1b14247a-goog
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
