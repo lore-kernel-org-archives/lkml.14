@@ -1,112 +1,147 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E6B156C65
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 11:37:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE52D158A35;
+	Fri, 28 Jun 2024 11:37:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719574636; cv=none; b=VzPDHv37Fa/3XIxufX4wzCZLJCvTXIbBZG0Xx4uj9WXVxCJnkDu7TGddFsyt9jch8AmI4cOJ4aqqJblbZtk1CESKXiquThC1uUOOxNrtyW9DL1Dilj/zoMOgKzbKRmp0wDo4qUnRexQAFLPGd5pIWckI90uGFw+VgQuESTUHvo4=
+	t=1719574643; cv=none; b=AftxL7YWD6Ooz2H7HE647zd/quI1c3+Qj/iUYKxRiJmC1dYNZLNzUlOAUUnFicXk3ZF/rRpHonuOAF1DGxRWz5Nek0xLgBK0uhpJSWh5rgijGuUJ8d6RQDuPHzYpCrNabwvewNwuNnwkAlnBG77Gznu7nhomTxeQBwNpZiHMN8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719574636; c=relaxed/simple;
-	bh=ye6FSQS/NKpcJzutp03vkmto5rrZ7PNX1AcZMkv0NpA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dj8H1ghtNbmitQviyyMENLsmZXDc27UhYyNh4h5WM5iAuKgiAY/08K9IjuvZ5U4SJVpejnjiWFfhOBwVMVpCnM04SY8hOY4u/zjIxzyD9eFAT3daonl8ultdRRSevkmKK5RXOAJb6X4ZvpONDI5hIsSH8Le9D/hb3YGgUGe18OY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DmzYwaw2; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DmzYwaw2"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-42562fde108so4626525e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 04:37:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719574631; x=1720179431; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Dllfp3FX/5YC/zss7njE9Wc54i5SAUNqTlCZuQW2zLE=;
-        b=DmzYwaw2xUgSvCDAvmLXW7CPP3rcRSemkJTBvJouieSyjZzVKZWBhBJRn3TXBvT/JY
-         guuZANHYJVoITlnrOWKlFt5rG2hUpXweTIA+cwv56MOsKkEBwRfxVUdvp5F+UHmXWITn
-         kutoY9FwRO4bJara2AaYeBA8twHvgM2eEIP65K8ZqplilyKXsNxcKlnTyoSHpMQPHhwy
-         pVxFeRAjr4aLiJ0fdwp4Qh3kBtTYd2AO7NzYb6lLu/H5TdNKusqwWPXPi4328h0goG3z
-         +kW4UXUnNCwphvZ+dZ7yAvZoC9srMRDGORXgaOTGp2jWbyodu8gOh5BO3/GsvasxMCTP
-         7jPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719574631; x=1720179431;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Dllfp3FX/5YC/zss7njE9Wc54i5SAUNqTlCZuQW2zLE=;
-        b=q1ihVnHk5DzUZo0A+oruQVEBKBT3nJA+VtYZxNGpwBgxpQbhoS/6/SN7vRKEciPUy/
-         fSPMxV4k7GwokCwqzD0OCu1orY9aQfr9ZsdTbIz9ffEU4O0oOUPR01sIb5lz3Cf5FJZE
-         OdusH89DZZNLk0hexyvGTfxTpJxPIGaePHqFO77zdhnWOw5Q9RUWXN7nXCTqsaeedIeN
-         M0SrrsDnc8MZJasHs+m81DVuRY2CATjzZEQxVs+F/Zh7FAyisgKb+mUBf0cT4IDfIgz1
-         RLxvwlS8sdhf3M57BBsfBUZgwH9m28Q0IgPhuKaNpiIFvd9h1FL3AIHduyH8F+xUi5Yz
-         d3nw==
-X-Gm-Message-State: AOJu0YzenPovMmeXUgGkh2d+BQbVtu6pKTVGoY1xLXY/BclYfRTbz0eg
-	MfQfZnzLwLEQYpJztM3UjY7If4RFrCAsOIkrlYFRxcFVGND5cgNt09A2i0jaY38=
-X-Google-Smtp-Source: AGHT+IEP8mJtr2lv0WyW5t8xLXDlcpnPJ7I1nJsFkBFMY1oOTNaTcrHwH+OH4b6EySrpeAIuc5h5HA==
-X-Received: by 2002:a05:600c:11:b0:425:6bea:8554 with SMTP id 5b1f17b1804b1-4256bea85ccmr13302165e9.27.1719574631518;
-        Fri, 28 Jun 2024 04:37:11 -0700 (PDT)
-Received: from srini-hackbase.lan ([5.133.47.210])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0fba5asm2048937f8f.71.2024.06.28.04.37.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 04:37:11 -0700 (PDT)
-From: srinivas.kandagatla@linaro.org
-To: gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	stable@vger.kernel.org,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 3/4] nvmem: core: only change name to fram for current attribute
-Date: Fri, 28 Jun 2024 12:37:03 +0100
-Message-Id: <20240628113704.13742-4-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240628113704.13742-1-srinivas.kandagatla@linaro.org>
-References: <20240628113704.13742-1-srinivas.kandagatla@linaro.org>
+	s=arc-20240116; t=1719574643; c=relaxed/simple;
+	bh=Uwa9DiSYD3gjtp88rgsIr0BCC8uTTimKDrWBJ24KDaY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fRBmwasjltWFJAlGmPGYVJvSub3Z8mxsTJLmMuqYGO+X5pcO9mKKDePMcgCrFF6kfXuImxezJfph8Mim6B/j+wwhKklgqkX536YX9FwBXNVQAMHISuALW9ykBzVyEeTVKKvhuXLHbpSU3kxYr7k7HKkiOsAFIOuVo0n4Tp44P9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4W9YLh2Mzwz4f3mJ7;
+	Fri, 28 Jun 2024 19:37:00 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 934781A0170;
+	Fri, 28 Jun 2024 19:37:12 +0800 (CST)
+Received: from [10.174.177.174] (unknown [10.174.177.174])
+	by APP1 (Coremail) with SMTP id cCh0CgBXgHxjoH5mMEhDAg--.18518S3;
+	Fri, 28 Jun 2024 19:37:10 +0800 (CST)
+Message-ID: <3536f485-e496-4042-a231-c43a567cee7b@huaweicloud.com>
+Date: Fri, 28 Jun 2024 19:37:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1211; i=srinivas.kandagatla@linaro.org; h=from:subject; bh=13iG1hG1MVP/pselTNqSmavmAZ1CPaJ78TUQIlJ1yGI=; b=owEBbAGT/pANAwAKAXqh/VnHNFU3AcsmYgBmfqBT+Em9xCEa/qzMWYgKZcaUN5HhiHE7IZ7SG u8x0i+hVciJATIEAAEKAB0WIQQi509axvzi9vce3Y16of1ZxzRVNwUCZn6gUwAKCRB6of1ZxzRV N8ToB/dXE+xVIc6GnZPcsWPb/lhvpTL21aR57RHEvfNxHSbmruA24nYginOnvL+gts3KVBRoQcN oQ1tGr1HHc38SWuZRlKOnhPsAL0vUSbsSHI5sRleisOjXF+DJpYeermvcCY8yUqGnKgeWyqYdHD 2ago7IDeH+HXdMeRnz/OGDT0XQC/4/lSMdb3qor2pUWznpFb/Hhfrl8RtbnD1RmMmbJOxgY6OKn Ez3Zq3IBOkh2i+giS3u4+pW9/EdwfugCtmh7c1z8R2+K0YVTfBGzqZbf5KxtLgX/LRYkpU/bVBl Q0+OQ0DwItpB1DuM8wcSQgy1BxVb0mU9iCyAKekJvTa2mEk=
-X-Developer-Key: i=srinivas.kandagatla@linaro.org; a=openpgp; fpr=ED6472765AB36EC43B3EF97AD77E3FC0562560D6
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/9] cachefiles: random bugfixes
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: Christian Brauner <brauner@kernel.org>, jlayton@kernel.org,
+ dhowells@redhat.com, netfs@lists.linux.dev, jefflexu@linux.alibaba.com,
+ zhujia.zj@bytedance.com, linux-erofs@lists.ozlabs.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ yangerkun@huawei.com, houtao1@huawei.com, yukuai3@huawei.com,
+ wozizhi@huawei.com, Baokun Li <libaokun1@huawei.com>,
+ Baokun Li <libaokun@huaweicloud.com>
+References: <20240628062930.2467993-1-libaokun@huaweicloud.com>
+ <ce6a7e15-5bea-413a-951e-b252319e1dfd@linux.alibaba.com>
+Content-Language: en-US
+From: Baokun Li <libaokun@huaweicloud.com>
+In-Reply-To: <ce6a7e15-5bea-413a-951e-b252319e1dfd@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:cCh0CgBXgHxjoH5mMEhDAg--.18518S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxuryDuF4UJrW5Aw4UCw1DGFg_yoW5CF4rpF
+	Wakay5KFWkWry0kws2yr4xtF4Fy3yxXFnrGr1rWr1UC3s8XF1IyrZakw1Yvas5Cr4fGw4a
+	vr4jvas3AryqyaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkE14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+	c2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Gr0_
+	Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQvt
+	AUUUUU=
+X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/1tbiAQAIBV1jkIANfAAAsT
 
-From: Thomas Weißschuh <linux@weissschuh.net>
+Hi Xiang,
 
-bin_attr_nvmem_eeprom_compat is the template from which all future
-compat attributes are created.
-Changing it means to change all subsquent compat attributes, too.
+On 2024/6/28 15:39, Gao Xiang wrote:
+> Hi Baokun,
+>
+> On 2024/6/28 14:29, libaokun@huaweicloud.com wrote:
+>> From: Baokun Li <libaokun1@huawei.com>
+>>
+>> Hi all!
+>>
+>> This is the third version of this patch series, in which another 
+>> patch set
+>> is subsumed into this one to avoid confusing the two patch sets.
+>> (https://patchwork.kernel.org/project/linux-fsdevel/list/?series=854914)
+>>
+>> Thank you, Jia Zhu, Gao Xiang, Jeff Layton, for the feedback in the
+>> previous version.
+>>
+>> We've been testing ondemand mode for cachefiles since January, and we're
+>> almost done. We hit a lot of issues during the testing period, and this
+>> patch series fixes some of the issues. The patches have passed internal
+>> testing without regression.
+>>
+>> The following is a brief overview of the patches, see the patches for
+>> more details.
+>>
+>> Patch 1-2: Add fscache_try_get_volume() helper function to avoid
+>> fscache_volume use-after-free on cache withdrawal.
+>>
+>> Patch 3: Fix cachefiles_lookup_cookie() and cachefiles_withdraw_cache()
+>> concurrency causing cachefiles_volume use-after-free.
+>>
+>> Patch 4: Propagate error codes returned by vfs_getxattr() to avoid
+>> endless loops.
+>>
+>> Patch 5-7: A read request waiting for reopen could be closed maliciously
+>> before the reopen worker is executing or waiting to be scheduled. So
+>> ondemand_object_worker() may be called after the info and object and 
+>> even
+>> the cache have been freed and trigger use-after-free. So use
+>> cancel_work_sync() in cachefiles_ondemand_clean_object() to cancel the
+>> reopen worker or wait for it to finish. Since it makes no sense to wait
+>> for the daemon to complete the reopen request, to avoid this pointless
+>> operation blocking cancel_work_sync(), Patch 1 avoids request generation
+>> by the DROPPING state when the request has not been sent, and Patch 2
+>> flushes the requests of the current object before cancel_work_sync().
+>>
+>> Patch 8: Cyclic allocation of msg_id to avoid msg_id reuse misleading
+>> the daemon to cause hung.
+>>
+>> Patch 9: Hold xas_lock during polling to avoid dereferencing reqs 
+>> causing
+>> use-after-free. This issue was triggered frequently in our tests, and we
+>> found that anolis 5.10 had fixed it. So to avoid failing the test, this
+>> patch is pushed upstream as well.
+>>
+>> Comments and questions are, as always, welcome.
+>> Please let me know what you think.
+>
+> Patch 4-9 looks good to me, and they are independent to patch 1-3
+> so personally I guess they could go upstream in advance.
 
-Instead only use the "fram" name for the currently registered attribute.
+Thank you for your review!
 
-Fixes: fd307a4ad332 ("nvmem: prepare basics for FRAM support")
-Cc: stable@vger.kernel.org
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- drivers/nvmem/core.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Indeed, the first three patches have no dependencies on the later
+ones, and the later ones can be merged in first.
+>
+> I hope the way to fix cachefiles in patch 1-4 could be also
+> confirmed by David and Jeff since they relates the generic
+> cachefiles logic anyway.
+Yes, the first four patches modify the generic process for cachefiles,
+and it would be great if David and Jeff could take a look at those.
+The logic for patches 2 and 3 is a bit more complex, so the review
+may take some time.
 
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index e1ec3b7200d7..1285300ed239 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -396,10 +396,9 @@ static int nvmem_sysfs_setup_compat(struct nvmem_device *nvmem,
- 	if (!config->base_dev)
- 		return -EINVAL;
- 
--	if (config->type == NVMEM_TYPE_FRAM)
--		bin_attr_nvmem_eeprom_compat.attr.name = "fram";
--
- 	nvmem->eeprom = bin_attr_nvmem_eeprom_compat;
-+	if (config->type == NVMEM_TYPE_FRAM)
-+		nvmem->eeprom.attr.name = "fram";
- 	nvmem->eeprom.attr.mode = nvmem_bin_attr_get_umode(nvmem);
- 	nvmem->eeprom.size = nvmem->size;
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
--- 
-2.25.1
+Cheers,
+Baokun
 
