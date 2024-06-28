@@ -1,36 +1,63 @@
-Received: from mail.nfschina.com (unknown [42.101.60.195])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 529A752F7A;
-	Fri, 28 Jun 2024 06:04:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.195
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF1B37143
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 06:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719554646; cv=none; b=tpZBEv/J0rIH9Xp1f80PstMy5tKwTpGyNzqWxxze3Oiv9F81yXYNI1CKQxkJxSHdFKtU0tMv131T44FlLZn0FrjCb8jPy2NTkWio9igIHNj51ZlMuW3bA2wp/PzWbfeGqkQWeNFWz6qs8netm3uuctk3AnUtvq+tAlGwqHCMPEw=
+	t=1719554712; cv=none; b=S8aezb3F0phMHxelpKXnrkBd6T2tQe0aLx8AlYYkvpTTwLZBz266w4tLJIHGJkPwBMS3PpqTfxMXGJkurpm/kdQYW31+gVYaEA9FwDUQQelzm+WBOTvCH2zuqlSaYYBFyV+E63lnVFK2YU+EKOm0SEoN6lvybWwhPSN4wvlPKNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719554646; c=relaxed/simple;
-	bh=c//nUK97LhQ4i/gqtAJZzEghbJ3QsRwBqd/pKLM7OAI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=me5c+KWPnx0PASd04coC4vebyfmByb5WujLDvAy92+VkyAlElFNzv8nbSXcByC+egO9QSbZIh8GEDp0dJeC69Nbo0txsU2+rNdWEcUZ44Ig+cSkgm9ttihy0xGIfgjrLLcfIFOfzccveR8PS+E+i/Oo73VBIzeol8Ka6WhAAsfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
-Received: from localhost.localdomain (unknown [103.163.180.2])
-	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPA id 6725D612A4BD4;
-	Fri, 28 Jun 2024 14:03:28 +0800 (CST)
-X-MD-Sfrom: youwan@nfschina.com
-X-MD-SrcIP: 103.163.180.2
-From: Youwan Wang <youwan@nfschina.com>
-To: andrew@lunn.ch
-Cc: hkallweit1@gmail.com,
-	linux@armlinux.org.uk,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org,
+	s=arc-20240116; t=1719554712; c=relaxed/simple;
+	bh=lU1XvXjiFFxsti9Je9vlciruaCZtXmC+z+HqWsgjafU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YpSlnRn0jmTh/FEkE05oGw1Kiwsxq1+gGGZbYCPAuBMSoCuMqD9tpK/iNf0KyMuL0ExwkRNGiB/eeLfZpd69g7kWR41OqgjVY8DPMn/snbgVR0CGTF1jJLRcIk+c5obkiYsUf1bv9/zhDZmCamUdCsvU7oJakYuvtu2ijofvMFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JtdGV2u+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JtdGV2u+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719554709;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ajvn4ITctkTMolN6abYxpt2/qWjVElb6xUSFcHxU6sg=;
+	b=JtdGV2u+8g8Kc1ujLZhReX8T3pOeq5bzZd2uvPD2u5hgxvkPA5Wmtg5s7UdKujzrMqral4
+	BGE2OIz0LD/vdaCwQ2QYAuvY0jPxy0sJe0XblPYPyTa8ypJgqZigz8qVdulMBNjFt5fxX8
+	wuRLfcDD4adMQ2NoASldHu99357Vbns=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-554-Uu0m_sE3NF6Jx4ije6529w-1; Fri,
+ 28 Jun 2024 02:05:05 -0400
+X-MC-Unique: Uu0m_sE3NF6Jx4ije6529w-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5C1E91955DA6;
+	Fri, 28 Jun 2024 06:05:03 +0000 (UTC)
+Received: from virt-mtcollins-01.lab.eng.rdu2.redhat.com (virt-mtcollins-01.lab.eng.rdu2.redhat.com [10.8.1.196])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0819419560A3;
+	Fri, 28 Jun 2024 06:04:59 +0000 (UTC)
+From: Shaoqin Huang <shahuang@redhat.com>
+To: Oliver Upton <oliver.upton@linux.dev>,
+	Marc Zyngier <maz@kernel.org>,
+	kvmarm@lists.linux.dev
+Cc: Shaoqin Huang <shahuang@redhat.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	James Morse <james.morse@arm.com>,
+	kvm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Youwan Wang <youwan@nfschina.com>
-Subject: [PATCH] net: phy: phy_device: fix PHY WOL enabled, PM failed to suspend
-Date: Fri, 28 Jun 2024 14:03:18 +0800
-Message-Id: <20240628060318.458925-1-youwan@nfschina.com>
-X-Mailer: git-send-email 2.25.1
+	linux-kselftest@vger.kernel.org,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Zenghui Yu <yuzenghui@huawei.com>
+Subject: [PATCH v3 0/2] Allow userspace to change ID_AA64PFR1_EL1
+Date: Fri, 28 Jun 2024 02:04:50 -0400
+Message-Id: <20240628060454.1936886-1-shahuang@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,73 +65,57 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-If the PHY of the mido bus is enabled with Wake-on-LAN (WOL),
-we cannot suspend the PHY. Although the WOL status has been
-checked in phy_suspend(), returning -EBUSY(-16) would cause
-the Power Management (PM) to fail to suspend. Since
-phy_suspend() is an exported symbol (EXPORT_SYMBOL),
-timely error reporting is needed. Therefore, an additional
-check is performed here. If the PHY of the mido bus is enabled
-with WOL, we skip calling phy_suspend() to avoid PM failure.
+Allow userspace to change the guest-visible value of the register with
+some severe limitation:
 
-log:
-[  322.631362] OOM killer disabled.
-[  322.631364] Freezing remaining freezable tasks
-[  322.632536] Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
-[  322.632540] printk: Suspending console(s) (use no_console_suspend to debug)
-[  322.633052] YT8521 Gigabit Ethernet stmmac-0:01:
-PM: dpm_run_callback(): mdio_bus_phy_suspend+0x0/0x110 [libphy] returns -16
-[  322.633071] YT8521 Gigabit Ethernet stmmac-0:01:
-PM: failed to suspend: error -16
-[  322.669699] PM: Some devices failed to suspend, or early wake event detected
-[  322.669949] OOM killer enabled.
-[  322.669951] Restarting tasks ... done.
-[  322.671008] random: crng reseeded on system resumption
-[  322.671014] PM: suspend exit
+  - No changes to features not virtualized by KVM (MPAM_frac, RAS_frac,
+    SME, RNDP_trap).
 
-If the YT8521 driver adds phydrv->flags, ask the YT8521 driver to process
-WOL at suspend and resume time, the phydev->suspended_by_mdio_bus=1
-flag would cause the resume failure.
+  - No changes to features (CSV2_frac, NMI, MTE_frac, GCS, THE, MTEX,
+    DF2, PFAR) which haven't been added into the ftr_id_aa64pfr1[].
+    Because the struct arm64_ftr_bits definition for each feature in the
+    ftr_id_aa64pfr1[] is used by arm64_check_features. If they're not
+    existing in the ftr_id_aa64pfr1[], the for loop won't check the if
+    the new_val is safe for those features.
 
-log:
-[  260.814763] YT8521 Gigabit Ethernet stmmac-0:01:
-PM: dpm_run_callback():mdio_bus_phy_resume+0x0/0x160 [libphy] returns -95
-[  260.814782] YT8521 Gigabit Ethernet stmmac-0:01:
-PM: failed to resume: error -95
+For the question why can't those fields be hidden depending on the VM
+configuration? I don't find there is the related VM configuration, maybe we
+should add the new VM configuration?
 
-Signed-off-by: Youwan Wang <youwan@nfschina.com>
----
- drivers/net/phy/phy_device.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+I'm not sure I'm right, so if there're any problems please help to point out and
+I will fix them.
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 2ce74593d6e4..c766130e2c41 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -270,6 +270,7 @@ static DEFINE_MUTEX(phy_fixup_lock);
- 
- static bool mdio_bus_phy_may_suspend(struct phy_device *phydev)
- {
-+	struct ethtool_wolinfo wol = { .cmd = ETHTOOL_GWOL };
- 	struct device_driver *drv = phydev->mdio.dev.driver;
- 	struct phy_driver *phydrv = to_phy_driver(drv);
- 	struct net_device *netdev = phydev->attached_dev;
-@@ -277,6 +278,14 @@ static bool mdio_bus_phy_may_suspend(struct phy_device *phydev)
- 	if (!drv || !phydrv->suspend)
- 		return false;
- 
-+	/* If the PHY of the mido bus is enabled with Wake-on-LAN (WOL),
-+	 * we cannot suspend the PHY.
-+	 */
-+	phy_ethtool_get_wol(phydev, &wol);
-+	phydev->wol_enabled = !!(wol.wolopts);
-+	if (phydev->wol_enabled && !(phydrv->flags & PHY_ALWAYS_CALL_SUSPEND))
-+		return false;
-+
- 	/* PHY not attached? May suspend if the PHY has not already been
- 	 * suspended as part of a prior call to phy_disconnect() ->
- 	 * phy_detach() -> phy_suspend() because the parent netdev might be the
+Also add the selftest for it.
+
+Changelog:
+----------
+v2 -> v3:
+  * Give more description about why only part of the fields can be writable.
+  * Updated the writable mask by referring the latest ARM spec.
+
+v1 -> v2:
+  * Tackling the full register instead of single field.
+  * Changing the patch title and commit message.
+
+RFCv1 -> v1:
+  * Fix the compilation error.
+  * Delete the machine specific information and make the description more
+    generable.
+
+RFCv1: https://lore.kernel.org/all/20240612023553.127813-1-shahuang@redhat.com/
+v1: https://lore.kernel.org/all/20240617075131.1006173-1-shahuang@redhat.com/
+v2: https://lore.kernel.org/all/20240618063808.1040085-1-shahuang@redhat.com/
+
+Shaoqin Huang (2):
+  KVM: arm64: Allow userspace to change ID_AA64PFR1_EL1
+  KVM: selftests: aarch64: Add writable test for ID_AA64PFR1_EL1
+
+ arch/arm64/kvm/sys_regs.c                         | 4 +++-
+ tools/testing/selftests/kvm/aarch64/set_id_regs.c | 8 ++++++++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
+
 -- 
-2.25.1
+2.40.1
 
