@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA34F1F934;
-	Fri, 28 Jun 2024 07:20:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3260B7EF10;
+	Fri, 28 Jun 2024 07:21:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719559223; cv=none; b=Ur/uA1ha+WQOKllA5UFi+UTnU2jkTbmC5jPFQihwrSOxEBbWUNAO4D/cZC2Jd9T/OcsVwpQxLjwZTAxkwSvDbV7YCvZ7nIOzeRUaCe17m+o8TGkO9/Y5wGAMn4+PFDx9FZdXSsumZZb8WuWRd7R1GO72W5D4PMgh1mklrI+h694=
+	t=1719559310; cv=none; b=ssb0qf8GAH6KBy+rPsVrmCuZM1FVVLyigPLILWiYFKJIIsKUP490oTe6QtNmGoTKUHoDMe66thLBQ3xvtx7BNh8aNgj7/bJ2GtensCyH/4eS74t3WPVgYI7xKd6NIl49q4sVSMsCjdYo/UMgUydNiY755++AQaD/ZtrT7R07qYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719559223; c=relaxed/simple;
-	bh=vTNBz/wLOTojPrgqgi2T1cbenZdK42UQ0OjDz2FOcmk=;
+	s=arc-20240116; t=1719559310; c=relaxed/simple;
+	bh=SYGh3+wgopvebKlBdvpsU2nh/VSvDxCDCRg0tLLkWO0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LN9bvfGcl2SI5W3mIF702ZcodOs8ce9kEvImdpdIHP+08AuteNNXZ0cUpk+Z2U60eG0noy8ZUO2JnctOseuRCuMyTGvNNvrthezpmweqjvQrFmKM/wHlW3EC/AXZk3nvRrHnMoQmXJcccOi6eJYGg6FkyXdVN3qzRey5I9Qdt/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YFBUuBmU; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=gkad6bq4UahpT4v5xTzhoASRKFeu9227awHoXDDkRSp382NqqiUJ+kcPekJlb+NLDcm2ZfDdYd94UNKSrSsnJjl3lW+0CcdtsTcoqu/xz1NG45H+OyoyifUsnZOalew0tghITC5QhoVeOCzb0HeVmFMp3LxOuk4bE9CScCPCsag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kvV4tadm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YFBUuBmU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8235FC116B1;
-	Fri, 28 Jun 2024 07:20:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kvV4tadm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82122C2BD10;
+	Fri, 28 Jun 2024 07:21:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719559222;
-	bh=vTNBz/wLOTojPrgqgi2T1cbenZdK42UQ0OjDz2FOcmk=;
+	s=k20201202; t=1719559309;
+	bh=SYGh3+wgopvebKlBdvpsU2nh/VSvDxCDCRg0tLLkWO0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YFBUuBmUEurG6s46nzLA0voroM5LRbqkfHs/kQnfUM3+IFG9zWq41h331dcxXVyVh
-	 7BQWu0n+3BIq2XWtqpog5zTfUIYEi+VGVtH7pXjweic+7AxurJQpgImxBc4HYKwGwP
-	 rRjOLmCgbQFIST+IvUEvyqqdKcZTyJSPi+PAgWGPCutUej5yoyBJWCiLMoxQATiw62
-	 fS1hXW42nG+nBzJ3kueCGQdzbDSDh+AkHUepchDnvrpzQ0omEc37kjrTckR7GyeMP4
-	 VzDa18ECx4ebsMOp01LFu8A8x/kISwCqjrsMKbERqLVxXgOJIN2DGvKoUPZTrCRyGI
-	 y5U9qdtYWNwgg==
-Message-ID: <2bc8c87c-0e2a-482c-82ff-aae86f3a2c06@kernel.org>
-Date: Fri, 28 Jun 2024 09:20:12 +0200
+	b=kvV4tadmHL/IAM0MIkO8N7mutdPMbFOYKoIMlxG+iIKi4hUfSA/+/5WLfUeoJf6o9
+	 Yq6MKD29reDww/dsyMGiCByn8f44uEZSxuMXO7bH+GvhddW6iDUaz28xQbGHlU0l8O
+	 Z9tabKWQFhBlQzDRr1mHOrEAvd65QZ8G2DjYWspzGLgP9bg7jUYYMz7PT/FMOjun19
+	 iLreZ6ZXm4FT90ckdZVp9NsJo95DiEKvOiDtsqBIho/nNiAZYltUkQBYoy1X7pxqtL
+	 69JsovfbAaQUpRRC/+gPrMppB8prpl2tcLwtKkjwY6Xc1NOATBcEbhzoBtQHiv392m
+	 TvHWDWTyOD7xg==
+Message-ID: <8c89d74a-2fb3-40f4-bcd1-7539aee30065@kernel.org>
+Date: Fri, 28 Jun 2024 09:21:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,22 +35,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/2] dt-bindings: cros-ec-keyboard: Add keyboard matrix
- v3.0
-To: Daisuke Nojiri <dnojiri@chromium.org>
-Cc: Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>,
- Guenter Roeck <groeck@chromium.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>,
+Subject: Re: [PATCH 1/1] spi: dt-bindings: fsl-dspi: add dmas and dma-names
+ properties
+To: Frank Li <Frank.Li@nxp.com>, Vladimir Oltean <olteanv@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Reka Norman <rekanorman@chromium.org>,
- Hans Verkuil <hverkuil-cisco@xs4all.nl>,
- Gwendal Grignou <gwendal@chromium.org>, Pavan Holla <pholla@chromium.org>,
- Lukasz Majczak <lma@chromium.org>, Ching-Kang Yen <chingkang@chromium.org>,
- Stephen Boyd <swboyd@chromium.org>, Prashant Malani <pmalani@chromium.org>,
- chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-input@vger.kernel.org, devicetree@vger.kernel.org
-References: <cover.1719531519.git.dnojiri@chromium.org>
- <9ae4d96cc2ce8c9de8755b9beffb78c641100fe7.1719531519.git.dnojiri@chromium.org>
+ <conor+dt@kernel.org>,
+ "open list:FREESCALE DSPI DRIVER" <linux-spi@vger.kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: imx@lists.linux.dev
+References: <20240627203308.476437-1-Frank.Li@nxp.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -96,20 +91,19 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <9ae4d96cc2ce8c9de8755b9beffb78c641100fe7.1719531519.git.dnojiri@chromium.org>
+In-Reply-To: <20240627203308.476437-1-Frank.Li@nxp.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 28/06/2024 01:53, Daisuke Nojiri wrote:
-> Add support for keyboard matrix version 3.0, which reduces keyboard
-> ghosting.
+On 27/06/2024 22:33, Frank Li wrote:
+> Add dmas and dma-names properties because dspi support dma transfer.
+> Fix below warnings:
+> arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var1.dtb: spi@2120000: Unevaluated properties are not allowed ('dma-names', 'dmas', 'little-endian' were unexpected)
+>         from schema $id: http://devicetree.org/schemas/spi/fsl,dspi.yaml#
 > 
-> Signed-off-by: Daisuke Nojiri <dnojiri@chromium.org>
-> ---
->  include/dt-bindings/input/cros-ec-keyboard.h | 104 +++++++++++++++++++
->  1 file changed, 104 insertions(+)
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
