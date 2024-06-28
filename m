@@ -1,49 +1,46 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9197C1BF37;
-	Fri, 28 Jun 2024 03:02:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D1A14A82
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 03:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719543762; cv=none; b=EN1h1fYTq4fLSGCE79jxEm5VepktKDuo2QAWciVFoGFfqVqHfZ5AOTnCyFiXUba4qllcrVXfS8IiY+3zQczrVAjqW6UpCGQjK7EmZESZppIGG2tA57I1R5gGn35EuLHpk6xkp0to6RZ6f3zET13olrqz6TITKbH6fLDvMygQdw0=
+	t=1719544010; cv=none; b=WYSbzu0TUSnIWbENnQBHcfcFZwFThrSzCljegF8SVG6b7h+U3NHMvk6CUoCZGtp4TNgJw6WqiykS7w1fLV6zXg/MMTvQ7bEhY3EQxYJdtY68kPXKpheu1q0bR7n7pyc8/gzjTjh9YaKrrteBTcd/H5Qz0s5OpPm80EmKNctMzv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719543762; c=relaxed/simple;
-	bh=1NrxczpmN4bxmVpjUaGYnOOj6Lak5FUxVpqQZrkS0MI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iceGAej7+WMIAycgTy900u3UhIdjf+9+grVSw2ZJ8ZocTk2ZchyNl4LENtKWq3XIDdWBi7axuW5BR+BroiQHSCox7Gk6w5Gh3aT/KdgN86jHmCkZnldK16p+rem2StYrBgkl6Tg3I9zifLH973UxzrQ/Be+CP1CyhDLXF1uNTXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=qba0I7in; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1719544010; c=relaxed/simple;
+	bh=5+tBHusmR4aUF4zyf7Vxi1FNFEYWZk+/bVwuyAj8IsI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CCNt0nGQfME/HEW0do0FtHmKhz7GCamKne7UHb/lFNBxu+sOv8rjDJ4O16l0Ww9D7uNbBa5TDgih0VLtwS1CdPQ7a9t0fMRLvMpmnuzLD3dKQbgGtrClaU3u9S0rA/E388diRh8pbKMQBcSm/CwJbg5RLEPSKLM+yLD9cepB4cA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pglwPe18; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="qba0I7in"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=LqCEG
-	j6lMZuJHj86R+aZ0jn06rkwtuAQt/xBP5lb1fA=; b=qba0I7inz0fYvLov7dUDd
-	yztP0vKgvpKYji3U5dbdN7doofy5701f3ETN3z7641rC1fYTsMcPZQ7xZUdod8zs
-	HtZ43pTunFsIxUbMjmdqwfVAf02/ycuwMPaGuwUfGlTBb3iyOluugojMaJM8MLvH
-	76lxCxmjg3D03iNIJ4r+mY=
-Received: from localhost.localdomain (unknown [193.203.214.57])
-	by gzga-smtp-mta-g2-3 (Coremail) with SMTP id _____wDnHpiXJ35mN8MXAg--.32613S4;
-	Fri, 28 Jun 2024 11:01:45 +0800 (CST)
-From: ran xiaokai <ranxiaokai627@163.com>
-To: david@redhat.com
-Cc: akpm@linux-foundation.org,
-	baohua@kernel.org,
-	linux-fsdevel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pglwPe18"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61538C2BBFC;
+	Fri, 28 Jun 2024 03:06:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719544009;
+	bh=5+tBHusmR4aUF4zyf7Vxi1FNFEYWZk+/bVwuyAj8IsI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=pglwPe18LUlrctHdShdWVYrBQP5VIPx3LY5Hd5hty+1rUqP9VU/G8RYzKefRNPMsQ
+	 NOD3zhg8nhVN4bTlPcNmnq7mRiRDdp+4ywDCwKuwrfsSAZUL+dGZYLDZMp+lUcpt/G
+	 VDvSdMp2qBTIQKPoGLj6Bfc/AIhcOZTYwOU7ximIbxlNnYOBTEXfCgs6Hl5l7YjloN
+	 haTGshE2CcfBfKQ9ryr2mwIjFJ/UVZN2D3gRcLs6iArOf8encGnj8S/qvmixMdD133
+	 UjFGae6kmU3PtFIeoj1/j1tdbV7G48b0rPEjMQKipSZZVwvLhPqg4FTPWtBjreqUCt
+	 WoUPHmPTW4jJg==
+From: alexs@kernel.org
+To: Vitaly Wool <vitaly.wool@konsulko.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
 	linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
-	peterx@redhat.com,
-	ran.xiaokai@zte.com.cn,
-	ranxiaokai627@163.com,
-	ryan.roberts@arm.com,
-	svetly.todorov@memverge.com,
-	vbabka@suse.cz,
+	minchan@kernel.org,
 	willy@infradead.org,
-	ziy@nvidia.com
-Subject: Re: [PATCH 2/2] kpageflags: fix wrong KPF_THP on non-pmd-mappable compound pages
-Date: Fri, 28 Jun 2024 03:01:43 +0000
-Message-Id: <20240628030143.27191-1-ranxiaokai627@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <1fddf73d-577f-4b4c-996a-818dd99eb489@redhat.com>
-References: <1fddf73d-577f-4b4c-996a-818dd99eb489@redhat.com>
+	senozhatsky@chromium.org,
+	david@redhat.com,
+	42.hyeyoo@gmail.com
+Cc: Alex Shi <alexs@kernel.org>
+Subject: [PATCH 00/20] mm/zsmalloc: add zpdesc memory descriptor for zswap.zpool
+Date: Fri, 28 Jun 2024 11:11:15 +0800
+Message-ID: <20240628031138.429622-1-alexs@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,126 +48,63 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnHpiXJ35mN8MXAg--.32613S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAFyfAw17Xr15ZFWfZw4rAFb_yoWrWrWxpF
-	W5KF92yw4DJ3Z0kr1xXw1jyryFgr98WF4jyFy3Kw1xZrs8t3Z7KrW8tw1rA3W7JrWxXF4I
-	vayjgF9093Z8ZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUN189UUUUU=
-X-CM-SenderInfo: xudq5x5drntxqwsxqiywtou0bp/1tbiqRIMTGVOBJWk6wAAsO
 
->On 26.06.24 04:49, ran xiaokai wrote:
->> From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
->> 
->> KPF_COMPOUND_HEAD and KPF_COMPOUND_TAIL are set on "common" compound
->> pages, which means of any order, but KPF_THP should only be set
->> when the folio is a 2M pmd mappable THP. Since commit 19eaf44954df
->
->"should only be set" -- who says that? :)
->
->The documentation only talks about "Contiguous pages which construct 
->transparent hugepages". Sure, when it was added there were only PMD ones.
+From: Alex Shi <alexs@kernel.org>
 
-Hi, David,
-I am working on tools/testing/selftests/mm/split_huge_page_test to support
-splitint THP to more orders, not only order-0, and the testcases failed.
-It seems the testcodes rely on KPF_THP to indicate only 2M THP.
+According to Metthew's plan, the page descriptor will be replace by a 8
+bytes mem_desc on destination purpose.
+https://lore.kernel.org/lkml/YvV1KTyzZ+Jrtj9x@casper.infradead.org/
 
->> ("mm: thp: support allocation of anonymous multi-size THP"),
->> multiple orders of folios can be allocated and mapped to userspace,
->> so the folio_test_large() check is not sufficient here,
->> replace it with folio_test_pmd_mappable() to fix this.
->> 
->
->A couple of points:
->
->1) If I am not daydreaming, ever since we supported non-PMD THP in the
->    pagecache (much longer than anon mTHP), we already indicate KPF_THP
->    for them here. So this is not anon specific? Or am I getting the
->    PG_lru check all wrong?
+Here is a implement on zsmalloc to replace page descriptor by 'zpdesc',
+which is still overlay on struct page now. but it's a step move forward
+above destination.
 
-Thanks for the clarification.
+To name the struct zpdesc instead of zsdesc, since there are still 3
+zpools under zswap: zbud, z3fold, zsmalloc for now(z3fold maybe removed
+soon), and we could easyly extend it to other zswap.zpool in needs.
 
->2) Anon THP are disabled as default. If some custom tool cannot deal
->    with that "extension" we did with smaller THP, it shall be updated if
->    it really has to special-case PMD-mapped THP, before enabled by the
->    admin.
+For all zswap.zpools, they are all using single page since often used
+under memory pressure. So the conversion via folio series helper is
+better than page's for compound_head check saving.
 
-ok, it seems that it is the testcodes which should be updated.
+For now, all zpools are using some page struct members, like page.flags
+for PG_private/PG_locked. and list_head lru, page.mapping for page migration.
 
->
->I think this interface does exactly what we want, as it is right now. 
->Unless there is *good* reason, we should keep it like that.
->
->So I suggest
->
->a) Extend the documentation to just state "THP of any size and any 
->mapping granularity" or sth like that.
+This patachset could save 123Kbyetes zsmalloc.o size.
 
-yes, it is neccessay to update the documentation to make it more clear.
-Since the definition of KPF_THP has been expanded since it was firstly introduced.
+Thanks
+Alex
 
->b) Maybe using folio_test_large_rmappable() instead of "(k & (1 <<
->    PG_lru)) || is_anon", so even isolated-from-LRU THPs are indicated
->    properly.
+Alex Shi (8):
+  mm/zsmalloc: add zpdesc memory descriptor for zswap.zpool
+  mm/zsmalloc: use zpdesc in trylock_zspage/lock_zspage
+  mm/zsmalloc: convert create_page_chain() and its users to use zpdesc
+  mm/zsmalloc: rename reset_page to reset_zpdesc and use zpdesc in it
+  mm/zsmalloc: convert SetZsPageMovable and remove unused funcs
+  mm/zsmalloc: introduce __zpdesc_clear_movable
+  mm/zsmalloc: introduce __zpdesc_clear_zsmalloc
+  mm/zsmalloc: introduce __zpdesc_set_zsmalloc()
 
-i will investigate on this.
+Hyeonggon Yoo (12):
+  mm/zsmalloc: convert __zs_map_object/__zs_unmap_object to use zpdesc
+  mm/zsmalloc: add and use pfn/zpdesc seeking funcs
+  mm/zsmalloc: convert obj_malloc() to use zpdesc
+  mm/zsmalloc: convert obj_allocated() and related helpers to use zpdesc
+  mm/zsmalloc: convert init_zspage() to use zpdesc
+  mm/zsmalloc: convert obj_to_page() and zs_free() to use zpdesc
+  mm/zsmalloc: add zpdesc_is_isolated/zpdesc_zone helper for
+    zs_page_migrate
+  mm/zsmalloc: convert __free_zspage() to use zdsesc
+  mm/zsmalloc: convert location_to_obj() to take zpdesc
+  mm/zsmalloc: convert migrate_zspage() to use zpdesc
+  mm/zsmalloc: convert get_zspage() to take zpdesc
+  mm/zsmalloc: convert get/set_first_obj_offset() to take zpdesc
 
->c) Whoever is interested in getting the folio size, use this flag along
->    with a scan for the KPF_COMPOUND_HEAD.
+ mm/zpdesc.h   | 134 +++++++++++++++
+ mm/zsmalloc.c | 454 +++++++++++++++++++++++++++-----------------------
+ 2 files changed, 384 insertions(+), 204 deletions(-)
+ create mode 100644 mm/zpdesc.h
 
-yes, we can use the combination of KPF_COMPOUND_HEAD and KPF_COMPOUND_TAIL
-to figure out the compound order.
-
->
->I'll note that, scanning documentation, PAGE_IS_HUGE currently only 
->applies to PMD *mapped* THP. It doesn't consider PTE-mapped THP at all 
->(including PMD-ones). Likely, documentation should be updated to state 
->"PMD-mapped THP or any hugetlb page".
-
-i will also investigate on this.
-
->> Also kpageflags is not only for userspace memory but for all valid pfn
->> pages,including slab pages or drivers used pages, so the PG_lru and
->> is_anon check are unnecessary here.
->
->I'm completely confused about that statements. We do have KPF_OFFLINE, 
->KPF_PGTABLE, KPF_SLAB, ... I'm missing something important.
-
-My statement is wrong, please ignore this.
-
->> 
->> Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
->> ---
->>   fs/proc/page.c | 14 ++++----------
->>   1 file changed, 4 insertions(+), 10 deletions(-)
->> 
->> diff --git a/fs/proc/page.c b/fs/proc/page.c
->> index 2fb64bdb64eb..3e7b70449c2f 100644
->> --- a/fs/proc/page.c
->> +++ b/fs/proc/page.c
->> @@ -146,19 +146,13 @@ u64 stable_page_flags(const struct page *page)
->>   		u |= kpf_copy_bit(k, KPF_COMPOUND_HEAD, PG_head);
->>   	else
->>   		u |= 1 << KPF_COMPOUND_TAIL;
->> +
->>   	if (folio_test_hugetlb(folio))
->>   		u |= 1 << KPF_HUGE;
->> -	/*
->> -	 * We need to check PageLRU/PageAnon
->> -	 * to make sure a given page is a thp, not a non-huge compound page.
->> -	 */
->> -	else if (folio_test_large(folio)) {
->> -		if ((k & (1 << PG_lru)) || is_anon)
->> -			u |= 1 << KPF_THP;
->> -		else if (is_huge_zero_folio(folio)) {
->> +	else if (folio_test_pmd_mappable(folio)) {
->
->folio_test_pmd_mappable() would not be future safe. It includes anything 
-> >= PMD_ORDER as well.
->
->
->-- 
->Cheers,
->
->David / dhildenb
+-- 
+2.43.0
 
