@@ -1,140 +1,131 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E93156C70;
-	Fri, 28 Jun 2024 10:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC6515382F
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 10:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719569438; cv=none; b=s2DrgN/6oTpgStVmVTVYg7J9zi0U+iHqUt97bSwvm0e/Ri0J0WZlCylIWNwFe7/hoF09jdCl0EFm/sGJWjTczX7nq0itmgfJdD+I2Nl1BhOr8suRTL0tHumTUXO/RYItGCDUop1E1D9DljGxdO0wMHM/F0TzRLm4cM7AB7FTlmc=
+	t=1719569495; cv=none; b=iXEmS6hJshf0gSa5XawFswvIUIO5A5Jlm4/jy9SgC06PsngyohDE54drIsmX3TzJN0TZDGGwhUXz5yDD4sbX/6Xs/0SJd1BjbEgjg8zOQDrS8z1VWyuQ8cYpMPCAj8TFH+Z3noimRLVYjslp6W6sjhlRR0KDrG4uy+G9rOqOBwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719569438; c=relaxed/simple;
-	bh=WoG3XUFYpnnYPBYkCiNe37kKCSGW3AfAOh5Ro/F+QME=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
-	 MIME-Version:Content-Type; b=YJU8tlqBOZug9at7dRhBiAlrupXRZkh+PWFQWPJ+oNZc5ZWk4KDYFEEBvhrQNr2YqjGG9+Z7k9uCSv4Ukr/xXtQOCtlOTgvdUzwgp+4MLk1casqLvXak7jQIhXvUCxyuPHHALycOrUbpTJO/3nvP3QCHjxRvnhUM7Ud10drLr7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K3GYY47T; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719569495; c=relaxed/simple;
+	bh=+/S4oEpOVrDy/MErgYZK3QlF9tlGNIxFq9HMRBhfBvs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=HGGzEQQ5VlKjwVIlXCUVlIoSjRNXryIeNBKKO+Cm9XXAUaHwv8ORsml/JgAdn0sLjX7fCfu8oQQxuR0BqY+a6lijo8KJ0feV1Wnd4SacYCYA8qGBsIh+z4rCMToFbvLTFeo4W1RAW7yKW2PrSjcXj4xD46LSQaYiCpEBokru0H0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mqiPDY6R; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K3GYY47T"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-42564a0d3ceso3271535e9.0;
-        Fri, 28 Jun 2024 03:10:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mqiPDY6R"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2ec50d4e47bso3979761fa.2
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 03:11:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719569435; x=1720174235; darn=vger.kernel.org;
-        h=mime-version:user-agent:references:message-id:date:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=djRjxO/ZJBQCrIZgaI6fk/U62O19bgzxywyn0TmHo/A=;
-        b=K3GYY47T8BBONpqixXEDRkPDVltUJbuybfgfmgV690AYWrrup3tKYqGQifv2cwzEFE
-         LXTHhdiN8lLIxEozAT5w8v8LYi/PlHLVkxUrNFg2QyDTlIAf1Qfm8VZPDbGdIBDZ+yew
-         cDtGV7y0GKhn0pZNQOSAdZHxDrLkyFPvFs3fgytHAdby1+QBTFMx6Bj9Sx4mcrn/XeUU
-         HlC6fgF5U6DDFTKQEoC4iSQenk608pwKclS961nUK84gsYmMU/oT13Z/zITFgwFFKGO9
-         mmvAmseCXjGgkhcU7+baQ3d9LLQoDx9srw1XDhIXZk8Zss21ebYyCH9fjAnZJzu+sx8o
-         V7MA==
+        d=linaro.org; s=google; t=1719569491; x=1720174291; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KM8DD+cslID7pkEl7Dub+wrgxyjLr4VeNk8hahbUqJQ=;
+        b=mqiPDY6RrYG4JeKG/lchXa44QY9Zv0Fxny2I44zmR1FnpBxhrM1ix48N5BxpLOa3oM
+         1h8FgqH4lXBXCkCXkcrmjd+7aA5o5FtBWToPEDr1OXPEb8o0boIEkROuH+jv8ZMXpyBG
+         htc1BmrT+fVnn4Ey3zOE/YzcNQdg8guHLAJiKMSZg51+gIoevShUgeHb69npJgugzumC
+         k2RHdFQintD69A4wKHMXDw0yGXUex8lF46cE6WJAJAZ+8ddxHF8cPTOwZl1T4x9qOi8Y
+         6MLEKC47bdlmcO0fYzjAOqOac9ugcruUaXnVEI/DXs+u+vDHsma7IjF13/qcruSc2FmJ
+         oOOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719569435; x=1720174235;
-        h=mime-version:user-agent:references:message-id:date:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=djRjxO/ZJBQCrIZgaI6fk/U62O19bgzxywyn0TmHo/A=;
-        b=TpSn1BqE5IexeTOq6OuXUtHdMqUPS+A8XiqLuJoW2zFU3qf39iAJ0ZO+nD5jj0+hY5
-         6YD64beVUcPQvSPdApx1KUg5youyb8nbmWGpyJt/cw/JGPb5TQS0ww6FZ40llexwFN9b
-         PpWRoD6C4wHB6ucnPchx4SkW4PMPn4Rg0EJ+jjuc7OhSS3EpFnjS6KoApGf1CTZTVAdF
-         dE0EcClC0VZvJu/bQHByktU4Q4spFQ50nb+ROWNP40HDqVVWa12kXWN4oIgVE1TaHmhT
-         1Z4oYse5uXl7OUZW3GVdD1UyMV7PgQbss9BSWjNTTEE+cUYtJD0JeERkRrUnVAZ2N5Xy
-         CW6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW6mp+Qq3gShRha3lOXeB1uwQ8hY9OPWchwqSXBTKrRTMZBoytS+XorvcE7G4IuR0d69mRYt9oPUCmbEEbNvety24bn7kpoBlu1XmduS8Bw3wVTT7S0QdnJSVTMMer4k1O0JA2Vv4RaX1IZjREsqwjUgPsJFcFOP+n3Ywu9R1YByy5NjEC9MgcdIAdToucVyrYY/5S2O6dO+B0T+T2Ogc42D6ThjtBYZjLG/zScoRRy0al+NkFqmyk6V5OvAz8XL3AIZb6jaSs8/6bVb2ghoEtNdPwny0LhTchoHFHrYExPnjp5oG6/5LRaDIc4MoGy3gY9Jr4xZQggicipPcK513xufK9eA/XYLye3QTzOynkSfOqHojCOPAp8qQ5mpjldKiQcNPI4jYrVIVE8ah/eMopFRqm4IRiJcjSokD6qzo9/DDZih/bWiCsG3wM9uasK7kYxvdEqPEl02vzMI1ITKEhC2ofFoyKiIBYOEStcFw==
-X-Gm-Message-State: AOJu0YxyvBZz+dDWvjJi+IDafaU+ntkoxZ/Mkzhdtdlt5FQqFjFlv+1G
-	xxy5zRbsbcGu4MdBqXZKxI9QMhV17L80B48SQ0zXK5ozO/SSvYqf
-X-Google-Smtp-Source: AGHT+IGTbLKuH6+lACoVW6gBGISTlFA2luNgNp0at8l17FynGxoGb7mI7uIhlXYSjVIEoYumxGZPkg==
-X-Received: by 2002:a7b:cc16:0:b0:424:8e3a:d020 with SMTP id 5b1f17b1804b1-42498ced472mr80452775e9.29.1719569435211;
-        Fri, 28 Jun 2024 03:10:35 -0700 (PDT)
-Received: from imac ([2a02:8010:60a0:0:49ff:2a2d:712c:9944])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256b0c15f8sm26999325e9.47.2024.06.28.03.10.33
+        d=1e100.net; s=20230601; t=1719569491; x=1720174291;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KM8DD+cslID7pkEl7Dub+wrgxyjLr4VeNk8hahbUqJQ=;
+        b=lKFV2SEmCWI9tX3o5famb0mMcnibdGKMn+jVN+e5+RBcFOQP3mtA6rwx2w2kn6XIwO
+         Akk443Na+tdFFNLKuusjmz5Bt+1w4RDrtutikE5ycdyC2a+THm3etK2T0cvt2vFKGKw/
+         +xg+F/103ruYAcqP0Cmy8QDSYWdD+/k+VD3YNWrXPnR4BOTy+EsWzmRGeyZKf3GBkoYr
+         5IZ3NkwuxT9d/VmJARrGzcWtJgwDcdozRcDQi72NhdRLblXzxneV7X4LxxwQZU+l9idc
+         LN/aWn0ykhYJVZZ/BreMpeED12EOjDyw1mdxrACMBK5kpUB5u8Y0Qe4IMJDYOtoyeEmp
+         4J+A==
+X-Forwarded-Encrypted: i=1; AJvYcCX8k5wgpHQOP9viu/4VFjvWtoHzMaxGwKCG+7QXPPkkJJo69agcc+z9qrKVUv2Go03A3Vuh2yiaSRqOD/wQUu5WHj+y1pL9j6kReXjo
+X-Gm-Message-State: AOJu0YzXTlqL0/feWQQLEEPUaTNED1IEworBtRUN/IqKt0IwfeNkbPIA
+	8LO1RUH78R1M75TQXwZku+/ykDhaO1xEHLKmN9FYgJb2YojHVj3I4au+v2y72YI=
+X-Google-Smtp-Source: AGHT+IHGFbihiK4LC17Z1HPkdsgv7xrg5O3Etzoo9ELEAqXsyotSeiGHHEDWd+tDnW/Vp67/PjINYA==
+X-Received: by 2002:a05:651c:19a2:b0:2ec:616e:1c92 with SMTP id 38308e7fff4ca-2ec616e1e74mr107676391fa.2.1719569475239;
+        Fri, 28 Jun 2024 03:11:15 -0700 (PDT)
+Received: from [127.0.1.1] ([178.197.219.137])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256b0c15f8sm27024605e9.47.2024.06.28.03.11.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 03:10:34 -0700 (PDT)
-From: Donald Hunter <donald.hunter@gmail.com>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org,  linux-kernel@vger.kernel.org,
-  linux-doc@vger.kernel.org,  linux-alpha@vger.kernel.org,
-  linux-mips@vger.kernel.org,  linux-parisc@vger.kernel.org,
-  sparclinux@vger.kernel.org,  linux-trace-kernel@vger.kernel.org,
-  linux-arch@vger.kernel.org,  bpf@vger.kernel.org,
-  linux-kselftest@vger.kernel.org,  linux-media@vger.kernel.org,
-  dri-devel@lists.freedesktop.org,  "David S. Miller"
- <davem@davemloft.net>,  Eric Dumazet <edumazet@google.com>,  Jakub
- Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>,  Jonathan
- Corbet <corbet@lwn.net>,  Richard Henderson
- <richard.henderson@linaro.org>,  Ivan Kokshaysky
- <ink@jurassic.park.msu.ru>,  Matt Turner <mattst88@gmail.com>,  Thomas
- Bogendoerfer <tsbogend@alpha.franken.de>,  "James E.J. Bottomley"
- <James.Bottomley@HansenPartnership.com>,  Helge Deller <deller@gmx.de>,
-  Andreas Larsson <andreas@gaisler.com>,  Jesper Dangaard Brouer
- <hawk@kernel.org>,  Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-  Steven Rostedt <rostedt@goodmis.org>,  Masami Hiramatsu
- <mhiramat@kernel.org>,  Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>,  Arnd Bergmann <arnd@arndb.de>,  Alexei
- Starovoitov <ast@kernel.org>,  Daniel Borkmann <daniel@iogearbox.net>,
-  Andrii Nakryiko <andrii@kernel.org>,  Martin KaFai Lau
- <martin.lau@linux.dev>,  Eduard Zingerman <eddyz87@gmail.com>,  Song Liu
- <song@kernel.org>,  Yonghong Song <yonghong.song@linux.dev>,  John
- Fastabend <john.fastabend@gmail.com>,  KP Singh <kpsingh@kernel.org>,
-  Stanislav Fomichev <sdf@fomichev.me>,  Hao Luo <haoluo@google.com>,  Jiri
- Olsa <jolsa@kernel.org>,  Steffen Klassert <steffen.klassert@secunet.com>,
-  Herbert Xu <herbert@gondor.apana.org.au>,  David Ahern
- <dsahern@kernel.org>,  Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-  Shuah Khan <shuah@kernel.org>,  Sumit Semwal <sumit.semwal@linaro.org>,
-  =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,  Bagas
- Sanjaya
- <bagasdotme@gmail.com>,  Christoph Hellwig <hch@infradead.org>,  Nikolay
- Aleksandrov <razor@blackwall.org>,  Pavel Begunkov
- <asml.silence@gmail.com>,  David Wei <dw@davidwei.uk>,  Jason Gunthorpe
- <jgg@ziepe.ca>,  Yunsheng Lin <linyunsheng@huawei.com>,  Shailend Chand
- <shailend@google.com>,  Harshitha Ramamurthy <hramamurthy@google.com>,
-  Shakeel Butt <shakeel.butt@linux.dev>,  Jeroen de Borst
- <jeroendb@google.com>,  Praveen Kaligineedi <pkaligineedi@google.com>
-Subject: Re: [PATCH net-next v15 12/14] net: add devmem TCP documentation
-In-Reply-To: <20240628003253.1694510-13-almasrymina@google.com> (Mina
-	Almasry's message of "Fri, 28 Jun 2024 00:32:49 +0000")
-Date: Fri, 28 Jun 2024 11:09:28 +0100
-Message-ID: <m234oxcraf.fsf@gmail.com>
-References: <20240628003253.1694510-1-almasrymina@google.com>
-	<20240628003253.1694510-13-almasrymina@google.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+        Fri, 28 Jun 2024 03:11:14 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2 0/5] ASoC: codecs: lpass-rx-macro: Few code cleanups
+Date: Fri, 28 Jun 2024 12:10:54 +0200
+Message-Id: <20240628-b4-qcom-audio-lpass-codec-cleanups-v2-0-e9741143e485@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAC6MfmYC/5WNSw6CMBQAr0K69pm2IL+V9zAsavuAl2AftkI0h
+ LtbuYHLmcXMJiIGwijabBMBV4rEPoE+ZcKOxg8I5BILLXUhS13BvYCn5QeYxRHDNJsYwbJDC3Z
+ C45c5gq5UdemVk2XTixSaA/b0Pia3LvFI8cXhczxX9bN/5VcFEtBhrupGOZ3X14m8CXzmMIhu3
+ /cvDY1I39UAAAA=
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Banajit Goswami <bgoswami@quicinc.com>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>
+Cc: alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org, 
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1289;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=+/S4oEpOVrDy/MErgYZK3QlF9tlGNIxFq9HMRBhfBvs=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmfow6hXMAhvr9f3euJp7I7UGeii4vjsSCL5dyf
+ 0dQcDhU8YaJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZn6MOgAKCRDBN2bmhouD
+ 1/h/EACK/mT4hTlY/Gsqi924GgxMfmmCjxJcsbhVBxXqRdk5McOUeZeimSfM2jk1Qa7xwV9mtLv
+ aH7mlwTsvWvXGhnzc89zVqSNPTLcxbRcTp2kzw/hcqLLkxhrUQ4bH9HKAOKDj28EEZ9KMnokauc
+ eFiJFEy97/wP1P5mIU7ZL/u/luEqJgQReRYBS6JFCyPpn1rl/b5rSzUrbW6pQImR7hXdHyrgsxr
+ ceSTCaMDFHcVeAq1lhrkItJn3+7SmNb07GYWfU90xK2uZ2LlmBgRMBILPn3ZSvsBkDP8dnoKrt2
+ iPtTOo37byd0B5QlbG6FIF6qrFQP06gTLKg/MNxvQhckNZSK00eScFrwC/XLWHyEm6is+Vl2RoR
+ msxHrNi81U4g51Ysb2SynbI2U9p4kdwLw5bkOWYiN8p7wUgSD0KoTclVKgDBu1yu8QxHaNy4lmB
+ tWSXEGuj735nnWP7ldjj+qqXKOxP4wuMV83ksIJZ95HdTH5O7a6omqNiiGHdVK8miTgmjNrgmZf
+ xAHgRqk5EAuvf6vMkh/WRRJW0ciWFaMIKvF9VcdfqJtHxdcinZUWBwL2gW5FMEMPKb8LQE69HB3
+ bbXaeiPZiNM+XGFBzSTjLIuH67VlePOCwN1OXJqG/CmCisjpS2Jbnxnfusr+nPsphoA803YA90j
+ NKZIK/tDtcY7Uaw==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Mina Almasry <almasrymina@google.com> writes:
-> +
-> +The user must bind a dmabuf to any number of RX queues on a given NIC using
-> +the netlink API::
-> +
-> +	/* Bind dmabuf to NIC RX queue 15 */
-> +	struct netdev_queue *queues;
-> +	queues = malloc(sizeof(*queues) * 1);
-> +
-> +	queues[0]._present.type = 1;
-> +	queues[0]._present.idx = 1;
-> +	queues[0].type = NETDEV_RX_QUEUE_TYPE_RX;
-> +	queues[0].idx = 15;
-> +
-> +	*ys = ynl_sock_create(&ynl_netdev_family, &yerr);
-> +
-> +	req = netdev_bind_rx_req_alloc();
-> +	netdev_bind_rx_req_set_ifindex(req, 1 /* ifindex */);
-> +	netdev_bind_rx_req_set_dmabuf_fd(req, dmabuf_fd);
-> +	__netdev_bind_rx_req_set_queues(req, queues, n_queue_index);
-> +
-> +	rsp = netdev_bind_rx(*ys, req);
-> +
-> +	dmabuf_id = rsp->dmabuf_id;
-> +
-> +
-> +The netlink API returns a dmabuf_id: a unique ID that refers to this dmabuf
-> +that has been bound.
+Hi,
 
-The docs don't mention the unbinding behaviour. Can you add the text
-from the commit message for patch 3 ?
+Changes in v2:
+- Use cleanup.h instead of devm(), therefore not adding Dmitry's review.
+- New patch #5.
+- Link to v1: https://lore.kernel.org/r/20240627-b4-qcom-audio-lpass-codec-cleanups-v1-0-ede31891d238@linaro.org
+
+Improve a bit the Qualcomm LPASS RX macro driver and align similar parts
+of code with LPASS WSA macro driver for consistency.
+
+No external dependencies.
+
+Best regards,
+Krzysztof
+
+---
+Krzysztof Kozlowski (5):
+      ASoC: codecs: lpass-rx-macro: Simplify with cleanup.h
+      ASoC: codecs: lpass-rx-macro: Keep static regmap_config as const
+      ASoC: dapm: Use unsigned for number of widgets in snd_soc_dapm_new_controls()
+      ASoC: codecs: lpass-rx-macro: Use unsigned for number of widgets
+      ASoC: codecs: lpass-wsa-macro: Simplify with cleanup.h
+
+ include/sound/soc-dapm.h           |  2 +-
+ sound/soc/codecs/lpass-rx-macro.c  | 31 +++++++++++++++++++------------
+ sound/soc/codecs/lpass-wsa-macro.c | 22 ++++++++++------------
+ sound/soc/soc-dapm.c               |  2 +-
+ 4 files changed, 31 insertions(+), 26 deletions(-)
+---
+base-commit: feca1ff0cd5ab7bc3990ec5a387d81d4dff88068
+change-id: 20240627-b4-qcom-audio-lpass-codec-cleanups-27175f1d069f
+
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
