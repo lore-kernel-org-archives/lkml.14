@@ -1,168 +1,94 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+Received: from mail-il1-f202.google.com (mail-il1-f202.google.com [209.85.166.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B34814277;
-	Fri, 28 Jun 2024 02:05:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF59718028
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 02:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719540345; cv=none; b=MiWC0jCOeEBC3zJEpo5weCtXnfsAk9w/ZPCU0U9VsnsHQRGfj9/AA9dqO6jsmLwosfiAQJi0u2k5B8yOnFsWMcTbNgVeZahcfKN5lr317g0FAjkkvVlCdsfA7L+4oIGFQWTwOtxsxHJOyGmzl1Ej0tt2iItNFHucKbj02QkgFlg=
+	t=1719540619; cv=none; b=nNifR0HN2N30xWfxIdbPi0q7KT73a906wuA7S504stLl5VMYayfZUZpfeSSQq76IxNmLklHwLQEgUZuL2oSEehxFFKczqzviJGOJcr0gO83QfoVD4/xnMP5N3Wn0/Vi6uw4YZdy9ANlQ7KT9rx2cw0F3BXvAH097/M/Ih6CkkEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719540345; c=relaxed/simple;
-	bh=gD9XgmxVJC+Q1OtnxS2UeubjQf6UO530r3oJ7FxTCt8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AK4B28w8NbkitaVyYcGa4HConlqm/dn1rpHIj07W7lLPfbfzvoNi+sodCab8xA1KKnn5REzoSX4AXjbN45umJWzlYUNNtcP82eetjs3dhms0AmMBH6xEln9lSZfJIgPm/0yJx8+3naMf6+k550SfLAz2vlxV61XVlHKvseJOqq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ReeDN4g5; arc=none smtp.client-ip=209.85.166.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719540619; c=relaxed/simple;
+	bh=KwfHzd2ldFxaypFOroC+XdF2BelSNa6KiFWOGRPVBHs=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=J97RW5AdzbTpULilstgw8EUaExK6FOXjCqAwAmbzbgGFTUQDv7hSh5dzTfD9iFN3K0HB65fG1edxfEc2oyZyGIadtiuu2yG9usqKqa/QIuXyLjTpls3Q9nddpG8/Ah9amH1GnsK9tM4dDcuPngIs0ByR3r/JLKsF9AnuS/BV6js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--avagin.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y76JuATT; arc=none smtp.client-ip=209.85.166.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--avagin.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ReeDN4g5"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-371c97913cdso457435ab.3;
-        Thu, 27 Jun 2024 19:05:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y76JuATT"
+Received: by mail-il1-f202.google.com with SMTP id e9e14a558f8ab-375c390cedeso2073585ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 19:10:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719540343; x=1720145143; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZeCg9T/nzBxod3Q7D14/fDxiz4AiEAfftwtSHln+1t0=;
-        b=ReeDN4g5WPE6ytEJvpsn0ckRlgpVqcPRaQPwRvx0bpWr2RQvMC4ThqJ7UR7gQtkRXC
-         I7J/DROTI3Zz5iTwSqZ2q2Od8GqzAp51T0LBrs9yezH3evcnGEoxFzR82739dac4bzTs
-         doMmjyO9C7PSs+aoS8MWyhaRgHmMzpn7G3YdVSFVglU7bpjBDk2QTUeRrTjvaqrIervE
-         oCW2V6UlaZ0cQCuhVe+OAXGRVOZmrDtu7yoySYqas4GF/ozohTAit6GFuf7Jo6gAeA/b
-         ehyXtJ/Ri9wCdnrAvUgcd6G/Ap8+WwTLXAd4Fi+sr3pJIWsD0HJEkleRcbnFk1wjl2iq
-         6MGA==
+        d=google.com; s=20230601; t=1719540617; x=1720145417; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NJVD1kO2ZVSodffyKuYzZBZLupRO0YSdINaUO14q6ys=;
+        b=y76JuATT+DPDpeiBQsedL/pSb+byga5TRNtH+c8+2dEaTFKjSpepnCAaxMljUvN6hn
+         cv8x2CKtKbdMcUQwqyxKumlSS+iizRjvMwdDW9fWD5xkKBo6MM0yk+QLbJyCCeOXJkG2
+         ynoBbtFUd9yKPPyK4h/Adq/ZL4g6WzW54netsSetU59iVHnuDJZ15c81yNUamgq/KteX
+         uPVXu093Ws06e6074Hjm47UsNFOYx5EDe+CHFKyUU9wm5OaqdrdhqwviBeg6gU5RAXLz
+         Y62PJqy/esI3sZsR/MCtQblYpwq8EuyMXhEILf5LJpSQ2M3blIhnyM+qcJoo7qPCoFlS
+         0zJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719540343; x=1720145143;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZeCg9T/nzBxod3Q7D14/fDxiz4AiEAfftwtSHln+1t0=;
-        b=IYWBIe5/d21Wc44EFNZFPdbfl/5OWSV7ZnUtkd/pwVtWv6WAMrVfRaoDHFdy551Ls6
-         Tm22j3YKo+5H63RdSc+P8avC6ANcA6Tt2iJXJsOC4oSGUWARw3kMFw7eJtb7pow7kl2V
-         htDdMrvKExLYZBaunk8JvKM9oJ9PoGlwzvxYiBn4Hf69VLBrKHviczPvOFK+CC0RA3I2
-         BjYgWgXTaEGp1+sCdYgUdV9w+jthSKE4p7II2K5UfRENrVJXLBxvMm9NI+PTyArgkmZE
-         YWKX07vIDPnwkTU8w7C3hFIrphLB6yPz34LA+o+GU3BxhDvOFxL4GTkZVmIW/MgbsKNC
-         08Ew==
-X-Forwarded-Encrypted: i=1; AJvYcCWezhI+RCd/2capSCXg+DBRgVqjbWziKvfNNqiI+SRRJ4BZpTJ/InqgVQJERu9PRU+oMDF26Rw6467GjLNYv+FrehxdoxkWekLwIkYC00m37RY1fsemnmn8WNszD7wi/Qr8I93R6yyk0zUjVt4kRgyJ0QdZTyiDWGgnGWT5KIRcAoUHDTni
-X-Gm-Message-State: AOJu0YwScDoV2JbxObEuLeR4JNpUPmS3IE8rqjyabDTmFmRlBhnrJbKJ
-	+wZFk3VBYkI3KDjGuJC1tD3NsSWOWY38mN7n1w5pgfxyHt4Ax8vA2qUyqMUtki9n/oRZzDZjcIp
-	p++3JU7pNwTcvJLxSlNhTUqW5BRI=
-X-Google-Smtp-Source: AGHT+IHfKp78K3bD76VSico8rt/g/p5hRvCSD+wH/YsY732oo7TT8J6D6HQLx4J9LS02OkF8+lr9iOA5Ok1CXzD6kes=
-X-Received: by 2002:a05:6e02:1c86:b0:375:a8c0:eecb with SMTP id
- e9e14a558f8ab-3763b0b4905mr221135135ab.6.1719540343296; Thu, 27 Jun 2024
- 19:05:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719540617; x=1720145417;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NJVD1kO2ZVSodffyKuYzZBZLupRO0YSdINaUO14q6ys=;
+        b=vBJkExK4D/l2U+0+2k2DH5il/Qsqsa66BrjjENoJFngZoJv7bdrontyRZrArMMdNPB
+         iowHU4CAodnFCGoxw4Tc8qRxKAHeO9XIJU9Ah7DhOrH/AsOY6Xw1tcBpyDnxPjIEfGm7
+         rEw4ejbIm5LnByksT+Nzcsmm/mN74EilTsJR4bBWWSj/LdbGPGnvfDsyVq0k4U69o7IC
+         AsZGk61KZSs1QbO26ko2phN2JQuTA6BSFtgXpGca+rG7UtDgbr4f4dPx1RfCUN6Bcvx1
+         V86IblvSkw8xiUFydPfWKHKImaVwo3PY+nLOBmH6+F3K9vPh/KXeUZ3a//hZCkY3weJf
+         D1/w==
+X-Gm-Message-State: AOJu0YyCIzfuncQCIBSY3bJYhvyIAm4MVHjP5ObUuTQRzzQqNdCI8Rlw
+	hROJ7DJ5x9DTdMHAjt3wwLscRI0mcEUBuxjM73mSgvzE9NejFsBCtwBGQETFIwgGZKEQQGJzSZB
+	zCA==
+X-Google-Smtp-Source: AGHT+IHp6BLEbHfaOCc2EizlV1RQzISTP/mr1WjZWk+vFNQbyVIzr2lS9Lb0vbaWpcUYu60NYcJOIHYgJVo=
+X-Received: from avagin.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:b84])
+ (user=avagin job=sendgmr) by 2002:a05:6e02:158a:b0:376:4049:69e4 with SMTP id
+ e9e14a558f8ab-37640496befmr15052435ab.5.1719540617067; Thu, 27 Jun 2024
+ 19:10:17 -0700 (PDT)
+Date: Fri, 28 Jun 2024 02:10:10 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <1719481981-4069-1-git-send-email-shengjiu.wang@nxp.com>
- <1719481981-4069-4-git-send-email-shengjiu.wang@nxp.com> <AM6PR04MB59411A2B4E63B0562BB652A288D02@AM6PR04MB5941.eurprd04.prod.outlook.com>
-In-Reply-To: <AM6PR04MB59411A2B4E63B0562BB652A288D02@AM6PR04MB5941.eurprd04.prod.outlook.com>
-From: Shengjiu Wang <shengjiu.wang@gmail.com>
-Date: Fri, 28 Jun 2024 10:05:32 +0800
-Message-ID: <CAA+D8ANqk=gmsEO=cd7k2P4A_Sv6Cp0KWLq-aG_BXVnN5=iFFA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] arm64: dts: imx8mp-evk: Add audio XCVR sound card
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "S.J. Wang" <shengjiu.wang@nxp.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, 
-	"broonie@kernel.org" <broonie@kernel.org>, "robh@kernel.org" <robh@kernel.org>, 
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
-	"linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, 
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, 
-	"festevam@gmail.com" <festevam@gmail.com>, "imx@lists.linux.dev" <imx@lists.linux.dev>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
+Message-ID: <20240628021014.231976-1-avagin@google.com>
+Subject: [PATCH 0/4 v3] seccomp: improve handling of SECCOMP_IOCTL_NOTIF_RECV
+From: Andrei Vagin <avagin@google.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-kernel@vger.kernel.org, Tycho Andersen <tandersen@netflix.com>, 
+	Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Christian Brauner <brauner@kernel.org>, Andrei Vagin <avagin@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 28, 2024 at 9:13=E2=80=AFAM Peng Fan <peng.fan@nxp.com> wrote:
->
-> > Subject: [PATCH v2 3/3] arm64: dts: imx8mp-evk: Add audio XCVR
-> > sound card
-> >
-> > Add audio XCVR sound card, which supports SPDIF TX & RX, eARC RX,
-> > ARC RX functions.
-> >
-> > HDMI_HPD is shared with the HDMI module so use pinctrl_hog.
-> >
-> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> > ---
-> >  arch/arm64/boot/dts/freescale/imx8mp-evk.dts | 27
-> > ++++++++++++++++++++
-> >  1 file changed, 27 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-> > b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-> > index c2c708c492c0..a64e8a6c830d 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-> > +++ b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-> > @@ -209,6 +209,19 @@ cpu {
-> >               };
-> >       };
-> >
-> > +     sound-xcvr {
-> > +             compatible =3D "fsl,imx-audio-card";
-> > +             model =3D "imx-audio-xcvr";
-> > +
-> > +             pri-dai-link {
-> > +                     link-name =3D "XCVR PCM";
-> > +
-> > +                     cpu {
-> > +                             sound-dai =3D <&xcvr>;
-> > +                     };
-> > +             };
-> > +     };
-> > +
-> >       reserved-memory {
-> >               #address-cells =3D <2>;
-> >               #size-cells =3D <2>;
-> > @@ -748,7 +761,15 @@ &wdog1 {
-> >       status =3D "okay";
-> >  };
-> >
-> > +&xcvr {
-> > +     #sound-dai-cells =3D <0>;
-> > +     status =3D "okay";
-> > +};
-> > +
-> >  &iomuxc {
-> > +     pinctrl-names =3D "default";
-> > +     pinctrl-0 =3D <&pinctrl_hog>;
->
-> Could this be put under xcvr node?
+This patch set addresses two problems with the SECCOMP_IOCTL_NOTIF_RECV
+ioctl:
+* it doesn't return when the seccomp filter becomes unused (all tasks
+  have exited).
+* EPOLLHUP is triggered not when a task exits, but rather when its zombie
+  is collected.
 
-The issue is that this pin is shared with HDMI video function.
-So I think it is better to put it in iomuxc.
+v2: - Remove unnecessary checks of PF_EXITING.
+    - Take siglock with disabling irqs.
+    Thanks to Oleg for the review and the help with the first version.
+v3: - a few fixes suggested by Kees.
+    - add a test to ensure that a dead thread leader doesn't prevent
+      installing new filters with SECCOMP_FILTER_FLAG_TSYNC.
 
-Best regards
-Shengjiu Wang
->
-> Regards,
-> Peng.
-> > +
-> >       pinctrl_audio_pwr_reg: audiopwrreggrp {
-> >               fsl,pins =3D <
-> >                       MX8MP_IOMUXC_SAI3_RXC__GPIO4_IO29
-> >               0xd6
-> > @@ -838,6 +859,12 @@
-> > MX8MP_IOMUXC_NAND_READY_B__GPIO3_IO16 0x140
-> >               >;
-> >       };
-> >
-> > +     pinctrl_hog: hoggrp {
-> > +             fsl,pins =3D <
-> > +
-> >       MX8MP_IOMUXC_HDMI_HPD__HDMIMIX_HDMI_HPD
-> >       0x40000010
-> > +             >;
-> > +     };
-> > +
-> >       pinctrl_i2c1: i2c1grp {
-> >               fsl,pins =3D <
-> >                       MX8MP_IOMUXC_I2C1_SCL__I2C1_SCL
-> >       0x400001c2
-> > --
-> > 2.34.1
-> >
->
+Andrei Vagin (3):
+  seccomp: interrupt SECCOMP_IOCTL_NOTIF_RECV when all users have exited
+  seccomp: release task filters when the task exits
+  selftests/seccomp: add test for NOTIF_RECV and unused filters
+  selftests/seccomp: check that a zombie leader doesn't affect others
+
+ kernel/exit.c                                 |   3 +-
+ kernel/seccomp.c                              |  30 +++-
+ tools/testing/selftests/seccomp/seccomp_bpf.c | 131 ++++++++++++++++++
+ 3 files changed, 157 insertions(+), 7 deletions(-)
+
+-- 
+2.45.0.rc1.225.g2a3ae87e7f-goog
+
