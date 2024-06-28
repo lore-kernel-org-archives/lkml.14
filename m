@@ -1,119 +1,121 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FAA03B29D;
-	Fri, 28 Jun 2024 07:37:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79BE35FBB1;
+	Fri, 28 Jun 2024 07:39:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719560254; cv=none; b=pNwl/ZwxmcYM8GJqWLA4yLXRleS4R0Iy//HcyGEtRaZIpy+1T9hj+2bUwxaxkj+aNbnM4f77Q1OpvDWMnU/AHiRlco+HdroU7jm3gDCzbrA6NI1pzaxXWz/E4z7XQe2Z0jC+mh3ON6U5Y1Ckq+N2NMitmDBaHGX63VfSIC8DDu4=
+	t=1719560343; cv=none; b=maNf8ZRXXq/Y1qZFSptepnD59DLFLU8A5h/5z2AcQTa2dE+OXdByj9lpYUGgGs/ldICRa9XpCmOUQoAjlew7YbWFXhuUNCsKWObn0OeZ+u7ieDm7PgcxwiUIkQgNckSHf6DOFGmLVd8gHbtsE2CbJrdtnTevKiKycgtfdb1SWBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719560254; c=relaxed/simple;
-	bh=btbuoqnbp19+IbkGkP5tLXygz84RloajtIo8HzsNVH8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=spvPaX359TWo9JhQ9yjlX9yBJ9AVN/6UIrUr7WzzGhyeWSGtMdmB2uKpYQ3F1d9Dd3Unwm5lpM68DtYb9urX7izuKezCl3mnAPE1yyVQ//ie4/84+Et+OGr7jB8A13+KSJnjkNia8FbWwM+gJnr2BQ+X7HP4ivFWtFd7QvWH6Ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=XVfXoKBQ; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1719560343; c=relaxed/simple;
+	bh=dMpnGkbwBhBOmnWPOOQH3m4F6wD2W+T9VXI4HrxWb6Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zd195SXpNFS+RUQxmTAyukirQpc3l0wKf5vDYZWQF71en2ezmtB0ihLHP3iYTlohwu0yL1wcaNmnLg5rk9cR5wQBbbUnIphEaf57zPNJKejo87zQJcHVAmHlJarQWIZpg0hzY3wqDhr1kyVXfjitPYEb6lcpuwaW/IEGjxc7jGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uTuGL549; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="XVfXoKBQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=YMm3T
-	0UnxeIlA2nphWPchowTmAu5M5TowJxfd/HCvM0=; b=XVfXoKBQ9f2Gbfm35xnFC
-	A6KGkszOpNsKZbOrtTCwpRQU1SXbSCMpO7gynuX34kB4XqR/nK+irTBOrJO8Wph6
-	MORYMrPZShKF5dEvqnWX0fX5huVjriWIoNKzNNOQ/lg5f9a1FxWookuWpcxUb4Q+
-	mc3C9qUO/6U43XNaQ4F/3o=
-Received: from localhost.localdomain (unknown [112.97.61.84])
-	by gzga-smtp-mta-g3-3 (Coremail) with SMTP id _____wD330AMaH5moqg7Aw--.48095S2;
-	Fri, 28 Jun 2024 15:36:45 +0800 (CST)
-From: Slark Xiao <slark_xiao@163.com>
-To: manivannan.sadhasivam@linaro.org,
-	loic.poulain@linaro.org,
-	ryazanov.s.a@gmail.com,
-	johannes@sipsolutions.net,
-	quic_jhugo@quicinc.com
-Cc: netdev@vger.kernel.org,
-	mhi@lists.linux.dev,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Slark Xiao <slark_xiao@163.com>
-Subject: [PATCH v3 3/3] net: wwan: mhi: make default data link id configurable
-Date: Fri, 28 Jun 2024 15:36:41 +0800
-Message-Id: <20240628073641.1447352-1-slark_xiao@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uTuGL549"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A5A3C116B1;
+	Fri, 28 Jun 2024 07:38:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719560342;
+	bh=dMpnGkbwBhBOmnWPOOQH3m4F6wD2W+T9VXI4HrxWb6Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=uTuGL549DcSV7rSjtp7trSfkRXhEzF2SM9aWwSPe5G4Ct/lUsvueM2Uk2LG03OF6C
+	 ir2tnS9enuakcioB+InIGtR7GWUAwk7lOEoEOEEmTfOQ3ox4m+0EWu9Nog55gY1vJ3
+	 C7ER9sZtguAoaVJ02zP3hUiTTAvaBzDRcwfgitJfez1aDcE23sc3qy663ZoQhPtQJN
+	 4pcuplRvikNKBxDskrR1ZzfI5Z52V7793DAUwOjP5vcDPXi0XSX7JTIk0Cs/84GxUv
+	 puPQMiHRfZp2/Z3eMa3DLXl7ItPdgDsqypBKTeWyE4Gmalqv1zy12YzYuJ4LSI/I/X
+	 ukCr/vqgrDTHg==
+Message-ID: <60f9e733-f5bd-4bfc-9bd5-94ae18bb3901@kernel.org>
+Date: Fri, 28 Jun 2024 09:38:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD330AMaH5moqg7Aw--.48095S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ZrWfJr1DAr1DWFWrJFW8WFg_yoW5JF1rpa
-	yUKFW3tr48J3y7Wa18Cr45Za4Y9r4qka4ak342gws8tw1Yyr9xXFWxXFyjkryFkFWv9r1q
-	yF18try3GanFkrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pi9YFJUUUUU=
-X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/1tbioxAMZGVOEHzVgwAAsK
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] clk: imx93: Move IMX93_CLK_END macro to clk driver
+To: Pengfei Li <pengfei.li_1@nxp.com>, krzk+dt@kernel.org, robh@kernel.org,
+ abelvesa@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+ conor+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+ ping.bai@nxp.com, ye.li@nxp.com, peng.fan@nxp.com, aisheng.dong@nxp.com,
+ frank.li@nxp.com
+Cc: kernel@pengutronix.de, festevam@gmail.com, linux-clk@vger.kernel.org,
+ imx@lists.linux.dev, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240627082426.394937-1-pengfei.li_1@nxp.com>
+ <20240627082426.394937-2-pengfei.li_1@nxp.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240627082426.394937-2-pengfei.li_1@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-For SDX72 MBIM mode, it starts data mux id from 112 instead of 0.
-This would lead to device can't ping outside successfully.
-Also MBIM side would report "bad packet session (112)".
-In oder to fix this issue, we decide to use the modem name
-to do a match in wwan side. Then wwan driver could
-set a corresponding mux_id value according to the modem product.
+On 27/06/2024 10:24, Pengfei Li wrote:
+> IMX93_CLK_END was previously defined in imx93-clock.h to indicate
+> the number of clocks, but it is not part of the ABI, so it should
+> be moved to clk driver.
+> 
+> Signed-off-by: Pengfei Li <pengfei.li_1@nxp.com>
+> ---
+> 
+> Notes:
+>     Change for v2:
+>     - Use pre-processor define to simplify code.
+> 
+>  drivers/clk/imx/clk-imx93.c | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Signed-off-by: Slark Xiao <slark_xiao@163.com>
----
- drivers/net/wwan/mhi_wwan_mbim.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+Are you sure this builds fine? If you need to define it here, it means
+some part of that unit file already uses the define. If so, you include
+the header. If you include the header, you should see fat warning.
 
-diff --git a/drivers/net/wwan/mhi_wwan_mbim.c b/drivers/net/wwan/mhi_wwan_mbim.c
-index 3f72ae943b29..e481ced496d8 100644
---- a/drivers/net/wwan/mhi_wwan_mbim.c
-+++ b/drivers/net/wwan/mhi_wwan_mbim.c
-@@ -42,6 +42,8 @@
- #define MHI_MBIM_LINK_HASH_SIZE 8
- #define LINK_HASH(session) ((session) % MHI_MBIM_LINK_HASH_SIZE)
- 
-+#define WDS_BIND_MUX_DATA_PORT_MUX_ID 112
-+
- struct mhi_mbim_link {
- 	struct mhi_mbim_context *mbim;
- 	struct net_device *ndev;
-@@ -93,6 +95,15 @@ static struct mhi_mbim_link *mhi_mbim_get_link_rcu(struct mhi_mbim_context *mbim
- 	return NULL;
- }
- 
-+static int mhi_mbim_get_link_mux_id(struct mhi_controller *cntrl)
-+{
-+	if (strcmp(cntrl->name, "foxconn-dw5934e") == 0 ||
-+	    strcmp(cntrl->name, "foxconn-t99w515") == 0)
-+		return WDS_BIND_MUX_DATA_PORT_MUX_ID;
-+
-+	return 0;
-+}
-+
- static struct sk_buff *mbim_tx_fixup(struct sk_buff *skb, unsigned int session,
- 				     u16 tx_seq)
- {
-@@ -596,7 +607,7 @@ static int mhi_mbim_probe(struct mhi_device *mhi_dev, const struct mhi_device_id
- {
- 	struct mhi_controller *cntrl = mhi_dev->mhi_cntrl;
- 	struct mhi_mbim_context *mbim;
--	int err;
-+	int err, link_id;
- 
- 	mbim = devm_kzalloc(&mhi_dev->dev, sizeof(*mbim), GFP_KERNEL);
- 	if (!mbim)
-@@ -617,8 +628,11 @@ static int mhi_mbim_probe(struct mhi_device *mhi_dev, const struct mhi_device_id
- 	/* Number of transfer descriptors determines size of the queue */
- 	mbim->rx_queue_sz = mhi_get_free_desc_count(mhi_dev, DMA_FROM_DEVICE);
- 
-+	/* Get the corresponding mux_id from mhi */
-+	link_id = mhi_mbim_get_link_mux_id(cntrl);
-+
- 	/* Register wwan link ops with MHI controller representing WWAN instance */
--	return wwan_register_ops(&cntrl->mhi_dev->dev, &mhi_mbim_wwan_ops, mbim, 0);
-+	return wwan_register_ops(&cntrl->mhi_dev->dev, &mhi_mbim_wwan_ops, mbim, link_id);
- }
- 
- static void mhi_mbim_remove(struct mhi_device *mhi_dev)
--- 
-2.25.1
+Really, people, just build your patches...
+
+Best regards,
+Krzysztof
 
