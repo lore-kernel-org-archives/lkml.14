@@ -1,98 +1,120 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9825414AD35;
-	Fri, 28 Jun 2024 08:59:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D24A14D2AB;
+	Fri, 28 Jun 2024 08:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719565168; cv=none; b=N5spoHt5pm9tX+i3aUTbDY3P8+j7oDQ9LcogXb7pycACldzLPwB+d7U3HgToDGPRhEOB1BapCw169aKhtfFPtCR36w5RvbWh+ZidqV+3frPRpnHmvpMuA1TskQqyh7pYHQ1Tr9Fm22v8eA5+Bvgw1uDXfoJhJLTgfnAdbA1oTPI=
+	t=1719565168; cv=none; b=KgNOnUtofhLFpzmScEc9DKFUuuocLow3ZvCQ96GPWD2MYCUUlkamkTNwnmUrCpQ84G4ZaVnVzOlpKDy7++Yh9JF2Lxfxqdz+sLNvzX/wfpTD8k+v2V72d7VD9v7u8WeE8AAXns5fokKYxBCt2LFscld0JuENzp/k7ca6h1d2pa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719565168; c=relaxed/simple;
-	bh=nauwjGmdLFNccHeQD8Fy+29KCvxwz7v+YNM+sNggz9I=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LfnA17gE3r+E3bdoBNs5ci3eeP/d48GSpJ6n6VOXnBmuik859bkEF2g/BO8h8umazVPxJgWcU1s4Q3TiRr8SNVoGCmixaMFS+rWD8ulFUJhKr3OKmJWvaSvjSICaP88vGZ1eyJbCeQSlCvLzY9B9nUia7phJh07tW5JTAjolNcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=70iyAEbF; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	bh=fsn7DgqHae5MMi2nZcdrg3QK9TBqy66uY6pL4EIadqI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y+4X5Aw70O5s4R7PQUybqzNGMztIn8/q84gEnqtmB0xhCSdKvWAUSI3CIM1g9ZmZRPI9c61Y7ENbAMSD2YjJPgygCgQnzcEdBjOT908PBkXD4zYYkfjdA5aOB4amoBHFyh0Q7EaR3PomZxG7TrAlAx1I1rfVWApk+P41dAqyEm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L/cxFALA; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="70iyAEbF"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45S11DVo008505;
-	Fri, 28 Jun 2024 10:58:58 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=VTjohtlLmp5i0WMDdkVZHk
-	SydQAA4BiVavYseaicg8k=; b=70iyAEbFId9824zmG45vv9SqcfTCljzA16IH/e
-	a7XVsE3881PKA9lNo0CDfVR/pao6bdK0o9UoIfqtWa0lrkhXfk3LfafAglCmocnz
-	atn9Ps9CmkCH4ppBfoP9masSWij+foE+sQX9Pcu0YNDmlifXxHIZZsAEoq8zfOWK
-	PXWFyYQas2T5N/a2y+VJkvqTvBKxm8fria3VM3mw4NuowxReuy4c0pdVLA/7FoqI
-	QbbcYwsAoAG8hxqwJ0rLloAGtuKGy+HIT7aQuaKYwSQckyIzcVsDVuaVZEoN9KFp
-	l8h/Sn62GeRu25zNNqdfe+0/pMWKBc4kav7xXKKx9on5nTNg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ywnxxs3nj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Jun 2024 10:58:58 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1BE0E40045;
-	Fri, 28 Jun 2024 10:58:53 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6106821ADB6;
-	Fri, 28 Jun 2024 10:58:21 +0200 (CEST)
-Received: from localhost (10.252.26.109) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 28 Jun
- 2024 10:58:19 +0200
-From: Pascal Paillet <p.paillet@foss.st.com>
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-CC: <p.paillet@foss.st.com>, Etienne Carriere <etienne.carriere@foss.st.com>
-Subject: [PATCH v2 0/4] Add SCMI regulators desciption on STM32MP25
-Date: Fri, 28 Jun 2024 10:58:10 +0200
-Message-ID: <20240628085814.1586186-1-p.paillet@foss.st.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L/cxFALA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719565167; x=1751101167;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=fsn7DgqHae5MMi2nZcdrg3QK9TBqy66uY6pL4EIadqI=;
+  b=L/cxFALAE+uLgcWl/XKi+Nq/H1ICiee0842NypSRqCflKWLTsOZDyCan
+   LDOHNFXlR5Kg7IBVh4Zs05sIxcamihSOhRQAQ2gMpCTaoCfwsgKpSxRjg
+   mdID4kIrvs8cSdESTfDOO0IwYrbdcCc7RaLzQvxfsASIciSzIaLGL642Q
+   DHgrLMvG7ZlwMOLbNrQ0HQwuGmz93cD+qHeNDAt/Ey/jCsOdVDg+SO7JO
+   /i+ytQJ58VKnm/EgQdZE1R10CCXkXv8xmHxOrrKZY5gH6HGqOply9gqRG
+   82Sk0g/u0EcLb+jZ+KYKW9OsbH1E6MAJhGQzbVF1Ab6k3J0jlgzeCwe5e
+   Q==;
+X-CSE-ConnectionGUID: ysVfkcyKRoC7Bi2q0cBoSg==
+X-CSE-MsgGUID: 8cryBuhgTmaWNNL9aaG61A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="16964150"
+X-IronPort-AV: E=Sophos;i="6.09,168,1716274800"; 
+   d="scan'208";a="16964150"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 01:59:26 -0700
+X-CSE-ConnectionGUID: a2q1RSkxRcSf3SQPaf8/7g==
+X-CSE-MsgGUID: nm1Jb91lS9S6fqU3fDhm8Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,168,1716274800"; 
+   d="scan'208";a="49278962"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.232.203]) ([10.124.232.203])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 01:59:22 -0700
+Message-ID: <09000f4e-f373-448f-afef-35d2a413929f@linux.intel.com>
+Date: Fri, 28 Jun 2024 16:59:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-28_05,2024-06-28_01,2024-05-17_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH PATCH v2 3/9] perf/x86/intel: Use topology_hw_cpu_type()
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org
+Cc: daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Andrew Cooper <andrew.cooper3@citrix.com>,
+ Brice Goglin <brice.goglin@gmail.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Perry Yuan <Perry.Yuan@amd.com>
+References: <20240627-add-cpu-type-v2-0-f927bde83ad0@linux.intel.com>
+ <20240627-add-cpu-type-v2-3-f927bde83ad0@linux.intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20240627-add-cpu-type-v2-3-f927bde83ad0@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add the description for SCMI regulators provided by OP-TEE firmware.
-The binding file named st,stm32mp25-regulator.h will be also used in
-the OP-TEE firmware.
 
-Changes in v2:
- - fix regulator binding commit title in patch 0001
- - add regulator selection for stm32 in patch 0004
+On 6/28/2024 4:44 AM, Pawan Gupta wrote:
+> get_this_hybrid_cpu_type() misses a case when cpu-type is populated
+> regardless of X86_FEATURE_HYBRID_CPU. This is particularly true for hybrid
+> variants that have P or E cores fused off.
+>
+> Instead use topology_hw_cpu_type() as it does not rely on hybrid feature to
+> enumerate cpu-type. This can also help avoid the model-specific fixup
+> get_hybrid_cpu_type().
+>
+> Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
+> Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> ---
+>  arch/x86/events/intel/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index 38c1b1f1deaa..0da1fd14b0ea 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -4753,7 +4753,7 @@ static void intel_pmu_check_hybrid_pmus(struct x86_hybrid_pmu *pmu)
+>  
+>  static struct x86_hybrid_pmu *find_hybrid_pmu_for_cpu(void)
+>  {
+> -	u8 cpu_type = get_this_hybrid_cpu_type();
+> +	u8 cpu_type = topology_hw_cpu_type(smp_processor_id());
 
-Pascal Paillet (4):
-  regulators: dt-bindings: add STM32MP25 regulator bindings
-  arm64: dts: st: add scmi regulators on stm32mp25
-  arm64: dts: st: describe power supplies for stm32mp257f-ev1 board
-  arm64: stm32: enable scmi regulator for stm32
+As Kan said, ARL-H would have two different atom uarchs, so we have to use
+the extra native model id to identify them for PMU enabling. I'm not sure
+if we need a similar helper topology_hw_cpu_native_id(), it may depend on
+if the native id needs to be exposed to user space? such as whether there
+are different vulnerabilities between these two atom uarchs?
 
- arch/arm64/Kconfig.platforms                  |  2 +
- arch/arm64/boot/dts/st/stm32mp251.dtsi        | 35 ++++++++++++++
- arch/arm64/boot/dts/st/stm32mp257f-ev1.dts    | 43 +++++++++++++----
- .../regulator/st,stm32mp25-regulator.h        | 48 +++++++++++++++++++
- 4 files changed, 119 insertions(+), 9 deletions(-)
- create mode 100644 include/dt-bindings/regulator/st,stm32mp25-regulator.h
+For PMU enabling, we don't need to expose the native model ID to user
+space, so we define a new helper get_this_hybrid_cpu_native_id() and
+leverage it to identify the atom uarch.
 
--- 
-2.34.1
 
+>  	int i;
+>  
+>  	/*
+>
