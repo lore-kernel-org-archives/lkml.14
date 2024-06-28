@@ -1,30 +1,60 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.9])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A91A01CF8A;
-	Fri, 28 Jun 2024 06:11:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.9
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BAD4481A4
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 06:13:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719555082; cv=none; b=E2nd46cVckZHurzjzMq1dJ+zcT2zFHakwVLUeJzbWF5fwf3Wp0H8VLru9hKUNNFOvOiwf5UyB/r7/kV04mOsjkOUclpMzVyNdmfDl4NhZbvnEPHTvLhUFnAKBtPNMHZ7I/pckMqaaPJZOM+gsZcbhG6+uDeTlLzaD2sJjNfG3II=
+	t=1719555197; cv=none; b=nhZcoAB+WkA5lmsEo9Q0OUWqhToIJ1PIleS0bixeafTzSEfTMaT1ZeFaQHY4XDcp6a9qSe6Kec6Kd1t0dlq3UbD1zNBrtgu6LYVE+d7a8N7i9rRZiZVZuxK8kBVxE7NmTqo39y0n5UXGQ+fIDGpJvUKOmlgy9o9RhCT0aM0TYQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719555082; c=relaxed/simple;
-	bh=k+xuxjQ6cgAeAEnX34DjIlB9mdycf2+0okpaZfq0K6c=;
+	s=arc-20240116; t=1719555197; c=relaxed/simple;
+	bh=mXboV2koynOibOquRmGUfTsfA6Kni9C+SoJxvBZRoxQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CccCjKk1NXFIgskAN3H6t1ZYVIQRsFnscwwL88wmiWKTeOJlW935Ng/fC2/vQlCVBuZTHFeoZjXEfF3u9IuzgRJa1xXZruOG0I2OBK69KWAe9N6y9VyE78ammT4sulm59NPh0B4B+smOiVSOunrWhDcrUdb1D+T4bNJAzerPTQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=ZyHZqk/X; arc=none smtp.client-ip=220.197.31.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	 In-Reply-To:Content-Type; b=aRs5vvRNR5VlAlGKI3G7blJiWHVzTWlX5UCsjmiK1RpuVLbNAF0gDBzoun0NfVeQi5xsd23HQhZmiSC09v5ux7FBnu8hjP/CfGJz7wtfchMNkR9hqNtO0WPz0Ai8Qxs6wwgCvnj3Sim+uwMgwZTDezjSVeBrwZoW57ovrZ7Cz+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JZRxI+ok; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="ZyHZqk/X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=9aswm6DR5ZbqBHIZa9TUwuJYXCs6Tm8kQTWEVNsvtH8=;
-	b=ZyHZqk/Xz0Y139JAhp1FZTEmo5h+MvrhEpkMqvZAexx53VWQ+zkRm9V4KB7Vpw
-	5aiYCMZlybffIQuP+1kohv7DGK6/J9dV9Yx66+UZyqMs3g7+y9D8y35aUsZ00Zpd
-	Au5CqSOcKDeHCpD6xWyh4PLghe1X2vVfuscRZ4NhWUkg4=
-Received: from [172.21.22.210] (unknown [118.242.3.34])
-	by gzga-smtp-mta-g0-0 (Coremail) with SMTP id _____wD3X+WJU35m7w_JAA--.17284S2;
-	Fri, 28 Jun 2024 14:09:13 +0800 (CST)
-Message-ID: <3a2dee50-ca5d-423c-bbf0-5dae8fbb62e3@126.com>
-Date: Fri, 28 Jun 2024 14:09:13 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JZRxI+ok"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-363826fbcdeso185302f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 23:13:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719555194; x=1720159994; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=wFplG5h+eoy/SrRKzDXl/4JO4gHhBXb/PLwcKabXHLE=;
+        b=JZRxI+ok9RD78okC6lvHpHT2t4+CSrOaKFKeauAE8uwLoe1cRgbA2XjwjUuXmdqmo9
+         wUa+lbrxp+tB1zQiqnFWyi9SvH9W+QzrUDDliv6GM+13ipHvR8E/HSOxO8Zq1r86XKsd
+         6X4cxCXAz59vneQAQEaGAEe/qdQkPOLGDUajdet3uhdWOsO8sGPz6Dl9yfRI4XDxlWBw
+         +/EcRrd5dfNLM+ZgaLpyxGYRWme1zYxAPHkGJNp8mEWIYDNpZ461j+Wyu40GS8t2quoR
+         2wjkqE5T9x//loUXth+N/lYbT57WNQfw1RVOo+RRsYEZd+6d0MNARy49KRqjDcbpu5/E
+         pikA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719555194; x=1720159994;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wFplG5h+eoy/SrRKzDXl/4JO4gHhBXb/PLwcKabXHLE=;
+        b=k8r7pIsA3pO/Ll96FB7YTOrgs53TQsR7c761YiYQI3CJymjMvglnRV3IlAKilc/ttu
+         fKjG6XtA+rSOor/cW2dQiiFhWZIScBx/JGgY6GstLEVu+HMOdHRTydFlWrTBHUfzp0Zd
+         En+7N5DZBk6rCUKzGk66F5ErKbhY+unjhXgKlEoru7n6TGhJ+/SDfx/ov7eBoFbvxMtm
+         1i6mHA1iWg8/jCrLivDF/2udXdGdhVy6zFFRE/7o/iaDVcmpSACxoGMngdttV8ZwBfIL
+         onTdc4le1l7kN+Bibi8eJ5mW2m+a98xrcC02kj99nbDgr6hOFNKqUCNNb0iU9PQ4H/63
+         DnVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWWUpx2ornR9iGy25kBnNKIQJ9ysYudAyk6mQskSMasZGil8y06YRHSBQocT39BKz6r5vgw6Z8Em7mvaoqfUlZnZ1eEwFaUwXBqZ23/
+X-Gm-Message-State: AOJu0Yzbz1R3w2QAosfu/kthaAdS01S7U6t4xPEBfiqhiOFpPyufIOTj
+	V3zu/MldnVydAz7O1ozthqwY+qgQqgn9KWglYXDgBMWFjHmnVk5UkjvPVAyCBAI=
+X-Google-Smtp-Source: AGHT+IFfBn99+tXVbecNsBlSQ/C+KgQNtbzR5Y/1VExDOuZn/jPCBkLeQYKy4DVrTb+Jbfl6YF1lww==
+X-Received: by 2002:a5d:68d2:0:b0:361:93d5:782f with SMTP id ffacd0b85a97d-366e79f1a3bmr10138328f8f.9.1719555194579;
+        Thu, 27 Jun 2024 23:13:14 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.137])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0e12d7sm1220096f8f.51.2024.06.27.23.13.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Jun 2024 23:13:13 -0700 (PDT)
+Message-ID: <dac61c61-ab79-4ae4-b0b0-736a09d0d2dd@linaro.org>
+Date: Fri, 28 Jun 2024 08:13:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,97 +62,88 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [v2 PATCH] mm: gup: do not call try_grab_folio() in slow path
-To: Peter Xu <peterx@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Yang Shi <yang@os.amperecomputing.com>, david@redhat.com,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20240627221413.671680-1-yang@os.amperecomputing.com>
- <Zn3zjKnKIZjCXGrU@x1n>
- <20240627163242.39b0a716bd950a895c032136@linux-foundation.org>
- <Zn35MMS_kq3p0m7q@x1n>
-From: Ge Yang <yangge1116@126.com>
-In-Reply-To: <Zn35MMS_kq3p0m7q@x1n>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3X+WJU35m7w_JAA--.17284S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxZFW5CF48Cw13Ar48Gr1UGFg_yoW5Xr18pF
-	y3Ka9xKFWkJr10kws7twn5ZFWFyrZ8JryUXws5Gr1fZa98ua4xWr48X34FkF98W348Ga10
-	vFW2y3srXa1DAa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jtSdkUUUUU=
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiWQwMG2VLbBlTrAAAsm
+Subject: Re: [PATCH 5/7] arm64: dts: qcom: sm6115: add LPASS LPI pin
+ controller
+To: Alexey Klimov <alexey.klimov@linaro.org>, linux-sound@vger.kernel.org,
+ srinivas.kandagatla@linaro.org, bgoswami@quicinc.com, lgirdwood@gmail.com,
+ broonie@kernel.org
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ andersson@kernel.org, konrad.dybcio@linaro.org, perex@perex.cz,
+ tiwai@suse.com, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
+ devicetree@vger.kernel.org, elder@linaro.org, dmitry.baryshkov@linaro.org,
+ caleb.connolly@linaro.org, linux-kernel@vger.kernel.org
+References: <20240628010715.438471-1-alexey.klimov@linaro.org>
+ <20240628010715.438471-6-alexey.klimov@linaro.org>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240628010715.438471-6-alexey.klimov@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+On 28/06/2024 03:07, Alexey Klimov wrote:
+> Add the Low Power Audio SubSystem Low Power Island (LPASS LPI)
+> pin controller device node required for audio subsystem on
+> Qualcomm QRB4210 RB2.
+> 
+> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
 
 
+>  		gcc: clock-controller@1400000 {
+>  			compatible = "qcom,gcc-sm6115";
+>  			reg = <0x0 0x01400000 0x0 0x1f0000>;
+> @@ -3068,6 +3084,9 @@ cpufreq_hw: cpufreq@f521000 {
+>  		};
+>  	};
+>  
+> +	sound: sound {
+> +	};
 
-在 2024/6/28 7:43, Peter Xu 写道:
-> On Thu, Jun 27, 2024 at 04:32:42PM -0700, Andrew Morton wrote:
->> On Thu, 27 Jun 2024 19:19:40 -0400 Peter Xu <peterx@redhat.com> wrote:
->>
->>> Yang,
->>>
->>> On Thu, Jun 27, 2024 at 03:14:13PM -0700, Yang Shi wrote:
->>>> The try_grab_folio() is supposed to be used in fast path and it elevates
->>>> folio refcount by using add ref unless zero.  We are guaranteed to have
->>>> at least one stable reference in slow path, so the simple atomic add
->>>> could be used.  The performance difference should be trivial, but the
->>>> misuse may be confusing and misleading.
->>>
->>> This first paragraph is IMHO misleading itself..
->>>
->>> I think we should mention upfront the important bit, on the user impact.
->>>
->>> Here IMO the user impact should be: Linux may fail longterm pin in some
->>> releavnt paths when applied over CMA reserved blocks.  And if to extend a
->>> bit, that include not only slow-gup but also the new memfd pinning, because
->>> both of them used try_grab_folio() which used to be only for fast-gup.
->>
->> It's still unclear how users will be affected.  What do the *users*
->> see?  If it's a slight slowdown, do we need to backport this at all?
-> 
-> The user will see the pin fails, for gpu-slow it further triggers the WARN
-> right below that failure (as in the original report):
-> 
->          folio = try_grab_folio(page, page_increm - 1,
->                                  foll_flags);
->          if (WARN_ON_ONCE(!folio)) { <------------------------ here
->                  /*
->                          * Release the 1st page ref if the
->                          * folio is problematic, fail hard.
->                          */
->                  gup_put_folio(page_folio(page), 1,
->                                  foll_flags);
->                  ret = -EFAULT;
->                  goto out;
->          }
-> 
-> For memfd pin and hugepd paths, they should just observe GUP failure on
-> those longterm pins, and it'll be the caller context to decide what user
-> can see, I think.
-> 
->>
->>>
->>> The patch itself looks mostly ok to me.
->>>
->>> There's still some "cleanup" part mangled together, e.g., the real meat
->>> should be avoiding the folio_is_longterm_pinnable() check in relevant
->>> paths.  The rest (e.g. switch slow-gup / memfd pin to use folio_ref_add()
->>> not try_get_folio(), and renames) could be good cleanups.
->>>
->>> So a smaller fix might be doable, but again I don't have a strong opinion
->>> here.
->>
->> The smaller the better for backporting, of course.
-> 
-> I think a smaller version might be yangge's patch, plus Yang's hugepd
-> "fast" parameter for the hugepd stack, then hugepd can also use
-> try_grab_page().  memfd-pin change can be a separate small patch perhaps
-> squashed.
+That's not really needed and does not bring much of benefits.
 
-Thanks, new version:
-https://lore.kernel.org/all/1719554518-11006-1-git-send-email-yangge1116@126.com/
-
-> 
-> I'll leave how to move on to Yang.
-> 
-> Thanks,
-> 
+Best regards,
+Krzysztof
 
