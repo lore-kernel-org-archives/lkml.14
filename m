@@ -1,46 +1,46 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826341CE087;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A4281CE08A;
 	Fri, 28 Jun 2024 15:15:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719587740; cv=none; b=Zlxfb5nvVPLAdEhZxNSmKuZ2bV7VN52igK86ROC8cbmgUrOCcOAfL4w6Lsw7jMia7LniL60ZGpFxaQqUvvhLfF8JZtcrJhR2d6LnZ555nA8shkc5VbmLDCS4ZmXkqzFSAxC/TllT5V+VeoMRmLulD2XC9w2iWpxjc6axBt7IBd8=
+	t=1719587740; cv=none; b=nEy+qfUg5/b6O9kIJ8FjckJWgSf8GVVl1yBoF5bnyfuOJrHcDD8IX+37f8e2imEd2ROtadKVqDso2PIeV/TrkNUqhqb9cy0RMV/3tqwdayoq3bTVZQkNfv9oDFVs5nm8TegLydNUKuOrUJsibRYX159pHepoP7/QzBauCU2AE4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719587740; c=relaxed/simple;
-	bh=UFzp48sdTV7PnHlUaB78IqGx/4CcREbpJVqW3suBwDg=;
+	bh=oHVv0/SCCVI3F7WFGHyeGNhEBrtKYoQxxA0t6HyZu60=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XBWsey/dEL+4+6WO1iWPQEcXUA9PFiTaYTlEx/wIvC5wC+id0DMmZh+Pcp2KtT7tPhO17PPV9dXf7VElX7TT60+Y6vsUKGTap1Njuse7N7nAd1FgqbrjkwNaOPBUTZ/8uYcyaE1P1iMOZ8TBBqIRsDZsDYyGPOQ2k5ErxBr+CXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Y13SUzF4; arc=none smtp.client-ip=198.47.19.141
+	 MIME-Version:Content-Type; b=KmkTlbg33GLBtxb+J6rDNEN+fPCdlQTAsujLj6f+bWOR5jTc5UO2vfcfbYEepsRwaQbV8rVjNnN07U7/qSYNJ5pzoGOTygjvZBabMpGluinLyo61m1pJI7RfipgQDMdGe+hJY9ZdOtl7ykzUhRbRU3nlFbdY4VexjBaQW2LSLtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BNDyzQ3x; arc=none smtp.client-ip=198.47.19.142
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y13SUzF4"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BNDyzQ3x"
 Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45SFFMjE001304;
-	Fri, 28 Jun 2024 10:15:22 -0500
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45SFFK5M106479;
+	Fri, 28 Jun 2024 10:15:20 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1719587722;
-	bh=EjRGWqtSA2M5g2YzMIZ4ttfcV4c5LM6Vt+zr7WjOyhc=;
+	s=ti-com-17Q1; t=1719587720;
+	bh=bX/INQxCOvUYPBjtz6cmPeM5ZIJqmCkwp95Q9pPdEYo=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=Y13SUzF4K7Fm1rLky8KcsQwoMWm4UIDV1rgphuBsX/vDBdNuXcqUmBNeWlA3qXzUw
-	 9tIaP1PyzROJoiqvrsLpBTM/gClRW6hCHMOKV5utyseS2u3AUUUIqNdC4GsY79c4Cc
-	 0VSxHNFZjLQbDw2SfD/5UNC0onO6SfKDeTBcXZmk=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45SFFMUD071759
+	b=BNDyzQ3xSp6HksXShakkm93iMEKI26qr8i+e1YSXz31X32tL4wvIhbgn7Qzc0xgig
+	 iCwf+Eh9ya3GklmKrtjyoK34v4B1v8a7XJgiy1n8Urev/VtNvQDhKxPIG+WDrEZ8gH
+	 z7cHEaTVragtgACxTo/2Jdu94H+qRu3P5laXFOTY=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45SFFK8o071748
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 28 Jun 2024 10:15:22 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+	Fri, 28 Jun 2024 10:15:20 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 28
- Jun 2024 10:15:21 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2024 10:15:20 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 28 Jun 2024 10:15:21 -0500
+ Frontend Transport; Fri, 28 Jun 2024 10:15:20 -0500
 Received: from lelvsmtp5.itg.ti.com ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45SFFJlY087911;
-	Fri, 28 Jun 2024 10:15:21 -0500
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45SFFJlU087911;
+	Fri, 28 Jun 2024 10:15:19 -0500
 From: Andrew Davis <afd@ti.com>
 To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
         Tero
@@ -52,9 +52,9 @@ To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
         Jan Kiszka <jan.kiszka@siemens.com>
 CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Andrew Davis <afd@ti.com>
-Subject: [PATCH 5/7] arm64: dts: ti: k3-j784s4: Add cpsw-mac-efuse node to mcu_conf
-Date: Fri, 28 Jun 2024 10:15:16 -0500
-Message-ID: <20240628151518.40100-6-afd@ti.com>
+Subject: [PATCH 1/7] arm64: dts: ti: k3-am65: Add cpsw-mac-efuse node to mcu_conf
+Date: Fri, 28 Jun 2024 10:15:12 -0500
+Message-ID: <20240628151518.40100-2-afd@ti.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240628151518.40100-1-afd@ti.com>
 References: <20240628151518.40100-1-afd@ti.com>
@@ -83,35 +83,35 @@ big syscon area, describe this bus address area as the simple-bus it is.
 
 Signed-off-by: Andrew Davis <afd@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi
-index 2e18d91ae92f8..f3a6ed1c979d0 100644
---- a/arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi
-@@ -145,12 +145,16 @@ mcu_timerio_output: pinctrl@40f04280 {
- 		status = "reserved";
- 	};
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+index 8feab93176447..43c6118d2bf0f 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+@@ -6,13 +6,17 @@
+  */
  
--	mcu_conf: syscon@40f00000 {
--		compatible = "ti,j721e-system-controller", "syscon", "simple-mfd";
--		reg = <0x00 0x40f00000 0x00 0x20000>;
+ &cbass_mcu {
+-	mcu_conf: scm-conf@40f00000 {
+-		compatible = "syscon", "simple-mfd";
+-		reg = <0x0 0x40f00000 0x0 0x20000>;
 +	mcu_conf: bus@40f00000 {
 +		compatible = "simple-bus";
  		#address-cells = <1>;
  		#size-cells = <1>;
--		ranges = <0x00 0x00 0x40f00000 0x20000>;
-+		ranges = <0x0 0x0 0x40f00000 0x20000>;
-+
+ 		ranges = <0x0 0x0 0x40f00000 0x20000>;
+ 
 +		cpsw_mac_syscon: ethernet-mac-syscon@200 {
 +			compatible = "ti,am62p-cpsw-mac-efuse", "syscon";
 +			reg = <0x200 0x8>;
 +		};
- 
++
  		phy_gmii_sel: phy@4040 {
  			compatible = "ti,am654-phy-gmii-sel";
-@@ -553,7 +557,7 @@ mcu_cpsw_port1: port@1 {
+ 			reg = <0x4040 0x4>;
+@@ -358,7 +362,7 @@ cpsw_port1: port@1 {
  				reg = <1>;
  				ti,mac-only;
  				label = "port1";
