@@ -1,28 +1,28 @@
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442236F2E6;
-	Fri, 28 Jun 2024 06:31:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B962B78B60;
+	Fri, 28 Jun 2024 06:31:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719556269; cv=none; b=DmF7oHjf1zXZiX/nNK36kdlFH+4mK5c5ITMfL7GVi0V40rq9O+vbSt93absEndEwDcD5z3peiD6UyLOJy3ngv08ZPIXAGDr2RTIjhvBbLXWeGfjzCOl3MVpZnnhvRFe2Z3xom/cjOAszK+eKvc1pZV/qxSK/YNZLUFqUG0+7dHQ=
+	t=1719556270; cv=none; b=bVhC85Kh/tuEOz3YcPwCFEiNJTQl4KnO4jRPJxMbK1VnMCGIFv5dzvU2E1xP1riQO8vZuoqu0FMhu+plfNSrN+FR0v/6uLAs/7OLdA9ZZgc4zhAaWpi95Jb9SIjh2P6NOYiHjq+bX354qP9cCEIo35x/e25fKCNX6EcAeDHUeL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719556269; c=relaxed/simple;
-	bh=nft+9d/YjFcA3nqWZSNMApWV16/FmIhqW5jCfnBGGM0=;
+	s=arc-20240116; t=1719556270; c=relaxed/simple;
+	bh=gqwYSNYOez5FoSMhBBxLT9PwTJsluXDHkon4rB6Ozwg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cYTeEomf363mlwbq9rqy8zpy2iE9ni7GZ+2WjpQHQYPjTx9AC5LXGQstWLkJcQmf5DU4GQFjgcMQuEQij8iFBolp7ahkeeigB8waDdwsIaj/caMJJg83l/HuHj/wMD6nTB2rX04NnlZP7Q1/780OaVRDDpwEzMfkX/W7c2bRQEU=
+	 MIME-Version; b=R1clhDtyw7zpW+Kc2se+4KZHXiVkbzKQWaztGYl+9gXTJ3BSZ8aqWTWbUopTnt07bnHk+XXeNsaF2FkmdXvn0d9ifim4EjBSrShZP4Ix2AZ+RCoOSbnAFxDHkSjTCw7wjWt2IGriqWI/8b4IfpfO0/cTeN0RLKbV0NhBgdvogKI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4W9QYS0fpnz4f3kw4;
-	Fri, 28 Jun 2024 14:30:52 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4W9QYT2S8Tz4f3l1s;
+	Fri, 28 Jun 2024 14:30:53 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 54B241A0572;
-	Fri, 28 Jun 2024 14:31:04 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 9265A1A0185;
+	Fri, 28 Jun 2024 14:31:05 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP2 (Coremail) with SMTP id Syh0CgBXwIWfWH5mZZVAAg--.52859S11;
-	Fri, 28 Jun 2024 14:31:04 +0800 (CST)
+	by APP2 (Coremail) with SMTP id Syh0CgBXwIWfWH5mZZVAAg--.52859S13;
+	Fri, 28 Jun 2024 14:31:05 +0800 (CST)
 From: libaokun@huaweicloud.com
 To: netfs@lists.linux.dev,
 	dhowells@redhat.com,
@@ -40,9 +40,9 @@ Cc: hsiangkao@linux.alibaba.com,
 	yukuai3@huawei.com,
 	wozizhi@huawei.com,
 	Baokun Li <libaokun1@huawei.com>
-Subject: [PATCH v3 7/9] cachefiles: wait for ondemand_object_worker to finish when dropping object
-Date: Fri, 28 Jun 2024 14:29:28 +0800
-Message-Id: <20240628062930.2467993-8-libaokun@huaweicloud.com>
+Subject: [PATCH v3 9/9] cachefiles: add missing lock protection when polling
+Date: Fri, 28 Jun 2024 14:29:30 +0800
+Message-Id: <20240628062930.2467993-10-libaokun@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240628062930.2467993-1-libaokun@huaweicloud.com>
 References: <20240628062930.2467993-1-libaokun@huaweicloud.com>
@@ -53,10 +53,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgBXwIWfWH5mZZVAAg--.52859S11
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ww4kur4fJF1DXFy7Zw1UKFg_yoW8uF4fpF
-	WakFy7KrWxWF4UCrWkZFs5XryrK3ykZFnrWFyYqrZ8Ar90qr4rZr12y3ZxZF15Aw1IgrZr
-	tw4UCr9xt34qy3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:Syh0CgBXwIWfWH5mZZVAAg--.52859S13
+X-Coremail-Antispam: 1UD129KBjvJXoW7tF4rWr4Dtr4furW3uw4rZrb_yoW8WrWfpF
+	WSya45try8ur48uF1qv3WkA34FyaykGa4DW3ykXwsIv3srXr15XF1Sk34a9rn5Jr4kAF43
+	Jw15KF9xA3yUA3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUm014x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -69,73 +69,53 @@ X-Coremail-Antispam: 1UD129KBjvJXoW7Ww4kur4fJF1DXFy7Zw1UKFg_yoW8uF4fpF
 	JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1V
 	AFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xII
 	jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
-	C2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVj
+	C2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVj
 	vjDU0xZFpf9x0JUB89_UUUUU=
-X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/1tbiAQAIBV1jkH-xJwAAsL
+X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/1tbiAQAIBV1jkH-xKAADsH
 
-From: Hou Tao <houtao1@huawei.com>
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
 
-When queuing ondemand_object_worker() to re-open the object,
-cachefiles_object is not pinned. The cachefiles_object may be freed when
-the pending read request is completed intentionally and the related
-erofs is umounted. If ondemand_object_worker() runs after the object is
-freed, it will incur use-after-free problem as shown below.
+Add missing lock protection in poll routine when iterating xarray,
+otherwise:
 
-process A  processs B  process C  process D
+Even with RCU read lock held, only the slot of the radix tree is
+ensured to be pinned there, while the data structure (e.g. struct
+cachefiles_req) stored in the slot has no such guarantee.  The poll
+routine will iterate the radix tree and dereference cachefiles_req
+accordingly.  Thus RCU read lock is not adequate in this case and
+spinlock is needed here.
 
-cachefiles_ondemand_send_req()
-// send a read req X
-// wait for its completion
-
-           // close ondemand fd
-           cachefiles_ondemand_fd_release()
-           // set object as CLOSE
-
-                       cachefiles_ondemand_daemon_read()
-                       // set object as REOPENING
-                       queue_work(fscache_wq, &info->ondemand_work)
-
-                                // close /dev/cachefiles
-                                cachefiles_daemon_release
-                                cachefiles_flush_reqs
-                                complete(&req->done)
-
-// read req X is completed
-// umount the erofs fs
-cachefiles_put_object()
-// object will be freed
-cachefiles_ondemand_deinit_obj_info()
-kmem_cache_free(object)
-                       // both info and object are freed
-                       ondemand_object_worker()
-
-When dropping an object, it is no longer necessary to reopen the object,
-so use cancel_work_sync() to cancel or wait for ondemand_object_worker()
-to finish.
-
-Fixes: 0a7e54c1959c ("cachefiles: resend an open request if the read request's object is closed")
-Signed-off-by: Hou Tao <houtao1@huawei.com>
+Fixes: b817e22b2e91 ("cachefiles: narrow the scope of triggering EPOLLIN events in ondemand mode")
+Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 Signed-off-by: Baokun Li <libaokun1@huawei.com>
 Reviewed-by: Jia Zhu <zhujia.zj@bytedance.com>
+Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 Acked-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/cachefiles/ondemand.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/cachefiles/daemon.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
-index 36b97ded16b4..1d5b970206d0 100644
---- a/fs/cachefiles/ondemand.c
-+++ b/fs/cachefiles/ondemand.c
-@@ -694,6 +694,9 @@ void cachefiles_ondemand_clean_object(struct cachefiles_object *object)
- 		}
- 	}
- 	xa_unlock(&cache->reqs);
-+
-+	/* Wait for ondemand_object_worker() to finish to avoid UAF. */
-+	cancel_work_sync(&object->ondemand->ondemand_work);
- }
+diff --git a/fs/cachefiles/daemon.c b/fs/cachefiles/daemon.c
+index 06cdf1a8a16f..89b11336a836 100644
+--- a/fs/cachefiles/daemon.c
++++ b/fs/cachefiles/daemon.c
+@@ -366,14 +366,14 @@ static __poll_t cachefiles_daemon_poll(struct file *file,
  
- int cachefiles_ondemand_init_obj_info(struct cachefiles_object *object,
+ 	if (cachefiles_in_ondemand_mode(cache)) {
+ 		if (!xa_empty(&cache->reqs)) {
+-			rcu_read_lock();
++			xas_lock(&xas);
+ 			xas_for_each_marked(&xas, req, ULONG_MAX, CACHEFILES_REQ_NEW) {
+ 				if (!cachefiles_ondemand_is_reopening_read(req)) {
+ 					mask |= EPOLLIN;
+ 					break;
+ 				}
+ 			}
+-			rcu_read_unlock();
++			xas_unlock(&xas);
+ 		}
+ 	} else {
+ 		if (test_bit(CACHEFILES_STATE_CHANGED, &cache->flags))
 -- 
 2.39.2
 
