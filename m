@@ -1,202 +1,98 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46AF200DB
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 03:17:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8AC414277;
+	Fri, 28 Jun 2024 03:18:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719544679; cv=none; b=UQ8m336mXzk+gQBb4YwAVini+JU4po15iC3Hd0nkFQFh7+jt6gTLZhwcuZsZj8vEIyYtwBWmj5haVOsBZUdsS9JxggncqJy2DY2UfV0+c1oS8pNe70KYdiV0iTqzVgQbt3082jB1rHWXvL94tGNiEeZm+Q56Ytx1BScJzOqMMII=
+	t=1719544701; cv=none; b=uQu5gZJvAlGyLF+flwy8BYb8wo1nfZvZnEqstz8Q4q3uw+zX1XR7VXg2KBET8m/fDGs8MzwYSJtDped9TsLY6OpAHDLUp93EtOQrWoycVPM/0qsKh2sf/7S2dZ+ITI4VI7DRHRnvTnAQBbUxOfAsygPNTWwe1rDntUNILK6dcIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719544679; c=relaxed/simple;
-	bh=fdCjEuFjhYeeY9vzbpQuPVm4W9bNTsY5MKRpYPvF7YM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C3E4Pxljqzw7AxoHTUfUgcS8k8xJLW3ocqbmj9ETe4Uste9skLp09e+9nC2FY+iau/6E/SSUqnjimphAyZX/cQoW9ZQYbbaQe1SwGY0pjvWT/LPeFvhd5ddcF55fHXTEFKiWiqJTgL/tTg3zEWtWqy3vUT7WPNoOW9yvP5jGyX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BL4zoSYp; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719544701; c=relaxed/simple;
+	bh=h92E2HHI/sLLhO3tji/J6FcOrGgu6Iv3Rn34UKirp3s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GezI0PmvQ6d1j6UN4xLSB5Vawf55iQJLvkrhALky8vvTI2AjxWxeG2i/dlC5UiazbwqbVxMGdyNXdc5c4ERR1QRRBWKu29MDj1eoCAQlwcV5PdMn73G5WRR0uI2qTn3SyuEpPasbtqVvuHuZoc5eatQoySnyIvQKNCAI2gtFttI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bfw7UMQr; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BL4zoSYp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719544676;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WS8VRRBGVPt+4KeY3/sBO8pTWhEejzFxWJJwTlTI53E=;
-	b=BL4zoSYpGAljrSJ+zAIyZD73u0OrSDT5wjbtBrQiBfvZKfyshGbnz0RmcDe0+5amre7Z2V
-	GdNPv+HwLohctpY0X8Gq1slHkWUyu1KAZ96Ju9OhQdAZaNb0QZB5uWggq++dit8q4TzQVI
-	bGBmGPJXussESxcII616ixeOiUnex74=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-505-lxfW5V6fO56N7pQLn-flHA-1; Thu, 27 Jun 2024 23:17:50 -0400
-X-MC-Unique: lxfW5V6fO56N7pQLn-flHA-1
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2c78c2b7f4bso244413a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2024 20:17:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719544670; x=1720149470;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WS8VRRBGVPt+4KeY3/sBO8pTWhEejzFxWJJwTlTI53E=;
-        b=jR+TIvsGeeUBClME/Va+fsat7sXJVLcEjjGK4X0GxgQBGKipM3lq74BLOVCEDbLKg/
-         9VQ3E2IfVRLQN8RCf9rHefHubfnjdHk3J6VxMVIV+MSBRQ1T5ogIUqeiHw6qbJJJFJ5W
-         bNSzx9vJFqnMrAJT3fp9oujGINaDCg/bGlQs6zQ4okYpb4u4DAApt7ogTNqEX5R9hvLy
-         J+GPxk9vOx6+0M6hF3onmKDZCc8RJ022Y+1AIhQJskZLmMAp669+0EUcKsKig/UNohQ5
-         nH2I7CrTpC3q6DiP5P1Ab2NryFGlaziPs9LqysKXo0/qyJ+IfGgbUh68jRXioNU/Ttha
-         XwzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUb/JYEzZbbdSmWtkno2PA30qCoO1Y+933zVGAVyHd7P0bPERN00mFRjgB255fCjN3vCxNFIopJ3YweKn1LHY7bXZ88sCsvYGVK1Wg6
-X-Gm-Message-State: AOJu0YylPXd89WZsr5zksg+i65LTr7tD5anCD2mQi9DhJVjYsJ8EZak/
-	HqoK9q5PxyeT8GL44RMH0pjDerLVPTI9nQ+AGMVXAPkB2eeRWuQFLPhpJrDypXFm3ZnOBIilcIc
-	u4f2OgDBZPnVXxlyGOsnYPFFjgoAGi0pi+KoSTfFo3I/4sL/Mk/KCsb00YdBofg==
-X-Received: by 2002:a17:90b:1644:b0:2c7:d414:a93d with SMTP id 98e67ed59e1d1-2c8612689cfmr14164938a91.24.1719544669886;
-        Thu, 27 Jun 2024 20:17:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IECesyWJa75m/ilpX2WXnRmR8zZe5yxJszHIy5IEJpEIC6jmzf018yU/YV85XyeNW9lapYOag==
-X-Received: by 2002:a17:90b:1644:b0:2c7:d414:a93d with SMTP id 98e67ed59e1d1-2c8612689cfmr14164921a91.24.1719544669510;
-        Thu, 27 Jun 2024 20:17:49 -0700 (PDT)
-Received: from ?IPV6:2403:580f:7fe0:0:ae49:39b9:2ee8:2187? (2403-580f-7fe0-0-ae49-39b9-2ee8-2187.ip6.aussiebb.net. [2403:580f:7fe0:0:ae49:39b9:2ee8:2187])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c91ce76935sm539044a91.34.2024.06.27.20.17.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Jun 2024 20:17:48 -0700 (PDT)
-Message-ID: <d1b449cb-7ff8-4953-84b9-04dd56ddb187@redhat.com>
-Date: Fri, 28 Jun 2024 11:17:43 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bfw7UMQr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719544700; x=1751080700;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=h92E2HHI/sLLhO3tji/J6FcOrGgu6Iv3Rn34UKirp3s=;
+  b=Bfw7UMQrnURP8+kUKBRK8IkDBA+/UxlE1o9kcSlsR+YdnNH1JTmI6Z0s
+   6a54sxm9kCSj8BxUTfMmGFrqcTCaF18u0JJTblT8sXlUc1BGj2flUmwii
+   PG3JhTIRmx1lEcxybENOvOwk+k298Sn7ynzA5J285M0yDbAxf+Yy6IFfN
+   qlG1x5RnUpP6l3mPvu33ftI/Xbk1MjksmWchgNO1rWLgs4t0GbGksH854
+   nUIF6uILbojm+/CoDreIgVzNUz4ez5TgBhXJe4Rh1KcikSKB9mhpoqiV8
+   WMN89S/q2Yzlzc9U+NIPuhZpmPbfCoHtX22gwjW/0/76K6M8pMsz1Gr81
+   Q==;
+X-CSE-ConnectionGUID: v3kpa4juQpujmLvBXFvvWQ==
+X-CSE-MsgGUID: OOis4k6GQ6qvLNrV1VLdZQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="16669261"
+X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
+   d="scan'208";a="16669261"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 20:18:20 -0700
+X-CSE-ConnectionGUID: IeQ2OvYkSFmpE7lNL6HNag==
+X-CSE-MsgGUID: WCMYJbTKSdeFBs340tLxNw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
+   d="scan'208";a="44656877"
+Received: from lizhipe3-mobl1.ccr.corp.intel.com (HELO rzhang1-mobl7.ccr.corp.intel.com) ([10.249.171.174])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 20:18:08 -0700
+From: Zhang Rui <rui.zhang@intel.com>
+To: peterz@infradead.org
+Cc: mingo@redhat.com,
+	tglx@linutronix.de,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ak@linux.intel.com,
+	kan.liang@linux.intel.com
+Subject: [PATCH V2 0/3] perf/x86/intel/cstate: Update for latest client platforms
+Date: Fri, 28 Jun 2024 11:17:55 +0800
+Message-Id: <20240628031758.43103-1-rui.zhang@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v3 1/1] fs/namespace: remove RCU sync for MNT_DETACH umount
-To: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Cc: Matthew Wilcox <willy@infradead.org>,
- Lucas Karpinski <lkarpins@redhat.com>, viro@zeniv.linux.org.uk,
- raven@themaw.net, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, Alexander Larsson <alexl@redhat.com>,
- Eric Chanudet <echanude@redhat.com>
-References: <20240626201129.272750-2-lkarpins@redhat.com>
- <20240626201129.272750-3-lkarpins@redhat.com>
- <Znx-WGU5Wx6RaJyD@casper.infradead.org>
- <50512ec3-da6d-4140-9659-58e0514a4970@redhat.com>
- <20240627115418.lcnpctgailhlaffc@quack3>
- <20240627-abkassieren-grinsen-6ce528fe5526@brauner>
-Content-Language: en-US
-From: Ian Kent <ikent@redhat.com>
-Autocrypt: addr=ikent@redhat.com; keydata=
- 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
-In-Reply-To: <20240627-abkassieren-grinsen-6ce528fe5526@brauner>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+There are a couple of cstate changes on latest Intel client platforms.
 
-On 27/6/24 23:16, Christian Brauner wrote:
-> On Thu, Jun 27, 2024 at 01:54:18PM GMT, Jan Kara wrote:
->> On Thu 27-06-24 09:11:14, Ian Kent wrote:
->>> On 27/6/24 04:47, Matthew Wilcox wrote:
->>>> On Wed, Jun 26, 2024 at 04:07:49PM -0400, Lucas Karpinski wrote:
->>>>> +++ b/fs/namespace.c
->>>>> @@ -78,6 +78,7 @@ static struct kmem_cache *mnt_cache __ro_after_init;
->>>>>    static DECLARE_RWSEM(namespace_sem);
->>>>>    static HLIST_HEAD(unmounted);	/* protected by namespace_sem */
->>>>>    static LIST_HEAD(ex_mountpoints); /* protected by namespace_sem */
->>>>> +static bool lazy_unlock = false; /* protected by namespace_sem */
->>>> That's a pretty ugly way of doing it.  How about this?
->>> Ha!
->>>
->>> That was my original thought but I also didn't much like changing all the
->>> callers.
->>>
->>> I don't really like the proliferation of these small helper functions either
->>> but if everyone
->>>
->>> is happy to do this I think it's a great idea.
->> So I know you've suggested removing synchronize_rcu_expedited() call in
->> your comment to v2. But I wonder why is it safe? I *thought*
->> synchronize_rcu_expedited() is there to synchronize the dropping of the
->> last mnt reference (and maybe something else) - see the comment at the
->> beginning of mntput_no_expire() - and this change would break that?
-> Yes. During umount mnt->mnt_ns will be set to NULL with namespace_sem
-> and the mount seqlock held. mntput() doesn't acquire namespace_sem as
-> that would get rather problematic during path lookup. It also elides
-> lock_mount_hash() by looking at mnt->mnt_ns because that's set to NULL
-> when a mount is actually unmounted.
->
-> So iirc synchronize_rcu_expedited() will ensure that it is actually the
-> system call that shuts down all the mounts it put on the umounted list
-> and not some other task that also called mntput() as that would cause
-> pretty blatant EBUSY issues.
->
-> So callers that come before mnt->mnt_ns = NULL simply return of course
-> but callers that come after mnt->mnt_ns = NULL will acquire
-> lock_mount_hash() _under_ rcu_read_lock(). These callers see an elevated
-> reference count and thus simply return while namespace_lock()'s
-> synchronize_rcu_expedited() prevents the system call from making
-> progress.
->
-> But I also don't see it working without risk even with MNT_DETACH. It
-> still has potential to cause issues in userspace. Any program that
-> always passes MNT_DETACH simply to ensure that even in the very rare
-> case that a mount might still be busy is unmounted might now end up
-> seeing increased EBUSY failures for mounts that didn't actually need to
-> be unmounted with MNT_DETACH. In other words, this is only inocuous if
-> userspace only uses MNT_DETACH for stuff they actually know is busy when
-> they're trying to unmount. And I don't think that's the case.
->
-I'm sorry but how does an MNT_DETACH umount system call return EBUSY, I 
-can't
+Alderlake platform, followed by Raptorlake, Meteorlake and Arrowlake,
+doesn't have PC7/PC9.
+Lunarlake platform doesn't have PC7/PC8/PC9.
 
-see how that can happen?
+Fix current code and update support for new platforms.
 
+Patch 1/3 fixes Alderlake/Raptorlake/Meteorlake by removing PC7/PC9
+support.
+Patch 2/3 adds Arrowlake support, which behaves the same as Alderlake.
+Patch 3/3 adds Lunarlake support, which behaves similar to Alderlake,
+but with PC8 removed.
 
-I have used lazy umount a lot over the years and I haven't had problems 
-with it.
+Patch V1 has been posted at
+   https://lore.kernel.org/all/20240419071019.1103953-1-rui.zhang@intel.com/
 
-There is a tendency to think there might be problems using it but I've 
-never been
+Changes since V1:
+- Add Reviewed-by tag from Liang, Kan.
+- Rebase on top of new CPU model macros from Tony.
+- Improve changelog.
 
-able to spot them.
+----------------------------------------------------------------
+Zhang Rui (3):
+      perf/x86/intel/cstate: Fix Alderlake/Raptorlake/Meteorlake
+      perf/x86/intel/cstate: Add Arrowlake support
+      perf/x86/intel/cstate: Add Lunarlake support
 
-
-Ian
+ arch/x86/events/intel/cstate.c | 39 ++++++++++++++++++++++++++-------------
+ 1 file changed, 26 insertions(+), 13 deletions(-)
 
