@@ -1,278 +1,137 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 630922139A7;
-	Fri, 28 Jun 2024 01:34:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6948B2139A7;
+	Fri, 28 Jun 2024 01:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719538469; cv=none; b=anoz0F2In0Ld5rpVMs/VC9XAMZqPcyFxYS9HtNsUqJ8gsL2WXS1YfIeDbDEOk11nlqOmjReVSeak7/h6RENisJ1W6dtJHuyqZ3OLqtdGMAB9kvBkHdO9Bb0f7WHxoalKt9OViOjOnT1zTtALovflY/7b7GY4oNy7x+7945GIOus=
+	t=1719538611; cv=none; b=T8QGbQtiZVZISnptWEryaxoLSDfxvwhFMOjtrbZqP2jvp/wuQhd67wlAMq+k6vjyDGLCg02WT4AN7vjmT9ne8/K9j9VxkogSStLoxL+NB9iO/3xa0QWeSsNeurLS/mjLkKpqO+qVAy1fuCxuLPDKlkxfVsgboCt781yRXx8nogI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719538469; c=relaxed/simple;
-	bh=t0INylUNf2k0kJwVKbtRu+K6PLesJ41tzUOSeafL+Uo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UP8T5NF10BKW0Youl34CCwu5TIqE0oN0JOCGZl91AmXzBABwqJEQ77KNkAKfqxAfrFADd6iERV6Tum3vgXvhdqJgRtdd1SsK9EiWGoLSqV5SEpCbGU5FH5JWI+mOTt69iabKFmj4hXf7aBkWupdUv4cu4Ww+wQ1TqbI/jqCN8js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cIrcrPjQ; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719538611; c=relaxed/simple;
+	bh=cm+QsmGQ91yNDaHPh+Q0+zctgCiUlvxaouRRHE+n9Ak=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=X32HrJ7lrt/OIDXO+MS7qZSpvGFo0r25ymhAIKEhUGC6QUc+OqreXSLJFGlp2IwASq09ej1agLATaVfHia0GLAPbWoO5UhhvfsTMprcXGTWKsjJJBDVbuycFZPD9hf1bWwaJNCuu0+UX5JiBDwBQpaEPcpR7SocJNbZUBDIZRsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=v9xK6vHq; arc=none smtp.client-ip=115.124.30.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cIrcrPjQ"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3627ef1fc07so42619f8f.3;
-        Thu, 27 Jun 2024 18:34:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719538466; x=1720143266; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rnvbgBjmT2j00SWL77w/wmw1cd/5GofeGMuapdrdl3U=;
-        b=cIrcrPjQfm2cwR8huJ9O+N45w9iBdY53TIwQ298IM+e5A4JBgckpx4LuLI85ynNLc3
-         +TRqEoPF/kvoEJzye8tzYd4hiuTek1AjbOj7nDU6CGFp7P/Fgf5N5ywMDmz8bwfCYs56
-         z4oyWDIQ/qg60jqjEWCSBSwZRNrqhJus/WgbFcz5OH7JJC1dOyn95AhAWZkxtgipKWQP
-         ewlz829bUR/jMBAERsPI2Yb6Lhz8J0x4Rkz+WuuNQtubLESzmok3KhJV/NWR55HJcYXo
-         wtMS3o4tO0Bti/fTrVCsbIEByxywKL/M2ziCWfsfhOqlnAAht9fMb5zhDHd43xUK/sJr
-         hcEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719538466; x=1720143266;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rnvbgBjmT2j00SWL77w/wmw1cd/5GofeGMuapdrdl3U=;
-        b=cXSdK12NDbX5dMnG+OhY6ZbzylIONUd+kxwn5gJPnz5ezcO/SMzCUKBKCT1cZejyo1
-         qW8iqCNPoX08C4G7ad4eltF2EA29q8OCufFeKTVFsipnuvT6fUN9PToSpO2QS/32wg6K
-         EH3X442+xegi1FnqENrXXGyYoSso9Y9RZvkk6I4HUczhXffBEhgemZdMCah+/aKvz46T
-         6RpbMzbJRX9nz0WV+h/vD84g3lkSiEU7o3XHlhiqLNpq+/HVqWCHgkKrXYjbOV+Qsesc
-         y33IFfgyRZjvVJVawfqQRtQGdeUSnxALjfBr5NYs5cgJ5cNwg7dlloCL8M4ongKx2WCS
-         G4Wg==
-X-Forwarded-Encrypted: i=1; AJvYcCUynNu4IwsNlKVLQqjaZvGVtH6pHVm4j8tY8xqVbci35Sv2OimJq057epPRFWz3C2oYWGS3U+IoDed6Fpc9uDJNbcSGa6gC515WwWDkZ/QG7rZgTQzdrCZ0mj4rI5XF+fJc
-X-Gm-Message-State: AOJu0Yxs/rt+khY8uiy4Uk9vIXkoh3t70bTHn7gcKtGxhlc0RWasZPMh
-	JeGYkxL0guNGp1gNbqf/rshPLwOHvHVH3i+F79FPI5nWuFdJlb3iFYOcd1t+etQhmerdeD0toK5
-	viR9ZHaN2GQd+5Pp2jXbevklClHJgdcO7
-X-Google-Smtp-Source: AGHT+IGW6vS18JQdvcuaosTgfTX2kjePBtN2gY5E87HIqzc7Nd3vlLCPrXvCcCx3k5gUpKoFtlMzJgl6D/aonoEMyaI=
-X-Received: by 2002:a05:6000:459a:b0:363:7bbf:efcc with SMTP id
- ffacd0b85a97d-366e96bef86mr8625498f8f.62.1719538465465; Thu, 27 Jun 2024
- 18:34:25 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="v9xK6vHq"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1719538600; h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type;
+	bh=Kmb8kttOq7xbDfKI1ccEDiYQbB2zK2LbPs9zivACKls=;
+	b=v9xK6vHqxY7n+FWlhhmNnmQ99NxeJXIznv8hxMdUmCzMYmYxHxrLwiDMdZDC1/rI92E+SkCi9EHMenWi01uUgUHgCj8BLWUxFLeoG1b7IACmhUUHbgYnCO/Ujt5uvg9bYvtry0m4VyUo55qMZIkstDAkkSoyzpXgIocup4gFk7E=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033023225041;MF=wodemia@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W9OGQul_1719538598;
+Received: from localhost.localdomain(mailfrom:wodemia@linux.alibaba.com fp:SMTPD_---0W9OGQul_1719538598)
+          by smtp.aliyun-inc.com;
+          Fri, 28 Jun 2024 09:36:39 +0800
+From: Tao Zou <wodemia@linux.alibaba.com>
+To: Alex Shi <alexs@kernel.org>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: Tao Zou <wodemia@linux.alibaba.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 RESEND] zh_CN/admin-guide: Add zh_CN/admin-guide/numastat.rst translation document
+Date: Fri, 28 Jun 2024 09:36:20 +0800
+Message-Id: <20240628013621.46741-1-wodemia@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Zn4BupVa65CVayqQ@slm.duckdns.org> <Zn4Cw4FDTmvXnhaf@slm.duckdns.org>
-In-Reply-To: <Zn4Cw4FDTmvXnhaf@slm.duckdns.org>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Thu, 27 Jun 2024 18:34:14 -0700
-Message-ID: <CAADnVQJym9sDF1xo1hw3NCn9XVPJzC1RfqtS4m2yY+YMOZEJYA@mail.gmail.com>
-Subject: Re: [PATCH sched_ext/for-6.11 2/2] sched_ext: Implement scx_bpf_consume_task()
-To: Tejun Heo <tj@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	bpf <bpf@vger.kernel.org>, David Vernet <void@manifault.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 27, 2024 at 5:24=E2=80=AFPM Tejun Heo <tj@kernel.org> wrote:
->
-> Implement scx_bpf_consume_task() which allows consuming arbitrary tasks o=
-n
-> the DSQ in any order while iterating in the dispatch path.
->
-> scx_qmap is updated to implement periodic dumping of the shared DSQ and a
-> rather silly prioritization mechanism to demonstrate the use of DSQ
-> iteration and selective consumption.
->
-> Note that it does a bit of nastry dance to pass in the pointer to the
-> iterator to __scx_bpf_consume_task(). This is to work around the current
-> limitation in the BPF verifier where it doesn't allow the memory area use=
-d
-> for an iterator to be passed into kfuncs. This may be too nasty and might
-> require a different approach.
->
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> Reviewed-by: David Vernet <dvernet@meta.com>
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> Cc: bpf@vger.kernel.org
-> ---
-> Hello, again.
->
-> (continuing from the previous patch) so, the problem is that I need to
-> distinguish the tasks which have left a queue and then get requeued while=
- an
-> iteration is in progress. The iterator itself already does this - it
-> remembers a sequence number when iteration starts and ignores tasks which
-> are queued afterwards.
->
-> As a task can get removed and requeued anytime, I need
-> scx_bpf_consume_task() to do the same testing, so I want to pass in the
-> iterator pointer into scx_bpf_consume_task() so that it can read the
-> sequence number stored in the iterator. However, BPF doesn't allow this, =
-so
-> I'm doing the weird self pointer probe read thing, to obtain it, which is
-> quite nasty.
->
-> What do you think?
->
-> Thanks.
->
->  kernel/sched/ext.c                       |   89 ++++++++++++++++++++++++=
-+++++--
->  tools/sched_ext/include/scx/common.bpf.h |   16 +++++
->  tools/sched_ext/scx_qmap.bpf.c           |   34 ++++++++++-
->  tools/sched_ext/scx_qmap.c               |   14 +++-
->  4 files changed, 142 insertions(+), 11 deletions(-)
->
-> --- a/kernel/sched/ext.c
-> +++ b/kernel/sched/ext.c
-> @@ -1122,6 +1122,12 @@ enum scx_dsq_iter_flags {
->  };
->
->  struct bpf_iter_scx_dsq_kern {
-> +       /*
-> +        * Must be the first field. Used to work around BPF restriction a=
-nd pass
-> +        * in the iterator pointer to scx_bpf_consume_task().
-> +        */
-> +       struct bpf_iter_scx_dsq_kern    *self;
-> +
->         struct scx_dsq_node             cursor;
->         struct scx_dispatch_q           *dsq;
->         u32                             dsq_seq;
-> @@ -1518,7 +1524,7 @@ static void dispatch_enqueue(struct scx_
->         p->scx.dsq_seq =3D dsq->seq;
->
->         dsq_mod_nr(dsq, 1);
-> -       p->scx.dsq =3D dsq;
-> +       WRITE_ONCE(p->scx.dsq, dsq);
->
->         /*
->          * scx.ddsp_dsq_id and scx.ddsp_enq_flags are only relevant on th=
-e
-> @@ -1611,7 +1617,7 @@ static void dispatch_dequeue(struct rq *
->                 WARN_ON_ONCE(task_linked_on_dsq(p));
->                 p->scx.holding_cpu =3D -1;
->         }
-> -       p->scx.dsq =3D NULL;
-> +       WRITE_ONCE(p->scx.dsq, NULL);
->
->         if (!is_local)
->                 raw_spin_unlock(&dsq->lock);
-> @@ -2107,7 +2113,7 @@ static void consume_local_task(struct rq
->         list_add_tail(&p->scx.dsq_node.list, &rq->scx.local_dsq.list);
->         dsq_mod_nr(dsq, -1);
->         dsq_mod_nr(&rq->scx.local_dsq, 1);
-> -       p->scx.dsq =3D &rq->scx.local_dsq;
-> +       WRITE_ONCE(p->scx.dsq, &rq->scx.local_dsq);
->         raw_spin_unlock(&dsq->lock);
->  }
->
-> @@ -5585,12 +5591,88 @@ __bpf_kfunc bool scx_bpf_consume(u64 dsq
->         }
->  }
->
-> +/**
-> + * __scx_bpf_consume_task - Transfer a task from DSQ iteration to the lo=
-cal DSQ
-> + * @it: DSQ iterator in progress
-> + * @p: task to consume
-> + *
-> + * Transfer @p which is on the DSQ currently iterated by @it to the curr=
-ent
-> + * CPU's local DSQ. For the transfer to be successful, @p must still be =
-on the
-> + * DSQ and have been queued before the DSQ iteration started. This funct=
-ion
-> + * doesn't care whether @p was obtained from the DSQ iteration. @p just =
-has to
-> + * be on the DSQ and have been queued before the iteration started.
-> + *
-> + * Returns %true if @p has been consumed, %false if @p had already been =
-consumed
-> + * or dequeued.
-> + */
-> +__bpf_kfunc bool __scx_bpf_consume_task(unsigned long it, struct task_st=
-ruct *p)
-> +{
-> +       struct bpf_iter_scx_dsq_kern *kit =3D (void *)it;
-> +       struct scx_dispatch_q *dsq, *kit_dsq;
-> +       struct scx_dsp_ctx *dspc =3D this_cpu_ptr(scx_dsp_ctx);
-> +       struct rq *task_rq;
-> +       u64 kit_dsq_seq;
-> +
-> +       /* can't trust @kit, carefully fetch the values we need */
-> +       if (get_kernel_nofault(kit_dsq, &kit->dsq) ||
-> +           get_kernel_nofault(kit_dsq_seq, &kit->dsq_seq)) {
-> +               scx_ops_error("invalid @it 0x%lx", it);
-> +               return false;
-> +       }
+Add translation zh_CN/admin-guide/numastat.rst and link it to
+zh_CN/admin-guide/index.rst while clean its todo entry.
 
-With scx_bpf_consume_task() it's only a compile time protection from bugs.
-Since kfunc doesn't dereference any field in kit_dsq it won't crash
-immediately, but let's figure out how to make it work properly.
+commit 77691ee92d4a ("Documentation: update numastat explanation")
 
-Since kit_dsq and kit_dsq_seq are pretty much anything in this implementati=
-on
-can they be passed as two scalars instead ?
-I guess not, since tricking dsq !=3D kit_dsq and
-time_after64(..,kit_dsq_seq) can lead to real issues ?
+Signed-off-by: Tao Zou <wodemia@linux.alibaba.com>
+Reviewed-by: Yanteng Si <siyanteng@loongson.cn>
+Reviewed-by: Alex Shi <alexs@kernel.org>
+---
+ .../translations/zh_CN/admin-guide/index.rst  |  2 +-
+ .../zh_CN/admin-guide/numastat.rst            | 48 +++++++++++++++++++
+ 2 files changed, 49 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/translations/zh_CN/admin-guide/numastat.rst
 
-Can some of it be mitigated by passing dsq into kfunc that
-was used to init the iter ?
-Then kfunc will read dsq->seq from it instead of kit->dsq_seq ?
+diff --git a/Documentation/translations/zh_CN/admin-guide/index.rst b/Documentation/translations/zh_CN/admin-guide/index.rst
+index ac2960da33e6..0db80ab830a0 100644
+--- a/Documentation/translations/zh_CN/admin-guide/index.rst
++++ b/Documentation/translations/zh_CN/admin-guide/index.rst
+@@ -68,6 +68,7 @@ Todolist:
+    cpu-load
+    cputopology
+    lockup-watchdogs
++   numastat
+    unicode
+    sysrq
+    mm/index
+@@ -109,7 +110,6 @@ Todolist:
+ *   module-signing
+ *   mono
+ *   namespaces/index
+-*   numastat
+ *   parport
+ *   perf-security
+ *   pm/index
+diff --git a/Documentation/translations/zh_CN/admin-guide/numastat.rst b/Documentation/translations/zh_CN/admin-guide/numastat.rst
+new file mode 100644
+index 000000000000..c0f54d9a6b05
+--- /dev/null
++++ b/Documentation/translations/zh_CN/admin-guide/numastat.rst
+@@ -0,0 +1,48 @@
++.. SPDX-License-Identifier: GPL-2.0
++.. include:: ../disclaimer-zh_CN.rst
++
++:Original: Documentation/admin-guide/numastat.rst
++:Translator: Tao Zou <wodemia@linux.alibaba.com>
++
++
++=======================
++Numa策略命中/未命中统计
++=======================
++
++/sys/devices/system/node/node*/numastat
++
++所有数据的单位都是页面。巨页有独立的计数器。
++
++numa_hit、numa_miss和numa_foreign计数器反应了进程是否能够在他们偏好的节点上分配内存。
++如果进程成功在偏好的节点上分配内存则在偏好的节点上增加numa_hit计数，否则在偏好的节点上增
++加numa_foreign计数同时在实际内存分配的节点上增加numa_miss计数。
++
++通常，偏好的节点是进程运行所在的CPU的本地节点，但是一些限制可以改变这一行为，比如内存策略，
++因此同样有两个基于CPU本地节点的计数器。local_node和numa_hit类似，当在CPU所在的节点上分
++配内存时增加local_node计数，other_node和numa_miss类似，当在CPU所在节点之外的其他节点
++上成功分配内存时增加other_node计数。需要注意，没有和numa_foreign对应的计数器。
++
++更多细节内容:
++
++=============== ============================================================
++numa_hit        一个进程想要从本节点分配内存并且成功。
++
++numa_miss       一个进程想要从其他节点分配内存但是最终在本节点完成内存分配。
++
++numa_foreign    一个进程想要在本节点分配内存但是最终在其他节点完成内存分配。
++
++local_node      一个进程运行在本节点的CPU上并且从本节点上获得了内存。
++
++other_node      一个进程运行在其他节点的CPU上但是在本节点上获得了内存。
++
++interleave_hit  内存交叉分配策略下想要从本节点分配内存并且成功。
++=============== ============================================================
++
++你可以使用numactl软件包（http://oss.sgi.com/projects/libnuma/）中的numastat工具
++来辅助阅读。需要注意，numastat工具目前只在有少量CPU的机器上运行良好。
++
++需要注意，在包含无内存节点（一个节点有CPUs但是没有内存）的系统中numa_hit、numa_miss和
++numa_foreign统计数据会被严重曲解。在当前的内核实现中，如果一个进程偏好一个无内存节点（即
++进程正在该节点的一个本地CPU上运行），实际上会从距离最近的有内存节点中挑选一个作为偏好节点。
++结果会导致相应的内存分配不会增加无内存节点上的numa_foreign计数器，并且会扭曲最近节点上的
++numa_hit、numa_miss和numa_foreign统计数据。
+-- 
+2.39.3 (Apple Git-146)
 
-> +
-> +       /*
-> +        * @kit can't be trusted and we can only get the DSQ from @p. As =
-we
-> +        * don't know @p's rq is locked, use READ_ONCE() to access the fi=
-eld.
-> +        * Derefing is safe as DSQs are RCU protected.
-> +        */
-> +       dsq =3D READ_ONCE(p->scx.dsq);
-> +
-> +       if (unlikely(!dsq || dsq !=3D kit_dsq))
-> +               return false;
-> +
-> +       if (unlikely(dsq->id =3D=3D SCX_DSQ_LOCAL)) {
-> +               scx_ops_error("local DSQ not allowed");
-> +               return false;
-> +       }
-> +
-> +       if (!scx_kf_allowed(SCX_KF_DISPATCH))
-> +               return false;
-> +
-> +       flush_dispatch_buf(dspc->rq, dspc->rf);
-> +
-> +       raw_spin_lock(&dsq->lock);
-> +
-> +       /*
-> +        * Did someone else get to it? @p could have already left $dsq, g=
-ot
-> +        * re-enqueud, or be in the process of being consumed by someone =
-else.
-> +        */
-> +       if (unlikely(p->scx.dsq !=3D dsq ||
-> +                    time_after64(p->scx.dsq_seq, kit_dsq_seq) ||
-
-In the previous patch you do:
-(s32)(p->scx.dsq_seq - kit->dsq_seq) > 0
-and here
-time_after64().
-Close enough, but 32 vs 64 and equality difference?
-
-> +                    p->scx.holding_cpu >=3D 0))
-> +               goto out_unlock;
-> +
-> +       task_rq =3D task_rq(p);
-> +
-> +       if (dspc->rq =3D=3D task_rq) {
-> +               consume_local_task(dspc->rq, dsq, p);
-> +               return true;
-> +       }
-> +
-> +       if (task_can_run_on_remote_rq(p, dspc->rq))
-> +               return consume_remote_task(dspc->rq, dspc->rf, dsq, p, ta=
-sk_rq);
-> +
-> +out_unlock:
-> +       raw_spin_unlock(&dsq->lock);
-> +       return false;
-> +}
-> +
->  __bpf_kfunc_end_defs();
