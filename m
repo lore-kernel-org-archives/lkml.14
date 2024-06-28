@@ -1,195 +1,102 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC6F14A636
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 10:47:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E2774DA0C;
+	Fri, 28 Jun 2024 10:47:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719571624; cv=none; b=WcIPWOqgRYVkefAkKG85Gqmd2T/rQXsJ4yIDEeQ0qmC4CBcjzB7UF3bKpF9N7ojMUlooUZyqTLA1EzTSJGptGSBI8oyQMlkBOZKs329x3PgdrMEs4y2z+3hlSut898nV5Ostx6LrfYCvfuzPvKdBSSdkmpwrHuCVBlMHacbd81I=
+	t=1719571635; cv=none; b=DUuDSiaBocVDFUDjCRlolWUpsK6S2b/8R72DYiVIjmoXStzhp0k73lXLE2rGvqSHZjSZGOVgrloA0ZbqiLiV4Z6Ln3p1XhtasGDo1LW2P4/aXL00xkc3QNHXXW76O2OoIDAUNI/eoVy8YaIQtdJYopOFu8PgFll+Eru8fokqpAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719571624; c=relaxed/simple;
-	bh=woktVHjxsn0gr5hr8+bromFgaR2dogPu6y9jS/+fBQ4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ZVKE173fuyereBGAYRfxqaBrUz1m+4sl7QvXNX0wxZsGASCs5kLWttNxPHpisobfM0OGHClwuWIObx7IhytF8sxbv/EhjcvzZxegQDhqpx39/HDV3Bktogtq/piWeVhdBR2u3iI/pjUuqBxnTxVZHbGIurINTgaUbS+c7LDslvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v4lp96/z; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	s=arc-20240116; t=1719571635; c=relaxed/simple;
+	bh=tu81VLihDtiB2EU/b16jwlMJgEGb3wRkp9Jv94c7K7I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=mxTJwdUAxAjbRIpJYrh1XbmNXXteqPm5gE+ABU8fWmpzLObc/WE2eR6CO8n/k0z5Z5XQbIlbykzATQBdvcgYRNNZxSETZw1TlYXTUL/L8tnQ50g5BJQHsxcISoiAKFJBaiOmWUtgagkH+TRkQqJLfGVGUp38qXY/bRcPHNUCcfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bDG1VjsX; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v4lp96/z"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4256b7702a5so3132145e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 03:47:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719571621; x=1720176421; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=mVAGmQDGpiRemF1EjQXmA7rPtOTMJWbLR7/b4BT5RFw=;
-        b=v4lp96/zQJlpT76ERcsL2tTbP+JW1NhGvQ5uwwFgTNoLRUs+SGYLfnTqQCe6DBPQ5H
-         Mx8sryHVafGwO3Ml+GgqFaEsvXeHDDBKvafg2uceSg9jAdh3YfcRS1xgEMchyNWyGMDH
-         3O0L1BkzchL6I/SeZ96rgyLoCInWvppjWl11JP6RVHkvx0RyPV+d2LJEZuSJ0bxqnsst
-         k1xNT20wPS56kysw44D516gpywYHTOBf18Uf8kidQ6A2NnQPqUxqWgf1IooY0jrM8gl6
-         itD8Ag1zxudVy1srXdYWT90f+b4jZk1Q3g93QQWrnBrBeDZ7uNX7b+7mOIq4iSYwLWhr
-         d7UA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719571621; x=1720176421;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mVAGmQDGpiRemF1EjQXmA7rPtOTMJWbLR7/b4BT5RFw=;
-        b=sjKvj5ptOVBEeC7N454tZGO+vdOMHxsBCgmgYoVghYrSc7XBhucxdFfZPr+Y2NFBJK
-         pOotTk12qpGAZos7UtyStjRchWRqKOcwHdVyX5BTi8sZktryNtx3G+PT/4HRvRjvvfkl
-         7ZxQkitI/X5JMMwbFY/Na+ulQtgHVGu24Xo5VVBVU3SQ1A91a9r70qhhv5YYFa4Ax39O
-         SwF4WQNbuJXyoD1/t0n4TeL6MzdZgt1KRX44npUXdeMDHtyWvIDutrLypbRs8vkEnsve
-         hD57wgb1sXKsKwXF2wcU5kgCpfZG73HtP+QTSD9gTnQ0EMZCdr/1YrqnPIGokdHsBjQi
-         e0VQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVqW+9RAjOGB7G2TU/8Wu5UkrDjg1TxvBIarjL6KwY053mihzqNqlx6wHBHFhf5tTl5ik2uq2xQ3LjUXsjr7o6qBErXlS2khBspj8Qb
-X-Gm-Message-State: AOJu0YzaK2Ma2h8MKzB+6UTYW647IenFGnfkNhdH0n7OGgm1XZ2oVZCS
-	33RzpzDtvlInII2EHZcWbNda/Gw8yAyIciuR8iJBZpj2dZXPIJyIWKkvexOweWEuqsEZLzE5MDk
-	lt8UY9J4e4yowY8KxbQ==
-X-Google-Smtp-Source: AGHT+IHZHlvGw4nxcFoHXUEV2Mmu2bpQJUntZHoAE0zOBHagzfvEXRkaEhyc77Lxq96Bn5RGJbrsHF420JmpKzNT
-X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:a05:600c:4c11:b0:425:5eee:2b75 with
- SMTP id 5b1f17b1804b1-4256d5a7ceamr221355e9.4.1719571620888; Fri, 28 Jun 2024
- 03:47:00 -0700 (PDT)
-Date: Fri, 28 Jun 2024 11:46:11 +0100
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bDG1VjsX"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45S8Y4hs010650;
+	Fri, 28 Jun 2024 10:47:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	dl0rYJ1SY742x7n44ent2QKcUViTZ8BpLhl0ihXX8PI=; b=bDG1VjsX5Q+k6Kcr
+	phNRceKLOHLh7HPPRaRToV0+kQMfwTQ2AbqBHq7QJOq/IOX9vPGGLOvYZdrmveYG
+	qHZZVMpX59G+HV62ZjM3nYZR8e6Pj7gu6ttBuHNLOtp+pNbOyZW39sIot+CiEjfv
+	5IiB81Kg2PnK6NGbGO/DmUUzBjczSPRQo/g6oV0N+VlbuO6upebcKAz+ckLVVXY0
+	yjNramgH2XlWGPUHG3wEe4sVvq/cV+hGkTil5j8Jmu4xq56ZKZw8rpleBYTDWLZY
+	1bAUSZzJQQAX+3pX7d1cr0txCrVKzjoOPLCbHgQLEeIGVHJ8ZURY25iJ4HJ3AR49
+	TUntgw==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 400bdqf9n2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Jun 2024 10:47:08 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45SAl6oB019972
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Jun 2024 10:47:06 GMT
+Received: from [10.251.44.199] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 28 Jun
+ 2024 03:47:03 -0700
+Message-ID: <75f15e4c-0e79-455a-a356-85c73a0f96ee@quicinc.com>
+Date: Fri, 28 Jun 2024 13:47:01 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
-Message-ID: <20240628104611.1443542-1-vdonnefort@google.com>
-Subject: [PATCH v2] ring-buffer: Align meta-page to sub-buffers for improved
- TLB usage
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, david@redhat.com, 
-	Vincent Donnefort <vdonnefort@google.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] media: qcom: camss: Remove unused phy_sel variable in
+ csid gen2
+Content-Language: en-US
+To: Hans Verkuil <hverkuil-cisco@xs4all.nl>, <rfoss@kernel.org>,
+        <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>,
+        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <mchehab@kernel.org>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <laurent.pinchart@ideasonboard.com>,
+        <quic_hariramp@quicinc.com>
+References: <20240626074730.85-1-quic_grosikop@quicinc.com>
+ <32e23a79-ad3a-465f-97e3-d32cbc75019e@xs4all.nl>
+From: "Gjorgji Rosikopulos (Consultant)" <quic_grosikop@quicinc.com>
+In-Reply-To: <32e23a79-ad3a-465f-97e3-d32cbc75019e@xs4all.nl>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: OuzYOImc_n7Ez2JkUCZA4PE2r_tNN8xU
+X-Proofpoint-GUID: OuzYOImc_n7Ez2JkUCZA4PE2r_tNN8xU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-28_06,2024-06-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=999
+ adultscore=0 bulkscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0
+ mlxscore=0 suspectscore=0 priorityscore=1501 clxscore=1015 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
+ definitions=main-2406280080
 
-Previously, the mapped ring-buffer layout caused misalignment between
-the meta-page and sub-buffers when the sub-buffer size was not a
-multiple of PAGE_SIZE. This prevented hardware with larger TLB entries
-from utilizing them effectively.
+Hi Hans,
 
-Add a padding with the zero-page between the meta-page and sub-buffers.
-Also update the ring-buffer map_test to verify that padding.
+On 6/28/2024 1:00 PM, Hans Verkuil wrote:
+> On 26/06/2024 09:47, Gjorgji Rosikopulos wrote:
+>> The issue is introduced with:
+>>
+>> [PATCH v4 0/8] Move camss version related defs in to resources
+> 
+> In the pull request I posted today I folded this patch into that 6/8 of the
+> patch series, rather than having this patch on top.
+> 
+> I forgot to mention that in my PR.
 
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+Thank you for this.
 
---
+Regards,
 
-This is based on the mm-unstable branch [1] as it depends on David's work [2]
-for allowing the zero-page in vm_insert_page().
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git
-[2] https://lore.kernel.org/all/20240522125713.775114-1-david@redhat.com
-
-v1 -> v2:
-  * Fix unsequenced modification and access to 'p' (s390 build)
-
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 7345a8b625fb..c1116e76fe17 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -6148,10 +6148,10 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
- 	/* install subbuf ID to kern VA translation */
- 	cpu_buffer->subbuf_ids = subbuf_ids;
- 
--	meta->meta_page_size = PAGE_SIZE;
- 	meta->meta_struct_len = sizeof(*meta);
- 	meta->nr_subbufs = nr_subbufs;
- 	meta->subbuf_size = cpu_buffer->buffer->subbuf_size + BUF_PAGE_HDR_SIZE;
-+	meta->meta_page_size = meta->subbuf_size;
- 
- 	rb_update_meta_page(cpu_buffer);
- }
-@@ -6238,6 +6238,12 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
- 	    !(vma->vm_flags & VM_MAYSHARE))
- 		return -EPERM;
- 
-+	subbuf_order = cpu_buffer->buffer->subbuf_order;
-+	subbuf_pages = 1 << subbuf_order;
-+
-+	if (subbuf_order && pgoff % subbuf_pages)
-+		return -EINVAL;
-+
- 	/*
- 	 * Make sure the mapping cannot become writable later. Also tell the VM
- 	 * to not touch these pages (VM_DONTCOPY | VM_DONTEXPAND).
-@@ -6247,11 +6253,8 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
- 
- 	lockdep_assert_held(&cpu_buffer->mapping_lock);
- 
--	subbuf_order = cpu_buffer->buffer->subbuf_order;
--	subbuf_pages = 1 << subbuf_order;
--
- 	nr_subbufs = cpu_buffer->nr_pages + 1; /* + reader-subbuf */
--	nr_pages = ((nr_subbufs) << subbuf_order) - pgoff + 1; /* + meta-page */
-+	nr_pages = ((nr_subbufs + 1) << subbuf_order) - pgoff; /* + meta-page */
- 
- 	vma_pages = (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
- 	if (!vma_pages || vma_pages > nr_pages)
-@@ -6264,20 +6267,24 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
- 		return -ENOMEM;
- 
- 	if (!pgoff) {
-+		unsigned long meta_page_padding;
-+
- 		pages[p++] = virt_to_page(cpu_buffer->meta_page);
- 
- 		/*
--		 * TODO: Align sub-buffers on their size, once
--		 * vm_insert_pages() supports the zero-page.
-+		 * Pad with the zero-page to align the meta-page with the
-+		 * sub-buffers.
- 		 */
--	} else {
--		/* Skip the meta-page */
--		pgoff--;
-+		meta_page_padding = subbuf_pages - 1;
-+		while (meta_page_padding-- && p < nr_pages) {
-+			unsigned long __maybe_unused zero_addr =
-+				vma->vm_start + (PAGE_SIZE * p);
- 
--		if (pgoff % subbuf_pages) {
--			err = -EINVAL;
--			goto out;
-+			pages[p++] = ZERO_PAGE(zero_addr);
- 		}
-+	} else {
-+		/* Skip the meta-page */
-+		pgoff -= subbuf_pages;
- 
- 		s += pgoff / subbuf_pages;
- 	}
-diff --git a/tools/testing/selftests/ring-buffer/map_test.c b/tools/testing/selftests/ring-buffer/map_test.c
-index a9006fa7097e..4bb0192e43f3 100644
---- a/tools/testing/selftests/ring-buffer/map_test.c
-+++ b/tools/testing/selftests/ring-buffer/map_test.c
-@@ -228,6 +228,20 @@ TEST_F(map, data_mmap)
- 	data = mmap(NULL, data_len, PROT_READ, MAP_SHARED,
- 		    desc->cpu_fd, meta_len);
- 	ASSERT_EQ(data, MAP_FAILED);
-+
-+	/* Verify meta-page padding */
-+	if (desc->meta->meta_page_size > getpagesize()) {
-+		void *addr;
-+
-+		data_len = desc->meta->meta_page_size;
-+		data = mmap(NULL, data_len,
-+			    PROT_READ, MAP_SHARED, desc->cpu_fd, 0);
-+		ASSERT_NE(data, MAP_FAILED);
-+
-+		addr = (void *)((unsigned long)data + getpagesize());
-+		ASSERT_EQ(*((int *)addr), 0);
-+		munmap(data, data_len);
-+	}
- }
- 
- FIXTURE(snapshot) {
-
-base-commit: c65920c76a977c2b73c3a8b03b4c0c00cc1285ed
--- 
-2.45.2.803.g4e1b14247a-goog
+~Gjorgji
 
