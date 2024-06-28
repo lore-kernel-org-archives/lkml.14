@@ -1,125 +1,95 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BB771C8FD0
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 15:19:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A01461C9EAC
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 15:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719587968; cv=none; b=fSX1/X8jkKCGa7ksi0Gzj3okeaYsvj/AaodSYTgO7Z1rEjHvYCNyy51ZvsizyfuZdICZ8TnHH07wTPwLHPVNpGiJYu626YHdayXFqFlvOs/UjWbFpyDPMBDjmVxCZKUX5M2KC2qE1w+5OvqHfvfhJi390Pf0qqJM+w1488kMDlQ=
+	t=1719587971; cv=none; b=Wuos31lt4nTofH57/KEGo8cbAs8KobzkV7I3c9rxaG9kpwgMGoxaBlMl4cw0JzFlHCaq2SxqAZO2rWxadv7DIjmyof2iXsgmLCQsBlURHCF7KFauUPLFLu7bQLjC3NImQQ+u6Cd8N2q5icapL6QL70XBmlKEbhwz1ozXrQcjE6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719587968; c=relaxed/simple;
-	bh=HPnLolP4WP+K+XqMhYDxxgbHsUPe0mOBx+n/fTfQXZ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c9+8LN99rb49r7cOTORjoUaI/xCxJaUgXtnNt/zjraNN7BieItc/NHCA27Tm8goywOzcTpLTNdGunbOPGqK6GReNXtXU0toORSjMunlx8C+R2ifyBu2dYXfy4hN2XNZTB21eHdIl5G1UVWNwoSaUg6s6mrMnKwxg0bWb8/cYsSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=M2Etf2FU; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1719587971; c=relaxed/simple;
+	bh=Pmjri7yaLe7QXW9juAdGl9QopQ/cO6H/4cwPORHxTGQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qhFl1tSsrRVx+z99oBtilSoxeBBHYQeFA6bxW3CNuNz7wz6TovmIk3+TrhubJnORb0Q4WQKBzosg7Nh/q/R8aHilfEY2Kfftotjuhg1K6Xfp800dYynQwDCvq9gMcS14uhNvlPgjNHtHGRlvdIOFAkf8yWrcZyhrQqrAFyq+9HM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zh4PM90K; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="M2Etf2FU"
-Received: from [192.168.7.205] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 45SFIhFx3061799
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 28 Jun 2024 08:18:44 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 45SFIhFx3061799
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024061501; t=1719587926;
-	bh=CLIDw+4i/fnZq6/k/RBTLF/CChJ1uJ8DmwkjiPX77bQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=M2Etf2FUtu0NX8wAXsHXHfRFYDOc6+NJTJ1nt+GlAAzpeWn93y8k8GeH6ZqpAgom/
-	 3Ly1RKzr0nRArGqtPnbuOqL5jqDssmmItdRpR4AbV1Cip5yKgDStlINkhxgHTvP+9m
-	 7p8IczIAwXf4QVaVhpGQqNkn4f6xhy2BGYtm8SBDjkGXy1D5XUjloR84r7OAuHEy1W
-	 FN0wttzVbKdOsG2jLkWNlKH8gj8DMDTjB9wKpMKNDKfCiVHkItMGQjB448by4YSDW7
-	 mCVFoJmQzdhqPugRHBVlYgSe+yN46RRf90OHCBkBqpPaJM3NktFKlWTMRXUFnnZDek
-	 n6/XeOArJbzsg==
-Message-ID: <c0ec7712-c538-4cd1-ada2-d0120c662ce8@zytor.com>
-Date: Fri, 28 Jun 2024 08:18:38 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zh4PM90K"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2c7bf925764so547307a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 08:19:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719587969; x=1720192769; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Pmjri7yaLe7QXW9juAdGl9QopQ/cO6H/4cwPORHxTGQ=;
+        b=Zh4PM90K8Os5aOk5d1RmK6q4pOMGMHqg1JfzJDVYIfpiCxI3jVen/8BZcR5ao/sHHc
+         bRXdImGjZG6dP+iPZ4gVfLze0YV5NraThdIq1h+yuyXcAY3iFyT1jtozk9XlvhrJebR3
+         ayHg7Bet05N1L+zkh67lbTsLqc5F1wb84/SniBX+8L1jIeEUN00PUrrGxvbcgVR2nnFU
+         x7fCL/3GGRNtx8wz7o38zehA8lfuRZiMSo54XUjIsudz5Y28JRM8doaO8p4WVf7sMw8S
+         yVDq/WhvgbTrpbk0au4BcYq+ETq8lm0hvJNYisg8GfBCuf2kLwpipKO0Oc7MbXEBJehz
+         W9zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719587969; x=1720192769;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Pmjri7yaLe7QXW9juAdGl9QopQ/cO6H/4cwPORHxTGQ=;
+        b=BENey3l4wvHy56ZjHqfYVdBD73WDNvOPvWKqLAx7hW9nZvzaEyrYajOnuWvI7OPoo9
+         RBSlqh6Ps0dezgzUG4LZYzBlCwTbn9m7nw+sTQzo0hX6CsXlG0/3Y1wWxtw4aAl96qsC
+         dSAGBmA7L8Gkij74Z/hXOf23r0CaHVHEmfJqAefqNN31uEt7KRdH5Gg8lYfuPqJKEQ1X
+         8YOQ0RZi1JtGepnMbC0+ownic8JwSCgun9dYW30TQez2WRHQbWtPU/Hx9oXAKudfSBkw
+         Ig2KYMh24yLvOmEyMdlqhmHg79h7IDatT7LJJLlBmw9OTWgrYJtl8wiD+u8Zer9B3cQx
+         jPqA==
+X-Forwarded-Encrypted: i=1; AJvYcCWiHTL5wlMR0yQt6ZJtdzhrqsQAUF7OWG+uRDzjjJp/IpUKJacGWq5gBijC8cZDF67PzzeUjsioAHINFwUhPvec0OEz22B+abVsnu8l
+X-Gm-Message-State: AOJu0YwEQSAiIQLNJK7QUagVy6z6spFUlwvbrDxYkCrvQ8NNrOB9K45Q
+	t9W/Q4+tywN1jbtJRz8PkmLRD4Wttvpuu3cmdUGeTiCCTSyIYWo1QbFA+BeSAaTB9VsNb2bCNJY
+	h8x4/HN2fLoUkAfzmvyA7176sOzo=
+X-Google-Smtp-Source: AGHT+IFl/ePdhUfWsByY453UJoZtJx+hjy/QQ0/MmsxXqE51xtMz7GT1s16IgCAaFz1nVwJbQE6MR1Er5Iz8x1FG1QA=
+X-Received: by 2002:a17:90a:6885:b0:2c7:e24d:f695 with SMTP id
+ 98e67ed59e1d1-2c861246b47mr15446562a91.12.1719587968869; Fri, 28 Jun 2024
+ 08:19:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] x86/fred: Always install system interrupt handler
- into IDT
-To: Hou Wenlong <houwenlong.hwl@antgroup.com>
-Cc: linux-kernel@vger.kernel.org, Lai Jiangshan <jiangshan.ljs@antgroup.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Xin Li
- <xin3.li@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <cover.1718972598.git.houwenlong.hwl@antgroup.com>
- <2f632ef59c8c9cc27c3702bc2d286496ed298d65.1718972598.git.houwenlong.hwl@antgroup.com>
- <dca1635b-1e08-4dbb-9dbb-335cbdcf9b9d@zytor.com>
- <20240628093656.GA103025@k08j02272.eu95sqa>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <20240628093656.GA103025@k08j02272.eu95sqa>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <CABXGCsNptxsQO=5=qi-JYiFX=rX8Ok5inK80Gn0qrUFWbtBGng@mail.gmail.com>
+ <CADnq5_PDxJ8O1JUQ9RBYRFB9G1WZJos05ZAM4jUKuPBwPxjNkA@mail.gmail.com>
+ <CABXGCsNN9LwHc2x2AAEH=5UNwpvkWkBqRYz3OP8MZ6Woy+HDXA@mail.gmail.com>
+ <b6c440ca-e63e-429b-af41-5f27d4b8b2a2@leemhuis.info> <CABXGCsNoFfMn7LaqqFgEPg-ECyUPN=f=SXVrFi=GZk6c69-Gqw@mail.gmail.com>
+In-Reply-To: <CABXGCsNoFfMn7LaqqFgEPg-ECyUPN=f=SXVrFi=GZk6c69-Gqw@mail.gmail.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Fri, 28 Jun 2024 11:19:16 -0400
+Message-ID: <CADnq5_PDSkr4hOHJmb1J30UC0a7sXsm5-TPkEmjzffMK_A+7ug@mail.gmail.com>
+Subject: Re: 6.10/bisected/regression - commits bc87d666c05 and 6d4279cb99ac
+ cause appearing green flashing bar on top of screen on Radeon 6900XT and 120Hz
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, "Mahfooz, Hamza" <Hamza.Mahfooz@amd.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Rodrigo.Siqueira@amd.com, 
+	"Deucher, Alexander" <alexander.deucher@amd.com>, amd-gfx list <amd-gfx@lists.freedesktop.org>, 
+	dri-devel <dri-devel@lists.freedesktop.org>, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/28/2024 2:36 AM, Hou Wenlong wrote:
-> Hi Xin,
-> 
-> It seems preferable to parse the FRED command line and disable FRED
-> early instead of using this method. As mentioned in my cover letter, I
-> initially attempted to fix the problem this way (by parsing the command
-> line in cpu_parse_early_param()). Should I send a new patch for it, or
-> will you be covering it in your work to enable FRED early?
-> 
+On Fri, Jun 21, 2024 at 6:45=E2=80=AFAM Mikhail Gavrilov
+<mikhail.v.gavrilov@gmail.com> wrote:
+>
+> On Fri, Jun 21, 2024 at 12:56=E2=80=AFPM Linux regression tracking (Thors=
+ten
+> Leemhuis) <regressions@leemhuis.info> wrote:
+> > Hmmm, I might have missed something, but it looks like nothing happened
+> > here since then. What's the status? Is the issue still happening?
+>
+> Yes. Tested on e5b3efbe1ab1.
+>
+> I spotted that the problem disappears after forcing the TV to sleep
+> (activate screensaver <Super> + <L>) and then wake it up by pressing
+> any button and entering a password.
+> Hope this information can't help figure out how to fix it.
 
-I have done it in my patches that enables FRED early, but if you want,
-you can post it, because you're a key contributor in this work.
+@Siqueira, Rodrigo @Mahfooz, Hamza any ideas?
 
-Thanks!
-     Xin
-
-> Thanks!
-> 
->>> +	idt_install_sysvec(vector, asm_##function);			\
->>>   }
->>>   #else /* !__ASSEMBLY__ */
->>
->> Thanks!
->>      Xin
-> 
-
+Alex
