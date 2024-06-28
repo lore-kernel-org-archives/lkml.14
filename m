@@ -1,209 +1,125 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA5F7B3F3;
-	Fri, 28 Jun 2024 22:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F142582499
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 22:35:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719614108; cv=none; b=E9HF7Jsxd/QyYwfs5j8zBOz37FWsX7qqqnaDdqGg+/Rik7+q/ZKcrjEteqx+mD+IKejCHTXqPpScs5CGFSDak9kRtOs/U0vBo8pjOxhmRRSBvBwG+DeQCuviFch/WWdFLfMX/y1HBUwrKV83b8FS0LZ4HY1G2b8j/Ey7rCjf+DU=
+	t=1719614112; cv=none; b=JgfH2JeE24pimkOiWvcAoHkl5XbdhLlHruWOsi+dwwU43a+RGcfrrJQUfw0ZeAqhzl/HN8MyX9Y32LnuuhWgipfQksE46QD9xt6/bNpKGa3VcNh8TcDfz2YM9gkvdFa5yeixDgomlhl7SxOYuvWMvtfTHSMOBunjNnTQOp58uaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719614108; c=relaxed/simple;
-	bh=07DYTvr+1cJJnnI4lcrtI01YvZ/CoNFQl7uUpMSlcko=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ivxGN39If3kcnGJxMkyT5cvRVFID1XvqtQZG2GXugHyc9+ITcdrDpLr9HzbkiT5Y5jH9U3+DOWiTNX3aYnGvigsFBaiFlYWQ9OovF+litJHu2Iji4jtLyEryxIkZpGaXdI4VhtLhLvsew7RmOhafm6NUi9AQeuI/mxjq9RL8g+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jINno7Nt; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719614112; c=relaxed/simple;
+	bh=5z39nspdCFa1waOp1np3+7VoVXwA4cwuinPBbzvRnSQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k7xQnPjJAGrQ0uVoH0Td+gKbViWlnnZRQ16ORxbAE5AvZoCP3IZslnTLA5UIOkLr7nPoEgobx3b/ua9xXUrgOwZAWldAPGFr89R2VcF8OzHDw2q94n49rlKnDkrXu5WrFByANzpM7+08mpfGBudtR1i9g4z3EzNuaexSREDJFDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=E5FEurIC; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jINno7Nt"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-706b53ee183so1617604b3a.1;
-        Fri, 28 Jun 2024 15:35:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E5FEurIC"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-42574064b16so5081305e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 15:35:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719614106; x=1720218906; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=k/Il0CyJ05RUxTJn8nhYPqyFFh/jRSTkpMyOabX2+KY=;
-        b=jINno7NtvDkk2buiveCWRx26AE1Z52u8j3DodteTCeygfxTX4nKdEDw319s9UAmbU1
-         yV3sQpcuWNN4JZgZSDPBpWcMi5FqQGofIgLFpO5oxwFF0KlBHRyVXEWqhSNancZE1uvQ
-         5IUrlKTj1450oxPskmxZJ6KBTk+ELdOxWH+L2Ciqw3UXAt7X/Ps/rXbo5IgQBXv2/jZX
-         pWDPVQp1li4feqBBk/myo/8DFA1lmP38ciIxh0S5bJuPX8o5jZNd70mBbyNoQj9gvYv+
-         B63GCWSQPEH2ykRcvMwMGcqluOffCleCzms5QpHQEOtY5lBLxclWgc2EtBwF3pBWJ0Vg
-         UhLA==
+        d=linaro.org; s=google; t=1719614109; x=1720218909; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=V1FJMdQVhtsVTBsP1IuwFsjq71hMcyI7HyXkWpIvov0=;
+        b=E5FEurICSpySN4RvIt21tdZEwOtLgGPfoEjmxqHd3uDEqsYrp1yQim7hS5V8QBrSVh
+         /nheAvZ5T6LL1jx+EtuByb7QNnVek3hamlw3S7mDjP12t5lkzGF9qSrsJOaI2dspRadL
+         9m/7LL2lp34mYqe04Fm+v5e6tyXWHbUrFQ6aClAxSiZaVFEL9rqUsP75T6mHJLAA6ZBo
+         gqObSkMn9Q8AAxzkZvF2yQ+K8pjnYZKrxQfbhsXMqiDR72jkCBo28vMAm/yzWSgLCZc1
+         mMpRiRNGr45A4sq8MJ6w+Y2YZldTJjTcocozMHLmAaylKemvBmX0tJfvx84NMTzvcZE6
+         +I/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719614106; x=1720218906;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=k/Il0CyJ05RUxTJn8nhYPqyFFh/jRSTkpMyOabX2+KY=;
-        b=mooDNJawvp1Gua9L8TbegRJvWkfVcCgCSwuqABTNo2pjjJ95Z5+0EGWGiECk2qHMBU
-         go4ilv3r6LhSiDPATmJUKZOpZM+v7yhkYOMk/d22bTnlMHgQTArAmeB9TGxdB3asvmap
-         zi0gXHhQQFUOJTJF/GOti3x/Azoo+oxPa2hBY/J/4q6elVj9Wc0M8h0MDzgqCXyaUh1/
-         wPR5M1DR1XRKuT6EO3/1bUXZU9ANimlsoeco31VyqiFZDag6lsAmTSHdC7arIzyEnbQR
-         v95fs8ltnLrqMAkUWYSvzDkFJzE6mMEaEYEbpI4W3z5ydC4CgWq85F5p5jeYiX5KI6FT
-         Z1VA==
-X-Forwarded-Encrypted: i=1; AJvYcCWjdOCsfREIEwVRhwGUbRo51hyGjUqEIByt57ywiUO0GLj/2svB/cu32mTAF8OpPsJiMoriFDWp7M6GlpXJ9cN/f8exR+SakfO8KigC
-X-Gm-Message-State: AOJu0Yx3hD1HkndhkV8du6TiuvMDuDNnWEqFd51TX/nF7XTuQqXEOCLS
-	p+EOFmqAx0Tl7kViAdMYU6zTZb3lcTCiuNFt8UeJNmQMP+c6OeGjxIYkUQ==
-X-Google-Smtp-Source: AGHT+IFdAI8lVdgvZ8QDwW9Tb7xEOZPV/kOLSX7mFxiYpppyd+S5/RqWY2OwYARoewQLD24aY4u95A==
-X-Received: by 2002:a05:6a21:1a1:b0:1be:bfc9:dbcf with SMTP id adf61e73a8af0-1bee4926c47mr4315795637.13.1719614105892;
-        Fri, 28 Jun 2024 15:35:05 -0700 (PDT)
-Received: from ?IPv6:2605:59c8:829:4c00:82ee:73ff:fe41:9a02? ([2605:59c8:829:4c00:82ee:73ff:fe41:9a02])
-        by smtp.googlemail.com with ESMTPSA id 41be03b00d2f7-72c69b53e3dsm1769146a12.9.2024.06.28.15.35.04
+        d=1e100.net; s=20230601; t=1719614109; x=1720218909;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=V1FJMdQVhtsVTBsP1IuwFsjq71hMcyI7HyXkWpIvov0=;
+        b=Zq/B1Emnd9F3mREk2UGVyx4xLZ3wk+qrCvQO6IK/n0fgUrsdmy7mDXmfRJ7bU6nRdv
+         0N+pH3LiRaLBLLApP2amLwMbxNNv9DsLy42LvTeTaBv4VumlNW/1iVkdiHNxnW53lgjC
+         vu0e9EJydWT7KtKsms4lEPuC3gAaEBvk7HDXIuUF49tgbgy7dnmoeHzQCYNLpLZ4MmYV
+         4jGP8gcFBVqtt/w4PvNeLC8zy+fC/M0N/ARW032CFQdhQR4QhyGOvU5cVlvuO8ev23Nb
+         7U1kJvweHLJMdIAJ62TAop63+BWPGWJ/kNgcuwq0+1jgfN4ptcNgz6Mcwa7l11aWunNT
+         VmeA==
+X-Forwarded-Encrypted: i=1; AJvYcCXymV0oxpFTg/ObPNDSgc3eXW7p+I45asYiBjRe4TDVRRCwHgpMkDfU3WWPLg17V+RiVQriGgCpPatJMTezeuyJaR0hCGn3IhuZ7lxA
+X-Gm-Message-State: AOJu0YwKO93v8MfC6s+gGjMi9R7/OM7qwgPM/3+5sv9hYtbia6OxQiCi
+	imhWQe/bl1yKpiRpLvMk1TI6r2zJqDFY+uKvWGkIk+sXe5oFy9VKHGZO+UxebmY=
+X-Google-Smtp-Source: AGHT+IGSqJzC8Dv0ZKSrTzp5xhhumx6Iv2B0brr3AvE+VbFcW5m/di04oRuZDZW7DCMVkBqggSlS2Q==
+X-Received: by 2002:a05:6000:1448:b0:367:4e17:3ed0 with SMTP id ffacd0b85a97d-3674e17400bmr4705520f8f.64.1719614109349;
+        Fri, 28 Jun 2024 15:35:09 -0700 (PDT)
+Received: from gpeter-l.lan ([2a0d:3344:2e8:8510::3aa])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a043a16sm3496711f8f.0.2024.06.28.15.35.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 15:35:05 -0700 (PDT)
-Message-ID: <33c3c7fc00d2385e741dc6c9be0eade26c30bd12.camel@gmail.com>
-Subject: Re: [PATCH net-next v9 10/13] mm: page_frag: introduce
- prepare/probe/commit API
-From: Alexander H Duyck <alexander.duyck@gmail.com>
-To: Yunsheng Lin <linyunsheng@huawei.com>, davem@davemloft.net,
- kuba@kernel.org,  pabeni@redhat.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton
-	 <akpm@linux-foundation.org>, linux-mm@kvack.org
-Date: Fri, 28 Jun 2024 15:35:04 -0700
-In-Reply-To: <20240625135216.47007-11-linyunsheng@huawei.com>
-References: <20240625135216.47007-1-linyunsheng@huawei.com>
-	 <20240625135216.47007-11-linyunsheng@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+        Fri, 28 Jun 2024 15:35:08 -0700 (PDT)
+From: Peter Griffin <peter.griffin@linaro.org>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	alim.akhtar@samsung.com,
+	s.nawrocki@samsung.com,
+	cw00.choi@samsung.com,
+	mturquette@baylibre.com,
+	sboyd@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	tudor.ambarus@linaro.org,
+	andre.draszik@linaro.org,
+	kernel-team@android.com,
+	willmcvicker@google.com,
+	devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH 0/3] Add syscon-reboot and syscon-poweroff support for gs101/Pixel 6
+Date: Fri, 28 Jun 2024 23:35:02 +0100
+Message-ID: <20240628223506.1237523-1-peter.griffin@linaro.org>
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2024-06-25 at 21:52 +0800, Yunsheng Lin wrote:
-> There are many use cases that need minimum memory in order
-> for forward progress, but more performant if more memory is
-> available or need to probe the cache info to use any memory
-> available for frag caoleasing reason.
->=20
-> Currently skb_page_frag_refill() API is used to solve the
-> above use cases, but caller needs to know about the internal
-> detail and access the data field of 'struct page_frag' to
-> meet the requirement of the above use cases and its
-> implementation is similar to the one in mm subsystem.
->=20
-> To unify those two page_frag implementations, introduce a
-> prepare API to ensure minimum memory is satisfied and return
-> how much the actual memory is available to the caller and a
-> probe API to report the current available memory to caller
-> without doing cache refilling. The caller needs to either call
-> the commit API to report how much memory it actually uses, or
-> not do so if deciding to not use any memory.
->=20
-> As next patch is about to replace 'struct page_frag' with
-> 'struct page_frag_cache' in linux/sched.h, which is included
-> by the asm-offsets.s, using the virt_to_page() in the inline
-> helper of page_frag_cache.h cause a "'vmemmap' undeclared"
-> compiling error for asm-offsets.s, use a macro for probe API
-> to avoid that compiling error.
->=20
-> CC: Alexander Duyck <alexander.duyck@gmail.com>
-> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-> ---
->  include/linux/page_frag_cache.h |  82 +++++++++++++++++++++++
->  mm/page_frag_cache.c            | 114 ++++++++++++++++++++++++++++++++
->  2 files changed, 196 insertions(+)
->=20
-> diff --git a/include/linux/page_frag_cache.h b/include/linux/page_frag_ca=
-che.h
-> index b33904d4494f..e95d44a36ec9 100644
-> --- a/include/linux/page_frag_cache.h
-> +++ b/include/linux/page_frag_cache.h
-> @@ -4,6 +4,7 @@
->  #define _LINUX_PAGE_FRAG_CACHE_H
-> =20
->  #include <linux/gfp_types.h>
-> +#include <linux/mmdebug.h>
-> =20
->  #define PAGE_FRAG_CACHE_MAX_SIZE	__ALIGN_MASK(32768, ~PAGE_MASK)
->  #define PAGE_FRAG_CACHE_MAX_ORDER	get_order(PAGE_FRAG_CACHE_MAX_SIZE)
-> @@ -87,6 +88,9 @@ static inline unsigned int page_frag_cache_page_size(st=
-ruct encoded_va *encoded_
-> =20
->  void page_frag_cache_drain(struct page_frag_cache *nc);
->  void __page_frag_cache_drain(struct page *page, unsigned int count);
-> +struct page *page_frag_alloc_pg(struct page_frag_cache *nc,
-> +				unsigned int *offset, unsigned int fragsz,
-> +				gfp_t gfp);
->  void *__page_frag_alloc_va_align(struct page_frag_cache *nc,
->  				 unsigned int fragsz, gfp_t gfp_mask,
->  				 unsigned int align_mask);
-> @@ -99,12 +103,90 @@ static inline void *page_frag_alloc_va_align(struct =
-page_frag_cache *nc,
->  	return __page_frag_alloc_va_align(nc, fragsz, gfp_mask, -align);
->  }
-> =20
-> +static inline unsigned int page_frag_cache_page_offset(const struct page=
-_frag_cache *nc)
-> +{
-> +	return page_frag_cache_page_size(nc->encoded_va) - nc->remaining;
-> +}
-> +
->  static inline void *page_frag_alloc_va(struct page_frag_cache *nc,
->  				       unsigned int fragsz, gfp_t gfp_mask)
->  {
->  	return __page_frag_alloc_va_align(nc, fragsz, gfp_mask, ~0u);
->  }
-> =20
-> +void *page_frag_alloc_va_prepare(struct page_frag_cache *nc, unsigned in=
-t *fragsz,
-> +				 gfp_t gfp);
-> +
-> +static inline void *page_frag_alloc_va_prepare_align(struct page_frag_ca=
-che *nc,
-> +						     unsigned int *fragsz,
-> +						     gfp_t gfp,
-> +						     unsigned int align)
-> +{
-> +	WARN_ON_ONCE(!is_power_of_2(align) || align > PAGE_SIZE);
-> +	nc->remaining =3D nc->remaining & -align;
-> +	return page_frag_alloc_va_prepare(nc, fragsz, gfp);
-> +}
-> +
-> +struct page *page_frag_alloc_pg_prepare(struct page_frag_cache *nc,
-> +					unsigned int *offset,
-> +					unsigned int *fragsz, gfp_t gfp);
-> +
-> +struct page *page_frag_alloc_prepare(struct page_frag_cache *nc,
-> +				     unsigned int *offset,
-> +				     unsigned int *fragsz,
-> +				     void **va, gfp_t gfp);
-> +
-> +static inline struct encoded_va *__page_frag_alloc_probe(struct page_fra=
-g_cache *nc,
-> +							 unsigned int *offset,
-> +							 unsigned int *fragsz,
-> +							 void **va)
-> +{
-> +	struct encoded_va *encoded_va;
-> +
-> +	*fragsz =3D nc->remaining;
-> +	encoded_va =3D nc->encoded_va;
-> +	*offset =3D page_frag_cache_page_size(encoded_va) - *fragsz;
-> +	*va =3D encoded_page_address(encoded_va) + *offset;
-> +
-> +	return encoded_va;
-> +}
-> +
-> +#define page_frag_alloc_probe(nc, offset, fragsz, va)			\
-> +({									\
-> +	struct page *__page =3D NULL;					\
-> +									\
-> +	VM_BUG_ON(!*(fragsz));						\
-> +	if (likely((nc)->remaining >=3D *(fragsz)))			\
-> +		__page =3D virt_to_page(__page_frag_alloc_probe(nc,	\
-> +							      offset,	\
-> +							      fragsz,	\
-> +							      va));	\
-> +									\
-> +	__page;								\
-> +})
-> +
+Hi Krzysztof,
 
-Why is this a macro instead of just being an inline? Are you trying to
-avoid having to include a header due to the virt_to_page?
+This series adds support for syscon-reboot and syscon-poweroff to gs101/Oriole.
+It has been tested with reboot and poweroff commands respectively.
+
+Note the syscon-reboot/poweroff has *runtime* dependencies on the exynos-pmu
+and clk-gs101 patches in this series, as well as [1] which was just queued by
+Lee. As you are the maintainer for exynos-pmu and samsung clock drivers I've
+included those patches in this series.
+
+For the moment I have left out syscon-reboot-mode dt node as whilst it uses the
+same SYSIP_DAT0 register as exynosautov9, and setting this the reboot mode is
+correctly reported in the Pixel bootloader. The bootloader is also checking a
+scratch register in max77779 chip that isn't currently enabled upstream, and
+thus the bootloader doesn't actually enter fastboot.
+
+Kind regards,
+
+Peter
+
+[1] https://lore.kernel.org/linux-arm-kernel/20240621115544.1655458-1-peter.griffin@linaro.org/
+
+Changes in v2:
+ - Move PMUALIVE_MASK check into tensor_is_atomic() (William)
+ - Collect up tags
+ - rebase onto next-20240628
+
+Peter Griffin (3):
+  arm64: dts: exynos: gs101: add syscon-poweroff and syscon-reboot nodes
+  soc: samsung: exynos-pmu: add support for PMU_ALIVE non atomic
+    registers
+  clk: samsung: gs101: mark gout_hsi2_ufs_embd_i_clk_unipro as critical
+
+ arch/arm64/boot/dts/exynos/google/gs101.dtsi | 15 +++++++++++++++
+ drivers/clk/samsung/clk-gs101.c              |  2 +-
+ drivers/soc/samsung/exynos-pmu.c             | 16 ++++++++++++++--
+ include/linux/soc/samsung/exynos-regs-pmu.h  |  4 ++++
+ 4 files changed, 34 insertions(+), 3 deletions(-)
+
+-- 
+2.45.2.741.gdbec12cfda-goog
 
