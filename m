@@ -1,278 +1,198 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE1A156242
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 11:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7695D152179;
+	Fri, 28 Jun 2024 11:29:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719573912; cv=none; b=W1oA2x7irzmfgPHaNHOlE9RDiPGguBbqqhjQKMnB2Y3ltNoGsnbqhwtkURsa2LxWelQMoKt3sM+jYmVK2cb5cl/XR8ZTXw7APYq0Rvp/bgiLAaohIVus6PoKxZ83+Wtb+/Ft8vrRqDwbd1egL0nkyi6b4biXKQjZrn/KtcqbdLk=
+	t=1719574163; cv=none; b=Wpo02WGydzhIvMqRyhxWhr3tdQ+tc/LR52Tv9cvaCqAHQ8+haPuKmQ2jDOldAzyUdm4nLpKDGiDUWTagB2nn1h7a7YLCMVFsJJ7Zt8hAH8usDtYuhQkiQlw8pd72nFrWaeQ179ir+LoXH0m2IduHV6haDovudF/4olaTHiGLhXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719573912; c=relaxed/simple;
-	bh=zVan0NHkWDffat6lSLM3TgKs5irxqac2uR3WD3BclUI=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=R1HtgXZGe9YhN1SATdGimJec/twbAGhtur9GqAvHCmMn3mWv+OHXuch7nQTmAEFs1sw00Uu1z24owI7owTOlw/ZUH8+ABv959IrTSgF49Nm42Uuk6hvcCjZV2PK2YOxRmePLMluON9/0TrG0Me+G2XcHah5qkd0NZ4Y3ZKa8tLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gGKGKKwO; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719574163; c=relaxed/simple;
+	bh=k0zq4I2xpIIHUPwrd+noMDLx1nxxe1on/uPa8q9W890=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kTaA818V65IHXUHqwktGGEceXrc53Itm93wo8mJNE5POQhgFBMkBU5ufq+w3aS1am/4vxU9251+fGetEUaV3fNUPmmIIIZ8KycqJRUicNG0CImHR+wS7CnAAelS4WtSo3zS70OIrC38LknKy6TAxYNrQlgU5c7JWUFmlK4ZmbWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nKSsS2Y9; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gGKGKKwO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719573910; x=1751109910;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=zVan0NHkWDffat6lSLM3TgKs5irxqac2uR3WD3BclUI=;
-  b=gGKGKKwO4gVv8xtKV+ymf0q58pE0PfpwU00RcOYygf+/K05nENRpqrOf
-   QUNHF2XW4SE7EkrBEHtgHjcc24TTtwGCUR5RpbFV9m2HKBSB0RyIj/YsX
-   cH3IlcLFieX5JzHwiGQvJ8M9XBJMjk9zC47dmh7CuSdSBrGgRwTI1oO5B
-   YYvAb6/ZwxKqQQpmGG8kTZI3t7USzoTWC/1Wp2edilRUKMJZO8W0cxmVg
-   hCp3ZzaT0GXr3+n/luc+0bccYtdZ3237KAhus5IQcZrdCu2ClJA5drBW4
-   PUhC0W77hw8czBKf7JXLx/7A9BAzkH5XwMyUSr0tDS/5BUukpM3womC+4
-   w==;
-X-CSE-ConnectionGUID: 0+ZQS4LsTPOgJgqeGqZoeA==
-X-CSE-MsgGUID: vuTfA7WCTvusFtvE23ztUA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="16428297"
-X-IronPort-AV: E=Sophos;i="6.09,168,1716274800"; 
-   d="scan'208";a="16428297"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 04:25:10 -0700
-X-CSE-ConnectionGUID: rjlAP/UTQLSfbC2jIrnDPw==
-X-CSE-MsgGUID: 8efYNTgTQKux6IzMXd87yA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,169,1716274800"; 
-   d="scan'208";a="44548285"
-Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.125.248.220]) ([10.125.248.220])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 04:24:54 -0700
-Message-ID: <92346e46-7306-4ed2-ad74-d20b0dbc60a4@linux.intel.com>
-Date: Fri, 28 Jun 2024 19:24:51 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nKSsS2Y9"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3629c517da9so423143f8f.2;
+        Fri, 28 Jun 2024 04:29:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719574160; x=1720178960; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VwHyv+/nheDOEQqvCDypmg/zh1UxDN8rLzkHFy0r5dk=;
+        b=nKSsS2Y9hyTym2ulGQNvdGhOc1mrC8sjdB55Gi3wkzV0CwRxDJNKhMXAwmtFeCDg6R
+         gCxfOqBwJgtQE8CIaJw9hRRzUHJMUjsUSWox/f4DfXztlBVpgbwZrMMPvDUtVGlDtZHs
+         5CgSwbh09MIBuOxgY9VjlGLRxdvbD/ey4WhoaUNfwxo1yGFeH1u7oKEtZxID9GmrTT56
+         Q2gTd4JTJraRI/hfC9zMrucooEZ1FTs0vf/FHsEi4jBvk6Gs0y5NZvjFLZFWk3b7pmyZ
+         mBq3BeISpP8q1WLkGHUEyLKcKdFgNAkvLqbUutru8el45hNYT9gMV7waHYXGxY2FO01Q
+         RoEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719574160; x=1720178960;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VwHyv+/nheDOEQqvCDypmg/zh1UxDN8rLzkHFy0r5dk=;
+        b=OWaPHIMCH5OjdZ+nUNNOOx1m0IeHUj8Lhoy8td+yOUh5UG/2D8ZpBmDITlxbxAuthe
+         fyu1BqSLnnVFtxrVdZy1XHB/VHHUMzmNxY5FpF8BTl87CX5HARZ4D7gJOtriGyf1oz7y
+         uf1D3AMRw93vfrPsX0038M2TGGu+yFZH0jXvXR7YZdvtkHp2ymBDq2cHEQ+6eiMpP44Y
+         7L8OJ/zYceZgnfIQctu1bQtRPtVV5t43rr0IMQU47x1vChGSte6ebHDmL6VpvKDl9u3W
+         2+KrdvKV8ox77ATTicaaAGkNt+RfB/0OyV7SIUUye6YzVLCEHwjmjq8HE0W1katvJtrf
+         18GA==
+X-Forwarded-Encrypted: i=1; AJvYcCXun0fzgY5gtGvEu7y9EEvTBOBf5JCOd5Kh2hkmi2T4ex90vGy/jILFURXeT2wcvfElDdKLjsej7vDwbarJv3QcYxXNul+X+wMvMAtfXWgJzXq5BwgZah+u7Eh47K3wwwMHLY2w56IiIf0OxH7fAkNg75jK3FzoXMOHKieTSLAsMawh6Jyu
+X-Gm-Message-State: AOJu0Yy1L7AM+mT6rDvCmB0KP9Qyxkk2aT7Ph4APT13kQB9y6CGyA/zq
+	e7mJvr6GMrXYyGYI7GEOuaDPasxKEyQneIAVZE2EQveEIIsifipZ/3Xyqg==
+X-Google-Smtp-Source: AGHT+IHSIPxiCQZHyj0KQ1gk5pY4ojyWZH16385yV/UYI3N9XukgmcAnac3lAWtu5FDl9Cb+4IKZ9g==
+X-Received: by 2002:adf:f450:0:b0:360:9a40:3dd8 with SMTP id ffacd0b85a97d-366e96567cemr12944422f8f.65.1719574159201;
+        Fri, 28 Jun 2024 04:29:19 -0700 (PDT)
+Received: from orome (p200300e41f162000f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f16:2000:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256b09a828sm31184325e9.37.2024.06.28.04.29.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Jun 2024 04:29:18 -0700 (PDT)
+Date: Fri, 28 Jun 2024 13:29:17 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+To: John Stultz <jstultz@google.com>, Maxime Ripard <mripard@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
+	Brian Starkey <Brian.Starkey@arm.com>, "T.J. Mercier" <tjmercier@google.com>, 
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, Mattijs Korpershoek <mkorpershoek@baylibre.com>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH 0/8] dma-buf: heaps: Support carved-out heaps and ECC
+ related-flags
+Message-ID: <qy7aczeu6kumv5utemoevi7omp5ryq55zmgzxh5hrz5orf2osp@wypg66awof4n>
+References: <20240515-dma-buf-ecc-heap-v1-0-54cbbd049511@kernel.org>
+ <CANDhNCoOKwtpstFE2VDcUvzdXUWkZ-Zx+fz6xrdPWTyciVXMXQ@mail.gmail.com>
+ <ZkXmWwmdPsqAo7VU@phenom.ffwll.local>
+ <CANDhNCo5hSC-sLwdkBi3e-Ja-MzdqcGGbn-4G3XNYwCzZUwscw@mail.gmail.com>
+ <ZkyOOwpM57HIiO3v@phenom.ffwll.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, "iommu@lists.linux.dev"
- <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] iommu/vt-d: Add helper to flush caches for context
- change
-To: "Tian, Kevin" <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Jason Gunthorpe <jgg@ziepe.ca>
-References: <20240627023121.50166-1-baolu.lu@linux.intel.com>
- <20240627023121.50166-2-baolu.lu@linux.intel.com>
- <BN9PR11MB527642AD41669FCF390297378CD72@BN9PR11MB5276.namprd11.prod.outlook.com>
- <80d727b4-c1eb-49d1-9b4a-ab3f0a4b54e2@linux.intel.com>
- <BN9PR11MB52760D102BD4F0AD7C24BCD58CD02@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <BN9PR11MB52760D102BD4F0AD7C24BCD58CD02@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="kapzi2mpfibvyjib"
+Content-Disposition: inline
+In-Reply-To: <ZkyOOwpM57HIiO3v@phenom.ffwll.local>
 
-On 2024/6/28 15:43, Tian, Kevin wrote:
->> From: Baolu Lu <baolu.lu@linux.intel.com>
->> Sent: Thursday, June 27, 2024 4:22 PM
->>
->> On 2024/6/27 14:08, Tian, Kevin wrote:
->>>> From: Lu Baolu <baolu.lu@linux.intel.com>
->>>> Sent: Thursday, June 27, 2024 10:31 AM
->>>>
->>>> + */
->>>> +void intel_context_flush_present(struct device_domain_info *info,
->>>> +				 struct context_entry *context,
->>>> +				 bool affect_domains)
->>>> +{
->>>> +	struct intel_iommu *iommu = info->iommu;
->>>> +	u16 did = context_domain_id(context);
->>>> +	struct pasid_entry *pte;
->>>> +	int i;
->>>> +
->>>> +	assert_spin_locked(&iommu->lock);
->>>> +
->>>> +	/*
->>>> +	 * Device-selective context-cache invalidation. The Domain-ID field
->>>> +	 * of the Context-cache Invalidate Descriptor is ignored by hardware
->>>> +	 * when operating in scalable mode. Therefore the @did value
->>>> doesn't
->>>> +	 * matter in scalable mode.
->>>> +	 */
->>>> +	iommu->flush.flush_context(iommu, did, PCI_DEVID(info->bus, info-
->>>>> devfn),
->>>> +				   DMA_CCMD_MASK_NOBIT,
->>>> DMA_CCMD_DEVICE_INVL);
->>>> +
->>>> +	/*
->>>> +	 * For legacy mode:
->>>> +	 * - Domain-selective IOTLB invalidation
->>>> +	 * - Global Device-TLB invalidation to all affected functions
->>>> +	 */
->>>> +	if (!sm_supported(iommu)) {
->>>> +		iommu->flush.flush_iotlb(iommu, did, 0, 0,
->>>> DMA_TLB_DSI_FLUSH);
->>>> +		__context_flush_dev_iotlb(info);
->>>> +
->>>> +		return;
->>>> +	}
->>>> +
->>>> +	/*
->>>> +	 * For scalable mode:
->>>> +	 * - Domain-selective PASID-cache invalidation to affected domains
->>>> +	 * - Domain-selective IOTLB invalidation to affected domains
->>>> +	 * - Global Device-TLB invalidation to affected functions
->>>> +	 */
->>>> +	if (affect_domains) {
->>>> +		for (i = 0; i < info->pasid_table->max_pasid; i++) {
->>>> +			pte = intel_pasid_get_entry(info->dev, i);
->>>> +			if (!pte || !pasid_pte_is_present(pte))
->>>> +				continue;
->>>> +
->>>> +			did = pasid_get_domain_id(pte);
->>>> +			qi_flush_pasid_cache(iommu, did,
->>>> QI_PC_ALL_PASIDS, 0);
->>>> +			iommu->flush.flush_iotlb(iommu, did, 0, 0,
->>>> DMA_TLB_DSI_FLUSH);
->>>> +		}
->>>> +	}
->>>> +
->>>> +	__context_flush_dev_iotlb(info);
->>>> +}
->>>> --
->>>> 2.34.1
->>>>
->>>
->>> this change moves the entire cache invalidation flow inside
->>> iommu->lock. Though the directly-affected operations are not in
->>> critical path the indirect impact applies to all other paths acquiring
->>> iommu->lock given it'll be held unnecessarily longer after this
->>> change.
->>>
->>> If the only requirement of holding iommu->lock is to walk the pasid
->>> table, probably we can collect a bitmap of DID's in the locked walk
->>> and then invalidate each in a loop outside of iommu->lock. Here
->>> we only care about DIDs associated with the old context entry at
->>> this point. New pasid attach will hit new context entry. Concurrent
->>> pasid detach then may just come with duplicated invalidations.
->>
->> The iommu->lock is not only for the PASID table walk. The basic
->> schematic here is that once a present context table entry is being
->> changed, all PASID entries should not be altered until all the related
->> caches have been flushed. This is because the configuration of the
->> context entry might also impact PASID translation.
-> 
-> Is it what the spec explicitly requires? My impression was that we
-> need to invalidate any cache which may be associated with the old
-> context entry, which is not equal to prohibiting PASID entries from
-> being changed at the same time (as long as those changes won't
-> cause a stale cache entry being active).
 
-No, I didn't find that the VT-d spec explicitly requires this. But
-conceptually, the context entry controls features of the whole device,
-while pasid entries control the translation on a pasid. The change in
-context entry potentially impacts the pasid translation ...
+--kapzi2mpfibvyjib
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> e.g. let's say this helper collects valid pasid entries (2, 3, 4) and
-> associated DIDs (x, y, z) in a locked walk of the pasid table and
-> then follows the spec sequence to invalidate the pasid cache
-> for (2, 3, 4) and the iotlb for (x, y, z) outside of the lock.
-> 
-> there could be several concurrent scenarios if iommu->lock is
-> only guarded on the pasid table walking:
-> 
-> 1) pasid entry #1 is torn down before the locked walk. The
-> teardown path will invalidate its pasid cache and iotlb properly.
-> 2) pasid entry #4 is torn down after the locked walk. Then we may
-> see duplicated invalidations both in this helper and in the
-> teardown path.
-> 3) new pasid attach before locked walk may be associated with
-> either old or new context entry, depending on whether it's passed
-> the context cache invalidation. In any case it will be captured by
-> locked walk and then have related cache invalidated in the helper.
-> 4) new pasid attach after locked walk is always safe as related
-> cache will only be associated with the new context entry.
+On Tue, May 21, 2024 at 02:06:19PM GMT, Daniel Vetter wrote:
+> On Thu, May 16, 2024 at 09:51:35AM -0700, John Stultz wrote:
+> > On Thu, May 16, 2024 at 3:56=E2=80=AFAM Daniel Vetter <daniel@ffwll.ch>=
+ wrote:
+> > > On Wed, May 15, 2024 at 11:42:58AM -0700, John Stultz wrote:
+> > > > But it makes me a little nervous to add a new generic allocation fl=
+ag
+> > > > for a feature most hardware doesn't support (yet, at least). So it's
+> > > > hard to weigh how common the actual usage will be across all the
+> > > > heaps.
+> > > >
+> > > > I apologize as my worry is mostly born out of seeing vendors really
+> > > > push opaque feature flags in their old ion heaps, so in providing a
+> > > > flags argument, it was mostly intended as an escape hatch for
+> > > > obviously common attributes. So having the first be something that
+> > > > seems reasonable, but isn't actually that common makes me fret some.
+> > > >
+> > > > So again, not an objection, just something for folks to stew on to
+> > > > make sure this is really the right approach.
+> > >
+> > > Another good reason to go with full heap names instead of opaque flag=
+s on
+> > > existing heaps is that with the former we can use symlinks in sysfs to
+> > > specify heaps, with the latter we need a new idea. We haven't yet got=
+ten
+> > > around to implement this anywhere, but it's been in the dma-buf/heap =
+todo
+> > > since forever, and I like it as a design approach. So would be a good=
+ idea
+> > > to not toss it. With that display would have symlinks to cma-ecc and =
+cma,
+> > > and rendering maybe cma-ecc, shmem, cma heaps (in priority order) for=
+ a
+> > > SoC where the display needs contig memory for scanout.
+> >=20
+> > So indeed that is a good point to keep in mind, but I also think it
+> > might re-inforce the choice of having ECC as a flag here.
+> >=20
+> > Since my understanding of the sysfs symlinks to heaps idea is about
+> > being able to figure out a common heap from a collection of devices,
+> > it's really about the ability for the driver to access the type of
+> > memory. If ECC is just an attribute of the type of memory (as in this
+> > patch series), it being on or off won't necessarily affect
+> > compatibility of the buffer with the device.  Similarly "uncached"
+> > seems more of an attribute of memory type and not a type itself.
+> > Hardware that can access non-contiguous "system" buffers can access
+> > uncached system buffers.
+>=20
+> Yeah, but in graphics there's a wide band where "shit performance" is
+> defacto "not useable (as intended at least)".
+>=20
+> So if we limit the symlink idea to just making sure zero-copy access is
+> possible, then we might not actually solve the real world problem we need
+> to solve. And so the symlinks become somewhat useless, and we need to
+> somewhere encode which flags you need to use with each symlink.
+>=20
+> But I also see the argument that there's a bit a combinatorial explosion
+> possible. So I guess the question is where we want to handle it ...
 
-... hence, from the driver's point of view, let's start from simplicity
-unless there's any real use case.
+Sorry for jumping into this discussion so late. But are we really
+concerned about this combinatorial explosion in practice? It may be
+theoretically possible to create any combination of these, but do we
+expect more than a couple of heaps to exist in any given system?
 
->>
->> Previously, we did not apply this lock because all those cases involved
->> changing the context entry from present to non-present, and we were
->> certain that all PASID entries were empty. Now, as we are making it a
->> generic helper that also serves scenarios where the entry remains
->> present after the change, we need this lock to ensure that no PASID
->> entry changes occur at the same time.
->>
-> 
-> Even if we want to do a conservative locking I prefer to not applying
-> it to existing paths which clearly have no need for extended lock.
-> 
-> Then probably making a specific helper for pri flip makes more sense
-> than generalizing code to incur unnecessary lock overhead on existing
-> paths...
+Would it perhaps make more sense to let a platform override the heap
+name to make it more easily identifiable? Maybe this is a naive
+assumption, but aren't userspace applications and drivers not primarily
+interested in the "type" of heap rather than whatever specific flags
+have been set for it?
 
-Yes, agreed with you. We don't need to extend this lock mechanism change
-to the existing cases where it's unnecessary.
+For example, if an applications wants to use a protected buffer, the
+application doesn't (and shouldn't need to) care about whether the heap
+for that buffer supports ECC or is backed by CMA. All it really needs to
+know is that it's the system's "protected" heap.
 
-How about below additional changes?
+This rather than try to represent every possible combination we
+basically make this a "configuration" issue. System designers need to
+settle on whatever combination of flags work for all the desired use-
+cases and then we expose that combination as a named heap.
 
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index c5d9c2283977..523407f6f6b2 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -1954,8 +1954,8 @@ static void domain_context_clear_one(struct 
-device_domain_info *info, u8 bus, u8
+One problem that this doesn't solve is that we still don't have a way of
+retrieving these flags in drivers which may need them. Perhaps one way
+to address this would be to add in-kernel APIs to allocate from a heap.
+That way a DRM/KMS driver (for example) could find a named heap,
+allocate from it and implicitly store flags about the heap/buffer. Or
+maybe we could add in-kernel API to retrieve flags, which would be a bit
+better than having to expose them to userspace.
 
-  	context_clear_entry(context);
-  	__iommu_flush_cache(iommu, context, sizeof(*context));
--	intel_context_flush_present(info, context, true);
-  	spin_unlock(&iommu->lock);
-+	intel_context_flush_present(info, context, true);
-  }
+Thierry
 
-  static int domain_setup_first_level(struct intel_iommu *iommu,
-diff --git a/drivers/iommu/intel/pasid.c b/drivers/iommu/intel/pasid.c
-index 01156135e60f..9a7b5668c723 100644
---- a/drivers/iommu/intel/pasid.c
-+++ b/drivers/iommu/intel/pasid.c
-@@ -690,8 +690,8 @@ static void device_pasid_table_teardown(struct 
-device *dev, u8 bus, u8 devfn)
+--kapzi2mpfibvyjib
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  	context_clear_entry(context);
-  	__iommu_flush_cache(iommu, context, sizeof(*context));
-+	spin_unlock(&iommu->lock);
-  	intel_context_flush_present(info, context, false);
--	spin_unlock(&iommu->lock);
-  }
+-----BEGIN PGP SIGNATURE-----
 
-  static int pci_pasid_table_teardown(struct pci_dev *pdev, u16 alias, 
-void *data)
-@@ -889,8 +889,6 @@ void intel_context_flush_present(struct 
-device_domain_info *info,
-  	struct pasid_entry *pte;
-  	int i;
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmZ+nooACgkQ3SOs138+
+s6E98RAAv7+i/7uJg+tq6+f8CJRlZOqAtn8prnuvk6eIf4H6fKxsN81OpDd288mJ
+Xq9XkIUEjLpb/ZGcXZXqQn8lO9d5/Q8aSuFOPNmDJwNdV/XXs+gNkf9lEvs61oPa
+lO3xPqP2BN7AZKwF6iVCUQ2pLcIFGbhVtJNcLkNNh0GtdH76bpHubTMGL+RoPtm6
+e1ktKqwr4Z0ur56l00LBy+OQ3A38tTIMq/5XLfESeAOQbqx7gszLJOYzvh58tAS5
+EYH/1c09cLk82EGjb0xb8IWvDhWn8RzCNeyX2F+gpfJsYHIWO9R/ygk+lBiMXgHx
+8Ynhlb7gL7fmO0M+vx63IkvPD6YSxlqAkLU+IDs7GMzRBrwh8NPcgkfWTXRu4vYf
+3r5Ere84xSZpat+ijjGDnckkMN4QeMXLn8wj0ZuaP26kjSX6R7gTKBINxm3LsivH
+gGI4Ab2FlVU5dGrHmewZt79+dAiWBd6y6ks6MVVBdzSNp9DCALKMDU2yZqh+fieA
++FCuIknJvPSZFr57m89YBZ2VqgoW+SHiaUabiscvldcW8DE/1QLNa54NN/1oLaJ3
+GCH34Xrl9BzuuD9Ph7Og7AoU7Y4nrB0NxgHWeMtpGTZqGvafMMZ9doVxBkHfT3z3
+rfQFVdZn2sWNqJFdLwzfR9O8UmF0w/rOxi9mwriAeGVXmUjUB/I=
+=6/gO
+-----END PGP SIGNATURE-----
 
--	assert_spin_locked(&iommu->lock);
--
-  	/*
-  	 * Device-selective context-cache invalidation. The Domain-ID field
-  	 * of the Context-cache Invalidate Descriptor is ignored by hardware
-@@ -919,6 +917,13 @@ void intel_context_flush_present(struct 
-device_domain_info *info,
-  	 * - Global Device-TLB invalidation to affected functions
-  	 */
-  	if (flush_domains) {
-+		/*
-+		 * If the IOMMU is running in scalable mode and there might
-+		 * be potential PASID translations, the caller should hold
-+		 * the lock to ensure that context changes and cache flushes
-+		 * are atomic.
-+		 */
-+		assert_spin_locked(&iommu->lock);
-  		for (i = 0; i < info->pasid_table->max_pasid; i++) {
-  			pte = intel_pasid_get_entry(info->dev, i);
-  			if (!pte || !pasid_pte_is_present(pte))
-
-Best regards,
-baolu
+--kapzi2mpfibvyjib--
