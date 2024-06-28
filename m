@@ -1,15 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D67C6F067
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 21:41:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92D47FBA1
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 21:41:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719610885; cv=none; b=ntK4rz+ApqjGsek4wqdv610YiBQrXsWfpZaG1G2QlcL8yZ9mWh+6woruO1QSyi0qpLGqNwNxudasu73ow9+JYEBPRQylW7CFPOta2ezWRpd/nOGXXDuirkjOBNkGBvHYTiK18NNDh5YTKbWXWk1ydIZzcBb3ezzZ7Y5EjtfX42Q=
+	t=1719610886; cv=none; b=X7nXbub68uJicN0AqxbuAI6clOmcgrNT3ZwfBgbR65nbKwzcdtqGSepRqXgnFv7SLLkE+FI7yYCoS9oaQLPFLdGl/6dA2PzrPTB+TD+pyJGPXdBcEGU2qSV49JUFQuR4vVJXcWLQ6qai2AHmBq1g7w03O+JM2biICSvYYqdZPBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719610885; c=relaxed/simple;
-	bh=o58Hc84fsq+Ltesz0M1Ri/m/Vu9nu/GQw7w2Pw07GJM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=WOfExcQfa00cTGstDViCYh5o6eLJNVTBjvCahpCUeiKWyc73ntbEV+MzDBuZ5inVKK/+ZkI6jdj42qkSN5hsP8xrYew2N0mbJXpm6RlhY12qJu3Q/NFlNQS/0QlLB3WOgZaNVBMMmPAFJZeMOIShkLKmKWyp3yZ3M/EQAneMYko=
+	s=arc-20240116; t=1719610886; c=relaxed/simple;
+	bh=OvmvoxTlE3ZJJWZzo5+0ZT6O7/7t8Xq/1c/0ZsEbLOo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=SLQ7NLeA6BJG/whoJQatf22wdP1JGg3wjrCYEBx5/vFq/AnqJFLxgmxZeh8OB50sKiRimJPXant0r/71R4Ou4y5qqE7ou3xicqSjH1Hevt4/BIpp4Cv4+0ytCIhy7vSfVCihX1zoAG//w3/gHJUSc5e1yG5zKV/oFMXuE4p6nFg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -17,31 +18,29 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <mkl@pengutronix.de>)
-	id 1sNJLM-0001Yf-Pr
-	for linux-kernel@vger.kernel.org; Fri, 28 Jun 2024 23:41:20 +0200
+	id 1sNJLO-0001bN-JS
+	for linux-kernel@vger.kernel.org; Fri, 28 Jun 2024 23:41:22 +0200
 Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <mkl@pengutronix.de>)
-	id 1sNJLM-005h20-22
-	for linux-kernel@vger.kernel.org; Fri, 28 Jun 2024 23:41:20 +0200
+	id 1sNJLN-005h3K-4z
+	for linux-kernel@vger.kernel.org; Fri, 28 Jun 2024 23:41:21 +0200
 Received: from dspam.blackshift.org (localhost [127.0.0.1])
-	by bjornoya.blackshift.org (Postfix) with SMTP id B95D02F609A
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 21:41:19 +0000 (UTC)
+	by bjornoya.blackshift.org (Postfix) with SMTP id CAA002F60B2
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 21:41:20 +0000 (UTC)
 Received: from hardanger.blackshift.org (unknown [172.20.34.65])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(Client did not present a certificate)
-	by bjornoya.blackshift.org (Postfix) with ESMTPS id 7409D2F6070;
-	Fri, 28 Jun 2024 21:41:16 +0000 (UTC)
+	by bjornoya.blackshift.org (Postfix) with ESMTPS id 8842C2F6074;
+	Fri, 28 Jun 2024 21:41:17 +0000 (UTC)
 Received: from [10.11.86.119] (localhost [::1])
-	by hardanger.blackshift.org (OpenSMTPD) with ESMTP id f480d03f;
+	by hardanger.blackshift.org (OpenSMTPD) with ESMTP id 856a58d8;
 	Fri, 28 Jun 2024 21:41:15 +0000 (UTC)
 From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH v4 0/9] can: mcp251xfd: workaround for erratum DS80000789E
- 6 of mcp2518fd
-Date: Fri, 28 Jun 2024 23:40:24 +0200
-Message-Id: <20240628-mcp251xfd-workaround-erratum-6-v4-0-53586f168524@pengutronix.de>
+Date: Fri, 28 Jun 2024 23:40:26 +0200
+Subject: [PATCH v4 2/9] can: mcp251xfd: update errata references
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,11 +48,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAMktf2YC/4WOS27DMAxEr2JwXaaq/EmRVe8RZKFIVEIUkhxKd
- hwYvntd+wBZvgFm5s2QSZgynKoZhEbOnOIKzUcF9m7ijZDdyqCVblSrWgy21+3X5B0+k/waSUN
- 0SCKmDAE71PStbWM77V0N60gv5HnaDs6XnYUew/pT9hCuJhPaFAKXUxWpYKSpfAbDEf4Ld84ly
- WsTHOutsbl0unnnMtao0Bp/pNbro+/UT0/xNhRJkaeDI7gsy/IHjOk/WAIBAAA=
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240628-mcp251xfd-workaround-erratum-6-v4-2-53586f168524@pengutronix.de>
+References: <20240628-mcp251xfd-workaround-erratum-6-v4-0-53586f168524@pengutronix.de>
+In-Reply-To: <20240628-mcp251xfd-workaround-erratum-6-v4-0-53586f168524@pengutronix.de>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
  Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
@@ -64,15 +62,15 @@ Cc: Manivannan Sadhasivam <mani@kernel.org>,
  kernel@pengutronix.de, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>
 X-Mailer: b4 0.15-dev-13183
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5294; i=mkl@pengutronix.de;
- h=from:subject:message-id; bh=o58Hc84fsq+Ltesz0M1Ri/m/Vu9nu/GQw7w2Pw07GJM=;
- b=owEBbQGS/pANAwAKASg4oj56LbxvAcsmYgBmfy3riFtMn/m6WXug0Z/2vR8wzgwrreGll17PM
- D6E4lqA0W6JATMEAAEKAB0WIQRQQLqG4LYE3Sm8Pl8oOKI+ei28bwUCZn8t6wAKCRAoOKI+ei28
- b1m0B/46uu9IUe+c9y5T2RnjSb4IivnAw8sAKJDiMMiocVgfXKjOGT/jruO15g+t58jgB6k/ADf
- EWL8dgescCDazLFIUBeomYHamDn7SffFvWf2YBgaAbJjrci/i7r9+SiUDgZknMdeHHdltY0qxfo
- Y1WkHRwwqeO8c1FtGnYIf9YcEzqjbDOvh1DbIGBp287N+duPUsaPsb4H+IUUEicTbiDPcYSZspD
- iRMB9mtBB56C0vPYYRDw5v8odztYwk3aoxHPNTTHTAFRIBSawgNP7Mo6IRuXKf66hbLuuyrWR1R
- Fb2zv0rFmza8ZniBg/6MFm/JYTqj+QnM42N+9cfTgwLrHyqn
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2546; i=mkl@pengutronix.de;
+ h=from:subject:message-id; bh=OvmvoxTlE3ZJJWZzo5+0ZT6O7/7t8Xq/1c/0ZsEbLOo=;
+ b=owEBbQGS/pANAwAKASg4oj56LbxvAcsmYgBmfy3vypUagknfl0R7JW2vb0VpABGVGpPBNHEes
+ ez2hYBWlMOJATMEAAEKAB0WIQRQQLqG4LYE3Sm8Pl8oOKI+ei28bwUCZn8t7wAKCRAoOKI+ei28
+ b2msCACamUSbuAXN8c7Aum7ZFl5NqVnC007wtM8BzJr6qvj5TuPQl5JFDN7+/awObGPnG+VlAm1
+ AP3//NFOybdfOak2R8f+fJUMtUCBhTYkYS1/jLumHi9ABOKFfUeP0ODqqd4r9AWFLqaJS5S2+Jd
+ h96htHh1cFd/9kTtbVOlr/yl4za3pp82MPs4AV1Nov9W4d+hTNV1o2q0P0EXGrqJguJhPYXpaP4
+ mK77yzd0eHK/1J9PovoiYXtWd6N7ss5vc28sYB0NfPoph4rjAjgU6MHWcZ+DAdsvNLuZTfHQU9Q
+ NlAxvCL1ys7JmrF+xJf70vdRQ22/neQzoGLv7CbyilwcjVra
 X-Developer-Key: i=mkl@pengutronix.de; a=openpgp;
  fpr=C1400BA0B3989E6FBC7D5B5C2B5EE211C58AEA54
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -80,121 +78,68 @@ X-SA-Exim-Mail-From: mkl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hello,
+Since the errata references have been added to the driver, new errata
+sheets have been published. Update the references for the mcp2517fd
+and mcp2518fd. For completeness add references for the mcp251863.
 
-This patch series tries to work around erratum DS80000789E 6 of the
-mcp2518fd, found by Stefan Althöfer, the other variants of the chip
-family (mcp2517fd and mcp251863) are probably also affected.
-
-Erratum DS80000789E 6 says "reading of the FIFOCI bits in the FIFOSTA
-register for an RX FIFO may be corrupted". However observation shows
-that this problem is not limited to RX FIFOs but also effects the TEF
-FIFO.
-
-In the bad case, the driver reads a too large head index. In the
-original code, the driver always trusted the read value.
-
-For the RX FIDO this caused old, already processed CAN frames or new,
-incompletely written CAN frames to be (re-)processed.
-
-To work around this issue, keep a per FIFO timestamp of the last valid
-received CAN frame and compare against the timestamp of every received
-CAN frame.
-
-Further tests showed that this workaround can recognize old CAN
-frames, but a small time window remains in which partially written CAN
-frames are not recognized but then processed. These CAN frames have
-the correct data and time stamps, but the DLC has not yet been
-updated.
-
-For the TEF FIFO the original driver already detects the error, update
-the error handling with the knowledge that it is causes by this erratum.
-
-The series applies against current net/main or net-next/main +
-d8fb63e46c88 ("can: mcp251xfd: fix infinite loop when xmit fails")
-
-regards,
-Marc
-
-Closes: https://lore.kernel.org/all/FR0P281MB1966273C216630B120ABB6E197E89@FR0P281MB1966.DEUP281.PROD.OUTLOOK.COM
 Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 ---
-Changes in v4:
-- 7/9: mcp251xfd_ring_alloc(): replace BITS_PER_TYPE(u8) by
-  BITS_PER_TYPE(rx_ring->obj_num_shift_to_u8) to calculate
-  rx_ring->obj_num_shift_to_u8
-- 7/9 mcp251xfd_get_rx_len(): add BUILD_BUG_ON() to ensure that all
-  variables used in calculation are actually u8
-- 9/9: mcp251xfd_ring_alloc(): replace BITS_PER_TYPE(u8) by
-  BITS_PER_TYPE(tx_ring->obj_num) to calculate
-  tx_ring->obj_num_shift_to_u8
-- 9/9: mcp251xfd_get_tef_len(): add BUILD_BUG_ON() to ensure that all
-  variables used in calculation are actually u8
-- Link to v3: https://lore.kernel.org/all/20240624-mcp251xfd-workaround-erratum-6-v3-0-caf7e5f27f60@pengutronix.de
+ drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-Changes in v3:
-- 1/9: can: mcp251xfd: properly indent labels:
-  - new
-- 2/9: can: mcp251xfd: update errata references:
- - new
-- 3/9: can: mcp251xfd: move mcp251xfd_timestamp_start()/stop() into mcp251xfd_chip_start/stop()
-  - split mcp251xfd_timestamp_init() into mcp251xfd_timestamp_init()
-    and mcp251xfd_timestamp_start()
-  - update patch description
-- 6/9: can: mcp251xfd: rx: prepare to workaround broken RX FIFO head index erratum
-  - update comments  
-  - update patch description
-- 7/9: can: mcp251xfd: rx: add workaround for erratum DS80000789E 6 of mcp2518fd
-  - update comments  
-  - update patch description
-- 8/9: new
-  - import 1/2 from https://lore.kernel.org/all/20230124152729.814840-1-mkl@pengutronix.de
-- 9/9: new
-  - import 2/2 from https://lore.kernel.org/all/20230124152729.814840-1-mkl@pengutronix.de
-- Link to v2: https://lore.kernel.org/all/20230119112842.500709-1-mkl@pengutronix.de
+diff --git a/drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c b/drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c
+index 61e749f97650..ce1610f240a4 100644
+--- a/drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c
++++ b/drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c
+@@ -1135,7 +1135,7 @@ mcp251xfd_handle_modif(const struct mcp251xfd_priv *priv, bool *set_normal_mode)
+ 		return 0;
+ 	}
+ 
+-	/* According to MCP2517FD errata DS80000792B 1., during a TX
++	/* According to MCP2517FD errata DS80000792C 1., during a TX
+ 	 * MAB underflow, the controller will transition to Restricted
+ 	 * Operation Mode or Listen Only Mode (depending on SERR2LOM).
+ 	 *
+@@ -1180,7 +1180,7 @@ static int mcp251xfd_handle_serrif(struct mcp251xfd_priv *priv)
+ 
+ 	/* TX MAB underflow
+ 	 *
+-	 * According to MCP2517FD Errata DS80000792B 1. a TX MAB
++	 * According to MCP2517FD Errata DS80000792C 1. a TX MAB
+ 	 * underflow is indicated by SERRIF and MODIF.
+ 	 *
+ 	 * In addition to the effects mentioned in the Errata, there
+@@ -1224,7 +1224,7 @@ static int mcp251xfd_handle_serrif(struct mcp251xfd_priv *priv)
+ 
+ 	/* RX MAB overflow
+ 	 *
+-	 * According to MCP2517FD Errata DS80000792B 1. a RX MAB
++	 * According to MCP2517FD Errata DS80000792C 1. a RX MAB
+ 	 * overflow is indicated by SERRIF.
+ 	 *
+ 	 * In addition to the effects mentioned in the Errata, (most
+@@ -1331,7 +1331,8 @@ mcp251xfd_handle_eccif(struct mcp251xfd_priv *priv, bool set_normal_mode)
+ 		return err;
+ 
+ 	/* Errata Reference:
+-	 * mcp2517fd: DS80000789B, mcp2518fd: DS80000792C 2.
++	 * mcp2517fd: DS80000789C 3., mcp2518fd: DS80000792E 2.,
++	 * mcp251863: DS80000984A 2.
+ 	 *
+ 	 * ECC single error correction does not work in all cases:
+ 	 *
+@@ -2095,7 +2096,8 @@ static int mcp251xfd_probe(struct spi_device *spi)
+ 	priv->devtype_data = *(struct mcp251xfd_devtype_data *)spi_get_device_match_data(spi);
+ 
+ 	/* Errata Reference:
+-	 * mcp2517fd: DS80000792C 5., mcp2518fd: DS80000789C 4.
++	 * mcp2517fd: DS80000792C 5., mcp2518fd: DS80000789E 4.,
++	 * mcp251863: DS80000984A 4.
+ 	 *
+ 	 * The SPI can write corrupted data to the RAM at fast SPI
+ 	 * speeds:
 
-Changes in v2
-- all:
-  - add proper patch description
-  - added Tested-by
-- 2/5 can: mcp251xfd: clarify the meaning of timestamp:
-  - revisited new naming of variables and functions
-    now we use ts_raw instead of tbc
-- 4/5 can: mcp251xfd: rx: prepare to workaround broken RX:
-  - precalculate shift width needed for full u8 instead of calculating
-    it every time
-- 5/5 can: mcp251xfd: rx: workaround broken RX FIFO head:
-  - remove dumping of old CAN frame in error case
-  - add erratum comments
-- Link to v1: v1: https://lore.kernel.org/all/20230111222042.1139027-1-mkl@pengutronix.de
-
----
-Marc Kleine-Budde (9):
-      can: mcp251xfd: properly indent labels
-      can: mcp251xfd: update errata references
-      can: mcp251xfd: move mcp251xfd_timestamp_start()/stop() into mcp251xfd_chip_start/stop()
-      can: mcp251xfd: clarify the meaning of timestamp
-      can: mcp251xfd: mcp251xfd_handle_rxif_ring_uinc(): factor out in separate function
-      can: mcp251xfd: rx: prepare to workaround broken RX FIFO head index erratum
-      can: mcp251xfd: rx: add workaround for erratum DS80000789E 6 of mcp2518fd
-      can: mcp251xfd: tef: prepare to workaround broken TEF FIFO tail index erratum
-      can: mcp251xfd: tef: update workaround for erratum DS80000789E 6 of mcp2518fd
-
- drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c     |  82 +++++-----
- drivers/net/can/spi/mcp251xfd/mcp251xfd-dump.c     |   2 +-
- drivers/net/can/spi/mcp251xfd/mcp251xfd-regmap.c   |   2 +-
- drivers/net/can/spi/mcp251xfd/mcp251xfd-ring.c     |   5 +
- drivers/net/can/spi/mcp251xfd/mcp251xfd-rx.c       | 165 ++++++++++++++-------
- drivers/net/can/spi/mcp251xfd/mcp251xfd-tef.c      | 129 ++++++++--------
- .../net/can/spi/mcp251xfd/mcp251xfd-timestamp.c    |  29 ++--
- drivers/net/can/spi/mcp251xfd/mcp251xfd.h          |  56 +++----
- 8 files changed, 269 insertions(+), 201 deletions(-)
----
-base-commit: 748e3bbf47212d5e2e22d731328b0c15ee3b85ae
-change-id: 20240505-mcp251xfd-workaround-erratum-6-2e82c4c62fd3
-
-Best regards,
 -- 
-Marc Kleine-Budde <mkl@pengutronix.de>
+2.43.0
 
 
