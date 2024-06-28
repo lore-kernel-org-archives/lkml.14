@@ -1,545 +1,258 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74C81CCCC6;
-	Fri, 28 Jun 2024 17:44:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D13225CE;
+	Fri, 28 Jun 2024 17:45:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719596684; cv=none; b=qyytvfK44CdAC77iWP9UPjhQEw/FKEtijTcL2D0MrlnxO9TYyt1dnvxMZO2SvyMZl4V7vFYHJv0CvwdrmO4hpYPoq+X/cR4WU26UBSVUY/+ap/KI9wQtZsn3ZEaJRou7zNTx2NfSxM8B3WhiDB2q8zH6vp82qfKjqVsd2JOza+E=
+	t=1719596706; cv=none; b=aAcsCWd9FbLbWLYfiViqSLj/0XcHgaSRgHgezbY6clhVx42aCYUbEySL7E+jZotPUScWkgi8IMHXxpL3HlX8j97iuAtmQNoqZYhBVqO7aPn5a2XIc/HmqPCyWZJAHxO4TEurL54Cxu/CZCg8CVI6xcklqNVscaYF5iME1KLf3aU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719596684; c=relaxed/simple;
-	bh=+e5pRsd7m0qEfsifx2aKW/OsCyO9nTrlFwA8xnreXb4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lO4EZ8+7HbSGhxBpTnb94oxiWvbUmBrm4KPLQ4N39Jo8i1W/zS+zI8co1FtYFSiVfk+36ATcvTytatDhf2BfY6fwMFrdlJkqT3L8Pb73XsJ61ZRk31dwwvQU7/MXvsR5FsUYMPjAeCEQh5sUc0k0prFjbytLtaUATeJCllZ40ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=F6eb/672; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1719596706; c=relaxed/simple;
+	bh=aNY+O6cDrcLDSxY03Nb33/NxPiS2cNiMTft/3ON4pLw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=f0DW2KRcxaF6V8Zu/2YO2yiK2XVklIblfVYPOJfdAC6mREv5yTNTKPya/LjrQyWz41cdcsm+56lURX0D1GO/w6egrAa18t/Gvd6Ue46GI/IL0ikb5bkmltzLI4SbLQ420IhmfC8C3DVj6kB4fzC1TsEBihYIE9XGwuF5EErC+h8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=giyKwRNL; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="F6eb/672"
-X-Virus-Scanned: SPAM Filter at disroot.org
-From: Daniel Hejduk <danielhejduk@disroot.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1719596678; bh=+e5pRsd7m0qEfsifx2aKW/OsCyO9nTrlFwA8xnreXb4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=F6eb/672OIIK/j1h+Z30FN71wA7j/jsCAci3xNK+nAthJku+awMUQCptyAaT/4Q5N
-	 e/APFR9qdSi94KN+AdKDx2RHNvAF6vi9fb58BLurGS37+XPlfsJFpaRbrsQn7j9vn5
-	 PpqC4xLs7wmBwux3QtoF+V/D6QuodLWUtMmw/yZiCe0rtKiZ2SJhw/YyX7bcVJfuCY
-	 yzwBYgg/yeIHMZwjaKUuWU6XVjpJ5+occiPjR68oFEfuODfABgnNM0wDK7u2+2o5gz
-	 0p1R8vuOVmvTDkb1UquAg/m1RW4IXDiMuhQIohj8mO0SJYy1sFZvBT8Mg40QdLXxaA
-	 VaK9dFzi2oiLA==
-To: shuah@kernel.org,
-	trenn@suse.com,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Daniel Hejduk <danielhejduk@disroot.org>
-Subject: [PATCH 2/3] Correcting needs work strings and adding new to cpupower's Czech translation
-Date: Fri, 28 Jun 2024 19:44:17 +0200
-Message-ID: <20240628174420.5370-3-danielhejduk@disroot.org>
-In-Reply-To: <20240628174420.5370-1-danielhejduk@disroot.org>
-References: <ba4d74fd-6762-4e9d-8346-5f3384cb60ce@linuxfoundation.org>
- <20240628174420.5370-1-danielhejduk@disroot.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="giyKwRNL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719596704; x=1751132704;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=aNY+O6cDrcLDSxY03Nb33/NxPiS2cNiMTft/3ON4pLw=;
+  b=giyKwRNLufXjrGIXM4FJ69DA0z9FF4isFKoAQivFgMXi8IFmvVxJT7nm
+   aFXnO0muyLvfioO5WfHXMyP9gbVjcwufjfd/LwFrbfq6y+3RXnhSAVhH2
+   TsybQS7GPBWC2U0ihek7oz4Su6VYp7uMg197Zw9DnMhZ9xhD4laGHxibr
+   bi+CuyhAyW1wHmEfFERATjcIm9rT79HiWtsYyGEm2aF4HhJHpSIBJ9aNN
+   wUXd4d9TsRk3Q0H4yP0c06zPwAYQZLtnoxbS3SWm2HfAh5vSHjKOXnHB8
+   GlYxD9sUERH1SipMaX2aukrGTQBdrm2rBhnw5JZu3V1Zy56pen+QwvQ5O
+   Q==;
+X-CSE-ConnectionGUID: FILi8e2pTfWfU9nQu6HTjA==
+X-CSE-MsgGUID: ZXwDT06jSQqBujn2MuHYeg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11117"; a="27379483"
+X-IronPort-AV: E=Sophos;i="6.09,169,1716274800"; 
+   d="scan'208";a="27379483"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 10:45:04 -0700
+X-CSE-ConnectionGUID: vtFp6bmySZm6jlK0kwZSBg==
+X-CSE-MsgGUID: 149hKepYTu63vL+i+3kR2w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,169,1716274800"; 
+   d="scan'208";a="45471201"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.49.253])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 10:44:57 -0700
+Message-ID: <d36acf6a-1505-459d-b392-be0fc952ad08@intel.com>
+Date: Fri, 28 Jun 2024 20:44:50 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/27] perf auxevent: Zero size dummy tool
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ James Clark <james.clark@arm.com>, Mike Leach <mike.leach@linaro.org>,
+ Leo Yan <leo.yan@linux.dev>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Yicong Yang <yangyicong@hisilicon.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Nick Terrell <terrelln@fb.com>, Nick Desaulniers <ndesaulniers@google.com>,
+ Oliver Upton <oliver.upton@linux.dev>,
+ Anshuman Khandual <anshuman.khandual@arm.com>, Song Liu <song@kernel.org>,
+ Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+ Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>,
+ Sun Haiyong <sunhaiyong@loongson.cn>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20240626203630.1194748-1-irogers@google.com>
+ <20240626203630.1194748-2-irogers@google.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20240626203630.1194748-2-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-The translation was very poor probably translated by machine.
+In subject: "auxevent" -> "auxtrace"
 
-Signed-off-by: Daniel Hejduk <danielhejduk@disroot.org>
----
- tools/power/cpupower/po/cs.po | 166 ++++++++++++++++++----------------
- 1 file changed, 88 insertions(+), 78 deletions(-)
+On 26/06/24 23:36, Ian Rogers wrote:
+> The dummy tool is passed as a placeholder to allow a container_of to
+> get additional parameters. As the tool isn't used, make it a zero
+> sized array saving 320 bytes on an x86_64 build.
+> 
+> s390-cpumsf's dummy tool struct was unused, so remove.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/arm-spe.c     | 6 +++---
+>  tools/perf/util/cs-etm.c      | 6 +++---
+>  tools/perf/util/intel-bts.c   | 6 +++---
+>  tools/perf/util/intel-pt.c    | 7 +++----
+>  tools/perf/util/s390-cpumsf.c | 5 -----
+>  5 files changed, 12 insertions(+), 18 deletions(-)
+> 
+> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+> index afbd5869f6bf..ee0d5064ddd4 100644
+> --- a/tools/perf/util/arm-spe.c
+> +++ b/tools/perf/util/arm-spe.c
+> @@ -1074,8 +1074,8 @@ static void arm_spe_print_info(__u64 *arr)
+>  }
+>  
+>  struct arm_spe_synth {
+> -	struct perf_tool dummy_tool;
+>  	struct perf_session *session;
+> +	struct perf_tool dummy_tool[0];
 
-diff --git a/tools/power/cpupower/po/cs.po b/tools/power/cpupower/po/cs.po
-index 8956f00bc..39f4ce65a 100644
---- a/tools/power/cpupower/po/cs.po
-+++ b/tools/power/cpupower/po/cs.po
-@@ -10,43 +10,43 @@ msgstr ""
- "Project-Id-Version: cs\n"
- "Report-Msgid-Bugs-To: \n"
- "POT-Creation-Date: 2011-03-08 17:03+0100\n"
--"PO-Revision-Date: 2008-06-11 16:26+0200\n"
-+"PO-Revision-Date: 2024-06-27 10:49+0200\n"
- "Last-Translator: Daniel Hejduk <danielhejduk@disroot.org>\n"
- "Language-Team: Czech <diskuze@lists.l10n.cz>\n"
- "Language: cs\n"
- "MIME-Version: 1.0\n"
- "Content-Type: text/plain; charset=UTF-8\n"
- "Content-Transfer-Encoding: 8bit\n"
--"Plural-Forms:  nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
--"X-Generator: KBabel 1.11.4\n"
-+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-+"X-Generator: Poedit 3.4.4\n"
- 
- #: utils/idle_monitor/nhm_idle.c:36
- msgid "Processor Core C3"
--msgstr ""
-+msgstr "Procesor Core C3"
- 
- #: utils/idle_monitor/nhm_idle.c:43
- msgid "Processor Core C6"
--msgstr ""
-+msgstr "Procesor Core C6"
- 
- #: utils/idle_monitor/nhm_idle.c:51
- msgid "Processor Package C3"
--msgstr ""
-+msgstr "Procesorový balíček C3"
- 
- #: utils/idle_monitor/nhm_idle.c:58 utils/idle_monitor/amd_fam14h_idle.c:70
- msgid "Processor Package C6"
--msgstr ""
-+msgstr "Procesorový balíček C6"
- 
- #: utils/idle_monitor/snb_idle.c:33
- msgid "Processor Core C7"
--msgstr ""
-+msgstr "Procesor Core C7"
- 
- #: utils/idle_monitor/snb_idle.c:40
- msgid "Processor Package C2"
--msgstr ""
-+msgstr "Procesorový balíček C2"
- 
- #: utils/idle_monitor/snb_idle.c:47
- msgid "Processor Package C7"
--msgstr ""
-+msgstr "Procesorový balíček C7"
- 
- #: utils/idle_monitor/amd_fam14h_idle.c:56
- msgid "Package in sleep state (PC1 or deeper)"
-@@ -54,7 +54,7 @@ msgstr ""
- 
- #: utils/idle_monitor/amd_fam14h_idle.c:63
- msgid "Processor Package C1"
--msgstr ""
-+msgstr "Procesorový balíček C1"
- 
- #: utils/idle_monitor/amd_fam14h_idle.c:77
- msgid "North Bridge P1 boolean counter (returns 0 or 1)"
-@@ -62,15 +62,15 @@ msgstr ""
- 
- #: utils/idle_monitor/mperf_monitor.c:35
- msgid "Processor Core not idle"
--msgstr ""
-+msgstr "Procesor Core není v klidovém stavu"
- 
- #: utils/idle_monitor/mperf_monitor.c:42
- msgid "Processor Core in an idle state"
--msgstr ""
-+msgstr "Procesor Core je v klidovém stavu"
- 
- #: utils/idle_monitor/mperf_monitor.c:50
- msgid "Average Frequency (including boost) in MHz"
--msgstr ""
-+msgstr "Průměrná frekvence (včetně boostu) v MHz"
- 
- #: utils/idle_monitor/cpupower-monitor.c:66
- #, c-format
-@@ -78,6 +78,8 @@ msgid ""
- "cpupower monitor: [-h] [ [-t] | [-l] | [-m <mon1>,[<mon2>] ] ] [-i "
- "interval_sec | -c command ...]\n"
- msgstr ""
-+"cpupower monitor: [-h] [ [-t] | [-l] | [-m <mon1>,[<mon2>] ] ] [-i "
-+"interní_sekundy | -c příkaz ...]\n"
- 
- #: utils/idle_monitor/cpupower-monitor.c:69
- #, c-format
-@@ -85,21 +87,23 @@ msgid ""
- "cpupower monitor: [-v] [-h] [ [-t] | [-l] | [-m <mon1>,[<mon2>] ] ] [-i "
- "interval_sec | -c command ...]\n"
- msgstr ""
-+"cpupower monitor: [-v] [-h] [ [-t] | [-l] | [-m <mon1>,[<mon2>] ] ] [-i "
-+"interní_sekundy | -c příkaz ...]\n"
- 
- #: utils/idle_monitor/cpupower-monitor.c:71
- #, c-format
- msgid "\t -v: be more verbose\n"
--msgstr ""
-+msgstr "\t -v: být víc upovídaný\n"
- 
- #: utils/idle_monitor/cpupower-monitor.c:73
- #, c-format
- msgid "\t -h: print this help\n"
--msgstr ""
-+msgstr "\t-h, --help: Vypíše tuto nápovědu\n"
- 
- #: utils/idle_monitor/cpupower-monitor.c:74
- #, c-format
- msgid "\t -i: time interval to measure for in seconds (default 1)\n"
--msgstr ""
-+msgstr "\t -i: časové intervaly pro měření v sekundách (výchozí 1)\n"
- 
- #: utils/idle_monitor/cpupower-monitor.c:75
- #, c-format
-@@ -222,7 +226,7 @@ msgstr ""
- #: utils/cpupower.c:114
- #, c-format
- msgid "Error parsing cpu list\n"
--msgstr ""
-+msgstr "Chyba v parsování procesorového listu\n"
- 
- #: utils/cpupower.c:172
- #, c-format
-@@ -259,25 +263,25 @@ msgstr ""
- #: utils/cpufreq-info.c:163
- #, c-format
- msgid "    Supported: %s\n"
--msgstr ""
-+msgstr "    Podporováno: %s\n"
- 
- #: utils/cpufreq-info.c:163 utils/cpufreq-info.c:164
- msgid "yes"
--msgstr ""
-+msgstr "ano"
- 
- #: utils/cpufreq-info.c:163 utils/cpufreq-info.c:164
- msgid "no"
--msgstr ""
-+msgstr "ne"
- 
- #: utils/cpufreq-info.c:164
--#, fuzzy, c-format
-+#, c-format
- msgid "    Active: %s\n"
--msgstr "  ovladač: %s\n"
-+msgstr "    Aktivní: %s\n"
- 
- #: utils/cpufreq-info.c:177
- #, c-format
- msgid "    Boost States: %d\n"
--msgstr ""
-+msgstr "    Boostové stavy: %d\n"
- 
- #: utils/cpufreq-info.c:178
- #, c-format
-@@ -305,14 +309,14 @@ msgid "  driver: %s\n"
- msgstr "  ovladač: %s\n"
- 
- #: utils/cpufreq-info.c:219
--#, fuzzy, c-format
-+#, c-format
- msgid "  CPUs which run at the same hardware frequency: "
--msgstr "  CPU, které musí měnit frekvenci zároveň: "
-+msgstr "  Procesory, které jsou na stejné hardwarové frekvenci: "
- 
- #: utils/cpufreq-info.c:230
--#, fuzzy, c-format
-+#, c-format
- msgid "  CPUs which need to have their frequency coordinated by software: "
--msgstr "  CPU, které musí měnit frekvenci zároveň: "
-+msgstr "  Procesory, které musí mít jejich frekvenci ovládanou softwarem: "
- 
- #: utils/cpufreq-info.c:241
- #, c-format
-@@ -350,7 +354,7 @@ msgid ""
- "The governor \"%s\" may decide which speed to use\n"
- "                  within this range.\n"
- msgstr ""
--"  Regulátor \"%s\" může rozhodnout jakou frekvenci použít\n"
-+"Regulátor \"%s\" může rozhodnout jakou frekvenci použít\n"
- "                    v těchto mezích.\n"
- 
- #: utils/cpufreq-info.c:293
-@@ -369,9 +373,9 @@ msgid "  cpufreq stats: "
- msgstr "  statistika cpufreq: "
- 
- #: utils/cpufreq-info.c:472
--#, fuzzy, c-format
-+#, c-format
- msgid "Usage: cpupower freqinfo [options]\n"
--msgstr "Užití: cpufreq-info [přepínače]\n"
-+msgstr "Užití: cpupower freqinfo [přepínače]\n"
- 
- #: utils/cpufreq-info.c:473 utils/cpufreq-set.c:26 utils/cpupower-set.c:23
- #: utils/cpupower-info.c:22 utils/cpuidle-info.c:148
-@@ -380,7 +384,7 @@ msgid "Options:\n"
- msgstr "Přepínače:\n"
- 
- #: utils/cpufreq-info.c:474
--#, fuzzy, c-format
-+#, c-format
- msgid "  -e, --debug          Prints out debug information [default]\n"
- msgstr "  -e, --debug          Vypíše ladicí informace\n"
- 
-@@ -427,20 +431,21 @@ msgid "  -g, --governors      Determines available cpufreq governors *\n"
- msgstr "  -g, --governors      Zjistí dostupné regulátory cpufreq *\n"
- 
- #: utils/cpufreq-info.c:483
--#, fuzzy, c-format
-+#, c-format
- msgid ""
- "  -r, --related-cpus   Determines which CPUs run at the same hardware "
- "frequency *\n"
- msgstr ""
--"  -a, --affected-cpus  Zjistí, které CPU musí měnit frekvenci zároveň *\n"
-+"  -r, --related-cpus  Zjistí, které procesory jsou na stejné frekvenci *\n"
- 
- #: utils/cpufreq-info.c:484
--#, fuzzy, c-format
-+#, c-format
- msgid ""
- "  -a, --affected-cpus  Determines which CPUs need to have their frequency\n"
- "                       coordinated by software *\n"
- msgstr ""
--"  -a, --affected-cpus  Zjistí, které CPU musí měnit frekvenci zároveň *\n"
-+"  -a, --affected-cpus  Zjistí, které procesory musí mít svoji frekvenci\n"
-+"                       ovládanou softwarem *\n"
- 
- #: utils/cpufreq-info.c:486
- #, c-format
-@@ -448,13 +453,13 @@ msgid "  -s, --stats          Shows cpufreq statistics if available\n"
- msgstr "  -s, --stats          Zobrazí statistiku cpufreq, je-li dostupná\n"
- 
- #: utils/cpufreq-info.c:487
--#, fuzzy, c-format
-+#, c-format
- msgid ""
- "  -y, --latency        Determines the maximum latency on CPU frequency "
- "changes *\n"
- msgstr ""
--"  -l, --hwlimits       Zjistí minimální a maximální dostupnou frekvenci CPU "
--"*\n"
-+"  -y, --latency        Zjistí maximální latenci na změně procesorové "
-+"frekvence *\n"
- 
- #: utils/cpufreq-info.c:488
- #, c-format
-@@ -468,16 +473,17 @@ msgid ""
- "cpufreq\n"
- "                       interface in 2.4. and early 2.6. kernels\n"
- msgstr ""
--"  -o, --proc           Vypíše informace ve formátu, jaký používalo rozhraní\n"
-+"  -o, --proc           Vypíše informace ve formátu, jaký používalo "
-+"rozhraní\n"
- "                       /proc/cpufreq v kernelech řady 2.4 a časné 2.6\n"
- 
- #: utils/cpufreq-info.c:491
--#, fuzzy, c-format
-+#, c-format
- msgid ""
- "  -m, --human          human-readable output for the -f, -w, -s and -y "
- "parameters\n"
- msgstr ""
--"  -m, --human          Výstup parametrů -f, -w a -s v „lidmi čitelném“ "
-+"  -m, --human          Výstup parametrů -f, -w a -s a -y v „lidmi čitelném“ "
- "formátu\n"
- 
- #: utils/cpufreq-info.c:492 utils/cpuidle-info.c:152
-@@ -488,12 +494,14 @@ msgstr "  -h, --help           Vypíše tuto nápovědu\n"
- #: utils/cpufreq-info.c:495
- #, c-format
- msgid ""
--"If no argument or only the -c, --cpu parameter is given, debug output about\n"
-+"If no argument or only the -c, --cpu parameter is given, debug output "
-+"about\n"
- "cpufreq is printed which is useful e.g. for reporting bugs.\n"
- msgstr ""
- "Není-li zadán žádný parametr nebo je-li zadán pouze přepínač -c, --cpu, "
- "jsou\n"
--"vypsány ladicí informace, což může být užitečné například při hlášení chyb.\n"
-+"vypsány ladicí informace, což může být užitečné například při hlášení "
-+"chyb.\n"
- 
- #: utils/cpufreq-info.c:497
- #, c-format
-@@ -509,7 +517,8 @@ msgstr ""
- msgid ""
- "The argument passed to this tool can't be combined with passing a --cpu "
- "argument\n"
--msgstr "Zadaný parametr nemůže být použit zároveň s přepínačem -c nebo --cpu\n"
-+msgstr ""
-+"Zadaný parametr nemůže být použit zároveň s přepínačem -c nebo --cpu\n"
- 
- #: utils/cpufreq-info.c:596
- #, c-format
-@@ -537,9 +546,9 @@ msgid "analyzing CPU %d:\n"
- msgstr "analyzuji CPU %d:\n"
- 
- #: utils/cpufreq-set.c:25
--#, fuzzy, c-format
-+#, c-format
- msgid "Usage: cpupower frequency-set [options]\n"
--msgstr "Užití: cpufreq-set [přepínače]\n"
-+msgstr "Užití: cpupower frequency-set [přepínače]\n"
- 
- #: utils/cpufreq-set.c:27
- #, c-format
-@@ -567,7 +576,8 @@ msgstr "  -g GOV, --governors GOV  Nový regulátor cpufreq\n"
- #: utils/cpufreq-set.c:30
- #, c-format
- msgid ""
--"  -f FREQ, --freq FREQ     specific frequency to be set. Requires userspace\n"
-+"  -f FREQ, --freq FREQ     specific frequency to be set. Requires "
-+"userspace\n"
- "                           governor to be available and loaded\n"
- msgstr ""
- "  -f FREQ, --freq FREQ     Frekvence, která má být nastavena. Vyžaduje, aby "
-@@ -580,21 +590,22 @@ msgid "  -r, --related            Switches all hardware-related CPUs\n"
- msgstr ""
- 
- #: utils/cpufreq-set.c:33 utils/cpupower-set.c:28 utils/cpupower-info.c:27
--#, fuzzy, c-format
-+#, c-format
- msgid "  -h, --help               Prints out this screen\n"
- msgstr "  -h, --help           Vypíše tuto nápovědu\n"
- 
- #: utils/cpufreq-set.c:35
--#, fuzzy, c-format
-+#, c-format
- msgid ""
- "Notes:\n"
--"1. Omitting the -c or --cpu argument is equivalent to setting it to \"all\"\n"
-+"1. Omitting the -c or --cpu argument is equivalent to setting it to "
-+"\"all\"\n"
- msgstr ""
--"Není-li při použití přepínačů označených * zadán parametr -c nebo --cpu,\n"
--"předpokládá se jeho hodnota 0.\n"
-+"Poznámky:\n"
-+"1. Vynechání -c nebo --cpu přepínače je ekvivalent na nastavení \"all\"\n"
- 
- #: utils/cpufreq-set.c:37
--#, fuzzy, c-format
-+#, c-format
- msgid ""
- "2. The -f FREQ, --freq FREQ parameter cannot be combined with any other "
- "parameter\n"
-@@ -603,12 +614,11 @@ msgid ""
- "   by postfixing the value with the wanted unit name, without any space\n"
- "   (FREQuency in kHz =^ Hz * 0.001 =^ MHz * 1000 =^ GHz * 1000000).\n"
- msgstr ""
--"Poznámky:\n"
--"1. Vynechání parametru -c nebo --cpu je ekvivalentní jeho nastavení na 0\n"
- "2. Přepínač -f nebo --freq nemůže být použit zároveň s žádným jiným vyjma -"
- "c\n"
- "   nebo --cpu\n"
--"3. Frekvence (FREQ) mohou být zadány v Hz, kHz (výchozí), MHz, GHz nebo THz\n"
-+"3. Frekvence (FREQ) mohou být zadány v Hz, kHz (výchozí), MHz, GHz nebo "
-+"THz\n"
- "   připojením názvu jednotky bez mezery mezi číslem a jednotkou\n"
- "   (FREQ v kHz =^ Hz * 0,001 = ^ MHz * 1000 =^ GHz * 1000000)\n"
- 
-@@ -659,7 +669,7 @@ msgstr ""
- #: utils/cpufreq-set.c:347
- #, c-format
- msgid "Setting cpu: %d\n"
--msgstr ""
-+msgstr "Nastavuji procesor:%d\n"
- 
- #: utils/cpupower-set.c:22
- #, c-format
-@@ -729,9 +739,9 @@ msgid ""
- msgstr ""
- 
- #: utils/cpupower-info.c:25
--#, fuzzy, c-format
-+#, c-format
- msgid "  -m, --sched-mc     Gets the kernel's multi core scheduler policy.\n"
--msgstr "  -p, --policy         Zjistí aktuální taktiku cpufreq *\n"
-+msgstr "  -m, --sched-mc     Zjistí pravidla pro multi jádrové plánování\n"
- 
- #: utils/cpupower-info.c:26
- #, c-format
-@@ -783,9 +793,9 @@ msgid "perf-bias: %d\n"
- msgstr ""
- 
- #: utils/cpuidle-info.c:28
--#, fuzzy, c-format
-+#, c-format
- msgid "Analyzing CPU %d:\n"
--msgstr "analyzuji CPU %d:\n"
-+msgstr "Analyzování procesoru %d:\n"
- 
- #: utils/cpuidle-info.c:32
- #, c-format
-@@ -808,9 +818,9 @@ msgid "Number of idle states: %d\n"
- msgstr ""
- 
- #: utils/cpuidle-info.c:48
--#, fuzzy, c-format
-+#, c-format
- msgid "Available idle states:"
--msgstr "  dostupné frekvence: "
-+msgstr "Dostupné frekvence:"
- 
- #: utils/cpuidle-info.c:71
- #, c-format
-@@ -820,7 +830,7 @@ msgstr ""
- #: utils/cpuidle-info.c:74
- #, c-format
- msgid "Latency: %lu\n"
--msgstr ""
-+msgstr "Latence: %lu\n"
- 
- #: utils/cpuidle-info.c:76
- #, c-format
-@@ -838,9 +848,9 @@ msgid "Could not determine cpuidle driver\n"
- msgstr ""
- 
- #: utils/cpuidle-info.c:94
--#, fuzzy, c-format
-+#, c-format
- msgid "CPUidle driver: %s\n"
--msgstr "  ovladač: %s\n"
-+msgstr "ovladač: %s\n"
- 
- #: utils/cpuidle-info.c:99
- #, c-format
-@@ -876,7 +886,7 @@ msgstr ""
- #: utils/cpuidle-info.c:130
- #, c-format
- msgid "states:\t\n"
--msgstr ""
-+msgstr "stavy:\t\n"
- 
- #: utils/cpuidle-info.c:132
- #, c-format
-@@ -904,31 +914,31 @@ msgid "duration[%020Lu] \n"
- msgstr ""
- 
- #: utils/cpuidle-info.c:147
--#, fuzzy, c-format
-+#, c-format
- msgid "Usage: cpupower idleinfo [options]\n"
--msgstr "Užití: cpufreq-info [přepínače]\n"
-+msgstr "Užití: cpupower idleinfo [přepínače]\n"
- 
- #: utils/cpuidle-info.c:149
--#, fuzzy, c-format
-+#, c-format
- msgid "  -s, --silent         Only show general C-state information\n"
--msgstr "  -e, --debug          Vypíše ladicí informace\n"
-+msgstr "  -s, --silent          Ukáže pouze základní informace o C-stavech\n"
- 
- #: utils/cpuidle-info.c:150
--#, fuzzy, c-format
-+#, c-format
- msgid ""
- "  -o, --proc           Prints out information like provided by the /proc/"
- "acpi/processor/*/power\n"
- "                       interface in older kernels\n"
- msgstr ""
--"  -o, --proc           Vypíše informace ve formátu, jaký používalo rozhraní\n"
--"                       /proc/cpufreq v kernelech řady 2.4 a časné 2.6\n"
-+"  -o, --proc           Vypíše informace které jsou obsaženy v /proc/acpi/"
-+"processor/*/power\n"
-+"                       rozhraní ve starších verzích jádra\n"
- 
- #: utils/cpuidle-info.c:209
--#, fuzzy, c-format
-+#, c-format
- msgid "You can't specify more than one output-specific argument\n"
- msgstr ""
--"Nelze zadat více než jeden parametr -c nebo --cpu\n"
--"anebo více než jeden parametr určující výstup\n"
-+"Nemůžeš specifikovat více jak jeden přepínač pro nastavování vypisování\n"
- 
- #~ msgid ""
- #~ "  -c CPU, --cpu CPU    CPU number which information shall be determined "
--- 
-2.45.2
+[] is preferred to [0]
+
+>  };
+>  
+>  static int arm_spe_event_synth(struct perf_tool *tool,
+> @@ -1084,7 +1084,7 @@ static int arm_spe_event_synth(struct perf_tool *tool,
+>  			       struct machine *machine __maybe_unused)
+>  {
+>  	struct arm_spe_synth *arm_spe_synth =
+> -		      container_of(tool, struct arm_spe_synth, dummy_tool);
+> +		      container_of(tool, struct arm_spe_synth, dummy_tool[0]);
+>  
+>  	return perf_session__deliver_synth_event(arm_spe_synth->session,
+>  						 event, NULL);
+> @@ -1098,7 +1098,7 @@ static int arm_spe_synth_event(struct perf_session *session,
+>  	memset(&arm_spe_synth, 0, sizeof(struct arm_spe_synth));
+>  	arm_spe_synth.session = session;
+>  
+> -	return perf_event__synthesize_attr(&arm_spe_synth.dummy_tool, attr, 1,
+> +	return perf_event__synthesize_attr(arm_spe_synth.dummy_tool, attr, 1,
+
+Passing a pointer to an object that doesn't exist there is NAK IMO
+
+It would be better to just write another version of
+perf_event__synthesize_attr().
+
+>  					   &id, arm_spe_event_synth);
+>  }
+>  
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 32818bd7cd17..9fd2967d4e3f 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -1596,8 +1596,8 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
+>  }
+>  
+>  struct cs_etm_synth {
+> -	struct perf_tool dummy_tool;
+>  	struct perf_session *session;
+> +	struct perf_tool dummy_tool[0];
+>  };
+>  
+>  static int cs_etm__event_synth(struct perf_tool *tool,
+> @@ -1606,7 +1606,7 @@ static int cs_etm__event_synth(struct perf_tool *tool,
+>  			       struct machine *machine __maybe_unused)
+>  {
+>  	struct cs_etm_synth *cs_etm_synth =
+> -		      container_of(tool, struct cs_etm_synth, dummy_tool);
+> +		      container_of(tool, struct cs_etm_synth, dummy_tool[0]);
+>  
+>  	return perf_session__deliver_synth_event(cs_etm_synth->session,
+>  						 event, NULL);
+> @@ -1620,7 +1620,7 @@ static int cs_etm__synth_event(struct perf_session *session,
+>  	memset(&cs_etm_synth, 0, sizeof(struct cs_etm_synth));
+>  	cs_etm_synth.session = session;
+>  
+> -	return perf_event__synthesize_attr(&cs_etm_synth.dummy_tool, attr, 1,
+> +	return perf_event__synthesize_attr(cs_etm_synth.dummy_tool, attr, 1,
+>  					   &id, cs_etm__event_synth);
+>  }
+>  
+> diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
+> index ec1b3bd9f530..fb8fec3a3c36 100644
+> --- a/tools/perf/util/intel-bts.c
+> +++ b/tools/perf/util/intel-bts.c
+> @@ -738,8 +738,8 @@ static bool intel_bts_evsel_is_auxtrace(struct perf_session *session,
+>  }
+>  
+>  struct intel_bts_synth {
+> -	struct perf_tool dummy_tool;
+>  	struct perf_session *session;
+> +	struct perf_tool dummy_tool[0];
+>  };
+>  
+>  static int intel_bts_event_synth(struct perf_tool *tool,
+> @@ -748,7 +748,7 @@ static int intel_bts_event_synth(struct perf_tool *tool,
+>  				 struct machine *machine __maybe_unused)
+>  {
+>  	struct intel_bts_synth *intel_bts_synth =
+> -			container_of(tool, struct intel_bts_synth, dummy_tool);
+> +			container_of(tool, struct intel_bts_synth, dummy_tool[0]);
+>  
+>  	return perf_session__deliver_synth_event(intel_bts_synth->session,
+>  						 event, NULL);
+> @@ -762,7 +762,7 @@ static int intel_bts_synth_event(struct perf_session *session,
+>  	memset(&intel_bts_synth, 0, sizeof(struct intel_bts_synth));
+>  	intel_bts_synth.session = session;
+>  
+> -	return perf_event__synthesize_attr(&intel_bts_synth.dummy_tool, attr, 1,
+> +	return perf_event__synthesize_attr(intel_bts_synth.dummy_tool, attr, 1,
+>  					   &id, intel_bts_event_synth);
+>  }
+>  
+> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+> index d6d7b7512505..b8b90773baa2 100644
+> --- a/tools/perf/util/intel-pt.c
+> +++ b/tools/perf/util/intel-pt.c
+> @@ -3660,8 +3660,8 @@ static int intel_pt_queue_data(struct perf_session *session,
+>  }
+>  
+>  struct intel_pt_synth {
+> -	struct perf_tool dummy_tool;
+>  	struct perf_session *session;
+> +	struct perf_tool dummy_tool[0];
+>  };
+>  
+>  static int intel_pt_event_synth(struct perf_tool *tool,
+> @@ -3670,7 +3670,7 @@ static int intel_pt_event_synth(struct perf_tool *tool,
+>  				struct machine *machine __maybe_unused)
+>  {
+>  	struct intel_pt_synth *intel_pt_synth =
+> -			container_of(tool, struct intel_pt_synth, dummy_tool);
+> +			container_of(tool, struct intel_pt_synth, dummy_tool[0]);
+>  
+>  	return perf_session__deliver_synth_event(intel_pt_synth->session, event,
+>  						 NULL);
+> @@ -3687,8 +3687,7 @@ static int intel_pt_synth_event(struct perf_session *session, const char *name,
+>  
+>  	memset(&intel_pt_synth, 0, sizeof(struct intel_pt_synth));
+>  	intel_pt_synth.session = session;
+> -
+> -	err = perf_event__synthesize_attr(&intel_pt_synth.dummy_tool, attr, 1,
+> +	err = perf_event__synthesize_attr(intel_pt_synth.dummy_tool, attr, 1,
+>  					  &id, intel_pt_event_synth);
+>  	if (err)
+>  		pr_err("%s: failed to synthesize '%s' event type\n",
+> diff --git a/tools/perf/util/s390-cpumsf.c b/tools/perf/util/s390-cpumsf.c
+> index 6fe478b0b61b..4ec583e511af 100644
+> --- a/tools/perf/util/s390-cpumsf.c
+> +++ b/tools/perf/util/s390-cpumsf.c
+> @@ -952,11 +952,6 @@ s390_cpumsf_process_event(struct perf_session *session,
+>  	return err;
+>  }
+>  
+> -struct s390_cpumsf_synth {
+> -	struct perf_tool cpumsf_tool;
+> -	struct perf_session *session;
+> -};
+
+Should really be a separate patch
+
+> -
+>  static int
+>  s390_cpumsf_process_auxtrace_event(struct perf_session *session,
+>  				   union perf_event *event __maybe_unused,
 
