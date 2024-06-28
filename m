@@ -1,148 +1,100 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD8C14E2E6;
-	Fri, 28 Jun 2024 08:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C0E14F9C9
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 08:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719563548; cv=none; b=qM9HWMkm1UtEVPmO7so7uN7NBMbBPTYPRB1OgjazVfkwl/VRHSqpVFHUYjikJePRoTR+6RZdaZybZffApGx5FkjLk0nlSyV/tJvE9CiNZIFDJ3+Hy8FchlmEE2YbiM9RitaqvMD4b6V2+q3OWscB23yA2JWg/6xVcvnUFhreNTQ=
+	t=1719563549; cv=none; b=m6Mbqpp4jeNhnqoojPW02xUz/F7wyk64MzVLyBWeWmrDZV1OoUSB0ikPl3doiLSNfd95EMcQfvcFKzz1WJLnfrSkDoh+ouy1UiJeAjX13HyYqGmRAUDYA4GW40GCkDzzAfyDIIMEa7lSvKcHTIS0EwGpX4prwNfUbgxGw0sDiHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719563548; c=relaxed/simple;
-	bh=aL5K60kyLaYT4Dy60EU0ucdDsNgnwxZmlu7fj1i/ycc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ayxMxeSyv/OYT03vyw1xK68tkQSQBwgFYctChEQ110bPrhUbYPSkLChtWj/vnLf6ooJwo3pYCNFKb/WSehzvZB6AZ0gtU15iq3JdbhUY+0Y1M5srEIWOStlH6WWb9aYzGlwRRiZmlOK3unhticbu7+yOLqWc4Ad5NzrprPGFsBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=G9Gb9Wo2; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1719563549; c=relaxed/simple;
+	bh=r7+eakRvT7ZiZ9WyL9rTTM6ysWPSIZYFNimdjEgNIJM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gI3NrZJivY7BWW9YEOGc1NsvOMdb9mZNUnaWijvPN6Rvpr1HAHW43l6Z5CxGr8+nVWMeC8CltIWFOY1j2QJsk0yjqju5xZxIv9kPThm2+qdolqN0PdbtIUqiVk45c1Ku9IanDtOuRlc3X3RoV6kYubHcTE7dP33ptyuGAob1zVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hfKvL5gl; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="G9Gb9Wo2"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A94714000D;
-	Fri, 28 Jun 2024 08:32:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1719563544;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8tG0Gf3/ayOMX1nsiE8dmm2OLilLLfJ1kVbKcOdcWgc=;
-	b=G9Gb9Wo2kxHls5K4sjfzF7LUQNIXai66n39n6ZKlePLrkKmZJtZBSm8mDSP0hRSQ8c2G0Y
-	2CyMoezTd01BdT3Iv/lLR2Ty0fhrDnE4gEquJkTnfkW0NLMBYMR1G9rmOo9XrJGYzh21q8
-	LS5LWZ4T8FFhqK+jwfkXY8Fg1jAkZefQSTYDK3K03UM4cD1o2zTgWO9t9doPstVCQ365GB
-	XY5+rauXzdSF4CM4SDxIZKFpzFaMnV1kYF1+kQ/PrHlL8/Zc+S5j/Oy9To3px1syXsHC6X
-	a6krfOSlNnsX9MBzBduIuvF7LmKkLtfVNuT2HD+cBYc11x0+/PUs6VoegCAyGA==
-From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Fri, 28 Jun 2024 10:31:59 +0200
-Subject: [PATCH net-next v5 6/7] netlink: specs: Expand the PSE netlink
- command with C33 pw-limit attributes
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hfKvL5gl"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52e7693c369so446785e87.3
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 01:32:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719563545; x=1720168345; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RJwxeW+GDgd+YjrwH0bRPELomJst4fhgHNABgR77E/Q=;
+        b=hfKvL5glJDWnkKCm3Pt3eedbEmaBuw/7vyCk3OJF9HGv9Ejiav107XtJRaoLPNwhCL
+         iFXdyy1BmoZHSSLowdvwOqnsHlrIYE+f43kdkrUWdAitJHMZIVrf2ZQ1BgjZSAT3/FCa
+         l959aEQhv82XzlWxSnBKtmAHNBiYuP/1Rd0nBSDKcxJfBhIMaDuNkNspmTQv2RsqKnu+
+         Ep4QlT78UaLmdgzKIzK5uqem0ABVikJ+s7OodD7AaLuynb4Ee9sOci+QAm5sphY6il77
+         F5yIBE6DgooLxFKvsmsCL9ghj80UidYQTSr+KXPfvwQrPp0B7ETLJKhItPKXt6HDtLN3
+         xNJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719563545; x=1720168345;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RJwxeW+GDgd+YjrwH0bRPELomJst4fhgHNABgR77E/Q=;
+        b=Dy7g5WeVlzkkZyteW4MKy3Y2UROS4xOdmXX4wTb572/SD0mRvkb0lqxsY6JT9c0cAM
+         7UwWHikqsPNQA7qaKW7c9+TxH2iIMo25iUYhV4qA95aqesTHGB26JuOJnofkn3+GmUmD
+         TlK4JuIQ3QTdlh3VNl5EcS+9DxJrdcDvDFqlSKlprQ6VBZKWoIRXl/ynF/OIkXuP8aW4
+         WrU4xuFQjJthRjmlm4X7x3wkR5ekWlN5D0fo9ET/Wkk1+SwWdM/TulBTwopA6vPwtQ1M
+         sZTTNjOn9TW796epwPJS3+rofhPuNtjCBmZMtCy0+EzoI3RflGTV880iu13N00glQdZD
+         YiEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWTtje8f3qI1zqsvhXJCLscUnlCbW/PcjJTF27IHxrZDogbkuchp5bgfThyP57Ki2tixYMQF+ovg2K3xZ1UtQEwtFdM3KoOPTggUikq
+X-Gm-Message-State: AOJu0YwYEV2VxCuDf7dMHozkB0j7CSgtRPPeUZ3wWqe1YOqI0bmya5Xv
+	MFxnQp6r1jyix8fz0WBQ4uUsmDX5Nn0WeJM0CVjf+KdbQ4FUAGebCz1Ux1oJXLM5eJdsb1YGixv
+	Edls0dA==
+X-Google-Smtp-Source: AGHT+IEBqgq8/ijDLYuWtZgrlxH0PdT/BNEB0C1UNr460C7LtzL4BXpKkJbR3oMqpmu0RY60Od9/Ag==
+X-Received: by 2002:a19:ee17:0:b0:52c:def6:7c97 with SMTP id 2adb3069b0e04-52ce064146emr10914325e87.45.1719563545317;
+        Fri, 28 Jun 2024 01:32:25 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52e7ab3b4cdsm208851e87.294.2024.06.28.01.32.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Jun 2024 01:32:24 -0700 (PDT)
+Date: Fri, 28 Jun 2024 11:32:23 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clk: qcom: gcc-x1e80100: Set parent rate for USB3 sec
+ and tert PHY pipe clks
+Message-ID: <6fr22a5ehq2vcd2ueeaphtzhauscpaj4llt2j62cj5m5wydw32@6ma244renp33>
+References: <20240530-x1e80100-clk-gcc-usb3-sec-tert-set-parent-rate-v1-1-7b2b04cad545@linaro.org>
+ <3ukguewuqqm5gmbd3afl62ihysdzkk44j3f2nuqht4gjuf5ruo@zu7jmmnbrpdj>
+ <Zn5w9zKxIT/2OvB4@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240628-feature_poe_power_cap-v5-6-5e1375d3817a@bootlin.com>
-References: <20240628-feature_poe_power_cap-v5-0-5e1375d3817a@bootlin.com>
-In-Reply-To: <20240628-feature_poe_power_cap-v5-0-5e1375d3817a@bootlin.com>
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>, 
- Oleksij Rempel <o.rempel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- Dent Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, 
- linux-doc@vger.kernel.org, Kory Maincent <kory.maincent@bootlin.com>
-X-Mailer: b4 0.15-dev-8cb71
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zn5w9zKxIT/2OvB4@linaro.org>
 
-From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+On Fri, Jun 28, 2024 at 11:14:47AM GMT, Abel Vesa wrote:
+> On 24-05-31 02:56:12, Dmitry Baryshkov wrote:
+> > On Thu, May 30, 2024 at 05:05:24PM +0300, Abel Vesa wrote:
+> > > Allow the USB3 second and third GCC PHY pipe clocks to propagate the
+> > > rate to the pipe clocks provided by the QMP combo PHYs. The first
+> > > instance is already doing that.
+> > 
+> > Which driver changes the rate of those clocks?
+> 
+> Sorry for the late reply.
+> 
+> These clocks are consumed by the combo PHYs, so driver is
+> phy-qcom-qmp-combo. This driver doesn't change the rates of the pipe
+> clocks as of yet.
+> 
+> The fix is still good, even if it's just to align all three clocks.
+> 
 
-Expand the c33 PSE attributes with power limit to be able to set and get
-the PSE Power Interface power limit.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-./ynl/cli.py --spec netlink/specs/ethtool.yaml --no-schema --do pse-get
-             --json '{"header":{"dev-name":"eth1"}}'
-{'c33-pse-actual-pw': 1700,
- 'c33-pse-admin-state': 3,
- 'c33-pse-avail-pw-limit': 97500,
- 'c33-pse-pw-class': 4,
- 'c33-pse-pw-d-status': 4,
- 'c33-pse-pw-limit-ranges': [{'max': 18100, 'min': 15000},
-                             {'max': 38000, 'min': 30000},
-                             {'max': 65000, 'min': 60000},
-                             {'max': 97500, 'min': 90000}],
- 'header': {'dev-index': 5, 'dev-name': 'eth1'}}
-
-./ynl/cli.py --spec netlink/specs/ethtool.yaml --no-schema --do pse-set
-             --json '{"header":{"dev-name":"eth1"},
-                      "c33-pse-avail-pw-limit":19000}'
-None
-
-Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
----
-
-Change in v4:
-- Add support for c33 pse power limit ranges.
----
- Documentation/netlink/specs/ethtool.yaml | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
-
-diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
-index 820cff47722d..411458d97911 100644
---- a/Documentation/netlink/specs/ethtool.yaml
-+++ b/Documentation/netlink/specs/ethtool.yaml
-@@ -935,6 +935,15 @@ attribute-sets:
-       -
-         name: power-mode
-         type: u8
-+  -
-+    name: c33-pse-pw-limit
-+    attributes:
-+      -
-+        name: min
-+        type: u32
-+      -
-+        name: max
-+        type: u32
-   -
-     name: pse
-     attributes:
-@@ -983,6 +992,16 @@ attribute-sets:
-         name: c33-pse-ext-substate
-         type: u32
-         name-prefix: ethtool-a-
-+      -
-+        name: c33-pse-avail-pw-limit
-+        type: u32
-+        name-prefix: ethtool-a-
-+      -
-+        name: c33-pse-pw-limit-ranges
-+        name-prefix: ethtool-a-
-+        type: nest
-+        multi-attr: true
-+        nested-attributes: c33-pse-pw-limit
-   -
-     name: rss
-     attributes:
-@@ -1678,6 +1697,8 @@ operations:
-             - c33-pse-actual-pw
-             - c33-pse-ext-state
-             - c33-pse-ext-substate
-+            - c33-pse-avail-pw-limit
-+            - c33-pse-pw-limit-ranges
-       dump: *pse-get-op
-     -
-       name: pse-set
-@@ -1691,6 +1712,7 @@ operations:
-             - header
-             - podl-pse-admin-control
-             - c33-pse-admin-control
-+            - c33-pse-avail-pw-limit
-     -
-       name: rss-get
-       doc: Get RSS params.
 
 -- 
-2.34.1
-
+With best wishes
+Dmitry
