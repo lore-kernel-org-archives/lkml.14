@@ -1,250 +1,665 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2089.outbound.protection.outlook.com [40.107.244.89])
+Received: from fhigh2-smtp.messagingengine.com (fhigh2-smtp.messagingengine.com [103.168.172.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB61F17F6;
-	Fri, 28 Jun 2024 00:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719534063; cv=fail; b=ZS56ofWpsG9UwKsbgBI1UJjzDfh3cJ7PG0LOjlf41Z3GXm9YtbkbxeRn82NzX385U6RmS9mwNhHzKpg3b6w/+8KuhlAbYu1WYvSLY/MwcZZNQ9V4y00GDrrLq098m4gAjOVmH1SlrAeaj4niCYVz0UeRzVJ5lXoAV8RW+Y9FslQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719534063; c=relaxed/simple;
-	bh=JKhVgXuZnGGTZfqf9V6eGsRzwsPCXaYLts89QehUpQY=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 Content-Type:MIME-Version; b=YFgshZHN0CgAwNoVTwmSzpXCES7791GrdMRn1wA5ya4CFK2E06wO9TU0L2Ea2w4SDc22tpvTJiCYUdMXIRNz4tUmDbTHVtX8IwoYEg2/ZrBbekBqghZFh8na2ef6rB/xmJH+jPqlS2op+IF3uyIK7NLqu0iYiRVO7BX0H2LCIoE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=FK/21Njq; arc=fail smtp.client-ip=40.107.244.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE2F17C2;
+	Fri, 28 Jun 2024 00:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719534140; cv=none; b=b+5UkwUNI6c09h0bGS+HyHsrcu7QTgDKx6F7IiqLbBuxJMwlLqGn4pcMEuURR5pXn/MozcxEmMVFkZOvOedMbzwQZKYa67TJlF7BiZeknsnXxFwzXle07ZtRuYI6DnGdxSgXG/7WdVffJ1y4MEGn6AIBUZm/ON70tuXmKlIS6D0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719534140; c=relaxed/simple;
+	bh=qkmz2Ue1OntiQaC8I7jUKz427rur09RoTh453TGYjSs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qVgdWBIlRW65csMNhus4WdzlSD4IVyu2r090L6VWXbGHOx3uKqlHCajFF5XJVkjIQR58qEX4jgEG+gWKgTIEScbZA3bHdWs1lzEnLj6xLUZsfO0UJEEZZ++FD3knCTQN0ppcmWMsSkCZuw+OvkmrHIJLH+sWehlquHK00nhiFGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=who-t.net; spf=pass smtp.mailfrom=who-t.net; dkim=pass (2048-bit key) header.d=who-t.net header.i=@who-t.net header.b=NNPEDeJZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=rsADd905; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=who-t.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=who-t.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="FK/21Njq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k5k7E0ZYJnMun/7DvdP5HHb8pQfEGOvSAzKN5T9GGNmh3veKvT9VobvTIMl4YZSfdsPGRISxuEzwhWiiIt+mADjTM0BqkIF7jkRsrJTIxdG4wTyn6p7ehF/zIO7gHEeDIoCRJMs/HYkl+pKXm3yD4aRPiUVwKA+ZoZEhSlot1QTolxX1ei0sVuh3H0NwA5hWTbLUkD/6WpK8i/C3X1gQEot7L5FYGkNUCFPeV7vgw6PJbP7iIeUkDzpin3zNgHq+sVxMDAvlFNNRZpp12CPId7qrdXw8XMdHPhioA0TmsmEVqfonsYURcP1/UdQ1BP98ihAMGHHdTBhgi5a1nX6JCw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7D8pN258ZLVxKASTLXddLCuitWvqg6KDBo7AcedGpes=;
- b=R9X8E3my3l9avSTDSNdzathKSweqvQHpqF7tfYz+oMTtwjPK0Uqcc53ilvcvIdlWVjEyIbwyI3N4V1rt5Xgce4oLgtQh/xgTG3MM5zN9d0EKYZfb2Oa2eXT16UjaOQxu0fJHDEwdwI3x3emdM8viGmooFEW1gun6iGM+2AODDPCjdWmC8reIo2nvTj+Qr6oBx08kswZsV0ACrbgilsl+WT2p9oXngQ0+ipUZAvhhVD9CsA+tQYS35hyZCt86ecqX+Gs+qNtrx/YTHH9BGilBvDkzGf8HtFoqjgJ7pgz6fBHWBswfd+NWZk03vHkGEdFyX5suef+1CAUvucVR5jrCnw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7D8pN258ZLVxKASTLXddLCuitWvqg6KDBo7AcedGpes=;
- b=FK/21Njq0wpB+s5vHF3MkPpvGKcAULPoY4DBsAw/OJ4JxsT8QdAWOlIQhNFCmKRoafiDW7HCf1zanPHXNSCkQKW4fZ3vROteP7ZpwAqRAowBP6sRNr8Im2A4GBNgJEeDZBIglAV63YOAT5amrqN10KuQdbhqFeaT1p6Dxm49JAakyA0X7iM5k8BbtpWqUE7/d9Djh0Jrb7zVITUBs72yZbvFGYyq2ElAKod0d+PyuLYCWTeG7QR/feObHRwakfGb9SoIs+cC3cGMpxvvv37u2Uu1JX5+7MHGWEsg32dueTPKO/u7ggZJ3M+HWUVJuVqlMeT7YFNIfgRZMqKFmv8CsA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
- MN0PR12MB5932.namprd12.prod.outlook.com (2603:10b6:208:37f::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7698.32; Fri, 28 Jun 2024 00:20:58 +0000
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe%6]) with mapi id 15.20.7698.025; Fri, 28 Jun 2024
- 00:20:58 +0000
-References: <cover.66009f59a7fe77320d413011386c3ae5c2ee82eb.1719386613.git-series.apopple@nvidia.com>
- <667d0da3572c_5be92947f@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <87a5j67szs.fsf@nvdebian.thelocal>
- <667dca6259bc8_57ac2946e@dwillia2-xfh.jf.intel.com.notmuch>
-User-agent: mu4e 1.10.8; emacs 29.1
-From: Alistair Popple <apopple@nvidia.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
- bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com,
- will@kernel.org, mpe@ellerman.id.au, npiggin@gmail.com,
- dave.hansen@linux.intel.com, ira.weiny@intel.com, willy@infradead.org,
- djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com, david@redhat.com,
- peterx@redhat.com, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
- jhubbard@nvidia.com, hch@lst.de, david@fromorbit.com
-Subject: Re: [PATCH 00/13] fs/dax: Fix FS DAX page reference counts
-Date: Fri, 28 Jun 2024 10:06:42 +1000
-In-reply-to: <667dca6259bc8_57ac2946e@dwillia2-xfh.jf.intel.com.notmuch>
-Message-ID: <87a5j56hp6.fsf@nvdebian.thelocal>
-Content-Type: text/plain
-X-ClientProxiedBy: SYBPR01CA0017.ausprd01.prod.outlook.com (2603:10c6:10::29)
- To DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6)
+	dkim=pass (2048-bit key) header.d=who-t.net header.i=@who-t.net header.b="NNPEDeJZ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rsADd905"
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 6987E11401FC;
+	Thu, 27 Jun 2024 20:22:16 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Thu, 27 Jun 2024 20:22:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=who-t.net; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1719534136;
+	 x=1719620536; bh=wVXE72ivDlBGDZftQG7oG6l5sifpds+gyqc1Nx7BRK4=; b=
+	NNPEDeJZe5oEHfot7ktewCZkx6XmDpSi3Gir7yBZieBOLABbWXQGe8/NcFzCQQ/y
+	1KsT5d5trlECgj8Du74incsQ6giIuP4GwE+ATHd3ShJKASQT4Gg4I2fHrhBU2ts0
+	EsYktVf9JkKSbxkwemI1WFrG04t0LlnViSc1g6nejMHi60JhZmsiFwDcjJIlsTs/
+	tVX2rHbKJLwI9xWtkB56aYq8b4DXYwuaP6eWMw+sqI9ZfGB4+X6+FDuiStkqaGcF
+	ZiPgcw8eh0+AJGQv+LsP2RRRqNcukxkxE038XaAx90nqr+FFWWPlHDPq5WC4obDJ
+	LtcPMJJNggSfdqNsYNJaLA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1719534136; x=
+	1719620536; bh=wVXE72ivDlBGDZftQG7oG6l5sifpds+gyqc1Nx7BRK4=; b=r
+	sADd905Gke9zEYiCgoXqRtWn4LS4CRpeKtxr7QX5t4iZCnxtWTYu9l+BOMBVY4on
+	ctEsZOujWWZv6IJaMuV5MEn5EonGrEeOIret1MOl1QJQCBk/gsKVMFWd3pxN6hyH
+	wGDlj2oN6rFwvG3XIH00ljf4naFUX7/MJc0bI0HhPn8BUL6ejUquGQWrOSunTNT4
+	hQc0bRXMoUFezXBJ+6UohpcisEkU/LvO0wv2RNF8V/vJX0HDgCTe2QZ2fVtDggq7
+	EU7vlSpPTTbnfsow/2kMPrHfeMHbhCufgxIHwP8CwiHoOYV4OmfcD1QADVZtcmq8
+	smim4Gb4wRPtPbMRDKqOg==
+X-ME-Sender: <xms:OAJ-ZlLm9YCVFKv9bX0USQEQhdzs5C2zX4hLtYabfT9-EMvoudN72g>
+    <xme:OAJ-ZhLZLo3T6KIFZ4Np1n4bHDCJFdGqtL2oIIDoifiiJJRSHtN4Orl1qOGxlUr7c
+    nmCd1JCcavkP_dJ7Rw>
+X-ME-Received: <xmr:OAJ-Ztvw8OPobSbAi3qhZnLbtpQzFIdyl7fF_YbBBNxDVisnDaFVdtva-9xLc5IPAPvKhZEtIcKKD8KasswY1ZNcsCi_mhIMAAoH>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrtdehgdefhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvvefukfhfgggtugfgjgesthekredttddtudenucfhrhhomheprfgvthgv
+    rhcujfhuthhtvghrvghruceophgvthgvrhdrhhhuthhtvghrvghrseifhhhoqdhtrdhnvg
+    htqeenucggtffrrghtthgvrhhnpeeukeektdeftdffjeegjeegueelffevjeekuefgvdek
+    leeutdduvdffveeuffekhfenucffohhmrghinhepfhhrvggvuggvshhkthhophdrohhrgh
+    dpghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
+    rghilhhfrhhomhepphgvthgvrhdrhhhuthhtvghrvghrseifhhhoqdhtrdhnvght
+X-ME-Proxy: <xmx:OAJ-Zma7wr4rx5_Xv4J-w2DfzibJDb2JR2w3C1HRayJhWwCZUaST4w>
+    <xmx:OAJ-ZsYyk59YwGRBLVyR9hd6kSsc2eQajtA6nHvq8Ees0LKdc7bWuQ>
+    <xmx:OAJ-ZqAeuTRYdlz5PuJl5AKYYbN4iZRRsbkDFJ6P_AKQK-yAv1mSSQ>
+    <xmx:OAJ-ZqZbczJNhV4IVkgmzkFrIN9CsroKOrW7MV1c6lNTnK6rusyL-Q>
+    <xmx:OAJ-ZrwvcAMU_ZKjWQx0VlOBCFlYw-79-uQzfMaLZ03uMAMeIeK1T6E5>
+Feedback-ID: i7ce144cd:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 27 Jun 2024 20:22:13 -0400 (EDT)
+Date: Fri, 28 Jun 2024 10:22:07 +1000
+From: Peter Hutterer <peter.hutterer@who-t.net>
+To: Benjamin Tissoires <bentiss@kernel.org>
+Cc: Jiri Kosina <jikos@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH 2/6] HID: bpf: add a driver for the Huion Inspiroy 2S
+ (H641P)
+Message-ID: <20240628002207.GA1468547@quokka>
+References: <20240627-import-bpf-v1-0-0dbcda4a5b1f@kernel.org>
+ <20240627-import-bpf-v1-2-0dbcda4a5b1f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|MN0PR12MB5932:EE_
-X-MS-Office365-Filtering-Correlation-Id: 71a55ce1-2d6c-4f94-ebd8-08dc97082ee0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?aQb3YROYeca27SMruaogKEscX4iC7ri3shD2JM6X3VlE7PvaDYEGCddyEDGq?=
- =?us-ascii?Q?iJ/UixCAK2GSbYE9wI7SNeQghf1DdtqjadmEJzu6qnUD3yVNomfFXoeT3yMm?=
- =?us-ascii?Q?LhkRD+9gQn3VD7dA0RRFLyaCKst2QzA2SJ2Dxcd3U0jblZo7K2HxJvuQlbDQ?=
- =?us-ascii?Q?56mIAOR/HugDJMHUEjkFxLzdhJQxPOZYQ+YjGHiPNsFpAVm7Zv4y07bss+d7?=
- =?us-ascii?Q?GsgPyjIDQy/i8EI5QZMGaBVKVlXCsO//6B5u/MbDKEeYNPvcWWPc3ijfxxw/?=
- =?us-ascii?Q?fexelLCjHh5hX9jyC4X7CQS5xzq2ma/L46E5TTjpcDTVHAVi5YYiXjpH+grF?=
- =?us-ascii?Q?sXsWHpObpYoT90shF/HXuJE0qZGkYSAjzF8s6JwD7dpez/Ec4T7Fga1mEVOq?=
- =?us-ascii?Q?H6rh2IExnnU5lLTcGowxFIT9E8YWsYZdXV1L9zczrX/Rywyr7EojNU0+ILPP?=
- =?us-ascii?Q?WagVgI6bY7uk/M+j+z/XHXOZYu33uFNqXf+BqPYAZJOwuwPBD7wzVU19XVpM?=
- =?us-ascii?Q?TLvcVYCaHnBYb2IAiH9ZP7mUx7+SCB94eTmoeW1NL5LY+GjAWl+OI31eYkEo?=
- =?us-ascii?Q?1e3KhZtSNHTvEM5yoLi9m6qQsGHfhPKEpZWTUe+ogUO7+YcopRjy2xVThPof?=
- =?us-ascii?Q?QIbxm7cjJlda9HgxoDitMF4BGNyLNmezs6jDud64zvgpovSeVRkTHv/GbOG0?=
- =?us-ascii?Q?0YaWdIDVw+PxEkLhEoRaRjVc4rAaCxInKHFu+Dvafv7CAe6uCZLcn07F2MeF?=
- =?us-ascii?Q?Q+dwL/z62C8DSZO7nviQnu7P+G8OduUJbOOigGc5FMbl6Z/xOUn1JY1UYjkX?=
- =?us-ascii?Q?0ortLZXHaOQTEtCE4vQUJVw0fF22GKHTIuEspZoQa0KSzuGe/i0pmBaXiqNt?=
- =?us-ascii?Q?fHAPjptPKfPP5593N1y/8cmB58kVrXq0F/qa33LnVt9ZiNygxRzs+ZNcAu2J?=
- =?us-ascii?Q?xkjPagjBnZvFxsDZcdi5BNUrVUPHSUxT4FuXNNvA21ZK0ySuLeAk9F1qUk4q?=
- =?us-ascii?Q?Y88RG1MyjTN2FY5eIZlAg7XiA33fFhW1yQp/eqyCwrmuO8Oozkif9Mhb0+pR?=
- =?us-ascii?Q?Jm/MOwsYew1iWynSCtn+K4PaRZb5+wVPOO/SuPB0AqpB1EohspBUgZEPz/HF?=
- =?us-ascii?Q?Ab4IGOTBf298Emxb43hqUdwc+qZZF+ulpfpueHLJX0CuGFahPlLrAS73TYqD?=
- =?us-ascii?Q?JK9XcOLBUl0tkHaKOqYFuQN09V58Db7ZN9/vmY578v5qIdlU6Il8SwuqBpbV?=
- =?us-ascii?Q?pC7xbbIu91Us1BnU9ngEWSgEbTeXRHaSYvuvT5fV3M+ligVsSTvyiw+oHmP+?=
- =?us-ascii?Q?bV6gGlrilDKfR1pBzmDsTqr60zLAyH46LkN29jwSAowM4A=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?tlUDzpDl6zXbBYLIwSzA+MaPgcq3TGVBiVyK1S40YqpgrjyrirOa/8ffV1i7?=
- =?us-ascii?Q?RlXvR+5VP7iGPoI6m9i0FkNlEToJvlhIghlHroA2U+eWZt8gPI49VuxdZrFn?=
- =?us-ascii?Q?OjWsL8+IKv70qLPXxjZrG12Hn3qtHKMyZXL+Ra5UQPrEMufXwMs4gsZOLAUT?=
- =?us-ascii?Q?KTWwtzwry5vVGfU2vkcNETfQePmm+tofl6jkICbnc+mWqbOhXIFH+uwGePRt?=
- =?us-ascii?Q?cctGDdjjOT+n6kuhlI3nlCW/RP8+YtPOjTmu08L3FuL0wiSogCT01ljYsBU6?=
- =?us-ascii?Q?4KihXay08VkfwcXlFAOQCQvTJ3eS0n4mDOIKfqC7DFlEobt5yabK9zmJ89W0?=
- =?us-ascii?Q?Mv5xsgY+iiPv/wj+oOCoRKy4QL57wt9zSpTDU4cfP4MavPgpmIW8O/Jp+mSA?=
- =?us-ascii?Q?56VXhsfz1xbhJXD8fwimw7DqAkZw5PHWw5eBpX5XbM18tzJ3y1yn8TwRCMR5?=
- =?us-ascii?Q?kcGbNYD/rgY8LOohMewgdTJ/VilcXWB8MFb2/3nP5tCNAEjp9BiNh9Ab1MAf?=
- =?us-ascii?Q?aaY97YCWsXF6kuT+dv3Qn+QymLo6lcik4nXayl4l4d1/4zY9ouGP61IiWjm9?=
- =?us-ascii?Q?y8980IE+hLAJAOM5FVUqH3a8icN884zKDCwwVcO8LKmuLPbxwpHS85IqlUZK?=
- =?us-ascii?Q?8V8KIb+8ei/1ZkVFXWJzpYh1X7NMm+UjuJsazJfMp2b1Og3JhLci7oPKueLO?=
- =?us-ascii?Q?szu+p/8mD9Stg86zbS/bLX33QDolNXUvs6P2IIgIyywGz1IGh1zngzFcUMng?=
- =?us-ascii?Q?vYtzIbg4pRzMIsggexF+k5NVC7k32x+x+ypYEFEReZGbboU5vjDwdygFzMKR?=
- =?us-ascii?Q?kHESvrE7JuBib8Z34hv8f6dFNmrp591/T1vsBVgGjUxxCq2CCS0Gnkvd75K2?=
- =?us-ascii?Q?ZZmUj+QnHJiloMp6niyGJo44z4XchGpb5xbtdEvrQLUqtDwgySgDZonLg/e3?=
- =?us-ascii?Q?h45a7nC4mcntxayNIX9F1111RY0571GWqM+ethp+aS0WitnLIWj2/Jd6s38d?=
- =?us-ascii?Q?A0U2aYUexTZc//0W/gwE/q15PX0LE8eAw41JxmDBJHyrsWg8xZeuyW6/HsEW?=
- =?us-ascii?Q?wJKXH775dMBHRO/klax5KY63pGhtoQJUL/IzXAk+GXdqTe3odc0Tigv0GZxl?=
- =?us-ascii?Q?6iHrxRe+KzDyvpaIgn5seIGgUGPj/qemnz3XTHI5Xndi7ZBwZbd0ge0MkpSr?=
- =?us-ascii?Q?oqt1rIDHFdFubj4rYid3gmi9NSoVXRbySyNA0MVcDza36dOHwuAaVJFmKRfd?=
- =?us-ascii?Q?Ai9lrN+wm8Sk+vsBuxozdLknzmJCMVTQbdF1fjqFGk1C5kv/jg1jvEIhfo0b?=
- =?us-ascii?Q?iBHSFd+tFrouNAH76kDgIR5BNtT8487nMdBnd3rvRI7xF58gLnLbu3+CtjUq?=
- =?us-ascii?Q?ZO0VMfOcFkiLmguaGHo5GM5gomhrmbYEwC1NQ0dLi4FDDz5UBWWc+JyHm9k/?=
- =?us-ascii?Q?mvyT0ovXNshBlHjGhPTwppRxAtsqkzUQrnXtui5bBHyYaAGoy/Hmlzblq8Nl?=
- =?us-ascii?Q?sQZx1MFqJQFqIpShPjpYa/TSt2JbGqR+CHRc2roZDpGMG7+FYK2IBOl5xsy8?=
- =?us-ascii?Q?2/rEpocDiYOKLd/zMBAZp2lbIDZpjKuKYa4EX1Ns?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 71a55ce1-2d6c-4f94-ebd8-08dc97082ee0
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2024 00:20:58.4534
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: I0C/XCDJ4lCGoNMOS9y+QOYQnDdkW7EscDx1XdqOMWurdCQJh3CsyuYTm9K6IYA7G7J3ZxS4RhNpAHRgYuiRYA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5932
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240627-import-bpf-v1-2-0dbcda4a5b1f@kernel.org>
 
+On Thu, Jun 27, 2024 at 11:54:18AM +0200, Benjamin Tissoires wrote:
+> This is a a driver for the Huion Inspiroy 2S in both modes (firmware mode
+> and tablet mode). This device has 6 buttons and a wheel, all of which
+> send key combinations (see the comments for the defaults). Luckily the
+> device is quite limited in that it only supports one button down at a
+> time, so with this BPF we can simply remap the 8 possible report IDs to
+> our own custom-built report descriptor.
+> 
+> If the device is in tablet mode (e.g. using huion-switcher it sends
+> everything through the vendor report instead). This BPF program converts
+> both, depending which devices you attach to you get both. Or if you
+> attach to all hid devices you get a duplicate device but it'll work
+> either way.
+> 
+> This BPF should be mostly compatible for the M and L as well though they
+> have more buttons so the rdescs will need some minor rework.
+> 
+> Link: https://gitlab.freedesktop.org/libevdev/udev-hid-bpf/-/merge_requests/85
+> Link: https://gitlab.freedesktop.org/libevdev/udev-hid-bpf/-/merge_requests/109
+> Signed-off-by: default avatarPeter Hutterer <peter.hutterer@who-t.net>
 
-Dan Williams <dan.j.williams@intel.com> writes:
+That looks like a copy-paste gone wrong :)
 
-> Alistair Popple wrote:
->> 
->> Dan Williams <dan.j.williams@intel.com> writes:
->> 
->> > Alistair Popple wrote:
->> >> FS DAX pages have always maintained their own page reference counts
->> >> without following the normal rules for page reference counting. In
->> >> particular pages are considered free when the refcount hits one rather
->> >> than zero and refcounts are not added when mapping the page.
->> >> 
->> >> Tracking this requires special PTE bits (PTE_DEVMAP) and a secondary
->> >> mechanism for allowing GUP to hold references on the page (see
->> >> get_dev_pagemap). However there doesn't seem to be any reason why FS
->> >> DAX pages need their own reference counting scheme.
->> >> 
->> >> By treating the refcounts on these pages the same way as normal pages
->> >> we can remove a lot of special checks. In particular pXd_trans_huge()
->> >> becomes the same as pXd_leaf(), although I haven't made that change
->> >> here. It also frees up a valuable SW define PTE bit on architectures
->> >> that have devmap PTE bits defined.
->> >> 
->> >> It also almost certainly allows further clean-up of the devmap managed
->> >> functions, but I have left that as a future improvment.
->> >> 
->> >> This is an update to the original RFC rebased onto v6.10-rc5. Unlike
->> >> the original RFC it passes the same number of ndctl test suite
->> >> (https://github.com/pmem/ndctl) tests as my current development
->> >> environment does without these patches.
->> >
->> > Are you seeing the 'mmap.sh' test fail even without these patches?
->> 
->> No. But I also don't see it failing with these patches :)
->> 
->> For reference this is what I see on my test machine with or without:
->> 
->> [1/70] Generating version.h with a custom command
->>  1/13 ndctl:dax / daxdev-errors.sh          SKIP             0.06s   exit status 77
->>  2/13 ndctl:dax / multi-dax.sh              SKIP             0.05s   exit status 77
->>  3/13 ndctl:dax / sub-section.sh            SKIP             0.14s   exit status 77
->
-> I really need to get this test built as a service as this shows a
-> pre-req is missing, and it's not quite fair to expect submitters to put
-> it all together.
+Cheers,
+  Peter
 
-Ok. I didn't dig into why this was being skipped but I might if I find
-some time. The rest of the tests seemed more relevant anyway and turned
-up enough bugs with my initial implementation to keep me busy which gave
-me some confidence.
-
-If I'm being honest though I found the whole test setup a bit of a
-pain. In particular remembering you have to manually (re)build the
-special test versions of the modules tripped me up a few times until I
-updated my build scripts. But I got there in the end.
-
->>  4/13 ndctl:dax / dax-dev                   OK               0.02s
->>  5/13 ndctl:dax / dax-ext4.sh               OK              12.97s
->>  6/13 ndctl:dax / dax-xfs.sh                OK              12.44s
->>  7/13 ndctl:dax / device-dax                OK              13.40s
->>  8/13 ndctl:dax / revoke-devmem             FAIL             0.31s   (exit status 250 or signal 122 SIGinvalid)
->> >>> TEST_PATH=/home/apopple/ndctl/build/test LD_LIBRARY_PATH=/home/apopple/ndctl/build/cxl/lib:/home/apopple/ndctl/build/daxctl/lib:/home/apopple/ndctl/build/ndctl/lib NDCTL=/home/apopple/ndctl/build/ndctl/ndctl MALLOC_PERTURB_=227 DATA_PATH=/home/apopple/ndctl/test DAXCTL=/home/apopple/ndctl/build/daxctl/daxctl /home/apopple/ndctl/build/test/revoke_devmem
->> 
->>  9/13 ndctl:dax / device-dax-fio.sh         OK              32.43s
->> 10/13 ndctl:dax / daxctl-devices.sh         SKIP             0.07s   exit status 77
->> 11/13 ndctl:dax / daxctl-create.sh          SKIP             0.04s   exit status 77
->> 12/13 ndctl:dax / dm.sh                     FAIL             0.08s   exit status 1
->> >>> MALLOC_PERTURB_=209 TEST_PATH=/home/apopple/ndctl/build/test LD_LIBRARY_PATH=/home/apopple/ndctl/build/cxl/lib:/home/apopple/ndctl/build/daxctl/lib:/home/apopple/ndctl/build/ndctl/lib NDCTL=/home/apopple/ndctl/build/ndctl/ndctl DATA_PATH=/home/apopple/ndctl/test DAXCTL=/home/apopple/ndctl/build/daxctl/daxctl /home/apopple/ndctl/test/dm.sh
->> 
->> 13/13 ndctl:dax / mmap.sh                   OK             107.57s
->
-> I need to think through why this one might false succeed, but that can
-> wait until we get this series reviewed. For now my failure is stable
-> which allows it to be bisected.
->
->> 
->> Ok:                 6   
->> Expected Fail:      0   
->> Fail:               2   
->> Unexpected Pass:    0   
->> Skipped:            5   
->> Timeout:            0   
->> 
->> I have been using QEMU for my testing. Maybe I missed some condition in
->> the unmap path though so will take another look.
->
-> I was able to bisect to:
-
-I could have guessed that one, as it's pretty much the crux of this
-series given it's the one that switches everything away from
-pXX_devmap. That means pXX_leaf/_trans_huge will start returning true
-for DAX pages.
-
-Based on your dump I'm guessing I missed some case in the
-zap_pXX_range() path. It could be helpful to narrow down which of the
-pXX paths is crashing but I will take another look there.
-
-> [PATCH 10/13] fs/dax: Properly refcount fs dax pages
->
-> ...I will prioritize that one in my review queue.
-
-Thanks!
+> Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
+> ---
+>  drivers/hid/bpf/progs/Huion__Inspiroy-2-S.bpf.c | 534 ++++++++++++++++++++++++
+>  1 file changed, 534 insertions(+)
+> 
+> diff --git a/drivers/hid/bpf/progs/Huion__Inspiroy-2-S.bpf.c b/drivers/hid/bpf/progs/Huion__Inspiroy-2-S.bpf.c
+> new file mode 100644
+> index 000000000000..b09b80132368
+> --- /dev/null
+> +++ b/drivers/hid/bpf/progs/Huion__Inspiroy-2-S.bpf.c
+> @@ -0,0 +1,534 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/* Copyright (c) 2024 Red Hat, Inc
+> + */
+> +
+> +#include "vmlinux.h"
+> +#include "hid_bpf.h"
+> +#include "hid_bpf_helpers.h"
+> +#include "hid_report_helpers.h"
+> +#include <bpf/bpf_tracing.h>
+> +
+> +#define VID_HUION 0x256C
+> +#define PID_INSPIROY_2_S 0x0066
+> +
+> +HID_BPF_CONFIG(
+> +	HID_DEVICE(BUS_USB, HID_GROUP_GENERIC, VID_HUION, PID_INSPIROY_2_S),
+> +);
+> +
+> +/* Filled in by udev-hid-bpf */
+> +char UDEV_PROP_HUION_FIRMWARE_ID[64];
+> +
+> +/* The prefix of the firmware ID we expect for this device. The full firmware
+> + * string has a date suffix, e.g. HUION_T21j_221221
+> + */
+> +char EXPECTED_FIRMWARE_ID[] = "HUION_T21j_";
+> +
+> +/* How this BPF program works: the tablet has two modes, firmware mode and
+> + * tablet mode. In firmware mode (out of the box) the tablet sends button events
+> + * and the dial as keyboard combinations. In tablet mode it uses a vendor specific
+> + * hid report to report everything instead.
+> + * Depending on the mode some hid reports are never sent and the corresponding
+> + * devices are mute.
+> + *
+> + * To switch the tablet use e.g.  https://github.com/whot/huion-switcher
+> + * or one of the tools from the digimend project
+> + *
+> + * This BPF works for both modes. The huion-switcher tool sets the
+> + * HUION_FIRMWARE_ID udev property - if that is set then we disable the firmware
+> + * pad and pen reports (by making them vendor collections that are ignored).
+> + * If that property is not set we fix all hidraw nodes so the tablet works in
+> + * either mode though the drawback is that the device will show up twice if
+> + * you bind it to all event nodes
+> + *
+> + * Default report descriptor for the first exposed hidraw node:
+> + *
+> + * # HUION Huion Tablet_H641P
+> + * # Report descriptor length: 18 bytes
+> + * # 0x06, 0x00, 0xff,              // Usage Page (Vendor Defined Page 0xFF00)   0
+> + * # 0x09, 0x01,                    // Usage (Vendor Usage 0x01)                 3
+> + * # 0xa1, 0x01,                    // Collection (Application)                  5
+> + * # 0x85, 0x08,                    //   Report ID (8)                           7
+> + * # 0x75, 0x58,                    //   Report Size (88)                        9
+> + * # 0x95, 0x01,                    //   Report Count (1)                        11
+> + * # 0x09, 0x01,                    //   Usage (Vendor Usage 0x01)               13
+> + * # 0x81, 0x02,                    //   Input (Data,Var,Abs)                    15
+> + * # 0xc0,                          // End Collection                            17
+> + * R: 18 06 00 ff 09 01 a1 01 85 08 75 58 95 01 09 01 81 02 c0
+> + *
+> + * This rdesc does nothing until the tablet is switched to raw mode, see
+> + * https://github.com/whot/huion-switcher
+> + *
+> + *
+> + * Second hidraw node is the Pen. This one sends events until the tablet is
+> + * switched to raw mode, then it's mute.
+> + *
+> + * # Report descriptor length: 93 bytes
+> + * # 0x05, 0x0d,          // Usage Page (Digitizers)                   0
+> + * # 0x09, 0x02,          // Usage (Pen)                               2
+> + * # 0xa1, 0x01,          // Collection (Application)                  4
+> + * # 0x85, 0x0a,          //   Report ID (10)                          6
+> + * # 0x09, 0x20,          //   Usage (Stylus)                          8
+> + * # 0xa1, 0x01,          //   Collection (Application)                10
+> + * # 0x09, 0x42,          //     Usage (Tip Switch)                    12
+> + * # 0x09, 0x44,          //     Usage (Barrel Switch)                 14
+> + * # 0x09, 0x45,          //     Usage (Eraser)                        16
+> + * # 0x09, 0x3c,          //     Usage (Invert)                        18 <-- has no Invert eraser
+> + * # 0x15, 0x00,          //     Logical Minimum (0)                   20
+> + * # 0x25, 0x01,          //     Logical Maximum (1)                   22
+> + * # 0x75, 0x01,          //     Report Size (1)                       24
+> + * # 0x95, 0x06,          //     Report Count (6)                      26
+> + * # 0x81, 0x02,          //     Input (Data,Var,Abs)                  28
+> + * # 0x09, 0x32,          //     Usage (In Range)                      30
+> + * # 0x75, 0x01,          //     Report Size (1)                       32
+> + * # 0x95, 0x01,          //     Report Count (1)                      34
+> + * # 0x81, 0x02,          //     Input (Data,Var,Abs)                  36
+> + * # 0x81, 0x03,          //     Input (Cnst,Var,Abs)                  38
+> + * # 0x05, 0x01,          //     Usage Page (Generic Desktop)          40
+> + * # 0x09, 0x30,          //     Usage (X)                             42
+> + * # 0x09, 0x31,          //     Usage (Y)                             44
+> + * # 0x55, 0x0d,          //     Unit Exponent (-3)                    46 <-- change to -2
+> + * # 0x65, 0x33,          //     Unit (EnglishLinear: in³)             48 <-- change in³ to in
+> + * # 0x26, 0xff, 0x7f,    //     Logical Maximum (32767)               50
+> + * # 0x35, 0x00,          //     Physical Minimum (0)                  53
+> + * # 0x46, 0x00, 0x08,    //     Physical Maximum (2048)               55 <-- invalid size
+> + * # 0x75, 0x10,          //     Report Size (16)                      58
+> + * # 0x95, 0x02,          //     Report Count (2)                      60
+> + * # 0x81, 0x02,          //     Input (Data,Var,Abs)                  62
+> + * # 0x05, 0x0d,          //     Usage Page (Digitizers)               64
+> + * # 0x09, 0x30,          //     Usage (Tip Pressure)                  66
+> + * # 0x26, 0xff, 0x1f,    //     Logical Maximum (8191)                68
+> + * # 0x75, 0x10,          //     Report Size (16)                      71
+> + * # 0x95, 0x01,          //     Report Count (1)                      73
+> + * # 0x81, 0x02,          //     Input (Data,Var,Abs)                  75
+> + * # 0x09, 0x3d,          //     Usage (X Tilt)                        77 <-- No tilt reported
+> + * # 0x09, 0x3e,          //     Usage (Y Tilt)                        79
+> + * # 0x15, 0x81,          //     Logical Minimum (-127)                81
+> + * # 0x25, 0x7f,          //     Logical Maximum (127)                 83
+> + * # 0x75, 0x08,          //     Report Size (8)                       85
+> + * # 0x95, 0x02,          //     Report Count (2)                      87
+> + * # 0x81, 0x02,          //     Input (Data,Var,Abs)                  89
+> + * # 0xc0,                //   End Collection                          91
+> + * # 0xc0,                // End Collection                            92
+> + * R: 93 05 0d 09 02 a1 01 85 0a 09 20 a1 01 09 42 09 44 09 45 09 3c 15 00 25 01 7501 95 06 81 02 09 32 75 01 95 01 81 02 81 03 05 01 09 30 09 31 55 0d 65 33 26 ff7f 35 00 46 00 08 75 10 95 02 81 02 05 0d 09 30 26 ff 1f 75 10 95 01 81 02 09 3d09 3e 15 81 25 7f 75 08 95 02 81 02 c0 c0
+> + *
+> + * Third hidraw node is the pad which sends a combination of keyboard shortcuts until
+> + * the tablet is switched to raw mode, then it's mute:
+> + *
+> + * # Report descriptor length: 65 bytes
+> + * # 0x05, 0x01,          // Usage Page (Generic Desktop)              0
+> + * # 0x09, 0x06,          // Usage (Keyboard)                          2
+> + * # 0xa1, 0x01,          // Collection (Application)                  4
+> + * # 0x85, 0x03,          //   Report ID (3)                           6
+> + * # 0x05, 0x07,          //   Usage Page (Keyboard/Keypad)            8
+> + * # 0x19, 0xe0,          //   UsageMinimum (224)                      10
+> + * # 0x29, 0xe7,          //   UsageMaximum (231)                      12
+> + * # 0x15, 0x00,          //   Logical Minimum (0)                     14
+> + * # 0x25, 0x01,          //   Logical Maximum (1)                     16
+> + * # 0x75, 0x01,          //   Report Size (1)                         18
+> + * # 0x95, 0x08,          //   Report Count (8)                        20
+> + * # 0x81, 0x02,          //   Input (Data,Var,Abs)                    22
+> + * # 0x05, 0x07,          //   Usage Page (Keyboard/Keypad)            24
+> + * # 0x19, 0x00,          //   UsageMinimum (0)                        26
+> + * # 0x29, 0xff,          //   UsageMaximum (255)                      28
+> + * # 0x26, 0xff, 0x00,    //   Logical Maximum (255)                   30
+> + * # 0x75, 0x08,          //   Report Size (8)                         33
+> + * # 0x95, 0x06,          //   Report Count (6)                        35
+> + * # 0x81, 0x00,          //   Input (Data,Arr,Abs)                    37
+> + * # 0xc0,                // End Collection                            39
+> + * # 0x05, 0x0c,          // Usage Page (Consumer)                     40
+> + * # 0x09, 0x01,          // Usage (Consumer Control)                  42
+> + * # 0xa1, 0x01,          // Collection (Application)                  44
+> + * # 0x85, 0x04,          //   Report ID (4)                           46
+> + * # 0x19, 0x00,          //   UsageMinimum (0)                        48
+> + * # 0x2a, 0x3c, 0x02,    //   UsageMaximum (572)                      50
+> + * # 0x15, 0x00,          //   Logical Minimum (0)                     53
+> + * # 0x26, 0x3c, 0x02,    //   Logical Maximum (572)                   55
+> + * # 0x95, 0x01,          //   Report Count (1)                        58
+> + * # 0x75, 0x10,          //   Report Size (16)                        60
+> + * # 0x81, 0x00,          //   Input (Data,Arr,Abs)                    62
+> + * # 0xc0,                // End Collection                            64
+> + * R: 65 05 01 09 06 a1 01 85 03 05 07 19 e0 29 e7 15 00 25 01 75 01 95 08 81 02 0507 19 00 29 ff 26 ff 00 75 08 95 06 81 00 c0 05 0c 09 01 a1 01 85 04 19 00 2a 3c02 15 00 26 3c 02 95 01 75 10 81 00 c0
+> + * N: HUION Huion Tablet_H641P
+> + */
+> +
+> +#define PAD_REPORT_DESCRIPTOR_LENGTH 65
+> +#define PEN_REPORT_DESCRIPTOR_LENGTH 93
+> +#define VENDOR_REPORT_DESCRIPTOR_LENGTH 18
+> +#define PAD_REPORT_ID 3
+> +#define PEN_REPORT_ID 10
+> +#define VENDOR_REPORT_ID 8
+> +#define PAD_REPORT_LENGTH 8
+> +#define PEN_REPORT_LENGTH 10
+> +#define VENDOR_REPORT_LENGTH 12
+> +
+> +
+> +__u8 last_button_state;
+> +
+> +static const __u8 fixed_rdesc_pad[] = {
+> +	UsagePage_GenericDesktop
+> +	Usage_GD_Keypad
+> +	CollectionApplication(
+> +		// -- Byte 0 in report
+> +		ReportId(PAD_REPORT_ID)
+> +		LogicalRange_i8(0, 1)
+> +		UsagePage_Digitizers
+> +		Usage_Dig_TabletFunctionKeys
+> +		CollectionPhysical(
+> +			// Byte 1 in report - just exists so we get to be a tablet pad
+> +			Usage_Dig_BarrelSwitch // BTN_STYLUS
+> +			ReportCount(1)
+> +			ReportSize(1)
+> +			Input(Var|Abs)
+> +			ReportCount(7) // padding
+> +			Input(Const)
+> +			// Bytes 2/3 in report - just exists so we get to be a tablet pad
+> +			UsagePage_GenericDesktop
+> +			Usage_GD_X
+> +			Usage_GD_Y
+> +			ReportCount(2)
+> +			ReportSize(8)
+> +			Input(Var|Abs)
+> +			// Byte 4 in report is the wheel
+> +			Usage_GD_Wheel
+> +			LogicalRange_i8(-1, 1)
+> +			ReportCount(1)
+> +			ReportSize(8)
+> +			Input(Var|Rel)
+> +			// Byte 5 is the button state
+> +			UsagePage_Button
+> +			UsageRange_i8(0x01, 0x6)
+> +			LogicalRange_i8(0x01, 0x6)
+> +			ReportCount(1)
+> +			ReportSize(8)
+> +			Input(Arr|Abs)
+> +		)
+> +		// Make sure we match our original report length
+> +		FixedSizeVendorReport(PAD_REPORT_LENGTH)
+> +	)
+> +};
+> +
+> +static const __u8 fixed_rdesc_pen[] = {
+> +	UsagePage_Digitizers
+> +	Usage_Dig_Pen
+> +	CollectionApplication(
+> +		// -- Byte 0 in report
+> +		ReportId(PEN_REPORT_ID)
+> +		Usage_Dig_Pen
+> +		CollectionPhysical(
+> +			// -- Byte 1 in report
+> +			Usage_Dig_TipSwitch
+> +			Usage_Dig_BarrelSwitch
+> +			Usage_Dig_SecondaryBarrelSwitch // maps eraser to BTN_STYLUS2
+> +			LogicalRange_i8(0, 1)
+> +			ReportSize(1)
+> +			ReportCount(3)
+> +			Input(Var|Abs)
+> +			ReportCount(4)  // Padding
+> +			Input(Const)
+> +			Usage_Dig_InRange
+> +			ReportCount(1)
+> +			Input(Var|Abs)
+> +			ReportSize(16)
+> +			ReportCount(1)
+> +			PushPop(
+> +				UsagePage_GenericDesktop
+> +				Unit(cm)
+> +				UnitExponent(-1)
+> +				PhysicalRange_i16(0, 160)
+> +				LogicalRange_i16(0, 32767)
+> +				Usage_GD_X
+> +				Input(Var|Abs) // Bytes 2+3
+> +				PhysicalRange_i16(0, 100)
+> +				LogicalRange_i16(0, 32767)
+> +				Usage_GD_Y
+> +				Input(Var|Abs) // Bytes 4+5
+> +			)
+> +			UsagePage_Digitizers
+> +			Usage_Dig_TipPressure
+> +			LogicalRange_i16(0, 8191)
+> +			Input(Var|Abs) // Byte 6+7
+> +			// Two bytes padding so we don't need to change the report at all
+> +			ReportSize(8)
+> +			ReportCount(2)
+> +			Input(Const) // Byte 6+7
+> +		)
+> +	)
+> +};
+> +
+> +static const __u8 fixed_rdesc_vendor[] = {
+> +	UsagePage_Digitizers
+> +	Usage_Dig_Pen
+> +	CollectionApplication(
+> +		// Byte 0
+> +		// We leave the pen on the vendor report ID
+> +		ReportId(VENDOR_REPORT_ID)
+> +		Usage_Dig_Pen
+> +		CollectionPhysical(
+> +			// Byte 1 are the buttons
+> +			LogicalRange_i8(0, 1)
+> +			ReportSize(1)
+> +			Usage_Dig_TipSwitch
+> +			Usage_Dig_BarrelSwitch
+> +			Usage_Dig_SecondaryBarrelSwitch
+> +			ReportCount(3)
+> +			Input(Var|Abs)
+> +			ReportCount(4) // Padding
+> +			Input(Const)
+> +			Usage_Dig_InRange
+> +			ReportCount(1)
+> +			Input(Var|Abs)
+> +			ReportSize(16)
+> +			ReportCount(1)
+> +			PushPop(
+> +				UsagePage_GenericDesktop
+> +				Unit(cm)
+> +				UnitExponent(-1)
+> +				// Note: reported logical range differs
+> +				// from the pen report ID for x and y
+> +				LogicalRange_i16(0, 32000)
+> +				PhysicalRange_i16(0, 160)
+> +				// Bytes 2/3 in report
+> +				Usage_GD_X
+> +				Input(Var|Abs)
+> +				LogicalRange_i16(0, 20000)
+> +				PhysicalRange_i16(0, 100)
+> +				// Bytes 4/5 in report
+> +				Usage_GD_Y
+> +				Input(Var|Abs)
+> +			)
+> +			// Bytes 6/7 in report
+> +			LogicalRange_i16(0, 8192)
+> +			Usage_Dig_TipPressure
+> +			Input(Var|Abs)
+> +		)
+> +	)
+> +	UsagePage_GenericDesktop
+> +	Usage_GD_Keypad
+> +	CollectionApplication(
+> +		// Byte 0
+> +		ReportId(PAD_REPORT_ID)
+> +		LogicalRange_i8(0, 1)
+> +		UsagePage_Digitizers
+> +		Usage_Dig_TabletFunctionKeys
+> +		CollectionPhysical(
+> +			// Byte 1 are the buttons
+> +			Usage_Dig_BarrelSwitch	 // BTN_STYLUS, needed so we get to be a tablet pad
+> +			ReportCount(1)
+> +			ReportSize(1)
+> +			Input(Var|Abs)
+> +			ReportCount(7) // Padding
+> +			Input(Const)
+> +			// Bytes 2/3 - x/y just exist so we get to be a tablet pad
+> +			UsagePage_GenericDesktop
+> +			Usage_GD_X
+> +			Usage_GD_Y
+> +			ReportCount(2)
+> +			ReportSize(8)
+> +			Input(Var|Abs)
+> +			// Byte 4 is the button state
+> +			UsagePage_Button
+> +			UsageRange_i8(0x01, 0x6)
+> +			LogicalRange_i8(0x0, 0x1)
+> +			ReportCount(6)
+> +			ReportSize(1)
+> +			Input(Var|Abs)
+> +			ReportCount(2)
+> +			Input(Const)
+> +			// Byte 5 is the wheel
+> +			UsagePage_GenericDesktop
+> +			Usage_GD_Wheel
+> +			LogicalRange_i8(-1, 1)
+> +			ReportCount(1)
+> +			ReportSize(8)
+> +			Input(Var|Rel)
+> +		)
+> +		// Make sure we match our original report length
+> +		FixedSizeVendorReport(VENDOR_REPORT_LENGTH)
+> +	)
+> +};
+> +
+> +static const __u8 disabled_rdesc_pen[] = {
+> +	FixedSizeVendorReport(PEN_REPORT_LENGTH)
+> +};
+> +
+> +static const __u8 disabled_rdesc_pad[] = {
+> +	FixedSizeVendorReport(PAD_REPORT_LENGTH)
+> +};
+> +
+> +SEC(HID_BPF_RDESC_FIXUP)
+> +int BPF_PROG(hid_fix_rdesc, struct hid_bpf_ctx *hctx)
+> +{
+> +	__u8 *data = hid_bpf_get_data(hctx, 0 /* offset */, HID_MAX_DESCRIPTOR_SIZE /* size */);
+> +	__s32 rdesc_size = hctx->size;
+> +	__u8 have_fw_id;
+> +
+> +	if (!data)
+> +		return 0; /* EPERM check */
+> +
+> +	/* If we have a firmware ID and it matches our expected prefix, we
+> +	 * disable the default pad/pen nodes. They won't send events
+> +	 * but cause duplicate devices.
+> +	 */
+> +	have_fw_id = __builtin_memcmp(UDEV_PROP_HUION_FIRMWARE_ID,
+> +				      EXPECTED_FIRMWARE_ID,
+> +				      sizeof(EXPECTED_FIRMWARE_ID) - 1) == 0;
+> +	if (rdesc_size == PAD_REPORT_DESCRIPTOR_LENGTH) {
+> +		if (have_fw_id) {
+> +			__builtin_memcpy(data, disabled_rdesc_pad, sizeof(disabled_rdesc_pad));
+> +			return sizeof(disabled_rdesc_pad);
+> +		}
+> +
+> +		__builtin_memcpy(data, fixed_rdesc_pad, sizeof(fixed_rdesc_pad));
+> +		return sizeof(fixed_rdesc_pad);
+> +	}
+> +	if (rdesc_size == PEN_REPORT_DESCRIPTOR_LENGTH) {
+> +		if (have_fw_id) {
+> +			__builtin_memcpy(data, disabled_rdesc_pen, sizeof(disabled_rdesc_pen));
+> +			return sizeof(disabled_rdesc_pen);
+> +		}
+> +
+> +		__builtin_memcpy(data, fixed_rdesc_pen, sizeof(fixed_rdesc_pen));
+> +		return sizeof(fixed_rdesc_pen);
+> +	}
+> +	/* Always fix the vendor mode so the tablet will work even if nothing sets
+> +	 * the udev property (e.g. huion-switcher run manually)
+> +	 */
+> +	if (rdesc_size == VENDOR_REPORT_DESCRIPTOR_LENGTH) {
+> +		__builtin_memcpy(data, fixed_rdesc_vendor, sizeof(fixed_rdesc_vendor));
+> +		return sizeof(fixed_rdesc_vendor);
+> +
+> +	}
+> +	return 0;
+> +}
+> +
+> +SEC(HID_BPF_DEVICE_EVENT)
+> +int BPF_PROG(inspiroy_2_fix_events, struct hid_bpf_ctx *hctx)
+> +{
+> +	__u8 *data = hid_bpf_get_data(hctx, 0 /* offset */, 10 /* size */);
+> +
+> +	if (!data)
+> +		return 0; /* EPERM check */
+> +
+> +	/* Only sent if tablet is in default mode */
+> +	if (data[0] == PAD_REPORT_ID) {
+> +		/* Nicely enough, this device only supports one button down at a time so
+> +		 * the reports are easy to match. Buttons numbered from the top
+> +		 *   Button released: 03 00 00 00 00 00 00 00
+> +		 *   Button 1: 03 00 05 00 00 00 00 00 -> b
+> +		 *   Button 2: 03 00 0c 00 00 00 00 00 -> i
+> +		 *   Button 3: 03 00 08 00 00 00 00 00 -> e
+> +		 *   Button 4: 03 01 16 00 00 00 00 00 -> Ctrl S
+> +		 *   Button 5: 03 00 2c 00 00 00 00 00 -> space
+> +		 *   Button 6: 03 05 1d 00 00 00 00 00 -> Ctrl Alt Z
+> +		 *
+> +		 *   Wheel down: 03 01 2d 00 00 00 00 00 -> Ctrl -
+> +		 *   Wheel up:   03 01 2e 00 00 00 00 00 -> Ctrl =
+> +		 */
+> +		__u8 button = 0;
+> +		__u8 wheel = 0;
+> +
+> +		switch (data[1] << 8 | data[2]) {
+> +		case 0x0000:
+> +			break;
+> +		case 0x0005:
+> +			button = 1;
+> +			break;
+> +		case 0x000c:
+> +			button = 2;
+> +			break;
+> +		case 0x0008:
+> +			button = 3;
+> +			break;
+> +		case 0x0116:
+> +			button = 4;
+> +			break;
+> +		case 0x002c:
+> +			button = 5;
+> +			break;
+> +		case 0x051d:
+> +			button = 6;
+> +			break;
+> +		case 0x012d:
+> +			wheel = -1;
+> +			break;
+> +		case 0x012e:
+> +			wheel = 1;
+> +			break;
+> +
+> +		}
+> +
+> +		__u8 report[6] = {PAD_REPORT_ID, 0x0, 0x0, 0x0, wheel, button};
+> +
+> +		__builtin_memcpy(data, report, sizeof(report));
+> +		return sizeof(report);
+> +	}
+> +
+> +	/* Nothing to do for the PEN_REPORT_ID, it's already mapped */
+> +
+> +	/* Only sent if tablet is in raw mode */
+> +	if (data[0] == VENDOR_REPORT_ID) {
+> +		/* Pad reports */
+> +		if (data[1] & 0x20) {
+> +			/* See fixed_rdesc_pad */
+> +			struct pad_report {
+> +				__u8 report_id;
+> +				__u8 btn_stylus;
+> +				__u8 x;
+> +				__u8 y;
+> +				__u8 buttons;
+> +				__u8 wheel;
+> +			} __attribute__((packed)) *pad_report;
+> +			__u8 wheel = 0;
+> +
+> +			/* Wheel report */
+> +			if (data[1] == 0xf1) {
+> +				if (data[5] == 2)
+> +					wheel = 0xff;
+> +				else
+> +					wheel = data[5];
+> +			} else {
+> +				/* data[4] are the buttons, mapped correctly */
+> +				last_button_state = data[4];
+> +				wheel = 0; // wheel
+> +			}
+> +
+> +			pad_report = (struct pad_report *)data;
+> +
+> +			pad_report->report_id = PAD_REPORT_ID;
+> +			pad_report->btn_stylus = 0;
+> +			pad_report->x = 0;
+> +			pad_report->y = 0;
+> +			pad_report->buttons = last_button_state;
+> +			pad_report->wheel = wheel;
+> +
+> +			return sizeof(struct pad_report);
+> +		}
+> +
+> +		/* Pen reports need nothing done */
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +HID_BPF_OPS(inspiroy_2) = {
+> +	.hid_device_event = (void *)inspiroy_2_fix_events,
+> +	.hid_rdesc_fixup = (void *)hid_fix_rdesc,
+> +};
+> +
+> +SEC("syscall")
+> +int probe(struct hid_bpf_probe_args *ctx)
+> +{
+> +	switch (ctx->rdesc_size) {
+> +	case PAD_REPORT_DESCRIPTOR_LENGTH:
+> +	case PEN_REPORT_DESCRIPTOR_LENGTH:
+> +	case VENDOR_REPORT_DESCRIPTOR_LENGTH:
+> +		ctx->retval = 0;
+> +		break;
+> +	default:
+> +		ctx->retval = -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +char _license[] SEC("license") = "GPL";
+> 
+> -- 
+> 2.44.0
+> 
