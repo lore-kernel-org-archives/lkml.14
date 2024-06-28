@@ -1,29 +1,29 @@
 Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495BC1B94F;
-	Fri, 28 Jun 2024 17:39:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306391B94F;
+	Fri, 28 Jun 2024 17:41:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719596344; cv=none; b=beKKzF6b9qhYfbd16TWObao1uifTx0tE9fTCkj2UaRVKzNmkrTgokbt2r48eHk5CrZULefcqOZkn/Q8W86i/NtQUdpuLU8Ar8CvSOi3Lj65WKcZNR/aNQzH6cBXqYBwRIE6qjO4roQGdSPOoFQu24lURxCaHkOCwsxdnwkqlQzw=
+	t=1719596477; cv=none; b=s+5R50q4FDMC7S/u4K0cXDy34GMALBDaDplX/DQN9HX8VNanue2eam21oywD+eBfcsqXy75u+Dt5v/td1xiiY95ntxrJsQgiQtnA3DLUheTruDyZpFyfK+kCKmJemXxz6dNGcaNQ0un0coAH7GGSEDFCkGPPOaTS8JpLbMAkagQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719596344; c=relaxed/simple;
-	bh=BK09IPXEmALm8Gdo89s3fQ9e2NwgJoDJ3gLuk1S/nic=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=QvH67ISuL3lSiolYlxv2XSJbRqmR7SMMtoKVsCvmqfZefWxGalP+B8z66o10hcH47hoW1m6u4jgdL866GTRuhl2kGuw3ASV818/x2cbEswkE+/LXGuob/YNXm74bq7zw44l5rso6xkiuHgGLy6uuH1SwycR7ltMSXN9cnBN5FLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=VT1AtZqs; arc=none smtp.client-ip=128.199.32.197
+	s=arc-20240116; t=1719596477; c=relaxed/simple;
+	bh=toIiav45hbrwvCItcKkP6A45Os2fpVL346q+vWA/6IE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=eetTjuYMffnFyw14oGyemDrYEiXsLw/cG1df/3gzlHiaDV+WQNj5qU3gTdimPE30AaFz8JWxx1s6ywdbvKZX4yCG6Bfj9nOXVWsYOccU5KxMiBqoNAHI2OquQamzzgECd5Cr/CMNZhHWRH5fWDVxRvEwj6z09KbgV0EC1UnZang=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=ZBjX/H8V; arc=none smtp.client-ip=128.199.32.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="VT1AtZqs"
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="ZBjX/H8V"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
-	t=1719595832; bh=BK09IPXEmALm8Gdo89s3fQ9e2NwgJoDJ3gLuk1S/nic=;
+	t=1719596473; bh=toIiav45hbrwvCItcKkP6A45Os2fpVL346q+vWA/6IE=;
 	h=From:Date:Subject:To:Cc;
-	b=VT1AtZqs98/uwP3P/YU+QlUlrx2apHg/XRtP93isHjKOssLUdW2wv/AylrG8s0qDo
-	 ng00yWuMFzNCor7IWpr42mf2i5Yhmp7pukkOIq1w3S8I81Ch3qyBRwdVThG1fiA2DN
-	 yhYNGfZrvCdOagURC7HXXd5YzGvw6gqr2JIxwdAs=
+	b=ZBjX/H8VWPTvLPm1ftDaOFAaEcOi9R2E+Ce4Rg9vfolEY8AwPd1FKpvVdunhqwMOJ
+	 e1X8wMkWwHdFB7QNZ2L8RFF2Md2ew913WUQya7Kw9yumX9SPrxTAPXhXBgtajBC8B7
+	 rVxd7C906/TRN62YPlAEuhevkUIfv/r8cF08232s=
 From: Luca Weiss <luca@lucaweiss.eu>
-Date: Fri, 28 Jun 2024 19:30:23 +0200
-Subject: [PATCH] soc: qcom: smsm: Add missing mailbox dependency to Kconfig
+Date: Fri, 28 Jun 2024 19:40:55 +0200
+Subject: [PATCH] mailmap: Update Luca Weiss's email address
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,61 +32,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240628-smsm-kconfig-v1-1-117d5af4ba1f@lucaweiss.eu>
-X-B4-Tracking: v=1; b=H4sIAC7zfmYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDMyML3eLc4lzd7OT8vLTMdF2zRANDcwtjE3OjNAMloJaCotS0zAqwcdG
- xtbUAekLAmV4AAAA=
-To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- kernel test robot <lkp@intel.com>, Luca Weiss <luca@lucaweiss.eu>
+Message-Id: <20240628-mailmap-v1-1-a0d12ffd1cd9@lucaweiss.eu>
+X-B4-Tracking: v=1; b=H4sIAKb1fmYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDMyML3dzEzJzcxAJdY1MjizRzYzPTxKQkJaDqgqLUtMwKsEnRsbW1AOn
+ eJpNZAAAA
+To: Bjorn Andersson <andersson@kernel.org>, 
+ ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Luca Weiss <luca@lucaweiss.eu>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1060; i=luca@lucaweiss.eu;
- h=from:subject:message-id; bh=BK09IPXEmALm8Gdo89s3fQ9e2NwgJoDJ3gLuk1S/nic=;
- b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBmfvM3tko9blewzgTgzwAB70K9tcux67YW7REKU
- PsY/V5ShRGJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZn7zNwAKCRBy2EO4nU3X
- VieMD/9au88RKFA4PK6YLlLbYdyrPrBvMGbLvmKLtcckx5TS22ylMYJmWaMo4KgZ8uus5uv/WfO
- tmq+HgRkj379eqOWElufsHZs6AIXEzacyYhgux6ZgQW00dQUvcCa1jKEUIKlyARu7Ed8QB0yxTR
- MEDogu7pK8U4a/s5+6v1bd/qnRb1Ay/91DNUbOeH7L2UOTz5vxCzOPKgR1WwC8leNGce5jBPj7O
- DWpr62ht0sxuejANoelemC+Mx3bJkyD3Nl23lwkZF3kKdocwolPcp4r/vym8vYTJuHILl/jSH8U
- pu+uTbAIG+czpMyVeBOr99IPqFR0jD7NZ8veB9rlSLLvkjBaR44Z9FHbuZ8EVojf/DVRrPL4rrx
- S/LwmRqO7u/BoKGedzDsNiU3eyW/YROUjV8pnaOTIv6GKAAAjIjEpM4D/fud8MqvTgDazsPDGiR
- YiZEMA3gMQvWsbjXLwgXS61qDV2j1iIyUuuoHw3DvqUm5I4J66Xs9XzZlR63uBjIXnVZrjRizhH
- mLNSQ1vA4ObpwGpwHmybrnesp6mtAe0UtV1gAU8QwjM0YO4it5HsiFbPj2gOzgHqa7fpn1oJfCY
- a7iMrsASR+yKu4L9y2WWM0tpTmHfnDWsJjeE2pW3k2KqeDcnuc6LmIVNB1w/pUWdMue5wxYgDgY
- yZTz5kqoWem1HMw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1240; i=luca@lucaweiss.eu;
+ h=from:subject:message-id; bh=toIiav45hbrwvCItcKkP6A45Os2fpVL346q+vWA/6IE=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBmfvW4le6rriyujXy0XorJNe8GloR7MugOVonFA
+ faFM5vNEl6JAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZn71uAAKCRBy2EO4nU3X
+ VrKvEACgd7YTcnp9R2cdZnmGgIjv9KZojIHB+mzQNcQFZg7z5ZyCLOgF4GnMyH8noKOwAEecfFL
+ GbJg1DCQd3UrYuw01OeAvtFyjK9JU2oIk+pWYY68QOP/JOJM6NwNr7e6nCG1s9y4TLup4u/m1U1
+ 0jlDiAUgjcR8pmYz+b0p035PbGdKG1Mp56w3+Up/ufu2NABVr8/fOa/jMkvFBea/fa4obfdKon7
+ u1JdOt3OCfznujgKW4B7bHMM3gXBqJSYjGM5xsRNmg3gpSODahztn5LdEB7bxIgAQWEBQK5FBnv
+ BTVujGIsdu4oC2yurvIjBro90sc7vHhlvIwyGZVCJ13Tt4k9hIco2XTeqE2EQWZHNiMXJ+mta+h
+ dlp8HyB0WluDjpgxbZp1Kj2tw322WJDHIoJ9IiBUa0h0UHZJiD6oOFcl8SMxD6YixPkHhfwKI7N
+ JajdnWhuwFqeVhX7gmzlud17pqJJ2EcpN+dMuwoL0rbA95Z3boma5EcqupyHLOGWCyhZ2oe8aGr
+ 4w/BWW4WoYC1DkKNME2j2FGXp4jusrfsHd204xdv9LVUlrVAn9c37UW+Vj7uQ98Gl1FS2nJXzjg
+ oJZmPqkmpMFvDmHQtH1UoWncJO47Fv4y4+jevnX9rTxBnl2RFmCSwARvIkpjtgH9KNFGBTnzdgW
+ sMdR7f0cTE9hilg==
 X-Developer-Key: i=luca@lucaweiss.eu; a=openpgp;
  fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
-Since the smsm driver got the ability to interact with the mailbox using
-the mailbox subsystem and not just syscon, we need to add the dependency
-to kconfig as well to avoid compile errors.
+I'm slowly migrating my mail to a new domain, add an entry to map the
+mail address. Just for clarity, my work-related @fairphone.com email
+stays unchanged.
 
-Fixes: 75287992f58a ("soc: qcom: smsm: Support using mailbox interface")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202406180006.Z397C67h-lkp@intel.com/
 Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
 ---
- drivers/soc/qcom/Kconfig | 1 +
+Since my email address also appears in a bunch of drivers and arm(64)
+files, and two devicetree binding files, how are those normally handled?
+Just ignore them and let mailmap handle everything relevant?
+---
+ .mailmap | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index 5af33b0e3470..60efecd16380 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -194,6 +194,7 @@ config QCOM_SMP2P
- 
- config QCOM_SMSM
- 	tristate "Qualcomm Shared Memory State Machine"
-+	depends on MAILBOX
- 	depends on QCOM_SMEM
- 	select QCOM_SMEM_STATE
- 	select IRQ_DOMAIN
+diff --git a/.mailmap b/.mailmap
+index a6c619e22efc..e169a99ce7c7 100644
+--- a/.mailmap
++++ b/.mailmap
+@@ -385,6 +385,7 @@ Li Yang <leoyang.li@nxp.com> <leo@zh-kernel.org>
+ Lior David <quic_liord@quicinc.com> <liord@codeaurora.org>
+ Lorenzo Pieralisi <lpieralisi@kernel.org> <lorenzo.pieralisi@arm.com>
+ Luca Ceresoli <luca.ceresoli@bootlin.com> <luca@lucaceresoli.net>
++Luca Weiss <luca@lucaweiss.eu> <luca@z3ntu.xyz>
+ Lukasz Luba <lukasz.luba@arm.com> <l.luba@partner.samsung.com>
+ Luo Jie <quic_luoj@quicinc.com> <luoj@codeaurora.org>
+ Maciej W. Rozycki <macro@mips.com> <macro@imgtec.com>
 
 ---
 base-commit: 642a16ca7994a50d7de85715996a8ce171a5bdfb
-change-id: 20240628-smsm-kconfig-6a01783472f0
+change-id: 20240628-mailmap-3528f7365abb
 
 Best regards,
 -- 
