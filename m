@@ -1,172 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9AD0158D7E;
-	Fri, 28 Jun 2024 12:02:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636C9158A10
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 12:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719576135; cv=none; b=pOcJKWE1/NcwRrFBCcR22Ii3VMSkwDRRFatdsteR/X2FkA4kWXAvcLutgvyT7N/ImyeNG7JV24YZUQ7nb2ZkfeO9ImGiVlJSdyB+vnVaz6dG7Y8N0TpaiuC8J0v75do7XGj9TAToaldZm32cw/ijf7at7scVGbqfGTQqTQULr80=
+	t=1719576137; cv=none; b=r7PfFcgqoG9u7O8lCZFCuyEj8OG5ojjhdIDtQJKMSE9AYUaQx9XzS9ds6SOw36wCnubusb68JFi4GYMc5DdA8wj1wzf74qpXhKVWZns6JfiBgWR7oibnDCmfwz991+5/Xg+JuF7lS3/PD5zYVU5axZtl5bMFo3nekUm0n8bObJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719576135; c=relaxed/simple;
-	bh=08Dx61MyaxKGlSkozABy5WMPBJ2CLpDC+4zlJix+0JA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=P/uJ9fxi81bZ2xUNEC4dLa/davonxA1JTPHwNVcu4eyQSjC4wv2ODPdDZOPR6GTLOKd86mW9lpweDohcKRBBxLzYE+nmH/BLM0zWgZDAvr+wHNtQrmiiuCds1JjEct7xu2cvpYqANHxBDAW7+DOSl3J/5KFitQTP40nJA5lX4N8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RzYQq506; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719576137; c=relaxed/simple;
+	bh=1uSrJkD5Zjfn20B0+Voqc1tYBBjAIlt32I1fxB4N9J8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QmfddFg615cGq2j/eqm344etEZTY3jFC/xvFTfFwGtZdfSN3i14MRT0GuELmgHrg1bbwt02W8v/Q66+sQse6SxcqpHoiXNo7mokJBZsZte3wG8+lNfseIgoVc0H2lMvUrfk8PRpX5MJJuD78vqlWy9jz9Gx7l9p0V/iyJ16dITc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=lHdl2hyM; arc=none smtp.client-ip=91.218.175.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RzYQq506"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CD57C116B1;
-	Fri, 28 Jun 2024 12:02:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719576135;
-	bh=08Dx61MyaxKGlSkozABy5WMPBJ2CLpDC+4zlJix+0JA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=RzYQq506UcW/kdIQvGp2LOORzyS3ZKUdNn+XuW7QuqfMg1KDVqMhx38pCGBlTGpSb
-	 KD6o0IoCWXb31KVykr5MpDoqJU+0IiFTb866z5iVV+GvQwg9GD3DD39N4brldlULGJ
-	 HzuN6ccs1A7pw7Eno7MrxBUy5QwknTN4JblVaA834mb3V9e2ByIuTprFdm2/AdOi1s
-	 gu6nLlj/ORx2PVHH7jqW8pxj/gzssrsq9bsxXd3YIEvVJJHhAFZuQPs4ppw/K3LR5x
-	 vHPkgRfqx0nQGAztAlpoHJIQHbUM4UjTUHtydbDdSD2GC0kGdgi8LcrgVFVPdxuSY1
-	 hWABbRAfvvNug==
-From: Roger Quadros <rogerq@kernel.org>
-Date: Fri, 28 Jun 2024 15:01:52 +0300
-Subject: [PATCH net-next v2 3/7] net: ethernet: ti: cpsw_ale: use regfields
- for number of Entries and Policers
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="lHdl2hyM"
+X-Envelope-To: heiko@sntech.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1719576129;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=sfuZFBB5M5HzceMLfENqUVqIXCu7nq+4d20hGrJdaF0=;
+	b=lHdl2hyMNHhzITHZTrrKvZs6BqdIjLJ1EeebRI2kMoTaXbH1Ai41zCDEcFyzPAe6ciIQf1
+	Fu0MOS6RM05zY2Kbbs3J9UDQLNtSOMbzpzaanoMBNoW1+9YlzQ/Ns9r3sVqpRcdagPz0KB
+	4gZE8wD7CsHrJ8AAGJLwAZ5M2XOhIrRVwSGn0xYpchIHZIHySemtwvaPInSko7O6WXdDx8
+	Iyc0L8mU6YGhl7N0BqLaqNB69LOG1iwPWJ4HrX0+TkUJpwV8DbItjeuk6WloPQnD+tOiLy
+	1tLoHDDGudWPu2jNz9ycny1D+m070dru7LJdXar5XJBVPqkbLKIY/2EsDuCHmw==
+X-Envelope-To: didi.debian@cknow.org
+X-Envelope-To: jonas@kwiboo.se
+X-Envelope-To: dsimic@manjaro.org
+X-Envelope-To: ukleinek@debian.org
+X-Envelope-To: wens@kernel.org
+X-Envelope-To: linux-rockchip@lists.infradead.org
+X-Envelope-To: devicetree@vger.kernel.org
+X-Envelope-To: linux-arm-kernel@lists.infradead.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Diederik de Haas <didi.debian@cknow.org>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Diederik de Haas <didi.debian@cknow.org>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Dragan Simic <dsimic@manjaro.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@debian.org>,
+	Chen-Yu Tsai <wens@kernel.org>,
+	linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: rockchip: Add dma-names to uart1 on quartz64-b
+Date: Fri, 28 Jun 2024 14:00:43 +0200
+Message-ID: <20240628120130.24076-1-didi.debian@cknow.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240628-am65-cpsw-multi-rx-v2-3-c399cb77db56@kernel.org>
-References: <20240628-am65-cpsw-multi-rx-v2-0-c399cb77db56@kernel.org>
-In-Reply-To: <20240628-am65-cpsw-multi-rx-v2-0-c399cb77db56@kernel.org>
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Siddharth Vadapalli <s-vadapalli@ti.com>, 
- Julien Panis <jpanis@baylibre.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, srk@ti.com, vigneshr@ti.com, 
- danishanwar@ti.com, pekka Varis <p-varis@ti.com>, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, 
- Roger Quadros <rogerq@kernel.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3704; i=rogerq@kernel.org;
- h=from:subject:message-id; bh=08Dx61MyaxKGlSkozABy5WMPBJ2CLpDC+4zlJix+0JA=;
- b=owEBbQKS/ZANAwAIAdJaa9O+djCTAcsmYgBmfqY4ikMcAIbn90+7REkmcxoDIU4AtE/QpZcqw
- v8O/wSgAZWJAjMEAAEIAB0WIQRBIWXUTJ9SeA+rEFjSWmvTvnYwkwUCZn6mOAAKCRDSWmvTvnYw
- k6UDD/9RIseQJBe3R4kKzM0TS0gP2bKiu9e/EMUpLTEQcKm7QBxYhKrTvrydcV4+duBlYWBuKnx
- TjVOz3XlkS0aQtIHdb2e5gFJDdJh1ERlpLUIHTEjm5hi+wjJFoJC8oS2hrD4BWxqmXKISovAFSJ
- yZZPIuKlyDBuciB0BwQQnT4P1W02LrJT/AHVOCklclyzBsZbplX71FMppmbh8fMYPysTh8+BMWX
- C45EoLZDlxmtZv/bb7t/2VVWNES62qfd6TILNknyVQzg5ZaDUl4tEhWgjLDp3Mvuqiv9//U2Yg7
- Z1UAuzkVHco5hxgw3xXbYST7ch8KTWQLgnOWgW/m37lp78CJTC3uf7h501JsQuwW1zKU61j8PPG
- O83c3kTtoufIeGPd2+iNZbkZgcB8sB3aR8e/VmzWBTWwKXqmwrO6lmgodvLohbuyi2QkyP3/yrW
- 76A96LTU9Q2PFIFWdOIRU+AGUzM8t4k0BG2ZN3V/NiMHPjXFWv7TFryN7gVis0PQQXkET1mvyDT
- nw6Z4X2QY9ZHZawwhskd7lmQa2zDMgs8I+0QV36BtsAEYcDwWnyL2Lg0aouVDKPmm8rOvBigMSG
- /NuJAC4lxY4+UmcIm3ZBOGpWvRa8rGo5CZI6h1xQD4I0X0glR7IKY3S854QcujATsIYSJITN5PV
- zP/3v1jmoMD0xDQ==
-X-Developer-Key: i=rogerq@kernel.org; a=openpgp;
- fpr=412165D44C9F52780FAB1058D25A6BD3BE763093
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Use regfields for number of ALE Entries and Policers.
+There have been several attempts to set the dma-names property on the
+SoC level (in rk356x.dtsi), but that appears to cause problems when set
+on channels without flow control.
 
-The variants that support Policers/Classifiers have the number
-of policers encoded in the ALE_STATUS register.
+Quoting part of a previous attempt for clarification:
 
-Use that and show the number of Policers in the ALE info message.
+> Nah, enabling it for bluetooth is fine because you have flow control.
+> My issues have been on channels without flow control. Without DMA it
+> simply drops messages or the channel hangs until you close and reopen
+> it. With DMA, when an overflow locks up the channel it is usually
+> unavailable until the board is rebooted.
 
-Signed-off-by: Roger Quadros <rogerq@kernel.org>
+Setting it on the board level for the bluetooth connection was deemed
+safe, so do so for the Quartz64 Model B.
+
+This fixes the following error/warning:
+
+  of_dma_request_slave_channel: dma-names property of node
+      '/serial@fe650000' missing or empty
+  dw-apb-uart fe650000.serial: failed to request DMA
+
+Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
+Link: https://libera.irclog.whitequark.org/armlinux/2024-02-29
+Link: https://lore.kernel.org/linux-rockchip/18284546.sWSEgdgrri@diego/
 ---
- drivers/net/ethernet/ti/cpsw_ale.c | 25 +++++++++++++++++++------
- drivers/net/ethernet/ti/cpsw_ale.h |  3 +++
- 2 files changed, 22 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3566-quartz64-b.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
-index 5afe9fdd6402..ca66c89c1f12 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.c
-+++ b/drivers/net/ethernet/ti/cpsw_ale.c
-@@ -103,7 +103,7 @@ struct cpsw_ale_dev_id {
- #define ALE_UCAST_TOUCHED		3
- 
- #define ALE_TABLE_SIZE_MULTIPLIER	1024
--#define ALE_STATUS_SIZE_MASK		0x1f
-+#define ALE_POLICER_SIZE_MULTIPLIER	8
- 
- static inline int cpsw_ale_get_field(u32 *ale_entry, u32 start, u32 bits)
- {
-@@ -1303,6 +1303,9 @@ static const struct reg_field ale_fields_cpsw_nu[] = {
- 	/* CPSW_ALE_IDVER_REG */
- 	[MINOR_VER]	= REG_FIELD(ALE_IDVER, 0, 7),
- 	[MAJOR_VER]	= REG_FIELD(ALE_IDVER, 8, 10),
-+	/* CPSW_ALE_STATUS_REG */
-+	[ALE_ENTRIES]	= REG_FIELD(ALE_STATUS, 0, 7),
-+	[ALE_POLICERS]	= REG_FIELD(ALE_STATUS, 8, 15),
+diff --git a/arch/arm64/boot/dts/rockchip/rk3566-quartz64-b.dts b/arch/arm64/boot/dts/rockchip/rk3566-quartz64-b.dts
+index b908ce006c26..13e599a85eb8 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3566-quartz64-b.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3566-quartz64-b.dts
+@@ -652,6 +652,7 @@ &tsadc {
  };
  
- static const struct cpsw_ale_dev_id cpsw_ale_id_match[] = {
-@@ -1404,7 +1407,7 @@ struct cpsw_ale *cpsw_ale_create(struct cpsw_ale_params *params)
- {
- 	const struct cpsw_ale_dev_id *ale_dev_id;
- 	struct cpsw_ale *ale;
--	u32 ale_entries, rev_major, rev_minor;
-+	u32 ale_entries, rev_major, rev_minor, policers;
- 	int ret;
- 
- 	ale_dev_id = cpsw_ale_match_id(cpsw_ale_id_match, params->dev_id);
-@@ -1446,9 +1449,7 @@ struct cpsw_ale *cpsw_ale_create(struct cpsw_ale_params *params)
- 
- 	if (ale->features & CPSW_ALE_F_STATUS_REG &&
- 	    !ale->params.ale_entries) {
--		ale_entries =
--			readl_relaxed(ale->params.ale_regs + ALE_STATUS) &
--			ALE_STATUS_SIZE_MASK;
-+		regmap_field_read(ale->fields[ALE_ENTRIES], &ale_entries);
- 		/* ALE available on newer NetCP switches has introduced
- 		 * a register, ALE_STATUS, to indicate the size of ALE
- 		 * table which shows the size as a multiple of 1024 entries.
-@@ -1462,8 +1463,20 @@ struct cpsw_ale *cpsw_ale_create(struct cpsw_ale_params *params)
- 		ale_entries *= ALE_TABLE_SIZE_MULTIPLIER;
- 		ale->params.ale_entries = ale_entries;
- 	}
-+
-+	if (ale->features & CPSW_ALE_F_STATUS_REG &&
-+	    !ale->params.num_policers) {
-+		regmap_field_read(ale->fields[ALE_POLICERS], &policers);
-+		if (!policers)
-+			return ERR_PTR(-EINVAL);
-+
-+		policers *= ALE_POLICER_SIZE_MULTIPLIER;
-+		ale->params.num_policers = policers;
-+	}
-+
- 	dev_info(ale->params.dev,
--		 "ALE Table size %ld\n", ale->params.ale_entries);
-+		 "ALE Table size %ld, Policers %ld\n", ale->params.ale_entries,
-+		 ale->params.num_policers);
- 
- 	/* set default bits for existing h/w */
- 	ale->port_mask_bits = ale->params.ale_ports;
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.h b/drivers/net/ethernet/ti/cpsw_ale.h
-index 58d377dd7496..e12bb2caf016 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.h
-+++ b/drivers/net/ethernet/ti/cpsw_ale.h
-@@ -15,6 +15,7 @@ struct cpsw_ale_params {
- 	void __iomem		*ale_regs;
- 	unsigned long		ale_ageout;	/* in secs */
- 	unsigned long		ale_entries;
-+	unsigned long		num_policers;
- 	unsigned long		ale_ports;
- 	/* NU Switch has specific handling as number of bits in ALE entries
- 	 * are different than other versions of ALE. Also there are specific
-@@ -33,6 +34,8 @@ struct regmap;
- enum ale_fields {
- 	MINOR_VER,
- 	MAJOR_VER,
-+	ALE_ENTRIES,
-+	ALE_POLICERS,
- 	/* terminator */
- 	ALE_FIELDS_MAX,
- };
-
+ &uart1 {
++	dma-names = "tx", "rx";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart1m0_xfer &uart1m0_ctsn &uart1m0_rtsn>;
+ 	status = "okay";
 -- 
-2.34.1
+2.45.2
 
