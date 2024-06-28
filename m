@@ -1,261 +1,106 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44EF01E532
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 14:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21DBE1C0057
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 14:48:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719586010; cv=none; b=mrk49dj4V91gra8+nhXVxXM+3TX/r4k95NXOzcRQO5AGiu71Crc8xJ3gaTl6vpIoaFqhO8b2AEUdNjQiZ4EaV+MR3WTH/5I6mzMcQRwIZhni5cD9RElpixBMZ3lkWmBL3qMqTHMIsDCH0rNG997F0y6RHnUS/XjqquuDIX8PUaY=
+	t=1719586122; cv=none; b=VFouX3e3S92AH5CEEOYF+tp+cyNsACrs6SNUtqadc3StZMXncsyjjVSxdELnbV9mhj403C5rsmRcrmKOqOm0kHrP7uXQ0s05OAIibSErjYN9OfMGlqdyxFUbhUKFkRXcn2HBCiJam8M8E3NNJWe89V7cq9ar9bot44Omfx61lqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719586010; c=relaxed/simple;
-	bh=edaHmvHbc8a5eSoGysusOi/UdYbwcqedB7i5VwDuYho=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FDSDoWfVpAOylXYYrR0CdtqJsaI99RcYfSDW0kAZcstesE6cn4j9oMc9YmSG/+S5aGDesPHGUtnfG2b/HloytEr1/0kFqCsNG3K/lpVrMVnsC0Ui7VYq/Xmfi+ypSAHDNDeto0j6CjV8g8z+30EQLpSTLJT9qBQGTOSTtC+QR50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=lRVGvHK5; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1719586122; c=relaxed/simple;
+	bh=PLtj7bSe++tHU1muE0ellbCUBsOVwaNLui/U8TXTses=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=hQrb4nJdWH8l6lUsSOb0XJGwYITJLp0zr53SLLCvdsxGY1MwW+81GbBkueCH5KZkK2Tcyxv4wX6EdlYWJD2PRdvbJQHda1HEzz0aRBt7s1QmHJIyWezxfpKGybz6nqIiVIGPyF7G4qpHZLXJasgYsuiYI1CqGHc/z3MDI//C9TM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=v6jOUtlZ; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="lRVGvHK5"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2ec002caeb3so8236331fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 07:46:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="v6jOUtlZ"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4256aee6e4dso5304075e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 07:48:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719586005; x=1720190805; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NJEUwCbOzu7QTCraes4nwXff/wo8VWMthQe2KP3OzRY=;
-        b=lRVGvHK5KqBPGlE3u18fMAx25djbMN3pfyXLbvdNXlfDwcsV8ygCI3Tox7Lj5NiVVB
-         fZug/66kPW9I6wk2n06huduluGhoERe3NYD5tRczjSo/kd1Oh/IKPXdqNZEycoEM380+
-         xMYhl3tD2MOISBgR5LM4N+gu7e8km+MifFhFsOVTFSfvq3Zonbje03p78y+ua8DTY623
-         0agRiKfjoCxd+eGGzcAYNc0aBjvUdQa27SN1tZ+ShO/Bp0tydeldbZjLFYH6Pt75M01l
-         zryt/AwOT4tR/tE/ob7DkQKfiA6tS0lAzClpQX/+q4fw4SgAFb6Y1zxS2Uk03S8758uk
-         RuhA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719586118; x=1720190918; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uJg4U+PW9Snx8tG5VLs4l5kg/oNVaqq+3EVHHkcbQfc=;
+        b=v6jOUtlZtIeACeLCCkYRk2O8ycfb6qRg/MEUNbSK0nsQ6wujLPYBGgHiKPJWTqjbz2
+         m7LspueVlAWnBhfoV7BBOAEwO5uORdW3RjH+qNHIwj99m5nExCisGlkPvOlFpMMbapcG
+         e5tG5LIFzE+E8q0Ytn5RUsN2OYGGWehui86FNrSpP6IGbUtHZj8p9THStSUL8q+7F4N5
+         9mWHNSqrwVLxp73SAHWWRWUTHQSAUFBc/Wpa8pYkoKhYmP3uA0TIqnF3yqviKFg+bU/q
+         k0CjSbL58MiJYm0KC7vGvuahzbvOPL6NSTur+KkqYu1fidzSe4jieagZWOmIFi7dhUFy
+         ufKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719586005; x=1720190805;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1719586118; x=1720190918;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NJEUwCbOzu7QTCraes4nwXff/wo8VWMthQe2KP3OzRY=;
-        b=ha2qiF30NLh8yBn6nPJ+3gIr1H6opyrTwf5J5aNjyM1qe2GfDKTMIavrGun8dKVoQK
-         xv7s2MPhsI9oUiYWHsQriHLpPqYegbxnZEjcqsLJiyl/YR97xlrN9M6THJxj+lFq2Nwo
-         5Ef2DGReOMZn18lQFKO7NsMI27pQokRYl+9Is5xExW82RYEHKOzImKDxb1m4j2GM+ZA/
-         FysNiAOUXl1O+Bexi4Bkt+UydAflJ0vnb3tSr38m7s2IdQdfjORmy2cFP4GOrnFI5dpf
-         JpzdjGLYTQ+1cjZU/jPWFuR+e+9M69nuc+s/rcEjqgf0+3jmtLeGuR/J+S1ltqhWmDrL
-         Hrsw==
-X-Forwarded-Encrypted: i=1; AJvYcCUnHrCG7MX/CeCzsUG8oXAeRiNgzVkfcJNn0OglGpkZDnqhIi93srRlklt0TQ2IMeStAtbeq8ADIOXGzMxk9edErurfOjlaVW7/MliD
-X-Gm-Message-State: AOJu0Yzu22kE7gdO/TaYKzto/fqWJBIWrWjKbYvWhyt/iVr7roYPatM5
-	J/5WJ8guB4AbcAleB2tQ/hG90Aj3Zydtda5EFL+bm+fxsXAu79CLuTk1qp2y/o7nfSdFwbwOtqw
-	xkTfswjV41w9vHcF1wcbKlYxewnI1WT6SaHggGg==
-X-Google-Smtp-Source: AGHT+IEAssqeG4VkYeYz5wXFHCqHzEcG+3pK46RbnFe7VFKCuQh/uxD4sVggsDU85mjCD+hFTgZO6iEuWF8/K3V8VGM=
-X-Received: by 2002:a2e:8909:0:b0:2ec:4fec:812c with SMTP id
- 38308e7fff4ca-2ec579fefcbmr106765681fa.44.1719586005212; Fri, 28 Jun 2024
- 07:46:45 -0700 (PDT)
+        bh=uJg4U+PW9Snx8tG5VLs4l5kg/oNVaqq+3EVHHkcbQfc=;
+        b=QSnobQAUQe3/h0eUAVKxZo2lQF7XjU9UtqbZS/FRSDiS4DPux27Q8s9dwAmaDY+MR5
+         R2UbhEHNRXCnHhLrfJXhR23gH+XdAsZmgXXpOpYS8o9FyKvuyT4HSNSOAU9R83bjrO5O
+         xvE9yuOUIVfjVr8w3tIKZp2wiX6vsh5gZ7cbuaJj6OyU57SJitgaVr37MBiHYsFBAeGl
+         29g6gEYTQjjqQd0gmRLk99val4ysWseff65fBo+HnuLpvBV8paDjUET2yhxZxqWdJAc0
+         qYrKx9QU85qmlGsJ5B1UL3rOjBMeLKwk2rZnLegwFd0I/kVDy3pHwQKmPwDGzWlHj8MY
+         uLbg==
+X-Forwarded-Encrypted: i=1; AJvYcCVPXRQOro4nHdDMa3fQs+YhrUTuu8lRAoQo6EHMTnb1Z1DmgU7wsNpW9deY0GXwt1fjeJjmWQCVxmXK/eUIU3fNurQPzvvsusRbtpKP
+X-Gm-Message-State: AOJu0Yx3Gt7DNePsiZxtYPuoj5f8FULUMfvFDjNEdOWuI36OzjJ7fBVz
+	/Yf4TNOQEOgJX/LnmcV8dlnnWkAPghCWhNk2gStkSaOe3/3/2Njm4KJuCMedPeE=
+X-Google-Smtp-Source: AGHT+IFZJvZcGme5tYJIDm7Fn4HGpd/PyLd+v7/pwoRVXETsHGa6eBvd/qNPMGWqDBbSv0goSqbC5g==
+X-Received: by 2002:a05:600c:54cc:b0:425:624e:d80a with SMTP id 5b1f17b1804b1-425624ed961mr46300535e9.24.1719586118172;
+        Fri, 28 Jun 2024 07:48:38 -0700 (PDT)
+Received: from [127.0.1.1] (frhb82016ds.ikexpress.com. [185.246.87.17])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256af55c0asm37972575e9.15.2024.06.28.07.48.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Jun 2024 07:48:37 -0700 (PDT)
+From: Guillaume Stols <gstols@baylibre.com>
+Date: Fri, 28 Jun 2024 14:48:19 +0000
+Subject: [PATCH v2 01/10] dt-bindings: iio: adc: adi,ad7606: add missing
+ datasheet link
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240628080146.49545-1-andrei.simion@microchip.com>
- <20240628080146.49545-2-andrei.simion@microchip.com> <CAMRc=MeJyByMvcFT2aJDK87bz4=+UXEuMtQ4G4MZUAUt39SS1Q@mail.gmail.com>
- <67d3646f-1b84-4d2d-9e36-be898f13be90@microchip.com>
-In-Reply-To: <67d3646f-1b84-4d2d-9e36-be898f13be90@microchip.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 28 Jun 2024 16:46:33 +0200
-Message-ID: <CAMRc=MeJM4LmczCbZ8bKytLZKY_mP=Q8eaUprLMmO8BYHecStw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] eeprom: at24: avoid adjusting offset for
- 24AA025E{48, 64}
-To: Andrei.Simion@microchip.com
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, 
-	claudiu.beznea@tuxon.dev, arnd@arndb.de, gregkh@linuxfoundation.org, 
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	claudiu.beznea@microchip.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240628-cleanup-ad7606-v2-1-96e02f90256d@baylibre.com>
+References: <20240628-cleanup-ad7606-v2-0-96e02f90256d@baylibre.com>
+In-Reply-To: <20240628-cleanup-ad7606-v2-0-96e02f90256d@baylibre.com>
+To: Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Beniamin Bia <beniamin.bia@analog.com>, 
+ Stefan Popa <stefan.popa@analog.com>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Michael Hennerich <michael.hennerich@analog.com>, 
+ linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Guillaume Stols <gstols@baylibre.com>, jstephan@baylibre.com, 
+ dlechner@baylibre.com
+X-Mailer: b4 0.14.0
 
-On Fri, Jun 28, 2024 at 4:17=E2=80=AFPM <Andrei.Simion@microchip.com> wrote=
-:
->
-> On 28.06.2024 11:30, Bartosz Golaszewski wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you know =
-the content is safe
-> >
-> > On Fri, Jun 28, 2024 at 10:02=E2=80=AFAM Andrei Simion
-> > <andrei.simion@microchip.com> wrote:
-> >>
-> >> From: Claudiu Beznea <claudiu.beznea@microchip.com>
-> >>
-> >> The EEPROMs could be used only for MAC storage. In this case the
-> >> EEPROM areas where MACs resides could be modeled as NVMEM cells
-> >> (directly via DT bindings) such that the already available networking
-> >> infrastructure to read properly the MAC addresses (via
-> >> of_get_mac_address()). The previously available compatibles needs the
-> >> offset adjustment probably for compatibility w/ old DT bindings.
-> >> Add "microchip,24aa025e48", "microchip,24aa025e64" compatible for the
-> >> usage w/ 24AA025E{48, 64} type of EEPROMs where "24aa025e48" stands
-> >> for EUI-48 address and "24aa025e64" stands for EUI-64 address.
-> >>
-> >> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> >> [andrei.simion@microchip.com: Add extended macros to initialize the st=
-ructure
-> >> with explicit value to adjusting offset. Add extra description for the=
- commit
-> >> message.]
-> >> Signed-off-by: Andrei Simion <andrei.simion@microchip.com>
-> >> ---
-> >> v2 -> v3:
-> >> - add specific compatible names according with
-> >> https://ww1.microchip.com/downloads/en/DeviceDoc/24AA02E48-24AA025E48-=
-24AA02E64-24AA025E64-Data-Sheet-20002124H.pdf
-> >> - add extended macros to initialize the structure with explicit value =
-for adjoff
-> >> - drop co-developed-by to maintain the commit history
-> >>  (chronological order of modifications)
-> >>
-> >> v1 -> v2:
-> >> - no change
-> >> ---
-> >>  drivers/misc/eeprom/at24.c | 28 +++++++++++++++++++++++-----
-> >>  1 file changed, 23 insertions(+), 5 deletions(-)
-> >>
-> >> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-> >> index 4bd4f32bcdab..e2ac08f656cf 100644
-> >> --- a/drivers/misc/eeprom/at24.c
-> >> +++ b/drivers/misc/eeprom/at24.c
-> >> @@ -121,20 +121,29 @@ struct at24_chip_data {
-> >>         u32 byte_len;
-> >>         u8 flags;
-> >>         u8 bank_addr_shift;
-> >> +       u8 adjoff;
-> >>         void (*read_post)(unsigned int off, char *buf, size_t count);
-> >>  };
-> >>
-> >> -#define AT24_CHIP_DATA(_name, _len, _flags)                          =
-  \
-> >> +#define AT24_CHIP_DATA_AO(_name, _len, _flags, _ao)                  =
-  \
-> >
-> > Please, don't try to save space on a few letters, call it
-> > AT24_CHIP_DATA_ADJOFF() for better readability.
-> >
->
-> I will change in next the version.
->
-> >>         static const struct at24_chip_data _name =3D {                =
-    \
-> >>                 .byte_len =3D _len, .flags =3D _flags,                =
-      \
-> >> +               .adjoff =3D _ao                                       =
-    \
-> >>         }
-> >>
-> >> -#define AT24_CHIP_DATA_CB(_name, _len, _flags, _read_post)           =
-  \
-> >> +#define AT24_CHIP_DATA(_name, _len, _flags)                          =
-  \
-> >> +       AT24_CHIP_DATA_AO(_name, _len, _flags, 0)
-> >> +
-> >> +#define AT24_CHIP_DATA_CB_AO(_name, _len, _flags, _ao, _read_post)   =
-  \
-> >>         static const struct at24_chip_data _name =3D {                =
-    \
-> >>                 .byte_len =3D _len, .flags =3D _flags,                =
-      \
-> >> +               .adjoff =3D _ao,                                      =
-    \
-> >>                 .read_post =3D _read_post,                            =
-    \
-> >>         }
-> >>
-> >> +#define AT24_CHIP_DATA_CB(_name, _len, _flags, _read_post)           =
-  \
-> >> +       AT24_CHIP_DATA_CB_AO(_name, _len, _flags, 0, _read_post)
-> >> +
-> >>  #define AT24_CHIP_DATA_BS(_name, _len, _flags, _bank_addr_shift)     =
-  \
-> >>         static const struct at24_chip_data _name =3D {                =
-    \
-> >>                 .byte_len =3D _len, .flags =3D _flags,                =
-      \
-> >> @@ -170,9 +179,13 @@ AT24_CHIP_DATA(at24_data_24cs01, 16,
-> >>  AT24_CHIP_DATA(at24_data_24c02, 2048 / 8, 0);
-> >>  AT24_CHIP_DATA(at24_data_24cs02, 16,
-> >>         AT24_FLAG_SERIAL | AT24_FLAG_READONLY);
-> >> -AT24_CHIP_DATA(at24_data_24mac402, 48 / 8,
-> >> +AT24_CHIP_DATA_AO(at24_data_24mac402, 48 / 8,
-> >> +       AT24_FLAG_MAC | AT24_FLAG_READONLY, 1);
-> >
-> > And this will not break existing users? I guess you refer to these
-> > changes in your commit message but it's not very clear what you're
-> > doing and why.
-> >
->
-> For those types of eeprom 24AA025E{48, 64} adjusting offset is not requir=
-ed (at24_get_offset_adj()).
-> So, indeed, it is an entanglement in logic.
-> To keep the implementation as it is:
-> adjoff (which is a flag that indicates when to use the adjusting offset) =
-needs to be 1 for old compatibles but for these new ones needs to be 0.
->
-> I think that is enough not to break the existing users. What are your tho=
-ughts?
->
+Add AD7606-5 datasheet link.
 
-Wait... is the adjoff field effectively a boolean? Why u8?
+Signed-off-by: Guillaume Stols <gstols@baylibre.com>
+---
+ Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Bart
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+index 7fa46df1f4fb..d55c58400df5 100644
+--- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+@@ -11,6 +11,7 @@ maintainers:
+ 
+ description: |
+   Analog Devices AD7606 Simultaneous Sampling ADC
++  https://www.analog.com/media/en/technical-documentation/data-sheets/AD7605-4.pdf
+   https://www.analog.com/media/en/technical-documentation/data-sheets/ad7606_7606-6_7606-4.pdf
+   https://www.analog.com/media/en/technical-documentation/data-sheets/AD7606B.pdf
+   https://www.analog.com/media/en/technical-documentation/data-sheets/AD7616.pdf
 
-> Best Regards,
-> Andrei Simion
->
-> >> +AT24_CHIP_DATA_AO(at24_data_24mac602, 64 / 8,
-> >> +       AT24_FLAG_MAC | AT24_FLAG_READONLY, 1);
-> >> +AT24_CHIP_DATA(at24_data_24aa025e48, 48 / 8,
-> >>         AT24_FLAG_MAC | AT24_FLAG_READONLY);
-> >> -AT24_CHIP_DATA(at24_data_24mac602, 64 / 8,
-> >> +AT24_CHIP_DATA(at24_data_24aa025e64, 64 / 8,
-> >>         AT24_FLAG_MAC | AT24_FLAG_READONLY);
-> >>  /* spd is a 24c02 in memory DIMMs */
-> >>  AT24_CHIP_DATA(at24_data_spd, 2048 / 8,
-> >> @@ -218,6 +231,8 @@ static const struct i2c_device_id at24_ids[] =3D {
-> >>         { "24cs02",     (kernel_ulong_t)&at24_data_24cs02 },
-> >>         { "24mac402",   (kernel_ulong_t)&at24_data_24mac402 },
-> >>         { "24mac602",   (kernel_ulong_t)&at24_data_24mac602 },
-> >> +       { "24aa025e48", (kernel_ulong_t)&at24_data_24aa025e48 },
-> >> +       { "24aa025e64", (kernel_ulong_t)&at24_data_24aa025e64 },
-> >>         { "spd",        (kernel_ulong_t)&at24_data_spd },
-> >>         { "24c02-vaio", (kernel_ulong_t)&at24_data_24c02_vaio },
-> >>         { "24c04",      (kernel_ulong_t)&at24_data_24c04 },
-> >> @@ -270,6 +285,8 @@ static const struct of_device_id __maybe_unused at=
-24_of_match[] =3D {
-> >>         { .compatible =3D "atmel,24c1024",        .data =3D &at24_data=
-_24c1024 },
-> >>         { .compatible =3D "atmel,24c1025",        .data =3D &at24_data=
-_24c1025 },
-> >>         { .compatible =3D "atmel,24c2048",        .data =3D &at24_data=
-_24c2048 },
-> >> +       { .compatible =3D "microchip,24aa025e48", .data =3D &at24_data=
-_24aa025e48 },
-> >> +       { .compatible =3D "microchip,24aa025e64", .data =3D &at24_data=
-_24aa025e64 },
-> >>         { /* END OF LIST */ },
-> >>  };
-> >>  MODULE_DEVICE_TABLE(of, at24_of_match);
-> >> @@ -690,7 +707,8 @@ static int at24_probe(struct i2c_client *client)
-> >>         at24->read_post =3D cdata->read_post;
-> >>         at24->bank_addr_shift =3D cdata->bank_addr_shift;
-> >>         at24->num_addresses =3D num_addresses;
-> >> -       at24->offset_adj =3D at24_get_offset_adj(flags, byte_len);
-> >> +       at24->offset_adj =3D cdata->adjoff ?
-> >> +                               at24_get_offset_adj(flags, byte_len) :=
- 0;
-> >>         at24->client_regmaps[0] =3D regmap;
-> >>
-> >>         at24->vcc_reg =3D devm_regulator_get(dev, "vcc");
-> >> --
-> >> 2.34.1
-> >>
-> >
-> > Bart
+-- 
+2.34.1
+
