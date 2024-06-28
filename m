@@ -1,101 +1,72 @@
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3338248788
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 21:46:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996747F7F7;
+	Fri, 28 Jun 2024 21:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719611199; cv=none; b=UGmjNTH5q/plVSQnIrC0ovrBGZuh7AYH6iA7W6tuTjHpdq/fd1EccFqbk6wraf5GsyzRf/t2nia9qSwnjUg15Oy3es42rI38N7QmqO8gI7o2KmVK0MVevTgMaLPNlouvKAyjWfyTL10HFPHvjFEm1R6lC6uLhce7dv20XandNm8=
+	t=1719611248; cv=none; b=Iu8URyAOdD4AQEe2+RSIWZoCVxVowrMGW38MBhSWmBZwkwvkEVzeKoz0KufopQ+pcbmu5kjbk/FSsEivePv1CxdBM87Nf4ZG4KbPSNdFNvZLw8QLx0/Zg3tKAiDIKWd8IshFZkauT1nQIu/ZeBlxE+vMSgXZhDT38Fl9cXFVrsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719611199; c=relaxed/simple;
-	bh=3jLwCquKW3GyED/lXgPUxbIyzXjUBfuctfTYO7pqGQg=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=mYA9MgGsnK4yqZlBprcn/ShQ/TwxI17U41Qyd3xt0BRJ13pDMjGypwH2S+Cayb4ai0KpI0g+UqWT1te4yjDVfJKKacpFN0iUIbb0zOimIM1m99Q0/+DaaVteHukns/Aopg3s+DTNpxu5O8MG0bFxl7cH5sQCNtqo4K4zivog9AQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=IZ1gFDXi; arc=none smtp.client-ip=209.85.210.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1719611248; c=relaxed/simple;
+	bh=eqKROMoY55qQgw/C7WYzzcaFYkwuTX7pn/ahqKrAUto=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WwepKEvCHNt3xi1ZZmEz/SN694a7D1Wl5ezZyYm2Eu0v9O8WkwvdWFiZT8X5rHqTR6pNyD1B2HQVuAzv6D8YglDL+ui6D3rmW5KZ5p6CYm9L8J4GBMAALbHZMlkPXrmCucHbx58OyIMse7krwh68hZXCeJGhgo71p247Nrzmdrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N37m5O1h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="IZ1gFDXi"
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-6f95be3d4c4so565910a34.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 14:46:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719611195; x=1720215995; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NPp+ePUGc90IaDta8y4cNAG9IL/0pbWsNrf29+a3X2M=;
-        b=IZ1gFDXipk2dWCkM89VBOTyIeZhEIKtgMkzRoTn++f7Dh/TLD3dWJSk5XdUCp5u6Lm
-         WvMyCmcW82OGvymRo8AjF6+faHYVaPrQLIabgu+9fJLODDmzTPefJTNIgm7eMkpwc46z
-         mjxG1k2/wkiGmuU5zuvoFyymlcEOGTrGx6RAQ5qUIWTb+LIW0zEsPkHPOHEhiLvAPQui
-         geKR/jRKEpAb+rVlYSRijihN6lCgoBoYnvStnqYnIGbd1wYtVMKsKt1Xa5XSWkrinHDQ
-         mwfPzrLRvAxwCuZmK89RtD692r4/rSwB8TnCAAwCYUN8Qa35b1c1hGOCxcQ+vCtslKO4
-         gdQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719611195; x=1720215995;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NPp+ePUGc90IaDta8y4cNAG9IL/0pbWsNrf29+a3X2M=;
-        b=VY5nDdFdCqgYcWxLP6/sV4RzbtkOWu+kRs7ZFOG4KpJA1Uvqzs/tUAPPZKc/pAirpr
-         1zh6cNYC2WXf0gq1jmpVy8duVV2AI088i6t1jfwym+WMEJMCsbEIpnFgIojRgTTUM3WH
-         BC1oQeru8bLOkYMXttKd6om24NVQ4sDnOTjmBI15oNVZ2qVZLlPBifcIVSjaTZFcYdZp
-         fHVns+NsZr5usHstzJspVxLaiDLruVTS1hTLG8tipDXFUybJ8roQSpEZSzbjaVzHcfB+
-         tUsuMusulh1REgzDfPVtfeu8/m7C5KuBwq5aJUTee04EPJQZ5LWwoPav/VMfu1l++XSs
-         JxdA==
-X-Forwarded-Encrypted: i=1; AJvYcCWtgxs0bUYHVC/f7+K7gy9WB9Osrn0zKxzcLL/p0QtY94DqaX4Sq65Gd5ONeAm9gYF7z/KUTvsh/iBS2nlHPKfM4I/BxfUkRxkXesYZ
-X-Gm-Message-State: AOJu0YxaSU7qsKv2MVXG6pJSyukMugcrv0/3kVtVd6LU9rVbSpfVrdjZ
-	lBQNe+i104soTGmlQ6X96EdrlvGdx+XoGk9aKbDLorX3O/l1a4lrcuDsN2KiO1TQSu44WUus3+d
-	o
-X-Google-Smtp-Source: AGHT+IFRuK+Ww/Un/6K1W85JiGOMRpvwKjobJ8PISyNIoNRbGI9W4wLzOAAbtxy/TuxmHO0HRW5uXg==
-X-Received: by 2002:a05:6830:1399:b0:6f9:82ca:15b5 with SMTP id 46e09a7af769-700b11e1961mr19903951a34.18.1719611195234;
-        Fri, 28 Jun 2024 14:46:35 -0700 (PDT)
-Received: from xanadu (modemcable018.15-162-184.mc.videotron.ca. [184.162.15.18])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-79d69309105sm108474085a.125.2024.06.28.14.46.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 14:46:34 -0700 (PDT)
-Date: Fri, 28 Jun 2024 17:46:33 -0400 (EDT)
-From: Nicolas Pitre <npitre@baylibre.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-cc: =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mul_u64_u64_div_u64: make it precise always
-In-Reply-To: <20240628142025.50ac4c92bfd2034668a0cc22@linux-foundation.org>
-Message-ID: <9nr61164-o95o-s47s-33sq-ss86499p6sso@onlyvoer.pbz>
-References: <39o9pnn4-p22s-rp4p-067n-83s18o5prnpn@onlyvoer.pbz> <20240628142025.50ac4c92bfd2034668a0cc22@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N37m5O1h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 906E2C116B1;
+	Fri, 28 Jun 2024 21:47:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719611248;
+	bh=eqKROMoY55qQgw/C7WYzzcaFYkwuTX7pn/ahqKrAUto=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=N37m5O1hwUMCn8iQCaU9/rQmLds0jhf48g0vpbCVruTBaITXhu04rNbDoqkmYIZWa
+	 M3C6QzxfUkkCuElGgS9T2z2/QMb4xbaI/5MKOyrl2JmcMxPJ+UoRMFRJnM2MmbeupX
+	 kSorp2TfvaZmiRaaJ1fHBpBFZXOPJ335kTp4eGG63gooK3o6m6STqkXpymms+t+WHp
+	 LLuvu3oL08cbDPMTEK384ec/Zcoi14ttnlBSpqEimnJo/jIWToMCbY7EL1ziEjR6qi
+	 YhDYxjOmLo0oa7T49u4D+WmU8qYRmf6jF5kujM0efjokCVKFs3S5/1UewTqn9lFasD
+	 Vk9eXPnbtz/wg==
+Date: Fri, 28 Jun 2024 15:47:24 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Mao Jinlong <quic_jinlmao@quicinc.com>
+Cc: Yuanfang Zhang <quic_yuanfang@quicinc.com>, coresight@lists.linaro.org,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	linux-arm-kernel@lists.infradead.org,
+	James Clark <james.clark@arm.com>, devicetree@vger.kernel.org,
+	Tingwei Zhang <quic_tingweiz@quicinc.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Tao Zhang <quic_taozha@quicinc.com>,
+	songchai <quic_songchai@quicinc.com>, linux-kernel@vger.kernel.org,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] dt-bindings: arm: Add arm,trace-id for coresight
+ dummy source
+Message-ID: <171961122510.264738.11293838583492040813.robh@kernel.org>
+References: <20240626060724.28862-1-quic_jinlmao@quicinc.com>
+ <20240626060724.28862-2-quic_jinlmao@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240626060724.28862-2-quic_jinlmao@quicinc.com>
 
-On Fri, 28 Jun 2024, Andrew Morton wrote:
 
-> On Fri, 28 Jun 2024 15:06:20 -0400 (EDT) Nicolas Pitre <npitre@baylibre.com> wrote:
+On Tue, 25 Jun 2024 23:07:20 -0700, Mao Jinlong wrote:
+> Some dummy source HW has static trace id which cannot be changed via
+> software programming. Add arm,trace-id for static id support to
+> coresight dummy source.
 > 
-> > Library facilities must always return exact results. If the caller may
-> > be contented with approximations then it should do the approximation on
-> > its own.
-> > 
-> > In this particular case the comment in the code says "the algorithm
-> > ... might lose some precision". Well, if you try it with e.g.:
-> > 
-> > 	a = 18446462598732840960
-> > 	b = 18446462598732840960
-> > 	c = 18446462598732840961
-> > 
-> > then the produced answer is 0 whereas the exact answer should be
-> > 18446462598732840959. This is _some_ precision loss indeed!
-> > 
-> > Let's reimplement this function so it always produces the exact result
-> > regardless of its inputs while preserving existing fast paths
-> > when possible.
+> Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
+> ---
+>  .../devicetree/bindings/arm/arm,coresight-dummy-source.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> I assume this was tested with some userspace harness?  It would be
-> interesting to see that so that reviewers can see that suitable cases
-> have been covered.
 
-I do have a user space test tool but it isn't pretty looking.
-How should this be acceptably presented for public consumption?
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
-
-Nicolas
