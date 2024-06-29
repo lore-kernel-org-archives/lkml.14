@@ -1,147 +1,166 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4915513C3CA;
-	Sat, 29 Jun 2024 19:20:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C353C2032B;
+	Sat, 29 Jun 2024 19:27:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719688817; cv=none; b=t0bbYz0Dd5u5AyPR+zKTYsihokmTwTp6mGTyWHWW/f1BplkfLmgOa6OR2gaOQ4ESwUiotlmQqgloHcrQzUxe9Y/zBtjVh7sngDGKlMh7hhF9CPZKQKNeyNdD1aBszzMOv7pbBG26P2tSllSztgNtT62hESKVJ9NJSxTA8vDJRjg=
+	t=1719689222; cv=none; b=SrrJ0oXln9Jm/MlvNwpUxHmAtHet+s2eNbPUA6UpgXvvdbhNmMGQvG4+MZ5wXf2e8/ICsZS0u2kF+Pu8xpJdOzNkkQn1acvxz1SZX2GfeL3PoMsNFnnJko769Fti/tjhEareOjpMkNk+Gbtv4GYd1xBxenNtBMQuKzcrumvMuIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719688817; c=relaxed/simple;
-	bh=KQXlYNGO5t0XXiirkC3HwO844EDhcpK5l5BlMakQQbI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PrPrPvSBqfnzxal3pzDdb2qEUkowvRCH2zEqeJ6mR5GM/k4J3dD5Jb0p3BX/hhmVCeoWmFJzM/WMR5Y15g3O+T+MXi9KP3lx5jjwyb8GxpqhpJUMutyXo1lH8N6Plet6FGU5UfjhlVoqANn74tQUp4pY5oTRoSZGPvnvtgbFOzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eGYcE/2Q; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719689222; c=relaxed/simple;
+	bh=5KGeK61hekuM2DL4N6jka1C8+Duo42iFnEkFlYpnIpY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=g+ZziPYxRboseh9NlVp3lideO5za7xzugH7REDTXR+VVrujwT96Ragrr+kVDHV8TYI09vVFF0YddAfERcX5qkG2lVA0Fyk211WlnLBFXx84B1hmxdU4SqLnb1k+MBEaAaNW39EqtwUXhxt/iTminathGguGvkRp0vzUquXalNkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dnfyZREM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eGYcE/2Q"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52e7d2278d8so2362249e87.3;
-        Sat, 29 Jun 2024 12:20:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719688813; x=1720293613; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=115ZNpFqbD4D/Gv906cLAl5QOwsv87o++hj04Lr8r4Y=;
-        b=eGYcE/2QFrkSgFBJUFPNX/0d71dDurLoaV0hOk0HY5GM56PVT3Bfgfd4sBv81wFp9V
-         CcAY06koocUCv6IA48sV6jD+fjX7DuXO15DpsxC4J0ADtpAiso2wTqqSboo8+s1OVmNt
-         ioD93kOmP+hha00lMuaNd59SrRDUkNpq/NJcxRqA0GbO13wNQZjU0zn4xhyJIoQY803E
-         49j0EKCMIkAcCC4/7l7ixZDMbv0QGz72Stdjq2l+hR1NCzV2PlBw04QolPdokXHU7hvG
-         9PYqmYqZqSxabzd6KM+xkniu7ihfC8WYYIhbnITfmDpPz2GQTfY42ESIry7l6HqsHR2c
-         NvSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719688813; x=1720293613;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=115ZNpFqbD4D/Gv906cLAl5QOwsv87o++hj04Lr8r4Y=;
-        b=TXVG+jBhFAY4idXVIR+KwWpPeptG3aOug7gb5vWsmXHeAMCPZXmtB1VYwINruuNoEX
-         aviADpw8Q3XceMStmc9LEDhC0vRfiK9hHE9bxj144jw+8Ktp/tleyz5QAM1t5sDzUtag
-         i9IRkLmO69Ayxx7IxENG/avGFYr8vvz9zEKZKmX+L0BYQyx2BySAs3yQRBAGH+ZgL4Vi
-         DizXCCgIrrn5jwZVuPKl+sUDfXwHICHxvRQts1HWgdArNc4sUaRM26iAYPDqQBL07RVC
-         jtzkqXL/1o+R4YkJHzCcg+bF6okOQf1Q/zDf6Twmc05J8nb/cHJoJlvXmWnAywYZaS2z
-         V0Ew==
-X-Forwarded-Encrypted: i=1; AJvYcCWoDcfNCfCQsZiTD6839JZ7iAYgQeIR2J49Elf0BciIjqtRYox6wP9Y2sXNy3hqrzsv0OnllH3CbGnSSPal0JSDyivkSu7zvWvATNIfqEX2qM17eFnmXhL2Z+qGLHKow2Zi9RDO9CmbP25VvjvURzBYrrRkJewAI1Squ3yOCTjNiU6xEQ==
-X-Gm-Message-State: AOJu0Ywlc0PKzKZNzUcoXCAaRd+Dlwx5O4+51+GMPSXEfdJGNlwQ5NJJ
-	kc1jOiwMfcV+5o82puSo8cT/Eyg1kK/FCOABRY9Govh+RPXRMCpk
-X-Google-Smtp-Source: AGHT+IHJmrqKd+ZUfaM7arqCzy8Vv8yoDvxco3EeRFo3mfQJCEF1GHI4mFixe6ydIK4oX9Pq6c0aJg==
-X-Received: by 2002:a05:6512:2345:b0:52c:76ac:329b with SMTP id 2adb3069b0e04-52e82687e21mr1665502e87.35.1719688812427;
-        Sat, 29 Jun 2024 12:20:12 -0700 (PDT)
-Received: from andrea (host-79-49-165-53.retail.telecomitalia.it. [79.49.165.53])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72aaf18933sm187310666b.13.2024.06.29.12.20.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Jun 2024 12:20:11 -0700 (PDT)
-Date: Sat, 29 Jun 2024 21:19:41 +0200
-From: Andrea Parri <parri.andrea@gmail.com>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>, Leonardo Bras <leobras@redhat.com>,
-	Guo Ren <guoren@kernel.org>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-arch@vger.kernel.org
-Subject: Re: [PATCH v2 03/10] riscv: Implement cmpxchg8/16() using Zabha
-Message-ID: <ZoBeTTdMYdXU8gxD@andrea>
-References: <20240626130347.520750-1-alexghiti@rivosinc.com>
- <20240626130347.520750-4-alexghiti@rivosinc.com>
- <Zn1StcN3H0r/eHjh@andrea>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dnfyZREM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 398E0C2BBFC;
+	Sat, 29 Jun 2024 19:26:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719689222;
+	bh=5KGeK61hekuM2DL4N6jka1C8+Duo42iFnEkFlYpnIpY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dnfyZREM0d9EjHczaxm7+jr4aTjM+8EeWwXp9f1+sV2WCzKWJ8TVXOCD5cMjlczJw
+	 xChe8Rfq/zaLEI4S4uG68PKMyR7gjxFu/jcZFboP8C3Vyn+3xBOUp5AYo0GvrgEM8P
+	 /H8+5ghHehX4bes9RVBT61bsVWO75+bQK9Ai6AN9W3UOrmFCGh9CoSSOkuhcVtjFhF
+	 6Q16GDmAPNYjJIZyn36YZamA349hlCns3Dj+IQh6xEiiQdM7fAGhJ4AOdV2prNEzKB
+	 oL+Y7SUwsjKyQFN/v99++8omYK+a4KRJAS2kAvPh8j9e53+iIygHUljN86EhgHTVFa
+	 rgCGk1F0mqOPg==
+Date: Sat, 29 Jun 2024 20:26:53 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: David Lechner <dlechner@baylibre.com>, Lars-Peter Clausen
+ <lars@metafoo.de>, Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman
+ <khilman@baylibre.com>, linux-kernel@vger.kernel.org,
+ linux-amlogic@lists.infradead.org, linux-iio@vger.kernel.org, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>
+Subject: Re: [PATCH 2/2] iio: frequency: add amlogic clock measure support
+Message-ID: <20240629202653.7285acb5@jic23-huawei>
+In-Reply-To: <1jr0clgdpt.fsf@starbuckisacylon.baylibre.com>
+References: <20240624173105.909554-1-jbrunet@baylibre.com>
+	<20240624173105.909554-3-jbrunet@baylibre.com>
+	<04254d15-2f6e-435d-ba4c-8e2e87766b9b@baylibre.com>
+	<1j4j9hift4.fsf@starbuckisacylon.baylibre.com>
+	<190ccd62-0803-46fa-87ee-0f9cef5a784e@baylibre.com>
+	<1jr0clgdpt.fsf@starbuckisacylon.baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zn1StcN3H0r/eHjh@andrea>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-> I admit that I found this all quite difficult to read; IIUC, this is
-> missing an IS_ENABLED(CONFIG_RISCV_ISA_ZACAS) check.  How about adding
-> such a check under the zabha: label (replacing/in place of the second
-> IS_ENABLED(CONFIG_RISCV_ISA_ZABHA) check) and moving the corresponding
-> asm goto statement there, perhaps as follows? (on top of this patch)
+On Tue, 25 Jun 2024 18:59:58 +0200
+Jerome Brunet <jbrunet@baylibre.com> wrote:
 
-[...]
+> On Tue 25 Jun 2024 at 09:52, David Lechner <dlechner@baylibre.com> wrote:
+> 
+> > On 6/25/24 3:31 AM, Jerome Brunet wrote:  
+> >> On Mon 24 Jun 2024 at 17:51, David Lechner <dlechner@baylibre.com> wrote:
+> >>   
+> >>> On 6/24/24 12:31 PM, Jerome Brunet wrote:  
+> >>>> Add support for the HW found in most Amlogic SoC dedicated to measure
+> >>>> system clocks.
+> >>>>  
+> >>>
+> >>>
+> >>>  
+> >>>> +static int cmsr_read_raw(struct iio_dev *indio_dev,
+> >>>> +			 struct iio_chan_spec const *chan,
+> >>>> +			 int *val, int *val2, long mask)
+> >>>> +{
+> >>>> +	struct amlogic_cmsr *cm = iio_priv(indio_dev);
+> >>>> +
+> >>>> +	guard(mutex)(&cm->lock);
+> >>>> +
+> >>>> +	switch (mask) {
+> >>>> +	case IIO_CHAN_INFO_RAW:
+> >>>> +		*val = cmsr_measure_unlocked(cm, chan->channel);  
+> >>>
+> >>> Is this actually returning an alternating voltage magnitutde?
+> >>> Most frequency drivers don't have a raw value, only frequency.  
+> >> 
+> >> No it is not the magnitude, it is the clock rate (frequency) indeed.
+> >> Maybe altvoltage was not the right pick for that but nothing obvious
+> >> stands out for Hz measurements  
+> >
+> > I'm certainly not an expert on the subject, but looking at the other
+> > frequency drivers, using altvoltage looks correct.
+> >
+> > But, we in those drivers, nearly all only have a "frequency" attribute
+> > but don't have a "raw" attribute. The ones that do have a "raw" attribute
+> > are frequency generators that use the raw attribute determine the output
+> > voltage.
+> >  
+> >>   
+> >>>  
+> >>>> +		if (*val < 0)
+> >>>> +			return *val;
+> >>>> +		return IIO_VAL_INT;
+> >>>> +
+> >>>> +	case IIO_CHAN_INFO_PROCESSED: /* Result in Hz */  
+> >>>
+> >>> Shouldn't this be IIO_CHAN_INFO_FREQUENCY?  
+> >> 
+> >> How would I get raw / processed / scale with IIO_CHAN_INFO_FREQUENCY ?
+> >>   
+> >>>
+> >>> Processed is just (raw + offset) * scale which would be a voltage
+> >>> in this case since the channel type is IIO_ALTVOLTAGE.  
+> >> 
+> >> This is was Processed does here, along with selecting the most
+> >> appropriate scale to perform the measurement.
+> >>   
+> >>>  
+> >>>> +		*val = cmsr_measure_processed_unlocked(cm, chan->channel, val2);
+> >>>> +		if (*val < 0)
+> >>>> +			return *val;
+> >>>> +		return IIO_VAL_INT_64;
+> >>>> +
+> >>>> +	case IIO_CHAN_INFO_SCALE:  
+> >>>
+> >>> What is this attribute being used for?  
+> >> 
+> >> Hz
+> >>   
+> >>>
+> >>> (clearly not used to convert the raw value to millivolts :-) )
+> >>>
+> >>> Maybe IIO_CHAN_INFO_INT_TIME is the right one for this? Although
+> >>> so far, that has only been used with light sensors.  
+> >> 
+> >> I think you are mixing up channel info and type here.
+> >> I do want the info
+> >>  * IIO_CHAN_INFO_RAW
+> >>  * IIO_CHAN_INFO_PROCESSED
+> >>  * IIO_CHAN_INFO_SCALE
+> >> 
+> >> I want those info to represent an alternate voltage frequency in Hz.
+> >> I thought type 'IIO_ALTVOLTAGE' was the right pick for that. Apparently
+> >> it is not. What is the appropriate type then ? Should I add a new one ?  
+> >
+> >
+> > The documentation at Documentation/ABI/testing/sysfs-bus-iio explains
+> > what the combination of a channel type and info means.  
+> 
+> Oh missed that, Thx
+> 
+> >
+> > For example, out_altvoltageY_raw is defined as it used for the frequency
+> > generator case that I mentioned above. in_altvoltageY_raw is not defined
+> > which means probably no one has needed it yet. But it would still be the
+> > voltage value, not the frequency.  
+> 
+> Got it. So the type I picked is wrong for sure.
+> So, maybe I need something new to measure a frequency ?
 
-> diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
-> index b9a3fdcec919..3c913afec150 100644
-> --- a/arch/riscv/include/asm/cmpxchg.h
-> +++ b/arch/riscv/include/asm/cmpxchg.h
-> @@ -110,15 +110,12 @@
->  	__label__ no_zacas, zabha, end;					\
->  									\
->  	if (IS_ENABLED(CONFIG_RISCV_ISA_ZABHA)) {			\
-> -		asm goto(ALTERNATIVE("j %[no_zacas]", "nop", 0,		\
-> -				     RISCV_ISA_EXT_ZACAS, 1)		\
-> -			 : : : : no_zacas);				\
->  		asm goto(ALTERNATIVE("nop", "j %[zabha]", 0,		\
->  				     RISCV_ISA_EXT_ZABHA, 1)		\
->  			 : : : : zabha);				\
->  	}								\
->  									\
-> -no_zacas:;								\
-> +no_zacas:								\
->  	u32 *__ptr32b = (u32 *)((ulong)(p) & ~0x3);			\
->  	ulong __s = ((ulong)(p) & (0x4 - sizeof(*p))) * BITS_PER_BYTE;	\
->  	ulong __mask = GENMASK(((sizeof(*p)) * BITS_PER_BYTE) - 1, 0)	\
-> @@ -148,16 +145,20 @@ no_zacas:;								\
->  	goto end;							\
->  									\
->  zabha:									\
-> -	if (IS_ENABLED(CONFIG_RISCV_ISA_ZABHA)) {			\
-> -		__asm__ __volatile__ (					\
-> -			prepend						\
-> -			"	amocas" cas_sfx " %0, %z2, %1\n"	\
-> -			append						\
-> -			: "+&r" (r), "+A" (*(p))			\
-> -			: "rJ" (n)					\
-> -			: "memory");					\
-> +	if (IS_ENABLED(CONFIG_RISCV_ISA_ZAZAS)) {			\
-> +		asm goto(ALTERNATIVE("j %[no_zacas]", "nop", 0,		\
-> +				     RISCV_ISA_EXT_ZACAS, 1)		\
-> +			 : : : : no_zacas);				\
->  	}								\
-> -end:;									\
-> +									\
-> +	__asm__ __volatile__ (						\
-> +		prepend							\
-> +		"	amocas" cas_sfx " %0, %z2, %1\n"		\
-> +		append							\
-> +		: "+&r" (r), "+A" (*(p))				\
-> +		: "rJ" (n)						\
-> +		: "memory");						\
-> +end:									\
->  })
->  
->  #define __arch_cmpxchg(lr_sfx, sc_cas_sfx, prepend, append, r, p, co, o, n)	\
+Yes. Seems likely we need a new channel type to me.
+In theory we could abuse an angular rate channel but that's nasty so
+lets not do that. :)
 
-Unfortunately, this diff won't work e.g. when ZABHA is supported and
-detected at boot while ZACAS is not supported; more thinking required...
+Jonathan
 
-  Andrea
