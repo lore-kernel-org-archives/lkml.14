@@ -1,90 +1,168 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FC937703;
-	Sat, 29 Jun 2024 08:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5CE2E64A
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 08:53:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719650282; cv=none; b=bsT/PDo9cL44DdRzxf51R7XEsei9dEW/1Mzw9hFkFT3YGpr2j2mYGZdMV7rbfW/o3fJ84bexObGTSGoTUK7nqkY+a+oKIBjQ9dvrniX+fvqkjkoM+zF+AATw9gVyXWLhPcmhJzei2QgKScorJlpP/1yWxjq+nbnLDrMArVxV6Dk=
+	t=1719651200; cv=none; b=B6Dq+s6rqONpayDssKFZouB0RA+BnqowFYkEpzneZKd2bCP8fbCtnWTmxTQ9GP7KhZjfAfVbhlXQ0e98tz37ZuSSsnpXOQ5FnZgzeqx5H8O+VbLXTFquBaPoce64PMwNLfQDDJYnEVpVnTZ20od9126JGBq5gJr36pqIW00qsj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719650282; c=relaxed/simple;
-	bh=q/3lT/7sRnUNMd+59T7wJOpFjJcROwhrHn3K/SaaZQQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Bz/KddG5h3VcCENjjYLLwx+7odSZZBxZsUkGBx/miUxt+n/FbKll86F3+nQE2oA9Nq51N0er7LsTETW6SXbLTG3w8m49dnqAfOYBfqcNAxImd5y/CUOhZphfIfseY4PcMUZrEz6CUdnrqWzkXs1OlWUDpTz47RSly1JbpvcfZ68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HSpIQWIf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fMTTsVzO; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HSpIQWIf";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fMTTsVzO"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1719650279;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TUFJvIfZrgiznYfgSI2fEF0HgrLUinnhHj4NcJxIY7I=;
-	b=HSpIQWIfLYjnVetGPvASNKXrCMaFiE/Ws84xltt0Sf+pZ5oVM+xkMuUVy8d7UXuaPsPxkl
-	tR+2Gduf1bUgujal8+v9oyrXohkxLqNmS7ASHW9Q3EXGghIhhsv1rB2DXh4uvYyTChtkHP
-	ORQfZeGvhccb8xaZRphhmszBxJaG1e0dbtzRzcECzY/Y+djKTt0abXY5Irg24W/xqSq51y
-	X/nQJhTiylR7SF4IBe2Bz4y5k21LV0gjHTDd5JGfKt6vxAGYU+5zTAQod9epIZrKQb+s78
-	Ksu0GsJLLi7fI6toVSCt/V945PqqPLYWmV9IpjZL1A0dzC0qbjiYKacYHaawrw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1719650279;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TUFJvIfZrgiznYfgSI2fEF0HgrLUinnhHj4NcJxIY7I=;
-	b=fMTTsVzOPD8Lf770Fvq7+goRYUzr2wpFw6BFLBw+z6xScfjxNz+UMwfdCSx/R2ad6kYULw
-	bOD5bUBI/j2uVOBw==
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
- maz@kernel.org, anna-maria@linutronix.de, shawnguo@kernel.org,
- s.hauer@pengutronix.de, festevam@gmail.com, bhelgaas@google.com,
- rdunlap@infradead.org, vidyas@nvidia.com, ilpo.jarvinen@linux.intel.com,
- apatel@ventanamicro.com, kevin.tian@intel.com, nipun.gupta@amd.com,
- den@valinux.co.jp, andrew@lunn.ch, gregory.clement@bootlin.com,
- sebastian.hesselbarth@gmail.com, gregkh@linuxfoundation.org,
- rafael@kernel.org, alex.williamson@redhat.com, will@kernel.org,
- lorenzo.pieralisi@arm.com, jgg@mellanox.com, ammarfaizi2@gnuweeb.org,
- robin.murphy@arm.com, lpieralisi@kernel.org, nm@ti.com, kristo@kernel.org,
- vkoul@kernel.org, okaya@kernel.org, agross@kernel.org,
- andersson@kernel.org, mark.rutland@arm.com,
- shameerali.kolothum.thodi@huawei.com, yuzenghui@huawei.com,
- shivamurthy.shastri@linutronix.de
-Subject: Re: [patch V4 05/21] irqchip/gic-v3-its: Provide MSI parent for
- PCI/MSI[-X]
-In-Reply-To: <Zn84OIS0zLWASKr2@arm.com>
-References: <20240623142137.448898081@linutronix.de>
- <20240623142235.024567623@linutronix.de> <Zn84OIS0zLWASKr2@arm.com>
-Date: Sat, 29 Jun 2024 10:37:59 +0200
-Message-ID: <87h6dcxhy0.ffs@tglx>
+	s=arc-20240116; t=1719651200; c=relaxed/simple;
+	bh=EgLKeT6641PYmctBh8JLWey9td+G6VxSXBqn082e0Nw=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AuD/gLJZb6jYTNFNnk0xsxKhzgTHwyZyMQ7mbb9aaz/44BDQoDp3jE2Euz3e+phIIafttjgbFYmhIGifYHWhKONoiMqDjbAnoo6l5KfBsk5h6bcCOweDxk7HP84T7Dyj/BNdZqf+kPMfNHWRrEZeA1br+dVQaQ298rauuoHrNHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4WB5Z73y6Jz1T4M1;
+	Sat, 29 Jun 2024 16:48:47 +0800 (CST)
+Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7DB0F18006F;
+	Sat, 29 Jun 2024 16:53:15 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
+ (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Sat, 29 Jun
+ 2024 16:53:14 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <catalin.marinas@arm.com>, <will@kernel.org>, <oleg@redhat.com>,
+	<tglx@linutronix.de>, <peterz@infradead.org>, <luto@kernel.org>,
+	<kees@kernel.org>, <wad@chromium.org>, <ruanjinjie@huawei.com>,
+	<rostedt@goodmis.org>, <arnd@arndb.de>, <ardb@kernel.org>,
+	<broonie@kernel.org>, <mark.rutland@arm.com>, <rick.p.edgecombe@intel.com>,
+	<leobras@redhat.com>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v3 2/3] arm64: Prepare to switch to generic entry
+Date: Sat, 29 Jun 2024 16:56:00 +0800
+Message-ID: <20240629085601.470241-3-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240629085601.470241-1-ruanjinjie@huawei.com>
+References: <20240629085601.470241-1-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemi100008.china.huawei.com (7.221.188.57)
 
-On Fri, Jun 28 2024 at 23:24, Catalin Marinas wrote:
-> I just noticed guests (under KVM) failing to boot on my TX2 with your
-> latest branch. I bisected to this patch as the first bad commit.
->
-> I'm away this weekend, so won't have time to dive deeper. It looks like
-> the CPU is stuck in do_idle() (no timer interrupts?). Also sysrq did not
-> seem able to get the stack trace on the other CPUs. It fails both with a
-> single or multiple CPUs in the same way place (shortly before mounting
-> the rootfs and starting user space).
+Prepare to switch to generic entry for arm64:
 
-From the RH log it's clear that PCI interrupts are not delivered.
+ - Implement regs_irqs_disabled() using interrupts_enabled() macro.
 
-> I'll drop your branch from the arm64 for-kernelci for now and have a
-> look again on Monday.
+ - Make on_thread_stack() compatible with generic entry.
 
-I stare too. Unfortunately I don't have access to such hardware :(
+ - Split report_syscall() to report_syscall_enter() and
+   report_syscall_exit() to make it clear to switch to generic entry.
 
-Thanks,
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+---
+v2:
+- Refactor report_syscall().
+- Update the commit message.
+---
+ arch/arm64/include/asm/ptrace.h     |  5 +++++
+ arch/arm64/include/asm/stacktrace.h |  5 ++++-
+ arch/arm64/kernel/ptrace.c          | 29 ++++++++++++++++++++---------
+ 3 files changed, 29 insertions(+), 10 deletions(-)
 
-        Thomas
+diff --git a/arch/arm64/include/asm/ptrace.h b/arch/arm64/include/asm/ptrace.h
+index 47ec58031f11..1857748ff017 100644
+--- a/arch/arm64/include/asm/ptrace.h
++++ b/arch/arm64/include/asm/ptrace.h
+@@ -360,6 +360,11 @@ static inline unsigned long regs_get_kernel_argument(struct pt_regs *regs,
+ 	return 0;
+ }
+ 
++static inline int regs_irqs_disabled(struct pt_regs *regs)
++{
++	return !interrupts_enabled(regs);
++}
++
+ /* We must avoid circular header include via sched.h */
+ struct task_struct;
+ int valid_user_regs(struct user_pt_regs *regs, struct task_struct *task);
+diff --git a/arch/arm64/include/asm/stacktrace.h b/arch/arm64/include/asm/stacktrace.h
+index 66ec8caa6ac0..36bc1831f906 100644
+--- a/arch/arm64/include/asm/stacktrace.h
++++ b/arch/arm64/include/asm/stacktrace.h
+@@ -57,7 +57,10 @@ static inline bool on_task_stack(const struct task_struct *tsk,
+ 	return stackinfo_on_stack(&info, sp, size);
+ }
+ 
+-#define on_thread_stack()	(on_task_stack(current, current_stack_pointer, 1))
++static __always_inline bool on_thread_stack(void)
++{
++	return on_task_stack(current, current_stack_pointer, 1);
++}
+ 
+ #ifdef CONFIG_VMAP_STACK
+ DECLARE_PER_CPU(unsigned long [OVERFLOW_STACK_SIZE/sizeof(long)], overflow_stack);
+diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
+index 0d022599eb61..60fd85d5119d 100644
+--- a/arch/arm64/kernel/ptrace.c
++++ b/arch/arm64/kernel/ptrace.c
+@@ -2184,7 +2184,7 @@ enum ptrace_syscall_dir {
+ 	PTRACE_SYSCALL_EXIT,
+ };
+ 
+-static void report_syscall(struct pt_regs *regs, enum ptrace_syscall_dir dir)
++static void report_syscall_enter(struct pt_regs *regs)
+ {
+ 	int regno;
+ 	unsigned long saved_reg;
+@@ -2207,13 +2207,24 @@ static void report_syscall(struct pt_regs *regs, enum ptrace_syscall_dir dir)
+ 	 */
+ 	regno = (is_compat_task() ? 12 : 7);
+ 	saved_reg = regs->regs[regno];
+-	regs->regs[regno] = dir;
++	regs->regs[regno] = PTRACE_SYSCALL_ENTER;
+ 
+-	if (dir == PTRACE_SYSCALL_ENTER) {
+-		if (ptrace_report_syscall_entry(regs))
+-			forget_syscall(regs);
+-		regs->regs[regno] = saved_reg;
+-	} else if (!test_thread_flag(TIF_SINGLESTEP)) {
++	if (ptrace_report_syscall_entry(regs))
++		forget_syscall(regs);
++	regs->regs[regno] = saved_reg;
++}
++
++static void report_syscall_exit(struct pt_regs *regs)
++{
++	int regno;
++	unsigned long saved_reg;
++
++	/* See comment for report_syscall_enter() */
++	regno = (is_compat_task() ? 12 : 7);
++	saved_reg = regs->regs[regno];
++	regs->regs[regno] = PTRACE_SYSCALL_EXIT;
++
++	if (!test_thread_flag(TIF_SINGLESTEP)) {
+ 		ptrace_report_syscall_exit(regs, 0);
+ 		regs->regs[regno] = saved_reg;
+ 	} else {
+@@ -2233,7 +2244,7 @@ int syscall_trace_enter(struct pt_regs *regs)
+ 	unsigned long flags = read_thread_flags();
+ 
+ 	if (flags & (_TIF_SYSCALL_EMU | _TIF_SYSCALL_TRACE)) {
+-		report_syscall(regs, PTRACE_SYSCALL_ENTER);
++		report_syscall_enter(regs);
+ 		if (flags & _TIF_SYSCALL_EMU)
+ 			return NO_SYSCALL;
+ 	}
+@@ -2261,7 +2272,7 @@ void syscall_trace_exit(struct pt_regs *regs)
+ 		trace_sys_exit(regs, syscall_get_return_value(current, regs));
+ 
+ 	if (flags & (_TIF_SYSCALL_TRACE | _TIF_SINGLESTEP))
+-		report_syscall(regs, PTRACE_SYSCALL_EXIT);
++		report_syscall_exit(regs);
+ 
+ 	rseq_syscall(regs);
+ }
+-- 
+2.34.1
+
