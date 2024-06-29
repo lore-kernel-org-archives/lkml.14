@@ -1,164 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C955E4C99
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 15:56:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7CCD42076;
+	Sat, 29 Jun 2024 16:18:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719676609; cv=none; b=U6vMUyHdVMM6tAajzp1nL5xsEo8nuUZqCXdqoJAYpP4IbbVAd0w3GV5OaqAh+jPVyFotd9qcMMQTJgwViGdULM8766Q86l+zijRvxl7akgTDZ7vbcYUupL1AWsk9y4ujoMDu7q4fnXYdI7Ba/J4DVFC/v6vIKc2xR0e7TEPkqaQ=
+	t=1719677908; cv=none; b=eiRxLkUr4g2uHyIDaeCdXKwuKL194iB4OgWCI1nbD6Mo37QFDN+82EVb5kvmV6KeUsviaItSn1sNzPLvJWVy0twya5NO7YAWBN17p8lXTymTlb0IJ8nqp862TevZRHJ43EuDh9nAOsNslRgW72r0aAz22tfpZbBihKX+VRzSmIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719676609; c=relaxed/simple;
-	bh=duVsCAV6a7856zLSoIZXU1stWtbIdnWVFiFmUoVHg70=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=o7EVc3B1FOwt2JucRwBb0m3XbVTIjppSOQwvecX0aczTP44kmlHSwleOdm+xPA0N7EVYMXbpXd72kuQZfrH/6eZ2A8hxOS4+HRFkW+PaWh2I9OU0AGC6WeqIc8GnnEqwKFW1uY2L8eaqqcvpzmoO4znxl+9UDwEk/CanKfoPeQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sf6jj6Ii; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sf6jj6Ii"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719676608; x=1751212608;
-  h=date:from:to:cc:subject:message-id;
-  bh=duVsCAV6a7856zLSoIZXU1stWtbIdnWVFiFmUoVHg70=;
-  b=Sf6jj6Iitgcp28oyd8ALb+lWZrbpc6m6dEnuxpld9r/eEBIWTpqNzjMK
-   Oitk0hmItkcczohhvVaOOSQgRnPZUuZLEGfBQJbR7tPOYlbgJZTUJ/kjy
-   9U6Ry1MyToW04nB6TAUc4XeQOzqJy4VO8M+FO6lIvlsQKlRvMDA5lkDmg
-   YutRO2enp20HXXCxve7PI8BVD5LnT8ZjLgp4oYVCcK3amMw7Q4c/GHrez
-   wNSAh66fuRMJ81qO+x30wQ0/K+72FDi7Pai9qV99rtKJS3sO8LjFerpmi
-   VWKNgqFj7zQMDzoA9W8kE7HoYQnrqA+5BrZS1ufGEhWallnAr9fszynkS
-   w==;
-X-CSE-ConnectionGUID: QV6cHbAZQLKY4udoUy4KoQ==
-X-CSE-MsgGUID: wcVvyfvdTLyrduaXDKTpdg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11117"; a="16580992"
-X-IronPort-AV: E=Sophos;i="6.09,172,1716274800"; 
-   d="scan'208";a="16580992"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2024 08:56:47 -0700
-X-CSE-ConnectionGUID: ZSq1Y7duRgGCg8qOdvixyQ==
-X-CSE-MsgGUID: AzbIq267RvCaxVULNdExgg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,172,1716274800"; 
-   d="scan'208";a="45778876"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 29 Jun 2024 08:56:46 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sNaRP-000JYk-0Y;
-	Sat, 29 Jun 2024 15:56:43 +0000
-Date: Sat, 29 Jun 2024 23:55:52 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Subject: [gustavoars:testing/WFAMNAE-next20240621-CbC] BUILD SUCCESS
- 9334c4d5e22a8aa6c4c4550fa27c5a424ed06f26
-Message-ID: <202406292350.NY326PEK-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1719677908; c=relaxed/simple;
+	bh=Zf1livi2LZmggYiyIiKrtpXTMV3WXPPRSTbJ3YtIJEc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=falTddw5lpjE6gS8pNWOhfnfK0GXr3I5OV8GaMPSRoCkDYZmY8fMJ/NJ6yTplMbjfMPBAG7MNhlXHzYxYsKEu3dP5gyBTY1AFrJPNYGjRrVZjKruBEkDMtFZ1v0ZrVOIdEcSiviqWq/7vaZeA7SQXp+/4IfOhe2Bhs2JJ66Vu/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from i53875b6a.versanet.de ([83.135.91.106] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1sNam7-000796-8Q; Sat, 29 Jun 2024 18:18:07 +0200
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To: Dragan Simic <dsimic@manjaro.org>
+Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, linux-kernel@vger.kernel.org,
+ Diederik de Haas <didi.debian@cknow.org>, Jonas Karlman <jonas@kwiboo.se>
+Subject:
+ Re: [PATCH] arm64: dts: rockchip: Add optional GPU OPP voltage ranges to
+ RK356x SoC dtsi
+Date: Sat, 29 Jun 2024 18:18:06 +0200
+Message-ID: <9297854.CDJkKcVGEf@diego>
+In-Reply-To: <36170f8485293b336106e92346478daa@manjaro.org>
+References:
+ <446399362bd2dbeeaecd8351f68811165429749a.1719637113.git.dsimic@manjaro.org>
+ <f10d5a3c425c2c4312512c20bd35073c@manjaro.org>
+ <36170f8485293b336106e92346478daa@manjaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/WFAMNAE-next20240621-CbC
-branch HEAD: 9334c4d5e22a8aa6c4c4550fa27c5a424ed06f26  scsi: fc: Avoid -Wflex-array-member-not-at-end warnings
+Am Samstag, 29. Juni 2024, 17:39:34 CEST schrieb Dragan Simic:
+> On 2024-06-29 17:25, Dragan Simic wrote:
+> > On 2024-06-29 17:10, Heiko St=FCbner wrote:
+> >> Am Samstag, 29. Juni 2024, 07:11:24 CEST schrieb Dragan Simic:
+> >>=20
+> >>> +#ifndef RK356X_GPU_NPU_SHARED_REGULATOR
+> >>=20
+> >> is there some reason for this duplicating of opps?
+> >>=20
+> >> The regulator framework should pick the lowest supported voltage
+> >> anyway, so it seems you're just extending them upwards a bit.
+> >>=20
+> >> So I really don't so why we'd need to sets here.
+> >=20
+> > The reason is improved strictness.  Having the exact GPU OPP voltages
+> > required for the boards whose GPU regulators can provide those exact
+> > voltages makes it possible to detect misconfigurations much easier,
+> > just like it was the case with the board dts misconfiguration that
+> > resulted in the recent DCDC_REG2 patch. [1]
+> >=20
+> > If we had GPU OPP voltage ranges in place instead, the aforementioned
+> > issue would probably remain undetected for some time.  It wouldn't be
+> > the end of the world, :) of course, but the resulting increased power
+> > consumption isn't one of the desired outcomes.
+> >=20
+> > [1]=20
+> > https://lore.kernel.org/linux-rockchip/e70742ea2df432bf57b3f7de542d81ca=
+22b0da2f.1716225483.git.dsimic@manjaro.org/
+>=20
+> On second thought, after seeing that the RK3399 CPU and GPU OPPs
+> already specify voltage ranges, I think it would be better to drop
+> the distinction between the separate strict voltages and the voltage
+> ranges in this patch,
 
-elapsed time: 5580m
+yes, that was what I was trying to say :-)
 
-configs tested: 87
-configs skipped: 2
+Also it makes the OPPs less cluttered. Also dt is firmware, I do expect
+people to be reasonably knowledgeable if they mess around with their
+boards OPPs ;-) .
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-tested configs:
-alpha                               defconfig   gcc-13.2.0
-arc                                 defconfig   gcc-13.2.0
-arc                   randconfig-001-20240628   gcc-13.2.0
-arc                   randconfig-002-20240628   gcc-13.2.0
-arm                       aspeed_g4_defconfig   clang-19
-arm                                 defconfig   clang-14
-arm                             pxa_defconfig   gcc-13.2.0
-arm                   randconfig-001-20240628   gcc-13.2.0
-arm                   randconfig-002-20240628   gcc-13.2.0
-arm                   randconfig-003-20240628   gcc-13.2.0
-arm                   randconfig-004-20240628   clang-19
-arm                         s3c6400_defconfig   gcc-13.2.0
-arm64                               defconfig   gcc-13.2.0
-arm64                 randconfig-001-20240628   gcc-13.2.0
-arm64                 randconfig-002-20240628   gcc-13.2.0
-arm64                 randconfig-003-20240628   clang-19
-arm64                 randconfig-004-20240628   gcc-13.2.0
-csky                                defconfig   gcc-13.2.0
-csky                  randconfig-001-20240628   gcc-13.2.0
-csky                  randconfig-002-20240628   gcc-13.2.0
-hexagon                             defconfig   clang-19
-hexagon               randconfig-001-20240628   clang-19
-hexagon               randconfig-002-20240628   clang-19
-loongarch                           defconfig   gcc-13.2.0
-loongarch             randconfig-001-20240628   gcc-13.2.0
-loongarch             randconfig-002-20240628   gcc-13.2.0
-m68k                                defconfig   gcc-13.2.0
-microblaze                          defconfig   gcc-13.2.0
-mips                     decstation_defconfig   gcc-13.2.0
-mips                           ip32_defconfig   clang-19
-nios2                               defconfig   gcc-13.2.0
-nios2                 randconfig-001-20240628   gcc-13.2.0
-nios2                 randconfig-002-20240628   gcc-13.2.0
-openrisc                            defconfig   gcc-13.2.0
-parisc                              defconfig   gcc-13.2.0
-parisc                randconfig-001-20240628   gcc-13.2.0
-parisc                randconfig-002-20240628   gcc-13.2.0
-parisc64                            defconfig   gcc-13.2.0
-powerpc               randconfig-001-20240628   gcc-13.2.0
-powerpc               randconfig-002-20240628   gcc-13.2.0
-powerpc               randconfig-003-20240628   gcc-13.2.0
-powerpc64             randconfig-001-20240628   gcc-13.2.0
-powerpc64             randconfig-002-20240628   gcc-13.2.0
-powerpc64             randconfig-003-20240628   clang-19
-riscv                               defconfig   clang-19
-riscv                 randconfig-001-20240628   gcc-13.2.0
-riscv                 randconfig-002-20240628   gcc-13.2.0
-s390                                defconfig   clang-19
-s390                  randconfig-001-20240628   clang-19
-s390                  randconfig-002-20240628   clang-19
-sh                                  defconfig   gcc-13.2.0
-sh                    randconfig-001-20240628   gcc-13.2.0
-sh                    randconfig-002-20240628   gcc-13.2.0
-sparc64                             defconfig   gcc-13.2.0
-sparc64               randconfig-001-20240628   gcc-13.2.0
-sparc64               randconfig-002-20240628   gcc-13.2.0
-um                                  defconfig   clang-19
-um                             i386_defconfig   gcc-13
-um                    randconfig-001-20240628   gcc-13
-um                    randconfig-002-20240628   clang-19
-um                           x86_64_defconfig   clang-15
-x86_64       buildonly-randconfig-001-20240627   clang-18
-x86_64       buildonly-randconfig-002-20240627   clang-18
-x86_64       buildonly-randconfig-003-20240627   clang-18
-x86_64       buildonly-randconfig-004-20240627   gcc-13
-x86_64       buildonly-randconfig-005-20240627   gcc-13
-x86_64       buildonly-randconfig-006-20240627   clang-18
-x86_64                randconfig-001-20240627   clang-18
-x86_64                randconfig-002-20240627   gcc-13
-x86_64                randconfig-003-20240627   clang-18
-x86_64                randconfig-004-20240627   clang-18
-x86_64                randconfig-005-20240627   gcc-13
-x86_64                randconfig-006-20240627   clang-18
-x86_64                randconfig-011-20240627   clang-18
-x86_64                randconfig-012-20240627   clang-18
-x86_64                randconfig-013-20240627   gcc-13
-x86_64                randconfig-014-20240627   clang-18
-x86_64                randconfig-015-20240627   gcc-13
-x86_64                randconfig-016-20240627   clang-18
-x86_64                randconfig-071-20240627   clang-18
-x86_64                randconfig-072-20240627   gcc-13
-x86_64                randconfig-073-20240627   clang-18
-x86_64                randconfig-074-20240627   gcc-13
-x86_64                randconfig-075-20240627   gcc-13
-x86_64                randconfig-076-20240627   clang-18
-xtensa                randconfig-001-20240628   gcc-13.2.0
-xtensa                randconfig-002-20240628   gcc-13.2.0
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
