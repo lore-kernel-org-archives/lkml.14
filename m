@@ -1,150 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426B912FB3F
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 16:46:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2571839E3
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 16:50:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719679621; cv=none; b=HZb6gsWSrnIfkMxPsa3WE/OwoR7QnX4pX6WZQDFRGQ96f7nH8snmyewYKyT7Fw6z0869woCnVQl9WelEUnTQbIxZvC2pPqsVKSNVCWoUjovRaG/tMtImMDwA6A3L8ppxkCz6wSjnF45sfuQaHWxQF3D/eI8s9HOpuiO3NYElhKI=
+	t=1719679814; cv=none; b=PKdDEZtXtue7HhGIZFiID+jOQoWMuc3B0HnEcgLvU5tX40YiAaOZtDnzCDCrKeun+EmFbUfZ9Fp5Efj5tjLnEMmjzgAJU981UrnizSO3lc6fG8nlhfMp+uhYqHURHXKA2z4YqxUQitH0dfyx12EC7cEy1ivRNZ+R5N6Nc97KfYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719679621; c=relaxed/simple;
-	bh=NdwDYXy90DzmNJ9UeuXmr+nGjsI/yHOxnXcY6RirEsQ=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=VPn6/NC6b6J79dljD6ENrzDTdHldSS0Ua8yq9rZwWDmCPrsqLMQZmWuy9mIAq0MTj0f5oM+7HwTcpEh62UPlrl0fppk8oiGd9YWt9nGoZG4D4glth8b+p0crokdrIDBwWR8IO7pL6veEsCE2kZ6CqqVRKoZcsQs339Qa0SAVaEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ua2N9FxN; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719679814; c=relaxed/simple;
+	bh=10oL9AMvuLwwVtCMC7BHvX1JE4xKZn3dswe8y+fUP6s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JuZxGoJuHG60CZr7C5yVDXwNgcIadmnWuXzjFNi0i0YttE+pgwj72CABCeqrPXLUutcHly763ezyMUuEtEhIjP4R+OMKpakdXjxGJhPMrUaR8PHuPCj+FnkU4GQV8lxpqFrZ6S+RvvwdRxkR35hZn6NtFV7rC8u+DrHzWBNCP80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=J/S6YhWe; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ua2N9FxN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719679620; x=1751215620;
-  h=date:from:to:cc:subject:message-id;
-  bh=NdwDYXy90DzmNJ9UeuXmr+nGjsI/yHOxnXcY6RirEsQ=;
-  b=Ua2N9FxNEXZr4Os8vb9KozwKl1v1AYy9GPgYE6cFG8cFCUrDtEneRWUZ
-   QSvxGqhRLmRhhfV9K66s30DNijmKaBm3NV7sMCOLiNC5xV2p9px+C5BCv
-   QDj+UvjB013S7yJj7wy/CQkO39042VEmJipx7yaOLf8zC/gvCEZucI87W
-   uEpaNlxOezEr1q5ARv0zG8fzeFYJbbDUtkkT4TZIfH2dIz86uyK85o7Xk
-   ty7uENZcvOjtPSeaR6qbf4+lgeFTPonqM9C7HJAYaYa5XDBn97oi1woDu
-   6nYC71Ho6S34xBDgFI7OFaTjLWL4T4vMwi7AeqiSVWjsvhqK/sLUePxYQ
-   A==;
-X-CSE-ConnectionGUID: Ay32/KoMTw+5qzU9oQNhDQ==
-X-CSE-MsgGUID: rGBNZRARSwO+/ZsY2NGWSA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11118"; a="20666084"
-X-IronPort-AV: E=Sophos;i="6.09,172,1716274800"; 
-   d="scan'208";a="20666084"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2024 09:46:59 -0700
-X-CSE-ConnectionGUID: NSnkV4GGTv2kIVz8sufIiw==
-X-CSE-MsgGUID: pgbCrVIORtKNQcettnd+6g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,172,1716274800"; 
-   d="scan'208";a="45800994"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 29 Jun 2024 09:46:57 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sNbDz-000Jr2-1s;
-	Sat, 29 Jun 2024 16:46:55 +0000
-Date: Sun, 30 Jun 2024 00:46:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/vmware] BUILD SUCCESS
- 57b7b6acb41b51087ceb40c562efe392ec8c9677
-Message-ID: <202406300024.4XdHdHsQ-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="J/S6YhWe"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a6265d3ba8fso149205266b.0
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 09:50:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1719679810; x=1720284610; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lBMDt+8jA08q/p80DdkymHwXPRFldtei4zyGks2eOfY=;
+        b=J/S6YhWeZ1gcJSjT+D+33UoEqbDjRScWcGCQlM+lyjUUrOMiAGaJIPamH/+agXhc/u
+         ttnf64MIgW/BH+KF6U2vSFyG4tRHC72jHzXNp9QTb3KjYPHC0q7W8w+ZYnNoGYeQLG7X
+         xD6RCxKd/IfTkIbiXFGacNO/z6XXIwy4LydG+Ex2BZ8KXbFmh/ZIcKpX+FcBJr46Szz3
+         zj8lmc5tejSqKDuplTLvOmsCHlc18ByIcYzBLoD1ChSuuwhlA6LR2el9OUGJycXMoWaq
+         5hcbi6abgSl+bZpeoQs50p5G8zUBjjSdKKh+9KF0qieuu0oSYznDFNqFwzoLkT4U4Jjl
+         e7GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719679810; x=1720284610;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lBMDt+8jA08q/p80DdkymHwXPRFldtei4zyGks2eOfY=;
+        b=R6ZvcYVzrzvhvXQ/6AOsFUd1SHSQvX+Gey0A4zs4tn5Us+wnzcsN6/zCwHWZYK0cYj
+         Fnr7uE6mhjRhAjkYjijI9YBMhYR360Z1koG/lqU9ur9OP4YjjZ+01p3TN49DzG91w8JB
+         JAdCcOzVML4tSAXL63L2W8/rgIWedHVYHwDDrwcTpxM0zgXdCziNod12mABy09B0P2Hq
+         2YqpfoYTEo9MR4ZhvJBCCIG4GIXdVCqRzZimwlY+H2jzbrUdCPMxaDOfXMW6lMfQPCF6
+         5TEAKass5NPPnFmFupl4vjxqXhiEPPhHwxF41hbwR0Juv5q/jO0Nua0A7CdAAL5jzFAq
+         KRzA==
+X-Forwarded-Encrypted: i=1; AJvYcCX48nTb3nO5+fIZMepBU4IjbO+ptTkiN4fCx7z45XKhfYYOAlRSJn5GTznT31tQnZyElUzKvih/ba4GaZZIdgFWzacx7JIowOQUUkAY
+X-Gm-Message-State: AOJu0YzfHStu63Ak+hV9NkG9Zc3BUVGZgDb0cp31klTkiI9FdKXjC3b4
+	xnVkhWTgl6I8U7WNtUHPbzOYq8MonX9Yx4B9BvqLojS4aW/BrgPnJAzOQ8pZZvk=
+X-Google-Smtp-Source: AGHT+IHvwR+S0H8B75vhf9qeQ+kHGKTeTw4A/GkQ/c76b/iFHFfjBt3yzq6qn6cYazPMr6u5gUJHbA==
+X-Received: by 2002:a17:906:5619:b0:a6f:4fc8:265f with SMTP id a640c23a62f3a-a751442416cmr83177266b.42.1719679810081;
+        Sat, 29 Jun 2024 09:50:10 -0700 (PDT)
+Received: from ?IPV6:2003:e5:8729:4000:29eb:6d9d:3214:39d2? (p200300e58729400029eb6d9d321439d2.dip0.t-ipconnect.de. [2003:e5:8729:4000:29eb:6d9d:3214:39d2])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72ab065667sm176551266b.114.2024.06.29.09.50.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 29 Jun 2024 09:50:09 -0700 (PDT)
+Message-ID: <5e6f2c81-f33b-4a66-b12e-91c88ae2307d@suse.com>
+Date: Sat, 29 Jun 2024 18:50:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/mm: fix lookup_address() to handle physical memory
+ holes in direct mapping
+To: Tom Lendacky <thomas.lendacky@amd.com>,
+ Ashish Kalra <Ashish.Kalra@amd.com>, dave.hansen@linux.intel.com,
+ luto@kernel.org, peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de
+Cc: x86@kernel.org, hpa@zytor.com, kirill.shutemov@linux.intel.com,
+ rick.p.edgecombe@intel.com, mhklinux@outlook.com, peterx@redhat.com,
+ linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev, jroedel@suse.de
+References: <20240628205229.193800-1-Ashish.Kalra@amd.com>
+ <2982a4f2-ea8f-4fa4-81ea-d73c00fc2ad0@suse.com>
+ <76d96581-202c-80ce-eb26-8f906660c8e0@amd.com>
+Content-Language: en-US
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+In-Reply-To: <76d96581-202c-80ce-eb26-8f906660c8e0@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/vmware
-branch HEAD: 57b7b6acb41b51087ceb40c562efe392ec8c9677  x86/vmware: Add TDX hypercall support
+On 29.06.24 17:16, Tom Lendacky wrote:
+> On 6/29/24 05:20, Jürgen Groß wrote:
+>> On 28.06.24 22:52, Ashish Kalra wrote:
+>>> From: Ashish Kalra <ashish.kalra@amd.com>
+>>>
+>>> lookup_address_in_pgd_attr() at pte level it is simply returning
+>>> pte_offset_kernel() and there does not seem to be a check for
+>>> returning NULL if pte_none().
+>>>
+>>> Fix lookup_address_in_pgd_attr() to add check for pte_none()
+>>> after pte_offset_kernel() and return NULL if it is true.
+>>
+>> Please have a look at the comment above lookup_address(). You should not
+>> break the documented behavior without verifying that no caller is relying
+>> on the current behavior. If this is fine, please update the comment.
+> 
+> This brings up a point from my other reply. The comment says that it
+> returns "the effective NX and RW bits of all page table levels", but in
+> fact NX and RW are not updated for the PTE. Since the comment says all
+> page table levels, shouldn't they be updated with the PTE values, too?
 
-elapsed time: 5782m
+Hmm, the comment could need some clarifications.
 
-configs tested: 73
-configs skipped: 2
+It returns the effective NX and RW bits of the levels above the PTE. Reason is
+that the function is used in case the NX/RW bits of a PTE are updated, so the
+PTE settings are not always really important.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-tested configs:
-alpha                               defconfig   gcc-13.2.0
-arc                                 defconfig   gcc-13.2.0
-arc                   randconfig-001-20240627   gcc-13.2.0
-arc                   randconfig-002-20240627   gcc-13.2.0
-arm                                 defconfig   clang-14
-arm                          exynos_defconfig   clang-17
-arm                   randconfig-001-20240627   gcc-13.2.0
-arm                   randconfig-002-20240627   clang-19
-arm                   randconfig-003-20240627   gcc-13.2.0
-arm                   randconfig-004-20240627   clang-19
-arm                       versatile_defconfig   gcc-13.2.0
-arm64                               defconfig   gcc-13.2.0
-arm64                 randconfig-001-20240627   gcc-13.2.0
-arm64                 randconfig-002-20240627   clang-19
-arm64                 randconfig-003-20240627   clang-17
-arm64                 randconfig-004-20240627   clang-19
-csky                                defconfig   gcc-13.2.0
-csky                  randconfig-001-20240627   gcc-13.2.0
-csky                  randconfig-002-20240627   gcc-13.2.0
-hexagon                             defconfig   clang-19
-hexagon               randconfig-001-20240627   clang-17
-hexagon               randconfig-002-20240627   clang-19
-loongarch                           defconfig   gcc-13.2.0
-loongarch                 loongson3_defconfig   gcc-13.2.0
-loongarch             randconfig-001-20240627   gcc-13.2.0
-loongarch             randconfig-002-20240627   gcc-13.2.0
-m68k                                defconfig   gcc-13.2.0
-microblaze                          defconfig   gcc-13.2.0
-mips                        bcm63xx_defconfig   clang-17
-mips                 decstation_r4k_defconfig   gcc-13.2.0
-mips                           ip27_defconfig   gcc-13.2.0
-mips                           ip32_defconfig   clang-19
-mips                          rm200_defconfig   gcc-13.2.0
-nios2                               defconfig   gcc-13.2.0
-nios2                 randconfig-001-20240627   gcc-13.2.0
-nios2                 randconfig-002-20240627   gcc-13.2.0
-openrisc                            defconfig   gcc-13.2.0
-parisc                           alldefconfig   gcc-13.2.0
-parisc                              defconfig   gcc-13.2.0
-parisc                randconfig-001-20240627   gcc-13.2.0
-parisc                randconfig-002-20240627   gcc-13.2.0
-parisc64                            defconfig   gcc-13.2.0
-powerpc                  iss476-smp_defconfig   gcc-13.2.0
-powerpc               randconfig-001-20240627   gcc-13.2.0
-powerpc               randconfig-002-20240627   clang-19
-powerpc               randconfig-003-20240627   gcc-13.2.0
-powerpc                    socrates_defconfig   gcc-13.2.0
-powerpc                     tqm8548_defconfig   clang-19
-powerpc64             randconfig-001-20240627   gcc-13.2.0
-powerpc64             randconfig-002-20240627   gcc-13.2.0
-powerpc64             randconfig-003-20240627   gcc-13.2.0
-riscv                               defconfig   clang-19
-riscv                 randconfig-001-20240627   gcc-13.2.0
-riscv                 randconfig-002-20240627   clang-19
-s390                                defconfig   clang-19
-s390                  randconfig-001-20240627   clang-16
-s390                  randconfig-002-20240627   clang-15
-sh                                  defconfig   gcc-13.2.0
-sh                 kfr2r09-romimage_defconfig   gcc-13.2.0
-sh                    randconfig-001-20240627   gcc-13.2.0
-sh                    randconfig-002-20240627   gcc-13.2.0
-sh                          rsk7201_defconfig   gcc-13.2.0
-sh                           se7750_defconfig   gcc-13.2.0
-sparc64                             defconfig   gcc-13.2.0
-sparc64               randconfig-001-20240627   gcc-13.2.0
-sparc64               randconfig-002-20240627   gcc-13.2.0
-um                                  defconfig   clang-19
-um                             i386_defconfig   gcc-13
-um                    randconfig-001-20240627   clang-19
-um                    randconfig-002-20240627   clang-19
-um                           x86_64_defconfig   clang-15
-xtensa                randconfig-001-20240627   gcc-13.2.0
-xtensa                randconfig-002-20240627   gcc-13.2.0
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Juergen
