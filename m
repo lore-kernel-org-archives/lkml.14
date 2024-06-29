@@ -1,64 +1,65 @@
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82BD3B1AC
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 23:37:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B749F224CE
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 23:42:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719704247; cv=none; b=r0G1Chrc67i0bpyuAXUbjJNAAzehtFEVACXU5ox6oxDkTwZ7iywadz4DASKhi72RFbFDUqd+PQil3LM8M8giKuMfJ49w7aa8F74VlegEdz9EVhwD3wJxdkBUPDgzHMapsa1/mzhYalLZekI/PsBIdSuNSrUhhHl9rZjFBogI80E=
+	t=1719704529; cv=none; b=QBolLB7EVvlUNGTVv76kTwUhq3oyFSOew2vrK6ZFcstndpVFHwACUqH9BNME+YZ9VSkhHzJrcCBh1NCbrfFV2PMtelnE36ehSztavBCoGQPzgsrDocF68damTT2j0Q665V5n0aCPlAufI3X5HKf79irupI6sAweaDjoW094JTb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719704247; c=relaxed/simple;
-	bh=IBEoI0bvSqitYJRqzPDoW8or7zGkJuOYQ/JpQeLhubU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Cb0PzCqUZUl09GwUxetM7czAqAqRNz0LeD8ukTgiWg76XpAbZnqdUxxCIFBl/sSEfqitOsI44+rdB0xJ2Z0EN3QyELiwu/gcRwsnAxgrvn1+Jh+r+LnQ0LyEzOVicHVSchazBtpoUNDdQRUcHRNQ8k9xK71mP+/Rg5Ty1+vID4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=3HrvFnjb; arc=none smtp.client-ip=209.85.167.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1719704529; c=relaxed/simple;
+	bh=/RVI+NuTW83Ntxmw+C16AWLP8jraqs9TGJc2ijesKGE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SwNNFYKcGkqbiqudePctk8PzqYYVS89hglUt/RWBNgnoDkr6s8uaVhMRdvows1H+WAEknkLPnWDSu1RlD/sH613W68jnnnGjnHdubF1sz89QcZ34hiEVrK/EjrqNfWsZbisLFyfMjoXOplHg0nPrHRmWVO4zMMYph9jd+SozSfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TnarpeiC; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="3HrvFnjb"
-Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3c9cc66c649so1090901b6e.1
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 16:37:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TnarpeiC"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-70a078edb8aso713099b3a.1
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 16:42:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1719704245; x=1720309045; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719704527; x=1720309327; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+3puRN6mg4Kad0heP72+x0UdDRAPxRVJ0rwKkzRspK0=;
-        b=3HrvFnjbv8R42DQH8RBAMyz+cUhlrHdxoFIuKcmVTUIV4TFIvGSUUPCsO1XrlN3Man
-         Hek+sQOp0wUfhZBdrJp4AbfS+2tP4yACs7vF4CcXKjVPHrEiZKoyCpS4jyS+ypoPJaLw
-         76BjNHfVtBazwh2cq4eolmPW2kZ9QunW070n8yL90vmY/skXDIaluZnBaDs6vPqP7NI5
-         RMKVeRoVG8uxXy78ikuKBSfzeMN6gxrfODfIyRvXj6Galsausj10b0i2DPRnRFMVWLpY
-         TJCGj0+8SCyAP6/qp94rs4tCKv78q9tuytzg82nNYr//bNra92DTvXNBI6O2HrVnjeFJ
-         cLPA==
+        bh=ZlOndXAQYIA/gkCwrk2GQEBTFD9obTR1n2sQ+YWZvbU=;
+        b=TnarpeiCD9f8+G7/B7EUPUMI2NIERIKiFLaIj7Y3CuZljKxXclircLHb6+JNaTocgh
+         AcnBFAptTU6RfdYRCbewYyR+83d2fTqS4CxWBvFI85ddkxbfjgf61VKfBkgOCySM41Dc
+         qvt4bcma0cQ9EO7HXLRA+/OBC/f7vg9ZjpEPn9/iY3soUa/iFJI25+m13bBeBhg+SI0x
+         uwW/Pubhd++H2wgKg8xZzWEZUQYYcKNi+hU1+IThGaAZg6ik0uRa2mlgCK1WtRDKddVZ
+         3Ao3eVZqAjtCkV5PwzTuGwM7+QsQKWHS04mpzG8U8vmreDkKQV0yAFrmb9TGJxdgASem
+         J5rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719704245; x=1720309045;
+        d=1e100.net; s=20230601; t=1719704527; x=1720309327;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=+3puRN6mg4Kad0heP72+x0UdDRAPxRVJ0rwKkzRspK0=;
-        b=YIhdN3iN1ExJqwGM06oH2heHQfJtyp+3N/LTC+CX0pXYnHeqvs5jS5Lil3muL3TDg9
-         3fK44W3egdpgb0B9UnjnOXCvQLG7PwN8y9zUEM6OT2r4aaQjfobhqPqFGwuyXXt9C9/Y
-         +pgEzUbzfKC1OOPQygSK1WPWO886uXdpPtt1L1MegLyyfPciKM+O38fBi0vS3E6AFi/y
-         HwR6Q+5Zoe3XG8tx8ajhDx3gHrC3NCI4iIqoouslIh2bg6QXGskebxszH5LtCB8XQ+Kc
-         a4RSV3vGSuU0mag+tUl0eJm09zjLfenWr/H3SEgmiM/QMzylx6t2GQEuopl2vOx9WnTJ
-         Y4NQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWg6C0j8T2GNSeaqP1QlLBd6e8B8keDcKRpF5/nez4B4yZjxWqpD2U/4asQLknOMR4vjNmpCsuh2zCml9xHFbxm/7eSl8ur1wRaWkNB
-X-Gm-Message-State: AOJu0Yy3X31Mtsjjz6XNI6qRMy4hXEy7W/sFSC15fj3gf8olLoYtiUR2
-	cOQWAWOcd6WJNCwQgF5DmmTAx/qZ12InU/gpvMW+lKKmi1PQ3x0K//v4gYHdp8w=
-X-Google-Smtp-Source: AGHT+IG8P+5igDk4ExwABkE2XwoDTVpTr+1Rh0xMCSl5Q2BnEcJHHpU8Ukw7tYI1CUy+tLNvveX6pg==
-X-Received: by 2002:a05:6808:199c:b0:3d6:2d6d:e0e3 with SMTP id 5614622812f47-3d6b55908demr2183569b6e.52.1719704244748;
-        Sat, 29 Jun 2024 16:37:24 -0700 (PDT)
-Received: from fedora.vc.shawcable.net (S0106c09435b54ab9.vc.shawcable.net. [24.85.107.15])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7080246ee80sm3791646b3a.69.2024.06.29.16.37.24
+        bh=ZlOndXAQYIA/gkCwrk2GQEBTFD9obTR1n2sQ+YWZvbU=;
+        b=ozKholfL/CHD2Uysn44L61ipnlJ8BckG+mYZYDYFdz3Olq5geadNa1mmNR2f6bU6Bv
+         X48kxlkVw4Qut8gnjgKmHjlvlkBmoy6T0IIBJes/Di339w6ISyrEjLD55cKRkUk/vaBN
+         96uSLmN04TN/Ykj3QNi6Xk/oIs8HsHXy2rdWDy2DIul75CDuETuTAdSv3UGz6rBvP0NW
+         RrQvN7afqEoXyrnsySvlhW35yzH/tahdC9ntPKgYzfqhovAgdkwJv2r0/6Ne+2UVNqW3
+         NKT23yppDdEK9e85yuBqOobC1nr5SpImrZRnubCACqfLZ/LF5PDyrntzS9+dw2r6V61/
+         FUiA==
+X-Gm-Message-State: AOJu0YxW8ev6cqELWx3mjFvHrajFhit/xHXtNqdhQh0KIlWzVLnqmhk2
+	Jb9K9uBRpDnJNCd/8LruZWT30CEbYiTD5deKVIYlGpmBoRsnMf4j
+X-Google-Smtp-Source: AGHT+IHNvRvSLdv6mjuw6V64R4JnaBcm1WHMuRvefgESl1YG1bBt/ZuuPsKKx3UjbO2Vvrq6vxH+AQ==
+X-Received: by 2002:a05:6a00:8c9:b0:705:a9d9:62b1 with SMTP id d2e1a72fcca58-70aaabc0162mr3284197b3a.15.1719704526992;
+        Sat, 29 Jun 2024 16:42:06 -0700 (PDT)
+Received: from localhost.localdomain ([2407:7000:8942:5500:aaa1:59ff:fe57:eb97])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7080498a021sm3760061b3a.203.2024.06.29.16.42.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Jun 2024 16:37:24 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: kees@kernel.org
-Cc: linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] gcc-plugins: Remove duplicate included header file stringpool.h
-Date: Sun, 30 Jun 2024 01:36:09 +0200
-Message-ID: <20240629233608.278028-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.45.2
+        Sat, 29 Jun 2024 16:42:06 -0700 (PDT)
+From: Barry Song <21cnbao@gmail.com>
+To: akpm@linux-foundation.org,
+	linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org,
+	Barry Song <v-songbaohua@oppo.com>,
+	David Hildenbrand <david@redhat.com>,
+	Ryan Roberts <ryan.roberts@arm.com>
+Subject: [PATCH] mm/vmscan: drop checking if _deferred_list is empty before using TTU_SYNC
+Date: Sun, 30 Jun 2024 11:41:55 +1200
+Message-Id: <20240629234155.53524-1-21cnbao@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,51 +68,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The header file stringpool.h is included for GCC version >= 8 and then
-again for all versions.
+From: Barry Song <v-songbaohua@oppo.com>
 
-Since the header file stringpool.h was added in GCC 4.9 and the kernel
-currently requires GCC 5.1 as a minimum, remove the conditional include.
+The optimization of list_empty(&folio->_deferred_list) aimed to prevent
+increasing the PTL duration when a large folio is partially unmapped,
+for example, from subpage 0 to subpage (nr - 2).
 
-Including the header file only once removes the following warning
-reported by make includecheck:
+But Ryan's commit 5ed890ce5147 ("mm: vmscan: avoid split during
+shrink_folio_list()") actually splits this kind of large folios. This
+makes the "optimization" useless.
 
-  stringpool.h is included more than once
-
-However, it's important to include stringpool.h before attribs.h
-because attribs.h uses some of its functions.
-
-Compile-tested with GCC 14.
-
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
 ---
- scripts/gcc-plugins/gcc-common.h | 5 -----
- 1 file changed, 5 deletions(-)
+ -v1
+ * I remember David and Ryan once suggested that this check could be dropped
+   while the patch was being pulled into mm-unstable. However, for some reason,
+   I forgot to request squashing this change.
 
-diff --git a/scripts/gcc-plugins/gcc-common.h b/scripts/gcc-plugins/gcc-common.h
-index 1ae39b9f4a95..3222c1070444 100644
---- a/scripts/gcc-plugins/gcc-common.h
-+++ b/scripts/gcc-plugins/gcc-common.h
-@@ -62,11 +62,7 @@
- #include "pass_manager.h"
- #include "predict.h"
- #include "ipa-utils.h"
--
--#if BUILDING_GCC_VERSION >= 8000
- #include "stringpool.h"
--#endif
--
- #include "attribs.h"
- #include "varasm.h"
- #include "stor-layout.h"
-@@ -78,7 +74,6 @@
- #include "context.h"
- #include "tree-ssa-alias.h"
- #include "tree-ssa.h"
--#include "stringpool.h"
- #if BUILDING_GCC_VERSION >= 7000
- #include "tree-vrp.h"
- #endif
+ mm/vmscan.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 3d4c681c6d40..0761f91b407f 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1291,7 +1291,7 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+ 			 * try_to_unmap acquire PTL from the first PTE,
+ 			 * eliminating the influence of temporary PTE values.
+ 			 */
+-			if (folio_test_large(folio) && list_empty(&folio->_deferred_list))
++			if (folio_test_large(folio))
+ 				flags |= TTU_SYNC;
+ 
+ 			try_to_unmap(folio, flags);
 -- 
-2.45.2
+2.34.1
 
