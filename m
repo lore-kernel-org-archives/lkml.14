@@ -1,70 +1,67 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6400839FF3
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 23:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3281D540
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 23:30:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719703371; cv=none; b=IyeNtJTas/ZKCrXbYy8hMk06HvYEXf7v/cgu85wPVxjakYE2TWujIOiSPnoSuCl8DClmI/cbPHbGSZSmoONPooBGWzFGZErYdvYRRK4XmbkGK1Jm28VoCycDSuAqyGQ6VMJMxgRct+ExVx7/6tnlvDFN9UKXn/hqd3Sp9sJlTBg=
+	t=1719703846; cv=none; b=quR0J+Rig8g07JiMjiJaTEdSxup90fjebOzx5Sxz9IhU8qxZcApAbjQyBpZNwPeJKk17mnnkOw+dNozvQ7rjs+NYU0XkAppWIE66Y49Wdx9ddzYPGWsauX6BhqhaVtFbEi5ubygXycENbh+/hfLQzg0UHuFq/mEVQoRBXvUl2Po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719703371; c=relaxed/simple;
-	bh=y++zxykpK9NLkq0lGO2nsOHzis/UJOoVXpmq2Sl2oa4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TBaVYAfjY9duQPbicaKtsSGHoLhqpXPdz/QQpo7vIs9z9Rw5f4JQpkiTCtEvhb2uNBVxrrf8dvHIr9IZ5PC+HqwW1HShoK4QrNxHb7mjozJn2jT1rKjfiGGlp0NoeOpxQpet6TxDp3OPUM8ToP/gFvNJezOBOHJLPrrnrRUQlq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ICSTS4Ho; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719703846; c=relaxed/simple;
+	bh=IEJjlAS5//s9IpfZOVPZKU6ryrB48hGMt4oSDmz/BIs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DEZ63gJTFyOFATguD2G9Srifi4A7ie3RUcOFFG7atZh/fbAyMejD3mQQIJ9KminOjbtKZ36oZtKG7bhfCEjF30ru2N7h9Gqrlz45M3cSvZBauwM37OAQZj30NL9EG+yLB/5vRkMiB/Vo3w0lvQX6XRvssTkqUlGYa5TKzhiIiI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=j/VbK+1N; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ICSTS4Ho"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1fa3bdd91c1so13674965ad.2
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 16:22:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="j/VbK+1N"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6b54683f65fso9309516d6.1
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 16:30:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719703370; x=1720308170; darn=vger.kernel.org;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1719703844; x=1720308644; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=teb0UEafOOXEAKqbKfLgAdCqPG7X0B1dC0LcXMPnx48=;
-        b=ICSTS4HorIti5RBmlMhwlXDuPgFbOrDKiZ0upBohTeJmYwXCWQLsb/0LmfaOjjvMZs
-         mmm5HAPuxfT2688+16i+YSJzZ6ZgigklJwFAKrSJK5dryR7HVxwJNDAa/9PK/E06HaKD
-         KjJ5CRNxxO7T5Wd+HSu1sRuCAEflY2+kKkaOByVfkAJaXSenzvNZyr+GnmxFugl0NPHu
-         MQCYQSQrL+DUvotuPliAEqE7I6gCXj0n0isn6q9UsOIlebbd8QOrKS0w1yBjosHcFcFk
-         F50CvYPgceB4uldFkK0Pidjmbbj1WBcWpwBFWg1XjsqezZWR9/SCxF76bc9SCBk00OkF
-         Lu3w==
+        bh=kzngZ4dBsZTw3mzD7TJaRH343afEjYAiOI6vhb3xMXs=;
+        b=j/VbK+1NaxRuT4jUqnZcD14LO3iMjW+G759wD3rfc9rsjLsFGbKGO1MCjm12+4FqxS
+         8I5hhtN+Qr5mD/Mne86it7EIvYpM4fZUAQC5plOkcHzu7O+sThYQA3YOfmK1qRlutQxS
+         3RioUDSD0QuIiB+BoEGZEn6/yk7vijU+JR7+5AuPFdnhkv7A0Eu/QkrZbXBgT/0HTA20
+         IAJtbdgaOIbdpvf4CQyQvdfv7f6Obm6e01vAuH1Yu0XHG8qzcERChfE2Y3dp8Lx9E0CJ
+         jJq5nK5/ddU0T5TyyFmXG3HHZP16fncE4xJQJNhDx4hN6Bmn+x3LrJfLWE5KHGr9/97x
+         jIKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719703370; x=1720308170;
+        d=1e100.net; s=20230601; t=1719703844; x=1720308644;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=teb0UEafOOXEAKqbKfLgAdCqPG7X0B1dC0LcXMPnx48=;
-        b=cdCjJNbifL0IYqPrxJz9NWK+9B2EMlDYjV5kV00ygEChEjbgqnWVs3WvB3RBi25hdv
-         T9PaiFAlmOE0ItHuGqIOnLPah1GOMPRaX52qugSW29+bXwsMKRSUAZGBF0EldezLUHC8
-         UgZTWOAny/M9HRiNxw+uO/lWRR3ugdIp5wmOWkh4Ul0gGRucoYcAsSB5w138sWDoNqDx
-         Ds2omrbIKCR8LH9td4L447a8nIUkLrjT85Y0h09uE6zjB9se1XXoWWw1qpfCBdpz9rM7
-         09vvUUhYzqGU1bFuy/MW2rxRuvBPPWXelybIgjyS71B0q+qyP7t1HKOcl4ptsW2og+AG
-         2axg==
-X-Gm-Message-State: AOJu0Yw7ha0MqUye1xDY83ii/AK7FaaCMwd7guZYrDz2IGFD8ABDzBLX
-	hn+BWVqs3/S7bBuJH1VhRphNVIv8hZMF08mat/ojG2Zh5Ui2Rh83
-X-Google-Smtp-Source: AGHT+IFjYofaGf9zLpZ2YOJRaS7HqlHNi+SYfRjo7DN7UqHI+6dj6sFc0nv+dGyVQbKKZD8NFoyK5w==
-X-Received: by 2002:a17:902:ce82:b0:1f9:ae6d:5697 with SMTP id d9443c01a7336-1fadbca1584mr26805325ad.35.1719703368748;
-        Sat, 29 Jun 2024 16:22:48 -0700 (PDT)
-Received: from localhost.localdomain ([2407:7000:8942:5500:aaa1:59ff:fe57:eb97])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac10c8f1asm37279085ad.48.2024.06.29.16.22.44
+        bh=kzngZ4dBsZTw3mzD7TJaRH343afEjYAiOI6vhb3xMXs=;
+        b=RmZrDmUU8ydkM6CMu04VgT9Di5j32GCxWZYUcijOoH0zLucQVQQeENOIH1jHQud4/H
+         bh7vrrXw7pd79vsy6hdMm+UyVXDOIfgNq6S5uSa6gqH+ycd3VVS+8XUlctk2U9aYcWyG
+         vJPQhT58VTf6hH6Uerq9jnpnibcR3dACazmqqZOByVKrg05xVUd1bPuGKaGCmwoWESLe
+         6ncAxZFXfhwUz6B4XWhi9whVQIsY6J77YgvvGZkgxgH6BaY3X7SQCGq9iGNRQd4m+Zoz
+         DJ3zjbFWlhB2fL58369oU+NEuzLbwbe8rHbU/5+sQ3usxpLIWn8YiWx2JXl7dGA6jgbm
+         yiDA==
+X-Forwarded-Encrypted: i=1; AJvYcCVtsAKy7TivumApZPKqTn9OlW4UCPzehkp8i270Yz14dDtHY9qn1rwP0mECOWMaorc9/sU9aURFj6mBcpRQPQcUHCRtXiGYgQ0XwntG
+X-Gm-Message-State: AOJu0YxBGVyVHiWVsPqzf7Urok87GG3dJoqpfVvceMyicmNAHMF/ZiLc
+	6C1APuHOdENNJyTajNfKmOxo1I4DebkJGOT1exfjlHVJ8ZXNL+Q3LyKFeyGi+0VtEZloqwjbab2
+	/
+X-Google-Smtp-Source: AGHT+IHMoATyt6j5Mm2oZ60wF78Ol80+nzN8Vjq1tYadVGAVyarOr8GCKkzWv8xp4vKA1CkWio12pg==
+X-Received: by 2002:ad4:5e8e:0:b0:6b5:8de5:d0b7 with SMTP id 6a1803df08f44-6b5b71a5d60mr27016206d6.44.1719703843928;
+        Sat, 29 Jun 2024 16:30:43 -0700 (PDT)
+Received: from fedora.vc.shawcable.net (S0106c09435b54ab9.vc.shawcable.net. [24.85.107.15])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fad31d5d57sm26608945ad.160.2024.06.29.16.30.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Jun 2024 16:22:48 -0700 (PDT)
-From: Barry Song <21cnbao@gmail.com>
-To: akpm@linux-foundation.org,
-	linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org,
-	Barry Song <v-songbaohua@oppo.com>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	Nhat Pham <nphamcs@gmail.com>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Chris Li <chrisl@kernel.org>,
-	David Hildenbrand <david@redhat.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH] mm: zswap: fix zswap_never_enabled() for CONFIG_ZSWAP==N
-Date: Sun, 30 Jun 2024 11:22:31 +1200
-Message-Id: <20240629232231.42394-1-21cnbao@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Sat, 29 Jun 2024 16:30:43 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: linux@armlinux.org.uk
+Cc: mingo@kernel.org,
+	sshegde@linux.ibm.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH v2] ARM, sched/topology: Check return value of kcalloc()
+Date: Sun, 30 Jun 2024 01:30:29 +0200
+Message-ID: <20240629233028.275424-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,37 +70,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Barry Song <v-songbaohua@oppo.com>
+Check the return value of kcalloc() and panic() if memory allocation
+fails.
 
-If CONFIG_ZSWAP is set to N, it means zswap cannot be enabled.
-zswap_never_enabled() should return true.
+Compile-tested only.
 
-Fixes: 0300e17d67c3 ("mm: zswap: add zswap_never_enabled()")
-Signed-off-by: Barry Song <v-songbaohua@oppo.com>
-Cc: Yosry Ahmed <yosryahmed@google.com>
-Cc: Nhat Pham <nphamcs@gmail.com>
-Cc: Chengming Zhou <chengming.zhou@linux.dev>
-Cc: Chris Li <chrisl@kernel.org>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
 ---
- include/linux/zswap.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v2:
+- Panic instead of failing gracefully by returning early after feedback
+  from Russell King
+- Link to v1: https://lore.kernel.org/linux-kernel/20240628194350.542376-2-thorsten.blum@toblux.com/
+---
+ arch/arm/kernel/topology.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/zswap.h b/include/linux/zswap.h
-index bf83ae5e285d..6cecb4a4f68b 100644
---- a/include/linux/zswap.h
-+++ b/include/linux/zswap.h
-@@ -68,7 +68,7 @@ static inline bool zswap_is_enabled(void)
+diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+index 2336ee2aa44a..27d6527f5fb6 100644
+--- a/arch/arm/kernel/topology.c
++++ b/arch/arm/kernel/topology.c
+@@ -93,6 +93,8 @@ static void __init parse_dt_topology(void)
  
- static inline bool zswap_never_enabled(void)
- {
--	return false;
-+	return true;
- }
+ 	__cpu_capacity = kcalloc(nr_cpu_ids, sizeof(*__cpu_capacity),
+ 				 GFP_NOWAIT);
++	if (unlikely(!__cpu_capacity))
++		panic("Failed to allocate memory for __cpu_capacity\n");
  
- #endif
+ 	for_each_possible_cpu(cpu) {
+ 		const __be32 *rate;
 -- 
-2.34.1
+2.45.2
 
