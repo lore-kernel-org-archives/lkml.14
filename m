@@ -1,90 +1,179 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C65591EA8D
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 05:41:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4924B2139D7;
+	Sat, 29 Jun 2024 05:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719639708; cv=none; b=Ia+YR5NPnIGZ7sAK9DKwHuECV/WuH+J/wNYH5gOo8eg70rR5hbkfawT834XsCLIBBBYQcMN++49zZqrGx9uuB76vO5lVzzNgI3u/39B6OBM9DSKXdV6lQpMq2PvvFSP4V/nLDPBMm1B4/NRUqQhvrne9zdoyEBkQgA5Hsd+AF6I=
+	t=1719640167; cv=none; b=E9PwL4988P8/9XKbj6P1d3Nc4R4+k2akbxXZooXx6epkN7bt8cz9dCPp2L47zEhtA7ZwEIVJ+rl10nLUU1UDoWjecGXPD2uReP11s90I+36yRa9ej8o6n+6pfdwUFmmJ7xXhTx8YPdNTAqGPK43a3mQ8jW7XlDO+/Q18n7Ah+BE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719639708; c=relaxed/simple;
-	bh=J7CU6oAbQI/8TIhR7X/EwNpsvd05QNWxa28dGhofYO4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DqF7Acj1MtlZY4kO4IgT0Ts8SWsFJvk/KVapiVruadSw1hvGubAJBp2t06OjXfGmXp+MaQ4MxVZj0NcJ9obCUG/czVtWyVMk5iytF9Vv2CpJf4SXe1BwQuZMbyvx0RTgciVzn8MU2wDERLZd8idVF/HLR+JRG8sx9Z+JI5HcGv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QIdZ4tFu; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719640167; c=relaxed/simple;
+	bh=eg3gR1VMY7M/28LC8QaaJZJuEM6oc16/cWeKJFaJ5cY=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=vC94CJcaC4u4eyjF8m5nbKOHzHESkYQTDyYYoPsg0WexcojfDmnI0tOASsx3MhGOJSf94qYBi7zF7RAKddLFLvknikyFjKVdFOTjk84w2HNiDnXDoNOJIpb6gIeGLC1WsOsnd+r/APmYNcLU0XC7B4ftQteNCK0Eu2e04Ocng30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Po7TgReX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/zO6C3O8; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QIdZ4tFu"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-42565697036so14271705e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Jun 2024 22:41:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719639705; x=1720244505; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1wZGy4XJFZVqMjehkmGr0BII/jxOHjo4pxHFFa9VOi0=;
-        b=QIdZ4tFu7JQf889VsR+cyvyPQMNQsR54IEppnk9NWQOtsfwX2wsjdLpsV+Al/C/74H
-         gkdbxm5BZJiAJujX+TIXKGsBeyCNpwv9Zn/HwC07ScpAU73chJhZ1lTvYRndlT2mCWHf
-         bln14RF9kIUSl82EviLerqPe3MbGmsUPmkeZzgmHAWRpBIsLMTEGgtYHN2O4sJOLeFOm
-         5cwcuJXz6hEfS3nUHNEcEPOjlejrmUdfbVH9vbtIxLNc2BBsGxaoy9vnbmgnUL617wnF
-         u5c55cZk9C1vmHgPvGrNxwj57tH52Ux07KsUVfZBh5Sfk6nNmwf3qKfnJK20OIfxqZ34
-         8aqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719639705; x=1720244505;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1wZGy4XJFZVqMjehkmGr0BII/jxOHjo4pxHFFa9VOi0=;
-        b=VuFgsCjzfB4IixQkDWFGB9sA5kvGmwnVh8JPWvI0m6LcOD+dCq83zJsWvL7wEbk8iu
-         3FKx/tOgW3Dvt8Kgv+TjP8m0r4C5gxGYUXgcPBlx6mkzGb8TPwxmQtMYalX/vmYoJ2e2
-         O0wMxGMSULnLC3maUxMgzg03/9WHRKaRyQDpGVpaPKVoZCf6KkBtjzn/RRVo4V7dKmDy
-         c1314ACthbHM8RkAFM+h36aPeEkQ6ykmR4In4k+6ldYBNunPGiivEHk5KAWegm6kPhK/
-         OP/DgocLimTLoacHBI1prOgeqkQb9Hubw0W3p1BHUYSMxwT3IRU8P9JR0XrKNp7EeHfu
-         nE0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUHTuBWeT1e9y8jZxOdf7GbnNTL7hmhjCp0UsqgN3xBPF3fIODOfjpnmaF23nl8n8mG3qL1iTA6Yhw4KzRaamALRJL1b4NZHk9alM+t
-X-Gm-Message-State: AOJu0YwvkS9hwZZhgVohQHHZRQxs66sE8K5TH852tRg6hcUkb57wUVPc
-	1ih1XhtFNW21jYWqpZcj+t+25JbRpughSNhJDlbfeEgiknBEbJT7esyGE9ASzTpMmBKaodsfkRX
-	RX2tCsS3GkQqLSalUEnvrlaOFaSI=
-X-Google-Smtp-Source: AGHT+IFcJNFllWffRgCcsOAWcnN3V+41dce2GQ/a5WpexWfICgiHLv7iDIcZIoCr4e0ESaPxJmoP7QydqpcBBhKUhQs=
-X-Received: by 2002:a05:600c:4686:b0:424:aa83:ef27 with SMTP id
- 5b1f17b1804b1-4256d4c1cc0mr36504175e9.1.1719639705131; Fri, 28 Jun 2024
- 22:41:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Po7TgReX";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/zO6C3O8"
+Date: Sat, 29 Jun 2024 05:49:22 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1719640163;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cGRE7VU/a5XrVKC4payEeBzM7wdGGv2v3j7a+/Cmt/Y=;
+	b=Po7TgReXB48d9WpvLr6ygfISrb/GS9lVGaqO4V89iuWkonnMKqSp5AQV5UnH+1TC3w3iNS
+	7S5UjNIgPjQtRo3M92UzYWKcXI/3iaQguvoqyOZpTTp1jXZl72znPozn23dhTcYT/ivOUA
+	xwqF6fcO2rS195VyqV1Nkxu5TvUvltIKStbwret3T7O4JUKRq1K0iF1akJ4R4KhWmo6+NJ
+	Z/5LmtXbEbw7Z83+aFKTTOhMuVoQbMW1IKs8rBJJZcljy98RRpQ5Ir7NKGIbkUPnY/bEoO
+	FU1Jdriwb5A5x1oaeESf/wup45ai6BVIkAb3lT1tCb7Nv0oIZgbClGP72CmYQA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1719640163;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cGRE7VU/a5XrVKC4payEeBzM7wdGGv2v3j7a+/Cmt/Y=;
+	b=/zO6C3O85eJhWQgeQiqj2lN1I6RyKrzsr19tfsEgqZ/ej9LcD7oJn6R9NwM1GAJvhajHmp
+	M/TrrXSNfJgupVDg==
+From: "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/bugs] x86/bugs: Add 'spectre_bhi=vmexit' cmdline option
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+ Nikolay Borisov <nik.borisov@suse.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To:
+ <2cbad706a6d5e1da2829e5e123d8d5c80330148c.1719381528.git.jpoimboe@kernel.org>
+References:
+ <2cbad706a6d5e1da2829e5e123d8d5c80330148c.1719381528.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJNi4rMfRmWoYdsyH6ibNKN8DSCL_DO8Wa08mWbe8t7vH21Dpw@mail.gmail.com>
- <86pls2isal.wl-maz@kernel.org> <20240627101207.0bbbead0@rorschach.local.home>
- <CAJNi4rMeDgDJbN0jjPguU_v5uoscJJN=5bZaShXpu7Q8X60hcg@mail.gmail.com> <20240628084137.3338ab75@gandalf.local.home>
-In-Reply-To: <20240628084137.3338ab75@gandalf.local.home>
-From: richard clark <richard.xnu.clark@gmail.com>
-Date: Sat, 29 Jun 2024 13:41:38 +0800
-Message-ID: <CAJNi4rOSnymWATKnDJ_pj-1LZTctZuF6bqWdfjn2Q4Cc7PyeMA@mail.gmail.com>
-Subject: Re: Will smp_call_function_single(cpu, ...) broadcast IPI to all
- other cpus?
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>, will@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	"Russell King (Oracle)" <linux@armlinux.org.uk>, Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <171964016261.2215.17849381714028894235.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 28, 2024 at 8:40=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> On Fri, 28 Jun 2024 18:21:25 +0800
-> richard clark <richard.xnu.clark@gmail.com> wrote:
->
->  trace-cmd reset
->
-> will put everything back. But yeah, I need to fix it so that it's easier =
-to
-> reset triggers.
+The following commit has been merged into the x86/bugs branch of tip:
 
-works! Thanks steve.
+Commit-ID:     42c141fbb651b64db492aab35bc1d96eb4c20261
+Gitweb:        https://git.kernel.org/tip/42c141fbb651b64db492aab35bc1d96eb4c20261
+Author:        Josh Poimboeuf <jpoimboe@kernel.org>
+AuthorDate:    Tue, 25 Jun 2024 23:02:02 -07:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Fri, 28 Jun 2024 15:35:54 +02:00
 
->
-> -- Steve
+x86/bugs: Add 'spectre_bhi=vmexit' cmdline option
+
+In cloud environments it can be useful to *only* enable the vmexit
+mitigation and leave syscalls vulnerable.  Add that as an option.
+
+This is similar to the old spectre_bhi=auto option which was removed
+with the following commit:
+
+  36d4fe147c87 ("x86/bugs: Remove CONFIG_BHI_MITIGATION_AUTO and spectre_bhi=auto")
+
+with the main difference being that this has a more descriptive name and
+is disabled by default.
+
+Mitigation switch requested by Maksim Davydov <davydov-max@yandex-team.ru>.
+
+  [ bp: Massage. ]
+
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Reviewed-by: Daniel Sneddon <daniel.sneddon@linux.intel.com>
+Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
+Link: https://lore.kernel.org/r/2cbad706a6d5e1da2829e5e123d8d5c80330148c.1719381528.git.jpoimboe@kernel.org
+---
+ Documentation/admin-guide/kernel-parameters.txt | 12 +++++++++---
+ arch/x86/kernel/cpu/bugs.c                      | 16 +++++++++++-----
+ 2 files changed, 20 insertions(+), 8 deletions(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 11e57ba..ddf4eff 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -6136,9 +6136,15 @@
+ 			deployment of the HW BHI control and the SW BHB
+ 			clearing sequence.
+ 
+-			on   - (default) Enable the HW or SW mitigation
+-			       as needed.
+-			off  - Disable the mitigation.
++			on     - (default) Enable the HW or SW mitigation as
++				 needed.  This protects the kernel from
++				 both syscalls and VMs.
++			vmexit - On systems which don't have the HW mitigation
++				 available, enable the SW mitigation on vmexit
++				 ONLY.  On such systems, the host kernel is
++				 protected from VM-originated BHI attacks, but
++				 may still be vulnerable to syscall attacks.
++			off    - Disable the mitigation.
+ 
+ 	spectre_v2=	[X86,EARLY] Control mitigation of Spectre variant 2
+ 			(indirect branch speculation) vulnerability.
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index b6f927f..45675da 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -1625,6 +1625,7 @@ static bool __init spec_ctrl_bhi_dis(void)
+ enum bhi_mitigations {
+ 	BHI_MITIGATION_OFF,
+ 	BHI_MITIGATION_ON,
++	BHI_MITIGATION_VMEXIT_ONLY,
+ };
+ 
+ static enum bhi_mitigations bhi_mitigation __ro_after_init =
+@@ -1639,6 +1640,8 @@ static int __init spectre_bhi_parse_cmdline(char *str)
+ 		bhi_mitigation = BHI_MITIGATION_OFF;
+ 	else if (!strcmp(str, "on"))
+ 		bhi_mitigation = BHI_MITIGATION_ON;
++	else if (!strcmp(str, "vmexit"))
++		bhi_mitigation = BHI_MITIGATION_VMEXIT_ONLY;
+ 	else
+ 		pr_err("Ignoring unknown spectre_bhi option (%s)", str);
+ 
+@@ -1659,19 +1662,22 @@ static void __init bhi_select_mitigation(void)
+ 			return;
+ 	}
+ 
++	/* Mitigate in hardware if supported */
+ 	if (spec_ctrl_bhi_dis())
+ 		return;
+ 
+ 	if (!IS_ENABLED(CONFIG_X86_64))
+ 		return;
+ 
+-	/* Mitigate KVM by default */
+-	setup_force_cpu_cap(X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT);
+-	pr_info("Spectre BHI mitigation: SW BHB clearing on vm exit\n");
++	if (bhi_mitigation == BHI_MITIGATION_VMEXIT_ONLY) {
++		pr_info("Spectre BHI mitigation: SW BHB clearing on VM exit only\n");
++		setup_force_cpu_cap(X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT);
++		return;
++	}
+ 
+-	/* Mitigate syscalls when the mitigation is forced =on */
++	pr_info("Spectre BHI mitigation: SW BHB clearing on syscall and VM exit\n");
+ 	setup_force_cpu_cap(X86_FEATURE_CLEAR_BHB_LOOP);
+-	pr_info("Spectre BHI mitigation: SW BHB clearing on syscall\n");
++	setup_force_cpu_cap(X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT);
+ }
+ 
+ static void __init spectre_v2_select_mitigation(void)
