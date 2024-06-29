@@ -1,255 +1,197 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8B73C6AC
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 10:06:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F772E3EE;
+	Sat, 29 Jun 2024 10:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719655581; cv=none; b=GjYWv1s6AI+puhdoaAcTspPZYkbsz8xqhItAytCcX3CzrmNbav627w0ROPwN+GXN/O+Qfml1PCj/NJXQbzdlEmeJBeCZQq4P4+Db3nXK8cJxBGEpfQ0RW1vBEkwyWKHJavq232CEIMzalx3LaMKIYpczUTSLPY40AyAckeTk4G0=
+	t=1719655874; cv=none; b=EIlVZQBaNdSyT6oKdK4Ku5nOoE6F7NEoYBFOMjCdd7frlEoNJRrEp+LQmNeT1Ds3RQ9xqo4s67C2BgbmKv+o8BG4E09TWOSFOtwSh9QBdaLA0E0/JsSEhf/6eAYDj8bjuAxbcHGaKx3HIC0zo/lV+PKjOyETtpbdYHOqvz8q4ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719655581; c=relaxed/simple;
-	bh=fP3ZgVcJWnSqmG+QDRXA2UxRMjfdyfjYKpcuz8EafME=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n7/pGynsYIL13CUrn0YbPiuPGqjdRL2puvUmwSj/ydeLkshZ8X43uacQIWJZ5qB56R/+rlqEWMyLghRfZWvJas/MTdY/X3x9Xe/ZD86QkHVGeoZUaUIqjcx7kvXT3ZwJtY9qBfwvWp5RmiDQomxLrZqIUqiuy/TlCSY7Q0WQAWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OXSHJPWO; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719655874; c=relaxed/simple;
+	bh=FnIL5yyt+lay07WZTdrkwW99UN6S/7QLQv1aXmRY8oA=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gBaFY2TvQjr1eldjnCnveoKZyUcAAPa47F48D1FF40OiISvuMfr/gbGVInMOE1ujLAi2R2LD+qSMPfK8TexHnPGFrSqCsG/1bEI4KjZKXijiet0XjIXw2+Gp088KzKXD6ECMxyL9XQtgPvGChM/t8iF+iy6SPixwctu5TEXFJJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J8Z+GxAg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OXSHJPWO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719655578;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yYqpbKxRqKTXTaQj/B2jrZZGCBFUlpUEsubwrs1Z6Mk=;
-	b=OXSHJPWOzn6o0Lka1cuUlxahTaUMHgaDPjBSuLJ6N+oTYpGVREYzQm719Hr80HH1yhebPe
-	+uFlABBeFOQ0qBwfhcsSJbi4UeGfSETW8A9o05PMYq04qTXlnGBC3fw2LYOTSUwD1pJu+e
-	uGi0E3GqYWXFIbDvSyIEHK+oMxdPBks=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-639-Y0ZNhVekMAOYC2yxSA_bRA-1; Sat, 29 Jun 2024 06:06:15 -0400
-X-MC-Unique: Y0ZNhVekMAOYC2yxSA_bRA-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a706f279c56so84297566b.3
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 03:06:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719655574; x=1720260374;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yYqpbKxRqKTXTaQj/B2jrZZGCBFUlpUEsubwrs1Z6Mk=;
-        b=MdTb+tyH8DwRNkGVUANNFqZF3kWrsO8qA39uJik73e90Hi5dQT5f25ufu9E4fSVgkl
-         QL8wyPj5RHqA2bmGv14K4znAKRsC/PRIwm7fCBo3ogs0M/EsOhS0rV+PyGIV0meRVS2f
-         lYLfusABYRBduQaSbIpa8UweoE3HLS/F5ocOg4DOW1rzk1s2cejuJoVZHq/gMpmw+5a5
-         f8mFsY4rYmIkFS36MuHdWQLxmZ1uWTalVEIOWrnv4ua2AweFe29xTnOLgtk8+3WEcj9E
-         XnaW0N7dXSUY0AvQ02jZSaxtbq3DXJK2PJPAWhTQwNw0BE2tkd/JvL2dzr+nlcYlkEms
-         EcRQ==
-X-Gm-Message-State: AOJu0Yz7Y2fLy9IJvhWYkRdIR7Dmr0D9nsgW71SAg+/amDtrv3TOIkHk
-	nJXcdGe1fgIjToO1n/ucDk1lpkIL45TtrEDo+TjpXMgNkLbTUzzehR2Ru2MNnxy16dbgGPT3EsX
-	RKDgt8c0mNntHUmqWi5RzvPUqpIcSnHOg3nY9Y2Wxi6w1lUPPTIRLBLONNz2xPA==
-X-Received: by 2002:a17:906:7c96:b0:a6f:52db:7e5e with SMTP id a640c23a62f3a-a7514428746mr47487066b.19.1719655573818;
-        Sat, 29 Jun 2024 03:06:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHcgB1sHbm6x7OGM6XRXkq/oMqclcO6vtKJYyVWv4qRyUGTgy4c/TliSIQ5E2RlBoz0K2Vdsw==
-X-Received: by 2002:a17:906:7c96:b0:a6f:52db:7e5e with SMTP id a640c23a62f3a-a7514428746mr47485866b.19.1719655573379;
-        Sat, 29 Jun 2024 03:06:13 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72ab065689sm149922566b.106.2024.06.29.03.06.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 29 Jun 2024 03:06:13 -0700 (PDT)
-Message-ID: <6e881b24-e1fe-40fe-b19e-69ee0091839f@redhat.com>
-Date: Sat, 29 Jun 2024 12:06:12 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J8Z+GxAg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5164C2BBFC;
+	Sat, 29 Jun 2024 10:11:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719655873;
+	bh=FnIL5yyt+lay07WZTdrkwW99UN6S/7QLQv1aXmRY8oA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=J8Z+GxAgG7bZ/af/qv3F1wtxXLfJuFAn8pHXyW04lmthoJULG1oemLUJPVRGOFZOL
+	 9Dv3YRyYsXLOT2v3Y2YxVg389rhFIv8AyPHct74RGK4FGZQZu9tIFEj9m6bJD/IvNy
+	 CrztD+SgeDll30W7C5ZfjudGZj0Qi26n84eJtaUL27FBhrxZlilH6QoD3YNTkLBXfQ
+	 INl9IwZQwfly+vX+KUQ5SZHVPZWdaMzbj15qnzQ03+AP+Ksj2Bspv4PwVhD9UwooGI
+	 vJIU3+92Vq8iHaigvq1wnxxy2Z2kuD0leqRc1QU/NHlNJT670cqqca7DFUfUbCq6Pt
+	 65eN5n7IVDGYg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1sNV31-008N1i-9T;
+	Sat, 29 Jun 2024 11:11:11 +0100
+Date: Sat, 29 Jun 2024 11:11:10 +0100
+Message-ID: <86bk3khxdt.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	anna-maria@linutronix.de,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	festevam@gmail.com,
+	bhelgaas@google.com,
+	rdunlap@infradead.org,
+	vidyas@nvidia.com,
+	ilpo.jarvinen@linux.intel.com,
+	apatel@ventanamicro.com,
+	kevin.tian@intel.com,
+	nipun.gupta@amd.com,
+	den@valinux.co.jp,
+	andrew@lunn.ch,
+	gregory.clement@bootlin.com,
+	sebastian.hesselbarth@gmail.com,
+	gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	alex.williamson@redhat.com,
+	will@kernel.org,
+	lorenzo.pieralisi@arm.com,
+	jgg@mellanox.com,
+	ammarfaizi2@gnuweeb.org,
+	robin.murphy@arm.com,
+	lpieralisi@kernel.org,
+	nm@ti.com,
+	kristo@kernel.org,
+	vkoul@kernel.org,
+	okaya@kernel.org,
+	agross@kernel.org,
+	andersson@kernel.org,
+	mark.rutland@arm.com,
+	shameerali.kolothum.thodi@huawei.com,
+	yuzenghui@huawei.com,
+	shivamurthy.shastri@linutronix.de
+Subject: Re: [patch V4 05/21] irqchip/gic-v3-its: Provide MSI parent for PCI/MSI[-X]
+In-Reply-To: <86cyo0hyc6.wl-maz@kernel.org>
+References: <20240623142137.448898081@linutronix.de>
+	<20240623142235.024567623@linutronix.de>
+	<Zn84OIS0zLWASKr2@arm.com>
+	<87h6dcxhy0.ffs@tglx>
+	<86ed8ghypg.wl-maz@kernel.org>
+	<86cyo0hyc6.wl-maz@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ACPI: PMIC: Constify struct pmic_table
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Andy Shevchenko <andy@kernel.org>,
- Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
- linux-acpi@vger.kernel.org
-References: <a6c9b1bcdf259adabbcaf91183d3f5ab87a98600.1719644292.git.christophe.jaillet@wanadoo.fr>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <a6c9b1bcdf259adabbcaf91183d3f5ab87a98600.1719644292.git.christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, catalin.marinas@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, anna-maria@linutronix.de, shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com, bhelgaas@google.com, rdunlap@infradead.org, vidyas@nvidia.com, ilpo.jarvinen@linux.intel.com, apatel@ventanamicro.com, kevin.tian@intel.com, nipun.gupta@amd.com, den@valinux.co.jp, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, gregkh@linuxfoundation.org, rafael@kernel.org, alex.williamson@redhat.com, will@kernel.org, lorenzo.pieralisi@arm.com, jgg@mellanox.com, ammarfaizi2@gnuweeb.org, robin.murphy@arm.com, lpieralisi@kernel.org, nm@ti.com, kristo@kernel.org, vkoul@kernel.org, okaya@kernel.org, agross@kernel.org, andersson@kernel.org, mark.rutland@arm.com, shameerali.kolothum.thodi@huawei.com, yuzenghui@huawei.com, shivamurthy.shastri@linutronix.de
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hi,
-
-On 6/29/24 8:58 AM, Christophe JAILLET wrote:
-> 'struct pmic_table' is not modified in these drivers.
+On Sat, 29 Jun 2024 10:50:33 +0100,
+Marc Zyngier <maz@kernel.org> wrote:
 > 
-> Constifying this structure moves some data to a read-only section, so
-> increase overall security.
+> On Sat, 29 Jun 2024 10:42:35 +0100,
+> Marc Zyngier <maz@kernel.org> wrote:
+> > 
+> > On Sat, 29 Jun 2024 09:37:59 +0100,
+> > Thomas Gleixner <tglx@linutronix.de> wrote:
+> > > 
+> > > On Fri, Jun 28 2024 at 23:24, Catalin Marinas wrote:
+> > > > I just noticed guests (under KVM) failing to boot on my TX2 with your
+> > > > latest branch. I bisected to this patch as the first bad commit.
+> > > >
+> > > > I'm away this weekend, so won't have time to dive deeper. It looks like
+> > > > the CPU is stuck in do_idle() (no timer interrupts?). Also sysrq did not
+> > > > seem able to get the stack trace on the other CPUs. It fails both with a
+> > > > single or multiple CPUs in the same way place (shortly before mounting
+> > > > the rootfs and starting user space).
+> > > 
+> > > From the RH log it's clear that PCI interrupts are not delivered.
+> > > 
+> > > > I'll drop your branch from the arm64 for-kernelci for now and have a
+> > > > look again on Monday.
+> > > 
+> > > I stare too. Unfortunately I don't have access to such hardware :(
+> > 
+> > On the face of it, the LPIs are never unmasked (grepping in
+> > /sys/kernel/debug/kvm/*/vgic-state):
+> > 
+> > Distributor
+> > ===========
+> > vgic_model:	GICv3
+> > nr_spis:	32
+> > nr_lpis:	7
+> > enabled:	1
+> > 
+> > P=pending_latch, L=line_level, A=active
+> > E=enabled, H=hw, C=config (level=1, edge=0)
+> > G=group
+> > 
+> > VCPU 0 TYP   ID TGT_ID PLAEHCG     HWID   TARGET SRC PRI VCPU_ID
+> > ----------------------------------------------------------------
+> > [...]
+> >        LPI 8192      0 1000001        0        0   0 160      -1 
+> >        LPI 8193      1 0000001        0        0   0 160      -1 
+> >        LPI 8194      2 0000001        0        0   0 160      -1 
+> >        LPI 8256      3 0000001        0        0   0 160      -1 
+> >        LPI 8257      4 0000001        0        0   0 160      -1 
+> >        LPI 8320      5 0000001        0        0   0 160      -1 
+> >        LPI 8321      6 1000001        0        0   0 160      -1
+> > 
+> > 8192 and 8321 are pending, but never enabled.
+> > 
+> > This is further confirmed by placing traces in the guest. Now trying
+> > to find my way through the new maze of callbacks, because something is
+> > clearly missing there.
 > 
-> On a x86_64, with allmodconfig, as an example:
-> Before:
-> ======
->    text	   data	    bss	    dec	    hex	filename
->    3811	    786	      0	   4597	   11f5	drivers/acpi/pmic/intel_pmic_xpower.o
+> This is clearly related to MSI_FLAG_PCI_MSI_MASK_PARENT which is not
+> seen as being set from cond_unmask_parent(), and ignoring this
+> condition results in a booting VM.
 > 
->    text	   data	    bss	    dec	    hex	filename
->    4147	    450	      0	   4597	   11f5	drivers/acpi/pmic/intel_pmic_xpower.o
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> Compile tested-only
+> I have the ugly feeling that the flag is applied at the wrong level,
+> or not propagated.
 
-Thanks, patch looks good to me:
+Here's a possible fix. Making the masking at the ITS level optional is
+not an option (haha). It is the PCI masking that is totally
+superfluous and that could completely be elided.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+With this hack, I can boot a GICv3+ITS guest as usual.
 
-Regards,
+	M.
 
-Hans
+diff --git a/drivers/irqchip/irq-gic-v3-its-msi-parent.c b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
+index 21daa452ffa6d..b66e64eaae440 100644
+--- a/drivers/irqchip/irq-gic-v3-its-msi-parent.c
++++ b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
+@@ -10,13 +10,13 @@
+ #include "irq-gic-common.h"
+ #include "irq-msi-lib.h"
+ 
+-#define ITS_MSI_FLAGS_REQUIRED  (MSI_FLAG_USE_DEF_DOM_OPS |	\
+-				 MSI_FLAG_USE_DEF_CHIP_OPS)
++#define ITS_MSI_FLAGS_REQUIRED  (MSI_FLAG_USE_DEF_DOM_OPS  |	\
++				 MSI_FLAG_USE_DEF_CHIP_OPS |	\
++				 MSI_FLAG_PCI_MSI_MASK_PARENT)
+ 
+ #define ITS_MSI_FLAGS_SUPPORTED (MSI_GENERIC_FLAGS_MASK |	\
+ 				 MSI_FLAG_PCI_MSIX      |	\
+-				 MSI_FLAG_MULTI_PCI_MSI |	\
+-				 MSI_FLAG_PCI_MSI_MASK_PARENT)
++				 MSI_FLAG_MULTI_PCI_MSI)
+ 
+ #ifdef CONFIG_PCI_MSI
+ static int its_pci_msi_vec_count(struct pci_dev *pdev, void *data)
 
 
-
-
-> ---
->  drivers/acpi/pmic/intel_pmic.c          | 2 +-
->  drivers/acpi/pmic/intel_pmic.h          | 4 ++--
->  drivers/acpi/pmic/intel_pmic_bxtwc.c    | 4 ++--
->  drivers/acpi/pmic/intel_pmic_bytcrc.c   | 4 ++--
->  drivers/acpi/pmic/intel_pmic_chtdc_ti.c | 4 ++--
->  drivers/acpi/pmic/intel_pmic_chtwc.c    | 2 +-
->  drivers/acpi/pmic/intel_pmic_xpower.c   | 4 ++--
->  7 files changed, 12 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/acpi/pmic/intel_pmic.c b/drivers/acpi/pmic/intel_pmic.c
-> index f20dbda1a831..134e9ca8eaa2 100644
-> --- a/drivers/acpi/pmic/intel_pmic.c
-> +++ b/drivers/acpi/pmic/intel_pmic.c
-> @@ -31,7 +31,7 @@ struct intel_pmic_opregion {
->  
->  static struct intel_pmic_opregion *intel_pmic_opregion;
->  
-> -static int pmic_get_reg_bit(int address, struct pmic_table *table,
-> +static int pmic_get_reg_bit(int address, const struct pmic_table *table,
->  			    int count, int *reg, int *bit)
->  {
->  	int i;
-> diff --git a/drivers/acpi/pmic/intel_pmic.h b/drivers/acpi/pmic/intel_pmic.h
-> index d956b03a6ca0..006f0780ffab 100644
-> --- a/drivers/acpi/pmic/intel_pmic.h
-> +++ b/drivers/acpi/pmic/intel_pmic.h
-> @@ -21,9 +21,9 @@ struct intel_pmic_opregion_data {
->  					  u32 reg_address, u32 value, u32 mask);
->  	int (*lpat_raw_to_temp)(struct acpi_lpat_conversion_table *lpat_table,
->  				int raw);
-> -	struct pmic_table *power_table;
-> +	const struct pmic_table *power_table;
->  	int power_table_count;
-> -	struct pmic_table *thermal_table;
-> +	const struct pmic_table *thermal_table;
->  	int thermal_table_count;
->  	/* For generic exec_mipi_pmic_seq_element handling */
->  	int pmic_i2c_address;
-> diff --git a/drivers/acpi/pmic/intel_pmic_bxtwc.c b/drivers/acpi/pmic/intel_pmic_bxtwc.c
-> index e247615189fa..c332afbf82bd 100644
-> --- a/drivers/acpi/pmic/intel_pmic_bxtwc.c
-> +++ b/drivers/acpi/pmic/intel_pmic_bxtwc.c
-> @@ -24,7 +24,7 @@
->  #define VSWITCH1_OUTPUT         BIT(4)
->  #define VUSBPHY_CHARGE          BIT(1)
->  
-> -static struct pmic_table power_table[] = {
-> +static const struct pmic_table power_table[] = {
->  	{
->  		.address = 0x0,
->  		.reg = 0x63,
-> @@ -177,7 +177,7 @@ static struct pmic_table power_table[] = {
->  	} /* MOFF -> MODEMCTRL Bit 0 */
->  };
->  
-> -static struct pmic_table thermal_table[] = {
-> +static const struct pmic_table thermal_table[] = {
->  	{
->  		.address = 0x00,
->  		.reg = 0x4F39
-> diff --git a/drivers/acpi/pmic/intel_pmic_bytcrc.c b/drivers/acpi/pmic/intel_pmic_bytcrc.c
-> index 2b09f8da5400..b4c21a75294a 100644
-> --- a/drivers/acpi/pmic/intel_pmic_bytcrc.c
-> +++ b/drivers/acpi/pmic/intel_pmic_bytcrc.c
-> @@ -16,7 +16,7 @@
->  
->  #define PMIC_A0LOCK_REG		0xc5
->  
-> -static struct pmic_table power_table[] = {
-> +static const struct pmic_table power_table[] = {
->  /*	{
->  		.address = 0x00,
->  		.reg = ??,
-> @@ -134,7 +134,7 @@ static struct pmic_table power_table[] = {
->  	}, /* V105 -> V1P05S, L2 SRAM */
->  };
->  
-> -static struct pmic_table thermal_table[] = {
-> +static const struct pmic_table thermal_table[] = {
->  	{
->  		.address = 0x00,
->  		.reg = 0x75
-> diff --git a/drivers/acpi/pmic/intel_pmic_chtdc_ti.c b/drivers/acpi/pmic/intel_pmic_chtdc_ti.c
-> index 79f9df552524..ecb36fbc1e7f 100644
-> --- a/drivers/acpi/pmic/intel_pmic_chtdc_ti.c
-> +++ b/drivers/acpi/pmic/intel_pmic_chtdc_ti.c
-> @@ -23,7 +23,7 @@
->  #define CHTDC_TI_BPTHERM	0x58
->  #define CHTDC_TI_GPADC		0x5a
->  
-> -static struct pmic_table chtdc_ti_power_table[] = {
-> +static const struct pmic_table chtdc_ti_power_table[] = {
->  	{ .address = 0x00, .reg = 0x41 }, /* LDO1 */
->  	{ .address = 0x04, .reg = 0x42 }, /* LDO2 */
->  	{ .address = 0x08, .reg = 0x43 }, /* LDO3 */
-> @@ -39,7 +39,7 @@ static struct pmic_table chtdc_ti_power_table[] = {
->  	{ .address = 0x30, .reg = 0x4e }, /* LD14 */
->  };
->  
-> -static struct pmic_table chtdc_ti_thermal_table[] = {
-> +static const struct pmic_table chtdc_ti_thermal_table[] = {
->  	{
->  		.address = 0x00,
->  		.reg = CHTDC_TI_GPADC
-> diff --git a/drivers/acpi/pmic/intel_pmic_chtwc.c b/drivers/acpi/pmic/intel_pmic_chtwc.c
-> index 25aa3e33b09a..81caede51ca2 100644
-> --- a/drivers/acpi/pmic/intel_pmic_chtwc.c
-> +++ b/drivers/acpi/pmic/intel_pmic_chtwc.c
-> @@ -70,7 +70,7 @@
->   * "regulator: whiskey_cove: implements Whiskey Cove pmic VRF support"
->   * https://github.com/intel-aero/meta-intel-aero/blob/master/recipes-kernel/linux/linux-yocto/0019-regulator-whiskey_cove-implements-WhiskeyCove-pmic-V.patch
->   */
-> -static struct pmic_table power_table[] = {
-> +static const struct pmic_table power_table[] = {
->  	{
->  		.address = 0x0,
->  		.reg = CHT_WC_V1P8A_CTRL,
-> diff --git a/drivers/acpi/pmic/intel_pmic_xpower.c b/drivers/acpi/pmic/intel_pmic_xpower.c
-> index 43c5850b4bf3..49bda5e0c8aa 100644
-> --- a/drivers/acpi/pmic/intel_pmic_xpower.c
-> +++ b/drivers/acpi/pmic/intel_pmic_xpower.c
-> @@ -26,7 +26,7 @@
->  #define AXP288_ADC_TS_CURRENT_ON_ONDEMAND		(2 << 0)
->  #define AXP288_ADC_TS_CURRENT_ON			(3 << 0)
->  
-> -static struct pmic_table power_table[] = {
-> +static const struct pmic_table power_table[] = {
->  	{
->  		.address = 0x00,
->  		.reg = 0x13,
-> @@ -129,7 +129,7 @@ static struct pmic_table power_table[] = {
->  };
->  
->  /* TMP0 - TMP5 are the same, all from GPADC */
-> -static struct pmic_table thermal_table[] = {
-> +static const struct pmic_table thermal_table[] = {
->  	{
->  		.address = 0x00,
->  		.reg = XPOWER_GPADC_LOW
-
+-- 
+Without deviation from the norm, progress is not possible.
