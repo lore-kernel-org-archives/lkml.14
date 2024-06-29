@@ -1,46 +1,46 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9C66FB9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D24A6138;
 	Sat, 29 Jun 2024 01:54:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719626079; cv=none; b=Wm26mdnYc5DcDWXqZC9n82nzfsnSJg3hXLhIR+t7713bDjDRBE86Wu92kF9e93PgKXbF5BHPn0jcQunz+Btm21L1tMZQ/LfPcmlfO7MDg7PaRRn573s7Tbw5U6UNYMWvhmjELam4RmwM0q+XGZI7E1/pyrOqhN4uGKlScQgPHP0=
+	t=1719626080; cv=none; b=LFpqxDb2KiViCCefujZoJdXOa2JDuMxkhqVzbUhPtpwPVDPFa4DPPYgw99/wZk6mlDARqMceJ4XPfgqzkOfcouLTh8yuSw9BrlIAvxilYrwgXPQZiaXk6v6duIfZSery/4+jghRmS8BbHjcfToRh2eaLpbp3/2oxSn1PoOeCYZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719626079; c=relaxed/simple;
-	bh=UmIWVxBU5T/CjBii5H+wghRlH2RxDfdLklVm05eEgX8=;
+	s=arc-20240116; t=1719626080; c=relaxed/simple;
+	bh=/GQfBDJw7xykpxT1/TXPV27mUnfIzvwqIMP8IFZbckQ=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Iu7foih6Qpv1Byrjvvuqryl+Y8Qx924DRAyaFyTEE8LRvYkQm+FcD0ENZrUKQghU9I1bJTA34iraYdEAO9xXQX1L7Z/BAGbypELIK3XvVBMLhK3SLXq0g1eqsZEbQpml1QdSh8tmRXba46Ue76Gkp9wKUbVaoCuRo6Z/C44bim4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jfEcE70r; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version:Content-Type; b=BcRiRnHVx1U23m4NJ8yTusFFBLznfm7LMImyqdHdzboNImY+8TV8ivnrBhnUHfYyYTcUTBkmLu8hNawBGD6WND4iVOyXHWdB2+Fr1o18LXCMyIQG+UTlTGBmCav7eFkOMHMYqUeo34vi7MeciSaB936IdJyy2vC3hJ9zEICbz/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OgMbV9mf; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jfEcE70r"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45T0h2R8010459;
-	Sat, 29 Jun 2024 01:54:12 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OgMbV9mf"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45SNU9tq020131;
+	Sat, 29 Jun 2024 01:54:28 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	xbKfDTNtdjST8qUicLLRuZwsVZnpO50hUNs+1kj12FU=; b=jfEcE70rXLJmRJiL
-	xntYheRn7991WLK/0fgc9R4OKYitw6zlrQpYWotWbDQtD2EQhK5TKgQ+kTnk3C8M
-	sK04gTHvNTaQtdTIpELYJ7k3T+YDIx8d48yfVXzUN/+Ti177XN1AJxKluAADbIX/
-	EKpzLufsz8mu0Sl1SDBt0Rl/gIshR2ODq7J00Trl2fqEAEJ6I7VyUGS9EW/wG5h7
-	tYYxu5NXPfK3F0OU2Je9qwRRlO8deLXAX9NbP38Yk2jl3T4orbeqzjXlt/Y8AJUy
-	Wo2bUwZLUUSCgkzdkwAhs1g0pvd2IOqidsLcZDx2n8/E5vHpEsg38WBch21Ebx3U
-	dbs1Eg==
+	sinBut3qStp+WDQ0auBrvP5cA7oV0uzJFIHa6cSUR/A=; b=OgMbV9mf7uOEKJPA
+	q8B/pKcyc7KceR65SzYDeKxsxbqBMO0KsRkp/GIh4jKCYZ0JGvob3MP8QXYLcTde
+	gG5c44QOe3XDLXe0VD4A4yy3col/NKuHcatAJLe/sMga+5rPHcicsCDHxgxW0hKr
+	vT4UrYpQ2FboQEsUWli5kETRuNhZI2ibVbtuF4pkVlWr+Qm+i604VgpkP3xzyrrS
+	vR4GWTtcKS8WKs8mmOK7cFYP+cRxxck4jo3O01ufnM7ayb91yUQz1pp6dyC4zHcd
+	YVYKbYtufAupSEF5uzl82O//vx1qwhx9AoKyjFns80Nx0CpzT8pICBkhiALz5bDG
+	aJFaPQ==
 Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4027yf02x6-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 401ubvt9c5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 29 Jun 2024 01:54:12 +0000 (GMT)
+	Sat, 29 Jun 2024 01:54:28 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45T1sBsR016408
+	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45T1sRcI017026
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 29 Jun 2024 01:54:11 GMT
+	Sat, 29 Jun 2024 01:54:27 GMT
 Received: from hu-akhilpo-hyd.qualcomm.com (10.80.80.8) by
  nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 28 Jun 2024 18:54:04 -0700
+ 15.2.1544.9; Fri, 28 Jun 2024 18:54:22 -0700
 From: Akhil P Oommen <quic_akhilpo@quicinc.com>
 To: freedreno <freedreno@lists.freedesktop.org>,
         <dri-devel@lists.freedesktop.org>, <linux-arm-msm@vger.kernel.org>,
@@ -55,25 +55,17 @@ To: freedreno <freedreno@lists.freedesktop.org>,
         "Will
  Deacon" <will@kernel.org>
 CC: Akhil P Oommen <quic_akhilpo@quicinc.com>,
-        Abhinav Kumar
-	<quic_abhinavk@quicinc.com>,
-        Conor Dooley <conor+dt@kernel.org>, "Daniel
- Vetter" <daniel@ffwll.ch>,
-        David Airlie <airlied@gmail.com>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        Maxime Ripard <mripard@kernel.org>, "Rob
- Herring" <robh@kernel.org>,
-        Sean Paul <sean@poorly.run>, Thomas Zimmermann
-	<tzimmermann@suse.de>,
+        Conor Dooley
+	<conor+dt@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>, Robin Murphy
+	<robin.murphy@arm.com>,
+        <iommu@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 1/5] dt-bindings: display/msm/gmu: Add Adreno X185 GMU
-Date: Sat, 29 Jun 2024 07:19:34 +0530
-Message-ID: <20240629015111.264564-2-quic_akhilpo@quicinc.com>
+Subject: [PATCH v2 4/5] dt-bindings: arm-smmu: Add X1E80100 GPU SMMU
+Date: Sat, 29 Jun 2024 07:19:37 +0530
+Message-ID: <20240629015111.264564-5-quic_akhilpo@quicinc.com>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240629015111.264564-1-quic_akhilpo@quicinc.com>
 References: <20240629015111.264564-1-quic_akhilpo@quicinc.com>
@@ -89,51 +81,57 @@ X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: XZoQjYLIEVpix9k4i73gfQ82hgxKuUWS
-X-Proofpoint-ORIG-GUID: XZoQjYLIEVpix9k4i73gfQ82hgxKuUWS
+X-Proofpoint-ORIG-GUID: r66KVX3Tt2TlDE5nYLCjBeFMJ5LTuwpu
+X-Proofpoint-GUID: r66KVX3Tt2TlDE5nYLCjBeFMJ5LTuwpu
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-28_18,2024-06-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- mlxscore=0 lowpriorityscore=0 mlxlogscore=999 phishscore=0 impostorscore=0
- clxscore=1015 malwarescore=0 suspectscore=0 adultscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ bulkscore=0 clxscore=1015 suspectscore=0 spamscore=0 mlxlogscore=995
+ adultscore=0 impostorscore=0 lowpriorityscore=0 priorityscore=1501
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2406140001 definitions=main-2406290013
 
-Document Adreno X185 GMU in the dt-binding specification.
+Update the devicetree bindings to support the gpu present in
+X1E80100 platform.
 
 Signed-off-by: Akhil P Oommen <quic_akhilpo@quicinc.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
 
 Changes in v2:
-- Minor update to compatible pattern, '[x]' -> 'x'
+- New patch in v2
 
- Documentation/devicetree/bindings/display/msm/gmu.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/display/msm/gmu.yaml b/Documentation/devicetree/bindings/display/msm/gmu.yaml
-index b3837368a260..b1bd372996d5 100644
---- a/Documentation/devicetree/bindings/display/msm/gmu.yaml
-+++ b/Documentation/devicetree/bindings/display/msm/gmu.yaml
-@@ -23,6 +23,9 @@ properties:
-       - items:
-           - pattern: '^qcom,adreno-gmu-[67][0-9][0-9]\.[0-9]$'
-           - const: qcom,adreno-gmu
-+      - items:
-+          - pattern: '^qcom,adreno-gmu-x[1-9][0-9][0-9]\.[0-9]$'
-+          - const: qcom,adreno-gmu
-       - const: qcom,adreno-gmu-wrapper
- 
-   reg:
-@@ -225,6 +228,7 @@ allOf:
-               - qcom,adreno-gmu-730.1
-               - qcom,adreno-gmu-740.1
-               - qcom,adreno-gmu-750.1
-+              - qcom,adreno-gmu-x185.1
+diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+index 5c130cf06a21..7ef225d4d783 100644
+--- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
++++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+@@ -95,6 +95,7 @@ properties:
+               - qcom,sm8450-smmu-500
+               - qcom,sm8550-smmu-500
+               - qcom,sm8650-smmu-500
++              - qcom,x1e80100-smmu-500
+           - const: qcom,adreno-smmu
+           - const: qcom,smmu-500
+           - const: arm,mmu-500
+@@ -520,6 +521,7 @@ allOf:
+             - enum:
+                 - qcom,sm8550-smmu-500
+                 - qcom,sm8650-smmu-500
++                - qcom,x1e80100-smmu-500
+             - const: qcom,adreno-smmu
+             - const: qcom,smmu-500
+             - const: arm,mmu-500
+@@ -557,7 +559,6 @@ allOf:
+               - qcom,sdx65-smmu-500
+               - qcom,sm6350-smmu-500
+               - qcom,sm6375-smmu-500
+-              - qcom,x1e80100-smmu-500
      then:
        properties:
-         reg:
+         clock-names: false
 -- 
 2.45.1
 
