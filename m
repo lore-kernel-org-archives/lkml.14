@@ -1,37 +1,37 @@
-Received: from smtp.smtpout.orange.fr (smtp-13.smtpout.orange.fr [80.12.242.13])
+Received: from smtp.smtpout.orange.fr (smtp-14.smtpout.orange.fr [80.12.242.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B223B1AC
-	for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 09:20:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F8543AD5
+	for <linux-kernel@vger.kernel.org>; Sat, 29 Jun 2024 09:20:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719652854; cv=none; b=VvV9kqRnBErUROrj55BBGuQGKsOTHGRG55iFNMRynA+5EaNuGxRyERFKo0x2m+IBfkgSNnBpPgqBKdNDzVlxg30ctcKsMFIa9r/6yzPUmvBo5PiTCEysqGK1Nk+duoGKGTCcL7YhcE2c4O3kwlVbJXs0b0MWOI+uvvqALaheX7k=
+	t=1719652858; cv=none; b=p7UWZpETpWArn0QmKSEdtQb6/3k6qs+FKVMBs79zna1gM6qAh9lz7WKXsqUiJjE0z1lwYsGsZmCsv0qRYkcJ1P5dpEB/uVTwLKtfbo71Rs2PLoiM6C+qOy2XQZeip1LLYuMPFdhNe1EKvBw7KOzObyb/EgKN2twdrtK5rriLO3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719652854; c=relaxed/simple;
-	bh=tIqb8K/9bSd8h5tSTEKj6fyRr0/9UPR6MjzTmhpbye4=;
+	s=arc-20240116; t=1719652858; c=relaxed/simple;
+	bh=JEqQTXN7i/UpjDTg0v2GMhy06AEN/B1xTgSE3FEecGA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wu9fuqeib2EtHtT8TSfjAVfqHezxWZpawNs5hfyB0aQ9KOzt9dQlR8p9NlAUxt83RUhT0aV7fR4OIv+cAWWts6yJLAdw0h98bGsa4klbS7Loyj9+8Y4tpEGB+KwDNhnmSMHNWCZmx70TDKkz1LWpweRAGuN6DaCBULaz3bWL1T8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=N18GjfXy; arc=none smtp.client-ip=80.12.242.13
+	 MIME-Version; b=l/BKsOp/j/3aIfWhDxVQ+/Lt5xcQR+zPa/H41PQ0jytn49IHPR3PDNZ5t/32SzradvswrSuwWRcf26i0Thms3iukKEOTSG+c44D5yi93NdPd48bH/8kjVyhYk5Cj0G0v+Dhb+F2qBteF8D1BVCLwmSU2eamTNklXnUYFdtcc6bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=GLm2aW9j; arc=none smtp.client-ip=80.12.242.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="N18GjfXy"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="GLm2aW9j"
 Received: from fedora.home ([86.243.222.230])
 	by smtp.orange.fr with ESMTPA
-	id NUF6sgiHDa7etNUFCs5cnD; Sat, 29 Jun 2024 11:19:42 +0200
+	id NUF6sgiHDa7etNUFFs5cqZ; Sat, 29 Jun 2024 11:19:45 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1719652782;
-	bh=wyjA2BhEiXaiYu36IgBQtDPeZotGjNfhM/eFXVY5sOg=;
+	s=t20230301; t=1719652785;
+	bh=SbC8eskPoxKJ+eN2Qq7W2GaCgbxx29oD7K2szf1j0QE=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=N18GjfXyCMCL0Bfw0rX/L1yZjQLg+P+cbpJLsU0XO16j1gxXLhpcjJNjlggMXf4l3
-	 Li/cp9PZBJgcuBcMsQrkdQ/hD8O3Lu1CAsj+Kgca5LOppYwNLBCZOuB0S3fhslsGmk
-	 uIoiLCOl4UyP9mZEdED4duW5Ysc2JxaeD/lozPQQeNtP+QDxMewVpqaUUOXIC+Jt6p
-	 t1xhs1NQ9hbf1YCx+28EbMroVUzK3UbiKywKVaAyGfWW1XNQyRQ1CR8FNj8KBh72CE
-	 kE9NuwuDBMqbtARqPPRuoXFAaa89vYhN2DWPtlgTNgUFK4JYjDSfYPwrQAzZRkJ35m
-	 18xZYF9C0NHFg==
+	b=GLm2aW9jAdL1vITOmoKJ22fGy+4A6bXXIupEbaVhXFBjWbK4tAcN7p6wrh9akuhCi
+	 9DIgF6Sgqyauc36H8w9LgJ3GDogS4OEERhmEcl6Bj9ASurrX+/k0Y+ZKl8xWSmXVB4
+	 dMI678AoM5hbZYzDdRewj11b8KefFRB5pCdE0cI8KUmt++9xIN1XHYdpPdoY6uTVJH
+	 tCGxCg6XRMKq6KoO1Wtw+H2uuPax70nAM/klCzp2ru/6xNMiIStjHNvJlbaURU7gd2
+	 oE9Kt1a+VQlPW/1VBalZD1kANRAfeafe7iFBxr9hR3hEFQuO73Zx2A2C0XiJGBiRYH
+	 Nk80KScPP8b9A==
 X-ME-Helo: fedora.home
 X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 29 Jun 2024 11:19:42 +0200
+X-ME-Date: Sat, 29 Jun 2024 11:19:45 +0200
 X-ME-IP: 86.243.222.230
 From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 To: matthias.bgg@gmail.com,
@@ -44,9 +44,9 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	kernel-janitors@vger.kernel.org,
 	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH 2/4] soc: mediatek: pwrap: Constify some struct int[]
-Date: Sat, 29 Jun 2024 11:19:31 +0200
-Message-ID: <626783bb264a8b3b0c8cd7e1d9f9b241f0a494b6.1719652155.git.christophe.jaillet@wanadoo.fr>
+Subject: [PATCH 4/4] soc: mediatek: pwrap: Simplify some error messages
+Date: Sat, 29 Jun 2024 11:19:33 +0200
+Message-ID: <7e6f7dcded577091061e2bc3f86d6ec5f6c4be7d.1719652155.git.christophe.jaillet@wanadoo.fr>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <cover.1719652155.git.christophe.jaillet@wanadoo.fr>
 References: <cover.1719652155.git.christophe.jaillet@wanadoo.fr>
@@ -58,168 +58,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-These arrays are not modified in this driver.
+dev_err_probe() already display the error code in a human readable form,
+there is no need to add it explicitly to the message.
 
-Constifying this structure moves some data to a read-only section, so
-increase overall security.
-
-On a x86_64, with allmodconfig, as an example:
-Before:
-======
-   text	   data	    bss	    dec	    hex	filename
-  45528	   8532	     16	  54076	   d33c	drivers/soc/mediatek/mtk-pmic-wrap.o
-
-After:
-=====
-   text	   data	    bss	    dec	    hex	filename
-  52664	   1384	     16	  54064	   d330	drivers/soc/mediatek/mtk-pmic-wrap.o
+While at it, remove some useless {}.
 
 Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
 Compile tested-only
 ---
- drivers/soc/mediatek/mtk-pmic-wrap.c | 30 ++++++++++++++--------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ drivers/soc/mediatek/mtk-pmic-wrap.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
-index 0da0cdec5050..d57553486383 100644
+index 6981d6a1ab93..c55f4061b8ef 100644
 --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
 +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
-@@ -483,7 +483,7 @@ enum pwrap_regs {
- 	PWRAP_MSB_FIRST,
- };
+@@ -2533,18 +2533,14 @@ static int pwrap_probe(struct platform_device *pdev)
+ 	}
  
--static int mt2701_regs[] = {
-+static const int mt2701_regs[] = {
- 	[PWRAP_MUX_SEL] =		0x0,
- 	[PWRAP_WRAP_EN] =		0x4,
- 	[PWRAP_DIO_EN] =		0x8,
-@@ -569,7 +569,7 @@ static int mt2701_regs[] = {
- 	[PWRAP_ADC_RDATA_ADDR2] =	0x154,
- };
+ 	clk = devm_clk_get_optional_enabled(wrp->dev, "sys");
+-	if (IS_ERR(clk)) {
++	if (IS_ERR(clk))
+ 		return dev_err_probe(wrp->dev, PTR_ERR(clk),
+-				     "failed to get clock: %pe\n",
+-				     clk);
+-	}
++				     "failed to get sys clock\n");
  
--static int mt6765_regs[] = {
-+static const int mt6765_regs[] = {
- 	[PWRAP_MUX_SEL] =		0x0,
- 	[PWRAP_WRAP_EN] =		0x4,
- 	[PWRAP_DIO_EN] =		0x8,
-@@ -601,7 +601,7 @@ static int mt6765_regs[] = {
- 	[PWRAP_DCM_DBC_PRD] =		0x1E0,
- };
+ 	clk = devm_clk_get_optional_enabled(wrp->dev, "tmr");
+-	if (IS_ERR(clk)) {
++	if (IS_ERR(clk))
+ 		return dev_err_probe(wrp->dev, PTR_ERR(clk),
+-				     "failed to get clock: %pe\n",
+-				     clk);
+-	}
++				     "failed to get tmr clock\n");
  
--static int mt6779_regs[] = {
-+static const int mt6779_regs[] = {
- 	[PWRAP_MUX_SEL] =		0x0,
- 	[PWRAP_WRAP_EN] =		0x4,
- 	[PWRAP_DIO_EN] =		0x8,
-@@ -640,7 +640,7 @@ static int mt6779_regs[] = {
- 	[PWRAP_WACS2_VLDCLR] =		0xC28,
- };
- 
--static int mt6795_regs[] = {
-+static const int mt6795_regs[] = {
- 	[PWRAP_MUX_SEL] =		0x0,
- 	[PWRAP_WRAP_EN] =		0x4,
- 	[PWRAP_DIO_EN] =		0x8,
-@@ -725,7 +725,7 @@ static int mt6795_regs[] = {
- 	[PWRAP_EXT_CK] =		0x14c,
- };
- 
--static int mt6797_regs[] = {
-+static const int mt6797_regs[] = {
- 	[PWRAP_MUX_SEL] =		0x0,
- 	[PWRAP_WRAP_EN] =		0x4,
- 	[PWRAP_DIO_EN] =		0x8,
-@@ -758,7 +758,7 @@ static int mt6797_regs[] = {
- 	[PWRAP_DCM_DBC_PRD] =		0x1D4,
- };
- 
--static int mt6873_regs[] = {
-+static const int mt6873_regs[] = {
- 	[PWRAP_INIT_DONE2] =		0x0,
- 	[PWRAP_TIMER_EN] =		0x3E0,
- 	[PWRAP_INT_EN] =		0x448,
-@@ -769,7 +769,7 @@ static int mt6873_regs[] = {
- 	[PWRAP_WACS2_RDATA] =		0xCA8,
- };
- 
--static int mt7622_regs[] = {
-+static const int mt7622_regs[] = {
- 	[PWRAP_MUX_SEL] =		0x0,
- 	[PWRAP_WRAP_EN] =		0x4,
- 	[PWRAP_DIO_EN] =		0x8,
-@@ -881,7 +881,7 @@ static int mt7622_regs[] = {
- 	[PWRAP_SPI2_CTRL] =		0x244,
- };
- 
--static int mt8135_regs[] = {
-+static const int mt8135_regs[] = {
- 	[PWRAP_MUX_SEL] =		0x0,
- 	[PWRAP_WRAP_EN] =		0x4,
- 	[PWRAP_DIO_EN] =		0x8,
-@@ -954,7 +954,7 @@ static int mt8135_regs[] = {
- 	[PWRAP_DCM_DBC_PRD] =		0x160,
- };
- 
--static int mt8173_regs[] = {
-+static const int mt8173_regs[] = {
- 	[PWRAP_MUX_SEL] =		0x0,
- 	[PWRAP_WRAP_EN] =		0x4,
- 	[PWRAP_DIO_EN] =		0x8,
-@@ -1036,7 +1036,7 @@ static int mt8173_regs[] = {
- 	[PWRAP_DCM_DBC_PRD] =		0x148,
- };
- 
--static int mt8183_regs[] = {
-+static const int mt8183_regs[] = {
- 	[PWRAP_MUX_SEL] =			0x0,
- 	[PWRAP_WRAP_EN] =			0x4,
- 	[PWRAP_DIO_EN] =			0x8,
-@@ -1087,7 +1087,7 @@ static int mt8183_regs[] = {
- 	[PWRAP_WACS2_VLDCLR] =			0xC28,
- };
- 
--static int mt8195_regs[] = {
-+static const int mt8195_regs[] = {
- 	[PWRAP_INIT_DONE2] =		0x0,
- 	[PWRAP_STAUPD_CTRL] =		0x4C,
- 	[PWRAP_TIMER_EN] =		0x3E4,
-@@ -1104,7 +1104,7 @@ static int mt8195_regs[] = {
- 	[PWRAP_WACS2_RDATA] =		0x8A8,
- };
- 
--static int mt8365_regs[] = {
-+static const int mt8365_regs[] = {
- 	[PWRAP_MUX_SEL] =		0x0,
- 	[PWRAP_WRAP_EN] =		0x4,
- 	[PWRAP_DIO_EN] =		0x8,
-@@ -1166,7 +1166,7 @@ static int mt8365_regs[] = {
- 	[PWRAP_WDT_SRC_EN_1] =		0xf8,
- };
- 
--static int mt8516_regs[] = {
-+static const int mt8516_regs[] = {
- 	[PWRAP_MUX_SEL] =		0x0,
- 	[PWRAP_WRAP_EN] =		0x4,
- 	[PWRAP_DIO_EN] =		0x8,
-@@ -1251,7 +1251,7 @@ static int mt8516_regs[] = {
- 	[PWRAP_MSB_FIRST] =		0x170,
- };
- 
--static int mt8186_regs[] = {
-+static const int mt8186_regs[] = {
- 	[PWRAP_MUX_SEL] =		0x0,
- 	[PWRAP_WRAP_EN] =		0x4,
- 	[PWRAP_DIO_EN] =		0x8,
-@@ -1377,7 +1377,7 @@ struct pmic_wrapper {
- };
- 
- struct pmic_wrapper_type {
--	int *regs;
-+	const int *regs;
- 	enum pwrap_type type;
- 	u32 arb_en_all;
- 	u32 int_en_all;
+ 	/* Enable internal dynamic clock */
+ 	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_DCM)) {
 -- 
 2.45.2
 
