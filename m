@@ -1,480 +1,218 @@
-Received: from mail-4027.protonmail.ch (mail-4027.protonmail.ch [185.70.40.27])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0E713664C
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2024 13:29:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CAA412DD90;
+	Sun, 30 Jun 2024 13:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719754195; cv=none; b=sYdfJ2KCr41pZPAwXVNFAwFioK3OiO7Unfj9u9IBo19x/ElZYiEf8urzkGiOYfNmWe1tAleNVkLQh1+xJ5W36S7UNAfU3hZzuDcZjPZp4GhZ6b1Uo+Rn2cMDXBTDw/qMiNd8p8YwPv7+t/TGYCDKk3hbJQE6kCtqfDf76gr/Dsk=
+	t=1719754821; cv=none; b=rLQ5b7+DfJUsVz73valtz0JpByZKsOOSnEjdm/ptp6qvRZ6U8BD8KQUwMfu+hF+HkHBU3Z5fJSz0WSj+t16OmXa4ljEMMYE9IEGbVALV/TQ17fP0VXpywMHt8At26lKOoo1LGjkJj8XCLbNqkPs++KMy7nyc0FX924ifu3ITEV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719754195; c=relaxed/simple;
-	bh=sSwessdxUTexDKWfuEygYdZIENIaFszLAaQ5Sk8Lt3I=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KKGnONkWYk6uqZsGiLE+F2Yb+XsqS4a8OdGAFKCxgCnvz6o6zs7wSyuwTqvax5rxoIoUOl53HnFjNXVLTn96WHEzE6TXbqsNUv59RkiazaZQpADRLT0hrWjykEHw1E/lMgjec9MrQ9LudZX2qrn+GMmxH8HUnqwVQqnLhRZ9Ewg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=YAo05L3a; arc=none smtp.client-ip=185.70.40.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1719754821; c=relaxed/simple;
+	bh=K1iSFLq5ePba2KehTDuSb8d5VR75RXpx8jz4H5SWxu4=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=DTeWNcWehiaFWy6n66I7CzTpKP95KtTFf9N+umimVTxH71HehTPplD0mgZdiRv17u2zIfMpgNexBHidwrajmzaaBL0W7YiEquh2aLdOcLMVa80T3Eqt09YNowWQK3NnI+UI0QvBdtkXhXt2uBaeDESjhn1LEWWuqloSyLWSBDi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FvcHmVGb; arc=none smtp.client-ip=209.85.161.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="YAo05L3a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1719754185; x=1720013385;
-	bh=B/NyK9dJjUatZmpbpdzxvckMDvV3orlN6Xrau38CSt4=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=YAo05L3aJVMGqqcQozVGE0iSqt3uVSOAh1fsPnlIZFGJcY2mkK3471VVrRVXYNcHW
-	 N4EY2uiPZYAuCiTz3wywLXdXl4clyGvqs95wdBOMT5AM50xbs2bvpYP4BkQ0+HGQ7J
-	 hYYVkyugbQqdulvuu8eOmFLtNgBSfZCD+CwvfdEKhg+37FDhSAltoyPUuedE/YjgfD
-	 HL+cTX5O6bhCCs1+AV5xXl4TQIxFjl4oqqZpnVyG6wLnT0hgegbjPRF1+l4sY42f1C
-	 TIcJtJBHH75mCxK7KtIRlR9pQhcD1JjdMCHe7fi8c+Xi7P9L2vLc76EVzBEKFqWIPi
-	 QzihOYNdTOqKw==
-Date: Sun, 30 Jun 2024 13:29:41 +0000
-To: linux-kernel@vger.kernel.org
-From: Raymond Hackley <raymondhackley@protonmail.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, Luca Weiss <luca@lucaweiss.eu>
-Subject: [PATCH v3 2/2] ARM: dts: qcom-msm8226-samsung-ms013g: Add initial device tree
-Message-ID: <20240630132859.2885-3-raymondhackley@protonmail.com>
-In-Reply-To: <20240630132859.2885-1-raymondhackley@protonmail.com>
-References: <20240630132859.2885-1-raymondhackley@protonmail.com>
-Feedback-ID: 49437091:user:proton
-X-Pm-Message-ID: dae7095aab2d2d09f8433b7d9ac54c999133eefe
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FvcHmVGb"
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5c444e7d18fso197425eaf.3;
+        Sun, 30 Jun 2024 06:40:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719754819; x=1720359619; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MQcDa+wDXNNN/mQ/HwttTTXR+alCmusd4OT/lRAH1tA=;
+        b=FvcHmVGb3rk805OkQQGxJ8mgD5V6eoz6JxyN/BPhpW2sri6QaRyKrrQqwoJC0vZlnf
+         3OW4G/EzWNIz1CwNo4FkcnJkTGYVpoda7RAQtVdacNP1iKb6gOXGqB9211ENOM48GHjp
+         331p3xeD62GxDsPGi40+X5Mlnh3TPGIS/XowZCyCwylSMUMsfw+LJl5CsSAHRqArW5K7
+         cS9ijfDyNbAlLJCFX0wSyYzgeUq+tAsn1E35HLk7TgNww04jHG4Q5A4RtBhZ54mpVf5n
+         apnpQ3hBq3FkFPfWbYuV1lN0I4t0pob9j8BiLv0QJfkWDARKMzdxm0Mz/rmT61M2PfoB
+         4H7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719754819; x=1720359619;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=MQcDa+wDXNNN/mQ/HwttTTXR+alCmusd4OT/lRAH1tA=;
+        b=IURW4r7ahKz5J1QnraNUGY/kdvj9CQuczmaPN5Jenx80csrHK3myOMV/9xjTOQRFfE
+         IQdHWpqNBSZuN4tjtI5AoL+TifyWf8O0fTQfn5d/oczeQhYKWItgFNMupTPkna5UIve5
+         5d7S1TPcQCtQSqUh0+N9hjpB/JXNYkxww4xaXi2KaHn/rgedLulScg2aBQYCmLsVt/k0
+         FfVbXq42DeB8JMimiM6Mjd0BzvxXGg3wbVYeslUoYXQv7WtbtQMghDVsLfW/IXeKrh5e
+         dlP5vSvMmit3uNZyRf9dChDLrkj2WPni+sDq+H8UY1ucFJ7u2itIlODs5w6sPYvTR0i3
+         vbLA==
+X-Forwarded-Encrypted: i=1; AJvYcCXRXrnkntTpz+vEbDyDscIcyi2zZkq+WnMHC7/oVT0ZDfhu5vZdtSqai4oikRCd7nPfxdnOwDIF6G5/iuKto3TJkqZcL7jm5v4oceG/bwgPB+qP2ZQvUZ9TyKwolbLzHNzb
+X-Gm-Message-State: AOJu0Yw9w8D/mLAEhxfVGyleff+40ngxt2zYkMmykbZqHJM4w+wTFxxy
+	EqRmaWqUw81xKa82jWD4OAEVyTh/v1YTW9YyFlOTMuipILHlOPkt
+X-Google-Smtp-Source: AGHT+IEUNMMZuVhVUIWv2yyDj7cheQEwWk3+Vfqb53sl5ZI0k2IxiEwvSe2rRf3iG2EgVF68Zkw1Ig==
+X-Received: by 2002:a05:6358:4327:b0:1a2:11d6:3b26 with SMTP id e5c5f4694b2df-1a6accda99dmr381208555d.2.1719754818361;
+        Sun, 30 Jun 2024 06:40:18 -0700 (PDT)
+Received: from localhost (240.157.150.34.bc.googleusercontent.com. [34.150.157.240])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-79d6929be9esm253760685a.60.2024.06.30.06.40.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Jun 2024 06:40:17 -0700 (PDT)
+Date: Sun, 30 Jun 2024 09:40:17 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Yan Zhai <yan@cloudflare.com>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: netdev@vger.kernel.org, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, 
+ Jesper Dangaard Brouer <hawk@kernel.org>, 
+ John Fastabend <john.fastabend@gmail.com>, 
+ Willem de Bruijn <willemb@google.com>, 
+ Simon Horman <horms@kernel.org>, 
+ Florian Westphal <fw@strlen.de>, 
+ Mina Almasry <almasrymina@google.com>, 
+ Abhishek Chauhan <quic_abchauha@quicinc.com>, 
+ David Howells <dhowells@redhat.com>, 
+ Alexander Lobakin <aleksander.lobakin@intel.com>, 
+ David Ahern <dsahern@kernel.org>, 
+ Richard Gobert <richardbgobert@gmail.com>, 
+ Antoine Tenart <atenart@kernel.org>, 
+ Felix Fietkau <nbd@nbd.name>, 
+ Soheil Hassas Yeganeh <soheil@google.com>, 
+ Pavel Begunkov <asml.silence@gmail.com>, 
+ Lorenzo Bianconi <lorenzo@kernel.org>, 
+ =?UTF-8?B?VGhvbWFzIFdlacOfc2NodWg=?= <linux@weissschuh.net>, 
+ linux-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org
+Message-ID: <668160415228c_c6202948c@willemb.c.googlers.com.notmuch>
+In-Reply-To: <CAO3-PbrKRqeA4bCPnv7xkDiUFtuCMfzYZiEur3wM=+x8nc2xpQ@mail.gmail.com>
+References: <cover.1718919473.git.yan@cloudflare.com>
+ <b8c183a24285c2ab30c51622f4f9eff8f7a4752f.1718919473.git.yan@cloudflare.com>
+ <66756ed3f2192_2e64f929491@willemb.c.googlers.com.notmuch>
+ <CAO3-Pbp8frVM-i6NKkmyNOFrqqW=g58rK8m4vfdWbiSHHdQBsg@mail.gmail.com>
+ <6677dc5cb5cca_33522729474@willemb.c.googlers.com.notmuch>
+ <CAO3-PbrKRqeA4bCPnv7xkDiUFtuCMfzYZiEur3wM=+x8nc2xpQ@mail.gmail.com>
+Subject: Re: [RFC net-next 1/9] skb: introduce gro_disabled bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Samsung Galaxy Grand 2 is a phone based on MSM8226. It's similar to the
-other Samsung devices based on MSM8226 with only a few minor differences.
+Yan Zhai wrote:
+> On Sun, Jun 23, 2024 at 3:27=E2=80=AFAM Willem de Bruijn
+> <willemdebruijn.kernel@gmail.com> wrote:
+> >
+> > Yan Zhai wrote:
+> > > > > -static inline bool netif_elide_gro(const struct net_device *de=
+v)
+> > > > > +static inline bool netif_elide_gro(const struct sk_buff *skb)
+> > > > >  {
+> > > > > -     if (!(dev->features & NETIF_F_GRO) || dev->xdp_prog)
+> > > > > +     if (!(skb->dev->features & NETIF_F_GRO) || skb->dev->xdp_=
+prog)
+> > > > >               return true;
+> > > > > +
+> > > > > +#ifdef CONFIG_SKB_GRO_CONTROL
+> > > > > +     return skb->gro_disabled;
+> > > > > +#else
+> > > > >       return false;
+> > > > > +#endif
+> > > >
+> > > > Yet more branches in the hot path.
+> > > >
+> > > > Compile time configurability does not help, as that will be
+> > > > enabled by distros.
+> > > >
+> > > > For a fairly niche use case. Where functionality of GRO already
+> > > > works. So just a performance for a very rare case at the cost of =
+a
+> > > > regression in the common case. A small regression perhaps, but de=
+ath
+> > > > by a thousand cuts.
+> > > >
+> > >
+> > > I share your concern on operating on this hotpath. Will a
+> > > static_branch + sysctl make it less aggressive?
+> >
+> > That is always a possibility. But we have to use it judiciously,
+> > cannot add a sysctl for every branch.
+> >
+> > I'm still of the opinion that Paolo shared that this seems a lot of
+> > complexity for a fairly minor performance optimization for a rare
+> > case.
+> >
+> Actually combining the discussion in this thread, I think it would be
+> more than the corner cases that we encounter. Let me elaborate below.
+> =
 
-The device trees contain initial support with:
- - GPIO keys
- - Regulator haptic
- - SDHCI (internal and external storage)
- - UART (on USB connector via the TI TSU6721 MUIC)
- - Regulators
- - Touchscreen
- - Accelerometer
+> > > Speaking of
+> > > performance, I'd hope this can give us more control so we can achie=
+ve
+> > > the best of two worlds: for TCP and some UDP traffic, we can enable=
 
-Signed-off-by: Raymond Hackley <raymondhackley@protonmail.com>
-Reviewed-by: Luca Weiss <luca@lucaweiss.eu>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
----
- arch/arm/boot/dts/qcom/Makefile               |   1 +
- .../dts/qcom/qcom-msm8226-samsung-ms013g.dts  | 386 ++++++++++++++++++
- 2 files changed, 387 insertions(+)
- create mode 100644 arch/arm/boot/dts/qcom/qcom-msm8226-samsung-ms013g.dts
+> > > GRO, while for some other classes that we know GRO does no good or
+> > > even harm, let's disable GRO to save more cycles. The key observati=
+on
+> > > is that developers may already know which traffic is blessed by GRO=
+,
+> > > but lack a way to realize it.
+> >
+> > Following up also on Daniel's point on using BPF as GRO engine. Even
+> > earlier I tried to add an option to selectively enable GRO protocols
+> > without BPF. Definitely worthwhile to be able to disable GRO handlers=
 
-diff --git a/arch/arm/boot/dts/qcom/Makefile b/arch/arm/boot/dts/qcom/Makef=
-ile
-index ccd4ce6353df..f06c6d425e91 100644
---- a/arch/arm/boot/dts/qcom/Makefile
-+++ b/arch/arm/boot/dts/qcom/Makefile
-@@ -28,6 +28,7 @@ dtb-$(CONFIG_ARCH_QCOM) +=3D \
- =09qcom-msm8226-microsoft-dempsey.dtb \
- =09qcom-msm8226-microsoft-makepeace.dtb \
- =09qcom-msm8226-microsoft-moneypenny.dtb \
-+=09qcom-msm8226-samsung-ms013g.dtb \
- =09qcom-msm8226-samsung-s3ve3g.dtb \
- =09qcom-msm8660-surf.dtb \
- =09qcom-msm8916-samsung-e5.dtb \
-diff --git a/arch/arm/boot/dts/qcom/qcom-msm8226-samsung-ms013g.dts b/arch/=
-arm/boot/dts/qcom/qcom-msm8226-samsung-ms013g.dts
-new file mode 100644
-index 000000000000..2ecc5983d365
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom/qcom-msm8226-samsung-ms013g.dts
-@@ -0,0 +1,386 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+
-+/dts-v1/;
-+
-+#include "qcom-msm8226.dtsi"
-+#include "pm8226.dtsi"
-+
-+/delete-node/ &smem_region;
-+
-+/ {
-+=09model =3D "Samsung Galaxy Grand 2";
-+=09compatible =3D "samsung,ms013g", "qcom,msm8226";
-+=09chassis-type =3D "handset";
-+
-+=09aliases {
-+=09=09mmc0 =3D &sdhc_1; /* SDC1 eMMC slot */
-+=09=09mmc1 =3D &sdhc_2; /* SDC2 SD card slot */
-+=09=09serial0 =3D &blsp1_uart3;
-+=09};
-+
-+=09chosen {
-+=09=09stdout-path =3D "serial0:115200n8";
-+=09};
-+
-+=09gpio-hall-sensor {
-+=09=09compatible =3D "gpio-keys";
-+
-+=09=09pinctrl-0 =3D <&gpio_hall_sensor_default>;
-+=09=09pinctrl-names =3D "default";
-+
-+=09=09label =3D "GPIO Hall Effect Sensor";
-+
-+=09=09event-hall-sensor {
-+=09=09=09label =3D "Hall Effect Sensor";
-+=09=09=09gpios =3D <&tlmm 50 GPIO_ACTIVE_LOW>;
-+=09=09=09linux,input-type =3D <EV_SW>;
-+=09=09=09linux,code =3D <SW_LID>;
-+=09=09=09linux,can-disable;
-+=09=09};
-+=09};
-+
-+=09gpio-keys {
-+=09=09compatible =3D "gpio-keys";
-+
-+=09=09pinctrl-0 =3D <&gpio_keys_default>;
-+=09=09pinctrl-names =3D "default";
-+
-+=09=09label =3D "GPIO Buttons";
-+
-+=09=09button-volume-up {
-+=09=09=09label =3D "Volume Up";
-+=09=09=09gpios =3D <&tlmm 106 GPIO_ACTIVE_LOW>;
-+=09=09=09linux,code =3D <KEY_VOLUMEUP>;
-+=09=09};
-+
-+=09=09button-volume-down {
-+=09=09=09label =3D "Volume Down";
-+=09=09=09gpios =3D <&tlmm 107 GPIO_ACTIVE_LOW>;
-+=09=09=09linux,code =3D <KEY_VOLUMEDOWN>;
-+=09=09};
-+
-+=09=09button-home {
-+=09=09=09label =3D "Home Key";
-+=09=09=09gpios =3D <&tlmm 108 GPIO_ACTIVE_LOW>;
-+=09=09=09linux,code =3D <KEY_HOMEPAGE>;
-+=09=09};
-+=09};
-+
-+=09reg_motor_vdd: regulator-motor-vdd {
-+=09=09compatible =3D "regulator-fixed";
-+=09=09regulator-name =3D "motor_vdd";
-+=09=09regulator-min-microvolt =3D <3300000>;
-+=09=09regulator-max-microvolt =3D <3300000>;
-+
-+=09=09gpio =3D <&tlmm 111 GPIO_ACTIVE_HIGH>;
-+=09=09enable-active-high;
-+
-+=09=09pinctrl-0 =3D <&motor_en_default>;
-+=09=09pinctrl-names =3D "default";
-+=09};
-+
-+=09reg_vdd_tsp_a: regulator-vdd-tsp-a {
-+=09=09compatible =3D "regulator-fixed";
-+=09=09regulator-name =3D "tsp_3p3v";
-+=09=09regulator-min-microvolt =3D <3300000>;
-+=09=09regulator-max-microvolt =3D <3300000>;
-+
-+=09=09gpio =3D <&tlmm 31 GPIO_ACTIVE_HIGH>;
-+=09=09enable-active-high;
-+
-+=09=09pinctrl-0 =3D <&tsp_en_default>;
-+=09=09pinctrl-names =3D "default";
-+=09};
-+
-+=09reserved-memory {
-+=09=09smem_region: smem@fa00000 {
-+=09=09=09reg =3D <0x0fa00000 0x100000>;
-+=09=09=09no-map;
-+=09=09};
-+=09};
-+
-+=09vibrator {
-+=09=09compatible =3D "regulator-haptic";
-+=09=09haptic-supply =3D <&reg_motor_vdd>;
-+=09=09min-microvolt =3D <3300000>;
-+=09=09max-microvolt =3D <3300000>;
-+=09};
-+};
-+
-+&blsp1_i2c2 {
-+=09status =3D "okay";
-+
-+=09accelerometer@18 {
-+=09=09compatible =3D "bosch,bma255";
-+=09=09reg =3D <0x18>;
-+=09=09interrupts-extended =3D <&tlmm 64 IRQ_TYPE_EDGE_RISING>;
-+
-+=09=09vdd-supply =3D <&pm8226_l19>;
-+=09=09vddio-supply =3D <&pm8226_lvs1>;
-+
-+=09=09pinctrl-0 =3D <&accel_int_default>;
-+=09=09pinctrl-names =3D "default";
-+
-+=09=09mount-matrix =3D "0", "1", "0",
-+=09=09=09       "-1", "0", "0",
-+=09=09=09       "0", "0", "-1";
-+=09};
-+};
-+
-+&blsp1_i2c5 {
-+=09status =3D "okay";
-+
-+=09touchscreen@20 {
-+=09=09compatible =3D "zinitix,bt541";
-+
-+=09=09reg =3D <0x20>;
-+=09=09interrupts-extended =3D <&tlmm 17 IRQ_TYPE_EDGE_FALLING>;
-+
-+=09=09touchscreen-size-x =3D <720>;
-+=09=09touchscreen-size-y =3D <1280>;
-+
-+=09=09vcca-supply =3D <&reg_vdd_tsp_a>;
-+=09=09vdd-supply =3D <&pm8226_lvs1>;
-+
-+=09=09pinctrl-0 =3D <&tsp_int_default>;
-+=09=09pinctrl-names =3D "default";
-+=09};
-+};
-+
-+&blsp1_uart3 {
-+=09status =3D "okay";
-+};
-+
-+&rpm_requests {
-+=09regulators {
-+=09=09compatible =3D "qcom,rpm-pm8226-regulators";
-+
-+=09=09pm8226_s3: s3 {
-+=09=09=09regulator-min-microvolt =3D <1200000>;
-+=09=09=09regulator-max-microvolt =3D <1300000>;
-+=09=09};
-+
-+=09=09pm8226_s4: s4 {
-+=09=09=09regulator-min-microvolt =3D <1800000>;
-+=09=09=09regulator-max-microvolt =3D <2200000>;
-+=09=09};
-+
-+=09=09pm8226_s5: s5 {
-+=09=09=09regulator-min-microvolt =3D <1150000>;
-+=09=09=09regulator-max-microvolt =3D <1150000>;
-+=09=09};
-+
-+=09=09pm8226_l1: l1 {
-+=09=09=09regulator-min-microvolt =3D <1225000>;
-+=09=09=09regulator-max-microvolt =3D <1225000>;
-+=09=09};
-+
-+=09=09pm8226_l2: l2 {
-+=09=09=09regulator-min-microvolt =3D <1200000>;
-+=09=09=09regulator-max-microvolt =3D <1200000>;
-+=09=09};
-+
-+=09=09pm8226_l3: l3 {
-+=09=09=09regulator-min-microvolt =3D <750000>;
-+=09=09=09regulator-max-microvolt =3D <1337500>;
-+=09=09};
-+
-+=09=09pm8226_l4: l4 {
-+=09=09=09regulator-min-microvolt =3D <1200000>;
-+=09=09=09regulator-max-microvolt =3D <1200000>;
-+=09=09};
-+
-+=09=09pm8226_l5: l5 {
-+=09=09=09regulator-min-microvolt =3D <1200000>;
-+=09=09=09regulator-max-microvolt =3D <1200000>;
-+=09=09};
-+
-+=09=09pm8226_l6: l6 {
-+=09=09=09regulator-min-microvolt =3D <1800000>;
-+=09=09=09regulator-max-microvolt =3D <1800000>;
-+=09=09=09regulator-allow-set-load;
-+=09=09=09regulator-always-on;
-+=09=09};
-+
-+=09=09pm8226_l7: l7 {
-+=09=09=09regulator-min-microvolt =3D <1850000>;
-+=09=09=09regulator-max-microvolt =3D <1850000>;
-+=09=09};
-+
-+=09=09pm8226_l8: l8 {
-+=09=09=09regulator-min-microvolt =3D <1800000>;
-+=09=09=09regulator-max-microvolt =3D <1800000>;
-+=09=09};
-+
-+=09=09pm8226_l9: l9 {
-+=09=09=09regulator-min-microvolt =3D <2050000>;
-+=09=09=09regulator-max-microvolt =3D <2050000>;
-+=09=09};
-+
-+=09=09pm8226_l10: l10 {
-+=09=09=09regulator-min-microvolt =3D <1800000>;
-+=09=09=09regulator-max-microvolt =3D <1800000>;
-+=09=09};
-+
-+=09=09pm8226_l12: l12 {
-+=09=09=09regulator-min-microvolt =3D <1800000>;
-+=09=09=09regulator-max-microvolt =3D <1800000>;
-+=09=09};
-+
-+=09=09pm8226_l14: l14 {
-+=09=09=09regulator-min-microvolt =3D <2750000>;
-+=09=09=09regulator-max-microvolt =3D <2750000>;
-+=09=09};
-+
-+=09=09pm8226_l15: l15 {
-+=09=09=09regulator-min-microvolt =3D <2800000>;
-+=09=09=09regulator-max-microvolt =3D <2800000>;
-+=09=09};
-+
-+=09=09pm8226_l16: l16 {
-+=09=09=09regulator-min-microvolt =3D <3000000>;
-+=09=09=09regulator-max-microvolt =3D <3350000>;
-+=09=09};
-+
-+=09=09pm8226_l17: l17 {
-+=09=09=09regulator-min-microvolt =3D <2950000>;
-+=09=09=09regulator-max-microvolt =3D <2950000>;
-+
-+=09=09=09regulator-system-load =3D <200000>;
-+=09=09=09regulator-allow-set-load;
-+=09=09=09regulator-always-on;
-+=09=09};
-+
-+=09=09pm8226_l18: l18 {
-+=09=09=09regulator-min-microvolt =3D <2950000>;
-+=09=09=09regulator-max-microvolt =3D <2950000>;
-+=09=09};
-+
-+=09=09pm8226_l19: l19 {
-+=09=09=09regulator-min-microvolt =3D <2850000>;
-+=09=09=09regulator-max-microvolt =3D <3000000>;
-+=09=09};
-+
-+=09=09pm8226_l20: l20 {
-+=09=09=09regulator-min-microvolt =3D <3075000>;
-+=09=09=09regulator-max-microvolt =3D <3075000>;
-+=09=09};
-+
-+=09=09pm8226_l21: l21 {
-+=09=09=09regulator-min-microvolt =3D <1800000>;
-+=09=09=09regulator-max-microvolt =3D <2950000>;
-+=09=09=09regulator-allow-set-load;
-+=09=09};
-+
-+=09=09pm8226_l22: l22 {
-+=09=09=09regulator-min-microvolt =3D <1800000>;
-+=09=09=09regulator-max-microvolt =3D <2950000>;
-+=09=09};
-+
-+=09=09pm8226_l23: l23 {
-+=09=09=09regulator-min-microvolt =3D <1800000>;
-+=09=09=09regulator-max-microvolt =3D <3300000>;
-+=09=09};
-+
-+=09=09pm8226_l24: l24 {
-+=09=09=09regulator-min-microvolt =3D <1300000>;
-+=09=09=09regulator-max-microvolt =3D <1350000>;
-+=09=09};
-+
-+=09=09pm8226_l25: l25 {
-+=09=09=09regulator-min-microvolt =3D <1775000>;
-+=09=09=09regulator-max-microvolt =3D <2125000>;
-+=09=09};
-+
-+=09=09pm8226_l26: l26 {
-+=09=09=09regulator-min-microvolt =3D <1225000>;
-+=09=09=09regulator-max-microvolt =3D <1300000>;
-+=09=09};
-+
-+=09=09pm8226_l27: l27 {
-+=09=09=09regulator-min-microvolt =3D <2050000>;
-+=09=09=09regulator-max-microvolt =3D <2050000>;
-+=09=09};
-+
-+=09=09pm8226_l28: l28 {
-+=09=09=09regulator-min-microvolt =3D <1800000>;
-+=09=09=09regulator-max-microvolt =3D <2950000>;
-+=09=09};
-+
-+=09=09pm8226_lvs1: lvs1 {};
-+=09};
-+};
-+
-+&sdhc_1 {
-+=09vmmc-supply =3D <&pm8226_l17>;
-+=09vqmmc-supply =3D <&pm8226_l6>;
-+
-+=09bus-width =3D <8>;
-+=09non-removable;
-+
-+=09status =3D "okay";
-+};
-+
-+&sdhc_2 {
-+=09vmmc-supply =3D <&pm8226_l18>;
-+=09vqmmc-supply =3D <&pm8226_l21>;
-+
-+=09bus-width =3D <4>;
-+=09cd-gpios =3D <&tlmm 38 GPIO_ACTIVE_LOW>;
-+
-+=09pinctrl-0 =3D <&sdhc2_default_state &sdhc2_cd_default>;
-+=09pinctrl-names =3D "default";
-+
-+=09status =3D "okay";
-+};
-+
-+&tlmm {
-+=09accel_int_default: accel-int-default-state {
-+=09=09pins =3D "gpio64";
-+=09=09function =3D "gpio";
-+=09=09drive-strength =3D <2>;
-+=09=09bias-disable;
-+=09};
-+
-+=09gpio_hall_sensor_default: gpio-hall-sensor-default-state {
-+=09=09pins =3D "gpio50";
-+=09=09function =3D "gpio";
-+=09=09drive-strength =3D <2>;
-+=09=09bias-pull-up;
-+=09};
-+
-+=09gpio_keys_default: gpio-keys-default-state {
-+=09=09pins =3D "gpio106", "gpio107", "gpio108";
-+=09=09function =3D "gpio";
-+=09=09drive-strength =3D <2>;
-+=09=09bias-pull-up;
-+=09};
-+
-+=09motor_en_default: motor-en-default-state {
-+=09=09pins =3D "gpio111";
-+=09=09function =3D "gpio";
-+=09=09drive-strength =3D <2>;
-+=09=09bias-disable;
-+=09};
-+
-+=09sdhc2_cd_default: sdhc2-cd-default-state {
-+=09=09pins =3D "gpio38";
-+=09=09function =3D "gpio";
-+=09=09drive-strength =3D <2>;
-+=09=09bias-disable;
-+=09};
-+
-+=09tsp_en_default: tsp-en-default-state {
-+=09=09pins =3D "gpio31";
-+=09=09function =3D "gpio";
-+=09=09drive-strength =3D <2>;
-+=09=09bias-disable;
-+=09};
-+
-+=09tsp_int_default: tsp-int-default-state {
-+=09=09pins =3D "gpio17";
-+=09=09function =3D "gpio";
-+=09=09drive-strength =3D <2>;
-+=09=09bias-disable;
-+=09};
-+};
---=20
-2.39.2
+> > to reduce attack surface to bad input.
+> >
+> I was probably staring too hard at my own things, which is indeed a
+> corner case. But reducing the attack surface is indeed a good
+> motivation for this patch. I checked briefly with our DoS team today,
+> the DoS scenario will definitely benefit from skipping GRO, for
+> example on SYN/RST floods. XDP is our main weapon to drop attack
+> traffic today, but it does not always drop 100% of the floods, and
+> time by time it does need to fall back to iptables due to the delay of
+> XDP program assembly or the BPF limitation on analyzing the packet. I
+> did an ad hoc measurement just now on a mostly idle server, with
+> ~1.3Mpps SYN flood concentrated on one CPU and dropped them early in
+> raw-PREROUTING. w/ GRO this would consume about 35-41% of the CPU
+> time, while w/o GRO the time dropped to 9-12%. This seems a pretty
+> significant breath room under heavy attacks.
+
+A GRO opt-out might make sense.
+
+A long time ago I sent a patch that configured GRO protocols using
+syscalls, selectively (un)registering handlers. The interface was not
+very nice, so I did not pursue it further. On the upside, the datapath
+did not introduce any extra code. The intent was to reduce attack
+surface of packet parsing code.
+
+A few concerns with an XDP based opt-out. It is more work to enable:
+requires compiling and load an XDP program. It adds cycles in the
+hot path. And I do not entirely understand when an XDP program will be
+able to detect that a packet should not enter the GRO engine, but
+cannot drop the packet (your netfilter example above).
+
+> But I am not sure I understand "BPF as GRO engine" here, it seems to
+> me that being able to disable GRO by XDP is already good enough. Any
+> more motivations to do more complex work here?
+
+FWIW, we looked into this a few years ago. Analogous to the BPF flow
+dissector: if the BPF program is loaded, use that instead of the C
+code path. But we did not arrive at a practical implementation at the
+time. Things may have changed, but one issue is how to store and
+access the list (or table) of outstanding GRO skbs.
+
+> best
+> Yan
+> =
+
+> >
+> > >
+> > > best
+> > > Yan
+> >
+> >
 
 
