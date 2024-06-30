@@ -1,83 +1,101 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536393A268;
-	Sun, 30 Jun 2024 08:07:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE4A3A268;
+	Sun, 30 Jun 2024 08:10:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719734876; cv=none; b=bIBvTXGI+Jsh10GwPpY/FUa0uCVwu67XLnkvE3kPWIiD2SU6TDGwB9LBW8nPyas94fuNqhCLmakOTsfrYa66NQvDaCwyxCcJl4CPFASwrsFOUHCwKSSj+xPw0Ye/du2kDpIKfzpQXeouNjCl7695k12ma4iSikeXLNlmaV0RoZQ=
+	t=1719735017; cv=none; b=VDfKb1ldwM/2GzQoJp308tNw/Y6t2rtElGiI7lPLvcJ7RLqn0c51QtqeyQZkiJVpNkDxmZX8Yuco5K7EPsjqgkBig+xBsQeE0I2CjnCRpC0XSqh3Pa7KgQb75ClelMnDul0CUJL83F9wwnBSQEm3wpi34PRXMVsOlET/P9PMz+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719734876; c=relaxed/simple;
-	bh=lNuSaJ11QtPi4mbe4FqYY/z0bjszGfu+9HvYgYhmTKA=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=htHxDoZuls77Fyz8ej6TCz6dZ9uKGnNYmhkqTlqjJbA8GNE6oJDnv4IIaS3y5DdF2wDg7nadKA660HYbrTM1vGRl77uj6Q2OHTMnBQVh1ngkngliIwUOGdBr/6XUMERYSC/OgXe9JhZHKDBpIsOEkpsKEe5xwU36ngvXHZg5V/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=l/i2vC5J; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="l/i2vC5J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1719734857; x=1720339657; i=markus.elfring@web.de;
-	bh=lN5WQT/P42Agtm6YWk9SosCJtGnpAgOUpbIGynjUq88=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=l/i2vC5JDLAolxVTBtLSrqQPvGLYRc9QVqTBWYel4k8jFSR+cN2MFmoFjZn2xZEA
-	 VmGw9mo3WExpwoYSeNfgRgOv7ja3e+CVuk4QCI07EVDrP1T7lxyo9nS8+Jc4fGH75
-	 RfI6lf8KLCACvobaqiS9+5GVtJ0iRnXxxcezMVKd1g7jfTFo/p8UNY6We1xi0MM4y
-	 /7NiMLV4sgUDxFXBqJq1psYVL5IcMeBK5WEdD073yZiGBVUHdrh2JXqV1BXwVhZtL
-	 0Tg+l2sB8co6oPoS799zQs3DdnTgnVAAEvvbvGHFHpEDzw/L6oGz6bk71HaFfCCKF
-	 mLDXTzlaqwKYMDyQpQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MuF8z-1s9Tfg1e0r-011PFz; Sun, 30
- Jun 2024 10:07:37 +0200
-Message-ID: <005f0c44-25bf-4e50-a660-9a298a164129@web.de>
-Date: Sun, 30 Jun 2024 10:07:35 +0200
+	s=arc-20240116; t=1719735017; c=relaxed/simple;
+	bh=H0n9BHPoOTdAepeEduREmT4dEfXjG2iu4JOFV0f/i1s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aGBs8f+ZSzmiiXVgh/0rWV9F6Ds1VCjpsIibb9dQx4eeIsUVg/SR1mUPFnQzcBppZs8fFYYibrtFzX6Gg2t9JXD/u+zIhPvYIxFv775x7iKXxOjNpF0/fQNxKdOJKJ+5J5pea0Ex4eR7njggW7DemVFyu+Lzps7qSFDW1c5cDFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 649B7100D942D;
+	Sun, 30 Jun 2024 10:04:40 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id DDEA72760BE; Sun, 30 Jun 2024 10:04:39 +0200 (CEST)
+Date: Sun, 30 Jun 2024 10:04:39 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Aditya Garg <gargaditya08@live.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+	"linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Orlando Chamberlain <orlandoch.dev@gmail.com>,
+	Kerem Karabay <kekrby@gmail.com>
+Subject: Re: [PATCH] efi: libstub: add support for the apple_set_os protocol
+Message-ID: <ZoERl1PWoc2xDGWz@wunner.de>
+References: <EBE51900-DA87-4113-B389-80B9C9160F0F@live.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Keith Busch <kbusch@kernel.org>, kernel-janitors@vger.kernel.org,
- Bjorn Helgaas <bhelgaas@google.com>, Dan Williams <dan.j.williams@intel.com>
-Cc: Keith Busch <kbusch@meta.com>, LKML <linux-kernel@vger.kernel.org>
-References: <20240628193514.1680137-1-kbusch@meta.com>
-Subject: Re: [PATCH] PCI: fix recusive device locking
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240628193514.1680137-1-kbusch@meta.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:z7GOR5Oam3BF13l4JmM7FgI8WpNGmFdJPfOk/1a2ZRVEsPeyxzG
- it6SNDjrL6bIn4PlogTF8z3CrM8+N6gaMBrhC2MUm7a7Bv4GJ3jLoqrOlq9YiP9ao9fGNU1
- AK6RcSvXlUv8aLE/cNlL2gQj9Ly97yOMNAYKEfy38GJ2I7Lt7UJu3q71DhIdeRA/dwSGVNP
- KZu9BY7PeliRTBQWq/qag==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:aoaQQgYZuWo=;wHqimmBKHoMU8h9+2o8BaCzkeag
- gTZsPwIQyygCJ747gHiq7sEN6+FNMnQj50ZkLt4odnw29qvuIlIb/eN3WjNgjrXUkZF7MX5gc
- zxjjr20+HG1YiA3YuJyhVpk1g18UsefKEInfhtY7CvsYQHqwIa98wugt6KZXvnf5QL8mU2XIs
- zht0Cx1zcNZo/fH/4Yf4WZ9IHuXbe/ErjUfJeLD39fkgksqKBjsS9ZNTpx+7lrWz9D+3bCU1R
- VTHB/gnGTdssCFlUeSPMxjxTvQLg/T9VeVMnnTYr14yXibHdzmrH3Xhb1hxOZiNlkIrqu/vY9
- +jBvc5RYSlCVDk6JRclwdDnUippTHD5gzVvl6aLdkbf50ejrYjKjyfybGP4cF4N7LAOdrKB1U
- 0PVZBOemxDHp1byDsTPFQB1CW2GuU174W4EJrgNTCLXSCNx+VpKMtkg8xnZUqxTMoShrDpbtp
- xGlDoSmgqsd9tpA2H+au1kbbqLuqv8fBo0stQ/Sd7ZW94KmJczJX3o1UkeCCrOlB6zFMWBRG3
- 7r6DC7/uRssEQwKXeyjI+Q+sUokqBJtJyFnP84fjSQxDUS4C/lcgqGMGkcOT8lXO9iK+T2s15
- n0jNjsPXSm2odfngrhXmzlXv/35OTu11DEbGsFi+1lMsOl8FSCDYFhl0k8p7okmm9rNopTF3v
- 9yPTvtC1IP8JyAUQPWplwetIOyG1swj/4y/dFSLhSd0ncQRCoCT4Pb+dLjBUrapMGTFAlJzuZ
- j4BJVaWEvAwFXaTlJZSszRTr7VVTuCfiN5+JofzC250RwhS3NftbI5V5ZPyZbCAuGY/i1cHWQ
- WiYp5XgOjNcI7Op3OzDAEtYA5AbtBIHlkcxxufCreUhbA=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <EBE51900-DA87-4113-B389-80B9C9160F0F@live.com>
 
-> If one of the bus' devices has subordinates, the recursive call locks
-> itself, so no need to lock the device before the recusion or it will
-=E2=80=A6
+On Sun, Jun 30, 2024 at 04:42:55AM +0000, Aditya Garg wrote:
+> Commit 0c18184de990 brought support for T2 Macs in apple-gmux. But in order to
 
-                                                   recursion?
+Please run patches through scripts/checkpatch.pl before submission.
+The subject of the commit is missing here and lines should be wrapped
+at 72 or at least 74 chars.
 
-Would you like to avoid another typo also in the summary phrase?
 
-Regards,
-Markus
+> Based on this patch for GRUB by Andreas Heider <andreas@heider.io>:
+> https://lists.gnu.org/archive/html/grub-devel/2013-12/msg00442.html
+
+Please include his Signed-off-by and cc him.
+
+
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -399,6 +399,8 @@
+>  			      useful so that a dump capture kernel won't be
+>  			      shot down by NMI
+>  
+> +	apple_set_os	[KNL] Report that macOS is being booted to the firmware
+> +
+
+Why the kernel parameter?  Why not do this unconditionally?
+
+
+> +struct apple_set_os_protocol {
+> +	u64 version;
+> +	efi_status_t (__efiapi *set_os_version) (const char *);
+> +	efi_status_t (__efiapi *set_os_vendor) (const char *);
+> +	struct {
+> +		u32 version;
+> +		u32 set_os_version;
+> +		u32 set_os_vendor;
+> +	} mixed_mode;
+> +};
+
+How about declaring this __packed, just to be on the safe side?
+
+Why "mixed_mode"?  Seems like an odd name given "mixed mode"
+in EFI context usually means 64-bit OS, but 32-bit EFI.
+
+
+> +static void apple_set_os(void)
+> +{
+> +	efi_guid_t guid = APPLE_SET_OS_PROTOCOL_GUID;
+
+My recollection is that if you don't declare this static const,
+gcc generates suboptimal code.  (It constructs the GUID on the
+stack at runtime instead of storing it in .rodata.)
+Maybe it's become smarter in the meantime, but I doubt it.
+
+Thanks,
+
+Lukas
