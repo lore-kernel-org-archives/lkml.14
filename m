@@ -1,114 +1,102 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out203-205-251-82.mail.qq.com (out203-205-251-82.mail.qq.com [203.205.251.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14BBE1304A3
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2024 15:19:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0ABC152536;
+	Sun, 30 Jun 2024 15:26:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.82
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719760800; cv=none; b=K9EUfkV4v9ObDp8UqUt0MvYVhrIdxhAvHBNpI+Zw0tD+VQE4iT5VqAd2rkfPwaSBrengo1Wd4eriZjremVYtvZ5ycu20rXS4aZ2HPoMPhRoKXCgBiwC5rT2+J1SV3PEPgv2n1ixgVYekc5knK/6q4VmECxmdw42Za4cK0s9FonI=
+	t=1719761213; cv=none; b=AkyAUnF5gEHr/vmfLeBUM7ahlwpGpudqAfVznRUTVu88EeAEgClJeUjmzlYCzSSts419Q62M20Ib9jQMdEkzO0xNtPu0yfZrMBVbQL0utL2hbIfTzc4Rh8J7TML8k3ce9fwYa7CJtykp7zkKLWWxIZVhhmFXJX+17GoFR1cYNfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719760800; c=relaxed/simple;
-	bh=y0GCV1s7z5QcjuCuXrZ65YOxUbYQxD7IzeF/Mo2/6Sc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bu1GLD5ezhHbodayJDEo47ccPYnguxUnUT5vg6nys0fK2Iewc0EeyVNTFrnCRztDkiJnywxRy6hKQ6WiEIUcKBP/3MRdJTHE3WNE1UQtt4HeV05rrpZA14DiyY9H4iS2ZIqnB/4qPiRJF9f1J/OhnmZKG5+A7KIMPvihSymrthQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N1rCNtp+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719761213; c=relaxed/simple;
+	bh=vO1NLBQxNQfA2xpyrK/rc/jpoKmQGGIJOtTb9QALIFo=;
+	h=Message-ID:Date:From:To:cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=snNyBgLwRcl6akSt+s14gCM0n9f9va5/HUwQ0jJh5QFR9FyOcw+4Wd/Avt10m4iAXEhodddY9vqPQyf4xI1oj3C6Uii5zI2OHUgCuEqH47UhmtDexRemBtaqvaaGVEOJMfkVQKXwhzjWucZOjOnpdNQS9guFpi1dGsFhwz7JyCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=GcCbrExb; arc=none smtp.client-ip=203.205.251.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N1rCNtp+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719760798;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/uw60rNCpwnr0C3iThEmSKSDPQVzVdj9gxMj7KcciDY=;
-	b=N1rCNtp+UzTTm3Z39VBO+ZJ4r/9t4qtM6iphZsq90lFlMLGTzUJSUkjtA0rPKqE/7QgYzM
-	tzQFG8W466Uh5L265iJBuIL7nsdePASfxyJ9/jtRPINCSl3QrDBb+pJjrzmtqYWEkgfcJw
-	jLh4Px0X0DQnH6VqnOpm6VMnUyP7u7I=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-110-kbgdXdslNjSRwvgoGPAgqA-1; Sun,
- 30 Jun 2024 11:19:52 -0400
-X-MC-Unique: kbgdXdslNjSRwvgoGPAgqA-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E5B3819560AA;
-	Sun, 30 Jun 2024 15:19:49 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.25])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id C951D1956089;
-	Sun, 30 Jun 2024 15:19:44 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sun, 30 Jun 2024 17:18:15 +0200 (CEST)
-Date: Sun, 30 Jun 2024 17:18:08 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Dev Jain <dev.jain@arm.com>
-Cc: shuah@kernel.org, mingo@kernel.org, tglx@linutronix.de,
-	mark.rutland@arm.com, ryan.roberts@arm.com, broonie@kernel.org,
-	suzuki.poulose@arm.com, Anshuman.Khandual@arm.com,
-	DeepakKumar.Mishra@arm.com, aneesh.kumar@kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] selftests: Add a test mangling with uc_sigmask
-Message-ID: <20240630151808.GA13321@redhat.com>
-References: <20240627035215.1527279-1-dev.jain@arm.com>
- <20240627035215.1527279-3-dev.jain@arm.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="GcCbrExb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1719760902; bh=lZ3i5L1HLdTTCLMU39/mrQkhmO03fgVVzrbXx5lN1sk=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References;
+	b=GcCbrExbiyLxe/FpoK0j8Rp0VI9RbN79etRgW/XlBCRpSjDiFL9SRdoWiqGQfE4u7
+	 f++YZ0HU0nC5gXnNmn/WbaPTuTT55Gv/k1CGIaUx0mWSzHu131als7CsrbI/OZssm+
+	 +tmxIHVUoFgHqeBcJ4mEMesczdT9dIfkvojfsgTk=
+Received: from LAPTOP-PMPPB61H ([36.129.28.219])
+	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
+	id 210974CF; Sun, 30 Jun 2024 23:08:16 +0800
+X-QQ-mid: xmsmtpt1719760096te8gy3gs2
+Message-ID: <tencent_6866D69439F77A09338872DC0398A84CB908@qq.com>
+X-QQ-XMAILINFO: N2bAIxLK0elnc+9Xe7d2ddVQ9KxnEcqKNXLiYmjhiz5xuush6I9PgckgkgBUKT
+	 tw3JK3gjPwyFA4jP9L00VIh1g+z5JHTzPi5lJcBD60NOsuSz9iy/wzc7QyoY80uvRsOtQAvSQXKm
+	 o3xmxXWZWcmJXkdAYNHjaoApocQe8zXFmEvA0gEJi7b0la7aVpKvk2TOgh2hFv1hCuGtIUlWPqhq
+	 59IhAo5e4+RoLzujf3IdYAICX5JlEDDzOrcr47MhBMzcuS3/ZOTQsPmIm1ltNPmg6FmPAVdYklvt
+	 JhEHUqGEcXXf4I65JS2A+08tEOoUIIe5+yfRir0818kJTEel2R3OQIvFiDPFL2igZY2CKHMX8aw2
+	 qqlMAEp2MsEYh5tkFFzg76XnDqJxngCW7aj1o7Yk/VBUw7fdilhG24mDROEkQAvqgJX6kCIf/CA4
+	 esea8wg/EZZI7dr+lcaduRd7eto3BrLzDHPOvV8+a2Eowlu0E1ci+TdSkjTHoNoH0c2R9/BwP/yo
+	 OpQ7plDI/Zsb++Au5SaV0f4YPTLRCaJG6BNe/kGVSskq1AxTeFR4zqgVC8VtDU1Ecltcgo+ckYQb
+	 f4pfs8Aak5Vp70ARkteKdrvfCBHDBl95ctSiDyroarJ5pwuXsfvW26xsILCsBRHH7PpNc/ySx1Oa
+	 +ttpX3X2HxOIqDE2nTUV+bTrwD8/OGMQgD7Do3jAXVXdowD3WYExSdJ0YAQ9R8eo4KpYUaACNGv0
+	 3VvKyL6jdfedDoor17Vqe/LupGWElQ+jlSwajbwjONkY31OggxIpQf5T3n/SDaqNiz5MCbYsdhGH
+	 HhbFPiox4p516EryjFJzOdA49VaP8QIJsHKUQP4QE5ktn9l2O0MN1xY6j9uj0bDUjLfpcwuqy7hf
+	 d4Q7TdanBXQyOx9YPjoDsvR5sFdOSsWMepNyIjOl4HNjVTgvGxIEIELpBWXftC7B2JvMzB0OOVfh
+	 1RfwGCmgWfy45v+IPuEhNnMB5X1/TixOvPcoYCla6wi6JpSDN/Ok3nPa8B/ZVi9ptAGRIFC3k=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+Date: Sun, 30 Jun 2024 23:08:17 +0800
+From: Zhou congjie <zcjie0802@qq.com>
+To: Zijun Hu <quic_zijuhu@quicinc.com>, gregkh@linuxfoundation.org, 
+    rafael@kernel.org, akpm@linux-foundation.org, dmitry.torokhov@gmail.com
+cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] kobject_uevent: Fix OOB access within
+ zap_modalias_env()
+In-Reply-To: <1716524403-5415-1-git-send-email-quic_zijuhu@quicinc.com>
+X-OQ-MSGID: <77765b34-80c6-6371-06b5-50be2a72e5de@qq.com>
+References: <1716524403-5415-1-git-send-email-quic_zijuhu@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240627035215.1527279-3-dev.jain@arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: text/plain; charset=US-ASCII
 
-I see nothing wrong, but perhaps this test can be simplified?
-Feel free to ignore.
+On Fri, 24 May 2024, Zijun Hu wrote:
 
-Say,
+> Subject: [PATCH] kobject_uevent: Fix OOB access within zap_modalias_env()
+> zap_modalias_env() wrongly calculates size of memory block
+> to move, so maybe cause OOB memory access issue, fixed by
+> correcting size to memmove.
+> 
+> Fixes: 9b3fa47d4a76 ("kobject: fix suppressing modalias in uevents delivered over netlink")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+> ---
+>  lib/kobject_uevent.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/lib/kobject_uevent.c b/lib/kobject_uevent.c
+> index 03b427e2707e..f153b4f9d4d9 100644
+> --- a/lib/kobject_uevent.c
+> +++ b/lib/kobject_uevent.c
+> @@ -434,7 +434,7 @@ static void zap_modalias_env(struct kobj_uevent_env *env)
+>  
+>  		if (i != env->envp_idx - 1) {
+>  			memmove(env->envp[i], env->envp[i + 1],
+> -				env->buflen - len);
+> +				env->buf + env->buflen - env->envp[i + 1]);
+>  
+>  			for (j = i; j < env->envp_idx - 1; j++)
+>  				env->envp[j] = env->envp[j + 1] - len;
+> 
 
-On 06/27, Dev Jain wrote:
->
-> +void handler_usr(int signo, siginfo_t *info, void *uc)
-> +{
-> +	int ret;
-> +
-> +	/*
-> +	 * Break out of infinite recursion caused by raise(SIGUSR1) invoked
-> +	 * from inside the handler
-> +	 */
-> +	++cnt;
-> +	if (cnt > 1)
-> +		return;
-> +
-> +	ksft_print_msg("In handler_usr\n");
-> +
-> +	/* SEGV blocked during handler execution, delivered on return */
-> +	if (raise(SIGSEGV))
-> +		ksft_exit_fail_perror("raise");
-> +
-> +	ksft_print_msg("SEGV bypassed successfully\n");
+I notice it too.
 
-You could simply do sigprocmask(SIG_SETMASK, NULL, &oldset) and check if
-SIGSEGV is blocked in oldset. SIG_SETMASK has no effect if newset == NULL.
+In the debug, I find that length of "env->buflen - len" is definitely 
+larger than  "env->buf + env->buflen - env->envp[i+1". So memmove() just 
+copy some extra '\0', and the problem will not happen when the length of 
+env variables is much smaller than 2048. That is why the problem is 
+difficult to be observed.
 
-Likewise,
-
-> +	/*
-> +	 * Mangle ucontext; this will be copied back into &current->blocked
-> +	 * on return from the handler.
-> +	 */
-> +	if (sigaddset(&((ucontext_t *)uc)->uc_sigmask, SIGUSR2))
-> +		ksft_exit_fail_perror("sigaddset");
-> +}
-
-The caller (main) can do the same rather than raise(SIGUSR2).
-
-But again, I won't insist.
-
-Oleg.
+But when the length of env variables is close to 2048 or even more than 
+2048, the memmove will access the memory not belong to env->buf[2048]. 
 
