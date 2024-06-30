@@ -1,31 +1,38 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-m1018.netease.com (mail-m1018.netease.com [154.81.10.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFD32F29;
-	Mon,  1 Jul 2024 03:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B456710A0E;
+	Mon,  1 Jul 2024 03:57:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=154.81.10.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719806166; cv=none; b=jpdfsv4KuQn3TFQ3YUjKLhdAw1k40pwo4puUQTAEx+tQucoA/x4mWAgSz0zO3uQ+0ibRL/i42lVI7Gxr1dI7M4xBODeqSQiyh/DzleVzzuh82YKQfu5jNU/hwmFCRB+sknzgCu55L6CGp/TXSU6Jrw/0EfWY79vjeTSNPc5/7h4=
+	t=1719806244; cv=none; b=t6OjWBZwgWGvA8AmRbe6N5b4WkRs//Z3wDAK0drZGWHBPzR/5+/UtjVgMx3P9PmoIblr5CuMJrwj1BfLi2qYNfZ9suqp29BNTVcaymByHFKzBJO95rR2AN3ko48+R2KtlAJrkdQNQp907afwQU2HXgVqPCJSTy+tkn7+4iGhiMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719806166; c=relaxed/simple;
-	bh=5nRwKclQHo74eFKgSr+muDmaAz+AnTAM242LUVGmivI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WcgmbHVB+9H5t82zrpiUd2TPMvt828I7U4ec7Qvfdhm4g4/scNHCp81eQYTgk9FCLf7lZPA/Nb/85HVKsekfj5kTWEUw7MFX8kCQGB4EALx+OIZJtLGLVVJtRvlpSQ41V6stgpqj9Q3KfuuwE+JtS0sY/SSYnByJ4wPI660Q5Mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-01 (Coremail) with SMTP id qwCowAD32E3PKIJmuELxAA--.4159S2;
-	Mon, 01 Jul 2024 11:55:59 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: James.Bottomley@HansenPartnership.com,
-	martin.petersen@oracle.com
-Cc: linux-scsi@vger.kernel.org,
+	s=arc-20240116; t=1719806244; c=relaxed/simple;
+	bh=Kxlb8Q72bEcQSqLoPPdxbd/Pn5A5udv2bxWYhz66ISw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fUATo1COR6gd64PxZUFzxOzrOYDOtMf2DoT+a6WHRRDuOny/9uVWr8Tzxsdz+rO+4OO6ZI4Lz8Glshwi0VcUw7yWHnjlVHXjL+hG0zYf92tvKfmw30yMxH8dgnFG0NdXvYIzwrdkCx98v+FNutVCsFBIZxGfN0dk6va4YbnlGyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=154.81.10.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
+Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c01:1720:3110:52ea:d52a:84f0])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id F1B2D7E017B;
+	Sun, 30 Jun 2024 23:00:14 +0800 (CST)
+From: Chukun Pan <amadeus@jmu.edu.cn>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] scsi: qlogicpti: Remove unneeded semicolon
-Date: Mon,  1 Jul 2024 11:55:44 +0800
-Message-Id: <20240701035544.562689-1-nichen@iscas.ac.cn>
+	devicetree@vger.kernel.org,
+	Chukun Pan <amadeus@jmu.edu.cn>
+Subject: [PATCH v2 1/9] arm64: dts: rockchip: fix regulator name for Lunzn Fastrhino R6xS
+Date: Sun, 30 Jun 2024 23:00:02 +0800
+Message-Id: <20240630150010.55729-2-amadeus@jmu.edu.cn>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240630150010.55729-1-amadeus@jmu.edu.cn>
+References: <20240630150010.55729-1-amadeus@jmu.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,44 +40,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowAD32E3PKIJmuELxAA--.4159S2
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYY7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E
-	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8I
-	cVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87
-	Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAK
-	zVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx
-	8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIF
-	xwCY02Avz4vE14v_Gr4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2
-	IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v2
-	6r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2
-	IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv
-	67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
-	uYvjfU0UDGUUUUU
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCSUhLVhoeS0lJGRpLSB5LGFYeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlJT0seQUgZSEFJGEtKQUpMSUtBSEpKS0FOSR4aQR9OSRpBQ08dS1lXWRYaDx
+	IVHRRZQVlPS0hVSktJT09PS1VKS0tVS1kG
+X-HM-Tid: 0a9069a934eb03a2kunmf1b2d7e017b
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OU06Dxw6HjNCFRwVFzEXSD9W
+	QjkKCQpVSlVKTEpCTE5CTUpOTkhLVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
+	Sx5BSBlIQUkYS0pBSkxJS0FISkpLQU5JHhpBH05JGkFDTx1LWVdZCAFZQUlDTkg3Bg++
 
-Remove unneeded semicolon.
-This is detected by coccinelle.
+Make the regulator name the same as those marked by schematics.
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+Fixes: c79dab407afd ("arm64: dts: rockchip: Add Lunzn Fastrhino R66S")
+Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
 ---
- drivers/scsi/qlogicpti.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r66s.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/qlogicpti.c b/drivers/scsi/qlogicpti.c
-index 6177f4798f3a..7680fc11ee28 100644
---- a/drivers/scsi/qlogicpti.c
-+++ b/drivers/scsi/qlogicpti.c
-@@ -1150,7 +1150,7 @@ static struct scsi_cmnd *qlogicpti_intr_handler(struct qlogicpti *qpti)
- 		case COMMAND_ERROR:
- 		case COMMAND_PARAM_ERROR:
- 			break;
--		};
-+		}
- 		sbus_writew(0, qpti->qregs + SBUS_SEMAPHORE);
- 	}
+diff --git a/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r66s.dtsi b/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r66s.dtsi
+index 89e84e3a9262..93987c8740f7 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r66s.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r66s.dtsi
+@@ -39,9 +39,9 @@ status_led: led-status {
+ 		};
+ 	};
  
+-	dc_12v: dc-12v-regulator {
++	vcc12v_dcin: vcc12v-dcin-regulator {
+ 		compatible = "regulator-fixed";
+-		regulator-name = "dc_12v";
++		regulator-name = "vcc12v_dcin";
+ 		regulator-always-on;
+ 		regulator-boot-on;
+ 		regulator-min-microvolt = <12000000>;
+@@ -65,7 +65,7 @@ vcc3v3_sys: vcc3v3-sys-regulator {
+ 		regulator-boot-on;
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+-		vin-supply = <&dc_12v>;
++		vin-supply = <&vcc12v_dcin>;
+ 	};
+ 
+ 	vcc5v0_sys: vcc5v0-sys-regulator {
+@@ -75,7 +75,7 @@ vcc5v0_sys: vcc5v0-sys-regulator {
+ 		regulator-boot-on;
+ 		regulator-min-microvolt = <5000000>;
+ 		regulator-max-microvolt = <5000000>;
+-		vin-supply = <&dc_12v>;
++		vin-supply = <&vcc12v_dcin>;
+ 	};
+ 
+ 	vcc5v0_usb_host: vcc5v0-usb-host-regulator {
 -- 
 2.25.1
 
