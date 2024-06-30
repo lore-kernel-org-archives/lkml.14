@@ -1,103 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C62143BBC9;
-	Sun, 30 Jun 2024 09:15:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7E139ADD
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2024 09:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719738914; cv=none; b=EIkRrn0L6ench/hwgY/ELGdxMfrRl/DbW+lp8/OjeinPnXQZJiHKi+osFq4cvkaS5+j87XGalCnfBnz+SclZcOao9ms1xt9NXMo5LDkoaT77u3ORI8mE8tiJxP8t3aU/kYzAKGJ0JOX2wn4aZwgAItmjrm0Ac4uCveBwZpcCkP0=
+	t=1719739028; cv=none; b=cR18Lqwty+D+3/qVY0IVLDxSw80JHCkSywOgqpERj19rGBZjKTp2tEQYRfOXF85VtHWq+hChUL7pjk+wOUSz+j+2KW31++nBZhmEpYOogV78Lkp9thuB6RrLwhAhNj3gGIXvCSLXtFLLGJpuPhVQD6rc90Vfcm3D/MSb2kJSKqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719738914; c=relaxed/simple;
-	bh=tc+Ufg00udHbrhXlW8SdH881js1R768qk0khtQCwXfM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jgnXa9UVacxspO0n9NWLqClYvJLkTJwugyPUfRIMo97jkFf9+xANkinwgm1kDugZc/eHUp8Olht2o3tymcvcImA0OLnBAfiPmp54vAsrTITiGAnl5U6lF8HJJrGoelpmNPk7e6axLEPyyld7qGu9vDhsGzMUfZ1Ot90y8F0ycRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=en4uil1K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719739028; c=relaxed/simple;
+	bh=bX7ZFvRHPigz2PpOmz+R/1fX7AVO6r9sR1w2lkN+3j4=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=prSHIVqyffd73AtqZBi40Tl+ernDK0Ud3JRSUEBDY1axhNvZ9ljr2/MiRG97pw2p2AWUi+HtX2I5Nycn9LizZe5STJaEuvOMXrdjUU0R7ZXSojVETg02dFeS8VtDpcEwkPwa///ixzDt2lf92Cbh+R2Sx1iFWvFsdBaCZDj929c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=lnkK7fA7; arc=none smtp.client-ip=162.62.58.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="en4uil1K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EE12C4AF17;
-	Sun, 30 Jun 2024 09:15:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719738914;
-	bh=tc+Ufg00udHbrhXlW8SdH881js1R768qk0khtQCwXfM=;
-	h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc:From;
-	b=en4uil1KnZ/7MbdeOWy8vNN5qJWiUXY0l2SbZobfjZ8oplSyoWMu1lOkjeF8flaH3
-	 /HV9bJ7Vv9kKv17jPnFYwEukaevW6iRTUbbr5QDOdTbDZa3n6lDKP1nTClVwZpq8+J
-	 oLaPu6sLyqwDf8E5OWmtJo7s5wiOFHtSqV6PrOxjaurK1T+ap5dnqpfGVBAeURsbSe
-	 TFAgfJQljWDYaCUdX8gxQiYJybypsxpSCGjM1obpaU26PlmwrDoAjm1+7EE7AWAQTh
-	 jcCs2X75RvRjSA5W7N6I/D1JRGNwVEi8P24nBLFrROD6E/ZZHuaJSCEo8rj9dPsIHL
-	 Z81Vj7v43wiTQ==
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2ec0f3b9cfeso23743541fa.0;
-        Sun, 30 Jun 2024 02:15:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWakp4fEobeJm555EldJIGf93SwgK4DltWYxvEErGotj/jvDoK+D3wwIodLG65l+oThfZBKfhlltKdItd+DE3Fx76cLIgDWRYe4usgkx+9vTZDrFVcwzXZ3631WMAQGLmUHVwmpCU8JXfCMbwg2QzeUcQR0ntaGpntRLQcpRj8t/ZwlvI5n2mR9edoQ1qbffykCX5ervYnO2I8xyckHKYCp
-X-Gm-Message-State: AOJu0YyG6hh/+ijapfwEZc/3LoR/jwV7deq7lbgRrVap+nj+UWuJEiUe
-	hE7T6oBC2yCHHIGNV5HmW144Srt0wWVqIc+2visdmcUD1NzX+cx5tgicTcS4CXk+PeJvHVuW2an
-	i9QKKeL3qmmx0M1viOU7rTX9qfKA=
-X-Google-Smtp-Source: AGHT+IHYW4n5GnYJwHXqY+6mUXvauoz57bZueShtW/YuVL9pXD9MpL3q7Rr5kG0lABD6uVFGXFXO7kcRPrfoJTzNisI=
-X-Received: by 2002:a2e:a179:0:b0:2ec:4fec:8bda with SMTP id
- 38308e7fff4ca-2ee5e6cd6a7mr18022581fa.36.1719738912735; Sun, 30 Jun 2024
- 02:15:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="lnkK7fA7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1719738716; bh=j4nZJ30e87StHskzMgAYoeekGmN/efAr1X8jXLvUZ1E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=lnkK7fA7r4aS0el4fTgJQ4xLuHDjlohF1Jx6MdeDGgTmck0qebRvY/SLYYeOclf04
+	 l2EuIk06iwhbWDoalA2+Pm/Ga8mrBrpet0kKZ2ixkXrK71jJ4JyuEFWByclS/SR0Dy
+	 Q+Ofm+8TJ33KeZ3ZHTS4XOY0vuvYBYQPnytoQAOQ=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.103])
+	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
+	id 269A8038; Sun, 30 Jun 2024 17:09:41 +0800
+X-QQ-mid: xmsmtpt1719738581tymvkb127
+Message-ID: <tencent_17CBBA43BB47335B9E931B5D4BD11B062508@qq.com>
+X-QQ-XMAILINFO: NY/MPejODIJVSyOQupuGHmL6ioAjaQbfhBwMCtYfTZVgLwBqmA5G3wsYsPTPTc
+	 WjUd2GEQIe52oNZN99u3HUMIPz5eXvE+kWdxoLsVBhjyHU3S0kHtL1mW2BsP32oMQZgLKRxm6n31
+	 6+Oi4Wwzm58PUT026GSIY7abY/yZvhruFsvcNlQn6Ml1slsGnxuF26QLOcyrhlOYW35Zl0Lc2ZIO
+	 x2EBbV30tOM9Vljn8ymXEKbeDxaFN4YQUDCBVnrufw6kczcqOa3+NkMvnEGyYSHWHnTuuqeGDw0r
+	 322BoI45poRpxfPFpqVJjQCwLyll3UoSCVrKga3bSqOnGcfMEd10pZvZkfrELgKqr8PlXeb5bqjM
+	 J9zapCfKwT9X99nOGszp1zBPqEiQsPSQFdhLAOKIR4e1++MiRUsmfANUglT/J5NgkavXyWugvzNz
+	 XtlFZbnA9DYsYjAwpynUujxYpgoyna7zrT4e5IZtm6BgicdvN4OAVWM1dFVMM/SFIG1pZJJ2Xyei
+	 gk5R9spSe/Xp2idvAhT04MnsAEeVjdY947VtE7zhvsLgCbfPusy0YyykHF7qYEmzarPZ8ODNbNEl
+	 /WKlYn8IbXYPNaBk63UkWXlFKctHMXsDUebOfdGRaY5uVSo0DENSm0+tN8gUzHaDuBPlsad/uX3l
+	 gU26LF72FwLMIEJcpNk/WYZTAmaBH+y2XNLrE3QnuJtTy3tucYEN4dxGvDFXiaAsf8OHWfZOorwc
+	 m+T14GAij2VT4msxVPOYkIqjHKG9zxTC7eZXfGlqJTjWwnufAmfvwVOzWMBLINlwJwnHPWtvGBmD
+	 UUQkYRsU7CYAfqlX+Sxw5L6eVkA60PDpINf+ZLKPP9PD/dri6B3UtUvi4T2y9J+HNhcLsATOJ7Zp
+	 rfL1ROjkxrjl0C5Tm6e/o8YxUcI9GRKg==
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+ae688d469e36fb5138d0@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: [syzbot] [ext4?] BUG: unable to handle kernel paging request in do_split
+Date: Sun, 30 Jun 2024 17:09:42 +0800
+X-OQ-MSGID: <20240630090941.2411923-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <00000000000075a135061c0480d0@google.com>
+References: <00000000000075a135061c0480d0@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240630073605.2164346-1-jacobe.zang@wesion.com>
- <20240630073605.2164346-5-jacobe.zang@wesion.com> <bd661690-1de8-4030-a209-ef26d3559221@gmx.net>
- <TYZPR03MB7001AC28827A86338BF2B77380D22@TYZPR03MB7001.apcprd03.prod.outlook.com>
-In-Reply-To: <TYZPR03MB7001AC28827A86338BF2B77380D22@TYZPR03MB7001.apcprd03.prod.outlook.com>
-Reply-To: wens@kernel.org
-From: Chen-Yu Tsai <wens@kernel.org>
-Date: Sun, 30 Jun 2024 17:15:00 +0800
-X-Gmail-Original-Message-ID: <CAGb2v66Vk8SMs1TOs+80Jy5fXumuYqCx59Tzd_N7wJAfyysQcw@mail.gmail.com>
-Message-ID: <CAGb2v66Vk8SMs1TOs+80Jy5fXumuYqCx59Tzd_N7wJAfyysQcw@mail.gmail.com>
-Subject: Re: [PATCH v3 4/5] wifi: brcmfmac: Add optional lpo clock enable support
-To: Jacobe Zang <jacobe.zang@wesion.com>
-Cc: Stefan Wahren <wahrenst@gmx.net>, "robh@kernel.org" <robh@kernel.org>, 
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "heiko@sntech.de" <heiko@sntech.de>, 
-	"kvalo@kernel.org" <kvalo@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, 
-	"edumazet@google.com" <edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>, 
-	"pabeni@redhat.com" <pabeni@redhat.com>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
-	"efectn@protonmail.com" <efectn@protonmail.com>, "dsimic@manjaro.org" <dsimic@manjaro.org>, 
-	"jagan@edgeble.ai" <jagan@edgeble.ai>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arend@broadcom.com" <arend@broadcom.com>, 
-	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, 
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, "megi@xff.cz" <megi@xff.cz>, 
-	"duoming@zju.edu.cn" <duoming@zju.edu.cn>, "bhelgaas@google.com" <bhelgaas@google.com>, 
-	"minipli@grsecurity.net" <minipli@grsecurity.net>, 
-	"brcm80211@lists.linux.dev" <brcm80211@lists.linux.dev>, 
-	"brcm80211-dev-list.pdl@broadcom.com" <brcm80211-dev-list.pdl@broadcom.com>, Nick Xie <nick@khadas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jun 30, 2024 at 5:10=E2=80=AFPM Jacobe Zang <jacobe.zang@wesion.com=
-> wrote:
->
-> Hi Stefan,
->
-> >> WiFi modules often require 32kHz clock to function. Add support to
-> >> enable the clock to PCIe driver.
-> > the low power clock is independent from the host interface like PCIe. S=
-o
-> > the clock handling should move to the common code. Sorry, not i cannot
-> > give a good suggestion, what's the best place for this.
->
-> I think the clock is used by the PCIe device so enable it in this file. A=
-lso I checked
-> use of clock which in spi[0] or sdio[0] device was enabled similarly to t=
-his.
->
-> [0] https://lore.kernel.org/all/20210806081229.721731-4-claudiu.beznea@mi=
-crochip.com/
+if split is too small, such as 0, use it to calculate continued will out of bound map
 
-You're looking at the wrong driver. For brcmfmac, the lpo clock is toggled
-by the MMC pwrseq code. And for the Bluetooth side (where it really matters=
-)
-for UARTs, it is in drivers/bluetooth/hci_bcm.c. and documented in the
-binding Documentation/devicetree/bindings/net/broadcom-bluetooth.yaml
+#syz test: upstream 55027e689933
 
+diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
+index a630b27a4cc6..0a111274dc4a 100644
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -2043,7 +2043,7 @@ static struct ext4_dir_entry_2 *do_split(handle_t *handle, struct inode *dir,
+ 		split = count/2;
+ 
+ 	hash2 = map[split].hash;
+-	continued = hash2 == map[split - 1].hash;
++	continued = split > 0 ? hash2 == map[split - 1].hash : 0;
+ 	dxtrace(printk(KERN_INFO "Split block %lu at %x, %i/%i\n",
+ 			(unsigned long)dx_get_block(frame->at),
+ 					hash2, split, count-split));
 
-ChenYu
