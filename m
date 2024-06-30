@@ -1,139 +1,181 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2138.outbound.protection.outlook.com [40.107.215.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1FDD41C6C;
-	Sun, 30 Jun 2024 09:07:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719738483; cv=none; b=a09GN0ow6RSPLNubz7XDhZEFag1cRdHyWBxp56mGq5JhhGu3ArojsqCPFF+Tv52I9o088UzyzIYiJTxzL7Fs+upt4qk6SxSHIzW8FepD665ePKpJul6m6/rawAC2ecrMI5zxgjA6WaATu49vOp5kn2WA5ymreOi0AhRk8OtN8i4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719738483; c=relaxed/simple;
-	bh=MSt0m7xQbrpa80ashPL1WjRzF7Xr5s9mnGJ5nmgDXFY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SLqCZuz3aUD1HE265tZpIq08a1Qu52o4WiGWQjcSi3gBYQzeq/EzxhD+i/8BpPcHA//BGpr7gj0jwn35jL0R9NlcblbtraTueRhaHROy7XUR3YUsE6FixpToi56i1DibftWt/ziV7wwdu+ny+mkLKXcMaNZBQ/lIdBfOuge3oMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i53875a16.versanet.de ([83.135.90.22] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1sNqXE-0002Nw-OK; Sun, 30 Jun 2024 11:07:48 +0200
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To: linux-rockchip@lists.infradead.org, Dragan Simic <dsimic@manjaro.org>,
- Diederik de Haas <didi.debian@cknow.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- linux-kernel@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>,
- Diederik de Haas <didi.debian@cknow.org>
-Subject:
- Re: [PATCH v2] arm64: dts: rockchip: Add GPU OPP voltage ranges to RK356x SoC
- dtsi
-Date: Sun, 30 Jun 2024 11:07:47 +0200
-Message-ID: <1894199.CQOukoFCf9@diego>
-In-Reply-To: <2442162.AJoTavkB1d@bagend>
-References:
- <bdb60f1f793166cd65f58ab7aea025347076019c.1719679068.git.dsimic@manjaro.org>
- <2442162.AJoTavkB1d@bagend>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3835B41C6C;
+	Sun, 30 Jun 2024 09:09:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.215.138
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719738597; cv=fail; b=KEd7s7xEDTaLAh3bzKdQBYa9hMK89eKX3KpqHUORAKiQS9fT5C7J9z1bbH7uTB1c8xjf2vnaacT9Bwig1pwWbvwfS3GTGkfbiA/2r6oXd/D4pPiUYkkoqQxp1qRBrOyyDtIGS04VnPW83xbvJ7ZZMDMyqd0K0lS1F1X3lcdE3UQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719738597; c=relaxed/simple;
+	bh=iLrD+8PXYCzwZIE9U0Vvgl5eunFa+Ehh5Yr9EesSs2Q=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Yr7nzlebIlqqJtIGbCBnA6NtwCrBpUnKp31Dwuv0k2Gr4borENhdKQKlOWYAPYj3BygnvrW6xmM+dWG2drWYv+GSs1uLgjv4hI5yAlyiSAsFvDnOnUiQz88LRVct+chHDb/KsvOVl3ysNS2M7EJNoG9Z4S5HMJ+GmQEcrC7fgPY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wesion.com; spf=pass smtp.mailfrom=wesion.com; arc=fail smtp.client-ip=40.107.215.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wesion.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wesion.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EL7q3I/LNyh9jUxe+7sy8VYq0mIm4fKdlT9xahhGCSg9NWHGn/kq/VFmPPI6XRZKeyauhswsBr7/6uca16EYgw0xpWU1nm9+RO9SsajplHC8C0U9mQT8DNZP047MVo+NocY1cFAXXipveWxzAi9BHkxvpdt5XWHL/CwodRt69tP/61xgxQmJvLdlMkl+NGB1hZyxlhqwtWWAs0e6iptbXPN2/l2CojtlOoRMOYc34BCR/MiUyNxe1qpMe4Qxpv152Y5t6FMAIBeo7GlY+Y6SqSYUFIZAEwS2y+JSPGDVEG0EpIVxpcCUqS5UBz3QtKOYmTTLputWZZb3c3LcUW/F2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iLrD+8PXYCzwZIE9U0Vvgl5eunFa+Ehh5Yr9EesSs2Q=;
+ b=bUtR0Y5skO2U4eZfEL84CGfbrpkrlGU1g4/wIr1NuDGHUaqKL2J5VAHfXt+KUAkzaZqjUPmsSchNsmbVttYYGLpR7nW1uuQ8dSIaYdpgu3hPeOOhLpY7DM1noN/dUmZdlz1hU/1yaU5kPN2FGKLDn1V+XiLUXkpw1gyGPTi8qIvy3+GDlbyJcKj1xNcesYK2/irJ9FrJzyBTPQdIXH6jWiRoxcw5FsqSV/w4AJe1r1M10ubW9dr1JuJepsHoykrqpaaxAgDWWQ9wY3usMIqVyTi8k5Za/5gI5OpczArIbRfxxV4ymr5D6s/S/Y7cCPGsVidpvBknivVs0t1hhrL7NQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wesion.com; dmarc=pass action=none header.from=wesion.com;
+ dkim=pass header.d=wesion.com; arc=none
+Received: from TYZPR03MB7001.apcprd03.prod.outlook.com (2603:1096:400:26a::14)
+ by KL1PR03MB8545.apcprd03.prod.outlook.com (2603:1096:820:13e::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.28; Sun, 30 Jun
+ 2024 09:09:50 +0000
+Received: from TYZPR03MB7001.apcprd03.prod.outlook.com
+ ([fe80::78dd:5e68:1a9c:36c0]) by TYZPR03MB7001.apcprd03.prod.outlook.com
+ ([fe80::78dd:5e68:1a9c:36c0%6]) with mapi id 15.20.7719.028; Sun, 30 Jun 2024
+ 09:09:50 +0000
+From: Jacobe Zang <jacobe.zang@wesion.com>
+To: Stefan Wahren <wahrenst@gmx.net>, "robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "heiko@sntech.de"
+	<heiko@sntech.de>, "kvalo@kernel.org" <kvalo@kernel.org>,
+	"davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
+	<edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>
+CC: "efectn@protonmail.com" <efectn@protonmail.com>, "dsimic@manjaro.org"
+	<dsimic@manjaro.org>, "jagan@edgeble.ai" <jagan@edgeble.ai>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-rockchip@lists.infradead.org"
+	<linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "arend@broadcom.com" <arend@broadcom.com>,
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, "megi@xff.cz"
+	<megi@xff.cz>, "duoming@zju.edu.cn" <duoming@zju.edu.cn>,
+	"bhelgaas@google.com" <bhelgaas@google.com>, "minipli@grsecurity.net"
+	<minipli@grsecurity.net>, "brcm80211@lists.linux.dev"
+	<brcm80211@lists.linux.dev>, "brcm80211-dev-list.pdl@broadcom.com"
+	<brcm80211-dev-list.pdl@broadcom.com>, Nick Xie <nick@khadas.com>
+Subject: Re: [PATCH v3 4/5] wifi: brcmfmac: Add optional lpo clock enable
+ support
+Thread-Topic: [PATCH v3 4/5] wifi: brcmfmac: Add optional lpo clock enable
+ support
+Thread-Index: AQHaysA7C3v/Z5nX1k2k1WM+yxb95rHf/Y0AgAAE1Wo=
+Date: Sun, 30 Jun 2024 09:09:50 +0000
+Message-ID:
+ <TYZPR03MB7001AC28827A86338BF2B77380D22@TYZPR03MB7001.apcprd03.prod.outlook.com>
+References: <20240630073605.2164346-1-jacobe.zang@wesion.com>
+ <20240630073605.2164346-5-jacobe.zang@wesion.com>
+ <bd661690-1de8-4030-a209-ef26d3559221@gmx.net>
+In-Reply-To: <bd661690-1de8-4030-a209-ef26d3559221@gmx.net>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wesion.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYZPR03MB7001:EE_|KL1PR03MB8545:EE_
+x-ms-office365-filtering-correlation-id: 33a62a13-0d91-4b76-89dc-08dc98e46574
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|376014|1800799024|366016|921020|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?o6X6MSxCJdnbZuXOgTOZ8vO2fnkq9j1S/K9E4vxP/fHiUrflZ6vH+ZS1PM?=
+ =?iso-8859-1?Q?s9puaXPp6LSzqs/MRDdkzsnEPpcPCQfuPcAiSuuE0XMer5PEP1DHlsg6KO?=
+ =?iso-8859-1?Q?03GeCO1IOtrdgJl8Sb4feeEC6LwpnolkJZZv1cXueMg5YJazBLG321axud?=
+ =?iso-8859-1?Q?43BedD+jT8prd3x9wSYFugwtdy6eg3m87zDWo0ngOkPeKE1vHP3fUvfy8c?=
+ =?iso-8859-1?Q?rmCBtjSEQKuVGBa3ZvwhTiA1alPn8LItTmo44bU1AXS48+aX00h+Y7sIs8?=
+ =?iso-8859-1?Q?VotQa8CfshGEvIIU7015YPIuLcdnba1H/MGC9XISR4r5YURVsjbpiL977A?=
+ =?iso-8859-1?Q?V3qw3v2VGShiF9V157d3wupwXewyCF2h1z6St3tTWDjTDm9SYGv80Z9mw2?=
+ =?iso-8859-1?Q?JUrOzEgZvrkVIWlpCkJUElYHVTwx5xnOO6aYn/mDbtpoyHykb4tlr37/tv?=
+ =?iso-8859-1?Q?KkeIjGU2ufSIaaYNNg6Gd0y4asmF2WyXa70ZR96FcN31JpJtl8mWT0Sc2D?=
+ =?iso-8859-1?Q?nCyURxNzTG/6xHeRGvb3fmg3vtriiQQvljbC+OgrXEYydDlPL0kXN+zige?=
+ =?iso-8859-1?Q?rFcnN5mwqgqAfrEFE3Y0opEYxJFVYmduv1p/GwXMXmjiYR9wEc7stZxrns?=
+ =?iso-8859-1?Q?4bcbTw6heQnY7fL9O1waFxiE2qnxRjnkgnGV4NczBumaiGHGh4eHtaJUjn?=
+ =?iso-8859-1?Q?llfeTZpYfDUgqzFSWXhPpnP89TwVWwmeTyin4z7Esu8IErNn9gPRwA1VG3?=
+ =?iso-8859-1?Q?8OHLJdhq3DID5QzkvjHe2RHDukrhTfjtYUumEHBcZbpgUGlrf9rx4bAuCW?=
+ =?iso-8859-1?Q?UD1J6G/B4t8Sq9xIqLtOgb1pF5XD7RiWgOUvmJdJyxCu6ZVXKenESCiC/s?=
+ =?iso-8859-1?Q?brn/M9KCl9MraeUijyBzoBqMKbijGjTs6ixaZQg7jePydtrEWvBR2gVORr?=
+ =?iso-8859-1?Q?B6Nbih5RGzVl+EAWzBm5qdlBNSIwRBwDqr2fAxHio3Hn/ZjN+t6sSt3jXL?=
+ =?iso-8859-1?Q?HcigRQ4gThYNpXbbQN57JGUb21UP0nG0UZxOhTxk5xZ2EA4aYCz1jyKTfc?=
+ =?iso-8859-1?Q?h7k2ub/fX14QGDBb60U8eAnODbuBtJ9X2BVjnaGKpR24QKZQW0Ru7X43TH?=
+ =?iso-8859-1?Q?9rMTnALoFESC5a8Fbdcm0R0HFNNQQRV9zxzmrNDjUlu2SyPs1yf0EljjMY?=
+ =?iso-8859-1?Q?snH4X4hT780sByWLbecfR4o0KlerOELGx/zHaqvW394U0Fap/QD5aiJ96F?=
+ =?iso-8859-1?Q?7+pxDyApv7Z6CZQE1qTgD7sZqCdv+d50+GmQ1jxY+WSuXUOlhIUI0SQTmA?=
+ =?iso-8859-1?Q?/CP/YU7RsUDlk+42IrxhbX8rjEX5ToDxiWifY1L26bprk5jEZw/RjUjs9h?=
+ =?iso-8859-1?Q?WFsWUBQR0b0V1LKCSlmNvhwG7DFYV4Y09RwPbBnxdIq4K4I/0/4Ki2hlut?=
+ =?iso-8859-1?Q?3hPsE7rjjdPLv3wO?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB7001.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(921020)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?HJgngX7hd1TcgeZrV3/BXZ6REs2rHIh7S+ImTKZbVwCmP0n30+ndl45RSU?=
+ =?iso-8859-1?Q?5UD5/mBpp6kwKgOaHoRL5UZeDivyzspx7bZHEf5DQax4W0cSLTQuyC74Eg?=
+ =?iso-8859-1?Q?3TLPzOVJw+50knVMFjAedZAAVwy9+XOX60EtDDUUMvnsrMgN6DkCoN/yo7?=
+ =?iso-8859-1?Q?RBwL4VBNe5/h3/NAOOdC4ciKy9liGOrvyfS7YyW+iE1w3AO4/ensD/oQJG?=
+ =?iso-8859-1?Q?cdepxnhjM2dk8ohDATfqSGWuAHqVZqff3CwftQDtKsDx32eID8iTjP7pNP?=
+ =?iso-8859-1?Q?vGdK/QW8faF88t6KHH+KuTf7KkYkw/pEaiUlp4NZmbaZgNyEcmTb41pZSB?=
+ =?iso-8859-1?Q?EAO/AwqN2qNWjqxr7rTY7Vtyj5rFKmqE1Dm385sC1SFCAROEhIEPOMjXNj?=
+ =?iso-8859-1?Q?gxIgrmy/RlDKUGNjSGmWjQ5HmfacarBMgHv8T8pUZd/4JrpGGISg/aN0ST?=
+ =?iso-8859-1?Q?E8/Hf4rhU3VCWuse5gfZ/pHLxudt5P3gY2JjYCq9VJZZQ//wSJqB9XbW57?=
+ =?iso-8859-1?Q?xN9Hwf3LMVRUpYMFBBeNvg1Y3WBd6XcGaUA2b4uutD7Z5Pyto9lsL6nvRh?=
+ =?iso-8859-1?Q?3ZKQRBDdn8zSZYEADettnntFYYnzMo9/FDNAlNKWzZel4Eeu2rhgW3vm0r?=
+ =?iso-8859-1?Q?Z/AfOA+V09fJ1aXQ88fyAajHkAkDRN5wPFbsauzP/FAKZChWEJY3sK1Nao?=
+ =?iso-8859-1?Q?dsWlxksMZvrbUWwAPZbvcFFbEA1C03zeMxYq/iDqSPX/5leMYHYankjVdZ?=
+ =?iso-8859-1?Q?JLjSAQ27icqn9ms2KZp2oxo+lZ+yb5IE+QF99La+35QOuSmfep0W7b9uc2?=
+ =?iso-8859-1?Q?BqZz8/IEqH0qnBPT8AAyFjEUXYNtPjyLcfJ6PWPaRUEJvE4XEj1+GHnjsT?=
+ =?iso-8859-1?Q?jph/G7HgMEcbcAMILe1sRX+QChZgQeV4QHfzS+i7T6GetKiDeCkfaCfFwq?=
+ =?iso-8859-1?Q?c91FIF6001ggdUm2ubVOV3E1DcwXsvM4quFJM9RBGp1zCGPPhBNqvH+PGE?=
+ =?iso-8859-1?Q?A4a4VRiL8B3v05hbYc6ak7SGheS8oy5speC5vELn8CRJe8IGE3G4PcaVCG?=
+ =?iso-8859-1?Q?c49OxgfRPcvThEJaSehZuiUoFewICe6vAat8TVFrDI636jiL/U73yF7yJD?=
+ =?iso-8859-1?Q?y7qUYuEMoPX6WGMFUvAubF/k6VUVu32IOUji9HXdAtubamtULbCp/0MO6F?=
+ =?iso-8859-1?Q?YT80sfZEjrpOh3zsGqHnzdYwUj381XqrAbeOUVJzksYcWWeCF+dYTVg0S2?=
+ =?iso-8859-1?Q?vF8EgWnNJ+2/lqlW7zxJXLV3ou+wKifrAwQBKvllJwCg3O0f2uJVL7PBM2?=
+ =?iso-8859-1?Q?0zI6b600F/JB6c5Vt4fAyXd4Lw8UkcEzjCm4lWYJTQyKcs5TjosuxjPr7/?=
+ =?iso-8859-1?Q?eUhtJG90/EQ6Qa9zT38+QjLhY9euAJcixGk+Obasj7ZDLSIVERMG/pK+37?=
+ =?iso-8859-1?Q?A3WsrztQmn47zs+cHBygeaYw48FBskdQ6SnOcdVqpJTXcUvto6TpgDobPA?=
+ =?iso-8859-1?Q?gm7+LSuWQevrWIRPprUjY3lNkt+tQ/DWhB3VoYlc527f930DBimYkPPFzb?=
+ =?iso-8859-1?Q?zMweHEranY7GkcW/8jYudO8FTX2a4XnjblxS4lSgPKR40H7vdDHFpqGcvH?=
+ =?iso-8859-1?Q?yzQ9Op7KNf0cvVHQZuEQ0QkGkFNngPeaJ5?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-OriginatorOrg: wesion.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB7001.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33a62a13-0d91-4b76-89dc-08dc98e46574
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2024 09:09:50.1542
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 2dc3bd76-7ac2-4780-a5b7-6c6cc6b5af9b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: VpSYPieq5q9Elsil23z4fJtutsZYDkYfpNA/RdXZ/hGXHZaeDbx6vr307nNQeArYFcKoax9ydCSYS9D7qOVswQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR03MB8545
 
-Am Sonntag, 30. Juni 2024, 00:01:41 CEST schrieb Diederik de Haas:
-> On Saturday, 29 June 2024 18:39:02 CEST Dragan Simic wrote:
-> > Add support for voltage ranges to the GPU OPPs defined in the SoC dtsi for
-> > RK356x.  These voltage ranges are useful for RK356x-based boards that are
-> > designed to use the same power supply for the GPU and NPU portions of the
-> > SoC, which is described further in the following documents:
-> > 
-> >   - Rockchip RK3566 Hardware Design Guide, version 1.1.0, page 37
-> >   - Rockchip RK3568 Hardware Design Guide, version 1.2, page 78
-> 
-> That was interesting to read, thanks.
-> Now I understand the difference between rk809(-5) and rk817(-5).
-> 
-> But AFAIUI the above description described why there were separate tables for 
-> rk809 and rk817 in v1. But that was dropped in v2. So it seems to me the 
-> (commit) message should be updated accordingly?
-> 
-> I also expected that (for v1) there would be a similar construct as was 
-> recently added for rk3588. But I should interpret Heiko's comments as that 
-> strategy should not be applied to rk356x?
-
-The issue I had was more about the #ifdef'ery and then having a board define
-a constant to enable one or the other.
-
-As far as I understood the description, the OPP itself is the same in
-terms of frequency and voltage, just the regulator can't fully realize
-that target voltage, so the solution is to allow a voltage range, to
-also support the less-exact regulator.
-
-On the rk3588 on the other hand the soc variants have different OPP
-tables themselfs, because the soc itself only supports different
-frequencies+voltages. So the solution here is the split of the OPPs so
-that we don't mess around with /delete-node/ edits of one OPP table.
-
-So TL;DR separate OPP tables are the way to go if the user needs different
-freq+voltage values and voltage ranges allows boards to use less-adapted
-regulators.
-
-
-> > The values for the exact GPU OPP voltages and the lower limits for the GPU
-> > OPP voltage ranges differ from the values found in the vendor kernel source
-> > (cf. downstream commit f8b9431ee38e ("arm64: dts: rockchip: rk3568: support
-> > adjust opp-table by otp")). [1][2]  
-> 
-> Why? In their latest update Rockchip changed it to the values as specified in 
-> the links. My assumption is that based on extensive testing they did and/or 
-> the feedback they got from the client/customers, they felt the need to change 
-> it to the values they did.
-> 
-> I think we should follow their values unless we have an explicit and very good 
-> reason to deviate from that.
-
-Correct.
-Values from some "random" Radxa kernel would also not be my
-selection of choice.
-
-In the mainline-kernel we always want the save choice - which in for me
-is Rockchip's. If people want to experiment with other values on their own
-boards to sort of overclock their chips, that's their prerogative.
-
-
-Heiko
-
-
-> > However, our values have served us well so far, so let's keep them for now,
-> 
-> And I don't think that qualifies as a (very) good reason.
-> I think it's reasonable to assume that far more (stress) testing has been done 
-> with the downstream code, then has happened with the upstream code.
-> Hopefully that'll change in the future, but I don't think we're there yet.
-> 
-> When we/upstream adds npu support, I think we should also follow downstream's 
-> OPP values, unless we have a very good reason to deviate from that.
-> 
-> > until we actually start supporting the CPU and GPU binning, together with
-> > the related voltage adjustments.
-> 
-> I may not fully understand what you mean by that, but I think it's (again) 
-> reasonable to assume that Rockchip has far more insight into this then we do.
-> 
-> Cheers,
->   Diederik
-> 
-> > [1]
-> > https://github.com/rockchip-linux/kernel/commit/f8b9431ee38ed561650be7092ab
-> > 93f564598daa9 [2]
-> > https://raw.githubusercontent.com/rockchip-linux/kernel/f8b9431ee38ed561650
-> > be7092ab93f564598daa9/arch/arm64/boot/dts/rockchip/rk3568.dtsi
-> 
-
-
-
-
+Hi Stefan,=0A=
+=0A=
+>> WiFi modules often require 32kHz clock to function. Add support to=0A=
+>> enable the clock to PCIe driver.=0A=
+> the low power clock is independent from the host interface like PCIe. So=
+=0A=
+> the clock handling should move to the common code. Sorry, not i cannot=0A=
+> give a good suggestion, what's the best place for this.=0A=
+=0A=
+I think the clock is used by the PCIe device so enable it in this file. Als=
+o I checked=0A=
+use of clock which in spi[0] or sdio[0] device was enabled similarly to thi=
+s.=0A=
+=0A=
+[0] https://lore.kernel.org/all/20210806081229.721731-4-claudiu.beznea@micr=
+ochip.com/=0A=
+=0A=
+---=0A=
+Best Regards=0A=
+Jacobe=
