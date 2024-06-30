@@ -1,124 +1,145 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEB4B2837B;
-	Sun, 30 Jun 2024 06:56:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F6A2A8FE;
+	Sun, 30 Jun 2024 07:00:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719730591; cv=none; b=gR/w08RI4zfNN6VUONea0Hg8+hW/0XHwKU/BIZKhWhqhJvWiSwZ2+CgvUbN59aTZl8FPWYmrncFJJ7YX5YtmF69KeizXJ6LIQDgLmSTbudWNoWkGUK9798MStMYzuIZDLpBShhf9cVlbxZl04SVTn7L/3LMjoE5oxnsN0NlN55c=
+	t=1719730820; cv=none; b=JA57LXf/y3/xnZ9GO7IdGFlCp88LJKGnlfESstMrz5yuDAzrB9RforLQiMDaClvZGa3AlvBD9GpAdFCwF8qVffmgnf+TIm3YMti2wYl+RbCy6tEJ/3T9crrGfvejyigrYp3W1UUD1AB1FX1T0bU2EWHGWZaUqMMfsoi9OYDhQGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719730591; c=relaxed/simple;
-	bh=blR4af+oJUOjmsjaK4tAkHlJHHKTe0N/YlteM2/+gdc=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=mTkasqj02MOeyj8PEGhWMBbuUuDdaiNzhjbcER27OoaPSTjoCcftBkYtdFPfSjqjJUHucMCNi6zxSB9+zuhSPdILClcKaIeG3EZH469U5am7qbRo+mSRsoNusTI2UiU9V9HULG1AMXsbbpQPSh0wDW2XVbfynEXIfYNZSBlXV0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id E52BE92009C; Sun, 30 Jun 2024 08:56:19 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id D7A9192009B;
-	Sun, 30 Jun 2024 07:56:19 +0100 (BST)
-Date: Sun, 30 Jun 2024 07:56:19 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Shiji Yang <yangshiji66@outlook.com>
-cc: linux-mips@vger.kernel.org, 
-    Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-    Arnd Bergmann <arnd@arndb.de>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Javier Martinez Canillas <javierm@redhat.com>, 
-    Khalid Aziz <khalid@gonehiking.org>, Baoquan He <bhe@redhat.com>, 
-    Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-    Serge Semin <fancer.lancer@gmail.com>, linux-kernel@vger.kernel.org, 
-    Mieczyslaw Nalewaj <namiltd@yahoo.com>
-Subject: Re: [PATCH v3] mips: kernel: fix detect_memory_region() function
-In-Reply-To: <TYCP286MB0895F65439037ED134FEA7DDBCD12@TYCP286MB0895.JPNP286.PROD.OUTLOOK.COM>
-Message-ID: <alpine.DEB.2.21.2406300615200.43454@angie.orcam.me.uk>
-References: <TYCP286MB0895F65439037ED134FEA7DDBCD12@TYCP286MB0895.JPNP286.PROD.OUTLOOK.COM>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1719730820; c=relaxed/simple;
+	bh=O1HR4kHR/XCGKG4h+DwtnIPA7DGTVS7E3KxzwKw3um0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=EObMNJrljN4l83ujNNJgngqAseyTyhV7BcH2tZzDh55UgebhtJP+YWOJLnG2gv8HOq8kv7Y51FRUnYh/nCUYj6ChNmXZKnVa6QAxI5mDrtC1nOf8W0hh6HrenXRVt2xRhLmHZ8gKEyu+VzShPniceAAIb5tof04gaBp4ALsidO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=LacBPdzE; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LacBPdzE"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45U6xs4P082744;
+	Sun, 30 Jun 2024 01:59:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1719730794;
+	bh=ntcPWOA37EUEY0RyxU96QTxE6TwwDzV08Y5dI/7aLHo=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=LacBPdzEMaCqzUtyn695b65Hwdsv6bm4xRabWixiEppZkJYExkN/W99hJz9qTIsi5
+	 9t9BXY0kBHYpdv5JOLPAakRrZwZ1EoeeY+uuQ0sCIZNReF74ipXKKe3V70D0LgPQhr
+	 /BupM7GTVNnyDMpw/KshF/ABNlr6iZbvcXizezds=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45U6xsnx048361
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Sun, 30 Jun 2024 01:59:54 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sun, 30
+ Jun 2024 01:59:53 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Sun, 30 Jun 2024 01:59:53 -0500
+Received: from [172.24.227.94] (uda0132425.dhcp.ti.com [172.24.227.94])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45U6xnDA113333;
+	Sun, 30 Jun 2024 01:59:50 -0500
+Message-ID: <8c32591a-ada0-4183-b4d1-68ac51c65d57@ti.com>
+Date: Sun, 30 Jun 2024 12:29:48 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/5] ti: fix dtbs_check for some syscon bindings and
+ DTS node
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Roger
+ Quadros <rogerq@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Tero Kristo
+	<kristo@kernel.org>, "Andrew F. Davis" <afd@ti.com>,
+        Bryan Brattlof
+	<bb@ti.com>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Conor Dooley
+	<conor.dooley@microchip.com>
+References: <20240626-dt-bindings-ti-soc-mfd-v2-0-ee4d69017326@linaro.org>
+From: Vignesh Raghavendra <vigneshr@ti.com>
+Content-Language: en-US
+In-Reply-To: <20240626-dt-bindings-ti-soc-mfd-v2-0-ee4d69017326@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Sat, 29 Jun 2024, Shiji Yang wrote:
++ Andrew and Bryan
 
-> 1. Do not use memcmp() on unallocated memory, as the new introduced
->   fortify dynamic object size check[1] will return unexpected result.
+Hi Krzysztof
 
- That seems like a bug in the check to me.  Why would `memcmp' referring 
-to a location within the data section cause an unexpected result, forcing 
-code to use an equivalent handcoded sequence?  This defeats the purpose of 
-having possibly optimised code in `memcmp' for this.
+On 26/06/24 16:53, Krzysztof Kozlowski wrote:
+> Hi,
+> 
+> Changes in v2:
+> - Add acks/tags
+> - Correct Kishon Vijay Abraham email
+> - Drop R/W from title of bindings
+> - Link to v1: https://lore.kernel.org/r/20240518-dt-bindings-ti-soc-mfd-v1-0-b3952f104c9a@linaro.org
+> 
+> I am in the process of fixing syscon/simple-mfd bindings (to be posted
+> separately) and found set of issues in TI looking independent of my
+> series.  Please apply via TI SoC.
+> 
+> Best regards,
+> Krzysztof
+> 
+> ---
+> Krzysztof Kozlowski (5):
+>       dt-bindings: soc: ti: am62-system-controller: add AM62 syscon
+>       dt-bindings: soc: ti: am645-system-controller: add AM654 syscon
+>       arm64: dts: ti: k3-am62: add dedicated wakeup controller compatible
+>       arm64: dts: ti: k3-am65-mcu: add dedicated wakeup controller compatible
+>       arm64: dts: ti: k3-am62a: use a specific MCU controller compatible
 
-> diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-> index 12a1a4ffb602..4197c7568f49 100644
-> --- a/arch/mips/kernel/setup.c
-> +++ b/arch/mips/kernel/setup.c
-> @@ -86,21 +86,26 @@ static struct resource bss_resource = { .name = "Kernel bss", };
->  unsigned long __kaslr_offset __ro_after_init;
->  EXPORT_SYMBOL(__kaslr_offset);
->  
-> -static void *detect_magic __initdata = detect_memory_region;
-> -
->  #ifdef CONFIG_MIPS_AUTO_PFN_OFFSET
->  unsigned long ARCH_PFN_OFFSET;
->  EXPORT_SYMBOL(ARCH_PFN_OFFSET);
->  #endif
->  
-> +#define MIPS_MEM_TEST_PATTERN		0xaa5555aa
-> +
->  void __init detect_memory_region(phys_addr_t start, phys_addr_t sz_min, phys_addr_t sz_max)
->  {
-> -	void *dm = &detect_magic;
-> +	u32 detect_magic;
-> +	volatile u32 *dm = (volatile u32 *)CKSEG1ADDR_OR_64BIT(&detect_magic);
->  	phys_addr_t size;
->  
->  	for (size = sz_min; size < sz_max; size <<= 1) {
-> -		if (!memcmp(dm, dm + size, sizeof(detect_magic)))
-> -			break;
-> +		*dm = MIPS_MEM_TEST_PATTERN;
-> +		if (*dm == *(volatile u32 *)((void *)dm + size)) {
-> +			*dm = ~MIPS_MEM_TEST_PATTERN;
-> +			if (*dm == *(volatile u32 *)((void *)dm + size))
 
- Can't you just do *(dm + (size >> 2)) and avoid all the horrible casting?  
-Or maybe even dm[0] == dm[size >> 2]?
+Thanks for the patches!
 
-> +				break;
-> +		}
->  	}
+Andrew's patches [0] remove "syscon", "simple-mfd" from all the below
+files except for k3-am62-wakeup.dtsi. But I think k3-am62-wakeup.dtsi
+can be fixed up in the similar way and not really need a custom
+system-controller binding. Last user is "ti-cpufreq" driver which is
+being adapted over to use granular syscon nodes [1].
 
- Anyway this code makes no sense to me, with or without the change.  What 
-is it exactly supposed to peek at, the location of `detect_magic' plus 
-some offset?
+I believe add new compatible for system-controllers nodes is unneeded?
 
- What about the `start' parameter?  What is it for, given that it's not 
-used in probing, but only for reporting and adding the memory region?  Is 
-it not where probing is supposed to happen in the first place?
+AM62 may need one more merge window to be resolved owing to dependencies
+but I am queuing [0] to get rid of the warning for rest of the dts.
 
- I can see how `ath79_detect_mem_size' this mess has come from made some 
-sense as in 9b75733b7b5e0^:arch/mips/ath79/setup.c -- a bit hackish, but 
-the size of the probing window set to 1024 bytes combined with comparing 
-against machine code from `ath79_detect_mem_size' made a false hit highly 
-unlikely.  That sense has been lost since and your change partially fixes 
-it by making a check against both the straight and the complemented value 
-of a test pattern.  Good.
+Bryan,
 
- But still that does not fix the issue with `start'.  Given how this code 
-has been written I'm not even sure if it's suitable for nonzero `start' at 
-all.  Or should the call to `memblock_add' just be adjusted accordingly:
+Could you repsin [1] with cleanups to am62-wakeup.dtsi as well?
 
-	memblock_add(start, size - start);
+[0] lore.kernel.org/r/20240628151518.40100-1-afd@ti.com
+[1] lore.kernel.org/r/20240621-ti-opp-updates-v3-0-d857be6dac8b@ti.com
 
-?  This might make sense and if suitable, then it should be documented as 
-the feature of `detect_memory_region' (as should probably be that it will 
-round the amount of memory available down to the nearest power of two).
 
- Alternatively the code can start probing at `start', but then it'll have 
-to be rewritten, because obviously `detect_magic' may not necessarily be 
-above `start'.
+> 
+>  .../bindings/soc/ti/ti,am62-system-controller.yaml | 77 ++++++++++++++++++++++
+>  .../soc/ti/ti,am654-system-controller.yaml         | 60 +++++++++++++++++
+>  arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi         |  2 +-
+>  arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi        |  2 +-
+>  arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi            |  2 +-
+>  5 files changed, 140 insertions(+), 3 deletions(-)
+> ---
+> base-commit: e032bb82c315d2317a80506195d16ce4308d8cf7
+> change-id: 20240518-dt-bindings-ti-soc-mfd-ac211578d7a5
+> 
+> Best regards,
 
-  Maciej
+-- 
+Regards
+Vignesh
