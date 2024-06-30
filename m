@@ -1,235 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AEAC2772A;
-	Sun, 30 Jun 2024 14:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C59D139CE5
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2024 14:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719757036; cv=none; b=Bhepn5gVjB3YBbFZ/AfNKQB7eakebdZ1/i8zUyPLQdwP0MHARo2GhlQI7Gmzy9lTV5HLPukbWgqCtw2x7QDLB8j/MM3GhL8ql7wujIbpNOt5Aa3sDVsTC/nUiEUlvaHdpjGZtt3QCSG/6k2ebGAfruMQnSvKnOIZIg9r5mdFxLU=
+	t=1719758151; cv=none; b=TzivGI1EU9yLV6DW3fm7VpMkzRZAAbHX7kj0uDG78/Aeg9p+yalcWRGyg18CkhFU84bzTTtlivRJsEg4O4ZZzNKGxEhlcKbBHbi1qp3ULd1YttVyB9+YeJoLcPTL9WEfuV1JeukhUIihNgABHe5XOBg9ZBV0o9a0AFppfA13D7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719757036; c=relaxed/simple;
-	bh=OeWxeK/hAq3F4XgmyMlEfI6ENOAQhsAVS+UmRnEu2Nc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p11UMGm4p5322w2Pc9A5rvj7GGUA0JVlo4f+3A7DUUC6hNxLibpKCfxuOVqBEylDkKe+xOpO1VTEXo6iD2HRbwsSuGDp+XuUl9pX9N9lUnNAWKPpOB/vQ0Aqfsz4QB3c0IWfH62hxC9F8lJpszqQ0RIGNj5k52+5ow5DaDiz5gI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ff/aOzUb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719758151; c=relaxed/simple;
+	bh=/IGJK9dpZ4v6FNXHecjBqRmRpuc91N38EG5z1/3g5Ik=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iKq8+mPSj2K8EEmIXs0NrkBLDN7DpD5RXDHpPYXcTotXM32Tr9tkNvpfq+DW5+18iqFU6V73yaeLUW2vObMWY0HUm6Gu8annXAj+6BXOZY32b9kyJraMxuAIeBkrKYYTPZRz2bHqdjCQghK+a7TTAYtMMZgePERcg/wekFDFRG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HtmQBuqF; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ff/aOzUb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 041B0C2BD10;
-	Sun, 30 Jun 2024 14:17:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719757036;
-	bh=OeWxeK/hAq3F4XgmyMlEfI6ENOAQhsAVS+UmRnEu2Nc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ff/aOzUbI30EZmVRrbvhaDGnR9o5VV861hQnrRQIDmcvLywHaYyqq33V3lu3ZpS5v
-	 uv2sUS8BMBtkJ003PIdCy/O1/qkY1H7EqR4aWX3ITPrVuMAIZ72VbQW/KO7c01KA+9
-	 FvVUEBZhBeZq4KLDzTDjRUf2dAwVm+luTOijGf0ZXD7rU0Qs3ta/oLHTR2WbhGVLog
-	 nNnrV/ZKUuDhCI/lcLxHmcTu9K6XdaUjDSfvlAN6/jhXwoHjS6LcbHPjrKnqwjBz+W
-	 3KM9y3tyozQ6Lqat32EctqoY1jrKXccke5ADC0AQhweH3lQRLwY9NwcY/ZCCevHbVt
-	 TiuzKB4x8VqjA==
-Date: Sun, 30 Jun 2024 15:17:10 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Hironori KIKUCHI <kikuchan98@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: display: st7701: Add Anbernic RG28XX
- panel
-Message-ID: <20240630-babied-grill-13c840abb70a@spud>
-References: <20240628051019.975172-1-kikuchan98@gmail.com>
- <20240628051019.975172-2-kikuchan98@gmail.com>
- <20240628-splashy-slug-1d74e3fd9fe6@spud>
- <CAG40kxERY2r2cj58kjVMMg1JVOChRKraKYFo_K5C5fnx0g80Qw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HtmQBuqF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719758148;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5hsNfpAVbuZ2ikv3amxzC/RjWyhA87CBLOPSXHDl79U=;
+	b=HtmQBuqFXk3YwafA7VBaMniz3nJOD40xLh9CcIoCbBnLGkmLMe3NGrpWWNieXlss9EYDt8
+	hzu1c8atzDyt+NkoZ+wA7m6GuWFoN1o8XX5Wx4RmFrFAKEovGPwZCW/SCehfR0XCear4Xi
+	+2hGft6JXmVUX1g8fqkalr7UB3LQMl8=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-620-YT2UjL4XMkq9MryX-Nly0g-1; Sun,
+ 30 Jun 2024 10:35:44 -0400
+X-MC-Unique: YT2UjL4XMkq9MryX-Nly0g-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 89F0119560AE;
+	Sun, 30 Jun 2024 14:35:43 +0000 (UTC)
+Received: from [10.22.32.51] (unknown [10.22.32.51])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5A1641956089;
+	Sun, 30 Jun 2024 14:35:40 +0000 (UTC)
+Message-ID: <4bad11b8-b257-44de-87a5-cf428eaa9a64@redhat.com>
+Date: Sun, 30 Jun 2024 10:35:40 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="x1OfUyRHDxZE9NVr"
-Content-Disposition: inline
-In-Reply-To: <CAG40kxERY2r2cj58kjVMMg1JVOChRKraKYFo_K5C5fnx0g80Qw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: dm-crypt performance regression due to workqueue changes
+To: Mikulas Patocka <mpatocka@redhat.com>
+Cc: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ Mike Snitzer <snitzer@kernel.org>, Laurence Oberman <loberman@redhat.com>,
+ Jonathan Brassow <jbrassow@redhat.com>, Ming Lei <minlei@redhat.com>,
+ Ondrej Kozina <okozina@redhat.com>, Milan Broz <gmazyland@gmail.com>,
+ linux-kernel@vger.kernel.org, dm-devel@lists.linux.dev
+References: <32fd8274-d5f-3eca-f5d2-1a9117fd8edb@redhat.com>
+ <a699a394-d36a-4f42-bd49-9a5a573fd58f@redhat.com>
+ <e5e5b436-17a6-aafe-2f61-eb659fa35ae2@redhat.com>
+Content-Language: en-US
+From: Waiman Long <longman@redhat.com>
+In-Reply-To: <e5e5b436-17a6-aafe-2f61-eb659fa35ae2@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
+On 6/30/24 05:49, Mikulas Patocka wrote:
+>
+> On Sat, 29 Jun 2024, Waiman Long wrote:
+>
+>> On 6/29/24 14:15, Mikulas Patocka wrote:
+>>> Hi
+>>>
+>>> I report that the patch 63c5484e74952f60f5810256bd69814d167b8d22
+>>> ("workqueue: Add multiple affinity scopes and interface to select them")
+>>> is causing massive dm-crypt slowdown in virtual machines.
+>>>
+>>> Steps to reproduce:
+>>> * Install a system in a virtual machine with 16 virtual CPUs
+>>> * Create a scratch file with "dd if=/dev/zero of=Scratch.img bs=1M
+>>>     count=2048 oflag=direct" - the file should be on a fast NVMe drive
+>>> * Attach the scratch file to the virtual machine as /dev/vdb; cache mode
+>>>     should be 'none'
+>>> * cryptsetup --force-password luksFormat /dev/vdb
+>>> * cryptsetup luksOpen /dev/vdb cr
+>>> * fio --direct=1 --bsrange=128k-128k --runtime=40 --numjobs=1
+>>>     --ioengine=libaio --iodepth=8 --group_reporting=1
+>>>     --filename=/dev/mapper/cr --name=job --rw=read
+>>>
+>>> With 6.5, we get 3600MiB/s; with 6.6 we get 1400MiB/s.
+>>>
+>>> The reason is that virt-manager by default sets up a topology where we
+>>> have 16 sockets, 1 core per socket, 1 thread per core. And that workqueue
+>>> patch avoids moving work items across sockets, so it processes all
+>>> encryption work only on one virtual CPU.
+>>>
+>>> The performance degradation may be fixed with "echo 'system'
+>>>> /sys/module/workqueue/parameters/default_affinity_scope" - but it is
+>>> regression anyway, as many users don't know about this option.
+>>>
+>>> How should we fix it? There are several options:
+>>> 1. revert back to 'numa' affinity
+>>> 2. revert to 'numa' affinity only if we are in a virtual machine
+>>> 3. hack dm-crypt to set the 'numa' affinity for the affected workqueues
+>>> 4. any other solution?
+>> Another alternative  is to go back to the old "numa" default if the kernel is
+>> running under a hypervisor since the cpu configuration information is likely
+>> to be incorrect anyway. The current default of "cache" will remain if not
+>> under a hypervisor.
+>>
+>> Cheers,
+>> Longman
+> Yes. How could we detect that we run under a hypervisor portably? There's
+> a flag X86_FEATURE_HYPERVISOR, but it's x86-only.
 
---x1OfUyRHDxZE9NVr
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, Jun 29, 2024 at 05:26:56PM +0900, Hironori KIKUCHI wrote:
-> Hello Conor,
->=20
-> Thank you for your reply.
->=20
-> On Sat, Jun 29, 2024 at 1:27=E2=80=AFAM Conor Dooley <conor@kernel.org> w=
-rote:
-> >
-> > On Fri, Jun 28, 2024 at 02:10:15PM +0900, Hironori KIKUCHI wrote:
-> > > The RG28XX panel is a display panel of the Anbernic RG28XX, a handheld
-> > > gaming device from Anbernic. It is 2.8 inches in size (diagonally) wi=
-th
-> > > a resolution of 480x640.
-> > >
-> > > This panel is driven by a variant of the ST7701 driver IC internally,
-> > > confirmed by dumping and analyzing its BSP initialization sequence
-> > > by using a logic analyzer. It is very similar to the existing
-> > > densitron,dmt028vghmcmi-1a panel, but differs in some unknown
-> > > register values, so add a new entry for the panel to distinguish them.
-> > >
-> > > Additionally, the panel is connected via SPI instead of MIPI DSI.
-> > > So add and modify for SPI as well.
-> > >
-> > > Signed-off-by: Hironori KIKUCHI <kikuchan98@gmail.com>
-> > > ---
-> > >  .../display/panel/sitronix,st7701.yaml        | 69 +++++++++++++++++=
---
-> > >  1 file changed, 64 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/display/panel/sitronix=
-,st7701.yaml b/Documentation/devicetree/bindings/display/panel/sitronix,st7=
-701.yaml
-> > > index b348f5bf0a9..835ea436531 100644
-> > > --- a/Documentation/devicetree/bindings/display/panel/sitronix,st7701=
-=2Eyaml
-> > > +++ b/Documentation/devicetree/bindings/display/panel/sitronix,st7701=
-=2Eyaml
-> > > @@ -20,21 +20,19 @@ description: |
-> > >    Densitron DMT028VGHMCMI-1A is 480x640, 2-lane MIPI DSI LCD panel
-> > >    which has built-in ST7701 chip.
-> > >
-> > > -allOf:
-> > > -  - $ref: panel-common.yaml#
-> > > -
-> > >  properties:
-> > >    compatible:
-> > >      items:
-> > >        - enum:
-> > >            - anbernic,rg-arc-panel
-> > > +          - anbernic,rg28xx-panel
-> >
-> > Please no wildcards in compatibles - what is the actual model of this
-> > panel? I don't really want to see the model of the handheld here if
-> > possible.
->=20
-> Well, the "RG28XX" is the actual product name of the device...
-
-Ah, I see. I didn't realise that.
-
-> Besides, there is no vendor name or model name on the panel; there is
-> no information at all.
-> Since the panel cannot be disassembled from the housing of the device,
-> I named it like this.
->=20
-> >
-> > >            - densitron,dmt028vghmcmi-1a
-> > >            - elida,kd50t048a
-> > >            - techstar,ts8550b
-> > >        - const: sitronix,st7701
-> > >
-> > >    reg:
-> > > -    description: DSI virtual channel used by that screen
-> > > +    description: DSI / SPI channel used by that screen
-> > >      maxItems: 1
-> > >
-> > >    VCC-supply:
-> > > @@ -43,6 +41,13 @@ properties:
-> > >    IOVCC-supply:
-> > >      description: I/O system regulator
-> > >
-> > > +  dc-gpios:
-> > > +    maxItems: 1
-> > > +    description:
-> > > +      Controller data/command selection (D/CX) in 4-line SPI mode.
-> > > +      If not set, the controller is in 3-line SPI mode.
-> > > +      Disallowed for DSI.
-> > > +
-> > >    port: true
-> > >    reset-gpios: true
-> > >    rotation: true
-> > > @@ -57,7 +62,38 @@ required:
-> > >    - port
-> > >    - reset-gpios
-> > >
-> > > -additionalProperties: false
-> > > +allOf:
-> > > +  - $ref: panel-common.yaml#
-> > > +  - if:
-> > > +      properties:
-> > > +        compatible:
-> > > +          contains:
-> > > +            # SPI connected panels
-> > > +            enum:
-> > > +              - anbernic,rg28xx-panel
-> > > +    then:
-> > > +      $ref: /schemas/spi/spi-peripheral-props.yaml
-> >
-> > I'm not really keen on this. I'd rather see a different binding for the
-> > SPI version compared to the MIPI ones. Is doing things like this common
-> > for panels? If it is, I'll turn a blind eye..
->=20
-> This might be the first case that a driver supports both DSI and SPI
-> for a panel.
-> The panel can be either a DSI device or an SPI device.
-
-The commit message sounded like the panel was capable of doing SPI
-instead of DSI, is that not the case and the panel is actually capable
-of doing both, just happens to be connected as SPI in this particular
-device?
-
-> I'm not sure if this is the right way to represent it in the documentatio=
-n...
->=20
-> >
-> > > +
-> > > +  - if:
-> > > +      properties:
-> > > +        compatible:
-> > > +          not:
-> > > +            contains:
-> > > +              # DSI or SPI without D/CX pin
-> > > +              enum:
-> > > +                - anbernic,rg-arc-panel
-> > > +                - anbernic,rg28xx-panel
-> > > +                - densitron,dmt028vghmcmi-1a
-> > > +                - elida,kd50t048a
-> > > +                - techstar,ts8550b
-> >
-> > This is all the compatibles in the file, so nothing is allowed to use
-> > dc-gpios? Why bother adding it?
->=20
-> There are 3 types of connections that the driver supports: DSI, SPI
-> with D/CX pin, and SPI without D/CX pin.
-> Although most SPI panels don't have a D/CX pin, theoretically "SPI
-> with D/CX pin" exists.
-> So, it's just prepared for that.
->=20
-> IMHO, once it's found, the list should be negated. List panels for SPI
-> with D/CX pin, instead.
-
-To be honest, I'd just delete this complication until something arrives
-that actually uses that pin.
+Right, that will be for x86 only. There is also a kernel boot command 
+line parameter "workqueue.default_affinity_scope=" that one can use to 
+set the default. It will be a bit easier to use than changing sysfs 
+parameter at run time.
 
 Cheers,
-Conor.
+Longman
 
---x1OfUyRHDxZE9NVr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZoFo5gAKCRB4tDGHoIJi
-0qshAQDKaLumFOWuN4jrXjbK4gsVoAH2fcl1soFQO6NFzf5UwAD/clQeMvJj+YfN
-Da1uAHKzY0HmeY5HiUmeSFDTZ4GsZgI=
-=rtsx
------END PGP SIGNATURE-----
-
---x1OfUyRHDxZE9NVr--
