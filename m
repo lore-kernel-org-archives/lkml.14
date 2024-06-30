@@ -1,129 +1,130 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C0B12DDBF
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2024 09:49:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE4517736;
+	Sun, 30 Jun 2024 09:55:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719740996; cv=none; b=OOBL423gTkdlvRYH5MbZh3LijZ0cj4h1NnoNNGNLX+nZf5axcP3erHo01x9asutg+8wlov/7RafR/TS2ATOwVRKn5tZ3ovfG7KOOWsOF/sizYhPF2Y8st/SzJnyFLfvLihYKKL2Ga8HkQHYpkaYnkGCRMZo4bRLcYrQ1DM2E7Pg=
+	t=1719741301; cv=none; b=R+RKZZTbHo87hbTBOqzlwdGDWEyPyHLU6IAkAqtGLcNFeCBTK/3CRarg545ruIEcPpafOXXx5khVCpRT/t4D7WGSxYE/bmkrpOcmjs+33JOCgp8GSKSjthVa1flnuCKgQNxjwb4IgeVqPOd3AJ1pqISpUQo87swifxM36IwQu1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719740996; c=relaxed/simple;
-	bh=+Hj+ej1yELwJpTLeFNY7s0JvVDII4lE0COM7CkqbpyU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=DZVPcmoR2AMg77QwmpzHJfnjgsyST2kDVZdaEQqiKsGCp1Cbeur/O8oX1sduUzBqm2wVeLvWPrjHNFfsqu32ESiq3XLKcHouScXouc3x5bprCgue3leivxZpfxRnEXYVIqyheBjQQ7o5XzOGQT7NWVcu25lyagNF/Afjya5egt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IQrNtJn+; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719741301; c=relaxed/simple;
+	bh=8I0fB8HDKSv544jKjZ8E6RXOX3Jk5+XFowFSScyCYj4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QrLqj0af5/w+cMElU9MoomhXkJ1z0KMuNShJtx+pqfCUyQw+2/DpAGKk0zQ6u65zhhD7Oivbc+R/pB588NIdo0zN1NCyoAiVXyb92GcfXC16I/6rBDJUbcvjCJQGMKmK/6bjXl1qGvMGI71AJTdwG/eSBt6KMFVc1hAhUAyKQeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XOHGXY8o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IQrNtJn+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719740993;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uxkrqXVgzzzEksGK9Qx5+Z70+SzFjaVw0EtwfNJwAVQ=;
-	b=IQrNtJn+m2Z5HFBT3RbIyUuYG54So+jMdjJNMozikp/7Z//J20q+IzqeH6Q6lhtX/SMq/O
-	TxQfEUj/o5FfPWDC5FeNvGzvtcQeDiIqr7SS/CGcCZKu5xXVJEzwztdeiOZrZ9AVSFB1eM
-	UFUiplPiGnf4zXS1VZLvufEeRfxGFUI=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-303-6FQfftPNP9-_kT62E-oubA-1; Sun,
- 30 Jun 2024 05:49:49 -0400
-X-MC-Unique: 6FQfftPNP9-_kT62E-oubA-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E618C19560AB;
-	Sun, 30 Jun 2024 09:49:47 +0000 (UTC)
-Received: from file1-rdu.file-001.prod.rdu2.dc.redhat.com (unknown [10.11.5.21])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A1F673000218;
-	Sun, 30 Jun 2024 09:49:46 +0000 (UTC)
-Received: by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix, from userid 12668)
-	id 8398130C1C14; Sun, 30 Jun 2024 09:49:45 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix) with ESMTP id 80C2E40D0E;
-	Sun, 30 Jun 2024 11:49:45 +0200 (CEST)
-Date: Sun, 30 Jun 2024 11:49:45 +0200 (CEST)
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: Waiman Long <longman@redhat.com>
-cc: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-    Mike Snitzer <snitzer@kernel.org>, Laurence Oberman <loberman@redhat.com>, 
-    Jonathan Brassow <jbrassow@redhat.com>, Ming Lei <minlei@redhat.com>, 
-    Ondrej Kozina <okozina@redhat.com>, Milan Broz <gmazyland@gmail.com>, 
-    linux-kernel@vger.kernel.org, dm-devel@lists.linux.dev
-Subject: Re: dm-crypt performance regression due to workqueue changes
-In-Reply-To: <a699a394-d36a-4f42-bd49-9a5a573fd58f@redhat.com>
-Message-ID: <e5e5b436-17a6-aafe-2f61-eb659fa35ae2@redhat.com>
-References: <32fd8274-d5f-3eca-f5d2-1a9117fd8edb@redhat.com> <a699a394-d36a-4f42-bd49-9a5a573fd58f@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XOHGXY8o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD57CC2BD10;
+	Sun, 30 Jun 2024 09:54:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719741300;
+	bh=8I0fB8HDKSv544jKjZ8E6RXOX3Jk5+XFowFSScyCYj4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XOHGXY8owx6Ta+5g37ueSQHUVvvFV8zFmcKSJUqv49ZW/t0iK/dpbo0Ovc87lHR2D
+	 IJxvU842JpmvIRn2acmZC4pigSCkYDmFy3OoMM5XnY0Ebrem44qx5gBywyM5lUuEPF
+	 H7qR3h9GruJ9o+GnFaaDGCIqLek/bjKdTAjevxWD4JUUSWpu9ocR+bah+OVlvPkaO3
+	 mojCjUZJnKw8hXnADWKNKjIPlJYTp0Es/BaM25QOsLAdzOk8PmmsyiLtUoCcYgPJWp
+	 kaq1yWXtkVPBhO7EmsmL+tY5IVdXD1G9+mXFkj9bxgzwkCbP2Ls/hFOfi85UpcQrqF
+	 v8KBR3VOVxing==
+Date: Sun, 30 Jun 2024 10:54:48 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>
+Cc: Alexandru Ardelean <aardelean@baylibre.com>, Alisa-Dariana Roman 
+ <alisadariana@gmail.com>, Alisa-Dariana Roman <alisa.roman@analog.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, Michael Hennerich
+ <michael.hennerich@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lars-Peter
+ Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Liam
+ Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v6 5/6] iio: adc: ad7192: Add clock provider
+Message-ID: <20240630105448.758dd131@jic23-huawei>
+In-Reply-To: <a72569f7c1f5d9a7158fe774179ec8fc76016168.camel@gmail.com>
+References: <20240624124941.113010-1-alisa.roman@analog.com>
+	<20240624124941.113010-6-alisa.roman@analog.com>
+	<CA+GgBR8r_W9X0hROUEw-xePyKAhOTBjJtf=cHbfWfvUUfk5j_g@mail.gmail.com>
+	<a72569f7c1f5d9a7158fe774179ec8fc76016168.camel@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="185210117-1505880377-1719740985=:507932"
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---185210117-1505880377-1719740985=:507932
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
 
 
+> > > +
+> > > =C2=A0static int ad7192_clock_setup(struct ad7192_state *st)
+> > > =C2=A0{
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct device *dev =3D &st=
+->sd.spi->dev;
+> > > @@ -412,6 +496,11 @@ static int ad7192_clock_setup(struct ad7192_stat=
+e *st)
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0) {
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 st->clock_sel =3D AD7192_CLK_INT;
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 st->fclk =3D AD7192_INT_FREQ_MHZ;
+> > > +
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 ret =3D ad7192_register_clk_provider(st);
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 if (ret)
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return d=
+ev_err_probe(dev, ret,
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Failed to register clock
+> > > provider\n"); =20
+> >=20
+> > A question here: do we want to fail the probe of this driver when it
+> > cannot register a clock provider?
+> > Or should we ignore it?
+> > No preference from my side. =20
+>=20
+> Sensible question... I would say it depends. On one side this is an optio=
+nal
+> feature so we should not (arguably) error out. OTOH, someone may really w=
+ant
+> (and relies on) this feature so failing makes sense.
+>=20
+> Maybe we should have
+>=20
+> if (!device_property_present(&spi->dev, "#clock-cells"))
+> 	return 0;
 
-On Sat, 29 Jun 2024, Waiman Long wrote:
+I'm not 100% sure from looking at the code, but if the absence of this prop=
+erty
+(because the DT writer doesn't care about this) is sufficient to make the
+calls in ad7192_register_clk_provider() fail then we should check this.
+I don't think we need the complexity of get_provider_clk_node() as there is
+no reason to look in a parent of this device (it's not an mfd or similar) so
+this check should be sufficient.
 
-> On 6/29/24 14:15, Mikulas Patocka wrote:
-> > Hi
-> >
-> > I report that the patch 63c5484e74952f60f5810256bd69814d167b8d22
-> > ("workqueue: Add multiple affinity scopes and interface to select them")
-> > is causing massive dm-crypt slowdown in virtual machines.
-> >
-> > Steps to reproduce:
-> > * Install a system in a virtual machine with 16 virtual CPUs
-> > * Create a scratch file with "dd if=/dev/zero of=Scratch.img bs=1M
-> >    count=2048 oflag=direct" - the file should be on a fast NVMe drive
-> > * Attach the scratch file to the virtual machine as /dev/vdb; cache mode
-> >    should be 'none'
-> > * cryptsetup --force-password luksFormat /dev/vdb
-> > * cryptsetup luksOpen /dev/vdb cr
-> > * fio --direct=1 --bsrange=128k-128k --runtime=40 --numjobs=1
-> >    --ioengine=libaio --iodepth=8 --group_reporting=1
-> >    --filename=/dev/mapper/cr --name=job --rw=read
-> >
-> > With 6.5, we get 3600MiB/s; with 6.6 we get 1400MiB/s.
-> >
-> > The reason is that virt-manager by default sets up a topology where we
-> > have 16 sockets, 1 core per socket, 1 thread per core. And that workqueue
-> > patch avoids moving work items across sockets, so it processes all
-> > encryption work only on one virtual CPU.
-> >
-> > The performance degradation may be fixed with "echo 'system'
-> >> /sys/module/workqueue/parameters/default_affinity_scope" - but it is
-> > regression anyway, as many users don't know about this option.
-> >
-> > How should we fix it? There are several options:
-> > 1. revert back to 'numa' affinity
-> > 2. revert to 'numa' affinity only if we are in a virtual machine
-> > 3. hack dm-crypt to set the 'numa' affinity for the affected workqueues
-> > 4. any other solution?
-> 
-> Another alternative  is to go back to the old "numa" default if the kernel is
-> running under a hypervisor since the cpu configuration information is likely
-> to be incorrect anyway. The current default of "cache" will remain if not
-> under a hypervisor.
-> 
-> Cheers,
-> Longman
-
-Yes. How could we detect that we run under a hypervisor portably? There's 
-a flag X86_FEATURE_HYPERVISOR, but it's x86-only.
-
-Mikulas
---185210117-1505880377-1719740985=:507932--
+Does this also mean the binding should not require this?  I suspect it shou=
+ldn't.
+=20
+>=20
+> in ad7192_register_clk_provider(). So that if we fail the function, then =
+yes, we
+> should fail probing as FW wants this to be a provider. Also, not providing
+> #clock-cells means we don't register the clock.
+>=20
+> Having said the above I think that failing devm_clk_hw_register() means t=
+hat
+> something is already really wrong (or we have a bug in the driver) so lik=
+ely we
+> should keep it simple and just always provide the clock and return an err=
+or if
+> we fail to do so.
+>=20
+> my 2 cents...
+>=20
+> - Nuno S=C3=A1
+>=20
+>=20
 
