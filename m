@@ -1,107 +1,76 @@
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m17214.xmail.ntesmail.com (mail-m17214.xmail.ntesmail.com [45.195.17.214])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E38B12D1F1
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2024 17:13:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723AF13D242;
+	Sun, 30 Jun 2024 17:27:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.17.214
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719767593; cv=none; b=L7i4O4cGekFvdm3cwfV3xiQDYIpphohRoPtHxG/W4/mKX52rdabqQOc8iFE0/Qb4O5QtRTxL7mAV9lTUh6EU4xoLL8ITLbzNg3LhUZMcOSJfNoQqvD00buuDv+5uUKmbm8PPht84hfPGbzCCOxWwS/BRi/hTJCzrEGeffNEVFzw=
+	t=1719768452; cv=none; b=G8sLT1Cv5CS2b+N0Yw2CXcCQXzY/mHdlvWkqomN1+I++xdXmP2yz8XBd/djdfHr3MnZ5WQepR6W+rR6Nm/vYGDq3vQeeYTYV+c3wJKRotfdus8ooM1D+Oi2QzNqcpNbCpDKR90m10GLEQqIIqlnoxzNH1UcOD/4HZoHQ5aAZfXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719767593; c=relaxed/simple;
-	bh=Qvyy3/lXwyEKWXW3eZp7oyXDjXCqcmUmVrNjAO+0GB8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y24meo2feUIxbmt3agEdkTbmb2fM7yM30xHtehCyAs5KUWiLVMv5fbBBQ4bWM4QRmsypfVZNt2X54wJTROwIhHKA2TdV+F2vIWGyPjp5lXiWKypoUiXaTMQ09XlGWLEk4TGEmhziRorjfjg/pcKJNytWJrsGhn2VEcrEoPVgbss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l2j7ETf5; arc=none smtp.client-ip=209.85.166.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l2j7ETf5"
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7f6309e9f29so49563339f.0
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2024 10:13:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719767591; x=1720372391; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0TlkErQpa0xa7YZ2T83OsxknNGSqMh+VvQCwH5wNmHY=;
-        b=l2j7ETf5bxi3vmqCt6n77r2L05KLHwm1e1m1anGaJiGHDbIv9mwAjTfnZWMRXlUzt7
-         Mf/UJJXRS5TjDv6BzNr4kRGBV4gMzc9uPe4goUvlyWf/lqWs1Xx90Bygay6IkmtgWXPh
-         WwQ5+N4AbA88smfga6WRhav0hHQo3YKj0/TxWp/GziknVI1Cpl6sLEzcV7IrcqnxQSB0
-         yOYHA/QpawksMTBdzF4uVVvQYwJu2s3Ji2mO5r0l6lo3XRuVx8eusBVkWVdfzO5vrB4s
-         E7qo2Y5vq0DgtvuRRBwf+3CpAiUNCDEsXHiK/D+wX7KZTOcinU3+qhvEpKC20zkZKYhl
-         lSaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719767591; x=1720372391;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0TlkErQpa0xa7YZ2T83OsxknNGSqMh+VvQCwH5wNmHY=;
-        b=oAT5ppn+gFMYJebHRNfrsiX4dfnJN2BqXtj3lwR1SOM2wqzIiYejzkvLgSsZXLhfFm
-         Wz4a0nT+khSJB4LtfRzAJ9+H4wcw4w5jEr+O4xEEW76JyUZtQaNre5fxFrJjCumEl9+G
-         Fb93mgOjRtKe4sgQCSspDrm4TfUo4ioVNZ9QnU2frLMYoSO9oy4e3mZNjfRp2kk4lRKw
-         ZFl0LHuOuDtqpmlqBb0SnBf6B4FGpZTGdit06XQCtQyMLpgwMwScjo8VSRMBl8EVqw5r
-         VWpr1TrB6/R1PiZ4qNjFqxLjKhm6mtTrplAY1V8RW3AOB2vHGnmmZLci9WhB+mZPRgAv
-         wL4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUdOuvVfUmtC/0jKv/syhnwWPapkyUxfgdwk/WX0fzcmNez0AyPTB/7uXMW2wCD+g9a4DQ9ZDir/1axpRjLUxa9KsE0UvzEEkF/vizT
-X-Gm-Message-State: AOJu0YyBU2Q2WNT/u2A8vzf150MQOEAtSDqdmRWb7/xuYmHt46vpweRC
-	50GAX5BtN+rhnCbmAbnzma5BhEJcJyyLJasQQmXbWbTSmBsl5Ei9
-X-Google-Smtp-Source: AGHT+IHL5QOdEfhGtEp4jRiJ9wOspdZ3OAW2+SZYHN4iHgTZ+RSxfUJigxeqU9GpA9qg3ovx2PO/Ow==
-X-Received: by 2002:a6b:7314:0:b0:7f6:1f20:f136 with SMTP id ca18e2360f4ac-7f62ee7a0cbmr443659739f.19.1719767591625;
-        Sun, 30 Jun 2024 10:13:11 -0700 (PDT)
-Received: from localhost (dhcp-141-239-149-160.hawaiiantel.net. [141.239.149.160])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-72c6a7e5cd2sm3894217a12.28.2024.06.30.10.13.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Jun 2024 10:13:11 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Sun, 30 Jun 2024 07:13:09 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Mikulas Patocka <mpatocka@redhat.com>
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>,
-	Waiman Long <longman@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
-	Laurence Oberman <loberman@redhat.com>,
-	Jonathan Brassow <jbrassow@redhat.com>,
-	Ming Lei <minlei@redhat.com>, Ondrej Kozina <okozina@redhat.com>,
-	Milan Broz <gmazyland@gmail.com>, linux-kernel@vger.kernel.org,
-	dm-devel@lists.linux.dev
-Subject: Re: dm-crypt performance regression due to workqueue changes
-Message-ID: <ZoGSJWMD9v1BxUDb@slm.duckdns.org>
-References: <32fd8274-d5f-3eca-f5d2-1a9117fd8edb@redhat.com>
+	s=arc-20240116; t=1719768452; c=relaxed/simple;
+	bh=A7lZXB+YNdmG407zrnZzFmINSND5c9ARdDF8hprFWWo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hOLxGCPAyIrtepTUlSWftEpeck3EuPsGw75zRxOKDcjTLfQ1HMZuWPm8evCuFMi6hgeM8CTQGHK0ht/42Y8rG7Y+ZfUi2e0nKmXc0E47dHnonISR9VppgD31X6NHcVt9JAZ+lZ/4vd4C58Eh0P+OtwT+aDvb5VLwDAojyliWtSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.195.17.214
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
+Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c01:1720:3110:52ea:d52a:84f0])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 606D67E0129;
+	Sun, 30 Jun 2024 23:00:14 +0800 (CST)
+From: Chukun Pan <amadeus@jmu.edu.cn>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Chukun Pan <amadeus@jmu.edu.cn>
+Subject: [PATCH v2 0/9]  arm64: dts: rockchip: fixes support for Lunzn Fastrhino R6xS
+Date: Sun, 30 Jun 2024 23:00:01 +0800
+Message-Id: <20240630150010.55729-1-amadeus@jmu.edu.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <32fd8274-d5f-3eca-f5d2-1a9117fd8edb@redhat.com>
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCSh8eVkwdQktCQ0tCHxlOSFYeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlJT0seQUgZSEFJGEtKQUpMSUtBSEpKS0FOSR4aQR9OSRpBQ08dS1lXWRYaDx
+	IVHRRZQVlPS0hVSktJSEJLQ1VKS0tVSkJZBg++
+X-HM-Tid: 0a9069a9329b03a2kunm606d67e0129
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OUk6MAw5GjNNIxwZLTBPSCsD
+	TEMaFBFVSlVKTEpCTE5CTUpPQklCVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
+	Sx5BSBlIQUkYS0pBSkxJS0FISkpLQU5JHhpBH05JGkFDTx1LWVdZCAFZQUlJSEw3Bg++
 
-Hello,
+Changes in v2:
+  Separate commits for regulator and supply changes
+  Separate commits for R68S Ethernet PHY changes
 
-On Sat, Jun 29, 2024 at 08:15:56PM +0200, Mikulas Patocka wrote:
-> With 6.5, we get 3600MiB/s; with 6.6 we get 1400MiB/s.
-> 
-> The reason is that virt-manager by default sets up a topology where we 
-> have 16 sockets, 1 core per socket, 1 thread per core. And that workqueue 
-> patch avoids moving work items across sockets, so it processes all 
-> encryption work only on one virtual CPU.
-> 
-> The performance degradation may be fixed with "echo 'system'
-> >/sys/module/workqueue/parameters/default_affinity_scope" - but it is 
-> regression anyway, as many users don't know about this option.
-> 
-> How should we fix it? There are several options:
-> 1. revert back to 'numa' affinity
-> 2. revert to 'numa' affinity only if we are in a virtual machine
-> 3. hack dm-crypt to set the 'numa' affinity for the affected workqueues
-> 4. any other solution?
+Chukun Pan (9):
+  arm64: dts: rockchip: fix regulator name for Lunzn Fastrhino R6xS
+  arm64: dts: rockchip: fix usb regulator for Lunzn Fastrhino R6xS
+  arm64: dts: rockchip: fix pmu_io supply for Lunzn Fastrhino R6xS
+  arm64: dts: rockchip: remove unused usb2 nodes for Lunzn Fastrhino
+    R6xS
+  arm64: dts: rockchip: disable display subsystem for Lunzn Fastrhino
+    R6xS
+  arm64: dts: rockchip: fixes PHY reset for Lunzn Fastrhino R68S
+  arm64: dts: rockchip: use generic Ethernet PHY reset bindings for
+    Lunzn Fastrhino R68S
+  arm64: dts: rockchip: remove useless tx/rx_delay for Lunzn Fastrhino
+    R68S
+  arm64: dts: rockchip: Enable UHS-I SDR-50 for Lunzn FastRhino R66S
 
-Do you happen to know why libvirt is doing that? There are many other
-implications to configuring the system that way and I don't think we want to
-design kernel behaviors to suit topology information fed to VMs which can be
-arbitrary.
-
-Thanks.
+ .../dts/rockchip/rk3568-fastrhino-r66s.dts    |  6 ++-
+ .../dts/rockchip/rk3568-fastrhino-r66s.dtsi   | 48 ++++++-------------
+ .../dts/rockchip/rk3568-fastrhino-r68s.dts    | 30 ++++++------
+ 3 files changed, 33 insertions(+), 51 deletions(-)
 
 -- 
-tejun
+2.25.1
+
