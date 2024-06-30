@@ -1,102 +1,130 @@
-Received: from out203-205-251-82.mail.qq.com (out203-205-251-82.mail.qq.com [203.205.251.82])
+Received: from m1-out-mua-14.websupport.sk (m1-out-mua-14.websupport.sk [45.13.137.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0ABC152536;
-	Sun, 30 Jun 2024 15:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF8F1527AF
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2024 15:27:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.13.137.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719761213; cv=none; b=AkyAUnF5gEHr/vmfLeBUM7ahlwpGpudqAfVznRUTVu88EeAEgClJeUjmzlYCzSSts419Q62M20Ib9jQMdEkzO0xNtPu0yfZrMBVbQL0utL2hbIfTzc4Rh8J7TML8k3ce9fwYa7CJtykp7zkKLWWxIZVhhmFXJX+17GoFR1cYNfA=
+	t=1719761253; cv=none; b=XEa97OT7i4Abi33MECTXpb68/TtJJKpuv0ugxgkcKZdkUOZLt2cxZdyr0174Bf3CSMaTmkwYs9MSbGpMiU+4otTmW5stiA11FdNBe96vES3LWm7Pjk/e8gKjzTJqafnGBBxqd5yWarEaPhTb/fBFUKz7EcbrOj/XDquDZ1ptHtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719761213; c=relaxed/simple;
-	bh=vO1NLBQxNQfA2xpyrK/rc/jpoKmQGGIJOtTb9QALIFo=;
-	h=Message-ID:Date:From:To:cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=snNyBgLwRcl6akSt+s14gCM0n9f9va5/HUwQ0jJh5QFR9FyOcw+4Wd/Avt10m4iAXEhodddY9vqPQyf4xI1oj3C6Uii5zI2OHUgCuEqH47UhmtDexRemBtaqvaaGVEOJMfkVQKXwhzjWucZOjOnpdNQS9guFpi1dGsFhwz7JyCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=GcCbrExb; arc=none smtp.client-ip=203.205.251.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1719761253; c=relaxed/simple;
+	bh=hVsbcKrwrQ3OoEgw8Y8zg8NGLkzoqomWNcuzWMWboO8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RZdjDQEV+fzPtBZGeeg3XsSO/j3DQ7Hkk2e+V0IPZWK3bJEtrnfDsBVAxtbLZJc1YMo0wEbSXtVD5FvXsgTRxdWwJfN3wWkGXL3PXcwqfDYFKCP7hr5t8FgAxNSOY1xx6Qbm6vI769Kx8iWGh0meq0P/Lc7oh6HgNGAudRl3pts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dpolakovic.space; spf=pass smtp.mailfrom=dpolakovic.space; dkim=pass (2048-bit key) header.d=dpolakovic.space header.i=@dpolakovic.space header.b=Lpj97W8C; arc=none smtp.client-ip=45.13.137.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dpolakovic.space
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dpolakovic.space
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="GcCbrExb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1719760902; bh=lZ3i5L1HLdTTCLMU39/mrQkhmO03fgVVzrbXx5lN1sk=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References;
-	b=GcCbrExbiyLxe/FpoK0j8Rp0VI9RbN79etRgW/XlBCRpSjDiFL9SRdoWiqGQfE4u7
-	 f++YZ0HU0nC5gXnNmn/WbaPTuTT55Gv/k1CGIaUx0mWSzHu131als7CsrbI/OZssm+
-	 +tmxIHVUoFgHqeBcJ4mEMesczdT9dIfkvojfsgTk=
-Received: from LAPTOP-PMPPB61H ([36.129.28.219])
-	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
-	id 210974CF; Sun, 30 Jun 2024 23:08:16 +0800
-X-QQ-mid: xmsmtpt1719760096te8gy3gs2
-Message-ID: <tencent_6866D69439F77A09338872DC0398A84CB908@qq.com>
-X-QQ-XMAILINFO: N2bAIxLK0elnc+9Xe7d2ddVQ9KxnEcqKNXLiYmjhiz5xuush6I9PgckgkgBUKT
-	 tw3JK3gjPwyFA4jP9L00VIh1g+z5JHTzPi5lJcBD60NOsuSz9iy/wzc7QyoY80uvRsOtQAvSQXKm
-	 o3xmxXWZWcmJXkdAYNHjaoApocQe8zXFmEvA0gEJi7b0la7aVpKvk2TOgh2hFv1hCuGtIUlWPqhq
-	 59IhAo5e4+RoLzujf3IdYAICX5JlEDDzOrcr47MhBMzcuS3/ZOTQsPmIm1ltNPmg6FmPAVdYklvt
-	 JhEHUqGEcXXf4I65JS2A+08tEOoUIIe5+yfRir0818kJTEel2R3OQIvFiDPFL2igZY2CKHMX8aw2
-	 qqlMAEp2MsEYh5tkFFzg76XnDqJxngCW7aj1o7Yk/VBUw7fdilhG24mDROEkQAvqgJX6kCIf/CA4
-	 esea8wg/EZZI7dr+lcaduRd7eto3BrLzDHPOvV8+a2Eowlu0E1ci+TdSkjTHoNoH0c2R9/BwP/yo
-	 OpQ7plDI/Zsb++Au5SaV0f4YPTLRCaJG6BNe/kGVSskq1AxTeFR4zqgVC8VtDU1Ecltcgo+ckYQb
-	 f4pfs8Aak5Vp70ARkteKdrvfCBHDBl95ctSiDyroarJ5pwuXsfvW26xsILCsBRHH7PpNc/ySx1Oa
-	 +ttpX3X2HxOIqDE2nTUV+bTrwD8/OGMQgD7Do3jAXVXdowD3WYExSdJ0YAQ9R8eo4KpYUaACNGv0
-	 3VvKyL6jdfedDoor17Vqe/LupGWElQ+jlSwajbwjONkY31OggxIpQf5T3n/SDaqNiz5MCbYsdhGH
-	 HhbFPiox4p516EryjFJzOdA49VaP8QIJsHKUQP4QE5ktn9l2O0MN1xY6j9uj0bDUjLfpcwuqy7hf
-	 d4Q7TdanBXQyOx9YPjoDsvR5sFdOSsWMepNyIjOl4HNjVTgvGxIEIELpBWXftC7B2JvMzB0OOVfh
-	 1RfwGCmgWfy45v+IPuEhNnMB5X1/TixOvPcoYCla6wi6JpSDN/Ok3nPa8B/ZVi9ptAGRIFC3k=
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-Date: Sun, 30 Jun 2024 23:08:17 +0800
-From: Zhou congjie <zcjie0802@qq.com>
-To: Zijun Hu <quic_zijuhu@quicinc.com>, gregkh@linuxfoundation.org, 
-    rafael@kernel.org, akpm@linux-foundation.org, dmitry.torokhov@gmail.com
-cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] kobject_uevent: Fix OOB access within
- zap_modalias_env()
-In-Reply-To: <1716524403-5415-1-git-send-email-quic_zijuhu@quicinc.com>
-X-OQ-MSGID: <77765b34-80c6-6371-06b5-50be2a72e5de@qq.com>
-References: <1716524403-5415-1-git-send-email-quic_zijuhu@quicinc.com>
+	dkim=pass (2048-bit key) header.d=dpolakovic.space header.i=@dpolakovic.space header.b="Lpj97W8C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dpolakovic.space;
+	s=mail; t=1719761246;
+	bh=hVsbcKrwrQ3OoEgw8Y8zg8NGLkzoqomWNcuzWMWboO8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Lpj97W8CtjWQ6T/Mp78pXlScLJ8uNwxDU3tYDRoz8lMzSvkmI/bC1N74WRkqztDnH
+	 Q4eTjhDOYiEKvon8OChNtkn/5gp7X5xtpLcegWnrfyZD6SD/arm0k/ocRoyENnlufo
+	 idKgZ3wKwLs1Vdl7Wift/ng5VthhHUgCj++yFzE1nkeWw7eug18LnK7BbK4LhIZlEU
+	 kNdyOHsh+pK0yL1TLhLnTgehuF/KqyLfxtHo1XBr53HSWNvmMp3mKTGohwxMpNJVyt
+	 aXiwz4QLIODByxYzUSzURncdch5jfWWg38u2AI2E7DcYFM27Y41frpRYxDqAvtApX9
+	 7v8YVYF2ptCKQ==
+Received: from m1-u5-ing.websupport.sk (unknown [10.30.5.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	by m1-out-mua-14.websupport.sk (Postfix) with ESMTPS id 4WBtMf6Hhqz1G26;
+	Sun, 30 Jun 2024 17:27:26 +0200 (CEST)
+X-Authenticated-Sender: email@dpolakovic.space
+Authentication-Results: m1-u5-ing.websupport.sk;
+	auth=pass smtp.auth=email@dpolakovic.space smtp.mailfrom=email@dpolakovic.space
+Received: from [192.168.1.29] (static-bband-88.87-197-167.telecom.sk [87.197.167.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: email@dpolakovic.space)
+	by m1-u5-ing.websupport.sk (Postfix) with ESMTPSA id 4WBtMd2g8fzY9Ml;
+	Sun, 30 Jun 2024 17:27:25 +0200 (CEST)
+Message-ID: <9e3b638d-76f2-8520-2a24-7de0cd0bc149@dpolakovic.space>
+Date: Sun, 30 Jun 2024 17:27:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: proposition for fixing Y292B bug
+To: Bagas Sanjaya <bagasdotme@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Theodore Ts'o <tytso@mit.edu>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Andrew Morton <akpm@linux-foundation.org>, "H. Peter Anvin" <hpa@zytor.com>
+References: <3be3235a-dea7-a5ca-b5ea-4047bdeb695d@dpolakovic.space>
+ <ZoFgga45QCh2uA0i@archie.me>
+Content-Language: en-US
+From: David Polakovic <email@dpolakovic.space>
+In-Reply-To: <ZoFgga45QCh2uA0i@archie.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Action: no action
+X-Out-Spamd-Result: default: False [1.90 / 1000.00];
+	INTRODUCTION(2.00)[];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[gmail.com,vger.kernel.org];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	HAS_X_AS(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:6855, ipnet:87.197.0.0/16, country:SK];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+]
+X-Out-Rspamd-Queue-Id: 4WBtMd2g8fzY9Ml
+X-Out-Rspamd-Server: m1-rspamd-out-5
+Feedback-ID: m1:dpolakovic.spac
 
-On Fri, 24 May 2024, Zijun Hu wrote:
+Thanks for reply.
 
-> Subject: [PATCH] kobject_uevent: Fix OOB access within zap_modalias_env()
-> zap_modalias_env() wrongly calculates size of memory block
-> to move, so maybe cause OOB memory access issue, fixed by
-> correcting size to memmove.
-> 
-> Fixes: 9b3fa47d4a76 ("kobject: fix suppressing modalias in uevents delivered over netlink")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
-> ---
->  lib/kobject_uevent.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/lib/kobject_uevent.c b/lib/kobject_uevent.c
-> index 03b427e2707e..f153b4f9d4d9 100644
-> --- a/lib/kobject_uevent.c
-> +++ b/lib/kobject_uevent.c
-> @@ -434,7 +434,7 @@ static void zap_modalias_env(struct kobj_uevent_env *env)
->  
->  		if (i != env->envp_idx - 1) {
->  			memmove(env->envp[i], env->envp[i + 1],
-> -				env->buflen - len);
-> +				env->buf + env->buflen - env->envp[i + 1]);
->  
->  			for (j = i; j < env->envp_idx - 1; j++)
->  				env->envp[j] = env->envp[j + 1] - len;
-> 
+My proposed solution was to create this BigInt datatype, which
+stores the value in array. The functions for division, multiplication,
+addition, subtraction and comparison could be stored in separate
+".h" library for manipulation with BigInt datatype. The paper speaks
+more in detail.
 
-I notice it too.
+And yes, this truly is an userspace solution, but for kernel space
+implementation I have zero to none experience. Therefore I wrote
+here.
 
-In the debug, I find that length of "env->buflen - len" is definitely 
-larger than  "env->buf + env->buflen - env->envp[i+1". So memmove() just 
-copy some extra '\0', and the problem will not happen when the length of 
-env variables is much smaller than 2048. That is why the problem is 
-difficult to be observed.
+dpo
 
-But when the length of env variables is close to 2048 or even more than 
-2048, the memmove will access the memory not belong to env->buf[2048]. 
 
+On 6/30/24 15:41, Bagas Sanjaya wrote:
+> On Sun, Jun 30, 2024 at 10:05:18AM +0200, David Polakovic wrote:
+>> Hello dear developers and enthusiasts.
+>>
+>> My name is David and recently I wrote a blog post about "necessity"
+>> of fixing 64-bit signed integer overflow of time_t, sometime in year
+>> 292 billion. I proposed this to simply have software complete solution
+>> for timekeeping. The blog had somewhat nice feedback and few people
+>> told me to write to your mailing list.
+>>
+>> As I mention in the list, I am no way experienced enough in kernel
+>> space to turn this into full merge request, so I post it to you and
+>> if anyone would like to build on this idea, it is GPLd for your convenience.
+>>
+>> Any feedback is highly appreciated so please, include me in CC's.
+>>
+>> The blog is written with funny attitude, but it is in no way meant to
+>> be joke, parody or insult.
+>> https://dpolakovic.space/blogs/y292b
+> Reading your paper, it seems like the userspace solution is to introduce bigger
+> int type (i.e. int128/bigint); and you want the same to apply to kernel, right?
+> Also, if that happens, I think C also needs built-in bigint type.
+>
+> Confused...
+>
