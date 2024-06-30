@@ -1,71 +1,73 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D518282ED
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2024 09:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+Received: from www.linux-watchdog.org (www.linux-watchdog.org [185.87.125.42])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD316282ED;
+	Sun, 30 Jun 2024 09:34:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.87.125.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719739984; cv=none; b=tb5wxznZ9d4VgDjtmp5HenpfxWesapMShoeuKThK4kjMbg96G3ymMj//GzqIDwmg0NWiVzsIP0Njirbf4cBLlttzFu8VQbslh5/T/dsYEVTqkqcNZ6ueZMMUHn/1PVGmDuGvsSeWinVQX6aNgx8X9dLKo7WbevcuJsD4GZP5qF8=
+	t=1719740060; cv=none; b=M0I7COXcTx8KMlZtXWvBUezRV6BoR9sBzGo+ODsjk7V7nCP1ceat5DDIy8HV54RJmSMQ2EcJSKNN4zb9ONY8bOaflRVd3kF3k6N2qdOJgw2QzuZ4cUd30FJYnFJXhhXGVkK9+6VSqHHqge5L7nqEz0qybIrLOD/xqB2jmpT8rqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719739984; c=relaxed/simple;
-	bh=0IoZT0c3L7MF/qyJ3BuhcxrkqOfVnY8AHMCmsRUXlaU=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=FIJyXXmkP9ncYbRy6fvv/Dckj4zG/RMKgk6WMF7hAf9mP+pe+/oiadcmiMwmMbmK68JjGfaAFjwzJ7e1XCmn1yZYKnY8w2Rf96bNCidkuMHF5alF2AySgm5NaGm0MvUdtgDp3nNECN6p9HgQN9rYtuaUxT1Gf/tkgOIosqUyZjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7f6200ad270so221481239f.0
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2024 02:33:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719739982; x=1720344782;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vFm/9ZXsB9e8tSPAg8CmTIlEdCpRRuUoLvsONF6LjYE=;
-        b=by0aI/u0icMq1UyYgis31++UotQE5pT+YE+/rrQrcgEDobb4ZWuA+pcD/Dfq3MloZj
-         EJRijvVwP/PfxTXI1ftBCl9O1ZzVTst7kOu4oQzbu3qXuqrgsLJjNeMWk9sHj1QFfOE/
-         23sI2+0eu7rBPe13u7udOsl9IB1sxIGFuRy7rr4+yHu4mSZ6yovZD7DI1N9k3f04ouzw
-         0Ttp8bnD4dGOvqmvZdpvylTvC7TCb/qzTfEniE11Gu3KszHqxAbpnlpswRICcKYK05LK
-         8IIkTYOTLXk3KMEOhM++O5LGo0Kgt7Qn0O/LmAjG9SzPUQL0VblerU/5BDnZs9ZTjIfC
-         QRyA==
-X-Forwarded-Encrypted: i=1; AJvYcCVssftyb0Gs5GrvghtflRIGLsJuuX6FHdVrKHjRQ68oUe62vtzyNCzqRHXVNBtbcs+rGtaFL7OIb6rNZwWgx8r96EdWW5CltJeyp9gp
-X-Gm-Message-State: AOJu0YyQ/af1d+DSk8rifuGNaB2I8x0I6wjVtWdRPRnTpYlrJtelwSF0
-	kQUrr4UHIrtA5Xz1vv/YKo3EdX+NTFUhOgTKXMwyq0OrCjyGJB4eMQUQao7zfhe5Dw5ldTWLZwR
-	8RUlbjDcnN7pc3672SpO93cJYVYPkKirl9t/BkiISg0CzMGKcYwpcmEQ=
-X-Google-Smtp-Source: AGHT+IFH/GwS0WaNuqfkdbbjEhmj1EPutKlDILbXsAS4ceNyPsRZ6BQh/1FAv56lWoxEiSjSvupEmtvbzIYke9/uneKyxiYI/zJM
+	s=arc-20240116; t=1719740060; c=relaxed/simple;
+	bh=k+G8NV2hvavRL0EHhCZYJQFAgauLbWs7Fncj83jaM6I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CsopRjjsMRN/IrUXGaQDfrXjcNvyO0seXC45lGzr0x808oIPcGHxFAPnKwOqDyIWsoU4BT1VperGeGChqN2vN44p2N+xYs5hOaNhx63uRXkDEVtsfJWpC273WWcJ8yq1il5BlCXfRjNdxeEaVu2jor3inARQ/NteS+6v4pp6IUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=linux-watchdog.org; spf=pass smtp.mailfrom=linux-watchdog.org; dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b=b1e/lUSS; arc=none smtp.client-ip=185.87.125.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=linux-watchdog.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux-watchdog.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b="b1e/lUSS"
+Received: by www.linux-watchdog.org (Postfix, from userid 500)
+	id 6C18B40A00; Sun, 30 Jun 2024 11:14:03 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org 6C18B40A00
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-watchdog.org;
+	s=odk20180602; t=1719738843;
+	bh=k+G8NV2hvavRL0EHhCZYJQFAgauLbWs7Fncj83jaM6I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=b1e/lUSS9zcUNcbVDGSsvzX1RVsSzOjhsF+M/29s6KnIKBWK0n5JrhHVML3gKF5KL
+	 ghBTdwxgp5SCkmZ0vy/Xng+eGW5F8Km3+RgS+d5nvpqibCLrASnfUcRYBtO3FCfsK4
+	 Dgsk8nhwoOr5f1hQT44Koa8CNE69vVJ3JaG+Fh1I=
+Date: Sun, 30 Jun 2024 11:14:03 +0200
+From: Wim Van Sebroeck <wim@linux-watchdog.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
+	Guenter Roeck <linux@roeck-us.net>, Arnd Bergmann <arnd@arndb.de>,
+	Jeff Johnson <quic_jjohnson@quicinc.com>
+Subject: Re: [GIT PULL REQUEST] watchdog - v6.10 release cycle (fixes).
+Message-ID: <20240630091403.GA12993@www.linux-watchdog.org>
+References: <20240625133151.GA1554@www.linux-watchdog.org>
+ <CAHk-=whgnEuO1+8Gk3AiWeuSeAuCoUWnkuxUvczHwfJL+juAsA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2dc9:b0:7f3:d89c:6030 with SMTP id
- ca18e2360f4ac-7f62ee88d1dmr15325939f.4.1719739982595; Sun, 30 Jun 2024
- 02:33:02 -0700 (PDT)
-Date: Sun, 30 Jun 2024 02:33:02 -0700
-In-Reply-To: <tencent_17CBBA43BB47335B9E931B5D4BD11B062508@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c4d507061c182a87@google.com>
-Subject: Re: [syzbot] [ext4?] BUG: unable to handle kernel paging request in do_split
-From: syzbot <syzbot+ae688d469e36fb5138d0@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whgnEuO1+8Gk3AiWeuSeAuCoUWnkuxUvczHwfJL+juAsA@mail.gmail.com>
+User-Agent: Mutt/1.5.20 (2009-12-10)
 
-Hello,
+Hi Linus,
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+> On Tue, 25 Jun 2024 at 06:51, Wim Van Sebroeck <wim@linux-watchdog.org> wrote:
+> >
+> >   git://www.linux-watchdog.org/linux-watchdog.git linux-watchdog-6.10-rc-fixes
+> 
+> ENOSUCHTAG.
+> 
+> I do see the commit you mention in HEAD, but there's no actual signed
+> tag referencing it.
+> 
+> Forgot to push out (and then didn't react to the error messages that
+> git request-pull gave you)?
 
-Reported-and-tested-by: syzbot+ae688d469e36fb5138d0@syzkaller.appspotmail.com
+It didn't gave me any warnings, so I took time to investigate it this morning.
+Turns out I did not do it on the linux-watchdog tree but on the linux-watchog-next tree :-( .
+Such a stupid mistake from my side...
 
-Tested on:
+I'll fix it and will come back.
 
-commit:         55027e68 Merge tag 'input-for-v6.10-rc5' of git://git...
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=16bb8761980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=67463c0717b8d4ca
-dashboard link: https://syzkaller.appspot.com/bug?extid=ae688d469e36fb5138d0
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=10754c81980000
+Kind regards,
+Wim.
 
-Note: testing is done by a robot and is best-effort only.
