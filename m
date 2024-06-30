@@ -1,95 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m2418.xmail.ntesmail.com (mail-m2418.xmail.ntesmail.com [45.195.24.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74574DF71;
-	Mon,  1 Jul 2024 02:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E505BDDB1;
+	Mon,  1 Jul 2024 02:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.24.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719801551; cv=none; b=l4LJuinidFmrQs56jLvm21zCf+ExVDVaDwLNXbPEn4DnVk7SDyxTkmuWWIt2JPTNdGJyx9SSTnF5YDh6X9nYJfbIZis23YQjAnQuR7njrfBaehogs+3DWfUoxH46xH7G5FagUUzo50ojZPx8ETg6tAvgZWtf46IwmzWywBhbh/A=
+	t=1719802046; cv=none; b=awm87hqIPTY0xvvTwtgVLJIVMh+XVjUA9sIWe1v+rVrBSRdaD3byIVyAsjWIjCdSsispgjegD4ZFM6MwVlM74KW1+jfn41h+P7OjGdEhe0p5zhXvjJIUtbkiL2z7/MFqpO5armpdQtLdsJNgEmO2LYYUZJ7dHpPyapi0yY821sg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719801551; c=relaxed/simple;
-	bh=tlgKBfaW0WVREdlHv1BoSTz4zEu/M+a8UwiX2tziU/A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e5z6AnqDgjc19reGQXoozeMBA48jMVMrDxedXiNStOwX67nBpJ0wvqzVLdXnRcxJKbPBwx6IKkva3z/MPOdRhV5MX60aY/jLz8ojzc98Cz3llgv+Aap7okc5zFJP/zBtmkWBPuyxOxXQi5QePH4yGDaxqnfYkaYq7umEtKeuSoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sKOkjOtV; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sKOkjOtV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E38EC2BD10;
-	Mon,  1 Jul 2024 02:39:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719801551;
-	bh=tlgKBfaW0WVREdlHv1BoSTz4zEu/M+a8UwiX2tziU/A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sKOkjOtVheiUf92NWqiywYZDo/JbHwjccCIoMXuBdjdf3Ro85lQzwtnqq9uSypdLr
-	 /SLjJoxZ4wSkXzXjBirg4MTSH28GAZaJPx3uCjlz8SxYCsiWcGSTzkXC9chEmNgLlO
-	 9Gl/NzD+Yug2wD8Dz3K6IIEMsU9rKvvyd77iObxEYFekng2QE3uSBkkkK49muwKMvf
-	 Zz/ci2NCzcJ0aSK+mc32Oj5hbgGW5C2LNFeal6Y6NczNUBxK9GsqdFFsyqhVpTUEYR
-	 3u5XnroJGoa38s6X3956wOwz+fXjebnQIRdSqnsPdaS5ZLZ6jXNcfooihp9QNHBvIK
-	 3vExEQ0c5y+Tw==
-From: William Breathitt Gray <wbg@kernel.org>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	s=arc-20240116; t=1719802046; c=relaxed/simple;
+	bh=Hk2NYHJJQeOrmt4wKSilJ9NRaqcLbuopCPxqRPckx8A=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=cpNYKK5xFliiI9OT2Lcn30huTYdiOj1ItrGqg9cnT7RQqQnI55gJdGKxXMNq930u5kC7DuF6ZmJSQKeYTIKEkF/krwYCEI4ZaxPuOvHSSRAns3WRvgEC4s9F5HKFiUra2OCy3zExDRKM0cQRRTlQJoRN6q3AsHUxUTK54JimQXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.195.24.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
+Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c01:1720:3110:52ea:d52a:84f0])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 25B6D7E0186;
+	Sun, 30 Jun 2024 23:00:16 +0800 (CST)
+From: Chukun Pan <amadeus@jmu.edu.cn>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Nishanth Menon <nm@ti.com>,
-	Judith Mendez <jm@ti.com>
-Cc: William Breathitt Gray <wbg@kernel.org>,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
+	Rob Herring <robh@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
-	David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v5 0/8] Enable eQEP DT support for Sitara K3 platforms
-Date: Mon,  1 Jul 2024 11:38:54 +0900
-Message-ID: <171980147646.3245330.16378344874755104998.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240612135538.2447938-1-jm@ti.com>
-References: <20240612135538.2447938-1-jm@ti.com>
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Chukun Pan <amadeus@jmu.edu.cn>
+Subject: [PATCH v2 3/9] arm64: dts: rockchip: fix pmu_io supply for Lunzn Fastrhino R6xS
+Date: Sun, 30 Jun 2024 23:00:04 +0800
+Message-Id: <20240630150010.55729-4-amadeus@jmu.edu.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240630150010.55729-1-amadeus@jmu.edu.cn>
+References: <20240630150010.55729-1-amadeus@jmu.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1240; i=wbg@kernel.org; h=from:subject:message-id; bh=r0Xdr2Jl+T4FPxaViclE8LBuTxOkELxFVAFU6X1B2oU=; b=owGbwMvMwCW21SPs1D4hZW3G02pJDGlNYtM42MsflTcwRzsF7SyWval1/TXHugARW8YVvaKep X+PnxHoKGVhEONikBVTZOk1P3v3wSVVjR8v5m+DmcPKBDKEgYtTACZyJ4uRYdkxCVXBc2szmZ0e /J8b9UTpbu+OpU+0mh+w3jWZeH3pdwNGhk6erfmPNnJPflkb06weaZfzYeGT4kSmWxZGCYX962b y8gIA
-X-Developer-Key: i=wbg@kernel.org; a=openpgp; fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
 Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCSBlIVh9JSxhLH0xDTRkdQ1YeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlJT0seQUgZSEFJGEtKQUpMSUtBSEpKS0FOSR4aQR9OSRpBQ08dS1lXWRYaDx
+	IVHRRZQVlPS0hVSktJT09PS1VKS0tVS1kG
+X-HM-Tid: 0a9069a9397703a2kunm25b6d7e0186
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NhQ6Syo5GDNDMxwSLTAtSDoo
+	P0tPFDdVSlVKTEpCTE5CTUpNTUJPVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
+	Sx5BSBlIQUkYS0pBSkxJS0FISkpLQU5JHhpBH05JGkFDTx1LWVdZCAFZQUhNTE83Bg++
 
+Fixes pmu_io_domains supply according to the schematic. Among them,
+the vccio3 is responsible for the io voltage of sdcard. There is no
+sdcard slot on the R68S, and it's connected to vcc_3v3, so describe
+the supply of vccio3 separately.
 
-On Wed, 12 Jun 2024 08:55:30 -0500, Judith Mendez wrote:
-> This patch series adds eQEP DT nodes for K3 Sitara devices:
-> - AM62x
-> - AM62ax
-> - AM62px
-> - AM64x
-> 
-> The series also allows the eQEP driver to be built for K3
-> architecture.
-> 
-> [...]
+Fixes: c79dab407afd ("arm64: dts: rockchip: Add Lunzn Fastrhino R66S")
+Fixes: b9f8ca655d80 ("arm64: dts: rockchip: Add Lunzn Fastrhino R68S")
+Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
+---
+ arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r66s.dts  | 4 ++++
+ arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r66s.dtsi | 4 ++--
+ arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r68s.dts  | 4 ++++
+ 3 files changed, 10 insertions(+), 2 deletions(-)
 
-Applied, thanks!
-
-[1/8] dt-bindings: counter: Add new ti,am62-eqep compatible
-      commit: 151ebcf0797b1a3ba53c8843dc21748c80e098c7
-[2/8] counter/ti-eqep: Add new ti-am62-eqep compatible
-      commit: 210457b651acd61fced405cf7fef12a482932ca1
-[3/8] arm64: dts: ti: k3-am62-main: Add eQEP nodes
-      commit: e2e1fce199b0db4fd4eba99ff6ef779826a55731
-[4/8] arm64: dts: ti: k3-am62a-main: Add eQEP nodes
-      commit: ba5a251b1d539a82970823dd510ee25be06d6ca7
-[5/8] arm64: dts: ti: k3-am62p-main: Add eQEP nodes
-      commit: 131eaf47c4c5ad444e3a0547960daacd3a40f82d
-[6/8] arm64: dts: ti: k3-am64-main: Add eQEP nodes
-      commit: afdfe6439a6d28a3062d576705b203da0857699f
-[7/8] arm64: dts: ti: k3-am64x-sk: Enable eQEP
-      commit: 7fb9d8854fcf23b7882a34a4cf247a7f60d02fef
-[8/8] counter: ti-eqep: Allow eQEP driver to be built for K3 devices
-      commit: 474bbfc637c719daebffb5cabcf914dd749cf393
-
-Best regards,
+diff --git a/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r66s.dts b/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r66s.dts
+index 58ab7e9971db..b5e67990dd0f 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r66s.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r66s.dts
+@@ -11,6 +11,10 @@ aliases {
+ 	};
+ };
+ 
++&pmu_io_domains {
++	vccio3-supply = <&vccio_sd>;
++};
++
+ &sdmmc0 {
+ 	bus-width = <4>;
+ 	cap-mmc-highspeed;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r66s.dtsi b/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r66s.dtsi
+index 8f587978fa3b..82577eba31eb 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r66s.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r66s.dtsi
+@@ -397,8 +397,8 @@ vcc5v0_usb_otg_en: vcc5v0-usb-otg-en {
+ &pmu_io_domains {
+ 	pmuio1-supply = <&vcc3v3_pmu>;
+ 	pmuio2-supply = <&vcc3v3_pmu>;
+-	vccio1-supply = <&vccio_acodec>;
+-	vccio3-supply = <&vccio_sd>;
++	vccio1-supply = <&vcc_3v3>;
++	vccio2-supply = <&vcc_1v8>;
+ 	vccio4-supply = <&vcc_1v8>;
+ 	vccio5-supply = <&vcc_3v3>;
+ 	vccio6-supply = <&vcc_1v8>;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r68s.dts b/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r68s.dts
+index e1fe5e442689..a3339186e89c 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r68s.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r68s.dts
+@@ -102,6 +102,10 @@ eth_phy1_reset_pin: eth-phy1-reset-pin {
+ 	};
+ };
+ 
++&pmu_io_domains {
++	vccio3-supply = <&vcc_3v3>;
++};
++
+ &sdhci {
+ 	bus-width = <8>;
+ 	max-frequency = <200000000>;
 -- 
-William Breathitt Gray <wbg@kernel.org>
+2.25.1
+
