@@ -1,59 +1,58 @@
 Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F12157E84
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2024 22:30:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BAAC83CD2
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2024 22:30:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719786651; cv=none; b=pvuulIYuLNIqg7voDRCl7P6UPhUXnJ5hxoKMvYugyqUoN4LeSCjEKWaU27ZoQWeSpowPHVM8U+sdyBB3ZF3pUYzEDrAm5zTjPSQ65zn7iEnHi/kTnEPRtOGSL4fRIAl10GD4IpuP0x87ItYaiqUDWXUslAZdboffPY1WVc08gO0=
+	t=1719786661; cv=none; b=LNGAHlwIXLg7gvZD3slWInInhQvneJq+iGy/8wxcI8J4KImtSK1kGmINUnSoSxRgE3oXbogk2KAk+/Nw/mOJezNTtf/LZPp8MGL3/OWU8DTGbYAbYLsz1ex5sKlqXaOHYr7qV5PqdWQ4RnvbCCVX629D+gj2fiTLRH6ek2s79pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719786651; c=relaxed/simple;
-	bh=tUbVJzUuG7ZHw5+C7mddw9Sd0qXDDpc0D302ICxu/Lg=;
+	s=arc-20240116; t=1719786661; c=relaxed/simple;
+	bh=YYP7ECM245oOndbZpOAQKMWR4jnF2PEPqJOhen+RRTg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WMSVVbisgJG6Sit+dS+x9/Y878lSAcrzz4mnkfeZV+NFaftpYV62B0yNHKvynwlilzniblcuLMJftP7Dlzj5B+Wh0XxICy6O0Bw70s5BG2MXsmj8cJNMSXix349fCCd3zbNWxS5keQe+yVx1sfd9iCWlIL8kITLQcvavm0xWNno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=s6m+89GC; arc=none smtp.client-ip=199.89.1.12
+	 MIME-Version; b=oi/UzoNDJDyDDX3aplj11w/71X0J/dFjP7GcZ6F+zykwbkFr1EnyATZkR2W89hr7fpbVFsQAxBfVnOXmPuEm41/fJHx9qmvTK3y5E/vqUt2VWIWoSvodgCn0C3pBoYRNTckMPG8B8LesrekQ5Z6Tp2jDhoLas0LLvusEQh9T1R0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=poXrv6Pp; arc=none smtp.client-ip=199.89.1.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="s6m+89GC"
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="poXrv6Pp"
 Received: from localhost (localhost [127.0.0.1])
-	by 009.lax.mailroute.net (Postfix) with ESMTP id 4WC3m94skKzll9fM;
-	Sun, 30 Jun 2024 22:30:49 +0000 (UTC)
+	by 009.lax.mailroute.net (Postfix) with ESMTP id 4WC3mM4MVxzll9fW;
+	Sun, 30 Jun 2024 22:30:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
 	content-transfer-encoding:mime-version:references:in-reply-to
 	:x-mailer:message-id:date:date:subject:subject:from:from
-	:received:received; s=mr01; t=1719786647; x=1722378648; bh=yMVfI
-	qqoUIRy7beKrIhjA8D9DxyD+p0AAzeh8SHR2Mg=; b=s6m+89GC/Xvlg3YQlLoox
-	s8dz/7y+TPmKint92MWdCJ10kMPwRSywMcryzPiIV3ITvcUCH5Qj6oBe3beQZHH/
-	4uwUrmdTv2RSKatA2rXJGpfUNsFDNFTHlWUc/bQsOEKw1aGFafPizQ0DOJTNqYkf
-	sfap9KnFC2dA5rAKXxg/2PzM0IYOkJkXeeDMfNyxdZKR7p2gOOj+yZvH4tiVzoas
-	CoQPooS2lNMqW5LmBaGDqMmDyWYJB9y/1fdyj+MFdsKH42xc8h7Y28yVCboEAU/d
-	Lg1YvzzSsAsmaFQMOfl/TEZHnUffZKbdI7jueFLxJL3AQnP4m1EYub5runl18Bl8
-	w==
+	:received:received; s=mr01; t=1719786657; x=1722378658; bh=srS5k
+	sO9b7hJ8Vkoa/n7YlGzN/WBGtTuwo7iQfvBhSU=; b=poXrv6PpNYZRUSvdrZwI2
+	YvrGVT5abMmBX3jxRdUcUjSIpz+dR7/Kr8lgeu0ouP+5wkShopwlMvt9K+Q2y2j0
+	/PcNv4bLC1XBPVEadDHhIcCKablMJm1clY6XMktIh0uIAew7oQKNENdpD0YZ/oBA
+	f0fjRaoAt4U/f6xk3clDDe2JPVaKgT46t1JA8uiaNaU5g6X3EorYk4mantGDktSf
+	DxQeaH7+L8xOKSXRlbhFe48HN3vyEjryrfoqUHpNawB7yqGTRdWrQYa4BN3ZHb95
+	PvL3gk7UVTLRRUVK8Xtf4bD13rOmDdnMp63xtVMmkfw096M9gj+3JEtM9EtzMXm3
+	Q==
 X-Virus-Scanned: by MailRoute
 Received: from 009.lax.mailroute.net ([127.0.0.1])
  by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id 5wnrQUsHYP8J; Sun, 30 Jun 2024 22:30:47 +0000 (UTC)
+ id j4XH3eIq4beq; Sun, 30 Jun 2024 22:30:57 +0000 (UTC)
 Received: from bvanassche-glaptop2.roam.corp.google.com (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: bvanassche@acm.org)
-	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4WC3m42P8pzll9f8;
-	Sun, 30 Jun 2024 22:30:44 +0000 (UTC)
+	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4WC3mG334rzll9fH;
+	Sun, 30 Jun 2024 22:30:54 +0000 (UTC)
 From: Bart Van Assche <bvanassche@acm.org>
 To: Tejun Heo <tj@kernel.org>
 Cc: Lai Jiangshan <jiangshanlai@gmail.com>,
 	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	linux-kernel@vger.kernel.org,
 	Bart Van Assche <bvanassche@acm.org>,
-	Sathya Prakash <sathya.prakash@broadcom.com>,
-	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-Subject: [PATCH 20/53] scsi: mpt3sas: Switch to create*_workqueue2()
-Date: Sun, 30 Jun 2024 15:26:38 -0700
-Message-ID: <20240630222904.627462-21-bvanassche@acm.org>
+	Antoine Tenart <atenart@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 22/53] crypto: safexcel - Simplify a create*_workqueue() call
+Date: Sun, 30 Jun 2024 15:26:40 -0700
+Message-ID: <20240630222904.627462-23-bvanassche@acm.org>
 X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
 In-Reply-To: <20240630222904.627462-1-bvanassche@acm.org>
 References: <20240630222904.627462-1-bvanassche@acm.org>
@@ -65,28 +64,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Prepare for removal of the create*_workqueue() macros.
+Pass a format string to create*_workqueue2() instead of formatting the
+workqueue name before create*_workqueue() is called.
 
-Cc: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- drivers/scsi/mpt3sas/mpt3sas_base.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/crypto/inside-secure/safexcel.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/m=
-pt3sas_base.c
-index b2bcf4a27ddc..2d8a56309ef0 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_base.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
-@@ -846,8 +846,8 @@ mpt3sas_base_start_watchdog(struct MPT3SAS_ADAPTER *i=
-oc)
- 	snprintf(ioc->fault_reset_work_q_name,
- 	    sizeof(ioc->fault_reset_work_q_name), "poll_%s%d_status",
- 	    ioc->driver_name, ioc->id);
--	ioc->fault_reset_work_q =3D
--		create_singlethread_workqueue(ioc->fault_reset_work_q_name);
-+	ioc->fault_reset_work_q =3D create_singlethread_workqueue2(
-+		"%s", ioc->fault_reset_work_q_name);
- 	if (!ioc->fault_reset_work_q) {
- 		ioc_err(ioc, "%s: failed (line=3D%d)\n", __func__, __LINE__);
- 		return;
+diff --git a/drivers/crypto/inside-secure/safexcel.c b/drivers/crypto/ins=
+ide-secure/safexcel.c
+index f5c1912aa564..45cff3adc71d 100644
+--- a/drivers/crypto/inside-secure/safexcel.c
++++ b/drivers/crypto/inside-secure/safexcel.c
+@@ -1615,7 +1615,6 @@ static int safexcel_probe_generic(void *pdev,
+ 		return -ENOMEM;
+=20
+ 	for (i =3D 0; i < priv->config.rings; i++) {
+-		char wq_name[9] =3D {0};
+ 		int irq;
+ 		struct safexcel_ring_irq_data *ring_irq;
+=20
+@@ -1664,9 +1663,8 @@ static int safexcel_probe_generic(void *pdev,
+ 		INIT_WORK(&priv->ring[i].work_data.work,
+ 			  safexcel_dequeue_work);
+=20
+-		snprintf(wq_name, 9, "wq_ring%d", i);
+ 		priv->ring[i].workqueue =3D
+-			create_singlethread_workqueue(wq_name);
++			create_singlethread_workqueue2("wq_ring%d", i);
+ 		if (!priv->ring[i].workqueue) {
+ 			ret =3D -ENOMEM;
+ 			goto err_cleanup_rings;
