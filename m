@@ -1,159 +1,220 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10olkn2027.outbound.protection.outlook.com [40.92.40.27])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com [209.85.210.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B2914291E
-	for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2024 14:03:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.40.27
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719756190; cv=fail; b=If6sRiDOXL+24MKxUdcdjWOQC62b7Bwg+/ntiGTvPuYgQ9m2WbO8T1xIuzNIP5fnDnlBON/1ujqEyRhADz2wuR5rCkw5y1tejah5vRCu1uSEjESWxmYkoZwtgm9EhKjzdv+A8sWCtu5gY749/wjEyI4o8TlQx9r6hw8muGv0HMM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719756190; c=relaxed/simple;
-	bh=clCLaKd9X1ji1UiIHJA/tzhE6o20WCoyyJM6PEh8Tfw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=QzVMKr6tiNYJYw09XWwOh8UPQj/L0lDJXN5xtZNAUCudSNmgKx6nPX8WNyreF1Jo38xCso8aTC5Gwxif4MHB68hVgK/riPe1JeBqzCMTpTW6CwgaqdDkmTZsn+MbXbim0zwetdJJN7DeLv1bQH7MSRTRLDDFgNk8xXn3NrGq2Gk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=fHPn0iE0; arc=fail smtp.client-ip=40.92.40.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464147E572;
+	Sun, 30 Jun 2024 14:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.194
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719756311; cv=none; b=D+NsXsG1N72zA9L99qmzhB5ReG6Nmkdwhl/Ybq21mjyIPfXLcwvVgB8lqaYRil8YYfdxxrDnuwcHUdbzUnMtc0a3Q+gqvPfjot0frH0PmPamaxO2/U3nbtvjkaikb8WGME1qfz7N5QlLttM3xB5udNMfsggayRGvf0n7XKMJ934=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719756311; c=relaxed/simple;
+	bh=JCX9RfkKcMe+viiahsmPNFHNBoULkMPfhabNd7u8+bc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MFCiPZHOPRut6FbmIZZ7ezZGGN4tC5dTqSYAVEQvfHwEZGZaUs8Jc4v51eYZlQ2ictX5gbEkoqeb++aHpT2rrlZwZCIM00cwVNSVW0IzNf2NzBmaQFNUJMI6w9ReHkNCQ/r3/dI1lO7ouqholtUIfVvpQNLjVQTi/yaV1RNWiWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=COhNXR4s; arc=none smtp.client-ip=209.85.210.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="fHPn0iE0"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GjolRelm4fBf2AJ1viX42J42cGZwBz4dJ7RKBo1ufunzq87nLc+qoqDRw9uQnkwPp42rKimrEf8lvBb+JAdMTXRC5Rjm1lGFkfC2DrfXtbASA9quh8nAzogEbtDkRREJlf6Xfyt79mNms0KLE9kalqrDVvhCWeZLdzDJhCbB9gjIzay+zM5motSpSip7I3sM7mbWV72AxIO3wVSMSUtK63v0L8NnQsL/IDZc7W3XXMc5kaA7UYoVvqXwGQTwubk3ewnL8fBfj+z9LUdzMXAaSQaXVgtg0UR/B/QbMkLHUbR6VOyQuhnN4A4rlYVDHv9Yub6wZI1PNMnVOYT64wkelQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8lTk4hRxrZhQ/fhyVY54JOkDpKaShrolCHbrWuRPTV0=;
- b=PGnnSPbu9rczOnneGT1dY6Xz+iTjim8eTRfnvcpb4BLExuQS99cX0EpnjYzUzGg09iK3ESGptUVpfELAheMMYtaytLiWueKmXLT2bVwGPEbH9Nir3AgPWGnz7OFFojBShLkZwmKs3o7vviDAZLjnqcGEV2I6BlQCDfo8Z5sYPgNN8l7dGLCYYLq6h4IGNsE2+TDNzq4UKvZw25wyyxOGvKxL3DN0M6KZrH/P61semK6fKIy+QbWCfjoMLInsAahdQ2MYtCdQ+W0RDaufkjfKnK7l1Vht37JCpEIZcZZ2B5aHQ0AtVEt2POQIQxzpwJTcVfcHfPWClBAa49zWI04lJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8lTk4hRxrZhQ/fhyVY54JOkDpKaShrolCHbrWuRPTV0=;
- b=fHPn0iE0Y359ZxUyYBYvs2EzC4l5uO/juVsAb5YsbQTkMcWfHxfMhDT6O9tLBxDDoq2KJvxyeP9bAED9bFv+ni9hLbYKE8MrXPcazPs482X4Z3bgI0RHA2EWUpDdmXYWolK1AdFqk62xGaz2xycSheTBQFv7DYviLAHcaTV51mBE7F1ywRiM5tYpvaNURUF81YiwxeRHj010EvIc+3g/i0YjUsb/XYn7AjyOfKRdapN0e4TDgAv4QdUnjjCsAFd42esMvC88BJJ+WOXMfTzYFP4xfQqkO/bB9uqcLpELtXZlMSD3kU0gXw5SkvSGbtcw5eA13dsW2Nxfrb5IEM9szA==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by BN0PR02MB8000.namprd02.prod.outlook.com (2603:10b6:408:16d::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.29; Sun, 30 Jun
- 2024 14:02:52 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%2]) with mapi id 15.20.7719.028; Sun, 30 Jun 2024
- 14:02:52 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: "hch@lst.de" <hch@lst.de>
-CC: =?iso-8859-2?Q?Petr_Tesa=F8=EDk?= <petr@tesarici.cz>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>, "joro@8bytes.org"
-	<joro@8bytes.org>, "will@kernel.org" <will@kernel.org>, "jgross@suse.com"
-	<jgross@suse.com>, "sstabellini@kernel.org" <sstabellini@kernel.org>,
-	"oleksandr_tyshchenko@epam.com" <oleksandr_tyshchenko@epam.com>,
-	"m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-Subject: RE: [RFC 1/1] swiotlb: Reduce calls to swiotlb_find_pool()
-Thread-Topic: [RFC 1/1] swiotlb: Reduce calls to swiotlb_find_pool()
-Thread-Index:
- AQHauIjoJBWSrCyO6UWzcncSceBiMLHa1Z9wgABomICAAA3OAIAAhiSggAAJLYCAAAn5IIAA6tuAgAAdhQCAAhqHMIAA6wAAgACDZAA=
-Date: Sun, 30 Jun 2024 14:02:52 +0000
-Message-ID:
- <SN6PR02MB415735CA2F5487AE3FD74FFED4D22@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20240607031421.182589-1-mhklinux@outlook.com>
- <SN6PR02MB41577686D72E206DB0084E90D4D62@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20240627060251.GA15590@lst.de>
- <20240627085216.556744c1@meshulam.tesarici.cz>
- <SN6PR02MB4157E61B49C8435E38AC968DD4D72@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20240627152513.GA23497@lst.de>
- <SN6PR02MB4157D9B1A64FF78461D6A7EDD4D72@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20240628060129.GA26206@lst.de>
- <20240628094708.3a454619@meshulam.tesarici.cz>
- <SN6PR02MB415781789CBD6597142BEC68D4D12@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20240630055542.GA5379@lst.de>
-In-Reply-To: <20240630055542.GA5379@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-tmn: [hFWwzBy8j2S1RGuEZXfH7YE/JsHE6jnB]
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|BN0PR02MB8000:EE_
-x-ms-office365-filtering-correlation-id: e5c7c2f5-31d9-4bc2-0a6c-08dc990d5538
-x-microsoft-antispam:
- BCL:0;ARA:14566002|461199028|8060799006|102099032|3412199025|440099028;
-x-microsoft-antispam-message-info:
- rUNDe6U7okKLMxQ3Y38uxbhxdVTELPNqzikkoDrT49IlbtYsIWeN79BkLYo9V2R5I2GBHHkBA2NOFEnQCmJuSD6Xim4k9u2vASWrJyl4mxupSc7aNhRD9XZxN5UcVfgYVNpjZ+ws7veE7Q08616fqANZiihXFzWb6b51bczbfIHohMo9g4/GgmWDZHG4dn6RvxdkEz7PxYht715cAql++MfYTtTYI9rA3SCihm+I5pazbsLIe+B8lkyKjPmVJrEXywlBSDPygBHtOITcHLzhUma27gL/cB4C8DKTd0hILtUMzE9Jv/fQRvm+WZrj2JRMJbJhxJDfoQpqfdjdLY2jaVTe8ZhPjqk/TpRBMtDi0DqK/oM5LT7J/a6x1LjdCY7/mzbMxNw+apQRP1ifxmv9+g7j5apSajD6kn/7eNBqAtaMY7uulFEwlSDm178vdKplcWOA4Una9ks69+C42oGA02kz2aNnW/ubw42Vh34mIhVJ6/rQ8LU+FyfyHvtHR5Mpeg5JKZ8YR0WWdmTiJaj+kdDEuQh/noMnGRefS0m5Nte7gf6RowWCvXUojWJy4kXNWCa/OD4/gGWZRu6c7iFx4dZA0oUwCp054VBwJtbRM6iAjzuHw4ZIAeffzrtJyVqb
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-2?Q?d2WOrTpAaya0ZFQLsUGOJCY5fQ2CgHXBhKPOipzluqhENuIbKs6MRxz8R7?=
- =?iso-8859-2?Q?ANgRRp5GQIikIuD2vy3El1hctKGYnxUbIPpR3gjuVXIzdKlZR6Q5fOUcUI?=
- =?iso-8859-2?Q?BSCiYP9OXqtBYIznQsLRjBfKYO8IxjLW0XdFPSjBztxCJpLYErVCi2G0o8?=
- =?iso-8859-2?Q?sy+rBwlq+XBnNkB1b9Lcmqr8Snp4ifz4NUFItShAkyt5Y72rgJ3KvEH3Z2?=
- =?iso-8859-2?Q?L59TQzGBnicReNC2MhUsr6Rp4vG42v0NhYV8tHX4bzVEePezH/hr9x20OB?=
- =?iso-8859-2?Q?ilEcqkdd3rIpD5e1iZRdSUEUS3xLdzj4OM1B38is6C7/dhsms+Qv1eNArr?=
- =?iso-8859-2?Q?xyTCxXz01uuxsEdjnf4tz5nHgM5fAxOKJg38mrueLa8f6V5XvGEwVgg7sG?=
- =?iso-8859-2?Q?sTackw65xPYgLKrKkoFwe4/YJC6dikXC194AxlhP54uT0pNDWMa1hTfLE/?=
- =?iso-8859-2?Q?nGAcb5z9qrO7ZgZnyb+FzQB4Yp6tS2SEWe0NYl8jBBNvQcTTE/gZprKb91?=
- =?iso-8859-2?Q?Hjg0c6rNoWuw77bUhV90t8Ga2LA2+Y4SFsmyQeyhXSeNrHdAAlocO4+gIu?=
- =?iso-8859-2?Q?f+9oJbuTmRdtwY+j6oALXOOFTSYa4QfK3A4MhkqCBZ/xtq/bBORzlN0zvW?=
- =?iso-8859-2?Q?BVBdGqm4NjxQtK16AC2MtRxeeM7W3oY5q/XMAHYk7LqX6RdeDr4OktdeXU?=
- =?iso-8859-2?Q?vOF3Mp93Futd+pYR4LgmZvieNZNA2g/JPMyCrwhK1UdpUtmWuP5NJbKzh8?=
- =?iso-8859-2?Q?tGb8xAeZ5nlboIEWmXSRYGeWhZz2dCkHzG2QIKW0I5kDz0AGps0chU3ugI?=
- =?iso-8859-2?Q?HW4MJHY3wYMAVz+SbyJvyTkLN99z+osthw4qWRgNUp2GkIHQRsFPijrPa1?=
- =?iso-8859-2?Q?xhptO40IuPkzX2wrDqtYfVTuPYTGJ9D1VF+VZiv+6FONFsYhVYwl8bIg/3?=
- =?iso-8859-2?Q?WzNuzlMpHEyvVTkQNDwQkbolhphhKlrLX4USELfLTH8cxF51Bnc+S7PfsB?=
- =?iso-8859-2?Q?uzhD33doAaAPFbxbYRDSJiGHhy3vwVJXjZBtoNwn1HW6L6fX8ROkga4TLA?=
- =?iso-8859-2?Q?yimmnbJ52NtcjJ9nw2AtBUofy2qKEVjvmdtWqOZm/OGanhbIRCywMVn5W2?=
- =?iso-8859-2?Q?T7DlvfwwdY5l0f2GQA5y7g33jvI1cnzpDQpN8fdqXmKfKaxv5U/8K/m3Ui?=
- =?iso-8859-2?Q?A4eWRT/w/ledJAiSBWkL1tdbObKgq4d02/BRkpz4PsCYOVqFppGG4oogIi?=
- =?iso-8859-2?Q?RLaVy6b203LS35BDwM5oOH8JUL7Dke8ETmUC/0IMw=3D?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="COhNXR4s"
+Received: by mail-pf1-f194.google.com with SMTP id d2e1a72fcca58-7066463c841so1202943b3a.1;
+        Sun, 30 Jun 2024 07:05:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719756308; x=1720361108; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3DMYWxVOVrbNinxcGttYFC0mIp7rbZQcJJC99krmUaA=;
+        b=COhNXR4sv+RgWoYqZSuZl+uXM+UHLNASbgDtXbkskijNi0vnEOWvOGA5lTERShg70n
+         NqdjfeGtNzTmmro/pome+0X0fZBe2+ibvGJHcxw81PuUvkeKZAvCzC1WStuc7gunA4tZ
+         AK5qx4of+LNBnLNV/hafVPPF4z/DTf2vA8+yMFHqaU/giurnlMtxxROA+9dhnrb3hxed
+         a+krIuz0A/rGn96iSPcQX/lkyEwRZJCgc34iDG2MivzDik5WIIAo3A3PDLj5T+XqVZsO
+         MlRmQUAOshWT7uk0AYYJ46NywBkIpX4dCnUrwh5DHPcqvzgQ8b+RAl0RL/SPeUkbR3FK
+         vfKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719756308; x=1720361108;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=3DMYWxVOVrbNinxcGttYFC0mIp7rbZQcJJC99krmUaA=;
+        b=N+JM2jU47SHUlOjb9BZMSkmSkOXJayHJZABqt/dvdtCNL3/5B8ltQKAY/4eWLgBokS
+         pLgjZSQJsvsRV9MwNayFFQNu0s9r48ZBUkJMN03+Svlkqc8/lN0Ve8qkAgYP6WL1N+wu
+         Ux0miRYcLde4eCE1FLMRl+1sOyVkPvyufPguQiQQafgLzb1ytvvcIrH7fn5VVpuvVsnm
+         HRVtqC/gBdvl5PymkyOPC3LmpEEHmny7K1hqZlBu2YWurFtiL2QS15fb0LZRKGbO37Ri
+         X3bZAFVjJ4AagFELnf0XWjjxyX0U6P45aLckpw6eEVYJdBsZTuE7QCLyEDuxCZ1eYnx7
+         s+wg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpdl3VB9oh96s/36RdpT5HxByicXlI3EmXFjEYzr0w166sc2BXW+e4I8gcxDSpj4XebScPVHfbIcpfI0yozjbFynoFyS/OFCV7UsxlGvYypXK799Hr4GvR1Xy/d7asmQCKBrVd
+X-Gm-Message-State: AOJu0YwbJhwhlCwWV/xJGV/6W9O84/PkyIk8GFokU6VMeb83YiHWWYMU
+	YWkAozveWlpNiiUwZ41X/G7mH3fPvHeXgMbXdrqbd6kZ22lWMP/t
+X-Google-Smtp-Source: AGHT+IErdZVHdJ/n/+BICGWyxIK1iehPhM3FHCl6vnJuEVkPFljF68IEBchgBhk61MJ9O5d8qzA4Ig==
+X-Received: by 2002:a05:6a20:748a:b0:1be:cf09:4f0 with SMTP id adf61e73a8af0-1bef61ff386mr2330753637.44.1719756308256;
+        Sun, 30 Jun 2024 07:05:08 -0700 (PDT)
+Received: from ?IPV6:2409:8a55:301b:e120:19b7:87b2:860d:6c8d? ([2409:8a55:301b:e120:19b7:87b2:860d:6c8d])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1598cfbsm46583435ad.250.2024.06.30.07.05.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 30 Jun 2024 07:05:07 -0700 (PDT)
+Message-ID: <0a80e362-1eb7-40b0-b1b9-07ec5a6506ea@gmail.com>
+Date: Sun, 30 Jun 2024 22:05:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: e5c7c2f5-31d9-4bc2-0a6c-08dc990d5538
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2024 14:02:52.2910
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR02MB8000
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v9 10/13] mm: page_frag: introduce
+ prepare/probe/commit API
+To: Alexander Duyck <alexander.duyck@gmail.com>,
+ Yunsheng Lin <linyunsheng@huawei.com>
+Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+References: <20240625135216.47007-1-linyunsheng@huawei.com>
+ <20240625135216.47007-11-linyunsheng@huawei.com>
+ <33c3c7fc00d2385e741dc6c9be0eade26c30bd12.camel@gmail.com>
+ <38da183b-92ba-ce9d-5472-def199854563@huawei.com>
+ <CAKgT0Ueg1u2S5LJuo0Ecs9dAPPDujtJ0GLcm8BTsfDx9LpJZVg@mail.gmail.com>
+From: Yunsheng Lin <yunshenglin0825@gmail.com>
+In-Reply-To: <CAKgT0Ueg1u2S5LJuo0Ecs9dAPPDujtJ0GLcm8BTsfDx9LpJZVg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-From: hch@lst.de <hch@lst.de> Sent: Saturday, June 29, 2024 10:56 PM
->=20
-> On Sat, Jun 29, 2024 at 03:55:58PM +0000, Michael Kelley wrote:
-> > Unless there is further discussion on this point, I'll just keep the or=
-iginal
-> > "is_swiotlb_buffer()" in v2.
->=20
-> That is the wrong name for something that returns the pool as pointed
-> out before.
+On 6/30/2024 1:37 AM, Alexander Duyck wrote:
+> On Sat, Jun 29, 2024 at 4:15 AM Yunsheng Lin <linyunsheng@huawei.com> wrote:
 
-OK. Since any new name could cause confusion with the existing
-swiotlb_find_pool(), here's my proposal:
+...
 
-1) Rename is_swiotlb_buffer() to swiotlb_find_pool(), since it
-now returns a pool.  A NULL return value indicates that the
-paddr is not an swiotlb buffer.
+>>>
+>>> Why is this a macro instead of just being an inline? Are you trying to
+>>> avoid having to include a header due to the virt_to_page?
+>>
+>> Yes, you are right.
+>> I tried including different headers for virt_to_page(), and it did not
+>> work for arch/x86/kernel/asm-offsets.s, which has included linux/sched.h,
+>> and linux/sched.h need 'struct page_frag_cache' for 'struct task_struct'
+>> after this patchset, including page_frag_cache.h for sched.h causes the
+>> below compiler error:
+>>
+>>    CC      arch/x86/kernel/asm-offsets.s
+>> In file included from ./arch/x86/include/asm/page.h:89,
+>>                   from ./arch/x86/include/asm/thread_info.h:12,
+>>                   from ./include/linux/thread_info.h:60,
+>>                   from ./include/linux/spinlock.h:60,
+>>                   from ./include/linux/swait.h:7,
+>>                   from ./include/linux/completion.h:12,
+>>                   from ./include/linux/crypto.h:15,
+>>                   from arch/x86/kernel/asm-offsets.c:9:
+>> ./include/linux/page_frag_cache.h: In function ‘page_frag_alloc_align’:
+>> ./include/asm-generic/memory_model.h:37:34: error: ‘vmemmap’ undeclared (first use in this function); did you mean ‘mem_map’?
+>>     37 | #define __pfn_to_page(pfn)      (vmemmap + (pfn))
+>>        |                                  ^~~~~~~
+>> ./include/asm-generic/memory_model.h:65:21: note: in expansion of macro ‘__pfn_to_page’
+>>     65 | #define pfn_to_page __pfn_to_page
+>>        |                     ^~~~~~~~~~~~~
+>> ./arch/x86/include/asm/page.h:68:33: note: in expansion of macro ‘pfn_to_page’
+>>     68 | #define virt_to_page(kaddr)     pfn_to_page(__pa(kaddr) >> PAGE_SHIFT)
+>>        |                                 ^~~~~~~~~~~
+>> ./include/linux/page_frag_cache.h:151:16: note: in expansion of macro ‘virt_to_page’
+>>    151 |         return virt_to_page(va);
+>>        |                ^~~~~~~~~~~~
+>> ./include/asm-generic/memory_model.h:37:34: note: each undeclared identifier is reported only once for each function it appears in
+>>     37 | #define __pfn_to_page(pfn)      (vmemmap + (pfn))
+>>        |                                  ^~~~~~~
+>> ./include/asm-generic/memory_model.h:65:21: note: in expansion of macro ‘__pfn_to_page’
+>>     65 | #define pfn_to_page __pfn_to_page
+>>        |                     ^~~~~~~~~~~~~
+>> ./arch/x86/include/asm/page.h:68:33: note: in expansion of macro ‘pfn_to_page’
+>>     68 | #define virt_to_page(kaddr)     pfn_to_page(__pa(kaddr) >> PAGE_SHIFT)
+>>        |                                 ^~~~~~~~~~~
+>> ./include/linux/page_frag_cache.h:151:16: note: in expansion of macro ‘virt_to_page’
+>>    151 |         return virt_to_page(va);
+>>
+>>
+> 
+> I am pretty sure you just need to add:
+> #include <asm/page.h>
 
-2) Similarly, rename is_xen_swiotlb_buffer() to
-xen_swiotlb_find_pool()
+I am supposing you mean adding the above to page_frag_cache.h, right?
 
-3) The existing swiotlb_find_pool() has the same function signature,
-but it is used only where the paddr is known to be an swiotlb buffer
-and hence always succeeds. Rename it to __swiotlb_find_pool() as
-the "internal" version of swiotlb_find_pool().
+It seems thing is more complicated for SPARSEMEM_VMEMMAP case, as it 
+needs the declaration of 'vmemmap'(some arch defines it as a pointer 
+variable while some arch defines it as a macro) and the definition of 
+'struct page' for '(vmemmap + (pfn))' operation.
 
-4) Do you still want is_swiotlb_buffer() as a trivial wrapper around
-the new swiotlb_find_pool(), for use solely in dma_direct_need_sync()
-where only a Boolean is needed and not the pool?
+Adding below for 'vmemmap' and 'struct page' seems to have some compiler 
+error caused by interdependence between linux/mm_types.h and asm/pgtable.h:
+#include <asm/pgtable.h>
+#include <linux/mm_types.h>
 
-Thanks,
+As below, asm/pgtable.h obviously need the definition of 'struct 
+mm_struct' from linux/mm_types.h, and linux/mm_types.h has some
+a long dependency of asm/pgtable.h starting from linux/uprobes.h
+if we add '#include <asm/pgtable.h>' in linux/page_frag_cache.h:
 
-Michael
+In file included from ./include/linux/page_frag_cache.h:8,
+                  from ./include/linux/sched.h:49,
+                  from ./include/linux/percpu.h:13,
+                  from ./arch/x86/include/asm/msr.h:15,
+                  from ./arch/x86/include/asm/tsc.h:10,
+                  from ./arch/x86/include/asm/timex.h:6,
+                  from ./include/linux/timex.h:67,
+                  from ./include/linux/time32.h:13,
+                  from ./include/linux/time.h:60,
+                  from ./include/linux/jiffies.h:10,
+                  from ./include/linux/ktime.h:25,
+                  from ./include/linux/timer.h:6,
+                  from ./include/linux/workqueue.h:9,
+                  from ./include/linux/srcu.h:21,
+                  from ./include/linux/notifier.h:16,
+                  from ./arch/x86/include/asm/uprobes.h:13,
+                  from ./include/linux/uprobes.h:49,
+                  from ./include/linux/mm_types.h:16,
+                  from ./include/linux/mmzone.h:22,
+                  from ./include/linux/gfp.h:7,
+                  from ./include/linux/slab.h:16,
+                  from ./include/linux/crypto.h:17,
+                  from arch/x86/kernel/asm-offsets.c:9:
+./arch/x86/include/asm/pgtable.h: In function ‘pte_accessible’:
+./arch/x86/include/asm/pgtable.h:970:40: error: invalid use of undefined 
+type ‘struct mm_struct’
+   970 |                         atomic_read(&mm->tlb_flush_pending))
+       |                                        ^~
+./arch/x86/include/asm/pgtable.h: In function ‘pmdp_establish’:
+./arch/x86/include/asm/pgtable.h:1370:37: error: invalid use of 
+undefined type ‘struct vm_area_struct’
+  1370 |         page_table_check_pmd_set(vma->vm_mm, pmdp, pmd);
+       |                                     ^~
+./arch/x86/include/asm/pgtable.h: At top level:
+./arch/x86/include/asm/pgtable.h:1495:50: error: ‘struct vm_fault’ 
+declared inside parameter list will not be visible outside of this 
+definition or declaration [-Werror]
+  1495 | static inline void update_mmu_cache_range(struct vm_fault *vmf,
+       |                                                  ^~~~~~~~
+In file included from ./arch/x86/include/asm/page.h:89,
+                  from ./arch/x86/include/asm/thread_info.h:12,
+                  from ./include/linux/thread_info.h:60,
+                  from ./include/linux/spinlock.h:60,
+                  from ./include/linux/swait.h:7,
+                  from ./include/linux/completion.h:12,
+                  from ./include/linux/crypto.h:15,
+                  from arch/x86/kernel/asm-offsets.c:9:
+./include/linux/page_frag_cache.h: In function ‘page_frag_alloc_probe’:
+./include/asm-generic/memory_model.h:37:42: error: invalid use of 
+undefined type ‘struct page’
+    37 | #define __pfn_to_page(pfn)      (vmemmap + (pfn))
+       |                                          ^
+./include/asm-generic/memory_model.h:65:21: note: in expansion of macro 
+‘__pfn_to_page’
+    65 | #define pfn_to_page __pfn_to_page
+       |                     ^~~~~~~~~~~~~
+./arch/x86/include/asm/page.h:68:33: note: in expansion of macro 
+‘pfn_to_page’
+    68 | #define virt_to_page(kaddr)     pfn_to_page(__pa(kaddr) >> 
+PAGE_SHIFT)
+       |                                 ^~~~~~~~~~~
+./include/linux/page_frag_cache.h:225:16: note: in expansion of macro 
+‘virt_to_page’
+   225 |         return virt_to_page(encoded_va);
+       |                ^~~~~~~~~~~~
+cc1: all warnings being treated as errors
+
+> 
