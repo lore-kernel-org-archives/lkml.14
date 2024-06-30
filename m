@@ -1,86 +1,76 @@
-Received: from mail-m2411.xmail.ntesmail.com (mail-m2411.xmail.ntesmail.com [45.195.24.11])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FAF92C1BA;
-	Sun, 30 Jun 2024 19:47:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.24.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E5F2C1BA
+	for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2024 19:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719776854; cv=none; b=j+jz2ha7Uqt3Noj9biItsHtLLv22/A6dPdU8J/X9d9SjrJ7E4nVCsmVu/sZDBJ0cz9R8Ak9CqpH7wfFC/c2E1HcXkJkY8TjBGEUi4VWdlP/dDl0v1ZxgNd9xsCJghC2S16eZHL2xd3KDdg7C+ve9PNioid35g+k4e2KIN48atKQ=
+	t=1719777182; cv=none; b=n7jViMmlLS1siGbL9HDSdeNf2GjIY4STk8lxyS4F589d7OfJ+zemdjq0cErGJclcDiKVBa9jm+jyNOchbaLjc55G6im9nBr7HtPFJyXwU1CJSKEEr+so9nNBHqlxMegq8kzgdi5Ufyh3+NKkK+GUVutyCMZM7I+fMzLVzkMYycQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719776854; c=relaxed/simple;
-	bh=Ka8TDxRrvq/QMKiwR/kAJmsQAcG8YwV5EicJrDLe8mI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gvQVeHXTJY/pl8phlGGb1n4BZ9lR9AzBZ1RVvHvtMupq4B0DS7NLq3bDLlGxjNl5QSnwBb8lmQUqn5fP4QLSC94FxO42UcrGdClngMvgs0WUawVcHBgCagyiQf1cG4520QyR9KjRoJV0tIfa3lK5dl9AzzkVzIaTYaK9UGXmHPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.195.24.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
-Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c01:1720:3110:52ea:d52a:84f0])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 52C767E018C;
-	Sun, 30 Jun 2024 23:00:19 +0800 (CST)
-From: Chukun Pan <amadeus@jmu.edu.cn>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Chukun Pan <amadeus@jmu.edu.cn>
-Subject: [PATCH v2 8/9] arm64: dts: rockchip: remove useless tx/rx_delay for Lunzn Fastrhino R68S
-Date: Sun, 30 Jun 2024 23:00:09 +0800
-Message-Id: <20240630150010.55729-9-amadeus@jmu.edu.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240630150010.55729-1-amadeus@jmu.edu.cn>
-References: <20240630150010.55729-1-amadeus@jmu.edu.cn>
+	s=arc-20240116; t=1719777182; c=relaxed/simple;
+	bh=zjrep4fX9TmpsgCAS9uCVjQRvbS1Ne2EqtBf2V7TwfM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d5sXM3RW79KzEO71fSdj4GPf40Q3iZunvugKBAPCkZtE7B05GpQP/5YGqqCNRG5okrePDG7xObExtoQo+EIMN+aXdhLl69BDBQUmJppGtfT+N1K+EYNMsIeDSkgoAunSYtWNyZKIdcGxxVyP3VJzi+FCOxlYEKix7MRQcRkHfHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Qb4jgR/M; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Qb4jgR/M"
+X-Envelope-To: surenb@google.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1719777174;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rl3FZxzTv6nkUMASAYvw9B8a5YZiWMBa7RB0BRu1rRY=;
+	b=Qb4jgR/MtNRK+7bUH1C4JiDr6rYwpc54H/vo3kvIVx36HKB6OlJPcwCKrkLorjp+HpqPid
+	iDpzITqlK083JXmw4t04lIQ+aWf8AG11rc8jnk1uDiubhEyGSSTNvh4NcQ94z8ybCyEBEb
+	7cQLuac+4BJWiSbSFJgKCouzFY1fSrc=
+X-Envelope-To: 00107082@163.com
+X-Envelope-To: akpm@linux-foundation.org
+X-Envelope-To: linux-mm@kvack.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+Date: Sun, 30 Jun 2024 15:52:51 -0400
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: David Wang <00107082@163.com>, akpm@linux-foundation.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Add accumulated call counter for memory allocation
+ profiling
+Message-ID: <baku3uqaneue53rr7uixlio4hvfgig4kcox3h45y3ijvigwait@sfsxp2pcftqr>
+References: <20240617153250.9079-1-00107082@163.com>
+ <CAJuCfpGaEJLaWYPidiAG1vtayugQY5vJoFv9Opauh1TrofOv7Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCGhlKVkJIGUlCSUIaQxlNHlYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlJT0seQUgZSEFJGEtKQUpMSUtBSEpKS0FOSR4aQR9OSRpBQ08dS1lXWRYaDx
-	IVHRRZQVlPS0hVSktJT09PS1VKS0tVS1kG
-X-HM-Tid: 0a9069a945e803a2kunm52c767e018c
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MiI6KTo4PTNPARwhFzcOSDk8
-	KzUKCRhVSlVKTEpCTE5CTUpCQ0JKVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
-	Sx5BSBlIQUkYS0pBSkxJS0FISkpLQU5JHhpBH05JGkFDTx1LWVdZCAFZQUlIQ0o3Bg++
+In-Reply-To: <CAJuCfpGaEJLaWYPidiAG1vtayugQY5vJoFv9Opauh1TrofOv7Q@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-Since we use rgmii-id as the phy mode, remove the useless
-tx_delay and rx_delay properties.
+On Sun, Jun 30, 2024 at 12:33:14PM GMT, Suren Baghdasaryan wrote:
+> On Mon, Jun 17, 2024 at 8:33 AM David Wang <00107082@163.com> wrote:
+> >
+> > Accumulated call counter can be used to evaluate rate
+> > of memory allocation via delta(counters)/delta(time).
+> > This metrics can help analysis performance behaviours,
+> > e.g. tuning cache size, etc.
+> 
+> Sorry for the delay, David.
+> IIUC with this counter you can identify the number of allocations ever
+> made from a specific code location. Could you please clarify the usage
+> a bit more? Is the goal to see which locations are the most active and
+> the rate at which allocations are made there? How will that
+> information be used?
+> I'm a bit cautious here because each counter will take more space and
+> use some additional cpu cycles.
+> Thanks,
+> Suren.
 
-Fixes: b9f8ca655d80 ("arm64: dts: rockchip: Add Lunzn Fastrhino R68S")
-Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
----
- arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r68s.dts | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r68s.dts b/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r68s.dts
-index 02d966d218fd..d27eb37b5b35 100644
---- a/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r68s.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r68s.dts
-@@ -39,8 +39,6 @@ &gmac0_tx_bus2
- 		     &gmac0_rx_bus2
- 		     &gmac0_rgmii_clk
- 		     &gmac0_rgmii_bus>;
--	tx_delay = <0x3c>;
--	rx_delay = <0x2f>;
- 	status = "okay";
- };
- 
-@@ -57,8 +55,6 @@ &gmac1m1_tx_bus2
- 		     &gmac1m1_rx_bus2
- 		     &gmac1m1_rgmii_clk
- 		     &gmac1m1_rgmii_bus>;
--	tx_delay = <0x4f>;
--	rx_delay = <0x26>;
- 	status = "okay";
- };
- 
--- 
-2.25.1
-
+Maybe behind another kconfig option?
