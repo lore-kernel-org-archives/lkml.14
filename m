@@ -1,270 +1,104 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1E412F365;
-	Mon,  1 Jul 2024 10:58:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B3B14B970;
+	Mon,  1 Jul 2024 10:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719831501; cv=none; b=KMlVbTewcCADxR8gu0RWoORf9qyqz3pW3PdaY5bvojgVru+YcrzdTaTUECOwH9yBaVq9me0w6PNnKJWlBMPoNHemYOrNGmI0ZlMGwGeq/uAytAR1aBbNZLL4sggfUieEmHTAgx9GQ00MSESAN6Gt7VHzmFYIJtn+5JIzjmTLbsw=
+	t=1719831505; cv=none; b=bmRQ8CNcSXLnUwH1aTjZyOGvaNTAE6oqJ8HGVY2tgicOFHa4grQLrCPzpx4Y7wz8CTXDHo1gbttyzOchuwsPtCYfgH/BFSn+ZhWeo80VA/Bs78aTrG4v4TjJKZNX7RTtcCwj2U1ZHqdiAloUImg0WTGUcEuI/3rJmDHR58HTSYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719831501; c=relaxed/simple;
-	bh=qLsaKtCYnUzq0nXL+azhAqq1n1fTZrIIiNimkfTTjm4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u12Tv79erGPbISk+kRjkSczHhPWqTa1Vjj2DY1rrgorHOihDm864jWTRN95ArU1Hwuvihh/HqgGAqaqumn4RqWrRnuC/2hfDTCFMJg1d0uclMbVmGu03K2tv739g5iWr0f/cJ55SwmpHcuWMq/CO2u3NiPmurRRRG/TiickaktU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=il+0qxmB; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1719831505; c=relaxed/simple;
+	bh=qfmjcgXwXL9ej5UsHYaaLGC4iEOatC7wQkbgxNZII50=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k0ZGDRta0qcWcuAC8SeCo5RghVXIxbaP4lXAXa+RNdrhyB/xogAxWOjUcZHx4wOLukdQYJsmwapuoUBFVkgdQ/D2cR7E3Ht3iYMitEGL9WhSsZV7Nn9VfUypw7+wNoKY7UOoEvQIuof8FmuBMvpgWIOfTShkYLuuu1bDeWvXIh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nFlUdJ5X; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="il+0qxmB"
-X-UUID: d03244a2379811ef99dc3f8fac2c3230-20240701
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=jgdxjlgqPjA+N/a60WUCAtQK9GZWi4HYoDxh9IrR7fI=;
-	b=il+0qxmBLJxeQfjpyLojX9PhbbZR4uFUhlY0rvNQ7JVBZaKnigJWrYhls2lZxTFsLd1OvNbpqfftAP9fhASU6DOJveZaLl1Rf3GuCabDs3G6SRn6hZZWgKKZqtut2lcCIYg+1BJFeTidG8YxkckLdvhK2vOWb88IczM2o8Uq26o=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.40,REQID:34a81212-748a-4f97-a664-367acb3b3a32,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:ba885a6,CLOUDID:008cd0d4-0d68-4615-a20f-01d7bd41f0bb,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:1,EDM:-3,IP:nil,U
-	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: d03244a2379811ef99dc3f8fac2c3230-20240701
-Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw02.mediatek.com
-	(envelope-from <skylake.huang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1391373857; Mon, 01 Jul 2024 18:58:13 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Mon, 1 Jul 2024 18:58:12 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Mon, 1 Jul 2024 18:58:12 +0800
-From: Sky Huang <SkyLake.Huang@mediatek.com>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Daniel Golle
-	<daniel@makrotopia.org>, Qingfang Deng <dqfext@gmail.com>, SkyLake Huang
-	<SkyLake.Huang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
-CC: Steven Liu <Steven.Liu@mediatek.com>, SkyLake.Huang
-	<skylake.huang@mediatek.com>
-Subject: [PATCH net-next v10 08/13] net: phy: mediatek: Change mtk-ge-soc.c line wrapping
-Date: Mon, 1 Jul 2024 18:54:12 +0800
-Message-ID: <20240701105417.19941-9-SkyLake.Huang@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20240701105417.19941-1-SkyLake.Huang@mediatek.com>
-References: <20240701105417.19941-1-SkyLake.Huang@mediatek.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nFlUdJ5X"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 461AvZWj023589;
+	Mon, 1 Jul 2024 10:58:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=q
+	fmjcgXwXL9ej5UsHYaaLGC4iEOatC7wQkbgxNZII50=; b=nFlUdJ5XypgfCuyC1
+	EsBU2zf8UfzPGnr2+cotqzU3GdzhFF8jnJY1UIoVvWv+bFRb19Nlz819kVRyU4iq
+	QSfzJvSSNZcGAt8KftOWYu+nUXpLYcUNiP4/W/CMljdm3nkpoaUbu9pF1Q72bIWA
+	KnLiFGGZKpYif1FHLVMUMNt/dB2mb+9qx4Vk+dSlI5uxjCzMcfUgr9XMzTaxiTVW
+	KsT8kT6hmbLo54e/Pi7zA7EFN7oXpKT83M4ymCDUAEOGcqpX+qVkz4IYvMUeP2t3
+	YRSzvVohLn/3JygS39LM+IdkDO5BSa+4c7FmHyghHdKsMmdT4Xo2XMmssRRlSuz0
+	wUmuQ==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 403u5m8044-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 01 Jul 2024 10:58:19 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4619Vf4x024114;
+	Mon, 1 Jul 2024 10:58:19 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 402ya36dym-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 01 Jul 2024 10:58:19 +0000
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 461AwFmL48235226
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 1 Jul 2024 10:58:17 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A969558055;
+	Mon,  1 Jul 2024 10:58:15 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6AC8B58067;
+	Mon,  1 Jul 2024 10:58:13 +0000 (GMT)
+Received: from [9.171.47.124] (unknown [9.171.47.124])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  1 Jul 2024 10:58:13 +0000 (GMT)
+Message-ID: <c41c53e4-aa6d-47b7-b928-0c1b9e8dcdc3@linux.ibm.com>
+Date: Mon, 1 Jul 2024 12:58:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--3.130700-8.000000
-X-TMASE-MatchedRID: ptJ0KTv/UXA9d1nHWxkekOKXavbHY/C1Ct59Uh3p/NWiXe5nNnUYtyAO
-	g9E37d4vvT6pHvydqvemGallF1XuaE6M27pFjx1L7spMO3HwKCAEa8g1x8eqFz6BH6zbVSRYW+v
-	0m5ycBq8e3c05NORFxx0BvcHhKs9ujNCnuZyJlEhH+PTjR9EWkvTcf8Av+QSAmyiLZetSf8mfop
-	0ytGwvXiq2rl3dzGQ1VZLvl77XgncBHu70Y56PL/xrHMwUkSRUrtjPkyE1bgMbqn+ZdF0SF+jCd
-	5IpKCDuW2XZLBse18l3EtoBQLXwIaN3P9GaabqVr9cWg8rSFn10BNB20+SxH7f8mJY57oZddJaB
-	DYald1mHO0tVYDV4T0MMprcbiest
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--3.130700-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP:
-	EC33C2B7BFB0C398FBDEDC2F9BAEA47284EF18CB8B9A88D9F0462E882329B9442000:8
-X-MTK: N
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] s390/dasd: fix error checks in dasd_copy_pair_store()
+To: =?UTF-8?Q?Carlos_L=C3=B3pez?= <clopez@suse.de>, linux-s390@vger.kernel.org
+Cc: Jan Hoeppner <hoeppner@linux.ibm.com>, Heiko Carstens
+ <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, Jens Axboe <axboe@kernel.dk>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20240527135044.27427-1-clopez@suse.de>
+Content-Language: en-US
+From: Stefan Haberland <sth@linux.ibm.com>
+In-Reply-To: <20240527135044.27427-1-clopez@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: dPZozCrxvg7Nfru8mf_1pc7X9RORArOe
+X-Proofpoint-ORIG-GUID: dPZozCrxvg7Nfru8mf_1pc7X9RORArOe
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-01_08,2024-06-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ spamscore=0 mlxscore=0 lowpriorityscore=0 mlxlogscore=842
+ priorityscore=1501 bulkscore=0 adultscore=0 suspectscore=0 clxscore=1011
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407010080
 
-From: "SkyLake.Huang" <skylake.huang@mediatek.com>
+Am 27.05.24 um 15:50 schrieb Carlos López:
+> dasd_add_busid() can return an error via ERR_PTR() if an allocation
+> fails. However, two callsites in dasd_copy_pair_store() do not check
+> the result, potentially resulting in a NULL pointer dereference. Fix
+> this by checking the result with IS_ERR() and returning the error up
+> the stack.
+>
+> Fixes: a91ff09d39f9b ("s390/dasd: add copy pair setup")
+> Signed-off-by: Carlos López <clopez@suse.de>
+> ---
 
-This patch shrinks mtk-ge-soc.c line wrapping to 80 characters.
-
-Signed-off-by: SkyLake.Huang <skylake.huang@mediatek.com>
----
- drivers/net/phy/mediatek/mtk-ge-soc.c | 67 +++++++++++++++++----------
- 1 file changed, 42 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/net/phy/mediatek/mtk-ge-soc.c b/drivers/net/phy/mediatek/mtk-ge-soc.c
-index 26c2183..cb6838b 100644
---- a/drivers/net/phy/mediatek/mtk-ge-soc.c
-+++ b/drivers/net/phy/mediatek/mtk-ge-soc.c
-@@ -295,7 +295,8 @@ static int cal_cycle(struct phy_device *phydev, int devad,
- 	ret = phy_read_mmd_poll_timeout(phydev, MDIO_MMD_VEND1,
- 					MTK_PHY_RG_AD_CAL_CLK, reg_val,
- 					reg_val & MTK_PHY_DA_CAL_CLK, 500,
--					ANALOG_INTERNAL_OPERATION_MAX_US, false);
-+					ANALOG_INTERNAL_OPERATION_MAX_US,
-+					false);
- 	if (ret) {
- 		phydev_err(phydev, "Calibration cycle timeout\n");
- 		return ret;
-@@ -304,7 +305,7 @@ static int cal_cycle(struct phy_device *phydev, int devad,
- 	phy_clear_bits_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_RG_AD_CALIN,
- 			   MTK_PHY_DA_CALIN_FLAG);
- 	ret = phy_read_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_RG_AD_CAL_COMP) >>
--			   MTK_PHY_AD_CAL_COMP_OUT_SHIFT;
-+	      MTK_PHY_AD_CAL_COMP_OUT_SHIFT;
- 	phydev_dbg(phydev, "cal_val: 0x%x, ret: %d\n", cal_val, ret);
- 
- 	return ret;
-@@ -394,38 +395,46 @@ static int tx_amp_fill_result(struct phy_device *phydev, u16 *buf)
- 	}
- 
- 	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TXVLD_DA_RG,
--		       MTK_PHY_DA_TX_I2MPB_A_GBE_MASK, (buf[0] + bias[0]) << 10);
-+		       MTK_PHY_DA_TX_I2MPB_A_GBE_MASK,
-+		       (buf[0] + bias[0]) << 10);
- 	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TXVLD_DA_RG,
- 		       MTK_PHY_DA_TX_I2MPB_A_TBT_MASK, buf[0] + bias[1]);
- 	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_A2,
--		       MTK_PHY_DA_TX_I2MPB_A_HBT_MASK, (buf[0] + bias[2]) << 10);
-+		       MTK_PHY_DA_TX_I2MPB_A_HBT_MASK,
-+		       (buf[0] + bias[2]) << 10);
- 	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_A2,
- 		       MTK_PHY_DA_TX_I2MPB_A_TST_MASK, buf[0] + bias[3]);
- 
- 	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_B1,
--		       MTK_PHY_DA_TX_I2MPB_B_GBE_MASK, (buf[1] + bias[4]) << 8);
-+		       MTK_PHY_DA_TX_I2MPB_B_GBE_MASK,
-+		       (buf[1] + bias[4]) << 8);
- 	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_B1,
- 		       MTK_PHY_DA_TX_I2MPB_B_TBT_MASK, buf[1] + bias[5]);
- 	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_B2,
--		       MTK_PHY_DA_TX_I2MPB_B_HBT_MASK, (buf[1] + bias[6]) << 8);
-+		       MTK_PHY_DA_TX_I2MPB_B_HBT_MASK,
-+		       (buf[1] + bias[6]) << 8);
- 	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_B2,
- 		       MTK_PHY_DA_TX_I2MPB_B_TST_MASK, buf[1] + bias[7]);
- 
- 	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_C1,
--		       MTK_PHY_DA_TX_I2MPB_C_GBE_MASK, (buf[2] + bias[8]) << 8);
-+		       MTK_PHY_DA_TX_I2MPB_C_GBE_MASK,
-+		       (buf[2] + bias[8]) << 8);
- 	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_C1,
- 		       MTK_PHY_DA_TX_I2MPB_C_TBT_MASK, buf[2] + bias[9]);
- 	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_C2,
--		       MTK_PHY_DA_TX_I2MPB_C_HBT_MASK, (buf[2] + bias[10]) << 8);
-+		       MTK_PHY_DA_TX_I2MPB_C_HBT_MASK,
-+		       (buf[2] + bias[10]) << 8);
- 	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_C2,
- 		       MTK_PHY_DA_TX_I2MPB_C_TST_MASK, buf[2] + bias[11]);
- 
- 	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_D1,
--		       MTK_PHY_DA_TX_I2MPB_D_GBE_MASK, (buf[3] + bias[12]) << 8);
-+		       MTK_PHY_DA_TX_I2MPB_D_GBE_MASK,
-+		       (buf[3] + bias[12]) << 8);
- 	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_D1,
- 		       MTK_PHY_DA_TX_I2MPB_D_TBT_MASK, buf[3] + bias[13]);
- 	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_D2,
--		       MTK_PHY_DA_TX_I2MPB_D_HBT_MASK, (buf[3] + bias[14]) << 8);
-+		       MTK_PHY_DA_TX_I2MPB_D_HBT_MASK,
-+		       (buf[3] + bias[14]) << 8);
- 	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_TX_I2MPB_TEST_MODE_D2,
- 		       MTK_PHY_DA_TX_I2MPB_D_TST_MASK, buf[3] + bias[15]);
- 
-@@ -616,7 +625,8 @@ static int tx_vcm_cal_sw(struct phy_device *phydev, u8 rg_txreserve_x)
- 		goto restore;
- 
- 	/* We calibrate TX-VCM in different logic. Check upper index and then
--	 * lower index. If this calibration is valid, apply lower index's result.
-+	 * lower index. If this calibration is valid, apply lower index's
-+	 * result.
- 	 */
- 	ret = upper_ret - lower_ret;
- 	if (ret == 1) {
-@@ -645,7 +655,8 @@ static int tx_vcm_cal_sw(struct phy_device *phydev, u8 rg_txreserve_x)
- 	} else if (upper_idx == TXRESERVE_MAX && upper_ret == 0 &&
- 		   lower_ret == 0) {
- 		ret = 0;
--		phydev_warn(phydev, "TX-VCM SW cal result at high margin 0x%x\n",
-+		phydev_warn(phydev,
-+			    "TX-VCM SW cal result at high margin 0x%x\n",
- 			    upper_idx);
- 	} else {
- 		ret = -EINVAL;
-@@ -749,7 +760,8 @@ static void mt7981_phy_finetune(struct phy_device *phydev)
- 
- 	/* TR_OPEN_LOOP_EN = 1, lpf_x_average = 9 */
- 	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_RG_DEV1E_REG234,
--		       MTK_PHY_TR_OPEN_LOOP_EN_MASK | MTK_PHY_LPF_X_AVERAGE_MASK,
-+		       MTK_PHY_TR_OPEN_LOOP_EN_MASK |
-+		       MTK_PHY_LPF_X_AVERAGE_MASK,
- 		       BIT(0) | FIELD_PREP(MTK_PHY_LPF_X_AVERAGE_MASK, 0x9));
- 
- 	/* rg_tr_lpf_cnt_val = 512 */
-@@ -818,7 +830,8 @@ static void mt7988_phy_finetune(struct phy_device *phydev)
- 
- 	/* TR_OPEN_LOOP_EN = 1, lpf_x_average = 10 */
- 	phy_modify_mmd(phydev, MDIO_MMD_VEND1, MTK_PHY_RG_DEV1E_REG234,
--		       MTK_PHY_TR_OPEN_LOOP_EN_MASK | MTK_PHY_LPF_X_AVERAGE_MASK,
-+		       MTK_PHY_TR_OPEN_LOOP_EN_MASK |
-+		       MTK_PHY_LPF_X_AVERAGE_MASK,
- 		       BIT(0) | FIELD_PREP(MTK_PHY_LPF_X_AVERAGE_MASK, 0xa));
- 
- 	/* rg_tr_lpf_cnt_val = 1023 */
-@@ -930,7 +943,8 @@ static void mt798x_phy_eee(struct phy_device *phydev)
- 	phy_restore_page(phydev, MTK_PHY_PAGE_STANDARD, 0);
- 
- 	phy_select_page(phydev, MTK_PHY_PAGE_EXTENDED_3);
--	__phy_modify(phydev, MTK_PHY_LPI_REG_14, MTK_PHY_LPI_WAKE_TIMER_1000_MASK,
-+	__phy_modify(phydev, MTK_PHY_LPI_REG_14,
-+		     MTK_PHY_LPI_WAKE_TIMER_1000_MASK,
- 		     FIELD_PREP(MTK_PHY_LPI_WAKE_TIMER_1000_MASK, 0x19c));
- 
- 	__phy_modify(phydev, MTK_PHY_LPI_REG_1c, MTK_PHY_SMI_DET_ON_THRESH_MASK,
-@@ -940,7 +954,8 @@ static void mt798x_phy_eee(struct phy_device *phydev)
- 	phy_modify_mmd(phydev, MDIO_MMD_VEND1,
- 		       MTK_PHY_RG_LPI_PCS_DSP_CTRL_REG122,
- 		       MTK_PHY_LPI_NORM_MSE_HI_THRESH1000_MASK,
--		       FIELD_PREP(MTK_PHY_LPI_NORM_MSE_HI_THRESH1000_MASK, 0xff));
-+		       FIELD_PREP(MTK_PHY_LPI_NORM_MSE_HI_THRESH1000_MASK,
-+				  0xff));
- }
- 
- static int cal_sw(struct phy_device *phydev, enum CAL_ITEM cal_item,
-@@ -1119,14 +1134,15 @@ static int mt798x_phy_led_brightness_set(struct phy_device *phydev,
- 				     MTK_GPHY_LED_ON_MASK, (value != LED_OFF));
- }
- 
--static const unsigned long supported_triggers = (BIT(TRIGGER_NETDEV_FULL_DUPLEX) |
--						 BIT(TRIGGER_NETDEV_HALF_DUPLEX) |
--						 BIT(TRIGGER_NETDEV_LINK)        |
--						 BIT(TRIGGER_NETDEV_LINK_10)     |
--						 BIT(TRIGGER_NETDEV_LINK_100)    |
--						 BIT(TRIGGER_NETDEV_LINK_1000)   |
--						 BIT(TRIGGER_NETDEV_RX)          |
--						 BIT(TRIGGER_NETDEV_TX));
-+static const unsigned long supported_triggers =
-+	(BIT(TRIGGER_NETDEV_FULL_DUPLEX) |
-+	 BIT(TRIGGER_NETDEV_HALF_DUPLEX) |
-+	 BIT(TRIGGER_NETDEV_LINK)        |
-+	 BIT(TRIGGER_NETDEV_LINK_10)     |
-+	 BIT(TRIGGER_NETDEV_LINK_100)    |
-+	 BIT(TRIGGER_NETDEV_LINK_1000)   |
-+	 BIT(TRIGGER_NETDEV_RX)          |
-+	 BIT(TRIGGER_NETDEV_TX));
- 
- static int mt798x_phy_led_hw_is_supported(struct phy_device *phydev, u8 index,
- 					  unsigned long rules)
-@@ -1189,7 +1205,8 @@ static int mt7988_phy_fix_leds_polarities(struct phy_device *phydev)
- 	/* Only now setup pinctrl to avoid bogus blinking */
- 	pinctrl = devm_pinctrl_get_select(&phydev->mdio.dev, "gbe-led");
- 	if (IS_ERR(pinctrl))
--		dev_err(&phydev->mdio.bus->dev, "Failed to setup PHY LED pinctrl\n");
-+		dev_err(&phydev->mdio.bus->dev,
-+			"Failed to setup PHY LED pinctrl\n");
- 
- 	return 0;
- }
--- 
-2.18.0
+Applied, thanks.
 
