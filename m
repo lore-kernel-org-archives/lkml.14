@@ -1,93 +1,137 @@
-Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043DC16EB71
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 20:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C7F16FF47
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 20:14:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719864842; cv=none; b=ehaYnQBtu666XtE9ONTDe7FslqNyP0KPl68mkGkvF7lDJDH4p0T4SDF1Dv20z0QOfpbgbfcKGQ4gxjG5Y4478zeaEtjX8MKgbXT7t7fRh34+yrSDC81mx/0RzFCbORz7IchjQ/yE3H4xtlArfVKBlQzQZbpuBZayM+S/MK+T/g8=
+	t=1719864862; cv=none; b=edvBHpmODyK+kkFEvi0ZqrFPt2WG0X+Z4cGN6Apk2bwyB3ItDPkG8EnIuGeEUtCVa7CL4chqTSoQTm5wCafdLkTzw8Pyaj80xKhFt/ZbvbatGT1Xspj01LKB8vAwxOiIsUILoUSX1tu6qhV8OqSN2PUFMptEC+izhYrFgULQsf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719864842; c=relaxed/simple;
-	bh=Ndb5tmWj2t6x8ReEqmKsTqHT3T9VRXbJNhom5ZerJWY=;
+	s=arc-20240116; t=1719864862; c=relaxed/simple;
+	bh=on5WVIclPkUFu3F4jhc3/dJr8reOuiDULJmhQJbCJfU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RiuV/Ps3oet/J22YW1eU0QmWYdv2UDWccxV6Gv6UpukPIGvyoglrGSGCrgkUrDAmRZERYgmoAuev/vXTFTcUk5GAGVLfTsLv7nYJihs5Ya4B+FOGhorisW0ZqGxe0K91cjkGLZx0aspw58Z9DPf3xYDc+y55kx9RkQ6WbCcwgvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=vq8yO1P3; arc=none smtp.client-ip=199.89.1.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	 In-Reply-To:Content-Type; b=XOrKO6QRFfd9jF7gIGOsRPX/JWecxGneVYU6n/R6OllyJp4FlAHkYjilyGSFGZzdsBOS5Q3n2OEF5YV1lPchTdkYQR+BK5J2s2WUOF+nyChdAhpxS+DF8frMHNNAwqknR36dcySof7xt8frzETeCyQFmDF0dK360uLo9KPd/heQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZwiD7hJD; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="vq8yO1P3"
-Received: from localhost (localhost [127.0.0.1])
-	by 008.lax.mailroute.net (Postfix) with ESMTP id 4WCcgr2tlwz6Cnv3g;
-	Mon,  1 Jul 2024 20:14:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1719864838; x=1722456839; bh=s3p0y6oCJfmqRErS35Xg3T7r
-	p10skE//lwfuVK9bxtg=; b=vq8yO1P36uFGHMXXboxKskGk2TAwQAK+/ZA4ETJd
-	HsnmVpCBNSk5NnykYcev0hKwW4q8alrQSnaHfbJhXmg0y96W4pMBEJVmyytHKoG0
-	8V3twDmzKCthXCaDgKUq0CGtof9V1Kos+E5Il7THaGa/xf5fZuFTSXCemp5D7hxf
-	+T+M9y1Df+LQrd2O8NiT+IWIqjSunyNcQXBrqw6BwkFd0+RuKalyfYB5UuPNxz3N
-	5ZWdMafdkL+0VZJFZz9YRsm6e+g6tVNxEqy+m5KHL8Knq9XSZqJI8mpAnBXwExLm
-	O14hlQ0h8gvo/CfWo2nSJU2UMgco31/LliAFpzE4+NumCg==
-X-Virus-Scanned: by MailRoute
-Received: from 008.lax.mailroute.net ([127.0.0.1])
- by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id vQwZ7Eajtq53; Mon,  1 Jul 2024 20:13:58 +0000 (UTC)
-Received: from [192.168.50.14] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4WCcgp0qrPz6Cnk9Y;
-	Mon,  1 Jul 2024 20:13:57 +0000 (UTC)
-Message-ID: <63917f94-d9ed-4d43-b0a8-50ae4afcf1ee@acm.org>
-Date: Mon, 1 Jul 2024 13:13:57 -0700
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZwiD7hJD"
+X-Envelope-To: kotaranov@linux.microsoft.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1719864858;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vVcX2CswbR9UqeUv5mjFgUSyxPx+TGqXWoaQOVEf264=;
+	b=ZwiD7hJDDV5UzHgeRrn00a0K1XK2mTwKIT1fHzo+/wiAzSLfdnW/U6K+Gy+1fHY5Rs+sPo
+	To16EGr9/2xhpZu8IQQaMbgfo0zqyYqY6SHvYCumLHP1pVSewM0qy1CmvdoS26iktQe6+t
+	t2v+anKsIlQ13kRomxH1cPc9H/xnOJo=
+X-Envelope-To: kotaranov@microsoft.com
+X-Envelope-To: pabeni@redhat.com
+X-Envelope-To: haiyangz@microsoft.com
+X-Envelope-To: kys@microsoft.com
+X-Envelope-To: edumazet@google.com
+X-Envelope-To: kuba@kernel.org
+X-Envelope-To: davem@davemloft.net
+X-Envelope-To: decui@microsoft.com
+X-Envelope-To: wei.liu@kernel.org
+X-Envelope-To: sharmaajay@microsoft.com
+X-Envelope-To: longli@microsoft.com
+X-Envelope-To: jgg@ziepe.ca
+X-Envelope-To: leon@kernel.org
+X-Envelope-To: linux-rdma@vger.kernel.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: netdev@vger.kernel.org
+Message-ID: <5b418472-4370-4626-9373-064e7aaf9ae5@linux.dev>
+Date: Tue, 2 Jul 2024 04:14:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/53] Let create*_workqueue() accept a printf-style
- format string
-To: Tejun Heo <tj@kernel.org>
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>,
- "Martin K . Petersen" <martin.petersen@oracle.com>,
- linux-kernel@vger.kernel.org
-References: <20240630222904.627462-1-bvanassche@acm.org>
- <ZoMF1ZydZUusxRcf@slm.duckdns.org>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <ZoMF1ZydZUusxRcf@slm.duckdns.org>
+Subject: Re: [PATCH net-next v2 1/2] net: mana: introduce helper to get a
+ master netdev
+To: Konstantin Taranov <kotaranov@linux.microsoft.com>,
+ kotaranov@microsoft.com, pabeni@redhat.com, haiyangz@microsoft.com,
+ kys@microsoft.com, edumazet@google.com, kuba@kernel.org,
+ davem@davemloft.net, decui@microsoft.com, wei.liu@kernel.org,
+ sharmaajay@microsoft.com, longli@microsoft.com, jgg@ziepe.ca, leon@kernel.org
+Cc: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org
+References: <1719838736-20338-1-git-send-email-kotaranov@linux.microsoft.com>
+ <1719838736-20338-2-git-send-email-kotaranov@linux.microsoft.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <1719838736-20338-2-git-send-email-kotaranov@linux.microsoft.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 7/1/24 12:39 PM, Tejun Heo wrote:
-> On Sun, Jun 30, 2024 at 03:26:18PM -0700, Bart Van Assche wrote:
->> 1. Introduce the create*_workqueue2() macros that accept a printf-style
->>     format string and argument list.
+在 2024/7/1 20:58, Konstantin Taranov 写道:
+> From: Konstantin Taranov <kotaranov@microsoft.com>
 > 
-> I don't think we want to update create_workqueue() interface at all. Please
-> convert them to use alloc_workqueue() instead. Once we convert all
-> create_workqueue() users then we can just drop the old interface.
+> Add helper to get a master netdevice for a given port.
+> When mana is used with netvsc, the VF netdev is controlled
+> by an upper netvsc device. In a baremetal case, the VF
+> netdev is the master device.
 > 
-> The challenge with converging to alloc_workqueue() interface is that the
-> conversion needs to explicitly decide whether WQ_MEM_RECLAIM is needed or
-> not but that shouldn't be *too* difficult.
+> Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
+> ---
+>   drivers/net/ethernet/microsoft/mana/mana_en.c | 18 ++++++++++++++++++
+>   include/net/mana/mana.h                       |  2 ++
+>   2 files changed, 20 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> index d087cf9..b893339 100644
+> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> @@ -2948,3 +2948,21 @@ out:
+>   	gd->gdma_context = NULL;
+>   	kfree(ac);
+>   }
+> +
+> +/* the caller should hold rcu_read_lock */
+> +struct net_device *mana_get_master_netdev_rcu(struct mana_context *ac, u32 port_index)
+> +{
+> +	struct net_device *ndev;
 
-The create*_workqueue() macros are used about 270 times in the Linux
-kernel (the macro names also occur in some comments):
+ From the comments, this function requires rcu_read_lock. Can the 
+following be added in this function?
 
-$ git grep -nHEw 
-'create_workqueue|create_freezable_workqueue|create_singlethread_workqueue' 
-| grep -Ev 'Documentation/|include/linux/workqueue' | wc -l
-     271
+RCU_LOCKDEP_WARN(!rcu_read_lock_held(), "no rcu read lock held");
 
-That's too much for a single patch series. I can start with converting
-the SCSI workqueue creation code.
+If rcu_read_lock is not held, this function will notify the caller.
+This can explicitly ensure that rcu_read_lock should be held before this 
+fuction is called.
 
-Thanks,
+Best Regards,
 
-Bart.
+Zhu Yanjun
+
+> +
+> +	if (port_index >= ac->num_ports)
+> +		return NULL;
+> +
+> +	/* When mana is used in netvsc, the upper netdevice should be returned. */
+> +	if (ac->ports[port_index]->flags & IFF_SLAVE)
+> +		ndev = netdev_master_upper_dev_get_rcu(ac->ports[port_index]);
+> +	else
+> +		ndev = ac->ports[port_index];
+> +
+> +	return ndev;
+> +}
+> +EXPORT_SYMBOL_NS(mana_get_master_netdev_rcu, NET_MANA);
+> diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+> index 46f741e..2d3625c 100644
+> --- a/include/net/mana/mana.h
+> +++ b/include/net/mana/mana.h
+> @@ -797,4 +797,6 @@ void mana_destroy_wq_obj(struct mana_port_context *apc, u32 wq_type,
+>   int mana_cfg_vport(struct mana_port_context *apc, u32 protection_dom_id,
+>   		   u32 doorbell_pg_id);
+>   void mana_uncfg_vport(struct mana_port_context *apc);
+> +
+> +struct net_device *mana_get_master_netdev_rcu(struct mana_context *ac, u32 port_index);
+>   #endif /* _MANA_H */
+
