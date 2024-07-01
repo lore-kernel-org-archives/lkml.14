@@ -1,91 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E95E87BAF7;
-	Mon,  1 Jul 2024 08:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C977A86131;
+	Mon,  1 Jul 2024 08:50:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719823823; cv=none; b=dnDhrVZPaDxXE0qhwlrsAC2iY6AjXLTYq97O+r6EHkUaHaViTxGutErFwl181FlDRNQeFuDdQ/rv5KlTstuJRoIejOaeBWOPQUvZaLJ2/DkahqYBmicCfy4PO1QHNDY1PdAz6fEUlKggoXhqprzIOgCqvu6JmIxE5D5Gi1cvCdM=
+	t=1719823849; cv=none; b=T2CHgwrN8RL3ZvY7CP/mGkTAqXk2X6lvNRYwWvnRGHyf4OtVXQHVtyAGaXEhWHkFzpHo1yJ5CkBcTzXCOYFPZFMOwDuYPsHHFBTX+hdGbgqSVQorI4zV9rwT0qkU4K4Q8L+1G+/zQpxVlwpgOp1S9fxEveTGnPFWpxQGPRYA9OM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719823823; c=relaxed/simple;
-	bh=lDEozFRfTCwEKXHhCwMeLrpdH7bHbFFnfjg0uB9M5Ok=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YfqKqhH77ClBLA0gYgBpxppjrVJcOxJMlwm0N9NYFl406YLucFnG7lz6XgJapCFA/FwMPaS4xrTInc+ss/Ejzgyl2cFkZzFK2fUGzdwkS7E0wVo1FbSOFRhJIIeFp6xi8SOAPNWX1Oc2jO4UVRCVmZF3h45PKzBYAbfjFzZ2AsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hqPZ6ZRS; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719823849; c=relaxed/simple;
+	bh=XCkunF4AkoYqkk7iGvEclPs05+M/NfpaS+34vYEgKWQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=mAh008UanuZbTD57iLBAFgGOU7PN3g7HMyva9LPRpCa73lSUzSElTem+IHnp09Bc+/pnAQDqWbsKO3bVbMG69+ZYtm3KLVhqogip0mmynq9GjGlIzuWDUFom6f21L/ly4KiZC/vRnpQvd8KKnTHW6yM9Rva2x9P3HUUbITfsMKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DJ7gTZLQ; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hqPZ6ZRS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719823822; x=1751359822;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=lDEozFRfTCwEKXHhCwMeLrpdH7bHbFFnfjg0uB9M5Ok=;
-  b=hqPZ6ZRSJpQ8Bc/MfDjdI79sC/bgcpgedVPUsY6yxFyCZNeqTKpZ9ntX
-   m1+gfLSY6OG5Q60USE1AGvGsSOSoSjYfRL87UGm+2dsjlR6tHDbR4YbAg
-   Uc8psISSRRj7RsjpvzebDkgr9nVBpCTwzQT431HRG3ziMHe94vIalotoE
-   SLrjbZWbQ8ZhFHqGThFm37XXdHOgSfDkVEy4m6Ky6v9xbG/ERptv7oPBu
-   6e2/S790fg52i3jOFghPp9TaF9BhzYrga4/nXi8Fvt6OxKBw6SvBgGYnk
-   Pb4jvi8Dnn3S5SRkZ30N68T+A4Gc+W6mpvma4gzsYTzDoD3HkRnW0AKxo
-   A==;
-X-CSE-ConnectionGUID: bRhSeLIZR8+dVDGpRddNtA==
-X-CSE-MsgGUID: qhtMX67wQlqTNa9O43+I+g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11119"; a="16770389"
-X-IronPort-AV: E=Sophos;i="6.09,175,1716274800"; 
-   d="scan'208";a="16770389"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 01:50:21 -0700
-X-CSE-ConnectionGUID: 83ZZ+qo/Qj2W8cdVYxPECA==
-X-CSE-MsgGUID: hQYQXUYaQSWbavLwd0gThA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,175,1716274800"; 
-   d="scan'208";a="45445134"
-Received: from aslawinx-mobl.ger.corp.intel.com (HELO [10.94.0.53]) ([10.94.0.53])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 01:50:19 -0700
-Message-ID: <326792b9-e706-4ab0-a1e8-cc48943e357d@linux.intel.com>
-Date: Mon, 1 Jul 2024 10:50:02 +0200
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DJ7gTZLQ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 602F2C0011;
+	Mon,  1 Jul 2024 08:50:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1719823844;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ew3JaznEZxurg8VWcTWT0iqBhrJFxR4lf44/wyJRZV4=;
+	b=DJ7gTZLQTxh8TCadSbqg5H1e9BFo/cx8I+wCnN0Nw9EnX7oHelxZZaEPoCIWV4ogQCf7KR
+	6GDj2HjMp0pxBTt5iDI4CYTvUWCQ22Bn0LVooDGzazpWgwsCHriD6Pi1Rg0L4rkefmIL7T
+	j9Mqord/KHqPxBBzo0qmMWqPwTBt/Iy8pxwo53QnWusHH+k9yB7oUYigQHcm3hZhFasai2
+	ckg5veS8kR5Q9cYjynYbdsdJ45GaFMAkMs0hDkuMYOMBEayW3wOZQN9Evr2zC5Ldsqf2pk
+	Cn1C0q8G3NBzopIl+fHGAZz8uhnXFrduoqA+TGX0mCM8U36CON18mvX+aAtMww==
+From: Romain Gantois <romain.gantois@bootlin.com>
+Date: Mon, 01 Jul 2024 10:51:03 +0200
+Subject: [PATCH net-next 1/6] net: phy: dp83869: Disable autonegotiation in
+ RGMII/1000Base-X mode
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] ALSA: pcm: add support for 128kHz sample rate
-To: Jerome Brunet <jbrunet@baylibre.com>, Mark Brown <broonie@kernel.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>,
- Jaroslav Kysela <perex@perex.cz>
-Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240628122429.2018059-1-jbrunet@baylibre.com>
- <20240628122429.2018059-2-jbrunet@baylibre.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
- <amadeuszx.slawinski@linux.intel.com>
-In-Reply-To: <20240628122429.2018059-2-jbrunet@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240701-b4-dp83869-sfp-v1-1-a71d6d0ad5f8@bootlin.com>
+References: <20240701-b4-dp83869-sfp-v1-0-a71d6d0ad5f8@bootlin.com>
+In-Reply-To: <20240701-b4-dp83869-sfp-v1-0-a71d6d0ad5f8@bootlin.com>
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Romain Gantois <romain.gantois@bootlin.com>
+X-Mailer: b4 0.14.0
+X-GND-Sasl: romain.gantois@bootlin.com
 
-On 6/28/2024 2:23 PM, Jerome Brunet wrote:
-> The usual sample rate possible on an SPDIF link are
-> 32k, 44.1k, 48k, 88.2k, 96k, 172.4k and 192k.
-> 
-> With higher bandwidth variant, such as eARC, and the introduction of 8
-> channels mode, the spdif frame rate may be multiplied by 4. This happens
-> when the interface use an IEC958_SUBFRAME format.
-> 
-> The spdif 8 channel mode rate list is:
-> 128k, 176.4k, 192k, 352.8k, 384k, 705.4k and 768k.
-> 
-> All are already supported by ASLA expect for the 128kHz one.
-> Add support for it but do not insert it the SNDRV_PCM_RATE_8000_192000
-> macro. Doing so would silently add 128k support to a lot of HW which
-> probably do not support it.
-> 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
+Currently, the DP83869 driver only disables autonegotiation in fiber
+configurations for 100Base-FX mode. However, the DP83869 PHY does not
+support autonegotiation in any of its fiber modes.
 
- From what I remember the recommendation is to not add new rates, but 
-use SNDRV_PCM_RATE_KNOT for all rates not included already.
+Disable autonegotiation for all fiber modes.
+
+Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
+---
+ drivers/net/phy/dp83869.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
+index d7aaefb5226b6..f6b05e3a3173e 100644
+--- a/drivers/net/phy/dp83869.c
++++ b/drivers/net/phy/dp83869.c
+@@ -647,6 +647,21 @@ static int dp83869_configure_fiber(struct phy_device *phydev,
+ 	linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT, phydev->supported);
+ 	linkmode_set_bit(ADVERTISED_FIBRE, phydev->advertising);
+ 
++	/* Auto neg is not supported in 100/1000base FX modes */
++	bmcr = phy_read(phydev, MII_BMCR);
++	if (bmcr < 0)
++		return bmcr;
++
++	phydev->autoneg = AUTONEG_DISABLE;
++	linkmode_clear_bit(ETHTOOL_LINK_MODE_Autoneg_BIT, phydev->supported);
++	linkmode_clear_bit(ETHTOOL_LINK_MODE_Autoneg_BIT, phydev->advertising);
++
++	if (bmcr & BMCR_ANENABLE) {
++		ret =  phy_modify(phydev, MII_BMCR, BMCR_ANENABLE, 0);
++		if (ret < 0)
++			return ret;
++	}
++
+ 	if (dp83869->mode == DP83869_RGMII_1000_BASE) {
+ 		linkmode_set_bit(ETHTOOL_LINK_MODE_1000baseX_Full_BIT,
+ 				 phydev->supported);
+@@ -655,21 +670,6 @@ static int dp83869_configure_fiber(struct phy_device *phydev,
+ 				 phydev->supported);
+ 		linkmode_set_bit(ETHTOOL_LINK_MODE_100baseFX_Half_BIT,
+ 				 phydev->supported);
+-
+-		/* Auto neg is not supported in 100base FX mode */
+-		bmcr = phy_read(phydev, MII_BMCR);
+-		if (bmcr < 0)
+-			return bmcr;
+-
+-		phydev->autoneg = AUTONEG_DISABLE;
+-		linkmode_clear_bit(ETHTOOL_LINK_MODE_Autoneg_BIT, phydev->supported);
+-		linkmode_clear_bit(ETHTOOL_LINK_MODE_Autoneg_BIT, phydev->advertising);
+-
+-		if (bmcr & BMCR_ANENABLE) {
+-			ret =  phy_modify(phydev, MII_BMCR, BMCR_ANENABLE, 0);
+-			if (ret < 0)
+-				return ret;
+-		}
+ 	}
+ 
+ 	/* Update advertising from supported */
+
+-- 
+2.45.2
 
