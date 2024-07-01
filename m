@@ -1,210 +1,198 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2081.outbound.protection.outlook.com [40.107.223.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1543413D61A;
-	Mon,  1 Jul 2024 11:28:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719833295; cv=none; b=atIu/2+q68cfdM46owEqQRtYRqgErxxRUiWU0ckoD9W0WS9uiU8fypZmjslat3XxWAHa/RFu+/VtI5GBJas1WXSk/UwaOFdS8hw8ik2btBnq/Nip3nTHrhOJpCL0T4FNP1dP7WP42O9Qxp/vRULPZGKef++AZ6+TW+0EnDIOT2w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719833295; c=relaxed/simple;
-	bh=zOwHp5zjE28cBlQd2S9n+jQz8YtgedZ6fB7JfsiWBiY=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lpoqSPucIs4PftGRsUtiLyz+H8ZsE9tWLpPkExnfBaA5746+XGGzjDwc8xjQIAx+8ZOmfSdJ7OiLAS3G51488YOCqXOhWrwwUgKBseuf3oG5P54nQCt1Mkopr3aeuyRg7uqBGJ43r7kzrmE6kF+r1LramhGAVHSQsBUo6uXlAqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J7WTeNYi; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85DFD13D53D
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 11:29:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.81
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719833399; cv=fail; b=ECTTDR+pnKFja2j/poaZuCzyuBmiYP2V0cqplS/IIKoUn3ijsUX9tbYFcIG//V3H9+ZcVQlmR7nZmrKhW5ibhAveIkqlZ6zqxOGS4r8AM/6P1TDpPPMPoDfGM3j0sIDOuAJ3RMXJhLQRw8SlKcDIzPtZI+Fi43CGxfIAa3lP8MQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719833399; c=relaxed/simple;
+	bh=qT0U7RR9POwt24OvTeo3sx7JEFJWiLLaWYg+xSsf/kw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Kx32uT/WjeimUmG9XuWBSp7FpaWeSBLZI8QQZ9OgndmIxcxYIFljXMSxRMCmgZdR0Qzr4EhbpwgSDSEQq79VmPCMnI10O+gKhrtz68kF13nH9O1yhSb1uhunjMmxwNqilEN5vTOJJsyLQlw4a1LWe/+ZeLgE55PFpYz7nKHl4fw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pDSlB6YS; arc=fail smtp.client-ip=40.107.223.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J7WTeNYi"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-7f63db7a69cso49498339f.2;
-        Mon, 01 Jul 2024 04:28:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719833293; x=1720438093; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CpoKjCPTwl55bMJqHWtfzuU++BcmcJ+0M6F9gW4qMA0=;
-        b=J7WTeNYi7BQkmoESVyzbOXo/LUI1xpaOuRK0Jl6MsK84GUUQrofc5nxYRwwmtON7pG
-         7Q5VOdWvBCEVtv1APuNfs8ihCFNuy+eUCg/jIOPq47iEycVXAO/Kma5gCKaTs5PbJqsT
-         CLep3UnZW3+iLCi/Ir2naX+caCm+fi7Lve7EYS7lC57iiKZ3tA0mr9RnsLOrHdRA5vef
-         x1uvYbBvpiZruyZj+Lqv3rs9oL+1SunrVJFThkXL5xVs8wMEcd129gZ+HYg/raRIl1tm
-         rWC10uHlR+dBS0hCxXayKL3H3arLl8vHtD2ly0fFxevSVspLEsw71D5JVIEPaxnNlTVX
-         9Yqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719833293; x=1720438093;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CpoKjCPTwl55bMJqHWtfzuU++BcmcJ+0M6F9gW4qMA0=;
-        b=ju0MNHzwhMVqYDI5OaC2UthMJfT/6YD7eJhdxxbGgy/xf5qrDdHUWekSPrZpzcqUBL
-         50t7bO16KI+yzwGfmhUd11lGcep7FGtQwdu1IWxFI/H3n0QDC/Hb2G0KWCrqZmtUpUsD
-         MbsU4JcmnhMnA5B5le6Y4waRVLRFN4TahoUwsXqMr5OwAf9btUV8nwWa/Hx3ZIL13KUR
-         sPiL4H9dFpdCrDuAeTVzyuQPKURFhKA1kZca8f7M06LhFKPtNxWr4H82oRzm6w4GAWer
-         9i/mn+V6RAEnkBctOcBICpQDISvPWgmLHW8u0apmWEps/slB28bR06jZRE5l+t9EH64u
-         Npfg==
-X-Forwarded-Encrypted: i=1; AJvYcCU0kj4i+oliH3I2eLGkZO4HeuBJmuyAfJdswrGaQDMmRie5pFkGIwx8aevLbDydF74Ow/mK1Q8PFQ8Qe7MNDBP2ZOwfuaH4TBNBWek20umqWT5xCJn0yNINyacHbKbhCJ6hivAsJdCFO13odSY=
-X-Gm-Message-State: AOJu0YzLpw77Ov9U541AoebXgYgd+9RMC/DJNiPKAAQcNQPASrv0Nc0f
-	CZ04xtZqnhLUCfz+xaSuZE9KEKmX7stAy4EeAgWY0eBDtAb86C8E
-X-Google-Smtp-Source: AGHT+IHWxiayB99qjYfYCg9nDiP4lise6uTqBz7aMgVxPan1j1uNQSAtg4t/Zz+c3rwNGlB7KBGUlw==
-X-Received: by 2002:a6b:5103:0:b0:7f3:9bde:f44 with SMTP id ca18e2360f4ac-7f62ee6eaf5mr615078439f.14.1719833293096;
-        Mon, 01 Jul 2024 04:28:13 -0700 (PDT)
-Received: from localhost.localdomain (h135-131-130-199.ashwwi.broadband.dynamic.tds.net. [135.131.130.199])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4bb73e062e3sm2087317173.75.2024.07.01.04.28.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 04:28:12 -0700 (PDT)
-From: "Ethan D. Twardy" <ethan.twardy@gmail.com>
-To: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Martin Rodriguez Reboredo <yakoyoku@gmail.com>,
-	"Ethan D. Twardy" <ethan.twardy@gmail.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Aswin Unnikrishnan <aswinunni01@gmail.com>,
-	rust-for-linux@vger.kernel.org (open list:RUST),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 4/4] rust: macros: Enable the rest of the tests
-Date: Mon,  1 Jul 2024 06:24:26 -0500
-Message-ID: <20240701112448.28638-5-ethan.twardy@gmail.com>
-X-Mailer: git-send-email 2.44.2
-In-Reply-To: <20240701112448.28638-1-ethan.twardy@gmail.com>
-References: <20240701112448.28638-1-ethan.twardy@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pDSlB6YS"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hIvyeT5jb0F38AtD7LMlrLEEHi4/3KoF9HKOJPkvfmT8g+sTkqeHgdNfqBbrMIp3GByyo/cZqb0ebm9TPM9eQu3dVxfvoEoYOsFSeMIz0nWcQWnnJfgjyOMiJ9d4mYlU7tZ1My2GTYr89p3HgeBUEyoql+PUmw2NAgiOLEQobykvuUpaEMeUdrhlLAk7YcvK573CfrjGg4lelAhTf0DA6ArE/dYh1D3Qzi5cM3eS6B3T21OFbQMgy8tUkN1lY3imduf4Ajci0gzhB+UU5l7iJpEyiB4PvJJ9gppcqOVUP6MwOKLhW/cE8312+D/UwcaA1QId++dxqjTTtrBQphjlzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WA++B+C6YvQ/gML+B3cD4hVv0Cu21rfsQI+gejK4tao=;
+ b=SFK1A+aI6jktIsAGSV82c92Q0sdtthTOKzmUYxWxL9LvDeSdUSC+soieGBC/trypHfDj4DmbxLVPwHLOQnJf66jrTqUY5pKjCzJn2fRGbLF1UQjGIxaj4298JzXsPsvp2XBLJLxlS4YsW4UEfdpEGIwNjSdnatO2iJ4sCS3E/RMZemSletaj8JfPUIQdXrZMPrDcJSVnKZpdrj91ghp2YoVc759mWCTFPLco6qPtTNQuDdxsLYmQ6YHl4dhb/V9wbdijRegeUPVAUGjoUMecMsbmkwBE/uqEkhs56eubPzmkEXOjIcqj3rKJ9sdZomDQ5OItct5PJPKwV4j0HcSk3A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WA++B+C6YvQ/gML+B3cD4hVv0Cu21rfsQI+gejK4tao=;
+ b=pDSlB6YSFfzFROiX70u9Yi6Kf4GeC6lBmtZ2IjlErpdnwMLHCfaN4ndXk0AOAGAlJuuru5zFQhK/1iP9kDd4vo2kvjsmf1TkgmIY3wUbgnW5DnrOFQqHfgzvQVLnez2/pcfnI80HWVQ/Mx4npYZtQAHi96wFG2pW8LSid2xRtfA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SN7PR12MB6839.namprd12.prod.outlook.com (2603:10b6:806:265::21)
+ by MN2PR12MB4470.namprd12.prod.outlook.com (2603:10b6:208:260::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.32; Mon, 1 Jul
+ 2024 11:29:55 +0000
+Received: from SN7PR12MB6839.namprd12.prod.outlook.com
+ ([fe80::eaf3:6d41:3ac0:b5f4]) by SN7PR12MB6839.namprd12.prod.outlook.com
+ ([fe80::eaf3:6d41:3ac0:b5f4%6]) with mapi id 15.20.7719.029; Mon, 1 Jul 2024
+ 11:29:54 +0000
+Message-ID: <4899690e-e1a6-479d-aff5-7a68b5ed756c@amd.com>
+Date: Mon, 1 Jul 2024 07:29:51 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/2] drm: panel-orientation-quirks: Add quirk for Steam
+ Deck Galileo revision and re-label the Deck panel quirks to specify hardware
+ revision
+To: Matthew Schwartz <mattschwartz@gwmail.gwu.edu>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+ Kyle Gospodnetich <me@kylegospodneti.ch>, Hans de Goede
+ <hdegoede@redhat.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, Matthew Schwartz <mattschwartz@gwu.edu>
+References: <20240628205822.348402-1-mattschwartz@gwu.edu>
+Content-Language: en-US
+From: Hamza Mahfooz <hamza.mahfooz@amd.com>
+In-Reply-To: <20240628205822.348402-1-mattschwartz@gwu.edu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YQBPR01CA0063.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:2::35) To SN7PR12MB6839.namprd12.prod.outlook.com
+ (2603:10b6:806:265::21)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN7PR12MB6839:EE_|MN2PR12MB4470:EE_
+X-MS-Office365-Filtering-Correlation-Id: 150e8a8c-a80d-449e-bebf-08dc99c12155
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SlJaVnlnU0FIOFZBL1pRMm0ra3MyS1NOQnpNV2MxYThHalZmUnhwbkp2RE00?=
+ =?utf-8?B?c25CNXEzcDRBZ25JemdKanRYRmpGU1BBTnFwc1JscVdjMzBQQ01jM2VYMTFJ?=
+ =?utf-8?B?dzU3VEtkSDY2Nkl1dHFheWVoOVY4SmxBejhlZkN2c3lXZ2JkaHozZ1FyMTBx?=
+ =?utf-8?B?c1h4SklXY21IVFFNditxS1pqM25iVkIzYk43MktxY21wbmMzTEJhVWVURk5w?=
+ =?utf-8?B?QWRjRnNPblJjTysxWDB4V25Pa2MrdmlpaGN6aDJNLzdSOTZRWUpMVWZWQVMx?=
+ =?utf-8?B?UUdCeUNIY29oU3hpV25od3ZpSkdYR2JGd2tDbG1BMmZFTjRITTZhZVpGQkl4?=
+ =?utf-8?B?Nml6L21GcDhQU05sS3JWUER0ZENkNzRjQ2dsSzFZYUlzbTNwZXRyTUhKYUtS?=
+ =?utf-8?B?V2FCaXJySkVVM2Fud0RqdTE0MjFXZldaR1lGUE8zR1V4VTgrWjVrWDh6ZWFy?=
+ =?utf-8?B?MjIxR2xxNklBaG0wbVlkc3BMbklsQUdmM2REMld6MWl0aHRuSCt2QjlDZE9I?=
+ =?utf-8?B?RGpIaUx2ajZTdnFWbHRNRW9HVkM0Z2NhcTlwTStlUjllTEtRVXdJK3Rpa1ZN?=
+ =?utf-8?B?UTYvU0hpNDNBdWtFQ0xwK2FoK2d5MEpuM3RPcFpxTkFhdHdzK2c2SzhscnBO?=
+ =?utf-8?B?eU4zS2tGSUY0YXlmbGVwTWtDa05NYmVJV3JwQXlIMC9WQlpEMWZNTXhsWStw?=
+ =?utf-8?B?ZW1mTGhXMngydlVZTjFJRFBzUmNmWG9PeVlhYXk5VXIyZ1pMTVFzUHRaRSty?=
+ =?utf-8?B?d0V0bkpkVjQxRWpROXAyVjE3SmY0dUdtTnQxM0dsTmhJY2Q3VGtoc2VkRGhO?=
+ =?utf-8?B?ZGcwUmNhZTQ4Wk5qWFhLb0RLZEdKc2RNMU9HZmpZS2RhUXZ5cXhrU0dpaXFX?=
+ =?utf-8?B?ZGh4SFhZY1Qzb2pZK0Q0b2FaUHVjV2xwMmxCWW1Wc05xK2ZuVmEvWkwxalY3?=
+ =?utf-8?B?WGpPU1M2SWhJbGNGeWxxbTU4UGVHTWlVWnlUVkdlWThNYnBsaU83dkQ1eFQ5?=
+ =?utf-8?B?U3YycGhtWCtHQ0lldlBseTYxMCtiZmdRMTB0RjZPVFJLekZjT1R6cXRIUHg4?=
+ =?utf-8?B?ZFFxNjJTNHRWMGt3eWEzbGRNNlowc0pqNEhxd2RsYTYwVHh4M28vV0ZEOU1Y?=
+ =?utf-8?B?azE2d291REJoVm9VcVhaQmtiTjJxNlpobW9Sd1p6VDF2RVVFNUozSE9BYWg3?=
+ =?utf-8?B?Z29TcGtOY05ISktKeGF0OFVzNVhEVWkrbWQ1bE9YUm9ab3Rkblg1eE9pUkJh?=
+ =?utf-8?B?dk4vc2xuUTZhV2VQd3h6R2lIQVZ4QlR3MXpNRGNEUW5IUlBWcGpiWlFOZTZk?=
+ =?utf-8?B?TTVUVE0zdjlMcHM2d05tU3BBRDUyUGtxa3VwenBRQTRoaWZYdGFkMDlGaDJY?=
+ =?utf-8?B?WjlxYkdUaERuRmtjQmhSbjQyUGNicmVnZStxaW0vNno2QW91MGxvNmpIM2tk?=
+ =?utf-8?B?ZmxrU2NWWC9qQk5ORncraGN5c0NKVGlzSzgxVDNHUnU1TUxnM0h3Mnh1eUc0?=
+ =?utf-8?B?eXI3ZEFxbXRVa3RCUW1Mdm5mRzBERjlzU0RnemdjT0o2aDVyV0lEZm1neVd0?=
+ =?utf-8?B?ZktoaDNUTEx6OWUrRzJIZ0tPcEluOVo3RkRFTEpWUWk5MkxVcC9FMkw0elBz?=
+ =?utf-8?B?U1BRMUFrSU52aVRvV2tCNFdnMUY4bU13OTRrMlFXZnpEb3ZtSHgvSUVCR2Nq?=
+ =?utf-8?B?dDhHcXVUaDhudlU3Wk5BVnh0ZnVWN1ZRVXRLVURnTVdjakN6NWNJUGRrN0pT?=
+ =?utf-8?Q?aMNXmT8wgNO4MH/Xe60mRlAAYa2TKc/jaZ+k+aJ?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB6839.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?aGZMMEhNeGNDQStVOExmUWlpaEkxemRJRWMwY3FuSmpvTmgvOENRL1lud1N6?=
+ =?utf-8?B?dTJJNDI5U2NzKzlNNXJobVJnZm9JaWl1TkhxMS9veUpuaXhkQ0tIaStuWG1p?=
+ =?utf-8?B?YzZjbisxVitReVdST00xNFVEajJxM0l3QkVQLzFlTUtVa0pkWUk1dzljVzdC?=
+ =?utf-8?B?R2pmUUdBaGpwWEQ4S2pCQW4vemF2YWQwSnZtYWk1VkVWTWxGM2Jjb0J5NFRv?=
+ =?utf-8?B?bGc2cjVmRUZQSkhqbFpVQTVZMThjOXh3bXFwdWJGUm1DcnNPdHFyL3FhRjlo?=
+ =?utf-8?B?NTlQb29IU2MxNWtGRXhWcG9hYnBJTVVRUkJkaHcyMjhrOTNzOGdIejdmR1pP?=
+ =?utf-8?B?Nnc2aG51OWtVamtLV0lHUVpyQ2l6aGtUVjB4WjZuZjk0SVpWaEREbDA3YkJL?=
+ =?utf-8?B?Z2txQjB0TklsaTdCUnlyQkpYRG92YVpZN2tKbkRpNEVGOGVEVkJwU0pGOEE2?=
+ =?utf-8?B?TnNUK3lmaEprQ2tpQ3JnMmkxUHNEeVNQTHc1a3JNbVVwcVJPK3hiY1BuM0pP?=
+ =?utf-8?B?bDd0eUk5OGJqb2duZjQwcDUwZnRwNUtqOW8yVy9ROW9Ga1JubHh4d2Myczgw?=
+ =?utf-8?B?S2VhN1kraWFpb21GSVRWY05FUFNrU1ZoUUJlMFVaYkNJUlJ6dFVQWmtkMFlZ?=
+ =?utf-8?B?d01uY3E2UjZNOWVQbGsyWEQ4OHNLa2N2V01nVXhIRmVlVVJ6RjU3WE5mbmN6?=
+ =?utf-8?B?aEl1LzA5c2hHaHp0eXA4ZVNjc2s2YmlsT1pDb3BLeWFMUENEbHNLNi80eTBk?=
+ =?utf-8?B?Yk1hbUdtbytaTUVHVk1mWWJSZng4dTNWQ2NWYUluOWhqY3FJNFNpTlNxeUw4?=
+ =?utf-8?B?YjRqV2pOT2huY1lZdG4xUWtuUzJ0eU0ybDAwdUUvbm5NMTVtOHVNQzl4TnE3?=
+ =?utf-8?B?djB0Q0xZL2xuL3ZWWnlZWlZqYmZPR2V3UTJzMmQ4SmpCVVFxMHE5SE5wMjg5?=
+ =?utf-8?B?L3BPbTlLVmwrWmxrRWJLMlo5ZzFnWkpEYjhSNU9BYmViNDlDTGJDM0ZPNitL?=
+ =?utf-8?B?TmxLR0RUQ0JlUnYwcTJQaGMzV1JyZUVtUkxaL21kNEpwdlNvam1SRC9LVFBy?=
+ =?utf-8?B?TlhhVXlZVCtwYlk4NnNKamRPY1JXNEF6aTA3R2VXR2Zxb2pwSllzS0hkd1Jr?=
+ =?utf-8?B?bUNWZUYvVnFMaldrVFJ3WHNmN08rS3hjVlkraVllZUdIRTUvb3piVFZ6Tk9U?=
+ =?utf-8?B?eG5wVGNjQjNaUkFKbTNJbVJrcVhKYW9NTVFyU3VtdnZocVFHbFJOUUVkdk5N?=
+ =?utf-8?B?V2MydERGYUdldVF5bEpaeVYwcGVXeFFPeStocHRzbXhwQ2ZpYjFuM0E1YjEy?=
+ =?utf-8?B?RXZ1VXJtUU9sRUtuSC83QlIzaDhpOCthZmV6Y0IwQjRyMEVLdU43cG9RRWox?=
+ =?utf-8?B?WDV5bzZKaGlJWlRiVy9HTVU1V0xYRlZiRFhVK2x1MEtLWE01VERiZ01wWnVT?=
+ =?utf-8?B?dGNiWW82MThXV3A5V3Y3L0h4Y2hlYUJ4ajlCSDhqL0xMZHE1MHduWnJCK1JS?=
+ =?utf-8?B?ejJjL2g2NUhQNmlaRXhXRkNmb25YLzI2UlE2MnNzQmVKWTM2MzZFMC8vekR0?=
+ =?utf-8?B?Zi9rdFl4RzJEZ0cxV25velZVMVVYSitjVDRseTBDcHJZRjQwTFAvOVNxelhE?=
+ =?utf-8?B?RUs2MUtGbXNtMjI4WG5ESzZCZmowTzlZRDBWaldENzgzeDh2WlhDS0xVdzBS?=
+ =?utf-8?B?eTQxOXRIZXErRXF4WHBBbEFCMWZMZE1pMlpoS2tpVFZzTDVIaExuT1R6RjRL?=
+ =?utf-8?B?ODM1clNqWEIwd0phS3N5SU5SL1p6MU5XNThkUGNWK0dNSmRnRWpFWVdxbTIy?=
+ =?utf-8?B?K3N0UFYwNmlJTlpsRVhaVW9EUjJnYldGYmJSc1ZITGxtc0ZQcUZSYnhGNTRB?=
+ =?utf-8?B?SnNVTEZiWTBPRGliVkUvbWdPQXNISjk5TzdSR1pkU0hwZ1k0dkJLM05rT2lu?=
+ =?utf-8?B?RjVHc1J3WlhmRFBnVkhkV0YvMGRrK0J1WkpLK2ZFcW9TTDBOZVpERGFCaHNH?=
+ =?utf-8?B?Tm8yTTNQRzJPZUpLSklrVVpmbUFWMTNpc0dJeHg4RHNSbDRZNEdua2pvSEl0?=
+ =?utf-8?B?UUdWZ1ptYTU2L2xHazAzQ1RmSDZ1WGl1N2RFRGpWaE1FMWhjS01EMzZNd3da?=
+ =?utf-8?Q?/3AVXU+SyPSgAWbZRZSiOfoBC?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 150e8a8c-a80d-449e-bebf-08dc99c12155
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB6839.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2024 11:29:54.8189
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ChpsQw6HvZBXmREnCdZEijKhxfcGGOqu/UokrGPJXRq1UFD/96BAabGdw0yWss2kecfdVMNs16tK9HBN0f7rig==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4470
 
-Now that the rusttest target for the macros crate is compiled with the
-kernel crate as a dependency, the rest of the rustdoc tests can be
-enabled.
+On 6/28/24 16:58, Matthew Schwartz wrote:
+> This is a series of 2 patches.
+> 
+> The first patch is from Valve's public kernel
+> source tree. It adds a panel rotation quirk for Valve's Steam Deck Galileo
+> revision, which has an 800x1280 OLED panel. The previous Steam Deck panel
+> orientation quirk does not apply to the Galileo revision's DMI. I have
+> added a short commit message and signed off below the original author.
+> 
+> The second patch is one that I authored to clarify which
+> device version each panel quirk applies to now that there are
+> multiple Steam Deck revisions.
+> 
+> ---
+> v4: add missing S-o-b from original author of patch 1/2 and re-signed commit
+> v3: fixup inconsistent patch versioning across patches in v2
+> v2: fixup patch 1/2 commit message
+> 
+> Link to v3: https://lore.kernel.org/all/20240627203057.127034-1-mattschwartz@gwu.edu/
+> Link to v1: https://lore.kernel.org/all/20240627175947.65513-1-mattschwartz@gwu.edu/
 
-Signed-off-by: Ethan D. Twardy <ethan.twardy@gmail.com>
+Applied, thanks!
 
-diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
-index 3278f7c8aa5e..fcd123b2c093 100644
---- a/rust/macros/lib.rs
-+++ b/rust/macros/lib.rs
-@@ -101,7 +101,9 @@ pub fn module(ts: TokenStream) -> TokenStream {
- ///
- /// # Examples
- ///
--/// ```ignore
-+/// ```rust
-+/// # #[macro_use] extern crate macros;
-+/// # #[macro_use] extern crate kernel;
- /// use kernel::error::VTABLE_DEFAULT_ERROR;
- /// use kernel::prelude::*;
- ///
-@@ -146,12 +148,27 @@ pub fn vtable(attr: TokenStream, ts: TokenStream) -> TokenStream {
- ///
- /// # Examples
- ///
--/// ```ignore
--/// use kernel::macro::concat_idents;
-+/// ```rust
-+/// # const binder_driver_return_protocol_BR_OK: u32 = 0;
-+/// # const binder_driver_return_protocol_BR_ERROR: u32 = 1;
-+/// # const binder_driver_return_protocol_BR_TRANSACTION: u32 = 2;
-+/// # const binder_driver_return_protocol_BR_REPLY: u32 = 3;
-+/// # const binder_driver_return_protocol_BR_DEAD_REPLY: u32 = 4;
-+/// # const binder_driver_return_protocol_BR_TRANSACTION_COMPLETE: u32 = 5;
-+/// # const binder_driver_return_protocol_BR_INCREFS: u32 = 6;
-+/// # const binder_driver_return_protocol_BR_ACQUIRE: u32 = 7;
-+/// # const binder_driver_return_protocol_BR_RELEASE: u32 = 8;
-+/// # const binder_driver_return_protocol_BR_DECREFS: u32 = 9;
-+/// # const binder_driver_return_protocol_BR_NOOP: u32 = 10;
-+/// # const binder_driver_return_protocol_BR_SPAWN_LOOPER: u32 = 11;
-+/// # const binder_driver_return_protocol_BR_DEAD_BINDER: u32 = 12;
-+/// # const binder_driver_return_protocol_BR_CLEAR_DEATH_NOTIFICATION_DONE: u32 = 13;
-+/// # const binder_driver_return_protocol_BR_FAILED_REPLY: u32 = 14;
-+/// use kernel::macros::concat_idents;
- ///
- /// macro_rules! pub_no_prefix {
- ///     ($prefix:ident, $($newname:ident),+) => {
--///         $(pub(crate) const $newname: u32 = kernel::macros::concat_idents!($prefix, $newname);)+
-+///         $(pub(crate) const $newname: u32 = concat_idents!($prefix, $newname);)+
- ///     };
- /// }
- ///
-@@ -197,7 +214,9 @@ pub fn concat_idents(ts: TokenStream) -> TokenStream {
- ///
- /// # Examples
- ///
--/// ```rust,ignore
-+/// ```rust
-+/// # use std::{sync::Mutex, process::Command};
-+/// # use kernel::macros::pin_data;
- /// #[pin_data]
- /// struct DriverData {
- ///     #[pin]
-@@ -206,7 +225,15 @@ pub fn concat_idents(ts: TokenStream) -> TokenStream {
- /// }
- /// ```
- ///
--/// ```rust,ignore
-+/// ```rust
-+/// # use std::{sync::Mutex, process::Command};
-+/// # use core::pin::Pin;
-+/// # pub struct Info;
-+/// # mod bindings {
-+/// #     pub unsafe fn destroy_info(_ptr: *mut super::Info) {}
-+/// # }
-+/// use kernel::macros::{pin_data, pinned_drop};
-+///
- /// #[pin_data(PinnedDrop)]
- /// struct DriverData {
- ///     #[pin]
-@@ -221,6 +248,8 @@ pub fn concat_idents(ts: TokenStream) -> TokenStream {
- ///         unsafe { bindings::destroy_info(self.raw_info) };
- ///     }
- /// }
-+///
-+/// # fn main() {}
- /// ```
- ///
- /// [`pin_init!`]: ../kernel/macro.pin_init.html
-@@ -236,13 +265,20 @@ pub fn pin_data(inner: TokenStream, item: TokenStream) -> TokenStream {
- ///
- /// # Examples
- ///
--/// ```rust,ignore
-+/// ```rust
-+/// # use macros::{pin_data, pinned_drop};
-+/// # use std::{sync::Mutex, process::Command};
-+/// # use core::pin::Pin;
-+/// # mod bindings {
-+/// #     pub struct Info;
-+/// #     pub unsafe fn destroy_info(_ptr: *mut Info) {}
-+/// # }
- /// #[pin_data(PinnedDrop)]
- /// struct DriverData {
- ///     #[pin]
- ///     queue: Mutex<Vec<Command>>,
- ///     buf: Box<[u8; 1024 * 1024]>,
--///     raw_info: *mut Info,
-+///     raw_info: *mut bindings::Info,
- /// }
- ///
- /// #[pinned_drop]
-@@ -405,7 +441,9 @@ pub fn paste(input: TokenStream) -> TokenStream {
- ///
- /// # Examples
- ///
--/// ```rust,ignore
-+/// ```rust
-+/// use kernel::macros::Zeroable;
-+///
- /// #[derive(Zeroable)]
- /// pub struct DriverData {
- ///     id: i64,
+> 
+> ---
+> John Schoenick (1):
+>    drm: panel-orientation-quirks: Add quirk for Valve Galileo
+> 
+> Matthew Schwartz (1):
+>    drm: panel-orientation-quirks: Add labels for both Valve Steam Deck
+>      revisions
+> 
+>   drivers/gpu/drm/drm_panel_orientation_quirks.c | 9 ++++++++-
+>   1 file changed, 8 insertions(+), 1 deletion(-)
+> 
 -- 
-2.44.2
+Hamza
 
