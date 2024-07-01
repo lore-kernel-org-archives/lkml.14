@@ -1,227 +1,198 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3060A2AD05;
-	Mon,  1 Jul 2024 07:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 493977406D
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 07:15:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719818097; cv=none; b=rf+HP+nn1Gt1i7CAopMpfh6F9harEMSit+QE37g0R2Ubs+VaSdq6ulAXwAhex5gZbBp1VIgzHAt6Q3Dy1g93ItCDlbWNI+AuSbwtX8D/cg4WzaZGBZEMheXtsZCs/jOF8c6iM43fEEopZQIZU8PGKbiBUBF8VxtK+wgo2zjVQu0=
+	t=1719818118; cv=none; b=lNJzgkwdhDxnARabEa3UKQvKVL14BdNSOQY3Yy+tdXqWF0EVkl3ECplN6IE9j+oQuah1eTle514jaAjaQ8U9rprhLwKy0JI4IwBqm4MIw2AIVBFvp34Tb1DM1vzztmMxs7CNtcNThllisNA6w1Ug6tgxxlkdtgRkFxFfF/6bTws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719818097; c=relaxed/simple;
-	bh=ZXglQ/VTk1fZzwy7abupWvu5+uECzL044Es5vKXAlU8=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=mJkPhIMdl4oJ7p+aLsoTN8iRBIGkJVmSJAakrPFncE/Liz8z7PWJgpVzQ2V1k/usZWAC5Jzwo+xJb7vIajyssiQiuuoAISF0Qs8vim2GKKiYPQ+nkVazMrbZ97gLY56nC5OsvLNCyUZkTM9m1Bepi5P/MQ1wV57bB7MFuoxfTpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=R8LNNNhR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BrwXZeyD; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1719818118; c=relaxed/simple;
+	bh=pUGnbmgT8PSO39DrhXDvbHFaLHIT4ZI9N9UeF4l3k6o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ffgYwnXW4eXCm5Jr2eIoGv6on6PP9+7L7ivCZhi7gNAJQFjz5ne44Heg7l9nmk9zZfD2T63GdmdddJ5FknuI3xbgbQpXgSHrXw7H8dFnAXjmnQm8ffil767mAvfTUbx8WS8YRLSV2jFjz/80dnXHDdRpMWBXVaYQEueWC7yivEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=C3r0A2co; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="R8LNNNhR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BrwXZeyD"
-Date: Mon, 01 Jul 2024 07:14:52 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1719818092;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gbjuquOUe3TTVBNnswuCeB57jhHCWcaBgo8q/DusDrU=;
-	b=R8LNNNhR2x09o625Rtn02sOEy2f5P38F+T9zDNaDg66P2zKc/GtRIycctdzM/gGumRADkJ
-	jMCJdjMW8WgNqt8ac8hv5jer0ljDvMbe7z5hWFVKm3O5oUD+8eLCpCQOr0wXsQyMLSo/ax
-	4q2HnVw3jMw8C9qdmzt7lNqyEcy7Km9Dwp0D7urPAa5DMi3x4i+QE/qs8Ac9Q2+Jo3P+5J
-	Pe5guo6jpC28vxTrtH9H/XONmAbsBz5+kIcsVDDUeOTTYuZSBp+JuSRyTwKb4yjmnszD/I
-	yf3WO+n3yDqH3wc9kaqDerqAIbL4UIKzGdz7VpElGKoJzcPbd1RwFBwPA/E0vg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1719818092;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gbjuquOUe3TTVBNnswuCeB57jhHCWcaBgo8q/DusDrU=;
-	b=BrwXZeyDKb9MPewlawL1BoKE3DO9m8X9Ar8RfY1pYk7qag1PR70dUHJEgt1Hto/n4HgMdL
-	VnofGNBl0EWDmNBg==
-From: "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf: Fix event leak upon exec and file release
-Cc: Frederic Weisbecker <frederic@kernel.org>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240621091601.18227-5-frederic@kernel.org>
-References: <20240621091601.18227-5-frederic@kernel.org>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="C3r0A2co"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-424a3d36c28so2173605e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 00:15:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719818113; x=1720422913; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8VeQ0WXLl07NKq9f5p8mUnjZiEvy2m2C1+1ufISTpL0=;
+        b=C3r0A2coBPyvhH7ENXy1EUNIBR/wXdj7xvpLwDZYCONZ2STXVgsipjL0KX/+GZL5x5
+         tm6LUhc5lp+j0Q12rEKtqM78T/wJxsnz6sdu3CJeun+ifD990mWoS1HDWV+ukM/+gNyp
+         03Z4Fg2wbNRkfFJv67Cquw0GJ8wZh7HkqQW4wHGOdEOZAZVGdvIi4DeTWrOwFvvvMRWZ
+         zQFR5HWVOi8pH0LQL0g7LfqHsSUAuPRdJCSqDP8jkQi5ywHlXKRNOUcpkZZVazEcA9Do
+         pRV4T9JD3SX74H0Mj8Wy4puYFt9E3ZBp7PbQgzU8wDjZf1iCeiuOFZiT+ovCZ8ZXJvjH
+         AZNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719818113; x=1720422913;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8VeQ0WXLl07NKq9f5p8mUnjZiEvy2m2C1+1ufISTpL0=;
+        b=Dv1+ZJgZtNhR+CGqUUUZIcLltOR7ugGzrbL3UIhyRf82n2xIZgiLsl32pT3Fr1JHcI
+         oSTxyvMnbRl5TVd7KxHbQg/Be/PAvz15Ij7stcpnRz/WZAPrjj5Ayn3fwzPAxrPVMEnK
+         LNqguZQgwbsl59yjiZXujrRDcZwSVLv4TQ6lEreoGNkwgs0oto59059ZmsOJWWA91z/j
+         PQdnYvPmeVT6/hlpfmoNrD1uV0+w9Lb1z9u2xl+jxyLeruj2+1bCCgcjodtP//XZ8KNr
+         7s3D6cP1KqoOtb2dDW3dyhpce5GzsSZZnMKNwMI171D5A4T4dfrXiu2g1ol5enEr/Tt0
+         K/Zg==
+X-Forwarded-Encrypted: i=1; AJvYcCUf50aE8TPrUKkhOjYr/Kr9OqqsDv+rSvosuUBxuX6t7oF+xMKjbihnaM12X0wvhjpQXBmNbskY9aygXsRMoLLgi/HrPqe+X5ITkNuU
+X-Gm-Message-State: AOJu0YwCE/xAgVuzbTzyxZyZn1/3BMAcnrT17a9mwv+q/+69Xr8/rM6G
+	utl+93WiOYbaip4rNWZNnHSk5lu2eMjmj4tjJFqCeqBPY16Ee+k8HzEqUuiG594=
+X-Google-Smtp-Source: AGHT+IHZQaXlqpMGgKtZhm65KqVJc9Mgo9OwA0jLJuAG0EVNKbRgsOyXl69tB7SHa+Zq4VyZ50I3kQ==
+X-Received: by 2002:a05:600c:3ba6:b0:425:6742:9942 with SMTP id 5b1f17b1804b1-4257a0405c5mr34411435e9.2.1719818113559;
+        Mon, 01 Jul 2024 00:15:13 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256af55e61sm138652275e9.20.2024.07.01.00.15.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Jul 2024 00:15:12 -0700 (PDT)
+Message-ID: <43941f48-9905-4b25-89ef-6ad75bf1a123@rivosinc.com>
+Date: Mon, 1 Jul 2024 09:15:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171981809202.2215.9829687815736995751.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/8] RISC-V: Check Zicclsm to set unaligned access
+ speed
+To: Charlie Jenkins <charlie@rivosinc.com>, Conor Dooley <conor@kernel.org>
+Cc: Jesse Taube <jesse@rivosinc.com>, linux-riscv@lists.infradead.org,
+ Jonathan Corbet <corbet@lwn.net>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Evan Green <evan@rivosinc.com>, Andrew Jones <ajones@ventanamicro.com>,
+ Xiao Wang <xiao.w.wang@intel.com>, Andy Chiu <andy.chiu@sifive.com>,
+ Eric Biggers <ebiggers@google.com>, Greentime Hu <greentime.hu@sifive.com>,
+ =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
+ Heiko Stuebner <heiko@sntech.de>, Costa Shulyupin <costa.shul@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
+ Anup Patel <apatel@ventanamicro.com>, Zong Li <zong.li@sifive.com>,
+ Sami Tolvanen <samitolvanen@google.com>,
+ Ben Dooks <ben.dooks@codethink.co.uk>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Erick Archer <erick.archer@gmx.com>, Joel Granados <j.granados@samsung.com>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20240625005001.37901-1-jesse@rivosinc.com>
+ <20240625005001.37901-5-jesse@rivosinc.com>
+ <20240626-march-abreast-83414e844250@spud> <Zn3XrLRl/yazsoZe@ghost>
+Content-Language: en-US
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <Zn3XrLRl/yazsoZe@ghost>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     b8accda880eaf60504446be8d5b81f9532b98b93
-Gitweb:        https://git.kernel.org/tip/b8accda880eaf60504446be8d5b81f9532b98b93
-Author:        Frederic Weisbecker <frederic@kernel.org>
-AuthorDate:    Fri, 21 Jun 2024 11:16:01 +02:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Tue, 25 Jun 2024 10:43:38 +02:00
 
-perf: Fix event leak upon exec and file release
+On 27/06/2024 23:20, Charlie Jenkins wrote:
+> On Wed, Jun 26, 2024 at 03:39:14PM +0100, Conor Dooley wrote:
+>> On Mon, Jun 24, 2024 at 08:49:57PM -0400, Jesse Taube wrote:
+>>> Check for Zicclsm before checking for unaligned access speed. This will
+>>> greatly reduce the boot up time as finding the access speed is no longer
+>>> necessary.
+>>>
+>>> Signed-off-by: Jesse Taube <jesse@rivosinc.com>
+>>> ---
+>>> V2 -> V3:
+>>>  - New patch split from previous patch
+>>> ---
+>>>  arch/riscv/kernel/unaligned_access_speed.c | 26 ++++++++++++++--------
+>>>  1 file changed, 17 insertions(+), 9 deletions(-)
+>>>
+>>> diff --git a/arch/riscv/kernel/unaligned_access_speed.c b/arch/riscv/kernel/unaligned_access_speed.c
+>>> index a9a6bcb02acf..329fd289b5c8 100644
+>>> --- a/arch/riscv/kernel/unaligned_access_speed.c
+>>> +++ b/arch/riscv/kernel/unaligned_access_speed.c
+>>> @@ -259,23 +259,31 @@ static int check_unaligned_access_speed_all_cpus(void)
+>>>  	kfree(bufs);
+>>>  	return 0;
+>>>  }
+>>> +#else /* CONFIG_RISCV_PROBE_UNALIGNED_ACCESS */
+>>> +static int check_unaligned_access_speed_all_cpus(void)
+>>> +{
+>>> +	return 0;
+>>> +}
+>>> +#endif
+>>>  
+>>>  static int check_unaligned_access_all_cpus(void)
+>>>  {
+>>> -	bool all_cpus_emulated = check_unaligned_access_emulated_all_cpus();
+>>> +	bool all_cpus_emulated;
+>>> +	int cpu;
+>>> +
+>>> +	if (riscv_has_extension_unlikely(RISCV_ISA_EXT_ZICCLSM)) {
+>>> +		for_each_online_cpu(cpu) {
+>>> +			per_cpu(misaligned_access_speed, cpu) = RISCV_HWPROBE_MISALIGNED_FAST;
+>>
+>> - const: zicclsm
+>>   description:
+>>     The standard Zicclsm extension for misaligned support for all regular
+>>     load and store instructions (including scalar and vector) but not AMOs
+>>     or other specialized forms of memory access. Defined in the
+>>     RISC-V RVA Profiles Specification. 
+>>
+>> Doesn't, unfortunately, say anywhere there that they're actually fast :(
+> 
+> Oh no! That is unfortunate that the ISA does not explicitly call that
+> out, but I think that acceptable.
+> 
+> If a vendor puts Zicclsm in their isa string, they should expect
+> software to take advantage of misaligned accesses. FAST is our signal to
+> tell software that they should emit misaligned accesses.
 
-The perf pending task work is never waited upon the matching event
-release. In the case of a child event, released via free_event()
-directly, this can potentially result in a leaked event, such as in the
-following scenario that doesn't even require a weak IRQ work
-implementation to trigger:
+AFAIK, Zicclsm is not even an ISA extension, simply a profile
+specification which means that only the execution environment which
+provides the profile support misaligned accesses (cf
+https://lists.riscv.org/g/tech-profiles/message/56). I don't think we
+can extrapolate that the misaligned accesses will be fast at all.
 
-schedule()
-   prepare_task_switch()
-=======> <NMI>
-      perf_event_overflow()
-         event->pending_sigtrap = ...
-         irq_work_queue(&event->pending_irq)
-<======= </NMI>
-      perf_event_task_sched_out()
-          event_sched_out()
-              event->pending_sigtrap = 0;
-              atomic_long_inc_not_zero(&event->refcount)
-              task_work_add(&event->pending_task)
-   finish_lock_switch()
-=======> <IRQ>
-   perf_pending_irq()
-      //do nothing, rely on pending task work
-<======= </IRQ>
+Thanks,
 
-begin_new_exec()
-   perf_event_exit_task()
-      perf_event_exit_event()
-         // If is child event
-         free_event()
-            WARN(atomic_long_cmpxchg(&event->refcount, 1, 0) != 1)
-            // event is leaked
+Clément
 
-Similar scenarios can also happen with perf_event_remove_on_exec() or
-simply against concurrent perf_event_release().
-
-Fix this with synchonizing against the possibly remaining pending task
-work while freeing the event, just like is done with remaining pending
-IRQ work. This means that the pending task callback neither need nor
-should hold a reference to the event, preventing it from ever beeing
-freed.
-
-Fixes: 517e6a301f34 ("perf: Fix perf_pending_task() UaF")
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20240621091601.18227-5-frederic@kernel.org
----
- include/linux/perf_event.h |  1 +-
- kernel/events/core.c       | 38 +++++++++++++++++++++++++++++++++----
- 2 files changed, 35 insertions(+), 4 deletions(-)
-
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index a5304ae..393fb13 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -786,6 +786,7 @@ struct perf_event {
- 	struct irq_work			pending_irq;
- 	struct callback_head		pending_task;
- 	unsigned int			pending_work;
-+	struct rcuwait			pending_work_wait;
- 
- 	atomic_t			event_limit;
- 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 7c3218d..586d4f3 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2288,7 +2288,6 @@ event_sched_out(struct perf_event *event, struct perf_event_context *ctx)
- 		if (state != PERF_EVENT_STATE_OFF &&
- 		    !event->pending_work &&
- 		    !task_work_add(current, &event->pending_task, TWA_RESUME)) {
--			WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
- 			event->pending_work = 1;
- 		} else {
- 			local_dec(&event->ctx->nr_pending);
-@@ -5203,9 +5202,35 @@ static bool exclusive_event_installable(struct perf_event *event,
- static void perf_addr_filters_splice(struct perf_event *event,
- 				       struct list_head *head);
- 
-+static void perf_pending_task_sync(struct perf_event *event)
-+{
-+	struct callback_head *head = &event->pending_task;
-+
-+	if (!event->pending_work)
-+		return;
-+	/*
-+	 * If the task is queued to the current task's queue, we
-+	 * obviously can't wait for it to complete. Simply cancel it.
-+	 */
-+	if (task_work_cancel(current, head)) {
-+		event->pending_work = 0;
-+		local_dec(&event->ctx->nr_pending);
-+		return;
-+	}
-+
-+	/*
-+	 * All accesses related to the event are within the same
-+	 * non-preemptible section in perf_pending_task(). The RCU
-+	 * grace period before the event is freed will make sure all
-+	 * those accesses are complete by then.
-+	 */
-+	rcuwait_wait_event(&event->pending_work_wait, !event->pending_work, TASK_UNINTERRUPTIBLE);
-+}
-+
- static void _free_event(struct perf_event *event)
- {
- 	irq_work_sync(&event->pending_irq);
-+	perf_pending_task_sync(event);
- 
- 	unaccount_event(event);
- 
-@@ -6829,23 +6854,27 @@ static void perf_pending_task(struct callback_head *head)
- 	int rctx;
- 
- 	/*
-+	 * All accesses to the event must belong to the same implicit RCU read-side
-+	 * critical section as the ->pending_work reset. See comment in
-+	 * perf_pending_task_sync().
-+	 */
-+	preempt_disable_notrace();
-+	/*
- 	 * If we 'fail' here, that's OK, it means recursion is already disabled
- 	 * and we won't recurse 'further'.
- 	 */
--	preempt_disable_notrace();
- 	rctx = perf_swevent_get_recursion_context();
- 
- 	if (event->pending_work) {
- 		event->pending_work = 0;
- 		perf_sigtrap(event);
- 		local_dec(&event->ctx->nr_pending);
-+		rcuwait_wake_up(&event->pending_work_wait);
- 	}
- 
- 	if (rctx >= 0)
- 		perf_swevent_put_recursion_context(rctx);
- 	preempt_enable_notrace();
--
--	put_event(event);
- }
- 
- #ifdef CONFIG_GUEST_PERF_EVENTS
-@@ -11959,6 +11988,7 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 	init_waitqueue_head(&event->waitq);
- 	init_irq_work(&event->pending_irq, perf_pending_irq);
- 	init_task_work(&event->pending_task, perf_pending_task);
-+	rcuwait_init(&event->pending_work_wait);
- 
- 	mutex_init(&event->mmap_mutex);
- 	raw_spin_lock_init(&event->addr_filters.lock);
+> 
+> This allows for a generic kernel, like the one a distro would compile, to
+> skip the probing when booting on a system that explicitly called out
+> that the hardware supports misaligned accesses.
+> 
+> - Charlie
+> 
+>>
+>> Thanks,
+>> Conor.
+>>
+>>> +		}
+>>> +		return 0;
+>>> +	}
+>>> +
+>>> +	all_cpus_emulated = check_unaligned_access_emulated_all_cpus();
+>>>  
+>>>  	if (!all_cpus_emulated)
+>>>  		return check_unaligned_access_speed_all_cpus();
+>>>  
+>>>  	return 0;
+>>>  }
+>>> -#else /* CONFIG_RISCV_PROBE_UNALIGNED_ACCESS */
+>>> -static int check_unaligned_access_all_cpus(void)
+>>> -{
+>>> -	check_unaligned_access_emulated_all_cpus();
+>>> -
+>>> -	return 0;
+>>> -}
+>>> -#endif
+>>>  
+>>>  arch_initcall(check_unaligned_access_all_cpus);
+>>> -- 
+>>> 2.45.2
+>>>
+> 
+> 
