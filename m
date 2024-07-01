@@ -1,364 +1,134 @@
-Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E1784A35;
-	Mon,  1 Jul 2024 08:47:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437FF84D34
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 08:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719823638; cv=none; b=C0z8kolXY4nbAPJqQJVixdx5ZRcbgmV+gVYwYv+XJh+pDaHno4cQeXp0DUMIK3xCoGmjcBXS1vYhrOVxe/6B1BY4GKZKnhg388vviZ+SjL8WpODWesNOsIiy+VqJkfHYc5eJHeA/wHi4cwK39GqHLG2McHNGHCpPMayIgPIjfso=
+	t=1719823655; cv=none; b=hOgnkgHa3y7wryOpH1AmilMiZJWegZOugdVp2OoSRueB8DnpD2KkG37DEPmU4Ne9vOs+3R5r++8SsjGT+cXVaPrSDfScjtDEurmx/3R7LYo4jtFkhfUWcw8D4oMPhHXRyxkIVDj/LKzv/zLKZMHSSg/oJUDWiPg1s6oRomHbxw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719823638; c=relaxed/simple;
-	bh=R4cC6D6gJjIIjiiIyqNIOYQ/ggPlCuWGQTFAtL7UPJA=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nRXvBbN79H3rP41+MljyLH5CqwtPPZBfAj4JfNEFMtS+lJ89jnIrrsGb+1Ta3RoVi2BGexW80QfCsUpq3wMbwWHwkm6lamFfXI7LtqbR9N7JaCP5W1DBja6Vr0jYsMrfJ5WR6I7bDGTjVmCLL/8cutRXUB5SMZ8ZDsvpoEiyXP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=xYarrNHl; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1719823655; c=relaxed/simple;
+	bh=ZXOdW4pto5OLdzPfn/Y/DqZDFGN+EvE0zNqkNrOGiqs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J8F2LW8/D79sHGKmhafXCaAJYXd2gruFKNI34cDpU/yARtgLneBEbiSVmiHtZV3I6VlF6McdUuP5qF+gGKscbIgKWjBAFxE3WJeSUfb7Uh3N0LS3dc19JCj7xZJaLpEVzjuQFIOYNJ6/my42RsAWxBkVlD/WgmcaD+HxsE+sjbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=GAl6i1Bs; arc=none smtp.client-ip=209.85.167.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="xYarrNHl"
-Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46186JRS005324;
-	Mon, 1 Jul 2024 04:46:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=8EGak
-	9Sb3hUw1x7TOM6eobyfu+QTbee4xTN4X/gkEoI=; b=xYarrNHl/agz1vq85WgtP
-	EWS3C1hTIOtHZMbadXRWdoBwJoWBMMZW6EtAKLFUlEWmcMUr3xNGNr0Ovrd5ZecF
-	Lfeh50HLDwei5H3YFXLj+TVsGHhQ/r7vuzzQc7v4bzk/RlbGVkW0io9ICer/ltTU
-	PeJp0LIWIAhi2FLNZ/3Fxv73IPAVdnY6Zx4aqVc7kFc9noS/axwAMhfHrI6/kI8Z
-	pjPYGJoCu4tGmrgUxw3/LOM4sxgrXWDUs1SZVMi7XB4+ni5P2fxHNe34AMK5MPWG
-	uOe3SSODzFq2NN/t8enxjpY1EfxBWxa/Gqm9h6EPIw+3vy1xdntT7H3t5k498/o7
-	Q==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 403m2ch2qq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Jul 2024 04:46:58 -0400 (EDT)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 4618kvqV037415
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 1 Jul 2024 04:46:57 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Mon, 1 Jul 2024
- 04:46:56 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Mon, 1 Jul 2024 04:46:56 -0400
-Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.159])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 4618k0LB004394;
-	Mon, 1 Jul 2024 04:46:43 -0400
-From: Antoniu Miclaus <antoniu.miclaus@analog.com>
-To: Ramona Gradinariu <ramona.gradinariu@analog.com>,
-        Antoniu Miclaus
-	<antoniu.miclaus@analog.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael
- Hennerich <Michael.Hennerich@analog.com>,
-        Jonathan Cameron
-	<jic23@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet
-	<corbet@lwn.net>,
-        Matti Vaittinen <mazziesaccount@gmail.com>,
-        Jun Yan
-	<jerrysteve1101@gmail.com>,
-        Andy Shevchenko
-	<andriy.shevchenko@linux.intel.com>,
-        Mehdi Djait <mehdi.djait.k@gmail.com>,
-        Mario Limonciello <mario.limonciello@amd.com>,
-        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>
-Subject: [PATCH v4 3/3] docs: iio: add documentation for adxl380 driver
-Date: Mon, 1 Jul 2024 11:30:44 +0300
-Message-ID: <20240701083138.15891-3-antoniu.miclaus@analog.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240701083138.15891-1-antoniu.miclaus@analog.com>
-References: <20240701083138.15891-1-antoniu.miclaus@analog.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="GAl6i1Bs"
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3d55ed47cc6so1869522b6e.2
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 01:47:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719823651; x=1720428451; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eT4FjvsO28ftxFn/D0RiQIRX4ThKgWSSkQhgt2BnXRM=;
+        b=GAl6i1BsqXgDAxwqjtei4EudLQhSnJWiVkqgBTy/3AqmNsv5L/jKCsQTfWa89swBLu
+         8TwwLQ45PB1fZDmB2N2oeKJeyyIFv1Ly2nhLaHCveO8saMwtRUBrm6HRFviQ6U+q7Bia
+         Ya4Nay9Jd8lUIQrCqILCsn/4KU51FYD7SRtfpZNd47uc0GDk4ieREImxjyPKTXeQ9Nx4
+         GsXPpWUeF4q+nduteY6Hqyk2k8cr8qk1IJD4nqxW9XcOjQjrT9jDaOvaQ+bbg7AoL7Qc
+         WdY0efaYJHtLQM/sHfEXRM/m2HSZKxhZZRLIJYP7nj9QPxzkNLx9Po5SuJ+R5k3YM5ZU
+         Py8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719823651; x=1720428451;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eT4FjvsO28ftxFn/D0RiQIRX4ThKgWSSkQhgt2BnXRM=;
+        b=mjLtpZE80Rx845+ZaTvcE8Yy1s+pHdkpMRp9Du5LdyEp2MO5uCvB0ZpFau5a4iqlkC
+         qNGSUvftx2qOU2/SGHGAL2sux7xTUZKlkZ18q7n/J2r+UgOn2yYBx+FRNJjB5mUSsiAP
+         MXdhOVKoxzyuOluS0zKpaYO07UrsAKPttNy1mh1Q1LTb9lfLTJ4BDxhAwcT+ex7PIb9+
+         RnVcLa/bPOcEtLw0inNhP/ZkibziWsKd3okBu1N7BEmd0r/MHqTaS9u3ZHPxqr8w/KKF
+         A6+w0XlQnzI4Xn1OQzmhyPyfWuw1pYzo7LagWOaNZ4h/cHuh/UxhUa7GtsAkafUnN5nq
+         /mCA==
+X-Forwarded-Encrypted: i=1; AJvYcCVYQWKGQzKPAXzvFvEvWcDH/Brlovzvu48mUopJ+y3EFQIq+J79MELgt6/x3UchoqNIesBXvrhUgL4Vd3F+bByBZ8CRX3YPyTb2Y2MF
+X-Gm-Message-State: AOJu0YxqdQoY1iUeWitrNgAk46IYy8Ft0KREzPB0QqRzDTmHKuGOP57r
+	762MIN86obcOtFv4DZsF6K6OatyitC02QRnR+bUlFhNZowPFhL01T4K6IRVY6tn74iqbxnzRjQU
+	ArIKYhPqSu4dc/529WPMjzvutUZ8vtskM6B9NxA==
+X-Google-Smtp-Source: AGHT+IEo9sl2VFAmozT72Mcd/Sum+ljFVLZGY4TYZg/jdAg5+RMJL9U3ru88WJ7pMksr0TPVKgSFdnKEZYRME4FZgyE=
+X-Received: by 2002:a05:6808:2288:b0:3d6:331d:b52d with SMTP id
+ 5614622812f47-3d6b2f07e53mr7562751b6e.4.1719823651207; Mon, 01 Jul 2024
+ 01:47:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240701072908.25503-1-luxu.kernel@bytedance.com> <20240701072908.25503-2-luxu.kernel@bytedance.com>
+In-Reply-To: <20240701072908.25503-2-luxu.kernel@bytedance.com>
+From: Tomasz Jeznach <tjeznach@rivosinc.com>
+Date: Mon, 1 Jul 2024 10:47:18 +0200
+Message-ID: <CAH2o1u7j6pXhWHL2rBZak6LeXxn_KUbQHjygRGQKuEfS_vmtkQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] iommu/riscv: Support sharing irq lines between iommu queues
+To: Xu Lu <luxu.kernel@bytedance.com>
+Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	apatel@ventanamicro.com, sunilvl@ventanamicro.com, iommu@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux@rivosinc.com, baolu.lu@linux.intel.com, lihangjing@bytedance.com, 
+	xieyongji@bytedance.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-ORIG-GUID: A5atxJNWU2CMRD3fNtkso-yhHiRK6YKB
-X-Proofpoint-GUID: A5atxJNWU2CMRD3fNtkso-yhHiRK6YKB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-01_07,2024-06-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 impostorscore=0 adultscore=0 bulkscore=0 lowpriorityscore=0
- malwarescore=0 clxscore=1011 mlxscore=0 suspectscore=0 mlxlogscore=999
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407010067
+Content-Transfer-Encoding: quoted-printable
 
-Add documentation for adxl380 driver which describes the driver
-device files and shows how the user may use the ABI for various
-scenarios (configuration, measurement, etc.).
+On Mon, Jul 1, 2024 at 9:29=E2=80=AFAM 'Xu Lu' via linux <linux@rivosinc.co=
+m> wrote:
+>
+> When the number of wired interrupt lines is less than the number of
+> iommu queues, we should assign one irq line for several queues and
+> configure csr icvec accordingly.
+>
 
-Signed-off-by: Ramona Gradinariu <ramona.gradinariu@analog.com>
-Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
----
-changes in v4:
- - drop marketing from description.
- Documentation/iio/adxl380.rst | 233 ++++++++++++++++++++++++++++++++++
- Documentation/iio/index.rst   |   1 +
- 2 files changed, 234 insertions(+)
- create mode 100644 Documentation/iio/adxl380.rst
+Is this case not already covered by the code in function
+riscv_iommu_init_check(), assigning cause to vector register (ICVEC)
+based on available interrupt vectors? Interrupt vector selection is
+based on accepted ICVEC configuration (see riscv_iommu_queue_vec()).
 
-diff --git a/Documentation/iio/adxl380.rst b/Documentation/iio/adxl380.rst
-new file mode 100644
-index 000000000000..376dee5fe1dd
---- /dev/null
-+++ b/Documentation/iio/adxl380.rst
-@@ -0,0 +1,233 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===============
-+ADXL380 driver
-+===============
-+
-+This driver supports Analog Device's ADXL380/382 on SPI/I2C bus.
-+
-+1. Supported devices
-+====================
-+
-+* `ADXL380 <https://www.analog.com/ADXL380>`_
-+* `ADXL382 <https://www.analog.com/ADXL382>`_
-+
-+The ADXL380/ADXL382 is a low noise density, low power, 3-axis accelerometer with
-+selectable measurement ranges. The ADXL380 supports the ±4 g, ±8 g, and ±16 g
-+ranges, and the ADXL382 supports ±15 g, ±30 g, and ±60 g ranges.
-+
-+2. Device attributes
-+====================
-+
-+Accelerometer measurements are always provided.
-+
-+Temperature data are also provided. This data can be used to monitor the
-+internal system temperature or to improve the temperature stability of the
-+device via calibration.
-+
-+Each IIO device, has a device folder under ``/sys/bus/iio/devices/iio:deviceX``,
-+where X is the IIO index of the device. Under these folders reside a set of
-+device files, depending on the characteristics and features of the hardware
-+device in questions. These files are consistently generalized and documented in
-+the IIO ABI documentation.
-+
-+The following tables show the adxl380 related device files, found in the
-+specific device folder path ``/sys/bus/iio/devices/iio:deviceX``.
-+
-++---------------------------------------------------+----------------------------------------------------------+
-+| 3-Axis Accelerometer related device files         | Description                                              |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_scale                                    | Scale for the accelerometer channels.                    |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_filter_high_pass_3db_frequency           | Low pass filter bandwidth.                               |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_filter_high_pass_3db_frequency_available | Available low pass filter bandwidth configurations.      |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_filter_low_pass_3db_frequency            | High pass filter bandwidth.                              |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_filter_low_pass_3db_frequency_available  | Available high pass filter bandwidth configurations.     |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_x_calibbias                              | Calibration offset for the X-axis accelerometer channel. |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_x_raw                                    | Raw X-axis accelerometer channel value.                  |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_y_calibbias                              | y-axis acceleration offset correction                    |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_y_raw                                    | Raw Y-axis accelerometer channel value.                  |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_z_calibbias                              | Calibration offset for the Z-axis accelerometer channel. |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_z_raw                                    | Raw Z-axis accelerometer channel value.                  |
-++---------------------------------------------------+----------------------------------------------------------+
-+
-++----------------------------------+--------------------------------------------+
-+| Temperature sensor related files | Description                                |
-++----------------------------------+--------------------------------------------+
-+| in_temp_raw                      | Raw temperature channel value.             |
-++----------------------------------+--------------------------------------------+
-+| in_temp_offset                   | Offset for the temperature sensor channel. |
-++----------------------------------+--------------------------------------------+
-+| in_temp_scale                    | Scale for the temperature sensor channel.  |
-++----------------------------------+--------------------------------------------+
-+
-++------------------------------+----------------------------------------------+
-+| Miscellaneous device files   | Description                                  |
-++------------------------------+----------------------------------------------+
-+| name                         | Name of the IIO device.                      |
-++------------------------------+----------------------------------------------+
-+| sampling_frequency           | Currently selected sample rate.              |
-++------------------------------+----------------------------------------------+
-+| sampling_frequency_available | Available sampling frequency configurations. |
-++------------------------------+----------------------------------------------+
-+
-+Channels processed values
-+-------------------------
-+
-+A channel value can be read from its _raw attribute. The value returned is the
-+raw value as reported by the devices. To get the processed value of the channel,
-+apply the following formula:
-+
-+.. code-block:: bash
-+
-+        processed value = (_raw + _offset) * _scale
-+
-+Where _offset and _scale are device attributes. If no _offset attribute is
-+present, simply assume its value is 0.
-+
-+The adis16475 driver offers data for 2 types of channels, the table below shows
-+the measurement units for the processed value, which are defined by the IIO
-+framework:
-+
-++-------------------------------------+---------------------------+
-+| Channel type                        | Measurement unit          |
-++-------------------------------------+---------------------------+
-+| Acceleration on X, Y, and Z axis    | Meters per Second squared |
-++-------------------------------------+---------------------------+
-+| Temperature                         | Millidegrees Celsius      |
-++-------------------------------------+---------------------------+
-+
-+Usage examples
-+--------------
-+
-+Show device name:
-+
-+.. code-block:: bash
-+
-+	root:/sys/bus/iio/devices/iio:device0> cat name
-+        adxl382
-+
-+Show accelerometer channels value:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_x_raw
-+        -1771
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_y_raw
-+        282
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_z_raw
-+        -1523
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_scale
-+        0.004903325
-+
-+- X-axis acceleration = in_accel_x_raw * in_accel_scale = −8.683788575 m/s^2
-+- Y-axis acceleration = in_accel_y_raw * in_accel_scale = 1.38273765 m/s^2
-+- Z-axis acceleration = in_accel_z_raw * in_accel_scale = -7.467763975 m/s^2
-+
-+Set calibration offset for accelerometer channels:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_x_calibbias
-+        0
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 50 > in_accel_x_calibbias
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_x_calibbias
-+        50
-+
-+Set sampling frequency:
-+
-+.. code-block:: bash
-+
-+	root:/sys/bus/iio/devices/iio:device0> cat sampling_frequency
-+        16000
-+        root:/sys/bus/iio/devices/iio:device0> cat sampling_frequency_available
-+        16000 32000 64000
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 32000 > sampling_frequency
-+        root:/sys/bus/iio/devices/iio:device0> cat sampling_frequency
-+        32000
-+
-+Set low pass filter bandwidth for accelerometer channels:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_filter_low_pass_3db_frequency
-+        32000
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_filter_low_pass_3db_frequency_available
-+        32000 8000 4000 2000
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 2000 > in_accel_filter_low_pass_3db_frequency
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_filter_low_pass_3db_frequency
-+        2000
-+
-+3. Device buffers
-+=================
-+
-+This driver supports IIO buffers.
-+
-+All devices support retrieving the raw acceleration and temperature measurements
-+using buffers.
-+
-+Usage examples
-+--------------
-+
-+Select channels for buffer read:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > scan_elements/in_accel_x_en
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > scan_elements/in_accel_y_en
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > scan_elements/in_accel_z_en
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > scan_elements/in_temp_en
-+
-+Set the number of samples to be stored in the buffer:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 10 > buffer/length
-+
-+Enable buffer readings:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > buffer/enable
-+
-+Obtain buffered data:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> hexdump -C /dev/iio\:device0
-+        ...
-+        002bc300  f7 e7 00 a8 fb c5 24 80  f7 e7 01 04 fb d6 24 80  |......$.......$.|
-+        002bc310  f7 f9 00 ab fb dc 24 80  f7 c3 00 b8 fb e2 24 80  |......$.......$.|
-+        002bc320  f7 fb 00 bb fb d1 24 80  f7 b1 00 5f fb d1 24 80  |......$...._..$.|
-+        002bc330  f7 c4 00 c6 fb a6 24 80  f7 a6 00 68 fb f1 24 80  |......$....h..$.|
-+        002bc340  f7 b8 00 a3 fb e7 24 80  f7 9a 00 b1 fb af 24 80  |......$.......$.|
-+        002bc350  f7 b1 00 67 fb ee 24 80  f7 96 00 be fb 92 24 80  |...g..$.......$.|
-+        002bc360  f7 ab 00 7a fc 1b 24 80  f7 b6 00 ae fb 76 24 80  |...z..$......v$.|
-+        002bc370  f7 ce 00 a3 fc 02 24 80  f7 c0 00 be fb 8b 24 80  |......$.......$.|
-+        002bc380  f7 c3 00 93 fb d0 24 80  f7 ce 00 d8 fb c8 24 80  |......$.......$.|
-+        002bc390  f7 bd 00 c0 fb 82 24 80  f8 00 00 e8 fb db 24 80  |......$.......$.|
-+        002bc3a0  f7 d8 00 d3 fb b4 24 80  f8 0b 00 e5 fb c3 24 80  |......$.......$.|
-+        002bc3b0  f7 eb 00 c8 fb 92 24 80  f7 e7 00 ea fb cb 24 80  |......$.......$.|
-+        002bc3c0  f7 fd 00 cb fb 94 24 80  f7 e3 00 f2 fb b8 24 80  |......$.......$.|
-+        ...
-+
-+See ``Documentation/iio/iio_devbuf.rst`` for more information about how buffered
-+data is structured.
-+
-+4. IIO Interfacing Tools
-+========================
-+
-+See ``Documentation/iio/iio_tools.rst`` for the description of the available IIO
-+interfacing tools.
-diff --git a/Documentation/iio/index.rst b/Documentation/iio/index.rst
-index 4c13bfa2865c..1ce5b24d40aa 100644
---- a/Documentation/iio/index.rst
-+++ b/Documentation/iio/index.rst
-@@ -20,5 +20,6 @@ Industrial I/O Kernel Drivers
-    ad7944
-    adis16475
-    adis16480
-+   adxl380
-    bno055
-    ep93xx_adc
--- 
-2.45.2
+Relevant code (patch 'Command and fault queue support'):
+iommu->icvec =3D FIELD_PREP(RISCV_IOMMU_ICVEC_FIV, 1 % iommu->irqs_count) |
+       FIELD_PREP(RISCV_IOMMU_ICVEC_PIV, 2 % iommu->irqs_count) |
+       FIELD_PREP(RISCV_IOMMU_ICVEC_PMIV, 3 % iommu->irqs_count);
 
+Values in iommu->irqs[] should represent actual interrupts allocated
+for the device.
+
+Best,
+- Tomasz
+
+> Signed-off-by: Xu Lu <luxu.kernel@bytedance.com>
+> ---
+>  drivers/iommu/riscv/iommu-platform.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/iommu/riscv/iommu-platform.c b/drivers/iommu/riscv/i=
+ommu-platform.c
+> index da336863f152..1d0af1260d5b 100644
+> --- a/drivers/iommu/riscv/iommu-platform.c
+> +++ b/drivers/iommu/riscv/iommu-platform.c
+> @@ -60,6 +60,10 @@ static int riscv_iommu_platform_probe(struct platform_=
+device *pdev)
+>         for (vec =3D 0; vec < iommu->irqs_count; vec++)
+>                 iommu->irqs[vec] =3D platform_get_irq(pdev, vec);
+>
+> +       for (vec =3D iommu->irqs_count; vec < RISCV_IOMMU_INTR_COUNT; vec=
+++)
+> +               iommu->irqs[vec] =3D platform_get_irq(pdev,
+> +                                                   (vec % iommu->irqs_co=
+unt));
+> +
+>         /* Enable wire-signaled interrupts, fctl.WSI */
+>         if (!(iommu->fctl & RISCV_IOMMU_FCTL_WSI)) {
+>                 iommu->fctl |=3D RISCV_IOMMU_FCTL_WSI;
+> --
+> 2.20.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups=
+ "linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to linux+unsubscribe@rivosinc.com.
+> To view this discussion on the web visit https://groups.google.com/a/rivo=
+sinc.com/d/msgid/linux/20240701072908.25503-2-luxu.kernel%40bytedance.com.
+> For more options, visit https://groups.google.com/a/rivosinc.com/d/optout=
+.
