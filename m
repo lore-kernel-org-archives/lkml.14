@@ -1,120 +1,103 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D639316C84D
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 14:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78DAE14B95A;
+	Mon,  1 Jul 2024 14:52:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719845435; cv=none; b=u6oZXnwPZr2wOEsvPewO97Kyjbuh+kGldzwukT0Mm0tH4YhvvXZTOKDBr8tZj4dVzdZ4zFS1uJ9CBGyz9H2fia7oF6iFEw8LgUwgxpc6ZujbUhPQe4ugbtODD00N8QBZppVSnBFRkXcEkc5Kyhn3R2c2BBBGi5beYO274674vys=
+	t=1719845533; cv=none; b=RnxPdCEkn5mximaWYXNn2/EIevEB1MbksUjFRnN/Ynj18udOfx2lGPDZRKYmR/sbVV63W2CORfzoqWELfVnu3C0UMp685iUC+k6L1ItNu9Jxq3BUiAI8SCsrt4fi9A1UNDQ6bnIyz0m4iGpGJVRny7VNCoY3TwDMhHiYvDGGmQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719845435; c=relaxed/simple;
-	bh=nPQmSRmxFkYAvEGstpdrhUEr1pwYwydjFr3ilUsw4pk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hVKa5idzU8DfXwdpBaz5h0E4IXv0KZ8RRq9mpougtCoFl+zIPWkHHYA8oPVgcdkiU5Vbh20csh6S7eVKw0ZLtZGzGQQZtKKNXe2sCmREXFmP4Zbwkxkpegm+bnkaB2OUY42TMDzZFurgpQW6pRhklK42/BV2HS0L+GyY8wQZlTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=KHzcdJpF; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1719845533; c=relaxed/simple;
+	bh=5vB6rfS074k8h9NxKGPuRUpIHxHySANWovl75hV6ARg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=WIO55miZQzICITcYraJe9/gFNxYTVftS4wuS2UUiX7OPP0qR/6UsWEd06fLIt4ZcDo2Ps6b6JiCqfgm250WPbLfmLW/DxsQQp2JQfj/UGAVFvLvg9nuHh8m9s0cYdEPLzNwCpgV6dWjOsCcgQSwis9SIYWJ8yuQvd8cOtaTERWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rnx8kpEK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="KHzcdJpF"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2ec58040f39so29893281fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 07:50:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1719845431; x=1720450231; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5R4veaHrLsvPru62XryR93QLDpwVMbkjxlXAZklEG+E=;
-        b=KHzcdJpFQ7avgOk/XaL+JzWHNuZG2t9zPZ9NoN71aG9+2yLFvsF6W4hNhpjNNLfDd5
-         fSYwBBOrq6TcCDux1T6GKsC5mpGX/8/CVuUmcmS1TsWfKIdjvg/r721fGsw+mpU0eI4H
-         2E/EIJupT9Ueo4iZdq7PSaipbGJK0FrIWnnw4XZ03yQwYxlmcMy/CRMAq4lIu5+UtWUF
-         I8d3FvfmGwvikd6WVQdQORTuzf5EQ6JKa9qhcn8TvXfA9p8fGMITqGYFA2TFVH0mwk1z
-         vVdue47A/vGSQP3zxXWqYqrD/7wqlIZ6ggr+AD1zaNqLLw/b0a0WKPRF5N0IKal3vvEx
-         N75g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719845431; x=1720450231;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5R4veaHrLsvPru62XryR93QLDpwVMbkjxlXAZklEG+E=;
-        b=wNuGVIMj+MznypAB6eT8jX92F5YJ042wlayjOPZEqIbxPO815g2KhXIeNMgEY1Yjph
-         PheEWbR60lQ+9clSREHiseRmHo1DOAgYXtIKWiwp0xOd/tg0tMXxLjnRsG42KoiHNz22
-         O7/MTgNp3bVV1ACdACYOKpRqZEeWj0Wa1juMiAqJZ5AHgznsDEFcV0g6yjFm8QwTTWq+
-         5kEmj5/xVkIwzxDly+G1qdlibkfPgrE3n19dtOjb5VYebS+DH7iH7uOpYqpGW57ZrhUw
-         iNUTlGJMjTLBEUTsVk3XKyFB49r91cv4GzU5MlLuP+onBBSwQ+gyo6MqVJTA9dEPmXwU
-         WkXw==
-X-Forwarded-Encrypted: i=1; AJvYcCVo5WALdRA2w+FyTst5Dlj3Jl9ilnyyRGFDDEza1oYFqIs91oW3RkIHbVLN9GaPi98QPFMDeI0eLLN6js8S49K8amfHY+pCYO3TpK5F
-X-Gm-Message-State: AOJu0YzA29LoroZ2InVYJzCav4NZ/Pb45m2ewtruff0QFnNoYJeBF8E0
-	kqFbIitbtuxsHiqVkY0TbzKEKZCRDEt1YD6SsNY3kwXBVf2g7OyveWHXrDAcBtI=
-X-Google-Smtp-Source: AGHT+IHwkxVgbDOc2mGtkSQedZ9W7zvlkiig3t1b8tLqhN02hzaaH8nczeygbiuw3+GjYgY4xXCHgA==
-X-Received: by 2002:a2e:a984:0:b0:2ec:53ad:464 with SMTP id 38308e7fff4ca-2ee5e6cd723mr47832101fa.34.1719845430983;
-        Mon, 01 Jul 2024 07:50:30 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c91d3b9f2csm6839982a91.35.2024.07.01.07.50.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 07:50:30 -0700 (PDT)
-Date: Mon, 1 Jul 2024 16:50:21 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH printk v2 12/18] printk: Add kthread for all legacy
- consoles
-Message-ID: <ZoLCLfcIjQ6FbgR0@pathway.suse.cz>
-References: <20240603232453.33992-1-john.ogness@linutronix.de>
- <20240603232453.33992-13-john.ogness@linutronix.de>
- <Zn6iq3n2ggL138Gs@pathway.suse.cz>
- <87cyo1xnmw.fsf@jogness.linutronix.de>
- <Zn67hDCEHdgtYPv3@pathway.suse.cz>
- <877ce9xim6.fsf@jogness.linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rnx8kpEK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0750C116B1;
+	Mon,  1 Jul 2024 14:52:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719845533;
+	bh=5vB6rfS074k8h9NxKGPuRUpIHxHySANWovl75hV6ARg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=Rnx8kpEK9JIDaxDHJudBcA0pbTOMeDB0ZuXyJYOJouuOP3Nl3kCNW9X5mJBieA+4k
+	 QSP6e3hN3/yZ/dM7XMRHRVKW/ugmtouL9wriUBK6BR5naVN+dmLnrrR66dlv2OTeRn
+	 tqFks+N0Mned2AzZCWhexR8hwPHqyd6ya6IYCFe2pycWlE0Pw/9v/GLrWnLeYhxc+I
+	 SodrOrPvwY3u15H19yBwJcIcapgQl+VHxeXBLvjuJXiIPsanR7xXcvXTL4EkvCMYCV
+	 SXB3o3VtmpLIJWFVIaLUkZhaxf0OoRyDWuz1Syg/pc2/QuNbIxaFcxU1CH6sUd2ihi
+	 Hd9Hs4ivYcZow==
+From: Mark Brown <broonie@kernel.org>
+To: Vladimir Oltean <olteanv@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Frank Li <Frank.Li@nxp.com>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ imx@lists.linux.dev, Kuldeep Singh <kuldeep.singh@nxp.com>, 
+ Vladimir Oltean <vladimir.oltean@nxp.com>
+In-Reply-To: <20240624-ls_qspi-v4-0-3d1c6f5005bf@nxp.com>
+References: <20240624-ls_qspi-v4-0-3d1c6f5005bf@nxp.com>
+Subject: Re: (subset) [PATCH v4 0/3] spi: fsl-dspi: Convert to yaml format
+ and use common SPI property
+Message-Id: <171984553050.67981.12522537296340689285.b4-ty@kernel.org>
+Date: Mon, 01 Jul 2024 15:52:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <877ce9xim6.fsf@jogness.linutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14-dev-d4707
 
-On Fri 2024-06-28 16:17:13, John Ogness wrote:
-> On 2024-06-28, Petr Mladek <pmladek@suse.com> wrote:
-> > On Fri 2024-06-28 14:28:47, John Ogness wrote:
-> >> On 2024-06-28, Petr Mladek <pmladek@suse.com> wrote:
-> >> >> @@ -1494,7 +1508,9 @@ void nbcon_cpu_emergency_exit(void)
-> >> >>  		 * to handle it.
-> >> >>  		 */
-> >> >>  		do_trigger_flush = true;
-> >> >> -		if (printing_via_unlock && !is_printk_deferred()) {
-> >> >> +		if (!force_printkthreads() &&
-> >> >
-> >> > Is this correct? We still need to flush the messages directly
-> >> > when the legacy kthread is not ready yet.
-> >> 
-> >> No! If force_printkthreads() is set, messages will never flush directly
-> >> except for console_flush_on_panic().
-> >
-> > But this is an _emergency_ context! This would be inconsistent with
-> > the nbcon consoles where the messages are flushed directly.
-> >
-> > Is RT sheduling quaranteed when the system reached emergency state?
+On Mon, 24 Jun 2024 14:55:26 -0400, Frank Li wrote:
+> Convert fsl-dspi binding to to yaml format.
+> Using common SPI property spi-cs-setup-delay-ns and spi-cs-hold-delay-ns.
+> Update driver and ls1043 dts file.
 > 
-> No.
+> To: Vladimir Oltean <olteanv@gmail.com>
+> To: Mark Brown <broonie@kernel.org>
+> To: Rob Herring <robh@kernel.org>
+> To: Krzysztof Kozlowski <krzk+dt@kernel.org>
+> To: Conor Dooley <conor+dt@kernel.org>
+> To: Shawn Guo <shawnguo@kernel.org>
+> Cc: linux-spi@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: imx@lists.linux.dev
+> Cc: olteanv@gmail.com
 > 
-> > In fact, we probably should not check force_printkthreads() here at
-> > all. It would be only for NBCON_PRIO_NORMAL context.
-> 
-> On PREEMPT_RT, legacy consoles are not allowed to print from
-> non-preemptible contexts because they use spinlocks (rtmutexes).
+> [...]
 
-Ah, I see.
+Applied to
 
-> This is a disadvantage for legacy consoles on PREEMPT_RT. If people want
-> a legacy console to gain the reliability attribute on PREEMPT_RT, then
-> that console _must_ be converted to nbcon.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-Makes sense.
+Thanks!
 
-Thanks a lot for explanation.
+[1/3] spi: fsl-dspi: use common proptery 'spi-cs-setup(hold)-delay-ns'
+      commit: 52e78777b6bfd4bc47448791a99d5f97c82ff81c
+[2/3] spi: dt-bindings: fsl-dspi: Convert to yaml format
+      commit: 94f19d076218a193d170da6d5ab2a87c080cc69c
 
-Best Regards,
-Petr
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
