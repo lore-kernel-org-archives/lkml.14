@@ -1,33 +1,59 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B162F4FA;
-	Mon,  1 Jul 2024 03:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD857847B
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 03:03:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719802985; cv=none; b=LgsAZJ/SdFjXaOoAYzdfAxA7rDZlxP3syKolgBNToyecBwhzrKJDDtCy5aQ9nPN9iDXKRSbZPX9nTxu4EFp5TBIOQjsMfJ5bYgZGqTzb+W03ZlJUZQqD4i99/zNWiqGtICkPY81cokR8WJotktFnDpAwYMcysqv0YbSFiDOY1tw=
+	t=1719803024; cv=none; b=HyAsI29vfFLoTRSyMpfe/XwdDqQ3qQajz7ELtgzUyhe5HB7f7jkrc8ODV0Ek3rlzubyYKY8+wDWZsZwMBhbwEhyznOcgGPaJtcM/N03MNjxY+NgjYFqCb2QFa8uvID+fjy+PMm8T+4HOJQ3omkfok6Nj5uYvmlnB0dm8R+n5SeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719802985; c=relaxed/simple;
-	bh=nyhn01EuqHL8T1OWGhJk6ZNhVB/UOlqWw6s6S1sIt7s=;
+	s=arc-20240116; t=1719803024; c=relaxed/simple;
+	bh=4G80SnsXT9QeFmG4xTVhGhnOOnBRmchXah5sDWW1lIc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bE9ljtEm+ukjsPTc1wW2V4bZ0kNiiEcHpybL38vqpYwjF1ee0sDXIIRKsAdiImhQqSfC/3rphGxG83WY2A425oXJsAReMSlJoVEf9bXSZN8pTxL3P1L5CsKy8o+48Ljmu96wPaezChZlXnwh03h48Ncv313iVWoMFaq5gFiLMWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DoD2p6q8; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=EVfRS/iHhUjjKJuWX7Vgy2Rofu5rh/Mm02v1nYl1NQZr1hE3cfICjEOJmxW9RYb20d0KszxqZ1y/Jo8WukqUt7mHEDkPTpphLZZ5CFlMj0/DXux+OIwNmqujZw6bS2Rw/dDZ5Lom7YEkGFlIAR4PcUrXnQEee2xx0JkJlJGaxxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G90xGLW9; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DoD2p6q8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79C41C4AF0B;
-	Mon,  1 Jul 2024 03:03:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719802985;
-	bh=nyhn01EuqHL8T1OWGhJk6ZNhVB/UOlqWw6s6S1sIt7s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DoD2p6q87Diq3qmQGCtzBvh8Pk01XRmjUxHhjbKQ3+xGfub058JAAe108/1Qdam/y
-	 riyP4NQth2xXNLlleq01UfXc4RUrKWHIgEuARvAF8tnOfLAGXUYjd7UNc7rY9UI7fN
-	 DNpdYybZFx1VY2lrr571LaYCe1TFOGuU52OlI6HXgt1NtBOjdR93O7G/LqhjJtmt4k
-	 C+iHjyVEnwEe3uOaQI4OKJxPhiG7BhGBbFQhCtjtlnJ6hMw5YKQbAbrbAMq+LLDlDx
-	 7CnxWQYotEjUPXWqO/2HmwXHiiqVmGNJMuBZh5KyKpSiaUo5JBk6TBzVMfgpY2mJct
-	 KKwkhyBo4ZGaQ==
-Message-ID: <85cebcb9-ce97-43f2-8da5-01c3a745fe2c@kernel.org>
-Date: Mon, 1 Jul 2024 12:03:02 +0900
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G90xGLW9"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-710437d0affso1235586a12.3
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2024 20:03:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719803022; x=1720407822; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hylkKysnQs2URCgI6f4H+azXob1gJRcDJ2yV/tK5m6A=;
+        b=G90xGLW9kb8jHLaLq6+c5xRa0ZathjkRLqKgkK97hjOgyMmqMrtlZSgnKHpNIvho53
+         zfnjTDL85Xp9aTf1pMk2SPr6sPkV7HeuxrCvJNEM5iOO+6XY3M/I5wLeaqQzAtqV6b0+
+         PVafDomDZq4PGOBlQDNTcY5XZhwNtiZVSbCIDoSXuF74nUoKM3lyyB/iiYwbm1Pc2S8s
+         1M81i3ORIY8lI4rZRD7LUSpssM96eEE/C8/eOJ5M3CjcxwXQiM8PBGXe0C8RDyf9AyGl
+         FkFEYuUdhgjCkBQogrnkLuDDq2DeWVp/7F9nlT8JrPRBsXfqIF7Gnv4XV62Gg05na0MF
+         C6vA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719803022; x=1720407822;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hylkKysnQs2URCgI6f4H+azXob1gJRcDJ2yV/tK5m6A=;
+        b=scduMfpNPGgNI8rIlQc9GWgy/N2xhPTqSNwBEB74wwyXYsi/1mNxGOesyaChUsNeI2
+         Az2PJDFPimVcJ7h7ER8iIBcxGFjKCPZ6pb7Ywo7qQYfnN+V7Kf4L8A6Zdh20WdxAoeV4
+         yu+gwHQhDIuKKV8mujWbXlVT/DEDKff0l7DbBulApZGNGzlrXiZH3fUBveaEk46+uky6
+         WM7V4FoWs2Jdn9V/+i0RDy416Cd0aSnwDBjoEK+ZtX10sEsuhbps3RGTQS5pkyR6tNng
+         qMJeE6x2aqAKepBKTPLz8suqC34OV22aRvquYvcvIQ5VHhk3YkFq09KIG0IiGKLseEjS
+         Z8wA==
+X-Forwarded-Encrypted: i=1; AJvYcCUoW2/+K9+vquioBuUkMx1n5/olKW0HHw5yEADH9zy2YcxMabJjoMaLEDkiQ6OYzDJuiHZ/QQNfxY59eAKdRH9YAGUpni5q6KjiuZHz
+X-Gm-Message-State: AOJu0YzQ5GIGl0uldwxwFuAng43BJc+Hkuvs0PJYKggOOtDGOb7PUF/h
+	ky1Dl4/pismDaQgGo1rU/CcyviD4C/tYRUYJ4++cRDBuetTpnyI3
+X-Google-Smtp-Source: AGHT+IH6e/ptwM0Xw24RgpyigCdn0UuK5f4uoERcJeojQn8zh/yEM2jskzW7a0hTX7CbMa7Ug9F6YA==
+X-Received: by 2002:a05:6a20:7348:b0:1be:bf38:7b1b with SMTP id adf61e73a8af0-1bef61201a6mr3630670637.33.1719803021915;
+        Sun, 30 Jun 2024 20:03:41 -0700 (PDT)
+Received: from [192.168.255.10] ([43.132.141.25])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac2f03acdsm52584645ad.302.2024.06.30.20.03.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 30 Jun 2024 20:03:41 -0700 (PDT)
+Message-ID: <4418c5c6-60f3-408f-a4ea-8d8ba1cc8afd@gmail.com>
+Date: Mon, 1 Jul 2024 11:03:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,100 +61,163 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [bug report] scsi: SATA devices missing after FLR is triggered
- during HBA suspended
-To: Yihang Li <liyihang9@huawei.com>, cassel@kernel.org
-Cc: James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
- john.g.garry@oracle.com, yanaijie@huawei.com, linux-kernel@vger.kernel.org,
- linux-scsi@vger.kernel.org, linuxarm@huawei.com, chenxiang66@hisilicon.com,
- prime.zeng@huawei.com, "linux-pci@vger.kernel.org"
- <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-References: <20240618132900.2731301-1-liyihang9@huawei.com>
- <0c5e14eb-5560-48cb-9086-6ad9c3970427@kernel.org>
- <f27d6fa7-3088-0e60-043e-e71232066b12@huawei.com>
- <b39b4a5b-07b7-483b-9c42-3ac80503120d@kernel.org>
- <0d9bce26-c45b-5ce1-93c0-ca8af50547ae@huawei.com>
-From: Damien Le Moal <dlemoal@kernel.org>
+Subject: Re: [PATCH 01/20] mm/zsmalloc: add zpdesc memory descriptor for
+ zswap.zpool
+To: Hyeonggon Yoo <42.hyeyoo@gmail.com>, alexs@kernel.org
+Cc: Vitaly Wool <vitaly.wool@konsulko.com>, Miaohe Lin
+ <linmiaohe@huawei.com>, Andrew Morton <akpm@linux-foundation.org>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, minchan@kernel.org,
+ willy@infradead.org, senozhatsky@chromium.org, david@redhat.com
+References: <20240628031138.429622-1-alexs@kernel.org>
+ <20240628031138.429622-2-alexs@kernel.org>
+ <CAB=+i9RSCkYyqo-qXJNRKjUig7s5ZMGWCKmur1nNcD3KkFnhUg@mail.gmail.com>
 Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <0d9bce26-c45b-5ce1-93c0-ca8af50547ae@huawei.com>
+From: Alex Shi <seakeel@gmail.com>
+In-Reply-To: <CAB=+i9RSCkYyqo-qXJNRKjUig7s5ZMGWCKmur1nNcD3KkFnhUg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/24/24 21:10, Yihang Li wrote:
->> Thank you for the explanation, but as Niklas said, it would be a lot easier for
->> me to recreate the issue if you send the exact commands you execute to trigger
->> the issue. E.g. "suspend all disks" in step a can have a lot of different
->> meaning depending on which type os suspend you are using... So please send the
->> exact commands you use.
->> is what exactly ? autosuspend ? or something else ?
 
-I am failing to recreate the exact same issue. I do see a lot of bad things
-happening though, but that is not looking like what you sent. I do endup with
-the 4 drives connected on my HBA being disabled by libata as revalidate/IDENTIFY
-fails. And even worse: I hit a deadlock on dev->mutex when I try to do "rmmod
-pm80xx" after running your test.
 
-I am using a pm80xx adapter as that is the only libsas adapter I have.
+On 6/30/24 9:45 PM, Hyeonggon Yoo wrote:
+> On Fri, Jun 28, 2024 at 12:06 PM <alexs@kernel.org> wrote:
+>>
+>> From: Alex Shi <alexs@kernel.org>
+>>
+>> The 1st patch introduces new memory decriptor zpdesc and rename
+>> zspage.first_page to zspage.first_zpdesc, no functional change.
+>>
+>> Originally-by: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+>> Signed-off-by: Alex Shi <alexs@kernel.org>
+>> ---
+>>  mm/zpdesc.h   | 56 +++++++++++++++++++++++++++++++++++++++++++++++++++
+>>  mm/zsmalloc.c | 19 ++++++++---------
+>>  2 files changed, 66 insertions(+), 9 deletions(-)
+>>  create mode 100644 mm/zpdesc.h
+> 
+> Hi Alex, thanks for your effort in pushing this forward!
+> 
+>> diff --git a/mm/zpdesc.h b/mm/zpdesc.h
+>> new file mode 100644
+>> index 000000000000..a1ab5ebaa936
+>> --- /dev/null
+>> +++ b/mm/zpdesc.h
+>> @@ -0,0 +1,56 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/* zpdesc.h: zswap.zpool memory descriptor
+>> + *
+>> + * Written by Alex Shi <alexs@kernel.org>
+>> + *           Hyeonggon Yoo <42.hyeyoo@gmail.com>
+>> + */
+>> +#ifndef __MM_ZPDESC_H__
+>> +#define __MM_ZPDESC_H__
+>> +
+>> +/*
+>> + * struct zpdesc -     Memory descriptor for zpool memory, now is for zsmalloc
+>> + * @flags:             Page flags, PG_private: identifies the first component page
+>> + * @lru:               Indirected used by page migration
+> 
+> maybe Indirected -> Indirectly?
 
-I think your test just kicked a big can of worms... There seem to be a lot of
-wrong things going on, but I now need to sort out if the problems are with the
-pm80xx driver, libsas, libata or sd. Probably a combination of all.
+Hi Yoo,
 
-ATA device suspend/resume has been a constant source of issues since scsi layer
-switched to doing PM operations asynchronouly. Your issue is latest one.
-This will take a while to debug.
+Thanks for comments! Yes Indirectly is better. I will update it in next version.
 
-> In step a, I suspend all disks by issuing the following command to all disks
-> attached to the SAS controller 0000:b4:02.0:
-> [root@localhost ~]# echo auto > /sys/devices/pci0000:b4/0000:b4:02.0/host6/port-6:0/end_device-6:0/target6:0:0/6:0:0:0/power/control
-> [root@localhost ~]# echo 5000 > /sys/devices/pci0000:b4/0000:b4:02.0/host6/port-6:0/end_device-6:0/target6:0:0/6:0:0:0/power/autosuspend_delay_ms
-> ...
-> [root@localhost ~]# echo auto > /sys/devices/pci0000:b4/0000:b4:02.0/host6/port-6:6/end_device-6:6/target6:0:6/6:0:6:0/power/control
-> [root@localhost ~]# echo 5000 > /sys/devices/pci0000:b4/0000:b4:02.0/host6/port-6:6/end_device-6:6/target6:0:6/6:0:6:0/power/autosuspend_delay_ms
+> 
+>> + * @next:              Next zpdesc in a zspage in zsmalloc zpool
+>> + * @handle:            For huge zspage in zsmalloc zpool
+>> + * @zspage:            Pointer to zspage in zsmalloc
+>> + *
+>> + * This struct overlays struct page for now. Do not modify without a good
+>> + * understanding of the issues.
+>> + */
+>> +struct zpdesc {
+>> +       unsigned long flags;
+>> +       struct list_head lru;
+>> +       unsigned long _zp_pad_1;
+> 
+> for understanding, I think it'd be better to replace _zp_pad_1 with movable ops,
+> because mops reuses this 'mapping' field.
 
-This works as expected on my system and I see my drives going to sleep after 5s.
+Right, 'mops' looks a bit more clear.
 
-> Step b, Suspend the SAS controller:
-> [root@localhost ~]# echo auto > /sys/devices/pci0000:b4/0000:b4:02.0/power/control
+> 
+>> +       union {
+>> +               /* Next zpdescs in a zspage in zsmalloc zpool */
+>> +               struct zpdesc *next;
+>> +               /* For huge zspage in zsmalloc zpool */
+>> +               unsigned long handle;
+>> +       };
+>> +       struct zspage *zspage;
+> 
+> There was a discussion with Yosry on including memcg_data on zpdesc
+> even if it's not used at the moment.
+> 
+> Maybe you can look at:
+> https://lore.kernel.org/linux-mm/CAB=+i9Quz9iP2-Lq=oQfKVVnzPDtOaKMm=hUPbnRg5hRxH+qaA@mail.gmail.com/
 
-This has no effect for me. Can you confirm that your controller is actually
-sleeping ? I.e., what do the following show ?
+Thanks for notice. 
+The memcg_data isn't used for zpdesc. And I have a bit confusion since Yosry said: "I think to drop memcg_data we need to enlighten the code that ...". So we actually don't need to have this unused member, is this right, Yosry?
 
-cat /sys/devices/pci0000:b4/0000:b4:02.0/power/runtime_active_kids
-cat /sys/devices/pci0000:b4/0000:b4:02.0/power/runtime_status
+> 
+>> diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
+>> index fec1a39e5bbe..67bb80b7413a 100644
+>> --- a/mm/zsmalloc.c
+>> +++ b/mm/zsmalloc.c
+>> @@ -13,17 +13,17 @@
+>>
+>>  /*
+>>   * Following is how we use various fields and flags of underlying
+>> - * struct page(s) to form a zspage.
+>> + * struct zpdesc(page) to form a zspage.
+>>   *
+>> - * Usage of struct page fields:
+>> - *     page->private: points to zspage
+>> - *     page->index: links together all component pages of a zspage
+>> + * Usage of struct zpdesc fields:
+>> + *     zpdesc->zspage: points to zspage
+>> + *     zpdesc->next: links together all component pages of a zspage
+>>   *             For the huge page, this is always 0, so we use this field
+>>   *             to store handle.
+>>   *     page->page_type: PG_zsmalloc, lower 16 bit locate the first object
+>>   *             offset in a subpage of a zspage
+>>   *
+>> - * Usage of struct page flags:
+>> + * Usage of struct zpdesc(page) flags:
+>>   *     PG_private: identifies the first component page
+>>   *     PG_owner_priv_1: identifies the huge component page
+> 
+> the comment for PG_owner_priv_1 can safely be removed as it's not used
+> after commit a41ec880aa7b ("zsmalloc: move huge compressed obj from
+> page to zspage")
 
-?
+Right, thanks for info!
 
-> At this point, the SAS controller is suspended. Next step c is trigger PCI FLR.
-> [root@localhost ~]# echo 1 > /sys/bus/pci/devices/0000:b4:02.0/reset
+> 
+>> @@ -948,7 +949,7 @@ static void create_page_chain(struct size_class *class, struct zspage *zspage,
+>>                 set_page_private(page, (unsigned long)zspage);
+>>                 page->index = 0;
+>>                 if (i == 0) {
+>> -                       zspage->first_page = page;
+>> +                       zspage->first_zpdesc = page_zpdesc(page);
+>>                         SetPagePrivate(page);
+>>                         if (unlikely(class->objs_per_zspage == 1 &&
+>>                                         class->pages_per_zspage == 1))
+>> @@ -1325,7 +1326,7 @@ static unsigned long obj_malloc(struct zs_pool *pool,
+>>                 link->handle = handle;
+>>         else
+>>                 /* record handle to page->index */
+>> -               zspage->first_page->index = handle;
+>> +               zspage->first_zpdesc->handle = handle;
+> 
+> FYI this line seems to conflict with
+> bcc6116e39f512 ("mm/zsmalloc: move record_obj() into obj_malloc()")
+> on mm-unstable.
 
-What does
+yes, a new commit made this conflict. will update this in next version.
 
-cat /sys/bus/pci/devices/0000:b4:02.0/reset_method
-
-is on your system ?
-
-Mine is "bus" only.
-
->>> The issue 2:
->>> a. Suspend all disks on controller B.
->>> b. Suspend controller B.
->>> c. Resuming all disks on controller B.
->>> d. Run the "lsmod" command to check the driver reference counting.
-
-What is the reference count before you do step (a), after you run step (b) and
-at step (d) ?
-
-For my system using the pm80xx driver, I get:
-
-pm80xx                352256  0
-libsas                155648  1 pm80xx
-
-before and after, and that is all normal. But there is the difference that
-suspending the pm80xx controller does not seem to be supported and does nothing.
-
--- 
-Damien Le Moal
-Western Digital Research
-
+Thanks
+Alex
+> 
+> Best,
+> Hyeonggon
