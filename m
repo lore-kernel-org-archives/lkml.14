@@ -1,106 +1,170 @@
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64CFBE4E;
-	Mon,  1 Jul 2024 01:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C319228F4
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 01:16:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719796407; cv=none; b=PDx9xEOuYi/k8mRh2SnIx/E5Y0r+Hk3cFWgNwCQI/Dr86XRp8HeveWPYkijxByvWGyo+FiUtAPWcndsg3+PXrm8vHfuJUwEaNCG5Gd4EbDFCUrTETcCnwgmndj4Fi69ANw6PcU9FzFlg/3tKCDhNyZGJ33u/zIkPTlw2s+Y2xi4=
+	t=1719796570; cv=none; b=h/gm93d7fNUh7QEQ6hnCLxr6KoQd/0u0wgnjWOBxjPYcEBfuejMZIGwoeVeny2fa2jTNVzjQwPSNnaH5iry18c9haPl8wLFuKuZfNNcy3PfbqDkGovFJ/Ut4WLSrjSPYbpRGtiLRU7WNOk6MxgjTpJfGhpnbjJA1ITTXJQU2noQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719796407; c=relaxed/simple;
-	bh=jV/+28htygmfT/iGCbegyipwTZ7biZY5+4ycwxWDy4M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DqX32Y2HDecBeZyaeuIgbdZGsdlOVg0Sz1aoNjLQi7vEAoSTZAvEapF8CG3VgKBvFle9ls71MnEy6tDyQqxR0+dYw5rdirlwRJLSVXEmw5ccBoVMMh78j1fatYnhHo8dc+gghnBfTCZW+vWsk4qIybF0JqdguRB5zBq3JtONoYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ejTJDOHR; arc=none smtp.client-ip=209.85.210.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719796570; c=relaxed/simple;
+	bh=uiod8Gdriil62+Shj/a8XEzFRx/9BbIC8xbxkPmFaC4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dhEsIGt67w8QrQD0g++c4Gqs2Hp5uk7V16cHVjoH7ypBIXi6g7jgYGogwDQiJmS2aqv0WSgXU2Ltj7FATctLCJdDcmwvRFpW8bYWaWS4t/OrpG3uWKiohewyfmJEHQQsUz/p991TBOR8b8fdekGSWnmh10pfUiYeae8JJ0Cm/cY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=Tq0xx76s; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ejTJDOHR"
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-6f855b2499cso1550345a34.1;
-        Sun, 30 Jun 2024 18:13:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="Tq0xx76s"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1f9b523a15cso15300305ad.0
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2024 18:16:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719796405; x=1720401205; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dr4jkJJ/l6gKebFSgpetMaXVUh3/kBjcGSdTd0wr5BE=;
-        b=ejTJDOHRaXRYWqROCiowInoa/hYfw158IFnAyJzEG0eqcmEDmf5VoHv5iFlmxjiYMT
-         w1EnXKz2AmySER8kbUwgmUItFuwcNLMfQuCWFervDc3kI1WUVaQvrCI9PzaGEJXX+tyY
-         0cpdsUqSt6QMKPkiRPotlt9T/htomz2wdFz0xE/FDUWgHZlNPdxkpaHpg6lF8a4ixIUO
-         pOxnA8zUwB/vhqcfqzvM5VRwNS80zVdmQcjg/zoFW4Kv15SCS+fA0waDfwvxhgfMBBij
-         L3f9fqag6bC+FnDEx3ckRuemNJIZ5QevuKcd3ggAaVatN2fLRWyd34R1jlj5cmYdMG4T
-         b/fg==
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1719796568; x=1720401368; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/WihJp7JnQZqE8Q3tF8oBlf+IYLcmEBJKiSEmeorD3A=;
+        b=Tq0xx76snsAIWJMCMefJNYzOBp9GG7RNOLUxwPazCWoYLgoANDrrWcP6HgdIL+oeug
+         pDE71+wtCa1gcj/Amc+Znc8cyO4LfIGEk+RvNkMFaC8lkMTsHE7kewe5MvzWt73vCmZs
+         p0dBkv0vqITqelFaatvkyFJWZbah1Qq9KZfRp9MOCV+0UMqw6IkYgOwe/nf6Ng8Tu9c3
+         f50tpf7XXFeupy8vHPoDt56fQG2BS1+ZocfhOXPrw2zYMFsCAFBadoRc5vvCJGB544T/
+         zMsoflyatVsi+UjBazXLYH56bQ9iq9aAj75YBxARxN/VHRlG+cpya3AkpJKxQ9OIezI5
+         w3tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719796405; x=1720401205;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dr4jkJJ/l6gKebFSgpetMaXVUh3/kBjcGSdTd0wr5BE=;
-        b=GTC8uzZvz4FSLu0VF/Rz6He29CFFRfRrRF9xTGt3f3xe1mCKpA+NYpXSkF40W6dl1l
-         xqX1z4kq5FIbMj1AgDwzkoksNaw4FTXWXUyD//Cgn9l/3XpfI3/2AsvHfC5lGf5zGTcn
-         nBEinauEf/Sxkq6TdtgvmGZ3pIufIinL/V2QNieENZ6/ZgKycjErc23nHOiC4D5jiPnW
-         GMfGZ6zBoAO2bWGy6fthtc7mMKT4LiFkHsHnV0UUaNU55Fd4ZpNaTszxuZq8HHc8Im0N
-         a0AlzEaJO6BIcCoAlzxElse8dzzHq/63C/Qb6KRrwMKCeGav6uNNoeWbJXpck2OTNC/w
-         u7/g==
-X-Forwarded-Encrypted: i=1; AJvYcCW7a3NSj7gOkJ5AuFD+SRgI/aF1aIhbEt78EnFJlLC5lUxvQn3gReyqPAtpUjgZzNO6G68sXE+HkXynKpKJE7mmFQt4irvGTWGzkmuzmEP84hiPflXi6G/LdPI+egBtG6AJMF6s0NdRlg==
-X-Gm-Message-State: AOJu0Yx9/7aeCENN8xc8PVPzg/5y9m7Swnbx5U5qZ/f2LcsPq90jqhcD
-	LusoUfb1gaiEaJzdrcGqGEwc9OQ1KmxcAjkiVL02+410krtOqk+ZV2BEo5ZKs6MBF+yJwGhzehD
-	SXFoGfsKkZe+JrTtUo5HzMiAR+hXNWA==
-X-Google-Smtp-Source: AGHT+IEtEZeUdRqXybFf2at6OYKEJGZZSvPUBk24z+ciafnogrSLXTl3tP82KTe7L+a8tfPy1qpWPUyXDwHHjyMrvNw=
-X-Received: by 2002:a05:6871:e7c6:b0:254:9ff5:a032 with SMTP id
- 586e51a60fabf-25db35b65d2mr4054583fac.47.1719796404722; Sun, 30 Jun 2024
- 18:13:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719796568; x=1720401368;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/WihJp7JnQZqE8Q3tF8oBlf+IYLcmEBJKiSEmeorD3A=;
+        b=KjCml5c3PBcjGuCva2CRiyIaM40evaQKWRfC3HGNBgnTQJerXGFDTPVfDM6XU5I/EX
+         30/yctbml3u5OgH9dRmONHMCCK2ZzDGo1PigxePVV9Cz4hU7b2PgiR/dXI4qcs1Bs59h
+         i6qGC5nHrQ8xJoraVhUv643oAEHsaqN61rgqTFOFif/MxA5lQ0LyWdtEmsKRPrQ1cBFD
+         xDo1LgL96cWGhafisZh9pcvENkvsLcbl79Zk9VaPPaWLjy1VTECHZWqsFNY5IfHXBBCl
+         n8nVE1OHH/by5fA9Da4F2djph7DL42c3Vmlzg0bAMCHjso2IkmmqbyeQcxr9hvqvvOEs
+         tT+g==
+X-Forwarded-Encrypted: i=1; AJvYcCXBffuJpL1txrb9nIvx8zev5IXjYfW0uE8GsMPlCOl4VGtsOcKTlRIJ7ehPCc6m8xvq1c0a/C8gPbsPwcUzq8yYFqYjBsRXYGSnYoPA
+X-Gm-Message-State: AOJu0YyKFN9XgD6NqMnjFmWxL5c6wNTecS5Ko2XSsZyT58dsDeCkq664
+	VAplZaBOOFoQ7s+1LZpqQN3WqKseFhD/utDt5E2OemFWaSFnCj9AuJWly+6UnAI=
+X-Google-Smtp-Source: AGHT+IEMQ/nIAAwcy5E9ZtnDihQLkeNPAxdYq4I132s7wFI5weLcV6ze43XfRapwnaVRCEDFola+Jw==
+X-Received: by 2002:a17:903:1cb:b0:1f9:e2c0:d962 with SMTP id d9443c01a7336-1fac7f1b66fmr116097455ad.31.1719796567869;
+        Sun, 30 Jun 2024 18:16:07 -0700 (PDT)
+Received: from dread.disaster.area (pa49-179-32-121.pa.nsw.optusnet.com.au. [49.179.32.121])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac10c8bb3sm52206465ad.46.2024.06.30.18.16.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Jun 2024 18:16:07 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1sO5eH-00HMwu-03;
+	Mon, 01 Jul 2024 11:16:05 +1000
+Date: Mon, 1 Jul 2024 11:16:05 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, djwong@kernel.org, hch@infradead.org,
+	brauner@kernel.org, chandanbabu@kernel.org, jack@suse.cz,
+	yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com
+Subject: Re: [PATCH -next v6 1/2] xfs: reserve blocks for truncating large
+ realtime inode
+Message-ID: <ZoIDVHaS8xjha1mA@dread.disaster.area>
+References: <20240618142112.1315279-1-yi.zhang@huaweicloud.com>
+ <20240618142112.1315279-2-yi.zhang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240701110113.1248c8c2@canb.auug.org.au>
-In-Reply-To: <20240701110113.1248c8c2@canb.auug.org.au>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Sun, 30 Jun 2024 18:13:12 -0700
-Message-ID: <CAEf4Bzb5cjLN0mDMaikTopa8ZFXuGcKef-Sv-MPHZgvguwUTng@mail.gmail.com>
-Subject: Re: linux-next: build warnings after merge of the mm tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240618142112.1315279-2-yi.zhang@huaweicloud.com>
 
-On Sun, Jun 30, 2024 at 6:01=E2=80=AFPM Stephen Rothwell <sfr@canb.auug.org=
-.au> wrote:
->
-> Hi all,
->
-> After merging the mm tree, today's linux-next build (arm
-> multi_v7_defconfig) produced these warnings:
->
-> fs/proc/task_mmu.c: In function 'do_procmap_query':
-> fs/proc/task_mmu.c:598:48: warning: cast to pointer from integer of diffe=
-rent size [-Wint-to-pointer-cast]
->   598 |         if (karg.vma_name_size && copy_to_user((void __user *)kar=
-g.vma_name_addr,
->       |                                                ^
-> fs/proc/task_mmu.c:605:48: warning: cast to pointer from integer of diffe=
-rent size [-Wint-to-pointer-cast]
->   605 |         if (karg.build_id_size && copy_to_user((void __user *)kar=
-g.build_id_addr,
+On Tue, Jun 18, 2024 at 10:21:11PM +0800, Zhang Yi wrote:
+> From: Zhang Yi <yi.zhang@huawei.com>
+> 
+> When unaligned truncate down a big realtime file, xfs_truncate_page()
+> only zeros out the tail EOF block, __xfs_bunmapi() should split the tail
+> written extent and convert the later one that beyond EOF block to
+> unwritten, but it couldn't work as expected now since the reserved block
+> is zero in xfs_setattr_size(), this could expose stale data just after
+> commit '943bc0882ceb ("iomap: don't increase i_size if it's not a write
+> operation")'.
+> 
+> If we truncate file that contains a large enough written extent:
+> 
+>      |<    rxext    >|<    rtext    >|
+>   ...WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+>         ^ (new EOF)      ^ old EOF
+> 
+> Since we only zeros out the tail of the EOF block, and
+> xfs_itruncate_extents()->..->__xfs_bunmapi() unmap the whole ailgned
+> extents, it becomes this state:
+> 
+>      |<    rxext    >|
+>   ...WWWzWWWWWWWWWWWWW
+>         ^ new EOF
+> 
+> Then if we do an extending write like this, the blocks in the previous
+> tail extent becomes stale:
+> 
+>      |<    rxext    >|
+>   ...WWWzSSSSSSSSSSSSS..........WWWWWWWWWWWWWWWWW
+>         ^ old EOF               ^ append start  ^ new EOF
+> 
+> Fix this by reserving XFS_DIOSTRAT_SPACE_RES blocks for big realtime
+> inode.
 
-argh, 32-bit strikes back. We have to do (void __user *)(unsigned
-long) cast to satisfy 32-bit compilers. I'll send a patch for mm tree,
-thanks for the heads up
+This same problem is going to happen with force aligned allocations,
+right? i.e. it is a result of having a allocation block size larger
+than one filesystem block?
 
+If so, then....
 
->       |                                                ^
->
-> Introduced by commits
->
->   3757be498749 ("fs/procfs: implement efficient VMA querying API for /pro=
-c/<pid>/maps")
->   df789ce1eb90 ("fs/procfs: add build ID fetching to PROCMAP_QUERY API")
->
-> --
-> Cheers,
-> Stephen Rothwell
+> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  fs/xfs/xfs_iops.c | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> index ff222827e550..a00dcbc77e12 100644
+> --- a/fs/xfs/xfs_iops.c
+> +++ b/fs/xfs/xfs_iops.c
+> @@ -17,6 +17,8 @@
+>  #include "xfs_da_btree.h"
+>  #include "xfs_attr.h"
+>  #include "xfs_trans.h"
+> +#include "xfs_trans_space.h"
+> +#include "xfs_bmap_btree.h"
+>  #include "xfs_trace.h"
+>  #include "xfs_icache.h"
+>  #include "xfs_symlink.h"
+> @@ -811,6 +813,7 @@ xfs_setattr_size(
+>  	struct xfs_trans	*tp;
+>  	int			error;
+>  	uint			lock_flags = 0;
+> +	uint			resblks = 0;
+>  	bool			did_zeroing = false;
+>  
+>  	xfs_assert_ilocked(ip, XFS_IOLOCK_EXCL | XFS_MMAPLOCK_EXCL);
+> @@ -917,7 +920,17 @@ xfs_setattr_size(
+>  			return error;
+>  	}
+>  
+> -	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate, 0, 0, 0, &tp);
+> +	/*
+> +	 * For realtime inode with more than one block rtextsize, we need the
+> +	 * block reservation for bmap btree block allocations/splits that can
+> +	 * happen since it could split the tail written extent and convert the
+> +	 * right beyond EOF one to unwritten.
+> +	 */
+> +	if (xfs_inode_has_bigrtalloc(ip))
+> +		resblks = XFS_DIOSTRAT_SPACE_RES(mp, 0);
+
+.... should this be doing this generic check instead:
+
+	if (xfs_inode_alloc_unitsize(ip) > 1)
+		resblks = XFS_DIOSTRAT_SPACE_RES(mp, 0);
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
