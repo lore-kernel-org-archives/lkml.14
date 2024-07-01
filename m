@@ -1,144 +1,120 @@
-Received: from fout1-smtp.messagingengine.com (fout1-smtp.messagingengine.com [103.168.172.144])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A01C84D02;
-	Mon,  1 Jul 2024 11:58:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC2B14D2AC
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 11:58:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719835109; cv=none; b=umiKsA6HpgnC4qANi4JSV8GtqK0rRA1PcvBVYBeGWf1p1mS7IItduvTA2SDRKJCN7gwmyfcp+mOj3f6w1dRSvqXH/nrkrEUZBSTvfFSIPRgXpMJbvJwjjfc/AYk/JUKD+x3ilQwkdTPIb0rgHTzuJq2ri4Mle5a8t1tdquOV6fc=
+	t=1719835124; cv=none; b=dlwNmkwZxYBrB6Sxc6BrlQw4F6byMDE2OnDyNEg1K1l14jHHVDukDN26zxcsdcMNklDI7P8yBiIUJlndnFie8EKqxSNBtEcULY48D7KFtWUp4/ATB4MwBf5gXDmpsIKluivdAwJMZlcwQSZZwlt45fFELbiszkSHPKiawqLByw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719835109; c=relaxed/simple;
-	bh=WaV/uifT+ewSSQQt4FXzBE5fi9386OXucSBJ4NdlHxg=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=YrBL5Hw5ginkdT2LT/ScunyEh91N2vjBgME0wq2AuhCrMGtlBDF4+NCy/Q8F75Ci+ZzZIgWxVhom2Zd9NShc5aE6vsdr31oLsIWmWeDsqlH64AzoDLjUQ7MZySqOdBy/8DMryrzye7eitMKK/+2VHpDPmySsxGP6mGRqBoW0mIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=G5aEq+jm; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=qft2T1tm; arc=none smtp.client-ip=103.168.172.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1719835124; c=relaxed/simple;
+	bh=gEOE+ocBdbt+fDzHf37CbGhJxzEUg6Nqi3RW68DDFgk=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=BSWqasreo3sX+Yb1wb6mJfpib7BuY4DlsFfNO/5b3zSZmpN0miQcwO/IuTvNn73STCXJnFnOIsH//hFkt9bu3UnWDVhIk+cqEUoX9fAoHzlL/OW8ilhuc+pbvmzUuIId9A+WI0Lne70WwbJ00chdwav2A1M8A2spS0u4hhUEE+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qXaTrbAk; arc=none smtp.client-ip=209.85.217.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="G5aEq+jm";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qft2T1tm"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 7AF251380463;
-	Mon,  1 Jul 2024 07:58:26 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 01 Jul 2024 07:58:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1719835106; x=1719921506; bh=xTKFbyMCes
-	YSqTGV3kNBw9DLS4BP7bP5n2sMbxKcREk=; b=G5aEq+jmJLeuDeV0mrL7Ml8cY7
-	9nWyr1HK4KhJYfPTaqFVqA4+bUYJObJisUcDybkcPMermDTU868P+bbZmyc0ghuw
-	R5DLJeJMdWWiaKci/VBvBSWxs4hy5ZW1qcmI9iZca3edwpUovEf/vhql9fSaFmiS
-	D1h3BrjoaE2X+s0SsUnxAYNflon6tnTQeOWY3nupbgWEkGzLjmS8SIJkdXbf8zR2
-	SFVFPSMMA3db5jkzqnSXH4c3q2zaB/r+gzBO01A+qj82aAdG8je7072ZmDRi/msd
-	Vvobyeocvxx+/UP1ZV86CXlhHGWA8qascKYcnIImd3UpyQXNRGop0o0cRP4A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1719835106; x=1719921506; bh=xTKFbyMCesYSqTGV3kNBw9DLS4BP
-	7bP5n2sMbxKcREk=; b=qft2T1tmF0gPXJxQcjqJ+4qMDmqirl2p6B6IORadaZ1D
-	pWI+i0TQJQkbGIODQmkDqEn0Z+ZWmIWrGruBUAE/qdvn4asyC9XSyTsB9dOdqoQJ
-	XgpJgkbxIPTfYqHwtPxv8l7KfkGpZb1st22hLpk7BCyNjCsxdyHsNVOlUW2ocXWl
-	XpuWmyTyhdZrfeMn0XMua3OlsWsmKq40vxBmQU2LrNTYWx0kjPBwKkWJC6ck5Y8C
-	ZpjBxfdfb7Wbzz88KTv8Ow3dcYG0zZHTFhYEJurQoggIbTvhKYyVMYQuZrctBqKR
-	Aef1ki5U5uQl2EXfTzXtWBkCGXZmKi4YIg1UXZhfrQ==
-X-ME-Sender: <xms:4ZmCZtUsbU2QX-zvIyWPJNmWEyzOzwCQ0_2vrxkGXVlPDBGY7Bcmxg>
-    <xme:4ZmCZtmQFWA4lE0IfzLNO97EeT5K7aGQE8mh1-AhB4j99UwA8ItqGQ51NolRDB7jJ
-    B3oz-uA60J0vx31SSs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudefgdeghecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:4ZmCZpb6vfZ-oV3D0qYPBc5RdopwhTRFByt7c6FNhRIE7e0I8jZ1lw>
-    <xmx:4ZmCZgXiMRn0_cjj35lltXsOr7swBAekdVNWy8iU9529ZQij8gNmfA>
-    <xmx:4ZmCZnl-LXr2HnkGZcIv-6hSFxVSSjA7elFAR9bOwl2hyDhBYIdWOg>
-    <xmx:4ZmCZtcrcuuz67vXwTxThdxLypZczJdZrQIGWr9jTBvBJXZF4M3yHg>
-    <xmx:4pmCZgehxJ9HzZqzR2KYamrvGgKCzJG7XJxoFR5Q5BHDLP3M75K3-9vU>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id C1BE1B6008D; Mon,  1 Jul 2024 07:58:25 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-566-g3812ddbbc-fm-20240627.001-g3812ddbb
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qXaTrbAk"
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-48f59584cbbso1008560137.3
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 04:58:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719835120; x=1720439920; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=FiDSz9VE0AFUeXEbzLB0AhJfOiLVcxxxs1VWcvfxXRY=;
+        b=qXaTrbAk52rnM1E7t5z75cKZtO4O7MwVgJQIySDlOOuqaFu0300pY/zsY9KKUFRVn3
+         WflPoapXzwE1tfr4avT9BerwpN4dxGnZ6tZJiQ6eDw7A0U7v4IRi4d8jajSIydYIux3+
+         C1iCpkVZwFW6IBh21pQpi4PhDmB3ET8P71cNpSN/m2ES8z+YuxR9f5I9YWjnTDAYcHtE
+         jI6xu8MH+Iwe0VYJxVcP2g+nQBx4Fz+qUtKzPtDiNl8rCu+cmjStu+mf48AL1xbxfK82
+         pZmOamYimxxiyRnf9Gb7b4RK68xa2TP6E+J1MDAqi7IGAubCUBOxpHzzsDu5ofE0QA9n
+         HP0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719835120; x=1720439920;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FiDSz9VE0AFUeXEbzLB0AhJfOiLVcxxxs1VWcvfxXRY=;
+        b=Ollbq1e7gFoX7rTeS5v9F08QVHhg4nDT7ptsMBqbvek/IurLKV2biAZZ7DuVeaN6SW
+         mHyfgMyGvrwRMU0PqEsvW0MzJe0cZgpPUQ2LyVu566I6RwgWl4uamqKEgV6X93k2/DAZ
+         XA7LNBCHoC1iIwZ3JoVDjXcxl4jCwlF9gEKXYJvSlKcbJtHgFxH0l6TBKHjOTfvlSOb2
+         bwz4pnhheOghSEJxgtfEg+uctXlhoCj83h+mDypiwOgIfJ3CXdxbSy98GsbsqWV5kSUG
+         81Sdh3dlk6hV92CU7ieYYEr1XiDg6M+9yFZc5A4+QpZAjTMiMew5zcbdNeMbz9KIObgM
+         oVzg==
+X-Forwarded-Encrypted: i=1; AJvYcCVZV01N/LsJSi5ctdKC25KzHal/KeZEfZFjwKk4naCdeub82Hn82rYRPg01BhTqDUakZVrhgHBfJPEXdH8Tfsl6fJNZ/Tvh2V+k4pJK
+X-Gm-Message-State: AOJu0YymSFkgAgCgKDdJKA3c0KH4Ddr2mxIA1+F5nIkhtMmpd0fgQzT+
+	z0/57ce7Yb8/VIebKEVZrbMod4g2FGnhXleWR6oAUcRuRmz1NPPSeZtpVTohs0nmHku34lYKebI
+	ksvWJ749hbgnsA/ygJ/nLZCoa7M+h4dtMmbRPfQ==
+X-Google-Smtp-Source: AGHT+IHXyYi+vErcz2WdDS+6TqDK+01dX2IbGbbnCkxLEnQrj1qDcp5NDG5b+X0fZ+YTkKJiTZEaWoLMJRjDqFi0TsE=
+X-Received: by 2002:a67:f343:0:b0:48f:5abc:8b93 with SMTP id
+ ada2fe7eead31-48faf132dc7mr5756721137.27.1719835120661; Mon, 01 Jul 2024
+ 04:58:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <5f1f44be-80ad-4b4e-90a0-c2e4e8cd3dbf@app.fastmail.com>
-In-Reply-To: 
- <CA+G9fYsk85UOsa0ijXcYRvvZLXEMQKe4phWhND+0qSNP36N5Tw@mail.gmail.com>
-References: 
- <CA+G9fYsk85UOsa0ijXcYRvvZLXEMQKe4phWhND+0qSNP36N5Tw@mail.gmail.com>
-Date: Mon, 01 Jul 2024 13:58:05 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Naresh Kamboju" <naresh.kamboju@linaro.org>,
- "open list" <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
- lkft-triage@lists.linaro.org
-Cc: "Jan Kara" <jack@suse.cz>, "Christian Brauner" <brauner@kernel.org>,
- "Hugh Dickins" <hughd@google.com>, "Andrii Nakryiko" <andrii@kernel.org>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Anders Roxell" <anders.roxell@linaro.org>
-Subject: Re: fs/proc/task_mmu.c:598:48: error: cast to pointer from integer of
- different size
-Content-Type: text/plain
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 1 Jul 2024 17:28:29 +0530
+Message-ID: <CA+G9fYsXsbHp+0cWoTjEhkpANOav=GLSjPx5ghtUY-FjMPyoSQ@mail.gmail.com>
+Subject: Mainline: v6.10-rc6 boot failed across all arm64 devices
+To: Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Mark Brown <broonie@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Aishwarya TCV <Aishwarya.TCV@arm.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jul 1, 2024, at 12:19, Naresh Kamboju wrote:
-> fs/proc/task_mmu.c: In function 'do_procmap_query':
-> fs/proc/task_mmu.c:598:48: error: cast to pointer from integer of
-> different size [-Werror=int-to-pointer-cast]
->   598 |         if (karg.vma_name_size && copy_to_user((void __user
-> *)karg.vma_name_addr,
->       |                                                ^
-> fs/proc/task_mmu.c:605:48: error: cast to pointer from integer of
-> different size [-Werror=int-to-pointer-cast]
->   605 |         if (karg.build_id_size && copy_to_user((void __user
-> *)karg.build_id_addr,
->       |                                                ^
-> cc1: all warnings being treated as errors
->
+The mainline kernel v6.10-rc6 boot failed across all arm64 devices and
+qemu-arm64 and no crash log found (earlycon) did not help.
 
-There is already a fix in linux-next:
+But the defconfig builds boot PASS.
 
-@@ -595,14 +595,14 @@ static int do_procmap_query(struct proc_maps_private *priv, void __user *uarg)
-        query_vma_teardown(mm, vma);
-        mmput(mm);
- 
--       if (karg.vma_name_size && copy_to_user((void __user *)karg.vma_name_addr,
-+       if (karg.vma_name_size && copy_to_user((void __user *)(uintptr_t)karg.vma_name_addr,
-                                               name, karg.vma_name_size)) {
-                kfree(name_buf);
-                return -EFAULT;
-        }
+The boot problem is with defconfig + Extra Kconfigs and builds links
+provided in the bottom of this email.
+
+The boot test history shows that,
+  GOOD: v6.10-rc5
+  BAD:  v6.10-rc6
+
+We are bisecting this issue and get back to you with git bisect results.
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+Following is the list of build combinations that boot failed.
+Regressions found on qemu-arm64, Juno-r2, db410c, db845c, e850-96 and Rock-pi-4.
+ - boot/gcc-13-lkftconfig-64k_page_size
+ - boot/gcc-13-lkftconfig-kunit
+ - boot/gcc-13-lkftconfig-rcutorture
+ - boot/gcc-13-lkftconfig-16k_page_size
+ - boot/gcc-13-lkftconfig-libgpiod
+ - boot/gcc-13-lkftconfig-devicetree
+ - boot/gcc-13-lkftconfig-debug-kmemleak
+ - boot/gcc-13-lkftconfig-debug
+ - boot/gcc-13-lkftconfig
 
 
-This could be expressed slightly nicer using u64_to_user_ptr(),
-but functionally that is the same.
+Steps to reproduce boot failure on qemu-arm64:
+----------
+ - https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2idWuAb51mcz7lO1BAj8Aw0BrNY/reproducer
 
-I also see a slight issue in the use of .compat_ioctl:
+metadata:
+----
+  git_describe: v6.10-rc6
+  git_repo: https://gitlab.com/Linaro/lkft/mirrors/torvalds/linux-mainline
+  git_sha: 22a40d14b572deb80c0648557f4bd502d7e83826
+  git_short_log: 22a40d14b572 ("Linux 6.10-rc6")
+  arch: arm64
 
- const struct file_operations proc_pid_maps_operations = {
-        .open           = pid_maps_open,
-        .read           = seq_read,
-        .llseek         = seq_lseek,
-        .release        = proc_map_release,
-+       .unlocked_ioctl = procfs_procmap_ioctl,
-+       .compat_ioctl   = procfs_procmap_ioctl,
- };
- 
+Links:
+-----
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2idWrbdtwMqpD9wx7IPRGJ7Dsx3/
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2idWrYDposdlRsS4jwF916a0qGE/
+ - https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.10-rc6/testrun/24473346/suite/boot/test/gcc-13-lkftconfig-libgpiod/history/
+ - https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.10-rc6/testrun/24473903/suite/boot/test/gcc-13-lkftconfig-rcutorture/history/
 
-Since the argument is always a pointer, this should be
 
-       .compat_ioctl = compat_ptr_ioctl,
-
-In practice this is only relevant on 32-bit s390
-tasks to sanitize the pointer value.
-
-     Arnd
+--
+Linaro LKFT
+https://lkft.linaro.org
