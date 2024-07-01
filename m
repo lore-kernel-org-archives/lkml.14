@@ -1,85 +1,77 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1558716D4E2
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 15:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 247DE126F1E;
+	Mon,  1 Jul 2024 15:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719849021; cv=none; b=c0JnMs6430JiUlLPK1rRjCug7gnwohafANGHIUjD3hJ1vdZ+TIdripgSgH27w9yF1Y+JzOneetNuIR/dGNROfcAylBuivopasWNMK3dZrKK+SiesX1WXxluKCmqg1EP8ntS5BSNa7AmtFGKEShhApV5lcWTHrgMdQTcK6cl4YEY=
+	t=1719849112; cv=none; b=RdquQ+v0hhEsSShHGIW5jJE4nb6IxOT4E5PoopaLRsN2iNzTitaKQ3MNxIrfsRMdNIyA+zYWYPJYncfsHNS6Ctry84h5NXan1ieSUSU22W7ciRpHU5uDJMKD1g+ykGRk5DNtJKgGVBOifJVl7WmZqvM23nRbOWxRTio4Q4dRV90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719849021; c=relaxed/simple;
-	bh=Qk8oUFF+A4W1ahD6THSI/ajDbhSQB7YK+eadVO8mj2A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GB6q/45n0gsCZ9q9jZGfVCB4v4QMO3uWupWf3e18iEGZ2BGkZru6Zo7RPkE0Z7oDeT0UdcxFTTkLyk7pVkDuafxV2GoyrEZfG943c+w/tbBDsiRgspgRVzMt6zHEjXttIOt5HlcrRTJgiWIJcngWudwz87CN6cc/MWVGb/4g9Rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=B/uYVcS2; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1719849112; c=relaxed/simple;
+	bh=go7y+/7R+ef/tBI71iLrWGpZRU+uIzdwgbbTeOixqMY=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To; b=EfRhIm8j7Es4O6jS7TOgL2dz+7FeLDZSdiPpMPdnJvH9NYLhOzNMgPfpJK/aabWoVzb8BXFplkOBsjfRjfalKTvWzdQMOXJevDyJ9FrXdtoI2/2NKUoXUDp56KvgWrre3XIxHdL+XSsgOG4wTjVcccBs0kGjEhVYcGeU/0vz0E4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mcnr/rRE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="B/uYVcS2"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2eaa89464a3so33309841fa.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 08:50:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1719849017; x=1720453817; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1DNku0/oWyFaFP/Y9JNMp4HONNLih0gP4BElhknkFCs=;
-        b=B/uYVcS2VgUTe6VXURqm3Efqr85ns5tWkWoMqZP0Az+RKFSAT+/9V5hUS7pvMKIxHD
-         bGN9XuYCSpUlr9DIsDGEPbXIr2WnUXdbev1GchFdIAxzwgPz93OH0X7JFS1jMeXRKYB/
-         qO/9XstBjthJ5nXJMPRlCmHUzZExPoSrXrk0ItiMvCSi0bgl6V/daDRo1zGxGiUh6GVT
-         49AdCGkMkAMiXEdpEVZmt1o4k1Xw+UFOrmpWLYmIC7YRdH4dcDm8xb9ZCvXezBOtHEJY
-         WoDiqXdQ7e2fdGRX1MbpfyaSYUel35r7UqU9yvEjVEsGgNrSvfEBT5dz3ZYn1xjIdrAJ
-         W11Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719849017; x=1720453817;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1DNku0/oWyFaFP/Y9JNMp4HONNLih0gP4BElhknkFCs=;
-        b=khKnbAFMKdwncQm9N0ap4zIgiJq6eq4184/V92EsF2nLJOZnP7DQH364KoxwqTCbUP
-         5q1gygwFhr2UUmBUZvPmbCrC2mS6Ku26YWXNXq2kV48I4znjOaZxMPVmt2rQAwyGylCG
-         Ymm05fsesc6JxAvQQ9CUSGpM1Fe7Egb7UbzUXN1aYkE0EWRwEtNMsADKdN6f18TSzRxW
-         hwxBpZJXMSLR/U04CqQdeEpkBQgWIHrQPgKbiVmOdefCOwyS0ccDuuK45NfPIu4L7k8o
-         qEv4Cbs6gIhl/Q++oSsYcJO5OCcLSehl7KdrXmEk7Kei6lnwHVfdycEelRmSH5BVpo3X
-         TetQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWxqL/yu88pS/aK1n47mLmw040p1+QramhAEerZAUE4HaiKxNB1vy+Q2k7zDyDLwZMi6m2cljJ0xnITuQPmmd5g1N8T3THXk+w5fFCD
-X-Gm-Message-State: AOJu0Yw2bmjjcFOK2D5Wa2rCcE0nWzZ0bts+akodY5MfexrGhkxg5LTS
-	gM7NJXBmZN10BejiIj6pDWFxNfmOOEITOEa/+wv6+7DumFYczRvGRLpEHMS49yY=
-X-Google-Smtp-Source: AGHT+IH0ZVnB39TMB6oazNb4dsuEITV59qCGirhuXUBkT4kEZEs1fXv/9Fdu/JEanJrzEidB5JsXJA==
-X-Received: by 2002:a2e:bcc1:0:b0:2ee:6a72:f006 with SMTP id 38308e7fff4ca-2ee6a72f0e6mr27541801fa.21.1719849017311;
-        Mon, 01 Jul 2024 08:50:17 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac11d9685sm66381265ad.111.2024.07.01.08.50.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 08:50:16 -0700 (PDT)
-Date: Mon, 1 Jul 2024 17:50:07 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>, linux-serial@vger.kernel.org
-Subject: Re: [PATCH printk v2 15/18] tty: sysfs: Add nbcon support for
- 'active'
-Message-ID: <ZoLQL6rdDM7Iv0Dk@pathway.suse.cz>
-References: <20240603232453.33992-1-john.ogness@linutronix.de>
- <20240603232453.33992-16-john.ogness@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mcnr/rRE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DD3AC116B1;
+	Mon,  1 Jul 2024 15:51:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719849111;
+	bh=go7y+/7R+ef/tBI71iLrWGpZRU+uIzdwgbbTeOixqMY=;
+	h=Date:Cc:Subject:From:To:From;
+	b=Mcnr/rRE5iNWKLLYUOSxXwc+iraO85pqjmO3jUSGnZIJw7zJEZ4qMeN078ofhzXN/
+	 9Rv6HziSrMs7NJjdQfhwfdsa9YA4rlxK37To0Dk9dmYs6RWPtY1ZXqtBmka7p6LtEn
+	 conB3EnmZ71aJtdBylbzc+dHsiqPq/YtBYVX+Jgk2n/pYR5fQlkC9ro7zcgkz9Xx6z
+	 Q8NYH9aRpJt+6h9Urfd90Ug9NJyvhtwIysy2+5vOP5Kqb3/Q5hwCV2+PFPnTqh7lC+
+	 hDjmJ099O1ap5hrH70Vezeu6HJwZoctJ9plX9yBFvHMLFkhtuvcdA/PDZiDCEN+Csd
+	 C66sl4NbdffLQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240603232453.33992-16-john.ogness@linutronix.de>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 01 Jul 2024 15:51:48 +0000
+Message-Id: <D2EBML829ZJI.1XZZVLVGUXRBH@kernel.org>
+Cc: "Peter Huewe" <peterhuewe@gmx.de>, "Jason Gunthorpe" <jgg@ziepe.ca>,
+ "David Howells" <dhowells@redhat.com>, <keyrings@vger.kernel.org>,
+ <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] TPM DEVICE DRIVER: tpmdd-next-6.11-rc1
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Linus Torvalds" <torvalds@linux-foundation.org>
+X-Mailer: aerc 0.17.0
 
-On Tue 2024-06-04 01:30:50, John Ogness wrote:
-> Allow the 'active' attribute to list nbcon consoles.
-> 
-> Signed-off-by: John Ogness <john.ogness@linutronix.de>
+The following changes since commit 22a40d14b572deb80c0648557f4bd502d7e83826=
+:
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+  Linux 6.10-rc6 (2024-06-30 14:40:44 -0700)
 
-Best Regards,
-Petr
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git tags=
+/tpmdd-next-6.11-rc1
+
+for you to fetch changes up to 0543f29408a151c1c4a12e5da07ec45c2779b9b8:
+
+  tpm_tis_spi: add missing attpm20p SPI device ID entry (2024-07-01 15:50:0=
+2 +0000)
+
+----------------------------------------------------------------
+Hi,
+
+Contains couuple of bug fixes.
+
+BR, Jarkko
+
+----------------------------------------------------------------
+Joe Hattori (1):
+      char: tpm: Fix possible memory leak in tpm_bios_measurements_open()
+
+Vitor Soares (1):
+      tpm_tis_spi: add missing attpm20p SPI device ID entry
+
+ drivers/char/tpm/eventlog/common.c  | 2 ++
+ drivers/char/tpm/tpm_tis_spi_main.c | 1 +
+ 2 files changed, 3 insertions(+)
