@@ -1,154 +1,227 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC5612C486;
-	Mon,  1 Jul 2024 10:27:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7398A145B38;
+	Mon,  1 Jul 2024 10:27:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719829628; cv=none; b=nr907TUxMiIPiDM8qxVmudbKR1475DJ7J+kZ9xzTJWobOJRJYwLNRMw9+qleiHt4r2FTGooGgKYm6rRiE2lD5pzYeBBKKgmosMWQtWj7sVeT/fGUZWBDLmqbqnHEAyE1+QtGejTZOLVr29UyHNuwTTRTnXcBy9Hp5zz9x03hLwE=
+	t=1719829629; cv=none; b=C3/0bLkeQGkP+E6DEVTUpa/WjJIOrKtl6WEf/8IhLYMGjE7WIL4gkfP+4cigptBVrA3hcnaPUWjaltrAek8xOTHUbkS066NtWoitRPKWqYyqZG3x/Se8YHOFak3wFYY3Npe/0aq3Tw2eezOsat55M6ZFscijDHIYi5AibexVeWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719829628; c=relaxed/simple;
-	bh=X6JnNaUpmLXm/etsj1wjIh6Yp85tWQSB7sG1ZkO5uUo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=aNBvx+6AygEdqOb1vQs/mPAwO0Z8X8LlColdthzknqCVMPHASWprmI1fstOCuJsxNDWK2HAPGyTQylF+r9KjN4f7eOIs7KyGVrtFJADmRwzWEJfzc4fYMFFoDGHvwBv9C/jJvGkulPO3BtiafOGJd/W3i/w54ZIyf8NNd1zwTYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vf+KOvFJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719829629; c=relaxed/simple;
+	bh=AOtDmRNJfqQY++v4UUgbpsLJiz5duuZ3LpRF+W3BRYg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j0ueEXFrjNxhG3F60PuonYrwPjBLU23WbtSUnYFCnw8cUZq9mRbKaZYUHhRDrOwEVHQU2Hf/td8JpK6HmfroSbOXFK6Zoidg+gDaa2U2sqva5zH4U3o9A+jAw/AUqwojpof0tTqiFfVnW7BBWw3iVqGdfVBlJgvNzbR1QMKT0Oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AD5cT/W4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vf+KOvFJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10A2DC116B1;
-	Mon,  1 Jul 2024 10:27:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AD5cT/W4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1063CC4AF0D;
+	Mon,  1 Jul 2024 10:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719829628;
-	bh=X6JnNaUpmLXm/etsj1wjIh6Yp85tWQSB7sG1ZkO5uUo=;
-	h=From:Subject:Date:To:Cc:From;
-	b=Vf+KOvFJKBw679ZYAgmsH0RLuGYp8IAiSlCCZUhsTO4bKK7aVVnIt6i4tns2GxcVc
-	 arXIZflCj58WmK6HjROQJKCEmt3cQ5z0Hzi3pn3cztxRDFM9AW3TTN05aRVRbzfTIP
-	 nb/Zx0ZvRRprqg1+Pe8fWPIbcD8w30t2kT6oAPo+uHh9tj3fWC6GkC1S99hRvIETG8
-	 521TVFm4Rxsi2Kpi4RFWUdZBsF5bKnOYBn+8q1ndAmtmtM2N3/ewIfHvBZfYQtQ7KW
-	 HZaynh8qe10p4ksacSS8KtMrPUEca2HAktvREYgJJmRJZftrOhVHQ9Oj0ZFkjFs9uC
-	 8nHV+WEk81uqA==
-From: Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH v2 00/11] fs: multigrain timestamp redux
-Date: Mon, 01 Jul 2024 06:26:36 -0400
-Message-Id: <20240701-mgtime-v2-0-19d412a940d9@kernel.org>
+	s=k20201202; t=1719829629;
+	bh=AOtDmRNJfqQY++v4UUgbpsLJiz5duuZ3LpRF+W3BRYg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=AD5cT/W4h116AQNwUQkblKnYYn3Nnr494DhkhpVdtXYAkmHIwpahbfe5WL+SAK1uU
+	 sQLL+zSTuIn4KiKKdXJexLhVkbuL9ImBQNGBKYb29uOxjtmEJMtk5wf1sXyCaGKsBu
+	 U7i0ladzzbL/nYAJ0NwEwCwcq7csruoEAFfef8QIYqRsvOL+uUhOSD3CCkdmOMdL74
+	 7Cc5qy4lZaDvmn6YknzWYBz9Qq88XT+Gn/Bzsj3s11ezq9J/g/o2tMZjqDVQ70aZSB
+	 XO9M/r/pPs8LBS/k2xyU388E4PhybqjM292VcIOkjmsKR1E8fpU1Xwy999M1KDiEFt
+	 zqysGTHZtHWPA==
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57d06101d76so47480a12.3;
+        Mon, 01 Jul 2024 03:27:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXjs9NWW/Feus//OVZwOlZJ/PuEvAc2sJdQBN2EbzpmSp1qotPzFFf3Lhvcv+RsZTxPzICKSv7hlGj2K1pRW2NqcCmNg0wgaGHBF6S4fqzLw24Gyu2uyRMSH1040oUphrXp
+X-Gm-Message-State: AOJu0YwyL2wltO/PUtOdhdXvAwe6U25BCrIOiWoo1mtXa5w/0g3vvA+7
+	9PEcwilcsCsYdUqeooIcjqKB334Xo83kPB0L4s8GPGRR31tIEL2LTVJIY1bIQgHBqg7w0DsX08z
+	u2D1/K48G5ZwNeCAZ1CuP6FTGcD4=
+X-Google-Smtp-Source: AGHT+IHGZZCbQwYQWDz7MHph9rhLp1XsHpW9ufuafTw/vti9tqr3X02n6kFZJcNGEpVMl2xkauTKpW7VaW5Rzdmikc8=
+X-Received: by 2002:a17:906:1246:b0:a72:7f22:5f9e with SMTP id
+ a640c23a62f3a-a751447bd08mr264808066b.57.1719829627601; Mon, 01 Jul 2024
+ 03:27:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAFyEgmYC/2XMQQ7CIBCF4as0sxYDaBt05T1MF7UMdKKFZmiIp
- uHuYrcu/5eXb4OETJjg2mzAmClRDDX0oYFxGoJHQbY2aKnPstOdmP1KM4p2tEY+lLFGSajnhdH
- Re4fufe2J0hr5s7tZ/dY/IishxaDM5dRqK51xtydywNcxsoe+lPIFCXxMlJ0AAAA=
-To: Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Chandan Babu R <chandan.babu@oracle.com>, 
- "Darrick J. Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
- Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, 
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
- Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Andi Kleen <ak@linux.intel.com>, kernel-team@fb.com, 
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
- linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org, linux-mm@kvack.org, 
- linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3820; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=X6JnNaUpmLXm/etsj1wjIh6Yp85tWQSB7sG1ZkO5uUo=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmgoRw4WRZGASUb0ntKxZvyqMtYMkx8cPpzxKSo
- 7jHqLZ2ou6JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZoKEcAAKCRAADmhBGVaC
- FRklD/0V9mb072IqdAyazN2How8Y2mDXc3TC/CKJ07/XI2o0+GsYhF4MwAHLt4dLmtP0m5lVEYt
- IXSS117t5QAbroXjMGDO78L/ngFJ6XHQNs8ApzjMPUa8wiawbeiKGEYtqgRm0+QcHsSkXtOKbfN
- /YpUKYMts3Zt4XXHBcfdJNv2QCNem83SoduUEY5ZGw+Cm3Zi428oPzX4zNx+KGveuc0atwcVkoM
- bNcs4Ua8HzyOOjnAZPcbSyLDv7nl4Lp8AeF86Pzg9s/TpY1We1cUclLV4H0DBoGVSc6rYrn73IJ
- F6XwQI5jldA2SxQpsuUq3Q9fRBGLIvU82LiSsJ6TuneSFb/nlLahtrbfTsFZKeBv1T8AtN/Bm3g
- 7JF8I8BESppicGDpFegi78JzwQvXq9QqPEeQoL7aFSVVBjDjlqz5kGT+3dZn5T6RoKRMPqNiTGY
- jIBsiFOWOR2qM8jpIb5mwYfHjSJSVf0FYhYrzNiOBhC60Mo5QrsyK73HTwf0ouEznjygtcaOgqs
- FevfDb09sW8WOF9igWYRK8bqpYkDbxPGVkflRLNElGxBooBGRokJsXnKOj63BWkqpAmZxct3dR6
- zcO9QewsnTTV5FQuOh/q1SzW+lOoa+eIAOqMTV8bsC+bXen4HUI4jXfhPlhbAOHNxurzh0M7nLT
- mBgV2UQww4zEPtQ==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+References: <20240626063239.3722175-1-maobibo@loongson.cn> <20240626063239.3722175-3-maobibo@loongson.cn>
+ <CAAhV-H4O8QNb61xkErd9y_1tK_70=Y=LNqzy=9Ny5EQK1XZJaQ@mail.gmail.com> <79dcf093-614f-2737-bb03-698b0b3abc57@loongson.cn>
+In-Reply-To: <79dcf093-614f-2737-bb03-698b0b3abc57@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 1 Jul 2024 18:26:57 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5bQutcLcVaHn-amjF6_NDnCf2BFqqnGSRT_QQ_6q6REg@mail.gmail.com>
+Message-ID: <CAAhV-H5bQutcLcVaHn-amjF6_NDnCf2BFqqnGSRT_QQ_6q6REg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] LoongArch: KVM: Add LBT feature detection function
+To: maobibo <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This set is essentially unchanged from the last one, aside from the
-new file in Documentation/. I had a review comment from Andi Kleen
-suggesting that the ctime_floor should be per time_namespace, but I
-think that's incorrect as the realtime clock is not namespaced.
+On Mon, Jul 1, 2024 at 9:27=E2=80=AFAM maobibo <maobibo@loongson.cn> wrote:
+>
+>
+> Huacai,
+>
+> On 2024/6/30 =E4=B8=8A=E5=8D=8810:07, Huacai Chen wrote:
+> > Hi, Bibo,
+> >
+> > On Wed, Jun 26, 2024 at 2:32=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> =
+wrote:
+> >>
+> >> Two kinds of LBT feature detection are added here, one is VCPU
+> >> feature, the other is VM feature. VCPU feature dection can only
+> >> work with VCPU thread itself, and requires VCPU thread is created
+> >> already. So LBT feature detection for VM is added also, it can
+> >> be done even if VM is not created, and also can be done by any
+> >> thread besides VCPU threads.
+> >>
+> >> Loongson Binary Translation (LBT) feature is defined in register
+> >> cpucfg2. Here LBT capability detection for VCPU is added.
+> >>
+> >> Here ioctl command KVM_HAS_DEVICE_ATTR is added for VM, and macro
+> >> KVM_LOONGARCH_VM_FEAT_CTRL is added to check supported feature. And
+> >> three sub-features relative with LBT are added as following:
+> >>   KVM_LOONGARCH_VM_FEAT_X86BT
+> >>   KVM_LOONGARCH_VM_FEAT_ARMBT
+> >>   KVM_LOONGARCH_VM_FEAT_MIPSBT
+> >>
+> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> >> ---
+> >>   arch/loongarch/include/uapi/asm/kvm.h |  6 ++++
+> >>   arch/loongarch/kvm/vcpu.c             |  6 ++++
+> >>   arch/loongarch/kvm/vm.c               | 44 +++++++++++++++++++++++++=
++-
+> >>   3 files changed, 55 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/in=
+clude/uapi/asm/kvm.h
+> >> index ddc5cab0ffd0..c40f7d9ffe13 100644
+> >> --- a/arch/loongarch/include/uapi/asm/kvm.h
+> >> +++ b/arch/loongarch/include/uapi/asm/kvm.h
+> >> @@ -82,6 +82,12 @@ struct kvm_fpu {
+> >>   #define KVM_IOC_CSRID(REG)             LOONGARCH_REG_64(KVM_REG_LOON=
+GARCH_CSR, REG)
+> >>   #define KVM_IOC_CPUCFG(REG)            LOONGARCH_REG_64(KVM_REG_LOON=
+GARCH_CPUCFG, REG)
+> >>
+> >> +/* Device Control API on vm fd */
+> >> +#define KVM_LOONGARCH_VM_FEAT_CTRL     0
+> >> +#define  KVM_LOONGARCH_VM_FEAT_X86BT   0
+> >> +#define  KVM_LOONGARCH_VM_FEAT_ARMBT   1
+> >> +#define  KVM_LOONGARCH_VM_FEAT_MIPSBT  2
+> >> +
+> >>   /* Device Control API on vcpu fd */
+> >>   #define KVM_LOONGARCH_VCPU_CPUCFG      0
+> >>   #define KVM_LOONGARCH_VCPU_PVTIME_CTRL 1
+> > If you insist that LBT should be a vm feature, then I suggest the
+> > above two also be vm features. Though this is an UAPI change, but
+> > CPUCFG is upstream in 6.10-rc1 and 6.10-final hasn't been released. We
+> > have a chance to change it now.
+>
+> KVM_LOONGARCH_VCPU_PVTIME_CTRL need be attr percpu since every vcpu
+> has is own different gpa address.
+Then leave this as a vm feature.
 
-At LSF/MM this year, we had a discussion about the inode change
-attribute. At the time I mentioned that I thought I could salvage the
-multigrain timestamp work that had to be reverted last year [1].  That
-version had to be reverted because it was possible for a file to get a
-coarse grained timestamp that appeared to be earlier than another file
-that had recently gotten a fine-grained stamp.
+>
+> For KVM_LOONGARCH_VCPU_CPUCFG attr, it will not changed. We cannot break
+> the API even if it is 6.10-rc1, VMM has already used this. Else there is
+> uapi breaking now, still will be in future if we cannot control this.
+UAPI changing before the first release is allowed, which means, we can
+change this before the 6.10-final, but cannot change it after
+6.10-final.
 
-This version corrects the problem by establishing a per-time_namespace
-ctime_floor value that should prevent this from occurring. In the above
-situation that was problematic before, the two files might end up with
-the same timestamp value, but they won't appear to have been modified in
-the wrong order.
+>
+> How about adding new extra features capability for VM such as?
+> +#define  KVM_LOONGARCH_VM_FEAT_LSX   3
+> +#define  KVM_LOONGARCH_VM_FEAT_LASX  4
+They should be similar as LBT, if LBT is vcpu feature, they should
+also be vcpu features; if LBT is vm feature, they should also be vm
+features.
 
-That problem was discovered by the test-stat-time gnulib test. Note that
-that test still fails on multigrain timestamps, but that's because its
-method of determining the minimum delay that will show a timestamp
-change will no longer work with multigrain timestamps. I have a patch to
-change the testcase to use a different method that I've posted to the
-bug-gnulib mailing list.
+Huacai
 
-The big question with this set is whether the performance will be
-suitable. The testing I've done seems to show performance parity with
-multigrain timestamps enabled, but it's hard to rule this out regressing
-some workload.
-
-This set is based on top of Christian's vfs.misc branch (which has the
-earlier change to track inode timestamps as discrete integers). If there
-are no major objections, I'd like to let this soak in linux-next for a
-bit to see if any problems shake out.
-
-[1]: https://lore.kernel.org/linux-fsdevel/20230807-mgctime-v7-0-d1dec143a704@kernel.org/
-
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
-Changes in v2:
-- Added Documentation file
-- Link to v1: https://lore.kernel.org/r/20240626-mgtime-v1-0-a189352d0f8f@kernel.org
-
----
-Jeff Layton (11):
-      fs: turn inode ctime fields into a single ktime_t
-      fs: uninline inode_get_ctime and inode_set_ctime_to_ts
-      fs: tracepoints for inode_needs_update_time and inode_set_ctime_to_ts
-      fs: add infrastructure for multigrain timestamps
-      fs: add percpu counters to count fine vs. coarse timestamps
-      fs: have setattr_copy handle multigrain timestamps appropriately
-      xfs: switch to multigrain timestamps
-      ext4: switch to multigrain timestamps
-      btrfs: convert to multigrain timestamps
-      tmpfs: add support for multigrain timestamps
-      Documentation: add a new file documenting multigrain timestamps
-
- Documentation/filesystems/multigrain-ts.rst | 126 ++++++++++++++++
- fs/attr.c                                   |  52 ++++++-
- fs/btrfs/file.c                             |  25 +---
- fs/btrfs/super.c                            |   3 +-
- fs/ext4/super.c                             |   2 +-
- fs/inode.c                                  | 221 +++++++++++++++++++++++++---
- fs/stat.c                                   |  39 ++++-
- fs/xfs/libxfs/xfs_trans_inode.c             |   6 +-
- fs/xfs/xfs_iops.c                           |   6 +-
- fs/xfs/xfs_super.c                          |   2 +-
- include/linux/fs.h                          |  61 +++++---
- include/trace/events/timestamp.h            | 173 ++++++++++++++++++++++
- mm/shmem.c                                  |   2 +-
- 13 files changed, 639 insertions(+), 79 deletions(-)
----
-base-commit: 2e8c78ef85682671dae2ac3a5aa039b07be0fc0b
-change-id: 20240626-mgtime-5cd80b18d810
-
-Best regards,
--- 
-Jeff Layton <jlayton@kernel.org>
-
+>
+> Regards
+> Bibo Mao
+> >
+> > Huacai
+> >
+> >> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> >> index 233d28d0e928..9734b4d8db05 100644
+> >> --- a/arch/loongarch/kvm/vcpu.c
+> >> +++ b/arch/loongarch/kvm/vcpu.c
+> >> @@ -565,6 +565,12 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
+> >>                          *v |=3D CPUCFG2_LSX;
+> >>                  if (cpu_has_lasx)
+> >>                          *v |=3D CPUCFG2_LASX;
+> >> +               if (cpu_has_lbt_x86)
+> >> +                       *v |=3D CPUCFG2_X86BT;
+> >> +               if (cpu_has_lbt_arm)
+> >> +                       *v |=3D CPUCFG2_ARMBT;
+> >> +               if (cpu_has_lbt_mips)
+> >> +                       *v |=3D CPUCFG2_MIPSBT;
+> >>
+> >>                  return 0;
+> >>          case LOONGARCH_CPUCFG3:
+> >> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
+> >> index 6b2e4f66ad26..09e05108c68b 100644
+> >> --- a/arch/loongarch/kvm/vm.c
+> >> +++ b/arch/loongarch/kvm/vm.c
+> >> @@ -99,7 +99,49 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, l=
+ong ext)
+> >>          return r;
+> >>   }
+> >>
+> >> +static int kvm_vm_feature_has_attr(struct kvm *kvm, struct kvm_device=
+_attr *attr)
+> >> +{
+> >> +       switch (attr->attr) {
+> >> +       case KVM_LOONGARCH_VM_FEAT_X86BT:
+> >> +               if (cpu_has_lbt_x86)
+> >> +                       return 0;
+> >> +               return -ENXIO;
+> >> +       case KVM_LOONGARCH_VM_FEAT_ARMBT:
+> >> +               if (cpu_has_lbt_arm)
+> >> +                       return 0;
+> >> +               return -ENXIO;
+> >> +       case KVM_LOONGARCH_VM_FEAT_MIPSBT:
+> >> +               if (cpu_has_lbt_mips)
+> >> +                       return 0;
+> >> +               return -ENXIO;
+> >> +       default:
+> >> +               return -ENXIO;
+> >> +       }
+> >> +}
+> >> +
+> >> +static int kvm_vm_has_attr(struct kvm *kvm, struct kvm_device_attr *a=
+ttr)
+> >> +{
+> >> +       switch (attr->group) {
+> >> +       case KVM_LOONGARCH_VM_FEAT_CTRL:
+> >> +               return kvm_vm_feature_has_attr(kvm, attr);
+> >> +       default:
+> >> +               return -ENXIO;
+> >> +       }
+> >> +}
+> >> +
+> >>   int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigne=
+d long arg)
+> >>   {
+> >> -       return -ENOIOCTLCMD;
+> >> +       struct kvm *kvm =3D filp->private_data;
+> >> +       void __user *argp =3D (void __user *)arg;
+> >> +       struct kvm_device_attr attr;
+> >> +
+> >> +       switch (ioctl) {
+> >> +       case KVM_HAS_DEVICE_ATTR:
+> >> +               if (copy_from_user(&attr, argp, sizeof(attr)))
+> >> +                       return -EFAULT;
+> >> +
+> >> +               return kvm_vm_has_attr(kvm, &attr);
+> >> +       default:
+> >> +               return -EINVAL;
+> >> +       }
+> >>   }
+> >> --
+> >> 2.39.3
+> >>
+>
