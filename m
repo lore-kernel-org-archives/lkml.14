@@ -1,145 +1,55 @@
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE6218635
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 20:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839D518635;
+	Mon,  1 Jul 2024 20:38:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719866256; cv=none; b=PngFDJOnEzVxgskgXzXB2cPj8PNrRWfyN8zTxbtE0PacUKNbFGCFtVTYDXsiVJ96KE4s/BqwOK+HZ0HpfS9nevkvQ3aMbTpfKyPQbWDFGe0zSJyIjwHsNvwmSWcUn7mg3/F8Uy4/g+pOAgbeG3jpakQ4u1z9TzCccMqCqWLzKlo=
+	t=1719866289; cv=none; b=r+jtJiQNxIpuxoCPWvwzjmOIr1Ol7w1RqNhl+0f5uN/yrqHkjFidpnCkaViwZOqWFAtOe2j8Ayh4CQFR1jhMWqs1RVv/nQLjXvNv7LEZQegokyLEmtyfwQz5CDzVJlgGuzv7m/Q76Tuub8/iQGYTo6unecWndSgGG51ODABF9RU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719866256; c=relaxed/simple;
-	bh=GDXQqQl49imr9gId7LhYIe5sv/DBl9egH625p/1ONLc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fCLIMB2SeHN+gVN/EyA95UH+H59cnF80sDt/AaBk7nxjARTeVy1i5ga/+aJWkIcSjnGqKJs6SxuAzYvaxx3B96sIzR0N0Hll4F8gmOeokzYTyNuRb+gU5JqXaH5pi4x7P/WLHUJk45lvl7QOFUC5dugXfttJzaA0NRmouR71tFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=iU17PC+y; arc=none smtp.client-ip=209.85.210.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="iU17PC+y"
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-70211abf4cbso1103734a34.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 13:37:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1719866254; x=1720471054; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eDKV6Lk3k3cbXDKwxmMPoqdaJonjZZSGWKnYU0oW01M=;
-        b=iU17PC+yy7H1pxq20Mrs2iLJyDX7fi/ZazV5+E6wXEiJbUguFIc2VvAtcEXYJcIvIe
-         T06abxMjnqiNKNZE1FCffEtHz7iX3GbpDQjArqESQxjv7tGYADOcXn3Iz4oIK4RB9RJE
-         AhAw05ZmPt2GSGTGT3iZg4wZoiSWE2+YOR3K6ZgXJbHdBqB4ezYiiUTnhNRhE92NFrIh
-         dM/Jlhl8PUE0BBO+DpmEaK+5kK936L/NYp2TrYyugKKajAe99Cnb5icwBDBbFN9I3vWT
-         Pp+NlstZqOVCIvzVXlenP+vnOQyJfdMhNIkBjFp7dXcqDwV3WMTM6zZibRl1JEz6CI8T
-         ZBww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719866254; x=1720471054;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eDKV6Lk3k3cbXDKwxmMPoqdaJonjZZSGWKnYU0oW01M=;
-        b=H1VTPe2ULZ/O8xywV7mMiQCDOH+4l2lcdVX6QGqUH3sI4ZFDWRmZiI5X0yOwG/U97o
-         VtxItwAw9T6SBEaTBI8m2Z9L8xsSW7aKjvUeRDiVlXojZAAkOrXWr8nE60SC+I5njvmd
-         NKrqu8tDGiuYMA1E0O2XjGTIeVj06UrZKUXkjBLOhXJvSg2+N5tt1xnTEHaipB9fHaYK
-         uEigTjpx8DdHflPGd2b0rooHd7/z+bOeIv9x+4qF2pQhaWNr+L40+ubl2gctMoiueSv2
-         2Z2FRd64sqsuZqyl10sARlwfB1ZcEGyHoOD23Rh8DRZRA94ZX9R9baarDXnpiDuibUQL
-         OMgA==
-X-Forwarded-Encrypted: i=1; AJvYcCVaeiBs++qwF/W329JqUrcdQ6+VzncVbJ9y7JI60TYr/GavuFg18bbMR2W2Zs+RRgPvT7hTAeIrtHOvQWwD43zBfCBEHheMKjicRPzO
-X-Gm-Message-State: AOJu0YyZFjvEuJEPAAATBCBrVYGWaqrKxm1Je3O1oXLjQbTJcBUibcfX
-	o9m4ua4hQU+YJoxCIqha+wrzhpSh0+sqxjWvG0tBXj6FgheN4GsYr2a2hQ3pSjs=
-X-Google-Smtp-Source: AGHT+IHA2fLEb6qaWdB+JmKOUVVoS4TPjbdpXIqXHuLmzi8+vn0Nwhlo8DLIsvzdPddTKnE6J7Aopw==
-X-Received: by 2002:a05:6830:2b1e:b0:701:f8d0:eb44 with SMTP id 46e09a7af769-702076a4747mr10637764a34.34.1719866253734;
-        Mon, 01 Jul 2024 13:37:33 -0700 (PDT)
-Received: from localhost (syn-076-182-020-124.res.spectrum.com. [76.182.20.124])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-79d69308b24sm382103785a.123.2024.07.01.13.37.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 13:37:33 -0700 (PDT)
-Date: Mon, 1 Jul 2024 16:37:32 -0400
-From: Josef Bacik <josef@toxicpanda.com>
-To: Johannes Thumshirn <jth@kernel.org>
-Cc: Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: Re: [PATCH v3 1/5] btrfs: replace stripe extents
-Message-ID: <20240701203732.GC510298@perftesting>
-References: <20240701-b4-rst-updates-v3-0-e0437e1e04a6@kernel.org>
- <20240701-b4-rst-updates-v3-1-e0437e1e04a6@kernel.org>
+	s=arc-20240116; t=1719866289; c=relaxed/simple;
+	bh=GtzHsfmxTwlD8fkBydhACIzOTugc3g87sx9jSrQdjYI=;
+	h=From:Subject:Date:Message-ID:To; b=odW4UlG5BBdfdMQyGNmQU3ig4ojPmwF1ipLflq+Qi3bsYQGOBQTLF7zagTNMZaTWVUt/fQJITqXjHOjciyeXssna593BtCVs2CZJjyslw3vf8y845/RQDkjiVaLnWZl3Afn4fWHC0VgV5MTxzJPobGJvHydnguhUePJJXFfgEs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E123CC116B1;
+	Mon,  1 Jul 2024 20:38:08 +0000 (UTC)
+From: Clark Williams <williams@redhat.com>
+Subject: [ANNOUNCE] 6.6.36-rt35
+Date: Mon, 01 Jul 2024 20:33:56 -0000
+Message-ID: <171986603692.1363512.2827523700380457269@demetrius.lan>
+To: LKML <linux-kernel@vger.kernel.org>,linux-rt-users <linux-rt-users@vger.kernel.org>,Steven Rostedt <rostedt@goodmis.org>,Thomas Gleixner <tglx@linutronix.de>,Carsten Emde <C.Emde@osadl.org>,John Kacur <jkacur@redhat.com>,Sebastian Andrzej Siewior <bigeasy@linutronix.de>,Daniel Wagner <daniel.wagner@suse.com>,Tom Zanussi <tom.zanussi@linux.intel.com>,Clark Williams <williams@redhat.com>,Pavel Machek <pavel@denx.de>,Joseph Salisbury <joseph.salisbury@canonical.com>,Derek Barbosa <debarbos@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240701-b4-rst-updates-v3-1-e0437e1e04a6@kernel.org>
 
-On Mon, Jul 01, 2024 at 12:25:15PM +0200, Johannes Thumshirn wrote:
-> From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-> 
-> If we can't insert a stripe extent in the RAID stripe tree, because
-> the key that points to the specific position in the stripe tree is
-> already existing, we have to remove the item and then replace it by a
-> new item.
-> 
-> This can happen for example on device replace operations.
-> 
-> Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-> ---
->  fs/btrfs/raid-stripe-tree.c | 34 ++++++++++++++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
-> 
-> diff --git a/fs/btrfs/raid-stripe-tree.c b/fs/btrfs/raid-stripe-tree.c
-> index e6f7a234b8f6..3020820dd6e2 100644
-> --- a/fs/btrfs/raid-stripe-tree.c
-> +++ b/fs/btrfs/raid-stripe-tree.c
-> @@ -73,6 +73,37 @@ int btrfs_delete_raid_extent(struct btrfs_trans_handle *trans, u64 start, u64 le
->  	return ret;
->  }
->  
-> +static int replace_raid_extent_item(struct btrfs_trans_handle *trans,
-> +				    struct btrfs_key *key,
-> +				    struct btrfs_stripe_extent *stripe_extent,
-> +				    const size_t item_size)
-> +{
-> +	struct btrfs_fs_info *fs_info = trans->fs_info;
-> +	struct btrfs_root *stripe_root = fs_info->stripe_root;
-> +	struct btrfs_path *path;
-> +	int ret;
-> +
-> +	path = btrfs_alloc_path();
-> +	if (!path)
-> +		return -ENOMEM;
-> +
-> +	ret = btrfs_search_slot(trans, stripe_root, key, path, -1, 1);
-> +	if (ret)
-> +		goto err;
-> +
-> +	ret = btrfs_del_item(trans, stripe_root, path);
-> +	if (ret)
-> +		goto err;
-> +
-> +	btrfs_free_path(path);
-> +
-> +	return btrfs_insert_item(trans, stripe_root, key, stripe_extent,
-> +				 item_size);
-> + err:
-> +	btrfs_free_path(path);
-> +	return ret;
-> +}
-> +
->  static int btrfs_insert_one_raid_extent(struct btrfs_trans_handle *trans,
->  					struct btrfs_io_context *bioc)
->  {
-> @@ -112,6 +143,9 @@ static int btrfs_insert_one_raid_extent(struct btrfs_trans_handle *trans,
->  
->  	ret = btrfs_insert_item(trans, stripe_root, &stripe_key, stripe_extent,
->  				item_size);
-> +	if (ret == -EEXIST)
-> +		ret = replace_raid_extent_item(trans, &stripe_key,
-> +					       stripe_extent, item_size);
+Hello RT-list!
 
-I had another thought, how often is this particular thing happening?  Bec ause
-we're doing 3 path allocations here in the worst case.  If it happens more than
-say 10% of the time then we need to allocate a path once in
-btrfs_insert_one_raid_extent(), do the insert, and if it fails re-use that path
-to do the delete and insert the new one.  Thanks,
+I'm pleased to announce the 6.6.36-rt35 stable release.
 
-Josef
+This release is the merge of the v6.6.36 stable tree and the addition of one commit:
+
+     2cd745fc0bec prinkt/nbcon: Add a scheduling point to nbcon_kthread_func().
+
+The commit addresses a live-lock in the printk/nbcon code when running a kernel from
+a tree with the RT code applied but compiled without PREEMPT_RT. 
+
+You can get this release via the git tree at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+
+  branch: v6.6-rt
+  Head SHA1: de1f6214d67ede05aa223fcb7e6e48474bee628b
+
+Or to build 6.6.36-rt35 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v6.x/linux-6.6.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v6.x/patch-6.6.36.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/patch-6.6.36-rt35.patch.xz
+
+
+Enjoy!
+Clark
