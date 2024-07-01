@@ -1,178 +1,90 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0224C6F077;
-	Mon,  1 Jul 2024 11:56:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D45882D94
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 11:56:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719834982; cv=none; b=luF++ol4Yfur1li6xQvNO1zw6RGo2KVuV5RNYOQeiuHMyeGv4oa8mRDdsCriuz0Pn9LxYF8DPn+0GwQ8OPNy+Cyd4v1SFTkKNwNkcuALmqwWj8yMrS6SGgHWiVBO6FD+8twAzbUBTowRVqTCpP82gAZ/X2bsFdNHZ8psufHRNSE=
+	t=1719835000; cv=none; b=DJeKsjbKuxz00/EYSPL5lUnCVhE5A3Sm3acTlvSa6EPGPWSbZTr5QidiagUhw87BCJhfhTzzhpZXz0Ss8LK7N13AokCHlEQ4TzYBk7tox0xIabFXUCCumWY4jRdNyvSOF5Xvho+IcNfgWL7tQKyQWXsX0JivNULwTkzBTUlNYgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719834982; c=relaxed/simple;
-	bh=c/eazRGHNDXqDo1NT5g1rFQOxAx0WoppSOhvrZFCueY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LyA+E/k62MKy0h9YiQxaq4hn47r6eZLEzeaPd3rQ/d76oi0uI5RY3X4IX2of/FgdqLE+0CDEoGOvulOEDZRoK39+xOGOor7RGvlg7BvgHxnEpW/il6YC2jHzwDdcyDyvrGd8RnOjhUmmQBa3p34dVSGAnhiB0JvuydRs3bNLTKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 461BtvwmF3804807, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.02/5.92) with ESMTPS id 461BtvwmF3804807
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 1 Jul 2024 19:55:57 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 1 Jul 2024 19:55:58 +0800
-Received: from RTDOMAIN (172.21.210.160) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 1 Jul
- 2024 19:55:57 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
-        <rkannoth@marvell.com>, <jdamato@fastly.com>, <pkshih@realtek.com>,
-        <larry.chiu@realtek.com>, "Justin
- Lai" <justinlai0215@realtek.com>
-Subject: [PATCH net-next v22 04/13] rtase: Implement the interrupt routine and rtase_poll
-Date: Mon, 1 Jul 2024 19:53:54 +0800
-Message-ID: <20240701115403.7087-5-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240701115403.7087-1-justinlai0215@realtek.com>
-References: <20240701115403.7087-1-justinlai0215@realtek.com>
+	s=arc-20240116; t=1719835000; c=relaxed/simple;
+	bh=Jpl22aqYGSxIo+qDQFAsqVJLvtdunm/X7rOU7kbj6Ko=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zz1saF6YMhgRAsL+Dk4W/4GzkxFEC6StjjMnRzqJF1xrYfM82cod0wrYcBBa1er0nhovJoibKREbId0aa1q/WW8H7maxuBnLJdtOHh6IH/CHgU8VsfXSM7Fc04T20Ou2+I//vmtYOK/16RbjyYPWuk6gVoEZG9dKSYfwWD0zBEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=R6/TngPm; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="R6/TngPm"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3645e9839b3so1711287f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 04:56:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1719834997; x=1720439797; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=q2+exavIfejK38TBkftpQIKDnT/YCEYLfkFpQAOqMrA=;
+        b=R6/TngPmQnl30Ku6Rc1iyNvQZEc1Gz1WNCrAE3m13ju5+QnzybSYZIMbC4kBgnEfik
+         SPCLcY88gTcntYaB4IgT1ctPlCcXrEBvx5KkCfiU0QyRSfI3aNtO8SqZxujcNfqpujrm
+         U2vc+Yr/52g5+KQnr5D8FQZv/Ge3MBJfUpQN3iCR/fagjvRtQ9H7yt60f2v2viOM/IfM
+         clwtOQfLc6kul40ttpG42S/ksUJWOrCRFz3q+Sr8IXrV0yG/3YNOYvFJqa6Iys319S2O
+         eHR0/oC4OUEdY7ScXg4aJtQ+BYoS15O9TqmNU6+bREgaC5RjrLHOvZXO1z8jdNwxTb+y
+         8zjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719834997; x=1720439797;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=q2+exavIfejK38TBkftpQIKDnT/YCEYLfkFpQAOqMrA=;
+        b=V9ozfpY9pOVfkdEb91N1P1jt6oChQxBksorBJVM4Ri6o2DK403vLpRxr3HUQC0vrMs
+         3cnZr2KkzFe/8/NNIzjnRrCZuEzkKWuuGkkZliSudsj8VNa/R5Mzs3hi3nw0ebw55jEf
+         v+H7yCvv443OX59e1Rz/Zf/g2x92FKXdutZhcSoVxpX04RM11SGQcqRKzwHwTT1PPKIa
+         ewQh9bzXIAgLh9bidd9klk4D8h9+8UFwkFxAMmOfROjclyoAPUuxEApQby2/0nJRtzbf
+         0UbWy8Xche+wPzvz9/aRRUnQhWk5wYosavs4yM0sqX1lkjgiR81a/1x3ydVEzLIZZJ1k
+         AniA==
+X-Forwarded-Encrypted: i=1; AJvYcCXiZToewQR3fA9S3I6K6DpBxabfgHgFlt1pI7WTp/Mgb5TrpEXKTM5YfAJmBNj0UiVqcNG0Z9pcLeOB9S40acKsk/7KbCauo5UyoZ+m
+X-Gm-Message-State: AOJu0YywtA1Vuxklbbdo+X7PL1VxVtyM1DyO0uyo7uboQAItiK7XP7gA
+	riJ3oNoLIZHxw2twMnGIhQdnX3fMWU8tmAy6YcmUagSJWkae91pMWzcBSoDrB8Y=
+X-Google-Smtp-Source: AGHT+IFpMs+kMYQhye2xH/ffra8GqlPW6v2h0K68WUFUlcoi1nV6+1EteASUbtPqnC+84XbNqh3VqA==
+X-Received: by 2002:a5d:410f:0:b0:364:d5af:3460 with SMTP id ffacd0b85a97d-36775728ddemr3086296f8f.61.1719834996788;
+        Mon, 01 Jul 2024 04:56:36 -0700 (PDT)
+Received: from ?IPV6:2a10:bac0:b000:7471:9e35:9ca5:4e8a:d8cb? ([2a10:bac0:b000:7471:9e35:9ca5:4e8a:d8cb])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0fb836sm9852925f8f.81.2024.07.01.04.56.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Jul 2024 04:56:36 -0700 (PDT)
+Message-ID: <b6289862-48e4-41fc-a6e8-0e21c90dacd9@suse.com>
+Date: Mon, 1 Jul 2024 14:56:34 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/4] x86/cpufeatures: Use AWK to generate
+ {REQUIRED|DISABLED}_MASK_BIT_SET
+To: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, will@kernel.org,
+ peterz@infradead.org, akpm@linux-foundation.org, acme@kernel.org,
+ namhyung@kernel.org, brgerst@gmail.com, andrew.cooper3@citrix.com
+References: <20240628174544.3118826-1-xin@zytor.com>
+ <20240628174544.3118826-5-xin@zytor.com>
+From: Nikolay Borisov <nik.borisov@suse.com>
+Content-Language: en-US
+In-Reply-To: <20240628174544.3118826-5-xin@zytor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-1. Implement rtase_interrupt to handle txQ0/rxQ0, txQ4~txQ7 interrupts,
-and implement rtase_q_interrupt to handle txQ1/rxQ1, txQ2/rxQ2 and
-txQ3/rxQ3 interrupts.
-2. Implement rtase_poll to call ring_handler to process the tx or
-rx packet of each ring. If the returned value is budget,it means that
-there is still work of a certain ring that has not yet been completed.
 
-Signed-off-by: Justin Lai <justinlai0215@realtek.com>
----
- .../net/ethernet/realtek/rtase/rtase_main.c   | 88 +++++++++++++++++++
- 1 file changed, 88 insertions(+)
 
-diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-index ef0b4ff5db7c..e65f53f01bce 100755
---- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-+++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-@@ -584,6 +584,75 @@ static void rtase_hw_start(const struct net_device *dev)
- 	rtase_enable_hw_interrupt(tp);
- }
- 
-+/*  the interrupt handler does RXQ0 and TXQ0, TXQ4~7 interrutp status
-+ */
-+static irqreturn_t rtase_interrupt(int irq, void *dev_instance)
-+{
-+	const struct rtase_private *tp;
-+	struct rtase_int_vector *ivec;
-+	u32 status;
-+
-+	ivec = dev_instance;
-+	tp = ivec->tp;
-+	status = rtase_r32(tp, ivec->isr_addr);
-+
-+	rtase_w32(tp, ivec->imr_addr, 0x0);
-+	rtase_w32(tp, ivec->isr_addr, status & ~RTASE_FOVW);
-+
-+	if (napi_schedule_prep(&ivec->napi))
-+		__napi_schedule(&ivec->napi);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+/*  the interrupt handler does RXQ1&TXQ1 or RXQ2&TXQ2 or RXQ3&TXQ3 interrupt
-+ *  status according to interrupt vector
-+ */
-+static irqreturn_t rtase_q_interrupt(int irq, void *dev_instance)
-+{
-+	const struct rtase_private *tp;
-+	struct rtase_int_vector *ivec;
-+	u16 status;
-+
-+	ivec = dev_instance;
-+	tp = ivec->tp;
-+	status = rtase_r16(tp, ivec->isr_addr);
-+
-+	rtase_w16(tp, ivec->imr_addr, 0x0);
-+	rtase_w16(tp, ivec->isr_addr, status);
-+
-+	if (napi_schedule_prep(&ivec->napi))
-+		__napi_schedule(&ivec->napi);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int rtase_poll(struct napi_struct *napi, int budget)
-+{
-+	const struct rtase_int_vector *ivec;
-+	const struct rtase_private *tp;
-+	struct rtase_ring *ring;
-+	int total_workdone = 0;
-+
-+	ivec = container_of(napi, struct rtase_int_vector, napi);
-+	tp = ivec->tp;
-+
-+	list_for_each_entry(ring, &ivec->ring_list, ring_entry)
-+		total_workdone += ring->ring_handler(ring, budget);
-+
-+	if (total_workdone >= budget)
-+		return budget;
-+
-+	if (napi_complete_done(napi, total_workdone)) {
-+		if (!ivec->index)
-+			rtase_w32(tp, ivec->imr_addr, ivec->imr);
-+		else
-+			rtase_w16(tp, ivec->imr_addr, ivec->imr);
-+	}
-+
-+	return total_workdone;
-+}
-+
- static int rtase_open(struct net_device *dev)
- {
- 	struct rtase_private *tp = netdev_priv(dev);
-@@ -729,9 +798,28 @@ static void rtase_rar_set(const struct rtase_private *tp, const u8 *addr)
- 	rtase_w16(tp, RTASE_LBK_CTRL, RTASE_LBK_ATLD | RTASE_LBK_CLR);
- }
- 
-+#ifdef CONFIG_NET_POLL_CONTROLLER
-+/* Polling 'interrupt' - used by things like netconsole to send skbs
-+ * without having to re-enable interrupts. It's not called while
-+ * the interrupt routine is executing.
-+ */
-+static void rtase_netpoll(struct net_device *dev)
-+{
-+	const struct rtase_private *tp = netdev_priv(dev);
-+	const struct pci_dev *pdev = tp->pdev;
-+
-+	disable_irq(pdev->irq);
-+	rtase_interrupt(pdev->irq, dev);
-+	enable_irq(pdev->irq);
-+}
-+#endif
-+
- static const struct net_device_ops rtase_netdev_ops = {
- 	.ndo_open = rtase_open,
- 	.ndo_stop = rtase_close,
-+#ifdef CONFIG_NET_POLL_CONTROLLER
-+	.ndo_poll_controller = rtase_netpoll,
-+#endif
- };
- 
- static void rtase_get_mac_address(struct net_device *dev)
--- 
-2.34.1
+On 28.06.24 г. 20:45 ч., Xin Li (Intel) wrote:
+> Generate macros {REQUIRED|DISABLED}_MASK_BIT_SET in the newly added AWK
+> script that generates the required and disabled feature mask header.
+> 
+> Suggested-by: Brian Gerst <brgerst@gmail.com>
+> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+> Reviewed-by: Brian Gerst <brgerst@gmail.com>
 
+Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
