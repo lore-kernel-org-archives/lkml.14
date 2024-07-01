@@ -1,46 +1,46 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA2DEEB5;
-	Mon,  1 Jul 2024 16:01:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92703142624;
+	Mon,  1 Jul 2024 16:01:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719849702; cv=none; b=VfaeDuh+FTMZPZA+gruqL8R9qrqZvtcRym3qhnXsh8ebA4I9SWDuNhpGhVVyRdzCNwb+ZM7c9PLtuQqsPi6OtJuOiNuCGMdF91l5f2AFPlFzFo/QUvgEOunob/RPNXq68NvsIeqw05ZapfhylPUGCgE2ITTwPAppNl64LKCQdxg=
+	t=1719849717; cv=none; b=Src3Vg0h1Uk49m7LdXkp28+9rY+oJ8er5G/hNb/TvBL5cCgbYUQRoky9dYp/RTHArcxSq+PM3YgpeT6N/qz3MBhv3dt/7mL4SHa1vs/pUmTqnw8xwVUivJ2iyeZNFPPTPSsKLSRq4EjSOIMByTVDjjSiPw6wI4137LJgUHn8Njk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719849702; c=relaxed/simple;
-	bh=YptetY8g5PbRgblxD/K9UqoVocA40UqH2KNgi4FJGP0=;
+	s=arc-20240116; t=1719849717; c=relaxed/simple;
+	bh=hOVgztX5aRZUelBLzXKsUa1jcr3sRcfH4cpgfhepbB8=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=F1QtrzaDfKVKBEvikBgOiVK8w5NKpg726ListBmGjEOYbqwZpc9Q5r7ZJvRqDb5PUYbKNc7bFrCaYXNzC0psB8fllhff7eosZz/JO0xnSEZwhkOKKyM5zbpOcDrjzP6Aw5H/wi0Beb1tIHYB7qCL1B6VKlXxNCkC2P+eo8jAcdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=pfpXL7mR; arc=none smtp.client-ip=198.47.23.249
+	 MIME-Version:Content-Type; b=TufXD4W5gFn5Vum4jvv4bX0Y7XSE7xWIISkpMbAhA4HVcO31LAU3pFhvzEfhx6FJbQGZ3ycJiAuHojJrYHbGgSdPj4OMYNE8rwE8SyrGYVVjA6KtnbYRyQ6mKItHa9sv8JbAB5oJz9wr9n4lnlXuK9pu5k0cFMeN009uSZMcf54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Lq1jIc6+; arc=none smtp.client-ip=198.47.19.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pfpXL7mR"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Lq1jIc6+"
 Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 461G1S6J011901;
-	Mon, 1 Jul 2024 11:01:28 -0500
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 461G1i5e099906;
+	Mon, 1 Jul 2024 11:01:44 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1719849688;
-	bh=Cg7rUwwI//mmk6bNZn23Ww3ehLdzrtbZaEJR6k0akSY=;
+	s=ti-com-17Q1; t=1719849704;
+	bh=EPp252fPRm63KzgIuXGKRMLf5I8ys+FPMN5TgPmJFpY=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=pfpXL7mRB0hD2cU7j00ELE7CqjtB+iX7rK+qumBwRoycMpj1N992fnNdDi1zRH/w7
-	 RYKHXjYomNnGQMKXTPvxpMNdgfRdQQUGvZDPtQjbD9bV0vrerFlLErLqZU3w0zPO4g
-	 H8+rspE0Df7ccUaQ3ihv6fAUUe/aRuvdgqEqL9PM=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 461G1SIi075759
+	b=Lq1jIc6+sKfDvZJMC/JGtw+OfcYutbejuFiybFcEbuw7XlkxfWF+wmfkXvw0w5XGm
+	 zsyObdbpLnGfYmfAIdS3FYlOs2caFfB6yT1nlC+zFEhcENjXzYwnG2j73mmEVzuCAY
+	 tvAvptvNVeeMeL7dmN9M3fdkrBzjUafewtRn7pbo=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 461G1iKT075898
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 1 Jul 2024 11:01:28 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+	Mon, 1 Jul 2024 11:01:44 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 1
- Jul 2024 11:01:28 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ Jul 2024 11:01:44 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 1 Jul 2024 11:01:28 -0500
+ Frontend Transport; Mon, 1 Jul 2024 11:01:44 -0500
 Received: from uda0132425.dhcp.ti.com (uda0132425.dhcp.ti.com [172.24.227.94])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 461G1PSm043765;
-	Mon, 1 Jul 2024 11:01:25 -0500
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 461G1eQT061733;
+	Mon, 1 Jul 2024 11:01:41 -0500
 From: Vignesh Raghavendra <vigneshr@ti.com>
 To: Nishanth Menon <nm@ti.com>, Kamlesh Gurudasani <kamlesh@ti.com>
 CC: Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
@@ -48,13 +48,14 @@ CC: Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
         Conor Dooley <conor+dt@kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: ti: k3-am62*-main: Remove unwanted properties from crypto
-Date: Mon, 1 Jul 2024 21:31:22 +0530
-Message-ID: <171984950176.3152309.10031093512487224951.b4-ty@ti.com>
+        <linux-kernel@vger.kernel.org>, Jayesh
+ Choudhary <j-choudhary@ti.com>
+Subject: Re: [PATCH v2] arm64: dts: ti: k3-am62a-main: Enable crypto accelerator
+Date: Mon, 1 Jul 2024 21:31:39 +0530
+Message-ID: <171984950176.3152309.8066747674925594460.b4-ty@ti.com>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240618-remove-ranges-v1-1-35d68147e9bf@ti.com>
-References: <20240618-remove-ranges-v1-1-35d68147e9bf@ti.com>
+In-Reply-To: <20240617-crytpo-am62a-v2-1-dc7a14f2635b@ti.com>
+References: <20240617-crytpo-am62a-v2-1-dc7a14f2635b@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,17 +68,16 @@ X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
 Hi Kamlesh Gurudasani,
 
-On Wed, 19 Jun 2024 15:27:25 +0530, Kamlesh Gurudasani wrote:
-> As there is no child node in crypto node, remove the properties
-> that are not needed.
+On Tue, 18 Jun 2024 18:11:13 +0530, Kamlesh Gurudasani wrote:
+> Add the node for sa3ul crypto accelerator.
 > 
 > 
 
 I have applied the following to branch ti-k3-dts-next on [1].
 Thank you!
 
-[1/1] arm64: dts: ti: k3-am62*-main: Remove unwanted properties from crypto
-      commit: b6861f152b4bf6f194b5e5162ee238f2c97e5aec
+[1/1] arm64: dts: ti: k3-am62a-main: Enable crypto accelerator
+      commit: 11926848eb550ea3018ad9e14761785a6f7f25df
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent up the chain during
