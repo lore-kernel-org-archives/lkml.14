@@ -1,97 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0195172BD1;
-	Mon,  1 Jul 2024 19:27:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431E416F82E;
+	Mon,  1 Jul 2024 19:28:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719862038; cv=none; b=VODGaWEuDdCX+JRqS0gf0r8dun5Wpfouzy1HjNiDDkOEEl7B8GoHpfDS4Zb4ANFpNejhW5sjCBe4I3nQiXeq6GphWxyZ/3xacQdUzgHnFZ7+ba1cpxfjzncGwbOnbm1xMKDv2EywZN9jC448kkAaN1GOY9+toHxgCivV6zSpGZs=
+	t=1719862108; cv=none; b=mtEfnxjLfR8F1KKgLAzh+DD3Y6u7EhireBRN699BCApPBDx7quRKs+923DitXg8BsmSHt6hdNoMcyBccV+vGhPPYK+k0fzHVJT2mpAzAG8JNLVhYQ6g0UX7ydFjXhMZZRZ7SRJhP+Ryns/YP6TAkD6GFWbzES4tHOeFf0YxkYUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719862038; c=relaxed/simple;
-	bh=fBlkxk1Ff29Zv5hf2sNJnmiHJF0MltvzTSJLNhDvsG8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=C1LCS26pfOteAuIrFxPbjbCFXYyN7nGti7dHfZhwSwZxDjkNlTvX5Qszb1AvXSEZfXn3ZSM5JJHuTTwaXP4yjPeHEwtFsz4yQ9Ci4cQRz4M1vCZZsjfNSyQz++au13K0O8IpW8V4SFtO/TVp41oD9hC7T59jeIA3wr8X4w5aPuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X4uyulKb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719862108; c=relaxed/simple;
+	bh=5Pb0c/Ig5x3IoqV7zXvxQplmAH8/JaolhjzydtQVsMQ=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=e0rXbHh2L654IgjjPG6bSCSVfQDGsIv+S0Afjy0hOMNg0q4j2XeDqSBstoTD8shsaWa8zddwlqZHLUSffKabVMxpziIbihHv/OWyn2w3vIyezCYfjsCuJSy1Q6scXeSOQhNomtNsQUkrmFiRSHAFJoTZwYTs7EZ9retrBma/NmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eK/F8rRc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X4uyulKb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BA6FC32786;
-	Mon,  1 Jul 2024 19:27:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eK/F8rRc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0362DC32781;
+	Mon,  1 Jul 2024 19:28:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719862037;
-	bh=fBlkxk1Ff29Zv5hf2sNJnmiHJF0MltvzTSJLNhDvsG8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=X4uyulKbdcl37BYLf/rxxpfmLRRiHxgo0DdJC/AznGxFaPaD2j5tC1707zu7MB4m+
-	 oJHVeSBr7Hsz/iQ3j/bCS+ZvrNDhcRNnbYDp38oh1BejNsY6D2hqBEd7NFK9vT7oPL
-	 F9tXsQ2/A3l7gcSZ0M8xHvwtA/eaBmHnRDfcG8tEVoGMwvD/AvmZpVT3QDVEMiZ+1r
-	 NTLTFMinIq0OI2PmAO8xdUtoayV+W+xeFoncTB63jXwm2TR/4ALWSu+g6IBJW38x1P
-	 4iPYzXgQ/QfldH4VQCg/4E/SXPmzn6KWDXXGiOWQGfl6aYfF94MwLNs97Pu3CFNO6b
-	 AFaxzonaM27Cg==
-From: SeongJae Park <sj@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 9/9] Docs/mm/damon/index: add links to admin-guide doc
-Date: Mon,  1 Jul 2024 12:27:06 -0700
-Message-Id: <20240701192706.51415-10-sj@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240701192706.51415-1-sj@kernel.org>
-References: <20240701192706.51415-1-sj@kernel.org>
+	s=k20201202; t=1719862108;
+	bh=5Pb0c/Ig5x3IoqV7zXvxQplmAH8/JaolhjzydtQVsMQ=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=eK/F8rRcEhl6noiaLkE6Rb8qV2v5vtfplYcW20zP39uKLgGPewpCi0go+bYd5hLfh
+	 cPo7tUtAKK2Xt5Wc7aYvB6iSu37/9XGzGYnUxXrsZ+xqTh1UtjxfNt0XpKc0pvdHDU
+	 pHLtjrAr8Kj2MKRbMsG1lOwIMOpbT2s9V9NK3x0l9/hbQCmoDsYbu1z+2G7Rwuj0Dq
+	 lNWCvQsCylYbKUQ1iN5LS93iXLokj19KOGdIb8K8tBX2WWmES6zQr0YtLr++9aciRi
+	 VIzozdUEWlYtiPgjdPeEQZaTkv/zFdxIO0nkGXmv0vlhmopj3EogcXICnuyt537fV2
+	 zg+ko26RMGa+w==
+Date: Mon, 01 Jul 2024 13:28:27 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Spencer Hill <shill@d3engineering.com>
+Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+ linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
+ Fabio Estevam <festevam@gmail.com>, imx@lists.linux.dev, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Alexander Stein <alexander.stein@ew.tq-group.com>, 
+ linux-kernel@vger.kernel.org, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ linux-arm-kernel@lists.infradead.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Shawn Guo <shawnguo@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>
+In-Reply-To: <20240628-imx728-driver-v2-1-80efa6774286@d3engineering.com>
+References: <20240628-imx728-driver-v2-0-80efa6774286@d3engineering.com>
+ <20240628-imx728-driver-v2-1-80efa6774286@d3engineering.com>
+Message-Id: <171986210711.640699.6919165749438870008.robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] media: dt-bindings: Add Sony IMX728
 
-Readers of DAMON subsystem documents index would want to further learn
-how they can use DAMON from the user-space.  Add the link to the admin
-guide.
 
-Signed-off-by: SeongJae Park <sj@kernel.org>
----
- Documentation/mm/damon/index.rst | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+On Fri, 28 Jun 2024 17:17:00 -0400, Spencer Hill wrote:
+> Add bindings for Sony IMX728.
+> 
+> Signed-off-by: Spencer Hill <shill@d3engineering.com>
+> ---
+>  .../devicetree/bindings/media/i2c/sony,imx728.yaml | 119 +++++++++++++++++++++
+>  MAINTAINERS                                        |   7 ++
+>  2 files changed, 126 insertions(+)
+> 
 
-diff --git a/Documentation/mm/damon/index.rst b/Documentation/mm/damon/index.rst
-index 3d3b345d8889..dafd6d028924 100644
---- a/Documentation/mm/damon/index.rst
-+++ b/Documentation/mm/damon/index.rst
-@@ -16,16 +16,16 @@ monitoring :ref:`mechanisms <damon_design_monitoring>` of DAMON make it
-    of the size of target workloads).
- 
- Using this framework, therefore, the kernel can operate system in an
--access-aware fashion.  Because the features are also exposed to the user space,
--users who have special information about their workloads can write personalized
--applications for better understanding and optimizations of their workloads and
--systems.
-+access-aware fashion.  Because the features are also exposed to the :doc:`user
-+space </admin-guide/mm/damon/index>`, users who have special information about
-+their workloads can write personalized applications for better understanding
-+and optimizations of their workloads and systems.
- 
- For easier development of such systems, DAMON provides a feature called
- :ref:`DAMOS <damon_design_damos>` (DAMon-based Operation Schemes) in addition
--to the monitoring.  Using the feature, DAMON users in both kernel and user
--spaces can do access-aware system operations with no code but simple
--configurations.
-+to the monitoring.  Using the feature, DAMON users in both kernel and :doc:`user
-+spaces </admin-guide/mm/damon/index>` can do access-aware system operations
-+with no code but simple configurations.
- 
- .. toctree::
-    :maxdepth: 2
-@@ -34,3 +34,6 @@ configurations.
-    design
-    api
-    maintainer-profile
-+
-+To utilize and control DAMON from the user-space, please refer to the
-+administration :doc:`guide </admin-guide/mm/damon/index>`.
--- 
-2.39.2
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/media/i2c/sony,imx728.yaml:62:17: [warning] wrong indentation: expected 18 but found 16 (indentation)
+./Documentation/devicetree/bindings/media/i2c/sony,imx728.yaml:65:17: [warning] wrong indentation: expected 18 but found 16 (indentation)
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/i2c/sony,imx728.example.dtb: camera@1a: port:endpoint: Unevaluated properties are not allowed ('data-lanes', 'link-frequencies' were unexpected)
+	from schema $id: http://devicetree.org/schemas/media/i2c/sony,imx728.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240628-imx728-driver-v2-1-80efa6774286@d3engineering.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
