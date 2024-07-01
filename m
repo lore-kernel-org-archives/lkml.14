@@ -1,98 +1,84 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F411A77115;
-	Mon,  1 Jul 2024 12:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7450158DDD;
+	Mon,  1 Jul 2024 12:41:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719837712; cv=none; b=Z16S3gSGKtGETCnpHj3VgmDzWhylGfQhCoFg5vb8+xpU50fuPjvDeAzci2oQy1QkTRV/l00gjR6aR4GTweXCF1qR87zUK02QfJLfOpYA+3nCtrL5W8rxJydEmTNUglMRP52F7/lXsmUQMbxG7v2wy2SQRjTJXEmIl7aA/XBllnc=
+	t=1719837715; cv=none; b=I15rFh+wR10o/I/DB6su0DPCTPsP/epAreJKq+Hj2NVR4X1jYDOFhbDaNXSExXzB/8BufVZcWnHTTZui93RJSV8w1NqDe0KHHQLuaq4nVhw4mdNvuDJyCgjdlpju6T5uQVpBto6fthBkovAdt+U/KyHlDaTNFPNovFTrnF55xVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719837712; c=relaxed/simple;
-	bh=n2Akp2Idb1d0HTDcFmSTnModP6C6eg6G16lrbMqXhiQ=;
+	s=arc-20240116; t=1719837715; c=relaxed/simple;
+	bh=ihcaF3I5EST7/gh26RJbcWXrvF2VUf3XZhHK396ADEY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q/GuZf04DBVgxLl7ahxT++TE8IHrrLgfxSmKug0UikEzLR1eKENbqQHg0r5BCD+lbu4d8X9wOhTXoLfmyYiI2uNDIlLyifWTh/RF2sJ92HMmtddUuQ5jVA6wIP50gv6EjN8pEBklsUyAMOXxFOTmRNt16sg1Y7UFvALGd2F0nZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=V7/LQUFu; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=q4Uhs2xzBMI397LtT600R/fVYOwjma/nNrFBUpBxaQqOY7KXP6tU8l5LGMCBLq/Zyk8aSbjTLdYiUfCAs/YjWRHDO5iPNM50SPvgjwL5/l9jpTTf1oFhvwGnfrojFuAA2h8yIhd520Aj9wzXor4aGhTf5XNW4g6iLhlscvcg5x8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VOrGFwGG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="V7/LQUFu"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 5D19F40E019D;
-	Mon,  1 Jul 2024 12:41:47 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id P6SIRr1ORBM5; Mon,  1 Jul 2024 12:41:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1719837703; bh=ZLTDYuOs8tE8GwUaXahINWut6HDEMBxJJps3o6JtEhs=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VOrGFwGG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05CB6C116B1;
+	Mon,  1 Jul 2024 12:41:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719837715;
+	bh=ihcaF3I5EST7/gh26RJbcWXrvF2VUf3XZhHK396ADEY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V7/LQUFuuOjfu6j/1ZZc7jh2gLHVXg3AT1ZwGGE5EI80fCzLhyILvZ0CO7EbZjvxc
-	 PkQfpzypo5F15C//zUTTZmxUz/X7FqFO6zT717Ao6xoNB+ypPyz4lgPCbmsiJZlTdO
-	 TO5NK2UiO14upnZjkcFBsDVeUCbg2r564xAY/71T2V6rDtWHjmrfk7Ip2C5KosY8aH
-	 dNBrOwae2ny/LSELye6T/ukYY+CrItNupO8LmjEfAm41c8eWlY3phNcwUrGN9+Wv/a
-	 OCfLRDQnkAZTQWoF4T2FnyNwGbBKL8vYc/HQaMVKgwAbu5bcWbHcySK4huBYNmSroA
-	 QBYfgXFDSYyUmgVb0gpK1ExgHrB4muzAY0Tqe+CJcAQ3WPDwI99fga55YaRzDc5J4C
-	 ygpcEloZMhr5zOm6i3F9nszwPqJMTcfVnbBLI56EZS0Wju6JBS8HyJ0sOFPYbnfOJ6
-	 kKGW7LPoxbifBZAIlaUL9xK87Lj6waw3yJitmW+Yxk64ROmrRLPrVnzmLrE8hs1B7p
-	 9cZaSai+0VaN/DXWN31ldTaaAIBOlGehxxGmfYFc1QnrcvvylLotapmKopl9x5M8Om
-	 JEwt0nichrKHYLpRAg4prbhagZtMOm4Oon6lVwcO5PH5vGHRwQt/gyZ0Y0yFQzxXc9
-	 z0qru6AHfwltaT0ikiE7xRaI=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4E70440E021E;
-	Mon,  1 Jul 2024 12:41:32 +0000 (UTC)
-Date: Mon, 1 Jul 2024 14:41:27 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Nikunj A. Dadhania" <nikunj@amd.com>
-Cc: linux-kernel@vger.kernel.org, thomas.lendacky@amd.com, x86@kernel.org,
-	kvm@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
-	dave.hansen@linux.intel.com, pgonda@google.com, seanjc@google.com,
-	pbonzini@redhat.com
-Subject: Re: [PATCH v10 07/24] virt: sev-guest: Store VMPCK index to SNP
- guest device structure
-Message-ID: <20240701124127.GEZoKj952TjNCZ8NiN@fat_crate.local>
-References: <20240621123903.2411843-1-nikunj@amd.com>
- <20240621123903.2411843-8-nikunj@amd.com>
- <20240628035217.GAZn4zcWMZy3mgCKky@fat_crate.local>
- <007c2e93-d5cd-7f7e-bd29-bfc0da4c18ba@amd.com>
+	b=VOrGFwGGKN5lI/CJUfdrHs/8GxLfqXIKjyaI9b1Hd1PWF6oNMCa9sg/PEoF0+L547
+	 djeXuDFAvRf01uwC4eXKoueFCp4+GHY//51rEsCpY1YSSPvIyep6ByNVH7s0a+Nzx6
+	 ITyRLFEMGh+4rkSQh0o0V7KDaflJroM081iuWe83EH3gy5u05LBpKkEKolaFkuuaMu
+	 0NMWR+RwmYCIs1ubSRDuwdrwRBhXDP+MfStM9oGjB87efyEPlWSdD6mBPKnmtrdqpi
+	 WQkPebsQ9TVZdnHLbTrXa0EhP+O/eQ6xTjnbKuX+Zc19lqU+mR481VPfJWR5hlcV4x
+	 GHkzRz4hzZxBg==
+Date: Mon, 1 Jul 2024 13:41:49 +0100
+From: Will Deacon <will@kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Aishwarya TCV <Aishwarya.TCV@arm.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: Mainline: v6.10-rc6 boot failed across all arm64 devices
+Message-ID: <20240701124149.GA2095@willie-the-truck>
+References: <CA+G9fYsXsbHp+0cWoTjEhkpANOav=GLSjPx5ghtUY-FjMPyoSQ@mail.gmail.com>
+ <145b39a0-da05-4c60-a019-c1a6211e6c77@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <007c2e93-d5cd-7f7e-bd29-bfc0da4c18ba@amd.com>
+In-Reply-To: <145b39a0-da05-4c60-a019-c1a6211e6c77@sirena.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Mon, Jul 01, 2024 at 04:15:31PM +0530, Nikunj A. Dadhania wrote:
-> In my v8 [1] and earlier series, I had dropped secrets pages pointer from
-> snp_guest_dev structure. But with newer changes in v9 secrets pages pointer
-> is retained so all these APIs will still be fine. 
+On Mon, Jul 01, 2024 at 01:12:07PM +0100, Mark Brown wrote:
+> On Mon, Jul 01, 2024 at 05:28:29PM +0530, Naresh Kamboju wrote:
+> > The mainline kernel v6.10-rc6 boot failed across all arm64 devices and
+> > qemu-arm64 and no crash log found (earlycon) did not help.
+> > 
+> > But the defconfig builds boot PASS.
+> > 
+> > The boot problem is with defconfig + Extra Kconfigs and builds links
+> > provided in the bottom of this email.
+> > 
+> > The boot test history shows that,
+> >   GOOD: v6.10-rc5
+> >   BAD:  v6.10-rc6
+> 
+> Other CI systems aren't showing this.  I'm guessing you've updated the
+> toolchain versions you're using and are running into:
+> 
+>    https://sourceware.org/bugzilla/show_bug.cgi?id=31924#c9
+> 
+> and will see this with other kernels.  It's probably worth testing
+> toolchains before deploying them...
 
-So I think you should step back, get a pen and paper and think about the
-design of what is going to be exported from sev.c to sev-guest, write it down
-and run it by folks first before you go code.
+Aha, that would explain why I'm failing to reproduce this with clang or
+my old version of GCC. I only see the problem with the binary provided
+by the CI.
 
-Because right now it feels like a waste of time for everybody involved.
-I still have no clue what is going on - just a rough idea.
-
-Also, looking forward:
-
-Subject: [PATCH v10 13/24] x86/sev: Make sev-guest driver functional again
-
-That's a no-no.
-
-You can't have a broken kernel at some point in the patch series. Unless you
-can't really avoid it. And I don't think there's a problem here: you define
-the interfaces and switch sev-guest to them in one last patch.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Will
