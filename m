@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C3A15E5AB;
-	Mon,  1 Jul 2024 13:23:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC0C13B597;
+	Mon,  1 Jul 2024 13:25:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719840225; cv=none; b=SwwruxWsY4+8owTGn7SBVQSgaG12EWPJcdm6vddjQ9uZio7vVcSQ4trbPSEwgHEKJtLh2SWup7dxLdeo0yuPc3S1O5VVMEt2WSrc3WEpCe2HqCpFrsQrXoE42MRR4M/OtoOlJPGtGJASkFIa+bsw0BxjPCair236cNZxIxYEn+Q=
+	t=1719840312; cv=none; b=XC5d0A7bqz1wm/2eev3QJex4N7ueyfg9eY7WTUXxoeinxdnPUkpAiYYuq96n+cKZ73uYGH5VWWM/gnU3UvDjWTdU2GR000Y6JIjOpbP0/RznTQVgbbOuRDYIZmJEfE7fLzuYuRmHHaLYP62wCNY/E06QnSxbuSvhN9W+xWKxALQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719840225; c=relaxed/simple;
-	bh=1aDaBVjQlCEBlWuUJhgLbck7PlekJKlGmM5Vo/RRkLA=;
+	s=arc-20240116; t=1719840312; c=relaxed/simple;
+	bh=76Fg4o1lJ9MMr72XRAyrLWbyMXJOmQRalQPwbHYFXYA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MmF88+l/h56wAKtAsdAsYJevM97EgFQCElrkYQQ2LGRjnicQR6asM1leXbTDImfmqUPRL5XUmgjbuujHq3aMbQm1QPdoUwP8IhxK1YV/jOUV+JMmO6rbtJu4Q6TjR9HEu47kIeLvn8qxNMOkHomGSjM6wTmz0u3C8m8adMwYlTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OTP9AWns; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=OFLFRx0zI73R0dIVtI4hEakdEYOynTjBIa/eeZZZtVIUv3VkMBmD/6hjTTOm+U4M9AjHF9YY+r7YmM+0TlawEEiGggPBSC9To7QgUkFKsqxxlZzTbi+61178lHeFAbKWQ0ey+14ZsKnq7hto27YL/Vh8ENzhje9Ub0bO7wp6VF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fDwRdQQP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OTP9AWns"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02C87C32786;
-	Mon,  1 Jul 2024 13:23:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fDwRdQQP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B98EC4AF0A;
+	Mon,  1 Jul 2024 13:25:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719840224;
-	bh=1aDaBVjQlCEBlWuUJhgLbck7PlekJKlGmM5Vo/RRkLA=;
+	s=k20201202; t=1719840312;
+	bh=76Fg4o1lJ9MMr72XRAyrLWbyMXJOmQRalQPwbHYFXYA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OTP9AWnsbw+FYOmLilmi1W/Advl202Jn8f3VzWILGydklJwijQaWqMbP804x69P9L
-	 E/jFB7y4SC208Zsf500vRD90J6YoXq8v6AKyc3rNTz0OUlVNBU/qr/MeqOuhvP3k6z
-	 zWLOS764nxQcwcUwDqCOolJSkS61bywTgFMkxV1tVqqWFuq89zWlW0cbrSmQwf3LU0
-	 jMIAhaYswH3HjStheYJOBTPYhyxlv5O//SOJRTBfI/dVHVikcvHMoiIXOQTk/Sz62E
-	 N2fGnbEMw05QLL2vJZT0DMFKLL3aePtoCaCYDlckvluEBBURf8kX32EwyeGZFRjlQt
-	 MtIWSraqaU/LQ==
-Message-ID: <9a6b0589-b401-49f2-aac1-ad00a90c4791@kernel.org>
-Date: Mon, 1 Jul 2024 15:23:37 +0200
+	b=fDwRdQQPkszEDYqJtvHyzpbxvkjeMIhFlIuU2dDWbM6PoqZk4cuAWQK4xReYWXQ2j
+	 eSMHCsFQrR1w/RC0H0Mgx5ixopKH2vNtESsZBHRJ3I+7Nxn3Ji2F3khwj7DMI3Amdl
+	 XVZXxMvvyMvFEWk18B5gju2T4iMtzG/N6sjNmB4jYOtJE013604azyGzjek+PG5zwQ
+	 y8dfN/rM6+pqs4hvuGxxdI5eWnjnRUzmi2uQTyGIiapE/HPT1tDuU4BROLMpRbqBzg
+	 DzKE7eurlXEnDctrHPUDs0Beam0ZzXIZ0UK6pCMa/1n5sLACPxspq2BwGFm1GqGqtp
+	 O7+2UqFMllQrA==
+Message-ID: <cfcebb37-0518-4dac-bd89-d845bb7fcd37@kernel.org>
+Date: Mon, 1 Jul 2024 15:25:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,21 +35,18 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] dt-bindings: clock: renesas: Document RZ/V2H(P)
- SoC CPG
-To: Prabhakar <prabhakar.csengg@gmail.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
- Magnus Damm <magnus.damm@gmail.com>, linux-clk@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
- Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
- Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20240627161315.98143-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240627161315.98143-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: amlogic: Add new bindings for meson
+ A1 pwm
+To: George Stark <gnstark@salutedevices.com>, ukleinek@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ neil.armstrong@linaro.org, khilman@baylibre.com, jbrunet@baylibre.com,
+ martin.blumenstingl@googlemail.com, hkallweit1@gmail.com
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, kernel@salutedevices.com,
+ Dmitry Rokosov <ddrokosov@salutedevices.com>
+References: <20240701130113.433169-1-gnstark@salutedevices.com>
+ <20240701130113.433169-2-gnstark@salutedevices.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -95,29 +92,36 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240627161315.98143-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240701130113.433169-2-gnstark@salutedevices.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 27/06/2024 18:13, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On 01/07/2024 15:01, George Stark wrote:
+> The chip has 3 dual-channel PWM modules PWM_AB, PWM_CD, PWM_EF.
 > 
-> Document the device tree bindings for the Renesas RZ/V2H(P) SoC
-> Clock Pulse Generator (CPG).
+> Signed-off-by: George Stark <gnstark@salutedevices.com>
+> Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> CPG block handles the below operations:
-> - Generation and control of clock signals for the IP modules
-> - Generation and control of resets
-> - Control over booting
-> - Low power consumption and power supply domains
-> 
-> Also define constants for the core clocks of the RZ/V2H(P) SoC. Note the
-> core clocks are a subset of the ones which are listed as part of section
-> 4.4.2 of HW manual Rev.1.01 which cannot be controlled by CLKON register.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+> index 1d71d4f8f328..63c6018b6b7c 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+> @@ -37,6 +37,7 @@ properties:
+>        - enum:
+>            - amlogic,meson8-pwm-v2
+>            - amlogic,meson-s4-pwm
+> +          - amlogic,meson-a1-pwm, amlogic,meson-s4-pwm
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+This is not valid, you cannot have such syntax (and there is no single
+DT schema file like this).
+
+It does not look like you tested the bindings, at least after quick
+look. Please run `make dt_binding_check` (see
+Documentation/devicetree/bindings/writing-schema.rst for instructions).
+Maybe you need to update your dtschema and yamllint.
 
 Best regards,
 Krzysztof
