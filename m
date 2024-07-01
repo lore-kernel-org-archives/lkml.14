@@ -1,607 +1,173 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2093.outbound.protection.partner.outlook.cn [139.219.17.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A3012D1FF;
-	Mon,  1 Jul 2024 10:45:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719830707; cv=none; b=XzDSFbCHsTNJxaLY0bc4s5jzWoLW9hEEAesc9yLh7s7vG/H8OrOQIOm78/s8t8bxYANzsi90wsCWrAT0IBWnviDr9sZUigLnxDJyzz3vWpNEG+YWHWYOOtrTwy0JiyqfX4BfSZMktNgBjW3oYCg+fzEzy+HWWl0IB4/KPjbhH/s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719830707; c=relaxed/simple;
-	bh=BMvTx/i6/pvRrx1c1537z5y7Td9l0JjjLCHRnCzvzbw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ol8mF8YKN1Ob2+iTmizy5cBL4+kuiyCMtU09oLY9wqexaDzCWlbkc0pdj6kCZWEFW5RECn70AVoB0tT/JmCu6aQ1XUvWRLH3H6GYZtBNUlnSzJs8ODGtr+SDdYvhfgft662NCsIFVN+EPpzMjO0AbTga2ZRWa2DytSkcUTjd4fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=i2rhbVvK; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="i2rhbVvK"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4617Qrbv017780;
-	Mon, 1 Jul 2024 05:44:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=HCJm1/O8+VK/k/WKyNPdRMmVNy6vBC1EQk0Zr5Z9P2c=; b=
-	i2rhbVvKbEkE3ASSUA9aUisWrrXsDDxTJYDrqPdNTyyioWlPv+xwXnlUWAfg29ZD
-	QY6hDFa+k1JG7VaZ6WWiGHx6dohccVW/JEIluz/BwLNaqjJHTL+M1L5Z3KuwyGJM
-	wsPLz/fBeAkEYE8j4cG3/IkEylRJ9BmPs/T68+BubeJIPo4H9OAcIss8RtifApD1
-	JCH01ra5NHfUQZR9EihuN3YugPD72mRCZn0K151rCzD5LumwamA39FZHvLmx771V
-	x65kTf/fN+QCVYKCQMoa6w+lxsJqo2cg7YjOtP8JxJFX5Uxo4DTNB4X2dKYDv5dM
-	LrEaFdJsdrrSdx8cnvgqfQ==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 402fnxa3x0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Jul 2024 05:44:47 -0500 (CDT)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 1 Jul 2024
- 11:44:44 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.9 via Frontend Transport; Mon, 1 Jul 2024 11:44:44 +0100
-Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.208.18])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 9FE8A82024D;
-	Mon,  1 Jul 2024 10:44:44 +0000 (UTC)
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-To: <broonie@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
-        <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>
-Subject: [PATCH 1/3] ASoC: cs35l56: Revert support for dual-ownership of ASP registers
-Date: Mon, 1 Jul 2024 11:44:42 +0100
-Message-ID: <20240701104444.172556-2-rf@opensource.cirrus.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240701104444.172556-1-rf@opensource.cirrus.com>
-References: <20240701104444.172556-1-rf@opensource.cirrus.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B096912C52E;
+	Mon,  1 Jul 2024 10:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.93
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719830730; cv=fail; b=nfjo72aCdvLbMD8nZ87pAHcEgSsLackjh37V/0GBBEOopLcz1wYBpzeaRt5WjVkoLDnvdtfHrF0E5UU820KNBGylgek1kZnc1uER8HcIf37OAAZs6E4Ci+0vuUH7rEKTCGpOb5Q1HBViwt3WOF4tXQxMEWzVo9+/QeySMRsbXfs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719830730; c=relaxed/simple;
+	bh=dO59LVyFoq9F7uIrwRjFkBZRaNbX4SzAUkLLfR41XKY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=CPf8X02q1vc0jVVg48oAD3kkDPht4n8KWcWKGoGxqNPpty/iNs01LvcEBMzHzka/kF71HT16VgIXF642RSc/w+ZYXM4eECwa3jCdMR/yDWAnccTNA7AY1VAEERd83HMCRRXK+/jWFPLMtaIy7KHYlJuudNm2U8fYeF+tJP0MnUc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hlV72AwgKcCzVgv8w2WmY8V86NQIJXPQgYEk9c0ecuaRCpwv/YUFlMcZvD804kl866ORwUY3+dS1BdXGJdU1YcUCL53HSawjLKKz+JgRgzVPo5F419PjeUS/T8a/T0NnDCbe5cH0vWVlxa7r6Uk8TbTDDsTYUOq/LYxB65Bgo7Xiy9Oxo7/dGFF068Jh92737OAP7Mso5GJDGc3Ud55ubfWDzA3dYzuJ1X4bzdcqYes3wNDAivDJJm7mpz6DQTRJAhVxuRimIanOoZ7DYyZCOOwN016ZoBMM+8Fk61FsDBi2gLV99kSL5Hg4vTX+H9+t5II04B/Tg87X5j8kh4LDXg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4Fpz9VwyVTaofpuBmUrXsl6XcCbmQlFKIRCLGA5iJ44=;
+ b=DdI12TnXG7y+aM2jmUtQzuHdT5i8VMsTUhqEtTtNHpq5c2u4upQBwSsBXdyXmlyY/Txg8df3jWB2ioQgC86XA3FtGa4SMkIoZXYkw2Uw1H4jRGC5uSjAXd3z8hG+eajllkJgbTOQRQ5mZTEX5MEgytDeN021VQweOTA2nYlhBHdPHtQyAa9SQ2LA6RtQkBp1ofV48DBq6wjZADyKj6SlNX2f1O1psxw2MZi61x0uZvzjV/V0CbYzBL8yotrxsf5dLSybVDO3jYeAVbpfQCO8gF0d3SpyzdZ//uJSWlRFpSMtDcCEX528rLyd5yhPevuHNib3TxGOIMGVCMHeSrX9XA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::15) by SHXPR01MB0814.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:24::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.32; Mon, 1 Jul
+ 2024 10:45:15 +0000
+Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+ ([fe80::358e:d57d:439f:4e8a]) by
+ SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn ([fe80::358e:d57d:439f:4e8a%7])
+ with mapi id 15.20.7719.028; Mon, 1 Jul 2024 10:45:15 +0000
+From: Minda Chen <minda.chen@starfivetech.com>
+To: Conor Dooley <conor@kernel.org>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>
+CC: Conor Dooley <conor.dooley@microchip.com>, Rob Herring
+	<robh+dt@kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] riscv: dts: starfive: add pcie1 on the star64
+Thread-Topic: [PATCH] riscv: dts: starfive: add pcie1 on the star64
+Thread-Index: AQHayAObtie3lKGpSUu9x20651p+HrHht3rA
+Date: Mon, 1 Jul 2024 10:45:15 +0000
+Message-ID:
+ <SHXPR01MB086332671CEBE2D0A21ED695E6D32@SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn>
+References: <20240626-traverse-excitable-a1d9be38a9da@spud>
+In-Reply-To: <20240626-traverse-excitable-a1d9be38a9da@spud>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SHXPR01MB0863:EE_|SHXPR01MB0814:EE_
+x-ms-office365-filtering-correlation-id: c70de35f-5a38-406c-b2db-08dc99bae482
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|41320700013|38070700018;
+x-microsoft-antispam-message-info:
+ e+uSDgvOzdK0V2HVD3hDDlXPpriRnQoHRCXvgyRM1LlyJadCfYpHhM2JX3OTJ4OiqAVAsM+/12dEqt7FUghN9+Tx8eeJu8MAV3AXHsO5kQg24Qs4erP2pZHwUwJWaMdFjLRBljxmTLl6M+PkQor8IwZUHjaGCciuElC9wAFwTRgz6cKJAueiRadFo9tyB7k7MiFKwXp2NW3kOZ0GmOcefhovOaHmmRwhcMCPr4QSQ0sHVpTWuXMgxHijkvTnDJua/er64DKtlfUXV0MRwasuwy4s23tQyzDTwzNmBP+AaFyv0gbyLCRmGB8Ryv+zh4RbBYp2h4L0jaOJXpXL3EencE5ry3HObkUoKaeS37lmDNGpf6IE4vJjeP3OwTLWLPSngUpLciwfkSVbsX+cYUBQULwh4B9cUirhY5W+8Kv6bAVuuiCeLyvQcgvxJMNEVB/0iejZidtZNrIMl2z6FDg9+ORCsaiOfmyqQbNBxYbOMLcTlCWQvoTkqclm5cXKi5RDUkPZCnYK5qDGfqBXTVmc/l5DCedJ1KDRFy4YUzwcZQ4ZyjuNUXD/yMuZI6ckdOYVq8txDGVp5MK/nnxJjkw+MHMs0sQ8AbIQZJ/mRiZHeB522/rFT7oZJTEQp8HkqFLR
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(41320700013)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?lnnKcDHnltCDzH0pxRKkqt25TnKqxw4l167wqqN2fxgbHxzHNIbsi8b8PGNJ?=
+ =?us-ascii?Q?hdzkcyTzH9/vOqTBYZANUyRrrSu6J1vDG0i0cxYyKFepYKciglqzEYRTA0Wo?=
+ =?us-ascii?Q?4NnJYwi05icDBvnNV3g1qQ9OC4BnrHYZ9ArJulcikagwbH1fUnTtwMpnKPPa?=
+ =?us-ascii?Q?96WV8sWCPysTXU7Ll823vKtg5+HTSxeq6g4jnRMDgZiuGDrfaP9v5kC8qNro?=
+ =?us-ascii?Q?pvlZzdMFik3JIBuTM735aoOQZjQdQPWJFEbAKmr3G349ZdjYwss/BPHB9WWH?=
+ =?us-ascii?Q?t8f8qm1JGoGp+kN2Gu3a2ze+FAeQalMPE0+X7J5m4YlWerU2baLBI0m1DlaL?=
+ =?us-ascii?Q?v5QXUfnvXRrm8tLgorCJz4VMygeKyv4zlgn7+Z//Z8nlD1UV0RMS++Ag2tAq?=
+ =?us-ascii?Q?I8Wsg21WG04TyY4pJDoG0pq3unYm+lb6rZHBtFZ06W98d76eXHcE0pPs9GbL?=
+ =?us-ascii?Q?khcZVI8/x7105LjkaFrCRmnL3qBt2nc3w/CMtoyBLdJJ4WfCdk3BO8kZFOMx?=
+ =?us-ascii?Q?2EkNwj0iDf1POoaa9FfPizBOVLtwNdeb6Yhec0kJRUbcLGAmgMQsU0ocN8LZ?=
+ =?us-ascii?Q?PypVCFnC6FgOV6d16ZZCA5coaZ3Wet5vEkUnpZzFfVxSxrl43D8c5BDGesgO?=
+ =?us-ascii?Q?wiKiItH9+/3Q368prSOyRN4ZNFDJ5daebg41xVWbqKTtA+TTBCOTaOVNnGIN?=
+ =?us-ascii?Q?fPWKj/Uurid/mj7waDLkvjF7rMDsnZjNSPPSg2am20DPADlFMT247p1VL9Hh?=
+ =?us-ascii?Q?gvPifl5LnzPrrnr3sV6ioNl9W2H+ZsF6I24sTY+wFUzZGbosPJIQdFdHstfv?=
+ =?us-ascii?Q?nE1NXKu+/dBOoyIJ9Iv+HIbBRZq656W3PbsUqtOULc2SPztoQXk0iofay9q8?=
+ =?us-ascii?Q?z9EWn3ue2O6u7UdK6ComoTI+6Cq0PyZYX+xm7ii678ftcan2WA9Mo0VB73qg?=
+ =?us-ascii?Q?Mbwo5OUB9ZNHdWS0niMKMYasYtPuCm2Nt/mahorJV2at6FgcihlBVx+WeYT6?=
+ =?us-ascii?Q?XStd4JLTaFwAMrwxO+KdvSnt7LgnNa1lk3gfwhEoizmGOv1Ei/cjP+lggcQw?=
+ =?us-ascii?Q?2SIC7hvJhxatdobTioQ6tAuajx3MHZSpcewfB8mJewTuEFhOWah94shHepYj?=
+ =?us-ascii?Q?ZTEFYg3W+DBglSauITUoGx3GpbSL/1iHzm8J7AYkL99djanww0TLf/lhp70t?=
+ =?us-ascii?Q?PNVyJqHAKHm+nz9fXLS1xEMwc1DPEnFfV1lg5ww1kqq/FLCbXCdiGQolNbc4?=
+ =?us-ascii?Q?/diI9Fw0JBI/dwUt0LH4mRRB4Uj5hOBwYAtgSCuFZeSRqeeZUXdVI4TT+dnS?=
+ =?us-ascii?Q?lPSw69j3ttI/ef6JUe7qQcB34ULl/nBcjjvOeJ2IcrTqz2hQcejC+Fq2ESgr?=
+ =?us-ascii?Q?kPQbwjnIXakIT1v4K+qJgVLk3acLCit2g3IFOjdp5jvIjitozWKDOH6Q4Gc6?=
+ =?us-ascii?Q?kVdXWul5g240qa6b9ysJRoM4Kc9nYHxQTiPVRcFSDu2m6e4YnvSkD0I9VIml?=
+ =?us-ascii?Q?1xtNvNVzIzEcLh+xzWHnCQmV8dRzOqgMgt69WlVHxZ7TnbGoCHoruGPfDBfE?=
+ =?us-ascii?Q?5ZjXz9GgAoQmwpb+2HQQSxGsoc8NP8FVpPnEXcxX?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: vEIB8zUQmljk-V0u7FTlmaIv4Y1s7dRf
-X-Proofpoint-ORIG-GUID: vEIB8zUQmljk-V0u7FTlmaIv4Y1s7dRf
-X-Proofpoint-Spam-Reason: safe
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: c70de35f-5a38-406c-b2db-08dc99bae482
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2024 10:45:15.6303
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7v3b1oiemt8kdCqd05GkVLDwrARvmZ4SxFYIFMf4lEbfEmXF55+IxTxtboECuHdfID2CXP2LVv5dwOxEKr5X0j0bMO6DwaWiA5V2fP/dlQA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0814
 
-This patch reverts a series of commits that allowed for the ASP
-registers to be owned by either the driver or the firmware. Nothing
-currently depends on the functionality that is being reverted, so
-it is safe to remove.
 
-The commits being reverted are (last 3 are bugfixes to the first 2):
-commit 72a77d7631c6
-("ASoC: cs35l56: Fix to ensure ASP1 registers match cache")
-commit 07f7d6e7a124
-("ASoC: cs35l56: Fix for initializing ASP1 mixer registers")
-commit 4703b014f28b
-("ASoC: cs35l56: fix reversed if statement in cs35l56_dspwait_asp1tx_put()")
-commit c14f09f010cc
-("ASoC: cs35l56: Fix deadlock in ASP1 mixer register initialization")
-commit dfd2ffb37399
-("ASoC: cs35l56: Prevent overwriting firmware ASP config")
 
-These reverts have been squashed into a single commit because there
-would be no reason to revert only some of them (which would just
-reintroduce bugs).
+>=20
+> From: Conor Dooley <conor.dooley@microchip.com>
+>=20
+> It was reported to me that the star64 actually /does/ have an exposed PCI=
+e port,
+> despite the commit message there. In my original conversation with Minda,
+> they said that pcie1 was available there and pcie0 was not, but the v2 pa=
+tch
+> didn't actually add pcie1 on the star64.
+>=20
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+> I think I'll just squash this in and fixup the commit message, since the =
+patch is still
+> at the top of my branch.
+>=20
+> CC: Minda Chen <minda.chen@starfivetech.com>
+> CC: Conor Dooley <conor@kernel.org>
+> CC: Rob Herring <robh+dt@kernel.org>,
+> CC: Emil Renner Berthing <emil.renner.berthing@canonical.com
+> CC: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org
+> CC: devicetree@vger.kernel.org
+> CC: linux-kernel@vger.kernel.org
+> CC: linux-riscv@lists.infradead.org
+> ---
+>  arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts
+> b/arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts
+> index 2d41f18e0359..b720cdd15ed6 100644
+> --- a/arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts
+> +++ b/arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts
+> @@ -39,6 +39,10 @@ phy1: ethernet-phy@1 {
+>  	};
+>  };
+>=20
+> +&pcie1 {
+> +	status =3D "okay";
+> +};
+> +
+>  &phy0 {
+>  	rx-internal-delay-ps =3D <1900>;
+>  	tx-internal-delay-ps =3D <1500>;
+> --
+> 2.43.0
 
-The changes introduced by the commits were well-intentioned but
-somewhat misguided. ACPI does not provide any information about how
-audio hardware is linked together, so that information has to be
-hardcoded into drivers. On Windows the firmware is customized to
-statically setup appropriate configuration of the audio links,
-and the intent of the commits was to re-use this information if the
-Linux host drivers aren't taking control of the ASP. This would
-avoid having to hardcode the ASP config into the machine driver on
-some systems.
+Hi Conor
 
-However, this added complexity and race conditions into the driver.
-It also complicates implementation of new code.
-
-The only case where the ASP is used but the host is not taking
-ownership is when CS35L56 is used in SoundWire mode with the ASP
-as a reference audio interconnect. But even in that case it's not
-necessarily required even if the firmware initialized it. Typically
-it is used to avoid the host SDCA drivers having to be capable of
-aggregating capture paths from multiple SoundWire peripherals. But
-the SOF SoundWire support is capable of doing that aggregation.
-
-Reverting all these commits significantly simplifies the driver.
-Let's just use the normal Linux mechanisms of the machine driver and
-ALSA controls to set things up instead of trying to use the firmware
-to do use-case setup.
-
-Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
----
- include/sound/cs35l56.h           |   9 +-
- sound/soc/codecs/cs35l56-shared.c | 101 ++++-----------
- sound/soc/codecs/cs35l56.c        | 205 ++----------------------------
- sound/soc/codecs/cs35l56.h        |   1 -
- 4 files changed, 43 insertions(+), 273 deletions(-)
-
-diff --git a/include/sound/cs35l56.h b/include/sound/cs35l56.h
-index 1a3c6f66f620..2e19722989f7 100644
---- a/include/sound/cs35l56.h
-+++ b/include/sound/cs35l56.h
-@@ -267,13 +267,18 @@ struct cs35l56_base {
- 	bool fw_patched;
- 	bool secured;
- 	bool can_hibernate;
--	bool fw_owns_asp1;
- 	bool cal_data_valid;
- 	s8 cal_index;
- 	struct cirrus_amp_cal_data cal_data;
- 	struct gpio_desc *reset_gpio;
- };
- 
-+/* Temporary to avoid a build break with the HDA driver */
-+static inline int cs35l56_force_sync_asp1_registers_from_cache(struct cs35l56_base *cs35l56_base)
-+{
-+	return 0;
-+}
-+
- extern struct regmap_config cs35l56_regmap_i2c;
- extern struct regmap_config cs35l56_regmap_spi;
- extern struct regmap_config cs35l56_regmap_sdw;
-@@ -284,8 +289,6 @@ extern const char * const cs35l56_tx_input_texts[CS35L56_NUM_INPUT_SRC];
- extern const unsigned int cs35l56_tx_input_values[CS35L56_NUM_INPUT_SRC];
- 
- int cs35l56_set_patch(struct cs35l56_base *cs35l56_base);
--int cs35l56_init_asp1_regs_for_driver_control(struct cs35l56_base *cs35l56_base);
--int cs35l56_force_sync_asp1_registers_from_cache(struct cs35l56_base *cs35l56_base);
- int cs35l56_mbox_send(struct cs35l56_base *cs35l56_base, unsigned int command);
- int cs35l56_firmware_shutdown(struct cs35l56_base *cs35l56_base);
- int cs35l56_wait_for_firmware_boot(struct cs35l56_base *cs35l56_base);
-diff --git a/sound/soc/codecs/cs35l56-shared.c b/sound/soc/codecs/cs35l56-shared.c
-index 880228f89baf..035d7c3c4683 100644
---- a/sound/soc/codecs/cs35l56-shared.c
-+++ b/sound/soc/codecs/cs35l56-shared.c
-@@ -20,6 +20,18 @@ static const struct reg_sequence cs35l56_patch[] = {
- 	 * Firmware can change these to non-defaults to satisfy SDCA.
- 	 * Ensure that they are at known defaults.
- 	 */
-+	{ CS35L56_ASP1_ENABLES1,		0x00000000 },
-+	{ CS35L56_ASP1_CONTROL1,		0x00000028 },
-+	{ CS35L56_ASP1_CONTROL2,		0x18180200 },
-+	{ CS35L56_ASP1_CONTROL3,		0x00000002 },
-+	{ CS35L56_ASP1_FRAME_CONTROL1,		0x03020100 },
-+	{ CS35L56_ASP1_FRAME_CONTROL5,		0x00020100 },
-+	{ CS35L56_ASP1_DATA_CONTROL1,		0x00000018 },
-+	{ CS35L56_ASP1_DATA_CONTROL5,		0x00000018 },
-+	{ CS35L56_ASP1TX1_INPUT,		0x00000000 },
-+	{ CS35L56_ASP1TX2_INPUT,		0x00000000 },
-+	{ CS35L56_ASP1TX3_INPUT,		0x00000000 },
-+	{ CS35L56_ASP1TX4_INPUT,		0x00000000 },
- 	{ CS35L56_SWIRE_DP3_CH1_INPUT,		0x00000018 },
- 	{ CS35L56_SWIRE_DP3_CH2_INPUT,		0x00000019 },
- 	{ CS35L56_SWIRE_DP3_CH3_INPUT,		0x00000029 },
-@@ -41,12 +53,18 @@ EXPORT_SYMBOL_NS_GPL(cs35l56_set_patch, SND_SOC_CS35L56_SHARED);
- static const struct reg_default cs35l56_reg_defaults[] = {
- 	/* no defaults for OTP_MEM - first read populates cache */
- 
--	/*
--	 * No defaults for ASP1 control or ASP1TX mixer. See
--	 * cs35l56_populate_asp1_register_defaults() and
--	 * cs35l56_sync_asp1_mixer_widgets_with_firmware().
--	 */
--
-+	{ CS35L56_ASP1_ENABLES1,		0x00000000 },
-+	{ CS35L56_ASP1_CONTROL1,		0x00000028 },
-+	{ CS35L56_ASP1_CONTROL2,		0x18180200 },
-+	{ CS35L56_ASP1_CONTROL3,		0x00000002 },
-+	{ CS35L56_ASP1_FRAME_CONTROL1,		0x03020100 },
-+	{ CS35L56_ASP1_FRAME_CONTROL5,		0x00020100 },
-+	{ CS35L56_ASP1_DATA_CONTROL1,		0x00000018 },
-+	{ CS35L56_ASP1_DATA_CONTROL5,		0x00000018 },
-+	{ CS35L56_ASP1TX1_INPUT,		0x00000000 },
-+	{ CS35L56_ASP1TX2_INPUT,		0x00000000 },
-+	{ CS35L56_ASP1TX3_INPUT,		0x00000000 },
-+	{ CS35L56_ASP1TX4_INPUT,		0x00000000 },
- 	{ CS35L56_SWIRE_DP3_CH1_INPUT,		0x00000018 },
- 	{ CS35L56_SWIRE_DP3_CH2_INPUT,		0x00000019 },
- 	{ CS35L56_SWIRE_DP3_CH3_INPUT,		0x00000029 },
-@@ -206,77 +224,6 @@ static bool cs35l56_volatile_reg(struct device *dev, unsigned int reg)
- 	}
- }
- 
--static const struct reg_sequence cs35l56_asp1_defaults[] = {
--	REG_SEQ0(CS35L56_ASP1_ENABLES1,		0x00000000),
--	REG_SEQ0(CS35L56_ASP1_CONTROL1,		0x00000028),
--	REG_SEQ0(CS35L56_ASP1_CONTROL2,		0x18180200),
--	REG_SEQ0(CS35L56_ASP1_CONTROL3,		0x00000002),
--	REG_SEQ0(CS35L56_ASP1_FRAME_CONTROL1,	0x03020100),
--	REG_SEQ0(CS35L56_ASP1_FRAME_CONTROL5,	0x00020100),
--	REG_SEQ0(CS35L56_ASP1_DATA_CONTROL1,	0x00000018),
--	REG_SEQ0(CS35L56_ASP1_DATA_CONTROL5,	0x00000018),
--	REG_SEQ0(CS35L56_ASP1TX1_INPUT,		0x00000000),
--	REG_SEQ0(CS35L56_ASP1TX2_INPUT,		0x00000000),
--	REG_SEQ0(CS35L56_ASP1TX3_INPUT,		0x00000000),
--	REG_SEQ0(CS35L56_ASP1TX4_INPUT,		0x00000000),
--};
--
--/*
-- * The firmware can have control of the ASP so we don't provide regmap
-- * with defaults for these registers, to prevent a regcache_sync() from
-- * overwriting the firmware settings. But if the machine driver hooks up
-- * the ASP it means the driver is taking control of the ASP, so then the
-- * registers are populated with the defaults.
-- */
--int cs35l56_init_asp1_regs_for_driver_control(struct cs35l56_base *cs35l56_base)
--{
--	if (!cs35l56_base->fw_owns_asp1)
--		return 0;
--
--	cs35l56_base->fw_owns_asp1 = false;
--
--	return regmap_multi_reg_write(cs35l56_base->regmap, cs35l56_asp1_defaults,
--				      ARRAY_SIZE(cs35l56_asp1_defaults));
--}
--EXPORT_SYMBOL_NS_GPL(cs35l56_init_asp1_regs_for_driver_control, SND_SOC_CS35L56_SHARED);
--
--/*
-- * The firmware boot sequence can overwrite the ASP1 config registers so that
-- * they don't match regmap's view of their values. Rewrite the values from the
-- * regmap cache into the hardware registers.
-- */
--int cs35l56_force_sync_asp1_registers_from_cache(struct cs35l56_base *cs35l56_base)
--{
--	struct reg_sequence asp1_regs[ARRAY_SIZE(cs35l56_asp1_defaults)];
--	int i, ret;
--
--	if (cs35l56_base->fw_owns_asp1)
--		return 0;
--
--	memcpy(asp1_regs, cs35l56_asp1_defaults, sizeof(asp1_regs));
--
--	/* Read current values from regmap cache into the write sequence */
--	for (i = 0; i < ARRAY_SIZE(asp1_regs); ++i) {
--		ret = regmap_read(cs35l56_base->regmap, asp1_regs[i].reg, &asp1_regs[i].def);
--		if (ret)
--			goto err;
--	}
--
--	/* Write the values cache-bypassed so that they will be written to silicon */
--	ret = regmap_multi_reg_write_bypassed(cs35l56_base->regmap, asp1_regs,
--					      ARRAY_SIZE(asp1_regs));
--	if (ret)
--		goto err;
--
--	return 0;
--
--err:
--	dev_err(cs35l56_base->dev, "Failed to sync ASP1 registers: %d\n", ret);
--
--	return ret;
--}
--EXPORT_SYMBOL_NS_GPL(cs35l56_force_sync_asp1_registers_from_cache, SND_SOC_CS35L56_SHARED);
--
- int cs35l56_mbox_send(struct cs35l56_base *cs35l56_base, unsigned int command)
- {
- 	unsigned int val;
-diff --git a/sound/soc/codecs/cs35l56.c b/sound/soc/codecs/cs35l56.c
-index 758dfdf9d3ea..7cac9812f5b5 100644
---- a/sound/soc/codecs/cs35l56.c
-+++ b/sound/soc/codecs/cs35l56.c
-@@ -63,131 +63,6 @@ static int cs35l56_dspwait_put_volsw(struct snd_kcontrol *kcontrol,
- 	return snd_soc_put_volsw(kcontrol, ucontrol);
- }
- 
--static const unsigned short cs35l56_asp1_mixer_regs[] = {
--	CS35L56_ASP1TX1_INPUT, CS35L56_ASP1TX2_INPUT,
--	CS35L56_ASP1TX3_INPUT, CS35L56_ASP1TX4_INPUT,
--};
--
--static const char * const cs35l56_asp1_mux_control_names[] = {
--	"ASP1 TX1 Source", "ASP1 TX2 Source", "ASP1 TX3 Source", "ASP1 TX4 Source"
--};
--
--static int cs35l56_sync_asp1_mixer_widgets_with_firmware(struct cs35l56_private *cs35l56)
--{
--	struct snd_soc_dapm_context *dapm = snd_soc_component_get_dapm(cs35l56->component);
--	const char *prefix = cs35l56->component->name_prefix;
--	char full_name[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
--	const char *name;
--	struct snd_kcontrol *kcontrol;
--	struct soc_enum *e;
--	unsigned int val[4];
--	int i, item, ret;
--
--	if (cs35l56->asp1_mixer_widgets_initialized)
--		return 0;
--
--	/*
--	 * Resume so we can read the registers from silicon if the regmap
--	 * cache has not yet been populated.
--	 */
--	ret = pm_runtime_resume_and_get(cs35l56->base.dev);
--	if (ret < 0)
--		return ret;
--
--	/* Wait for firmware download and reboot */
--	cs35l56_wait_dsp_ready(cs35l56);
--
--	ret = regmap_bulk_read(cs35l56->base.regmap, CS35L56_ASP1TX1_INPUT,
--			       val, ARRAY_SIZE(val));
--
--	pm_runtime_mark_last_busy(cs35l56->base.dev);
--	pm_runtime_put_autosuspend(cs35l56->base.dev);
--
--	if (ret) {
--		dev_err(cs35l56->base.dev, "Failed to read ASP1 mixer regs: %d\n", ret);
--		return ret;
--	}
--
--	for (i = 0; i < ARRAY_SIZE(cs35l56_asp1_mux_control_names); ++i) {
--		name = cs35l56_asp1_mux_control_names[i];
--
--		if (prefix) {
--			snprintf(full_name, sizeof(full_name), "%s %s", prefix, name);
--			name = full_name;
--		}
--
--		kcontrol = snd_soc_card_get_kcontrol_locked(dapm->card, name);
--		if (!kcontrol) {
--			dev_warn(cs35l56->base.dev, "Could not find control %s\n", name);
--			continue;
--		}
--
--		e = (struct soc_enum *)kcontrol->private_value;
--		item = snd_soc_enum_val_to_item(e, val[i] & CS35L56_ASP_TXn_SRC_MASK);
--		snd_soc_dapm_mux_update_power(dapm, kcontrol, item, e, NULL);
--	}
--
--	cs35l56->asp1_mixer_widgets_initialized = true;
--
--	return 0;
--}
--
--static int cs35l56_dspwait_asp1tx_get(struct snd_kcontrol *kcontrol,
--				      struct snd_ctl_elem_value *ucontrol)
--{
--	struct snd_soc_component *component = snd_soc_dapm_kcontrol_component(kcontrol);
--	struct cs35l56_private *cs35l56 = snd_soc_component_get_drvdata(component);
--	struct soc_enum *e = (struct soc_enum *)kcontrol->private_value;
--	int index = e->shift_l;
--	unsigned int addr, val;
--	int ret;
--
--	ret = cs35l56_sync_asp1_mixer_widgets_with_firmware(cs35l56);
--	if (ret)
--		return ret;
--
--	addr = cs35l56_asp1_mixer_regs[index];
--	ret = regmap_read(cs35l56->base.regmap, addr, &val);
--	if (ret)
--		return ret;
--
--	val &= CS35L56_ASP_TXn_SRC_MASK;
--	ucontrol->value.enumerated.item[0] = snd_soc_enum_val_to_item(e, val);
--
--	return 0;
--}
--
--static int cs35l56_dspwait_asp1tx_put(struct snd_kcontrol *kcontrol,
--				      struct snd_ctl_elem_value *ucontrol)
--{
--	struct snd_soc_component *component = snd_soc_dapm_kcontrol_component(kcontrol);
--	struct snd_soc_dapm_context *dapm = snd_soc_dapm_kcontrol_dapm(kcontrol);
--	struct cs35l56_private *cs35l56 = snd_soc_component_get_drvdata(component);
--	struct soc_enum *e = (struct soc_enum *)kcontrol->private_value;
--	int item = ucontrol->value.enumerated.item[0];
--	int index = e->shift_l;
--	unsigned int addr, val;
--	bool changed;
--	int ret;
--
--	ret = cs35l56_sync_asp1_mixer_widgets_with_firmware(cs35l56);
--	if (ret)
--		return ret;
--
--	addr = cs35l56_asp1_mixer_regs[index];
--	val = snd_soc_enum_item_to_val(e, item);
--
--	ret = regmap_update_bits_check(cs35l56->base.regmap, addr,
--				       CS35L56_ASP_TXn_SRC_MASK, val, &changed);
--	if (ret)
--		return ret;
--
--	if (changed)
--		snd_soc_dapm_mux_update_power(dapm, kcontrol, item, e, NULL);
--
--	return changed;
--}
--
- static DECLARE_TLV_DB_SCALE(vol_tlv, -10000, 25, 0);
- 
- static const struct snd_kcontrol_new cs35l56_controls[] = {
-@@ -206,44 +81,40 @@ static const struct snd_kcontrol_new cs35l56_controls[] = {
- };
- 
- static SOC_VALUE_ENUM_SINGLE_DECL(cs35l56_asp1tx1_enum,
--				  SND_SOC_NOPM,
--				  0, 0,
-+				  CS35L56_ASP1TX1_INPUT,
-+				  0, CS35L56_ASP_TXn_SRC_MASK,
- 				  cs35l56_tx_input_texts,
- 				  cs35l56_tx_input_values);
- 
- static const struct snd_kcontrol_new asp1_tx1_mux =
--	SOC_DAPM_ENUM_EXT("ASP1TX1 SRC", cs35l56_asp1tx1_enum,
--			  cs35l56_dspwait_asp1tx_get, cs35l56_dspwait_asp1tx_put);
-+	SOC_DAPM_ENUM("ASP1TX1 SRC", cs35l56_asp1tx1_enum);
- 
- static SOC_VALUE_ENUM_SINGLE_DECL(cs35l56_asp1tx2_enum,
--				  SND_SOC_NOPM,
--				  1, 0,
-+				  CS35L56_ASP1TX2_INPUT,
-+				  0, CS35L56_ASP_TXn_SRC_MASK,
- 				  cs35l56_tx_input_texts,
- 				  cs35l56_tx_input_values);
- 
- static const struct snd_kcontrol_new asp1_tx2_mux =
--	SOC_DAPM_ENUM_EXT("ASP1TX2 SRC", cs35l56_asp1tx2_enum,
--			  cs35l56_dspwait_asp1tx_get, cs35l56_dspwait_asp1tx_put);
-+	SOC_DAPM_ENUM("ASP1TX2 SRC", cs35l56_asp1tx2_enum);
- 
- static SOC_VALUE_ENUM_SINGLE_DECL(cs35l56_asp1tx3_enum,
--				  SND_SOC_NOPM,
--				  2, 0,
-+				  CS35L56_ASP1TX3_INPUT,
-+				  0, CS35L56_ASP_TXn_SRC_MASK,
- 				  cs35l56_tx_input_texts,
- 				  cs35l56_tx_input_values);
- 
- static const struct snd_kcontrol_new asp1_tx3_mux =
--	SOC_DAPM_ENUM_EXT("ASP1TX3 SRC", cs35l56_asp1tx3_enum,
--			  cs35l56_dspwait_asp1tx_get, cs35l56_dspwait_asp1tx_put);
-+	SOC_DAPM_ENUM("ASP1TX3 SRC", cs35l56_asp1tx3_enum);
- 
- static SOC_VALUE_ENUM_SINGLE_DECL(cs35l56_asp1tx4_enum,
--				  SND_SOC_NOPM,
--				  3, 0,
-+				  CS35L56_ASP1TX4_INPUT,
-+				  0, CS35L56_ASP_TXn_SRC_MASK,
- 				  cs35l56_tx_input_texts,
- 				  cs35l56_tx_input_values);
- 
- static const struct snd_kcontrol_new asp1_tx4_mux =
--	SOC_DAPM_ENUM_EXT("ASP1TX4 SRC", cs35l56_asp1tx4_enum,
--			  cs35l56_dspwait_asp1tx_get, cs35l56_dspwait_asp1tx_put);
-+	SOC_DAPM_ENUM("ASP1TX4 SRC", cs35l56_asp1tx4_enum);
- 
- static SOC_VALUE_ENUM_SINGLE_DECL(cs35l56_sdw1tx1_enum,
- 				CS35L56_SWIRE_DP3_CH1_INPUT,
-@@ -281,21 +152,6 @@ static SOC_VALUE_ENUM_SINGLE_DECL(cs35l56_sdw1tx4_enum,
- static const struct snd_kcontrol_new sdw1_tx4_mux =
- 	SOC_DAPM_ENUM("SDW1TX4 SRC", cs35l56_sdw1tx4_enum);
- 
--static int cs35l56_asp1_cfg_event(struct snd_soc_dapm_widget *w,
--				  struct snd_kcontrol *kcontrol, int event)
--{
--	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
--	struct cs35l56_private *cs35l56 = snd_soc_component_get_drvdata(component);
--
--	switch (event) {
--	case SND_SOC_DAPM_PRE_PMU:
--		/* Override register values set by firmware boot */
--		return cs35l56_force_sync_asp1_registers_from_cache(&cs35l56->base);
--	default:
--		return 0;
--	}
--}
--
- static int cs35l56_play_event(struct snd_soc_dapm_widget *w,
- 			      struct snd_kcontrol *kcontrol, int event)
- {
-@@ -332,9 +188,6 @@ static const struct snd_soc_dapm_widget cs35l56_dapm_widgets[] = {
- 	SND_SOC_DAPM_REGULATOR_SUPPLY("VDD_B", 0, 0),
- 	SND_SOC_DAPM_REGULATOR_SUPPLY("VDD_AMP", 0, 0),
- 
--	SND_SOC_DAPM_SUPPLY("ASP1 CFG", SND_SOC_NOPM, 0, 0, cs35l56_asp1_cfg_event,
--			    SND_SOC_DAPM_PRE_PMU),
--
- 	SND_SOC_DAPM_SUPPLY("PLAY", SND_SOC_NOPM, 0, 0, cs35l56_play_event,
- 			    SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_POST_PMD),
- 
-@@ -402,9 +255,6 @@ static const struct snd_soc_dapm_route cs35l56_audio_map[] = {
- 	{ "AMP", NULL, "VDD_B" },
- 	{ "AMP", NULL, "VDD_AMP" },
- 
--	{ "ASP1 Playback", NULL, "ASP1 CFG" },
--	{ "ASP1 Capture", NULL, "ASP1 CFG" },
--
- 	{ "ASP1 Playback", NULL, "PLAY" },
- 	{ "SDW1 Playback", NULL, "PLAY" },
- 
-@@ -455,14 +305,9 @@ static int cs35l56_asp_dai_set_fmt(struct snd_soc_dai *codec_dai, unsigned int f
- {
- 	struct cs35l56_private *cs35l56 = snd_soc_component_get_drvdata(codec_dai->component);
- 	unsigned int val;
--	int ret;
- 
- 	dev_dbg(cs35l56->base.dev, "%s: %#x\n", __func__, fmt);
- 
--	ret = cs35l56_init_asp1_regs_for_driver_control(&cs35l56->base);
--	if (ret)
--		return ret;
--
- 	switch (fmt & SND_SOC_DAIFMT_CLOCK_PROVIDER_MASK) {
- 	case SND_SOC_DAIFMT_CBC_CFC:
- 		break;
-@@ -536,11 +381,6 @@ static int cs35l56_asp_dai_set_tdm_slot(struct snd_soc_dai *dai, unsigned int tx
- 					unsigned int rx_mask, int slots, int slot_width)
- {
- 	struct cs35l56_private *cs35l56 = snd_soc_component_get_drvdata(dai->component);
--	int ret;
--
--	ret = cs35l56_init_asp1_regs_for_driver_control(&cs35l56->base);
--	if (ret)
--		return ret;
- 
- 	if ((slots == 0) || (slot_width == 0)) {
- 		dev_dbg(cs35l56->base.dev, "tdm config cleared\n");
-@@ -589,11 +429,6 @@ static int cs35l56_asp_dai_hw_params(struct snd_pcm_substream *substream,
- 	struct cs35l56_private *cs35l56 = snd_soc_component_get_drvdata(dai->component);
- 	unsigned int rate = params_rate(params);
- 	u8 asp_width, asp_wl;
--	int ret;
--
--	ret = cs35l56_init_asp1_regs_for_driver_control(&cs35l56->base);
--	if (ret)
--		return ret;
- 
- 	asp_wl = params_width(params);
- 	if (cs35l56->asp_slot_width)
-@@ -650,11 +485,7 @@ static int cs35l56_asp_dai_set_sysclk(struct snd_soc_dai *dai,
- 				      int clk_id, unsigned int freq, int dir)
- {
- 	struct cs35l56_private *cs35l56 = snd_soc_component_get_drvdata(dai->component);
--	int freq_id, ret;
--
--	ret = cs35l56_init_asp1_regs_for_driver_control(&cs35l56->base);
--	if (ret)
--		return ret;
-+	int freq_id;
- 
- 	if (freq == 0) {
- 		cs35l56->sysclk_set = false;
-@@ -1035,13 +866,6 @@ static int cs35l56_component_probe(struct snd_soc_component *component)
- 	debugfs_create_bool("can_hibernate", 0444, debugfs_root, &cs35l56->base.can_hibernate);
- 	debugfs_create_bool("fw_patched", 0444, debugfs_root, &cs35l56->base.fw_patched);
- 
--	/*
--	 * The widgets for the ASP1TX mixer can't be initialized
--	 * until the firmware has been downloaded and rebooted.
--	 */
--	regcache_drop_region(cs35l56->base.regmap, CS35L56_ASP1TX1_INPUT, CS35L56_ASP1TX4_INPUT);
--	cs35l56->asp1_mixer_widgets_initialized = false;
--
- 	queue_work(cs35l56->dsp_wq, &cs35l56->dsp_work);
- 
- 	return 0;
-@@ -1432,9 +1256,6 @@ int cs35l56_common_probe(struct cs35l56_private *cs35l56)
- 	cs35l56->base.cal_index = -1;
- 	cs35l56->speaker_id = -ENOENT;
- 
--	/* Assume that the firmware owns ASP1 until we know different */
--	cs35l56->base.fw_owns_asp1 = true;
--
- 	dev_set_drvdata(cs35l56->base.dev, cs35l56);
- 
- 	cs35l56_fill_supply_names(cs35l56->supplies);
-diff --git a/sound/soc/codecs/cs35l56.h b/sound/soc/codecs/cs35l56.h
-index b000e7365e40..200f695efca3 100644
---- a/sound/soc/codecs/cs35l56.h
-+++ b/sound/soc/codecs/cs35l56.h
-@@ -51,7 +51,6 @@ struct cs35l56_private {
- 	u8 asp_slot_count;
- 	bool tdm_mode;
- 	bool sysclk_set;
--	bool asp1_mixer_widgets_initialized;
- 	u8 old_sdw_clock_scale;
- };
- 
--- 
-2.39.2
+The jh7110-pine64-star64.dts is in linux-next tree. I have not noticed it b=
+efore.
+Should I squash this to my patch? Can my dts patch be accepted in kernel 6.=
+11? Thanks
+(The same with Starfive PCIe patch set in linux-next, which will be merge i=
+n 6.11, right?)
 
