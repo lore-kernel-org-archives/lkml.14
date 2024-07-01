@@ -1,143 +1,113 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFF2C171C9;
-	Mon,  1 Jul 2024 02:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from cmccmta1.chinamobile.com (cmccmta2.chinamobile.com [111.22.67.135])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8F9110F1;
+	Mon,  1 Jul 2024 02:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.22.67.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719799997; cv=none; b=JGa6p6CYYikf1jT7LQ14oeFqamaI1uQUIg1s5z0WdXRABD0HXYg/QmMTt8+Sqrn1lFJZTG4ogXR3cD6GfHabflOCgTpm3o3ceFWavbxhKO2L9GqonA8bgKLybjoCp60K0BA28IytxjP83AxQmVQnKy6Q9zfITLVUO7axAOa7DdI=
+	t=1719800032; cv=none; b=X1SJ/9oAqZzxxpOFaa9Ir7sLP5hiusIsum05Xgv3189lATcotVLfg0DHPITbZlin4f9XOcr362rvwdoGbPcqD6l8tjy8VKhJtyA73TKxtyCImyTGEEXn7U08qCDGNQ+dM8e+l01IjC/+cLUc5WEdh5nlRFnFu+D8/TWOTQc75pM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719799997; c=relaxed/simple;
-	bh=92AGGsrcbotljDKeMUOW1yDTBBo1NNwetVgmd8RhVRo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YeQNCB8cei0L5xndVV1u+F3RGA4hr00N4Sq7D8c8d0h2yx0E862Y9ZacksLqbrif0roIe/JNp7TySBZnJe7Psm0O9X0hQOWip8SA8uF+73vnqTU6Q6c13AyBobISNJXi71TQoLaEBYRnT0NO+nvtwho/Qu0fv+SyfQm/bqyxPy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Dv9VK0Kx; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Dv9VK0Kx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=qOVWR
-	6aXQqry3nItjJ+e8OBR8po78qC5/g5g+JfJjCI=; b=Dv9VK0KxkmIm3q8vlu8S3
-	FYk+DNS92yV5sq07dLJI6MBIbfOlRVWSa4McQetZLPP/Vb76Fj18whHGrXK1O7/y
-	kZsES1jwlzwt1yjFma73VbhP8H77wgQ7TasybTrZOoSOEa8YMxFg9D6nitdcaOS4
-	u9vN3hfLB4+2w6VXJ/5hts=
-Received: from localhost.localdomain (unknown [223.104.68.114])
-	by gzga-smtp-mta-g3-3 (Coremail) with SMTP id _____wD3v0uFEIJm1iKSBA--.55558S2;
-	Mon, 01 Jul 2024 10:12:22 +0800 (CST)
-From: Slark Xiao <slark_xiao@163.com>
-To: manivannan.sadhasivam@linaro.org,
-	loic.poulain@linaro.org,
-	ryazanov.s.a@gmail.com,
-	johannes@sipsolutions.net,
-	quic_jhugo@quicinc.com
-Cc: netdev@vger.kernel.org,
-	mhi@lists.linux.dev,
-	linux-arm-msm@vger.kernel.org,
+	s=arc-20240116; t=1719800032; c=relaxed/simple;
+	bh=xX4Ak7E42QQc9wwOJPl3DEy10f6SvXhNxNVxxv/+pwA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=AlwlswcyeiMWg0ZSdNKpslYDTsMbv+bvvWOmzUkogr1FxRx5rdbaOnn9Evd1Rz73iF2vE/7FRTRtaelA5Yvkkarjcv2H7ZOeb2y5aCciRS7nwdCncPXWKeRr+3YiZkHfGmlUW11tToJACl9W28RQ4yK+1XGc4LKLUzE405VrziI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com; spf=pass smtp.mailfrom=cmss.chinamobile.com; arc=none smtp.client-ip=111.22.67.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
+	by rmmx-syy-dmz-app03-12003 (RichMail) with SMTP id 2ee3668210d135d-a7b66;
+	Mon, 01 Jul 2024 10:13:38 +0800 (CST)
+X-RM-TRANSID:2ee3668210d135d-a7b66
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from ubuntu.localdomain (unknown[10.54.5.252])
+	by rmsmtp-syy-appsvr01-12001 (RichMail) with SMTP id 2ee1668210d0cd3-58186;
+	Mon, 01 Jul 2024 10:13:37 +0800 (CST)
+X-RM-TRANSID:2ee1668210d0cd3-58186
+From: Zhu Jun <zhujun2@cmss.chinamobile.com>
+To: daniel@iogearbox.net
+Cc: andrii@kernel.org,
+	ast@kernel.org,
+	bpf@vger.kernel.org,
+	eddyz87@gmail.com,
+	haoluo@google.com,
+	john.fastabend@gmail.com,
+	jolsa@kernel.org,
+	kpsingh@kernel.org,
 	linux-kernel@vger.kernel.org,
-	Slark Xiao <slark_xiao@163.com>
-Subject: [PATCH v4 1/3] bus: mhi: host: Add Foxconn SDX72 related support
-Date: Mon,  1 Jul 2024 10:12:14 +0800
-Message-Id: <20240701021216.17734-1-slark_xiao@163.com>
-X-Mailer: git-send-email 2.25.1
+	linux-kselftest@vger.kernel.org,
+	martin.lau@linux.dev,
+	mykolal@fb.com,
+	sdf@fomichev.me,
+	shuah@kernel.org,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	zhujun2@cmss.chinamobile.com
+Subject: [PATCH] selftests/bpf:fix a resource leak
+Date: Sun, 30 Jun 2024 19:13:31 -0700
+Message-Id: <20240701021331.3057-1-zhujun2@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <847bcc7c-e54e-648a-be47-59e0a6d0853e@iogearbox.net>
+References: <847bcc7c-e54e-648a-be47-59e0a6d0853e@iogearbox.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3v0uFEIJm1iKSBA--.55558S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxur15Kry7Zw47JF4rKw4UArb_yoW5KrykpF
-	s3Z3yUta1kJFWrKFW8A34DG3Z5GrsxCr93KFnrKw1Igw1Yy3yYqFZ7K342kryYy3sFqryS
-	yF95WFy293ZrJF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pRijjhUUUUU=
-X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/1tbiRwcPZGV4KDQrogAAsj
 
-Align with Qcom SDX72, add ready timeout item for Foxconn SDX72.
-And also, add firehose support since SDX72.
+The requested resources should be closed before return
+in main(), otherwise resource leak will occur
 
-Signed-off-by: Slark Xiao <slark_xiao@163.com>
+Signed-off-by: Zhu Jun <zhujun2@cmss.chinamobile.com>
 ---
-v2: (1). Update the edl file path and name (2). Set SDX72 support
-trigger edl mode by default
-v3: Divide into 2 parts for Foxconn sdx72 platform
----
- drivers/bus/mhi/host/pci_generic.c | 43 ++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ tools/testing/selftests/bpf/test_sockmap.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/pci_generic.c
-index 35ae7cd0711f..1fb1c2f2fe12 100644
---- a/drivers/bus/mhi/host/pci_generic.c
-+++ b/drivers/bus/mhi/host/pci_generic.c
-@@ -399,6 +399,8 @@ static const struct mhi_channel_config mhi_foxconn_sdx55_channels[] = {
- 	MHI_CHANNEL_CONFIG_DL(13, "MBIM", 32, 0),
- 	MHI_CHANNEL_CONFIG_UL(32, "DUN", 32, 0),
- 	MHI_CHANNEL_CONFIG_DL(33, "DUN", 32, 0),
-+	MHI_CHANNEL_CONFIG_UL_FP(34, "FIREHOSE", 32, 0),
-+	MHI_CHANNEL_CONFIG_DL_FP(35, "FIREHOSE", 32, 0),
- 	MHI_CHANNEL_CONFIG_HW_UL(100, "IP_HW0_MBIM", 128, 2),
- 	MHI_CHANNEL_CONFIG_HW_DL(101, "IP_HW0_MBIM", 128, 3),
- };
-@@ -419,6 +421,16 @@ static const struct mhi_controller_config modem_foxconn_sdx55_config = {
- 	.event_cfg = mhi_foxconn_sdx55_events,
- };
+diff --git a/tools/testing/selftests/bpf/test_sockmap.c b/tools/testing/selftests/bpf/test_sockmap.c
+index a34e95040994..d51af986d9d8 100644
+--- a/tools/testing/selftests/bpf/test_sockmap.c
++++ b/tools/testing/selftests/bpf/test_sockmap.c
+@@ -2075,8 +2075,10 @@ int main(int argc, char **argv)
  
-+static const struct mhi_controller_config modem_foxconn_sdx72_config = {
-+	.max_channels = 128,
-+	.timeout_ms = 20000,
-+	.ready_timeout_ms = 50000,
-+	.num_channels = ARRAY_SIZE(mhi_foxconn_sdx55_channels),
-+	.ch_cfg = mhi_foxconn_sdx55_channels,
-+	.num_events = ARRAY_SIZE(mhi_foxconn_sdx55_events),
-+	.event_cfg = mhi_foxconn_sdx55_events,
-+};
-+
- static const struct mhi_pci_dev_info mhi_foxconn_sdx55_info = {
- 	.name = "foxconn-sdx55",
- 	.fw = "qcom/sdx55m/sbl1.mbn",
-@@ -488,6 +500,28 @@ static const struct mhi_pci_dev_info mhi_foxconn_dw5932e_info = {
- 	.sideband_wake = false,
- };
+ 	if (!cg_fd) {
+ 		cg_fd = cgroup_setup_and_join(CG_PATH);
+-		if (cg_fd < 0)
+-			return cg_fd;
++		if (cg_fd < 0) {
++			err = cg_fd;
++			goto out1;
++		}
+ 		cg_created = 1;
+ 	}
  
-+static const struct mhi_pci_dev_info mhi_foxconn_t99w515_info = {
-+	.name = "foxconn-t99w515",
-+	.edl = "fox/sdx72m/edl.mbn",
-+	.edl_trigger = true,
-+	.config = &modem_foxconn_sdx72_config,
-+	.bar_num = MHI_PCI_DEFAULT_BAR_NUM,
-+	.dma_data_width = 32,
-+	.mru_default = 32768,
-+	.sideband_wake = false,
-+};
-+
-+static const struct mhi_pci_dev_info mhi_foxconn_dw5934e_info = {
-+	.name = "foxconn-dw5934e",
-+	.edl = "fox/sdx72m/edl.mbn",
-+	.edl_trigger = true,
-+	.config = &modem_foxconn_sdx72_config,
-+	.bar_num = MHI_PCI_DEFAULT_BAR_NUM,
-+	.dma_data_width = 32,
-+	.mru_default = 32768,
-+	.sideband_wake = false,
-+};
-+
- static const struct mhi_channel_config mhi_mv3x_channels[] = {
- 	MHI_CHANNEL_CONFIG_UL(0, "LOOPBACK", 64, 0),
- 	MHI_CHANNEL_CONFIG_DL(1, "LOOPBACK", 64, 0),
-@@ -720,6 +754,15 @@ static const struct pci_device_id mhi_pci_id_table[] = {
- 	/* DW5932e (sdx62), Non-eSIM */
- 	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xe0f9),
- 		.driver_data = (kernel_ulong_t) &mhi_foxconn_dw5932e_info },
-+	/* T99W515 (sdx72) */
-+	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xe118),
-+		.driver_data = (kernel_ulong_t) &mhi_foxconn_t99w515_info },
-+	/* DW5934e(sdx72), With eSIM */
-+	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xe11d),
-+		.driver_data = (kernel_ulong_t) &mhi_foxconn_dw5934e_info },
-+	/* DW5934e(sdx72), Non-eSIM */
-+	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xe11e),
-+		.driver_data = (kernel_ulong_t) &mhi_foxconn_dw5934e_info },
- 	/* MV31-W (Cinterion) */
- 	{ PCI_DEVICE(PCI_VENDOR_ID_THALES, 0x00b3),
- 		.driver_data = (kernel_ulong_t) &mhi_mv31_info },
+@@ -2092,7 +2094,7 @@ int main(int argc, char **argv)
+ 	if (err) {
+ 		fprintf(stderr, "populate program: (%s) %s\n",
+ 			bpf_file, strerror(errno));
+-		return 1;
++		goto out;
+ 	}
+ 	running = 1;
+ 
+@@ -2105,13 +2107,14 @@ int main(int argc, char **argv)
+ 
+ 	err = run_options(&options, cg_fd, test);
+ out:
++	close(cg_fd);
++	if (cg_created)
++		cleanup_cgroup_environment();
++out1:
+ 	if (options.whitelist)
+ 		free(options.whitelist);
+ 	if (options.blacklist)
+ 		free(options.blacklist);
+-	close(cg_fd);
+-	if (cg_created)
+-		cleanup_cgroup_environment();
+ 	return err;
+ }
+ 
 -- 
-2.25.1
+2.17.1
+
+
 
