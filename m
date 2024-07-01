@@ -1,158 +1,108 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0961E28F4
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 15:33:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D5628F4;
+	Mon,  1 Jul 2024 15:34:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719848019; cv=none; b=P983Upgl57vxZh+3CxQrN3Iuo9CCqvXpfixmSVqU6d9I/eAx8HlqluA7jyvaxBnO/srt2WcIJt9Rjp6hw2UdkUI96JeBm1ROcKYB2BnMxcBn0GnZ6A3sQ7HBk4P2X3EYHDq/GqhtN7hQj9zjBNqPz77FiPg68n5cA6ev8XH16E8=
+	t=1719848086; cv=none; b=jDnjx5FpHxHOI8gajn/llJTrOF4+riEuA252mxM2551ONlC4NyENTGAdXZgwvXaNYklAG482tqAL4bRYy8nvRSMkSVwYv6ctJ/fUj+ofnLHS0kTL+NyX+6FXQfoRSXIePzkWo8s8G5/OcPwn7S7uW34i/0wrc8xyjk2QhKZORAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719848019; c=relaxed/simple;
-	bh=/rzIGcl+EawX5xeAIo09+kQuMmPfnSkoh236ozH+F0I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qRSqVGT8WxlwqvLVi0Kb1QfqLLg7fE7VbrGlF/+7TCcA3g+ATGAdwWtP52E+FB57NvUAPagBpBopTmOcXR26PmjIMu53PE7GfGDrKWJsODLvbQKIXgvF0TJ2SCurQj83EmkBKJ9wpHlSb6fjT4Zf/c8RK01n35FY+GC4wDbpRyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=YWww/ma6; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1719848086; c=relaxed/simple;
+	bh=iq8bWnF6w36ZZ3oKBLDL7Q66Va//VDQRpFTyD5AraCo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RnT1wDuNTktSuScjWDngLrPqb/FpAPbOeEt5NqWlIQX7s+tfdE9hE0I8XydPEoJz1pmmUSGNV3IUvEYadUcOo57ZmMHUBJHwkKP7AdPf4c0vWV+DNpuucfDl2aOfGfHrf8fHmRkqp1qAEDS3gftdAsvDSAVk4VH35YBgB9EhJMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eW64tHs7; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="YWww/ma6"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2ec61eeed8eso39079781fa.0
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 08:33:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1719848014; x=1720452814; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PSEsfiIduoMSYnAdmjobGnIBcHy7WCzxH+uV65l0j+0=;
-        b=YWww/ma6z/jyrRB9SERsyUlLe5ucrNKZmSFekYicfB8/IH2nRPJm0K/UdsVbI5aJr/
-         EVYn+2mFik1OJos6BRaRw08/lwCFaADcBdwjTdGDOhmhJH60qwi/fmehw5QX454VuwfU
-         iIvmouUBTgHxbRxzQLenpONjt0A3fP11BEO/XQgjixqh267Q+TzARsXUq5QKLjw2g6B9
-         /m0N4F9K41xxN+HxicgEnhRbBM4Clevz3DTRnrkJbhWGPaS0o43HHtG3yyRqWq0BoVU0
-         5nXd5wwzA5G1llsOKBgRvgmyd3wsglQRb+K9TfjCw+ZT1FJB+KtqMmBMkAB/voV3QKSE
-         Xn4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719848014; x=1720452814;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PSEsfiIduoMSYnAdmjobGnIBcHy7WCzxH+uV65l0j+0=;
-        b=gYhLjf1+fBFhBvnV27m5wO858YH1fOa09mqiC9zljhyJIOPTl27INbZ64pIx3EEzL3
-         b6AGyvxNTAlQWMDgLgHyAjhZKQpjfgydPJZL3ExL0PlAEcc5Q7aWQlwrKKaXIYyuLOCP
-         X07xpBEHxMSqKzd5giqRBJJrLmqLcmDiaE+vcrRF1A0iZhMoaFp61ci92qYd1+tdKEQr
-         fugmkWmyLZcYsbyHdLQR7zdPsZIDspYxkIVxhoUTwuJHjHLzoibyU77K4PuSVs3+a8mR
-         Y8XWqVajf7OTM8ASABB0ACtMOFRZh7E1qeduBoIMQQaq8vCCiGiYTW15eIlTQgN4QGfU
-         6EqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJ5H/iCexhCrJJqKbu/LPGOGzO04HRQ/32Q/9xqMHzQfGKgPsr33UDBYpvNwp2JZrNLpQRF4cf2fINTX/heFD1zLfAyO2eFHGGSqqi
-X-Gm-Message-State: AOJu0YxhKSN3yhnDqF0ISPtQvSnpHwgCCT13vB8L3YANxquO7bkoDpdC
-	0vHYVTwwmV1//YRDrqpS+ZuYuqdLuyWKrk+SSJjTA7nL5etOe95M0okZhRdJ3kIZoYQnd2qbFpt
-	a
-X-Google-Smtp-Source: AGHT+IEUgHtWdqwGOHvvW6PWQm/0rPo7mTo0TqKawefzKpu+qv9w8VFcNWVj+sQbUQ5O0VQb7CfI2Q==
-X-Received: by 2002:a2e:9509:0:b0:2ee:494c:c3d3 with SMTP id 38308e7fff4ca-2ee5e6bca4cmr38923251fa.43.1719848014117;
-        Mon, 01 Jul 2024 08:33:34 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70803ecfc61sm6665390b3a.132.2024.07.01.08.33.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 08:33:33 -0700 (PDT)
-Date: Mon, 1 Jul 2024 17:33:25 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH printk v2 12/18] printk: Add kthread for all legacy
- consoles
-Message-ID: <ZoLMRQhrwZnWMuj9@pathway.suse.cz>
-References: <20240603232453.33992-1-john.ogness@linutronix.de>
- <20240603232453.33992-13-john.ogness@linutronix.de>
- <Zn6iq3n2ggL138Gs@pathway.suse.cz>
- <87cyo1xnmw.fsf@jogness.linutronix.de>
- <Zn67hDCEHdgtYPv3@pathway.suse.cz>
- <877ce9xim6.fsf@jogness.linutronix.de>
- <874j9dxdr0.fsf@jogness.linutronix.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eW64tHs7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719848084; x=1751384084;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=iq8bWnF6w36ZZ3oKBLDL7Q66Va//VDQRpFTyD5AraCo=;
+  b=eW64tHs7rEe1TdVUZRaLDRCc/bXFVf9LuGFNkqez9CQUAkMxeDxDPJnX
+   +usxlRBqxJTjjaGdDATFHPPvpHryFFtSsolsJSOM1HSWmrfhQWOQqk7YA
+   jbgJSJjMZ8mZVymG6Q96YJm4kBvL4CLSfzy9QCSUVQilOmeS/xf/z7lpF
+   7Focolt2bhn+g21hp0sucOQ/32fUwK9BzYx2+vxB0JjydFT5rIP0kvsaW
+   Efp5Hw3yKYAB1vt0h7Fo9f50APFzWOvoHMMgvJGexDNQOrei58gt8bcJH
+   SBfh2Y4cguOLQojl5ZHAZCgBGPTm+kZ5jm7/OqQbITSynzovECJQGpBxX
+   A==;
+X-CSE-ConnectionGUID: o5KnzWbJRoaa5bdlmehGXw==
+X-CSE-MsgGUID: v5om0M9TRwGLtAK5OvzHEw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="34527578"
+X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
+   d="scan'208";a="34527578"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 08:34:43 -0700
+X-CSE-ConnectionGUID: YfCSuWqcRQ+x9qFnKqd/Gw==
+X-CSE-MsgGUID: Y6xwroDyRqScS3SLIcaBvw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
+   d="scan'208";a="50446989"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 08:34:44 -0700
+Date: Mon, 1 Jul 2024 08:39:56 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: Xin Li <xin@zytor.com>
+Cc: X86 Kernel <x86@kernel.org>, Sean Christopherson <seanjc@google.com>,
+ LKML <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Xin Li
+ <xin3.li@intel.com>, linux-perf-users@vger.kernel.org, Peter Zijlstra
+ <peterz@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>, Tony Luck
+ <tony.luck@intel.com>, Andy Lutomirski <luto@kernel.org>, acme@kernel.org,
+ kan.liang@linux.intel.com, Andi Kleen <andi.kleen@intel.com>, "Mehta,
+ Sohil" <sohil.mehta@intel.com>, Zeng Guang <guang.zeng@intel.com>,
+ jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v3 06/11] KVM: VMX: Expand FRED kvm entry with event
+ data
+Message-ID: <20240701083956.4460bb06@jacob-builder>
+In-Reply-To: <d385c639-d2b1-4068-b386-98c456265926@zytor.com>
+References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
+	<20240628201839.673086-7-jacob.jun.pan@linux.intel.com>
+	<d385c639-d2b1-4068-b386-98c456265926@zytor.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874j9dxdr0.fsf@jogness.linutronix.de>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri 2024-06-28 18:02:19, John Ogness wrote:
-> Hi Petr,
+
+On Fri, 28 Jun 2024 21:01:28 -0700, Xin Li <xin@zytor.com> wrote:
+
+> On 6/28/2024 1:18 PM, Jacob Pan wrote:
+> > From: Zeng Guang <guang.zeng@intel.com>
+> > 
+> > For VM exits caused by events (NMI, #DB, and #PF) delivered by FRED, the
+> > event data is saved in the exit-qualification field. (FRED spec.
+> > 10.6.2)  
 > 
-> Your comments are sending me into deep thought about this
-> situation. Some more comments from me...
+> I don't like mentioning #DB/#PF here, they belong to the guest that was 
+> running, and KVM handles them.
+It is part of the spec.
+
+> While NMIs belong to host, and the host NMI handler needs event data
+> saved in VMCS in NMI induced VM exits.
 > 
-> On 2024-06-28, John Ogness <john.ogness@linutronix.de> wrote:
-> > On PREEMPT_RT, legacy consoles are not allowed to print from
-> > non-preemptible contexts because they use spinlocks (rtmutexes).
+> Or you paint a full picture.
+I will add your explanation that #DB/#PF belong to the guest so readers can
+get a full picture of both usage and spec.
 > 
-> The above statement is not true for legacy _boot_ consoles
-> (earlycon/earlyprintk). These are lockless and are intended to execute
-> from any context (except NMI due to semaphore limitations).
+> > Expand FRED KVM entry interface to include the event data obtained from
+> > the exit qualification.
+> > 
+> > Signed-off-by: Zeng Guang <guang.zeng@intel.com>
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>  
 > 
-> I hate boot consoles because they don't use the Linux driver model and
-> rely fully on external synchronization. This has made the rework very
-> difficult and is actually the core reason why our work was reverted back
-> in 5.19-rc4. But for debugging early boot problems, they are quite
-> useful.
->
-> I have a new proposal. What if we allow boot consoles to always print in
-> the caller context (for any preemption model)? I hacked a quick test
-> together by providing console_flush_all() an extra argument for printing
-> _only_ on boot consoles. Then in vprintk_emit(), I always do a
-> boot-console-only-flush (under console_trylock) after storing the record
-> in the ringbuffer.
-> 
-> For PREEMPT_RT this is horrible. But I am OK with mandating that RT
-> scheduling cannot be guaranteed with boot consoles (just as it is
-> currently mandated that RT scheduling cannot be guaranteed in emergency
-> situations). Since the boot consoles are lockless, they pose no deadlock
-> threat to RT.
 
-Is this really the case for all boot consoles?
 
-I had the feeling that some boot consoles actually used port->lock.
-And for example, register_earlycon() is initializing this spin lock.
+Thanks,
 
-> This has some nice features:
-> 
-> - We get early debugging in all preemption models.
-
-It would be great.
-
-> - We get true synchronous printing when using boot consoles (which
->   should make peterz happy).
-
-Well, Peter's mode is really special because it is done without
-the console_lock(). Every printk() is flushing its own message
-to the console. Parallel printk()'s are busy waiting for each other.
-
-> - Boot consoles are then horrible enough that options such as
->   "keep_bootcon" will really be avoided unless debugging kernel issues.
-> 
-> >From the tests I have run so far, it looks good.
-> 
-> Looking to the future, I think this would also provide an excellent
-> foundation for the "sync" console option I would like. For nbcon
-> consoles with the "sync" option specified, it would work the same way,
-> flushing boot consoles and nbcon consoles directly in vprintk_emit().
-
-The sync mode would be nice.
-
-Just to be sure. I guess that you are talking about a sync mode
-using some trylock mechanism where the current owner would be
-responsible for flushing everything.
-
-Peter Zijlstra's mode (serialized printk()) is easy to implement
-and might be needed in some situations. But I am not sure if
-it would be good enough for most other users preferring the
-current "synchronous" output.
-
-Well, let's see what people request after they get some experience
-with the first nbcon consoles and kthreads.
-
-Best Regards,
-Petr
-
+Jacob
