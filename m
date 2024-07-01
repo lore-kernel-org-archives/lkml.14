@@ -1,91 +1,90 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB93F16F8E3
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 19:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B484216F0C2
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 19:53:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719863537; cv=none; b=Lux/i8aQhnY92d9O5zUKxzIkDT6k8TkQinjSHyK4J+8PY7TwUEtbfqOkdH0WnTXt32+Id1Y3fjhn0boW9ewxktnD7in8BcMzW+HvgBhp31py2NCHD2X4QPdkkNyEonu4wdquk31XNu1PWHdjkRjZ1S3gIF8P3dk9lcCNGFYPUAs=
+	t=1719863638; cv=none; b=qrbWMa6WSpBoS+vGpKLPjxA+AbMI5wJh4M4n/VXb7upZ606orTCITJeh2OclwbKuhacaNTKT8MfiOyQCm+JDUb0NPOEdaG/PsPRgc7PVxTfeTmjLJZt+myTCttKjs+ipbtnWa6dVfOkjDa96O+EuxezV3PduXsSQbZf/EEocKbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719863537; c=relaxed/simple;
-	bh=H8delFYIAEjO+ZiSHwr9JeJ8MSblaIUUh8iXOXAfrOw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PUuKiim2iaZQL7BPjLJIpRz/JAsK5fmOr2NTvHUqC+uK9FlEQcpaRdylbpHLuZz7yc+uP01X/tz7XFjWJsDWj7ceIvsBqGHHYBsLkQ+KydPlXFMW7zVQZCAvcMBdICfUCf7L/0woJD+aeN2+aBZfDDFUbUb10n7dqT8AximGaiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OUyt9Owt; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719863638; c=relaxed/simple;
+	bh=wq9bhqS3zCbu9gJD3O0EoBVvdzJE9spKvwDbUBPvqwE=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ZZEmgGTEWuRgdp5jdg6EMgv2vckwuYreWXIcspLXCkNZbZoyRUckJKKkhpZPMHv2K3DWC+TgqHAdPe4D6lNhyZcX4DZ+Z5q/3rxOw78IID4PqzSwYkOJC8UzZsUJa77DG5ilJl2BTiTyf2vWTAtfR4Kbre2etcZlDwpZVsa2fKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=p8L1csTW; arc=none smtp.client-ip=199.89.1.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OUyt9Owt"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52e7693c369so4509024e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 12:52:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719863534; x=1720468334; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HRHUkoGwpjNf6W9qmppc9hQKHNt+zygF+l53pGcNu58=;
-        b=OUyt9OwtmL/2wdV2pmTB+YajlTimlcuW5/JAHYR0SP+gPc6uyaIr/WLRDhenyYxTXQ
-         r3npugV59vWn4rN/Gm6ybycHZoiHwtInX/DSpIGDH4lijcIWnmk81AnM41xv0mpVi4mX
-         CHFJYnBRk57dzJgRDXcSasUEO4RoKUJLIFuzVH/hD0LHdcUo2xssfaiAcTZJ2v2bh8nV
-         b+4JUTuMI5DfTolcjat3cC9HssVmBMJU/cjsnnuhQaTgmyCL9MvuGyBk6ssyB5yIqJol
-         1fI+IB/3+GyfOa1jZ228LTtsyMN5Lib6PObRiUBXJC9aQVI9Lrv3Kz01zp7nJBAuoCp6
-         txGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719863534; x=1720468334;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HRHUkoGwpjNf6W9qmppc9hQKHNt+zygF+l53pGcNu58=;
-        b=Jdi+HxW5TOi1Zu8G0XfGEMEw7brlB1mjGmqrpRYDYELpPZmURqomzeBS7GzTijpJtG
-         Fs1dGc6MCw3Iguc/54vjQXTnv7BwUi+8mIke0Zak+hLTc49ucS/7Q5LJGNeNMUTtyxdw
-         JpldGLnCWCpcCEo5sEZ+vToSOFEI+36ZWwl8Xi2rE6HQAEeUz4EDzjxoAMHXTLpdEhHg
-         5K4z8OhKjnc2JVGbRquYVA2UYUpsSy0nOP4T1iFZc5dhDd+vda5Y9Mv+ePrbqHvB6V5g
-         RonbEYDEkvbEYPl4+2JwKjHJ8rHK3S24M3hT0oKtLwIVP6sR5S0ghp9r4soqO5lR8I7o
-         2TFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXGIY+ZYoTxUuF/vccHRJUhlBa+QAowoFmL1gUryKe/tJwW2TAYtwpesntAIFzfWatKArd8nbykcKl65h9OzMXHf87y8c69OBK3fOf/
-X-Gm-Message-State: AOJu0YzVN8WAx+vic+Z2r8TTTzCAOtB04z5bq7f30yLE/OEjh+WTivcd
-	0o2SjtosyIFY+H8vQJgVa60pHNM0dJVQLXVzo/NxaYBpnUP0UEyB7eFQw6VANYU=
-X-Google-Smtp-Source: AGHT+IGpZG78DLYt7UtXr9ZQfMpLzTwgkoAHEXhLyaBaZvfF5SxznHfPGIkjInmqLnX5xJ/9v+HutA==
-X-Received: by 2002:a05:6512:2397:b0:52c:dfe1:44ea with SMTP id 2adb3069b0e04-52e82643c41mr5319588e87.6.1719863533890;
-        Mon, 01 Jul 2024 12:52:13 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52e7ab2ea60sm1522272e87.218.2024.07.01.12.52.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 12:52:13 -0700 (PDT)
-Date: Mon, 1 Jul 2024 22:52:12 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Cc: freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>, 
-	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, 
-	quic_jesszhan@quicinc.com, swboyd@chromium.org, dianders@chromium.org, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/5] drm/msm/iommu: introduce msm_iommu_disp_new() for
- msm_kms
-Message-ID: <b4kskldnis3m724kq6kpvqx4pnnjditxwy2jiiivkieqt25o6w@aj6ybxbvwq3t>
-References: <20240628214848.4075651-1-quic_abhinavk@quicinc.com>
- <20240628214848.4075651-4-quic_abhinavk@quicinc.com>
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="p8L1csTW"
+Received: from localhost (localhost [127.0.0.1])
+	by 008.lax.mailroute.net (Postfix) with ESMTP id 4WCcDh0CSvz6Cp2tZ;
+	Mon,  1 Jul 2024 19:53:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:content-language:references:subject:subject:from:from
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1719863632; x=1722455633; bh=2RedW0+tdVWSl88RavhXHAEH
+	rSw/trVcgxslWfPVWLM=; b=p8L1csTWtBqrC01fYg07g1F1oZmCFAE7fdieicTj
+	gFNT8j6pj7Lu4nOWBXL0JC/KZ+JYTOSrN9Xot4kZAreFxwUaxEMJVNS+0tSMCFdM
+	drYhkm1wMITXO1xFfih3gzq5u7Y1qcgvQyAoXGTcvcbTb9i7M1qoC9W2hB+JR704
+	MGlnpSyKcEeeATEJ00bZkZldEIa9/f7VXvIXMqaPTOB8AD3KZnrspPUe+ttHg9Rj
+	PqKpxK9ivsWMTq4bKIkjnLbqerb8nmLLMEGgH10F5nLliGD6PezGYX0QhZuktYID
+	8n1M6WNgvePPVkYN4kAicYEEVrRSBW2lqSZBe76BlIFFJw==
+X-Virus-Scanned: by MailRoute
+Received: from 008.lax.mailroute.net ([127.0.0.1])
+ by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id EBgrLXBx4vtf; Mon,  1 Jul 2024 19:53:52 +0000 (UTC)
+Received: from [192.168.3.219] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4WCcDY3FQQz6Cnk90;
+	Mon,  1 Jul 2024 19:53:49 +0000 (UTC)
+Message-ID: <3d8f288a-bfe8-4d25-967c-1be688bc1667@acm.org>
+Date: Mon, 1 Jul 2024 12:53:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240628214848.4075651-4-quic_abhinavk@quicinc.com>
+User-Agent: Mozilla Thunderbird
+From: Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH 23/53] pds_core: Simplify a create*_workqueue() call
+To: Brett Creeley <bcreeley@amd.com>, Tejun Heo <tj@kernel.org>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>,
+ linux-kernel@vger.kernel.org, Shannon Nelson <shannon.nelson@amd.com>,
+ Brett Creeley <brett.creeley@amd.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+References: <20240630222904.627462-1-bvanassche@acm.org>
+ <20240630222904.627462-24-bvanassche@acm.org>
+ <fe0ecf26-e098-473d-a78b-58938a237bac@amd.com>
+Content-Language: en-US
+In-Reply-To: <fe0ecf26-e098-473d-a78b-58938a237bac@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 28, 2024 at 02:48:45PM GMT, Abhinav Kumar wrote:
-> Introduce a new API msm_iommu_disp_new() for display use-cases.
+On 7/1/24 11:49 AM, Brett Creeley wrote:
+> LGTM. Thanks.
 > 
-> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
-> ---
->  drivers/gpu/drm/msm/msm_iommu.c | 26 ++++++++++++++++++++++++++
->  drivers/gpu/drm/msm/msm_mmu.h   |  1 +
->  2 files changed, 27 insertions(+)
+> Reviewed-by: Brett Creeley <brett.creeley@amd.com>
 > 
+> BTW, I don't actually see patch 53/53 that renames *workqueue2() ->
+> *workqueue(). Am I missing something here? It's mentioned in the
+> cover letter, but I don't see it on the series thread.
+Hi Brett,
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+I don't see patch 53/53 either on Lore. Maybe I hit an outgoing mail
+limit when I sent out this patch series.
 
--- 
-With best wishes
-Dmitry
+Note: as one can see from Tejun's reply to the cover letter I will have
+to rework this patch series so I'm not sure whether it's useful that I
+make patch 53/53 available now.
+
+Thanks,
+
+Bart.
+
