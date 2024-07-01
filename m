@@ -1,348 +1,144 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout1-smtp.messagingengine.com (fout1-smtp.messagingengine.com [103.168.172.144])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333E91494B9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A01C84D02;
 	Mon,  1 Jul 2024 11:58:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719835109; cv=none; b=NeLv/vEIsyK8FFFu7/lCezVLeuvKcC1idtx/rg011g3C+7AzZWajA8DalDxSCqG1JDkOR3F+exkcTaORRcjIBvvbYPXgdgDl7WgjCBm81o/7fjXLMXFdP5fVnG72kgp9lLlJhXdH97jGI9BibgRaPQk3ZG068KLWe52fnLkqglg=
+	t=1719835109; cv=none; b=umiKsA6HpgnC4qANi4JSV8GtqK0rRA1PcvBVYBeGWf1p1mS7IItduvTA2SDRKJCN7gwmyfcp+mOj3f6w1dRSvqXH/nrkrEUZBSTvfFSIPRgXpMJbvJwjjfc/AYk/JUKD+x3ilQwkdTPIb0rgHTzuJq2ri4Mle5a8t1tdquOV6fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719835109; c=relaxed/simple;
-	bh=gBD4uZ6FZrSNccqNUBjVJSctVbjdJvMDnrLnmG8VwY0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dpcZHbJIyA8XqquvZxUbGNMFOltG75h5QmNIZ9bszVLoHwHD8VAk1NNZsBjMjFm7h15fTQ3ohewwZKHJdamhR/p3tqCe4e26R1A08XjLxeJ65/Pe4iApIaeU5rwsHPpT9wI3NMZMgUqzcMXiMQEgaL83sh5JeDOvXOh9MCKQczI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 461Bw5uG53805834, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.02/5.92) with ESMTPS id 461Bw5uG53805834
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 1 Jul 2024 19:58:05 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 1 Jul 2024 19:58:05 +0800
-Received: from RTDOMAIN (172.21.210.160) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 1 Jul
- 2024 19:58:05 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
-        <rkannoth@marvell.com>, <jdamato@fastly.com>, <pkshih@realtek.com>,
-        <larry.chiu@realtek.com>, "Justin
- Lai" <justinlai0215@realtek.com>
-Subject: [PATCH net-next v22 08/13] rtase: Implement net_device_ops
-Date: Mon, 1 Jul 2024 19:53:58 +0800
-Message-ID: <20240701115403.7087-9-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240701115403.7087-1-justinlai0215@realtek.com>
-References: <20240701115403.7087-1-justinlai0215@realtek.com>
+	bh=WaV/uifT+ewSSQQt4FXzBE5fi9386OXucSBJ4NdlHxg=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=YrBL5Hw5ginkdT2LT/ScunyEh91N2vjBgME0wq2AuhCrMGtlBDF4+NCy/Q8F75Ci+ZzZIgWxVhom2Zd9NShc5aE6vsdr31oLsIWmWeDsqlH64AzoDLjUQ7MZySqOdBy/8DMryrzye7eitMKK/+2VHpDPmySsxGP6mGRqBoW0mIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=G5aEq+jm; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=qft2T1tm; arc=none smtp.client-ip=103.168.172.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="G5aEq+jm";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qft2T1tm"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 7AF251380463;
+	Mon,  1 Jul 2024 07:58:26 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Mon, 01 Jul 2024 07:58:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1719835106; x=1719921506; bh=xTKFbyMCes
+	YSqTGV3kNBw9DLS4BP7bP5n2sMbxKcREk=; b=G5aEq+jmJLeuDeV0mrL7Ml8cY7
+	9nWyr1HK4KhJYfPTaqFVqA4+bUYJObJisUcDybkcPMermDTU868P+bbZmyc0ghuw
+	R5DLJeJMdWWiaKci/VBvBSWxs4hy5ZW1qcmI9iZca3edwpUovEf/vhql9fSaFmiS
+	D1h3BrjoaE2X+s0SsUnxAYNflon6tnTQeOWY3nupbgWEkGzLjmS8SIJkdXbf8zR2
+	SFVFPSMMA3db5jkzqnSXH4c3q2zaB/r+gzBO01A+qj82aAdG8je7072ZmDRi/msd
+	Vvobyeocvxx+/UP1ZV86CXlhHGWA8qascKYcnIImd3UpyQXNRGop0o0cRP4A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1719835106; x=1719921506; bh=xTKFbyMCesYSqTGV3kNBw9DLS4BP
+	7bP5n2sMbxKcREk=; b=qft2T1tmF0gPXJxQcjqJ+4qMDmqirl2p6B6IORadaZ1D
+	pWI+i0TQJQkbGIODQmkDqEn0Z+ZWmIWrGruBUAE/qdvn4asyC9XSyTsB9dOdqoQJ
+	XgpJgkbxIPTfYqHwtPxv8l7KfkGpZb1st22hLpk7BCyNjCsxdyHsNVOlUW2ocXWl
+	XpuWmyTyhdZrfeMn0XMua3OlsWsmKq40vxBmQU2LrNTYWx0kjPBwKkWJC6ck5Y8C
+	ZpjBxfdfb7Wbzz88KTv8Ow3dcYG0zZHTFhYEJurQoggIbTvhKYyVMYQuZrctBqKR
+	Aef1ki5U5uQl2EXfTzXtWBkCGXZmKi4YIg1UXZhfrQ==
+X-ME-Sender: <xms:4ZmCZtUsbU2QX-zvIyWPJNmWEyzOzwCQ0_2vrxkGXVlPDBGY7Bcmxg>
+    <xme:4ZmCZtmQFWA4lE0IfzLNO97EeT5K7aGQE8mh1-AhB4j99UwA8ItqGQ51NolRDB7jJ
+    B3oz-uA60J0vx31SSs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudefgdeghecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
+    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
+    hnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:4ZmCZpb6vfZ-oV3D0qYPBc5RdopwhTRFByt7c6FNhRIE7e0I8jZ1lw>
+    <xmx:4ZmCZgXiMRn0_cjj35lltXsOr7swBAekdVNWy8iU9529ZQij8gNmfA>
+    <xmx:4ZmCZnl-LXr2HnkGZcIv-6hSFxVSSjA7elFAR9bOwl2hyDhBYIdWOg>
+    <xmx:4ZmCZtcrcuuz67vXwTxThdxLypZczJdZrQIGWr9jTBvBJXZF4M3yHg>
+    <xmx:4pmCZgehxJ9HzZqzR2KYamrvGgKCzJG7XJxoFR5Q5BHDLP3M75K3-9vU>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id C1BE1B6008D; Mon,  1 Jul 2024 07:58:25 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-566-g3812ddbbc-fm-20240627.001-g3812ddbb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-Id: <5f1f44be-80ad-4b4e-90a0-c2e4e8cd3dbf@app.fastmail.com>
+In-Reply-To: 
+ <CA+G9fYsk85UOsa0ijXcYRvvZLXEMQKe4phWhND+0qSNP36N5Tw@mail.gmail.com>
+References: 
+ <CA+G9fYsk85UOsa0ijXcYRvvZLXEMQKe4phWhND+0qSNP36N5Tw@mail.gmail.com>
+Date: Mon, 01 Jul 2024 13:58:05 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Naresh Kamboju" <naresh.kamboju@linaro.org>,
+ "open list" <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
+ lkft-triage@lists.linaro.org
+Cc: "Jan Kara" <jack@suse.cz>, "Christian Brauner" <brauner@kernel.org>,
+ "Hugh Dickins" <hughd@google.com>, "Andrii Nakryiko" <andrii@kernel.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Dan Carpenter" <dan.carpenter@linaro.org>,
+ "Anders Roxell" <anders.roxell@linaro.org>
+Subject: Re: fs/proc/task_mmu.c:598:48: error: cast to pointer from integer of
+ different size
 Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36506.realtek.com.tw (172.21.6.27) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-1. Implement .ndo_set_rx_mode so that the device can change address
-list filtering.
-2. Implement .ndo_set_mac_address so that mac address can be changed.
-3. Implement .ndo_change_mtu so that mtu can be changed.
-4. Implement .ndo_tx_timeout to perform related processing when the
-transmitter does not make any progress.
-5. Implement .ndo_get_stats64 to provide statistics that are called
-when the user wants to get network device usage.
-6. Implement .ndo_vlan_rx_add_vid to register VLAN ID when the device
-supports VLAN filtering.
-7. Implement .ndo_vlan_rx_kill_vid to unregister VLAN ID when the device
-supports VLAN filtering.
-8. Implement the .ndo_setup_tc to enable setting any "tc" scheduler,
-classifier or action on dev.
-9. Implement .ndo_fix_features enables adjusting requested feature flags
-based on device-specific constraints.
-10. Implement .ndo_set_features enables updating device configuration to
-new features.
+On Mon, Jul 1, 2024, at 12:19, Naresh Kamboju wrote:
+> fs/proc/task_mmu.c: In function 'do_procmap_query':
+> fs/proc/task_mmu.c:598:48: error: cast to pointer from integer of
+> different size [-Werror=int-to-pointer-cast]
+>   598 |         if (karg.vma_name_size && copy_to_user((void __user
+> *)karg.vma_name_addr,
+>       |                                                ^
+> fs/proc/task_mmu.c:605:48: error: cast to pointer from integer of
+> different size [-Werror=int-to-pointer-cast]
+>   605 |         if (karg.build_id_size && copy_to_user((void __user
+> *)karg.build_id_addr,
+>       |                                                ^
+> cc1: all warnings being treated as errors
+>
 
-Signed-off-by: Justin Lai <justinlai0215@realtek.com>
----
- .../net/ethernet/realtek/rtase/rtase_main.c   | 235 ++++++++++++++++++
- 1 file changed, 235 insertions(+)
+There is already a fix in linux-next:
 
-diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-index 7fe0e95acf70..4ea9c4d0c242 100755
---- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-+++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-@@ -1433,6 +1433,11 @@ static netdev_tx_t rtase_start_xmit(struct sk_buff *skb,
- 	return NETDEV_TX_BUSY;
- }
+@@ -595,14 +595,14 @@ static int do_procmap_query(struct proc_maps_private *priv, void __user *uarg)
+        query_vma_teardown(mm, vma);
+        mmput(mm);
  
-+static void rtase_set_rx_mode(struct net_device *dev)
-+{
-+	rtase_hw_set_rx_packet_filter(dev);
-+}
-+
- static void rtase_enable_eem_write(const struct rtase_private *tp)
- {
- 	u8 val;
-@@ -1465,6 +1470,203 @@ static void rtase_rar_set(const struct rtase_private *tp, const u8 *addr)
- 	rtase_w16(tp, RTASE_LBK_CTRL, RTASE_LBK_ATLD | RTASE_LBK_CLR);
- }
- 
-+static int rtase_set_mac_address(struct net_device *dev, void *p)
-+{
-+	struct rtase_private *tp = netdev_priv(dev);
-+	int ret;
-+
-+	ret = eth_mac_addr(dev, p);
-+	if (ret)
-+		return ret;
-+
-+	rtase_rar_set(tp, dev->dev_addr);
-+
-+	return 0;
-+}
-+
-+static int rtase_change_mtu(struct net_device *dev, int new_mtu)
-+{
-+	dev->mtu = new_mtu;
-+
-+	netdev_update_features(dev);
-+
-+	return 0;
-+}
-+
-+static void rtase_wait_for_quiescence(const struct net_device *dev)
-+{
-+	struct rtase_private *tp = netdev_priv(dev);
-+	struct rtase_int_vector *ivec;
-+	u32 i;
-+
-+	for (i = 0; i < tp->int_nums; i++) {
-+		ivec = &tp->int_vector[i];
-+		synchronize_irq(ivec->irq);
-+		/* wait for any pending NAPI task to complete */
-+		napi_disable(&ivec->napi);
-+	}
-+
-+	rtase_irq_dis_and_clear(tp);
-+
-+	for (i = 0; i < tp->int_nums; i++) {
-+		ivec = &tp->int_vector[i];
-+		napi_enable(&ivec->napi);
-+	}
-+}
-+
-+static void rtase_sw_reset(struct net_device *dev)
-+{
-+	struct rtase_private *tp = netdev_priv(dev);
-+	int ret;
-+
-+	netif_stop_queue(dev);
-+	netif_carrier_off(dev);
-+	rtase_hw_reset(dev);
-+
-+	/* let's wait a bit while any (async) irq lands on */
-+	rtase_wait_for_quiescence(dev);
-+	rtase_tx_clear(tp);
-+	rtase_rx_clear(tp);
-+
-+	ret = rtase_init_ring(dev);
-+	if (ret) {
-+		netdev_err(dev, "unable to init ring\n");
-+		rtase_free_desc(tp);
-+		return;
-+	}
-+
-+	rtase_hw_config(dev);
-+	/* always link, so start to transmit & receive */
-+	rtase_hw_start(dev);
-+
-+	netif_carrier_on(dev);
-+	netif_wake_queue(dev);
-+}
-+
-+static void rtase_dump_tally_counter(const struct rtase_private *tp)
-+{
-+	dma_addr_t paddr = tp->tally_paddr;
-+	u32 cmd = lower_32_bits(paddr);
-+	u32 val;
-+	int err;
-+
-+	rtase_w32(tp, RTASE_DTCCR4, upper_32_bits(paddr));
-+	rtase_w32(tp, RTASE_DTCCR0, cmd);
-+	rtase_w32(tp, RTASE_DTCCR0, cmd | RTASE_COUNTER_DUMP);
-+
-+	err = read_poll_timeout(rtase_r32, val, !(val & RTASE_COUNTER_DUMP),
-+				10, 250, false, tp, RTASE_DTCCR0);
-+
-+	if (err == -ETIMEDOUT)
-+		netdev_err(tp->dev, "error occurred in dump tally counter\n");
-+}
-+
-+static void rtase_dump_state(const struct net_device *dev)
-+{
-+	const struct rtase_private *tp = netdev_priv(dev);
-+	int max_reg_size = RTASE_PCI_REGS_SIZE;
-+	const struct rtase_counters *counters;
-+	const struct rtase_ring *ring;
-+	u32 dword_rd;
-+	int n = 0;
-+
-+	ring = &tp->tx_ring[0];
-+	netdev_err(dev, "Tx descriptor info:\n");
-+	netdev_err(dev, "Tx curIdx = 0x%x\n", ring->cur_idx);
-+	netdev_err(dev, "Tx dirtyIdx = 0x%x\n", ring->dirty_idx);
-+	netdev_err(dev, "Tx phyAddr = %pad\n", &ring->phy_addr);
-+
-+	ring = &tp->rx_ring[0];
-+	netdev_err(dev, "Rx descriptor info:\n");
-+	netdev_err(dev, "Rx curIdx = 0x%x\n", ring->cur_idx);
-+	netdev_err(dev, "Rx dirtyIdx = 0x%x\n", ring->dirty_idx);
-+	netdev_err(dev, "Rx phyAddr = %pad\n", &ring->phy_addr);
-+
-+	netdev_err(dev, "Device Registers:\n");
-+	netdev_err(dev, "Chip Command = 0x%02x\n",
-+		   rtase_r8(tp, RTASE_CHIP_CMD));
-+	netdev_err(dev, "IMR = %08x\n", rtase_r32(tp, RTASE_IMR0));
-+	netdev_err(dev, "ISR = %08x\n", rtase_r32(tp, RTASE_ISR0));
-+	netdev_err(dev, "Boot Ctrl Reg(0xE004) = %04x\n",
-+		   rtase_r16(tp, RTASE_BOOT_CTL));
-+	netdev_err(dev, "EPHY ISR(0xE014) = %04x\n",
-+		   rtase_r16(tp, RTASE_EPHY_ISR));
-+	netdev_err(dev, "EPHY IMR(0xE016) = %04x\n",
-+		   rtase_r16(tp, RTASE_EPHY_IMR));
-+	netdev_err(dev, "CLKSW SET REG(0xE018) = %04x\n",
-+		   rtase_r16(tp, RTASE_CLKSW_SET));
-+
-+	netdev_err(dev, "Dump PCI Registers:\n");
-+
-+	while (n < max_reg_size) {
-+		if ((n % RTASE_DWORD_MOD) == 0)
-+			netdev_err(tp->dev, "0x%03x:\n", n);
-+
-+		pci_read_config_dword(tp->pdev, n, &dword_rd);
-+		netdev_err(tp->dev, "%08x\n", dword_rd);
-+		n += 4;
-+	}
-+
-+	netdev_err(dev, "Dump tally counter:\n");
-+	counters = tp->tally_vaddr;
-+	rtase_dump_tally_counter(tp);
-+
-+	netdev_err(dev, "tx_packets %lld\n",
-+		   le64_to_cpu(counters->tx_packets));
-+	netdev_err(dev, "rx_packets %lld\n",
-+		   le64_to_cpu(counters->rx_packets));
-+	netdev_err(dev, "tx_errors %lld\n",
-+		   le64_to_cpu(counters->tx_errors));
-+	netdev_err(dev, "rx_errors %d\n",
-+		   le32_to_cpu(counters->rx_errors));
-+	netdev_err(dev, "rx_missed %d\n",
-+		   le16_to_cpu(counters->rx_missed));
-+	netdev_err(dev, "align_errors %d\n",
-+		   le16_to_cpu(counters->align_errors));
-+	netdev_err(dev, "tx_one_collision %d\n",
-+		   le32_to_cpu(counters->tx_one_collision));
-+	netdev_err(dev, "tx_multi_collision %d\n",
-+		   le32_to_cpu(counters->tx_multi_collision));
-+	netdev_err(dev, "rx_unicast %lld\n",
-+		   le64_to_cpu(counters->rx_unicast));
-+	netdev_err(dev, "rx_broadcast %lld\n",
-+		   le64_to_cpu(counters->rx_broadcast));
-+	netdev_err(dev, "rx_multicast %d\n",
-+		   le32_to_cpu(counters->rx_multicast));
-+	netdev_err(dev, "tx_aborted %d\n",
-+		   le16_to_cpu(counters->tx_aborted));
-+	netdev_err(dev, "tx_underun %d\n",
-+		   le16_to_cpu(counters->tx_underun));
-+}
-+
-+static void rtase_tx_timeout(struct net_device *dev, unsigned int txqueue)
-+{
-+	rtase_dump_state(dev);
-+	rtase_sw_reset(dev);
-+}
-+
-+static void rtase_get_stats64(struct net_device *dev,
-+			      struct rtnl_link_stats64 *stats)
-+{
-+	const struct rtase_private *tp = netdev_priv(dev);
-+	const struct rtase_counters *counters;
-+
-+	counters = tp->tally_vaddr;
-+
-+	dev_fetch_sw_netstats(stats, dev->tstats);
-+
-+	/* fetch additional counter values missing in stats collected by driver
-+	 * from tally counter
-+	 */
-+	rtase_dump_tally_counter(tp);
-+	stats->rx_errors = tp->stats.rx_errors;
-+	stats->tx_errors = le64_to_cpu(counters->tx_errors);
-+	stats->rx_dropped = tp->stats.rx_dropped;
-+	stats->tx_dropped = tp->stats.tx_dropped;
-+	stats->multicast = tp->stats.multicast;
-+	stats->rx_length_errors = tp->stats.rx_length_errors;
-+}
-+
- #ifdef CONFIG_NET_POLL_CONTROLLER
- /* Polling 'interrupt' - used by things like netconsole to send skbs
-  * without having to re-enable interrupts. It's not called while
-@@ -1481,13 +1683,46 @@ static void rtase_netpoll(struct net_device *dev)
- }
- #endif
- 
-+static netdev_features_t rtase_fix_features(struct net_device *dev,
-+					    netdev_features_t features)
-+{
-+	netdev_features_t features_fix = features;
-+
-+	/* not support TSO for jumbo frames */
-+	if (dev->mtu > ETH_DATA_LEN)
-+		features_fix &= ~NETIF_F_ALL_TSO;
-+
-+	return features_fix;
-+}
-+
-+static int rtase_set_features(struct net_device *dev,
-+			      netdev_features_t features)
-+{
-+	netdev_features_t features_set = features;
-+
-+	features_set &= NETIF_F_RXALL | NETIF_F_RXCSUM |
-+			NETIF_F_HW_VLAN_CTAG_RX;
-+
-+	if (features_set ^ dev->features)
-+		rtase_hw_set_features(dev, features_set);
-+
-+	return 0;
-+}
-+
- static const struct net_device_ops rtase_netdev_ops = {
- 	.ndo_open = rtase_open,
- 	.ndo_stop = rtase_close,
- 	.ndo_start_xmit = rtase_start_xmit,
-+	.ndo_set_rx_mode = rtase_set_rx_mode,
-+	.ndo_set_mac_address = rtase_set_mac_address,
-+	.ndo_change_mtu = rtase_change_mtu,
-+	.ndo_tx_timeout = rtase_tx_timeout,
-+	.ndo_get_stats64 = rtase_get_stats64,
- #ifdef CONFIG_NET_POLL_CONTROLLER
- 	.ndo_poll_controller = rtase_netpoll,
- #endif
-+	.ndo_fix_features = rtase_fix_features,
-+	.ndo_set_features = rtase_set_features,
+-       if (karg.vma_name_size && copy_to_user((void __user *)karg.vma_name_addr,
++       if (karg.vma_name_size && copy_to_user((void __user *)(uintptr_t)karg.vma_name_addr,
+                                               name, karg.vma_name_size)) {
+                kfree(name_buf);
+                return -EFAULT;
+        }
+
+
+This could be expressed slightly nicer using u64_to_user_ptr(),
+but functionally that is the same.
+
+I also see a slight issue in the use of .compat_ioctl:
+
+ const struct file_operations proc_pid_maps_operations = {
+        .open           = pid_maps_open,
+        .read           = seq_read,
+        .llseek         = seq_lseek,
+        .release        = proc_map_release,
++       .unlocked_ioctl = procfs_procmap_ioctl,
++       .compat_ioctl   = procfs_procmap_ioctl,
  };
  
- static void rtase_get_mac_address(struct net_device *dev)
--- 
-2.34.1
 
+Since the argument is always a pointer, this should be
+
+       .compat_ioctl = compat_ptr_ioctl,
+
+In practice this is only relevant on 32-bit s390
+tasks to sanitize the pointer value.
+
+     Arnd
