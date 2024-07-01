@@ -1,111 +1,107 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA5F38397
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D263126F02
 	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 10:08:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719828537; cv=none; b=M7x9pNcTyC3cm86i7ppVsN9o6Yc/pjQBgqZXs3s0n9M6HNkRTKOwJvyqbYMXIDsr3cZUQfPcQX5n2xrn7vTPfbhnMeoulh/PdDDCW3i+UwQbtwU5sDeglGBHoUc8uC8Mi5X4ZrssqF4a82C+WxNj8ObsmNKlaEhvsgT+qpJRlMc=
+	t=1719828537; cv=none; b=uGI9bQyOb5PAp+qCoxrySzLOGk6dgybNZqCSfU2st57RQFme+yqUUhrbzMcb4ypfOABp68nnj/LPMssrNHALAu04SOggwQddG7i4yxncLFb/d2FpdLaDxhMujoCfhPRkjZHImNZZ1bB7kkOgZSjRLujzazQqDZLQeqpn89V+MrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719828537; c=relaxed/simple;
-	bh=DBE7iAf6douD2ekCMunjZ6GvuaMCKlqv3UvoSJdfo64=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=sEnya9qlk3Xq/CMmiAgbt/snV49qSvMl7IZ4QYtXXhB3P2yLBrfRHmZxB0mke3QGZNRgBiurbFUqUkpDe5YrnkmWEsJWyON6Gu/n0E0Sbg6C3Cppzze7bGlC1z5bEseYPb+k+f/9EmUk5rn8zhHXLaEYFI4GMZ09KKSmwmrs+G4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7f3c9b72aebso307290439f.3
+	bh=Aa++gCLn3lD+NqzuYFw3VYIsdm8ZENJyZaQkJnhuZ7I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cunC8slxTxEOQ29bjI2wMm5zFz/DR9OGifhmqhdWauFQkuvwVX8zWdgkd7T4VM9JQLLlSjMibq2Uwtpf4qC+LvlcpXl21qQLYd2+cnHLC+KfTiyLdJbJJOISHk7DucHMTnlKONBxSAXguQZ2mnUv/a340xU0o7EjB9caRSc8ZeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BhtmeHKb; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BhtmeHKb"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6325b04c275so27857957b3.3
         for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 03:08:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719828535; x=1720433335; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=NycmgRDsq327D/ssa2zH2umzDutW5jKnX1XFk2AIiOQ=;
+        b=BhtmeHKbx7UCJOdCGlQI5WZyphmtyTgNXgMruzAXfr7c8kHkYCW3rrcqY0Yvlf5LB9
+         VY+xtgQEESVNUOV7J8bwOsqjJ9ptgWgObwHviZTYTDCvf4HPfi2sUYGfrfUSypgJF4bE
+         IcgQKY5H/3O8+7Dx7V8m7GvvEsZjeE1QakxvTTscKEe/rGYjXiLYIONIqO4QFJJR8DVx
+         WqjOBEd5kposlpy7wRi8jPdN6r7DCBTuzD+orwImXa3LkIeuDTdwLWqc5TEHu++UmNfd
+         B0GX5G6ngDC/isHkExBW2bjdv6roTggNWUfE9qtqY3Ly4gxyYWtKYD3lLil0IJFhGYsr
+         /OuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1719828535; x=1720433335;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2P3DiKTRhPXgRbdLfmRBRDpp1MsjZKjZ8JgmQvxrVMU=;
-        b=Q8KKFF4M1zdCaVR/L/g6iiuLp52ydNoTMoV+57txJl1DeQ2v9ZU3atoTG+DvlLmJid
-         0AMCV1uiuUQ2nJ4thO3fJPEt5FTKrGZIKacDqLt+Z1eOZoeizarvkfQKf9xONACIggK+
-         x7tZYwOYvOxeMk3ytHV5wYnEqre5ZuT70g5qqho7Z3DqZADGqPGmdQYhVP+zBAE2ech6
-         EmZnBEN2ypmPsO65vPUBe6CJVZ1BOW93q3B6Nz3fQKurbvXzrV4InQRIyaawKBWCciDa
-         haDLGHp1ligC9F+9gz6fTFMR6thRvWcyCJIL/lA57qEevpzImgS5etWx30WoTxbN3A9z
-         HQUQ==
-X-Gm-Message-State: AOJu0Yw83o2fKZ86veMAl54ewxt/aUgGtxTbz+xybEgou1CYwKGlTaFM
-	DI2DkipvGeU9dGZNxSoa1IrEueLyMIbZIAZYexU/IP1DW1X3jkMlYyb8QiidA1cJBAw2R+M7dLG
-	yY1bsi/nnRwc/LETGHWW4FsohsrDEIZ02Zfgx3Nq80uYtQ7ggce9xAIM=
-X-Google-Smtp-Source: AGHT+IEdfNicUut4M3jlEVimVVVhwNk8nA4O0ohYD8vGaqHdcXsx10hHJ5UtgfyNHyQUBxQBIS2EXZ4vimAv4rpf20W8IEfnGivj
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NycmgRDsq327D/ssa2zH2umzDutW5jKnX1XFk2AIiOQ=;
+        b=DIQ3xQRnLxLIN2EZ8fKb3IAVIrB26jggZOTmhDoRKj626nzFNm3WpOt7sVn8F3l7RW
+         +qtEwUgwYdhT6Kqy6/n6RYoxKIsRDEBhxDsCsNEjcl+X5KLrUhZu4yiUNKsx/LW9JDHK
+         HiaHp1rOpNOPWPDAx5kCpmRWxJOIBziyflRR1Mm6FbJOPzVVlhgTLPlJspaPbXiLYEYA
+         q5uEmMQTmQ3mwwEgU5jH9sSPreMmHoyk9t3W7Z3SQ9UQy0RW7D06RsmgroqsKFAOhKga
+         XM8sMRjO0m/v41PzTZyB3d4H22HgQ0krKhnq0t7H0ZIV1bysVGrL4wrWJATIFiz3lUKl
+         FUaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWWECmZI65Dj4fByoPjS7xj4xG6meo2f0z/8WvbL9L7zhOJ3TTJrKb6aKPLM9aeEXslJuGxMXs6pLhyrG8bFhTN0ItZuZ2PI4G3+O8U
+X-Gm-Message-State: AOJu0YwkNGxe51CNRH8NKPR3zjHoJ03Z8CZna7/fxRJdacBsSmrSoMPB
+	tOwrt470vnlchevwIS2mlIguquU7nvjTkP9G1xMBotYZVBTgLIP5iGzr2Mg72CCPUHRDiwavJDN
+	tRYs9FXI4SsH0b5NiMQFSqU0oUpIkya7k/Hptm/ObTTPl4ndoByVkNONmv0s=
+X-Google-Smtp-Source: AGHT+IGwi8WafEVjmBObOnzPp7tJ35c7X+EGOliYOe27SUZqWJxtxBxMEXMJreOS27yNOad4E5WT+Ba5yGrNIupy4u4=
+X-Received: by 2002:a81:c441:0:b0:61a:d4ea:b856 with SMTP id
+ 00721157ae682-64c7277ca98mr42261657b3.40.1719828535353; Mon, 01 Jul 2024
+ 03:08:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:6d8b:b0:7f6:28ed:efe5 with SMTP id
- ca18e2360f4ac-7f62ee8869bmr45896939f.2.1719828534415; Mon, 01 Jul 2024
- 03:08:54 -0700 (PDT)
-Date: Mon, 01 Jul 2024 03:08:54 -0700
-In-Reply-To: <0000000000004cf0fe06160c8d71@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000de633e061c2cc882@google.com>
-Subject: Re: [syzbot] [syzbot] [bpf?] KMSAN: uninit-value in htab_percpu_map_lookup_elem
-From: syzbot <syzbot+0a079d6ef3831217a230@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <ZnxhiKAYvoqNIywH@sirena.org.uk> <20240701172655.3db48d51@canb.auug.org.au>
+In-Reply-To: <20240701172655.3db48d51@canb.auug.org.au>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Mon, 1 Jul 2024 13:08:43 +0300
+Message-ID: <CAA8EJprxGyEK-1jXBJOmBT_+VDyEKD2DVN8shwan60GO5-dopg@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the rpmsg tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Bjorn Andersson <andersson@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, 
+	Mark Brown <broonie@kernel.org>, Chris Lew <quic_clew@quicinc.com>, 
+	Steev Klimaszewski <steev@kali.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+On Mon, 1 Jul 2024 at 10:26, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi Mark,
+>
+> On Wed, 26 Jun 2024 19:44:24 +0100 Mark Brown <broonie@kernel.org> wrote:
+> >
+> > Hi all,
+> >
+> > After merging the rpmsg tree, today's linux-next build (KCONFIG_NAME)
+> > failed like this:
+> >
+> > ERROR: modpost: "__auxiliary_driver_register" [drivers/soc/qcom/qcom_pd_mapper.ko] undefined!
+> > ERROR: modpost: "servreg_loc_pfr_resp_ei" [drivers/soc/qcom/qcom_pd_mapper.ko] undefined!
+> > ERROR: modpost: "auxiliary_driver_unregister" [drivers/soc/qcom/qcom_pd_mapper.ko] undefined!
+> > ERROR: modpost: "servreg_get_domain_list_resp_ei" [drivers/soc/qcom/qcom_pd_mapper.ko] undefined!
+> > ERROR: modpost: "servreg_get_domain_list_req_ei" [drivers/soc/qcom/qcom_pd_mapper.ko] undefined!
+> > ERROR: modpost: "servreg_loc_pfr_req_ei" [drivers/soc/qcom/qcom_pd_mapper.ko] undefined!
+> > ERROR: modpost: "auxiliary_device_init" [drivers/remoteproc/qcom_common.ko] undefined!
+> > ERROR: modpost: "__auxiliary_device_add" [drivers/remoteproc/qcom_common.ko] undefined!
+> >
+> > Caused by commit
+> >
+> >   5b9f51b200dcb2c3924 ("remoteproc: qcom: enable in-kernel PD mapper")
+> >
+> > and likely others, I didn't look too hard.  I have used the tree from
+> > 20240625 instead.
+>
+> I am still seeing this build failure in the arm multi_v7_defconfig build.
 
-***
+This should be fixed by
+https://lore.kernel.org/linux-arm-msm/20240626-qcom-pd-mapper-fix-deps-v1-0-644678dc4663@linaro.org/
+, hopefully Bjorn can pick it up.
 
-Subject: [syzbot] [bpf?] KMSAN: uninit-value in htab_percpu_map_lookup_elem
-Author: wojciech.gladysz@infogain.com
-
-#syz test: https://linux.googlesource.com/linux/kernel/git/torvalds/linux e478cf26c556e4ab572ab0ab2306c986901dcd61
-
----
- kernel/bpf/verifier.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 36ef8e96787e..13a9c2e2908a 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -7146,8 +7146,8 @@ static int check_stack_range_initialized(
- 		 * reads. However, if raw_mode is not set, we'll do extra
- 		 * checks below.
- 		 */
--		bounds_check_type = BPF_WRITE;
--		clobber = true;
-+		clobber = !meta || meta->raw_mode;
-+		bounds_check_type = clobber ? BPF_WRITE : BPF_READ;
- 	} else {
- 		bounds_check_type = BPF_READ;
- 	}
-@@ -7230,8 +7230,7 @@ static int check_stack_range_initialized(
- 		stype = &state->stack[spi].slot_type[slot % BPF_REG_SIZE];
- 		if (*stype == STACK_MISC)
- 			goto mark;
--		if ((*stype == STACK_ZERO) ||
--		    (*stype == STACK_INVALID && env->allow_uninit_stack)) {
-+		if (*stype == STACK_ZERO) {
- 			if (clobber) {
- 				/* helper can write anything into the stack */
- 				*stype = STACK_MISC;
-@@ -8748,6 +8747,8 @@ static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
- 		meta->map_uid = reg->map_uid;
- 		break;
- 	case ARG_PTR_TO_MAP_KEY:
-+		/* always mark read access */
-+		meta->raw_mode = false;
- 		/* bpf_map_xxx(..., map_ptr, ..., key) call:
- 		 * check that [key, key + map->key_size) are within
- 		 * stack limits and initialized
-@@ -8763,7 +8764,7 @@ static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
- 		}
- 		err = check_helper_mem_access(env, regno,
- 					      meta->map_ptr->key_size, false,
--					      NULL);
-+					      meta);
- 		break;
- 	case ARG_PTR_TO_MAP_VALUE:
- 		if (type_may_be_null(arg_type) && register_is_null(reg))
 -- 
-2.35.3
+With best wishes
+Dmitry
