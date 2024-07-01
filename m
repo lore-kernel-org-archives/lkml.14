@@ -1,26 +1,26 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CE615EFD7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB6F15ECC6
 	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 13:54:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719842056; cv=none; b=GZpjupJVEofSICMbaUC+EzxlpE7hgIyAriTb9jf3Fc5cm1cWn2Q5QtcgQsnbt+1YWoHVaOVY4oHt1EuBwv7K9l4vkqYbk7WSKbisG7pMuVw4vw7MUiBDrR39XZ1RGQ51YgSpAGbCO0XNfx/rTb0LLEmVFHDx9DBw3G/Bv4nyi+g=
+	t=1719842057; cv=none; b=n7H6/oCRCvPeTR5QdzGrPi11bsCeuB2+6Qi4A9A0WvMPOsTovj9t+AlyCawcq9TKTjRtpzaZ1kA8rlS7NWB96ol3xNec5OSBKilpdkOKgrjkzs5WfCSFDmbkDi+Ic1CpDUwn+qM8XAsTIHhxfliNSX8lNqUlVUTGB74NzyS5NTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719842056; c=relaxed/simple;
-	bh=d1VqLgtNJ7N5InaRsqu3AvJq0Y06PnoD+deMUi+gLeY=;
+	s=arc-20240116; t=1719842057; c=relaxed/simple;
+	bh=mGAuCZgA2CcqrjhV6CHTOjJSYcLUjnH7A7J5jQMNJG0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=J6taKmOHus2fytv1nywgIxGh3jSKXyiUocxqNAbnN7Vq9uc0Wd0sB2OhF54dtF7fdGp+6Il764qWYdCAlqRfKZB21s8PhF7Yb00OJopqHFlaEfexcIHo/myHs2OSnEUCpj/Z++RYJkpcZ7Ttd2m1MhWMsXkVZR8kn2NkeZlXoqQ=
+	 In-Reply-To:To:Cc; b=t5WdG0my8OHm2zzxLiQ5N3qdKJPBnhnrMpzRIPz82xxjXm/Xh7XGpNyqqpo+GV2DRW6M1rMQVBGzOFeyP/WzWl131CpuPgZupBdC1g7c4LA+P2Mneu05+yMVrAlZIKYFw3EU/wHngH1yyFMxLG/n4ZPK0uUFDV5hqto/aughiyY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
 Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
 	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
 	(envelope-from <m.felsch@pengutronix.de>)
-	id 1sOHTX-0001LY-UP; Mon, 01 Jul 2024 15:53:47 +0200
+	id 1sOHTX-0001LY-6i; Mon, 01 Jul 2024 15:53:47 +0200
 From: Marco Felsch <m.felsch@pengutronix.de>
-Date: Mon, 01 Jul 2024 15:53:47 +0200
-Subject: [PATCH 8/9] LoongArch: convert to MTD_EEPROM_AT24
+Date: Mon, 01 Jul 2024 15:53:41 +0200
+Subject: [PATCH 2/9] mtd: add mtd_is_master helper
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -29,7 +29,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240701-b4-v6-10-topic-usbc-tcpci-v1-8-3fd5f4a193cc@pengutronix.de>
+Message-Id: <20240701-b4-v6-10-topic-usbc-tcpci-v1-2-3fd5f4a193cc@pengutronix.de>
 References: <20240701-b4-v6-10-topic-usbc-tcpci-v1-0-3fd5f4a193cc@pengutronix.de>
 In-Reply-To: <20240701-b4-v6-10-topic-usbc-tcpci-v1-0-3fd5f4a193cc@pengutronix.de>
 To: Miquel Raynal <miquel.raynal@bootlin.com>, 
@@ -70,27 +70,29 @@ X-SA-Exim-Mail-From: m.felsch@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The EEPROM_AT24 Kconfig symbol is marked as deprecated. Make use of the
-new Kconfig symbol to select the I2C EEPROM driver support.
+Provide a simple helper to make it easy to detect an master mtd device.
 
 Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- arch/loongarch/configs/loongson3_defconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/mtd/mtd.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-index b4252c357c8e..31daff75a01a 100644
---- a/arch/loongarch/configs/loongson3_defconfig
-+++ b/arch/loongarch/configs/loongson3_defconfig
-@@ -433,7 +433,7 @@ CONFIG_NVME_TARGET_LOOP=m
- CONFIG_NVME_TARGET_RDMA=m
- CONFIG_NVME_TARGET_FC=m
- CONFIG_NVME_TARGET_TCP=m
--CONFIG_EEPROM_AT24=m
-+CONFIG_MTD_EEPROM_AT24=m
- CONFIG_BLK_DEV_SD=y
- CONFIG_BLK_DEV_SR=y
- CONFIG_CHR_DEV_SG=y
+diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
+index 8d10d9d2e830..bf3fc2ea7230 100644
+--- a/include/linux/mtd/mtd.h
++++ b/include/linux/mtd/mtd.h
+@@ -408,6 +408,11 @@ static inline struct mtd_info *mtd_get_master(struct mtd_info *mtd)
+ 	return mtd;
+ }
+ 
++static inline bool mtd_is_master(struct mtd_info *mtd)
++{
++	return mtd->parent ? false : true;
++}
++
+ static inline u64 mtd_get_master_ofs(struct mtd_info *mtd, u64 ofs)
+ {
+ 	while (mtd->parent) {
 
 -- 
 2.39.2
