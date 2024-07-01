@@ -1,95 +1,123 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mxout70.expurgate.net (mxout70.expurgate.net [194.37.255.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C22233FE
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 06:09:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D0333FE;
+	Mon,  1 Jul 2024 06:12:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.37.255.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719814147; cv=none; b=Vq5v73Jd1/Hmo8A1Kut0EJa7/dVDCu0w9t7bidQ4axLFqlpWsbn/irkBjgy3cThB7L9ErWgD8crw3SHfje4ZWrKvLOvwDDO+b4ZrsQhVvq5l0DHJqyFjaEb6P9p5SNkH+HZMIZb4SDh+AFp1aELMU3BdDK3KKE9AlRXb025qeW4=
+	t=1719814355; cv=none; b=sIDzSBmLCFkFfJSP0+/L309u5CbA1M6PdO253aMl2pPhU8E0UuzSwMqgWGV4OJ3/CTeNwS0F/Pd+YWAFbBDrzqypHaS8SEhnJcfzuGKAxCQEdaEiYbLYgUzzpm1q/oD+UE4SjrKN0KGUsk8JBJDPk8I7dR1rph4Ux7lcxvpUTf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719814147; c=relaxed/simple;
-	bh=yu7zEuDuX70Ff8y7mh42pUCyTGIn1VYL9Vh9F/cXML0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yu0g/DA25Y7Rrqis/1zlgmLEa4Kyw9PWF+7xYA6AvgRaifg863QpmINVpto3I4s9IifRgo2DfJHJQBbcwayUscfdKFS8J4ClC5/AF9Y+ea2m48s1fgBkfbBOrEDho5HxU0yqFttHgcfg1Ec5Vd63noTeUgikfTBVuQsJTTq9EAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=cpONkq40; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="cpONkq40"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A37ED40E019D;
-	Mon,  1 Jul 2024 06:09:01 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id cYihkSCg1Nn2; Mon,  1 Jul 2024 06:08:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1719814138; bh=Hhxy5v3YzmxyT9Wh7oyXjG1N4XxgzLak4QFrRjCzjOY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cpONkq40WMXb1P+Hv1N8WbDQ5R9UUSFDx9PaiBjD4B14ip9ZgOZ98vcEx2A/BqInm
-	 ZoaO/yeEq85mIqh8XBWLrlsQgJq7lXMikkUWl79J5f6V1joBDPUj5NtKiXxTPyfZIe
-	 /lnsWER3GOVxVzrHoVd8bx38SYFhjoGqXsUWCNQgj2tk7L+CTApcqd2PzE4TX6le1J
-	 c96DVgUMAZzaf+v4rXSCt1vYOfbo8duP9A3MPuO0oQAOPIo07WRhjUqArOSH80zPZx
-	 hwwfgIZskFeTjqmeyth6DooObkK5WDRCOFkhwOf3OgOwce9ioDhhbXiItAq8BqqQDM
-	 /+oH65ULtOZ8yLrts44nPh3ykHOx016erfQel9gUbvAVbluo084xFb4srhHAe/uycL
-	 qxvzVJMkf/NGMY2Sbl5KzL9RLWUg6K3PqomlnqJHNO+NTsKwGUvTvPLW3VWrRCi1Y8
-	 LQclwojvwm2BtBeqfqxnlb7IXsQouUfjMybitadm/K9votri1NDG+Tq1XCjSyadIKI
-	 OMGJhQXg70Yef3TIJwF0fLQzcFIlRBdxidMePV+Fukp0jFjzYFHQ6qC5EnWrUpWcQO
-	 7opd1YlFZFbag3NwAVphAN01f5XAZC3GXhphw7raRGyzy9JcTO3YlSLfq7HXKTnPU8
-	 +6YkeR0zDP/XwKQvAvehVZyw=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8DC1C40E0192;
-	Mon,  1 Jul 2024 06:08:47 +0000 (UTC)
-Date: Mon, 1 Jul 2024 08:08:41 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Xin Li <xin3.li@intel.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-	dave.hansen@linux.intel.com, peterz@infradead.org,
-	brgerst@gmail.com, chang.seok.bae@intel.com, jgross@suse.com
-Subject: Re: [PATCH v6 5/5] x86/gsseg: use the LKGS instruction if available
- for load_gs_index()
-Message-ID: <20240701060841.GAZoJH6XpJz6qyo-Lr@fat_crate.local>
-References: <20230112072032.35626-1-xin3.li@intel.com>
- <20230112072032.35626-6-xin3.li@intel.com>
- <20240630160448.GAZoGCIHXRuBY8sLqW@fat_crate.local>
- <3A846C73-305E-4C55-B846-AC00657BA95B@zytor.com>
+	s=arc-20240116; t=1719814355; c=relaxed/simple;
+	bh=leRdL9TIL27DeazUKkscwZ4eVccvWI29q1x4++5ggTU=;
+	h=MIME-Version:Content-Type:Date:From:To:Cc:Subject:In-Reply-To:
+	 References:Message-ID; b=FWgusiSQOQ1rCV0S00x2ReY2kjhDgLdtKQEALaMlxLIxeRmpITKW92J7i/oJhsSl4cYe0vgJraFkNo6BwCbVQAKNzjgF1g9vMhA7kpbSqWDFQT75BYqhAnyToN9HtlWP+DrBM41Ld4iBUNjjNwqmfoMzLrrikT+9aZ9Gp1LCUOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; arc=none smtp.client-ip=194.37.255.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
+Received: from [127.0.0.1] (helo=localhost)
+	by relay.expurgate.net with smtp (Exim 4.92)
+	(envelope-from <prvs=0926ff46b5=ms@dev.tdt.de>)
+	id 1sOAGx-002Ih1-QJ; Mon, 01 Jul 2024 08:12:19 +0200
+Received: from [195.243.126.94] (helo=securemail.tdt.de)
+	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ms@dev.tdt.de>)
+	id 1sOAGx-0081tm-0F; Mon, 01 Jul 2024 08:12:19 +0200
+Received: from securemail.tdt.de (localhost [127.0.0.1])
+	by securemail.tdt.de (Postfix) with ESMTP id B005B240053;
+	Mon,  1 Jul 2024 08:12:18 +0200 (CEST)
+Received: from mail.dev.tdt.de (unknown [10.2.4.42])
+	by securemail.tdt.de (Postfix) with ESMTP id 2FFDB240050;
+	Mon,  1 Jul 2024 08:12:18 +0200 (CEST)
+Received: from mail.dev.tdt.de (localhost [IPv6:::1])
+	by mail.dev.tdt.de (Postfix) with ESMTP id 9AF8538201;
+	Mon,  1 Jul 2024 08:12:17 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <3A846C73-305E-4C55-B846-AC00657BA95B@zytor.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date: Mon, 01 Jul 2024 08:12:17 +0200
+From: Martin Schiller <ms@dev.tdt.de>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Hauke Mehrtens <hauke@hauke-m.de>, Thomas Bogendoerfer
+ <tsbogend@alpha.franken.de>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: of: fix lookup quirk for MIPS Lantiq
+Organization: TDT AG
+In-Reply-To: <Zn8CZ47e3LFncrDP@google.com>
+References: <Zn8CZ47e3LFncrDP@google.com>
+Message-ID: <6e07aee09188e241b79e141c532b632b@dev.tdt.de>
+X-Sender: ms@dev.tdt.de
+User-Agent: Roundcube Webmail/1.3.17
+X-purgate-ID: 151534::1719814339-81CB1642-F0BC8056/0/0
+X-purgate: clean
+X-purgate-type: clean
 
-On Sun, Jun 30, 2024 at 07:34:42PM -0700, H. Peter Anvin wrote:
-> It is much like "movl %edi,%ds"...
+On 2024-06-28 20:35, Dmitry Torokhov wrote:
+> As it turns out, there is a large number of out-of-tree DTSes (in
+> OpenWrt project) that used to specify incorrect (active high) polarity
+> for the Lantiq reset GPIO, so to keep compatibility while they are
+> being updated a quirk for force the polarity low is needed. Luckily
+> these old DTSes used nonstandard name for the property ("gpio-reset" vs
+> "reset-gpios") so the quirk will not hurt if there are any new devices
+> that need inverted polarity as they can specify the right polarity in
+> their DTS when using the standard "reset-gpios" property.
+> 
+> Additionally the condition to enable the translation from standard to
+> non-standard reset GPIO property name was inverted and the replacement
+> name for the property was not correct. Fix this as well.
+> 
+> Fixes: fbbbcd177a27 ("gpiolib: of: add quirk for locating reset lines
+> with legacy bindings")
+> Fixes: 90c2d2eb7ab5 ("MIPS: pci: lantiq: switch to using gpiod API")
+> Reported-by: Martin Schiller <ms@dev.tdt.de>
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+>  drivers/gpio/gpiolib-of.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> index 59c7f8a2431a..d21085830632 100644
+> --- a/drivers/gpio/gpiolib-of.c
+> +++ b/drivers/gpio/gpiolib-of.c
+> @@ -203,6 +203,16 @@ static void of_gpio_try_fixup_polarity(const
+> struct device_node *np,
+>  		 */
+>  		{ "qi,lb60",		"rb-gpios",	true },
+>  #endif
+> +#if IS_ENABLED(CONFIG_PCI_LANTIQ)
+> +		/*
+> +		 * According to the PCI specification, the RST# pin is an
+> +		 * active-low signal. However, most of the device trees that
+> +		 * have been widely used for a long time incorrectly describe
+> +		 * reset GPIO as active-high, and were also using wrong name
+> +		 * for the property.
+> +		 */
+> +		{ "lantiq,pci-xway",	"gpio-reset",	false },
+> +#endif
+>  #if IS_ENABLED(CONFIG_TOUCHSCREEN_TSC2005)
+>  		/*
+>  		 * DTS for Nokia N900 incorrectly specified "active high"
+> @@ -512,9 +522,9 @@ static struct gpio_desc
+> *of_find_gpio_rename(struct device_node *np,
+>  		{ "reset",	"reset-n-io",	"marvell,nfc-uart" },
+>  		{ "reset",	"reset-n-io",	"mrvl,nfc-uart" },
+>  #endif
+> -#if !IS_ENABLED(CONFIG_PCI_LANTIQ)
+> +#if IS_ENABLED(CONFIG_PCI_LANTIQ)
+>  		/* MIPS Lantiq PCI */
+> -		{ "reset",	"gpios-reset",	"lantiq,pci-xway" },
+> +		{ "reset",	"gpio-reset",	"lantiq,pci-xway" },
+>  #endif
+> 
+>  		/*
+> --
+> 2.45.2.803.g4e1b14247a-goog
 
-You mean ...,%gs"... :-P
-
-But yeah, that makes more sense.
-
-Are we saying somewhere that when moving into a segreg, only the lower 16 bits
-of the source operand are used?
-
-Both docs say
-
-8E /r	MOV Sreg, r/m16		Move r/m16 to segment register.
-
-and I read that strict as r16 so I'd expect a "mov %di,..." not a "mov
-%edi,..."
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Acked-by: Martin Schiller <ms@dev.tdt.de>
