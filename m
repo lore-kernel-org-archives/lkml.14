@@ -1,118 +1,131 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525E515ADAD
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 13:17:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5836315E5A2;
+	Mon,  1 Jul 2024 13:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719839854; cv=none; b=qdZCfEvX6+irs9pxnPlMYLfa2j14SveTG4temWr5yQyOY+ik3HrFItKmHzylmf4/4UZ5BEPIYyKCl9P3b7+t5Xn9lToISxRetYO3KzRg47IlmtS1eJRhjNcJn6Lgi8wHujkjgD4RtiBzGmpGKSZ4NqJaad3Uhxo1UDCV5tOnuyE=
+	t=1719839895; cv=none; b=RuLXfhQ+/34aOcnQt4hl7lVpe2JHk6/m75+7G7f3tb3JIPJ9T+fGUneALssx5GEVLQ0Uvqww4orT4tQqi8wOy45XccqTYcu5pdXBWcMHRYO6zypU6yaRa/SII+YiDCFD+0AM41FlMpZgBKnis90ttjbzmPonzMo21znzL8Oo96w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719839854; c=relaxed/simple;
-	bh=B3NQ8HCyj1ZTe5E7TLaeqHT43qtQdDbfhF0WcJB5/l4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HL4bJXoHwND6caThTcWRY2U8O63XFKZXfLRzj+GCfSF+0dWYw19WKO/W98xgNK3rDOTc8NrpyTcE0a1ui1FPQN5SlxuF4k6ydx1G+HZJxREceEjn1L6pZ6hiQrprytPKN3/hhXhphMiDA176baDLxL71dI/Tl/e2uqh66S8V6uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=UWKDH2AZ; arc=none smtp.client-ip=209.85.166.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1719839895; c=relaxed/simple;
+	bh=hh1i+9dVZXUUJjTf6x+9miLPTLehfB1g2lO/UR8WrI0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fVowUM8yQKnayveu+KyXnpNY+MFhXr/5Dw/6T4VxFc/o6rvvn2EmG9A5Nv9FgrYp2mUyUFh7GM33IEpV93QOGWzH/W9EfkdKpIz7+YxTyl8Omn9O/YZxKQ6/ZWm1RK3JnPYAPoJc/vhYaoH/Dk9gV+Il1KbupCLOQsH0uSNEOIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=lLE/ndvC; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="UWKDH2AZ"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7e21dfbc310so109564439f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 06:17:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1719839852; x=1720444652; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Tv7hLmqJSP26fMN3IiNsBgVJSAix2nuXmhfSvybhYBQ=;
-        b=UWKDH2AZl3qh51IaJ844eBRRwwGSLeuh5xk19tkKla8v4ZrIpy+m4k4BIjSl2eidlO
-         9dpgHw1aDoQTUYXzk2xHzA1WjfNAqwDxOhcVJvogiMigtxJPkvRvw3MOZKwPFJbwWEhT
-         zIaq7NxLSNGncfzWmKb8S8pMnM6RrVAeGQxB8AfeuKf6+1Zfd4P8i8ltFBAmKy87qBOY
-         6LyYZJ9Nn4F9y+6OY61UcTXywKuFonw9UDJnhm50AJX7YciMtwUHU/o3g0ORLYyO0zw5
-         zCBRHbDi09OHjwyPvJCF4bQ8/vwj+anBMK6m8MEgw6AEArmlsU9G9jPYgGViBUqDUW14
-         Y8xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719839852; x=1720444652;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tv7hLmqJSP26fMN3IiNsBgVJSAix2nuXmhfSvybhYBQ=;
-        b=HOiCBq64oWdZAw/b6Hk9uDflQzIN3hnsQGDNfj9ScfpNG+FN5e+JqX5RBgJ0ftJr3i
-         dqP2Bgf8+vDA0JGYlCRVZbIZzBa86944QQK0uFWlqGV/WWziAHBAV+g5eKMd7MhwGyVs
-         NMjB9e83K6PozNzKbkt967EixblQpYYD0FJGN69hZB8i2yKY9uSJlrKNy7WX8uPKwYQq
-         dWiWFkeBt5T6dGwX0yhGKVBdt5WOaYfSt/L3047OZwf/I8ZTg9JyKgGa8UaZTUHZpi90
-         d9o+ZbPHw7O3jIr6FiKeHZj0q1cCTBTK6NfdDieQJrDaEEHh2Cm4UPW3rFZfK9ZRRPNF
-         BFHw==
-X-Forwarded-Encrypted: i=1; AJvYcCXmveCA2buttdcVVR+Ytt5Su1kpTB3n34cZyWuJjudHpLQ60seGJZ7HiVIAMbcdXpJOKsvNY8wQn59Q37zN6xYInd4AFw4StNn6Ztqm
-X-Gm-Message-State: AOJu0Yz9d6d/DXVF2g1h4jcGWBmGEj6ch1nBHgd4YZCrtPVXOUpBrqhb
-	9J+sV1nJaI0pYNKU0zVNyShNyR6+bdlyXoHyv/jXicBan6E7ldu6f03lkonoOy8=
-X-Google-Smtp-Source: AGHT+IEZw7OPZRtqEEfxj8LpOcD4ss2+Aeo4eVMjfKvEB8LYKyAWd6+8RBlnjTcAOf4l/FP8eMO8Kg==
-X-Received: by 2002:a05:6602:584:b0:7eb:776f:d970 with SMTP id ca18e2360f4ac-7f62ee74896mr592724639f.14.1719839852334;
-        Mon, 01 Jul 2024 06:17:32 -0700 (PDT)
-Received: from [100.64.0.1] ([147.124.94.167])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4bb73e08bc2sm2165340173.83.2024.07.01.06.17.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Jul 2024 06:17:32 -0700 (PDT)
-Message-ID: <f8604c68-8866-447b-a874-562bdad1df79@sifive.com>
-Date: Mon, 1 Jul 2024 08:17:29 -0500
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="lLE/ndvC"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 36784FF80B;
+	Mon,  1 Jul 2024 13:18:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1719839891;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=42HRyVnUZZ6yygw+Uuh45E3YKED+dxCVj6t2LrErm3Q=;
+	b=lLE/ndvCrXOr4zkeIpAX15Vkr97rkirGAqZGUuyVRNdvsYHxwSDkDQkYZgapBv7k8nivpQ
+	brBQ3iNP4yfkZgloit37sg8gq/8P3rH2csO4rf5Nt8R2MKTDM9K9OnHanYGvmyTzJTCpi/
+	1RTJuURO0mwgNLR3zUGXSHSB5iUS++7vGI7Lyp/cZTL6pFodrmlBlH/Uoi36LYcPlmjsEl
+	n0wXchDMz5rFGUEEn0xPPX9eGeWOVPwswGY6DMxZ6Rm30qfJpl+3e9PfjY8buZ0Yb5R3oN
+	sr62uuKmKQ4713dH6vr8vWp4PsTOybZ9f1sh/unnzHx0eyRdRMd2J6gObPNKkg==
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: davem@davemloft.net
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	thomas.petazzoni@bootlin.com,
+	Andrew Lunn <andrew@lunn.ch>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>,
+	linux-arm-kernel@lists.infradead.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	=?UTF-8?q?K=C3=B6ry=20Maincent?= <kory.maincent@bootlin.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+	Piergiorgio Beruto <piergiorgio.beruto@gmail.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	=?UTF-8?q?Nicol=C3=B2=20Veronese?= <nicveronese@gmail.com>,
+	Simon Horman <horms@kernel.org>,
+	mwojtas@chromium.org,
+	Nathan Chancellor <nathan@kernel.org>,
+	Antoine Tenart <atenart@kernel.org>,
+	Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH net-next v14 04/13] net: sfp: Add helper to return the SFP bus name
+Date: Mon,  1 Jul 2024 15:17:50 +0200
+Message-ID: <20240701131801.1227740-5-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240701131801.1227740-1-maxime.chevallier@bootlin.com>
+References: <20240701131801.1227740-1-maxime.chevallier@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] spi: dw-mmio: update dw_spi_mmio_of_match struct
- with thead
-To: Kanak Shilledar <kanakshilledar@gmail.com>
-Cc: Serge Semin <fancer.lancer@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jisheng Zhang <jszhang@kernel.org>,
- Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-References: <20240701121355.262259-2-kanakshilledar@gmail.com>
- <20240701121355.262259-4-kanakshilledar@gmail.com>
-From: Samuel Holland <samuel.holland@sifive.com>
-Content-Language: en-US
-In-Reply-To: <20240701121355.262259-4-kanakshilledar@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Hi Kanak,
+Knowing the bus name is helpful when we want to expose the link topology
+to userspace, add a helper to return the SFP bus name.
 
-On 2024-07-01 7:13 AM, Kanak Shilledar wrote:
-> updated the struct of_device_id dw_spi_mmio_of_match to include
-> the updated compatible value for TH1520 SoC ("thead,th1520-spi")
-> to initialize with dw_spi_pssi_init().
-> 
-> Signed-off-by: Kanak Shilledar <kanakshilledar@gmail.com>
-> ---
-> Changes in v2:
-> - Separated from a single patch file.
-> ---
->  drivers/spi/spi-dw-mmio.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
-> index 819907e332c4..39e3d46ebf5d 100644
-> --- a/drivers/spi/spi-dw-mmio.c
-> +++ b/drivers/spi/spi-dw-mmio.c
-> @@ -419,6 +419,7 @@ static const struct of_device_id dw_spi_mmio_of_match[] = {
->  	{ .compatible = "microchip,sparx5-spi", dw_spi_mscc_sparx5_init},
->  	{ .compatible = "canaan,k210-spi", dw_spi_canaan_k210_init},
->  	{ .compatible = "amd,pensando-elba-spi", .data = dw_spi_elba_init},
-> +	{ .compatible = "thead,th1520-spi", .data = dw_spi_pssi_init},
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+---
+ drivers/net/phy/sfp-bus.c | 11 +++++++++++
+ include/linux/sfp.h       |  6 ++++++
+ 2 files changed, 17 insertions(+)
 
-Your binding requires snps,dw-apb-ssi as a fallback compatible string, which is
-already supported by this driver and uses the same match data. So you don't need
-this patch; its only effect is to make the kernel larger.
-
-Regards,
-Samuel
-
->  	{ /* end of table */}
->  };
->  MODULE_DEVICE_TABLE(of, dw_spi_mmio_of_match);
+diff --git a/drivers/net/phy/sfp-bus.c b/drivers/net/phy/sfp-bus.c
+index 56953e66bb7b..37c85f1e6534 100644
+--- a/drivers/net/phy/sfp-bus.c
++++ b/drivers/net/phy/sfp-bus.c
+@@ -860,3 +860,14 @@ void sfp_unregister_socket(struct sfp_bus *bus)
+ 	sfp_bus_put(bus);
+ }
+ EXPORT_SYMBOL_GPL(sfp_unregister_socket);
++
++const char *sfp_get_name(struct sfp_bus *bus)
++{
++	ASSERT_RTNL();
++
++	if (bus->sfp_dev)
++		return dev_name(bus->sfp_dev);
++
++	return NULL;
++}
++EXPORT_SYMBOL_GPL(sfp_get_name);
+diff --git a/include/linux/sfp.h b/include/linux/sfp.h
+index 54abb4d22b2e..60c65cea74f6 100644
+--- a/include/linux/sfp.h
++++ b/include/linux/sfp.h
+@@ -576,6 +576,7 @@ struct sfp_bus *sfp_bus_find_fwnode(const struct fwnode_handle *fwnode);
+ int sfp_bus_add_upstream(struct sfp_bus *bus, void *upstream,
+ 			 const struct sfp_upstream_ops *ops);
+ void sfp_bus_del_upstream(struct sfp_bus *bus);
++const char *sfp_get_name(struct sfp_bus *bus);
+ #else
+ static inline int sfp_parse_port(struct sfp_bus *bus,
+ 				 const struct sfp_eeprom_id *id,
+@@ -654,6 +655,11 @@ static inline int sfp_bus_add_upstream(struct sfp_bus *bus, void *upstream,
+ static inline void sfp_bus_del_upstream(struct sfp_bus *bus)
+ {
+ }
++
++static inline const char *sfp_get_name(struct sfp_bus *bus)
++{
++	return NULL;
++}
+ #endif
+ 
+ #endif
+-- 
+2.45.1
 
