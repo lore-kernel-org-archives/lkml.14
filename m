@@ -1,166 +1,139 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 770E517C61;
-	Mon,  1 Jul 2024 04:42:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D1737169
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 04:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719808961; cv=none; b=eiuIU5WkAEJ5liCJMx0gf3GF8fPbUxIruwzjYOM3z9igdqb0MUv7/9ElrwbzJJUEN5XxjObFWLzyLkC0o8DIhsdYc0xEDzxnO4z1nlXC7DJjsToPWI/J/wZTaXc/ZHmaaS5T5MjPSicCwP2Hp3kwSrhSWzvE0g2mbJ7HKL0cXMI=
+	t=1719808964; cv=none; b=IM1DJLweHpBENSVi5w8/075P1Qiyy10dGzhkEnQcqWjzZ6TnB8yNu6S5z39UP0noYeDKpQei9RDpamAQbrq9Ah0Idu+iLHB3MHk0X3hedRhG94/sC1YWWAkBQWnbU3FdmQRew9yr6syrodmUSnwnSHDC5Je146vD4soDt/DUpc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719808961; c=relaxed/simple;
-	bh=8t/KdAzxqkS/7p07GxkZ0bFQhYV3CS1hbsMUGQ4NktI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jzfRPbykx6Gro34amjXTfhzgY1gO/ge/pqqhn98Pt47/a4UPHabXY6Uq2HWODctOuxbKQvT4PUKOi/ff/R8klPCTDSQ7lS/ALZtm6+cDGj1f4Pvg2DwTUMvSBBHDxOC5dgqzXfjLlRE6awhfW3KIhOULdkPLTYThWG0hef4uR+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QieRuDgl; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719808964; c=relaxed/simple;
+	bh=3WSw+LzwDfsuTLO07J/Gfgu67U+bggq7nxlP2SFbdkc=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=grj8SrB8DhtLG/sAPjegjes5O3JipgrBAK4cLPenMVq78ItS3zPFp0QuZyEBArvAScrRnL/UKbngvGBO7xC8/dIy+S+SsIGXU77n+nDv1tCVj1AldowAf0Acnm3VgTuD7Gi+r2PT4M/Eol/YeksYd/Y567uMsxe/OyWzsUlRAcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cWQpvF4T; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QieRuDgl"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-719843c8478so76144a12.0;
-        Sun, 30 Jun 2024 21:42:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cWQpvF4T"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-6507e2f0615so1545438a12.1
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2024 21:42:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719808960; x=1720413760; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R8YffMYnGN0uxObMvEtbv5MkYWHWmd5kg/aBxvT37pI=;
-        b=QieRuDglrhRRqQQeGsTK57L6ZTGHmnQT3JE4VRXEONa1j73l1gVSVszsgk+w1somcX
-         78DimDLPrlLDqAzin/P8RTInSHK7LR3cUwL6AguELCMAhc99o3glus6FVBMg9pn+S/NS
-         Dx3N/Vvax7ovulGZNdBZob5AwkRxDsseCErJT2XulAjjVTkgtwIv3GoUNaXWUFKTow59
-         hty7dxzT+zQW4twu3Sig8XjTkYY4BsG80IfGfnPdrSN+gnxZqVtBupSrmFWnvhBt6r7j
-         uDAOSuS7C53vv1oJKgt+GPO8IpFqfC8dWKF/5PrzWseBMvTMUEMwkCTQiyO9e1g89MY+
-         Uhrg==
+        d=google.com; s=20230601; t=1719808962; x=1720413762; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hJaevJbd0eQTHDa7xn1OIMkQuKnrhSd1AMXiSY5R5Xk=;
+        b=cWQpvF4TR0LQ91aZUrUG80AKl+7sQa9kdkGKiAH9uI16gpjdBczaRLIsJ9rSJgkDzx
+         KEckuB61p3wpyuCfIms4QVx7MOsHmey8LfY53Vc2aMEhPlNxaHJldMgcIML0RrELdHtb
+         qlli5PELIJbUWRviMItJREKEIRgrfMqXjABSMTECSHbPWjvDUW5Pldeio641SielBE+l
+         cmYtdAZGELWhdSKVNxq64wiNfIesX7/KjcbnBopigwYEeEkqhGPtP8y42pio4KKvtc6n
+         eZLwBte1a5zsAUqmKDA/xzEF/G8qtwEZsnOkxxZatNAk+V3VjwTMxujfsTcEHGUaXR6J
+         fpDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719808960; x=1720413760;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=R8YffMYnGN0uxObMvEtbv5MkYWHWmd5kg/aBxvT37pI=;
-        b=D4Ui1ltaAB/2rl+jgBSaLsXdmEp/nKrdQwh2aGwVQDDiVks6u0b3HbBVXx12W7faOi
-         qwJvA2nLHKJDu/KDxx+6fOfPdCKSc3ggfzWxKL/5bLGj9kBQKMXpL4mxlfAGb91HExHQ
-         /8tQouK30JEElAzXzd1ED8KmEyF3ctO8+qcxow6PSTkKUpHUg3irXS2jDrWlAyhX8B/p
-         N+d7Oea573vE498BWN89Nwi2OjG+FI+3e4ZHv6bF0Ae1l8KEFIYWXViAoOtRgQ+T2DE+
-         nGPOrWlb12rs6iLZysB3ZMTN/ZsBvIjdZvL9q8wOCtzRZJE7Cx/+uRKvYzcklVgFAPPO
-         QjNw==
-X-Forwarded-Encrypted: i=1; AJvYcCVe/7DvUjrL9j0cJmivhB1NunfG1IfGF4qKWbeO9zbo6w2vFxnGCldMGSLtPl4zDI8oGMrfKnDiSNNBqNK6uAOxWs9AzTZWrDNg06UAGNs23IxJNR83yl5KBuvsnU9w+jnoMkXuGk3Tjw==
-X-Gm-Message-State: AOJu0YzgJ9D7ycL0kyHFvH93rlRUQWHgAmHROlLGwf9k2hs8Y8SFXoJY
-	+LXtqHRyaXGGgFh2NnTV3uKuQvlNFJ3oygNjsfW68iuFWaS+0uL9Ruus0g==
-X-Google-Smtp-Source: AGHT+IHcbdyNFOmrDfxkQwPMDupIwNySdkVbFUyk2wdUvXKuxcCIR8tGWdbWR7laH0m2coQeAkGLbQ==
-X-Received: by 2002:a05:6a00:bcc:b0:706:61bb:7094 with SMTP id d2e1a72fcca58-70aaaed0574mr5211840b3a.2.1719808959476;
-        Sun, 30 Jun 2024 21:42:39 -0700 (PDT)
-Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70802564b50sm5485130b3a.67.2024.06.30.21.42.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Jun 2024 21:42:39 -0700 (PDT)
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: rafael@kernel.org
-Cc: lenb@kernel.org,
-	mario.limonciello@amd.com,
-	akpm@linux-foundation.org,
-	jserv@ccns.ncku.edu.tw,
-	alexdeucher@gmail.com,
-	belegdol@gmail.com,
-	regressions@leemhuis.info,
-	linux-acpi@vger.kernel.org,
-	regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Kuan-Wei Chiu <visitorckw@gmail.com>
-Subject: [PATCH v2] ACPI: processor_idle: Fix invalid comparison with insertion sort for latency
-Date: Mon,  1 Jul 2024 12:42:32 +0800
-Message-Id: <20240701044232.42266-1-visitorckw@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <ZoHKhr9896+Kf65F@visitorckw-System-Product-Name>
-References: <ZoHKhr9896+Kf65F@visitorckw-System-Product-Name>
+        d=1e100.net; s=20230601; t=1719808962; x=1720413762;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hJaevJbd0eQTHDa7xn1OIMkQuKnrhSd1AMXiSY5R5Xk=;
+        b=xNUCXwTlMOuzdwVGzthkPVRy/G5bZzhovYQwKpe+LWrwiBiula0+lHbsNv9daKN4Gw
+         eErgr7kRBzYkKlWbY7axH1wVbEHyeOM1SC21y6I1oJ/mbu5+u3Aua1651VxwfpHL+jwH
+         V7BfQBjs3UAu5yTPYzlcGrYzDgzDqzVU5mYMwUk/b3NzRuRcd9qBYSI9MEsYFipLXhYo
+         wi3dqzZhanhFeYvfJGTuGeqP2GU6Kfx54DaaZ3+OkJXMrEMtkeH4TbCoLWO0osWtF3Om
+         4Za+fNGexhJ9IM80h63kbRZbcjulcHJG/r2b/FxhuHP9ucP7Z0LlwgR/eGi8WYb8rhFu
+         zE0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU2sH+fPnCp8bhmV2AbAlzHoszku46mVLBOOIYp7SIzR1emgduzdEP4Ln4Un5TubhpmocSe89a5iufSY8o4n2gARMi/tPuqH5NXvhAm
+X-Gm-Message-State: AOJu0YzwoxyMmutVYpnvvPPKuVIsAHNgYPqLum4Ny96RxZGfbkQqI5D8
+	wj2VPc8WyVOyC6Y9//PfsQKlTu2SFuHf6VgLToeTKW06AeOVbVltXHxdngVJwUf1eII7bcKePWH
+	O1shyeg==
+X-Google-Smtp-Source: AGHT+IEIzUWDNM21Dmwx3C1YCGQLf5z9VbV+vSSee8+oDr/p/4o0NWDbt/9UqSMxCfs86165f3MQN29AeBtQ
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:7bcd:6ae9:263e:82ff])
+ (user=irogers job=sendgmr) by 2002:a63:77cc:0:b0:6e4:d411:7c64 with SMTP id
+ 41be03b00d2f7-73cf238df43mr12182a12.3.1719808961796; Sun, 30 Jun 2024
+ 21:42:41 -0700 (PDT)
+Date: Sun, 30 Jun 2024 21:42:35 -0700
+In-Reply-To: <20240701044236.475098-1-irogers@google.com>
+Message-Id: <20240701044236.475098-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240701044236.475098-1-irogers@google.com>
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
+Subject: [PATCH v2 1/2] tools subcmd: Add non-waitpid check_if_command_finished()
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-The acpi_cst_latency_cmp comparison function currently used for sorting
-C-state latencies does not satisfy transitivity, causing incorrect
-sorting results. Specifically, if there are two valid acpi_processor_cx
-elements A and B and one invalid element C, it may occur that A < B,
-A = C, and B = C. Sorting algorithms assume that if A < B and A = C,
-then C < B, leading to incorrect ordering.
+Using waitpid can cause stdout/stderr of the child process to be
+lost. Use Linux's /prod/<pid>/status file to determine if the process
+has reached the zombie state. Use the 'status' file rather than 'stat'
+to avoid issues around skipping the process name.
 
-Given the small size of the array (<=8), we replace the library sort
-function with a simple insertion sort that properly ignores invalid
-elements and sorts valid ones based on latency. This change ensures
-correct ordering of the C-state latencies.
-
-Fixes: 65ea8f2c6e23 ("ACPI: processor idle: Fix up C-state latency if not ordered")
-Reported-by: Julian Sikorski <belegdol@gmail.com>
-Closes: https://lore.kernel.org/lkml/70674dc7-5586-4183-8953-8095567e73df@gmail.com/
-Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
-v1 -> v2:
-- Avoid swapping if arr[i] is an invalid element.
+ tools/lib/subcmd/run-command.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-I do not have the appropriate AMD hardware to reproduce this issue and
-test the patch. However, if the aforementioned reason is indeed the
-source of the problem, I believe this patch might help.
-
- drivers/acpi/processor_idle.c | 35 ++++++++++++++---------------------
- 1 file changed, 14 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
-index bd6a7857ce05..813c718b9108 100644
---- a/drivers/acpi/processor_idle.c
-+++ b/drivers/acpi/processor_idle.c
-@@ -386,25 +386,21 @@ static void acpi_processor_power_verify_c3(struct acpi_processor *pr,
- 	acpi_write_bit_register(ACPI_BITREG_BUS_MASTER_RLD, 1);
- }
+diff --git a/tools/lib/subcmd/run-command.c b/tools/lib/subcmd/run-command.c
+index 4e3a557a2f37..ec06683e77a0 100644
+--- a/tools/lib/subcmd/run-command.c
++++ b/tools/lib/subcmd/run-command.c
+@@ -2,6 +2,7 @@
+ #include <unistd.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
++#include <ctype.h>
+ #include <fcntl.h>
+ #include <string.h>
+ #include <linux/string.h>
+@@ -217,8 +218,40 @@ static int wait_or_whine(struct child_process *cmd, bool block)
  
--static int acpi_cst_latency_cmp(const void *a, const void *b)
-+static void acpi_cst_latency_sort(struct acpi_processor_cx *arr, size_t length)
+ int check_if_command_finished(struct child_process *cmd)
  {
--	const struct acpi_processor_cx *x = a, *y = b;
-+	int i, j, k;
- 
--	if (!(x->valid && y->valid))
--		return 0;
--	if (x->latency > y->latency)
--		return 1;
--	if (x->latency < y->latency)
--		return -1;
--	return 0;
--}
--static void acpi_cst_latency_swap(void *a, void *b, int n)
--{
--	struct acpi_processor_cx *x = a, *y = b;
--
--	if (!(x->valid && y->valid))
--		return;
--	swap(x->latency, y->latency);
-+	for (i = 1; i < length; i++) {
-+		if (!arr[i].valid)
-+			continue;
-+		for (j = i - 1, k = i; j >= 0; j--) {
-+			if (!arr[j].valid)
-+				continue;
-+			if (arr[j].latency > arr[k].latency)
-+				swap(arr[j].latency, arr[k].latency);
-+			k = j;
-+		}
++#ifdef __linux__
++	char filename[FILENAME_MAX + 12];
++	char status_line[256];
++	FILE *status_file;
++
++	/*
++	 * Check by reading /proc/<pid>/status as calling waitpid causes
++	 * stdout/stderr to be closed and data lost.
++	 */
++	sprintf(filename, "/proc/%d/status", cmd->pid);
++	status_file = fopen(filename, "r");
++	if (status_file == NULL) {
++		/* Open failed assume finish_command was called. */
++		return true;
 +	}
++	while (fgets(status_line, sizeof(status_line), status_file) != NULL) {
++		char *p;
++
++		if (strncmp(status_line, "State:", 6))
++			continue;
++
++		fclose(status_file);
++		p = status_line + 6;
++		while (isspace(*p))
++			p++;
++		return *p == 'Z';
++	}
++	/* Read failed assume finish_command was called. */
++	fclose(status_file);
++	return true;
++#else
+ 	wait_or_whine(cmd, /*block=*/false);
+ 	return cmd->finished;
++#endif
  }
  
- static int acpi_processor_power_verify(struct acpi_processor *pr)
-@@ -449,10 +445,7 @@ static int acpi_processor_power_verify(struct acpi_processor *pr)
- 
- 	if (buggy_latency) {
- 		pr_notice("FW issue: working around C-state latencies out of order\n");
--		sort(&pr->power.states[1], max_cstate,
--		     sizeof(struct acpi_processor_cx),
--		     acpi_cst_latency_cmp,
--		     acpi_cst_latency_swap);
-+		acpi_cst_latency_sort(&pr->power.states[1], max_cstate);
- 	}
- 
- 	lapic_timer_propagate_broadcast(pr);
+ int finish_command(struct child_process *cmd)
 -- 
-2.34.1
+2.45.2.803.g4e1b14247a-goog
 
