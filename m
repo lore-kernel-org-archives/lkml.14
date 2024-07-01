@@ -1,102 +1,87 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD13214B95A
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 08:48:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 615BC14BF90
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 08:48:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719823717; cv=none; b=pxXF+M6pj0xnWAUEAMehfXcZvL6unQ9kyCSFGs+t7n2bH3VTjv5KsFqVgxRL1aMJQWPTg/5/RsgXmDyv5ii+mwmZ8QtLZyTKlCAditMqU7FO6pyPTMD0eH7vLSk2eZCowQadz0gEnqUQmh0szodnJw08CaT7IrE6Nwo0FBqBQ48=
+	t=1719823723; cv=none; b=acg5GS7FSVtF0q1YTq/XCW2sazljiVN3iMAqwN+osB8i9AgZdykqUYJd7w/2ouSTddYdW0jhioFKRijxyMAipGGP/tCFlLwzo3EJx9M90eyku4ASsBDm7HIhtb5VOHZnqoG5CUwlOo1h31W71mPJ308U5XMpc8851udWrF9iNLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719823717; c=relaxed/simple;
-	bh=fcyiPkvEEKdWecEuJOIrUfCCsRSKdwvcoilRZcmvGGo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=V64rj+Y6kUd/cXr1cb8KZKUb1DF7s+WJQitoLcWlirPcxReCcPibX/8Pd2ASsEtWcTVM9vrEhWt+oBomaXc3KQwkAsG9XTDDOz4RgzIyNjcdkA14h6eqRB9nz7hUTcIRlniBH9LaH02zd2osGgC+rRcc15qunbZGvpYtpFG5tJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=V+qLUZ4G; arc=none smtp.client-ip=209.85.160.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="V+qLUZ4G"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-25cd49906aeso382642fac.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 01:48:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1719823715; x=1720428515; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=StMJ2RtFXCKaoVJqaHkGOtRFp2kjcwvK/9x07Wn8pQQ=;
-        b=V+qLUZ4GIIrF45F6iucTWm5GCtC3/JlaRVHJV1mluKhVd3fH9gOzvL5rd4ib8DKX7L
-         ExYdNg9vjeOteHZM4NZwnx4kDVY7LKpHedblkfyAhuqTduhUvhbLQ+aTN1zpDuIRo1Ma
-         As8MZsThRMwALvnMcQ89JK2xiDKkMNkIi47mT0b1hH1ADKKgZWRyyVtLppwan9rL+oCh
-         mVCb65Brq4oVsshm4bk6RWTPwcqPLiR6dOa1QzbRuA1EIolPOiXu/SiezFcZZfAVHXaK
-         1bQVcYIg55vO0om8sSbNtycD9MtR3IJ+hDQls0zhX/yMdXro4aVMGYmItwB0OHYgtvQf
-         A0GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719823715; x=1720428515;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=StMJ2RtFXCKaoVJqaHkGOtRFp2kjcwvK/9x07Wn8pQQ=;
-        b=qaXsqrErUY+lszf7F8BjztIQps29Zq9XvNqcY92uJyHIRySwyrXCFlElKg8ieD7Slq
-         EFKZj8UOSZT5nHpsWigGPnSpammhWxNaiEqiXPDS0ntrS6TAvZ+ynNu7F7oBn/F/rDt6
-         rNLaAFrIyt9PTn9wpNOEbk8cYuxmD9Vfc+jlhVjDKgSstPFBildxla3VK3eprqBKJeKu
-         mBhI/o4Wr2vg1ONwiAW5m59OLRLrEAAfCi5qewIX2bHtu3d3vMPbKQYshG8DYnHBWP/+
-         707aFT+r/sKTYkafqMSrVJJLsReOMsIvg5ZXSIMVRMGkhQWINbYAiNplucAUAOEWUoLe
-         uZjw==
-X-Forwarded-Encrypted: i=1; AJvYcCUaDMVhTx221eQhQwQiwVjbyf+pAbeKSeVWe0DsNzPD1luemE92fzk2NrBjYP8wfaeWK6H9q39SyDMFr0ARqrLW8YK4YqaRFpuRHjrv
-X-Gm-Message-State: AOJu0YwGSgALiMZQeXNCqTvfiySipcm4nbjqLTDjyOj40rvjQT2qv2PI
-	amhTUDZ1CLkTaUCZRv9HcUtDKdFL39ROucdSar0uB647B0dVEO9mI2kC5kYshpU=
-X-Google-Smtp-Source: AGHT+IFE3dKI9Tgl7EIyomU4IdVHY+PmwvfXhSbglMPZKAPvgX4/lADNKj6dPhxAruv+7V80kKXCBw==
-X-Received: by 2002:a05:6808:1a2a:b0:3d5:65c7:c26c with SMTP id 5614622812f47-3d6b549a9fcmr5659724b6e.4.1719823714723;
-        Mon, 01 Jul 2024 01:48:34 -0700 (PDT)
-Received: from C02DW0BEMD6R.bytedance.net ([139.177.225.241])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70804a7e7e0sm5932374b3a.204.2024.07.01.01.48.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 01:48:34 -0700 (PDT)
-From: Qi Zheng <zhengqi.arch@bytedance.com>
-To: david@redhat.com,
-	hughd@google.com,
-	willy@infradead.org,
-	mgorman@suse.de,
-	muchun.song@linux.dev,
-	akpm@linux-foundation.org
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Qi Zheng <zhengqi.arch@bytedance.com>
-Subject: [RFC PATCH 7/7] x86: select ARCH_SUPPORTS_PT_RECLAIM if X86_64
-Date: Mon,  1 Jul 2024 16:46:48 +0800
-Message-Id: <0f3aacc9707da962398de71c127e7771c6798062.1719570849.git.zhengqi.arch@bytedance.com>
-X-Mailer: git-send-email 2.24.3 (Apple Git-128)
-In-Reply-To: <cover.1719570849.git.zhengqi.arch@bytedance.com>
-References: <cover.1719570849.git.zhengqi.arch@bytedance.com>
+	s=arc-20240116; t=1719823723; c=relaxed/simple;
+	bh=CdPTH1L8XM9BliRaR+K4i2VVXwKTLMr/P6n8pgwx1h0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a4Y5O2jh4QFkO9pF6vIq/8XPhe3My6kpJKVSTsBZinH/gLXtZBtqiWl/Q2Usdk6WbIolnhBMayrf1hCKsUyg+vvhhXntxWcUr/I5AKVkMuzqseKHUyHYhzsmOQP94O3rtOW0w/qRawPTq8ISRmfHJPfUz+r77pP9cyl7YHHSfbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77313339;
+	Mon,  1 Jul 2024 01:49:04 -0700 (PDT)
+Received: from [10.57.72.41] (unknown [10.57.72.41])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 98A4B3F766;
+	Mon,  1 Jul 2024 01:48:38 -0700 (PDT)
+Message-ID: <bfdf6970-48cc-477a-b726-5e0da242da93@arm.com>
+Date: Mon, 1 Jul 2024 09:48:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/vmscan: drop checking if _deferred_list is empty
+ before using TTU_SYNC
+Content-Language: en-GB
+To: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org,
+ linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>,
+ David Hildenbrand <david@redhat.com>
+References: <20240629234155.53524-1-21cnbao@gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20240629234155.53524-1-21cnbao@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Now, x86 has fully supported the CONFIG_PT_RECLAIM feature, and
-reclaiming PTE pages is profitable only on 64-bit systems, so select
-ARCH_SUPPORTS_PT_RECLAIM if X86_64.
+On 30/06/2024 00:41, Barry Song wrote:
+> From: Barry Song <v-songbaohua@oppo.com>
+> 
+> The optimization of list_empty(&folio->_deferred_list) aimed to prevent
+> increasing the PTL duration when a large folio is partially unmapped,
+> for example, from subpage 0 to subpage (nr - 2).
+> 
+> But Ryan's commit 5ed890ce5147 ("mm: vmscan: avoid split during
+> shrink_folio_list()") actually splits this kind of large folios. This
+> makes the "optimization" useless.
+> 
+> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Ryan Roberts <ryan.roberts@arm.com>
 
-Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
----
- arch/x86/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index cbe5fac4b9dd..23ccd7c30adc 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -313,6 +313,7 @@ config X86
- 	select FUNCTION_ALIGNMENT_4B
- 	imply IMA_SECURE_AND_OR_TRUSTED_BOOT    if EFI
- 	select HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
-+	select ARCH_SUPPORTS_PT_RECLAIM		if X86_64
- 
- config INSTRUCTION_DECODER
- 	def_bool y
--- 
-2.20.1
+> ---
+>  -v1
+>  * I remember David and Ryan once suggested that this check could be dropped
+>    while the patch was being pulled into mm-unstable. However, for some reason,
+>    I forgot to request squashing this change.
+> 
+>  mm/vmscan.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index 3d4c681c6d40..0761f91b407f 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -1291,7 +1291,7 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+>  			 * try_to_unmap acquire PTL from the first PTE,
+>  			 * eliminating the influence of temporary PTE values.
+>  			 */
+> -			if (folio_test_large(folio) && list_empty(&folio->_deferred_list))
+> +			if (folio_test_large(folio))
+
+As it stands, the list_empty() technically needs a data_race() annotation. I
+think your original patch went into v6.10-rc1? If so, perhaps it makes sense to
+try to get this into the next rc?
+
+>  				flags |= TTU_SYNC;
+>  
+>  			try_to_unmap(folio, flags);
 
