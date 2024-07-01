@@ -1,159 +1,89 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 876513770D
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 05:42:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFD02A8E5;
+	Mon,  1 Jul 2024 05:42:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719812526; cv=none; b=i8yF2TBlhvLCFstyillEQyPmPrZktsXxRKhyEQb/uLKvwaQl4TV71sP1MrMtvwDRrOQ9sdUv8qcQ6Q1WeO4IYm/cGi3MsLqTC/vZmv6LkC1JiH/pA6ivneEo4lml2UIuqihMCM8B2YtYGhfTaD0j8lCiGGM6Btx1mYxP+XouqXA=
+	t=1719812571; cv=none; b=gcq14d4Az8tvJEIiwssDQhY5nrNfBO3v1SjF3zdQAip+ov+Yhzd7aIRnUrbi8jsTpVdjcm3ObpEjzREc+uqS7e/C5u1wH/lg8hu6sW7H6ac+WjDwUY1phsPmD0ksC0uu3zmnNyhTu9Itqm4zxkw6uDFetS+oPbnIeBqlpmXi7Dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719812526; c=relaxed/simple;
-	bh=URBql0tdkG8weo7qslMgXtQqS7z1an3iLJvVeKwFk6E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SSF7yk9jUIgow5eHg0Vibb6duWAiHIOj7F3rdKuZtZ9Nw360aZMoOy+KMO/JwGH0iOm/AZMthwgIYaR54S2T8QnvX3bvBbjO4NeHvtQZwHSApSBKYJiP96jDTQfYWMqO6qKrlS8t+QaaGCMg4h1Lka9yjx/wDlTj4dUV5+XP2+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SdnCP3L6; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719812571; c=relaxed/simple;
+	bh=3ROkGh3LFrwXkgjUpZL7vyrfZ1wpzqjzTylzrP6qt98=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Lu37P7YvocTqYuPdnz4I0TYLbDaPOg7TBFwgdSG6T695jhjEsy66ZfEKn0+4HcaTaa/9rtIVyOqDiPgJZ71ujAXnc7DW15HcR+ippfgha/j6wq8YaevCtD9XsDHXbyQI3WKx03OLskgo8St0Fo3ApKAZDSpnhZrAIQ0AL50rKMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=XN1yb5H6; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SdnCP3L6"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-364ff42999eso663367f8f.3
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2024 22:42:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719812523; x=1720417323; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=K1RP7Fpk8x/fLqAOvJCm2fvlERvfv14/xhETHMn8PzY=;
-        b=SdnCP3L6fLRyDuWCSl2PrHaSybYB1c8hyciiYFPAn3OBIyVs77uVYSo/gsc18XJvn0
-         1GVs3lgubddxKwegjInCCOwumPOU8GZI3lEuRRhLBYCEx7hoPnBznkhyb78UIv5ae1/8
-         ekY7LSt/cQRiIsE0cMmL1wT8irmB+6LhkQwiTeTy6CRjiGvQRqnTS5mhy5RMquzvr6kN
-         7dfAbFIW5Xm2bephIUEnfSTcaHQQNlH5dnBRwBDjzzuqypem4zDU6yQKzrGAn6UMXwH2
-         RP1dad90jW+xBi5DjgkL2GsT2UbDKZnl+POnhFRaZciGEtH5bX78kMn8CV1n+Uxx2gc/
-         g4tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719812523; x=1720417323;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=K1RP7Fpk8x/fLqAOvJCm2fvlERvfv14/xhETHMn8PzY=;
-        b=SPeUFo7e0BiDwl4K0VxeFyFdat6EcAjYXSwa9r4QpHNfagyr/009mkPeC083h8pH4x
-         pDCwaqEpjmQiLR4cnXTR4b7YyjW6DaIzAXyez3tBVNHF1f5GrQbV0OZkX2g5nBSWbA42
-         RD4JoY2vVEZwAlCT42EyS9lNipskN4UzBs3ym2TatCdGlMj/5BuCBYsRYfekrxZU5/Vi
-         dLw4/gX1CdiiliYB3D0N1HD3K+lW+y64/u1p+fU/l4FnAqKX/ChvtVJ7VGDEEkfxTNNP
-         DjAjBz1aYq6Nx8yqbyKjxtubE8eFETbBU7xLX1Heu1AhQxIo7+BahmnGbOdjtCvqAv/V
-         CtIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXQ3OruLvmUjI0k+/sV9HIQEkpyPRA/s6rIUdcDjnH14rWiFrk6Yy4NhF5JxKCi6Gqrj/1BLg7Huc0YppKqIKm3XxuWMAeEsp649IVO
-X-Gm-Message-State: AOJu0YxhoFqFLUFCBNyOeqQKYGcvYVWEUkbq8/BI2h3RSJR7o14AQAAk
-	lSTL0V80WKbpU0kNcOVK5R2PpKarT6Qbq2w54adVHzBA7zDcEXaRQ7AybGcnnHA=
-X-Google-Smtp-Source: AGHT+IHSKBmHrhw/AYhWM82y6sx7nEDDCK+Cj+oGMZFjhX97MXohzQV+8dJGlqZohNNB2+Ja+HNgaA==
-X-Received: by 2002:a5d:47c6:0:b0:367:2d2f:e634 with SMTP id ffacd0b85a97d-367757249a4mr5411546f8f.55.1719812522948;
-        Sun, 30 Jun 2024 22:42:02 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.137])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0cd687sm9063218f8f.14.2024.06.30.22.42.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 Jun 2024 22:42:02 -0700 (PDT)
-Message-ID: <9f1fa742-28c1-428a-9f85-2d3b352abb44@linaro.org>
-Date: Mon, 1 Jul 2024 07:42:00 +0200
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XN1yb5H6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1719812567;
+	bh=GuMdoXOBBCGaPufChFeoBTb4PW1bsW+H5h3wyrbJKy8=;
+	h=Date:From:To:Cc:Subject:From;
+	b=XN1yb5H60tGm6gHULClKQ+fAuVWnYQ4nnwAXj2itiQjv1jDmlSPVAzSUp8+ogrhtp
+	 efQ19EYh6+9gJOg4a5EWdMbjb83R0Xvam007rK18pxphLgDxSEdSVKOQpqNOd1iUkR
+	 PklkbNW7XSYhdYowJooPJvwT/lN37wjMql2nncajP7s2LpZWMzq82abp0ulG2l2WLb
+	 eO76vvbcnL8cb0b9g/xzIvhladdfSFb8Y0VnIfCOIEBwK9Jso4EH7Y7oWCTyez7hT4
+	 19I8/nnyyazOJ8J366v/D+IlgzXpQISOw10W2d0chidwD8XsnC0guK04JGnv267odG
+	 GlRm9tgrC+fGA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WCFLb5BJSz4wc1;
+	Mon,  1 Jul 2024 15:42:47 +1000 (AEST)
+Date: Mon, 1 Jul 2024 15:42:47 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patch in the regulator tree
+Message-ID: <20240701154247.34727007@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: intel,lgm: drop inactive maintainers from
- intel
-To: Rob Herring <robh@kernel.org>, Chuanhua Lei <lchuanhua@maxlinear.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
- Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Rahul Tanwar <rtanwar@maxlinear.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-leds@vger.kernel.org,
- linux-mtd@lists.infradead.org, linux-phy@lists.infradead.org,
- linux-gpio@vger.kernel.org
-References: <20240626101809.25227-1-krzysztof.kozlowski@linaro.org>
- <20240628215350.GA267712-robh@kernel.org>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
- m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
- HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
- XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
- mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
- v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
- cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
- rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
- qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
- aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
- gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
- dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
- NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
- hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
- oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
- H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
- yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
- 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
- 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
- +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
- FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
- 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
- DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
- oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
- 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
- Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
- qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
- /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
- qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
- EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
- KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
- fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240628215350.GA267712-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/P9QYTc0i7SQui5Uam6j3=qs";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 28/06/2024 23:53, Rob Herring wrote:
-> On Wed, Jun 26, 2024 at 12:18:09PM +0200, Krzysztof Kozlowski wrote:
->> Emails to chuanhua.lei@intel.com, mallikarjunax.reddy@intel.com,
->> yixin.zhu@intel.com and vadivel.muruganx.ramuthevar@linux.intel.com
->> bounce with the same message:
->>
->>   Your message wasn't delivered to Yixin.zhu@intel.com because the
->>   address couldn't be found or is unable to receive email.
->>
->> The Intel LGM SoC was apparently part of Home Gateway division which was
->> acquired by Maxlinear, so switch maintenance of affected bindings to the
->> only known non-bouncing Maxlinear address: Rahul Tanwar.
->>
->> I do not know if Rahul Tanwar or Maxlinear want to maintain the
->> bindings, so regardless of this change we should consider bindings
->> abandoned and probably drop soon.
-> 
-> No bounces on this? According to this[1], Rahul is not with Maxlinear 
-> any more. Maybe an address in that thread will work. But seems like it 
-> is abandoned.
+--Sig_/P9QYTc0i7SQui5Uam6j3=qs
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I did not get any bounces, maybe there is some sort of redirection
-within Maxlinear. I can change the maintainer to Chuanhua Lei.
+Hi all,
 
-Best regards,
-Krzysztof
+The following commit is also in the mediatek tree as a different commit
+(but the same patch):
 
+  b147ae7ae514 ("regulator: Add bindings for MediaTek DVFSRC Regulators")
+
+This is commit
+
+  9a682c18ee49 ("regulator: Add bindings for MediaTek DVFSRC Regulators")
+
+in the mediatek tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/P9QYTc0i7SQui5Uam6j3=qs
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmaCQdcACgkQAVBC80lX
+0GxltggAhWeNALISCTPl8h6XHomgBuo+IYrz9I+I/o9ZfPxlwIKi/nfPOyrhgh0W
+Dh2K4I4b0nLWloW7uUsxhDJ5S2OZ8IbSvf95bctyIbxLFFOGouvPTpf3pLmTZIam
+0Fq6cEYv/LBMjyTgVg/wc8rNopatbTThIFp5+4QWVepgcz1ChQ6Fsyii7IP67PG1
+RXy/H4IoRG6m/8nIOfA9+vH0A5JXAJjeOjEH2QIPddj+I8Idb5DDbwGJXjYhGOSa
+PmKgEiJq53narqpiH24OMLFOpKsDVC/dg5ERnLnXGpLknZvOpajPUtv01vvCh8D+
+/cZ1La/YFbj2JkoMg0tvVo1dEbegzw==
+=NwgJ
+-----END PGP SIGNATURE-----
+
+--Sig_/P9QYTc0i7SQui5Uam6j3=qs--
