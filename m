@@ -1,154 +1,157 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7622AD05;
-	Mon,  1 Jul 2024 07:13:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2F459168;
+	Mon,  1 Jul 2024 07:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719818002; cv=none; b=MnJNlB4XnBtF4wJtIvyNU1VY79ckOujXNviqxcxa30rOLs+n8y3M8S0aR+7wWjw2kYrMghccymUwOF2D/FpI6f7mN4j+N2BGtP/ci0ppgg+uKLsRJhUj3Y8zLJNv3FZlWWkazzCPmQbzGKAtqkjnbWRHU06i+5jTVvHJsHDBxKg=
+	t=1719818095; cv=none; b=c8h8/VifPtdcwyb1W9nH5pC2mlH5mC8Z44lKPsPDjAQvtY2KH36RkX2cP39RufwYgSFI3SpTa4w87vdkyCpk+oxg/s3zKfSfG7Ul1ymPJ+vXOBDjIL5GxtF8UowvLudo+WEdqL+abIRasG1/wVFYV37p4pQnIH+uxwqZmq4eGo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719818002; c=relaxed/simple;
-	bh=qUAkfJVWtPqbt4jLO5JajCL6NEIKpRiTrpsx0py35n8=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hVy/vnqt34LcdOgIl+EgxbZ2ZtTHPyTtF4LdE12Yszx6JodzWBjZvPU0lPTlt5GhHkkZt36Qn3gZ4j6WEFJiZxY3lJJynrQHP1posjLT5fCC7edLWV63XR8ueZNwoPGX/mdNgIUjPFtziyE8v1OLh/f4OTt5aox1F1zyGNm78rM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=agxOA7Sm; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xGl3+u28; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Th2fWMW1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=EE14GiBt; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1719818095; c=relaxed/simple;
+	bh=aBKD3Uj+bz0fC3jHCQStdgSfgrblCRNumgZ6FJr+Qg4=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=TGdW/6F8KzhneTXWz2x4PnSOwHUAHOzXQQ6xpCAtLpKxutzkwqTSu5T/pi8sZ+zFCP6lt377X0syfFy8aRczoGAZobT2nUzGDG0AG2XB0ePq+PlF3+KjQfDourae+1Gt2yHhNxq1CQf2hzg5XDeC3IIRZJdsKT471ZWkCNFgJyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zZE2gWH8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uSMUdtpO; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="agxOA7Sm";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xGl3+u28";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Th2fWMW1";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="EE14GiBt"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D872521AC4;
-	Mon,  1 Jul 2024 07:13:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1719817993; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zZE2gWH8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uSMUdtpO"
+Date: Mon, 01 Jul 2024 07:14:52 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1719818092;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RntfX8icZol8M8rrp5guiSaR0MaQ5iQBleFBw6EU+ME=;
-	b=agxOA7SmcIn1byZ/ZvwfTRjQLi1CUcSqmOI+MZncs9FfpxmRV+FmQ+kefAyGlk46HAU+6V
-	+q9IiVeP9TCd67G0FsqSB6zvhDOkvXP2wI1j1KDeHyGmOGWUa6onfurVEe4LoueD5aRjmZ
-	TPr4ZiL6jn3gjR6dVTf8lGTFNiseSI4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1719817993;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	bh=/8y7doyPNcQhto4gUcbOsO9PzfLioSsTJraVqqEFPzo=;
+	b=zZE2gWH8Ta4XTVNDi/qT7kZ/8t6w2R7CmoErQXWQt4o4/4W5mVZ9MLNHaM0hryfK8EkPsG
+	yV05olVQTIV1nZHnkJjWixxpR3DSHXZxywrFstNArpe+VfQTw++AcTN2KKgWQfMMQtu/OV
+	rWEGXYQsCqPFfd63Rv+bth7FIARe4vhK2rMOJNE2Prlbja3TYdZEYvdzBfWOcJRh4Ypegm
+	KF15GZETcCElMj5p2ne+kjk0JO3ynlCcodtxHujR6nLL6qT2hmbuRrEWP/AuMt6J4m9uAh
+	WbIY2EAUNtpK1cyEJ6jFnmy4Stx6vtd3kVJm7SvTzo9qWz3HbRFlxihG2cPoVw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1719818092;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RntfX8icZol8M8rrp5guiSaR0MaQ5iQBleFBw6EU+ME=;
-	b=xGl3+u28BKWvdWFJd76MPeG8IVKbqyD6OyLKgB01eY6jtR6k+TEhtV3lbcJ6Ts1Ee0JDXM
-	ZIOTNO7aC1LETPCg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1719817992; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RntfX8icZol8M8rrp5guiSaR0MaQ5iQBleFBw6EU+ME=;
-	b=Th2fWMW1v12RsTvEle8mT0d4qTokMLn9WNJ+HKq+0KyzRT8rpA9+yUVQwBZDR7UotBEkQk
-	3urM9wkja4tn8av58E4A2mTShNT0nlcTUxejfNeiuOaUR0oZHMl6aI/bl476bhc++nVkXw
-	NMNofmmcH2fygWMd5OaIKoCCXNm7Y30=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1719817992;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RntfX8icZol8M8rrp5guiSaR0MaQ5iQBleFBw6EU+ME=;
-	b=EE14GiBtMgFFNDolbGLpPLz8I3c6al+BgVenqD/8nuWTMoc/eyl96gC6XTi28Cus1ugweU
-	krqX21puNrcDPuAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 80BB6139C2;
-	Mon,  1 Jul 2024 07:13:12 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id I9cTHghXgmaOawAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 01 Jul 2024 07:13:12 +0000
-Date: Mon, 01 Jul 2024 09:13:41 +0200
-Message-ID: <87wmm5a8ka.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	Simon Trimmer <simont@opensource.cirrus.com>,
-	Takashi Iwai <tiwai@suse.de>,
-	perex@perex.cz,
-	tiwai@suse.com,
-	rf@opensource.cirrus.com,
-	broonie@kernel.org,
-	shenghao-ding@ti.com,
-	sbinding@opensource.cirrus.com,
-	lukas.bulwahn@gmail.com,
-	linux-sound@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.6 11/12] ALSA: hda: cs35l56: Select SERIAL_MULTI_INSTANTIATE
-In-Reply-To: <20240701001342.2920907-11-sashal@kernel.org>
-References: <20240701001342.2920907-1-sashal@kernel.org>
-	<20240701001342.2920907-11-sashal@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	bh=/8y7doyPNcQhto4gUcbOsO9PzfLioSsTJraVqqEFPzo=;
+	b=uSMUdtpODs3m7FqMhv7dxTVrymrLyQC3dAsnpDmlZzDr5RYY+q+Mj+kuXNAsr2wBb+7A+B
+	9zkMzjINT0CZUUDQ==
+From: "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf: Fix event leak upon exit
+Cc: Frederic Weisbecker <frederic@kernel.org>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240621091601.18227-4-frederic@kernel.org>
+References: <20240621091601.18227-4-frederic@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spamd-Result: default: False [-1.77 / 50.00];
-	BAYES_HAM(-2.97)[99.85%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,opensource.cirrus.com,suse.de,perex.cz,suse.com,kernel.org,ti.com,gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Score: -1.77
-X-Spam-Level: 
+MIME-Version: 1.0
+Message-ID: <171981809242.2215.6810968999368920588.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Mon, 01 Jul 2024 02:13:30 +0200,
-Sasha Levin wrote:
-> 
-> From: Simon Trimmer <simont@opensource.cirrus.com>
-> 
-> [ Upstream commit 9b1effff19cdf2230d3ecb07ff4038a0da32e9cc ]
-> 
-> The ACPI IDs used in the CS35L56 HDA drivers are all handled by the
-> serial multi-instantiate driver which starts multiple Linux device
-> instances from a single ACPI Device() node.
-> 
-> As serial multi-instantiate is not an optional part of the system add it
-> as a dependency in Kconfig so that it is not overlooked.
-> 
-> Signed-off-by: Simon Trimmer <simont@opensource.cirrus.com>
-> Link: https://lore.kernel.org/20240619161602.117452-1-simont@opensource.cirrus.com
-> Signed-off-by: Takashi Iwai <tiwai@suse.de>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+The following commit has been merged into the perf/urgent branch of tip:
 
-This change breaks random builds, so please pick up a follow-up fix
-17563b4a19d1844bdbccc7a82d2f31c28ca9cfae
-    ALSA: hda: Use imply for suggesting CONFIG_SERIAL_MULTI_INSTANTIATE
-too.
+Commit-ID:     73caafba7021a97c22bff58c3d123228e03cdc46
+Gitweb:        https://git.kernel.org/tip/73caafba7021a97c22bff58c3d123228e03cdc46
+Author:        Frederic Weisbecker <frederic@kernel.org>
+AuthorDate:    Fri, 21 Jun 2024 11:16:00 +02:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Tue, 25 Jun 2024 10:43:38 +02:00
 
+perf: Fix event leak upon exit
 
-thanks,
+When a task is scheduled out, pending sigtrap deliveries are deferred
+to the target task upon resume to userspace via task_work.
 
-Takashi
+However failures while adding an event's callback to the task_work
+engine are ignored. And since the last call for events exit happen
+after task work is eventually closed, there is a small window during
+which pending sigtrap can be queued though ignored, leaking the event
+refcount addition such as in the following scenario:
+
+    TASK A
+    -----
+
+    do_exit()
+       exit_task_work(tsk);
+
+       <IRQ>
+       perf_event_overflow()
+          event->pending_sigtrap = pending_id;
+          irq_work_queue(&event->pending_irq);
+       </IRQ>
+    =========> PREEMPTION: TASK A -> TASK B
+       event_sched_out()
+          event->pending_sigtrap = 0;
+          atomic_long_inc_not_zero(&event->refcount)
+          // FAILS: task work has exited
+          task_work_add(&event->pending_task)
+       [...]
+       <IRQ WORK>
+       perf_pending_irq()
+          // early return: event->oncpu = -1
+       </IRQ WORK>
+       [...]
+    =========> TASK B -> TASK A
+       perf_event_exit_task(tsk)
+          perf_event_exit_event()
+             free_event()
+                WARN(atomic_long_cmpxchg(&event->refcount, 1, 0) != 1)
+                // leak event due to unexpected refcount == 2
+
+As a result the event is never released while the task exits.
+
+Fix this with appropriate task_work_add()'s error handling.
+
+Fixes: 517e6a301f34 ("perf: Fix perf_pending_task() UaF")
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20240621091601.18227-4-frederic@kernel.org
+---
+ kernel/events/core.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 8f908f0..7c3218d 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2284,18 +2284,15 @@ event_sched_out(struct perf_event *event, struct perf_event_context *ctx)
+ 	}
+ 
+ 	if (event->pending_sigtrap) {
+-		bool dec = true;
+-
+ 		event->pending_sigtrap = 0;
+ 		if (state != PERF_EVENT_STATE_OFF &&
+-		    !event->pending_work) {
+-			event->pending_work = 1;
+-			dec = false;
++		    !event->pending_work &&
++		    !task_work_add(current, &event->pending_task, TWA_RESUME)) {
+ 			WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
+-			task_work_add(current, &event->pending_task, TWA_RESUME);
+-		}
+-		if (dec)
++			event->pending_work = 1;
++		} else {
+ 			local_dec(&event->ctx->nr_pending);
++		}
+ 	}
+ 
+ 	perf_event_set_state(event, state);
