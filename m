@@ -1,115 +1,147 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 939BA16EB71
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 17:58:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10248F9DF
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 18:01:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719856735; cv=none; b=Jo5f7yWWTdrG1jlMpnbAC25h/UhGKAtuz9UjTOnFJjFD9p9PwBhUVNhodv66WvNk4mfSjGR/A7UUuabTPX/krBrtVGZ/ieVHCAbF0xAgNrjgrdkS156iD70l5aaHfXvGSGOI5ZSjv9ZPOn27joMIpBR6O4cCn/Gpqab1hbCuSMw=
+	t=1719856914; cv=none; b=ufEJLxjYwMjuGWMz2sJbgFnTaVH/OjmfbjeyCLJd8Dgz7y0PwKGa6PmriOEgJo02F6g5yMrGizhm0K2umKKIlLNutTrV6gREKlorbFzszZcagP3ubaYStQcbW54Gn7LW1rVpA1vhSHmbbPM7KISpOJu9kOW/7LR2BcDm4fM5iOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719856735; c=relaxed/simple;
-	bh=9uA3Y+CKDQgcpbSj76MBdoSDbtnzadrzu8XP5nWZpXc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n3FumIaqIZ2UNSoS4b8h9sNQNxqE4Rq5F7kYKtFS1wbiMt83/HapkICYON1cYjI6iMr2qwMh0oQbagnehVRf9OS2rJmc1LcpAYzZN/6eArAkLBcI/VziuLVYOqTcz3/Aotu2R2BH4N3qx2J8gWEP70jaRZU4GEw0lvnxzN1py/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chrisli.org; spf=pass smtp.mailfrom=chrisli.org; dkim=pass (2048-bit key) header.d=chrisli-org.20230601.gappssmtp.com header.i=@chrisli-org.20230601.gappssmtp.com header.b=2Gz+YDoq; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chrisli.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chrisli.org
+	s=arc-20240116; t=1719856914; c=relaxed/simple;
+	bh=P8YG2LyxevjiJ7vKNtBwNMx6fC14gxOjGhQOFwy3PnE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J8QA+aUaMf6JlocpjF51XzcYBIz8cu2C8UekOqhePo8lBeR0uAZZ5D6otrAGE70VzRi+Eao6lNk9bBhhLagtUZAAShPeKR9SdA73D1HezBH2oCAJLS7sg/SbZz7shB5h/AwKa7YaK/8VVEE/MPMJbCIHUacNC3KNd/ZdkMed8QM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=CvCLh9nA; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=chrisli-org.20230601.gappssmtp.com header.i=@chrisli-org.20230601.gappssmtp.com header.b="2Gz+YDoq"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-64d408a5d01so15764837b3.1
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 10:58:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="CvCLh9nA"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-57d1012e52fso717994a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 11:01:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisli-org.20230601.gappssmtp.com; s=20230601; t=1719856732; x=1720461532; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9StUTNhxwCy/pDRuf8/7L71MaUer3QRVVlv9U1S2xNU=;
-        b=2Gz+YDoq8m+XuStUY2eBBWXEkygpgcoGU2zaHRO0s1ZzVRkxQOlkAan0OHJDqHogjS
-         0m6FnU5S0JS8QOIYApJ4C33xE8RGekvjV7OqU7l9p2bhvEMFDXriuGJtZ886QblgtvD2
-         /92drCS8hfGO2hvwvr4bl2yJaOeqQ3ZMPuMwdeFF2NZPtTM1D3EUURc6aioWKpQVYR8t
-         eq4UrNa7ktkiyr6IKgVr+F+qLasae9KROKBVzxQjBvLI5dljwXRfgohjAs27flvJGPgL
-         aBtmHaVhNhZMwseqFvpuJxoKWYabnzHJuQJfdF+d5P0BoFv+XHUUdclP76bMkYirdwdP
-         AESQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719856908; x=1720461708; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=INqZmZ/BbGR0eouXTG+y0zxvAOWCJwOuHsTjqM/v/d4=;
+        b=CvCLh9nA+iPm9LBrmceHUbijfnLPB/F1HIyUv5qWhAlU5/zXPI6aohMEu0bzXfIsFN
+         9umQHqZKGKZXEFE6ekQKdLECyFiNkEhV6U0Hj7FcUdB3+ykbYPyRTomV1wTcJ2Wtrp7T
+         g9SKgRD/bcw+yBDGnyTkds4Mm60gkwT3Pq+tAHPagKcAP/HJTm8t2gxEAjLe97egcaMa
+         k9zzFZjFGpqpeN+uFKXSH4d6+w6UnzfpX7aaPym5lTGa+7bi7zEqoMujvFBLgFApYQ6/
+         N/GDwzqquTKW7aqx8Ru9WfCl0TNzO44mSh+/q1dbgE2iXTXKcP3znx0qU41IaiZXbQQi
+         dpfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719856732; x=1720461532;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9StUTNhxwCy/pDRuf8/7L71MaUer3QRVVlv9U1S2xNU=;
-        b=ZjQaCrt/hhCERbNXrd7AqoDOdwrIdOdtS96N2lD36IQ1A3pdqBtYL4wmyVTc2XcyMo
-         nLz+c8WgTesc7lC3qs3zaVAWXl82mktFbKJzSgMlm/5i3/OPEGODiRy8apLNJeEB4qd9
-         F8imtj+gywiOSQQZ8ub5RCti0pCe72cKQzWXTfjDr8LHAV5KdaqVdsykUdL8z59Qj+W8
-         VRq2fLdNbDEmtwVdHgAsFA36r+yYqiZLUQJ5/56eNsVwLn4NpRRjyUcs+KNLkZsHh4E4
-         IAfL/vhcL3B7y/+cfNZyFd08ubNPazV2TfLZTg1egiJ4JxgjIf8iW7Pl1ufJd2/dDuyF
-         3JPw==
-X-Forwarded-Encrypted: i=1; AJvYcCWHQix5YL07MfYcQS78AS/hyA3X8cNSFioG100uCY5AtToR3gq+aLpDfjaZtjbEyGLskFta0TBrcfbPEskGW/mgQ5WgFGpVVjOPZbz5
-X-Gm-Message-State: AOJu0YwI2QCV9dlKMYzB8bcYEWx0xxThYc/RPphnJvCX7GyUb3HjjfBV
-	Iz2gOtUttOO7vc2zUsc4y600u9XC+drl14nDOckqcpnjg+o44wwa+eWJLjEcm0zz4StfXyrztOZ
-	a6appMmFvAqwKJAwvlNOQo6Mx65PMrNvPabOQEA==
-X-Google-Smtp-Source: AGHT+IFJluQuwD1WcAotSkbFXZSCdGFCSEJsz0a4V4lxTs2mfUgp3DWk5Hz/0vqUyKZs3Prk2hk7RE+AVR9pUzOtbpY=
-X-Received: by 2002:a81:ab4c:0:b0:630:d0a3:d2e6 with SMTP id
- 00721157ae682-64c73bde7d6mr59684427b3.49.1719856732638; Mon, 01 Jul 2024
- 10:58:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719856908; x=1720461708;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=INqZmZ/BbGR0eouXTG+y0zxvAOWCJwOuHsTjqM/v/d4=;
+        b=F3obKdQ0QWJs3A84gAF4gmGHQRlsmyN2TzD9iNwHAViKKXlqdbG8JUbOlfm/55I3tc
+         FPfIDzGkpKv5ApcDwb2DYi7LmKs1M4SS4MrJVKQugqf2noy/zY/3jozEihaz3GvFzwhq
+         7bIjRH9pos70PkXOqH8LOXtO4RQubAexM7W72snsGwjITK+zms3Y3gVUwAyGfgbb8VYe
+         Nyx8/i9Jo8kUoFQpGSCVk7mi0yrvqhvtGtVmugyzsISMnGxgSlPa1h+rA1kR++PBAFNO
+         2liQp8Lz6GhfwBXw6Ku2pVxxi7Dj9Oil8lRczWfVALoLsWgBCOJs/etoh5B3eff7wk1R
+         /1HA==
+X-Forwarded-Encrypted: i=1; AJvYcCUErgDjmzFuKtRksrX8R99NuDscws+BBow15uR/m5xjYkYMtq12ghmoxOpsHvWRnt7rOFTfwEhBmmuxVnYQkcKbCxpxCQi6R74pfCjy
+X-Gm-Message-State: AOJu0YwL+MdGmTYRgl+6gVXvZ9ccSVda34vh947zv/TAP2H1oeaLhLYA
+	toeQLWxYgBDrNXq8NOLWOiwOEZrImKfrpqgjXEA+OHKUkG/IdWl79lTWWSjr7/4=
+X-Google-Smtp-Source: AGHT+IFS0IKG4SAvkQ872CcDn2q1pa+4nXgdaSgRnCwPe+UQcIA9gA5eQvrWiX4yZWT0Jl8kNs6JJw==
+X-Received: by 2002:a05:6402:1d4b:b0:57d:15ee:3d18 with SMTP id 4fb4d7f45d1cf-5879f984d05mr4338882a12.20.1719856908042;
+        Mon, 01 Jul 2024 11:01:48 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-586138185ebsm4680218a12.52.2024.07.01.11.01.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 11:01:47 -0700 (PDT)
+Date: Mon, 1 Jul 2024 20:01:46 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Ahmad Fatoum <a.fatoum@pengutronix.de>, 
+	Masahiro Yamada <masahiroy@kernel.org>, kernel@pengutronix.de, it+linux-kconfig@molgen.mpg.de, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] lib/build_OID_registry: Avoid non-destructive
+ substitution for Perl < 5.13.2 compat
+Message-ID: <rroqnszmdjpue4q5celbqbo43hij7lqlzpdtm7odmkfwb6vc2b@qp6lgyzlxwt6>
+References: <20240701155802.75152-1-pmenzel@molgen.mpg.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240629232231.42394-1-21cnbao@gmail.com>
-In-Reply-To: <20240629232231.42394-1-21cnbao@gmail.com>
-From: Chris Li <cli@chrisli.org>
-Date: Mon, 1 Jul 2024 10:58:41 -0700
-Message-ID: <CACePvbW+0j0omqwYcJR6RKSzJu9Kf6aYK7rYJZFtWo3f_bXhWw@mail.gmail.com>
-Subject: Re: [PATCH] mm: zswap: fix zswap_never_enabled() for CONFIG_ZSWAP==N
-To: Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>, 
-	Yosry Ahmed <yosryahmed@google.com>, Nhat Pham <nphamcs@gmail.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Chris Li <chrisl@kernel.org>, 
-	David Hildenbrand <david@redhat.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="45ulsa4igztdzz5v"
+Content-Disposition: inline
+In-Reply-To: <20240701155802.75152-1-pmenzel@molgen.mpg.de>
+
+
+--45ulsa4igztdzz5v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Chris Li <chrisl@kernel.org>
+Hello Paul,
 
-Chris
+On Mon, Jul 01, 2024 at 05:58:01PM +0200, Paul Menzel wrote:
+> On a system with Perl 5.12.1, commit 5ef6dc08cfde
+> ("lib/build_OID_registry: don't mention the full path of the script in
+> output") causes the build to fail with the error below.
+>=20
+>      Bareword found where operator expected at ./lib/build_OID_registry l=
+ine 41, near "s#^\Q$abs_srctree/\E##r"
+>      syntax error at ./lib/build_OID_registry line 41, near "s#^\Q$abs_sr=
+ctree/\E##r"
+>      Execution of ./lib/build_OID_registry aborted due to compilation err=
+ors.
+>      make[3]: *** [lib/Makefile:352: lib/oid_registry_data.c] Error 255
+>=20
+> Ahmad Fatoum analyzed that non-destructive substitution is only supported=
+ since
+> Perl 5.13.2. Instead of dropping `r` and having the side effect of modify=
+ing
+> `$0`, introduce a dedicated variable to support older Perl versions.
+>=20
+> Fixes: 5ef6dc08cfde ("lib/build_OID_registry: don't mention the full path=
+ of
+> the script in output")
 
-On Sat, Jun 29, 2024 at 4:22=E2=80=AFPM Barry Song <21cnbao@gmail.com> wrot=
-e:
->
-> From: Barry Song <v-songbaohua@oppo.com>
->
-> If CONFIG_ZSWAP is set to N, it means zswap cannot be enabled.
-> zswap_never_enabled() should return true.
->
-> Fixes: 0300e17d67c3 ("mm: zswap: add zswap_never_enabled()")
-> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
-> Cc: Yosry Ahmed <yosryahmed@google.com>
-> Cc: Nhat Pham <nphamcs@gmail.com>
-> Cc: Chengming Zhou <chengming.zhou@linux.dev>
-> Cc: Chris Li <chrisl@kernel.org>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
-> ---
->  include/linux/zswap.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/include/linux/zswap.h b/include/linux/zswap.h
-> index bf83ae5e285d..6cecb4a4f68b 100644
-> --- a/include/linux/zswap.h
-> +++ b/include/linux/zswap.h
-> @@ -68,7 +68,7 @@ static inline bool zswap_is_enabled(void)
->
->  static inline bool zswap_never_enabled(void)
->  {
-> -       return false;
-> +       return true;
->  }
->
->  #endif
-> --
-> 2.34.1
->
+No real objection from my side. But if this is an issue for you, I
+recommend to upgrade your build system. Looking at Debian releases
+(because they are known for their up-to-date software) and their
+included versions of Perl, we have:
+
+	release  | releaseno | Perl version | release date
+	---------+-----------+--------------+-------------------
+	squeeze  |     6     |    5.10.1    | February 6th, 2011
+	wheezy   |     7     |    5.14.2    | May 4th, 2013
+	jessie   |     8     |    5.20.2    | April 26th, 2015
+	stretch  |     9     |    5.24.1    | June 17th, 2017
+	buster   |    10     |    5.28.1    | July 6th, 2019
+	bullseye |    11     |    5.32.1    | August 14th, 2021
+	bookworm |    12     |    5.36.0    | June 10th, 2023
+
+So wheezy is new enough, and that's 11 years old.
+Perl 5.13.2 was released June 22, 2010---that's 14 years ago.
+
+I don't know about your build environment, but I wonder if a system that
+old can really build a recent kernel (if the patch under discussion is
+applied).
+
+Best regards
+Uwe
+
+--45ulsa4igztdzz5v
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaC7wcACgkQj4D7WH0S
+/k4VpAf+JeZLxCrS0r1yfAdVFivttdmpWI9bVU2Apq24G6PAS0fH7m14oZEHNFdu
+giBVi7XCQGZLGlZHFUJfpXq+D3FrRt/J4zHiPeh3DIXMdMd0TNqcH9jUrwf+Z6Bm
+hQZQWGl4vbUotZMcaoEGrkXbsIEJMEtF6vIT8uFqQ7C7JyEF97/V/G/JLPEzkaOy
+cArfdMiXdb4A6mkbwTJ3KWNtpZQYrE63cOKyaQyFmdnGMeTYyL08pLI7bKyTere5
+zpmGESHqZmZH4XrIT33MUBJN8+C7moL3id62Lfw60o+BzkKK70Dz6DL0trseLrJ1
+0sUGsF0FxbdzxjfZsT95LzxtrBp2GQ==
+=VZs2
+-----END PGP SIGNATURE-----
+
+--45ulsa4igztdzz5v--
