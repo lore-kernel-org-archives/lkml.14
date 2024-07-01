@@ -1,153 +1,129 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969AB15B542
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 13:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63A0915ECE4
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 13:52:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719841955; cv=none; b=rl5sC1QYy+h3CCz54RwVcsTjcPHlebb5CE7g+XD/5qChLzVMn/kjO77OLtBj5WTciti2tIRz4ZzlZqEjWARAX6WwqNwykdQbirGDBN6WL51I8zq1cy9nJ/IDUkrtd/o5B9hKPimucujFDlqjskHBfk+hXzpWMS/XOJ7zfQxWppQ=
+	t=1719841967; cv=none; b=kMJE52hpPkSHP57aC1UOkh1SlpfP3pzddUg6EOer2eoZeS/vhs+neCsOOjyHYsIp7xtzOsZAXCUiJJlKAES4tLxLvexO6w+WSW6LAh4jw0K1LTgvCJtFNB1TQuRA37nRjPZjLQ1NS3+cjxyRmYfNM3w5ANwMYqcdAR7oUYLpvyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719841955; c=relaxed/simple;
-	bh=fQuVbcfepCBPcjWz1qR5Q0Co13YLEIkiBggEBvLmaiU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i49B9xquezUKJjaIfPqnotqprrB9IH7T24cilti9F0gudlGx1vi6IUquv+2SYmz4JoLc+Mf2a8IXw/GBXMongyKk64KuLDzc2eU09iBS8qVQt1znlDs3ZLset+wy14XPwWzAsKYfhSWGTSj2yqNs13NndsSz5nbxMFOYslBKpzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RU4zWI+V; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719841967; c=relaxed/simple;
+	bh=oZfktzUPI3IvvgR/NIDhpEaqQ3nKMo0bcmqAq2UgUnQ=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=fzDqEU8cHq6QZ8D0VUw9LW1cJBEsYRAC902XXCSzQHSkK33p5dZ5MlvYzPk2SMJPi3x8adwfz6knbnCkejH/k58PBjfijelEjkL8WZAnOw+tbSWzA7fQwGhWyZzts13ahQXTYOMT2yP/ZVSbPSb/iU0D7fJxqiEk8NQ0N1Te0pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=bs/kJmZq; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RU4zWI+V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719841952;
-	h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b4F3lH+ReQNo4WY9zXX7OuALuxOcU2yXfUaanHhrEeY=;
-	b=RU4zWI+V3bBfuHWqVF41U11FEuVbDZ6NjqPYdJ1X0DP1M1Cyuv2G4cRuyZw5LobLBfXCzu
-	pX4iEbLfMzlh4P2j8mtKjqO4XfTqVM7HR0KQZli2JFxSNVjCucyd7+KmYdkIYbfSIygyCu
-	UPimIrTG25Y/xeZnEKJMopt/rWBoNcg=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-86-9c1miWGYMrG3vbKrh-HmlQ-1; Mon,
- 01 Jul 2024 09:52:28 -0400
-X-MC-Unique: 9c1miWGYMrG3vbKrh-HmlQ-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1F7E319560B0;
-	Mon,  1 Jul 2024 13:52:27 +0000 (UTC)
-Received: from redhat.com (unknown [10.42.28.124])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A36F219560AD;
-	Mon,  1 Jul 2024 13:52:22 +0000 (UTC)
-Date: Mon, 1 Jul 2024 14:52:19 +0100
-From: Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
-To: Mikulas Patocka <mpatocka@redhat.com>
-Cc: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
-	Waiman Long <longman@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
-	Laurence Oberman <loberman@redhat.com>,
-	Jonathan Brassow <jbrassow@redhat.com>,
-	Ming Lei <minlei@redhat.com>, Ondrej Kozina <okozina@redhat.com>,
-	Milan Broz <gmazyland@gmail.com>, linux-kernel@vger.kernel.org,
-	dm-devel@lists.linux.dev, users@lists.libvirt.org
-Subject: Re: dm-crypt performance regression due to workqueue changes
-Message-ID: <ZoK0kwzis1iWVyLr@redhat.com>
-Reply-To: Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
-References: <32fd8274-d5f-3eca-f5d2-1a9117fd8edb@redhat.com>
- <ZoGSJWMD9v1BxUDb@slm.duckdns.org>
- <e64c112-4fa9-74da-68ce-c1eec19460f2@redhat.com>
- <ZoKqYg7TKiozapmW@redhat.com>
- <e52c5a40-8ca9-38ae-1595-3785c6ac435@redhat.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="bs/kJmZq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id; bh=I7dexkcSvfu0hWvkAL
+	sE+VerRAaqIqAKgBZEe4vrhOo=; b=bs/kJmZqcYUjdq6yhWqM2bBCWolOeeL+8M
+	iDhNvO6nytk2ZjCuM4UlFr4QIqsuz7E13FaFytweFmE877YJkuHhsqb8juNhBh0n
+	us7gYKyupiWcHj0DdYgpXsPpKDMLiZGIJk24bXtZ7R0UI8qt2MzxfAX8KLzYTAMj
+	9Wnrx0TgM=
+Received: from localhost.localdomain (unknown [120.229.10.135])
+	by gzga-smtp-mta-g1-5 (Coremail) with SMTP id _____wDnFxSDtIJmmQfdBA--.47600S2;
+	Mon, 01 Jul 2024 21:52:04 +0800 (CST)
+From: "yongfa.hu" <hushange@163.com>
+To: akpm@linux-foundation.org
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	hushange@163.com
+Subject: [PATCH] mm: rename no_progress_loops to reclaim_retries
+Date: Mon,  1 Jul 2024 21:51:50 +0800
+Message-Id: <20240701135150.24623-1-hushange@163.com>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID:_____wDnFxSDtIJmmQfdBA--.47600S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxGrWxury3CFWUtFyDuF18Grg_yoW5XrWxpF
+	4xu3W7KrZYvFnxtFZ5Aa109F18A3s7KFZ8Xr1fKryxZw1fJry29rW7Kry2vF18XF4DXayY
+	qFZ8Ar40grn8Aa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUeCJkUUUUU=
+X-CM-SenderInfo: xkxvxtxqjhqiywtou0bp/1tbiLxMLnmVOEj4DuwACsU
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e52c5a40-8ca9-38ae-1595-3785c6ac435@redhat.com>
-User-Agent: Mutt/2.2.12 (2023-09-09)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Mon, Jul 01, 2024 at 03:42:29PM +0200, Mikulas Patocka wrote:
-> 
-> 
-> On Mon, 1 Jul 2024, Daniel P. Berrangé wrote:
-> 
-> > On Sun, Jun 30, 2024 at 08:49:48PM +0200, Mikulas Patocka wrote:
-> > > 
-> > > 
-> > > On Sun, 30 Jun 2024, Tejun Heo wrote:
-> > > 
-> > > > Do you happen to know why libvirt is doing that? There are many other
-> > > > implications to configuring the system that way and I don't think we want to
-> > > > design kernel behaviors to suit topology information fed to VMs which can be
-> > > > arbitrary.
-> > > > 
-> > > > Thanks.
-> > > 
-> > > I don't know why. I added users@lists.libvirt.org to the CC.
-> > > 
-> > > How should libvirt properly advertise "we have 16 threads that are 
-> > > dynamically scheduled by the host kernel, so the latencies between them 
-> > > are changing and unpredictable"?
-> > 
-> > NB, libvirt is just control plane, the actual virtual hardware exposed
-> > is implemented across QEMU and the KVM kernel mod. Guest CPU topology
-> > and/or NUMA cost information is the responsibility of QEMU.
-> > 
-> > When QEMU's virtual CPUs are floating freely across host CPUs there's
-> > no perfect answer. The host admin needs to make a tradeoff in their
-> > configuration
-> > 
-> > They can optimize for density, by allowing guest CPUs to float freely
-> > and allow CPU overcommit against host CPUs, and the guest CPU topology
-> > is essentially a lie.
-> > 
-> > They can optimize for predictable performance, by strictly pinning
-> > guest CPUs 1:1 to host CPUs, and minimize CPU overcommit, and have
-> > the guest CPU topology 1:1 match the host CPU topology.
-> 
-> The problem that we have here is that the commit 
-> 63c5484e74952f60f5810256bd69814d167b8d22 ("workqueue: Add multiple 
-> affinity scopes and interface to select them") changes the behavior of 
-> unbound workqueues, so that work items are only executed on CPUs that 
-> share last level cache with the task that submitted them.
-> 
-> If there are 16 virtual CPUs that are freely floating across physical 
-> CPUs, virt-manager by default selects a topology where it advertises 16 
-> sockets, 1 CPU per socket, 1 thread per CPU. The result is that the 
-> unbound workqueues are no longer unbound, they can't move work across 
-> sockets and they are bound to just one virtual CPU, causing dm-crypt 
-> performance degradation. (the crypto operations are no longer 
-> parallelized).
-> 
-> Whose bug is this? Is it a bug in virt-manager because it advertises 
-> invalid topology? Is this a bug in that patch 63c5484e7495 because it 
-> avoids moving work items across sockets?
+variable no_progress_loops exectly means reclaim retry counts,
+renameing makes it easier to understand. and has the same style
+as variable compaction_retries.
 
-It is hard to call it is a bug in anything. The Linux patch is reasonable
-in honouring the CPU topology. The hypervisor is reasonable to exposing
-sockets=N,cores=1 as there's no right answer for the topology choice, and
-it has no idea how it may or may not impact guest OS behaviour or perf.
-Letting CPUs float freely is sensible default behaviour too. All of them
-conspire to have a perf impact here, but the deployment is not seeking
-to maximise performance, rather to maximise flexibility & density.
+Signed-off-by: yongfa.hu <hushange@163.com>
+---
+ mm/page_alloc.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-None the less, I'd suggest that virt-manager should be a explicitly
-asking for sockets=1,cores=N, as that has broader guest OS compatibility.
-By chance that would also help this scenario, but that woudn't be a
-driving factor as we can't pick defaults based on the needs of particular
-versions of a particular guest kernel.
-
-With regards,
-Daniel
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 9054645ed..1435a9587 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -4107,7 +4107,7 @@ bool gfp_pfmemalloc_allowed(gfp_t gfp_mask)
+ static inline bool
+ should_reclaim_retry(gfp_t gfp_mask, unsigned order,
+ 		     struct alloc_context *ac, int alloc_flags,
+-		     bool did_some_progress, int *no_progress_loops)
++		     bool did_some_progress, int *reclaim_retries)
+ {
+ 	struct zone *zone;
+ 	struct zoneref *z;
+@@ -4119,11 +4119,11 @@ should_reclaim_retry(gfp_t gfp_mask, unsigned order,
+ 	 * always increment the no progress counter for them
+ 	 */
+ 	if (did_some_progress && order <= PAGE_ALLOC_COSTLY_ORDER)
+-		*no_progress_loops = 0;
++		*reclaim_retries = 0;
+ 	else
+-		(*no_progress_loops)++;
++		(*reclaim_retries)++;
+ 
+-	if (*no_progress_loops > MAX_RECLAIM_RETRIES)
++	if (*reclaim_retries > MAX_RECLAIM_RETRIES)
+ 		goto out;
+ 
+ 
+@@ -4150,7 +4150,7 @@ should_reclaim_retry(gfp_t gfp_mask, unsigned order,
+ 		wmark = __zone_watermark_ok(zone, order, min_wmark,
+ 				ac->highest_zoneidx, alloc_flags, available);
+ 		trace_reclaim_retry_zone(z, order, reclaimable,
+-				available, min_wmark, *no_progress_loops, wmark);
++				available, min_wmark, *reclaim_retries, wmark);
+ 		if (wmark) {
+ 			ret = true;
+ 			break;
+@@ -4222,14 +4222,14 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
+ 	enum compact_priority compact_priority;
+ 	enum compact_result compact_result;
+ 	int compaction_retries;
+-	int no_progress_loops;
++	int reclaim_retries;
+ 	unsigned int cpuset_mems_cookie;
+ 	unsigned int zonelist_iter_cookie;
+ 	int reserve_flags;
+ 
+ restart:
+ 	compaction_retries = 0;
+-	no_progress_loops = 0;
++	reclaim_retries = 0;
+ 	compact_priority = DEF_COMPACT_PRIORITY;
+ 	cpuset_mems_cookie = read_mems_allowed_begin();
+ 	zonelist_iter_cookie = zonelist_iter_begin();
+@@ -4390,7 +4390,7 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
+ 		goto nopage;
+ 
+ 	if (should_reclaim_retry(gfp_mask, order, ac, alloc_flags,
+-				 did_some_progress > 0, &no_progress_loops))
++				 did_some_progress > 0, &reclaim_retries))
+ 		goto retry;
+ 
+ 	/*
+@@ -4427,7 +4427,7 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
+ 
+ 	/* Retry as long as the OOM killer is making progress */
+ 	if (did_some_progress) {
+-		no_progress_loops = 0;
++		reclaim_retries = 0;
+ 		goto retry;
+ 	}
+ 
 -- 
-|: https://berrange.com      -o-    https://www.flickr.com/photos/dberrange :|
-|: https://libvirt.org         -o-            https://fstop138.berrange.com :|
-|: https://entangle-photo.org    -o-    https://www.instagram.com/dberrange :|
+2.17.1
 
