@@ -1,48 +1,37 @@
-Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA9918635
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 16:47:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D602A18635;
+	Mon,  1 Jul 2024 16:48:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719852453; cv=none; b=thwu8J3mupp2RryhqTiyf+R5E0xF6uBvOax+vPjueGKo9HxCjq5Q5dGtjLmaUjtdBq6UuoqFvYzHHncI+oQ0+ZSYe2+RsbGvzOywblLkGZnEYW2u/qJWi3xRCKrUnl/sNMuCXOqXuzhmJTj6cTBSLT1k968jgwsOv7Y5EAq9WEU=
+	t=1719852524; cv=none; b=daLunvMIycYpUNrG+VRcvUWCtxzGngw3FfGKse+G/X8/Xubr1jDd6L294ll54dYFrhmdrACZBw5MuhC4yu9f11VB1IU6CujruWAdwOYW/DKhJ5FEd4ycMXB+v8+2WYTfG/d4HRVhu+OJ5+Vexz/oT/PsofulG6KYj0rTUYWWkyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719852453; c=relaxed/simple;
-	bh=Nsgc1o0xUy64Zn2AvTib3nicIwaAJ2/DGfiFNp2gIwQ=;
+	s=arc-20240116; t=1719852524; c=relaxed/simple;
+	bh=QHRVNjo6eJMLb6/mFBCitJ/AZOeixGtTyCV3hrFGq5A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t10gtPobkEfmePwXRYlk6voZ41eq53ykTboib0jG6CsfUxcW1x2Fc1BAGldpbCL4wSkf1d26MjOt61EXTnx1mz8akSZnayCfM1Yj3sB9HDoq0D/JQtHvMNU9y9CWlue5tCwJywAAKSKMJwokosR+5MtQ5kz/RB7JRYRIu44itvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=e17Bxh9n; arc=none smtp.client-ip=199.89.1.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	 In-Reply-To:Content-Type; b=ah6YiLkH2pyi6H1GPAesDBZK2mJHkSVriN9T/WUxAD+g8nkzNp9H2W3h3V/YIJ9vfnb2+e0uzfSCzB5Ah4t1wyvlOUC2DhjkpyDgElU52sYBr76ADvJvOHtaysPUDG7ya5MW+LB/f0C7snU872Xiv7S2oi3zWm6zU039Mr5H49Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IDnjhqWO; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="e17Bxh9n"
-Received: from localhost (localhost [127.0.0.1])
-	by 008.lax.mailroute.net (Postfix) with ESMTP id 4WCX220HHJz6CmSMs;
-	Mon,  1 Jul 2024 16:44:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1719852263; x=1722444264; bh=MsJAC0SHqFyuVVRY34+8Dyns
-	58WoYnU8G7iaORuOaJY=; b=e17Bxh9nzeeBi1wfKHA1rv4Dd8NopdzxVuJD49Q+
-	OP3XLx/EajozFrTDI06zkwkM/Eduf7zFoVCioPE5rfzQqm1wc2E+MXMU9o4a8jWD
-	Gc9vqIxf6qlTnaV/twahOaBsS8Mk97xGkvPxVROc1Cldv5szo9ZITAgxmzltTt15
-	hXIqrDnu0xFGILZztE4QscmxPV60qQRV/iGlidcP1RpMUGY4upTxBJYCnkx7TEb6
-	B4MOJjUjypwm1bh5cJHTaT+IeQNdMY4jT/Lw7qV+gBwW4fiKTGU2+Mr4x0TU9izT
-	0BdUDV9oQnEr2SwXYECTRH7pG55B5p1A8DON5JCt+/+g8g==
-X-Virus-Scanned: by MailRoute
-Received: from 008.lax.mailroute.net ([127.0.0.1])
- by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id Aydu-dLlTYVt; Mon,  1 Jul 2024 16:44:23 +0000 (UTC)
-Received: from [192.168.50.14] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4WCX1y5kZCz6Cp2tZ;
-	Mon,  1 Jul 2024 16:44:22 +0000 (UTC)
-Message-ID: <7d41097f-4757-4bde-8a8c-d293643850a2@acm.org>
-Date: Mon, 1 Jul 2024 09:44:21 -0700
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IDnjhqWO"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1BC54FF805;
+	Mon,  1 Jul 2024 16:48:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1719852516;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K4DfwZvTx3ILvmJeXn6XCc8XKI3AWEVwJse2C+CTb5M=;
+	b=IDnjhqWOSvaOBBFxLGcG7EFB9hoyympmZXhAx2n8opAgwoSnH3dI7tzzL/b5AQnsrJ9RPY
+	pT/QicXRYTUpEIzaAeDpCcK/Z76FBKGIvo6TvaPNMMbYYHl3rUZc3r7pvij9i7lBsbD94N
+	CPOEpBZoEInv4xvqFR3FI96gALSoDmjfKmHDLohCeaU1ObfzGkRAIzkwcCdKkXNsl654CN
+	0GZP5UOXJrmlmJNBiE2r4RxW0KKFGZAlfOM8MWlCO0JIhHzlA8a9K2pplpOWL4ybQ2OyX5
+	WC1xO/exFcZP8v36Nu3d+n13UPDUNSzzBrYpHf78lfFVBi3z38nZooymeTIEsQ==
+Message-ID: <e1d6913d-bf6f-4403-bf55-6806ed690935@bootlin.com>
+Date: Mon, 1 Jul 2024 18:48:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,41 +39,190 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 31/53] nfc: mrvl: Simplify a create*_workqueue() call
-To: Krzysztof Kozlowski <krzk@kernel.org>, Tejun Heo <tj@kernel.org>
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>,
- "Martin K . Petersen" <martin.petersen@oracle.com>,
- linux-kernel@vger.kernel.org
-References: <20240630222904.627462-1-bvanassche@acm.org>
- <20240630222904.627462-32-bvanassche@acm.org>
- <b2f7c7de-080c-4dab-ad6f-ed8b73aae59b@kernel.org>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <b2f7c7de-080c-4dab-ad6f-ed8b73aae59b@kernel.org>
+Subject: Re: [PATCH 4/4] remoteproc: k3-r5: support for graceful stop of
+ remote cores
+To: Andrew Davis <afd@ti.com>, Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Suman Anna <s-anna@ti.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Udit Kumar <u-kumar1@ti.com>, Thomas Richard <thomas.richard@bootlin.com>,
+ Gregory CLEMENT <gregory.clement@bootlin.com>, Hari Nagalla
+ <hnagalla@ti.com>, =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
+ linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240621150058.319524-1-richard.genoud@bootlin.com>
+ <20240621150058.319524-5-richard.genoud@bootlin.com>
+ <33d97f00-dd9a-4643-8210-859c2ab38a97@ti.com>
+From: Richard GENOUD <richard.genoud@bootlin.com>
+Content-Language: en-US, fr
+Organization: Bootlin
+In-Reply-To: <33d97f00-dd9a-4643-8210-859c2ab38a97@ti.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: richard.genoud@bootlin.com
 
-On 7/1/24 2:17 AM, Krzysztof Kozlowski wrote:
-> On 01/07/2024 00:26, Bart Van Assche wrote:
->> Pass a format string to create*_workqueue2() instead of formatting the
->> workqueue name before create*_workqueue() is called.
+Le 29/06/2024 à 00:50, Andrew Davis a écrit :
+> On 6/21/24 10:00 AM, Richard Genoud wrote:
+>> Introduce software IPC handshake between the K3-R5 remote proc driver
+>> and the R5 MCU to gracefully stop/reset the remote core.
 >>
->> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+>> Upon a stop request, K3-R5 remote proc driver sends a RP_MBOX_SHUTDOWN
+>> mailbox message to the remote R5 core.
+>> The remote core is expected to:
+>> - relinquish all the resources acquired through Device Manager (DM)
+>> - disable its interrupts
+>> - send back a mailbox acknowledgment RP_MBOX_SHUDOWN_ACK
+>> - enter WFI state.
+>>
+>> Meanwhile, the K3-R5 remote proc driver does:
+>> - wait for the RP_MBOX_SHUTDOWN_ACK from the remote core
+>> - wait for the remote proc to enter WFI state
+>> - reset the remote core through device manager
+>>
+>> Based on work from: Hari Nagalla <hnagalla@ti.com>
+>>
+>> Signed-off-by: Richard Genoud <richard.genoud@bootlin.com>
 >> ---
->>   drivers/nfc/nfcmrvl/fw_dnld.c | 8 +++-----
+>>   drivers/remoteproc/omap_remoteproc.h     |  9 +++++-
+>>   drivers/remoteproc/ti_k3_r5_remoteproc.c | 40 ++++++++++++++++++++++++
+>>   2 files changed, 48 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/remoteproc/omap_remoteproc.h 
+>> b/drivers/remoteproc/omap_remoteproc.h
+>> index 828e13256c02..c008f11fa2a4 100644
+>> --- a/drivers/remoteproc/omap_remoteproc.h
+>> +++ b/drivers/remoteproc/omap_remoteproc.h
+>> @@ -42,6 +42,11 @@
+>>    * @RP_MBOX_SUSPEND_CANCEL: a cancel suspend response from a remote 
+>> processor
+>>    * on a suspend request
+>>    *
+>> + * @RP_MBOX_SHUTDOWN: shutdown request for the remote processor
+>> + *
+>> + * @RP_MBOX_SHUTDOWN_ACK: successful response from remote processor 
+>> for a
+>> + * shutdown request. The remote processor should be in WFI state 
+>> short after.
+>> + *
+>>    * Introduce new message definitions if any here.
+>>    *
+>>    * @RP_MBOX_END_MSG: Indicates end of known/defined messages from 
+>> remote core
+>> @@ -59,7 +64,9 @@ enum omap_rp_mbox_messages {
+>>       RP_MBOX_SUSPEND_SYSTEM    = 0xFFFFFF11,
+>>       RP_MBOX_SUSPEND_ACK    = 0xFFFFFF12,
+>>       RP_MBOX_SUSPEND_CANCEL    = 0xFFFFFF13,
+>> -    RP_MBOX_END_MSG        = 0xFFFFFF14,
+>> +    RP_MBOX_SHUTDOWN    = 0xFFFFFF14,
+>> +    RP_MBOX_SHUTDOWN_ACK    = 0xFFFFFF15,
+>> +    RP_MBOX_END_MSG        = 0xFFFFFF16,
+>>   };
+>>   #endif /* _OMAP_RPMSG_H */
+>> diff --git a/drivers/remoteproc/ti_k3_r5_remoteproc.c 
+>> b/drivers/remoteproc/ti_k3_r5_remoteproc.c
+>> index a2ead87952c7..918a15e1dd9a 100644
+>> --- a/drivers/remoteproc/ti_k3_r5_remoteproc.c
+>> +++ b/drivers/remoteproc/ti_k3_r5_remoteproc.c
+>> @@ -21,6 +21,7 @@
+>>   #include <linux/pm_runtime.h>
+>>   #include <linux/remoteproc.h>
+>>   #include <linux/suspend.h>
+>> +#include <linux/iopoll.h>
+>>   #include <linux/reset.h>
+>>   #include <linux/slab.h>
+>> @@ -172,8 +173,23 @@ struct k3_r5_rproc {
+>>       struct k3_r5_core *core;
+>>       struct k3_r5_mem *rmem;
+>>       int num_rmems;
+>> +    struct completion shutdown_complete;
+>>   };
+>> +/*
+>> + * This will return true if the remote core is in Wait For Interrupt 
+>> state.
+>> + */
+>> +static bool k3_r5_is_core_in_wfi(struct k3_r5_core *core)
+>> +{
+>> +    int ret;
+>> +    u64 boot_vec;
+>> +    u32 cfg, ctrl, stat;
+>> +
+>> +    ret = ti_sci_proc_get_status(core->tsp, &boot_vec, &cfg, &ctrl, 
+>> &stat);
+>> +
+>> +    return !ret ? !!(stat & PROC_BOOT_STATUS_FLAG_R5_WFI) : false;
 > 
-> I only got this patch, no links to new API being introduced and there is
-> no create_singlethread_workqueue2() call. Looks fine, but tricky to
-> review. Provide first patch or lore link in patch changelog.
+> Too fancy for me :) Just return if (ret) right after get_status().
+Ok, too much punctuation :)
 
-Thanks for the advice. I will do this if I have to repost this patch
-series.
+> 
+> Looks like this function is called in a polling loop, if
+> ti_sci_proc_get_status() fails once, it won't get better,
+> no need to keep checking, we should just error out of
+> the polling loop.
+Ok
 
-This is the link to the entire patch series:
-https://lore.kernel.org/linux-kernel/20240630222904.627462-1-bvanassche@acm.org/
 
-Further feedback is welcome.
+Thanks !
+> 
+> Andrew
+> 
+>> +}
+>> +
+>>   /**
+>>    * k3_r5_rproc_mbox_callback() - inbound mailbox message handler
+>>    * @client: mailbox client pointer used for requesting the mailbox 
+>> channel
+>> @@ -209,6 +225,10 @@ static void k3_r5_rproc_mbox_callback(struct 
+>> mbox_client *client, void *data)
+>>       case RP_MBOX_ECHO_REPLY:
+>>           dev_info(dev, "received echo reply from %s\n", name);
+>>           break;
+>> +    case RP_MBOX_SHUTDOWN_ACK:
+>> +        dev_dbg(dev, "received shutdown_ack from %s\n", name);
+>> +        complete(&kproc->shutdown_complete);
+>> +        break;
+>>       default:
+>>           /* silently handle all other valid messages */
+>>           if (msg >= RP_MBOX_READY && msg < RP_MBOX_END_MSG)
+>> @@ -634,6 +654,7 @@ static int k3_r5_rproc_stop(struct rproc *rproc)
+>>       struct k3_r5_cluster *cluster = kproc->cluster;
+>>       struct device *dev = kproc->dev;
+>>       struct k3_r5_core *core1, *core = kproc->core;
+>> +    bool wfi;
+>>       int ret;
+>> @@ -650,6 +671,24 @@ static int k3_r5_rproc_stop(struct rproc *rproc)
+>>           }
+>>       }
+>> +    /* Send SHUTDOWN message to remote proc */
+>> +    reinit_completion(&kproc->shutdown_complete);
+>> +    ret = mbox_send_message(kproc->mbox, (void *)RP_MBOX_SHUTDOWN);
+>> +    if (ret < 0) {
+>> +        dev_err(dev, "Sending SHUTDOWN message failed: %d. Halting 
+>> core anyway.\n", ret);
+>> +    } else {
+>> +        ret = wait_for_completion_timeout(&kproc->shutdown_complete,
+>> +                          msecs_to_jiffies(1000));
+>> +        if (ret == 0) {
+>> +            dev_err(dev, "Timeout waiting SHUTDOWN_ACK message. 
+>> Halting core anyway.\n");
+>> +        } else {
+>> +            ret = readx_poll_timeout(k3_r5_is_core_in_wfi, core,
+>> +                         wfi, wfi, 200, 2000);
+>> +            if (ret)
+>> +                dev_err(dev, "Timeout waiting for remote proc to be 
+>> in WFI state. Halting core anyway.\n");
+>> +        }
+>> +    }
+>> +
+>>       /* halt all applicable cores */
+>>       if (cluster->mode == CLUSTER_MODE_LOCKSTEP) {
+>>           list_for_each_entry(core, &cluster->cores, elem) {
+>> @@ -1410,6 +1449,7 @@ static int k3_r5_cluster_rproc_init(struct 
+>> platform_device *pdev)
+>>               goto err_config;
+>>           }
+>> +        init_completion(&kproc->shutdown_complete);
+>>   init_rmem:
+>>           k3_r5_adjust_tcm_sizes(kproc);
+>>
 
-Thanks,
-
-Bart.
