@@ -1,197 +1,113 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0028715F3E0;
-	Mon,  1 Jul 2024 19:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8FC15F3E0
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 19:22:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719861692; cv=none; b=q7K3KUYjhYQu6V47HKzJ2tvEUhtRbh+F2H+D/wL5zVRlynNc8KyVhJn+0sNDi1QfImXKTeLJ/8rPqtyMSTBEtVejGJV0ZgSB/PlGLnUHjLH6namXs8PwNRd+WddcIiSBiGeELb4kwZzzXSiSavU7mZLHg+GTX4FEScyjcGG5t1s=
+	t=1719861740; cv=none; b=jVUFiV3nBLOeNAJNj6poLs3Yg806Ls7QDEW5L9cyKCP1WT5g6vDVixu3iUa1sEQKpYqPls+IRoXTjsyawJftSoTD8LuSIQaKNYw8ZDnUdUHtQ5lEXcui6ben+P8R7T+rzq56ml2hjuSChiYhmnh6aiie4rpoBFVXeXN+7GdCm0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719861692; c=relaxed/simple;
-	bh=xA4gT5jgdk/OTxA5+HmO+icyiiNsnLJsHJKqiT48Ou0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=HD2Qa2DZGkBWOyjlqj7h07VGjHDLX8lR1+jHBbYfjGGnpumy6QywWJ5zvyJTOHzQuJ4FUgARLOZzRSirEYr/uyrk1wWHizUeHwn/nrKJY0ncrS9zFVfXiN5eEoJokOxOinXqhitxBlxTv3EE+YncfvaobS4Hux+IQ5/pvZDQIiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UqjDwCGD; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1719861740; c=relaxed/simple;
+	bh=jhRT1K6xV21Os/urlXYX84zmxP8MArFSxr/p511FRSM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Yj/948OK+9tS4mAFYnF9Dyu/aQmCXn6tc+OP43kpc9ZiazKBW8qrhrb3Dvq1nO8k/Xz2iUUJGrhaFNA2wN54GO/11jK3vHFnKdmSYmlJSARIMgq7dXZzB3ut3ZIx6puoOmaWufPS8J2Gs0DtjORpc/pZ9OzA+91ZNQQ4iUSyOm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kYx3pWf3; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UqjDwCGD"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 461Iv0HE013388;
-	Mon, 1 Jul 2024 19:21:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:date:subject:to:cc:references:from:in-reply-to
-	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
-	vwPSGgNyfB7PV/gU5mKuyglcYgFurNIMZQ4OJRpNuIs=; b=UqjDwCGD7ZPhhPfJ
-	2T6PY4BrgQHagrXZIf+zZGGzZGUfoAAodzuyCsNY0bxSrOZToKePlOHrxjrIz/Uc
-	pF54TtoFwemRyaydw+3mzwZchISj0Xq60tA8dwJY9Z8wSSaPLiodu8NrjWB/FAmk
-	nA17VDTWM4JdDXqrH+hsEENndoD/bIza/7p70dmsTF5ZdfXcYzeSMIFBtFkQmVu7
-	YxTRGSTwhtAZsXOVnUe4Ujt+iA1eQ8hnWzMN4N829hYvBXaorK5VZMYC7gmQA5jA
-	9qZOM7J2vaJGjmPzzZrvPEgOd6TvEY0Mi31+kExoiKKVK2USaLTDGULpdsEVr7nS
-	mZ3nEA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4041rw03s2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Jul 2024 19:21:16 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 461JLFUw025280;
-	Mon, 1 Jul 2024 19:21:15 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4041rw03s1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Jul 2024 19:21:15 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 461I0B4R009561;
-	Mon, 1 Jul 2024 19:21:14 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 402w00h39e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Jul 2024 19:21:14 +0000
-Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 461JLBA256230172
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 1 Jul 2024 19:21:13 GMT
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2DFFC58055;
-	Mon,  1 Jul 2024 19:21:11 +0000 (GMT)
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4D36B58060;
-	Mon,  1 Jul 2024 19:21:07 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  1 Jul 2024 19:21:07 +0000 (GMT)
-Message-ID: <596c3997-6a9d-4ac4-895f-512058a2648c@linux.ibm.com>
-Date: Mon, 1 Jul 2024 15:21:06 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tpm: Check non-nullity of chip->auth
-To: Jarkko Sakkinen <jarkko@kernel.org>, linux-integrity@vger.kernel.org
-Cc: stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>,
-        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, Ard Biesheuvel <ardb@kernel.org>,
-        "open list:KEYS-TRUSTED" <keyrings@vger.kernel.org>,
-        "open list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>
-References: <20240701170735.109583-1-jarkko@kernel.org>
-Content-Language: en-US
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <20240701170735.109583-1-jarkko@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: ZiMnc2k-AjdCMwIntE57sE603DRvScCp
-X-Proofpoint-ORIG-GUID: 1rPc_D_JYeAanSUH0ce6VrL5Yf1X5woA
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kYx3pWf3"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2c2dee9d9cfso2024104a91.3
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 12:22:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719861738; x=1720466538; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4aymU97a1sGvobGJ+atGeteP+/v1F5zejZr+FSZsxR0=;
+        b=kYx3pWf34TtSJmhV9AOJYgQKLXx+QSCqFrfE/vwbqmP3JCHadzEOGWV3s0xfxGd8EY
+         tkF1HEyBzUaG8tefRfGWRW3FBlkhdBdYNUz7okttbjM1etwI4fYB5N/WdrMMTVhckytZ
+         XCbHc4XWEfBYdeY59skXITUqI+fkNK1yqe1Bhs+xaqfP1sO/LzmyFx5V2xAy7RbOtHff
+         iqeThIBnYOzMcCgMatjobpCwHpxIOw8bZs6x3ny3JiG17i2jrk2kt8Yto+UO7TufByTl
+         DQlgHkmy7gRBD7VXRaOW6qmWSvk/h8tJZ2vqXID6P01wBqd9iwUL0EMPsFfOq6hbF6ax
+         76yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719861738; x=1720466538;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4aymU97a1sGvobGJ+atGeteP+/v1F5zejZr+FSZsxR0=;
+        b=CvozJTWqcasc2/jNEm3hKvb9gHBPmQ2GBhrCbI1NuQqRK6XXuP0rhDmoO1TZRmORZe
+         1eNsLbAS958Q798LlSAzFxq4JjChuTU/DVfu+Cf/Iyddh1lAYoC1dmORJz8xhzXKNIIO
+         CrjqM1TErbVDT8RQMgCiPJ+6I3tjo7rXUtvu9bhivTjRk2IDDGZHIB0ocShS66GhCbCI
+         +EUXly3y+/M83fdETHKGZ3gXTsv44UunB4Tu6awU4ZYmwDrU1v9M9iiWzafll0vGqiUG
+         bzReBE7GPEJlVI4Kw41ARASVXwIml/D8PSXk9IQufo62NsrXHttls4sxF500ow+rAx4y
+         UMRA==
+X-Forwarded-Encrypted: i=1; AJvYcCVOL7xLxHnyb4h8uFcV9kroOUZ2uD4bzZ1rjIFGUrB1XMxjH3ZNaVZIKh6ow8teaPEzTyavlZm924YZEwkVmyCZfmuT/9/z2sjdbxfW
+X-Gm-Message-State: AOJu0Ywy/kA5MROr6pHwzOwMxd5yEVMWDEPXsvxXa9CrkNAPOj30PfFP
+	kwwRx3qcu8EghRqvKFsdyE1uyb8r3cP8ncDcfznXQzp4OO11j8cLPniA/8Pxa1S3fy/JvaM3Iv3
+	5JFx1DWkur41DktXgZcGdOtOYVMY=
+X-Google-Smtp-Source: AGHT+IGWf9gM/yO+PqY/uzKDCywdTX9GVdifnKlIyO8850AhUVnit1KRSinpn8GzTYvf4biNxr3CAvdFFOwlgJrft6E=
+X-Received: by 2002:a17:90a:e617:b0:2c7:5622:bf40 with SMTP id
+ 98e67ed59e1d1-2c93d6d4a69mr3298695a91.4.1719861738375; Mon, 01 Jul 2024
+ 12:22:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-01_19,2024-07-01_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=999 impostorscore=0 spamscore=0 clxscore=1011 bulkscore=0
- phishscore=0 mlxscore=0 adultscore=0 priorityscore=1501 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407010141
+References: <20240701070454.106083-1-jiapeng.chong@linux.alibaba.com>
+In-Reply-To: <20240701070454.106083-1-jiapeng.chong@linux.alibaba.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Mon, 1 Jul 2024 15:22:06 -0400
+Message-ID: <CADnq5_P2KH0FioN-uQ0604mbbrprOs2TmgzuGX4S=J-goYTf3Q@mail.gmail.com>
+Subject: Re: [PATCH 4/4] drm/amd/display: Fix warning comparing pointer to 0
+To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Cc: harry.wentland@amd.com, sunpeng.li@amd.com, Rodrigo.Siqueira@amd.com, 
+	alexander.deucher@amd.com, christian.koenig@amd.com, Xinhui.Pan@amd.com, 
+	airlied@gmail.com, daniel@ffwll.ch, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	Abaci Robot <abaci@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Applied the series.  Thanks!
 
+Alex
 
-On 7/1/24 13:07, Jarkko Sakkinen wrote:
-> All exported functions lack the check for non-nullity of chip->auth. Add
-> the guard for each.
-> 
-> Link: https://lore.kernel.org/linux-integrity/9f86a167074d9b522311715c567f1c19b88e3ad4.camel@kernel.org/
-> Cc: Stefan Berger <stefanb@linux.ibm.com>
-> Cc: stable@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Fixes: 1085b8276bb4 ("tpm: Add the rest of the session HMAC API")
-> Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+On Mon, Jul 1, 2024 at 3:15=E2=80=AFAM Jiapeng Chong
+<jiapeng.chong@linux.alibaba.com> wrote:
+>
+> Avoid pointer type value compared with 0 to make code clear.
+>
+> ./drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_facto=
+ry.c:14:12-13: WARNING comparing pointer to 0.
+>
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=3D9458
+> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 > ---
->   drivers/char/tpm/tpm2-sessions.c | 26 ++++++++++++++++++++++++--
->   1 file changed, 24 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/char/tpm/tpm2-sessions.c b/drivers/char/tpm/tpm2-sessions.c
-> index 907ac9956a78..d833db20531a 100644
-> --- a/drivers/char/tpm/tpm2-sessions.c
-> +++ b/drivers/char/tpm/tpm2-sessions.c
-> @@ -377,6 +377,9 @@ void tpm_buf_append_hmac_session(struct tpm_chip *chip, struct tpm_buf *buf,
->   	u32 len;
->   	struct tpm2_auth *auth = chip->auth;
->   
-> +	if (!auth)
-> +		return;
-> +
->   	/*
->   	 * The Architecture Guide requires us to strip trailing zeros
->   	 * before computing the HMAC
-> @@ -449,6 +452,9 @@ void tpm_buf_fill_hmac_session(struct tpm_chip *chip, struct tpm_buf *buf)
->   	u8 cphash[SHA256_DIGEST_SIZE];
->   	struct sha256_state sctx;
->   
-> +	if (!auth)
-> +		return;
-> +
->   	/* save the command code in BE format */
->   	auth->ordinal = head->ordinal;
->   
-> @@ -639,6 +645,9 @@ void tpm_buf_append_name(struct tpm_chip *chip, struct tpm_buf *buf,
->   	struct tpm2_auth *auth = chip->auth;
->   	int slot;
->   
-> +	if (!auth)
-> +		return;
-> +
->   	slot = (tpm_buf_length(buf) - TPM_HEADER_SIZE)/4;
->   	if (slot >= AUTH_MAX_NAMES) {
->   		dev_err(&chip->dev, "TPM: too many handles\n");
-> @@ -705,6 +714,9 @@ int tpm_buf_check_hmac_response(struct tpm_chip *chip, struct tpm_buf *buf,
->   	u32 cc = be32_to_cpu(auth->ordinal);
->   	int parm_len, len, i, handles;
->   
-> +	if (!auth)
-> +		return rc;
-> +
->   	if (auth->session >= TPM_HEADER_SIZE) {
->   		WARN(1, "tpm session not filled correctly\n");
->   		goto out;
-> @@ -824,8 +836,13 @@ EXPORT_SYMBOL(tpm_buf_check_hmac_response);
->    */
->   void tpm2_end_auth_session(struct tpm_chip *chip)
->   {
-> -	tpm2_flush_context(chip, chip->auth->handle);
-> -	memzero_explicit(chip->auth, sizeof(*chip->auth));
-> +	struct tpm2_auth *auth = chip->auth;
-> +
-> +	if (!auth)
-> +		return;
-> +
-> +	tpm2_flush_context(chip, auth->handle);
-> +	memzero_explicit(auth, sizeof(*auth));
->   }
->   EXPORT_SYMBOL(tpm2_end_auth_session);
->   
-> @@ -907,6 +924,11 @@ int tpm2_start_auth_session(struct tpm_chip *chip)
->   	int rc;
->   	u32 null_key;
->   
-> +	if (!auth) {
-> +		pr_warn_once("%s: encryption is not active\n", __func__);
-> +		return 0;
-> +	}
-> +
->   	rc = tpm2_load_null(chip, &null_key);
->   	if (rc)
->   		goto out;
-It looks like you got all of the chip->auth tested:
-
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-
-As I mentioned in the other email (1), it does not solve the problem on 
-ppc64.
-
-1: 
-https://lore.kernel.org/linux-integrity/656b319fc58683e399323b880722434467cf20f2.camel@kernel.org/T/#m88892cb6f9cf8fdef875dcdd0ed3eccac1d28190
+>  .../amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_factory.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2=
+_core_factory.c b/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/d=
+ml2_core_factory.c
+> index 1a0da8c6df5a..f56abe9ab919 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_f=
+actory.c
+> +++ b/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_f=
+actory.c
+> @@ -11,7 +11,7 @@ bool dml2_core_create(enum dml2_project_id project_id, =
+struct dml2_core_instance
+>  {
+>         bool result =3D false;
+>
+> -       if (out =3D=3D 0)
+> +       if (!out)
+>                 return false;
+>
+>         memset(out, 0, sizeof(struct dml2_core_instance));
+> --
+> 2.20.1.7.g153144c
+>
