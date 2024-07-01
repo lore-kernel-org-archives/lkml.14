@@ -1,184 +1,60 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C02B15667C;
-	Mon,  1 Jul 2024 12:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198DA7F9
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 12:45:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719837901; cv=none; b=KFdS4BCzTK/zWDoOzpAhtgXGpg+0gkU6zN4homlk1Qi4RCqO/+lVNQB9QQke42ii0wWVmeLm7lVZ2eBQsVs3xkVnfq6+xzin3vo11qgN6BlJmHEf6OM1Gyi+T6hIKcfUOv4Q9D5zAKnlDSbQAfcMoa5N7MfnpQREtphGEzAbarI=
+	t=1719837920; cv=none; b=Qz9djhNSmSxNb5drZq2tNefa2s6Fq33BaD1qbUw9KItw/fTVMl6440jnCi8bYdole3MVkSCXFpqo8C5Q9yLC2RO/OeizQ12iVMABW3NrKdcN3aExCiuZW/Di80jdvIZL3Ulu1UULi8a5Bq7iAmfsABCkDV29eas9cCUk0KRyEyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719837901; c=relaxed/simple;
-	bh=cQylj+EjYj/7INTgdTr0BduS9Kod/JnlXfO3nV7qH2s=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sYEDLhmP9KXN5UomieItUO1DnesNO4IiWqr7R7v9UgUxh6W2o3rNvS+bvTJPyX0eY/UArGfwZdW3sjKwn13iwO0ItP/nvPLIOM6NDa0Xa/icDHb89PSGSCVI0s6b7VBQLMElP/qwsZlLu15dObeUv9UaRV3+ootjdaNsCFEXyIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WCQhX4zHkz6K6tY;
-	Mon,  1 Jul 2024 20:43:56 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 081061404FC;
-	Mon,  1 Jul 2024 20:44:54 +0800 (CST)
-Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 1 Jul
- 2024 13:44:53 +0100
-Date: Mon, 1 Jul 2024 13:44:52 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Vasileios Amoiridis <vassilisamir@gmail.com>
-CC: <jic23@kernel.org>, <dpfrey@gmail.com>, <himanshujha199640@gmail.com>,
-	<lars@metafoo.de>, <linux-iio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <mike.looijmans@topic.nl>
-Subject: Re: [PATCH v3 00/15] iio: chemical: bme680: Driver cleanup
-Message-ID: <20240701134452.00003f1d@Huawei.com>
-In-Reply-To: <20240630202640.GA185141@vamoiridPC>
-References: <20240609233826.330516-1-vassilisamir@gmail.com>
-	<20240630202640.GA185141@vamoiridPC>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1719837920; c=relaxed/simple;
+	bh=mcsm+deKAsfjotatoCY43zzx8qAarB1cncwtOYmoE5E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hh9saphAY6Ho52L6gdvVKiO4dPpxws4uzHnSmiFCVlpXvKE3wD+8BqBZydBYFgrKhUPvxvZu7CskuuaOLb84ZPrUbxKloscSq14ii8CQFeM8tTAWBIk7PnTCPLmAJvd1KcS8ZnRqagoKltXpM9gXmsUxcOWE8KIgKwKslz8QsjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=sIMAuXXi; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="sIMAuXXi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74C3DC32786;
+	Mon,  1 Jul 2024 12:45:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1719837919;
+	bh=mcsm+deKAsfjotatoCY43zzx8qAarB1cncwtOYmoE5E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sIMAuXXin+3XP14RmiXZse6QmoojSzhAhVNx977D7LRV1aUwuXXsPVKcPY0MklDDn
+	 nMcFphel2Ljruvv26XvXHEPdUdWrTwd+Bm7FqznD3lX/KIpr6kPPfgq0cKjrhi7KA3
+	 4YAhGd78lMNmMy8LG6CYnSmNSd7TlpPqgIm0/0PA=
+Date: Mon, 1 Jul 2024 14:27:04 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Jari Ruusu <jariruusu@protonmail.com>
+Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: Stable linux-5.10.x regression triggered by MDS mitigation
+Message-ID: <2024070152-unpaired-trouble-2632@gregkh>
+References: <IdYcxU6x6xuUqUg8cliJUnucfwfTO29TrKIlLGCCYbbIr1EQnP0ZAtTxdAM2hp5e5Gny_acIN3OFDS6v0sazocnZZ1UBaINEJ0HoDnbasSI=@protonmail.com>
+ <20240624170921.mep2x6pg4aiui4wh@desk>
+ <yVXwe8gvgmPADpRB6lXlicS2fcHoV5OHHxyuFbB_MEleRPD7-KhGe5VtORejtPe-KCkT8Uhcg5d7-IBw4Ojb4H7z5LQxoZylSmJ8KNL3A8o=@protonmail.com>
+ <20240625180150.7awxiyvmztcuu4pw@desk>
+ <eK0mvc1FJknv3ZTg6opsYgeqRGgQCTFIQ-gdp5k0KdB3EsY-dL7cKmKvsG93qcTKvPQhrjkbRTrI32YK-AqMXcqiKqLetkLeDnn_b5qs7AA=@protonmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eK0mvc1FJknv3ZTg6opsYgeqRGgQCTFIQ-gdp5k0KdB3EsY-dL7cKmKvsG93qcTKvPQhrjkbRTrI32YK-AqMXcqiKqLetkLeDnn_b5qs7AA=@protonmail.com>
 
-On Sun, 30 Jun 2024 22:26:40 +0200
-Vasileios Amoiridis <vassilisamir@gmail.com> wrote:
-
-> On Mon, Jun 10, 2024 at 01:38:11AM +0200, Vasileios Amoiridis wrote:
-> > Based on fixes-togreg as the 4 first commits are already applied
-> > 
-> > Patch 1/15: Added comment for explanation of what mutex is used for
-> > 
-> > Patch 2/15: Removed fixes tag
-> > 
-> > Patch 3-15/15: Reworded the commit messages to come close to convention
-> > 	       of 75 chars per line.
-> > 
-> > v2: https://lore.kernel.org/linux-iio/20240606212313.207550-1-vassilisamir@gmail.com/
-> > 
-> > Patch 4/19:
-> > 	- Combined the bme680_conversion_time_us() and bme680_wait_for_eoc()
-> > 	  into one function.
-> > 	- Added better comment for the calculation.
-> > 	- Added checks in the bme680_wait_for_eoc() function.
-> > 
-> > Patch 5/19:
-> > 	- Fixed typo in commit message.
-> > 
-> > Patch 6/19:
-> > 	- Added a fixes tag since without the mutexes, read operations can be
-> > 	  broken.
-> > 
-> > Patch 10/19:
-> > 	- Converted shifting operation to FIELD_GET()
-> > 
-> > Patch 11/19:
-> > 	- Changed convention from &data->bufer[0] to data->buffer.
-> > 	- Removed IIO_DMA_MINALIGN as it is not needed anymore.
-> > 
-> > Patch 13/19:
-> > 	- Removed IIO_DMA_MINALIGN
-> > 
-> > Patch 14/19:
-> > 	- Splitted from Patch v1 14/19
-> > 
-> > Patch 15/19:
-> > 	- Splitted from Patch v1 14/19
-> > 
-> > Patch 16/19: **NEW**
-> > 	- Use dev_err_probe() where applicable.
-> > 
-> > v1: https://lore.kernel.org/linux-iio/20240527183805.311501-1-vassilisamir@gmail.com/
-> > 
-> > This started as a series to add support for buffers and the new
-> > BME688 but it ended up being just a cleaning series. These might
-> > be quite some patches for such a thing but I feel that they are
-> > are well split, in order to allow for better review.
-> > 
-> > The patches are mostly small changes but essential for the correct use
-> > of the driver. The first patches looked like fixes that should be
-> > marked for the stable. Patches [11,17/17] might be a bit bigger but 11/17
-> > is quite straightforward and 17/17 is basically a duplication of a
-> > very similar commit coming from the BMP280 driver [1].
-> > 
-> > In general, the datasheet [2] of the driver is not very descriptive,
-> > and it redirects the user to the BME68x Sensor API [3]. All the things
-> > that were identified from the BME68x Sensor API have been marked with
-> > links to the original locations of the GitHub code. If this is too much
-> > and we don't want this type of information on the commit message, please
-> > let me know and I will fix it.
-> > 
-> > [1]: https://lore.kernel.org/linux-iio/20240512230524.53990-1-vassilisamir@gmail.com/T/#mc6f814e9a4f8c2b39015909d174c7013b3648b9b
-> > [2]: https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bme680-ds001.pdf
-> > [3]: https://github.com/boschsensortec/BME68x_SensorAPI/tree/master
-> > 
-> > 
-> > Vasileios Amoiridis (15):
-> >   iio: chemical: bme680: Fix read/write ops to device by adding mutexes
-> >   iio: chemical: bme680: Fix typo in define
-> >   iio: chemical: bme680: Drop unnecessary casts and correct adc data
-> >     types
-> >   iio: chemical: bme680: Remove remaining ACPI-only stuff
-> >   iio: chemical: bme680: Sort headers alphabetically
-> >   iio: chemical: bme680: Remove duplicate register read
-> >   iio: chemical: bme680: Use bulk reads for calibration data
-> >   iio: chemical: bme680: Allocate IIO device before chip initialization
-> >   iio: chemical: bme680: Add read buffers in read/write buffer union
-> >   iio: chemical: bme680: Make error checks consistent
-> >   iio: chemical: bme680: Modify startup procedure
-> >   iio: chemical: bme680: Move probe errors to dev_err_probe()
-> >   iio: chemical: bme680: Remove redundant gas configuration
-> >   iio: chemical: bme680: Move forced mode setup in ->read_raw()
-> >   iio: chemical: bme680: Refactorize reading functions
-> > 
-> >  drivers/iio/chemical/bme680.h      |  41 +-
-> >  drivers/iio/chemical/bme680_core.c | 631 +++++++++++++----------------
-> >  2 files changed, 291 insertions(+), 381 deletions(-)
-> > 
-> > 
-> > base-commit: 4241665e6ea063a9c1d734de790121a71db763fc
-> > -- 
-> > 2.25.1
-> >   
+On Wed, Jun 26, 2024 at 01:02:35PM +0000, Jari Ruusu wrote:
+> On Tuesday, June 25th, 2024 at 21:01, Pawan Gupta <pawan.kumar.gupta@linux.intel.com> wrote:
+> > Thanks for pointing this out, CLEAR_CPU_BUFFERS should happen before POPFL.
+> > Below patch moves it before POPFL and also adds a safer version that
+> > switches to KERNEL_DS before executing VERW. This should ensure VERW works
+> > in all cases:
 > 
-> Hi Jonathan,
-> 
-> It's been three weeks so I am just checking-in here, to be sure that this
-> series was not lost in the countless e-mails that you receive. Totally
-> understand the summer time on top, so no hurry at all, just checking in
-> that it is not lost! :) Thanks for the amazing job with the reviews
-> though anyways! :)
+> Your patch looks OK to me. Thanks.
+> Tested on linux-5.10.220 inside 32-bit VM.
 
-Hi,
-
-It's stalled because of a tree management issue - that is the first
-few patches were going through fixes-togreg and I'd like to keep
-the merge fun simple which means they have to end up upstream and
-back in char-misc/char-misc-next which I then rebase on after
-an IIO pull request.
-
-They are in char-misc-next as of about 45 mins ago.
-
-It'll be a bit tight for this cycle but my plan is 2 more pull requests
-with the last one at risk because of timing.  This stuff can only be
-in that final pull request.
-
-Once it's all in place I will take a final look for but not anticipating
-needing any changes.
-
-Jonathan
-
-
-
-> 
-> Cheers,
-> Vasilis
-> 
-
+Great!  Hopefully someone submits this to the stable tree so we can
+accept it...
