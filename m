@@ -1,260 +1,184 @@
-Received: from out0-205.mail.aliyun.com (out0-205.mail.aliyun.com [140.205.0.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33CC916C857
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 14:56:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9526016D4D1
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 14:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719845812; cv=none; b=GNRCBKGwDeKxrwwUIBmea9Az0BY+u7tNxdAX/BQlXwv3P0rs1vjotSFec8fPGwZVXAVro4xjeHU8e5u2daYkgABu4qjR6M6rxF4aLVWwPI71aVo0y/CZ1GQuaigYWB59rkzj2IipJJWCMu1Dw9B5h4rirqWZqeH4kufwdvFy/3E=
+	t=1719845816; cv=none; b=BcAL1LyLniLrr9VjtYztwRkcfEIvM968vAdkSiqpXIiEV+NXS/PLSKAOmLh/rrbBx/eV7jsfARjMDG3FDd5s3AFi2U+SYOIvbaC4I6IzkJhU8B7zyYQtZWgqLzIruVlXCVlVmmv4YqIeyNJPIRWlZL9O6pNFv5iNNL2OZETmkR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719845812; c=relaxed/simple;
-	bh=pfaHEbBJd5fTzy7GDHQIzLjXL5VslSIT9fpjfkpMfls=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PS11Nz88UekQHHB741JKzSXSIr+mL30k7BQRXYsoQXwIikFV/Qgj9cR82XGqodGnmjj86AE7SSCMJtq9JEPthdxjYItNwFTmctF3RVABeeaElcDtE16FGBsqGe+lhhT9FOblH2bu8IGrQH+BXmFv63HGnJ6ZwMRu89jY+ueb7ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=ztOEFfQt; arc=none smtp.client-ip=140.205.0.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
+	s=arc-20240116; t=1719845816; c=relaxed/simple;
+	bh=lulhEHbDI9HXkLTpJhxhZ2CGZpInoFABmokVqba+H/o=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=eY4IsfJ7mYUYn+4Ya5THsOetvAmjfuY8jlTYvGJgaiwE/4M3PYlrvUnjzcPLGL6YZaM9jyA2XuJ/WjcYawooIWr2srN5+QE+aiYrv+6Yz8pK/qH1buWLvPMJvuq3aG57r9HccUHFmtgCuxKs2EEflsN+3FK7bXY7g453ZQbbXjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YrdZAIC/; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="ztOEFfQt"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=antgroup.com; s=default;
-	t=1719845800; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=7fXQtGE1vB/XPlQsFz75kPV4wKlykVtl82FG6M2N7A0=;
-	b=ztOEFfQt9Ih78TOoEbW0SUa2cbFfRSBjjEUAooKErmaIwxC5V3cPTt7C3gPtcwq2FWF7hA5QuKxIdXiMs0iIb6n7d3vL89EIw/3ZkHQ6OJ1Fzn7mJQEu01CCS7ym79rLaimPPX8mgHOr3xDQbi5a+UxsGsO6aVBrz9PIpoTI5M4=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033070043001;MF=libang.li@antgroup.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---.YENyL8G_1719845482;
-Received: from 30.13.185.168(mailfrom:libang.li@antgroup.com fp:SMTPD_---.YENyL8G_1719845482)
-          by smtp.aliyun-inc.com;
-          Mon, 01 Jul 2024 22:51:23 +0800
-Message-ID: <f8a8d9de-c1e8-457e-8782-d8565f1983a2@antgroup.com>
-Date: Mon, 01 Jul 2024 22:51:20 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YrdZAIC/"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4257a390a4eso13657795e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 07:56:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719845812; x=1720450612; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NQf5Ish3Av0gD9Da5lEuRdMWHvRT8TUq9V7uM/AJGRM=;
+        b=YrdZAIC/39f/WsQE9wNHbV+G5up555StfYHX9H9xxA7dCDWFLbyg+kOOuq74hefn1d
+         cLxAq3wHee0WFMB7G6bN7Kf6DocH1S9f2CYoSEt4tZjNr5G8HfjhqPVKKsmeqs7plPOI
+         8oN+QXe7Q6iDdM+eXxgdF6kYFTPHSeQGNUDVw8w9XrBT5W5hF5Q8jvsnphhlX3VDrME5
+         Wo/2FX4LlFfqSwjEUWtfOLJb7pJBwhB8TBWtnia8Mv82yco0+jb2ZUXHvGGcs0tHjuTi
+         ZwtiK5sm9d5kpLKwhQoXZbBylVrYNZa7PdGVurTpsT24tDzMsLypvMrMQ4qCTOtc+o1f
+         oAeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719845812; x=1720450612;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NQf5Ish3Av0gD9Da5lEuRdMWHvRT8TUq9V7uM/AJGRM=;
+        b=icEBTCMz85na1muW0ejp5HLkhe8J62XBdYWQITKVQkmQDwnMIF0c8Sngm2GFBr0dvU
+         ISd/2bhehUQNryAXjndPlml1v0QTi2d+Ny6ZEVpuB8Kh1+KZgJAsJI3Qj+NM0bJ5C8R+
+         UvWrfzxxUTfSw9rTiGcBuVuAwTcja+cQmPGOrNhbmDW5PRkjYIya5mb5XiQxvlqeZ8JS
+         yTS4/5libQVjup6W5zFNgi4GHTVNKAJ2ut6lxJ2q7+fkrX8POW2lF+DPzHDWcEKDced9
+         ry8YwHiFMQ99RRPBmdX2x1T9nfz2E7oTICUaKy4vcQL4fyw46G0rD9Ze9zOYZtsn34DO
+         Qznw==
+X-Forwarded-Encrypted: i=1; AJvYcCVqniMTjBuGNhhX7vgXiHRYvzIKmX432QLDoGbVFwjRslxJ/1cuVYLUlj+lfyX9fdhk0cbxYCrmpGSTcKIMVXhB6trADdiwAmbRZwsC
+X-Gm-Message-State: AOJu0YzHacjuvI4xz0PI8bhxRgkPFaZLZIF4szs0nzx4WtT6eEFablB9
+	lAyfy/N82VBgI8X9trWtvLlaGKzaushIulFP0iuMlEiTJuRMh8o34/513U8IOJPWAp+3x2roJdc
+	j
+X-Google-Smtp-Source: AGHT+IFuoYQlLRqQ9dWAaFITgP1ycNsICaOHlaVoLz1A7a/V/dTh0+2D6q5hqGRXA8gtFdGZaYA6dA==
+X-Received: by 2002:a05:600c:1c88:b0:424:ab90:ecf0 with SMTP id 5b1f17b1804b1-4257a020ecdmr40982085e9.31.1719845812723;
+        Mon, 01 Jul 2024 07:56:52 -0700 (PDT)
+Received: from [127.0.1.1] ([178.197.219.137])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256b0c0f99sm160062915e9.41.2024.07.01.07.56.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 07:56:52 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Date: Mon, 01 Jul 2024 16:56:40 +0200
+Subject: [PATCH 7/7] ARM: dts: marvell: orion: align LED node name with
+ bindings
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] support "THPeligible" semantics for mTHP with anonymous
- shmem
-To: Baolin Wang <baolin.wang@linux.alibaba.com>,
- Ryan Roberts <ryan.roberts@arm.com>, hughd@google.com,
- akpm@linux-foundation.org
-Cc: david@redhat.com, wangkefeng.wang@huawei.com, ziy@nvidia.com,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20240628104926.34209-1-libang.li@antgroup.com>
- <4b38db15-0716-4ffb-a38b-bd6250eb93da@arm.com>
- <4d54880e-03f4-460a-94b9-e21b8ad13119@linux.alibaba.com>
- <ee59573f-52bd-45e4-bd2f-eac28ae97e66@antgroup.com>
- <2910ddc3-b05f-4394-8288-6e3c321fffee@linux.alibaba.com>
-Content-Language: en-US
-From: "Bang Li" <libang.li@antgroup.com>
-In-Reply-To: <2910ddc3-b05f-4394-8288-6e3c321fffee@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240701-dts-marvell-cleanup-v1-7-4773bd20691a@linaro.org>
+References: <20240701-dts-marvell-cleanup-v1-0-4773bd20691a@linaro.org>
+In-Reply-To: <20240701-dts-marvell-cleanup-v1-0-4773bd20691a@linaro.org>
+To: Andrew Lunn <andrew@lunn.ch>, 
+ Gregory Clement <gregory.clement@bootlin.com>, 
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3014;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=lulhEHbDI9HXkLTpJhxhZ2CGZpInoFABmokVqba+H/o=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmgsOpTixCygCACa26/Ig9SNDnBxhrjatBdht+K
+ 3quMnNm3yKJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZoLDqQAKCRDBN2bmhouD
+ 19McD/9JoJH1/47Ibse8yXq5ZQrHqBFbdg/aRfFIFNiriij2A6v4YY2hWO50iWr4K6f8gRaKhIC
+ nasnu5umdaYkTDXGzQL1kEAVnJ4t3VwyZga9PUsrm9eUfV7cIvTz2lj+OYIoQU1kY1Ei6IgRA3H
+ 4o1zaQ5tdtxmAyNGOf6j3Jw3Ie+9yHdvJ96/GZ+JknCWi6VV5WBea78i/0+YU//r+f8Bvp7kjYN
+ dsOCP8duMYZ0U0NZb1MgSX4lFc0vN8GZsQ3PmY3Pnfp0ALC/8IOdqahgvS0e67YXjBrnKG5ozRg
+ uCfLlNGVJ5r6X67Ftj9lMGJ5wqOqE+tKcgstllUqCaJ2X1Jy3sIC/54jpw0LY7P2XDTpim9V/ZU
+ MHgq2LFfQEdY5FkLkVbyrFvOQhtidDk17t+HZBE9vJkH/V3a9PVEKIF5CqdsjnVdLcvNOzGFXFz
+ WTTUKCScF9zNDqhqVwCMgRgfpWO6iiVM85fLgYW21paImgl99ZOJrzJ0Z8ClWDTkYXPdsqdA5RR
+ LNhM8efXnN94m7Ijoh3G/I08uLEK3uiMHbnN3Bkhw3DrwyQGpEdbRV8ib8wP5fNTxysdZZreUZ8
+ oL+F9ROB2CEcKBe2PAkAZNH24gM9ZmzyoVtRxT7/P5+RnhTDw5HeoeGA7/Xa99sUTFCw5jtXxe8
+ XJ+DIrZg1rzUJIA==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-On 2024/7/1 19:12, Baolin Wang wrote:
-> 
-> 
-> On 2024/7/1 17:43, Bang Li wrote:
->> Hi, Baolin
->>
->> On 2024/7/1 16:33, Baolin Wang wrote:
->>>
->>>
->>> On 2024/7/1 15:55, Ryan Roberts wrote:
->>>> On 28/06/2024 11:49, Bang Li wrote:
->>>>> After the commit 7fb1b252afb5 ("mm: shmem: add mTHP support for
->>>>> anonymous shmem"), we can configure different policies through
->>>>> the multi-size THP sysfs interface for anonymous shmem. But
->>>>> currently "THPeligible" indicates only whether the mapping is
->>>>> eligible for allocating THP-pages as well as the THP is PMD
->>>>> mappable or not for anonymous shmem, we need to support semantics
->>>>> for mTHP with anonymous shmem similar to those for mTHP with
->>>>> anonymous memory.
->>>>>
->>>>> Signed-off-by: Bang Li <libang.li@antgroup.com>
->>>>> ---
->>>>>   fs/proc/task_mmu.c      | 10 +++++++---
->>>>>   include/linux/huge_mm.h | 11 +++++++++++
->>>>>   mm/shmem.c              |  9 +--------
->>>>>   3 files changed, 19 insertions(+), 11 deletions(-)
->>>>>
->>>>> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
->>>>> index 93fb2c61b154..09b5db356886 100644
->>>>> --- a/fs/proc/task_mmu.c
->>>>> +++ b/fs/proc/task_mmu.c
->>>>> @@ -870,6 +870,7 @@ static int show_smap(struct seq_file *m, void *v)
->>>>>   {
->>>>>       struct vm_area_struct *vma = v;
->>>>>       struct mem_size_stats mss = {};
->>>>> +    bool thp_eligible;
->>>>>       smap_gather_stats(vma, &mss, 0);
->>>>> @@ -882,9 +883,12 @@ static int show_smap(struct seq_file *m, void *v)
->>>>>       __show_smap(m, &mss, false);
->>>>> -    seq_printf(m, "THPeligible:    %8u\n",
->>>>> -           !!thp_vma_allowable_orders(vma, vma->vm_flags,
->>>>> -               TVA_SMAPS | TVA_ENFORCE_SYSFS, THP_ORDERS_ALL));
->>>>> +    thp_eligible = !!thp_vma_allowable_orders(vma, vma->vm_flags,
->>>>> +                        TVA_SMAPS | TVA_ENFORCE_SYSFS, 
->>>>> THP_ORDERS_ALL);
->>>>> +    if (vma_is_anon_shmem(vma))
->>>>> +        thp_eligible = 
->>>>> !!shmem_allowable_huge_orders(file_inode(vma->vm_file),
->>>>> +                            vma, vma->vm_pgoff, thp_eligible);
->>>>
->>>> Afraid I haven't been following the shmem mTHP support work as much 
->>>> as I would
->>>> have liked, but is there a reason why we need a separate function 
->>>> for shmem?
->>>
->>> Since shmem_allowable_huge_orders() only uses shmem specific logic to 
->>> determine if huge orders are allowable, there is no need to 
->>> complicate the thp_vma_allowable_orders() function by adding more 
->>> shmem related logic, making it more bloated. In my view, providing a 
->>> dedicated helper shmem_allowable_huge_orders(), specifically for 
->>> shmem, simplifies the logic.
->>>
->>> IIUC, I agree with David's suggestion that the 
->>> shmem_allowable_huge_orders() helper function could be used in 
->>> thp_vma_allowable_orders() to support shmem mTHP. Something like:
->>>
->>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
->>> index c7ce28f6b7f3..9677fe6cf478 100644
->>> --- a/mm/huge_memory.c
->>> +++ b/mm/huge_memory.c
->>> @@ -151,10 +151,13 @@ unsigned long __thp_vma_allowable_orders(struct 
->>> vm_area_struct *vma,
->>>           * Must be done before hugepage flags check since shmem has its
->>>           * own flags.
->>>           */
->>> -       if (!in_pf && shmem_file(vma->vm_file))
->>> -               return shmem_is_huge(file_inode(vma->vm_file), 
->>> vma->vm_pgoff,
->>> -                                    !enforce_sysfs, vma->vm_mm, 
->>> vm_flags)
->>> -                       ? orders : 0;
->>> +       if (!in_pf && shmem_file(vma->vm_file)) {
->>> +               bool global_huge = 
->>> shmem_is_huge(file_inode(vma->vm_file), vma->vm_pgoff,
->>> +                                    !enforce_sysfs, vma->vm_mm, 
->>> vm_flags);
->>> +
->>> +               return 
->>> shmem_allowable_huge_orders(file_inode(vma->vm_file),
->>> +                                       vma, vma->vm_pgoff, 
->>> global_huge);
->>> +       }
->>>
->>>          if (!vma_is_anonymous(vma)) {
->>>                  /*
->>>
->>>> Couldn't (shouldn't) thp_vma_allowable_orders() be taught to handle 
->>>> shmem too?
->>>>
->>>>> +    seq_printf(m, "THPeligible:    %8u\n", thp_eligible);
->>>>>       if (arch_pkeys_enabled())
->>>>>           seq_printf(m, "ProtectionKey:  %8u\n", vma_pkey(vma));
->>>>> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
->>>>> index 212cca384d7e..f87136f38aa1 100644
->>>>> --- a/include/linux/huge_mm.h
->>>>> +++ b/include/linux/huge_mm.h
->>>>> @@ -267,6 +267,10 @@ unsigned long thp_vma_allowable_orders(struct 
->>>>> vm_area_struct *vma,
->>>>>       return __thp_vma_allowable_orders(vma, vm_flags, tva_flags, 
->>>>> orders);
->>>>>   }
->>>>> +unsigned long shmem_allowable_huge_orders(struct inode *inode,
->>>>> +                struct vm_area_struct *vma, pgoff_t index,
->>>>> +                bool global_huge);
->>>>> +
->>>>>   struct thpsize {
->>>>>       struct kobject kobj;
->>>>>       struct list_head node;
->>>>> @@ -460,6 +464,13 @@ static inline unsigned long 
->>>>> thp_vma_allowable_orders(struct vm_area_struct *vma,
->>>>>       return 0;
->>>>>   }
->>>>> +static inline unsigned long shmem_allowable_huge_orders(struct 
->>>>> inode *inode,
->>>>> +                struct vm_area_struct *vma, pgoff_t index,
->>>>> +                bool global_huge)
->>>>> +{
->>>>> +    return 0;
->>>>> +}
->>>>> +
->>>>>   #define transparent_hugepage_flags 0UL
->>>>>   #define thp_get_unmapped_area    NULL
->>>>> diff --git a/mm/shmem.c b/mm/shmem.c
->>>>> index d495c0701a83..aa85df9c662a 100644
->>>>> --- a/mm/shmem.c
->>>>> +++ b/mm/shmem.c
->>>>> @@ -1622,7 +1622,7 @@ static gfp_t limit_gfp_mask(gfp_t huge_gfp, 
->>>>> gfp_t limit_gfp)
->>>>>   }
->>>>>   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->>>>> -static unsigned long shmem_allowable_huge_orders(struct inode *inode,
->>>>> +unsigned long shmem_allowable_huge_orders(struct inode *inode,
->>>>>                   struct vm_area_struct *vma, pgoff_t index,
->>>>>                   bool global_huge)
->>>>>   {
->>>>> @@ -1707,13 +1707,6 @@ static unsigned long 
->>>>> shmem_suitable_orders(struct inode *inode, struct vm_fault
->>>>>       return orders;
->>>>>   }
->>>>>   #else
->>>>> -static unsigned long shmem_allowable_huge_orders(struct inode *inode,
->>>>> -                struct vm_area_struct *vma, pgoff_t index,
->>>>> -                bool global_huge)
->>>>> -{
->>>>> -    return 0;
->>>>> -}
->>>>> -
->>>>>   static unsigned long shmem_suitable_orders(struct inode *inode, 
->>>>> struct vm_fault *vmf,
->>>>>                          struct address_space *mapping, pgoff_t index,
->>>>>                          unsigned long orders)
->>
->> Thanks for the reference code. Currently, we only implement the mTHP of
->> anonymous shmem, so we only need to handle anonymous shmem specially. As
->> shown in the following code:
->>
->> --- a/mm/huge_memory.c
->> +++ b/mm/huge_memory.c
->> @@ -151,10 +151,14 @@ unsigned long __thp_vma_allowable_orders(struct 
->> vm_area_struct *vma,
->>           * Must be done before hugepage flags check since shmem has its
->>           * own flags.
->>           */
->> -       if (!in_pf && shmem_file(vma->vm_file))
->> -               return shmem_is_huge(file_inode(vma->vm_file), 
->> vma->vm_pgoff,
->> -                                    !enforce_sysfs, vma->vm_mm, 
->> vm_flags)
->> -                       ? orders : 0;
->> +       if (!in_pf && shmem_file(vma->vm_file)) {
->> +               bool global_huge = 
->> shmem_is_huge(file_inode(vma->vm_file), vma->vm_pgoff,
->> +                                    !enforce_sysfs, vma->vm_mm, 
->> vm_flags);
-> 
-> Nit: add a blank line after the declaration. Otherwise looks good to me.
+Bindings expect the LED node names to follow certain pattern, see
+dtbs_check warnings:
 
-It doesn't matter to me whether I add spaces or not, thanks for your
-suggestion anyway.
+  orion5x-lswsgl.dtb: gpio-leds: led-alarm: Unevaluated properties are not allowed ('gpio' was unexpected)
 
-Thanks,
-Bang
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ arch/arm/boot/dts/marvell/orion5x-lacie-ethernet-disk-mini-v2.dts | 2 +-
+ arch/arm/boot/dts/marvell/orion5x-linkstation-lschl.dts           | 2 +-
+ arch/arm/boot/dts/marvell/orion5x-lswsgl.dts                      | 8 ++++----
+ arch/arm/boot/dts/marvell/orion5x-rd88f5182-nas.dts               | 2 +-
+ 4 files changed, 7 insertions(+), 7 deletions(-)
 
-> 
->> +               if (!vma_is_anon_shmem(vma))
->> +                       return global_huge? orders : 0;
->> +               return 
->> shmem_allowable_huge_orders(file_inode(vma->vm_file),
->> +                                               vma, vma->vm_pgoff, 
->> global_huge);
->> +       }
->>
->>          if (!vma_is_anonymous(vma)) {
->>
->> Thanks,
->> Bang
+diff --git a/arch/arm/boot/dts/marvell/orion5x-lacie-ethernet-disk-mini-v2.dts b/arch/arm/boot/dts/marvell/orion5x-lacie-ethernet-disk-mini-v2.dts
+index a7586370b1d5..f81acb9b7223 100644
+--- a/arch/arm/boot/dts/marvell/orion5x-lacie-ethernet-disk-mini-v2.dts
++++ b/arch/arm/boot/dts/marvell/orion5x-lacie-ethernet-disk-mini-v2.dts
+@@ -52,7 +52,7 @@ gpio-leds {
+ 		pinctrl-0 = <&pmx_power_led>;
+ 		pinctrl-names = "default";
+ 
+-		led@1 {
++		led-1 {
+ 			label = "power:blue";
+ 			gpios = <&gpio0 16 GPIO_ACTIVE_LOW>;
+ 		};
+diff --git a/arch/arm/boot/dts/marvell/orion5x-linkstation-lschl.dts b/arch/arm/boot/dts/marvell/orion5x-linkstation-lschl.dts
+index 624b737a8be4..79fee048c900 100644
+--- a/arch/arm/boot/dts/marvell/orion5x-linkstation-lschl.dts
++++ b/arch/arm/boot/dts/marvell/orion5x-linkstation-lschl.dts
+@@ -90,7 +90,7 @@ amber-info-led {
+ 			gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
+ 		};
+ 
+-		func {
++		func-led {
+ 			label = "lschl:func:blue:top";
+ 			gpios = <&gpio0 17 GPIO_ACTIVE_LOW>;
+ 		};
+diff --git a/arch/arm/boot/dts/marvell/orion5x-lswsgl.dts b/arch/arm/boot/dts/marvell/orion5x-lswsgl.dts
+index 802cd6ff6169..e0da406c430f 100644
+--- a/arch/arm/boot/dts/marvell/orion5x-lswsgl.dts
++++ b/arch/arm/boot/dts/marvell/orion5x-lswsgl.dts
+@@ -102,22 +102,22 @@ gpio-leds {
+ 			     &pmx_led_power>;
+ 		pinctrl-names = "default";
+ 
+-		alarm {
++		led-alarm {
+ 			label = "lswsgl:alarm:red";
+ 			gpios = <&gpio0 2 GPIO_ACTIVE_LOW>;
+ 		};
+ 
+-		info {
++		led-info {
+ 			label = "lswsgl:info:amber";
+ 			gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
+ 		};
+ 
+-		func {
++		led-func {
+ 			label = "lswsgl:func:blue:top";
+ 			gpios = <&gpio0 9 GPIO_ACTIVE_LOW>;
+ 		};
+ 
+-		power {
++		led-power {
+ 			label = "lswsgl:power:blue:bottom";
+ 			gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
+ 			default-state = "on";
+diff --git a/arch/arm/boot/dts/marvell/orion5x-rd88f5182-nas.dts b/arch/arm/boot/dts/marvell/orion5x-rd88f5182-nas.dts
+index fd78aa02a3c5..75ab913b21e5 100644
+--- a/arch/arm/boot/dts/marvell/orion5x-rd88f5182-nas.dts
++++ b/arch/arm/boot/dts/marvell/orion5x-rd88f5182-nas.dts
+@@ -32,7 +32,7 @@ gpio-leds {
+ 		pinctrl-0 = <&pmx_debug_led>;
+ 		pinctrl-names = "default";
+ 
+-		led@0 {
++		led-0 {
+ 			label = "rd88f5182:cpu";
+ 			linux,default-trigger = "heartbeat";
+ 			gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
+
+-- 
+2.43.0
+
