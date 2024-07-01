@@ -1,101 +1,202 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1892770E6;
-	Mon,  1 Jul 2024 10:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311E3219E4;
+	Mon,  1 Jul 2024 10:47:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719830787; cv=none; b=ucjrTDbVXGY3oA5WmQuHvmmbk2VOHOIS3pQOqQVu3Y24NvK+FFeJonoIDDIOeznsrJbhrLlQ9m2VY/luK5m0OGeEq0uyVLFRyIjZvKFUuosMS6mKRYNvE6qgWOwFxVW0G9u4z/Lsegw53xBQBrozIX9LNrh2yytMTcVCNsxt8uE=
+	t=1719830845; cv=none; b=X5OCetK/J4jGhUe/9cAuJ1lrdBgJO2QtjDbwAoW69H0E4jk+I/p9gEhdAn2eDHngck/Lya08sti4sB8mQm0LUw8N+Dp/brjlD73bMOLm9/dofxiVKBCjxnG5uoF1/IEmKo2dmCi6TCHxm6V88S8waTUqzP28j/Q05CabwiIsoWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719830787; c=relaxed/simple;
-	bh=+GWwp7BZyeiCr0bRF9W7x/gTSmPZTt0iUoqHGzc9sVY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SYmWFQ3Wj/Ldmx2tUdAfogADtsdozyaAk0d2H4yz45X3+Rla+PTxplJxgOiX8LrUPFXdQS7tUG2ScBMHxxT21XZ5oko+6uwHz1i0Zt1e5okz5COLSAt9OYebDEGQpyKxD7xXA+d0vlqi9FzRtzNMVFWgN9OLq2X/PvsWOQafam0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H7XYox2o; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719830845; c=relaxed/simple;
+	bh=uLreaSzsfWWKqMGJYJV4gCqtwlpLEPOuQHljyyG/gWU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nlEZVn8FD4sZCr3a+vnnE7v059Z3RRRMoJgvZ5dlCW6Aep9BTCCA9zhDzqMy1x4ItiIvXZReOcZ1Mj8zwAZcqQNm/JM/WWrxAVincTANTbp/lRu/qpD8vynDv+XiCiSvbuUTRFaBcoBxM5BgxosCb7+Ilc6t/1JHe+C77aUUtFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=MB1chLtH; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H7XYox2o"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57d251b5fccso120524a12.0;
-        Mon, 01 Jul 2024 03:46:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719830784; x=1720435584; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=+GWwp7BZyeiCr0bRF9W7x/gTSmPZTt0iUoqHGzc9sVY=;
-        b=H7XYox2o8IOyOFdG5+vDydJkBDpWeNQ6VHiEEQFC/jo0wGubOKt8tiM8AVqY21V5yI
-         n8ChHqtLmV2j4TfrncfRDNOTCZXbHYHAX224oYkirwwHpHWCBOBOvyMvdu/vsSkySsx3
-         T7RtwZ4AHWopFcFO5vnogLvBbN8uRcDlhp6+7hN65sQe753KnnwL9OZQ7WJ46IYKrjVx
-         IZtW13u6NKwyiYGZR5ziNM9BK9yRuydnb3UEVb4QozOdS5BlpF2XtLzoZLZMtMUOMUZb
-         IRWg7Y4zPdArd6umVMY1F1GXUmC0RjcFkZ4/VL9BllBytmmbm8HvD7TWgBMX10NqsZeh
-         Cq+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719830784; x=1720435584;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+GWwp7BZyeiCr0bRF9W7x/gTSmPZTt0iUoqHGzc9sVY=;
-        b=RRS4CeFOpN4lNNfPFHO1PHbiBY3yqGrpMiCGHZiiNbdoKSEOtsyM4ndZJ8ab+ePkU+
-         pG+9MIfEx/j4bCcrecGYiZJDth/lWaz4487aUo1ATlAxJhd6V7VEtPihXUzZt5kqivTN
-         ntXVEYcJAyCIyWO7ddV7gQ6bq+dbyaiPuYVvQOvd944L05wdgl94JuRDSO+5yd0HuItf
-         JiX/hUmnK/QHJ/CFfPX1w2xVVtv9GPqlrHxCGAbBguVATTT2WGkGnz81imslogwslFCp
-         34eeyQdk9UUZp8K6SA/IpwzyTB32epOthyUZ0hXcXmvFWoqwkwxhOknzkG1j9xmx7kKz
-         hCDg==
-X-Forwarded-Encrypted: i=1; AJvYcCU9JzVygwz2J7aRNCfm1KSZYTZ/4mldCvu+oWWdXi0oD24cIld3yCvPttNT6U3QTpFKFvdveuNkHraZqIn72CkjR42NE9ydmN9eCVFtXjJpQwmpPhcr09PkVo40KpOTq254QTUhUglw6bA=
-X-Gm-Message-State: AOJu0YxYe7zKqqNnN7UrEteDa0/kMzSvd0aguH2F+XJERKVbjB4L4IjS
-	0erJzkwkz1GDCaDk8tlS5ibayIkVqKaZHKUMKeDxtfjJOe5CWCWO
-X-Google-Smtp-Source: AGHT+IEHC6BLROwpxdJYFjHPGy7yHaYl7t3ABtvtEuL8J2t0FkfZbYtJ8zbgpQC7cQMcPEF+UiG8sA==
-X-Received: by 2002:a05:6402:1d4b:b0:57d:15ee:3d18 with SMTP id 4fb4d7f45d1cf-5879f984d05mr3469882a12.20.1719830783884;
-        Mon, 01 Jul 2024 03:46:23 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:994e:fbde:478:1ce1? (p200300f6ef1cc500994efbde04781ce1.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:994e:fbde:478:1ce1])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-58614d50a6bsm4218065a12.66.2024.07.01.03.46.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 03:46:23 -0700 (PDT)
-Message-ID: <9bcd2aefd15890f8957e2b2bd767b05a64acb659.camel@gmail.com>
-Subject: Re: [PATCH v3] adp5588-keys: Support for dedicated gpio operation
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: "Agarwal, Utsav" <Utsav.Agarwal@analog.com>, "Hennerich, Michael"
-	 <Michael.Hennerich@analog.com>, "dmitry.torokhov@gmail.com"
-	 <dmitry.torokhov@gmail.com>, "linux-input@vger.kernel.org"
-	 <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	 <linux-kernel@vger.kernel.org>
-Cc: "Artamonovs, Arturs" <Arturs.Artamonovs@analog.com>, "Bimpikas,
- Vasileios" <Vasileios.Bimpikas@analog.com>, "Gaskell, Oliver"
- <Oliver.Gaskell@analog.com>
-Date: Mon, 01 Jul 2024 12:50:15 +0200
-In-Reply-To: <SJ0PR03MB634333C6AE67823F421B08B59BD32@SJ0PR03MB6343.namprd03.prod.outlook.com>
-References: 
-	<SJ0PR03MB6343CAFA976656052DD10F5D9BD02@SJ0PR03MB6343.namprd03.prod.outlook.com>
-	 <SJ0PR03MB634322A27945D27D047DCFFE9BD02@SJ0PR03MB6343.namprd03.prod.outlook.com>
-	 <SJ0PR03MB634333C6AE67823F421B08B59BD32@SJ0PR03MB6343.namprd03.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MB1chLtH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=60Kumii6pmJtpzJ+hSjU333nWVuyFzmImepY1GewN4I=; b=MB1chLtHl35qWH3NyFhR54TBfj
+	u6dNEVDvApmasLPc85NmkPL8B31J4jDxszPVqhtklBBRd/CFxZ9NWUq7JJAN4KnG9y/MJ8yBDeNV9
+	o6BuhQ7P1RLvO737e6iW+qpFqZTcXH72h+JOGZ4I8edAv4qaGmRMym96fq8I/0FT0FNkoTSaw129w
+	TosSWsjqunBMJlD+2Ac8syu2+o0HzT9nueD+eeFbyYMky8gBCiGKHvOYcSV6SNi2/y4RJXf5cAM+3
+	/+VPlQtTXfQnbis5JbhmPHGJOA6zqANrdLYc3fggiEe1+4TJy4s1vusBrgc+V1QFCtb0vBEZMlASl
+	atu637nA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sOEYo-0000000HFKK-15U7;
+	Mon, 01 Jul 2024 10:47:02 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 576BB300694; Mon,  1 Jul 2024 12:46:59 +0200 (CEST)
+Date: Mon, 1 Jul 2024 12:46:59 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Hendrik Brueckner <brueckner@linux.ibm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Will Deacon <will@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V8 02/12] perf/x86/intel/pt: Add support for pause /
+ resume
+Message-ID: <20240701104659.GB20127@noisy.programming.kicks-ass.net>
+References: <20240628065111.59718-1-adrian.hunter@intel.com>
+ <20240628065111.59718-3-adrian.hunter@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240628065111.59718-3-adrian.hunter@intel.com>
 
-Hi Utsav,
+On Fri, Jun 28, 2024 at 09:51:01AM +0300, Adrian Hunter wrote:
 
+> @@ -534,7 +537,20 @@ static void pt_config(struct perf_event *event)
+>  	reg |= (event->attr.config & PT_CONFIG_MASK);
+>  
+>  	event->hw.config = reg;
+> +
+> +	/*
+> +	 * Allow resume before starting so as not to overwrite a value set by a
+> +	 * PMI.
+> +	 */
+> +	WRITE_ONCE(pt->resume_allowed, 1);
+	barrier();
+>  	pt_config_start(event);
+	barrier();
+> +	/*
+> +	 * Allow pause after starting so its pt_config_stop() doesn't race with
+> +	 * pt_config_start().
+> +	 */
+> +	WRITE_ONCE(pt->pause_allowed, 1);
 
-On Mon, 2024-07-01 at 10:43 +0000, Agarwal, Utsav wrote:
-> It seems like there's a typo in the patch from an earlier version of the
-> file(dev_err is supplied struct device rather than a struct device pointe=
-r).=20
->=20
-> I will be resubmitting it, apologies for the same.
->=20
+IIRC you need those barrier()s, because if the compiler 'helpfully'
+inlines the static pt_config_start(), you loose your sequence point and
+things can get re-ordered. WRITE_ONCE() only ensures the store is whole
+and ordered against other volatile ops, but not against much else.
 
-Don't toppost :)...
+>  }
+>  
+>  static void pt_config_stop(struct perf_event *event)
+> @@ -1511,6 +1527,7 @@ void intel_pt_interrupt(void)
+>  		buf = perf_aux_output_begin(&pt->handle, event);
+>  		if (!buf) {
+>  			event->hw.state = PERF_HES_STOPPED;
+> +			pt->resume_allowed = 0;
+>  			return;
+>  		}
+>  
+> @@ -1519,6 +1536,7 @@ void intel_pt_interrupt(void)
+>  		ret = pt_buffer_reset_markers(buf, &pt->handle);
+>  		if (ret) {
+>  			perf_aux_output_end(&pt->handle, 0);
+> +			pt->resume_allowed = 0;
+>  			return;
+>  		}
+>  
 
-Also, you're still missing the bindings patch and you're not properly inclu=
-ding
-a changelog between different versions of your patches.
+Above you WRITE_ONCE() on ->resume_allowed, here you do not. Some *SAN
+thing or other is bound to get upset about things like that.
 
-- Nuno S=C3=A1
->=20
+> @@ -1573,6 +1591,26 @@ static void pt_event_start(struct perf_event *event, int mode)
+>  	struct pt *pt = this_cpu_ptr(&pt_ctx);
+>  	struct pt_buffer *buf;
+>  
+> +	if (mode & PERF_EF_RESUME) {
+> +		if (READ_ONCE(pt->resume_allowed)) {
 
+At this point I seem to have lost the plot, how do ->resume_allowed and
+->aux_paused interact?
+
+> +			u64 status;
+> +
+> +			/*
+> +			 * Only if the trace is not active and the error and
+> +			 * stopped bits are clear, is it safe to start, but a
+> +			 * PMI might have just cleared these, so resume_allowed
+> +			 * must be checked again also.
+> +			 */
+> +			rdmsrl(MSR_IA32_RTIT_STATUS, status);
+> +			if (!(status & (RTIT_STATUS_TRIGGEREN |
+> +					RTIT_STATUS_ERROR |
+> +					RTIT_STATUS_STOPPED)) &&
+> +			   READ_ONCE(pt->resume_allowed))
+> +				pt_config_start(event);
+> +		}
+> +		return;
+> +	}
+> +
+>  	buf = perf_aux_output_begin(&pt->handle, event);
+>  	if (!buf)
+>  		goto fail_stop;
+> @@ -1601,6 +1639,16 @@ static void pt_event_stop(struct perf_event *event, int mode)
+>  {
+>  	struct pt *pt = this_cpu_ptr(&pt_ctx);
+>  
+> +	if (mode & PERF_EF_PAUSE) {
+> +		if (READ_ONCE(pt->pause_allowed))
+> +			pt_config_stop(event);
+> +		return;
+> +	}
+> +
+> +	/* Protect against racing */
+
+No F1 cars allowed? Sure the comment can elucidate the reader as to what
+actual race one is concerned about, no?
+
+> +	WRITE_ONCE(pt->pause_allowed, 0);
+> +	WRITE_ONCE(pt->resume_allowed, 0);
+> +
+>  	/*
+>  	 * Protect against the PMI racing with disabling wrmsr,
+>  	 * see comment in intel_pt_interrupt().
+> @@ -1659,8 +1707,12 @@ static long pt_event_snapshot_aux(struct perf_event *event,
+>  	/*
+>  	 * Here, handle_nmi tells us if the tracing is on
+>  	 */
+> -	if (READ_ONCE(pt->handle_nmi))
+> +	if (READ_ONCE(pt->handle_nmi)) {
+> +		/* Protect against racing */
+> +		WRITE_ONCE(pt->pause_allowed, 0);
+> +		WRITE_ONCE(pt->resume_allowed, 0);
+
+barrier()?
+
+>  		pt_config_stop(event);
+> +	}
+>  
+>  	pt_read_offset(buf);
+>  	pt_update_head(pt);
+> @@ -1677,8 +1729,11 @@ static long pt_event_snapshot_aux(struct perf_event *event,
+>  	 * Compiler barrier not needed as we couldn't have been
+>  	 * preempted by anything that touches pt->handle_nmi.
+>  	 */
+> -	if (pt->handle_nmi)
+> +	if (pt->handle_nmi) {
+> +		WRITE_ONCE(pt->resume_allowed, 1);
+>  		pt_config_start(event);
+> +		WRITE_ONCE(pt->pause_allowed, 1);
+
+barrier() went missing again?
+
+> +	}
+>  
+>  	return ret;
+>  }
