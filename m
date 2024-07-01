@@ -1,101 +1,129 @@
-Received: from smtp1.tecnico.ulisboa.pt (smtp1.tecnico.ulisboa.pt [193.136.128.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359182A1A4;
-	Mon,  1 Jul 2024 14:39:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.136.128.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EF584696;
+	Mon,  1 Jul 2024 14:42:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719844775; cv=none; b=P9Kqocyu2eKiLSiBfbc7Y6SW7K3S1YAF0l1JSaMMozaCVMC5+s573FLBdf6kfIeZ7vmo8G+QD2nRKDcBfxaioqtmiXkNeuIJh7AKZ4VQBkofoL73NPmmo4GN/WJ1fjiri3o/lHUwUOBR5HEt5luhB3upNvjGw7WscyYucgYvfFE=
+	t=1719844961; cv=none; b=Wv0lvCC11h8mD2kgsRvavWPyUbssqvskV/CTJRNfEq17z4Q2tc5GUNBiOq/phhVzFzZDj9txDS8oL2J3sqCV6TLV/HDGUueQc1vjXspD43v7Vhgs18qLXxKXGOxT9OyisHuKawqwN1U2koZ3z/NTw5OLki0tJHik+dEiGStxqlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719844775; c=relaxed/simple;
-	bh=/6qke6RUXta77pvxyFGlQ7jb5LbK70lHz1fXlCciVSQ=;
+	s=arc-20240116; t=1719844961; c=relaxed/simple;
+	bh=oqreuN7Lmf3KZB06NiHnlq3XgvAne96Q0HZLnxU1cvA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fC7X1sC5/TCGMA2HK2XwwarKZMkE19v29IDL1VJqv3KB2R3DR1SKkyL2D2DrD1v7F0cJUVzcVzw27iWQfixtMR39S+8m5qXB5eLYfAzuAatIUxWuMR17ooNSyR7m44XSLOXfjBe70vUKenamjpFTBWUtdfUIiTrPjECpYsBhXJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt; spf=pass smtp.mailfrom=tecnico.ulisboa.pt; dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b=UYp5EScF; arc=none smtp.client-ip=193.136.128.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tecnico.ulisboa.pt
+	 Content-Type:Content-Disposition:In-Reply-To; b=cetDsoaMvwzi8W9hhDbN5E8LUWMYgDwpGNmwtbde3BHQwDWiyciQo7/zZfC+4qqu6SkXmsAvcsmUylFs89e6r+CqYTrT+awDdsa1mGXvYem/dLPbFnKC+KBPJsi1zL4baVpUIFcQzk4uhe1/tFsgxYxnHmRx5x2WITq/v//Yu7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Es6ZvAts; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b="UYp5EScF"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTP id 122A26002414;
-	Mon,  1 Jul 2024 15:30:39 +0100 (WEST)
-X-Virus-Scanned: by amavis-2.13.0 (20230106) (Debian) at tecnico.ulisboa.pt
-Received: from smtp1.tecnico.ulisboa.pt ([127.0.0.1])
- by localhost (smtp1.tecnico.ulisboa.pt [127.0.0.1]) (amavis, port 10025)
- with LMTP id vtWJFCvQ7Ifm; Mon,  1 Jul 2024 15:30:09 +0100 (WEST)
-Received: from mail1.tecnico.ulisboa.pt (mail1.ist.utl.pt [IPv6:2001:690:2100:1::b3dd:b9ac])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTPS id 5B1E2600140D;
-	Mon,  1 Jul 2024 15:30:09 +0100 (WEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tecnico.ulisboa.pt;
-	s=mail; t=1719844209;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R1hlZfJgLOxh6K5sBaTW/U1/Z3z8nnKAghRXP3SUY+M=;
-	b=UYp5EScF7V+KxA4yERMIUFmVwF4ik5RZZrXsTQ+JOmRz7TDUNzk8F9oeDbcNRDUt/YyzgC
-	uecnkyP5cSBhMWq0WLp8KzX+X4Qk4z0wx3v4TxtzPnKQdCBDq5J4ajqGNTlhKdaKAdEQ1L
-	5w//eWiLtm2vsLdM5RcLGhDQpcD8T2Q=
-Received: from diogo-gram (unknown [46.6.168.43])
-	(Authenticated sender: ist187313)
-	by mail1.tecnico.ulisboa.pt (Postfix) with ESMTPSA id 11CD83600B9;
-	Mon,  1 Jul 2024 15:30:03 +0100 (WEST)
-Date: Mon, 1 Jul 2024 15:29:55 +0100
-From: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: "Rob Herring (Arm)" <robh@kernel.org>, soc@kernel.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-tegra@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: Add/fix /memory node unit-addresses
-Message-ID: <otqwrgux76jfnj3zqdmybivu23k7os4gthxlvwn6xh3wv5g4lk@niz3kwwmcizr>
-References: <20240430191856.874600-2-robh@kernel.org>
- <lbv5dlpvjfolp3tidna6ft7o3c3xswu6udp6savazegbfovygp@uzf2yyrocfuj>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Es6ZvAts"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A929C116B1;
+	Mon,  1 Jul 2024 14:42:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719844961;
+	bh=oqreuN7Lmf3KZB06NiHnlq3XgvAne96Q0HZLnxU1cvA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Es6ZvAtss93UUyTV0/C5Kq7xcHV2mMr7W2uHGzC8FpKbNdC+jdwp2ciIC5jj/WLlr
+	 FyJlaV6yEroIgDjOJcuzd9aP6IUmM5Sp6czY1Awasc8IPqdGjj19lmJ1PoKJQekKjF
+	 iO8Evf/hfcQCmvr2bAjQTBrWOLxgdGAf4UNc7gokAoLxG4XDH0ROZNiDmRHlstPjTK
+	 RYuYX45Ln2d79925pclof5E9V0BwvtKu0XXZGfSh1PNR9rQGijypIVTJJfg19nB3Ou
+	 eOYGsfaO+Ws94mFfXxKN7LCu/yzJU5xXxZNZxLrtd2oRTkk6rkoTKotFrck44To5RZ
+	 tLuvqQyHCPFuA==
+Date: Mon, 1 Jul 2024 15:42:37 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel@pengutronix.de
+Subject: Re: [PATCH v2 1/2] dt-bindings: input: touchscreen: exc3000: add
+ EXC81W32
+Message-ID: <20240701-evolve-unbutton-ef7d913ad69f@spud>
+References: <20240628-input-exc3000-exc81w32-v2-0-c2b21a369c05@pengutronix.de>
+ <20240628-input-exc3000-exc81w32-v2-1-c2b21a369c05@pengutronix.de>
+ <20240628-agonizing-syrup-fcd55c441b3f@spud>
+ <150055844b8af2017fa721ff08bbde473354b2da.camel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="oXw+Hz09N3mxcR0V"
+Content-Disposition: inline
+In-Reply-To: <150055844b8af2017fa721ff08bbde473354b2da.camel@pengutronix.de>
+
+
+--oXw+Hz09N3mxcR0V
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <lbv5dlpvjfolp3tidna6ft7o3c3xswu6udp6savazegbfovygp@uzf2yyrocfuj>
+Content-Transfer-Encoding: quoted-printable
 
-Hi Thierry,
+On Mon, Jul 01, 2024 at 02:47:50PM +0200, Philipp Zabel wrote:
+> Hi Conor,
+>=20
+> On Fr, 2024-06-28 at 17:21 +0100, Conor Dooley wrote:
+> > On Fri, Jun 28, 2024 at 10:35:51AM +0200, Philipp Zabel wrote:
+> > > Add compatible for EXC81W32 touchscreen controllers.
+> >=20
+> > Could you please mention in your commit messages what makes a fallback
+> > compatible inappropriate here?
+>=20
+> thank for pointing this out. Actually, I'm not sure a fallback
+> compatible is inappropriate at all. There just is none currently, even
+> though EXC80H60 and EXC80H84 already look compatible to me.
+>=20
+> To my understanding, there's EXC80[WH]{32,46,60,84} models, that should
+> only differ in ball pitch (W or H) and targeted display size (the last
+> number).
+> I don't know if there are actual relevant differences between what I
+> assume are model generations, such as EXC80 to EXC81. At least the
+> limited currently implemented feature set in the exc3000 driver is
+> identical.
+>=20
+> Given that EXC80H60, EXC80H84, and now EXC81W32 all share the same 16K
+> resolution and the same message format (possible differences in
+> capability to measure touch area nonwithstanding), should I prepend
+> this series with a patch:
 
-On Fri, Jun 28, 2024 at 05:06:10PM GMT, Thierry Reding wrote:
-> On Tue, Apr 30, 2024 at 02:18:54PM GMT, Rob Herring (Arm) wrote:
-> [...]
-> > diff --git a/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
-> > index 9ebb7369256e..2e5b6b2c1f56 100644
-> > --- a/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
-> > +++ b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
-> > @@ -25,7 +25,7 @@ chosen {
-> >  		stdout-path = "serial0:115200n8";
-> >  	};
-> >  
-> > -	memory {
-> > +	memory@80000000 {
-> >  		device_type = "memory";
-> >  		reg = <0x0 0x80000000 0x0 0xc0000000>;
-> >  	};
-> 
-> [trimming the recipient list and adding Diogo]
-> 
-> Sorry I just noticed this as I was doing a cleanup path of patchwork.
-> 
-> For tegra210-smaug, unfortunately we can't do this. The problem is that
-> the firmware for this device looks for a hard-coded /memory device when
-> updating with the proper memory size and this firmware can't always be
-> updated.
-> 
-> Diogo, you're one of the few remaining people that I know of that still
-> use this device (with an upstream kernel). Do you have any more details
-> about this? Is there any way the firmware can be safely updated on these
-> devices?
+If you're prepared to update the two users to avoid adding more
+dtbs_check warnings, sure.
 
-To be honest I am not quite sure. I do know that at least there is a part
-of the firmware that is locked down and cannot be updated easily, as you
-have to disconnect a ribbon cable inside of the device. Do you know of
-any firmware updates for this device? Currently I am not aware of any.
+Thanks,
+Conor.
 
-Diogo
+>=20
+> @@ -14,10 +14,13 @@
+> =20
+>  properties:
+>    compatible:
+> -    enum:
+> -      - eeti,exc3000
+> -      - eeti,exc80h60
+> -      - eeti,exc80h84
+> +    oneOf:
+> +      - const: eeti,exc3000
+> +      - items:
+> +          - enum:
+> +              - eeti,exc80h60
+> +          - const: eeti,exc80h84
+> +      - const: eeti,exc80h84
+>    reg:
+>      const: 0x2a
+>    interrupts:
+>=20
+> regards
+> Philipp
+
+--oXw+Hz09N3mxcR0V
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHQEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZoLAXQAKCRB4tDGHoIJi
+0kfdAPinlDksflI+CZ0V7RLLNE6TzTiZAcuSVA8xrHNj8sd+AP4/QgKGeSLOwa2n
+NxYwmgWXdF5eK9yJeua4gyd0PjUSBg==
+=eq1X
+-----END PGP SIGNATURE-----
+
+--oXw+Hz09N3mxcR0V--
