@@ -1,100 +1,139 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9F51E49B
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 13:42:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6122715ECE0
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 13:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719841377; cv=none; b=F+NoZcGiL7lvd03poDZgEw2hdVz4MKbVtL8mz5AJpH7u+s+y6I34h7PjEuRV+O6WxqYNsjFFNEByQJ5tIetKaPvvojvLn1xC8osf5Tp2EraQGnlxuyc+T/xfc7BpDKupP72rDOM6f8cH8Wl5ya2JFBxioRqNNaKtSbMG8Hs90bk=
+	t=1719841382; cv=none; b=gXakXlK9KBmU7vWUG8rjhLtcEBWPjFg27IHwQZ0rzKk4Uh1RZ6YA2Di2NzuwxNKLmrsQUmauk0R9XQTNLU9nO+iSC0tcGi/0xv9POaH1i+LBRnVSZlLjkpProjLanfItej5yeejPGvlSZDPYCU5Hy0y7KIpukt7IchSHGTGFefo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719841377; c=relaxed/simple;
-	bh=AxRzN7fHTVxWFbg84u/qgzpVKfY1AVTvfiXp5T9RQSE=;
+	s=arc-20240116; t=1719841382; c=relaxed/simple;
+	bh=6TJrdqdGOFUfNAc2K8v9vR/tcthQDljpvcHgKkBQdV8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qeSCj2RiM7T8LHb066KPIQJbmYdUaheDO+uUWdIT7mBX7l9ITcUUrK1AJRdva+yBknp5FxuqRhrYEHakpdFgqIdMVik0KVG1jU6erxHi5nzM25fMrQ7Wu1FMi+juNUdH+Kpyq3EUTUc5Ydl3Bm7rDbaw+DcD2zXOLjtO1o4tyyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4e5htErC; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=C6FICP03Md4KspO0vWg5rtVrVVQBg44laSQyytjLQTSasjxBzGxnIiVo8Bs7TFPrC8EoRIw68VK+TIQwo3dupQRHUMZGVZ0EbYMLWJcWzJ/syhziPpo8ULsVufuKzdukYLAzrB7HGbORKSDymBt1OLrq1Xeg0lK2TtKITOL7R5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZQ5fm6tk; arc=none smtp.client-ip=209.85.222.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4e5htErC"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a724a8097deso359785366b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 06:42:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZQ5fm6tk"
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-80fc48bb31cso1068684241.0
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 06:43:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719841374; x=1720446174; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1719841380; x=1720446180; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y6+ROQuG9R9V4/iqWZBWFHNOUOamNJ5L/2g9UTxcB7A=;
-        b=4e5htErCYqCU7O/3A6wyl0yEoM93Z9EMwbusanbgf+3hSdqhLBugSsxzl3KJEyjKxP
-         Tmmi62HqudGMG5vnmH7sOyUMD8ZsIVRQcdrKIY3niGPdEgazpgFToREWE0GEcRb5a/iH
-         m7cevmV6uYj/GVLOQaGc+lq6N6AnnPcV6SA1VeKzgAdKUp9nanFMNO1vnYzAopg1jplH
-         jdIQy+dUFz1u42GNHmNP7AQ0CIx9JFDgCROxbH5gGUYQTMH8WF3ZePxbHpBpZ8txYN2C
-         DitvIryPe65duPUmYjyyGo9j/rxbRIJ4fJsNI50nja8Kz8Yn4cllD6m7bwENqGiSjOPW
-         rx0Q==
+        bh=QzDzN8qMadfykp4fLzSl/Fe/+BqVWg+52h9oZmO7PNo=;
+        b=ZQ5fm6tk66Ve3NlZ1tqnqDiSiwFmhVXzXwJulx+zW1NBeP94jz8kwnlaVq6IguskLh
+         Xiyz5C188tUFmqFN61lUALCI71aDoM18GpJuPQywTiSPHmEAUERrWjual1eVycpzv1rk
+         lYVGycYTokXNXi/QyDhNBXfhTggaHJV90bPDOVT42WogYayglGH3D3OgU5wyWpRcdv0X
+         moqTey+ScS2FadTtLqK3B32jJhPp6y4zNiZjTc8BS7ML0IyjZhUVBb7DW3WzoKJVEzNG
+         k3P2xTZj0Vw2XchxHa63PktDK6A+kBxt9+rZ4mqf/gIN6oRVErP4AbCwP+5no9Z1MgEs
+         RJVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719841374; x=1720446174;
+        d=1e100.net; s=20230601; t=1719841380; x=1720446180;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Y6+ROQuG9R9V4/iqWZBWFHNOUOamNJ5L/2g9UTxcB7A=;
-        b=w/mwBm4Do9UGSUI2pAI/ZFv0IP2uQdnpA+2XMDnE1QNB/RpFHn8/2D/7G9I7jmfh2M
-         NSP/m5G9N2iqhYiivtLK2DBn4PLRPfblYn4q7RJItA8XBuERtdfTA6IdeQPj/jQzDOci
-         TrQAQfJv8faWv4iqmSKD3of9adeo9oYeGmTbpj28iuY0VBV/IYF7iUgf4tz5E4X3CX9Y
-         8hZI+APlfw+QwamlXEYaknAEylOHgRatfFYtj5E2rUfeOu/vMzyxCXmNPAtkPHeP6Ovh
-         iYLvPkXLuzLfgc+oclZ2iwhAaNbm727k3N3uAVapahw4f7FsZIFtYYRztXAFDnuvuTqa
-         eJEA==
-X-Forwarded-Encrypted: i=1; AJvYcCWLAQVP9CWYfAuyj73yhCY9cbvG6WXVx2mz4jln48Us6nKxP89pi2YQeUezPOWxwCKyI+r5zeqNSXJ97t6UaNgG+W1UlR1mWynjxAbx
-X-Gm-Message-State: AOJu0YxQ+djzZNT4Z2SXsp18SlWoXlIDBznwwQyu9DHAAuSxzrahkRkh
-	Y9mb849edcwtOwnTDIZ8hkKoqeb9RfDoUJBmcAwaAKPkC74HUIHjxG1CONh9AFgVTLn8LlCrENb
-	KRd1LGObTaQDKx2gTQaJN9MFMUPJKKEeXqEPN
-X-Google-Smtp-Source: AGHT+IFV4dTRI3P8iNIhdPexKZlB2wwYXOVVqOfVMChmuGqyN6r7izGH9FX3cKQeHPJ+zswbhWGGkzb1Wqq4fa4HaGw=
-X-Received: by 2002:a17:906:b756:b0:a72:8631:2e01 with SMTP id
- a640c23a62f3a-a7514498a41mr332947666b.64.1719841373635; Mon, 01 Jul 2024
- 06:42:53 -0700 (PDT)
+        bh=QzDzN8qMadfykp4fLzSl/Fe/+BqVWg+52h9oZmO7PNo=;
+        b=HDvYv0xNlSqCIhEb7WNw3IRxvf+yvmuRR/w8tIZRBT3KkSv94p7gquXwvFL9NHwwIO
+         SZz8dNqyMFUsmp7nUwPHI3B965ssh9EqPdZ1xHPf4gu/T3DiMCIwVMDNLDrTmHbiDuMU
+         2GsgxCq3yKuAzeDJtmk9vxZejAmY/f30OhQoh+6AS3/K14+JX4KRqR02golWPy6K68dQ
+         C3jmiyeX0rpMS0tIuD1pigTQuBDGj9zgZnVdZ/id/UbMLCMZsO8bLNJMrrb8ThrGWoho
+         OtIVT6serBgZ0UuYXWJ6repNhA+bKfrFjL+8Q2h+t6bqrN16iO4Iiw5DndCOusfPvWnL
+         aSPA==
+X-Forwarded-Encrypted: i=1; AJvYcCWX7TAxa8Gk5bVh/8Cl8F+6j9iIMsDieO5K420lfXgYHCaU9et2OSX3uDVDvmP/AEZAJgzEWu9SyU9/cso/t9NaEsGwQiAj1RDIZijy
+X-Gm-Message-State: AOJu0Yx4tmQ1GUAWjeVfPNNgdvaXn7ATqGKm+hA/rSBSbVyJn/GSjWJA
+	/PeO/JASNf0gZXM1yxg1AsPI8Q8eh1YXtrN9K0b2Isds8+j9r3wgzzMMM3yRXdaH3k/vXk2Do2x
+	QRVyTlmKW9UPfIBvsYu7R+gXdU8cbUSZHGYaijQ==
+X-Google-Smtp-Source: AGHT+IEiXUSbYSAJMo84UhUarOx3CsnYlrPxZyKJQGlBzRnCF/WKnt/Ht7O8aq6MeKZvdwlxYEkKcMyqbYdByzcAwDk=
+X-Received: by 2002:a05:6102:3109:b0:48f:8be8:970f with SMTP id
+ ada2fe7eead31-48faf15a142mr5297794137.32.1719841380229; Mon, 01 Jul 2024
+ 06:43:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240628031138.429622-1-alexs@kernel.org> <20240628031138.429622-2-alexs@kernel.org>
- <CAB=+i9RSCkYyqo-qXJNRKjUig7s5ZMGWCKmur1nNcD3KkFnhUg@mail.gmail.com> <4418c5c6-60f3-408f-a4ea-8d8ba1cc8afd@gmail.com>
-In-Reply-To: <4418c5c6-60f3-408f-a4ea-8d8ba1cc8afd@gmail.com>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Mon, 1 Jul 2024 06:42:17 -0700
-Message-ID: <CAJD7tkZebGv1Bd+T6u3UL5buf8J9RFh0y_kC0ZJjBRT3NdNOBA@mail.gmail.com>
-Subject: Re: [PATCH 01/20] mm/zsmalloc: add zpdesc memory descriptor for zswap.zpool
-To: Alex Shi <seakeel@gmail.com>
-Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>, alexs@kernel.org, 
-	Vitaly Wool <vitaly.wool@konsulko.com>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, minchan@kernel.org, willy@infradead.org, 
-	senozhatsky@chromium.org, david@redhat.com
+References: <CA+G9fYsXsbHp+0cWoTjEhkpANOav=GLSjPx5ghtUY-FjMPyoSQ@mail.gmail.com>
+ <20240701124733.GB2095@willie-the-truck>
+In-Reply-To: <20240701124733.GB2095@willie-the-truck>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 1 Jul 2024 19:12:48 +0530
+Message-ID: <CA+G9fYu2GQXEWECWHi0LZZ_UsMSPGaJ1ORKTR8k_E_LuYteLAA@mail.gmail.com>
+Subject: Re: Mainline: v6.10-rc6 boot failed across all arm64 devices
+To: Will Deacon <will@kernel.org>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Aishwarya TCV <Aishwarya.TCV@arm.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 
-[..]
-> >> +       union {
-> >> +               /* Next zpdescs in a zspage in zsmalloc zpool */
-> >> +               struct zpdesc *next;
-> >> +               /* For huge zspage in zsmalloc zpool */
-> >> +               unsigned long handle;
-> >> +       };
-> >> +       struct zspage *zspage;
-> >
-> > There was a discussion with Yosry on including memcg_data on zpdesc
-> > even if it's not used at the moment.
-> >
-> > Maybe you can look at:
-> > https://lore.kernel.org/linux-mm/CAB=+i9Quz9iP2-Lq=oQfKVVnzPDtOaKMm=hUPbnRg5hRxH+qaA@mail.gmail.com/
+Hi Will,
+
+On Mon, 1 Jul 2024 at 18:17, Will Deacon <will@kernel.org> wrote:
 >
-> Thanks for notice.
-> The memcg_data isn't used for zpdesc. And I have a bit confusion since Yosry said: "I think to drop memcg_data we need to enlighten the code that ...". So we actually don't need to have this unused member, is this right, Yosry?
+> Hi Naresh,
+>
+> This report is quite hard to follow, so just some minor comments which
+> you can hopefully take on board to improve things in future:
+>
+> On Mon, Jul 01, 2024 at 05:28:29PM +0530, Naresh Kamboju wrote:
+> > The mainline kernel v6.10-rc6 boot failed across all arm64 devices and
+> > qemu-arm64 and no crash log found (earlycon) did not help.
+> >
+> > But the defconfig builds boot PASS.
+> >
+> > The boot problem is with defconfig + Extra Kconfigs and builds links
+> > provided in the bottom of this email.
+>
+> If I go to the bottom of the email, I see this:
+>
+> > Links:
+> > -----
+> >  - https://storage.tuxsuite.com/public/linaro/lkft/builds/2idWrbdtwMqpD9wx7IPRGJ7Dsx3/
+> >  - https://storage.tuxsuite.com/public/linaro/lkft/builds/2idWrYDposdlRsS4jwF916a0qGE/
+> >  - https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.10-rc6/testrun/24473346/suite/boot/test/gcc-13-lkftconfig-libgpiod/history/
+> >  - https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.10-rc6/testrun/24473903/suite/boot/test/gcc-13-lkftconfig-rcutorture/history/
+>
+> but these are just random links without any context. The first two appear
+> to be kernel build artifacts, but I can't tell:
+>
+>   - Are both "good" or "bad"?
 
-I think we need to have it, at least for now. When the pages are
-freed, put_page() -> folio_put() -> __folio_put() will call
-mem_cgroup_uncharge(). The latter will call folio_memcg() (which reads
-folio->memcg_data) to figure out if uncharging needs to be done.
+Both are bad. which failed to boot from these build artifacts.
+Which is the location of storage of Build artifacts and build logs,
+Image, Vmlinux.
 
-There are also other similar code paths that will check
-folio->memcg_data. It is currently expected to be present for all
-folios. So until we have custom code paths per-folio type for
-allocation/freeing/etc, we need to keep folio->memcg_data present and
-properly initialized.
+>   - What is the difference between them?
+ one build is pointing to Rcu Torture test build,
+  - CONFIG_RCU_TORTURE_TEST=m ++Kconfigs
+
+other one is pointing to libgpiod build,
+  - CONFIG_GPIOLIB=y ++Kconfigs
+
+>
+> If I look at the first of the last two links, click through to the
+> "qemu-arm64" target and follow the "job_url" link, then I end up at:
+>
+>   https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2idWuAb51mcz7lO1BAj8Aw0BrNY
+>
+> which has some empty logs and something from "TuxRun" which says:
+>
+>   {"error": "File not found"}
+
+Due to missing boot log this file is empty.
+
+>
+> It's very hard to know what to do with this :/
+
+
+Sorry for the trouble.
+I will add more detailed information next to each link in my next report.
+
+>
+> Will
+
+- Naresh
