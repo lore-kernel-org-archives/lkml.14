@@ -1,278 +1,163 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2069.outbound.protection.outlook.com [40.107.93.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A1516EB72
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 15:13:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719846836; cv=none; b=cdtlGv/WSsn1ZVg1fcLnPEGO3cYneWLox6x5Jv8rNVqjSedeKWGnTZJJZ5jHg0fXcHAIdKPvwKZmezvR7xo6iU3chdq5AyHZe4N0dsiRkmjHJZpXPONOfFgsU38ZK5eYSAKhLbMQOYhHjHL3zvmbVj7lsG2LPQ4UQC9INpKsluA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719846836; c=relaxed/simple;
-	bh=7qcE8lPjIwP/SjTN6Lj8p4iqpk99LwTwXiVLS/aMuW0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XWGOXyWo4QPw4xOT8BZm7r6S5BFaxJbVI6cH75GNWY3BZAR2QnVHefLQGp1oZ2emk1SLGj6ExEscPbSeNEx4GmUE18w9RSmBJPqsX+QkR4QhSYOcTU5+aIqEEH1XVmq7AgEpeUhGIFcbVqTrwaUnHibDteYPYRGVI5TZ61ZMv6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=KtK/jnJe; arc=none smtp.client-ip=209.85.166.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5258B16D4C0;
+	Mon,  1 Jul 2024 15:14:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719846844; cv=fail; b=YRxlbOsKlVhqeabtf/OOyyEEZqz3LbA32+ldwrAynN1kt5xR13Dhi01mht4cpleO+jg4oY8aWHSNskCvHZxldAbB/1obxAmFCzQ2YooNSHYnpl6L+p8THDBkWq/YiYBqn1qfevjE9wkRdd+4rT0udyNtkYWu8lOmimcv8fBvY3I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719846844; c=relaxed/simple;
+	bh=OW40ogSE1nK+6GyBTZvqWoHgZTNKai77LP3930/9vE4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rYKXbZMe8Ely41HLv7fT0WF3BouHCpCFGOtLyHX55MbcfY3wj+05tB5FIdpBDBV0nlHTzyaxNX7qr8Od2zDrgk/PDBCKCPeHY3rEEbKrq+R6Oe80eNbSdAJILTQoiFX+nFK1jIRpuBoVe8HtD+M2vb7X+QbLKYXfjJJUtX+jBcw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=I6PS3vNC; arc=fail smtp.client-ip=40.107.93.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="KtK/jnJe"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3762abfe005so11701445ab.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 08:13:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1719846834; x=1720451634; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jdlYna21mfTMWUTr17RbNLs/+Rxw0E+v4uLW3lEJDTY=;
-        b=KtK/jnJe7ZLoIxkdjmhb2zN2c+lbLsVg8iQmCL4Y1pOn99YLgYVOYzgCtqbNxXBG05
-         CUrn0TW/Q0S3O/uwLMKNvWA1JIQoJ15lju/O3GcgSHpEVpSITLLqlsHgBp9I9AQRnCy2
-         Mhl2MyatMh/XSi6j01hGNCRyAJGjfrVtBDpepK26w0xDVfw+W08Mw8R2XUj9kddHrfvl
-         AsoK9GTpC6UwTAKiW0GDqgIv/BCrduJN8a25rPU60gRs7hxqA8+EKJC7lojB0FCYQNwU
-         DQMrIFpINCIKapOuQYsJ9Jk92WQRwzFMxusUhqk+UYKH2NHx32GK1FhdnQ0haJB9UAWi
-         cP6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719846834; x=1720451634;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jdlYna21mfTMWUTr17RbNLs/+Rxw0E+v4uLW3lEJDTY=;
-        b=ZpXYW+MltisVoKTg9LaveXZsEFTCAYnd2rj0EcojgEWAkX73KB4wjnLR4q1Y1cxTxe
-         RN7lGbzwXZUkwbL9OM4w3O3N8mXaK8MN9vT6is3Glfj3zD5LBzae3pIaAjZFG7Q1mth5
-         URASbV+rpQO1wVCbGYF8gX1TlU8oR92n5fEJhEDvMwBaFnxekiadkkxcWjm+J2E9mfih
-         Suxqcz8vUpGY4s+oX3c7mLHc0ufGKBgwkq8ekMAkrWXRW3fgUS3pRUGB0XjoKTydLptN
-         yzeyYxEn6F+tNtdOxQsmBD7qyK3acJuiyGvrEjea+pPhdUaHFzCm9ZmaYmG0GQcgQqnR
-         X0GQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZNDpFN8SIbZmol1ALf1FocI9akuWFfZiF3z8ngUkDO6oVmZyxt3mcoAKCKVO9ia9grEgksj8iyBuASAUVJyNGHABlD5fSdc2N62+9
-X-Gm-Message-State: AOJu0YwDwofHaNNkvgx4lzTGUN/66DGihhq3rzM1GwCVI3nODq8KYEqX
-	d0hBCZx/S//BR1wVYpTXHxOnirr5ZDCCRmhTnSY+8OMuyYvnmAHotnxGi5Q18t0=
-X-Google-Smtp-Source: AGHT+IG2LEJBd8JPWcoRaUn0j0oZYGN9rVJ4rCzlNxSPtRcLCAiwIU7nt3Q1UdnZDR0nCbvGg3/B4A==
-X-Received: by 2002:a05:6e02:1a26:b0:375:873a:aa99 with SMTP id e9e14a558f8ab-37cd31b6d36mr81916185ab.25.1719846833763;
-        Mon, 01 Jul 2024 08:13:53 -0700 (PDT)
-Received: from [100.64.0.1] ([147.124.94.167])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-37ad4370c90sm19136545ab.69.2024.07.01.08.13.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Jul 2024 08:13:53 -0700 (PDT)
-Message-ID: <ccb669ad-be56-4dbd-ad9c-851a94b933eb@sifive.com>
-Date: Mon, 1 Jul 2024 10:13:50 -0500
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="I6PS3vNC"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Gz6thvVZH1xsTdBT78HEZUg7KfVhlAD6ijJDHS2ST9FWCbpJqjLiRVw19VqBB0XfbYcTKrFg0YKvvzVLcMgFByuGR0cKG+4MmPlp5IjvFhAmwi+l6Irtz6eHI+93VEE0RvYn6rfwkAyZDa1dKKZq80ZWuV+TCjy7/qJ3TAmw9EmAD1KslkrG2p+37ms7c8tiMQKlSeg5Gj3Tgnj4j6j+h1a1WPP5IVI/BPfg99T9b49m1pKXuK8KW7V9eXulE4seNZ4qaQhNnX0x/eJeQteyt6tzWuCPiB8rN90f8vTXmlTM5omG4oCYwLzCG4unfhOCeo0lWmpsYD6SwHMSS9nfuQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/8MmBcG6p5veTatA5jYc17PKVm6PDOVnskR2/JevhJs=;
+ b=UzufAnIWQiRhP9uioqm9uAQwbowQusRwKyO9W3efL5x6FVfmLNU4Kb27eX/2oNHQAouMttXTxNchDSTG4hnWngWSyvx2mD0BS5iHpCpdkasb/yyhZqUHDM9X8hK7vFWY/88JK4ekbpo/x50OD13Mv/dgHZWd7GNoavZqPRBaP28ft3M7eChpPTUB0zhdClkVTokIQlzf4aali4+UpynvhDVfQeGjM9N4Ta8yVwF9gE0lmxzeuwet2MXwtihhYDSRWWB4xLUvy4r7LjRFICxsUiG8ZLBOvksVORYYJbkThsjpA436WVT0vneqdGNuvxcS+37nuGRZ0tW3lL3jQ6SoHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/8MmBcG6p5veTatA5jYc17PKVm6PDOVnskR2/JevhJs=;
+ b=I6PS3vNC6qUbmexjEMVxGYjQtl8KbaK/hGJ7Sre/SC7WHFvwFaS4ARGEE+4JLJK9bRhcmHeX6TCPxKkKc3woBVPO7tZx9N+LrIHtdqG9R7oTOHYMxY1k+Ns4nueYcJCJSIKdfFKEijAppbj79wJ0SYXo0v9lgubdzuK/dMLv4kIFXl37X7ZqRvbFOm6kwGxSKbkDXPdGYDpS8kBuhVSHQEP5R4luDFZXngGbvZgJp/T8sHSkJyqjYk+IWeQOZ8LTxyPllrNqdwfPD3c7cIdNDkOGnbpxfCYLyEc85j5erTzjwOnwNhRyKSj0MVH7cyKfqTKnXzTzgGjLDTqjAtkEOQ==
+Received: from PH8PR05CA0018.namprd05.prod.outlook.com (2603:10b6:510:2cc::21)
+ by PH7PR12MB7938.namprd12.prod.outlook.com (2603:10b6:510:276::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.32; Mon, 1 Jul
+ 2024 15:13:59 +0000
+Received: from CY4PEPF0000EE38.namprd03.prod.outlook.com
+ (2603:10b6:510:2cc:cafe::49) by PH8PR05CA0018.outlook.office365.com
+ (2603:10b6:510:2cc::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.22 via Frontend
+ Transport; Mon, 1 Jul 2024 15:13:59 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ CY4PEPF0000EE38.mail.protection.outlook.com (10.167.242.10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7741.18 via Frontend Transport; Mon, 1 Jul 2024 15:13:59 +0000
+Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 1 Jul 2024
+ 08:13:38 -0700
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Mon, 1 Jul 2024 08:13:38 -0700
+Received: from BUILDSERVER-IO-L4T.nvidia.com (10.127.8.13) by mail.nvidia.com
+ (10.126.190.182) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Mon, 1 Jul 2024 08:13:33 -0700
+From: Krishna Yarlagadda <kyarlagadda@nvidia.com>
+To: <linux-tegra@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+	<linux-mmc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <thierry.reding@gmail.com>, <jonathanh@nvidia.com>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <corbet@lwn.net>,
+	<andi.shyti@kernel.org>, <wsa+renesas@sang-engineering.com>,
+	<ulf.hansson@linaro.org>, <adrian.hunter@intel.com>, <digetx@gmail.com>,
+	<ldewangan@nvidia.com>, <kyarlagadda@nvidia.com>, <mkumard@nvidia.com>
+Subject: [RFC PATCH V2 10/12] dt-bindings: mmc: tegra-sdhci: reference to config
+Date: Mon, 1 Jul 2024 20:42:28 +0530
+Message-ID: <20240701151231.29425-11-kyarlagadda@nvidia.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240701151231.29425-1-kyarlagadda@nvidia.com>
+References: <20240701151231.29425-1-kyarlagadda@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/8] RISC-V: Detect unaligned vector accesses supported
-To: Jesse Taube <jesse@rivosinc.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
- Evan Green <evan@rivosinc.com>, Andrew Jones <ajones@ventanamicro.com>,
- Charlie Jenkins <charlie@rivosinc.com>, Xiao Wang <xiao.w.wang@intel.com>,
- Andy Chiu <andy.chiu@sifive.com>, Eric Biggers <ebiggers@google.com>,
- Greentime Hu <greentime.hu@sifive.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
- <bjorn@rivosinc.com>, Heiko Stuebner <heiko@sntech.de>,
- Costa Shulyupin <costa.shul@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
- Anup Patel <apatel@ventanamicro.com>, Zong Li <zong.li@sifive.com>,
- Sami Tolvanen <samitolvanen@google.com>,
- Ben Dooks <ben.dooks@codethink.co.uk>,
- Alexandre Ghiti <alexghiti@rivosinc.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Erick Archer <erick.archer@gmx.com>, Joel Granados <j.granados@samsung.com>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-riscv@lists.infradead.org
-References: <20240625005001.37901-1-jesse@rivosinc.com>
- <20240625005001.37901-7-jesse@rivosinc.com>
-From: Samuel Holland <samuel.holland@sifive.com>
-Content-Language: en-US
-In-Reply-To: <20240625005001.37901-7-jesse@rivosinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE38:EE_|PH7PR12MB7938:EE_
+X-MS-Office365-Filtering-Correlation-Id: 08e297bd-0fd1-4561-eaf6-08dc99e06ed5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|7416014|1800799024|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?SLQ0QZtQchyx8NDqJ4SH/Hhde2tK5mffRGlKJKfi/+eoKpVk732GcVXG3rnU?=
+ =?us-ascii?Q?RgxC2Jlyz0+/63wUgw0A582+BCcYqKGZggaVz70eSrSplGym8ecxPkl6nnf/?=
+ =?us-ascii?Q?0yvGWpAn/yoHhS1qIfZfYBHB0u5Up6v61+qASo1+YCDBZkP/6sd7JeTW3z9r?=
+ =?us-ascii?Q?bgPBBsMvwYBW6GoH6Pf4Od9Vfo6UhQyNLaOpLlWeM4+6fAYEkps8tIuUldrd?=
+ =?us-ascii?Q?3EqLUI7D1sGF5xahcJdHMbCRKgnPFHf5x9Vxtbdwc7FQRGWCjqgU0jTmVTGH?=
+ =?us-ascii?Q?LxutVTYZBN9ZT56v0UYpOMIGAMHz97+jIO2ESNW6BCucEpuDvrHv2PBb3hTR?=
+ =?us-ascii?Q?F30ypfhX5bhKtT4fhoCDRYlLtuAkbC4fbRskZBJq1uwH8CM4Ny1vpwyd6l0L?=
+ =?us-ascii?Q?kY0ZDgfrlfmXGdiBYGHQaw3OEZuH4UkTn2hMzyQLOYXnPz4uzsE4XlKRMulL?=
+ =?us-ascii?Q?UHWmN5xy4gQLJLVu3/7TRp7zE+c2YVd349g8O0tn4Bg9vglsFdCxMAe/5VOn?=
+ =?us-ascii?Q?x2QpvtDL1O+rnxkqgPuUebWEm5inm4s/z0/semAZoju5FSxE/tIGIB8Xdg4+?=
+ =?us-ascii?Q?8x0tskh9iVHfZihVPp6dz+FhQgqiDyMe81zd9cPmtRRe3auoxpbFo4PCx7z9?=
+ =?us-ascii?Q?R1BeUY2sGAaKnfF0v8PlVsZVkwdMVU+bwEEpHeKTYXdlAaPoVJpBhvGUfmq1?=
+ =?us-ascii?Q?2Mp3dRMebhnamW8b55UsSXT1uBuq6IKxQT1Kan3PdUcQqf0QjF+kubEiA/Qv?=
+ =?us-ascii?Q?Bfryw9fNRAfFWBputJe/a9CwTPooItmu7r0YRHivSikdn7Q8q8+ZxbaMN24R?=
+ =?us-ascii?Q?YdpT7Bfr/wvxsYhD/RfEr/U7l3zYjdA/l63aXR7bHc9+X9OLI1NLo2BmhYVl?=
+ =?us-ascii?Q?ttjNq5N6+49SVdM6QIJm0w1jN1So/nYRI6/KixG+leGd2VRjpuy3z6GdMH6z?=
+ =?us-ascii?Q?/bR5NvUqUhTH1JE0LbjUOR31uRf3VPqHvxou9Y9N16Jt0X1uQ3Egad9BXyrF?=
+ =?us-ascii?Q?K+oN2XIhYU/aMWXYzaYXeO1XRv3zuQjGWdh1X0SwyJZmvV5nDyrnOFoJuktu?=
+ =?us-ascii?Q?vy0V9SLoQdQBc5Glckvg1jbYR59ZsyepHMJJrvsLBFq9qFM8ezWzDYFMbgDH?=
+ =?us-ascii?Q?2e8luXxzr0T1perzsjqo0uJpqRtE+8trx+yipp3rKtplvJpck99CE09gD3pa?=
+ =?us-ascii?Q?6ztMPX6+DUrKAuqxt1TsG0K4N3Fom7N6ZBAK/6V3ALq3VwqmgOoYGoZKxJNX?=
+ =?us-ascii?Q?dEBfnBLvA71Sp92ejS71TNFYcR09rMT8d86E9TrLHMApRXf1of8UyKkmlIJk?=
+ =?us-ascii?Q?CJytGZOITCnOaFF2FaQcPaRh96DlogAILPpHUdb+2Pm2eCfFbzrTUUq7S32X?=
+ =?us-ascii?Q?MIZYkh7wMS26pg5+3B+ak7ronslO1rkvWw2i4EwXES4SRqPW8baeDfZgeb1B?=
+ =?us-ascii?Q?F6y2t920bMSIGQN1kLNpe5jozNgC4P86?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(376014)(7416014)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2024 15:13:59.0067
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 08e297bd-0fd1-4561-eaf6-08dc99e06ed5
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EE38.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7938
 
-Hi Jesse,
+SDHCI vendor tuning registers are configured using config setting
+framework. Add reference to SDHCI controllers config settings.
 
-On 2024-06-24 7:49 PM, Jesse Taube wrote:
-> Run a unaligned vector access to test if the system supports
-> vector unaligned access. Add the result to a new key in hwprobe.
-> This is useful for usermode to know if vector misaligned accesses are
-> supported and if they are faster or slower than equivalent byte accesses.
-> 
-> Signed-off-by: Jesse Taube <jesse@rivosinc.com>
-> V1 -> V2:
+Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
+---
+ .../devicetree/bindings/mmc/nvidia,tegra20-sdhci.yaml         | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-You are missing the "---" here, so the changelog is leaking into the commit message.
-
->  - Add Kconfig options
->  - Add insn_is_vector
->  - Add handle_vector_misaligned_load
->  - Fix build
->  - Seperate vector from scalar misaligned access
->  - This patch was almost completely rewritten
-> V2 -> V3:
->  - Fixed CONFIG_ in Kconfig
->  - Fixed check_vector_unaligned_access_emulated leaving
->      vector_misaligned_access as unknown.
->  - Remove local_irq_enable
->  - Remove RISCV_DETECT_VECTOR_UNALIGNED_ACCESS
->  - Remove RISCV_VEC_UNALIGNED_ACCESS_UNSUPPORTED
-> ---
->  arch/riscv/Kconfig                         |  35 ++++++
->  arch/riscv/include/asm/cpufeature.h        |   5 +
->  arch/riscv/include/asm/entry-common.h      |  11 --
->  arch/riscv/include/asm/hwprobe.h           |   2 +-
->  arch/riscv/include/asm/vector.h            |   1 +
->  arch/riscv/include/uapi/asm/hwprobe.h      |   5 +
->  arch/riscv/kernel/Makefile                 |   4 +-
->  arch/riscv/kernel/sys_hwprobe.c            |  35 ++++++
->  arch/riscv/kernel/traps_misaligned.c       | 120 ++++++++++++++++++++-
->  arch/riscv/kernel/unaligned_access_speed.c |   9 +-
->  arch/riscv/kernel/vector.c                 |   2 +-
->  11 files changed, 209 insertions(+), 20 deletions(-)
-> 
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 34d24242e37a..ffbe0fdd7fb3 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -717,12 +717,26 @@ config THREAD_SIZE_ORDER
->  	  Specify the Pages of thread stack size (from 4KB to 64KB), which also
->  	  affects irq stack size, which is equal to thread stack size.
->  
-> +config RISCV_MISALIGNED
-> +	bool
-> +	help
-> +	  Embed support for detecting and emulating misaligned
-> +	  scalar or vector loads and stores.
-> +
->  config RISCV_SCALAR_MISALIGNED
->  	bool
-> +	select RISCV_MISALIGNED
->  	select SYSCTL_ARCH_UNALIGN_ALLOW
->  	help
->  	  Embed support for emulating misaligned loads and stores.
->  
-> +config RISCV_VECTOR_MISALIGNED
-> +	bool
-> +	select RISCV_MISALIGNED
-> +	depends on RISCV_ISA_V
-> +	help
-> +	  Enable detecting support for vector misaligned loads and stores.
-> +
->  choice
->  	prompt "Unaligned Accesses Support"
->  	default RISCV_PROBE_UNALIGNED_ACCESS
-> @@ -774,6 +788,27 @@ config RISCV_EFFICIENT_UNALIGNED_ACCESS
->  
->  endchoice
->  
-> +choice
-> +	prompt "Vector unaligned Accesses Support"
-> +	depends on RISCV_ISA_V
-> +	default RISCV_PROBE_VECTOR_UNALIGNED_ACCESS
-> +	help
-> +	  This determines the level of support for vector unaligned accesses. This
-> +	  information is used by the kernel to perform optimizations. It is also
-> +	  exposed to user space via the hwprobe syscall. The hardware will be
-> +	  probed at boot by default.
-> +
-> +config RISCV_PROBE_VECTOR_UNALIGNED_ACCESS
-> +	bool "Probe speed of vector unaligned accesses"
-> +	select RISCV_VECTOR_MISALIGNED
-> +	help
-> +	  During boot, the kernel will run a series of tests to determine the
-> +	  speed of vector unaligned accesses if they are supported. This probing
-> +	  will dynamically determine the speed of vector unaligned accesses on
-> +	  the underlying system if they are supported.
-> +
-> +endchoice
-> +
->  endmenu # "Platform type"
->  
->  menu "Kernel features"
-> diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include/asm/cpufeature.h
-> index 0ed7d99c14dd..f25f56f9bfaa 100644
-> --- a/arch/riscv/include/asm/cpufeature.h
-> +++ b/arch/riscv/include/asm/cpufeature.h
-> @@ -45,6 +45,11 @@ static inline bool unaligned_ctl_available(void)
->  }
->  #endif
->  
-> +bool check_vector_unaligned_access_emulated_all_cpus(void);
-> +#if defined(CONFIG_RISCV_VECTOR_MISALIGNED)
-> +DECLARE_PER_CPU(long, vector_misaligned_access);
-> +#endif
-> +
->  #if defined(CONFIG_RISCV_PROBE_UNALIGNED_ACCESS)
->  DECLARE_STATIC_KEY_FALSE(fast_unaligned_access_speed_key);
->  
-> diff --git a/arch/riscv/include/asm/entry-common.h b/arch/riscv/include/asm/entry-common.h
-> index 0a4e3544c877..7b32d2b08bb6 100644
-> --- a/arch/riscv/include/asm/entry-common.h
-> +++ b/arch/riscv/include/asm/entry-common.h
-> @@ -25,18 +25,7 @@ static inline void arch_exit_to_user_mode_prepare(struct pt_regs *regs,
->  void handle_page_fault(struct pt_regs *regs);
->  void handle_break(struct pt_regs *regs);
->  
-> -#ifdef CONFIG_RISCV_SCALAR_MISALIGNED
->  int handle_misaligned_load(struct pt_regs *regs);
->  int handle_misaligned_store(struct pt_regs *regs);
-> -#else
-> -static inline int handle_misaligned_load(struct pt_regs *regs)
-> -{
-> -	return -1;
-> -}
-> -static inline int handle_misaligned_store(struct pt_regs *regs)
-> -{
-> -	return -1;
-> -}
-> -#endif
->  
->  #endif /* _ASM_RISCV_ENTRY_COMMON_H */
-> diff --git a/arch/riscv/include/asm/hwprobe.h b/arch/riscv/include/asm/hwprobe.h
-> index 150a9877b0af..ef01c182af2b 100644
-> --- a/arch/riscv/include/asm/hwprobe.h
-> +++ b/arch/riscv/include/asm/hwprobe.h
-> @@ -8,7 +8,7 @@
->  
->  #include <uapi/asm/hwprobe.h>
->  
-> -#define RISCV_HWPROBE_MAX_KEY 7
-> +#define RISCV_HWPROBE_MAX_KEY 8
->  
->  static inline bool riscv_hwprobe_key_is_valid(__s64 key)
->  {
-> diff --git a/arch/riscv/include/asm/vector.h b/arch/riscv/include/asm/vector.h
-> index be7d309cca8a..99b0f91db9ee 100644
-> --- a/arch/riscv/include/asm/vector.h
-> +++ b/arch/riscv/include/asm/vector.h
-> @@ -21,6 +21,7 @@
->  
->  extern unsigned long riscv_v_vsize;
->  int riscv_v_setup_vsize(void);
-> +bool insn_is_vector(u32 insn_buf);
->  bool riscv_v_first_use_handler(struct pt_regs *regs);
->  void kernel_vector_begin(void);
->  void kernel_vector_end(void);
-> diff --git a/arch/riscv/include/uapi/asm/hwprobe.h b/arch/riscv/include/uapi/asm/hwprobe.h
-> index 023b7771d1b7..2fee870e41bb 100644
-> --- a/arch/riscv/include/uapi/asm/hwprobe.h
-> +++ b/arch/riscv/include/uapi/asm/hwprobe.h
-> @@ -75,6 +75,11 @@ struct riscv_hwprobe {
->  #define		RISCV_HWPROBE_MISALIGNED_MASK		(7 << 0)
->  #define RISCV_HWPROBE_KEY_ZICBOZ_BLOCK_SIZE	6
->  #define RISCV_HWPROBE_KEY_MISALIGNED_PERF	7
-> +#define RISCV_HWPROBE_KEY_VEC_MISALIGNED_PERF	8
-> +#define		RISCV_HWPROBE_VEC_MISALIGNED_UNKNOWN		0
-> +#define		RISCV_HWPROBE_VEC_MISALIGNED_SLOW		2
-> +#define		RISCV_HWPROBE_VEC_MISALIGNED_FAST		3
-> +#define		RISCV_HWPROBE_VEC_MISALIGNED_UNSUPPORTED	4
-
-We are spelling out "SCALAR" in the fixes series here[1], so for consistency we
-should spell out "VECTOR" as well.
-
-Regards,
-Samuel
-
-[1]: https://lore.kernel.org/linux-riscv/20240627172238.2460840-2-evan@rivosinc.com/
+diff --git a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.yaml b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.yaml
+index 72987f0326a1..39bda6ce1e50 100644
+--- a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.yaml
++++ b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.yaml
+@@ -88,6 +88,10 @@ properties:
+     items:
+       - description: phandle to the core power domain
+ 
++  config-settings:
++    description: phandle to the sdhci configuration settings
++    $ref: /schemas/types.yaml#/definitions/phandle
++
+   nvidia,default-tap:
+     description: Specify the default inbound sampling clock trimmer value for
+       non-tunable modes.
+-- 
+2.43.2
 
