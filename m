@@ -1,204 +1,206 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DEAB158DC6;
-	Mon,  1 Jul 2024 12:43:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C409158D70;
+	Mon,  1 Jul 2024 12:43:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719837830; cv=none; b=qk5yLanyulvVadHbEN3o406SN4Mh0z/zxHOkTJdGyTkNa80oDEgSB14yAPGqtMo7chy760XJusuXFHSCEIcUXSFzx9RJtdZYqNdewiJYS60ZPHHkBYrwWtBL9A4lu3mKwRcFrQA+C7Dn/y1Soi5VT1HJNw+iGtfrLVokXn6+mho=
+	t=1719837841; cv=none; b=DQlGZz6SOo5hJg0Q9I2t7faK2LGtRMPdIq7QgBXfLIRTzszQqTzFR+gWQDDnRneb6rQnF7ZTm4mfXRPv5hhG4q4FxSqewTkcQT1LrgUrk1kiC66//4jGHlWCuZ8+ZZNtrg85logRygM1XF5mPlG/X/yjyyiAe8uDMpW/milfsm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719837830; c=relaxed/simple;
-	bh=2o7s3+jwf4d7j2wX7b0YIdzDHJXWm17Dtp8dUF3Mcok=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u1Rg7PY5rSDfTWuM4ug6S4aCp9gMdhk6fhHkD5sco54CUihfX+RxbHrPcXucMQ34yHEU9bFbc1kSb+ykw4macL+o38fFldoYEYnGJpTVGAqWBxJjD/7lSP9edD7Kaib+O+3U8pTlDeTKcoy5Ndm54tmpjesonYMF/pFXydA7UnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EKEMhFZd; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EKEMhFZd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719837829; x=1751373829;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2o7s3+jwf4d7j2wX7b0YIdzDHJXWm17Dtp8dUF3Mcok=;
-  b=EKEMhFZdJizsIf56baEkY4MhQvjmwKwBR9m+nKhaiUapiBVBQ+Iz1FLf
-   gjn0IgM13F4moD1vX6XK61GaGtka4JSRGGc7yHRx+zfLabhVKL5/ghQ3m
-   +3sUoceATeE4I9pXwZu2VD8IEtHNCo1M17M3fQKPZhzsZy8r3D5Uu/K9j
-   5F++LCJtN8CV5XMD25XGqlCLPo4fmpOAj0NE7Cn4NswmjAMUgB9KOAbPu
-   nm5ka4m20I17BozNglya/R3N7E46FoGdKLk74IlChcaqbCyY5fKeZdKAA
-   7/Cl/FXstL6+hCTJxdpFQWHVTi9baBIatzoJx6vc37w2J7rxYKrKLydv/
-   A==;
-X-CSE-ConnectionGUID: tBaGOid3R82NzG4LDiuqww==
-X-CSE-MsgGUID: Swcuz7kXTj2ohhpMsbjuQQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="16798007"
-X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
-   d="scan'208";a="16798007"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 05:43:47 -0700
-X-CSE-ConnectionGUID: gtvZPW+YTcq6UhVJOzq/cg==
-X-CSE-MsgGUID: jAMtbU+rQi2eg9X7xVYG1w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
-   d="scan'208";a="46258202"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa008.jf.intel.com with ESMTP; 01 Jul 2024 05:43:42 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 61337389; Mon, 01 Jul 2024 15:43:41 +0300 (EEST)
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Baoquan He <bhe@redhat.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Sean Christopherson <seanjc@google.com>,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH 2/3] x86/acpi: Replace manual page table initialization with kernel_ident_mapping_init()
-Date: Mon,  1 Jul 2024 15:43:33 +0300
-Message-ID: <20240701124334.1855981-3-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240701124334.1855981-1-kirill.shutemov@linux.intel.com>
-References: <20240701124334.1855981-1-kirill.shutemov@linux.intel.com>
+	s=arc-20240116; t=1719837841; c=relaxed/simple;
+	bh=gziZ/YmkYT8HtuQpa9Hf7+eLTOnqdaOU3fKyu0JLdLg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FSKNSAD1uQ56wdFm1O/pLnOCSCGwY4e7Y5ASAoecoUPO4r2xZn40AxKS3unpL1F4pc/VEXgDC4sh04IF98pPD9bnmzLjGFGhce3i8G0GdxCk5PXYm2g+59CvYeYEgOzwljiwE8SdmPDOdcbJ5TmIXT9lh/Dl2TjyXKwCJ9QOslw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [141.14.13.50] (g305.RadioFreeInternet.molgen.mpg.de [141.14.13.50])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 5375661E5FE01;
+	Mon,  1 Jul 2024 14:42:43 +0200 (CEST)
+Message-ID: <e981261e-77be-407b-b601-f7214a4f57dd@molgen.mpg.de>
+Date: Mon, 1 Jul 2024 14:42:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Intel-wired-lan] [PATCH iwl-net v1 1/1] igc: Fix packet still tx
+ after gate close by reducing i226 MAC retry buffer
+To: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
+Cc: "David S . Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Jesse Brandeburg <jesse.brandeburg@intel.com>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>,
+ Vinicius Costa Gomes <vinicius.gomes@intel.com>, netdev@vger.kernel.org,
+ intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20240701100058.3301229-1-faizal.abdul.rahim@linux.intel.com>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <20240701100058.3301229-1-faizal.abdul.rahim@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-The function init_transition_pgtable() maps the page with
-asm_acpi_mp_play_dead() into an identity mapping.
+Dear Faizal,
 
-Replace manual page table initialization with kernel_ident_mapping_init()
-to avoid code duplicatiion. Use x86_mapping_info::offset to get the page
-is mapped at the correct location.
 
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- arch/x86/kernel/acpi/madt_wakeup.c | 73 ++++++------------------------
- 1 file changed, 15 insertions(+), 58 deletions(-)
+Thank you for your patch.
 
-diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/madt_wakeup.c
-index 6cfe762be28b..acbc9305c8e3 100644
---- a/arch/x86/kernel/acpi/madt_wakeup.c
-+++ b/arch/x86/kernel/acpi/madt_wakeup.c
-@@ -70,58 +70,6 @@ static void __init free_pgt_page(void *pgt, void *dummy)
- 	return memblock_free(pgt, PAGE_SIZE);
- }
- 
--/*
-- * Make sure asm_acpi_mp_play_dead() is present in the identity mapping at
-- * the same place as in the kernel page tables. asm_acpi_mp_play_dead() switches
-- * to the identity mapping and the function has be present at the same spot in
-- * the virtual address space before and after switching page tables.
-- */
--static int __init init_transition_pgtable(pgd_t *pgd)
--{
--	pgprot_t prot = PAGE_KERNEL_EXEC_NOENC;
--	unsigned long vaddr, paddr;
--	p4d_t *p4d;
--	pud_t *pud;
--	pmd_t *pmd;
--	pte_t *pte;
--
--	vaddr = (unsigned long)asm_acpi_mp_play_dead;
--	pgd += pgd_index(vaddr);
--	if (!pgd_present(*pgd)) {
--		p4d = (p4d_t *)alloc_pgt_page(NULL);
--		if (!p4d)
--			return -ENOMEM;
--		set_pgd(pgd, __pgd(__pa(p4d) | _KERNPG_TABLE));
--	}
--	p4d = p4d_offset(pgd, vaddr);
--	if (!p4d_present(*p4d)) {
--		pud = (pud_t *)alloc_pgt_page(NULL);
--		if (!pud)
--			return -ENOMEM;
--		set_p4d(p4d, __p4d(__pa(pud) | _KERNPG_TABLE));
--	}
--	pud = pud_offset(p4d, vaddr);
--	if (!pud_present(*pud)) {
--		pmd = (pmd_t *)alloc_pgt_page(NULL);
--		if (!pmd)
--			return -ENOMEM;
--		set_pud(pud, __pud(__pa(pmd) | _KERNPG_TABLE));
--	}
--	pmd = pmd_offset(pud, vaddr);
--	if (!pmd_present(*pmd)) {
--		pte = (pte_t *)alloc_pgt_page(NULL);
--		if (!pte)
--			return -ENOMEM;
--		set_pmd(pmd, __pmd(__pa(pte) | _KERNPG_TABLE));
--	}
--	pte = pte_offset_kernel(pmd, vaddr);
--
--	paddr = __pa(vaddr);
--	set_pte(pte, pfn_pte(paddr >> PAGE_SHIFT, prot));
--
--	return 0;
--}
--
- static int __init acpi_mp_setup_reset(u64 reset_vector)
- {
- 	struct x86_mapping_info info = {
-@@ -130,6 +78,7 @@ static int __init acpi_mp_setup_reset(u64 reset_vector)
- 		.page_flag      = __PAGE_KERNEL_LARGE_EXEC,
- 		.kernpg_flag    = _KERNPG_TABLE_NOENC,
- 	};
-+	unsigned long mstart, mend;
- 	pgd_t *pgd;
- 
- 	pgd = alloc_pgt_page(NULL);
-@@ -137,8 +86,6 @@ static int __init acpi_mp_setup_reset(u64 reset_vector)
- 		return -ENOMEM;
- 
- 	for (int i = 0; i < nr_pfn_mapped; i++) {
--		unsigned long mstart, mend;
--
- 		mstart = pfn_mapped[i].start << PAGE_SHIFT;
- 		mend   = pfn_mapped[i].end << PAGE_SHIFT;
- 		if (kernel_ident_mapping_init(&info, pgd, mstart, mend)) {
-@@ -147,14 +94,24 @@ static int __init acpi_mp_setup_reset(u64 reset_vector)
- 		}
- 	}
- 
--	if (kernel_ident_mapping_init(&info, pgd,
--				      PAGE_ALIGN_DOWN(reset_vector),
--				      PAGE_ALIGN(reset_vector + 1))) {
-+	mstart = PAGE_ALIGN_DOWN(reset_vector);
-+	mend = mstart + PAGE_SIZE;
-+	if (kernel_ident_mapping_init(&info, pgd, mstart, mend)) {
- 		kernel_ident_mapping_free(&info, pgd);
- 		return -ENOMEM;
- 	}
- 
--	if (init_transition_pgtable(pgd)) {
-+	/*
-+	 * Make sure asm_acpi_mp_play_dead() is present in the identity mapping
-+	 * at the same place as in the kernel page tables.
-+	 * asm_acpi_mp_play_dead() switches to the identity mapping and the
-+	 * function has be present at the same spot in the virtual address space
-+	 * before and after switching page tables.
-+	 */
-+	info.offset = __START_KERNEL_map - phys_base;
-+	mstart = PAGE_ALIGN_DOWN(__pa(asm_acpi_mp_play_dead));
-+	mend = mstart + PAGE_SIZE;
-+	if (kernel_ident_mapping_init(&info, pgd, mstart, mend)) {
- 		kernel_ident_mapping_free(&info, pgd);
- 		return -ENOMEM;
- 	}
--- 
-2.43.0
+Am 01.07.24 um 12:00 schrieb Faizal Rahim:
+> AVNU testing uncovered that even when the taprio gate is closed,
+> some packets still transmit.
 
+What is AVNU? *some* would fit on the line above.
+
+> A known i225/6 hardware errata states traffic might overflow the planned
+
+Do you have an idea for that errata? Please document it. (I see you 
+added it at the end. Maybe use [1] notation for referencing it.)
+
+> QBV window. This happens because MAC maintains an internal buffer,
+> primarily for supporting half duplex retries. Therefore, when
+> the gate closes, residual MAC data in the buffer may still transmit.
+> 
+> To mitigate this for i226, reduce the MAC's internal buffer from
+> 192 bytes to 88 bytes by modifying the RETX_CTL register value.
+
+… to the recommended 88 bytes …
+
+> This follows guidelines from:
+> 
+> a) Ethernet Controller I225/I22 Spec Update Rev 2.1 Errata Item 9:
+>     TSN: Packet Transmission Might Cross Qbv Window
+> b) I225/6 SW User Manual Rev 1.2.4: Section 8.11.5 Retry Buffer Control
+> 
+> Test Steps:
+> 1. Send taprio cmd to board A
+> tc qdisc replace dev enp1s0 parent root handle 100 taprio \
+> num_tc 4 \
+> map 3 2 1 0 3 3 3 3 3 3 3 3 3 3 3 3 \
+> queues 1@0 1@1 1@2 1@3 \
+> base-time 0 \
+> sched-entry S 0x07 500000 \
+> sched-entry S 0x0f 500000 \
+> flags 0x2 \
+> txtime-delay 0
+> 
+> - Note that for TC3, gate opens for 500us and close for another 500us
+> 
+> 3. Take tcpdump log on Board B
+> 
+> 4. Send udp packets via UDP tai app from Board A to Board B
+> 
+> 5. Analyze tcpdump log via wireshark log on Board B
+> - Observed that the total time from the first to the last packet
+> received during one cycle for TC3 does not exceed 500us
+
+Indent the list item by four spaces? (Also above?)
+
+> 
+> Signed-off-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
+
+As you Cc’ed stable@vger.kernel.org, add a Fixes: tag?
+
+> ---
+>   drivers/net/ethernet/intel/igc/igc_defines.h |  6 ++++
+>   drivers/net/ethernet/intel/igc/igc_tsn.c     | 34 ++++++++++++++++++++
+>   2 files changed, 40 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/intel/igc/igc_defines.h b/drivers/net/ethernet/intel/igc/igc_defines.h
+> index 5f92b3c7c3d4..511384f3ec5c 100644
+> --- a/drivers/net/ethernet/intel/igc/igc_defines.h
+> +++ b/drivers/net/ethernet/intel/igc/igc_defines.h
+> @@ -404,6 +404,12 @@
+>   #define IGC_DTXMXPKTSZ_TSN	0x19 /* 1600 bytes of max TX DMA packet size */
+>   #define IGC_DTXMXPKTSZ_DEFAULT	0x98 /* 9728-byte Jumbo frames */
+>   
+> +/* Retry Buffer Control */
+> +#define IGC_RETX_CTL			0x041C
+> +#define IGC_RETX_CTL_WATERMARK_MASK	0xF
+> +#define IGC_RETX_CTL_QBVFULLTH_SHIFT	8 /* QBV Retry Buffer Full Threshold */
+> +#define IGC_RETX_CTL_QBVFULLEN	0x1000 /* Enable QBV Retry Buffer Full Threshold */
+> +
+>   /* Transmit Scheduling Latency */
+>   /* Latency between transmission scheduling (LaunchTime) and the time
+>    * the packet is transmitted to the network in nanosecond.
+> diff --git a/drivers/net/ethernet/intel/igc/igc_tsn.c b/drivers/net/ethernet/intel/igc/igc_tsn.c
+> index 22cefb1eeedf..c97d908cecc5 100644
+> --- a/drivers/net/ethernet/intel/igc/igc_tsn.c
+> +++ b/drivers/net/ethernet/intel/igc/igc_tsn.c
+> @@ -78,6 +78,15 @@ void igc_tsn_adjust_txtime_offset(struct igc_adapter *adapter)
+>   	wr32(IGC_GTXOFFSET, txoffset);
+>   }
+>   
+> +static void igc_tsn_restore_retx_default(struct igc_adapter *adapter)
+> +{
+> +	struct igc_hw *hw = &adapter->hw;
+> +	u32 retxctl;
+> +
+> +	retxctl = rd32(IGC_RETX_CTL) & IGC_RETX_CTL_WATERMARK_MASK;
+> +	wr32(IGC_RETX_CTL, retxctl);
+> +}
+> +
+>   /* Returns the TSN specific registers to their default values after
+>    * the adapter is reset.
+>    */
+> @@ -91,6 +100,9 @@ static int igc_tsn_disable_offload(struct igc_adapter *adapter)
+>   	wr32(IGC_TXPBS, I225_TXPBSIZE_DEFAULT);
+>   	wr32(IGC_DTXMXPKTSZ, IGC_DTXMXPKTSZ_DEFAULT);
+>   
+> +	if (igc_is_device_id_i226(hw))
+> +		igc_tsn_restore_retx_default(adapter);
+> +
+>   	tqavctrl = rd32(IGC_TQAVCTRL);
+>   	tqavctrl &= ~(IGC_TQAVCTRL_TRANSMIT_MODE_TSN |
+>   		      IGC_TQAVCTRL_ENHANCED_QAV | IGC_TQAVCTRL_FUTSCDDIS);
+> @@ -111,6 +123,25 @@ static int igc_tsn_disable_offload(struct igc_adapter *adapter)
+>   	return 0;
+>   }
+>   
+> +/* To partially fix i226 HW errata, reduce MAC internal buffering from 192 Bytes
+> + * to 88 Bytes by setting RETX_CTL register using the recommendation from:
+> + * a) Ethernet Controller I225/I22 Specification Update Rev 2.1
+> + *    Item 9: TSN: Packet Transmission Might Cross the Qbv Window
+> + * b) I225/6 SW User Manual Rev 1.2.4: Section 8.11.5 Retry Buffer Control
+> + */
+> +static void igc_tsn_set_retx_qbvfullth(struct igc_adapter *adapter)
+
+It’d put threshold in the name.
+
+> +{
+> +	struct igc_hw *hw = &adapter->hw;
+> +	u32 retxctl, watermark;
+> +
+> +	retxctl = rd32(IGC_RETX_CTL);
+> +	watermark = retxctl & IGC_RETX_CTL_WATERMARK_MASK;
+> +	/* Set QBVFULLTH value using watermark and set QBVFULLEN */
+> +	retxctl |= (watermark << IGC_RETX_CTL_QBVFULLTH_SHIFT) |
+> +		   IGC_RETX_CTL_QBVFULLEN;
+> +	wr32(IGC_RETX_CTL, retxctl);
+> +}
+> +
+>   static int igc_tsn_enable_offload(struct igc_adapter *adapter)
+>   {
+>   	struct igc_hw *hw = &adapter->hw;
+> @@ -123,6 +154,9 @@ static int igc_tsn_enable_offload(struct igc_adapter *adapter)
+>   	wr32(IGC_DTXMXPKTSZ, IGC_DTXMXPKTSZ_TSN);
+>   	wr32(IGC_TXPBS, IGC_TXPBSIZE_TSN);
+>   
+> +	if (igc_is_device_id_i226(hw))
+> +		igc_tsn_set_retx_qbvfullth(adapter);
+> +
+>   	for (i = 0; i < adapter->num_tx_queues; i++) {
+>   		struct igc_ring *ring = adapter->tx_ring[i];
+>   		u32 txqctl = 0;
+
+
+Kind regards,
+
+Paul
