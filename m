@@ -1,215 +1,155 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mail.thorsis.com (mail.thorsis.com [217.92.40.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428BFC144;
-	Mon,  1 Jul 2024 07:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CDB037142
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 07:46:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.92.40.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719819966; cv=none; b=Kw1G8GpEzdnaK4xNw1tc8dz+SWGOKARSMpo7UMXisVa7chXYwwZ/yY6Uka1thPZbmS4vCK8ydsoR1ORkYewt7+9D/ON+pmkH9RDukagy2v/DpH36YEDvIcaKqBhvXWkhGfV/pgzc5XH1dHR4t2clDDl5YERsL4bllvD+wUQzh7s=
+	t=1719819996; cv=none; b=B7P2BpI/3J4OkyRjOA538UJze51rxEnCRC0hlO1WCIb0ANx1iH4NdusQyrCQMu38sjZMHFfx9gqnz2FZYnXzUgzMjVG7ylVv090pdHX+6bCN1QmeM54WQoMdtqsaiWmcXdqZSiKg9Lxiz2f80Gst2aQnjPnXsn4khugsIhung4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719819966; c=relaxed/simple;
-	bh=eu+1hRloBkCtTsdD3c7EpT7vZuoZchofbkb1YLuh0Os=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oBtCrUR3TRWyEiP1hhzZGJ/1KaLIsW+JvOBqCPa+3WYD/UgBSVCI6dIREAtZEOa/xSO3rVbJl8iPLBT7zJ0zD0W1Pyf6umagTn83UCa3VlKHk1OJFu+0tOA6Qh4lEsYLvzqpMyoI+xBvxfp6nA9CZvw586fj78VWY1ylVw19Cac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=T3PuyQYd; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1719819996; c=relaxed/simple;
+	bh=4IuU3rL9MQkYSvOSjZrnPlocJmUuOKhy+jxUu+oFEug=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L12+nafcwdTdPzexRNmc0+cEBZNkObq59W1zTAHrbpugaahEkVX9w5UwKo1UdqVIucOkGfCfi7OqLyrMHOUa9kULzzJcINI5qCkDyhfNwTMnxyHecdg+bKOUe+88gyRl0Bz2ZAFZc671Yji9KauAxH2RvRmtRVRhy7ua7rskRw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com; spf=pass smtp.mailfrom=thorsis.com; dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b=bDLcOEyg; arc=none smtp.client-ip=217.92.40.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thorsis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="T3PuyQYd"
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4616vKvY025560;
-	Mon, 1 Jul 2024 07:45:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=/qWCb0RrNPuPW
-	4UHecWAZj4MlZnWK893nVlQRpserAE=; b=T3PuyQYd7JyaAdKWu5Awb2qzGeULg
-	zV/NIwZBi9JJeMuk/Zb8recslKhawKLuqTXE0LeWcT91B0S99ctMTqBefJ/ZNQUV
-	UpRsQnN5mjR1D5/AYiu/+b1iPoU4AUuw4uqAO/1HJG/+XChq+qqNdFpAqUomVq9W
-	hHrEyskf8zmKUJg/HqQIQXewhu0A6k68pmsjwHBLAKJ/M5Gkfpl5BeShyiSBggP2
-	6YVVgldKm6V1FQj49r1Qz/KUasI33JPOLNG7qtVAn3uYg6mYmV+NqtOjQzsXzKjo
-	VJ8NeID0BBeq0nEvI7tvqLX51jSS39mLsCroPuvmCPD4KP6aYO5RVtSOA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 403pb98auk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Jul 2024 07:45:50 +0000 (GMT)
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4617jnfU005813;
-	Mon, 1 Jul 2024 07:45:49 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 403pb98auf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Jul 2024 07:45:49 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46151S8h030022;
-	Mon, 1 Jul 2024 07:45:49 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 402x3mnxud-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Jul 2024 07:45:48 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4617jhCF55771470
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 1 Jul 2024 07:45:45 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 329982004B;
-	Mon,  1 Jul 2024 07:45:43 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 073DD20040;
-	Mon,  1 Jul 2024 07:45:40 +0000 (GMT)
-Received: from li-a50b8fcc-3415-11b2-a85c-f1daa4f09788.in.ibm.com (unknown [9.109.241.85])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  1 Jul 2024 07:45:39 +0000 (GMT)
-From: Krishna Kumar <krishnak@linux.ibm.com>
-To: mpe@ellerman.id.au, npiggin@gmail.com
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, brking@linux.vnet.ibm.com,
-        gbatra@linux.ibm.com, aneesh.kumar@kernel.org,
-        christophe.leroy@csgroup.eu, nathanl@linux.ibm.com,
-        bhelgaas@google.com, oohall@gmail.com, tpearson@raptorengineering.com,
-        Krishna Kumar <krishnak@linux.ibm.com>,
-        Shawn Anastasio <sanastasio@raptorengineering.com>
-Subject: [PATCH v4 2/2] powerpc: hotplug driver bridge support
-Date: Mon,  1 Jul 2024 13:15:07 +0530
-Message-ID: <20240701074513.94873-3-krishnak@linux.ibm.com>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20240701074513.94873-1-krishnak@linux.ibm.com>
-References: <20240701074513.94873-1-krishnak@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b="bDLcOEyg"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4C1A514868DC;
+	Mon,  1 Jul 2024 09:41:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thorsis.com; s=dkim;
+	t=1719819666; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=38ns72u8iNLYvZX9CtZLrTvjFcrXs/evZ3NwzBdYp4E=;
+	b=bDLcOEygba8aEwqpUqrIWKEt+go5w1XVL7wq52BCrpR+L2fipm2jTFgj3q1LehjBS9hqcM
+	m4UYpnXKBlHkOlVKoqziYgnHiqrX8j9NDvWu2D/D6OOb/xhGzoHksdmcRjWcOPfi7V/ima
+	CThzFS690em8xvUsmyW6ukMgmV0zk9+wQPASQUGM23mH6INi4FuiVsYQ6jW4QnqGDHlSJp
+	ozz9aAudLrmP+GcVoXk6o+sG4YeXDuuBztsPJv0bQftH1x2CAEybpoCyXcB1MFaFVTNQhV
+	rcZ3GWF0GYugMfZTsq0+79eUFMg2YowZXWlBndun/XpwTOspghSu1i0Gw2DRTg==
+Date: Mon, 1 Jul 2024 09:40:56 +0200
+From: Alexander Dahl <ada@thorsis.com>
+To: claudiu beznea <claudiu.beznea@tuxon.dev>
+Cc: Alexander Dahl <ada@thorsis.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Cyrille Pitchen <cyrille.pitchen@microchip.com>
+Subject: Re: [RFC PATCH 0/1] Timeout error with Microchip OTPC driver on
+ SAM9X60
+Message-ID: <20240701-nuttiness-backlit-60ccfea75b56@thorsis.com>
+Mail-Followup-To: claudiu beznea <claudiu.beznea@tuxon.dev>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Cyrille Pitchen <cyrille.pitchen@microchip.com>
+References: <20240412140802.1571935-1-ada@thorsis.com>
+ <d4dc3f45-5bae-44a8-8169-58077f8b7966@tuxon.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: -uKa2DmjEIygamUOQFeGQEff9bnWi5xw
-X-Proofpoint-ORIG-GUID: Eh40lHwqZYgl-C9qUFuzFyouUf-dJovG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-01_05,2024-06-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 suspectscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
- spamscore=0 adultscore=0 phishscore=0 lowpriorityscore=0 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407010051
+In-Reply-To: <d4dc3f45-5bae-44a8-8169-58077f8b7966@tuxon.dev>
+User-Agent: Mutt/2.2.12 (2023-09-09)
+X-Last-TLS-Session-Version: TLSv1.3
 
-There is an issue with the hotplug operation when it's done on the
-bridge/switch slot. The bridge-port and devices behind the bridge, which
-become offline by hot-unplug operation, don't get hot-plugged/enabled by
-doing hot-plug operation on that slot. Only the first port of the bridge
-gets enabled and the remaining port/devices remain unplugged. The hot
-plug/unplug operation is done by the hotplug driver
-(drivers/pci/hotplug/pnv_php.c).
+Hei hei,
 
-Root Cause Analysis: This behavior is due to missing code for the
-switch/bridge. The existing driver depends on pci_hp_add_devices()
-function for device enablement. This function calls pci_scan_slot() on
-only one device-node/port of the bridge, not on all the siblings'
-device-node/port.
+Am Wed, Apr 24, 2024 at 10:32:02AM +0300 schrieb claudiu beznea:
+> Hi, Alexander,
+> 
+> On 12.04.2024 17:08, Alexander Dahl wrote:
+> > Hei hei,
+> > 
+> > on a custom sam9x60 based board we want to access a unique ID of the
+> > SoC.  Microchip sam-ba has a command 'readuniqueid' which returns the
+> > content of the OTPC Product UID x Register in that case.
+> > 
+> > (On a different board with a SAMA5D2 we use the Serial Number x Register
+> > exposed through the atmel soc driver, which is not present in the
+> > SAM9X60 series.)
+> > 
+> > There is a driver for the OTPC of the SAMA7G5 and after comparing
+> > register layouts it seems that one is almost identical to the one used
+> > by SAM9X60.  So I thought just adapting the driver for SAM9X60 should be
+> > easy.  (At least as a start, the driver has no support for that UID
+> > register, but I suppose it would be the right place to implement it.)
+> > 
+> > However it does not work.  I used the patch attached with
+> > additional debug messages on a SAM9X60-Curiosity board.  (That patch is
+> > not meant for inclusion, just for showing what I've tried.)
+> > 
+> > On probe the function mchp_otpc_init_packets_list() returns with
+> > ETIMEDOUT, which it can only do if mchp_otpc_prepare_read() returns with
+> > timeout and that can only happen if read_poll_timeout() times out on
+> > reading the Status Register.  Poking that register with `devmem
+> > 0xeff0000c 32` gives 0x00000040 which means "A packet read is on-going".
+> 
+> 
+> Would it be possible that the OTP memory is not properly initialized and
+> the algorithm to initialized the packet list to confuse the hardware?
+> 
+> I see in the datasheet the following: "The initial value of the OTP memory
+> is ‘0’ but the memory may contain some “defective” bits already set to the
+> value ‘1’."
 
-The missing code needs to be added which will find all the sibling
-device-nodes/bridge-ports and will run explicit pci_scan_slot() on
-those.  A new function has been added for this purpose which gets
-invoked from pci_hp_add_devices(). This new function
-pci_traverse_sibling_nodes_and_scan_slot() gets all the sibling
-bridge-ports by traversal and explicitly invokes pci_scan_slot on them.
+Meanwhile we looked deeper into this driver.  I just drop here what we
+found so far, because it's vacation time, and this will probably not
+be picked up again this month because vacation etc.  I wanna get it
+out of my head for now. ;-)
 
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Gaurav Batra <gbatra@linux.ibm.com>
-Cc: Nathan Lynch <nathanl@linux.ibm.com>
-Cc: Brian King <brking@linux.vnet.ibm.com>
+Note: most of this should also apply to sama7g5, from comparing data
+sheets the OTPC is the same.
 
-Tested-by: Shawn Anastasio <sanastasio@raptorengineering.com>
-Signed-off-by: Krishna Kumar <krishnak@linux.ibm.com>
----
- arch/powerpc/include/asm/ppc-pci.h |  4 ++++
- arch/powerpc/kernel/pci-hotplug.c  |  5 ++---
- arch/powerpc/kernel/pci_dn.c       | 32 ++++++++++++++++++++++++++++++
- 3 files changed, 38 insertions(+), 3 deletions(-)
+1. the call to read_poll_timeout() most probably has its sleep and
+timeout paramaters swapped.
 
-diff --git a/arch/powerpc/include/asm/ppc-pci.h b/arch/powerpc/include/asm/ppc-pci.h
-index a8b7e8682f5b..83db8d0798ac 100644
---- a/arch/powerpc/include/asm/ppc-pci.h
-+++ b/arch/powerpc/include/asm/ppc-pci.h
-@@ -28,6 +28,10 @@ struct pci_dn;
- void *pci_traverse_device_nodes(struct device_node *start,
- 				void *(*fn)(struct device_node *, void *),
- 				void *data);
-+
-+void pci_traverse_sibling_nodes_and_scan_slot(struct device_node *start,
-+					       struct pci_bus *bus);
-+
- extern void pci_devs_phb_init_dynamic(struct pci_controller *phb);
- 
- #if defined(CONFIG_IOMMU_API) && (defined(CONFIG_PPC_PSERIES) || \
-diff --git a/arch/powerpc/kernel/pci-hotplug.c b/arch/powerpc/kernel/pci-hotplug.c
-index 0fe251c6ac2c..639a3d592fe2 100644
---- a/arch/powerpc/kernel/pci-hotplug.c
-+++ b/arch/powerpc/kernel/pci-hotplug.c
-@@ -106,7 +106,7 @@ EXPORT_SYMBOL_GPL(pci_hp_remove_devices);
-  */
- void pci_hp_add_devices(struct pci_bus *bus)
- {
--	int slotno, mode, max;
-+	int mode, max;
- 	struct pci_dev *dev;
- 	struct pci_controller *phb;
- 	struct device_node *dn = pci_bus_to_OF_node(bus);
-@@ -129,8 +129,7 @@ void pci_hp_add_devices(struct pci_bus *bus)
- 		 * order for fully rescan all the way down to pick them up.
- 		 * They can have been removed during partial hotplug.
- 		 */
--		slotno = PCI_SLOT(PCI_DN(dn->child)->devfn);
--		pci_scan_slot(bus, PCI_DEVFN(slotno, 0));
-+		pci_traverse_sibling_nodes_and_scan_slot(dn, bus);
- 		max = bus->busn_res.start;
- 		/*
- 		 * Scan bridges that are already configured. We don't touch
-diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
-index 38561d6a2079..bea612759832 100644
---- a/arch/powerpc/kernel/pci_dn.c
-+++ b/arch/powerpc/kernel/pci_dn.c
-@@ -493,4 +493,36 @@ static void pci_dev_pdn_setup(struct pci_dev *pdev)
- 	pdn = pci_get_pdn(pdev);
- 	pdev->dev.archdata.pci_data = pdn;
- }
-+
-+void pci_traverse_sibling_nodes_and_scan_slot(struct device_node *start, struct pci_bus *bus)
-+{
-+	struct device_node *dn;
-+	int slotno;
-+
-+	u32 class = 0;
-+
-+	if (!of_property_read_u32(start->child, "class-code", &class)) {
-+		/* Call of pci_scan_slot for non-bridge/EP case */
-+		if (!((class >> 8) == PCI_CLASS_BRIDGE_PCI)) {
-+			slotno = PCI_SLOT(PCI_DN(start->child)->devfn);
-+			pci_scan_slot(bus, PCI_DEVFN(slotno, 0));
-+			return;
-+		}
-+	}
-+
-+	/* Iterate all siblings */
-+	for_each_child_of_node(start, dn) {
-+		class = 0;
-+
-+		if (!of_property_read_u32(start->child, "class-code", &class)) {
-+			/* Call of pci_scan_slot on each sibling-nodes/bridge-ports */
-+			if ((class >> 8) == PCI_CLASS_BRIDGE_PCI) {
-+				slotno = PCI_SLOT(PCI_DN(dn)->devfn);
-+				pci_scan_slot(bus, PCI_DEVFN(slotno, 0));
-+			}
-+		}
-+	}
-+
-+}
-+
- DECLARE_PCI_FIXUP_EARLY(PCI_ANY_ID, PCI_ANY_ID, pci_dev_pdn_setup);
--- 
-2.45.0
+2. the read access to OTPC_CR register is not necessary, the datasheet
+says the register is "write only".  It may even trigger an interrupt
+for reading a write only register.  Furthermore the WPCTEN bit in the
+OTPC Write Protection Mode register (OTPC_WPMR) is not checked before
+accessing OTPC_CR as suggested by the datasheet.
 
+3. the errata sheet for the SAM9X60 SoC (DS80000846) has a section on
+the OTPC which recommends a fixup before the first write operation,
+with code example:
+https://ww1.microchip.com/downloads/aemDocuments/documents/MPU32/ProductDocuments/Errata/SAM9X60-Device-Silicon-Errata-and-Data-Sheet-Clarif-DS80000846.pdf
+The same thing is implemented in 'atmel-software-package' which has
+(at least had in the past) the code for the binary applets used in the
+'sam-ba' tool:
+https://github.com/atmelcorp/atmel-software-package/blame/master/drivers/nvm/otp/otpc.c#L86
+I bet this fixup should be implemented in this driver here as well?
+
+So far for now.
+
+Greets
+Alex
+
+> 
+> Otherwise, from the top of my mind I don't have any idea on what might happen.
+> 
+> Thank you,
+> Claudiu Beznea
+> 
+> > 
+> > Kinda stuck here.  Any ideas?
+> > 
+> > Greets and have a nice weekend everyone
+> > Alex
+> > 
+> > Alexander Dahl (1):
+> >   nvmem: microchip-otpc: Add support for SAM9X60
+> > 
+> >  .../dts/microchip/at91-sam9x60_curiosity.dts     |  4 ++++
+> >  arch/arm/boot/dts/microchip/sam9x60.dtsi         |  7 +++++++
+> >  drivers/nvmem/microchip-otpc.c                   | 16 +++++++++++++---
+> >  3 files changed, 24 insertions(+), 3 deletions(-)
+> > 
+> > 
+> > base-commit: fec50db7033ea478773b159e0e2efb135270e3b7
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
