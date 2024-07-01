@@ -1,100 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0812E16EC05;
-	Mon,  1 Jul 2024 17:32:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F4D2C6A3;
+	Mon,  1 Jul 2024 17:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719855153; cv=none; b=AULlnoIBsz8WPH6MTPwmO5vR7UALJsqzkb12BLDG1diWS8mfj1BGR6f7IyIirTzmc4nQYHP10nNF3FhRz/x2sOOL9uzlWc3mplDw7F06V+HhcbeKZUXM7cmELZHJNKJ8QR9tvto+u5Xp9d0y0MdDJXbnyARQxNDFTYSam5UMmVs=
+	t=1719855269; cv=none; b=XMBMW9yB25PhykZcX1hcOQUxG8bSA4V8O//VSub+gy4NxAnX8T41abU8AzjQ3SmBSwQt4GINa6z5rvBP4YJCzUHf0BLblY23VWsmXfLQXdIVJ2eTWFYId8oyXYTZvpFXlVmIhTAFoY1USTQ3LqgHiNv5a8Mi+TxlZ7V+v7Tv2Dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719855153; c=relaxed/simple;
-	bh=RH54wpfJPFuq1p/47n403zxx5+QmRAvugMB5EeGq/DM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dm1HIWTFVgsHl7Ts2RwfWXJtuov7vvoxgiswA7gxChTpl1J6kyqgZfYR1SGzr+ZTtjYd6n8f2h7FphYgje++kvMYSyYJBmN5c7dSLvfai78goNCHj/xwzdqAz4lL2FpudADtT0UTzGhoajS3fAZEaGcZVuYEocApaci0EVSM97w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YaUTwfVa; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719855269; c=relaxed/simple;
+	bh=+bbr0YgH3S6DRuV/lOUY3GAma0Hm5f6urxThBML5+3A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DjdnRvSRy+iVaFqCAKH46NW90mMj2Fig4DOdrmJ5/tzhhCgUKXK2pGSea56NcAt+LRaAXW+kcXmLTNP6bT+4EjU0xwH7dgOWHkZ8djgq+25L1EBX+lnKAseGWcM2SQS6hfB+p8PQ5DHDpjD3hhBvA+kfnZAHRHvFyjX85ebvxOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cBU/oxK7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YaUTwfVa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719855152; x=1751391152;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RH54wpfJPFuq1p/47n403zxx5+QmRAvugMB5EeGq/DM=;
-  b=YaUTwfVa2Q7VbQVzCRb1r1/HJU9UPuG6oq+ztCoTd1+CC4WtHHCW38BL
-   jEG5npCRKTGTPR5i8upMFdD7podYFVQ2tVWQ70qSzz21pxDIZCxtcfMHR
-   r2sPpT9W5+X/f8R6VVBv1DxXdXhlYMyeVpeB50I4q9c5Fq3j+8Arz4eeE
-   J4f8TrmwfDO1VT7ium5EEITt1qGNnlNZ8pLpun8ki8g7J8P3gkAi0LOct
-   4TestWFCIq8r6OUgXO9q26TXKoCEInFct64cfrEjlwKHeuRhi8KeycMZU
-   i5jGuVNB9D8O8zbpqEW+KYpQfK2LhHk1bQKDlkxHyGbkKhRuXhgapWrKA
-   Q==;
-X-CSE-ConnectionGUID: nBrwzkblSuOfHanpbYrxCA==
-X-CSE-MsgGUID: EcilDMjWQCiWfQlteJVxYg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="12343503"
-X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
-   d="scan'208";a="12343503"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 10:32:30 -0700
-X-CSE-ConnectionGUID: hrC7i042S+KUbRkezbWGJA==
-X-CSE-MsgGUID: QtPpU4dST423AiFJac8HDw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
-   d="scan'208";a="46259398"
-Received: from aadeosun-mobl.amr.corp.intel.com (HELO desk) ([10.209.8.130])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 10:32:29 -0700
-Date: Mon, 1 Jul 2024 10:32:21 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Brice Goglin <brice.goglin@gmail.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Perry Yuan <Perry.Yuan@amd.com>
-Subject: Re: [PATCH v2 3/9] perf/x86/intel: Use topology_hw_cpu_type()
-Message-ID: <20240701173221.fb5k3dqyycsb4pmn@desk>
-References: <20240627-add-cpu-type-v2-0-f927bde83ad0@linux.intel.com>
- <20240627-add-cpu-type-v2-3-f927bde83ad0@linux.intel.com>
- <09000f4e-f373-448f-afef-35d2a413929f@linux.intel.com>
- <20240628185136.6rl4x3no3vl3zben@desk>
- <d866215b-bffc-453f-9d92-232b729946d0@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cBU/oxK7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ED2FC116B1;
+	Mon,  1 Jul 2024 17:34:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719855269;
+	bh=+bbr0YgH3S6DRuV/lOUY3GAma0Hm5f6urxThBML5+3A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=cBU/oxK7snZtrNzlef9OrNN4XC68y/IKWJPRYLx3x4+TqAnFTtnBpIp+gy6vLkQ9x
+	 PVtg6i98unqGXy/TyeYesaGOJHDs852/PscX37HbMDE68hVHhyInLUGe4sjYRA5d7L
+	 g7JJurglzvC5z/VsL2RsxY5l3iLUohB92YYXKJDxyHEA9n10YlTwgAXkQnBwkdp6vE
+	 Zlbs84U3TiABRuaByrbUrNEPb6DS/PD7LIpIhBhuAaaLoxwfusIUm20f2jQ7gyDjq4
+	 ynBtMNv6iYr/oEioj0mNDuJ7roOMG1e5herjTYC/B16Xu+rjDh8Gn7XHejPkElsNtu
+	 U4AGT2GTpTS/A==
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-25075f3f472so488014fac.2;
+        Mon, 01 Jul 2024 10:34:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWa7mJ8q3As4P+P/Lli+qHBJlG4f5ZIcxhL7FFLkVQYBJ1Gt++5nldv3q6ocy4zYytxQUqdhFyU37/6yKVDcqRkQFemHUsfRRpE/aX5o5PjvvkKSZQlCSwfotrTL8TL0n7932y6SimvBA==
+X-Gm-Message-State: AOJu0Yzay9KMWBpD+3SacdaWTjoYBgVC+1E6R3dml/ME10f92pRoCYph
+	CbcDDAFdoY6I02yoLODUoaABZVSpq175kJJ/BFSZsQMGSDsvvejSPJlbY7GEY1AcRfL4rNjw0YI
+	LXv32soCkopbLgl5D/Vp9X3Ay5jI=
+X-Google-Smtp-Source: AGHT+IEucRk7+G9KtfTHkimt+xorhTmeosEBYSOKBZhF3xpIYPGpUXcaGyJhAHV7iVEKD7fC+u4M6x1GGFHWexjqsug=
+X-Received: by 2002:a05:6870:4195:b0:25d:d69:eaf with SMTP id
+ 586e51a60fabf-25db36406d0mr6182660fac.4.1719855268686; Mon, 01 Jul 2024
+ 10:34:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d866215b-bffc-453f-9d92-232b729946d0@linux.intel.com>
+References: <20240620191410.3646-1-W_Armin@gmx.de>
+In-Reply-To: <20240620191410.3646-1-W_Armin@gmx.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 1 Jul 2024 19:34:17 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iG4fAp1NL1Xf3JAY1XcYRuCttaZyR1S6AYD=FZpmzRWw@mail.gmail.com>
+Message-ID: <CAJZ5v0iG4fAp1NL1Xf3JAY1XcYRuCttaZyR1S6AYD=FZpmzRWw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ACPI: battery: Add support for charge limiting state
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 01, 2024 at 11:37:26AM +0800, Mi, Dapeng wrote:
-> > diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-> > index d8d715fcc25c..08794668750f 100644
-> > --- a/arch/x86/include/asm/processor.h
-> > +++ b/arch/x86/include/asm/processor.h
-> > @@ -107,7 +107,7 @@ struct cpuinfo_topology {
-> >  	u32			l2c_id;
-> >  
-> >  	// Hardware defined CPU-type
-> > -	u8			hw_cpu_type;
-> > +	u32			hw_cpu_type;
-> 
-> Since hw_cpu_type represents the whole EAX right now, it may need to be
-> changed to a more generic name, like hw_cpu_model, or others.
+On Thu, Jun 20, 2024 at 9:14=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote:
+>
+> The ACPI specification says that bit 3 inside the battery state
+> signals that the battery is in charge limiting state. In this state,
+> the platform limits the battery from reaching its full capacity, the
+> exact limit is platform-specific.
+>
+> This might explain why a number of batteries reported a "Unknown"
+> battery state in the past when using platform-specific interfaces to
+> stop battery charging at a user defined level.
+>
+> Unfortunately not all platforms set this bit in such cases, so
+> "non-charging" is still the default state when the battery is neither
+> charging, discharging or full.
+>
+> Tested on a Lenovo Ideapad S145-14IWL.
+>
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>  drivers/acpi/battery.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
+> index d289b98a2cca..9ba2191a96d6 100644
+> --- a/drivers/acpi/battery.c
+> +++ b/drivers/acpi/battery.c
+> @@ -38,9 +38,10 @@
+>  /* Battery power unit: 0 means mW, 1 means mA */
+>  #define ACPI_BATTERY_POWER_UNIT_MA     1
+>
+> -#define ACPI_BATTERY_STATE_DISCHARGING 0x1
+> -#define ACPI_BATTERY_STATE_CHARGING    0x2
+> -#define ACPI_BATTERY_STATE_CRITICAL    0x4
+> +#define ACPI_BATTERY_STATE_DISCHARGING         0x1
+> +#define ACPI_BATTERY_STATE_CHARGING            0x2
+> +#define ACPI_BATTERY_STATE_CRITICAL            0x4
+> +#define ACPI_BATTERY_STATE_CHARGE_LIMITING     0x8
+>
+>  #define MAX_STRING_LENGTH      64
+>
+> @@ -155,7 +156,7 @@ static int acpi_battery_get_state(struct acpi_battery=
+ *battery);
+>
+>  static int acpi_battery_is_charged(struct acpi_battery *battery)
+>  {
+> -       /* charging, discharging or critical low */
+> +       /* charging, discharging, critical low or charge limited */
+>         if (battery->state !=3D 0)
+>                 return 0;
+>
+> @@ -215,6 +216,8 @@ static int acpi_battery_get_property(struct power_sup=
+ply *psy,
+>                         val->intval =3D acpi_battery_handle_discharging(b=
+attery);
+>                 else if (battery->state & ACPI_BATTERY_STATE_CHARGING)
+>                         val->intval =3D POWER_SUPPLY_STATUS_CHARGING;
+> +               else if (battery->state & ACPI_BATTERY_STATE_CHARGE_LIMIT=
+ING)
+> +                       val->intval =3D POWER_SUPPLY_STATUS_NOT_CHARGING;
+>                 else if (acpi_battery_is_charged(battery))
+>                         val->intval =3D POWER_SUPPLY_STATUS_FULL;
+>                 else
+> --
 
-Even with whole EAX it still identifies the CPU-type (just more granular).
-
-Since hw_cpu_type will be used by AMD as well, I think it is better to keep
-it as is. Interpretation of what hw_cpu_type means can be left to vendor
-specific code.
+Applied as 6.11 material along with the [2/2], thanks!
