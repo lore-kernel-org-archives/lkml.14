@@ -1,133 +1,196 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9005839F4;
-	Mon,  1 Jul 2024 08:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43B4582C6C
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 08:40:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719823234; cv=none; b=rD8k06mDFxncuNLhRvhk/Agz8dbJfJFIWZa1NmzbQNCx0gCRobqb4OBjH5GRX29jZllAG7XjRiYYkX0Xw2R08ZqxCvVQypOFln86CPspi7dmPUWozpJj1Z1EzCaHgKmuiOHD1jIbvKy1HebsKuGFZvYDQLilQnzsHejGmCzRF0I=
+	t=1719823241; cv=none; b=BSDBeHhLVHwrcemIfYeui+u48Sc//vDoQ1u/ubojpFwhRKBvDnMijYha/4kGEOrsai3YphaM0J2TnAvh8YamHmx9tn/i7NYzg7FbOWwOVw23wANnTpI6jDzGi+OWlty04We/XlEqE9E0Na3wjsvLFIgmnC/xbqiD1cU15+vxat8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719823234; c=relaxed/simple;
-	bh=lQDakvkuTP95XC9nGbLvBkMLIuh0XUah0cZPHLuoKsE=;
-	h=From:Subject:To:CC:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=aFlIIBZlKUAQylQH5xpS1T6D7BD82WQS1Hn2OvUTP/I+9LBfmvdY/lb/Y/13tF7FGZ/A47tFobpns8tELYZ1DfrkXSyw7LWu+JhcVXdNxfdmdfAr9aX43HO22+U2Z6a+ckilieITyQRpKlPbWqe/HSBsrm7XZcBpeIEkAaKcme8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=d+4eF9Pm; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="d+4eF9Pm"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45ULuuvT006937;
-	Mon, 1 Jul 2024 08:40:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ILgMAm3EqPPh0KqXEOvCXs48fV2I2eMWHuby+dIR9PY=; b=d+4eF9PmHd5p3WEU
-	0raCfLW2iM/UaunLmOj/TPp9ymzWT+XPW94xCgam/rhbE3gJUB10Z9S1kX6POIG0
-	c37+Z1KJjVBfTDX0V9L/rNTEBFlv8rZ4xrLk9pghRkljBnbH5OX/dOVaiw+350nW
-	tXa+oy8RBSADea6SVlFM+/YaZGTvr6rLwIKVYTtqXd8CUK6eE7rTiB5VOaIk+kt+
-	ktPbmiyAhGvdqMVbw/G0wdShoAu0e4hXVPiQkU2TcKZa8xKDBcNeHxsE/fneOLEJ
-	muZich7gjc8IZ85XLetkfrsFveOU7DMRBu+bTN4VI+Q7UMkOs8D+yH+WciMqNIXB
-	I1Gbcw==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 402bejk8vj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Jul 2024 08:40:28 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4618eRqi007170
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 1 Jul 2024 08:40:27 GMT
-Received: from [10.214.66.219] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 1 Jul 2024
- 01:40:23 -0700
-From: Naina Mehta <quic_nainmeht@quicinc.com>
-Subject: Re: [PATCH v3 3/5] arm64: dts: qcom: sdx75: update reserved memory
- regions for mpss
-To: Konrad Dybcio <konrad.dybcio@linaro.org>, <andersson@kernel.org>,
-        <mathieu.poirier@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <manivannan.sadhasivam@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240618131342.103995-1-quic_nainmeht@quicinc.com>
- <20240618131342.103995-4-quic_nainmeht@quicinc.com>
- <e5b7a888-8ca3-463a-a2de-cf719e58d7a0@linaro.org>
- <c186bd2e-a132-fbe6-2212-dcdb93a6c14a@quicinc.com>
- <45c95955-51a7-489f-993e-252e8bd63dbd@linaro.org>
-Message-ID: <fc7e3c93-1a79-6911-04c2-19ddc7e298cb@quicinc.com>
-Date: Mon, 1 Jul 2024 14:10:20 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+	s=arc-20240116; t=1719823241; c=relaxed/simple;
+	bh=ZypCh53St70/iDwLmK0LimJkap2qCPTKgx83lJROPDc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hMygYvCUdqAJqW7BpgzpBN4jcaNkM/4gp+bI6diWCGH8TPOhRTE7+JdtB5xD+Q5liwej0IgXlitmGzKSkjsaG4jveoQC5tMFLPDyYdUtpKWiVSS55otasg73VdTvcHyXNhaOG7qDXw+iFwpuuuE5LupgNehJg3opwVvrbSkDHkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 57C9F339;
+	Mon,  1 Jul 2024 01:41:02 -0700 (PDT)
+Received: from [10.57.72.41] (unknown [10.57.72.41])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D38A83F766;
+	Mon,  1 Jul 2024 01:40:35 -0700 (PDT)
+Message-ID: <516aa6b3-617c-4642-b12b-0c5f5b33d1c9@arm.com>
+Date: Mon, 1 Jul 2024 09:40:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <45c95955-51a7-489f-993e-252e8bd63dbd@linaro.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: rAgPgtuWnVBKcgr4r2NkUCMxJbSIA-Le
-X-Proofpoint-ORIG-GUID: rAgPgtuWnVBKcgr4r2NkUCMxJbSIA-Le
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-01_07,2024-06-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
- impostorscore=0 spamscore=0 clxscore=1015 mlxscore=0 suspectscore=0
- bulkscore=0 adultscore=0 lowpriorityscore=0 malwarescore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407010066
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] support "THPeligible" semantics for mTHP with anonymous
+ shmem
+Content-Language: en-GB
+To: Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Bang Li <libang.li@antgroup.com>, hughd@google.com, akpm@linux-foundation.org
+Cc: david@redhat.com, wangkefeng.wang@huawei.com, ziy@nvidia.com,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20240628104926.34209-1-libang.li@antgroup.com>
+ <4b38db15-0716-4ffb-a38b-bd6250eb93da@arm.com>
+ <4d54880e-03f4-460a-94b9-e21b8ad13119@linux.alibaba.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <4d54880e-03f4-460a-94b9-e21b8ad13119@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-
-
-On 6/26/2024 9:12 PM, Konrad Dybcio wrote:
-> On 24.06.2024 1:21 PM, Naina Mehta wrote:
+On 01/07/2024 09:33, Baolin Wang wrote:
+> 
+> 
+> On 2024/7/1 15:55, Ryan Roberts wrote:
+>> On 28/06/2024 11:49, Bang Li wrote:
+>>> After the commit 7fb1b252afb5 ("mm: shmem: add mTHP support for
+>>> anonymous shmem"), we can configure different policies through
+>>> the multi-size THP sysfs interface for anonymous shmem. But
+>>> currently "THPeligible" indicates only whether the mapping is
+>>> eligible for allocating THP-pages as well as the THP is PMD
+>>> mappable or not for anonymous shmem, we need to support semantics
+>>> for mTHP with anonymous shmem similar to those for mTHP with
+>>> anonymous memory.
+>>>
+>>> Signed-off-by: Bang Li <libang.li@antgroup.com>
+>>> ---
+>>>   fs/proc/task_mmu.c      | 10 +++++++---
+>>>   include/linux/huge_mm.h | 11 +++++++++++
+>>>   mm/shmem.c              |  9 +--------
+>>>   3 files changed, 19 insertions(+), 11 deletions(-)
+>>>
+>>> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+>>> index 93fb2c61b154..09b5db356886 100644
+>>> --- a/fs/proc/task_mmu.c
+>>> +++ b/fs/proc/task_mmu.c
+>>> @@ -870,6 +870,7 @@ static int show_smap(struct seq_file *m, void *v)
+>>>   {
+>>>       struct vm_area_struct *vma = v;
+>>>       struct mem_size_stats mss = {};
+>>> +    bool thp_eligible;
+>>>         smap_gather_stats(vma, &mss, 0);
+>>>   @@ -882,9 +883,12 @@ static int show_smap(struct seq_file *m, void *v)
+>>>         __show_smap(m, &mss, false);
+>>>   -    seq_printf(m, "THPeligible:    %8u\n",
+>>> -           !!thp_vma_allowable_orders(vma, vma->vm_flags,
+>>> -               TVA_SMAPS | TVA_ENFORCE_SYSFS, THP_ORDERS_ALL));
+>>> +    thp_eligible = !!thp_vma_allowable_orders(vma, vma->vm_flags,
+>>> +                        TVA_SMAPS | TVA_ENFORCE_SYSFS, THP_ORDERS_ALL);
+>>> +    if (vma_is_anon_shmem(vma))
+>>> +        thp_eligible = !!shmem_allowable_huge_orders(file_inode(vma->vm_file),
+>>> +                            vma, vma->vm_pgoff, thp_eligible);
 >>
+>> Afraid I haven't been following the shmem mTHP support work as much as I would
+>> have liked, but is there a reason why we need a separate function for shmem?
+> 
+> Since shmem_allowable_huge_orders() only uses shmem specific logic to determine
+> if huge orders are allowable, there is no need to complicate the
+> thp_vma_allowable_orders() function by adding more shmem related logic, making
+> it more bloated. In my view, providing a dedicated helper
+> shmem_allowable_huge_orders(), specifically for shmem, simplifies the logic.
+
+My point was really that a single interface (thp_vma_allowable_orders) should be
+used to get this information. I have no strong opinon on how the implementation
+of that interface looks. What you suggest below seems perfectly reasonable to me.
+
+> 
+> IIUC, I agree with David's suggestion that the shmem_allowable_huge_orders()
+> helper function could be used in thp_vma_allowable_orders() to support shmem
+> mTHP. Something like:
+
+I hadn't seen David's suggestion until after I sent my mail. But I think we are
+both suggesting the same thing.
+
+> 
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index c7ce28f6b7f3..9677fe6cf478 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -151,10 +151,13 @@ unsigned long __thp_vma_allowable_orders(struct
+> vm_area_struct *vma,
+>          * Must be done before hugepage flags check since shmem has its
+>          * own flags.
+>          */
+> -       if (!in_pf && shmem_file(vma->vm_file))
+> -               return shmem_is_huge(file_inode(vma->vm_file), vma->vm_pgoff,
+> -                                    !enforce_sysfs, vma->vm_mm, vm_flags)
+> -                       ? orders : 0;
+> +       if (!in_pf && shmem_file(vma->vm_file)) {
+> +               bool global_huge = shmem_is_huge(file_inode(vma->vm_file),
+> vma->vm_pgoff,
+> +                                    !enforce_sysfs, vma->vm_mm, vm_flags);
+> +
+> +               return shmem_allowable_huge_orders(file_inode(vma->vm_file),
+> +                                       vma, vma->vm_pgoff, global_huge);
+> +       }
+> 
+>         if (!vma_is_anonymous(vma)) {
+>                 /*
+> 
+>> Couldn't (shouldn't) thp_vma_allowable_orders() be taught to handle shmem too?
 >>
->> On 6/18/2024 7:08 PM, Konrad Dybcio wrote:
->>>
->>>
->>> On 6/18/24 15:13, Naina Mehta wrote:
->>>> Rename qdss@88800000 memory region as qlink_logging memory region
->>>> and add qdss_mem memory region at address of 0x88500000.
->>>> Split mpss_dsmharq_mem region into 2 separate regions and
->>>> reduce the size of mpssadsp_mem region.
->>>>
->>>> Signed-off-by: Naina Mehta <quic_nainmeht@quicinc.com>
->>>> ---
->>>
->>> Alright, we're getting somewhere. The commit message should however motivate
->>> why such changes are necessary. For all we know, the splitting in two is
->>> currently done for no reason, as qdss_mem and qlink_logging_mem are contiguous
->>> - does the firmware have some expectations about them being separate?
->>>
->>
->> Since different DSM region size is required for different modem firmware, mpss_dsmharq_mem region being split into 2 separate regions.
->> This would provide the flexibility to remove the region which is
->> not required for a particular platform.
->> qlink_logging is being added at the memory region at the address of
->> 0x88800000 as the region is being used by modem firmware.
-> 
-> Ok, now put that in the commit message :)
-> 
-> And I suppose:
-> 
-> "This would provide the flexibility to remove the region which is not
-> required for a particular platform." - but you still pass both to the
-> remoteproc in patch 4. Are these regions mutually exclusive?
-> 
+>>> +    seq_printf(m, "THPeligible:    %8u\n", thp_eligible);
+>>>         if (arch_pkeys_enabled())
+>>>           seq_printf(m, "ProtectionKey:  %8u\n", vma_pkey(vma));
+>>> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+>>> index 212cca384d7e..f87136f38aa1 100644
+>>> --- a/include/linux/huge_mm.h
+>>> +++ b/include/linux/huge_mm.h
+>>> @@ -267,6 +267,10 @@ unsigned long thp_vma_allowable_orders(struct
+>>> vm_area_struct *vma,
+>>>       return __thp_vma_allowable_orders(vma, vm_flags, tva_flags, orders);
+>>>   }
+>>>   +unsigned long shmem_allowable_huge_orders(struct inode *inode,
+>>> +                struct vm_area_struct *vma, pgoff_t index,
+>>> +                bool global_huge);
+>>> +
+>>>   struct thpsize {
+>>>       struct kobject kobj;
+>>>       struct list_head node;
+>>> @@ -460,6 +464,13 @@ static inline unsigned long
+>>> thp_vma_allowable_orders(struct vm_area_struct *vma,
+>>>       return 0;
+>>>   }
+>>>   +static inline unsigned long shmem_allowable_huge_orders(struct inode *inode,
+>>> +                struct vm_area_struct *vma, pgoff_t index,
+>>> +                bool global_huge)
+>>> +{
+>>> +    return 0;
+>>> +}
+>>> +
+>>>   #define transparent_hugepage_flags 0UL
+>>>     #define thp_get_unmapped_area    NULL
+>>> diff --git a/mm/shmem.c b/mm/shmem.c
+>>> index d495c0701a83..aa85df9c662a 100644
+>>> --- a/mm/shmem.c
+>>> +++ b/mm/shmem.c
+>>> @@ -1622,7 +1622,7 @@ static gfp_t limit_gfp_mask(gfp_t huge_gfp, gfp_t
+>>> limit_gfp)
+>>>   }
+>>>     #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>>> -static unsigned long shmem_allowable_huge_orders(struct inode *inode,
+>>> +unsigned long shmem_allowable_huge_orders(struct inode *inode,
+>>>                   struct vm_area_struct *vma, pgoff_t index,
+>>>                   bool global_huge)
+>>>   {
+>>> @@ -1707,13 +1707,6 @@ static unsigned long shmem_suitable_orders(struct
+>>> inode *inode, struct vm_fault
+>>>       return orders;
+>>>   }
+>>>   #else
+>>> -static unsigned long shmem_allowable_huge_orders(struct inode *inode,
+>>> -                struct vm_area_struct *vma, pgoff_t index,
+>>> -                bool global_huge)
+>>> -{
+>>> -    return 0;
+>>> -}
+>>> -
+>>>   static unsigned long shmem_suitable_orders(struct inode *inode, struct
+>>> vm_fault *vmf,
+>>>                          struct address_space *mapping, pgoff_t index,
+>>>                          unsigned long orders)
 
-Yes, for IDP platform, we are using both the DSM regions.
-Based on the modem firmware either both the regions have to be used or 
-only mpss_dsm_mem has to be used.
-
-Regards,
-Naina
-
-> Konrad
-> 
