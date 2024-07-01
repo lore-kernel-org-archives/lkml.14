@@ -1,136 +1,128 @@
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2FA96FBF
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 02:37:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95783BA20;
+	Mon,  1 Jul 2024 02:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719801436; cv=none; b=r34/zPxXMJjEf+lJRlihkeURrv85axr5ayRIhLZeBkqEdQv/iqWVtnN/9kPiDeZCHpWYnkeOomjHg1rtjfHfXPfFivG9unUOGl/986OKZgTFMPzu8G+d85hM/A8R12qSo6LcbXNBNvtlSjtYY6e6Je8exNxnLlDTv4IY+0nKLaU=
+	t=1719801550; cv=none; b=ZYzBNY4dvSS4sV1iNItm8+BWivGLMjUygpC34EwkXmVsYCYkhpn/qkR9zWmBU36SLLnuMwlU2qK4PMODG00Nb7hRAqsXfifjlus0bZflkhFh51SRurwmAWjlwUgqt5WWFhwjIEDC6bxtrk6qssuOpEXyTWJIXKQtTefuilqDzF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719801436; c=relaxed/simple;
-	bh=lqwELc+8R6n7oIAYBPBASK/w4I25XITcOSCEwq6tAxw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MLUFpv6z1H8O06d8v02LLKkxRj0lzsvT1ls0btnWXJw8ihWnuxQz0Y40IKawP+fPO11F53enxifu5r0AsHuCe6GZxzOe/YqZPGJHmp48w5dKVp5gKeQ99af9i1EWPipvc8jTD9kn0KdF4IPSGRF/kPFZ2dEGoOP0ftKvHz2+NMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=NrV5CDNg; arc=none smtp.client-ip=209.85.161.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+	s=arc-20240116; t=1719801550; c=relaxed/simple;
+	bh=xzi07c7GKOJME/WHCQ/3gDV2INYWUviFigFkDt43Gj0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FTHjs0KfsijtNEq0K/281I5R2fBdO4xUFHe6FnM1P6BPL8i31dLvg78Vhh3dHWTUJJ27MUWM++ik2Xd4XCkiCFPmTah1p6YFxy/4sgsptMv/zL7WxE/gesiMvSTKSwaqtjVMsi+RqpPVFl+SY0fK/w1e3S3En9DAtICnGolWyIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gfc4BvKw; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="NrV5CDNg"
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5c427f3695cso1231785eaf.3
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2024 19:37:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gfc4BvKw"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-375af3538f2so13030635ab.3;
+        Sun, 30 Jun 2024 19:39:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1719801434; x=1720406234; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=m0rcRCi2FGvgQgr9Zpkb36TAwmq6Gr7fbHDsnURXNUg=;
-        b=NrV5CDNgIRrGPzcNNOjfnQ/zuIwjUg9MzCf8pvoPTUMDsp46T4C5UmZgSoqCwY6Jky
-         qcKzIGy9GohMuMkwp/8leAYEGBDDRzSekcEXYK2+aco3iGs3QkUJc4AVZTFDpK9gLREx
-         etFTC47NGkOr3rj8sHbMbB5b2H75gN3eiJqnDUxQcU2alRcRvHqZXIF2jJhxJ0eapaMm
-         eCrlJo46a/7Mcspx0wneCyA7jFTZ27W1iYI8EeakGzYIxlCTDaYWOKeQE2jTkZKoAjgw
-         O9i4WY6d1p0xBom9g9Wd+SIg8RCsPwsmAJJWFE+FqmL1WCEszljK5sPvXx285sEz5yEc
-         3XYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719801434; x=1720406234;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1719801548; x=1720406348; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=m0rcRCi2FGvgQgr9Zpkb36TAwmq6Gr7fbHDsnURXNUg=;
-        b=BqhshQjzl6Z3dChS+gQ0FzBgKt6lE2HYaeI/h5n+gErWQWSV+wUKWKof61ABo8YXD5
-         Zs0Q6In9s2h67kDxpSSYiy/JHHdDqv6Q1bB6AqK52zwqQOZ3sYCogOQpV446j4xoT8gA
-         9ttcq0NfiA6cF9MinJaIfBDZ7pAJNxlAs/lBniWPqaAof12NLakW9lGAVIz0hE0tcjWe
-         kmb4U6PZjn2yQojeTNPN9+eQccm9kW0omRSjydvCHDXF1YFlxNdvydeTjsHYEBGSIfeZ
-         ER9R6p6lWXmFpC+SnUixKAf6Ib3LtiSNdVsx+Nap8X0rsOUG0qQ994JlR2AgUfkVOcJV
-         GkEA==
-X-Forwarded-Encrypted: i=1; AJvYcCW2V49m33XCzeA8543+Vya/ew5J2R7W4bO2l/fhJSjOEq9RyuS6nDfPulxdny+oDhPSeBllcH0TCShyUJCO5iRvova5FxK7gxRw/8FP
-X-Gm-Message-State: AOJu0YwiAZ1Q5IZDoU6VOHfTPZQ7ThFKsEJasBeT8OWXl5cbQ0zQhFNZ
-	vK+hnIxezxZhIDPOqsFivE9tiYF/PJR8jJEs4RjNRquX3L6t1OZu7pLngh7a8DQ=
-X-Google-Smtp-Source: AGHT+IEKU7/ErAzsurHPsktSpR5wwiSvxcXhKtFFLIUsLHdEdFgaLynxClPU/fi5/wA2tx9Ll0sAmg==
-X-Received: by 2002:a05:6358:9201:b0:1a4:b69d:a197 with SMTP id e5c5f4694b2df-1a6acef5ae5mr474319155d.29.1719801434005;
-        Sun, 30 Jun 2024 19:37:14 -0700 (PDT)
-Received: from dread.disaster.area (pa49-179-32-121.pa.nsw.optusnet.com.au. [49.179.32.121])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c91ce17a77sm5548654a91.6.2024.06.30.19.37.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Jun 2024 19:37:13 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-	(envelope-from <david@fromorbit.com>)
-	id 1sO6uk-00HR7V-2U;
-	Mon, 01 Jul 2024 12:37:10 +1000
-Date: Mon, 1 Jul 2024 12:37:10 +1000
-From: Dave Chinner <david@fromorbit.com>
-To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-Cc: willy@infradead.org, chandan.babu@oracle.com, djwong@kernel.org,
-	brauner@kernel.org, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, yang@os.amperecomputing.com,
-	linux-mm@kvack.org, john.g.garry@oracle.com,
-	linux-fsdevel@vger.kernel.org, hare@suse.de, p.raghav@samsung.com,
-	mcgrof@kernel.org, gost.dev@samsung.com, cl@os.amperecomputing.com,
-	linux-xfs@vger.kernel.org, hch@lst.de, Zi Yan <zi.yan@sent.com>
-Subject: Re: [PATCH v8 06/10] iomap: fix iomap_dio_zero() for fs bs > system
- page size
-Message-ID: <ZoIWVthXmtZKesSO@dread.disaster.area>
-References: <20240625114420.719014-1-kernel@pankajraghav.com>
- <20240625114420.719014-7-kernel@pankajraghav.com>
+        bh=Y40QwGli4KT7ff1uF7HzZYK9rm2EfcOvxXXgg3mEqoo=;
+        b=gfc4BvKwtNjbhn612P3gd2BkPZDI4dQJqSIXo1mf8WUk7qluv7VV7AgTwsUVktOtJx
+         VxMz+uzkUSi7yD/G9RVzFMnwamfebBFXxvo2Dw++s8cR+G4hqn4QenlhuLKXn/0xvJHt
+         sfloPcLqCHF9/geABbT6M2Q6xI6B1oDIDC2P5nH7InBE3Bz+YK8YrFcKHoofeaLzUKl0
+         B8lRFXSP8zVwjViRQ65+EMjXckGthTdVsGxIOJFPBBdu8+133KkgxdgZVeL3x4DsLeF4
+         xS2ghLut41YgcaKmxPZwCZkiMnXg7PLJZtRcohOyEwgWRU2PLBsNNxjcZ0TmRTPKnys+
+         XulA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719801548; x=1720406348;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Y40QwGli4KT7ff1uF7HzZYK9rm2EfcOvxXXgg3mEqoo=;
+        b=tUf1gRjZbz7fBrhBy9OE3QM839Ay4g/okK+GlR3oCijaYmhYfw3KPNemK70hBNzUqh
+         FC5UdvEQBZ04AE0mC/smov5Se+yOF+Y8HHvv450eARDBsbQFAZdfNK3kclNp+Toybvgk
+         G0zKRDPypvFfv3OCi+kNLw5x+1H4VBliCVe4cGGfURbztuq/MeXYK0qrsP7nTgLHLb3Z
+         itahnT3bFy/eZgtskS9IUOvtCAYYeE4V9sug4XSnjaWgJ2czog6prZ0uoy+PrB+kSTUT
+         XOedqBTzCuosRPz1jMiA/msZUworzYpmESPUqH0wJkUjjfmo4s7DfeV6uQxw7UcAPKq9
+         BCJA==
+X-Forwarded-Encrypted: i=1; AJvYcCVSskonn/NVRfbKQ00OJnoAiTMtTSha4Q/GOEsg8t901T4Ga3ou+jPQw4AR5Y4E5Km0RH2KmJ94YEdAgx7gaiTM6Krqv9J8TyxBGgPOUk2t6VJ3EOmyrkqZbwXMa5+3BR7XeRyh2Pu2AV182WForGACV3kcXuNhaeWf6iYIHDseYUSSPZ+J
+X-Gm-Message-State: AOJu0YzT20sN6zGNwzUVHJhXZxVs+MS5py4tbxu7XL+s4aTIjAave9cN
+	r7piWXEoI1EA0veyfEcnxbXboJwYM3g/S734Pk7lnOa/rvRzEfMxgHeV7CWmJwFsjsjL53Dg1tc
+	Xig8X5UL+NUEik32IbYpJyPfOAVE=
+X-Google-Smtp-Source: AGHT+IFl6hhIVwcNWvb7KuIdXA/G8P41RTV32LeQ6fy/SVP0IkTxdaNJCEE4hHhayovF9Ke2gw9gVLaBx7hagg/hTfU=
+X-Received: by 2002:a05:6e02:b46:b0:375:a4e5:1dc9 with SMTP id
+ e9e14a558f8ab-37cd0913b1fmr60376685ab.4.1719801547584; Sun, 30 Jun 2024
+ 19:39:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240625114420.719014-7-kernel@pankajraghav.com>
+References: <20240626071202.7149-1-chancel.liu@nxp.com> <20240626071202.7149-2-chancel.liu@nxp.com>
+In-Reply-To: <20240626071202.7149-2-chancel.liu@nxp.com>
+From: Shengjiu Wang <shengjiu.wang@gmail.com>
+Date: Mon, 1 Jul 2024 10:38:56 +0800
+Message-ID: <CAA+D8ANH8+FBsatondzSfiVD0H0BweRdPLOmoPaBNW6gMFck_Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ASoC: fsl_rpmsg: Add support for i.MX95 platform
+To: Chancel Liu <chancel.liu@nxp.com>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, Xiubo.Lee@gmail.com, 
+	festevam@gmail.com, nicoleotsuka@gmail.com, perex@perex.cz, tiwai@suse.com, 
+	linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, 
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 25, 2024 at 11:44:16AM +0000, Pankaj Raghav (Samsung) wrote:
-> From: Pankaj Raghav <p.raghav@samsung.com>
-> 
-> iomap_dio_zero() will pad a fs block with zeroes if the direct IO size
-> < fs block size. iomap_dio_zero() has an implicit assumption that fs block
-> size < page_size. This is true for most filesystems at the moment.
-> 
-> If the block size > page size, this will send the contents of the page
-> next to zero page(as len > PAGE_SIZE) to the underlying block device,
-> causing FS corruption.
-> 
-> iomap is a generic infrastructure and it should not make any assumptions
-> about the fs block size and the page size of the system.
-> 
-> Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
-> Reviewed-by: Hannes Reinecke <hare@suse.de>
+On Wed, Jun 26, 2024 at 3:12=E2=80=AFPM Chancel Liu <chancel.liu@nxp.com> w=
+rote:
+>
+> Add compatible string and specific soc data to support rpmsg sound card
+> on i.MX95 platform.
+>
+> Signed-off-by: Chancel Liu <chancel.liu@nxp.com>
 
-Looks fine, so:
+Acked-by: Shengjiu Wang <shengjiu.wang@gmail.com>
 
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-
-but....
-
-> +/*
-> + * Used for sub block zeroing in iomap_dio_zero()
-> + */
-> +#define ZERO_PAGE_64K_SIZE (65536)
-> +#define ZERO_PAGE_64K_ORDER (get_order(ZERO_PAGE_64K_SIZE))
-> +static struct page *zero_page_64k;
-
-.....
-
-> @@ -753,3 +765,17 @@ iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
->  	return iomap_dio_complete(dio);
->  }
->  EXPORT_SYMBOL_GPL(iomap_dio_rw);
+Best regards
+Shengjiu Wang
+> ---
+>  sound/soc/fsl/fsl_rpmsg.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/sound/soc/fsl/fsl_rpmsg.c b/sound/soc/fsl/fsl_rpmsg.c
+> index bc41a0666856..467d6bc9f956 100644
+> --- a/sound/soc/fsl/fsl_rpmsg.c
+> +++ b/sound/soc/fsl/fsl_rpmsg.c
+> @@ -175,6 +175,14 @@ static const struct fsl_rpmsg_soc_data imx93_data =
+=3D {
+>                    SNDRV_PCM_FMTBIT_S32_LE,
+>  };
+>
+> +static const struct fsl_rpmsg_soc_data imx95_data =3D {
+> +       .rates =3D SNDRV_PCM_RATE_16000 | SNDRV_PCM_RATE_32000 |
+> +                SNDRV_PCM_RATE_44100 | SNDRV_PCM_RATE_48000 |
+> +                SNDRV_PCM_RATE_88200 | SNDRV_PCM_RATE_96000,
+> +       .formats =3D SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE |
+> +                  SNDRV_PCM_FMTBIT_S32_LE,
+> +};
 > +
-> +static int __init iomap_dio_init(void)
-> +{
-> +	zero_page_64k = alloc_pages(GFP_KERNEL | __GFP_ZERO,
-> +				    ZERO_PAGE_64K_ORDER);
-> +
-> +	if (!zero_page_64k)
-> +		return -ENOMEM;
-> +
-> +	set_memory_ro((unsigned long)page_address(zero_page_64k),
-> +		      1U << ZERO_PAGE_64K_ORDER);
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^
-isn't that just ZERO_PAGE_64K_SIZE?
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+>  static const struct of_device_id fsl_rpmsg_ids[] =3D {
+>         { .compatible =3D "fsl,imx7ulp-rpmsg-audio", .data =3D &imx7ulp_d=
+ata},
+>         { .compatible =3D "fsl,imx8mm-rpmsg-audio", .data =3D &imx8mm_dat=
+a},
+> @@ -182,6 +190,7 @@ static const struct of_device_id fsl_rpmsg_ids[] =3D =
+{
+>         { .compatible =3D "fsl,imx8mp-rpmsg-audio", .data =3D &imx8mp_dat=
+a},
+>         { .compatible =3D "fsl,imx8ulp-rpmsg-audio", .data =3D &imx7ulp_d=
+ata},
+>         { .compatible =3D "fsl,imx93-rpmsg-audio", .data =3D &imx93_data}=
+,
+> +       { .compatible =3D "fsl,imx95-rpmsg-audio", .data =3D &imx95_data}=
+,
+>         { /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, fsl_rpmsg_ids);
+> --
+> 2.43.0
+>
