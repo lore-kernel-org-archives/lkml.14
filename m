@@ -1,144 +1,113 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C8DB4696
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 16:30:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D8B14D2AC;
+	Mon,  1 Jul 2024 16:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719851445; cv=none; b=l+0lJE7lGYmoiztz+W1EgtPhUmvejkyTaeyV9Q8UyV6PN00YGIms52Ih/vWdQ6BCB/fywDmdQgdTAtPAcw3MlM9dRbPHsX0Li0FCzEIdHx8Zx7tMqKzfAfNSk5HiuYdVy/txmwHoenUVQ3mHVYd1A5+zdN2HWpsAq58gi2rL6ZU=
+	t=1719851468; cv=none; b=kXDUotvwWLYc0BZGC9CXWhbu939XC9s9YCPaMXmwiydeJdwQ3nOCyav8t+Xulg2BnoNp+armnN9ADqzA+sa8g0oaseMRh3alrUuP++W+nCFJrSmDOqMncXBjzbPO4uk9SRrNv0qBr2EkIhbPTHJ/kLADrDUZbzjJjoFddveZfYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719851445; c=relaxed/simple;
-	bh=cyBZIZOlVW0uFuDers68bdrFwZZWvwcsCmsyVCP3NT0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=qdHTEnVK39p9gDbK9t97t/4zt/V6xkfbUsG+TjGBgIt4106akBXcbgC2ea+92E9nqnQStD0MYJSBbDOwYYYZ4XXGP36zE62PKf3BFnYvK0fulTj2fiOnEgh1O85Hfrf7aRYLeI9cjr2h8ggAdP27usTfn4IDahQI1esB3N7K0OE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sgvA1voj; arc=none smtp.client-ip=209.85.167.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719851468; c=relaxed/simple;
+	bh=9pyJvPtweb1UHSGE+8KU62A6fqLPa5bzsQ1lE0/LcU0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:From:Subject:Cc:
+	 References:In-Reply-To; b=Oe+p993rJwVqp6DES6psMLXPU0By+Ozu7y4NzBH+g/1Lmy6DbYSJa39a32kM8f9O132Cvci6WrtbHozhd5qmlSunlfbi26kR+Fk4nBBPzUhZcz8ouxGDLEFr7v02Tnq4YQmncby86pgcflIn4XB5ZbOvztLhSP85phYGSm6aKmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JT/7HuBB; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sgvA1voj"
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3d55db7863bso2176511b6e.1
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 09:30:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719851442; x=1720456242; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xG/yczWNA3S6agDnft2zlqDhiY2xh8cwDya0vX2WWTc=;
-        b=sgvA1voj2jNw7u/rqLSpGPhk6F4Ve0CDbLXDcIYPDSGFXR2ZICFVeuREQgYKE01ADi
-         vDzG2WXAkwf5VJhyTcQBVvsoicetQQX7rTalHkuDE6+ECoQpu+0f5L9s36QpAzXb2Ls8
-         8hJ9NuM8+FvNOC58PtvH88giqezWH/LAWfcrrY/CQBOzt19JGFj9GDXpvRiO77busi5h
-         ztKV5gC8gEJ/cmUjOnpD8iPso/cXfGoscegs+Cr7lUiOtq5sauPjNMsYwNUrmBbYbjmt
-         Obq/AKewgJhiAkMYG84jiDZc6BdPyDWIbTvwb2PF+Q0HUmj8gkvC0T73Xsekby2+jlJt
-         HLBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719851442; x=1720456242;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xG/yczWNA3S6agDnft2zlqDhiY2xh8cwDya0vX2WWTc=;
-        b=FpTPNvE8/phQJ/6uqQP/d5hZf7z3xrJzLJ0xUV0vaUuNhZ7H7G3vZO5/KF5we3lQom
-         IdOVVEuQXUr345f5gIKzqKc11rKuKXjzuQ5o4AgxTBusYjf/cnfTLalwNa5tlDgazlq0
-         594qYZQvnRc0ZxDS2nl1H8/fR+wvoVOnKHTkQ7mTaiCjzZy0I18lsowKXNp8JLN5qNPn
-         Q2dpZZJuY074VxpnWOKFucSkqM/zoEstbHAKDnMrWbpoGuDizkGmc5UH+wVE7uM3DcNV
-         HupwHNP4HUbO298jxdaHWDxz4lMDLmTwuHMBI1oR0kmh9IWCMcKcjjteo/zB6ak8YZoh
-         7WLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV7mgwVQ6c5cJtfXSbQNgk0Ao7/5i9o0igJU+WfglYTimzExOOT/tGfE3M6HiEMMgstCEivv6rv9vJQBf/EBfqzHbeZddEwDTWECwpI
-X-Gm-Message-State: AOJu0YzaBzxLSyaz2IlWefY2l8YeICMcMduT4ZneuOG7Kap8OPZiH9kV
-	iw1iKyw7WGrBMHsph65IAJitRwoji3ha4Mul50eCBShuHTP/zSM/C42TAKOz9hc=
-X-Google-Smtp-Source: AGHT+IGtjpg0CTkGUOVUT8tVr1x56kkLv8fO3EHB0uCgBbInRDqjQByQEmG74LyP6w9zbLghuwHLtQ==
-X-Received: by 2002:a05:6808:2288:b0:3d5:63f0:ee9e with SMTP id 5614622812f47-3d6b32e3fd9mr8133239b6e.20.1719851442481;
-        Mon, 01 Jul 2024 09:30:42 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:e8c6:2364:637f:c70e])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-3d62fa39edfsm1420328b6e.37.2024.07.01.09.30.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 09:30:41 -0700 (PDT)
-Date: Mon, 1 Jul 2024 18:30:38 +0200
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev,
-	Ronald =?iso-8859-1?Q?Tschal=E4r?= <ronald@innovation.ch>
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: drivers/input/keyboard/applespi.c:1833 applespi_drain_writes() warn:
- mixing irqsave and irq
-Message-ID: <3e789ab9-ebfc-40a2-b90d-b8b55e0cfaac@suswa.mountain>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JT/7HuBB"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A44F320005;
+	Mon,  1 Jul 2024 16:31:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1719851464;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9pyJvPtweb1UHSGE+8KU62A6fqLPa5bzsQ1lE0/LcU0=;
+	b=JT/7HuBBhBruZABWwdrYHaof3kr2CIBvYXpPf4wr1GJpwr2XbNjvzVtkA6rQqclFs+npbl
+	gc2aOIoAkc955HAVqHq3PVlT0wg1C2ifdZGqjfHAoitjZMFJz10P2mBcg7RvWo1mCAFNyO
+	8LvIvXHKMX0eJjHO2LpjkYtucxYBT0QLwjkAHVcgqVtB2zV4/MXLF592ysxzQny76lp2/F
+	T8GSDcl8cpKS+LT0L2xvE/P3Jyvqea0MhnNDDHh8cr5rDudb+el41fKz91s2JZ0FmValVS
+	pVYZJxGsaxTBTKy/qU3eXje4bitHxfHGONcwuL4T2EaDCarZ6QM9kTUJMLPS3g==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 01 Jul 2024 18:31:03 +0200
+Message-Id: <D2ECGMYXJWZ9.GNRJ1NAG4MF8@bootlin.com>
+To: "Krzysztof Kozlowski" <krzk@kernel.org>, "Michael Turquette"
+ <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>, "Rob Herring"
+ <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH 1/4] Revert "dt-bindings: clock: mobileye,eyeq5-clk: add
+ bindings"
+Cc: <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, "Vladimir Kondratiev"
+ <vladimir.kondratiev@mobileye.com>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>
+X-Mailer: aerc 0.17.0
+References: <20240628-mbly-clk-v1-0-edb1e29ea4c1@bootlin.com>
+ <20240628-mbly-clk-v1-1-edb1e29ea4c1@bootlin.com>
+ <2846186f-a0e1-4cd3-85bf-f029053bf98c@kernel.org>
+In-Reply-To: <2846186f-a0e1-4cd3-85bf-f029053bf98c@kernel.org>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   6d6444ba82053c716fb5ac83346202659023044e
-commit: 038b1a05eae6666b731920e46f47d8e2332e07ff Input: add Apple SPI keyboard and trackpad driver
-config: x86_64-randconfig-161-20240628 (https://download.01.org/0day-ci/archive/20240628/202406280337.1Av9qm8V-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
+Hello Krzysztof,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202406280337.1Av9qm8V-lkp@intel.com/
+On Mon Jul 1, 2024 at 11:14 AM CEST, Krzysztof Kozlowski wrote:
+> On 28/06/2024 18:10, Th=C3=A9o Lebrun wrote:
+> > Switch from one sub-node per functionality in the system-controller to =
+a
+> > single node representing the entire OLB instance. This is the
+> > recommended approach for controllers handling many different
+> > functionalities; it is a single controller and should be represented by
+> > a single devicetree node.
+> >=20
+> > The clock bindings is removed and all properties will be described by:
+> > soc/mobileye/mobileye,eyeq5-olb.yaml
+> >=20
+> > Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+>
+> This is v1, so where did this happen?
 
-smatch warnings:
-drivers/input/keyboard/applespi.c:1833 applespi_drain_writes() warn: mixing irqsave and irq
-drivers/input/keyboard/applespi.c:1845 applespi_drain_reads() warn: mixing irqsave and irq
+This is a split of the previous Mobileye EyeQ5 system-controller series.
 
-vim +1833 drivers/input/keyboard/applespi.c
+I started my cover letter [4] by mentioning it. I should most probably
+have kept incrementing on the previous version number, sorry about
+that.
 
-038b1a05eae666 Ronald Tschalär 2019-07-15  1826  static void applespi_drain_writes(struct applespi_data *applespi)
-038b1a05eae666 Ronald Tschalär 2019-07-15  1827  {
-038b1a05eae666 Ronald Tschalär 2019-07-15  1828  	unsigned long flags;
-038b1a05eae666 Ronald Tschalär 2019-07-15  1829  
-038b1a05eae666 Ronald Tschalär 2019-07-15  1830  	spin_lock_irqsave(&applespi->cmd_msg_lock, flags);
+Relevant extract from this series' cover letter:
 
-_irqsave() sort of implies that potentially the caller has disabled IRQs,
-otherwise we would use spin_lock_irq() if we knew they hadn't disabled
-IRQs.
+On Fri Jun 28, 2024 at 6:10 PM CEST, Th=C3=A9o Lebrun wrote:
+> This is a new iteration on the Mobileye system-controller series [0].
+> It has been split into separate series to facilitate merging.
+[...]
+> Related series are targeted at reset [1], pinctrl [2] and MIPS [3].
+[...]
+> [0]: https://lore.kernel.org/lkml/20240620-mbly-olb-v3-0-5f29f8ca289c@boo=
+tlin.com/
+> [1]: https://lore.kernel.org/lkml/20240628-mbly-reset-v1-0-2a8294fd4392@b=
+ootlin.com/
+> [2]: https://lore.kernel.org/lkml/20240628-mbly-pinctrl-v1-0-c878192d6b0a=
+@bootlin.com/
+> [3]: https://lore.kernel.org/lkml/20240628-mbly-mips-v1-0-f53f5e4c422b@bo=
+otlin.com/
 
-038b1a05eae666 Ronald Tschalär 2019-07-15  1831  
-038b1a05eae666 Ronald Tschalär 2019-07-15  1832  	applespi->drain = true;
-038b1a05eae666 Ronald Tschalär 2019-07-15 @1833  	wait_event_lock_irq(applespi->drain_complete, !applespi->write_active,
-038b1a05eae666 Ronald Tschalär 2019-07-15  1834  			    applespi->cmd_msg_lock);
+Regards,
 
-This will renable IRQs briefly and then disable them again.
+[4]: https://lore.kernel.org/lkml/20240628-mbly-clk-v1-0-edb1e29ea4c1@bootl=
+in.com/
 
-038b1a05eae666 Ronald Tschalär 2019-07-15  1835  
-038b1a05eae666 Ronald Tschalär 2019-07-15  1836  	spin_unlock_irqrestore(&applespi->cmd_msg_lock, flags);
-
-This will set them back to how they were at the start of the function.
-
-The issue is that if the caller really wanted IRQs disabled, then it's
-not necessarilly a good idea to enable them at all in the
-wait_event_lock_irq() macro.  I suspect that in real life no callers
-disable IRQs so it's not an issue.  But anyway, that's what the warning
-is about.
-
-I suspect that kbuild-bot has a 5 year cut off for warnings and if this
-had been a month older then kbuild-bot would have ignored it.  :P
-
-038b1a05eae666 Ronald Tschalär 2019-07-15  1837  }
-038b1a05eae666 Ronald Tschalär 2019-07-15  1838  
-038b1a05eae666 Ronald Tschalär 2019-07-15  1839  static void applespi_drain_reads(struct applespi_data *applespi)
-038b1a05eae666 Ronald Tschalär 2019-07-15  1840  {
-038b1a05eae666 Ronald Tschalär 2019-07-15  1841  	unsigned long flags;
-038b1a05eae666 Ronald Tschalär 2019-07-15  1842  
-038b1a05eae666 Ronald Tschalär 2019-07-15  1843  	spin_lock_irqsave(&applespi->cmd_msg_lock, flags);
-038b1a05eae666 Ronald Tschalär 2019-07-15  1844  
-038b1a05eae666 Ronald Tschalär 2019-07-15 @1845  	wait_event_lock_irq(applespi->drain_complete, !applespi->read_active,
-038b1a05eae666 Ronald Tschalär 2019-07-15  1846  			    applespi->cmd_msg_lock);
-038b1a05eae666 Ronald Tschalär 2019-07-15  1847  
-038b1a05eae666 Ronald Tschalär 2019-07-15  1848  	applespi->suspended = true;
-038b1a05eae666 Ronald Tschalär 2019-07-15  1849  
-038b1a05eae666 Ronald Tschalär 2019-07-15  1850  	spin_unlock_irqrestore(&applespi->cmd_msg_lock, flags);
-038b1a05eae666 Ronald Tschalär 2019-07-15  1851  }
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
