@@ -1,88 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E0D816C871;
-	Mon,  1 Jul 2024 15:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B70216D9AF;
+	Mon,  1 Jul 2024 15:14:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719846888; cv=none; b=Mv4bJnl/Kd8ELeRlatYjDVnkmLYmCx/KqUahID/WNvM9RA9ryPYpQQuibwYW6MUXJ6UhJat1UhMBXbquDR/mzh8yjwgFB8IjmSLdny1RzDs5i7R5z4IHewH8AKFAa4s2brY9Lpq044AToiglhYitOrctk6zRRa+cgtO4Vv+BRvQ=
+	t=1719846894; cv=none; b=iVazTIjkyWhCRdNk6p1d7sYWphIz6T7Is32AQuHRerVbOtKLkUVgLFxNS0lOirHr0xTm0ZiRwoIKNIcDst5IfPv/kbdxU3C130fzZm2jqwAyM1cynHP+rRSenmHnZjkmVzIZhm0fSq45ZKFWKRWRTPgCJfhjDKp2pTrrFpcm2Ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719846888; c=relaxed/simple;
-	bh=D+dqZWEYQrj6N5dhh+KIXd+1VWrn8ph2xtTWAgXfdLc=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Fs9BihUyKOhocVRTkeRJ717TS6QAOmGaVcMSXhT3l+y2HOSLQa3N3TuFSW8wTAt1+MRYCeb01xfiolvPVB52Pbp7VYlTBYCACksyS8u7qiLaBgj80KWEhmbR2oUKRlXVfT5vJvzPKTLVZQFGfxyjf33PSf0agS3s8MDHgORvtgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M/bhFd5x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719846894; c=relaxed/simple;
+	bh=emEo2nK6RszIfwU6cYRYPUlBrb6n+mIoqRWrZ8dz85Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jly0B8x8j78qk38fTseebszymW90+odUoPSB0xiVMOqYrTDN8s9cOtjrzK3Qb373LqfUUWYAsp9NZflMKlog1cWAYCE1onNzOg5p3+/FGEuMr6L5GFdj1295oDF4n6h01+zx7mnUD790gr5yPGu7h9pyNcqO7cmvw0S8YTlRu8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=fXWJvykL; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M/bhFd5x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0F46C32781;
-	Mon,  1 Jul 2024 15:14:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719846887;
-	bh=D+dqZWEYQrj6N5dhh+KIXd+1VWrn8ph2xtTWAgXfdLc=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=M/bhFd5xZ5iddEfYtFWXKCJHnYnW7vRiv1kIhHLhM8S2P1F2ALEZp3TK71Zx8eQsr
-	 WCWLE2IT1rjREDCaT/b1TNMTMU5nJP7yzvcHVFnitjXVdvBvPKx75yA4Kfh0veEoeO
-	 tX9Vru9TZU0n8lw36uI5wtCXLn7qC2oVRffPCDFEOJrGW91egpXUT6eIMSMYxQwIei
-	 F4haOj2bPDs3FkW5pe1VsNA3jI/DkUqVATz+lGOVcLURgR2yO91W4jUMLfhyRvWV7k
-	 Ge2SlJvy4AHT0ABeM1fN6PKVC91IOkaPfSj9EsM/bO4BE6myEHI0joz2G/K5WpaA3b
-	 NNOZz8SlYEh1g==
-From: Mark Brown <broonie@kernel.org>
-To: lgirdwood@gmail.com, robh+dt@kernel.org, 
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
- shengjiu.wang@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com, 
- nicoleotsuka@gmail.com, perex@perex.cz, tiwai@suse.com, 
- linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, 
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
- devicetree@vger.kernel.org, Chancel Liu <chancel.liu@nxp.com>
-In-Reply-To: <20240626071202.7149-1-chancel.liu@nxp.com>
-References: <20240626071202.7149-1-chancel.liu@nxp.com>
-Subject: Re: [PATCH 1/2] ASoC: dt-bindings: fsl_rpmsg: Add compatible
- string for i.MX95
-Message-Id: <171984688438.72817.17478121699254917987.b4-ty@kernel.org>
-Date: Mon, 01 Jul 2024 16:14:44 +0100
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="fXWJvykL"
+Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 80E991F9E9;
+	Mon,  1 Jul 2024 17:14:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1719846880;
+	bh=lM5/Wnna7Hm3iMcWVYaGjff8NYGJOCK4TV7iz134cXU=; h=From:To:Subject;
+	b=fXWJvykL7b9J3bF2RofTCBLONFtRRcLUaY1ACfo2EoNwq5ztoEDz/buPH0kvy25zX
+	 ZORBcfEQIVSa2MseOJId6N/lxHc+aj8BqSlRcF4jfEzFtGabBdECAoVBa7JYZR6fWl
+	 tef5/kB6A1+VoZeQ3qsZgkiYop2AaHJZ0j0tFWIBuiR/EmwFky9+rTO+0+tNc09oV7
+	 M3Nk2mG6c3ThRjiwCNp2Wb4o65yvaJXhSRVEVRNJmMLJTtjabiFRUUVRaYTCcy+52s
+	 OxJ3W/oBjQiZ525J4Ctd9CjxKsXI2ddZWx2yPoLEUGgYIOA9gH/5bgZkPghwawA/ky
+	 oweV0mP9BVVGg==
+Date: Mon, 1 Jul 2024 17:14:36 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Vitor Soares <ivitro@gmail.com>, Peter Huewe <peterhuewe@gmx.de>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Lukas Wunner <lukas@wunner.de>,
+	Vitor Soares <vitor.soares@toradex.com>,
+	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v1] tpm_tis_spi: add missing attpm20p SPI device ID entry
+Message-ID: <20240701151436.GA41530@francesco-nb>
+References: <20240621095045.1536920-1-ivitro@gmail.com>
+ <0c5445a5142612fa617fef91cb85fa7ed174447f.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14-dev-d4707
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0c5445a5142612fa617fef91cb85fa7ed174447f.camel@kernel.org>
 
-On Wed, 26 Jun 2024 16:12:01 +0900, Chancel Liu wrote:
-> Add compatible string for i.MX95 platform which supports audio
-> function through rpmsg channel between Cortex-A and Cortex-M core.
+On Mon, Jul 01, 2024 at 03:02:11PM +0000, Jarkko Sakkinen wrote:
+> On Fri, 2024-06-21 at 10:50 +0100, Vitor Soares wrote:
+> > From: Vitor Soares <vitor.soares@toradex.com>
+> > 
+> > "atmel,attpm20p" DT compatible is missing its SPI device ID entry, not
+> > allowing module autoloading and leading to the following message:
+> > 
+> >   "SPI driver tpm_tis_spi has no spi_device_id for atmel,attpm20p"
+> > 
+> > Based on:
+> >   commit 7eba41fe8c7b ("tpm_tis_spi: Add missing SPI ID")
+> > 
+> > Fix this by adding the corresponding "attpm20p" spi_device_id entry.
+> > 
+> > Fixes: 3c45308c44ed ("tpm_tis_spi: Add compatible string atmel,attpm20p")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Vitor Soares <vitor.soares@toradex.com>
 > 
-> 
+> This is not a bug fix. This is a feature.
 
-Applied to
+I believe that some maintainer have a different view on this kind of
+patches compared to you, adding new device id would be material for
+stable, or this specific issue preventing module auto loading.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+I noticed that this specific view is not new from you, see
+https://lore.kernel.org/all/CY54PJM8KY92.UOCXW1JQUVF7@suppilovahvero/.
 
-Thanks!
+With that said, I am ok with it.
 
-[1/2] ASoC: dt-bindings: fsl_rpmsg: Add compatible string for i.MX95
-      commit: 8e5c11963c5ca4af90b36147cabb4835e59990aa
-[2/2] ASoC: fsl_rpmsg: Add support for i.MX95 platform
-      commit: 19dec6650e3fd02de8752c4e0ab1c4894ce7fcb7
+Do you want a new patch version without Fixes/Cc:stable tags or you can
+remove those while applying?
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+Francesco
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
 
