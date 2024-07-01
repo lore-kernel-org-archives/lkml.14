@@ -1,75 +1,47 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E5C314B943;
-	Mon,  1 Jul 2024 12:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301CF153563
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 12:00:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719835226; cv=none; b=bSKEfNhe6t4t7A9gt2LSJD/6VZ5WS4BfyyMsRwvzkzr6O9DJ4SXmMyqczrW+QFby3cKXGlgsuR6RK/+Q4J1WxUdsBdzfKVv8/0Ua4soqsS9rHKCwADupUdfvk5unxJA03N4tRD149/BNjiShf6P0osL59DTAacd1Iy8muCsbceo=
+	t=1719835231; cv=none; b=TSSRhHHu0/cbAbewjHDebxr62Nd4NLzdHUYmjjWD22XIyNgfy/vejlWhiE5P3hAGp3o598kIfDDSUi9vlBgp9hdM/4nNbIQirzYVLzSRHCO6ndzjBMCrnXcyW0wY4qr7prbimEoFSMIy3eQjLQ8o6CXn4GHaCveWqH3R/0snUBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719835226; c=relaxed/simple;
-	bh=CiIv7Xj0hDAY54eJzG5mpM4iH06Y/H97qfByMIGFJcs=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EpemLti4qcfeXr34UroRbD6BYvX0itjZV4O6rY21HQZRg25Fnp2lVAtAA+8Rs3/mbXpJF8J8qXV5PJTZyZUQ4Mu5iBaUKfYDfRQhcwUpr96nFNDCumGuGpNc7sfRVCe2diM5AwhVewIE8P41ipjiC6YVxq0qYnpx5c7Ghu5mKcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=i+eE3Tot; arc=none smtp.client-ip=217.70.183.201
+	s=arc-20240116; t=1719835231; c=relaxed/simple;
+	bh=XcpLI/ft75AxuL+Bs1bMWy1WYi6sKFPIpWsegoQFfuI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=OhQvRi+JIeDH7Naigh1QLPoEQviDGjVYpYpuuraB9WB80518FDuf+Y2VZd9al2LzTP+tITzJfaKh8eMtur0oo1XALxx0vJ9hrUVF4Gnqw5tIhBQglL28voeBP674AOb/XYRozP+X2HpctU5syRFvmAcwBbRsOW7uwfTdBWlCN30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PKdIXZjj; arc=none smtp.client-ip=217.70.183.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="i+eE3Tot"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6BDE91BF203;
-	Mon,  1 Jul 2024 12:00:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PKdIXZjj"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 21D8DC0002;
+	Mon,  1 Jul 2024 12:00:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1719835220;
+	t=1719835227;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MHfqL50fDUx9zIlzHn0VY8tLg/2DFwYEENXwOfaE3OU=;
-	b=i+eE3TotMR50bBfes4DsOLwnZGegNdfTcIvHQBmZ5Rq/F4dbq1iJM4I8N3+qZvav2ahVsH
-	Ivkiy2JPqAepgZOJEOwoWvBMZa1jDTyKQPG4V5P7B6i23O09ZK+fbe9NSVnWi1+ikIlyI5
-	oDDv9pqa/Db7BdZkQmTjpWudVhECQjy9LKF7FGvH67I8eeqv2rmM+ZKNn/2vr/kT+8don4
-	qjXAo2Adz8qJLdOEhTcijmZM3pE3j5msYJFq5od6l7wCrCQIbhM+iCYnqXtb9qWBfuOAcm
-	37q3q0E4zOctVZ1eWimxXHOzwfxcN4VknS52xMHooKk2wjYTtAUs5jR9k/q1sQ==
+	bh=stCq6xm2MokH+wKmsDICPsDu1Nj3JaDipa8NgCyyLi8=;
+	b=PKdIXZjjZcZR1vP07WHZRVqmsM/pWwO1uTn47KNy/kpgSYVk8QFFU88I4ezo8OXQPGed94
+	P9EBNy0vRXlu6ye1/+N9dCiO8D6fQb/QDRdpzm0drDPhHJbVt1QItH18l7G6ApbOkQGPGM
+	G3kkKunePH1JNhtkoVCPtoEOaso4r2OIE0JarZZ2GtTHHK9GP180/rnHRde9o0bGav1NEn
+	06dN1VQlrKAfGd9HJS9cV8yyZo2fRvhsA+tBj8Gx7po5gzcUpTgy0srr7j3feqI+UUrQ9t
+	vP9YbbRp8fbXLS923T98tvJMcmfxaMqsfZruwBkTOlqc8XRXCZ4B9srGny4T4g==
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"J.M.B. Downing" <jonathan.downing@nautel.com>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	linux-kernel@vger.kernel.org
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
 	Richard Weinberger <richard@nod.at>,
 	Vignesh Raghavendra <vigneshr@ti.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Yangtao Li <frank.li@vivo.com>,
-	Li Zetao <lizetao1@huawei.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Chancel Liu <chancel.liu@nxp.com>,
-	Corentin Labbe <clabbe@baylibre.com>,
-	dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	alsa-devel@alsa-project.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-sound@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
 	linux-mtd@lists.infradead.org
-Subject: Re: [Patch v5 10/12] mtd: rawnand: lpx32xx: Request DMA channels using DT entries
-Date: Mon,  1 Jul 2024 14:00:16 +0200
-Message-Id: <20240701120016.525443-1-miquel.raynal@bootlin.com>
+Subject: Re: [PATCH 2/2] mtd: rawnand: intel: use 'time_left' variable with wait_for_completion_timeout()
+Date: Mon,  1 Jul 2024 14:00:26 +0200
+Message-Id: <20240701120026.525512-1-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240627150046.258795-11-piotr.wojtaszczyk@timesys.com>
+In-Reply-To: <20240604212919.5038-6-wsa+renesas@sang-engineering.com>
 References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -78,14 +50,23 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: b'7326d3fb1ee39f02ef1f49d1e14ac3896caf85e2'
+X-linux-mtd-patch-commit: b'177bf19628dcf214c658c08eb1e41ab9c373e7ff'
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Thu, 2024-06-27 at 15:00:28 UTC, Piotr Wojtaszczyk wrote:
-> Move away from pl08x platform data towards device tree.
+On Tue, 2024-06-04 at 21:29:21 UTC, Wolfram Sang wrote:
+> There is a confusing pattern in the kernel to use a variable named 'timeout' to
+> store the result of wait_for_completion_timeout() causing patterns like:
 > 
-> Signed-off-by: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+> 	timeout = wait_for_completion_timeout(...)
+> 	if (!timeout) return -ETIMEDOUT;
+> 
+> with all kinds of permutations. Use 'time_left' as a variable to make the code
+> self explaining.
+> 
+> Fix to the proper variable type 'unsigned long' while here.
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
 Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
 
