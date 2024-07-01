@@ -1,97 +1,105 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+Received: from h3cspam02-ex.h3c.com (smtp.h3c.com [60.191.123.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5070B79FE
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 02:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5DD15E88
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 02:49:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.191.123.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719802166; cv=none; b=ETOPsPtxmir4KnqajAp4IpGsjLHsje/oZKBwPPzikSlfGIti8E09QqMt87mz5Q8t5OS0Kly7yM6aG6AqOtFTyTm4eCBTEla6oglCb/YuDDxHsRvgjgwpIfd0tWKpGZlG8TR0xqCLV05g0vQkSOFg2+HtbQHn8SGE0AZI0SG+OoE=
+	t=1719802183; cv=none; b=NDC5DhxSUcV/Fl/xq+ZI1iS1nBGSoAKBFfWCakRkdRVCiKFikf3fKvWMMYvhOIpTBfSK4outSsrZOzEkmnMcgz+Q3UXNrmN5Dd5n34C8dQGeEjjWRMOx8IWkdZbUJFfWvyXPHqT5Q8wnjlyHLNmKwrGFWUw7t4wEywK2WcGvOGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719802166; c=relaxed/simple;
-	bh=keqjdE0I+X6l14hJzH5UBvrkJI7iwlUuj7mnK9jbMJI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=fuVQshgxkBojLNyx5d16MnKZe1LlH6DU6w7AYu5DMfUxBzwGyYT+nqm20lc2/E3BTV8rCTYpjcG5gnWYsS16MaTkapZif3GN9MCG/61sULw54dGtcPiFYBVkE2t5dRVf7q5DZ8xpZ533SRf5PSB/6XzdGca1vyZndUocgbb0HOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ei9mi7B0; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ei9mi7B0"
-X-Envelope-To: senozhatsky@chromium.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1719802159;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7mFxjC1U9/7JygpJdsg86O8Ayb0TyOCDXKOYMsrvCw0=;
-	b=Ei9mi7B0/RVD3/lgBL1ONKhW0K810nMsBJltQ6rAP5LVFw8dP2N3FIgV34ysxAFQj3yIMb
-	jQhuD/i0IcIjuJNuCFFBmLJX/ubb1qTzi5KIZs5Ew9usL2WCH1/AJmMResu6YJzlDbvinQ
-	zySfDA08FINQDopG7cM78XBatmiw8S8=
-X-Envelope-To: akpm@linux-foundation.org
-X-Envelope-To: minchan@kernel.org
-X-Envelope-To: linux-mm@kvack.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-Message-ID: <8163966f-d31d-425c-97cb-3d18ab28ac1f@linux.dev>
-Date: Mon, 1 Jul 2024 10:49:13 +0800
+	s=arc-20240116; t=1719802183; c=relaxed/simple;
+	bh=K+txfgIBDiC5EBu9Tyu6qcr21MebyAoTXTIWB1FfFmA=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=AgOTgmCPrn5rO129XIfNFE7EZsWi7taEf3KJQTCdEOoleRv/gUDzYGfCmbWR+udZ9vdzhnLRdNV0eK2/jJkzadKbLc/zqPe03lZb9bjyEW8SCsHPZl1jZm+8jf3WNKkrRNhcY1zARhGvwMCvM4ZJJzWuDb3xIGVNxhX7QTK7sWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com; spf=pass smtp.mailfrom=h3c.com; arc=none smtp.client-ip=60.191.123.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h3c.com
+Received: from h3cspam02-ex.h3c.com (localhost [127.0.0.2] (may be forged))
+	by h3cspam02-ex.h3c.com with ESMTP id 4611lFwP029898
+	for <linux-kernel@vger.kernel.org>; Mon, 1 Jul 2024 09:47:15 +0800 (GMT-8)
+	(envelope-from zhang.chunA@h3c.com)
+Received: from mail.maildlp.com ([172.25.15.154])
+	by h3cspam02-ex.h3c.com with ESMTP id 4611jvHJ024589;
+	Mon, 1 Jul 2024 09:45:57 +0800 (GMT-8)
+	(envelope-from zhang.chunA@h3c.com)
+Received: from DAG6EX11-BJD.srv.huawei-3com.com (unknown [10.153.34.13])
+	by mail.maildlp.com (Postfix) with ESMTP id 07A032004BBD;
+	Mon,  1 Jul 2024 09:49:59 +0800 (CST)
+Received: from DAG6EX09-BJD.srv.huawei-3com.com (10.153.34.11) by
+ DAG6EX11-BJD.srv.huawei-3com.com (10.153.34.13) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.27; Mon, 1 Jul 2024 09:45:58 +0800
+Received: from DAG6EX09-BJD.srv.huawei-3com.com ([fe80::bdc5:ad7:2347:12a5])
+ by DAG6EX09-BJD.srv.huawei-3com.com ([fe80::bdc5:ad7:2347:12a5%4]) with mapi
+ id 15.02.1258.027; Mon, 1 Jul 2024 09:45:58 +0800
+From: Zhangchun <zhang.chunA@h3c.com>
+To: "shaohaojize@126.com" <shaohaojize@126.com>,
+        "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jiaoxupo
+	<jiaoxupo@h3c.com>, Bailin <berlin@h3c.com>,
+        Zhangzhansheng
+	<zhang.zhansheng@h3c.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>, wangyu
+	<wang.yuI@h3c.com>
+Subject: [PATCH] mm: fix kmap_high deadlock
+Thread-Topic: [PATCH] mm: fix kmap_high deadlock
+Thread-Index: AdrLWGWcTXIJ41leRoK9JQLjgSju3w==
+Date: Mon, 1 Jul 2024 01:45:57 +0000
+Message-ID: <079f7b0b129f4fbc86d5f5ee8795fd1b@h3c.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-sender-location: DAG2
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/2] mm/zsmalloc: fix class per-fullness zspage counts
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: akpm@linux-foundation.org, minchan@kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20240627075959.611783-1-chengming.zhou@linux.dev>
- <20240628005523.GC15925@google.com> <20240628010812.GD15925@google.com>
- <caf4b05d-6adf-4976-9961-fa30d3a9969c@linux.dev>
- <20240701013731.GA3232210@google.com>
- <4f2a5cf1-3132-4bc6-965f-8dc5a8ffc05a@linux.dev>
-In-Reply-To: <4f2a5cf1-3132-4bc6-965f-8dc5a8ffc05a@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:h3cspam02-ex.h3c.com 4611lFwP029898
 
-On 2024/7/1 10:20, Chengming Zhou wrote:
-> On 2024/7/1 09:37, Sergey Senozhatsky wrote:
->> On (24/06/28 11:19), Chengming Zhou wrote:
->>> Andrew, could you please help to change the subject as Sergey asked?
->>> Sorry, I should have noted these details in the changelog when I wrote
->>> this subject.
->>
->> Chengming, can I ask you to resend these patches with a proper commit
->> message?
-> 
-> Of course, will update and send later.
-
-I just pulled mm/mm-unstable and ready to update, but find Andrew has 
-already helped to change the subject and commit message as below, which
-is great enough! Thanks!
-
-commit 84d0abc5905bbdf29dc7ff8083d21145d78a3ffe
-Author: Chengming Zhou <chengming.zhou@linux.dev>
-Date:   Thu Jun 27 15:59:58 2024 +0800
-
-     mm/zsmalloc: clarify class per-fullness zspage counts
-
-     We always use insert_zspage() and remove_zspage() to update zspage's
-     fullness location, which will account correctly.
-
-     But this special async free path use "splice" instead of 
-remove_zspage(),
-     so the per-fullness zspage count for ZS_INUSE_RATIO_0 won't decrease.
-
-     Clean things up by decreasing when iterate over the zspage free list.
-
-     This doesn't actually fix anything.  ZS_INUSE_RATIO_0 is just a
-     "placeholder" which is never used anywhere.
-
-     Link: 
-https://lkml.kernel.org/r/20240627075959.611783-1-chengming.zhou@linux.dev
-     Signed-off-by: Chengming Zhou <chengming.zhou@linux.dev>
-     Cc: Minchan Kim <minchan@kernel.org>
-     Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
-     Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+DQpGcm9tOiAiemhhbmcuY2h1biIgPHpoYW5nLmNodW5hQGgzYy5jb20+DQoNCkkgd29yayB3aXRo
+IHpoYW5nemhhbnNoZW5nKGZyb20gaDNjKSBmaW5kIHRoYXQgc29tZSBzaXR1YXRpb24gbWF5IGNh
+c3VlIGRlYWRsb2NrIHdoZW4gd2UgdXNlIGttYXBfaGlnaGFuZCBrbWFwX1hYWCBvciBrdW1hcF94
+eHggYmV0d2VlbiAgZGlmZmVydCBjb3JlcyBhdCB0aGUgc2FtZSB0aW1lLmttYXBfaGlnaC0+bWFw
+X25ld192aXJ0dWFsLT4gZmx1c2hfYWxsX3plcm9fcGttYXBzLT5mbHVzaF90bGJfa2VybmVsX3Jh
+bmdlLT5vbl9lYWNoX2NwdSwNCk9uIHRoaXMgY29uZGl0aW9uLCBrbWFwX2hpZ2gNCmhvbGQgdGhl
+IGttYXBfbG9ja++8jCB3YWl0IHRoZSBvdGhlciBjb3JlcyBhY2suIEJ1dCB0aGUgb3RoZXJzIG1h
+eSBkaXNhYmxlIGlycSBhbmQgd2FpdCBrbWFwX2xvY2vvvIwgdGhpcyBpcyBzb21lIGRlYWRsb2Nr
+IGNvbmRpdGlvbi4NCkkgdGhpbmsgaXQncyBuZWNlc3NhcnkgdG8gZ2l2ZSBrbWFwX2xvY2sgYmVm
+b3JlIGNhbGwgZmx1c2hfdGxiX2tlcm5lbF9yYW5nZS4NCkxpa2UgdGhpczoNCnNwaW5fdW5sb2Nr
+KCZrbWFwX2xvY2spOw0KZmx1c2hfdGxiX2tlcm5lbF9yYW5nZSh4eHgpOw0Kc3Bpbl9sb2NrKCZr
+bWFwX2xvY2spOw0KDQpTaWduZWQtb2ZmLWJ5OiB6aGFuZy5jaHVuIDx6aGFuZy5jaHVuYUBoM2Mu
+Y29tPg0KLS0tDQogbW0vaGlnaG1lbS5jIHwgMiArKw0KIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2Vy
+dGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL21tL2hpZ2htZW0uYyBiL21tL2hpZ2htZW0uYyBpbmRl
+eCBiZDQ4YmE0NDVkZDQuLjEyZDIwZTU1MTU3OSAxMDA2NDQNCi0tLSBhL21tL2hpZ2htZW0uYw0K
+KysrIGIvbW0vaGlnaG1lbS5jDQpAQCAtMjIxLDcgKzIyMSw5IEBAIHN0YXRpYyB2b2lkIGZsdXNo
+X2FsbF96ZXJvX3BrbWFwcyh2b2lkKQ0KIG5lZWRfZmx1c2ggPSAxOw0KIH0NCiBpZiAobmVlZF9m
+bHVzaCkNCitzcGluX3VubG9jaygma21hcF9sb2NrKTsNCiBmbHVzaF90bGJfa2VybmVsX3Jhbmdl
+KFBLTUFQX0FERFIoMCksIFBLTUFQX0FERFIoTEFTVF9QS01BUCkpOw0KK3NwaW5fbG9jaygma21h
+cF9sb2NrKTsNCiB9DQoNCiB2b2lkIF9fa21hcF9mbHVzaF91bnVzZWQodm9pZCkNCi0tDQoyLjM0
+LjENCg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0K5pys6YKu5Lu25Y+K5YW26ZmE5Lu25ZCr5pyJ5paw
+5Y2O5LiJ6ZuG5Zui55qE5L+d5a+G5L+h5oGv77yM5LuF6ZmQ5LqO5Y+R6YCB57uZ5LiK6Z2i5Zyw
+5Z2A5Lit5YiX5Ye6DQrnmoTkuKrkurrmiJbnvqTnu4TjgILnpoHmraLku7vkvZXlhbbku5bkurrk
+u6Xku7vkvZXlvaLlvI/kvb/nlKjvvIjljIXmi6zkvYbkuI3pmZDkuo7lhajpg6jmiJbpg6jliIbl
+nLDms4TpnLLjgIHlpI3liLbjgIENCuaIluaVo+WPke+8ieacrOmCruS7tuS4reeahOS/oeaBr+OA
+guWmguaenOaCqOmUmeaUtuS6huacrOmCruS7tu+8jOivt+aCqOeri+WNs+eUteivneaIlumCruS7
+tumAmuefpeWPkeS7tuS6uuW5tuWIoOmZpOacrA0K6YKu5Lu277yBDQpUaGlzIGUtbWFpbCBhbmQg
+aXRzIGF0dGFjaG1lbnRzIGNvbnRhaW4gY29uZmlkZW50aWFsIGluZm9ybWF0aW9uIGZyb20gTmV3
+IEgzQywgd2hpY2ggaXMNCmludGVuZGVkIG9ubHkgZm9yIHRoZSBwZXJzb24gb3IgZW50aXR5IHdo
+b3NlIGFkZHJlc3MgaXMgbGlzdGVkIGFib3ZlLiBBbnkgdXNlIG9mIHRoZQ0KaW5mb3JtYXRpb24g
+Y29udGFpbmVkIGhlcmVpbiBpbiBhbnkgd2F5IChpbmNsdWRpbmcsIGJ1dCBub3QgbGltaXRlZCB0
+bywgdG90YWwgb3IgcGFydGlhbA0KZGlzY2xvc3VyZSwgcmVwcm9kdWN0aW9uLCBvciBkaXNzZW1p
+bmF0aW9uKSBieSBwZXJzb25zIG90aGVyIHRoYW4gdGhlIGludGVuZGVkDQpyZWNpcGllbnQocykg
+aXMgcHJvaGliaXRlZC4gSWYgeW91IHJlY2VpdmUgdGhpcyBlLW1haWwgaW4gZXJyb3IsIHBsZWFz
+ZSBub3RpZnkgdGhlIHNlbmRlcg0KYnkgcGhvbmUgb3IgZW1haWwgaW1tZWRpYXRlbHkgYW5kIGRl
+bGV0ZSBpdCENCg==
