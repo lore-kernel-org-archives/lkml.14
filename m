@@ -1,16 +1,15 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9FD81749
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 08:53:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F3CF83CA0
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 08:53:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719824033; cv=none; b=kS4uFphBWWkKBMi8TQMfXyFmWUfjE2ivJynO4m0CTFjwbP+umIEA/ERiNOpGrbsaX5fZPSuZNIUqmto1rzirZdHQS5wJxTWfmy/gC6zKIscRBXwakxhIEiE1TIttGwOA07j/GQApUqEJucrw5FXyootsVTOp0O6eHT49Tw01enU=
+	t=1719824033; cv=none; b=dNUNFWILhZj/RS1x1eddaDzpIEk9MYYwG5ikiEzjldeEhS/bxWhav34jc29y5WkdILHbGahvC7neffGKt6AiZiaBDX6XiUCG6fURBRuwvMpOBqYTMAGwUEE917w69OAZ8PFtgO2lyMKDMBUg8hteOE8Fim9nUocIUntrqV+b0ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719824033; c=relaxed/simple;
-	bh=5aS9mvQ/Irljen8wjikG89TM/g9nsYb8aM4QkYtKZPI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QEjy9u//Tdb9PVXjkrDOu9BH1QOwsf6ViH1TAz60S66RL50Sa/HShJgFRJ9xpsFVH35bqOyrna48pziE9vTLD0xBDEibcsuf5lPvMPA+7ua2Xww1Qmvck9vOc5WD1EsAsrueibxaRhfK9Tqu2iou8r+b22MFi0oBAQmgrbJhROc=
+	bh=liY53S4w/KHcfF+rpHHbCX7sjkGkRvmvbvS2ZT5yaz0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lACvgOFBXdmxohibBNka0f3I4FAVDismh/e9uu5zmH0NSXSIXRFmu2/7ifj7Du+DkQJl47q6+dnNbdvw6wSTDZt0uflOjJ4Vbu/GrhKBbFvYUSUgk+uyPJ8QvFU2/90/JkoPPzIYHs4BfooouBQ9/5emUM+msRGBDXe4hNX+o4g=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,15 +17,15 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1sOCnB-0006bE-92; Mon, 01 Jul 2024 10:53:45 +0200
+	id 1sOCnB-0006bC-91; Mon, 01 Jul 2024 10:53:45 +0200
 Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ore@pengutronix.de>)
-	id 1sOCnA-006Kdp-KC; Mon, 01 Jul 2024 10:53:44 +0200
+	id 1sOCnA-006Kdn-IW; Mon, 01 Jul 2024 10:53:44 +0200
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1sOCnA-00ClWO-1m;
+	id 1sOCnA-00ClW4-1d;
 	Mon, 01 Jul 2024 10:53:44 +0200
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>,
@@ -44,12 +43,10 @@ Cc: Lucas Stach <l.stach@pengutronix.de>,
 	linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org,
 	UNGLinuxDriver@microchip.com
-Subject: [PATCH net-next v2 3/3] net: dsa: microchip: lan937x: disable VPHY support
-Date: Mon,  1 Jul 2024 10:53:43 +0200
-Message-Id: <20240701085343.3042567-3-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v2 1/3] net: dsa: microchip: lan9371/2: add 100BaseTX PHY support
+Date: Mon,  1 Jul 2024 10:53:41 +0200
+Message-Id: <20240701085343.3042567-1-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240701085343.3042567-1-o.rempel@pengutronix.de>
-References: <20240701085343.3042567-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,67 +61,60 @@ X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
 From: Lucas Stach <l.stach@pengutronix.de>
 
-As described by the microchip article "LAN937X - The required
-configuration for the external MAC port to operate at RGMII-to-RGMII
-1Gbps link speed." [1]:
-
-"When VPHY is enabled, the auto-negotiation process following IEEE 802.3
-standard will be triggered and will result in RGMII-to-RGMII signal
-failure on the interface because VPHY will try to poll the PHY status
-that is not available in the scenario of RGMII-to-RGMII connection
-(normally the link partner is usually an external processor).
-
-Note that when VPHY fails on accessing PHY registers, it will fall back
-to 100Mbps speed, it indicates disabling VPHY is optional if you only
-need the port to link at 100Mbps speed.
-
-Again, VPHY must and can only be disabled by writing VPHY_DISABLE bit in
-the register below as there is no strapping pin for the control."
-
-This patch was tested on LAN9372, so far it seems to not to affect VPHY
-based clock crossing optimization for the ports with integrated PHYs.
-
-[1]: https://microchip.my.site.com/s/article/LAN937X-The-required-configuration-for-the-external-MAC-port-to-operate-at-RGMII-to-RGMII-1Gbps-link-speed
+On the LAN9371 and LAN9372, the 4th internal PHY is a 100BaseTX PHY
+instead of a 100BaseT1 PHY. The 100BaseTX PHYs have a different base
+register offset.
 
 Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
 changes v2:
-- reword the comment and link microchip article
+- add LAN9371 port 4 support
 ---
- drivers/net/dsa/microchip/lan937x_main.c | 3 +++
- drivers/net/dsa/microchip/lan937x_reg.h  | 4 ++++
- 2 files changed, 7 insertions(+)
+ drivers/net/dsa/microchip/ksz_common.h   | 1 +
+ drivers/net/dsa/microchip/lan937x_main.c | 4 ++++
+ drivers/net/dsa/microchip/lan937x_reg.h  | 1 +
+ 3 files changed, 6 insertions(+)
 
+diff --git a/drivers/net/dsa/microchip/ksz_common.h b/drivers/net/dsa/microchip/ksz_common.h
+index ee7db46e469d5..c4a4664c03859 100644
+--- a/drivers/net/dsa/microchip/ksz_common.h
++++ b/drivers/net/dsa/microchip/ksz_common.h
+@@ -22,6 +22,7 @@
+ /* all KSZ switches count ports from 1 */
+ #define KSZ_PORT_1 0
+ #define KSZ_PORT_2 1
++#define KSZ_PORT_4 3
+ 
+ struct ksz_device;
+ struct ksz_port;
 diff --git a/drivers/net/dsa/microchip/lan937x_main.c b/drivers/net/dsa/microchip/lan937x_main.c
-index eaa862eb6b265..0606796b14856 100644
+index b479a628b1ae5..eaa862eb6b265 100644
 --- a/drivers/net/dsa/microchip/lan937x_main.c
 +++ b/drivers/net/dsa/microchip/lan937x_main.c
-@@ -390,6 +390,9 @@ int lan937x_setup(struct dsa_switch *ds)
- 	lan937x_cfg(dev, REG_SW_GLOBAL_OUTPUT_CTRL__1,
- 		    (SW_CLK125_ENB | SW_CLK25_ENB), true);
+@@ -55,6 +55,10 @@ static int lan937x_vphy_ind_addr_wr(struct ksz_device *dev, int addr, int reg)
+ 	u16 addr_base = REG_PORT_T1_PHY_CTRL_BASE;
+ 	u16 temp;
  
-+	/* Disable global VPHY support. Related to CPU interface only? */
-+	ksz_rmw32(dev, REG_SW_CFG_STRAP_OVR, SW_VPHY_DISABLE, SW_VPHY_DISABLE);
++	if ((dev->info->chip_id == LAN9371_CHIP_ID ||
++	     dev->info->chip_id == LAN9372_CHIP_ID) && addr == KSZ_PORT_4)
++		addr_base = REG_PORT_TX_PHY_CTRL_BASE;
 +
- 	return 0;
- }
+ 	/* get register address based on the logical port */
+ 	temp = PORT_CTRL_ADDR(addr, (addr_base + (reg << 2)));
  
 diff --git a/drivers/net/dsa/microchip/lan937x_reg.h b/drivers/net/dsa/microchip/lan937x_reg.h
-index 7ecada9240233..2f22a9d01de36 100644
+index 45b606b6429f6..7ecada9240233 100644
 --- a/drivers/net/dsa/microchip/lan937x_reg.h
 +++ b/drivers/net/dsa/microchip/lan937x_reg.h
-@@ -37,6 +37,10 @@
- #define SW_CLK125_ENB			BIT(1)
- #define SW_CLK25_ENB			BIT(0)
+@@ -147,6 +147,7 @@
  
-+/* 2 - PHY Control */
-+#define REG_SW_CFG_STRAP_OVR		0x0214
-+#define SW_VPHY_DISABLE			BIT(31)
-+
- /* 3 - Operation Control */
- #define REG_SW_OPERATION		0x0300
+ /* 1 - Phy */
+ #define REG_PORT_T1_PHY_CTRL_BASE	0x0100
++#define REG_PORT_TX_PHY_CTRL_BASE	0x0280
  
+ /* 3 - xMII */
+ #define PORT_SGMII_SEL			BIT(7)
 -- 
 2.39.2
 
