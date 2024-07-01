@@ -1,64 +1,98 @@
-Received: from weierstrass.telenet-ops.be (weierstrass.telenet-ops.be [195.130.137.81])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C823681AB4
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 08:08:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FBAD347B4;
+	Mon,  1 Jul 2024 08:09:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719821322; cv=none; b=pk3Tl4qmcWssQcmIYl616MPWyy4vi3/x5kitRFXanuAv/ni4NYriZjf8n3l6u0LBTy/H3RDJkbNcZIwkcn7WalPYMuOvkirWDJuDyOWmmr2QfV//xconCfAn5rmOQx5umXhTiSAID7M+ofjBD3tAfEN/zgBB/orpvLBbPY9DXWI=
+	t=1719821374; cv=none; b=ltG2LVnsM1vllnYqbYXDuEQSNxWdt0iwdRA1523s5isFp27MLHq9XpMnbf3SUE5wqAxdNYa2Yx02xV4xrYWOPh7kMvi5gceE7Oa0EuzExboVNPr0B9XLBBsj/lQs85J4piYNk1/l5CWT8GYFoVGX1dKgo1m7MEUrE5B+QnyICCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719821322; c=relaxed/simple;
-	bh=CSsYmUBxfHc30L8B6vNlO22F5seUPiAqBtknMmFWbpE=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=qT1tILhvG91PbaIzytgYnA+0ZykfI/lNSdnYM2cCOOkrLjbskr2sJWozlWdXH5lZuGq1ecyzpWB4JbVJe+8PMdlhfREHtz5vzjb66Ftatztwk/QHsbCvNjr5+DobynMV2/1EDyOZa95lv4gbl6mGSx16v6WyiP30pP3owKbhego=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
-	by weierstrass.telenet-ops.be (Postfix) with ESMTPS id 4WCJRM2dJ4z4wxqt
-	for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 10:02:07 +0200 (CEST)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:1c8a:3990:9784:a231])
-	by xavier.telenet-ops.be with bizsmtp
-	id i8202C00D4bcH3801820MT; Mon, 01 Jul 2024 10:02:00 +0200
-Received: from geert (helo=localhost)
-	by ramsan.of.borg with local-esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1sOBz6-000l3a-9Q;
-	Mon, 01 Jul 2024 10:02:00 +0200
-Date: Mon, 1 Jul 2024 10:02:00 +0200 (CEST)
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-To: linux-kernel@vger.kernel.org
-cc: Arnd Bergmann <arnd@arndb.de>, linux-parisc@vger.kernel.org
-Subject: Re: Build regressions/improvements in v6.10-rc6
-In-Reply-To: <20240701072703.2941315-1-geert@linux-m68k.org>
-Message-ID: <bb1acd5b-1a20-646-8d99-12dcfa899c3@linux-m68k.org>
-References: <CAHk-=wgQMOscLeeA3QXOs97xOz_CTxdqJjpC20tJ-7bUdHWtSA@mail.gmail.com> <20240701072703.2941315-1-geert@linux-m68k.org>
+	s=arc-20240116; t=1719821374; c=relaxed/simple;
+	bh=lusB39eljmjkSeTzESJvKRNx1NioaIrYok+tE4tYOBE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mPC9GObC3FZtRqYY1mnae+JKfRIG68CZVM0v/wsuSU1S8Poehm4F2oYFFkBL0i65zC0+iObc/nmpH7qanANVsOl/30gze5QtwCbmu39Py3Wd1vr5V2S36+3sbjSoYn0P9jZFM7XzR3aE+9bTRLuXl2qEyWKrRuscn+PqGl8rhjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 974822800B1D8;
+	Mon,  1 Jul 2024 10:09:29 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 78EA34D3E0; Mon,  1 Jul 2024 10:09:29 +0200 (CEST)
+Date: Mon, 1 Jul 2024 10:09:29 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: "David E. Box" <david.e.box@linux.intel.com>
+Cc: linux-doc@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com, linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH V4 1/3] platform/x86/intel/sdsi: Add ioctl SPDM transport
+Message-ID: <ZoJkOYwmvx3SnEr6@wunner.de>
+References: <20240608034247.181843-1-david.e.box@linux.intel.com>
+ <ZmRSwpRWEgw2GxF1@wunner.de>
+ <c58a850758d106f9613c9ba5882e9988712394de.camel@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c58a850758d106f9613c9ba5882e9988712394de.camel@linux.intel.com>
 
-On Mon, 1 Jul 2024, Geert Uytterhoeven wrote:
-> JFYI, when comparing v6.10-rc6[1] to v6.10-rc5[3], the summaries are:
->  - build errors: +1/-0
+On Fri, Jun 14, 2024 at 02:17:23PM -0700, David E. Box wrote:
+> On Sat, 2024-06-08 at 14:46 +0200, Lukas Wunner wrote:
+> > > On Fri, Jun 07, 2024 at 08:42:45PM -0700, David E. Box wrote:
+> > > > > Intel On Demand adds attestation and firmware measurement retrieval
+> > > > > services through use of the protocols defined the Security Protocols
+> > > > > and Data Measurement (SPDM) specification.
+> > > 
+> > > I've amended the in-kernel SPDM implementation to expose signatures
+> > > received from the device in sysfs, together with all ancillary data
+> > > necessary to re-verify signatures from user space (transcript, hash
+> > > algorithm, etc). It is also possible to set the next requester nonce
+> > > from user space if the kernel is mistrusted to always use a fresh nonce.
+> > > 
+> > > I recall S3M folks rejected use of the in-kernel SPDM implementation for
+> > > SDSi because it previously didn't allow for re-verification of signatures
+> > > by user space.
+> 
+> Yes, this was the main reason for not going with the in-kernel solution.
+> 
+> > > Perhaps with the added functionality they'll reconsider?
+> 
+> Q3 is too late for their needs. They want to proceed with the driver
+> solution. We can push for using the in-kernel solution when it is
+> upstreamed. I think this will be possible when they extend support
+> beyond SPDM v1.0.
 
-   + /kisskb/src/include/linux/syscalls.h: error: conflicting types for 'sys_fanotify_mark'; have 'long int(int,  unsigned int,  u32,  u32,  int,  const char *)' {aka 'long int(int,  unsigned int,  unsigned int,  unsigned int,  int,  const char *)'}:  => 248:25
+Fair enough.  I've submitted v2 of the in-kernel SPDM library yesterday:
 
-parisc-gcc13/parisc-allmodconfig
+https://lore.kernel.org/all/cover.1719771133.git.lukas@wunner.de/
 
-> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/22a40d14b572deb80c0648557f4bd502d7e83826/ (132 out of 138 configs)
-> [3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/f2661062f16b2de5d7b6a5c42a9a5c96326b8454/ (132 out of 138 configs)
+It would be good to know if the ABI for exposure of certificates and
+signatures makes sense and would integrate easily with SDSi user space
+tooling.  Or if it does not, how I should change it.  So I'd love
+to hear feedback.  The ABI documentation is contained in these patches:
 
-Gr{oetje,eeting}s,
+* [PATCH v2 12/18] PCI/CMA: Expose certificates in sysfs
+  https://lore.kernel.org/all/e42905e3e5f1d5be39355e833fefc349acb0b03c.1719771133.git.lukas@wunner.de/
+* [PATCH v2 15/18] PCI/CMA: Expose a log of received signatures in sysfs
+  https://lore.kernel.org/all/77f549685f994981c010aebb1e9057aa3555b18a.1719771133.git.lukas@wunner.de/
+* [PATCH v2 16/18] spdm: Limit memory consumed by log of received signatures
+  https://lore.kernel.org/all/2e6ee6670a5d450bc880e77a892ea0227a2cc3b4.1719771133.git.lukas@wunner.de/
+* [PATCH v2 17/18] spdm: Authenticate devices despite invalid certificate chain
+  https://lore.kernel.org/all/dff8bcb091a3123e1c7c685f8149595e39bbdb8f.1719771133.git.lukas@wunner.de/
+* [PATCH v2 18/18] spdm: Allow control of next requester nonce through sysfs
+  https://lore.kernel.org/all/ee3248f9f8d60cff9106a5a46c5f5d53ac81e60a.1719771133.git.lukas@wunner.de/
 
- 						Geert
+This doesn't yet contain measurement retrieval, which I understand
+is needed for SDSi.  I intend to add it this (third) quarter.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Thanks,
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
- 							    -- Linus Torvalds
+Lukas
