@@ -1,32 +1,33 @@
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E0A83A14
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 08:46:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F92F83A14;
+	Mon,  1 Jul 2024 08:47:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719823612; cv=none; b=UOA8iLB5WpPyG5ldlRgptY0T2h+BHE1cIbdgzfJOmRUNZO1PJYqlz2oEUFD8s+G0HpuMZFDHT/hzUoPOmgyxirh2Iw4TesX0Q8Lcg0V7t6rC3FvDqYzv7/GvNVMNUqHjP0morGtujdAcdV7z2tVIRKaX9iNkSGajuA3iSBq9Rpk=
+	t=1719823622; cv=none; b=pU3feRrIgBS67trekYfUBUxlmle5igxHdz3hwYAb6FznzY+GB1ZlZbeG/aBj0NaVCZfuCIyWnFeGm9/VVE6DfCSxhOud2B2gXsZ2/J3m1MWeMtdRF9CJ9tn9r8+HnOzCNYjn0jrBu5dZ/vLqHCH+ZekPIUxjt1DsL3+obSFr5cE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719823612; c=relaxed/simple;
-	bh=NQ0ndZ/vTdR6qLhrOP1+1QFH0dvbytTmfuQhDcWArWI=;
+	s=arc-20240116; t=1719823622; c=relaxed/simple;
+	bh=eXt8DtOJVKFI5OlO3caEI0BK15ZG8stmVqrzhbjKqss=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TvArKbeb745WCRuPHSBfyRGRqWRvBzme0+e2ItosfY5RX+PcaHQilVB9IdY4e1aDchwRp6h5s2MuNzQvejU2jXcI0j7wsKEOtVhmKpM0t2vQhvzzwcqamrX5lzgrBuwXkUyQccaJIlyIE2Rh/9DWtSld0He7oyNWZnu7U/IgJiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Ix6nHoS+; arc=none smtp.client-ip=115.124.30.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=H5r1NFzb2/oYxU9/7lXKIeww1xL2G259oAtrML5AiBJy/ydoJyFFddlhNEZGZIxDd5AYGQPVT0jhlTtF3glyNGzpurxt0or39z1K967BrppVfK1kVNqj7fdnWeo8rbjJArnpsRSpeKc9rwvb3I9SvsRrZ2NCTgk2L2wpazvI9Jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zf7TKwRc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Ix6nHoS+"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1719823607; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Sw5IgswMEuJV2XoSVcM0OJziGgFmvuhn48aAmj906Do=;
-	b=Ix6nHoS+Yt/Ssxt5wvbcrOJgbP/JwJUVmamsHAcUP4iQwh4yBEStscgU3t+2UQqwWffYLiXJRGJWKBZ+TUAlx3pbbDQxzDV8Byaze32cQg28oe0EdHoXuRRuSrSOUrbTOQScsvYYsRjGmZ9j63/Zy8cgh0QLIbza1tAQCJ20IRs=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067113;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0W9c7l2Y_1719823605;
-Received: from 30.97.56.67(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W9c7l2Y_1719823605)
-          by smtp.aliyun-inc.com;
-          Mon, 01 Jul 2024 16:46:46 +0800
-Message-ID: <03acea8b-b0d9-403f-8dc8-1f32ee02153e@linux.alibaba.com>
-Date: Mon, 1 Jul 2024 16:46:45 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zf7TKwRc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62705C32786;
+	Mon,  1 Jul 2024 08:46:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719823622;
+	bh=eXt8DtOJVKFI5OlO3caEI0BK15ZG8stmVqrzhbjKqss=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Zf7TKwRc2X6XRQl0XWRgdmeDERAWtrlJq/KUFyHeYKkjJ56l8el4vKzxrESMehapS
+	 /s/V9WJh8betn6bi/8o7Q2bsSq15VtmKaZECAeCdjlQ7jxytCDCZhFftHMNzT91uj7
+	 /qkmlBpSNbQAfdgAy/PnemJNXauFo1dnKSKimqYCapmFPiz0kvXyecQBHxA4o4TR7U
+	 abg+XKrhdbGeZpfEA654A45qfkGVayK+Wn1OGZLLcv1Wn9wkhTkzOpj/ImcEymxerq
+	 8/noGzMCEjfSWAYSludiyM2hbAXrn9bkpiwluW3ZNvePjpAFHao8gOR6+jCl8OuxWf
+	 +6Zpp5kUG/wNw==
+Message-ID: <eeeb3f1f-5c77-4ca5-b996-17b968b7c2f0@kernel.org>
+Date: Mon, 1 Jul 2024 10:46:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,84 +35,105 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] support "THPeligible" semantics for mTHP with anonymous
- shmem
-To: Ryan Roberts <ryan.roberts@arm.com>, Bang Li <libang.li@antgroup.com>,
- hughd@google.com, akpm@linux-foundation.org
-Cc: david@redhat.com, wangkefeng.wang@huawei.com, ziy@nvidia.com,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20240628104926.34209-1-libang.li@antgroup.com>
- <4b38db15-0716-4ffb-a38b-bd6250eb93da@arm.com>
- <4d54880e-03f4-460a-94b9-e21b8ad13119@linux.alibaba.com>
- <516aa6b3-617c-4642-b12b-0c5f5b33d1c9@arm.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <516aa6b3-617c-4642-b12b-0c5f5b33d1c9@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3 3/5] arm64: dts: rockchip: Add AP6275P wireless support
+ to Khadas Edge 2
+To: Jacobe Zang <jacobe.zang@wesion.com>, robh@kernel.org,
+ krzk+dt@kernel.org, heiko@sntech.de, kvalo@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, conor+dt@kernel.org
+Cc: efectn@protonmail.com, dsimic@manjaro.org, jagan@edgeble.ai,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ arend@broadcom.com, linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+ megi@xff.cz, duoming@zju.edu.cn, bhelgaas@google.com,
+ minipli@grsecurity.net, brcm80211@lists.linux.dev,
+ brcm80211-dev-list.pdl@broadcom.com, nick@khadas.com
+References: <20240630073605.2164346-1-jacobe.zang@wesion.com>
+ <20240630073605.2164346-4-jacobe.zang@wesion.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240630073605.2164346-4-jacobe.zang@wesion.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-
-On 2024/7/1 16:40, Ryan Roberts wrote:
-> On 01/07/2024 09:33, Baolin Wang wrote:
->>
->>
->> On 2024/7/1 15:55, Ryan Roberts wrote:
->>> On 28/06/2024 11:49, Bang Li wrote:
->>>> After the commit 7fb1b252afb5 ("mm: shmem: add mTHP support for
->>>> anonymous shmem"), we can configure different policies through
->>>> the multi-size THP sysfs interface for anonymous shmem. But
->>>> currently "THPeligible" indicates only whether the mapping is
->>>> eligible for allocating THP-pages as well as the THP is PMD
->>>> mappable or not for anonymous shmem, we need to support semantics
->>>> for mTHP with anonymous shmem similar to those for mTHP with
->>>> anonymous memory.
->>>>
->>>> Signed-off-by: Bang Li <libang.li@antgroup.com>
->>>> ---
->>>>    fs/proc/task_mmu.c      | 10 +++++++---
->>>>    include/linux/huge_mm.h | 11 +++++++++++
->>>>    mm/shmem.c              |  9 +--------
->>>>    3 files changed, 19 insertions(+), 11 deletions(-)
->>>>
->>>> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
->>>> index 93fb2c61b154..09b5db356886 100644
->>>> --- a/fs/proc/task_mmu.c
->>>> +++ b/fs/proc/task_mmu.c
->>>> @@ -870,6 +870,7 @@ static int show_smap(struct seq_file *m, void *v)
->>>>    {
->>>>        struct vm_area_struct *vma = v;
->>>>        struct mem_size_stats mss = {};
->>>> +    bool thp_eligible;
->>>>          smap_gather_stats(vma, &mss, 0);
->>>>    @@ -882,9 +883,12 @@ static int show_smap(struct seq_file *m, void *v)
->>>>          __show_smap(m, &mss, false);
->>>>    -    seq_printf(m, "THPeligible:    %8u\n",
->>>> -           !!thp_vma_allowable_orders(vma, vma->vm_flags,
->>>> -               TVA_SMAPS | TVA_ENFORCE_SYSFS, THP_ORDERS_ALL));
->>>> +    thp_eligible = !!thp_vma_allowable_orders(vma, vma->vm_flags,
->>>> +                        TVA_SMAPS | TVA_ENFORCE_SYSFS, THP_ORDERS_ALL);
->>>> +    if (vma_is_anon_shmem(vma))
->>>> +        thp_eligible = !!shmem_allowable_huge_orders(file_inode(vma->vm_file),
->>>> +                            vma, vma->vm_pgoff, thp_eligible);
->>>
->>> Afraid I haven't been following the shmem mTHP support work as much as I would
->>> have liked, but is there a reason why we need a separate function for shmem?
->>
->> Since shmem_allowable_huge_orders() only uses shmem specific logic to determine
->> if huge orders are allowable, there is no need to complicate the
->> thp_vma_allowable_orders() function by adding more shmem related logic, making
->> it more bloated. In my view, providing a dedicated helper
->> shmem_allowable_huge_orders(), specifically for shmem, simplifies the logic.
+On 30/06/2024 09:36, Jacobe Zang wrote:
+> Khadas Edge2 uses the PCI-e Ampak AP6275P 2T2R Wi-Fi 6 module. The
+> pcie@0 node can be used as Bridge1, so the wifi@0 node is used as a
+> device under the Bridge1. As a PCIe device the wifi@0 can be probed
+> without compatible.
 > 
-> My point was really that a single interface (thp_vma_allowable_orders) should be
-> used to get this information. I have no strong opinon on how the implementation
-> of that interface looks. What you suggest below seems perfectly reasonable to me.
+> Co-developed-by: Muhammed Efe Cetin <efectn@protonmail.com>
+> Signed-off-by: Muhammed Efe Cetin <efectn@protonmail.com>
+> Signed-off-by: Jacobe Zang <jacobe.zang@wesion.com>
+> ---
+>  .../boot/dts/rockchip/rk3588s-khadas-edge2.dts    | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 > 
->>
->> IIUC, I agree with David's suggestion that the shmem_allowable_huge_orders()
->> helper function could be used in thp_vma_allowable_orders() to support shmem
->> mTHP. Something like:
-> 
-> I hadn't seen David's suggestion until after I sent my mail. But I think we are > both suggesting the same thing.
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-khadas-edge2.dts b/arch/arm64/boot/dts/rockchip/rk3588s-khadas-edge2.dts
+> index dbddfc3bb4641..8c152d587aefc 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3588s-khadas-edge2.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3588s-khadas-edge2.dts
+> @@ -283,6 +283,21 @@ &pcie2x1l2 {
+>  	reset-gpios = <&gpio3 RK_PD1 GPIO_ACTIVE_HIGH>;
+>  	vpcie3v3-supply = <&vcc3v3_pcie_wl>;
+>  	status = "okay";
+> +
+> +	pcie@0,0 {
+> +		reg = <0x400000 0 0 0 0>;
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +		device_type = "pci";
+> +		bus-range = <0x40 0x4f>;
+> +
+> +		wifi: wifi@0,0 {
 
-OK. Great :)
+Where is the compatible (again!)? Test your code - you will see your
+binding is a no-op.
+
+
+Best regards,
+Krzysztof
+
