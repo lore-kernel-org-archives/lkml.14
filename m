@@ -1,135 +1,124 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF251EB39;
-	Mon,  1 Jul 2024 08:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0ECF1EB39
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 08:02:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719820915; cv=none; b=OK6kWvZvgUKadd7F5PmxleY5NgJYRh5nzYk9liprDaCov70LPU9RDlHrxpXElgxzIJZi3oaHMAtaTMrgqH2KDdBCg25+IgSqIJesqfzGCOzIlOv7OC7h5zFy0wXSFNXlEYwAkRwfts4dhRsQIm09R65w18HV5qwVQ40Nr4MGhNY=
+	t=1719820922; cv=none; b=AEPvxSO8kfXt0z00Qx6O1j7NwpbbGZnxLUc4Bk20QrgucibYSMk6WVzANKrQraUdU9fxYqvO4+fdQ04hBeKELHPli1gLJt13ZxrwKj3AflDmFYXcdooJH6voIkbgAR3HscK3i4Nr0aP/8ZZjQVsu15jXQQUM4J4wJTeY84a5hJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719820915; c=relaxed/simple;
-	bh=vHZsiYbVuLK8PNijbZkO2ITL1Z6pcGf5q74vYq9jzEg=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=hCLiEDj95tJZKQnGRa63VbtuGzSVmcYoDMqIrXmQMlE7xmSiFiPzq0lJbPV6c7WtU7E7kVZmLI+OiSXFkP8IVvsvEgDdVqlVLcBggiRa8iksnaMddyJ9Bx/opR0KnKKXTrP2H1LIVTD8r7CmiCNBOP+o6GYmKt1VE3z/4W146fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=NPa412Fr; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1719820922; c=relaxed/simple;
+	bh=RNR6K2TOb1Ga1tcDvDTlnAeZP4UvL2eIARu705tjdf4=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Xb4pnzmzETDQR3mk2AdmxfpdXDumB+gUOldRmEK5wTZylbNCZDXjze05au7ZlNV5AEfvVKzT93/EhQCnzo+a9v1b+uLS4ger0s90ap1kILu3QGLmkfv5AjwG9xwBwhmbebtoTtjfEmIJupHf/kRMUlaEi4jT9pvzKidhpW4M4R4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mnrOLyib; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="NPa412Fr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1719820885; x=1720425685; i=markus.elfring@web.de;
-	bh=XMjo85fqdujP80T25ZWnN55NRa54zLobA87TTomVDrA=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=NPa412FrmCBZuIGal3jrn9O06XHbIqxQWQevki1VbsLVJ5rDdS6/Q0xok3Bjorzf
-	 DIsJJC8QA2gO6r4GDPoa2GVAvuDmcyTdjIsSAAfwUG8Mmpmzlk7UPQolAwfWsuBZ4
-	 aomV3oiNogFm6VXjc3jQG2QoSVUkA4RR+HuvGvm8LkMHnP16cjeRX7Nc8achUdpiG
-	 HqFENMiIq8zB8IvaCRzYuam/VUOMzgmcw8b5zb4BgJbK76kPGfqfpqWOrwfOMP/yP
-	 2IIwfhbmiMn9BXmjt8QaMrxfCx4rU/31Zwol+5wXTeALBCnwHWAU3isDvuzDLfZen
-	 KO9MHMcAu21h7WpPjg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MsaS7-1s8aw22d59-00zkZa; Mon, 01
- Jul 2024 10:01:25 +0200
-Message-ID: <a194b5d3-d3f8-48a4-a010-d98381107b80@web.de>
-Date: Mon, 1 Jul 2024 10:01:13 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mnrOLyib"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40C15C116B1;
+	Mon,  1 Jul 2024 08:02:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719820922;
+	bh=RNR6K2TOb1Ga1tcDvDTlnAeZP4UvL2eIARu705tjdf4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=mnrOLyibTtnCEosmDKMhOnpW+NDSK/wuJlIx3L50kNzvo4gdZS8zfiyh2XCebp+YU
+	 FaDNLZJ8xQh63rB+wBt81f9xGgOCerSyYYgZr0gS1uA8SOBjJw19ibSOrys5bpItPp
+	 XjpcIFjzsXdYYqtedz3SgYmdm9gSjZuQyFNOl1ZyaZRKtKopdcsfjjjWg66ebJ/bdV
+	 hbEQiCKPW9HYPFXjaMvqzrsuBhEKiyS0JMJmK+/RB2y3V30HpsSDXRrIQGK0TZj9IO
+	 l4mCBDIoOvyBGjRCkFtbxQlpRr/f9Dad7ermqYEfzohXI2kMwlPuoSBzpqXZN9iZ8T
+	 8JTitQkjwzU3A==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1sOBz5-008hlF-Ur;
+	Mon, 01 Jul 2024 09:02:00 +0100
+Date: Mon, 01 Jul 2024 09:01:59 +0100
+Message-ID: <86a5j1ilqg.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Nianyao Tang <tangnianyao@huawei.com>
+Cc: <tglx@linutronix.de>,
+	<linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>,
+	<guoyang2@huawei.com>,
+	<wangwudi@hisilicon.com>
+Subject: Re: [RESPIN PATCH] irqchip/gic-v4.1: Use local 4_1 ITS to generate VSGI
+In-Reply-To: <20240701062042.4128863-1-tangnianyao@huawei.com>
+References: <20240701062042.4128863-1-tangnianyao@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Ma Ke <make24@iscas.ac.cn>, linux-kselftest@vger.kernel.org,
- Amer Al Shanawany <amer.shanawany@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski
- <luto@kernel.org>, Kees Cook <kees@kernel.org>,
- Muhammad Usama Anjum <usama.anjum@collabora.com>,
- Shuah Khan <shuah@kernel.org>,
- Swarup Laxman Kotiaklapudi <swarupkotikalapudi@gmail.com>
-Cc: kernel-janitors@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Julia Lawall <julia.lawall@inria.fr>
-References: <20240630130038.3671507-1-make24@iscas.ac.cn>
-Subject: Re: [PATCH v3] selftests/capabilities: Fix possible file leak in
- copy_fromat_to
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240630130038.3671507-1-make24@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ITtbtaJRixQcC4ydQvWAh70vkNkfeTcFFOSJ+GWUnF3ZF7ZPydo
- iv9KGBeu0yaw+ZcByKAnvwFn1SaSqT3D+ij7Wdqfz5ToAAYq4q2lBfPHH1OW4wjEBPuFoqb
- Zjl96yT1l3VpqNWijbS5KiGTMPWlDnbniWZkJsiJ5+S4imLHpSiU0SzzIpTgq7wNBmdaj0F
- LI4AEC1n+35wXxG9SIHQQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:y2osiQM7q8c=;1aLLusO+miy302MIfA0gbIrnF0A
- BRAcS6kQibZuLPI9SQ0XEz/rYmslI66qtnLOpXUsiAy7IbSMEFdYV9HXNcxCp7JA9FEldlm1M
- 0WsRd1pCBE7x9vhZ8iNqqbatNkGl7Tv0oxaV82ERi8WALuJq3xwBvHFyTEI0Iz8kHsu5g6LCC
- FiMQfO6YPgsnNgH1t7fvYTvOVDvetlxQX7ep7U4lIjvTopnZN11u3fnskr8i5ci/JnTDG/bVw
- a67A2Zhk68LHUmq4qqSbf4gYM03eKhjpKxQLyMHFRzA3av6ZvX1vGlwX5G4nHuAoxULXmBi2g
- trlpVc6L5i1qn5vNpIgHgfxIEGDTpf2yyJAhSIHGLYD6NlmSf6CuzwGIwH7Tl91cxrpYKe5Md
- yCOIt+G7zSL/w/l3cU17iBSzBxLVIqClb332iWI/K3nJRl5kX/ervhyzOpIH7xWVJlpMQh0oX
- ClLYQmjboR9CXPMaN6jvGUnwrGlBeQbSLu0onZYWxm77JSUHTl1RcFRixBU4mdYihFFK0V0XR
- E8ux8/AO8yhjNLVKvJmXZP924bnxTJAP8rpU/oLMnIYQhf6APShgNcia7UT61/61nNKhcTG0e
- C6XRYeT7g245SMYwmK18EmMsLOmqiXorWhZ9/ZAAxeaTnnQiHYSGoo9C+rE4PGBtyh1n8MZsv
- bAhr/cB/Q/LV3sKgWgaca0KsqGyfjo/yOx9rc1ZeT99fAwQzlmISheez54jY3hWfTi7yL3Bv9
- cDzzTxK8dGTFxrE7K+/tY6XborgX6KN2CDEt4cRuvIgKli+ww3DD417AmzNzoODKt3nCe5kY6
- CJ5zeKTCTrRHKbP9ZFASljiv1+fJzQ5XXgzzkzDfcHdQ8=
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: tangnianyao@huawei.com, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, guoyang2@huawei.com, wangwudi@hisilicon.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
->                                        =E2=80=A6 openat() and open() ini=
-tialize
-> 'from' and 'to', and only 'from' validated with 'if' statement.
+Please don't use "RESPIN" as a subject tag. This means nothing, and
+confuses the tooling such as b4, which expects a version number.
 
-Why do you find such information helpful?
+If the code has changed in any way, increment the version number. This
+really should have been a v2.
 
+On Mon, 01 Jul 2024 07:20:42 +0100,
+Nianyao Tang <tangnianyao@huawei.com> wrote:
+> 
+> On multi-node GICv4.1 system, VSGI senders always use one certain 4_1 ITS,
+> because find_4_1_its return the first its_node in list, regardless of
+> which node the VSGI sender is on. This brings guest vsgi performance drop
+> when VM is not deployed on the same node as this returned ITS.
 
->                                                                 If the
-> initialization of variable 'to' fails,
+s/deployed/running/
 
-The variable assignment will usually succeed.
-A stored return value would eventually indicate a failed function call.
+> 
+> On a 2-socket environment, each with one ITS and 32 cpu, GICv4.1 enabled,
+> 4U8G guest, 4 vcpu is deployed on same socket.
 
+s/deployed/running/
 
->                                        we should better check the value
-> of 'to' and close 'from' to avoid possible file leak. Improve the checki=
-ng
-> of 'from' additionally.
+> When VM on socket0, kvm-unit-tests ipi_hw result is 850ns.
+> When VM on socket1, it is 750ns. The reason is VSGI sender always
+> use lasted reported ITS(that on socket1) to inject VSGI. The access
 
-Please split desired changes into separate update steps.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.10-rc6#n168
+s/lasted/the last/
 
+> from cpu to other-socket ITS will cost 100ns more compared to cpu to 
+> local ITS.
+> 
+> To use local ITS, we can get 12% reduction in IPI latency.
 
-How do you think about to use a summary phrase like =E2=80=9CComplete erro=
-r handling
-in copy_fromat_to()=E2=80=9D?
+s/To use/By using a/
 
+> 
+> The patch modify find_4_1_its to firstly return per-cpu local_4_1_its,
 
-Under which circumstances would you become interested to take remaining
-patch review concerns better into account?
+Drop "the patch".
 
+s/firstly/first/
 
-=E2=80=A6
-> ---
-> Changes in v3:
-> - Thank you for your interest in our vulnerability detection method. We
-> extract vulnerability characteristics from a known vulnerability and mat=
-ch
-> the same characteristics in the project code. As our work is still in
-> progress, we are not able to disclose it at this time. =E2=80=A6
+> which is init when inherit the VPE table from the ITS on secondary CPUs.
 
-* In which time range do you plan to publish an official announcement?
+or from another CPU.
 
-* Will similar software research approaches be discussed further?
+> If fail to find local 4_1 ITS, return any 4_1 ITS like before.
+> 
+> Signed-off-by: Nianyao Tang <tangnianyao@huawei.com>
+> Reviewed-by: Marc Zyngier <maz@kernel.org>
 
+No. I never gave this tag. You can (and probably should) add a
+"Suggested-by:" tag, but not a "Reviewed-by:", until I explicitly
+reply to the patch with that tag.
 
-> - found by customized static analysis tool.
-> ---
+Please resend it as a v3 with all of the above fixed.
 
-Would you like to replace a duplicate marker line by a blank line?
+Thanks,
 
+	M.
 
-Regards,
-Markus
+-- 
+Without deviation from the norm, progress is not possible.
