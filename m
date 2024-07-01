@@ -1,84 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B149C8C7;
-	Mon,  1 Jul 2024 19:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2052BC8C7;
+	Mon,  1 Jul 2024 19:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719860839; cv=none; b=Nv3eZGwdU5pwIhP4oY2PL84uQ7cvQ+svIfADAMAj9804aal6LDJkri/pN869oUJubpsW6Ealw9GGidvDTPfPFnVm/j1rvsQR8NrYzQ5IJljDnHpuAr1KtgwYKQDHJoUWG84i3q3bKG8jrxx93mnm1GcUu76WWbpN32A1GTf1SYw=
+	t=1719860846; cv=none; b=lh2U08csOKI8dhLrxW6V0jsC/eavEZ0c2ALccxGWJCe1B2E0dro23V36rOD3fBJ/lpT6vGw42PUJcTi0Rfg8YCdAigF+5/xEkwVyUx/ZYyF15VAQJX3Xj76UF0cp+QBVSO4uMEg/w1MFej/KxowD6hRaLB7gC8Ahh1fVRbjBF48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719860839; c=relaxed/simple;
-	bh=gMrV+ijgZMh0m+2ERFZl/fbLXqTQXBW5x5rclYiAQDs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=VAU86BM3OkwWIYgrWkfiR8mVWJl+efuftWYWLb2at7Q24q0Z9CvyOnC94JReeNsi3dIQ6hGxdN3R2LcLw5llpzxTqKrsFtK+ocSzwRiZdZWZvTYt5sdVTZOeV69rxX6QqtaeOVdvSBV4DydlwnyZr/1h5d55qrhbHm4vIryC/nM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WyDgSE21; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719860846; c=relaxed/simple;
+	bh=BXqpDmhelS53fqFTYgCoicuf3ZcXJwS6pFu7n/nrJNI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KVU8yLBsJrPAaTWiSGPcnPX9G+Yu8DGE6HSeynFr3i/gPHC/IUpvDKafHwJRfu0TFbpKWyb97bGV4Yna+BIRC4XaHSj7qQ/KCo+up1Vw7CnlixlogkKd7pY7bLOdFJVl2oLwihRpSjjNy9FenfMFYp/T9V5Vxema/QqJVzHoWwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=URIQhaTD; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WyDgSE21"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73E0CC116B1;
-	Mon,  1 Jul 2024 19:07:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719860839;
-	bh=gMrV+ijgZMh0m+2ERFZl/fbLXqTQXBW5x5rclYiAQDs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=WyDgSE21W/R6Z6n8hZW9i7gR2SypF4OkpA3/Cd0gbuR10uWBqElJUoJ3JKpnos/qW
-	 QJM+aWi/H0o8HYyL24E+OTRCsVcVs5zSXcTpAhj32Ej6aqnJOSzNqigan+U6KENP9U
-	 Cqwcf+mkzSPjQtnDcf7moWOeqhMrHD1nJWs2bC+/g2pM/ck+Nt/ZnwIrWplqma6RpT
-	 tZHlW1jC4HqrI00ETXsPxc/p7zvqQbQYj6sWoL3/aKforoZCcUwnDRnQv4/OlnKKPm
-	 k+aeJLhumfJ+2R2rJztRehC8EAbnI5hiPtaGo1hGj0ROtU/L0pOtTCsAZ2uIAOXlcN
-	 I7Qd1U6Bx/9rw==
-From: Mark Brown <broonie@kernel.org>
-To: Animesh Agarwal <animeshagarwal28@gmail.com>
-Cc: Daniel Baluta <daniel.baluta@nxp.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, linux-sound@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240627105030.14360-1-animeshagarwal28@gmail.com>
-References: <20240627105030.14360-1-animeshagarwal28@gmail.com>
-Subject: Re: [PATCH v2] ASoC: dt-bindings: realtek,rt5677: Convert to
- dtschema
-Message-Id: <171986083720.121161.13189262733622905838.b4-ty@kernel.org>
-Date: Mon, 01 Jul 2024 20:07:17 +0100
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="URIQhaTD"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id B1D4440E021B;
+	Mon,  1 Jul 2024 19:07:20 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 91M11-d0dMNM; Mon,  1 Jul 2024 19:07:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1719860837; bh=YvgcWqvpapeeWojA6dF/+phZFfl1obRl2CIZRAObln4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=URIQhaTDvh0kXZgX12KbyeLXwtEef+DyrJp+u+h0U7jkvt97ah/GP/EvC5JbdFlCy
+	 9EB8mN6ns+/mwjGd92gz5pnbki7qp8uLmDmu6mvItKmpSD83X2JEfl7bEXrY8jMf4F
+	 9h04etUdKKbqpvdvBid3s5KG7kBC7QtvyEXVqdi0aHGiMrPfJ1QNI7lS+Axd+MY0Df
+	 quvc6s+tkNtdsML4ODoiM6sJ12TyGG1fWfeayhQsmXKb75/QWWzWR8zmM/fpuw/nSN
+	 UkiCnaZLGvvWeJkdW0ZD6Q1ZX7VB1HGQuie4ia4ZzOgL4gd5PCjTu/J9S7UMxJz9Jp
+	 46tBqHCN/PnEN5f1EMAb2P25gKmAu+Q7X6otb/KX1NHlv7HHiS4s2LawrMdIepv/RD
+	 oUhYXUo81RMa5hFFYBcTEDjRPvqB+SA5Fain7cj5pVt6g/8S3tNl+R+gt1j8xGUcMb
+	 HMPICbAtqJ1G8WAN897PTmLlP13Po3T28An+HlQj+VZMWlLu0kSj7J5vIkt4tJlcke
+	 KJtDEeETW+HEZNaSDB1YYCygJfi/nZOB9lhBXuvL9HoelBZtALd4mhkXRkPv77NU3j
+	 STEvOFLTqpBoNVFnLRVhnPhkvwSJvfsOutG7EXlgwrOI89SrMngB7M7WSvfiMF6TvZ
+	 bnFrH6hZESfGNE5C7senlgv4=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 503DF40E0185;
+	Mon,  1 Jul 2024 19:07:09 +0000 (UTC)
+Date: Mon, 1 Jul 2024 21:07:04 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org, tony.luck@intel.com, x86@kernel.org,
+	avadhut.naik@amd.com, john.allen@amd.com
+Subject: Re: [PATCH v2 1/5] x86/topology: Export helper to get CPU number
+ from APIC ID
+Message-ID: <20240701190704.GKZoL-WBZ19-z8s7UR@fat_crate.local>
+References: <20240624212008.663832-1-yazen.ghannam@amd.com>
+ <20240624212008.663832-2-yazen.ghannam@amd.com>
+ <87ed8l7byy.ffs@tglx>
+ <20240626014212.GA1086@yaz-khff2.amd.com>
+ <20240628083722.GFZn52QnltR_2gjuO5@fat_crate.local>
+ <20240628141542.GA124261@yaz-khff2.amd.com>
+ <20240628144535.GAZn7Mj4jofP3Vz2xf@fat_crate.local>
+ <20240701175142.GA4681@yaz-khff2.amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14-dev-d4707
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240701175142.GA4681@yaz-khff2.amd.com>
 
-On Thu, 27 Jun 2024 16:20:26 +0530, Animesh Agarwal wrote:
-> Convert the RT5677 audio CODEC bindings to DT schema.
-> 
-> 
+On Mon, Jul 01, 2024 at 01:51:42PM -0400, Yazen Ghannam wrote:
+> X86_LOCAL_APIC depends on the logical OR of a bunch of options. So it
+> depends on "any one" of the options to be enabled. But it doesn't need
+> all of them.
 
-Applied to
+Yes, I can see that.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+How does any of that info answer your initial question?
 
-Thanks!
+IOW, if you don't have LAPIC support in the kernel, what CPU number should we
+return for any APIC ID serving as input, and why?
 
-[1/1] ASoC: dt-bindings: realtek,rt5677: Convert to dtschema
-      commit: 4381b88b24a2edf9ce130adc9acd53258ba44116
+-- 
+Regards/Gruss,
+    Boris.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+https://people.kernel.org/tglx/notes-about-netiquette
