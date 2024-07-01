@@ -1,211 +1,169 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2115.outbound.protection.outlook.com [40.107.104.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0AE113E41A
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 11:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719833171; cv=none; b=I1CozqbWsWCTInHU4xlZuslH7L03kgu2jGT1HSHnssM/Gu///A1F1NbsUPeFzmYR3K3SDZP0/R+1YHTlAp5jqJ2QsoGAG2H0oJcWcRl08s1bU40ZCXbmjdZcPOp0G1iUSYJyA4tsbLOTBobGI7jOEJDvbw/MnvI6s0e5YdcRmVc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719833171; c=relaxed/simple;
-	bh=U1/5xZ88mpV+ZF8ju2FWT/lZTIezJ16/Q9Ox9bMaOwQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DVM7z1E1930CLaQoEnO95+ik/f7KGheEvJIup7cevntosGW5htHofNFJl7uu+xdEjhPobkSUQfNIrXT25BKyMUffpzM5uJl6jJVIi6ShECMZVCMaAlhoW6GjS7CC+vC7a8GIRK1WjKgorfWVpdW+jYswJi1P/H9zj/9S5JpOo6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F7xcgQiV; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A3D13DBB3;
+	Mon,  1 Jul 2024 11:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.115
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719833183; cv=fail; b=puVWqyosyDAOVgCYAH0CBanaYxyGkQEeCS8+1HtUcAvEwi1FcDAwSbeNXm9TJnUARWcRv3Ec+w98pEGxXRTxcTHLAoBmvH5UB43FCUYLyZKBffK1wjvntqgSj1+ti7OnvmClnQw2TOU0C+Dx3IZd+VOEPtx0oJ3LBjijb8x5nNw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719833183; c=relaxed/simple;
+	bh=RY0w0iAbwDSIXaYmJIfmfFJxwBfHpYFk2RBRmPfzsRc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=UungAfpjIaS9hRBXBVYyTsmNKITXP4oVg8MRayled4F7YbVrFNa/FDmTE2OiUOz12APTg2hNIxm4csMFFQB/2em8hGwvAtNiE1bMAzgmW5KA+ETKlVFKku6ha5pn9znwt28B+wmT8IJz0iAiKo7PTR2YaVjBQG+L2xezPIB0kDw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=YPAapqay; arc=fail smtp.client-ip=40.107.104.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F7xcgQiV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719833170; x=1751369170;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=U1/5xZ88mpV+ZF8ju2FWT/lZTIezJ16/Q9Ox9bMaOwQ=;
-  b=F7xcgQiVABwVloRBEKrY7a7CwLVhzNVRTngO5t0DWzABouDe8cFoS0qt
-   4FwxDDJUnuqeUr7qawByr/XLfuOwZTHQ4iOvY80V6wGlg59DCqGts9pSj
-   083cVqp4S+cprxGw4lw58+CiqLor/4DFZjoRZh4N3bjDS/PrD+RZRkTws
-   747ZXJjltgzeADfvhEYzLGcwENUZybK1hIzFLgZJRJOdr9JwvfE1maBoe
-   av1KqNSSOhJlRfTYSnMLJ5FSSqved7yu12khtr/c9lqnqPr9zxs44RwTc
-   KsmU8X7mJM25lDviQxcJcCQXrXM7WLIfWDKK4Hc2EQ7akoacHed3tL9CV
-   Q==;
-X-CSE-ConnectionGUID: QmLxcHBVQNiqd9bdrQUFfA==
-X-CSE-MsgGUID: pCAYcxuLSgOpyE66e5uS0w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11119"; a="17082665"
-X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
-   d="scan'208";a="17082665"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 04:26:09 -0700
-X-CSE-ConnectionGUID: aMtpQnM2Qvu/H75Bg7yBxQ==
-X-CSE-MsgGUID: Uen45B8GSkCb6lFbj2Ah1A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
-   d="scan'208";a="45481475"
-Received: from unknown (HELO allen-box.sh.intel.com) ([10.239.159.127])
-  by fmviesa008.fm.intel.com with ESMTP; 01 Jul 2024 04:26:07 -0700
-From: Lu Baolu <baolu.lu@linux.intel.com>
-To: Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Kevin Tian <kevin.tian@intel.com>
-Cc: iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH v3 2/2] iommu/vt-d: Refactor PCI PRI enabling/disabling callbacks
-Date: Mon,  1 Jul 2024 19:23:17 +0800
-Message-Id: <20240701112317.94022-3-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240701112317.94022-1-baolu.lu@linux.intel.com>
-References: <20240701112317.94022-1-baolu.lu@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="YPAapqay"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RiE+FK9TVhXaO3F07q/oPlniAePp4nx0BMfg4ixVgdSdXizWm3EnfG7KxIYeSt2tUN7iPimYqiKDFKs0TtFbXOtxjpO+7AYPSLJNOr2+oNPLzEsqgKkbKEuwIkiNcYTvSmwbawOgtFt+KuO9bD1THrj8w1b8/0tNxkpM/0AU5mcyhgHYww8FyeMn4fSjsmelcVw6gon1W+Xv+KsP1BRtbu/3G8pZDntmtwBtGSrdlXQfBd+OW/nMd6YU8PJcovsfKn0fYCIR/fgRENlvA+OviX3Q1Zov6BNTVNsWJEOutroCWFxgJ4x2gRdysJVWLM9ODlmjPXU7Q0z//XBbusypQw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WF0cn0r8DOkmqRBRvAEY44hJDUdC7Yni8efwG5C0Ddc=;
+ b=a43MVAS10nt4mYK9dfmMmzdHiBUYpBBXhAHHVDclMIImQd3BDiXpDpJbYdy4jIk4yZYbVodyp/n7s1x9i6uLhFu7CPecGOoBvjyf1Ih1mb03gvhguY2IoqYxmKjlOkebFuCtIkzFIiDljfx+S+PuvKz5dcIeg/Dh5BYAvHx7EciqEMz56q6E+TWazKVpuG+ASHUfjAnWPyiiARz84B/cgu5aAQLhTSZt8ZOPbeizKhvTHm7YwWH1a+FAn1jYkzJzPLYQpZEAp0l9mbL+w2gDXxp2OsSHRYT/8fjF5dWrV8impCszn7O7AP1GXNcjTN1ZfzNbqO1R+uMz3WUWGVG2Kw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
+ dkim=pass header.d=cherry.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WF0cn0r8DOkmqRBRvAEY44hJDUdC7Yni8efwG5C0Ddc=;
+ b=YPAapqaynZrqNQTbMZVdAs34OvDZgwODtZVffxS/KTUZlXP2v4ZllN75dbKoER9LIFCiPih89g910bmu/O/LYtHl2BoRTEMxrnOwB0N9q2QYKNEGFUlz/MjvPuhXNoZg0txEnRXAxH+atL/WiaVKM22qJaSMG0Uvdua5j78JWsE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cherry.de;
+Received: from PA4PR04MB7982.eurprd04.prod.outlook.com (2603:10a6:102:c4::9)
+ by DU2PR04MB8552.eurprd04.prod.outlook.com (2603:10a6:10:2d7::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.32; Mon, 1 Jul
+ 2024 11:26:19 +0000
+Received: from PA4PR04MB7982.eurprd04.prod.outlook.com
+ ([fe80::3c4:afd5:49ac:77af]) by PA4PR04MB7982.eurprd04.prod.outlook.com
+ ([fe80::3c4:afd5:49ac:77af%4]) with mapi id 15.20.7719.029; Mon, 1 Jul 2024
+ 11:26:19 +0000
+Message-ID: <fb4169e2-b605-40de-9bb4-6c3b3297bb0e@cherry.de>
+Date: Mon, 1 Jul 2024 13:26:17 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 06/10] hwmon: (amc6821) Use tabs for column alignment in
+ defines
+To: Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Farouk Bouabid <farouk.bouabid@cherry.de>
+References: <20240628151346.1152838-1-linux@roeck-us.net>
+ <20240628151346.1152838-7-linux@roeck-us.net>
+Content-Language: en-US
+From: Quentin Schulz <quentin.schulz@cherry.de>
+In-Reply-To: <20240628151346.1152838-7-linux@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: WA2P291CA0048.POLP291.PROD.OUTLOOK.COM
+ (2603:10a6:1d0:1f::10) To PA4PR04MB7982.eurprd04.prod.outlook.com
+ (2603:10a6:102:c4::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PA4PR04MB7982:EE_|DU2PR04MB8552:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5adcdcd0-c6a3-458c-cdec-08dc99c0a0b7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aWtLU1YwUmZ3M0dRaUtEWkpkTXN3emtZZzB5ZTc1MmQxQnBWbU9WNDlOeHlS?=
+ =?utf-8?B?V1Y5ZEk5Q0NIaDljQ0F4UTRTR1cxSjE2TGxyaHZRUWpSZ3J0Nk9JbGVJTEtD?=
+ =?utf-8?B?NlJkbXJocTFBazBYUHhSTFNPWHpma0gvQ245YVFQQ2JrZGpOQXY5M2tOczFt?=
+ =?utf-8?B?V0x6SXh2SUZyZTNSZkg2K1BCNGVERmJ2Q2V3NE12eE03SzkzN3J1aXZzdWRF?=
+ =?utf-8?B?b2hVdkhJUDlnSW05Vlp3bUp2ckJqS3gwWk1ZK1hUUFVSdHNSVGljaTQ4bW1w?=
+ =?utf-8?B?L01kMFlaZndIL0Vyb0t5VUE1NllwQU54UWluV2Z0SHVrenFSMjB2UjIwOGJ5?=
+ =?utf-8?B?QXFrS0lSd3BSU2ZzM1BJclIzZ1NBUDhQRGQyb1crKzN5cDU0U3lIeUtYWW50?=
+ =?utf-8?B?cGF3ZmtJR1VZUjFGSWtGSnlaWExKMUs5c2FwclJsSkF0SEZTYi92Q2NZWGVx?=
+ =?utf-8?B?YTdhU0QwWEtUckhLLzdWckZsN0ZNVTA5ZlBaV1hHZlZXb1lMRVhSdjNldHVj?=
+ =?utf-8?B?Y2VhSDlyK0xQM1V0OTV2WG5XRzdOWXJrT0FaR1l6MUFWeEU4emZkd0pPYktS?=
+ =?utf-8?B?ZGVjZzdYcTJIdHppVkdtS2FjQ3ZJZ0Q4WGx5MWwvSjRvZHREaTYxZlJtY3pU?=
+ =?utf-8?B?NXNkay84UGJHVTFsejl0dG1WZnh1NHhSREdKV2J5c2YxU3V4VFFVWU9vcVlG?=
+ =?utf-8?B?UURuei9ZQW10ei9pVUFBUDF5SGwxZDZmZFBVS0FiY3o2a3E4WFkzYlNkSm9p?=
+ =?utf-8?B?SEhNb3c1Ti9CaUtmUzlpaEI4dVNaYXg1Z2pQR0V2YmpZUmtoS3V6WkhFc1o3?=
+ =?utf-8?B?V3pYMk16aERncEZLNWFYVHA2RFJ4c1BnV04vU1BVT0xCRUdEV0xGcll6OEM5?=
+ =?utf-8?B?bWNVSVZSNXc0b2h6aFR0UnZEV0FGeEE3TVp6SXZYdkNxQ0c0SWdIZFdIaWJz?=
+ =?utf-8?B?cXJ0USt4V1FidGRpaGJoR1RBd2c4OFZsQXJYakhRS3AxQkQ2MVRVbWx4Q2pq?=
+ =?utf-8?B?MktkUVo3eVBJOFBmcjdLQ3I5U3JTS2JibHZEQ0FZWk41Vmk5cDRmUklObEx4?=
+ =?utf-8?B?RkFzVnpPdzk2RjZGeWdONU1ZZGowZXhyUC9VYXBBY25tbkVGQ01PTEtyaVZB?=
+ =?utf-8?B?WnZPdDFORlBOdWkxd0M4bUJtMkxXMzRrNjJIQ0NSZ3UxNHNMaThXZkpxT3VL?=
+ =?utf-8?B?WUZranUxZlhwWEhEUi9jUFYwdGpaNm53UEVjOVYxYlQ4bGlySTJaODZwQkxF?=
+ =?utf-8?B?d0J2VFB4VEc3blk0dS8wK2VqNTYrQ2czUk9IMmQxRzE3WnNhVnphdkJIZnl6?=
+ =?utf-8?B?U2RuR0RlTzE4OFhoUEZlK2Y4ZkJkZVEwVVJjc2tLQUFzdkRQeGl6YmxjMnJD?=
+ =?utf-8?B?SVdwQzhtZFUvOWVxdlp1M3k4YkxaeVJuNTEraE1adnRuUlZ2ckQ2Tm4xYVhG?=
+ =?utf-8?B?amlhdExNb3hUUGtLcXNxSm8rMlJIbGwrODRSQngxUzkwUDJNWjdacWptcGFB?=
+ =?utf-8?B?MllBVTVqWjErTThDSGNaLy8ydjQrT3BXT21abHJTTW0wMnIxTDNkQVdRT2Q1?=
+ =?utf-8?B?VnlEZ2JEM21GclRubzZNZTJNQjFISzAwa05ZemRMM3JJMUF6T1VUUld0dlUv?=
+ =?utf-8?B?S3ZUU2ZNaVlsS1FQTXBBWTBXcFYyei92S2paamxkUXk3WVBzMWtIbzhRWGZz?=
+ =?utf-8?B?M1FvNkZKcnpyZFVlTEgvb1F5cHVhUFZvK1JpaytaOGdkOHhZd1dnTHFZREw5?=
+ =?utf-8?B?TExIMExXcTJxOXZMOGJMQ242Ni9FNEM2UmVCWGJaUnlyWHdOWEhCV0w3T2Y0?=
+ =?utf-8?B?VG93SDRRUHA2RnJBeE9Mdz09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB7982.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SS9OUGJ3NDYzenVYYjhIdjZFRnRQQTg0RDFNTDRnUEV5bUhuK1ZxQVBmS1Vh?=
+ =?utf-8?B?Vkt5WHVQN0l6Z3o4VXFzbmJsWXlneTJGbmRkYVovT0QrQ0ZxRjZpc0huQWpO?=
+ =?utf-8?B?cU1VenZpbnpzVUsvR1BzblpoVHN3aWJSYXk2cG1sRlZWRGE3Uit4MDREcVky?=
+ =?utf-8?B?WFFvc1N0NVVzdDh3NDllaUFHbUpBSGZVMTlsWnlacEpRNm5hVERhTFBDOUhz?=
+ =?utf-8?B?b0oyQUF2dUpmNUpiMDh2UEhRcUZTdzY2MU9ETXF4VlJCellNbS9PVjFQOEFC?=
+ =?utf-8?B?THpCc3d5cXpnVXNxM3BTb2FqMDFDZE4zTEFkYjl0emp0U00yZDJBVm40WmxK?=
+ =?utf-8?B?dHZvSTYrRXlJMmwyZ2NGcFY3N0EzdWNlWXBQSXJyOWtmdEZLMXBtM3p5ZHhj?=
+ =?utf-8?B?U3dCUk5CQjRhckpFSjVwSlZ6THdUWVA4RklFVVRZczRjTElsRC9CdmxyREhq?=
+ =?utf-8?B?SG1wM0dXemd1UWVyNk1jUi80NTFuL2dnQ2lzYmNIQU5LQnlEZU5sSmVpT2tD?=
+ =?utf-8?B?TDM4MGR0TWpidFY5V3ZUWkRqakt3V3o0RmM4cTNOWE5kdlV4QmdDOW5NaUYx?=
+ =?utf-8?B?NktURExHYUdNVHBsTWppZ1RZQmNGajlBdVJpTlhDZjJnb05vRlRwZjVkS1FG?=
+ =?utf-8?B?QW1ZdGdta2YrU3hIeEZsb05MRkVaWVlaLzJoaXhXUkYvZVhob2Y3QWJOaDV3?=
+ =?utf-8?B?RVhrTGY4RjhGTW45OHJBVkVXWDQzaHpQZEtoRDFBL1k1NWI1Ump5b1B3NTZh?=
+ =?utf-8?B?MlJ0bGlUak9qc2YzTVlUR0VURFNQeFhMVGoxejlDMldhUWNjQ1l0TS9lNWtl?=
+ =?utf-8?B?Ri9nNGVqSHRMNC9QWjZlSzJrQUhuaVZxOTBLc0pKUnlxQjVSVndKcEo5VkZX?=
+ =?utf-8?B?S3h5VTJzOHZmZTV6MEpDa2wwUVFpWkhYeG9DdXZ6eEpIMVAwY1h1M3ZCWWVX?=
+ =?utf-8?B?K1orNHc5MVJLbzJ4RGZHU2tXWmFsR2o3dVNhSXNLUG5jUnVpa21Gamdwb1lN?=
+ =?utf-8?B?dm0yYlNQcitXZ0dTNUl4cFBEQ1hoSmdFZklCKzV3QVVPUndNRCtEeFE4ZndG?=
+ =?utf-8?B?K1Z3WW1KaHJiQzVDMHN4aUY3NndxdDE5bkFGV1IzeWJXWlBCNWN5WDJlZFpm?=
+ =?utf-8?B?dE5qWjh1dDN2MmpGc2NQOUdoVUd1bVUxcU9iRHlEa3p6bTY0c1JQc2hmODFq?=
+ =?utf-8?B?Vy9EUHZObGN3bUJKdk14b2hGR3ZCVU11UlZKTVJCZkJMWGIwbGthTCs0d2hS?=
+ =?utf-8?B?eEVqelNQbHUvdjltOW1oc05WNDFPd1VRamhOcmx5WjVXOWVxVE9nZ0pVV1RC?=
+ =?utf-8?B?c3BJcTYvNTJPVWxtYXB3VGRXNHRka3hTdW1kT040TlFFNnNSWWVmUjdrWWVZ?=
+ =?utf-8?B?NVovU29idVp6QnZ3eUNML0dJNHlsbjkxb1hHLzQ2dXUyelorakpJa05QMzlK?=
+ =?utf-8?B?eG5lNTRUM0ZzcElGU3JIVWFuWFVYamNMM1NhTVJGQWtWTEVza3pWd25KNVNY?=
+ =?utf-8?B?aUxmeG9hMEFBMVNXQmZ0MVdGTkYwQjBBUmpSQ3BuWTNaQkVzcjFERFNxbnJo?=
+ =?utf-8?B?Y2xNQVhzY3hOeU82cHhzblZRN2FJMUkyMHNERFBwSGE2QmdTQkNkYjZoMVRl?=
+ =?utf-8?B?ZWJQMlQxS0RDamgxUHh2L0Y1MzNuYWM4c3pqcVdOZGI5SWcydlFWazcxeTJF?=
+ =?utf-8?B?aWdqTkEvSEtiTnpQd2o1U3B3Wm4rRFRnaGhPR0JpQVc5SGM1U000bXh4UWFF?=
+ =?utf-8?B?LzlyQTQ4WEpmOGRCcjJHbjFaaXo2UkVkOE5VNXhlR0ZiMVM1Q0lqQkhmc3BG?=
+ =?utf-8?B?VE1mQm16Uks0cWRtOG9XYk5KQVpGcytXSFNCeEtpUFRjMXVGTDFNTjlTVEFJ?=
+ =?utf-8?B?VEJ4V0pyUmVKVkdGQlUrTjZVRlRNRDJKUERHcGYyc2NkV3JOQ3VoaGZ5eHAy?=
+ =?utf-8?B?L3lQYW1JbVN6VnpFeHlXRm1WM0w4Wnk1aEUzN2ZHbFFveVhsVU9Za0VjcVRi?=
+ =?utf-8?B?cWtxYUkyZ1pmUVRySGNHOWMwQVBnUm9hcTJPL2JZM0J3NkgzOVhnbWU0NnlO?=
+ =?utf-8?B?SWRUMkdSVDJWMUlYN04rSkpEQTE1T3R5Wm9XODJRRlBoUkxzTEVXMkgvdk9I?=
+ =?utf-8?B?eUE4a0pKNVF6c1ZNTlpSbXg5S3AyVTYzbTRzRzdZSlliYzNxN0xDbUd0dUVL?=
+ =?utf-8?B?WUE9PQ==?=
+X-OriginatorOrg: cherry.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5adcdcd0-c6a3-458c-cdec-08dc99c0a0b7
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB7982.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2024 11:26:19.0470
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0hQmKNOemTQxMMSPu4xhPwbnB8wFsP18vnrsovotb6nhBVAulR3pmHorwWipkcIjosu7EzG7cJBzInLpHCCFZuNENL2T1g26GdGqZlep+i0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8552
 
-Commit 0095bf83554f8 ("iommu: Improve iopf_queue_remove_device()")
-specified the flow for disabling the PRI on a device. Refactor the
-PRI callbacks in the intel iommu driver to better manage PRI
-enabling and disabling and align it with the device queue interfaces
-in the iommu core.
+Hi Guenter,
 
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- drivers/iommu/intel/iommu.h |  9 ++++++
- drivers/iommu/intel/iommu.c | 57 +++++++++++++++++++++++++++++++++----
- drivers/iommu/intel/pasid.c |  2 --
- 3 files changed, 61 insertions(+), 7 deletions(-)
+On 6/28/24 5:13 PM, Guenter Roeck wrote:
+> Using tabs for column alignment makes the code easier to read.
+> 
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 
-diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
-index 63eb3306c025..b67c14da1240 100644
---- a/drivers/iommu/intel/iommu.h
-+++ b/drivers/iommu/intel/iommu.h
-@@ -1045,6 +1045,15 @@ static inline void context_set_sm_pre(struct context_entry *context)
- 	context->lo |= BIT_ULL(4);
- }
- 
-+/*
-+ * Clear the PRE(Page Request Enable) field of a scalable mode context
-+ * entry.
-+ */
-+static inline void context_clear_sm_pre(struct context_entry *context)
-+{
-+	context->lo &= ~BIT_ULL(4);
-+}
-+
- /* Returns a number of VTD pages, but aligned to MM page size */
- static inline unsigned long aligned_nrpages(unsigned long host_addr, size_t size)
- {
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index e84b0fdca107..523407f6f6b2 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -4244,6 +4244,37 @@ static int intel_iommu_enable_sva(struct device *dev)
- 	return 0;
- }
- 
-+static int context_flip_pri(struct device_domain_info *info, bool enable)
-+{
-+	struct intel_iommu *iommu = info->iommu;
-+	u8 bus = info->bus, devfn = info->devfn;
-+	struct context_entry *context;
-+
-+	spin_lock(&iommu->lock);
-+	if (context_copied(iommu, bus, devfn)) {
-+		spin_unlock(&iommu->lock);
-+		return -EINVAL;
-+	}
-+
-+	context = iommu_context_addr(iommu, bus, devfn, false);
-+	if (!context || !context_present(context)) {
-+		spin_unlock(&iommu->lock);
-+		return -ENODEV;
-+	}
-+
-+	if (enable)
-+		context_set_sm_pre(context);
-+	else
-+		context_clear_sm_pre(context);
-+
-+	if (!ecap_coherent(iommu->ecap))
-+		clflush_cache_range(context, sizeof(*context));
-+	intel_context_flush_present(info, context, true);
-+	spin_unlock(&iommu->lock);
-+
-+	return 0;
-+}
-+
- static int intel_iommu_enable_iopf(struct device *dev)
- {
- 	struct pci_dev *pdev = dev_is_pci(dev) ? to_pci_dev(dev) : NULL;
-@@ -4273,15 +4304,23 @@ static int intel_iommu_enable_iopf(struct device *dev)
- 	if (ret)
- 		return ret;
- 
-+	ret = context_flip_pri(info, true);
-+	if (ret)
-+		goto err_remove_device;
-+
- 	ret = pci_enable_pri(pdev, PRQ_DEPTH);
--	if (ret) {
--		iopf_queue_remove_device(iommu->iopf_queue, dev);
--		return ret;
--	}
-+	if (ret)
-+		goto err_clear_pri;
- 
- 	info->pri_enabled = 1;
- 
- 	return 0;
-+err_clear_pri:
-+	context_flip_pri(info, false);
-+err_remove_device:
-+	iopf_queue_remove_device(iommu->iopf_queue, dev);
-+
-+	return ret;
- }
- 
- static int intel_iommu_disable_iopf(struct device *dev)
-@@ -4292,6 +4331,15 @@ static int intel_iommu_disable_iopf(struct device *dev)
- 	if (!info->pri_enabled)
- 		return -EINVAL;
- 
-+	/* Disable new PRI reception: */
-+	context_flip_pri(info, false);
-+
-+	/*
-+	 * Remove device from fault queue and acknowledge all outstanding
-+	 * PRQs to the device:
-+	 */
-+	iopf_queue_remove_device(iommu->iopf_queue, dev);
-+
- 	/*
- 	 * PCIe spec states that by clearing PRI enable bit, the Page
- 	 * Request Interface will not issue new page requests, but has
-@@ -4302,7 +4350,6 @@ static int intel_iommu_disable_iopf(struct device *dev)
- 	 */
- 	pci_disable_pri(to_pci_dev(dev));
- 	info->pri_enabled = 0;
--	iopf_queue_remove_device(iommu->iopf_queue, dev);
- 
- 	return 0;
- }
-diff --git a/drivers/iommu/intel/pasid.c b/drivers/iommu/intel/pasid.c
-index d6623d2c2050..9a7b5668c723 100644
---- a/drivers/iommu/intel/pasid.c
-+++ b/drivers/iommu/intel/pasid.c
-@@ -749,8 +749,6 @@ static int context_entry_set_pasid_table(struct context_entry *context,
- 
- 	if (info->ats_supported)
- 		context_set_sm_dte(context);
--	if (info->pri_supported)
--		context_set_sm_pre(context);
- 	if (info->pasid_supported)
- 		context_set_pasid(context);
- 
--- 
-2.34.1
+Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
 
+Thanks!
+Quentin
