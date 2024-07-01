@@ -1,84 +1,202 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66DD712C479;
-	Mon,  1 Jul 2024 10:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC2612BF30;
+	Mon,  1 Jul 2024 10:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719828195; cv=none; b=dRwl8lvfUuBx2BYPZZoKjeWHgpEVWKyirVfDnl4KEaki3G1rr/6nhjoyzIAc7qZomwVvlSBIp6/ViagBBPpjG/r+tAAGrsCI1TzceIGMwHNDopuFw8L/0Q1AnBOT77xImzcnVLDJj6hFnsleC9v1pQQDVp3gg4+v0PlAm5qxrgo=
+	t=1719828201; cv=none; b=SWpFByyzpduKCCL8nuKmSKpRUuECYCxm9HYMF7hCyEzbL184slsxy01NdYPXdIFUqJTxDwYtKd77bfSb2K5E1Pxkn5cuCyCffnbfEWVokOM561+LMUK+MykPl7VeoLmqW+qr4qvYrzBn2r77Meclo2Q1yubKuQ2ITAuAClldEvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719828195; c=relaxed/simple;
-	bh=XoTDAbWOLIESpoH9BMDOq30jyd4sCkuy9/DqEzEYJlw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=N5q2Tv/UtrJ5k4j4iQ4LRBcbKGPXqQre+U3kuzvZTuu9eRdWqO+3q7NSb8XIAybirAUBVEgWJPDbCEYMmqZJQOre9R8co3fS3pd8D+yeJSiO/1TqdsJfpnue2f5RM8mlapMDu9hssgwH7v5wUNnL4KOwIWAiELJpDSaYsomL+pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=PO2uoFGK; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1719828201; c=relaxed/simple;
+	bh=IHzImYBvS+r2Fb9vRJHdboMmTujqYSOlMOmKDtVxjSE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NamhzAbIYcGh7AQthBMxsbWt7rTItNq+w1SgCNccOTGrspCVbdBYRuZ36nA2guQ3/ASrqijAxaj4UAnGkYp4EnumP4kjW5a/4cF+17ZOe2Q9wE49YfGKi1hglo8eTvoeCWd/QEU/c3HwaRMWB6kLdtz/6K/NzDZMKGw9haSBDyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZGITFEOq; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PO2uoFGK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1719828190;
-	bh=TMcc74SmKXPi106EXt/29itxJEIX0AsitIPAF1hkIqo=;
-	h=Date:From:To:Cc:Subject:From;
-	b=PO2uoFGKDWWrv9xxcCuxxb0VbsuJFnNrd5AOBgLOVTx1pFqUF5hjz8qittFcXSNMY
-	 ZzbGkOhcgdDFNtUxgwwAX2mQ19bvStMFlkr/muVxwHSOnm84B579uT0RVm4lovhTA1
-	 8xBafPlzQ8oFVydhYh80LQV40HsdAfLiK3uAvMkaInnanP69zQWeHVz5hgnJy0h9WT
-	 3ziXXBtk6INt1VVVSnH+i//hF6zDW8qQ8F4ekKqDpewWihQheoc7CTSBfr+pRy0UBE
-	 aAaEFr+siRitCL6mRpkVANypZN2pGZ3C2TwBQs9DTAs6C8KeOMmO84ltwgkFWp9xyE
-	 XFW5rD7tq/LeQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WCM714t3yz4wc1;
-	Mon,  1 Jul 2024 20:03:09 +1000 (AEST)
-Date: Mon, 1 Jul 2024 20:03:09 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: Wander Lairson Costa <wander@redhat.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the tip tree
-Message-ID: <20240701200309.5c6169df@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZGITFEOq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719828200; x=1751364200;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=IHzImYBvS+r2Fb9vRJHdboMmTujqYSOlMOmKDtVxjSE=;
+  b=ZGITFEOqTMge5BJjpGpnqykS3XJZTGp4Flrp3ROP5drMFANMgddwx4YW
+   aKe0twN7q+waFEbq6xmZ+6nMo0lrzZ1+HwzMpy5Nogz8oICMgVbBsm8Em
+   5ntzAAENdn0eH55RhkiXdd9f+vBPg84Tv8wG/XzP8+vdoSkfWIrOKUBL+
+   qZ8y78F+1+Thlhevjx/YJaobpgINUkP9ylPjUJM6RDxW/zOIBobojxjKI
+   dzamS61VSO46FJ28ge4CnzgbwSuY0oDv3E3Kl7NpgDwnLKRCYp++nmCTV
+   jlaXTBRzB9XZ6WuwwjT5Ze5ovIbJ0iJNTaFPCo/q5JHmS4TIBY7xeqt+b
+   g==;
+X-CSE-ConnectionGUID: tLtvLf/YT2WxkYYqLWGdbw==
+X-CSE-MsgGUID: 6swt6iXURZaRg1CavVdUFQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11119"; a="16783848"
+X-IronPort-AV: E=Sophos;i="6.09,175,1716274800"; 
+   d="scan'208";a="16783848"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 03:03:19 -0700
+X-CSE-ConnectionGUID: Anw2rhvOSD6NgytuqK2ETQ==
+X-CSE-MsgGUID: e35sdeIxRzmdQoUVKrLERw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,175,1716274800"; 
+   d="scan'208";a="68696797"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 03:03:18 -0700
+Received: from mohdfai2-iLBPG12-1.png.intel.com (mohdfai2-iLBPG12-1.png.intel.com [10.88.227.73])
+	by linux.intel.com (Postfix) with ESMTP id D0DA720B5702;
+	Mon,  1 Jul 2024 03:03:14 -0700 (PDT)
+From: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
+To: "David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Cc: intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
+Subject: [PATCH iwl-net v1 1/1] igc: Fix packet still tx after gate close by reducing i226 MAC retry buffer
+Date: Mon,  1 Jul 2024 06:00:58 -0400
+Message-Id: <20240701100058.3301229-1-faizal.abdul.rahim@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/KqrmHzdYBpv.Bdlr6acNAIQ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/KqrmHzdYBpv.Bdlr6acNAIQ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+AVNU testing uncovered that even when the taprio gate is closed,
+some packets still transmit.
 
-Hi all,
+A known i225/6 hardware errata states traffic might overflow the planned
+QBV window. This happens because MAC maintains an internal buffer,
+primarily for supporting half duplex retries. Therefore, when
+the gate closes, residual MAC data in the buffer may still transmit.
 
-Commit
+To mitigate this for i226, reduce the MAC's internal buffer from
+192 bytes to 88 bytes by modifying the RETX_CTL register value.
+This follows guidelines from:
 
-  a7accf658efa ("sched/deadline: fix task_struct reference leak")
+a) Ethernet Controller I225/I22 Spec Update Rev 2.1 Errata Item 9:
+   TSN: Packet Transmission Might Cross Qbv Window
+b) I225/6 SW User Manual Rev 1.2.4: Section 8.11.5 Retry Buffer Control
 
-is missing a Signed-off-by from its author.
+Test Steps:
+1. Send taprio cmd to board A
+tc qdisc replace dev enp1s0 parent root handle 100 taprio \
+num_tc 4 \
+map 3 2 1 0 3 3 3 3 3 3 3 3 3 3 3 3 \
+queues 1@0 1@1 1@2 1@3 \
+base-time 0 \
+sched-entry S 0x07 500000 \
+sched-entry S 0x0f 500000 \
+flags 0x2 \
+txtime-delay 0
 
---=20
-Cheers,
-Stephen Rothwell
+- Note that for TC3, gate opens for 500us and close for another 500us
 
---Sig_/KqrmHzdYBpv.Bdlr6acNAIQ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+3. Take tcpdump log on Board B
 
------BEGIN PGP SIGNATURE-----
+4. Send udp packets via UDP tai app from Board A to Board B
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmaCft0ACgkQAVBC80lX
-0Gz8twgAn211AGJ0Mg76iTz8WvyVqR0ZTioPSqaAbJSXB5QZezAMOKTkd1yyd/Xf
-A/5sGYn7Suic2oOkuPgMYn2oBeA8DgNHaW61XAmTRO02RcU2xKbvXTWF5qdQ3Alv
-wqg59aHhilEjjpSX+1c3hmTeU7wYKmioKCaDAPCKYODnSNsF8MYYqcPsGxP9iu39
-j/BJAJSkH1WUjDlVOj5Z5Acr6eyE4HdMK5qNfLl0Df2hnDF5UO5BmnAuLTPHj98V
-2VEU8bwf6zuTvKlKVw+t2qYMqIj99WGyS4RgxdRGxJVYWIH+0G44ciG06vHNKQKN
-idff4Zt0SmVzKPugY/kQizXZi9Xlow==
-=MbOG
------END PGP SIGNATURE-----
+5. Analyze tcpdump log via wireshark log on Board B
+- Observed that the total time from the first to the last packet
+received during one cycle for TC3 does not exceed 500us
 
---Sig_/KqrmHzdYBpv.Bdlr6acNAIQ--
+Signed-off-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
+---
+ drivers/net/ethernet/intel/igc/igc_defines.h |  6 ++++
+ drivers/net/ethernet/intel/igc/igc_tsn.c     | 34 ++++++++++++++++++++
+ 2 files changed, 40 insertions(+)
+
+diff --git a/drivers/net/ethernet/intel/igc/igc_defines.h b/drivers/net/ethernet/intel/igc/igc_defines.h
+index 5f92b3c7c3d4..511384f3ec5c 100644
+--- a/drivers/net/ethernet/intel/igc/igc_defines.h
++++ b/drivers/net/ethernet/intel/igc/igc_defines.h
+@@ -404,6 +404,12 @@
+ #define IGC_DTXMXPKTSZ_TSN	0x19 /* 1600 bytes of max TX DMA packet size */
+ #define IGC_DTXMXPKTSZ_DEFAULT	0x98 /* 9728-byte Jumbo frames */
+ 
++/* Retry Buffer Control */
++#define IGC_RETX_CTL			0x041C
++#define IGC_RETX_CTL_WATERMARK_MASK	0xF
++#define IGC_RETX_CTL_QBVFULLTH_SHIFT	8 /* QBV Retry Buffer Full Threshold */
++#define IGC_RETX_CTL_QBVFULLEN	0x1000 /* Enable QBV Retry Buffer Full Threshold */
++
+ /* Transmit Scheduling Latency */
+ /* Latency between transmission scheduling (LaunchTime) and the time
+  * the packet is transmitted to the network in nanosecond.
+diff --git a/drivers/net/ethernet/intel/igc/igc_tsn.c b/drivers/net/ethernet/intel/igc/igc_tsn.c
+index 22cefb1eeedf..c97d908cecc5 100644
+--- a/drivers/net/ethernet/intel/igc/igc_tsn.c
++++ b/drivers/net/ethernet/intel/igc/igc_tsn.c
+@@ -78,6 +78,15 @@ void igc_tsn_adjust_txtime_offset(struct igc_adapter *adapter)
+ 	wr32(IGC_GTXOFFSET, txoffset);
+ }
+ 
++static void igc_tsn_restore_retx_default(struct igc_adapter *adapter)
++{
++	struct igc_hw *hw = &adapter->hw;
++	u32 retxctl;
++
++	retxctl = rd32(IGC_RETX_CTL) & IGC_RETX_CTL_WATERMARK_MASK;
++	wr32(IGC_RETX_CTL, retxctl);
++}
++
+ /* Returns the TSN specific registers to their default values after
+  * the adapter is reset.
+  */
+@@ -91,6 +100,9 @@ static int igc_tsn_disable_offload(struct igc_adapter *adapter)
+ 	wr32(IGC_TXPBS, I225_TXPBSIZE_DEFAULT);
+ 	wr32(IGC_DTXMXPKTSZ, IGC_DTXMXPKTSZ_DEFAULT);
+ 
++	if (igc_is_device_id_i226(hw))
++		igc_tsn_restore_retx_default(adapter);
++
+ 	tqavctrl = rd32(IGC_TQAVCTRL);
+ 	tqavctrl &= ~(IGC_TQAVCTRL_TRANSMIT_MODE_TSN |
+ 		      IGC_TQAVCTRL_ENHANCED_QAV | IGC_TQAVCTRL_FUTSCDDIS);
+@@ -111,6 +123,25 @@ static int igc_tsn_disable_offload(struct igc_adapter *adapter)
+ 	return 0;
+ }
+ 
++/* To partially fix i226 HW errata, reduce MAC internal buffering from 192 Bytes
++ * to 88 Bytes by setting RETX_CTL register using the recommendation from:
++ * a) Ethernet Controller I225/I22 Specification Update Rev 2.1
++ *    Item 9: TSN: Packet Transmission Might Cross the Qbv Window
++ * b) I225/6 SW User Manual Rev 1.2.4: Section 8.11.5 Retry Buffer Control
++ */
++static void igc_tsn_set_retx_qbvfullth(struct igc_adapter *adapter)
++{
++	struct igc_hw *hw = &adapter->hw;
++	u32 retxctl, watermark;
++
++	retxctl = rd32(IGC_RETX_CTL);
++	watermark = retxctl & IGC_RETX_CTL_WATERMARK_MASK;
++	/* Set QBVFULLTH value using watermark and set QBVFULLEN */
++	retxctl |= (watermark << IGC_RETX_CTL_QBVFULLTH_SHIFT) |
++		   IGC_RETX_CTL_QBVFULLEN;
++	wr32(IGC_RETX_CTL, retxctl);
++}
++
+ static int igc_tsn_enable_offload(struct igc_adapter *adapter)
+ {
+ 	struct igc_hw *hw = &adapter->hw;
+@@ -123,6 +154,9 @@ static int igc_tsn_enable_offload(struct igc_adapter *adapter)
+ 	wr32(IGC_DTXMXPKTSZ, IGC_DTXMXPKTSZ_TSN);
+ 	wr32(IGC_TXPBS, IGC_TXPBSIZE_TSN);
+ 
++	if (igc_is_device_id_i226(hw))
++		igc_tsn_set_retx_qbvfullth(adapter);
++
+ 	for (i = 0; i < adapter->num_tx_queues; i++) {
+ 		struct igc_ring *ring = adapter->tx_ring[i];
+ 		u32 txqctl = 0;
+-- 
+2.25.1
+
