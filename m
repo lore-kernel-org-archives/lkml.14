@@ -1,123 +1,208 @@
-Received: from smtp2.infineon.com (smtp2.infineon.com [217.10.52.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060511388;
-	Mon,  1 Jul 2024 01:05:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.10.52.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C62CC4A07
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 01:08:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719795906; cv=none; b=Y3zKUb6xbUGfP86IqVLY3omklue+FeinxXL8TYfcddqJrAuMN30Issvfh9XI9q073J7/nfHIJMf9/EwBovPHMqRJVAylnPvY+SCuzTeFIDBEiwYFKLS8hhj6eLiSGwktz5y4d37H3UV8GZDB0z5EO69onpvmhlqOdYwKJ1e320g=
+	t=1719796097; cv=none; b=gAQRSkO/+xdv5lE0t0y1qQBppK/oynDBCQDxbIIqm+EAVMtErIK6+ciS76T3zPGsiEcBHdY9ImyXoveItkpxzF3WLaJjjJbOiAGpACdnbqRAqnNOLWHJnaTFbYD9muV19aQkDYGndhus4vOtFFY3VQpc7ciXdnFTigUjDrYZAQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719795906; c=relaxed/simple;
-	bh=zt88BMcCBRpJY29U2eW/EnAJhUpbDlG0WddY4Dm+gzc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Jd3+Rvdz0Y6IJyjMTv9NOfLXMeXUdfqTCtWYK9e+TnEj8ieK7gnNwQ0+G2h7jYbUt5zQlIG233TTFadqfONgNlpTDkwXBLczJQ8xONIoKP3XNhT0X1wzl9CU8Q79fjB8JRzZHBqocQ6Kv80ECyCdn9rVBG1H6XKimQKHOXydgg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infineon.com; spf=pass smtp.mailfrom=infineon.com; dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b=K0nuT5wc; arc=none smtp.client-ip=217.10.52.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infineon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infineon.com
+	s=arc-20240116; t=1719796097; c=relaxed/simple;
+	bh=QV7oB0MzBepH3Gfv/sfxZY2kIPARX64YeKWtqGVi7fg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Gv595KG9td/lhzVkwvr7uz/ooftyWoRiL3SX96fwrezLiTxMaMT61JJ3DCRC2pjb1Jm4bBPU+apG6bQob2DzC7GqokZvtmKjz3JaAbVMvuFhFqvSS5oN2yMRWZ3fWdcq6zYcuWi3KpeDdV6gy3oorPdmAstyNkysItZkqCKOi4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U068HH5R; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="K0nuT5wc"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
-  t=1719795905; x=1751331905;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=zt88BMcCBRpJY29U2eW/EnAJhUpbDlG0WddY4Dm+gzc=;
-  b=K0nuT5wcP04NyUwmnuuRAQ+uCGT6Ib05uvJz/3c9xyxsm7Z5k8QK9qc5
-   9g5n0jpym2w33CP7/56VpgaJ/VWfqzYDQzRbDp/ei9JhaiYQGZcX8Z3Wk
-   eNMDMAhQK3FscqAF9tAdUvb7fdkV0KsKGBGdR1CzPFc33XfV/wDc1rjEo
-   g=;
-X-IronPort-AV: E=McAfee;i="6700,10204,11119"; a="80217184"
-X-IronPort-AV: E=Sophos;i="6.09,175,1716242400"; 
-   d="scan'208";a="80217184"
-Received: from unknown (HELO MUCSE814.infineon.com) ([172.23.29.40])
-  by smtp2.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 03:04:56 +0200
-Received: from MUCSE833.infineon.com (172.23.7.105) by MUCSE814.infineon.com
- (172.23.29.40) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Mon, 1 Jul
- 2024 03:04:55 +0200
-Received: from MUCSE832.infineon.com (172.23.7.104) by MUCSE833.infineon.com
- (172.23.7.105) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Mon, 1 Jul
- 2024 03:04:55 +0200
-Received: from MUCSE832.infineon.com ([fe80::df7:95e8:60bd:7478]) by
- MUCSE832.infineon.com ([fe80::df7:95e8:60bd:7478%15]) with mapi id
- 15.02.1258.034; Mon, 1 Jul 2024 03:04:55 +0200
-From: <Nobuaki.Tsunashima@infineon.com>
-To: <luiz.dentz@gmail.com>
-CC: <marcel@holtmann.org>, <linux-bluetooth@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4] Bluetooth: btbcm: Apply
- HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER to CYW4373
-Thread-Topic: [PATCH v4] Bluetooth: btbcm: Apply
- HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER to CYW4373
-Thread-Index: AQHarXodRFaIWgJslEGA5+113yeWdrGmousAgAOzr9CAMussgIAEB17A
-Date: Mon, 1 Jul 2024 01:04:54 +0000
-Message-ID: <3ae77d91542241eb9b1f4c7428ee52cd@infineon.com>
-References: <20240524013127.434500-1-nobuaki.tsunashima@infineon.com>
- <CABBYNZ+yvQL0KBagUXtzrBUFmFxp-ek_5aFDJNVyUKsA-xJ-Zg@mail.gmail.com>
- <f7a5e281c48b4232a4ba74022dd3f83a@infineon.com>
- <CABBYNZKjUY2XVf2yu95ECggZb1xJ0SAneKqMNSnAGGfgRTs02g@mail.gmail.com>
-In-Reply-To: <CABBYNZKjUY2XVf2yu95ECggZb1xJ0SAneKqMNSnAGGfgRTs02g@mail.gmail.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U068HH5R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719796094;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=V5j0C14UkFNEgU8QNuYTSpJEUKhs7EJnYTgNEqeZvhM=;
+	b=U068HH5RU5rAHBhh54P/NPLuMTOK4DW5EOaIkA5kKAzsGNakB86yH2jAJPRidE1KSQ+RXW
+	lxG2yZMy16F1DhENehesB2s/ixttVPLN/GfLH+jesn90gLKE9gE+uF0PCCvFlawqlBxy4k
+	yja+kiZcoMfWfPDDrzxx+UUPm4CEOvQ=
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
+ [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-408-zmt-3zTqMw-QkKK-x_xoMw-1; Sun, 30 Jun 2024 21:08:13 -0400
+X-MC-Unique: zmt-3zTqMw-QkKK-x_xoMw-1
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-7065df788f6so2385205b3a.3
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2024 18:08:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719796092; x=1720400892;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V5j0C14UkFNEgU8QNuYTSpJEUKhs7EJnYTgNEqeZvhM=;
+        b=M2l4NFeH9Q3veoQ3Rnk28aY0d1W5Muor9C5YmOB0FmEd/AWrgNQQxhWlPljA+F+XEO
+         Eq0NoP+KpPaC7YwLXU4Oy2kFZVdujIst3huEdd6We1Q1t4xRhE5ZK9MI9t++U2s6n1US
+         7Dz6obsw2FuvBYPfg+wX9a89kjhkvNmVWjJS76LZSpE7WyflZco8vSXJA8JLgxTIeYlu
+         rnNM6I9Ntto9Wk/XqPyutw0OIfY9hHXvtCSYzY3zDlvh5FgqpvlYDyHAPtJtvJ8jTR0c
+         Zj+hxzzUROBQj4prQi6vJQyOivpB1RWjLypOSOBCjD/rLDnzIskRaqprkdOeW3RqCRwQ
+         nsXg==
+X-Forwarded-Encrypted: i=1; AJvYcCUTG6tzCYLIFiFL3/oONkIB1KDIH1kPoS8lEvdzIokb7iPaNZlcbb9TusCgSGHLA79KBAMQqAKvbraGJ+N7F976pqAUfsRgJzpxEIFA
+X-Gm-Message-State: AOJu0Yy4huK5WG9gMvHjV1RwmzIraoIC0bcDO09j4mtbyHBa+w4uUgt9
+	1VQXWCye+mC8QIcXEZFva/I5eZd+jZtRJS25IwrtqyOOBDMOMWaqdc+MTIIXH3pBVCEsW9K0GD8
+	+f2ReTkPsRQzBWfZSk3cZRvEKvWXvP7/8oOFDlhURtNjxvV12+wvL234X+60aVQ==
+X-Received: by 2002:a05:6a20:ba99:b0:1bd:1d15:f089 with SMTP id adf61e73a8af0-1bef6242eeamr5462306637.54.1719796092216;
+        Sun, 30 Jun 2024 18:08:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEg7qtY/QXMS6S2ii2fOZIzTOLQPr0GDKRhgQHXTfkEFEcWlAztbrnL5mL3j61qvOuCKC962Q==
+X-Received: by 2002:a05:6a20:ba99:b0:1bd:1d15:f089 with SMTP id adf61e73a8af0-1bef6242eeamr5462288637.54.1719796091815;
+        Sun, 30 Jun 2024 18:08:11 -0700 (PDT)
+Received: from ?IPV6:2403:580f:7fe0:0:ae49:39b9:2ee8:2187? (2403-580f-7fe0-0-ae49-39b9-2ee8-2187.ip6.aussiebb.net. [2403:580f:7fe0:0:ae49:39b9:2ee8:2187])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac10e2239sm52143735ad.67.2024.06.30.18.08.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 30 Jun 2024 18:08:11 -0700 (PDT)
+Message-ID: <b3bd4181-daf1-457e-807d-b252673d5042@redhat.com>
+Date: Mon, 1 Jul 2024 09:08:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v3 1/1] fs/namespace: remove RCU sync for MNT_DETACH umount
+To: Jan Kara <jack@suse.cz>
+Cc: Matthew Wilcox <willy@infradead.org>,
+ Lucas Karpinski <lkarpins@redhat.com>, viro@zeniv.linux.org.uk,
+ brauner@kernel.org, raven@themaw.net, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Alexander Larsson <alexl@redhat.com>,
+ Eric Chanudet <echanude@redhat.com>
+References: <20240626201129.272750-2-lkarpins@redhat.com>
+ <20240626201129.272750-3-lkarpins@redhat.com>
+ <Znx-WGU5Wx6RaJyD@casper.infradead.org>
+ <50512ec3-da6d-4140-9659-58e0514a4970@redhat.com>
+ <20240627115418.lcnpctgailhlaffc@quack3>
+ <cfda4682-34b4-462c-acf6-976b0d79ba06@redhat.com>
+ <20240628111345.3bbcgie4gar6icyj@quack3>
+Content-Language: en-US
+From: Ian Kent <ikent@redhat.com>
+Autocrypt: addr=ikent@redhat.com; keydata=
+ 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
+In-Reply-To: <20240628111345.3bbcgie4gar6icyj@quack3>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-SGkgTHVpeiwNCg0KVGhhbmtzIGZvciB5b3VyIGNvbW1lbnQuDQoNCj4gT2ssIGJ1dCBJIHN0aWxs
-IGNvbnNpZGVyIHJld29ya2luZyB0aGVzZSB0byB1c2Ugc2tiX3B1bGxfZGF0YS4NCg0KTm93LCBJ
-IHJlY29uc2lkZXIgYW5kIGZvdW5kIHRoZSBza2JfcHVsbF9kYXRhIGlzIG1vcmUgY29udmVuaWVu
-dCByYXRoZXIgdGhhbiBkaXJlY3RseSBhY2Nlc3NpbmcgdG8gc2tiLT5kYXRhLg0KQXMgSSBhbSBv
-biBidXNpbmVzcyB0cmlwIG9uIGEgZmV3IGRheXMsIEkgd2lsbCBzdWJtaXQgbmV3IHBhdGNoIGFm
-dGVyIEkgY29tZSBiYWNrLg0KDQpSZWdhcmRzLA0KTm9idWFraSBUc3VuYXNoaW1hDQoNCi0tLS0t
-T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBMdWl6IEF1Z3VzdG8gdm9uIERlbnR6IDxsdWl6
-LmRlbnR6QGdtYWlsLmNvbT4gDQpTZW50OiBGcmlkYXksIEp1bmUgMjgsIDIwMjQgMTA6MjkgUE0N
-ClRvOiBUc3VuYXNoaW1hIE5vYnVha2kgKFNNRCBDMyBKUCBSTSBXTFMgQUUpIDxOb2J1YWtpLlRz
-dW5hc2hpbWFAaW5maW5lb24uY29tPg0KQ2M6IG1hcmNlbEBob2x0bWFubi5vcmc7IGxpbnV4LWJs
-dWV0b290aEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNClN1
-YmplY3Q6IFJlOiBbUEFUQ0ggdjRdIEJsdWV0b290aDogYnRiY206IEFwcGx5IEhDSV9RVUlSS19C
-Uk9LRU5fUkVBRF9UUkFOU01JVF9QT1dFUiB0byBDWVc0MzczDQoNCkNhdXRpb246IFRoaXMgZS1t
-YWlsIG9yaWdpbmF0ZWQgb3V0c2lkZSBJbmZpbmVvbiBUZWNobm9sb2dpZXMuIFBsZWFzZSBiZSBj
-YXV0aW91cyB3aGVuIHNoYXJpbmcgaW5mb3JtYXRpb24gb3Igb3BlbmluZyBhdHRhY2htZW50cyBl
-c3BlY2lhbGx5IGZyb20gdW5rbm93biBzZW5kZXJzLiBSZWZlciB0byBvdXIgaW50cmFuZXQgZ3Vp
-ZGU8aHR0cHM6Ly9pbnRyYW5ldC1jb250ZW50LmluZmluZW9uLmNvbS9leHBsb3JlL2Fib3V0aW5m
-aW5lb24vcnVsZXMvaW5mb3JtYXRpb25zZWN1cml0eS91Zy9Tb2NpYWxFbmdpbmVlcmluZy9QYWdl
-cy9Tb2NpYWxFbmdpbmVlcmluZ0VsZW1lbnRzX2VuLmFzcHg+IHRvIGhlbHAgeW91IGlkZW50aWZ5
-IFBoaXNoaW5nIGVtYWlsLg0KDQoNCg0KSGksDQoNCk9uIFN1biwgTWF5IDI2LCAyMDI0IGF0IDk6
-NTnigK9QTSA8Tm9idWFraS5Uc3VuYXNoaW1hQGluZmluZW9uLmNvbT4gd3JvdGU6DQo+DQo+IEhp
-IEx1aXosDQo+DQo+IFRoYW5rcyBmb3IgeW91ciByZXZpZXcuDQo+DQo+ID4+ICBzdGF0aWMgaW50
-IGJ0YmNtX3JlYWRfaW5mbyhzdHJ1Y3QgaGNpX2RldiAqaGRldikgIHsNCj4gPj4gICAgICAgICBz
-dHJ1Y3Qgc2tfYnVmZiAqc2tiOw0KPiA+PiArICAgICAgIHU4IGNoaXBfaWQ7DQo+ID4+ICsgICAg
-ICAgdTE2IGJhc2VsaW5lOw0KPiA+Pg0KPiA+PiAgICAgICAgIC8qIFJlYWQgVmVyYm9zZSBDb25m
-aWcgVmVyc2lvbiBJbmZvICovDQo+ID4+ICAgICAgICAgc2tiID0gYnRiY21fcmVhZF92ZXJib3Nl
-X2NvbmZpZyhoZGV2KTsNCj4gPj4gICAgICAgICBpZiAoSVNfRVJSKHNrYikpDQo+ID4+ICAgICAg
-ICAgICAgICAgICByZXR1cm4gUFRSX0VSUihza2IpOw0KPiA+PiAtDQo+ID4+ICsgICAgICAgY2hp
-cF9pZCA9IHNrYi0+ZGF0YVsxXTsNCj4gPj4gKyAgICAgICBiYXNlbGluZSA9IHNrYi0+ZGF0YVsz
-XSB8IChza2ItPmRhdGFbNF0gPDwgOCk7DQo+ID4NCj4gPlRoaXMgaXMgbm90IHJlYWxseSBzYWZl
-LCB5b3Ugc2hvdWxkbid0IGF0dGVtcHQgdG8gYWNjZXNzIHNrYi0+ZGF0YSB3aXRob3V0IGZpcnN0
-IGNoZWNraW5nIHNrYi0+bGVuLCBhY3R1YWxseSBpdCB3b3VsZCBiZSBtdWNoIGJldHRlciB0aGF0
-ID55b3Ugd291bGQgdXNlIHNrYl9wdWxsX2RhdGEgd2hpY2ggZG9lcyBza2ItPmxlbiBjaGVjayBi
-ZWZvcmUgcHVsbGluZyBkYXRhLg0KPg0KPiBJIHRoaW5rIGl0IGNvdWxkIGJlIHNhZmUgYmVjYXVz
-ZSBpdHMgbGVuZ3RoIGlzIGNoZWNrZWQgaW5zaWRlIGJ0YmNtX3JlYWRfdmVyYm9zZV9jb25maWco
-KSBhcyBiZWxvdy4NCj4gUGxlYXNlIGxldCBtZSBrbm93IGlmIGZ1cnRoZXIgY2hlY2tpbmcgaXMg
-bmVlZGVkLg0KPg0KPiA+Pj4NCj4gc3RhdGljIHN0cnVjdCBza19idWZmICpidGJjbV9yZWFkX3Zl
-cmJvc2VfY29uZmlnKHN0cnVjdCBoY2lfZGV2ICpoZGV2KSANCj4gew0KPiAgICAgICAgIHN0cnVj
-dCBza19idWZmICpza2I7DQo+DQo+ICAgICAgICAgc2tiID0gX19oY2lfY21kX3N5bmMoaGRldiwg
-MHhmYzc5LCAwLCBOVUxMLCBIQ0lfSU5JVF9USU1FT1VUKTsNCj4gICAgICAgICBpZiAoSVNfRVJS
-KHNrYikpIHsNCj4gICAgICAgICAgICAgICAgIGJ0X2Rldl9lcnIoaGRldiwgIkJDTTogUmVhZCB2
-ZXJib3NlIGNvbmZpZyBpbmZvIGZhaWxlZCAoJWxkKSIsDQo+ICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIFBUUl9FUlIoc2tiKSk7DQo+ICAgICAgICAgICAgICAgICByZXR1cm4gc2tiOw0KPiAg
-ICAgICAgIH0NCj4NCj4gICAgICAgICBpZiAoc2tiLT5sZW4gIT0gNykgew0KPiAgICAgICAgICAg
-ICAgICAgYnRfZGV2X2VycihoZGV2LCAiQkNNOiBWZXJib3NlIGNvbmZpZyBsZW5ndGggbWlzbWF0
-Y2giKTsNCj4gICAgICAgICAgICAgICAgIGtmcmVlX3NrYihza2IpOw0KPiAgICAgICAgICAgICAg
-ICAgcmV0dXJuIEVSUl9QVFIoLUVJTyk7DQo+ICAgICAgICAgfQ0KPg0KPiAgICAgICAgIHJldHVy
-biBza2I7DQo+IH0NCj4gPDw8DQoNCk9rLCBidXQgSSBzdGlsbCBjb25zaWRlciByZXdvcmtpbmcg
-dGhlc2UgdG8gdXNlIHNrYl9wdWxsX2RhdGEuDQoNCj4gQmVzdCBSZWdhcmRzLA0KPiBOb2J1YWtp
-IFRzdW5hc2hpbWENCj4NCg0KDQotLQ0KTHVpeiBBdWd1c3RvIHZvbiBEZW50eg0K
+On 28/6/24 19:13, Jan Kara wrote:
+> On Fri 28-06-24 10:58:54, Ian Kent wrote:
+>> On 27/6/24 19:54, Jan Kara wrote:
+>>> On Thu 27-06-24 09:11:14, Ian Kent wrote:
+>>>> On 27/6/24 04:47, Matthew Wilcox wrote:
+>>>>> On Wed, Jun 26, 2024 at 04:07:49PM -0400, Lucas Karpinski wrote:
+>>>>>> +++ b/fs/namespace.c
+>>>>>> @@ -78,6 +78,7 @@ static struct kmem_cache *mnt_cache __ro_after_init;
+>>>>>>     static DECLARE_RWSEM(namespace_sem);
+>>>>>>     static HLIST_HEAD(unmounted);	/* protected by namespace_sem */
+>>>>>>     static LIST_HEAD(ex_mountpoints); /* protected by namespace_sem */
+>>>>>> +static bool lazy_unlock = false; /* protected by namespace_sem */
+>>>>> That's a pretty ugly way of doing it.  How about this?
+>>>> Ha!
+>>>>
+>>>> That was my original thought but I also didn't much like changing all the
+>>>> callers.
+>>>>
+>>>> I don't really like the proliferation of these small helper functions either
+>>>> but if everyone
+>>>>
+>>>> is happy to do this I think it's a great idea.
+>>> So I know you've suggested removing synchronize_rcu_expedited() call in
+>>> your comment to v2. But I wonder why is it safe? I *thought*
+>>> synchronize_rcu_expedited() is there to synchronize the dropping of the
+>>> last mnt reference (and maybe something else) - see the comment at the
+>>> beginning of mntput_no_expire() - and this change would break that?
+>> Interesting, because of the definition of lazy umount I didn't look closely
+>> enough at that.
+>>
+>> But I wonder, how exactly would that race occur, is holding the rcu read
+>> lock sufficient since the rcu'd mount free won't be done until it's
+>> released (at least I think that's how rcu works).
+> I'm concerned about a race like:
+>
+> [path lookup]				[umount -l]
+> ...
+> path_put()
+>    mntput(mnt)
+>      mntput_no_expire(m)
+>        rcu_read_lock();
+>        if (likely(READ_ONCE(mnt->mnt_ns))) {
+> 					do_umount()
+> 					  umount_tree()
+> 					    ...
+> 					    mnt->mnt_ns = NULL;
+> 					    ...
+> 					  namespace_unlock()
+> 					    mntput(&m->mnt)
+> 					      mntput_no_expire(mnt)
+> 				              smp_mb();
+> 					      mnt_add_count(mnt, -1);
+> 					      count = mnt_get_count(mnt);
+> 					      if (count != 0) {
+> 						...
+> 						return;
+>          mnt_add_count(mnt, -1);
+>          rcu_read_unlock();
+>          return;
+> -> KABOOM, mnt->mnt_count dropped to 0 but nobody cleaned up the mount!
+>        }
+>
+> And this scenario is exactly prevented by synchronize_rcu() in
+> namespace_unlock().
+
+I just wanted to say that I don't have a reply to this yet, having been 
+distracted
+
+looking at the concern that Christian raised, in fact this looks like it 
+will be hard
+
+to grok ...
+
+
+Ian
+
