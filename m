@@ -1,165 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5112F29;
-	Mon,  1 Jul 2024 05:06:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C27A17C61;
+	Mon,  1 Jul 2024 05:11:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719810378; cv=none; b=A5Gzfx4Ko8nQ4Qe8dlWFCXqSzPFI9vACsEc4cwVK5/Wd7llr3Us3xdMzlrGGz9pDhspoUkpdsCpwdCqEVV8HiR2y5b1ltg3ms1f2vgTQ2kG4QME6CxUr+VS9BjDsbxAqdmWiyMMsAD14tg1QTkg3AiN97EdHjQjcoW0dohuaBl4=
+	t=1719810695; cv=none; b=GI1GdOaORRo1K63NFcvvyQTtfBFlmLvSyKuK5nEEF3A8/tolD2f6esARQZF45pH/NwKS6+41erKIfMM/2DTq67Lff92QyEAB6huQ85Q2pQRqtFitJcWP24nXrkVfy3R98LOy7UdWeW1snUVVkqllJgyJe/aeO5Ln5D50WhsDM5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719810378; c=relaxed/simple;
-	bh=nTVRxiCIHz9LY6D6rR9agA7CNvFvd2tSLrxtF3txtyc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ts5zjAE/jeM1SGxlc9SoZ/mCR8p0j30oOKzRNCEk/Mq3T2OZ85VG2UeNQ0qZUdej/mRGYnVRse03rXobxqs/sovsxyCteF7+y5ctAkq5llxAJeGs4syrWmnMIStEDn/ioT6GE53ZTLbmFO4iKOR7At6SrgOIUX0dTrHVreKFx/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Rsj1X60r; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719810695; c=relaxed/simple;
+	bh=/xu6j3mzqMxyt5btghD36ts3zTipK1aGMS2i3uL+PWA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KzSNn71Z/sJ/a6F8zTWCmvcjKbCh735LKzpO8wcKQokOlDOvxZIKOLXJ752lzZQzQ/kZns4jiqGs4Py5iFtM+MYFm3Q2cTmLerAQmuuSlWQCIFuS3jR710RCjfZkiCuYWfyud9uUxrTg/0M3lj4k+E5nKltRmTE3TcMBUfD1qH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eWeEG5Z2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Rsj1X60r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1EF9C116B1;
-	Mon,  1 Jul 2024 05:06:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1719810378;
-	bh=nTVRxiCIHz9LY6D6rR9agA7CNvFvd2tSLrxtF3txtyc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Rsj1X60r5k8zoOZ/tMjPj3MEpSt29Ik/CKAZFecM6Ah22Hlw235MtTmJjnKDaiEph
-	 hGGJJegMH85RkxbVEcbcr5PRR167fxuaKkN2nGi4ekEWMaruAglDJvv0lkz6ubQ45h
-	 q7IuooW9Xzvd8Hxw+scIOS5OGIK05SqHjhr76Q24=
-Date: Mon, 1 Jul 2024 07:06:14 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Kuan-Wei Chiu <visitorckw@gmail.com>
-Cc: rafael@kernel.org, lenb@kernel.org, mario.limonciello@amd.com,
-	akpm@linux-foundation.org, jserv@ccns.ncku.edu.tw,
-	alexdeucher@gmail.com, belegdol@gmail.com,
-	regressions@leemhuis.info, linux-acpi@vger.kernel.org,
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ACPI: processor_idle: Fix invalid comparison with
- insertion sort for latency
-Message-ID: <2024070102-overvalue-barber-806a@gregkh>
-References: <ZoHKhr9896+Kf65F@visitorckw-System-Product-Name>
- <20240701044232.42266-1-visitorckw@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eWeEG5Z2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1044C4AF0E;
+	Mon,  1 Jul 2024 05:11:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719810694;
+	bh=/xu6j3mzqMxyt5btghD36ts3zTipK1aGMS2i3uL+PWA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=eWeEG5Z2eL3gJVhqW4496zBJQSEW7A3jtOblVBN25VuzMlJRdS6Bj0qcHWEa4ZGWm
+	 OniUzn4kI3nwFoA3EUjNsnjNIa8YhBAQehPuIyH0G0RsdmXdrWakgbpQOlZ9sassTZ
+	 5d3PCFUcG8UBoiWXghUT0aimSDFY6nZjSJSQ5oIurGZor620yRGnBz7JZ9hggFYGPM
+	 Myy58jhVwI41kHpMi6otKUf41dfTuuBU05rnKWKkep7XytNYyFbVAh6Ru6VBxWTmwe
+	 hfrs+REbVrHXh3RnIQqa1YvMYtGMPxbk482Ulyt3XuvSPFJVA8HyHlK7p+/VEZoCph
+	 F55UjEZMHLJQA==
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2ec59193468so20720921fa.1;
+        Sun, 30 Jun 2024 22:11:34 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV5GF7zAVc4K+kne4QUr5igXBllPnf1uz8maehx7Yk6eTUAg6/OhnPaF14qTgBLVeFNQpSIHI1TMmdFWjF9TMlqjJyrIDK+3pjTxAH6GkvClmYpsie944HRp5rK2bhl6fRbOa+e77K7
+X-Gm-Message-State: AOJu0YwlV9vpkmXn2KE81zqrObOISZPQ41LM9Sw5WDChnX+e3eiPGCjc
+	v7nQxiHNv8qn63ofXfwyFNsJ16XFTRgv8cLhKWjbk4J4NefjMxrbJBd2F8Q3aJcenlZIunaSd5C
+	c78uQZZbc/7gv6B0YrafcYmvou/M=
+X-Google-Smtp-Source: AGHT+IHx98RloeGcgZXJescxkH/qiEue+hEQSGzRXj+bZiMFYS37FwdPAUkewrHUBw2iodsw9bJI2DJbMzJ3ExBFPn0=
+X-Received: by 2002:a2e:a484:0:b0:2ec:5f11:4f6b with SMTP id
+ 38308e7fff4ca-2ee5e37fa82mr11324111fa.10.1719810693008; Sun, 30 Jun 2024
+ 22:11:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240701044232.42266-1-visitorckw@gmail.com>
+References: <75C90B50-9AB9-4F0A-B2CD-43427354D15C@live.com> <CADfWnbbWDgYe6g_CkEmpwAMfZf2kWLE5khB0GSfhojfvDFu5sA@mail.gmail.com>
+In-Reply-To: <CADfWnbbWDgYe6g_CkEmpwAMfZf2kWLE5khB0GSfhojfvDFu5sA@mail.gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Mon, 1 Jul 2024 07:11:22 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFuKstumJnygLi_hhu+6OrtjrPEX+SX=GELrU4sthAV7A@mail.gmail.com>
+Message-ID: <CAMj1kXFuKstumJnygLi_hhu+6OrtjrPEX+SX=GELrU4sthAV7A@mail.gmail.com>
+Subject: Re: [PATCH v2] efi: libstub: add support for the apple_set_os protocol
+To: Orlando Chamberlain <orlandoch.dev@gmail.com>
+Cc: Aditya Garg <gargaditya08@live.com>, Hans de Goede <hdegoede@redhat.com>, 
+	Lukas Wunner <lukas@wunner.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	"linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, Kerem Karabay <kekrby@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jul 01, 2024 at 12:42:32PM +0800, Kuan-Wei Chiu wrote:
-> The acpi_cst_latency_cmp comparison function currently used for sorting
-> C-state latencies does not satisfy transitivity, causing incorrect
-> sorting results. Specifically, if there are two valid acpi_processor_cx
-> elements A and B and one invalid element C, it may occur that A < B,
-> A = C, and B = C. Sorting algorithms assume that if A < B and A = C,
-> then C < B, leading to incorrect ordering.
-> 
-> Given the small size of the array (<=8), we replace the library sort
-> function with a simple insertion sort that properly ignores invalid
-> elements and sorts valid ones based on latency. This change ensures
-> correct ordering of the C-state latencies.
-> 
-> Fixes: 65ea8f2c6e23 ("ACPI: processor idle: Fix up C-state latency if not ordered")
-> Reported-by: Julian Sikorski <belegdol@gmail.com>
-> Closes: https://lore.kernel.org/lkml/70674dc7-5586-4183-8953-8095567e73df@gmail.com/
-> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
-> ---
-> v1 -> v2:
-> - Avoid swapping if arr[i] is an invalid element.
-> 
-> I do not have the appropriate AMD hardware to reproduce this issue and
-> test the patch. However, if the aforementioned reason is indeed the
-> source of the problem, I believe this patch might help.
-> 
->  drivers/acpi/processor_idle.c | 35 ++++++++++++++---------------------
->  1 file changed, 14 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
-> index bd6a7857ce05..813c718b9108 100644
-> --- a/drivers/acpi/processor_idle.c
-> +++ b/drivers/acpi/processor_idle.c
-> @@ -386,25 +386,21 @@ static void acpi_processor_power_verify_c3(struct acpi_processor *pr,
->  	acpi_write_bit_register(ACPI_BITREG_BUS_MASTER_RLD, 1);
->  }
->  
-> -static int acpi_cst_latency_cmp(const void *a, const void *b)
-> +static void acpi_cst_latency_sort(struct acpi_processor_cx *arr, size_t length)
->  {
-> -	const struct acpi_processor_cx *x = a, *y = b;
-> +	int i, j, k;
->  
-> -	if (!(x->valid && y->valid))
-> -		return 0;
-> -	if (x->latency > y->latency)
-> -		return 1;
-> -	if (x->latency < y->latency)
-> -		return -1;
-> -	return 0;
-> -}
-> -static void acpi_cst_latency_swap(void *a, void *b, int n)
-> -{
-> -	struct acpi_processor_cx *x = a, *y = b;
-> -
-> -	if (!(x->valid && y->valid))
-> -		return;
-> -	swap(x->latency, y->latency);
-> +	for (i = 1; i < length; i++) {
-> +		if (!arr[i].valid)
-> +			continue;
-> +		for (j = i - 1, k = i; j >= 0; j--) {
-> +			if (!arr[j].valid)
-> +				continue;
-> +			if (arr[j].latency > arr[k].latency)
-> +				swap(arr[j].latency, arr[k].latency);
-> +			k = j;
-> +		}
-> +	}
->  }
->  
->  static int acpi_processor_power_verify(struct acpi_processor *pr)
-> @@ -449,10 +445,7 @@ static int acpi_processor_power_verify(struct acpi_processor *pr)
->  
->  	if (buggy_latency) {
->  		pr_notice("FW issue: working around C-state latencies out of order\n");
-> -		sort(&pr->power.states[1], max_cstate,
-> -		     sizeof(struct acpi_processor_cx),
-> -		     acpi_cst_latency_cmp,
-> -		     acpi_cst_latency_swap);
-> +		acpi_cst_latency_sort(&pr->power.states[1], max_cstate);
->  	}
->  
->  	lapic_timer_propagate_broadcast(pr);
-> -- 
-> 2.34.1
-> 
-> 
+On Mon, 1 Jul 2024 at 06:46, Orlando Chamberlain
+<orlandoch.dev@gmail.com> wrote:
+>
+>
+> On Mon, 1 Jul 2024 at 05:24, Aditya Garg <gargaditya08@live.com> wrote:
+> >
+> > From: Aditya Garg <gargaditya08@live.com>
+> >
+> > 0c18184de990 ("platform/x86: apple-gmux: support MMIO gmux on T2 Macs")
+> > brought support for T2 Macs in apple-gmux. But in order to use dual GPU,
+> > the integrated GPU has to be enabled. On such dual GPU EFI Macs, the EFI
+> > stub needs to report that it is booting macOS in order to prevent the
+> > firmware from disabling the iGPU.
+> >
+> > This patch is also applicable for some non T2 Intel Macs.
+> >
+> > Based on this patch for GRUB by Andreas Heider <andreas@heider.io>:
+> > https://lists.gnu.org/archive/html/grub-devel/2013-12/msg00442.html
+> >
+> > Credits also goto Kerem Karabay <kekrby@gmail.com> for helping porting
+> > the patch to the Linux kernel.
+> >
+> > Signed-off-by: Aditya Garg <gargaditya08@live.com>
 
-Hi,
+> I've checked that this patch works for me when applied to 6.10-rc6.
+> I can also use https://github.com/0xbb/gpu-switch to make the boot gpu
+> the iGPU now.
+>
+> Tested-By: Orlando Chamberlain <orlandoch.dev@gmail.com> (MacBookPro16,1)
+>
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+Thanks.
 
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- You have marked a patch with a "Fixes:" tag for a commit that is in an
-  older released kernel, yet you do not have a cc: stable line in the
-  signed-off-by area at all, which means that the patch will not be
-  applied to any older kernel releases.  To properly fix this, please
-  follow the documented rules in the
-  Documentation/process/stable-kernel-rules.rst file for how to resolve
-  this.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
+Is there any point to making this set_os() call if CONFIG_APPLE_GMUX
+is not enabled?
