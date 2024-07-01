@@ -1,70 +1,84 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437BF149DE8
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 12:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2893214A0A0
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 12:21:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719836464; cv=none; b=nr7XuhkyPzMD9PcsqG8BxMJMXPN0Rgakp1ChJ1aMKDVJ+GzcRr1Hh1UhCaQADjy13J7skEQu+HD+Lo8X87hBxxARIan6yXhbWTkXp0p/lhXraEBzCGc1AKNnaY6eIdYqNaaAt8B/EZCsSST3p4dcXHZnolsSWSdUuM1v3Onhhfg=
+	t=1719836477; cv=none; b=upAqiZ5wzThXjSTPa+NgV8dxVoOr/MFukaGNAcA/lL9u/DACHmnHJKpXoGHHnhxQ1/r/nWIAMkuMFLCyE5KdQP/2Kq7M+8W+WLKUHSIn13eHDO9St8DFEUa9mm8S3eKEL6sRY7V1LygAeZkRg3uyxEjtpbxbTP1Mx6a8KVL08aA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719836464; c=relaxed/simple;
-	bh=+deYL4WBlXJWKQEpgNwbfhUrOdLyhKqyIlelJn25hNA=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=dNiqzi8mU+kQ6pJnIn5boivUBhfrPHiSsAfFRZvDqusrf+ErqD4oZQPm8b5DXf8w2s/ATvmS/65gwPnPajJZvEMep7U1fMvm8mUcSk4nPLpBYVJ0vbX+E3OR9/1O4kAd1h/qlM7YnVaj+XN9ilC50dkDDJb1c/84l4w2rwImTSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7f63eb9f141so66229339f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 05:21:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719836462; x=1720441262;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wwUU/lzjebgwtoQnySebEIMZvhyJodUWf06YFj+rre0=;
-        b=Mvhb5KhW320kBFQFPrTu6VHzDQCiPKesONG9wuijFnlkQlDRhM6M01/jIjp+3O1pRK
-         fPlTZTwXtSz401lVw/Tpeh5mYO8ahJYqS+onT/7+pEEa72jpN4r1l9wbKy8vwYxBKKCJ
-         B7aWJ+79oGJReWYwFy9rfmggrKnpAxnYSCyZBkT189IJLAbX8BDUVTbIWdeVngzOPLGx
-         54GTVFMbHsARb21dhAMS+Y4yt06B8skbQN3LHl2QviXgW7CVuTJOZ6oQ34FVAVIWDdBX
-         ak6FYbOwxzwZOMVU370NSj/rSjXHMA0k7uLuFwErQR3lL+jFFqK6zdu9IP/bXmJQ3ZeD
-         cSyw==
-X-Gm-Message-State: AOJu0YxWm5aprNbQbjelhZ1QTkYtpWqkjt02G2ofDJ57OTs4eSO00JTb
-	ZcrFzQSrTxtzAlfdif5sbUCYHZN/t8iSEGP+ne27GaVMwbyQlknTsRglrMOKSPGOEibSieqWVN1
-	ByxNWo2yOTFTeNhdfyBTM4nNNhoP042OSVpsQ62yKegeoOmHlAKFtVtY=
-X-Google-Smtp-Source: AGHT+IH9qCJVN3HstAQD5PBF97/APL/UyLQfzjGiMydDwJa6fb/CgDGnCv+v3p8wNJR21pEG00ZhKu83CKaBAWCvPIYyMsfrtTKw
+	s=arc-20240116; t=1719836477; c=relaxed/simple;
+	bh=toC1qfgk/Wv5MhgzY6TgdrN+h4e/JEV4Y++upj3wbc0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j+oOVCfqv5Pqb8lX3VI8OGQJlsQQ/cXvgPgLaLQwF/b8mNsxQvSz+fIeJjHamktO/C5fUDyRY+pLj3S8d/WpLSDZNK5U91srZwudhud72axI/oFCm9DKxnajlMOVZu91c0uNMw4TSoDAhWYudCsWQ0uy2C9ELKxH/mKSlc5QHBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 143CD6000F;
+	Mon,  1 Jul 2024 12:21:11 +0000 (UTC)
+Message-ID: <bc976095-9153-44f1-8996-5b3717f6f83d@ghiti.fr>
+Date: Mon, 1 Jul 2024 14:21:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:372b:b0:4b9:9c0a:6f6c with SMTP id
- 8926c6da1cb9f-4bbb59453e7mr386926173.1.1719836462510; Mon, 01 Jul 2024
- 05:21:02 -0700 (PDT)
-Date: Mon, 01 Jul 2024 05:21:02 -0700
-In-Reply-To: <20240701100849.13110-1-wojciech.gladysz@infogain.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006b809c061c2ea17b@google.com>
-Subject: Re: [syzbot] [bpf?] KMSAN: uninit-value in htab_percpu_map_lookup_elem
-From: syzbot <syzbot+0a079d6ef3831217a230@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	wojciech.gladysz@infogain.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv: Remove redundant restriction on memory size
+Content-Language: en-US
+To: Stuart Menefy <stuart.menefy@codasip.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240624121723.2186279-1-stuart.menefy@codasip.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20240624121723.2186279-1-stuart.menefy@codasip.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: alex@ghiti.fr
 
-Hello,
+Hi Stuart,
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+On 24/06/2024 14:17, Stuart Menefy wrote:
+> The original reason for reserving the top 4GiB of the direct map
+> (space for modules/BPF/kernel) hasn't applied since the address
+> map was reworked for KASAN.
+>
+> Signed-off-by: Stuart Menefy <stuart.menefy@codasip.com>
+> ---
+>   arch/riscv/mm/init.c | 8 +-------
+>   1 file changed, 1 insertion(+), 7 deletions(-)
+>
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index 7e25606f858a..3998d1ca369c 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -1130,13 +1130,7 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+>   				0UL : PAGE_OFFSET - kernel_map.phys_addr;
+>   	kernel_map.va_kernel_pa_offset = kernel_map.virt_addr - kernel_map.phys_addr;
+>   
+> -	/*
+> -	 * The default maximal physical memory size is KERN_VIRT_SIZE for 32-bit
+> -	 * kernel, whereas for 64-bit kernel, the end of the virtual address
+> -	 * space is occupied by the modules/BPF/kernel mappings which reduces
+> -	 * the available size of the linear mapping.
+> -	 */
+> -	memory_limit = KERN_VIRT_SIZE - (IS_ENABLED(CONFIG_64BIT) ? SZ_4G : 0);
+> +	memory_limit = KERN_VIRT_SIZE;
+>   
+>   	/* Sanity check alignment and size */
+>   	BUG_ON((PAGE_OFFSET % PGDIR_SIZE) != 0);
 
-Reported-and-tested-by: syzbot+0a079d6ef3831217a230@syzkaller.appspotmail.com
 
-Tested on:
+I somehow totally missed this one, I guess this is the third fix you 
+mentioned earlier right?
 
-commit:         e478cf26 Merge branch 'bpf-fix-a-couple-of-test-failur..
-git tree:       https://linux.googlesource.com/linux/kernel/git/torvalds/linux
-console output: https://syzkaller.appspot.com/x/log.txt?x=162282b9980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2ad6a8768920dd4b
-dashboard link: https://syzkaller.appspot.com/bug?extid=0a079d6ef3831217a230
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=148ddbfa980000
+This is correct so you can add:
 
-Note: testing is done by a robot and is best-effort only.
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+
+Thanks,
+
+Alex
+
