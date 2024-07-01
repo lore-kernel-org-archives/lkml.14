@@ -1,137 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE2D155381;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 999B977115;
 	Mon,  1 Jul 2024 12:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719837827; cv=none; b=GjNX6SFtC8XVN3h8TS43YNSeNfHS7eOU4suDbY2QOtO4n08iko3rEljZoEii/JEFkAnUWhUS0RP6Kp1IBxDIqrF4FBYAM7gDhQd5hcd7eNJaAqbp9Wu2nhkutspg0odnWw/sRvlq15EuPwgauHPQWLgMXIge9IyguO014f67TwE=
+	t=1719837828; cv=none; b=dy73FMz8HwfqXyRBu3eUskYtZsZGNAdhkaWg1FXlDgHaxrWXvZaLnZYuboovmZTN7A/PeeMIh9ICB/5sdomTB/rKC2hTkoch889xF4KV7b4ceSpZxC0ZYoc5pD36asNH+gMTuXc5aO6N/dcmvzAhmuj+tiEjQoufGRQRu8SOwoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719837827; c=relaxed/simple;
-	bh=YeBo7WeEfHrDjar+170g32UT5NI8xg7k30NX9nn6DDM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uFWWVx5Ds0ld+N5Wvx9R7hAP3dl6aNs8gZtLMM9/GmsaFPsUR9FskuvZfHMCxJ1xXZP2QaBYSSsih6TNJQx77OtdMXCob5WyabZZ8egvaZ6sV4AQ/Hl28LyQcVqtrGJQQiEwkcPV04n6TyAos1SkP6LMJNkduLF8It0X7CPiDG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dSIJzG5k; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719837828; c=relaxed/simple;
+	bh=fuZHtYepSjJ+dKAML5RqYEDMwlfQw1MHuNoSf5j7xF4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Oh8FCbZkVknzrP+VGlnFZKJdFPa91ORQPWZecKUjgGvJBLJECZmcvsI9x0isR0esnhxZ59kRk4CzZ/2B0CDHGIkVUXBQgPuaQEz6xY9xpszJZ3JHbfNnDqK8czuj7SYlV7tWvVw1i3HMNmEEqFNysWxIVC2X6bODlEg7FOw5Vs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Eo5HqoFc; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dSIJzG5k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7699C116B1;
-	Mon,  1 Jul 2024 12:43:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719837826;
-	bh=YeBo7WeEfHrDjar+170g32UT5NI8xg7k30NX9nn6DDM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dSIJzG5kE3e7rGZi40BjaTQT/5aPg4DFWj8Vm1JdG0gJVnpmtOUQpSPVgCx0fB0gM
-	 QBb+Aj++c+X7axAYj/va2uHBCMv5DSYRdrRCzOjTyXtwJPsJmAsrgXd/t3vvxJk979
-	 v5PF/L273JYv8bq2K2Py93P1Xoq0mGrX0/hMk3ZkdAyvInZteKAKPKLnWPp3ZJ0AOw
-	 RrJ3KHCZBo2kZp18Eo27xiWDtCRQQFAzAQapbw5Ai2jEke04hBRnNqEBQWqLji2HrF
-	 y2dzUy/nZzEeMgr71LJeczA4L6Ktils1i4fcrrm2sUexD3PPy0D7CJf6lihcbrjyMU
-	 sqj9p8HSh1QHQ==
-Date: Mon, 1 Jul 2024 14:43:41 +0200
-From: Benjamin Tissoires <bentiss@kernel.org>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Jiri Kosina <jikos@kernel.org>, 
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the hid tree
-Message-ID: <p3uo2zzvqgw5ym6dmbmhqdhjv2xgkocwcaulqmrunen3mgalge@2clqixaxpar3>
-References: <20240701185104.52c159c1@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Eo5HqoFc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719837827; x=1751373827;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=fuZHtYepSjJ+dKAML5RqYEDMwlfQw1MHuNoSf5j7xF4=;
+  b=Eo5HqoFcdUb9hYVr91ZRgXiR/NCa/oBU4iCSMHmTuKAuzn3mO4MVoWgn
+   WL4+hMBDIj6VKhfQBtKtA3VQkeuIWD1McN2UmAXzhSS5/kkQcyvDtRLAK
+   vVaQeNeq54/PTUYQaWITCUQIlutJA+mBOBf9yI3fAwGoGPY0RoU0mlEnR
+   RC5UAlXYdcEZsPtTDOERwXeG0NJuWr3Pfl6kDUznllj9GSFOPZseSJIjW
+   l0HRCZMAilq2NSHxnfB6HKK99mno3mJzlvmJJ1OzDQYfXrNXeIguu86ED
+   2Z+NM67Kx8l9zzT9qSX/qErPG5yUtfImQJBX49d8bkMyy/0WFWHiOT5I9
+   Q==;
+X-CSE-ConnectionGUID: 4zTatBpMRO+AANSc5WEm0Q==
+X-CSE-MsgGUID: jU9SInQ+SL6+YKX3cxavsw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="20717559"
+X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
+   d="scan'208";a="20717559"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 05:43:46 -0700
+X-CSE-ConnectionGUID: G9gf8jThQLa1r9xw+cDMjg==
+X-CSE-MsgGUID: gMdY0FQ4RDGnKzBUvYHueg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
+   d="scan'208";a="49971716"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa005.fm.intel.com with ESMTP; 01 Jul 2024 05:43:42 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 3C686341; Mon, 01 Jul 2024 15:43:41 +0300 (EEST)
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Baoquan He <bhe@redhat.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Sean Christopherson <seanjc@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH 0/3] x86: Reduce code duplication on page table initialization
+Date: Mon,  1 Jul 2024 15:43:31 +0300
+Message-ID: <20240701124334.1855981-1-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240701185104.52c159c1@canb.auug.org.au>
+Content-Transfer-Encoding: 8bit
 
-Hi Stephen,
+Use kernel_ident_mapping_init() to initialize kernel page tables where
+possible, replacing manual initialization, reducing code duplication.
 
-On Jul 01 2024, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the hid tree, today's linux-next build (i386 defconfig)
-> failed like this:
-> 
-> drivers/hid/hidraw.c: In function 'hidraw_send_report':
-> drivers/hid/hidraw.c:143:63: error: cast from pointer to integer of different size [-Werror=pointer-to-int-cast]
->   143 |                 ret = __hid_hw_output_report(dev, buf, count, (__u64)file, false);
->       |                                                               ^
-> drivers/hid/hidraw.c:154:56: error: cast from pointer to integer of different size [-Werror=pointer-to-int-cast]
->   154 |                                    HID_REQ_SET_REPORT, (__u64)file, false);
->       |                                                        ^
-> drivers/hid/hidraw.c: In function 'hidraw_get_report':
-> drivers/hid/hidraw.c:231:56: error: cast from pointer to integer of different size [-Werror=pointer-to-int-cast]
->   231 |                                    HID_REQ_GET_REPORT, (__u64)file, false);
->       |                                                        ^
-> cc1: all warnings being treated as errors
-> 
-> Caused by commit
-> 
->   67eccf151d76 ("HID: add source argument to HID low level functions")
-> 
-> I applied the following patch.
+Kirill A. Shutemov (3):
+  x86/mm/ident_map: Fix virtual address wrap to zero
+  x86/acpi: Replace manual page table initialization with
+    kernel_ident_mapping_init()
+  x86/64/kexec: Rewrite init_transition_pgtable() with
+    kernel_ident_mapping_init()
 
-Thanks a lot for the report and the proposed patch. I've just finished
-and published[0] my own version which enforces a u64 in the end. It's the
-same approach that can be found in the kernel/bpf/helper.c file, which
-is IMO slightly better than yours.
+ arch/x86/include/asm/kexec.h       |  5 +-
+ arch/x86/kernel/acpi/madt_wakeup.c | 73 +++++-------------------
+ arch/x86/kernel/machine_kexec_64.c | 89 +++++++++++-------------------
+ arch/x86/mm/ident_map.c            | 15 +----
+ 4 files changed, 50 insertions(+), 132 deletions(-)
 
-I think I'll apply all of the series[0] right now so you can drop this
-patch below from your tree.
-
-Cheers,
-Benjamin
-
-[0] https://lore.kernel.org/all/20240701-fix-cki-v2-2-20564e2e1393@kernel.org/
-
-> 
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Mon, 1 Jul 2024 18:36:36 +1000
-> Subject: [PATCH] fix up for "HID: add source argument to HID low level
->  functions"
-> 
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  drivers/hid/hidraw.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/hid/hidraw.c b/drivers/hid/hidraw.c
-> index c2396916cdaa..34633f99f3e4 100644
-> --- a/drivers/hid/hidraw.c
-> +++ b/drivers/hid/hidraw.c
-> @@ -140,7 +140,7 @@ static ssize_t hidraw_send_report(struct file *file, const char __user *buffer,
->  
->  	if ((report_type == HID_OUTPUT_REPORT) &&
->  	    !(dev->quirks & HID_QUIRK_NO_OUTPUT_REPORTS_ON_INTR_EP)) {
-> -		ret = __hid_hw_output_report(dev, buf, count, (__u64)file, false);
-> +		ret = __hid_hw_output_report(dev, buf, count, (unsigned long)file, false);
->  		/*
->  		 * compatibility with old implementation of USB-HID and I2C-HID:
->  		 * if the device does not support receiving output reports,
-> @@ -151,7 +151,7 @@ static ssize_t hidraw_send_report(struct file *file, const char __user *buffer,
->  	}
->  
->  	ret = __hid_hw_raw_request(dev, buf[0], buf, count, report_type,
-> -				   HID_REQ_SET_REPORT, (__u64)file, false);
-> +				   HID_REQ_SET_REPORT, (unsigned long)file, false);
->  
->  out_free:
->  	kfree(buf);
-> @@ -228,7 +228,7 @@ static ssize_t hidraw_get_report(struct file *file, char __user *buffer, size_t
->  	}
->  
->  	ret = __hid_hw_raw_request(dev, report_number, buf, count, report_type,
-> -				   HID_REQ_GET_REPORT, (__u64)file, false);
-> +				   HID_REQ_GET_REPORT, (unsigned long)file, false);
->  
->  	if (ret < 0)
->  		goto out_free;
-> -- 
-> 2.43.0
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
-
+-- 
+2.43.0
 
