@@ -1,149 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 029425028C
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 07:38:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC447482D8
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 07:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719819498; cv=none; b=Z1+ktvcuGIIotb2RwOaQFzDt+S5XSPUjTq//S2/LL1rkROlJdthk3Ry/NsIHovXet/dBk9tFOPUsyVRrTBfZ3RF0h52Qxt5b90oR29b2Rk3ImXCEvctW12T8e3HCZpzLZux9/6AkrL7q8wvQV47RESxvk/eDQoGrsUaiKCi+Rq8=
+	t=1719819553; cv=none; b=H/R4FcjL8jzhKAmbv/n4iBlhpmWMjX5UpcTyaAwgiYep/NGiPMy9Rvvsit0WRzYqAXA4jbzpaS77hOydTWaXkM+M7+MGOgDd6JSIJ2gu4gyWOrCN+fyPwlFO7VkWBOexRd6tSFoeZ7ws9esoeed8FkVDR2V+m31WKBkF9DqjvNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719819498; c=relaxed/simple;
-	bh=facbaRCnbSQSPEJ4NU4guvxeVPVmZBrJDP2YaKOJGH4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Wca3z9sxuxwcvpN4gAzOFDsPqHUwYAWgGWd+AHr5dPMb4xE8OjPzKcGEoAWbEBbbKTAegeyQOEPll0CeUGVrlfRWAWjajhk/B0y62mAq+reCZ6lr295yoaKpmjOUgkh+cNC7Z6Xnn7uXiWjECKOuXpeGJyqPlAvu2Y+xnCUmO2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LA42ONo8; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719819553; c=relaxed/simple;
+	bh=dkYEAXIYXVQLMENqeRXWiEaGrupUhLNU8N2paeczWJs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=e8CK9/bSMKViyp9J7b/qFmk5oYWyLzIx+jXumMYOYYRtEtJjvk4dYmaSFbZ4q97shy+ibRpK7RHcGKvPijuXDupZkChURXzyqwMOrQRqESmLOaqmcuY100sCbgzpENRYEQ8ed2JTLekR/sR8KPlh1Y5ddbW+bdq5j3bQaGGtcL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=D8IRHPW6; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LA42ONo8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719819497; x=1751355497;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=facbaRCnbSQSPEJ4NU4guvxeVPVmZBrJDP2YaKOJGH4=;
-  b=LA42ONo8Sw28x88kMe15MWmRBarMHLH2rssD8TdjXWMRtA/TiJAGVtOP
-   mQlaPGZk/9EdDz9wIxL/qpUUnOpPkKkYS9k+WxNyoTDusskPFX8A9Cbjb
-   m7qwwYxaORVTGT5vgW9V8n0B37b1gOJExU8HAy+CObR/7sqXe9L0eaT9k
-   l8xCCqm9uSGXiTF5WyX5S9NNwmLl4fIzZ9rCpjb/TV9tE+9wMkBqSq5IS
-   mqtOvzmzRW2prQZy2xxeAWrrHLbCuLDewxwd3RofgyB8GvMx4VVzICg5X
-   dOBgDNL68qLMkweDBD4KWEVK9mR06tpD+tzSJ8TXtB942lYlQhfvCdjUh
-   A==;
-X-CSE-ConnectionGUID: +nQJfwG9SROuLIhTszIDcg==
-X-CSE-MsgGUID: ox40AmOxRAiugmyNbVOJtw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11119"; a="28324752"
-X-IronPort-AV: E=Sophos;i="6.09,175,1716274800"; 
-   d="scan'208";a="28324752"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 00:38:16 -0700
-X-CSE-ConnectionGUID: GB8kuVrgQeCem9zhK20QJQ==
-X-CSE-MsgGUID: JTvTZ1kXQOG5KpD8ugvahA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,175,1716274800"; 
-   d="scan'208";a="76610300"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 00:38:15 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org,  linux-mm@kvack.org,  Andrew Morton
- <akpm@linux-foundation.org>
-Subject: Re: [PATCH v1 1/2] mm/migrate: make migrate_misplaced_folio()
- return 0 on success
-In-Reply-To: <20240620212935.656243-2-david@redhat.com> (David Hildenbrand's
-	message of "Thu, 20 Jun 2024 23:29:34 +0200")
-References: <20240620212935.656243-1-david@redhat.com>
-	<20240620212935.656243-2-david@redhat.com>
-Date: Mon, 01 Jul 2024 15:36:23 +0800
-Message-ID: <87plrxo96w.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="D8IRHPW6"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-42563a9fa58so19491955e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 00:39:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719819549; x=1720424349; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7fgIgufC6sWYVbWr++Melz5Zaf+Cm5Y66Rpu0DCSBjw=;
+        b=D8IRHPW6266MB2L5Gevthpv6l8AZb2uhApvEiT1kOEO+fMnRivnbCSpDg09QSsmQtg
+         +s2BQCKPvyEcGTgD3ZuYy4N8zoqEDNHkio9yY2e2J71UJjXMDXd2aPrC98T9M8SrFju3
+         OmxDXQT+tCDpqG4VEhHhz1tom0sapMjvrB9ovvLybrQoEsO2rM7pmJCk+h9I1qBL/Oj/
+         X6RJZRNPGD6QHYUTvsp0ihdhXU3S4deVkt7ngtKSnb0xomjFTnhu2yRNbSrwW5USqRrl
+         Cu2VIe/j9/MKMmfTawvMUufz9Tdag+8BJTtHagxigmgUJ9RrKpQl9Sohijik3HswjPyl
+         XNxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719819549; x=1720424349;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7fgIgufC6sWYVbWr++Melz5Zaf+Cm5Y66Rpu0DCSBjw=;
+        b=eKs99Z6Ltr+yWPA4irfOjbvW4Af5TTXa8zIYPgYDxA0IrQddPeXyBykikuaPNmxTZD
+         ML3++vlvhs1OrvsLa0OLxl0P9pkF63zz43bayIWJOrk8xgCgFY1ElgQTrEzSFlH1HPq1
+         6CanAmBDtHPD58YRxYfmj2fVUbQLe2PrqKqE8ntaI0QkNPPJXP4ErnbYrLzTumPUICwB
+         X84AiWBLGb0b4WQMUYZJZbVsz4cP/7ylzEtigxqUojwlGVNgrD9SJ0vDxm23Y5jZ7Hh/
+         wQufe7fjed802+U9vpGCMJn9tWska4+tIc0irSfbTA6h0xKismGhe0DLYMwSCk2K3UXY
+         QpVQ==
+X-Gm-Message-State: AOJu0YxhyNzi9iDlM5Hc/Njij4H1nkoqcBQsEH9DVeX3gRuF7CqBYXSQ
+	8m4Rs/K/BKCConBRrXr+kxs8A6MTD/NSPqgFOLUN5Zaeeg762koiVKwd8qifw8mM+8mHY9ePzor
+	t
+X-Google-Smtp-Source: AGHT+IHNc+7+N9eC1OCeqWD0tq/0TARqW46iTGahOqldEck4UMOaczS4cTl8rIDye8WekS0QF9nrHw==
+X-Received: by 2002:a05:6000:136f:b0:367:1da6:e419 with SMTP id ffacd0b85a97d-3677571c211mr4067290f8f.46.1719819548998;
+        Mon, 01 Jul 2024 00:39:08 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:1c2d:13b2:676b:59c2])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0d9ca8sm9249029f8f.43.2024.07.01.00.39.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 00:39:08 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	brgl@bgdev.pl,
+	linus.walleij@linaro.org,
+	Kent Gibson <warthog618@gmail.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 0/4] gpiolib: cdev: directionless line reconfiguration
+Date: Mon,  1 Jul 2024 09:39:07 +0200
+Message-ID: <171981953255.7947.3008231579681723957.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240626052925.174272-1-warthog618@gmail.com>
+References: <20240626052925.174272-1-warthog618@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-David Hildenbrand <david@redhat.com> writes:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> Let's just return 0 on success, which is less confusing.
->
-> ... especially because we got it wrong in the migrate.h stub where we
-> have "return -EAGAIN; /* can't migrate now */" instead of "return 0;".
-> Likely this wrong return value doesn't currently matter, but it
-> certainly adds confusion.
->
-> We'll add migrate_misplaced_folio_prepare() next, where we want to use
-> the same "return 0 on success" approach, so let's just clean this up.
->
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  mm/huge_memory.c | 5 ++---
->  mm/memory.c      | 2 +-
->  mm/migrate.c     | 4 ++--
->  3 files changed, 5 insertions(+), 6 deletions(-)
->
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 0fffaa58a47a..fc27dabcd8e3 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -1652,7 +1652,7 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf)
->  	unsigned long haddr = vmf->address & HPAGE_PMD_MASK;
->  	int nid = NUMA_NO_NODE;
->  	int target_nid, last_cpupid = (-1 & LAST_CPUPID_MASK);
-> -	bool migrated = false, writable = false;
-> +	bool writable = false;
->  	int flags = 0;
->  
->  	vmf->ptl = pmd_lock(vma->vm_mm, vmf->pmd);
-> @@ -1696,8 +1696,7 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf)
->  	spin_unlock(vmf->ptl);
->  	writable = false;
->  
-> -	migrated = migrate_misplaced_folio(folio, vma, target_nid);
-> -	if (migrated) {
-> +	if (!migrate_misplaced_folio(folio, vma, target_nid)) {
->  		flags |= TNF_MIGRATED;
->  		nid = target_nid;
->  	} else {
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 00728ea95583..118660de5bcc 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -5354,7 +5354,7 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
->  	ignore_writable = true;
->  
->  	/* Migrate to the requested node */
-> -	if (migrate_misplaced_folio(folio, vma, target_nid)) {
-> +	if (!migrate_misplaced_folio(folio, vma, target_nid)) {
->  		nid = target_nid;
->  		flags |= TNF_MIGRATED;
->  	} else {
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index 781979567f64..0307b54879a0 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -2629,11 +2629,11 @@ int migrate_misplaced_folio(struct folio *folio, struct vm_area_struct *vma,
->  					    nr_succeeded);
->  	}
->  	BUG_ON(!list_empty(&migratepages));
-> -	return isolated;
-> +	return isolated ? 0 : -EAGAIN;
 
-Is it good to use -EAGAIN as error code always?  At least if
-nr_remaining < 0, we can use that?
+On Wed, 26 Jun 2024 13:29:21 +0800, Kent Gibson wrote:
+> The behaviour of request reconfiguration without a direction flag set is
+> ill-defined and badly behaved, for both uAPI v1 and v2.  I'll will refer
+> to such a configuration as 'directionless' here.  That refers to the
+> configuration requested, not the actual state of the line.
+> 
+> The configuration validation used during reconfiguration is borrowed from
+> the line request operation, where, to verify the intent of the user, the
+> direction must be set to in order to effect a change to the electrical
+> configuration of a line. But that validation does not allow for the
+> directionless case, making it possible to clear flags set previously
+> without specifying the line direction.
+> 
+> [...]
 
-Otherwise, this LGTM.  Thanks!
+Applied, thanks!
 
->  
->  out:
->  	folio_put(folio);
-> -	return 0;
-> +	return -EAGAIN;
->  }
->  #endif /* CONFIG_NUMA_BALANCING */
->  #endif /* CONFIG_NUMA */
+[3/4] Documentation: gpio: Reconfiguration with unset direction (uAPI v1)
+      commit: e48fe75afa539d110753f7420aa398ef89f8e383
+[4/4] Documentation: gpio: Reconfiguration with unset direction (uAPI v2)
+      commit: 6a9c15083b1662a4b7b36e787272deb696d72c24
 
---
-Best Regards,
-Huang, Ying
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
