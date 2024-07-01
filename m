@@ -1,95 +1,106 @@
-Received: from out187-6.us.a.mail.aliyun.com (out187-6.us.a.mail.aliyun.com [47.90.187.6])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213F782498
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 08:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E966824AF;
+	Mon,  1 Jul 2024 08:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719822504; cv=none; b=DTQAy3gc/LBCHCD/KxLMI+AExhzQrkGaac0ojJ8E6P7ZVWrDl6wOSfpoZQUYG/kSfB0f7zWDQUZaTNGVrgazmaNQ9uhqhdTRaI8VW+ZqygfxMdvxnnRN5UOM6iXl2ZzQlbybcLhaKUN5VDetc9hRUy/bchmSXnYoGakItWPyPVI=
+	t=1719822516; cv=none; b=H4niZdIXFtX+uxRE08lhRoJMKjoszrbFhiWIwzYHsCYD3mTwGLY4DSsmA7JladW1C3ztozRUIjpgNUZyjy4WRbqq3agPAIvcZoRxpneIArWzdDJGlcKczXMEkNdTRxBFGtsCHx19pnxtj8cv5QAuNycXXYcx3VEdEPVhk+WMxgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719822504; c=relaxed/simple;
-	bh=LVZaEFFpmjLSLIHc3mWQaQg3P//cgDdA2m4wmoDiXFk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fmEDni72TCoO58XRcYFTzjiOiC586KA0NaEysrqOhoOE3fDgCXDdnjwqqEQVwqFowxB/1q5XlmhTORo7cxIL+tRQVh6NWT8Yl/ysNFeqTHVjbDadXVK1L/sznyIKa817685jbF7mtQx9Z3SW5kQh/LCgNaKdslxI+AWHIL9HF98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=o7QnGHhJ; arc=none smtp.client-ip=47.90.187.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
+	s=arc-20240116; t=1719822516; c=relaxed/simple;
+	bh=s2fBiJyREcC4i9H08i5WrySqxNVK3cYGRob83QSf9eE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ICUo659GANLzdWRenGpM6qSATf6/7r/wl08JszK+rCmAIUlZw5SqesInJA566r30dFpsWvBNtBhVARZNcJUb1j8bmeTjglhqJIL0kOuAtDu2xkXOSOmOOstYUPugEZlV+3rvo2ia8hhBf7Cw4SYN1yjdoUy6bV4gxV2g3+qDKc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=D+8/mzLa; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="o7QnGHhJ"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=antgroup.com; s=default;
-	t=1719822490; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=vGhjO9uIjc37ou1f7D8tf/WdHUzM0CCNY36XPbaqCkA=;
-	b=o7QnGHhJ73rwoGE3GBRfcgfT6wgLbHZ2Y1DS8YLYn2xLWWRQc4pxCDW8SpghUTuL+BAzd8TYAj6/CNdeYD9iXISHE1i6ZKzZnR26m/5TEcEPryRJcAVVUfBEIaNMq4hP2kCZ7JEK9hba3xAMAAxsgRdyaBP9C1/do2iDLcVedaA=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033068157007;MF=libang.li@antgroup.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---.YE88zYj_1719822171;
-Received: from 30.13.185.168(mailfrom:libang.li@antgroup.com fp:SMTPD_---.YE88zYj_1719822171)
-          by smtp.aliyun-inc.com;
-          Mon, 01 Jul 2024 16:22:51 +0800
-Message-ID: <d17c2da6-fa1f-4d89-afef-2be82e7d8d52@antgroup.com>
-Date: Mon, 01 Jul 2024 16:22:49 +0800
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="D+8/mzLa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1719822511;
+	bh=3hsbIPaDjys+Ehj+HX+kZMbDeNv4mL+sLfHc4C1dJ2k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=D+8/mzLa5pr+4DyV01i4Jw16nzMl92X2WjF/o8ViHF4EegxePPmlTo4mHZX/iS1uL
+	 lQ6jNgOZFaHVEAhAbiBI5u29XUKUY5hYYZAc8Q+xYreeFCJRxCUZ6pERWDAT5xUA9h
+	 fn/l2n1oCrIApkyyb7vX8Zp9ikKIJiGEDtHHn0JpWXjJZ63utolSZvpUzrVnXHsmEj
+	 l0KoZRiVfxhENLKABohEtJ+RzvPPeV3LSFsxiZa7Di2XBSn0c8mOLiGrL1yB4GIB7X
+	 77mAWIi9RLmFdcn489+oQdpq8qgJVpKf/EFzPqtexDIyZ11ZuSxCWmOiievFtHrK89
+	 1XGYLkqC19RvA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WCK1q46VPz4wc1;
+	Mon,  1 Jul 2024 18:28:31 +1000 (AEST)
+Date: Mon, 1 Jul 2024 18:28:30 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build warnings after merge of the mm tree
+Message-ID: <20240701182830.0fd1950c@canb.auug.org.au>
+In-Reply-To: <20240701110113.1248c8c2@canb.auug.org.au>
+References: <20240701110113.1248c8c2@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] support "THPeligible" semantics for mTHP with anonymous
- shmem
-To: David Hildenbrand <david@redhat.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>, hughd@google.com,
- akpm@linux-foundation.org
-Cc: ryan.roberts@arm.com, wangkefeng.wang@huawei.com, ziy@nvidia.com,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- Barry Song <21cnbao@gmail.com>
-References: <20240628104926.34209-1-libang.li@antgroup.com>
- <b2e6fac2-7c23-4a92-8d89-ff29b8566967@linux.alibaba.com>
- <2972d75a-ab26-4da7-88fa-81bed955cf52@redhat.com>
-Content-Language: en-US
-From: "Bang Li" <libang.li@antgroup.com>
-In-Reply-To: <2972d75a-ab26-4da7-88fa-81bed955cf52@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/7sKor7V.xBnoUCqxgNiNO0d";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hi David,
+--Sig_/7sKor7V.xBnoUCqxgNiNO0d
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 2024/7/1 14:55, David Hildenbrand wrote:
-> On 01.07.24 08:47, Baolin Wang wrote:
->> CC Barry.
->>
->> On 2024/6/28 18:49, Bang Li wrote:
->>> After the commit 7fb1b252afb5 ("mm: shmem: add mTHP support for
->>> anonymous shmem"), we can configure different policies through
->>> the multi-size THP sysfs interface for anonymous shmem. But
->>> currently "THPeligible" indicates only whether the mapping is
->>> eligible for allocating THP-pages as well as the THP is PMD
->>> mappable or not for anonymous shmem, we need to support semantics
->>> for mTHP with anonymous shmem similar to those for mTHP with
->>> anonymous memory.
->>
->> I did not see a consensus that "THP*" related statistics should contain
->> mTHP in previous discussion [1].
->>
->> In addition, if we all agree that "THPeligible" should include mTHP
->> statistics, you should update the corresponding documentation to keep
->> consistency.
->>
->> [1]
->> https://lore.kernel.org/linux-mm/202406262300.iAURISyJ-lkp@intel.com/T/#md7a77056110cebcc2a9b3cd7e4a8d682667f6ba5
->>
-> 
-> Fortunately, documentation (Documentation/filesystems/proc.rst) says:
-> 
-> "THPeligible" indicates whether the mapping is eligible for allocating 
-> naturally aligned THP pages of any currently enabled size. 1 if true, 0 
-> otherwise."
-> 
-> So that documentation is already pretty clear (we just have to make sure 
-> the other ones are properly documented, for example as raised in reply 
-> to [1]).
-> 
+Hi all,
 
-Thanks for the clarification.
+On Mon, 1 Jul 2024 11:01:13 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>
+> After merging the mm tree, today's linux-next build (arm
+> multi_v7_defconfig) produced these warnings:
+>=20
+> fs/proc/task_mmu.c: In function 'do_procmap_query':
+> fs/proc/task_mmu.c:598:48: warning: cast to pointer from integer of diffe=
+rent size [-Wint-to-pointer-cast]
+>   598 |         if (karg.vma_name_size && copy_to_user((void __user *)kar=
+g.vma_name_addr,
+>       |                                                ^
+> fs/proc/task_mmu.c:605:48: warning: cast to pointer from integer of diffe=
+rent size [-Wint-to-pointer-cast]
+>   605 |         if (karg.build_id_size && copy_to_user((void __user *)kar=
+g.build_id_addr,
+>       |                                                ^
+>=20
+> Introduced by commits
+>=20
+>   3757be498749 ("fs/procfs: implement efficient VMA querying API for /pro=
+c/<pid>/maps")
+>   df789ce1eb90 ("fs/procfs: add build ID fetching to PROCMAP_QUERY API")
 
-Thanks,
-Bang
+This became a build failure in my i386 defconfig build, so I applied
+Andrii's patch.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/7sKor7V.xBnoUCqxgNiNO0d
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmaCaK4ACgkQAVBC80lX
+0GzJFggAn28rsNTouJwd+khjs5Izuu8CupaaZEARMxKPl/7YpYq5KjwmVcfzARXz
+hkdDTI+RXkXMoysUHQB4t2VyhhKQAlOu8sIMKD8vZYDYPxs8TPiQm9FnmQ6ldOG+
+KDlfLCM/dALKHl7ATNlvQjfxLnUxPE0x6cGevwZoapuBVky9LWbR6jt3MGZ3DLnK
+GY3P45/j791dGui6J5tX1Gjh6d2yH8McDP3bS83yMt8GZeBAywhJaptHl+UtVasU
+052UJfvehaLqlPxOA4gXWecKuwONu1qXCDQK90mrdw39opbfAwzONeLhEuM9rlY8
+Re53ozErzIHI9GdRPRNiU/iZ54GM/A==
+=lTjr
+-----END PGP SIGNATURE-----
+
+--Sig_/7sKor7V.xBnoUCqxgNiNO0d--
