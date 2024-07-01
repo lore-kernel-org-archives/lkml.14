@@ -1,133 +1,130 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4BE84FDF;
-	Mon,  1 Jul 2024 09:15:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD61484A5E
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 09:16:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719825312; cv=none; b=hURZtuBxNzreWHaLXYh508xi1H/Gq8Bex2c6CLisTO1TT2mhveKO4nF2f/NJjlFqHI98N4USVBwLSeFJ+AOL+p+mPCrFQcdGSMQpAXuB8dl6rKqpqErAvRPrsewm4FxqmfnTkILOgWodC+gB5QD1IYhyGM7DlfztpK1SWGFgEmY=
+	t=1719825394; cv=none; b=a5UtAjuvGAZqPCP52CDxeJ8r9TUbXkftN+a2WBmrZZRbqXkPyUD4O6Gsg9kCY4u523wT1c3HPRAScFUSwzwSR6oDAQ4XqGg1fKmRTt+/L/ig07GoJaLmatLUnMhodbRYDH4KlLUqsUwA+NrJtg6AXMr5LO2bSZz6yJX/nnHsEu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719825312; c=relaxed/simple;
-	bh=EXNMgrTiEPpQEAXGI28JpwhOg3RrTVpofGQB0ZCOThM=;
+	s=arc-20240116; t=1719825394; c=relaxed/simple;
+	bh=cwp5rplcY8DjZiq1lafOEd2HSNWPSJdoC6cJyocB40Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sssmpbkAQS4Hu/GRVRn1eGGXNafcxzSJnp1+yq8iTzTdLtPxlQ6agUNjB8QMP/9Cj8oYp0Zmj8ru0bAFok1Uci42167VCrVV3iSjCRmD8y8eKkAlYiDJ+qE1IeQ0Jl7B1ohBglr8Hr1fewN/eU/jOzrzPrSoIvPZ9mCrwcTbU2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com; spf=pass smtp.mailfrom=cyphar.com; dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b=pYwFDWas; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyphar.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=b8e0+RcWixmWLZpNOBc89YoPtd/oqgJae86PR4YviNKR7caELpnylaqGyCNbNChwlNpp9m+SOgwe3y48g4z9I35sy6jNnuNwFmWXpS/8nLbI6mlc5FJ8jkeebInWxzjQlj3hiAZWhJMYfH6iIPE4hfKwqycpFDYdZqBIiXSV2lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cTNl0fyO; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b="pYwFDWas"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4WCL3Y69kfz9scS;
-	Mon,  1 Jul 2024 11:15:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyphar.com; s=MBO0001;
-	t=1719825305;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cTNl0fyO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719825391;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=K+QZIagZ7OIN+OXgwfZRx/CoBfAQFQoz16267s73MDs=;
-	b=pYwFDWasuVUv2oq5EADkqN8xdmyWO1Ksa+jbTDgxQBgyW36GGZfo3SVqgJn8NlrtOjT+3B
-	MmF3NGRLL5CFQELInQnWKIeI/NiKK9DOx3RqVDHqNjIC7WsGgqR1m58eALH8RT5mNTSL+0
-	GHTajev72Wy2CnjyTKVEeMblP6r4fFyipplHzHLHvd6YLmv5fIkY3mFjivTHe55Sd8gnHB
-	SoA015X2UfHjNRzt34d0RVh3uM30ks6VDJkRgjzyWfOGRcReoqjA/J+GYRbs0z1t/A+w5I
-	38d3me6jtRY9FaarJWI4bsN83RxqCH8lc4Ly2EOIYOyA5L2VMIE/mICllU1/EA==
-Date: Mon, 1 Jul 2024 02:14:54 -0700
-From: Aleksa Sarai <cyphar@cyphar.com>
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, kernel@collabora.com, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH] selftests: openat2: don't print total number of tests
- and then skip
-Message-ID: <20240701.085146-junky.rubs.mossy.crews-uyuNIdHgWxb@cyphar.com>
-References: <20240522214647.3568788-1-usama.anjum@collabora.com>
- <1fc06a15-f06e-4db1-ace5-b9d52250d0df@collabora.com>
+	bh=EDqyRdhYnb9M1XMOG4X5CSh/FJ2XKI6Btl8RCyPZq18=;
+	b=cTNl0fyOHcEMT7X2y43m8dtIGNFEHBixrPLc+qDdEmWfP1LBMg0IU8VO1TXCTsY3x8iIcC
+	mYNt53X9+CSRV1AH8KSPP0/YxO+7qloVBkftCyKXeNbzeWseRkJlvMo7GoxPAkvqI+sFWy
+	1kwt37Gt8IhOptrV5aVKNLlXMa8itYI=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-177-NPstdspGOHmTb05q43_i_A-1; Mon,
+ 01 Jul 2024 05:16:28 -0400
+X-MC-Unique: NPstdspGOHmTb05q43_i_A-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BFCFB19560AD;
+	Mon,  1 Jul 2024 09:16:25 +0000 (UTC)
+Received: from fedora (unknown [10.72.112.45])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 85E941956089;
+	Mon,  1 Jul 2024 09:16:16 +0000 (UTC)
+Date: Mon, 1 Jul 2024 17:16:11 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Hannes Reinecke <hare@suse.de>
+Cc: Daniel Wagner <dwagner@suse.de>, Jens Axboe <axboe@kernel.dk>,
+	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Christoph Hellwig <hch@lst.de>,
+	Frederic Weisbecker <fweisbecker@suse.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Sridhar Balaraman <sbalaraman@parallelwireless.com>,
+	"brookxu.cn" <brookxu.cn@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-nvme@lists.infradead.org
+Subject: Re: [PATCH v2 3/3] lib/group_cpus.c: honor housekeeping config when
+ grouping CPUs
+Message-ID: <ZoJz23UJLQ0NKpH4@fedora>
+References: <20240627-isolcpus-io-queues-v2-0-26a32e3c4f75@suse.de>
+ <20240627-isolcpus-io-queues-v2-3-26a32e3c4f75@suse.de>
+ <ZoFgLxGXrk4VCR03@fedora>
+ <b2ncik6c7xicsnzihhwfjjqood2yys52tzotohjnxj6o2mapg5@m364yzsjbvs2>
+ <ZoJY6a1CHCENAZZ8@fedora>
+ <0d8a5256-9719-45c5-b098-237b5a82fd36@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="seca4cj23snjpkde"
-Content-Disposition: inline
-In-Reply-To: <1fc06a15-f06e-4db1-ace5-b9d52250d0df@collabora.com>
-
-
---seca4cj23snjpkde
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <0d8a5256-9719-45c5-b098-237b5a82fd36@suse.de>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On 2024-07-01, Muhammad Usama Anjum <usama.anjum@collabora.com> wrote:
-> Adding more people for review
->=20
-> On 5/23/24 2:46 AM, Muhammad Usama Anjum wrote:
-> > Don't print that 88 sub-tests are going to be executed. But then skip.
-> > The error is printed that executed test was only 1 while 88 should have
-> > run:
-> >=20
-> > Old output:
-> >   TAP version 13
-> >   1..88
-> >   ok 2 # SKIP all tests require euid =3D=3D 0
-> >   # Planned tests !=3D run tests (88 !=3D 1)
-> >   # Totals: pass:0 fail:0 xfail:0 xpass:0 skip:1 error:0
-> >=20
-> > New and correct output:
-> >   TAP version 13
-> >   1..0 # SKIP all tests require euid =3D=3D 0
-> >=20
-> > Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-> > ---
-> >  tools/testing/selftests/openat2/resolve_test.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/tools/testing/selftests/openat2/resolve_test.c b/tools/tes=
-ting/selftests/openat2/resolve_test.c
-> > index bbafad440893c..5472ec478d227 100644
-> > --- a/tools/testing/selftests/openat2/resolve_test.c
-> > +++ b/tools/testing/selftests/openat2/resolve_test.c
-> > @@ -508,12 +508,13 @@ void test_openat2_opath_tests(void)
-> >  int main(int argc, char **argv)
-> >  {
-> >  	ksft_print_header();
-> > -	ksft_set_plan(NUM_TESTS);
-> > =20
-> >  	/* NOTE: We should be checking for CAP_SYS_ADMIN here... */
-> > -	if (geteuid() !=3D 0)
-> > +	if (geteuid())
+On Mon, Jul 01, 2024 at 10:43:14AM +0200, Hannes Reinecke wrote:
+> On 7/1/24 09:21, Ming Lei wrote:
+> > On Mon, Jul 01, 2024 at 09:08:32AM +0200, Daniel Wagner wrote:
+> > > On Sun, Jun 30, 2024 at 09:39:59PM GMT, Ming Lei wrote:
+> > > > > Make group_cpus_evenly aware of isolcpus configuration and use the
+> > > > > housekeeping CPU mask as base for distributing the available CPUs into
+> > > > > groups.
+> > > > > 
+> > > > > Fixes: 11ea68f553e2 ("genirq, sched/isolation: Isolate from handling managed interrupts")
+> > > > 
+> > > > isolated CPUs are actually handled when figuring out irq effective mask,
+> > > > so not sure how commit 11ea68f553e2 is wrong, and what is fixed in this
+> > > > patch from user viewpoint?
+> > > 
+> > > IO queues are allocated/spread on the isolated CPUs and if there is an
+> > > thread submitting IOs from an isolated CPU it will cause noise on the
+> > > isolated CPUs. The question is this a use case you need/want to support?
+> > 
+> > I have talked RH Openshift team weeks ago and they have such usage.
+> > 
+> > userspace is free to run any application from isolated CPUs via 'taskset
+> > -c' even though 'isolcpus=' is passed from command line.
+> > 
+> > Kernel can not add such new constraint on userspace.
+> > 
+> > > We have customers who are complaining that even with isolcpus provided
+> > > they still see IO noise on the isolated CPUs.
+> > 
+> > That is another issue, which has been fixed by the following patch:
+> > 
+> > a46c27026da1 blk-mq: don't schedule block kworker on isolated CPUs
+> > 
+> Hmm. Just when I thought I understood the issue ...
+> 
+> How is this supposed to work, then, given that I/O can be initiated
+> from the isolated CPUs?
+> I would have accepted that we have two scheduling domains, blk-mq is
+> spread across all cpus, and the blk-mq cpusets are arranged according
+> to the isolcpu settings.
+> Then we can initiate I/O from the isolated cpus, and the scheduler
+> would 'magically' ensure that everything is only run on isolated cpus.
 
-This change isn't necessary, !=3D 0 makes what we're checking clearer.
+blk-mq issues IO either from current context or kblockd context.
 
-> >  		ksft_exit_skip("all tests require euid =3D=3D 0\n");
-> > =20
-> > +	ksft_set_plan(NUM_TESTS);
-> > +
-> >  	test_openat2_opath_tests();
-> > =20
-> >  	if (ksft_get_fail_cnt() + ksft_get_error_cnt() > 0)
->=20
-> --=20
-> BR,
-> Muhammad Usama Anjum
+> 
+> But that patch would completely counteract such a setup, as during
+> I/O we more often than not will invoke kblockd, which then would cause
+> cross-talk on non-isolated cpus.
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+If IO is submitted from isolated CPU, blk-mq will issue this IO via
+unbound kblockd WQ, which is guaranteed to not run on isolated CPUs.
 
---seca4cj23snjpkde
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+Thanks,
+Ming
 
-iHUEABYKAB0WIQS2TklVsp+j1GPyqQYol/rSt+lEbwUCZoJzjgAKCRAol/rSt+lE
-bxhiAQCCSg+NVT9wtQ5TWZos7rAeoiAPbTt6VZEfxt5Ib3xwOwEAh6BegHRFZA0d
-OVTVzTsB+2YtqxW8oIxQQVxJoD8dhQo=
-=iOwh
------END PGP SIGNATURE-----
-
---seca4cj23snjpkde--
