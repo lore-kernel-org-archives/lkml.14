@@ -1,152 +1,70 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E68146017;
-	Mon,  1 Jul 2024 13:01:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B6114D6E1;
+	Mon,  1 Jul 2024 13:01:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719838881; cv=none; b=WN2RYZ0MW1CqSmlHVxT4lF2gnQhJqtgrMN5+k2MkOe+dH9GLZRcEMfO9eJpl381RDN4kN1vm/TNgecaJcw5TnU94VVbnQVB3m/QKcQN6ywO3lOQUsH2mGDr5dzh8o0o/RfvRjwGu9t4IPDZxi6byrB8BFWndBmirpzT2m4leFQc=
+	t=1719838894; cv=none; b=ShfjQVUaeASf0flvVzvznc1YdmFBh1eY2iph2THtaRwTRsRZk4YdRLHG4HA7sPMUmIHoCoMtVNjlKyGbVW4ZUzSBAgl53JOW9zc1fINJ76rvea95eXZO7s9pRzDYV3sEunp44RyvmD0xJ5Voc6hYjevhbVopg3cvaU1A6czxdhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719838881; c=relaxed/simple;
-	bh=mSSBgX5YD/tN1nW23Z9JSj0R5Z2gP3h1AymETTt512Y=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AwUoTPK0bDk8V6f5R8CP8gEb+zVGhAtw0H6n1cIzqV0cXK3FOw8Fw9jqSK3GQcwgh1E3917157zSmbBiap9WJRF9MzNFbImkdWohnyEWP/eDqizVa5k2IV9IO44UWzl9MC42LpdTeRghr3oqD1ZRiYX6aDVBEi6osIrmsr7mmio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WCQzG1x4hzZh4c;
-	Mon,  1 Jul 2024 20:56:42 +0800 (CST)
-Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
-	by mail.maildlp.com (Postfix) with ESMTPS id 413AB1403D4;
-	Mon,  1 Jul 2024 21:01:13 +0800 (CST)
-Received: from hulk-vt.huawei.com (10.67.174.26) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 1 Jul 2024 21:01:13 +0800
-From: Xiu Jianfeng <xiujianfeng@huawei.com>
-To: <tj@kernel.org>, <lizefan.x@bytedance.com>, <hannes@cmpxchg.org>,
-	<corbet@lwn.net>, <kamalesh.babulal@oracle.com>,
-	<haitao.huang@linux.intel.com>
-CC: <cgroups@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] cgroup/misc: Introduce misc.peak
-Date: Mon, 1 Jul 2024 12:52:59 +0000
-Message-ID: <20240701125259.2611466-1-xiujianfeng@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1719838894; c=relaxed/simple;
+	bh=mzcB+fYp3o9NJjTjsfH7uSf97jiaMjiCzdHrbPN4x/0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mNneA+cMoLRzUtW7LCV5WutuAy7cbEzzuhmYX2eptLZw8Ibogb0kQ+UwRd0iHBTU1eVtQa5mTWgraCzoAIS37qWYgEA1kvjps0U6myZRD6y/wT3nJ+NFqP5e2avqCBj0CE14SvnFw8zTFI7n3K6u9p6VSnTmP6h0SPCEj0yBpME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sX4NA97c; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sX4NA97c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B61DFC116B1;
+	Mon,  1 Jul 2024 13:01:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719838893;
+	bh=mzcB+fYp3o9NJjTjsfH7uSf97jiaMjiCzdHrbPN4x/0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sX4NA97c5+M3LFDkuGDmaVnn/H9lqdywQTGi+jxtly5k1AKfc5AdVHcAPDo+4ctLK
+	 Yo31K7dSkmvLiKRA+jxdP0vmelQs2BzJm5Om54DuXw5S665Xop1Suz19U/xaui/sxx
+	 /69EGjx8QiSxvyBUkFCafe/RV4ew1fGgVW3CI7Qy1uWSERd6c4/Kp8sM8fPfP8IvXV
+	 7L0A1hcoerKhduog+LaCtUpLMV6f9YRybnBvrK0AlwLMvD80qee5VyvAdsc8n9UY5Y
+	 cQsutZuPE+rGLLEPgfhltbn6nMO8wUtwwU4OzhFhMmLlu+1ih/2FHHNSqG+/J0dJtC
+	 TLfebFRb2V83g==
+Date: Mon, 1 Jul 2024 14:01:27 +0100
+From: Will Deacon <will@kernel.org>
+To: Atish Patra <atishp@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, kvm-riscv@lists.infradead.org,
+	Atish Patra <atishp@atishpatra.org>,
+	Anup Patel <anup@brainfault.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, garthlei@pku.edu.cn
+Subject: Re: [PATCH v4 0/3] Assorted fixes in RISC-V PMU driver
+Message-ID: <20240701130127.GA2250@willie-the-truck>
+References: <20240628-misc_perf_fixes-v4-0-e01cfddcf035@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpeml500023.china.huawei.com (7.185.36.114)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240628-misc_perf_fixes-v4-0-e01cfddcf035@rivosinc.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Introduce misc.peak to record the historical maximum usage of the
-resource, as in some scenarios the value of misc.max could be
-adjusted based on the peak usage of the resource.
+On Fri, Jun 28, 2024 at 12:51:40AM -0700, Atish Patra wrote:
+> This series contains 3 fixes out of which the first one is a new fix
+> for invalid event data reported in lkml[2]. The last two are v3 of Samuel's
+> patch[1]. I added the RB/TB/Fixes tag and moved 1 unrelated change
+> to its own patch. I also changed an error message in kvm vcpu_pmu from
+> pr_err to pr_debug to avoid redundant failure error messages generated
+> due to the boot time quering of events implemented in the patch[1]
 
-Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
----
- Documentation/admin-guide/cgroup-v2.rst |  9 ++++++++
- include/linux/misc_cgroup.h             |  2 ++
- kernel/cgroup/misc.c                    | 29 +++++++++++++++++++++++++
- 3 files changed, 40 insertions(+)
+I'm assuming this series will go via the riscv arch tree, but please
+shout if that's not the case.
 
-diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
-index ae0fdb6fc618..48ae30f2d9ab 100644
---- a/Documentation/admin-guide/cgroup-v2.rst
-+++ b/Documentation/admin-guide/cgroup-v2.rst
-@@ -2646,6 +2646,15 @@ Miscellaneous controller provides 3 interface files. If two misc resources (res_
- 	  res_a 3
- 	  res_b 0
- 
-+  misc.peak
-+        A read-only flat-keyed file shown in the all cgroups.  It shows
-+        the historical maximum usage of the resources in the cgroup and
-+        its children.::
-+
-+	  $ cat misc.peak
-+	  res_a 10
-+	  res_b 8
-+
-   misc.max
-         A read-write flat-keyed file shown in the non root cgroups. Allowed
-         maximum usage of the resources in the cgroup and its children.::
-diff --git a/include/linux/misc_cgroup.h b/include/linux/misc_cgroup.h
-index e799b1f8d05b..8aa69818291e 100644
---- a/include/linux/misc_cgroup.h
-+++ b/include/linux/misc_cgroup.h
-@@ -30,11 +30,13 @@ struct misc_cg;
- /**
-  * struct misc_res: Per cgroup per misc type resource
-  * @max: Maximum limit on the resource.
-+ * $watermark: Historical maximum usage of the resource.
-  * @usage: Current usage of the resource.
-  * @events: Number of times, the resource limit exceeded.
-  */
- struct misc_res {
- 	u64 max;
-+	u64 watermark;
- 	atomic64_t usage;
- 	atomic64_t events;
- };
-diff --git a/kernel/cgroup/misc.c b/kernel/cgroup/misc.c
-index 79a3717a5803..a1b6ed76e00b 100644
---- a/kernel/cgroup/misc.c
-+++ b/kernel/cgroup/misc.c
-@@ -159,6 +159,8 @@ int misc_cg_try_charge(enum misc_res_type type, struct misc_cg *cg, u64 amount)
- 			ret = -EBUSY;
- 			goto err_charge;
- 		}
-+		if (new_usage > READ_ONCE(res->watermark))
-+			WRITE_ONCE(res->watermark, new_usage);
- 	}
- 	return 0;
- 
-@@ -307,6 +309,29 @@ static int misc_cg_current_show(struct seq_file *sf, void *v)
- 	return 0;
- }
- 
-+/**
-+ * misc_cg_peak_show() - Show the peak usage of the misc cgroup.
-+ * @sf: Interface file
-+ * @v: Arguments passed
-+ *
-+ * Context: Any context.
-+ * Return: 0 to denote successful print.
-+ */
-+static int misc_cg_peak_show(struct seq_file *sf, void *v)
-+{
-+	int i;
-+	u64 watermark;
-+	struct misc_cg *cg = css_misc(seq_css(sf));
-+
-+	for (i = 0; i < MISC_CG_RES_TYPES; i++) {
-+		watermark = READ_ONCE(cg->res[i].watermark);
-+		if (READ_ONCE(misc_res_capacity[i]) || watermark)
-+			seq_printf(sf, "%s %llu\n", misc_res_name[i], watermark);
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * misc_cg_capacity_show() - Show the total capacity of misc res on the host.
-  * @sf: Interface file
-@@ -357,6 +382,10 @@ static struct cftype misc_cg_files[] = {
- 		.name = "current",
- 		.seq_show = misc_cg_current_show,
- 	},
-+	{
-+		.name = "peak",
-+		.seq_show = misc_cg_peak_show,
-+	},
- 	{
- 		.name = "capacity",
- 		.seq_show = misc_cg_capacity_show,
--- 
-2.34.1
-
+Will
