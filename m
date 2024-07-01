@@ -1,103 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35ABF2C1BA
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 21:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4D0381B0
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 21:55:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719870546; cv=none; b=nmEfHKLEBoqPMvr2qyBJs0o6iTQfoWrHZN6cUoYYPGJ/MRYrPl2vx8Zzb9jR0edli4OqX/KM+XnYNLJequpUciMiCeO+Ul5qoR5B8UCoqQHVWWeXSZ0W2N2GgwaZhM0cVNMoJKiqjeGx4k4tLctI5oGJStkPVxQABTCIzjmKxIg=
+	t=1719870912; cv=none; b=QgpJEf1qvQe8LvAU18PW0v491lM/mQ5UT1Ddy9vXWI+rEgb3BStD8SpgVFGs3b/ZblrthDPB0jdz3EM7v7/4IU1UeEusfW4wtbq80xBhHPNjen+McOrqJn2YSaKvSVRbRgPG5rMN/lZ7DafAUMbULkfXGm3J8acpCE4V3RQH/no=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719870546; c=relaxed/simple;
-	bh=Byn5QNQ8h+2zCnguEP5D8U+mBLZxKBQdtqbsHOASRoQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pjcyr5cNVU0PvRUgBO+giHaC0QG3vxp21FGlFM2aL0YmHSUEuGbMCme6HE2DQRi0rD+cqNdriOGoBlD5+C4zZsUG9ry+AdM/t4WlBxOyJmNKyJ1jG23DTwE37mcw61K6WxPuKJAK6Hgu2rf/zYVM+YFxt/Nuy4ykfgvn+lIXoe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BAHRSrng; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BAHRSrng"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57940C116B1;
-	Mon,  1 Jul 2024 21:49:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719870545;
-	bh=Byn5QNQ8h+2zCnguEP5D8U+mBLZxKBQdtqbsHOASRoQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BAHRSrngnTvwA9Uy8Nbg6zQZssCyx6P6FjMpOIWBbPO+KOZH3Wx3T2Qd6z+LkDfgm
-	 MrLoMyqH5FfSMMO8opTmuuhHFqKgfka1JDiciQRwl1ijcWrgqrOGSJzEc/Xornfo6/
-	 Vfc9iRqvXtGmJXDZzXxBavuNMdjnSVrYSRVH/+eU7XC8SvJaAAMCkyqq4fJnR320sZ
-	 OhfZqMwyxAXUja59rcRfoTmSjOJc/Ljp0Z55ESGSyJMvy3M+b3CAuu0653au2PMAvS
-	 r5H0RPC7+YYCYCZsEz5pf93+lpOfM2Joy7rI8hC67Tw2D24Nzl3D5PqL9vo2vFc2TU
-	 Pg+pF+QfQv5SQ==
-Date: Mon, 1 Jul 2024 23:49:02 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/8] timers/migration: Move hierarchy setup into
- cpuhotplug prepare callback
-Message-ID: <ZoMkTttgF_DgUvGG@pavilion.home>
-References: <20240701-tmigr-fixes-v3-0-25cd5de318fb@linutronix.de>
- <20240701-tmigr-fixes-v3-2-25cd5de318fb@linutronix.de>
+	s=arc-20240116; t=1719870912; c=relaxed/simple;
+	bh=iRjCKXHq4eV8ko+UGUOl678VdrZXKjD+o9oN5Pbqw+4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=I2LE3llGqxAgGwavh2wBOKw9EogA2KgpfKA4UpN9iNhAgvoThf6+eFPesKNvmTQY2q2XH24zMJJ9LrpE3I8WS4HRXczgTZaSRDR62wsMkKXMzUIEGPDecu+4w4Xvh4WNq5gMqm+h+qpORFHldh4CeCRJ9WdzgEJZi3dBesly2rM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7f63ce98003so178353439f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 14:55:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719870910; x=1720475710;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iRjCKXHq4eV8ko+UGUOl678VdrZXKjD+o9oN5Pbqw+4=;
+        b=Zbq57FqeQqNhnMdlDng+4TioxdV1SFCuoN4myJ8NeMvfiu0iWd6JgcKOYsdfz3Kuwv
+         PdMHnhv6i/HsDfQHq5u/FELx1yFJ6zHxm+a1E9KbmFNKA9wIo82V+Jk+CBCg/XOU9Y25
+         AHu7uqDNwBcV3jD07tKs7aSZxyIMKR+vpUWO30fNiKe18/rsxrOA6WHITEgoA3JBj9q4
+         4j/9tH4hSfF8bFBxWOIdwKpmz02OTBsFum0BrCOgkhOiKM3gxjF5QF5NZDoUt0Ryq/KU
+         nE6gCg0KL7OZesEjC5ffgxd7XGs40FhhK6K+getvEwE9oR8928ZEgYPzZtC/DcU2jrpa
+         7Wvw==
+X-Gm-Message-State: AOJu0YwrvqWjx2C52p9FsPgx8k76/JlWJz2ou6NCdJCgIF56NSrnfV4N
+	kf6YcM6fl/MpDOpSrKAaQOiCzQs4SNrXYiI5Odahdl+SMSQCofh/qtU1wts7CB5cvTk8S4FH0OY
+	nwrXwQtzCGLCmEv4eaKrJQJeQNQcsCqgy6jKn8SS/OLGNwGSbrPtZ5KY=
+X-Google-Smtp-Source: AGHT+IFhVagB0i9eYcQHnMpTpTgDxoFkTlBzsol21vjxnMkWqmzeAf6lUEUzSlPS2ZcTLd6Cq/6Y9FBxf5hW0SQeFOI3HMNmVyym
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240701-tmigr-fixes-v3-2-25cd5de318fb@linutronix.de>
+X-Received: by 2002:a05:6602:6c0d:b0:7f6:1f4c:96c9 with SMTP id
+ ca18e2360f4ac-7f62ee8d43amr48438939f.2.1719870909897; Mon, 01 Jul 2024
+ 14:55:09 -0700 (PDT)
+Date: Mon, 01 Jul 2024 14:55:09 -0700
+In-Reply-To: <00000000000077d29606186c5e99@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a4ed95061c36a6c3@google.com>
+Subject: Re: [syzbot] test
+From: syzbot <syzbot+39b2fb0f2638669008ec@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Le Mon, Jul 01, 2024 at 12:18:38PM +0200, Anna-Maria Behnsen a écrit :
-> To prevent those races, the setup of the hierarchy is moved into the
-> cpuhotplug prepare callback. The prepare callback is not executed by the
-> CPU which will come online, it is executed by the CPU which prepares
-> onlining of the other CPU. This CPU will not go idle and so it is ensured,
-> that the formerly top level group cannot go idle and change top level group
-> state and the propagation could be done without a risk. The direction for
-> the updates is now forced to look like "from bottom to top".
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-You might want to elaborate a bit on those last two sentences. For example:
+***
 
-"""
-This CPU is active while it is connecting the formerly top level to the new
-one. This prevents from (A) to happen and it also prevents from any further walk
-above the formerly top level until that active CPU becomes inactive, releasing
-the new ->parent and ->childmask updates to be visible by any subsequent walk
-up above the formerly top level hierarchy. This prevents from (B) to happen.
-"""
+Subject: test
+Author: mukattreyee@gmail.com
 
-However if the active CPU prevents from tmigr_cpu_(in)active() to walk
-up with the update not-or-half visible, nothing prevents walking up to
-the new top with a 0 childmask in tmigr_handle_remote_up() or
-tmigr_requires_handle_remote_up() if the active CPU doing the prepare is not
-the migrator. But then it looks fine because:
-
-* tmigr_check_migrator() should just return false
-* The migrator is active and should eventually observe the new childmask
-  at some point in a future tick.
-
-But still it can be a good idea to mention that somewhere.
-
-> @@ -1540,22 +1600,22 @@ static void tmigr_connect_child_parent(struct tmigr_group *child,
->  	 *   child to the new parent. So tmigr_connect_child_parent() is
->  	 *   executed with the formerly top level group (child) and the newly
->  	 *   created group (parent).
-> +	 *
-> +	 * * It is ensured, that the child is active, as this setup path is
-
-First comma is not needed.
-
-> +	 *   executed in hotplug prepare callback. This is exectued by an
-> +	 *   already connected and !idle CPU. Even if all other CPUs go idle,
-> +	 *   the CPU executing the setup will be responsible up to current top
-> +	 *   level group.
-
-And the next time it goes inactive, it will release the new childmask and parent
-to subsequent walkers through this @child.
-
-> +       * Therefore propagate active state unconditionally.
-
-As for the change itself:
-
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-
-Thanks.
+#syz test:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
