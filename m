@@ -1,108 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D5628F4;
-	Mon,  1 Jul 2024 15:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D6E28F4
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 15:35:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719848086; cv=none; b=jDnjx5FpHxHOI8gajn/llJTrOF4+riEuA252mxM2551ONlC4NyENTGAdXZgwvXaNYklAG482tqAL4bRYy8nvRSMkSVwYv6ctJ/fUj+ofnLHS0kTL+NyX+6FXQfoRSXIePzkWo8s8G5/OcPwn7S7uW34i/0wrc8xyjk2QhKZORAY=
+	t=1719848150; cv=none; b=L+8IVVbfy2UksO3ZuYo192Oi4HDbg3TBH4KsjKjFX6nwaDVPJspUxEfT9mp3HckpKcNMCNPBN6pAhyRh4yX8iwhTM+YYbIzab6BJE3Yqpk2BDU6vfBLMhi/IXM1CWDnH52PLjq0Kq/Re77HwuaUWqC9LDZTGYeWbvGGfrelTOTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719848086; c=relaxed/simple;
-	bh=iq8bWnF6w36ZZ3oKBLDL7Q66Va//VDQRpFTyD5AraCo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RnT1wDuNTktSuScjWDngLrPqb/FpAPbOeEt5NqWlIQX7s+tfdE9hE0I8XydPEoJz1pmmUSGNV3IUvEYadUcOo57ZmMHUBJHwkKP7AdPf4c0vWV+DNpuucfDl2aOfGfHrf8fHmRkqp1qAEDS3gftdAsvDSAVk4VH35YBgB9EhJMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eW64tHs7; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719848150; c=relaxed/simple;
+	bh=fo5ZZhgaal61SnMn7wEKP+Sjpf3+qXtFCB39J2KT88U=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NJVNZ3YMGfZKyc8n9IVsCVsU/emN9S6eTiSnEEqHutzXfTzlsrgbX3VtPiBfFmvLyC0tw/s7KROfD92hSQM3tyBEypBmMnOb1XLb/bvtonehHwSHOJPk0YHN/CYxGnoQAswN4xMMeA4O6NzMiFKxnq+uB1HhbV1bli9+XWmB+c8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PDsgpuAd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eW64tHs7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719848084; x=1751384084;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=iq8bWnF6w36ZZ3oKBLDL7Q66Va//VDQRpFTyD5AraCo=;
-  b=eW64tHs7rEe1TdVUZRaLDRCc/bXFVf9LuGFNkqez9CQUAkMxeDxDPJnX
-   +usxlRBqxJTjjaGdDATFHPPvpHryFFtSsolsJSOM1HSWmrfhQWOQqk7YA
-   jbgJSJjMZ8mZVymG6Q96YJm4kBvL4CLSfzy9QCSUVQilOmeS/xf/z7lpF
-   7Focolt2bhn+g21hp0sucOQ/32fUwK9BzYx2+vxB0JjydFT5rIP0kvsaW
-   Efp5Hw3yKYAB1vt0h7Fo9f50APFzWOvoHMMgvJGexDNQOrei58gt8bcJH
-   SBfh2Y4cguOLQojl5ZHAZCgBGPTm+kZ5jm7/OqQbITSynzovECJQGpBxX
-   A==;
-X-CSE-ConnectionGUID: o5KnzWbJRoaa5bdlmehGXw==
-X-CSE-MsgGUID: v5om0M9TRwGLtAK5OvzHEw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="34527578"
-X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
-   d="scan'208";a="34527578"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 08:34:43 -0700
-X-CSE-ConnectionGUID: YfCSuWqcRQ+x9qFnKqd/Gw==
-X-CSE-MsgGUID: Y6xwroDyRqScS3SLIcaBvw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
-   d="scan'208";a="50446989"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 08:34:44 -0700
-Date: Mon, 1 Jul 2024 08:39:56 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: Xin Li <xin@zytor.com>
-Cc: X86 Kernel <x86@kernel.org>, Sean Christopherson <seanjc@google.com>,
- LKML <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Xin Li
- <xin3.li@intel.com>, linux-perf-users@vger.kernel.org, Peter Zijlstra
- <peterz@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>, Tony Luck
- <tony.luck@intel.com>, Andy Lutomirski <luto@kernel.org>, acme@kernel.org,
- kan.liang@linux.intel.com, Andi Kleen <andi.kleen@intel.com>, "Mehta,
- Sohil" <sohil.mehta@intel.com>, Zeng Guang <guang.zeng@intel.com>,
- jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v3 06/11] KVM: VMX: Expand FRED kvm entry with event
- data
-Message-ID: <20240701083956.4460bb06@jacob-builder>
-In-Reply-To: <d385c639-d2b1-4068-b386-98c456265926@zytor.com>
-References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
-	<20240628201839.673086-7-jacob.jun.pan@linux.intel.com>
-	<d385c639-d2b1-4068-b386-98c456265926@zytor.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PDsgpuAd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C259BC2BD10;
+	Mon,  1 Jul 2024 15:35:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719848150;
+	bh=fo5ZZhgaal61SnMn7wEKP+Sjpf3+qXtFCB39J2KT88U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=PDsgpuAdef8jYQybVzt2GCDWickE7x4cq160Nj3BT6POPFuGolydHL+9GaiGFhW/U
+	 NCyondw9kVIIF5emYfo/Egv0hsn+7cm7R/X0X1ls0lE/5jl01fvak6B/sa3LjEJqz/
+	 j/EokTxgV4rku39cD2gz1GiEc0vQO2TPvzrkzcdSdbF/FXqY2xbzgVFB//vjfGSyG7
+	 nidmcmG+1yDpgir9e23ahHqm375YcUnem9ODk0krJZa/MPRrLb5EBnNJsmYYDXPIIW
+	 VBj/2tZETSXqPjm7KkLUyTk7S+iAcyr8YcTrIJIKBRy7FPqA758uvfiU7z5n8CKEvc
+	 19BVaowmvCynA==
+From: Will Deacon <will@kernel.org>
+To: Robin Murphy <robin.murphy@arm.com>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>
+Cc: catalin.marinas@arm.com,
+	kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Jing Zhang <renyu.zj@linux.alibaba.com>
+Subject: Re: [PATCH v4 0/2] Mesh PMU: Add tertiary match group support
+Date: Mon,  1 Jul 2024 16:35:42 +0100
+Message-Id: <171984210889.916169.4034955157375868268.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20240618005056.3092866-1-ilkka@os.amperecomputing.com>
+References: <20240618005056.3092866-1-ilkka@os.amperecomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-
-On Fri, 28 Jun 2024 21:01:28 -0700, Xin Li <xin@zytor.com> wrote:
-
-> On 6/28/2024 1:18 PM, Jacob Pan wrote:
-> > From: Zeng Guang <guang.zeng@intel.com>
-> > 
-> > For VM exits caused by events (NMI, #DB, and #PF) delivered by FRED, the
-> > event data is saved in the exit-qualification field. (FRED spec.
-> > 10.6.2)  
+On Mon, 17 Jun 2024 17:50:54 -0700, Ilkka Koskinen wrote:
+> v4:	* No changes, only rebased on top of v6.10-rc4
 > 
-> I don't like mentioning #DB/#PF here, they belong to the guest that was 
-> running, and KVM handles them.
-It is part of the spec.
-
-> While NMIs belong to host, and the host NMI handler needs event data
-> saved in VMCS in NMI induced VM exits.
+> v3:
+> 	* Replaced wp_cfg in arm_cmn_hw_event with wp_idx that keeps
+> 	  track, whether the event uses 0 or 1 index for the given direction
+> 	* Cleaned and simplified allocation/claiming of wp config
+> 	* arm_cmn_val_add_event() can't and won't fail anymore
+> 	* Separated wp_combine from wp[] in event validation phase
+> 	* use memset()/sizeof() when clearing an event
+> 	* Still kept wp config allocator in separate functions - at least
+> 	  for now
+> 	* https://lore.kernel.org/all/20240329013215.169345-1-ilkka@os.amperecomputing.com/
 > 
-> Or you paint a full picture.
-I will add your explanation that #DB/#PF belong to the guest so readers can
-get a full picture of both usage and spec.
-> 
-> > Expand FRED KVM entry interface to include the event data obtained from
-> > the exit qualification.
-> > 
-> > Signed-off-by: Zeng Guang <guang.zeng@intel.com>
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>  
-> 
+> [...]
 
+Applied to will (for-next/perf), thanks!
 
-Thanks,
+[1/2] perf/arm-cmn: Decouple wp_config registers from filter group number
+      https://git.kernel.org/will/c/4a112585ebe8
+[2/2] perf/arm-cmn: Enable support for tertiary match group
+      https://git.kernel.org/will/c/f9a7a91f6406
 
-Jacob
+Cheers,
+-- 
+Will
+
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
