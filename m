@@ -1,48 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C786C16D31E;
-	Mon,  1 Jul 2024 17:27:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B725416E872;
+	Mon,  1 Jul 2024 17:28:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719854857; cv=none; b=Nb5LkQ6vUT0e+JOOh2Ui+CBeqYlf6jnnV5sEfmDV237F5H4IyelEf4EVwc2Zq9IJH8igiFdmMdSka3Re17qJRanMAjGbP0jRvAUNfxw4B6Gw4bHSfI01lkSdsWgDFJ2atzPGw4jpmdWtqXKW9AYRNoy8VJ8SQ3fFkxAvsrGtRIE=
+	t=1719854919; cv=none; b=qZTUCYQCvdMv8ZEQ4zQkkqO9W5tdJpIkfVPN/hQ0HWInzfDbUACGTSL8MkEuCrr0OoA6Qmd/KEIaNPgKKbk2GK3IZ6Uh8P69GmUlYb2A94WhEdZqzFUcZuiQnNdCg0FsvbmK4Xap1I2SFT3e8VILFyk+ZE2jQqOSZkPrBb2TLnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719854857; c=relaxed/simple;
-	bh=WhySC+CWoDzq2eZaqyGSWY4XkTyZrFTCeeNH2YSu8oE=;
+	s=arc-20240116; t=1719854919; c=relaxed/simple;
+	bh=Djq+I6/H5NeWMc6k7f+gRN1mfm/Ucj4/tjTrKbX0FKc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y5Kq8O05b/rmYLMnAfB8S/ReJ5QHVSlY7NEo2DDfShOxE6rH/0LP4gEHGbYI0V+X19ojVtndmp3sauvoxD2vHoXoOizs/LNEEWFPLHxLXa55Qs8MqtNU3vD/q6iDzfWTGHJNU/hOo5ZtD8z4XWHokS/lbev34O4nwFh/XQm6Cy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gOuUFE2I; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gv9QKYjS99unE8PXK61ge+gqnxCSBxHCYJJhT9vqiUJBp/iJk7SbDR8aoRZGx5HEzsvn2xkmmVeI0wfLF3oU3C/88Qy+SbC7l4A6snVJIYU6Uci/VKu6Zjvq12CY1fomUDx83luQEEbSZcpr6lSS4i0EH3DOvduO3xUBM3KQ/10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M/K6254y; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gOuUFE2I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24720C116B1;
-	Mon,  1 Jul 2024 17:27:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719854857;
-	bh=WhySC+CWoDzq2eZaqyGSWY4XkTyZrFTCeeNH2YSu8oE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gOuUFE2IosfkrW4xYzcTId5L674CpOxtkB9KTj6mobFD08Co1NjyO9m8BpOT3gmFI
-	 X8EfygDahr0JkavhfcR8UafMgCxljoUctyHsV7ECFnUiM3m2gXCTdVp0LleybtEekA
-	 Af2Q2Q8pky/pEU2/LWLp1O6qb4bB+r0vzTCGaJK95Iwqq4a4Tyg5UPpdrbt5Xkizbp
-	 Hl3Ky2tzi7YVMSlbz25kuaQM4ecn4Xe9izWRl3YLyMopiOPqaD6ybAcUKOrHrG9K4P
-	 qy0paVhHPEyzP+l/yNWckCdpva3kDk9Tk3FuMex0SI/zqgfjgJ+ci0q8YXehtnEXHr
-	 PInpNJN/u7E7w==
-Date: Mon, 1 Jul 2024 11:27:36 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Conor Dooley <conor+dt@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
-	Madalin Bucur <madalin.bucur@nxp.com>,
-	Sean Anderson <sean.anderson@seco.com>, netdev@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Richard Cochran <richardcochran@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>
-Subject: Re: [PATCH 2/2] dt-bindings: net: fsl,fman: add ptimer-handle
- property
-Message-ID: <171985485502.144984.15918205840917891186.robh@kernel.org>
-References: <20240628213711.3114790-1-Frank.Li@nxp.com>
- <20240628213711.3114790-2-Frank.Li@nxp.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M/K6254y"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1f9b52ef481so15300975ad.1;
+        Mon, 01 Jul 2024 10:28:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719854917; x=1720459717; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dBaHO6wsf3uapECt7oYjoJlQSnwdtRQ+9RONzIUWqL0=;
+        b=M/K6254yzC19i2VSLjn91XH7U2HWRsySVL/kSFOtjK0QUWyejiCqfjwGEqDHKyacP5
+         US59/5vriQoNN8T0/WfiwUcLPFLokeFC+I1U9C8zuR2C7195bKiz2TzYnVMRiRjo7qw7
+         R/u+xAX/JH+pVxnfDlPAQ10n7jPjW7mF80qL7FdN6ibMDEbxZI88+u6NFOq/6SSBdn4F
+         4AUIrrmyp8YTplQ1Lh9VdQ75fgh3PF5h6D6EKl654FCtVE0Gcyy0Cjc6nau4Gagc6RwO
+         fSSSvPI8qxZuAIG25uNA5nXDnZ5h5Uuob4GdypxigBqw+gadUiG95eCHd/FOYJKp8QvJ
+         M9SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719854917; x=1720459717;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dBaHO6wsf3uapECt7oYjoJlQSnwdtRQ+9RONzIUWqL0=;
+        b=sBlbWuUfgfnVPgTogxEVUwYqxQ+RGqny5u+r/oZEwYN99coIxrsgjRb8NXkie9zm5q
+         9nyvghzEbfaaY4dTT71ajGkh+q2ZA2rVCEfVyD8O58s5nXCxF6SzN4bx/kfAIPGIoHcq
+         d8InZGPItR50pZ0K93e949kNXqq+BQqZNqR9h+mLkL9LY2YrFbQDNZPQccUH8IOgs9Jm
+         0znEu4hALLFhQdMTZ2VavZruAZxItrIuNshp7Qe0WPF1zUdAG6osW3/2cKkjzV989aS2
+         froqJatsei6X/kIxgkKCt69b4vl7iKonVxvseBpGRhUPpRUxFmQp4tUepoy0FlGfa1bN
+         xoxw==
+X-Forwarded-Encrypted: i=1; AJvYcCWLkAsdFhIE7yaFEp1uP+XdzohRe9ZArF3iGp1COy64T1rD7/l/5zkrLw5YwIgab/noNfi9DWJT+AJ/T5w7eeH9NfqxkSr40GkXnKXKHe/96S3bdlyX0iOJARWzYJYAWOZ8PK3FB3jcXFsn81UuvslKjCNbKB/rYuEiaduuGh1Yp5BiLgp2DO5bzVYGplYyemr4vywu+yyAqYR0emIUIw6lASAjlnF7U6U/Tp5WqVN0XCInMYnu8ba8Ug==
+X-Gm-Message-State: AOJu0YzaXGQZvFhD5VyuvZWDIJ+yy1NsAejEzWTmOlgcnoPEMlLp2cNQ
+	3rCJOIoLvH78WW1YuOAj1JDS9DoJIInGGs1H9WksqnhZ3a8DyaXs
+X-Google-Smtp-Source: AGHT+IFHI6aSahk4LDx5+TUExioY5PoSZ+kWHD3kE361kIjohObRUxjgpnenJDrBbZSIaLc5EMTDeA==
+X-Received: by 2002:a17:902:cec5:b0:1f9:edf6:d79c with SMTP id d9443c01a7336-1fadbd248e8mr44825495ad.69.1719854916374;
+        Mon, 01 Jul 2024 10:28:36 -0700 (PDT)
+Received: from localhost ([2804:30c:165e:de00:82ea:ff72:ead3:4367])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1538ee0sm67657285ad.149.2024.07.01.10.28.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 10:28:35 -0700 (PDT)
+Date: Mon, 1 Jul 2024 14:30:07 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, broonie@kernel.org,
+	lars@metafoo.de, Michael.Hennerich@analog.com, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	nuno.sa@analog.com, dlechner@baylibre.com, corbet@lwn.net,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/7] spi: Enable controllers to extend the SPI
+ protocol with MOSI idle configuration
+Message-ID: <ZoLnn9K2caWJtIlQ@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1719686465.git.marcelo.schmitt@analog.com>
+ <7eb23146ad6bf6090183c6340e4d59cb269d83a7.1719686465.git.marcelo.schmitt@analog.com>
+ <20240630114716.3e06f18b@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,19 +75,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240628213711.3114790-2-Frank.Li@nxp.com>
+In-Reply-To: <20240630114716.3e06f18b@jic23-huawei>
 
-
-On Fri, 28 Jun 2024 17:37:11 -0400, Frank Li wrote:
-> Add ptimer-handle property to link to ptp-timer node handle.
-> Fix below warning:
-> arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dtb: fman@1a00000: 'ptimer-handle' do not match any of the regexes: '^ethernet@[a-f0-9]+$', '^mdio@[a-f0-9]+$', '^muram@[a-f0-9]+$', '^phc@[a-f0-9]+$', '^port@[a-f0-9]+$', 'pinctrl-[0-9]+'
+On 06/30, Jonathan Cameron wrote:
+> On Sat, 29 Jun 2024 16:04:40 -0300
+> Marcelo Schmitt <marcelo.schmitt@analog.com> wrote:
 > 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  Documentation/devicetree/bindings/net/fsl,fman.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
+> > The behavior of an SPI controller data output line (SDO or MOSI or COPI
+> > (Controller Output Peripheral Input) for disambiguation) is usually not
+> > specified when the controller is not clocking out data on SCLK edges.
+> > However, there do exist SPI peripherals that require specific MOSI line
+> > state when data is not being clocked out of the controller.
+> > 
+> > Conventional SPI controllers may set the MOSI line on SCLK edges then bring
+> > it low when no data is going out or leave the line the state of the last
+> > transfer bit. More elaborated controllers are capable to set the MOSI idle
+> > state according to different configurable levels and thus are more suitable
+> > for interfacing with demanding peripherals.
+> > 
+> > Add SPI mode bits to allow peripherals to request explicit MOSI idle state
+> > when needed.
+> > 
+> > When supporting a particular MOSI idle configuration, the data output line
+> > state is expected to remain at the configured level when the controller is
+> > not clocking out data. When a device that needs a specific MOSI idle state
+> > is identified, its driver should request the MOSI idle configuration by
+> > setting the proper SPI mode bit.
+> > 
+> > Acked-by: Nuno Sa <nuno.sa@analog.com>
+> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
 > 
+> I always like to see some nice ascii art. Very nice documentation.
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> > diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+> > index 93f59ebb5b79..c8ba5e490850 100644
+> > --- a/drivers/spi/spi.c
+> > +++ b/drivers/spi/spi.c
+> 
+> > @@ -3950,6 +3956,7 @@ int spi_setup(struct spi_device *spi)
+> >  	 */
+> >  	bad_bits = spi->mode & ~(spi->controller->mode_bits | SPI_CS_WORD |
+> >  				 SPI_NO_TX | SPI_NO_RX);
+> > +
+> 
+> Trivial grumpy comment.  Don't touch white space in unrelated code!
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Ouf, must have slipped through after messing around with spi_setup().
+Didn't intend to add that. Fine if that can be removed when applying the patch.
 
+> 
+> >  	ugly_bits = bad_bits &
+> >  		    (SPI_TX_DUAL | SPI_TX_QUAD | SPI_TX_OCTAL |
+> >  		     SPI_RX_DUAL | SPI_RX_QUAD | SPI_RX_OCTAL);
