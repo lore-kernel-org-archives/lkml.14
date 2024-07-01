@@ -1,102 +1,176 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CB2415AAC6
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 18:07:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DECA14BF8F;
+	Mon,  1 Jul 2024 18:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719857266; cv=none; b=GifyVDEPLgfzJdqtSEtj6qnBTxOaX/Pe+zzSV8X8B4ztYJSf6fGzcwadZV2FTjcMA+wNyRoB1rHmYIx3Smob9/X9eQsQ5abBsJEKnmq2bFXXE7KhioTutUMLfX4jZ7BuRch1vs5SUVWbeB34nexX2RAO5IZu+m+drM79Mo1QSrs=
+	t=1719857366; cv=none; b=oznVxkHHG2N0p0axIZfQhplVmJFbfZpiIhoBxovVHXGG6uoZwH9C7AIlPipqNFNhkOJT6/oD85Xynb+KQMsCNrLHVZ4ldQ1kcoaqq4jBGjH/62UEJSG2Lsn93REQLgXL2k2uc/oFFwZMf21alMvOPPv861/qpgNQQgxX1XN8D4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719857266; c=relaxed/simple;
-	bh=0WJK0DQDMfrrm9aLm0I8hI63X3HOuwUlbMdXiHGcn8I=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=vEkrXAYJcm6k/d7ZbtCdTgQ1FOb4ZyiUbUOnaAxOVt4+LjO448Gv+PhfVZFhaObvhgeOOig1AezFLiPnSLU3Qa8T3kceT5q75fQLvjQB2xElY5fjA7HupvbbdusHnqUT/ATB7h5/0oLvNMWiIbuwtTNuRuw6k3AgvqsfENVKUBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Nf8LXmfo; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719857366; c=relaxed/simple;
+	bh=klklsmtDboy+OW955V/X6hfHZRk2vERsRPap13LB4hE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cadNz9t87fIlxFK9B6cwfQE6X4Q6AqvRlaKx3m2IUjcvkqtg2qRPpC8Va4qI1/FfY3BPhagXUWrwkF2U9dyMn69gjiZpZxyxDtwccKGAaG3AJm32Wr6JZEbbIZBr+4EmBAA5+QBQBIHIVefQj2XR3702kVYvPepjOAXjXhNQ3ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kx+IGK5X; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nf8LXmfo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719857264;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=slpaHcT+KzFuwGQ23ExD/xCBjj0LGNVOshtAT3iwP8k=;
-	b=Nf8LXmfoltRjmjVW5ceSMh/zh0L35kFJ+HvQqsm3bJqlHrXOqCc5viY7WxfNiOZjFztRDh
-	pibGMQhw2sCd8RDrIBuRxR1J8HPkUTuy2l1AHB/gx7klrUKkikkzJMrg1oTbilQaklKRqb
-	gPrQ/KwzTBlltyUbQCFkLC68dM3k8lw=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-490-b7wbM74EMFWBdPyQ0W8ugg-1; Mon,
- 01 Jul 2024 14:07:40 -0400
-X-MC-Unique: b7wbM74EMFWBdPyQ0W8ugg-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6FA3C19560AE;
-	Mon,  1 Jul 2024 18:07:38 +0000 (UTC)
-Received: from RHTRH0061144 (unknown [10.22.8.184])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3063C3000218;
-	Mon,  1 Jul 2024 18:07:34 +0000 (UTC)
-From: Aaron Conole <aconole@redhat.com>
-To: Adrian Moreno <amorenoz@redhat.com>
-Cc: netdev@vger.kernel.org,  echaudro@redhat.com,  horms@kernel.org,
-  i.maximets@ovn.org,  dev@openvswitch.org,  Ido Schimmel
- <idosch@nvidia.com>,  Yotam Gigi <yotam.gi@gmail.com>,  "David S. Miller"
- <davem@davemloft.net>,  Eric Dumazet <edumazet@google.com>,  Jakub
- Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v7 03/10] net: psample: skip packet copy if no
- listeners
-In-Reply-To: <20240630195740.1469727-4-amorenoz@redhat.com> (Adrian Moreno's
-	message of "Sun, 30 Jun 2024 21:57:24 +0200")
-References: <20240630195740.1469727-1-amorenoz@redhat.com>
-	<20240630195740.1469727-4-amorenoz@redhat.com>
-Date: Mon, 01 Jul 2024 14:07:32 -0400
-Message-ID: <f7ttth9vvdn.fsf@redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kx+IGK5X"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-706524adf91so2663768b3a.2;
+        Mon, 01 Jul 2024 11:09:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719857365; x=1720462165; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=P6qcu1nZE7KZYDUrd9vIfmSvZPyMTSfX2YwStcmyIO8=;
+        b=kx+IGK5X3ddtiXRBExuebifv/lOQhQk86fUjWWg/sd8zuj5p+oxNX2LxxAg4jKEDL6
+         rMBnG0ZpnkMDTKPV+N4ZmiAGxyUT1CiqLldALYRwe0qPeI28FJjEqJ8vDkNcC4w1pSbs
+         OMx2gizuYcLOo5GtoYLKyu2z4wKjj+iH+FsLuaMdVpZD9l1EBTH61AEBophLlssEka5R
+         JQ9Vkw0TZ6Rz9cefU96ZgPut3lC6qfTifjtRWleCikz2f8K+Ux1eZ+d4eWfb7u7ERked
+         +uUez2C66sEMZfEZz6oMby8zPvz+/xyQ+38G9rkCqxPvMHVj9LQdaOEDRnkFdZkD774f
+         /g5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719857365; x=1720462165;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P6qcu1nZE7KZYDUrd9vIfmSvZPyMTSfX2YwStcmyIO8=;
+        b=TlskvTrAKnefs4575Cx8Oeu0P45zjBuMiBMBdQSiiI6uYQ2OQe13UX1SoM4mAJ0cfs
+         Rjwtfe/0eNnWcdFjMBu+x5JbeAWDBRsNb6ZWGyu+7li1j4sL4VOn8myTt/ENSsJbLTtn
+         v6AiYZjeL1OOvyhMatVwdyv4vSKpLyu8Bs/y/3Ujb5RpgljcArChfZ5sBZsbFz4FjB6Y
+         ye1CREioymX+1jQzY2LMyeoCE4WR+wqQsqp59TzUW+xrnEfiWybDKJ57K/zqWKjxhI5S
+         Ku8QiOXY7uhT6HiAHsI6IEGftoDQOZQXndnjRbwBVcL2EYg1w8p0fNV9UWknxMY5FMZx
+         cXJA==
+X-Forwarded-Encrypted: i=1; AJvYcCUpdbWepjjiCxeVzW3mYO8VZpomsawSkk7escfScGF7r5bAN7zlTJyliWTGHyo8C8KypWx1V14abqRQNpD5iDX8mnw1Frahoqr/oVznZL6M1RGay3JfTqZjz6z0nkyW/6IFPOPtm+sRFRl/LiMmx/3HC3ZCRqfJRjCewLI7AJxRLf1K3iC2GJMLjQ4DIOuPoZPJ8xM1IpL9dc5I/7TqnNX/ccCGXaDkjPiJ3+83OMdR9mvz8eQtw2eJ7Q==
+X-Gm-Message-State: AOJu0YyCnG8zmTfgIMEHQniVB08zRXZA2mvCuY8n+wP/4t/zWx9+MdA8
+	hWrIosNlF6Gsk4ozOCMSzAqoMmkH7YC8NnbgkSLPm8SsuEj8seVV
+X-Google-Smtp-Source: AGHT+IFh2feUeG/ELVwtKgQhpLtRHdSCRscIJK5gnG+BmVmyoeoN4Men1/9vx42lil4cyddQBeE8kw==
+X-Received: by 2002:a05:6a21:32a5:b0:1bd:2ba1:983b with SMTP id adf61e73a8af0-1bef6216d0bmr10499470637.51.1719857362875;
+        Mon, 01 Jul 2024 11:09:22 -0700 (PDT)
+Received: from localhost ([2804:30c:165e:de00:82ea:ff72:ead3:4367])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac10c8f67sm67538595ad.43.2024.07.01.11.09.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 11:09:22 -0700 (PDT)
+Date: Mon, 1 Jul 2024 15:10:54 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, broonie@kernel.org,
+	lars@metafoo.de, Michael.Hennerich@analog.com, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	nuno.sa@analog.com, dlechner@baylibre.com, corbet@lwn.net,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 6/7] iio: adc: Add support for AD4000
+Message-ID: <ZoLxLgpy44S38nSe@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1719686465.git.marcelo.schmitt@analog.com>
+ <628a85cb8cbee32ea7d2930c63e73f2ef449a800.1719686465.git.marcelo.schmitt@analog.com>
+ <20240630121726.5d75578e@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240630121726.5d75578e@jic23-huawei>
 
-Adrian Moreno <amorenoz@redhat.com> writes:
+On 06/30, Jonathan Cameron wrote:
+> On Sat, 29 Jun 2024 16:06:59 -0300
+> Marcelo Schmitt <marcelo.schmitt@analog.com> wrote:
+> 
+> > Add support for AD4000 series of low noise, low power, high speed,
+> > successive approximation register (SAR) ADCs.
+> > 
+> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> 
+> Hi Marcelo
+> 
+> A few comments inline. However, the spi_w8r8 etc can easily be a follow up
+> optimization patch (if you agree it's a good improvement) and the
+> other changes are so trivial I could tweak whilst applying.
+> 
+...
+> > +	/*
+> > +	 * The gain is stored as a fraction of 1000 and, as we need to
+> > +	 * divide vref_mv by the gain, we invert the gain/1000 fraction.
+> > +	 * Also multiply by an extra MILLI to preserve precision.
+> > +	 * Thus, we have MILLI * MILLI equals MICRO as fraction numerator.
+> > +	 */
+> > +	val = mult_frac(st->vref_mv, MICRO, st->gain_milli);
+> 
+> If you are rolling a v7 for other reasons, stick some line breaks in here!
+> It's a bit of a mass of text that is hard for my eyes to parse!
+> 
+Ack
 
-> If nobody is listening on the multicast group, generating the sample,
-> which involves copying packet data, seems completely unnecessary.
->
-> Return fast in this case.
->
-> Acked-by: Eelco Chaudron <echaudro@redhat.com>
-> Reviewed-by: Ido Schimmel <idosch@nvidia.com>
-> Reviewed-by: Simon Horman <horms@kernel.org>
-> Signed-off-by: Adrian Moreno <amorenoz@redhat.com>
-> ---
+...
 
-Reviewed-by: Aaron Conole <aconole@redhat.com>
+> 
+> > +static int ad4000_read_reg(struct ad4000_state *st, unsigned int *val)
+> > +{
+> > +	struct spi_transfer t = {
+> > +		.tx_buf = st->tx_buf,
+> > +		.rx_buf = st->rx_buf,
+> > +		.len = 2,
+> > +	};
+> > +	int ret;
+> > +
+> > +	st->tx_buf[0] = AD4000_READ_COMMAND;
+> > +	ret = spi_sync_transfer(st->spi, &t, 1);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	*val = st->rx_buf[1];
+> > +	return ret;
+> 
+> I'd be tempted to do
+> 
+> 	ssize_t ret;
+> 
+> 	ret = spi_w8r8(AD4000_READ_COMMAND);
+> 	if (ret < 0)
+> 		return ret;
+> 	*val = ret;
+> 	
+> 	return 0;
+> 
+I tried this when working on v6. Only difference was I had declared ret as int.
+Then reg values were not read correctly with spi_w8r8().
+I'm either missing something or reg access must be 16-bit transfer.
+Datasheet sais:
+"The AD4000/AD4004/AD4008 configuration register is read from and written to
+with a 16-bit SPI instruction."
+Yet, besides possible delay between first and last 8 SCLK pulses, I don't see
+any transfer level differences between current and spi_w8r8() versions.
 
->  net/psample/psample.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/net/psample/psample.c b/net/psample/psample.c
-> index b37488f426bc..1c76f3e48dcd 100644
-> --- a/net/psample/psample.c
-> +++ b/net/psample/psample.c
-> @@ -376,6 +376,10 @@ void psample_sample_packet(struct psample_group *group, struct sk_buff *skb,
->  	void *data;
->  	int ret;
->  
-> +	if (!genl_has_listeners(&psample_nl_family, group->net,
-> +				PSAMPLE_NL_MCGRP_SAMPLE))
-> +		return;
-> +
->  	meta_len = (in_ifindex ? nla_total_size(sizeof(u16)) : 0) +
->  		   (out_ifindex ? nla_total_size(sizeof(u16)) : 0) +
->  		   (md->out_tc_valid ? nla_total_size(sizeof(u16)) : 0) +
+> 
+> 
+...
+> > +			ret = ad4000_write_reg(st, reg_val);
+> > +			if (ret < 0)
+> > +				return ret;
+> > +
+> > +			st->span_comp = span_comp_en;
+> > +			return ret;
+> 
+> If you are spinning for another reason, make it clear this is always good.
+> The spi_write() never returns positive so current code is correct but I had
+> to go check which this would have avoided.
+> 
+> 			return 0;
 
+Ack
+> 
+> If nothing else comes up, I'll probably tweak whilst applying.
+> 
+> J
+> 
+> > +		}
+> > +		unreachable();
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> > +}
+> 
