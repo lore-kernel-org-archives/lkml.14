@@ -1,45 +1,32 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out0-209.mail.aliyun.com (out0-209.mail.aliyun.com [140.205.0.209])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF721804A
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 08:22:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9123C1804A
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 08:24:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719822156; cv=none; b=E/fLCtDFoaL7aGG+A7mJ5N4zahbBmt15Hzz3+XTtVHBJUU46hd7Pm3PSuBznbcCTAu68n83jABcOnIdDI05BWNxTGBqsS2jHZZ2E4t93We27sqZCeqoIGmbwgnE5xmoO7khDB6DrUDIZMQ4Q6Jihx7BGoGKWkQVD0JbtBHaj1/o=
+	t=1719822277; cv=none; b=LlcU5EiwPZc9ozbX9qnrjfJ6FEDpJZDgIN12jyhsKbguU8htt5d2la74Ry74vQzmnWzO1iu6lYPlZNn6gopq82nCmGZw48MYwvEplN+9CPafTSUn9mGxfuSw0nn8tCHh8n38o7/zA7TSFCuLSiGj7VGMOTe5KTyOHhhXqcsY58M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719822156; c=relaxed/simple;
-	bh=v/2qpsEwD7OSRBonyA/hkKS8oFZjbfyp0gW9bfe+RJk=;
+	s=arc-20240116; t=1719822277; c=relaxed/simple;
+	bh=h/ysissWJ3fdVPDH35GDl3waQLbtD2L181Ml+HYur60=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fmm9BMoOToR5YLGBDQQTcSR310xnp6UEA52gphV4JoX+biTtctw4jgrU3tUVFPz3Ngb4Os1zsPYoWhwTf1go55fqilRYTh3eaxZcAryQ4pJ9KNKCRpIOQlbxxjS6C+2jLX0tHpQ3ngT9Emswl6oKnOKECqwIQOym92lS9MkyPcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2ec89b67bfcso2034271fa.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 01:22:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719822153; x=1720426953;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gaP5w0WmO/BebCNFZntsO+CPAvXO89ZzwU0nrSMDmXQ=;
-        b=OlRSO/WYAg1rOrwOpigJiVANXt4vaxU3cdOL7WBuheBLI0cX1lz+atF6tGWKgcNSTu
-         8XS3hDS2DvWfdGujsACXKUh75cZRWe33on7gGdLNH/CGyv2LznB6lsYugb6wsRSEVO6K
-         AoOvKvrMaf2lCKO5yggtvK2dAyhPAbNkmbDajvsYNsl+moO/+pensEO8AVCvD3JjXWR/
-         /aREzGm+p1UsrSNzQt9cPXT/SaR+/ex/tImlV9EPqyRrwSmZzLzuFwFyZJrWMuytg7uT
-         fOBgnEIUM0JPtrbzJrDnTj+sUQEUwbgY4bTWOV7fvEWz8GsZp7uxwmQrdyyBMmT3+/au
-         EOJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX4DVmSOPbPS2lqOWswa+SKdvn2ZF3yFmpU5g82RwjtDZtOJXQjIfeyOJapk/FfIf12VukmoUkdeK+vjSh/RrqsQvelOvAhE39Whqwh
-X-Gm-Message-State: AOJu0Yw+3OA9OTneExzGiIC/ZNGbuelVJgqJL3qchCVEwg63hHaoK46Y
-	DhUEIxcBC4nw5DB05nTG49MQ3kMUspIfnw5yChIX5F2AFu22d7Ej
-X-Google-Smtp-Source: AGHT+IFuX/aRh+/2oeCaBxwgLCJAgVDmsxLq+dFmpsqq5OOpdob4L+PPh5M5IZYik62pZtZDjvVrxw==
-X-Received: by 2002:a2e:8e90:0:b0:2ec:31d9:16e1 with SMTP id 38308e7fff4ca-2ee5e6e745emr24732201fa.5.1719822152602;
-        Mon, 01 Jul 2024 01:22:32 -0700 (PDT)
-Received: from [10.50.4.180] (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256f55c4b5sm128104555e9.43.2024.07.01.01.22.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Jul 2024 01:22:32 -0700 (PDT)
-Message-ID: <f9828eb4-39be-498b-8b90-2cb7ce42d3c7@grimberg.me>
-Date: Mon, 1 Jul 2024 11:22:31 +0300
+	 In-Reply-To:Content-Type; b=LwrLwm0iBL/Ea79+5HVDuddebAhT5BDWbE6lajq9k9SsP+34lf/temEzossamktnON+vuVPg2bYi2NcMLJroHwzqjOYQHI9Uec+hpn+RZX4JqLoE6s5VcgnO5xcNwrdZsTpLyzaUQesp/FUE3WqiIzk//9Bv1NXq6SGuE/eSYB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=B7k/XCZv; arc=none smtp.client-ip=140.205.0.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="B7k/XCZv"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=antgroup.com; s=default;
+	t=1719822264; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=DDMQAn41L6SWm47GL1Pl/XtVoTBg9GDb/pxF+UO/8oc=;
+	b=B7k/XCZv2Bgko6+2duBPdHDW+DhG805cKcdlmTrzOm8TIvrnSvRLRGLyKE/KHsTki7VzD7mhGOik07Rmy87us/J118cKfTGe0yGkQbAcbtTtTONBtvpHXa7DoZbzOOT6/B45g7M6Syniqebj50oy2EC7GpnMOI5/MwNrVzxpWRY=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033068194251;MF=libang.li@antgroup.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---.YE7WgG6_1719822263;
+Received: from 30.13.185.168(mailfrom:libang.li@antgroup.com fp:SMTPD_---.YE7WgG6_1719822263)
+          by smtp.aliyun-inc.com;
+          Mon, 01 Jul 2024 16:24:24 +0800
+Message-ID: <21c698a4-f6b5-4afd-9f6c-72de08adad10@antgroup.com>
+Date: Mon, 01 Jul 2024 16:24:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,104 +34,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] nvmet: support polling task for RDMA and TCP
-To: hch@lst.de, kch@nvidia.com, linux-nvme@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Cc: ping.gan@dell.com
-References: <0779b376-38e3-42ef-b32a-a9cfab2749f2@grimberg.me>
- <20240701074245.73348-1-jacky_gam_2001@163.com>
+Subject: Re: [PATCH] support "THPeligible" semantics for mTHP with anonymous
+ shmem
+To: David Hildenbrand <david@redhat.com>, hughd@google.com,
+ akpm@linux-foundation.org
+Cc: ryan.roberts@arm.com, wangkefeng.wang@huawei.com,
+ baolin.wang@linux.alibaba.com, ziy@nvidia.com, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org
+References: <20240628104926.34209-1-libang.li@antgroup.com>
+ <1bf214bb-86a7-4f73-a839-39a4b37bc04a@redhat.com>
 Content-Language: en-US
-From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <20240701074245.73348-1-jacky_gam_2001@163.com>
+From: "Bang Li" <libang.li@antgroup.com>
+In-Reply-To: <1bf214bb-86a7-4f73-a839-39a4b37bc04a@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Hi David,
 
+Thanks for you review!
 
-On 01/07/2024 10:42, Ping Gan wrote:
->> Hey Ping Gan,
+On 2024/7/1 14:57, David Hildenbrand wrote:
+> On 28.06.24 12:49, Bang Li wrote:
+>> After the commit 7fb1b252afb5 ("mm: shmem: add mTHP support for
+>> anonymous shmem"), we can configure different policies through
+>> the multi-size THP sysfs interface for anonymous shmem. But
+>> currently "THPeligible" indicates only whether the mapping is
+>> eligible for allocating THP-pages as well as the THP is PMD
+>> mappable or not for anonymous shmem, we need to support semantics
+>> for mTHP with anonymous shmem similar to those for mTHP with
+>> anonymous memory.
 >>
+>> Signed-off-by: Bang Li <libang.li@antgroup.com>
+>> ---
+>>   fs/proc/task_mmu.c      | 10 +++++++---
+>>   include/linux/huge_mm.h | 11 +++++++++++
+>>   mm/shmem.c              |  9 +--------
+>>   3 files changed, 19 insertions(+), 11 deletions(-)
 >>
->> On 26/06/2024 11:28, Ping Gan wrote:
->>> When running nvmf on SMP platform, current nvme target's RDMA and
->>> TCP use kworker to handle IO. But if there is other high workload
->>> in the system(eg: on kubernetes), the competition between the
->>> kworker and other workload is very radical. And since the kworker
->>> is scheduled by OS randomly, it's difficult to control OS resource
->>> and also tune the performance. If target support to use delicated
->>> polling task to handle IO, it's useful to control OS resource and
->>> gain good performance. So it makes sense to add polling task in
->>> rdma-rdma and rdma-tcp modules.
->> This is NOT the way to go here.
->>
->> Both rdma and tcp are driven from workqueue context, which are bound
->> workqueues.
->>
->> So there are two ways to go here:
->> 1. Add generic port cpuset and use that to direct traffic to the
->> appropriate set of cores
->> (i.e. select an appropriate comp_vector for rdma and add an appropriate
->> steering rule
->> for tcp).
->> 2. Add options to rdma/tcp to use UNBOUND workqueues, and allow users
->> to
->> control
->> these UNBOUND workqueues cpumask via sysfs.
->>
->> (2) will not control interrupts to steer to other workloads cpus, but
->> the handlers may
->> run on a set of dedicated cpus.
->>
->> (1) is a better solution, but harder to implement.
->>
->> You also should look into nvmet-fc as well (and nvmet-loop for that
->> matter).
-> hi Sagi Grimberg,
-> Thanks for your reply, actually we had tried the first advice you
-> suggested, but we found the performance was poor when using spdk
-> as initiator.
+>> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+>> index 93fb2c61b154..09b5db356886 100644
+>> --- a/fs/proc/task_mmu.c
+>> +++ b/fs/proc/task_mmu.c
+>> @@ -870,6 +870,7 @@ static int show_smap(struct seq_file *m, void *v)
+>>   {
+>>       struct vm_area_struct *vma = v;
+>>       struct mem_size_stats mss = {};
+>> +    bool thp_eligible;
+>>       smap_gather_stats(vma, &mss, 0);
+>> @@ -882,9 +883,12 @@ static int show_smap(struct seq_file *m, void *v)
+>>       __show_smap(m, &mss, false);
+>> -    seq_printf(m, "THPeligible:    %8u\n",
+>> -           !!thp_vma_allowable_orders(vma, vma->vm_flags,
+>> -               TVA_SMAPS | TVA_ENFORCE_SYSFS, THP_ORDERS_ALL));
+>> +    thp_eligible = !!thp_vma_allowable_orders(vma, vma->vm_flags,
+>> +                        TVA_SMAPS | TVA_ENFORCE_SYSFS, THP_ORDERS_ALL);
+>> +    if (vma_is_anon_shmem(vma))
+>> +        thp_eligible = 
+>> !!shmem_allowable_huge_orders(file_inode(vma->vm_file),
+>> +                            vma, vma->vm_pgoff, thp_eligible);
+> 
+> I would have thought the correct fix is to return the correct result 
+> from thp_vma_allowable_orders().
+> 
 
-I suggest that you focus on that instead of what you proposed.
-What is the source of your poor performance?
+Agreed. I'll try to reimplement this in thp_vma_allowable_orders().
 
->   You know this patch is not only resolving OS resource
-> competition issue, but also the perf issue. We have analyzed if we
-> still use workqueue(kworker) as target when initiator is polling
-> driver(eg: spdk), then workqueue/kworker target is the bottleneck
-> since every nvmf request may have a wait latency from queuing on
-> workqueue to begin processing,
-
-That is incorrect, the work context polls the cq until it either drains it
-completely, or exhaust a quota of IB_POLL_BUDGET_WORKQUEUE (or
-NVMET_TCP_IO_WORK_BUDGET). Not every command gets its own workqueue
-queuing delay.
-
-And, what does the spdk initiator has to do with it? Didn't understand...
-
->   and the latency can be traced by wqlat
-> of bcc (https://github.com/iovisor/bcc/blob/master/tools/wqlat.py).
-> We think the latency is a disaster for the polling driver data plane,
-> right?
-
-If you need a target that polls all the time, you should probably resort 
-to spdk.
-If there is room for optimization in nvmet we'll gladly take it, but 
-this is not the
-way to go IMO.
-
-> So we think adding a polling task mode on nvmet side to handle
-> IO does really make sense; what's your opinion about this?
-
-I personally think that adding a polling kthread is questionable.
-However there is a precedent, io_uring sqthreads. So please look
-into what is done there. I don't mind having something like 
-IB_POLL_IOTASK (or
-io_task threads in nvmet-tcp) if its done correctly (leverages common code).
-
->   And you
-> mentioned we should also look into nvmet-fc, I agree with you.
-> However currently we have no nvmf-fc's testbed; if we get the testbed,
-> will do that.
-
-There is fcloop, you should use that to test, same for loop. We don't want
-the transports to diverge in functionality.
+Thanks again for the review!
+Bang
