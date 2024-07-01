@@ -1,49 +1,40 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C6B182D2
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 03:41:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26DA11863E;
+	Mon,  1 Jul 2024 03:44:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719805297; cv=none; b=HJTvBQ3vU1rl7OHkkuZylwAqkVhFfQNKmHdjTXN92myUPNb+15zbR01L9gqWJ6AB7kJ14CqAoFIR2ui5vIN0Ck5pHflvF8vSB9F4JMD9iX/vVW+vF568e5Z0AKxmzlwiv63y2ig54EHg3loMMa6ib6LrC/ngtLgATUwNSuz+5w0=
+	t=1719805455; cv=none; b=e4cq0IP2xdxk1KALaT8xuE/5dWcLuyzkRRcgvl1YeKqo1n1kSkvPPATG1zqpjOMpNwQE+DwMbP1wvFIxMKD61eq3XQAL4ixeCwWVeXytJBQHGIw3ZG1LPvHnf3gyW3q4j62arKzbG/rwU1+4n3teFsIkJplmw5ZbMTLiQAW6nC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719805297; c=relaxed/simple;
-	bh=y3WnovNNW3Z+2WUTkJVPMku/QUpINyrdhika/pXn5WY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=I73ZCEOp0D07C7o7q+FVNmpgvCALGIKF4eTNAs/eTN1DkvLUx+6y3nvt1f1xsvFFIAdc1RZ6bEMlF42L+VWP8Rs0ezxzop4JvxN88l5+0P9L1SojYPQsfWRjSCV2rk1noVa/VfzPaIQCoE43UBJCR1Fsy5KpvRs4RZkjT9f0TmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: c5b985cc375b11ef93f4611109254879-20240701
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.38,REQID:b4ced21e-6492-4fc9-aedd-e54a5c760c26,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:-25,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:-39
-X-CID-INFO: VERSION:1.1.38,REQID:b4ced21e-6492-4fc9-aedd-e54a5c760c26,IP:0,URL
-	:0,TC:0,Content:-5,EDM:-25,RT:0,SF:-9,FILE:0,BULK:0,RULE:EDM_GE969F26,ACTI
-	ON:release,TS:-39
-X-CID-META: VersionHash:82c5f88,CLOUDID:a7ca31e2781213daf043e2d3116a8573,BulkI
-	D:24070111381932D88IRB,BulkQuantity:1,Recheck:0,SF:43|74|66|38|24|17|19|10
-	2,TC:nil,Content:0,EDM:1,IP:1,URL:1,File:nil,RT:nil,Bulk:40,QS:nil,BEC:nil
-	,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_IBB,
-	TF_CID_SPAM_ULS,TF_CID_SPAM_SNR
-X-UUID: c5b985cc375b11ef93f4611109254879-20240701
-X-User: zhaomengmeng@kylinos.cn
-Received: from localhost.localdomain [(123.150.8.42)] by mailgw.kylinos.cn
-	(envelope-from <zhaomengmeng@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 925970037; Mon, 01 Jul 2024 11:41:17 +0800
-From: Zhao Mengmeng <zhaomengmeng@kylinos.cn>
-To: akpm@linux-foundation.org,
-	yang@os.amperecomputing.com
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] mm: gup: add forward declaration for try_grab_folio_fast
-Date: Mon,  1 Jul 2024 11:40:52 +0800
-Message-Id: <20240701034052.9988-1-zhaomengmeng@kylinos.cn>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1719805455; c=relaxed/simple;
+	bh=EmN0HyErxUi/t88ya0Y2EFToqI7LudU60sxfOsCokjw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D1kZLw8CiE/lfl6PijzVKPEVUI97GC50tAV4uqBSpzujYY/Rh1ithJ+p26PPzj8JHrpd3JJwwNvnJIMGiR+yKJ7qW2ccrz4Duikr///h/DU11t07RNc6rg9G8cQdsWFUCEtrOXmpDewtfPOhrkWUbtOUjKQKd+4yVwRMpxqusfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-01 (Coremail) with SMTP id qwCowACHtFXsJYJmN8rwAA--.5579S2;
+	Mon, 01 Jul 2024 11:43:40 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	james.clark@arm.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] perf pmu: Remove unneeded semicolon
+Date: Mon,  1 Jul 2024 11:43:00 +0800
+Message-Id: <20240701034300.558886-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,32 +42,47 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowACHtFXsJYJmN8rwAA--.5579S2
+X-Coremail-Antispam: 1UD129KBjvdXoWruFW5Jw4xZr47Jw1DWw4kWFg_yoW3GFc_W3
+	Z7KFZIyr18JF95K3W7ArWrZFyrArW3uay8KFWqkr45GF4DJr4UXr4F9w4DAFy5Kw4qkFy7
+	K34rAFyUXrWakjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbVkFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+	Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc2xSY4AK67AK6r48MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
+	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
+	b7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
+	cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
+	nxnUUI43ZEXa7VUb2g4DUUUUU==
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-try_grab_folio_fast() was used in gup_hugepte(), while itself was
-defined after gup_hugepte(), so add a forward declaration to eliminate
-the -Wimplicit-function-declaration warning.
+Remove unneeded semicolon.
+This is detected by coccinelle.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202407010039.D3sIu3fu-lkp@intel.com/
-Signed-off-by: Zhao Mengmeng <zhaomengmeng@kylinos.cn>
+Fixes: d9c5f5f94c2d ("perf pmu: Count sys and cpuid JSON events separately")
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
 ---
- mm/gup.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/util/pmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/gup.c b/mm/gup.c
-index 7439359d0b71..222b83a87d7d 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -488,6 +488,9 @@ static unsigned long hugepte_addr_end(unsigned long addr, unsigned long end,
- 	return (__boundary - 1 < end - 1) ? __boundary : end;
- }
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index c94a91645b21..884eb23445e4 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -1773,7 +1773,7 @@ size_t perf_pmu__num_events(struct perf_pmu *pmu)
+ 	size_t nr;
  
-+static struct folio *try_grab_folio_fast(struct page *page, int refs,
-+					 unsigned int flags);
-+
- /*
-  * Returns 1 if succeeded, 0 if failed, -EMLINK if unshare needed.
-  *
+ 	pmu_aliases_parse(pmu);
+-	nr = pmu->sysfs_aliases + pmu->sys_json_aliases;;
++	nr = pmu->sysfs_aliases + pmu->sys_json_aliases;
+ 
+ 	if (pmu->cpu_aliases_added)
+ 		 nr += pmu->cpu_json_aliases;
 -- 
-2.33.0
+2.25.1
 
