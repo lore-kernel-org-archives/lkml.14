@@ -1,91 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8020C16DED9
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 16:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB72F16DED9;
+	Mon,  1 Jul 2024 16:50:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719852641; cv=none; b=EqHwmyMITSBnnvbQ0XrX26bn8v6Y7TCyAhy6IZJK67LiDoosWRvMppRdbaOe7g0ptNDUd1ZoyilhmUOHCUfrC8U91D62edi+aJ85XxFZiBouIYQJ88TcMJhx525+V9vFHyP0KfMUXGgVYMPs+538L4Ytsq3FGuXzsIkgWz3/JCM=
+	t=1719852660; cv=none; b=ZMXD1ILNIr/aJFZFTsiplAtrqrHzXeFgy9Vq5++h2MiSfHKrwMx+X5h1cIshi6c5OWdQhdZ/MrYvMj7pXf7yyiEp2ZmgWl0Yi+MJYktdcO1lt5NuYKNNy+BFmoha1PkN7SgEhRn8I+Uc5D/1lHBNnYtcksAjwHLXMBaELPyIdck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719852641; c=relaxed/simple;
-	bh=Jr6KxU1uZSc1WvMCd1WtXZr02Xg+bpz2196Ms0qOUr8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=f3CfTdanYurpVUKgYYiNCBjMhAddUwwQm+4Lh/Y3aDKuc+2EoM+TBRMcgsf71S+oIGYhzHarx/5ngsv5UfA4uju0nQzdi10uLdbRE/4Z7GZmA23rAH/YAPiYRYKz0P1yFe+x8zCfxlYMEiCOTf5/+TYTUuJUoAAMDAN5F2nBz/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mH8fNkUu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719852660; c=relaxed/simple;
+	bh=zOFLftViufapuivx3YffdETelgmIgRHdwp9+F6+2Qqo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GqCWwOlMEWhyIn5hlMZ2WzIfh3Yy2CHK27zi95PhuNmZ9HaKiuwa9wZUDrgviQ/mMR2OD4Up5/JZjJIOIFNnNtuANyOEDjc8+y+43fvA5L3/Cuat4uA2pz0UEEa1UY7MZPqQhzVSZgmwJPhvCLEQ4rxbPiNwcMFdB6RvqCBYNFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=CV6uAFCE; arc=none smtp.client-ip=199.89.1.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mH8fNkUu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96DF1C116B1;
-	Mon,  1 Jul 2024 16:50:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719852641;
-	bh=Jr6KxU1uZSc1WvMCd1WtXZr02Xg+bpz2196Ms0qOUr8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=mH8fNkUuawcN6VckXgd3GICxQdsjwe6qhkZbESxaJ/XXKCXSs0xDHv/8K3u2qVqXz
-	 mpvH64N2c3R3qC9Xyx5DRKcyXEhooySpgTOecLE9EnDKxY+lQ03AVO3UM7aXMIzzsC
-	 KRJVJeidw0nVxDB0mMsSIlO323DJKwnJtrUtRAFub2Un5RVRjC9nIYBe+xWLPuxPI1
-	 1d51HOqRynUj5ipX5Wj8LwOQ4ttZMmznESRdvrmJyhECfcw9e4ogRaTlVhS37Xs/Ys
-	 MTAXxX/JbqT9oDNlXEfVXhOQxBgzE4nZbl4CwvhpTIb05Wkiu9yoMoJ3Ldbkfo3ca2
-	 +d/JzFfqSfc7g==
-From: Mark Brown <broonie@kernel.org>
-To: Shenghao Ding <shenghao-ding@ti.com>
-Cc: andriy.shevchenko@linux.intel.com, lgirdwood@gmail.com, perex@perex.cz, 
- pierre-louis.bossart@linux.intel.com, 13916275206@139.com, 
- zhourui@huaqin.com, alsa-devel@alsa-project.org, i-salazar@ti.com, 
- linux-kernel@vger.kernel.org, j-chadha@ti.com, liam.r.girdwood@intel.com, 
- jaden-yue@ti.com, yung-chuan.liao@linux.intel.com, dipa@ti.com, 
- yuhsuan@google.com, henry.lo@ti.com, tiwai@suse.de, baojun.xu@ti.com, 
- soyer@irl.hu, Baojun.Xu@fpt.com, judyhsiao@google.com, navada@ti.com, 
- cujomalainey@google.com, aanya@ti.com, nayeem.mahmud@ti.com, 
- savyasanchi.shukla@netradyne.com, flaviopr@microsoft.com, jesse-ji@ti.com, 
- darren.ye@mediatek.com
-In-Reply-To: <20240629101112.628-1-shenghao-ding@ti.com>
-References: <20240629101112.628-1-shenghao-ding@ti.com>
-Subject: Re: [PATCH v1] ASoc: tas2781: Add name_prefix as the prefix name
- of DSP firmwares and calibrated data files
-Message-Id: <171985263533.96334.14332115494301599710.b4-ty@kernel.org>
-Date: Mon, 01 Jul 2024 17:50:35 +0100
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="CV6uAFCE"
+Received: from localhost (localhost [127.0.0.1])
+	by 008.lax.mailroute.net (Postfix) with ESMTP id 4WCX9Z2Wdxz6CmSMs;
+	Mon,  1 Jul 2024 16:50:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1719852656; x=1722444657; bh=Y+bFqVUrYtpwvsoBRpn7yP4H
+	1jwZfKeHmCcUEqtPACI=; b=CV6uAFCEdExtDdDfdnCWsj0FpMbzUF1ez3lQlwBz
+	eKQrtYoKnd5WgFoMK8vtivhW1wtS/bKxmlGzoootnpUdsZwI5QqIFThF9Pu/Tl3Z
+	jKBRaH/4o1Xs4k8esXNP2I3J+OCnmInVEgz8UG4SvbXdOMb5LXWXz9ByoZpHhrQF
+	HTrEhEaR8ysrq3HX/M3W9Jjf4TI6sxJUbtyGFQGnLAtYxBiSZP01xVEgLtcnQFtC
+	UJWLLrIuA+wjZEpgVM8big03VBJdsER4ykrDNMZ48TK8/ct9CMWP9f4Ketn+pRSL
+	z1sQ/zCaPoP3G3eBTnRSDN6Wpc5ZKvXn+P1PPHMg+spf8g==
+X-Virus-Scanned: by MailRoute
+Received: from 008.lax.mailroute.net ([127.0.0.1])
+ by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id HjoeCZ1Q7Zkc; Mon,  1 Jul 2024 16:50:56 +0000 (UTC)
+Received: from [192.168.50.14] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4WCX9W2TpKz6Cp2tZ;
+	Mon,  1 Jul 2024 16:50:55 +0000 (UTC)
+Message-ID: <230c996d-536c-4d7f-9098-2e03203482e4@acm.org>
+Date: Mon, 1 Jul 2024 09:50:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] scsi: sd: Fix unsigned expression compared with zero
+To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+ James.Bottomley@HansenPartnership.com
+Cc: martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
+References: <20240701090603.127783-1-jiapeng.chong@linux.alibaba.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20240701090603.127783-1-jiapeng.chong@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14-dev-d4707
 
-On Sat, 29 Jun 2024 18:11:10 +0800, Shenghao Ding wrote:
-> Add name_prefix as the prefix name of DSP firmwares
-> and calibrated data files which stored speaker
-> calibrated impedance.
+On 7/1/24 2:06 AM, Jiapeng Chong wrote:
+> The return value from the call to scsi_execute_cmd() is int. However, the
+> return value is being assigned to an unsigned int variable 'the_result',
+> so making 'the_result' an int.
 > 
-> 
+> ./drivers/scsi/sd.c:2333:6-16: WARNING: Unsigned expression compared with zero: the_result > 0.
 
-Applied to
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-
-Thanks!
-
-[1/1] ASoc: tas2781: Add name_prefix as the prefix name of DSP firmwares and calibrated data files
-      commit: 55f0a1fa6ea4e339c797e9a3292ca0caa4ab3885
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Since this is a bug fix, please add Cc: stable and Fixes: tags.
 
 Thanks,
-Mark
+
+Bart.
 
