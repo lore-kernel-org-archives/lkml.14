@@ -1,96 +1,89 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343591F937;
-	Mon,  1 Jul 2024 09:28:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65642C859
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 09:30:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719826107; cv=none; b=GmwvWs3R+klYOk0koxvxlZAaSD0ea8NWRcCs2jpbH2dUk+Yii/GRqskYIqymRFkyeTJ9ro7Nf0CRv9gpQtvq/vWB+8p7hecKhH+CaqkV3T8X6PNOLTgvLK+Vh/G33QigChucJ2pEeWKJOgmm4bHtoh7+3JUUVMhsy9gZRNfJSL0=
+	t=1719826243; cv=none; b=M1M2WvHP68RHO00+0K/evWTAOs2xhsrVw/caD8uXRTE5Gv37RIv2H6rWc4VctpQUesD0sBUszH0jZdYc+ck079nRluhXt+A4tRmWCT5QXiD8MRP/GbcejCUI2HoTI/ZT0QXSnr1IqajMVQtrw6yBL9N5fyoIxCAK3fRJE3mWAU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719826107; c=relaxed/simple;
-	bh=wAKcEvpgmzYUQv4xBYdWwUr3ERXwzRzT3O3PNKdMLsc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JuF3Q/FDhf9G3fQkfFSFw90p/znjJwXzABYrJgAMAaM+eneR3GUwjOIivRD5Zs8yFHFESgyE03mzORdXgWY1kwrXEzapXBQWZD+F2Vg0Pe8syQYdYzZaBXz+0QbYkj1Nl/IMvxcdAVRVkWRTYmZYtyWGsOp7fe58z/O93Um80Vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=GMOn+323; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="GMOn+323"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4618vWEV022313;
-	Mon, 1 Jul 2024 02:07:58 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pfpt0220; bh=MxTte4ZHFHq+OKifMO5kKxA
-	kLudbwO9gv7RxKcZ+UVo=; b=GMOn+323pObtD3pEJeEzwRpsuLLPIOW7xpgPvim
-	5jT0u6NHar5vkYD7LQKjRL5R5NpIxwHVpfJhTIjlSstTGDhsXeEaaL2pdAn9PAMz
-	x3RODRHlUVM0wKogzNt/gBjhw0QaMKpZBvHUFbjQZ5rylBHbX3Ks/nQXmkKb+PpN
-	Jk3bTa697cLBdmDMAjmURB7/sk41bDH4lff8gr4bNI3VcwmoKR89myx1MPl8FBA6
-	XMBueIo+8zk+N+gAE0GVtQX1yB86GcX2dBPKFa9ei9Iw/5vWNWby37ATzSAhrBP5
-	6rtXtn3TcWKy5YyswsXJuhfYVXRK9yBApPrcVqdqnvHWGHA==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 403sdcg1my-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Jul 2024 02:07:58 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Mon, 1 Jul 2024 02:07:57 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Mon, 1 Jul 2024 02:07:57 -0700
-Received: from localhost.localdomain (unknown [10.28.36.175])
-	by maili.marvell.com (Postfix) with ESMTP id 5B2BB3F7048;
-	Mon,  1 Jul 2024 02:07:48 -0700 (PDT)
-From: Srujana Challa <schalla@marvell.com>
-To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <kuba@kernel.org>, <davem@davemloft.net>, <pabeni@redhat.com>,
-        <sgoutham@marvell.com>, <lcherian@marvell.com>, <gakula@marvell.com>,
-        <jerinj@marvell.com>, <hkelam@marvell.com>, <sbhatta@marvell.com>,
-        <schalla@marvell.com>
-Subject: [PATCH net,0/6] Fixes for CPT and RSS configuration
-Date: Mon, 1 Jul 2024 14:37:40 +0530
-Message-ID: <20240701090746.2171565-1-schalla@marvell.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1719826243; c=relaxed/simple;
+	bh=bXS05YXP29lYledT5VQ7UD9ves+9A8eAVmV+KKJbQtw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=SHtjB7DSdPjpPJOzTCUvCEk7lY1S8ll/wqkp1uibwTJGGR6fzO2bdQ26ifafGLMmnnzFEapAUNxIDA9DnsseVFuvR7+ySNI+WRTrcWtWoynP4o2hmelq8MTS/eTwpit6/WRakISgwm7QMrKBLWAU5ioGTfcDSzsfc5jym/rlUW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1sODMj-00022u-9n; Mon, 01 Jul 2024 11:30:29 +0200
+Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1sODMi-006L4k-Jt; Mon, 01 Jul 2024 11:30:28 +0200
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1sODMi-000PmG-1m;
+	Mon, 01 Jul 2024 11:30:28 +0200
+Message-ID: <7dbda1952c9e873823d4e6d2a9534f1b3b945c4a.camel@pengutronix.de>
+Subject: Re: [PATCH] media: imx-pxp: Rewrite coeff expression
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Ricardo Ribalda <ribalda@chromium.org>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>
+Cc: linux-media@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Hans
+ Verkuil <hverkuil-cisco@xs4all.nl>
+Date: Mon, 01 Jul 2024 11:30:28 +0200
+In-Reply-To: <20240628-gcc5-v1-1-7cd56f04a6a8@chromium.org>
+References: <20240628-gcc5-v1-1-7cd56f04a6a8@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: Wdzqu5yh_sXxaS-oq3rHEc4RaaA-6Iee
-X-Proofpoint-ORIG-GUID: Wdzqu5yh_sXxaS-oq3rHEc4RaaA-6Iee
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-01_07,2024-06-28_01,2024-05-17_01
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-This series of patches fixes various issues related to CPT
-configuration and RSS configuration.
+On Fr, 2024-06-28 at 15:11 +0000, Ricardo Ribalda wrote:
+> GCC5 cannot figure out that the expressions are constant, and that
+> triggers a build failure. Rewrite the expressions.
+>=20
+> The following gcc5 error is workaround:
+>=20
+>  #define BM_PXP_CSC1_COEF0_YCBCR_MODE 0x80000000
+>                                       ^
+>     BM_PXP_CSC1_COEF0_YCBCR_MODE |
+>     ^
+>  #define BM_PXP_CSC1_COEF0_YCBCR_MODE 0x80000000
+>                                       ^
+>=20
+> drivers/media/platform/nxp/imx-pxp.c: In function 'pxp_setup_csc':
+> drivers/media/platform/nxp/imx-pxp.h:582:38: error: initializer element i=
+s not constant
+> drivers/media/platform/nxp/imx-pxp.c:374:4: note: in expansion of macro '=
+BM_PXP_CSC1_COEF0_YCBCR_MODE'
+> drivers/media/platform/nxp/imx-pxp.h:582:38: note: (near initialization f=
+or 'csc1_coef_bt601_lim[0]')
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 
-Kiran Kumar K (1):
-  octeontx2-af: Fix issue with IPv6 ext match for RSS
+Can you elaborate on how this is triggered?
 
-Michal Mazur (1):
-  octeontx2-af: fix detection of IP layer
+At least I couldn't reproduce this by just copy & pasting the
+csc1_coef_bt601_lim initializer and the required macros into gcc 5.4 on
+godbolt.
 
-Nithin Dabilpuram (1):
-  octeontx2-af: replace cpt slot with lf id on reg write
+Can this be fixed by using GENMASK / FIELD_PREP instead?
 
-Satheesh Paul (1):
-  octeontx2-af: fix issue with IPv4 match for RSS
-
-Srujana Challa (2):
-  octeontx2-af: reduce cpt flt interrupt vectors for cn10kb
-  octeontx2-af: fix a issue with cpt_lf_alloc mailbox
-
- .../net/ethernet/marvell/octeontx2/af/mbox.h  |  7 +-
- .../net/ethernet/marvell/octeontx2/af/npc.h   |  8 +-
- .../ethernet/marvell/octeontx2/af/rvu_cpt.c   | 78 +++++++++++++++----
- .../ethernet/marvell/octeontx2/af/rvu_nix.c   |  7 +-
- .../marvell/octeontx2/af/rvu_struct.h         |  5 +-
- 5 files changed, 79 insertions(+), 26 deletions(-)
-
--- 
-2.25.1
-
+regards
+Philipp
