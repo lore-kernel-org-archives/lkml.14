@@ -1,106 +1,59 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E25002C6BB
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 08:31:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8426239FCF
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 08:32:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719822717; cv=none; b=ucUm+rDcM1gt55QnXyvlaOEj/mdjYrnIPEC139TqNOKokslFkOX1pwYkyjDTH4fJMVhqH4sxX7wMShhQnVJHlRFlPqTVtCN622Ln6MBUmkhCa6Q+FbhVNJ6McH6Fg5RspuUqj2hzLMOI4Cf/0CT6MaJyu5kDGozAhtDvxVb1q9U=
+	t=1719822729; cv=none; b=Ry7Ev8g1cVGRqupgXtL81x9Jl6oVV0Q7Jm8EIfOSYNw2NkmIN4GCQ45/3J63jNo0DY4Hetp9Nc+GBih+ZG3jCTXeLBTW42aneQ6yjnrEntAfqzGfDrNDZ0r9mNg1zBUcVHc1FVfEaQIru8MLlbHLwtXbo4VhkPAzNCYBiQZRXOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719822717; c=relaxed/simple;
-	bh=9fMBl3IiR9pAJFqq60EQ0JGDl+5vTAPK9ubUsBFBqfs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hDtYkSxBgEpGlIkUQA4ODQic4Tvvnz6/c27EfiGBCOpBLut7k1eZjJsTQ8d14iTscmRWLTgu2uQqZXZJd/cV1wJQu43LdeXa7b+2AyllgoAu9/PdJv0NsmbAG3rYteAC/WMrNGv0ShkGVfEQY+DAYHsoHTPw8O/69su0noc9gPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 34DBF339;
-	Mon,  1 Jul 2024 01:32:19 -0700 (PDT)
-Received: from [10.57.72.41] (unknown [10.57.72.41])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9F4103F766;
-	Mon,  1 Jul 2024 01:31:52 -0700 (PDT)
-Message-ID: <13dcf4be-8c5f-4697-adc1-b68c3da82d78@arm.com>
-Date: Mon, 1 Jul 2024 09:31:51 +0100
+	s=arc-20240116; t=1719822729; c=relaxed/simple;
+	bh=Bz94elEHPz1zbjvcEHFc1YDv3mX8QFoL8smTwn7WggY=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=rrm/ZLxaYCgk5cA79Hcz/avmAzLYdd96b89IgprpWH3oiIj2DCXhsrs/uQLNjAK08qy07exo0ls2Su2d32xaPkOreEtm0iJ11PLHgUv0NtzhrJdzFNoIGJe1fh66J4C5ByDbwDpRZ5HX2y8a1YVMcttZ4wpTsXXILKX5UpSXnRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-375e4d55457so29886105ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 01:32:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719822727; x=1720427527;
+        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bz94elEHPz1zbjvcEHFc1YDv3mX8QFoL8smTwn7WggY=;
+        b=Zeax5HO/V04rJ0+7+IhCWh5hLumIVrBOZEMwTezYuOmrXlLNgsp9gUENJ04wVWFLgB
+         VcF40SxaTkmkv1N/xTH/gjWkHOxMS+zDh3jYLQOISnj5GU/3erKqZH2oVaeo715OmOog
+         1emgmFXKDAeByNfOMBe6YPntu4yh5nLsivj9Ekcj9dJ5FJdAx3mXFdYn+FIaJgoMRy8j
+         efOHWCoyU+WuxR9ddk4MbTOUvkQ/7VsmmiV2xd0QtoIbDHA0qQhHnOGGlgIubwmpCyDJ
+         m7TAorNi19DQEo9ElEUQaRoYMS8W8AEbWAm/0AivbVpRCMad84kB8mGPAIniYS3r4PCd
+         RWpA==
+X-Forwarded-Encrypted: i=1; AJvYcCWxD3bmBtIRqR93J/ioDjnmPxqr9ssnEq8MRxc4J9bH62gf+UWfrIujIHXMWdcS3vBRikJKIRIVuuzr8f5dyH/Z3mX16cfW27VWYuRP
+X-Gm-Message-State: AOJu0Yxnh9ocdVftKxK9uNNTU9eAQVXFHJzcIObiO4e9o9CYW0zYRxM5
+	zI4fkYVGeuDNWBGNkVXZMvTnNHT/PypJQ5e7Z0c7pXxWUgT0HzdFj5up4lfu+SjQpQX50tE1O7O
+	cLkQB7vgWHUUibLCh215484Hv3ZlqkZvAvI1iqDYQztOrZ3szHpIQ35I=
+X-Google-Smtp-Source: AGHT+IFmEDVTBB7AcDzoYFPL6bAaF8jLYUJTWos1jmzdRa99WPUyfE0ncFrgyVtrmqTc14kcchXyMbc7p9fUuVdWDTy1TyxLDZm5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] mm: add docs for per-order mTHP split counters
-Content-Language: en-GB
-To: Lance Yang <ioworker0@gmail.com>, akpm@linux-foundation.org
-Cc: dj456119@gmail.com, 21cnbao@gmail.com, david@redhat.com,
- shy828301@gmail.com, ziy@nvidia.com, libang.li@antgroup.com,
- baolin.wang@linux.alibaba.com, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, Mingzhe Yang <mingzhe.yang@ly.com>
-References: <20240628130750.73097-1-ioworker0@gmail.com>
- <20240628130750.73097-3-ioworker0@gmail.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20240628130750.73097-3-ioworker0@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:c605:0:b0:375:9deb:ceb8 with SMTP id
+ e9e14a558f8ab-37cd2af838cmr1467035ab.3.1719822727401; Mon, 01 Jul 2024
+ 01:32:07 -0700 (PDT)
+Date: Mon, 01 Jul 2024 01:32:07 -0700
+In-Reply-To: <20240701083204.18577-1-wojciech.gladysz@infogain.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000be6635061c2b6e63@google.com>
+Subject: Re: Test head for issue
+From: syzbot <syzbot+18df508cf00a0598d9a6@syzkaller.appspotmail.com>
+To: wojciech.gladysz@infogain.com
+Cc: wojciech.gladysz@infogain.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 28/06/2024 14:07, Lance Yang wrote:
-> This commit introduces documentation for mTHP split counters in
-> transhuge.rst.
-> 
-> Signed-off-by: Mingzhe Yang <mingzhe.yang@ly.com>
-> Signed-off-by: Lance Yang <ioworker0@gmail.com>
-> ---
->  Documentation/admin-guide/mm/transhuge.rst | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
-> index 1f72b00af5d3..709fe10b60f4 100644
-> --- a/Documentation/admin-guide/mm/transhuge.rst
-> +++ b/Documentation/admin-guide/mm/transhuge.rst
-> @@ -514,6 +514,22 @@ file_fallback_charge
->  	falls back to using small pages even though the allocation was
->  	successful.
+> #syz test: https://linux.googlesource.com/linux/kernel/git/torvalds/linux
 
-
-I note at the top of this section there is a note:
-
-Monitoring usage
-================
-
-.. note::
-   Currently the below counters only record events relating to
-   PMD-sized THP. Events relating to other THP sizes are not included.
-
-Which is out of date, now that we support mTHP stats. Perhaps it should be removed?
-
->  
-> +split
-> +	is incremented every time a huge page is successfully split into
-> +	base pages. This can happen for a variety of reasons but a common
-> +	reason is that a huge page is old and is being reclaimed.
-> +	This action implies splitting any block mappings into PTEs.
-
-Now that I'm reading this, I'm reminded that Yang Shi suggested at LSFMM that a
-potential aid so solving the swap-out fragmentation problem is to split high
-orders to lower (but not 0) orders. I don't know if we would take that route,
-but in principle it sounds like splitting mTHP to smaller mTHP might be
-something we want some day. I wonder if we should spec this counter to also
-include splits to smaller orders and not just splits to base pages?
-
-Actually looking at the code, I think split_huge_page_to_list_to_order(order>0)
-would already increment this counter without actually splitting to base pages.
-So the documantation should probably just reflect that.
-
-> +
-> +split_failed
-> +	is incremented if kernel fails to split huge
-> +	page. This can happen if the page was pinned by somebody.
-> +
-> +split_deferred
-> +	is incremented when a huge page is put onto split
-> +	queue. This happens when a huge page is partially unmapped and
-> +	splitting it would free up some memory. Pages on split queue are
-> +	going to be split under memory pressure.
-> +
->  As the system ages, allocating huge pages may be expensive as the
->  system uses memory compaction to copy data around memory to free a
->  huge page for use. There are some counters in ``/proc/vmstat`` to help
+want either no args or 2 args (repo, branch), got 1
 
