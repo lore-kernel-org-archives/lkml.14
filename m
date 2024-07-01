@@ -1,38 +1,39 @@
 Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97F6127B57;
-	Mon,  1 Jul 2024 08:50:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F5BE7E0F0;
+	Mon,  1 Jul 2024 08:50:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719823850; cv=none; b=f34uUmcW8wVLZLBMFDnGDKDZ82C+bVRNLCJcxQvWIjIK+gRrBlOEN+lwhu9ToUtJkvX+Ki74kNoQVip4eZPyEbQMD2Szlp5l88MoR0si1b1N+rOah3KittiLAgNNspo/daLMfIX1xfAHFSuPr2Oq3W+6sV8l0CBQMU3YeRnqsxI=
+	t=1719823850; cv=none; b=cb44uCCGOtA/A6nGgARKuRpAIXZMA+i2l9038yq1qO3ciPC5H/0GTnb33YfGWlNPWBVYHCrbDnzj1DN40LKtGCnJxZ0XtgCjUiKmrJg9F+B0LpBYOxJ9+Qx4uNRWoXKgQbTQ0t6AcovxSoaJF3SIO45IDyHuIGnAfwIJGij8ZEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719823850; c=relaxed/simple;
-	bh=NpDLeoWlfO75xR5lZbpySzJDKMvQSBb/ujqrRwpiHN0=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XGnw9CiCJW1x+dKZU1IdhJtJVGlfjbn/r65Ocyrp3Ps7lnmViO3RVw00F04V/se3OyQhnTd4bQYiksHJjqgoLLllSL7YQZhVb7VaU8aCsI+/6Zh/3AhwqK7iuSzwpHZ0JzS22wKSI6FDqGLjSHK7XW3trcql98/URwrh4vWVvbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=O2WA0yoj; arc=none smtp.client-ip=217.70.183.198
+	bh=1ZHhzaXO/qyzrVPK875CXBdCiwYG+tNpCoZ7YYPtqxg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ip+0FILhfwqKxW6Y4hl/+M6us4wfdkQFAQ2sSIB2tCMpJtwttLG8X+Xwu5r16jwf9BkmvKote4C0WXVxBRKE2yA7KATk1STT+dUOvxEBkM04xsGOzZOjRIZrfD2+reCyKpkWIMVjDAC2Pq/WYq5Y4tjnkM32AKUPwhUGSjMzw8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QqSNhPO9; arc=none smtp.client-ip=217.70.183.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="O2WA0yoj"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1FE68C0005;
-	Mon,  1 Jul 2024 08:50:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QqSNhPO9"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5EBC4C000D;
+	Mon,  1 Jul 2024 08:50:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1719823844;
+	t=1719823846;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=RTR8H7b1tl9eAKDR+Ps9ZqecKHhEcbAUOFZfLXxFeyo=;
-	b=O2WA0yojVx3gRuuWY0lO6f9o943QQ5LaJuaTzA1sWGFhsyQRorPD0spZv+xVilAj2+UDnT
-	YYdXrlmtCNqbYVqWuzEjLi/yFoxdQ4ABqzw7OgnH0HEkFhzZZFqclMfhWqxQuIeOSl7Fbz
-	kRB+nxe22S3/JCm7Qk5/Di3Ce0m92sAyCIywlkUwgM4fvQz7tR7fy86POx1VJPC4gxDVNo
-	tdiiYugGoh0tPgOldlkx8MdOiXCGR3X26Fh3KpAMn2YLBd2iPKFQsNT9qzhkhCKIlEi0pN
-	Q0NRz7Kw8R/QvxKd8V2dBWj+AvzBhnTAtReazzC6Lzlt5yOiBU+EhA8SvMQFWg==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MZphmPMPCyxcl1+lMlccveFAU5GvuISteHDMC4X9nDA=;
+	b=QqSNhPO9khOguffGObeAEmjOC0bBH4YUUUOiCo54Ppji21mL/3bO6EgRqVEWdVWWBHIOhX
+	WyKMXBopdn9a/20l7v+ix2UxUPut8KdWEo45aYPQ/hoV1oOk7VkDKBD2BkoG9m/2eIMVZi
+	6wXKXJlNecX7SPRRKfjg0QdfSWPwQFReNdiYmGHIRdWz3Fnauuq0HrD0rom4i65g/G4oQv
+	AKxJarvVZYUuZKhxzds7o2oK3CrylSNt1B2esiCw3iRugkLa2LHQLeKLB0xQ4DSnvsLqRf
+	O7mo3LXGlCY9JAjPaywDdEt9x6tWJeebEfcwUHqeL53glk6foyugo6yA0KHlaA==
 From: Romain Gantois <romain.gantois@bootlin.com>
-Subject: [PATCH net-next 0/6] net: phy: dp83869: Add support for downstream
- SFP cages
-Date: Mon, 01 Jul 2024 10:51:02 +0200
-Message-Id: <20240701-b4-dp83869-sfp-v1-0-a71d6d0ad5f8@bootlin.com>
+Date: Mon, 01 Jul 2024 10:51:06 +0200
+Subject: [PATCH net-next 4/6] net: phy: dp83869: Support 1000Base-X and
+ 100Base-FX SFP modules
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,9 +42,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAPdtgmYC/x3MTQqAIBBA4avErBswFZm6SrToZ6zZmGhEIN09a
- fkt3iuQOQlnGJoCiW/JcoaKrm1gPeawM8pWDVppq5wmXCxukQy5HrOPSDz3bjHeGlqhRjGxl+c
- fjhD4wsDPBdP7fv1VkKpqAAAA
+Message-Id: <20240701-b4-dp83869-sfp-v1-4-a71d6d0ad5f8@bootlin.com>
+References: <20240701-b4-dp83869-sfp-v1-0-a71d6d0ad5f8@bootlin.com>
+In-Reply-To: <20240701-b4-dp83869-sfp-v1-0-a71d6d0ad5f8@bootlin.com>
 To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
  Russell King <linux@armlinux.org.uk>, 
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
@@ -53,63 +54,107 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
 X-Mailer: b4 0.14.0
 X-GND-Sasl: romain.gantois@bootlin.com
 
-Hello everyone,
+The DP83869HM PHY transceiver can be configured in RGMII-1000Base-X mode to
+interface an RGMII MAC with a copper direct-attach (DAC) or fiber SFP
+module. SFP upstream ops are needed to notify the DP83869 driver of SFP
+module insertions and let it configure the PHY appropriately.
 
-This is version one of my series that adds support for downstream SFP cages
-to the DP83869 PHY driver.
-
-The DP83869HM PHY transceiver supports a variety of different conversion
-modes, including RGMII to SGMII and RGMII to 1000Base-X. With these last
-two modes, the DP83869 can act as a bridge between an Ethernet MAC and an SFP
-cage in one of the following two configurations:
-
-RGMII-SGMII bridge:
-
-+-------+       +------------+        +-----------+--------------------+
-|       |RGMII  |            | SGMII  |                                |
-|  MAC  |<----->| DP83869HM  |<------>| SFP cage with SGMII SFP module |
-|       |       |            |        |                                |
-+-------+       +------------+        +-----------+--------------------+
-
-RGMII-1000Base-X converter:
-
-+-------+        +------------+1000Base-X+-----------+--------------------+
-|       |RGMII   |            |          |                                |
-|  MAC  |<------>| DP83869HM  |<-------->| SFP cage with DAC/fiber module |
-|       |        |            |          |                                |
-+-------+        +------------+          +-----------+--------------------+
-
-The RGMII-SGMII and RGMII-1000Base-X are currently supported in the PHY
-driver, but there are some flaws that prevent proper operation with
-downstream SFP modules. Additionally, the sfp_upstream_ops callbacks which
-are needed to interact with the downstream SFP modules are not yet
-implemented.
-
-This series adds full support for both SGMII and DAC SFP modules by
-implementing these sfp_upstream_ops callbacks and fixing relevant issues in
-the existing DP83869 operational modes.
-
-Best Regards,
-
-Romain
+Add relevant SFP callbacks to the DP83869 driver to support 1000Base-X and
+100Base-FX modules.
 
 Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
 ---
-Romain Gantois (6):
-      net: phy: dp83869: Disable autonegotiation in RGMII/1000Base-X mode
-      net: phy: dp83869: Perform software restart after configuring op mode
-      net: phy: dp83869: Ensure that the FORCE_LINK_GOOD bit is cleared
-      net: phy: dp83869: Support 1000Base-X and 100Base-FX SFP modules
-      net: phy: dp83869: Support SGMII SFP modules
-      net: phy: dp83869: Fix link up reporting in SGMII bridge mode
+ drivers/net/phy/dp83869.c | 62 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
 
- drivers/net/phy/dp83869.c | 269 +++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 233 insertions(+), 36 deletions(-)
----
-base-commit: 30972a4ea092bacb9784fe251327571be6a99f9c
-change-id: 20240628-b4-dp83869-sfp-8ea96b3f438c
+diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
+index 579cf6f84e030..a3ccaad738b28 100644
+--- a/drivers/net/phy/dp83869.c
++++ b/drivers/net/phy/dp83869.c
+@@ -10,6 +10,8 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/phy.h>
++#include <linux/phylink.h>
++#include <linux/sfp.h>
+ #include <linux/delay.h>
+ #include <linux/bitfield.h>
+ 
+@@ -843,6 +845,62 @@ static int dp83869_config_init(struct phy_device *phydev)
+ 	return ret;
+ }
+ 
++static int dp83869_module_insert(void *upstream, const struct sfp_eeprom_id *id)
++{
++	__ETHTOOL_DECLARE_LINK_MODE_MASK(phy_support);
++	__ETHTOOL_DECLARE_LINK_MODE_MASK(sfp_support);
++	DECLARE_PHY_INTERFACE_MASK(interfaces);
++	struct phy_device *phydev = upstream;
++	struct dp83869_private *dp83869;
++	phy_interface_t interface;
++
++	linkmode_zero(phy_support);
++	phylink_set(phy_support, 1000baseX_Full);
++	phylink_set(phy_support, 100baseFX_Full);
++	phylink_set(phy_support, FIBRE);
++
++	linkmode_zero(sfp_support);
++	sfp_parse_support(phydev->sfp_bus, id, sfp_support, interfaces);
++
++	linkmode_and(sfp_support, phy_support, sfp_support);
++
++	if (linkmode_empty(sfp_support)) {
++		dev_err(&phydev->mdio.dev, "incompatible SFP module inserted\n");
++		return -EINVAL;
++	}
++
++	interface = sfp_select_interface(phydev->sfp_bus, sfp_support);
++
++	dev_info(&phydev->mdio.dev, "%s SFP compatible link mode: %s\n", __func__,
++		 phy_modes(interface));
++
++	dp83869 = phydev->priv;
++
++	switch (interface) {
++	case PHY_INTERFACE_MODE_100BASEX:
++		dp83869->mode = DP83869_RGMII_100_BASE;
++		phydev->port = PORT_FIBRE;
++		break;
++	case PHY_INTERFACE_MODE_1000BASEX:
++		dp83869->mode = DP83869_RGMII_1000_BASE;
++		phydev->port = PORT_FIBRE;
++		break;
++	default:
++		dev_err(&phydev->mdio.dev,
++			"incompatible PHY-to-SFP module link mode %s!\n",
++			phy_modes(interface));
++		return -EINVAL;
++	}
++
++	return dp83869_configure_mode(phydev, dp83869);
++}
++
++static const struct sfp_upstream_ops dp83869_sfp_ops = {
++	.attach = phy_sfp_attach,
++	.detach = phy_sfp_detach,
++	.module_insert = dp83869_module_insert,
++};
++
+ static int dp83869_probe(struct phy_device *phydev)
+ {
+ 	struct dp83869_private *dp83869;
+@@ -859,6 +917,10 @@ static int dp83869_probe(struct phy_device *phydev)
+ 	if (ret)
+ 		return ret;
+ 
++	ret = phy_sfp_probe(phydev, &dp83869_sfp_ops);
++	if (ret)
++		return ret;
++
+ 	if (dp83869->mode == DP83869_RGMII_100_BASE ||
+ 	    dp83869->mode == DP83869_RGMII_1000_BASE)
+ 		phydev->port = PORT_FIBRE;
 
-Best regards,
 -- 
-Romain Gantois <romain.gantois@bootlin.com>
+2.45.2
 
