@@ -1,77 +1,96 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2327514A098
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 12:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C49214B09F
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 12:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719836824; cv=none; b=dlzwbgmyDEUtUyoMs56fFIqZUdlpqcrfJ48HHr2MvhgVbAW1W5eSoAYaP1MVoo3Cfzqo67lfGdC33pKaRUhijkGX8Sujf8fne0qkqVSNjj/1QmJOGAy4NkDrahwZVRoQu0Jbi7WvGXo9LVI5gD6rZVtVC7IlB5SlvHaOOACixWI=
+	t=1719836864; cv=none; b=odJihGurTsT8KodX2ZpcfC4EWKn6409GngJKGaokFMilACa6Y1Pj/bTZQ9iMjJywrccGAUNI4OrNTWWMfywW7Jtm1fwgzW1xGJWM1m1Y5QSJTt3clQ8FSoRMP0VrHO701Amlb070hXsiVQdF76143NmOQfl8JuZQqeH4wOXqsPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719836824; c=relaxed/simple;
-	bh=6qdpZ2ZaMSNBLlhJwrtc5Vcmfp7+vv0OVMHqTXpWb7c=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=EN/35pZlNExkky9nW5tpg49GZ4lj6DgvdG8Gc6odgOCD6rCFiQL4fCWsBzJy3ySMv01TBTJP1wskEABmRY3r784oe1y8xol8lB97ypYHiR/lBPKkLmpd+z0S/pTyo61PriVVkXZ78L5oPwJlBhV2H/Ze4m1+RcbL1KQxc3WodOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7f63eb9f141so66556739f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 05:27:02 -0700 (PDT)
+	s=arc-20240116; t=1719836864; c=relaxed/simple;
+	bh=DKtxpPgVNtsn7K3hHeygsIzw1BFxEqTpvfTeM+AQT+s=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=pFHRtdWFNG9yEH0Sgp3Z0rI4So924Dpo0PLSr/PnpCskOw7Y0RpvC4WhmBaT3qdGjL2/SV/wESknv6v9o9XRtgNRSCfSrGAthp/Vno7RKvGhEUdVCbhaQZaWicAVe9ih24VicZ/T45ZTaBMnOgISKrheT9t10F2QG+2FEq0d8Eg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Hb26X+hW; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hb26X+hW"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-365663f51adso1823015f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 05:27:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719836861; x=1720441661; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IbKJ1+fHrcfsxoNPssv5ufXQjSB4NnSOZ79R2VobUDs=;
+        b=Hb26X+hWtdxku4kNvWXx2QTDnVXqfsxei5cJwNrLYvRB8BZ2vid8FHRGW1/UnU27Wn
+         xe2aq0si6KQ8yIUcNgEjjh5rzdVDR6IYF96DmAPlgqLQmQBUMvX4TObcGPOu6GDpTXlN
+         oOW5mq81QcpjRsP1Qo+Jg0xXqhSwcjw/uRZyAnridOfHTyifQzJIEQjIJUUesdsleCxS
+         gS85qnhb6qErGTozxsyGFvGWCKuZ87UXCRvzp7CVnI+hhARkLLHSQP5/+ViLCr3PedNR
+         MoxMmgkpqTs0ZWawGcL8g3j2ioyAh8atXsCfki+ZrFBNAPau9Fai1b/s8I+fsR8sajDj
+         kRBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719836822; x=1720441622;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DbeecvukDyVo3VtHX6r0WAchUA0h1Wd3HInWyp6BZ+g=;
-        b=u5RLJ6e1LtqYaBrLK6GVfCVxs47Ace5UMR7UN0ILQ0aO3gqEP6WRF5zWc8AZMvqkNW
-         mCTItleWiDNyhE8cpfIxQTfLU+3hbahGyBx8tX1qhqyzJfJa2nv2y5z3ewGbO7AI97Z8
-         wTKWOKdV0qllDRIHoZHl/1RKMAWgOE/sDp4fij/5+3LMfPe+a8ra6Yb2fz/JO2i9ilj7
-         ssJUjAMiXcYpqGyGZ0b6Spa3Jw9EZX1ftakgLi8GYVTrLhpiCbkVw5mGvl3CbeVDAC9o
-         iq48ROK+5PkOimsQy8RmNYtxWisRDEmE/Q5B297nCuZt5wzS7rHfdd3hQVarSVCvJz9n
-         An5A==
-X-Gm-Message-State: AOJu0YzYrrvDA+tDmLdQrMUN8TSghIFq32rDai/PoHsicxyVe/jTvffF
-	Sc0R8HmF2tZ7DH4Mm2g06sL+rpHwZPZ5M/p7UTGz8ffMNA88kHnY50wzrTB75ZW9G8qcA/Hdbt3
-	OzWrdaa+NfqreYRlsyKS614LkOPCYhbyRJIgUtOMQTFsYtUaY2UF4vPc=
-X-Google-Smtp-Source: AGHT+IG/mr/OnbDSwOXZa2ArGb59Z6ZlPDlP2jnvk9DPb9ctSlK5vJy+y683Qw+5sOM2lDBk5bHFpGL+f0imr3ES4QJUteRpsKPa
+        d=1e100.net; s=20230601; t=1719836861; x=1720441661;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IbKJ1+fHrcfsxoNPssv5ufXQjSB4NnSOZ79R2VobUDs=;
+        b=XE0U+5yyxz5yzqSwnMJbDEpF+zCMHooC1jNsBeqRCSbUPVQbVppxl2p7/uJqzonvwe
+         Aqbf9VsaIt3gF1wZFgwrl0d8+pcyHucGs66Jb/fdQ9YvvNXUIrjtG+MHSjRDOmYL2ixQ
+         psPDRpMwQzoZo+SZ7di33s0Fy6O67bTkiL6/udpoiRGAhA4wnh3RYitq8zvCJH60Wdka
+         LZmWV2H/f7jJLtYd6x3/F3/tJfiYDvJdeZg6xlS9h/FsDUmrfIu3bwSq9+sZ46AzxKY5
+         RRJKcznIuWujpfBM0Sezz3JM2V9x7ymDLmfGzntlw8WnwE0wZOWnc3vx9uOQQISn6ckL
+         8mpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVhw48Vm7Ku+rgI2h1Gg6x+PYx/z0rpg+UvuKjCdU4KhwdnKxk/xt5jRE7uLWZo4UhhA3qp3hy48f2tNCLO41YQ/Z4rBFLoxBZNI3AL
+X-Gm-Message-State: AOJu0YwHXtbw51xY0aMgfB702F9gcDTxZ9kDEUXxJRTQbOpKZTRhvX8d
+	dc64SiRT/oeZO5xoNQHe2UbSBFrlKK30gSpa5rmQTtKz8ImAUoyPHSwnPXgSeNCjMr/ssNWy8kr
+	R
+X-Google-Smtp-Source: AGHT+IFH35xxvg5N4AtgQdVncudDweLagl90Mb/QWe2ODsQ64shBW9nGUOgVWRgqPVDQN+ts6wv3Yw==
+X-Received: by 2002:adf:ab17:0:b0:364:a733:74de with SMTP id ffacd0b85a97d-367756a9394mr3104569f8f.28.1719836860636;
+        Mon, 01 Jul 2024 05:27:40 -0700 (PDT)
+Received: from [127.0.1.1] ([178.197.219.137])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0d90d5sm9961414f8f.31.2024.07.01.05.27.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 05:27:39 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: =?utf-8?q?=C5=81ukasz_Stelmach?= <l.stelmach@samsung.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Sam Protsenko <semen.protsenko@linaro.org>
+Cc: Anand Moon <linux.amoon@gmail.com>, Olivia Mackall <olivia@selenic.com>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, linux-samsung-soc@vger.kernel.org, 
+ linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240618204523.9563-8-semen.protsenko@linaro.org>
+References: <20240618204523.9563-1-semen.protsenko@linaro.org>
+ <20240618204523.9563-8-semen.protsenko@linaro.org>
+Subject: Re: (subset) [PATCH v2 7/7] arm64: dts: exynos850: Enable TRNG
+Message-Id: <171983685912.414640.3760379043384228947.b4-ty@linaro.org>
+Date: Mon, 01 Jul 2024 14:27:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:d5c8:0:b0:375:cfd0:393d with SMTP id
- e9e14a558f8ab-37cbcc6d420mr2236345ab.2.1719836822341; Mon, 01 Jul 2024
- 05:27:02 -0700 (PDT)
-Date: Mon, 01 Jul 2024 05:27:02 -0700
-In-Reply-To: <20240701101125.13829-1-wojciech.gladysz@infogain.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000de1f00061c2eb6ec@google.com>
-Subject: Re: [syzbot] [bpf?] [net?] KMSAN: uninit-value in dev_map_hash_lookup_elem
-From: syzbot <syzbot+80cf9d55d6fd2d6a9838@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	wojciech.gladysz@infogain.com
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-SYZFAIL: NL802154_CMD_SET_SHORT_ADDR failed
-
-2024/07/01 12:26:06 ignoring optional flag "sandboxArg"="0"
-2024/07/01 12:26:07 parsed 1 programs
-2024/07/01 12:26:07 [FATAL] failed to run ["./syz-executor" "setup" "fault" "binfmt_misc" "usb" "802154" "swap"]: exit status 67
-mkdir(/syzcgroup) failed: 17
-mount(binfmt_misc) failed: 16
-SYZFAIL: NL802154_CMD_SET_SHORT_ADDR failed
- (errno 16: Device or resource busy)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.0
 
 
-Tested on:
+On Tue, 18 Jun 2024 15:45:23 -0500, Sam Protsenko wrote:
+> Add True Random Number Generator (TRNG) node to Exynos850 SoC dtsi.
+> 
+> 
 
-commit:         e478cf26 Merge branch 'bpf-fix-a-couple-of-test-failur..
-git tree:       https://linux.googlesource.com/linux/kernel/git/torvalds/linux
-console output: https://syzkaller.appspot.com/x/log.txt?x=15f181c1980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2ad6a8768920dd4b
-dashboard link: https://syzkaller.appspot.com/bug?extid=80cf9d55d6fd2d6a9838
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=129891d1980000
+Applied, thanks!
+
+[7/7] arm64: dts: exynos850: Enable TRNG
+      https://git.kernel.org/krzk/linux/c/64c7ea42fcc2b972fc8d108642f4b8fabf0999c3
+
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
