@@ -1,98 +1,84 @@
-Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127FA16DEB4
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 16:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16CE916DEA8;
+	Mon,  1 Jul 2024 16:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719852175; cv=none; b=ZjjLKefNltsRX0RlTLpn6hHhyiIMsw/2fZ1ejMySsUnMNWpKoDFCFPPIWpZscL9vW+IU/7i3oOHLY4tDbydLUhMJPfHES/eiWvFEz+CcMhHmGXNBgVu5aH1ai3SF3g1zv1blm85O/S/9z0BVn+NhgAjiv2coC1i5bxr9DXl4Qbs=
+	t=1719852181; cv=none; b=EuG5S//dPA1vPoUmDvJez4a4fjLhylxgt5RmZ08RLvXFO/4I8UPcVLv4WyZdBeuvBVLyCUgJHY6ERpJj4I38P/oKEWRBloiPQeE50Ys+HzrNSrTi4PTUvioR/vQ/l3tqfcuRjRpZRH2KgpW/CTldElp6dI/qBcaHL7dbI9+AdJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719852175; c=relaxed/simple;
-	bh=PZPszu38C9qjHBErM1SkImmwDbA/mBUiPyCRRw7EAeo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Aq2HobPKjkJiJEQggVcs9WM74ZWt0fdut4HiXJ2gxGkovsZZJ6xCjQuvrDC+yMeVff0MaYxOan+MoIWdkSv7H/IYHckl1x/1EUqlPqaSLAMKSvx7DhJjHP4zj7NwHIvJMCCUu/jUmLxkfv1vEOlHHi/kajEGaxeZXDr5+NBDWw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=N3eHAXGe; arc=none smtp.client-ip=199.89.1.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1719852181; c=relaxed/simple;
+	bh=gG84DeAaodLa3Fp+CwvCwEEBgnOJ9khtc9sE+yhKlT4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LHU6O3qF+qp+bBye8/pjLu2DHuAG3wagVAfEyus9vvancuxqi73vIlS2UypngAHigtv+NJaY5Ac+Dvwx1g/gr4cwk2uX240FHNq/mN0tP8EuxATrHeZkDpZHW2DlitF2AK5Qpc/0yH54VHSMWSm17rWrh1iyd5AkYOkuwnKGMjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WFzSXf4r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="N3eHAXGe"
-Received: from localhost (localhost [127.0.0.1])
-	by 009.lax.mailroute.net (Postfix) with ESMTP id 4WCX0F3MqjzlnNFn;
-	Mon,  1 Jul 2024 16:42:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1719852172; x=1722444173; bh=88w72/yhcBtkcYIHH4laK8V+
-	I9JZOPcRykHIFahc//4=; b=N3eHAXGeds+g5rneafIf9NF7woZLwFdK7OPlk+La
-	/MBRSNkV9Ge3K41tvXkkjyDrwsz+y9gxr4XGF/Jxsi2ArgxpslhKUmZiKCOzkkk5
-	m7ArEUdPVYxJJ880MjGJQdA5cf6c35Z1hg3Dn1zyKEfFpKnq4XmcpUW/zL6h6MJu
-	Sp7MxC9cKuv8v9FOjgl63dJKYBErOvTO7iBtwVe+/2dtkuOZvdgELdJiYsQyFE/q
-	Z1eCmy22ft3PH2Z6G2bvu12ooc2rBdr5+SAUunzOb0QMCJXs2Jx3olBfDMwXwUpV
-	vwy3YZmvOfFp+qiPxXU09viSSAV0ZG0f9c2ZZeODWyCBxQ==
-X-Virus-Scanned: by MailRoute
-Received: from 009.lax.mailroute.net ([127.0.0.1])
- by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id t5zoGWQ9OUPC; Mon,  1 Jul 2024 16:42:52 +0000 (UTC)
-Received: from [192.168.50.14] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4WCX0C3tdrzlnNFk;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WFzSXf4r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52112C2BD10;
 	Mon,  1 Jul 2024 16:42:51 +0000 (UTC)
-Message-ID: <3302014f-6ee0-452a-a6a5-dea6fcc37542@acm.org>
-Date: Mon, 1 Jul 2024 09:42:50 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719852180;
+	bh=gG84DeAaodLa3Fp+CwvCwEEBgnOJ9khtc9sE+yhKlT4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=WFzSXf4r9phWB8cBrmkGepdyAmDwyHcUIyWUgnnN1T0JbG1PGgLneVKyLiDpEOrZf
+	 CnHaGM5NNPKrPFT1UTKa3yhnM2H3pfIpksPE6iZWRxZSgsbUi9ad6XxxtXN8WwS7Ss
+	 gaxOWSf1uPwiyHLWRS0UN30vBIEazbbSXKC0YNQl1yvdM4RhZB8CSiVS70K3tqvULx
+	 2BBGinCaYRMUTt4G+QFor8KngpSawteWTz1vEE60fIViciUVjj68DSQtUsVtHct5FC
+	 38MBZMT3kLb4TIcroy6FcBzit7FuzkbkfzKvCsGEFmlxHfCuun3hDKpx5EpmMahNbo
+	 n+cVmDUze1RIg==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@chromium.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCHv2 bpf-next 5/9] libbpf: Add uprobe session attach type names to attach_type_name
+Date: Mon,  1 Jul 2024 18:41:11 +0200
+Message-ID: <20240701164115.723677-6-jolsa@kernel.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240701164115.723677-1-jolsa@kernel.org>
+References: <20240701164115.723677-1-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/53] workqueue: Introduce the create*_workqueue2()
- macros
-To: Lai Jiangshan <jiangshanlai@gmail.com>
-Cc: Tejun Heo <tj@kernel.org>,
- "Martin K . Petersen" <martin.petersen@oracle.com>,
- linux-kernel@vger.kernel.org
-References: <20240630222904.627462-1-bvanassche@acm.org>
- <20240630222904.627462-2-bvanassche@acm.org>
- <CAJhGHyCsypVP7VgsNKdQ=rn0hqiJOzSS9p_OGio6k-S2idaLtA@mail.gmail.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <CAJhGHyCsypVP7VgsNKdQ=rn0hqiJOzSS9p_OGio6k-S2idaLtA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On 6/30/24 7:51 PM, Lai Jiangshan wrote:
-> On Mon, Jul 1, 2024 at 6:29=E2=80=AFAM Bart Van Assche <bvanassche@acm.=
-org> wrote:
->=20
->> --- a/include/linux/workqueue.h
->> +++ b/include/linux/workqueue.h
->> @@ -525,11 +525,20 @@ alloc_workqueue(const char *fmt, unsigned int fl=
-ags, int max_active, ...);
->>
->>   #define create_workqueue(name)                                      =
-   \
->>          alloc_workqueue("%s", __WQ_LEGACY | WQ_MEM_RECLAIM, 1, (name)=
-)
->> +#define create_workqueue2(fmt, args...) \
->> +       alloc_workqueue(fmt, __WQ_LEGACY | WQ_MEM_RECLAIM, 1, ##args)
->>   #define create_freezable_workqueue(name)                            =
-   \
->>          alloc_workqueue("%s", __WQ_LEGACY | WQ_FREEZABLE | WQ_UNBOUND=
- | \
->>                          WQ_MEM_RECLAIM, 1, (name))
->=20
-> Is there any possible preprocessor hack to avoid the renaming of the fu=
-nctions?
+Adding uprobe session attach type name to attach_type_name,
+so libbpf_bpf_attach_type_str returns proper string name for
+BPF_TRACE_UPROBE_SESSION attach type.
 
-Thanks Lai for having taken a look. As one can see here the last patch=20
-of this patch series renames create_workqueue2() back to=20
-create_workqueue():=20
-https://lore.kernel.org/linux-kernel/20240630222904.627462-1-bvanassche@a=
-cm.org/
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ tools/lib/bpf/libbpf.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Bart.
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index 492a8eb4d047..e69a54264580 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -133,6 +133,7 @@ static const char * const attach_type_name[] = {
+ 	[BPF_NETKIT_PRIMARY]		= "netkit_primary",
+ 	[BPF_NETKIT_PEER]		= "netkit_peer",
+ 	[BPF_TRACE_KPROBE_SESSION]	= "trace_kprobe_session",
++	[BPF_TRACE_UPROBE_SESSION]	= "trace_uprobe_session",
+ };
+ 
+ static const char * const link_type_name[] = {
+-- 
+2.45.2
+
