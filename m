@@ -1,194 +1,260 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7984316EBF6
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 18:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 282A84206C;
+	Mon,  1 Jul 2024 18:26:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719858305; cv=none; b=rVHgkN31FvEN3WHu6aqORo975N4MhZdcdc6LvGqaaIiU0arpPr1C+8tpgxhawC9ZMnkmWK9z3oL0+G3mvjiFLz1NCUZKIF4wnjqSlwt4maS5OSTXk9KuW5CdlF8mtK1cbKGyRB52EJYVhD2C2SYWi2gtkGIuWVXPOWL8TvKI/ek=
+	t=1719858389; cv=none; b=qY4a3TomwZbLHuCgF34B9r5wTXfS2vggHvKXaevbVKjnHXYgv5Gx3OyJjrj+IQXH2I83aGaqSVpTlXwcigDdjhFBpZj4zkOKVPq+7za2b243oAO1GSWRgcjDZuFyJQXIDvaFhnpcERLpjYQ3yUJ/HhxC5QLdxUPwwlJG3HGxXnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719858305; c=relaxed/simple;
-	bh=vbfWueNOr9tHAjtPV5+kzwg2VA4il/flgFRHmFX8c1M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=r0jf7eNY031xi+wHhCwYZuTXCFZJ8KXkpfkbTB/+nNEcHJiMTqv/uOJJtcvLbU/MIDQnps4nHPdnAuUavrA2iuPZlwGeFj2jCjzsTQoac+1LdW3jQ/pQ4HghNm/SjqWeeur3HzyeU54XfEz51KvwLz3MYYzATTmnO5wiIGnq1iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NbjX/M/W; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719858389; c=relaxed/simple;
+	bh=eJuTrf0oLJxZyj0FJqRF/6p6IZeg+srqP1FrZsdO7Q8=;
+	h=MIME-Version:Content-Type:Date:Message-ID:CC:Subject:From:To:
+	 References:In-Reply-To; b=BE9Aj03HosIM31RW+tvkH9CExX0lde5S1om91+NGoyvCfiHZ3PFV6SZNToCyqWyPiTdFo09IMPn1ZdbmL4FkUsXR8BcQpfQiupL62qDqhrUEXnOIlRnssvtdpt+BB1ivdaEQMYY45oXq5dWBZpo7e03zSCqAI1KVxzU6F8EFYKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Uc5hw9TL; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NbjX/M/W"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719858302;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f9L74R/Nh5UzgxWQDOQ0rotNTE5hRajpeHypxcAqGvM=;
-	b=NbjX/M/WkH/x1Sf+lvK8by4jIh3gd7LVeomudBlp/BPOIOhmUi3XJEyMQ3gXJ43huCPqfl
-	Y+kt2k1S21s1RU/DcIeXkEGDOWRjYHgN1BoSctO1fN49g+BXxIoAgEORF72k73mrUx3JvU
-	RUU9e80ad+It6TyE0aJUhtPuBpv8zD8=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-691-sBLwdqhDNsGo0zw3jZamZg-1; Mon,
- 01 Jul 2024 14:24:58 -0400
-X-MC-Unique: sBLwdqhDNsGo0zw3jZamZg-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 820A619560B3;
-	Mon,  1 Jul 2024 18:24:56 +0000 (UTC)
-Received: from RHTRH0061144 (unknown [10.22.8.184])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 54A4B3000218;
-	Mon,  1 Jul 2024 18:24:53 +0000 (UTC)
-From: Aaron Conole <aconole@redhat.com>
-To: Adrian Moreno <amorenoz@redhat.com>
-Cc: netdev@vger.kernel.org,  echaudro@redhat.com,  horms@kernel.org,
-  i.maximets@ovn.org,  dev@openvswitch.org,  Pravin B Shelar
- <pshelar@ovn.org>,  "David S. Miller" <davem@davemloft.net>,  Eric Dumazet
- <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>,  Paolo Abeni
- <pabeni@redhat.com>,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v7 06/10] net: openvswitch: store sampling
- probability in cb.
-In-Reply-To: <20240630195740.1469727-7-amorenoz@redhat.com> (Adrian Moreno's
-	message of "Sun, 30 Jun 2024 21:57:27 +0200")
-References: <20240630195740.1469727-1-amorenoz@redhat.com>
-	<20240630195740.1469727-7-amorenoz@redhat.com>
-Date: Mon, 01 Jul 2024 14:24:46 -0400
-Message-ID: <f7tjzi5vukx.fsf@redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Uc5hw9TL"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 461IQG9b033443;
+	Mon, 1 Jul 2024 13:26:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1719858376;
+	bh=OTJBK/eXTcbCUlw13jrhouc45oqruLOebA3Tdbxp8MU=;
+	h=Date:CC:Subject:From:To:References:In-Reply-To;
+	b=Uc5hw9TL2yMsW1KDXtOSuNJcTMz6fjJwhzB+cQieBsVQniGiVXovoHeYlQukomA9Q
+	 QEl5X14IQWj/0Z87a6ikTlc4RraEtTN9PTAIAoT/MGSnOzKx40XKTRhMxTCul+wkjU
+	 EYm1yTUUpuN613GEVhfG5CZTM+VpYKdaGPu0P80s=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 461IQG8E056592
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 1 Jul 2024 13:26:16 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 1
+ Jul 2024 13:26:16 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 1 Jul 2024 13:26:16 -0500
+Received: from localhost (rs-desk.dhcp.ti.com [128.247.81.144])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 461IQG2Q073831;
+	Mon, 1 Jul 2024 13:26:16 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Date: Mon, 1 Jul 2024 13:26:16 -0500
+Message-ID: <D2EEWUPE9RAG.26DDBH0DK0OP7@ti.com>
+CC: <praneeth@ti.com>, <a-bhatia1@ti.com>, <j-luthra@ti.com>,
+        <b-brnich@ti.com>, <detheridge@ti.com>, <p-mantena@ti.com>,
+        <vijayp@ti.com>, "Khasim, Syed Mohammed" <khasim@ti.com>
+Subject: Re: [PATCH 0/3] Add global CMA reserve area
+From: Randolph Sapp <rs@ti.com>
+To: Andrew Davis <afd@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Devarsh
+ Thakkar <devarsht@ti.com>, <nm@ti.com>, <kristo@kernel.org>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+X-Mailer: aerc 0.17.0-0-g6ea74eb30457
+References: <20240613150902.2173582-1-devarsht@ti.com>
+ <D1ZXO8F3XN2I.3CTTE245I0TYY@ti.com>
+ <24c0ed06-3c32-4cc3-922c-4717d35a1112@ti.com>
+ <64b78ba2-776c-1de6-4c13-001d11000ff0@ti.com>
+ <D2BSORIL5C7T.3B8EAANVQ7TX5@ti.com>
+ <0ca809d0-3d0f-47d1-b5e7-aa78d65d7917@ti.com>
+ <2f1f25b5-86c1-4a60-8f71-519658d5f88a@ti.com>
+In-Reply-To: <2f1f25b5-86c1-4a60-8f71-519658d5f88a@ti.com>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Adrian Moreno <amorenoz@redhat.com> writes:
-
-> When a packet sample is observed, the sampling rate that was used is
-> important to estimate the real frequency of such event.
+On Mon Jul 1, 2024 at 9:33 AM CDT, Andrew Davis wrote:
+> On 6/30/24 2:09 AM, Vignesh Raghavendra wrote:
+> >=20
+> >=20
+> > On 28/06/24 22:05, Randolph Sapp wrote:
+> >> On Fri Jun 28, 2024 at 10:57 AM CDT, Devarsh Thakkar wrote:
+> >>> Hi Andrew, Vignesh,
+> >>>
+> >>> On 24/06/24 22:03, Andrew Davis wrote:
+> >>>> On 6/14/24 12:58 PM, Randolph Sapp wrote:
+> >>>>> On Thu Jun 13, 2024 at 10:08 AM CDT, Devarsh Thakkar wrote:
+> >>>>>> Add global CMA reserve area for AM62x, AM62A and AM62P SoCs.
+> >>>>>> These SoCs do not have MMU and hence require contiguous memory poo=
+l to
+> >>>>>> support various multimedia use-cases.
+> >>>>>>
+> >>>>>> Brandon Brnich (1):
+> >>>>>>  =C2=A0=C2=A0 arm64: dts: ti: k3-am62p5-sk: Reserve 576 MiB of glo=
+bal CMA
+> >>>>>>
+> >>>>>> Devarsh Thakkar (2):
+> >>>>>>  =C2=A0=C2=A0 arm64: dts: ti: k3-am62x-sk-common: Reserve 128MiB o=
+f global CMA
+> >>>>>>  =C2=A0=C2=A0 arm64: dts: ti: k3-am62a7-sk: Reserve 576MiB of glob=
+al CMA
+> >>>>>>
+> >>>>>>  =C2=A0 arch/arm64/boot/dts/ti/k3-am62a7-sk.dts=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 | 9 +++++++++
+> >>>>>>  =C2=A0 arch/arm64/boot/dts/ti/k3-am62p5-sk.dts=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 | 7 +++++++
+> >>>>>>  =C2=A0 arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi | 8 +++++++=
++
+> >>>>>>  =C2=A0 3 files changed, 24 insertions(+)
+> >>>>>
+> >>>>> I'm still a little torn about putting this allocation into the devi=
+ce tree
+> >>>>> directly as the actual required allocation size depends on the task=
+.
+> >>>>>
+> >>>>
+> >>>> That is the exact reason this does not belong in DT. For everyone *n=
+ot*
+> >>>> using the most extreme case (12x decodes at the same time), this is
+> >>>> all wasted space. If one is running out of CMA, they can add more on
+> >>>> the kernel cmdline.
+> >>>>
+> >>>
+> >>> I disagree with this. The 12x decode for 480p is not an extreme use-c=
+ase this
+> >>> is something VPU is capable to run at optimum frame-rate (12x 1080p i=
+t can't)
+> >>> and as the AM62A7 is meant to be AI + multimedia centric device, per =
+the
+> >>> device definition we were given the requirements to support a list of
+> >>> multimedia use-cases which should work out of box and 12x decode for =
+480p was
+> >>> one of them as device is very much capable of doing that with optimum
+> >>> performance and I don't think it is right to change these requirement=
+s on the fly.
+> >>>
+> >>> The AM62A7 board has 4 GiB of DDR and we have been using this CMA val=
+ue since
+> >>> more than a year, I have never heard anyone complain about out of mem=
+ory or
+> >>> CMA starvation and it suffices to requirements of *most use-cases*, b=
+ut if for
+> >>> some specific use-case it doesn't suffice, user can change it via ker=
+nel cmdline.
+> >>>
+> >>> The kernelcmdline suggestion doesn't suffice out of box experience re=
+quired,
+> >>> we don't want to ask the user to reboot the board everytime they run =
+out of CMA.
+> >>>
+> >>>
+> >>>>> If it's allowed though, this series is fine for introducing those c=
+hanges. This
+> >>>>> uses the long-tested values we've been using on our tree for a bit =
+now. The
+> >>>>> only
+> >>>>> thing that's a little worrying is the missing range definitions for=
+ devices
+> >>>>> with
+> >>>>> more than 32bits of addressable memory as Brandon has pointed out. =
+Once that's
+> >>>>> addressed:
+> >>>>>
+> >>>>> Reviewed-by: Randolph Sapp <rs@ti.com>
+> >>>>>
+> >>>>> Specifying these regions using the kernel cmdline parameter via u-b=
+oot was
+> >>>>> brought up as a potential workaround. This is fine until you get in=
+to distro
+> >>>>> boot methods which will almost certainly attempt to override those.=
+ I don't
+> >>>>> know. Still a little odd. Curious how the community feels about it.
+> >>>>>
+> >>>>> Technically the user or distro can still override it with the cmdli=
+ne parameter
+> >>>>> if necessary, so this may be the best way to have a useful default.
+> >>>>>
+> >>>>
+> >>>
+> >>> Unlike above, this solution is independent of distro as it should be =
+as we
+> >>> want that all the supported multimedia use-cases should work out of b=
+ox. This
+> >>> solution is nothing illegal as CMA region carveouts are not a kernel
+> >>> deprecated feature.
+> >>
+> >> Right. I support this change for at least introducing a usable default=
+. 32M of
+> >> CMA is barely enough to run glmark2 under Weston once everything's up =
+and
+> >> running.
+> >>
+> >> As I said before, the user or distro can still override the dt CMA blo=
+ck with
+> >> the cma kernel parameter if they aren't happy with the default block.
+> >> Unfortunately this is about the only way to have a usable default valu=
+e to fall
+> >> back on.
+> >>
+> >=20
+> >=20
+> > Given the number of SoMs and non TI EVMs that are about to come out wit=
+h
+> > AM62A/P and AM67s, we need to provide a consistent way of being able to
+> > support multimedia IPs out of the box. Modifying cmdline may not always
+> > be feasible given distro defaults don't always provide a way to do so.
+> >=20
 >
-> Store the probability of the parent sample action in the skb's cb area
-> and use it in psample action to pass it down to psample module.
->
-> Acked-by: Eelco Chaudron <echaudro@redhat.com>
-> Reviewed-by: Ilya Maximets <i.maximets@ovn.org>
-> Signed-off-by: Adrian Moreno <amorenoz@redhat.com>
-> ---
+> We need to keep thinking then. I empathize with desire to put
+> configuration in Device Tree. DT feels like a great spot for it,
+> it is ubiquitous on these boards and has a good bit of tooling around
+> it. We are already describing the hardware, why not configure it here
+> too? But the reason we do not want to go down that road is simple:
+> DT takes away use-case flexibility. A lack of flexibility is fine for
+> hardware which is unchanging, but not for configuration.
 
-Reviewed-by: Aaron Conole <aconole@redhat.com>
+I agree with the sentiment here, but this explicit case is an exception. Th=
+is is
+no more than a default value. Userspace can still change this allocation wi=
+th
+the kernel cma parameter. That still takes precedence.
 
->  include/uapi/linux/openvswitch.h |  3 ++-
->  net/openvswitch/actions.c        | 20 +++++++++++++++++---
->  net/openvswitch/datapath.h       |  3 +++
->  net/openvswitch/vport.c          |  1 +
->  4 files changed, 23 insertions(+), 4 deletions(-)
+> Device policy and configuration must be left to userspace.
 >
-> diff --git a/include/uapi/linux/openvswitch.h b/include/uapi/linux/openvswitch.h
-> index 3dd653748725..3a701bd1f31b 100644
-> --- a/include/uapi/linux/openvswitch.h
-> +++ b/include/uapi/linux/openvswitch.h
-> @@ -649,7 +649,8 @@ enum ovs_flow_attr {
->   * Actions are passed as nested attributes.
->   *
->   * Executes the specified actions with the given probability on a per-packet
-> - * basis.
-> + * basis. Nested actions will be able to access the probability value of the
-> + * parent @OVS_ACTION_ATTR_SAMPLE.
->   */
->  enum ovs_sample_attr {
->  	OVS_SAMPLE_ATTR_UNSPEC,
-> diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
-> index a035b7e677dd..34af6bce4085 100644
-> --- a/net/openvswitch/actions.c
-> +++ b/net/openvswitch/actions.c
-> @@ -1048,12 +1048,15 @@ static int sample(struct datapath *dp, struct sk_buff *skb,
->  	struct nlattr *sample_arg;
->  	int rem = nla_len(attr);
->  	const struct sample_arg *arg;
-> +	u32 init_probability;
->  	bool clone_flow_key;
-> +	int err;
->  
->  	/* The first action is always 'OVS_SAMPLE_ATTR_ARG'. */
->  	sample_arg = nla_data(attr);
->  	arg = nla_data(sample_arg);
->  	actions = nla_next(sample_arg, &rem);
-> +	init_probability = OVS_CB(skb)->probability;
->  
->  	if ((arg->probability != U32_MAX) &&
->  	    (!arg->probability || get_random_u32() > arg->probability)) {
-> @@ -1062,9 +1065,16 @@ static int sample(struct datapath *dp, struct sk_buff *skb,
->  		return 0;
->  	}
->  
-> +	OVS_CB(skb)->probability = arg->probability;
-> +
->  	clone_flow_key = !arg->exec;
-> -	return clone_execute(dp, skb, key, 0, actions, rem, last,
-> -			     clone_flow_key);
-> +	err = clone_execute(dp, skb, key, 0, actions, rem, last,
-> +			    clone_flow_key);
-> +
-> +	if (!last)
-> +		OVS_CB(skb)->probability = init_probability;
-> +
-> +	return err;
->  }
->  
->  /* When 'last' is true, clone() should always consume the 'skb'.
-> @@ -1311,6 +1321,7 @@ static void execute_psample(struct datapath *dp, struct sk_buff *skb,
->  	struct psample_group psample_group = {};
->  	struct psample_metadata md = {};
->  	const struct nlattr *a;
-> +	u32 rate;
->  	int rem;
->  
->  	nla_for_each_attr(a, nla_data(attr), nla_len(attr), rem) {
-> @@ -1329,8 +1340,11 @@ static void execute_psample(struct datapath *dp, struct sk_buff *skb,
->  	psample_group.net = ovs_dp_get_net(dp);
->  	md.in_ifindex = OVS_CB(skb)->input_vport->dev->ifindex;
->  	md.trunc_size = skb->len - OVS_CB(skb)->cutlen;
-> +	md.rate_as_probability = 1;
-> +
-> +	rate = OVS_CB(skb)->probability ? OVS_CB(skb)->probability : U32_MAX;
->  
-> -	psample_sample_packet(&psample_group, skb, 0, &md);
-> +	psample_sample_packet(&psample_group, skb, rate, &md);
->  }
->  #else
->  static inline void execute_psample(struct datapath *dp, struct sk_buff *skb,
-> diff --git a/net/openvswitch/datapath.h b/net/openvswitch/datapath.h
-> index 0cd29971a907..9ca6231ea647 100644
-> --- a/net/openvswitch/datapath.h
-> +++ b/net/openvswitch/datapath.h
-> @@ -115,12 +115,15 @@ struct datapath {
->   * fragmented.
->   * @acts_origlen: The netlink size of the flow actions applied to this skb.
->   * @cutlen: The number of bytes from the packet end to be removed.
-> + * @probability: The sampling probability that was applied to this skb; 0 means
-> + * no sampling has occurred; U32_MAX means 100% probability.
->   */
->  struct ovs_skb_cb {
->  	struct vport		*input_vport;
->  	u16			mru;
->  	u16			acts_origlen;
->  	u32			cutlen;
-> +	u32			probability;
->  };
->  #define OVS_CB(skb) ((struct ovs_skb_cb *)(skb)->cb)
->  
-> diff --git a/net/openvswitch/vport.c b/net/openvswitch/vport.c
-> index 972ae01a70f7..8732f6e51ae5 100644
-> --- a/net/openvswitch/vport.c
-> +++ b/net/openvswitch/vport.c
-> @@ -500,6 +500,7 @@ int ovs_vport_receive(struct vport *vport, struct sk_buff *skb,
->  	OVS_CB(skb)->input_vport = vport;
->  	OVS_CB(skb)->mru = 0;
->  	OVS_CB(skb)->cutlen = 0;
-> +	OVS_CB(skb)->probability = 0;
->  	if (unlikely(dev_net(skb->dev) != ovs_dp_get_net(vport->dp))) {
->  		u32 mark;
+> It is not for us to decide how folks should use our hardware, and
+> that is what we are doing when we configure it in DT.
+>
+> For configuration that must happen in early boot before userspace is
+> available (such as kernel stdout and memory carveouts) we have the
+> kernel cmdline. If we find something that cannot be done today though
+> the cmdline, then we should add that support to the cmdline, not
+> give up and just hide the configuration in DT.
+>
+> What this series does is already available on the kernel cmdline.
+> Our bootloader can provide sane defaults on the cmdline today.
+> If the worry is that distros will override this default then
+> go fix those distros.
+
+Our bootloaders doing anything to kernel cmdline parameters is inherently
+non-standard. You just brought up userspace control. They clobber cmdline
+parameters all the time. Unsetting this bootloader value will be the first =
+thing
+they do. This will be done passively, since they normally inject a new
+intermediary boot stage that they can actually control between u-boot and t=
+heir
+kernel.
+
+- Randolph
+
+> > So I am inclined to queue first 2 patches unless there is another way t
+> > achieve this.
+> >=20
+>
+> Our lack of creativity in finding better solutions to this issue is
+> not an excuse to add more junk to DT..
+>
+> Andrew
+>
+> > [...]
+> >=20
 
