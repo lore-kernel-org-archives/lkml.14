@@ -1,78 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769DE16191A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DA1161916;
 	Mon,  1 Jul 2024 14:18:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719843484; cv=none; b=Hk24Alm8aA/vD6mGfUa4Zv6VjWNd9EWNk3YClr2VNRkW1OL5MhBrZwrOlTJ8v6N7nSCHpaMu44p2DkfPKRJT7jr/M/0MjPQmS5qkJCd65/RI0W9/lXcQlcLMAOuuhYz/XPlGc+Hd+tF7GzVU6h+8er1njgauNP8MtzlG9K/7aoc=
+	t=1719843485; cv=none; b=kXuOmqpy0s0CIc2KHh/Huc/kQZKEd+q9XpmYTPSTub8TNrZo/PTsoRDmWKAxy6KCvKDRVDqIkUEY+DqL2TYWzGtcU4F0jKruUhFrryU4SNTnBELkDMLPIFFCrjJ04VT8GJ/VChgmO7uL6SYz0g05AZ3VEVDdt1pMIGeqpMCf1/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719843484; c=relaxed/simple;
-	bh=KNdmg62H0LvKkwIT08kVZT9u8KwP64SOz7rDR0b4SFE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EjxMYc7B+OykxRJLlnhBT++GVZXdPGe3g/shBf22imCp2/p/UJwADzgxzceU1V7nYLfkaDx+upxg4Auwg8V4x/ZAZ9zH3S47O50qOF+8OpfGI2Owjh7gdAqeoSlw0oOH2yaxO25Nc2x4NXjcNltUmcycS/gSB04FHGpG9W9YSvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C6DydJbO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719843485; c=relaxed/simple;
+	bh=YlgxvvMKuYOb7VrlFEGtat9oTHTp4z22Xsbw0NWVNM4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lzOJahK8Ryug7b1hgiRzUHBes3Gq+K3R/kBuJoIl4MhAnP1Rx2C6m2xmePjAc5QAJYB2uSQPNRmBgtdY/Uq2dtd6TPW6tpNZyROP72GFk995/9gQCsfXKTcyRYLNNEf7qWLbUAvicKjxfJlKatrFZEIJzmjHClDIZF30iMe2OLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sw0rZaxq; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C6DydJbO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1D8FC116B1;
-	Mon,  1 Jul 2024 14:18:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719843484;
-	bh=KNdmg62H0LvKkwIT08kVZT9u8KwP64SOz7rDR0b4SFE=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=C6DydJbOJaYlZYklePBF3Mo12au5Yjdt2qvyRaArGosBk6V1aQWD1+mPpmyoTD7aa
-	 H142OWpuDA0wW/Dq8pJx0lIsbaY5LJPRC2KMfrASntlF0W5Ey5houV2xjJu0dhsrvW
-	 +sXSmJvCd3IHLyFJj4Nnlw391xuhO1uL0MIi/9tGYGtTxaBbkywvXcIDF/AHnQecgz
-	 1A0BCNmhWgAA0p33tZC3bVduW66GyodzrYTgl+hk2HMiDkNf40k/Mo1bBHdfEpXa06
-	 Z++U+RlDRgkcd7AFt4mL4ZcuHCV++rBaKxb6SQK7f+vXdTzzO6KCQF+ilHSTFxeHLp
-	 s/o2L9gRqQkSQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 94168CE0AD3; Mon,  1 Jul 2024 07:18:03 -0700 (PDT)
-Date: Mon, 1 Jul 2024 07:18:03 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Matthew Wilcox <willy@infradead.org>, kernel-janitors@vger.kernel.org,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
-	maple-tree@lists.infradead.org
-Subject: Re: [v2 2/5] rosebush: Add new data structure
-Message-ID: <c550c690-7555-4ccd-bf8a-8c54657aea3c@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240625211803.2750563-3-willy@infradead.org>
- <52d370b2-d82a-4629-918a-128fc7bf7ff8@web.de>
- <ZoIHLiTvNm0IE0CD@casper.infradead.org>
- <8ced519f-47f2-4a74-be6d-4be5958009ba@web.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sw0rZaxq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719843485; x=1751379485;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=YlgxvvMKuYOb7VrlFEGtat9oTHTp4z22Xsbw0NWVNM4=;
+  b=Sw0rZaxqeatfHNwMIrqkyYhFJSaMgveZt0bGUPY4OZCEjWyObaAB4Q5w
+   qChmSJlJkL5ub1lsspL04zNruWXWVpbLiv5YjdW1boPrVL2KpoiHp+HxV
+   ggkO0Nw6PIZkuAOEaExO7VdLQqwl4Q2peivYbheKQygSUjYQI8+i4vrtJ
+   LDZwyVriepUYOhwH8t9vfc/Cjl967SPjvoFh0nCVhXcsamj5W7/JONXHL
+   DlbBzdAmN56AvX7uXIINwpBr0z58hHkuTAToBrTvonwqEkkuPyOdT/Gsy
+   x3TvHTtyEqAv4knVt2pZjqyJJWhaM6GPeigUWl2CGtsxfhn+iJa/LJ3tj
+   g==;
+X-CSE-ConnectionGUID: grV0BHZHR7qG/+hedVLCYA==
+X-CSE-MsgGUID: qTZwMAtCS/irFeIrVoKmEw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="34419572"
+X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
+   d="scan'208";a="34419572"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 07:18:04 -0700
+X-CSE-ConnectionGUID: zEMPwDC7QyW97ghOuiw0bg==
+X-CSE-MsgGUID: HjZ79eMST7CYr1uT7liV1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
+   d="scan'208";a="50414737"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO wieczorr-mobl1.intel.com) ([10.245.244.21])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 07:18:02 -0700
+From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+To: fenghua.yu@intel.com,
+	reinette.chatre@intel.com,
+	shuah@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	tony.luck@intel.com
+Subject: [PATCH v3 0/2] selftests/resctrl: SNC kernel support discovery
+Date: Mon,  1 Jul 2024 16:17:07 +0200
+Message-ID: <cover.1719842207.git.maciej.wieczor-retman@intel.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8ced519f-47f2-4a74-be6d-4be5958009ba@web.de>
 
-On Mon, Jul 01, 2024 at 07:21:18AM +0200, Markus Elfring wrote:
-> >> Under which circumstances would you become interested to apply a statement
-> >> like “guard(rcu)();”?
-> >
-> > Under no circumstances.
-> 
-> I imagine that further contributors would like to discuss collateral evolution
-> also according to the support for applications of scope-based resource management.
-> https://elixir.bootlin.com/linux/v6.10-rc6/source/include/linux/rcupdate.h#L1093
-> 
-> See also the commit 80cd613a9ae091dbf52e27a409d58da988ffc8f3 ("rcu:
-> Mollify sparse with RCU guard") from 2024-04-15.
+Changes v3:
+- Reworked patch 2.
+- Changed minor things in patch 1 like function name and made
+  corrections to the patch message.
 
-Although the guard(rcu)() statement is very helpful in some circumstances
-and is seeing increasing use, it is not free of downsides in a number
-of situations.  For but one example, Matthew might expect that partially
-overlapping critical sections will be needed, which would rule out use of
-guards on one or the other of those two critical sections.
+Changes v2:
+- Removed patches 2 and 3 since now this part will be supported by the
+  kernel.
 
-							Thanx, Paul
+Sub-Numa Clustering (SNC) allows splitting CPU cores, caches and memory
+into multiple NUMA nodes. When enabled, NUMA-aware applications can
+achieve better performance on bigger server platforms.
+
+SNC support in the kernel is currently in review [1]. With SNC enabled
+and kernel support in place all the tests will function normally (aside
+from effective cache size). There might be a problem when SNC is enabled
+but the system is still using an older kernel version without SNC
+support. Currently the only message displayed in that situation is a
+guess that SNC might be enabled and is causing issues. That message also
+is displayed whenever the test fails on an Intel platform.
+
+Add a mechanism to discover kernel support for SNC which will add more
+meaning and certainty to the error message.
+
+Add runtime SNC mode detection and verify how reliable that information
+is.
+
+Series was tested on Ice Lake server platforms with SNC disabled, SNC-2
+and SNC-4. The tests were also ran with and without kernel support for
+SNC.
+
+Series applies cleanly on kselftest/next.
+
+[1] https://lore.kernel.org/all/20240628215619.76401-1-tony.luck@intel.com/
+
+Previous versions of this series:
+[v1] https://lore.kernel.org/all/cover.1709721159.git.maciej.wieczor-retman@intel.com/
+[v2] https://lore.kernel.org/all/cover.1715769576.git.maciej.wieczor-retman@intel.com/
+
+Maciej Wieczor-Retman (2):
+  selftests/resctrl: Adjust effective L3 cache size with SNC enabled
+  selftests/resctrl: Adjust SNC support messages
+
+ tools/testing/selftests/resctrl/cache.c       |   3 +
+ tools/testing/selftests/resctrl/cmt_test.c    |   4 +-
+ tools/testing/selftests/resctrl/mba_test.c    |   4 +
+ tools/testing/selftests/resctrl/mbm_test.c    |   6 +-
+ tools/testing/selftests/resctrl/resctrl.h     |   8 +
+ .../testing/selftests/resctrl/resctrl_tests.c |   7 +
+ tools/testing/selftests/resctrl/resctrlfs.c   | 138 ++++++++++++++++++
+ 7 files changed, 166 insertions(+), 4 deletions(-)
+
+-- 
+2.45.2
+
