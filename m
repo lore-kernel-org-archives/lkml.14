@@ -1,59 +1,66 @@
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E594B4EB45;
-	Mon,  1 Jul 2024 06:56:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22F310A0E
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 06:57:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719817015; cv=none; b=emcwZfNxd9wtVrEiD7R5MH1Rkem1i2XPG2d75ppSOglmGv7ksMU248Fy+3Xe4hUT5QX8KNK3rmMMFyyGGVzFanf0GDCIx2Mq0XSaMJa9R5AgY1DMCLk4b74Ku9jAFknao59/MHrciW0FAocvvH0+URgoxgeabGwDbK0hDChJCts=
+	t=1719817064; cv=none; b=Llhj1z/PMie6JjycdbTLa8l7KZo9/KPo8YZ5sz0XGHHsrBw51KaQ4CVmaaeMU7tIEUUTJOa9B9QKr6Lm3Mej7ThLTaWUiMthbJkVsf3UM/7q1PngI6RebCi7MLDmDJTWlw+e+hbMtTcOy2wUDPeKq/gG0oEtokln9xz8bd5rtEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719817015; c=relaxed/simple;
-	bh=+ntPJT+r5ArrobOCjTljPY5X1luO0LW3vJ9fSfFxWI8=;
+	s=arc-20240116; t=1719817064; c=relaxed/simple;
+	bh=8DfI1H8UonA6NomhsPjUPjeq10/x6VChoMolak6uzSY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=giGNBuUNkHGvoE61BDSrahcjMsybYcZnbeOkjiSsmQCMpK+UKxY2n4pTGgy7v76phfEx2IkWrEhnIhVtE9BX0a2xKAWp9uZIL488eWHFgeeyatkfl6IJJw/YK4fLga98UXr5mRoCQMpra+OkBD3JiyCbzkpsc+0SFj675BdbJbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h87V073D; arc=none smtp.client-ip=209.85.167.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=SU+c3fySIkKFBb9AgMuRTBml6k9dQ+OE6BM9OTv+/m4xZNNwYIYRJnBECAdgtbvxDKcF/4o3QbsVGxhBFLbFjVMVml+8i3a2PQHR8CmOGm8AxZ5I2KmXBiOmCvAiD3Yrwy+BLTGQ08+hJPRi7ql1E5lMwOXpGVYYFJkXWTcRZyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OzK1/tut; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h87V073D"
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3c9cc681ee4so1825102b6e.0;
-        Sun, 30 Jun 2024 23:56:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719817013; x=1720421813; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+ntPJT+r5ArrobOCjTljPY5X1luO0LW3vJ9fSfFxWI8=;
-        b=h87V073DHZRX2oFduFxZYCFGk7+mB8WXTR6EMqgiVXed0oZKwY7NV9n12f4PcTZjTt
-         1qUiLnoEKMyHGU7c87xivHK8qfZHFlitZV82mZU88kADdg0+ninBJX7xx/jUautog4uM
-         LrAO4cC25E8bjW7tvTAdkuJFB/s2SJLH0LEuVDUJEx+Ar741ciX9f8mikvWX9h3LpXG8
-         PodP5K232B74RRk6YJyNryCxVsDGXMF6406PoRyj9BtEtIbdlZ4z/w48+bZfTX8PUMKM
-         8D33in+zJXtyNUWWor10WGa49bdmpOk3lqCu3lBVWFEnufqksNhX5dbpGBodqFv0tTqV
-         jhLQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OzK1/tut"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719817059;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=IpTSHvGGLKrRIbXymuTxT7TJOOuk+NtEfOPydwUddDU=;
+	b=OzK1/tutq4Bxy53Z8xF2Jvci19E7RMlvom83Oj92CI/oW4FQyOASb3OZJKSGDTNqlUG77m
+	eMs7uyDF9+RovL1v0YQ1iVGiOibfGwZd7zqn9YLbb5VbX83X5TXw8xG0C3MVVCfNa4RHLi
+	5qGYgDWyn1FK2bvuDB6fsYUXSfPeuL8=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-150-voQJEwLsM_-GYDxXX9_L4A-1; Mon, 01 Jul 2024 02:57:36 -0400
+X-MC-Unique: voQJEwLsM_-GYDxXX9_L4A-1
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2ec584f36bfso24293121fa.3
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Jun 2024 23:57:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719817013; x=1720421813;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+ntPJT+r5ArrobOCjTljPY5X1luO0LW3vJ9fSfFxWI8=;
-        b=iSeiJGVe/g7BpSeldaO9IfCKoOPmz3EN124grAiSGwqlaJuhpkinazU2OUdM2tG4nR
-         lrdhungC9C5QWPkXqcEoMS3T8haBiq3wtp19vFdyuHPdlfUQo3dHd2uon9snka1XGeNw
-         a4/V4qHOp2X5n0z4Rl4e+sinDzXKYnbAnhdzGuIrHsMiC5hUy2kqRzeNR7IxEnGZXCvs
-         dGnxywk14L9+m9pVIjkWhnV+4vruDqSwRT7E8W2Tc6ibiz96uFJAaLGgNgnPlvevX5dd
-         u8wLeg+10vlvpufgRfpuoH+cHaNxwC/dz6m/uVAlNviPBIJL78gmkUSohrewFpdv6Tv9
-         nb3w==
-X-Forwarded-Encrypted: i=1; AJvYcCW/a6FhpDOITszcWlOrIG0RvMxSybkF41+KLSzn4HuwKCUSiZJZmMbSOxA86eSBkDRkugYHGtO5bMrAEJX+qFzeO9skno6ud9auzM9cXifqq3+bbSCY/DeAI3cvP3wpXTEPmMPnza7lQ3OUWpr3NqURU2x06nOiKeH9WBkE0V22Txjwxw==
-X-Gm-Message-State: AOJu0YymkSzx8Vz8i6N/pcnSX2S9aDRMsDCy7u9nJuIHqTR9sh9LLTsv
-	cQEMMgFT9TmE7ScqIQ0qcOuUIMWp/jXcYhK4VZDktxhikaRRAgeY
-X-Google-Smtp-Source: AGHT+IEpqIOCW/jccTj/xYWZV3r4E+LFfyzOwkCVx0hHDZpgZCno30MYJoir9PNX4x8DmW0+NjCHRg==
-X-Received: by 2002:a05:6808:f15:b0:3d6:2d45:a791 with SMTP id 5614622812f47-3d6b3c86bbbmr8659230b6e.32.1719817012691;
-        Sun, 30 Jun 2024 23:56:52 -0700 (PDT)
-Received: from [172.19.1.51] (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-708044b1112sm5715670b3a.182.2024.06.30.23.56.49
+        d=1e100.net; s=20230601; t=1719817054; x=1720421854;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=IpTSHvGGLKrRIbXymuTxT7TJOOuk+NtEfOPydwUddDU=;
+        b=ezwIj9xZtFA31OCjLnp3AMPb8b4jov5vHhKenW4eyoWzd4MksrbvpmIQh6EWF/boAl
+         bV+rn4Advcx11oSk7xF2pS9WuRWG7Ehv9uq16aA65wVdrUiBTIQxNCPNNgVLO2tvuMch
+         e1JJJZz47u/xJwx7iULAp5lM0jSpJ+A0wo6Et5Lc/9NvExxauhb0kPapFghdlka7n26L
+         HiFi1+cWoUNl1r4+8n1VLVzzJjT6Gs+mhT5bijCrUKIftN8KKSHWvQj2yxeTbDxQCptc
+         VJTdQjjZPRr0jKwf/p8QYep7MZnjP3pJYKXRjqONhtCEPSZ9yBid8vWZohS5iDyGXSyZ
+         Zskw==
+X-Forwarded-Encrypted: i=1; AJvYcCVQGA3NXIOjBgBgMh5OcT4iyLsE0nthDK/cczhLDOujLntkNd+JYijmWWrnoPslyP4sZ5S9Re44QxS2R+EQyi0NhcF7x5BIV0YXzph9
+X-Gm-Message-State: AOJu0YzbqR0Gs6slH8EC/g16tywjSvJrStKQAikRt2rWbcOOFITQhAqc
+	kZCRihjISeSiFJyj0k/uBibSaIbOoHJmSZGE7m7Qywk8heUrni3BxnVnIAh5yriKqfMjBUgm3sj
+	gIGjYjdXvteMeUEdVpaPvmA3kIQd5nE4pX4s+NimwCJalHp/KEhDiU8GZmdsbDA==
+X-Received: by 2002:a2e:9556:0:b0:2ec:58e8:d7a2 with SMTP id 38308e7fff4ca-2ee5e359092mr25084501fa.16.1719817053956;
+        Sun, 30 Jun 2024 23:57:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF/HNWdb4R7HyFPm87+8vcgtMUhbGbar8AL+VQEjwkzMxx2hDvAu8eV7BURsrmPE30qqdiZcw==
+X-Received: by 2002:a2e:9556:0:b0:2ec:58e8:d7a2 with SMTP id 38308e7fff4ca-2ee5e359092mr25084441fa.16.1719817053536;
+        Sun, 30 Jun 2024 23:57:33 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c72e:2200:7ed7:c239:d423:3b31? (p200300cbc72e22007ed7c239d4233b31.dip0.t-ipconnect.de. [2003:cb:c72e:2200:7ed7:c239:d423:3b31])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0e1345sm9105356f8f.54.2024.06.30.23.57.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 Jun 2024 23:56:52 -0700 (PDT)
-Message-ID: <747c568b-6934-40dc-90d6-386fd1e0e795@gmail.com>
-Date: Mon, 1 Jul 2024 14:56:47 +0800
+        Sun, 30 Jun 2024 23:57:33 -0700 (PDT)
+Message-ID: <1bf214bb-86a7-4f73-a839-39a4b37bc04a@redhat.com>
+Date: Mon, 1 Jul 2024 08:57:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,58 +68,112 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] dt-bindings: mmc: nuvoton,ma35d1-sdhci: Document
- MA35D1 SDHCI controller
-To: Krzysztof Kozlowski <krzk@kernel.org>, ulf.hansson@linaro.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- adrian.hunter@intel.com, p.zabel@pengutronix.de, pbrobinson@gmail.com,
- serghox@gmail.com, mcgrof@kernel.org,
- prabhakar.mahadev-lad.rj@bp.renesas.com, forbidden405@outlook.com,
- tmaimon77@gmail.com, andy.shevchenko@gmail.com,
- linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: ychuang3@nuvoton.com, schung@nuvoton.com
-References: <20240701003913.729428-1-shanchun1218@gmail.com>
- <20240701003913.729428-2-shanchun1218@gmail.com>
- <e02dc084-1e69-4231-b191-3605c68b53f4@kernel.org>
+Subject: Re: [PATCH] support "THPeligible" semantics for mTHP with anonymous
+ shmem
+To: Bang Li <libang.li@antgroup.com>, hughd@google.com,
+ akpm@linux-foundation.org
+Cc: ryan.roberts@arm.com, wangkefeng.wang@huawei.com,
+ baolin.wang@linux.alibaba.com, ziy@nvidia.com, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org
+References: <20240628104926.34209-1-libang.li@antgroup.com>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-From: Shan-Chun Hung <shanchun1218@gmail.com>
-In-Reply-To: <e02dc084-1e69-4231-b191-3605c68b53f4@kernel.org>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240628104926.34209-1-libang.li@antgroup.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Dear Krzysztof,
+On 28.06.24 12:49, Bang Li wrote:
+> After the commit 7fb1b252afb5 ("mm: shmem: add mTHP support for
+> anonymous shmem"), we can configure different policies through
+> the multi-size THP sysfs interface for anonymous shmem. But
+> currently "THPeligible" indicates only whether the mapping is
+> eligible for allocating THP-pages as well as the THP is PMD
+> mappable or not for anonymous shmem, we need to support semantics
+> for mTHP with anonymous shmem similar to those for mTHP with
+> anonymous memory.
+> 
+> Signed-off-by: Bang Li <libang.li@antgroup.com>
+> ---
+>   fs/proc/task_mmu.c      | 10 +++++++---
+>   include/linux/huge_mm.h | 11 +++++++++++
+>   mm/shmem.c              |  9 +--------
+>   3 files changed, 19 insertions(+), 11 deletions(-)
+> 
+> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+> index 93fb2c61b154..09b5db356886 100644
+> --- a/fs/proc/task_mmu.c
+> +++ b/fs/proc/task_mmu.c
+> @@ -870,6 +870,7 @@ static int show_smap(struct seq_file *m, void *v)
+>   {
+>   	struct vm_area_struct *vma = v;
+>   	struct mem_size_stats mss = {};
+> +	bool thp_eligible;
+>   
+>   	smap_gather_stats(vma, &mss, 0);
+>   
+> @@ -882,9 +883,12 @@ static int show_smap(struct seq_file *m, void *v)
+>   
+>   	__show_smap(m, &mss, false);
+>   
+> -	seq_printf(m, "THPeligible:    %8u\n",
+> -		   !!thp_vma_allowable_orders(vma, vma->vm_flags,
+> -			   TVA_SMAPS | TVA_ENFORCE_SYSFS, THP_ORDERS_ALL));
+> +	thp_eligible = !!thp_vma_allowable_orders(vma, vma->vm_flags,
+> +						TVA_SMAPS | TVA_ENFORCE_SYSFS, THP_ORDERS_ALL);
+> +	if (vma_is_anon_shmem(vma))
+> +		thp_eligible = !!shmem_allowable_huge_orders(file_inode(vma->vm_file),
+> +							vma, vma->vm_pgoff, thp_eligible);
 
-Thanks for your review.
+I would have thought the correct fix is to return the correct result 
+from thp_vma_allowable_orders().
 
-I'm sorry, I just realized I missed an important letter.
+-- 
+Cheers,
 
-I will drop status = "disabled" in the next version.
-
-> On 01/07/2024 02:39, Shan-Chun Hung wrote:
->> Add binding for Nuvoton MA35D1 SDHCI controller.
->>
->> Signed-off-by: Shan-Chun Hung <shanchun1218@gmail.com>
-> You ignored comment third time.
->
-> NAK.
->
-> <form letter>
-> This is a friendly reminder during the review process.
->
-> It seems my or other reviewer's previous comments were not fully
-> addressed. Maybe the feedback got lost between the quotes, maybe you
-> just forgot to apply it. Please go back to the previous discussion and
-> either implement all requested changes or keep discussing them.
->
-> Thank you.
-> </form letter>
->
->
-> Best regards,
-> Krzysztof
-
-Best Regards,
-
-Shan-Chun
+David / dhildenb
 
