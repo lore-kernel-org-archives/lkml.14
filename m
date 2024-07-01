@@ -1,73 +1,103 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA22C14B08C;
-	Mon,  1 Jul 2024 12:00:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8595514D2B4;
+	Mon,  1 Jul 2024 12:00:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719835221; cv=none; b=f8zuPPsxXYSUbhGGzoSbYHkfpCPmmsJIPBjet8l8TcsCEHqRtUWACnMxJUL4NR4pFvHdYGysE8zfN4e9Be81da5gtK7SEJDz9dGnY9G0NxQ7Tw3Ca3f/FYsQzd+FlbXb9XSHSBBq+dJe1Ib8Y1TXSJrouvbZulKZP4ck1ckTes8=
+	t=1719835223; cv=none; b=Zz8MhL2GtBW5iUTamLu7g85ykc6q/XH0WoBnW73Sp636bioh1WvHCCoij3r2L/kx0LgU4lcT0XyxDWvgi7E5K3sUXtDVopkupXDC7o1NK5rPMY5sYvI2TiqafIt+Quztkk8Kwy0niIGfHoyfpCsybmDTL7wudBrfkL9q6Xfq+DA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719835221; c=relaxed/simple;
-	bh=v+TJRSFG6vtG/HKelyZ/LwaHaHnu+Zm9P7RCd+736Vc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YwcPjtwZgj7YziL5JV3wYrYAhFV5ZIDlp9amNI6rMik5d526TsEcBHQ0SRVG6mNGsj6Pzb4HWXp45gRKhCHRn8t/brDINDecDxTds+beNuYWiRaveuwun4tzRk+1IC94qCoh/Bs0aYXp/oknLrZnHwBtKR13mfmscfO+ql7t5oI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JVny6elc; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JVny6elc"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 371C16000B;
-	Mon,  1 Jul 2024 12:00:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1719835211;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+aHAgr1AUMIYTiMO4TzrlpHUTP45cb4Qfb4xfsok78g=;
-	b=JVny6elc1jgoGI4XXcp9685XOb/1WhzbIDIqMMVc8bmAiIXiULq08TmGFtQvJp6gRMphnh
-	P6hHzN7etB6rZhYkf2U+D35pCBwZvmg7GTsmTSWciYIkcB74sCTUx83yUG03A/1vi9ExVA
-	aiL2O8EQgCnssKJxeq8gpmyS5gg/Bd/7db5D4o2EmM+tc7i99XQ8UULkj1MsIpOzgGfegL
-	WbM8DxJWT/KeJu8hOpnyfJeOIyHv9N3S6YEyFyuu2DKJM9wmRcY8/F8lL9i5ZThzOxEkSW
-	oBTrUiA9Xdt0eVHPrcXgQ1tTAsU0+qgLkO2x1eXmEyYgdUI94jIuEC9IX27K4A==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Jeff Johnson <quic_jjohnson@quicinc.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>
-Cc: linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] mtd: add missing MODULE_DESCRIPTION() macros
-Date: Mon,  1 Jul 2024 14:00:07 +0200
-Message-Id: <20240701120007.525382-1-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240610-md-drivers-mtd-v1-1-0f59183e4005@quicinc.com>
-References: 
+	s=arc-20240116; t=1719835223; c=relaxed/simple;
+	bh=lL6XwdZJ4/NSnyTZr5wjeCiLPkV47JPaGNNKpbRUVio=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=X+x5765u2/qSHqEp0aGREhRd2klF1KhqygVhNKDldCiO0OGc9GuIwn3FuQkCrOatlRdGCsJKxQiW0c/YcTu+SWD12j8rsGPPulK8YPZnntx4UFVcYpgeYFM5RbjsVURn1kz0lmxJf2R4O3pq5RMBAMRks9TDkTmFx4ufCeU6pMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 461BxvDoB3806849, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/3.02/5.92) with ESMTPS id 461BxvDoB3806849
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 1 Jul 2024 19:59:57 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 1 Jul 2024 19:59:58 +0800
+Received: from RTDOMAIN (172.21.210.160) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 1 Jul
+ 2024 19:59:57 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
+        <rkannoth@marvell.com>, <jdamato@fastly.com>, <pkshih@realtek.com>,
+        <larry.chiu@realtek.com>, "Justin
+ Lai" <justinlai0215@realtek.com>
+Subject: [PATCH net-next v22 12/13] realtek: Update the Makefile and Kconfig in the realtek folder
+Date: Mon, 1 Jul 2024 19:54:02 +0800
+Message-ID: <20240701115403.7087-13-justinlai0215@realtek.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240701115403.7087-1-justinlai0215@realtek.com>
+References: <20240701115403.7087-1-justinlai0215@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: b'f32ded4b55753131272129c58e743d175d0a3c7e'
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-On Tue, 2024-06-11 at 05:07:13 UTC, Jeff Johnson wrote:
-> With ARCH=x86, make allmodconfig && make W=1 C=1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/parsers/brcm_u-boot.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/parsers/tplink_safeloader.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/chips/cfi_util.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/chips/cfi_cmdset_0020.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/maps/map_funcs.o
-> 
-> Add the missing invocations of the MODULE_DESCRIPTION() macro.
-> 
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-> Acked-by: Vignesh Raghavendra <vigneshr@ti.com>
+1. Add the RTASE entry in the Kconfig.
+2. Add the CONFIG_RTASE entry in the Makefile.
 
-Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git mtd/next, thanks.
+Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+---
+ drivers/net/ethernet/realtek/Kconfig  | 19 +++++++++++++++++++
+ drivers/net/ethernet/realtek/Makefile |  1 +
+ 2 files changed, 20 insertions(+)
 
-Miquel
+diff --git a/drivers/net/ethernet/realtek/Kconfig b/drivers/net/ethernet/realtek/Kconfig
+index 03015b665f4e..8a8ea51c639e 100644
+--- a/drivers/net/ethernet/realtek/Kconfig
++++ b/drivers/net/ethernet/realtek/Kconfig
+@@ -120,4 +120,23 @@ config R8169_LEDS
+ 	  Optional support for controlling the NIC LED's with the netdev
+ 	  LED trigger.
+ 
++config RTASE
++	tristate "Realtek Automotive Switch 9054/9068/9072/9075/9068/9071 PCIe Interface support"
++	depends on PCI
++	select CRC32
++	select PAGE_POOL
++	help
++	  Say Y here and it will be compiled and linked with the kernel
++	  if you have a Realtek Ethernet adapter belonging to the
++	  following families:
++	  RTL9054 5GBit Ethernet
++	  RTL9068 5GBit Ethernet
++	  RTL9072 5GBit Ethernet
++	  RTL9075 5GBit Ethernet
++	  RTL9068 5GBit Ethernet
++	  RTL9071 5GBit Ethernet
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called rtase. This is recommended.
++
+ endif # NET_VENDOR_REALTEK
+diff --git a/drivers/net/ethernet/realtek/Makefile b/drivers/net/ethernet/realtek/Makefile
+index 635491d8826e..046adf503ff4 100644
+--- a/drivers/net/ethernet/realtek/Makefile
++++ b/drivers/net/ethernet/realtek/Makefile
+@@ -9,3 +9,4 @@ obj-$(CONFIG_ATP) += atp.o
+ r8169-y += r8169_main.o r8169_firmware.o r8169_phy_config.o
+ r8169-$(CONFIG_R8169_LEDS) += r8169_leds.o
+ obj-$(CONFIG_R8169) += r8169.o
++obj-$(CONFIG_RTASE) += rtase/
+-- 
+2.34.1
+
