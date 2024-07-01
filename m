@@ -1,77 +1,47 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4341A16DC18
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 16:38:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B751016D9AB;
+	Mon,  1 Jul 2024 16:40:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719851929; cv=none; b=d91s3nPebDp7uvqOLR+xdzn7tLIsrj/ZCHgS5KN1Bod1n7gfX1/Jxg8L7q91BAMHkaEcKp39oPvocUvrvWXDgKijK5t3Sf4dLro+p+/9pMH5yoNJjD93ICcs2kBTyxPwTbNWieBelL+egj1GrBzof2gIFQ59ZItgocRdwBoBivE=
+	t=1719852035; cv=none; b=s57wvG9vQ2f4kizdws6oMbamC4Tt3e5WrSmU1SB9WrIcS/CNKOr474pEf+Sw7qF4HBfnSAjz3315DoXjPDRF3wDI4ZMlueEuUfTo0X5VTcADIRfluhV3Qt2T11ace+QiCPM8w9MzpHp7un6gOMwiUbEErJlOs/Y9xrxAoxygl30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719851929; c=relaxed/simple;
-	bh=0b7GgSUI0eaO01MBB0nXBh/uhDFmkdDbzFFrkkaPLGg=;
+	s=arc-20240116; t=1719852035; c=relaxed/simple;
+	bh=InQxmdhcbdfStQupraNJHb78LhJpdvpvopFz87PBFRA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rTXOaFto5Ru5DeFFksK/Jqysig6xPwUYSQE9jG0u3iwS3k3dcmRt7jVlRoNfnKUC6rFO3tqsRBFkPB2BefkUlkl0VL5anxfMozsjNbkNPEZ/7AlaMcw/igexDgezL5Gyza2clq0ZrT/HpRmksSpCmNmAGwEqAbDBXUP7idNHK/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y642MEww; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=bcbEGiLgBvE7tn8v6X8YdUXWeZzyFOhjAKgaprLXy0H1i+5Ne6ZS1OVnIRKhtnm8CgirKiUSCrh+IVX20FGVD+pHcBFwMsZacEO4WxoVRtMG3+Tkve50FUn5IyELJBb/e9o6O9E3yXK3CX2KzxU4cEzUX7g3MNKL6UaOXIytLog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=0rtPCNzx; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y642MEww"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-707f9c3bd02so2006022b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 09:38:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719851926; x=1720456726; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hNYjJKW2jt8iaEsXSmdf0KI6tUTkldXsy2itazLTZ+0=;
-        b=y642MEww6iDrivxrs4wcxpJnjBHGw8CuSQqqOEzp7WhHLkzBJ6MRQH94x3FFOBZYO7
-         /72FUlfsLCjk2ETrjytYwEDnbDTafgbl1zoIP4gDBFHH+v/aoiLuFCY8TbgaLy4NFJ+h
-         emVPnhsBlKfI9V514uX0QvAuds2V0NXkJX/JhSE46cJGU2C/ZjSbVBhkMok3m/I2Ei6G
-         zbaEI64POA2Rcd6WEJoM5/9Cc4nn2tdDpLKCVt6MxdxT6OhBR9Dji+iZqHpZ8iPuTZV4
-         Bmgm+qw2eKESMPDADDmbZKi/xyUdYkkKZ+rZdDOFKrPKmsRRqDdStc0VdHccsdHUmx2m
-         gjgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719851926; x=1720456726;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hNYjJKW2jt8iaEsXSmdf0KI6tUTkldXsy2itazLTZ+0=;
-        b=uYWhy8tgabLVly5L45qacdtjN+Sy6uqgRXGoDTMTagQcj/FFap6bhX8M5nTgo3v3ns
-         2yrdubEBcj+iI8nBbhSGjYa2Va7yk7oemOPo71im4zuBDcQCcKGyBhkgZJWffYN52f32
-         BPljjcKdWOI+V8hnvGovgsVRU8rH2yxhYMItMOV80zSxxipdvvPYE42w5UPr04l+y7EE
-         vlVQXtZvLddVQtPVWkQH4iNtUuX6YEb8Nr7MFwypbErjVFumfJT8oDb1o69KfQhYpfQy
-         qzUVKqqk6gEFvQ/5bmKfxaKjpEFADjMsUrrZ5UlD24tjT9OZ4dKQf/pizxFRzVpdmqw1
-         GpXA==
-X-Forwarded-Encrypted: i=1; AJvYcCXIuckHyPsLIw+CT/g17uWe3Vf1f+seVXVw+7wym/PaKh/GmirUjXBNk1/QXF5WxA4DTJVG+akIAfHyP3TdCAZHUstqzXNKoi2UIWf2
-X-Gm-Message-State: AOJu0YyF0ULUK7+Yjiaye7oc3yhhR02EdoS+z/UfJPl/ck7aQxWODYQZ
-	cArhk2ht6TiOYs1DE94jd67AtslmktRQ/fs/sqh+xdc15lD6+IW0UJYx004w2aM=
-X-Google-Smtp-Source: AGHT+IGc+D4Kly/VppZGK/Z1ZC7dkWa/VVh5diZ2R4Kt/mwAbmpm/6oFFdZKNY8WdAVVVUZU4t+S3w==
-X-Received: by 2002:a05:6a21:789f:b0:1be:c59a:8ed8 with SMTP id adf61e73a8af0-1bef60fa8a2mr5963059637.16.1719851926542;
-        Mon, 01 Jul 2024 09:38:46 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:be24:7a34:86fc:1a51])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70838a9a188sm6555725b3a.131.2024.07.01.09.38.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 09:38:46 -0700 (PDT)
-Date: Mon, 1 Jul 2024 10:38:43 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: Hari Nagalla <hnagalla@ti.com>
-Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-	"Andrew F. Davis" <afd@ti.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>, Suman Anna <s-anna@ti.com>,
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="0rtPCNzx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=9XVDAay2T0LhiNCcdccMadV7DGJ/vCEpdZXpqYEeP0s=; b=0rtPCNzxa/DXGjv0dhO/ArY4FJ
+	EwXr8+pHClbKJgI5B8V6AXqD6OMDtEAhSZQm6G1kNkVdVwOXNe/SCK8WRmxqz297iHFPkchjXAraD
+	VUqGGWs3kZqUnZvzAFZ7FufftydCZ8oZqZMtNM1pXXC1pjaojn2Fp0r8Jffeu2Oa0sfU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1sOK4m-001YxR-Ow; Mon, 01 Jul 2024 18:40:24 +0200
+Date: Mon, 1 Jul 2024 18:40:24 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Romain Gantois <romain.gantois@bootlin.com>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Udit Kumar <u-kumar1@ti.com>,
-	Thomas Richard <thomas.richard@bootlin.com>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>,
-	=?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
-	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] remoteproc: k3-r5: Fix IPC-only mode detection
-Message-ID: <ZoLbk3HjrPRfBNVg@p14s>
-References: <20240621150058.319524-1-richard.genoud@bootlin.com>
- <20240621150058.319524-2-richard.genoud@bootlin.com>
- <Zn8UumUllbGS4/p9@p14s>
- <CANLsYkxFvci0o0ET4vOGTYp0P2xEdwU2q4V1SmNh=W83uj87rA@mail.gmail.com>
- <3064a3cb-9153-3bd1-4c55-79e8911f029f@ti.com>
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 1/6] net: phy: dp83869: Disable autonegotiation
+ in RGMII/1000Base-X mode
+Message-ID: <a244ce05-28a1-47b7-9093-12899f2c447f@lunn.ch>
+References: <20240701-b4-dp83869-sfp-v1-0-a71d6d0ad5f8@bootlin.com>
+ <20240701-b4-dp83869-sfp-v1-1-a71d6d0ad5f8@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,24 +50,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3064a3cb-9153-3bd1-4c55-79e8911f029f@ti.com>
+In-Reply-To: <20240701-b4-dp83869-sfp-v1-1-a71d6d0ad5f8@bootlin.com>
 
-On Mon, Jul 01, 2024 at 04:13:00AM -0500, Hari Nagalla wrote:
-> On 6/28/24 14:58, Mathieu Poirier wrote:
-> > > This could lead in an incorrect IPC-only mode detection if reset line is
-> > > asserted (so reset_control_status() return > 0) and c_state != 0 and
-> > > halted == 0.
-> > > In this case, the old code would have detected an IPC-only mode instead
-> > > of a mismatched mode.
-> > > 
-> > Your assessment seems to be correct.  That said I'd like to have an RB or a TB
-> > from someone in the TI delegation - guys please have a look.
-> Agree with Richard's assessment, and the proposed fix looks good.
+On Mon, Jul 01, 2024 at 10:51:03AM +0200, Romain Gantois wrote:
+> Currently, the DP83869 driver only disables autonegotiation in fiber
+> configurations for 100Base-FX mode. However, the DP83869 PHY does not
+> support autonegotiation in any of its fiber modes.
 > 
-> Reviewed-by:
-> Hari Nagalla <hnagalla@ti.com>
+> Disable autonegotiation for all fiber modes.
 
-I have applied this patch, no need to send it again.
+I'm assuming to does work in copper mode?
 
-Thanks,
-Mathieu
+    Andrew
