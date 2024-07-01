@@ -1,408 +1,199 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2124.outbound.protection.outlook.com [40.107.255.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED4062B9C6;
-	Mon,  1 Jul 2024 11:30:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF652B9C6;
+	Mon,  1 Jul 2024 11:31:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.124
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719833433; cv=fail; b=I32VwUWxLOX1LH5fejjj7WKXvsT4kVJ6JlDNVNYGDpdL5Ya2mMpZYOD17M3P8Fax3/y9ZGVTMMohPqdrX2WiEx4YSL4aoCN8JoW/rlZWlPRkm1tQhzGDEEn+Lb7zC5S5duXJr3Vco+NEaCsu2r+0rVgsin2rWP2IGg/+d/4IVRg=
+	t=1719833496; cv=fail; b=fyYOaS+JCSm/NQRiTVGRZsL5mxirTytTJLP0ZxJeYYGic58LT98p6/nvsudri6myqmypuqEP+KJRYGvWIhcSnp57MyjNebn79L3lvwy+VV1yorGOcihuah5VIHUs4RsqZZtza/+/t+4Xo4UsayFaVanPr3wMNMFbFRrPobbwWds=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719833433; c=relaxed/simple;
-	bh=HC/TiN6xQYufu6i6azvjyyL0YsaAgQ6DUxSRP3hGo30=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=jwJ7jjs7rkDVlDKg5U741ZEWB2xfsI5VuyUDpVjol44d9xzTzahcDl6w1AtzbmbYbzuNAlcMXacsc1TpkeNiJMxSz7VKHikPCoqb5H5MmQ7Ekh4J0NIin0xAXpUyK5S4f9Qdni9iadwHvXEvQz/33HLORtsZfCpKaI5BpPfOUIQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bwC7wb1C; arc=fail smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bwC7wb1C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719833432; x=1751369432;
-  h=date:from:to:cc:subject:message-id:reply-to:references:
-   in-reply-to:mime-version;
-  bh=HC/TiN6xQYufu6i6azvjyyL0YsaAgQ6DUxSRP3hGo30=;
-  b=bwC7wb1CI1sI8+MfyY9J7Cb/zh4Vz714YJe783jO6wzKwnq2Z8wX5EmB
-   hf2WHdEQAntcaXCwgHiqjhzo4EEBofWZB4QmNDHp2G2352xBl6WNwrg1l
-   Y0iVLLJFQsJxvFL6b5XPje6y4Q3RDI7IEbT1k4paXNDzsaSgOIDcbbUMD
-   SdZ4p7thCUx/fDfM0bZIBKg9tlV0qgsJaAV0z1cZkJteQ76fVkFyn/E5Z
-   Im0wOjusIEQc7LaJ4xBui44UiFfN2raRHCPTA8za6nG0BvHfZRsSI/oLg
-   W09a/yVXtHMGqDY4hfpO/e3zQ+hTGwggDvZGF6UDkfMpOyLVvlNsv+ekD
-   w==;
-X-CSE-ConnectionGUID: FLIz9uZSTUWYB6qRjC9PKw==
-X-CSE-MsgGUID: wL+6EiyVTUqoB7/q71Lw8g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11119"; a="12335574"
-X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
-   d="scan'208";a="12335574"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 04:30:31 -0700
-X-CSE-ConnectionGUID: lBmhck9MSny7i6iOkgrWKQ==
-X-CSE-MsgGUID: bDZ3tst8TqC14q+Qv/sa1w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
-   d="scan'208";a="46152805"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orviesa007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 01 Jul 2024 04:30:30 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Mon, 1 Jul 2024 04:30:29 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Mon, 1 Jul 2024 04:30:29 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Mon, 1 Jul 2024 04:30:29 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.168)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 1 Jul 2024 04:30:29 -0700
+	s=arc-20240116; t=1719833496; c=relaxed/simple;
+	bh=MNB/oj6E3ATgeAv7Spql3aeZL5BH2gwnTsO1OnjoiK0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=bp9UIXPQaKa8b1L/a/Rdy4QuApXGYMfG+iF8h45ugt2AZnU9CzEoZoDG3y1ZecCF1N3KmW9xh8w6sB+oIXHmfF6NdnhbYk3HUSRVpCubc7e0IjR2dHCWj6pbwKnITKD9SQnqMVq3dHO69Q/urN8GvnrQC4ls2XzcL6aEkqX+cA8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wesion.com; spf=pass smtp.mailfrom=wesion.com; arc=fail smtp.client-ip=40.107.255.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wesion.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wesion.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=m+kWjLINz458A1ZQnJLQf+ug3ECuKfeF5ccWo61ZXWnnX/sRXfq5uLQ0hX3x+YH2/KW9naP1vj1lEuoMkyhX+u589tiDc8glFCae30REUtmbqKSamAcVqlK4sahxC0aRhN/iske5R6hOl0iFrmfwnVmMjtkCN/vGUT/LHhMafaRYsYOzO1mLPOYDlcpiYx3c84Lvqu6i/lrcTrD1fNC38okSMNbaCzQ9ygeO15bwMQsnK1/fkwlWK7YMs/iFa2SbTtPniF7brCYZay4+6JQQQnNFMhVuMZOiQCZq5bUrcUeyMLDJL7JHgzWrE6EQszdW0mT7sFQEz1TPB4TfNhebYw==
+ b=LXajuF6pX2/OFyVLgOypYlvXYKh3rFlEsCvpczr6qrkQBVzWDd6mqkav0LF3lQvxOZgZkAVJbiwHQBbqklJdL8us4wDlygaVEJxE8O1okC36ifxT8mIeljEzO5cJZkqSmQt6vpGDeHHwQ+JQcNPVoxoGrrd9YJBd9KUl9A/E05z237rpklTdCQ3wiJEvKHdbrZsAVr5MQSXtOL62AJh837m4x32TkNbiZcQErt7/g7HZSNZBedAtCKWaecTKNSo5zM6P8bH4DXRlcUvk7cO4MzXMu3WWesTgBQDv4wnLmA9qglsxtReUaUwiwY/SSjnrum62qCwU0E2BFSvt+UUtVw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TTTVyeeS+47SbJ8BzPmOLo2klrK3Uv3F5VDj29jMxO4=;
- b=R5qaTmD7krqwFK/0cGFfuuVmWjUsiKF0PK4Zxc6jeqdZFPEbrQHtvUsEHlTWsxr4Wi4JTDdVnx/FUs3L4pG3EMuGYiMS3d2T62ER83W6ReJQf1a1tZdvRF6LnhK5ynTsUZthy0R8qISqRKboLLj4XpRebX8NOG/RXfzzv/krs+A58o6DtTh9gcebjW6voEee/cEFVHl5n/QPmsLA4MbEhNGtECSMpvMNg/ICoOXTdw9xM1A9RaKCYdmxiHFsEMljLBD9AKlBtDLWRHAMi8OwknKpeiblqWgkCPHu9XntB0XRqJDn01tyQHAT6WXgRdojoK6mtNVnvCcHdP2IO1r5pA==
+ bh=MNB/oj6E3ATgeAv7Spql3aeZL5BH2gwnTsO1OnjoiK0=;
+ b=jWZaylRsVz//0vn1d6J6UMP8pAHfW0dGDbfAhwl89tY2DIvXh13rhdpwt3ap/mxjAFU9E5LVAwFkHNiykSX/zq52JQ048lVWNLen1h46ON4sPGGPMjkCtkXRCVIcU37EXcWMd2bjbcRXxug845AoUjc5Io8EOglFYq9FGdFlHSzzQp5eCAJmyQBu7WeprA0oPfoZZYSuUAgfRM9kk1sPj7RvRmFUi1r4yI5cj6wZTwhYZYxKiqhBUtTB2Ds2DQQyACWAS/M4zNw+So2AFs0BtGPeAM5/yhV0gVCqxSkJBL+X4v1NC8HMmMwQEGN1X/xtxPTNkwfNZeRZMK3f/Hp8aQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
- MW4PR11MB5823.namprd11.prod.outlook.com (2603:10b6:303:186::12) with
+ smtp.mailfrom=wesion.com; dmarc=pass action=none header.from=wesion.com;
+ dkim=pass header.d=wesion.com; arc=none
+Received: from TYZPR03MB7001.apcprd03.prod.outlook.com (2603:1096:400:26a::14)
+ by JH0PR03MB7653.apcprd03.prod.outlook.com (2603:1096:990:10::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.32; Mon, 1 Jul
- 2024 11:30:24 +0000
-Received: from DS7PR11MB5966.namprd11.prod.outlook.com
- ([fe80::e971:d8f4:66c4:12ca]) by DS7PR11MB5966.namprd11.prod.outlook.com
- ([fe80::e971:d8f4:66c4:12ca%6]) with mapi id 15.20.7719.029; Mon, 1 Jul 2024
- 11:30:24 +0000
-Date: Mon, 1 Jul 2024 19:29:09 +0800
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: Yi Liu <yi.l.liu@intel.com>
-CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<alex.williamson@redhat.com>, <kevin.tian@intel.com>, <jgg@nvidia.com>,
-	<peterx@redhat.com>, <ajones@ventanamicro.com>
-Subject: Re: [PATCH] vfio: Reuse file f_inode as vfio device inode
-Message-ID: <ZoKTBU2VaW0IazUi@yzhao56-desk.sh.intel.com>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20240617095332.30543-1-yan.y.zhao@intel.com>
- <edc71108-2e2e-455d-b109-4542a845cf6e@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <edc71108-2e2e-455d-b109-4542a845cf6e@intel.com>
-X-ClientProxiedBy: SI1PR02CA0052.apcprd02.prod.outlook.com
- (2603:1096:4:1f5::20) To DS7PR11MB5966.namprd11.prod.outlook.com
- (2603:10b6:8:71::6)
+ 2024 11:31:30 +0000
+Received: from TYZPR03MB7001.apcprd03.prod.outlook.com
+ ([fe80::78dd:5e68:1a9c:36c0]) by TYZPR03MB7001.apcprd03.prod.outlook.com
+ ([fe80::78dd:5e68:1a9c:36c0%6]) with mapi id 15.20.7719.028; Mon, 1 Jul 2024
+ 11:31:30 +0000
+From: Jacobe Zang <jacobe.zang@wesion.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>, "robh@kernel.org"
+	<robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"heiko@sntech.de" <heiko@sntech.de>, "kvalo@kernel.org" <kvalo@kernel.org>,
+	"davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
+	<edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>
+CC: "efectn@protonmail.com" <efectn@protonmail.com>, "dsimic@manjaro.org"
+	<dsimic@manjaro.org>, "jagan@edgeble.ai" <jagan@edgeble.ai>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-rockchip@lists.infradead.org"
+	<linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "arend@broadcom.com" <arend@broadcom.com>,
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, "megi@xff.cz"
+	<megi@xff.cz>, "duoming@zju.edu.cn" <duoming@zju.edu.cn>,
+	"bhelgaas@google.com" <bhelgaas@google.com>, "minipli@grsecurity.net"
+	<minipli@grsecurity.net>, "brcm80211@lists.linux.dev"
+	<brcm80211@lists.linux.dev>, "brcm80211-dev-list.pdl@broadcom.com"
+	<brcm80211-dev-list.pdl@broadcom.com>, Nick Xie <nick@khadas.com>
+Subject: Re: [PATCH v3 3/5] arm64: dts: rockchip: Add AP6275P wireless support
+ to Khadas Edge 2
+Thread-Topic: [PATCH v3 3/5] arm64: dts: rockchip: Add AP6275P wireless
+ support to Khadas Edge 2
+Thread-Index: AQHaysA5gqQ7qqo00E6aPButxU3qdLHhkO8AgAAdHZeAAAytAIAAAH9G
+Date: Mon, 1 Jul 2024 11:31:30 +0000
+Message-ID:
+ <TYZPR03MB7001C414251A2A844D121A0E80D32@TYZPR03MB7001.apcprd03.prod.outlook.com>
+References: <20240630073605.2164346-1-jacobe.zang@wesion.com>
+ <20240630073605.2164346-4-jacobe.zang@wesion.com>
+ <eeeb3f1f-5c77-4ca5-b996-17b968b7c2f0@kernel.org>
+ <TYZPR03MB7001FFD5180C6248F14EE48E80D32@TYZPR03MB7001.apcprd03.prod.outlook.com>
+ <c2febca9-59e4-4505-bbec-6e61f7d8b944@kernel.org>
+In-Reply-To: <c2febca9-59e4-4505-bbec-6e61f7d8b944@kernel.org>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wesion.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYZPR03MB7001:EE_|JH0PR03MB7653:EE_
+x-ms-office365-filtering-correlation-id: 1edf8738-9d49-4c05-718c-08dc99c15a58
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|7416014|376014|38070700018|921020;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?6SM48O8Zt7BSKYEmtgd/577nzeNvNArf7PiEBUAbrBniHrAwzlLA2Uka1K?=
+ =?iso-8859-1?Q?vv8TxZesAOqwTph5KiN4luM+R9RT/lzXw2zXJMhApf8k6MAYdFMhfW4i1E?=
+ =?iso-8859-1?Q?AixdZizhbC09KCfCTy4/ZKq2HuzcEV3qccKOInxzuh6a6V4si11W84r3l1?=
+ =?iso-8859-1?Q?imreTs3BsiyApao+SfiEZZvRu8D2VbRhxOyu6croAZ2r1rJOg0qwTNxYEq?=
+ =?iso-8859-1?Q?499e2d87kAeMD+uNyfyBx6+AEve7qWaPgd1yJM8CpIAgCYHd2Ge1GCmW6n?=
+ =?iso-8859-1?Q?Ekbo/5slgVPdw7k6Tstb62iyIoVBBk9IltccVUYxyDN+1ADYNf9EJle2zg?=
+ =?iso-8859-1?Q?Wxs31w7ezcy1InCb0JdlAGAstfLhQ+620D+9LK8/CMf+I8FGaeEgo2711q?=
+ =?iso-8859-1?Q?pB+kqwUBjrw9n+zqiyuaLNg9CA8cm0CxxkEtmkRezFEprpln4+4W2i9z/i?=
+ =?iso-8859-1?Q?JRtSKufodWC4G9ZSwjHyX7gPB8ttdhLZ2ICsbx2zl0S4d8gMawKTph5kD8?=
+ =?iso-8859-1?Q?evZEuZGxmiuksu6jomSUR3Pc8DdNELnCnl4lWz2syp0CDoiyB4fVtvcIKz?=
+ =?iso-8859-1?Q?CGjAhQDaTkg6Fi3CtXmRoi+ZtpFT28rjk/4qCgpfsUx83G6Y3ZMCdHrHKE?=
+ =?iso-8859-1?Q?cPHFPIH8XFvAlP9WuqJUN+/9BdCicvMjyV/XaA645bA6ODSAohG6DIR1x+?=
+ =?iso-8859-1?Q?HPv0zr7qr+qedsUuz5t8rrxKGTqaVffgw2nc5qxVteD8WntNlsuTbAg7fF?=
+ =?iso-8859-1?Q?FQaNQ/mDD3ub6LwHNPuJvU2W0is2DjxwaGedyYtKfrWXS+eWlrGUEeNbwI?=
+ =?iso-8859-1?Q?gnnsubvFtTJvq5CSbSoufw2MpSdnLm8wngIGNI+KSUxCg0TlABJXLX40e0?=
+ =?iso-8859-1?Q?DnO3ShxjKLQE/4oL4mMmFSvnrrLWc7Lwq7sLgl5uuPaTtlySnCdYcJ4IFi?=
+ =?iso-8859-1?Q?6gMyTGoPHjqLjW2lPueMKLvWviY1wlHAiD7Iv/5YMpV4TsjMkKSokuks8u?=
+ =?iso-8859-1?Q?TzJgPxgw+XHIJqDpNv5BaGLnvGj6Bex9IlWpiXmZmVGVRNQSZbCFd4Sgn6?=
+ =?iso-8859-1?Q?8m4hJY2ZfJB0tjGhD8D7BZ5RNhuVJ3+fSUKxdtt8I/hLsStAa6r5A57ct7?=
+ =?iso-8859-1?Q?l7lcND89ebaMTiAQjlzV9nn+GNXvZqIPy8y0zUWoAcGXDFkoaSQ68tdqGV?=
+ =?iso-8859-1?Q?CF5zALyqMAm+M3zYWfIkbatV+DtpksN3GCzfvz6BxeDbXwutcr9kmgzMot?=
+ =?iso-8859-1?Q?f10BweI4vBSGDGMUVO6JPLPvnKzBIocjut1imRoH2nB5KHUbkIQbFQBTKQ?=
+ =?iso-8859-1?Q?I4vZdN1U/ztXkrsWN6R0M6h/65OM50xZSVIRGPjTzY3Kaqi6m3YI/cXjbL?=
+ =?iso-8859-1?Q?mWl78B//BExjaLSMqmvmF5fkJu1oZ0ziycPi2d3KVKin7kYOf5whwVUJ3n?=
+ =?iso-8859-1?Q?06tNKjTt0NLRpPjhYl7E54qYlat+PM/q8YdiE1EcC2ccyeuaaPmWD1stxD?=
+ =?iso-8859-1?Q?I=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB7001.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(38070700018)(921020);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?JDO5TU9k0Aiyh5obS+D8TJ0xn0HfMFJpHVI0633Og//IrDoeH2ZgdgislU?=
+ =?iso-8859-1?Q?Pf8uSG4ef/vPVZV5WtSWtHvq4ts+Xch19DCFWYxp9OVJ7fmGpF0U3bx7gl?=
+ =?iso-8859-1?Q?KN2Y7cL/cN7Rl+y0EUzjW0yr4dC+1UyYBaMnV4a5cY41vQaoSiGgK2QIxm?=
+ =?iso-8859-1?Q?PoiN2sA6FtGHc3BOEx6pAevLm4wPe6nPxkaUI7PRnAuKVfJ90ZaXGTha6F?=
+ =?iso-8859-1?Q?pwwubLl5WFOlDD5uCZlz/Mc0QGGoSOMINxb/nrhITmiBsJPpEHZ2S/Y9eN?=
+ =?iso-8859-1?Q?9nICMNDhNZPeTN6XyHKNu8UVl5cX8z12Xxq7au0vjJf3H3RQiiPvBAPaGX?=
+ =?iso-8859-1?Q?3OxFYydC4+L9aLwNra4eKanRixCRwwUrOPidls4ED1ll9USn4cKVO9w/sn?=
+ =?iso-8859-1?Q?8RpKql6snx0jW9+7/x8dENk1oN/kBXhLL0Sgea6o/uxA1Ze5/1x5B1bcUQ?=
+ =?iso-8859-1?Q?82D4WyRbgKQaWIuzhWSZygKJFe2Mwrvj8QF6EeGyboPez9FLCTQt8FItC2?=
+ =?iso-8859-1?Q?yZKDsSJDKL+MCuzzwG7YxrJ3IMN1eSG3iRB3zrbXlAIo3wm0F1VgbCH5ZL?=
+ =?iso-8859-1?Q?ACVSMiKW0Ape/JlwB/91OuzjvdJlTQGm7HCWyylyzJMrHdW2qL1NMEtIss?=
+ =?iso-8859-1?Q?bRsxiDe0ehwQRinB/aGiqSD+PdfN4+hPHZtiD0u1FKA3H399DxbF4fSxKK?=
+ =?iso-8859-1?Q?vgkRteq6Wja3jCCU2FikZKeAlqkB+TFcjhy0p83Hraa2uk/ty+hqGEEmG0?=
+ =?iso-8859-1?Q?eK3yWKwP8Ba9SS98tiPKEfRN7muurDI72EekfhlT3acWNWN5P/c/QtJTuF?=
+ =?iso-8859-1?Q?KQIhwXFBXPi8XaGc84870VVUyQQRjPWTcFI5zV6HNZUUOYQx9ZX9VqQLWJ?=
+ =?iso-8859-1?Q?23fYrvZFE7lMg8icYSWtrBBRgm6tFBm+bA/H1IlTmUiwSHD1KKs5yKSEJe?=
+ =?iso-8859-1?Q?W7PwyrVqzUsOy4L1N7x9gj5ZBiQOukpVQMAkFNkxhsc/hyeddnM6UDnZh8?=
+ =?iso-8859-1?Q?KPwqT2exfH2863fYVwgf58rkKE+GGRon7GVxO0c5dhgWMJwQN2vgzI4UV7?=
+ =?iso-8859-1?Q?isbHHFkZamFXpTQhbTbFhtBVi67iet4wE3ScubOP+qnb2JPsVAAoHLf358?=
+ =?iso-8859-1?Q?sTzBRfMt1UmnTbCOJVspd/jVmPoz5ZXShUq0y98hSPCEwBn2Ubd0mHTwPC?=
+ =?iso-8859-1?Q?5f0WWyAc54AgP6yi8vf0yrIrewJwioPbJc3dSHekrsi2f/uAhW6oJtR6IJ?=
+ =?iso-8859-1?Q?fovhx0KjpQ9vx/r+SRIF5jZRtZ7XNYwgUVWS/iN5U7lm78vIfNETGW3nrY?=
+ =?iso-8859-1?Q?U4xhEnrMQnVGHRRrSgxZNzXDeav3kj30YZwJ3493u2r4CwJ+OogT11dTji?=
+ =?iso-8859-1?Q?PVTgoUD2y2YrQ23gVO7M9Iho7fQ3coNXk8WArymBF3g639YMvh65qM9WMI?=
+ =?iso-8859-1?Q?GVBXmc2uHJnvi9f6+pS342HI1kqxtwziusNNoZofwLEHWVSaWBe0A9UP3r?=
+ =?iso-8859-1?Q?zkqdyBDTpiWG9tMZlD+EM/bx5Q6A+rC9zEGYXOdHcTY4QIVRls/auzJyYw?=
+ =?iso-8859-1?Q?rM74TEwPM4mP7AjR6NvYi6Cbi0xNig727xiB/MUzLNRb5XzpyXH8negJpU?=
+ =?iso-8859-1?Q?7w9b4TVsAYMVFwPh5KeoVhFC5v+wKqqGXf?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|MW4PR11MB5823:EE_
-X-MS-Office365-Filtering-Correlation-Id: a322b11f-5944-4204-68be-08dc99c132fe
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?KoIX0pElepIk+c56IgolKLry8yQ6MgEnyNZ4phpvDrxxGuVpkTfo3CtWwILL?=
- =?us-ascii?Q?sA3ilgpNzD/i0lGqu7H3k3ibY5ODXT3scLtnB9pT2airtR2PvJykMVRZhLzf?=
- =?us-ascii?Q?OWHwVc1MoFrn5/j4dodjgEOjKXDY2u5hGJZ00LI2Dqb0P4/GbkVb8Wt1Y7n+?=
- =?us-ascii?Q?OXHXx4H6y6CjUKqM36mZ6wuGwveBzVRHeVv9xagui64/PesyKZG3jkXdGGvd?=
- =?us-ascii?Q?0OibAzcVma6mC4LKUQZjYOPeVnGD6L19GH5PLx65T+vMrhbdDON8XXj6qiUH?=
- =?us-ascii?Q?A5Sl+lxKXdqcH+zzSWMEYLZEFyLKjUnMgMAEJWbXh1TgIH3dSQ5SNiMM3R1z?=
- =?us-ascii?Q?mF0ON8sEMZ+97z3ixOwhIxhoioL1w3yKflyr0KezSQ6DLJLzNMgHyG48gOqB?=
- =?us-ascii?Q?EQB4+I9JiMrh8z+D8OnOH0BhF33NoWYCls6cs2kA3V2R329pe+LQG3UElPZ5?=
- =?us-ascii?Q?TDFhpYjAyfVtiVj1Jc35YN150efj2tXsRaCKD92R9CArkjP3KjZUJ3ktHtd2?=
- =?us-ascii?Q?BYzSCgYXBy2enH1bOvGesHZ+MmScie3nINq33N7gJC0eBxISVtt3r8gdhsaN?=
- =?us-ascii?Q?yB/9x57gH6iTZNlomAKOabO5nl2sYBHrQktnt227/NErBqZmhHMnpFydmXsi?=
- =?us-ascii?Q?Jt56kaE/AR4fwFO0qptcQZdi1rYo9R6GNMEcNh22NWUFO7kbhyRq34+dgmsq?=
- =?us-ascii?Q?JtJSI7J7AjvYuGneQ+72a52JYor4UeC9JdpMeuUH1ck5+/6b7Ow3an8iK5iQ?=
- =?us-ascii?Q?hHTHwj09WEXnzxR/6gFM6iO8uzlMvbqFRBc6lC0Ff0xCP+bYQ0J72nQFCDj1?=
- =?us-ascii?Q?fGDW3ynUL1pmilsljfwgoosp9zCCXgxvdkxaCnAZw2p0ZX/qfhQXvYy065Qs?=
- =?us-ascii?Q?BfGZRFRlbt7vBgoDOvhECd9FS8Qbkp/mfuSiFhfg5nZobZexJ/rH+slXrKK8?=
- =?us-ascii?Q?1WtGI+5LFEKHqyVkSeOT4j19Izl0qXv5DIMC2eZQpQ5/S32Irbv7ogpEm896?=
- =?us-ascii?Q?8+zie/3+UMvqidLHgjcBy6mJtv4oxzJRA9nYQuu4Gx5QAl9yu5UMN5A82z4u?=
- =?us-ascii?Q?4TDOVJkbDspe5JPgoPHYDCCIMaPptaW4h7S60JVDQk9Or4x4YuCz5liBs61C?=
- =?us-ascii?Q?dMWPqdPM6St2eaFXYPEvPe1dv5HGQN49OG5i6wQsDxszzem+R31BPi4X+pmb?=
- =?us-ascii?Q?ZbJ3dDGb5Plrjv9K+RGCAq2mEIgcDuKWN2yZbm5DK/rXfXG6UvR1Jb7BqJTr?=
- =?us-ascii?Q?T2rIDbek5Dnb6IIgcnGcSp9hilBqT6098GqlTQpFjwJXJm6ssUu83OtvHtIp?=
- =?us-ascii?Q?IN8=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?VZl2cAxxW96eMBYZ+mWFVA2GmjR2RWGtelEyy0sz2su/ukt18O6IrkTsgmit?=
- =?us-ascii?Q?g6eW5K/Yxj31/4l5YgZBEEBhQctlfAfqBlWR9mmX3uWCWLRGnyMdTu+EHonF?=
- =?us-ascii?Q?MQt5+TRdgyazOpvUiTI+E6EJMwy06K5cYDrP7HU8cSgUrkUhhq0FTsK5BPFB?=
- =?us-ascii?Q?W7hS+13CWHhr06vjHn1+6hkbofaZ84DpIVooySNWJUOgDhpUzMuy3edi21ev?=
- =?us-ascii?Q?UZuOswU9sroztK60saan4HXZRxT6uIWNf4CEJXoI0kLI6ByFZzxlzWXpJGbJ?=
- =?us-ascii?Q?IpW2B1hC7BLJdd3XONwlapw/XZffjgSAG+8cL2sJrrIVXkPVxOr/ychNWvHZ?=
- =?us-ascii?Q?7Kvgh8pv31am3KvST1URQwpXSlWCYOIiZsKx0Wfdi3kA6Oo1O05DNRe50Xqr?=
- =?us-ascii?Q?0HNCco3NkYRIks2Wr8jtcQSvvGOVWFNWEL8BEW3niXQkyhOnx5/3a1V/c5Ky?=
- =?us-ascii?Q?GlfJWrfz5GSFerDZ4ge0aE8qFNfnobOxVN2JseL+j+0t5LjfzYuhN8IjvU/u?=
- =?us-ascii?Q?4loDX0rpL4Bg8ghmqT1gSMD+UtXc0L9dNR7cMdjpJJp+D7tHe7zbzEXGrlRP?=
- =?us-ascii?Q?IOKRPK3sEOs9ypC4cUWo964ZhL78lq6ZGw8DMm4npjx1Yd8IeLQiCHXDOCxi?=
- =?us-ascii?Q?CuSgzLkdGI3BCIRTEMzOPe6ExeZDn8cOHBumoDamAnyl3l3tels7b2o2nGbR?=
- =?us-ascii?Q?HEO6HadQ0HoY6Iv00qXCKZsQbviW8S3NzfoP2dZefQikpkr1ePTmx4dKJJP1?=
- =?us-ascii?Q?ZUfpA/A4RcTrJ58LBlOv8R2wF7KKAWdefFKkG2w5d3U088fSIYOF6BEs37C2?=
- =?us-ascii?Q?L8knW8Im6Zqykeha3/4hALk8RBzerBkDEvr9/bRJNNY8V2Ju0q5+j+f65JJ6?=
- =?us-ascii?Q?4xythWURJNVYyeTZac/fnYXt3bTQYLtYU2S3JQf7h1eefYlUeB6rRvgj629/?=
- =?us-ascii?Q?in2O+mpehsgVckx2yBbVropJAnxUA9sCy/kkVEXN8dFLpPsOEtr9GcByavP/?=
- =?us-ascii?Q?0ZIdv34h64u45VZlKxk50AZM/k420n6LVym/M9jSp7bX/Q2sI56pFlXbOBWd?=
- =?us-ascii?Q?2N7lnxI1g7l0/84x3bmMJpTv9u7ooXCeCG7T3LC62CdyfnlMvJNpIHFLeiud?=
- =?us-ascii?Q?z2ODZ2p71fTp2BDBWHKV/6RVE1XeVQws/PkCP9UrsxbJvZpnuOnzgnme/vjj?=
- =?us-ascii?Q?klJF5qM1Fp5a6Qo6YSjAyQaYhxbxp9aINKq4vSj2AgYhmBiHzFcwVMtFq5Am?=
- =?us-ascii?Q?qpqv4DbbmPNqm6kFah0MLcROdLUIfjDpuwwn2WeOY0LrBWjGgq8ytXHOwMcN?=
- =?us-ascii?Q?niiP1fXXH5kq+z9OenYQWANZ3IMazaiZBhAcCQoTIX91XQtiOvZXxOpcUs7E?=
- =?us-ascii?Q?pmv73Zl4gAmiVBDAVuG6PjpV/IlX5wJiK+xaXCZVIxiyFenB46edmo336YrC?=
- =?us-ascii?Q?kKZAGz3jywcXFvkN8JzABec7mD6fQvo1G60gyLK+yRupeXxTHvoR/2jQKa1E?=
- =?us-ascii?Q?NPsN01YnfQ1fzQaKzyO9QE2oO/XQxZ1CR1KXsEB1f4DMAMSboYaGyfrj+3Xr?=
- =?us-ascii?Q?nI5t9ifEqWxwPyvyfdlDCGToK7eYCCd5acFKojQp?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: a322b11f-5944-4204-68be-08dc99c132fe
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
+X-OriginatorOrg: wesion.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2024 11:30:24.4866
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB7001.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1edf8738-9d49-4c05-718c-08dc99c15a58
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2024 11:31:30.2653
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: za0CLjwAZpWnw2hyiFMTUDvknMArGNDhnq/6u+Po1FepwWYSLvYZhiWRSCwICqaLaTI1H7SJawscTiPReVOwNQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB5823
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 2dc3bd76-7ac2-4780-a5b7-6c6cc6b5af9b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: PfJmK39fcO3woJvrFbau2IdYynMs4MhRPHD+ALR4u8OXzoLmDF6o0i4YJtMZi4vnG1tpH+Zq6VRTshZBQL82Gw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR03MB7653
 
-On Mon, Jul 01, 2024 at 03:54:19PM +0800, Yi Liu wrote:
-> On 2024/6/17 17:53, Yan Zhao wrote:
-> > Reuse file f_inode as vfio device inode and associate pseudo path file
-> > directly to inode allocated in vfio fs.
-> > 
-> > Currently, vfio device is opened via 2 ways:
-> > 1) via cdev open
-> >     vfio device is opened with a cdev device with file f_inode and address
-> >     space associated with a cdev inode;
-> > 2) via VFIO_GROUP_GET_DEVICE_FD ioctl
-> >     vfio device is opened via a pseudo path file with file f_inode and
-> >     address space associated with an inode in anon_inode_fs.
-> > 
-> 
-> You can simply say the cdev path and group path. :)
-Ok, if they are well-known terms.
-
-> 
-> > In commit b7c5e64fecfa ("vfio: Create vfio_fs_type with inode per device"),
-> > an inode in vfio fs is allocated for each vfio device. However, this inode
-> > in vfio fs is only used to assign its address space to that of a file
-> > associated with another cdev inode or an inode in anon_inode_fs.
-> > 
-> > This patch
-> > - reuses cdev device inode as the vfio device inode when it's opened via
-> >    cdev way;
-> > - allocates an inode in vfio fs, associate it to the pseudo path file,
-> >    and save it as the vfio device inode when the vfio device is opened via
-> >    VFIO_GROUP_GET_DEVICE_FD ioctl.
-> 
-> So Alex's prior series only makes use of the i_mapping of the inode instead
-> of associating the inode with the pseudo path file?
-Right.
-
-> > File address space will then point automatically to the address space of
-> > the vfio device inode. Tools like unmap_mapping_range() can then zap all
-> > vmas associated with the vfio device.
-> > 
-> > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> > ---
-> >   drivers/vfio/device_cdev.c |  9 ++++---
-> >   drivers/vfio/group.c       | 21 ++--------------
-> >   drivers/vfio/vfio.h        |  2 ++
-> >   drivers/vfio/vfio_main.c   | 49 +++++++++++++++++++++++++++-----------
-> >   4 files changed, 43 insertions(+), 38 deletions(-)
-> > 
-> > diff --git a/drivers/vfio/device_cdev.c b/drivers/vfio/device_cdev.c
-> > index bb1817bd4ff3..a4eec8e88f5c 100644
-> > --- a/drivers/vfio/device_cdev.c
-> > +++ b/drivers/vfio/device_cdev.c
-> > @@ -40,12 +40,11 @@ int vfio_device_fops_cdev_open(struct inode *inode, struct file *filep)
-> >   	filep->private_data = df;
-> >   	/*
-> > -	 * Use the pseudo fs inode on the device to link all mmaps
-> > -	 * to the same address space, allowing us to unmap all vmas
-> > -	 * associated to this device using unmap_mapping_range().
-> > +	 * mmaps are linked to the address space of the inode of device cdev.
-> > +	 * Save the inode of device cdev in device->inode to allow
-> > +	 * unmap_mapping_range() to unmap all vmas.
-> >   	 */
-> > -	filep->f_mapping = device->inode->i_mapping;
-> > -
-> > +	device->inode = inode;
-> >   	return 0;
-> >   err_put_registration:
-> > diff --git a/drivers/vfio/group.c b/drivers/vfio/group.c
-> > index ded364588d29..aaef188003b6 100644
-> > --- a/drivers/vfio/group.c
-> > +++ b/drivers/vfio/group.c
-> > @@ -268,31 +268,14 @@ static struct file *vfio_device_open_file(struct vfio_device *device)
-> >   	if (ret)
-> >   		goto err_free;
-> > -	/*
-> > -	 * We can't use anon_inode_getfd() because we need to modify
-> > -	 * the f_mode flags directly to allow more than just ioctls
-> > -	 */
-> > -	filep = anon_inode_getfile("[vfio-device]", &vfio_device_fops,
-> > -				   df, O_RDWR);
-> > +	filep = vfio_device_get_pseudo_file(device);
-> >   	if (IS_ERR(filep)) {
-> >   		ret = PTR_ERR(filep);
-> >   		goto err_close_device;
-> >   	}
-> > -
-> > -	/*
-> > -	 * TODO: add an anon_inode interface to do this.
-> > -	 * Appears to be missing by lack of need rather than
-> > -	 * explicitly prevented.  Now there's need.
-> > -	 */
-> > +	filep->private_data = df;
-> >   	filep->f_mode |= (FMODE_PREAD | FMODE_PWRITE);
-> > -	/*
-> > -	 * Use the pseudo fs inode on the device to link all mmaps
-> > -	 * to the same address space, allowing us to unmap all vmas
-> > -	 * associated to this device using unmap_mapping_range().
-> > -	 */
-> > -	filep->f_mapping = device->inode->i_mapping;
-> > -
-> >   	if (device->group->type == VFIO_NO_IOMMU)
-> >   		dev_warn(device->dev, "vfio-noiommu device opened by user "
-> >   			 "(%s:%d)\n", current->comm, task_pid_nr(current));
-> > diff --git a/drivers/vfio/vfio.h b/drivers/vfio/vfio.h
-> > index 50128da18bca..1f8915f79fbb 100644
-> > --- a/drivers/vfio/vfio.h
-> > +++ b/drivers/vfio/vfio.h
-> > @@ -35,6 +35,7 @@ struct vfio_device_file *
-> >   vfio_allocate_device_file(struct vfio_device *device);
-> >   extern const struct file_operations vfio_device_fops;
-> > +struct file *vfio_device_get_pseudo_file(struct vfio_device *device);
-> >   #ifdef CONFIG_VFIO_NOIOMMU
-> >   extern bool vfio_noiommu __read_mostly;
-> > @@ -420,6 +421,7 @@ static inline void vfio_cdev_cleanup(void)
-> >   {
-> >   }
-> >   #endif /* CONFIG_VFIO_DEVICE_CDEV */
-> > +struct file *vfio_device_get_pseduo_file(struct vfio_device *device);
-> >   #if IS_ENABLED(CONFIG_VFIO_VIRQFD)
-> >   int __init vfio_virqfd_init(void);
-> > diff --git a/drivers/vfio/vfio_main.c b/drivers/vfio/vfio_main.c
-> > index a5a62d9d963f..e81d0f910c70 100644
-> > --- a/drivers/vfio/vfio_main.c
-> > +++ b/drivers/vfio/vfio_main.c
-> > @@ -192,7 +192,6 @@ static void vfio_device_release(struct device *dev)
-> >   	if (device->ops->release)
-> >   		device->ops->release(device);
-> > -	iput(device->inode);
-> >   	simple_release_fs(&vfio.vfs_mount, &vfio.fs_count);
-> >   	kvfree(device);
-> >   }
-> > @@ -248,20 +247,50 @@ static struct file_system_type vfio_fs_type = {
-> >   	.kill_sb = kill_anon_super,
-> >   };
-> > -static struct inode *vfio_fs_inode_new(void)
-> > +/*
-> > + * Alloc pseudo file from inode associated of vfio.vfs_mount.
-> 
-> nit: s/Alloc/Allocate/ and s/of/with/
-> 
-> > + * This is called when vfio device is opened via pseudo file.
-> 
-> group path might be better. Is this pseudo file only needed for the device
-> files opened in the group path? If so, might be helpful to move the related
-> codes into group.c.
-Yes. I also planed to move the this to group.c in v2 :)
-
-> 
-> > + * mmaps are linked to the address space of the inode of the pseudo file.
-> > + * Save the inode in device->inode for unmap_mapping_range() to unmap all vmas.
-> > + */
-> > +struct file *vfio_device_get_pseudo_file(struct vfio_device *device)
-> >   {
-> > +	const struct file_operations *fops = &vfio_device_fops;
-> >   	struct inode *inode;
-> > +	struct file *filep;
-> >   	int ret;
-> > +	if (!fops_get(fops))
-> > +		return ERR_PTR(-ENODEV);
-> > +
-> >   	ret = simple_pin_fs(&vfio_fs_type, &vfio.vfs_mount, &vfio.fs_count);
-> >   	if (ret)
-> > -		return ERR_PTR(ret);
-> > +		goto err_pin_fs;
-> >   	inode = alloc_anon_inode(vfio.vfs_mount->mnt_sb);
-> > -	if (IS_ERR(inode))
-> > -		simple_release_fs(&vfio.vfs_mount, &vfio.fs_count);
-> > +	if (IS_ERR(inode)) {
-> > +		ret = PTR_ERR(inode);
-> > +		goto err_inode;
-> > +	}
-> > +
-> > +	filep = alloc_file_pseudo(inode, vfio.vfs_mount, "[vfio-device]",
-> > +				  O_RDWR, fops);
-> > +
-> > +	if (IS_ERR(filep)) {
-> > +		ret = PTR_ERR(filep);
-> > +		goto err_file;
-> > +	}
-> > +	device->inode = inode;
-> 
-> The group path allows multiple device fd get, hence this will set the
-> device->inode multiple times. It does not look good. Setting it once
-> should be enough?
-Will make the multipl opens to use the same vfio inode, as in [1].
-
-[1] https://lore.kernel.org/all/Zn02BUdJ7kvOg6Vw@yzhao56-desk.sh.intel.com/
-
-> 
-> > +	return filep;
-> > +
-> > +err_file:
-> > +	iput(inode);
-> 
-> If the vfio_device_get_pseudo_file() succeeds, who will put inode? I
-> noticed all the other iput() of this file are removed.
-On success, the inode ref count is moved to the file and put in
-vfio_device_fops_release().
-The prevous iput() is only required because that inode is not associated
-with any file.
-
-> > +err_inode:
-> > +	simple_release_fs(&vfio.vfs_mount, &vfio.fs_count);
-> > +err_pin_fs:
-> > +	fops_put(fops);
-> > -	return inode;
-> > +	return ERR_PTR(ret);
-> >   }
-> >   /*
-> > @@ -282,11 +311,6 @@ static int vfio_init_device(struct vfio_device *device, struct device *dev,
-> >   	init_completion(&device->comp);
-> >   	device->dev = dev;
-> >   	device->ops = ops;
-> > -	device->inode = vfio_fs_inode_new();
-> > -	if (IS_ERR(device->inode)) {
-> > -		ret = PTR_ERR(device->inode);
-> > -		goto out_inode;
-> > -	}
-> >   	if (ops->init) {
-> >   		ret = ops->init(device);
-> > @@ -301,9 +325,6 @@ static int vfio_init_device(struct vfio_device *device, struct device *dev,
-> >   	return 0;
-> >   out_uninit:
-> > -	iput(device->inode);
-> > -	simple_release_fs(&vfio.vfs_mount, &vfio.fs_count);
-> > -out_inode:
-> >   	vfio_release_device_set(device);
-> >   	ida_free(&vfio.device_ida, device->index);
-> >   	return ret;
-> > 
-> > base-commit: 6ba59ff4227927d3a8530fc2973b80e94b54d58f
-> 
-> -- 
-> Regards,
-> Yi Liu
+>>> +=A0=A0=A0=A0 pcie@0,0 {=0A=
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 reg =3D <0x400000 0 0 0 0>;=0A=
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 #address-cells =3D <3>;=0A=
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 #size-cells =3D <2>;=0A=
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 ranges;=0A=
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 device_type =3D "pci";=0A=
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 bus-range =3D <0x40 0x4f>;=0A=
+>>> +=0A=
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 wifi: wifi@0,0 {=0A=
+>> Where is the compatible (again!)? Test your code - you will see your=0A=
+>> binding is a no-op.=0A=
+>=0A=
+> I tried to build kernel with CHECK_DTBS=3D1. And didn't get any message=
+=0A=
+> like 'compatible' is a required property in wifi node. But when I check=
+=0A=
+> the bindings that do required the compatible... So I will add it next tim=
+e.=0A=
+=0A=
+> Yep, use different clock name and then test. You should see errors,=0A=
+> right? But there are not, because schema is not applied to this node at a=
+ll.=0A=
+> =0A=
+> Look how Apple is doing this.=0A=
+> =0A=
+> I have doubts that your code works at all in the first place. If there=0A=
+> is no compatible, how your platform device gets of_node?=0A=
+=0A=
+In file brcm_hw_ids.h and pcie.c has added Device ID and Vendor ID=0A=
+for bus to enumerate the device when board bootup, so I didn't add=0A=
+specific compatible in DTS. And by doing so, it can probe successfully.=0A=
+=0A=
+---=0A=
+Best Regards=0A=
+Jacobe=
