@@ -1,162 +1,134 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3107514D290
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 11:58:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6016B1494CE;
+	Mon,  1 Jul 2024 11:58:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719835124; cv=none; b=o6c8hGoK6ffpDyeBWjCTq7nnbthhZjk2x8o+57LQm0TzwbdCQPOLQohoUqoBzhEj67tQV80MVdsHwmVf6BywE2UTur6ES8S+ZQuRXkcSoAqu2E5juCwhj5u7buOp+qESYww81W2IYprMImVnv2w0L2xIV0RsHiS3WfVbC1QFGn4=
+	t=1719835136; cv=none; b=ZugrnPSLtx0XWELK4PHMXuSRuKRgSS6QnmjGIdrhxcnkHnY+Qo7N2KZGlAT3cV38VlzBx07Uc1YUUlexaTfpWBWWU75+IN39nj/bvhpujhY4HLFGeLOBk220/dZ8TqlQt+jlLdbpbptkV6/6xxshta4O+d9Il0PDpb8ER5w0KjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719835124; c=relaxed/simple;
-	bh=/nA58iNMwvVtAGqSYF3E2ixIjum0Lx9xpHzYk+CSGJo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MYR4Cl2K+n2SS9hX6duYyfkBfVHJ5KVALTcJout80m3ClxAkuj9VSPmOHvAoqsR9/dzsN1L5dGRX2gzCzhAbGES0LdGZCJ3DR0t4NgOA/292LpOB46GBjkPVXIH3hXcBrIvqwEbnXxvg2EWH+6sVzO98Jx86sCC87/o1O+00iAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=qbDC7GrZ; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="qbDC7GrZ"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a729d9d7086so636912866b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 04:58:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719835119; x=1720439919; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IksdoqfXXoNA3l1EF7/U4rm+eTkM++3OsdHeCQcdlog=;
-        b=qbDC7GrZmSgub1ubG86KzOG+qaiA+xaVkCrMD/009yD7+Rf8bnbusguxbLNZkvcYIE
-         28+JrRubbWTkHPFPpN0IvjGLWFdeBiQBWfhBWT33+VLEYZUBshMsvneOHLEW5tUbBe0r
-         aLmrpE8w7r3kJWBQUnSX1CBjWePjK13PNgnyvtVmuRXhxckXc3xC1PjZcQn/eDbjKDwI
-         qiqTSnggevUVImjOFCSl2skk6S0RN/iJuYMAtHMI1Su0j5CQDozFuwbsR89b20HV2LoL
-         0eAbfjE5RyCfcAdsn2avnNp+SDf1K1mgD5MVAuFJMS0sbzg9hbfQrxdSAVT/g3eqiqXq
-         gi6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719835119; x=1720439919;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IksdoqfXXoNA3l1EF7/U4rm+eTkM++3OsdHeCQcdlog=;
-        b=NB6jHaz11ztr284avBN75V6n59CI36TV6KV3dXAosz4zi7F1pbmtTJx/aE0I5BCR4T
-         aTtIf1hlvBk37KdMDKNfq+WfwtS3hTopgwRFC5c7ib3aZDYG13KQQs3v5lJfrLb1XeJj
-         xokNSDau+gD9n1MzxBCi0V0LtIU4VoTvBRnjapst2RnWeYNToiYVVJmm+vrLr7bJBub6
-         +dSj3r4eUh8ZCAaJtEBWFUHtkYenjWk3vxCWaPeh1mMsNpgdi1dd9Fio91bhxhwBdON1
-         nhOL3oiWIC6nv8i/Sq2eBia+7iZCceBvJV4DIM4nLlF2j7zD6gbAvYQPMIHmV1bIJKoH
-         ci0A==
-X-Forwarded-Encrypted: i=1; AJvYcCXC0mFHCHxV/mrvBG1F3zQiro3Hu1Nb8csSQDxGl8AhLJ1SEQzTsW/g8bTAhQC89MRbXN+D26a2S5k+SnRFvkuRdTF+RMn/W6ZuMEb7
-X-Gm-Message-State: AOJu0YwQ5Fg4mcsVps7dRAL4mKexaS7tPSeJz861bA1wlQ1/dCSlSsU3
-	uXSUl0g2UN5Pat3vA6lEaB3clqMzHP3WRgrBQZHPQ9dM73xLLb4R7RH6RVMXTqN++jLAR8+/dGF
-	/3nvpzHPyFUVDMbyCP+P1ikN8qq+jf7rkX6LHmw==
-X-Google-Smtp-Source: AGHT+IF2OBW7kIrXE1UpSv50tCGPZtC+ETK4mqONVGqJACOHcLEzbhk5UFyau/lwX9nOtB0IRaHq1FCgCFisjtf323o=
-X-Received: by 2002:a17:907:9712:b0:a75:7a8:d70c with SMTP id
- a640c23a62f3a-a751386eca4mr578971166b.4.1719835119427; Mon, 01 Jul 2024
- 04:58:39 -0700 (PDT)
+	s=arc-20240116; t=1719835136; c=relaxed/simple;
+	bh=BLt7Roa3Pgux58ytu621b/nxwnLWSydXCxGWCHBmp04=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nbo+QfdFt3Zc97//S6lmYtsxsHdPkHpdmqe24qI+xErazeSZrb4Pe3pux8dAKvFfAmmLsUsgClwwsuRiejmYFRFv9YdKfxaw970DqVaDFwrLSU6IFUbZhvEATqTj+ocOYcn/kXQI4pBXRpJCU+IqqEH4mt+Ag3M9sO3qwNDJLdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 461BwW4w93806172, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/3.02/5.92) with ESMTPS id 461BwW4w93806172
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 1 Jul 2024 19:58:32 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 1 Jul 2024 19:58:32 +0800
+Received: from RTDOMAIN (172.21.210.160) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 1 Jul
+ 2024 19:58:31 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
+        <rkannoth@marvell.com>, <jdamato@fastly.com>, <pkshih@realtek.com>,
+        <larry.chiu@realtek.com>, "Justin
+ Lai" <justinlai0215@realtek.com>
+Subject: [PATCH net-next v22 09/13] rtase: Implement pci_driver suspend and resume function
+Date: Mon, 1 Jul 2024 19:53:59 +0800
+Message-ID: <20240701115403.7087-10-justinlai0215@realtek.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240701115403.7087-1-justinlai0215@realtek.com>
+References: <20240701115403.7087-1-justinlai0215@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240630110550.1731929-1-stuart.menefy@codasip.com>
-In-Reply-To: <20240630110550.1731929-1-stuart.menefy@codasip.com>
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-Date: Mon, 1 Jul 2024 13:58:27 +0200
-Message-ID: <CAHVXubg+aXS7-smmWS9LwUbAkpfGvet9Zk0UJs_AZhxV2vx6UQ@mail.gmail.com>
-Subject: Re: [PATCH v2] riscv: Extend sv39 linear mapping max size to 128G
-To: Stuart Menefy <stuart.menefy@codasip.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, linux-doc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36506.realtek.com.tw (172.21.6.27) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-Hi Stuart,
+Implement the pci_driver suspend function to enable the device
+to sleep, and implement the resume function to enable the device
+to resume operation.
 
-On Sun, Jun 30, 2024 at 1:06=E2=80=AFPM Stuart Menefy <stuart.menefy@codasi=
-p.com> wrote:
->
-> This harmonizes all virtual addressing modes which can now all map
-> (PGDIR_SIZE * PTRS_PER_PGD) / 4 of physical memory.
->
-> The RISCV implementation of KASAN requires that the boundary between
-> shallow mappings are aligned on an 8G boundary. In this case we need
-> VMALLOC_START to be 8G aligned. So although we only need to move the
-> start of the linear mapping down by 4GiB to allow 128GiB to be mapped,
-> we actually move it down by 8GiB (creating a 4GiB hole between the
-> linear mapping and KASAN shadow space) to maintain the alignment
-> requirement.
->
-> Signed-off-by: Stuart Menefy <stuart.menefy@codasip.com>
-> ---
->
-> Changes since V1:
-> This is a modified version of the patch posted by Alexandre Ghiti
-> <alexghiti@rivosinc.com> [1]. That version moved the start of the
-> liner mapping by 4GiB, but was subsequently found to trigger a problem
-> in the KASAN code [2]. By moving the start address by 8GiB alignment
-> requiremenents are maintained.
->
-> [1] https://lore.kernel.org/linux-riscv/20240514133614.87813-1-alexghiti@=
-rivosinc.com/
-> [2] https://lore.kernel.org/linux-riscv/4011b34a-1b86-42c7-aaf6-3bd297149=
-f06@ghiti.fr/
->
-> ---
->  Documentation/arch/riscv/vm-layout.rst | 11 ++++++-----
->  arch/riscv/include/asm/page.h          |  2 +-
->  2 files changed, 7 insertions(+), 6 deletions(-)
->
-> diff --git a/Documentation/arch/riscv/vm-layout.rst b/Documentation/arch/=
-riscv/vm-layout.rst
-> index e476b4386bd9..077b968dcc81 100644
-> --- a/Documentation/arch/riscv/vm-layout.rst
-> +++ b/Documentation/arch/riscv/vm-layout.rst
-> @@ -47,11 +47,12 @@ RISC-V Linux Kernel SV39
->                                                                | Kernel-s=
-pace virtual memory, shared between all processes:
->    ____________________________________________________________|_________=
-__________________________________________________
->                      |            |                  |         |
-> -   ffffffc6fea00000 | -228    GB | ffffffc6feffffff |    6 MB | fixmap
-> -   ffffffc6ff000000 | -228    GB | ffffffc6ffffffff |   16 MB | PCI io
-> -   ffffffc700000000 | -228    GB | ffffffc7ffffffff |    4 GB | vmemmap
-> -   ffffffc800000000 | -224    GB | ffffffd7ffffffff |   64 GB | vmalloc/=
-ioremap space
-> -   ffffffd800000000 | -160    GB | fffffff6ffffffff |  124 GB | direct m=
-apping of all physical memory
-> +   ffffffc4fea00000 | -236    GB | ffffffc4feffffff |    6 MB | fixmap
-> +   ffffffc4ff000000 | -236    GB | ffffffc4ffffffff |   16 MB | PCI io
-> +   ffffffc500000000 | -236    GB | ffffffc5ffffffff |    4 GB | vmemmap
-> +   ffffffc600000000 | -232    GB | ffffffd5ffffffff |   64 GB | vmalloc/=
-ioremap space
-> +   ffffffd600000000 | -168    GB | fffffff5ffffffff |  128 GB | direct m=
-apping of all physical memory
-> +                    |            |                  |         |
->     fffffff700000000 |  -36    GB | fffffffeffffffff |   32 GB | kasan
->    __________________|____________|__________________|_________|_________=
-___________________________________________________
->                                                                |
-> diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.=
-h
-> index 115ac98b8d72..81d47fbbd927 100644
-> --- a/arch/riscv/include/asm/page.h
-> +++ b/arch/riscv/include/asm/page.h
-> @@ -37,7 +37,7 @@
->   * define the PAGE_OFFSET value for SV48 and SV39.
->   */
->  #define PAGE_OFFSET_L4         _AC(0xffffaf8000000000, UL)
-> -#define PAGE_OFFSET_L3         _AC(0xffffffd800000000, UL)
-> +#define PAGE_OFFSET_L3         _AC(0xffffffd600000000, UL)
->  #else
->  #define PAGE_OFFSET            _AC(CONFIG_PAGE_OFFSET, UL)
->  #endif /* CONFIG_64BIT */
-> --
-> 2.43.0
->
+Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+---
+ .../net/ethernet/realtek/rtase/rtase_main.c   | 51 +++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-So the issue was with my patch, sorry! Your fix makes sense so you can add:
+diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+index 4ea9c4d0c242..a4799311bd39 100755
+--- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
++++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+@@ -2186,12 +2186,63 @@ static void rtase_shutdown(struct pci_dev *pdev)
+ 	rtase_reset_interrupt(pdev, tp);
+ }
+ 
++static int rtase_suspend(struct device *device)
++{
++	struct net_device *dev = dev_get_drvdata(device);
++
++	if (netif_running(dev)) {
++		netif_device_detach(dev);
++		rtase_hw_reset(dev);
++	}
++
++	return 0;
++}
++
++static int rtase_resume(struct device *device)
++{
++	struct net_device *dev = dev_get_drvdata(device);
++	struct rtase_private *tp = netdev_priv(dev);
++	int ret;
++
++	/* restore last modified mac address */
++	rtase_rar_set(tp, dev->dev_addr);
++
++	if (!netif_running(dev))
++		goto out;
++
++	rtase_wait_for_quiescence(dev);
++
++	rtase_tx_clear(tp);
++	rtase_rx_clear(tp);
++
++	ret = rtase_init_ring(dev);
++	if (ret) {
++		netdev_err(dev, "unable to init ring\n");
++		rtase_free_desc(tp);
++		return -ENOMEM;
++	}
++
++	rtase_hw_config(dev);
++	/* always link, so start to transmit & receive */
++	rtase_hw_start(dev);
++
++	netif_device_attach(dev);
++out:
++
++	return 0;
++}
++
++static const struct dev_pm_ops rtase_pm_ops = {
++	SYSTEM_SLEEP_PM_OPS(rtase_suspend, rtase_resume)
++};
++
+ static struct pci_driver rtase_pci_driver = {
+ 	.name = KBUILD_MODNAME,
+ 	.id_table = rtase_pci_tbl,
+ 	.probe = rtase_init_one,
+ 	.remove = rtase_remove_one,
+ 	.shutdown = rtase_shutdown,
++	.driver.pm = pm_ptr(&rtase_pm_ops),
+ };
+ 
+ module_pci_driver(rtase_pci_driver);
+-- 
+2.34.1
 
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-
-Thanks,
-
-Alex
