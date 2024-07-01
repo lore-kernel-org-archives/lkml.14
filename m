@@ -1,161 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A1516CD21;
-	Mon,  1 Jul 2024 17:11:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA5016E880;
+	Mon,  1 Jul 2024 17:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719853873; cv=none; b=A/y6Wo8+UDYJxwNeO1uI0GNEmLyhtEZu7fbv13rhIYiF2eYOPf2uogMe5AhO6kmx0fkVw46hSsl7EIXdj9vxjLeuHoap7ykeq+sBsFVxq2k/yqhehfyMWjatUpbYiU7Kr7Uq6y7VXGtkN3drC/s5KshKaLNifu1o1Z3/+PLZ/AQ=
+	t=1719853877; cv=none; b=fZfKtVOkzTT4RE48vs3mHA76M1Rmp3bNwH7cQR9Mxqkfj+pheHc0VBA4jFi6+VevhS0zCCsKmCnTDLchRlKlxpdveJJEQxRx5mo74gY+mLJWdFCkUdNuaH00Oj5PstAoyi3xB7jOS6CH3LOLfWydl38ZurQy5uArOxSmW0K0i3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719853873; c=relaxed/simple;
-	bh=/n8yXSU+8Zd0IVWtstzU65ZNdM1aKVu4Wfm3xjGnkGw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K3Wj00ZVtgHNBkFo8rAtxFiH02n+74w1LiQTr2USTVpXSDVxv93e7p7C7PJlYn51blC0kmpeuzYrZMUKvt5MfgwwAgXTh2KMuHx1bRT5QgCsH9IGGMFyqpsgygX9g88ZcpcIe/ooV6ntsxR/+UYV1CpSoiCMot24VN5aEAEdKK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h8N4nDHK; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719853877; c=relaxed/simple;
+	bh=R0NWfF0fDtyeoauyfED8t0eoe2J52bkoikEJUoUb0Lw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SBcN2tsJsq4A6g7ex/e4qhklVrrUOmUm+mfA8rZHjNxpN/Ap3fsHtoUc6xG6AwnDjQTL4xFYfsHQCa3kSDkDrUacYG3RDq9GBzFqpNB/6cfALALxcVPugfQVtN5uNZfMWDJZQYUAysdElGKabkI7kwprK4cCZLVDjfzVul9u37g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WaCsXyfm; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h8N4nDHK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719853873; x=1751389873;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=/n8yXSU+8Zd0IVWtstzU65ZNdM1aKVu4Wfm3xjGnkGw=;
-  b=h8N4nDHKSvIvHrWiTO+GXohWu+mjssrHBeUgLLl96uZXOqOB6POpjyV2
-   u+VcGctfw5vGTovqZITqTbdFJkxWpK+6vgqptI4/j6d82vTWjYwi/AXBH
-   y91ydGgMLjSc7yifDVV2AT2S5/td/n9qiz31AIOJWq34y4Cvo0KE9aQPu
-   7M3npuNLRWyNx3xTp8oHACRkICX+EeKSnjm4TK9B0ubhQqPXpY+7J3ttb
-   rVkSjrQ6By/+oVZp8eVg3iCvsC+lYS2Wc/4NhXmDnU3UIx5rnvm679uQW
-   ptwbSM2Gt8t/zQ/OQHL3rL6zyU3+TwaGdhyYS3ZfoHRfj98TQ5Ahpml3N
-   A==;
-X-CSE-ConnectionGUID: ccy9PmpjQZyO9aRJGUDD7w==
-X-CSE-MsgGUID: pnVRX8s5STqxENJK3oEWTQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="16821015"
-X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
-   d="scan'208";a="16821015"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 10:11:08 -0700
-X-CSE-ConnectionGUID: zNo7PBA9QwyMt2yYyUiXAQ==
-X-CSE-MsgGUID: QaFraCjcTsejU2VP8gGe4Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
-   d="scan'208";a="46328443"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 10:11:08 -0700
-Date: Mon, 1 Jul 2024 10:16:19 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: Xin Li <xin@zytor.com>
-Cc: X86 Kernel <x86@kernel.org>, Sean Christopherson <seanjc@google.com>,
- LKML <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Xin Li
- <xin3.li@intel.com>, linux-perf-users@vger.kernel.org, Peter Zijlstra
- <peterz@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>, Tony Luck
- <tony.luck@intel.com>, Andy Lutomirski <luto@kernel.org>, acme@kernel.org,
- kan.liang@linux.intel.com, Andi Kleen <andi.kleen@intel.com>, "Mehta,
- Sohil" <sohil.mehta@intel.com>, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v3 02/11] x86/irq: Define NMI source vectors
-Message-ID: <20240701101619.63c65106@jacob-builder>
-In-Reply-To: <a1d3b2dd-e4d0-4733-85a0-7d9f83c396a7@zytor.com>
-References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
-	<20240628201839.673086-3-jacob.jun.pan@linux.intel.com>
-	<a1d3b2dd-e4d0-4733-85a0-7d9f83c396a7@zytor.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WaCsXyfm"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-42122ac2f38so19673815e9.1;
+        Mon, 01 Jul 2024 10:11:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719853874; x=1720458674; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RFr8Ofpiwm2nPtOKnS8vgxJYURmMVP4cZnCgpB044ic=;
+        b=WaCsXyfmSAUdLIDFnCXlF2N6Xv7PYAUVbmjLbCk8yZSblydZgRFWuLpOL8KiQb+mRY
+         kDGrMIb5+oKYwCQdVJbYTVIrgp70mA0zxoHOlyFNlJayYg/jDFxRvHs2xz41e1wuaMi6
+         jinbSQvuJzy6yVoy8wNg6E07vH1cVPZUet2gbLUW98YVV6qpupgs89/P9fr9apEeFemK
+         QQu2oqjI4bV6rdExuEqF0GrZuvvG9JIYWd0JLZ7wvvfnOZtyKWYfa19GWJn3ypZnSYlS
+         2Z6N+a0mHU4s44YbeWFp+1LavBajvRmvIiMhcYblT4YNWWUZesDZVMV1uM7rH8uT+Dyw
+         0PbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719853874; x=1720458674;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RFr8Ofpiwm2nPtOKnS8vgxJYURmMVP4cZnCgpB044ic=;
+        b=ohaprcwnSNjorvs+mDM/QBmgy65+wRi1LXac8NAlADr9tHcL43+HQvzm7MlCVL3Vjq
+         5J8vDaAgOF43aXo3ft4/8/FsmUgCHosU+QABCE/1xoPFioDw7FjvTen4mxMd80ytDGgh
+         1iA2Mb6m2bW9wz87G2JneEA00QubejYDFI1dbJXcYkJQ9mHSIaODzJ5pNEc8CDc4Ds5y
+         2Gp6Czb1MyXub1Sf1VQcY/naJoguVniUEH6ZU4rZvSpYAn5rUneHhjUohV4pqcDclL7r
+         Pij1sck7/acJv3EtheUh0z6Cb2SPY/VDU4RrcvpL/G6sCQbVgh9F+RF9zPOlEqVfEhKD
+         +zSg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJfZtWr3FHG8LzbVrPt+1aAQhTX02o4RRpMCjPI0ymiGpP/pUOF8UU+R2MDKK+xUUDeyosl9WRvvSJaRD+Cy07fBQ4IUd6sBLmJu3prsfT/2fc8U4XfJRQTlU/J/uxF4q4roePuSVt
+X-Gm-Message-State: AOJu0YznAd5ha2fXlhSeJC3YAyr426+coJnRd7erIr0o8pOq4BBS3kTV
+	KFY7DxYPIOWa7bs3LhIZ1hKhsTNLrlRYSZPlrRXUFh5IhiZBTMZv
+X-Google-Smtp-Source: AGHT+IGj+dj/EQvMf0Xx7lgxXlKS6qpK6UTruNerxqVaDzO91UchOJE4v36wVK4R6I8c1OknxTOwXw==
+X-Received: by 2002:a05:600c:3089:b0:424:ab8c:a24e with SMTP id 5b1f17b1804b1-4257986256bmr53666225e9.11.1719853873438;
+        Mon, 01 Jul 2024 10:11:13 -0700 (PDT)
+Received: from localhost ([2001:861:3385:e20:6384:4cf:52c5:3194])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a104dbdsm10581949f8f.113.2024.07.01.10.11.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 10:11:12 -0700 (PDT)
+From: Raphael Gallais-Pou <rgallaispou@gmail.com>
+To: "'Rafael J . Wysocki'" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: linux-pm@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] cpufreq: docs: Add missing scaling_available_frequencies description
+Date: Mon,  1 Jul 2024 19:10:40 +0200
+Message-ID: <20240701171040.369030-1-rgallaispou@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Add a description of the scaling_available_frequencies attribute in
+sysfs to the documentation.
 
-On Sat, 29 Jun 2024 11:32:10 -0700, Xin Li <xin@zytor.com> wrote:
+Signed-off-by: Raphael Gallais-Pou <rgallaispou@gmail.com>
+---
+ Documentation/admin-guide/pm/cpufreq.rst | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> On 6/28/2024 1:18 PM, Jacob Pan wrote:
-> > When NMI-source reporting is supported, each logical processor maintains
-> > a 16-bit NMI-source bitmap. It is up to the system software to assign
-> > NMI sources for their matching vector (bit position) in the bitmap.
-> > 
-> > Notice that NMI source vector is in a different namespace than the IDT
-> > vectors. Though they share the same programming interface/field in the
-> > NMI originator.
-> > 
-> > This initial allocation of the NMI sources are limited to local NMIs in
-> > that there is no external device NMI usage yet.
-> > 
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> >   arch/x86/include/asm/irq_vectors.h | 28 ++++++++++++++++++++++++++++
-> >   1 file changed, 28 insertions(+)
-> > 
-> > diff --git a/arch/x86/include/asm/irq_vectors.h
-> > b/arch/x86/include/asm/irq_vectors.h index 13aea8fc3d45..e4cd33bc4fef
-> > 100644 --- a/arch/x86/include/asm/irq_vectors.h
-> > +++ b/arch/x86/include/asm/irq_vectors.h
-> > @@ -105,6 +105,34 @@
-> >   
-> >   #define NR_VECTORS			 256
-> >   
-> > +/*
-> > + * The NMI senders specify the NMI source vector as an 8bit integer in
-> > their  
-> 
-> s/The NMI senders/NMI senders/
-will do
+diff --git a/Documentation/admin-guide/pm/cpufreq.rst b/Documentation/admin-guide/pm/cpufreq.rst
+index 6adb7988e0eb..fe1be4ad88cb 100644
+--- a/Documentation/admin-guide/pm/cpufreq.rst
++++ b/Documentation/admin-guide/pm/cpufreq.rst
+@@ -267,6 +267,10 @@ are the following:
+ ``related_cpus``
+ 	List of all (online and offline) CPUs belonging to this policy.
+ 
++``scaling_available_frequencies``
++	List of available frequencies of the CPUs belonging to this policy
++	(in kHz).
++
+ ``scaling_available_governors``
+ 	List of ``CPUFreq`` scaling governors present in the kernel that can
+ 	be attached to this policy or (if the |intel_pstate| scaling driver is
+-- 
+2.45.2
 
-> > + * vector field with NMI delivery mode. A local APIC receiving an NMI
-> > will
-> > + * set the corresponding bit in a 16bit bitmask, which is accumulated
-> > until
-> > + * the NMI is delivered.
-> > + * When a sender didn't specify an NMI source vector the source vector
-> > will
-> > + * be 0, which will result in bit 0 of the bitmask being set. For out
-> > of
-> > + * bounds vectors >= 16 bit 0 will also be set.
-> > + * When bit 0 is set, system software must invoke all registered NMI
-> > handlers
-> > + * as if NMI source feature is not enabled.  
-> 
-> Add empty lines in the above paragraph.
-sounds good.
-
-> > + *
-> > + * Vector 2 is reserved for matching IDT NMI vector where it may be
-> > hardcoded
-> > + * by some external devices.
-> > + *
-> > + * The NMI source vectors are sorted by descending priority with the
-> > exceptions
-> > + * of 0 and 2.
-> > + */
-> > +#define NMI_SOURCE_VEC_UNKNOWN		0
-> > +#define NMI_SOURCE_VEC_IPI_REBOOT	1	/* Crash reboot */
-> > +#define NMI_SOURCE_VEC_IDT_NMI		2	/* Match IDT
-> > NMI vector 2 */ +#define NMI_SOURCE_VEC_IPI_SMP_STOP	3	/*
-> > Panic stop CPU */ +#define NMI_SOURCE_VEC_IPI_BT
-> > 4	/* CPU backtrace */ +#define NMI_SOURCE_VEC_PMI
-> > 5	/* PerfMon counters */ +#define NMI_SOURCE_VEC_IPI_KGDB
-> > 	6	/* KGDB */ +#define NMI_SOURCE_VEC_IPI_MCE
-> > 	7	/* MCE injection */ +#define
-> > NMI_SOURCE_VEC_IPI_TEST		8	/* For remote and local
-> > IPIs */ +#define NR_NMI_SOURCE_VECTORS		9  
-> 
-> Fix alignment.
-Do you see alignment problem after the patch is applied? Alignment looks
-good with vi, emacs, etc. passed checkpatch --strict.
-
-> > +
-> >   #ifdef CONFIG_X86_LOCAL_APIC
-> >   #define FIRST_SYSTEM_VECTOR
-> > POSTED_MSI_NOTIFICATION_VECTOR #else  
-> 
-
-
-Thanks,
-
-Jacob
