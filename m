@@ -1,52 +1,46 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE5915250C;
-	Mon,  1 Jul 2024 12:00:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66192155332
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 12:00:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719835234; cv=none; b=Z1TrXVd7uzoPl+mrFOsfYcoeM8XYOODAZOOMkbTOSMKRGZvw7laqxuBofIERiCWNlv5Q5m0bystdaH3QL7LBMAT6rys1KxFLvYQ6ipRyETlIcNr3eDufVFhXzb7fORuGU4Y6t4LV09/Xy/eFi3qwVU/NHKz5UykQMLYvV0EjbEI=
+	t=1719835236; cv=none; b=lfVqsFudLT9P55+C9sxMaRB1rztvhGmANHmsYDkkj7ncaI2VPiSrSJmxkQUl5EZG5Pwy61Iw2rOp6d5//Il1ojFQW4eWVfg72H695gdfgiVXk6QtU3pfwQ66+KodNLM1c+uKy9ITAdM5F2RdOXz9pXf/Lx0h69rGwvXw7Bh3LhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719835234; c=relaxed/simple;
-	bh=/J7nwEG7G/iCQI62554P/C54kT++JSK1r3VsB7f4G4s=;
+	s=arc-20240116; t=1719835236; c=relaxed/simple;
+	bh=cdg3Vn98qZ7oARU4FlI4fkjayGjkqe8AY/54bj/jMvw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qkthG1yFdyGgc4YOk+2KbubsF2A2H7M4XwqYnrlu9YgaBYxZ17ti+Jbh8UfZgxbazIXasqE7Ml/H5aRC/r5gYSgflrquc1ZDEcazPCJdWtg4tYPlwsKB1qpZrLB8rYIl5Jhrs9x08zPGHHBgG7v2ViW3sNyEAoV4EKeNDyqjEDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=V2oJLv+R; arc=none smtp.client-ip=217.70.183.194
+	 MIME-Version; b=mE1FcmbcsPffn3jxrvWveUGWyw1L/q3yfICPMTQSdTh78x6K+kHdBuULAgQzVSuB0YusasZFHosWpPGDoqvEomlCOTb4usH2E1rIKcS2cF/maJUpXWGnJW3Lw7CPa+dXQT6WTy9FbuewMeN85BZijDXfMuLSyKABBqak3/UFQZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pklm/J+p; arc=none smtp.client-ip=217.70.183.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="V2oJLv+R"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 581EE4000D;
-	Mon,  1 Jul 2024 12:00:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pklm/J+p"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A4F3160007;
+	Mon,  1 Jul 2024 12:00:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1719835224;
+	t=1719835233;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CUg8N+QU6C4GigySnqcnzizYYV5dL0IssWNRBHYgoR4=;
-	b=V2oJLv+RDDvqgpngTUbpB2a6TqKGtzwCGJpaaFDMDfbnge8RAnjGpH1m6ap5z8NWqCS/2W
-	IU1MMAw6Ba7+TjoXnpgHbxTuLB+qiRTqiBNp9PuiDOWqb54yDwkx7F09HhUpzb56wjVEpR
-	DJoReRIf7jPqHRlz2OmTy0RCnV9vK+Ltu/Gjf/ucBlgZluSn6e/8uiJJS4aQED73zbbqoA
-	eKFmmHfh2k22S6YbUD6c7jqPUeF1tX9Ppota+lkv6pAQnO/NXbKHjSV5qatTzmjjW3Cywb
-	THYi+GtG0MNmJ1dAwk4+zBwSbpTKOnMfcDKNHWc+Qb1DcoXhMPjFYlKZSCj8cg==
+	bh=64LFwUS4Is69wJ6D0Vpr/kBDvHoL1J6TvpQz+n9BfAY=;
+	b=pklm/J+pHxLS6jke9M71TPZjw/5/1KY+Hb/WI+jtYFo+73jz/h918s4WeBbz7mpjkfZxEQ
+	HXo75L36noysRxjErknWqFPMJXRRf1rccxUi2L/ZBIXatHDcXzIjxRNJOyLivn1jVm5/uP
+	Fy4WzsAVoq7jrsMine9OdYsh2uS68vuSObNAjq+f/8w6wZi3rOXOmbhQGApjZ6MMT0htlF
+	1QwPaBZyzFzjWp8P3SPS0f5GZQriTAT77HnAQc968mZ4BBmJHkya4ObaKSyb3uT6c6Lhga
+	6Z3nGjHt2z2XX2bMCR1P0+j3Ewj4Dgk0msT4NZ1EsClJdr8ZVysGeRMzuzdiHg==
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-mtd@lists.infradead.org,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: mtd: qcom,nandc: Define properties at top-level
-Date: Mon,  1 Jul 2024 14:00:22 +0200
-Message-Id: <20240701120022.525479-1-miquel.raynal@bootlin.com>
+To: Sascha Hauer <s.hauer@pengutronix.de>,
+	linux-mtd@lists.infradead.org
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
+	linux-kernel@vger.kernel.org,
+	Richard Weinberger <richard@nod.at>
+Subject: Re: [PATCH] mtd: nand: mxc_nand: always copy_spare() for page write
+Date: Mon,  1 Jul 2024 14:00:32 +0200
+Message-Id: <20240701120032.525600-1-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240625215605.192260-1-robh@kernel.org>
+In-Reply-To: <20240528203006.1479230-1-s.hauer@pengutronix.de>
 References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -55,21 +49,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: b'31489eac5e4835d4521be320c8e5f4517780572b'
+X-linux-mtd-patch-commit: b'd3dfbae6d4adee33deb804d28d10045878974471'
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Tue, 2024-06-25 at 21:56:05 UTC, "Rob Herring (Arm)" wrote:
-> Convention is DT schemas should define all properties at the top-level
-> and not inside of if/then schemas. That minimizes the if/then schemas
-> and is more future proof.
+On Tue, 2024-05-28 at 20:30:06 UTC, Sascha Hauer wrote:
+> When doing a page write we always have to copy the OOB data in place,
+> as the controller will always write it. Not copying it means we write
+> random data to the OOB area.
 > 
-> There were 2 "if" schemas for "qcom,ipq806x-nand" and the
-> "qcom,boot-partitions: true" unnecessary, so the conditional schemas
-> can be simplified a bit.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Fixes: 3df54960b63cc ("mtd: nand: mxc_nand: implement exec_op")
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 
 Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
 
