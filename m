@@ -1,102 +1,106 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F15839F1
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 08:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E25002C6BB
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 08:31:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719822590; cv=none; b=cBTIjIFCkcbWF2T3PuHwvgBEOX8CVaFXUjbJDTiYB7rlI2vkTIAiLwQutMCFFKV9GIlupx2DhrQlSp+7Hj+SHSygAtab1FB94yEUNBPDy+9dlJHzJJItMMpfhc9M+mCF4PLgljkbaX/DbW2LA8rkqscVB7R4Bvv2f2O5szpzm5s=
+	t=1719822717; cv=none; b=ucUm+rDcM1gt55QnXyvlaOEj/mdjYrnIPEC139TqNOKokslFkOX1pwYkyjDTH4fJMVhqH4sxX7wMShhQnVJHlRFlPqTVtCN622Ln6MBUmkhCa6Q+FbhVNJ6McH6Fg5RspuUqj2hzLMOI4Cf/0CT6MaJyu5kDGozAhtDvxVb1q9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719822590; c=relaxed/simple;
-	bh=dsLvM6A/NR+CxJT4/b0go59hFzrUqWywWs1EWYXaLz8=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=bhGVvTgKlDsRZb7K8jtowcfE2paC1KU5H7W56xvy6M/K77MpZFdRr2OvktcVsnbIue/g+IpyGcdQD4/Y6TxPj8erJOjUu5c5mTqgeqC3Wy3y7M2YvIGY00LX6LfjfNPmjj1JpvpVLzDFeqIuSyJXMgsKMFEpVmm4fYA0MT1QRqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7f3c9764edbso280354939f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 01:29:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719822588; x=1720427388;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JjtIOKXXqcE84q6BVLWG9Kjx/jd/kn7ucqS4JTICZjw=;
-        b=SujLdf3Jkgsp1F/OTWt+3g1elSuafknYJFpZKzQraA8zAU4vHFZwVZlfxq3oeNeIx0
-         J9im0wzq/Ej0x9bCim12vh6rZFz9cHKY7HFsnXdmcpfesQMXF9+RsdlqX0GivHKW+ED7
-         Sdl7nivUtefcksLz+7MSj1/cSwqa1EgiiaY5Rkq49NkGzJUCUc2mbnSdruUMqDKxhGzz
-         SxExehYFxQVUzdnmGefISlpTh8I7uV+5C0sQcJpCKnMn8PFV9HMp82V4UGXhWUGJhxui
-         UhSqW3pxhRt6XHfZ97ujYaAlA+CoYBGssBcsxTAMeBaJxZLxk/xf+Zybesk7HnVWiCO7
-         mArQ==
-X-Gm-Message-State: AOJu0YwnlX/UchG07TewTwfK3UJUgO08M/wTjBl3mgysec8j/y+3Y1/L
-	zMDt9h26MFL1qu7uQlQ7u6xDGh6mza/dpk+/3njOPEP8uMmHf/hkTekT+nIP2uQPE/CbFWFR2jk
-	DhJ6Q3lAMfXUQ5FX8GL8RHL4oZynhV3G8GO9bhzmuMNUDHnK1YWKhdHI=
-X-Google-Smtp-Source: AGHT+IGawY8Cf6Y1SZaFyx8TXZZyXRH/Jjt5F6tcXVNmnnxymlk7FFOfOSNWdZ0GreP68Np4PlfWh4eW7Zu9YWXh7xJWRH39/qWm
+	s=arc-20240116; t=1719822717; c=relaxed/simple;
+	bh=9fMBl3IiR9pAJFqq60EQ0JGDl+5vTAPK9ubUsBFBqfs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hDtYkSxBgEpGlIkUQA4ODQic4Tvvnz6/c27EfiGBCOpBLut7k1eZjJsTQ8d14iTscmRWLTgu2uQqZXZJd/cV1wJQu43LdeXa7b+2AyllgoAu9/PdJv0NsmbAG3rYteAC/WMrNGv0ShkGVfEQY+DAYHsoHTPw8O/69su0noc9gPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 34DBF339;
+	Mon,  1 Jul 2024 01:32:19 -0700 (PDT)
+Received: from [10.57.72.41] (unknown [10.57.72.41])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9F4103F766;
+	Mon,  1 Jul 2024 01:31:52 -0700 (PDT)
+Message-ID: <13dcf4be-8c5f-4697-adc1-b68c3da82d78@arm.com>
+Date: Mon, 1 Jul 2024 09:31:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:3488:b0:4b9:ad20:51ff with SMTP id
- 8926c6da1cb9f-4bbb6e8ec35mr369886173.1.1719822587664; Mon, 01 Jul 2024
- 01:29:47 -0700 (PDT)
-Date: Mon, 01 Jul 2024 01:29:47 -0700
-In-Reply-To: <000000000000f19a1406109eb5c5@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006a2b4c061c2b66b5@google.com>
-Subject: Re: [syzbot] [PATCH] handle EFSCORRUPTED, drop EXT4_STATE_MAY_INLINE_DATA
- sanity check
-From: syzbot <syzbot+18df508cf00a0598d9a6@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] mm: add docs for per-order mTHP split counters
+Content-Language: en-GB
+To: Lance Yang <ioworker0@gmail.com>, akpm@linux-foundation.org
+Cc: dj456119@gmail.com, 21cnbao@gmail.com, david@redhat.com,
+ shy828301@gmail.com, ziy@nvidia.com, libang.li@antgroup.com,
+ baolin.wang@linux.alibaba.com, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Mingzhe Yang <mingzhe.yang@ly.com>
+References: <20240628130750.73097-1-ioworker0@gmail.com>
+ <20240628130750.73097-3-ioworker0@gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20240628130750.73097-3-ioworker0@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+On 28/06/2024 14:07, Lance Yang wrote:
+> This commit introduces documentation for mTHP split counters in
+> transhuge.rst.
+> 
+> Signed-off-by: Mingzhe Yang <mingzhe.yang@ly.com>
+> Signed-off-by: Lance Yang <ioworker0@gmail.com>
+> ---
+>  Documentation/admin-guide/mm/transhuge.rst | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
+> index 1f72b00af5d3..709fe10b60f4 100644
+> --- a/Documentation/admin-guide/mm/transhuge.rst
+> +++ b/Documentation/admin-guide/mm/transhuge.rst
+> @@ -514,6 +514,22 @@ file_fallback_charge
+>  	falls back to using small pages even though the allocation was
+>  	successful.
 
-***
 
-Subject: [PATCH] handle EFSCORRUPTED, drop EXT4_STATE_MAY_INLINE_DATA sanity check
-Author: wojciech.gladysz@infogain.com
+I note at the top of this section there is a note:
 
-#syz test: https://linux.googlesource.com/linux/kernel/git/torvalds/linux
----
- fs/buffer.c     | 5 ++++-
- fs/ext4/inode.c | 5 +++++
- 2 files changed, 9 insertions(+), 1 deletion(-)
+Monitoring usage
+================
 
-diff --git a/fs/buffer.c b/fs/buffer.c
-index 4f73d23c2c46..10514fa9851c 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -2163,7 +2163,10 @@ static void __block_commit_write(struct folio *folio, size_t from, size_t to)
- 	unsigned blocksize;
- 	struct buffer_head *bh, *head;
- 
--	bh = head = folio_buffers(folio);
-+	head = folio_buffers(folio);
-+	if (!head)
-+		return;
-+	bh = head;
- 	blocksize = bh->b_size;
- 
- 	block_start = 0;
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 537803250ca9..e7a6958025ee 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -2948,6 +2948,11 @@ static int ext4_da_do_write_end(struct address_space *mapping,
- 	bool disksize_changed = false;
- 	loff_t new_i_size;
- 
-+	if (unlikely(!folio_buffers(folio))) {
-+		folio_unlock(folio);
-+		folio_put(folio);
-+		return -EIO;
-+	}
- 	/*
- 	 * block_write_end() will mark the inode as dirty with I_DIRTY_PAGES
- 	 * flag, which all that's needed to trigger page writeback.
--- 
-2.35.3
+.. note::
+   Currently the below counters only record events relating to
+   PMD-sized THP. Events relating to other THP sizes are not included.
+
+Which is out of date, now that we support mTHP stats. Perhaps it should be removed?
+
+>  
+> +split
+> +	is incremented every time a huge page is successfully split into
+> +	base pages. This can happen for a variety of reasons but a common
+> +	reason is that a huge page is old and is being reclaimed.
+> +	This action implies splitting any block mappings into PTEs.
+
+Now that I'm reading this, I'm reminded that Yang Shi suggested at LSFMM that a
+potential aid so solving the swap-out fragmentation problem is to split high
+orders to lower (but not 0) orders. I don't know if we would take that route,
+but in principle it sounds like splitting mTHP to smaller mTHP might be
+something we want some day. I wonder if we should spec this counter to also
+include splits to smaller orders and not just splits to base pages?
+
+Actually looking at the code, I think split_huge_page_to_list_to_order(order>0)
+would already increment this counter without actually splitting to base pages.
+So the documantation should probably just reflect that.
+
+> +
+> +split_failed
+> +	is incremented if kernel fails to split huge
+> +	page. This can happen if the page was pinned by somebody.
+> +
+> +split_deferred
+> +	is incremented when a huge page is put onto split
+> +	queue. This happens when a huge page is partially unmapped and
+> +	splitting it would free up some memory. Pages on split queue are
+> +	going to be split under memory pressure.
+> +
+>  As the system ages, allocating huge pages may be expensive as the
+>  system uses memory compaction to copy data around memory to free a
+>  huge page for use. There are some counters in ``/proc/vmstat`` to help
 
