@@ -1,83 +1,63 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD04016DEC2;
-	Mon,  1 Jul 2024 16:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3A116DC28
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 16:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719852582; cv=none; b=XCgLt75U9mUnW1dRKnioxywMIGPTFT3IwbRhIwO48sB9iaYa2EZRZUGU3tvkjZknpzG5xDCGJqb/gqOvRBP5YzSQu4msb2U+Qi9zt4w6gQ9yKsIzBsvvtSmBp4Anv1F68D+iSg67XlG7iKV/iwxoolZ5sWKezEfBrabzhCeABAg=
+	t=1719852583; cv=none; b=R5okjz9DeE8CTkwB6P6q/bvY7v1I765DhdUQtrD/WMYToGdATTSKAIJBkejWmzoZpoUsN6XD61P1iajo+I8xWvVigNQRdJnaAw5x4JPLrchGMnfYBQFR0q01bcB9YgkCjQJQkdEGaZjcqJvUUMuu72LS9y3fgOt1uriOJ7Y/rLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719852582; c=relaxed/simple;
-	bh=2mzQChKJBEDOxYPL0UcHWBNArWKR33Oh6AobARyhyng=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dLK9Fs30FsSvaKZQSf8zsow2CZya43+8N0uvBt8VMIWZVGrMIJumRgIjtiiYNrQx/JPW8bl6rffz/pHNGuZ01ZbwHBDs2/Jtw/sWsa6OVQADB3e5kUDMI+0LTdTP8dIQofA2zdTsH2gVoCkosEGh12iv++L2UpAJIAkg8oYHf0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=qoebQFd4; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1719852583; c=relaxed/simple;
+	bh=aIy8w2x4i39X1sEGi7Yo4OKtvRgd6sbGVj+X1IPp9hc=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ZNog11zlYlrxPsnv9p4+9lGTU0XmqrleamLY1R8dOu22xKmJsIDFj1b3xxxAcMZcjWC3FedSOlcC4QDaIU7GY2jw9+Ij3t/uY8bsNCQhzpN9U9X2H+qoEcjqrinmVi1o1LvER//931yQsAWFkhLJ/XbTiOvaZP6KEyB0G75p0kI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nETWEwBk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="qoebQFd4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=r0nb3H9c2I34kc6YVbbpxeTBYxeO3JBcLrwkJRtEGMI=; b=qoebQFd4z3LA+lu2Jl7LUTcVEw
-	x/umcz3cJApJrjt7Dsm8c1UlkItdiodXhFCXwT/a8Q+RSlXAiYc9pPZsh5u23xyaHmbrg97JdlDlt
-	kvUzvG22t3rOZxUP4l7vm2qAD8FoCWtcSmhFbFHCkf46TWV2eNdmFvlt8uah8Cvjo2cg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sOKDV-001Z1N-8p; Mon, 01 Jul 2024 18:49:25 +0200
-Date: Mon, 1 Jul 2024 18:49:25 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Romain Gantois <romain.gantois@bootlin.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 4/6] net: phy: dp83869: Support 1000Base-X and
- 100Base-FX SFP modules
-Message-ID: <21081e48-0f96-463f-a01a-959eb71bdb40@lunn.ch>
-References: <20240701-b4-dp83869-sfp-v1-0-a71d6d0ad5f8@bootlin.com>
- <20240701-b4-dp83869-sfp-v1-4-a71d6d0ad5f8@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nETWEwBk"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A27B5C32781;
+	Mon,  1 Jul 2024 16:49:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719852583;
+	bh=aIy8w2x4i39X1sEGi7Yo4OKtvRgd6sbGVj+X1IPp9hc=;
+	h=Subject:From:In-Reply-To:References:Date:To:List-Id:Cc:From;
+	b=nETWEwBkViETCOMRbr/aNo7rsET1W64vQHQtv+ftwAyUJBEZHiWsuOqlpLZGEnqUs
+	 Ftjr3NrZwGFrRVU4A7kftk7Eg3i6C/ZTjWhIbadpx1/r+RwzBJLbPCiEPKrwTvtQJJ
+	 3nBag6NIkXcqxrPb7SrJ++lv2Q6aTFnrzY9FmMEeJXtUp3t8T/hy2DZw1YzFPIuG2d
+	 QqBcq5Gb3EKG9gerEY0cLHwtNyaQCxdBrj2pLCcAkYg+CIXdMhe7kUF7v/xWbqxYAg
+	 Ny9MxINsXsZoOKsu5gYOgCWySey/ZWbp7X83HdsW7T6UTSIf3ejBmup/ksHSkrmz3x
+	 +h3qdvlYk4/gA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 95DC0C43446;
+	Mon,  1 Jul 2024 16:49:43 +0000 (UTC)
+Subject: Re: [GIT PULL] SoC fixes for 6.10, part 2
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <3040c98f-940b-4380-9a90-dfcae18a47b6@app.fastmail.com>
+References: <3040c98f-940b-4380-9a90-dfcae18a47b6@app.fastmail.com>
+X-PR-Tracked-List-Id: <linux-arm-kernel.lists.infradead.org>
+X-PR-Tracked-Message-Id: <3040c98f-940b-4380-9a90-dfcae18a47b6@app.fastmail.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/arm-fixes-6.10-2
+X-PR-Tracked-Commit-Id: 07917ee08723e6c46074a2655a380126acee3898
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 651ab78190e2e4817eb6c21bbc5b4119c2fb34f7
+Message-Id: <171985258360.24381.15874330138736099680.pr-tracker-bot@kernel.org>
+Date: Mon, 01 Jul 2024 16:49:43 +0000
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, soc@kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240701-b4-dp83869-sfp-v1-4-a71d6d0ad5f8@bootlin.com>
 
-> +	dev_info(&phydev->mdio.dev, "%s SFP compatible link mode: %s\n", __func__,
-> +		 phy_modes(interface));
+The pull request you sent on Mon, 01 Jul 2024 18:00:20 +0200:
 
-Maybe phydev_debug().
+> https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/arm-fixes-6.10-2
 
-> +
-> +	dp83869 = phydev->priv;
-> +
-> +	switch (interface) {
-> +	case PHY_INTERFACE_MODE_100BASEX:
-> +		dp83869->mode = DP83869_RGMII_100_BASE;
-> +		phydev->port = PORT_FIBRE;
-> +		break;
-> +	case PHY_INTERFACE_MODE_1000BASEX:
-> +		dp83869->mode = DP83869_RGMII_1000_BASE;
-> +		phydev->port = PORT_FIBRE;
-> +		break;
-> +	default:
-> +		dev_err(&phydev->mdio.dev,
-> +			"incompatible PHY-to-SFP module link mode %s!\n",
-> +			phy_modes(interface));
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/651ab78190e2e4817eb6c21bbc5b4119c2fb34f7
 
-phydev_err()?
+Thank you!
 
-
-    Andrew
-
----
-pw-bot: cr
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
