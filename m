@@ -1,171 +1,130 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF9715572D
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 08:51:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9FD81749
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 08:53:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719823876; cv=none; b=kVyraz/2tnfkst/AykL4u8G/c7lT/IjH78fnHiWmrDmosFil8xWxEC5l+gapdjBU9xTDreqVWrAhDXUJgOyqpO1GYYdfWWUYCB7VRK2rtTC1wDtBbksXBSVm7MZZVTJVuVo1pOsuq+YEmsRX2bTc3sTJ5C8ZBHDrCdXCVYN2bbY=
+	t=1719824033; cv=none; b=kS4uFphBWWkKBMi8TQMfXyFmWUfjE2ivJynO4m0CTFjwbP+umIEA/ERiNOpGrbsaX5fZPSuZNIUqmto1rzirZdHQS5wJxTWfmy/gC6zKIscRBXwakxhIEiE1TIttGwOA07j/GQApUqEJucrw5FXyootsVTOp0O6eHT49Tw01enU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719823876; c=relaxed/simple;
-	bh=pv5z3h3GJ3bX8KpKces8qLwgZDP5k02EwW8KogP8qF0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q6aqx5z23l9n6IerjFHdxKPpumWC/t9qLAqHHnYcGwlrc6xTy4juPIjL8zV/OA5rBdhjCYhhDZSto1yf6QKpJcgmBUSopQe3bkJgXWg0f4O6xg+gkQqjlNF45r4vPAlFfSeiCpeOdAzAI/Oi2Y7ij/irLJZbhXT6VRijG3/JBPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ft1Wn9T0; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ft1Wn9T0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719823874;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=+Dwuh31FWXKFETeVE1bIi4aG9bVbhfrl9UVZK40+cBU=;
-	b=Ft1Wn9T02dZSW20SwDono6WhQGSy5/ICxZ6TxBDUAHGJwqf+66u01oG9Hy1DgAIJaj+W5H
-	I14EQnLaUr0AGL8SLT0+QiN3Y26Aq9dCxxR9MYzoQVyrtPAzPOdOoF6sxnPKNhoYxM9LJ4
-	NiGRG1aEO8LqutKU9ctUJM3Ae4nawxc=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-635-bYAFG5LbOkaC8B3a4ytF_w-1; Mon, 01 Jul 2024 04:51:13 -0400
-X-MC-Unique: bYAFG5LbOkaC8B3a4ytF_w-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a72b3066669so344775666b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 01:51:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719823872; x=1720428672;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+Dwuh31FWXKFETeVE1bIi4aG9bVbhfrl9UVZK40+cBU=;
-        b=BofWE88d7fl3n0x4AdpdIIM6HttVafrj3NEr6BENv+eXcbV1lvbtm6BABBdHYtQ/AU
-         yXWmC8OjsKXNzL1x87+sAeUQ13MYB8d3nTp9UVc0kHuHLldu0nMylli7rnRBT7NXL4Dk
-         kbCRTtFe9etll/wXY/O/jjIGlOiM8hkMvzW//crLdDOFkBP6HqgUb9je1D2IbT/tgdag
-         SNUaCTC2WEdGxbBOmZTVZ1LW3PYkZuqUy5hHE8P7L5XMWc1OGGrsDoNHWwr9QYKslS4i
-         JBz/DNgyVUBAoaZbz0k3yw280Dlk29u0gg/kspfGAeIIID+aa7qoq3W2wMH77xdcqjHH
-         eUow==
-X-Gm-Message-State: AOJu0Ywd8Md+Sn1vcirUd088ewL40lWYpmkTc7TsuHrISYu6oeXGwo9H
-	pbjpGwjWYN7vikefuFBq2BD/JqZzEBwZkmMC5maFVYbT1rSMxF0pfESUKa0/fYyNoUUqtG4g7Iv
-	xEtiswjNXmXhhbpEg5cWAQtDsbLr+Df/mrlxRUyROhmGnaXoY6ExZ00jKtlOGcw==
-X-Received: by 2002:a17:907:3f29:b0:a6f:6df5:a264 with SMTP id a640c23a62f3a-a751386ec5fmr488694466b.1.1719823871255;
-        Mon, 01 Jul 2024 01:51:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGYvD40tgD05VnEwmXz0XcpYx3ec+54nXSBpU3yVu8tlzKFZdfjFxO8yOk+ow1/wiXC0tObSg==
-X-Received: by 2002:a17:907:3f29:b0:a6f:6df5:a264 with SMTP id a640c23a62f3a-a751386ec5fmr488690666b.1.1719823870372;
-        Mon, 01 Jul 2024 01:51:10 -0700 (PDT)
-Received: from [100.81.188.195] ([178.24.249.76])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72aaf1846esm312641266b.38.2024.07.01.01.51.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Jul 2024 01:51:09 -0700 (PDT)
-Message-ID: <81d768d4-6d37-4d73-a1a4-39950a663105@redhat.com>
-Date: Mon, 1 Jul 2024 10:51:08 +0200
+	s=arc-20240116; t=1719824033; c=relaxed/simple;
+	bh=5aS9mvQ/Irljen8wjikG89TM/g9nsYb8aM4QkYtKZPI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=QEjy9u//Tdb9PVXjkrDOu9BH1QOwsf6ViH1TAz60S66RL50Sa/HShJgFRJ9xpsFVH35bqOyrna48pziE9vTLD0xBDEibcsuf5lPvMPA+7ua2Xww1Qmvck9vOc5WD1EsAsrueibxaRhfK9Tqu2iou8r+b22MFi0oBAQmgrbJhROc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sOCnB-0006bE-92; Mon, 01 Jul 2024 10:53:45 +0200
+Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sOCnA-006Kdp-KC; Mon, 01 Jul 2024 10:53:44 +0200
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1sOCnA-00ClWO-1m;
+	Mon, 01 Jul 2024 10:53:44 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: "David S. Miller" <davem@davemloft.net>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Eric Dumazet <edumazet@google.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	Arun Ramadoss <arun.ramadoss@microchip.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	UNGLinuxDriver@microchip.com
+Subject: [PATCH net-next v2 3/3] net: dsa: microchip: lan937x: disable VPHY support
+Date: Mon,  1 Jul 2024 10:53:43 +0200
+Message-Id: <20240701085343.3042567-3-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240701085343.3042567-1-o.rempel@pengutronix.de>
+References: <20240701085343.3042567-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/vmscan: drop checking if _deferred_list is empty
- before using TTU_SYNC
-To: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org,
- linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>,
- Ryan Roberts <ryan.roberts@arm.com>
-References: <20240629234155.53524-1-21cnbao@gmail.com>
-Content-Language: en-US
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240629234155.53524-1-21cnbao@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On 30.06.24 01:41, Barry Song wrote:
-> From: Barry Song <v-songbaohua@oppo.com>
-> 
-> The optimization of list_empty(&folio->_deferred_list) aimed to prevent
-> increasing the PTL duration when a large folio is partially unmapped,
-> for example, from subpage 0 to subpage (nr - 2).
-> 
-> But Ryan's commit 5ed890ce5147 ("mm: vmscan: avoid split during
-> shrink_folio_list()") actually splits this kind of large folios. This
-> makes the "optimization" useless.
-> 
-> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Ryan Roberts <ryan.roberts@arm.com>
-> ---
->   -v1
->   * I remember David and Ryan once suggested that this check could be dropped
->     while the patch was being pulled into mm-unstable. However, for some reason,
->     I forgot to request squashing this change.
-> 
->   mm/vmscan.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index 3d4c681c6d40..0761f91b407f 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -1291,7 +1291,7 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
->   			 * try_to_unmap acquire PTL from the first PTE,
->   			 * eliminating the influence of temporary PTE values.
->   			 */
-> -			if (folio_test_large(folio) && list_empty(&folio->_deferred_list))
-> +			if (folio_test_large(folio))
->   				flags |= TTU_SYNC;
->   
->   			try_to_unmap(folio, flags);
+From: Lucas Stach <l.stach@pengutronix.de>
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+As described by the microchip article "LAN937X - The required
+configuration for the external MAC port to operate at RGMII-to-RGMII
+1Gbps link speed." [1]:
 
+"When VPHY is enabled, the auto-negotiation process following IEEE 802.3
+standard will be triggered and will result in RGMII-to-RGMII signal
+failure on the interface because VPHY will try to poll the PHY status
+that is not available in the scenario of RGMII-to-RGMII connection
+(normally the link partner is usually an external processor).
+
+Note that when VPHY fails on accessing PHY registers, it will fall back
+to 100Mbps speed, it indicates disabling VPHY is optional if you only
+need the port to link at 100Mbps speed.
+
+Again, VPHY must and can only be disabled by writing VPHY_DISABLE bit in
+the register below as there is no strapping pin for the control."
+
+This patch was tested on LAN9372, so far it seems to not to affect VPHY
+based clock crossing optimization for the ports with integrated PHYs.
+
+[1]: https://microchip.my.site.com/s/article/LAN937X-The-required-configuration-for-the-external-MAC-port-to-operate-at-RGMII-to-RGMII-1Gbps-link-speed
+
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+changes v2:
+- reword the comment and link microchip article
+---
+ drivers/net/dsa/microchip/lan937x_main.c | 3 +++
+ drivers/net/dsa/microchip/lan937x_reg.h  | 4 ++++
+ 2 files changed, 7 insertions(+)
+
+diff --git a/drivers/net/dsa/microchip/lan937x_main.c b/drivers/net/dsa/microchip/lan937x_main.c
+index eaa862eb6b265..0606796b14856 100644
+--- a/drivers/net/dsa/microchip/lan937x_main.c
++++ b/drivers/net/dsa/microchip/lan937x_main.c
+@@ -390,6 +390,9 @@ int lan937x_setup(struct dsa_switch *ds)
+ 	lan937x_cfg(dev, REG_SW_GLOBAL_OUTPUT_CTRL__1,
+ 		    (SW_CLK125_ENB | SW_CLK25_ENB), true);
+ 
++	/* Disable global VPHY support. Related to CPU interface only? */
++	ksz_rmw32(dev, REG_SW_CFG_STRAP_OVR, SW_VPHY_DISABLE, SW_VPHY_DISABLE);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/net/dsa/microchip/lan937x_reg.h b/drivers/net/dsa/microchip/lan937x_reg.h
+index 7ecada9240233..2f22a9d01de36 100644
+--- a/drivers/net/dsa/microchip/lan937x_reg.h
++++ b/drivers/net/dsa/microchip/lan937x_reg.h
+@@ -37,6 +37,10 @@
+ #define SW_CLK125_ENB			BIT(1)
+ #define SW_CLK25_ENB			BIT(0)
+ 
++/* 2 - PHY Control */
++#define REG_SW_CFG_STRAP_OVR		0x0214
++#define SW_VPHY_DISABLE			BIT(31)
++
+ /* 3 - Operation Control */
+ #define REG_SW_OPERATION		0x0300
+ 
 -- 
-Cheers,
-
-David / dhildenb
+2.39.2
 
