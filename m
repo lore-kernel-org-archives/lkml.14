@@ -1,86 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B53381CC;
-	Mon,  1 Jul 2024 18:36:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA1016EB70;
+	Mon,  1 Jul 2024 18:36:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719858992; cv=none; b=uSrrl02hWLTOp0OEEF6dRL9RY5+xzravBRJYhc+uz2YKM76AFpw4AX5JQiitKM5n4xvBQU7RWy4vNEHqWKb8bS5ONzXiqN4GhMKjYicZurG7RyDPtwnXjb2BV7SPjkx+XB9fp+RnJiN+I9/iWpYcAhpbASrPW/uTHiP++b4R2mM=
+	t=1719859008; cv=none; b=LtXuh7xn9VvUO859ibFcPpTK2DSFvybgvrfwhiHIRUAbxPqcPK3P4DKxBaLKGGpe+roU2XJEAGcD0Q0+g5yYPEcdNQXkY5LSPeGNps3D3RQYxj4eteVN0StMrFQuZw+EVt0aRf0BFvqiJbO+Zmq/uN75cbsPEwXSnzU06epUBo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719858992; c=relaxed/simple;
-	bh=PtmpIxW7QtZRZGSwCmMzSgdpUv310aGaJeYhAgzViwo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rhBjwx882Cqjw9IK2IVZFqvupjfStoMlSwaN56msZQl5nhFO91+gln30VSY1qy2dLYtHCsniBlY6+SLiQqBThWbZGMdqWgnh69Ts+GNNmJ6B6GVOytcdk7NHowrKFyczPdgas0O2CPtFjgu4TItfVsV+T6dvmSTxlD5jgFJha+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y1i8joHi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719859008; c=relaxed/simple;
+	bh=6irQFrUOYtg/mtmSRairb5nPKj33UQSNuMI8G+CrdDQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lyaU7Tu5k0/FpBpsYcuRLKWszSRhdfx8mdG1jNt+Qvv9Br9y6Xy+wJYClVm5Vo+M0D/6Oe+mgROs9EA7OPyf+l5iCkafFD67ECNUGFwbcGsysihAXgw9Uzve5359/tbQKMj5TUZNq7+DftNoDE6uJVKjziOO5m+5P0EJPdEq0xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eI08Fa6F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y1i8joHi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2892AC116B1;
-	Mon,  1 Jul 2024 18:36:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eI08Fa6F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FFCCC116B1;
+	Mon,  1 Jul 2024 18:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719858992;
-	bh=PtmpIxW7QtZRZGSwCmMzSgdpUv310aGaJeYhAgzViwo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y1i8joHio0IzCMxKBhGEFgei3HHw7ygdeCR3CAglvJMsZFMYe6bgeaLT8w3eXH8uZ
-	 0wnahBan1xLupL68xx3DPMJtL3CdwHHZNTXRfJM1Ys//jPd9y4PSzyaZtVrQ48aabu
-	 dpaTvX3D18/ZGJc1HfXl3f6o2SHUNZBfBHaXSTLLW9L2VflxGGc96B7kXiLlHEyVSK
-	 1amC0DpO7Yq2VTIiISBHuf52YjNgZaYJrDn5Gf5i8VjBP1ULbVqjKWThpJmNqeWJfj
-	 FebHhcKrJDdGsVOgT1jMyStSml6H77i7COpyZHcWldp7RIAIHfTrmw7jdvAp6EKzSY
-	 8B8fbD1hfXGsw==
-Date: Mon, 1 Jul 2024 12:36:31 -0600
-From: Rob Herring <robh@kernel.org>
-To: George Stark <gnstark@salutedevices.com>
-Cc: ukleinek@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	neil.armstrong@linaro.org, khilman@baylibre.com,
-	jbrunet@baylibre.com, martin.blumenstingl@googlemail.com,
-	hkallweit1@gmail.com, linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kernel@salutedevices.com
-Subject: Re: [PATCH v2 2/3] dt-bindings: pwm: amlogic: Add optional
- power-domains
-Message-ID: <20240701183631.GA349021-robh@kernel.org>
-References: <20240701172016.523402-1-gnstark@salutedevices.com>
- <20240701172016.523402-3-gnstark@salutedevices.com>
+	s=k20201202; t=1719859007;
+	bh=6irQFrUOYtg/mtmSRairb5nPKj33UQSNuMI8G+CrdDQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=eI08Fa6FHYRAQ9oWAZP/phH9d0fNiZ3U2wg54VsMNcCg7s7FAIJPB9LlGl2Rza28T
+	 JH44p144BD43MWITsEL3wCNpD/7luxZMOnN26y4WpYK7bjjrW0G84LfQ5VStbwV1x0
+	 tNWnhpJ1KNucxrdJgrVfu/2v4I+8h5s+I/q6uP2thOn7ghl/r69a5eWyZY06ZibMTg
+	 cZo9n5oZUCb+zoXbkWWiPu2kezosL+oLIPsy0CUca76qqGyNP1yZSuaPySoL5YiPxJ
+	 eARQ46XlzEaTQRlnchs+vIVL+MmZIIY0iptky2nJfs7A9OfG350yysH7G6SbsBfe+s
+	 sMmNFuVpKOhYg==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Alex Gaynor <alex.gaynor@gmail.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev
+Subject: [PATCH 00/13] Support several Rust toolchain versions
+Date: Mon,  1 Jul 2024 20:36:10 +0200
+Message-ID: <20240701183625.665574-1-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240701172016.523402-3-gnstark@salutedevices.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jul 01, 2024 at 08:20:15PM +0300, George Stark wrote:
-> On newer SoCs, the PWM can require a power-domain to operate so add it
-> as optional.
+Hi all,
 
-If required, then how is it optional?
+It is time to start supporting several Rust toolchain versions and thus
+establish a minimum Rust compiler and `bindgen` version.
 
-If the 'newer SoCs' means the one you just added, then this should be 
-squashed into the prior patch with a conditional schema making it 
-required for the new compatible.
+For the Rust compiler, we will start with a window of two stable
+releases, and widen it over time. This series keeps the minimum where
+it is (1.78.0), but adds support for the recently released 1.79.0.
 
-> 
-> Signed-off-by: George Stark <gnstark@salutedevices.com>
-> ---
->  Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-> index da22cb3ed878..c814d88748dd 100644
-> --- a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-> @@ -60,6 +60,9 @@ properties:
->      minItems: 1
->      maxItems: 2
->  
-> +  power-domains:
-> +    maxItems: 1
-> +
->    "#pwm-cells":
->      const: 3
->  
-> -- 
-> 2.25.1
-> 
+This should already be enough for kernel developers in distributions that
+provide recent Rust compiler versions routinely, such as Arch Linux,
+Debian Unstable (outside the freeze period), Fedora Linux, Gentoo
+Linux (especially the testing channel), Nix (unstable) and openSUSE
+Tumbleweed. A documentation adds the instructions for each of them.
+
+In addition, Rust for Linux is now being built-tested in Rust's
+pre-merge CI. That is, every change that is attempting to land into the
+Rust compiler is tested against the kernel, and it is merged only if it
+passes -- thanks to the Rust project for that!
+
+Thus, with the pre-merge CI in place, both projects hope to avoid
+unintentional changes to Rust that break the kernel. This means that,
+in general, apart from intentional changes on their side (that we will
+need to workaround conditionally on our side), the upcoming Rust compiler
+versions should generally work.
+
+For instance, currently, the beta (1.80.0) and nightly (1.81.0) branches
+work as well.
+
+Similarly, we kept the minimum as it is for `bindgen`. `bindgen` is also
+adding the kernel to its CI -- thanks!
+
+Cheers,
+Miguel
+
+
+Miguel Ojeda (13):
+  rust: macros: indent list item in `paste!`'s docs
+  rust: init: simplify from `map_err` to `inspect_err`
+  rust: allow `dead_code` for never constructed bindings
+  rust: relax most deny-level lints to warnings
+  rust: simplify Clippy warning flags set
+  rust: start supporting several compiler versions
+  rust: warn about `bindgen` versions 0.66.0 and 0.66.1
+  rust: work around `bindgen` 0.69.0 issue
+  rust: avoid assuming a particular `bindgen` build
+  rust: start supporting several `bindgen` versions
+  kbuild: rust: add `rustc-version` support
+  rust: support the new `-Zub-checks` flag
+  docs: rust: quick-start: add section on Linux distributions
+
+ Documentation/process/changes.rst  |   9 +--
+ Documentation/rust/quick-start.rst | 118 +++++++++++++++++++++++------
+ Makefile                           |  29 +++----
+ init/Kconfig                       |  11 ++-
+ lib/Kconfig.debug                  |  18 +++++
+ rust/Makefile                      |   4 +-
+ rust/bindings/lib.rs               |   1 +
+ rust/kernel/init.rs                |  12 +--
+ rust/macros/lib.rs                 |   2 +-
+ rust/uapi/lib.rs                   |   1 +
+ scripts/Kconfig.include            |   6 ++
+ scripts/Makefile.compiler          |   4 +
+ scripts/rust_is_available.sh       |  20 ++---
+ scripts/rust_is_available_test.py  |  40 +++++-----
+ scripts/rustc-version.sh           |  52 +++++++++++++
+ 15 files changed, 238 insertions(+), 89 deletions(-)
+ create mode 100755 scripts/rustc-version.sh
+
+
+base-commit: f2661062f16b2de5d7b6a5c42a9a5c96326b8454
+-- 
+2.45.2
+
