@@ -1,147 +1,147 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BDB612C489;
-	Mon,  1 Jul 2024 10:55:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DBF112C489;
+	Mon,  1 Jul 2024 10:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719831357; cv=none; b=N/OzuxYFpNXgn/jE/R/iV/JRWmIp8IBqKD9YJjPil6PUFVL2w4ZHuuplWf9Z3drZIFTPjxlVZulEVkBPABrWg20xoyrzClWm2BOv8w1YAad3ZCGZmvoujAIvr7XQepfZHz0rr4+Jr65DkM6evI6O54urLI1jh1osXj6QM79sYMc=
+	t=1719831365; cv=none; b=Hssu+P+/YMurF6Q6jPG21xvwtgJryocxt5pEcwS24Qf2GaO1ld7HsIqqurIwQ4dMJpKPyaCa3jhF0SS9Sgfe7hHu8FsF/GJzfs4AYL0moebQcPBiu5/uyshvKY//iYxr8+aezUytOu7+uy3bX69V8p+WK13zNyH7DIgxHbSs9Ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719831357; c=relaxed/simple;
-	bh=X3RcYdLq/Lsq/wq9vKrRrPvg8enu2de4SNTQnenVjbY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rh3ieZWRRn98/tLtT7a6Gi0w1fuZJ/hdU9WkJbwD2ufVWpi9cU94a+55q+ks2Oivpuwkb9NM+4FrveZrSgdna8HnLYqZexgxZxH+pvsYQzB8LgpZxKv7+CppskYKYa8BFXkC94OJ9LucbyrFoc7EsTcv7wlOt1ISUDfrGVyUpNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VB9yszEv; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719831365; c=relaxed/simple;
+	bh=K65IVlrKY3Xsptcq0fLVqvZoKLlnpLs67eU9ZU+fiYk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ed8EOp1DdCf2R3LmiL/RvAJ+68iCt1uC/DdrGXopey274tR+9YBwkW6nN/qgAadWocVs02K0WmZJ69ZUsMp/uNfNs/IhYMPPwyOjrLo4Qst6N0KcnWUn2he5OTSoPM4tLrzQ/cNEREEiDjDaqoldC1FG4BWHE31pXVC324HbLAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=pryqS76X; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VB9yszEv"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a6fe617966fso246265166b.1;
-        Mon, 01 Jul 2024 03:55:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719831354; x=1720436154; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=X3RcYdLq/Lsq/wq9vKrRrPvg8enu2de4SNTQnenVjbY=;
-        b=VB9yszEvSh6gare+muTp773UVgank/MKQMY+HikmnlkOABz1v1eZqjDyy6R9MzRt3l
-         g/r9gG4CTFqxAd8F84a7Knf/p2h3zLJgiZbnW/OLPcZaghSE4E67RpBobw9c3TFK17y4
-         +r3D5A04dZA6vv5i8A5Roo+suZfv4BffTnRfwqNnp5gRTt59PqVocKKn+aOpOHAGEGTY
-         pNZadRttgcjy/f6g8WatJzEbFo22e9sscl/xMW86k++vGh8AZi3g4prhGK2gcRhibDg/
-         S4bbxARe8pG6RKE8UXGUknrOSnAQteNMv82uOJOaLKWRSxF/AODXNL5z1g7OYhsNWUfu
-         yl9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719831354; x=1720436154;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X3RcYdLq/Lsq/wq9vKrRrPvg8enu2de4SNTQnenVjbY=;
-        b=C9YWfGC8T9StLXvvpB1+Jt30kze5jawACPQDvPBuJNeycoSmUqp99cNGGGROsaoP1b
-         c3y+Z8jIZIeQRdThacPur/TusiGLBV4zMhqUAs+w0YNi6vSG2vsjNsjVY9Bvj5cKpa+b
-         YPpQlftDTHLDAwdTgxs91cPSSugAi2kUSKjem/i/vLxZz2gYFVYwOoi6ujxWreKxNmuS
-         SMKZGOSoEpuYg7/xBV/l5RcenFU1Rqv6GwPS1vIMz/Zet7CGhdLny1S1E3FUvjCMiXxC
-         jDVpZHvcHtjZoVmDTnJ8AnSnTXXSOskAIW7KRbfO0o6Se/KN67t0FPDEblFzSa85J8Nq
-         mNew==
-X-Forwarded-Encrypted: i=1; AJvYcCXOoKp1JdCJgFovzezqjamROBOqkDbce05oclpqrtpbLi27vUwS98yGPZhROQTJwrfL7hs0ubb99JbMh8yyY2ewNoGlbK6fvwG0mI+lnY6Wr1Q/98FveFfK8Cf7yZlRYLwyxoKsJIW23w==
-X-Gm-Message-State: AOJu0YzlD85QKGAilXTuV4Ikg0WssN9J1psff5bm3rkn00kv7xug+UvZ
-	r19jNwF6KgBEEH8a6vaXNxa/E2z6xNt1CNb7d0jNu9INIh4Z7GscFrwhUBNNcVDatbpojo+6TBB
-	4239gogI9qTRGJJUjJIn2MBDWNQ==
-X-Google-Smtp-Source: AGHT+IHf+jvSnMsS7fnrtn/Hefkzj14PsozhqErpwtq9dwGfGgvNEIM8z2teFIhhWo8QauH1P4mlEOP/wT0RZ4zrz5w=
-X-Received: by 2002:a17:906:af87:b0:a6f:22ea:55b6 with SMTP id
- a640c23a62f3a-a7514511fe7mr333247566b.65.1719831353783; Mon, 01 Jul 2024
- 03:55:53 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pryqS76X"
+X-UUID: 7f5cc098379811ef8b8f29950b90a568-20240701
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=X1ZfKDAKXYZ214un5lPy2Eeni1wyEgjthR8eGcrwQ0c=;
+	b=pryqS76XPqZdr6ogmV+ltSMtDjwYdPJQS09cKU3hksj14h9DP6BpdSBuohGFq9R9GIg8BXlV40kU1pYwAN1v6T6vbek905I317/RI2VRicUS3nfIznlbKoNyzvx0HG/NSkurioACVWycIy3vzmtre4dS+alyfmNOS7VOWg95b+g=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.40,REQID:e08071b4-dac6-4d13-97ca-f54d04aeaf10,IP:0,U
+	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-25
+X-CID-META: VersionHash:ba885a6,CLOUDID:bcf9c444-a117-4f46-a956-71ffeac67bfa,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_ULN,TF_CID_SPAM_SNR
+X-UUID: 7f5cc098379811ef8b8f29950b90a568-20240701
+Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw01.mediatek.com
+	(envelope-from <skylake.huang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 2038173261; Mon, 01 Jul 2024 18:55:58 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Mon, 1 Jul 2024 18:55:56 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Mon, 1 Jul 2024 18:55:56 +0800
+From: Sky Huang <SkyLake.Huang@mediatek.com>
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Daniel Golle
+	<daniel@makrotopia.org>, Qingfang Deng <dqfext@gmail.com>, SkyLake Huang
+	<SkyLake.Huang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
+CC: Steven Liu <Steven.Liu@mediatek.com>, SkyLake.Huang
+	<skylake.huang@mediatek.com>
+Subject: [PATCH net-next v10 02/13] net: phy: mediatek: Fix spelling errors and rearrange variables
+Date: Mon, 1 Jul 2024 18:54:06 +0800
+Message-ID: <20240701105417.19941-3-SkyLake.Huang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20240701105417.19941-1-SkyLake.Huang@mediatek.com>
+References: <20240701105417.19941-1-SkyLake.Huang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240629103914.161530-1-erezgeva@nwtime.org> <20240629103914.161530-4-erezgeva@nwtime.org>
- <1c457520-07b7-4bde-b040-e8bca959a4f5@linaro.org> <CANeKEMOODBNZA6efh0E0Ga_KaVs5Y3WLcUftRhNwYHhnXO=GNw@mail.gmail.com>
- <CANeKEMO42rJt5Ob4_HDcZ3eEMvuMOPvRaFaLwL8SA65NtxSV7A@mail.gmail.com> <1d56c3b2-7adf-45b9-a509-956340f3f17b@linaro.org>
-In-Reply-To: <1d56c3b2-7adf-45b9-a509-956340f3f17b@linaro.org>
-From: Erez <erezgeva2@gmail.com>
-Date: Mon, 1 Jul 2024 12:55:16 +0200
-Message-ID: <CANeKEMM_9qs8neP=Dwks_enmUt9oqGx6+UO=CvAh_4Fm+eF+ew@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] dt-bindings: mtd: macronix,mx25l12833f: add
- SPI-NOR chip
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: Esben Haabendal <esben@geanix.com>, Erez Geva <erezgeva@nwtime.org>, linux-mtd@lists.infradead.org, 
-	Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>, linux-kernel@vger.kernel.org, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-AS-Result: No-10--10.199700-8.000000
+X-TMASE-MatchedRID: BojwQ6Keou89d1nHWxkekOKXavbHY/C1Ct59Uh3p/NXY5zxTXVb0k/ha
+	nb3HD5F6OfAiJ/eonC22JFdhGpav6wZuQ+SK0t7O6rBZUF8y6+gmOgC1/BTSzitjI02a+7m1J7o
+	vlkPXpS2687AZgkxtNKMePb3Txp8kbPzHGwA0xPYQ9/tMNQ4aijwiJNMt63hmV9eB8vnmKe/20J
+	EY1Cw2kSZE5D95I7+IgDLqnrRlXrZ8nn9tnqel2DsAVzN+Ov/st9JmVPe6OexyJffKpdSfZrLpA
+	Jb7+npPby7kioZWH5LKD/c2asFB/Q==
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--10.199700-8.000000
+X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-SNTS-SMTP: 32628B2A921C22D60674D3CBC5BF4E09902FBA012D67E2AE3C305DA2577AB6132000:8
+X-MTK: N
 
-On Mon, 1 Jul 2024 at 12:15, Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
->
->
->
-> On 7/1/24 10:46 AM, Erez wrote:
-> > When using mx25l12805d, we do not read SFDP.
-> > As it uses the no-SFDP flags.
-> > When using mx25l12833f hardware with mx25l12805d driver, it did not
-> > try to read the SFDP.
-> > Yet mx25l12833f does have SFDP, when I remove the no-SFDP flags, the
-> > driver fetch the SFDP.
-> >
-> > Secondly SFDP does not contain OTP information.
-> >
-> > mx25l12805d has two OTP regions of 128 KiB and 384 KiB (yes asymmetric).
-> > While mx25l12833f has two OTP regions of 512 KiB.
-> >
-> > How do we handle it?
->
-> You would first try to parse SFDP and initialize the flash based on
-> SFDP. If there's no SFDP then you fallback to the flags declared at
-> flash declaration. Esben had a try recently, see [1]. I don't know if
-> there's any progress in that direction.
+From: "SkyLake.Huang" <skylake.huang@mediatek.com>
 
-That's great. I probably haven't seen it yet, as I used kernel 6.5 based.
-However the OTP is not in the SFDP.
-Reading the SFDP with "mx25l12805d" does improve :-)
-if a user wants to use the OTP, he must specify "mx25l12833f".
-Perhaps less likely, but yet no other solution for OTP at the moment.
-I would not go to a kernel config for this.
+This patch fixes spelling errors which comes from mediatek-ge-soc.c and
+rearrange variables with reverse Xmas tree order.
 
->
-> Also, you haven't mentioned anything about the testing. Do you have the
-> flash?
+Signed-off-by: SkyLake.Huang <skylake.huang@mediatek.com>
+---
+ drivers/net/phy/mediatek/mtk-ge-soc.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-I test the code with mx25l12833f hardware, with an older version of
-the kernel, 6.5 I think.
-It is a kernel provided by Microchip with their setting, The SPI-NOR
-driver is vanilla.
+diff --git a/drivers/net/phy/mediatek/mtk-ge-soc.c b/drivers/net/phy/mediatek/mtk-ge-soc.c
+index f4f9412..0eb5395 100644
+--- a/drivers/net/phy/mediatek/mtk-ge-soc.c
++++ b/drivers/net/phy/mediatek/mtk-ge-soc.c
+@@ -408,16 +408,17 @@ static int tx_offset_cal_efuse(struct phy_device *phydev, u32 *buf)
+ 
+ static int tx_amp_fill_result(struct phy_device *phydev, u16 *buf)
+ {
+-	int i;
+-	int bias[16] = {};
+-	const int vals_9461[16] = { 7, 1, 4, 7,
+-				    7, 1, 4, 7,
+-				    7, 1, 4, 7,
+-				    7, 1, 4, 7 };
+ 	const int vals_9481[16] = { 10, 6, 6, 10,
+ 				    10, 6, 6, 10,
+ 				    10, 6, 6, 10,
+ 				    10, 6, 6, 10 };
++	const int vals_9461[16] = { 7, 1, 4, 7,
++				    7, 1, 4, 7,
++				    7, 1, 4, 7,
++				    7, 1, 4, 7 };
++	int bias[16] = {};
++	int i;
++
+ 	switch (phydev->drv->phy_id) {
+ 	case MTK_GPHY_ID_MT7981:
+ 		/* We add some calibration to efuse values
+@@ -1069,10 +1070,10 @@ static int start_cal(struct phy_device *phydev, enum CAL_ITEM cal_item,
+ 
+ static int mt798x_phy_calibration(struct phy_device *phydev)
+ {
++	struct nvmem_cell *cell;
+ 	int ret = 0;
+-	u32 *buf;
+ 	size_t len;
+-	struct nvmem_cell *cell;
++	u32 *buf;
+ 
+ 	cell = nvmem_cell_get(&phydev->mdio.dev, "phy-cal-data");
+ 	if (IS_ERR(cell)) {
+@@ -1415,7 +1416,7 @@ static int mt7988_phy_probe_shared(struct phy_device *phydev)
+ 	 * LED_C and LED_D respectively. At the same time those pins are used to
+ 	 * bootstrap configuration of the reference clock source (LED_A),
+ 	 * DRAM DDRx16b x2/x1 (LED_B) and boot device (LED_C, LED_D).
+-	 * In practise this is done using a LED and a resistor pulling the pin
++	 * In practice this is done using a LED and a resistor pulling the pin
+ 	 * either to GND or to VIO.
+ 	 * The detected value at boot time is accessible at run-time using the
+ 	 * TPBANK0 register located in the gpio base of the pinctrl, in order
+-- 
+2.18.0
 
-In my testing using kernel 6.5 with a Microchip based board.
-Before changing, the kernel driver, was using the "mx25l12805d"
-setting and did NOT read the SFDP.
-Once I added the "mx25l12833f" without any no-sfdp flags, the driver
-did read the SFDP.
-The driver can find "mx25l12833f" with a read ID, once I remove the
-"mx25l12805d" setting, I did test that too.
-Adding the new 'SPI_NOR_TRY_SFDP' is great. but does not provide proper OTP!
-
-All the testings were done using the same mx25l12833f hardware, only
-the settings in the driver were changed.
-
-I am no longer in contact with the company that provides me the hardware.
-And as this is a Microchip based hardware it is difficult to use the
-latest kernel.
-
-Anyhow as mx25l12805d hardware has not been sold since 2010, it is
-hard to get one.
-I do not want to change any setting of mx25l12805d without testing!
-
-Anyhow my patch is focused on the new Macronix OTP callbacks.
-I do not care about the "mx25l12833f" or "mx25l12805d" compatibilities
-or settings.
-If I had a different Macronix chip with a unique ID, I would gladly test it.
-
-I only add them as the kernel rule is that new functions must be used
-and tested with real hardware.
-
-Erez
-
->
-> [1]
-> https://lore.kernel.org/linux-mtd/20240603-macronix-mx25l3205d-fixups-v2-0-ff98da26835c@geanix.com/
