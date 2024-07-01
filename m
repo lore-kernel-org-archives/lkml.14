@@ -1,189 +1,233 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2081.outbound.protection.outlook.com [40.107.101.81])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55DE654F87;
-	Mon,  1 Jul 2024 08:34:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719822878; cv=fail; b=Hb820ioNbNAB282BbX0hyFGYS06pub+FwJVV9CBPMWpwIfKIjNL1ykBPgpPKmkoalU8vc8Y0aPA6vN8FkXEoJh1YrMdav1OsgTzrVyBm8qR4F09X+DDHVqHvhabYIdmqg3AEz0GwI2ocK/I8TainkkofZDQGfIgC/gr026hBVJ8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719822878; c=relaxed/simple;
-	bh=Z+eZqxll3oRjGhDzRgOcZCV2QjGU0/IJG2a4qNc44As=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 Content-Type:MIME-Version; b=ZpeCuPvanC04He1Qru8xKOVqKaS9VsTvrRo/ivIItC3vssj8oI2TqtEXmhOJGBMDQZqDYaYF2NQMOhTuNoGsT8EbXughGoHADmJv5+sm+J9cFrfGbXoYTkoaMbDlINtij6bwYeSgRTrXq5z9q3qDcMBgMiPARjW6D8IvTKN44V4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Lu1ZoyDB; arc=fail smtp.client-ip=40.107.101.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A071084E0D
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 08:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719822893; cv=none; b=swPVLTprstFx4zzH+6ur+38bMAOAce6Wv/+Xk20y6m4FREDE0TNqFrU3I8wia/0uoEFKXES/Bzo8OY04d0WJE71f9KRgqA7PL4awjTZd7+1qeHAR8OC6kBucMMr6Z/GSwOmD6RoD6LOmVMs1pcxzzNwnDWa2KpWdFA0THkXGGgE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719822893; c=relaxed/simple;
+	bh=p7ktz7dlrNKb9ZMJ9u8GxENG+VyajmcO26M0wpetK+g=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=qhmwcWLXBnl2EGVWXsNz5HWjsBqCWc0cujmVo4Fm+t93syhLcNfqDWcdLn6ZhaVO43sy6xFpyzWZxVgrhxDCkkBcDe5fNn2QkVKXIKrLheXSXVLMkdIgzDtKjVbY6H7UuXq1ApTol7W6sIKDVhAOwmIGm8j/q0J9iS3kdYHY78I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=drtui0UM; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Lu1ZoyDB"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BOtaD0mKyNYxfRgwRv6CaAM+t3Qx3G3Iq7eu1N0SYeAD48y4avhoqNpLWw+dRXmo4KNuBfAXFpeDZVHByYxgq3GU3B1yvQ0hP+Iegcke0hvOlbKdzy5httEsc/4UUksR/owwEsuD7kjFcjRl+2/NqXzcxWmwJXGp5lTT5js1S0GOig4/cJyiXT7xc5eQ2SS9VZdlNkWRi+0UbbHqfg4BRIkgl1tB2tSdAPPBirYZze3o2xaSfkKnFVpAWkaYlWI+0zaJR76RRAKm57dh3KqBBPEBekWeG0uY8WCUBhk6Vy6yi5PB/X5SobBK29XtblkNhrYD+nIMDE/SeDaQD0imhQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PFNw5m7TevX7O32FT2B4WhapzTHm6yB0PYh9fZOVVe0=;
- b=fb1izYFoHe+9UwvN0OQgTc9CY4eCpD2uuLhDXw9y+ChiymaFVDB+2rVlXlHRk8uoW4BfwNvmOJiY97riyVf72tk0Ob8XSLCBVjSO+lwwnga6ZOcgsGUSQjVIz0M4I9QVXR8d9exoGRjWdHVL3IRAGEowF7my62WFW+AFL1FFWsgQZ0I/y0HptBptUlFjJ8yHFb2YcKRmXvs7f6SoMQP3afTyXE5mJf29t3bem8ZyHeQFuThcLAUUrcIDeFUyEd6DdFoMwbwY3xDqPV/lzENPHFL1JwKW/DKZ/irtkcllPhGsuz06knAFFxFaO6CQ1PPLdNmhbASPKRp9yMTlJePfDA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PFNw5m7TevX7O32FT2B4WhapzTHm6yB0PYh9fZOVVe0=;
- b=Lu1ZoyDBnGLn1frb6qiyltBSFMlR5Iwin46tZX2tghr8stvR2GBq6yw50/hQcQmsYYOU6lumh5Ns/SxGSWbTobzmmA7bzpM4hnN1HCDNCtQ1u7isogDu3I3Zv1dfEtABY4jEmDj5HpsopECWJS9o3QKnZx6Oldvq+TimPxkgEIMoHrnZSiO0qA/ehBygY/U6RUETVlPXOftp7b31rYOCPW0qlTOCOfsPHzrFjjzAjp14HUzbunDSI9V3QtNgSNaf8o3TmFE0wuMQ3ETK+GikFcbPYrqit2keyUVGs2yOEfuvupGjd9BlXT1j75b/On2HX94rZOITgFO0XWjkhniKDA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
- CY5PR12MB6526.namprd12.prod.outlook.com (2603:10b6:930:31::20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7719.29; Mon, 1 Jul 2024 08:34:31 +0000
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe%6]) with mapi id 15.20.7719.028; Mon, 1 Jul 2024
- 08:34:31 +0000
-References: <cover.66009f59a7fe77320d413011386c3ae5c2ee82eb.1719386613.git-series.apopple@nvidia.com>
- <ZoIvhDvzMCw28VBI@dread.disaster.area>
-User-agent: mu4e 1.10.8; emacs 29.1
-From: Alistair Popple <apopple@nvidia.com>
-To: Dave Chinner <david@fromorbit.com>
-Cc: dan.j.williams@intel.com, vishal.l.verma@intel.com,
- dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com,
- jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com, will@kernel.org,
- mpe@ellerman.id.au, npiggin@gmail.com, dave.hansen@linux.intel.com,
- ira.weiny@intel.com, willy@infradead.org, djwong@kernel.org,
- tytso@mit.edu, linmiaohe@huawei.com, david@redhat.com, peterx@redhat.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
- jhubbard@nvidia.com, hch@lst.de
-Subject: Re: [PATCH 00/13] fs/dax: Fix FS DAX page reference counts
-Date: Mon, 01 Jul 2024 18:33:34 +1000
-In-reply-to: <ZoIvhDvzMCw28VBI@dread.disaster.area>
-Message-ID: <87plrxo6i5.fsf@nvdebian.thelocal>
-Content-Type: text/plain
-X-ClientProxiedBy: SY5P282CA0054.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:10:20a::13) To DS0PR12MB7726.namprd12.prod.outlook.com
- (2603:10b6:8:130::6)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="drtui0UM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719822892; x=1751358892;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=p7ktz7dlrNKb9ZMJ9u8GxENG+VyajmcO26M0wpetK+g=;
+  b=drtui0UM+sM9yseU0CkWvMLrRr6LWn1uBE9VXNlRW10e9EJxWKiMpUNJ
+   8PF2eRc3qS+6Q0Wrqz9OGHYevcdVzo3q+E+30kfiMGJ7dkiVj2k0Q/rmF
+   Kwh62aNf0eyFYUGhx420aaUOJbBuHQs/bRwt86EdFt5vqZIF96n028IM3
+   QEgnm8e3oYJhxqAk4OjWTMuYLrLLWCRZOvu6Gmsxa2kw/NAhsJ3gAzoB3
+   9+96mKHd6f6+4IyockKmHndXpF5GCFEdCnFtpbk5SIe/gWJDD/l+MGL2e
+   sdcNFC8hFs4e71NNqKg/rdYgBPFUeN5V3QUnJorLrrx6RkAw2wzlxbhfy
+   w==;
+X-CSE-ConnectionGUID: BdD5CVmxSr2xm9/2MoSS+g==
+X-CSE-MsgGUID: ou3dBqqTRSyR+zs/DJ0DzQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11119"; a="28326919"
+X-IronPort-AV: E=Sophos;i="6.09,175,1716274800"; 
+   d="scan'208";a="28326919"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 01:34:52 -0700
+X-CSE-ConnectionGUID: 57dpLEkBQ6eqbP0yC6s8OQ==
+X-CSE-MsgGUID: LxVWJEe3TMOY5fWZplOaFg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,175,1716274800"; 
+   d="scan'208";a="50397561"
+Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 01:34:50 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: "Zi Yan" <ziy@nvidia.com>
+Cc: David Hildenbrand <david@redhat.com>,  <linux-kernel@vger.kernel.org>,
+  <linux-mm@kvack.org>,  Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v1 2/2] mm/migrate: move NUMA hinting fault folio
+ isolation + checks under PTL
+In-Reply-To: <D2A4QLLXOM9N.1YK9YRDXMWJPX@nvidia.com> (Zi Yan's message of
+	"Wed, 26 Jun 2024 13:37:15 -0400")
+References: <20240620212935.656243-1-david@redhat.com>
+	<20240620212935.656243-3-david@redhat.com>
+	<B726B923-E023-4E56-BED1-BFA5CEF644A1@nvidia.com>
+	<c8f9d6fd-310d-4b13-9871-556b6b9a47e1@redhat.com>
+	<0F4ABC1D-7A26-4AE2-BCAA-3EA906FB13A7@nvidia.com>
+	<9af34a6b-ca56-4a64-8aa6-ade65f109288@redhat.com>
+	<D2A4QLLXOM9N.1YK9YRDXMWJPX@nvidia.com>
+Date: Mon, 01 Jul 2024 16:32:58 +0800
+Message-ID: <87ed8do6kl.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|CY5PR12MB6526:EE_
-X-MS-Office365-Filtering-Correlation-Id: 29db7317-e6ac-45d7-d4ae-08dc99a8a116
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?XLlxJb1lVvo85rezcGTpc3hCUtIhEW+5GVosS3jRLn3OyQiKcj0IB0KBeL8P?=
- =?us-ascii?Q?HBbiLmoJpBL2LjBsuMFC7ZwlSVPdNUjngHkCc/DuEKnsF93aEufM6ViwNjiQ?=
- =?us-ascii?Q?gxPkOTQ11h9e9i1HEoPSMXleTt4IeNO/VrxZ1PIN5mfnx2lGNNOjN6sc3aLJ?=
- =?us-ascii?Q?cZxEOW4OpbcK20TaBLMoi0KKdCtMYSUwG9Nye6NE+hANzL+kGdHOmjATmCto?=
- =?us-ascii?Q?Y6NIEKiYhrlOETALl5xvI/leurEe9T9PxkYnVSkzFp5gZe/PnXO+mYjTXupI?=
- =?us-ascii?Q?cRcDZuxQosInHDLiUR5GLK6Ihhj7usG0UQR6PAXwFmdT1IYGhUm+YC+bvhNc?=
- =?us-ascii?Q?gHmLRB9oj2sRgAy0mupZwTU1mKIQ8YsYDHb8sJ64LDn5FjR+xJ9xp9oj5HPg?=
- =?us-ascii?Q?7y2NU977dXameYCFf5ckK89qUdaIXnDwYyfpI5xw0g4Y0dQgCd5pduIda2qh?=
- =?us-ascii?Q?87KKbYiFb5tbZ3F1UCdUH2J19hMVMjBw7k1uxsaFe3K4MBLiMgC0gBTsvQEe?=
- =?us-ascii?Q?F86a0IyRrBDAqgm80TxVxlx10NZX2wgdIxn+bQ4VHptvjnRb4P67H1FaVZyH?=
- =?us-ascii?Q?xnn+fKA3ECj+Hw2YXQlBdNacLsxAkivvSOBdBG6F7gB1JsPajZsqkN8kEejW?=
- =?us-ascii?Q?OSWj/kZMQ6DAl3/onhS0e+D6B3kJdPwbCKS3DGAufg4gqHYxuDysRfSMWsTr?=
- =?us-ascii?Q?to9hpnzLjv7gQABniPQzFjwR94COSMzDyhGLas2Iuqa9ytdlsmXtxGMh+yxG?=
- =?us-ascii?Q?fTGGL5G7gqW/vcJTMG986oIk9THVT/vr2E/g7SE1uT/XSbozdNwFsu7oWe+e?=
- =?us-ascii?Q?Ubcf5gBi04G4+Hmg8BBfsD0w67Ln5gA+lWUvhT+2UsJoweYctVuD83gq7Xlh?=
- =?us-ascii?Q?pV4vioT4DYH7K7r2IpWxGIBcvHrIaJXh1KsVHNeIktP+gBLWrpCiYYQqDXPv?=
- =?us-ascii?Q?Ou+lziSiNUP24xkZkwv8zLliAHBTkLrwU4gzkee7+cj2+RTcaDuuNAWQzRvd?=
- =?us-ascii?Q?gmtkOq00+QIqnvn7Jnc1iQpZm1vn0AouCvZr85l6wYrHjYyoa8nkpAsd21m3?=
- =?us-ascii?Q?VFnlOeoXktWr99FWu2F/4tfCauwmDgaGeoLB35t52j9PhwdeXiKKDoKDiKlK?=
- =?us-ascii?Q?SNQEnqI75DbHOdm0OpLO0VyyZdUtHLpP5gE3XD19+Bxad6NnPbMllYMm6yhx?=
- =?us-ascii?Q?orwhD+mic7wj4RHM8DINSdqOUG0fbzOI0iFl012VwJDV7QBrdh5siC0WttXo?=
- =?us-ascii?Q?R8gM0cojS1C2K7oDnQskZTjohHhKR1ZEiHUoSBPbMRs89wai54hg8bGrRmZT?=
- =?us-ascii?Q?rlCe2gDBasWQHi8lpgbb+uO/puXDmW4G4nWOO4IB+eJZkMz4qEt9QTKZKlLh?=
- =?us-ascii?Q?XX9O7Tk=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?tFQ1gux8lhIoMOxgG12dVbV3IjEixEbFCya2zDeqA7Orl+5w8POA3N6+XYp5?=
- =?us-ascii?Q?EBnm3HmGXIxDuxrXll+y4oArT5SVdky9Kd2zGnw3uBmDbpJKozGCE9y26FW7?=
- =?us-ascii?Q?ZspaICZcg6l+jpXUMtG/gYeHwPrlrvgmfa4A3MCk651rf4a1BIQl0Qckzl7Z?=
- =?us-ascii?Q?nSInxSfUo6o64b5w5sxpTpyh+mHjroZlPZW58X7PKat2Kp5ctckQoxxQldDZ?=
- =?us-ascii?Q?jXWb1R8JOn6ZFrCSUJHZhdMSM9bgwZLCIQGw7YA27qOpK9ZvAb8RSpVsZxuC?=
- =?us-ascii?Q?5vPdZkqwM3Tyt4XXOX1NvcIRmypLg0pu7dJnsgm4CqhUsMq8REIsvGzoGcDZ?=
- =?us-ascii?Q?Arz3aruv+SOI7Zw9VZFueiZVKte7QCT11JJJW9hoK5hlvg04dneQO+2IFlTQ?=
- =?us-ascii?Q?M+Jk/LO0ZsnSD2AuD/AjT4V//cPYr0RGt2cDu3vlMB3NjAu0xxN9sfH/QOdO?=
- =?us-ascii?Q?One1KqFR+yUs9Hx4airaQOI1xiEaJMTdexj9QTX/Z7ZMD7edsLFPolCWsvbh?=
- =?us-ascii?Q?orB+a/gOy9zXbFEFxh5FTmZiUhz6CK9lax9W205ZsAMP8ZYG3bCYcDMAyZdn?=
- =?us-ascii?Q?8EJ11DJVweFI9mUn8FO9iPNZWwpxwt0yQzzAvJ/ebMLXfwDwCgTQ6leJrm1M?=
- =?us-ascii?Q?a/xt5uchTAkQj9aQgKo1yIo199/ktYUJE6aY+HVkTEHHX4Jf0Lq+yZam/wZj?=
- =?us-ascii?Q?4sVeIy+KAvzpQr1oDT59ilgT42ghDINQAhB/2aSpd6dCHT2WJk4oc7fQI6Ke?=
- =?us-ascii?Q?Kc6iyj6if7RqB+Twxm+J9R3lbZdsDiGX9lQSE34X90zee+KIcUwM+oZLtyc+?=
- =?us-ascii?Q?YHXl3XqGsoClGTAKb4GYCMLt2t8mSmkHW4FOpwPMpCg8BPFAmhP06ClcrFrW?=
- =?us-ascii?Q?YboMkd0QM0oGPDNuquXnxxfyGKmeI1ma77yPI6Vg+KCYMU+D1mF8yWq3TQ+J?=
- =?us-ascii?Q?TqB6njFNO6axruAyge0UWXX6j0WIxloq+P1xlX1qj6PKW7R+fwvA1GCpOtbG?=
- =?us-ascii?Q?WLcao/idEaCQggecL7Qn1916/xUAK68a28MuET7lRLIDfOr/dlfYjzYcwgN1?=
- =?us-ascii?Q?NYm62zYMQGoGCTpE0L+Pp+b7jRNVtTDlgNTjV/dIFlfEe4KfZw/wN8rCJwW+?=
- =?us-ascii?Q?ZxeHQ2jO7uz9ZbjNL+KSxKSFNVxm9fOb9+7jVAzp+I3OAxErqULN9nnF+SYH?=
- =?us-ascii?Q?yl/RGUAM6xqvZsWDXpCg9SC4ZiE+q/qU1kws7Z6YONqgSdZhU4h7acUNd7cH?=
- =?us-ascii?Q?iYDnfKL7XlBwSKhVhsABAgtPwEfIXrLvFTHibmp19XdIEPJ+RopZ+5ltZzUn?=
- =?us-ascii?Q?lZYUfZfrBQLtzVrfRjd2+c6dj72SKWRZfiDrCfLSyeeJW9mQ8MwrOcTEsfvC?=
- =?us-ascii?Q?nhVhEFpMCHTG1Is3dPrzYGTrIzRNjDuYbiKnxOYw0eJdkFFm9QvDCg6jj3Ji?=
- =?us-ascii?Q?EcceJ2gc9EsweHEM0/WEbR48iP/s0cJV9BYRnh+CV9jhRWGRchApxQL+LhVD?=
- =?us-ascii?Q?jlhWnELEbKsB0UB4/P27LAcZie692+WLWTOc6DGb3YuO9a5OmulzjLOrA6NC?=
- =?us-ascii?Q?4bqComHfNsKOyhbEx6R64vfYMofF8FFC5tq85w0y?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 29db7317-e6ac-45d7-d4ae-08dc99a8a116
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2024 08:34:31.7356
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HNHem0PUDLSPzeTvb/VE3gWOqSKXF3DLTDKZ/Gzpie8bR+30UlTlRjb/XsQ8R+oyKrPvSnnD2HeTGWdx5zkKQg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6526
+Content-Type: text/plain; charset=ascii
 
+"Zi Yan" <ziy@nvidia.com> writes:
 
-Dave Chinner <david@fromorbit.com> writes:
-
-> On Thu, Jun 27, 2024 at 10:54:15AM +1000, Alistair Popple wrote:
->> FS DAX pages have always maintained their own page reference counts
->> without following the normal rules for page reference counting. In
->> particular pages are considered free when the refcount hits one rather
->> than zero and refcounts are not added when mapping the page.
->> 
->> Tracking this requires special PTE bits (PTE_DEVMAP) and a secondary
->> mechanism for allowing GUP to hold references on the page (see
->> get_dev_pagemap). However there doesn't seem to be any reason why FS
->> DAX pages need their own reference counting scheme.
->> 
->> By treating the refcounts on these pages the same way as normal pages
->> we can remove a lot of special checks. In particular pXd_trans_huge()
->> becomes the same as pXd_leaf(), although I haven't made that change
->> here. It also frees up a valuable SW define PTE bit on architectures
->> that have devmap PTE bits defined.
->> 
->> It also almost certainly allows further clean-up of the devmap managed
->> functions, but I have left that as a future improvment.
->> 
->> This is an update to the original RFC rebased onto v6.10-rc5. Unlike
->> the original RFC it passes the same number of ndctl test suite
->> (https://github.com/pmem/ndctl) tests as my current development
->> environment does without these patches.
+> On Wed Jun 26, 2024 at 12:49 PM EDT, David Hildenbrand wrote:
+>> On 21.06.24 22:48, Zi Yan wrote:
+>> > On 21 Jun 2024, at 16:18, David Hildenbrand wrote:
+>> > 
+>> >> On 21.06.24 15:44, Zi Yan wrote:
+>> >>> On 20 Jun 2024, at 17:29, David Hildenbrand wrote:
+>> >>>
+>> >>>> Currently we always take a folio reference even if migration will not
+>> >>>> even be tried or isolation failed, requiring us to grab+drop an additional
+>> >>>> reference.
+>> >>>>
+>> >>>> Further, we end up calling folio_likely_mapped_shared() while the folio
+>> >>>> might have already been unmapped, because after we dropped the PTL, that
+>> >>>> can easily happen. We want to stop touching mapcounts and friends from
+>> >>>> such context, and only call folio_likely_mapped_shared() while the folio
+>> >>>> is still mapped: mapcount information is pretty much stale and unreliable
+>> >>>> otherwise.
+>> >>>>
+>> >>>> So let's move checks into numamigrate_isolate_folio(), rename that
+>> >>>> function to migrate_misplaced_folio_prepare(), and call that function
+>> >>>> from callsites where we call migrate_misplaced_folio(), but still with
+>> >>>> the PTL held.
+>> >>>>
+>> >>>> We can now stop taking temporary folio references, and really only take
+>> >>>> a reference if folio isolation succeeded. Doing the
+>> >>>> folio_likely_mapped_shared() + golio isolation under PT lock is now similar
+>> >>>> to how we handle MADV_PAGEOUT.
+>> >>>>
+>> >>>> While at it, combine the folio_is_file_lru() checks.
+>> >>>>
+>> >>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>> >>>> ---
+>> >>>>    include/linux/migrate.h |  7 ++++
+>> >>>>    mm/huge_memory.c        |  8 ++--
+>> >>>>    mm/memory.c             |  9 +++--
+>> >>>>    mm/migrate.c            | 81 +++++++++++++++++++----------------------
+>> >>>>    4 files changed, 55 insertions(+), 50 deletions(-)
+>> >>>
+>> >>> LGTM. Reviewed-by: Zi Yan <ziy@nvidia.com>
+>> >>>
+>> >>> One nit below:
+>> >>>
+>> >>> <snip>
+>> >>>
+>> >>>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>> >>>> index fc27dabcd8e3..4b2817bb2c7d 100644
+>> >>>> --- a/mm/huge_memory.c
+>> >>>> +++ b/mm/huge_memory.c
+>> >>>> @@ -1688,11 +1688,13 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf)
+>> >>>>    	if (node_is_toptier(nid))
+>> >>>>    		last_cpupid = folio_last_cpupid(folio);
+>> >>>>    	target_nid = numa_migrate_prep(folio, vmf, haddr, nid, &flags);
+>> >>>> -	if (target_nid == NUMA_NO_NODE) {
+>> >>>> -		folio_put(folio);
+>> >>>> +	if (target_nid == NUMA_NO_NODE)
+>> >>>> +		goto out_map;
+>> >>>> +	if (migrate_misplaced_folio_prepare(folio, vma, target_nid)) {
+>> >>>> +		flags |= TNF_MIGRATE_FAIL;
+>> >>>>    		goto out_map;
+>> >>>>    	}
+>> >>>> -
+>> >>>> +	/* The folio is isolated and isolation code holds a folio reference. */
+>> >>>>    	spin_unlock(vmf->ptl);
+>> >>>>    	writable = false;
+>> >>>>
+>> >>>> diff --git a/mm/memory.c b/mm/memory.c
+>> >>>> index 118660de5bcc..4fd1ecfced4d 100644
+>> >>>> --- a/mm/memory.c
+>> >>>> +++ b/mm/memory.c
+>> >>>
+>> >>> <snip>
+>> >>>
+>> >>>> @@ -5345,10 +5343,13 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
+>> >>>>    	else
+>> >>>>    		last_cpupid = folio_last_cpupid(folio);
+>> >>>>    	target_nid = numa_migrate_prep(folio, vmf, vmf->address, nid, &flags);
+>> >>>> -	if (target_nid == NUMA_NO_NODE) {
+>> >>>> -		folio_put(folio);
+>> >>>> +	if (target_nid == NUMA_NO_NODE)
+>> >>>> +		goto out_map;
+>> >>>> +	if (migrate_misplaced_folio_prepare(folio, vma, target_nid)) {
+>> >>>> +		flags |= TNF_MIGRATE_FAIL;
+>> >>>>    		goto out_map;
+>> >>>>    	}
+>> >>>
+>> >>> These two locations are repeated code, maybe just merge the ifs into
+>> >>> numa_migrate_prep(). Feel free to ignore if you are not going to send
+>> >>> another version. :)
+>> >>
+>> >> I went back and forth a couple of times and
+>> >>
+>> >> a) Didn't want to move numa_migrate_prep() into
+>> >>     migrate_misplaced_folio_prepare(), because having that code in
+>> >>     mm/migrate.c felt a bit odd.
+>> > 
+>> > I agree after checking the actual code, since the code is just
+>> > updating NUMA fault stats and checking where the folio should be.
+>> > 
+>> >>
+>> >> b) Didn't want to move migrate_misplaced_folio_prepare() because I enjoy
+>> >>     seeing the migrate_misplaced_folio_prepare() and
+>> >>     migrate_misplaced_folio() calls in the same callercontext.
+>> >>
+>> >> I also considered renaming numa_migrate_prep(), but wasn't really able to come up with a good name.
+>> > 
+>> > How about numa_migrate_check()? Since it tells whether a folio should be
+>> > migrated or not.
+>> > 
+>> >>
+>> >> But maybe a) is not too bad?
+>> >>
+>> >> We'd have migrate_misplaced_folio_prepare() consume &flags and &target_nid, and perform the "flags |= TNF_MIGRATE_FAIL;" internally.
+>> >>
+>> >> What would be your take?
+>> > 
+>> > I would either rename numa_migrate_prep() or just do nothing. I have to admit
+>> > that the "prep" and "prepare" in both function names motivated me to propose
+>> > the merge, but now the actual code tells me they should be separate.
+>>
+>> Let's leave it like that for now. Renaming to numa_migrate_check() makes 
+>> sense, and likely moving more numa handling stuff in there.
+>>
+>> Bit I yet have to figure out why some of the memory.c vs. huge_memory.c 
+>> code differences exist, so we can unify them.
+>>
+>> For example, why did 33024536bafd9 introduce slightly different 
+>> last_cpupid handling in do_huge_pmd_numa_page(), whereby it seems like 
+>> some subtle difference in handling NUMA_BALANCING_MEMORY_TIERING? Maybe 
+>> I am missing something obvious. :)
 >
-> I strongly suggest running fstests on pmem devices with '-o
-> dax=always' mount options to get much more comprehensive fsdax test
-> coverage. That exercises a lot of the weird mmap corner cases that
-> cause problems so it would be good to actually test that nothing new
-> got broken in FSDAX by this patchset.
+> It seems to me that a sysctl_numa_balancing_mode & NUMA_BALANCING_MEMORY_TIERING
+> check is missing in do_huge_pmd_numa_page(). So the
+>
+> if (node_is_toptier(nid))
+>
+> should be
+>
+> if (!(sysctl_numa_balancing_mode & NUMA_BALANCING_MEMORY_TIERING) ||
+> node_is_toptier(nid))
+>
+> to be consistent with other checks. Add Ying to confirm.
 
-Thanks Dave, I will do that and report back. I suspect it will turn up
-something, given Dan was seeing a crash with these patches.
+Yes.  It should be so.  Sorry for my mistake and confusing.
 
- - Alistair
+> I also think a function like
+>
+> bool folio_has_cpupid(folio)
+> {
+>     return !(sysctl_numa_balancing_mode & NUMA_BALANCING_MEMORY_TIERING)
+>     || node_is_toptier(folio_nid(folio));
+> }
+>
+> would be better than the existing checks.
 
-> -Dave.
+Yes.  This looks better.  Even better, we can add some comments to the
+function too.
 
+--
+Best Regards,
+Huang, Ying
