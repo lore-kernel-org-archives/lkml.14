@@ -1,164 +1,335 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53DD85654
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 09:10:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9F05C614
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 09:11:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719825048; cv=none; b=JmJD1JtqVDiI2KYXURHgJAhjuotZ8GY1xXvjFx0kYarzpjCmEULKjxatFbN2JrikdnJVdURclsoROIqmv64EOZtJUTscBwZDxTRVrOSswVZnZrLt9/M0N5eEHDeCdmE7xb9uxnzE/Itut8VWSdgJ9lc7psSYCCDI3zKIVKunHP4=
+	t=1719825081; cv=none; b=V9iTnL7ouV3PtS4G5QJ9soHIcJtNTeIDterXzz4DZFGiRk3UCg2qYLjVypBHHNvyKtP7eemrV6nizz9KhTWlhs8mSaLUvBLAJfH8muE++O2ZGGhA8fo4CyPiPN4bK4tB/woWvuSUwrO6egFBJI3bO2ctw1cRVUanJmawZD2ldQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719825048; c=relaxed/simple;
-	bh=s6wUZFBzlnzCYz9OAO3FsO7lybksMejV2MvZlfsae3s=;
+	s=arc-20240116; t=1719825081; c=relaxed/simple;
+	bh=ZZDuefkVybRKv7eLniy7SDH1/QwWLvpRP8veMGQDDDk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e96+LrhPGQvwy8SdWShuo0F/6EynhIZS6eBFHkW4MDf0X8dvP8Tsq/fBcpRhDAeHbGfxuE34Y9qQKQOVeGen1escjoxUAAXEt7he+uLP90eWs4o8FtEiJS7UJukSDnBfV8YOJKoegaZtI9jAPm7BvxbmiLSPo9X1H2a5MPh73zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=AKOHCuGM; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	 To:Cc:Content-Type; b=NGAvatGMAZKAEXnD7bz/Xa+esQx7CtzmFvwwXobU/p5MQbsdv2QU71HvwnRAswIqpBkMTkTbuHljGdHVXWexaJ2RqM9GdF9zwPHatRYqpnbNURTpTIIazViDduPrHjJq8lWXqSe84VqBHP0fjx64OCu/265Gqr8McZ90VbbPXgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h4ctP++n; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="AKOHCuGM"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2c825f0b381so1458388a91.1
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 02:10:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h4ctP++n"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-64ad8d7b804so21167787b3.0
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 02:11:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1719825046; x=1720429846; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1719825078; x=1720429878; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9VvOaQzlpnKiFlOfEz9Er17nO3pgB9yQmQ0QBuBPFt4=;
-        b=AKOHCuGMfsIxvxv2OU4p9uJ5yUytHDvIi9QO32h+ZTOS6dNmdlgRKRhv+pkJKgpxmH
-         wydpOIAqjs5lrNnrMVUJr5aHEvGY08ngawL+Lwl+999tm7F4pX6nhRPUPPtd7vqKGvx2
-         4baNWrACULEhGiMqbVUMVjUFFwqPCjMLWQecJ47CShnLeh0ZGYnORCBnXwNQH38E5d4O
-         9HVLyOWiY9LPSL+b3p30GI3/5QiNP07WTQCxvdHEmAqjqdl2j0wNuXpoz7TuKM75Cct7
-         jvffk0Js/c+xfcqmY5l8k63T6cqfvdOJVaEhzKF4CaL1cjjR1hPqf8jnsw8jbqXGz0PK
-         f18g==
+        bh=279s14TPu3NAq9grtIdz6lApvIxsHo2tIujxIiLRJtk=;
+        b=h4ctP++nx3tXoOCGqUEPThF/0zOq8M1EfpcGyU2rprSf9Sb88bP6I4E0vTTM28k5Mm
+         nRceZQhH5A322QyTZAQjoq55dkISJLVMwbITP7n87t1dIe73z7CPhIG/v9/yb9g++kiN
+         WjFdiZ8ctypXHyMAX8TFamer+TwNhfTAT4HjOQzWhRQEnqcELTMeHVHoP8Ibugerul+x
+         vLGq3EKQgZ69+llF0z5YvGi8PQFVOmy8/b4kldiQygR7Ih1+PhLxhup+G/+nz6saxl+R
+         j0yI+vug9eq2qt+4wpyOBcr1zaE3zc2IIqqHOpNX6VBJLYwSiqfXKhJA48NpsMJumYL2
+         /IDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719825046; x=1720429846;
+        d=1e100.net; s=20230601; t=1719825078; x=1720429878;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9VvOaQzlpnKiFlOfEz9Er17nO3pgB9yQmQ0QBuBPFt4=;
-        b=p0lu/88PidwtoA1f+oqMWPInVg8983rIyFb1ex9wWMdwxx+L2oZI2a63IWQqmkyhBz
-         W7DKzdS1t3oHWwsQRDMXBaJ7mtaU4s6HJHUyoDoq/EMgwXskz3pNwUI4fILQktaKLMnR
-         vpbgAmgsInxSwSskVHMw7LDRYgyOvfqUWQiw12sgxwvVvi/wkh6CHMQsYznsOOCf1ECh
-         +z3heoBJiw6O1bIo2Ah3sIynKB9YZ24Pa0nDtoT5NvmRhiSyr/xfb2HFnPmXtq0r0l0/
-         ydKofsIOLom1kJSpBvtBddL5HF0laNKUEJU2ISEKk/vWQquiUOiwRpmI2vcFi0QEB9nL
-         bUow==
-X-Forwarded-Encrypted: i=1; AJvYcCXbjyawx7PJeAEqXhhcSeCDHjm9TYepnZCFRuqi0zf0JdGBtPK0PecVZ26P+lAXmCXhzM9P764qGC6FWUOS5B/XDOqEr1O3GKCIAAI2
-X-Gm-Message-State: AOJu0Ywj0cycAWN3XITJa2hkjRHB1iTsn4d0mBjZGqxWMdqYLQbX0vvk
-	DvD6mNNQsPjEiGNxEqLPKp5ywOHQI0KpVEl1qrNmnkq8cIaPQU2epsbf+eVzKOiY3YoVZ+4Vp+D
-	fsze4yi8Jysj9PMlCrSbOt8hffjHPUh0cC8Lb4g==
-X-Google-Smtp-Source: AGHT+IGwkj24vCYggigVErwYUWeLyyQPYaxqLK9M4dtT+l3m8GW14hK5AXbiZ8Timfu0ZgNDZaYV9PwlM36bnRlfo7g=
-X-Received: by 2002:a17:90a:fa03:b0:2c8:ec4c:436 with SMTP id
- 98e67ed59e1d1-2c93d767652mr2217306a91.33.1719825046205; Mon, 01 Jul 2024
- 02:10:46 -0700 (PDT)
+        bh=279s14TPu3NAq9grtIdz6lApvIxsHo2tIujxIiLRJtk=;
+        b=vLwSM3dUwMHeGnlU0+7zhJAe0kpCGCEDfgISk7FYkPpos+sxPzxQRqV2E/4Wu4sCXd
+         aJQxASK+nzXUUlPs0dzwEIYYNKA++543y0zYApAXhESMoFpgnbu/ZVc5znBkjIZ3qEjo
+         Mgui/kqkmqO/Oz+G9MaqWlZnKn8j6kcyBCkZxxCYH+TrXLn2osCuP8SnoPjCCEZIKKTV
+         dQgSAmt7KBf3ENkvhhOHrnFXuOYkA4UP6SkZ4OCqRgnOP+w95XKlxrYOahvgSGEHhRy2
+         gaOHhpq2Dwp+xc/zZCSbZ/U10PV1ynSdMWF2aEJ5/0yQGsudkn0baRVm/c2mu410BjsK
+         3Qzg==
+X-Forwarded-Encrypted: i=1; AJvYcCUSXUdtF690pUlkKuAtiVF6rnBAxEh3NsEx7RdpzlbNX1YyWpTul9SKobLeUg/QesZrVrWRhDcqYJjEcKYxbq9BZ/KKjil0xdCfibXJ
+X-Gm-Message-State: AOJu0YynJbyoABtnBem6CD+TV1wRXSVoBOl6+0UuhvU3ncgdPMnwmjYk
+	+nb8i6ludiQ8OOHrBMXTWvPRuOcH0NDHAGSppvuLRuvvnaXRug560TV+mFuyL9bFb0gcLIVx2XC
+	oyVflNeO19cwKjOs7BJ3xip12pMY9CzZIpzPUIQ==
+X-Google-Smtp-Source: AGHT+IEnkyIn8A8Q7D/dqG51zS65A3m2K6WhBC9Ohf/ZxxAQQg/JJmdkDQU6wzrdArQnROoMt2dP3o28EdVqFmRyS04=
+X-Received: by 2002:a05:690c:319:b0:618:90cc:bc4a with SMTP id
+ 00721157ae682-64af5a1ca8cmr46087537b3.26.1719825078412; Mon, 01 Jul 2024
+ 02:11:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240701072908.25503-1-luxu.kernel@bytedance.com>
- <20240701072908.25503-2-luxu.kernel@bytedance.com> <CAH2o1u7j6pXhWHL2rBZak6LeXxn_KUbQHjygRGQKuEfS_vmtkQ@mail.gmail.com>
-In-Reply-To: <CAH2o1u7j6pXhWHL2rBZak6LeXxn_KUbQHjygRGQKuEfS_vmtkQ@mail.gmail.com>
-From: Xu Lu <luxu.kernel@bytedance.com>
-Date: Mon, 1 Jul 2024 17:10:35 +0800
-Message-ID: <CAPYmKFtCzQOOsN7vutoY0MrthtvcGxBqRsbr4ZgMQsaY1CrXHQ@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH 1/1] iommu/riscv: Support sharing irq lines
- between iommu queues
-To: Tomasz Jeznach <tjeznach@rivosinc.com>
-Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	apatel@ventanamicro.com, sunilvl@ventanamicro.com, iommu@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux@rivosinc.com, baolu.lu@linux.intel.com, lihangjing@bytedance.com, 
-	xieyongji@bytedance.com
+References: <20240620115245.31540-1-lvzhaoxiong@huaqin.corp-partner.google.com>
+ <20240620115245.31540-3-lvzhaoxiong@huaqin.corp-partner.google.com>
+ <bmmng663zqsc4xolkh6jdbu6yj637f3k6qbclxgi6fcmm4hv7z@i7ycd36flcha>
+ <CA+6=WdT80hcAW4f=UDcO2d3e+ODcRjAQBOUug7M6vgmtAEY1SA@mail.gmail.com> <CA+6=WdRSkQnx5qDn5rCzebEyjx-6Pz5ze0kE0oqvQ3uf5digMQ@mail.gmail.com>
+In-Reply-To: <CA+6=WdRSkQnx5qDn5rCzebEyjx-6Pz5ze0kE0oqvQ3uf5digMQ@mail.gmail.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Mon, 1 Jul 2024 12:11:05 +0300
+Message-ID: <CAA8EJposWO_ZXDp0rTSbAPfR0U+C35VjuigR+tZVd+80md+k=w@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] drm/panel: starry-er88577: add new panel driver
+To: zhaoxiong lv <lvzhaoxiong@huaqin.corp-partner.google.com>
+Cc: dmitry.torokhov@gmail.com, robh@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, jikos@kernel.org, 
+	benjamin.tissoires@redhat.co, dianders@google.com, hsinyi@google.com, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Sorry for not describing it clearly.
-
-Indeed, the hardware interrupt lines have be configured in
-riscv_iommu_init_check().
-
-What I mean is that virtual interrupts of irqs[iommu->irqs_count] to
-irqs[RISCV_IOMMU_INTR_COUNT - 1] are not set, which will cause
-riscv_iommu_queue_enable() fail:
-       const unsigned int irq =3D
-iommu->irqs[riscv_iommu_queue_vec(iommu, queue->qid)];
-       rc =3D request_threaded_irq(irq, xxx);
-       if (rc) {
-                 queue->iommu =3D NULL;
-                 return rc;
-       }
-
-The virtual irq of queue id 'q' should be the same as irqs[q %
-iommu->irqs_count] as ICVEC is configured in the same way.
-
-Regards,
-
-Xu Lu
-
-On Mon, Jul 1, 2024 at 4:47=E2=80=AFPM Tomasz Jeznach <tjeznach@rivosinc.co=
-m> wrote:
+On Mon, 1 Jul 2024 at 09:26, zhaoxiong lv
+<lvzhaoxiong@huaqin.corp-partner.google.com> wrote:
 >
-> On Mon, Jul 1, 2024 at 9:29=E2=80=AFAM 'Xu Lu' via linux <linux@rivosinc.=
-com> wrote:
+> On Fri, Jun 21, 2024 at 9:43=E2=80=AFAM zhaoxiong lv
+> <lvzhaoxiong@huaqin.corp-partner.google.com> wrote:
 > >
-> > When the number of wired interrupt lines is less than the number of
-> > iommu queues, we should assign one irq line for several queues and
-> > configure csr icvec accordingly.
+> > On Fri, Jun 21, 2024 at 3:56=E2=80=AFAM Dmitry Baryshkov
+> > <dmitry.baryshkov@linaro.org> wrote:
+> > >
+> > > On Thu, Jun 20, 2024 at 07:52:45PM GMT, Zhaoxiong Lv wrote:
+> > > > The bias IC of this starry-er88577 panel is placed
+> > > > on the panel side, so when the panel is powered on,
+> > > > there is no need to control AVDD and AVEE in the driver,
+> > > > only 3.3v and reset are needed.
+> > > >
+> > > > Signed-off-by: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google=
+.com>
+> > > > ---
+> > > > Chage since V3:
+> > > > -  1. Adjust the ".clock" assignment format.
+> > > >
+> > > > v3: https://lore.kernel.org/all/20240614145609.25432-3-lvzhaoxiong@=
+huaqin.corp-partner.google.com/
+> > > >
+> > > > Chage since V3:
+> > > > -  Separate Starry-er88577 from the panel-kingdisplay-kd101ne3 driv=
+er.
+> > > > -  Use mipi_dsi_dcs_set_display_on_multi().
+> > > > -  Use mipi_dsi_dcs_exit_sleep_mode_multi() and mipi_dsi_msleep().
+> > > >
+> > > > v2: https://lore.kernel.org/all/20240601084528.22502-5-lvzhaoxiong@=
+huaqin.corp-partner.google.com/
+> > > >
+> > > > Chage since V2:
+> > > > -  Add compatible for Starry er88577 in panel-kingdisplay-kd101ne3 =
+drivers.
+> > > >
+> > > > ---
+> > > >  drivers/gpu/drm/panel/Kconfig                |   9 +
+> > > >  drivers/gpu/drm/panel/Makefile               |   1 +
+> > > >  drivers/gpu/drm/panel/panel-starry-er88577.c | 343 +++++++++++++++=
+++++
+> > > >  3 files changed, 353 insertions(+)
+> > > >  create mode 100644 drivers/gpu/drm/panel/panel-starry-er88577.c
+> > > >
+> > > > diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/=
+Kconfig
+> > > > index e54f6f5604ed..a52aa2552ab8 100644
+> > > > --- a/drivers/gpu/drm/panel/Kconfig
+> > > > +++ b/drivers/gpu/drm/panel/Kconfig
+> > > > @@ -781,6 +781,15 @@ config DRM_PANEL_SITRONIX_ST7789V
+> > > >         Say Y here if you want to enable support for the Sitronix
+> > > >         ST7789V controller for 240x320 LCD panels
+> > > >
+> > > > +config DRM_PANEL_STARRY_ER88577
+> > > > +     tristate "Starry er88577 panel"
+> > > > +     depends on OF
+> > > > +     depends on DRM_MIPI_DSI
+> > > > +     depends on BACKLIGHT_CLASS_DEVICE
+> > > > +     help
+> > > > +       Say Y if you want to enable support for panels based on the
+> > > > +       Starry er88577 controller.
+> > > > +
+> > > >  config DRM_PANEL_SONY_ACX565AKM
+> > > >       tristate "Sony ACX565AKM panel"
+> > > >       depends on GPIOLIB && OF && SPI
+> > > > diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel=
+/Makefile
+> > > > index f0203f6e02f4..ecd843a6dc6e 100644
+> > > > --- a/drivers/gpu/drm/panel/Makefile
+> > > > +++ b/drivers/gpu/drm/panel/Makefile
+> > > > @@ -81,6 +81,7 @@ obj-$(CONFIG_DRM_PANEL_SHARP_LS060T1SX01) +=3D pa=
+nel-sharp-ls060t1sx01.o
+> > > >  obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7701) +=3D panel-sitronix-st7701=
+.o
+> > > >  obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7703) +=3D panel-sitronix-st7703=
+.o
+> > > >  obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7789V) +=3D panel-sitronix-st778=
+9v.o
+> > > > +obj-$(CONFIG_DRM_PANEL_STARRY_ER88577) +=3D panel-starry-er88577.o
+> > > >  obj-$(CONFIG_DRM_PANEL_SYNAPTICS_R63353) +=3D panel-synaptics-r633=
+53.o
+> > > >  obj-$(CONFIG_DRM_PANEL_SONY_ACX565AKM) +=3D panel-sony-acx565akm.o
+> > > >  obj-$(CONFIG_DRM_PANEL_SONY_TD4353_JDI) +=3D panel-sony-td4353-jdi=
+.o
+> > > > diff --git a/drivers/gpu/drm/panel/panel-starry-er88577.c b/drivers=
+/gpu/drm/panel/panel-starry-er88577.c
+> > > > new file mode 100644
+> > > > index 000000000000..e6088262ee69
+> > > > --- /dev/null
+> > > > +++ b/drivers/gpu/drm/panel/panel-starry-er88577.c
+> > > > @@ -0,0 +1,343 @@
+> > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > +/* Panels based on the ER88577 display controller.
+> > > > + * Author: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.co=
+m>
+> > > > + */
+> > > > +
+> > > > +#include <linux/delay.h>
+> > > > +#include <linux/gpio/consumer.h>
+> > > > +#include <linux/module.h>
+> > > > +#include <linux/of.h>
+> > > > +#include <linux/regulator/consumer.h>
+> > > > +
+> > > > +#include <drm/drm_connector.h>
+> > > > +#include <drm/drm_crtc.h>
+> > > > +#include <drm/drm_mipi_dsi.h>
+> > > > +#include <drm/drm_panel.h>
+> > > > +
+> > > > +#include <video/mipi_display.h>
+> > > > +#include <drm/drm_probe_helper.h>
+> > > > +
+> > > > +struct starry_panel;
+> > > > +
+> > > > +struct panel_desc {
+> > > > +     const struct drm_display_mode *modes;
+> > > > +     unsigned int bpc;
+> > > > +     unsigned long mode_flags;
+> > > > +     enum mipi_dsi_pixel_format format;
+> > > > +     const struct panel_init_cmd *init_cmds;
+> > > > +     int (*init)(struct starry_panel *starry);
+> > > > +     unsigned int lanes;
+> > > > +     bool discharge_on_disable;
+> > > > +     bool lp11_before_reset;
+> > > > +     unsigned int power_off_delay_ms;
+> > > > +};
+> > > > +
+> > > > +struct starry_panel {
+> > > > +     struct drm_panel base;
+> > > > +     struct mipi_dsi_device *dsi;
+> > > > +
+> > > > +     const struct panel_desc *desc;
+> > > > +
+> > > > +     enum drm_panel_orientation orientation;
+> > > > +     struct regulator *vccio;
+> > > > +     struct gpio_desc *reset;
+> > > > +};
+> > > > +
+> > > > +static int starry_er88577_init(struct starry_panel *starry)
+> > > > +{
+> > > > +     struct mipi_dsi_multi_context dsi_ctx =3D { .dsi =3D starry->=
+dsi };
+> > > > +
+> > > > +     /* T5:HWreset to init_code >=3D 120ms */
+> > > > +     mipi_dsi_msleep(dsi_ctx, 120);
+> > > > +
+> > > > +     mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xe0, 0xab, 0xba);
+> > > > +     mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xe1, 0xba, 0xab);
+> > > > +     mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb1, 0x10, 0x01, 0x47=
+, 0xff);
+> > > > +     mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb2, 0x0c, 0x14, 0x04=
+, 0x50, 0x50, 0x14);
+> > > > +     mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb3, 0x56, 0x53, 0x00=
+);
+> > > > +     mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb4, 0x33, 0x30, 0x04=
+);
+> > > > +     mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb6, 0xb0, 0x00, 0x00=
+, 0x10, 0x00, 0x10, 0x00);
+> > > > +     mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb8, 0x05, 0x12, 0x29=
+, 0x49, 0x40);
+> > > > +     mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb9, 0x7c, 0x61, 0x4f=
+, 0x42, 0x3e, 0x2d, 0x31,
+> > > > +                                  0x1a, 0x33, 0x33, 0x33, 0x52, 0x=
+40, 0x47, 0x38, 0x34, 0x26,
+> > > > +                                  0x0e, 0x06, 0x7c, 0x61, 0x4f, 0x=
+42, 0x3e, 0x2d, 0x31, 0x1a,
+> > > > +                                  0x33, 0x33, 0x33, 0x52, 0x40, 0x=
+47, 0x38, 0x34, 0x26, 0x0e,
+> > > > +                                  0x06);
+> > > > +     mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc0, 0xcc, 0x76, 0x12=
+, 0x34, 0x44, 0x44, 0x44,
+> > > > +                                  0x44, 0x98, 0x04, 0x98, 0x04, 0x=
+0f, 0x00, 0x00, 0xc1);
+> > > > +     mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc1, 0x54, 0x94, 0x02=
+, 0x85, 0x9f, 0x00, 0x6f,
+> > > > +                                  0x00, 0x54, 0x00);
+> > > > +     mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc2, 0x17, 0x09, 0x08=
+, 0x89, 0x08, 0x11, 0x22,
+> > > > +                                  0x20, 0x44, 0xff, 0x18, 0x00);
+> > > > +     mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc3, 0x87, 0x47, 0x05=
+, 0x05, 0x1c, 0x1c, 0x1d,
+> > > > +                                  0x1d, 0x02, 0x1e, 0x1e, 0x1f, 0x=
+1f, 0x0f, 0x0f, 0x0d, 0x0d,
+> > > > +                                  0x13, 0x13, 0x11, 0x11, 0x24);
+> > > > +     mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc4, 0x06, 0x06, 0x04=
+, 0x04, 0x1c, 0x1c, 0x1d,
+> > > > +                                  0x1d, 0x02, 0x1e, 0x1e, 0x1f, 0x=
+1f, 0x0e, 0x0e, 0x0c, 0x0c,
+> > > > +                                  0x12, 0x12, 0x10, 0x10, 0x24);
+> > > > +     mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc8, 0x21, 0x00, 0x31=
+, 0x42, 0x34, 0x16);
+> > > > +     mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xca, 0xcb, 0x43);
+> > > > +     mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xcd, 0x0e, 0x4b, 0x4b=
+, 0x20, 0x19, 0x6b, 0x06,
+> > > > +                                  0xb3);
+> > > > +     mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xd2, 0xe3, 0x2b, 0x38=
+, 0x08);
+> > > > +     mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xd4, 0x00, 0x01, 0x00=
+, 0x0e, 0x04, 0x44, 0x08,
+> > > > +                                  0x10, 0x00, 0x00, 0x00);
+> > > > +     mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xe6, 0x80, 0x09, 0xff=
+, 0xff, 0xff, 0xff, 0xff,
+> > > > +                                  0xff);
+> > > > +     mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xf0, 0x12, 0x03, 0x20=
+, 0x00, 0xff);
+> > > > +     mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xf3, 0x00);
+> > >
+> > > NAK.
+> > >
+> > > This sequence looks _exactly_ like the sequence in
+> > > panel-boe-th101mb31ig002-28a.c.
+> > >
+> > Hi Dmity
 > >
->
-> Is this case not already covered by the code in function
-> riscv_iommu_init_check(), assigning cause to vector register (ICVEC)
-> based on available interrupt vectors? Interrupt vector selection is
-> based on accepted ICVEC configuration (see riscv_iommu_queue_vec()).
->
-> Relevant code (patch 'Command and fault queue support'):
-> iommu->icvec =3D FIELD_PREP(RISCV_IOMMU_ICVEC_FIV, 1 % iommu->irqs_count)=
- |
->        FIELD_PREP(RISCV_IOMMU_ICVEC_PIV, 2 % iommu->irqs_count) |
->        FIELD_PREP(RISCV_IOMMU_ICVEC_PMIV, 3 % iommu->irqs_count);
->
-> Values in iommu->irqs[] should represent actual interrupts allocated
-> for the device.
->
-> Best,
-> - Tomasz
->
-> > Signed-off-by: Xu Lu <luxu.kernel@bytedance.com>
-> > ---
-> >  drivers/iommu/riscv/iommu-platform.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
+> > We checked the panel-boe-th101mb31ig002-28a.c driver. The init_code is
+> > indeed very similar, but the ICs seem to be different from the names,
+> > and our panels and timings are also different. Do you want us to add
+> > compatibility with Starry in this driver
+> > panel-boe-th101mb31ig002-28a.c?
 > >
-> > diff --git a/drivers/iommu/riscv/iommu-platform.c b/drivers/iommu/riscv=
-/iommu-platform.c
-> > index da336863f152..1d0af1260d5b 100644
-> > --- a/drivers/iommu/riscv/iommu-platform.c
-> > +++ b/drivers/iommu/riscv/iommu-platform.c
-> > @@ -60,6 +60,10 @@ static int riscv_iommu_platform_probe(struct platfor=
-m_device *pdev)
-> >         for (vec =3D 0; vec < iommu->irqs_count; vec++)
-> >                 iommu->irqs[vec] =3D platform_get_irq(pdev, vec);
+> > thanks
 > >
-> > +       for (vec =3D iommu->irqs_count; vec < RISCV_IOMMU_INTR_COUNT; v=
-ec++)
-> > +               iommu->irqs[vec] =3D platform_get_irq(pdev,
-> > +                                                   (vec % iommu->irqs_=
-count));
-> > +
-> >         /* Enable wire-signaled interrupts, fctl.WSI */
-> >         if (!(iommu->fctl & RISCV_IOMMU_FCTL_WSI)) {
-> >                 iommu->fctl |=3D RISCV_IOMMU_FCTL_WSI;
-> > --
-> > 2.20.1
-> >
-> > --
-> > You received this message because you are subscribed to the Google Grou=
-ps "linux" group.
-> > To unsubscribe from this group and stop receiving emails from it, send =
-an email to linux+unsubscribe@rivosinc.com.
-> > To view this discussion on the web visit https://groups.google.com/a/ri=
-vosinc.com/d/msgid/linux/20240701072908.25503-2-luxu.kernel%40bytedance.com=
-.
-> > For more options, visit https://groups.google.com/a/rivosinc.com/d/opto=
-ut.
+> hi dmitry.baryshkov
+>
+> We tried to make modifications based on the
+> panel-boe-th101mb31ig002-28a.c driver, but we encountered some
+> problems.
+> For example, the panel-boe-th101mb31ig002-28a.c driver will get
+> "enable/reset" gpio in the probe() function, but our hardware design
+> only has "enable". This will cause an error to be returned in the
+> devm_gpiod_get function when we use this driver and the probe()
+> function will be interrupted.
+> How should we modify this? Can we re-judge the return value of the
+> devm_gpiod_get function?
+
+If it is optional, then it should be devm_gpiod_get_optional().
+
+>
+> thanks
+>
+> > > > +
+> > > > +     mipi_dsi_dcs_exit_sleep_mode_multi(&dsi_ctx);
+> > > > +
+> > > > +     mipi_dsi_msleep(dsi_ctx, 120);
+> > > > +
+> > > > +     mipi_dsi_dcs_set_display_on_multi(&dsi_ctx);
+> > > > +     mipi_dsi_msleep(dsi_ctx, 20);
+> > > > +
+> > > > +     return dsi_ctx.accum_err;
+> > >
+> > > --
+> > > With best wishes
+> > > Dmitry
+
+
+
+--=20
+With best wishes
+Dmitry
