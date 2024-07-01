@@ -1,146 +1,103 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11BDE12A14C;
-	Mon,  1 Jul 2024 09:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F01C2C859
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 09:48:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719827218; cv=none; b=YdgMzyEQEhV5rY8EHEP2bnIIHyTM3/kkOghA5qEPn9BsUKsaKa4xM61R8lmUmpBufPrjl8Dru0zFRp2RkXaWE37rHDViJQaMBzeGj7YGalWVhpbNHsy+6v3yo5wwRR8TE8M0aY4HWy3AScattsnIdvp8lfLboUYZHWT5GhTHvIM=
+	t=1719827304; cv=none; b=r4E2XsJH5QGz1m2TJkVx1bemqLVQss7l8m2i/FM/fIBt0B+0xi9GqjqMe+EsDHhhxOASglaAhTQuoCTVAO2PeDp3zLwYxWqf1Lf6WBvvSLXwwTVezawBXNHmeRAc9+ivANHjLW4I4F3yeWjzwmOESWJRIiSi/ZmoYjGt3TV/C7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719827218; c=relaxed/simple;
-	bh=1mdbcvOKare6fTE6pXiojzL/q9PAeyXp0dtBoiv77Ho=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fi02L9mxzueLk0+8R0Nixlg6fDIMh6ZNJB2IYI1QytUSPW7f2JIG56V2X+Dliy64DUhtzgynzCN9RGB4rpe8JDC/+0BFTUYyXSft4RrrzA0oky958p5qGaIBekuSt8n4++D2xcAgpMtl252DZAD01ALi+8fXw94x7fEJRJjsUBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ldTD3weu; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719827304; c=relaxed/simple;
+	bh=WDBFL/17CdcA7gxHJdZAMmvj0UN0nf3e/J0B5ml6HnU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IXn/hKhxtSFa3UPi7h3IylmWHhGdTxgZ/bNnjIepBwuTHdJA01B/Dkqjvs2INL/IB2SW4I6lIaTKrX/nker6ya8UcnWe8yl2HJ3o+9RWm3aydWzAGf8rUKXtxlfJNzvljv9K2R+u2kasbACk/twwsBFXjB+icqGVDgyWiNHuAT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=YwIh839T; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ldTD3weu"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a7527afa23cso82690266b.2;
-        Mon, 01 Jul 2024 02:46:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719827215; x=1720432015; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=QJ8hznQdBSpW/pK4jDinmZ2F4dwUUNDMvQFJh/2PnF8=;
-        b=ldTD3weuvLRSVhT5KFsSa5RBDf/KzvCXcZMJHkEaPOZvzasU45SRIAXiGAEK5Vxci2
-         ft8YAYIDLFYxx2co/pk96ve0IP7VNJm3qiDanz3z7KEQNBTUvK4EgyXGDvz6ATqtTp1H
-         FWUKUK1o8ePZCbqpOoewldqi7Q22S3sdrVCzUs4qG7rLLIfHYrLYoBZD7d1u0e5/UI4V
-         7okpmYz6N0iB68MYTOUWRIO4XTDB3twtU1TayI7MW2RvvQc5bXL+1B/57g0giJqI0qIT
-         98JPTHlRYLSOLQNuls2HB0/ZJ+C9IElr5IQ8slaL2jEDDPfdZhoWl6GYZE2sDN+XpTJO
-         wKUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719827215; x=1720432015;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QJ8hznQdBSpW/pK4jDinmZ2F4dwUUNDMvQFJh/2PnF8=;
-        b=RqSrsFkOMXbT9mGAXf67yPdLUGqoDahsya/m19qvxgE+Ka5eLmRU6mi/5lPbX1S8Af
-         SSSJGXLe4+SqvaJoiLFAgGPQF+KJz7GyR9EPnPkn914zj7IC5yTr5/JQ/ESvKr4HC2iP
-         7glcCKNvR/vBd2HKkjlhQQNuAMOwGfxqsNM0LDRMJMHq1+aHLDsWntoSZG/T7QWhPEa4
-         KuXf1VQHkQsNiPgrxXc1f88Hly8JZDpQM0sAaHC4Z2soo+KKobAuZjxIwvzUvXM1ugBv
-         k0ad+n2C3eZRTbc549sbrfQeqLYa2uov3fEOae1lnLsdf3Xt7j7AFDZf+e2ww3PyohQD
-         gtew==
-X-Forwarded-Encrypted: i=1; AJvYcCUmpLU8RA743Szu9RzzzDgsJn3V7rBME7pLbZYxilZy7TLqpfFZgu7ENE0LTLBLvRcq4ZkI8o45uBrp/nQVHEODoIktXdLky+oslbmAm1bBOddI9IiX5JM3jQaTQtXP7PozdyB3F/NqiQ==
-X-Gm-Message-State: AOJu0YwsTnSQwGlWqelN4yv4ZzIBup8jlW6Fuqinh5L4NvFqPDFpjQlj
-	1TiVbj97YZDsxwEhEzdvlVRWwVTNLw+5XE8wVFBecOzNIWA2CbemL2p+KBrS0AUVxhW5yysVztu
-	ABRYFXUtjH03OviUwDYjRHtdYOg==
-X-Google-Smtp-Source: AGHT+IHDggheRf09W9QEoK9AQzFlLZt2A//Iiql249o+YW7xCeGM2QIwLllRZevmRIDL1Bw4ZPjbtWr2EPs32Qz1SSA=
-X-Received: by 2002:a17:907:7207:b0:a72:7ffc:f54a with SMTP id
- a640c23a62f3a-a7514467505mr469201466b.5.1719827215242; Mon, 01 Jul 2024
- 02:46:55 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="YwIh839T"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 25E9240E021B;
+	Mon,  1 Jul 2024 09:48:16 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id LdQdrtoIkIOu; Mon,  1 Jul 2024 09:48:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1719827293; bh=auILb1VYaqkHFB1JzDesJQYua+AJ8kjsg0oXI4kMZlo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YwIh839Ttdc1S+Rk87CgorgNgx69rP98x4dik6SvjhqDM/bGZFnSc2DEGCJ7u/q77
+	 iO9qlN4ODlt0ygVMAhmLb7Y2/QqaCdKzaezFRnZZ01hwF1RePatrufVc0TDYOsHEWy
+	 xeu9deJ7T5A+jQDbmuT01jYSr1JUJLuv/H+qS14AqxdUYwtXoMI1G9v0xTUl6JOX7f
+	 Ss82uJJVH8TVsrfTLZ8N93rZJ+FF9j4ljgNCN/PWKyBi7K2uKG7/hWm6nVenh06He3
+	 7Mrc9c5DNmexNj73bFeG95q/trV8SWEEMi8TXAKD44/QxpAGVks7RS+RmMR3YRtY6B
+	 Hu4WIVhs3zhQrYPRYA/2CG9fhseeAKsHE1ZaYgBv2MBqB/cuw53xlp4j/kUmGtePH8
+	 +EKGhLeCPw5s9x0mrBriOzJ9CUipjcTnHNBb3RVAtXQvv6AaIHxKS0nIv/OrNNpUub
+	 cc1t+w3QqRpXVPkCfiCxH4D3xDDJz4PtNAGJdfOk27XLG760VMcF/1xlzbB25RweuM
+	 79dXnXzn+BFTvLF550SC83qtiXqqFcNgNVoyYIWqaWvT4Y6CWQTEt4dYnhtpW4FsaC
+	 /FtRoAB/cj8ga4IRfZAEit6cAQMjROchp4l/Oopk+bFDNYmtTqIjrpA3aOgSwYfnuK
+	 O1ZYrmu1Mmzr5frvdOsyFtQA=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0E64640E0185;
+	Mon,  1 Jul 2024 09:48:02 +0000 (UTC)
+Date: Mon, 1 Jul 2024 11:47:57 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Xin Li <xin3.li@intel.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+	dave.hansen@linux.intel.com, peterz@infradead.org,
+	brgerst@gmail.com, chang.seok.bae@intel.com, jgross@suse.com
+Subject: Re: [PATCH v6 5/5] x86/gsseg: use the LKGS instruction if available
+ for load_gs_index()
+Message-ID: <20240701094757.GCZoJ7TWGdv2Cm6egY@fat_crate.local>
+References: <20230112072032.35626-1-xin3.li@intel.com>
+ <20230112072032.35626-6-xin3.li@intel.com>
+ <20240630160448.GAZoGCIHXRuBY8sLqW@fat_crate.local>
+ <3A846C73-305E-4C55-B846-AC00657BA95B@zytor.com>
+ <20240701060841.GAZoJH6XpJz6qyo-Lr@fat_crate.local>
+ <38C69EA0-DB74-4D2A-ABB5-CB3F1D31FB0C@zytor.com>
+ <20240701064002.GBZoJPQg2IXSCRa4sN@fat_crate.local>
+ <2B27D0A2-B1D0-4347-8587-DCFDB05BF683@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240629103914.161530-1-erezgeva@nwtime.org> <20240629103914.161530-4-erezgeva@nwtime.org>
- <1c457520-07b7-4bde-b040-e8bca959a4f5@linaro.org> <CANeKEMOODBNZA6efh0E0Ga_KaVs5Y3WLcUftRhNwYHhnXO=GNw@mail.gmail.com>
-In-Reply-To: <CANeKEMOODBNZA6efh0E0Ga_KaVs5Y3WLcUftRhNwYHhnXO=GNw@mail.gmail.com>
-From: Erez <erezgeva2@gmail.com>
-Date: Mon, 1 Jul 2024 11:46:18 +0200
-Message-ID: <CANeKEMO42rJt5Ob4_HDcZ3eEMvuMOPvRaFaLwL8SA65NtxSV7A@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] dt-bindings: mtd: macronix,mx25l12833f: add
- SPI-NOR chip
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: Erez Geva <erezgeva@nwtime.org>, linux-mtd@lists.infradead.org, 
-	Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>, linux-kernel@vger.kernel.org, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2B27D0A2-B1D0-4347-8587-DCFDB05BF683@zytor.com>
 
-Sorry, I resend the same mail, as I send it again as HTML.
+On Mon, Jul 01, 2024 at 01:01:54AM -0700, H. Peter Anvin wrote:
+> I don't know. It is stated in a number of places, but I don't know if it is
+> explicit in *this* specific context.
 
-How?
+Right, so the *read* side is explained tho, in both manuals and I presume for
+the other direction it is implied that the 16 LSBits are used:
 
-When using mx25l12805d, we do not read SFDP.
-As it uses the no-SFDP flags.
-When using mx25l12833f hardware with mx25l12805d driver, it did not
-try to read the SFDP.
-Yet mx25l12833f does have SFDP, when I remove the no-SFDP flags, the
-driver fetch the SFDP.
+AMD:
 
-Secondly SFDP does not contain OTP information.
+"When reading segment-registers with a 32-bit operand size, the processor
+zero-extends the 16-bit selector results to 32 bits. When reading
+segment-registers with a 64-bit operand size, the processor zero-extends the
+16-bit selector to 64 bits."
 
-mx25l12805d has two OTP regions of 128 KiB and 384 KiB (yes asymmetric).
-While mx25l12833f has two OTP regions of 512 KiB.
+Intel:
 
-How do we handle it?
-I would gladly remove the obsolete mx25l12805d.
-And skp compatibles all together.
+"When executing MOV Reg, Sreg, the processor copies the content of Sreg to the
+16 least significant bits of the general-purpose register. The upper bits of
+the destination register are zero for most IA-32 processors (Pentium Pro
+processors and later) and all Intel 64 processors, with the exception that
+bits 31:16 are undefined for Intel Quark X1000 processors, Pentium, and
+earlier processors."
 
-Thanks
-    Erez Geva
+-- 
+Regards/Gruss,
+    Boris.
 
-
-
-
-On Mon, 1 Jul 2024 at 11:40, Erez <erezgeva2@gmail.com> wrote:
->
-> How?
->
-> When using mx25l12805d, we do not read SFDP.
-> As it uses the no-SFDP flags.
-> When using mx25l12833f hardware with mx25l12805d driver, it did not try to read the SFDP.
-> Yet mx25l12833f does have SFDP, when I remove the no-SFDP flags, the driver fetch the SFDP.
->
-> Secondly SFDP does not contain OTP information.
->
-> mx25l12805d has two OTP regions of 128 KiB and 384 KiB (yes asymmetric).
-> While mx25l12833f has two OTP regions of 512 KiB.
->
-> How do we handle it?
-> I would gladly remove the obsolete mx25l12805d.
-> And skp compatibles all together.
->
-> Thanks
->     Erez Geva
->
->
->
->
->
-> On Mon, 1 Jul 2024 at 07:23, Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
->>
->> Hi,
->>
->> On 6/29/24 11:39 AM, Erez Geva wrote:
->> > From: Erez Geva <ErezGeva2@gmail.com>
->> >
->> > Add Macronix SPI-NOR mx25l12833f.
->> >
->> > mx25l12833f uses the same JEDEC ID as mx25l12805d.
->> >
->> > Although mx25l12833f is a new chip that support read ID and SFDP,
->> >  users might want to specify it in the device tree,
->> >  to differ it from the old mx25l12805d chip.
->>
->> As Michael said in a reply in v1, we try really hard to don't introduce
->> new compatibles and instead rely on the generic "jedec,spi-nor". In your
->> case you can differentiate between the two flavors of flashes based on
->> the SFDP presence. We won't apply this.
->>
->> Cheers,
->> ta
+https://people.kernel.org/tglx/notes-about-netiquette
