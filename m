@@ -1,215 +1,112 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB5783CD2;
-	Mon,  1 Jul 2024 08:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F514155325
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 08:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719823851; cv=none; b=GL/Ju/xKTd3D/edGqmjLCRhHIfRj0lxrDQlp4tYK49KVFVVcBFTWVZei4vAuIb+kfjq0Pd+TKlf5GJMopIfnBEgMmhZWlcrVzGKGcu4/M2EeW0V2WWaAssFfHiUjogMhPk5RPj2MMtcNB3OQghhF9lbSYxfIY0fMJC/1zJ662yc=
+	t=1719823865; cv=none; b=chpctfWy3DQOXIhl9Q1qDvfEpBU2f0Iuqva0QuP1PA5+7fU+MZXIkTMKbL7JMQGgJzgucaPAMDFBepGgziCFzcieg3uSF+kZ+SEcaAikld9FNQ8ztYVt4soyLOzEM61o8IE7JMvxf7HDAaT/zUqA8xS1aXp72S1cJm2NeRBMIe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719823851; c=relaxed/simple;
-	bh=Qbzsv+o+10uVgBolMErJzFgza2Cclektj/sx8Hrkgpk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=r+T+xxUrECOJbjbkX4CQicm4jkbMy/6/RYZ8dDt5p1ZE5PO7Pi+nRBJLEbQF6bkD+oiA09sBu4SOhez9lGgPchiRtv2K9CNce1l8azcaHQL2w599/0M9oI2a2cmPEMEP61GzCFVTE8gQBm5EwKHH6yX3QdREgBvsKji7gZjIi8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bcI/U9nZ; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bcI/U9nZ"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 02216C0010;
-	Mon,  1 Jul 2024 08:50:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1719823847;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e+k+cQVeC5+oHnw/gxWDOFgR0fNAUfcW0a0uGgqAPu8=;
-	b=bcI/U9nZdbhD1hLyYm9NRhCL1N33tiP1M1Fisl0bNhgiVQsnZjwprHoKMdJZaFGQRNpsHz
-	dLEBHD8mRobvrZi2sLNa4gZl7N80RgNDFpkfTx8+snQ6H6Etzg7+xqmQMVpJSdfpV3emDu
-	NHQW2jtKpy8R9xIGAvR8/PML77bek/964OMVuciD5FhwgXAZGUeCLY+fwON0P33wrTtIRG
-	Nzc2kQ9DY2WsSY+yU+9wZAX0b0QMgG1XaqwKDyWq1YsDHtDhs1b9+V968+YqS8jwuo9gOa
-	uAYKPhOirS0z1EHHFGzu0ZfiYpXkD3Wc9fwMfYz0I+JQy2XzaGbk0QkjzpRTjg==
-From: Romain Gantois <romain.gantois@bootlin.com>
-Date: Mon, 01 Jul 2024 10:51:07 +0200
-Subject: [PATCH net-next 5/6] net: phy: dp83869: Support SGMII SFP modules
+	s=arc-20240116; t=1719823865; c=relaxed/simple;
+	bh=ADeFDTrQyuXrodrUXFPne8GrrYXJRrCWVe3GARiGF/o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AKS41izJ1gEj3IRrwORNuLRVuarX4WQF9eFO7/j8ctsMwNyI53i6lP0Ef82jFJW4/DxdUhiEP9w98mxsCVeZTCxEasrB5wRDx5uZ52754Mi6EpY5ZL3IiMB1sT5W2giSy2op0RPs1km742+JVU1VwzTMZ/G8FZfEKNlvtUOscH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B1B4339;
+	Mon,  1 Jul 2024 01:51:27 -0700 (PDT)
+Received: from [10.57.72.41] (unknown [10.57.72.41])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 37FAD3F766;
+	Mon,  1 Jul 2024 01:51:01 -0700 (PDT)
+Message-ID: <6f68fb9d-3039-4e38-bc08-44948a1dae4d@arm.com>
+Date: Mon, 1 Jul 2024 09:50:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240701-b4-dp83869-sfp-v1-5-a71d6d0ad5f8@bootlin.com>
-References: <20240701-b4-dp83869-sfp-v1-0-a71d6d0ad5f8@bootlin.com>
-In-Reply-To: <20240701-b4-dp83869-sfp-v1-0-a71d6d0ad5f8@bootlin.com>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Romain Gantois <romain.gantois@bootlin.com>
-X-Mailer: b4 0.14.0
-X-GND-Sasl: romain.gantois@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] support "THPeligible" semantics for mTHP with anonymous
+ shmem
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>, Bang Li
+ <libang.li@antgroup.com>, hughd@google.com, akpm@linux-foundation.org
+Cc: wangkefeng.wang@huawei.com, ziy@nvidia.com, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org
+References: <20240628104926.34209-1-libang.li@antgroup.com>
+ <4b38db15-0716-4ffb-a38b-bd6250eb93da@arm.com>
+ <4d54880e-03f4-460a-94b9-e21b8ad13119@linux.alibaba.com>
+ <516aa6b3-617c-4642-b12b-0c5f5b33d1c9@arm.com>
+ <597ac51e-3f27-4606-8647-395bb4e60df4@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <597ac51e-3f27-4606-8647-395bb4e60df4@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-The DP83869HM PHY transceiver can be configured in RGMII-SGMII bridge mode
-to interface an RGMII MAC with a standard SFP module containing an
-integrated PHY. Additional SFP upstream ops are needed to notify the
-DP83869 driver of SFP PHY detection so that it can initialize it.
+On 01/07/2024 09:48, David Hildenbrand wrote:
+> On 01.07.24 10:40, Ryan Roberts wrote:
+>> On 01/07/2024 09:33, Baolin Wang wrote:
+>>>
+>>>
+>>> On 2024/7/1 15:55, Ryan Roberts wrote:
+>>>> On 28/06/2024 11:49, Bang Li wrote:
+>>>>> After the commit 7fb1b252afb5 ("mm: shmem: add mTHP support for
+>>>>> anonymous shmem"), we can configure different policies through
+>>>>> the multi-size THP sysfs interface for anonymous shmem. But
+>>>>> currently "THPeligible" indicates only whether the mapping is
+>>>>> eligible for allocating THP-pages as well as the THP is PMD
+>>>>> mappable or not for anonymous shmem, we need to support semantics
+>>>>> for mTHP with anonymous shmem similar to those for mTHP with
+>>>>> anonymous memory.
+>>>>>
+>>>>> Signed-off-by: Bang Li <libang.li@antgroup.com>
+>>>>> ---
+>>>>>    fs/proc/task_mmu.c      | 10 +++++++---
+>>>>>    include/linux/huge_mm.h | 11 +++++++++++
+>>>>>    mm/shmem.c              |  9 +--------
+>>>>>    3 files changed, 19 insertions(+), 11 deletions(-)
+>>>>>
+>>>>> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+>>>>> index 93fb2c61b154..09b5db356886 100644
+>>>>> --- a/fs/proc/task_mmu.c
+>>>>> +++ b/fs/proc/task_mmu.c
+>>>>> @@ -870,6 +870,7 @@ static int show_smap(struct seq_file *m, void *v)
+>>>>>    {
+>>>>>        struct vm_area_struct *vma = v;
+>>>>>        struct mem_size_stats mss = {};
+>>>>> +    bool thp_eligible;
+>>>>>          smap_gather_stats(vma, &mss, 0);
+>>>>>    @@ -882,9 +883,12 @@ static int show_smap(struct seq_file *m, void *v)
+>>>>>          __show_smap(m, &mss, false);
+>>>>>    -    seq_printf(m, "THPeligible:    %8u\n",
+>>>>> -           !!thp_vma_allowable_orders(vma, vma->vm_flags,
+>>>>> -               TVA_SMAPS | TVA_ENFORCE_SYSFS, THP_ORDERS_ALL));
+>>>>> +    thp_eligible = !!thp_vma_allowable_orders(vma, vma->vm_flags,
+>>>>> +                        TVA_SMAPS | TVA_ENFORCE_SYSFS, THP_ORDERS_ALL);
+>>>>> +    if (vma_is_anon_shmem(vma))
+>>>>> +        thp_eligible =
+>>>>> !!shmem_allowable_huge_orders(file_inode(vma->vm_file),
+>>>>> +                            vma, vma->vm_pgoff, thp_eligible);
+>>>>
+>>>> Afraid I haven't been following the shmem mTHP support work as much as I would
+>>>> have liked, but is there a reason why we need a separate function for shmem?
+>>>
+>>> Since shmem_allowable_huge_orders() only uses shmem specific logic to determine
+>>> if huge orders are allowable, there is no need to complicate the
+>>> thp_vma_allowable_orders() function by adding more shmem related logic, making
+>>> it more bloated. In my view, providing a dedicated helper
+>>> shmem_allowable_huge_orders(), specifically for shmem, simplifies the logic.
+>>
+>> My point was really that a single interface (thp_vma_allowable_orders) should be
+>> used to get this information. I have no strong opinon on how the implementation
+>> of that interface looks. What you suggest below seems perfectly reasonable to me.
+> 
+> Right. thp_vma_allowable_orders() might require some care as discussed in other
+> context (cleanly separate dax and shmem handling/orders). But that would be
+> follow-up cleanups.
 
-Add relevant SFP callbacks to the DP83869 driver to support SGMII
-modules.
+Are you planning to do that, or do you want me to send a patch?
 
-Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
----
- drivers/net/phy/dp83869.c | 104 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 104 insertions(+)
-
-diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
-index a3ccaad738b28..a07ec1be84baf 100644
---- a/drivers/net/phy/dp83869.c
-+++ b/drivers/net/phy/dp83869.c
-@@ -153,6 +153,8 @@ struct dp83869_private {
- 	bool rxctrl_strap_quirk;
- 	int clk_output_sel;
- 	int mode;
-+	/* PHY in a downstream SFP module */
-+	struct phy_device *mod_phy;
- };
- 
- static int dp83869_read_status(struct phy_device *phydev)
-@@ -845,6 +847,93 @@ static int dp83869_config_init(struct phy_device *phydev)
- 	return ret;
- }
- 
-+static void dp83869_sfp_phy_change(struct phy_device *phydev, bool up)
-+{
-+	/* phylink uses this to populate its own structs from phy_device fields
-+	 * we don't actually need this callback but if we don't implement it
-+	 * the phy core will crash
-+	 */
-+}
-+
-+static int dp83869_connect_phy(void *upstream, struct phy_device *phy)
-+{
-+	struct phy_device *phydev = upstream;
-+	struct dp83869_private *dp83869;
-+
-+	dp83869 = phydev->priv;
-+
-+	if (dp83869->mode != DP83869_RGMII_SGMII_BRIDGE)
-+		return 0;
-+
-+	if (!phy->drv) {
-+		dev_warn(&phy->mdio.dev, "No driver bound to SFP module phy!\n");
-+		return 0;
-+	}
-+
-+	phy_support_asym_pause(phy);
-+	linkmode_set_bit(PHY_INTERFACE_MODE_SGMII, phy->host_interfaces);
-+	phy->interface = PHY_INTERFACE_MODE_SGMII;
-+	phy->port = PORT_TP;
-+
-+	phy->speed = SPEED_UNKNOWN;
-+	phy->duplex = DUPLEX_UNKNOWN;
-+	phy->pause = MLO_PAUSE_NONE;
-+	phy->interrupts = PHY_INTERRUPT_DISABLED;
-+	phy->irq = PHY_POLL;
-+	phy->phy_link_change = &dp83869_sfp_phy_change;
-+	phy->state = PHY_READY;
-+
-+	dp83869->mod_phy = phy;
-+
-+	return 0;
-+}
-+
-+static void dp83869_disconnect_phy(void *upstream)
-+{
-+	struct phy_device *phydev = upstream;
-+	struct dp83869_private *dp83869;
-+
-+	dp83869 = phydev->priv;
-+	dp83869->mod_phy = NULL;
-+}
-+
-+static int dp83869_module_start(void *upstream)
-+{
-+	struct phy_device *phydev = upstream;
-+	struct dp83869_private *dp83869;
-+	struct phy_device *mod_phy;
-+	int ret;
-+
-+	dp83869 = phydev->priv;
-+	mod_phy = dp83869->mod_phy;
-+	if (!mod_phy)
-+		return 0;
-+
-+	ret = phy_init_hw(mod_phy);
-+	if (ret) {
-+		dev_err(&mod_phy->mdio.dev, "Failed to initialize PHY hardware: error %d", ret);
-+		return ret;
-+	}
-+
-+	phy_start(mod_phy);
-+
-+	return 0;
-+}
-+
-+static void dp83869_module_stop(void *upstream)
-+{
-+	struct phy_device *phydev = upstream;
-+	struct dp83869_private *dp83869;
-+	struct phy_device *mod_phy;
-+
-+	dp83869 = phydev->priv;
-+	mod_phy = dp83869->mod_phy;
-+	if (!mod_phy)
-+		return;
-+
-+	phy_stop(mod_phy);
-+}
-+
- static int dp83869_module_insert(void *upstream, const struct sfp_eeprom_id *id)
- {
- 	__ETHTOOL_DECLARE_LINK_MODE_MASK(phy_support);
-@@ -858,6 +947,13 @@ static int dp83869_module_insert(void *upstream, const struct sfp_eeprom_id *id)
- 	phylink_set(phy_support, 1000baseX_Full);
- 	phylink_set(phy_support, 100baseFX_Full);
- 	phylink_set(phy_support, FIBRE);
-+	phylink_set(phy_support, 10baseT_Full);
-+	phylink_set(phy_support, 100baseT_Full);
-+	phylink_set(phy_support, 1000baseT_Full);
-+	phylink_set(phy_support, Autoneg);
-+	phylink_set(phy_support, Pause);
-+	phylink_set(phy_support, Asym_Pause);
-+	phylink_set(phy_support, TP);
- 
- 	linkmode_zero(sfp_support);
- 	sfp_parse_support(phydev->sfp_bus, id, sfp_support, interfaces);
-@@ -877,6 +973,10 @@ static int dp83869_module_insert(void *upstream, const struct sfp_eeprom_id *id)
- 	dp83869 = phydev->priv;
- 
- 	switch (interface) {
-+	case PHY_INTERFACE_MODE_SGMII:
-+		dp83869->mode = DP83869_RGMII_SGMII_BRIDGE;
-+		phydev->port = PORT_TP;
-+		break;
- 	case PHY_INTERFACE_MODE_100BASEX:
- 		dp83869->mode = DP83869_RGMII_100_BASE;
- 		phydev->port = PORT_FIBRE;
-@@ -899,6 +999,10 @@ static const struct sfp_upstream_ops dp83869_sfp_ops = {
- 	.attach = phy_sfp_attach,
- 	.detach = phy_sfp_detach,
- 	.module_insert = dp83869_module_insert,
-+	.module_start = dp83869_module_start,
-+	.module_stop = dp83869_module_stop,
-+	.connect_phy = dp83869_connect_phy,
-+	.disconnect_phy = dp83869_disconnect_phy,
- };
- 
- static int dp83869_probe(struct phy_device *phydev)
-
--- 
-2.45.2
 
