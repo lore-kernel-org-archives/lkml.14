@@ -1,120 +1,162 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E171E4696
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 14:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6173616B3BD;
+	Mon,  1 Jul 2024 14:43:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719845002; cv=none; b=OKFZmsYRCNNhRT5vRbgSsVpw8xaTTQDh8kW5IoeB+UmNnektRODExK34j9RUViMwdaXF+ayZqVqrr2aNcFuxbKV/webUBFbJq7Gm1i8nKUD64Y/NWrF/+KtxxYp904hTrVGCr+o47mU8A9Ra5zv6zYODM7J1//tGkfELqHMd1P8=
+	t=1719845023; cv=none; b=lmPjZl2GK1jW5n0XfOZe4c7EJgDjijYJm5Yfa2jHdv23KxR2DEqvfCIYELCSEBrCsdViV9F+/bn1LxX3nBGP9IiNsyKDsOgJZqKDYnplMBzwSEFnxy+rmc6ra/Lbz3pOlAdJdtLst2gwSfRM7JGOzhXbxIu1MxlHO9DFXlnu1ME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719845002; c=relaxed/simple;
-	bh=rlxVV7EQRoPLIq0qGRgISDIedccfU22EckJfvQVaVVE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IWuWPX8opSkyKNUhVIAAFE9XlWdJ2l9fHP+N7i397Zfy/Z9hmKdQKy59lMkPz0mNnNSZEN1o/Uqc3LU2R8dvsE3zKLkiyhzckF0FqGbBuYxLMtSHOB+H+UFuUwdFzngP8Yj+UrwW+FyCTfdaXGYu5G8SbMHa8GNJ11Ml7RFm7xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F5vRh8u3; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719845023; c=relaxed/simple;
+	bh=bG2ru4fWCajW+qe+qA7NC/B+XA3N0d8dcjIR0OxiVhs=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kWEkybJJ6PIj+p5YihtAxXBuLx037pxitM0OjQTUjZ3/ruR8a7cSXnrDYT26X/EGWIvPDinIfSvk0XjuZaHLLRJsyj8v3tyrs15a2Z12QFvhkrlHTUsara+MCsDOO7Fh/OXvZCZyVM3RUj8LuwuiWbu1ajdJJg2VS3hBxMTklyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AObP9STy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F5vRh8u3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719845001; x=1751381001;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=rlxVV7EQRoPLIq0qGRgISDIedccfU22EckJfvQVaVVE=;
-  b=F5vRh8u3Zkmo8Ypm2DKgVsL8ZRWfYZN4eTu3SE3oqdTnDJe8cy3lmpse
-   WuV68c+6CYfzi6YPBDsBKcQiMm/pdWhIkIs3hGMebg0G08hBryaZWhqov
-   52la/1DM7cPt+x2oWifuHqOjitElfQCtj+slY/ExLlNyXJ/OWukZIZAN7
-   TplhP6CaeEUO5hLIaXoKXr2LiLaWeilV4slQLZMEhKmAd6OKVeTGj9ImW
-   nqnNRPihPnNgt2l8/y9aVrbhkQtLE5MFoZHpqRsHEfiF2DjRWNQ5H6Q4c
-   /7B2Mas0dZi7q9xUqQ2lZHoF9RJ58h4AX4uRtr9pzKZwRS3ct1Qi9ywZ/
-   Q==;
-X-CSE-ConnectionGUID: 6jcqKKrpTFS5uq2e6i2KFw==
-X-CSE-MsgGUID: G5aBc01USuCqWwCokQhipw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="27571868"
-X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
-   d="scan'208";a="27571868"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 07:43:20 -0700
-X-CSE-ConnectionGUID: PDTDgxzeQMaW1EAg+NtB/Q==
-X-CSE-MsgGUID: qRW8Z8hNT5WSfLwvtBc7OQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
-   d="scan'208";a="76731148"
-Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.111.36]) ([10.125.111.36])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 07:43:18 -0700
-Message-ID: <33e838a0-dd84-48b2-b2d6-aea173ab8ced@intel.com>
-Date: Fri, 21 Jun 2024 09:16:16 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AObP9STy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7471C116B1;
+	Mon,  1 Jul 2024 14:43:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719845022;
+	bh=bG2ru4fWCajW+qe+qA7NC/B+XA3N0d8dcjIR0OxiVhs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=AObP9STyNMqcLb1LLilzdg7DMSkjB6Ji+XjK3vmCcyvKgrt1BXNSmuMOWqoNx05ak
+	 o+v0UK/0OSb2Ri2l6y/IdP3AtwbBMupdpBdr1nQxvg3ZZ4fxw60nqtX22OlHoM623S
+	 iPzRcOW+XJ+FQNxwL530PFUMjjBFSjj5XTSV/KD9rPU15SOttylRtq8ei69nQ+0+pH
+	 px2G4mazmq495kctJOz9rj9or8s+U+97wnI16sgJ9gfdmlOu4y6EpxzrwjySOu8UBt
+	 xKUp5yWidHSPRkih1FHr9fkeE9R7blK+VF0+KmFkhA30Qqz6I+rhJMLajxEphrMFbP
+	 rCwPv+OLfWkbA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1sOIFo-008peG-HV;
+	Mon, 01 Jul 2024 15:43:40 +0100
+Date: Mon, 01 Jul 2024 15:43:40 +0100
+Message-ID: <87bk3hp3z7.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Yangyu Chen <cyy@cyyself.name>,
+	Will Deacon <will@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+	Mark Rutland <mark.rutland@arm.com>,
+	Janne Grunau <j@jannau.net>,
+	Hector Martin <marcan@marcan.st>,
+	Asahi Lina <lina@asahilina.net>,
+	asahi@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] drivers/perf: apple_m1: fix affinity table for event 0x96 and 0x9b
+In-Reply-To: <87cynxp52o.wl-maz@kernel.org>
+References: <tencent_7B71486CE305DF8AE084B6BB6313EE550C06@qq.com>
+	<20240701140148.GE2250@willie-the-truck>
+	<87cynxp52o.wl-maz@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] lib/Kconfig.debug: disable LOCK_DEBUGGING_SUPPORT
- under KMSAN
-To: Alexander Potapenko <glider@google.com>
-Cc: elver@google.com, dvyukov@google.com, dave.hansen@linux.intel.com,
- peterz@infradead.org, akpm@linux-foundation.org, x86@kernel.org,
- linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-References: <20240621094901.1360454-1-glider@google.com>
- <20240621094901.1360454-2-glider@google.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20240621094901.1360454-2-glider@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: cyy@cyyself.name, will@kernel.org, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, j@jannau.net, marcan@marcan.st, lina@asahilina.net, asahi@lists.linux.dev, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On 6/21/24 02:49, Alexander Potapenko wrote:
->  config LOCK_DEBUGGING_SUPPORT
->  	bool
-> -	depends on TRACE_IRQFLAGS_SUPPORT && STACKTRACE_SUPPORT && LOCKDEP_SUPPORT
-> +	depends on TRACE_IRQFLAGS_SUPPORT && STACKTRACE_SUPPORT && LOCKDEP_SUPPORT && !KMSAN
->  	default y
+On Mon, 01 Jul 2024 15:19:59 +0100,
+Marc Zyngier <maz@kernel.org> wrote:
+> 
+> On Mon, 01 Jul 2024 15:01:48 +0100,
+> Will Deacon <will@kernel.org> wrote:
+> > 
+> > On Thu, Jun 20, 2024 at 11:04:28AM +0800, Yangyu Chen wrote:
+> > > Events 0x96 and 0x9b can be installed on counter 7 only. Fix this to avoid
+> > > getting the wrong counter value.
+> > > 
+> > > Signed-off-by: Yangyu Chen <cyy@cyyself.name>
+> > > ---
+> > >  drivers/perf/apple_m1_cpu_pmu.c | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/perf/apple_m1_cpu_pmu.c b/drivers/perf/apple_m1_cpu_pmu.c
+> > > index f322e5ca1114..b8127e5428e1 100644
+> > > --- a/drivers/perf/apple_m1_cpu_pmu.c
+> > > +++ b/drivers/perf/apple_m1_cpu_pmu.c
+> > > @@ -107,12 +107,12 @@ static const u16 m1_pmu_event_affinity[M1_PMU_PERFCTR_LAST + 1] = {
+> > >  	[M1_PMU_PERFCTR_UNKNOWN_93]	= ONLY_5_6_7,
+> > >  	[M1_PMU_PERFCTR_UNKNOWN_94]	= ONLY_5_6_7,
+> > >  	[M1_PMU_PERFCTR_UNKNOWN_95]	= ONLY_5_6_7,
+> > > -	[M1_PMU_PERFCTR_UNKNOWN_96]	= ONLY_5_6_7,
+> > > +	[M1_PMU_PERFCTR_UNKNOWN_96]	= BIT(7),
+> > >  	[M1_PMU_PERFCTR_UNKNOWN_97]	= BIT(7),
+> > >  	[M1_PMU_PERFCTR_UNKNOWN_98]	= ONLY_5_6_7,
+> > >  	[M1_PMU_PERFCTR_UNKNOWN_99]	= ONLY_5_6_7,
+> > >  	[M1_PMU_PERFCTR_UNKNOWN_9a]	= BIT(7),
+> > > -	[M1_PMU_PERFCTR_UNKNOWN_9b]	= ONLY_5_6_7,
+> > > +	[M1_PMU_PERFCTR_UNKNOWN_9b]	= BIT(7),
+> > >  	[M1_PMU_PERFCTR_UNKNOWN_9c]	= ONLY_5_6_7,
+> > >  	[M1_PMU_PERFCTR_UNKNOWN_9f]	= BIT(7),
+> > >  	[M1_PMU_PERFCTR_UNKNOWN_bf]	= ONLY_5_6_7,
+> > 
+> > It would be great if somebody with access to M1 hardware (and/or any
+> > PMU insight) could Test or Ack this, please.
+> 
+> I'm a bit concerned by this.
+> 
+> I originally generated this table by hacking the counter setup so that
+> it would try and count everywhere, and then feed the observations back
+> into the driver.
+> 
+> So either my methodology was flaky (not unlikely), but I'd then expect
+> more of these mis-assignments, or this applies to an implementation
+> that is different from the one I wrote this driver against (the
+> original M1). Could it be that this for M2 only, and not M1? Or
+> another flavour of M1?
+> 
+> Either way, it would be good to understand how this has been
+> established.
+> 
+> In the meantime, I'll try and resurrect my original experiment and see
+> if I spot the same issue.
 
-This kinda stinks.  It ends up doubling the amount of work that ks
+A quick experiment shows that these events are counting on all 3
+expected counters:
+
+maz@mary-lou:~$ sudo taskset -c 8 perf stat -e r096:u -e r096:u -e r096:u sleep 5
+
+ Performance counter stats for 'sleep 5':
+
+            10,775      r096:u                                                                
+            10,775      r096:u                                                                
+            10,775      r096:u                                                                
+
+       5.000110823 seconds time elapsed
+
+       0.000340000 seconds user
+       0.000000000 seconds sys
+
+
+maz@mary-lou:~$ sudo taskset -c 8 perf stat -e r09b:u -e r09b:u -e r09b:u sleep 5
+
+ Performance counter stats for 'sleep 5':
+
+            41,927      r09b:u                                                                
+            41,927      r09b:u                                                                
+            41,927      r09b:u                                                                
+
+       5.000109771 seconds time elapsed
+
+       0.000339000 seconds user
+       0.000000000 seconds sys
+
+This is on M2 Pro, by the way, and I also checked that my M1 Ultra
+counts the exact same way.
+
+Yangyu, can you please clarify how you came to the conclusion that
+these events didn't count anywhere other than counter 7?
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
