@@ -1,83 +1,108 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0662015A87F
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 13:11:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8349215A87F;
+	Mon,  1 Jul 2024 13:11:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719839463; cv=none; b=elcukZKA21657iKFugSyChUYWj7Q9O+ALu3SOiP9i0rxcGWt+5WzGFCdDcpbMcVeJA/tWsBRAH7byB7x6eHGikBBBF5yPf5vyXeu8iXYDPhfa22OD0foAYGsX+5Nefl2ILbbjVLRIyXrzchuZc6DTazzGIoiVVGGlUh+8OCrNuo=
+	t=1719839467; cv=none; b=TljVDVskCw2bp//7kOJcqJe7imRHah/OMDPVD0ddvDnPH6n/Sf7p18y8If2e0EuKJ7Cn1hqx5o3RXa5qlpJtJQBlgxFMYVEiW699yE20WWbcub2UpWFiMezmPiZ+2KwqOX1iF+j5Uzp3Z5R/VhaOd0aChow9SCdN3kvHfK3zKfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719839463; c=relaxed/simple;
-	bh=Oy6yYdKW4gW6aeA4+YZ6g8uaflkMG9fKhzoE8BIyvqs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CJ2THWHhjjpCVdbZ2TDu1ThI9nWpbaf2ImEOr0KrpF+JiEC03fgX3XFc82N7IZpnTHrWDijM6GxMCw5pJ14XIrNxlOheX7x9Lkq/mg8HIZ1AO2Ow4i8Twz3jG2lGJwW+ZIyLNTLDQUm8XG02Zj901HR85EaDRqGbrlo5/tDP5K4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <m.felsch@pengutronix.de>)
-	id 1sOGnt-0006DR-7p; Mon, 01 Jul 2024 15:10:45 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: neil.armstrong@linaro.org,
-	quic_jesszhan@quicinc.com,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	thierry.reding@gmail.com,
-	sam@ravnborg.org
-Cc: kernel@pengutronix.de,
-	Conor Dooley <conor.dooley@microchip.com>,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] dt-bindings: display: simple: Add Jiangsu Smartwin SMMT043480272A-A19
-Date: Mon,  1 Jul 2024 15:10:39 +0200
-Message-Id: <20240701131041.2816856-1-m.felsch@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1719839467; c=relaxed/simple;
+	bh=FuIyr5cJVkyy4ivUHpQq8SjRTBe8Hj5DYPSoV2fNhVA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DE1xDN/Imrg6iHa3WL8Un8P58mUBqU00SKvJpOys+5+r5oCPWhIosclEJL9YDpqwX0kva0FoEUOqSGUSWJfDHI/MqHLkVJjADSPzwSdO25bkTCSmk7/cZ7r83jdxnvndEe9NKUx+dYLRA/vdF/f/tYHcAPJK82nU/yJIzp7DWdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=VOMUFvPA; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VOMUFvPA"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 461DAw21014721;
+	Mon, 1 Jul 2024 08:10:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1719839458;
+	bh=lEQez9SmyB4tTSWUbTZtubWsey4RixNmBeiVhlXGX1k=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=VOMUFvPAArMgvClSRgpOA8u3uRDyxAZ58QVBKfbK5tm/eptUWGovK8Uq4Ia2WR7Zv
+	 2dGG6Fp9Hin3uJZCDEMGDCPVuHOlpB6m9oYcIkf5CqNCAzcpnxuhgnASQ075p6bgaz
+	 y9qzBFumv0zjylit1+akO1TKHGnj+VLS26NTJ3+k=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 461DAwuP066227
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 1 Jul 2024 08:10:58 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 1
+ Jul 2024 08:10:58 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 1 Jul 2024 08:10:58 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 461DAwSt018922;
+	Mon, 1 Jul 2024 08:10:58 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Abraham I
+	<kishon@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero Kristo
+	<kristo@kernel.org>, Roger Quadros <rogerq@kernel.org>
+CC: Nishanth Menon <nm@ti.com>, "Andrew F. Davis" <afd@ti.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] dt-bindings: soc: ti: Move ti,j721e-system-controller.yaml to soc/ti
+Date: Mon, 1 Jul 2024 08:10:55 -0500
+Message-ID: <171983945260.2331026.6584261698710579259.b4-ty@ti.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240520-for-v6-11-j721e-syscon-v1-1-f57a93e12cad@kernel.org>
+References: <20240520-for-v6-11-j721e-syscon-v1-1-f57a93e12cad@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:1101:1d::28
-X-SA-Exim-Mail-From: m.felsch@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Add compatible to panel-simple for Jiangsu Smartwin Electronics
-SMMT043480272A-A19 4.3" 480x272 LCD-TFT panel.
+Hi Roger Quadros,
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
-Changelog:
-v2:
-- rebased ontop of drm-misc-next
-- added Conor's acked-by
+On Mon, 20 May 2024 15:05:41 +0300, Roger Quadros wrote:
+> soc/ti is the more appropriate location for the system controller
+> device tree binding documentation so move there.
+> 
+> Update Kishon's email address to a working one.
+> 
+> 
 
- .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
- 1 file changed, 2 insertions(+)
+I have applied the following to branch ti-drivers-soc-next on [1].
+Thank you!
 
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-index 8a87e0100dcb..55be695952cc 100644
---- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-@@ -176,6 +176,8 @@ properties:
-       - innolux,n156bge-l21
-         # Innolux Corporation 7.0" WSVGA (1024x600) TFT LCD panel
-       - innolux,zj070na-01p
-+        # Jiangsu Smartwin Electronics 4.3" (480x272) TFT LCD panel
-+      - jianda,smmt043480272a-a19
-         # Kaohsiung Opto-Electronics Inc. 5.7" QVGA (320 x 240) TFT LCD panel
-       - koe,tx14d24vm1bpa
-         # Kaohsiung Opto-Electronics. TX31D200VM0BAA 12.3" HSXGA LVDS panel
+[1/1] dt-bindings: soc: ti: Move ti,j721e-system-controller.yaml to soc/ti
+      commit: b87a1cbb3385a806f8abfd9b8a2191e4c6620347
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent up the chain during
+the next merge window (or sooner if it is a relevant bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
 -- 
-2.39.2
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
 
