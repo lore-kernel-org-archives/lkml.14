@@ -1,111 +1,152 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE82215EFA2
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 13:00:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E68146017;
+	Mon,  1 Jul 2024 13:01:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719838821; cv=none; b=UO6r7xEjTqdM+sR3p4dxPpdYuI6em5Ok4cx9KlJeAYUqCu4WrhVHLwSAMjSvEH6SmU7yxp4ZyC8YoF8IkD5hVhrLjwdWLckGLySlKqEQqSFhxZd1JyzjYDnpEqnqwJ6BwG9Yg2XSJqsdRszCU3vUVmuI0Jh6sMW6gccIlraC7t8=
+	t=1719838881; cv=none; b=WN2RYZ0MW1CqSmlHVxT4lF2gnQhJqtgrMN5+k2MkOe+dH9GLZRcEMfO9eJpl381RDN4kN1vm/TNgecaJcw5TnU94VVbnQVB3m/QKcQN6ywO3lOQUsH2mGDr5dzh8o0o/RfvRjwGu9t4IPDZxi6byrB8BFWndBmirpzT2m4leFQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719838821; c=relaxed/simple;
-	bh=DU5Rpao9sVkwftxVXiBbPjmDCfg1edojbtuA+4rU99w=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=bp5o0ssVDg/z8xJrZZGUNYNIV6QkH4ViH0n75tRPNRLRbw5wE1+3Jz6qc6QGJcLNZ9uqw971fB1uI/BYm+2xQDra4rMeVcjQl60FY8KSehTui+V2inETt2xkbON4ROxUGyjAT+y4zd8qd+Bxj27GrixuupsTmKsN+L3V56otgrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7f61fca8c40so313268839f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 06:00:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719838819; x=1720443619;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lKQzMVVd8JV3z0u1HLRD129oSCr8seG4wu/QgPU2cjc=;
-        b=YycqUOh3sA0gJseUtQp7F17FefOJX/EF9/7YWmEbM9ryZiEWnqFoFkqO6gRSbjpnyh
-         29OKG+t9ezDEJhE2v85qdgM+kIFMprVvrP4sSx+ahma5T8bXY5jOPbqMbH6ibaXTzyfd
-         PWUbeSaPwat5eDf7erkGWPI2M+GRoxhiAVhpXfpTQJXJ+T3EKJLLpJaDS+Be46eGcQdr
-         4SG+CM5n+RShVKqWS4bmhpJht2nOCAIfqe9duJ4lFcmUVfk1+/lUIAtdDeRUM5tDvirI
-         I9dSDTSSeiqtVJ8QPK11wl+dRsH1roTiW4amRWYeEFCo8777UrWZOBXyd+EDsxVOZwAn
-         HSPA==
-X-Gm-Message-State: AOJu0Yxhqu/1fe/97Bu5HdKcALlZMWq+SV27v5BdvFzbwbplzcd7K8eM
-	ElpPLRn/UD4g1OVmio6Cd0rZ5iQs+C+p2qPrnP13Xh7HrM4IskUGZo+qXBX2Bx6vtsGIe9hpevd
-	fOchP+LQuwgALdaEFXPwloRXGStAnorg+c1VsCJ3flv2P7Rb7z6u7myM=
-X-Google-Smtp-Source: AGHT+IFjfzX64Rdy84nGXFpO+a/9DdmBFIA0Cb03XfztEfHdSopox7b2rYRLwMVVIk6xuXUnH0kqit7skKw8yR7UbffZUoOxCs2j
+	s=arc-20240116; t=1719838881; c=relaxed/simple;
+	bh=mSSBgX5YD/tN1nW23Z9JSj0R5Z2gP3h1AymETTt512Y=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AwUoTPK0bDk8V6f5R8CP8gEb+zVGhAtw0H6n1cIzqV0cXK3FOw8Fw9jqSK3GQcwgh1E3917157zSmbBiap9WJRF9MzNFbImkdWohnyEWP/eDqizVa5k2IV9IO44UWzl9MC42LpdTeRghr3oqD1ZRiYX6aDVBEi6osIrmsr7mmio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WCQzG1x4hzZh4c;
+	Mon,  1 Jul 2024 20:56:42 +0800 (CST)
+Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
+	by mail.maildlp.com (Postfix) with ESMTPS id 413AB1403D4;
+	Mon,  1 Jul 2024 21:01:13 +0800 (CST)
+Received: from hulk-vt.huawei.com (10.67.174.26) by
+ dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 1 Jul 2024 21:01:13 +0800
+From: Xiu Jianfeng <xiujianfeng@huawei.com>
+To: <tj@kernel.org>, <lizefan.x@bytedance.com>, <hannes@cmpxchg.org>,
+	<corbet@lwn.net>, <kamalesh.babulal@oracle.com>,
+	<haitao.huang@linux.intel.com>
+CC: <cgroups@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] cgroup/misc: Introduce misc.peak
+Date: Mon, 1 Jul 2024 12:52:59 +0000
+Message-ID: <20240701125259.2611466-1-xiujianfeng@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:3f8a:b0:7eb:75e9:8f2b with SMTP id
- ca18e2360f4ac-7f62ee6461bmr43693339f.2.1719838819082; Mon, 01 Jul 2024
- 06:00:19 -0700 (PDT)
-Date: Mon, 01 Jul 2024 06:00:19 -0700
-In-Reply-To: <0000000000006cbc570618c0d4a3@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e1f1a9061c2f2d82@google.com>
-Subject: Re: [syzbot] [syzbot] [bpf?] [net?] KMSAN: uninit-value in dev_map_hash_lookup_elem
-From: syzbot <syzbot+80cf9d55d6fd2d6a9838@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpeml500023.china.huawei.com (7.185.36.114)
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+Introduce misc.peak to record the historical maximum usage of the
+resource, as in some scenarios the value of misc.max could be
+adjusted based on the peak usage of the resource.
 
-***
-
-Subject: [syzbot] [bpf?] [net?] KMSAN: uninit-value in dev_map_hash_lookup_elem
-Author: wojciech.gladysz@infogain.com
-
-#syz test: https://linux.googlesource.com/linux/kernel/git/torvalds/linux e478cf26c556e4ab572ab0ab2306c986901dcd61
-
+Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
 ---
- kernel/bpf/verifier.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ Documentation/admin-guide/cgroup-v2.rst |  9 ++++++++
+ include/linux/misc_cgroup.h             |  2 ++
+ kernel/cgroup/misc.c                    | 29 +++++++++++++++++++++++++
+ 3 files changed, 40 insertions(+)
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 36ef8e96787e..13a9c2e2908a 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -7146,8 +7146,8 @@ static int check_stack_range_initialized(
- 		 * reads. However, if raw_mode is not set, we'll do extra
- 		 * checks below.
- 		 */
--		bounds_check_type = BPF_WRITE;
--		clobber = true;
-+		clobber = !meta || meta->raw_mode;
-+		bounds_check_type = clobber ? BPF_WRITE : BPF_READ;
- 	} else {
- 		bounds_check_type = BPF_READ;
- 	}
-@@ -7230,8 +7230,7 @@ static int check_stack_range_initialized(
- 		stype = &state->stack[spi].slot_type[slot % BPF_REG_SIZE];
- 		if (*stype == STACK_MISC)
- 			goto mark;
--		if ((*stype == STACK_ZERO) ||
--		    (*stype == STACK_INVALID && env->allow_uninit_stack)) {
-+		if (*stype == STACK_ZERO) {
- 			if (clobber) {
- 				/* helper can write anything into the stack */
- 				*stype = STACK_MISC;
-@@ -8748,6 +8747,8 @@ static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
- 		meta->map_uid = reg->map_uid;
- 		break;
- 	case ARG_PTR_TO_MAP_KEY:
-+		/* always mark read access */
-+		meta->raw_mode = false;
- 		/* bpf_map_xxx(..., map_ptr, ..., key) call:
- 		 * check that [key, key + map->key_size) are within
- 		 * stack limits and initialized
-@@ -8763,7 +8764,7 @@ static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
+diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+index ae0fdb6fc618..48ae30f2d9ab 100644
+--- a/Documentation/admin-guide/cgroup-v2.rst
++++ b/Documentation/admin-guide/cgroup-v2.rst
+@@ -2646,6 +2646,15 @@ Miscellaneous controller provides 3 interface files. If two misc resources (res_
+ 	  res_a 3
+ 	  res_b 0
+ 
++  misc.peak
++        A read-only flat-keyed file shown in the all cgroups.  It shows
++        the historical maximum usage of the resources in the cgroup and
++        its children.::
++
++	  $ cat misc.peak
++	  res_a 10
++	  res_b 8
++
+   misc.max
+         A read-write flat-keyed file shown in the non root cgroups. Allowed
+         maximum usage of the resources in the cgroup and its children.::
+diff --git a/include/linux/misc_cgroup.h b/include/linux/misc_cgroup.h
+index e799b1f8d05b..8aa69818291e 100644
+--- a/include/linux/misc_cgroup.h
++++ b/include/linux/misc_cgroup.h
+@@ -30,11 +30,13 @@ struct misc_cg;
+ /**
+  * struct misc_res: Per cgroup per misc type resource
+  * @max: Maximum limit on the resource.
++ * $watermark: Historical maximum usage of the resource.
+  * @usage: Current usage of the resource.
+  * @events: Number of times, the resource limit exceeded.
+  */
+ struct misc_res {
+ 	u64 max;
++	u64 watermark;
+ 	atomic64_t usage;
+ 	atomic64_t events;
+ };
+diff --git a/kernel/cgroup/misc.c b/kernel/cgroup/misc.c
+index 79a3717a5803..a1b6ed76e00b 100644
+--- a/kernel/cgroup/misc.c
++++ b/kernel/cgroup/misc.c
+@@ -159,6 +159,8 @@ int misc_cg_try_charge(enum misc_res_type type, struct misc_cg *cg, u64 amount)
+ 			ret = -EBUSY;
+ 			goto err_charge;
  		}
- 		err = check_helper_mem_access(env, regno,
- 					      meta->map_ptr->key_size, false,
--					      NULL);
-+					      meta);
- 		break;
- 	case ARG_PTR_TO_MAP_VALUE:
- 		if (type_may_be_null(arg_type) && register_is_null(reg))
++		if (new_usage > READ_ONCE(res->watermark))
++			WRITE_ONCE(res->watermark, new_usage);
+ 	}
+ 	return 0;
+ 
+@@ -307,6 +309,29 @@ static int misc_cg_current_show(struct seq_file *sf, void *v)
+ 	return 0;
+ }
+ 
++/**
++ * misc_cg_peak_show() - Show the peak usage of the misc cgroup.
++ * @sf: Interface file
++ * @v: Arguments passed
++ *
++ * Context: Any context.
++ * Return: 0 to denote successful print.
++ */
++static int misc_cg_peak_show(struct seq_file *sf, void *v)
++{
++	int i;
++	u64 watermark;
++	struct misc_cg *cg = css_misc(seq_css(sf));
++
++	for (i = 0; i < MISC_CG_RES_TYPES; i++) {
++		watermark = READ_ONCE(cg->res[i].watermark);
++		if (READ_ONCE(misc_res_capacity[i]) || watermark)
++			seq_printf(sf, "%s %llu\n", misc_res_name[i], watermark);
++	}
++
++	return 0;
++}
++
+ /**
+  * misc_cg_capacity_show() - Show the total capacity of misc res on the host.
+  * @sf: Interface file
+@@ -357,6 +382,10 @@ static struct cftype misc_cg_files[] = {
+ 		.name = "current",
+ 		.seq_show = misc_cg_current_show,
+ 	},
++	{
++		.name = "peak",
++		.seq_show = misc_cg_peak_show,
++	},
+ 	{
+ 		.name = "capacity",
+ 		.seq_show = misc_cg_capacity_show,
 -- 
-2.35.3
+2.34.1
+
