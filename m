@@ -1,117 +1,76 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A637F1B809;
-	Mon,  1 Jul 2024 07:26:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862E11B809
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 07:27:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719818823; cv=none; b=PvfnUxxMDFf2kGBHfIXPAvdhotN2WuYwaHmwuCVc96cfAsl5kyIPJ/eMq3CSQMlxXKh7tm0e4s//sGTYhhUGdsl7shOAIKBryUj0NKtUydeO+RRQgUqiGZEuQjOHOuZQjviqtS9jz6naTd5lo0UmRVv9tn/Vn74/x3d6ZkRyZhI=
+	t=1719818870; cv=none; b=pew7PjiE1OtAGkkx1WtfiMbA6T4MU7SUG2FnnB4JZpJIwx0BnDOLKVdzCv/adx0VCAP2M5WVgEYxNkPykQnto3Bch/USUgA9HGJqJTvnuhen36tfVClPZea4eu0WqXjXCLgegpHiOOuA5G93RLuYbQJfB61nteYz0FgZNjYXOhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719818823; c=relaxed/simple;
-	bh=IjM158RGboPPOQCeDxcAKHL0YMk6767fMxMahPPa5AE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=awl2hxqDRfOq61nonvx9+hI3ZQm7PWSxISHD/tKRYIlxR6bAE/vzO7tWOmpviU+QAQl+lZ0XRivsJluY7cdpxRi9kOFWk4FUlI1irS3TGAzse+9Md5Sz2/tCoVtZOKRZO5EDp/edn5p2VdlLcOV4uz12+fBe84BWeui2AVO6otI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=BLpHAa/E; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BLpHAa/E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1719818817;
-	bh=3s3GOYGnn9c6E94kTyUMZcyHysLRns/RZ7yO2LN9vI8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BLpHAa/EeydkNYG4+TzHyYfnzIXhWW7bL97PPbnncY27yLAPzx8soiaYDFmsLXy4w
-	 PGKEwaApCRAY2gCq1Jg5lQIKndJqn/adFRECusI14UK56IaDVTd/smtIQD0RCcwpDR
-	 JL8fqcfVvRQoK+phtdoZnp46/DPYNOiKdpISnUZcXg82M4jOjur4FgeUaflhPnxP4q
-	 5oNbuJcQfxxziJpLWSruNLv23X8bArapUQeDjTU5YJkPzEC4Rghxm2cPA0/1EU+a+l
-	 00tuZE2QP0WyCytLu234jlnysrUncMI/Gpwb4vpyUhlc6v2kCGjopTqCM56FDaptTI
-	 N5KJ0iVEOz15g==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WCHfn1GB0z4wc1;
-	Mon,  1 Jul 2024 17:26:57 +1000 (AEST)
-Date: Mon, 1 Jul 2024 17:26:55 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Bjorn Andersson <andersson@kernel.org>, Mathieu Poirier
- <mathieu.poirier@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, Chris Lew <quic_clew@quicinc.com>,
- Steev Klimaszewski <steev@kali.org>, Neil Armstrong
- <neil.armstrong@linaro.org>, Dmitry Baryshkov
- <dmitry.baryshkov@linaro.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the rpmsg tree
-Message-ID: <20240701172655.3db48d51@canb.auug.org.au>
-In-Reply-To: <ZnxhiKAYvoqNIywH@sirena.org.uk>
-References: <ZnxhiKAYvoqNIywH@sirena.org.uk>
+	s=arc-20240116; t=1719818870; c=relaxed/simple;
+	bh=l9TPGLgKua1vM/W31z/6qhz5xeaXxr3iCx1dHQsV63k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qZ/ASqNlGB5OB1vtOdoU4sf7IKncNzwK7QLcqTWN/VtPN2zcurP7cQH52G0GZOtq+SUOxGfTTU1Fp3ju1HLkIdbsiHk5QF7eo5nww1IBSwBsY6SbtMQixK+SnMakgG56x84/cJt9Fh6BE+empL5feR9+sKuFgOQaJ8MX/j3U+6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-05 (Coremail) with SMTP id zQCowAD3_7drWoJmhzHwAA--.62668S2;
+	Mon, 01 Jul 2024 15:27:39 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: pjones@redhat.com,
+	konrad@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] iscsi_ibft: Remove unneeded semicolon
+Date: Mon,  1 Jul 2024 15:27:14 +0800
+Message-Id: <20240701072714.846388-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/cfQbcrVmOLpIqD7lRdyQ8SO";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAD3_7drWoJmhzHwAA--.62668S2
+X-Coremail-Antispam: 1UD129KBjvdXoWruFW7Gr1rGFyrur4ftw1DJrb_yoWxAwb_C3
+	45ZF4xKay0k3yjgF15WFyfZr90k3yjga1I9FnF9ayakry2q34DXr4jvr47AwnrXrWUuF17
+	Jry5Kr1UArnrKjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbc8FF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+	Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_GF4l
+	42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
+	WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
+	I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F
+	4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY
+	6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU0OJeDUUUU
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
---Sig_/cfQbcrVmOLpIqD7lRdyQ8SO
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Remove unneeded semicolon.
+This is detected by coccinelle.
 
-Hi Mark,
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/firmware/iscsi_ibft.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Wed, 26 Jun 2024 19:44:24 +0100 Mark Brown <broonie@kernel.org> wrote:
->
-> Hi all,
->=20
-> After merging the rpmsg tree, today's linux-next build (KCONFIG_NAME)
-> failed like this:
->=20
-> ERROR: modpost: "__auxiliary_driver_register" [drivers/soc/qcom/qcom_pd_m=
-apper.ko] undefined!
-> ERROR: modpost: "servreg_loc_pfr_resp_ei" [drivers/soc/qcom/qcom_pd_mappe=
-r.ko] undefined!
-> ERROR: modpost: "auxiliary_driver_unregister" [drivers/soc/qcom/qcom_pd_m=
-apper.ko] undefined!
-> ERROR: modpost: "servreg_get_domain_list_resp_ei" [drivers/soc/qcom/qcom_=
-pd_mapper.ko] undefined!
-> ERROR: modpost: "servreg_get_domain_list_req_ei" [drivers/soc/qcom/qcom_p=
-d_mapper.ko] undefined!
-> ERROR: modpost: "servreg_loc_pfr_req_ei" [drivers/soc/qcom/qcom_pd_mapper=
-.ko] undefined!
-> ERROR: modpost: "auxiliary_device_init" [drivers/remoteproc/qcom_common.k=
-o] undefined!
-> ERROR: modpost: "__auxiliary_device_add" [drivers/remoteproc/qcom_common.=
-ko] undefined!
->=20
-> Caused by commit
->=20
->   5b9f51b200dcb2c3924 ("remoteproc: qcom: enable in-kernel PD mapper")
->=20
-> and likely others, I didn't look too hard.  I have used the tree from
-> 20240625 instead.
+diff --git a/drivers/firmware/iscsi_ibft.c b/drivers/firmware/iscsi_ibft.c
+index 6e9788324fea..3c52fde713ce 100644
+--- a/drivers/firmware/iscsi_ibft.c
++++ b/drivers/firmware/iscsi_ibft.c
+@@ -800,7 +800,7 @@ static void ibft_unregister(void)
+ 		ibft_kobj = boot_kobj->data;
+ 		if (ibft_kobj->hdr && ibft_kobj->hdr->id == id_nic)
+ 			sysfs_remove_link(&boot_kobj->kobj, "device");
+-	};
++	}
+ }
+ 
+ static void ibft_cleanup(void)
+-- 
+2.25.1
 
-I am still seeing this build failure in the arm multi_v7_defconfig build.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/cfQbcrVmOLpIqD7lRdyQ8SO
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmaCWkAACgkQAVBC80lX
-0Gx5Qgf/T838srJ+Qymk46fPuIzdY/jnIwo9sTNxDDTNRvp5T+wNbmpvMjZvgL22
-OBbuJvKho70ZMXfZnKcDiVm3TzNtsSWh2gdcbrPpXkTzoaWJPakyQBVLYUF1zOAx
-08Cv8RQ2CgQMDiBPloCHsZ+eOIdocxrcGdP0HdOve3suJ5AI7OueDNuyDKOQiGM1
-FmqTRYiAbWP+ct56uucrgZo29iwSb8CC8qGhROiEZYGziqmXcp7y7pcyr/5bH4Bb
-vky8Si/cYHlkgweyR5uM/e6yx1htlnU+3omXRDeLR1SHYjUNl8L0+A3zG50q6cSL
-vnZ74GkAqj4dtT6zEJLF7HTT6VsdKQ==
-=KELX
------END PGP SIGNATURE-----
-
---Sig_/cfQbcrVmOLpIqD7lRdyQ8SO--
