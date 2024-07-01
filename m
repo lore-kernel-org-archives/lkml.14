@@ -1,185 +1,100 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2289416EB6E
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 17:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0812E16EC05;
+	Mon,  1 Jul 2024 17:32:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719855151; cv=none; b=PeXuVnqt02Ic6BdE9jBQbz4JXXi7pjYqeB5RzBebNPcGUpCiAuLNtX7RTxrWJm5NgtZMjsCYjIHHbfgGDaZpmAdQu/WOcYy3q31yXlZ/haupbqe80MI01GhUQu5q1/69xLjaIc6zpsJlNsvaKTd14oW5BostgdmiKaa8P4JGoLA=
+	t=1719855153; cv=none; b=AULlnoIBsz8WPH6MTPwmO5vR7UALJsqzkb12BLDG1diWS8mfj1BGR6f7IyIirTzmc4nQYHP10nNF3FhRz/x2sOOL9uzlWc3mplDw7F06V+HhcbeKZUXM7cmELZHJNKJ8QR9tvto+u5Xp9d0y0MdDJXbnyARQxNDFTYSam5UMmVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719855151; c=relaxed/simple;
-	bh=51Kq3gRK+jS3Cu8UCGhkoVM3OSd3sQMg5c/pQd13i4Q=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=aBgA0bgRj6uEVNMozkHPReWmMw8/MDWaDwk2vKwqv3lIrb3ciV0zfZpYZpDuhYepc0KmJ5JF1XVnLmrOoMYQapguZRKB1U7Uq88hOu/XupeGcFyGuAhX+HZZnkqAgSvU5TM26xGyVLX0kxm63FmM/qn6bKxCQrC6ePVLZRVCzdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7f61f4c998bso346558139f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 10:32:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719855149; x=1720459949;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ffa27t3BLrBDQAt47I5b6vb7eILrf+TZVezmh48Gadw=;
-        b=dfUpbEiiXTG0xQFP6D0eP03BZSITjlkWrL/jsWx+dI/EDZlpWR7TgS1u39vo07o/6M
-         BhHyVURHrHGuEgQwdg1+dtsfn2AEqrBxIPnRJxH3hy94vLYDp+/7iXZZ88M9nw626858
-         WNuocVwl6HPt/Epq5c6Q3kA7bSq44ZNo9I5qcxKta1S6vlqu46oNbVb+7GtzNec9MxRP
-         yPAOLzi+mAd26zVDvwwdnuaHM2GT1SaaLI9I7XbC6ITbSY/EuX7t0CGQ9mS1TB8xausq
-         f5gxzZgYcXwpde0zuI+zJyQ9xlhn9gi9mAmEhnyw1sPDoEcy5xz8Yz/VHK+Wbls19Ue6
-         Vb8g==
-X-Forwarded-Encrypted: i=1; AJvYcCWnrlGZjv5NPiyhVloZVqMC6HU/hdd7wvTBcWZOYafnPRPRdxvHiBpe7dZOgFYSHhCg0su7S87fBHFCWwMxG+fWYKWKMhUzPqn0I+Us
-X-Gm-Message-State: AOJu0YxA3soCrPd8Anrm2qK9zNQtjrC7lJmXC8hDHVnX8vxfWd76IJq8
-	PHG/KoX6t92LXU4CmGDzG5AftUJ+h5QCk0Ejohj2cXc3Z0nKu71run4uVa85XRLin4vc+KcMgA6
-	l1WiN9awAe1y+D+YQklFQy90QdV6rV992Yp/k4MGuE+1A5+vjEn7JV1c=
-X-Google-Smtp-Source: AGHT+IGsHkpF/sHm10D4ueOGx0LXZnSx/de8pd3wSKZeEB0AuL81ha9X6popDv3dKCdM3xkPYLYae3r5DGjx18oWZ6W+BMxBxJFF
+	s=arc-20240116; t=1719855153; c=relaxed/simple;
+	bh=RH54wpfJPFuq1p/47n403zxx5+QmRAvugMB5EeGq/DM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dm1HIWTFVgsHl7Ts2RwfWXJtuov7vvoxgiswA7gxChTpl1J6kyqgZfYR1SGzr+ZTtjYd6n8f2h7FphYgje++kvMYSyYJBmN5c7dSLvfai78goNCHj/xwzdqAz4lL2FpudADtT0UTzGhoajS3fAZEaGcZVuYEocApaci0EVSM97w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YaUTwfVa; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YaUTwfVa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719855152; x=1751391152;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RH54wpfJPFuq1p/47n403zxx5+QmRAvugMB5EeGq/DM=;
+  b=YaUTwfVa2Q7VbQVzCRb1r1/HJU9UPuG6oq+ztCoTd1+CC4WtHHCW38BL
+   jEG5npCRKTGTPR5i8upMFdD7podYFVQ2tVWQ70qSzz21pxDIZCxtcfMHR
+   r2sPpT9W5+X/f8R6VVBv1DxXdXhlYMyeVpeB50I4q9c5Fq3j+8Arz4eeE
+   J4f8TrmwfDO1VT7ium5EEITt1qGNnlNZ8pLpun8ki8g7J8P3gkAi0LOct
+   4TestWFCIq8r6OUgXO9q26TXKoCEInFct64cfrEjlwKHeuRhi8KeycMZU
+   i5jGuVNB9D8O8zbpqEW+KYpQfK2LhHk1bQKDlkxHyGbkKhRuXhgapWrKA
+   Q==;
+X-CSE-ConnectionGUID: nBrwzkblSuOfHanpbYrxCA==
+X-CSE-MsgGUID: EcilDMjWQCiWfQlteJVxYg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="12343503"
+X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
+   d="scan'208";a="12343503"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 10:32:30 -0700
+X-CSE-ConnectionGUID: hrC7i042S+KUbRkezbWGJA==
+X-CSE-MsgGUID: QtPpU4dST423AiFJac8HDw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
+   d="scan'208";a="46259398"
+Received: from aadeosun-mobl.amr.corp.intel.com (HELO desk) ([10.209.8.130])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 10:32:29 -0700
+Date: Mon, 1 Jul 2024 10:32:21 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Brice Goglin <brice.goglin@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <Perry.Yuan@amd.com>
+Subject: Re: [PATCH v2 3/9] perf/x86/intel: Use topology_hw_cpu_type()
+Message-ID: <20240701173221.fb5k3dqyycsb4pmn@desk>
+References: <20240627-add-cpu-type-v2-0-f927bde83ad0@linux.intel.com>
+ <20240627-add-cpu-type-v2-3-f927bde83ad0@linux.intel.com>
+ <09000f4e-f373-448f-afef-35d2a413929f@linux.intel.com>
+ <20240628185136.6rl4x3no3vl3zben@desk>
+ <d866215b-bffc-453f-9d92-232b729946d0@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:3f8a:b0:7f6:1590:447b with SMTP id
- ca18e2360f4ac-7f62eeaf6c7mr54907839f.4.1719855149319; Mon, 01 Jul 2024
- 10:32:29 -0700 (PDT)
-Date: Mon, 01 Jul 2024 10:32:29 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003d9ca1061c32fbb7@google.com>
-Subject: [syzbot] [bcachefs?] general protection fault in bch2_fs_btree_key_cache_exit
- (2)
-From: syzbot <syzbot+3093e1444fd7fe5e374a@syzkaller.appspotmail.com>
-To: bfoster@redhat.com, kent.overstreet@linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d866215b-bffc-453f-9d92-232b729946d0@linux.intel.com>
 
-Hello,
+On Mon, Jul 01, 2024 at 11:37:26AM +0800, Mi, Dapeng wrote:
+> > diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+> > index d8d715fcc25c..08794668750f 100644
+> > --- a/arch/x86/include/asm/processor.h
+> > +++ b/arch/x86/include/asm/processor.h
+> > @@ -107,7 +107,7 @@ struct cpuinfo_topology {
+> >  	u32			l2c_id;
+> >  
+> >  	// Hardware defined CPU-type
+> > -	u8			hw_cpu_type;
+> > +	u32			hw_cpu_type;
+> 
+> Since hw_cpu_type represents the whole EAX right now, it may need to be
+> changed to a more generic name, like hw_cpu_model, or others.
 
-syzbot found the following issue on:
+Even with whole EAX it still identifies the CPU-type (just more granular).
 
-HEAD commit:    55027e689933 Merge tag 'input-for-v6.10-rc5' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14d8e561980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=53ab35b556129242
-dashboard link: https://syzkaller.appspot.com/bug?extid=3093e1444fd7fe5e374a
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: i386
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-55027e68.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/a36929b5a065/vmlinux-55027e68.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/d72de6f61ddc/bzImage-55027e68.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3093e1444fd7fe5e374a@syzkaller.appspotmail.com
-
-bcachefs (loop2): flushing journal and stopping allocators complete, journal seq 12
-bcachefs (loop2): shutdown complete, journal seq 13
-bcachefs (loop2): marking filesystem clean
-bcachefs (loop2): shutdown complete
-Oops: general protection fault, probably for non-canonical address 0xdffffc000000001b: 0000 [#1] PREEMPT SMP KASAN NOPTI
-KASAN: null-ptr-deref in range [0x00000000000000d8-0x00000000000000df]
-CPU: 0 PID: 5266 Comm: syz-executor.2 Not tainted 6.10.0-rc5-syzkaller-00018-g55027e689933 #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-RIP: 0010:__list_add include/linux/list.h:154 [inline]
-RIP: 0010:list_add include/linux/list.h:169 [inline]
-RIP: 0010:bch2_fs_btree_key_cache_exit+0x90a/0x1490 fs/bcachefs/btree_key_cache.c:968
-Code: 00 fc ff df 48 89 f8 48 c1 e8 03 80 3c 08 00 0f 85 7f 08 00 00 4c 89 e0 4d 89 66 08 48 b9 00 00 00 00 00 fc ff df 48 c1 e8 03 <80> 3c 08 00 0f 85 53 08 00 00 49 8d bf e0 00 00 00 4d 89 b7 d8 00
-RSP: 0018:ffffc90002e67c48 EFLAGS: 00010206
-RAX: 000000000000001b RBX: 0000000000000000 RCX: dffffc0000000000
-RDX: ffff88801de2a440 RSI: ffffffff83ef5656 RDI: ffff888000932a48
-RBP: ffffe8ffad043af0 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000003 R12: 00000000000000d8
-R13: ffffc90002e67cc0 R14: ffff888000932a40 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff88802c000000(0063) knlGS:0000000056b3b400
-CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-CR2: 000000002c47f000 CR3: 0000000052d8e000 CR4: 0000000000350ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __bch2_fs_free fs/bcachefs/super.c:554 [inline]
- bch2_fs_release+0x107/0x870 fs/bcachefs/super.c:605
- kobject_cleanup lib/kobject.c:689 [inline]
- kobject_release lib/kobject.c:720 [inline]
- kref_put include/linux/kref.h:65 [inline]
- kobject_put+0x1fa/0x5b0 lib/kobject.c:737
- deactivate_locked_super+0xbe/0x1a0 fs/super.c:473
- deactivate_super+0xde/0x100 fs/super.c:506
- cleanup_mnt+0x222/0x450 fs/namespace.c:1267
- task_work_run+0x14e/0x250 kernel/task_work.c:180
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0x278/0x2a0 kernel/entry/common.c:218
- __do_fast_syscall_32+0x80/0x120 arch/x86/entry/common.c:389
- do_fast_syscall_32+0x32/0x80 arch/x86/entry/common.c:411
- entry_SYSENTER_compat_after_hwframe+0x84/0x8e
-RIP: 0023:0xf7307579
-Code: b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 00 00 00 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d b4 26 00 00 00 00 8d b4 26 00 00 00 00
-RSP: 002b:00000000ff9c55d8 EFLAGS: 00000292 ORIG_RAX: 0000000000000034
-RAX: 0000000000000000 RBX: 00000000ff9c5680 RCX: 0000000000000009
-RDX: 00000000f745dff4 RSI: 00000000f73ae361 RDI: 00000000ff9c6724
-RBP: 00000000ff9c5680 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000292 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:__list_add include/linux/list.h:154 [inline]
-RIP: 0010:list_add include/linux/list.h:169 [inline]
-RIP: 0010:bch2_fs_btree_key_cache_exit+0x90a/0x1490 fs/bcachefs/btree_key_cache.c:968
-Code: 00 fc ff df 48 89 f8 48 c1 e8 03 80 3c 08 00 0f 85 7f 08 00 00 4c 89 e0 4d 89 66 08 48 b9 00 00 00 00 00 fc ff df 48 c1 e8 03 <80> 3c 08 00 0f 85 53 08 00 00 49 8d bf e0 00 00 00 4d 89 b7 d8 00
-RSP: 0018:ffffc90002e67c48 EFLAGS: 00010206
-RAX: 000000000000001b RBX: 0000000000000000 RCX: dffffc0000000000
-RDX: ffff88801de2a440 RSI: ffffffff83ef5656 RDI: ffff888000932a48
-RBP: ffffe8ffad043af0 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000003 R12: 00000000000000d8
-R13: ffffc90002e67cc0 R14: ffff888000932a40 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff88802c000000(0063) knlGS:0000000056b3b400
-CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-CR2: 000000002c47f000 CR3: 0000000052d8e000 CR4: 0000000000350ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess), 3 bytes skipped:
-   0:	df 48 89             	fisttps -0x77(%rax)
-   3:	f8                   	clc
-   4:	48 c1 e8 03          	shr    $0x3,%rax
-   8:	80 3c 08 00          	cmpb   $0x0,(%rax,%rcx,1)
-   c:	0f 85 7f 08 00 00    	jne    0x891
-  12:	4c 89 e0             	mov    %r12,%rax
-  15:	4d 89 66 08          	mov    %r12,0x8(%r14)
-  19:	48 b9 00 00 00 00 00 	movabs $0xdffffc0000000000,%rcx
-  20:	fc ff df
-  23:	48 c1 e8 03          	shr    $0x3,%rax
-* 27:	80 3c 08 00          	cmpb   $0x0,(%rax,%rcx,1) <-- trapping instruction
-  2b:	0f 85 53 08 00 00    	jne    0x884
-  31:	49 8d bf e0 00 00 00 	lea    0xe0(%r15),%rdi
-  38:	4d                   	rex.WRB
-  39:	89                   	.byte 0x89
-  3a:	b7 d8                	mov    $0xd8,%bh
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Since hw_cpu_type will be used by AMD as well, I think it is better to keep
+it as is. Interpretation of what hw_cpu_type means can be left to vendor
+specific code.
