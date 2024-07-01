@@ -1,105 +1,157 @@
-Received: from h3cspam02-ex.h3c.com (smtp.h3c.com [60.191.123.50])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5DD15E88
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 02:49:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.191.123.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C57171C9;
+	Mon,  1 Jul 2024 02:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719802183; cv=none; b=NDC5DhxSUcV/Fl/xq+ZI1iS1nBGSoAKBFfWCakRkdRVCiKFikf3fKvWMMYvhOIpTBfSK4outSsrZOzEkmnMcgz+Q3UXNrmN5Dd5n34C8dQGeEjjWRMOx8IWkdZbUJFfWvyXPHqT5Q8wnjlyHLNmKwrGFWUw7t4wEywK2WcGvOGY=
+	t=1719802198; cv=none; b=pHrDSrSfb02CCGE2C/wmxSamszUGsIBjEyIzjj4qf61nXFG5Sn+9BYPVUPYhv9VawvI/fLVQfIFTBZaBFa397HwYYbVGI79VLH4lc3IQa0IYT/hCFxh/ypcZ1TW1gJDVmjSDj+ZKtSy4Z84RLf5tZFRfOxoNkfLoWtU3Dgv3oQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719802183; c=relaxed/simple;
-	bh=K+txfgIBDiC5EBu9Tyu6qcr21MebyAoTXTIWB1FfFmA=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=AgOTgmCPrn5rO129XIfNFE7EZsWi7taEf3KJQTCdEOoleRv/gUDzYGfCmbWR+udZ9vdzhnLRdNV0eK2/jJkzadKbLc/zqPe03lZb9bjyEW8SCsHPZl1jZm+8jf3WNKkrRNhcY1zARhGvwMCvM4ZJJzWuDb3xIGVNxhX7QTK7sWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com; spf=pass smtp.mailfrom=h3c.com; arc=none smtp.client-ip=60.191.123.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h3c.com
-Received: from h3cspam02-ex.h3c.com (localhost [127.0.0.2] (may be forged))
-	by h3cspam02-ex.h3c.com with ESMTP id 4611lFwP029898
-	for <linux-kernel@vger.kernel.org>; Mon, 1 Jul 2024 09:47:15 +0800 (GMT-8)
-	(envelope-from zhang.chunA@h3c.com)
-Received: from mail.maildlp.com ([172.25.15.154])
-	by h3cspam02-ex.h3c.com with ESMTP id 4611jvHJ024589;
-	Mon, 1 Jul 2024 09:45:57 +0800 (GMT-8)
-	(envelope-from zhang.chunA@h3c.com)
-Received: from DAG6EX11-BJD.srv.huawei-3com.com (unknown [10.153.34.13])
-	by mail.maildlp.com (Postfix) with ESMTP id 07A032004BBD;
-	Mon,  1 Jul 2024 09:49:59 +0800 (CST)
-Received: from DAG6EX09-BJD.srv.huawei-3com.com (10.153.34.11) by
- DAG6EX11-BJD.srv.huawei-3com.com (10.153.34.13) with Microsoft SMTP Server
+	s=arc-20240116; t=1719802198; c=relaxed/simple;
+	bh=n+oAJrMiKU/m7GwdMOLXLJIDRyS/D/sRQp8DT/+cx0E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=DVB7jiJckyINmX7KVSRUZ8CI/HSgh6MDt9vS1ukUzSksGuCe5UtwM21yEHr7XXFy02WATnhmjkEvQkuxfxl9K4X8iROf3hpcHGfSRMjdGqe245Ro//Ooc8WZelYHSdWK9zG+Z4Ns/vwkUmh3584XccEqshD+yYlKJqtHY/9zAJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4WC9QD3QP1z1j62j;
+	Mon,  1 Jul 2024 10:45:40 +0800 (CST)
+Received: from kwepemf100017.china.huawei.com (unknown [7.202.181.16])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6D6FB1A016C;
+	Mon,  1 Jul 2024 10:49:44 +0800 (CST)
+Received: from [10.174.176.88] (10.174.176.88) by
+ kwepemf100017.china.huawei.com (7.202.181.16) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.27; Mon, 1 Jul 2024 09:45:58 +0800
-Received: from DAG6EX09-BJD.srv.huawei-3com.com ([fe80::bdc5:ad7:2347:12a5])
- by DAG6EX09-BJD.srv.huawei-3com.com ([fe80::bdc5:ad7:2347:12a5%4]) with mapi
- id 15.02.1258.027; Mon, 1 Jul 2024 09:45:58 +0800
-From: Zhangchun <zhang.chunA@h3c.com>
-To: "shaohaojize@126.com" <shaohaojize@126.com>,
-        "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jiaoxupo
-	<jiaoxupo@h3c.com>, Bailin <berlin@h3c.com>,
-        Zhangzhansheng
-	<zhang.zhansheng@h3c.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>, wangyu
-	<wang.yuI@h3c.com>
-Subject: [PATCH] mm: fix kmap_high deadlock
-Thread-Topic: [PATCH] mm: fix kmap_high deadlock
-Thread-Index: AdrLWGWcTXIJ41leRoK9JQLjgSju3w==
-Date: Mon, 1 Jul 2024 01:45:57 +0000
-Message-ID: <079f7b0b129f4fbc86d5f5ee8795fd1b@h3c.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-sender-location: DAG2
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ 15.2.1544.11; Mon, 1 Jul 2024 10:49:43 +0800
+Message-ID: <3f2edec7-5be9-4bf4-bc34-f64072a61336@huawei.com>
+Date: Mon, 1 Jul 2024 10:49:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:h3cspam02-ex.h3c.com 4611lFwP029898
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3] xfs: Avoid races with cnt_btree lastrec updates
+To: Dave Chinner <david@fromorbit.com>
+CC: <chandan.babu@oracle.com>, <djwong@kernel.org>, <dchinner@redhat.com>,
+	<linux-xfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<yangerkun@huawei.com>
+References: <20240625014651.382485-1-wozizhi@huawei.com>
+ <ZoIUrmB2Jc1KK9Tv@dread.disaster.area>
+From: Zizhi Wo <wozizhi@huawei.com>
+In-Reply-To: <ZoIUrmB2Jc1KK9Tv@dread.disaster.area>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemf100017.china.huawei.com (7.202.181.16)
 
-DQpGcm9tOiAiemhhbmcuY2h1biIgPHpoYW5nLmNodW5hQGgzYy5jb20+DQoNCkkgd29yayB3aXRo
-IHpoYW5nemhhbnNoZW5nKGZyb20gaDNjKSBmaW5kIHRoYXQgc29tZSBzaXR1YXRpb24gbWF5IGNh
-c3VlIGRlYWRsb2NrIHdoZW4gd2UgdXNlIGttYXBfaGlnaGFuZCBrbWFwX1hYWCBvciBrdW1hcF94
-eHggYmV0d2VlbiAgZGlmZmVydCBjb3JlcyBhdCB0aGUgc2FtZSB0aW1lLmttYXBfaGlnaC0+bWFw
-X25ld192aXJ0dWFsLT4gZmx1c2hfYWxsX3plcm9fcGttYXBzLT5mbHVzaF90bGJfa2VybmVsX3Jh
-bmdlLT5vbl9lYWNoX2NwdSwNCk9uIHRoaXMgY29uZGl0aW9uLCBrbWFwX2hpZ2gNCmhvbGQgdGhl
-IGttYXBfbG9ja++8jCB3YWl0IHRoZSBvdGhlciBjb3JlcyBhY2suIEJ1dCB0aGUgb3RoZXJzIG1h
-eSBkaXNhYmxlIGlycSBhbmQgd2FpdCBrbWFwX2xvY2vvvIwgdGhpcyBpcyBzb21lIGRlYWRsb2Nr
-IGNvbmRpdGlvbi4NCkkgdGhpbmsgaXQncyBuZWNlc3NhcnkgdG8gZ2l2ZSBrbWFwX2xvY2sgYmVm
-b3JlIGNhbGwgZmx1c2hfdGxiX2tlcm5lbF9yYW5nZS4NCkxpa2UgdGhpczoNCnNwaW5fdW5sb2Nr
-KCZrbWFwX2xvY2spOw0KZmx1c2hfdGxiX2tlcm5lbF9yYW5nZSh4eHgpOw0Kc3Bpbl9sb2NrKCZr
-bWFwX2xvY2spOw0KDQpTaWduZWQtb2ZmLWJ5OiB6aGFuZy5jaHVuIDx6aGFuZy5jaHVuYUBoM2Mu
-Y29tPg0KLS0tDQogbW0vaGlnaG1lbS5jIHwgMiArKw0KIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2Vy
-dGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL21tL2hpZ2htZW0uYyBiL21tL2hpZ2htZW0uYyBpbmRl
-eCBiZDQ4YmE0NDVkZDQuLjEyZDIwZTU1MTU3OSAxMDA2NDQNCi0tLSBhL21tL2hpZ2htZW0uYw0K
-KysrIGIvbW0vaGlnaG1lbS5jDQpAQCAtMjIxLDcgKzIyMSw5IEBAIHN0YXRpYyB2b2lkIGZsdXNo
-X2FsbF96ZXJvX3BrbWFwcyh2b2lkKQ0KIG5lZWRfZmx1c2ggPSAxOw0KIH0NCiBpZiAobmVlZF9m
-bHVzaCkNCitzcGluX3VubG9jaygma21hcF9sb2NrKTsNCiBmbHVzaF90bGJfa2VybmVsX3Jhbmdl
-KFBLTUFQX0FERFIoMCksIFBLTUFQX0FERFIoTEFTVF9QS01BUCkpOw0KK3NwaW5fbG9jaygma21h
-cF9sb2NrKTsNCiB9DQoNCiB2b2lkIF9fa21hcF9mbHVzaF91bnVzZWQodm9pZCkNCi0tDQoyLjM0
-LjENCg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0K5pys6YKu5Lu25Y+K5YW26ZmE5Lu25ZCr5pyJ5paw
-5Y2O5LiJ6ZuG5Zui55qE5L+d5a+G5L+h5oGv77yM5LuF6ZmQ5LqO5Y+R6YCB57uZ5LiK6Z2i5Zyw
-5Z2A5Lit5YiX5Ye6DQrnmoTkuKrkurrmiJbnvqTnu4TjgILnpoHmraLku7vkvZXlhbbku5bkurrk
-u6Xku7vkvZXlvaLlvI/kvb/nlKjvvIjljIXmi6zkvYbkuI3pmZDkuo7lhajpg6jmiJbpg6jliIbl
-nLDms4TpnLLjgIHlpI3liLbjgIENCuaIluaVo+WPke+8ieacrOmCruS7tuS4reeahOS/oeaBr+OA
-guWmguaenOaCqOmUmeaUtuS6huacrOmCruS7tu+8jOivt+aCqOeri+WNs+eUteivneaIlumCruS7
-tumAmuefpeWPkeS7tuS6uuW5tuWIoOmZpOacrA0K6YKu5Lu277yBDQpUaGlzIGUtbWFpbCBhbmQg
-aXRzIGF0dGFjaG1lbnRzIGNvbnRhaW4gY29uZmlkZW50aWFsIGluZm9ybWF0aW9uIGZyb20gTmV3
-IEgzQywgd2hpY2ggaXMNCmludGVuZGVkIG9ubHkgZm9yIHRoZSBwZXJzb24gb3IgZW50aXR5IHdo
-b3NlIGFkZHJlc3MgaXMgbGlzdGVkIGFib3ZlLiBBbnkgdXNlIG9mIHRoZQ0KaW5mb3JtYXRpb24g
-Y29udGFpbmVkIGhlcmVpbiBpbiBhbnkgd2F5IChpbmNsdWRpbmcsIGJ1dCBub3QgbGltaXRlZCB0
-bywgdG90YWwgb3IgcGFydGlhbA0KZGlzY2xvc3VyZSwgcmVwcm9kdWN0aW9uLCBvciBkaXNzZW1p
-bmF0aW9uKSBieSBwZXJzb25zIG90aGVyIHRoYW4gdGhlIGludGVuZGVkDQpyZWNpcGllbnQocykg
-aXMgcHJvaGliaXRlZC4gSWYgeW91IHJlY2VpdmUgdGhpcyBlLW1haWwgaW4gZXJyb3IsIHBsZWFz
-ZSBub3RpZnkgdGhlIHNlbmRlcg0KYnkgcGhvbmUgb3IgZW1haWwgaW1tZWRpYXRlbHkgYW5kIGRl
-bGV0ZSBpdCENCg==
+
+
+在 2024/7/1 10:30, Dave Chinner 写道:
+> On Tue, Jun 25, 2024 at 09:46:51AM +0800, Zizhi Wo wrote:
+>> A concurrent file creation and little writing could unexpectedly return
+>> -ENOSPC error since there is a race window that the allocator could get
+>> the wrong agf->agf_longest.
+>>
+>> Write file process steps:
+>> 1) Find the entry that best meets the conditions, then calculate the start
+>>     address and length of the remaining part of the entry after allocation.
+>> 2) Delete this entry and update the -current- agf->agf_longest.
+>> 3) Insert the remaining unused parts of this entry based on the
+>>     calculations in 1), and update the agf->agf_longest again if necessary.
+>>
+>> Create file process steps:
+>> 1) Check whether there are free inodes in the inode chunk.
+>> 2) If there is no free inode, check whether there has space for creating
+>>     inode chunks, perform the no-lock judgment first.
+>> 3) If the judgment succeeds, the judgment is performed again with agf lock
+>>     held. Otherwire, an error is returned directly.
+>>
+>> If the write process is in step 2) but not go to 3) yet, the create file
+>> process goes to 2) at this time, it may be mistaken for no space,
+>> resulting in the file system still has space but the file creation fails.
+>>
+>> We have sent two different commits to the community in order to fix this
+>> problem[1][2]. Unfortunately, both solutions have flaws. In [2], I
+>> discussed with Dave and Darrick, realized that a better solution to this
+>> problem requires the "last cnt record tracking" to be ripped out of the
+>> generic btree code. And surprisingly, Dave directly provided his fix code.
+>> This patch includes appropriate modifications based on his tmp-code to
+>> address this issue.
+>>
+>> The entire fix can be roughly divided into two parts:
+>> 1) Delete the code related to lastrec-update in the generic btree code.
+>> 2) Place the process of updating longest freespace with cntbt separately
+>>     to the end of the cntbt modifications. Move the cursor to the rightmost
+>>     firstly, and update the longest free extent based on the record.
+>>
+>> Note that we can not update the longest with xfs_alloc_get_rec() after
+>> find the longest record, as xfs_verify_agbno() may not pass because
+>> pag->block_count is updated on the outside. Therefore, use
+>> xfs_btree_get_rec() as a replacement.
+>>
+>> [1] https://lore.kernel.org/all/20240419061848.1032366-2-yebin10@huawei.com
+>> [2] https://lore.kernel.org/all/20240604071121.3981686-1-wozizhi@huawei.com
+>>
+>> Reported by: Ye Bin <yebin10@huawei.com>
+>> Signed-off-by: Zizhi Wo <wozizhi@huawei.com>
+>> ---
+>>   fs/xfs/libxfs/xfs_alloc.c       | 115 ++++++++++++++++++++++++++++++++
+>>   fs/xfs/libxfs/xfs_alloc_btree.c |  64 ------------------
+>>   fs/xfs/libxfs/xfs_btree.c       |  51 --------------
+>>   fs/xfs/libxfs/xfs_btree.h       |  16 +----
+>>   4 files changed, 116 insertions(+), 130 deletions(-)
+> 
+> Mostly looks good. One small thing to fix, though.
+> 
+>> +/*
+>> + * Find the rightmost record of the cntbt, and return the longest free space
+>> + * recorded in it. Simply set both the block number and the length to their
+>> + * maximum values before searching.
+>> + */
+>> +static int
+>> +xfs_cntbt_longest(
+>> +	struct xfs_btree_cur	*cnt_cur,
+>> +	xfs_extlen_t		*longest)
+>> +{
+>> +	struct xfs_alloc_rec_incore irec;
+>> +	union xfs_btree_rec	    *rec;
+>> +	int			    stat = 0;
+>> +	int			    error;
+>> +
+>> +	memset(&cnt_cur->bc_rec, 0xFF, sizeof(cnt_cur->bc_rec));
+>> +	error = xfs_btree_lookup(cnt_cur, XFS_LOOKUP_LE, &stat);
+>> +	if (error)
+>> +		return error;
+>> +	if (!stat) {
+>> +		/* totally empty tree */
+>> +		*longest = 0;
+>> +		return 0;
+>> +	}
+>> +
+>> +	error = xfs_btree_get_rec(cnt_cur, &rec, &stat);
+>> +	if (error)
+>> +		return error;
+>> +	if (!stat) {
+>> +		ASSERT(0);
+>> +		*longest = 0;
+>> +		return 0;
+> 
+> If we don't find a record, some kind of btree corruption has been
+> encountered. Rather than "ASSERT(0)" here, this should fail in
+> production systems in a way that admins and online repair will
+> notice:
+> 
+> 	if (XFS_IS_CORRUPT(mp, stat != 0)) {
+> 		xfs_btree_mark_sick(cnt_cur);
+> 		return -EFSCORRUPTED;
+> 	}
+> 
+> -Dave.
+
+Yes, that seems more reasonable. I will send the V4 patch.
+
+Thanks,
+Zizhi Wo
