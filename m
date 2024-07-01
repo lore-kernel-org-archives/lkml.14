@@ -1,130 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA9A3D72
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 14:01:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968B014374E
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 14:01:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719842491; cv=none; b=fmUDk0htoUY9X8BG6zeYuEAWj8m5wrjtU+M7FrDjVf8Lm+QbPyOVwf6RrcGAF8cJ4fCQcUqLOgUb2OGEY5xAoyUYk65MILMv1SSsUJmAT8Xe4i8jSLjXAhrLSfu/aAlbsB5MpNwrCo9/ZtABJhSBFTKy8nwQJCfXlJsA+5iKUIE=
+	t=1719842511; cv=none; b=njlf7BahheyxdswfzPaJmkTNQqVZImiuKz1tRI6JE2lf7J7tVaRjEVpDQ45ANI6lY6qfMdODOQIiA+fr8CjDabxMEPEzd3ehvI/kxIf5tOFO86QFrrMBhU0xbZC72oO2m6ZxA03Z/RRg5OeMEiy1Db4wJu5Hc6aU03MZ1fDceGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719842491; c=relaxed/simple;
-	bh=OCCNiYkig3OpItCurKgzHYtMokBXxh1cSb7XVgOm6D4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KKWB0k6GLIg6EjNTC62QZGl2gW3+YgpXt1uJDGHfXICfbrSpONKbJ3hFc3NLm+TQuYXEDJ9g4QX2mIKBuT72KybPccqEV4rOiCe/Zbt/NrQP58wB9yowoS0UuBY6BTY0YCM87QqNoZ+qpNw/psM0BwjL/Kyf0FFsEUd349D6ik8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DCt6KPfE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719842511; c=relaxed/simple;
+	bh=3reg4i/O4YiAE5aKRVANGYOBm/8AOHKu8/Lh8yOWM1w=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=gQMbiNbTJzpm+lR4mjWhQQTosLicue/v+nHih+PsAgYZJtYeZsmovXOTjp/3DomJO34IGysg2pmdth3rh9RTiZ8XdIBMbZWD0d964kb1SYunVugOJEeQ7Yj+qODHgVBUZD1qEnhiqraLX20NLCGX1en/MXT10XW0JofpPwbIH7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=r+sBtxYi; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DCt6KPfE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E57C9C116B1;
-	Mon,  1 Jul 2024 14:01:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719842490;
-	bh=OCCNiYkig3OpItCurKgzHYtMokBXxh1cSb7XVgOm6D4=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=DCt6KPfEC4wrzpjthvJpI1iicVsXHkoMkr40lfVEGqSnM4UbdnDA8HVNf++TfS1yW
-	 Sp7Nfyo/g3c8GG9JDQYzpt/EDy9Px4A2gTJUJ8FhsC1YSKBsgtVTQ61sKKZqA3/PWd
-	 tH3i4ugNwGSXuEa93UFGCeW2Wa7k3YkJvNK7Wfbojr/3xQEX+jlYIUs7pFuwZLsK9F
-	 TTkn3lykqO3mJ2c/ll6a3WTsXSPS8TXyCCRgZnTrIyu3HbVnWr9x1M1ffX+Qv6iYIS
-	 PdbOfmkqG087Fd6gvoYQ1Y9Bkl3n7JJRU2cYIFHRsW4YJZ3jubJeKzHp1dnjgtxRxP
-	 P1/7kVb1yc0xA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 88A74CE0AD3; Mon,  1 Jul 2024 07:01:30 -0700 (PDT)
-Date: Mon, 1 Jul 2024 07:01:30 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Marco Elver <elver@google.com>
-Cc: Thorsten Blum <thorsten.blum@toblux.com>, dvyukov@google.com,
-	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-	David.Laight@aculab.com
-Subject: Re: [PATCH v3] kcsan: Use min() to fix Coccinelle warning
-Message-ID: <b96317e1-2aa6-4e04-bd9e-6fb2ce49c417@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240630200135.224108-1-thorsten.blum@toblux.com>
- <CANpmjNMXOn_N=9CY2iGLC=r=FAP4J2EFJbwDsAEuhKydwh6wtg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="r+sBtxYi"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 461E0EUt074153;
+	Mon, 1 Jul 2024 09:00:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1719842414;
+	bh=jjxKQjXPGDBo7KD1g9SLb7Db/+v0i0QFj/MuvZQRvGE=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To;
+	b=r+sBtxYiyUPBmKIZZ+6Li8yXVLl8t//deqhOz+TkK1RE0sVS9TD9AEtgfU1DTkwy5
+	 g4hJ5tWBXY3HHX2Mq59rXbviXtUpxwne2CBnsjsi3deohEZ5Luq27mtf7wWxWbw0PC
+	 Yrc8Drq7UJboRayPxaXqR0D/54nuCIt8GT/e1doU=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 461E0ETD003409
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 1 Jul 2024 09:00:14 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 1
+ Jul 2024 09:00:13 -0500
+Received: from DLEE101.ent.ti.com ([fe80::91ee:60bc:bfb7:851c]) by
+ DLEE101.ent.ti.com ([fe80::91ee:60bc:bfb7:851c%18]) with mapi id
+ 15.01.2507.023; Mon, 1 Jul 2024 09:00:13 -0500
+From: "Ding, Shenghao" <shenghao-ding@ti.com>
+To: Mark Brown <broonie@kernel.org>
+CC: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "perex@perex.cz"
+	<perex@perex.cz>,
+        "pierre-louis.bossart@linux.intel.com"
+	<pierre-louis.bossart@linux.intel.com>,
+        "13916275206@139.com"
+	<13916275206@139.com>,
+        "zhourui@huaqin.com" <zhourui@huaqin.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "Salazar, Ivan"
+	<i-salazar@ti.com>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        "Chadha, Jasjot Singh" <j-chadha@ti.com>,
+        "liam.r.girdwood@intel.com" <liam.r.girdwood@intel.com>,
+        "Yue, Jaden"
+	<jaden-yue@ti.com>,
+        "yung-chuan.liao@linux.intel.com"
+	<yung-chuan.liao@linux.intel.com>,
+        "Rao, Dipa" <dipa@ti.com>, "yuhsuan@google.com" <yuhsuan@google.com>,
+        "Lo, Henry" <henry.lo@ti.com>, "tiwai@suse.de" <tiwai@suse.de>,
+        "Xu, Baojun" <baojun.xu@ti.com>, "soyer@irl.hu" <soyer@irl.hu>,
+        "Baojun.Xu@fpt.com" <Baojun.Xu@fpt.com>,
+        "judyhsiao@google.com" <judyhsiao@google.com>,
+        "Navada Kanyana, Mukund"
+	<navada@ti.com>,
+        "cujomalainey@google.com" <cujomalainey@google.com>,
+        "Kutty,
+ Aanya" <aanya@ti.com>,
+        "Mahmud, Nayeem" <nayeem.mahmud@ti.com>,
+        "savyasanchi.shukla@netradyne.com" <savyasanchi.shukla@netradyne.com>,
+        "flaviopr@microsoft.com" <flaviopr@microsoft.com>,
+        "Ji, Jesse"
+	<jesse-ji@ti.com>,
+        "darren.ye@mediatek.com" <darren.ye@mediatek.com>
+Subject: RE: [EXTERNAL] Re: [PATCH v1] ASoc: tas2781: Add name_prefix as the
+ prefix name of DSP firmwares and calibrated data files
+Thread-Topic: [EXTERNAL] Re: [PATCH v1] ASoc: tas2781: Add name_prefix as the
+ prefix name of DSP firmwares and calibrated data files
+Thread-Index: AQHaygy3zqcBdt6oi0KleesuzWGEKLHiIqwA///EuhA=
+Date: Mon, 1 Jul 2024 14:00:13 +0000
+Message-ID: <664b818a177f4403bd60c3d4cd0bf4d1@ti.com>
+References: <20240629101112.628-1-shenghao-ding@ti.com>
+ <8245d8e7-3ff0-4f05-9f99-666e9693603f@sirena.org.uk>
+In-Reply-To: <8245d8e7-3ff0-4f05-9f99-666e9693603f@sirena.org.uk>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-exclaimer-md-config: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNMXOn_N=9CY2iGLC=r=FAP4J2EFJbwDsAEuhKydwh6wtg@mail.gmail.com>
 
-On Mon, Jul 01, 2024 at 10:07:29AM +0200, Marco Elver wrote:
-> On Sun, 30 Jun 2024 at 22:03, Thorsten Blum <thorsten.blum@toblux.com> wrote:
-> >
-> > Fixes the following Coccinelle/coccicheck warning reported by
-> > minmax.cocci:
-> >
-> >   WARNING opportunity for min()
-> >
-> > Use size_t instead of int for the result of min().
-> >
-> > Compile-tested with CONFIG_KCSAN=y.
-> >
-> > Reviewed-by: Marco Elver <elver@google.com>
-> > Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
-> > ---
-> > Changes in v2:
-> > - Add const and remove redundant parentheses as suggested by Marco Elver
-> > - Link to v1: https://lore.kernel.org/linux-kernel/20240623220606.134718-2-thorsten.blum@toblux.com/
-> >
-> > Changes in v3:
-> > - Remove const again after feedback from David Laight
-> 
-> I think I was clear that the removal of const was not needed in this
-> case, and my preference was to keep const.
-> 
-> While general and _constructive_ comments are helpful and appreciated,
-> this level of nit-picking and bikeshedding about 'const' is a complete
-> and utter waste of time. I'm sorry, but I'm rather allergic to this
-> level of time-wasting.
-> 
-> As KCSAN maintainer, I'm just going to say I prefer v2.
-> 
-> > - Link to v2: https://lore.kernel.org/linux-kernel/20240624175727.88012-2-thorsten.blum@toblux.com/
-> 
-> [+Cc Paul]
-> 
-> Paul, if possible kindly pick v2 of this patch into the KCSAN tree:
-> https://lore.kernel.org/linux-kernel/20240624175727.88012-2-thorsten.blum@toblux.com/
+Hi Brown
+Thanks for your comment.
 
-I have queued v2 of this patch, which is as shown below.  Please let me
-know if anything needs adjustment.  If things go well, this should make
-the upcoming merge window.
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-commit 613b072fe9b3aa11410937498c98b7ac6d7c9d5a
-Author: Thorsten Blum <thorsten.blum@toblux.com>
-Date:   Mon Jun 24 19:57:28 2024 +0200
-
-    kcsan: Use min() to fix Coccinelle warning
-    
-    Fixes the following Coccinelle/coccicheck warning reported by
-    minmax.cocci:
-    
-            WARNING opportunity for min()
-    
-    Use const size_t instead of int for the result of min().
-    
-    Compile-tested with CONFIG_KCSAN=y.
-    
-    Reviewed-by: Marco Elver <elver@google.com>
-    Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-
-diff --git a/kernel/kcsan/debugfs.c b/kernel/kcsan/debugfs.c
-index 1d1d1b0e4248..53b21ae30e00 100644
---- a/kernel/kcsan/debugfs.c
-+++ b/kernel/kcsan/debugfs.c
-@@ -225,7 +225,7 @@ debugfs_write(struct file *file, const char __user *buf, size_t count, loff_t *o
- {
- 	char kbuf[KSYM_NAME_LEN];
- 	char *arg;
--	int read_len = count < (sizeof(kbuf) - 1) ? count : (sizeof(kbuf) - 1);
-+	const size_t read_len = min(count, sizeof(kbuf) - 1);
- 
- 	if (copy_from_user(kbuf, buf, read_len))
- 		return -EFAULT;
+> -----Original Message-----
+> From: Mark Brown <broonie@kernel.org>
+> Sent: Monday, July 1, 2024 8:23 PM
+> To: Ding, Shenghao <shenghao-ding@ti.com>
+> Cc: andriy.shevchenko@linux.intel.com; lgirdwood@gmail.com;
+> perex@perex.cz; pierre-louis.bossart@linux.intel.com;
+> 13916275206@139.com; zhourui@huaqin.com; alsa-devel@alsa-project.org;
+> Salazar, Ivan <i-salazar@ti.com>; linux-kernel@vger.kernel.org; Chadha,
+> Jasjot Singh <j-chadha@ti.com>; liam.r.girdwood@intel.com; Yue, Jaden
+> <jaden-yue@ti.com>; yung-chuan.liao@linux.intel.com; Rao, Dipa
+> <dipa@ti.com>; yuhsuan@google.com; Lo, Henry <henry.lo@ti.com>;
+> tiwai@suse.de; Xu, Baojun <baojun.xu@ti.com>; soyer@irl.hu;
+> Baojun.Xu@fpt.com; judyhsiao@google.com; Navada Kanyana, Mukund
+> <navada@ti.com>; cujomalainey@google.com; Kutty, Aanya
+> <aanya@ti.com>; Mahmud, Nayeem <nayeem.mahmud@ti.com>;
+> savyasanchi.shukla@netradyne.com; flaviopr@microsoft.com; Ji, Jesse
+> <jesse-ji@ti.com>; darren.ye@mediatek.com
+> Subject: [EXTERNAL] Re: [PATCH v1] ASoc: tas2781: Add name_prefix as the
+> prefix name of DSP firmwares and calibrated data files
+>=20
+> On Sat, Jun 29, 2024 at 06:11:10PM +0800, Shenghao Ding wrote:
+>=20
+> >  	tas_priv->fw_state =3D TASDEVICE_RCA_FW_OK;
+> > -	scnprintf(tas_priv->coef_binaryname, 64, "%s_coef.bin",
+> > -		tas_priv->dev_name);
+> > +	if (tas_priv->name_prefix)
+> > +		scnprintf(tas_priv->rca_binaryname, 64, "%s-%s_coef.bin",
+> > +			tas_priv->name_prefix, tas_priv->dev_name);
+> > +	else
+> > +		scnprintf(tas_priv->coef_binaryname, 64, "%s_coef.bin",
+> > +			tas_priv->dev_name);
+>=20
+> I'll apply this but I do wonder if it's worth falling back to trying to l=
+oad the
+> unprefixed name if we fail to load the prefixed one.
+If fail to load dsp firmware, the driver won't load unprefixed name firmwar=
+e,=20
+but switch tas2563/tas2781 to bypass-dsp mode automatically.
+In this mode, smartamp become simple amp.
+These day, I met a case from one of my customers, they put 2 pieces of tas2=
+563,=20
+and 2 pieces of tas2781 in the same i2c bus. In order to identify tas2563 a=
+nd=20
+tas2781, I think name_prefix is a good solution for this case.
+Looking forward to your comment. Thanks.
