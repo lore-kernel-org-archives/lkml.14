@@ -1,220 +1,105 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29C047F60;
-	Mon,  1 Jul 2024 10:57:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D24C139CFE;
+	Mon,  1 Jul 2024 10:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719831438; cv=none; b=DCm15anW8QziAkPxwZOpIEJBTJHemKyvhdsjG7Djcuw1A/lSlAMBoZoGhNvK8RovzArlDV6NpY5HNuQnoAVKRC48Lre3zbqvWVuNZ9j61lZVmRnKRTIKQ6afCKoXIdVmkdWMccrTcHUzvijBoK9vGCR3tZn2vsTigqHnTsKSuIU=
+	t=1719831441; cv=none; b=eD9+gmbQdZvSwCUOPYknRThf7oY9zZw4CFVXX7cKYLI1H8l/M31302vJARMP4holFLRe2KFIIQL+WtGnXpIHR7loSu8Hx1tOiSTshQ2qnnVHWsq8i42Iz4SNpmomEj28WGqHoutmscbSPamAWEoIM0SAi3MFC+o1FYuGumeXDv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719831438; c=relaxed/simple;
-	bh=8umNuOKh7+H+tPPKz6sksVNNc6Nq6hLwrsBMo9ZL0Lg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W2ZfbwaNYbqjtk9ScG3BF2qIkHK8aXEB7fCPaoOVOXNEoXknUwN3Jd2fnPEJNomGvJCib8f6/wX5Srf8oFHElc2daqzpuRO3XfLT+8VXE4y3E5ePAFCSSdBhbwJxO3b/N8T5G5RHZJGt9p6a3/PF7SkW9f5N7CA/Ih/g0L/c2U4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=JL7WUgth; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1719831441; c=relaxed/simple;
+	bh=JiofziG/xZtlyqRXDAzYHGYGfhs54iVEkwzYJYFNDjc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FsPMWQLqTc47Tfsu1QNgYBa3m+F0I9QeFafDD+byyg1RmHJBUeri+nwlaBk9cRR9ZEeh9Vz3aMAgrxHxu3mE8RUiKwgt9SUFHscNKUPzPTadmVeL9iJLCZNae2UW2XtMj7xgLPGNJtrW1YBIddw8c3qXaIvyGl45rPsUqiTNH6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eeNxvYmV; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="JL7WUgth"
-X-UUID: ab720a30379811ef8b8f29950b90a568-20240701
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=fyi0fRuKNHcwx0uipw9Xw1x1ZFruV+jFiu2FmEzSg9Q=;
-	b=JL7WUgthm7dQKrAaXAdtWvWmtvOcOm/hvGp/Rb1YF+vCV1fAjxVUn+M+4jvvmsuS09sTJbPKk2iMMD7saSPBBGU2WsPkK9Hx8qGvy2pRAWsGjuT8SuMDtnucd79etTyB947LIiMFgEZOAWp3kgaM2mlby7WNz5bhwM99ZsZfuc0=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.40,REQID:e62a9a68-f270-459c-ac4c-179c4618a4e0,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:ba885a6,CLOUDID:c296f3d0-436f-4604-ad9d-558fa44a3bbe,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: ab720a30379811ef8b8f29950b90a568-20240701
-Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw01.mediatek.com
-	(envelope-from <skylake.huang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1438659399; Mon, 01 Jul 2024 18:57:12 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Mon, 1 Jul 2024 03:57:11 -0700
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Mon, 1 Jul 2024 18:57:11 +0800
-From: Sky Huang <SkyLake.Huang@mediatek.com>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Daniel Golle
-	<daniel@makrotopia.org>, Qingfang Deng <dqfext@gmail.com>, SkyLake Huang
-	<SkyLake.Huang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
-CC: Steven Liu <Steven.Liu@mediatek.com>, SkyLake.Huang
-	<skylake.huang@mediatek.com>
-Subject: [PATCH net-next v10 05/13] net: phy: mediatek: Integrate read/write page helper functions
-Date: Mon, 1 Jul 2024 18:54:09 +0800
-Message-ID: <20240701105417.19941-6-SkyLake.Huang@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20240701105417.19941-1-SkyLake.Huang@mediatek.com>
-References: <20240701105417.19941-1-SkyLake.Huang@mediatek.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eeNxvYmV"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 461AurGk031543;
+	Mon, 1 Jul 2024 10:57:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=J
+	iofziG/xZtlyqRXDAzYHGYGfhs54iVEkwzYJYFNDjc=; b=eeNxvYmVyDSH150XC
+	f/O+mGpnMsGveiSOxRyoT8SIAtODQYWqaS5FoBg9TEncUR0BTxsdOtZFpss8/WW4
+	DSj52UCHu+xpnZE5TKZt2HW/LjRmJ6kHIVZ1Q+e4T9biM1+0Ac4qt5aUXlN8+fAW
+	Oro+Ts/RWnsQ/9oWg7k6TfrJwrp31gnFY2gkWjlTJggc8tSTJard4E+TrZusHIFI
+	2QwgKiwmnZ7gYpPANR+2B/6THuKmsKpPA4gcZI3TuJtr3yj1WHajhANW7WEYKav8
+	LaezD0B3Rd05FToiciRy9VpTqQfm+8zfIzCeAdmR9BMw1tpWSwNCmWYbO6Y7fvbQ
+	tQ7IA==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 403tqv81r1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 01 Jul 2024 10:57:17 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4619USAE024091;
+	Mon, 1 Jul 2024 10:57:16 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 402ya36dv6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 01 Jul 2024 10:57:16 +0000
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 461AvCZD26739442
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 1 Jul 2024 10:57:14 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AF8695804B;
+	Mon,  1 Jul 2024 10:57:12 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 57F575805B;
+	Mon,  1 Jul 2024 10:57:10 +0000 (GMT)
+Received: from [9.171.47.124] (unknown [9.171.47.124])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  1 Jul 2024 10:57:10 +0000 (GMT)
+Message-ID: <2c2655ad-2a2a-4180-8a31-828a7531af1b@linux.ibm.com>
+Date: Mon, 1 Jul 2024 12:57:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK: N
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] s390/dasd: add missing MODULE_DESCRIPTION() macros
+To: Jeff Johnson <quic_jjohnson@quicinc.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev
+ <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20240615-md-s390-drivers-s390-block-dasd-v1-1-36b200f14344@quicinc.com>
+Content-Language: en-US
+From: Stefan Haberland <sth@linux.ibm.com>
+In-Reply-To: <20240615-md-s390-drivers-s390-block-dasd-v1-1-36b200f14344@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: D1xLR7T2PHM2C2vUe5sHmreK7F05PUyp
+X-Proofpoint-ORIG-GUID: D1xLR7T2PHM2C2vUe5sHmreK7F05PUyp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-01_09,2024-06-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 lowpriorityscore=0 spamscore=0 clxscore=1011
+ phishscore=0 adultscore=0 impostorscore=0 suspectscore=0 bulkscore=0
+ mlxlogscore=829 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407010084
 
-From: "SkyLake.Huang" <skylake.huang@mediatek.com>
+Am 16.06.24 um 04:19 schrieb Jeff Johnson:
+> With ARCH=s390, make allmodconfig && make W=1 C=1 reports:
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/s390/block/dasd_diag_mod.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/s390/block/dasd_eckd_mod.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/s390/block/dasd_fba_mod.o
+>
+> Add the missing invocations of the MODULE_DESCRIPTION() macro.
+>
+> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> ---
 
-This patch integrates read/write page helper functions as MTK phy lib.
-They are basically the same in mtk-ge.c & mtk-ge-soc.c.
-
-Signed-off-by: SkyLake.Huang <skylake.huang@mediatek.com>
----
- drivers/net/phy/mediatek/mtk-ge-soc.c  | 18 ++++--------------
- drivers/net/phy/mediatek/mtk-ge.c      | 20 ++++++--------------
- drivers/net/phy/mediatek/mtk-phy-lib.c | 12 ++++++++++++
- drivers/net/phy/mediatek/mtk.h         |  3 +++
- 4 files changed, 25 insertions(+), 28 deletions(-)
-
-diff --git a/drivers/net/phy/mediatek/mtk-ge-soc.c b/drivers/net/phy/mediatek/mtk-ge-soc.c
-index 970bf35..26c2183 100644
---- a/drivers/net/phy/mediatek/mtk-ge-soc.c
-+++ b/drivers/net/phy/mediatek/mtk-ge-soc.c
-@@ -275,16 +275,6 @@ struct mtk_socphy_shared {
- 	struct mtk_socphy_priv	priv[4];
- };
- 
--static int mtk_socphy_read_page(struct phy_device *phydev)
--{
--	return __phy_read(phydev, MTK_EXT_PAGE_ACCESS);
--}
--
--static int mtk_socphy_write_page(struct phy_device *phydev, int page)
--{
--	return __phy_write(phydev, MTK_EXT_PAGE_ACCESS, page);
--}
--
- /* One calibration cycle consists of:
-  * 1.Set DA_CALIN_FLAG high to start calibration. Keep it high
-  *   until AD_CAL_COMP is ready to output calibration result.
-@@ -1305,8 +1295,8 @@ static struct phy_driver mtk_socphy_driver[] = {
- 		.probe		= mt7981_phy_probe,
- 		.suspend	= genphy_suspend,
- 		.resume		= genphy_resume,
--		.read_page	= mtk_socphy_read_page,
--		.write_page	= mtk_socphy_write_page,
-+		.read_page	= mtk_phy_read_page,
-+		.write_page	= mtk_phy_write_page,
- 		.led_blink_set	= mt798x_phy_led_blink_set,
- 		.led_brightness_set = mt798x_phy_led_brightness_set,
- 		.led_hw_is_supported = mt798x_phy_led_hw_is_supported,
-@@ -1322,8 +1312,8 @@ static struct phy_driver mtk_socphy_driver[] = {
- 		.probe		= mt7988_phy_probe,
- 		.suspend	= genphy_suspend,
- 		.resume		= genphy_resume,
--		.read_page	= mtk_socphy_read_page,
--		.write_page	= mtk_socphy_write_page,
-+		.read_page	= mtk_phy_read_page,
-+		.write_page	= mtk_phy_write_page,
- 		.led_blink_set	= mt798x_phy_led_blink_set,
- 		.led_brightness_set = mt798x_phy_led_brightness_set,
- 		.led_hw_is_supported = mt798x_phy_led_hw_is_supported,
-diff --git a/drivers/net/phy/mediatek/mtk-ge.c b/drivers/net/phy/mediatek/mtk-ge.c
-index 54ea64a..9122899 100644
---- a/drivers/net/phy/mediatek/mtk-ge.c
-+++ b/drivers/net/phy/mediatek/mtk-ge.c
-@@ -3,6 +3,8 @@
- #include <linux/module.h>
- #include <linux/phy.h>
- 
-+#include "mtk.h"
-+
- #define MTK_EXT_PAGE_ACCESS		0x1f
- #define MTK_PHY_PAGE_STANDARD		0x0000
- #define MTK_PHY_PAGE_EXTENDED		0x0001
-@@ -11,16 +13,6 @@
- #define MTK_PHY_PAGE_EXTENDED_2A30	0x2a30
- #define MTK_PHY_PAGE_EXTENDED_52B5	0x52b5
- 
--static int mtk_gephy_read_page(struct phy_device *phydev)
--{
--	return __phy_read(phydev, MTK_EXT_PAGE_ACCESS);
--}
--
--static int mtk_gephy_write_page(struct phy_device *phydev, int page)
--{
--	return __phy_write(phydev, MTK_EXT_PAGE_ACCESS, page);
--}
--
- static void mtk_gephy_config_init(struct phy_device *phydev)
- {
- 	/* Enable HW auto downshift */
-@@ -77,8 +69,8 @@ static struct phy_driver mtk_gephy_driver[] = {
- 		.handle_interrupt = genphy_handle_interrupt_no_ack,
- 		.suspend	= genphy_suspend,
- 		.resume		= genphy_resume,
--		.read_page	= mtk_gephy_read_page,
--		.write_page	= mtk_gephy_write_page,
-+		.read_page	= mtk_phy_read_page,
-+		.write_page	= mtk_phy_write_page,
- 	},
- 	{
- 		PHY_ID_MATCH_EXACT(0x03a29441),
-@@ -91,8 +83,8 @@ static struct phy_driver mtk_gephy_driver[] = {
- 		.handle_interrupt = genphy_handle_interrupt_no_ack,
- 		.suspend	= genphy_suspend,
- 		.resume		= genphy_resume,
--		.read_page	= mtk_gephy_read_page,
--		.write_page	= mtk_gephy_write_page,
-+		.read_page	= mtk_phy_read_page,
-+		.write_page	= mtk_phy_write_page,
- 	},
- };
- 
-diff --git a/drivers/net/phy/mediatek/mtk-phy-lib.c b/drivers/net/phy/mediatek/mtk-phy-lib.c
-index 20796ae..e55a432 100644
---- a/drivers/net/phy/mediatek/mtk-phy-lib.c
-+++ b/drivers/net/phy/mediatek/mtk-phy-lib.c
-@@ -6,6 +6,18 @@
- 
- #include "mtk.h"
- 
-+int mtk_phy_read_page(struct phy_device *phydev)
-+{
-+	return __phy_read(phydev, MTK_EXT_PAGE_ACCESS);
-+}
-+EXPORT_SYMBOL_GPL(mtk_phy_read_page);
-+
-+int mtk_phy_write_page(struct phy_device *phydev, int page)
-+{
-+	return __phy_write(phydev, MTK_EXT_PAGE_ACCESS, page);
-+}
-+EXPORT_SYMBOL_GPL(mtk_phy_write_page);
-+
- int mtk_phy_led_hw_is_supported(struct phy_device *phydev, u8 index,
- 				unsigned long rules,
- 				unsigned long supported_triggers)
-diff --git a/drivers/net/phy/mediatek/mtk.h b/drivers/net/phy/mediatek/mtk.h
-index 2fc89e3..5986aaa 100644
---- a/drivers/net/phy/mediatek/mtk.h
-+++ b/drivers/net/phy/mediatek/mtk.h
-@@ -62,6 +62,9 @@
- #define MTK_PHY_LED_STATE_FORCE_BLINK	1
- #define MTK_PHY_LED_STATE_NETDEV	2
- 
-+int mtk_phy_read_page(struct phy_device *phydev);
-+int mtk_phy_write_page(struct phy_device *phydev, int page);
-+
- int mtk_phy_led_hw_is_supported(struct phy_device *phydev, u8 index,
- 				unsigned long rules,
- 				unsigned long supported_triggers);
--- 
-2.18.0
+Applied, thanks.
 
