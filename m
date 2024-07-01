@@ -1,471 +1,258 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2081.outbound.protection.outlook.com [40.107.22.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B5616C853;
-	Mon,  1 Jul 2024 15:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719846233; cv=none; b=lnuRNjy2y2nwxK2zeQuTRmQX89xg+/TKsd64jDku0LVIFii+8IhhAaPn8qriUljvlRPNWlW00MsM3GsHZw3c3oq+nnBT9WiXFCK9XUts9OWotP9LxNX9cC/RxM9RSk+K4L31ADLe7wGSnbiI9bhID/N7DEHMxAdEn8Ld3h8Sfv4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719846233; c=relaxed/simple;
-	bh=aIjVMAMm23jw4Ye/EfWrLHoksB5uC6PUeTdMLTvMwK0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E2OgYXsTg9devqiBjOyhy5L47/Usi65hM31J+eP0PHR8XV0SqXrCt4IootyXHMM4vSF5VYTTF9V9hH0sOGxHGRVAjJMCEt77XiQYqKYG105oYct8u0TCY3WEdqwyzz+PCMG9nFoqfcjJQ+UUOV7YGfTM+JWQGPnniMqM3T4CI4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B8lFcyjp; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFCA16CD04;
+	Mon,  1 Jul 2024 15:03:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.81
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719846234; cv=fail; b=JDkzwiJoL/aSEWdJY+d9frdG9QY9e2MuDJbjWx+hRDJbzo4OJMcIpm/XWKZpFVzwIUocJNmo3sywDcCZblqPcENYBMowqXOQ6o1kNODArZQQE+1Ki2TGSe/m5aLTE47DlX+PpvFQN3PYv1tsuTjR2dFKAVvt3MIWaNjAzEnCWpA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719846234; c=relaxed/simple;
+	bh=7/YjXlfvKOECt/5G4KqFAsI9krhxF/Ct+VZv74w8jds=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=QplBfv6daoCub8VkGZ5EDNjxxH7Bz3XvQPYYhUBHP6e/tvLq8U/6UOpGzwXIEDUm0Fd9jL6qpGLPaGMmbL/1ixsrT859+eA6j+fyQ5zjZOwtm7nYiuBNfK4f5vXuU5cFRCWegSGnDBAy6uExmhsK53g/n3SNf8u3nEU9avQXL3w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=iF3a81Z0; arc=fail smtp.client-ip=40.107.22.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B8lFcyjp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 254FCC2BD10;
-	Mon,  1 Jul 2024 15:03:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719846233;
-	bh=aIjVMAMm23jw4Ye/EfWrLHoksB5uC6PUeTdMLTvMwK0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B8lFcyjpOFHidpU54Jv0X+DwclUuGjd/rEaO0s9wGI2b2GxQ6fav9rPiIxlUl08/1
-	 UqY6IqODUh4wLaACwHXwT8siWQ+BW2ugltHbf2p1iefWp27nxOvr6D0tilTUAvNiqv
-	 QaLFi65+AvpSD5HRS6fKEhFTNdlrmmtw3AK8zHJIVPv4uH6lkYlNbl5WwZc8uWaTVE
-	 DY8pw829ZtBcDHO90zrajnJJVLkRc5uRcBYCn3rZRvgvGFG+kCL+RWr2eb/MFoqlun
-	 Nsx8WHdKi1cphLz7DvEmYf2AlA4EcrAt28wIEoKAGqKqNtegK3cDAMo7tHSBvg9rMb
-	 lacSz75gjvFiw==
-Date: Mon, 1 Jul 2024 09:03:51 -0600
-From: Rob Herring <robh@kernel.org>
-To: Manikandan Muralidharan <manikandan.m@microchip.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, krzk+dt@kernel.org,
-	conor+dt@kernel.org, nicolas.ferre@microchip.com,
-	alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev,
-	arnd@arndb.de, durai.manickamkr@microchip.com,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] dt-bindings: pinctrl: Convert Atmel PIO3 pinctrl
- to json-schema
-Message-ID: <20240701150351.GA4051458-robh@kernel.org>
-References: <20240625043525.279711-1-manikandan.m@microchip.com>
- <20240625043525.279711-6-manikandan.m@microchip.com>
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="iF3a81Z0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WQaCr+BWBcHsJw7ynV1Ir04qcPoiRzFDtwvx3lMzDFWIdCXnvbzTXKiiiizoxPAVkIOos2A/ebXtDGMNyfsnZzyCL8cDwl7Rdn7ItZV1vH0zIf/LKY2oog+XElp6by1z+8Gl0cegnBya4+WISmhf/o5JLgTDmfxQHYsr5h3vSWwJqFM2kfYDhh+w7KxsnG+PoHwpuCl55ku08CxX9L4WSuCD3LTRpFrGlbISUwEsY8yjdFvXWJMivoAB+4JHKm0spc+OQhXkjQovYAAyQJjUVITZbk6BtNmrP6xDT1JIntzIvThjoCvKPm4kOt0U7oijdG1AcD9k8vc0bS+DahmJMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=h9EIEdg1uebR80MWEZ/T2nDjYAtVAFHc9DSu/GnO3PA=;
+ b=Gv3rqKl5iUEKLCJku/O4sNaGReQeNIaBtqPb4hXXEIBTK8zdV8/VqveY1xi1ZjvWU6Gn2JP0+psaPQKADUiNuTT/fdUbLY/NXzJ32qXnSqUBKi89WJ6LV9LekzKk8UsmwX6rN1DbwgKwOFr/5mBCAMwqLgFz9OJkhlFmvxIV1arouMoumcKh0h7uQdQrzCLjJhDKvkr7wPErZ0OvwDxAOGAApHvXaWUket+5iESVmp5lXbkofgDDU3gvqbCqhMcul8NrWYG2/ida5c4Tj76ZiMNxwFWmTpqAiEufSYWoViVMvyXJVro9lAQijwQOBdo6+QgnsebHw/d/++gWOdD5Kw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=h9EIEdg1uebR80MWEZ/T2nDjYAtVAFHc9DSu/GnO3PA=;
+ b=iF3a81Z0yY+Q9z4bY2tIRGUZ2F/13EakE1r/65CI6gPK8xemBVJLGav+emy02u6budxElpi1o9hc554MkfMFFcQlbx9hbPBZ9KOC8wpbeHrytrr+kkmnKHcOMACEknadl3+Nz1tKioPcSp2Wx3PCv7i/ledBKVu18wkYkRwRu20=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AS8PR04MB8166.eurprd04.prod.outlook.com (2603:10a6:20b:3fa::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.32; Mon, 1 Jul
+ 2024 15:03:47 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7719.022; Mon, 1 Jul 2024
+ 15:03:47 +0000
+From: Frank Li <Frank.Li@nxp.com>
+Subject: [PATCH v4 0/8] arm64: dts: imx8qm: add subsystem lvds and mipi
+Date: Mon, 01 Jul 2024 11:03:26 -0400
+Message-Id: <20240701-imx8qm-dts-usb-v4-0-03cdbc8c44b6@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAD7FgmYC/3XMSw7CIBSF4a00jMVwKS8duQ/jQChYBn0IldQ03
+ bu0E2sah+ck3z+haIO3EZ2LCQWbfPRdmwc7FMjU9/Zhsa/yRpRQRgQR2Dejeja4GiJ+RY1PhvO
+ Kamc5FSijPljnxzV4veVd+zh04b32Eyzv31QCTDAXXFLQgjnKL+3YH03XoCWU6AYD2WGasVSKg
+ QQQTsMvLreY7XCZsbLGlERIZcF88TzPH1YLNt4kAQAA
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, Dong Aisheng <aisheng.dong@nxp.com>
+Cc: devicetree@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Frank Li <Frank.Li@nxp.com>, Peng Fan <peng.fan@nxp.com>
+X-Mailer: b4 0.13-dev-e586c
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1719846224; l=4681;
+ i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
+ bh=7/YjXlfvKOECt/5G4KqFAsI9krhxF/Ct+VZv74w8jds=;
+ b=lhROHnNXnBBVTNLxKc/UnM0tSzDQoSlXMjh1MFuAzbbCv3nszX36YiKKLeGDebbPRa4LzrKRB
+ wd6LYcI2pIqA9tNgBkXSU/EH8FvBZzMn8Ti82DcxE9hQIAA125y01kG
+X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
+ pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
+X-ClientProxiedBy: SJ0PR13CA0149.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c6::34) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240625043525.279711-6-manikandan.m@microchip.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB8166:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4286af41-1e2d-4e55-ec74-08dc99df026e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|52116014|366016|376014|7416014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?b25LRlJRWnJTdmFka2Rkem1uS1RCVThoRDdTMXcyNms2aVZCSDNVeGVXemxY?=
+ =?utf-8?B?eXRtc0xwUU5aUDlqK1dzd3k1UmxjYlg0WTRYUjczVVl1UHVtZVdhQVBiVDJU?=
+ =?utf-8?B?c1lGd2hXdjJOMEFyM2g4dmwyK1JsRUpPa1BveXQ4eWtZSS9SZm5sbFRURjlY?=
+ =?utf-8?B?UGVybjg2ZGVxZGpJODNsU0FYSmxlVE0wYk9IbXBpMkxPcFA2Ui9USnFMWmFo?=
+ =?utf-8?B?UzR2dExGUG5QRHlEbWsrdGsvc1RaY1hZajVMbUpVVTBJMXg1TkxXY2c1cU8z?=
+ =?utf-8?B?VDgvamdheTU4SjMzeGFNUzF0V3hRRGx6eWtSQ2Z3Q2crdVYzMUYxLzBnUHN0?=
+ =?utf-8?B?Y05nMzBEU2VwVGwyRVhPWlRRQ3NHN0g4UDk0VDMwMTB0WC9wRktqczIxVU5o?=
+ =?utf-8?B?Wmo3VEJ3enRESGVNU0ErQllBanIvalpPUytjMThqRGptUGdtODZweGtZWG80?=
+ =?utf-8?B?NFFvekV0WWxiOVh4VGdjUDJBOGxnamVGRzZmbnZNQmE5b2pTRjFIUFhaQldw?=
+ =?utf-8?B?c3QvQ1QwUzg2TG1tRjRJTG9yUlBUVEIzeFpGdUpqZUQzd0xMTXJNdEZWdGRr?=
+ =?utf-8?B?QlNvbFk3cTJpZExub0p0TEdlUmRIVmowYnphaHZKMFdDdmIvM1k2bUkyTEJO?=
+ =?utf-8?B?Q1Y0Vno5OE8rb3dwMVd0NS90MElNSVVVZks5UGhhVENFcVZVZTBvcmgrdDZW?=
+ =?utf-8?B?ME95b2ZaSUJ5SGhoanNMMnYrZ2lhU1F4V1RZRkcyWXk5bnA0YVJMZUFCT2tt?=
+ =?utf-8?B?b0c5bklhc09BNFJlclFCbmJkazF2MU5YL2hTTlpiaVZzWkJGVFVOWW9DNTRL?=
+ =?utf-8?B?cUszNmJHY1YzUDFXenhFaXJ4YVZIVjdZZ014SnNRbmNFdnRkeVRuSE51dFBT?=
+ =?utf-8?B?LzV2VktVbTZ6UTVMNVppNkQ5OE93d3d0OCtWdzVVUUozOGtlVXp5VkM4aXNG?=
+ =?utf-8?B?anZaZnF3VTVGdFFPT0EwUGd4SncvVktOT3Z6aXViOEVyM2x6UHB4aDFuMDRP?=
+ =?utf-8?B?b0k2a3ZlTXUvWVVYUU1sK3hGcGxiR3hzbEUzeUhydDZrYmpGV0FibnpQWko4?=
+ =?utf-8?B?SzB6a1FNZU9OMXAveXBsREptZytpSDV3TDNLcVhjM0krZytRZy9ZZmZwOXpa?=
+ =?utf-8?B?RytsUFNodStvbTZ4c1IzY2tUbmZVMHFwWDlqbVNibHpxSVpuNEo3NXFUSlBi?=
+ =?utf-8?B?ZVh2cUk1NmZKdWpZWHdxWGZSUEcrQktCRTlXL2E3U3hPM3RQZlRBZ1FGdkk5?=
+ =?utf-8?B?dDkvNmlMNTdvVnp0L2M5aEduWWE1Nk9CdUNwT1FPWmpuZ0N4TDk0ckQ0OUVE?=
+ =?utf-8?B?RzBpdEJ3ZDROMURqRWJmZW5aMitjeDJkc3pPYiswaXVHWnZjTnExZFNJSWdC?=
+ =?utf-8?B?TDFtcnpmVlNFSGE0MjRPSEF1YTYwYnNGczQ3TVR0Z3cwVzkvL3Rya082d21J?=
+ =?utf-8?B?WVoxU2RLWVYwcHJ6ZUZNc2VoYkRJZys2OTFMUmhwOGdFbXFuQTFFaGpFdTBX?=
+ =?utf-8?B?dWltWHpaTUdldGMxQk9YVkgrcW1wOC9ONGxWNFMyQ2ErQVhvNEQ5c3RNUzI2?=
+ =?utf-8?B?SWIzN3R3NUx4MERxN0ZIQWVCVFoveXpJNGJ5U0RPOG8yYW9Ndm5IZ0dBak4z?=
+ =?utf-8?B?dngzMHQ1ajEvc3U2Tlg3M0V5Y2VtUjZtbWJ4THZDNkprMGhzZ0tIb0JCMnl3?=
+ =?utf-8?B?aFF6ZHlFeEsyYVk5WmxmbnlPak11eUIvNklVeGlqUU5qZ3hEWnJNNTlsK095?=
+ =?utf-8?B?L2hwVWIyRExFNTVES05FZ2pZbHNrUWRwdmo0VWkyc3hSWkxhKzFoNHoxQnFX?=
+ =?utf-8?Q?kd0/WvnjlTXikiIoBtWCYpt1i9l39bS6o6OOI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(366016)(376014)(7416014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZmRHRWlmNzZBNmNrV1FCVGRmREpQSlk4aTdDRFhhM1pUNVZzOWlvQSszaTBT?=
+ =?utf-8?B?VjhUNTA5djl6SEo5WEl3bWFOV0sxd2tDVWhRTmtzMGJYNUpCQURLdmdmcXhJ?=
+ =?utf-8?B?UWc3a0M4NVViMEg0c1RkSUNQTUtLc0JqdDJSaVQrWWNJcFZCckdUdlk5elhv?=
+ =?utf-8?B?ZGdObEdiK0p3YlUxTmQrdGhEa0FXcU9iOGN4OXc1SWRaTDhlOE1mWjZybW9M?=
+ =?utf-8?B?dENMWEdkTnlvM1A0Q0t6ZGhCQkdrNkZuTjJwUmp4WE5USFlXTncvLzZKTjBy?=
+ =?utf-8?B?R0RPT0tjbHQwWWNpZkQ3Sm9LcUhoV0xlL2VtSFBJT2NCRlk3NlFxdG1zUTRI?=
+ =?utf-8?B?amJVWWQ5U0QrckJTUnNsazF6M1NzdzYxSWx6OUJsVFdUU3p5RWVrWC9jNHp0?=
+ =?utf-8?B?eXp2alAzbkNpK2NVdytnUTI1L2I0VG9FUTlCQ1BpNWRacXdNeUdyMFBJRTEw?=
+ =?utf-8?B?TU1JeTlIN0VGakhMZ1hCMVlhN1R5eHova05IK2lqQVZLR3NXTDZQZktRd2Z4?=
+ =?utf-8?B?OTBqUytMMWc3VDVvLzc3cXByMWZVUG5kajR0Ui9hZ1RLdXRCYlNmYXpqMjhq?=
+ =?utf-8?B?NmdzUFRZVkV4VGNBb0lqVmZIYThQYUdlVG9LMXMxYjVMS2tMdXowUHpGVVRU?=
+ =?utf-8?B?ODByTFc5NW5rK2lFOCtUKy9HSzhvUFVMdmF4TUZTSFFYZXdEdUU0bWhDbno2?=
+ =?utf-8?B?YnFDQ0FPLzEzTVVWT0ZyOEMzWmJEdndOQWJRamJhRjU1OSthUGZKQWphR2gy?=
+ =?utf-8?B?WE1tVDlqa0h6dHFpUGVaRkFUKytWWDlJT3VtWi9FdGZMZVl4Y2Noek1CWHd0?=
+ =?utf-8?B?MzhMQW1od2RUdnhZTVNGdmQ0eXdpYnlaTFhZY291cHJOdlVGekYrOW9RbWRT?=
+ =?utf-8?B?d3ZkTDNvaWZTdnpYeFozTk4rZWZmNmdpSnQ0cmxjWjFNRTdjSGdxdUlHbEJO?=
+ =?utf-8?B?WWszQzd4TEJHbDhMazgrbWdWZDIwQUIxUElSTCsza1lGSlovYWdlSG1BbzlZ?=
+ =?utf-8?B?bWwyVGJYNnZKekJ2RmtMWGxiNjl6cUQ1YklWSTZmaUtqVHduUmZZQ2YrU0dj?=
+ =?utf-8?B?UVhDdU52dDRFUlZRajBTSDdwZnBBenZSdUg4M0lGSFlvdEdlQ1hranFheFp1?=
+ =?utf-8?B?TG9mbFAyWlhzckFwcXhVN0V2aEtlOHpKUnVXQnNXUnJEaGlZZzZ1RlRxTzdt?=
+ =?utf-8?B?TDNxeFkreU1pemI4UFJpRURtdUVSZW9sR0RNUmpGeTUvbUV5ZEZoNUVLYVFk?=
+ =?utf-8?B?QTgvMWJMZTZudW5PRThkQWVjdmV1U1VpNkxzQXZHamJCaVhpNzg4WGUrb0pO?=
+ =?utf-8?B?dG9hRjkrem5GZVd0WFhNdlZvdEUydDZpbFNrZzZjY2ZaRlRlU2xFaVIzQWZ0?=
+ =?utf-8?B?RmVFSnk2bm0rdjF5OHJGR3JMWFV1RHIyVGRjTVVqVHRkcWVvMnJjYm5hQnRR?=
+ =?utf-8?B?dzVmbDB4UmRhT2pZRkM3ZFNUZGk5cEF5bVJpendNdllQOWxNbk84VGVtZ1NP?=
+ =?utf-8?B?SG5zZUk1dlJKZFk5dWdJTXdtNzFtV2VhdFRVY0VDZVo1Ni8wTCtRQU04U1FE?=
+ =?utf-8?B?cUgybXl2MVFIamI2RnNpWDFBM1JsYnNxb3QySWJlb1R4aVUzVXExbkZVS1Vm?=
+ =?utf-8?B?S3ZqdDRvZXpVTnlnbmRQU24rSzEycCt3Rk5sdEZVUWtaVGNUaUdMajc0TSsr?=
+ =?utf-8?B?T3lzdnNVMDU2V0VoTXdOdGJGS2lrZ3JhQS94V2lDVUlacXNQcjF1TUtrdVZP?=
+ =?utf-8?B?ckJWT2Z4cGh2eVR6SkVkYVhPOVVmQVVVaEtqTWlXTjYxNndsNHgxcXR2emRn?=
+ =?utf-8?B?bm5oT2ZuYXRlSDl1ZWFiRTZCRXhvdExGSTlPM0dEZlMvWi8rTHVTcWdHTjZY?=
+ =?utf-8?B?YVpHazRUM2oxY0tyUlNEU01pclZWVTZWRFJTMTIrMzVoRUdsRG5PSThHRTY0?=
+ =?utf-8?B?TDZsc1liODYvaW1IYUpQVm5RRzVLYzUyUjg5dTYzcldKa0g1K1hnVHpXQTdK?=
+ =?utf-8?B?ZDhZYkIra1FaUmtiUXRiQ0FXWUhjQmRjUGFYQXFvY2RRNG9YMlVHK3phYXVM?=
+ =?utf-8?B?aDNIZCt1SFdVT0lCbFBVeU1OSC9zaDZaaWlLOXZCK3BVUjR3Z0oxVGo0QVVB?=
+ =?utf-8?Q?Euow=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4286af41-1e2d-4e55-ec74-08dc99df026e
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2024 15:03:47.8210
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fTX6GhdwYswXkrN+HrXoKXGUmtNNenAGETss0YTxx5Oe7nX/IXW4bW2uvbHfhqAInn/47EPp7DtR3ecSouLuXg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8166
 
-On Tue, Jun 25, 2024 at 10:05:25AM +0530, Manikandan Muralidharan wrote:
-> Convert Atmel PIO3 pinctrl binding document to DT schema format
-> json-schema.
-> 
-> Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
-> ---
-> changes in v2:
-> 
-> - Fix bot errors by fixing issues in 4/5 
-> - remove qoutes from $ref
-> ---
->  .../bindings/pinctrl/atmel,at91-pinctrl.txt   | 178 ----------------
->  .../pinctrl/atmel,at91rm9200-pinctrl.yaml     | 194 ++++++++++++++++++
->  2 files changed, 194 insertions(+), 178 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/atmel,at91rm9200-pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-> deleted file mode 100644
-> index 0aa1a53012d6..000000000000
-> --- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-> +++ /dev/null
-> @@ -1,178 +0,0 @@
-> -* Atmel AT91 Pinmux Controller
-> -
-> -The AT91 Pinmux Controller, enables the IC
-> -to share one PAD to several functional blocks. The sharing is done by
-> -multiplexing the PAD input/output signals. For each PAD there are up to
-> -8 muxing options (called periph modes). Since different modules require
-> -different PAD settings (like pull up, keeper, etc) the controller controls
-> -also the PAD settings parameters.
-> -
-> -Please refer to pinctrl-bindings.txt in this directory for details of the
-> -common pinctrl bindings used by client devices, including the meaning of the
-> -phrase "pin configuration node".
-> -
-> -Atmel AT91 pin configuration node is a node of a group of pins which can be
-> -used for a specific device or function. This node represents both mux and config
-> -of the pins in that group. The 'pins' selects the function mode(also named pin
-> -mode) this pin can work on and the 'config' configures various pad settings
-> -such as pull-up, multi drive, etc.
-> -
-> -Required properties for iomux controller:
-> -- compatible: "atmel,at91rm9200-pinctrl" or "atmel,at91sam9x5-pinctrl"
-> -		or "atmel,sama5d3-pinctrl" or "microchip,sam9x60-pinctrl"
-> -		or "microchip,sam9x7-pinctrl", "microchip,sam9x60-pinctrl"
-> -- atmel,mux-mask: array of mask (periph per bank) to describe if a pin can be
-> -  configured in this periph mode. All the periph and bank need to be describe.
-> -
-> -How to create such array:
-> -
-> -Each column will represent the possible peripheral of the pinctrl
-> -Each line will represent a pio bank
-> -
-> -Take an example on the 9260
-> -Peripheral: 2 ( A and B)
-> -Bank: 3 (A, B and C)
-> -=>
-> -
-> -  /*    A         B     */
-> -  0xffffffff 0xffc00c3b  /* pioA */
-> -  0xffffffff 0x7fff3ccf  /* pioB */
-> -  0xffffffff 0x007fffff  /* pioC */
-> -
-> -For each peripheral/bank we will describe in a u32 if a pin can be
-> -configured in it by putting 1 to the pin bit (1 << pin)
-> -
-> -Let's take the pioA on peripheral B
-> -From the datasheet Table 10-2.
-> -Peripheral B
-> -PA0	MCDB0
-> -PA1	MCCDB
-> -PA2
-> -PA3	MCDB3
-> -PA4	MCDB2
-> -PA5	MCDB1
-> -PA6
-> -PA7
-> -PA8
-> -PA9
-> -PA10	ETX2
-> -PA11	ETX3
-> -PA12
-> -PA13
-> -PA14
-> -PA15
-> -PA16
-> -PA17
-> -PA18
-> -PA19
-> -PA20
-> -PA21
-> -PA22	ETXER
-> -PA23	ETX2
-> -PA24	ETX3
-> -PA25	ERX2
-> -PA26	ERX3
-> -PA27	ERXCK
-> -PA28	ECRS
-> -PA29	ECOL
-> -PA30	RXD4
-> -PA31	TXD4
-> -
-> -=> 0xffc00c3b
-> -
-> -Required properties for pin configuration node:
-> -- atmel,pins: 4 integers array, represents a group of pins mux and config
-> -  setting. The format is atmel,pins = <PIN_BANK PIN_BANK_NUM PERIPH CONFIG>.
-> -  The PERIPH 0 means gpio, PERIPH 1 is periph A, PERIPH 2 is periph B...
-> -  PIN_BANK 0 is pioA, PIN_BANK 1 is pioB...
-> -
-> -Bits used for CONFIG:
-> -PULL_UP		(1 << 0): indicate this pin needs a pull up.
-> -MULTIDRIVE	(1 << 1): indicate this pin needs to be configured as multi-drive.
-> -			Multi-drive is equivalent to open-drain type output.
-> -DEGLITCH	(1 << 2): indicate this pin needs deglitch.
-> -PULL_DOWN	(1 << 3): indicate this pin needs a pull down.
-> -DIS_SCHMIT	(1 << 4): indicate this pin needs to the disable schmitt trigger.
-> -DRIVE_STRENGTH (3 << 5): indicate the drive strength of the pin using the
-> -			following values:
-> -				00 - No change (reset state value kept)
-> -				01 - Low
-> -				10 - Medium
-> -				11 - High
-> -OUTPUT		(1 << 7): indicate this pin need to be configured as an output.
-> -OUTPUT_VAL	(1 << 8): output val (1 = high, 0 = low)
-> -SLEWRATE	(1 << 9): slew rate of the pin: 0 = disable, 1 = enable
-> -DEBOUNCE	(1 << 16): indicate this pin needs debounce.
-> -DEBOUNCE_VAL	(0x3fff << 17): debounce value.
-> -
-> -NOTE:
-> -Some requirements for using atmel,at91rm9200-pinctrl binding:
-> -1. We have pin function node defined under at91 controller node to represent
-> -   what pinmux functions this SoC supports.
-> -2. The driver can use the function node's name and pin configuration node's
-> -   name describe the pin function and group hierarchy.
-> -   For example, Linux at91 pinctrl driver takes the function node's name
-> -   as the function name and pin configuration node's name as group name to
-> -   create the map table.
-> -3. Each pin configuration node should have a phandle, devices can set pins
-> -   configurations by referring to the phandle of that pin configuration node.
-> -4. The gpio controller must be describe in the pinctrl simple-bus.
-> -
-> -For each bank the required properties are:
-> -- compatible: "atmel,at91sam9x5-gpio" or "atmel,at91rm9200-gpio" or
-> -  "microchip,sam9x60-gpio"
-> -  or "microchip,sam9x7-gpio", "microchip,sam9x60-gpio", "atmel,at91rm9200-gpio"
-> -- reg: physical base address and length of the controller's registers
-> -- interrupts: interrupt outputs from the controller
-> -- interrupt-controller: marks the device node as an interrupt controller
-> -- #interrupt-cells: should be 2; refer to ../interrupt-controller/interrupts.txt
-> -  for more details.
-> -- gpio-controller
-> -- #gpio-cells: should be 2; the first cell is the GPIO number and the second
-> -  cell specifies GPIO flags as defined in <dt-bindings/gpio/gpio.h>.
-> -- clocks: bank clock
-> -
-> -Examples:
-> -
-> -pinctrl@fffff400 {
-> -	#address-cells = <1>;
-> -	#size-cells = <1>;
-> -	ranges;
-> -	compatible = "atmel,at91rm9200-pinctrl", "simple-bus";
-> -	reg = <0xfffff400 0x600>;
-> -
-> -	pioA: gpio@fffff400 {
-> -		compatible = "atmel,at91sam9x5-gpio";
-> -		reg = <0xfffff400 0x200>;
-> -		interrupts = <2 IRQ_TYPE_LEVEL_HIGH 1>;
-> -		#gpio-cells = <2>;
-> -		gpio-controller;
-> -		interrupt-controller;
-> -		#interrupt-cells = <2>;
-> -		clocks = <&pmc PMC_TYPE_PERIPHERAL 2>;
-> -	};
-> -
-> -	atmel,mux-mask = <
-> -	      /*    A         B     */
-> -	       0xffffffff 0xffc00c3b  /* pioA */
-> -	       0xffffffff 0x7fff3ccf  /* pioB */
-> -	       0xffffffff 0x007fffff  /* pioC */
-> -	      >;
-> -
-> -	/* shared pinctrl settings */
-> -	dbgu {
-> -		pinctrl_dbgu: dbgu-0 {
-> -			atmel,pins =
-> -				<1 14 0x1 0x0	/* PB14 periph A */
-> -				 1 15 0x1 0x1>;	/* PB15 periph A with pullup */
-> -		};
-> -	};
-> -};
-> -
-> -dbgu: serial@fffff200 {
-> -	compatible = "atmel,at91sam9260-usart";
-> -	reg = <0xfffff200 0x200>;
-> -	interrupts = <1 4 7>;
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&pinctrl_dbgu>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91rm9200-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/atmel,at91rm9200-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..0ed71e22384c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91rm9200-pinctrl.yaml
-> @@ -0,0 +1,194 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/atmel,at91rm9200-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Microchip PIO3 Pinmux Controller
-> +
-> +maintainers:
-> +  - Manikandan Muralidharan <manikandan.m@microchip.com>
-> +
-> +description:
-> +  The AT91 Pinmux Controller, enables the IC to share one PAD to several
-> +  functional blocks. The sharing is done by multiplexing the PAD input/output
-> +  signals. For each PAD there are up to 8 muxing options (called periph modes).
-> +  Since different modules require different PAD settings (like pull up, keeper,
-> +  etc) the controller controls also the PAD settings parameters.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - atmel,at91rm9200-pinctrl
-> +              - atmel,at91sam9x5-pinctrl
-> +              - atmel,sama5d3-pinctrl
-> +              - microchip,sam9x60-pinctrl
-> +          - const: simple-mfd
-> +      - items:
-> +          - enum:
-> +              - microchip,sam9x7-pinctrl
-> +          - const: microchip,sam9x60-pinctrl
-> +          - const: simple-mfd
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 1
-> +
-> +  ranges: true
-> +
-> +  atmel,mux-mask:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
+Add subsystem lvds and mipi. Add pwm and i2c in lvds and mipi.
+imx8qm-mek:
+- add remove-proc
+- fixed gpio number error for vmmc
+- add usb3 and typec
+- add pwm and i2c in lvds and mipi
 
-Is there no constraint on the dimensions? Always sets of 2 or 3 entries?
+DTB_CHECK warning fixed by seperate patches.
+arch/arm64/boot/dts/freescale/imx8qm-mek.dtb: usb@5b110000: usb@5b120000: 'port', 'usb-role-switch' do not match any of the regexes: 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/usb/fsl,imx8qm-cdns3.yaml#
+arch/arm64/boot/dts/freescale/imx8qm-mek.dtb: usb@5b120000: 'port', 'usb-role-switch' do not match any of the regexes: 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/usb/cdns,usb3.yaml#
 
-Maybe better to not specify because the tools have some issues if the 
-dimensions are variable.
+** binding fix patch:  https://lore.kernel.org/imx/20240606161509.3201080-1-Frank.Li@nxp.com/T/#u
 
-> +    description: |
-> +      Array of mask (periph per bank) to describe if a pin can be
-> +      configured in this periph mode. All the periph and bank need to
-> +      be described.
-> +
-> +      #How to create such array:
-> +
-> +      Each column will represent the possible peripheral of the pinctrl
-> +      Each line will represent a pio bank
-> +
-> +      #Example:
-> +
-> +      In at91sam9260.dtsi,
-> +      Peripheral: 2 ( A and B)
-> +      Bank: 3 (A, B and C)
-> +
-> +      #    A          B
-> +      0xffffffff 0xffc00c3b  # pioA
-> +      0xffffffff 0x7fff3ccf  # pioB
-> +      0xffffffff 0x007fffff  # pioC
-> +
-> +      For each peripheral/bank we will describe in a u32 if a pin can be
-> +      configured in it by putting 1 to the pin bit (1 << pin)
-> +
-> +      Let's take the pioA on peripheral B whose value is 0xffc00c3b
-> +      From the datasheet Table 10-2.
-> +      Peripheral B
-> +      PA0     MCDB0
-> +      PA1     MCCDB
-> +      PA2
-> +      PA3     MCDB3
-> +      PA4     MCDB2
-> +      PA5     MCDB1
-> +      PA6
-> +      PA7
-> +      PA8
-> +      PA9
-> +      PA10    ETX2
-> +      PA11    ETX3
-> +      PA12
-> +      PA13
-> +      PA14
-> +      PA15
-> +      PA16
-> +      PA17
-> +      PA18
-> +      PA19
-> +      PA20
-> +      PA21
-> +      PA22    ETXER
-> +      PA23    ETX2
-> +      PA24    ETX3
-> +      PA25    ERX2
-> +      PA26    ERX3
-> +      PA27    ERXCK
-> +      PA28    ECRS
-> +      PA29    ECOL
-> +      PA30    RXD4
-> +      PA31    TXD4
-> +
-> +patternProperties:
-> +  '^[a-z0-9-_]+$':
-> +    description:
-> +      A pinctrl node should contain at least one subnode representing the
-> +      pinctrl group available on the machine.
+arch/arm64/boot/dts/freescale/imx8qm-mek.dtb: interrupt-controller@56240000: 'power-domains' does not match any of the regexes: 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/interrupt-controller/fsl,irqsteer.yaml#
 
-       type: object
+** binding fix patch: https://lore.kernel.org/imx/20240528071141.92003-1-alexander.stein@ew.tq-group.com/T/#me3425d580ba9a086866c3053ef854810ac7a0ef6
 
-> +    additionalProperties: false
-> +
-> +    patternProperties:
-> +      '^[a-z0-9-_]+$':
-> +        type: object
-> +        properties:
-> +          atmel,pins:
-> +            $ref: /schemas/types.yaml#/definitions/uint32-matrix
-> +            description: |
-> +              Each entry consists of 4 integers and represents the pins
-> +              mux and config setting.The format is
-> +              atmel,pins = <PIN_BANK PIN_BANK_NUM PERIPH CONFIG>.
-> +              Supported pin number and mux varies for different SoCs, and
-> +              are defined in <include/dt-bindings/pinctrl/at91.h>.
-> +              items:
-> +                items:
-> +                  - description:
-> +                      Pin bank
-> +                  - description:
-> +                      Pin bank index
-> +                  - description:
-> +                      Peripheral function
-> +                  - description:
-> +                      Pad configuration
-> +
-> +        required:
-> +          - atmel,pins
-> +
-> +        additionalProperties: false
-> +
-> +  'gpio@[0-9a-f]*$':
+arch/arm64/boot/dts/freescale/imx8qm-mek.dtb: pwm@56244000: 'oneOf' conditional failed, one must be fixed:
+	'interrupts' is a required property
+	'interrupts-extended' is a required property
+	from schema $id: http://devicetree.org/schemas/pwm/imx-pwm.yaml#
 
-'*' means 0 or more. You need '+' for 1 or more
+** binding fix patch: https://lore.kernel.org/imx/dc9accba-78af-45ec-a516-b89f2d4f4b03@kernel.org/T/#t 
 
-> +    $ref: "/schemas/gpio/atmel,at91rm9200-gpio.yaml"
+	from schema $id: http://devicetree.org/schemas/interrupt-controller/fsl,irqsteer.yaml#
+arch/arm64/boot/dts/freescale/imx8qm-mek.dtb: imx8qm-cm4-0: power-domains: [[15, 278], [15, 297]] is too short
+	from schema $id: http://devicetree.org/schemas/remoteproc/fsl,imx-rproc.yaml#
+arch/arm64/boot/dts/freescale/imx8qm-mek.dtb: imx8qm-cm4-1: power-domains: [[15, 298], [15, 317]] is too short
 
-Don't need quotes. yamllint should have told you this.
+** binding fix patch: https://lore.kernel.org/imx/20240606150030.3067015-1-Frank.Li@nxp.com/T/#u
 
-> +    unevaluatedProperties: false
-> +
-> +allOf:
-> +  - $ref: pinctrl.yaml#
-> +
-> +required:
-> +  - compatible
-> +  - ranges
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - atmel,mux-mask
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/at91.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/pinctrl/at91.h>
-> +
-> +    pinctrl@fffff400 {
-> +      #address-cells = <1>;
-> +      #size-cells = <1>;
-> +      compatible = "atmel,at91rm9200-pinctrl", "simple-mfd";
-> +      ranges = <0xfffff400 0xfffff400 0x600>;
-> +
-> +      atmel,mux-mask = <
-> +        /*    A         B     */
-> +        0xffffffff 0xffc00c3b  /* pioA */
-> +        0xffffffff 0x7fff3ccf  /* pioB */
-> +        0xffffffff 0x007fffff  /* pioC */
-> +        >;
-> +
-> +      dbgu {
-> +        pinctrl_dbgu: dbgu-0 {
-> +                        atmel,pins =
-> +                          <AT91_PIOB 14 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
-> +                           AT91_PIOB 15 AT91_PERIPH_A AT91_PINCTRL_NONE>;
-> +        };
-> +      };
-> +
-> +      pioA: gpio@fffff400 {
-> +              compatible = "atmel,at91rm9200-gpio";
-> +              reg = <0xfffff400 0x200>;
-> +              interrupts = <2 IRQ_TYPE_LEVEL_HIGH 1>;
-> +              #gpio-cells = <2>;
-> +              gpio-controller;
-> +              interrupt-controller;
-> +              #interrupt-cells = <2>;
-> +              clocks = <&pmc PMC_TYPE_PERIPHERAL 2>;
-> +      };
-> +    };
-> +...
-> -- 
-> 2.25.1
-> 
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+Changes in v4:
+- Fix kernel test robot warning. 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406290945.3KbIuqTZ-lkp@intel.com/
+dtcheck warnings: (new ones prefixed by >>)>> arch/arm64/boot/dts/freescale/imx8qm-mek.dts:64.22-68.5: Warning (unit_address_vs_reg): /reserved-memory/memory: node has a reg or ranges property, but no unit name
+- order node by address in reserved-memory.
+- Link to v3: https://lore.kernel.org/r/20240614-imx8qm-dts-usb-v3-0-8ecc30678e1c@nxp.com
+
+Changes in
+- Add imx8qm-ss-mipi.dtsi to overwrite mipi lpcg clock setting
+- Fixed order in imx8-ss-mipi0.dtsi
+- lpcg arg0 have to use clock indices, insteand of index, so keep current change
+- lvds1 and mipi1 keep current file name to algin exist naming conversion
+- Link to v2: https://lore.kernel.org/r/20240610-imx8qm-dts-usb-v2-0-788417116fb1@nxp.com
+
+Changes in v2:
+    Changes in v2:
+    - split common lvds and mipi part to seperate dtsi file.
+    - num-interpolated-steps = <100>
+    - irq-steer add "fsl,imx8qm-irqsteer"
+    - using mux-controller
+    - move address-cells common dtsi
+- Link to v1: https://lore.kernel.org/r/20240606-imx8qm-dts-usb-v1-0-565721b64f25@nxp.com
+
+---
+Frank Li (8):
+      arm64: dts: imx8: add basic lvds0 and lvds1 subsystem
+      arm64: dts: imx8qm: add lvds subsystem
+      arm64: dts: imx8: add basic mipi subsystem
+      arm64: dts: imx8qm: add mipi subsystem
+      arm64: dts: imx8qm-mek: add cm4 remote-proc and related memory region
+      arm64: dts: imx8qm-mek: add pwm and i2c in lvds subsystem
+      arm64: dts: imx8qm-mek: add i2c in mipi[0,1] subsystem
+      arm64: dts: imx8qm-mek: add usb 3.0 and related type C nodes
+
+ arch/arm64/boot/dts/freescale/imx8-ss-lvds0.dtsi  |  63 +++++
+ arch/arm64/boot/dts/freescale/imx8-ss-lvds1.dtsi  | 114 +++++++++
+ arch/arm64/boot/dts/freescale/imx8-ss-mipi0.dtsi  | 130 ++++++++++
+ arch/arm64/boot/dts/freescale/imx8-ss-mipi1.dtsi  | 138 +++++++++++
+ arch/arm64/boot/dts/freescale/imx8qm-mek.dts      | 278 ++++++++++++++++++++++
+ arch/arm64/boot/dts/freescale/imx8qm-ss-lvds.dtsi |  77 ++++++
+ arch/arm64/boot/dts/freescale/imx8qm-ss-mipi.dtsi |  19 ++
+ arch/arm64/boot/dts/freescale/imx8qm.dtsi         |  27 +++
+ 8 files changed, 846 insertions(+)
+---
+base-commit: 9db27bc55bd8363570c5a259ff4dc77bd6a0b2cd
+change-id: 20240606-imx8qm-dts-usb-9c55d2bfe526
+
+Best regards,
+---
+Frank Li <Frank.Li@nxp.com>
+
