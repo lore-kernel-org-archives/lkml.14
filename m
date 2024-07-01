@@ -1,181 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B24C016DC1D;
-	Mon,  1 Jul 2024 16:43:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA6116DC1D;
+	Mon,  1 Jul 2024 16:43:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719852218; cv=none; b=BMFJmFaJOel6we6B5J5Nu3dWk7YFcbZkvKBxfdwfzNOuHBXvFJwZZHjXRlYTUZymFYMBZQBYo0CbmrmA/qmk+ERMsA0v7BxfvEOV8tBEQih9zMV8oHfkQRl1KKPleBMd4q2Tp8S4THFbY/nELdI2kKqwCzo0ccXoF/jgkTSG0nQ=
+	t=1719852227; cv=none; b=Ak6RAooBXBP0ADtDNPTHcq/p8LSAG4ZxZZ8YZkkFWo+HJdb5RdK8xyw7IEhILT53SK1oAbL9IsnVZp4KqFWeZrBsr6C+kwQgpfhNITTnZ8v7G+ZNpYrQmXGK6zyOquFIIjDZN37VhXjmeblEKyFLp5nZ4G6LLnqBYV02pnIVoCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719852218; c=relaxed/simple;
-	bh=qAUh4MKP2DjtDw9Cio2ulcRI9ffRqRy1s4P8u+0NfeM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TQKfW+uOBoNeEi0FepvnvYPivBakZpZQayOf6SyvSWzsoRksGNAJ1wZWpfJINa41uloBqikcl2ii37Jj/plEzabnDRQRn5k1sgEpRIQsv6+7/2kFj5lySZhe2juyHzjJRqi85J1y7XMrnHJPx/0vD9R7iJnABT7BdkNaHw4Bpe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sLIB5Xj3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719852227; c=relaxed/simple;
+	bh=RhesN34OZXRCLFEIbStTuwHzFvllKCOmzyEKt6ScGKQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JnXMfylrvWPGoDkPIX2b/oVMWUoLaQ3SVqUziY5B9YXvfrRyjOGV7fZgRtfbKTA7i90vIn7bLMIdiLrV7zllJwHcYDKL086/rAjyu9UkkRPavCMGB3xytiVhZNStbNuNM089K6iAlkSCe/rNzyXez10yI1DwkHbgXTEHQOAepwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PA7lOMC2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sLIB5Xj3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50017C116B1;
-	Mon,  1 Jul 2024 16:43:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PA7lOMC2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19736C4AF0D;
+	Mon,  1 Jul 2024 16:43:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719852218;
-	bh=qAUh4MKP2DjtDw9Cio2ulcRI9ffRqRy1s4P8u+0NfeM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sLIB5Xj3ecz4XCmYQ5h4Rgw/WVqKjiy1VKg9OaqvI3V7Wmx6ZLbpY+cVTqwHfWulT
-	 BBqMN3Is47BrbCwamBx32hg9et42kjbvqsxCQCwnS1MhjdwTfMQyUGBMg0QAkRC4WG
-	 /9bJqbDaiI65iS/AK6EkAQeNzaubyotgUGeWApeQML/vPuf3k/dsDAscLqNjbvkBCM
-	 refFiR0Y+fqrLcMtZ5N0eeYwO519aNRVzPKkbW+1brLqTEIqkyMJzrK4aIYsULip6P
-	 be/PWPk757lwk2YT04lC0NudWENar0309eUXjESDkEs85sSA6E/kEWyt9xTrBIg2o6
-	 Vk0Fdyj+i0bew==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCHv2 bpf-next 7/9] selftests/bpf: Add uprobe session cookie test
-Date: Mon,  1 Jul 2024 18:41:13 +0200
-Message-ID: <20240701164115.723677-8-jolsa@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240701164115.723677-1-jolsa@kernel.org>
-References: <20240701164115.723677-1-jolsa@kernel.org>
+	s=k20201202; t=1719852227;
+	bh=RhesN34OZXRCLFEIbStTuwHzFvllKCOmzyEKt6ScGKQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=PA7lOMC2yeT5jHq4YyMbgHj+ebNMg5lGTkbWWSUdr+Vp0Lv7dXhP4eHYPkazqLK+W
+	 DAqKl3xuorgsLurLjSt8NruWVqV1BtvSVUXft3JWmux9S0Qa8S38Obs4yAPrQ8DL2M
+	 Re/wxgG+ko3t1z/p0edpbgA5l62Ty8eW+Y8DJe4tBE/ypxtQH5G0TUerwgMbJ8oLwg
+	 CRnGI/LYdDbQXV4TAXGHif4OKddS1ZGPR1AEkF+6tIeLzysR7KNG10ScFYDPPuWuc5
+	 3f7RQa0TJOrjCOFqLQDHQpxdLoEVy9X7iAHo4TnY+GqpcLhtRAKUWpOu7a8i8xNVKO
+	 V/b/1WQTXErDA==
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52cd87277d8so3274884e87.2;
+        Mon, 01 Jul 2024 09:43:47 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXorbEBLUZFDySvziAjLIeZiQSxyibAuzqK9a86vSLXKk/i5xYKfgYMpXtbLz4N90mTuYgRvRmdwsXOXN92ry9Zu/Z6aUPU5ttMzpKVWm5pmYK/A+ptQ9Q8m8yRns6hcOOgFxl51AgGPA==
+X-Gm-Message-State: AOJu0YwjycOvMf4R31LSyb2JoIC8VBlYti9SWY3WEYPLu8u02y0bJeSN
+	cXIt/K5K5Eqebv6OsPcMKHACxBA61tRSmxB83l0clyprCOa9SF7eaHaFtWudO8ip47lw4zbBfM0
+	HV8HxxiqcbZLD1Timgj/a48OdtA==
+X-Google-Smtp-Source: AGHT+IFG5Mq0obsNWQtCBZPRbzAd+loy81MuYfKp3AnfwKzL/l+yMY2HM7soGl/xhylLHC0NirhzM3BijXPSGg4CMbw=
+X-Received: by 2002:a19:c214:0:b0:52c:e132:799f with SMTP id
+ 2adb3069b0e04-52e82691aa8mr3365838e87.31.1719852225386; Mon, 01 Jul 2024
+ 09:43:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240626202533.2182846-1-Frank.Li@nxp.com> <20240626202533.2182846-3-Frank.Li@nxp.com>
+In-Reply-To: <20240626202533.2182846-3-Frank.Li@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 1 Jul 2024 10:43:32 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+YpLk4E-Sk7otOtbZo8FKYb-9GuPC1ie3aRauP=7_1HA@mail.gmail.com>
+Message-ID: <CAL_Jsq+YpLk4E-Sk7otOtbZo8FKYb-9GuPC1ie3aRauP=7_1HA@mail.gmail.com>
+Subject: Re: [PATCH v2 02/13] arm64: dts: layerscape: add platform special
+ compatible string for gpio
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, 
+	"moderated list:ARM/FREESCALE LAYERSCAPE ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	imx@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Adding uprobe session test that verifies the cookie value
-get properly propagated from entry to return program.
+On Wed, Jun 26, 2024 at 2:26=E2=80=AFPM Frank Li <Frank.Li@nxp.com> wrote:
+>
+> Add platform special compatible string for all gpio controller to fix
+> below warning.
+>
+>  gpio@2300000: compatible: 'oneOf' conditional failed, one must be fixed:
+>         ['fsl,qoriq-gpio'] is too short
+>         'fsl,qoriq-gpio' is not one of ['fsl,mpc5121-gpio', 'fsl,mpc5125-=
+gpio', 'fsl,mpc8349-gpio', 'fsl,mpc8572-gpio', 'fsl,mpc8610-gpio', 'fsl,pq3=
+-gpio']
+>         'fsl,qoriq-gpio' is not one of ['fsl,ls1021a-gpio', 'fsl,ls1028a-=
+gpio', 'fsl,ls1043a-gpio', 'fsl,ls1088a-gpio', 'fsl,ls2080a-gpio']
+>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 4 ++--
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 8 ++++----
+>  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 8 ++++----
+>  3 files changed, 10 insertions(+), 10 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/=
+boot/dts/freescale/fsl-ls1012a.dtsi
+> index 2e1cddc11bf47..1b6ab9550cce9 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+> @@ -407,7 +407,7 @@ duart1: serial@21c0600 {
+>                 };
+>
+>                 gpio0: gpio@2300000 {
+> -                       compatible =3D "fsl,qoriq-gpio";
+> +                       compatible =3D "fsl,ls1021a-gpio", "fsl,qoriq-gpi=
+o";
+>                         reg =3D <0x0 0x2300000 0x0 0x10000>;
+>                         interrupts =3D <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
+>                         gpio-controller;
+> @@ -417,7 +417,7 @@ gpio0: gpio@2300000 {
+>                 };
+>
+>                 gpio1: gpio@2310000 {
+> -                       compatible =3D "fsl,qoriq-gpio";
+> +                       compatible =3D "fsl,ls1021a-gpio", "fsl,qoriq-gpi=
+o";
+>                         reg =3D <0x0 0x2310000 0x0 0x10000>;
+>                         interrupts =3D <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
+>                         gpio-controller;
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/=
+boot/dts/freescale/fsl-ls1046a.dtsi
+> index f8c9489507e7a..524b44f424272 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> @@ -589,7 +589,7 @@ duart3: serial@21d0600 {
+>                 };
+>
+>                 gpio0: gpio@2300000 {
+> -                       compatible =3D "fsl,qoriq-gpio";
+> +                       compatible =3D "fsl,ls1046a-gpio", "fsl,qoriq-gpi=
+o";
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- .../bpf/prog_tests/uprobe_multi_test.c        | 31 ++++++++++++
- .../bpf/progs/uprobe_multi_session_cookie.c   | 48 +++++++++++++++++++
- 2 files changed, 79 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_session_cookie.c
+ls1046a isn't documented.
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c b/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
-index cd9581f46c73..d5f78fc61013 100644
---- a/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
-+++ b/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
-@@ -7,6 +7,7 @@
- #include "uprobe_multi_bench.skel.h"
- #include "uprobe_multi_usdt.skel.h"
- #include "uprobe_multi_session.skel.h"
-+#include "uprobe_multi_session_cookie.skel.h"
- #include "bpf/libbpf_internal.h"
- #include "testing_helpers.h"
- #include "../sdt.h"
-@@ -655,6 +656,34 @@ static void test_session_skel_api(void)
- 	uprobe_multi_session__destroy(skel);
- }
- 
-+static void test_session_cookie_skel_api(void)
-+{
-+	struct uprobe_multi_session_cookie *skel = NULL;
-+	int err;
-+
-+	skel = uprobe_multi_session_cookie__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "fentry_raw_skel_load"))
-+		goto cleanup;
-+
-+	skel->bss->pid = getpid();
-+
-+	err = uprobe_multi_session_cookie__attach(skel);
-+	if (!ASSERT_OK(err, " kprobe_multi_session__attach"))
-+		goto cleanup;
-+
-+	/* trigger all probes */
-+	uprobe_multi_func_1();
-+	uprobe_multi_func_2();
-+	uprobe_multi_func_3();
-+
-+	ASSERT_EQ(skel->bss->test_uprobe_1_result, 1, "test_uprobe_1_result");
-+	ASSERT_EQ(skel->bss->test_uprobe_2_result, 2, "test_uprobe_2_result");
-+	ASSERT_EQ(skel->bss->test_uprobe_3_result, 3, "test_uprobe_3_result");
-+
-+cleanup:
-+	uprobe_multi_session_cookie__destroy(skel);
-+}
-+
- static void test_bench_attach_uprobe(void)
- {
- 	long attach_start_ns = 0, attach_end_ns = 0;
-@@ -745,4 +774,6 @@ void test_uprobe_multi_test(void)
- 		test_attach_api_fails();
- 	if (test__start_subtest("session"))
- 		test_session_skel_api();
-+	if (test__start_subtest("session_cookie"))
-+		test_session_cookie_skel_api();
- }
-diff --git a/tools/testing/selftests/bpf/progs/uprobe_multi_session_cookie.c b/tools/testing/selftests/bpf/progs/uprobe_multi_session_cookie.c
-new file mode 100644
-index 000000000000..5befdf944dc6
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/uprobe_multi_session_cookie.c
-@@ -0,0 +1,48 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/bpf.h>
-+#include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
-+#include <stdbool.h>
-+#include "bpf_kfuncs.h"
-+
-+char _license[] SEC("license") = "GPL";
-+
-+int pid = 0;
-+
-+__u64 test_uprobe_1_result = 0;
-+__u64 test_uprobe_2_result = 0;
-+__u64 test_uprobe_3_result = 0;
-+
-+static int check_cookie(__u64 val, __u64 *result)
-+{
-+	__u64 *cookie;
-+
-+	if (bpf_get_current_pid_tgid() >> 32 != pid)
-+		return 1;
-+
-+	cookie = bpf_session_cookie();
-+
-+	if (bpf_session_is_return())
-+		*result = *cookie == val ? val : 0;
-+	else
-+		*cookie = val;
-+	return 0;
-+}
-+
-+SEC("uprobe.session//proc/self/exe:uprobe_multi_func_1")
-+int uprobe_1(struct pt_regs *ctx)
-+{
-+	return check_cookie(1, &test_uprobe_1_result);
-+}
-+
-+SEC("uprobe.session//proc/self/exe:uprobe_multi_func_2")
-+int uprobe_2(struct pt_regs *ctx)
-+{
-+	return check_cookie(2, &test_uprobe_2_result);
-+}
-+
-+SEC("uprobe.session//proc/self/exe:uprobe_multi_func_3")
-+int uprobe_3(struct pt_regs *ctx)
-+{
-+	return check_cookie(3, &test_uprobe_3_result);
-+}
--- 
-2.45.2
-
+Rob
