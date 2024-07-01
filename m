@@ -1,160 +1,100 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.rothwell.id.au (gimli.rothwell.id.au [103.230.158.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1EC138DD9
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 23:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE1685C74;
+	Mon,  1 Jul 2024 23:19:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.230.158.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719875964; cv=none; b=L/S0JzI0HnZAJKrM9CIHZw0Hde5M+OJocjLOG6g0Dx88fiD4eKi+Fb6u1Q+W7DCDg6GlppEifQnJDDaElW7rg+Jg2r79UwOgJSkumAYgvO6LV/NPFQqie6UXOKGmPXs67DEsMWfqlo5iTQ1TWeqvAG21FmCgU/mTg/0WoHaCc7s=
+	t=1719875966; cv=none; b=bpJGFOxKAtrH5vjAQXAHigtx2AHHCUrVGJyii2s1Wr0N4LJE/tf71DgMSYGJvYEMci297isvmkw70akAq8N/TQ99W0fCPNLtQ/glfkWAbXA3L/UyWuO9W6dgtgW4hmUg+Ch0ERg8IuLWQCO7+q0f8pB+qbAg7J92YyxdpuvWmwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719875964; c=relaxed/simple;
-	bh=Nn4wl21piTV59fKP9uWtPQ4iQsG/oANAJVXF/KxzmT0=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=OVuvcpV9ERfMUBsES4jqrg9N3OdQuoCPow0gZitrAroib7FXw49861/9vmggE3fPIuV9wQReaK2LJwiFfHfQcjMUzGlGpb0ErRtvknRF83Pj0lQ+8XBKHolieC8hHQApZ+bC82wdTls2RyXZF7H9TzUMQL0dcIOfUEWJj9+JVzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7f61fca8c40so365845939f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 16:19:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719875962; x=1720480762;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6HrcRx6Tfxw+w89glV2DY2z2LYuzg69csFaa4GorFmY=;
-        b=pPSuA07qX3DE2DGqSYS9XQO/h/2CH99nmFKPYx/GcPhrAn6cYZTD2L4osFw++oLuIF
-         NUdptKEyPIfvjFk9ltfI4uYWQwr+M+F+e82Y5nWRKc3HCy5IRjthpNcvxU+Xuv/HnSK1
-         ORCdVd/4XZ4X/acJop/OM2P0NtOWWod+3g5Oap9qQNTyiwpnRtb7Bmnx2PvpPnQgMTWf
-         ayosvRZk/RmCRUY1KH0glT8mEFKFVtkOMSZnpEpFUTLihlrLti45YQ2Ec6nyaczZQoE1
-         SnSyMyP2ECzv4b1FKKCJOKZi0Su2/rh6ge5GT89Pp1pq8GzPXgwu34wswPPfwxN4NsKZ
-         j1MA==
-X-Forwarded-Encrypted: i=1; AJvYcCURH0h6oEbFfVXbz2p74raliZ+bzFP5eIENqZeaLOgvD/Yden3E7Z1o9w3b9Jfn7QB9bxVA9zTlaOrNgoa0XsVGUWMeTL/Yfp4qC/mR
-X-Gm-Message-State: AOJu0YzQaRth59SyjgVf8pdUQ/Zf8JdG9Dc7ZmCrblYq7M0n9nr53USH
-	u+qeJSNGTPsIE9/b6dldsIPhTIpEqdQowzLjd9exrRXdACSMxb+ZFIvuar4NwR4iVOYEOHLH3Ws
-	nfroBJxcnOxJeuIsvQwWey36smlQkRAj8xDd3hVeXEoJRmKpNyBgi60c=
-X-Google-Smtp-Source: AGHT+IFMleHcpokVPEguHmLGUq7veZ3YQSKLoTnvViBGu5hzLtbkptK5cnD3JxYOBu0eOk7CgW3QvHliAlCWxumW3aV/+f/0sATZ
+	s=arc-20240116; t=1719875966; c=relaxed/simple;
+	bh=6/tUiMxEEZVfdLohUSs/3BaOuf1zNln8q9fpCuM06Kc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pkKRlopvzuCOLX9lpgCwR3Kr/6/gs+tUKkKu5RT3gDruWOenoJbTJ4ljOg2ecPtnl1cXvCXnYcy/GnbWyHkgGL0RW4eUATJNFrNtIiXCF9FoODx93oB4WTNxUv7Z7kQWzLrpits9A+ksKPUXhKFGE0UoXoubugbuHgHCd6mDTHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rothwell.id.au; spf=pass smtp.mailfrom=rothwell.id.au; dkim=pass (2048-bit key) header.d=rothwell.id.au header.i=@rothwell.id.au header.b=dqNO2QEQ; arc=none smtp.client-ip=103.230.158.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rothwell.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rothwell.id.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rothwell.id.au header.i=@rothwell.id.au header.b="dqNO2QEQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rothwell.id.au;
+	s=201702; t=1719875636;
+	bh=6/tUiMxEEZVfdLohUSs/3BaOuf1zNln8q9fpCuM06Kc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dqNO2QEQ4wU6DQb9b2r7VC7wPGiDRGBYueYdsaREgmgwaMXn7znvSIOVcDOUs3THG
+	 7T7+x3VxUSQCVF2ac1OxY9DMMU0CPIZPTyhfeHyJp0nfqoSmv0tiDa2FtopPbah46r
+	 4ei8AhhdNNHbqqWNvTgxY92mLl3+8juShENlQDrMOSfEYylYAOThhS5fL/pk/pcfG5
+	 W+O14L61Dxr8b+A5xOrHnVi5VXQEA6aZK/lpv1RkF2dkgSsD19iu5n+Cqy7tfunM8n
+	 DvrHUE5AZMOBoPOBnUENBcaqZ27shGCMuuZUKNSi5HhBlZuT8ua2dyj/GUexDs4e7p
+	 zOtjyjP4cIgsQ==
+Received: from authenticated.rothwell.id.au (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.rothwell.id.au (Postfix) with ESMTPSA id 4WChgR6p5vz3m;
+	Tue,  2 Jul 2024 09:13:55 +1000 (AEST)
+Date: Tue, 2 Jul 2024 09:13:54 +1000
+From: Stephen Rothwell <sfr@rothwell.id.au>
+To: Philippe CORNU <philippe.cornu@foss.st.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown
+ <broonie@kernel.org>, Ville =?UTF-8?B?U3lyasOkbMOk?=
+ <ville.syrjala@linux.intel.com>, Raphael Gallais-Pou
+ <raphael.gallais-pou@foss.st.com>, Yannick Fertre
+ <yannick.fertre@foss.st.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the drm tree
+Message-ID: <20240702091354.368f4d0f@oak>
+In-Reply-To: <78644a85-9e42-8af7-778a-80383bc7c0f4@foss.st.com>
+References: <Zn8TKYDCOCtbbNH8@sirena.org.uk>
+	<2024063022-trapping-affidavit-56fd@gregkh>
+	<78644a85-9e42-8af7-778a-80383bc7c0f4@foss.st.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:130e:b0:4b0:b123:d9d with SMTP id
- 8926c6da1cb9f-4bbb70abb58mr685984173.5.1719875962131; Mon, 01 Jul 2024
- 16:19:22 -0700 (PDT)
-Date: Mon, 01 Jul 2024 16:19:22 -0700
-In-Reply-To: <0000000000008f77c2061c357383@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c7ee4c061c37d314@google.com>
-Subject: Re: [syzbot] [bpf?] [net?] stack segment fault in bpf_xdp_redirect
-From: syzbot <syzbot+5ae46b237278e2369cac@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, davem@davemloft.net, eddyz87@gmail.com, 
-	edumazet@google.com, haoluo@google.com, john.fastabend@gmail.com, 
-	jolsa@kernel.org, kpsingh@kernel.org, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, martin.lau@linux.dev, netdev@vger.kernel.org, 
-	pabeni@redhat.com, sdf@fomichev.me, song@kernel.org, 
-	syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/IwlIge1b6sSr2u3Tklnf5m=";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-syzbot has found a reproducer for the following issue on:
+--Sig_/IwlIge1b6sSr2u3Tklnf5m=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-HEAD commit:    1c5fc27bc48a Merge tag 'nf-next-24-06-28' of git://git.ker..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=14aeab3e980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5264b58fdff6e881
-dashboard link: https://syzkaller.appspot.com/bug?extid=5ae46b237278e2369cac
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1673738e980000
+Hi Philippe,
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/9672225af907/disk-1c5fc27b.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/0f14d163a914/vmlinux-1c5fc27b.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/ec6c331e6a6e/bzImage-1c5fc27b.xz
+On Mon, 1 Jul 2024 11:41:09 +0200 Philippe CORNU <philippe.cornu@foss.st.co=
+m> wrote:
+>
+> Many thanks for this fix and all my apologies for having creating this is=
+sue.
+> What's next and how can I help?
+> Philippe :-)
+> ps: On my side, I am still trying to understand why I did not "catch" thi=
+s issue that looks "pretty big".
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+5ae46b237278e2369cac@syzkaller.appspotmail.com
+There is nothing for you to do, this fails only when the drm tree is
+merged with the driver-core tree.
 
-Oops: stack segment: 0000 [#1] PREEMPT SMP KASAN PTI
-CPU: 1 PID: 14042 Comm: syz.0.2930 Not tainted 6.10.0-rc5-syzkaller-01137-g1c5fc27bc48a #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-RIP: 0010:bpf_net_ctx_get_ri include/linux/filter.h:788 [inline]
-RIP: 0010:____bpf_xdp_redirect net/core/filter.c:4544 [inline]
-RIP: 0010:bpf_xdp_redirect+0x59/0x1a0 net/core/filter.c:4542
-Code: 81 c3 08 18 00 00 48 89 d8 48 c1 e8 03 42 80 3c 28 00 74 08 48 89 df e8 55 1a 99 f8 48 8b 1b 4c 8d 63 38 4c 89 e5 48 c1 ed 03 <42> 0f b6 44 2d 00 84 c0 0f 85 d0 00 00 00 45 8b 34 24 44 89 f6 83
-RSP: 0018:ffffc9000aaf7970 EFLAGS: 00010202
-RAX: 1ffff1100536be41 RBX: 0000000000000000 RCX: ffff888029b5da00
-RDX: 0000000000000000 RSI: 000000000000a020 RDI: ffffc9000aaf7af0
-RBP: 0000000000000007 R08: ffffffff8665e84f R09: 1ffffffff25f78b0
-R10: dffffc0000000000 R11: fffffbfff25f78b1 R12: 0000000000000038
-R13: dffffc0000000000 R14: ffffc90009f63048 R15: 000000000000a020
-FS:  00007f2c699ff6c0(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fa0bea356dd CR3: 000000007a9bc000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- bpf_prog_bc55b47b7a2429cd+0x1d/0x1f
- __bpf_prog_run include/linux/filter.h:691 [inline]
- bpf_prog_run_xdp include/net/xdp.h:514 [inline]
- tun_build_skb drivers/net/tun.c:1711 [inline]
- tun_get_user+0x3321/0x4560 drivers/net/tun.c:1819
- tun_chr_write_iter+0x113/0x1f0 drivers/net/tun.c:2048
- new_sync_write fs/read_write.c:497 [inline]
- vfs_write+0xa72/0xc90 fs/read_write.c:590
- ksys_write+0x1a0/0x2c0 fs/read_write.c:643
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f2c69f7471f
-Code: 89 54 24 18 48 89 74 24 10 89 7c 24 08 e8 29 8c 02 00 48 8b 54 24 18 48 8b 74 24 10 41 89 c0 8b 7c 24 08 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 31 44 89 c7 48 89 44 24 08 e8 7c 8c 02 00 48
-RSP: 002b:00007f2c699ff010 EFLAGS: 00000293 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00007f2c6a103fa0 RCX: 00007f2c69f7471f
-RDX: 0000000000000032 RSI: 0000000020001500 RDI: 00000000000000c8
-RBP: 00007f2c69ff677e R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000032 R11: 0000000000000293 R12: 0000000000000000
-R13: 000000000000000b R14: 00007f2c6a103fa0 R15: 00007ffd4d9d6998
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:bpf_net_ctx_get_ri include/linux/filter.h:788 [inline]
-RIP: 0010:____bpf_xdp_redirect net/core/filter.c:4544 [inline]
-RIP: 0010:bpf_xdp_redirect+0x59/0x1a0 net/core/filter.c:4542
-Code: 81 c3 08 18 00 00 48 89 d8 48 c1 e8 03 42 80 3c 28 00 74 08 48 89 df e8 55 1a 99 f8 48 8b 1b 4c 8d 63 38 4c 89 e5 48 c1 ed 03 <42> 0f b6 44 2d 00 84 c0 0f 85 d0 00 00 00 45 8b 34 24 44 89 f6 83
-RSP: 0018:ffffc9000aaf7970 EFLAGS: 00010202
-RAX: 1ffff1100536be41 RBX: 0000000000000000 RCX: ffff888029b5da00
-RDX: 0000000000000000 RSI: 000000000000a020 RDI: ffffc9000aaf7af0
-RBP: 0000000000000007 R08: ffffffff8665e84f R09: 1ffffffff25f78b0
-R10: dffffc0000000000 R11: fffffbfff25f78b1 R12: 0000000000000038
-R13: dffffc0000000000 R14: ffffc90009f63048 R15: 000000000000a020
-FS:  00007f2c699ff6c0(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fa0bea356dd CR3: 000000007a9bc000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	81 c3 08 18 00 00    	add    $0x1808,%ebx
-   6:	48 89 d8             	mov    %rbx,%rax
-   9:	48 c1 e8 03          	shr    $0x3,%rax
-   d:	42 80 3c 28 00       	cmpb   $0x0,(%rax,%r13,1)
-  12:	74 08                	je     0x1c
-  14:	48 89 df             	mov    %rbx,%rdi
-  17:	e8 55 1a 99 f8       	call   0xf8991a71
-  1c:	48 8b 1b             	mov    (%rbx),%rbx
-  1f:	4c 8d 63 38          	lea    0x38(%rbx),%r12
-  23:	4c 89 e5             	mov    %r12,%rbp
-  26:	48 c1 ed 03          	shr    $0x3,%rbp
-* 2a:	42 0f b6 44 2d 00    	movzbl 0x0(%rbp,%r13,1),%eax <-- trapping instruction
-  30:	84 c0                	test   %al,%al
-  32:	0f 85 d0 00 00 00    	jne    0x108
-  38:	45 8b 34 24          	mov    (%r12),%r14d
-  3c:	44 89 f6             	mov    %r14d,%esi
-  3f:	83                   	.byte 0x83
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/IwlIge1b6sSr2u3Tklnf5m=
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmaDODIACgkQAVBC80lX
+0GxiYggAmNrd01vETqF3Cl//OxwLwb6AzwOKeSHv6DAX6EBTiYTZNejf9wqYXO5J
+abhhwJmcJKluKeyRsHuyO58EkYiz8BcPIcJs6/Qhnqjvbh2YEy4+JFPpXQpeCINl
+cQ5muInxTCTvB2l3YuKTiHCH+Lh6KUs2/BgNh7BV5epduwumLqOEFjFriZCtEn4g
+SXXHLNiMm2HviSva7lsihxVwKLho69OPsXdG9oMPjmQIhDJO5J44az3U8zHjrBu5
+hcZMfVS5TJk3yAeDsqTSSjdPpXOkAtJT9fm5aYVT9IdXCkJ3dsuyyyGWSMKJWifm
+Go4+Q0+p7Wnww97PIt3OlQuTR/D50A==
+=1gey
+-----END PGP SIGNATURE-----
+
+--Sig_/IwlIge1b6sSr2u3Tklnf5m=--
