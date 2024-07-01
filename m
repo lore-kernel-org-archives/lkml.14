@@ -1,116 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B31014AD25;
-	Mon,  1 Jul 2024 17:02:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE92614AD25;
+	Mon,  1 Jul 2024 17:04:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719853352; cv=none; b=qPd9V2JqaSIwOL/H6xhHz5FOPm1gBNfxu/2vokwKa71q2MesV9bLQjmI9+JomEp+AiQ3alWnEDw72/I9vIrKtNQ8jhsZxmB2rLWqdynIJMZf50QZz0uRSnLcC7TNkn5SyK2asVZq2F4lACyT40UMiyzhUH8mUvmmCEmjDCyCFZ4=
+	t=1719853473; cv=none; b=cqI59mlmR/DkmCM9ezN13l+jfuW1ng38DSMo4IysjJZdqWuJpQzHAYVZflrMFq3QbOJn4kGiGZ7vv/6uMYV3huRUX/GrTVn67c06/hCz4O78i92er2vFWSKLRyU4u0U75nL1xPbTivDFYdXUloQQ7j1fNhl/q1pDwjKRqx1pf2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719853352; c=relaxed/simple;
-	bh=rrZg9Pb0++jARgOgd/Z0l3VmYE7RR9w+0Gh7JqwfciA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IPgHppmyyLYIxInRnZuXDBcoqaiUf9pKhoZN1ROWIuqbL9gaEPdmNyb0rj/arVsrEsjMi3ZWsYzfMSDp3Jed8oKyAAZXH4C/7QTP1A+st/gigegpeShff4KpbOYlMQEyrEerbCIKfR2HFq2yMkccQXLte9UEEGDGKp+oDQpu074=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ukJ1XLye; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719853473; c=relaxed/simple;
+	bh=1ozzb/852acdo8maf7CK3uWvvUYvjaMR99Rgi2L1nMk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MfL9D1kRlzuJGLtXX17j5ANJziImrG1jpUJPuCFwlD0N8WdqjyTt0EeVbXn8UhzFpDkV5hR05I4iuHNmRIVVGJuQ+ddSi3A/rYoocMWPZBCG6hSTai5Uh/zkvbZm1rCh9XF8UP9g4ORga2ZtY1cBt8VPlgv2yX3NXg2lx8Tqxjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kb38BPDg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ukJ1XLye"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 250B5C4AF12;
-	Mon,  1 Jul 2024 17:02:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kb38BPDg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D7C0C2BD10;
+	Mon,  1 Jul 2024 17:04:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719853352;
-	bh=rrZg9Pb0++jARgOgd/Z0l3VmYE7RR9w+0Gh7JqwfciA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ukJ1XLyeOU7dxCB49i0ennHAaVa1jJTryhFOGA+E8Nere57bzHshRUNzzdezWqB1w
-	 oW9gtcr8NPmhf+eYmD0PztlGnOihLVLIUbkTZs2Syu6FHAnDWqp6na+67mSsRtY4Jl
-	 dkeOummBLEWEi3FKYBFmei747ke6iObMkO3PyR+zSstsmpRFjGeOBLScJc/0LdE5ki
-	 hWuznYaexvRgB04gAFoo0NS9M0DZdxjm6VRwHjpqpVPnSxjjF1znzSFtRVPQYT87Hg
-	 1V+iYtEJqGUNypGYdO75dJc2nR+Gnc2S6uwHjQTJN0Cssuk+s0a7/UbjhTjJK7Uzvo
-	 6U3N39uZo2pCQ==
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-25989f87e20so504939fac.1;
-        Mon, 01 Jul 2024 10:02:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVc3RyDe9B2GkUXOZKAZElHzsAFnNYk2U0sbkikOCGRM83fIwQXDGcGEz9NeHKBqwx3yZHDsqCx7I0+fvwg43p1YrdjdoY2+oT8RZcCQFwJemBUV/s0PpOKvM1bo5Sn09K72R00cD8=
-X-Gm-Message-State: AOJu0Yxm5PD8BqWut5NsjdAqcRPKzD3mCZvR1H7VL/9x7IuJKZ5Fwq3P
-	OkhcZ7js4TCHVWPapknJTXge0gnR/qokmVWM269faPxznDQES+La3OHMCZFyylkXcBmewNdff42
-	PMFsH9g9GSJeZsY0tCjgo0DJhpm0=
-X-Google-Smtp-Source: AGHT+IEJpZmbqEHO1Bh+OEp3LPFinKMG1IadW16uX8PwTkV1l2Yyvu7JRQgOww++E+3PBknGG60nkJTheF+JVlO6A5A=
-X-Received: by 2002:a05:6870:4195:b0:25d:d69:eaf with SMTP id
- 586e51a60fabf-25db36406d0mr6091618fac.4.1719853351316; Mon, 01 Jul 2024
- 10:02:31 -0700 (PDT)
+	s=k20201202; t=1719853472;
+	bh=1ozzb/852acdo8maf7CK3uWvvUYvjaMR99Rgi2L1nMk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kb38BPDg98IEiiykLogYdQog24ja1Ju1ivfXoaYRgwQ8XuDS81vqR3U+82FiqRQAC
+	 314iwm2tUYzDDTsl+3LfuNVWtDBtORtzUpitm121ABb4bfIFmB8BPYxtiZBCTjerCQ
+	 Tp3h0FXW1boa+NW5bSaxA+6faNxF2xNSaPDULORc/ULKlQwRLYuMQg8ggtC7tFPqyl
+	 yG9A8d6mNfXazVLxvrnaEVQTeK1WYLmgJNuU3uY973oiidVV2RZcM3Q+luV/dsVj9f
+	 xIslnBtOdmOFZ42JdhXIx5SHbnppLSuR6GFwU4wXVMysZx/OE5oW/PNSCJYpWhHFCH
+	 nz3RAQVfWFxRw==
+Date: Mon, 1 Jul 2024 11:04:31 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: sudeep.holla@arm.com, linux-kernel@vger.kernel.org, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, cristian.marussi@arm.com,
+	krzk+dt@kernel.org, Peng Fan <peng.fan@nxp.com>,
+	arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH RESEND] dt-bindings: firmware: arm,scmi: support system
+ power protocol
+Message-ID: <171985347002.119709.17589124239067617690.robh@kernel.org>
+References: <20240628030309.1162012-1-peng.fan@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240628091456.57301-1-yang.lee@linux.alibaba.com>
-In-Reply-To: <20240628091456.57301-1-yang.lee@linux.alibaba.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 1 Jul 2024 19:02:20 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0h1OZ1=x3Evfkdb90oHML_KOALS9FmPW+jk-o7udOY-yQ@mail.gmail.com>
-Message-ID: <CAJZ5v0h1OZ1=x3Evfkdb90oHML_KOALS9FmPW+jk-o7udOY-yQ@mail.gmail.com>
-Subject: Re: [PATCH -next] mm/treewide: Add missing kernel-doc function comments.
-To: Yang Li <yang.lee@linux.alibaba.com>
-Cc: mingo@redhat.com, rafael@kernel.org, tglx@linutronix.de, pavel@ucw.cz, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Abaci Robot <abaci@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240628030309.1162012-1-peng.fan@oss.nxp.com>
 
-On Fri, Jun 28, 2024 at 11:15=E2=80=AFAM Yang Li <yang.lee@linux.alibaba.co=
-m> wrote:
->
-> Add kernel-doc style comments for the pfn_is_nosave and
-> arch_hibernation_header_save functions.
->
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=3D9453
-> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+
+On Fri, 28 Jun 2024 11:03:09 +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> Add SCMI System Power Protocol bindings, and the protocol id is 0x12.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
->  arch/x86/power/hibernate.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/x86/power/hibernate.c b/arch/x86/power/hibernate.c
-> index 5b81d19cd114..90f682ff63b1 100644
-> --- a/arch/x86/power/hibernate.c
-> +++ b/arch/x86/power/hibernate.c
-> @@ -41,7 +41,8 @@ unsigned long temp_pgt __visible;
->  unsigned long relocated_restore_code __visible;
->
->  /**
-> - *     pfn_is_nosave - check if given pfn is in the 'nosave' section
-> + * pfn_is_nosave - check if given pfn is in the 'nosave' section
-> + * @pfn: The Page Frame Number to check
+>  Documentation/devicetree/bindings/firmware/arm,scmi.yaml | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
 
-This is fine.
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
->   */
->  int pfn_is_nosave(unsigned long pfn)
->  {
-> @@ -84,9 +85,11 @@ static inline u32 compute_e820_crc32(struct e820_table=
- *table)
->  #endif
->
->  /**
-> - *     arch_hibernation_header_save - populate the architecture specific=
- part
-> - *             of a hibernation image header
-> - *     @addr: address to save the data at
-> + * arch_hibernation_header_save - populate the architecture specific par=
-t
-> + * of a hibernation image header
-
-But this is not.
-
-If you take the time to clean this up, please rephrase this so it fits
-into one line.
-
-> + * @addr: address to save the data at
-> + * @max_size: the maximum size of the data to save
-> + *
->   */
->  int arch_hibernation_header_save(void *addr, unsigned int max_size)
->  {
-> --
-> 2.20.1.7.g153144c
->
->
