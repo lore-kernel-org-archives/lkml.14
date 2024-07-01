@@ -1,108 +1,111 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D48E146017;
-	Mon,  1 Jul 2024 13:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE82215EFA2
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 13:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719838813; cv=none; b=EGgCaHJxS+YpuWwpM5UPt3bvJn8NnDOfXSGJi2wj3UG5Td53OMVOgupEUk0UI/JCISyTZWaPSj8a3w1EfMeJ+VuqETP/BRsIFkL72rvzG9uVjVChKp6kT49L2tObF/vy4Rwemlp+XoFZ4uhaDNqTxzzZg/3wJu1x1rz4NdBJ0Jo=
+	t=1719838821; cv=none; b=UO6r7xEjTqdM+sR3p4dxPpdYuI6em5Ok4cx9KlJeAYUqCu4WrhVHLwSAMjSvEH6SmU7yxp4ZyC8YoF8IkD5hVhrLjwdWLckGLySlKqEQqSFhxZd1JyzjYDnpEqnqwJ6BwG9Yg2XSJqsdRszCU3vUVmuI0Jh6sMW6gccIlraC7t8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719838813; c=relaxed/simple;
-	bh=G/xOlPYe3vF5oKjhIB7GW4ffAy3SSJ2aL4UQN6CovZw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=bDn+4g1V5zs8cwY6+tm0tuBlUE/26OgM2QrwW7kUWgcliMwzi2ZzoYn75SYMp+2jLllYhzKJKb/0RfkdwUrRoNl+OuIk7rbpEFtaM2bdTX74kCa8hWnRL17jtZ9r43flpSZGD9BBSsezfufspIsYuXo/FsvNDyB8QZC5c+T1J7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=eRBolBwC; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="eRBolBwC"
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 3B4B820B7004;
-	Mon,  1 Jul 2024 06:00:05 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3B4B820B7004
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1719838805;
-	bh=zzK5OuTFvzx/ju5sunPw2VL6Q836V9zKxrgDi0Ynufw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eRBolBwCEfEP1Uao3huhzX7M3wgtQqVMefS3sT7f7Dy0uxkOz7zR63vNtGwI6DuCq
-	 Dj+OYf061lAyHMqXKTbDrYHd4xpJaf1hdw7zEdMXUIH9Tn0Eq3BxhP1ypbjbCXGw2+
-	 Zq6IFAtp4G/DMWw2cvCqyLGEdhwOoz9Hg95DQhvQ=
-From: Konstantin Taranov <kotaranov@linux.microsoft.com>
-To: kotaranov@microsoft.com,
-	pabeni@redhat.com,
-	haiyangz@microsoft.com,
-	kys@microsoft.com,
-	edumazet@google.com,
-	kuba@kernel.org,
-	davem@davemloft.net,
-	decui@microsoft.com,
-	wei.liu@kernel.org,
-	sharmaajay@microsoft.com,
-	longli@microsoft.com,
-	jgg@ziepe.ca,
-	leon@kernel.org
-Cc: linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH net-next v2 1/2] net: mana: introduce helper to get a master netdev
-Date: Mon,  1 Jul 2024 05:58:55 -0700
-Message-Id: <1719838736-20338-2-git-send-email-kotaranov@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1719838736-20338-1-git-send-email-kotaranov@linux.microsoft.com>
-References: <1719838736-20338-1-git-send-email-kotaranov@linux.microsoft.com>
+	s=arc-20240116; t=1719838821; c=relaxed/simple;
+	bh=DU5Rpao9sVkwftxVXiBbPjmDCfg1edojbtuA+4rU99w=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=bp5o0ssVDg/z8xJrZZGUNYNIV6QkH4ViH0n75tRPNRLRbw5wE1+3Jz6qc6QGJcLNZ9uqw971fB1uI/BYm+2xQDra4rMeVcjQl60FY8KSehTui+V2inETt2xkbON4ROxUGyjAT+y4zd8qd+Bxj27GrixuupsTmKsN+L3V56otgrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7f61fca8c40so313268839f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 06:00:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719838819; x=1720443619;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lKQzMVVd8JV3z0u1HLRD129oSCr8seG4wu/QgPU2cjc=;
+        b=YycqUOh3sA0gJseUtQp7F17FefOJX/EF9/7YWmEbM9ryZiEWnqFoFkqO6gRSbjpnyh
+         29OKG+t9ezDEJhE2v85qdgM+kIFMprVvrP4sSx+ahma5T8bXY5jOPbqMbH6ibaXTzyfd
+         PWUbeSaPwat5eDf7erkGWPI2M+GRoxhiAVhpXfpTQJXJ+T3EKJLLpJaDS+Be46eGcQdr
+         4SG+CM5n+RShVKqWS4bmhpJht2nOCAIfqe9duJ4lFcmUVfk1+/lUIAtdDeRUM5tDvirI
+         I9dSDTSSeiqtVJ8QPK11wl+dRsH1roTiW4amRWYeEFCo8777UrWZOBXyd+EDsxVOZwAn
+         HSPA==
+X-Gm-Message-State: AOJu0Yxhqu/1fe/97Bu5HdKcALlZMWq+SV27v5BdvFzbwbplzcd7K8eM
+	ElpPLRn/UD4g1OVmio6Cd0rZ5iQs+C+p2qPrnP13Xh7HrM4IskUGZo+qXBX2Bx6vtsGIe9hpevd
+	fOchP+LQuwgALdaEFXPwloRXGStAnorg+c1VsCJ3flv2P7Rb7z6u7myM=
+X-Google-Smtp-Source: AGHT+IFjfzX64Rdy84nGXFpO+a/9DdmBFIA0Cb03XfztEfHdSopox7b2rYRLwMVVIk6xuXUnH0kqit7skKw8yR7UbffZUoOxCs2j
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-Received: by 2002:a05:6602:3f8a:b0:7eb:75e9:8f2b with SMTP id
+ ca18e2360f4ac-7f62ee6461bmr43693339f.2.1719838819082; Mon, 01 Jul 2024
+ 06:00:19 -0700 (PDT)
+Date: Mon, 01 Jul 2024 06:00:19 -0700
+In-Reply-To: <0000000000006cbc570618c0d4a3@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e1f1a9061c2f2d82@google.com>
+Subject: Re: [syzbot] [syzbot] [bpf?] [net?] KMSAN: uninit-value in dev_map_hash_lookup_elem
+From: syzbot <syzbot+80cf9d55d6fd2d6a9838@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Konstantin Taranov <kotaranov@microsoft.com>
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-Add helper to get a master netdevice for a given port.
-When mana is used with netvsc, the VF netdev is controlled
-by an upper netvsc device. In a baremetal case, the VF
-netdev is the master device.
+***
 
-Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
+Subject: [syzbot] [bpf?] [net?] KMSAN: uninit-value in dev_map_hash_lookup_elem
+Author: wojciech.gladysz@infogain.com
+
+#syz test: https://linux.googlesource.com/linux/kernel/git/torvalds/linux e478cf26c556e4ab572ab0ab2306c986901dcd61
+
 ---
- drivers/net/ethernet/microsoft/mana/mana_en.c | 18 ++++++++++++++++++
- include/net/mana/mana.h                       |  2 ++
- 2 files changed, 20 insertions(+)
+ kernel/bpf/verifier.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index d087cf9..b893339 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -2948,3 +2948,21 @@ out:
- 	gd->gdma_context = NULL;
- 	kfree(ac);
- }
-+
-+/* the caller should hold rcu_read_lock */
-+struct net_device *mana_get_master_netdev_rcu(struct mana_context *ac, u32 port_index)
-+{
-+	struct net_device *ndev;
-+
-+	if (port_index >= ac->num_ports)
-+		return NULL;
-+
-+	/* When mana is used in netvsc, the upper netdevice should be returned. */
-+	if (ac->ports[port_index]->flags & IFF_SLAVE)
-+		ndev = netdev_master_upper_dev_get_rcu(ac->ports[port_index]);
-+	else
-+		ndev = ac->ports[port_index];
-+
-+	return ndev;
-+}
-+EXPORT_SYMBOL_NS(mana_get_master_netdev_rcu, NET_MANA);
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index 46f741e..2d3625c 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -797,4 +797,6 @@ void mana_destroy_wq_obj(struct mana_port_context *apc, u32 wq_type,
- int mana_cfg_vport(struct mana_port_context *apc, u32 protection_dom_id,
- 		   u32 doorbell_pg_id);
- void mana_uncfg_vport(struct mana_port_context *apc);
-+
-+struct net_device *mana_get_master_netdev_rcu(struct mana_context *ac, u32 port_index);
- #endif /* _MANA_H */
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 36ef8e96787e..13a9c2e2908a 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -7146,8 +7146,8 @@ static int check_stack_range_initialized(
+ 		 * reads. However, if raw_mode is not set, we'll do extra
+ 		 * checks below.
+ 		 */
+-		bounds_check_type = BPF_WRITE;
+-		clobber = true;
++		clobber = !meta || meta->raw_mode;
++		bounds_check_type = clobber ? BPF_WRITE : BPF_READ;
+ 	} else {
+ 		bounds_check_type = BPF_READ;
+ 	}
+@@ -7230,8 +7230,7 @@ static int check_stack_range_initialized(
+ 		stype = &state->stack[spi].slot_type[slot % BPF_REG_SIZE];
+ 		if (*stype == STACK_MISC)
+ 			goto mark;
+-		if ((*stype == STACK_ZERO) ||
+-		    (*stype == STACK_INVALID && env->allow_uninit_stack)) {
++		if (*stype == STACK_ZERO) {
+ 			if (clobber) {
+ 				/* helper can write anything into the stack */
+ 				*stype = STACK_MISC;
+@@ -8748,6 +8747,8 @@ static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
+ 		meta->map_uid = reg->map_uid;
+ 		break;
+ 	case ARG_PTR_TO_MAP_KEY:
++		/* always mark read access */
++		meta->raw_mode = false;
+ 		/* bpf_map_xxx(..., map_ptr, ..., key) call:
+ 		 * check that [key, key + map->key_size) are within
+ 		 * stack limits and initialized
+@@ -8763,7 +8764,7 @@ static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
+ 		}
+ 		err = check_helper_mem_access(env, regno,
+ 					      meta->map_ptr->key_size, false,
+-					      NULL);
++					      meta);
+ 		break;
+ 	case ARG_PTR_TO_MAP_VALUE:
+ 		if (type_may_be_null(arg_type) && register_is_null(reg))
 -- 
-2.43.0
-
+2.35.3
