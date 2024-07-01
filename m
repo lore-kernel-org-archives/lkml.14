@@ -1,39 +1,59 @@
-Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
+Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A4A0167DA0;
-	Mon,  1 Jul 2024 14:31:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 744A716849D;
+	Mon,  1 Jul 2024 14:31:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719844272; cv=none; b=IPNt1r9p1tS7EvWCGlOGu61A/ioMUGdFeTQZJYF6eHF4WPBuKMLfQmnMNP84rBn4Bg24SCDF3tlk3ZBL7RBRcPDuJMxOpJ1+zed8RBHh0JIiuiYks3kl2v6+mx5/oK4+HweqXGubK8+nXaNWUKzxu3iFAc3KEU5+K2R5jUYFxxA=
+	t=1719844281; cv=none; b=oCe0WP1zLr9Dj7k+S+rnX2GiLrYRDUaVhFo5b0PYaanu173OljWeRv6vRAnUhMHXpRp82x94LrAeBul+lrcw1zLo+0VpxJzT2sTokMwnbSoiEylc7HPG9JQujhaK36BsDGQ5LDNMHp+wsvE/+CbBooVKnmmgmZ7h6t7h0JBcza0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719844272; c=relaxed/simple;
-	bh=Ydo6IeCAYm/Htl+UqVy30jaJhyLZJozPLceq8yBsyKg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mUwLdtQQBOsHKMuZ6F2HwHyRVHiPSKQJp7yB3R9Oc7cHjvZFGhiBdilQxWf0VOFPdsruBybwJE6fd6FhUVWb8GxSzsHD73kAYVnk8NlTEpMiVtaAdL5BpdrKCdADucGZ9cjvpaFuUh/gnrh5Jk0zG2cfa27vbloq/9cp1Tef5v0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.254.49.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
-Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c00:7a80:98d3:5fc8:a2a:615f])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 9C9757E0193;
-	Mon,  1 Jul 2024 22:30:35 +0800 (CST)
-From: Chukun Pan <amadeus@jmu.edu.cn>
-To: amadeus@jmu.edu.cn
-Cc: conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	heiko@sntech.de,
-	krzk+dt@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
+	s=arc-20240116; t=1719844281; c=relaxed/simple;
+	bh=kh4fd2Tt1g3FgPpUUT16nQDDaDmCFVlh5X1PX3Rz9RU=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=nSCws6SAKRbZx8u+4a6m8Q0VDt1IJh9wcnKtyxzVGBjCQE5WAS0aSUrNOtlNSVP0unCSEJFo3pabTESGKW1Uw5c1Iyk4FZ2T/wCKRN9rmoB/hmeHLNQ7sIOjs/dDKw7eGZyhjT/3NkSwWQJwcSa8RyuPeB8Xa1DWFQXw0WAmvFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=woHIJPTO; arc=none smtp.client-ip=162.62.57.252
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="woHIJPTO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1719844268; bh=oig2jSCI3rDtVcLntOJD59bkVH+SVdUKsJBtU3A9NPg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=woHIJPTO5DRjvijRxgqfRyyE6eNzJxy3y5aP5Fq2WJDs17gcUF3EkUWLr6UfD+BJs
+	 jYs1z2gUcsNn0Gg/VMSRcoaimdNjweUaY/pUXgR4Zdc+ZoPuZAgNCkTDUECSlGnNrf
+	 1jNT3EwsY8sjT8OcMjOHJYgJZAP9CcXj4YxTiRZY=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.103])
+	by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
+	id 642386CC; Mon, 01 Jul 2024 22:25:02 +0800
+X-QQ-mid: xmsmtpt1719843902t011y0o3y
+Message-ID: <tencent_BE7AEE6C7C2D216CB8949CE8E6EE7ECC2C0A@qq.com>
+X-QQ-XMAILINFO: OCYbvBDBNb9r37I3PMSS14NyCwzK375aFroJL/YLh4ESeb9E/2KRMBm3bnUoev
+	 BsN9N0Q6AMJLVwj1FimcZvUyQNyqlBeu6FkSPuHzRXR7+fxTcSw1iPKuWQdE1nSKaGpjNspgO75Z
+	 A36YvFBGz1YNdjrvyBpUf8l6uh2hb/jvNGb0xm5Pmq0GHxLb98sgaBSy0P5EuYXj+SNDYr6/P1/q
+	 Q8+ipEes29TcweAPo0VxoYy+gaEaaV0ffbWLYVKGhFTpwpfTfGJwVOOrNupAzGS0wYP96qrWEQij
+	 4Q3h+L0zMcIzfJxc9Ep1m2Cx7aMVHyEZ+aXCjHE9qEDAy78bNhYEN0W6NmA25ND4/Kq0aSeuuWaA
+	 UF3Z8iKQu3CqR8ymtz+8q/Q6tNFi8fzsZb33NVHUTkaV+gyyWRnyModF0Qp1u2k+99pChZSbhoFN
+	 +tqMmXsY7nOZceJY1UFtMk5J06xIDsbbjCovAuQRFd4rq6TyOoEYF72VDsTqqDEf0mNHBK14R2sR
+	 +vUSPc/q6byPXidrTStGbXSjv/LfVDFSvLaRZzBU/3XM3kIswL7kR8+LFKOo3hJiog83OYeL3IgR
+	 FFo6iHMRACXWG/9rzrb7+JdvmqLdvf2Tzgj+XM7Jobhh3qtlikjz3MKKpLlNWOgVBX9a7A43znvV
+	 eJZKVlviHYA+VYZS5qt+yz4xgI3tsPfuDH+vZ3bfeOGabsC4/37V2o8IcFzSBe4ZXUAZh33E9AHS
+	 8w+4m+OscvCX/uJAdZ+W7+DA77SYWv+43Af04q8GyzI9hW1aN/xHxeFF1S/vAHP63pY59a/Ha/ny
+	 /h146ZVPDcWvxUmMw42V4d9hLOlIB4FPxowtMzJN78IOz9CTVxYdV7776tJF5Lu5GGfsZtgfyqVI
+	 hdthla8G9HJnLOSEViWZ4rTvhy145C0aim7NX+HNX3OwIslcipY7NTPV11D5Zjm7JGeMXLt8Ge
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+ae688d469e36fb5138d0@syzkaller.appspotmail.com
+Cc: adilger.kernel@dilger.ca,
+	linux-ext4@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	robh@kernel.org
-Subject: [PATCH v2 7/9] arm64: dts: rockchip: use generic Ethernet PHY reset bindings for Lunzn Fastrhino R68S
-Date: Mon,  1 Jul 2024 22:30:28 +0800
-Message-Id: <20240701143028.1203997-4-amadeus@jmu.edu.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240701143028.1203997-1-amadeus@jmu.edu.cn>
-References: <20240630150010.55729-1-amadeus@jmu.edu.cn>
- <20240701143028.1203997-1-amadeus@jmu.edu.cn>
+	syzkaller-bugs@googlegroups.com,
+	tytso@mit.edu
+Subject: [PATCH] ext4: No need to continue when the number of entries is 1
+Date: Mon,  1 Jul 2024 22:25:03 +0800
+X-OQ-MSGID: <20240701142502.2973881-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <00000000000075a135061c0480d0@google.com>
+References: <00000000000075a135061c0480d0@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,72 +61,30 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDQkMYVh4eGB1CGhhPQkpMSlYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlJT0seQUgZSEFJGEtLQUwaQ0tBQkMfSEFOHRhDQRpJGkFNSk4dWVdZFhoPEh
-	UdFFlBWU9LSFVKS0lPT09LVUpLS1VLWQY+
-X-HM-Tid: 0a906eb46a4703a2kunm9c9757e0193
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PzY6CTo5OjNRFRcwM00hT0gY
-	PUkaFB5VSlVKTEpCQ09PSUhNSkxIVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
-	Sx5BSBlIQUkYS0tBTBpDS0FCQx9IQU4dGENBGkkaQU1KTh1ZV1kIAVlBSElCSDcG
 
-Replace the deprecated snps,reset-xxx bindings to the generic Ethernet
-PHY reset GPIO bindings. Also updates the delays based on the vendor
-recommendations.
+When the number of entries mapped is 1, there is no need to split it.
 
-Fixes: b9f8ca655d80 ("arm64: dts: rockchip: Add Lunzn Fastrhino R68S")
-Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
+Fixes: ac27a0ec112a ("[PATCH] ext4: initial copy of files from ext3")
+Reported-by: syzbot+ae688d469e36fb5138d0@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=ae688d469e36fb5138d0
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
 ---
- .../boot/dts/rockchip/rk3568-fastrhino-r68s.dts    | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ fs/ext4/namei.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r68s.dts b/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r68s.dts
-index ce2a5e1ccefc..02d966d218fd 100644
---- a/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r68s.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3568-fastrhino-r68s.dts
-@@ -39,10 +39,6 @@ &gmac0_tx_bus2
- 		     &gmac0_rx_bus2
- 		     &gmac0_rgmii_clk
- 		     &gmac0_rgmii_bus>;
--	snps,reset-gpio = <&gpio1 RK_PB0 GPIO_ACTIVE_LOW>;
--	snps,reset-active-low;
--	/* Reset time is 15ms, 50ms for rtl8211f */
--	snps,reset-delays-us = <0 15000 50000>;
- 	tx_delay = <0x3c>;
- 	rx_delay = <0x2f>;
- 	status = "okay";
-@@ -61,10 +57,6 @@ &gmac1m1_tx_bus2
- 		     &gmac1m1_rx_bus2
- 		     &gmac1m1_rgmii_clk
- 		     &gmac1m1_rgmii_bus>;
--	snps,reset-gpio = <&gpio1 RK_PB1 GPIO_ACTIVE_LOW>;
--	snps,reset-active-low;
--	/* Reset time is 15ms, 50ms for rtl8211f */
--	snps,reset-delays-us = <0 15000 50000>;
- 	tx_delay = <0x4f>;
- 	rx_delay = <0x26>;
- 	status = "okay";
-@@ -76,6 +68,9 @@ rgmii_phy0: ethernet-phy@1 {
- 		reg = <0x1>;
- 		pinctrl-0 = <&eth_phy0_reset_pin>;
- 		pinctrl-names = "default";
-+		reset-assert-us = <20000>;
-+		reset-deassert-us = <100000>;
-+		reset-gpios = <&gpio1 RK_PB0 GPIO_ACTIVE_LOW>;
- 	};
- };
+diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
+index a630b27a4cc6..0a111274dc4a 100644
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -2043,7 +2043,7 @@ static struct ext4_dir_entry_2 *do_split(handle_t *handle, struct inode *dir,
+ 		split = count/2;
  
-@@ -85,6 +80,9 @@ rgmii_phy1: ethernet-phy@1 {
- 		reg = <0x1>;
- 		pinctrl-0 = <&eth_phy1_reset_pin>;
- 		pinctrl-names = "default";
-+		reset-assert-us = <20000>;
-+		reset-deassert-us = <100000>;
-+		reset-gpios = <&gpio1 RK_PB1 GPIO_ACTIVE_LOW>;
- 	};
- };
- 
+ 	hash2 = map[split].hash;
+-	continued = hash2 == map[split - 1].hash;
++	continued = split > 0 ? hash2 == map[split - 1].hash : 0;
+ 	dxtrace(printk(KERN_INFO "Split block %lu at %x, %i/%i\n",
+ 			(unsigned long)dx_get_block(frame->at),
+ 					hash2, split, count-split));
 -- 
-2.25.1
+2.43.0
 
