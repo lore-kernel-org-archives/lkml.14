@@ -1,39 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868AC381C4;
-	Mon,  1 Jul 2024 21:06:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0760C170855;
+	Mon,  1 Jul 2024 21:10:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719868019; cv=none; b=PvfyGo5c+1RYOAQelHDe7sycZS+/zGPF+UkYHgJdp803D5qOmHvW4/on5V3SIIZbOeQgw3SrU0TbUHnmq56ZDxsecxEdPIY5vWG1/Ea8jgu/xxaMecA1JA0awmpfHhIHbHH4JaXT3kwRzjLd0nA9yH+jZ+3gLvLDx1Xbev33nlg=
+	t=1719868203; cv=none; b=cJHH46ZS9H4IRULjqGa3IjG+qF3glA4yYlKTGVVlYyR+93DmLT3rZpbkiD2hvILPtAt0WueO0zXB4nVeKDUuH4ER8TJe6h20Om/wVHuW7+YD4glg1wSeyw0Ssv1bto+mliZrz+miDJvrUOYEkEznivc6jTCpBTq74qEwgdt2XfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719868019; c=relaxed/simple;
-	bh=icwFKyaGqnlGKLMZKMHhEmLPtpcpRxOzqd2cuz1wh2I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=sR4Q/2wa+PasMBVQt8wA7D7gJQnorcD6HZL88W0UUQP4a9jaPSEDMlMy0fvtl2ClHFaF9RkBY84eIhTXUMShMI5c23ZUSrIv/qaS/DojWOtNOpv7IjCwX3qtg3dmHXtKB0T3oOucY87yr4bbsA5aPVx6toYZfkAgtR7TEWGyITM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pnEKgN6L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719868203; c=relaxed/simple;
+	bh=I+mbDCY+FeTTxdfJIQu5i2MerfDx039k/V9YynnPHVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BTa1HdXi1dCZx1ULaNAfkzrfKHi448ILoFKw0DWbB1MI0dU/nEQR5ilfyA7xOa5GiyusnIt2D8QZmix1OwH6NvNXqXE4KLG2NQIAyMpkstSYTGww/eKHsQrmQEPQUP7Rl2P7geGj5NdQoFfuo0MbbeXrBxLrEqGe9ZVeBeFlXyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EoC29VfQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pnEKgN6L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5A3CC116B1;
-	Mon,  1 Jul 2024 21:06:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EoC29VfQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99EE0C116B1;
+	Mon,  1 Jul 2024 21:10:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719868019;
-	bh=icwFKyaGqnlGKLMZKMHhEmLPtpcpRxOzqd2cuz1wh2I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=pnEKgN6L3qH6pFcXKHxo2T/XIV15XU3WdQvMvzl2K3yWKIr4jBXb5+hLGUU9k2Dud
-	 j7bbMutMJmqR8eBGaZwmRLQ9dew/1J8Ekyl0ZEHtHCeR0ogLS3D+mmcb9nW4erwhP1
-	 m1TSlx59dCxy9F/9dqWhM6vjbA6DTFmopHEFofch9PUdks0g5K+TaOQvnF9vKX94T9
-	 0IDgrwOL+9CDEHaX827o+1GycnLNihzserNo+yGOhZTfdj0iNwK2L3FssKomsJwPmc
-	 5nhyN8sQ/24SP94+alAU0Qz3aTWg/9pAcIeaGjepLpApmUrl6yblAi4F8B/dDtGtPA
-	 X5Pmq2K+Wxtaw==
-Date: Mon, 1 Jul 2024 16:06:56 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Zhou Shengqing <zhoushengqing@ttyinfo.com>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, lkp@intel.com,
-	llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
-Subject: Re: Re: [PATCH] PCI: Enable io space 1k granularity for intel cpu
- root port
-Message-ID: <20240701210656.GA16926@bhelgaas>
+	s=k20201202; t=1719868202;
+	bh=I+mbDCY+FeTTxdfJIQu5i2MerfDx039k/V9YynnPHVE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EoC29VfQYzncc+fs+pTthq98KlbfZxPV6jYH7Ki0wO9dXJFLTl4WJRnLPfJjwsoAm
+	 7KOFnMjorbahCWYb9zis9aC741vqohwUhzU51rL0bLNWI8qxVdhUMW8X9SgwTM7nc8
+	 rMlIEsKyYQFx2u8KBXlHEwgj3LWIvy6FrFLhaLgb6wJZe82XeXcFoFybVK+ITubbPs
+	 MYNZJmh3qoezvr/RvkjKVWGgxQ0lNVBDVeC4ljRPqenfSsSgR0BI39coMtFLu8LDYf
+	 9aqsnw142+rrynovFm6yXSLC0sW8ZdrW1EAAxKFa5+QF5pHLAvy+uXHyBNh3coFAHh
+	 42JI5dB8LIW3w==
+Date: Mon, 1 Jul 2024 23:09:57 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Igor Pylypiv <ipylypiv@google.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Hannes Reinecke <hare@suse.de>, linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Akshat Jain <akshatzen@google.com>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v4 1/8] ata: libata-scsi: Fix offsets for the fixed
+ format sense data
+Message-ID: <ZoMbJX7VupfIPfBp@ryzen.lan>
+References: <20240701195758.1045917-1-ipylypiv@google.com>
+ <20240701195758.1045917-2-ipylypiv@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,82 +47,138 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240630025225.9910-1-zhoushengqing@ttyinfo.com>
+In-Reply-To: <20240701195758.1045917-2-ipylypiv@google.com>
 
-On Sun, Jun 30, 2024 at 02:52:25AM +0000, Zhou Shengqing wrote:
-> > On Thu, Jun 27, 2024 at 12:58:56AM +0000, Zhou Shengqing wrote:
-> > > This patch add 1k granularity for intel root port bridge.Intel latest
-> > > server CPU support 1K granularity,And there is an BIOS setup item named
-> > > "EN1K",but linux doesn't support it. if an IIO has 5 IOU (SPR has 5 IOUs)
-> > > all are bifurcated 2x8.In a 2P server system,There are 20 P2P bridges
-> > > present.if keep 4K granularity allocation,it need 20*4=80k io space,
-> > > exceeding 64k.I test it in a 16*nvidia 4090s system under intel eaglestrem
-> > > platform.There are six 4090s that cannot be allocated I/O resources.
-> > > So I applied this patch.And I found a similar implementation in quirks.c,
-> > > but it only targets the Intel P64H2 platform.
-> > > 
-> > > Signed-off-by: Zhou Shengqing <zhoushengqing@ttyinfo.com>
-> > > ---
-> > >  drivers/pci/probe.c | 23 +++++++++++++++++++++++
-> > >  1 file changed, 23 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > > index 5fbabb4e3425..909962795311 100644
-> > > --- a/drivers/pci/probe.c
-> > > +++ b/drivers/pci/probe.c
-> > > @@ -461,6 +461,9 @@ static void pci_read_bridge_windows(struct pci_dev *bridge)
-> > >  	u32 buses;
-> > >  	u16 io;
-> > >  	u32 pmem, tmp;
-> > > +	u16 ven_id, dev_id;
-> > > +	u16 en1k = 0;
-> > > +	struct pci_dev *dev = NULL;
-> > >  	struct resource res;
-> > >  
-> > >  	pci_read_config_dword(bridge, PCI_PRIMARY_BUS, &buses);
-> > > @@ -478,6 +481,26 @@ static void pci_read_bridge_windows(struct pci_dev *bridge)
-> > >  	}
-> > >  	if (io) {
-> > >  		bridge->io_window = 1;
-> > > +		if (pci_is_root_bus(bridge->bus)) {
-> > > +			list_for_each_entry(dev, &bridge->bus->devices, bus_list) {
-> > > +				pci_read_config_word(dev, PCI_VENDOR_ID, &ven_id);
-> > > +				pci_read_config_word(dev, PCI_DEVICE_ID, &dev_id);
-> > > +				if (ven_id == PCI_VENDOR_ID_INTEL && dev_id == 0x09a2) {
-> > > +					/*IIO MISC Control offset 0x1c0*/
-> > > +					pci_read_config_word(dev, 0x1c0, &en1k);
-> > > +				}
-> > > +			}
-> > > +		/*
-> > > +		 *Intel ICX SPR EMR GNR
-> > > +		 *IIO MISC Control (IIOMISCCTRL_1_5_0_CFG) — Offset 1C0h
-> > > +		 *bit 2:Enable 1K (EN1K)
-> > > +		 *This bit when set, enables 1K granularity for I/O space decode
-> > > +		 *in each of the virtual P2P bridges
-> > > +		 *corresponding to root ports, and DMI ports.
-> > > +		 */
-> > > +		if (en1k & 0x4)
-> > > +			bridge->io_window_1k = 1;
-> > > +		}
-> > 
-> > I still think this is not going to work because I don't want this kind
-> > of device-specific clutter in this generic path. The pcibios_*
-> > interfaces are history that we'd like to get rid of also, but it would
-> > be better than putting it here.
+On Mon, Jul 01, 2024 at 07:57:51PM +0000, Igor Pylypiv wrote:
+> Correct the ATA PASS-THROUGH fixed format sense data offsets to conform
+> to SPC-6 and SAT-5 specifications. Additionally, set the VALID bit to
+> indicate that the INFORMATION field contains valid information.
 > 
-> Do you think it should be putted to the pci_bios* interface?
+> INFORMATION
+> ===========
 > 
-> And if there is no suitable place to apply this patch, 
-> then let's just ignore this issue.
+> SAT-5 Table 212 — "Fixed format sense data INFORMATION field for the ATA
+> PASS-THROUGH commands" defines the following format:
+> 
+> +------+------------+
+> | Byte |   Field    |
+> +------+------------+
+> |    0 | ERROR      |
+> |    1 | STATUS     |
+> |    2 | DEVICE     |
+> |    3 | COUNT(7:0) |
+> +------+------------+
+> 
+> SPC-6 Table 48 - "Fixed format sense data" specifies that the INFORMATION
+> field starts at byte 3 in sense buffer resulting in the following offsets
+> for the ATA PASS-THROUGH commands:
+> 
+> +------------+-------------------------+
+> |   Field    |  Offset in sense buffer |
+> +------------+-------------------------+
+> | ERROR      |  3                      |
+> | STATUS     |  4                      |
+> | DEVICE     |  5                      |
+> | COUNT(7:0) |  6                      |
+> +------------+-------------------------+
+> 
+> COMMAND-SPECIFIC INFORMATION
+> ============================
+> 
+> SAT-5 Table 213 - "Fixed format sense data COMMAND-SPECIFIC INFORMATION
+> field for ATA PASS-THROUGH" defines the following format:
+> 
+> +------+-------------------+
+> | Byte |        Field      |
+> +------+-------------------+
+> |    0 | FLAGS | LOG INDEX |
+> |    1 | LBA (7:0)         |
+> |    2 | LBA (15:8)        |
+> |    3 | LBA (23:16)       |
+> +------+-------------------+
+> 
+> SPC-6 Table 48 - "Fixed format sense data" specifies that
+> the COMMAND-SPECIFIC-INFORMATION field starts at byte 8
+> in sense buffer resulting in the following offsets for
+> the ATA PASS-THROUGH commands:
+> 
+> Offsets of these fields in the fixed sense format are as follows:
+> 
+> +-------------------+-------------------------+
+> |       Field       |  Offset in sense buffer |
+> +-------------------+-------------------------+
+> | FLAGS | LOG INDEX |  8                      |
+> | LBA (7:0)         |  9                      |
+> | LBA (15:8)        |  10                     |
+> | LBA (23:16)       |  11                     |
+> +-------------------+-------------------------+
+> 
+> Reported-by: Akshat Jain <akshatzen@google.com>
+> Fixes: 11093cb1ef56 ("libata-scsi: generate correct ATA pass-through sense")
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Hannes Reinecke <hare@suse.de>
+> Signed-off-by: Igor Pylypiv <ipylypiv@google.com>
+> ---
+>  drivers/ata/libata-scsi.c | 26 +++++++++++++-------------
+>  1 file changed, 13 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
+> index bb4d30d377ae..a9e44ad4c2de 100644
+> --- a/drivers/ata/libata-scsi.c
+> +++ b/drivers/ata/libata-scsi.c
+> @@ -855,7 +855,6 @@ static void ata_gen_passthru_sense(struct ata_queued_cmd *qc)
+>  	struct scsi_cmnd *cmd = qc->scsicmd;
+>  	struct ata_taskfile *tf = &qc->result_tf;
+>  	unsigned char *sb = cmd->sense_buffer;
+> -	unsigned char *desc = sb + 8;
+>  	u8 sense_key, asc, ascq;
+>  
+>  	memset(sb, 0, SCSI_SENSE_BUFFERSIZE);
+> @@ -877,7 +876,8 @@ static void ata_gen_passthru_sense(struct ata_queued_cmd *qc)
+>  		scsi_build_sense(cmd, 1, RECOVERED_ERROR, 0, 0x1D);
+>  	}
+>  
+> -	if ((cmd->sense_buffer[0] & 0x7f) >= 0x72) {
+> +	if ((sb[0] & 0x7f) >= 0x72) {
+> +		unsigned char *desc;
+>  		u8 len;
+>  
+>  		/* descriptor format */
+> @@ -916,21 +916,21 @@ static void ata_gen_passthru_sense(struct ata_queued_cmd *qc)
+>  		}
+>  	} else {
+>  		/* Fixed sense format */
+> -		desc[0] = tf->error;
+> -		desc[1] = tf->status;
+> -		desc[2] = tf->device;
+> -		desc[3] = tf->nsect;
+> -		desc[7] = 0;
+> +		sb[0] |= 0x80;
+> +		sb[3] = tf->error;
+> +		sb[4] = tf->status;
+> +		sb[5] = tf->device;
+> +		sb[6] = tf->nsect;
+>  		if (tf->flags & ATA_TFLAG_LBA48)  {
+> -			desc[8] |= 0x80;
+> +			sb[8] |= 0x80;
+>  			if (tf->hob_nsect)
+> -				desc[8] |= 0x40;
+> +				sb[8] |= 0x40;
+>  			if (tf->hob_lbal || tf->hob_lbam || tf->hob_lbah)
+> -				desc[8] |= 0x20;
+> +				sb[8] |= 0x20;
+>  		}
+> -		desc[9] = tf->lbal;
+> -		desc[10] = tf->lbam;
+> -		desc[11] = tf->lbah;
+> +		sb[9] = tf->lbal;
+> +		sb[10] = tf->lbam;
+> +		sb[11] = tf->lbah;
+>  	}
+>  }
+>  
+> -- 
+> 2.45.2.803.g4e1b14247a-goog
+> 
 
-What are the device/function addresses of the IIO and the Root Ports?
-
-They must all be on the root bus, and if the IIO is enumerated first
-(i.e., if it has a smaller device/function number), you may be able to 
-make a quirk that applies to the Root Port vendor/device ID but reads
-the config bit from the IIO.
-
-quirk_passive_release(), quirk_vialatency(), quirk_amd_780_apc_msi(),
-etc. do similar things.
-
-Bjorn
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
