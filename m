@@ -1,168 +1,216 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6629C16EB6A;
-	Mon,  1 Jul 2024 17:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2626C16D4F0;
+	Mon,  1 Jul 2024 17:57:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719856549; cv=none; b=FOOb6R6oSoiuNYu2bqelLyM6OqbDuU3mWZGTcxrSnssczIm14ODy9mAgHpco9w/EL+hmW3I+kB7INQd7liu+xl9/bj0vSup3suu9PzJTnZQqUonZ9IjomsY7HdJZgY97GayCqez2vr76uV1KiT6ySrBtl94XY7ayX18oy/2xV9g=
+	t=1719856643; cv=none; b=kCGLMXPO+V60qmEeL3BexGxARCAIuv0OWDNsg6hmbEy31r0WV5r9FcVvvrijB7NNDEYydztYJ2H07fWWQAVGB8PECxOPrrnwbUL6xHxtYbY5bd3B1VPwOj2AmraSUC8RaLPuOQSf+P0OlS6MxC5r1EAKKVvosktlUpSBUldk/74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719856549; c=relaxed/simple;
-	bh=SGQJsHnQ5hH73LkMg9W47h+XoIg3nmMQ48iQr3+H3sY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dS4oQLSvb3DRVn4VcegZC6EbpNAszh68WhV0L/tKAwZ1K91leo0wnUtcuPmeF9OUQ8l+s09XP0XotuG6C2crEHEz67bNUoigik7GQ5kZ3PI30h8M5QYMHawkv4CA+C/xpnuMS18gGZD3RKZrc81WPkd+sZYaPr6vDwO5808zIdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Me7R+7ax; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719856643; c=relaxed/simple;
+	bh=SaLxlOaLeIy6cJ2O8VEYwT6gGoNIQBGx/nLJKnvcBqE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=h01TUPoXImAsZ8UYgaaIZBscay3EkOeEoNzl5EpaEk6wjQtb7nW0Qyyy2cGEjXHGJhITwgNSEOCDTYldXYmLvfEDBefoVIAo/t9CFx9xMk9+AuavG4J8PgERNmXo1f+NMelwjST3U//bR7wCysda38XpD/rZsXcrOYOFDqkqB1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AzgQrqHb; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Me7R+7ax"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719856547; x=1751392547;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=SGQJsHnQ5hH73LkMg9W47h+XoIg3nmMQ48iQr3+H3sY=;
-  b=Me7R+7axUMNfMWxGttgnb+89XbTsKhSmWZFpkdmgE7LxZuC4a9QuN4fa
-   5bhgmXcnygT4fmlqfXECJZAQKYYLMoDRs07VVYypPJPAX/xPaUMxmuHGG
-   YYyDybgrA4BL/600MyG0NDkB7e8z+5/W6PY6aY1Ht4kC6f/I07h9xKQlm
-   H5stO5bd8RXPvsYqEuVvoQZa2P7mfOmh2DhBp1sc/gFPgZC+w9rVVt23z
-   6CunIOt+YtYBR6saP0Qx4qEsTzVcbyV1TVrFsp4gDMxNHK121YV/fB1Ng
-   bYSp/elPueeWzFC/+KKLYAJpHa0CfgLfliS8o2UmZfX7jBNjGCp2Id5cs
-   g==;
-X-CSE-ConnectionGUID: soQ9o0/nS5iazJpkUfDtgw==
-X-CSE-MsgGUID: U+riKPaDQ+i6Vcy4D0tgpg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="34542838"
-X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
-   d="scan'208";a="34542838"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 10:55:46 -0700
-X-CSE-ConnectionGUID: VvlaK8fdRBex0s2yHtTBBA==
-X-CSE-MsgGUID: Hy0V87hJRWagHoxyaofFRw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
-   d="scan'208";a="46263903"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 10:55:47 -0700
-Date: Mon, 1 Jul 2024 11:00:58 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: Xin Li <xin@zytor.com>
-Cc: X86 Kernel <x86@kernel.org>, Sean Christopherson <seanjc@google.com>,
- LKML <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Xin Li
- <xin3.li@intel.com>, linux-perf-users@vger.kernel.org, Peter Zijlstra
- <peterz@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>, Tony Luck
- <tony.luck@intel.com>, Andy Lutomirski <luto@kernel.org>, acme@kernel.org,
- kan.liang@linux.intel.com, Andi Kleen <andi.kleen@intel.com>, "Mehta,
- Sohil" <sohil.mehta@intel.com>, Zeng Guang <guang.zeng@intel.com>,
- jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v3 07/11] KVM: VMX: Handle NMI Source report in VM exit
-Message-ID: <20240701110058.098c6445@jacob-builder>
-In-Reply-To: <51768b50-96ac-49a7-a63b-02d2b94c2c6a@zytor.com>
-References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
-	<20240628201839.673086-8-jacob.jun.pan@linux.intel.com>
-	<6c8160e4-3d67-410d-aad0-3ec731a903f8@zytor.com>
-	<20240701084558.1620584f@jacob-builder>
-	<51768b50-96ac-49a7-a63b-02d2b94c2c6a@zytor.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AzgQrqHb"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1f65a3abd01so24010115ad.3;
+        Mon, 01 Jul 2024 10:57:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719856641; x=1720461441; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QTnBu4nnqsZojUMtGOINbfAR4CxGHYDTTSGyDIhRhiE=;
+        b=AzgQrqHbgWnt2+VtDV0c7mC3yvPjNVPd10juXZTf6IeaOZTunMzI/meM+GIy3oFb96
+         i7Opi2YEp+zJfIkjMOHxQom1gk0RT4wNRhLMaXs9xEn5536irNUqQpU1p1BXQzzVbGtI
+         vrwsQxbu6o/enUzGfn/Xzck9ZleR3Qjr3euNx7pqKcIktO0mOZdD7e5aw6NrlS8NrZsA
+         tgT8v6R78KDPV15uc60OPO9XviUor9pzVaX2CcqCNzVdOQjdguKdvskKVdw2sBq6hYom
+         37MfJzduOC43wYh3UVzIogQ8wWAZNATPT4jifZOrXsyMjFf+EgkUB/noH3jTL+gkUijV
+         iJEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719856641; x=1720461441;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QTnBu4nnqsZojUMtGOINbfAR4CxGHYDTTSGyDIhRhiE=;
+        b=h2bxBqsT05i/Eq/DspFEkSyOITdo56U6q0wZrQj5nnB7QCPCGZw9RsrP56xzEFdXIR
+         M0QwtWmM0Uj4biMppnvVcr1rD1r8IoN0a7U7+97nFXY2KPlSh2tSGC+tDnWSTR/FUGtR
+         iL7icxntNCChYq7WfKZCvX9SiWwu99N8qSEkHbDKujkF685yqh6YpKZwJKN8mcnR81xg
+         nSIPzZDReJu77jaTBwy++grJr9/oLMe5OstxGCE1a6v1MmhbWVDcsBtoF2o01pQCKT+R
+         /+L7QSp8ne0NgpS+uI8KFSW32wIYgSK4dzLTGBRhnJui4535BrN6L0HqyJpOT+ZXfhot
+         y2Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCXETdqT17+0wPeLrjjYu2YVrj0uBG1y93KqP5bsRdXK8elmwR7d1yB2Y+6XHP1HV0dz9K9flDdtwZYKfjXrykgnuXlOueYjoKe6MR322zT3J/RjoP1W5br28S5xd1N6NNvfHPwxGLb27HE=
+X-Gm-Message-State: AOJu0Yz7ZMjsvc6odxkuYPzwQpJk/EVnTjAhxNvVLcCd7ZZYeBk8oiZn
+	Mg73aP7lDM4iZ5OK4kvORdBNZw2rsOKCpyJnnOjTuPh85Wt6GfJN
+X-Google-Smtp-Source: AGHT+IFo+6odbDk3AziB8lJmBh7bCrPK0HlbjMXlB/kaZJyUYY2xfVs8u2HJkwLzKlpyeEkt+pN+Qw==
+X-Received: by 2002:a17:903:2308:b0:1fa:1d37:700b with SMTP id d9443c01a7336-1fadbce6a01mr57101205ad.45.1719856641322;
+        Mon, 01 Jul 2024 10:57:21 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:7783:69e6:8487:f6ab])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac10e392asm67875045ad.78.2024.07.01.10.57.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 10:57:21 -0700 (PDT)
+Date: Mon, 1 Jul 2024 10:57:18 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Michael Hennerich <michael.hennerich@analog.com>,
+	Utsav Agarwal <utsav.agarwal@analog.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] iInput: adp5588-keys - use guard notation when acquiring
+ mutexes
+Message-ID: <ZoLt_qBCQS-tG8Ar@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+This makes the code more compact and error handling more robust.
+
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+
+Sending this out because Utsav is working on the driver so he can rebase
+the work on top of this.
+
+ drivers/input/keyboard/adp5588-keys.c | 49 ++++++++++-----------------
+ 1 file changed, 17 insertions(+), 32 deletions(-)
+
+diff --git a/drivers/input/keyboard/adp5588-keys.c b/drivers/input/keyboard/adp5588-keys.c
+index 1b0279393df4..09bcfc6b9408 100644
+--- a/drivers/input/keyboard/adp5588-keys.c
++++ b/drivers/input/keyboard/adp5588-keys.c
+@@ -221,15 +221,13 @@ static int adp5588_gpio_get_value(struct gpio_chip *chip, unsigned int off)
+ 	unsigned int bit = ADP5588_BIT(kpad->gpiomap[off]);
+ 	int val;
+ 
+-	mutex_lock(&kpad->gpio_lock);
++	guard(mutex)(&kpad->gpio_lock);
+ 
+ 	if (kpad->dir[bank] & bit)
+ 		val = kpad->dat_out[bank];
+ 	else
+ 		val = adp5588_read(kpad->client, GPIO_DAT_STAT1 + bank);
+ 
+-	mutex_unlock(&kpad->gpio_lock);
+-
+ 	return !!(val & bit);
+ }
+ 
+@@ -240,7 +238,7 @@ static void adp5588_gpio_set_value(struct gpio_chip *chip,
+ 	unsigned int bank = ADP5588_BANK(kpad->gpiomap[off]);
+ 	unsigned int bit = ADP5588_BIT(kpad->gpiomap[off]);
+ 
+-	mutex_lock(&kpad->gpio_lock);
++	guard(mutex)(&kpad->gpio_lock);
+ 
+ 	if (val)
+ 		kpad->dat_out[bank] |= bit;
+@@ -248,8 +246,6 @@ static void adp5588_gpio_set_value(struct gpio_chip *chip,
+ 		kpad->dat_out[bank] &= ~bit;
+ 
+ 	adp5588_write(kpad->client, GPIO_DAT_OUT1 + bank, kpad->dat_out[bank]);
+-
+-	mutex_unlock(&kpad->gpio_lock);
+ }
+ 
+ static int adp5588_gpio_set_config(struct gpio_chip *chip,  unsigned int off,
+@@ -259,7 +255,6 @@ static int adp5588_gpio_set_config(struct gpio_chip *chip,  unsigned int off,
+ 	unsigned int bank = ADP5588_BANK(kpad->gpiomap[off]);
+ 	unsigned int bit = ADP5588_BIT(kpad->gpiomap[off]);
+ 	bool pull_disable;
+-	int ret;
+ 
+ 	switch (pinconf_to_config_param(config)) {
+ 	case PIN_CONFIG_BIAS_PULL_UP:
+@@ -272,19 +267,15 @@ static int adp5588_gpio_set_config(struct gpio_chip *chip,  unsigned int off,
+ 		return -ENOTSUPP;
+ 	}
+ 
+-	mutex_lock(&kpad->gpio_lock);
++	guard(mutex)(&kpad->gpio_lock);
+ 
+ 	if (pull_disable)
+ 		kpad->pull_dis[bank] |= bit;
+ 	else
+ 		kpad->pull_dis[bank] &= bit;
+ 
+-	ret = adp5588_write(kpad->client, GPIO_PULL1 + bank,
+-			    kpad->pull_dis[bank]);
+-
+-	mutex_unlock(&kpad->gpio_lock);
+-
+-	return ret;
++	return adp5588_write(kpad->client, GPIO_PULL1 + bank,
++			     kpad->pull_dis[bank]);
+ }
+ 
+ static int adp5588_gpio_direction_input(struct gpio_chip *chip, unsigned int off)
+@@ -292,16 +283,11 @@ static int adp5588_gpio_direction_input(struct gpio_chip *chip, unsigned int off
+ 	struct adp5588_kpad *kpad = gpiochip_get_data(chip);
+ 	unsigned int bank = ADP5588_BANK(kpad->gpiomap[off]);
+ 	unsigned int bit = ADP5588_BIT(kpad->gpiomap[off]);
+-	int ret;
+ 
+-	mutex_lock(&kpad->gpio_lock);
++	guard(mutex)(&kpad->gpio_lock);
+ 
+ 	kpad->dir[bank] &= ~bit;
+-	ret = adp5588_write(kpad->client, GPIO_DIR1 + bank, kpad->dir[bank]);
+-
+-	mutex_unlock(&kpad->gpio_lock);
+-
+-	return ret;
++	return adp5588_write(kpad->client, GPIO_DIR1 + bank, kpad->dir[bank]);
+ }
+ 
+ static int adp5588_gpio_direction_output(struct gpio_chip *chip,
+@@ -310,9 +296,9 @@ static int adp5588_gpio_direction_output(struct gpio_chip *chip,
+ 	struct adp5588_kpad *kpad = gpiochip_get_data(chip);
+ 	unsigned int bank = ADP5588_BANK(kpad->gpiomap[off]);
+ 	unsigned int bit = ADP5588_BIT(kpad->gpiomap[off]);
+-	int ret;
++	int error;
+ 
+-	mutex_lock(&kpad->gpio_lock);
++	guard(mutex)(&kpad->gpio_lock);
+ 
+ 	kpad->dir[bank] |= bit;
+ 
+@@ -321,17 +307,16 @@ static int adp5588_gpio_direction_output(struct gpio_chip *chip,
+ 	else
+ 		kpad->dat_out[bank] &= ~bit;
+ 
+-	ret = adp5588_write(kpad->client, GPIO_DAT_OUT1 + bank,
+-			    kpad->dat_out[bank]);
+-	if (ret)
+-		goto out_unlock;
+-
+-	ret = adp5588_write(kpad->client, GPIO_DIR1 + bank, kpad->dir[bank]);
++	error = adp5588_write(kpad->client, GPIO_DAT_OUT1 + bank,
++			      kpad->dat_out[bank]);
++	if (error)
++		return error;
+ 
+-out_unlock:
+-	mutex_unlock(&kpad->gpio_lock);
++	error = adp5588_write(kpad->client, GPIO_DIR1 + bank, kpad->dir[bank]);
++	if (error)
++		return error;
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int adp5588_build_gpiomap(struct adp5588_kpad *kpad)
+-- 
+2.45.2.803.g4e1b14247a-goog
 
 
-On Mon, 1 Jul 2024 10:03:58 -0700, Xin Li <xin@zytor.com> wrote:
-
-> On 7/1/2024 8:45 AM, Jacob Pan wrote:
-> > 
-> > On Fri, 28 Jun 2024 21:07:04 -0700, Xin Li <xin@zytor.com> wrote:
-> >   
-> >> On 6/28/2024 1:18 PM, Jacob Pan wrote:  
-> >>> From: Zeng Guang <guang.zeng@intel.com>
-> >>>
-> >>> If the "NMI exiting" VM-execution control is 1, the value of the
-> >>> 16-bit NMI source vector is saved in the exit-qualification field in
-> >>> the VMCS when VM exits occur on CPUs that support NMI source.
-> >>>
-> >>> KVM that is aware of NMI-source reporting will push the bitmask of NMI
-> >>> source vectors as the exceptoin event data field on the stack for then
-> >>> entry of FRED exception. Subsequently, the host NMI exception handler
-> >>> is invoked which will process NMI source information in the event
-> >>> data. This operation is independent of vCPU FRED enabling status.
-> >>>
-> >>> Signed-off-by: Zeng Guang <guang.zeng@intel.com>
-> >>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> >>> ---
-> >>>    arch/x86/entry/entry_64_fred.S |  2 +-
-> >>>    arch/x86/kvm/vmx/vmx.c         | 11 ++++++++---
-> >>>    2 files changed, 9 insertions(+), 4 deletions(-)
-> >>>
-> >>> diff --git a/arch/x86/entry/entry_64_fred.S
-> >>> b/arch/x86/entry/entry_64_fred.S index a02bc6f3d2e6..0d934a3fcaf8
-> >>> 100644 --- a/arch/x86/entry/entry_64_fred.S
-> >>> +++ b/arch/x86/entry/entry_64_fred.S
-> >>> @@ -92,7 +92,7 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
-> >>>    	 * +--------+-----------------+
-> >>>    	 */
-> >>>    	push $0				/* Reserved, must
-> >>> be 0 */
-> >>> -	push $0				/* Event data, 0 for
-> >>> IRQ/NMI */
-> >>> +	push %rsi			/* Event data for IRQ/NMI */
-> >>>    	push %rdi			/* fred_ss handed in by
-> >>> the caller */ push %rbp
-> >>>    	pushf  
-> >>
-> >> This belongs to the previous patch, it is part of the host changes.  
-> > right, will do.
-> >   
-> >>  
-> >>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> >>> index 4e7b36081b76..6719c598fa5f 100644
-> >>> --- a/arch/x86/kvm/vmx/vmx.c
-> >>> +++ b/arch/x86/kvm/vmx/vmx.c
-> >>> @@ -7331,10 +7331,15 @@ static noinstr void vmx_vcpu_enter_exit(struct
-> >>> kvm_vcpu *vcpu, if ((u16)vmx->exit_reason.basic ==
-> >>> EXIT_REASON_EXCEPTION_NMI && is_nmi(vmx_get_intr_info(vcpu))) {
-> >>>    		kvm_before_interrupt(vcpu, KVM_HANDLING_NMI);
-> >>> -		if (cpu_feature_enabled(X86_FEATURE_FRED))
-> >>> -			fred_entry_from_kvm(EVENT_TYPE_NMI,
-> >>> NMI_VECTOR, 0);
-> >>> -		else
-> >>> +		if (cpu_feature_enabled(X86_FEATURE_FRED)) {
-> >>> +			unsigned long edata = 0;
-> >>> +
-> >>> +			if
-> >>> (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE))
-> >>> +				edata = vmx_get_exit_qual(vcpu);
-> >>> +			fred_entry_from_kvm(EVENT_TYPE_NMI,
-> >>> NMI_VECTOR, edata);  
-> >>
-> >> Simply do fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR,
-> >> vmx_get_exit_qual(vcpu))?  
-> > I don't have strong preference but having a local variable improves
-> > readability IMHO.  
-> 
-> My point was, do we actually need this check:
->      (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE)?
-I also pondered about the value of this CPUID bit if it is consistently
-linked with the FRED bit. But since the architecture provided this
-additional enumeration, as noted in Chapter 9 of the FRED specification,
-which states: 
-
-"Processors that support FRED *may* also support a related feature called
-NMI-source reporting".
-
-The use of "may" suggests that there are scenarios where FRED might exist
-without NMI-source reporting. To ensure future compatibility, I believe
-it is still valid to maintain this check.
-
-
-Thanks,
-
-Jacob
+-- 
+Dmitry
