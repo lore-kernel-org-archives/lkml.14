@@ -1,61 +1,61 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA63416C6B6
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 14:56:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03DB116CD0C
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 14:56:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719845809; cv=none; b=rzPlqMPy3r7ZpxHXZA1NcQSkcRpKPbBRGA664r0UEtJAhh7IPMlNHXll50gfm4X7LK4cPjwzPpue9TffSMfrX2VlNIMBZEg+fOdfjbDyNU/dRRc+Z5AMzh/pdr3t9CZpK939W1ExqKWOJgUG8X/Q4SUUNdEuWXYLCmT32ew4Dyo=
+	t=1719845812; cv=none; b=BJYlhPohCbZ1ZQxy0vOQQbRK1PjX33pquHaxpCt90BG9Pqxpv1sf9ny4zia4JKRjZvT7D4nHFoYFWeDI405D/NtPFXOq5hbvh5FjTqABbWEEw2Oo99xd2aFQoRPFEqf3hHzpZfvoqvksai46kOQ3Qiv1vHjT4cMDVDAqaEfDkVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719845809; c=relaxed/simple;
-	bh=79NJk/kks064XT4lzuhqDllc7V+WZUytw1GlsOlds7Q=;
+	s=arc-20240116; t=1719845812; c=relaxed/simple;
+	bh=kb1FnQDn0ZT17ALs01+HilXnHppqjDF6c8veki67I7Y=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cgCB/TzFr/y/NF8SkyO+qdBp+pqR/JDC8BG9cFq8yc750voEDHbzieJMsjWE97K109HIK5WznOiM+XaDTTXypQeL07ihV/MVpC5LK/qtb61yEbOAoyh5j998JOcQj/1rGJaClmJpCGfOW8EB4zMoisN7pd9iWpUjz1tHOH9Via4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f2Rm3vpq; arc=none smtp.client-ip=209.85.208.177
+	 In-Reply-To:To:Cc; b=LLbj23UcCG6ISaPhO1fh+DLyc+afUGgwl2/Nb3mRW7ZXReSaw1eu8o2KZLlcb28dzHo7znFEUSywhb9qfSIJYnTiDrn43Zxopkjx7GRrCBAk0AhutDv6cWdh5AuHVHi32YDOgfZLPfYIsdlJUPW7rqoXE8j8312wKR4j/X7j9ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DsKy32Ey; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f2Rm3vpq"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2ebe0a81dc8so41981601fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 07:56:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DsKy32Ey"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-425809eef0eso8808955e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 07:56:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719845804; x=1720450604; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1719845809; x=1720450609; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=JATPX/JRe6q4Z3TotQ5wEOtjsde3mkXmcqQGJxoMG3g=;
-        b=f2Rm3vpqmp0KnqYvBQaJaF4c09gh62YKh5BVvr0I4uxT7lujm7FpxDlAz64bZpqtsg
-         WMtj2eN1NX/IfZee5FuLB8/uIW/z59fhjoevZrBfDaWFo35SG5l5KRHhaSXlRk+Bql5p
-         WynnPVnquATbhrk9j0teVoGFwq8onBAZ0QyXxpqtTjC7stQ/4eDRYpqFJFOrJ39E+y4c
-         lfvpkyeOWYsMCUaRohfyLZf8dcQ0IIFvmgGmdtWHbftoUR5QXUieFYEFBEdqpP/vEALY
-         +HcROcayt10QisQulSbwsdIpI3A4IvNXPwEyJhivFbPjA28h84gtidxm/3zZQyFynrZo
-         Xkdg==
+        bh=RmnlXVSk8Bmi7VgmYcl1HcRpFD6VX2h6iLn8P1zKdUs=;
+        b=DsKy32EyPUv6ohllT8PacQta1TeOJ3SkHJ4wSd/9vzld2Zc343FQ8a+COjcUazFpc7
+         TXrJ0To8ofg45cqUeegH9w575w5jIf93UMgpoqo+m0ZA9NBSR7Bq/Hd59CQid6kpaSwE
+         TCvADIFFV8gYoRhOu4+/EEXH7Nya3NSicApPFJR4UQ3YkHnydynX74yZNXQE6aieV3Ut
+         gBqRpTCYrsj39gBCS6ypLmG0PYB3FvB6z2JVUynK3rbGJFgcx2e/Smcjj7VIkbeXjAMA
+         0PAUm2vG7N5mLTgPAPAa53xLP3L7glj+EAfYxilnYGSS0vKgvNXKaxJEwlgdBYKjzRQ8
+         CSOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719845804; x=1720450604;
+        d=1e100.net; s=20230601; t=1719845809; x=1720450609;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JATPX/JRe6q4Z3TotQ5wEOtjsde3mkXmcqQGJxoMG3g=;
-        b=NnX7sFzUQf+kc9wbwRPAK8WWRFVgcld7qDtI+zzBirKwzOx2NObZynrjLuvT8AP8wU
-         kWl2AwwYDP1PzdwEMmNiq3q/EBYsSD3CNzk2lPY93s3eMs66oV/4K6qUi0nVExKiOlgh
-         NvhwQfr8toSb/3HYkQb05PnmP+B5sKkOOzBXPcmqw7YObpIBnejtAq8Xv04zGBqVQFXV
-         Ng4wuQe/UkxNkGm//un6a+Ma6ff+/uvd8oS1SwalvAI2q1LhczS5VGHKR+5Bds6mAeFs
-         XTrKD6hDr9e3bQBHVxxApnC11jgDQ3ASje6t5Q73Xe5fwZIm9GjRIlp1u0dq2N83/ZCI
-         i7ew==
-X-Forwarded-Encrypted: i=1; AJvYcCVB9Fd7Df1AoGniEQUaNQOATKXbGTFYgLCzb0ij9cl94IsFxW/D2olUGF2bHvJdRlxMpLWDOSqi2cTFhfS0dgfNSUhD0rx6NnJvpKEt
-X-Gm-Message-State: AOJu0Yz6sfoq28WFVbyuQmOYeNW/miVxIK+XqKpzdVKWkmOehN10wcb0
-	fwPID9+n+VoYngUb63GY8txTzqoeno+bt3/PC2RMjSz6wjZblxVPET4ViZOZzLmgLgMzvcIJqvG
-	Z
-X-Google-Smtp-Source: AGHT+IE22RIOChFZZa4znuI1O9mOLun25MwFCbFMZiEdl8Iwww43ZJGWH2ZmYlbDClkh5/Wy0lb1+g==
-X-Received: by 2002:a2e:a889:0:b0:2ec:558d:4e0a with SMTP id 38308e7fff4ca-2ee5e393e16mr52979781fa.19.1719845804485;
-        Mon, 01 Jul 2024 07:56:44 -0700 (PDT)
+        bh=RmnlXVSk8Bmi7VgmYcl1HcRpFD6VX2h6iLn8P1zKdUs=;
+        b=dVQteSo9NSQpkBqAQ+fKAC/s+gp/SZxJUSsy3MCXjQyNe/aUwfMOx3nzwvHieKBL+j
+         9Os2hmMi3YyhYXQGaQq/bd67nLW/VlqEdhM5sXtV+SlGjlk7bxOk3aKb4GW7x5jCor54
+         ijlPO83MFtUXYpb9rP52JizEBOhq9Yf7FzRsL3+rnRBIWwiooA9Gd/UEXkVTstwOT0aS
+         +eXNFggysEZmyqLvuTIWLLsDMQyfXbFk8MB1aO4LTcHIfmA2x3kDtu1p33TBI2ZM40kr
+         l550CNVXwhGF8eA6chOSSEdkww/8FBvn4wFmYnZCdrkSDJA7Dfjw64PZzT7yoBmcv5tL
+         oQEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUsMk6keCF4kfHoVLTsHm/xubhY1lNLpgD3Res79ytxu7ftv3EP+VXjR516pwQUMkduvgjGOFF1pbU04Talk+IWNxs8KD8FJi3BshgC
+X-Gm-Message-State: AOJu0YxNP1bga40zpo2+DS/K/Vz16aZZueZvfV/HdzjUq4vyuIowJCfh
+	M0TTzT4vGov0dS0m6DDw/I2VydtmYxSEtjA+CBs8LFIwHnZRpTXSN5odlN4g80MZwD+AwFlXD8i
+	0
+X-Google-Smtp-Source: AGHT+IGra1rN0CktmnXJF4vfHe896ROGlb3rDY4QCV/i7d+MRtIToMqbGMp6dcTl/zTwo3hzkxk+Sg==
+X-Received: by 2002:a05:600c:2255:b0:421:7b9d:5b9b with SMTP id 5b1f17b1804b1-4257a03022fmr47607455e9.15.1719845808875;
+        Mon, 01 Jul 2024 07:56:48 -0700 (PDT)
 Received: from [127.0.1.1] ([178.197.219.137])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256b0c0f99sm160062915e9.41.2024.07.01.07.56.43
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256b0c0f99sm160062915e9.41.2024.07.01.07.56.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 07:56:43 -0700 (PDT)
+        Mon, 01 Jul 2024 07:56:48 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Mon, 01 Jul 2024 16:56:34 +0200
-Subject: [PATCH 1/7] ARM: dts: marvell: kirkwood: align GPIO keys node name
+Date: Mon, 01 Jul 2024 16:56:37 +0200
+Subject: [PATCH 4/7] ARM: dts: marvell: orion: align GPIO keys node name
  with bindings
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -65,7 +65,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240701-dts-marvell-cleanup-v1-1-4773bd20691a@linaro.org>
+Message-Id: <20240701-dts-marvell-cleanup-v1-4-4773bd20691a@linaro.org>
 References: <20240701-dts-marvell-cleanup-v1-0-4773bd20691a@linaro.org>
 In-Reply-To: <20240701-dts-marvell-cleanup-v1-0-4773bd20691a@linaro.org>
 To: Andrew Lunn <andrew@lunn.ch>, 
@@ -77,510 +77,143 @@ Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=17045;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4380;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=79NJk/kks064XT4lzuhqDllc7V+WZUytw1GlsOlds7Q=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmgsOjPa79i2wAY3BT1qCSZzyYEo45o+HlfiOBX
- DDT8xAZS8aJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZoLDowAKCRDBN2bmhouD
- 1z66EACSRfVcHB/qDzhjBWmIncYpKirAvYh9JjoXYCUikttoWxnFj62tNR3/Uz7eEf2dzOZLy1e
- OxfGmkQhKL05rOl8WVvzIp5d9328lTDV6H3ok82YqDchLYrkjFZnfTT6F5v+9TpJXPXK0iN2QXd
- sNJsQLSqL6ZUMoqHqLjAvuESYaRDXnCQcuPyzegjLi6wGY+cpt/C2aO+PGxmww4Timf+LTIwVhn
- 2ayBiXVeh0MT0CPAhM47k3A3u7J/ZnboA6K97qyhUA7knDkE0PO6HTMJ0OsF7maMOF9lfgWHpie
- 7FSxVynlnt3CJo9OGTbBznGsMcPVcaTD7xADyeABGIChDBEQ0c/N9uG+jZpuU98uf5O55rrWYQK
- QnElBLVqAsGHGIFdW8g4iRFTI8ITjWOa12uPqRc51Gl1gSlkyKKNaHEQbWXcLaxa8Gfii2QRpxE
- aB1EBNPyRNhfcRo2G9iwvQZCGzi5eAufY3nbRO01/IbLkGFa2d/4t19kX5NJnNGjpF8ZWy52P4p
- UTB9Z5PRuPwFYUzPFbCzB9DV9dw44BVLBcFs5GndmygjF9cXivGSEOOIywXJB+HI5EUXuvU52FH
- waiRVuafwvcyjuuj5euIhHx0dljW9OQDcdIe1BdAyTFVXkG0rB+v0p9LefkvwMioUcc/RDImOXC
- BwpsZw4SrDqGvLQ==
+ bh=kb1FnQDn0ZT17ALs01+HilXnHppqjDF6c8veki67I7Y=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmgsOm1UBLm7b69zUMX/zcTfKcYyhS1/iRpO2En
+ +Uex+ylj8yJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZoLDpgAKCRDBN2bmhouD
+ 144FD/4xlTp2kYFnF/dp6I0lBkqMMr4j5u9JWCbw/26hD3Oqy24gqwEtJJOoSIxn8cGbZV/S5o/
+ 8vWFvPXXQToXoBGQMCvBfsZ6/eASPEvN3WApo/hg5Vgm2tRmXUAdIL8g+8TzXMpl0HGWhFOhyD2
+ tlp+j82/ShcJPiTt7I7T2IOnTrulSfBaX3HCGqorljFL9aVP8+k57NRBvZ+x2DH8G+twa4IRPw5
+ nGwygRHMpPbIKG1V+7JTQ7tXhppg/+zN6+CrxRuFv0E3Z1OOIXzE5VE2fKoQQIJ1qQgEzYaEm2k
+ cKDZx/pA9c2lhYZmhrh3cvCfr+BXqKAm7Ak46Kdi9VEzfPf1zRgT4Y2pxZZ40bBQ7ppabmYdvxi
+ NOBY3hLZCpLSqYWHiGfzP6XeeCwJqxqZ1bWeVtTe4g4D+gWbdLfeBcxMgMH6eRu8YlBjSNzRfwr
+ rkerLlYETsBwmN9wUakwtDsjYfAVu2fG0N7xmGFqoYqV/HOrVsw3py7P5RU7WPlM4uKMbNRukGZ
+ WKv85CR0c7+5IL8f1Ch+I4AfOej9aLnATT0HpdQPmSLleGlPUwxmwuKkwl+swVrljlEktJvuBDH
+ 1dSN8JnfBCz9hHkMwo846IurWcibjKFmQGV0+qiVdc1av8+uLIgGpSY82bGnOq9fM6lXp5RTVC2
+ 5a5rH6Lckm+4FsQ==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
 Bindings expect the GPIO key node names to follow certain pattern, see
 dtbs_check warnings:
 
-  kirkwood-laplug.dtb: gpio_keys: 'power' does not match any of the regexes: '^(button|event|key|switch|(button|event|key|switch)...
+  orion5x-lacie-d2-network.dtb: gpio-keys: 'front_button', 'power_rocker_sw_off', 'power_rocker_sw_on' do not match any of the regexes: '^(button|event|key|switch| ...
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- arch/arm/boot/dts/marvell/kirkwood-blackarmor-nas220.dts | 4 ++--
- arch/arm/boot/dts/marvell/kirkwood-c200-v1.dts           | 8 ++++----
- arch/arm/boot/dts/marvell/kirkwood-cloudbox.dts          | 2 +-
- arch/arm/boot/dts/marvell/kirkwood-dir665.dts            | 4 ++--
- arch/arm/boot/dts/marvell/kirkwood-dnskw.dtsi            | 6 +++---
- arch/arm/boot/dts/marvell/kirkwood-ib62x0.dts            | 4 ++--
- arch/arm/boot/dts/marvell/kirkwood-iconnect.dts          | 4 ++--
- arch/arm/boot/dts/marvell/kirkwood-iomega_ix2_200.dts    | 6 +++---
- arch/arm/boot/dts/marvell/kirkwood-l-50.dts              | 2 +-
- arch/arm/boot/dts/marvell/kirkwood-laplug.dts            | 2 +-
- arch/arm/boot/dts/marvell/kirkwood-linksys-viper.dts     | 4 ++--
- arch/arm/boot/dts/marvell/kirkwood-lsxl.dtsi             | 6 +++---
- arch/arm/boot/dts/marvell/kirkwood-mv88f6281gtw-ge.dts   | 4 ++--
- arch/arm/boot/dts/marvell/kirkwood-netxbig.dtsi          | 6 +++---
- arch/arm/boot/dts/marvell/kirkwood-ns2-common.dtsi       | 2 +-
- arch/arm/boot/dts/marvell/kirkwood-nsa310s.dts           | 6 +++---
- arch/arm/boot/dts/marvell/kirkwood-nsa3x0-common.dtsi    | 6 +++---
- arch/arm/boot/dts/marvell/kirkwood-openblocks_a6.dts     | 2 +-
- arch/arm/boot/dts/marvell/kirkwood-pogoplug-series-4.dts | 2 +-
- arch/arm/boot/dts/marvell/kirkwood-t5325.dts             | 2 +-
- arch/arm/boot/dts/marvell/kirkwood-ts219-6281.dts        | 4 ++--
- arch/arm/boot/dts/marvell/kirkwood-ts219-6282.dts        | 4 ++--
- arch/arm/boot/dts/marvell/kirkwood-ts419.dtsi            | 4 ++--
- 23 files changed, 47 insertions(+), 47 deletions(-)
+ arch/arm/boot/dts/marvell/orion5x-lacie-d2-network.dts        | 7 ++++---
+ arch/arm/boot/dts/marvell/orion5x-linkstation-lschl.dts       | 2 +-
+ arch/arm/boot/dts/marvell/orion5x-lswsgl.dts                  | 7 ++++---
+ arch/arm/boot/dts/marvell/orion5x-maxtor-shared-storage-2.dts | 5 +++--
+ arch/arm/boot/dts/marvell/orion5x-netgear-wnr854t.dts         | 2 +-
+ 5 files changed, 13 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/marvell/kirkwood-blackarmor-nas220.dts b/arch/arm/boot/dts/marvell/kirkwood-blackarmor-nas220.dts
-index 07fbfca444d5..f34c3897ff48 100644
---- a/arch/arm/boot/dts/marvell/kirkwood-blackarmor-nas220.dts
-+++ b/arch/arm/boot/dts/marvell/kirkwood-blackarmor-nas220.dts
-@@ -35,13 +35,13 @@ gpio_poweroff {
- 	gpio_keys {
- 		compatible = "gpio-keys";
- 
--		reset {
-+		button-reset {
- 			label = "Reset";
- 			linux,code = <KEY_POWER>;
- 			gpios = <&gpio0 29 GPIO_ACTIVE_HIGH>;
- 		};
- 
--		button {
-+		button-power {
- 			label = "Power";
- 			linux,code = <KEY_SLEEP>;
- 			gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm/boot/dts/marvell/kirkwood-c200-v1.dts b/arch/arm/boot/dts/marvell/kirkwood-c200-v1.dts
-index f59ff7578dfc..7e3ee64d4bdf 100644
---- a/arch/arm/boot/dts/marvell/kirkwood-c200-v1.dts
-+++ b/arch/arm/boot/dts/marvell/kirkwood-c200-v1.dts
-@@ -29,25 +29,25 @@ keys {
- 		pinctrl-0 = <&pmx_buttons>;
+diff --git a/arch/arm/boot/dts/marvell/orion5x-lacie-d2-network.dts b/arch/arm/boot/dts/marvell/orion5x-lacie-d2-network.dts
+index 03471d30bfd9..3d6c5af0e843 100644
+--- a/arch/arm/boot/dts/marvell/orion5x-lacie-d2-network.dts
++++ b/arch/arm/boot/dts/marvell/orion5x-lacie-d2-network.dts
+@@ -37,20 +37,21 @@ gpio-keys {
  		pinctrl-names = "default";
- 
--		power {
-+		button-power {
- 			label = "Power Button";
- 			linux,code = <KEY_POWER>;
- 			gpios = <&gpio1 16 GPIO_ACTIVE_HIGH>;
- 		};
- 
--		reset {
-+		button-reset {
- 			label = "Reset Button";
- 			linux,code = <KEY_RESTART>;
- 			gpios = <&gpio1 17 GPIO_ACTIVE_LOW>;
- 		};
- 
--		usb1 {
-+		button-usb1 {
- 			label = "USB1 Button";
- 			linux,code = <BTN_0>;
- 			gpios = <&gpio0 28 GPIO_ACTIVE_LOW>;
- 		};
- 
--		usb2 {
-+		button-usb2 {
- 			label = "USB2 Button";
- 			linux,code = <BTN_1>;
- 			gpios = <&gpio0 29 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm/boot/dts/marvell/kirkwood-cloudbox.dts b/arch/arm/boot/dts/marvell/kirkwood-cloudbox.dts
-index 448b0cd23b5f..2582b84d8415 100644
---- a/arch/arm/boot/dts/marvell/kirkwood-cloudbox.dts
-+++ b/arch/arm/boot/dts/marvell/kirkwood-cloudbox.dts
-@@ -61,7 +61,7 @@ gpio_keys {
  		#address-cells = <1>;
  		#size-cells = <0>;
+-		front_button {
++
++		button-front {
+ 			label = "Front Push Button";
+ 			linux,code = <KEY_POWER>;
+ 			gpios = <&gpio0 18 GPIO_ACTIVE_HIGH>;
+ 		};
+ 
+-		power_rocker_sw_on {
++		switch-power-rocker-sw-on {
+ 			label = "Power rocker switch (on|auto)";
+ 			linux,input-type = <5>; /* EV_SW */
+ 			linux,code = <1>; /* D2NET_SWITCH_POWER_ON */
+ 			gpios = <&gpio0 8 GPIO_ACTIVE_HIGH>;
+ 		};
+ 
+-		power_rocker_sw_off {
++		switch-power-rocker-sw-off {
+ 			label = "Power rocker switch (auto|off)";
+ 			linux,input-type = <5>; /* EV_SW */
+ 			linux,code = <2>; /* D2NET_SWITCH_POWER_OFF */
+diff --git a/arch/arm/boot/dts/marvell/orion5x-linkstation-lschl.dts b/arch/arm/boot/dts/marvell/orion5x-linkstation-lschl.dts
+index ee751995c8d0..624b737a8be4 100644
+--- a/arch/arm/boot/dts/marvell/orion5x-linkstation-lschl.dts
++++ b/arch/arm/boot/dts/marvell/orion5x-linkstation-lschl.dts
+@@ -61,7 +61,7 @@ memory { /* 128 MB */
+ 	};
+ 
+ 	gpio_keys {
+-		func {
++		func-button {
+ 			label = "Function Button";
+ 			linux,code = <KEY_OPTION>;
+ 			gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;
+diff --git a/arch/arm/boot/dts/marvell/orion5x-lswsgl.dts b/arch/arm/boot/dts/marvell/orion5x-lswsgl.dts
+index 2fbc17d6dfa4..e2829fb0c8b2 100644
+--- a/arch/arm/boot/dts/marvell/orion5x-lswsgl.dts
++++ b/arch/arm/boot/dts/marvell/orion5x-lswsgl.dts
+@@ -76,20 +76,21 @@ gpio-keys {
+ 		pinctrl-names = "default";
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+-		func {
++
++		key-func {
+ 			label = "Function Button";
+ 			linux,code = <KEY_OPTION>;
+ 			gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;
+ 		};
  
 -		power {
 +		key-power {
- 			label = "Power push button";
- 			linux,code = <KEY_POWER>;
- 			gpios = <&gpio0 16 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm/boot/dts/marvell/kirkwood-dir665.dts b/arch/arm/boot/dts/marvell/kirkwood-dir665.dts
-index 0c0851cd9bec..e8eff0ba1c99 100644
---- a/arch/arm/boot/dts/marvell/kirkwood-dir665.dts
-+++ b/arch/arm/boot/dts/marvell/kirkwood-dir665.dts
-@@ -179,12 +179,12 @@ gpio-keys {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		reset {
-+		button-reset {
- 			label = "reset";
- 			linux,code = <KEY_RESTART>;
- 			gpios = <&gpio0 28 GPIO_ACTIVE_LOW>;
- 		};
--		wps {
-+		button-wps {
- 			label = "wps";
- 			linux,code = <KEY_WPS_BUTTON>;
- 			gpios = <&gpio1 14 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm/boot/dts/marvell/kirkwood-dnskw.dtsi b/arch/arm/boot/dts/marvell/kirkwood-dnskw.dtsi
-index 0738eb679fcd..baea14c68520 100644
---- a/arch/arm/boot/dts/marvell/kirkwood-dnskw.dtsi
-+++ b/arch/arm/boot/dts/marvell/kirkwood-dnskw.dtsi
-@@ -14,17 +14,17 @@ gpio_keys {
- 			     &pmx_button_reset>;
- 		pinctrl-names = "default";
- 
--		power {
-+		button-power {
- 			label = "Power button";
- 			linux,code = <KEY_POWER>;
- 			gpios = <&gpio1 2 GPIO_ACTIVE_LOW>;
- 		};
--		eject {
-+		button-eject {
- 			label = "USB unmount button";
- 			linux,code = <KEY_EJECTCD>;
- 			gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
- 		};
--		reset {
-+		button-reset {
- 			label = "Reset button";
- 			linux,code = <KEY_RESTART>;
- 			gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm/boot/dts/marvell/kirkwood-ib62x0.dts b/arch/arm/boot/dts/marvell/kirkwood-ib62x0.dts
-index 962a910a6f5c..d76dbbce16f1 100644
---- a/arch/arm/boot/dts/marvell/kirkwood-ib62x0.dts
-+++ b/arch/arm/boot/dts/marvell/kirkwood-ib62x0.dts
-@@ -63,12 +63,12 @@ gpio_keys {
- 		pinctrl-0 = <&pmx_button_reset &pmx_button_usb_copy>;
- 		pinctrl-names = "default";
- 
--		copy {
-+		button-copy {
- 			label = "USB Copy";
- 			linux,code = <KEY_COPY>;
- 			gpios = <&gpio0 29 GPIO_ACTIVE_LOW>;
- 		};
--		reset {
-+		button-reset {
- 			label = "Reset";
- 			linux,code = <KEY_RESTART>;
- 			gpios = <&gpio0 28 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm/boot/dts/marvell/kirkwood-iconnect.dts b/arch/arm/boot/dts/marvell/kirkwood-iconnect.dts
-index aed20185fd7a..ea98ff13700e 100644
---- a/arch/arm/boot/dts/marvell/kirkwood-iconnect.dts
-+++ b/arch/arm/boot/dts/marvell/kirkwood-iconnect.dts
-@@ -127,13 +127,13 @@ gpio_keys {
- 		pinctrl-0 = < &pmx_button_reset &pmx_button_otb >;
- 		pinctrl-names = "default";
- 
--		otb {
-+		button-otb {
- 			label = "OTB Button";
- 			linux,code = <KEY_COPY>;
- 			gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
- 			debounce-interval = <100>;
- 		};
--		reset {
-+		button-reset {
- 			label = "Reset";
- 			linux,code = <KEY_RESTART>;
- 			gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm/boot/dts/marvell/kirkwood-iomega_ix2_200.dts b/arch/arm/boot/dts/marvell/kirkwood-iomega_ix2_200.dts
-index 2338f495d517..fa7ace071de8 100644
---- a/arch/arm/boot/dts/marvell/kirkwood-iomega_ix2_200.dts
-+++ b/arch/arm/boot/dts/marvell/kirkwood-iomega_ix2_200.dts
-@@ -154,17 +154,17 @@ gpio-keys {
- 		pinctrl-names = "default";
- 
- 
--		Power {
-+		button-power {
- 			label = "Power Button";
- 			linux,code = <KEY_POWER>;
- 			gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
- 		};
--		Reset {
-+		button-reset {
- 			label = "Reset Button";
- 			linux,code = <KEY_RESTART>;
- 			gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
- 		};
--		OTB {
-+		button-otb {
- 			label = "OTB Button";
- 			linux,code = <KEY_COPY>;
- 			gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm/boot/dts/marvell/kirkwood-l-50.dts b/arch/arm/boot/dts/marvell/kirkwood-l-50.dts
-index c841eb8e7fb1..094854743dde 100644
---- a/arch/arm/boot/dts/marvell/kirkwood-l-50.dts
-+++ b/arch/arm/boot/dts/marvell/kirkwood-l-50.dts
-@@ -193,7 +193,7 @@ express_card_pwr {
- 	keys {
- 		compatible = "gpio-keys";
- 
--		factory_defaults {
-+		button-factory-defaults {
- 			label = "factory_defaults";
- 			gpios = <&gpio0 29 GPIO_ACTIVE_LOW>;
- 			linux,code = <KEY_RESTART>;
-diff --git a/arch/arm/boot/dts/marvell/kirkwood-laplug.dts b/arch/arm/boot/dts/marvell/kirkwood-laplug.dts
-index 8c2b540eaf4f..8296486a5931 100644
---- a/arch/arm/boot/dts/marvell/kirkwood-laplug.dts
-+++ b/arch/arm/boot/dts/marvell/kirkwood-laplug.dts
-@@ -51,7 +51,7 @@ pmx_usb_power_enable: pmx-usb-power-enable {
- 	gpio_keys {
- 		compatible = "gpio-keys";
- 
--		power {
-+		button-power {
- 			label = "Power push button";
- 			linux,code = <KEY_POWER>;
- 			gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>;
-diff --git a/arch/arm/boot/dts/marvell/kirkwood-linksys-viper.dts b/arch/arm/boot/dts/marvell/kirkwood-linksys-viper.dts
-index 27fd6e2337d5..3f97240fda74 100644
---- a/arch/arm/boot/dts/marvell/kirkwood-linksys-viper.dts
-+++ b/arch/arm/boot/dts/marvell/kirkwood-linksys-viper.dts
-@@ -38,13 +38,13 @@ gpio_keys {
- 		pinctrl-0 = < &pmx_btn_wps &pmx_btn_reset >;
- 		pinctrl-names = "default";
- 
--		wps {
-+		button-wps {
- 			label = "WPS Button";
- 			linux,code = <KEY_WPS_BUTTON>;
- 			gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
- 		};
- 
--		reset {
-+		button-reset {
- 			label = "Reset Button";
- 			linux,code = <KEY_RESTART>;
- 			gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm/boot/dts/marvell/kirkwood-lsxl.dtsi b/arch/arm/boot/dts/marvell/kirkwood-lsxl.dtsi
-index f80af24b9e90..a86dbc490600 100644
---- a/arch/arm/boot/dts/marvell/kirkwood-lsxl.dtsi
-+++ b/arch/arm/boot/dts/marvell/kirkwood-lsxl.dtsi
-@@ -113,18 +113,18 @@ gpio_keys {
- 			     &pmx_power_auto_switch>;
- 		pinctrl-names = "default";
- 
--		option {
-+		button-option {
- 			label = "Function Button";
- 			linux,code = <KEY_OPTION>;
- 			gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
- 		};
--		reserved {
-+		button-reserved {
  			label = "Power-on Switch";
- 			linux,code = <KEY_RESERVED>;
- 			linux,input-type = <5>;
- 			gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
+ 			linux,input-type = <5>; /* EV_SW */
+ 			linux,code = <KEY_RESERVED>; /* LSMINI_SW_POWER */
+ 			gpios = <&gpio0 18 GPIO_ACTIVE_LOW>;
  		};
--		power {
-+		button-power {
+ 
+-		autopower {
++		key-autopower {
  			label = "Power-auto Switch";
- 			linux,code = <KEY_ESC>;
- 			linux,input-type = <5>;
-diff --git a/arch/arm/boot/dts/marvell/kirkwood-mv88f6281gtw-ge.dts b/arch/arm/boot/dts/marvell/kirkwood-mv88f6281gtw-ge.dts
-index 5a77286136c7..0d5d85c873b5 100644
---- a/arch/arm/boot/dts/marvell/kirkwood-mv88f6281gtw-ge.dts
-+++ b/arch/arm/boot/dts/marvell/kirkwood-mv88f6281gtw-ge.dts
-@@ -96,12 +96,12 @@ gpio_keys {
- 		pinctrl-0 = <&pmx_keys>;
+ 			linux,input-type = <5>; /* EV_SW */
+ 			linux,code = <KEY_ESC>; /* LSMINI_SW_AUTOPOWER */
+diff --git a/arch/arm/boot/dts/marvell/orion5x-maxtor-shared-storage-2.dts b/arch/arm/boot/dts/marvell/orion5x-maxtor-shared-storage-2.dts
+index d57859998350..90ce5fa883a4 100644
+--- a/arch/arm/boot/dts/marvell/orion5x-maxtor-shared-storage-2.dts
++++ b/arch/arm/boot/dts/marvell/orion5x-maxtor-shared-storage-2.dts
+@@ -37,13 +37,14 @@ gpio-keys {
  		pinctrl-names = "default";
- 
--		restart {
-+		button-restart {
- 			label = "SWR Button";
- 			linux,code = <KEY_RESTART>;
- 			gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
- 		};
--		wps {
-+		button-wps {
- 			label = "WPS Button";
- 			linux,code = <KEY_WPS_BUTTON>;
- 			gpios = <&gpio1 14 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm/boot/dts/marvell/kirkwood-netxbig.dtsi b/arch/arm/boot/dts/marvell/kirkwood-netxbig.dtsi
-index b5737026e244..d0f85893aeca 100644
---- a/arch/arm/boot/dts/marvell/kirkwood-netxbig.dtsi
-+++ b/arch/arm/boot/dts/marvell/kirkwood-netxbig.dtsi
-@@ -60,19 +60,19 @@ gpio-keys {
- 		 * esc and power represent a three position rocker
- 		 * switch. Thus the conventional KEY_POWER does not fit
- 		 */
--		exc {
-+		button-exc {
- 			label = "Back power switch (on|auto)";
- 			linux,code = <KEY_ESC>;
- 			linux,input-type = <5>;
- 			gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
- 		};
--		power {
-+		button-power {
- 			label = "Back power switch (auto|off)";
- 			linux,code = <KEY_1>;
- 			linux,input-type = <5>;
- 			gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;
- 		};
--		option {
-+		button-option {
- 			label = "Function button";
- 			linux,code = <KEY_OPTION>;
- 			gpios = <&gpio1 2 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm/boot/dts/marvell/kirkwood-ns2-common.dtsi b/arch/arm/boot/dts/marvell/kirkwood-ns2-common.dtsi
-index 51530ea86622..6cc068a05673 100644
---- a/arch/arm/boot/dts/marvell/kirkwood-ns2-common.dtsi
-+++ b/arch/arm/boot/dts/marvell/kirkwood-ns2-common.dtsi
-@@ -58,7 +58,7 @@ gpio_keys {
  		#address-cells = <1>;
  		#size-cells = <0>;
- 
 -		power {
-+		button-power {
- 			label = "Power push button";
++
++		key-power {
+ 			label = "Power";
  			linux,code = <KEY_POWER>;
- 			gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>;
-diff --git a/arch/arm/boot/dts/marvell/kirkwood-nsa310s.dts b/arch/arm/boot/dts/marvell/kirkwood-nsa310s.dts
-index 49da633a1bc0..767f34ab434e 100644
---- a/arch/arm/boot/dts/marvell/kirkwood-nsa310s.dts
-+++ b/arch/arm/boot/dts/marvell/kirkwood-nsa310s.dts
-@@ -40,19 +40,19 @@ keys {
- 		pinctrl-0 = <&pmx_buttons>;
- 		pinctrl-names = "default";
- 
--		power {
-+		button-power {
- 			label = "Power Button";
- 			linux,code = <KEY_POWER>;
- 			gpios = <&gpio0 26 GPIO_ACTIVE_HIGH>;
- 		};
- 
--		copy {
-+		button-copy {
- 			label = "Copy Button";
- 			linux,code = <KEY_COPY>;
- 			gpios = <&gpio0 25 GPIO_ACTIVE_LOW>;
+ 			gpios = <&gpio0 11 GPIO_ACTIVE_LOW>;
  		};
  
 -		reset {
-+		button-reset {
++		key-reset {
+ 			label = "Reset";
+ 			linux,code = <KEY_RESTART>;
+ 			gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
+diff --git a/arch/arm/boot/dts/marvell/orion5x-netgear-wnr854t.dts b/arch/arm/boot/dts/marvell/orion5x-netgear-wnr854t.dts
+index fb203e7d37f5..d63ea15539aa 100644
+--- a/arch/arm/boot/dts/marvell/orion5x-netgear-wnr854t.dts
++++ b/arch/arm/boot/dts/marvell/orion5x-netgear-wnr854t.dts
+@@ -35,7 +35,7 @@ gpio-keys {
+ 		pinctrl-0 = <&pmx_reset_button>;
+ 		pinctrl-names = "default";
+ 
+-		reset {
++		key-reset {
  			label = "Reset Button";
  			linux,code = <KEY_RESTART>;
- 			gpios = <&gpio0 24 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm/boot/dts/marvell/kirkwood-nsa3x0-common.dtsi b/arch/arm/boot/dts/marvell/kirkwood-nsa3x0-common.dtsi
-index ea3d36512e9f..bdce8a86ce51 100644
---- a/arch/arm/boot/dts/marvell/kirkwood-nsa3x0-common.dtsi
-+++ b/arch/arm/boot/dts/marvell/kirkwood-nsa3x0-common.dtsi
-@@ -68,17 +68,17 @@ gpio_keys {
- 		pinctrl-0 = <&pmx_btn_reset &pmx_btn_copy &pmx_btn_power>;
- 		pinctrl-names = "default";
- 
--		power {
-+		button-power {
- 			label = "Power Button";
- 			linux,code = <KEY_POWER>;
- 			gpios = <&gpio1 14 GPIO_ACTIVE_HIGH>;
- 		};
--		copy {
-+		button-copy {
- 			label = "Copy Button";
- 			linux,code = <KEY_COPY>;
- 			gpios = <&gpio1 5 GPIO_ACTIVE_LOW>;
- 		};
--		reset {
-+		button-reset {
- 			label = "Reset Button";
- 			linux,code = <KEY_RESTART>;
- 			gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm/boot/dts/marvell/kirkwood-openblocks_a6.dts b/arch/arm/boot/dts/marvell/kirkwood-openblocks_a6.dts
-index 8ea430168ea5..ef6d6d7a4008 100644
---- a/arch/arm/boot/dts/marvell/kirkwood-openblocks_a6.dts
-+++ b/arch/arm/boot/dts/marvell/kirkwood-openblocks_a6.dts
-@@ -118,7 +118,7 @@ gpio_keys {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		power {
-+		button-power {
- 			label = "Init Button";
- 			linux,code = <KEY_POWER>;
- 			gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
-diff --git a/arch/arm/boot/dts/marvell/kirkwood-pogoplug-series-4.dts b/arch/arm/boot/dts/marvell/kirkwood-pogoplug-series-4.dts
-index 5aa4669ae254..601760041c99 100644
---- a/arch/arm/boot/dts/marvell/kirkwood-pogoplug-series-4.dts
-+++ b/arch/arm/boot/dts/marvell/kirkwood-pogoplug-series-4.dts
-@@ -34,7 +34,7 @@ gpio_keys {
- 		pinctrl-0 = <&pmx_button_eject>;
- 		pinctrl-names = "default";
- 
--		eject {
-+		button-eject {
- 			debounce-interval = <50>;
- 			wakeup-source;
- 			linux,code = <KEY_EJECTCD>;
-diff --git a/arch/arm/boot/dts/marvell/kirkwood-t5325.dts b/arch/arm/boot/dts/marvell/kirkwood-t5325.dts
-index ad093324e075..6703e412c8e2 100644
---- a/arch/arm/boot/dts/marvell/kirkwood-t5325.dts
-+++ b/arch/arm/boot/dts/marvell/kirkwood-t5325.dts
-@@ -161,7 +161,7 @@ gpio_keys {
- 		pinctrl-0 = <&pmx_button_power>;
- 		pinctrl-names = "default";
- 
--		power {
-+		button-power {
- 			label = "Power Button";
- 			linux,code = <KEY_POWER>;
- 			gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
-diff --git a/arch/arm/boot/dts/marvell/kirkwood-ts219-6281.dts b/arch/arm/boot/dts/marvell/kirkwood-ts219-6281.dts
-index 30892c19aceb..859521b5b84e 100644
---- a/arch/arm/boot/dts/marvell/kirkwood-ts219-6281.dts
-+++ b/arch/arm/boot/dts/marvell/kirkwood-ts219-6281.dts
-@@ -40,12 +40,12 @@ gpio_keys {
- 		pinctrl-0 = <&pmx_reset_button &pmx_USB_copy_button>;
- 		pinctrl-names = "default";
- 
--		copy {
-+		button-copy {
- 			label = "USB Copy";
- 			linux,code = <KEY_COPY>;
- 			gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;
- 		};
--		reset {
-+		button-reset {
- 			label = "Reset";
- 			linux,code = <KEY_RESTART>;
- 			gpios = <&gpio0 16 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm/boot/dts/marvell/kirkwood-ts219-6282.dts b/arch/arm/boot/dts/marvell/kirkwood-ts219-6282.dts
-index aba1205981f1..3b0a4ed588e8 100644
---- a/arch/arm/boot/dts/marvell/kirkwood-ts219-6282.dts
-+++ b/arch/arm/boot/dts/marvell/kirkwood-ts219-6282.dts
-@@ -40,12 +40,12 @@ gpio_keys {
- 		pinctrl-0 = <&pmx_reset_button &pmx_USB_copy_button>;
- 		pinctrl-names = "default";
- 
--		copy {
-+		button-copy {
- 			label = "USB Copy";
- 			linux,code = <KEY_COPY>;
- 			gpios = <&gpio1 11 GPIO_ACTIVE_LOW>;
- 		};
--		reset {
-+		button-reset {
- 			label = "Reset";
- 			linux,code = <KEY_RESTART>;
- 			gpios = <&gpio1 5 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm/boot/dts/marvell/kirkwood-ts419.dtsi b/arch/arm/boot/dts/marvell/kirkwood-ts419.dtsi
-index 717236853e45..126db753c8fe 100644
---- a/arch/arm/boot/dts/marvell/kirkwood-ts419.dtsi
-+++ b/arch/arm/boot/dts/marvell/kirkwood-ts419.dtsi
-@@ -41,12 +41,12 @@ gpio_keys {
- 		pinctrl-0 = <&pmx_reset_button &pmx_USB_copy_button>;
- 		pinctrl-names = "default";
- 
--		copy {
-+		button-copy {
- 			label = "USB Copy";
- 			linux,code = <KEY_COPY>;
- 			gpios = <&gpio1 11 GPIO_ACTIVE_LOW>;
- 		};
--		reset {
-+		button-reset {
- 			label = "Reset";
- 			linux,code = <KEY_RESTART>;
- 			gpios = <&gpio1 5 GPIO_ACTIVE_LOW>;
+ 			gpios = <&gpio0 1 GPIO_ACTIVE_LOW>;
 
 -- 
 2.43.0
