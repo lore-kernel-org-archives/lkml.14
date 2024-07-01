@@ -1,177 +1,99 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19AEF13D53D;
-	Mon,  1 Jul 2024 11:27:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659A013D53D;
+	Mon,  1 Jul 2024 11:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719833249; cv=none; b=hw7NhAmACnxc+yZP0I4jq0/LFoiRBO9T7MeMAcUaCZ4hgf0DNgzDkgbOM54Ss1FmTmmva6q46vBx2PFPpWgTeL/S/PLm0jASzO2MarERlWtN3307EogK2DugQlul4CxEjOfvoC9Cv8QruP0q9jKpe/LmRukZLfTxqzrwzEdsbhQ=
+	t=1719833253; cv=none; b=cGKn9UyvOU+0RtNylzwO7XfcZb47JMrn9TEoibnWteRq4+LzY04GJoRVNvmia/9J3bGd4qwmiSivMoM828OfyxieFKVfII1tWadsawThmDhEVhzycBrfhTJr9xDlXdjZ48HvjCmBHG9dW6l4lk4FrheGHmZbaaVZ63cL2IfnmUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719833249; c=relaxed/simple;
-	bh=VF7ABEH7CUrrrauei+ZFGbjO1CVQzw2+43N56g2h9Rg=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XxXIJVDZ4G/2GdOSHEzER5OXmYpyDTjduv1Kd0kNBvHF6u95ZnhMAZOVdvKb91CGeiG1YI/Tq7Kagw+iY9zKZKcvT2toDss4cFAPLt+zxVUbl4KscuNQowgb5It9JOXfJgqViHS35WT8tPP4PlbfXuoMhHqLYuYW6zfV3Ywwj8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WCNzZ5fZpz6JB7Y;
-	Mon,  1 Jul 2024 19:26:50 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 76B62140B63;
-	Mon,  1 Jul 2024 19:27:23 +0800 (CST)
-Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 1 Jul
- 2024 12:27:22 +0100
-Date: Mon, 1 Jul 2024 12:27:21 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Alistair Francis <alistair23@gmail.com>
-CC: <bhelgaas@google.com>, <linux-pci@vger.kernel.org>, <lukas@wunner.de>,
-	<alex.williamson@redhat.com>, <christian.koenig@amd.com>, <kch@nvidia.com>,
-	<gregkh@linuxfoundation.org>, <logang@deltatee.com>,
-	<linux-kernel@vger.kernel.org>, <chaitanyak@nvidia.com>,
-	<rdunlap@infradead.org>, Alistair Francis <alistair.francis@wdc.com>
-Subject: Re: [PATCH v12 3/4] PCI/DOE: Expose the DOE features via sysfs
-Message-ID: <20240701122721.0000034d@Huawei.com>
-In-Reply-To: <20240626045926.680380-3-alistair.francis@wdc.com>
-References: <20240626045926.680380-1-alistair.francis@wdc.com>
-	<20240626045926.680380-3-alistair.francis@wdc.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1719833253; c=relaxed/simple;
+	bh=MiE+t/Qy7mTvW/UJKwZYIqpcyNeA4NT5zBhuLcSvdtU=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=s3xDM3ngiyvAVJFuz88JcCV8N2AedrgkZFYw/yazj107+fRO1QxEwFGHjwwm81qYJEAvvaulvZhR2RKIHjHziQ5FB7Pv9db9FjXcaK/jP0Xe5eufi5wZdNNGsAsK8hZfHt+UcTOt+skP0c0US4fkLUPR+Bn51jIwNb6y28FapiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aNRvU9RA; arc=none smtp.client-ip=209.85.166.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aNRvU9RA"
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7f3d6785665so94286939f.1;
+        Mon, 01 Jul 2024 04:27:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719833251; x=1720438051; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=N33ic0hVrQ47JNPqyZI6N613/A1ho/xocad/pxtq+J0=;
+        b=aNRvU9RAMwhIm+74wK4rluPFXOZybkHxAL/8neHeeBe4+nBNIz66uPD/OPUOkN4cEE
+         Qmmnvmwgfrco4FAZ5UsKtQ+pMdHX65lttLGmupe+21pSZzkuWhRVi32Q3MG3G7Z7325L
+         wIbIhqIVihDqgHBFfKviMZC/ZCywysbSs1Hr7Hft5gTLy9M4QZ6nn7nz1eAlXOlv02uc
+         HB/NSeWx/B+hwlgSg/qhMXFk+4Yww46KBKuPJPkF+LoVnDkTMFpMygCw4XxISdmGzvRh
+         PQChbKzOK7fjUo87GF/4Ic00TR2OYQT6o50Rxkp4FV+sn3o5BIERfrNrKhcVUD+O4ZMs
+         SzRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719833251; x=1720438051;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=N33ic0hVrQ47JNPqyZI6N613/A1ho/xocad/pxtq+J0=;
+        b=ivEDxACU2mL1YyikVmOilRxaVcBbcVN2TszQvEsah5ANSnKvZIlD46aKzUMlT0QkpF
+         o5Y5JByf+odnVRuI3q0bU5t/OIWXf7AaV5zqlM/ZORd3a0xZUq2YQ+X9Vs2ZEQLaQQ9c
+         Ztp40yiWA4y/qOPhVBAmYmA7rU5rslEiFAVAK4hqnPqK8WyoFx5fU/uYd5BOdCcw1BIP
+         1RBr8CMVPvjXW+FFzN7IYRvRozzs5J6jCMXqDUFKZeQljNglmq73CQJSd/25s0SYDH+z
+         q6S8p5dUsM6GeEaRoRI0LBwyyziVaf3Qtu+bJjV6UCYz6EV2/5yzcTMBZlLeQ9h+WNmm
+         pYZw==
+X-Forwarded-Encrypted: i=1; AJvYcCULewcX9uDBICKOWQimmuA+R9133hjv3OUu3eFhmcvjv9mSUhQQ9emiFhOqN8i1qdLVhEqcpBVky3BQ0YQ5oF9ttF0zrSr5LhQ+xgrIfrDH0AOXDAP7RbVuUFJTJ3s2olJy/nSIMP+gUCLfbM0=
+X-Gm-Message-State: AOJu0Yz2j0/ZYpazklBN9l5K23IIToprQVAmbWoh9IusP3Obftyc0mtb
+	nHuOBHRS8ORm7/EeDz7SZFF9AKK/WOF77wZj2goTfZcsI1cj3U2v
+X-Google-Smtp-Source: AGHT+IGElsOEdy1buV/bEtFs7g4vLLosB7qQ/q9Xcw9NwcsuJ7Si/vEtp+iTGcjdsPf8hgiUzGYIaw==
+X-Received: by 2002:a05:6602:2358:b0:7f6:369f:262c with SMTP id ca18e2360f4ac-7f6369f328bmr461928039f.10.1719833251388;
+        Mon, 01 Jul 2024 04:27:31 -0700 (PDT)
+Received: from localhost.localdomain (h135-131-130-199.ashwwi.broadband.dynamic.tds.net. [135.131.130.199])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4bb73e062e3sm2087317173.75.2024.07.01.04.27.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 04:27:30 -0700 (PDT)
+From: "Ethan D. Twardy" <ethan.twardy@gmail.com>
+To: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Martin Rodriguez Reboredo <yakoyoku@gmail.com>,
+	"Ethan D. Twardy" <ethan.twardy@gmail.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Aswin Unnikrishnan <aswinunni01@gmail.com>,
+	rust-for-linux@vger.kernel.org (open list:RUST),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 0/4] Enable rustdoc tests for the macros crate
+Date: Mon,  1 Jul 2024 06:24:22 -0500
+Message-ID: <20240701112448.28638-1-ethan.twardy@gmail.com>
+X-Mailer: git-send-email 2.44.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Transfer-Encoding: 8bit
 
-On Wed, 26 Jun 2024 14:59:25 +1000
-Alistair Francis <alistair23@gmail.com> wrote:
+Changes from v1:
+ - Resolve a duplicate kbuild rule identified by the test robot
+ - Fix a number of formatting issues in the tests
 
-> The PCIe 6 specification added support for the Data Object
-> Exchange (DOE).
-> When DOE is supported the DOE Discovery Feature must be implemented per
-> PCIe r6.1 sec 6.30.1.1. The protocol allows a requester to obtain
-> information about the other DOE features supported by the device.
-> 
-> The kernel is already querying the DOE features supported and cacheing
-> the values. Expose the values in sysfs to allow user space to
-> determine which DOE features are supported by the PCIe device.
-> 
-> By exposing the information to userspace tools like lspci can relay the
-> information to users. By listing all of the supported features we can
-> allow userspace to parse the list, which might include
-> vendor specific features as well as yet to be supported features.
-> 
-> As the DOE Discovery feature must always be supported we treat it as a
-> special named attribute case. This allows the usual PCI attribute_group
-> handling to correctly create the doe_features directory when registering
-> pci_doe_sysfs_group (otherwise it doesn't and sysfs_add_file_to_group()
-> will seg fault).
-> 
-> After this patch is supported you can see something like this when
-> attaching a DOE device
-> 
-> $ ls /sys/devices/pci0000:00/0000:00:02.0//doe*
-> 0001:01        0001:02        doe_discovery
-> 
-> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
-Hi Alistair,
+Ethan D. Twardy (4):
+  kbuild: rust: Expand rusttest target for macros
+  rust: Enable test for macros::module
+  rust: macros: Enable use from macro_rules!
+  rust: macros: Enable the rest of the tests
 
-I think I missed an error path issue in earlier reviews.
-
-Suggestion for minimal fix inline. If that is fine feel
-free to add
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> index defc4be81bd4..580370dc71ee 100644
-> --- a/drivers/pci/doe.c
-> +++ b/drivers/pci/doe.c
+ rust/Makefile        |  29 ++++++++--
+ rust/macros/lib.rs   | 126 ++++++++++++++++++++++++++++++++-----------
+ rust/macros/paste.rs |  15 ++++--
+ 3 files changed, 132 insertions(+), 38 deletions(-)
 
 
-> +
-> +int pci_doe_sysfs_init(struct pci_dev *pdev)
-> +{
-> +	struct pci_doe_mb *doe_mb;
-> +	unsigned long index;
-> +	int ret;
-> +
-> +	xa_for_each(&pdev->doe_mbs, index, doe_mb) {
-> +		ret = pci_doe_sysfs_feature_populate(pdev, doe_mb);
-
-This doesn't feel quite right.  If we wait after a doe_mb features
-set succeeds and then an error occurs this code doesn't cleanup and...
-
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
->  static int pci_doe_wait(struct pci_doe_mb *doe_mb, unsigned long timeout)
->  {
->  	if (wait_event_timeout(doe_mb->wq,
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 40cfa716392f..b5db191cb29f 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -16,6 +16,7 @@
->  #include <linux/kernel.h>
->  #include <linux/sched.h>
->  #include <linux/pci.h>
-> +#include <linux/pci-doe.h>
->  #include <linux/stat.h>
->  #include <linux/export.h>
->  #include <linux/topology.h>
-> @@ -1143,6 +1144,9 @@ static void pci_remove_resource_files(struct pci_dev *pdev)
->  {
->  	int i;
->  
-> +	if (IS_ENABLED(CONFIG_PCI_DOE))
-> +		pci_doe_sysfs_teardown(pdev);
-> +
->  	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
->  		struct bin_attribute *res_attr;
->  
-> @@ -1227,6 +1231,12 @@ static int pci_create_resource_files(struct pci_dev *pdev)
->  	int i;
->  	int retval;
->  
-> +	if (IS_ENABLED(CONFIG_PCI_DOE)) {
-> +		retval = pci_doe_sysfs_init(pdev);
-> +		if (retval)
-
-... this doesn't call pci_remove_resource_files() unlike te
-other error path in this function which does.
-
-I think just calling that here would be sufficient and inline
-with how error cleanup works for the rest of this code.
-Personally I prefer driving for a function to have no side effects
-but such is life.
-
-> +			return retval;
-> +	}
-> +
->  	/* Expose the PCI resources from this device as files */
->  	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
->  
-> @@ -1661,6 +1671,9 @@ const struct attribute_group *pci_dev_attr_groups[] = {
->  #endif
->  #ifdef CONFIG_PCIEASPM
->  	&aspm_ctrl_attr_group,
-> +#endif
-> +#ifdef CONFIG_PCI_DOE
-> +	&pci_doe_sysfs_group,
->  #endif
->  	NULL,
->  };
+base-commit: a126eca844353360ebafa9088d22865cb8e022e3
+-- 
+2.44.2
 
