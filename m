@@ -1,141 +1,348 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E78215DBDD
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 13:25:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32BAF158DAE;
+	Mon,  1 Jul 2024 13:25:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719840322; cv=none; b=hESwbKygCtwOJqbVR6Vp9BEW71kwf0GDRxFzLPYw7ayVBtx51rA4l3abEox0mX1MWxTzcbb+cbcdW6NDXqZ0gtGPHduluOCvdKmpxUZOtD3I+VH2QhBwW0oYQv1tEwCQnBaihoypa8yHSb4r1+JlD67rzmE77xVsd9UIFcP5KBM=
+	t=1719840346; cv=none; b=ApBssyqXIY6ZvyC286tP/eyHkQY9V+Cx5N09vQm0hRy2D0r8Gqxn5KusRFvbnzZCQWwe6VAwfZICpnEtvzladue5wWtMKwhDne44WMb1TYQ/OvPzfhciNmxgiZmTakm5U3oeTkj0svtMa9JKgSOnAXvzMvAtzk2lj9+f0rXxjvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719840322; c=relaxed/simple;
-	bh=E7WGqYQ5XsL70e6FskwkWLTXyyK4uuEzCIVRfrp+FIo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MPmcg2uzOe9L3RLiij5v1gEfB6JH57voqF7wlnj35AnwU0u/5WliUvtDiKhmSM+Jx+F2qyOl4l3MErG8hh5j1DIVFaZdAsG02BlTrehoS8xXep5J/VDaitlwf3GMu1/7f+2bqwQr/N5mroZGER9rbcEn1ndlplyR6Nc+MI4kPFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UYgc8xmT; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UYgc8xmT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719840319;
-	h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W9n3jyEHRQHTUMDV4hJHIiWOZIRhBAfse04rCoeLgEg=;
-	b=UYgc8xmT3TIHdXiuQZ6dBAC8f1wITx4tKits9Zc8bdd/LE9fRJSZXfM/E2rkpS8nluRqye
-	SZFiiSNevvBxQTuNPTHyoqzjPcMY/+rpqmdiZXC4zTIvDlbO3WaoNlP2TaCTerdAqS5nIq
-	eohrskmlPtCgWWXiAVWfR/pOiwPXEuI=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-644-2RsFG1nZMAe1ZBs5uh4seg-1; Mon,
- 01 Jul 2024 09:25:13 -0400
-X-MC-Unique: 2RsFG1nZMAe1ZBs5uh4seg-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C09AF19373DD;
-	Mon,  1 Jul 2024 13:25:11 +0000 (UTC)
-Received: from redhat.com (unknown [10.42.28.124])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BFFEA1956089;
-	Mon,  1 Jul 2024 13:25:06 +0000 (UTC)
-Date: Mon, 1 Jul 2024 14:25:03 +0100
-From: Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
-To: Michal =?utf-8?B?UHLDrXZvem7DrWs=?= <mprivozn@redhat.com>
-Cc: Mikulas Patocka <mpatocka@redhat.com>, Tejun Heo <tj@kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Waiman Long <longman@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
-	Laurence Oberman <loberman@redhat.com>,
-	Jonathan Brassow <jbrassow@redhat.com>,
-	Ming Lei <minlei@redhat.com>, Ondrej Kozina <okozina@redhat.com>,
-	Milan Broz <gmazyland@gmail.com>, linux-kernel@vger.kernel.org,
-	dm-devel@lists.linux.dev, users@lists.libvirt.org
-Subject: Re: dm-crypt performance regression due to workqueue changes
-Message-ID: <ZoKuLzyhE8N4RaW4@redhat.com>
-Reply-To: Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
-References: <32fd8274-d5f-3eca-f5d2-1a9117fd8edb@redhat.com>
- <ZoGSJWMD9v1BxUDb@slm.duckdns.org>
- <e64c112-4fa9-74da-68ce-c1eec19460f2@redhat.com>
- <b0e364d2-0def-4909-98c6-ce7188b7819f@redhat.com>
+	s=arc-20240116; t=1719840346; c=relaxed/simple;
+	bh=bVmwXTrzmBwJ/rb/pDfRz70jHffI0cY40vYcXh/fKLA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VUj3oJChBpcQPt1RgYhLjulSizB0oUcrjB4nF+WQW+YDGJg7mwG/Qob6ug+Mg7nDut66zPmvyheOvHTuJnu8xYT+vQqbJPJRXZ7fUJa5JvKDRG5viUuumFVhOZCNnGpJTXBL+WslZIBJRUbQ6kcF2GeABr2Anl/QA2IcVdfGPlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 04458339;
+	Mon,  1 Jul 2024 06:26:07 -0700 (PDT)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 408283F766;
+	Mon,  1 Jul 2024 06:25:38 -0700 (PDT)
+Message-ID: <f9d45e23-28ef-447e-87b7-afa73be6d783@arm.com>
+Date: Mon, 1 Jul 2024 14:25:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 15/17] coresight: Remove pending trace ID release
+ mechanism
+To: James Clark <james.clark@arm.com>, coresight@lists.linaro.org,
+ gankulkarni@os.amperecomputing.com, mike.leach@linaro.org,
+ leo.yan@linux.dev, anshuman.khandual@arm.com, jszu@nvidia.com,
+ bwicaksono@nvidia.com
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-stm32@st-md-mailman.stormreply.com, linux-perf-users@vger.kernel.org
+References: <20240625133105.671245-1-james.clark@arm.com>
+ <20240625133105.671245-16-james.clark@arm.com>
+Content-Language: en-US
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20240625133105.671245-16-james.clark@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b0e364d2-0def-4909-98c6-ce7188b7819f@redhat.com>
-User-Agent: Mutt/2.2.12 (2023-09-09)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Mon, Jul 01, 2024 at 02:48:07PM +0200, Michal Prívozník wrote:
-> On 6/30/24 20:49, Mikulas Patocka wrote:
-> > 
-> > 
-> > On Sun, 30 Jun 2024, Tejun Heo wrote:
-> > 
-> >> Hello,
-> >>
-> >> On Sat, Jun 29, 2024 at 08:15:56PM +0200, Mikulas Patocka wrote:
-> >>
-> >>> With 6.5, we get 3600MiB/s; with 6.6 we get 1400MiB/s.
-> >>>
-> >>> The reason is that virt-manager by default sets up a topology where we 
-> >>> have 16 sockets, 1 core per socket, 1 thread per core. And that workqueue 
-> >>> patch avoids moving work items across sockets, so it processes all 
-> >>> encryption work only on one virtual CPU.
-> >>>
-> >>> The performance degradation may be fixed with "echo 'system'
-> >>>> /sys/module/workqueue/parameters/default_affinity_scope" - but it is 
-> >>> regression anyway, as many users don't know about this option.
-> >>>
-> >>> How should we fix it? There are several options:
-> >>> 1. revert back to 'numa' affinity
-> >>> 2. revert to 'numa' affinity only if we are in a virtual machine
-> >>> 3. hack dm-crypt to set the 'numa' affinity for the affected workqueues
-> >>> 4. any other solution?
-> >>
-> >> Do you happen to know why libvirt is doing that? There are many other
-> >> implications to configuring the system that way and I don't think we want to
-> >> design kernel behaviors to suit topology information fed to VMs which can be
-> >> arbitrary.
+On 25/06/2024 14:30, James Clark wrote:
+> Pending the release of IDs was a way of managing concurrent sysfs and
+> Perf sessions in a single global ID map. Perf may have finished while
+> sysfs hadn't, and Perf shouldn't release the IDs in use by sysfs and
+> vice versa.
 > 
-> Firstly, libvirt's not doing anything. It very specifically avoids doing
-> policy decisions. If something configures vCPUs so that they are in
-> separate sockets, then we should look at that something. Alternatively,
-> if "default" configuration does not work for your workflow well,
-> document recommended configuration.
+> Now that Perf uses its own exclusive ID maps, pending release doesn't
+> result in any different behavior than just releasing all IDs when the
+> last Perf session finishes. As part of the per-sink trace ID change, we
+> would have still had to make the pending mechanism work on a per-sink
+> basis, due to the overlapping ID allocations, so instead of making that
+> more complicated, just remove it.
+> 
+> Signed-off-by: James Clark <james.clark@arm.com>
+> ---
+>   .../hwtracing/coresight/coresight-etm-perf.c  | 11 ++--
+>   .../hwtracing/coresight/coresight-trace-id.c  | 62 +++++--------------
+>   .../hwtracing/coresight/coresight-trace-id.h  | 31 +++++-----
+>   include/linux/coresight.h                     |  6 +-
+>   4 files changed, 34 insertions(+), 76 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> index 7fb55dafb639..17fa29969643 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> @@ -232,15 +232,14 @@ static void free_event_data(struct work_struct *work)
+>   		if (!(IS_ERR_OR_NULL(*ppath))) {
+>   			struct coresight_device *sink = coresight_get_sink(*ppath);
+>   
+> -			coresight_trace_id_put_cpu_id_map(cpu, &sink->perf_sink_id_map);
+> +			/* mark perf event as done for trace id allocator */
+> +			coresight_trace_id_perf_stop(&sink->perf_sink_id_map);
+> +
+>   			coresight_release_path(*ppath);
+>   		}
+>   		*ppath = NULL;
+>   	}
+>   
+> -	/* mark perf event as done for trace id allocator */
+> -	coresight_trace_id_perf_stop();
+> -
+>   	free_percpu(event_data->path);
+>   	kfree(event_data);
+>   }
+> @@ -328,9 +327,6 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
+>   		sink = user_sink = coresight_get_sink_by_id(id);
+>   	}
+>   
+> -	/* tell the trace ID allocator that a perf event is starting up */
+> -	coresight_trace_id_perf_start();
+> -
+>   	/* check if user wants a coresight configuration selected */
+>   	cfg_hash = (u32)((event->attr.config2 & GENMASK_ULL(63, 32)) >> 32);
+>   	if (cfg_hash) {
+> @@ -411,6 +407,7 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
+>   			continue;
+>   		}
+>   
+> +		coresight_trace_id_perf_start(&sink->perf_sink_id_map);
+>   		*etm_event_cpu_path_ptr(event_data, cpu) = path;
+>   	}
+>   
+> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c b/drivers/hwtracing/coresight/coresight-trace-id.c
+> index 8a777c0af6ea..1e70892f5beb 100644
+> --- a/drivers/hwtracing/coresight/coresight-trace-id.c
+> +++ b/drivers/hwtracing/coresight/coresight-trace-id.c
+> @@ -18,12 +18,6 @@ static struct coresight_trace_id_map id_map_default = {
+>   	.cpu_map = &id_map_default_cpu_ids
+>   };
+>   
+> -/* maintain a record of the pending releases per cpu */
+> -static cpumask_t cpu_id_release_pending;
+> -
+> -/* perf session active counter */
+> -static atomic_t perf_cs_etm_session_active = ATOMIC_INIT(0);
+> -
+>   /* lock to protect id_map and cpu data  */
+>   static DEFINE_SPINLOCK(id_map_lock);
+>   
+> @@ -122,34 +116,18 @@ static void coresight_trace_id_free(int id, struct coresight_trace_id_map *id_ma
+>   	clear_bit(id, id_map->used_ids);
+>   }
+>   
+> -static void coresight_trace_id_set_pend_rel(int id, struct coresight_trace_id_map *id_map)
+> -{
+> -	if (WARN(!IS_VALID_CS_TRACE_ID(id), "Invalid Trace ID %d\n", id))
+> -		return;
+> -	set_bit(id, id_map->pend_rel_ids);
+> -}
+> -
+>   /*
+> - * release all pending IDs for all current maps & clear CPU associations
+> - *
+> - * This currently operates on the default id map, but may be extended to
+> - * operate on all registered id maps if per sink id maps are used.
+> + * Release all IDs and clear CPU associations.
+>    */
+> -static void coresight_trace_id_release_all_pending(void)
+> +static void coresight_trace_id_release_all(struct coresight_trace_id_map *id_map)
+>   {
+> -	struct coresight_trace_id_map *id_map = &id_map_default;
+>   	unsigned long flags;
+> -	int cpu, bit;
+> +	int cpu;
+>   
+>   	spin_lock_irqsave(&id_map_lock, flags);
+> -	for_each_set_bit(bit, id_map->pend_rel_ids, CORESIGHT_TRACE_ID_RES_TOP) {
+> -		clear_bit(bit, id_map->used_ids);
+> -		clear_bit(bit, id_map->pend_rel_ids);
+> -	}
+> -	for_each_cpu(cpu, &cpu_id_release_pending) {
+> -		atomic_set(per_cpu_ptr(id_map_default.cpu_map, cpu), 0);
+> -		cpumask_clear_cpu(cpu, &cpu_id_release_pending);
+> -	}
+> +	bitmap_zero(id_map->used_ids, CORESIGHT_TRACE_IDS_MAX);
+> +	for_each_possible_cpu(cpu)
+> +		atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
+>   	spin_unlock_irqrestore(&id_map_lock, flags);
+>   	DUMP_ID_MAP(id_map);
+>   }
+> @@ -164,7 +142,7 @@ static int _coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map
+>   	/* check for existing allocation for this CPU */
+>   	id = _coresight_trace_id_read_cpu_id(cpu, id_map);
+>   	if (id)
+> -		goto get_cpu_id_clr_pend;
+> +		goto get_cpu_id_out_unlock;
+>   
+>   	/*
+>   	 * Find a new ID.
+> @@ -185,11 +163,6 @@ static int _coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map
+>   	/* allocate the new id to the cpu */
+>   	atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), id);
+>   
+> -get_cpu_id_clr_pend:
+> -	/* we are (re)using this ID - so ensure it is not marked for release */
+> -	cpumask_clear_cpu(cpu, &cpu_id_release_pending);
+> -	clear_bit(id, id_map->pend_rel_ids);
+> -
+>   get_cpu_id_out_unlock:
+>   	spin_unlock_irqrestore(&id_map_lock, flags);
+>   
+> @@ -210,15 +183,8 @@ static void _coresight_trace_id_put_cpu_id(int cpu, struct coresight_trace_id_ma
+>   
+>   	spin_lock_irqsave(&id_map_lock, flags);
+>   
+> -	if (atomic_read(&perf_cs_etm_session_active)) {
+> -		/* set release at pending if perf still active */
+> -		coresight_trace_id_set_pend_rel(id, id_map);
+> -		cpumask_set_cpu(cpu, &cpu_id_release_pending);
+> -	} else {
+> -		/* otherwise clear id */
+> -		coresight_trace_id_free(id, id_map);
+> -		atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
+> -	}
+> +	coresight_trace_id_free(id, id_map);
+> +	atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
+>   
+>   	spin_unlock_irqrestore(&id_map_lock, flags);
+>   	DUMP_ID_CPU(cpu, id);
+> @@ -302,17 +268,17 @@ void coresight_trace_id_put_system_id(int id)
+>   }
+>   EXPORT_SYMBOL_GPL(coresight_trace_id_put_system_id);
+>   
+> -void coresight_trace_id_perf_start(void)
+> +void coresight_trace_id_perf_start(struct coresight_trace_id_map *id_map)
+>   {
+> -	atomic_inc(&perf_cs_etm_session_active);
+> +	atomic_inc(&id_map->perf_cs_etm_session_active);
+>   	PERF_SESSION(atomic_read(&perf_cs_etm_session_active));
+>   }
+>   EXPORT_SYMBOL_GPL(coresight_trace_id_perf_start);
+>   
+> -void coresight_trace_id_perf_stop(void)
+> +void coresight_trace_id_perf_stop(struct coresight_trace_id_map *id_map)
+>   {
+> -	if (!atomic_dec_return(&perf_cs_etm_session_active))
+> -		coresight_trace_id_release_all_pending();
+> +	if (!atomic_dec_return(&id_map->perf_cs_etm_session_active))
+> +		coresight_trace_id_release_all(id_map);
+>   	PERF_SESSION(atomic_read(&perf_cs_etm_session_active));
+>   }
+>   EXPORT_SYMBOL_GPL(coresight_trace_id_perf_stop);
+> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.h b/drivers/hwtracing/coresight/coresight-trace-id.h
+> index 840babdd0794..9aae50a553ca 100644
+> --- a/drivers/hwtracing/coresight/coresight-trace-id.h
+> +++ b/drivers/hwtracing/coresight/coresight-trace-id.h
+> @@ -17,9 +17,10 @@
+>    * released when done.
+>    *
+>    * In order to ensure that a consistent cpu / ID matching is maintained
+> - * throughout a perf cs_etm event session - a session in progress flag will
+> - * be maintained, and released IDs not cleared until the perf session is
+> - * complete. This allows the same CPU to be re-allocated its prior ID.
+> + * throughout a perf cs_etm event session - a session in progress flag will be
+> + * maintained for each sink, and IDs are cleared when all the perf sessions
+> + * complete. This allows the same CPU to be re-allocated its prior ID when
+> + * events are scheduled in and out.
+>    *
+>    *
+>    * Trace ID maps will be created and initialised to prevent architecturally
+> @@ -66,11 +67,7 @@ int coresight_trace_id_get_cpu_id_map(int cpu, struct coresight_trace_id_map *id
+>   /**
+>    * Release an allocated trace ID associated with the CPU.
+>    *
+> - * This will release the CoreSight trace ID associated with the CPU,
+> - * unless a perf session is in operation.
+> - *
+> - * If a perf session is in operation then the ID will be marked as pending
+> - * release.
+> + * This will release the CoreSight trace ID associated with the CPU.
+>    *
+>    * @cpu: The CPU index to release the associated trace ID.
+>    */
+> @@ -133,21 +130,21 @@ void coresight_trace_id_put_system_id(int id);
+>   /**
+>    * Notify the Trace ID allocator that a perf session is starting.
+>    *
+> - * Increase the perf session reference count - called by perf when setting up
+> - * a trace event.
+> + * Increase the perf session reference count - called by perf when setting up a
+> + * trace event.
+>    *
+> - * This reference count is used by the ID allocator to ensure that trace IDs
+> - * associated with a CPU cannot change or be released during a perf session.
+> + * Perf sessions never free trace IDs to ensure that the ID associated with a
+> + * CPU cannot change during their and other's concurrent sessions. Instead,
+> + * this refcount is used so that the last event to finish always frees all IDs.
+>    */
+> -void coresight_trace_id_perf_start(void);
+> +void coresight_trace_id_perf_start(struct coresight_trace_id_map *id_map);
+>   
+>   /**
+>    * Notify the ID allocator that a perf session is stopping.
+>    *
+> - * Decrease the perf session reference count.
+> - * if this causes the count to go to zero, then all Trace IDs marked as pending
+> - * release, will be released.
+> + * Decrease the perf session reference count. If this causes the count to go to
+> + * zero, then all Trace IDs will be released.
+>    */
+> -void coresight_trace_id_perf_stop(void);
+> +void coresight_trace_id_perf_stop(struct coresight_trace_id_map *id_map);
+>   
+>   #endif /* _CORESIGHT_TRACE_ID_H */
+> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+> index 9c3067e2e38b..197949fd2c35 100644
+> --- a/include/linux/coresight.h
+> +++ b/include/linux/coresight.h
+> @@ -227,14 +227,12 @@ struct coresight_sysfs_link {
+>    * @used_ids:	Bitmap to register available (bit = 0) and in use (bit = 1) IDs.
+>    *		Initialised so that the reserved IDs are permanently marked as
+>    *		in use.
+> - * @pend_rel_ids: CPU IDs that have been released by the trace source but not
+> - *		  yet marked as available, to allow re-allocation to the same
+> - *		  CPU during a perf session.
+> + * @perf_cs_etm_session_active: Number of Perf sessions using this ID map.
+>    */
+>   struct coresight_trace_id_map {
+>   	DECLARE_BITMAP(used_ids, CORESIGHT_TRACE_IDS_MAX);
+> -	DECLARE_BITMAP(pend_rel_ids, CORESIGHT_TRACE_IDS_MAX);
+>   	atomic_t __percpu *cpu_map;
+> +	atomic_t perf_cs_etm_session_active;
+>   };
 
-Actually in this particular case, it is strictly speaking libvirt.
-If the guest XML config does not mention any <topology> info, then
-libvirt explicitly tells QEMU to set sockets=N,cores=1,threads=1.
-That matches QEMU's own historical built-in default topology.
+Also this breaks the build for me :
 
-None the less, my advice for mgmt applications using libvirt would
-likely be to explicitly request sockets=1,cores=N,threads=1. This
-is because it gives slightly better compatibility with unpleasant
-software that applies licensing / subscription rules that penalize
-use of many sockets, while being happy with any number of cores.
+$ make -j17
+   CALL    scripts/checksyscalls.sh 
+
+   CC [M]  drivers/hwtracing/coresight/coresight-trace-id.o
+   LD [M]  drivers/hwtracing/coresight/coresight-cti.o
+In file included from ./include/linux/printk.h:573, 
+
+                  from ./include/linux/kernel.h:31,
+                  from ./include/linux/clk.h:13,
+                  from ./include/linux/amba/bus.h:14, 
+
+                  from ./include/linux/coresight.h:9,
+                  from drivers/hwtracing/coresight/coresight-trace-id.c:6:
+drivers/hwtracing/coresight/coresight-trace-id.c: In function 
+‘coresight_trace_id_dump_table’:
+drivers/hwtracing/coresight/coresight-trace-id.c:30:59: error: ‘struct 
+coresight_trace_id_map’ has no member named ‘pend_rel_ids’
+    30 |  pr_debug("Pend = %*pb\n", CORESIGHT_TRACE_IDS_MAX, 
+id_map->pend_rel_ids);
+       |                                                           ^~ 
 
 
-Either way though, the topology is a lie when the guest CPUs
-are not pinned to host CPUs, so making performance decisions based
-on this is unlikely to yield the desired results. Historically the
-cores vs sockets distinction hasn't seemed to make much difference
-to guest OS performance, as the OS' haven't made significant
-decisions on this axis. Exposing threads != 1 though has always been
-a big no though, unless strictly pinning 1:1 guest:host CPUs, as that
-has had notable impacts on scheduling decisions.
 
-With regards,
-Daniel
--- 
-|: https://berrange.com      -o-    https://www.flickr.com/photos/dberrange :|
-|: https://libvirt.org         -o-            https://fstop138.berrange.com :|
-|: https://entangle-photo.org    -o-    https://www.instagram.com/dberrange :|
+Suzuki
+>   
+>   /**
 
