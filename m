@@ -1,252 +1,160 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0315C524C9;
-	Mon,  1 Jul 2024 09:34:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB58524C9;
+	Mon,  1 Jul 2024 09:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719826465; cv=none; b=o5ekUuJit1T49V19JbChRaKKLDCfVq+jioxwCoMIffeUDGHeDUiI6IKxLXOw7+2ccOKuBDYrnzuHmM/uN7l/NucbIP+HN4EaK5Efr3J9TNgXMLzVazt/qJemzvNK96O3+d+5JWxfwIahqiCZj/8jWUtCgaub9DxXr1TowiTKJSY=
+	t=1719826547; cv=none; b=HIadCvsIIL93cRYXd18PCYTHYmDVIFfelOAO/oyMNhlGwdhVvmg3cG1vZshvktoqXbQSXDjIWnQn1e+5zcLcWFbA/O7oOabxcknICYnKndNIYOKDE2WJlf+o4/A+99aC/+hvEVHQnMbiZgZ9wmZViBTXB4KMyF641l/j6zpL1wA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719826465; c=relaxed/simple;
-	bh=FUidlms4reTKrj8tPZAIMM+XtHJztwJBqkxAH7otq/4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mcfdG05u5NKlY373EEG3mPq1Y4jNU5l9F7xLq1EwANN3iUt52nfsfOLotHY3ehnRQWlXvUpbnkppd1i46lnVYDLJISPwhg+ooZKp8h1Dm2SKf4AKMziF42uBq721a61R5otj5mLhL+Q8qhLeH4zFisSGjNUnRmDMOTC1zmB8jOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=Rjbw9mtr; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1719826547; c=relaxed/simple;
+	bh=59nWDz5KyWpQYxZk1EUqpoOhyJdMTuiAo37okGxi7JQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r8xdIO1j6r0VeV2aoLNl0QGV72VK9/noJDuirDLyhPfKibEY5ewy+xVDi/K4OFX9XxuWWKT3+t9fXzciQd+G+tXCCCOTz9L93vRzJ0/jDwpsCFUq9WAK8Wk8t9TMeYEM1UPhbsUazximeuNcNzk3YLK9nBi8xQAejM5wB3b4U/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NC8ySdEb; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Rjbw9mtr"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4618vOGn021971;
-	Mon, 1 Jul 2024 02:08:01 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=j
-	2tqm7FQF6kM2u/o5QF4rgWJJH8NaYwwNv/fKL+Glrw=; b=Rjbw9mtrsfVh2HIs0
-	JJ2bj9tesixhr5y2fp1dIhuyq9FCbGBED444T98B8EFcBtJ1hRV5kJ7c3R75zaoD
-	fTQ1QHwIccuhXm9KbocY+j5EoirUU/UgTFAQ0LS2oHCCvrSa4B7DDR9In+Ul5HRp
-	oKxRZgJHxQ9oU0soNhRZOsYNjG6sH8mfirYYEKXo8HYjxG8WD/zun0U30VLvHRQV
-	G3BNxw2Lea4vxV5Cfrt1ZO/2RxvEUg/NI7KBSEczT6pY+Q2NDMOBRU3lrACa1XZU
-	JjsZnJqCKuIhha36eXAWyygKGFKdcRNqNFPehKoLJSdSORRPZAys3107YTZYHceJ
-	8IrRw==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 403sdcg1n4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Jul 2024 02:08:01 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Mon, 1 Jul 2024 02:08:00 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Mon, 1 Jul 2024 02:08:00 -0700
-Received: from localhost.localdomain (unknown [10.28.36.175])
-	by maili.marvell.com (Postfix) with ESMTP id C1EB53F7074;
-	Mon,  1 Jul 2024 02:07:56 -0700 (PDT)
-From: Srujana Challa <schalla@marvell.com>
-To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <kuba@kernel.org>, <davem@davemloft.net>, <pabeni@redhat.com>,
-        <sgoutham@marvell.com>, <lcherian@marvell.com>, <gakula@marvell.com>,
-        <jerinj@marvell.com>, <hkelam@marvell.com>, <sbhatta@marvell.com>,
-        <schalla@marvell.com>
-Subject: [PATCH net,2/6] octeontx2-af: reduce cpt flt interrupt vectors for cn10kb
-Date: Mon, 1 Jul 2024 14:37:42 +0530
-Message-ID: <20240701090746.2171565-3-schalla@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240701090746.2171565-1-schalla@marvell.com>
-References: <20240701090746.2171565-1-schalla@marvell.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NC8ySdEb"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52e8b27f493so640506e87.2;
+        Mon, 01 Jul 2024 02:35:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719826543; x=1720431343; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jNtVDXlUBrpuhb54W707Pwv7hKueeWy4QSQTipfsCuo=;
+        b=NC8ySdEbINopdim8LCsHMC+6sZuSZcEiJsIvxMsYxaA48jb8cX6C2OrKpwgaDCgTiw
+         /O8LB1SSHG+zXfOmd7/ku4d6wC4OFIWZp0V6HPTXC09/VdGEngT2CQgr6QUDAFwkvEsR
+         anwx4fxFJAaWAXUMGhyTEo98M/dKf6o0ALZdC/sSsIPirhA99BR/DJxyGXzV8IgCZWtq
+         Mpwv1e6odbeYrMEVGJFIY/3M/Q4RMkcQj4YN01PcvcMb+GR4EGIPlhs6gJ4H04jL8wTa
+         zCGDMl2MPms7Jdl1phQcIUzkIOc9FaQ+pxM/5RyBvpFmyeWjN84TCDn1tOdlI7cN+J3Y
+         tlmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719826543; x=1720431343;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jNtVDXlUBrpuhb54W707Pwv7hKueeWy4QSQTipfsCuo=;
+        b=R2goiGMfMAA6sQhAm/teST/6ICjHWlZk6zFkdPi0HHO22OEYJX87SIGnRba5F0bJAM
+         KUeDMlYM4dz8+gRRT+0AHSSqM58Nns5tnNLXG9Cwk2l+76g/1hulE2eYmkYAsdv4AngH
+         BF3P71FOJkEhcdPUUbMf5Wc4Ky69r4SjvD0ir8hjcf+Ta5Fh8kK9of4vghOkv20i4Ilk
+         4fF8zJJxtTTFIxbaTWsZs+xWX4G/ONBxUwINIhuQBEL2n2u9jjRCIQ4+T92OrphxEQkt
+         9vy+XJn+GuKgTD5PWKbxsp4uIjTTYk2WAaMRsyltvLK8zSk9OE+F9fYhG0cvsTFPYe30
+         tIKw==
+X-Forwarded-Encrypted: i=1; AJvYcCW2+GKET32uuUnU0p0BheqXwtxYb1PAJW0TJ6PNHPU1YqcmhxQxTnJknVi4/N6x9zzKYdvguHgdBQDHPaH6wItcmh2ndLQILleaUddd6UOYdus4Q0f5/HCvMPld44NiZzasItrssWjMyuj+ZS14nJTCyHwN0UR2K83fGvuDoSrTTf6085WnDCNMpjXi2V8Evqvt2DEe3CXRP4uz7KWDIRljKQ==
+X-Gm-Message-State: AOJu0YxQwAQ9frmG6WP7gt4+c/UA7o0E4qr8Gdsyo70qno211bF3ayBv
+	HZAw8m7ySBMlYv9Jr6Y3tbc6NkoIg95a2VenfC5ApohpYzFDmIuS
+X-Google-Smtp-Source: AGHT+IGTWlXt5GwVSpONKN18jUPqOio2BQyzMNx8kLyn1xpM2UpBf6ISd9dLJbwj/YGEYvPKtguBoQ==
+X-Received: by 2002:a05:6512:e93:b0:52e:7f3c:6b81 with SMTP id 2adb3069b0e04-52e82687479mr4007321e87.32.1719826543231;
+        Mon, 01 Jul 2024 02:35:43 -0700 (PDT)
+Received: from [10.10.12.27] (91-118-163-37.static.upcbusiness.at. [91.118.163.37])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72aaf18c99sm314224466b.2.2024.07.01.02.35.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Jul 2024 02:35:42 -0700 (PDT)
+Message-ID: <cffb5885-3cbc-480c-ab6d-4a442d1afb8a@gmail.com>
+Date: Mon, 1 Jul 2024 11:35:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] hwmon: (ltc2992) Use
+ fwnode_for_each_available_child_node_scoped()
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Jean Delvare
+ <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ Antoniu Miclaus <antoniu.miclaus@analog.com>, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+References: <20240523-fwnode_for_each_available_child_node_scoped-v2-0-701f3a03f2fb@gmail.com>
+ <20240523-fwnode_for_each_available_child_node_scoped-v2-3-701f3a03f2fb@gmail.com>
+ <20240526144851.493dd3f2@jic23-huawei>
+ <3a16dc06-81df-4493-bac6-216e9c6ea16e@gmail.com>
+ <20240630124157.07bf97d9@jic23-huawei>
+Content-Language: en-US, de-AT
+From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+In-Reply-To: <20240630124157.07bf97d9@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: 3xqp-k5PngYfbLWB74-Bnzk2NOLgUgMk
-X-Proofpoint-ORIG-GUID: 3xqp-k5PngYfbLWB74-Bnzk2NOLgUgMk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-01_07,2024-06-28_01,2024-05-17_01
 
-On new silicon(cn10kb), the number of FLT interrupt vectors has
-been reduced. Hence, this patch modifies the code to make
-it work for both cn10ka and cn10kb.
+On 30/06/2024 13:41, Jonathan Cameron wrote:
+> On Mon, 24 Jun 2024 23:45:42 +0200
+> Javier Carrasco <javier.carrasco.cruz@gmail.com> wrote:
+> 
+>> On 26/05/2024 15:48, Jonathan Cameron wrote:
+>>> On Thu, 23 May 2024 17:47:16 +0200
+>>> Javier Carrasco <javier.carrasco.cruz@gmail.com> wrote:
+>>>   
+>>>> The scoped version of the fwnode_for_each_available_child_node() macro
+>>>> automates object recfount decrement, avoiding possible memory leaks
+>>>> in new error paths inside the loop like it happened when
+>>>> commit '10b029020487 ("hwmon: (ltc2992) Avoid division by zero")'
+>>>> was added.
+>>>>
+>>>> The new macro removes the need to manually call fwnode_handle_put() in
+>>>> the existing error paths and in any future addition. It also removes the
+>>>> need for the current child node declaration as well, as it is internally
+>>>> declared.
+>>>>
+>>>> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>>>> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>  
 
-Signed-off-by: Srujana Challa <schalla@marvell.com>
----
- .../net/ethernet/marvell/octeontx2/af/mbox.h  |  5 +-
- .../ethernet/marvell/octeontx2/af/rvu_cpt.c   | 73 ++++++++++++++++---
- .../marvell/octeontx2/af/rvu_struct.h         |  5 +-
- 3 files changed, 65 insertions(+), 18 deletions(-)
+...
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/mbox.h b/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
-index 4a77f6fe2622..41b46724cb3d 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
-@@ -1848,8 +1848,9 @@ struct cpt_flt_eng_info_req {
- 
- struct cpt_flt_eng_info_rsp {
- 	struct mbox_msghdr hdr;
--	u64 flt_eng_map[CPT_10K_AF_INT_VEC_RVU];
--	u64 rcvrd_eng_map[CPT_10K_AF_INT_VEC_RVU];
-+#define CPT_AF_MAX_FLT_INT_VECS 3
-+	u64 flt_eng_map[CPT_AF_MAX_FLT_INT_VECS];
-+	u64 rcvrd_eng_map[CPT_AF_MAX_FLT_INT_VECS];
- 	u64 rsvd;
- };
- 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_cpt.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_cpt.c
-index 98440a0241a2..38363ea56c6c 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_cpt.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_cpt.c
-@@ -37,6 +37,38 @@
- 	(_rsp)->free_sts_##etype = free_sts;                        \
- })
- 
-+#define MAX_AE  GENMASK_ULL(47, 32)
-+#define MAX_IE  GENMASK_ULL(31, 16)
-+#define MAX_SE  GENMASK_ULL(15, 0)
-+static u32 cpt_max_engines_get(struct rvu *rvu)
-+{
-+	u16 max_ses, max_ies, max_aes;
-+	u64 reg;
-+
-+	reg = rvu_read64(rvu, BLKADDR_CPT0, CPT_AF_CONSTANTS1);
-+	max_ses = FIELD_GET(MAX_SE, reg);
-+	max_ies = FIELD_GET(MAX_IE, reg);
-+	max_aes = FIELD_GET(MAX_AE, reg);
-+
-+	return max_ses + max_ies + max_aes;
-+}
-+
-+/* Number of flt interrupt vectors are depends on number of engines that
-+ * the chip has. Each flt vector represents 64 engines.
-+ */
-+static int cpt_10k_flt_nvecs_get(struct rvu *rvu)
-+{
-+	u32 max_engs;
-+	int flt_vecs;
-+
-+	max_engs = cpt_max_engines_get(rvu);
-+
-+	flt_vecs = (max_engs / 64);
-+	flt_vecs += (max_engs % 64) ? 1 : 0;
-+
-+	return flt_vecs;
-+}
-+
- static irqreturn_t cpt_af_flt_intr_handler(int vec, void *ptr)
- {
- 	struct rvu_block *block = ptr;
-@@ -150,17 +182,25 @@ static void cpt_10k_unregister_interrupts(struct rvu_block *block, int off)
- {
- 	struct rvu *rvu = block->rvu;
- 	int blkaddr = block->addr;
-+	u32 max_engs;
-+	u8 nr;
- 	int i;
- 
-+	max_engs = cpt_max_engines_get(rvu);
-+
- 	/* Disable all CPT AF interrupts */
--	rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1C(0), ~0ULL);
--	rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1C(1), ~0ULL);
--	rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1C(2), 0xFFFF);
-+	for (i = CPT_10K_AF_INT_VEC_FLT0; i < cpt_10k_flt_nvecs_get(rvu); i++) {
-+		nr = (max_engs > 64) ? 64 : max_engs;
-+		max_engs -= nr;
-+		rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1C(i),
-+			    INTR_MASK(nr));
-+	}
- 
- 	rvu_write64(rvu, blkaddr, CPT_AF_RVU_INT_ENA_W1C, 0x1);
- 	rvu_write64(rvu, blkaddr, CPT_AF_RAS_INT_ENA_W1C, 0x1);
- 
--	for (i = 0; i < CPT_10K_AF_INT_VEC_CNT; i++)
-+	/* CPT AF interrupt vectors are flt_int, rvu_int and ras_int. */
-+	for (i = 0; i < cpt_10k_flt_nvecs_get(rvu) + 2; i++)
- 		if (rvu->irq_allocated[off + i]) {
- 			free_irq(pci_irq_vector(rvu->pdev, off + i), block);
- 			rvu->irq_allocated[off + i] = false;
-@@ -206,12 +246,17 @@ void rvu_cpt_unregister_interrupts(struct rvu *rvu)
- 
- static int cpt_10k_register_interrupts(struct rvu_block *block, int off)
- {
-+	int rvu_intr_vec, ras_intr_vec;
- 	struct rvu *rvu = block->rvu;
- 	int blkaddr = block->addr;
- 	irq_handler_t flt_fn;
-+	u32 max_engs;
- 	int i, ret;
-+	u8 nr;
-+
-+	max_engs = cpt_max_engines_get(rvu);
- 
--	for (i = CPT_10K_AF_INT_VEC_FLT0; i < CPT_10K_AF_INT_VEC_RVU; i++) {
-+	for (i = CPT_10K_AF_INT_VEC_FLT0; i < cpt_10k_flt_nvecs_get(rvu); i++) {
- 		sprintf(&rvu->irq_name[(off + i) * NAME_SIZE], "CPTAF FLT%d", i);
- 
- 		switch (i) {
-@@ -229,20 +274,24 @@ static int cpt_10k_register_interrupts(struct rvu_block *block, int off)
- 						    flt_fn, &rvu->irq_name[(off + i) * NAME_SIZE]);
- 		if (ret)
- 			goto err;
--		if (i == CPT_10K_AF_INT_VEC_FLT2)
--			rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1S(i), 0xFFFF);
--		else
--			rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1S(i), ~0ULL);
-+
-+		nr = (max_engs > 64) ? 64 : max_engs;
-+		max_engs -= nr;
-+		rvu_write64(rvu, blkaddr, CPT_AF_FLTX_INT_ENA_W1S(i),
-+			    INTR_MASK(nr));
- 	}
- 
--	ret = rvu_cpt_do_register_interrupt(block, off + CPT_10K_AF_INT_VEC_RVU,
-+	rvu_intr_vec = cpt_10k_flt_nvecs_get(rvu);
-+	ras_intr_vec = rvu_intr_vec + 1;
-+
-+	ret = rvu_cpt_do_register_interrupt(block, off + rvu_intr_vec,
- 					    rvu_cpt_af_rvu_intr_handler,
- 					    "CPTAF RVU");
- 	if (ret)
- 		goto err;
- 	rvu_write64(rvu, blkaddr, CPT_AF_RVU_INT_ENA_W1S, 0x1);
- 
--	ret = rvu_cpt_do_register_interrupt(block, off + CPT_10K_AF_INT_VEC_RAS,
-+	ret = rvu_cpt_do_register_interrupt(block, off + ras_intr_vec,
- 					    rvu_cpt_af_ras_intr_handler,
- 					    "CPTAF RAS");
- 	if (ret)
-@@ -922,7 +971,7 @@ int rvu_mbox_handler_cpt_flt_eng_info(struct rvu *rvu, struct cpt_flt_eng_info_r
- 		return blkaddr;
- 
- 	block = &rvu->hw->block[blkaddr];
--	for (vec = 0; vec < CPT_10K_AF_INT_VEC_RVU; vec++) {
-+	for (vec = 0; vec < cpt_10k_flt_nvecs_get(block->rvu); vec++) {
- 		spin_lock_irqsave(&rvu->cpt_intr_lock, flags);
- 		rsp->flt_eng_map[vec] = block->cpt_flt_eng_map[vec];
- 		rsp->rcvrd_eng_map[vec] = block->cpt_rcvrd_eng_map[vec];
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_struct.h b/drivers/net/ethernet/marvell/octeontx2/af/rvu_struct.h
-index 5ef406c7e8a4..120776063e86 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_struct.h
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_struct.h
-@@ -71,13 +71,10 @@ enum cpt_af_int_vec_e {
- 	CPT_AF_INT_VEC_CNT	= 0x4,
- };
- 
--enum cpt_10k_af_int_vec_e {
-+enum cpt_cn10k_flt_int_vec_e {
- 	CPT_10K_AF_INT_VEC_FLT0	= 0x0,
- 	CPT_10K_AF_INT_VEC_FLT1	= 0x1,
- 	CPT_10K_AF_INT_VEC_FLT2	= 0x2,
--	CPT_10K_AF_INT_VEC_RVU	= 0x3,
--	CPT_10K_AF_INT_VEC_RAS	= 0x4,
--	CPT_10K_AF_INT_VEC_CNT	= 0x5,
- };
- 
- /* NPA Admin function Interrupt Vector Enumeration */
--- 
-2.25.1
+> 
+> Straw man for people to shoot at:
+> 
+> I think where possible rely on device_for_each_child_node[_scoped]()
+> actually meaning the available nodes.  In cases where it applies that
+> is normally cleaner anyway.
+> 
+> If you find cases where there is no relevant device (I'm sure there are some)
+> just provide fwnode_for_each_available_child_node() and not the non-available
+> one.  If that means switching some drivers to use the available form as
+> part of cleanups, at that point we consider if there is a special reason
+> it actually wants the non available modes.
+> 
+> Ideally we also add documentation to say the device_for_each_child_node()
+> will (at least mostly) not consider non available nodes.  It might
+> be always, I'm still personally not sure on that!
+> 
+> Jonathan
+
+There are multiple cases where fwnode_for_each_available_child_node()
+seems to be used just to get a macro that explicitly guarantees node
+availability i.e. they retrieve ’fwnode’ out of ’device' by means of
+dev_fwnode() to pass it to the loop.
+
+In those cases, device_for_each_child_node[_scoped]() could be used if
+it guarantees availability, which no one could refute so far.
+
+On the other hand, there are other uses that do need the fwnode_*
+variants because they iterate over nodes inside another node which is
+usually retrieved via device_get_named_child_node().
+
+If there are no objections or better proposals, I will proceed as follows:
+
+1. Document that device_for_each_child_node() means availability.
+2. Use device_for_each_child_node[_scoped]() instead of the fwnode_*
+variant where it makes sense.
+3. Provide fwnode_*_scoped() macros.
+4. Use the new macros where needed.
+5. Use fwnode_for_each_available_child_node() as the default where
+unavailable nodes are not explicitly required.
+
+Any additional feedback, especially to clarify _availability_ in the
+device_for_each_child_node macros, or to provide a case where
+unavailable nodes must be considered (Nuno mentioned CPUs, but just as a
+vague idea) is more than welcome.
+
+Best regards,
+Javier Carrasco
 
