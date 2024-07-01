@@ -1,74 +1,129 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE74D84A30;
-	Mon,  1 Jul 2024 09:06:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A555C614
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 09:07:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719824777; cv=none; b=H5CuSUISplx6NyMcgSgOinZhb5r69DC9OPbNEDjKARATGeh6qjm9JWfi81h3RlpXQfT19du2cc29IJKCGCNqGWJ5uS69P0jMpQOFHhkaw+rVny8wYMFPj7AxQY7xnZNv3gUZ+pfNKf0uFr+6HDgVpF5WWw+Q36XJ2HDlgdw6VX0=
+	t=1719824874; cv=none; b=hDd+gbKDzihW/F/kdg73PyLUBWG4P5Vd5LAjaLlAgE2Ch+ZzJDmapQ83HB3f/D+gggziw1Oxzd15dz0F2zDRkv/2Yo1781RJDjAvv6EXTp4a1g3HxwBjoYk5hlyXu2ZU05W16wfRPQEQ+jMW8xUpGkgA6GXNAi1v3xerlJgiEsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719824777; c=relaxed/simple;
-	bh=lHTxC+saNwomHSdQ9/N0PF0JUGiXX9fKozXCfNEoZtY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RvVjJzm+HlkDO77wdrNUOE6u7pnzo7kEkPLbge8PUAmz2nJuHEAvdXU6Boxcww3jJhkVJ6qJwBmoChageSZbhdY9ds5BGMbXb+j51QtkCNHyR0XFyCNZd7JD7/+E0Eq8YH/Vqsl39NjZIGgHN4yexYTH38dyV0LEtEui2ZBb4Yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=j1DEXGds; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1719824874; c=relaxed/simple;
+	bh=x/KFL51JXTIkDF6sc0VQ2KeqoC+PcGy2ITuElz//u9A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lhc06KUWr0Gfj841y/siJImikFEoeuUQmELzZOUeIK84Xd2bKLslADi1VI1CULq3s065c6YXsoaaeBC1PFJujxm+PIDsLDRiVClrL0dIn969IlUPC9TN9LT+OcrQ1xA9tSS9CoFsWmau8AtlYHMbvFJVo5L8U3/OGBROUYMape0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dfj2ubxg; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="j1DEXGds"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1719824772; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=3lCDxI9hX7IFUfqrckpaMfqXdk5NsVJ2mROyHOZx4/s=;
-	b=j1DEXGdsJCI01MQKkT7MjYKBDuIhb8z5CVRYTLKAxraILJjxmCcErz/IZzaBA30t5DToD/kmvQj3ot2/o9pZ9ZkteIojHI8B3gLO5kGvtfCpD2JHP7Vki6EGHCdwFJW50HTly0pvKc3b62SiRGEq9UirpQ43LwuajwWIrdTtNcI=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033023225041;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W9cYQiW_1719824764;
-Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0W9cYQiW_1719824764)
-          by smtp.aliyun-inc.com;
-          Mon, 01 Jul 2024 17:06:11 +0800
-From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-To: James.Bottomley@HansenPartnership.com
-Cc: martin.petersen@oracle.com,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH] scsi: sd: Fix unsigned expression compared with zero
-Date: Mon,  1 Jul 2024 17:06:03 +0800
-Message-Id: <20240701090603.127783-1-jiapeng.chong@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dfj2ubxg"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1f9c6e59d34so21203045ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 02:07:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719824873; x=1720429673; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=x/KFL51JXTIkDF6sc0VQ2KeqoC+PcGy2ITuElz//u9A=;
+        b=dfj2ubxgF7tyjU5qtWpvRkmR83HCJuoAcJxIhA7zvji84EUfinIGa+7hqQokswiH+q
+         PNtXyTpvRAJ+tFAYqfH9nuxntTWRWlbhLbE3OkTrucyEZ6dctFYtLFsjOtS08K5Rh+W4
+         BOn/9c1BxLr6+r84M8mq9mxuuD5G5ruAdjMQTfHdQJ/8AVd2twGpKCahd5A5wCzpyc5E
+         HPl9NNfXrM/tql0IyUSQpwtkiw5IfLSDLasaQzBclsCfuT4nL0hS82T1IiAzb46KQLSe
+         PSHxROnOwqZIfOyCTN7ykbEOriqxKorZ1FQUO+BJPjQoFUMdSSkfO0AjlZYbVe9E9KAv
+         rEWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719824873; x=1720429673;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x/KFL51JXTIkDF6sc0VQ2KeqoC+PcGy2ITuElz//u9A=;
+        b=tlZoo6V0x5RbxVFKMF9sEiM/7Az7fa1w4U7ExfwlRuDVBaY85n2H2MADxj8+7pWypf
+         c+ZhpLyU9KbpLCbhVQf/gvuIhefsw47HXQpsFX2rE2HGjfFRZVF2SEYzsgxTEUXjgHKD
+         yvmpzCyguDtb96XvA/Us9bxa5x4b27L0Iro3UQ9EyqKpWUjjoRW5Rdpv4vhHj71TTEXV
+         qZYrcrrjol0l7ADLur9L2tovHPJ5uKRoXMK8Jv9Yqassj/3PNYIfEjGMK7BMU6tJ10YU
+         YMfE37j/1wAavu48YGFhTc/3KFfNJuEIqfnSyq/VsZHcbU1HewMjvNnjyakeYTp878SM
+         XktQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXjEIEtw8+Dgdb/KQwz8huYQI1L2o1sykZLVOfNKlWSxFY7zqrdhTcIz16ekWF+IeRrLqkZ/1ZwsHCA+eAuq6UzMI/akXubXDhYcMr6
+X-Gm-Message-State: AOJu0YwQXWj+qC6MxjsD7gL2gx/FiOHANJL8KY62UtFxRf2bIxmEwQga
+	+K/rJIeXeClcIgEwtShuINcHdMMQKnz9hTw74OMLXPGNRd6rfi67
+X-Google-Smtp-Source: AGHT+IGM+NYZFbKhzIiWcx1bGBaLftaof+ZWtjw8RcmMRMYuUIS8FOSkXjb+dA670b841i2/X+m6Ig==
+X-Received: by 2002:a17:902:f60a:b0:1fa:1ebb:eb79 with SMTP id d9443c01a7336-1fadbd08b30mr57004885ad.58.1719824872603;
+        Mon, 01 Jul 2024 02:07:52 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1568dd9sm59437925ad.182.2024.07.01.02.07.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 02:07:51 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id C59EB186E01DF; Mon, 01 Jul 2024 16:07:48 +0700 (WIB)
+Date: Mon, 1 Jul 2024 16:07:48 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: David Polakovic <email@dpolakovic.space>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Theodore Ts'o <tytso@mit.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Alexander Lobakin <alexandr.lobakin@intel.com>,
+	Jakub Kicinski <kuba@kernel.org>
+Subject: Re: proposition for fixing Y292B bug
+Message-ID: <ZoJx5GaBDHg7nayw@archie.me>
+References: <3be3235a-dea7-a5ca-b5ea-4047bdeb695d@dpolakovic.space>
+ <ZoFgga45QCh2uA0i@archie.me>
+ <9e3b638d-76f2-8520-2a24-7de0cd0bc149@dpolakovic.space>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="92cRUBLdgfOuwnAu"
+Content-Disposition: inline
+In-Reply-To: <9e3b638d-76f2-8520-2a24-7de0cd0bc149@dpolakovic.space>
 
-The return value from the call to scsi_execute_cmd() is int. However, the
-return value is being assigned to an unsigned int variable 'the_result',
-so making 'the_result' an int.
 
-./drivers/scsi/sd.c:2333:6-16: WARNING: Unsigned expression compared with zero: the_result > 0.
+--92cRUBLdgfOuwnAu
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9463
-Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
----
- drivers/scsi/sd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Sun, Jun 30, 2024 at 05:27:24PM +0200, David Polakovic wrote:
+> Thanks for reply.
 
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index 979795dad62b..ade8c6cca295 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -2396,7 +2396,7 @@ sd_spinup_disk(struct scsi_disk *sdkp)
- 	static const u8 cmd[10] = { TEST_UNIT_READY };
- 	unsigned long spintime_expire = 0;
- 	int spintime, sense_valid = 0;
--	unsigned int the_result;
-+	int the_result;
- 	struct scsi_sense_hdr sshdr;
- 	struct scsi_failure failure_defs[] = {
- 		/* Do not retry Medium Not Present */
--- 
-2.20.1.7.g153144c
+Please don't top-post on LKML, reply inline with appropriate context
+instead.
 
+>=20
+> My proposed solution was to create this BigInt datatype, which
+> stores the value in array. The functions for division, multiplication,
+> addition, subtraction and comparison could be stored in separate
+> ".h" library for manipulation with BigInt datatype. The paper speaks
+> more in detail.
+>=20
+> And yes, this truly is an userspace solution, but for kernel space
+> implementation I have zero to none experience. Therefore I wrote
+> here.
+
+There was a proposal for adding 128-bit unsigned integer (see [1]).
+The signed counterpart should be analogous.
+
+Thanks.
+
+[1]: https://lore.kernel.org/lkml/20220722145514.767592-1-alexandr.lobakin@=
+intel.com/
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--92cRUBLdgfOuwnAu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZoJx3wAKCRD2uYlJVVFO
+o1aEAP9IP0FK4gFNO4JrVAySvKbtwJDvtLCwhwcKYmdor5AZFQEAnS2qOTk9SGdm
+ccgkqZZPpk7xSE0TToAc9dBDE4KXdwg=
+=CNX4
+-----END PGP SIGNATURE-----
+
+--92cRUBLdgfOuwnAu--
