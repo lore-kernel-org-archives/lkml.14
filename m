@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61B116B739;
-	Mon,  1 Jul 2024 15:03:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829EB15A865;
+	Mon,  1 Jul 2024 15:03:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719846188; cv=none; b=ATgLHi3L5HfkKDAz3FMKl3PkX1MJQHrOE7Vp5K1dMeWlpNWcEDy6XE75ie/ly8Q4dWJiXFC4Vq1eJpQFw33k5Semt+KYNLg5bf7E8NxkSm8szd/Oj5q4vXwqwCAmR8syRxaYH2mkiCRknevC8hrAJazHixsYd4gv118fptkua7w=
+	t=1719846222; cv=none; b=gwB2QtzktBbhpatWGgKGwrG//pe6FjE/AFWJ5SVLVqKseHaw8P8yVq7M0+us11wnArU0k9YTl0iQjuf1eHufTmEHFbnSt+SsAmOwMyFLtOjRctONIGIzxnwMUYjlxRWSLdUSW5NjXdkbD9CpnUixqfdLyAO3JpGUh+4S7dR2gaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719846188; c=relaxed/simple;
-	bh=9zEnVq1vKf8ZCB+ZTWMUuZ5XV/zSomvjrV9gFojPVhY=;
+	s=arc-20240116; t=1719846222; c=relaxed/simple;
+	bh=U/EJ8D/Tfr6OznzJRJUQtg9hf0KFmSbGxB7rMS1TF5A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K/kV0JCdqmBZkyzJ489qmlrzIIyyBDFq1UVaNs3R53EeE9DoLkq/N+74FCA3p3nNhPTeoG5/gj+BsVHAFvArRqX7Y0jzYfHm0e5aW4KT148qTt57P+3Sz8OitISeB+jyEB5bZL/xi4ZBlz+KZcbFq7lbcuQqUzs2/dr8+gWcjYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WKP31U3P; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=PjNowoFH0YGLJwAUuJrxZctAxb18muaHg1QuH5X2BXFEUArJ4b+Xwxr4QJP8v9LLPf/UItaxwwi5EDArcIS+X9nGqT87uWTc7ETthTGpRDRvaKS0oQhzA9fATNwMDtvtAg/NDhl8kfDdSdBdvpPWdwSKqXZHHSVQmx2Eyr/T28A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GrqXYAsl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WKP31U3P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AA9EC116B1;
-	Mon,  1 Jul 2024 15:03:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GrqXYAsl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82747C116B1;
+	Mon,  1 Jul 2024 15:03:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719846188;
-	bh=9zEnVq1vKf8ZCB+ZTWMUuZ5XV/zSomvjrV9gFojPVhY=;
+	s=k20201202; t=1719846222;
+	bh=U/EJ8D/Tfr6OznzJRJUQtg9hf0KFmSbGxB7rMS1TF5A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WKP31U3PYNlxmJ5Jw6ioMcWDQnElftOp2CStBuFMpol50DHkEDljLXpYZneKe1hK/
-	 V+Gzkx/DA10SFxNMABh5BXp6LpumMgOF3zJi8+RqTegYGwwVu1Cv1G2NgtPk5jsj7V
-	 wu8qzmuCoAaBYDgWCjmT2uFTh4nRowX0GrqnZ3skuKsek7sqOgeKF0KVraQ7oEaXQA
-	 bmTn0A63keAa789BFAcl8D7VXLegb4ugUTcuRLKhrHAb8kj4llVkKd7vd6PWcfkrql
-	 ISTEAL+faHJHnOmfNpwilUfMY/cDu+mEF33TVK6Asti4NavBdUskw83zY6gy8u2bYl
-	 SctQE3VkLt17w==
-Date: Mon, 1 Jul 2024 16:03:03 +0100
+	b=GrqXYAslaCu2jiWxD12Vy0N0SS2Uwx67L5z927STQmY3ibxz+qkf8/XzfdjCdzh9M
+	 W0ONax2L4+PXgPPunra9AK/ieVr54F8I+AfQg7VtbEPvolFbABu1Iz1/mhYJEkqEVD
+	 ZbhSIJRS0LHwakM7ZYbbl7hv5rgliOtv14waBSRQsjf8yb+WxssKNZVKActCcZ0NS4
+	 2PE5Ppm/fXD+JyJoTnPA7vQZhJE81839aPqArsuctjloddfCGtdYB47fR9+8z++i9j
+	 aRlbwTWqUBYROXHyXlXoIRe+1KdiCfBXVs/iTvpEeh3ul9vRk8FSUVIz3DrCzrOQRq
+	 QzxcURxkippNQ==
+Date: Mon, 1 Jul 2024 16:03:37 +0100
 From: Conor Dooley <conor@kernel.org>
-To: George Liu <liuxiwei1013@gmail.com>
-Cc: linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-	openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	joel@jms.id.au, andrew@codeconstruct.com.au
-Subject: Re: [PATCH v1 2/3] dt-bindings: arm: aspeed: add IEIT x86 platform
- BMC boards
-Message-ID: <20240701-penniless-purplish-99aa73b47a42@spud>
-References: <20240701105259.972135-1-liuxiwei@ieisystem.com>
- <20240701105259.972135-2-liuxiwei@ieisystem.com>
+To: Tomer Maimon <tmaimon77@gmail.com>
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, tali.perry1@gmail.com,
+	joel@jms.id.au, venture@google.com, yuenn@google.com,
+	benjaminfair@google.com, openbmc@lists.ozlabs.org,
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: pinctrl: npcm8xx: add missing pin group
+ and mux function
+Message-ID: <20240701-unreal-fester-477720e68dae@spud>
+References: <20240630090104.565779-1-tmaimon77@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,54 +46,34 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="IXUbULBPs5b4abff"
+	protocol="application/pgp-signature"; boundary="2UZrTae3B0K5RTNy"
 Content-Disposition: inline
-In-Reply-To: <20240701105259.972135-2-liuxiwei@ieisystem.com>
+In-Reply-To: <20240630090104.565779-1-tmaimon77@gmail.com>
 
 
---IXUbULBPs5b4abff
+--2UZrTae3B0K5RTNy
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 01, 2024 at 06:52:58PM +0800, George Liu wrote:
-> Document the new compatibles used on the ieisystems
+On Sun, Jun 30, 2024 at 12:01:04PM +0300, Tomer Maimon wrote:
+> Add the following missing pin group and mux function:
+> smb6b, smb6c, smb6d, smb7b, smb7c, smb7d, bu4, bu4b, bu5, bu5b, bu6,
+> gpo187.
 >=20
-> Signed-off-by: George Liu <liuxiwei@ieisystem.com>
-> ---
->  Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml b/D=
-ocumentation/devicetree/bindings/arm/aspeed/aspeed.yaml
-> index e386d0ebfb14..818fbe9c45fc 100644
-> --- a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
-> +++ b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
-> @@ -92,6 +92,7 @@ properties:
->                - ibm,rainier-bmc
->                - ibm,system1-bmc
->                - ibm,tacoma-bmc
-> +              - ieit,nf5280m7-bmc
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
 
-This is a singular item, but your commit message's $body and $subject
-both sound plural. Is that intentional?
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
->                - inventec,starscream-bmc
->                - inventec,transformer-bmc
->                - jabil,rbp-bmc
-> --=20
-> 2.34.1
->=20
-
---IXUbULBPs5b4abff
+--2UZrTae3B0K5RTNy
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZoLFJwAKCRB4tDGHoIJi
-0pXnAP4labcVzdg4N5elo5nMFW9/bbZHoNZWdzlofSvdJaEHJwD/cMxGLP+opluH
-MicGC5BtbXqGAUic3usuJcSJOjWoYwM=
-=O6so
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZoLFSQAKCRB4tDGHoIJi
+0kWlAQDrib++ORF3992J5J2D4JW60q9UtcZJrVsV7tMdu3oHcAEAys1Wd9QhBgAV
+bXzA+/Vev8OlNVlUYuwH7Fb6xGNl4wc=
+=6aKU
 -----END PGP SIGNATURE-----
 
---IXUbULBPs5b4abff--
+--2UZrTae3B0K5RTNy--
