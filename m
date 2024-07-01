@@ -1,108 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E481A16D9DB;
-	Mon,  1 Jul 2024 18:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA2516EB6D
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 18:11:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719857464; cv=none; b=lA3azq243xXUy6pZO9KAKP6lBfkFI0YA4HTY5haay9J2ymI0uFTaR4jQ8YCGy167R021IZGSLKyqgMob2gTQg4Ci8H5a001dTVjSqelx7Aob5p4FTn5Vb2bD/UOg81RAPYtIiMwSGkCx4s3MigyU1j+ZYK2McuFq2pbltvynSK0=
+	t=1719857483; cv=none; b=HM1+eBbJ+2PwuVetZqOXYy1qDP7CK7DGT4qfhnV86/QhFTIIoG6smboIS+vuqpk/v/7nymHQ1OdqPHfP2kTB8Mf58GHmTzwFSjR8dtPNOvpcbwux8F11p0kPDbc95ozCFDKHBNlqWDH3HsI5NaUSYjqRDdJp+knY7l+nu4un6Dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719857464; c=relaxed/simple;
-	bh=T1HHsQL1cp7GHIolyLrOtq44GdhsnKzNF5VI7774Res=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BdlNQGDAyG6ycB93u3zHm2lARO/1XXpRJ875V6H6WR4YFIUktymoTwohXpw4tdLyShwBjwdMIot9ppkD7UCK90I1sp618wPJEmjBk9wvlzQiYyUPblVKCwn5V31LngeOOVpakzkeuYRjKSp9itijrF6S2c/TZ9GnoS/KZgO+kTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S4ZHmqWE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719857483; c=relaxed/simple;
+	bh=w7U7p//qg9/BOYI9iU60ZIGf+BbEbqV3HX/8OXO7k20=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=clP60gbQ82bzo194qstHRDL9PNDVLp2B1AQlTm0n4H/Q36j7/OXhyNnJy4PmfzBebt5fGNaUYXYEJS+et2uznrq/1rat4sEpW1GDZ9N0rvi++HtWGp89YbaPQVAaJQ0n/dZG3LzAJKPUj8sHEvHYTHRh3nmBvyLzO98qKuklrko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sug4zvn4; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S4ZHmqWE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74A74C116B1;
-	Mon,  1 Jul 2024 18:11:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719857463;
-	bh=T1HHsQL1cp7GHIolyLrOtq44GdhsnKzNF5VI7774Res=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=S4ZHmqWEjOUsO94b1suFp8CeAC7zdVOc4KKbLu90fpe9pW5PA1i/iZnjgM7W8oAG1
-	 YTolIvRYy8oQWAkfcINb7/7twLS8v+q2NbwXvwmauK16bke+RampQWRqwihtD5S6Or
-	 PRXZUyvT9pDeTGjZ/0jpEOoIeLzxg+ybxfxSDHUTLwuw7XSMRdemKmHwOXwXILocDh
-	 dULQDASGFqwIDf3hZWoCVz5o6eHGYoZ9z8fpYijAXVJN+SfYN/k7zkDozUx9EWoPVG
-	 xxxc9kkNLjj496Y3qjePzkkYQJ+hlFe5KBKKDRHME5JIy/LIKLxoydTEjCQBRBDgaK
-	 2/gPEzPuhOiaA==
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-25cd2b51fd3so436439fac.3;
-        Mon, 01 Jul 2024 11:11:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWNl1aP4ds11636hSp1r7dmQTBokgr0ywMzp7qZiKDrwGBiRAwMLwsIaHGIF+pjx+AG9bRs1Ledz9KCLs+t5Z+Z6R+sdKZ+jZETEZ9HBgCXyl08C37k14jZOylntECXIVQ/HPwzM10Pvw==
-X-Gm-Message-State: AOJu0YyD7ijzACZAC3MEVMmjoIbGCfrVQh6JDyAmXqmjgX68/fI+tzdi
-	X1whoV/W3WBVAdakrfM9TMYP4+HMuLxG7yIRUuIImNKSg+EqKEuKFXMuWEBATUdQvs1udQR6Ncq
-	NKVpgiMbKRumRso5EUuli6PKTj/c=
-X-Google-Smtp-Source: AGHT+IFkJ5n9eacsv7HBNduFQK0PZSjK3DFzu1xyqyeGUVfvBhPzZ4daHk0oHJtG925NcLgtuyp33wyGbgjtPesYfVk=
-X-Received: by 2002:a05:6870:46a8:b0:25c:f5f8:a822 with SMTP id
- 586e51a60fabf-25db33f8baamr6661470fac.1.1719857462710; Mon, 01 Jul 2024
- 11:11:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sug4zvn4"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52e764bb3fbso4271834e87.3
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 11:11:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719857479; x=1720462279; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UXIjfifqoY2+USdxqsmMR1PZNjbJyEi4O/Dl39q5iAg=;
+        b=sug4zvn4JF2dCA43ZCLn+iwezXRDZucJI23Tq1wbktBunfHFAM5R1u+Cu/Xdx+EKhB
+         EDaa3a1KMUmXAcV2Yom46JWgx2cjneNwNdTP4LsG4RJxf979W6m59333EPhWwbT8BtVX
+         X+Q1XClsPe+uttN5/8khXNo5bTsjmvFFaS+ewftnDrzjNACqD1f95cazRBCCW20BbvoW
+         kEBbKuVayKwm+sc0s6nZTQ75ZE5DWo+2aOV5BQLU5hn2s2AoP5hyWX8QqgVFrf85ndAo
+         /ueUtK1uRq2fEPSK9eHbA1NQjRS+UYpEWZQdkWkhWToCPQs4hILCphLK5LBte0SvuojB
+         n6kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719857479; x=1720462279;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UXIjfifqoY2+USdxqsmMR1PZNjbJyEi4O/Dl39q5iAg=;
+        b=A2+dTJmDKtAnG3i4aXw/P8h1jLoir0hcxZ0gKmcgCI2SqsxYGC2wGM4mLMB7dx9Thi
+         RQGyHibSYdanpTVWliEU+BS44GCMqpYCK2Y+IB+WPZum40JjuXcxacH1t+0coOy4jbyg
+         06MqG88FzpyUcQ9004qf5AS78HKWpRK3JJJmZOf3bx72JFPEIVUqhjs5Xi1LbxWfzhwr
+         /2TMmw+RXQAGHB00jiCTzNAo3gdLReviE/Lkz6X/8SVemdp58+GYNXBpQdajI/OlraJc
+         OspoNrhK2PyYLiEG0xbz16kc5EO5lD+GEXb+Dhn0qsJgSi+A0HlhjtZlUrfDILzhzMDm
+         Qmow==
+X-Forwarded-Encrypted: i=1; AJvYcCX/cz/o3apFfSo0OBFDoTG0OVGBq25f0/+9NKdqjETypvCDuq/dF9Uk+WwUXB2IZ3rNYGNktBAVmgF3c5bDavrHX4QfkzB+Ksqdi6Vl
+X-Gm-Message-State: AOJu0YzxeNYl2ujmR3mterLIkMl5aG/FxmEqwZyS1MsGyzTFzkU9AIrN
+	OJDMMdkOf5P0mI6O5wEB9idStB8oZ/XGP5p8hwDIwmhEs0b4xXz9Pp8WfjHgwvc=
+X-Google-Smtp-Source: AGHT+IF3y0VQLedqFBWkM6U87xQcON7ggU7XAKTs5isP66PO2FZSXJSQqq/IyH9zOvUQm0t8b7EkCg==
+X-Received: by 2002:a05:6512:528:b0:52b:c1ad:1b56 with SMTP id 2adb3069b0e04-52e8266639bmr3495909e87.19.1719857479041;
+        Mon, 01 Jul 2024 11:11:19 -0700 (PDT)
+Received: from umbar.lan ([192.130.178.91])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52e7e3bd707sm1274292e87.53.2024.07.01.11.11.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 11:11:18 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Mon, 01 Jul 2024 21:11:16 +0300
+Subject: [PATCH] arm64: dts: qcom: pm8916: correct thermal zone name
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240630173510.9481-1-qasim.majeed20@gmail.com>
-In-Reply-To: <20240630173510.9481-1-qasim.majeed20@gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 1 Jul 2024 20:10:51 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hmtVZRqh1U+n07Quvp0JpLtxO+Z0bVZsubQRoqvCfExg@mail.gmail.com>
-Message-ID: <CAJZ5v0hmtVZRqh1U+n07Quvp0JpLtxO+Z0bVZsubQRoqvCfExg@mail.gmail.com>
-Subject: Re: [PATCH v2] Updating a vulnerable use of strcpy.
-To: Muhammad Qasim Abdul Majeed <qasim.majeed20@gmail.com>
-Cc: rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240701-fix-pm8916-tz-v1-1-02f8a713f577@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAEPxgmYC/x2MSQqAMAwAvyI5G0hKcfuKeHCJmoNVWhGx+HeLx
+ 4GZiRDEqwRosgheLg26uwScZzCuvVsEdUoMhoylkhhnvfHYqpoLPB9kIzyQkJ1kgNQcXpLw/9r
+ ufT84GrIDXwAAAA==
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=998;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=w7U7p//qg9/BOYI9iU60ZIGf+BbEbqV3HX/8OXO7k20=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmgvFG5D7g4V+ZT1LWDVCXsEADQXnHuLk/v9cMz
+ m2ca8/RU+SJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZoLxRgAKCRCLPIo+Aiko
+ 1WVoB/9270bZd7hm1wP1rDCf0QLlVeu+merMMJdG4zLjiIvUAoGOnSQRjyIgCBwfwbjz0Pe79rd
+ +K3Jn3w7jsJb420UkDb+OTsssL5yzZOjPt2e1gJkxraOgPm19/3qe0iCMJ+7T/tJGY4B01IXyjv
+ v4vfGYnepgsTIE/dnNqCwmhzx0x05yE2gGbxBc3aIhwYI30gyArq3tUBsFokxsBYyX7xFOdrYJH
+ v+/hcGftN+GHiHTECu1gXTWz5oQVTLuB5fwNDa8zovsrsAYNuKGS/ANaomcUfjOPO8oxJ8NnHSp
+ Nne1ca5ZjTBBXrwRnMynrA3XHyfbS2fabhc7dx1ot1XNvfWe
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-In what way exactly is it vulnerable?
+Correct the name for the thermal zone on PM8916 PMIC. I ended up with
+c&p mistake, which wasn't noticed until the patch got merged.
 
-Both ACPI_VIDEO_DEVICE_NAME and ACPI_VIDEO_CLASS are kernel symbols.
+Reported-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Fixes: b7a28d8a7b80 ("arm64: dts: qcom: pm8916: add temp-alarm thermal zone")
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/pm8916.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Sun, Jun 30, 2024 at 7:36=E2=80=AFPM Muhammad Qasim Abdul Majeed
-<qasim.majeed20@gmail.com> wrote:
->
-> Replacing strcpy with strscpy and memory bound the copy.
->
-> Signed-off-by: Muhammad Qasim Abdul Majeed <qasim.majeed20@gmail.com>
-> ---
->  drivers/acpi/acpi_video.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
-> index 1fda30388297..6113baffd53f 100644
-> --- a/drivers/acpi/acpi_video.c
-> +++ b/drivers/acpi/acpi_video.c
-> @@ -1128,8 +1128,8 @@ static int acpi_video_bus_get_one_device(struct acp=
-i_device *device, void *arg)
->                 return -ENOMEM;
->         }
->
-> -       strcpy(acpi_device_name(device), ACPI_VIDEO_DEVICE_NAME);
-> -       strcpy(acpi_device_class(device), ACPI_VIDEO_CLASS);
-> +       strscpy(acpi_device_name(device), ACPI_VIDEO_DEVICE_NAME, strlen(=
-ACPI_VIDEO_DEVICE_NAME));
-> +       strscpy(acpi_device_class(device), ACPI_VIDEO_CLASS, strlen(ACPI_=
-VIDEO_CLASS));
+diff --git a/arch/arm64/boot/dts/qcom/pm8916.dtsi b/arch/arm64/boot/dts/qcom/pm8916.dtsi
+index 2def48f2d101..f8e4829ff7f7 100644
+--- a/arch/arm64/boot/dts/qcom/pm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/pm8916.dtsi
+@@ -6,7 +6,7 @@
+ 
+ / {
+ 	thermal-zones {
+-		pm8150-thermal {
++		pm8916-thermal {
+ 			polling-delay-passive = <100>;
+ 
+ 			thermal-sensors = <&pm8916_temp>;
 
-Why is a runtime check needed here if all of the sizes in question are
-known at compile time?
+---
+base-commit: 43f9f53b46c63cbfc02af073a84c72c64b10767b
+change-id: 20240701-fix-pm8916-tz-12e1b0e04deb
 
->
->         data->device_id =3D device_id;
->         data->video =3D video;
-> @@ -2010,8 +2010,8 @@ static int acpi_video_bus_add(struct acpi_device *d=
-evice)
->         }
->
->         video->device =3D device;
-> -       strcpy(acpi_device_name(device), ACPI_VIDEO_BUS_NAME);
-> -       strcpy(acpi_device_class(device), ACPI_VIDEO_CLASS);
-> +       strscpy(acpi_device_name(device), ACPI_VIDEO_BUS_NAME, strlen(ACP=
-I_VIDEO_BUS_NAME));
-> +       strscpy(acpi_device_class(device), ACPI_VIDEO_CLASS, strlen(ACPI_=
-VIDEO_CLASS));
->         device->driver_data =3D video;
->
->         acpi_video_bus_find_cap(video);
-> --
+Best regards,
+-- 
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+
