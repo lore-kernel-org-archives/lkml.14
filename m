@@ -1,69 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72B853AC
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 15:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E0C253AC;
+	Mon,  1 Jul 2024 15:40:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719848421; cv=none; b=Cor7uk7epfNfvzaHR7s+SHYqd2gmJiRc9d/Xkb7LJTVng+b/QHKAA+zjABdhuCRY3bT5z2r0GsmVCbCoxbHVqUm904vjleMrnD/AYQ72Q2OHnJqre6sl8M8Gh1LRn8MdFcMpvpZOdKM2De9yawq8YJNWQcE9fAaHT7uk1ufUp+w=
+	t=1719848449; cv=none; b=qDfxuF1sjKqAmaaRHYJd0Juz3teUW4su5A5QOWupKhdwkXh4buX2L/PWgRgGRv6zuk+2ZYBB4tK615VchfS0WoEvIdq+rMDfkKsmiJibgJci7Rw0ltBVA9iSlbwY5LnRoDr0rbDoecYKnLedjUVxpO0lJ7ZHK6BmQSpAhBg8w50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719848421; c=relaxed/simple;
-	bh=jzZ8xQY7eDm6paSkzdj5TLzcQV7wRCSr0mNrUY+RcFE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GUAgtd4AKDeUUisw2rCmegaEFAtf88aPnkCiCaEfZsr3Dq7mmxiRmFQ5+ktawkzBzr6szcn+cjNp8SwlVPy2vYGIIEeWsHBIgskeXKRX+yCjhvlosKIi81a6M/ScFqONynzWhOPBO3owkEyTLgicjgE2pJJ4wt946CtpciiqTFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FbqxQsNP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719848449; c=relaxed/simple;
+	bh=een/u44RHHbOSr8wUZ1YivcJUZUcGARZ5X9uyg30b84=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WhTLCWUavf6Zpw+toe8UsX0EJd3pUA0WYGwSYc/US6NwrwDAX8s60YijHmcM6PN3UQ4pD3Bc35BWEvjVqbgjna32MNO+2V7zKwsqrjfwo+CUKARsPFe4yQZLZkPjePaflTe0Ze1sMWr4YqcIIpsP1UUAu9AjGyViyTmncKbQ3Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P+Ia4RYV; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FbqxQsNP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73776C116B1;
-	Mon,  1 Jul 2024 15:40:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719848420;
-	bh=jzZ8xQY7eDm6paSkzdj5TLzcQV7wRCSr0mNrUY+RcFE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FbqxQsNPRL84pLMtwOYiIBqCdPxk+tbjUAUx+CXdTLUxDGXLqsBVDPtq2qjkTeX1z
-	 QG9Bhz/Pf1HdH2lzwk1tLLqI94CkHRDuXMJpIa/J5CpQt9niePFr8r7nc3Q5fWV/o5
-	 Z+i/bOmAYJTtaKFvo1i0W4+WRCYJWz6Pd1gUTqqvIY/aDfuTbs2MtvTprn4dhN15fv
-	 AwMh4VYz+sc+OK3VQCl9RQcmJnFoMVrXmoRdqm5jv5Ir8z7n8n0VQR4Vi2lzbPhIBP
-	 geh51ewBqrpDt6wXAuheehLmkaWwpN2N4mNx/4fAcqkRVVLWIC0BblIl99EEQQFU1D
-	 I+EKdMaZ8q3zg==
-Date: Mon, 1 Jul 2024 08:40:20 -0700
-From: Kees Cook <kees@kernel.org>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, oleg@redhat.com,
-	tglx@linutronix.de, peterz@infradead.org, luto@kernel.org,
-	wad@chromium.org, rostedt@goodmis.org, arnd@arndb.de,
-	ardb@kernel.org, broonie@kernel.org, mark.rutland@arm.com,
-	rick.p.edgecombe@intel.com, leobras@redhat.com,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 0/3] arm64: entry: Convert to generic entry
-Message-ID: <202407010839.125126F@keescook>
-References: <20240629085601.470241-1-ruanjinjie@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P+Ia4RYV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719848448; x=1751384448;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=een/u44RHHbOSr8wUZ1YivcJUZUcGARZ5X9uyg30b84=;
+  b=P+Ia4RYVrbCFWpoXBf5VEnUQtKTbUeG/Y0bYQXWo5rZt4Un+cfjltCz+
+   xiOfr0t02M/niF2ElYmU3r7bgp49fPbDRamnoObqpfwmHUAO3HS3dRZdg
+   p4tZuXpE/VrRwaTpdkEPV6pU2Uxqk9sSpEeRcK7Ov9sZ/qFd3jYU03afY
+   wpVtC1eZ46IjG1KL0xaiS+LYOyH7eNHJ23FP9YODVObYGIJBCIVkIgBl8
+   xykDT4E6F4s25XQ+aHtwSfCQjnFST7u3DS0b+Bg0Ku9EyJvHHFaUqmwO2
+   eI0tFqPc6hd5K8bjD25yNr/l28w/ZfKAw5Ao17xyKwXKuJt8zjlrgTe06
+   w==;
+X-CSE-ConnectionGUID: 7/ob2AhORHunWMvr9Gh8WQ==
+X-CSE-MsgGUID: oD2MTkcFSZiyT6TpXO6p0A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="34528148"
+X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
+   d="scan'208";a="34528148"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 08:40:47 -0700
+X-CSE-ConnectionGUID: A81hiQBvSMmHLYpz/Tm3MQ==
+X-CSE-MsgGUID: t2s5aAH9QGi/ZScpGyvL/g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
+   d="scan'208";a="49917494"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 08:40:46 -0700
+Date: Mon, 1 Jul 2024 08:45:58 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: Xin Li <xin@zytor.com>
+Cc: X86 Kernel <x86@kernel.org>, Sean Christopherson <seanjc@google.com>,
+ LKML <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Xin Li
+ <xin3.li@intel.com>, linux-perf-users@vger.kernel.org, Peter Zijlstra
+ <peterz@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>, Tony Luck
+ <tony.luck@intel.com>, Andy Lutomirski <luto@kernel.org>, acme@kernel.org,
+ kan.liang@linux.intel.com, Andi Kleen <andi.kleen@intel.com>, "Mehta,
+ Sohil" <sohil.mehta@intel.com>, Zeng Guang <guang.zeng@intel.com>,
+ jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v3 07/11] KVM: VMX: Handle NMI Source report in VM exit
+Message-ID: <20240701084558.1620584f@jacob-builder>
+In-Reply-To: <6c8160e4-3d67-410d-aad0-3ec731a903f8@zytor.com>
+References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
+	<20240628201839.673086-8-jacob.jun.pan@linux.intel.com>
+	<6c8160e4-3d67-410d-aad0-3ec731a903f8@zytor.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240629085601.470241-1-ruanjinjie@huawei.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jun 29, 2024 at 04:55:58PM +0800, Jinjie Ruan wrote:
-> Changes in v3:
-> - Test the MTE test cases.
-> - Handle forget_syscall() in arch_post_report_syscall_entry()
-> - Make the arch funcs not use __weak as Thomas suggested, so move
->   the arch funcs to entry-common.h, and make arch_forget_syscall() folded
->   in arch_post_report_syscall_entry() as suggested.
-> - Move report_single_step() to thread_info.h for arm64
-> - Change __always_inline() to inline, add inline for the other arch funcs.
-> - Remove unused signal.h for entry-common.h.
-> - Add Suggested-by.
-> - Update the commit message.
 
-I didn't see the mentioned feedback from tglx in any of the threads. Is
-lore busted or is there discussion on this series happening somewhere
-else?
+On Fri, 28 Jun 2024 21:07:04 -0700, Xin Li <xin@zytor.com> wrote:
 
--- 
-Kees Cook
+> On 6/28/2024 1:18 PM, Jacob Pan wrote:
+> > From: Zeng Guang <guang.zeng@intel.com>
+> > 
+> > If the "NMI exiting" VM-execution control is 1, the value of the 16-bit
+> > NMI source vector is saved in the exit-qualification field in the VMCS
+> > when VM exits occur on CPUs that support NMI source.
+> > 
+> > KVM that is aware of NMI-source reporting will push the bitmask of NMI
+> > source vectors as the exceptoin event data field on the stack for then
+> > entry of FRED exception. Subsequently, the host NMI exception handler
+> > is invoked which will process NMI source information in the event data.
+> > This operation is independent of vCPU FRED enabling status.
+> > 
+> > Signed-off-by: Zeng Guang <guang.zeng@intel.com>
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > ---
+> >   arch/x86/entry/entry_64_fred.S |  2 +-
+> >   arch/x86/kvm/vmx/vmx.c         | 11 ++++++++---
+> >   2 files changed, 9 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/arch/x86/entry/entry_64_fred.S
+> > b/arch/x86/entry/entry_64_fred.S index a02bc6f3d2e6..0d934a3fcaf8 100644
+> > --- a/arch/x86/entry/entry_64_fred.S
+> > +++ b/arch/x86/entry/entry_64_fred.S
+> > @@ -92,7 +92,7 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
+> >   	 * +--------+-----------------+
+> >   	 */
+> >   	push $0				/* Reserved, must be 0
+> > */
+> > -	push $0				/* Event data, 0 for
+> > IRQ/NMI */
+> > +	push %rsi			/* Event data for IRQ/NMI */
+> >   	push %rdi			/* fred_ss handed in by the
+> > caller */ push %rbp
+> >   	pushf  
+> 
+> This belongs to the previous patch, it is part of the host changes.
+right, will do.
+
+> 
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index 4e7b36081b76..6719c598fa5f 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -7331,10 +7331,15 @@ static noinstr void vmx_vcpu_enter_exit(struct
+> > kvm_vcpu *vcpu, if ((u16)vmx->exit_reason.basic ==
+> > EXIT_REASON_EXCEPTION_NMI && is_nmi(vmx_get_intr_info(vcpu))) {
+> >   		kvm_before_interrupt(vcpu, KVM_HANDLING_NMI);
+> > -		if (cpu_feature_enabled(X86_FEATURE_FRED))
+> > -			fred_entry_from_kvm(EVENT_TYPE_NMI,
+> > NMI_VECTOR, 0);
+> > -		else
+> > +		if (cpu_feature_enabled(X86_FEATURE_FRED)) {
+> > +			unsigned long edata = 0;
+> > +
+> > +			if
+> > (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE))
+> > +				edata = vmx_get_exit_qual(vcpu);
+> > +			fred_entry_from_kvm(EVENT_TYPE_NMI,
+> > NMI_VECTOR, edata);  
+> 
+> Simply do fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR, 
+> vmx_get_exit_qual(vcpu))?
+I don't have strong preference but having a local variable improves
+readability IMHO.
+
+> > +		} else {
+> >   			vmx_do_nmi_irqoff();
+> > +		}
+> >   		kvm_after_interrupt(vcpu);
+> >   	}
+> >     
+> 
+
+
+Thanks,
+
+Jacob
