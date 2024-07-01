@@ -1,116 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55889502BD;
-	Mon,  1 Jul 2024 07:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 029425028C
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 07:38:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719819464; cv=none; b=VhRHLboCgWgjGtp7CCTAIcdtsewczUP2ABxtlsBOuY34V8hROz+TYcDsx4QRnWZ5t81BOFq7/5p9c12tE4R6kryFnK4YniCDk8sP5dgoG7R5eZ0BPya4AAI+RQbhTPRc+VjPU4m+fKr90ZZ/+eM4BKdJVGzuBsxtURPZg4qoOBM=
+	t=1719819498; cv=none; b=Z1+ktvcuGIIotb2RwOaQFzDt+S5XSPUjTq//S2/LL1rkROlJdthk3Ry/NsIHovXet/dBk9tFOPUsyVRrTBfZ3RF0h52Qxt5b90oR29b2Rk3ImXCEvctW12T8e3HCZpzLZux9/6AkrL7q8wvQV47RESxvk/eDQoGrsUaiKCi+Rq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719819464; c=relaxed/simple;
-	bh=BhAlKVTvL5abtou59jRZCxb5CQYI4SDdsUJnyIVDGfc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cLE0E81sIa/nu0+3AR6asBp+QQOXuGAA9JdqRTbCEeOUgxpr+yKh8iVckbW7TZian41Myv7ntGOCNpHNxcolMdIFQW6+k1SJzJwkjeo4rsQsLUAAqWPbSSOZqRve9weWE0c/3Z22Qvk9OGnB653Wjn8VvyxQsmHbwCziG0U3RZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kjv+8yOT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719819498; c=relaxed/simple;
+	bh=facbaRCnbSQSPEJ4NU4guvxeVPVmZBrJDP2YaKOJGH4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Wca3z9sxuxwcvpN4gAzOFDsPqHUwYAWgGWd+AHr5dPMb4xE8OjPzKcGEoAWbEBbbKTAegeyQOEPll0CeUGVrlfRWAWjajhk/B0y62mAq+reCZ6lr295yoaKpmjOUgkh+cNC7Z6Xnn7uXiWjECKOuXpeGJyqPlAvu2Y+xnCUmO2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LA42ONo8; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kjv+8yOT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2D43C116B1;
-	Mon,  1 Jul 2024 07:37:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719819463;
-	bh=BhAlKVTvL5abtou59jRZCxb5CQYI4SDdsUJnyIVDGfc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Kjv+8yOTH5/hmwJ+NSJFlV3tVGsbWPxsX/pfT9mE9y8ZEZbWXxovE+YV3ecWhdiUg
-	 Z12OJQn9x328QP3mE8YrIJ7f7mTRPfmnhw5hUdcJEwHi9uivDpdolgqS1qfjfwfLDl
-	 a0jQdhYM7qy8gGn5XLnLwPhbveSxQmBYyhpHXJOLAYO9hTEVJWx+kp166W0SymCLS2
-	 VYN0qbgCOaNjcI1I5DXwKYeVeX+YQi5+vBKt744c015NSmY4Uit00M28nvwAaiCBjr
-	 j9yhhxunWYABQGGOBMN1IkXySbRLfA9/GDRKz/hR2LPTFCrOhL9OitX3pIqgdRoHcE
-	 ahY6Hp+ruXFUA==
-Date: Mon, 1 Jul 2024 09:37:39 +0200
-From: Benjamin Tissoires <bentiss@kernel.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org, Jeff LaBundy <jeff@labundy.com>, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] Input: make events() method return number of events
- processed
-Message-ID: <my7tmdbjskljxhp5vdu6cervetpwvalqmgeg3g4yfgzxereqqx@cidajfox7dzr>
-References: <20240701060553.869989-1-dmitry.torokhov@gmail.com>
- <20240701060553.869989-3-dmitry.torokhov@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LA42ONo8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719819497; x=1751355497;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=facbaRCnbSQSPEJ4NU4guvxeVPVmZBrJDP2YaKOJGH4=;
+  b=LA42ONo8Sw28x88kMe15MWmRBarMHLH2rssD8TdjXWMRtA/TiJAGVtOP
+   mQlaPGZk/9EdDz9wIxL/qpUUnOpPkKkYS9k+WxNyoTDusskPFX8A9Cbjb
+   m7qwwYxaORVTGT5vgW9V8n0B37b1gOJExU8HAy+CObR/7sqXe9L0eaT9k
+   l8xCCqm9uSGXiTF5WyX5S9NNwmLl4fIzZ9rCpjb/TV9tE+9wMkBqSq5IS
+   mqtOvzmzRW2prQZy2xxeAWrrHLbCuLDewxwd3RofgyB8GvMx4VVzICg5X
+   dOBgDNL68qLMkweDBD4KWEVK9mR06tpD+tzSJ8TXtB942lYlQhfvCdjUh
+   A==;
+X-CSE-ConnectionGUID: +nQJfwG9SROuLIhTszIDcg==
+X-CSE-MsgGUID: ox40AmOxRAiugmyNbVOJtw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11119"; a="28324752"
+X-IronPort-AV: E=Sophos;i="6.09,175,1716274800"; 
+   d="scan'208";a="28324752"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 00:38:16 -0700
+X-CSE-ConnectionGUID: GB8kuVrgQeCem9zhK20QJQ==
+X-CSE-MsgGUID: JTvTZ1kXQOG5KpD8ugvahA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,175,1716274800"; 
+   d="scan'208";a="76610300"
+Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 00:38:15 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org,  linux-mm@kvack.org,  Andrew Morton
+ <akpm@linux-foundation.org>
+Subject: Re: [PATCH v1 1/2] mm/migrate: make migrate_misplaced_folio()
+ return 0 on success
+In-Reply-To: <20240620212935.656243-2-david@redhat.com> (David Hildenbrand's
+	message of "Thu, 20 Jun 2024 23:29:34 +0200")
+References: <20240620212935.656243-1-david@redhat.com>
+	<20240620212935.656243-2-david@redhat.com>
+Date: Mon, 01 Jul 2024 15:36:23 +0800
+Message-ID: <87plrxo96w.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240701060553.869989-3-dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset=ascii
 
-On Jun 30 2024, Dmitry Torokhov wrote:
-> In preparation to consolidating filtering and event processing in the
-> input core change events() method to return number of events processed
-> by it.
-> 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+David Hildenbrand <david@redhat.com> writes:
+
+> Let's just return 0 on success, which is less confusing.
+>
+> ... especially because we got it wrong in the migrate.h stub where we
+> have "return -EAGAIN; /* can't migrate now */" instead of "return 0;".
+> Likely this wrong return value doesn't currently matter, but it
+> certainly adds confusion.
+>
+> We'll add migrate_misplaced_folio_prepare() next, where we want to use
+> the same "return 0 on success" approach, so let's just clean this up.
+>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 > ---
->  drivers/input/evdev.c | 6 ++++--
->  include/linux/input.h | 7 ++++---
->  2 files changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/input/evdev.c b/drivers/input/evdev.c
-> index 51e0c4954600..c8eca8cdb976 100644
-> --- a/drivers/input/evdev.c
-> +++ b/drivers/input/evdev.c
-> @@ -288,8 +288,8 @@ static void evdev_pass_values(struct evdev_client *client,
->  /*
->   * Pass incoming events to all connected clients.
->   */
-> -static void evdev_events(struct input_handle *handle,
-> -			 const struct input_value *vals, unsigned int count)
-> +static unsigned int evdev_events(struct input_handle *handle,
-> +				 struct input_value *vals, unsigned int count)
->  {
->  	struct evdev *evdev = handle->private;
->  	struct evdev_client *client;
-> @@ -306,6 +306,8 @@ static void evdev_events(struct input_handle *handle,
->  			evdev_pass_values(client, vals, count, ev_time);
+>  mm/huge_memory.c | 5 ++---
+>  mm/memory.c      | 2 +-
+>  mm/migrate.c     | 4 ++--
+>  3 files changed, 5 insertions(+), 6 deletions(-)
+>
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 0fffaa58a47a..fc27dabcd8e3 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -1652,7 +1652,7 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf)
+>  	unsigned long haddr = vmf->address & HPAGE_PMD_MASK;
+>  	int nid = NUMA_NO_NODE;
+>  	int target_nid, last_cpupid = (-1 & LAST_CPUPID_MASK);
+> -	bool migrated = false, writable = false;
+> +	bool writable = false;
+>  	int flags = 0;
 >  
->  	rcu_read_unlock();
-> +
-> +	return count;
+>  	vmf->ptl = pmd_lock(vma->vm_mm, vmf->pmd);
+> @@ -1696,8 +1696,7 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf)
+>  	spin_unlock(vmf->ptl);
+>  	writable = false;
+>  
+> -	migrated = migrate_misplaced_folio(folio, vma, target_nid);
+> -	if (migrated) {
+> +	if (!migrate_misplaced_folio(folio, vma, target_nid)) {
+>  		flags |= TNF_MIGRATED;
+>  		nid = target_nid;
+>  	} else {
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 00728ea95583..118660de5bcc 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -5354,7 +5354,7 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
+>  	ignore_writable = true;
+>  
+>  	/* Migrate to the requested node */
+> -	if (migrate_misplaced_folio(folio, vma, target_nid)) {
+> +	if (!migrate_misplaced_folio(folio, vma, target_nid)) {
+>  		nid = target_nid;
+>  		flags |= TNF_MIGRATED;
+>  	} else {
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index 781979567f64..0307b54879a0 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -2629,11 +2629,11 @@ int migrate_misplaced_folio(struct folio *folio, struct vm_area_struct *vma,
+>  					    nr_succeeded);
+>  	}
+>  	BUG_ON(!list_empty(&migratepages));
+> -	return isolated;
+> +	return isolated ? 0 : -EAGAIN;
+
+Is it good to use -EAGAIN as error code always?  At least if
+nr_remaining < 0, we can use that?
+
+Otherwise, this LGTM.  Thanks!
+
+>  
+>  out:
+>  	folio_put(folio);
+> -	return 0;
+> +	return -EAGAIN;
 >  }
->  
->  /*
-> diff --git a/include/linux/input.h b/include/linux/input.h
-> index c22ac465254b..89a0be6ee0e2 100644
-> --- a/include/linux/input.h
-> +++ b/include/linux/input.h
-> @@ -275,7 +275,8 @@ struct input_handle;
->   *	it may not sleep
->   * @events: event sequence handler. This method is being called by
->   *	input core with interrupts disabled and dev->event_lock
-> - *	spinlock held and so it may not sleep
-> + *	spinlock held and so it may not sleep. The method must return
-> + *	number of events passed to it.
->   * @filter: similar to @event; separates normal event handlers from
->   *	"filters".
->   * @match: called after comparing device's id with handler's id_table
-> @@ -312,8 +313,8 @@ struct input_handler {
->  	void *private;
->  
->  	void (*event)(struct input_handle *handle, unsigned int type, unsigned int code, int value);
-> -	void (*events)(struct input_handle *handle,
-> -		       const struct input_value *vals, unsigned int count);
-> +	unsigned int (*events)(struct input_handle *handle,
-> +			       struct input_value *vals, unsigned int count);
->  	bool (*filter)(struct input_handle *handle, unsigned int type, unsigned int code, int value);
->  	bool (*match)(struct input_handler *handler, struct input_dev *dev);
->  	int (*connect)(struct input_handler *handler, struct input_dev *dev, const struct input_device_id *id);
-> -- 
-> 2.45.2.803.g4e1b14247a-goog
-> 
+>  #endif /* CONFIG_NUMA_BALANCING */
+>  #endif /* CONFIG_NUMA */
 
-Reviewed-by: Benjamin Tissoires <bentiss@kernel.org>
-
-Cheers,
-Benjamin
+--
+Best Regards,
+Huang, Ying
