@@ -1,155 +1,153 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4488415DBD6;
-	Mon,  1 Jul 2024 19:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B2B15DBD6
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 19:19:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719861542; cv=none; b=DWi4hb+XdVeDbU4mNwfo3O9JvbKBlUIfrbmu8Kdj0/YuPfIJ3dg4rrpLZ3MPc//u0BI0KYlKhPNv2/hjagGzZikq9gtbaN4YzuwUPmiHjnbXmXIYH7dlgPL6a+mJa4mBcRwhRB8uG6n7Roh3O/x90BHQ/BVO6INO5YQPRUsgvFc=
+	t=1719861583; cv=none; b=XA2novjT4s4OMkiC3VhdGFOrh2muwoP07hnR5J3SxM05OUz1vwnQ6ZfaDuBlBWD8I42vX2Xtkbh7qYJ5v+KwICO+3BhMQswmLVRIBT37yaNxEZbj8S6s0bX9jctA7qccZ+kr2I2oIHOs8eQF5uzJuRfSbzIR6CeIX/yAUSOi91E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719861542; c=relaxed/simple;
-	bh=jWZ1CeQ+Pa38AA57KdIwDpbzTnMj3qGPaHVJkcEuG78=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=jMdKrAjEAbNFhFKLMg2VK0lXp0jy+DRizu/q366ZEqw4sd+qV+JPLi6jK2e4qKPFEDWvOKBPbthiom7cY70uEVMSW+1ApdtaEtsQZwdMDeuJUIQPmIxLrRpvD3Lgn9KV1sDe95ovpMzcY7VOi2+1LNT6Wf6wVgzCWMboMXR6en0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=e0xEJUb3; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1719861583; c=relaxed/simple;
+	bh=pckBVQAzVr8cwtuEZw0i7PNYij6s4gjYYxqZSfZ98lY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OvO7Mj0GjGmEutndg8o0Nh+GXMNEn/At0PChCycSFnHUFrorvsWtYrwD/tbHUrUVsBq7J+M/iHO00gzQqHDnv+bs/5xndJFMuQe2qauFbz97651gCJj70YYKU78aPU63cCkoxtlSSeXZU5AI1glXxp4aC94Q5hod/v+q5YYfmXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=URjtsM50; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="e0xEJUb3"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 461BNd10031186;
-	Mon, 1 Jul 2024 19:18:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	HEOucDbBLsGiHd0h8bxK39k/378s4ze6cCjXgEeaqvw=; b=e0xEJUb3vKj9QKER
-	EMjxyym5noJskbaAYX2LSb0TYrSwXmhph4DlGyEwpocJJTThlcjgIgz139Nu1PwW
-	rJCmj/YM2GFPBpc4JVaQXk7jSgscd7Ezp29tUG9hHKuicp8X/vLI6W+RET3C5yOl
-	YJUM+UNoRB5xPIMdYcOhqQG0zkN/Dn62pi7NUy7X+MLfoCViP+SMYbOMSQrRcXBH
-	CocIKkKsFQjDkFi96LPjRuZAe8RTfKsbUaA+rYNgrTObWKAZNqd4LNir9BFdCUH8
-	110n0lnIoNuPLpyk2rjl3HfYCax+iX3pi5uPkRJ0jneP8CyZv1hcg75DhEuVN2Pw
-	bJDsdg==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 402bejmvvs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Jul 2024 19:18:24 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 461JIOT7014247
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 1 Jul 2024 19:18:24 GMT
-Received: from [10.110.54.196] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 1 Jul 2024
- 12:18:19 -0700
-Message-ID: <eb63b7c2-9485-4b11-bf73-4d38a2365f19@quicinc.com>
-Date: Mon, 1 Jul 2024 12:18:19 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="URjtsM50"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2c7fa0c9a8cso1938365a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 12:19:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719861581; x=1720466381; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n7dX91rR++X8l6FgAb2IdZ2jTpqGOU3hxaiyihnGxWg=;
+        b=URjtsM50BdIbrleahVegrzo+bCX6UBLdj5eOelrAZn9Fo2BGiMlGySwZbcMlyjk+LA
+         cEwGY9FXQUn5SkBW7tiSByznnVvc5bT5dH5BSLGFYMndL2ROV5sWMdjIU/JdNx1Oku/W
+         rjNEu3Z07iVfaqjzKOYt9YOwWVESod+ukC5Ox5hOdRn6cCZALzo272J1JCoAdJ8S97be
+         giitv4DZFSLa5hBKZaJKp/zS/RjA0MOqGtyCUUk7m+YxwDXEK38jmdPALIiCQCYMeti9
+         3yQblNcwQLu57Ks666qw+mz3yuvXOpjxCsD27gThV4j0v64UgSZ2w2694hhFsf3FfC7x
+         z4eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719861581; x=1720466381;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=n7dX91rR++X8l6FgAb2IdZ2jTpqGOU3hxaiyihnGxWg=;
+        b=uX6bXv/3AdlCe0nKvrE/+v69zdtTAga6zGwEl/wjV6kY+AupkRhAifQzeHuRm6K13V
+         rkXLEi/GEOEDWC8dyg7rx+LlsZfLM9m5+f4XzkraIZOWCOCEMNFpFSfvD8j2px46oyD0
+         pH9YWDhou0uD0a0Nnld1rR32NxlhEUUpJYuzmvM4ROMzS1+lpyy9PlIcDPVE9IlQU6Pa
+         p4RupFehdjFHnixXErKCaGV0O6brZ3SFvRrqDOqu8/SPWuoC5MJGswgF2ovPry24RgXf
+         ph4AgJC3TUYyr9nETMGSrqgy8oSD3UhQIrzbYWZelf6vR52bieis6W2V0gAcYfhokOEq
+         hRlg==
+X-Forwarded-Encrypted: i=1; AJvYcCWH1/NGQNp1TW27EsQDr1uKPKtsWbPeLCNGwN56m/5N/LWjuuxOIkzk3KAjoO5hyp3fA4dfia/56ijPQNohITx1dc0vhgBu6E6rqOcd
+X-Gm-Message-State: AOJu0YwevxI44UJkZo8syOWq7UHXZiAd1DsYXrbpXNAokilTXBdN1l7r
+	e0q2e3N3/1wOeCANI4+6Iyu3J9unXJ7UJ+zhgCE3BKaqO4Vr9n15h/5uc4HE/+cwN8mhv9Pan00
+	P2vChm61Xtzh6wa7+WreX5IIMeQ4=
+X-Google-Smtp-Source: AGHT+IG5+yZI4SRXCP1ZRSO57iNkvyORgQdxHHwZ6QNuY1DRKJ4lk+z/+oxiPHPCnZXrnlpXT/gQVlhMBabT1lU/5O4=
+X-Received: by 2002:a17:90b:e0f:b0:2c8:a8f:45fa with SMTP id
+ 98e67ed59e1d1-2c93d6c650cmr3631105a91.2.1719861581296; Mon, 01 Jul 2024
+ 12:19:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] net: stmmac: Bring down the clocks to lower
- frequencies when mac link goes down
-From: Sagar Cheluvegowda <quic_scheluve@quicinc.com>
-To: Andrew Halaney <ahalaney@redhat.com>
-CC: Vinod Koul <vkoul@kernel.org>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S.
- Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        "Jakub
- Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Russell King <linux@armlinux.org.uk>, "Rob
- Herring" <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        "Conor
- Dooley" <conor+dt@kernel.org>,
-        Bhupesh Sharma <bhupesh.sharma@linaro.org>, <kernel@quicinc.com>,
-        Andrew Lunn <andrew@lunn.ch>, <linux-arm-msm@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20240625-icc_bw_voting_from_ethqos-v2-0-eaa7cf9060f0@quicinc.com>
- <20240625-icc_bw_voting_from_ethqos-v2-3-eaa7cf9060f0@quicinc.com>
- <qf4zl7qupkzbrb6ik4v4nkjct7tsh34cmoufy23zozcht5gch6@kvymsd2ue6cd>
- <fd5c86d8-4243-43d6-a07d-919ceeb12d82@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <fd5c86d8-4243-43d6-a07d-919ceeb12d82@quicinc.com>
+References: <20240701025028.36072-1-jiapeng.chong@linux.alibaba.com>
+In-Reply-To: <20240701025028.36072-1-jiapeng.chong@linux.alibaba.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Mon, 1 Jul 2024 15:19:29 -0400
+Message-ID: <CADnq5_N3wS=dbg5cfjKdqnU+JmCw80Evat_3-H_RJ3Aus7CfyA@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd/display: Fix unsigned comparison with less than zero
+To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Cc: harry.wentland@amd.com, sunpeng.li@amd.com, Rodrigo.Siqueira@amd.com, 
+	alexander.deucher@amd.com, christian.koenig@amd.com, Xinhui.Pan@amd.com, 
+	airlied@gmail.com, daniel@ffwll.ch, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	Abaci Robot <abaci@linux.alibaba.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: kddQ-wpQVuQPjCybJxZd8qn6L8J1iblC
-X-Proofpoint-ORIG-GUID: kddQ-wpQVuQPjCybJxZd8qn6L8J1iblC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-01_19,2024-07-01_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
- impostorscore=0 spamscore=0 clxscore=1015 mlxscore=0 suspectscore=0
- bulkscore=0 adultscore=0 lowpriorityscore=0 malwarescore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407010144
+Content-Transfer-Encoding: quoted-printable
 
+Applied.  Thanks!
 
-
-On 6/28/2024 2:50 PM, Sagar Cheluvegowda wrote:
-> 
-> 
-> On 6/26/2024 7:58 AM, Andrew Halaney wrote:
->> On Tue, Jun 25, 2024 at 04:49:30PM GMT, Sagar Cheluvegowda wrote:
->>> When mac link goes down we don't need to mainitain the clocks to operate
->>> at higher frequencies, as an optimized solution to save power when
->>> the link goes down we are trying to bring down the clocks to the
->>> frequencies corresponding to the lowest speed possible.
->>>
->>> Signed-off-by: Sagar Cheluvegowda <quic_scheluve@quicinc.com>
->>> ---
->>>  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 8 ++++++++
->>>  1 file changed, 8 insertions(+)
->>>
->>> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->>> index ec7c61ee44d4..f0166f0bc25f 100644
->>> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->>> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->>> @@ -996,6 +996,9 @@ static void stmmac_mac_link_down(struct phylink_config *config,
->>>  {
->>>  	struct stmmac_priv *priv = netdev_priv(to_net_dev(config->dev));
->>>  
->>> +	if (priv->plat->fix_mac_speed)
->>> +		priv->plat->fix_mac_speed(priv->plat->bsp_priv, SPEED_10, mode);
->>> +
-The above fix_mac_speed needs to be removed, i lately realized this mistake.
->>>  	stmmac_mac_set(priv, priv->ioaddr, false);
->>>  	priv->eee_active = false;
->>>  	priv->tx_lpi_enabled = false;
->>> @@ -1004,6 +1007,11 @@ static void stmmac_mac_link_down(struct phylink_config *config,
->>>  
->>>  	if (priv->dma_cap.fpesel)
->>>  		stmmac_fpe_link_state_handle(priv, false);
->>> +
->>> +	stmmac_set_icc_bw(priv, SPEED_10);
->>> +
->>> +	if (priv->plat->fix_mac_speed)
->>> +		priv->plat->fix_mac_speed(priv->plat->bsp_priv, SPEED_10, mode);
->>
->>
->> I think you're doing this at the beginning and end of
->> stmmac_mac_link_down(), is that intentional?
->>
->>
-> 
-> I realised that bringing down the clock to 10Mbps should be the last operation
-> of the link down process, the reason being if we bring down the clocks first it will
-> deprive essential internal clocks to DMA/MTL modules which are required for
-> Cleanup operations this might cause excessive delays in stopping DMA
-> or flusing MTL queues.
->  
->>
+On Sun, Jun 30, 2024 at 11:10=E2=80=AFPM Jiapeng Chong
+<jiapeng.chong@linux.alibaba.com> wrote:
+>
+> The return value from the call to dml21_find_dc_pipes_for_plane() is int.
+> However, the return value is being assigned to an unsigned int variable
+> 'num_pipes', the condition if(num_pipes <=3D 0) is not rigorous enough,
+> so making 'num_pipes' an int.
+>
+> ./drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_wrapper.c:318:6-15: WAR=
+NING: Unsigned expression compared with zero: num_pipes <=3D 0.
+> ./drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_wrapper.c:360:6-15: WAR=
+NING: Unsigned expression compared with zero: num_pipes <=3D 0.
+>
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=3D9454
+> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+> ---
+>  .../drm/amd/display/dc/dml2/dml21/dml21_wrapper.c | 15 ++++++---------
+>  1 file changed, 6 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_wrapper.c b/=
+drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_wrapper.c
+> index c310354cd5fc..9d96a31419fa 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_wrapper.c
+> +++ b/drivers/gpu/drm/amd/display/dc/dml2/dml21/dml21_wrapper.c
+> @@ -280,7 +280,8 @@ bool dml21_validate(const struct dc *in_dc, struct dc=
+_state *context, struct dml
+>
+>  void dml21_prepare_mcache_programming(struct dc *in_dc, struct dc_state =
+*context, struct dml2_context *dml_ctx)
+>  {
+> -       unsigned int num_pipes, dml_prog_idx, dml_phantom_prog_idx, dc_pi=
+pe_index;
+> +       unsigned int dml_prog_idx, dml_phantom_prog_idx, dc_pipe_index;
+> +       int num_pipes;
+>         struct pipe_ctx *dc_main_pipes[__DML2_WRAPPER_MAX_STREAMS_PLANES_=
+_];
+>         struct pipe_ctx *dc_phantom_pipes[__DML2_WRAPPER_MAX_STREAMS_PLAN=
+ES__] =3D {0};
+>
+> @@ -314,10 +315,8 @@ void dml21_prepare_mcache_programming(struct dc *in_=
+dc, struct dc_state *context
+>                 }
+>
+>                 num_pipes =3D dml21_find_dc_pipes_for_plane(in_dc, contex=
+t, dml_ctx, dc_main_pipes, dc_phantom_pipes, dml_prog_idx);
+> -
+> -               if (num_pipes <=3D 0 ||
+> -                               dc_main_pipes[0]->stream =3D=3D NULL ||
+> -                               dc_main_pipes[0]->plane_state =3D=3D NULL=
+)
+> +               if (num_pipes <=3D 0 || dc_main_pipes[0]->stream =3D=3D N=
+ULL ||
+> +                   dc_main_pipes[0]->plane_state =3D=3D NULL)
+>                         continue;
+>
+>                 /* get config for each pipe */
+> @@ -356,10 +355,8 @@ void dml21_prepare_mcache_programming(struct dc *in_=
+dc, struct dc_state *context
+>                 pln_prog =3D &dml_ctx->v21.mode_programming.programming->=
+plane_programming[dml_prog_idx];
+>
+>                 num_pipes =3D dml21_find_dc_pipes_for_plane(in_dc, contex=
+t, dml_ctx, dc_main_pipes, dc_phantom_pipes, dml_prog_idx);
+> -
+> -               if (num_pipes <=3D 0 ||
+> -                               dc_main_pipes[0]->stream =3D=3D NULL ||
+> -                               dc_main_pipes[0]->plane_state =3D=3D NULL=
+)
+> +               if (num_pipes <=3D 0 || dc_main_pipes[0]->stream =3D=3D N=
+ULL ||
+> +                   dc_main_pipes[0]->plane_state =3D=3D NULL)
+>                         continue;
+>
+>                 /* get config for each pipe */
+> --
+> 2.20.1.7.g153144c
+>
