@@ -1,47 +1,52 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F34152500
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 12:00:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE5915250C;
+	Mon,  1 Jul 2024 12:00:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719835233; cv=none; b=lVRMShBrKVmAQiEUKJzgC/UsPyVULENSbaItLouiAAebH136hvgr/wM4cgvlLwJOjdUb1zOrgtT+pLu9/dNRPBl4M19XTBu8qI30UIl5qQ0tyetFQCKzasBrnm3sZgk7Rf0LcKaFYlLRm7Qhyeo2LkY0DL2w/gWA9k7VnFOPGfw=
+	t=1719835234; cv=none; b=Z1TrXVd7uzoPl+mrFOsfYcoeM8XYOODAZOOMkbTOSMKRGZvw7laqxuBofIERiCWNlv5Q5m0bystdaH3QL7LBMAT6rys1KxFLvYQ6ipRyETlIcNr3eDufVFhXzb7fORuGU4Y6t4LV09/Xy/eFi3qwVU/NHKz5UykQMLYvV0EjbEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719835233; c=relaxed/simple;
-	bh=5tWNzcLQ6GEUa/V0DYFPIm2I6atDIjegPMLNE71Ue3M=;
+	s=arc-20240116; t=1719835234; c=relaxed/simple;
+	bh=/J7nwEG7G/iCQI62554P/C54kT++JSK1r3VsB7f4G4s=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PZ4myNzYCsLT4huAL6cgg/6kf1Uq+qksa2vqJatsmADjDbDnq3mSad0ZrGS1TF+LrcQKVAYqgm2sPz+8ocq8G6HMc+JNdyCUm23X1DtqQgCIodS3iuCxIoh4TfpGfucsvoC7S8IWO6e48xFphFxEMWugMqxJ5uPOmqppfOHUlPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=AxdWh2iP; arc=none smtp.client-ip=217.70.183.198
+	 MIME-Version; b=qkthG1yFdyGgc4YOk+2KbubsF2A2H7M4XwqYnrlu9YgaBYxZ17ti+Jbh8UfZgxbazIXasqE7Ml/H5aRC/r5gYSgflrquc1ZDEcazPCJdWtg4tYPlwsKB1qpZrLB8rYIl5Jhrs9x08zPGHHBgG7v2ViW3sNyEAoV4EKeNDyqjEDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=V2oJLv+R; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="AxdWh2iP"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C068CC0007;
-	Mon,  1 Jul 2024 12:00:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="V2oJLv+R"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 581EE4000D;
+	Mon,  1 Jul 2024 12:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1719835230;
+	t=1719835224;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0mMFdDlVb8tiUU5WEmsBNo9BoejZis2bqk/srViz/iU=;
-	b=AxdWh2iPt5xV83865WrQsdKKsm33cg8tiIZCQRdI0G/urVsuKUyuxPGfkCZyLi9VfYMhN9
-	Mv/LpkDuIXI4FvUIdFlKpY7abT98KSQvkNeaBhStjHcMnyvX2XCflRrY92p/9t85UrMlth
-	YdQWL0Bx43mL4w+D/hXQPb008V4VQHNJQi/rHktDbJgSQ+fYG2YIzLAkWNiMbh+fuKwuwo
-	zZzy7GYtbty+Zw//kx1ME8KW3imMOnaHAoqu3+qwtDnL41tNvpq8sDWAfneotFVcNxWwUF
-	/cFTAQgSVFyU3deqh5S5RxxkmaSAPJAK1JzwYH1KSC17v7or6cpdIHv90UGk9g==
+	bh=CUg8N+QU6C4GigySnqcnzizYYV5dL0IssWNRBHYgoR4=;
+	b=V2oJLv+RDDvqgpngTUbpB2a6TqKGtzwCGJpaaFDMDfbnge8RAnjGpH1m6ap5z8NWqCS/2W
+	IU1MMAw6Ba7+TjoXnpgHbxTuLB+qiRTqiBNp9PuiDOWqb54yDwkx7F09HhUpzb56wjVEpR
+	DJoReRIf7jPqHRlz2OmTy0RCnV9vK+Ltu/Gjf/ucBlgZluSn6e/8uiJJS4aQED73zbbqoA
+	eKFmmHfh2k22S6YbUD6c7jqPUeF1tX9Ppota+lkv6pAQnO/NXbKHjSV5qatTzmjjW3Cywb
+	THYi+GtG0MNmJ1dAwk4+zBwSbpTKOnMfcDKNHWc+Qb1DcoXhMPjFYlKZSCj8cg==
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-kernel@vger.kernel.org
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
+To: "Rob Herring (Arm)" <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
 	Richard Weinberger <richard@nod.at>,
 	Vignesh Raghavendra <vigneshr@ti.com>,
-	linux-mtd@lists.infradead.org
-Subject: Re: [PATCH 1/2] mtd: nand: mxc_nand: use 'time_left' variable with wait_for_completion_timeout()
-Date: Mon,  1 Jul 2024 14:00:29 +0200
-Message-Id: <20240701120029.525541-1-miquel.raynal@bootlin.com>
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-mtd@lists.infradead.org,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: mtd: qcom,nandc: Define properties at top-level
+Date: Mon,  1 Jul 2024 14:00:22 +0200
+Message-Id: <20240701120022.525479-1-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240604212919.5038-5-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20240625215605.192260-1-robh@kernel.org>
 References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -50,21 +55,21 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: b'73c6e7963ee8b835c5f267222ec011510be2b630'
+X-linux-mtd-patch-commit: b'31489eac5e4835d4521be320c8e5f4517780572b'
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Tue, 2024-06-04 at 21:29:20 UTC, Wolfram Sang wrote:
-> There is a confusing pattern in the kernel to use a variable named 'timeout' to
-> store the result of wait_for_completion_timeout() causing patterns like:
+On Tue, 2024-06-25 at 21:56:05 UTC, "Rob Herring (Arm)" wrote:
+> Convention is DT schemas should define all properties at the top-level
+> and not inside of if/then schemas. That minimizes the if/then schemas
+> and is more future proof.
 > 
-> 	timeout = wait_for_completion_timeout(...)
-> 	if (!timeout) return -ETIMEDOUT;
+> There were 2 "if" schemas for "qcom,ipq806x-nand" and the
+> "qcom,boot-partitions: true" unnecessary, so the conditional schemas
+> can be simplified a bit.
 > 
-> with all kinds of permutations. Use 'time_left' as a variable to make the code
-> self explaining.
-> 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
 
