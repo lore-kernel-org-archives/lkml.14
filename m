@@ -1,68 +1,101 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2041.outbound.protection.outlook.com [40.107.243.41])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 585F2482D8;
-	Mon,  1 Jul 2024 07:49:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9698EC144;
+	Mon,  1 Jul 2024 07:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719820181; cv=fail; b=lyFcbnYEtSVfnkS/KZlxR88adPmowE/GLsfyzVrhm+/wodvYVAAdRvxo9Cmm1/ztyhdSt8jqHnlRcLIKfMKJ81FdUhyKOxPTUnepwfPlrr3dcMvY9xqF6S4nUOjTa2aSgyQuT+oRT3Qq0ywdFY4YSiuKOmAX96OHmkCVkRGAq0w=
+	t=1719820230; cv=fail; b=CmJPt520+a/JSmiLDS462dCZA9VzKgRi6zXtz7QhowF6rDbi/WLABqV2LJdsIs03A1/0Zj1KcOKM/qOLKVfo28SFoEPz4Unx4e4+nErkmmgPtIQFVuSBPVM27drtMP8XhfZzDbznBIR4RdsEWtu2RnXe66TdJ9Ds/6F6rcki2ys=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719820181; c=relaxed/simple;
-	bh=PLjJ7SvY0uc8/7BB6urm57TDFMizLgEGdn9Y5Y99R2w=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=YtCuXorLKGqpGocPPGg72CV36A5DfWMadoBju1O2t1nJY95411J5D6Cj4ud6ztoJVOoLBpDm42jvHP74DVPQtww4W7ZnDw2ZaerybEOuUgxDXuJpWqx4Vb9VHtGEMQYKjRFobaB1xGMP8RIpBfOuz4MC55SQgtN95KiksiWRhXM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=AHfwnBa5; arc=fail smtp.client-ip=40.107.243.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1719820230; c=relaxed/simple;
+	bh=z0sfT+yHGGy7FRqt3GuYdSITXjS9kmrn4BTgkCcZ8GQ=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=s7mAittW957fyojR/A+wPSHqK88kZY9CVG89GIZa7bi1itqC6fK5oDNuQXSB3LaVsohx5CtLWkjz6BabHa7J6wtvuGtGHI8zUeY9FLRBZbgzxO3t6El88hBMnwWdnXxA5V6i5gybvh+tEEn+sPhHdioJGq45kz/zPO2afzDIXgw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DEpl/aSN; arc=fail smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="AHfwnBa5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DEpl/aSN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719820229; x=1751356229;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=z0sfT+yHGGy7FRqt3GuYdSITXjS9kmrn4BTgkCcZ8GQ=;
+  b=DEpl/aSNtDebPxXhJcpGEwmBQjcMkXoi/EqZHwBwL0Ag0r6cfp/9OuB3
+   CkR4BnqV1ySWKE1WSTEtJ6XXp8GybNVAIOge/sR9NhdWUVqF9BOWOZ5qp
+   yvgSS45wZbfgxCYkJ6lvufHB0mzxUy3v+wCbMFjL4OnPO2nP1QL86bcMn
+   5ZdTYzng85Fq6M/f2snO9GZ/3henxmNsb5qP9TmQi9yVWovY95qJqHig4
+   5z57XndSw9eZHwwEBTwy06KbEh7++aAXKLvH2OKsYfU47g9vX2xHpoJHx
+   xLhUUWNog5BJ/I+BsS5b2dr/u6UYjUoVUVCKjmtlryBTwnST8F7c+VyEi
+   Q==;
+X-CSE-ConnectionGUID: gAFOGbfIQWa1o0MOpEDioA==
+X-CSE-MsgGUID: HS9UMlLRQ5CFAdTPtMyQBQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11119"; a="17147155"
+X-IronPort-AV: E=Sophos;i="6.09,175,1716274800"; 
+   d="scan'208";a="17147155"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 00:50:27 -0700
+X-CSE-ConnectionGUID: ko4ioir0RPuPLAMPZgLBIA==
+X-CSE-MsgGUID: AiC8VfdEQ32Qaqqz3EyfLA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,175,1716274800"; 
+   d="scan'208";a="45320494"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 01 Jul 2024 00:50:27 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 1 Jul 2024 00:50:26 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 1 Jul 2024 00:50:26 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Mon, 1 Jul 2024 00:50:26 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 1 Jul 2024 00:50:26 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kSz/mU1QfhNSTLqlWW22TOKcPNgHIJesQeKEV6Ta55EP0grQW1my9pu09W0EROqI8jp/qIIv363YFUUJ7E2tps0cF79RyFwX/hyCj8M/mTiznDntquJw+DH7GgGtEA0vjVC4zcQk0enNdrvsFa3ELY4GjdcJgUhcW28YUmUb/ohg5j1kHvoGpTA9vhIUbJEDGOKj2cUi1Kj9/dEMr8Gmh0Am0yLP8DtFvSmmXhFClKP2QkmlUZubl2cm8cpV9+MrLzQf5y4gC/er0dvHczC5e4AKLlRjN69SjoIHP90j2wlh+H3f22SMDArlDRwxgyU938ZKPEtIPDcrKm4ETuVUDQ==
+ b=hd3N+emJ7Zf7TCnNQmG7/gDL9ZHzKALiTWctsFsYDwu87XUHS5kcpkZ67AyHu8HwblWZe3wWY7/jyElH6NqMSY0Ft40f9uS/npVpoh83griydDW8tkY8v/5Xu55NAZEcZaF6z999HJKvKr9rT+2C8o6oGeqHgGOlvBoJEe58W4WoLhCyP6fU72AXFJxEZBNXcbmU/zrv55OgF/YwoS+QjUkvbBOjnTR9H0Mmu0gC3jjHt4ngYUTUG3XxWbxaLZZITt8cWopRhTJJwbULM/WfVGUH+zQi92JWqkRzn4MxpxqgcJ0Uual6P4+ZkIvnL2uht9ZxeiinXZffYkr6aHa1sA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=08ThproNo+OX8Hm+CXdIFdif8TpNyDFVyLkvjS55Xvk=;
- b=hw9coVK+MnqgRjCW3LLDt2VBdOLCFmTu6WMqLP6eWVEGZlLYwnwYB925wKwLhfpk3tReOVOF5OIkbW3apU65xqcLOEqEv3TvEpwncPT9+6ulbmmUatGmXcl+GpvHs/tjeq7BEpiQl0/ypNo87ZHZ2TlSBIvpF6RLtzzeOhDeFYQBt1PaVm1EAY0Pmpu/HAVbbR6+H3qO7h/aGaOXwMNvO8K5f2Ob2AaGC6PuAwEU9qxtaR36FOSvyY62SDyU+mMMWzndK/W7JKwzQBm4hVkD5iZvqV3TkEeI4FDCEkhiL/MeJEcoKvGbm6XtrPn/izOjdp4EIjrcuHLkkdsPUpTMIA==
+ bh=Uu+PW+qM5pXif1pk//DI6HEvcOSacfRTVOjsdsv5xqA=;
+ b=ZnOUrVuEonEPmwPrGnbx4XnLCcWs/TihhfgJJTZuGAVsnY4P6UUKTwEpDrSFaG4jravLzxoZHGFinxprk3DfYhVR30jUQsptEy5QtuHef0PWOA6YfHMWls0Wz+Wgw7SQenmzqpjSo6sOZCbGm7OxtwL9OzB2h8WSCB47BZQPNytRyVvQDT6uMUMCAFIgfNN6BKER9UYTZ5B6bjdqRJsuNyGGN5B0l+HMP6PNfs1Ixe2cf4HzDBZNbibcCBIM2o3lwzTUzDQSS/VA6ark928wbyAnadue++/qfeDQOHzJtwq2k5K1sS8IOj8gzhiZXNfuEdA6c33v3yohTy2geTwDHA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=08ThproNo+OX8Hm+CXdIFdif8TpNyDFVyLkvjS55Xvk=;
- b=AHfwnBa5dzq9DjUl6i2MwDegzWykg5JofRsgAQzlT4IEFGCukKgb9grl9htUqep0jK5SIWC5Noj3vf2xpcSlJKHATd6sM6DNvLah7/V+snFAsp89FbDTHuAIArxGkMe/4NwdwrS+PMd7kj4BaNOfNLFb5UwqZh7iX5EPYDFLKfiCzUoXpvYdVHZVOK8uDeckFb/aeVIOb4KbXBCqxCQXFHpGod5MhrIY+EmMeIa7sYD4uk0PCK+WRD+aWypvwYH3s19qLp+qNbcCycc6heYjb9CvqH496uje6dL3APdDaqkFGH/NlckUwycgzSuWnC6DWS634Ltj+kt6EQ56S2Zq9Q==
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH7PR12MB7426.namprd12.prod.outlook.com (2603:10b6:510:201::18)
- by IA1PR12MB8237.namprd12.prod.outlook.com (2603:10b6:208:3f3::16) with
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS0PR11MB7529.namprd11.prod.outlook.com (2603:10b6:8:141::20)
+ by CY8PR11MB7687.namprd11.prod.outlook.com (2603:10b6:930:74::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.29; Mon, 1 Jul
- 2024 07:49:33 +0000
-Received: from PH7PR12MB7426.namprd12.prod.outlook.com
- ([fe80::6fdd:1491:4d83:ac33]) by PH7PR12MB7426.namprd12.prod.outlook.com
- ([fe80::6fdd:1491:4d83:ac33%4]) with mapi id 15.20.7698.017; Mon, 1 Jul 2024
- 07:49:33 +0000
-Message-ID: <39d1635d-25b4-47ca-beb3-0baaae6252db@nvidia.com>
-Date: Mon, 1 Jul 2024 13:19:22 +0530
+ 2024 07:50:24 +0000
+Received: from DS0PR11MB7529.namprd11.prod.outlook.com
+ ([fe80::d244:15cd:1060:941a]) by DS0PR11MB7529.namprd11.prod.outlook.com
+ ([fe80::d244:15cd:1060:941a%3]) with mapi id 15.20.7719.022; Mon, 1 Jul 2024
+ 07:50:24 +0000
+Message-ID: <edc71108-2e2e-455d-b109-4542a845cf6e@intel.com>
+Date: Mon, 1 Jul 2024 15:54:19 +0800
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] iommu: Optimize IOMMU UnMap
-From: Ashish Mhetre <amhetre@nvidia.com>
-To: Robin Murphy <robin.murphy@arm.com>, will@kernel.org, joro@8bytes.org,
- linux-arm-kernel@lists.infradead.org, Rob Clark <robdclark@gmail.com>,
- Boris Brezillon <boris.brezillon@collabora.com>
-Cc: vdumpa@nvidia.com, linux-tegra@vger.kernel.org, treding@nvidia.com,
- jonathanh@nvidia.com, iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20240523031935.90856-1-amhetre@nvidia.com>
- <6b707eb4-5cf3-4b66-8152-5ba252f5df39@arm.com>
- <2a349725-72cf-45e2-9ca2-5a8b153a6fae@nvidia.com>
- <d854664c-ab56-46b6-81f9-9ef712c32b3a@nvidia.com>
+Subject: Re: [PATCH] vfio: Reuse file f_inode as vfio device inode
+To: Yan Zhao <yan.y.zhao@intel.com>, <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <alex.williamson@redhat.com>, <kevin.tian@intel.com>, <jgg@nvidia.com>,
+	<peterx@redhat.com>, <ajones@ventanamicro.com>
+References: <20240617095332.30543-1-yan.y.zhao@intel.com>
 Content-Language: en-US
-In-Reply-To: <d854664c-ab56-46b6-81f9-9ef712c32b3a@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BMXPR01CA0086.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:54::26) To PH7PR12MB7426.namprd12.prod.outlook.com
- (2603:10b6:510:201::18)
+From: Yi Liu <yi.l.liu@intel.com>
+In-Reply-To: <20240617095332.30543-1-yan.y.zhao@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SGBP274CA0019.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b0::31)
+ To DS0PR11MB7529.namprd11.prod.outlook.com (2603:10b6:8:141::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,280 +103,323 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB7426:EE_|IA1PR12MB8237:EE_
-X-MS-Office365-Filtering-Correlation-Id: e4c32ea7-0d2f-49a5-a9b3-08dc99a25896
+X-MS-TrafficTypeDiagnostic: DS0PR11MB7529:EE_|CY8PR11MB7687:EE_
+X-MS-Office365-Filtering-Correlation-Id: f721255f-bd90-483f-5012-08dc99a276ea
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aHdOQXJSSFpWOGszUXFBbmRpRXRMRmJUazVqOXY1bUNKOEdIdURlZVV4UkpK?=
- =?utf-8?B?S0FnaVljV2MvcjV4Sk5NcExHZVlRdUI0UTU3VVJQcS9NeDIrdmIyNWZNLzlS?=
- =?utf-8?B?YVBydFRtSnMyNXVNaituZm93OUlyd3M3VlhIcFU1UHBVaGR1cnF5TVh6S2h5?=
- =?utf-8?B?Rkg3ampOOVpHd2RncW9PaFpPMUErQmdSQ2tQU3FwYXNBc1h5b2d3MmRITVl4?=
- =?utf-8?B?SXlVU29sS0dKZ0MzdUM5MlI1cUo2WHFtOTBlVVdxM3JKSmVnZmJRL2FTdTRv?=
- =?utf-8?B?Z0RlL3praVVLQTRLZ3c0MEREV0dyV0k1eWVUSG5uVzBOUkhiamxJUXVwY2ht?=
- =?utf-8?B?SFlZa2VNVUJYZlBRcUlJS3BnbUppVEMyWG51UGNOVDhIbXhCdU1GUkRlaVpH?=
- =?utf-8?B?MU9UaVE2QjNxS2RLNjJ4YXNSVzdDbklZcmlvOWo2SUtzT2l1Vm5qSEFPSmJk?=
- =?utf-8?B?Q2FQbXVXWlA5b0hRMjdKS3lmSEhQaFpESEtWcUYzQSt6TkVJS2dsL0VjeEdD?=
- =?utf-8?B?OWZ0MUswbFA1S1Bvdkw2YU1SNGR6Q1h3VzRySVZSanVhRjF4QUJ2c05hLzFr?=
- =?utf-8?B?ek5vSUd1Skh2MnZvWG9HQzBpdFk3aGYzQW5sOCtMckJkWVlHa3BUaS92MDFz?=
- =?utf-8?B?WTA1RjJQdkRwSU9HdFFrTkFkYTcrK3Q2U3RWTE1PR1VIOVQ4endUQk16eVAy?=
- =?utf-8?B?UmN6WnVmTkNpUTArRE5aQktRSWc0dnhUckV2Yi9xN3hnSk9xVHZJT0M3QWNt?=
- =?utf-8?B?aloveVFzQUVhUXZJZWl3UC8zRmJ3QjRWRTFsWEVZWTIwSVRGUVhoKzFIN1ha?=
- =?utf-8?B?L2F0NkgxQjdtYWtzVUxsd215dVpUbmxvUzZNNDBhQ0w2ejJxRHQ1S1BMTmFJ?=
- =?utf-8?B?eVZDdlU0Z1lLVHJoMm9uVDRZekZUS2E2Mmg1aWF5Zis1UGQwaEVvbmppeU1R?=
- =?utf-8?B?YjQ2UnhDbjdLTTdCN3E3Um5RbkdxMGRPY09nYTduYzdaOTVka0tYUWJrVGkz?=
- =?utf-8?B?Nk5XbXlmYU8yc3hzeGNjbHhFZVFoWnF1SE15b2RrWDUxYXpPbmlWbXVJcEJz?=
- =?utf-8?B?dDVMeUp1bTI1Tm9VTHU5b3FmR2NocEJhSUFWaTdQWGZkd2pseXdPSXd3ZVZO?=
- =?utf-8?B?c0RwSnJmVytoWGxmWTlOTlR1QVpHQUpFTzMyVzlaa1JRNGhJdVQvKzY4bDl6?=
- =?utf-8?B?bnphY2dlb1JSQkhRaHMrdkcyNGwxSHRtbUM2endaalFjVTBuY1BSeE50WUdI?=
- =?utf-8?B?aDhUQWljU3U3Mm1obkMvd1RTQXV4WW5wQWtPMEJUSXhLUkpSVTBVTy95OFFy?=
- =?utf-8?B?QkY0ZnplQlozNDNCamEwM2Jmb3RCYU4wdDQvZFdCR29WQmFKK0lldm1JRE5w?=
- =?utf-8?B?ZnpwSG8yYldoQ2MwMU5GNjVDdGNxaFpDelhqZCtWVjNna2g5NjIrQmNlNlFm?=
- =?utf-8?B?dWowYmdiODdDM01xRHV1N09LWHhUOWpIZzVVT1BoRGJ2UHBnR1ZsV3MwU1Fz?=
- =?utf-8?B?aTVsallQREFjUm1HK2pKYzJYWDUxaWd5T3RQT3pxSmxGallDV1Z3dEJFLy9l?=
- =?utf-8?B?UE52ek9xRzRac2k1RU5oZVJyQW5sc21zek1YdkMyQi8wM0dpZ09McTBoTVJu?=
- =?utf-8?B?dFZsbkNHc1o4c0NQZHhzVjVsNmZSamRWNVZ1VGF6YXA0VzFBNHJzYkNsRGpC?=
- =?utf-8?B?dlpXQTFhOVVCbzhIKzdhTGN0UmFyUlBJRTF3bzNKRC9mYTBHMTFIbTJOZUJz?=
- =?utf-8?B?RGk2S3N3MTAwMy9CeXBrUlhhZkFubDhpQklOSHo1WmFzVUVxa25ZMmw0TjJC?=
- =?utf-8?B?cmNjc0NSMy9jM0VuQXNOUT09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB7426.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?K3g3d1kyUHpLbE45Yk5kM3kwRVUrS0dmbVVVRUpvZVM0VXQvZ3ZnenFTZkRk?=
+ =?utf-8?B?NGxMcHBZSkwzTmxGR0JMdDAyNnRpdDU2NWdYL3lWakp4eVFTaGRyM3Y5Z1Ro?=
+ =?utf-8?B?MUdGSTdkNnpzdzNBbkk2aWQ1aCt2QzFrb01EWGcrS1FFWElET2xXMlhHVnhW?=
+ =?utf-8?B?dlo0RG40RmFrbWdCbVBwaWV2dHB0eWh6T3BPelpQb05EWFVmSGxwTXhzckMv?=
+ =?utf-8?B?aDlBd0xHZ04vaWQ0YWZ3a1dtR0x4c1IvTlFVeHpyR2N5cmVVc0c3ekZYc0la?=
+ =?utf-8?B?TVR6d0ZGdnVqTWg4V1VxdGNnbzJxb1UwcVc4VEwzayticUVTZUdaZUFTLzJK?=
+ =?utf-8?B?N216T1FKQm8wMGI3Nkx1TVp4SkRPeEJrMURKUklDMnFxdFNNREJnWE1uejB4?=
+ =?utf-8?B?MHhlSG53VXczSXF1K0hOZG95NzJCR1pPRE1GbUNFMDJsOFVvSUE5eVpqWGlN?=
+ =?utf-8?B?MEhnSU9Yam96djBJUm94SXUvMmxKWHlvclM0aWw5bVVQeWIraVc4V1VuLzRo?=
+ =?utf-8?B?YjdNNkh1M2ZGLzlDemtLZnZGZ1N6MVprWml1Z3lQR0NNVllqQUpVRWtMSm9r?=
+ =?utf-8?B?VlZQSkhsZlNJMzJhengwUjVpb0tEQWNVMEhBVFY2UzU3eFk2K1p0ZHY3TkRt?=
+ =?utf-8?B?c3FmaEFkZEMvdkJYL3psaDZvTjFRQzZrcWJUcjlvSUFMTWRyRE43ZEF4Vzlp?=
+ =?utf-8?B?amIyU3d1bzJ2Y2xWOWVzUGc1OURQV25JYTJ0UkZFK2htZ213YWJKN1VUQ0Q2?=
+ =?utf-8?B?cmRadXkyZ05IUWpBNDZiR2k5ZkxDSTdSUGhUUmlUaEVYNzFjam1mYjQxTVNk?=
+ =?utf-8?B?dUVxWStqellJWkdsV2lYWGlUbVhaamZKalgyYXlSVFhCT2REVVNNa3phVnlH?=
+ =?utf-8?B?ZHhSY3JJRjE2cmM2UVlja2JJZlY4R2l4UTRWc0lYY2J1dlJBRzV0Z3VQZGFn?=
+ =?utf-8?B?VnpnZFpEOHVvVERLRzhYb0dRcW15UXUyKzlOakhtMjRQRG5Cc1pTQkxOSjFm?=
+ =?utf-8?B?WjFRSEhqcTNWbnNzbkZxZnhiSWtBZjVRMVdiSEkxV2xwTFE4cDFOVUljMzE0?=
+ =?utf-8?B?WitUQVJyZXU2b2pyT3poRkhob3NrbXdQQXlQcTc0U2NrblFlaVdBQldOY3Bo?=
+ =?utf-8?B?bW9KRXpOaW11VkZjZldiTzlkSzY0SVpXMldsRWdzK09rSVRCdEZzNnhlSllX?=
+ =?utf-8?B?OWhGVStSOGlKNmxKQnNwTjl6QjMxaGdHVFRqVmUzazB6MnJVNVdkblRTUjE2?=
+ =?utf-8?B?RXVIeFAwR0dPcUhkeDVkZlc2WEkxNXp2WUxTSjJqTjhTeFhudmpqSHhhdytM?=
+ =?utf-8?B?OHJBTnloWEQ3eTZSU3N4MnpscHhYVFU2MU0vWXVoVXArSGZnZ3AzN3RTWDVN?=
+ =?utf-8?B?ZnNEeW41MENvUE9rTGE4aUxTWmdEWmtONWVIU2krVUdJOTJkdVhEV0xpWVJ3?=
+ =?utf-8?B?WEI5Sjh4blB0NElsTTB3dm5KTCtPR0d4ZzRDdCt6a24vQjV0T2JrWVhXcXp3?=
+ =?utf-8?B?WmlnQmpOcmZsanlMcEd4RDhZb1crQ0VHanpTWDJDeWVtQ2U2dVVScVRmUmtU?=
+ =?utf-8?B?b2JiODJtUWowWEU5eDZ4U285anFWTGVzMzBjUEtvanBWTXlMdGZRWlYxZ2tW?=
+ =?utf-8?B?Z1VSUFZTNVh5bXYvWWdWVVBiZVh1eVFuSFNtYmJGVHhmWm5XT1FVMm9iWkRj?=
+ =?utf-8?B?OStQbXFTUmt5M0dmdlBEaGIwbVNwM1FCYTY3TkVuY0Z3djdGS2preTVRd3BY?=
+ =?utf-8?B?UHFjelIwUVpINlI4NzRVQTR5UmJkOUtmSmVGalgrRGpqd2ZoZnYxcStpQjIv?=
+ =?utf-8?B?WHloMkwwdVZsQlhYRmxBZz09?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB7529.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RlFiMTRqcDNRRXdyU3dvMjl1Q0FFbHUydTFTNlpyUXVQampEeUxFQWw3elZy?=
- =?utf-8?B?ZXNheEN3OWoxV2NDQW5SOTdyUGEwUVE4U011Qmora2FZYmdTeXluM08rdG9O?=
- =?utf-8?B?S3RRQmZpWGYyUUZHeFFpZ2dHeWVqQjN0RUI1em02VVNpMEFUV3Z5SUxwQnZi?=
- =?utf-8?B?ZlVWTUlWVFlUR3BsNVJVY0szY0NxQ0pHNjJPb3dGaUdUaFdlc1JiQVdQSGt1?=
- =?utf-8?B?TDVjc0t4dDhlYmlXWlpaY3hnc0lscXM2WmpOWWE0UWZCUjIwa0RXU2YwdVhy?=
- =?utf-8?B?Ym1Ob1NkcThPWHVMUmNCQTVMTG9tcmJHcFRHTTB0YXJHOURNclVwVmk4NHBo?=
- =?utf-8?B?RlFGZ3lQMFdPNkhhMmVVNE53KzN0cnBNQzFjMmVEdjhkQ2lPc0NsTnFDY2NJ?=
- =?utf-8?B?N25OQUpvbnZSbWovUGsxNFhDQXh4V2o0UmYra0ZNaUNJd0JlMmJBNDQwU0JY?=
- =?utf-8?B?S0YwelFmb1pDbitBQmw1NE9mTmdmR0Q1dXdaUi9vOEJwK0t3ZHdyZXMyWXJl?=
- =?utf-8?B?S0JyTTJwVi9jQnZNNjZNN0FpQUNZQThMUXRaa1ZtUzhTK1lNckRESnpMVENH?=
- =?utf-8?B?ZVRNVWkxbjZIREplNE1TVkxNNGUvMmRNYnBMdWg0MjR6NjBQYXE0NVYxRXh6?=
- =?utf-8?B?OTd1Nkt5QVpPK2I2T0NFSGFRV01GaStPOXBDU0swUDk2WXdhMnl0MkRLSnRZ?=
- =?utf-8?B?NkZQUFZaVWpBT1IvdDFFaThJcjdYcHZZQUZmclBsOTMzaWhwTFk0V2RpaWlT?=
- =?utf-8?B?OS8vbmRxSTcrY1doaUNRR2x3MUc3U3VGSkwvYlRFOC94RldTeU52UGJianVO?=
- =?utf-8?B?SFR4UTN1UE1JTnhtbjY2S0FpeXB0emxiQTZIRXMwRWlnczlDeVZHc0dVVkQ5?=
- =?utf-8?B?ZTdzVGUxMzNmcitva3R2RUxGUjBOT2hNaVkyMHh6T0VOKzBiSFVKaTJmVldN?=
- =?utf-8?B?ZGZxRDlXVFQvQWhUbk55US8ydWw5K3BEL2tQMkNRM0VsL2NVSHQzMk83ZkF5?=
- =?utf-8?B?Tlk1OWJHUTM1TlVFL29FUEhCRVdtK2hkTCtYR3hXTEhvQmgwaG9PK3hiTTdX?=
- =?utf-8?B?OENuRkFFV2xrMm1xZFQ2eFo1cGJGdnpuc0xkZE9XVVJ4N2xmZTQ2SXl5YWNu?=
- =?utf-8?B?c1pRRE9tVUpSY0tEb3lrWDhZOWgzY1NuY0pabG5pWmtLWnc5SDRvR1ZhdGl5?=
- =?utf-8?B?M1lSS0J6UmM2NjVvcVo1bEcxM0ozNjAyZzZ5TUoxbTdNMTE4bXVmaHBxZjNq?=
- =?utf-8?B?UnlDTitOdUEyNllZekE5NGVVeHFIL0F6Zk12STBRd252SjdvTFRscWdYOW5G?=
- =?utf-8?B?R3cyNENrdHV6T2JZamlpajVIWW0wSy9MTEoxMzdvZWQ4SFFjQ2JYclIvSGEw?=
- =?utf-8?B?STVZNHZmZ2EwVlRBaENUQUQ4dFJjY1NVSlRzRXJGUmJpNEd2cmJKd1JmeHk4?=
- =?utf-8?B?SWs3eSsrQmlKMng0dHFrZGI3K2xQNHRvYUxCSi9IV1VOdHY4Q3BLaDZUWFo2?=
- =?utf-8?B?THFWNEhMWUVUaHFwZnJ3ZFVGYkN1b1dTMUR3U1JyRndHS0hEQWhqN3pIbEpn?=
- =?utf-8?B?dm5JQjdXSDUvR0x5bWhkSEQrWkhXR2tLTkZoQWFnVUFhVWdlbE04VW1xZ21L?=
- =?utf-8?B?RlZyTW9tUUVtYVBSY2xWNGYwOGVrd21Vc05GWGc5Ump3eS9VYmc3U0RpNERQ?=
- =?utf-8?B?dHUvS1Y0K01lWG1weit1dHVpSlBSY0NORzVkeGc3emd3S0x6Q3B1eGh1UklL?=
- =?utf-8?B?N2Rqc0w5YW9qVWx5ekFiQmptb055MlMxRzBnWElMcEd6QXNodGhhamJVbVFI?=
- =?utf-8?B?alNvcGhhaGpFSUkwOUFPT1pUYTR0NXpFZUdwYXRvUkZmZzU2MmRMNVdOQzN1?=
- =?utf-8?B?ZVo2dXVVc0dtZHF4bjh3L3psZ3NlTWZhM0RhcEFBTUdFTU9BSWlvTmEwZ2Vr?=
- =?utf-8?B?TFIvdXdxT2RpUmE3NkxTcUdzem50YjNhLzdzRnNpL0RwTVlmaHF1SEpLQ1Nh?=
- =?utf-8?B?cVhGWVdrZGNaWUFwcEFyY2ZYNTBpNzJTSHhiVXRjWVNORTEzc2ZOWjJVU1M0?=
- =?utf-8?B?VTFYSWdTVHJjYU1mTUJ5SlhVbkFIeWR1Wks3dVZPRFVBS1FRRUcxQ1VIVzlW?=
- =?utf-8?Q?cG8NpNMRbgangih30GMiQeKq6?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e4c32ea7-0d2f-49a5-a9b3-08dc99a25896
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB7426.namprd12.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?U0puNjhaQkMxT2FqRDdlZmw5R2djZ0MwbTdtVWdqK01IVkV5bWhERG9QRHps?=
+ =?utf-8?B?OVlxQ0oyQjJJVXlpNGY1MHhmY3EyRmJZaG5ZVGpGZ3JrY0FpZE54Q3gvUDMz?=
+ =?utf-8?B?YXFZNkcxSi9wQXFETXMwcDRlSldHeHF6MHRuMmMvdHhmdERnY1hTUGRQTmF5?=
+ =?utf-8?B?Nkgwd21YczBGUW1XQWcxN3pyaTFkelYxdzVNRUVrTlBVVUU3ZjZsWDUwSVBz?=
+ =?utf-8?B?VnFjd0ZMcjVoVFBSY3BCYS9McEc2WjNodmoxUU5OVis3blpLbXBNQll2Rnph?=
+ =?utf-8?B?ZHpZTEhPRStHeFZvUGczQkFTMzJWMVBoTGtxMjhZOTZlM1hQaDd3SjF3ZEpi?=
+ =?utf-8?B?MUt2S0hWM2RIZFVyaEpDSitLOVFwUmxMS1Bac1NkTlMrQ0Fsb3JTei9sbTU2?=
+ =?utf-8?B?WHY0S2NyWDdkOUJGcTR5QXpxV09jQTFjWkxaQ0hwR2VIUE5YMjNDcUVBRm9i?=
+ =?utf-8?B?OGVGYlBsL3puSjQzbUJhbWpFTjlKOXRNVDlsb2VJNVdSQ3dxcXNhWkxscWIy?=
+ =?utf-8?B?dFhnZllHYzNhSlhSODRKWFpDTXhQU2lIWS9DREYrenUvRFg3OW9YdHhlT1Zy?=
+ =?utf-8?B?UkRlSDdxbkxVeHVzb0pQMEVodVdtWVc0U2hhVWFuTG1oSGl6OTdUdkdRUWFV?=
+ =?utf-8?B?b0MzQnYvcUxuc3EwdXR6RmY2OFVsTzN6TVhiOFdUMDduUVpBS3o5UklnNUpY?=
+ =?utf-8?B?d01icUVLNFloVU1LMlZnNzJFVHJuV25zV1ZFR1k1OTNrTWNaNFFkUzBiejla?=
+ =?utf-8?B?RCtFMkN2YmRKditxajBDVkRjbk5weEtEYzNkZTIvb0V6VW50SWs2TkZiZ2R5?=
+ =?utf-8?B?Vzc5TDlMWDJiQXVSZURSbzU1SWZCS2FHcXlsSVNGdkIxOFNjeURkMVNtaTNB?=
+ =?utf-8?B?akJNb2pZeUIrOG1PZWR4d0NtWTdWQ1dwNnNSZ3B2WlBFUUZnRWJ1QVhtb2tu?=
+ =?utf-8?B?WWNvUUpIWjBJYnFaK1Q5dFFRR3VIT2JrZ2Rzb0w0OTcrallvZzMxVWVodjI1?=
+ =?utf-8?B?R3pqNzJvS2Q3cEMxUmQvUnpkampueW9udFdwQThKaGxxUHNGYXhxcHBiVC9s?=
+ =?utf-8?B?d3prdG5FaFFUdHF3M3lYdjlhdXV6OUpSOStsR2RPQ29QcHdnak9NbHFmOU1C?=
+ =?utf-8?B?MFozaEZ2eWxLNWVPK011RnUvRVl3UG51R2tGaTFxNXpaNFVJTS9XMXRxa2xo?=
+ =?utf-8?B?UUV2MGkyYWpvajlENGVrOVJWajFSR0dmUjUweThGV0J2dFZHbHBxemcwUlVY?=
+ =?utf-8?B?OVExbDd2Z0hpNHgzOFRvTXFoc1o1NnlJeEdON2dyM1VXTzZHWEpmZXVNdXRX?=
+ =?utf-8?B?ZXkrZ3RBYWlENEFHQmJqYXk0UGNBbGRDc3kyeXBvaE5jUW83dkxZQWhuUnFh?=
+ =?utf-8?B?dndDdVJ2NnBkZ3BpUVFEWXJpNGY1ekMyNlRWdVNrQ0FaRjBlNUwyMDU3UnJw?=
+ =?utf-8?B?ZjJzWmg3YWV3bjBKNUtSM1g5dHNVTTJSUW1xTVNnOHJNbVd2RG5RVlBSdXds?=
+ =?utf-8?B?ektUMmFSUmVkZ1FXNkp0cW93TGpUbnB4MWZoZXFBRVBoSXhUU1d5S3ZFaU5I?=
+ =?utf-8?B?TWxGaEQrc1BQbG9xNlZXNDNhWlVkdGQwMnN0R0dUc3B6NnVlTkRxSFUra09J?=
+ =?utf-8?B?MTZUMHBqSWNUY21YOTJWdmtlUWtKdWt4bzBuSzhDNllCZTJJT0NMa2VycFl6?=
+ =?utf-8?B?aHIwSnNjVFQyQzVLSjEwbWIrZXlYeXZxbTc4TWJEeVBsWG12Nnh4QmVRcUY1?=
+ =?utf-8?B?NHY4bDBnZHkwY2twdFFmaTEydS9nVWNvd1BoenowZXNnTEdEbkFVLzRwTXVW?=
+ =?utf-8?B?WkZnTEJ1ZjY2dStjTDlDeUtmc1ZsbmZZb2VDT2pQY3Vqakx5L0x0UU5IRVhi?=
+ =?utf-8?B?NXNpcWZuT1FIcGZWOEhxZlBSQmVyeVdZRFZxS0tsUVppVHhjR21XZWMwNjJq?=
+ =?utf-8?B?eEs1empSd0ZQYVk5cUludlpyYWVrRHRETTN4SjRnRE53cUR1WlVndDRnWnRW?=
+ =?utf-8?B?ZnZYN3pDVFF3dXFkdnUxQ2ZFVWtOYTljbURUNGlvNE8rSlhrai92b21rcXl3?=
+ =?utf-8?B?dUJ5NVhYdm85dTRwc2Jtd0UyUDJlNHFwRmg5V2phSXVuZlYvQkdlckJ0OFFG?=
+ =?utf-8?Q?mFVp/N8XkpI9SzCqR14Qbe0mF?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: f721255f-bd90-483f-5012-08dc99a276ea
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB7529.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2024 07:49:33.3872
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2024 07:50:24.1623
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 457LjFKXBmXWkQVaf+hSkdi1+4bb20r1Zj9iA6VbW0VQZ/ZnKbQDGnETaB6ahZdcoi6pziFV1NK83gKISQMpSQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8237
+X-MS-Exchange-CrossTenant-UserPrincipalName: ic1WKcZFGfjq7OPJMF5e60YC+tppbBvpq2fm10SxqFaSX0YHC5DeN+po8HJQPvmQRhoiTb53EMS71XmmAqlMAw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7687
+X-OriginatorOrg: intel.com
 
+On 2024/6/17 17:53, Yan Zhao wrote:
+> Reuse file f_inode as vfio device inode and associate pseudo path file
+> directly to inode allocated in vfio fs.
+> 
+> Currently, vfio device is opened via 2 ways:
+> 1) via cdev open
+>     vfio device is opened with a cdev device with file f_inode and address
+>     space associated with a cdev inode;
+> 2) via VFIO_GROUP_GET_DEVICE_FD ioctl
+>     vfio device is opened via a pseudo path file with file f_inode and
+>     address space associated with an inode in anon_inode_fs.
+> 
 
-On 5/31/2024 2:52 PM, Ashish Mhetre wrote:
->
-> On 5/24/2024 6:09 PM, Ashish Mhetre wrote:
->>
->> On 5/23/2024 7:11 PM, Robin Murphy wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> On 23/05/2024 4:19 am, Ashish Mhetre wrote:
->>>> The current __arm_lpae_unmap() function calls dma_sync() on individual
->>>> PTEs after clearing them. By updating the __arm_lpae_unmap() to call
->>>> dma_sync() once for all cleared PTEs, the overall performance can be
->>>> improved 25% for large buffer sizes.
->>>> Below is detailed analysis of average unmap latency(in us) with and
->>>> without this optimization obtained by running dma_map_benchmark for
->>>> different buffer sizes.
->>>>
->>>> Size  Time W/O        Time With       % Improvement
->>>>       Optimization    Optimization
->>>>       (us)            (us)
->>>>
->>>> 4KB   3.0             3.1             -3.33
->>>> 1MB   250.3           187.9           24.93
->>>
->>> This seems highly suspect - the smallest possible block size is 2MB 
->>> so a
->>> 1MB unmap should not be affected by this path at all.
->>>
->> It will be unmapped at 4KB block size, right? The 'size' passed to
->> __arm_lpae_unmap will be 4KB and 'pgcount' will be 256 for 1MB
->> buffer from iommu_pgsize() unless the IOVA and phys address met
->> conditions for next bigger size i.e., 2MB.
->>>> 2MB   493.7           368.7 25.32
->>>> 4MB   974.7           723.4           25.78
->>>
->>> I'm guessing this is on Tegra with the workaround to force 
->>> everything to
->>> PAGE_SIZE? In the normal case a 2MB unmap should be nominally *faster*
->>> than 4KB, since it would also be a single PTE, but with one fewer level
->>> of table to walk to reach it. The 25% figure is rather misleading if
->>> it's only a mitigation of an existing erratum workaround, and the 
->>> actual
->>> impact on the majority of non-broken systems is unmeasured.
->>>
->> Yes, I forgot about the workaround we have and agree that without the
->> workaround, 2MB unmap will be faster without this optimization. But
->> for any size between 4KB and 2MB, this optimization would help in
->> improving the unmap latencies. To verify that, I reverted the workaround
->> and again got unmap latencies using dma_map_benchmark which are as
->> mentioned below. We can see an improvement around 20% to 25%:
->>
->> Size          Time WO Opt(us)     Time With Opt(us)       % improvement
->> 4KB          3                                  3.1                 
->> -3.33
->> 64KB        18.6                            15 19.36
->> 128KB      35.2                            27.7            21.31
->> 256KB      67.6                            52.6            22.19
->> 512KB      128.4                          97.7           23.91
->> 1MB         249.9                          188.1           24.72
->> 2MB         67.4                             67.5 -0.15
->> 4MB         121.3                          121.2           0.08
->>
->>> (As an aside, I think that workaround itself is a bit broken, since at
->>> least on Tegra234 with Cortex-A78, PAGE_SIZE could be 16KB which 
->>> MMU-500
->>> doesn't support.)
->>>
->> Yes, that's true. For 16KB PAGE_SIZE, we need to fall back to 4KB 
->> pgsize_bitmap.
->>>> Signed-off-by: Ashish Mhetre <amhetre@nvidia.com>
->>>> ---
->>>>   drivers/iommu/io-pgtable-arm.c | 34 
->>>> +++++++++++++++++++++++++---------
->>>>   1 file changed, 25 insertions(+), 9 deletions(-)
->>>>
->>>> diff --git a/drivers/iommu/io-pgtable-arm.c 
->>>> b/drivers/iommu/io-pgtable-arm.c
->>>> index 3d23b924cec1..94094b711cba 100644
->>>> --- a/drivers/iommu/io-pgtable-arm.c
->>>> +++ b/drivers/iommu/io-pgtable-arm.c
->>>> @@ -256,13 +256,15 @@ static void 
->>>> __arm_lpae_sync_pte(arm_lpae_iopte *ptep, int num_entries,
->>>>                                  sizeof(*ptep) * num_entries, 
->>>> DMA_TO_DEVICE);
->>>>   }
->>>>
->>>> -static void __arm_lpae_clear_pte(arm_lpae_iopte *ptep, struct 
->>>> io_pgtable_cfg *cfg)
->>>> +static void __arm_lpae_clear_pte(arm_lpae_iopte *ptep, struct 
->>>> io_pgtable_cfg *cfg, int num_entries)
->>>>   {
->>>> +     int i;
->>>>
->>>> -     *ptep = 0;
->>>> +     for (i = 0; i < num_entries; i++)
->>>> +             ptep[i] = 0;
->>>>
->>>>       if (!cfg->coherent_walk)
->>>> -             __arm_lpae_sync_pte(ptep, 1, cfg);
->>>> +             __arm_lpae_sync_pte(ptep, num_entries, cfg);
->>>>   }
->>>>
->>>>   static size_t __arm_lpae_unmap(struct arm_lpae_io_pgtable *data,
->>>> @@ -633,13 +635,25 @@ static size_t __arm_lpae_unmap(struct 
->>>> arm_lpae_io_pgtable *data,
->>>>       if (size == ARM_LPAE_BLOCK_SIZE(lvl, data)) {
->>>>               max_entries = ARM_LPAE_PTES_PER_TABLE(data) - 
->>>> unmap_idx_start;
->>>>               num_entries = min_t(int, pgcount, max_entries);
->>>> -
->>>> -             while (i < num_entries) {
->>>> -                     pte = READ_ONCE(*ptep);
->>>> +             arm_lpae_iopte *pte_flush;
->>>> +             int j = 0;
->>>> +
->>>> +             pte_flush = kvcalloc(num_entries, sizeof(*pte_flush), 
->>>> GFP_ATOMIC);
->>>
->>> kvmalloc() with GFP_ATOMIC isn't valid. However, I'm not sure if there
->>> isn't a more fundamental problem here - Rob, Boris; was it just the map
->>> path, or would any allocation on unmap risk the GPU reclaim deadlock
->>> thing as well?
->>>
->> I am using kvmalloc() here to create an array which is used to store 
->> PTEs
->> that are going to be flushed after clearing. If we don't store them then
->> those will be lost once cleared and we won't be able to flush them.
->> I tried using GFP_KERNEL instead of GFP_ATOMIC but then I am getting
->> warning from might_sleep().
->> Is there any other alternative way we can use here to store the PTEs?
->>> Thanks,
->>> Robin.
->>>
->>>> +             if (pte_flush) {
->>>> +                     for (j = 0; j < num_entries; j++) {
->>>> +                             pte_flush[j] = READ_ONCE(ptep[j]);
->>>> +                             if (WARN_ON(!pte_flush[j]))
->>>> +                                     break;
->>>> +                     }
->>>> +                     __arm_lpae_clear_pte(ptep, &iop->cfg, j);
->>>> +             }
->>>> +             while (i < (pte_flush ? j : num_entries)) {
->>>> +                     pte = pte_flush ? pte_flush[i] : 
->>>> READ_ONCE(*ptep);
->>>>                       if (WARN_ON(!pte))
->>>>                               break;
->>>>
->>>> -                     __arm_lpae_clear_pte(ptep, &iop->cfg);
->>>> +                     if (!pte_flush)
->>>> +                             __arm_lpae_clear_pte(ptep, &iop->cfg, 
->>>> 1);
->>>>
->>>>                       if (!iopte_leaf(pte, lvl, iop->fmt)) {
->>>>                               /* Also flush any partial walks */
->>>> @@ -649,10 +663,12 @@ static size_t __arm_lpae_unmap(struct 
->>>> arm_lpae_io_pgtable *data,
->>>>                       } else if (!iommu_iotlb_gather_queued(gather)) {
->>>>                               io_pgtable_tlb_add_page(iop, gather, 
->>>> iova + i * size, size);
->>>>                       }
->>>> -
->>>> -                     ptep++;
->>>> +                     if (!pte_flush)
->>>> +                             ptep++;
->>>>                       i++;
->>>>               }
->>>> +             if (pte_flush)
->>>> +                     kvfree(pte_flush);
->>>>
->>>>               return i * size;
->>>>       } else if (iopte_leaf(pte, lvl, iop->fmt)) {
-> Hi all,
->
-> Can you please provide feedback on this patch? Is this optimization
-> worth pursuing?
->
-> Thanks,
-> Ashish Mhetre
-Hi Robin,
+You can simply say the cdev path and group path. :)
 
-Can you please share feedback on this? Is more testing required
-for this on non-Tegra platforms? Perhaps shall I send it as RFT ?
-I have used 'dma_map_benchmark' available in kernel to test this.
-Same can be used to test on other platforms.
+> In commit b7c5e64fecfa ("vfio: Create vfio_fs_type with inode per device"),
+> an inode in vfio fs is allocated for each vfio device. However, this inode
+> in vfio fs is only used to assign its address space to that of a file
+> associated with another cdev inode or an inode in anon_inode_fs.
+> 
+> This patch
+> - reuses cdev device inode as the vfio device inode when it's opened via
+>    cdev way;
+> - allocates an inode in vfio fs, associate it to the pseudo path file,
+>    and save it as the vfio device inode when the vfio device is opened via
+>    VFIO_GROUP_GET_DEVICE_FD ioctl.
 
-Thanks and Regards,
-Ashish Mhetre
+So Alex's prior series only makes use of the i_mapping of the inode instead
+of associating the inode with the pseudo path file?
+
+> File address space will then point automatically to the address space of
+> the vfio device inode. Tools like unmap_mapping_range() can then zap all
+> vmas associated with the vfio device.
+> 
+> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> ---
+>   drivers/vfio/device_cdev.c |  9 ++++---
+>   drivers/vfio/group.c       | 21 ++--------------
+>   drivers/vfio/vfio.h        |  2 ++
+>   drivers/vfio/vfio_main.c   | 49 +++++++++++++++++++++++++++-----------
+>   4 files changed, 43 insertions(+), 38 deletions(-)
+> 
+> diff --git a/drivers/vfio/device_cdev.c b/drivers/vfio/device_cdev.c
+> index bb1817bd4ff3..a4eec8e88f5c 100644
+> --- a/drivers/vfio/device_cdev.c
+> +++ b/drivers/vfio/device_cdev.c
+> @@ -40,12 +40,11 @@ int vfio_device_fops_cdev_open(struct inode *inode, struct file *filep)
+>   	filep->private_data = df;
+>   
+>   	/*
+> -	 * Use the pseudo fs inode on the device to link all mmaps
+> -	 * to the same address space, allowing us to unmap all vmas
+> -	 * associated to this device using unmap_mapping_range().
+> +	 * mmaps are linked to the address space of the inode of device cdev.
+> +	 * Save the inode of device cdev in device->inode to allow
+> +	 * unmap_mapping_range() to unmap all vmas.
+>   	 */
+> -	filep->f_mapping = device->inode->i_mapping;
+> -
+> +	device->inode = inode;
+>   	return 0;
+>   
+>   err_put_registration:
+> diff --git a/drivers/vfio/group.c b/drivers/vfio/group.c
+> index ded364588d29..aaef188003b6 100644
+> --- a/drivers/vfio/group.c
+> +++ b/drivers/vfio/group.c
+> @@ -268,31 +268,14 @@ static struct file *vfio_device_open_file(struct vfio_device *device)
+>   	if (ret)
+>   		goto err_free;
+>   
+> -	/*
+> -	 * We can't use anon_inode_getfd() because we need to modify
+> -	 * the f_mode flags directly to allow more than just ioctls
+> -	 */
+> -	filep = anon_inode_getfile("[vfio-device]", &vfio_device_fops,
+> -				   df, O_RDWR);
+> +	filep = vfio_device_get_pseudo_file(device);
+>   	if (IS_ERR(filep)) {
+>   		ret = PTR_ERR(filep);
+>   		goto err_close_device;
+>   	}
+> -
+> -	/*
+> -	 * TODO: add an anon_inode interface to do this.
+> -	 * Appears to be missing by lack of need rather than
+> -	 * explicitly prevented.  Now there's need.
+> -	 */
+> +	filep->private_data = df;
+>   	filep->f_mode |= (FMODE_PREAD | FMODE_PWRITE);
+>   
+> -	/*
+> -	 * Use the pseudo fs inode on the device to link all mmaps
+> -	 * to the same address space, allowing us to unmap all vmas
+> -	 * associated to this device using unmap_mapping_range().
+> -	 */
+> -	filep->f_mapping = device->inode->i_mapping;
+> -
+>   	if (device->group->type == VFIO_NO_IOMMU)
+>   		dev_warn(device->dev, "vfio-noiommu device opened by user "
+>   			 "(%s:%d)\n", current->comm, task_pid_nr(current));
+> diff --git a/drivers/vfio/vfio.h b/drivers/vfio/vfio.h
+> index 50128da18bca..1f8915f79fbb 100644
+> --- a/drivers/vfio/vfio.h
+> +++ b/drivers/vfio/vfio.h
+> @@ -35,6 +35,7 @@ struct vfio_device_file *
+>   vfio_allocate_device_file(struct vfio_device *device);
+>   
+>   extern const struct file_operations vfio_device_fops;
+> +struct file *vfio_device_get_pseudo_file(struct vfio_device *device);
+>   
+>   #ifdef CONFIG_VFIO_NOIOMMU
+>   extern bool vfio_noiommu __read_mostly;
+> @@ -420,6 +421,7 @@ static inline void vfio_cdev_cleanup(void)
+>   {
+>   }
+>   #endif /* CONFIG_VFIO_DEVICE_CDEV */
+> +struct file *vfio_device_get_pseduo_file(struct vfio_device *device);
+>   
+>   #if IS_ENABLED(CONFIG_VFIO_VIRQFD)
+>   int __init vfio_virqfd_init(void);
+> diff --git a/drivers/vfio/vfio_main.c b/drivers/vfio/vfio_main.c
+> index a5a62d9d963f..e81d0f910c70 100644
+> --- a/drivers/vfio/vfio_main.c
+> +++ b/drivers/vfio/vfio_main.c
+> @@ -192,7 +192,6 @@ static void vfio_device_release(struct device *dev)
+>   	if (device->ops->release)
+>   		device->ops->release(device);
+>   
+> -	iput(device->inode);
+>   	simple_release_fs(&vfio.vfs_mount, &vfio.fs_count);
+>   	kvfree(device);
+>   }
+> @@ -248,20 +247,50 @@ static struct file_system_type vfio_fs_type = {
+>   	.kill_sb = kill_anon_super,
+>   };
+>   
+> -static struct inode *vfio_fs_inode_new(void)
+> +/*
+> + * Alloc pseudo file from inode associated of vfio.vfs_mount.
+
+nit: s/Alloc/Allocate/ and s/of/with/
+
+> + * This is called when vfio device is opened via pseudo file.
+
+group path might be better. Is this pseudo file only needed for the device
+files opened in the group path? If so, might be helpful to move the related
+codes into group.c.
+
+> + * mmaps are linked to the address space of the inode of the pseudo file.
+> + * Save the inode in device->inode for unmap_mapping_range() to unmap all vmas.
+> + */
+> +struct file *vfio_device_get_pseudo_file(struct vfio_device *device)
+>   {
+> +	const struct file_operations *fops = &vfio_device_fops;
+>   	struct inode *inode;
+> +	struct file *filep;
+>   	int ret;
+>   
+> +	if (!fops_get(fops))
+> +		return ERR_PTR(-ENODEV);
+> +
+>   	ret = simple_pin_fs(&vfio_fs_type, &vfio.vfs_mount, &vfio.fs_count);
+>   	if (ret)
+> -		return ERR_PTR(ret);
+> +		goto err_pin_fs;
+>   
+>   	inode = alloc_anon_inode(vfio.vfs_mount->mnt_sb);
+> -	if (IS_ERR(inode))
+> -		simple_release_fs(&vfio.vfs_mount, &vfio.fs_count);
+> +	if (IS_ERR(inode)) {
+> +		ret = PTR_ERR(inode);
+> +		goto err_inode;
+> +	}
+> +
+> +	filep = alloc_file_pseudo(inode, vfio.vfs_mount, "[vfio-device]",
+> +				  O_RDWR, fops);
+> +
+> +	if (IS_ERR(filep)) {
+> +		ret = PTR_ERR(filep);
+> +		goto err_file;
+> +	}
+> +	device->inode = inode;
+
+The group path allows multiple device fd get, hence this will set the
+device->inode multiple times. It does not look good. Setting it once
+should be enough?
+
+> +	return filep;
+> +
+> +err_file:
+> +	iput(inode);
+
+If the vfio_device_get_pseudo_file() succeeds, who will put inode? I
+noticed all the other iput() of this file are removed.
+
+> +err_inode:
+> +	simple_release_fs(&vfio.vfs_mount, &vfio.fs_count);
+> +err_pin_fs:
+> +	fops_put(fops);
+>   
+> -	return inode;
+> +	return ERR_PTR(ret);
+>   }
+>   
+>   /*
+> @@ -282,11 +311,6 @@ static int vfio_init_device(struct vfio_device *device, struct device *dev,
+>   	init_completion(&device->comp);
+>   	device->dev = dev;
+>   	device->ops = ops;
+> -	device->inode = vfio_fs_inode_new();
+> -	if (IS_ERR(device->inode)) {
+> -		ret = PTR_ERR(device->inode);
+> -		goto out_inode;
+> -	}
+>   
+>   	if (ops->init) {
+>   		ret = ops->init(device);
+> @@ -301,9 +325,6 @@ static int vfio_init_device(struct vfio_device *device, struct device *dev,
+>   	return 0;
+>   
+>   out_uninit:
+> -	iput(device->inode);
+> -	simple_release_fs(&vfio.vfs_mount, &vfio.fs_count);
+> -out_inode:
+>   	vfio_release_device_set(device);
+>   	ida_free(&vfio.device_ida, device->index);
+>   	return ret;
+> 
+> base-commit: 6ba59ff4227927d3a8530fc2973b80e94b54d58f
+
+-- 
+Regards,
+Yi Liu
