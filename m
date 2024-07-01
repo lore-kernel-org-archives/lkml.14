@@ -1,134 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.riseup.net (mx1.riseup.net [198.252.153.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E41412BF32;
-	Mon,  1 Jul 2024 10:08:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0453E38397;
+	Mon,  1 Jul 2024 10:10:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.252.153.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719828538; cv=none; b=u8gYvXrS7/91zTn6fiq4Q7LggCgk4vU2oJXTLcB3B+CyPOZD1+jWphdP55jm/xLdjowBtyrrArC2cgB1se0kXyLefoZlVB51nhZUB7lXFp2iRj/AFI+7JJLYDLasakXEXwwAom2h9su67v4i3c7pkj5DDGzHXQF4raqtKEn0ZiA=
+	t=1719828623; cv=none; b=PBZVR5Nf7JCWPgfaD0pYmRhnCKojxcMKMlc3Gv4nEQGbA/E7OUwDNMPJBwfxq7NKGG1622Fv/Pe+6JJU6HMsWl+EZOESNuZCjb/f2W+jU+KS85MDpREnpSf5R1zbcX1sFwXxbT4fqFfY8Ej/fFP3mWTU2nwdGIDfAQv3lSr6zbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719828538; c=relaxed/simple;
-	bh=jH3nearMFaAQlRhm+ugZS+3bjSfLjOJPX+r7dcSWXuM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r70D9LjTaicX3OJqGDtQSaY23BFynTDj9W5Mva2OLFWq0RAfv5bnmmHKKIzHeIBsuD3FpCZNMNmlO+Bpu5UqcF/NNIbUZIpkGE9zAnz3007VqUEZHbnuudiuLo0YM4C/6ZxBumBEsRTcDXSqhDzloR4c8IC5F9a2YJ7wOEg9AkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l7QwhlzY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719828623; c=relaxed/simple;
+	bh=3RsDpfCoTAZ3q1FNMCir3GnLeMMkBWdgV78aDzg85+A=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=bB/5Ool42tUYVeRICnAf/6MM6gTrMuEsrxGlvAXmYZLLfvD2F2MWmnfFZDTYJGkUyoQ1Ed0boYCCrtnIyOLHrICVUQu3a4qoYJephnmFhlotXGiL61xQI8e0MmmVqm0kT2RK1DSea17FXtF9xNY2aiYanYfoNVjV8uQrLxwT4PA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net; spf=pass smtp.mailfrom=riseup.net; dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b=AdzFlVXn; arc=none smtp.client-ip=198.252.153.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riseup.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l7QwhlzY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20C37C116B1;
-	Mon,  1 Jul 2024 10:08:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719828537;
-	bh=jH3nearMFaAQlRhm+ugZS+3bjSfLjOJPX+r7dcSWXuM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=l7QwhlzYmn5KN8z7OP0jBE/CimXzbBKWObFyuQAEkcdTdgfIoHwmbutcDW4QocKfc
-	 pls+raO8TxJdqu4mALYSqwhFeCFdgwBULoaf86ySStXqJtJJ80I0CQeslqPs6kIDAu
-	 c4tlIGEcVRgZ8euR4ZZqS/+DXWlxJWZnB6lO4DjWLzN7ZNNqTCjvK2zS+AhEbcSqhP
-	 /ILKBL2pLpPh8cckYr7l7txhpoarsQDELzwl2sBbGNbznFareoihFxb8HkOH3DRciX
-	 To13StKSg65vbY3+x8jL4gvuMTqm13e7iiP4tzZzZSW2EDr0kUyyOHsUGEisJzCgRX
-	 +C68+twjUjcVg==
-Date: Mon, 1 Jul 2024 19:08:53 +0900
-From: William Breathitt Gray <wbg@kernel.org>
-To: Vignesh Raghavendra <vigneshr@ti.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Nishanth Menon <nm@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
-	Santosh Shilimkar <ssantosh@kernel.org>, Judith Mendez <jm@ti.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>
-Subject: Re: linux-next: manual merge of the counter-next tree with the ti
- tree
-Message-ID: <ZoKANeudCKsjjYDQ@ishi>
-References: <20240701163749.1cb88c8b@canb.auug.org.au>
- <d595b624-ef18-4aac-ab2c-bd36a8c4de3d@ti.com>
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="AdzFlVXn"
+Received: from mx0.riseup.net (mx0-pn.riseup.net [10.0.1.42])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx1.riseup.net (Postfix) with ESMTPS id 4WCMHC0fCCzDqh4;
+	Mon,  1 Jul 2024 10:10:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
+	t=1719828615; bh=3RsDpfCoTAZ3q1FNMCir3GnLeMMkBWdgV78aDzg85+A=;
+	h=From:Date:Subject:To:Cc:From;
+	b=AdzFlVXnCppvzWVbrzh//iVrRDRZSf40pXrYiwxVDwzhCAxHtWvldkLicD1ixBpV+
+	 Eta5GCfLmvF2ZqO60c6WNwnu2ZYNmaSkBR5ATIAAX6/3W9QqXG+UANPG9QJs2Qh4jS
+	 Pg1NsCmOqNVkhISHTzem7/LCtNO4XJ6lxnrdGsXY=
+Received: from fews01-sea.riseup.net (fews01-sea-pn.riseup.net [10.0.1.109])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx0.riseup.net (Postfix) with ESMTPS id 4WCMH35p0Jz9vXW;
+	Mon,  1 Jul 2024 10:10:07 +0000 (UTC)
+X-Riseup-User-ID: 1D35BC222651F46F43E4F43BC3D5A4A6C635349B67A1625C0F0EC58AC523AE47
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	 by fews01-sea.riseup.net (Postfix) with ESMTPSA id 4WCMGn5hsDzJrqG;
+	Mon,  1 Jul 2024 10:09:53 +0000 (UTC)
+From: Dang Huynh <danct12@riseup.net>
+Date: Mon, 01 Jul 2024 17:09:42 +0700
+Subject: [PATCH] arm64: dts: qcom: qrb4210-rb2: Correct PMI632 VBUS voltage
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="nnREai9O/od+bX6T"
-Content-Disposition: inline
-In-Reply-To: <d595b624-ef18-4aac-ab2c-bd36a8c4de3d@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240701-qrd4210rb2-vbus-volt-v1-1-5c06f8358436@riseup.net>
+X-B4-Tracking: v=1; b=H4sIAGWAgmYC/x3MQQqEMAxA0atI1gbaUKx4lcGFrVEDomPqlAHx7
+ haXb/H/BYlVOEFXXaCcJcm+Fdi6grgM28woYzGQIWe8sXjo6MgaDYQ5/BLmfT2xJfKNiz5OcYC
+ SfpUn+b/bT3/fD7xOmVpmAAAA
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ Luca Weiss <luca.weiss@fairphone.com>, linux-arm-msm@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Dang Huynh <danct12@riseup.net>
 
+According to downstream sources, PMI632 maximum VBUS voltage is
+1 volt.
 
---nnREai9O/od+bX6T
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Taken from msm-4.19 (631561973a034e46ccacd0e53ef65d13a40d87a4)
+Line 685-687 in drivers/power/supply/qcom/qpnp-smb5.c
 
-On Mon, Jul 01, 2024 at 12:58:28PM +0530, Vignesh Raghavendra wrote:
-> Hi Will,
->=20
-> On 01/07/24 12:07, Stephen Rothwell wrote:
-> > Hi all,
-> >=20
-> > Today's linux-next merge of the counter-next tree got a conflict in:
-> >=20
-> >   arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
-> >=20
-> > between commits:
-> >=20
-> >   3ad6579f106d ("arm64: dts: ti: am62p: Rename am62p-{}.dtsi to am62p-j=
-722s-common-{}.dtsi")
-> >   77044cfb9346 ("arm64: dts: ti: k3-am62p-j722s: Move AM62P specific US=
-B1 to am62p-main.dtsi")
-> >   ed07d82f9e3e ("arm64: dts: ti: k3-am62p-j722s: Move SoC-specific node=
- properties")
-> >   84935117f25f ("arm64: dts: ti: k3-am62p: Add gpio-ranges properties")
-> >=20
-> > from the ti tree and commit:
-> >=20
-> >   131eaf47c4c5 ("arm64: dts: ti: k3-am62p-main: Add eQEP nodes")
->=20
-> Could you please drop from your tree "arm64: dts: ti: .." patches, these =
-need to go via TI SoC/arm64 tree.=20
->=20
-> In particular
->=20
-> 7fb9d8854fcf(Judith Mendez)6 hours ago  arm64: dts: ti: k3-am64x-sk: Enab=
-le eQEP
-> afdfe6439a6d(Judith Mendez)6 hours ago  arm64: dts: ti: k3-am64-main: Add=
- eQEP nodes
-> 131eaf47c4c5(Judith Mendez)6 hours ago  arm64: dts: ti: k3-am62p-main: Ad=
-d eQEP nodes
-> ba5a251b1d53(Judith Mendez)6 hours ago  arm64: dts: ti: k3-am62a-main: Ad=
-d eQEP nodes
-> e2e1fce199b0(Judith Mendez)6 hours ago  arm64: dts: ti: k3-am62-main: Add=
- eQEP nodes
->=20
-> Thanks!
->=20
-> >=20
-> > from the counter-next tree.
-> >=20
-> > I don't know how to fix this up, so I just dropped the latter chanhd
-> > for now.
-> >=20
->=20
->=20
-> --=20
-> Regards
-> Vignesh
+Signed-off-by: Dang Huynh <danct12@riseup.net>
+---
+In previous patch series, there's a suggestion to correct
+PMI632's VBUS voltage.
 
-Hi Vignesh,
+Unfortunately it didn't make it and probably forgotten.
+---
+ arch/arm64/boot/dts/qcom/qrb4210-rb2.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I have now dropped the "arm64: dts: ti: ..." patches from my
-counter-next tree, I retained just the counter patches.
+diff --git a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts b/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
+index 1c7de7f2db79..1888d99d398b 100644
+--- a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
++++ b/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
+@@ -305,7 +305,7 @@ pmi632_ss_in: endpoint {
+ 
+ &pmi632_vbus {
+ 	regulator-min-microamp = <500000>;
+-	regulator-max-microamp = <3000000>;
++	regulator-max-microamp = <1000000>;
+ 	status = "okay";
+ };
+ 
 
-Thanks,
+---
+base-commit: 642a16ca7994a50d7de85715996a8ce171a5bdfb
+change-id: 20240701-qrd4210rb2-vbus-volt-822764c7cfca
 
-William Breathitt Gray
+Best regards,
+-- 
+Dang Huynh <danct12@riseup.net>
 
---nnREai9O/od+bX6T
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZoKANQAKCRC1SFbKvhIj
-K1jgAQCAqfAEjD9q5+cUSla7wIXytQE8E3rqtODn5ITHc+ImlAD/ZOl6Qoipad8I
-FObVp6vumXMNs7gV8clo8HyJcs/cVg4=
-=IFSD
------END PGP SIGNATURE-----
-
---nnREai9O/od+bX6T--
