@@ -1,237 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F3616EC0F;
-	Mon,  1 Jul 2024 18:37:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF1416F26C;
+	Mon,  1 Jul 2024 18:38:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719859068; cv=none; b=WgnXuhEtd3Uf6w62Ong+NRRvxVbizq2ztFKxuCr1k1uyAI+O7eyMndafClBPmgl6FzAlFnqnqmx07wlTsp81asZBWsEH9lGUtPRpJS6x3zASUrJ3/CdPtreHa2C4JC9j9gdpXX1/qNdG2HF2po3F6UuDll9RBWmYnOgOjQcqrGM=
+	t=1719859093; cv=none; b=lanjaAkTIOil6i1oQSKx8IORRxDiDitnVBS31QcgY84ztupfZUy3ISCo9ciQ2pirzbI1xJ6a45RQ2F0KwqSup7uD0PFhwwds7GkZclw10/Gh/vPEWLW0XRO2RSrqSSJsPYQR4oyP+VMOFLiWJohMa/eFAfWBWaLRBu9l6NBPsoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719859068; c=relaxed/simple;
-	bh=AOrqewpmo3+XMOPNv8O3XmSJfqYus/NPWk7kj+7SfIM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lROtEcios58SvxIMm15HJWXtm0AFL/iKv+t/4IH3DgDwoMqbXzVK7zJM+sJSt/tGxT6cAWvtqIKWjUrbR/DZon/PQBnQUsQFHLmjFKjuxqZ46JfzHSTX8tBltLSvY1NKor4roZyp9IA2uBpMmPxMFFGNfHq7/jIgBmYzpt1vGuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B+IGRoqX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719859093; c=relaxed/simple;
+	bh=AX3Burc+jVtSsnnqyFaj57eodtlYTSR/s+lG7Ov1sgI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hWE/V2RxJ1vL8SR/AyHbXYLFY4Rq+Jfwc7jZdwmQ7GF5x94t3oezgury6fI2UtGnU+209BLJnuiNjrAq94Kvy9udj+3XEWjR6CW3Hlno/1Plx8OS1kD29FdFAXBdBDgTx5jc8f+Z/4MU7Hlcj3DpPiPi2pqSB/ahvflxrXPmrQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sSyHjfU9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B+IGRoqX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80560C32781;
-	Mon,  1 Jul 2024 18:37:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sSyHjfU9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7DF2C116B1;
+	Mon,  1 Jul 2024 18:38:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719859068;
-	bh=AOrqewpmo3+XMOPNv8O3XmSJfqYus/NPWk7kj+7SfIM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=B+IGRoqXbOqjfzM3t6kEYMadiwnbMJQ8J/igQBEqS1MPRwhrMDjygFhKkjFtdID2C
-	 sarxRKfJeexmt45ww1XF4AqqH/EgLNNrrz2qfXf/vwNEhbuU8PWkBQH3GCtfDZKpoH
-	 To2ku5h2susyntctwh98HmUISl8ZGl0g53206t9IET/4ghGf2zMNZeuxwpP9lYQatl
-	 UjvXs7BDewmQcHm2JW3ytVbWiQ5ZibqpsP/edubE9ipXWDfbqIHSU+hWjUU8HDY3dd
-	 olm4qwALzvksdTQljYoAI40I5omT8jF67N0BzZaIHMOzp5nMbPwfHPNVWL7+fUlbqv
-	 e/HTj6YPjjHfA==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: Miguel Ojeda <ojeda@kernel.org>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
-	Jan Alexander Steffens <heftig@archlinux.org>,
-	=?UTF-8?q?Johannes=20L=C3=B6thberg?= <johannes@kyriasis.com>,
-	=?UTF-8?q?Fabian=20Gr=C3=BCnbichler?= <debian@fabian.gruenbichler.email>,
-	Josh Stone <jistone@redhat.com>,
-	Randy Barlow <randy@electronsweatshop.com>,
-	Anna Figueiredo Gomes <navi@vlhl.dev>,
-	Matoro Mahri <matoro_gentoo@matoro.tk>,
-	Ryan Scheel <ryan.havvy@gmail.com>,
-	figsoda <figsoda@pm.me>,
-	=?UTF-8?q?J=C3=B6rg=20Thalheim?= <joerg@thalheim.io>,
-	Theodore Ni <43ngvg@masqt.com>,
-	Winter <nixos@winter.cafe>,
-	William Brown <wbrown@suse.de>,
-	Xiaoguang Wang <xiaoguang.wang@suse.com>,
-	Andrea Righi <andrea.righi@canonical.com>,
-	Zixing Liu <zixing.liu@canonical.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	workflows@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: [PATCH 13/13] docs: rust: quick-start: add section on Linux distributions
-Date: Mon,  1 Jul 2024 20:36:23 +0200
-Message-ID: <20240701183625.665574-14-ojeda@kernel.org>
-In-Reply-To: <20240701183625.665574-1-ojeda@kernel.org>
-References: <20240701183625.665574-1-ojeda@kernel.org>
+	s=k20201202; t=1719859093;
+	bh=AX3Burc+jVtSsnnqyFaj57eodtlYTSR/s+lG7Ov1sgI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sSyHjfU9W8vGs6ErMsERYxc7l6R+5ipDNqZ2WOFY+pAntHp9Bru4N7DeebcQRYEKt
+	 MPVB3gx2g7JV7UY08ap+VjNYlDzPqSlchKb+9IyVZznt9glZbc1NMUNlicbbRKPyj/
+	 i2VT46ecWjmXTYRbFT2ozagHlpJ+a4bhmRELY0Sazw7jl6Bf/uKprk8QKN9P0jzFf5
+	 3TDY1AE9UK9ftqm6Kyf+HhV8UKpbyRjR5u9Oom0AOI+xJ6zY5/CuibBvgcU76J+oO3
+	 KOkRtB0c2HuN9gWL7PKTw4WxuCpVBbrcTVnPZac6/3zrnwn0spvX9z8OVnnVUM0r8g
+	 1Hgp+uo4Vxcmw==
+Date: Mon, 1 Jul 2024 19:38:06 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Marcelo Schmitt <marcelo.schmitt@analog.com>, lars@metafoo.de,
+	Michael.Hennerich@analog.com, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	nuno.sa@analog.com, dlechner@baylibre.com, corbet@lwn.net,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 6/7] iio: adc: Add support for AD4000
+Message-ID: <152ba099-7610-478b-8465-49d9e5adffd0@sirena.org.uk>
+References: <cover.1719686465.git.marcelo.schmitt@analog.com>
+ <628a85cb8cbee32ea7d2930c63e73f2ef449a800.1719686465.git.marcelo.schmitt@analog.com>
+ <20240630121726.5d75578e@jic23-huawei>
+ <ZoLxLgpy44S38nSe@debian-BULLSEYE-live-builder-AMD64>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="vlIPlvW+fKtcuuHS"
+Content-Disposition: inline
+In-Reply-To: <ZoLxLgpy44S38nSe@debian-BULLSEYE-live-builder-AMD64>
+X-Cookie: Microwaves frizz your heir.
 
-Now that we are starting to support several Rust compiler and `bindgen`
-versions, there is a good chance some Linux distributions work out of
-the box.
 
-Thus, provide some instructions on how to set the toolchain up for a
-few major Linux distributions. This simplifies the setup users need to
-build the kernel.
+--vlIPlvW+fKtcuuHS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-In addition, add an introduction to the document so that it is easier
-to understand its structure. We may want to reorganize it or split it
-in the future, but I wanted to focus this commit on the new information
-added about each particular distribution.
+On Mon, Jul 01, 2024 at 03:10:54PM -0300, Marcelo Schmitt wrote:
+> On 06/30, Jonathan Cameron wrote:
+> > Marcelo Schmitt <marcelo.schmitt@analog.com> wrote:
 
-Finally, remove the `rustup`'s components mention in `changes.rst` since
-users do not need it if they install the toolchain via the distributions
-(and anyway it was too detailed for that main document).
+> > > +	struct spi_transfer t =3D {
+> > > +		.tx_buf =3D st->tx_buf,
+> > > +		.rx_buf =3D st->rx_buf,
+> > > +		.len =3D 2,
+> > > +	};
 
-Cc: Jan Alexander Steffens <heftig@archlinux.org>
-Cc: Johannes Löthberg <johannes@kyriasis.com>
-Cc: Fabian Grünbichler <debian@fabian.gruenbichler.email>
-Cc: Josh Stone <jistone@redhat.com>
-Cc: Randy Barlow <randy@electronsweatshop.com>
-Cc: Anna (navi) Figueiredo Gomes <navi@vlhl.dev>
-Cc: Matoro Mahri <matoro_gentoo@matoro.tk>
-Cc: Ryan Scheel <ryan.havvy@gmail.com>
-Cc: figsoda <figsoda@pm.me>
-Cc: Jörg Thalheim <joerg@thalheim.io>
-Cc: Theodore Ni <43ngvg@masqt.com>
-Cc: Winter <nixos@winter.cafe>
-Cc: William Brown <wbrown@suse.de>
-Cc: Xiaoguang Wang <xiaoguang.wang@suse.com>
-Cc: Andrea Righi <andrea.righi@canonical.com>
-Cc: Zixing Liu <zixing.liu@canonical.com>
-Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
----
-Note that openSUSE Tumbleweed is adding the Rust standard library source
-code, `rustfmt` and Clippy, so we may be able to drop that small note in
-their section in a few days (possibly before this gets applied) --
-thanks William!
+> > I'd be tempted to do
 
- Documentation/process/changes.rst  |  5 --
- Documentation/rust/quick-start.rst | 83 ++++++++++++++++++++++++++++--
- 2 files changed, 78 insertions(+), 10 deletions(-)
+> > 	ssize_t ret;
+> >=20
+> > 	ret =3D spi_w8r8(AD4000_READ_COMMAND);
 
-diff --git a/Documentation/process/changes.rst b/Documentation/process/changes.rst
-index 0d0b7120792b..0ce96ae2588c 100644
---- a/Documentation/process/changes.rst
-+++ b/Documentation/process/changes.rst
-@@ -90,11 +90,6 @@ Rust (optional)
- 
- A recent version of the Rust compiler is required.
- 
--Each Rust toolchain comes with several "components", some of which are required
--(like ``rustc``) and some that are optional. The ``rust-src`` component (which
--is optional) needs to be installed to build the kernel. Other components are
--useful for developing.
--
- Please see Documentation/rust/quick-start.rst for instructions on how to
- satisfy the build requirements of Rust support. In particular, the ``Makefile``
- target ``rustavailable`` is useful to check why the Rust toolchain may not
-diff --git a/Documentation/rust/quick-start.rst b/Documentation/rust/quick-start.rst
-index f624b913ff89..65a34a9a7089 100644
---- a/Documentation/rust/quick-start.rst
-+++ b/Documentation/rust/quick-start.rst
-@@ -5,17 +5,90 @@ Quick Start
- 
- This document describes how to get started with kernel development in Rust.
- 
-+There are a few ways to install a Rust toolchain needed for kernel development.
-+A simple way is to use the packages from your Linux distribution if they are
-+suitable -- the first section below explains this approach. An advantage of this
-+approach is that, typically, the distribution will match the LLVM used by Rust
-+and Clang.
-+
-+Alternatively, the next two "Requirements" sections explain each component and
-+how to install them through ``rustup``, the standalone installers from Rust
-+and/or building them.
-+
-+The rest of the document explains other aspects on how to get started.
-+
-+
-+Distributions
-+-------------
-+
-+Arch Linux
-+**********
-+
-+Arch Linux provides recent Rust releases and thus it should generally work out
-+of the box, e.g.::
-+
-+	pacman -S rust rust-src rust-bindgen
-+
-+
-+Debian
-+******
-+
-+Debian Unstable (Sid), outside of the freeze period, provides recent Rust
-+release and thus it should generally work out of the box, e.g.::
-+
-+	apt install rustc rust-src bindgen rustfmt rust-clippy
-+
-+
-+Fedora Linux
-+************
-+
-+Fedora Linux provides recent Rust releases and thus it should generally work out
-+of the box, e.g.::
-+
-+	dnf install rust rust-src bindgen-cli rustfmt clippy
-+
-+
-+Gentoo Linux
-+************
-+
-+Gentoo Linux (and especially the testing branch) provides recent Rust releases
-+and thus it should generally work out of the box, e.g.::
-+
-+	USE='rust-src rustfmt clippy' emerge dev-lang/rust dev-util/bindgen
-+
-+``LIBCLANG_PATH`` may need to be set.
-+
-+
-+Nix
-+***
-+
-+Nix (unstable channel) provides recent Rust releases and thus it should
-+generally work out of the box, e.g.::
-+
-+	{ pkgs ? import <nixpkgs> {} }:
-+	pkgs.mkShell {
-+	  nativeBuildInputs = with pkgs; [ rustc rust-bindgen rustfmt clippy ];
-+	  RUST_LIB_SRC = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
-+	}
-+
-+
-+openSUSE
-+********
-+
-+openSUSE Tumbleweed provides recent Rust releases and thus it should generally
-+work out of the box, e.g.::
-+
-+	zypper install rust rust-bindgen clang
-+
-+The Rust standard library source code, ``rustfmt`` and Clippy are not packaged
-+(yet), thus currently they need to be installed separately.
-+
- 
- Requirements: Building
- ----------------------
- 
- This section explains how to fetch the tools needed for building.
- 
--Some of these requirements might be available from Linux distributions
--under names like ``rustc``, ``rust-src``, ``rust-bindgen``, etc. However,
--at the time of writing, they are likely not to be recent enough unless
--the distribution tracks the latest releases.
--
- To easily check whether the requirements are met, the following target
- can be used::
- 
--- 
-2.45.2
+> I tried this when working on v6. Only difference was I had declared ret a=
+s int.
+> Then reg values were not read correctly with spi_w8r8().
+> I'm either missing something or reg access must be 16-bit transfer.
+> Datasheet sais:
+> "The AD4000/AD4004/AD4008 configuration register is read from and written=
+ to
+> with a 16-bit SPI instruction."
+> Yet, besides possible delay between first and last 8 SCLK pulses, I don't=
+ see
+> any transfer level differences between current and spi_w8r8() versions.
 
+It is possible the chip gets upset with the state of the idle line
+during the RX only or TX only portion of the transfer.
+
+>=20
+> >=20
+> >=20
+> ...
+> > > +			ret =3D ad4000_write_reg(st, reg_val);
+> > > +			if (ret < 0)
+> > > +				return ret;
+> > > +
+> > > +			st->span_comp =3D span_comp_en;
+> > > +			return ret;
+> >=20
+> > If you are spinning for another reason, make it clear this is always go=
+od.
+> > The spi_write() never returns positive so current code is correct but I=
+ had
+> > to go check which this would have avoided.
+> >=20
+> > 			return 0;
+>=20
+> Ack
+> >=20
+> > If nothing else comes up, I'll probably tweak whilst applying.
+> >=20
+> > J
+> >=20
+> > > +		}
+> > > +		unreachable();
+> > > +	default:
+> > > +		return -EINVAL;
+> > > +	}
+> > > +}
+> >=20
+
+--vlIPlvW+fKtcuuHS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmaC944ACgkQJNaLcl1U
+h9D8mwf/fLAAQ6d+jz6IWF9+lHbZcHpYz4U1qtMVOTEwlcyyObhiyLG+zZFIRrrZ
+80bLCIzF1ST4jCHXer4FT2bmwK0ItVpV7DR1n+YfXIu/4Zt8TISh4ViHHa6gZKNo
+Ggxvea/jOMcToMTpIqj4el5fvIM2MgozOiaNxDgUlBHG5Edu4BAPCy13AQdvfJ2/
+thc6NoeBrY70l/l5L/PWJBkJdXt8yh/4H5MocWtr9SQYhHwWRiQoyftYbDrakNby
+CfcD63Uh3WrEtWvdgYjwjUgg7yPdx5kQCFbpGXu4NA86Gh1V1oW14mk3s0WObxa+
+ha3wV0ZtQKfaYElnEtfG2iL+mab5Xw==
+=FfdN
+-----END PGP SIGNATURE-----
+
+--vlIPlvW+fKtcuuHS--
