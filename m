@@ -1,110 +1,81 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE7217277F;
-	Mon,  1 Jul 2024 23:46:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0827502A9;
+	Mon,  1 Jul 2024 23:48:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719877571; cv=none; b=QU+KvS2ldlAHa6WvNhUFkQiH5t07QlmiSXivYcZLUTvqkGuXi/Yi5+NEd/fBWBBl2FgNAtxF0gTxLyFsNgKcSpFwwkF1GJc1OrCmFyFO4B6sKrs0xQdrpC97cx9vi45CAVbpS7IEjQSKhFpzGkWClIDIvETJwL0bzL81oXFWPho=
+	t=1719877691; cv=none; b=XyMwfbnjs8yuqEGxbIbZueZwz4LMcag0APxi89Pabb9uC0cqPOpPW3aD4SyG3p3nIDcN/OI1mhoAkDjcPXXadJ/i1f450Szrh9jEtho7cutE43x8elVtIYWXkbG3OohmRoKGXZ7nyRDqMECNQVKp2t+Wwj2fmD/ICtqnJcoOOHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719877571; c=relaxed/simple;
-	bh=vDCAs5hfddH+lemVzwZUk4EaAhxdz0tNNx9npgmH4No=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CxRdkGNKT4IDMrX/FEnwMF300A4IqiqDODq9kbOtD+7uXFl0iihqbJEcRDd9bJB8pwNmU2hN3/RmQtfW1hFRBen4oX6r+KPm5gO1e138C3tkwo+rTAniwfYgEd+SKoktjHcLmgLSe5CnhXeyA92eby1PEtue73KpnBUPast1yKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=D1fWCCmL; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="D1fWCCmL"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id 5F333100005;
-	Tue,  2 Jul 2024 02:45:52 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1719877552; bh=zsi0EpcTiG/36yNGtHhih1fjouzjejGqb6SOyBmE7js=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=D1fWCCmLKjwjB9HvsrYgzXso4sRv8EyaZPFGwLqPlpFkVpqJEbbA4N9snZL8K5Z0z
-	 Xt/qOvtHQ8ziVhyAnULHda7XrtGKMbByVDAzI5IxpTfSJ2vMXw+mH9BVPpZg4/RR/1
-	 btX+RX+2VPNp3g0OYMAY2VZzDSqqqrYlT//qbfc55tRleG2iZNT+ZF4926t38atD7v
-	 QR4jG8QfyXeMu7C8RNJ3VD5Qfcb1/qYYaD1xJ5EepB9fgy9c10RlUJ3zQL8l1tBVcF
-	 la+7qrUQU4A0c/0qjDOmJLPPnIvoEmiO3hsVxQDIP46BRJfATRjYRkdh4xBNkvZhO/
-	 weXxJSgfbBGPg==
-Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Tue,  2 Jul 2024 02:44:36 +0300 (MSK)
-Received: from localhost.localdomain (172.17.215.5) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 2 Jul 2024
- 02:43:46 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: <stable@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, Lars-Peter Clausen
-	<lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan
- Cameron <jic23@kernel.org>, Graf Yang <graf.yang@analog.com>, Mike Frysinger
-	<vapier@gentoo.org>, <linux-iio@vger.kernel.org>,
-	<linux-staging@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>, David Lechner <dlechner@baylibre.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.10/5.15/6.1 1/1] staging: iio: resolver: ad2s1210: remove call to spi_setup()
-Date: Tue, 2 Jul 2024 02:43:24 +0300
-Message-ID: <20240701234324.20811-2-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240701234324.20811-1-amishin@t-argos.ru>
-References: <20240701234324.20811-1-amishin@t-argos.ru>
+	s=arc-20240116; t=1719877691; c=relaxed/simple;
+	bh=mgMNZ9LW5qxu8pJDRIr7A6e906IxawaTZZPws8m/fxM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=AN5SyT1FzAXBhuFNmUwYWjR6GzV7kEHQA/0QkrZWDKlBn1k617451M2yqnKKtm7l3ij0Kd696GLwNVF+Hx/kFTlSDDJF5JetOJPP9hjqUzVAoNhviRaolVapVu62AS+tpNVxDc1MK14FePkrC1ZRx/DXhhWPI3Qr4N+2u/CmJgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id D05B392009C; Tue,  2 Jul 2024 01:48:00 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id C917892009B;
+	Tue,  2 Jul 2024 00:48:00 +0100 (BST)
+Date: Tue, 2 Jul 2024 00:48:00 +0100 (BST)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+cc: Arnd Bergmann <arnd@arndb.de>, "Paul E. McKenney" <paulmck@kernel.org>, 
+    John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+    Arnd Bergmann <arnd@kernel.org>, linux-alpha@vger.kernel.org, 
+    Richard Henderson <richard.henderson@linaro.org>, 
+    Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+    Matt Turner <mattst88@gmail.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+    Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org, 
+    Michael Cree <mcree@orcon.net.nz>, Frank Scheiner <frank.scheiner@web.de>
+Subject: Re: [PATCH 00/14] alpha: cleanups for 6.10
+In-Reply-To: <CAHk-=wimJ2hQhKSq7+4O1EHtkg7eFBwY+fygxD+6sjWqgyDMTQ@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.2406302009480.43454@angie.orcam.me.uk>
+References: <20240503081125.67990-1-arnd@kernel.org> <272a909522f2790a30b9a8be73ab7145bf06d486.camel@physik.fu-berlin.de> <alpine.DEB.2.21.2405280041550.23854@angie.orcam.me.uk> <aa397ad5-a08a-48a1-a9c0-75cfd5f6a3a5@paulmck-laptop>
+ <alpine.DEB.2.21.2405291432450.23854@angie.orcam.me.uk> <4bb50dc0-244a-4781-85ad-9ebc5e59c99a@app.fastmail.com> <CAHk-=wimJ2hQhKSq7+4O1EHtkg7eFBwY+fygxD+6sjWqgyDMTQ@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186263 [Jul 02 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 21 0.3.21 ebee5449fc125b2da45f1a6a6bc2c5c0c3ad0e05, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, lore.kernel.org:7.1.1;mx1.t-argos.ru.ru:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;t-argos.ru:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/07/01 22:18:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/07/01 17:38:00 #25803542
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain; charset=US-ASCII
 
-From: David Lechner <dlechner@baylibre.com>
+On Fri, 31 May 2024, Linus Torvalds wrote:
 
-commit 9829ebacea804ad4b5d1a74a8d94a1f843505546 upstream.
+> The fact is, the original alpha is the worst architecture ever made.
+> The lack of byte instructions and the absolutely horrendous memory
+> ordering are fatal flaws. And while the memory ordering arguably had
+> excuses for it ("they didn't know better"), the lack of byte ops was
+> wilful misdesign that the designers were proud of, and made a central
+> tenet of their mess.
+> 
+> And I say that as somebody who *loved* it originally. Yes, the lack of
+> byte operations always was a pain, because it really caused the IO
+> subsystem to be a nightmare, but I was young, I was stupid, it was
+> interesting, and I had bought into the kool aid.
 
-This removes the call to spi_setup() in the ad2s1210 driver.
-Setting MODE_3 was incorrect. It should be MODE_1 but we can let the
-device tree select this and avoid the need to call spi_setup().
+ Looking from today's perspective it was clearly a bad choice.  However it 
+was 30+ years ago, it wasn't so certain as it is now that x86 was there to 
+stay -- indeed as I recall it DEC had the ambition to phase x86 out with 
+their Alpha (whether they approached it the right way business-wise is 
+another matter) -- so the notion of having a fully byte-addressed machine 
+perhaps wasn't yet so obvious to DEC engineers as it is now, when most if 
+not all the current CPU architectures have these fundamentals the same.  
 
-Signed-off-by: David Lechner <dlechner@baylibre.com>
-Link: https://lore.kernel.org/r/20230929-ad2s1210-mainline-v3-3-fa4364281745@baylibre.com
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
----
- drivers/staging/iio/resolver/ad2s1210.c | 2 --
- 1 file changed, 2 deletions(-)
+ As I say it may have been the final attempt to do something differently 
+before x86 domination forced everyone to be at least remotely compatible.
 
-diff --git a/drivers/staging/iio/resolver/ad2s1210.c b/drivers/staging/iio/resolver/ad2s1210.c
-index 636c45b12843..42aab1ac3aac 100644
---- a/drivers/staging/iio/resolver/ad2s1210.c
-+++ b/drivers/staging/iio/resolver/ad2s1210.c
-@@ -681,8 +681,6 @@ static int ad2s1210_probe(struct spi_device *spi)
- 		return ret;
- 
- 	st->fclkin = spi->max_speed_hz;
--	spi->mode = SPI_MODE_3;
--	spi_setup(spi);
- 	ad2s1210_initial(st);
- 
- 	return 0;
--- 
-2.30.2
+ And there used to be weirder architectures before people moved away from 
+them and settled on the current paradigm, just as nobody wants to build a 
+general-purpose atmospheric railway anymore and yet a while ago not only 
+it didn't appear ridiculous, but such stuff was actually built and run, 
+such as the South Devon Railway.
 
+ And then it wasn't the only failed attempt: remember the i860 or the 
+iAPX432?  At least the Alphas weren't a total disaster, they made their 
+impact, the worst mistakes have been fixed as the architecture evolved, 
+and the engineering legacy remains, often in unexpected places.
+
+  Maciej
