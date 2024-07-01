@@ -1,146 +1,252 @@
-Received: from IND01-BMX-obe.outbound.protection.outlook.com (mail-bmxind01olkn2073.outbound.protection.outlook.com [40.92.103.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF99839FE;
-	Mon,  1 Jul 2024 09:10:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.103.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719825019; cv=fail; b=bMdf2zGoI/betmFIoZlo8OTkUiPL5UDxH9vHM2co7wpPZHYSnJojxl8DgGas0XEMS7r7/WT9C+IXstJsMJbSuYVd0gIM8OFTABuHpqpOXjcZEVPkwcUjVJrRCZBoqTgUeG94Yewywvoo7hthcobd4MZPtdRwNcMTex9hjLjfji0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719825019; c=relaxed/simple;
-	bh=qt6zcDdryNeLf5VTWpfgH3jbAZzo3WkKf4aBhka7z8w=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=MrUENoQvo3J4foiC//1QaAPPgnkZh4JqGJd6mVzf3QmZW19+Xo0FC0rxDye6hvzGYToUcTP8/9dwnhPKxh0Ya4X153XhNrFO1AVMjXsBESMP70Ly2BjPkIPUZnH4xb27cxJ/5ejuDAnG8wdizOlkS4sT1cm9yKSeaR9lQ9BfvfU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=egDd/4jO; arc=fail smtp.client-ip=40.92.103.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84AE5C614
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 09:10:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719825042; cv=none; b=XtMhUTwpULVg/IaQE1HE8OxlEAtgN06guu9zd0u12R3wE0kVObAQeXWFfQOekNsjKa74qQcZWlP8qKAhDj1aqSHmIdTv2x1h0fu4wLbqUEj+RvvdxIn1jo/LXn9PE75uXKr54+lCGkmHg1nKhVxr8Y79xka9pdt0l8/VX2Doz04=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719825042; c=relaxed/simple;
+	bh=MihLrulO9FQtyvs5PM4koGS4EJy3DSirwHr1Ngd6tAM=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=uG85q30d26I4EYCUi0dzRZN2qJn5/Uktqdp/ckW0uqslC6v+XUZ99dOLjZYORkyvD2W/a1ZKsabBrPd48fU6dM5+M5kE/eUYmKWUSXOYyLn0wmPakQAw2U7GViX6gARE7VGWRcJbk9S7vykriC2rMrf9Bucsp346A1+JNqxBQG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zWJt2t0w; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="egDd/4jO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FdVSMXgirWyjBQ04u/JtYyL1nOvp5HBZAxHTtZtv7xR506RpWLilbYh+MLet9hupRekqfDxW/Pe5bPPfXqViJDMWEq3iu7Otlq+iLh0fhAjtKqccXFbcpnp/8C68KgAdwG9xTities+xwKWCzeBP81LRkhmWtQy1CWNb/bZkQ/gbks5ZyV+peZBVayHIZmmxq3IQbcIZESUdiO1/1yO9ewJjb7h8ya2F4maTCcCrqDIuZs+rszOstXQC8wtWBwu9FBNwXRoQ6532borocS1FmhKsazkwpYKUfpgMHKDFnJcpdJGvRfM8rDWtdbfjTKdH+Ox30A/spiNBeXCIhaP3rw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qt6zcDdryNeLf5VTWpfgH3jbAZzo3WkKf4aBhka7z8w=;
- b=eDNcy7BAgb8D7x1zqFr6pvFD4GmQD2R5RtgBEu6ODoBjTiBve5Yyt+KwGiVXONA17TJz2YF06zovMDduGbaBzVedodanXAZsV0DbWmmecQwymdoxDCWZlVcZ1JQHyrz7DE8jrfSESplAmmMnMlXLq3XFGaIEz7Xb5B3axh/onm2++8xl4PyessKCQIJW56bdfZlZhrbJBg3yn7HQNJK+6VuUS4sxZ7BTr0/n/D8issZKl7gvfUGuHSt1YdT2tlwghK+c6fuSZdBmZoEQFQ41rpBS4DTmoKe8rwtrx7pRU7nBchqkExV+yaULTThW0Ulnfu4xMzjzqDIEogjhGie4ZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qt6zcDdryNeLf5VTWpfgH3jbAZzo3WkKf4aBhka7z8w=;
- b=egDd/4jOdPDz6/rZcN9uINUv7vlwh9e4DWN6CzNA3luR3HTpz9cOiNvoGHvmXBJC2KVZft5gYySePYsU4PtONxpY8/JgdFEDoKSfWIXMNTXcCrA4IP8NTTXxdDEERUi3TFN4ztgYEuQVChkxRSwosPNbKvFP85W9hYwtnyjZcp+dxRZdZbpsvCKxTYjwkgxJ/loRnJ1EwPcw34h/jXPo806mWGu8CuFFe26LZM7zGpz+ut4NmgAHDNeW0qIs+qmo9xkXX/AxGBGJtnu4lbm5sYF+wUx2Q4T88aEJDR++Y6oCYC8fjZxfdM2g/YmXsCdhNtYKtEkQAKEvli0MuNeoaw==
-Received: from MA0P287MB0217.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:b3::9) by
- MA0P287MB0731.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:c2::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7719.29; Mon, 1 Jul 2024 09:10:11 +0000
-Received: from MA0P287MB0217.INDP287.PROD.OUTLOOK.COM
- ([fe80::98d2:3610:b33c:435a]) by MA0P287MB0217.INDP287.PROD.OUTLOOK.COM
- ([fe80::98d2:3610:b33c:435a%7]) with mapi id 15.20.7719.029; Mon, 1 Jul 2024
- 09:10:11 +0000
-From: Aditya Garg <gargaditya08@live.com>
-To: Lukas Wunner <lukas@wunner.de>
-CC: Ard Biesheuvel <ardb@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	"linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, Kerem Karabay
-	<kekrby@gmail.com>, Orlando Chamberlain <orlandoch.dev@gmail.com>
-Subject: Re: [PATCH v2] efi: libstub: add support for the apple_set_os
- protocol
-Thread-Topic: [PATCH v2] efi: libstub: add support for the apple_set_os
- protocol
-Thread-Index:
- AQHayyMw+x8Tv3BlDUuYLD8zHzW0zLHhWosAgAABBwCAAANoAIAAAXYAgAAMlICAAA3UAIAAA9mAgAAB9YCAAACgEYAAApwLgAADXQCAAA9uOw==
-Date: Mon, 1 Jul 2024 09:10:11 +0000
-Message-ID:
- <MA0P287MB02177E3AFF8E87A152CAA743B8D32@MA0P287MB0217.INDP287.PROD.OUTLOOK.COM>
-References: <ZoJAAifMqIDXdniv@wunner.de>
- <CAMj1kXH3fvS259Y1mfYcKQbM2mUYbSfuf2ZiMXfFhjq-rzn5UA@mail.gmail.com>
- <ZoJDuunseVIDua-m@wunner.de>
- <CAMj1kXFKBsAXDLxinqiszH=6hEOjbJQL-nFgBsBceta4rUCN-w@mail.gmail.com>
- <ZoJPgSlZJ3ZlU2zL@wunner.de>
- <CAMj1kXHR+mCR5eibj23S26-PN6yLPD1uf9+H2fEEDhNWOh6TjA@mail.gmail.com>
- <ZoJeVWMU8yg4CRLl@wunner.de>
- <CAMj1kXFRNrmyAtVaqHr+RWQ22+++u70eJ__brLjmJa0ocyc0Bw@mail.gmail.com>
- <MA0P287MB0217F69CBAB2D5776D4AFA43B8D32@MA0P287MB0217.INDP287.PROD.OUTLOOK.COM>
- <MA0P287MB0217751F3532CF80BA255DB3B8D32@MA0P287MB0217.INDP287.PROD.OUTLOOK.COM>
- <ZoJlgkUohsIuL0_r@wunner.de>
-In-Reply-To: <ZoJlgkUohsIuL0_r@wunner.de>
-Accept-Language: en-IN, en-US
-Content-Language: en-IN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:
- [Xm468YL20uIy/YeFuNSx8MVeYsPLpzRFwkEoTzYwvR5xpCvKy/nq0JBJWO+3WOZRMpsdObWUGPg=]
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MA0P287MB0217:EE_|MA0P287MB0731:EE_
-x-ms-office365-filtering-correlation-id: a64e4055-009c-4634-84e9-08dc99ad9cb2
-x-microsoft-antispam:
- BCL:0;ARA:14566002|461199028|8060799006|440099028|4302099013|3412199025|102099032|1602099012;
-x-microsoft-antispam-message-info:
- qrTAlaPpojKHDr1fnl3ywIaw7JSZ48ZX6ZPnZZmEfb8yfb20nHvpHUqYY1rwKY410+yCmQz4aoCgcdi8PtOFC7lLlALD4qOOTQlxKf8Y9S7Kj025ZtSzXcs78slVeNeCi74YqthX0+55ASaSpsisu5P20PePMUd/AsgVod3A2jHItsXPOmM/Z9XsDxQu1sOKLulQ1+bVP50XQtpCwo9OIDuw/P4Tio2laSIlIhxHwD4jCqw2FV9rIT1OxtZIJJQ88BU29s40QczsZTATOATHe7wbsas0+uzAonXJj8ahwiJ0kbXyx6AtXa2xNLVt4DWQmXtp2sxBHICF+0hNPejQJx6dSFc8yivm6IUf0xkv1Z4EVKMoInkHNTdtc0c5ilMQp+nnL13SV9+wJkHSHoTVllZav498cKd69a2s9B7HeEQGyW5aF8Mfvi9NrskiDXGlUAONnDmERC3gqW9Yd0MmAEYpcGg+F3bXzy576o6gitZ+1iYEDdRBXpEcadif1Sn/P0DL385unGAz8W6jF8wVuXO//RSRjj3lrgLsHq8AGDPM2NFzB8HgC98AZQqQQhb7Ifq/wJD3bIKZvmdSZWAHWGDbIpBeTofdujVeUEq9XTenz/we2kWuSF/PxHaSKF8+B2/FKAVcQPgnGbMkyxtRZ5oBHDPQVORihX/VBhzl+gXQwzmJ0iSLyP6fqwvj7NhyOT4lVpPcwgW+r5UtULdsEIiRHMj90lckYWmMDU9ziJ4=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?bFk1b09zYldOWGE5RURwMXU1eENINitBWWZEVkJIdlJ1Q1E4RHA4NWEzNFJt?=
- =?utf-8?B?QUhTbzRXM3ZqR2wvSTYyZ2RFc2pPelpNTW1uRGE2eUNIOTJYc1NvLy9KY2Ns?=
- =?utf-8?B?OFZISW44NWFsTFFJTUNhTGZaaWZQTFVrb3c1YmhjenRHZFZGQ0wzVit3Rmx6?=
- =?utf-8?B?cENnRVNEYndUaVZwRnFqQUtlM0U0SWFiZ0FGeXVVUFJZbC8wQUo0enFYcW5Y?=
- =?utf-8?B?V2lIUTBaWDlreFg0R2J4alBuRHFZVlZpSmxtazVhNzZVdldjWHNROC9Ba3c2?=
- =?utf-8?B?UjdFRXBvSktiWlBNSFdZdkp5Q2R6cEl6SGl5QnRWUGZsc2NWQnlQR1VjVEk2?=
- =?utf-8?B?SEluSitEWVhnZFEzUUlBck1iTE90SEVzUGNVcVg0bzBxcWw1WWdBTThLcllr?=
- =?utf-8?B?SUR2QTdCY055amQ2T0xieFphUytPSE9nRER1elp4clJaaHpGVzZienZ4L0lI?=
- =?utf-8?B?Q1ZHVklERE5Ga0UzcEcvbjNHdGU0eEpNQ1hnbW01YmRlVkl1dWh1UFB5ZExO?=
- =?utf-8?B?S0VRc1dPUGFmaVQxTUhPc1AyUndGVVlEM3BMZzRpcU11TDAvRVFZVUlVcjdm?=
- =?utf-8?B?SG1iQjRUajFNbE9TUkVPZE44WE9qOFRpcHFFT1hjWmRUL05sRU16Z1IzZjhB?=
- =?utf-8?B?NXNLWXBSTHlxZ1ZBTlNyZjlRY01pcitDV3pZUjBvZkZSMU1leC9pbk5SNHEr?=
- =?utf-8?B?dlRmVTZ4bTNKQzNuNndteDA4SzYwT055UXJmZkhIZFBXU0FXTy9lTFFSZTRP?=
- =?utf-8?B?MVBQWEQ0dFZwRnlxcUZ3Ukx5ZEkwTzFtSkNTSTMvN2RsUDBsM0E3MkhSVWpo?=
- =?utf-8?B?a0RramNUNmNjRWFkRXJKZFpHblI0a0ZrdHAyb0NxRVNNcmd0eUdWbHF1elRV?=
- =?utf-8?B?VHJsdjZXSFNFY2t1NHl4OENOeFJhSysrVlR2ZmpFaEZCU3VscG9SaEtmS0ZB?=
- =?utf-8?B?Mytob2dlSERvUWN5MlFLWkJUQml3ZU02UlFFeFEraTdDT3A0NCs1dGVBUkVS?=
- =?utf-8?B?TnNZSDJWazVuR0c3NVlmN0N4bHZxSDA1NWhPRFF5dGVtazN1bnpRcENXM0FZ?=
- =?utf-8?B?aFVqQXN0emIxRFVjekJTcDV2T0pDMTFZbWt0NjczN0laazNyUFFYQ2NDc3Vq?=
- =?utf-8?B?V3FhMmJKQkVHblVjbVd3M1dHdWN0cHBvWElNVjV4WlUrNFh4SEZGSjE4Q1cv?=
- =?utf-8?B?QytmT1FTSGZPTXRsMGpId3g2aU9Ta09ZNUh3VnpadEgwSC9xeU9yTFkxVEFy?=
- =?utf-8?B?dEVXeGh4b2F3bHI3MzZPS3k3REdBNG1CKzJyVkpSZE5lSktteGs5cUpDSlJW?=
- =?utf-8?B?a1lpL0d0SnlnWEprMDllZXFUQ1NoVGk5cjdOem00OVlUOHRvbVgrYUgveEpO?=
- =?utf-8?B?c0dpeVBRZVJyTEtwRGhyOVhCKzZNb08rQjNmTWNBZm5aOWxhUnVlK0tLcFo5?=
- =?utf-8?B?WnkwWmFITlhoY2htTjQvLzZ4amdYQjMraVlKdEdVQmxWNVEvdGNobzRhdWtJ?=
- =?utf-8?B?ZGJaSGx3QXpSYVduTm9US0tmc3lIOEluOTVBU1VYbWRkamlCRFZ4TU5sVDZn?=
- =?utf-8?B?WlJUYjg0Q0FUS25iUkJHQTM3T2loMWh4RzcrUmczVmhJOWRDUjdBdko2RWV6?=
- =?utf-8?B?dGtzRzU4Yy91dXdMbTFLVm9HTW1md0pjWGFUOVNadENZUkx1VzJHSFZidk8z?=
- =?utf-8?B?b0RZbjNRZ2dZZ1VTVzNLblJCU2FmbWlvcWZKaWg4N0JTWHlDb0dGa29uOTdU?=
- =?utf-8?Q?A1cwQetb1p8zZNhVD8=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zWJt2t0w"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52cf4ca8904so4314184e87.3
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 02:10:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719825039; x=1720429839; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WmxwoN5WifjaiLHb4RF2OzomH1ffmSkrRHOoZR2aCx8=;
+        b=zWJt2t0weDnDDofh6PgypnbImIWrnv0r7qKGN3eSk/lxnT/SD3W982ABf9QS2jlkmW
+         fHN88i+Juke8j4c8GrPBraf3nR+FRzyuhdY3t4Hjg8W/O84Om1l21b2BZY089xrHtsFo
+         kt+PbA0/9nHOymKecQ914wyIwZmwJnmoWNuV24IVVl99pCFgJaufQTkL68r947lp6xBt
+         pJMeC8QKjt5VbkNzYWzICaBRZGrieg/lsG4doIXBGZVA1ClX5lKigLNSDLghD0dXECtR
+         iJcIVcSS0LFJLApU7+jtxMe01k3VTkr+60oZTk441Aa29d1lSKQa312RvWcTgLaDVx/I
+         5BGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719825039; x=1720429839;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=WmxwoN5WifjaiLHb4RF2OzomH1ffmSkrRHOoZR2aCx8=;
+        b=aKFwpOBZgsMHjqD44SlbQiytJza1prkujWBZm3mZ4gtTaHQX5I8C+pS+7p1TYqM4IM
+         jFq5ue/04rpUHlQWZ+S9Reof3AkwVbz32h5yQxnS2PkLa9gPQWHjxjGfSGz1ujNkCc/D
+         FRsk0LQQwVtMrtEFQHni9qm8E8TlgN+zzOrV2pzvp05pTSFz8UdKGrjw8awlfV6772XB
+         HniMaa7szNE4TyYuo+KrvbwPfa1aHx/hIGrKZqAtaxLNYonE6Nf7NbsymQ+al5veBv31
+         zj27FEKRQ1eP5wFlOTOi9WID1rukYymc2cpT2lZAOT5JJOsAmGY+tqF9gbCrO5acH1NO
+         2NKw==
+X-Forwarded-Encrypted: i=1; AJvYcCVsbWa+Gtq0c4etmzVfp7Z1Zksmdip2PjQ+GDCVMUx4/nnQoTLoZ83NiAgeHBNa2/4XFUByRdKr7/qX+unVYTLy58GadeI1iN2Dm2mF
+X-Gm-Message-State: AOJu0YzERJph/KO3hAkSgPruRG0+/MJ9tnBP9nnxX6+Obi0pdyjFMRBt
+	QD5Rd4CsjEY3/v1fYeDN7BoOqAHwa/7iZYicNPGhE+yk2uG2lHz9Awgial+cSLQ=
+X-Google-Smtp-Source: AGHT+IEU8xp3goGxhTEutzBiuLEdZgqoKoixVNFadzR5iUuvIJM+GQ80X/3pH/R60oEG9o4bMBlLAw==
+X-Received: by 2002:a05:6512:39ca:b0:52c:e312:2082 with SMTP id 2adb3069b0e04-52e826febbamr3646811e87.54.1719825038326;
+        Mon, 01 Jul 2024 02:10:38 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:4719:99ea:652b:10d0? ([2a01:e0a:982:cbb0:4719:99ea:652b:10d0])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0cd687sm9494431f8f.14.2024.07.01.02.10.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Jul 2024 02:10:37 -0700 (PDT)
+Message-ID: <bd1c0c99-e394-4ad2-bc86-a277018b3ec0@linaro.org>
+Date: Mon, 1 Jul 2024 11:10:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-bafef.templateTenant
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB0217.INDP287.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: a64e4055-009c-4634-84e9-08dc99ad9cb2
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2024 09:10:11.6894
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA0P287MB0731
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 0/2] iio: frequency: add iio support for Amlogic clock
+ measure
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen
+ <lars@metafoo.de>, Kevin Hilman <khilman@baylibre.com>,
+ linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
+ linux-iio@vger.kernel.org, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+References: <20240624173105.909554-1-jbrunet@baylibre.com>
+ <52fab9b5-2b44-49c0-8b90-cb2a74eb6633@linaro.org>
+ <1jzfr9gxh4.fsf@starbuckisacylon.baylibre.com>
+ <c092ec67-e384-411d-8885-665597547523@linaro.org>
+ <1jv81xgmfc.fsf@starbuckisacylon.baylibre.com>
+ <5da26c0e-75a7-4d5a-9eca-f88ecf369996@linaro.org>
+ <1jjzi5a3ka.fsf@starbuckisacylon.baylibre.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <1jjzi5a3ka.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-DQoNCj4gT24gMSBKdWwgMjAyNCwgYXQgMTo0NeKAr1BNLCBMdWthcyBXdW5uZXIgPGx1a2FzQHd1
-bm5lci5kZT4gd3JvdGU6DQo+IA0KPiDvu79PbiBNb24sIEp1bCAwMSwgMjAyNCBhdCAwODowMjo1
-NUFNICswMDAwLCBBZGl0eWEgR2FyZyB3cm90ZToNCj4+IElJUkMsIHQyIG1hY3MgZG8gbm90IHN1
-cHBvcnQgU01CSU9TLCBidXQgSSdsbCB0ZXN0IHRoaXMgYW55d2F5cy4NCj4gDQo+IEZyb20gTWFj
-Qm9va1BybzE2LDEgZG1lc2c6DQo+IA0KPiBbICAgIDAuMDAwMDAwXSBlZmk6IEVGSSB2Mi40MCBi
-eSBBcHBsZQ0KPiBbICAgIDAuMDAwMDAwXSBlZmk6ICBBQ1BJPTB4N2FmZmUwMDAgIEFDUEkgMi4w
-PTB4N2FmZmUwMTQgIFNNQklPUz0weDdhZWQxMDAwICBTTUJJT1MgMy4wPTB4N2FlY2YwMDANCj4g
-WyAgICAwLjAwMDAwMF0gc2VjdXJlYm9vdDogU2VjdXJlIGJvb3QgZGlzYWJsZWQNCj4gWyAgICAw
-LjAwMDAwMF0gU01CSU9TIDMuMC4wIHByZXNlbnQuDQo+IFsgICAgMC4wMDAwMDBdIERNSTogQXBw
-bGUgSW5jLiBNYWNCb29rUHJvMTYsMS9NYWMtRTEwMDgzMzFGREM5Njg2NCwgQklPUyAxMDM3Ljgw
-LjUzLjAuMCAoaUJyaWRnZTogMTcuMTYuMTMwNTAuMC4wLDApIDAxLzE3LzIwMjANCj4gDQo+IFNv
-dXJjZToNCj4gDQo+IGh0dHBzOi8vZ2l0aHViLmNvbS9EdW5lZGFuL21icC0yMDE2LWxpbnV4L2Js
-b2IvbWFzdGVyL01hY0Jvb2tQcm8xNiUyQzEvZG1lc2cNCg0KVGhhbmtzLiBJJ3ZlIHB1dCB0aGUg
-a2VybmVsIHRvIGNvbXBpbGUgYWxyZWFkeS4=
+On 01/07/2024 11:01, Jerome Brunet wrote:
+> On Mon 01 Jul 2024 at 09:41, Neil Armstrong <neil.armstrong@linaro.org> wrote:
+> 
+>> On 25/06/2024 15:51, Jerome Brunet wrote:
+>>> On Tue 25 Jun 2024 at 15:18, Neil Armstrong <neil.armstrong@linaro.org> wrote:
+>>>
+>>>> On 25/06/2024 11:53, Jerome Brunet wrote:
+>>>>> On Tue 25 Jun 2024 at 11:38, Neil Armstrong <neil.armstrong@linaro.org> wrote:
+>>>>>
+>>>>>> Hi,
+>>>>>>
+>>>>>> [+cc people from linux-msm]
+>>>>>>
+>>>>>> On 24/06/2024 19:31, Jerome Brunet wrote:
+>>>>>>> Add support for the HW found in most Amlogic SoC dedicated to measure
+>>>>>>> system clocks.
+>>>>>>> This drivers aims to replace the one found in
+>>>>>>> drivers/soc/amlogic/meson-clk-measure.c with following improvements:
+>>>>>>> * Access to the measurements through the IIO API:
+>>>>>>>       Easier re-use of the results in userspace and other drivers
+>>>>>>> * Controllable scale with raw measurements
+>>>>>>> * Higher precision with processed measurements
+>>>>>>> Jerome Brunet (2):
+>>>>>>>       dt-bindings: iio: frequency: add clock measure support
+>>>>>>>       iio: frequency: add amlogic clock measure support
+>>>>>>>      .../iio/frequency/amlogic,clk-msr-io.yaml     |  50 ++
+>>>>>>>      drivers/iio/frequency/Kconfig                 |  15 +
+>>>>>>>      drivers/iio/frequency/Makefile                |   1 +
+>>>>>>>      drivers/iio/frequency/amlogic-clk-msr-io.c    | 802 ++++++++++++++++++
+>>>>>>>      4 files changed, 868 insertions(+)
+>>>>>>>      create mode 100644 Documentation/devicetree/bindings/iio/frequency/amlogic,clk-msr-io.yaml
+>>>>>>>      create mode 100644 drivers/iio/frequency/amlogic-clk-msr-io.c
+>>>>>>>
+>>>>>>
+>>>>>> While I really appreciate the effort, and the code looks cool, the clkmsr is really
+>>>>>> a debug tool, and I'm not sure IIO is the right place for such debug tool ?
+>>>>> The reason why I went through the trouble of doing an IIO port is
+>>>>> because I need that for other purposes than debug. I need to to be able
+>>>>> to check a frequency from another driver. I don't see a reason to invent
+>>>>> another API when IIO provide a perfectly good one.
+>>>>> The HW does measurements. IIO seems like the best place for it.
+>>>>> For the record, I need this for a eARC support.
+>>>>> eARC has a PLL that locks on incoming stream. eARC registers show wether
+>>>>> the PLL is locked or not, but not at which rate. That information is
+>>>>> needed in ASoC. Fortunately the eARC PLL is one of measured clock, which
+>>>>> is a life saver in that case.
+>>>>
+>>>> This is a very interesting use-case, and quite weird nothing is provided
+>>>> on the eARC side.
+>>> Indeed.
+>>>
+>>>>
+>>>> So yes it's definitely a valid use-case, but:
+>>>> - we should keep the debugfs interface, perhaps move it in the iio driver ?
+>>> I considered this initially but it would add a lot of boiler plate
+>>> code to provide over debugfs exactly what iio already provides over
+>>> sysfs. As you pointed out, the previous driver only provided debug
+>>> information, the debugfs interface it provided is hardly a
+>>> critical/stable one.
+>>
+>> I still don't see why it could add so much boilerplate, all the tables and
+>> calculation fonction would be shared, only the debugfs clk_msr_show() and
+>> clk_msr_summary_show() would be kept, all the rest would be common.
+>>
+>> I insist, please keep the debugfs interface for debug purposes. You don't
+>> want to mess with IIO when you bring up new platforms with bare minimum
+>> kernels.
+> 
+> I don't think that is going to change anything. It's not like IIO brings
+> any complexity or will be compiled out.
+> 
+> But since you insist, I'll add it in the next version as a separate patch.
+> 
+>>
+>>>
+>>>> - we should keep a single compatible, so simply update the current bindings with iio cells
+>>> Using a new compatible allows to split the memory region, making the
+>>> interface between DT and driver a lot easier to implement seemlessly
+>>> between old and new SoCs. Eventually it may allow to implement the duty
+>>> part too.
+>>
+>> It's a problem for new platforms, you can introduce the split only for the
+>> new ones, the impact on code won't high enough to justify new bindings.
+>>
+> 
+> What you are requesting will introduce two drivers providing the same
+> compatible, unless you plan on removing the old one in a coordinated
+> way.
+> 
+> That's an unncessary churn. The old driver could stay there for a
+> while and platform slowly migrate. What you are requesting forcefully
+> migrates every consumer, assuming the old driver is compiled out.
+> 
+> This is an opportunity to more correctly describe the interface.
+> It does not break any DT rules, that is enough of a justification IMO.
+
+DT describes the Hardware, I don't see how the new bindings describes better
+the current hardware... tying the new bindings to a new driver is actually
+against the DT rules, the bindings thing is actually to avoid that.
+For PWM, bindings architecture was clearly wrong, but here, not really.
+
+I still don't see the problem of migrating current users to the new driver
+using the current compatible, really, please explain what would be the problem ?
+
+In any case you'll only need to add the #io-channel-cells to boards that would
+require frequency monitoring for eARC, for all the other boards you'll won't need it.
+So this property can safely be added as optional to the current bindings.
+
+Neil
+
+> 
+>> Neil
+>>
+>>>
+>>>> - for s4 & c3, it's ok to either add a second reg entry in the bindings
+>>> Doing that for s4 and c3 only would still make a mess of offset handling
+>>> the region because duty prepend the region on old SoC. The goal is to
+>>> have an interface that seemlessly support both old and new SoCs.
+>>>
+>>>>
+>>>> Neil
+>>>>
+>>>>> Everything that was available through the old driver still is, with more
+>>>>> precision and more control.
+>>>>>
+>>>>>>
+>>>>>> There's almost the same interface on qcom SoCs (https://github.com/linux-msm/debugcc) but
+>>>>>> they chose to keep it in userspace until we find an appropriate way to expose
+>>>>>> this from the kernel the right way.
+>>>>>>
+>>>>>> If it enabled us to monitor a frequency input for a product use-case, IIO would be
+>>>>>> the appropriate interface, but AFAIK it's only internal clocks and thus I'm worried
+>>>>>> it's not the best way to expose those clocks.
+>>>>>>
+>>>>>> Neil
+>>>>>
+>>>
+> 
+
