@@ -1,79 +1,145 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BEC14AD35;
-	Mon,  1 Jul 2024 12:28:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F78F1E488
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 12:30:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719836918; cv=none; b=OS9CW6oXQejF6I3vRABvj/+gLKKpgeBKIIuLCRs3uiN471QtZANNxTclAvC6cGqncI1/uM81YuYvHU4iDVjMK7wRaYt7+5GceH05f7SE0TQXts7fIzEV2qL8VqkE2iW2mbR9PEIN5PVxD15WPcuhpOcw1KZdSHhXbBAfrlnPff4=
+	t=1719837036; cv=none; b=sEV8CHHnwWS2EcT5eC74x9ttnSQodEmnWzvDkWhaib3RBwXPPRRy2xNjmokfjIvyCAu8bHMPtauYR4JyygQFYT9Hq3g3iJOBepqkl4u1TwrHsQDSPB3FjNWKp6Ujq8SuqI1N0XmUEDgF5FxhpTZ8eeqg4I+s0En1OllNf+qGAYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719836918; c=relaxed/simple;
-	bh=8Vnkb5Sj5ahbf41xkdp3RVrVWg6PtFAl5M0wAYACncE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mQmQAinyHH/iwzJ35/9YYXIfk3+Cej8KmsMZ1kk98s+4dDG8+5KC18nqO7JWtKUDvIrQlbSXtkvyKt0xhvliksU9XJeEzkEnijwMl9Ab4ui0VM6pG+7beSsJXFKeCAHqEY2DwQ9n94fRgmc3in5UhZaZaig3qhbfoBr1fbgMpcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=rWaKaeeM; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1719837036; c=relaxed/simple;
+	bh=LLmcgabvctEkbE6riHSSC4c3qFFz1sFOpyMoPGQvv7o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JGquQXXXY1+YBRv4ZC0KVlnX1QIIuUsW7Neq+C7UJ2orQz+Qn5GgvXwTRgdqgEszBstX+wfgVDd2bL4l1VMaHbhb3XjcxHJz1dX/GO0o9SyLKyptoMq/MrReOGeNzM6VEKKCel/nTWB2eEb5ekKaKkwoiZXgXwo2C1sY/0lVKHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VBGk9eNU; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rWaKaeeM"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=8oU0Zu0hDmII2BWlQyeY+sS/zbhKwqsdmTyUNdLjFLw=; b=rWaKaeeM62/4xfdNeq12ulT6j0
-	eM/tVbxIVLV1fLS8qF3Y22M/+BE4PeVV3bYgfkQ7riY8EB9PL9Lv3akdElWLc1VtHaEQb7RI+0RAG
-	yP1yHBCzLwmDHcTw8KmX84Ar45mUZi4IijsS/HP+rAgt/maXp+3OcHLqbjw8dSJN4FP1gjV6sZNtX
-	ePIebCfbb1bckXA1gvimUrHTSOgOOUOWOm0nWS9erJoO/pJ/DTxzvzNikL287q59gi3TweEh7Gvl5
-	wrbVw/zYmZZUQc5UiRqOR6lAzSii2c264GqHTmn4PSkKVUTA2951K35ckS5Gh9rsMKW5Hz2gIY3xR
-	1qH4rsiQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sOG90-0000000HK3p-1Djh;
-	Mon, 01 Jul 2024 12:28:30 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 9A977300694; Mon,  1 Jul 2024 14:28:29 +0200 (CEST)
-Date: Mon, 1 Jul 2024 14:28:29 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Bristot de Oliveira <bristot@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
-	Marco Elver <elver@google.com>, Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v4 2/6] perf: Enqueue SIGTRAP always via task_work.
-Message-ID: <20240701122829.GE20127@noisy.programming.kicks-ass.net>
-References: <20240624152732.1231678-1-bigeasy@linutronix.de>
- <20240624152732.1231678-3-bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VBGk9eNU"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 461BvBOY020166;
+	Mon, 1 Jul 2024 12:30:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding; s=pp1; bh=7GWEMxivoUcncsnn/R8QMMDiaH
+	Hb/pV3UWTM6QzvYLY=; b=VBGk9eNUqu0+5HqPzyNxZPYAla859eTGsyx9LB0m+Q
+	TsriisyxThBGkKF84Mdh2sn1833ij1XnufZPDrwUiguezHzfM8cz6jcqIqHAUIKi
+	QjTx4O5xHHxUJ6edFWwZJaC73gnOaLpPu2SCEiH01Ix5Wb+dvoe3FhFAo06HHG/y
+	5VzX0jEoXc0GmRuQLqpGihqLSZgu2hcCs1ZdE9JlWASbE5zXcnOTwcyABw9m8Nlc
+	kx2jCnldP1+CzK6gauGMA15WzcTgBpEE5XwUi8n8cFoQNV5Vs586O/PJsVUUDMPE
+	oxpPP8cUjmdNNh09O5ijknilkkpgMFP9Nt8kuFTmsoMw==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 403ukyr4r5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 01 Jul 2024 12:30:28 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4619vqK7024071;
+	Mon, 1 Jul 2024 12:30:28 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 402ya36thn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 01 Jul 2024 12:30:28 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 461CUOhR45220172
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 1 Jul 2024 12:30:26 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 65F7F2004B;
+	Mon,  1 Jul 2024 12:30:24 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7BCBC20040;
+	Mon,  1 Jul 2024 12:30:23 +0000 (GMT)
+Received: from li-34d1fccc-27cd-11b2-a85c-c167793e56f7.in.ibm.com (unknown [9.204.200.131])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  1 Jul 2024 12:30:23 +0000 (GMT)
+From: Aboorva Devarajan <aboorvad@linux.ibm.com>
+To: tj@kernel.org, void@manifault.com
+Cc: aboorvad@linux.ibm.com, linux-kernel@vger.kernel.org
+Subject: [PATCH sched_ext/for-6.11] sched_ext: Documentation: Remove mentions of scx_bpf_switch_all
+Date: Mon,  1 Jul 2024 18:00:22 +0530
+Message-Id: <20240701123022.68700-1-aboorvad@linux.ibm.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240624152732.1231678-3-bigeasy@linutronix.de>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: hKbCSgkuic0HnYXBMrGm04tYsAmHK6jc
+X-Proofpoint-ORIG-GUID: hKbCSgkuic0HnYXBMrGm04tYsAmHK6jc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-01_10,2024-06-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ lowpriorityscore=0 suspectscore=0 mlxscore=0 clxscore=1011
+ priorityscore=1501 bulkscore=0 spamscore=0 mlxlogscore=961 impostorscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407010095
 
-On Mon, Jun 24, 2024 at 05:15:15PM +0200, Sebastian Andrzej Siewior wrote:
-> @@ -9735,18 +9719,28 @@ static int __perf_event_overflow(struct perf_event *event,
->  
->  		if (regs)
->  			pending_id = hash32_ptr((void *)instruction_pointer(regs)) ?: 1;
-> -		if (!event->pending_sigtrap) {
-> -			event->pending_sigtrap = pending_id;
-> +
-> +		if (!event->pending_work &&
-> +		    !task_work_add(current, &event->pending_task, TWA_RESUME)) {
-> +			event->pending_work = pending_id;
->  			local_inc(&event->ctx->nr_pending);
+Updated sched_ext doc to eliminate references to scx_bpf_switch_all,
+which has been removed in recent sched_ext versions.
 
-task_work_add() isn't NMI safe, at the very least the
-kasan_record_aux_stack() thing needs to go. But the whole
-set_notify_resume() thing also needs an audit.
+Signed-off-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
+---
+ Documentation/scheduler/sched-ext.rst | 32 ++++++++++++++++-----------
+ 1 file changed, 19 insertions(+), 13 deletions(-)
+
+diff --git a/Documentation/scheduler/sched-ext.rst b/Documentation/scheduler/sched-ext.rst
+index 497eeaa5ecbe..d887e9e11256 100644
+--- a/Documentation/scheduler/sched-ext.rst
++++ b/Documentation/scheduler/sched-ext.rst
+@@ -44,17 +44,24 @@ options should be enabled to use sched_ext:
+     CONFIG_PAHOLE_HAS_SPLIT_BTF=y
+     CONFIG_PAHOLE_HAS_BTF_TAG=y
+ 
+-sched_ext is used only when the BPF scheduler is loaded and running.
+ 
+-If a task explicitly sets its scheduling policy to ``SCHED_EXT``, it will be
+-treated as ``SCHED_NORMAL`` and scheduled by CFS until the BPF scheduler is
+-loaded. On load, such tasks will be switched to and scheduled by sched_ext.
++sched_ext is used only when the BPF scheduler is loaded and running. To use
++sched_ext, a task can invoke ``sched_setscheduler`` with the ``SCHED_EXT``
++policy constant.
+ 
+-The BPF scheduler can choose to schedule all normal and lower class tasks by
+-calling ``scx_bpf_switch_all()`` from its ``init()`` operation. In this
+-case, all ``SCHED_NORMAL``, ``SCHED_BATCH``, ``SCHED_IDLE`` and
+-``SCHED_EXT`` tasks are scheduled by sched_ext. In the example schedulers,
+-this mode can be selected with the ``-a`` option.
++When the BPF scheduler is not loaded, tasks with the ``SCHED_EXT`` policy are
++treated as ``SCHED_NORMAL`` and scheduled by CFS. ``SCHED_NORMAL`` tasks
++continue to be scheduled by CFS.
++
++When the BPF scheduler is loaded, all tasks with the ``SCHED_EXT`` policy are
++switched to sched_ext. By default, if the ``struct ops->flag`` is not set to
++``SCX_OPS_SWITCH_PARTIAL``, ``SCHED_EXT``, ``SCHED_NORMAL``, and lower class
++tasks are scheduled by sched_ext. In this case, all ``SCHED_NORMAL``,
++``SCHED_BATCH``, ``SCHED_IDLE``, and ``SCHED_EXT`` tasks are scheduled by
++sched_ext.
++
++However, if the ``struct ops->flag`` is set to``SCX_OPS_SWITCH_PARTIAL``,
++only tasks with the policy set to ``SCHED_EXT`` are scheduled by sched_ext.
+ 
+ Terminating the sched_ext scheduler program, triggering :kbd:`SysRq-S`, or
+ detection of any internal error including stalled runnable tasks aborts the
+@@ -156,13 +163,12 @@ optional. The following modified excerpt is from
+             scx_bpf_dispatch(p, SCX_DSQ_GLOBAL, SCX_SLICE_DFL, enq_flags);
+     }
+ 
+-    s32 BPF_STRUCT_OPS(simple_init)
++    s32 BPF_STRUCT_OPS_SLEEPABLE(simple_init)
+     {
+             /*
+-             * All SCHED_OTHER, SCHED_IDLE, and SCHED_BATCH tasks should
+-             * use sched_ext.
++             * By default, all SCHED_EXT, SCHED_OTHER, SCHED_IDLE, and
++             * SCHED_BATCH tasks should use sched_ext.
+              */
+-            scx_bpf_switch_all();
+             return 0;
+     }
+ 
+-- 
+2.25.1
+
