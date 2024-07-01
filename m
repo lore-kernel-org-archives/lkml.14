@@ -1,26 +1,26 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A8115EFDC
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4939015F303
 	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 13:54:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719842057; cv=none; b=QGrAO48GoX0E+J84GauUKTiPHzY7QPy4eH0A9XTk9B5Uf3Z3SM5RPjGjUUQDErFFoXhVVbs7bp9oYVf7V0eOc2JYyjt1xqJwurmz+RNpZR9AAzt5TIyWFE0+AgLB2S49Vd0JShrswVsZWNF5j5keKUzGT7YVoedhCN/MjG+0teY=
+	t=1719842057; cv=none; b=ZpLGq1aZxiNjZQWdEf4MP3SvnWfW+bmqLrMVydXIff563KqBd+YK9r8nnwIMEcFLE/v6XKIwPVx0wVHhGTc/GnHtY7+tzcvb5MRa8STxAjNLWUbkjgg+dKdZUvc1icD1W84YPZD1EQQi20EtiG8d2G++iVlwuhw+gkw1opO2Gao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719842057; c=relaxed/simple;
-	bh=zHeI+GWSdz7PR0D30nDNzWXJoqqyXyai8DQT6s7xrdw=;
+	bh=Uzn7LDoOL9SlsZeIM68XzGKBB+r44Ge/qQ/yufBvw8U=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=L4GUH3mYCWf2GvXuWU4KvE1gyM7FLmuz+WnL6687K8LZzpqp5xbRUdVr5TchE3r3ydx1xwxQiU01sntfoJETHnXQTi3mCWa0IMeM4VAAh5O5JKTUN6I6zcj0FYpSk7GLC8TpEm6OLkFiPol266vOtYgM+XwrKiH5InMLGDh2h0s=
+	 In-Reply-To:To:Cc; b=J5hVB22mcHX9+6+8r4n7GPEJVmW1sgHQugp8JwlNXJ+VglWZmQqaJ2Xn5o3cHItT7gCPF7IE+krhTozCXETPRIXpa4T2i4m0hik7eGNDV+GLqg044QgkIIL4QjlDIFxh6YwQMnN/AoCl9cakIji6vBvi5bOFsXNqWIwN9JU/sSk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
 Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
 	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
 	(envelope-from <m.felsch@pengutronix.de>)
-	id 1sOHTX-0001LY-37; Mon, 01 Jul 2024 15:53:47 +0200
+	id 1sOHTY-0001LY-20; Mon, 01 Jul 2024 15:53:48 +0200
 From: Marco Felsch <m.felsch@pengutronix.de>
-Date: Mon, 01 Jul 2024 15:53:40 +0200
-Subject: [PATCH 1/9] mtd: core: add nvmem_write support
+Date: Mon, 01 Jul 2024 15:53:48 +0200
+Subject: [PATCH 9/9] eeprom: at24: remove deprecated Kconfig symbol
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -29,7 +29,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240701-b4-v6-10-topic-usbc-tcpci-v1-1-3fd5f4a193cc@pengutronix.de>
+Message-Id: <20240701-b4-v6-10-topic-usbc-tcpci-v1-9-3fd5f4a193cc@pengutronix.de>
 References: <20240701-b4-v6-10-topic-usbc-tcpci-v1-0-3fd5f4a193cc@pengutronix.de>
 In-Reply-To: <20240701-b4-v6-10-topic-usbc-tcpci-v1-0-3fd5f4a193cc@pengutronix.de>
 To: Miquel Raynal <miquel.raynal@bootlin.com>, 
@@ -70,53 +70,32 @@ X-SA-Exim-Mail-From: m.felsch@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The MTD framework does support the NVMEM framework already but only the
-read support was implemented. This commit adds the write support if the
-MTD device supports writing (MTD_WRITEABLE is set).
+All kernel users are shifted to the new MTD_EEPROM_AT24 Kconfig symbol
+so we can drop the old one.
 
 Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- drivers/mtd/mtdcore.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ drivers/misc/eeprom/Kconfig | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
-index 724f917f91ba..dcd97e59425e 100644
---- a/drivers/mtd/mtdcore.c
-+++ b/drivers/mtd/mtdcore.c
-@@ -544,6 +544,20 @@ static int mtd_nvmem_reg_read(void *priv, unsigned int offset,
- 	return retlen == bytes ? 0 : -EIO;
- }
+diff --git a/drivers/misc/eeprom/Kconfig b/drivers/misc/eeprom/Kconfig
+index 3a9aaec2f2c7..9e071cfdc6c6 100644
+--- a/drivers/misc/eeprom/Kconfig
++++ b/drivers/misc/eeprom/Kconfig
+@@ -1,13 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ menu "EEPROM support"
  
-+static int mtd_nvmem_reg_write(void *priv, unsigned int offset,
-+			       void *val, size_t bytes)
-+{
-+	struct mtd_info *mtd = priv;
-+	size_t retlen;
-+	int err;
-+
-+	err = mtd_write(mtd, offset, bytes, &retlen, val);
-+	if (err && err != -EUCLEAN)
-+		return err;
-+
-+	return retlen == bytes ? 0 : -EIO;
-+}
-+
- static int mtd_nvmem_add(struct mtd_info *mtd)
- {
- 	struct device_node *node = mtd_get_of_node(mtd);
-@@ -555,10 +569,11 @@ static int mtd_nvmem_add(struct mtd_info *mtd)
- 	config.owner = THIS_MODULE;
- 	config.add_legacy_fixed_of_cells = of_device_is_compatible(node, "nvmem-cells");
- 	config.reg_read = mtd_nvmem_reg_read;
-+	config.reg_write = mtd_nvmem_reg_write;
- 	config.size = mtd->size;
- 	config.word_size = 1;
- 	config.stride = 1;
--	config.read_only = true;
-+	config.read_only = !(mtd->flags & MTD_WRITEABLE);
- 	config.root_only = true;
- 	config.ignore_wp = true;
- 	config.priv = mtd;
+-config EEPROM_AT24
+-	tristate "I2C EEPROMs / RAMs / ROMs from most vendors"
+-	select MTD_EEPROM_AT24
+-	help
+-	  Deprecated config option to get read/write support to most I2C
+-	  EEPROMs. Please use MTD_EEPROM_AT24 instead.
+-
+ config EEPROM_AT25
+ 	tristate "SPI EEPROMs (FRAMs) from most vendors"
+ 	depends on SPI && SYSFS
 
 -- 
 2.39.2
