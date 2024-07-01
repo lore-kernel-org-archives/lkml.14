@@ -1,106 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6820664C6;
-	Mon,  1 Jul 2024 12:14:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C58E60BBE;
+	Mon,  1 Jul 2024 12:14:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719836060; cv=none; b=kWPwatxrjCOj3CXFA2BQ3/Fy8Na/4uL/mUccrjVKEdnYKTlXC1BU9yAv9l/vTweec3h4zT7/o61SYEe8LYGSawWACLfegsL6H2OHcLzYb1St1cmCl7UR5aKif1vRdDpX0qr4iinyzgA48hRs6JZEISNf1SXLQhcKAWhZvRoR2xY=
+	t=1719836083; cv=none; b=DxFB9/G2EnMYbJ+ls+/h5g+JXnvHz2GGJAA9/m8M/m4im2/A26mHB/5M3nVf/A+LbGQLaUgs8LaiWgyX0dF/fTmU7Yq7mDoFTivQR2J/owuzPhm7gra1uZG5OPnJeqGjrwurW5n4D6tHzrv+xKEybxFhO6NiUR2ZdPIVRbgBRSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719836060; c=relaxed/simple;
-	bh=1MluUAgSp3pJc1y2+DA4vG/J/+82dGk6KWuKj5Eet5A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GJGtlRUuOPCzcUQOaLZvu9/mbv8r/wS+jGEv41BJ2rP9H4PpQh+o0z3d+gn+y1v1AfMTmYgLo5HHyOt7dvuHZ2sx+m+tvbSeLPZObHlUwPU/fq26D9NNsRoQc9N6T6mojP/lk29HkFKChWu7IdaXWaOASqKNYdJuYIvmZqyInpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eRMeNBRR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719836083; c=relaxed/simple;
+	bh=vVQEBAHhv92sP2fSGRtWvh7EDXEieYCE2SACw14V0Ho=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XAOvr3Ax9gnsIKD1WyRcTFJcEeiaHOIXe/0Vh8QJrxeqbtny2985wuZ7nLKMr2EmG4uiNMKVz4B6w8VuMQtqxiCh8g2hai822tcog5o/1Opl/2RKjcSHl2XE2BBW/raCSvScDi1EQKp3Ym3c9rGdMiBZe9SRLnqTf+dTpwuMoAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SSAQDXp+; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eRMeNBRR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEF49C2BD10;
-	Mon,  1 Jul 2024 12:14:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719836060;
-	bh=1MluUAgSp3pJc1y2+DA4vG/J/+82dGk6KWuKj5Eet5A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eRMeNBRRTnG479A1nEZ4sri1AUSt7D3haskD2rUoXOKBX4RifJFpBwVN0qqZsEE9Q
-	 j+PdywAWnSs75M4SVgVlzJU4tFl3SmojhKkGVXbXBxr0ffkigB6sD6UG+nnEAz8+05
-	 nPS9rhbS2GsPOaCRix2OifPyKudpif3lOqGOEv9XN/o2shFG1B4PUo2HjCmAuQLIrc
-	 nkzCoOk2xk0zTPj/BhUJ50IxQ+B/FIFymXSRhLMD3ZubjzkLFAQ4db9EdMr/Zibtiu
-	 lsXNw4+G3Mrq0a7cHPkL9iEiZBnjLZkHOvfg3hOQH5f8+02Gm9Nmcv8C4iEOGReyYq
-	 z3Nx8ma7F87bQ==
-Date: Mon, 1 Jul 2024 14:13:47 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Cc: Alexander Larsson <alexl@redhat.com>, Ian Kent <ikent@redhat.com>, 
-	Matthew Wilcox <willy@infradead.org>, Lucas Karpinski <lkarpins@redhat.com>, viro@zeniv.linux.org.uk, 
-	raven@themaw.net, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Eric Chanudet <echanude@redhat.com>
-Subject: Re: [RFC v3 1/1] fs/namespace: remove RCU sync for MNT_DETACH umount
-Message-ID: <20240701-vortrag-riesig-bbedb130d443@brauner>
-References: <50512ec3-da6d-4140-9659-58e0514a4970@redhat.com>
- <20240627115418.lcnpctgailhlaffc@quack3>
- <20240627-abkassieren-grinsen-6ce528fe5526@brauner>
- <d1b449cb-7ff8-4953-84b9-04dd56ddb187@redhat.com>
- <20240628-gelingen-erben-0f6e14049e68@brauner>
- <CAL7ro1HtzvcuQbRpdtYAG1eK+0tekKYaTh-L_8FqHv_JrSFcZg@mail.gmail.com>
- <97cf3ef4-d2b4-4cb0-9e72-82ca42361b13@redhat.com>
- <20240701-zauber-holst-1ad7cadb02f9@brauner>
- <CAL7ro1FOYPsN3Y18tgHwpg+VB=rU1XB8Xds9P89Mh4T9N98jyA@mail.gmail.com>
- <20240701101536.jb452t25xds6x7f3@quack3>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SSAQDXp+"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-7276dff62b6so2846808a12.1;
+        Mon, 01 Jul 2024 05:14:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719836081; x=1720440881; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x2JlVyvdXaf8wO0NkeSTlMZDCp7W3gnVU01+vdeONI4=;
+        b=SSAQDXp+xwzDzYVdvYFNt/kR7txxUL40/4mt2AYYaW5PmqLjtk1bFliMF3UlK003p8
+         lFHuP68qjeKAveI1MlFW0EclYKXG7EAG2QnCUb1P8AbtQCO3+ktrjUS/ppR7IXh9uXrf
+         xTa8nwTQUd4CrjGD98txUeL3xRc2f08OtR9FyuvFqrufVsw2PNQ4iEoPjY9BsyjBk0MV
+         zbzIevEyEZSH2J9QQ1gfBT/Etmb/hYXetZrt4msZwX9b/43OU8t+i+PqUrSPe1ku8pIO
+         ZZPII3AIZCBYv26NBxAoueL/2z0hTNZxJhIempfx2PFTrPxJFsceRGoEQNfbvkS6AZWl
+         wcCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719836081; x=1720440881;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x2JlVyvdXaf8wO0NkeSTlMZDCp7W3gnVU01+vdeONI4=;
+        b=dIJb1bPsL0eqDem1lTa0OdyB9eS/nHUhVN9oaE5R0Fw0Kyf6k2I7BhsIZvt3dnhiWZ
+         VnqaKFJawg9GYtBhFZbw3IO/lkjLlBXCZVgdBWQIbbwUs6WFDxTQPtrDa5loKlf0ZJsu
+         QsH3HeptewnT+wtv5qQooeaLFi2t9dzWG7/BC1e1gPnNvlATZlvHPvN+MMIc0R1aUCbE
+         VC7LRqX9zQV/1tBP6jFSnwhs7FvhzdFpvKD7wpLRNZpWHCGCllPj3+zqe78zJCu/bkRG
+         XzRtDHrfII6+VwlxxbHeUw+qsvkzOyREx5R6RUTJSe08vz1iMfJN4qP62ZdNJSi3gMhH
+         y6kg==
+X-Forwarded-Encrypted: i=1; AJvYcCX6gJW6LZ3PZTBpPzex9+wft8pnNwGDs7dhpwkTL9buwQJ3zNyHesm2tSjCJIMD356JVVKZqd2TIxR738VQAOmO27NOLCffh9AoIzRAHBD7vqcDnkmVOzobpmRn+HlU8rfBi8X+mc2e5w7F0DYU2FKukePwtrHAOmdnD4UY0JF9hei5tg==
+X-Gm-Message-State: AOJu0YzBR2w1d9AsMlN4lAwBh9ObpvDHSyBtUTVfHvi7YQrSLFV7zdyW
+	6nLDJMOm/yIMLovyVWLcxR6L1NAqRhw8r3/k5bmTQ9Zs7SBpTdXcubAYFyRs
+X-Google-Smtp-Source: AGHT+IH5fZqGsM7fv4aL4Hf2OsbfmuWDVI3xrdjeGta3W/nTcuTAQXHLXW/5GIXbOraLNdXwplsgNQ==
+X-Received: by 2002:a17:90a:c090:b0:2c6:f5bf:5175 with SMTP id 98e67ed59e1d1-2c93d1b99b3mr8969180a91.10.1719836081239;
+        Mon, 01 Jul 2024 05:14:41 -0700 (PDT)
+Received: from ga401ii.. ([223.178.83.109])
+        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-2c91ce17a77sm6613098a91.6.2024.07.01.05.14.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 05:14:40 -0700 (PDT)
+From: Kanak Shilledar <kanakshilledar@gmail.com>
+To: 
+Cc: Kanak Shilledar <kanakshilledar@gmail.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Guo Ren <guoren@kernel.org>,
+	Fu Wei <wefu@redhat.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	linux-spi@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH v2 1/3] dt-bindings: spi: snps,dw-apb-ssi.yaml: update compatible property
+Date: Mon,  1 Jul 2024 17:43:52 +0530
+Message-ID: <20240701121355.262259-3-kanakshilledar@gmail.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240701121355.262259-2-kanakshilledar@gmail.com>
+References: <20240701121355.262259-2-kanakshilledar@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240701101536.jb452t25xds6x7f3@quack3>
 
-On Mon, Jul 01, 2024 at 12:15:36PM GMT, Jan Kara wrote:
-> On Mon 01-07-24 10:41:40, Alexander Larsson wrote:
-> > On Mon, Jul 1, 2024 at 7:50 AM Christian Brauner <brauner@kernel.org> wrote:
-> > >
-> > > > I always thought the rcu delay was to ensure concurrent path walks "see" the
-> > > >
-> > > > umount not to ensure correct operation of the following mntput()(s).
-> > > >
-> > > >
-> > > > Isn't the sequence of operations roughly, resolve path, lock, deatch,
-> > > > release
-> > > >
-> > > > lock, rcu wait, mntput() subordinate mounts, put path.
-> > >
-> > > The crucial bit is really that synchronize_rcu_expedited() ensures that
-> > > the final mntput() won't happen until path walk leaves RCU mode.
-> > >
-> > > This allows caller's like legitimize_mnt() which are called with only
-> > > the RCU read-lock during lazy path walk to simple check for
-> > > MNT_SYNC_UMOUNT and see that the mnt is about to be killed. If they see
-> > > that this mount is MNT_SYNC_UMOUNT then they know that the mount won't
-> > > be freed until an RCU grace period is up and so they know that they can
-> > > simply put the reference count they took _without having to actually
-> > > call mntput()_.
-> > >
-> > > Because if they did have to call mntput() they might end up shutting the
-> > > filesystem down instead of umount() and that will cause said EBUSY
-> > > errors I mentioned in my earlier mails.
-> > 
-> > But such behaviour could be kept even without an expedited RCU sync.
-> > Such as in my alternative patch for this:
-> > https://www.spinics.net/lists/linux-fsdevel/msg270117.html
-> > 
-> > I.e. we would still guarantee the final mput is called, but not block
-> > the return of the unmount call.
-> 
-> So FWIW the approach of handing off the remainder of namespace_unlock()
-> into rcu callback for lazy unmount looks workable to me. Just as Al Viro
-> pointed out you cannot do all the stuff right from the RCU callback as the
-> context doesn't allow all the work to happen there, so you just need to
-> queue work from RCU callback and then do the real work from there (but OTOH
-> you can avoid the task work in mnput_noexpire() in that case - will need a
-> bit of refactoring).
+updated compatible property to include "thead,th1520-spi" for the
+TH1520 SoC SPI Controller.
 
-Yes, but that wasn't what this patch did. As I said I'm not opposed to
-trying a _working_ version of this but I suspect we'll slightly change
-MNT_DETACH and cause user visible changes (But then we may end up adding
-MNT_ASYNC or something which I wouldn't consider the worst idea ever.).
+Signed-off-by: Kanak Shilledar <kanakshilledar@gmail.com>
+---
+Changes in v2:
+- Separated from a single patch file
+---
+ Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+index fde3776a558b..bccd00a1ddd0 100644
+--- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
++++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+@@ -88,6 +88,10 @@ properties:
+               - renesas,r9a06g032-spi # RZ/N1D
+               - renesas,r9a06g033-spi # RZ/N1S
+           - const: renesas,rzn1-spi   # RZ/N1
++      - description: T-HEAD TH1520 SoC SPI Controller
++        items:
++          - const: thead,th1520-spi
++          - const: snps,dw-apb-ssi
+ 
+   reg:
+     minItems: 1
+-- 
+2.45.2
+
