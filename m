@@ -1,132 +1,133 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B7D2BB05;
-	Mon,  1 Jul 2024 21:15:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEBAB83CC8
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 21:22:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719868559; cv=none; b=qapSCDUJvMZLEYdqjZblrZ9Qk+cKN9nXEmwu+lEK9nYSwPkg2Hca+xuV0oUiZ7bm23YXQiG7qiimpUr5DpwxhDehcgdOJhg1ZPZRO8L5JGoetl6BiE6H25STtPsA6LNq7dT3WxJLTTkZ7528CIc4MdHrMswRZVpAN1CISRFdBdo=
+	t=1719868970; cv=none; b=NbFEE5Bj5pRLZv4P4fSRNocgtWcP/YjVhVD53N+AyufCLsdEtJqub1OYjEiwQ0aZj4+/9pmb4OcAE06NNHhwwDqCySyEKvIdIQvd/9UTSgdhEmxCfgm+436thvHE3S6GEnm5L4Q5iskQFzmjl62xQeCAsYOqC1BqMoacle6xewo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719868559; c=relaxed/simple;
-	bh=h1IhBGf8UYCEd0sZEKyQ+4tiVcw/QbYUeV4K7LDSHzg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JPA2VFgoO+l6XWQpXgtAS6XOH03WMNQXDyTciVEq/aK8LQ6fSjfB/p/iNYMqiaxEKiqlRNwLD10spmcDy4oJFzgydlLxqdax/Uq5YHMbPgMjl4dVrI9MUk61WJNPbPLYCXA7JE2QyQYlFotbhOfznt3djWxOAQLq1yApdbaxKz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mMw+brKj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719868970; c=relaxed/simple;
+	bh=C6hwA9WiWjI0vwhBnyO0uhdnyGgmsDABKgj/1fPvRuc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FxPoT54kRfajABh2povuHl+nnNx6AsY5Ek6c7Ds2EZ0HT/Hoz2frHSy9u0HY3TnJ/LNdk8a2l2fkVV0XPBELTWaNUNSWAseSVnkwHKFB3gbMRQgxBrwyvM5JKVrFKU0zyvl+RyjwRS9N2qdL0rkUcvtrcWw9zRse2Z7cdEBRE8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pydKs1D9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mMw+brKj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C64BC116B1;
-	Mon,  1 Jul 2024 21:15:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pydKs1D9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09F6BC116B1;
+	Mon,  1 Jul 2024 21:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719868559;
-	bh=h1IhBGf8UYCEd0sZEKyQ+4tiVcw/QbYUeV4K7LDSHzg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mMw+brKjO98pABwU982xNOMBmiqGSdKy2CJmPzvbgbpa1jIahQ5wmPui4VJ2RRw/9
-	 Nq7b31vyPZnLr/bReN6Oz+E4c1DHMrnJ8pXAKWKPcacIUQlz2Sh1G7Tt6GuuOemC7K
-	 WcrHSxX7AFemJrFMs6+SiC8PdwJlUNEf89cSUr0bYt1bwz1IWii4Q0yBA/p2Bd9M4B
-	 RJputxI/JwMRTgxa7GYIgNC08WfS3hQpY0AMmZrvRExq0XgDXhtMcFoVOetCD757tW
-	 uG9of8iar7ddlfzzC3mNVtj9bdM/C4W5Z3AqUobzMm/Xzyizk2+Ha0Ltz1sc6ksYPx
-	 /Y0uiJV0uN5Fw==
-Date: Mon, 1 Jul 2024 23:15:54 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Igor Pylypiv <ipylypiv@google.com>
-Cc: Damien Le Moal <dlemoal@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Hannes Reinecke <hare@suse.de>, linux-ide@vger.kernel.org,
+	s=k20201202; t=1719868970;
+	bh=C6hwA9WiWjI0vwhBnyO0uhdnyGgmsDABKgj/1fPvRuc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=pydKs1D9zRPayuKgORFFuOehtBOUm8Pl4LE570qTwqeGQIoaqm2GCgpLW91pe0huJ
+	 KclKH0+GZODByg7VQK5PH4bh3LESJJjZ1r/7FeZgMa6zfU6EsIcin9FCUrpFVFBPG2
+	 kLZtY4/gw2Yq8WRkO0n7D6x45HLxbdN0zN9Z5kgSw6/yWYeXAwxQ4xw3cL+gwW7MbD
+	 F1DSD44cKn2QISdLgzfKDfKF+OOa2b+vc2HdgZjHzmZWOQEmqLJv9jEfxWbq9Ejn8F
+	 VqM9dpmNylbeL9qJPGX/uVuLSsfpLcwosnmxEmDCokaSqTUCPn31Fa/qX928KiiwCh
+	 xzVRgVrv7rWHA==
+From: SeongJae Park <sj@kernel.org>
+To: 
+Cc: SeongJae Park <sj@kernel.org>,
+	damon@lists.linuxdev,
+	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 8/8] ata: libata-scsi: Make ata_scsi_qc_complete()
- more readable
-Message-ID: <ZoMciql1lQcj5MbM@ryzen.lan>
-References: <20240701195758.1045917-1-ipylypiv@google.com>
- <20240701195758.1045917-9-ipylypiv@google.com>
+Subject: DAMON Quaterly News Letter (2024 Q2)
+Date: Mon,  1 Jul 2024 14:22:44 -0700
+Message-Id: <20240701212244.52288-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240701195758.1045917-9-ipylypiv@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jul 01, 2024 at 07:57:58PM +0000, Igor Pylypiv wrote:
-> The ATA PASS-THROUGH handling logic in ata_scsi_qc_complete() is hard
-> to read/understand. Improve the readability of the code by moving checks
-> into self-explanatory boolean variables.
-> 
-> Additionally, always set SAM_STAT_CHECK_CONDITION when CK_COND=1 because
-> SAT specification mandates that SATL shall return CHECK CONDITION if
-> the CK_COND bit is set.
-> 
-> Co-developed-by: Niklas Cassel <cassel@kernel.org>
-> Signed-off-by: Niklas Cassel <cassel@kernel.org>
-> Signed-off-by: Igor Pylypiv <ipylypiv@google.com>
-> ---
->  drivers/ata/libata-scsi.c | 21 +++++++++++----------
->  1 file changed, 11 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
-> index a66c177b6087..8f21b3b0bc75 100644
-> --- a/drivers/ata/libata-scsi.c
-> +++ b/drivers/ata/libata-scsi.c
-> @@ -1659,26 +1659,27 @@ static void ata_scsi_qc_complete(struct ata_queued_cmd *qc)
->  {
->  	struct scsi_cmnd *cmd = qc->scsicmd;
->  	u8 *cdb = cmd->cmnd;
-> -	int need_sense = (qc->err_mask != 0) &&
-> -		!(qc->flags & ATA_QCFLAG_SENSE_VALID);
-> -	int need_passthru_sense = (qc->err_mask != 0) ||
-> -		(qc->flags & ATA_QCFLAG_SENSE_VALID);
-> +	bool have_sense = qc->flags & ATA_QCFLAG_SENSE_VALID;
-> +	bool is_ata_passthru = cdb[0] == ATA_16 || cdb[0] == ATA_12;
-> +	bool is_ck_cond_request = cdb[2] & 0x20;
-> +	bool is_error = qc->err_mask != 0;
->  
->  	/* For ATA pass thru (SAT) commands, generate a sense block if
->  	 * user mandated it or if there's an error.  Note that if we
-> -	 * generate because the user forced us to [CK_COND =1], a check
-> +	 * generate because the user forced us to [CK_COND=1], a check
->  	 * condition is generated and the ATA register values are returned
->  	 * whether the command completed successfully or not. If there
-> -	 * was no error, we use the following sense data:
-> +	 * was no error, and CK_COND=1, we use the following sense data:
->  	 * sk = RECOVERED ERROR
->  	 * asc,ascq = ATA PASS-THROUGH INFORMATION AVAILABLE
->  	 */
-> -	if (((cdb[0] == ATA_16) || (cdb[0] == ATA_12)) &&
-> -	    ((cdb[2] & 0x20) || need_passthru_sense)) {
-> -		if (!(qc->flags & ATA_QCFLAG_SENSE_VALID))
-> +	if (is_ata_passthru && (is_ck_cond_request || is_error || have_sense)) {
-> +		if (!have_sense)
->  			ata_gen_passthru_sense(qc);
->  		ata_scsi_set_passthru_sense_fields(qc);
-> -	} else if (need_sense) {
-> +		if (is_ck_cond_request)
-> +			set_status_byte(qc->scsicmd, SAM_STAT_CHECK_CONDITION);
-> +	} else if (is_error && !have_sense) {
->  		ata_gen_ata_sense(qc);
->  	} else {
->  		/* Keep the SCSI ML and status byte, clear host byte. */
-> -- 
-> 2.45.2.803.g4e1b14247a-goog
-> 
-
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
-
-However: I really think that this patch should be squashed with patch 2/8.
-
-Sure, the changes in this patch will make it harder to backport...
-but, even patch 2/8 will be a pain to backport...
-
-And this patch will need to have CC: stable and be backported as well...
-(such that we always set CHECK_CONDITION when CK_COND=1), so I strongly
-suggest that we should squash these, since it will probably be way simpler
-to backport the patch that is "patch 2/8 squashed with this patch",
-compared to backporting patch 2/8, and then backporting this patch.
-(That would just give two patches that will need manual backport, rather
-than one patch that needs manual backport.)
-
-Both of these are fixing incorrect sense data for ATA passthough commands
-anyway.
+Hello DAMON community,
 
 
-Kind regards,
-Niklas
+Time flies.  The second quater of 2024 has passed.  Let me take a time to look
+back what happened to DAMON community in the last three months and share my
+humble summary with this quaterly news letter.
+
+Highlights of Highlights
+========================
+
+DAMON gained a feature [10] for CXL-based tiered memory management.  HacKerMaiL
+(hkml), a simple mailing tool that DAMON maintainer is developing, made an
+official commitment [12] to support DAMON community.  DAMON has presented and
+discussed with more people from OSSummit NA [4] and LSF/MM+BPF [7].  It will
+again be presented and discussed with more folks in September [10,13].
+
+Please read below for more highlights for each month.
+
+April 2024
+==========
+
+DAMO v2.2.8 has released [1] with memory footprint monitoring feature.
+
+DAMON news letter for 2024-Q1 has posted [2].
+
+Using Oracle's awesome kernel configs comparison tool, we found some dsitros
+that enable DAMON on their kernel [3].
+
+DAMON has presented[4] on Open Source Summit North America 2024.  The third
+in-person DAMON meetup has also held [5] on the conference.
+
+May 2024
+========
+
+Access/Contiguity-aware Memory Auto-scaling second RFC idea with example
+implementation is posted [6].
+
+DAMON's status and future plans have shared and discussed on LSFMM+BPF.  LWN's
+summary of the session is available [7].
+
+Memory managment subsystem pull request [8] for Linux 6.10-rc1 that contains
+DAMOS young page filter has merged.
+
+Beer/Coffee/Tea DAMON meetup has extended [9] for reservation-based ones.
+
+June 2024
+=========
+
+DAMON talk for Open Source Summit Europe 2024 has been accepted and
+scheduled [10].
+
+SK hynix' patch series titled "DAMON based tiered memory managment for CXL
+memory" has been merged [11] into mm-unstable tree.
+
+DAMON community got a simple mailing tool called HacKerMaiL (hkml), which is
+officially committed [12] to support the development workflow.
+
+A session for DAMON at kernel summit 2024 has proposed [13] .
+
+Previous news letters
+=====================
+
+- 2024 Q1: https://lore.kernel.org/20240402191224.92305-1-sj@kernel.org
+
+More Past DAMON News
+====================
+
+If you're interested in a humblie list of more DAMON events that happened in
+past and curated by DAMON maintainer, please reach out to the project site's
+news page [14].
+
+References
+==========
+
+[1] https://github.com/awslabs/damo/blob/v2.2.8/USAGE.md#recording-memory-footprints
+[2] https://lore.kernel.org/damon/20240402191224.92305-1-sj@kernel.org/
+[3] https://oracle.github.io/kconfigs/?config=UTS_RELEASE&config=DAMON
+[4] https://sched.co/1aBOg
+[5] https://sched.co/1cP4G
+[6] https://lore.kernel.org/20240512193657.79298-1-sj@kernel.org
+[7] https://lwn.net/Articles/973702/
+[8] https://lore.kernel.org/20240517192239.9285edd85f8ef893bb508a61@linux-foundation.org
+[9] https://lore.kernel.org/20240519163329.150340-1-sj@kernel.org
+[10] https://sched.co/1ej2S
+[11] https://lore.kernel.org/all/20240614185328.BA2C1C2BD10@smtp.kernel.org/
+[12] https://lore.kernel.org/20240621163626.74815-2-sj@kernel.org
+[13] https://lore.kernel.org/20240614175504.87365-1-sj@kernel.org/
+[14] https://sjp38.github.io/post/damon_news/
