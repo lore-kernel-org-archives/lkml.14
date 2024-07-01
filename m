@@ -1,156 +1,82 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 452BE173348;
-	Mon,  1 Jul 2024 18:29:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A8116F284;
+	Mon,  1 Jul 2024 18:29:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719858585; cv=none; b=LYkw/ECo/r9TsJoP2kMTROWHtm6L2y+dCUBTik1U7m/Ts/UN+GG3Yw3pSh9xiVgKL3jyAdANeTSEGQDX4szg273bnzrj6BfQ8Kg59b5FFt+QYhlMihs7DQM+QxmON9AVaW4Pvhg/X67ooLAW3Tqt3+yGFqY871Sso5UXTl8mEYI=
+	t=1719858591; cv=none; b=mo65DVT9yFUYoScLrgs1MbAyXmEvn/rJgdgyGCP0+fOFYIkrZP2nNZBa1qpFE47SlWVmwa7uEK0kuBvFgG+3+g0TIcg9ooTk+HEQQJseN0U/2T9J8cbQwgHPtNGzMhsojaqhX+iJkT2Z7DMpHfaB5la1uYzOCMItAd0mUPVLywE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719858585; c=relaxed/simple;
-	bh=xj2Cr4TyHsmmOYefzTQwzoHeqZD22q0utO2EV+/SVb4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WVdzuBs0UEaa3o/n+Zc1l0ekcguZpfcrASlxYEjiM2UzccLthxFk/uzghEt3CVZ1Vt2mERX7BfhaJAfpYUwjkzC6ndURXJfYb07PgrXW3BBnsiwycBZZe7Dl5gkOmLhbpkkKCYL+6gCdFpHNO62PynXsbh0oyZ4aO7mLKLqSxks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fLScsTGP; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719858591; c=relaxed/simple;
+	bh=kOKJXfn77YBdoorcP1QIopGNCIW+CsRKC6yRszSVKaY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H5xDrCnrahTdVJLPDxc7NCNzVrjG9axyYOBQVfvvxjEPDBnBgLKRxb00wDzD1qvj5WCi/rmvH1GlFcwlqe9J+AyBCIcBR81jK+tWuTMgABtIZK5tZTuwu6DwW7L652Ad2Fd/UqMruv+iAUG1wOw1rAZiytHXW1/WS9H3TiqY1ZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XW40Af/E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fLScsTGP"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2eabd22d3f4so33005881fa.1;
-        Mon, 01 Jul 2024 11:29:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719858582; x=1720463382; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wGa0V/+q1PY+8AtdQff4+HTCc2sbpBqj/v0lwdLsGCU=;
-        b=fLScsTGPZsRUryyCx45lJehtt4FF7E62oBBO+tX+5yKGQJX2kHuGksO811dE1lN/Hv
-         cVKMghKnfuUzqNAPAWE+MVG09h6y1AAH1kx1JJYir6XudTDDdhX195/Rv86+BukI9gPc
-         gzjEazenUbN7KamPuYh0pArAWQYQaVRodlJ/re6TJ6jAxLSHD2a0NHgeLds7dPEKQyIK
-         r5zPOWfu59Uf4nIzu1jOMl+LS0NttL0mqMm7vajXBT3BchwnQeuYz+x2T1FH8ar/m/hW
-         QB8MqT5A4wNidOLAcI3FJUYjN4pqX0q7JIL59OnrMhWsl48MKxeaQytuu8PaFoGo8CNr
-         EtmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719858582; x=1720463382;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wGa0V/+q1PY+8AtdQff4+HTCc2sbpBqj/v0lwdLsGCU=;
-        b=F4jw0y4w6BWo+4gWYFLBpvM2MVWFyPTDzCmSwjs0uL0N56H83fB/O53jmdI87rDQxy
-         UurQQRJjFw7ITBSkJqIi8fdMlVmDXgqEcmzhgQxLybkBZBRitTTEQBhyRGfeM86Htu1X
-         Q0/PfaOL/wSCyEE5vw62F5YIqqAfdDEXzOfziXdFHa+Cbr2VjgmB2JIlcwtvSKoDktJw
-         SkAb3mtHa8JTM261LWvV1tc3Jiuhv9QI3gVSaTv+Wj5QwaBFtv0Wn/WBqbAZNijvukbB
-         3UKKKULt+Rtcvpvj91bWUuy0Ay51zb6GVuxyC2MdaUbPEqFM3zaxhJXPeMJ6a3/xQSsr
-         f4pQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU5n3bOJIr7XIaw9KoVZJKmxwDGMgMbV66f0yfMYFsv3XXV3f4CkI2VMxEZKKta/FO/tfLYRtrffjvDc5NSfTCiatW3I1WBtZNWqGDuiw7eiv9vJAXvPupE0YIljU3G2XXgr5mPhTYZDLzugKeW91FFvBG+7/wsI3bhqTCmHSfuDQ==
-X-Gm-Message-State: AOJu0YzTyo8kY7S2O/R/HQxJVSF7aTyfUCSjAu7v7Lk0sSQ4exGGthAx
-	PyBo1kTCKPDxR6UOS+kw8eRTgg7+KAsxOA95lEu/924lyskJ+aXe
-X-Google-Smtp-Source: AGHT+IFXnUFdgrXA1uR1LN5UmTAA18az9EpTs+N0Pv9356JIFI06IvJbJFQAahcrWN6Else101zSvA==
-X-Received: by 2002:a2e:b535:0:b0:2ec:4eca:748b with SMTP id 38308e7fff4ca-2ee5e39260amr38054481fa.14.1719858582315;
-        Mon, 01 Jul 2024 11:29:42 -0700 (PDT)
-Received: from localhost ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ee5168d0c2sm14452161fa.124.2024.07.01.11.29.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 11:29:41 -0700 (PDT)
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Serge Semin <fancer.lancer@gmail.com>,
-	Sagar Cheluvegowda <quic_scheluve@quicinc.com>,
-	Abhishek Chauhan <quic_abchauha@quicinc.com>,
-	Andrew Halaney <ahalaney@redhat.com>,
-	Jiawen Wu <jiawenwu@trustnetic.com>,
-	Mengyuan Lou <mengyuanlou@net-swift.com>,
-	Tomer Maimon <tmaimon77@gmail.com>,
-	openbmc@lists.ozlabs.org,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH net-next v4 10/10] net: stmmac: Add DW XPCS specified via "pcs-handle" support
-Date: Mon,  1 Jul 2024 21:28:41 +0300
-Message-ID: <20240701182900.13402-11-fancer.lancer@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240701182900.13402-1-fancer.lancer@gmail.com>
-References: <20240701182900.13402-1-fancer.lancer@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XW40Af/E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B540C32781;
+	Mon,  1 Jul 2024 18:29:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719858590;
+	bh=kOKJXfn77YBdoorcP1QIopGNCIW+CsRKC6yRszSVKaY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XW40Af/E2Y8kFNrAXnM6dME9FeksSFduyq0fOpscUGFtiIKvCYOMiP9r4BX46bYmE
+	 DWNvJ5Zl9mBj0waTRF4YWt3Mh6Kpx0k6j/ubHvRBrFT6UbM9Gfc6A5CIqKDf/GAiKX
+	 6Ans25SXIHbSDLfmdxCM7Q/sTxAzOCnNkte/eUnTz4HGejQlYbVw+u+x94IRUifX0h
+	 VcvoiGRNxc4nuomin8RLfBOf/cY2bwxcDT8SXOjD1jkBNv6Rb+H22HdTmgSVf2JrK2
+	 swL71e4Cn7ilA1bkfNgRD0NxWN4LwBcJI5GWOxJEbDbG8A9atv3TnYacrQ6FyjyDYy
+	 mbAEx/CFZaI3Q==
+Date: Mon, 1 Jul 2024 12:29:49 -0600
+From: Rob Herring <robh@kernel.org>
+To: George Liu <liuxiwei1013@gmail.com>
+Cc: linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+	openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	joel@jms.id.au, andrew@codeconstruct.com.au
+Subject: Re: [PATCH v1 1/3] dt-bindings: vendor-prefixes: Add prefix for
+ ieisystems
+Message-ID: <20240701182949.GA341683-robh@kernel.org>
+References: <20240701105259.972135-1-liuxiwei@ieisystem.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240701105259.972135-1-liuxiwei@ieisystem.com>
 
-Recently the DW XPCS DT-bindings have been introduced and the DW XPCS
-driver has been altered to support the DW XPCS registered as a platform
-device. In order to have the DW XPCS DT-device accessed from the STMMAC
-driver let's alter the STMMAC PCS-setup procedure to support the
-"pcs-handle" property containing the phandle reference to the DW XPCS
-device DT-node. The respective fwnode will be then passed to the
-xpcs_create_fwnode() function which in its turn will create the DW XPCS
-descriptor utilized in the main driver for the PCS-related setups.
+On Mon, Jul 01, 2024 at 06:52:57PM +0800, George Liu wrote:
+> Add a vendor prefix entry for ieisystems
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ieisystems or IEIT SYSTEMS
+> 
+> Signed-off-by: George Liu <liuxiwei@ieisystem.com>
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-index 74de6ec00bbf..03f90676b3ad 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-@@ -497,15 +497,22 @@ int stmmac_mdio_reset(struct mii_bus *bus)
- 
- int stmmac_pcs_setup(struct net_device *ndev)
- {
-+	struct fwnode_handle *devnode, *pcsnode;
- 	struct dw_xpcs *xpcs = NULL;
- 	struct stmmac_priv *priv;
- 	int addr, mode, ret;
- 
- 	priv = netdev_priv(ndev);
- 	mode = priv->plat->phy_interface;
-+	devnode = priv->plat->port_node;
- 
- 	if (priv->plat->pcs_init) {
- 		ret = priv->plat->pcs_init(priv);
-+	} else if (fwnode_property_present(devnode, "pcs-handle")) {
-+		pcsnode = fwnode_find_reference(devnode, "pcs-handle", 0);
-+		xpcs = xpcs_create_fwnode(pcsnode, mode);
-+		fwnode_handle_put(pcsnode);
-+		ret = PTR_ERR_OR_ZERO(xpcs);
- 	} else if (priv->plat->mdio_bus_data &&
- 		   priv->plat->mdio_bus_data->pcs_mask) {
- 		addr = ffs(priv->plat->mdio_bus_data->pcs_mask) - 1;
-@@ -515,10 +522,8 @@ int stmmac_pcs_setup(struct net_device *ndev)
- 		return 0;
- 	}
- 
--	if (ret) {
--		dev_warn(priv->device, "No xPCS found\n");
--		return ret;
--	}
-+	if (ret)
-+		return dev_err_probe(priv->device, ret, "No xPCS found\n");
- 
- 	priv->hw->xpcs = xpcs;
- 
--- 
-2.43.0
+Or ieisystem?
 
+Using the domain name (minus .com, etc.) is common practice.
+
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index 573578db9509..0ffa8d06aea9 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -609,6 +609,8 @@ patternProperties:
+>      description: IC Plus Corp.
+>    "^idt,.*":
+>      description: Integrated Device Technologies, Inc.
+> +  "^ieit,.*":
+> +    description: IEIT SYSTEMS Co.，Ltd.
+>    "^ifi,.*":
+>      description: Ingenieurburo Fur Ic-Technologie (I/F/I)
+>    "^ilitek,.*":
+> -- 
+> 2.34.1
+> 
