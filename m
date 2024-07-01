@@ -1,115 +1,206 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD323207;
-	Mon,  1 Jul 2024 10:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F8446436;
+	Mon,  1 Jul 2024 10:02:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719828025; cv=none; b=mPQXpidxcuofZipBTe5rYRSrFGdOALv2u628mur0CKldzl3yV2hmD/eG+811cGnRdl6LDfrbhUxrT81s0dr+6dzziDJdRQobo51kg2o+TmbCj8eZMTYaZXUlW7bG/4fQfCU4/EjToUhCrBDtgX2kgynFNlCnBHk8qpnbb/vz2WY=
+	t=1719828154; cv=none; b=maDOaQMVBefIWsMhXx1ytm0sCd5CX2O8nQZtY67J9u3sxVhkh1U0h6sLHtiQRdsd7GTRRRr7T6hoDFyIvLkZ1zXBp6xScyt4hsqwJvwAwoTmDQ2jdwxDxSNyEKA1TTs3R1NoPqe3MeSCBCVO1HF+Xa93ExSp61wv9yG8fUVEeRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719828025; c=relaxed/simple;
-	bh=RUf7OjjTglvTPXGaPVeizucUUQcyVBcR3ba4jC8am9c=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TQO6bydQNSxclCTxlsL/mz4KHpNj09snEiKK+XPeBczrxUProdIPnjsxL4A1GJ117PBKlsgkdnut6eCZ1O2SZr5MXNZTnuwRa7ue7+McoU3XcPDK2oq828bFu2ElT0qDT6qBLF3kkX+TRe7Iv8uSh/mVbJ05iN5pLAxzf4JJw3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=XOUQQgmK; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1719828154; c=relaxed/simple;
+	bh=qpqOlNCc6pE+Az7x1zOSWa1Hy2UVVKTtKCMN0PvJV2c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kYIe7Ku8J/Lvw/3rZzMZXXGn/8A1JgAdqxgKH34D0hXEOEzGqNF6K6oveaPP3w63vhCXF+7PZmsfr8DJWjXUzjCnXSPi4uIkPrR+Z44SNSszwxrt1RP5BCBlS4BEHQT2e1gd+6LJvkZGp1fTJEyTvrZmM+V1IR+Q0xUwh/umgU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=A6X+9638; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="XOUQQgmK"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4618vWEW022313;
-	Mon, 1 Jul 2024 02:07:59 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=r
-	V/vwo6keil1TY6K9z6dN0ncA5BO0qdU5lVeOPVYXzU=; b=XOUQQgmKbmOuIPBzq
-	/Xwi47VHHLMzo/0h16BE/dYX3cyKTcxlAtNNuaJfYv+LjZ7jDO4L9SEoPgq0JSwx
-	BUm6TvmloehuUwZ0WgxVrRw2EA/E5n7iKp3T368STe5evXmtMIxGG4e7tmrfXo7h
-	7pv172C/DPNvTeJfZuOO3tkRRWsxbe/2vcDBdkiJgEGLoguEXcuq0BMhuTjs/1ui
-	dE+l9IBKdfGBIZlhIc9zpRzozR1iVF/GZqPT9wvA3nUORx9A/Y2dHtVr92aEXU++
-	2Ee02SOx6iZd3qszJ1EwzPFCkI2j6tnnCxkwlXobF6hSLuep3fAyMZlLcfk/nRLv
-	qyAxQ==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 403sdcg1my-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Jul 2024 02:07:58 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Mon, 1 Jul 2024 02:07:57 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Mon, 1 Jul 2024 02:07:57 -0700
-Received: from localhost.localdomain (unknown [10.28.36.175])
-	by maili.marvell.com (Postfix) with ESMTP id 7615B3F7055;
-	Mon,  1 Jul 2024 02:07:52 -0700 (PDT)
-From: Srujana Challa <schalla@marvell.com>
-To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <kuba@kernel.org>, <davem@davemloft.net>, <pabeni@redhat.com>,
-        <sgoutham@marvell.com>, <lcherian@marvell.com>, <gakula@marvell.com>,
-        <jerinj@marvell.com>, <hkelam@marvell.com>, <sbhatta@marvell.com>,
-        <schalla@marvell.com>, Nithin Dabilpuram <ndabilpuram@marvell.com>
-Subject: [PATCH net,1/6] octeontx2-af: replace cpt slot with lf id on reg write
-Date: Mon, 1 Jul 2024 14:37:41 +0530
-Message-ID: <20240701090746.2171565-2-schalla@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240701090746.2171565-1-schalla@marvell.com>
-References: <20240701090746.2171565-1-schalla@marvell.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="A6X+9638"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=DJ9+LxV54Ieb6gRSrHFlDXvJdhuQToWOdrkYwkWiAjg=;
+	t=1719828152; x=1720260152; b=A6X+9638Ee5F083A/4TnUMgo2C6rHZSIH062qgydb+xzkYN
+	P1fNquUmSUvWkdGzAB2jIPDgfo7kQaWFCPkHeK7EdYvD2tbFRGUFatoqiAAAqkA2dl4TSSiPomCU3
+	6+Kc/lp1tcTj3a77P++OiuK0tRCpOIti8jR3XwqwpHp5omH9RjAqHSxknS4JkGFqri4wrF3DcDHJB
+	osahfQd8pQhKVj+evon6Vbn5jE8vy9MJ3EBzzrbY9608qpVkAbUsUTfIBYElXA8ztTglV1M38w+Sp
+	nwnvFv3aQaj2eCFCfHrg5nkCzUwqCcygiYcjgP/sR5Yv4spJ/x0/I8zRBgXrHwXg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sODrZ-0007Nt-U6; Mon, 01 Jul 2024 12:02:22 +0200
+Message-ID: <e0d95288-17b4-4286-8084-95f496603ada@leemhuis.info>
+Date: Mon, 1 Jul 2024 12:02:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: xhxDl6Nlsy0u5m-up4tXOxKgGyOdswgC
-X-Proofpoint-ORIG-GUID: xhxDl6Nlsy0u5m-up4tXOxKgGyOdswgC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-01_07,2024-06-28_01,2024-05-17_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] QXL display malfunction
+To: "Kaplan, David" <David.Kaplan@amd.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: "Petkov, Borislav" <Borislav.Petkov@amd.com>,
+ "zack.rusin@broadcom.com" <zack.rusin@broadcom.com>,
+ "dmitry.osipenko@collabora.com" <dmitry.osipenko@collabora.com>,
+ "Koenig, Christian" <Christian.Koenig@amd.com>,
+ Dave Airlie <airlied@redhat.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ ML dri-devel <dri-devel@lists.freedesktop.org>,
+ "spice-devel@lists.freedesktop.org" <spice-devel@lists.freedesktop.org>,
+ "virtualization@lists.linux.dev" <virtualization@lists.linux.dev>
+References: <DS7PR12MB576622398096CB650FF6AF4294FF2@DS7PR12MB5766.namprd12.prod.outlook.com>
+ <DS7PR12MB57665F9F4BDF0598D7CC53DD94FF2@DS7PR12MB5766.namprd12.prod.outlook.com>
+ <67b279c7-1b65-46be-baa2-06794b47b9d1@leemhuis.info>
+ <ab0fb17d-0f96-4ee6-8b21-65d02bb02655@suse.de>
+ <DS7PR12MB57662053B081FBD62213016B94C22@DS7PR12MB5766.namprd12.prod.outlook.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <DS7PR12MB57662053B081FBD62213016B94C22@DS7PR12MB5766.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1719828152;8b6a32e2;
+X-HE-SMSGID: 1sODrZ-0007Nt-U6
 
-From: Nithin Dabilpuram <ndabilpuram@marvell.com>
+Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+for once, to make this easily accessible to everyone.
 
-Replace cpt slot id with lf id on reg read/write as
-CPTPF/VF driver would send slot number instead of lf id
-in the reg offset.
+Thomas, was there some progress wrt to fixing below regression? I might
+have missed something, but from here it looks like this fall through the
+cracks.
 
-Fixes: ae454086e3c2 ("octeontx2-af: add mailbox interface for CPT")
-Signed-off-by: Nithin Dabilpuram <ndabilpuram@marvell.com>
----
- drivers/net/ethernet/marvell/octeontx2/af/rvu_cpt.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Makes me wonder if we should temporarily revert this for now to fix this
+for rc7 and ensure things get at least one week of testing before the final.
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_cpt.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_cpt.c
-index f047185f38e0..98440a0241a2 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_cpt.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_cpt.c
-@@ -663,6 +663,8 @@ static bool is_valid_offset(struct rvu *rvu, struct cpt_rd_wr_reg_msg *req)
- 		if (lf < 0)
- 			return false;
- 
-+		req->reg_offset &= 0xFF000;
-+		req->reg_offset += lf << 3;
- 		return true;
- 	} else if (!(req->hdr.pcifunc & RVU_PFVF_FUNC_MASK)) {
- 		/* Registers that can be accessed from PF */
-@@ -707,12 +709,13 @@ int rvu_mbox_handler_cpt_rd_wr_register(struct rvu *rvu,
- 	    !is_cpt_vf(rvu, req->hdr.pcifunc))
- 		return CPT_AF_ERR_ACCESS_DENIED;
- 
-+	if (!is_valid_offset(rvu, req))
-+		return CPT_AF_ERR_ACCESS_DENIED;
-+
- 	rsp->reg_offset = req->reg_offset;
- 	rsp->ret_val = req->ret_val;
- 	rsp->is_write = req->is_write;
- 
--	if (!is_valid_offset(rvu, req))
--		return CPT_AF_ERR_ACCESS_DENIED;
- 
- 	if (req->is_write)
- 		rvu_write64(rvu, blkaddr, req->reg_offset, req->val);
--- 
-2.25.1
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
+#regzbot poke
+
+On 14.06.24 15:45, Kaplan, David wrote:
+> [AMD Official Use Only - AMD Internal Distribution Only]
+> 
+>> -----Original Message-----
+>> From: Thomas Zimmermann <tzimmermann@suse.de>
+>> Sent: Wednesday, June 12, 2024 9:26 AM
+>> To: Linux regressions mailing list <regressions@lists.linux.dev>
+>> Cc: Petkov, Borislav <Borislav.Petkov@amd.com>;
+>> zack.rusin@broadcom.com; dmitry.osipenko@collabora.com; Kaplan, David
+>> <David.Kaplan@amd.com>; Koenig, Christian <Christian.Koenig@amd.com>;
+>> Dave Airlie <airlied@redhat.com>; Maarten Lankhorst
+>> <maarten.lankhorst@linux.intel.com>; Maxime Ripard
+>> <mripard@kernel.org>; LKML <linux-kernel@vger.kernel.org>; ML dri-devel
+>> <dri-devel@lists.freedesktop.org>; spice-devel@lists.freedesktop.org;
+>> virtualization@lists.linux.dev
+>> Subject: Re: [REGRESSION] QXL display malfunction
+>>
+>> Caution: This message originated from an External Source. Use proper
+>> caution when opening attachments, clicking links, or responding.
+>>
+>>
+>> Hi
+>>
+>> Am 12.06.24 um 14:41 schrieb Linux regression tracking (Thorsten Leemhuis):
+>>> [CCing a few more people and lists that get_maintainers pointed out
+>>> for qxl]
+>>>
+>>> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+>>> for once, to make this easily accessible to everyone.
+>>>
+>>> Thomas, from here it looks like this report that apparently is caused
+>>> by a change of yours that went into 6.10-rc1 (b33651a5c98dbd
+>>> ("drm/qxl: Do not pin buffer objects for vmap")) fell through the
+>>> cracks. Or was progress made to resolve this and I just missed this?
+>>>
+>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker'
+>>> hat)
+>>> --
+>>> Everything you wanna know about Linux kernel regression tracking:
+>>> https://linux-regtracking.leemhuis.info/about/#tldr
+>>> If I did something stupid, please tell me, as explained on that page.
+>>>
+>>> #regzbot poke
+>>>
+>>>
+>>> On 03.06.24 04:29, Kaplan, David wrote:
+>>>>> -----Original Message-----
+>>>>> From: Kaplan, David
+>>>>> Sent: Sunday, June 2, 2024 9:25 PM
+>>>>> To: tzimmermann@suse.de; dmitry.osipenko@collabora.com; Koenig,
+>>>>> Christian <Christian.Koenig@amd.com>; zach.rusin@broadcom.com
+>>>>> Cc: Petkov, Borislav <Borislav.Petkov@amd.com>;
+>>>>> regressions@list.linux.dev
+>>>>> Subject: [REGRESSION] QXL display malfunction
+>>>>>
+>>>>> Hi,
+>>>>>
+>>>>> I am running an Ubuntu 19.10 VM with a tip kernel using QXL video
+>>>>> and I've observed the VM graphics often malfunction after boot,
+>>>>> sometimes failing to load the Ubuntu desktop or even immediately
+>> shutting the guest down.
+>>>>> When it does load, the guest dmesg log often contains errors like
+>>>>>
+>>>>> [    4.303586] [drm:drm_atomic_helper_commit_planes] *ERROR* head
+>> 1
+>>>>> wrong: 65376256x16777216+0+0
+>>>>> [    4.586883] [drm:drm_atomic_helper_commit_planes] *ERROR* head
+>> 1
+>>>>> wrong: 65376256x16777216+0+0
+>>>>> [    4.904036] [drm:drm_atomic_helper_commit_planes] *ERROR* head
+>> 1
+>>>>> wrong: 65335296x16777216+0+0
+>>
+>> I don't see how these messages are related. Did they already appear before
+>> the broken commit was there?
+> 
+> No, I did not observe them prior to the broken commit.
+> 
+>>
+>>>>> [    5.374347] [drm:qxl_release_from_id_locked] *ERROR* failed to find
+>> id in
+>>>>> release_idr
+>>
+>> Is there only one such message in the log? Or multiple/frequent ones.
+> 
+> I would usually only see one.
+> 
+>>
+>> Could you provide a stack trace of what happens before?
+> 
+> Here's the top of a backtrace when the error occurs:
+> #0  qxl_release_from_id_locked (qdev=qdev@entry=0xffff88810126e000, id=id@entry=262151)
+>     at drivers/gpu/drm/qxl/qxl_release.c:373
+> #1  0xffffffff819f5b6a in qxl_garbage_collect (qdev=0xffff88810126e000)
+>     at drivers/gpu/drm/qxl/qxl_cmd.c:222
+> #2  0xffffffff810e3aa8 in process_one_work (worker=worker@entry=0xffff888101680300,
+>     work=0xffff88810126f340) at kernel/workqueue.c:3231
+> #3  0xffffffff810e6281 in process_scheduled_works (worker=<optimized out>)
+>     at kernel/workqueue.c:3312
+> #4  worker_thread (__worker=0xffff888101680300) at kernel/workqueue.c:3393
+> 
+>>
+>> We sometimes draw into the buffer object from the CPU. For accessing the
+>> buffer object's pages from the CPU, only a vmap operation should be
+>> necessary. It appears as if qxl also requires a pin. My guess is that the pin
+>> inserts the buffer-object's host-side pages and the code around
+>> qxl_release_from_id_locked() appears to be garbage-collecting them.
+>> Hence without the pin, the GC complains about inconsistent state.
+>>>>>
+>>>>> I bisected the issue down to "drm/qxl: Do not pin buffer objects for
+>> vmap"
+>>>>> (b33651a5c98dbd5a919219d8c129d0674ef74299).
+>>
+>> Thanks for bisecting. Does it work if you revert that commit?
+> 
+> Yes
+> 
+> Thanks --David Kaplan
