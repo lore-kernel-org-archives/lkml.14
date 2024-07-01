@@ -1,119 +1,231 @@
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE361CA9C
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 13:34:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3EBE15ECC5
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 13:35:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719840865; cv=none; b=hhAGaCu98Gr+m6ibt0Kk2DBtK0DnTyFNoVabFSh738K2lqmZn0M6tsJxtXi9QW4m9mH2VMT7iFw2tfecr8f9+L9gjkxAgNAFD80zeO9GfVu6ycRw+6tP+wY77rk7fEOL2EHscE5vqbf+6bq8U9NnnPGVoUrHul3cfUUt2zH3C0Y=
+	t=1719840920; cv=none; b=NqQMv6EnUPNbchfp/66KjRDEaP6creoHnDj5+tJIoaMKc+CnuUD4/4mkDUVU8agdPYO4caxspzFAYHK45hBBLbm/lRvRXO49lPsuk5bafuLrisxBD3yi6RCsrGGfr7Geobmicg97wRNlGc5iNSQYywwmvvB8SfrCgkrLy4e5XAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719840865; c=relaxed/simple;
-	bh=9+9V2bXFQ9Bx9R52IP1NjXmiX1PMdyibPsUY7UTJaas=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y5KIN/LmcwQKnfgh+mtX+OIghU27Zamzb2tZTJXkSCURQIFTfcZI8x2k/H3EyH5YYOGQbmEeRty4SMO66oEpstLu8VvFsGMcvUs4xiudywXqjB8me4s+MAp6MK9tZZjz8DMn3TF/mlEmCxSnicuMapHdMxXjqPyOvs20KVW4Whg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IDAyEB6N; arc=none smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719840920; c=relaxed/simple;
+	bh=452Q4FhZJ0mADWWLmyzoJKxOQya9ASi8Mich7VuTw24=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u7t8j+iC0yMctcQQtCBdmcdnwve9aaoMOIknf944KG5VMOoGSfT+gLipxpPWNWPds3dowQ8iMsn34+TMQTMTRsrT9NE4yUZRu7eNW1neHDjeQU2ekiQeQS/DM8wtJ51ImuAsxPnnVCWm4LoK54noZ7U/bo3wuVTthPYEu/ke/Sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=obfwfaXZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IDAyEB6N"
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-80fa1509989so1574887241.0
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 06:34:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719840862; x=1720445662; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=nF71EHXFkyHVGuCXiP4aYrq6taOjaORROM/h1AwGKLA=;
-        b=IDAyEB6N5K5Li9UCwwVylUbdExPRhVeQOr+eUm9zzIZG5s+fDIGWPjAMZb1RPsdgxb
-         XLFoohM4GNSYBkLiaALw801ojBDelJjjqEKENJVTZcX17cc+ZY0HcVSobQcIQQBaaCyR
-         eJwwaZ1Nagc5KEuJrV5j9GZ5iz8Jiy8RjiCOcQkBYeofFG8xwztr2yEJPcPr9Q+3mNer
-         ZRW+rEpxqj5I5RgnzXbySGeS8mg8/4vZueD4gppweqYznKLDexsU13EhBQ07YP/UFE1g
-         LsW1cOsP21UR2vjBpLZN72KTJ9yX2seewMXzBrJBe2YIC58xDs8bb4bDHMnw0lomZPn0
-         AXLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719840862; x=1720445662;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nF71EHXFkyHVGuCXiP4aYrq6taOjaORROM/h1AwGKLA=;
-        b=pB5G+6Y8TIvZ7qwaS81FH36fQj1QCmA64Q2KuC6oylhjaQDcwJcqxC0aaPN9XcVaJs
-         Ilw7xA/exNaxZ0bxhJKgXvT6p5f3Pvg9Q8ymCBnQicuCAyvCFsBuWRMYCOntKx0HeChW
-         dGjR+xaYa77+Olf1UJAT0zNKb7AICH+55i3QabK9BNrKEL1eEmTZjLIWjqJ4nUnsUEV/
-         /DOGhk0Ne3MxKDdR6icKZf6Worfx5AKwiHOOALwVnLAAEYNPgruCWPNs0B8KjY+muxII
-         joujv6sGlY5pJ9Xygo0+8NlY3EBk3f/UtjAQ+FDiRIL+ooaGGRgD4vbHxovGZ0vGwwIn
-         mieg==
-X-Forwarded-Encrypted: i=1; AJvYcCVc9EWo+hvd7dPSUiJe4mkMpVIbZpuRgZSmM7SgpsPg7d7n9u5D5ObUV8aawPnVZ7HOKZPtc9BzaLYvolcS9Y7CS9ev4VOjy6+mWKfG
-X-Gm-Message-State: AOJu0YwY0VIgCKw+uBE3D4SNpDnPugL6wG03fyJMsAQlpYw1MiJK1wKC
-	EReSifAhoHrnfTE6Tg85Z3Wla5WUi5eUhLLL1PKiqnsPWYrYIV1t0lcC+uPZcx4yQzoe8PpholJ
-	GGl1+IoUYVA+mZXW2fHmgOQv8x3th79zu+JdMpQ==
-X-Google-Smtp-Source: AGHT+IEi91/OioUckML3e16qf/5FwGqwAJCndr2RrL0tA44bCDWr7zkEAKyB2e2ZdEb99op+GJlsVEiETTclvMwxUvQ=
-X-Received: by 2002:a67:e291:0:b0:48c:45e3:16e0 with SMTP id
- ada2fe7eead31-48f9e890cc1mr5239072137.9.1719840861068; Mon, 01 Jul 2024
- 06:34:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="obfwfaXZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F3E1C116B1;
+	Mon,  1 Jul 2024 13:35:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719840919;
+	bh=452Q4FhZJ0mADWWLmyzoJKxOQya9ASi8Mich7VuTw24=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=obfwfaXZJuo7CKWqimApdmuV6R+GIeO9qj255mFWzzCb/bf29xrbGB0kNUz8ziT7r
+	 xLQ4ZK3JLomhHJTwIM0LIndI2ftjImn5aTlEzNj8NawFcqSVDlZrGkTHXjnRkA1Sf8
+	 TDLXP23gqmKaBatLMfyuzTxdSLo9y3n9imHVSmzBSgeKO25JZ1MeWa7C23V2n8I1H0
+	 6CfzYRDFefZORpoLqkh1DDLtGYjiDxoD0QnGSJl3PGQ2qVMmDzad6kMxIAYV8a6Xpf
+	 kEsAOr07kgfEnroGDkS+kKej+ye0fzWjW3Axp57ZfMZV8YchAgVfXFlu+qW4ClPTnT
+	 fA2wv5x4hOclg==
+Date: Mon, 1 Jul 2024 14:35:14 +0100
+From: Will Deacon <will@kernel.org>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, jialong.yang@shingroup.cn
+Subject: Re: [PATCH 2/3] perf: Add driver for Arm NI-700 interconnect PMU
+Message-ID: <20240701133514.GB2250@willie-the-truck>
+References: <cover.1713972897.git.robin.murphy@arm.com>
+ <eb471ea519d358880eda01c95fd1f11a63663907.1713972897.git.robin.murphy@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+G9fYsXsbHp+0cWoTjEhkpANOav=GLSjPx5ghtUY-FjMPyoSQ@mail.gmail.com>
- <145b39a0-da05-4c60-a019-c1a6211e6c77@sirena.org.uk>
-In-Reply-To: <145b39a0-da05-4c60-a019-c1a6211e6c77@sirena.org.uk>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 1 Jul 2024 19:04:09 +0530
-Message-ID: <CA+G9fYs+RfnttPg7E_TAGW4sgnLOuvUQnZj6kHsXeRy=JEMOcg@mail.gmail.com>
-Subject: Re: Mainline: v6.10-rc6 boot failed across all arm64 devices
-To: Mark Brown <broonie@kernel.org>
-Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Aishwarya TCV <Aishwarya.TCV@arm.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eb471ea519d358880eda01c95fd1f11a63663907.1713972897.git.robin.murphy@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Mon, 1 Jul 2024 at 17:42, Mark Brown <broonie@kernel.org> wrote:
->
-> On Mon, Jul 01, 2024 at 05:28:29PM +0530, Naresh Kamboju wrote:
-> > The mainline kernel v6.10-rc6 boot failed across all arm64 devices and
-> > qemu-arm64 and no crash log found (earlycon) did not help.
-> >
-> > But the defconfig builds boot PASS.
-> >
-> > The boot problem is with defconfig + Extra Kconfigs and builds links
-> > provided in the bottom of this email.
-> >
-> > The boot test history shows that,
-> >   GOOD: v6.10-rc5
-> >   BAD:  v6.10-rc6
->
-> Other CI systems aren't showing this.  I'm guessing you've updated the
-> toolchain versions you're using and are running into:
+On Thu, Apr 25, 2024 at 01:29:53PM +0100, Robin Murphy wrote:
+> The Arm NI-700 Network-on-Chip Interconnect has a relatively
+> straightforward design with a hierarchy of voltage, power, and clock
+> domains, where each clock domain then contains a number of interface
+> units and a PMU which can monitor events thereon. As such, it begets a
+> relatively straightforward driver to interface those PMUs with perf.
+> 
+> Even more so than with arm-cmn, users will require detailed knowledge of
+> the wider system topology in order to meaningfully analyse anything,
+> since the interconnect itself cannot know what lies beyond the boundary
+> of each inscrutably-numbered interface. Given that, for now they are
+> also expected to refer to the NI-700 documentation for the relevant
+> event IDs to provide as well. An identifier is implemented so we can
+> come back and add jevents if anyone really wants to.
+> 
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> ---
+>  drivers/perf/Kconfig  |   7 +
+>  drivers/perf/Makefile |   1 +
+>  drivers/perf/arm-ni.c | 767 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 775 insertions(+)
+>  create mode 100644 drivers/perf/arm-ni.c
 
-Our LKFT tests saw the same bug as #31924.
+Please can you add some documentation?
 
-BAD:
-   "ar": "GNU ar (GNU Binutils for Debian) 2.42.50.20240625",
-   "as": "GNU assembler (GNU Binutils for Debian) 2.42.50.20240625",
-   "ld": "GNU ld (GNU Binutils for Debian) 2.42.50.20240625",
-   "gcc": "gcc (Debian 13.3.0-1) 13.3.0",
+> +struct arm_ni {
+> +	struct device *dev;
+> +	void __iomem *base;
+> +	enum ni_part part;
+> +	int id;
+> +	int num_cds;
+> +	struct arm_ni_cd cds[];
+> +};
 
-Good:
-   "ar": "GNU ar (GNU Binutils for Debian) 2.42",
-   "as": "GNU assembler (GNU Binutils for Debian) 2.42",
-    "ld": "GNU ld (GNU Binutils for Debian) 2.42",
-    "gcc": "gcc (Debian 13.2.0-25) 13.2.0",
+Can you use that fancy new __counted_by thing here?
 
+> +
+> +#define cd_to_ni(cd) container_of((cd), struct arm_ni, cds[(cd)->id])
+> +#define pmu_to_cd(p) container_of((p), struct arm_ni_cd, pmu)
+> +
+> +#define cd_for_each_unit(cd, u) \
+> +	for (struct arm_ni_unit *u = cd->units; u < cd->units + cd->num_units; u++)
+> +
+> +static int arm_ni_hp_state;
+> +
+> +struct arm_ni_event_attr {
+> +	struct device_attribute attr;
+> +	enum ni_node_type type;
+> +};
+> +
+> +#define NI_EVENT_ATTR(_name, _type)					\
+> +	(&((struct arm_ni_event_attr[]) {{				\
+> +		.attr = __ATTR(_name, 0444, arm_ni_event_show, NULL),	\
+> +		.type = _type,						\
+> +	}})[0].attr.attr)
+> +
+> +static ssize_t arm_ni_event_show(struct device *dev,
+> +				 struct device_attribute *attr, char *buf)
+> +{
+> +	struct arm_ni_event_attr *eattr = container_of(attr, typeof(*eattr), attr);
+> +
+> +	if (eattr->type == NI_PMU)
+> +		return sysfs_emit(buf, "type=0x%x\n", eattr->type);
+> +
+> +	return sysfs_emit(buf, "type=0x%x,eventid=?,nodeid=?\n", eattr->type);
 
->    https://sourceware.org/bugzilla/show_bug.cgi?id=31924#c9
+I'm struggling to see what this is doing. Please can you explain it a
+bit? For example, does the perf tool parse those "=?" entries, and why
+is it useful to print out only the NI_PMU value for the other events?
 
-We are able to reproduce this bug ^.
-The gcc-13 builds failed and gcc-8 builds and clang-18 builds PASS.
+> +}
+> +
+> +static umode_t arm_ni_event_attr_is_visible(struct kobject *kobj,
+> +					    struct attribute *attr, int unused)
+> +{
+> +	struct device *dev = kobj_to_dev(kobj);
+> +	struct arm_ni_cd *cd = pmu_to_cd(dev_get_drvdata(dev));
+> +	struct arm_ni_event_attr *eattr;
+> +
+> +	eattr = container_of(attr, typeof(*eattr), attr.attr);
+> +
+> +	cd_for_each_unit(cd, unit) {
+> +		if (unit->type == eattr->type && unit->ns)
+> +			return attr->mode;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static struct attribute *arm_ni_event_attrs[] = {
+> +	NI_EVENT_ATTR(asni, NI_ASNI),
+> +	NI_EVENT_ATTR(amni, NI_AMNI),
+> +	NI_EVENT_ATTR(cycles, NI_PMU),
+> +	NI_EVENT_ATTR(hsni, NI_HSNI),
+> +	NI_EVENT_ATTR(hmni, NI_HMNI),
+> +	NI_EVENT_ATTR(pmni, NI_PMNI),
+> +	NULL
+> +};
 
-> and will see this with other kernels.  It's probably worth testing
-> toolchains before deploying them...
+[...]
 
-While we talk, I get to see today's Linux next and also encounter the
-same problem.
-Thanks for the suggestion to test toolchains.
+> +static bool arm_ni_validate_event(struct perf_event *this,
+> +				  struct perf_event *that, int *count)
+> +{
+> +	if (is_software_event(this))
+> +		return true;
+> +	if (this->pmu != that->pmu)
+> +		return false;
+> +	return --count[NI_EVENT_TYPE(this) == NI_PMU] >= 0;
 
-- Naresh
+This is pretty horrible to read :/
+
+I don't know the details of this PMU, so is the count array saying that
+you can have NI_NUM_COUNTERS events with the NI_PMU type, but only one
+event of any other type?
+
+> +}
+> +
+> +static int arm_ni_validate_group(struct perf_event *event)
+> +{
+> +	struct perf_event *sibling, *leader;
+> +	int count[2] = {NI_NUM_COUNTERS, 1};
+> +
+> +	arm_ni_validate_event(event, event, count);
+> +
+> +	leader = event->group_leader;
+> +	if (leader != event && !arm_ni_validate_event(leader, event, count))
+> +		return - EINVAL;
+> +
+> +	for_each_sibling_event(sibling, leader) {
+> +		if (!arm_ni_validate_event(sibling, event, count))
+> +			return - EINVAL;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int arm_ni_event_init(struct perf_event *event)
+> +{
+> +	struct arm_ni_cd *cd = pmu_to_cd(event->pmu);
+> +
+> +	if (event->attr.type != event->pmu->type)
+> +		return -ENOENT;
+> +
+> +	if (is_sampling_event(event))
+> +		return -EINVAL;
+> +
+> +	event->cpu = cd->cpu;
+> +	if (NI_EVENT_TYPE(event) == NI_PMU)
+> +		return arm_ni_validate_group(event);
+> +
+> +	cd_for_each_unit(cd, unit) {
+> +		if (unit->type == NI_EVENT_TYPE(event) &&
+> +		    unit->id == NI_EVENT_NODEID(event) && unit->ns) {
+> +			event->hw.config_base = (unsigned long)unit;
+> +			return arm_ni_validate_group(event);
+> +		}
+> +	}
+> +	return -EINVAL;
+> +}
+> +
+> +static u64 arm_ni_read_ccnt(struct arm_ni_cd *cd)
+> +{
+> +	u64 l, u_old, u_new;
+> +
+> +	u_new = readl_relaxed(cd->pmu_base + NI_PMCCNTR_U);
+> +	do {
+> +		u_old = u_new;
+> +		l = readl_relaxed(cd->pmu_base + NI_PMCCNTR_L);
+> +		u_new = readl_relaxed(cd->pmu_base + NI_PMCCNTR_U);
+> +	} while (u_new != u_old);
+> +
+> +	return (u_new << 32) | l;
+> +}
+
+oh man, they really don't have 64-bit registers on this thing? If we
+have to loop like this, can we add a timeout just in case the hardware
+goes wonky? It's like mixing together the worst parts of iopoll.h and
+io-64-nonatomic-lo-hi.h.
+
+There are a few other PMU drivers that look like they could share that
+code if you added it as a generic helper.
+
+Will
