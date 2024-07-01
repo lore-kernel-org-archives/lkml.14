@@ -1,39 +1,38 @@
 Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C973483CD4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97F6127B57;
 	Mon,  1 Jul 2024 08:50:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719823849; cv=none; b=prSzhFbqfBpZ2EvdB1//jbkaS/VNmTUPVTzTKA4QpmFIQ64Cp+CiekMIRr2FjZauYxhK8U5vLZsF+yRckD049RDUTEsMEI7PLKgC2KAqxOAkNG5tfWr5dICtXd8+EXGo1p4ikSKf5YVYEvaEsDwuM72rOa2WCgWJUMutjobn6kw=
+	t=1719823850; cv=none; b=f34uUmcW8wVLZLBMFDnGDKDZ82C+bVRNLCJcxQvWIjIK+gRrBlOEN+lwhu9ToUtJkvX+Ki74kNoQVip4eZPyEbQMD2Szlp5l88MoR0si1b1N+rOah3KittiLAgNNspo/daLMfIX1xfAHFSuPr2Oq3W+6sV8l0CBQMU3YeRnqsxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719823849; c=relaxed/simple;
-	bh=dM26KV7IcWU1eKc3ESLM8nCREge6dZZhQTJUDCMgjeY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=REWi/jRbQ8Cc9JBpcgUe+a2dwPmWzCLMYjESdvI8T+ZP8bamF5GYofLxl/Qn59FKtDz6LsXMjmjYME7dBWkE1Ee5VRp2ups39oafUjoiqJ4fkJx/tVT8+CrxQ4ZNuqYc9wQwkhmTJkuMqZygzmuFZ/CX5co5zNqiDKJPAGbLmPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=aBOg2sMg; arc=none smtp.client-ip=217.70.183.198
+	s=arc-20240116; t=1719823850; c=relaxed/simple;
+	bh=NpDLeoWlfO75xR5lZbpySzJDKMvQSBb/ujqrRwpiHN0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XGnw9CiCJW1x+dKZU1IdhJtJVGlfjbn/r65Ocyrp3Ps7lnmViO3RVw00F04V/se3OyQhnTd4bQYiksHJjqgoLLllSL7YQZhVb7VaU8aCsI+/6Zh/3AhwqK7iuSzwpHZ0JzS22wKSI6FDqGLjSHK7XW3trcql98/URwrh4vWVvbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=O2WA0yoj; arc=none smtp.client-ip=217.70.183.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="aBOg2sMg"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A6F59C000E;
-	Mon,  1 Jul 2024 08:50:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="O2WA0yoj"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1FE68C0005;
+	Mon,  1 Jul 2024 08:50:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1719823846;
+	t=1719823844;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4KWTM28xCttexEfryGnrAJQCAdQ+fe99PoCf6yYBGvY=;
-	b=aBOg2sMgmPAEG0asW8W5yHv8Xb1IdQEA/Rn1gjlHKZ0weyL8Lu+s7dqhAdWsb8nCREb2ij
-	JbTqMpGtE2g0Kf5fbPo5KAESyjWoAquk+2qtczQCOSe+CB1lQRoa9k0JYQ8JH/DPYOYk7w
-	Qtb3M4xBHLqP1waFMn7tKtRzyLOWBfwyZ2ikEaNr+xW9FJLwP8CyawsY+pFl+uA5eABFvk
-	S3oNXYuBiGvDiu0tXZM6unX+EuERe8Gi4djl6psPxyEzUrpeaSriM8k+RkxkrX5bCM3F3+
-	kPEeislca4RvFM6K7p2r8zDN9wjGySgRyxwamWrk9VUFzfOQc3Sz3oWWAtiD8w==
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=RTR8H7b1tl9eAKDR+Ps9ZqecKHhEcbAUOFZfLXxFeyo=;
+	b=O2WA0yojVx3gRuuWY0lO6f9o943QQ5LaJuaTzA1sWGFhsyQRorPD0spZv+xVilAj2+UDnT
+	YYdXrlmtCNqbYVqWuzEjLi/yFoxdQ4ABqzw7OgnH0HEkFhzZZFqclMfhWqxQuIeOSl7Fbz
+	kRB+nxe22S3/JCm7Qk5/Di3Ce0m92sAyCIywlkUwgM4fvQz7tR7fy86POx1VJPC4gxDVNo
+	tdiiYugGoh0tPgOldlkx8MdOiXCGR3X26Fh3KpAMn2YLBd2iPKFQsNT9qzhkhCKIlEi0pN
+	Q0NRz7Kw8R/QvxKd8V2dBWj+AvzBhnTAtReazzC6Lzlt5yOiBU+EhA8SvMQFWg==
 From: Romain Gantois <romain.gantois@bootlin.com>
-Date: Mon, 01 Jul 2024 10:51:05 +0200
-Subject: [PATCH net-next 3/6] net: phy: dp83869: Ensure that the
- FORCE_LINK_GOOD bit is cleared
+Subject: [PATCH net-next 0/6] net: phy: dp83869: Add support for downstream
+ SFP cages
+Date: Mon, 01 Jul 2024 10:51:02 +0200
+Message-Id: <20240701-b4-dp83869-sfp-v1-0-a71d6d0ad5f8@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,9 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240701-b4-dp83869-sfp-v1-3-a71d6d0ad5f8@bootlin.com>
-References: <20240701-b4-dp83869-sfp-v1-0-a71d6d0ad5f8@bootlin.com>
-In-Reply-To: <20240701-b4-dp83869-sfp-v1-0-a71d6d0ad5f8@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAPdtgmYC/x3MTQqAIBBA4avErBswFZm6SrToZ6zZmGhEIN09a
+ fkt3iuQOQlnGJoCiW/JcoaKrm1gPeawM8pWDVppq5wmXCxukQy5HrOPSDz3bjHeGlqhRjGxl+c
+ fjhD4wsDPBdP7fv1VkKpqAAAA
 To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
  Russell King <linux@armlinux.org.uk>, 
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
@@ -54,79 +53,63 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
 X-Mailer: b4 0.14.0
 X-GND-Sasl: romain.gantois@bootlin.com
 
-This bit is located in the PHY_CONTROL register and should be cleared on
-reset. However, this is not always the case, which can cause unexpected
-behavior such as link up being incorrectly reported as good when the
-DP83869 is brought up directly in RGMII-SGMII bridge mode.
+Hello everyone,
 
-Make sure that this bit is cleared for all operational modes.
+This is version one of my series that adds support for downstream SFP cages
+to the DP83869 PHY driver.
+
+The DP83869HM PHY transceiver supports a variety of different conversion
+modes, including RGMII to SGMII and RGMII to 1000Base-X. With these last
+two modes, the DP83869 can act as a bridge between an Ethernet MAC and an SFP
+cage in one of the following two configurations:
+
+RGMII-SGMII bridge:
+
++-------+       +------------+        +-----------+--------------------+
+|       |RGMII  |            | SGMII  |                                |
+|  MAC  |<----->| DP83869HM  |<------>| SFP cage with SGMII SFP module |
+|       |       |            |        |                                |
++-------+       +------------+        +-----------+--------------------+
+
+RGMII-1000Base-X converter:
+
++-------+        +------------+1000Base-X+-----------+--------------------+
+|       |RGMII   |            |          |                                |
+|  MAC  |<------>| DP83869HM  |<-------->| SFP cage with DAC/fiber module |
+|       |        |            |          |                                |
++-------+        +------------+          +-----------+--------------------+
+
+The RGMII-SGMII and RGMII-1000Base-X are currently supported in the PHY
+driver, but there are some flaws that prevent proper operation with
+downstream SFP modules. Additionally, the sfp_upstream_ops callbacks which
+are needed to interact with the downstream SFP modules are not yet
+implemented.
+
+This series adds full support for both SGMII and DAC SFP modules by
+implementing these sfp_upstream_ops callbacks and fixing relevant issues in
+the existing DP83869 operational modes.
+
+Best Regards,
+
+Romain
 
 Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
 ---
- drivers/net/phy/dp83869.c | 29 +++++++++--------------------
- 1 file changed, 9 insertions(+), 20 deletions(-)
+Romain Gantois (6):
+      net: phy: dp83869: Disable autonegotiation in RGMII/1000Base-X mode
+      net: phy: dp83869: Perform software restart after configuring op mode
+      net: phy: dp83869: Ensure that the FORCE_LINK_GOOD bit is cleared
+      net: phy: dp83869: Support 1000Base-X and 100Base-FX SFP modules
+      net: phy: dp83869: Support SGMII SFP modules
+      net: phy: dp83869: Fix link up reporting in SGMII bridge mode
 
-diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
-index 6bb9bb1c0e962..579cf6f84e030 100644
---- a/drivers/net/phy/dp83869.c
-+++ b/drivers/net/phy/dp83869.c
-@@ -713,17 +713,20 @@ static int dp83869_configure_mode(struct phy_device *phydev,
- 	if (ret)
- 		return ret;
- 
--	phy_ctrl_val = (dp83869->rx_fifo_depth << DP83869_RX_FIFO_SHIFT |
-+	/* The FORCE_LINK_GOOD bit 10 in the PHYCTRL register should be
-+	 * unset after a hardware reset but it is not. make sure it is
-+	 * cleared so that the PHY can function properly.
-+	 * Also configure TX/RX FIFO depth for modes that require it.
-+	 */
-+	ret = phy_write(phydev, MII_DP83869_PHYCTRL,
-+			dp83869->rx_fifo_depth << DP83869_RX_FIFO_SHIFT |
- 			dp83869->tx_fifo_depth << DP83869_TX_FIFO_SHIFT |
- 			DP83869_PHY_CTRL_DEFAULT);
-+	if (ret)
-+		return ret;
- 
- 	switch (dp83869->mode) {
- 	case DP83869_RGMII_COPPER_ETHERNET:
--		ret = phy_write(phydev, MII_DP83869_PHYCTRL,
--				phy_ctrl_val);
--		if (ret)
--			return ret;
--
- 		ret = phy_write(phydev, MII_CTRL1000, DP83869_CFG1_DEFAULT);
- 		if (ret)
- 			return ret;
-@@ -746,28 +749,14 @@ static int dp83869_configure_mode(struct phy_device *phydev,
- 
- 		break;
- 	case DP83869_1000M_MEDIA_CONVERT:
--		ret = phy_write(phydev, MII_DP83869_PHYCTRL,
--				phy_ctrl_val);
--		if (ret)
--			return ret;
--
- 		ret = phy_write_mmd(phydev, DP83869_DEVADDR,
- 				    DP83869_FX_CTRL, DP83869_FX_CTRL_DEFAULT);
- 		if (ret)
- 			return ret;
- 		break;
- 	case DP83869_100M_MEDIA_CONVERT:
--		ret = phy_write(phydev, MII_DP83869_PHYCTRL,
--				phy_ctrl_val);
--		if (ret)
--			return ret;
- 		break;
- 	case DP83869_SGMII_COPPER_ETHERNET:
--		ret = phy_write(phydev, MII_DP83869_PHYCTRL,
--				phy_ctrl_val);
--		if (ret)
--			return ret;
--
- 		ret = phy_write(phydev, MII_CTRL1000, DP83869_CFG1_DEFAULT);
- 		if (ret)
- 			return ret;
+ drivers/net/phy/dp83869.c | 269 +++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 233 insertions(+), 36 deletions(-)
+---
+base-commit: 30972a4ea092bacb9784fe251327571be6a99f9c
+change-id: 20240628-b4-dp83869-sfp-8ea96b3f438c
 
+Best regards,
 -- 
-2.45.2
+Romain Gantois <romain.gantois@bootlin.com>
 
