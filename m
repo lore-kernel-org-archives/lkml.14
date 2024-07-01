@@ -1,63 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E8D170855;
-	Mon,  1 Jul 2024 20:16:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B6E916DC09
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 20:17:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719865009; cv=none; b=JMATKn0dWBoQ0NTThu8ii2k1a0rNKmqGYVUisQz0wnFJ1iEf7i6cLq8WEM2BextLVqicqZVg5Tj2T84W+sQDWqB6MujZhx26ZCls42FrxZkDCZWKEhvNghpG5l9jyO8za9xvfdp0iiGgdu6KtzB3jrchbnueevqVmTHPV2RjfVA=
+	t=1719865030; cv=none; b=PHH+diMMNJbnZe1aKVQXNsgA1RfwrV7WeKRmib6AOiH6j2mVboQXduRbilpN2yDB5NsyLKEDWoLWF4ychcaSGk6OEpLuvGNd3eq/ueJUilBJbHYGY2PLRsjUpSsAybBOJbWszMln+BoxFnoSF139uieW/S9GUTwne/21SQ27n8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719865009; c=relaxed/simple;
-	bh=Gv4r8sx6Tu3wxrHS+75UjHv/KD00tiLjZTo4ckRgvdA=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Y2yDsJBLCvY7u7iDzWxJ6vd27KNu6lKig3ysuhrRrMDoyTFLf3FRttrtnNH/iTcaNbBau2/mb8vKL4EFwkLTeGSvzFlHlBTMyyqA3/gB4PgAXUdLoRKRudXCjlUHZGQ+c9cPx52j5DKaegaPxDpNn8kC26HdPc8Mp+Bk3qj91WE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FfCSE4pN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719865030; c=relaxed/simple;
+	bh=9WtcZBMJXubPgPMkr8XA9l+MS8Fxyy2wp3MuResS2dA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TpC21Uh0lS4KsIIxSVSbgSptJHagFbU50luyp0BJt6VR0N/0OxIocZTHDtbiuPkRrfdTZI2Lm3Lkir2JSnSqQmNqA74uYZfzXnPkfM5L3u1PrrH4ho4bteAfOB4g6Ae7QuwqBQ4X99qlcdZQQfcRu1FG6FxF7cGdAsVO/z69+nQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nnd0B/Yb; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FfCSE4pN"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 81FBCC116B1;
-	Mon,  1 Jul 2024 20:16:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719865009;
-	bh=Gv4r8sx6Tu3wxrHS+75UjHv/KD00tiLjZTo4ckRgvdA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=FfCSE4pNVKNeFiuC3o8BbXMgXkzujpAQMRlGFiJATRdCiNxF7CWkVUQBW+BZYAEuN
-	 dV6JinBzDs7zEW4l2cs3OF24p0DTEeb7rbyEo+BC1Hm8qR+7NYdaMjOW9iWF2Q5pJY
-	 QX8aBj0kbAyT/lc6w9f9HEZuPu8jbVBJQ1Cj/J6ZQGz0vU9NhxA5eNrUuX86MEzkD3
-	 cbaUS7U/qRxUrv7RZtP8n4Uc/NO9fmRpsxKcSjPQtSZPlAiIhPJsCRijJt8t05i/Gn
-	 GVIExsrqAIrkb99KIq9MmEB3y/MClivCWCIIff1DNk5Ht33xPrlCFe2qm6PHrgIYgW
-	 jCAQz6EAPqljA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 77519C43468;
-	Mon,  1 Jul 2024 20:16:49 +0000 (UTC)
-Subject: Re: [GIT PULL] Btrfs fix for 6.10-rc7
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <cover.1719854274.git.dsterba@suse.com>
-References: <cover.1719854274.git.dsterba@suse.com>
-X-PR-Tracked-List-Id: <linux-btrfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <cover.1719854274.git.dsterba@suse.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.10-rc6-tag
-X-PR-Tracked-Commit-Id: 48f091fd50b2eb33ae5eaea9ed3c4f81603acf38
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: cfbc0ffea88c764d23f69efe6ecb74918e0f588e
-Message-Id: <171986500948.16343.5915143754758462508.pr-tracker-bot@kernel.org>
-Date: Mon, 01 Jul 2024 20:16:49 +0000
-To: David Sterba <dsterba@suse.com>
-Cc: torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nnd0B/Yb"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1f4c7b022f8so24912825ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 13:17:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719865029; x=1720469829; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+FFTICpPIkIBdKGgtA5+7smT1E0OW9XyPseCm5bYDkY=;
+        b=nnd0B/YbnweyxCCGKsUDY9lvCpLmY+aTEhpZjXApkLhOR4vb2ZZChJb3fex95XUJS1
+         BuXvXR6L3jP14EcqE0Hq2T4IXuH+qsG2bHxjkDnyiwQQ/eH58HtQOkRV/UOx5m0UuJBV
+         rmqHvB7lrDSXZOUtMRcYEMgxZx7TZiv9pE8HG0+EVvCZvOD7nZcrTL5nI2qtDqsETh13
+         GCqTY282Vi1tkHvWBXJCxKFpIWQTVKn+V3pMCpmubIUUQGCqMKcnl045rMRZMTRnpPMb
+         AaCD9rFzscnCIG5C8MGeksvGoanXxVyQ79huSHiqF73lsYCQV9SIzYJNDIFhD7rJjEhb
+         3Khg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719865029; x=1720469829;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+FFTICpPIkIBdKGgtA5+7smT1E0OW9XyPseCm5bYDkY=;
+        b=grGkaQ1oYJdGO46vmIt+6Vo38gO++OdfMA/AiqyjH1vk5MKtzs/wFXgCb/QDqDr0EO
+         aNQ8YFd0/BypzTBfAvIGVbXCbIMIXmIPi7/DnOix85diIh+JbpVgv5zwbo4C5PfXcyKk
+         gSw/OBbWuUs+DiwOx0sf3efkf9yZd368hBTiVjOsYQGI3xr8dAS32MIjyAVZWZeyUK+n
+         G1DQm99H0mUg84y45V8MsU9Ym8+gS7mXIxHnvvKCJnS8KPrpzwIE9Uy2s9c5YoH3HGKb
+         mQ/Irgv3aYgfORhJRJERUMizv6u2SbKFNRgpd9p4kFu16aRwyi5lOT0OucpXrHTN8LcZ
+         Aerg==
+X-Forwarded-Encrypted: i=1; AJvYcCVcW2Is2w1gALDow7UUbYE5DDiImnqMIRC9a6Wv5htWYGHgO6+FFolOALn4LtwBJDU4wlgjMLDhFsJ4h6JKWGeCf7kDOJsD5MjrzXR8
+X-Gm-Message-State: AOJu0YzByVzKtwl2C2YOm9/czqSuNdbD7ZFiwVfakw+DkY2UwHFcp4is
+	l7fVVdFvSRNXhkEp6ZljSg+ShNJkgoF7XNwK+GEpwvfeSB2PhdXg
+X-Google-Smtp-Source: AGHT+IERlfmn9aa4EX3JvBUAcuLhAHi52io95Gz5BQo1xMmnX/571Xy/1gDdRlef/wZpWbSfjnU2rQ==
+X-Received: by 2002:a17:902:f685:b0:1f7:1017:b2b3 with SMTP id d9443c01a7336-1fadbce7bfbmr56514555ad.42.1719865028595;
+        Mon, 01 Jul 2024 13:17:08 -0700 (PDT)
+Received: from localhost (dhcp-141-239-149-160.hawaiiantel.net. [141.239.149.160])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1596657sm69180565ad.255.2024.07.01.13.17.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 13:17:08 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Mon, 1 Jul 2024 10:17:06 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Bart Van Assche <bvanassche@acm.org>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/53] Let create*_workqueue() accept a printf-style
+ format string
+Message-ID: <ZoMOwkiLx2KHYHWa@slm.duckdns.org>
+References: <20240630222904.627462-1-bvanassche@acm.org>
+ <ZoMF1ZydZUusxRcf@slm.duckdns.org>
+ <63917f94-d9ed-4d43-b0a8-50ae4afcf1ee@acm.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <63917f94-d9ed-4d43-b0a8-50ae4afcf1ee@acm.org>
 
-The pull request you sent on Mon,  1 Jul 2024 19:36:54 +0200:
+Hello, Bart.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.10-rc6-tag
+On Mon, Jul 01, 2024 at 01:13:57PM -0700, Bart Van Assche wrote:
+> The create*_workqueue() macros are used about 270 times in the Linux
+> kernel (the macro names also occur in some comments):
+> 
+> $ git grep -nHEw
+> 'create_workqueue|create_freezable_workqueue|create_singlethread_workqueue'
+> | grep -Ev 'Documentation/|include/linux/workqueue' | wc -l
+>     271
+> 
+> That's too much for a single patch series. I can start with converting
+> the SCSI workqueue creation code.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/cfbc0ffea88c764d23f69efe6ecb74918e0f588e
+Yeah, it's been on the to-do list for a long time. Starting with SCSI sounds
+great.
 
-Thank you!
+Thank you.
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+tejun
