@@ -1,234 +1,179 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E0F460BBE
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 06:57:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8585729AB;
+	Mon,  1 Jul 2024 07:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719817069; cv=none; b=m6Jz1fNiiUolqOZCDFHnxPdUIoVkS1LqdU8ndKJ+rwAnGu7LvWhqN1MjE3IDpU9CNCtGDQ7KwqyoEvzoinglSiaBwT9Bhwah6dCcWhB+nQjDTapF/Mboy4G/9NnWVLdcAuopKOQvahTifE9RqyHV0BkLexk3doHxi/64BbkPGJo=
+	t=1719817344; cv=none; b=KzYTGOTEUVRGFBClxJFlcTUmbhrKQ7WL1TjTlt8e4F033SZfniHZUo+31z8Zkgw9J6+bjOJxTC+vJ7PlGu7X96AgP9yOMh2U7o2lgGH6trBzM6mjywEk3DFUdWIQOkrrclJ4cw9LlNhFnNde6jWpJ4BxARWNSI5pdUV8jebGlNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719817069; c=relaxed/simple;
-	bh=Zc7HA+BQowWq5Oaa95fc6fBaYWxRXcEecHyUImcmiFA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VeIUfL5om0lp7njej+RyGr66feGnBrYVvu8oJVHEh31W2DOpf6Ol2FH/+hLm0dGZScX1gthyqSEVzEOhrK/vR7jMKnO+t7Z8mi6oH5ouFtMoo/tIJ0XEJIcotV7Lf8clkL+jSmQ+3u2G6s2M4WSAF/1MTKivobe6pEUrpeR7LCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=efault@gmx.de header.b=M45OcH+T; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1719817344; c=relaxed/simple;
+	bh=7yktUN/gStqRPZN7+y3ofWazn0UWTgeoET7Zwx12TTg=;
+	h=MIME-Version:Message-ID:From:To:Cc:Subject:Content-Type:Date:
+	 In-Reply-To:References; b=DZ6MOEQt1VMVjWz64i2RQ4bpq1qzhjPxv60wIKZOyTCV96szIkZHFSesh656R+5ZvMdeUF2RrjcG2n0ozST58DKhJOxs4hRWUByMbXZrEpd7pFSpNbUeW/MC7wAiC123Na8R7vS44aHPoeFjqf3neM7VcubBDZRaIm5clygUDkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=A1U6ZGQ/; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=efault@gmx.de header.b="M45OcH+T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1719817046; x=1720421846; i=efault@gmx.de;
-	bh=5wPewIEuF6TbLHl/Kj1QXPvantQneRP01pEe6xIVb7k=;
-	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=M45OcH+T/ZUj+jfNw7jrWxwQLzHzP/4Vayb8iqX0gcSlb/fJ4UNv2DJiZpOpaRGF
-	 dL5V5QuTHUTQRR3s+Qp+plrffr6aJk2NLofkGP8nHXMhIJYw9sQv1wcN2LJSiSmyi
-	 ms5PBSuwurHl2Bk//PIagg0U7rkGMJR+Aa+GTpc7GEa/sFurJSqvPbF+cJ1YbKLDr
-	 mXWklWCth5HjJ3/XQ9079ldkLFropJgCEq9w/sTf/7NPIy40xZ1f3ambxVaT2oD5A
-	 UyH2lRgeT063X6PAT8196dxEjd3I9d11rvkfEg1HbTPSsBxjB6lVBd7ARZVvMJhIg
-	 wF3dPN8C+f0/us1KhQ==
+	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="A1U6ZGQ/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
+	s=s31663417; t=1719817320; x=1720422120; i=frank-w@public-files.de;
+	bh=7yktUN/gStqRPZN7+y3ofWazn0UWTgeoET7Zwx12TTg=;
+	h=X-UI-Sender-Class:MIME-Version:Message-ID:From:To:Cc:Subject:
+	 Content-Type:Date:In-Reply-To:References:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=A1U6ZGQ//VDcVnLCnj99gRSn1/RH0ykxvaX4PgnWzoAQJ9TUXeFCTMPtEREF3cpC
+	 l2IUXgVxGDUuEFo4XO763sQXZKAEBlrolIM+JbSl2vk/HWDawRJaGwqT2BcaW4tvB
+	 chbOTy4f8kppxOR04f+EfAHh283jRbzl0ktT6gTU7TCP4uTY3lk7XhzketFFdbcmb
+	 VLhgRWGi1J0P2dzvJgubyMEaYQ2tHsGXAlLywlUFSiZUPrNvDKhDDQzWDPRDGqqNN
+	 UWFi8jVqGpEuaIP+p2Gj1oqps4sv5kC6cHf6K0ysJf5+v0d/dNxy1pRbX8O0YXAhE
+	 F6yc13/VTRfl7y1MSQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from homer.fritz.box ([185.191.216.19]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MTAFh-1srZfd2Bx9-00T42L; Mon, 01
- Jul 2024 08:57:26 +0200
-Message-ID: <db81ba7fba622e2a1b7186e66471cfb9ad8490fd.camel@gmx.de>
-Subject: Re: [PATCH 1/2] sched/fair: Record the average duration of a task
-From: Mike Galbraith <efault@gmx.de>
-To: Chen Yu <yu.c.chen@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Tim Chen <tim.c.chen@intel.com>, Yujie Liu
- <yujie.liu@intel.com>, K Prateek Nayak <kprateek.nayak@amd.com>, "Gautham R
- . Shenoy" <gautham.shenoy@amd.com>,  Chen Yu <yu.chen.surf@gmail.com>,
- linux-kernel@vger.kernel.org
-Date: Mon, 01 Jul 2024 08:57:25 +0200
-In-Reply-To: <ZoFY/n2S7rMp6ypn@chenyu5-mobl2>
-References: <cover.1719295669.git.yu.c.chen@intel.com>
-	 <338ec61022d4b5242e4af6d156beac53f20eacf2.1719295669.git.yu.c.chen@intel.com>
-	 <d922f7bf3965f4eaef5028177b886e2e1861742d.camel@gmx.de>
-	 <ZoFY/n2S7rMp6ypn@chenyu5-mobl2>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 
+Received: from [217.61.148.41] ([217.61.148.41]) by web-mail.gmx.net
+ (3c-app-gmx-bap25.server.lan [172.19.172.95]) (via HTTP); Mon, 1 Jul 2024
+ 09:02:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Message-ID: <trinity-4bc16904-d2f8-4932-8ec9-2973560f1dde-1719817320042@3c-app-gmx-bap25>
+From: Frank Wunderlich <frank-w@public-files.de>
+To: regressions@lists.linux.dev
+Cc: Paolo Abeni <pabeni@redhat.com>, "David S. Miller"
+ <davem@davemloft.net>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, Jakub Kicinski
+ <kuba@kernel.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, Daniel Golle <daniel@makrotopia.org>,
+ Frank Wunderlich <linux@fw-web.de>, =?UTF-8?Q?Ar=C4=B1n=C3=A7_=C3=9CNAL?=
+ <arinc.unal@arinc9.com>, Rob Herring <robh@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Matthias
+ Brugger <matthias.bgg@gmail.com>, Linux regressions mailing list
+ <regressions@lists.linux.dev>
+Subject: Aw: Re: [PATCH] arm64: dts: mt7622: fix switch probe on
+ bananapi-r64
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 1 Jul 2024 09:02:00 +0200
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <cebb10b8-b0bf-4cb7-bba4-c3f941ba2b82@leemhuis.info>
+References: <20240516204847.171029-1-linux@fw-web.de>
+ <714da201-654b-4183-8e5e-8ff0b64fe621@leemhuis.info>
+ <2cac4cf68304e81abffbd9ff0387ee100323c2b7.camel@redhat.com>
+ <b49c801c-6628-40a6-8294-0876d8871ba7@leemhuis.info>
+ <e92c3ca0-c9be-44ac-a4fc-57ca5ebedbc5@leemhuis.info>
+ <1807a142-1534-4fa4-ad4b-d1c03af014c2@arinc9.com>
+ <58d8ddea-71cc-427a-94cc-a95f6bce61d2@collabora.com>
+ <16e9c06e-9908-455d-a387-614fefe5bcf8@arinc9.com>
+ <5e87d31c-b059-4f9a-93f7-dc87465ed14a@collabora.com>
+ <4416ef22-78cc-4ce5-b61d-69ff0903811e@arinc9.com>
+ <bd6b6929-d34d-4bd5-9cb0-bc8fe850ee46@leemhuis.info>
+ <af561268-9793-4b5d-aa0f-d09698fd6fb0@arinc9.com>
+ <750a60a6-4585-4bd2-97be-cf944e51fbdb@leemhuis.info>
+ <9c498e37-df8b-469e-818a-9b1c9f2b1a3c@collabora.com>
+ <cebb10b8-b0bf-4cb7-bba4-c3f941ba2b82@leemhuis.info>
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:+aQCZbKsF8EVAytOQhP20MIfuHhKmi4JIncM4tSynN0UW/8KO5+
- d0/U+MYfVQQquZS2Qty2snf+vXq9ZdJskzrwsCEzDckihZ1d1nxTq0cvcaifQ74J34VQSIO
- lw4iasYEN4edPOagOKBTXwFFitIh1Ir3HMuAyeMk6XYzm9uXY35JkAG4Uryf+3raGSCoPMZ
- hHd+ZkhgqxPiHWWXXjMrg==
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:iSzNiwwEGm+X9Sk/waPaMhv+3missYA8VAXRSbGHCV+HKBSTSrTEZxICirIavHnwicFi9
+ 2srm4ZrjCYSwJ1GlRhIvaheYakXtMAyZRQ2H7TXkUrFo2gDZ1vGImR9OQUSUqjTrzHaZpfFtlcyX
+ qCFHGcVuA9dNudxieUc08D5y02DNqdADfpT2+y0BqeascmO1QbZSDhed5WvfIMYguEvqwW3rxCys
+ wsKoON+aZlWXBRR926oMZQT7S9jj6ti+qsgQU+wrxYSPGL4lSymwuT4Hsr5cGnXQT8kyse1wY6kh
+ W0=
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:e+bbNlmh9ig=;2IFEq5urH5lMd0JIcQ4dfwF02MB
- WWAnXHA/vlDp2QhUQgYMni415oayeqZ6lAUd1WeSQeKNVT6+vpsTK1tFVIEPYn0f1A/TrCX01
- WC3Rx0+YOZrgglm25W5gWIWrlypfmN8g1TvraCxL/VA5iWhqTgqi62A1cQQhF+sRxWCLZoROP
- Vka5r/TJcm50a/gYLSKP92qIKwWHeScB57Ank36kXM6irNPfpF1FBlQcJm6N3CajRr6Lpfiz9
- eaUh/+v+ZoGImg1MMBn+Smv1VJVT7uP01CWs+P50ltsPOkDZ5QsrAHdgCJWeYBtApjsYjxkql
- O/cRG5THQS3v1BegAvz3E3Ql1Evz7aPgeRvmqbf0m3xqykGnylJoLswAknEyejkwejxYYSyqU
- 3SzwoN2UGsFqc8cmnDxEdc0vsot1sfN9Nd6XZGiHwDg6w4EjpaxJOIgO7tWVGA9FRQZ2yvbOP
- 5saztbNQEtnWFd2gd3qOO2kecctDGwUd6/nktCGnCEvG2se/l/0wFkLz7QP5ZhSSUUHjBKpi5
- TInQDpwPVVaYk2gOxG3lK7kna6mj71JRURBN0FqwjTqZRInkcwiyB0FoS6t+3p3YXcdp3lczq
- oHQpEIBhWloNrUusOh55P9hCA0gTzxDzA5H7QdUELfTnkhG+TKcHWdoY0IB3y4kJkpWxC6qKJ
- YgqK/2ixMs3bhSvNlJmWVnjfF3cdLU76bUOnGk9GGrAKsvMsHF+Xt/OvEmRmYVtXxaYG2fDNC
- kYFVdennz3fPwSExfehk2YD3JDk69gm73lVyWGDmCL8271vDhvex4ePsKBJ7xjyDez6jXh9hc
- E+1PFxF/QGE3we0c9Q3aSSz4C8f8933d4q3bxi1CUKOKU=
+UI-OutboundReport: notjunk:1;M01:P0:TFqw0JB/3K4=;HFFRgvoA1Z6/Iqd3nHpxa9dft/I
+ JzIG7BujbzaBNJHe6yIPS+fOp1Tf6fBi5hrwRM+ldiLXXK6NpOnWxMUsxzm/Vn4TL/4d9NrPN
+ Li62NNQz3UYCSmsDwN6apWd7AROrSW3KOcqNwFcXqbZgrfqLnoSPADq6ha7PnsNfjnHbyD8ef
+ D9qSlIzE4GKDTqJzQCsTwRxACO0FX1O5NMrTQ1NYlGEpYODBr/Ah2o/UGQGn1IXV+IObXJ6Ru
+ h+mpqfBRH0O/RUEdMGukKfst435YgjuR2OkwgGuf6FX+ABCXtsmUQEju4wEHUCEnNxvv617ei
+ qdR3WCdcJHrvCRUte02QMiOip0563rfBUR6VmTq5LVB8mr2Krhrd5j3qA1NJ7M6ToSDTxgrCJ
+ Fwqfp+/nckb2HfyJXc1ajs2xOdfn4GvXsomUd24z7o9iT7AjcBOW34zx8r+8uwU7NzCkRDfXr
+ Y976xfry+f24JhklN/mvDwElK3QgfHx3r6q7zoRK1VV6ggbFdYiDDLzyS/IJDbWFyg6itVnui
+ U3o3KjF5oWi0TSGICHtMil/jixrS6/2qMcM0T4eXm/kb1qNwMbjQfP4+yc5cyiICiBWRk5trt
+ NFcWrTc1aL9M+i8ycJe+sONMDaUGFMS8r1fDBZIhltL5z8joBDF+3iPGSa18hTK1tQ0mXK/b2
+ +8kp9jb3a+hnmiYkinzBsCB53g3OEjbwuu2saeIwO2xCOh9ny/qhK6HnnZNa028=
 
-On Sun, 2024-06-30 at 21:09 +0800, Chen Yu wrote:
-> Hi Mike,
->
-> Thanks for your time and giving the insights.
->
-> On 2024-06-26 at 06:21:43 +0200, Mike Galbraith wrote:
-> > On Tue, 2024-06-25 at 15:22 +0800, Chen Yu wrote:
-> > >
-> > > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > > index 0935f9d4bb7b..7399c4143528 100644
-> > > --- a/kernel/sched/core.c
-> > > +++ b/kernel/sched/core.c
-> > > @@ -4359,6 +4359,8 @@ static void __sched_fork(unsigned long clone_f=
-lags, struct task_struct *p)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0p->migration_pending=
- =3D NULL;
-> > > =C2=A0#endif
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0init_sched_mm_cid(p)=
-;
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0p->prev_sleep_sum_runtime=
- =3D 0;
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0p->duration_avg =3D 0;
-> > > =C2=A0}
-> >
-> > Beginning life biased toward stacking?
-> >
->
-> OK, so I should change the short_task() to skip the 0 duration_avg, to a=
-void
-> task stacking in the beginning.
+Hi,
 
-Or something, definitely.
-=C2=A0 =C2=A0
-> > > =C2=A0DEFINE_STATIC_KEY_FALSE(sched_numa_balancing);
-> > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > > index 41b58387023d..445877069fbf 100644
-> > > --- a/kernel/sched/fair.c
-> > > +++ b/kernel/sched/fair.c
-> > >
-> > > @@ -6905,6 +6914,9 @@ static void dequeue_task_fair(struct rq *rq, s=
-truct task_struct *p, int flags)
-> > > =C2=A0
-> > > =C2=A0dequeue_throttle:
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0util_est_update(&rq-=
->cfs, p, task_sleep);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (task_sleep)
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0dur_avg_update(p);
-> > > +
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0hrtick_update(rq);
-> > > =C2=A0}
-> > >
-> >
-> > That qualifier looks a bit dangerous.=C2=A0 Microbench components tend=
- to
-> > have only one behavior, but the real world goes through all kinds of
-> > nutty gyrations, intentional and otherwise.
-> >
+i can confirm that daniels patch pointed by arinc fixes driver for the wro=
+ng devicetree on BPI-R64=2E
+
+but there are concerns from the netdev/dsa maintainers in its current stat=
+e
+
+https://patchwork=2Ekernel=2Eorg/project/linux-mediatek/patch/11f5f127d035=
+0e72569c36f9060b6e642dfaddbb=2E1714514208=2Egit=2Edaniel@makrotopia=2Eorg/
+
+regards Frank
+
+
+> Gesendet: Montag, 01=2E Juli 2024 um 08:16 Uhr
+> Von: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhu=
+is=2Einfo>
+> An: "Paolo Abeni" <pabeni@redhat=2Ecom>, "David S=2E Miller" <davem@dave=
+mloft=2Enet>, "AngeloGioacchino Del Regno" <angelogioacchino=2Edelregno@col=
+labora=2Ecom>, "Jakub Kicinski" <kuba@kernel=2Eorg>
+> Cc: devicetree@vger=2Ekernel=2Eorg, linux-kernel@vger=2Ekernel=2Eorg, li=
+nux-arm-kernel@lists=2Einfradead=2Eorg, linux-mediatek@lists=2Einfradead=2E=
+org, "Daniel Golle" <daniel@makrotopia=2Eorg>, frank-w@public-files=2Ede, "=
+Frank Wunderlich" <linux@fw-web=2Ede>, "Ar=C4=B1n=C3=A7 =C3=9CNAL" <arinc=
+=2Eunal@arinc9=2Ecom>, "Rob Herring" <robh@kernel=2Eorg>, "Conor Dooley" <c=
+onor+dt@kernel=2Eorg>, "Krzysztof Kozlowski" <krzk+dt@kernel=2Eorg>, "Matth=
+ias Brugger" <matthias=2Ebgg@gmail=2Ecom>, "Linux regressions mailing list"=
+ <regressions@lists=2Elinux=2Edev>
+> Betreff: Re: [PATCH] arm64: dts: mt7622: fix switch probe on bananapi-r6=
+4
 >
-> Understand. Unfortunately I don't have access to production environment
-> so I have to rely on microbenchmarks and a OLTP to check the result. I
-> get feedback from Abel that the former version of this patch brought
-> benefit to some short tasks like Redis in the production environment[1].
-> https://lore.kernel.org/lkml/36ba3b68-5b73-9db0-2247-061627b0d95a@byteda=
-nce.com/
-
-Here's hoping you get a lot more.
-
-> I can launch a combination of microbenchmarks in parallel to check the i=
-mpact.
->
-> > The heuristics in the next patch seem to exhibit a healthy level of
-> > paranoia, but these bits could perhaps use a tad more.=C2=A0 Bad exper=
-iences
-> > springs to mind when I stare at that - sleepers going hog, hogs meet
-> > sleeping lock contention, preemption, sync hint not meaning much...
-> >
->
-> I see. If I understand correctly, the scenario mentioned above
-> could bring a false positive of 'short task', which causes
-> task stacking.
-
-Yeah.
-
-> If the sleeper task:
-> 1. is preempted frequently. This should not be a problem, because
-> =C2=A0=C2=A0 the task duration is unlikely to be shorten by preemption, =
+> [CCing the other net maintainers]
+>=20
+> On 25=2E06=2E24 10:51, AngeloGioacchino Del Regno wrote:
+> > Il 25/06/24 07:56, Linux regression tracking (Thorsten Leemhuis) ha
+> > scritto:
+> >> On 17=2E06=2E24 13:08, Ar=C4=B1n=C3=A7 =C3=9CNAL wrote:
+> >>> On 17/06/2024 11:33, Linux regression tracking (Thorsten Leemhuis)
+> >>> wrote:
+> >>> [=2E=2E=2E]
+> >> It looks more and more like we are stuck here (or was there progress =
 and
-> =C2=A0=C2=A0 the short_task() is unlikely to return true.
-
-Ah, but it not being a problem would beg the question why bother?
-There are consequences either way, the dark side is just scarier.
-
-> 2. meets sleeping lock contention. This would be a false positive 'short=
- task',
-> =C2=A0=C2=A0 which bring unexpected task stacking.
-
-Yeah.
-
-> So consider 1 and 2, I'm thinking of moving the calculating of task dura=
-tion from
-> dequeue_task_fair() to wait_woken(). The reason to update the task's dur=
-ation in
-> wait_woken() rather than dequeue_task_fair() is that, the former is awar=
-e of the
-> scenario that the task is waiting for the real resource, rather than blo=
-cking
-> on a random sleeping lock. And the wait_woken() is widely used by the dr=
-iver to
-> indicate that task is waiting for the resource. For example, the netperf=
- calltrace:
+> >> I just missed it?) while the 6=2E10 final is slowly getting closer=2E=
+ Hence:
+> >>
+> >> AngeloGioacchino, should we ask the net maintainers to revert
+> >> 868ff5f4944aa9 ("net: dsa: mt7530-mdio: read PHY address of switch fr=
+om
+> >> device tree") for now to resolve this regression? Reminder, there is
+> >> nothing wrong with that commit per se afaik, it just exposes a proble=
+m
+> >> that needs to be fixed first before it can be reapplied=2E
+> >=20
+> > To be clear on this: I asked for the commit to be fixed such that it
+> > guarantees
+> > backwards compatibility with older device trees=2E
+> >=20
+> > If no fix comes,
+>=20
+> I haven't see any since that mail, did you? If not, I think=2E=2E=2E
+>=20
+> > then I guess that we should ask them to revert this commit
+> > until a fix is available=2E
+>=20
+> =2E=2E=2Eit's time to ask them for the revert to resolve this for -rc7 (=
+and
+> avoid a last minute revert), or what do you think?
+>=20
+> > I don't like this situation, either, btw=2E
+>=20
+> I guess none of us does=2E :-/
+>=20
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking=2Eleemhuis=2Einfo/about/#tldr
+> If I did something stupid, please tell me, as explained on that page=2E
+>=20
+> #regzbot poke
 >
-> =C2=A0=C2=A0=C2=A0 schedule_timeout+222
-> =C2=A0=C2=A0=C2=A0 wait_woken+84
-> =C2=A0=C2=A0=C2=A0 sk_wait_data+378
-> =C2=A0=C2=A0=C2=A0 tcp_recvmsg_locked+507
-> =C2=A0=C2=A0=C2=A0 tcp_recvmsg+115
-> =C2=A0=C2=A0=C2=A0 inet_recvmsg+90
-> =C2=A0=C2=A0=C2=A0 sock_recvmsg+150
->
-> In the future, if there is requirement other scenario could also invoke =
-the newly
-> introduced update_cur_duration() when needed. For example, the pipe_read=
-() could
-> use it if the task is going to sleep due to the empty pipe buffer. I cha=
-nge the
-> code as below, may I have your suggestion on this?
-
-I don't have any suggestions that will help plug the holes, heck, I
-squabbled in this arena quite a bit some years ago, and did not win.
-Frankly I don't think the scheduler has the information necessary to do
-so, it'll always be a case of this will likely do less harm than good,
-but will certainly leave at least an occasional mark.
-
-Just take a look at the high speed ping-pong thing (not a benchmark,
-that's a box full of tape measures, rather silly, but..).  TCP_RR IS
-1:1, has as short a duration as network stack plus scheduler can
-possibly make it, and is nearly synchronous to boot, two halves of a
-whole, the ONLY thing you can certainly safely stack.. but a shared L2
-box still takes a wee hit when you do so.  1:N or M:N tasks can
-approach its wakeup frequency range, and there's nothing you can do
-about the very same cache to cache latency you're trying to duck, it
-just is what it is, and is considered perfectly fine as it is.  That's
-a bit of a red flag, but worse is the lack of knowledge wrt what tasks
-are actually up to at any given time.  We rashly presume that tasks
-waking one another implies a 1:1 relationship, we routinely call them
-buddies and generally get away with it.. but during any overlap they
-can be doing anything including N way data share, and regardless of
-what that is and section size, needless stacking flushes concurrency,
-injecting service latency in its place, cost unknown.
-
-Intentional stacking can be jokingly equated to injecting just a wee
-bit of SMP kryptonite.. it'll be fine.. at least until it's not ;-)
-
-	-Mike
