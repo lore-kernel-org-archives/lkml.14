@@ -1,105 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.nearlyone.de (mail.nearlyone.de [49.12.199.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AACB16F298;
-	Mon,  1 Jul 2024 18:41:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297EF1607BB;
+	Mon,  1 Jul 2024 18:43:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.199.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719859262; cv=none; b=RWlff9E2soYQRynLeOtYNACJJbVCCbWw9FbSH2c8/3TWlNlJmoLrQSQlmDQEd0vR4/70cqWppzRsHevpVtEZBS3Xw8hfMROPt3ouHdYphxlVHG8RknkYhA4rYMl17arbm7YO3fXIQv2gSTJ+vuLq+uWcYK6J4+c+elM5EgyTR20=
+	t=1719859396; cv=none; b=ay5Gtc3rc2AcO6ukyE5C+/YdRn3U20lfwXomm8xt5EIwEr3sOhd1kgViTy+8Zoqf7PxjWD51Veeatonsv6oUW8IQideRdnLyfMHzp8G0OXyTjhtISdFow/DDC7KmKtCN2B09D4F98I4vmGbM+If/Gd7Owg83NI1LQTCMDNhI8LA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719859262; c=relaxed/simple;
-	bh=b9t315kB2irXXTEOqh+BPq5CDd3WoseJBjsx1O8vZSo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R6YldDyzk3mEsHqlpF3HAlYHIw9Mcr4xtWezkz+wKs3Mq975tI1QGor76iiKqFJ16crDywq6EWMVlVDyIHFQa+dZHo7KA9KtCBQJII1exmHiz42w3ohnQ/Cj5iKcLroQhJvZdC/iVrlAdA+BX3k0kmmwi13yg3R7/TI32fVU1Y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fX88dpFK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719859396; c=relaxed/simple;
+	bh=q7oEyAjSy5DFHSIwCMTeCMxS4QAytBiQTTx9DdVDZ+8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LO2X6jCJYvyawkCyE2TVKQplOCez5YAduch/sjQI+UxiHEf9QHmFOsBSPrHmiFGpN2AKCITJFhUJAJXzFwsNxycj7WwiB/3o3bmQt/WPUfQpdDX48fc57QosYe01U+KB4uAZmAsWtLyJ9NSTEzeIdAzp0VMGTjBR5cxHpVBo2a0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org; spf=pass smtp.mailfrom=monom.org; dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b=P0j1HtUV; arc=none smtp.client-ip=49.12.199.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=monom.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fX88dpFK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD09FC116B1;
-	Mon,  1 Jul 2024 18:40:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719859262;
-	bh=b9t315kB2irXXTEOqh+BPq5CDd3WoseJBjsx1O8vZSo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fX88dpFKO878qmBPMIG3r5lwS2ifsBgzlaZduktbIrYVmU/6VJf1obFf44anDXWnj
-	 bq0pX6Znv9d8lZ+NGsuUm5BcO84WNxJJcJ9bCoIn1Ff8k3OwVsKVH9l9rh0jZlaXSo
-	 vQurBqp789lZAI3w2Prz3qDD+ugCN4NNqdadOYg56BrSmXNUM8obZxOPuCnFH8pFpq
-	 WMzSrEvPR0mE+sikN668ATSUPsi1XKeRDgp098UAHSba52z7o0CxoDcwq8JtnG65pV
-	 sXIR9fHY/CRLXtW5Q46XxpjDFu5SLP2RMYjdgCFRC0GnlSra41TnX3p67DVB9ycr+u
-	 MwZYgw0UmUCOA==
-Date: Mon, 1 Jul 2024 19:40:52 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, matthias.bgg@gmail.com, lee@kernel.org,
- andy@kernel.org, nuno.sa@analog.com, bigunclemax@gmail.com,
- dlechner@baylibre.com, marius.cristea@microchip.com,
- marcelo.schmitt@analog.com, fr0st61te@gmail.com, mitrutzceclan@gmail.com,
- mike.looijmans@topic.nl, marcus.folkesson@gmail.com,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, andy.shevchenko@gmail.com,
- kernel@collabora.com
-Subject: Re: [PATCH v2 0/5] MediaTek MT6357/8/9 PMIC Auxiliary ADC support
-Message-ID: <20240701194052.2702a3da@jic23-huawei>
-In-Reply-To: <20240604123008.327424-1-angelogioacchino.delregno@collabora.com>
-References: <20240604123008.327424-1-angelogioacchino.delregno@collabora.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b="P0j1HtUV"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id AF5E1DAD58;
+	Mon,  1 Jul 2024 20:35:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monom.org; s=dkim;
+	t=1719858925; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=Azlo5zzhAy5LswlCYq4vQqAd/U/JrBD0AwDg1T7XrBE=;
+	b=P0j1HtUVu2P1YB47w+mYiEt31s6YBzDmth54SYDCRoiTgQHvtkNqv+1iyNd8W2pHiu9JPC
+	dQU5mI0wfH83l5b97QWuE0f7F7XYq0KGkg/BpdeR4aGhT7ll5dSJw69bpvzcZMaK5rhUA+
+	zjSWN5jhXbF8HHhlz1XcgOPFYkUX6kaTqxt+giE7/Rg+88QmjtobgQfUbDCRk8Po7XZ0zV
+	I9N0Z2dKY0nqMOMUIxCt8vMJdjRTJSo++nDfqN4UyVAXMQ+ewScnO60vwMln9a3291KWOz
+	h1pTZz6rGNiJm1kP8n2QRBMVV1FVk8nGWZ9ieWjW1On/bFMIJBIwOKBkb7acqA==
+From: Daniel Wagner <wagi@monom.org>
+To: LKML <linux-kernel@vger.kernel.org>,
+	 <linux-rt-users@vger.kernel.org>,
+	 <stable-rt@vger.kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Tom Zanussi <tom.zanussi@linux.intel.com>,
+	Clark Williams <williams@redhat.com>
+Cc: Daniel Wagner <wagi@monom.org>
+Subject: [PATCH RT 1/1] Linux 4.19.316-rt136
+Date: Mon,  1 Jul 2024 20:35:18 +0200
+Message-ID: <20240701183518.26751-2-wagi@monom.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240701183518.26751-1-wagi@monom.org>
+References: <20240701183518.26751-1-wagi@monom.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Tue,  4 Jun 2024 14:30:03 +0200
-AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com> wrote:
+v4.19.316-rt136-rc1 stable review patch.
+If anyone has any objections, please let me know.
 
-> Changes in v2:
->  - Dropped 'mfd: mt6397-core: Add support for AUXADCs on MT6357/58/59 PMICs'
->    as Lee J already applied it;
->  - Added patch to describe the ADC subnode in the MT6357 MFD binding
->    and moved the example node from mediatek,mt6359-auxadc.yaml to
->    mediatek,mt6357.yaml
->  - Added 8-bits {s8,u8}_fract to math.h
->  - Addressed reviewer comments on mt6359-auxadc driver
+-----------
 
-Applied 1,3,4 to the IIO tree. I'm assuming the mfd dt binding update
-will got via mfd and the dts via appropriate SoC tree.
 
-Given time is tight I'll gamble a bit and push directly out as togreg
-rather than normal exposure to 0-day first.
+Signed-off-by: Daniel Wagner <wagi@monom.org>
+---
+ localversion-rt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-
-Jonathan
-
-> 
-> AngeloGioacchino Del Regno (5):
->   dt-bindings: iio: adc: Add MediaTek MT6359 PMIC AUXADC
->   dt-bindings: mfd: mediatek,mt6357: Describe Auxiliary ADC subdev
->   math.h: Add unsigned 8 bits fractional numbers type
->   iio: adc: Add support for MediaTek MT6357/8/9 Auxiliary ADC
->   arm64: dts: mediatek: Add ADC node on MT6357, MT6358, MT6359 PMICs
-> 
->  .../iio/adc/mediatek,mt6359-auxadc.yaml       |  33 +
->  .../bindings/mfd/mediatek,mt6357.yaml         |  10 +
->  arch/arm64/boot/dts/mediatek/mt6357.dtsi      |   5 +
->  arch/arm64/boot/dts/mediatek/mt6358.dtsi      |   5 +
->  arch/arm64/boot/dts/mediatek/mt6359.dtsi      |   5 +
->  drivers/iio/adc/Kconfig                       |  12 +
->  drivers/iio/adc/Makefile                      |   1 +
->  drivers/iio/adc/mt6359-auxadc.c               | 606 ++++++++++++++++++
->  .../iio/adc/mediatek,mt6357-auxadc.h          |  21 +
->  .../iio/adc/mediatek,mt6358-auxadc.h          |  22 +
->  .../iio/adc/mediatek,mt6359-auxadc.h          |  22 +
->  include/linux/math.h                          |   2 +
->  12 files changed, 744 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/mediatek,mt6359-auxadc.yaml
->  create mode 100644 drivers/iio/adc/mt6359-auxadc.c
->  create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6357-auxadc.h
->  create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6358-auxadc.h
->  create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6359-auxadc.h
-> 
+diff --git a/localversion-rt b/localversion-rt
+index e3026053f01e..f824f53c19ea 100644
+--- a/localversion-rt
++++ b/localversion-rt
+@@ -1 +1 @@
+--rt135
++-rt136
+-- 
+2.45.2
 
