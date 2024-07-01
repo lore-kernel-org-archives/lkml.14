@@ -1,79 +1,102 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A3236AF5
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 08:45:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1937536AF5
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jul 2024 08:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719823548; cv=none; b=tpqP+J5ifmUaORh9T0xVI8xMjqOHOTbR0yBWvJ5hoFyeVNhPb8Q7mFZ1KtiAzNa4rfBYvUNEA/MJR6HcDidnVRlu0AzDMMwbBL0ugn8qBi33cQd28XLX00Qp0r4nU1pbNUT1Iux9fmnYZxhyXlY+6AaR9K1Le8M0s3CMU5m0044=
+	t=1719823560; cv=none; b=lNV78bJLJYZyqKDY6Xet9rDhyhPBxS5QNXCkCdY9W2i6BTKKIAlCmJF4l2YpJ6TFQ7uM9C35pnl9ppJssVeETVd2TuaflVn6WsnFec5A7lSXItX04I0sdVJ5UqKsInA6CvvgTypXBYmCiurvHqah8sp34T7g2LJIFtjTIgPcNdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719823548; c=relaxed/simple;
-	bh=LyLnx7XRF7YDLqP2ULZszBNYIDRvvBrdHegUv9r676g=;
+	s=arc-20240116; t=1719823560; c=relaxed/simple;
+	bh=Cq9CeYaW5DvHjzhAjJ0eBF81E0Q5j+R7YlaO4CRbdsk=;
 	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=ICNaSf1YxLOMtHb/u0E3yD/KgNOeZBu0v88CVwaTtMsxaNvvLWYg9MHb6vXtcX5Vw/upNl1Kbrv3GaJ5Q4GR2W2bw3EyxccQ/4AD1SxVQNcDfLL2KMLPoG98HW70csSSfSVJZAWC+74Lz5zLjxW7J+sy5Xx5AhPadc7UNSmtuNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+	 Content-Type; b=RQducj8gUTWdJjVfkXQKlAGDww2QsO5wVxQDgRUCcD//ApiYNJQ+xe00HdbhQbsviHqOY4XsI7rPipqGM3sMJU6sZCBZFyfuWGnffcBNt8SGRTQ291i3J6Mrhl/2HTBQrqcMeQ4b0987WWDiy5Bv2jfd2RBJJJ3qs34dJax6pGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7f3caa9e180so181070239f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 01:45:46 -0700 (PDT)
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3737b3ee909so34321825ab.2
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 01:45:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719823545; x=1720428345;
+        d=1e100.net; s=20230601; t=1719823558; x=1720428358;
         h=to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yVYWamr9xmV1XQ044C1uaPNwG5V3ZEn451uAxABgvTM=;
-        b=DX+i/L1Df5WJIDjr2EGu5+LCWobSDY29oQnxL/JgpKD/x2uV8talbmC/kD4uL1qMkg
-         sbhzOPg3yBWgdjI1OIYansnePTDM3+khYNgoKdr1mlz65KHGigTzx9RpObZ/fNLOCrpx
-         UyPSjgBAr4bkXs0x+Rc0XznjfOCGvBprGAKIbG8sQ1YlQ1Wkw4X99pMV9uPEIbE/cXlT
-         bV88ulIe+VmM4IK+PiSwDCzmyvtNA07GjiJX6waFlVb8t/0HMN3ArtRQDp3JTmgUzwjC
-         CJ/58E/fQwIJtgjNrf+mp5SzAJrGeKHrXUr8lWBygoIlXjelRrNT3Ty9h0Njw5zWJU/A
-         GUkw==
-X-Gm-Message-State: AOJu0YyDS3PHwbfYIEPm8Ag6m9hVNzHH45rum0zAaSSld2bL8+nK97j/
-	AlruUFXY4INBBWH95HPVQuMo4P/XGbDRCIJfPdeDw1A6gCXpmk6ycaxjnxfu8ZPMLUal17nfTeM
-	SDAdIwLF4nI7Rq8Y+BRHV8PXYZcjhivUe+fkUOMXCQnX0Rp7cPCnzJkw=
-X-Google-Smtp-Source: AGHT+IFN4djy66q99ne/pp+iqZ7I5xlNcK3eqbFT7Rr9FlcfDBIk047ioPqltejJjFnDjQ/D3qsYC3AYhAvl1jDTF0mGnPFUhYvl
+        bh=zRl1TrLOvsoM5tfnEtPPLlkhvInFM5lQwLRHWYew8Eo=;
+        b=eGhKlQVWZeHyb3ZFo+KnzGzSz7Z9FEThJ45q9bMyqxofLFvbljxTdNLix+ULEk68On
+         kkZcT0xqASvPnTjxXyD0JUQFUoCb+tqoJ9aVcIpRZMOXGYdvr1tEJorjKHCBuNy233g6
+         hFdVeR9Gtia/BR7n5YsisGFDLAk+Yx9vQ8UVGKib8x3DKGebVp684ioW1VqAVUuQP5T5
+         FPLF4P7aIjjmzffpWeY0z+JBKZGE9fGRCcNI3EdZckmxiFOQrnSmIOcnjj3sWY6qOd8m
+         81eoBrqjnoM1K4FWHyLjPhO26uHvJYUJGMw+BKCCloAbnEwYuegDC9gURbrYnzreLw+W
+         p7lA==
+X-Gm-Message-State: AOJu0YxopJVvnrfbygbFuy781HuNQrQsYEk/2YTTEQf28rca2ZWGjDbw
+	/fjixZ/Eznjec9U7bqfZHYkxQ7JK/D7XPJk9SUEr8bv9qCFprNg8BPhaPoEbnp5pIoI9i9A8pld
+	GLa9d5J898M/WDZROOhac8brH1L1XlfNIac040S6R40XmykerDtOFJcg=
+X-Google-Smtp-Source: AGHT+IG4odfCmSnzCdrjrmy9Amkx446Fqz9czrDtKbt346p43MBNTtLUrdX7L4Ov28g8ta+I3NkVfdbXDeMrZz2JcrFk90HyT9pH
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:8726:b0:4b9:ad94:2074 with SMTP id
- 8926c6da1cb9f-4bbb5ad0288mr444895173.3.1719823545727; Mon, 01 Jul 2024
- 01:45:45 -0700 (PDT)
-Date: Mon, 01 Jul 2024 01:45:45 -0700
-In-Reply-To: <000000000000e9b6ff0618356b26@google.com>
+X-Received: by 2002:a92:dd0b:0:b0:375:e04f:55d0 with SMTP id
+ e9e14a558f8ab-37cd0a0abd2mr1776735ab.2.1719823558257; Mon, 01 Jul 2024
+ 01:45:58 -0700 (PDT)
+Date: Mon, 01 Jul 2024 01:45:58 -0700
+In-Reply-To: <000000000000f19a1406109eb5c5@google.com>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000850b95061c2b9fc0@google.com>
-Subject: Re: [syzbot] Re: [syzbot] [bcachefs?] INFO: task hung in bch2_fs_read_only_work
-From: syzbot <syzbot+8996d8f176cf946ef641@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org
+Message-ID: <000000000000443e28061c2ba0ea@google.com>
+Subject: Re: [syzbot] [PATCH] handle EFSCORRUPTED, drop EXT4_STATE_MAY_INLINE_DATA
+ sanity check
+From: syzbot <syzbot+18df508cf00a0598d9a6@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
 For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org.
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
 ***
 
-Subject: Re: [syzbot] [bcachefs?] INFO: task hung in bch2_fs_read_only_work
-Author: lizhi.xu@windriver.com
+Subject: [PATCH] handle EFSCORRUPTED, drop EXT4_STATE_MAY_INLINE_DATA sanity check
+Author: wojciech.gladysz@infogain.com
 
-#syz test: upstream f06ce441457d
+#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+---
+ fs/buffer.c     | 5 ++++-
+ fs/ext4/inode.c | 5 +++++
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
-when hit -BCH_ERR_fsck_errors_not_fixed in journal_entry_err, it will make
-journal_entry_btree_keys_validate output too many same error log, and it will block
-bch2_fs_start to release state_lock
-
-diff --git a/fs/bcachefs/journal_io.c b/fs/bcachefs/journal_io.c
-index 492426c8d869..67c3f09162e4 100644
---- a/fs/bcachefs/journal_io.c
-+++ b/fs/bcachefs/journal_io.c
-@@ -415,6 +415,8 @@ static int journal_entry_btree_keys_validate(struct bch_fs *c,
- 					       flags|BCH_VALIDATE_journal);
- 		if (ret == FSCK_DELETED_KEY)
- 			continue;
-+		else if (ret == -BCH_ERR_fsck_errors_not_fixed)
-+			break;
+diff --git a/fs/buffer.c b/fs/buffer.c
+index 4f73d23c2c46..10514fa9851c 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -2163,7 +2163,10 @@ static void __block_commit_write(struct folio *folio, size_t from, size_t to)
+ 	unsigned blocksize;
+ 	struct buffer_head *bh, *head;
  
- 		k = bkey_next(k);
- 	}
+-	bh = head = folio_buffers(folio);
++	head = folio_buffers(folio);
++	if (!head)
++		return;
++	bh = head;
+ 	blocksize = bh->b_size;
+ 
+ 	block_start = 0;
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 537803250ca9..e7a6958025ee 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -2948,6 +2948,11 @@ static int ext4_da_do_write_end(struct address_space *mapping,
+ 	bool disksize_changed = false;
+ 	loff_t new_i_size;
+ 
++	if (unlikely(!folio_buffers(folio))) {
++		folio_unlock(folio);
++		folio_put(folio);
++		return -EIO;
++	}
+ 	/*
+ 	 * block_write_end() will mark the inode as dirty with I_DIRTY_PAGES
+ 	 * flag, which all that's needed to trigger page writeback.
+-- 
+2.35.3
+
