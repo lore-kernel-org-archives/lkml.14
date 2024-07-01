@@ -1,104 +1,173 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A71FE17BA1;
-	Mon,  1 Jul 2024 22:48:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A9617BA1;
+	Mon,  1 Jul 2024 22:49:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719874128; cv=none; b=ZjZ6owCipN1L8z0ZE3RXEmk8cepQT3DnFnjda4wgFrbSljW6rpOg35Ls2Mxl0rKqHs1zIEMgUcg7vpnKwNaYAmZsArvJvS4IGNKZJjBoOKf5+p8I4CQi6HVjoKDsYuQi6Jm9XdWdOeYnvYtmbWYt9v0K61li5d60isp2nJUxy4M=
+	t=1719874182; cv=none; b=u8aARWDsdSmta65FJP7jdRsONCSILIPbhNjoNxNDjna5/8HN2sbvjeLrz+82mZwHRyKdxvJCY0ZSkJllQcPkN4FStsa0Y5nq1Yu7+gMlraODZoSmdYt5s+I6PuSVtZYpiYq5XAwy8UcfrUyNgn5oVQiFx/fLhWqSo2SXbgTaAzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719874128; c=relaxed/simple;
-	bh=/6Z/UAr2KgLqp347jHQwBD9sTujLQ/+JLX5OMYw3hw8=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Cc:Date:
-	 Message-Id:References:To; b=Gb5RWIzHP6HqS3KvNJI/ObFdPsHKWITgZEnY/rfapi43420WCCovmgPRQmcqYY+Oyih9uXoE3I8OWIw5vMOhwdsotTMg9bzfwYJMq9LuZMzRsPSCtLxnsgBOw5tC3ObmNT8LGIlD6fRNPKiwNTvJ0DtIeozw1LJDFuyUM0M0wcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AHDu8+jk; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719874182; c=relaxed/simple;
+	bh=bXoWDyduCGsJU7lhbujiLjxLA54PjQmw5SMTkVT0vNc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aOY/q+lHQEjFSLMAP6FTF6ABlk/W+rHq8cstR2cufqvdkpcyY/bheoWssnzP60UyzgRJFBPw+qorbB2GSZA7fj6Owf8L3dXNhiZXduxAxULjxBJE+RmmlYTs6vFRRCuWxNb9QS4L33p2fJGXz9Lqt92y46LzwYMpI9EXaClcxm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MnsIb0uN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AHDu8+jk"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7066a3229f4so2171362b3a.2;
-        Mon, 01 Jul 2024 15:48:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719874127; x=1720478927; darn=vger.kernel.org;
-        h=to:references:message-id:date:cc:in-reply-to:from:subject
-         :mime-version:content-transfer-encoding:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FdlVPgQAR+X09paap9HfMATsnRFfGeCHqlkO62FRPcs=;
-        b=AHDu8+jkE1dqghzR8TOIdrNns2K7FPieKwMDqNjL2zPQoFM+9ShR2CS7QqAssKOq2K
-         qfhh8kqiRvusRnaMcSUmE3xHqJsir/YpscDGVjvna+C5RfeoOQJWdmTC8ueMj0T3VXNk
-         3CIcFhkAKoj+bva+t8fUdDhIY2+JbComrMorPZZfdT13rGhGfhC715nnT5f4TkKs3xLH
-         Kb3+yq86WIZ87mvj8iNDFqW3I0605+ACUF7Asd10pAnwkYIEzsu0CJjUUUd8lSgkueHG
-         p1KVThjmRL3yNDkPaPE01WJbHD/oYox9BeH+2UeYaicQu5AwhifHRRsc9sVhbaFdfyvF
-         dMhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719874127; x=1720478927;
-        h=to:references:message-id:date:cc:in-reply-to:from:subject
-         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=FdlVPgQAR+X09paap9HfMATsnRFfGeCHqlkO62FRPcs=;
-        b=qgj6P8aDYVyI5EtGETzbim6bMTqKNeqy9udh9cKecyxd0jUHkicNrXxiuq+MC6onzH
-         80iIC4Ymt2M7RNwj2OrOVMHu93n8A1SN+b1QnPuEkK7T6Fk6KrbepOOfVkizIHQ1r/ZB
-         tCgIp0o2Iug4gSq8ErlQXos4UPrGlnJA5L27fEuulNtbVMG80CkeXP+K2fSFNFFSmJpG
-         JOsjpoNw1y/TIMjuAkLukJLBXD3ydcuAfrKRD6Tansi0fuK8E9Ka2bcmWPmDfU+aPUz9
-         vJoxf/CuW6eiiQaboM389dM8aYvMx5/o6hzB6308YEIeBcv8pu4tSmqt++G2UHBM6KG6
-         aPMw==
-X-Forwarded-Encrypted: i=1; AJvYcCVIH6mPvmiX4rJoVKWPNOI1wdrEJfA35q5rMWIbwzjDsKF2gwgzjLr47ikQWso+rIzIJKAb7y2bRlPH8gToInJlAwWIci0Ims0sFIhRtmBFIVLzYmmeN0WtLHeB4JTOh0SANcfjSSHLdNA=
-X-Gm-Message-State: AOJu0Yzb6/e3q0Hn/s6Q5t1+0ilHsHclD4kaltMVnRGxsuNyU73n1aVZ
-	cb90lSNMA4hi8KySh55ciUEHKgAOPeGUMzNDuHL4HFJlsCWjYiEV
-X-Google-Smtp-Source: AGHT+IHFN4CHmBRJmSu3HUoM28FBmLYAzslqhKRbx5V+Mpzpac89oqKSSeVgLrGFTnQlhl4Ua+32Ow==
-X-Received: by 2002:a05:6a00:1acd:b0:706:334a:43d8 with SMTP id d2e1a72fcca58-70aaad26836mr6351092b3a.2.1719874126879;
-        Mon, 01 Jul 2024 15:48:46 -0700 (PDT)
-Received: from smtpclient.apple (121-45-106-167.tpgi.com.au. [121.45.106.167])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-708044af3b0sm7288776b3a.175.2024.07.01.15.48.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Jul 2024 15:48:46 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MnsIb0uN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02F84C116B1;
+	Mon,  1 Jul 2024 22:49:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719874182;
+	bh=bXoWDyduCGsJU7lhbujiLjxLA54PjQmw5SMTkVT0vNc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MnsIb0uNSwAHfqytxz2YxarQKag9GysdcNIBeUK8dH1tzYMDJUfwlKcSo9NyetHFj
+	 4gRTea8CYRA/mwIDw8oQW65xy5aeE/FMx8dHovVUqnwGBQ4AMIi7TwrfpiY//28W68
+	 GrtBUsMP/EL1H25z91QNWBL63F7TRQUhp19y5VK0+7ldauGeatdJextRuf2x+nFj+D
+	 iToBZrGCa+a2CZZd1KHEMQIfFgam7OVr+YJ9P0s1scV4VsWOy36sQp+RFpToV/BKr+
+	 x2PWAcV1CMKmDKqSRrQjQTblzn4M2tyZE92FrpeA94E7MCwdHtrYNE606nDiRjp05o
+	 7pAp5zCFIgkUg==
+Date: Mon, 1 Jul 2024 15:49:41 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Chandan Babu R <chandan.babu@oracle.com>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	Hugh Dickins <hughd@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>, kernel-team@fb.com,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-mm@kvack.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 01/10] fs: turn inode ctime fields into a single ktime_t
+Message-ID: <20240701224941.GE612460@frogsfrogsfrogs>
+References: <20240626-mgtime-v1-0-a189352d0f8f@kernel.org>
+ <20240626-mgtime-v1-1-a189352d0f8f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] HID: apple: Add support for magic keyboard backlight on T2 Macs
-From: Orlando Chamberlain <orlandoch.dev@gmail.com>
-In-Reply-To: <MA0P287MB021782E3C0DEDB8FC65F1C35B8D32@MA0P287MB0217.INDP287.PROD.OUTLOOK.COM>
-Cc: Jiri Kosina <jikos@kernel.org>, bentiss@kernel.org,
- linux-input@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date: Tue, 2 Jul 2024 08:48:34 +1000
-Message-Id: <8DC4D384-1349-4C8A-848D-589BA25B15D2@gmail.com>
-References: <MA0P287MB021782E3C0DEDB8FC65F1C35B8D32@MA0P287MB0217.INDP287.PROD.OUTLOOK.COM>
-To: Aditya Garg <gargaditya08@live.com>
-X-Mailer: iPhone Mail (21F90)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240626-mgtime-v1-1-a189352d0f8f@kernel.org>
 
+On Wed, Jun 26, 2024 at 09:00:21PM -0400, Jeff Layton wrote:
+> The ctime is not settable to arbitrary values. It always comes from the
+> system clock, so we'll never stamp an inode with a value that can't be
+> represented there. If we disregard people setting their system clock
+> past the year 2262, there is no reason we can't replace the ctime fields
+> with a ktime_t.
+> 
+> Switch the ctime fields to a single ktime_t. Move the i_generation down
+> above i_fsnotify_mask and then move the i_version into the resulting 8
+> byte hole. This shrinks struct inode by 8 bytes total, and should
+> improve the cache footprint as the i_version and ctime are usually
+> updated together.
+> 
+> The one downside I can see to switching to a ktime_t is that if someone
+> has a filesystem with files on it that has ctimes outside the ktime_t
+> range (before ~1678 AD or after ~2262 AD), we won't be able to display
+> them properly in stat() without some special treatment in the
+> filesystem. The operating assumption here is that that is not a
+> practical problem.
 
+What happens if a filesystem with the ability to store ctimes beyond
+whatever ktime_t supports (AFAICT 2^63-1 nanonseconds on either side of
+the Unix epoch)?  I think the behavior with your patch is that ktime_set
+clamps the ctime on iget because the kernel can't handle it?
 
-> On 2 Jul 2024, at 4:19=E2=80=AFAM, Aditya Garg <gargaditya08@live.com> wro=
-te:
-> =EF=BB=BFApparently this patch is breaking touchbar functionality is some c=
-ases.
+It's a little surprising that the ctime will suddenly jump back in time
+to 2262, but maybe you're right that nobody will notice or care? ;)
 
-I think this is because apple_magic_backlight_init will return an error when=
- it finds the touchbar interface, but this return value is not checked, so h=
-id-apple still binds to the touchbar backlight.
+--D
 
-This should be fixable so I don't think we need to still have the separate d=
-river.
-
->>=20
->> static int apple_probe(struct hid_device *hdev,
->>       const struct hid_device_id *id)
->> {
->> @@ -860,6 +940,9 @@ static int apple_probe(struct hid_device *hdev,
->>   if (quirks & APPLE_BACKLIGHT_CTL)
->>       apple_backlight_init(hdev);
->>=20
->> +    if (quirks & APPLE_MAGIC_BACKLIGHT)
->> +        apple_magic_backlight_init(hdev);
-
-return value isn't checked here ^, we return 0 unconditionally below.
-
->> +
->>   return 0;
->> }
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  include/linux/fs.h | 26 +++++++++++---------------
+>  1 file changed, 11 insertions(+), 15 deletions(-)
+> 
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 5ff362277834..5139dec085f2 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -662,11 +662,10 @@ struct inode {
+>  	loff_t			i_size;
+>  	time64_t		i_atime_sec;
+>  	time64_t		i_mtime_sec;
+> -	time64_t		i_ctime_sec;
+>  	u32			i_atime_nsec;
+>  	u32			i_mtime_nsec;
+> -	u32			i_ctime_nsec;
+> -	u32			i_generation;
+> +	ktime_t			__i_ctime;
+> +	atomic64_t		i_version;
+>  	spinlock_t		i_lock;	/* i_blocks, i_bytes, maybe i_size */
+>  	unsigned short          i_bytes;
+>  	u8			i_blkbits;
+> @@ -701,7 +700,6 @@ struct inode {
+>  		struct hlist_head	i_dentry;
+>  		struct rcu_head		i_rcu;
+>  	};
+> -	atomic64_t		i_version;
+>  	atomic64_t		i_sequence; /* see futex */
+>  	atomic_t		i_count;
+>  	atomic_t		i_dio_count;
+> @@ -724,6 +722,8 @@ struct inode {
+>  	};
+>  
+>  
+> +	u32			i_generation;
+> +
+>  #ifdef CONFIG_FSNOTIFY
+>  	__u32			i_fsnotify_mask; /* all events this inode cares about */
+>  	/* 32-bit hole reserved for expanding i_fsnotify_mask */
+> @@ -1608,29 +1608,25 @@ static inline struct timespec64 inode_set_mtime(struct inode *inode,
+>  	return inode_set_mtime_to_ts(inode, ts);
+>  }
+>  
+> -static inline time64_t inode_get_ctime_sec(const struct inode *inode)
+> +static inline struct timespec64 inode_get_ctime(const struct inode *inode)
+>  {
+> -	return inode->i_ctime_sec;
+> +	return ktime_to_timespec64(inode->__i_ctime);
+>  }
+>  
+> -static inline long inode_get_ctime_nsec(const struct inode *inode)
+> +static inline time64_t inode_get_ctime_sec(const struct inode *inode)
+>  {
+> -	return inode->i_ctime_nsec;
+> +	return inode_get_ctime(inode).tv_sec;
+>  }
+>  
+> -static inline struct timespec64 inode_get_ctime(const struct inode *inode)
+> +static inline long inode_get_ctime_nsec(const struct inode *inode)
+>  {
+> -	struct timespec64 ts = { .tv_sec  = inode_get_ctime_sec(inode),
+> -				 .tv_nsec = inode_get_ctime_nsec(inode) };
+> -
+> -	return ts;
+> +	return inode_get_ctime(inode).tv_nsec;
+>  }
+>  
+>  static inline struct timespec64 inode_set_ctime_to_ts(struct inode *inode,
+>  						      struct timespec64 ts)
+>  {
+> -	inode->i_ctime_sec = ts.tv_sec;
+> -	inode->i_ctime_nsec = ts.tv_nsec;
+> +	inode->__i_ctime = ktime_set(ts.tv_sec, ts.tv_nsec);
+>  	return ts;
+>  }
+>  
+> 
+> -- 
+> 2.45.2
+> 
+> 
