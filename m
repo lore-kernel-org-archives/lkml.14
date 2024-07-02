@@ -1,150 +1,102 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6202A1A28C
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 04:34:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E965C81F
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 04:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719894861; cv=none; b=OebrLACqqfjE8hl1wh6GXJFJj5nmgrKjhC9sgcPZCfctsulMBGsEOZ3TCg4io37D6YPsEQ5k/atl+C4fHDPbj9piBvtsXwhRMfwR9EKmWfgD68r6WK9G9SAttnR3y4rwjfqRr1Zgu1RBoxvUxNBnqfJ8lrzROhv3qz3CYHj2yO0=
+	t=1719894978; cv=none; b=KFC44Nsvf5tfy9SO8CxE+xjprLUlTx1zbvqPOESlfZqm/lN+q+gSQM915AOpBEiOGTv0L07b8Vox8nwbuHH22AeQj9UADtH9IyS4qIBCpoK6+xppYp293pX5Xu9tIOrukZRaEsaXicRuJWWYKvyK9OpY6Q8fnRpOLzgY6bTq3LI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719894861; c=relaxed/simple;
-	bh=q2Cc35SOsDHpJeJOWn7FTe19A5jZWBMPUxY/THw20DE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b2H7O8kQh8Buue/BI8MJ1/PcQ9CI2U+746l9ZMElj+dX7u2zcdxukH4rUV6exPuSTa6FtS8UjHszlatrWZal3aqyziOlS8vMAhjuBZ8cvxUlBo1HTi+PH6BP3EGvE/U6LtpkPVNbdkp4DP4JDCS6IeYRSE0CC+rZxtZBL4BUhck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=aEeuSrFr; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1719894978; c=relaxed/simple;
+	bh=OVwUJBNznARdqYZL7x7aHqg592Wvhe4sk/xyK3nN0tA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RgG3ipRdqq0sJrUSSLO14YbuGLM6E35WAT4GeYWZlDpLty3ekt9akk4pRO6FzbYJ1Wcs7+/sC9JrwLBjdGxGMtq9LQGg7SFAKQdgLCla02XrdgD02kl5MBX7Io/qFi4K+YatKAYj4uIm26fn2JL1ob3q37ojjZCP/NS0uFJwOzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FWqYx7yl; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="aEeuSrFr"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e039be89de9so219077276.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 21:34:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719894859; x=1720499659; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=h4yh23E/AmlByOcWJD4eWcZh7D8p3BbXHSztKcWq0cA=;
-        b=aEeuSrFrQVtv2G4B7g86L1WmTDy6WmabvepSyX+zHaRVtwLQFrPqhcN/WHj5udzSm5
-         zRJlwC1dPR2ILzEUphxHrXaSuQuvl6F9wYUWMNekG4FEXgKOL7ui94xIMykH+/pH8aze
-         hp+tGnEJj6lXaIlN86HI6gZm3/5PU08yMWZoOcU5tZvgc1l88WwrTq8eZSEeReKA4GuQ
-         oN3NpLk+iXoT0hqbn5oUyZ8FRyWkdOglo+9vRCXVBQFCNymIv7EmI9iZ5Atb2o01Vx0O
-         5fqkuDRvzRR/v7dzkscDNy4uUkkmpj6cye0IseqwaX1hCWo41r9zx7NSlifd59UopjUf
-         v0aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719894859; x=1720499659;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h4yh23E/AmlByOcWJD4eWcZh7D8p3BbXHSztKcWq0cA=;
-        b=HXIVgQIJBTvk/YKWECCJDzlO1WF3iOc8obnaDlLNPYJjmihJ23whL0kttg3s3+qxmr
-         KsAUcd3b59/xBT9IMS6JOtgi5J8BFW0vyXSYPnidVK+ty5YzyWxzPJAq9JCQvhac3tIi
-         U46JWprVxw8QkRe77IJ8ZoN0oWtqfi95PDwAV/b8nw1rhQhMQpeGYz23sNhsSUtWuWph
-         z+WUnS81E/YgKxbpkT4BoYPcYOob4AQIOS+QJ4rzqEOj2W7tU+6zA9RzvulT9pLf7vUu
-         ARUEl7B84eR/va0uECq1nGhNpf0pCW7JUFozDs0G6dAk+X7nD02X9rsL1mQWTtPDpPcR
-         nl/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWvuZ/IOTx1AMlpnPGJkXWoo/WBKo5CQIb9yDdXoS+yrXDhwPNa8WepYsuqm63/4RP81sI8fb6LsAN7a3TXLem2y505uk9FbSrO6olm
-X-Gm-Message-State: AOJu0YwMUl9JrABPN8gaTkxrgOSHP2fMirury3K7bRk5rvKU1FB3zEkl
-	xcMAi9cnCxUbRQsTkh32t/ATc6hsMK01qwINkEP6Su3b3nGiu7GJnlNakqfV7Cw=
-X-Google-Smtp-Source: AGHT+IFr7sVN2iw1k2zfGO5K3dhcutxzXrXIQmhw11TwtYUrAFSIAsviplllqAK0LOhKsh6tA8qHVg==
-X-Received: by 2002:a25:53c9:0:b0:dff:4862:b0a with SMTP id 3f1490d57ef6-e036ec357fcmr8474625276.46.1719894859404;
-        Mon, 01 Jul 2024 21:34:19 -0700 (PDT)
-Received: from ghost ([2601:647:5700:6860:a569:328b:99ad:ce17])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-72c6d3efeddsm5826997a12.88.2024.07.01.21.34.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 21:34:18 -0700 (PDT)
-Date: Mon, 1 Jul 2024 21:34:16 -0700
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: zhouquan@iscas.ac.cn
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, oleg@redhat.com,
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	andy.chiu@sifive.com, shuah@kernel.org
-Subject: Re: [PATCH v1 1/2] riscv: Expose orig_a0 in the user_regs_struct
- structure
-Message-ID: <ZoODSMYCRbNcZWaY@ghost>
-References: <cover.1719408040.git.zhouquan@iscas.ac.cn>
- <a424caf3072d12ef6ba0c56c411789fb3282e844.1719408040.git.zhouquan@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FWqYx7yl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719894977; x=1751430977;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=OVwUJBNznARdqYZL7x7aHqg592Wvhe4sk/xyK3nN0tA=;
+  b=FWqYx7yldHC7BtfE4xFZkvngsZVPL/zAnV3DA4chR3+pb3LDMvixbJT9
+   LWzed9pZTXsuuMKEKVP4tuC0w9aUcTQL4eU+0cJobEdhCJ17F9SxoT8oV
+   47+NKlbfZUiuImwqA5+O8jHaonW4+T9lqjUUX/HXCgxAWbtHZ37PPieN+
+   w0/LaUP/CRFX/dq/pkrxLqGyg0+fXBEVcu3z3ssz5Uy16+nLpRUXfi1Kr
+   9tQotTvAuFqyvrgmXWFvjDT8kyBeJekhzRSWUtJBeICa2qcjTRHtc4SXw
+   ua5OPR9nV+NtnSUMw0dOt8QNakPNtDrgGpJc+sbHxHkynVkvVR1j815rT
+   Q==;
+X-CSE-ConnectionGUID: 4mKdQgwDQaG6hYnBd4+oJg==
+X-CSE-MsgGUID: ZY2E9tfATse5vKGFVEeC3w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="12351119"
+X-IronPort-AV: E=Sophos;i="6.09,178,1716274800"; 
+   d="scan'208";a="12351119"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 21:36:16 -0700
+X-CSE-ConnectionGUID: IELBY2l0T4mJ53Bgx1RUSw==
+X-CSE-MsgGUID: BU0DcK1+T3yM0jszmDfnhw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,178,1716274800"; 
+   d="scan'208";a="45561528"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 21:36:16 -0700
+Date: Mon, 1 Jul 2024 21:41:28 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin
+ Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian
+ <kevin.tian@intel.com>, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v3 1/2] iommu/vt-d: Add helper to flush caches for
+ context change
+Message-ID: <20240701214128.5523a1ea@jacob-builder>
+In-Reply-To: <20240701112317.94022-2-baolu.lu@linux.intel.com>
+References: <20240701112317.94022-1-baolu.lu@linux.intel.com>
+	<20240701112317.94022-2-baolu.lu@linux.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a424caf3072d12ef6ba0c56c411789fb3282e844.1719408040.git.zhouquan@iscas.ac.cn>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 27, 2024 at 11:02:46AM +0800, zhouquan@iscas.ac.cn wrote:
-> From: Quan Zhou <zhouquan@iscas.ac.cn>
-> 
-> Expose orig_a0 to userspace to ensure that users can modify
-> the actual value of `a0` in the traced process through the
-> ptrace(PTRACE_SETREGSET, ...) path.
-> 
-> The addition of orig_a0 also requires the following adjustments:
-> 1) Adjust the position of orig_a0 in pt_regs to ensure correct copying.
-> 2) MAX_REG_OFFSET should match the new bottom of pt_regs.
-> 
-> Suggested-by: Charlie Jenkins <charlie@rivosinc.com>
-> Signed-off-by: Quan Zhou <zhouquan@iscas.ac.cn>
-> ---
->  arch/riscv/include/asm/ptrace.h      | 7 ++++---
->  arch/riscv/include/uapi/asm/ptrace.h | 2 ++
->  2 files changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/riscv/include/asm/ptrace.h b/arch/riscv/include/asm/ptrace.h
-> index b5b0adcc85c1..380cf54c1f3d 100644
-> --- a/arch/riscv/include/asm/ptrace.h
-> +++ b/arch/riscv/include/asm/ptrace.h
-> @@ -12,6 +12,7 @@
->  
->  #ifndef __ASSEMBLY__
->  
-> +/* MAX_REG_OFFSET should match the bottom of pt_regs */
->  struct pt_regs {
->  	unsigned long epc;
->  	unsigned long ra;
-> @@ -45,12 +46,12 @@ struct pt_regs {
->  	unsigned long t4;
->  	unsigned long t5;
->  	unsigned long t6;
-> +	/* a0 value before the syscall */
-> +	unsigned long orig_a0;
->  	/* Supervisor/Machine CSRs */
->  	unsigned long status;
->  	unsigned long badaddr;
->  	unsigned long cause;
-> -	/* a0 value before the syscall */
-> -	unsigned long orig_a0;
->  };
->  
->  #define PTRACE_SYSEMU			0x1f
-> @@ -64,7 +65,7 @@ struct pt_regs {
->  
->  #define user_mode(regs) (((regs)->status & SR_PP) == 0)
->  
-> -#define MAX_REG_OFFSET offsetof(struct pt_regs, orig_a0)
-> +#define MAX_REG_OFFSET offsetof(struct pt_regs, cause)
->  
->  /* Helpers for working with the instruction pointer */
->  static inline unsigned long instruction_pointer(struct pt_regs *regs)
-> diff --git a/arch/riscv/include/uapi/asm/ptrace.h b/arch/riscv/include/uapi/asm/ptrace.h
-> index a38268b19c3d..3e37f80cb3e8 100644
-> --- a/arch/riscv/include/uapi/asm/ptrace.h
-> +++ b/arch/riscv/include/uapi/asm/ptrace.h
-> @@ -54,6 +54,8 @@ struct user_regs_struct {
->  	unsigned long t4;
->  	unsigned long t5;
->  	unsigned long t6;
-> +	/* a0 value before the syscall */
-> +	unsigned long orig_a0;
->  };
->  
->  struct __riscv_f_ext_state {
-> -- 
-> 2.34.1
-> 
 
-Thank you!
+On Mon,  1 Jul 2024 19:23:16 +0800, Lu Baolu <baolu.lu@linux.intel.com>
+wrote:
 
-Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+> +	if (flush_domains) {
+> +		/*
+> +		 * If the IOMMU is running in scalable mode and there
+> might
+> +		 * be potential PASID translations, the caller should
+> hold
+> +		 * the lock to ensure that context changes and cache
+> flushes
+> +		 * are atomic.
+> +		 */
+> +		assert_spin_locked(&iommu->lock);
+> +		for (i = 0; i < info->pasid_table->max_pasid; i++) {
+> +			pte = intel_pasid_get_entry(info->dev, i);
+> +			if (!pte || !pasid_pte_is_present(pte))
+> +				continue;
+Is it worth going through 1M PASIDs just to skip the PASID cache
+invalidation? Or just do the flush on all used DIDs unconditionally.
 
+> +			did = pasid_get_domain_id(pte);
+> +			qi_flush_pasid_cache(iommu, did,
+> QI_PC_ALL_PASIDS, 0);
+> +			iommu->flush.flush_iotlb(iommu, did, 0, 0,
+> DMA_TLB_DSI_FLUSH);
+> +		}
+> +	}
+
+Thanks,
+
+Jacob
