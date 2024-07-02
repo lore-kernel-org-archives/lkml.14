@@ -1,103 +1,94 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0605B15217F;
-	Tue,  2 Jul 2024 09:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B70F153836
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 09:41:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719913283; cv=none; b=NdktH12oid1DwIFuG5l/RjSUiqDqq74ZR+JBwQg0OLiAFbpxwbcoAeojU52rCFT+F1WfUnE1SM0LDwdU3QXOSDGX7blLR2Enp90st4qTtrfHPNiEM8Qp0N/waOltX4QSqbqwl8gRSq/RaKgElnnYZQrBTMxUgXFa+wVJGwvZphQ=
+	t=1719913291; cv=none; b=XDNjj09asZSgfsXdkRvZSn12+kkYi1PZmEKoxKMk4mVy5Xpc0JtVUsg0oc07sLuVe8qxzxX1A5xPPNSyZSVM4wnaNIQhXwnNncXIvPWL7n1w7+wUKxAK+aCfbmpsqIdHMb+ZVO83xdqPjvza2o42abSTb0tlSnRjh5we9+cJrHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719913283; c=relaxed/simple;
-	bh=R3ngL8Fv4zUiKpxmIUnkSD2duuv6wqVU5YmU8bbdbN4=;
+	s=arc-20240116; t=1719913291; c=relaxed/simple;
+	bh=kxWmBl/62F6kGkS01rbXx3MfKTWBN/DQsH2ryOG58n0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SdBJcBkCQuPr+G9+kbn9rm8FUaQIYbJugr6WXIgPbl7JBSChfkQSxU6FTc81I/+b9nYqLT6YQlDxh69EMfpoI+42VAZ7a63lzEDyJfFT9suw80DpTrweR1xgoEnOu7xTEyBjU5jan2SlWoGhwe4g+djVjETCU10OKRts1qoJ5jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pRaqfWxz; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	 MIME-Version:Content-Type; b=Vl6YwesE3FMHojZKhs8YUjHO6ERVPsfHfFt/GZd7G2P/TcxGYdgd1hDG8uF4lSaEMVHTxX9NaIxC4nw2W/bT7O5kUYn8ozSrtyh3I1+wmBtjQoG5vf3svvkYNu+ge6WG7TAieLs/pP/8FtynspH9974c8QNzKj1sey3zlQdpnZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=LtUwbk09; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pRaqfWxz"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9727A1BF212;
-	Tue,  2 Jul 2024 09:41:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1719913279;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G/8hFWK9UcvLwmvxQx5S9JAO7f5G9Pn+Hmqfq5j09fY=;
-	b=pRaqfWxz7ShvEpbGMyehKBsFqI6DV37eHtko40iUK13IxdeiNqS5pAfFbaKS5gV2zkhTKL
-	mY4gP1UmRATDhw4pCrojqv2yBq2pPi5yams5dgbm6Lc9Juj4a0ow/UDWgEajkBi2ZUU/0u
-	5mPY4VLbPgX5fW60tnOE9hSUIT9ijeHSr0CMW/AqnZ7S0OKa/LuCrqiVZPFYYk4HmYP2sJ
-	KaHMLWUUeod3kHa+04gIsg8t4B7bWLJQEKW3l8lTZUAjDY+0dcxKgRnI5QTd0nl5yxbznG
-	ZJjAqs208unbRu0I3tYI5CnEId14CFuMevH9UVqlv+WQ6Pj8zIKRJq24JJ2kyQ==
-From: Romain Gantois <romain.gantois@bootlin.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH net-next 1/6] net: phy: dp83869: Disable autonegotiation in
- RGMII/1000Base-X mode
-Date: Tue, 02 Jul 2024 11:42:04 +0200
-Message-ID: <2614671.Lt9SDvczpP@fw-rgant>
-In-Reply-To: <ZoPHQms2bDo5zWZm@shell.armlinux.org.uk>
-References:
- <20240701-b4-dp83869-sfp-v1-0-a71d6d0ad5f8@bootlin.com>
- <3818335.kQq0lBPeGt@fw-rgant> <ZoPHQms2bDo5zWZm@shell.armlinux.org.uk>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LtUwbk09"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-42563a9fa58so28009185e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 02:41:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719913289; x=1720518089; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YE0waSrgtEeU0HkldbaEfxX0jG9ixu+KFSkm+VwWqgM=;
+        b=LtUwbk09LHEpI1H3BgtRpWN7R5TtEXkgkvonFlJmeFtQLfFRoBb4gsrtCO/0fc23qc
+         k8ie+qlVWSbFgBOWLRRVg/RSgNMG4ZpvkcSdgAcGgkfk+b84ddj4VxjIKVQCeqtAJcHj
+         5E24UtCIzuys204RdgPIyYjkegkq78LEqIab9rw2ZJyOC4cB81x7l1oJABxeR5aPtBLy
+         1RsQgpi9eAK6Q94Nlxm+EZCu/8UAec0nZNmWvxr1FgMD2AeboZVQCYGrB8PNDTgsN1jh
+         97zB+F35s2NhfoPji7tANlPYaAzXcz/3thTHQKXXPKnCmCfyj++YVHABSRVurf7QjP9y
+         EMGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719913289; x=1720518089;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YE0waSrgtEeU0HkldbaEfxX0jG9ixu+KFSkm+VwWqgM=;
+        b=B/awHrVaBWsYj9Pfmjdr0eH0Wo8eElBiZtdZxhfBuBhHKcNtbgKL5mUIECPHVu9ynX
+         Uarz/bQhA3zk+tm9MVo4o0YfDwThOLroPSAetOYFIASsX3wBSmGAk1SWlOpX4C+OdY0u
+         wgSQRaRN+j3NkCqWC9sy8I/FSTEwv0c15PtHsy5CLyLJycByHKYMZWZ8brF1jMopyWDZ
+         tLPELNVA9nvXrPm1Ra0lGOu5ZMhlZAUBqaj6btRlX0sQAQkpXbYoR624vjMLwNkLjXqe
+         zpoJ/rbVTUnEgDNgw20f65V7A7JAgEh2O8wjLNhYwk2INB+2K6QcC2X0dEw7NsxSw03/
+         NuSg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+inlPLxOj1Qo1s85DHd5F16iOUwINc2R3yxAiUAFPTXVlqXYh6a6F142azT9zcxc0vD9vRmIKVRZg3eFlpoSV+2J2mV/FSd7tvZUZ
+X-Gm-Message-State: AOJu0YyScQvAXxnPU3KF07y3wWKBpkfnFytgIeaVw0nIBbYwlz8gJT5W
+	Hq+o3h2HOGQQiWGwA3suBaTpxide+EPah4oC1tvHpMICyrhqCkb+cKoKkLOgfBc=
+X-Google-Smtp-Source: AGHT+IGkyESW9xePTb5X/hnH8dGkmvMTF0N+RUyGBGuPtMLfLKFbJSjRsa3XTlj/FaSou+MTpduycw==
+X-Received: by 2002:a05:600c:4a16:b0:424:a779:b5c1 with SMTP id 5b1f17b1804b1-4257a0114a9mr56336445e9.20.1719913288699;
+        Tue, 02 Jul 2024 02:41:28 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:628b:5bc8:edc:9c60])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4258014f8b7sm95708385e9.41.2024.07.02.02.41.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jul 2024 02:41:28 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: unexport gpiochip_get_desc()
+Date: Tue,  2 Jul 2024 11:41:26 +0200
+Message-ID: <171991328463.12913.15479546795148049516.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240625073815.12376-1-brgl@bgdev.pl>
+References: <20240625073815.12376-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="utf-8"
-X-GND-Sasl: romain.gantois@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-Hello Russell,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-On mardi 2 juillet 2024 11:24:18 UTC+2 Russell King (Oracle) wrote:
-> On Tue, Jul 02, 2024 at 10:44:12AM +0200, Romain Gantois wrote:
-> > To be clear, "fiber mode" in the DP83869 linguo also includes
-> > 1000Base-X which can be used with a direct-attach copper cable. From
-> > what I've seen, autonegotiation is not supported in this configuration.
+
+On Tue, 25 Jun 2024 09:38:15 +0200, Bartosz Golaszewski wrote:
+> This function has been deprecated for some time and is now only used
+> within the GPIOLIB core. Remove it from the public header and unexport
+> it as all current users are linked against the compilation unit where
+> it is defined.
 > 
-> Why? Direct-attached cables are 1000base-CX, which is defined by 802.3.
-> It uses the 1000base-X PCS which is shared with 1000base-SX, 1000base-LX
-> etc. If one looks at 37.1.3, Relationship to architectural layering,
-> or 36.1.5, Inter-sublayer interfaces, one can see in that diagram that
-> the PCS *including* auto-negotiation is included for SX, LX *and* CX.
 > 
-> Moreover, 39.3 states that TP1 and TP4 will be commin in many
-> implementations of LX, SX and CX.
-> 
-> Moreover, 39.1, 1000base-CX introduction, states that it incorporates
-> clause 36 and clause 38. Clause 36.2.2 states that the 1000base-X PCS
-> incorporates clause 37 auto-negotiation.
-> 
-> So, I think AN is supposed to be supported on CX in the same way that
-> it's supported for SX and LX.
 
-This seems to be a limitation of this particular PHY. From the DP83869
-datasheet:
+Applied, thanks!
 
-"7.4.2.1 1000BASE-X
-The DP83869HM supports the 1000Base-X Fiber Ethernet protocol as
-defined in IEEE 802.3 standard. In 1000M Fiber mode, the PHY will use
-two differential channels for communication. In fiber mode, the speed is not
-decided through auto-negotiation. Both sides of the link must be
-configured to the same operating speed. The PHY can be configured to
-operate in 1000BASE-X through the register settings (Section 7.4.8) or
-strap settings (Section 7.5.1.2)."
+[1/1] gpiolib: unexport gpiochip_get_desc()
+      commit: 6f2a875024993449f1b19a144d3e4391411a1b51
 
-Thanks,
-
+Best regards,
 -- 
-Romain Gantois, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
-
-
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
