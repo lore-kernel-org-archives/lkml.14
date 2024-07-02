@@ -1,126 +1,208 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15C88523D;
-	Tue,  2 Jul 2024 06:35:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB0849621
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 06:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719902151; cv=none; b=On+rWO2fRehoY7i46TqEHwWuUurC/FG6XJxbWcMNWIiCx9IwUwViDp2sWZi6y4xZ/HWN0KfBc3m7U6E9Zoq2SudZ4Lrw3LVlpFXnK9KavALwsDH1hpdPE5WiewgASOJdS1cvCyq+Lc1DVdqaToeKz+cfpYTEo1C1hTyI7BRlISo=
+	t=1719902253; cv=none; b=tbtqPcj9GCIoyu/ceJAQXUr14e4Qav16hxTNBsZyDzPPLq0IW2Rw8icQ6kyvwtntpmPejpwtxETQ+6/czJIuE48Re5NxFwMfh7j9mFHMhq8GOdY9CwibicBP+8IHXyAQQee8uMDIDZMiAGhV4dC8mlInygcha2hcfxkJhZFMaQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719902151; c=relaxed/simple;
-	bh=6UyaXtdSJN87qPrtLpnAwlUBMTry5YyqrGRdWgO9chM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=OH5ujnp1pWUO1Srp/5UOumafV7mG1MIv6jT3spQcoMW013lCeVgqgfegFL2ATmhOr483iIr5pUYRmIlVE3cnqTdYuItVuoMNlcaVYRr4aIVv3ZNb4azly1c1uw57pKkEpIwZOExfcAMeYWtlmQIYgAyYxVV1oBYIRnAFBskSsP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=iJq7I7CV reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1719902253; c=relaxed/simple;
+	bh=ebuYOo3up2lIO+mZ8J6j1N1O2VYAll9pwU9NvDibdg8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sir7O/UrDacXqMZBPpxsQYYDOnsPIeYLsCiP/DdLFp4GHGhu7zsPwjp3VxCXZC5VddQkKQPLrVD+WdxJn4gt1xhG0rScvE3dh+JZxheUJAfxg1GlXmVGGWfsjWagj3jpIw2qj/ie1bcpEv1flKy0jVPGUBvjy33l4R+4uqSQZ5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mw/OW+3i; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="iJq7I7CV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=yomgaRjDGgQXUoWu4sIaqbVyDnSTqfWHwpjm4EaLzhM=; b=i
-	Jq7I7CVMjO32MpzNhzwsDxXkq/nIKlNvtSNBieZDMDha5pE3MZ1xGQxTuN47sKkF
-	dW04m9SsPUoIF8O4clVTDXJRcF4q9QiABUd7GWfbx8orXnH+JyCHB+V66bb/oPhD
-	G4rPtfs+02oS9l6tne7XgkUJ7f6o+T5CZ6H5VE4kJo=
-Received: from slark_xiao$163.com ( [112.97.57.76] ) by
- ajax-webmail-wmsvr-40-111 (Coremail) ; Tue, 2 Jul 2024 14:34:51 +0800 (CST)
-Date: Tue, 2 Jul 2024 14:34:51 +0800 (CST)
-From: "Slark Xiao" <slark_xiao@163.com>
-To: "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>
-Cc: loic.poulain@linaro.org, ryazanov.s.a@gmail.com, johannes@sipsolutions.net, 
-	quic_jhugo@quicinc.com, netdev@vger.kernel.org, mhi@lists.linux.dev, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re:Re: [PATCH v4 1/3] bus: mhi: host: Add Foxconn SDX72 related
- support
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
- Copyright (c) 2002-2024 www.mailtech.cn 163com
-In-Reply-To: <20240701162523.GC133366@thinkpad>
-References: <20240701021216.17734-1-slark_xiao@163.com>
- <20240701162523.GC133366@thinkpad>
-X-NTES-SC: AL_Qu2aC/WbvUgi5yedbekfmk8Sg+84W8K3v/0v1YVQOpF8jDjp5A4rXkRlE1r59fKtICS+jT6xQQdUyOFnbbJmdKkNlM/BN8CAR5oan0L0tfyfWQ==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mw/OW+3i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719902252; x=1751438252;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ebuYOo3up2lIO+mZ8J6j1N1O2VYAll9pwU9NvDibdg8=;
+  b=Mw/OW+3iipoJjiO0nYOPvuLAhKedo7IcapHF6EmbRAlsmnRSXvu1hXxf
+   gVQuHN1lu6miTmz7YutJ/GGZI+xqqFAKaZnDSt3Ky/sMe5Eb2QJkNoUBW
+   6cMTlIQrXKbTJMdXx6WvVE0FDj1Au110NnA9eIYr2f2T+RuP+nlTeoCtW
+   gpe8BrjbS/GZf8M8PrK/49XeWdsGsiq0NL08p+o6jC6/ohB0zxSIKZSHA
+   deym5ab8ofHjbWAaoTTrT5Dkq/9dhsi+K03n74bPr9mkND1qKLm075NxT
+   aIjUB8f6vfo3Z6ghZAVYWR4n5B1MIpFD/wusZCjMeGJRAbc3TxN+XFcV4
+   A==;
+X-CSE-ConnectionGUID: s/CwOk+vRlKaMF68SktHCg==
+X-CSE-MsgGUID: zJ4nNyUXQaitJP6+Nqj3Fw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="28455561"
+X-IronPort-AV: E=Sophos;i="6.09,178,1716274800"; 
+   d="scan'208";a="28455561"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 23:37:31 -0700
+X-CSE-ConnectionGUID: sJdbJ6N6Tya2N9RApR+X5Q==
+X-CSE-MsgGUID: 8zjQDBa8Q3WgslKjkGX/tA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,178,1716274800"; 
+   d="scan'208";a="50137095"
+Received: from unknown (HELO allen-box.sh.intel.com) ([10.239.159.127])
+  by fmviesa003.fm.intel.com with ESMTP; 01 Jul 2024 23:37:27 -0700
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	Nicolin Chen <nicolinc@nvidia.com>,
+	Yi Liu <yi.l.liu@intel.com>,
+	Jacob Pan <jacob.jun.pan@linux.intel.com>,
+	Joel Granados <j.granados@samsung.com>
+Cc: iommu@lists.linux.dev,
+	virtualization@lists.linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH v8 00/10] IOMMUFD: Deliver IO page faults to user space
+Date: Tue,  2 Jul 2024 14:34:34 +0800
+Message-Id: <20240702063444.105814-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <c156594.626c.190722739f2.Coremail.slark_xiao@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:_____wD3v4mLn4NmwUwaAA--.26409W
-X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/1tbiNQQPZGV4IYYnYgACsn
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Transfer-Encoding: 8bit
 
-CkF0IDIwMjQtMDctMDIgMDA6MjU6MjMsICJNYW5pdmFubmFuIFNhZGhhc2l2YW0iIDxtYW5pdmFu
-bmFuLnNhZGhhc2l2YW1AbGluYXJvLm9yZz4gd3JvdGU6Cj5PbiBNb24sIEp1bCAwMSwgMjAyNCBh
-dCAxMDoxMjoxNEFNICswODAwLCBTbGFyayBYaWFvIHdyb3RlOgo+PiBBbGlnbiB3aXRoIFFjb20g
-U0RYNzIsIGFkZCByZWFkeSB0aW1lb3V0IGl0ZW0gZm9yIEZveGNvbm4gU0RYNzIuCj4+IEFuZCBh
-bHNvLCBhZGQgZmlyZWhvc2Ugc3VwcG9ydCBzaW5jZSBTRFg3Mi4KPj4gCj4+IFNpZ25lZC1vZmYt
-Ynk6IFNsYXJrIFhpYW8gPHNsYXJrX3hpYW9AMTYzLmNvbT4KPj4gLS0tCj4+IHYyOiAoMSkuIFVw
-ZGF0ZSB0aGUgZWRsIGZpbGUgcGF0aCBhbmQgbmFtZSAoMikuIFNldCBTRFg3MiBzdXBwb3J0Cj4+
-IHRyaWdnZXIgZWRsIG1vZGUgYnkgZGVmYXVsdAo+PiB2MzogRGl2aWRlIGludG8gMiBwYXJ0cyBm
-b3IgRm94Y29ubiBzZHg3MiBwbGF0Zm9ybQo+PiAtLS0KPj4gIGRyaXZlcnMvYnVzL21oaS9ob3N0
-L3BjaV9nZW5lcmljLmMgfCA0MyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPj4gIDEg
-ZmlsZSBjaGFuZ2VkLCA0MyBpbnNlcnRpb25zKCspCj4+IAo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9idXMvbWhpL2hvc3QvcGNpX2dlbmVyaWMuYyBiL2RyaXZlcnMvYnVzL21oaS9ob3N0L3BjaV9n
-ZW5lcmljLmMKPj4gaW5kZXggMzVhZTdjZDA3MTFmLi4xZmIxYzJmMmZlMTIgMTAwNjQ0Cj4+IC0t
-LSBhL2RyaXZlcnMvYnVzL21oaS9ob3N0L3BjaV9nZW5lcmljLmMKPj4gKysrIGIvZHJpdmVycy9i
-dXMvbWhpL2hvc3QvcGNpX2dlbmVyaWMuYwo+PiBAQCAtMzk5LDYgKzM5OSw4IEBAIHN0YXRpYyBj
-b25zdCBzdHJ1Y3QgbWhpX2NoYW5uZWxfY29uZmlnIG1oaV9mb3hjb25uX3NkeDU1X2NoYW5uZWxz
-W10gPSB7Cj4+ICAJTUhJX0NIQU5ORUxfQ09ORklHX0RMKDEzLCAiTUJJTSIsIDMyLCAwKSwKPj4g
-IAlNSElfQ0hBTk5FTF9DT05GSUdfVUwoMzIsICJEVU4iLCAzMiwgMCksCj4+ICAJTUhJX0NIQU5O
-RUxfQ09ORklHX0RMKDMzLCAiRFVOIiwgMzIsIDApLAo+PiArCU1ISV9DSEFOTkVMX0NPTkZJR19V
-TF9GUCgzNCwgIkZJUkVIT1NFIiwgMzIsIDApLAo+PiArCU1ISV9DSEFOTkVMX0NPTkZJR19ETF9G
-UCgzNSwgIkZJUkVIT1NFIiwgMzIsIDApLAo+PiAgCU1ISV9DSEFOTkVMX0NPTkZJR19IV19VTCgx
-MDAsICJJUF9IVzBfTUJJTSIsIDEyOCwgMiksCj4+ICAJTUhJX0NIQU5ORUxfQ09ORklHX0hXX0RM
-KDEwMSwgIklQX0hXMF9NQklNIiwgMTI4LCAzKSwKPj4gIH07Cj4+IEBAIC00MTksNiArNDIxLDE2
-IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbWhpX2NvbnRyb2xsZXJfY29uZmlnIG1vZGVtX2ZveGNv
-bm5fc2R4NTVfY29uZmlnID0gewo+PiAgCS5ldmVudF9jZmcgPSBtaGlfZm94Y29ubl9zZHg1NV9l
-dmVudHMsCj4+ICB9Owo+PiAgCj4+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG1oaV9jb250cm9sbGVy
-X2NvbmZpZyBtb2RlbV9mb3hjb25uX3NkeDcyX2NvbmZpZyA9IHsKPj4gKwkubWF4X2NoYW5uZWxz
-ID0gMTI4LAo+PiArCS50aW1lb3V0X21zID0gMjAwMDAsCj4+ICsJLnJlYWR5X3RpbWVvdXRfbXMg
-PSA1MDAwMCwKPj4gKwkubnVtX2NoYW5uZWxzID0gQVJSQVlfU0laRShtaGlfZm94Y29ubl9zZHg1
-NV9jaGFubmVscyksCj4+ICsJLmNoX2NmZyA9IG1oaV9mb3hjb25uX3NkeDU1X2NoYW5uZWxzLAo+
-PiArCS5udW1fZXZlbnRzID0gQVJSQVlfU0laRShtaGlfZm94Y29ubl9zZHg1NV9ldmVudHMpLAo+
-PiArCS5ldmVudF9jZmcgPSBtaGlfZm94Y29ubl9zZHg1NV9ldmVudHMsCj4KPldlaXJkLiBXaHkg
-dGhpcyBtb2RlbSBpcyB1c2luZyBhbGwgU0RYNTUgY29uZmlncz8gUmV1c2luZyBpcyBmaW5lLCBi
-dXQgaXQgaXMKPnN0cmFuZ2UgdG8gc2VlIG9ubHkgdGhpcyBTRFg3MiBtb2RlbSB1c2luZyBkaWZm
-ZXJlbnQgY29uZmlnIHRoYW4gdGhlIG90aGVycwo+YWRkZWQgYmVsb3cuCj4KPi0gTWFuaQo+CgpU
-aGVyZSBpcyBhIHNldHRpbmdzICIucmVhZHlfdGltZW91dF9tcyA9IDUwMDAwLCIgZm9yIFNEWDcy
-L1NEWDc1IG9ubHkuCkl0IGFsaWducyB3aXRoIFFjb20gU0RYNzIvU0RYNzUgaW4gY2FzZSBvZiB0
-aW1lb3V0IGlzc3VlLgoKPj4gK307Cj4+ICsKPj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbWhpX3Bj
-aV9kZXZfaW5mbyBtaGlfZm94Y29ubl9zZHg1NV9pbmZvID0gewo+PiAgCS5uYW1lID0gImZveGNv
-bm4tc2R4NTUiLAo+PiAgCS5mdyA9ICJxY29tL3NkeDU1bS9zYmwxLm1ibiIsCj4+IEBAIC00ODgs
-NiArNTAwLDI4IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbWhpX3BjaV9kZXZfaW5mbyBtaGlfZm94
-Y29ubl9kdzU5MzJlX2luZm8gPSB7Cj4+ICAJLnNpZGViYW5kX3dha2UgPSBmYWxzZSwKPj4gIH07
-Cj4+ICAKPj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgbWhpX3BjaV9kZXZfaW5mbyBtaGlfZm94Y29u
-bl90OTl3NTE1X2luZm8gPSB7Cj4+ICsJLm5hbWUgPSAiZm94Y29ubi10OTl3NTE1IiwKPj4gKwku
-ZWRsID0gImZveC9zZHg3Mm0vZWRsLm1ibiIsCj4+ICsJLmVkbF90cmlnZ2VyID0gdHJ1ZSwKPj4g
-KwkuY29uZmlnID0gJm1vZGVtX2ZveGNvbm5fc2R4NzJfY29uZmlnLAo+PiArCS5iYXJfbnVtID0g
-TUhJX1BDSV9ERUZBVUxUX0JBUl9OVU0sCj4+ICsJLmRtYV9kYXRhX3dpZHRoID0gMzIsCj4+ICsJ
-Lm1ydV9kZWZhdWx0ID0gMzI3NjgsCj4+ICsJLnNpZGViYW5kX3dha2UgPSBmYWxzZSwKPj4gK307
-Cj4+ICsKPj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgbWhpX3BjaV9kZXZfaW5mbyBtaGlfZm94Y29u
-bl9kdzU5MzRlX2luZm8gPSB7Cj4+ICsJLm5hbWUgPSAiZm94Y29ubi1kdzU5MzRlIiwKPj4gKwku
-ZWRsID0gImZveC9zZHg3Mm0vZWRsLm1ibiIsCj4+ICsJLmVkbF90cmlnZ2VyID0gdHJ1ZSwKPj4g
-KwkuY29uZmlnID0gJm1vZGVtX2ZveGNvbm5fc2R4NzJfY29uZmlnLAo+PiArCS5iYXJfbnVtID0g
-TUhJX1BDSV9ERUZBVUxUX0JBUl9OVU0sCj4+ICsJLmRtYV9kYXRhX3dpZHRoID0gMzIsCj4+ICsJ
-Lm1ydV9kZWZhdWx0ID0gMzI3NjgsCj4+ICsJLnNpZGViYW5kX3dha2UgPSBmYWxzZSwKPj4gK307
-Cj4+ICsKPj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbWhpX2NoYW5uZWxfY29uZmlnIG1oaV9tdjN4
-X2NoYW5uZWxzW10gPSB7Cj4+ICAJTUhJX0NIQU5ORUxfQ09ORklHX1VMKDAsICJMT09QQkFDSyIs
-IDY0LCAwKSwKPj4gIAlNSElfQ0hBTk5FTF9DT05GSUdfREwoMSwgIkxPT1BCQUNLIiwgNjQsIDAp
-LAo+PiBAQCAtNzIwLDYgKzc1NCwxNSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBjaV9kZXZpY2Vf
-aWQgbWhpX3BjaV9pZF90YWJsZVtdID0gewo+PiAgCS8qIERXNTkzMmUgKHNkeDYyKSwgTm9uLWVT
-SU0gKi8KPj4gIAl7IFBDSV9ERVZJQ0UoUENJX1ZFTkRPUl9JRF9GT1hDT05OLCAweGUwZjkpLAo+
-PiAgCQkuZHJpdmVyX2RhdGEgPSAoa2VybmVsX3Vsb25nX3QpICZtaGlfZm94Y29ubl9kdzU5MzJl
-X2luZm8gfSwKPj4gKwkvKiBUOTlXNTE1IChzZHg3MikgKi8KPj4gKwl7IFBDSV9ERVZJQ0UoUENJ
-X1ZFTkRPUl9JRF9GT1hDT05OLCAweGUxMTgpLAo+PiArCQkuZHJpdmVyX2RhdGEgPSAoa2VybmVs
-X3Vsb25nX3QpICZtaGlfZm94Y29ubl90OTl3NTE1X2luZm8gfSwKPj4gKwkvKiBEVzU5MzRlKHNk
-eDcyKSwgV2l0aCBlU0lNICovCj4+ICsJeyBQQ0lfREVWSUNFKFBDSV9WRU5ET1JfSURfRk9YQ09O
-TiwgMHhlMTFkKSwKPj4gKwkJLmRyaXZlcl9kYXRhID0gKGtlcm5lbF91bG9uZ190KSAmbWhpX2Zv
-eGNvbm5fZHc1OTM0ZV9pbmZvIH0sCj4+ICsJLyogRFc1OTM0ZShzZHg3MiksIE5vbi1lU0lNICov
-Cj4+ICsJeyBQQ0lfREVWSUNFKFBDSV9WRU5ET1JfSURfRk9YQ09OTiwgMHhlMTFlKSwKPj4gKwkJ
-LmRyaXZlcl9kYXRhID0gKGtlcm5lbF91bG9uZ190KSAmbWhpX2ZveGNvbm5fZHc1OTM0ZV9pbmZv
-IH0sCj4+ICAJLyogTVYzMS1XIChDaW50ZXJpb24pICovCj4+ICAJeyBQQ0lfREVWSUNFKFBDSV9W
-RU5ET1JfSURfVEhBTEVTLCAweDAwYjMpLAo+PiAgCQkuZHJpdmVyX2RhdGEgPSAoa2VybmVsX3Vs
-b25nX3QpICZtaGlfbXYzMV9pbmZvIH0sCj4+IC0tIAo+PiAyLjI1LjEKPj4gCj4KPi0tIAo+4K6u
-4K6j4K6/4K614K6j4K+N4K6j4K6p4K+NIOCumuCupOCuvuCumuCuv+CuteCuruCvjQo=
+This series implements the functionality of delivering IO page faults to
+user space through the IOMMUFD framework. One feasible use case is the
+nested translation. Nested translation is a hardware feature that
+supports two-stage translation tables for IOMMU. The second-stage
+translation table is managed by the host VMM, while the first-stage
+translation table is owned by user space. This allows user space to
+control the IOMMU mappings for its devices.
+
+When an IO page fault occurs on the first-stage translation table, the
+IOMMU hardware can deliver the page fault to user space through the
+IOMMUFD framework. User space can then handle the page fault and respond
+to the device top-down through the IOMMUFD. This allows user space to
+implement its own IO page fault handling policies.
+
+User space application that is capable of handling IO page faults should
+allocate a fault object, and bind the fault object to any domain that it
+is willing to handle the fault generatd for them. On a successful return
+of fault object allocation, the user can retrieve and respond to page
+faults by reading or writing to the file descriptor (FD) returned.
+
+The iommu selftest framework has been updated to test the IO page fault
+delivery and response functionality.
+
+The series and related patches are available on GitHub:
+https://github.com/LuBaolu/intel-iommu/commits/iommufd-io-pgfault-delivery-v8
+
+Change log:
+v8:
+ - Update an out-of-date commit message.
+ - Fix an error unwind issue by storing to a reserved entry.
+ - Add a fail_nth selftest case to test iommufd_ucmd_respond() failure
+   path.
+ - Fix a refcounting issue in hwpt allocation with fault object.
+ - Miscellaneous cleanup.
+
+v7: https://lore.kernel.org/linux-iommu/20240616061155.169343-1-baolu.lu@linux.intel.com/
+ - Move the setting of handle.domain into the helpers.
+ - Return value of copy_to_user() should be converted to -EFAULT.
+ - Add more checks on a fetched dma handle in the sva bind path.
+ - Add a constant flag in iommu_ops to replace
+   IOMMU_CAP_USER_IOASID_TABLE.
+ - Simplify iommu_hwpt_pgfault and iommu_hwpt_page_response by removing
+   some unnecessary fields.
+ - Address the wrong order between dec users and ctx_put in fault FD
+   release path.
+ - Miscellaneous cleanup.
+
+v6: https://lore.kernel.org/linux-iommu/20240527040517.38561-1-baolu.lu@linux.intel.com/
+ - Refine the attach handle code by shifting the handle allocation to
+   the caller. The caller will then provide the allocated handle to the
+   domain attachment interfaces.
+ - Add reference counter in iommufd_fault_iopf_enable/disable() helpers.
+ - Fix the return values of fault FD's read/write fops.
+ - Add IOMMU_CAP_USER_IOASID_TABLE capability and check it before roll
+   back getting attach_handle to RID.
+ - Move the iopf respond queue from iommufd device to iommufd fault.
+ - Disallow PRI enablement on SR-IOV VF devices.
+ - Miscellaneous cleanup.
+
+v5: https://lore.kernel.org/linux-iommu/20240430145710.68112-1-baolu.lu@linux.intel.com/
+ - Removed attach handle reference count from the core. Drivers will now
+   synchronize their use of handles and domain attach/detach.
+ - Automatically responds to all outstanding faults in hwpt detach or
+   replace paths.
+ - Supports getting a domain-type specific attach handle.
+ - Reorganized the series by changing the patch order.
+ - Miscellaneous cleanup.
+
+v4: https://lore.kernel.org/linux-iommu/20240403011519.78512-1-baolu.lu@linux.intel.com/
+ - Add the iommu domain attachment handle to replace the iopf-specific
+   domain attachment interfaces introduced in the previous v3.
+ - Replace the iommu_sva with iommu domain attachment handle.
+ - Refine some fields in the fault and response message encoding
+   according to feedback collected during v3 review period.
+ - Refine and fix some problems in the fault FD implementation.
+ - Miscellaneous cleanup.
+
+v3: https://lore.kernel.org/linux-iommu/20240122073903.24406-1-baolu.lu@linux.intel.com/
+ - Add iopf domain attach/detach/replace interfaces to manage the
+   reference counters of hwpt and device, ensuring that both can only be
+   destroyed after all outstanding IOPFs have been responded to. 
+ - Relocate the fault handling file descriptor from hwpt to a fault
+   object to enable a single fault handling object to be utilized
+   across multiple domains.
+ - Miscellaneous cleanup and performance improvements.
+
+v2: https://lore.kernel.org/linux-iommu/20231026024930.382898-1-baolu.lu@linux.intel.com/
+ - Move all iommu refactoring patches into a sparated series and discuss
+   it in a different thread. The latest patch series [v6] is available at
+   https://lore.kernel.org/linux-iommu/20230928042734.16134-1-baolu.lu@linux.intel.com/
+ - We discussed the timeout of the pending page fault messages. We
+   agreed that we shouldn't apply any timeout policy for the page fault
+   handling in user space.
+   https://lore.kernel.org/linux-iommu/20230616113232.GA84678@myrica/
+ - Jason suggested that we adopt a simple file descriptor interface for
+   reading and responding to I/O page requests, so that user space
+   applications can improve performance using io_uring.
+   https://lore.kernel.org/linux-iommu/ZJWjD1ajeem6pK3I@ziepe.ca/
+
+v1: https://lore.kernel.org/linux-iommu/20230530053724.232765-1-baolu.lu@linux.intel.com/
+
+Lu Baolu (10):
+  iommu: Introduce domain attachment handle
+  iommu: Remove sva handle list
+  iommu: Add attach handle to struct iopf_group
+  iommu: Extend domain attach group with handle support
+  iommufd: Add fault and response message definitions
+  iommufd: Add iommufd fault object
+  iommufd: Fault-capable hwpt attach/detach/replace
+  iommufd: Associate fault object with iommufd_hw_pgtable
+  iommufd/selftest: Add IOPF support for mock device
+  iommufd/selftest: Add coverage for IOPF test
+
+ include/linux/iommu.h                         |  41 +-
+ drivers/iommu/iommu-priv.h                    |  11 +
+ drivers/iommu/iommufd/iommufd_private.h       |  80 ++++
+ drivers/iommu/iommufd/iommufd_test.h          |   8 +
+ include/uapi/linux/iommufd.h                  | 109 +++++
+ tools/testing/selftests/iommu/iommufd_utils.h |  86 +++-
+ drivers/dma/idxd/init.c                       |   2 +-
+ drivers/iommu/io-pgfault.c                    |  63 +--
+ drivers/iommu/iommu-sva.c                     |  42 +-
+ drivers/iommu/iommu.c                         | 185 ++++++--
+ drivers/iommu/iommufd/device.c                |   7 +-
+ drivers/iommu/iommufd/fault.c                 | 433 ++++++++++++++++++
+ drivers/iommu/iommufd/hw_pagetable.c          |  38 +-
+ drivers/iommu/iommufd/main.c                  |   6 +
+ drivers/iommu/iommufd/selftest.c              |  64 +++
+ tools/testing/selftests/iommu/iommufd.c       |  22 +
+ .../selftests/iommu/iommufd_fail_nth.c        |   2 +-
+ drivers/iommu/iommufd/Makefile                |   1 +
+ 18 files changed, 1083 insertions(+), 117 deletions(-)
+ create mode 100644 drivers/iommu/iommufd/fault.c
+
+-- 
+2.34.1
+
