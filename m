@@ -1,162 +1,255 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from relay1-c.mailbaby.net (relay1-c.mailbaby.net [64.20.36.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC06179CC;
-	Tue,  2 Jul 2024 05:47:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA01F79CC
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 05:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.20.36.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719899280; cv=none; b=TE1iErGEh+XHSkPq8nk1sV6WkqJXu0sQTfAwab+IRKHCT3KflMtY/pmbaT4im6fRmN66FhV4lCt10ZOq/9CWAzs/zJ8n2yqW/21PLa9EBbzLMpRZFc/n6baunfjBogG7SbRUrf5JAR7cs4OgxiUEQ9NSZHkkj1HCpNZOogPphmA=
+	t=1719899397; cv=none; b=pLRi0s3MDUV1Mftn4DQUOsNXLy0JZgUkHNGTQOe/E2/RhKdfs+Iseal1nxLOj5mC/lYwlAdMBrT0eCR1HOtDqqpzXnfamdsPd7JvGxWAfhk+8FxsNVQqNPG1GxtFC21OdXXJ1oZGYntIEuDL8Vm5UpupH/vEDmnGdErbKWIrrXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719899280; c=relaxed/simple;
-	bh=Bn3wG4lA+xxGiSruiHBol9oYVeiEnMeIGUNym8g/cIo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WFv62Vn35yW95sPPIOKESQXALOdC5EueFWiLe4Kio5TP5PWGbnSTKR26B8kAgU2z8Y07hRYYNXkDgfVpAOAalBbh3JQ9pItFTZgU1QSPeHfwvIJxoLWSkkTZfTXpPyVw2ZpHHxuH3eN6eWrG1WBpbLpq0TypN4cHS9kP2+Q4eus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=4L1OOc1C; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1719899397; c=relaxed/simple;
+	bh=jZFHz7qk29RqwEyiJGu1UAgq5doWP0aOqvcNZeq1qyE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ZgWX9NvR+T5l+2zlphtz2XNrcoMElCh5wJkqq1uVJHOOi4mhXld1vdD95JaM2kau/R46DzegMpOw0uLI8lUVIOB8muiTU+3BIc6ULabqEpD3usygPWGLIqtDBeIlmsWbjITnxX+t9J8t5/uuAbhWuD23fQ1CQB6Bhdppcd4Nvso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=agatha.dev; spf=fail smtp.mailfrom=agatha.dev; dkim=pass (1024-bit key) header.d=mailbaby.net header.i=@mailbaby.net header.b=cEppydcu; dkim=pass (2048-bit key) header.d=agatha.dev header.i=@agatha.dev header.b=SSgQ+pJT; arc=none smtp.client-ip=64.20.36.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=agatha.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=agatha.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="4L1OOc1C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1719899277;
-	bh=Bn3wG4lA+xxGiSruiHBol9oYVeiEnMeIGUNym8g/cIo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=4L1OOc1CMaqgg0QIXjgIFNkXfJ0CecvLU2J0BI6d5vzQBkZQhz0yY2bR9K+YU0sor
-	 GOHqzqFBN8NXvkwF3Sz8yft2ORq6G7wDqct3gu0wYmVY4dIE+L3xnuuEC/09vpcrrq
-	 SPwsLiB437/77bdi6yDbrI/hFopyJI4vey7asWFl/y3ENpqKVhlY2hQQ73Vnm2P7Z/
-	 IGvoEhoSJqsL6GVHjqKsg7mQMDZOqCHJG7OxmcPujOYn4GB+B4Xdb0lNApvmJ3xQpk
-	 SOD5S+yyLGZiwY2MAUUuRdeSKuxmV63nRzZF8HmtlI3sWs+trb/wyHuyvk7/hVEg8N
-	 PEEFRuxcTIidg==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 81F9837811EB;
-	Tue,  2 Jul 2024 05:47:56 +0000 (UTC)
-Message-ID: <70b31b71-750b-4de0-9102-0852fef7d623@collabora.com>
-Date: Tue, 2 Jul 2024 07:47:55 +0200
+	dkim=pass (1024-bit key) header.d=mailbaby.net header.i=@mailbaby.net header.b="cEppydcu";
+	dkim=pass (2048-bit key) header.d=agatha.dev header.i=@agatha.dev header.b="SSgQ+pJT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbaby.net;
+ q=dns/txt; s=bambino; bh=kLRQSdBWD5O01x5quSpu5x32+TFH2X1iwkgzQjlFJjA=;
+ h=from:subject:date:message-id:to:cc:mime-version:content-type;
+ b=cEppydcumRHOK6OYUsUc6CgWJ/jZqaWpY6ikj6FFyaRX8jcJWgVN6iMG707phaTdN1+Q38HLq
+ vsGw5pdbjcXT4rF6Cf5WMOVfdgcrwi/Z+/ou1WGSznzh3JEisVIFFCjbEpb6GY+Y4Ps6ckF7HNc
+ fd7pvRvlnvATGNGMP960Mlg=
+Received: from mia3000.dnsiaas.com ([192.155.110.18] mia3000.dnsiaas.com)
+ (Authenticated sender: mb6724)
+ by relay1-c.mailbaby.net (MailBabyMTA) with ESMTPSA id 19071f93f2f0009a32.002
+ for <linux-kernel@vger.kernel.org>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Tue, 02 Jul 2024 05:44:38 +0000
+X-Zone-Loop: c4456174a38d8ead6cdcdbdcdcff0eafc63ab245e291
+X-Get-Message-Sender-Via: mb6724: authenticated_id: code@agatha.dev
+X-NS-SCAN: PASS
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=agatha.dev;
+	s=default; h=Content-Type:MIME-Version:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=kLRQSdBWD5O01x5quSpu5x32+TFH2X1iwkgzQjlFJjA=; b=SSgQ+pJT2Yl7bYtV2EO+AWkUR2
+	FSUJgsvxdh2Tyb+URU8u5J32pWw1wBQf0bTZYzlHdr7qcLSWVM/61IiMuNkZhJ1AEM2w+qTnrX/+S
+	fYOcPdLrFtSquHIZmqwN6v8SrRZuA4FnY5uConT45d22leIVQgz5sx3xjdVRwxO4MAQJysGF3aLGW
+	p4RGDuZjGcUmn1IDSwvUotHfBHdExtcaJ3UVK5dYW5IRxE28EUmoK1ZUEvWS+1BZYyI2TnioevqDc
+	A3TUO4530o/UqOqA/JR1NXTndChf1LjluWL+qUq0BV5QHB/CDFJsKwqnXK9lxItsR9irWRlVuxY/z
+	Ox7pNlkQ==;
+Received: from [186.250.91.79] (port=19818 helo=kurupi-arch.blackcat)
+	by mia3000.dnsiaas.com with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <code@agatha.dev>)
+	id 1sOWJe-00000001HnP-3X5k;
+	Tue, 02 Jul 2024 01:44:35 -0400
+Date: Tue, 2 Jul 2024 02:44:31 -0300
+From: =?utf-8?Q?=C3=81gatha?= Isabelle Chris Moreira Guedes <code@agatha.dev>
+To: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-modules@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>
+Cc: =?utf-8?Q?=C3=81gatha?= Isabelle Chris Moreira Guedes <patch-reply@agatha.dev>, 
+	Jookia <contact@jookia.org>
+Subject: [PATCH] staging: Fix missing warning/taint on builtin code
+Message-ID: <yf3ewok3u7fu7f4yqlcovcvedkhyjtibvwzlgbcjwf7ijcsktt@vrk54srlnk2n>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4942; i=code@agatha.dev;
+ h=from:subject; bh=M0JBCO3WgTHKX1tSFWBSzLK4B1xEvuxIrpd2ceDc2cc=;
+ b=owGbwMvMwCX2vcdPlI2bz4fxtFoSQ1pz70ebCxU2Be1Cu9PScgqb/szZ482lx3KG47noiWOBG
+ ZUVL1o6SlkYxLgYZMUUWXjKhRO04v+kvyvaGQIzh5UJZAgDF6cATKSOmeE3u+Kjl738rt4mxs88
+ c8w3XlZg5eN4cHDvscq3tw0LdzYtYWTY3j7hpX+XtIP85q8P5V9y1v//db1xpuOaZ8wfTqzXdn/
+ BAgA=
+X-Developer-Key: i=code@agatha.dev; a=openpgp;
+ fpr=0C7713602A5FFC67EE72B954F78C4E15060B0E4C
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cpufreq: mediatek: Use dev_err_probe in every error path
- in probe
-To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>,
- Matthias Brugger <matthias.bgg@gmail.com>
-Cc: kernel@collabora.com, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20240628-mtk-cpufreq-dvfs-fail-init-err-v1-1-19c55db23011@collabora.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20240628-mtk-cpufreq-dvfs-fail-init-err-v1-1-19c55db23011@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-Il 28/06/24 21:48, Nícolas F. R. A. Prado ha scritto:
-> Use the dev_err_probe() helper to log the errors on every error path in
-> the probe function and its sub-functions. This includes
-> * adding error messages where there was none
-> * converting over dev_err/dev_warn
-> * removing the top-level error message after mtk_cpu_dvfs_info_init() is
->    called, since every error path inside that function already logs the
->    error reason. This gets rid of the misleading error message when probe
->    is deferred:
-> 
->      mtk-cpufreq mtk-cpufreq: failed to initialize dvfs info for cpu0
-> 
-> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-> ---
->   drivers/cpufreq/mediatek-cpufreq.c | 66 ++++++++++++++++++--------------------
->   1 file changed, 31 insertions(+), 35 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/mediatek-cpufreq.c b/drivers/cpufreq/mediatek-cpufreq.c
-> index 518606adf14e..b21425bb83be 100644
-> --- a/drivers/cpufreq/mediatek-cpufreq.c
-> +++ b/drivers/cpufreq/mediatek-cpufreq.c
-
-..snip..
-
-> @@ -487,7 +488,7 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
->   	rate = clk_get_rate(info->inter_clk);
->   	opp = dev_pm_opp_find_freq_ceil(cpu_dev, &rate);
->   	if (IS_ERR(opp)) {
-> -		dev_err(cpu_dev, "cpu%d: failed to get intermediate opp\n", cpu);
-> +		dev_err_probe(cpu_dev, ret, "cpu%d: failed to get intermediate opp\n", cpu);
->   		ret = PTR_ERR(opp);
-
-I believe you want to first assign ret, and then use it in dev_err_probe() :-P
-
-Please fix. After which:
-
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
-Cheers!
-
->   		goto out_disable_inter_clock;
->   	}
-> @@ -501,7 +502,7 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
->   	info->opp_nb.notifier_call = mtk_cpufreq_opp_notifier;
->   	ret = dev_pm_opp_register_notifier(cpu_dev, &info->opp_nb);
->   	if (ret) {
-> -		dev_err(cpu_dev, "cpu%d: failed to register opp notifier\n", cpu);
-> +		dev_err_probe(cpu_dev, ret, "cpu%d: failed to register opp notifier\n", cpu);
->   		goto out_disable_inter_clock;
->   	}
->   
-> @@ -629,11 +630,9 @@ static int mtk_cpufreq_probe(struct platform_device *pdev)
->   	int cpu, ret;
->   
->   	data = dev_get_platdata(&pdev->dev);
-> -	if (!data) {
-> -		dev_err(&pdev->dev,
-> -			"failed to get mtk cpufreq platform data\n");
-> -		return -ENODEV;
-> -	}
-> +	if (!data)
-> +		return dev_err_probe(&pdev->dev, -ENODEV,
-> +				     "failed to get mtk cpufreq platform data\n");
->   
->   	for_each_possible_cpu(cpu) {
->   		info = mtk_cpu_dvfs_info_lookup(cpu);
-> @@ -643,24 +642,21 @@ static int mtk_cpufreq_probe(struct platform_device *pdev)
->   		info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
->   		if (!info) {
->   			ret = -ENOMEM;
-> +			dev_err_probe(&pdev->dev, ret, "Failed to allocate dvfs_info\n");
->   			goto release_dvfs_info_list;
->   		}
->   
->   		info->soc_data = data;
->   		ret = mtk_cpu_dvfs_info_init(info, cpu);
-> -		if (ret) {
-> -			dev_err(&pdev->dev,
-> -				"failed to initialize dvfs info for cpu%d\n",
-> -				cpu);
-> +		if (ret)
->   			goto release_dvfs_info_list;
-> -		}
->   
->   		list_add(&info->list_head, &dvfs_info_list);
->   	}
->   
->   	ret = cpufreq_register_driver(&mtk_cpufreq_driver);
->   	if (ret) {
-> -		dev_err(&pdev->dev, "failed to register mtk cpufreq driver\n");
-> +		dev_err_probe(&pdev->dev, ret, "failed to register mtk cpufreq driver\n");
->   		goto release_dvfs_info_list;
->   	}
->   
-> 
-> ---
-> base-commit: 0fc4bfab2cd45f9acb86c4f04b5191e114e901ed
-> change-id: 20240627-mtk-cpufreq-dvfs-fail-init-err-0a662ca72de2
-> 
-> Best regards,
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="g43t564sfxvjtdzc"
+Content-Disposition: inline
+X-AuthUser: me@agatha.dev
 
 
+--g43t564sfxvjtdzc
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Fix the absence of warning message and kernel tainting when initializing
+drivers from the `drivers/staging` subtree from initcalls (when
+configured as built-in).
+
+When such a driver is built as module and the module is loaded, the
+`load_module()` function taints the kernel to signal code of unknown
+quality is loaded, and produces a warning like this:
+
+[    8.076352] rts5208: module is from the staging directory, the
+quality is unknown, you have been warned.
+
+The same behaviour is absent, however, when a staging driver is compiled
+as built-in on the kernel image, since loading it happens through
+initcalls and not through load_module().
+
+This might prevent relevant information of being available on a bug
+report (i.e. on a panic log) among other possible problems.
+
+Signed-off-by: =C1gatha Isabelle Chris Moreira Guedes <code@agatha.dev>
+---
+ACKNOWLEDGEMENTS
+Thanks for Jookia, heat and ukleinek for the important comments &
+suggestions on this patch prior to submission.
+
+ drivers/staging/Makefile |  2 ++
+ include/linux/init.h     |  6 ++++++
+ include/linux/module.h   | 33 +++++++++++++++++++++++++++++++++
+ init/main.c              | 20 ++++++++++++++++++++
+ kernel/module/main.c     |  4 +---
+ 5 files changed, 62 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/staging/Makefile b/drivers/staging/Makefile
+index 5390879b5d1b..7cea13436426 100644
+--- a/drivers/staging/Makefile
++++ b/drivers/staging/Makefile
+@@ -1,6 +1,8 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Makefile for staging directory
+=20
++subdir-ccflags-y +=3D -DSTAGING_CODE
++
+ obj-y				+=3D media/
+ obj-$(CONFIG_FB_OLPC_DCON)	+=3D olpc_dcon/
+ obj-$(CONFIG_RTL8192E)		+=3D rtl8192e/
+diff --git a/include/linux/init.h b/include/linux/init.h
+index 58cef4c2e59a..68c37600958f 100644
+--- a/include/linux/init.h
++++ b/include/linux/init.h
+@@ -397,4 +397,10 @@ void __init parse_early_options(char *cmdline);
+ #define __exit_p(x) NULL
+ #endif
+=20
++#ifdef CONFIG_STAGING
++#ifndef __ASSEMBLY__
++extern void staging_taint(const char *code_id, bool module);
++#endif /* __ASSEMBLY__ */
++#endif /* CONFIG_STAGING */
++
+ #endif /* _LINUX_INIT_H */
+diff --git a/include/linux/module.h b/include/linux/module.h
+index 330ffb59efe5..ffe58f5d143b 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -76,6 +76,39 @@ extern struct module_attribute module_uevent;
+ extern int init_module(void);
+ extern void cleanup_module(void);
+=20
++#ifdef CONFIG_STAGING
++
++#define __lower_define_initcall(fn, id) ___define_initcall(fn, id, .initca=
+ll##id)
++
++/**
++ * __staging_define_initcall(fn,id) - staging initialization entry point
++ * @fn: the function to run at kernel boot time
++ * @id: the initcall level
++ *
++ * __staging_define_initcall() will ensure the drive's init function is al=
+ways
++ * called during initcalls for staging code by producing a wrapper functio=
+n.
++ * It applies if a module from the drivers/staging subtree is builtin to t=
+he
++ * kernel. It reproduces the behavior in load_module() by tainting the ker=
+nel
++ * and logging a warning about the code quality.
++ */
++
++#define __staging_define_initcall(fn, id) \
++	static int __init __staging_wrapped_##fn(void) \
++	{ \
++		staging_taint(__FILE__, false); \
++		return fn(); \
++	} \
++__lower_define_initcall(__staging_wrapped_##fn, id)
++
++#ifdef STAGING_CODE
++
++#undef __define_initcall
++#define __define_initcall(fn, id) __staging_define_initcall(fn, id)
++
++#endif /* STAGING_CODE */
++
++#endif /* CONFIG_STAGING */
++
+ #ifndef MODULE
+ /**
+  * module_init() - driver initialization entry point
+diff --git a/init/main.c b/init/main.c
+index 206acdde51f5..fca889f3bcc0 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -1602,3 +1602,23 @@ static noinline void __init kernel_init_freeable(voi=
+d)
+=20
+ 	integrity_load_keys();
+ }
++
++#ifdef CONFIG_STAGING
++/**
++ * staging_init_taint() - We need to taint the kernel whenever staging code
++ * is initialized (from built-in drivers) or loaded (as modules) and issue
++ * a warning the first time it happens.
++ */
++void staging_taint(const char *code_id, bool module)
++{
++	char *code_type =3D module ? "module" : "builtin driver at";
++
++	pr_warn("%s %s: The kernel contains code from staging directory"
++		"the quality is unknown, you have been warned.\n",
++		code_type, code_id);
++
++	add_taint(TAINT_CRAP, LOCKDEP_STILL_OK);
++}
++EXPORT_SYMBOL(staging_taint);
++
++#endif /* CONFIG_STAGING */
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index d18a94b973e1..d7d33336ab43 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -2039,9 +2039,7 @@ static void module_augment_kernel_taints(struct modul=
+e *mod, struct load_info *i
+ 	check_modinfo_retpoline(mod, info);
+=20
+ 	if (get_modinfo(info, "staging")) {
+-		add_taint_module(mod, TAINT_CRAP, LOCKDEP_STILL_OK);
+-		pr_warn("%s: module is from the staging directory, the quality "
+-			"is unknown, you have been warned.\n", mod->name);
++		staging_taint(mod->name, true);
+ 	}
+=20
+ 	if (is_livepatch_module(mod)) {
+--=20
+2.45.2
+
+
+--g43t564sfxvjtdzc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQQMdxNgKl/8Z+5yuVT3jE4VBgsOTAUCZoOTugAKCRD3jE4VBgsO
+TPWCAPwOyNBuM1QEcscgmuuJFibaalLbh+ZZc4yb3TVJkqpGNQEAvqpNDfRaKcZJ
++PyayOxrPy9KDV4NYowEE0s3RC/32Ac=
+=ReiF
+-----END PGP SIGNATURE-----
+
+--g43t564sfxvjtdzc--
