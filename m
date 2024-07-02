@@ -1,85 +1,134 @@
-Received: from mail.fris.de (mail.fris.de [116.203.77.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E4C158D61;
-	Tue,  2 Jul 2024 10:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.77.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B47916131A;
+	Tue,  2 Jul 2024 10:42:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719916917; cv=none; b=NbriPm5/a1t+59SLYbkwIbD32B1Ynqi+KYQjED/ytJKK9NVweJedQBkRjHknn6WmZWgXOQj08snmnn1DTGlHHXaID0I7e5uoJjrCSg+afRa7kTkjtLgzqpwrTnJlZXpJ6x6Wmj7HtoOWe+3CtxO/QnJWbrNPUR8EYpFtPmQF8Mw=
+	t=1719916929; cv=none; b=OVuzlKcIgM9c8snGqkDmuDhjs9cIUBOeZqwVYdqbAf6E5yVUQCo1VVyoYr5uvmaalvmKS28E59pmXK8aEryfWEOSGrBCq5Ob1LnVpsFODFrQNWhsWQAWCBrk03JIEtEPUhMc4JzFbiKZzoXbJ9kgk18xfxX87S0PxRKHpOao3Xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719916917; c=relaxed/simple;
-	bh=sPCgBGmaEIjGdzBuX+ZiLW5g5QxenEh/PLa2ZraUm7g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XOttiKnWKrJep5lLQ8xsD7LoAQ229BfRY/y33cqoFYHTdf5GHQV59y6JJZfkCaZyXJiQfqhPzB/I8bjuyqjoSH1ZCsN0DSE5wUrK1MLbzWpaWDn4A81+6wkTtTz398eSqfiAhpr5aX/6d8bHIkXKxLrALZef5iVDW5Z2VBPH69E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fris.de; spf=fail smtp.mailfrom=fris.de; dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b=BcC99NIC; arc=none smtp.client-ip=116.203.77.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fris.de
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=fris.de
+	s=arc-20240116; t=1719916929; c=relaxed/simple;
+	bh=9te4SuzqH62rSiRTnMqtKWx++pY/uzFBoKFXN4sinKw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u3dX22X2s5rOj2+AJorm9mokj8HMJYCzhaUvmk2U433q6doPc4PW+3Ed2GtjRYideZRAOfe1pp1WiIaxia44tbhp1zFKqH/dRZU4nNbHDNWmpQdz/s94T99DkyhWGv85yz3ygGdIfkOWwjurNGHZv50NdSw9kixo+AiyeNB2c/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lXeTGi8H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b="BcC99NIC"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 97049BFC0E;
-	Tue,  2 Jul 2024 12:32:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fris.de; s=dkim;
-	t=1719916378; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=VKYV733Fjpk+GAdBZI7izuRi4FBRnkYy/52IFjD1Dd8=;
-	b=BcC99NICrst6VxTOtUzFX5RFrJiaxlX2/yPwMUOXY+vSRS/UIB+YkXeB94vzRUFA6rP/03
-	RIif0ZrhMkTv7yoy9NAONNr/22kDEl8l+paquwhBz694Yx6OwzYFFL4d+vsozQ6CMVwY0U
-	c24ZnVpwy3M/5Pyb/lOdvnz4xq68qwpnEm2B1CktbiHD7GtlVmj062BowxQmpAXCKLGvyL
-	Vj7viGP4SYP46mimgUUEc7VaA7Yr0sC8Oz6mGNXol/MoExvk4CKojfU/SHrAWALwDL3cFZ
-	K9JozOqbKmXspUNIfkTpeBwMupDmM5rwNc/ynCphMr4zoURGeDCxv50qUQGcYw==
-From: Frieder Schrempf <frieder@fris.de>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Stefan Agner <stefan@agner.ch>
-Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH 3/7] dt-bindings: gpio: vf610: Allow gpio-line-names to be set
-Date: Tue,  2 Jul 2024 12:31:15 +0200
-Message-ID: <20240702103155.321855-4-frieder@fris.de>
-In-Reply-To: <20240702103155.321855-1-frieder@fris.de>
-References: <20240702103155.321855-1-frieder@fris.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lXeTGi8H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBFCCC116B1;
+	Tue,  2 Jul 2024 10:42:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719916928;
+	bh=9te4SuzqH62rSiRTnMqtKWx++pY/uzFBoKFXN4sinKw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lXeTGi8H5lQ99m0W9AvngPQxNZJtHcWYxpIhiiLXFNheUejm5z/qZHHoy3JqcMAso
+	 S7Ci/nmaL3WJhAAKmPounVeajUgtjDvAebA0khHHJvOujOTgP4UOqUIJp2YgnM38dB
+	 z+39tqOvWtIVlGEiCgAhwqPPHqIszugB1iw9a4dQ8Mm/A/J39QXwYLJldGLuBT/yff
+	 YOFM91BqsCEVwo7PIw4NsDU+PXiuBl/xw69EFyZNTt8K8DG8A5KJr8SPrs+BJXOwzm
+	 deSrdFQDgq+YouyNjgG4IwZ+9kcHsMXC8vfKaKUc1G6urvTRKW3e5HsyEl3jPQtCKj
+	 5MhssaujpzxBw==
+Message-ID: <8ba07bbf-e8b1-4244-882b-ff2575368b20@kernel.org>
+Date: Tue, 2 Jul 2024 12:42:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: sm8550-hdk: add the Wifi node
+To: Amit Pundir <amit.pundir@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+ dt <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
+References: <20240702091655.278974-1-amit.pundir@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240702091655.278974-1-amit.pundir@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+On 02/07/2024 11:16, Amit Pundir wrote:
+> Describe the ath12k WLAN on-board the WCN7850 module present on the
+> board.
+> 
+> Signed-off-by: Amit Pundir <amit.pundir@linaro.org>
+> ---
+> Kanged verbatim from 490812872449 ("arm64: dts: qcom: sm8550-qrd: add the Wifi node").
+> 
+>  arch/arm64/boot/dts/qcom/sm8550-hdk.dts | 97 +++++++++++++++++++++++++
+>  1 file changed, 97 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
+> index 12d60a0ee095..c453d081a2df 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
+> +++ b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
+> @@ -279,6 +279,68 @@ platform {
+>  			};
+>  		};
+>  	};
+> +
+> +	wcn7850-pmu {
+> +		compatible = "qcom,wcn7850-pmu";
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&wlan_en>, <&pmk8550_sleep_clk>;
+> +
+> +		wlan-enable-gpios = <&tlmm 80 GPIO_ACTIVE_HIGH>;
+> +		/*
+> +		 * TODO Add bt-enable-gpios once the Bluetooth driver is
+> +		 * converted to using the power sequencer.
 
-Describe common "gpio-line-names" property to fix dtbs_check warnings
-like:
+I don't understand why hardware description should depend on the driver.
+Either you have this GPIO or not. If you have it, what does it matter if
+there is no driver who can play with it?
 
-  arch/arm64/boot/dts/freescale/imx93-kontron-bl-osm-s.dtb: gpio@43810000:
-    'gpio-line-names' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', 'pinctrl-[0-9]+'
-
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
----
- Documentation/devicetree/bindings/gpio/gpio-vf610.yaml | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-index a27f929502575..7230ba1a386ae 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-+++ b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-@@ -50,6 +50,7 @@ properties:
-     const: 2
- 
-   gpio-controller: true
-+  gpio-line-names: true
- 
-   clocks:
-     items:
--- 
-2.45.2
+Best regards,
+Krzysztof
 
