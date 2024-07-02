@@ -1,93 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.fris.de (mail.fris.de [116.203.77.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB51C14D42C;
-	Tue,  2 Jul 2024 15:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72BF16131A;
+	Tue,  2 Jul 2024 15:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.77.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719935062; cv=none; b=Svb2Q8/Txs3xlYCugZPUG97mzgt7LI6ARgNZAxsAeZYWrWVcANrS/FUQKHFI+op3ksRGMRPdpBKrG/2fhfzDgIQLT/wmexQa+pOIQ/agDaxz7i4R3Cb5iZYVf+CcGQ7rGCDxxamw8KZ7VmpybUTJXTE7jyeyzN+CFdwGls/z7Fs=
+	t=1719935092; cv=none; b=i3i8Yy2Mw6v5XFLg0H92Ktg40jeHUHIa/LiFqy4FHjO1dPYf+94TH5HGcfMTAEH9J6a4gedK1IAotxeb24l+5dNucLGF/WmwgIafUNKJOxSYyTYR8FxIbTLBO3IZ7vjYyd/wlNnyF6j765p5Xr4i8eXYwx66Kjy7bJX5b7hbx+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719935062; c=relaxed/simple;
-	bh=v1t1MaxBQImoIXMUPjRrALLxH2leye75HXLGWWUFfKg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aQaGoSYEJVa5PlmbSCHa1wsqjmZvTFPr1FNb2XLfqkKXnMnKnnSjhPL911qu2P9wkqRgJa0VMWijPCEvexWbaPYMGMSiZXmiO61IBbiHFHScNqIOn0M1PT1Q6uADCWqQDASbM62NnSWmrq+xSy7rXOnfZ9Fl6M8NFLPJ9qc2hrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eoPr7mrI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719935092; c=relaxed/simple;
+	bh=U1JugdT9aRR+ZYAfw5Cj2rCc6yrbD8hnLYZbgelYAuM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=p87NyXifDqw3OkmbtGmbAl460CgvhIEg8cI3O8rtsJVPmmV2QTW0jZb1cSDn6UpBTNC/Kn5NS1my3NViiSVNYr6SDlviiMo+drSN4FbDRZmHymsx8BtU8iRe5Cnq6pEceeDq/SddvRzZ3x8GywaQ7N1ODcJMtLItIEn/dyCqvuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fris.de; spf=fail smtp.mailfrom=fris.de; dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b=vvb/W2Rk; arc=none smtp.client-ip=116.203.77.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fris.de
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=fris.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eoPr7mrI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43BC0C2BD10;
-	Tue,  2 Jul 2024 15:44:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719935062;
-	bh=v1t1MaxBQImoIXMUPjRrALLxH2leye75HXLGWWUFfKg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eoPr7mrIRVJM8iEaeui0mZbM3fDnT8SdwrLSTWjW0PiG2xDM5sNxeVaUU6hCqYahu
-	 VPQcXNCNvg5khueBu7asJhJmnnOTFoRyEWgIT2HERr1QgD9lK0g2hVP6YkUCo83rJr
-	 9I+Rx5Mf0VjuFAiA08CwhLp9Zv9zhxPw0S4TyonHUb0iC53DblnqHdewTr72gZpv1k
-	 u3TB5x9/e1ZTV08qPfIKs3/8Uq0t7WWcFpAJ+T3P/S5XEHrJU3rBfq6SMs+r68qdLL
-	 tw+qNz2vnbGiJ/qGMffJsXmQLQfvCMOwQNQVZgaEfncUNLMlxcTSTtr2hP2OFDk2u/
-	 92jalahj1ULGw==
-Date: Tue, 2 Jul 2024 16:44:17 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Alex Vdovydchenko <keromvp@gmail.com>, Rob Herring <robh@kernel.org>,
+	dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b="vvb/W2Rk"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 7344ABFB3F;
+	Tue,  2 Jul 2024 17:44:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fris.de; s=dkim;
+	t=1719935089; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=b/k/G5ujt6jXc1BK9KQvcPh4+PBbMuNUK3X7txcMX/k=;
+	b=vvb/W2Rks4cnvNe9hMDB1l9gTjP+rkjMTVFzqmxBYxhftjhPVJyu+zG5FBo7fOsPlbyUiJ
+	Gyx/T35iCB53tFZ0l28b0SP7GiQ298lMPARcV/+ywdfg/9koDYBFyJjAVJE5PqC2ajuw1e
+	MpS/wLjR0Bs1Jsyk6aMsGobyt5m+VoFWWldLbGxhX8XSE8lDrWvTFjH7RpJWCMoclEV3+k
+	LA1zIXY6mM9aVheitaW9Ypb+M59ZiGxJZKu3tWKiMD0ia2yVttGd2G/mY3sVmsfR6TnumO
+	Irt+h27RCRzpajOdxmv6TrlsfhqWtymQF4F/oqo3RWrKDguxC9mE/MWwWr5T9A==
+From: Frieder Schrempf <frieder@fris.de>
+To: Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sean Anderson <sean.anderson@linux.dev>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
-	Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-i2c@vger.kernel.org, Alex Vdovydchenko <xzeol@yahoo.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: hwmon: Add MPS mp5920
-Message-ID: <20240702-hacked-uncorrupt-f47bdc0ca8e3@spud>
-References: <20240701145603.1507516-1-xzeol@yahoo.com>
- <20240701145603.1507516-2-xzeol@yahoo.com>
- <20240701-mug-scuttle-dfe4c84b4e0b@spud>
- <fcd91462-f8bb-4713-afc1-ba9473405396@kernel.org>
+	linux-kernel@vger.kernel.org,
+	Li Yang <leoyang.li@nxp.com>,
+	Rob Herring <robh@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>
+Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Gregor Herburger <gregor.herburger@ew.tq-group.com>,
+	Hiago De Franco <hiago.franco@toradex.com>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Joao Paulo Goncalves <joao.goncalves@toradex.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Marco Felsch <m.felsch@pengutronix.de>,
+	Markus Niebel <Markus.Niebel@ew.tq-group.com>,
+	Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH 1/3] dt-bindings: arm: fsl: Add Kontron i.MX8MP OSM-S based boards
+Date: Tue,  2 Jul 2024 17:43:19 +0200
+Message-ID: <20240702154413.968044-2-frieder@fris.de>
+In-Reply-To: <20240702154413.968044-1-frieder@fris.de>
+References: <20240702154413.968044-1-frieder@fris.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="cnwz3vA9WW8lYRuE"
-Content-Disposition: inline
-In-Reply-To: <fcd91462-f8bb-4713-afc1-ba9473405396@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
---cnwz3vA9WW8lYRuE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add the bindings for the Kontron i.MX8MP OSM-S SoM and carrier
+boards.
 
-On Tue, Jul 02, 2024 at 03:10:38PM +0200, Krzysztof Kozlowski wrote:
-> On 01/07/2024 17:47, Conor Dooley wrote:
-> > On Mon, Jul 01, 2024 at 05:56:00PM +0300, Alex Vdovydchenko wrote:
-> >> Add support for MPS mp5920 controller
-> >>
-> >> Signed-off-by: Alex Vdovydchenko <xzeol@yahoo.com>
-> >=20
-> > Missing an ack from v2:
-> > https://lore.kernel.org/all/20240627-swivel-grower-002af077b654@spud/
-> > Acked-by: Conor Dooley <conor.dooley@microchip.com>
->=20
-> That's third time you give the same ack. I suggest give up...
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+---
+ Documentation/devicetree/bindings/arm/fsl.yaml | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 6d185d09cb6ae..0bda153c38705 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -1095,6 +1095,19 @@ properties:
+           - const: engicam,icore-mx8mp             # i.MX8MP Engicam i.Core MX8M Plus SoM
+           - const: fsl,imx8mp
+ 
++      - description: Kontron i.MX8MP OSM-S SoM based Boards
++        items:
++          - const: kontron,imx8mp-bl-osm-s  # Kontron BL i.MX8MP OSM-S Board
++          - const: kontron,imx8mp-osm-s     # Kontron i.MX8MP OSM-S SoM
++          - const: fsl,imx8mp
++
++      - description: Kontron i.MX8MP SMARC based Boards
++        items:
++          - const: kontron,imx8mp-smarc-eval-carrier  # Kontron i.MX8MP SMARC Eval Carrier
++          - const: kontron,imx8mp-smarc               # Kontron i.MX8MP SMARC Module
++          - const: kontron,imx8mp-osm-s               # Kontron i.MX8MP OSM-S SoM
++          - const: fsl,imx8mp
++
+       - description: PHYTEC phyCORE-i.MX8MP SoM based boards
+         items:
+           - const: phytec,imx8mp-phyboard-pollux-rdk # phyBOARD-Pollux RDK
+-- 
+2.45.2
 
-Yeah, I guess. It's just not really any slower to re-ack than it is to
-complain about the ack being missing.
-
---cnwz3vA9WW8lYRuE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZoQgUQAKCRB4tDGHoIJi
-0jjwAP9FGIR2sKM6PEyujeg3Aa1yFh8BuTEEcQ6LkcO2cVVsBwD/Q2bFhdQ4M8mC
-Mf8Js+efMEtSMDxrvPHMe7pqcXq+2wg=
-=REgq
------END PGP SIGNATURE-----
-
---cnwz3vA9WW8lYRuE--
