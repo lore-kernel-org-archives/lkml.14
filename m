@@ -1,132 +1,83 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail.fris.de (mail.fris.de [116.203.77.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA19D158A3D
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 10:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9DAF154449;
+	Tue,  2 Jul 2024 10:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.77.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719916876; cv=none; b=gO25AgrmzBzJLzim3IcAMY9Z3rNuPPFzNCPzIuj5wIAUnnBQZ4t3cdsOd0Ov1Bq7U/FQlwEotH/Ud185Zo7Z5wQRAqipcWWaPwPgXi1X0ogO3gZ5iQap/rZ45G0p4HS0prKJhVF6JgFdQTESp21xkq0Ve2J/6mBpIVLbxJBeccU=
+	t=1719916916; cv=none; b=BruMLb2bB6NGuc3+73LynC+g/7dLf2pswno8mqtb2unKkE/mBZmQOx/0bGfnFfGHxDAEE7iV9Fgdro8/g7o+FRtnUVohmUO2AQ4RcRjx0TNMqob5YuFGb2gKRoUcMzohXQVN7Kd4mM+qzuPYdIs1b6QXB3f7zgHlgVhgr+WKqig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719916876; c=relaxed/simple;
-	bh=lZWDKkVU4wUQ2+XVtlarhxp5FdOdYIV7mJ/9JVxeaqM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Iud0qqz3SO0ceBBKrd4AWn296LQmPL3+BfG8nHFHaczUfZUf46V0HID9/kr48JTr5/sLaedk4s3riFepu8rxrt7rVs9IAPH7ftLESh64f7IHkW7en5cJ44pvD0kGEckNhy/ccIeQkgzaDiR+ss/D5tp2VaMv6lQsO+UuwOvQUWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Hv/z9svX; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719916916; c=relaxed/simple;
+	bh=vVZBtjQdyGHelO9SJKEk9PcX9Cn9HJoNYjoKVzUunvg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YHYcIZoVm0qkBoHeF3r1N/hT/wE8rjextyMECp0jUb6YwYCtPTX/D9QObfMG0tNGu8A2RD49QXuWlaOtpvL0JG9V77f+jstb3NQ7zG0CCsCU77uQhJYm89HDVtNrO0i2KLTCr4lKo7DUaZT0ROkqpRcy18Ra7XWrgwjGQ0QcCEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fris.de; spf=fail smtp.mailfrom=fris.de; dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b=DnvLzSmi; arc=none smtp.client-ip=116.203.77.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fris.de
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=fris.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hv/z9svX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719916874;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CAtqrFZvfKjiF7uOC6sDtpciWiE0nsuU8n5L7biUdck=;
-	b=Hv/z9svXUVQzAO1LnbnKW9KHNv9pK7P2S874C2kXojxcIxPhUEVGZyjfyjj2H+UqxDMeAd
-	qMuShlWEsnEZAaIOouoAzMmProBDAHsqfZo/xI1NOL7Rj9FCUaJ8UVwjAJu50B5qMz62fy
-	PDndxOjkrAOsgrbR+M5GmYmLFn9rISQ=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-171-m29-H7dbNHS3ERBFLAe0tw-1; Tue, 02 Jul 2024 06:41:12 -0400
-X-MC-Unique: m29-H7dbNHS3ERBFLAe0tw-1
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-58b0dce2704so937640a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 03:41:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719916872; x=1720521672;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CAtqrFZvfKjiF7uOC6sDtpciWiE0nsuU8n5L7biUdck=;
-        b=QRVvhfHkfoDbZxGyT2wiHfWEOyEr6aJQlsPhfu79JObGKoL/M8eRL6fDQXufoLGIWV
-         Hjj0WIcGYLtG0kjWxICYHM15Az6RaZh9kgO+oro04Twk1lMIxooNCTepuDjXoEKhyZxK
-         0hPkG7lsyvsqcJG/tcpR2PYY1bzlodP7tiuxOc+gm48hvea6j1VqYQxd5pOmwLhLYTVs
-         gT8EhzTLdOL+8F6F4t34l52ug26/6z5/bJ+yDYfETsEr5GnV8SBCE12aj4Gk7t6hPWT9
-         P1eu2PDp0PSNuC7q5FdTn74c55EZnN7E3fbhmFO6bV1ujaRktjBYd/TtnlLoro2mSLWy
-         oDhA==
-X-Forwarded-Encrypted: i=1; AJvYcCWgHZK2lrd/EHphA6H0NPAfz65TwY6YvUqVnEQx+fFHueBY+pr60eAEtVqZgXFyCiW5+t4nvXqyfT8DZK+N4m++Iyvskt6COGSXdopj
-X-Gm-Message-State: AOJu0Yx1iKkNMto1nfaecMsUPkadjBD/7Lz7YGShHJNLON6qwVMY+HHj
-	zp9gJUf0HIK62uBAR7OO0fOJgrdnfkVzr5xyi/JLRazkIjLKl8f9rFiogDT2gcgFIcwjXAH+u+4
-	EaiE/zguj3XbYeyS8AXz0bLCNuGXBuTfxEGkx4LvajmT8tlabVdrL/wrXh31lvg==
-X-Received: by 2002:a05:6402:51d3:b0:57c:947c:f9cf with SMTP id 4fb4d7f45d1cf-5879eed9408mr5609422a12.11.1719916871820;
-        Tue, 02 Jul 2024 03:41:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHLlgdlK6UOwTRIbEkRdNSjnktG1oYSCS5jVvBCEBX/8U9vauixSEkrhY6hQoBbUN2cdCflBg==
-X-Received: by 2002:a05:6402:51d3:b0:57c:947c:f9cf with SMTP id 4fb4d7f45d1cf-5879eed9408mr5609372a12.11.1719916870421;
-        Tue, 02 Jul 2024 03:41:10 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-58613815dd7sm5505486a12.43.2024.07.02.03.41.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jul 2024 03:41:10 -0700 (PDT)
-Message-ID: <d240c315-b438-462c-90a6-22f7e39b2a7a@redhat.com>
-Date: Tue, 2 Jul 2024 12:41:09 +0200
+	dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b="DnvLzSmi"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id EE5DCBFC11;
+	Tue,  2 Jul 2024 12:32:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fris.de; s=dkim;
+	t=1719916379; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=d77ZQOlbpJuUyjITV/doinN4bcdAcaYxN2IVFgTz3ss=;
+	b=DnvLzSmiOKxBQOFynE4Nmyh7y75kzaQVXwR0XATifdikXWYvuthO3VSpt//AcQ8o1CvLgV
+	ZVLmtRWJQ9eDaLB3v5NgnFXtMuISm8J2PCOxmk9pbymc8gJlWat+hU8Hc14yCpCi9+yIZ0
+	/q+YLtWrxKdE1UvB/H85ipdVmSTpOemjlz7c50aF/UZuTMtrK24ePU3nWn/O2RUIG8syrJ
+	8g06H6ZfAb1y1lfAQPZf1zD4p3NolwDbJRg3LGrfxm2nkPoCMDOdOrR5SFmmhEIf3q8VGi
+	f0cGFcbsDBn4Ed3dQ9IhXY5anpV+ojKkzhft0KvnQqNAEiL3ZLWnneY0gMmUAw==
+From: Frieder Schrempf <frieder@fris.de>
+To: Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Robin Gong <yibin.gong@nxp.com>
+Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Joy Zou <joy.zou@nxp.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 4/7] dt-bindings: regulator: pca9450: Make interrupt optional
+Date: Tue,  2 Jul 2024 12:31:16 +0200
+Message-ID: <20240702103155.321855-5-frieder@fris.de>
+In-Reply-To: <20240702103155.321855-1-frieder@fris.de>
+References: <20240702103155.321855-1-frieder@fris.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] staging: atomisp: Fix spelling mistake in
- sh_css_internal.h
-To: Roshan Khatri <topofeverest8848@gmail.com>, mchehab@kernel.org,
- sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org, hpa@redhat.com
-Cc: linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20240501162620.86865-1-topofeverest8848@gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240501162620.86865-1-topofeverest8848@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-Hi,
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-On 5/1/24 6:26 PM, Roshan Khatri wrote:
-> codespell reported misspelled words still and member.
-> This patch fixes misspellings.
-> 
-> Signed-off-by: Roshan Khatri <topofeverest8848@gmail.com>
+The interrupt line is currently only used for printing warnings and
+the PMIC works just fine without it.
 
-Thank you for your 5 patches.
+Allow boards to not use the interrupt line and therefore make it
+optional.
 
-I have merged all 5 in my media-atomisp branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/hansg/linux.git/log/?h=media-atomisp
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+---
+ .../devicetree/bindings/regulator/nxp,pca9450-regulator.yaml     | 1 -
+ 1 file changed, 1 deletion(-)
 
-And these will be included in my next pull-request to
-Mauro (to media subsystem maintainer)
-
-Regards,
-
-Hans
-
-
-
-
-> ---
->  drivers/staging/media/atomisp/pci/sh_css_internal.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/media/atomisp/pci/sh_css_internal.h b/drivers/staging/media/atomisp/pci/sh_css_internal.h
-> index 2349eb4d3767..5395be1ed26b 100644
-> --- a/drivers/staging/media/atomisp/pci/sh_css_internal.h
-> +++ b/drivers/staging/media/atomisp/pci/sh_css_internal.h
-> @@ -509,7 +509,7 @@ struct sh_css_sp_pipeline {
->   * of the associated pipe. Dynamic means that the data address can
->   * change with every (frame) iteration of the associated pipe
->   *
-> - * s3a and dis are now also dynamic but (stil) handled separately
-> + * s3a and dis are now also dynamic but (still) handled separately
->   */
->  #define SH_CSS_NUM_DYNAMIC_FRAME_IDS (3)
->  
-> @@ -597,7 +597,7 @@ struct sh_css_sp_stage {
->  
->  /*
->   * Time: 2012-07-19, 17:40.
-> - * Note: Add a new data memeber "debug" in "sh_css_sp_group". This
-> + * Note: Add a new data member "debug" in "sh_css_sp_group". This
->   * data member is used to pass the debugging command from the
->   * Host to the SP.
->   *
+diff --git a/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml b/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml
+index 849bfa50bdbab..f8057bba747a5 100644
+--- a/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml
++++ b/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml
+@@ -96,7 +96,6 @@ properties:
+ required:
+   - compatible
+   - reg
+-  - interrupts
+   - regulators
+ 
+ additionalProperties: false
+-- 
+2.45.2
 
