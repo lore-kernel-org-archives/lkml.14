@@ -1,85 +1,113 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A093A16F858;
-	Tue,  2 Jul 2024 13:04:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985AC85C74;
+	Tue,  2 Jul 2024 13:04:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719925467; cv=none; b=Ybu4TXnxOoeelJkK2BPax4QScKjDZRqY5mtvjocQjLrk242OK5RAWTU3npg2tX0CIaMTQ3uwQwmHkf2WDSj1vG1CF7FR0lB8BvjV1K4xF6izf3wjoq/m9Xeu84LCAZBt1a95lsewq+HwjNGnnwiOBKWv/F2j6M2dONPjBbi01Mk=
+	t=1719925503; cv=none; b=bk6BauzsvM/ZzeSA6I+IW2c9zy/YITpshciqZTECg6Q1S0ycbFvTaL2UYvkSwyUX4w/EEMo8p+59bRgB2lodz41YXgWdH7DgKALkNiDC92B8dw0bVm7CCR4W8Jd5YPNsOXvUE8XMTkITcDfI16SQcVT1L4BQynd921QxF4LNq9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719925467; c=relaxed/simple;
-	bh=wcCKkAf9LeZlQUUgB4iwi//wVVqoNwx/15yAOShTGZA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SIYYk8s68wMRmK1kXcQNs4qa4MzD6GOAJUReODVMwQPRoeCBdXALxnF09ut5BbB7lPlH2FcwVaFXKQ2KbaYb2EVOMjJUhaM8x60RCxL9VvuIryDedzqiF2feVesL3pa18/y4cs8GfqjZAxRI22oaHxYO2Z3ZDmyh8USwJpURNV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=frNB2o+5; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1719925503; c=relaxed/simple;
+	bh=3KcH1mvo3c8vxp6bWIMM8taPOyXym4k8+bE8hSgVFVw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SR35b2Bu104ENGmliFRrhgjtfsPg5W6Zikl0VpUjWcSIy2dLazXPnpOA8bf3KMMQF5MB0NMLUUZ1ytYCEDdNv/9VNJdLjrB94jrTVX8SEbRBnvXMbhJlpBPj+MDUU6lG8xRkUqKczn6mFa15MCy+J9iAk6k+flNbnTREYRdUpM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=Jd+yYe5S; arc=none smtp.client-ip=109.73.34.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="frNB2o+5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=aE50TOJGmMs56D5keFB0ZpbHVyMbTxUF2K2Gl2vDliA=; b=frNB2o+56C+04ofDDQrQj97WAp
-	pUYuSQh9p+/dyvHA/b6yticybkp99022dvqOn+oxFUs/UjeiDTVOAsTK7huR0sZ1hSZxTTN17enmi
-	078itthmAcewlpWUGNvGlXODMEPNJbi+Ob86V6UC20QnaB0nx8cDoeL5cPA03xEK4HEERohMkXkNa
-	aiRm7rNuJOTCD9xO9S1XiLMzi4j7X/cVCnDA7gjXbLX8wf8H5laAQSk6p5aFghy++HnNNtoV8ewwH
-	D+lbxcaXkT8CgdxFf60OEL6+m9q4pY5Gu69QJ353cGe/auzFh06h7wJrUP4XyQCs0x+Tnov1Pqzdv
-	AogRD0uQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sOdB6-00000009p2E-0pO1;
-	Tue, 02 Jul 2024 13:04:12 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id EA86E300694; Tue,  2 Jul 2024 15:04:08 +0200 (CEST)
-Date: Tue, 2 Jul 2024 15:04:08 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 bpf-next 1/9] uprobe: Add support for session consumer
-Message-ID: <20240702130408.GH11386@noisy.programming.kicks-ass.net>
-References: <20240701164115.723677-1-jolsa@kernel.org>
- <20240701164115.723677-2-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="Jd+yYe5S"
+Received: from mx1.t-argos.ru (localhost [127.0.0.1])
+	by mx1.t-argos.ru (Postfix) with ESMTP id 4FC10100002;
+	Tue,  2 Jul 2024 16:04:35 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
+	t=1719925475; bh=zowmtXX0f+3Uklt3sUVqGKSt/ix1I6aiLaxyigUy3zA=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=Jd+yYe5SOTcaorMCkrsPJibc1u+/4fi39vjeBCi8XsE3ujPzE8+kzCSCYyCTRjdW3
+	 R4OcCaMIClDHK2kKAQ9cW4AQJ8bTwJDFJEFFKGnr7n9fWqWt8dzzPlALearBXP39gP
+	 HkkuyeVFRLiovFUT9dUT+Wf8R7kMltbZG0LZ9NwD6eLoNiZIndG0AIz60abISshGIL
+	 0UUP0tp+KfEfHQ5YDbd0tpgcy2XkZ95Dxb8e6Iq+EaHoVqvGGEEMlXFNCYcBjq1yQt
+	 T6AeVxytvJI6NbkH7gmDhz208kB7w0BVGNbue4E4d9vxyuPFZ+Hdl6guT+TcwI3Vzh
+	 i9RCFHOxflkig==
+Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
+	by mx1.t-argos.ru (Postfix) with ESMTP;
+	Tue,  2 Jul 2024 16:03:30 +0300 (MSK)
+Received: from localhost.localdomain (172.17.215.5) by ta-mail-02
+ (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 2 Jul 2024
+ 16:03:10 +0300
+From: Aleksandr Mishin <amishin@t-argos.ru>
+To: Michael Walle <michael@walle.cc>
+CC: Aleksandr Mishin <amishin@t-argos.ru>, Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>
+Subject: [PATCH net v2] net: phy: mscc-miim: Validate bus frequency obtained from Device Tree
+Date: Tue, 2 Jul 2024 16:02:47 +0300
+Message-ID: <20240702130247.18515-1-amishin@t-argos.ru>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20240702110650.17563-1-amishin@t-argos.ru>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240701164115.723677-2-jolsa@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
+ (172.17.13.212)
+X-KSMG-Rule-ID: 1
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 186279 [Jul 02 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 21 0.3.21 ebee5449fc125b2da45f1a6a6bc2c5c0c3ad0e05, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;t-argos.ru:7.1.1;127.0.0.199:7.1.2;mx1.t-argos.ru.ru:7.1.1, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/07/02 10:26:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/07/02 07:20:00 #25796017
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On Mon, Jul 01, 2024 at 06:41:07PM +0200, Jiri Olsa wrote:
+In mscc_miim_clk_set() miim->bus_freq is taken from Device Tree and can
+contain any value in case of any error or broken DT. A value of 2147483648
+multiplied by 2 will result in an overflow and division by 0.
 
-> +static void
-> +uprobe_consumer_account(struct uprobe *uprobe, struct uprobe_consumer *uc)
-> +{
-> +	static unsigned int session_id;
-> +
-> +	if (uc->session) {
-> +		uprobe->sessions_cnt++;
-> +		uc->session_id = ++session_id ?: ++session_id;
-> +	}
-> +}
+Add bus frequency value check to avoid overflow.
 
-The way I understand this code, you create a consumer every time you do
-uprobe_register() and unregister makes it go away.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-Now, register one, then 4g-1 times register+unregister, then register
-again.
+Fixes: bb2a1934ca01 ("net: phy: mscc-miim: add support to set MDIO bus frequency")
+Suggested-by: Michael Walle <michael@walle.cc>
+Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+---
+v1->v2: Detect overflow event instead of using magic numbers as suggested by Michael
 
-The above seems to then result in two consumers with the same
-session_id, which leads to trouble.
+ drivers/net/mdio/mdio-mscc-miim.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Hmm?
+diff --git a/drivers/net/mdio/mdio-mscc-miim.c b/drivers/net/mdio/mdio-mscc-miim.c
+index c29377c85307..b344d0b03d8e 100644
+--- a/drivers/net/mdio/mdio-mscc-miim.c
++++ b/drivers/net/mdio/mdio-mscc-miim.c
+@@ -254,6 +254,11 @@ static int mscc_miim_clk_set(struct mii_bus *bus)
+ 	if (!miim->bus_freq)
+ 		return 0;
+ 
++	if (2 * miim->bus_freq == 0) {
++		dev_err(&bus->dev, "Incorrect bus frequency\n");
++		return -EINVAL;
++	}
++
+ 	rate = clk_get_rate(miim->clk);
+ 
+ 	div = DIV_ROUND_UP(rate, 2 * miim->bus_freq) - 1;
+-- 
+2.30.2
+
