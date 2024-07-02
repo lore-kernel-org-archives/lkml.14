@@ -1,216 +1,262 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9C562AF16;
-	Tue,  2 Jul 2024 13:25:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46CCB1B580F;
+	Tue,  2 Jul 2024 13:25:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719926737; cv=none; b=ZclrhFN7gxxXBAigcA2nT3b1JP5eUvEknjzYBWanorS2Dg74ozDWWLhZM5/xl/SnRLlJtiHb/JD4SZ/NMu+XUIaq/Yp03qEbwOddlqp7n3TFsEJiQtPT99SBnE3t/KG5ie4tqUwmBjb+Rq4G151AGIF6Q9q+R1drnTwLSLBuS4g=
+	t=1719926741; cv=none; b=mm6vdplevIKk6FCHZU/EWgVGQFp8v/abGOBAZdgGVnB6oWn5jF7PrDvAbgC8HrS+Yr1avCtjnPCUyMJrEEXG+7+1dr0a4IjQ9/auH2WlWIK+pyoEGsxC0mHHgJQAkVW60GJKNi2xnSML+HgXsXbZcVYc8oYhZJVQPRHxF5/2G3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719926737; c=relaxed/simple;
-	bh=/afTGIclt3fp6ucVNNuhF6iV22ZJeLND8TrVIthbzbc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QBLR4Oflg3zYHvrtHKt3sh2yyZO2wFiO1wWyrzbzpMclZHzG8J0ce2pyTMpjRuPXVP/F760EldLJfaV5LdlumKZ/clmi8+DaxqJOvjX2GQeh7MHP2XHALyCYe8p7HkhGISI33bMn+bXTa4CuuTyQC+n0KdEbJs0XNPkLhNeHX7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4WD3Yq6mWBz4f3lVp;
-	Tue,  2 Jul 2024 21:25:19 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 69A311A0170;
-	Tue,  2 Jul 2024 21:25:32 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP2 (Coremail) with SMTP id Syh0CgCXAYfI_4NmaZ_dAw--.32725S5;
-	Tue, 02 Jul 2024 21:25:31 +0800 (CST)
-From: libaokun@huaweicloud.com
-To: linux-ext4@vger.kernel.org
-Cc: tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	jack@suse.cz,
-	ritesh.list@gmail.com,
-	linux-kernel@vger.kernel.org,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com,
-	libaokun@huaweicloud.com,
-	Baokun Li <libaokun1@huawei.com>,
-	syzbot+ae688d469e36fb5138d0@syzkaller.appspotmail.com,
-	stable@kernel.org
-Subject: [PATCH 1/2] ext4: check dot and dotdot of dx_root before making dir indexed
-Date: Tue,  2 Jul 2024 21:23:48 +0800
-Message-Id: <20240702132349.2600605-2-libaokun@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240702132349.2600605-1-libaokun@huaweicloud.com>
-References: <20240702132349.2600605-1-libaokun@huaweicloud.com>
+	s=arc-20240116; t=1719926741; c=relaxed/simple;
+	bh=rzfwDHLMmpigWVdvXCtKhRmYiLruuuCfKfjujE+/a+c=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eOmjv0pgvQj+9XH2LJFUFnjvizOnHLB/0zS3p2DOniFlhYPKqlEVbD4vEGO2RJc2hatniDEzz6fkrqSn+UsBRdJ4WvP2U0vRI8RGrZK5k2vtEeLH8+n5VhaIl8N+4R96eBfHo1+tTsdS9Xe0KYMeGkl9g8nCye42EOqkJoj7gdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WD3X15Qdpz6K8xB;
+	Tue,  2 Jul 2024 21:23:45 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 08FC0140517;
+	Tue,  2 Jul 2024 21:25:37 +0800 (CST)
+Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 2 Jul
+ 2024 14:25:36 +0100
+Date: Tue, 2 Jul 2024 14:25:35 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Ho-Ren (Jack) Chuang" <horen.chuang@linux.dev>
+CC: "Huang, Ying" <ying.huang@intel.com>, Gregory Price
+	<gourry.memverge@gmail.com>, <aneesh.kumar@linux.ibm.com>, <mhocko@suse.com>,
+	<tj@kernel.org>, <john@jagalactic.com>, Eishan Mirakhur
+	<emirakhur@micron.com>, Vinicius Tavares Petrucci <vtavarespetr@micron.com>,
+	Ravis OpenSrc <Ravis.OpenSrc@micron.com>, Alistair Popple
+	<apopple@nvidia.com>, Srinivasulu Thanneeru <sthanneeru@micron.com>, SeongJae
+ Park <sj@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown
+	<lenb@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Dave Jiang
+	<dave.jiang@intel.com>, "Dan Williams" <dan.j.williams@intel.com>,
+	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-mm@kvack.org>, "Ho-Ren (Jack) Chuang" <horenc@vt.edu>, "Ho-Ren (Jack)
+ Chuang" <horenchuang@bytedance.com>, "Ho-Ren (Jack) Chuang"
+	<horenchuang@gmail.com>, <linux-cxl@vger.kernel.org>, <qemu-devel@nongnu.org>
+Subject: Re: [PATCH v2 1/1] memory tier: consolidate the initialization of
+ memory tiers
+Message-ID: <20240702142535.00003dc0@Huawei.com>
+In-Reply-To: <20240628060925.303309-2-horen.chuang@linux.dev>
+References: <20240628060925.303309-1-horen.chuang@linux.dev>
+	<20240628060925.303309-2-horen.chuang@linux.dev>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgCXAYfI_4NmaZ_dAw--.32725S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxZF4DtFW7WF1fXw48JrWDurg_yoW7Jry5pF
-	sxKr93JryrGF9xur4avr45Zr1Yk34IgF1DGFZ3Xw10yrWa9w1xWFn2vF10qFWDKrWkuw1q
-	qF4agry3Gw17XrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPl14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
-	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
-	vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
-	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04
-	v7M4kE6xkIj40Ew7xC0wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC2
-	0s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI
-	0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv2
-	0xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2js
-	IE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZF
-	pf9x0JUhTmDUUUUU=
-X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/1tbiAgAMBV1jkHxOdgADsi
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-From: Baokun Li <libaokun1@huawei.com>
+On Fri, 28 Jun 2024 06:09:23 +0000
+"Ho-Ren (Jack) Chuang" <horen.chuang@linux.dev> wrote:
 
-Syzbot reports a issue as follows:
-============================================
-BUG: unable to handle page fault for address: ffffed11022e24fe
-PGD 23ffee067 P4D 23ffee067 PUD 0
-Oops: Oops: 0000 [#1] PREEMPT SMP KASAN PTI
-CPU: 0 PID: 5079 Comm: syz-executor306 Not tainted 6.10.0-rc5-g55027e689933 #0
-Call Trace:
- <TASK>
- make_indexed_dir+0xdaf/0x13c0 fs/ext4/namei.c:2341
- ext4_add_entry+0x222a/0x25d0 fs/ext4/namei.c:2451
- ext4_rename fs/ext4/namei.c:3936 [inline]
- ext4_rename2+0x26e5/0x4370 fs/ext4/namei.c:4214
-[...]
-============================================
+> If we simply move the set_node_memory_tier() from memory_tier_init()
+> to late_initcall(), it will result in HMAT not registering
+> the mt_adistance_algorithm callback function, because
+> set_node_memory_tier() is not performed during the memory tiering
+> initialization phase, leading to a lack of correct default_dram
+> information.
+> 
+> Therefore, we introduced a nodemask to pass the information of the
+> default DRAM nodes. The reason for not choosing to reuse
+> default_dram_type->nodes is that it is not clean enough. So in the end,
+> we use a __initdata variable, which is a variable that is released once
+> initialization is complete, including both CPU and memory nodes for HMAT
+> to iterate through.
+> 
+> Besides, since default_dram_type may be checked/used during the
+> initialization process of HMAT and drivers, it is better to keep the
+> allocation of default_dram_type in memory_tier_init().
+> 
+> Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
+> Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  drivers/acpi/numa/hmat.c     |  5 +--
+>  include/linux/memory-tiers.h |  2 ++
+>  mm/memory-tiers.c            | 59 +++++++++++++++---------------------
+>  3 files changed, 28 insertions(+), 38 deletions(-)
+> 
+> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+> index 2c8ccc91ebe6..a2f9e7a4b479 100644
+> --- a/drivers/acpi/numa/hmat.c
+> +++ b/drivers/acpi/numa/hmat.c
+> @@ -940,10 +940,7 @@ static int hmat_set_default_dram_perf(void)
+>  	struct memory_target *target;
+>  	struct access_coordinate *attrs;
+>  
+> -	if (!default_dram_type)
+> -		return -EIO;
+> -
+> -	for_each_node_mask(nid, default_dram_type->nodes) {
+> +	for_each_node_mask(nid, default_dram_nodes) {
+As below. Do we care if the combination of RAM + CPU wasn't true
+earlier and is true by this point?   If not, why not just
+compute the node mask in here and not store it.
 
-The immediate cause of this problem is that there is only one valid dentry
-for the block to be split during do_split, so split==0 results in out of
-bounds accesses to the map triggering the issue.
+>  		pxm = node_to_pxm(nid);
+>  		target = find_mem_target(pxm);
+>  		if (!target)
+> diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.h
+> index 0d70788558f4..fa61ad9c4d75 100644
+> --- a/include/linux/memory-tiers.h
+> +++ b/include/linux/memory-tiers.h
+> @@ -38,6 +38,7 @@ struct access_coordinate;
+>  #ifdef CONFIG_NUMA
+>  extern bool numa_demotion_enabled;
+>  extern struct memory_dev_type *default_dram_type;
+> +extern nodemask_t default_dram_nodes __initdata;
+>  struct memory_dev_type *alloc_memory_type(int adistance);
+>  void put_memory_type(struct memory_dev_type *memtype);
+>  void init_node_memory_type(int node, struct memory_dev_type *default_type);
+> @@ -76,6 +77,7 @@ static inline bool node_is_toptier(int node)
+>  
+>  #define numa_demotion_enabled	false
+>  #define default_dram_type	NULL
+> +#define default_dram_nodes NODE_MASK_NONE
+>  /*
+>   * CONFIG_NUMA implementation returns non NULL error.
+>   */
+> diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
+> index 6632102bd5c9..a19a90c3ad36 100644
+> --- a/mm/memory-tiers.c
+> +++ b/mm/memory-tiers.c
+> @@ -43,6 +43,7 @@ static LIST_HEAD(memory_tiers);
+>  static LIST_HEAD(default_memory_types);
+>  static struct node_memory_type_map node_memory_types[MAX_NUMNODES];
+>  struct memory_dev_type *default_dram_type;
+> +nodemask_t default_dram_nodes __initdata = NODE_MASK_NONE;
+>  
+>  static const struct bus_type memory_tier_subsys = {
+>  	.name = "memory_tiering",
+> @@ -671,28 +672,38 @@ EXPORT_SYMBOL_GPL(mt_put_memory_types);
+>  
+>  /*
+>   * This is invoked via `late_initcall()` to initialize memory tiers for
+> - * CPU-less memory nodes after driver initialization, which is
+> - * expected to provide `adistance` algorithms.
+> + * memory nodes, both with and without CPUs. After the initialization of
+> + * firmware and devices, adistance algorithms are expected to be provided.
+>   */
+>  static int __init memory_tier_late_init(void)
+>  {
+>  	int nid;
+> +	struct memory_tier *memtier;
+>  
+> +	get_online_mems();
+>  	guard(mutex)(&memory_tier_lock);
+> +	/*
+> +	 * Look at all the existing and uninitialized N_MEMORY nodes and
+> +	 * add them to default memory tier or to a tier if we already have
+> +	 * memory types assigned.
+> +	 */
+>  	for_each_node_state(nid, N_MEMORY) {
+>  		/*
+> -		 * Some device drivers may have initialized memory tiers
+> -		 * between `memory_tier_init()` and `memory_tier_late_init()`,
+> -		 * potentially bringing online memory nodes and
+> -		 * configuring memory tiers. Exclude them here.
+> +		 * Some device drivers may have initialized
+> +		 * memory tiers, potentially bringing memory nodes
+> +		 * online and configuring memory tiers.
+> +		 * Exclude them here.
+>  		 */
+>  		if (node_memory_types[nid].memtype)
+>  			continue;
+>  
+> -		set_node_memory_tier(nid);
+> +		memtier = set_node_memory_tier(nid);
+> +		if (IS_ERR(memtier))
+> +			/* Continue with memtiers we are able to setup. */
 
-    do_split
-      unsigned split
-      dx_make_map
-       count = 1
-      split = count/2 = 0;
-      continued = hash2 == map[split - 1].hash;
-       ---> map[4294967295]
+Might later ones be possible if we just continued this loop?
 
-The maximum length of a filename is 255 and the minimum block size is 1024,
-so it is always guaranteed that the number of entries is greater than or
-equal to 2 when do_split() is called.
+> +			break;
+>  	}
+> -
+White space was harmless - I'd leave it there rather than adding noise to this diff.
+>  	establish_demotion_targets();
+> +	put_online_mems();
+>  
+>  	return 0;
+>  }
+> @@ -875,8 +886,7 @@ static int __meminit memtier_hotplug_callback(struct notifier_block *self,
+>  
+>  static int __init memory_tier_init(void)
+>  {
+> -	int ret, node;
+> -	struct memory_tier *memtier;
+> +	int ret;
+>  
+>  	ret = subsys_virtual_register(&memory_tier_subsys, NULL);
+>  	if (ret)
+> @@ -887,7 +897,8 @@ static int __init memory_tier_init(void)
+>  				GFP_KERNEL);
+>  	WARN_ON(!node_demotion);
+>  #endif
+> -	mutex_lock(&memory_tier_lock);
+> +
+> +	guard(mutex)(&memory_tier_lock);
 
-But syzbot's crafted image has no dot and dotdot in dir, and the dentry
-distribution in dirblock is as follows:
+If this was safe to do without the rest of the change (I think so)
+then better to pull that out as a trivial precursor so less noise
+in here.
 
-  bus     dentry1          hole           dentry2           free
-|xx--|xx-------------|...............|xx-------------|...............|
-0   12 (8+248)=256  268     256     524 (8+256)=264 788     236     1024
+>  	/*
+>  	 * For now we can have 4 faster memory tiers with smaller adistance
+>  	 * than default DRAM tier.
+> @@ -897,29 +908,9 @@ static int __init memory_tier_init(void)
+>  	if (IS_ERR(default_dram_type))
+>  		panic("%s() failed to allocate default DRAM tier\n", __func__);
+>  
+> -	/*
+> -	 * Look at all the existing N_MEMORY nodes and add them to
+> -	 * default memory tier or to a tier if we already have memory
+> -	 * types assigned.
+> -	 */
+> -	for_each_node_state(node, N_MEMORY) {
+> -		if (!node_state(node, N_CPU))
+> -			/*
+> -			 * Defer memory tier initialization on
+> -			 * CPUless numa nodes. These will be initialized
+> -			 * after firmware and devices are initialized.
+> -			 */
+> -			continue;
+> -
+> -		memtier = set_node_memory_tier(node);
+> -		if (IS_ERR(memtier))
+> -			/*
+> -			 * Continue with memtiers we are able to setup
+> -			 */
+> -			break;
+> -	}
+> -	establish_demotion_targets();
+> -	mutex_unlock(&memory_tier_lock);
+> +	/* Record nodes with memory and CPU to set default DRAM performance. */
+> +	nodes_and(default_dram_nodes, node_states[N_MEMORY],
+> +		  node_states[N_CPU]);
 
-So when renaming dentry1 increases its name_len length by 1, neither hole
-nor free is sufficient to hold the new dentry, and make_indexed_dir() is
-called.
+There are systems where (for various esoteric reasons, such as describing an
+association with some other memory that isn't DRAM where the granularity
+doesn't match) the CPU nodes contain no DRAM but rather it's one node away.
+Handling that can be a job for another day though.
 
-In make_indexed_dir() it is assumed that the first two entries of the
-dirblock must be dot and dotdot, so bus and dentry1 are left in dx_root
-because they are treated as dot and dotdot, and only dentry2 is moved
-to the new leaf block. That's why count is equal to 1.
+Why does this need to be computed here?  Why not do it in
+hmat_set_default_dram_perf? Doesn't seem to be used anywhere else.
 
-Therefore add the ext4_check_dx_root() helper function to add more sanity
-checks to dot and dotdot before starting the conversion to avoid the above
-issue.
 
-Reported-by: syzbot+ae688d469e36fb5138d0@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=ae688d469e36fb5138d0
-Fixes: ac27a0ec112a ("[PATCH] ext4: initial copy of files from ext3")
-Cc: stable@kernel.org
-Signed-off-by: Baokun Li <libaokun1@huawei.com>
----
- fs/ext4/namei.c | 56 ++++++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 51 insertions(+), 5 deletions(-)
-
-diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
-index e6769b97a970..35881e3dd880 100644
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -2172,6 +2172,52 @@ static int add_dirent_to_buf(handle_t *handle, struct ext4_filename *fname,
- 	return err ? err : err2;
- }
- 
-+static bool ext4_check_dx_root(struct inode *dir, struct dx_root *root)
-+{
-+	struct fake_dirent *fde;
-+	const char *error_msg;
-+	unsigned int rlen;
-+	unsigned int blocksize = dir->i_sb->s_blocksize;
-+	char *blockend = (char *)root + dir->i_sb->s_blocksize;
-+
-+	fde = &root->dot;
-+	if (unlikely(fde->name_len != 1)) {
-+		error_msg = "invalid name_len for '.'";
-+		goto corrupted;
-+	}
-+	if (unlikely(strncmp(root->dot_name, ".", fde->name_len))) {
-+		error_msg = "invalid name for '.'";
-+		goto corrupted;
-+	}
-+	rlen = ext4_rec_len_from_disk(fde->rec_len, blocksize);
-+	if (unlikely((char *)fde + rlen >= blockend)) {
-+		error_msg = "invalid rec_len for '.'";
-+		goto corrupted;
-+	}
-+
-+	fde = &root->dotdot;
-+	if (unlikely(fde->name_len != 2)) {
-+		error_msg = "invalid name_len for '..'";
-+		goto corrupted;
-+	}
-+	if (unlikely(strncmp(root->dotdot_name, "..", fde->name_len))) {
-+		error_msg = "invalid name for '..'";
-+		goto corrupted;
-+	}
-+	rlen = ext4_rec_len_from_disk(fde->rec_len, blocksize);
-+	if (unlikely((char *)fde + rlen >= blockend)) {
-+		error_msg = "invalid rec_len for '..'";
-+		goto corrupted;
-+	}
-+
-+	return true;
-+
-+corrupted:
-+	EXT4_ERROR_INODE(dir, "Corrupt dir, %s, running e2fsck is recommended",
-+			 error_msg);
-+	return false;
-+}
-+
- /*
-  * This converts a one block unindexed directory to a 3 block indexed
-  * directory, and adds the dentry to the indexed directory.
-@@ -2206,17 +2252,17 @@ static int make_indexed_dir(handle_t *handle, struct ext4_filename *fname,
- 		brelse(bh);
- 		return retval;
- 	}
-+
- 	root = (struct dx_root *) bh->b_data;
-+	if (!ext4_check_dx_root(dir, root)) {
-+		brelse(bh);
-+		return -EFSCORRUPTED;
-+	}
- 
- 	/* The 0th block becomes the root, move the dirents out */
- 	fde = &root->dotdot;
- 	de = (struct ext4_dir_entry_2 *)((char *)fde +
- 		ext4_rec_len_from_disk(fde->rec_len, blocksize));
--	if ((char *) de >= (((char *) root) + blocksize)) {
--		EXT4_ERROR_INODE(dir, "invalid rec_len for '..'");
--		brelse(bh);
--		return -EFSCORRUPTED;
--	}
- 	len = ((char *) root) + (blocksize - csum_size) - (char *) de;
- 
- 	/* Allocate new block for the 0th block's dirents */
--- 
-2.39.2
+>  
+>  	hotplug_memory_notifier(memtier_hotplug_callback, MEMTIER_HOTPLUG_PRI);
+>  	return 0;
 
