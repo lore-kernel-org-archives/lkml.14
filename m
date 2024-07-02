@@ -1,172 +1,210 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2041.outbound.protection.outlook.com [40.107.220.41])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802F015921D;
-	Tue,  2 Jul 2024 10:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719917457; cv=fail; b=LQ4z4Vaa0cdXDnkbCDOIlb1zfHtnEge2UIRSxK067bGjTmcspUVk5RbHWN3yb7BQZP9Z+dh16018bYP0jcCvvCSKi6M2L99OsnwQUu6zh+UesBSJcZxIXQoitXaMHy6LPsVZ2qPXThc13VCbnKRvO3N1BrdtZnPGTnfGbpGSlyg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719917457; c=relaxed/simple;
-	bh=lV7BVviFIlqDtjVN8GCJeGSwbod73hK3R3sV2OAHLEM=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 Content-Type:MIME-Version; b=aMzqzzrSgdgLkH5hRWQ4mH0YmEKKFLlpnlfbdMCZIyhcb6QNChFiU/Oo9kHc4Cte7ubSlzhzf2EJGqrnLp13Kk3OHg0gZ2HSVmZSyF2bcAWqYXojfdqPQjRiPb1INJ9xjUUrK3DTfYNg99sBLK3PQ8Vl0MiuhRNS8rxBOu8Famo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=gyCBhUOB; arc=fail smtp.client-ip=40.107.220.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E734E51004
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 10:52:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719917553; cv=none; b=soA3/ikVpGUJAstD+1IPDReZceRrpY+cED2sYZjVeotgFmxpXlQsWpZ6BKBFd+I/25dmsRIvmslW0LsnKokGcT3yHwZWbPYXVeozGnvLevNOGGEfkf+fgh8yQTIUEQ6vOMcYck5eND3aJYgpgGTtBTNmL5gzxW/7KuLGTmY1Nl4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719917553; c=relaxed/simple;
+	bh=7Q8xbz0ss+YODr//H0kU4M//qeFDSYIzUi/DaFmuBCs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zgd0R+2iNPtifAzaMnfOm7Q6Zlh9VJQQzrnamA7TlEBUO/GA+/bkKieS00nCM5bUo6pFHI9LH+RNM2JR7rk4oQDTNWjuuohk7KFr7iZ+f0VDrfkwbFPpjbV2Zh2OcZxaEbiUFXzUAmHb2z6BdtuNBo07Y0oZnB1yE5Fo3VpB0TY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dCH66iKa; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="gyCBhUOB"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oBD8cxQNCGhv2q4bUoUgHez59euwEZ/glKv/OoNOwsBu5Mi3bD1QTajL7HGQF3r0dvQsZv1ZX2tx9TBn+q96MYZ/k/xClaD250F9MDSJ0Za8bt+V/wpOR9jKbe/buuXAwsssToe9OuTVdv3S5JmXX3DQhk8F8M0WYTnPuGmOw4Tq9SbCwMr6EJwzS8yNnxRLe/QvBS/nqx8ZBEoOUz+NAjTYCNAKMCwoPtZoiTBSqqlQdJKJt4UdOAGO1e4K8SbGIhxwWb4ahV3qoLpwq3CgPf7253Mk+fffv9VQKBCsKNEDJk4YjaDzWMvFN1U/JZIkmIsD0g8QhMWjpzuWD3HHRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lV7BVviFIlqDtjVN8GCJeGSwbod73hK3R3sV2OAHLEM=;
- b=eo0Bgw6hjLyKBy0Ez0T1mlx1YsMdKUmpoMWsPYEQnDNSgMcUAJQ+dHaYKPKW16fpwGFRyCPQlp+S0f1RiiQ0OJouZZ0KUHFpulbbFuIJ8cTDvA2oZsB4+Bsgg2nRn7JPYtwjNHvDZmQuxpi/liElSnvV2PGihSXjhqpDPmkLpolChY1v++ov0q0zjvk3TGNqcjvUKOwOdTsU1hGkE7Pvdx5g5KjrO2a0EyY0gED465xrSknB2rbBvQuqwCOquqfzExUoHLgYzpBJHtmVqC68xhNNgl2/f1p61bWA3ofTbYU5V3kCylWLpNvnrA+bnIESsZ4YHTg40LZWj38thSF/XQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lV7BVviFIlqDtjVN8GCJeGSwbod73hK3R3sV2OAHLEM=;
- b=gyCBhUOBZHUd1tdi9yJxvpqlDYO3zJXG01rt7Fnxa/dBEAPQSVtzsAu+xuQO3pWEdcyiIAwSxLyTUDupnhcrPo86xamr4eAvAw/B9nqZYJdkJrA20EMVXw59dZOuRwIiQLHoP8PDIVA9DnVAkTJzVmEI0X0IZFs3zphkzzH9U+CpkSK3lDL2+LRHUMU3Ph6ICDJaBAliHutPQsZLJ7W4TCxFBvI+Z7RtubSG+aJlgsFujxLp/45DNRLNKslgpXsLqaYfSDwPI6QsTyoI8REo6y3wqF8WzgGuiP7PmiA1xooCHL0YUZwUWz7Nqiwn5P3t+s2tkQ+HIzrCZSW9d0sstw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
- MN2PR12MB4063.namprd12.prod.outlook.com (2603:10b6:208:1dc::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7719.32; Tue, 2 Jul 2024 10:50:53 +0000
-Received: from DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
- ([fe80::953f:2f80:90c5:67fe%6]) with mapi id 15.20.7741.017; Tue, 2 Jul 2024
- 10:50:53 +0000
-References: <cover.66009f59a7fe77320d413011386c3ae5c2ee82eb.1719386613.git-series.apopple@nvidia.com>
- <50013c1ee52b5bb1213571bff66780568455f54c.1719386613.git-series.apopple@nvidia.com>
- <eb3120fd-44db-4cb3-af3c-a13f9e71380b@redhat.com>
-User-agent: mu4e 1.10.8; emacs 29.1
-From: Alistair Popple <apopple@nvidia.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: dan.j.williams@intel.com, vishal.l.verma@intel.com,
- dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com,
- jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com, will@kernel.org,
- mpe@ellerman.id.au, npiggin@gmail.com, dave.hansen@linux.intel.com,
- ira.weiny@intel.com, willy@infradead.org, djwong@kernel.org,
- tytso@mit.edu, linmiaohe@huawei.com, peterx@redhat.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
- jhubbard@nvidia.com, hch@lst.de, david@fromorbit.com
-Subject: Re: [PATCH 06/13] mm/memory: Add dax_insert_pfn
-Date: Tue, 02 Jul 2024 20:47:50 +1000
-In-reply-to: <eb3120fd-44db-4cb3-af3c-a13f9e71380b@redhat.com>
-Message-ID: <87zfr0f4oo.fsf@nvdebian.thelocal>
-Content-Type: text/plain
-X-ClientProxiedBy: SY5P300CA0106.AUSP300.PROD.OUTLOOK.COM
- (2603:10c6:10:248::7) To DS0PR12MB7726.namprd12.prod.outlook.com
- (2603:10b6:8:130::6)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dCH66iKa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719917550;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=J7umkcpqXQxwDVTau9fHQ+ZMfOegpHM40k/wLyeqzy0=;
+	b=dCH66iKa1oKasLewhAeHbTGY/KhrjT0OUt9rXHAZ9jFoZHbJvhzZX7XkoNRIWDOjQgzPcg
+	ZkrM5KoCkXk5ZPShMljLdJK+9Hukr3V50cfhxiISEKa9/M8Y2xQuXCWyrPFDLJrTcCCasF
+	JyO2UJWJcx+VJq/bVDEyJAVCKjF84w4=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-680-rpAB2V9eMFySVpaJwBLiWw-1; Tue, 02 Jul 2024 06:52:29 -0400
+X-MC-Unique: rpAB2V9eMFySVpaJwBLiWw-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a74914bc770so217696966b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 03:52:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719917548; x=1720522348;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=J7umkcpqXQxwDVTau9fHQ+ZMfOegpHM40k/wLyeqzy0=;
+        b=VJY9Ko1KZuxjuL9snkpGDbVScmmd2/lgTK9cVUJcFkXIY9w7x/0koAO6lESpp7xdpA
+         cVivQXNTu9AWylmfTIrl91wIGnm/dGLptFk0+k21/86I6uR3iLAkh+z3v1c33OWCkLXT
+         SxqhZFqWVP6SIQaz3XnZ1O3XYOIIDZ/yWa1PKwW4h5r1co0680qCl9giZCkmh9fAsemx
+         lTqCOA3lTsDXlfd0DKwGoCnwA/ZrIoL2Gs555vbvh6jCwDdyjiVab/vFDavRTxo9StiR
+         guSpeLT6/UKUyCQa8AIA7IQ7RuMpp5eO8/79Mv5j4YmlrY9D2fDWHHGbaZX/Zv+vWqG7
+         tpYg==
+X-Forwarded-Encrypted: i=1; AJvYcCVMGP/Bo5FssATphnqrUj7YaPEVAdyY3T9elRHkyQ/3YFPWy1S9vTYRUTxqCCJOqm70Naw/bhYG0+s98ugH/YsBMNqJllcf607gqO7c
+X-Gm-Message-State: AOJu0YxgOoFxn38YOsy7iJO1rxPYrI7TE5SNUoY13/G0wDcgmjaskfho
+	E/gu9Z1mord6ASpz2LTQdlsG1S3Lcn8PV3ZnDasAvJSixTZ7dgrCGyAVGD1WMamFY8hoJ6ufiQq
+	PWoaDo1URiGd9+XQQRtFmL/jWnRbQDLWIfnm9HeUBmtg7Z/Wn9tthV9YUsbqwrQ==
+X-Received: by 2002:a17:906:f2d3:b0:a72:7e82:7a15 with SMTP id a640c23a62f3a-a751440e853mr440989966b.23.1719917547861;
+        Tue, 02 Jul 2024 03:52:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGZtWsHeiQPj+lmpTz5Ow6a0tfLYovX9jqadqN9bEI2PdLe09L12QaY5MfbDIgyA3yWU46vWQ==
+X-Received: by 2002:a17:906:f2d3:b0:a72:7e82:7a15 with SMTP id a640c23a62f3a-a751440e853mr440988366b.23.1719917547461;
+        Tue, 02 Jul 2024 03:52:27 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72ab090590sm407518666b.183.2024.07.02.03.52.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jul 2024 03:52:27 -0700 (PDT)
+Message-ID: <60260bb8-ba94-4bd7-8aed-c3bf5b8f4a14@redhat.com>
+Date: Tue, 2 Jul 2024 12:52:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|MN2PR12MB4063:EE_
-X-MS-Office365-Filtering-Correlation-Id: 19b3bc10-5a53-47f4-a83c-08dc9a84d7e4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?5ctS0T3sEfGEmg4Sh7vc6i685Z4ZV61MlXoxr+dur1ScXoj/T+8BwRiURqe5?=
- =?us-ascii?Q?iUlY3q/vQE1ysXhkLPGQwYqd0SNMV1MmRzoY5B2EvRmmfCTRHrR8YbJPZ3cz?=
- =?us-ascii?Q?cPY2tOBao/ldYL3DVKFBtj0eQRYom9Ion1v/m6tAClT5cnKGxMogEpmqP8Jt?=
- =?us-ascii?Q?j4SEOA4Q+eroPHa/fluiJqTeckLpxki458j9caJMQMtb1cJouVnZGHvRxKBd?=
- =?us-ascii?Q?vkoXvPaA3ES5zBjsh/82I9N9hUwue/k4AQYiVslW7jiHcBpAXajoF+aT26lV?=
- =?us-ascii?Q?sZWxbcwyhTm+Ch0bf/IQpDZn4IVYAeZnopW0nYAyeTGjSafLJxo1y5aW4JeC?=
- =?us-ascii?Q?6a46gGL4sHcEtpnqe8UiHjmzxeUWcYRMa02hEBT0iFrPiQk3pWDUSGLKqFSF?=
- =?us-ascii?Q?d8UMOv2t4p89+gGXsqmQsYdIpiqHdItZR+XdIcG7UxaPIKZ2gn3Xea0FchiF?=
- =?us-ascii?Q?Wfvb9ktuvwkshvcTdoYZI1O81aPT62uJTIYpy4ylrUBbiuBzX6DIIaJoJTRu?=
- =?us-ascii?Q?tzXtBfifKopWxMqZPulIIz4QHaL80N/VoYV1BzDIULZtifJH3eCLY5fwMlvS?=
- =?us-ascii?Q?IhtPUDfA9wO/XSisDw1zesPMRIsfjxb1+AGIILmAHBVAUjU1/cas1BFn+f7Y?=
- =?us-ascii?Q?7NQc587ottolLQuFFhoOXMZZ2MN9hvyNyJ4ovp0WSAb3F6mPAVXPJDoGd8VP?=
- =?us-ascii?Q?0awJPZ5tnJCvS4fPDmLuYFMzzLL/oah6Aa2jBnPKoIhbNFs7osWRvx+4siSx?=
- =?us-ascii?Q?aJfGhKIVaBVF/O/kFKMKXz8J6ASA+1RKJeDiBtCzBlVqUJeQQPaDfiTxUrwS?=
- =?us-ascii?Q?tloq/YlrH5TRIk5NA3yPTQig012hFaLPw9yeB7CSiYoCyDKI0Ux+CxGt8bY6?=
- =?us-ascii?Q?QSLNP6Rzz73CaulotUS4ZTA/9875mYc0/c9tkxpONPfxaxqLhQ0g7jOwLZzC?=
- =?us-ascii?Q?ZcovjSWqNrBYZnhhlHBIfSwlRfn6iWwg5zVVQ1OhXlxB0K4Pv5LBFB/9hsWQ?=
- =?us-ascii?Q?Rz33vsTaPYaOYd5u09TMCTZyjhD4e9Y50DWaN3w+BHAMbMUogtSQLyeo/+68?=
- =?us-ascii?Q?cJmV2pnYuK/FO68DurTwdXApHKF70ioRD4z+LfDnCsbrmz1mHmSLpW1RDMjj?=
- =?us-ascii?Q?i+SxcKIx5KVfIjSwqfwYBys6wK4V45o2kaxph8DBAyV/sRnB90xdc6cGiBEe?=
- =?us-ascii?Q?HsS7k4+LJm3WCIVdd0YMbypJoCJAvpSFHisW0/FqJWt7SZEIKrJUiz7Rkb4/?=
- =?us-ascii?Q?wzcdfI+aRlwmh/g/3CiZPx3NVnv1nNr7k/4H7iGJCG4AMwOv/5ZNRFZYfBIw?=
- =?us-ascii?Q?rMSNxedT6R5qIEoQMkUb7B6Ar28qOEZ7TjRw3t29riQSqQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?4BDO7vWjzliW4r2OXCiMmbQLnCg3VG+tA9fu4CPe9ZP/yNNoxX5tc/ZR0aWo?=
- =?us-ascii?Q?G+szZNjfzugehUlRUyGPblrm/aEFk3gSP6tdozKDtOp/OHyUSc9xYaUKCTJr?=
- =?us-ascii?Q?oZ3Ziq7KEBFFXo2V5okD3hnIboExO23aBtsFbuQi42b/Pl4boYG6rzitApeC?=
- =?us-ascii?Q?LPhawV/9lLF3Ic0p48qwapVMmkZW5qMi6sIeyIRG9hYmmbyM7vpoR++bxxVF?=
- =?us-ascii?Q?mIt64ofLAr+INNutV+rHTznXizG8P5kvOK4AgGtLCBZ1lMeyfrZpvsMf7SyJ?=
- =?us-ascii?Q?RJVS8TXfzQEUb7vThNb/7pbk56mAH9AJMmd5LvrRzTZR7LmwiL+PmFZ0xIdC?=
- =?us-ascii?Q?ehIH69g2Urd6UkdbPBED3V1M3hclRmwwyV5wXrClecgY5o2jmtM94YyIk9wq?=
- =?us-ascii?Q?U1mFvXCTlrBSTE3UbfuEVo+QC9Itl+rsSA5FQveoPku+Cg0yfdXcZ5DA+LRe?=
- =?us-ascii?Q?N63wgioGKSSkBsNzKxpIRwXS6MRUtBPDpJW4fRh2s7AyIFMjfZ09G+8LBxfl?=
- =?us-ascii?Q?0VU9GhFYB4VT6H3hDUUQw3Tc7ZR7HYChPS0xS7jVQ8iCNYbm7neIrImAjDbI?=
- =?us-ascii?Q?fIepWEfP5Ldf6YXz16AAcl0ddHZQHWGgeatqkP+X3RZApiWsMKo5KB1WcyO4?=
- =?us-ascii?Q?AAUNYqwsW+xJEeSSzVywOz1RQerTAoLNxHys5yxCaA2M7qAx+V/NWkOt0EkL?=
- =?us-ascii?Q?/SykHz315uG2CBC6aWizVyQxGDZWCrsFPhu5NkaSglgjE5GmLRchTLFn6EF4?=
- =?us-ascii?Q?/BCIw9Ni39xeqtxy7LnoENxrLCIGMkRXZPluaIUT64JVg/v0farTx0CgNuBS?=
- =?us-ascii?Q?LF7q1UbJg06FytzFvPMZR0dQKL1oHsVKm3PF85sE+XWfQXOEdIXDjUmq/9bi?=
- =?us-ascii?Q?4tYWsiufRvVo7yDajidBd4TjMaivsuAiO/pnHEs/BsKVXuUULeQLAGo02KOn?=
- =?us-ascii?Q?fmoDxP/y/KD7u0Ok2Q41KtzIl2p1aDaKlmy9dn3gBVD5NtU4i0pA2u0hQJUv?=
- =?us-ascii?Q?yjcNlBSldA6bajSzFOsiqN99ptHzVvUcEEXFvOjIRIlyBbBdSM+iSa6LHRZp?=
- =?us-ascii?Q?e6M9axoRNbWBH5TBS2YSEUlYupfkHqQi5cgO9S6ED+CvrktsJSKSDGxWH8Sb?=
- =?us-ascii?Q?Ks7g3cD0MelgNT1WKj02+nPsMNxxcXuLgK8zp5F1sr0aV31PItxRxifr4lJp?=
- =?us-ascii?Q?zD2yeWt1G6fF5+UNld2LWYu7vBzEsjbIZ/SpJpZQ0A+ucQU8V5PYEmJQQ6iB?=
- =?us-ascii?Q?1s7WvD3xW1KyU3IJzC3lSeGJN4EZQvxQwUrF4lthwYudOIenr5SYnSCRYJBD?=
- =?us-ascii?Q?Ve+aHJDzxQ61uTU9lMSO0+BkDrfEqGit3mXvdOr8IqKmHeRhVU/fT1Rsm5cr?=
- =?us-ascii?Q?+F7rSy/9HK64CuDsHSWOIp0zoxYnGRhNFNeNyEXnMiq2Ma9b0uYI77d9+7YE?=
- =?us-ascii?Q?zNBB2GPwZnzP491SN/3R+6Wra8vy6jl0QYWgTlfNq+s+k6/693jt+sHfql/9?=
- =?us-ascii?Q?ZlKedttLKwOw2Ux5mwMpaq7jKsHaG+ZMQtFS2DcVXGcHR62kZ+HBgwh3egcR?=
- =?us-ascii?Q?ehX4eN5i1V3YBOZZTVyYZyk0dj6n6IounbUdQ78p?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19b3bc10-5a53-47f4-a83c-08dc9a84d7e4
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2024 10:50:52.9365
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cH3e8+JqqVVzXZGzU4/557t8yK8CU7L+KUK5wWAI8gpXs2W+hx8bXd4OVYDnBzzd+lTBhzqJsNPN0CxbcFFDZA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4063
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] platform/x86: toshiba_acpi: Fix quickstart quirk
+ handling
+To: Armin Wolf <W_Armin@gmx.de>, coproscefalo@gmail.com
+Cc: lkml@vorpal.se, kmal@cock.li, ilpo.jarvinen@linux.intel.com,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240701194539.348937-1-W_Armin@gmx.de>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240701194539.348937-1-W_Armin@gmx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Hi Armin,
+
+On 7/1/24 9:45 PM, Armin Wolf wrote:
+> The global hci_hotkey_quickstart quirk flag is tested in
+> toshiba_acpi_enable_hotkeys() before the quirk flag is properly
+> initialized based on SMBIOS data. This causes the quirk to be
+> applied to all models, some of which behave erratically as a
+> result.
+> 
+> Fix this by initializing the global quirk flags during module
+> initialization before registering the ACPI driver. This also
+> allows us to mark toshiba_dmi_quirks[] as __initconst.
+> 
+> Fixes: 23f1d8b47d12 ("platform/x86: toshiba_acpi: Add quirk for buttons on Z830")
+> Reported-by: kemal <kmal@cock.li>
+> Tested-by: kemal <kmal@cock.li>
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+> Changes since v1:
+>  - add Tested-by tag
+
+Thank you for fixing this, the patch looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+I was hoping my pdx86 fixes pull-request last Saturday would
+be the last one for this cycle, but I'll prep another one
+with this patch sometime this week:
+
+Thank you for your patch/series, I've applied this patch
+(series) to my review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+I have added a:
+
+Closes: https://lore.kernel.org/platform-driver-x86/R4CYFS.TWB8QUU2SHWI1@cock.li/
+
+tag whole applying this.
+
+I will include this patch in my next fixes pull-req to Linus
+for the current kernel development cycle.
+
+Regards,
+
+Hans
 
 
-David Hildenbrand <david@redhat.com> writes:
 
-> On 27.06.24 02:54, Alistair Popple wrote:
->> Currently to map a DAX page the DAX driver calls vmf_insert_pfn. This
->> creates a special devmap PTE entry for the pfn but does not take a
->> reference on the underlying struct page for the mapping. This is
->> because DAX page refcounts are treated specially, as indicated by the
->> presence of a devmap entry.
->> To allow DAX page refcounts to be managed the same as normal page
->> refcounts introduce dax_insert_pfn. This will take a reference on the
->> underlying page much the same as vmf_insert_page, except it also
->> permits upgrading an existing mapping to be writable if
->> requested/possible.
->
-> We have this comparably nasty vmf_insert_mixed() that FS dax abused to
-> insert into !VM_MIXED VMAs. Is that abuse now stopping and are there
-> maybe ways to get rid of vmf_insert_mixed()?
+Regards,
 
-It's not something I've looked at but quite possibly - there are a
-couple of other users of vmf_insert_mixed() that would need to be
-removed though. I just added this as dax_insert_pfn() because as an API
-it is really specific to the DAX use case. For example a more general
-API would likely pass a page/folio.
+Hans
+
+
+
+> ---
+>  drivers/platform/x86/toshiba_acpi.c | 31 +++++++++++++++++------------
+>  1 file changed, 18 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+> index 3a8d8df89186..10d0ce6c8342 100644
+> --- a/drivers/platform/x86/toshiba_acpi.c
+> +++ b/drivers/platform/x86/toshiba_acpi.c
+> @@ -3271,7 +3271,7 @@ static const char *find_hci_method(acpi_handle handle)
+>   */
+>  #define QUIRK_HCI_HOTKEY_QUICKSTART		BIT(1)
+> 
+> -static const struct dmi_system_id toshiba_dmi_quirks[] = {
+> +static const struct dmi_system_id toshiba_dmi_quirks[] __initconst = {
+>  	{
+>  	 /* Toshiba Portégé R700 */
+>  	 /* https://bugzilla.kernel.org/show_bug.cgi?id=21012 */
+> @@ -3306,8 +3306,6 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+>  	struct toshiba_acpi_dev *dev;
+>  	const char *hci_method;
+>  	u32 dummy;
+> -	const struct dmi_system_id *dmi_id;
+> -	long quirks = 0;
+>  	int ret = 0;
+> 
+>  	if (toshiba_acpi)
+> @@ -3460,16 +3458,6 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+>  	}
+>  #endif
+> 
+> -	dmi_id = dmi_first_match(toshiba_dmi_quirks);
+> -	if (dmi_id)
+> -		quirks = (long)dmi_id->driver_data;
+> -
+> -	if (turn_on_panel_on_resume == -1)
+> -		turn_on_panel_on_resume = !!(quirks & QUIRK_TURN_ON_PANEL_ON_RESUME);
+> -
+> -	if (hci_hotkey_quickstart == -1)
+> -		hci_hotkey_quickstart = !!(quirks & QUIRK_HCI_HOTKEY_QUICKSTART);
+> -
+>  	toshiba_wwan_available(dev);
+>  	if (dev->wwan_supported)
+>  		toshiba_acpi_setup_wwan_rfkill(dev);
+> @@ -3618,10 +3606,27 @@ static struct acpi_driver toshiba_acpi_driver = {
+>  	.drv.pm	= &toshiba_acpi_pm,
+>  };
+> 
+> +static void __init toshiba_dmi_init(void)
+> +{
+> +	const struct dmi_system_id *dmi_id;
+> +	long quirks = 0;
+> +
+> +	dmi_id = dmi_first_match(toshiba_dmi_quirks);
+> +	if (dmi_id)
+> +		quirks = (long)dmi_id->driver_data;
+> +
+> +	if (turn_on_panel_on_resume == -1)
+> +		turn_on_panel_on_resume = !!(quirks & QUIRK_TURN_ON_PANEL_ON_RESUME);
+> +
+> +	if (hci_hotkey_quickstart == -1)
+> +		hci_hotkey_quickstart = !!(quirks & QUIRK_HCI_HOTKEY_QUICKSTART);
+> +}
+> +
+>  static int __init toshiba_acpi_init(void)
+>  {
+>  	int ret;
+> 
+> +	toshiba_dmi_init();
+>  	toshiba_proc_dir = proc_mkdir(PROC_TOSHIBA, acpi_root_dir);
+>  	if (!toshiba_proc_dir) {
+>  		pr_err("Unable to create proc dir " PROC_TOSHIBA "\n");
+> --
+> 2.39.2
+> 
+
