@@ -1,245 +1,229 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90024201257
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 21:57:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C89B1BD512;
+	Tue,  2 Jul 2024 21:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719957453; cv=none; b=fh2Srcr/sR0Vc36ZKoZcC4i/NSxLJfBdU1D7qCdNRZ3JSv1RX401TsnUwpeRzRnidzxkszoKmmGutBBPmRg9qqGB9zazQirtpqvqDmggZZjNm17aJvlCulR1NzazEPZY2duIvRTxHbGXNuZYhFusDgqXNqb+fyP6imLajpv6YFc=
+	t=1719957471; cv=none; b=ca9PoNQkEQNbFzM0H8ntodKMgC8zV1WUH/SVpgaVmJvsPW5ziDBbCbzUnRgOmDox4vj3VVKE48GShcn6909/Wk/dBmpIwC+JKcL5v6Hlo95q2A+SDZJpJ3g9d+nUeV+hzrUIPxjJw2NVE5YeKYElLQf7Z06kue5anBA++2vs/Ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719957453; c=relaxed/simple;
-	bh=Je9kVQrIgaxsRgrSWPFlFhDE4Vq4y0q8UKQudsgFpfQ=;
+	s=arc-20240116; t=1719957471; c=relaxed/simple;
+	bh=3IoNLmFrW04h5NZct8LpCc5lx5DRX/yIR+IZxZhLabU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tthmMxJvz60LlKA56sjbEnGO2OmMuUTYzZ1r3tHbXNhdAb4FQ6sTZy08xeU5hvWA90TkWeh9zeM7aqFMCpk+y9UJDe9FQb8LMihbJXuE0gooIn0103q3g0Pc+P2Gt3PTnjFhe0j1mBhZaGMCdLkCvkZ3ZqwLFZArE3IuwSsQGQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=PwBe9QGf; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	 To:Cc:Content-Type; b=acgl5pbaaajAtvyLjBAaMYFmar0i7lUf1mrt2XFwO9ZZz59B80HP5n4DytlyLOjjyeSm4ciYChg8EWKp24MgTk3yvHWIoQy6lfLqKylopUtxyBohqbDsDvxeCSHTXLQcz00t54hKHUtOLELKRGjYIDJS2CpLtjtFUPa4Q639kdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=niPPaf0q; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="PwBe9QGf"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52ce9ba0cedso8239640e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 14:57:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="niPPaf0q"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a724598cfe3so592316566b.1;
+        Tue, 02 Jul 2024 14:57:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1719957450; x=1720562250; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9z+8bdnHCMPCApRJBPIUlmhdXsDcMjQ8o+Q70WqEG6c=;
-        b=PwBe9QGfm93EmVBLrxgKtHdzCiN8gdRlsfuFKMo43Kp4VTrHzagvZoUxFSqAENCiAo
-         02FAaamaxZiRUKtyXufz0Fh25atzlghVKW0f1RgXt528XFn1ugBLqJ8El7rNe/z/zxUl
-         ZjlOMS0at6ZS+m/LZqhJ3BfAZzQYQVR9RDkfw=
+        d=gmail.com; s=20230601; t=1719957467; x=1720562267; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0qVUlcxGg0CHOekHZ6+YIbM0eY0VoswlJ0lYpz49cnw=;
+        b=niPPaf0qL7/cCI55fzipByy82mm4fRwqTj435f38/0Ri9XpOVV4hNSLkmjM0iYJVTj
+         Qw2Sjdo3MyCJbYLskKj78NFchwc6z1OQZpiYRPpl3XTr+GaQUJP/zyWOCC2TPTJJIQ77
+         MmUgq1fRDmeNJXPg3Hh+1zS2K4NcL0bzE+An0T/umxpOymBFt2mQxwRW+OGsnXVY9vGN
+         3ZlZ2YTdjp3knEccISCqH95GsjeBVvF3alxJLS5f09KkMuExc+oe5r0VBIKSVqSQHZAT
+         XLDFXCdqOKvOvX19JTzJEKMwpHp08bojkOErkUTkYzi13Adsz/VswZoxqJnvYgc5FZeL
+         1wig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719957450; x=1720562250;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9z+8bdnHCMPCApRJBPIUlmhdXsDcMjQ8o+Q70WqEG6c=;
-        b=Qz8Kpgpv9aN42oWUq5TF2M1wFrDYzs0dOKMo5dumecJxp1EDRvC+5E5n2uqCWkC1ek
-         YqFYnnnE/kLYJHsB3p4/jsoCmYf3S3D0Vjiaflfr5sZgu7BDSAVXrNyEY7nBpJj3i4at
-         50cCnLI+jp5KmOKqVYsM7NU1iM8v/R9G4hLaQQW9c6+6qVCrLh9rQFXa545Gd8eQLhJX
-         beBLAQ5KAFAXvIIHPQbVn4GHURGWS7n5FX4Hjr7RmXkwFJNMN64ukuYTd2PXP1F2mmMx
-         JxRz9aHcv/a9oD0vxxxNkNASBmKrZeZmPJ+pqxzi+S1OnMhe61DLWgGjefhRbgubrbDL
-         YV1w==
-X-Forwarded-Encrypted: i=1; AJvYcCUMsjhyVbk8oUlqJWzOjJGhZq3SmnwVO1a+Eu6x8NiQlcUdWT0Hi5q40QXcUI7Z0dnuuJoBYVJQwGlz3bD3je3zO1u0XyWXLFDfe9EO
-X-Gm-Message-State: AOJu0YyX+3Iz1eysXtWjPMZbD9fNSxryTsZQpHoeB2vUlTXTw5xnGIHi
-	uslUQSF3vZUAFqcyHkf45xL+TH2ppELlEUYIpX55He/dy2xzp+WfR67MFl9KzBt5WzdStAjCE1H
-	0/4keRqq1muU/NnRl18oY0TEp7vO1ElljCvD2
-X-Google-Smtp-Source: AGHT+IF+RYXnS9P09KG8u4Bf3AZ2HvJkSySrEDejE6ieNhBaC41VEUORI/mqe2KAWvV5bl+hbrNoUVP0FBBN87NT4AA=
-X-Received: by 2002:a05:6512:3d1e:b0:52c:9ae0:beed with SMTP id
- 2adb3069b0e04-52e82705d17mr9360475e87.52.1719957449672; Tue, 02 Jul 2024
- 14:57:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719957467; x=1720562267;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0qVUlcxGg0CHOekHZ6+YIbM0eY0VoswlJ0lYpz49cnw=;
+        b=UQxQMTIWiQl9V5ZdUIjjMQHEy7A7jXhXrQ6V7vCwxuxTaKazzjWqegS9PduJh9Pu2L
+         /bw0aQU9O6Kq0bpxQCVcrjojIeyndksRD5CwGDEmgnXnloaj4aiAunHDd5VLEymYROth
+         B1eY8QbvCdKKVLZWHuiHRmQFyyNyfrkk0UdKOu9DiKZQSw+wvLhGWrXeKWCqsTsB4ILp
+         AoV4fnbOiH8DD890JrmgcvVGUotwW5ItO+aUYcgIQKpYaTWoeE7+azNoOiwo2FDCyL1h
+         1B+VCNmxy9RYcvW1KWVbwssQL45oXgGn0aeTElTM4zge88HtSS7KZai4xXgnoX3Z7fEV
+         VTmw==
+X-Forwarded-Encrypted: i=1; AJvYcCVSkznQorx/vYU1TyNQa+tdHoP40V67IBh75yAjgh/N38mhd5OKk/HA69KaChaxoITJl/3hEmWsd40MHK+RbQt5ThXY4vuyr7nZxW0Lr3OqqjTpen+fpGKRdLbmYyCgQNeIYjRBDGPxAq08yvI5GkTBNoQvgai/2GiGLBhhbeQ7jh5UqX5z
+X-Gm-Message-State: AOJu0Yy0wII6a6w53qPXklFWd/naUucCcpvJE/9h8AoErhjR6aHa43zI
+	Vch97yDjCFyiwDbyKbH77q9gW6Z9tUxhJIgv7Qc50BF7mlkrHAtLMMqdSxoYdY8VsMRXDbzoV28
+	Ihv0jlFgny1BD+J1Mi1oljLEyd30=
+X-Google-Smtp-Source: AGHT+IEWKwRh13zALGUZeYb54SJjh/VFz3E8OF502MPQpiXuwMwTmJpwUAyI27pPStrbjgG0Mr0sC0aGcS91RQtdCZc=
+X-Received: by 2002:a17:906:b897:b0:a72:4402:9344 with SMTP id
+ a640c23a62f3a-a7514488e8amr754070866b.20.1719957467509; Tue, 02 Jul 2024
+ 14:57:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240628205430.24775-1-james.quinlan@broadcom.com>
- <20240628205430.24775-2-james.quinlan@broadcom.com> <5d0950fd-dcd2-4996-aab0-0030f1911960@kernel.org>
-In-Reply-To: <5d0950fd-dcd2-4996-aab0-0030f1911960@kernel.org>
-From: Jim Quinlan <james.quinlan@broadcom.com>
-Date: Tue, 2 Jul 2024 17:57:17 -0400
-Message-ID: <CA+-6iNzoPTk0mxwug8Odv4Loj5hN8eDy56AjYmsAa+qV3SnWfA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/8] dt-bindings: PCI: Add Broadcom STB 7712 SOC,
- update maintainter
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
-	Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>, 
-	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000d78ae9061c4acc0f"
-
---000000000000d78ae9061c4acc0f
+References: <20240701164115.723677-1-jolsa@kernel.org> <20240701164115.723677-7-jolsa@kernel.org>
+In-Reply-To: <20240701164115.723677-7-jolsa@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 2 Jul 2024 14:57:33 -0700
+Message-ID: <CAEf4Bzby-7tt3fmLocL8_TXrP+ZuUOQYv9TnBg1vnb4GpXTzXg@mail.gmail.com>
+Subject: Re: [PATCHv2 bpf-next 6/9] selftests/bpf: Add uprobe session test
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, 
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 1, 2024 at 5:12=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.org=
-> wrote:
+On Mon, Jul 1, 2024 at 9:43=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
 >
-> On 28/06/2024 22:54, Jim Quinlan wrote:
-> > - Update maintainer.
+> Adding uprobe session test and testing that the entry program
+> return value controls execution of the return probe program.
 >
-> Why?
-
-I haven't observed any action or feedback from Nicolas in years.
-Nicolas, please
-state your case for being a maintainer because it is not making sense from
-my perspective.
->
-> > - Adds a driver compatible string for the new STB SOC 7712
-> > - Adds two new resets for the 7712: "bridge", for the
-> >   the bridge between the PCIe core and the memory bus;
-> >   and "swinit", the PCIe core reset.
-> >
-> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > ---
-> >  .../bindings/pci/brcm,stb-pcie.yaml           | 24 ++++++++++++++++++-
-> >  1 file changed, 23 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b=
-/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > index 11f8ea33240c..f594fef343a1 100644
-> > --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > @@ -7,12 +7,13 @@ $schema: http://devicetree.org/meta-schemas/core.yaml=
-#
-> >  title: Brcmstb PCIe Host Controller
-> >
-> >  maintainers:
-> > -  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > +  - Jim Quinlan <james.quinlan@broadcom.com>
-> >
-> >  properties:
-> >    compatible:
-> >      items:
-> >        - enum:
-> > +          - brcm,bcm7712-pcie # STB sibling SOC of Raspberry Pi 5
->
-> Why did you place it here? Isn't the list ordered?
-
-It is ordered from newest at top to oldest at bottom -- is the
-convention to put the "new" at the bottom?
->
-> >            - brcm,bcm2711-pcie # The Raspberry Pi 4
-> >            - brcm,bcm4908-pcie
-> >            - brcm,bcm7211-pcie # Broadcom STB version of RPi4
-> > @@ -146,6 +147,27 @@ allOf:
-> >        required:
-> >          - resets
-> >          - reset-names
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            const: brcm,bcm7712-pcie
-> > +    then:
-> > +      properties:
-> > +        resets:
->
-> Fix the binding first - properties should be defined in top level
-> "properties:" and then customized. Where are "resets"?
->
-> > +          items:
-> > +            - description: phandle pointing to the RESCAL reset contro=
-ller
->
-> Drop redundant text. There is no point in saying that phandle is a
-> phandle. It's obvious. Say something which is not obvious.
-
-My kernel Yaml-fu is weak.  I will redo.
-
-Regards,
-Jim Quinlan
-Broadcom STB/CM
->
->
-> Best regards,
-> Krzysztof
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  .../bpf/prog_tests/uprobe_multi_test.c        | 42 +++++++++++++++
+>  .../bpf/progs/uprobe_multi_session.c          | 53 +++++++++++++++++++
+>  2 files changed, 95 insertions(+)
+>  create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_sessio=
+n.c
 >
 
---000000000000d78ae9061c4acc0f
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+LGTM.
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
-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
-mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
-uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
-AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
-c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
-AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
-TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
-bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
-L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
-BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
-VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
-z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
-b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
-+R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
-AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
-75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
-AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
-AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
-MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCBwVW8pXlVLww1mPrKvYhO2eKmE4KGc
-/a99BY7AIDuRMDAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDA3
-MDIyMTU3MzBaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
-hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
-AgEwDQYJKoZIhvcNAQEBBQAEggEAgOr5PGRh3EYtSSiNDPp3bD5oLqzQ4gkYdx/y41hzbzVNDuTk
-WFJLIFfb9pOGhuk7ZNNuJQcF4GKClEtfiG532martVSKMJ17ILFRNTo1uad5JlORx/i3D/p3TS03
-HhD7uYx43+zxRp1ZwvrmQ0XWtqsp9LStRdhNfbanW72AIiemlAZEQ2Tidg5paKs03EU/rSTqLdU2
-Givq3fTJ29E/4QstxnqZZZ107YOctvTp5IhZMdsvmlFidE6njFs6WCtr/KBAn9qaV550RNLMk5oo
-PJnh4EY3UoTgpjkGrkx72mIvEjHlW7uownilbL27oGxxPcH9cUwreQV9ysYiWHFEQw==
---000000000000d78ae9061c4acc0f--
+> diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c b=
+/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
+> index bf6ca8e3eb13..cd9581f46c73 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
+> @@ -6,6 +6,7 @@
+>  #include "uprobe_multi.skel.h"
+>  #include "uprobe_multi_bench.skel.h"
+>  #include "uprobe_multi_usdt.skel.h"
+> +#include "uprobe_multi_session.skel.h"
+>  #include "bpf/libbpf_internal.h"
+>  #include "testing_helpers.h"
+>  #include "../sdt.h"
+> @@ -615,6 +616,45 @@ static void test_link_api(void)
+>         __test_link_api(child);
+>  }
+>
+> +static void test_session_skel_api(void)
+> +{
+> +       struct uprobe_multi_session *skel =3D NULL;
+> +       LIBBPF_OPTS(bpf_kprobe_multi_opts, opts);
+> +       struct bpf_link *link =3D NULL;
+> +       int err;
+> +
+> +       skel =3D uprobe_multi_session__open_and_load();
+> +       if (!ASSERT_OK_PTR(skel, "fentry_raw_skel_load"))
+> +               goto cleanup;
+> +
+> +       skel->bss->pid =3D getpid();
+> +
+> +       err =3D uprobe_multi_session__attach(skel);
+> +       if (!ASSERT_OK(err, " uprobe_multi_session__attach"))
+> +               goto cleanup;
+> +
+> +       /* trigger all probes */
+> +       skel->bss->uprobe_multi_func_1_addr =3D (__u64) uprobe_multi_func=
+_1;
+> +       skel->bss->uprobe_multi_func_2_addr =3D (__u64) uprobe_multi_func=
+_2;
+> +       skel->bss->uprobe_multi_func_3_addr =3D (__u64) uprobe_multi_func=
+_3;
+> +
+> +       uprobe_multi_func_1();
+> +       uprobe_multi_func_2();
+> +       uprobe_multi_func_3();
+> +
+> +       /*
+> +        * We expect 2 for uprobe_multi_func_2 because it runs both entry=
+/return probe,
+> +        * uprobe_multi_func_[13] run just the entry probe.
+> +        */
+> +       ASSERT_EQ(skel->bss->uprobe_session_result[0], 1, "uprobe_multi_f=
+unc_1_result");
+> +       ASSERT_EQ(skel->bss->uprobe_session_result[1], 2, "uprobe_multi_f=
+unc_2_result");
+> +       ASSERT_EQ(skel->bss->uprobe_session_result[2], 1, "uprobe_multi_f=
+unc_3_result");
+> +
+> +cleanup:
+> +       bpf_link__destroy(link);
+> +       uprobe_multi_session__destroy(skel);
+> +}
+> +
+>  static void test_bench_attach_uprobe(void)
+>  {
+>         long attach_start_ns =3D 0, attach_end_ns =3D 0;
+> @@ -703,4 +743,6 @@ void test_uprobe_multi_test(void)
+>                 test_bench_attach_usdt();
+>         if (test__start_subtest("attach_api_fails"))
+>                 test_attach_api_fails();
+> +       if (test__start_subtest("session"))
+> +               test_session_skel_api();
+>  }
+> diff --git a/tools/testing/selftests/bpf/progs/uprobe_multi_session.c b/t=
+ools/testing/selftests/bpf/progs/uprobe_multi_session.c
+> new file mode 100644
+> index 000000000000..72c00ae68372
+> --- /dev/null
+> +++ b/tools/testing/selftests/bpf/progs/uprobe_multi_session.c
+> @@ -0,0 +1,53 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <linux/bpf.h>
+> +#include <bpf/bpf_helpers.h>
+> +#include <bpf/bpf_tracing.h>
+> +#include <stdbool.h>
+> +#include "bpf_kfuncs.h"
+> +#include "bpf_misc.h"
+> +
+> +char _license[] SEC("license") =3D "GPL";
+> +
+> +__u64 uprobe_multi_func_1_addr =3D 0;
+> +__u64 uprobe_multi_func_2_addr =3D 0;
+> +__u64 uprobe_multi_func_3_addr =3D 0;
+> +
+> +__u64 uprobe_session_result[3];
+> +
+> +int pid =3D 0;
+> +
+> +static int uprobe_multi_check(void *ctx, bool is_return)
+> +{
+> +       const __u64 funcs[] =3D {
+> +               uprobe_multi_func_1_addr,
+> +               uprobe_multi_func_2_addr,
+> +               uprobe_multi_func_3_addr,
+> +       };
+> +       unsigned int i;
+> +       __u64 addr;
+> +
+> +       if (bpf_get_current_pid_tgid() >> 32 !=3D pid)
+> +               return 1;
+> +
+> +       addr =3D bpf_get_func_ip(ctx);
+> +
+> +       for (i =3D 0; i < ARRAY_SIZE(funcs); i++) {
+> +               if (funcs[i] =3D=3D addr) {
+> +                       uprobe_session_result[i]++;
+> +                       break;
+> +               }
+> +       }
+> +
+> +       /* only uprobe_multi_func_2 executes return probe */
+> +       if ((addr =3D=3D uprobe_multi_func_1_addr) ||
+> +           (addr =3D=3D uprobe_multi_func_3_addr))
+> +               return 1;
+> +
+> +       return 0;
+> +}
+> +
+> +SEC("uprobe.session//proc/self/exe:uprobe_multi_func_*")
+> +int uprobe(struct pt_regs *ctx)
+> +{
+> +       return uprobe_multi_check(ctx, bpf_session_is_return());
+> +}
+> --
+> 2.45.2
+>
