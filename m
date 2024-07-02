@@ -1,102 +1,109 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24806747F
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 06:14:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C008BFA;
+	Tue,  2 Jul 2024 06:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719900847; cv=none; b=Qb2IjwXe1QxV9Rf1C8eTEpak6uKEX9OPi/5bZjtv6DtJGv1Jz7hGxgvitV8RV/pjqpM9iJqnu7WKuixtK2hehNHhPFvKJnQTMRbhPWbZ8/IEpd/PH+uN5qo0/OTv3r9PM9i3P4/qPSKdVsYEMxK83cCmI0ktQTNRelmEWXA/RRA=
+	t=1719901108; cv=none; b=U4ENHhU4u+ju7ihMnuXgM4/eHEuQSlVl2F4ndy6W+LNCfPFoKW/BUsEosZyhUo0xpczJrf87lDNFbIDsHdO1l+S+lN0nqYclAW3MeV6aO85Yz2R+7rWhn9uZbkxnmVLsiki3X3BnzCKpu/xTLSfm+7E960k31310t2B1J0mIzwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719900847; c=relaxed/simple;
-	bh=cuq57puEZlPVYH0zxLtbdFgQQUF/SdQZusuVvv78jy8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F6hUrGVfFBB7zJyJW4rJQZ62OvtwIktC3U3b7bwZFnBjwJotBjtImLeHs/ih13vayXZqscqUq4Do6D7xB4j0wwTuHTZsax6J6uicKONiOgfWbG+nLXK8todBgmG1bLZSqPL2wMMLqo3Uvq62ucuvHhdBA9z9DfBk9R9paR0c6Ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=rhqNNg0I; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1719901108; c=relaxed/simple;
+	bh=xcbo7H35s62k57wpp5CZn9fiLqU/YmxQeNb6aW/ijbo=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=ToKDqVS4X/qdS5YCvkmzJUS2qXu8AsZmgx7a7lUrxAX/Y30+ShRskUUp06dY7rD6X1an51L+vKU67QS4yutYFM/wD78m7xV0C4ypAxOSqaHQDtr2htzdKadL4dciY9RdMR+BTosB3gvfV1B402rWdJJxJ9nGdiQNngPgboHawow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=xq9BHxRa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="rhqNNg0I"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1719900843; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=erDT9J5j1rBE4ZxSrWgpupITXKbScrM2e64G+CfHvXQ=;
-	b=rhqNNg0I/qjp4O0FlMjOEeDfM8rowrw6mXvNOeIC/Qc7tcYbbl7Xvmp6ON7vBwPQ/ql4EOiKrS6ufVeZzOREcadAcB4KMEH4u+rj030jQW3Oj9BZahbSsAisCcfVc4aB9h2iSIFeZyUzi31lDV0iUSqVMoEC8V6alvFam/9vK7A=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033068173054;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0W9hWdSb_1719900840;
-Received: from 30.97.56.72(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W9hWdSb_1719900840)
-          by smtp.aliyun-inc.com;
-          Tue, 02 Jul 2024 14:14:01 +0800
-Message-ID: <6f383c8c-b125-4374-bf21-67b6cc3edcbe@linux.alibaba.com>
-Date: Tue, 2 Jul 2024 14:14:00 +0800
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="xq9BHxRa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5652BC116B1;
+	Tue,  2 Jul 2024 06:18:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1719901107;
+	bh=xcbo7H35s62k57wpp5CZn9fiLqU/YmxQeNb6aW/ijbo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=xq9BHxRaLm52nTg3V4uSDWdhiU55d5dItWGm5OHO3o4KIVhuoqsvVssq6bDEMMvrb
+	 um7p7vo59/H5oQatAtFS2oz2iJvFHgWrKF7uKqXdWuXI5g91dRjjQs6nD+yBMdCV0n
+	 cijErqWZNuWe6RxHe81qqlkxaUUY8GJkrQgUYybM=
+Date: Mon, 1 Jul 2024 23:18:26 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Jiaqi Yan <jiaqiyan@google.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, linux-doc@vger.kernel.org
+Subject: Re: linux-next: build warnings after merge of the mm tree
+Message-Id: <20240701231826.fb3044bb52dc97bedc9853ab@linux-foundation.org>
+In-Reply-To: <CACw3F52wm=5Rg+QP-E7JDOjBvA2mYv0uDBL+8=KPCfQ8tkHQaA@mail.gmail.com>
+References: <20240701184912.01f1f9ce@canb.auug.org.au>
+	<20240701201448.7878e9b35e1569bfc1f2ddbc@linux-foundation.org>
+	<CACw3F52=GxTCDw-PqFh3-GDM-fo3GbhGdu0hedxYXOTT4TQSTg@mail.gmail.com>
+	<CACw3F52wm=5Rg+QP-E7JDOjBvA2mYv0uDBL+8=KPCfQ8tkHQaA@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mm: thp: support "THPeligible" semantics for mTHP with
- anonymous shmem
-To: Bang Li <libang.li@antgroup.com>, ughd@google.com,
- akpm@linux-foundation.org
-Cc: david@redhat.com, ryan.roberts@arm.com, wangkefeng.wang@huawei.com,
- ioworker0@gmail.com, ziy@nvidia.com, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org
-References: <20240702023401.41553-1-libang.li@antgroup.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20240702023401.41553-1-libang.li@antgroup.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Mon, 1 Jul 2024 21:33:20 -0700 Jiaqi Yan <jiaqiyan@google.com> wrote:
 
+> > > This seems a reasonable thing to do so there's probably some way in
+> > > which to do it, but a bit of grepping failed to turn up examples in
+> > > existing .rst files.  Can someone please suggest?
+> >
+> > It seems I need to add some blank lines according to [1], especially
+> > to add a blank line above the first list item:
+> >
+> > diff --git a/Documentation/admin-guide/sysctl/vm.rst
+> > b/Documentation/admin-guide/sysctl/vm.rst
+> > index 75e22137d849..74b4c0f65213 100644
+> > --- a/Documentation/admin-guide/sysctl/vm.rst
+> > +++ b/Documentation/admin-guide/sysctl/vm.rst
+> > @@ -274,12 +274,15 @@ Correctable memory errors are very common on
+> > servers. Soft-offline is kernel's
+> >  solution for memory pages having (excessive) corrected memory errors.
+> >
+> >  For different types of page, soft-offline has different behaviors / costs.
+> > +
+> >  - For a raw error page, soft-offline migrates the in-use page's content to
+> >    a new raw page.
+> > +
+> >  - For a page that is part of a transparent hugepage, soft-offline splits the
+> >    transparent hugepage into raw pages, then migrates only the raw error page.
+> >    As a result, user is transparently backed by 1 less hugepage, impacting
+> >    memory access performance.
+> > +
+> >  - For a page that is part of a HugeTLB hugepage, soft-offline first migrates
+> >    the entire HugeTLB hugepage, during which a free hugepage will be consumed
+> >    as migration target.  Then the original hugepage is dissolved into raw
+> >
+> > But I am having trouble testing the build, so wasn't able to validate
+> > the change above:
+> >
+> > Documentation$ make
+> > /tools/net/ynl/ynl-gen-rst.py -o
+> > /Documentation/networking/netlink_spec/index.rst -x
+> > make: /tools/net/ynl/ynl-gen-rst.py: No such file or directory
+> > make: *** [Makefile:113:
+> > /Documentation/networking/netlink_spec/index.rst] Error 127
 
-On 2024/7/2 10:34, Bang Li wrote:
-> After the commit 7fb1b252afb5 ("mm: shmem: add mTHP support for
-> anonymous shmem"), we can configure different policies through
-> the multi-size THP sysfs interface for anonymous shmem. But
-> currently "THPeligible" indicates only whether the mapping is
-> eligible for allocating THP-pages as well as the THP is PMD
-> mappable or not for anonymous shmem, we need to support semantics
-> for mTHP with anonymous shmem similar to those for mTHP with
-> anonymous memory.
+You need to install all sorts of whacky system and python packages. 
+The (failed) build process should guide you through this.
+
+> I tried another way: make htmldocs at repo's root directory. Although
+> I wasn't able to finish the make process,
 > 
-> Signed-off-by: Bang Li <libang.li@antgroup.com>
-> ---
-> Changes since v1 [1]:
->   - Put anonymous shmem mthp related logic into
->     thp_vma_allowable_orders() (per David)
+> - without the blank lines:
 > 
-> [1] https://lore.kernel.org/linux-mm/20240628104926.34209-1-libang.li@antgroup.com/
-> ---
->   include/linux/huge_mm.h | 11 +++++++++++
->   mm/huge_memory.c        | 13 +++++++++----
->   mm/shmem.c              |  9 +--------
->   3 files changed, 21 insertions(+), 12 deletions(-)
+>   Documentation/admin-guide/sysctl/vm.rst:278: ERROR: Unexpected indentation.
+>   Documentation/admin-guide/sysctl/vm.rst:279: WARNING: Block quote
+> ends without a blank line; unexpected unindent.
 > 
-> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-> index 212cca384d7e..f87136f38aa1 100644
-> --- a/include/linux/huge_mm.h
-> +++ b/include/linux/huge_mm.h
-> @@ -267,6 +267,10 @@ unsigned long thp_vma_allowable_orders(struct vm_area_struct *vma,
->   	return __thp_vma_allowable_orders(vma, vm_flags, tva_flags, orders);
->   }
->   
-> +unsigned long shmem_allowable_huge_orders(struct inode *inode,
-> +				struct vm_area_struct *vma, pgoff_t index,
-> +				bool global_huge);
-> +
->   struct thpsize {
->   	struct kobject kobj;
->   	struct list_head node;
-> @@ -460,6 +464,13 @@ static inline unsigned long thp_vma_allowable_orders(struct vm_area_struct *vma,
->   	return 0;
->   }
->   
-> +static inline unsigned long shmem_allowable_huge_orders(struct inode *inode,
-> +				struct vm_area_struct *vma, pgoff_t index,
-> +				bool global_huge)
-> +{
-> +	return 0;
-> +}
+> - with the blank lines added, the ERROR and WARNING in vm/rst are gone.
+> 
+> Andrew and Stephen, what is the best way to post the fix for this?
+> Should I send out a v8 of the patch with the blank lines added? or a
+> standalone commit for this fix?
 
-This function should be placed in the ‘shmem_fs.h’ header file, just 
-like shmem_is_huge().
+I added your fix, thanks.
