@@ -1,101 +1,90 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2762158D60;
-	Tue,  2 Jul 2024 11:08:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4730E15B107
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 11:08:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719918516; cv=none; b=eWDsre61afwh19Mb0x2FYVpvpnvXy3MJN9z4NY//zXsRYaZo7A/1U7FEeH6k1mqPL2haaOiO+PcGvy5r2EfGEAkTVczLadMOEjJn07KVruZcZcmxD8jeu0Da7lZCv94urlAJyx4QSraF/t1QE1uLHRtblJlt45+sHNU/FDri0h8=
+	t=1719918526; cv=none; b=QcXUecRVrU2vtJF54kNoHz/faQZRvpj/z17MhoIAIb/E1P/zZcpHttk7+L/2n2Tnnspp2L5Gm/mZ+QGlokZRBNQIjYISenFLXOkCnbkQ8YRvXiDLI0iJNHVxItOtaf7wAXjr1t58NLirls5w09cRFYhMGywkXmfs1JG5H5V2Gak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719918516; c=relaxed/simple;
-	bh=n5no851s4EqSpb91NEEhXc2fA3vfWAjE+sOHLwT1ZGw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ESQiRVPCAxt0aliY7XtE9H762TjWOt3+kE57Sb/g0bmhr/0ipAgy+2EW7WJdZv8ij9i+7JTQL9/D3fE/DO8EM7bnJb0o0OyEOBpTG9aKhRiJRRZlYHLl/k8sTxuU6fSu9AWjT+qcPJllWO0/WGrr6UP428/YyNQThY0hfVVCSkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=XTCLedTV; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1719918526; c=relaxed/simple;
+	bh=rkLpdMgiJZFVhnB8hgL0AQQ81N+bITs8qz59JOchlCo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hcTOQmhtrHXiFUDHSif38NLVe68FJsCsXcSAZJW3V9FWDmfgU1yruG4lssU7rmvaA6FcE07Hiejslt2JdJ+IWlViK3/uMy8iXLFWrF+P66a5KAhpWMt+qhtu/10sXOMBu8Jh0gxBNkf9qaRuyonLj8LT2f2WB1JFFVvrvszh9/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=G0fZ5M3a; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="XTCLedTV"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4625w9tW022383;
-	Tue, 2 Jul 2024 06:08:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=PODMain02222019; bh=CSRl7sRT2Z1oI9e6
-	B+Pg7fpYU5oWGS/FDqjHOl/KzEw=; b=XTCLedTVv4JZLYIn154fQ85Qmh81g3XR
-	oXmb7G3Es5qBRlGDMdD+xRIG0LjsMbtVzPGAwzkxeMmiZ90v/9sBSbDuGbbY8DDh
-	fI1qLRqvrEWm8kpZmJmwyScQ1guUQkbifTDiE0KqJF+PeE0IFOQgaGynRgYWSR1V
-	O3jb/BauAXuZhHW6YVABNxk++jjuHEwSerhmxruPbrlISSzL3itSOt3kYWQxCZIm
-	+eEuIf+ibxnCRofROi/DguDoAkblIRH2efkgkfpOonyyjJE8XKJixb4CRyp2iE5W
-	uH3bfDGyT7Cm5Db5ELYc1bJcdq6OLkM0iLAIBpHvl6+yDMEnMt5Ltw==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 402epjbte7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jul 2024 06:08:14 -0500 (CDT)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 2 Jul 2024
- 12:08:13 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
- 15.2.1544.9 via Frontend Transport; Tue, 2 Jul 2024 12:08:13 +0100
-Received: from EDIN4L06LR3.ad.cirrus.com (EDIN4L06LR3.ad.cirrus.com [198.61.68.170])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id AE3BF820244;
-	Tue,  2 Jul 2024 11:08:12 +0000 (UTC)
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-To: <broonie@kernel.org>
-CC: <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
-        "Richard
- Fitzgerald" <rf@opensource.cirrus.com>
-Subject: [PATCH] firmware: cs_dsp: Don't allow writes to read-only controls
-Date: Tue, 2 Jul 2024 12:08:09 +0100
-Message-ID: <20240702110809.16836-1-rf@opensource.cirrus.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G0fZ5M3a"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2ed5ac077f5so48353271fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 04:08:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719918522; x=1720523322; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BetJ1UFbBIbWuWtZ702eQZdFCcSKSw0NShAWxEnl87w=;
+        b=G0fZ5M3akgdl+DVQOA7cf6HpEZILjVZkCIgavcFOZHjFXxmY19RmX1p6fgZWGATN+c
+         4+fmwIZuVhJsak0/LwtafE5W3ocERs1J3IVD0PtVwbzuaFpp2aFdda1UZhOrckMvKPqo
+         2YjQRqc4XDb6dpTU6BAGIMtrfeoy1i3HbUuuUQhJvH/D6f+JPi/yBUM4oGJAOhVuTkoJ
+         ShFXuNpKZSEUX9e6Xbf4abS6ktplNicOKMJxpfZ6yLhJ0z85tkOe+54dXlDCF6wogsFS
+         n0CpGnKanCqB5wlDzxiUMMnJ8q93/OW4yOpP0gX2iyQLDBusrTNo7Zv792aBZHtgchiM
+         7CIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719918522; x=1720523322;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BetJ1UFbBIbWuWtZ702eQZdFCcSKSw0NShAWxEnl87w=;
+        b=mXhtOmBVLycVQY3F0BGkPqOKSuxQhd84Jw91Ij20kPzJelrVBPYlfaJIiqGX3lQFEB
+         7M7mUMGZQPofRzwpoH4lEgyBCS7DTvAEiPibr7drdi1AEejxCKzdJ1/jlDOlUyxzJPnf
+         rzNkXgKhjW4Gev7nCWnpvh+kZS8ww31h0SFAbK3pdjBDMrbw7k9nwhD2T1sEYcJ2kOFV
+         YC0OpzRO3XiwzKk6HfssB46T3QRymyBMOByMgCqTtFh1/8ZZj7Le6fJ+fV4vNSG+gzBO
+         L/hFVZs1yfd0GRUbfMxkJZxz3bTCeYXyGFfnxNwu49kq/EYl30akj2QwizKp4n/EH6Ht
+         y25Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUtT5hrPksjuxBaUeI+V5i693+48kCVf2Ec/unMKGECo42IH1DninmEmFrri4p1n+J4xxK7jk2fmaH+bFURcaQFw6UGkxyPnl9IclsS
+X-Gm-Message-State: AOJu0YzVVkNl9bQE/167JFNms8X0R33LUFAsnirvFTAiV2GKOjRk/qYO
+	/LpEf4G7hGHp7q7nQRA6Or3UgWVXns8yPXikJh5qhi4YNg09KtshcxqZWG/pJrs=
+X-Google-Smtp-Source: AGHT+IG9yoIyOpavgSvp8xHwWJUEv9GqMHuoWpEObJoubi3aQFctTwmkcSut9eRF8p0IN+IsXf9WjA==
+X-Received: by 2002:a05:651c:198b:b0:2ec:5843:2fbd with SMTP id 38308e7fff4ca-2ee5e6cd69cmr61059341fa.41.1719918522391;
+        Tue, 02 Jul 2024 04:08:42 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ee55fa9c47sm14955721fa.15.2024.07.02.04.08.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jul 2024 04:08:42 -0700 (PDT)
+Date: Tue, 2 Jul 2024 14:08:40 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Zhenhua Huang <quic_zhenhuah@quicinc.com>
+Cc: robdclark@gmail.com, will@kernel.org, robin.murphy@arm.com, 
+	joro@8bytes.org, iommu@lists.linux.dev, linux-arm-msm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iommu/arm-smmu-qcom: record reason for deferring probe
+Message-ID: <ecomdlciigigng36ao6j4sj25dmbkoy6j5qun6nje3ok4rp6ld@n7cwb7v2ynbt>
+References: <1719910870-25079-1-git-send-email-quic_zhenhuah@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: lBNBSqB8R0zprM-c8oEhesQYylmjmetz
-X-Proofpoint-ORIG-GUID: lBNBSqB8R0zprM-c8oEhesQYylmjmetz
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1719910870-25079-1-git-send-email-quic_zhenhuah@quicinc.com>
 
-Add a check to cs_dsp_coeff_write_ctrl() to abort if the control
-is not writeable.
+On Tue, Jul 02, 2024 at 05:01:10PM GMT, Zhenhua Huang wrote:
+> To avoid deferring probe smmu driver silently, record reason for it.
+> It can be checked through ../debugfs/devices_deferred as well:
+> /sys/kernel/debug# cat devices_deferred
+> 15000000.iommu  arm-smmu: qcom_scm not ready
+> 
+> Signed-off-by: Zhenhua Huang <quic_zhenhuah@quicinc.com>
+> ---
+>  drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
 
-The cs_dsp code originated as an ASoC driver (wm_adsp) where all
-controls were exported as ALSA controls. It relied on ALSA to
-enforce the read-only permission. Now that the code has been
-separated from ALSA/ASoC it must perform its own permission check.
 
-This isn't currently causing any problems so there shouldn't be any
-need to backport this. If the client of cs_dsp exposes the control as
-an ALSA control, it should set permissions on that ALSA control to
-protect it. The few uses of cs_dsp_coeff_write_ctrl() inside drivers
-are for writable controls.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
----
- drivers/firmware/cirrus/cs_dsp.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/firmware/cirrus/cs_dsp.c b/drivers/firmware/cirrus/cs_dsp.c
-index 16484ab9b09d..be8747d227db 100644
---- a/drivers/firmware/cirrus/cs_dsp.c
-+++ b/drivers/firmware/cirrus/cs_dsp.c
-@@ -796,6 +796,9 @@ int cs_dsp_coeff_write_ctrl(struct cs_dsp_coeff_ctl *ctl,
- 
- 	lockdep_assert_held(&ctl->dsp->pwr_lock);
- 
-+	if (ctl->flags && !(ctl->flags & WMFW_CTL_FLAG_WRITEABLE))
-+		return -EPERM;
-+
- 	if (len + off * sizeof(u32) > ctl->len)
- 		return -EINVAL;
- 
 -- 
-2.39.2
-
+With best wishes
+Dmitry
