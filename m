@@ -1,116 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10371DFE3;
-	Tue,  2 Jul 2024 15:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DB161BB6B0;
+	Tue,  2 Jul 2024 15:29:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719934126; cv=none; b=mm1Uzu21Yins/OCVPIL2ihe4fcPlTAgkbCUTy5jyT1tAsBT7Kmxz+b2kuoSakTRjeM2Mj00gNmkeP29BPVIiRbLO9WoViVAQxOuxtgpQTKZ3Zqg3DPwX2OXu7QvnSQlCHZU0jcZrTerqiSUAvyn/zK9WtXQBw5T4A92qNNCmpdI=
+	t=1719934150; cv=none; b=b8eXsZkEYA0ofwTTq02jqQCm9QO+y1H/F2bXgtN0+X/5zDqVE//g/czgyQcluxXL04RQpAoGElv9/TK4fWD9ULLs4zj9UDUDVPy2EmMYyCBD5K9ZQqQktQh5cEGtqXw9hBVQWF+qxCY9kAFzwspVjrhUBR6jN4j4ZdrsBMLaGds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719934126; c=relaxed/simple;
-	bh=kNIFoFr+sMRrifkGqI15BiMwzzpaUIYjD+frgyWhr2o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d3MaET4N9vy3zxy3HkibMOMFabFDeEt8dgwTzYtFysI01jyn5zAaIiHBFYKmaf8NUxG4QM5PKy4Aq0AGz3FXFoBEZ0laJWbZeo3Blt+XofAlbJ37fV/Mj3u/pUZa9GzygTzYrCGESlathVej8TRin8cRA7trwUbSG5lMj7Hmwmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1497C116B1;
-	Tue,  2 Jul 2024 15:28:43 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH V2 1/2] LoongArch: Add architectural preparation for CPUFreq
-Date: Tue,  2 Jul 2024 23:27:36 +0800
-Message-ID: <20240702152737.1184244-2-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240702152737.1184244-1-chenhuacai@loongson.cn>
-References: <20240702152737.1184244-1-chenhuacai@loongson.cn>
+	s=arc-20240116; t=1719934150; c=relaxed/simple;
+	bh=k9zcHWSU3SVCDd1jDmuhPlvQkn/cGB17Vzw6wwxarDM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dpTbI2kTuxp5zsy177bvPQx2bPgmIIVtr7a3GFAboeermMx82o+h+D+O1uTMeZNS6imqZiARSJPk2NkVLH5jieIcdRiB3B2RPYrZ26Ht9uPzwTzZYs2yJ7K1mZ+nFXLEVSN15euEdrrYcQIcIOk5NLCBa1t1MZRc5uFS/4FJ5VQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 69935339;
+	Tue,  2 Jul 2024 08:29:32 -0700 (PDT)
+Received: from [10.1.32.193] (XHFQ2J9959.cambridge.arm.com [10.1.32.193])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E6B7A3F766;
+	Tue,  2 Jul 2024 08:29:05 -0700 (PDT)
+Message-ID: <ed5042af-b12f-4a36-a2e7-9d8983141099@arm.com>
+Date: Tue, 2 Jul 2024 16:29:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] mm: Fix khugepaged activation policy
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
+ Barry Song <baohua@kernel.org>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Lance Yang <ioworker0@gmail.com>, Yang Shi <shy828301@gmail.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20240702144617.2291480-1-ryan.roberts@arm.com>
+ <c877a136-4294-4f00-b0ac-7194fe170452@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <c877a136-4294-4f00-b0ac-7194fe170452@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add architectural preparation for CPUFreq driver, including: Kconfig,
-register definition and platform device registration.
+On 02/07/2024 15:57, David Hildenbrand wrote:
+> On 02.07.24 16:46, Ryan Roberts wrote:
+>> Since the introduction of mTHP, the docuementation has stated that
+>> khugepaged would be enabled when any mTHP size is enabled, and disabled
+>> when all mTHP sizes are disabled. There are 2 problems with this; 1.
+>> this is not what was implemented by the code and 2. this is not the
+>> desirable behavior.
+>>
+>> Desirable behavior is for khugepaged to be enabled when any PMD-sized
+>> THP is enabled, anon or file. (Note that file THP is still controlled by
+>> the top-level control so we must always consider that, as well as the
+>> PMD-size mTHP control for anon). khugepaged only supports collapsing to
+>> PMD-sized THP so there is no value in enabling it when PMD-sized THP is
+>> disabled. So let's change the code and documentation to reflect this
+>> policy.
+>>
+>> Further, per-size enabled control modification events were not
+>> previously forwarded to khugepaged to give it an opportunity to start or
+>> stop. Consequently the following was resulting in khugepaged eroneously
+>> not being activated:
+>>
+>>    echo never > /sys/kernel/mm/transparent_hugepage/enabled
+>>    echo always > /sys/kernel/mm/transparent_hugepage/hugepages-2048kB/enabled
+>>
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+>> Fixes: 3485b88390b0 ("mm: thp: introduce multi-size THP sysfs interface")
+>> Closes:
+>> https://lore.kernel.org/linux-mm/7a0bbe69-1e3d-4263-b206-da007791a5c4@redhat.com/
+>> Cc: stable@vger.kernel.org
+>> ---
+>>
+>> Hi All,
+>>
+>> Applies on top of today's mm-unstable (9bb8753acdd8). No regressions observed in
+>> mm selftests.
+>>
+>> When fixing this I also noticed that khugepaged doesn't get (and never has been)
+>> activated/deactivated by `shmem_enabled=`. I'm not sure if khugepaged knows how
+>> to collapse shmem - perhaps it should be activated in this case?
+>>
+> 
+> Call me confused.
+> 
+> khugepaged_scan_mm_slot() and madvise_collapse() only all
+> hpage_collapse_scan_file() with ... IS_ENABLED(CONFIG_SHMEM) ?
 
-Some of LoongArch processors support DVFS, their IOCSR.FEATURES has
-IOCSRF_FREQSCALE set. And they has a micro-core in the package called
-SMC (System Management Controller) to scale frequency, voltage, etc.
+Looks like khugepaged_scan_mm_slot() was converted from:
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/Kconfig                 |  1 +
- arch/loongarch/include/asm/loongarch.h |  3 +++
- arch/loongarch/power/platform.c        | 15 +++++++++++++++
- 3 files changed, 19 insertions(+)
+  if (shmem_file(vma->vm_file)) {
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index e346b5b0a5ca..692adf6aad7e 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -701,6 +701,7 @@ config ARCH_HIBERNATION_POSSIBLE
- 
- source "kernel/power/Kconfig"
- source "drivers/acpi/Kconfig"
-+source "drivers/cpufreq/Kconfig"
- 
- endmenu
- 
-diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-index c430df595376..1501f0f8b06e 100644
---- a/arch/loongarch/include/asm/loongarch.h
-+++ b/arch/loongarch/include/asm/loongarch.h
-@@ -1061,11 +1061,14 @@
- #define LOONGARCH_IOCSR_NODECNT		0x408
- 
- #define LOONGARCH_IOCSR_MISC_FUNC	0x420
-+#define  IOCSR_MISC_FUNC_SOFT_INT	BIT_ULL(10)
- #define  IOCSR_MISC_FUNC_TIMER_RESET	BIT_ULL(21)
- #define  IOCSR_MISC_FUNC_EXT_IOI_EN	BIT_ULL(48)
- 
- #define LOONGARCH_IOCSR_CPUTEMP		0x428
- 
-+#define LOONGARCH_IOCSR_SMCMBX		0x51c
-+
- /* PerCore CSR, only accessible by local cores */
- #define LOONGARCH_IOCSR_IPI_STATUS	0x1000
- #define LOONGARCH_IOCSR_IPI_EN		0x1004
-diff --git a/arch/loongarch/power/platform.c b/arch/loongarch/power/platform.c
-index 4b5d82643c23..0909729dc2e1 100644
---- a/arch/loongarch/power/platform.c
-+++ b/arch/loongarch/power/platform.c
-@@ -34,6 +34,21 @@ void enable_pci_wakeup(void)
- 		acpi_write_bit_register(ACPI_BITREG_PCIEXP_WAKE_DISABLE, 0);
- }
- 
-+static struct platform_device loongson3_cpufreq_device = {
-+	.name = "loongson3_cpufreq",
-+	.id = -1,
-+};
-+
-+static int __init loongson_cpufreq_init(void)
-+{
-+	if (!cpu_has_scalefreq)
-+		return -ENODEV;
-+
-+	return platform_device_register(&loongson3_cpufreq_device);
-+}
-+
-+arch_initcall(loongson_cpufreq_init);
-+
- static void default_suspend_addr(void)
- {
- 	acpi_enter_sleep_state(ACPI_STATE_S3);
--- 
-2.43.0
+to:
+
+  if (IS_ENABLED(CONFIG_SHMEM) && vma->vm_file) {
+
+By 99cb0dbd47a15d395bf3faa78dc122bc5efe3fc0 which adds THP collapse support for
+non-shmem files. Clearly that looks wrong, but I guess never spotted in practice
+because noone disables shemem?
+
+I guess madvise_collapse() was a copy/paste?
+
+> 
+> collapse_file() is only called by hpage_collapse_scan_file() ... and there we
+> check "shmem_file(file)".
+> 
+> So why is the IS_ENABLED(CONFIG_SHMEM) check in there if collapse_file() seems
+> to "collapse filemap/tmpfs/shmem pages into huge one".
+> 
+> Anyhow, we certainly can collapse shmem (that's how it all started IIUC).
+
+Yes, thanks for pointing me at it. Should have just searched "shmem" in
+khugepaged.c :-/
+
+> 
+> Besides that, khugepaged only seems to collapse !shmem with
+>   VM_BUG_ON(!IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS) && !is_shmem);
+
+That makes sense. I guess I could use IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS) to
+tighen the (non-shmem) file THP check in hugepage_pmd_enabled() (currently I'm
+unconditionally using the top-level enabled setting as a "is THP enabled for
+files" check).
+
+But back to my original question, I think hugepage_pmd_enabled() should also be
+explicitly checking the appropriate shmem_enabled controls and ORing in the
+result? Otherwise in a situation where only shmem is THP enabled (and file/anon
+THP is disabled) khugepaged won't run.
+
+> 
+> The thp_vma_allowable_order() check tests if we are allowed to collapse a
+> PMD_ORDER in that VMA.
+
+I don't follow the relevance of this statement.
 
