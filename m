@@ -1,39 +1,39 @@
 Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A051BA86C
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 13:52:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC751BA071
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 13:52:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719928326; cv=none; b=n/rTDQ4CNxH5Wc2YjK1sRrpj77aeQfMiO3NZOtFIAvUGCUqA8hx2k/K7DcXIRRF9SlGGPO9HeGLcUTabFYwa6wkR751dkNZQiYhinNZjVWxfQUpF4KLroC0lSIq/5BD54dmjyzSTLAGcEJ9LWKfKS8E9agVpghVtUsVefLT4hJ4=
+	t=1719928335; cv=none; b=m+6mj1i++h5/LSfkybwVRA/uu5IrwkYjwFVO9936GzM5IeKi8eMn/6Fbqi/5t3obLFG6/NXoMGRyOTJLF/tLu1kdMWN6w+mPYobPSCh8k9ZwsZBJkP+bMwwaQQuUxDt1PaFrVxonv0uXPbuzjeNS9Z2XptHKOTb7T1Lnf3oW9gQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719928326; c=relaxed/simple;
-	bh=NqqR+DBf4uYbt5gP7om6e3QFNLkHAAKdU42xGKHVcEo=;
+	s=arc-20240116; t=1719928335; c=relaxed/simple;
+	bh=cm0Ph/xp1X0SRFsHS2XbjMZ7j+bK1MCB+6twQ18qnAY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E14frMbxqhXPDO+9vvOFrFhcMVhjhX+Ar+pVuOkM5uWLRKjCqlOWL2+Fk4Bgm0T4iiMcV1iSnyElnCV0otUnteMqNWFWvPTzy8rSBsoMYHiKbhruib+lHM4d9eQ3KSuLFBlKQxvOStmb/uEWQlBYmEOZzIslWWangiBgW7SlRAM=
+	 MIME-Version; b=uEM5IkXlRM3oN6PTvIhIYqSutVmxIXwj1MEZ9NgTBpoLDawaAJWRH7zD3zC85VJ7GfUxsM5bl3Fi+CtJ13wljZFgKlxXLO8XuxmKpMKzkR8DFi16gxw+pN4JiTXY9Y4dDWGKlmbOCaTzwZjiB0GRePIgfAZ2paUKd81NcmhfKwM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
 Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4WD4841fp7z9v6W;
-	Tue,  2 Jul 2024 15:51:32 +0200 (CEST)
+	by localhost (Postfix) with ESMTP id 4WD48616p3z9v6y;
+	Tue,  2 Jul 2024 15:51:34 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
 	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id C9od68sRy3VN; Tue,  2 Jul 2024 15:51:32 +0200 (CEST)
+	with ESMTP id q5V0x4RsUWT7; Tue,  2 Jul 2024 15:51:34 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4WD4805RNyz9v4J;
-	Tue,  2 Jul 2024 15:51:28 +0200 (CEST)
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4WD4816rW9z9v2F;
+	Tue,  2 Jul 2024 15:51:29 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id B678D8B774;
-	Tue,  2 Jul 2024 15:51:28 +0200 (CEST)
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id E719F8B775;
+	Tue,  2 Jul 2024 15:51:29 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
 	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id BGNhRIrkHoLm; Tue,  2 Jul 2024 15:51:28 +0200 (CEST)
+	with ESMTP id 1X1oHFkZy9am; Tue,  2 Jul 2024 15:51:29 +0200 (CEST)
 Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.233.12])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 4106F8B764;
-	Tue,  2 Jul 2024 15:51:28 +0200 (CEST)
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 6981D8B774;
+	Tue,  2 Jul 2024 15:51:29 +0200 (CEST)
 From: Christophe Leroy <christophe.leroy@csgroup.eu>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Jason Gunthorpe <jgg@nvidia.com>,
@@ -45,9 +45,9 @@ Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
 	linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
 	linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v7 07/23] mm: Define __pte_leaf_size() to also take a PMD entry
-Date: Tue,  2 Jul 2024 15:51:19 +0200
-Message-ID: <c7c008f0a314bf8029ad7288fdc908db1ec7e449.1719928057.git.christophe.leroy@csgroup.eu>
+Subject: [PATCH v7 09/23] powerpc/mm: Remove _PAGE_PSIZE
+Date: Tue,  2 Jul 2024 15:51:21 +0200
+Message-ID: <c41da3b0ceda7311a50f0391cc4d54302ae15b74.1719928057.git.christophe.leroy@csgroup.eu>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <cover.1719928057.git.christophe.leroy@csgroup.eu>
 References: <cover.1719928057.git.christophe.leroy@csgroup.eu>
@@ -57,61 +57,95 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1719928274; l=1803; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=NqqR+DBf4uYbt5gP7om6e3QFNLkHAAKdU42xGKHVcEo=; b=yV33hLP9H4xcUhyFxDXIt5LnxJgWqrCn1V5Xykpxq478yOcZTAZhwgAiteylu27VRD9Xbv6er iD0lsuBP5qqBVXJsr9LvPuLb4J+Nh0P8vxx5LpDXoG49QzJ3MzMfoS4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1719928274; l=3260; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=cm0Ph/xp1X0SRFsHS2XbjMZ7j+bK1MCB+6twQ18qnAY=; b=wKCfe3P3AAC+AJggcgkbesGaq/R5QimE5BC+cTvL/N7+H8zTid2Owy0Iq3Lerz2Z/xZECy/6+ WDUwzjvYtrTAQmdL02KM8AK8EXJucNmt8XXEOwdN3Ypl3szJoFnZgx0
 X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
 Content-Transfer-Encoding: 8bit
 
-On powerpc 8xx, when a page is 8M size, the information is in the PMD
-entry. So allow architectures to provide __pte_leaf_size() instead of
-pte_leaf_size() and provide the PMD entry to that function.
+_PAGE_PSIZE macro is never used outside the place it is defined
+and is used only on 8xx and e500.
 
-When __pte_leaf_size() is not defined, define it as a pte_leaf_size()
-so that architectures not interested in the PMD arguments are not
-impacted.
-
-Only define a default pte_leaf_size() when __pte_leaf_size() is not
-defined to make sure nobody adds new calls to pte_leaf_size() in the
-core.
+Remove indirection, remove it and use its content directly.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 Reviewed-by: Oscar Salvador <osalvador@suse.de>
 ---
-v3: Don't change pte_leaf_size() to not impact other architectures
+v6: Removed the change to pte-40x.h to avoid conflict with the removal of 40x
 ---
- include/linux/pgtable.h | 3 +++
- kernel/events/core.c    | 2 +-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ arch/powerpc/include/asm/nohash/32/pte-44x.h  | 3 ---
+ arch/powerpc/include/asm/nohash/32/pte-85xx.h | 3 ---
+ arch/powerpc/include/asm/nohash/32/pte-8xx.h  | 5 ++---
+ arch/powerpc/include/asm/nohash/pte-e500.h    | 4 +---
+ 4 files changed, 3 insertions(+), 12 deletions(-)
 
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index 2f32eaccf0b9..2a6a3cccfc36 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -1907,9 +1907,12 @@ typedef unsigned int pgtbl_mod_mask;
- #ifndef pmd_leaf_size
- #define pmd_leaf_size(x) PMD_SIZE
+diff --git a/arch/powerpc/include/asm/nohash/32/pte-44x.h b/arch/powerpc/include/asm/nohash/32/pte-44x.h
+index 851813725237..da0469928273 100644
+--- a/arch/powerpc/include/asm/nohash/32/pte-44x.h
++++ b/arch/powerpc/include/asm/nohash/32/pte-44x.h
+@@ -75,9 +75,6 @@
+ #define _PAGE_NO_CACHE	0x00000400		/* H: I bit */
+ #define _PAGE_WRITETHRU	0x00000800		/* H: W bit */
+ 
+-/* No page size encoding in the linux PTE */
+-#define _PAGE_PSIZE		0
+-
+ /* TODO: Add large page lowmem mapping support */
+ #define _PMD_PRESENT	0
+ #define _PMD_PRESENT_MASK (PAGE_MASK)
+diff --git a/arch/powerpc/include/asm/nohash/32/pte-85xx.h b/arch/powerpc/include/asm/nohash/32/pte-85xx.h
+index 653a342d3b25..14d64b4f3f14 100644
+--- a/arch/powerpc/include/asm/nohash/32/pte-85xx.h
++++ b/arch/powerpc/include/asm/nohash/32/pte-85xx.h
+@@ -31,9 +31,6 @@
+ #define _PAGE_WRITETHRU	0x00400	/* H: W bit */
+ #define _PAGE_SPECIAL	0x00800 /* S: Special page */
+ 
+-/* No page size encoding in the linux PTE */
+-#define _PAGE_PSIZE		0
+-
+ #define _PMD_PRESENT	0
+ #define _PMD_PRESENT_MASK (PAGE_MASK)
+ #define _PMD_BAD	(~PAGE_MASK)
+diff --git a/arch/powerpc/include/asm/nohash/32/pte-8xx.h b/arch/powerpc/include/asm/nohash/32/pte-8xx.h
+index 137dc3c84e45..625c31d6ce5c 100644
+--- a/arch/powerpc/include/asm/nohash/32/pte-8xx.h
++++ b/arch/powerpc/include/asm/nohash/32/pte-8xx.h
+@@ -74,12 +74,11 @@
+ #define _PTE_NONE_MASK	0
+ 
+ #ifdef CONFIG_PPC_16K_PAGES
+-#define _PAGE_PSIZE	_PAGE_SPS
++#define _PAGE_BASE_NC	(_PAGE_PRESENT | _PAGE_ACCESSED | _PAGE_SPS)
+ #else
+-#define _PAGE_PSIZE		0
++#define _PAGE_BASE_NC	(_PAGE_PRESENT | _PAGE_ACCESSED)
  #endif
-+#ifndef __pte_leaf_size
- #ifndef pte_leaf_size
- #define pte_leaf_size(x) PAGE_SIZE
- #endif
-+#define __pte_leaf_size(x,y) pte_leaf_size(y)
-+#endif
  
- /*
-  * We always define pmd_pfn for all archs as it's used in lots of generic
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 8f908f077935..b2ca11bdc11e 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7609,7 +7609,7 @@ static u64 perf_get_pgtable_size(struct mm_struct *mm, unsigned long addr)
+-#define _PAGE_BASE_NC	(_PAGE_PRESENT | _PAGE_ACCESSED | _PAGE_PSIZE)
+ #define _PAGE_BASE	(_PAGE_BASE_NC)
  
- 	pte = ptep_get_lockless(ptep);
- 	if (pte_present(pte))
--		size = pte_leaf_size(pte);
-+		size = __pte_leaf_size(pmd, pte);
- 	pte_unmap(ptep);
- #endif /* CONFIG_HAVE_GUP_FAST */
+ #include <asm/pgtable-masks.h>
+diff --git a/arch/powerpc/include/asm/nohash/pte-e500.h b/arch/powerpc/include/asm/nohash/pte-e500.h
+index f516f0b5b7a8..975facc7e38e 100644
+--- a/arch/powerpc/include/asm/nohash/pte-e500.h
++++ b/arch/powerpc/include/asm/nohash/pte-e500.h
+@@ -65,8 +65,6 @@
  
+ #define _PAGE_SPECIAL	_PAGE_SW0
+ 
+-/* Base page size */
+-#define _PAGE_PSIZE	_PAGE_PSIZE_4K
+ #define	PTE_RPN_SHIFT	(24)
+ 
+ #define PTE_WIMGE_SHIFT (19)
+@@ -89,7 +87,7 @@
+  * pages. We always set _PAGE_COHERENT when SMP is enabled or
+  * the processor might need it for DMA coherency.
+  */
+-#define _PAGE_BASE_NC	(_PAGE_PRESENT | _PAGE_ACCESSED | _PAGE_PSIZE)
++#define _PAGE_BASE_NC	(_PAGE_PRESENT | _PAGE_ACCESSED | _PAGE_PSIZE_4K)
+ #if defined(CONFIG_SMP)
+ #define _PAGE_BASE	(_PAGE_BASE_NC | _PAGE_COHERENT)
+ #else
 -- 
 2.44.0
 
