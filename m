@@ -1,115 +1,102 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC781B4C4A
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 13:46:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706791B5811
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 13:48:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719927964; cv=none; b=eO3lduP9XKqlrYyIIGV/Npb1iYDZpgc7Ev9hZW7km16lkxFGxgrrgjGpeNUT1Sh/5b/PdQXsm3w4ktbMJXK3ZEQh6db/8zbXb6+9lFyKStgR5KtoqYPT1fkdNnEK9o6H0ePwXsZeVvStsrCeUGfvD8YUVHKN8ROWP/DIS5sR6cE=
+	t=1719928088; cv=none; b=AXv7uFIeJdHiSnJYufG/DyiEGmR/7PkTa9wMzrNUYT1U16fk+CZL2Rs1h8gsGE+GpE8DuxKTeJH82hRioRMu56kPBA21J3lbu/rbobuzD1WhX06aSwUr/DgVtkhdFzJ/9q9Bat6Pw3nq/eo6iJe6y5YINpGxtE6wkNIVlKTeXNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719927964; c=relaxed/simple;
-	bh=bgNxm9SETuFLnJPGDZUgPkVw2fzndE14aiGORTSGCzc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=J/V6F6I4EtsvmQGzd7wYYo8IDr97jlqEwj3GG5s1n3+iPvtRiepsrGQwskUfDqIqxBy+JUScpKVFrgF+FtWjaTNm7xSNCPYqKh6U1vxZAU5goYRcFbkMfhti8vgwbe3zPI6UT2cyvI+IRDlTMVBs7N6mJ3DypFrKJRM45n/SSVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zh8vjjRj; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719928088; c=relaxed/simple;
+	bh=cvHBMVkFw0cdu8CqXT2tcn8q1A8BbAKQJOw7cbYh+PU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=SH95GM8oasa2blKT8+YHmotAhTFrjehAhRHezaAwgc8AqlW+oMF9Qsc/ggag2qD1cWLVfoM//miZJUhIrLyQrSWMbAWnxGqb5oaDKvHivWOyEgHvCTUCW4/BrWivvcTbWoDDYM1N9uRilAH02gupADYUeVdF+5T4DZuNfqGaJdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hL1xQkTe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zh8vjjRj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719927962;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=bgNxm9SETuFLnJPGDZUgPkVw2fzndE14aiGORTSGCzc=;
-	b=Zh8vjjRjOodMHBSxEAUq/5NBbwAkFmfgPr70wlxplP5yx+VZoV895/kV7eEOokWrojeY1G
-	LqxrQilpsnd3As4oKYC5wy5zqTqQ3qX+0lnrSH3fLentYVkf7zNLtDiAKkywP54EmNQ/+I
-	65tUUX2SpJMFmQYOOL9lfkAv4D8an/U=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-74-ykPku7uWN_eztJLZqtCjhQ-1; Tue, 02 Jul 2024 09:46:01 -0400
-X-MC-Unique: ykPku7uWN_eztJLZqtCjhQ-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-42568f0bc56so7146495e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 06:45:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719927959; x=1720532759;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bgNxm9SETuFLnJPGDZUgPkVw2fzndE14aiGORTSGCzc=;
-        b=oZD/Fqk13GW9kedNG6WAHYK371pn28yBSrXwy/Q8gMLnosraQO0EB552TsZCf4/niU
-         +rj5pmNyjL1UCaGA7ozI0Eg6WrEHfhTajrz/uz5brvft2qhTQaxZWlck/beTHbGU7b3a
-         Z/DihysVhn6TIq2wPNEhdbyEcTKN0nmHTva5xfLSDR6AkHWcgP1ig455OYrMbQb4dnHV
-         0+Os19o/A0zwIdWHxSvULnfyc4q2V2x7EJZlQKbquhzq5pEuy9ZjPL8k/ITdAF3RB9O0
-         +I/dqK6SM1TI14WOyDFhJTcoY8hza96Qmy1m2Q8wg9S//oVSSdo4RD+is2YoDFq615oM
-         tuuw==
-X-Forwarded-Encrypted: i=1; AJvYcCVeRpMHMxR5DrIY3SG+nEe8/Dn8IEPF3yjglD/jAdfXZTGxSd4yVow2CcrE8lC+tMZO77WSVXDOx8GGhqK70Pzj8yQ1dvxe7iMsh4XX
-X-Gm-Message-State: AOJu0YwKQbfYFWif1sGiVy3E7ZGPCBl5Tf+U0NeAqWK8h7sYJBqaAAsN
-	wMtAZjT8V9OWs1CG7UpgJiQnAHIlxLhRECdjwODFKmvGFIYCT6pWZQZ/H5E8iyHZrMqNgF3c2cz
-	t7d0i5MDlUp2sSYQk9KJs+Rl27TjLN/2H8kwMOA5LINvxwfUQt2lGTAsdAwnCUA==
-X-Received: by 2002:a05:600c:1c17:b0:425:69cb:5495 with SMTP id 5b1f17b1804b1-4257a0a8687mr59023495e9.4.1719927958871;
-        Tue, 02 Jul 2024 06:45:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGdwgNh38INBT6VUB9Lk3lWbXXGZ9zOZlC3CC60W6SLKJy3R/ujz2lxQoP7yjXRT9VVfds5tw==
-X-Received: by 2002:a05:600c:1c17:b0:425:69cb:5495 with SMTP id 5b1f17b1804b1-4257a0a8687mr59023335e9.4.1719927958454;
-        Tue, 02 Jul 2024 06:45:58 -0700 (PDT)
-Received: from gerbillo.redhat.com ([2a0d:3341:b0a6:6710::f71])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256af3d004sm200291865e9.4.2024.07.02.06.45.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 06:45:57 -0700 (PDT)
-Message-ID: <7cbc7f017bf4e62ba9a3e67144e009ac755b5642.camel@redhat.com>
-Subject: Re: [net-next,PATCH v2 1/2] net: stmmac: dwmac-stm32: Add test to
- verify if ETHCK is used before checking clk rate
-From: Paolo Abeni <pabeni@redhat.com>
-To: Christophe Roullier <christophe.roullier@foss.st.com>, "David S .
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>,  Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>, Richard Cochran
- <richardcochran@gmail.com>, Jose Abreu <joabreu@synopsys.com>, Liam
- Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Marek
- Vasut <marex@denx.de>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org
-Date: Tue, 02 Jul 2024 15:45:55 +0200
-In-Reply-To: <20240701064838.425521-2-christophe.roullier@foss.st.com>
-References: <20240701064838.425521-1-christophe.roullier@foss.st.com>
-	 <20240701064838.425521-2-christophe.roullier@foss.st.com>
-Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hL1xQkTe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DA54C4AF10;
+	Tue,  2 Jul 2024 13:48:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719928088;
+	bh=cvHBMVkFw0cdu8CqXT2tcn8q1A8BbAKQJOw7cbYh+PU=;
+	h=Date:From:To:Cc:Subject:From;
+	b=hL1xQkTe78IaQIpZ+hZSpilbOGr94FXS4BIXNKzjyG2uTOS+E2N2g4xRNTexbh2oX
+	 F6Xvc5pGyU71I9t96h2dd8/1qfxY9Gryak47fH8wHARvc/+sCJrbgL3yEvc+vH5cov
+	 vmUGU4lUZGQ4Ysnw7GwqdW3mrzHpzkESeSIS1LVlGxRM1MJDT9YqY6jwxQx1bCUcNP
+	 yTOO1txNNUdPBtyzSJzLw1sc/ADkxfKCOpSJu41iyqVYA88dOeCc8g3CkYXJiOGb0G
+	 AttlS2lZwy+WzMmMJHgNVjakYmGHSsz39puhca265ag5zm8TfR2yUo5ncy4MBCkNXa
+	 17KzUWDxxu+uA==
+Date: Tue, 2 Jul 2024 21:48:02 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+	Sandeep Dhavale <dhavale@google.com>,
+	Huang Xiaojia <huangxiaojia2@huawei.com>, Chao Yu <chao@kernel.org>
+Subject: [GIT PULL] erofs fixes for 6.10-rc7
+Message-ID: <ZoQFEp+U+689DPdO@debian>
+Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+	Sandeep Dhavale <dhavale@google.com>,
+	Huang Xiaojia <huangxiaojia2@huawei.com>, Chao Yu <chao@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-On Mon, 2024-07-01 at 08:48 +0200, Christophe Roullier wrote:
-> When we want to use clock from RCC to clock Ethernet PHY (with ETHCK)
-> we need to check if value of clock rate is authorized.
-> If ETHCK is unused, the ETHCK frequency is 0Hz and validation fails.
-> It makes no sense to validate unused ETHCK, so skip the validation.
->=20
-> Fixes: 582ac134963e ("net: stmmac: dwmac-stm32: Separate out external clo=
-ck rate validation")
->=20
-> Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
+Hi Linus,
 
-Note that you must avoid any empty line in the tag area between the
-fixes and the SoB tag.
+Could you consider these patches for 6.10-rc7?
 
-I'll exceptionally fix the above while applying the patch, but please
-run checkpatch before your next submission.
+The most important one fixes possible infinite loops reported by
+a smartphone vendor OPPO recently due to some unexpected zero-sized
+compressed pcluster out of interrupted I/Os, storage failures, etc.
 
-Thanks!
+Another patch fixes global buffer memory leak on unloading, and the
+remaining one switches to use super_set_uuid() to keep with the other
+filesystems.
 
-Paolo
+All commits have been in -next for a while and no potential merge
+conflict is observed.
 
+Thanks,
+Gao Xiang
+
+The following changes since commit f2661062f16b2de5d7b6a5c42a9a5c96326b8454:
+
+  Linux 6.10-rc5 (2024-06-23 17:08:54 -0400)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.10-rc7-fixes
+
+for you to fetch changes up to 9b32b063be1001e322c5f6e01f2a649636947851:
+
+  erofs: ensure m_llen is reset to 0 if metadata is invalid (2024-06-30 10:54:28 +0800)
+
+----------------------------------------------------------------
+Changes since last update:
+
+ - Fix possible global buffer memory leak when unloading EROFS module;
+
+ - Fix FS_IOC_GETFSUUID ioctl by using super_set_uuid();
+
+ - Reset m_llen to 0 so then it can retry if metadata is invalid.
+
+----------------------------------------------------------------
+Gao Xiang (1):
+      erofs: ensure m_llen is reset to 0 if metadata is invalid
+
+Huang Xiaojia (1):
+      erofs: convert to use super_set_uuid to support for FS_IOC_GETFSUUID
+
+Sandeep Dhavale (1):
+      erofs: fix possible memory leak in z_erofs_gbuf_exit()
+
+ fs/erofs/super.c | 2 +-
+ fs/erofs/zmap.c  | 2 ++
+ fs/erofs/zutil.c | 8 ++++----
+ 3 files changed, 7 insertions(+), 5 deletions(-)
