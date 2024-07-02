@@ -1,115 +1,172 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from serv108.segi.ulg.ac.be (serv108.segi.ulg.ac.be [139.165.32.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322A81BF323
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 17:45:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E41F2F4A;
+	Tue,  2 Jul 2024 17:45:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.165.32.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719942305; cv=none; b=sI0uLJBW02+EI/vGqLVLL38sjG2SDDy/2o5I6TaT9CO6kco1B5M1nQkYbnowS41uZVEojCI2QgfDsW5ouQZiyGz/NYF6C0mdkYBHpQXCk9A2VqQvgG5zBtyN1OcT1nE35JdJVFQLqV9r582+ukK0rEMl6DToRCTPwVvL55B980Y=
+	t=1719942351; cv=none; b=pOYGFTeMNM9o/RM+whL0P9z3yGbbVWsWPD2PgZXn39HF22UQl9Ole/2dOVnTN/lcOJeBsAorWNymsKpO9IXeYO52SlBIiLvNymx60XTMYwSZTVu9L4p77y+048DJGi/TgYC2a1h4H/l1op+6mm3ySGHiO9wc0NrsGZ1jUeP3Hf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719942305; c=relaxed/simple;
-	bh=oYqR3wLiRfWSLLApkAQi3EaN6keWhZrozeSyZ8MlMC4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nlOF3RHaeIYr0aa15e0CQWn5u1u6+bbUEH6kirZsBUKrZJlcctJxwA2Rd8Nl/Aiot7BC4KHJ58D47yjfFgqzo6oOpokhmdWoF5h6PX+GIoRu2sTsqcvmB9iOBkYvpC+RIgpR4cwwsGx5HlDfPPCRDARIThceFrBZaQHyI0ygg7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Zmq2BK6s; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1719942351; c=relaxed/simple;
+	bh=79m0+IHKOGJpBG6VM+cdQYZz7BkdFizzIX3hwF2tek0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=RSq15ZBdrngyZ6VNaEjly1TT/n/nsJTGpdrgQjNVBasqS5QMdjMp80Q9DRKDNfoniwtDtbjp7fhMB/qnvvHFHDnphhwlkyjB7C04fRy4XIONOT6RsVif49zQze856nuudBaEPm7+E2NUMdjVafM5/NhN3eTsu1wz2I6ijmQ0JWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uliege.be; spf=pass smtp.mailfrom=uliege.be; dkim=pass (2048-bit key) header.d=uliege.be header.i=@uliege.be header.b=yrX0AN3k; arc=none smtp.client-ip=139.165.32.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uliege.be
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uliege.be
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Zmq2BK6s"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 99BAB40E0185;
-	Tue,  2 Jul 2024 17:45:00 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 5fKRksOYuIgZ; Tue,  2 Jul 2024 17:44:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1719942297; bh=saeEPFUiOPFddDdAFi8h6suMw9zu7xx9gxAbltffxCc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Zmq2BK6s8VIRbdHJrU0NIAl/cTDBrZjhMVlr13bZqH1bTR1lFz8AruL2hD5qEDUnl
-	 4pxvVSqP81EI0fN+9FcLm1h5bnxkZm11oPnjKlCK5O7Nag+I+RX4FQuQwC4hlr2USl
-	 GfYTY4NP78rsBbuzPn1PZ5W8uVXjA7/NgKWn/BuwLckRLEcBsr0jyz6wX7zg5PievM
-	 /4HSNIj6bzxmvJBxYF2Y3D6jtn/FeWu3Af1ABiLyI1krJv9d99VUI/+MB/spxeSaFH
-	 C5pOC2adhGYgBXXNSIXnAIw8UbJxpEeHJsWMRZ5UTYmiNQ4ctXFWx1+v8o4T6SmxcF
-	 PaNZggpEOvAD3bJTkdGWNM6mvDOpsL+bN/HL8FGjp8CVJoSh4RYFqVsQjK76OEcb8E
-	 q3saS888JobkUnfJ43KQMwIBQkwNZhXQ/ey6FtPJLSbiECYQlOx79r+9y6vB4k99pO
-	 rBBtdlPK1SA2Si5DXu0PTdqGzbx5KKjg28qQiq6+b5oU6w/tnyX6KDIexNhyJXpCo1
-	 6cLua57D58h34OB7setVanVUosjZiA4Jrm58nocxAobqzDj97vASER0vjyiogZyNw+
-	 NnHKrpqqdLXagXJiSi2fIi4zJLMrMNaARFUs6OK5QfbRCUMeO4MfgFvtP2WPRSpStn
-	 V096Pby2Fh7ZHWmM1ACAzcDs=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	dkim=pass (2048-bit key) header.d=uliege.be header.i=@uliege.be header.b="yrX0AN3k"
+Received: from localhost.localdomain (48.39-182-91.adsl-dyn.isp.belgacom.be [91.182.39.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8FA1340E0187;
-	Tue,  2 Jul 2024 17:44:30 +0000 (UTC)
-Date: Tue, 2 Jul 2024 19:44:25 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Steve Wahl <steve.wahl@hpe.com>, Ashish Kalra <ashish.kalra@amd.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-	Pavin Joseph <me@pavinjoseph.com>,
-	Eric Hagberg <ehagberg@gmail.com>,
-	Simon Horman <horms@verge.net.au>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Dave Young <dyoung@redhat.com>, Sarah Brofeldt <srhb@dbc.dk>,
-	Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>,
-	Hou Wenlong <houwenlong.hwl@antgroup.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>, Yuntao Wang <ytcoode@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Joerg Roedel <jroedel@suse.de>,
-	Michael Roth <michael.roth@amd.com>
-Subject: Re: [PATCH 0/3] Resolve problems with kexec identity mapping
-Message-ID: <20240702174425.GHZoQ8edlTfB1falcO@fat_crate.local>
-References: <20240520183633.1457687-1-steve.wahl@hpe.com>
- <20240613152826.GKZmsQGnO3OthLH3Vu@fat_crate.local>
- <ZmsbZCF9rFzuB3rO@swahl-home.5wahls.com>
- <20240616202533.GDZm9KPZtpDKw5aXWX@fat_crate.local>
- <ZnBR6MgS-jzjgA8A@swahl-home.5wahls.com>
- <20240621131742.GEZnV9dn_0XVH0IZ58@fat_crate.local>
- <ZnmNKAE5qT48yhrI@swahl-home.5wahls.com>
- <20240701142704.GGZoK8uDt-2VVtclHl@fat_crate.local>
+	by serv108.segi.ulg.ac.be (Postfix) with ESMTPSA id 05142200BFE5;
+	Tue,  2 Jul 2024 19:45:47 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 serv108.segi.ulg.ac.be 05142200BFE5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uliege.be;
+	s=ulg20190529; t=1719942347;
+	bh=lCaW80VzNxTMCxl0iWs4I+4RdjYWCe+gUOodsHPN+jI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=yrX0AN3kBNZJgjGw8ercURW2DmEl3Du/mC4Kxyf7GKdp3GvgsPtfgUfpeCJJPqIYb
+	 7ufWYV+NpZInF3iDqba2CKovPhCvHMFeY9045uW+M8KOXlUafRrROB+L7rk2+wAb9D
+	 X0IO+cHFB3Jogx2TgZWkcsV/NJlJsVlmfqnA2hXbaO+qQyabwrD7JFZTfmqR+Jr+qY
+	 hGDj0KbzX17exbpCF9Vu+qY8/tTB1PcCAK2yniey4mMWWdOBS4PIhj/8pGBChnf5vc
+	 MCvDux4G8D4bQIk5K+95oo9iUPmSAH+K4NadTk1J9NcYfz1m0YvrzUVzsGDZ5cvprF
+	 i87NwgL/nc+wA==
+From: Justin Iurman <justin.iurman@uliege.be>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net,
+	dsahern@kernel.org,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	linux-kernel@vger.kernel.org,
+	justin.iurman@uliege.be
+Subject: [PATCH net 1/2] net: ioam6: use "new" dst entry with skb_cow_head
+Date: Tue,  2 Jul 2024 19:44:50 +0200
+Message-Id: <20240702174451.22735-2-justin.iurman@uliege.be>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240702174451.22735-1-justin.iurman@uliege.be>
+References: <20240702174451.22735-1-justin.iurman@uliege.be>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240701142704.GGZoK8uDt-2VVtclHl@fat_crate.local>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jul 01, 2024 at 04:27:04PM +0200, Borislav Petkov wrote:
-> On Mon, Jun 24, 2024 at 10:13:44AM -0500, Steve Wahl wrote:
-> > These accesses are a problem because they happen prior to establishing
-> > the page fault interrupt handler that would mend the identity map.  I
-> > know very little about the AMD SEV feature but reading the code I
-> > think it may be required to do this before setting up that handler.
-> 
-> Yeah, from looking at it, we should be able to establish a #PF handler that
-> early too but the devil's in the detail, especially in that early boot code.
-> 
-> Lemme poke some things and people...
+In ioam6_output(), we call skb_cow_head() with LL_RESERVED_SPACE(). The
+latter uses "dst", which is potentially not the good one anymore. As a
+consequence, there might not be enough headroom, depending on the "new"
+dev (e.g., needed_headroom > 0). Therefore, we first need to get the
+"new" dst entry (from the cache or by calling ip6_route_output()), just
+like seg6 and rpl both do, and only then call skb_cow_head() with
+LL_RESERVED_SPACE() on the "new" dst entry.
 
-Ard, from EFI perspective and boot services exiting, do you see any potential
-issues if we enable a pagefault handler in load_stage1_idt() in
-arch/x86/boot/compressed/head_64.S already or is the EFI pagetable not really
-"reliable" then?
+Fixes: 8cb3bf8bff3c ("ipv6: ioam: Add support for the ip6ip6 encapsulation")
+Signed-off-by: Justin Iurman <justin.iurman@uliege.be>
+---
+ net/ipv6/ioam6_iptunnel.c | 65 +++++++++++++++++++--------------------
+ 1 file changed, 32 insertions(+), 33 deletions(-)
 
-Would solve the issue in this thread where the EFI config table ends up not
-mapped on some hw configurations, elegantly...
-
-Thx.
-
+diff --git a/net/ipv6/ioam6_iptunnel.c b/net/ipv6/ioam6_iptunnel.c
+index bf7120ecea1e..b08c13550144 100644
+--- a/net/ipv6/ioam6_iptunnel.c
++++ b/net/ipv6/ioam6_iptunnel.c
+@@ -295,7 +295,7 @@ static int ioam6_do_encap(struct net *net, struct sk_buff *skb,
+ 
+ static int ioam6_output(struct net *net, struct sock *sk, struct sk_buff *skb)
+ {
+-	struct dst_entry *dst = skb_dst(skb);
++	struct dst_entry *dst, *orig_dst = skb_dst(skb);
+ 	struct in6_addr orig_daddr;
+ 	struct ioam6_lwt *ilwt;
+ 	int err = -EINVAL;
+@@ -304,7 +304,7 @@ static int ioam6_output(struct net *net, struct sock *sk, struct sk_buff *skb)
+ 	if (skb->protocol != htons(ETH_P_IPV6))
+ 		goto drop;
+ 
+-	ilwt = ioam6_lwt_state(dst->lwtstate);
++	ilwt = ioam6_lwt_state(orig_dst->lwtstate);
+ 
+ 	/* Check for insertion frequency (i.e., "k over n" insertions) */
+ 	pkt_cnt = atomic_fetch_inc(&ilwt->pkt_cnt);
+@@ -346,45 +346,44 @@ static int ioam6_output(struct net *net, struct sock *sk, struct sk_buff *skb)
+ 		goto drop;
+ 	}
+ 
+-	err = skb_cow_head(skb, LL_RESERVED_SPACE(dst->dev));
+-	if (unlikely(err))
+-		goto drop;
++	local_bh_disable();
++	dst = dst_cache_get(&ilwt->cache);
++	local_bh_enable();
++
++	if (unlikely(!dst)) {
++		struct ipv6hdr *hdr = ipv6_hdr(skb);
++		struct flowi6 fl6;
++
++		memset(&fl6, 0, sizeof(fl6));
++		fl6.daddr = hdr->daddr;
++		fl6.saddr = hdr->saddr;
++		fl6.flowlabel = ip6_flowinfo(hdr);
++		fl6.flowi6_mark = skb->mark;
++		fl6.flowi6_proto = hdr->nexthdr;
++
++		dst = ip6_route_output(net, NULL, &fl6);
++		if (dst->error) {
++			err = dst->error;
++			dst_release(dst);
++			goto drop;
++		}
+ 
+-	if (!ipv6_addr_equal(&orig_daddr, &ipv6_hdr(skb)->daddr)) {
+ 		local_bh_disable();
+-		dst = dst_cache_get(&ilwt->cache);
++		dst_cache_set_ip6(&ilwt->cache, dst, &fl6.saddr);
+ 		local_bh_enable();
++	}
+ 
+-		if (unlikely(!dst)) {
+-			struct ipv6hdr *hdr = ipv6_hdr(skb);
+-			struct flowi6 fl6;
+-
+-			memset(&fl6, 0, sizeof(fl6));
+-			fl6.daddr = hdr->daddr;
+-			fl6.saddr = hdr->saddr;
+-			fl6.flowlabel = ip6_flowinfo(hdr);
+-			fl6.flowi6_mark = skb->mark;
+-			fl6.flowi6_proto = hdr->nexthdr;
+-
+-			dst = ip6_route_output(net, NULL, &fl6);
+-			if (dst->error) {
+-				err = dst->error;
+-				dst_release(dst);
+-				goto drop;
+-			}
+-
+-			local_bh_disable();
+-			dst_cache_set_ip6(&ilwt->cache, dst, &fl6.saddr);
+-			local_bh_enable();
+-		}
++	skb_dst_drop(skb);
++	skb_dst_set(skb, dst);
+ 
+-		skb_dst_drop(skb);
+-		skb_dst_set(skb, dst);
++	err = skb_cow_head(skb, LL_RESERVED_SPACE(dst->dev));
++	if (unlikely(err))
++		goto drop;
+ 
++	if (!ipv6_addr_equal(&orig_daddr, &ipv6_hdr(skb)->daddr))
+ 		return dst_output(net, sk, skb);
+-	}
+ out:
+-	return dst->lwtstate->orig_output(net, sk, skb);
++	return orig_dst->lwtstate->orig_output(net, sk, skb);
+ drop:
+ 	kfree_skb(skb);
+ 	return err;
 -- 
-Regards/Gruss,
-    Boris.
+2.34.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
