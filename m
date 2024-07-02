@@ -1,169 +1,123 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC9CB16F26E;
-	Tue,  2 Jul 2024 11:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE1616F260
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 11:41:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719920481; cv=none; b=tTY+M2vyjLSj2wJBoX+QtMgslqZzGCAYFd6aRQSo8OgXmjM6Jgzh6M6z676xZ/7yrA+288zVQvx/DkPg1yIOmg91lz4YfvYnoOH6njnmw+ibQxnBfvDe0Uooao0mLXymKVCQelWnuZrs3ldPIE0ZGouWxvPrV4F68KiKG379BMo=
+	t=1719920481; cv=none; b=bV5dg7jfxTLN9nFzOGpfsjGejNZJy/mCQscbDf8GhuUPMW7DTJIz6puWtVzhT3uqdHpY7hvZIGff66kPGQjM/75s8Z8sE+v0g4NNZmGI7QbjJWQHtRRgxglry8jJLUDfhg0Pf9tl2XmpBk+2eEbvjf8bEfv0FoadA7hYjQHltUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719920481; c=relaxed/simple;
-	bh=BsZMpiJ3PnNUi15MSPgknU5OYD2lbSBlecjuX9Xi5EY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FCh2Doh4ryW0IXKA/C7d6alr1fNdFuo5YQNsokq6FNwcB5I15QFcHc4Deo7dj2XMQR5m0YrJK/DolUp36AOGIsVbuurNXgaRB7ZCELNhq8ZQDn8S8M8Ti1GDZY2VXs5TYqIr7Yss9thfQKtHEQi2gjsU27x50FEh8VTJRQ41Ff0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 88B4F1684;
-	Tue,  2 Jul 2024 04:41:44 -0700 (PDT)
-Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0EB403F762;
-	Tue,  2 Jul 2024 04:41:16 -0700 (PDT)
-From: Robin Murphy <robin.murphy@arm.com>
-To: Will Deacon <will@kernel.org>,
-	Joerg Roedel <joro@8bytes.org>
-Cc: linux-acpi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Yong Wu <yong.wu@mediatek.com>
-Subject: [PATCH v3 5/5] iommu: Remove iommu_fwspec ops
-Date: Tue,  2 Jul 2024 12:40:51 +0100
-Message-Id: <55c1410b2cd09531eab4f8e2f18f92a0faa0ea75.1719919669.git.robin.murphy@arm.com>
-X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
-In-Reply-To: <cover.1719919669.git.robin.murphy@arm.com>
-References: <cover.1719919669.git.robin.murphy@arm.com>
+	bh=NSroMKxF+iEaFAVVz8p4WKV4y7ZnU+9j/v7aX3NGInk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VntbLqQ/znAgbcEUk3VwQ75UIDlqwyGxFEZg1wfVQa4IvgUqz93WLjNfQNka5rCIBbXs5sE07hGwqwmxliRf6c4COOizwfa/IhpeXYaI2g38Bqj2n9g8fyIp8se/UHgI34GYYUHxBEx0W19lRKmahKOsy8p6BKXV5E2xTtxbflY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Aij3nAQ4; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Aij3nAQ4"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52cdb9526e2so2970317e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 04:41:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719920477; x=1720525277; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kQVFB1Ory94czUgWNWBlgE/4b9Cm7QVvjGoDYPQAvFo=;
+        b=Aij3nAQ4/WoczJMW9ELIykb7PgDVYwmKQNslgdLDcCNq3ovTXxWXWiMPEnHClQK09p
+         d57wVRh5N9Cb7ntZiRS5DpMKXIplps01PMBZK4oZWv4Go66ZygPGFtjOV5Yr+++2Hl/v
+         0+o8JH5joKLqCvve+7Zfjvga2iy4oNV1t4biEv/D385YM11yfdFa4Bqq9uHOKnBFdsKS
+         1HIvQuwUCIEuxI6XYnYjeUTxGifaDefBI44GI1KV7bDWvK5d2pny/fmNBB/Ha6d36cvv
+         AA6xy+BkGEFPAcuxW5dpOzNaVD8b87+RGmV0Oxi/eeNRXpgNr5o5Xj9QZ2erIwvF0KAC
+         qyig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719920477; x=1720525277;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kQVFB1Ory94czUgWNWBlgE/4b9Cm7QVvjGoDYPQAvFo=;
+        b=TktePQ7DN+viJoqYiVrIHN5ISKSZHMw3b695+lkrrGaHkH5UrYl6oj4Yf2C6RfOiPE
+         SaXnkn50zXajU7ro9reZ5zEn0zQq81EPu6zyiKclZAFLG7eHFEKez5q6p8W7jYYTgpKo
+         ZKI+J/44Rsk83I1SmE4u5rS7INmMkyCxIXKlWg3DcFGRML0A4GCpkXCk46aiYfYgGE8b
+         +wL4jYLYM2VBpJSfn2eJKEzR1ystzXQ+22K0wOIdE/uWVHq2TEsmWMeUes/2P7mqsaI4
+         5yUrKwCXwYQNuFS/i2mN1NkgiGYbfrJr6fAT2CA3+MVzgG02oRunWdMOlc8xLnjyJQM0
+         fJZg==
+X-Forwarded-Encrypted: i=1; AJvYcCW2CvEuzx9fu+B/yb2GHNsHwdlIuk7YHGKYkz+A+fon2PRwpKVoUZKcpSYwk0/FRiFZHLNgTeoJsetDqFL17jzSHTTayXN973LzvdWA
+X-Gm-Message-State: AOJu0YzOTN0WqU8lO7cu/6AEqu2kma9qxM6f/UOQPW9wwQs1X3D+D4RZ
+	eW2SUdoWxvianvkHKbya4HNCFk1s5vwR7uoxhtq6dAES5hOKmDODoN4UkbKydlg=
+X-Google-Smtp-Source: AGHT+IFqRDyr09Nd7VDWumaaV4++hDJsHKTRvx5HWWdlWqBKX6NlFxjkCBaAtoRxcjfUWhxGiOhj5A==
+X-Received: by 2002:a19:e017:0:b0:52c:81ba:aeba with SMTP id 2adb3069b0e04-52e8259ff12mr1988718e87.14.1719920477367;
+        Tue, 02 Jul 2024 04:41:17 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52e7ab2f8b5sm1774583e87.233.2024.07.02.04.41.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jul 2024 04:41:17 -0700 (PDT)
+Date: Tue, 2 Jul 2024 14:41:15 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/1] drm/bridge: Silence error messages upon probe
+ deferral
+Message-ID: <5f2qg7cidl6rchculjzw52sfadwoprcptkhz2ikvo43kyny42s@o2ejrvqg7xjg>
+References: <20240628115131.2903251-1-alexander.stein@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240628115131.2903251-1-alexander.stein@ew.tq-group.com>
 
-The ops in iommu_fwspec are only needed for the early configuration and
-probe process, and by now are easy enough to derive on-demand in those
-couple of places which need them, so remove the redundant stored copy.
+On Fri, Jun 28, 2024 at 01:51:30PM GMT, Alexander Stein wrote:
+> When -EPROBE_DEFER is returned do not raise an error, but silently return
+> this error instead. Fixes error like this:
+> [drm:drm_bridge_attach] *ERROR* failed to attach bridge
+>   /soc@0/bus@30800000/mipi-dsi@30a00000 to encoder None-34: -517
+> [drm:drm_bridge_attach] *ERROR* failed to attach bridge
+>   /soc@0/bus@30800000/mipi-dsi@30a00000 to encoder None-34: -517
+> 
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> Reviewed-by: Robert Foss <rfoss@kernel.org>
+> ---
+> Changes in v4:
+> * Rebased to next-20240628
+> 
+>  drivers/gpu/drm/drm_bridge.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
+> index d44f055dbe3e7..3e72dfd941577 100644
+> --- a/drivers/gpu/drm/drm_bridge.c
+> +++ b/drivers/gpu/drm/drm_bridge.c
+> @@ -353,8 +353,9 @@ int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
+>  	bridge->encoder = NULL;
+>  	list_del(&bridge->chain_node);
+>  
+> -	DRM_ERROR("failed to attach bridge %pOF to encoder %s: %d\n",
+> -		  bridge->of_node, encoder->name, ret);
+> +	if (ret != -EPROBE_DEFER)
+> +		DRM_ERROR("failed to attach bridge %pOF to encoder %s: %d\n",
+> +			  bridge->of_node, encoder->name, ret);
 
-Tested-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
- drivers/iommu/iommu-priv.h |  5 +++++
- drivers/iommu/iommu.c      | 11 ++---------
- drivers/iommu/of_iommu.c   |  4 +++-
- include/linux/iommu.h      |  2 --
- 4 files changed, 10 insertions(+), 12 deletions(-)
+Maybe?
 
-diff --git a/drivers/iommu/iommu-priv.h b/drivers/iommu/iommu-priv.h
-index 078cafcf49b4..a34efed2884b 100644
---- a/drivers/iommu/iommu-priv.h
-+++ b/drivers/iommu/iommu-priv.h
-@@ -19,6 +19,11 @@ static inline const struct iommu_ops *dev_iommu_ops(struct device *dev)
- 
- const struct iommu_ops *iommu_ops_from_fwnode(const struct fwnode_handle *fwnode);
- 
-+static inline const struct iommu_ops *iommu_fwspec_ops(struct iommu_fwspec *fwspec)
-+{
-+	return iommu_ops_from_fwnode(fwspec ? fwspec->iommu_fwnode : NULL);
-+}
-+
- int iommu_group_replace_domain(struct iommu_group *group,
- 			       struct iommu_domain *new_domain);
- 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 7618c4285cf9..e15ae1dd494b 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -510,7 +510,6 @@ DEFINE_MUTEX(iommu_probe_device_lock);
- static int __iommu_probe_device(struct device *dev, struct list_head *group_list)
- {
- 	const struct iommu_ops *ops;
--	struct iommu_fwspec *fwspec;
- 	struct iommu_group *group;
- 	struct group_device *gdev;
- 	int ret;
-@@ -523,12 +522,7 @@ static int __iommu_probe_device(struct device *dev, struct list_head *group_list
- 	 * be present, and that any of their registered instances has suitable
- 	 * ops for probing, and thus cheekily co-opt the same mechanism.
- 	 */
--	fwspec = dev_iommu_fwspec_get(dev);
--	if (fwspec && fwspec->ops)
--		ops = fwspec->ops;
--	else
--		ops = iommu_ops_from_fwnode(NULL);
--
-+	ops = iommu_fwspec_ops(dev_iommu_fwspec_get(dev));
- 	if (!ops)
- 		return -ENODEV;
- 	/*
-@@ -2831,7 +2825,7 @@ int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode)
- 		return -EPROBE_DEFER;
- 
- 	if (fwspec)
--		return ops == fwspec->ops ? 0 : -EINVAL;
-+		return ops == iommu_fwspec_ops(fwspec) ? 0 : -EINVAL;
- 
- 	if (!dev_iommu_get(dev))
- 		return -ENOMEM;
-@@ -2843,7 +2837,6 @@ int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode)
- 
- 	fwnode_handle_get(iommu_fwnode);
- 	fwspec->iommu_fwnode = iommu_fwnode;
--	fwspec->ops = ops;
- 	dev_iommu_fwspec_set(dev, fwspec);
- 	return 0;
- }
-diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-index c946521a5906..559c5db78edb 100644
---- a/drivers/iommu/of_iommu.c
-+++ b/drivers/iommu/of_iommu.c
-@@ -17,6 +17,8 @@
- #include <linux/slab.h>
- #include <linux/fsl/mc.h>
- 
-+#include "iommu-priv.h"
-+
- static int of_iommu_xlate(struct device *dev,
- 			  struct of_phandle_args *iommu_spec)
- {
-@@ -32,7 +34,7 @@ static int of_iommu_xlate(struct device *dev,
- 	if (ret)
- 		return ret;
- 
--	ops = dev_iommu_fwspec_get(dev)->ops;
-+	ops = iommu_ops_from_fwnode(&iommu_spec->np->fwnode);
- 	if (!ops->of_xlate || !try_module_get(ops->owner))
- 		return -ENODEV;
- 
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index 81893aad9ee4..11ae1750cb1d 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -968,7 +968,6 @@ extern struct iommu_group *generic_single_device_group(struct device *dev);
- 
- /**
-  * struct iommu_fwspec - per-device IOMMU instance data
-- * @ops: ops for this device's IOMMU
-  * @iommu_fwnode: firmware handle for this device's IOMMU
-  * @flags: IOMMU_FWSPEC_* flags
-  * @num_ids: number of associated device IDs
-@@ -979,7 +978,6 @@ extern struct iommu_group *generic_single_device_group(struct device *dev);
-  * consumers.
-  */
- struct iommu_fwspec {
--	const struct iommu_ops	*ops;
- 	struct fwnode_handle	*iommu_fwnode;
- 	u32			flags;
- 	unsigned int		num_ids;
+else
+   dev_err_probe(encoder->dev->dev, -EPROBE_DEFER, "failed to attach...\n");
+
+>  
+>  	return ret;
+>  }
+> -- 
+> 2.34.1
+> 
+
 -- 
-2.39.2.101.g768bb238c484.dirty
-
+With best wishes
+Dmitry
