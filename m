@@ -1,56 +1,56 @@
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB48D1ABC4C
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 21:58:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE55D20FAA9
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 21:58:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719957540; cv=none; b=Qfyj2sRtFOL6fOmW2lHx+smjxJTtHVDP4kC/mYqAXowCIjhv9cuZ9/3LtGSlczdyISNUsjkj8ISmn5UVNzGOIR3pIWUutHKAGIfwYip2HcL1nIETCfhoc444XqTsphSwAGLY86pl3B7nWXNZ6HftH2Fnjc28LFp6cIy5dMu8e6o=
+	t=1719957541; cv=none; b=IxvsQ1m7621txp92ugHKq6xfKJ+oI8cXawGtECtU2778GBe8XtG99doW+R7210CY2f8iF3PHBQXuGm1hqHKxQ/yOX793KqWWkWa0wkzF/sdBo/JjWp/PMr/HlzbHzZyU2yF15A3OtGNKAUjIukYde+OQzA/890e1bJLbldSg7+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719957540; c=relaxed/simple;
-	bh=BmoS/pi4WE3RilgtxDmWX/Z/qwCySxzocceyZaJhNAY=;
+	s=arc-20240116; t=1719957541; c=relaxed/simple;
+	bh=gmzz9xKUKEU2FwGVjtUT8xi4cORsbLKLRijp90yxR0I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BBLeWNzZtw5IKXIug7mi8fEbVJmsgu73zIjZag7A3jLlpzzlNOu8UV8kGZtadpqKt0oBCbEI45v+El82Lh5g9OEbd8kVyNQ6QFg2Ppvm5Y3dAsdZL5JrF4BcfIGCllTdfPXkw9uBEZwKYjpKctY4NvP4aJZcbvOATIdh5kCQ0HI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kG4j0ldx; arc=none smtp.client-ip=209.85.166.51
+	 MIME-Version; b=Vr9jtI76IfYh8VNhXjE7ky4uj2xDThscW1gkbMAJi5yg+r5Qt2aLIgyasYW7yrMr4QniEW7sPIqdYbhEn5I3jhZ5qml0mVVdO1P66CwnrRvyPTUDgguPYOtQxbICMt3O68d9GCP6noJfdSlEnY6tOCEtZV6jm/mSPcpIAHVHyhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jkPczX4f; arc=none smtp.client-ip=209.85.166.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kG4j0ldx"
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-7f64f66fdd7so60623139f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 14:58:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jkPczX4f"
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7f3cc78afb6so165126239f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 14:58:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719957538; x=1720562338; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719957539; x=1720562339; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=94MIkUtYPNbEjf2ABNxMIbyceZTrdE5XkTP/b1VTHKc=;
-        b=kG4j0ldxkZpfNsdamHeNpHlyzessz4115+aDbzJaBfmQQKf57CUWeq4YPgMRppD6KK
-         mqKJor56qZsZ6nTn7KZBaJA9jIE7y/xmzp0luc9e3DjIPU8MtDluwxOOBApsrFW/B8Rk
-         caBIdFUOq2PiXFWqcJwIScroO+ajxlYeABk03U3saQlZtt8GZiJb7oTwcZKqLSvISpnR
-         z2EPLsL3f1mtlXRs+OTplaHDfrUgm4RodW31TdXnrs04yzViJSdgzUL9fUDmNT61LqQT
-         L9375au7MNLafdfFH8bPWrru1S3i7sBx1UpdtA5vvDnk0UiheNLlir+EiR9CKCZiO9tj
-         Wv6A==
+        bh=0SUm8Nyqte9xAsE2tQLuwSyCdCfAncJgW1l33uKzz4o=;
+        b=jkPczX4fYwyJuR8Z1/C3i/T+vPLVBrKbXj+ncrNLksqCYjhzRww62H2YlQRHLvmTBN
+         9BNUlPRa0Q23flr260ijxH7qrc0F200WFjV4a0gmcIq5xgZmAg5OlwKgM2m+wyCmaf08
+         na/PPFvRp/2rRMkAI/D+wSWQ8yvQVLHkmLnWc0vbppTpOU4/+rKWazHq77C1OKnJNnjU
+         EKO31gmJtLT8Lz4uud7/aJ44SDc0i9gpiSrnkBMOaVY0EuT1rdTcpAYPiK8UqBIDngMB
+         xGXE59OsNUVwAnWlVOEl+BevvOgOgqadcPLA2RiDAf32ztXPCR7LkeinM4l0unBYddv/
+         uiug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719957538; x=1720562338;
+        d=1e100.net; s=20230601; t=1719957539; x=1720562339;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=94MIkUtYPNbEjf2ABNxMIbyceZTrdE5XkTP/b1VTHKc=;
-        b=gbz1QUfIYXyaJnOts0YUg67aLaF7QwjUL4ZJJPpGWtg35JKFbKtHZiJrFHRH9VA/Gg
-         WAsx6H7rrsJk53fOMX/ww81MkfOWxtJa1ARWc5Pc9xVhP8dI6emhXSed0fWYG88Q3stc
-         qiUXqePeurGShbqTYxVHv5Ci1oEHHA/4wOvlZU23CYWPf9ISpmI6cl40C7DguGqbSjNi
-         5gaXGreRAlmkHvjPQPhNq2Q2ZafeAwuVRVqJCEvNWACf7/jBbajSb0Y91vG5RAehVqrv
-         WqpD2K9TgVLxS3u6Baxv3fMfKHgKlnfpuMn4DDHEBOTDR1azgkoCwlLwQeaU6TliKCNW
-         wZbQ==
-X-Gm-Message-State: AOJu0YzqtHSGm0JPtufSPWbaJebTgswdbqRWp7yb0XySKxzCyTFECEWE
-	0iDIz9Pj7wsrWQF9Jl4tMPR0g9tAbo8hIBPK0dHxcvyE9BzME8/B
-X-Google-Smtp-Source: AGHT+IEeyfoDsrnF6r4ABpMFuIX2eN+Lbm0YqA2PfdZDRQYY0jl8O9vciO2Q9HKa3iN91XoM/brm0g==
-X-Received: by 2002:a05:6602:600d:b0:7f6:5035:1826 with SMTP id ca18e2360f4ac-7f650351c42mr444802439f.11.1719957538015;
+        bh=0SUm8Nyqte9xAsE2tQLuwSyCdCfAncJgW1l33uKzz4o=;
+        b=vvuH7zvMVxVkMFIjdoMkv9a4WDYDEz6YSl0zNR6wLohM1x3di9bFZ/J6xKHzK5Muzg
+         0XIK6NiUpw6aQwvAIbZxvUG7SHDz+h674Md5RWBE5gAjRarUJt82HN1LNoXrkpTpw3KU
+         ub5fOnJgkRoXCMwkxVoBRZCRhqqQ/QK6N49ZIm1ImXOdK7MgKi4IDpVmlE8drqNutRdG
+         G7Uvuoe2lZghhjgp71SQzf+SVlnDp7OMtSUzsnaExvxy7MaZkkG4ziJHl5b2wZmidRtu
+         hWMYrlY83AuopTlREI9RpB7Y0Tf5FZiAwY4XEnMU1iixp8SFAgHdgA/g0M3cTJ/GuQKP
+         QAWg==
+X-Gm-Message-State: AOJu0YxJdWf1uxDtn5KgSp/kCJUuTS5pAdcV59G3SiWSGlqmmaOFaqis
+	WivpQZrjpWVdSrCwbuCcYL8nn/fG/vj6qxPSx1X4du66PeXLRzLF
+X-Google-Smtp-Source: AGHT+IEUnJOZJMWFZCPfI0cb1ttS0mdFvKdodraHs1JHxvSWaTiAIpWzxzSmb2Z5C00Z5H72ikNb1w==
+X-Received: by 2002:a5e:d606:0:b0:7eb:d640:274 with SMTP id ca18e2360f4ac-7f62ee622b1mr1057821039f.10.1719957538981;
         Tue, 02 Jul 2024 14:58:58 -0700 (PDT)
 Received: from frodo.. (c-73-78-62-130.hsd1.co.comcast.net. [73.78.62.130])
-        by smtp.googlemail.com with ESMTPSA id ca18e2360f4ac-7f61d207fcesm279944739f.51.2024.07.02.14.58.56
+        by smtp.googlemail.com with ESMTPSA id ca18e2360f4ac-7f61d207fcesm279944739f.51.2024.07.02.14.58.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 14:58:57 -0700 (PDT)
+        Tue, 02 Jul 2024 14:58:58 -0700 (PDT)
 From: Jim Cromie <jim.cromie@gmail.com>
 To: daniel.vetter@ffwll.ch,
 	tvrtko.ursulin@linux.intel.com,
@@ -68,9 +68,9 @@ Cc: linux-kernel@vger.kernel.org,
 	joe@perches.com,
 	mcgrof@kernel.org,
 	Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH v9 34/53] drm-dyndbg: DRM_CLASSMAP_USE in i915 driver
-Date: Tue,  2 Jul 2024 15:57:27 -0600
-Message-ID: <20240702215804.2201271-38-jim.cromie@gmail.com>
+Subject: [PATCH v9 35/53] drm-dyndbg: DRM_CLASSMAP_USE in drm_crtc_helper
+Date: Tue,  2 Jul 2024 15:57:28 -0600
+Message-ID: <20240702215804.2201271-39-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240702215804.2201271-1-jim.cromie@gmail.com>
 References: <20240702215804.2201271-1-jim.cromie@gmail.com>
@@ -93,16 +93,16 @@ Fixes: f158936b60a7 ("drm: POC drm on dyndbg - use in core, 2 helpers, 3 drivers
 
 Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 ---
- drivers/gpu/drm/i915/i915_params.c | 12 +-----------
+ drivers/gpu/drm/drm_crtc_helper.c | 12 +-----------
  1 file changed, 1 insertion(+), 11 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/i915_params.c b/drivers/gpu/drm/i915/i915_params.c
-index de43048543e8..dccf12d05105 100644
---- a/drivers/gpu/drm/i915/i915_params.c
-+++ b/drivers/gpu/drm/i915/i915_params.c
-@@ -29,17 +29,7 @@
- #include "i915_params.h"
- #include "i915_drv.h"
+diff --git a/drivers/gpu/drm/drm_crtc_helper.c b/drivers/gpu/drm/drm_crtc_helper.c
+index 2dafc39a27cb..e9d229a393f4 100644
+--- a/drivers/gpu/drm/drm_crtc_helper.c
++++ b/drivers/gpu/drm/drm_crtc_helper.c
+@@ -50,17 +50,7 @@
+ 
+ #include "drm_crtc_helper_internal.h"
  
 -DECLARE_DYNDBG_CLASSMAP(drm_debug_classes, DD_CLASS_TYPE_DISJOINT_BITS, 0,
 -			"DRM_UT_CORE",
@@ -117,8 +117,8 @@ index de43048543e8..dccf12d05105 100644
 -			"DRM_UT_DRMRES");
 +DRM_CLASSMAP_USE(drm_debug_classes);
  
- #define i915_param_named(name, T, perm, desc) \
- 	module_param_named(name, i915_modparams.name, T, perm); \
+ /**
+  * DOC: overview
 -- 
 2.45.2
 
