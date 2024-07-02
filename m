@@ -1,50 +1,49 @@
 Received: from mail.fris.de (mail.fris.de [116.203.77.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9EDC158D98;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E4C158D61;
 	Tue,  2 Jul 2024 10:41:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.77.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719916917; cv=none; b=dKJ3MFQPP4FxqTA0haKpUjRsFwE6WchOioblOhPWZyuA/UfVHBcDpEdmNPrfI8Kx8/ZQ4YuTN9pT82Z2nvVzVwOcUOkArJmZDEK/vGWBmVXm/COqMnQii07xU+I1tm9QZepCr5ox5vjF9nFhkh2Puz6d7xfDnPvOet58knJ+MEQ=
+	t=1719916917; cv=none; b=NbriPm5/a1t+59SLYbkwIbD32B1Ynqi+KYQjED/ytJKK9NVweJedQBkRjHknn6WmZWgXOQj08snmnn1DTGlHHXaID0I7e5uoJjrCSg+afRa7kTkjtLgzqpwrTnJlZXpJ6x6Wmj7HtoOWe+3CtxO/QnJWbrNPUR8EYpFtPmQF8Mw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719916917; c=relaxed/simple;
-	bh=4yCJXGE+2S/GMSXwIsV31N8cJZ3mLudJr1hId2uxM54=;
+	bh=sPCgBGmaEIjGdzBuX+ZiLW5g5QxenEh/PLa2ZraUm7g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=T59Y5GkbcXbIq5vEdfr1wyNsbg8Q1YeFkalkk2ShO1Lo4HErEmrOb5/WQHDGmCDH1BsHycNzlQix+itdxqCCKc43KhAz/k4IfKXuFISxr5FCZK7yvDVWGd5yQpMET6YFulLyH9uuyFnYEnTS64hLLtPcWvI+O641kIU0NuXOrhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fris.de; spf=fail smtp.mailfrom=fris.de; dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b=LxI4jHQC; arc=none smtp.client-ip=116.203.77.234
+	 MIME-Version; b=XOttiKnWKrJep5lLQ8xsD7LoAQ229BfRY/y33cqoFYHTdf5GHQV59y6JJZfkCaZyXJiQfqhPzB/I8bjuyqjoSH1ZCsN0DSE5wUrK1MLbzWpaWDn4A81+6wkTtTz398eSqfiAhpr5aX/6d8bHIkXKxLrALZef5iVDW5Z2VBPH69E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fris.de; spf=fail smtp.mailfrom=fris.de; dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b=BcC99NIC; arc=none smtp.client-ip=116.203.77.234
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fris.de
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=fris.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b="LxI4jHQC"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 5AAAABFC0D;
-	Tue,  2 Jul 2024 12:32:56 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b="BcC99NIC"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 97049BFC0E;
+	Tue,  2 Jul 2024 12:32:57 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fris.de; s=dkim;
-	t=1719916376; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1719916378; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=0IEroQzFNTReRDzy5DgWCzMxhO8L1pDD2JVHObmjDGQ=;
-	b=LxI4jHQCZLXZctWwNQH6p3GnIatktShezN7ouoVdhvxOgpTY5UgtC2gVnAtoK/eSS5+YNx
-	nJ5MnnTDtNvv0qrUHgexcCGDN5UFCW2NNKwLr8hHUnf9ggHCSt5AnAzPlBn5+SUXYel8kp
-	6P11zvJ6b5rdeRE2xC2R3ZKG2DI7dV8RewdXLVMbzOl8YWNmf+MPYT3FNgo2gWWO2IuiJV
-	BMBaCROH5+yVgss7DgtZiJyeAIRB777ns06w/tHl1BcEE5C4A/z+hkooknWvOutc+se1ys
-	XseBGEamEAI1cHC7InaG2x6OrjBdwi6dkAKUnh+Cq5r8Qds1fkCqXGEFBqKNjw==
+	bh=VKYV733Fjpk+GAdBZI7izuRi4FBRnkYy/52IFjD1Dd8=;
+	b=BcC99NICrst6VxTOtUzFX5RFrJiaxlX2/yPwMUOXY+vSRS/UIB+YkXeB94vzRUFA6rP/03
+	RIif0ZrhMkTv7yoy9NAONNr/22kDEl8l+paquwhBz694Yx6OwzYFFL4d+vsozQ6CMVwY0U
+	c24ZnVpwy3M/5Pyb/lOdvnz4xq68qwpnEm2B1CktbiHD7GtlVmj062BowxQmpAXCKLGvyL
+	Vj7viGP4SYP46mimgUUEc7VaA7Yr0sC8Oz6mGNXol/MoExvk4CKojfU/SHrAWALwDL3cFZ
+	K9JozOqbKmXspUNIfkTpeBwMupDmM5rwNc/ynCphMr4zoURGeDCxv50qUQGcYw==
 From: Frieder Schrempf <frieder@fris.de>
 To: Bartosz Golaszewski <brgl@bgdev.pl>,
 	Conor Dooley <conor+dt@kernel.org>,
 	devicetree@vger.kernel.org,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-i2c@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Rob Herring <robh@kernel.org>
+	Rob Herring <robh@kernel.org>,
+	Stefan Agner <stefan@agner.ch>
 Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Marek Vasut <marex@denx.de>,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH 2/7] dt-bindings: eeprom: at24: Add compatible for ONSemi N24S64B
-Date: Tue,  2 Jul 2024 12:31:14 +0200
-Message-ID: <20240702103155.321855-3-frieder@fris.de>
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH 3/7] dt-bindings: gpio: vf610: Allow gpio-line-names to be set
+Date: Tue,  2 Jul 2024 12:31:15 +0200
+Message-ID: <20240702103155.321855-4-frieder@fris.de>
 In-Reply-To: <20240702103155.321855-1-frieder@fris.de>
 References: <20240702103155.321855-1-frieder@fris.de>
 Precedence: bulk
@@ -58,28 +57,29 @@ X-Last-TLS-Session-Version: TLSv1.3
 
 From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-The ONSemi N24S64B is a 64 KBit serial EEPROM that is compatible
-with atmel,24c64.
+Describe common "gpio-line-names" property to fix dtbs_check warnings
+like:
+
+  arch/arm64/boot/dts/freescale/imx93-kontron-bl-osm-s.dtb: gpio@43810000:
+    'gpio-line-names' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', 'pinctrl-[0-9]+'
 
 Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
 ---
- Documentation/devicetree/bindings/eeprom/at24.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/devicetree/bindings/gpio/gpio-vf610.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Documentation/devicetree/bindings/eeprom/at24.yaml
-index 9cca8ffa1712a..539e4684ce565 100644
---- a/Documentation/devicetree/bindings/eeprom/at24.yaml
-+++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
-@@ -126,6 +126,9 @@ properties:
-       - items:
-           - const: giantec,gt24c32a
-           - const: atmel,24c32
-+      - items:
-+          - const: onnn,n24s64b
-+          - const: atmel,24c64
-       - items:
-           - enum:
-               - renesas,r1ex24128
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
+index a27f929502575..7230ba1a386ae 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
++++ b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
+@@ -50,6 +50,7 @@ properties:
+     const: 2
+ 
+   gpio-controller: true
++  gpio-line-names: true
+ 
+   clocks:
+     items:
 -- 
 2.45.2
 
