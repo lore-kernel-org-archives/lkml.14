@@ -1,93 +1,112 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5F2155312;
-	Tue,  2 Jul 2024 09:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 772D313D8BA;
+	Tue,  2 Jul 2024 09:42:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719913302; cv=none; b=bamPYybfuz09ra7QgzFBy53Hq3w+1jQAGRfQOXtcki/oFy2leyL5eURt5Zt6TC7MhqxyhgHZ96ilbZOL3xWUbzlmcfLCCb3rwfS1pdC5PRAAFGqBPsgjXNM/QMkv+tcl4fHWiub/C85Ztau5gO3HUZ9AHWXc3TdsvLkzBm+JOxY=
+	t=1719913341; cv=none; b=f7ysgVFZFpOarDSqTwQCk9kjdqADcyu2GjWB4hMG8m7sm4GQEm5E1iIFg43l2ylbuKMBWpozR1hHVsMd1Mu2VGxSz2H/IX+ePqfsvnrdHej6dF1+WoxSDHikRAGEmhX+IrC2jRpiHYLdzeuUXVtsLl48/Ju1A86+pahWl7R/iBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719913302; c=relaxed/simple;
-	bh=rrHJuzABvv32dcWokveTz7Dnd/80nmaf3YwG2Ar19yE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K1jJ/WQUrcQO0m9pIQ82mQCfqmM0bEmS8g9+8P191HPj9+kc4n7LcbP/ouRNrJMeMcebO6bPchTrtIXaBzJ2wiKHkPN4Ylwum7z7eLXY277GtoyY35ufi+Q7XBwe9bnCpVlgmTm/yjeQ82OlQOq2zo4Ys+Zvk9c1cFXfcn3y3xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EWaxIt3c; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719913341; c=relaxed/simple;
+	bh=IdsBWoTpm6MC5BQctO736Zwu3gL2rlz9Gvm+xB0DvLE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=McSSagUBSPS5k0szmXXAVPbVlrqt/6rXYSGvAq/oo5Cnxdo1y/kW7jojnf1EITlawohV7bB+d5Jh04CKePKNt0Titte42kKUtomDAhxlmkxhXlRf6bMLPDN0zGPYZ6gETUCSCGcqqaZ9ACwM7AqJJvxqUTs/luIW5sLO/mO1OJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=gVN9QI5s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EWaxIt3c"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2c8c6cc53c7so2731048a91.0;
-        Tue, 02 Jul 2024 02:41:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719913300; x=1720518100; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rrHJuzABvv32dcWokveTz7Dnd/80nmaf3YwG2Ar19yE=;
-        b=EWaxIt3cf1wXAoV7eCxzvLnu/RJrtIQKk1u5/eVfZohla6F04WhG6VB8dK9c2PTCKk
-         nom8CftNH43FlRxL2UBGjboUxTkCWcpQLM/mXfzv+D6dcFiYpPE1RvCdu3qetHj0w/Jk
-         E5h5xNoKvKTm/VqoqAjgvgZZPdctD6pMW6VKs49V72iDUxWZGaDPtkCkhtiVBciDAjuT
-         yRXwYlWpyDNKk6Lu4hpd62xNA50htXnTStXa39eIXtkXAyWrdEq4cvh9kgfiAfEmnzza
-         P6GjvvesALtBi6mF9GP+HfYTBH0B2gEbqPIPS1rsCCVPEYurTfuNfoXXGTh256CqxiEE
-         sTyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719913300; x=1720518100;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rrHJuzABvv32dcWokveTz7Dnd/80nmaf3YwG2Ar19yE=;
-        b=SJKYJcc3N34tYVXHx2BZ8e96+K2SjQrgZEOCA/XXXxqKRK+Rm22lXjb9WFBXOabx3C
-         hWLpdVm3lPt9DFICOrgkHdeUqm14Y2AxHrYnSoSFJWAs7FwK0sAqLnjdKR0hDTW4QC4J
-         eNE8cLn3KFxxy0INeAwOkd/CdjAEfiLn+rLrlag4/heMo8K1qmsHFW/LPfLx3x6IiP2O
-         8JBHlnT7qMH6UvHcLd7DibQqE6JIx7jrt4DVniY4RaisClro5LMjjTImdr+9dM7VNsBr
-         ekwrsoTJlJ/384L+wFBw2aETHoXsdQxOnjn5r37HB5aQOlOZ6tldVCnWUa2MtoWXm3LX
-         Xnxw==
-X-Forwarded-Encrypted: i=1; AJvYcCUGR3fGBdxhWs+Q6tjkZeE188/V7fUB/m2+KFpjriTfk1CJvJerSJk2vnDA8DBvOea/KnZy5ElhmyTXw3biQCfzZuhP2PIZVzwdo3FFBHoLaml2UFPhen5/fsJgDJlHsbrRDxuSS/ie4cA3rlA=
-X-Gm-Message-State: AOJu0YxqUcrkii58zRyy9BSZ+2M81+kFBCdYTmf+j2TpzrebB7KLBu8R
-	EkcYTkgpSC2WQFl2t+yTYjqqyegUR4tLIWD6esZp7UUEn2yQADt6D/ienCP7hf4LnobxRogMkeY
-	wJwyYCGXakfEjv9XjxIygk9c/mNA=
-X-Google-Smtp-Source: AGHT+IEDftu7sk+tfSLkqpQkBEgUNXL8IgNpgAL9Frlx/qQPKc4RNAvHIN4qui+yL3vGvj/+3mk7DlNTp02STXHJzQQ=
-X-Received: by 2002:a17:90b:180d:b0:2c5:32c3:a777 with SMTP id
- 98e67ed59e1d1-2c93d7242f8mr6335964a91.28.1719913299802; Tue, 02 Jul 2024
- 02:41:39 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="gVN9QI5s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C4D8C116B1;
+	Tue,  2 Jul 2024 09:42:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1719913341;
+	bh=IdsBWoTpm6MC5BQctO736Zwu3gL2rlz9Gvm+xB0DvLE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gVN9QI5s/ek2EI6v275cWiCBY1KIfITsrBeAeO//UjiznstGnuvKJigGnHkkl3JdN
+	 hWm1PTpIbEd1M8x+0xrIgNztlGX8QRfysYUUcUgls8h5JLrA5LBmybR0Oq5gzCPE5d
+	 N3XKpu7KgqjOwgVU81LVjO7LRQaf5Q15XBU8so2A=
+Date: Tue, 2 Jul 2024 11:42:17 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Kazunori Kobayashi <kazunori.kobayashi@miraclelinux.com>
+Cc: netdev@vger.kernel.org, stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org, hiraku.toyooka@miraclelinux.com,
+	Eric Dumazet <edumazet@google.com>,
+	"David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 5.15 1/3] ipv6: annotate some data-races around
+ sk->sk_prot
+Message-ID: <2024070241-equivocal-dismantle-5dd2@gregkh>
+References: <20230417165348.26189-1-kazunori.kobayashi@miraclelinux.com>
+ <20230417165348.26189-2-kazunori.kobayashi@miraclelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240701183625.665574-1-ojeda@kernel.org> <4fa15761-7cab-4463-a2ff-717256c67d76@proton.me>
-In-Reply-To: <4fa15761-7cab-4463-a2ff-717256c67d76@proton.me>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 2 Jul 2024 11:41:27 +0200
-Message-ID: <CANiq72kX2yhAVwd2FVRaGZvGrhPhTnnM=v18nng___Pu+aZaSg@mail.gmail.com>
-Subject: Re: [PATCH 00/13] Support several Rust toolchain versions
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230417165348.26189-2-kazunori.kobayashi@miraclelinux.com>
 
-On Tue, Jul 2, 2024 at 8:25=E2=80=AFAM Benno Lossin <benno.lossin@proton.me=
-> wrote:
->
-> I applied the series and successfully ran the kunit tests on nixos.
-> I tried the following rust versions via fenix:
-> - rustc 1.78.0 (9b00956e5 2024-04-29)
-> - rustc 1.79.0 (129f3b996 2024-06-10)
-> - 1.80.0-beta.4 (64a1fe671 2024-06-21)
-> - 1.81.0-nightly (6868c831a 2024-06-30)
->
-> My bindgen version is 0.69.4.
->
-> Everything worked as expected :)
+On Mon, Apr 17, 2023 at 04:53:46PM +0000, Kazunori Kobayashi wrote:
+> From: Eric Dumazet <edumazet@google.com>
+> 
+> commit 086d49058cd8471046ae9927524708820f5fd1c7 upstream.
+> 
+> IPv6 has this hack changing sk->sk_prot when an IPv6 socket
+> is 'converted' to an IPv4 one with IPV6_ADDRFORM option.
+> 
+> This operation is only performed for TCP and UDP, knowing
+> their 'struct proto' for the two network families are populated
+> in the same way, and can not disappear while a reader
+> might use and dereference sk->sk_prot.
+> 
+> If we think about it all reads of sk->sk_prot while
+> either socket lock or RTNL is not acquired should be using READ_ONCE().
+> 
+> Also note that other layers like MPTCP, XFRM, CHELSIO_TLS also
+> write over sk->sk_prot.
+> 
+> BUG: KCSAN: data-race in inet6_recvmsg / ipv6_setsockopt
+> 
+> write to 0xffff8881386f7aa8 of 8 bytes by task 26932 on cpu 0:
+>  do_ipv6_setsockopt net/ipv6/ipv6_sockglue.c:492 [inline]
+>  ipv6_setsockopt+0x3758/0x3910 net/ipv6/ipv6_sockglue.c:1019
+>  udpv6_setsockopt+0x85/0x90 net/ipv6/udp.c:1649
+>  sock_common_setsockopt+0x5d/0x70 net/core/sock.c:3489
+>  __sys_setsockopt+0x209/0x2a0 net/socket.c:2180
+>  __do_sys_setsockopt net/socket.c:2191 [inline]
+>  __se_sys_setsockopt net/socket.c:2188 [inline]
+>  __x64_sys_setsockopt+0x62/0x70 net/socket.c:2188
+>  do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+>  do_syscall_64+0x44/0xd0 arch/x86/entry/common.c:80
+>  entry_SYSCALL_64_after_hwframe+0x44/0xae
+> 
+> read to 0xffff8881386f7aa8 of 8 bytes by task 26911 on cpu 1:
+>  inet6_recvmsg+0x7a/0x210 net/ipv6/af_inet6.c:659
+>  ____sys_recvmsg+0x16c/0x320
+>  ___sys_recvmsg net/socket.c:2674 [inline]
+>  do_recvmmsg+0x3f5/0xae0 net/socket.c:2768
+>  __sys_recvmmsg net/socket.c:2847 [inline]
+>  __do_sys_recvmmsg net/socket.c:2870 [inline]
+>  __se_sys_recvmmsg net/socket.c:2863 [inline]
+>  __x64_sys_recvmmsg+0xde/0x160 net/socket.c:2863
+>  do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+>  do_syscall_64+0x44/0xd0 arch/x86/entry/common.c:80
+>  entry_SYSCALL_64_after_hwframe+0x44/0xae
+> 
+> value changed: 0xffffffff85e0e980 -> 0xffffffff85e01580
+> 
+> Reported by Kernel Concurrency Sanitizer on:
+> CPU: 1 PID: 26911 Comm: syz-executor.3 Not tainted 5.17.0-rc2-syzkaller-00316-g0457e5153e0e-dirty #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> 
+> Reported-by: syzbot <syzkaller@googlegroups.com>
+> Signed-off-by: Eric Dumazet <edumazet@google.com>
+> Signed-off-by: David S. Miller <davem@davemloft.net>
+> Signed-off-by: Kazunori Kobayashi <kazunori.kobayashi@miraclelinux.com>
 
-Thanks Benno! I tried nixpkgs' toolchain for the examples in the docs
-patch, but not fenix's ones, so it's good to know those work as well. :)
+This backport didn't apply at all, are you sure you made it against the
+proper tree?
 
-Cheers,
-Miguel
+The original commit does seem to apply properly, so I'll go apply that
+one instead...
+
+greg k-h
