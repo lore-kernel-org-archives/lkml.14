@@ -1,174 +1,245 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7541B581C
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 13:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDE6715B125
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 13:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719926790; cv=none; b=D0SVUjFmZP+bFgbgKVerRRI3G+kRKdx9vKMq5++D/wCVpStDCU3b38m8QnUZDiVHo/7bA4H9djCUFyi0P0fa+82z6BqCUraTqxziwKutTVu4f5Y++lyqWnNeUKDE4kZHmVw1Bp3pS3YeUy2rX8h5gI8tARL3uYty1+H5J+ljJSY=
+	t=1719926820; cv=none; b=lBVCVlfZr38yO0kvfLsi+TpLnCJqZRpFxJ7h4XrDl+Tjl4xsHqlEVQLVJLf7pD94vDqTi9wzP8GnRcj+j92JW+cIuOcQ90TynCWcxb0d6rnWZBRHpcEqCoD0qyvEw4QPGZjiAHbsBFOC1esY23R0bgobWYhCjeCOA5exr6WCGo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719926790; c=relaxed/simple;
-	bh=lg+tZDVs4hEyLY3HQiLLe2lKwm2BGwh2GCtDRaNR0hg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wklp/8wveaOL8IofZJ5czv9bRvXDvBy2SF7f/o78ZStj7h0813Ymb7U5WOqCplJv92LWsuOY62HruGOyhfZlz2Bi90vsl4QwrYd/Mp88EyIgn6TR/O1I7IQEyrQvKe+/POXhqRo19IAcMGwriSZ11B+ASNJ5mwPwIxi1sFFW+j8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=gtSOVgqR; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="gtSOVgqR"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2ee7885ac1cso5759901fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 06:26:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1719926785; x=1720531585; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gEXzoyWOhFjqKYW61KLBPXBOfhQL6RJZ80o2uJwzay0=;
-        b=gtSOVgqRsBClLWCLp+ZMn446DSCHeBhorvS8olEOTUpcDRvpe/S82Y6Xpp67EfcNhO
-         0P5QaERRDxWpLfVzMuT7d9/cxw4l0ItrkwcPkSD3ojBgrQrfoU1tDKO6EepqWZ0rS+qk
-         fh1PzyK75vGLFdQ58JAWDD32UoTmrRp24bLMo9e4QG4KdCLs8wdzQd0jlMx5bhqvjy5e
-         tCmV/qZh/NPAlOHTQgJDQ90zxizqMAGZS7Quv2nRX0SG54nJJRrfy17v6EljUXPpuxwX
-         l9RVxZjDUwRbjAf22UKFy3//PdY5NZjG4TgKM/dAgkePOb9omdTEmHIy9FEW+QtZuX/l
-         MTJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719926785; x=1720531585;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gEXzoyWOhFjqKYW61KLBPXBOfhQL6RJZ80o2uJwzay0=;
-        b=kmo2SLb0rfG4wHwPUlWhWyQwaaTaueijXzNVuMuqwhDZz/ohiK3KWQGbJmJgfY1gX7
-         PM8ooLNurT3iYNnqgMr1InwMsa/ALWIy6U7SbDQGhMKQklgMxn2q7tYdriZht8vY8NpD
-         1JRps7oFRKSC8YMFr/TwozgXl3/6pUjCmL0U0g31AwqbttLWSTBGxAbcs3GsYdUyd/hu
-         hXs2J7/N7GFIhHqnjK+RtLzfnQJPRNWZ+JaabvRMiwKudS/5vRL42t2sHSQYjSx1w7Lt
-         XXeKcRzeI9tb9tpPdZfi+11uXvl+E0729SRjptQWtd5ZcADzgjs7qZjuJKz8mi29lptt
-         GhPA==
-X-Forwarded-Encrypted: i=1; AJvYcCW/fjaU7znJNFyS3Z4fDglbQYwvYWMyEV2RyEY7tizN8RW8ttVrDHxCIPvgAOHC3F/Su7AJ388a/SrlBhA4tL50Thtw121jJZPTjdI5
-X-Gm-Message-State: AOJu0YwfKMZH1JyVBXC1twci6YIvbEMRx7KQRrVNwm2SITZ1YMo+2bGa
-	2oZfwZL68/SVd3m8OJYruQfo1NkmJZfhOEjc6HBehdw86KVg8ponH/aDqFbLFUc=
-X-Google-Smtp-Source: AGHT+IHOwy0gSsJlyo6I2CbsLhWTUOs3Wi9zfbRiK0I3klKQk6XIRE1REHPqeHNsrUu9XlM+VeBpkw==
-X-Received: by 2002:a2e:a813:0:b0:2ee:7a3e:4728 with SMTP id 38308e7fff4ca-2ee7a3e48d9mr4524661fa.53.1719926784755;
-        Tue, 02 Jul 2024 06:26:24 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c91ce44d5esm8782234a91.19.2024.07.02.06.26.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 06:26:24 -0700 (PDT)
-Date: Tue, 2 Jul 2024 15:26:15 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH printk v2 17/18] printk: Avoid false positive lockdep
- report for legacy printing
-Message-ID: <ZoP_9w0nNr_ploOn@pathway.suse.cz>
-References: <20240603232453.33992-1-john.ogness@linutronix.de>
- <20240603232453.33992-18-john.ogness@linutronix.de>
+	s=arc-20240116; t=1719926820; c=relaxed/simple;
+	bh=z2cN92QRC9XP6uX0nenTg8OJrUFSHEUuRRPlK6cGwTY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CWD0k5jwxUfPo1fcOER6gDbgpIhV2FACaV8LNGDksSWs3uT3EFwbl/G4EPmzwFL2TS6KymOSyoNE3zwxpzXy9PmCd5MzOH+aYblGTAw6fqc7MJJuKYIjYBNqx2+2dotTW4mxmuG9og50UrSVrxszHWb3xLCmCNQovytUrOlSqFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09A3B339;
+	Tue,  2 Jul 2024 06:27:21 -0700 (PDT)
+Received: from [10.1.32.193] (XHFQ2J9959.cambridge.arm.com [10.1.32.193])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 87B8F3F766;
+	Tue,  2 Jul 2024 06:26:54 -0700 (PDT)
+Message-ID: <9a9e0a83-59a8-46ac-ae7a-8f2a65b48e1e@arm.com>
+Date: Tue, 2 Jul 2024 14:26:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240603232453.33992-18-john.ogness@linutronix.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v5 PATCH] arm64: mm: force write fault for atomic RMW
+ instructions
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Yang Shi <yang@os.amperecomputing.com>
+Cc: "Christoph Lameter (Ampere)" <cl@gentwo.org>, will@kernel.org,
+ anshuman.khandual@arm.com, scott@os.amperecomputing.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Jinjiang Tu <tujinjiang@huawei.com>
+References: <20240626191830.3819324-1-yang@os.amperecomputing.com>
+ <Zn7q3oL1AE8jdM-g@arm.com> <773c8be7-eb73-010c-acea-1c2fefd65b84@gentwo.org>
+ <Zn7xs6OYZz4dyA8a@arm.com>
+ <200c5d06-c551-4847-adaf-287750e6aac4@os.amperecomputing.com>
+ <ZoMG6n4hQp5XMhUN@arm.com> <3743d7e1-0b79-4eaf-82d5-d1ca29fe347d@arm.com>
+ <34f2d8c6-50fa-4a8a-82a8-d417eb30ea70@redhat.com>
+ <905e1319-7b20-4812-b052-8031a3c4dcf3@arm.com>
+ <168f9fd4-527d-4b74-86b0-029ef474f9b6@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <168f9fd4-527d-4b74-86b0-029ef474f9b6@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue 2024-06-04 01:30:52, John Ogness wrote:
-> Legacy console printing from printk() caller context may invoke
-> the console driver from atomic context. This leads to a lockdep
-> splat because the console driver will acquire a sleeping lock
-> and the caller may already hold a spinning lock. This is noticed
-> by lockdep on !PREEMPT_RT configurations because it will lead to
-> a problem on PREEMPT_RT.
+On 02/07/2024 13:58, David Hildenbrand wrote:
+> On 02.07.24 14:36, Ryan Roberts wrote:
+>> On 02/07/2024 12:22, David Hildenbrand wrote:
+>>> On 02.07.24 12:26, Ryan Roberts wrote:
+>>>> On 01/07/2024 20:43, Catalin Marinas wrote:
+>>>>> On Fri, Jun 28, 2024 at 11:20:43AM -0700, Yang Shi wrote:
+>>>>>> On 6/28/24 10:24 AM, Catalin Marinas wrote:
+>>>>>>> This patch does feel a bit like working around a non-optimal user choice
+>>>>>>> in kernel space. Who knows, madvise() may even be quicker if you do a
+>>>>>>> single call for a larger VA vs touching each page.
+>>>>>>
+>>>>>> IMHO, I don't think so. I viewed this patch to solve or workaround some ISA
+>>>>>> inefficiency in kernel. Two faults are not necessary if we know we are
+>>>>>> definitely going to write the memory very soon, right?
+>>>>>
+>>>>> I agree the Arm architecture behaviour is not ideal here and any
+>>>>> timelines for fixing it in hardware, if they do happen, are far into the
+>>>>> future. Purely from a kernel perspective, what I want though is make
+>>>>> sure that longer term (a) we don't create additional maintenance burden
+>>>>> and (b) we don't keep dead code around.
+>>>>>
+>>>>> Point (a) could be mitigated if the architecture is changed so that any
+>>>>> new atomic instructions added to this range would also come with
+>>>>> additional syndrome information so that we don't have to update the
+>>>>> decoding patterns.
+>>>>>
+>>>>> Point (b), however, depends on the OpenJDK and the kernel versions in
+>>>>> distros. Nick Gasson kindly provided some information on the OpenJDK
+>>>>> changes. The atomic_add(0) change happened in early 2022, about 5-6
+>>>>> months after MADV_POPULATE_WRITE support was added to the kernel. What's
+>>>>> interesting is Ampere already contributed MADV_POPULATE_WRITE support to
+>>>>> OpenJDK a few months ago:
+>>>>>
+>>>>> https://github.com/openjdk/jdk/commit/a65a89522d2f24b1767e1c74f6689a22ea32ca6a
+>>>>>
+>>>>> The OpenJDK commit lacks explanation but what I gathered from the diff
+>>>>> is that this option is the preferred one in the presence of THP (which
+>>>>> most/all distros enable by default). If we merge your proposed kernel
+>>>>> patch, it will take time before it makes its way into distros. I'm
+>>>>> hoping that by that time, distros would have picked a new OpenJDK
+>>>>> version already that doesn't need the atomic_add(0) pattern. If that's
+>>>>> the case, we end up with some dead code in the kernel that's almost
+>>>>> never exercised.
+>>>>>
+>>>>> I don't follow OpenJDK development but I heard that updates are dragging
+>>>>> quite a lot. I can't tell whether people have picked up the
+>>>>> atomic_add(0) feature and whether, by the time a kernel patch would make
+>>>>> it into distros, they'd also move to the MADV_POPULATE_WRITE pattern.
+>>>>>
+>>>>> There's a point (c) as well on the overhead of reading the faulting
+>>>>> instruction. I hope that's negligible but I haven't measured it.
+>>>>>
+>>>>
+>>>> Just to add to this, I note the existing kernel behaviour is that if a write
+>>>> fault happens in a region that has a (RO) huge zero page mapped at PMD level,
+>>>> then the PMD is shattered, the PTE of the fault address is populated with a
+>>>> writable page and the remaining PTEs are populated with order-0 zero pages
+>>>> (read-only).
+>>>
+>>> That also recently popped up in [1]. CCing Jinjiang. Ever since I
+>>> replied there, I also thought some more about that handling in regard to the
+>>> huge zeropage.
+>>>
+>>>>
+>>>> This seems like odd behaviour to me. Surely it would be less effort and more
+>>>> aligned with the app's expectations to notice the huge zero page in the PMD,
+>>>> remove it, and install a THP, as would have been done if pmd_none() was true? I
+>>>> don't think there is a memory bloat argument here because, IIUC, with the
+>>>> current behaviour, khugepaged would eventually upgrade it to a THP anyway?
+>>>
+>>> One detail: depending on the setting of khugepaged_max_ptes_none. zeropages
+>>> are treated like pte_none. But in the common case, that setting is left alone.
+>>
+>> Ahh, got it. So in the common case, khugepaged won't actually collapse
+>> unless/until a bunch more write faults occur in the 2M region, and in that case
+>> there is a risk that changing this behaviour could lead to a memory bloat
+>> regression.
+>>
+>>>
+>>>>
+>>>> Changing to this new behaviour would only be a partial solution for your use
+>>>> case, since you would still have 2 faults. But it would remove the cost of the
+>>>> shattering and ensure you have a THP immediately after the write fault. But I
+>>>> can't think of a reason why this wouldn't be a generally useful change
+>>>> regardless? Any thoughts?
+>>>
+>>> The "let's read before we write" as used by QEMU migration code is the desire
+>>> to not waste memory by populating the zeropages. Deferring consuming memory
+>>> until really required.
+>>>
+>>>      /*
+>>>       * We read one byte of each page; this will preallocate page tables if
+>>>       * required and populate the shared zeropage on MAP_PRIVATE anonymous
+>>> memory
+>>>       * where no page was populated yet. This might require adaption when
+>>>       * supporting other mappings, like shmem.
+>>>       */
+>>
+>> So QEMU is concerned with preallocatiing page tables? I would have thought you
+>> could make that a lot more efficient with an explicit MADV_POPULATE_PGTABLE
+>> call? (i.e. 1 kernel call vs 1 call per 2M, allocate all the pages in one trip
+>> through the allocator, fewer pud/pmd lock/unlocks, etc).
 > 
-> However, on PREEMPT_RT the printing path from atomic context is
-> always avoided and the console driver is always invoked from a
-> dedicated thread. Thus the lockdep splat on !PREEMPT_RT is a
-> false positive.
+> I think we are only concerned about the "shared zeropage" part. Everything else
+> is just unnecessary detail that adds confusion here :) One requires the other.
+
+Sorry I don't quite follow your comment. As I understand it, the zeropage
+concept is intended as a memory-saving mechanism for applications that read
+memory but never write it. I don't think that really applies in your migration
+case, because you are definitely going to write all the memory eventually, I
+think? So I guess you are not interested in the "memory-saving" property, but in
+the side-effect, which is the pre-allocation of pagetables? (if you just wanted
+the memory-saving property, why not just skip the "read one byte of each page"
+op? It's not important though, so let's not go down the rabbit hole.
+
 > 
-> For !PREEMPT_RT override the lock-context before invoking the
-> console driver to avoid the false positive.
+> Note that this is from migration code where we're supposed to write a single
+> page we received from the migration source right now (not more). And we want to
+> avoid allcoating memory if it can be avoided (usually for overcommit).
 > 
-> Do not override the lock-context for PREEMPT_RT in order to
-> allow lockdep to catch any real locking context issues related
-> to the write callback usage.
-
-Could you please provide more information?
-Is this anything new?
-How did it work so far?
-
-See below.
-
-> Signed-off-by: John Ogness <john.ogness@linutronix.de>
-> ---
->  kernel/printk/printk.c | 31 ++++++++++++++++++++++++++++++-
->  1 file changed, 30 insertions(+), 1 deletion(-)
 > 
-> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> index ea2d66152256..5e9778f69206 100644
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -2980,6 +2980,33 @@ bool printk_get_next_message(struct printk_message *pmsg, u64 seq,
->  	return true;
->  }
->  
-> +/*
-> + * Legacy console printing from printk() caller context does not respect
-> + * raw_spinlock/spinlock nesting. For !PREEMPT_RT the lockdep warning is a
-> + * false positive. For PREEMPT_RT the false positive condition does not
-> + * occur.
-> + *
-> + * This map is used to establish LD_WAIT_SLEEP context for the console write
-> + * callbacks when legacy printing to avoid false positive lockdep complaints,
-> + * thus allowing lockdep to continue to function for real issues.
-> + */
-> +#ifdef CONFIG_PREEMPT_RT
-> +static inline void printk_legacy_lock_map_acquire_try(void) { }
-> +static inline void printk_legacy_lock_map_release(void) { }
-> +#else
-> +static DEFINE_WAIT_OVERRIDE_MAP(printk_legacy_map, LD_WAIT_SLEEP);
-> +
-> +static inline void printk_legacy_lock_map_acquire_try(void)
-> +{
-> +	lock_map_acquire_try(&printk_legacy_map);
-> +}
-> +
-> +static inline void printk_legacy_lock_map_release(void)
-> +{
-> +	lock_map_release(&printk_legacy_map);
-> +}
-> +#endif /* CONFIG_PREEMPT_RT */
-> +
->  /*
->   * Used as the printk buffers for non-panic, serialized console printing.
->   * This is for legacy (!CON_NBCON) as well as all boot (CON_BOOT) consoles.
-> @@ -3035,7 +3062,7 @@ static bool console_emit_next_record(struct console *con, bool *handover, int co
->  		/*
->  		 * With forced threading this function is either in a thread
->  		 * or panic context. So there is no need for concern about
-> -		 * printk reentrance or handovers.
-> +		 * printk reentrance, handovers, or lockdep complaints.
->  		 */
->  
->  		con->write(con, outbuf, pmsg.outbuf_len);
-> @@ -3057,7 +3084,9 @@ static bool console_emit_next_record(struct console *con, bool *handover, int co
->  		/* Do not trace print latency. */
->  		stop_critical_timings();
->  
-> +		printk_legacy_lock_map_acquire_try();
+> 
+>>
+>> TBH I always assumed in the past the that huge zero page is only useful because
+>> its a placeholder for a real THP that would be populated on write. But that's
+>> obviously not the case at the moment. So other than a hack to preallocate the
+>> pgtables with only 1 fault per 2M, what other benefits does it have?
+> 
+> I don't quite udnerstand that question. [2] has some details why the huge
+> zeropage was added -- because we would have never otherwise received huge
+> zeropages with THP enabled but always anon THP directly on read.
+> 
+>>
+>>>
+>>>
+>>> Without THP this works as expected. With THP this currently also works as
+>>> expected, but of course with the price [1] of not getting anon THP
+>>> immediately, which usually we don't care about. As you note, khugepaged might
+>>> fix this up later.
+>>>
+>>> If we disable the huge zeropage, we would get anon THPs when reading instead of
+>>> small zeropages.
+>>
+>> I wasn't aware of that behaviour either. Although that sounds like another
+>> reason why allocating a THP over the huge zero page on write fault should be the
+>> "more consistent" behaviour.
+> 
+> Reading [2] I think the huge zeropage was added to avoid the allocation of THP
+> on read. Maybe for really only large readable regions, not sure why exactly.
 
-I am not familiar with lockdep in these depths. The comment in
-include/kernel/lockdep_types.h says that LD_WAIT_SLEEP is
-a type used for sleeping locks. And this code says that
-it is acquire_try(). I would assume that similar lockdep
-map is set also by "console_trylock()".
+I might raise this on the THP call tomorrow, if Kyril joins and get his view.
 
-Do we need this for a new callpath without console_trylock()?
-Or do I miss anything?
+> 
+>>
+>>>
+>>> As reply to [1], I suggested using preallcoation (using MADV_POPULATE_WRITE)
+>>> when we really care about that performance difference, which would also
+>>> avoid the huge zeropage completely, but it's also not quite optimal in some
+>>> cases.
+>>
+>> I could imagine some cases could benefit from a MADV_POPULATE_WRITE_ON_FAULT,
+>> which would just mark the VMA so that any read fault is upgraded to write.
+>>
+>>>
+>>>
+>>> I don't really know what to do here: changing the handling for the huge zeropage
+>>> only unconditionally does not sound too wrong, but the change in behavior
+>>> might (or might not) be desired for some use cases.
+>>>
+>>> Reading from unpopulated memory can be a clear sign that really the shared
+>>> zeropage
+>>> is desired (as for QEMU), and concurrent memory preallcoation/population should
+>>> ideally use MADV_POPULATE_WRITE. Maybe there are some details buried in [2]
+>>> regarding
+>>> the common use cases for the huge zeropage back than.
+>>
+>> The current huge zero page behavior on write fault sounds wonky to me. But I
+>> agree there are better and more complete solutions to the identified use cases.
+>> So unless something pops up where the change is a clear benefit, I guess better
+>> to be safe and leave as is.
+> 
+> We've had that behavior for a quite a while ... so it's rather surprising to see
+> multiple people reporting this right now.
+> 
+> I guess most use cases don't read from uninitialized memory barely write to it
+> and care about getting THPs immediately.
+> 
+> For preallocation, MADVISE_POPULATE_WRITE is better. For QEMU migration? not
+> sure what's really better. Maybe replacing the huge zeropage by a THP would be
+> faster in some cases, but result in more memory consumption (and more page
+> zeroing?) during migration in other cases.
+> 
 
->  		con->write(con, outbuf, pmsg.outbuf_len);
-> +		printk_legacy_lock_map_release();
->  
->  		start_critical_timings();
-
-Best Regards,
-Petr
