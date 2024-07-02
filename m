@@ -1,89 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AABA91534E6;
-	Tue,  2 Jul 2024 11:30:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F285143746;
+	Tue,  2 Jul 2024 11:31:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719919804; cv=none; b=VN7nz58bIwr0qnfYRBpXMjqvfaSFCH3CI5qPSZTsBhUsF2VaxtoxuOr1X6uFhTEGozWUrjvDoKXPhUIZoK9AdZnu6FUa878meUmcdDzbBCgqaKF/jlavi9TfxA/NFJJeC0bZuGFqkVREFn4uvWsswFxX4gEGrB4YRIhseL4DP+M=
+	t=1719919865; cv=none; b=WRB52q34ysaizLq5VQdxIxtd1Kj17E0tt54D9TH82hxUnZ02chgT9uWHIVdp/fNd3Nptv0taibG1hvCe144r3VCcVGAiAMe3CwPwiAquIps4izDyb7/KpKFD9/naHnriR0RJe0IkrQGTx8EkYbM4ewhNethTukVhzS0oH297f7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719919804; c=relaxed/simple;
-	bh=8VjB7u2o1X6Fkf4ljzLQulZ+iIR1INcOkKXgXFjoEP4=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=kDvC1f2BXzQOhz8RniXBCUdp0fw2s6/V+8TXqiaX+2zW7TZk9qFzSUPxhfmlWH0J9FOuf8V0qbRtqBMOVn8km4TmFUbVjDaQ2ttYQetWkAFD8EL7Pppo4R3sYNVja4iM2rNjdmmGJfwz7ew8ZFGrRgURnkz2bApLJRXCdJcZGiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MsFQzMwg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719919865; c=relaxed/simple;
+	bh=uCu68Z1bpcRG5OT0Z3gl5xWAnsWzMuJTChZVlqhueZQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EJJsrxypFNiPy62kr8txtEMNNhiFAGVuhqySS0ekrFV+JD4Uqh22L8qF9yi3RShdIT8t04zNtS72y4GFyjUiXXEIX0WAyt0GxL8MExXvE7OU+ZTu9QBphZeBalOEqHXJDwUDtps+MvUxCTXiDBg6HQ3hEO8JKbdiBuIoAFdFyn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=TLlPRAaG; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MsFQzMwg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE852C116B1;
-	Tue,  2 Jul 2024 11:30:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719919804;
-	bh=8VjB7u2o1X6Fkf4ljzLQulZ+iIR1INcOkKXgXFjoEP4=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=MsFQzMwgt8Dy9o13LHIHXMusSsQkTEC1XvOsyAP6RSb/rBFCn8lrmAFmMHdqrHed3
-	 ycKjB0ZCtwaURxZt321m9Qsmp3TUFeIDgWWm3LQDC9+JuhpTv7n/t/mjmIE9G/D1q/
-	 fQ0GVgEZDbHasKgk0wsfFOiC7KZ4S1eCPF9R01JuwvkdCIjh38zxlRCzIDK7ygCrlz
-	 8F4eYxJ0gGcAmZc6DUoiUx0WWFMYpaNmuS17q/VsUcdUXnWwu1uffIdQNOxmg3NUmp
-	 DeZeJcuwRuMJIB/kEUbSuFoD3UfGBOoeFQwKElhjX5DT7pUCjfKZYAIdotTAD1aVBW
-	 cll11JNGiBC9Q==
-From: Mark Brown <broonie@kernel.org>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
- Banajit Goswami <bgoswami@quicinc.com>, Liam Girdwood <lgirdwood@gmail.com>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, alsa-devel@alsa-project.org, 
- linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20240628095831.207942-1-krzysztof.kozlowski@linaro.org>
-References: <20240628095831.207942-1-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH 1/2] ASoC: codecs: lpass-rx-macro: Fix using NULL
- pointer in probe() dev_err
-Message-Id: <171991980162.18111.8940228821828803310.b4-ty@kernel.org>
-Date: Tue, 02 Jul 2024 12:30:01 +0100
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="TLlPRAaG"
+X-UUID: 8c5182ec386611ef8b8f29950b90a568-20240702
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=rz5boOxsi/u+gkabvKEweLBuuQ8l1CKIHW5Q1pnKZyU=;
+	b=TLlPRAaG+vsCGedssAG/L7iTvVA/QoaAiXBFxR9XoydzMDn6HlLYSCNVZDpDdw+Rp3GJXCEqx4UBcQdXDh3bEykrMt3JGRGDsW7oSOCWiZf30r4rU66TfJfgVzjfDSy98L5rCC32pU4nJ8WNCk4SdKXFy1xjN92tqmNymImGMAU=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.40,REQID:183b0df1-986e-476e-9977-cfc9496713d8,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:ba885a6,CLOUDID:99badcd4-0d68-4615-a20f-01d7bd41f0bb,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-UUID: 8c5182ec386611ef8b8f29950b90a568-20240702
+Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw01.mediatek.com
+	(envelope-from <chris.lu@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 2043749492; Tue, 02 Jul 2024 19:30:56 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Tue, 2 Jul 2024 19:30:54 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Tue, 2 Jul 2024 19:30:54 +0800
+From: Chris Lu <chris.lu@mediatek.com>
+To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg
+	<johan.hedberg@gmail.com>, Luiz Von Dentz <luiz.dentz@gmail.com>
+CC: Sean Wang <sean.wang@mediatek.com>, Aaron Hou <aaron.hou@mediatek.com>,
+	Steve Lee <steve.lee@mediatek.com>, linux-bluetooth
+	<linux-bluetooth@vger.kernel.org>, linux-kernel
+	<linux-kernel@vger.kernel.org>, linux-mediatek
+	<linux-mediatek@lists.infradead.org>, Chris Lu <chris.lu@mediatek.com>
+Subject: [PATCH v6 1/8] Bluetooth: btusb: mediatek: remove the unnecessary goto tag
+Date: Tue, 2 Jul 2024 19:30:44 +0800
+Message-ID: <20240702113051.24372-2-chris.lu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20240702113051.24372-1-chris.lu@mediatek.com>
+References: <20240702113051.24372-1-chris.lu@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14-dev-d4707
+Content-Type: text/plain
+X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-AS-Result: No-10--4.468500-8.000000
+X-TMASE-MatchedRID: +drbuUTY1kqd5MMyOelRHUhEDfw/93BuuoYFb0nRiqMGW3hFnC9N1cHZ
+	AvQpPtWOxiqnR+5LS88BtjkcfRMmqY5S9RIYp1E+S3OTftLNfg19LQinZ4QefCP/VFuTOXUT3n8
+	eBZjGmUzkwjHXXC/4I66NVEWSRWybkPZ1zEIiY1OqosqXYkcNGNrIBUvoKoWgzXtJngQ86QZWJi
+	/KSfD6tTW7iBcoYt72Bp8yRCY8d4aQD51mC4VVLRF+1mOPGajPjofsMjQaxVwyYjbiqIQ3Csykh
+	tyXcigD6rVdgBjDT2r1nXJavJVNag==
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--4.468500-8.000000
+X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-SNTS-SMTP: 24D18DA9FA4F2AE4B35311283515DDEA5CAAB6351648141E79161E89433E36C02000:8
 
-On Fri, 28 Jun 2024 11:58:30 +0200, Krzysztof Kozlowski wrote:
-> The 'rx->dev' is assigned closer to the end of the probe() function, so
-> the dev_err() must not use it - it is still NULL at this point.  Instead
-> there is already a local 'dev' variable.
-> 
-> 
+Remove the unnecessary goto tag whether there is an error or not, we have
+to free the buffer at the end of the function.
 
-Applied to
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Signed-off-by: Chris Lu <chris.lu@mediatek.com>
+---
+ drivers/bluetooth/btusb.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-
-Thanks!
-
-[1/2] ASoC: codecs: lpass-rx-macro: Fix using NULL pointer in probe() dev_err
-      commit: 2e068fe01ecbf677d414d4c1b02eea1636dd614c
-[2/2] ASoC: codecs: lpass-wsa-macro: Fix using NULL pointer in probe() dev_err
-      commit: 765d3a2aa195882e231835f5d9ac4d99affc8c07
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 79aefdb3324d..fcdd660add19 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -2953,12 +2953,9 @@ static int btusb_mtk_uhw_reg_write(struct btusb_data *data, u32 reg, u32 val)
+ 			      0x5E,
+ 			      reg >> 16, reg & 0xffff,
+ 			      buf, 4, USB_CTRL_SET_TIMEOUT);
+-	if (err < 0) {
++	if (err < 0)
+ 		bt_dev_err(hdev, "Failed to write uhw reg(%d)", err);
+-		goto err_free_buf;
+-	}
+ 
+-err_free_buf:
+ 	kfree(buf);
+ 
+ 	return err;
+-- 
+2.18.0
 
