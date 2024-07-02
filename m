@@ -1,179 +1,202 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AADDC157E84;
-	Tue,  2 Jul 2024 10:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F5F12CD8B
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 10:19:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719915548; cv=none; b=lUZ/x/u6IIn+Eo3KGerCVGDEffHZNNTeEHuPo2qLkZgc3hUMCoK/9eu1TIJCHtMVdhKps2sV7nwEGWFFHNJtrx+9gcEQq2UzhVaxJy+Lyn4oCp0vXowuLQ9WTAJzpnDBH/A7Z8x8FcUWBdcc8Jh2vbU6UDioLGesXKV/Fa6dn1E=
+	t=1719915559; cv=none; b=exhNng20355iXPgvQRXHuOcCAZRG8spD9mtiUdarf8BK7TNhSR0HOGvZ7lIKMOoY+V3lK+OhAhjSlAHR19YH9tzi7z1rsMjbNec6oLNLVrB1PewsolYCaErAbGuqx624LS1ZDSWeCfBcpn2Kk7l6msOwkiOGmj5JOiksxapz8dU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719915548; c=relaxed/simple;
-	bh=14fl0hG2i0eIiGJZ4fDwGiWtU7bkyFt1BvazraR5F/U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lswljfr38T7GS0w3sF/nJhj7o9ahih414KViK03BeRg1NkVccx8VdV8n6PmKxBWZNQ3CZ7QCT1dM/9Lpk606vVmLstvaDjyygaWtFdqNawquAZFHYCybtsp2zq6sncIfeXWwV6/6r6OQhSHYjDq5Hu7GAMV8cIIgyx5+Cbu9Pf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=j7fuXjZk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=gZn2I7tN; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=j7fuXjZk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=gZn2I7tN; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="j7fuXjZk";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="gZn2I7tN";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="j7fuXjZk";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="gZn2I7tN"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C13D621AA1;
-	Tue,  2 Jul 2024 10:19:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1719915542; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7QgfEvG+VBe8fgiEqH2xll6Fjp3VI8MfOXpkPTjxvqU=;
-	b=j7fuXjZkmiE8Ag2HgL272opB8gC348U1vxjpTBOtY6LE+6BtsWFohG7inTzCArFz3+/Y2A
-	fsagrkuxeYfZ8SNgIRc8ho8lY829gEzTHrEt6cB9TicadUdIHt122lBAeI7D6DiGbUVJHp
-	ABYPmNo0+u1Ybzt2b8ywZJKWmP+nEvM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1719915542;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7QgfEvG+VBe8fgiEqH2xll6Fjp3VI8MfOXpkPTjxvqU=;
-	b=gZn2I7tNyT6UFDx6bdQBhB0nr4VJsWmxq/IWXZIsvrb6DqDNA3HlA+g+TnuOiGJ/cdZZBe
-	+buovUNEnvNclaAg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=j7fuXjZk;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=gZn2I7tN
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1719915542; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7QgfEvG+VBe8fgiEqH2xll6Fjp3VI8MfOXpkPTjxvqU=;
-	b=j7fuXjZkmiE8Ag2HgL272opB8gC348U1vxjpTBOtY6LE+6BtsWFohG7inTzCArFz3+/Y2A
-	fsagrkuxeYfZ8SNgIRc8ho8lY829gEzTHrEt6cB9TicadUdIHt122lBAeI7D6DiGbUVJHp
-	ABYPmNo0+u1Ybzt2b8ywZJKWmP+nEvM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1719915542;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7QgfEvG+VBe8fgiEqH2xll6Fjp3VI8MfOXpkPTjxvqU=;
-	b=gZn2I7tNyT6UFDx6bdQBhB0nr4VJsWmxq/IWXZIsvrb6DqDNA3HlA+g+TnuOiGJ/cdZZBe
-	+buovUNEnvNclaAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B253413A9A;
-	Tue,  2 Jul 2024 10:19:02 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id N46DKxbUg2bdPgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 02 Jul 2024 10:19:02 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 7219DA08A6; Tue,  2 Jul 2024 12:19:02 +0200 (CEST)
-Date: Tue, 2 Jul 2024 12:19:02 +0200
-From: Jan Kara <jack@suse.cz>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Chandan Babu R <chandan.babu@oracle.com>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	Hugh Dickins <hughd@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>, kernel-team@fb.com,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
-	linux-mm@kvack.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 01/10] fs: turn inode ctime fields into a single ktime_t
-Message-ID: <20240702101902.qcx73xgae2sqoso7@quack3>
-References: <20240626-mgtime-v1-0-a189352d0f8f@kernel.org>
- <20240626-mgtime-v1-1-a189352d0f8f@kernel.org>
- <20240701224941.GE612460@frogsfrogsfrogs>
- <3042db2f803fbc711575ec4f1c4a273912a50904.camel@kernel.org>
- <ZoOuSxRlvEQ5rOqn@infradead.org>
- <d91a29f0e600793917b73ac23175e02dafd56beb.camel@kernel.org>
+	s=arc-20240116; t=1719915559; c=relaxed/simple;
+	bh=0ajCnf3SAOP6eQuHMw4tQTjVDmgvoTdZApQsPOmIy/8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UxGKD1JadwuZuTgG3jevdcqaSv/fwWOiRRLSAgbLVn97vJDqS4kpc8JB9HzXgIxiBRNwQph73dtvU6AiEZ3lsbzuXCC1gZQDao5158tGa7lWKvvbgPRWT0rITHXlgSLNK/HmWmAA4wd0ZjH59qSzmeiusHpeMhOXYq0PU+3i2Vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
+Received: from Atcsqr.andestech.com (localhost [127.0.0.2] (may be forged))
+	by Atcsqr.andestech.com with ESMTP id 4629kwXX053553
+	for <linux-kernel@vger.kernel.org>; Tue, 2 Jul 2024 17:46:58 +0800 (+08)
+	(envelope-from peterlin@andestech.com)
+Received: from mail.andestech.com (ATCPCS34.andestech.com [10.0.1.134])
+	by Atcsqr.andestech.com with ESMTPS id 4629kkj0053530
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK);
+	Tue, 2 Jul 2024 17:46:46 +0800 (+08)
+	(envelope-from peterlin@andestech.com)
+Received: from APC323 (10.0.12.98) by ATCPCS34.andestech.com (10.0.1.134) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 2 Jul
+ 2024 17:46:46 +0800
+Date: Tue, 2 Jul 2024 17:46:42 +0800
+From: Yu-Chien Peter Lin <peterlin@andestech.com>
+To: Conor Dooley <conor@kernel.org>
+CC: Samuel Holland <samuel.holland@sifive.com>,
+        Charlie Jenkins
+	<charlie@rivosinc.com>,
+        <linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-sunxi@lists.linux.dev>,
+        <linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        "Paul Walmsley" <paul.walmsley@sifive.com>,
+        Palmer Dabbelt
+	<palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Jisheng Zhang
+	<jszhang@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec
+	<jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Jonathan
+ Corbet <corbet@lwn.net>, "Shuah Khan" <shuah@kernel.org>,
+        Guo Ren
+	<guoren@kernel.org>, Evan Green <evan@rivosinc.com>,
+        Andy Chiu
+	<andy.chiu@sifive.com>, Jessica Clarke <jrtc27@jrtc27.com>,
+        <tim609@andestech.com>, <dminus@andestech.com>,
+        <ycliang@andestech.com>
+Subject: Re: [PATCH v3 03/13] riscv: dts: allwinner: Add xtheadvector to the
+ D1/D1s devicetree
+Message-ID: <ZoPMEaq8wKzXhFuA@APC323>
+References: <20240619-xtheadvector-v3-0-bff39eb9668e@rivosinc.com>
+ <20240619-xtheadvector-v3-3-bff39eb9668e@rivosinc.com>
+ <0cc13581-5cc4-4a25-a943-7a896f42da4c@sifive.com>
+ <20240701-prancing-outpost-3cbce791c554@spud>
+ <7ab7d629-6993-4cad-b5b7-62bddfc74a49@sifive.com>
+ <20240701-pyromania-spinster-709a6c8cc460@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <d91a29f0e600793917b73ac23175e02dafd56beb.camel@kernel.org>
-X-Rspamd-Queue-Id: C13D621AA1
-X-Spam-Score: -4.01
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[26];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+In-Reply-To: <20240701-pyromania-spinster-709a6c8cc460@spud>
+User-Agent: Mutt/2.2.12 (2023-09-09)
+X-ClientProxiedBy: ATCPCS33.andestech.com (10.0.1.100) To
+ ATCPCS34.andestech.com (10.0.1.134)
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:Atcsqr.andestech.com 4629kwXX053553
 
-On Tue 02-07-24 05:56:37, Jeff Layton wrote:
-> On Tue, 2024-07-02 at 00:37 -0700, Christoph Hellwig wrote:
-> > On Mon, Jul 01, 2024 at 08:22:07PM -0400, Jeff Layton wrote:
-> > > 2) the filesystem has been altered (fuzzing? deliberate doctoring?).
-> > > 
-> > > None of these seem like legitimate use cases so I'm arguing that we
-> > > shouldn't worry about them.
-> > 
-> > Not worry seems like the wrong answer here.  Either we decide they
-> > are legitimate enough and we preserve them, or we decide they are
-> > bogus and refuse reading the inode.  But we'll need to consciously
-> > deal with the case.
-> > 
+Hi Conor,
+
+On Mon, Jul 01, 2024 at 05:31:01PM +0100, Conor Dooley wrote:
+> [EXTERNAL MAIL]
+
+> Date: Mon, 1 Jul 2024 17:31:01 +0100
+> From: Conor Dooley <conor@kernel.org>
+> To: Samuel Holland <samuel.holland@sifive.com>
+> Cc: Charlie Jenkins <charlie@rivosinc.com>,
+>  linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+>  linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev,
+>  linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, Conor Dooley
+>  <conor.dooley@microchip.com>, Rob Herring <robh@kernel.org>, Krzysztof
+>  Kozlowski <krzk+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+>  Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+>  Jisheng Zhang <jszhang@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej
+>  Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>,
+>  Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, Guo Ren
+>  <guoren@kernel.org>, Evan Green <evan@rivosinc.com>, Andy Chiu
+>  <andy.chiu@sifive.com>, Jessica Clarke <jrtc27@jrtc27.com>,
+>  peterlin@andestech.com
+> Subject: Re: [PATCH v3 03/13] riscv: dts: allwinner: Add xtheadvector to
+>  the D1/D1s devicetree
 > 
-> Is there a problem with consciously dealing with it by clamping the
-> time at KTIME_MAX? If I had a fs with corrupt timestamps, the last
-> thing I'd want is the filesystem refusing to let me at my data because
-> of them.
+> On Mon, Jul 01, 2024 at 11:11:55AM -0500, Samuel Holland wrote:
+> > Hi Conor, Charlie,
+> > 
+> > On 2024-07-01 11:07 AM, Conor Dooley wrote:
+> > > On Mon, Jul 01, 2024 at 10:27:01AM -0500, Samuel Holland wrote:
+> > >> On 2024-06-19 6:57 PM, Charlie Jenkins wrote:
+> > >>> The D1/D1s SoCs support xtheadvector so it can be included in the
+> > >>> devicetree. Also include vlenb for the cpu.
+> > >>>
+> > >>> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > >>> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> > >>> ---
+> > >>>  arch/riscv/boot/dts/allwinner/sun20i-d1s.dtsi | 3 ++-
+> > >>
+> > >> The other C906/C910/C920-based SoCs need devicetree updates as well, although
+> > >> they don't necessarily need to be part of this series:
+> > >>
+> > >>  - sophgo/cv18xx.dtsi
+> > >>  - sophgo/sg2042-cpus.dtsi
+> > >>  - thead/th1520.dtsi
+> > > 
+> > > Yeah, I think I pointed that out before with the same "escape hatch" of
+> > > it not needing to be in the same series.
+> > > 
+> > >>
+> > >>>  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >>>
+> > >>> diff --git a/arch/riscv/boot/dts/allwinner/sun20i-d1s.dtsi b/arch/riscv/boot/dts/allwinner/sun20i-d1s.dtsi
+> > >>> index 64c3c2e6cbe0..6367112e614a 100644
+> > >>> --- a/arch/riscv/boot/dts/allwinner/sun20i-d1s.dtsi
+> > >>> +++ b/arch/riscv/boot/dts/allwinner/sun20i-d1s.dtsi
+> > >>> @@ -27,7 +27,8 @@ cpu0: cpu@0 {
+> > >>>  			riscv,isa = "rv64imafdc";
+> > >>
+> > >> The ISA string should be updated to keep it in sync with riscv,isa-extensions.
+> > > 
+> > > This probably looks like this cos I said that the kernel shouldn't parse
+> > > vendor extensions from "riscv,isa". My rationale was that we have
+> > > basically no control of what a vendor extension means in riscv,isa so 
+> > > we shouldn't parse them from it (so marginally worse than standard
+> > > extensions, where it means what the spec says except when it doesn't).
+> > > 
+> > > Given how we implement the parsing, it also meant we weren't implying
+> > > meanings for vendor extensions ACPI-land, where we also can't ensure the
+> > > meanings or that they remain stable. That change is in a different
+> > > series:
+> > > https://patchwork.kernel.org/project/linux-riscv/patch/20240609-support_vendor_extensions-v2-1-9a43f1fdcbb9@rivosinc.com/
+> > > 
+> > > Although now that I think about it, this might break xandespmu... I
+> > > dunno if the Andes guys switched over to using the new property outside
+> > > of the single dts in the kernel tree using their SoC. We could
+> > > potentially special-case that extension if they haven't - but my
+> > > position on this mostly is that if you want to use vendor extensions you
+> > > should not be using riscv,isa (even if the regex doesn't complain if you
+> > > add them). I'd like to leave the code in the other patch as-is if we can
+> > > help it.
+> > > 
+> > > I added Yu Chien Peter Lin here, maybe they can let us know what they're
+> > > doing.
+> > 
+> > OK, that makes sense to me. Then please ignore my original comment.
+> 
+> Should the xandespmu thing be an issue, I'd suggest we just do something
+> like the following, in place of the new switch arm added by Charlie:
+> 
+> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+> index ec4bff7a827c..bb99b4055ec2 100644
+> --- a/arch/riscv/kernel/cpufeature.c
+> +++ b/arch/riscv/kernel/cpufeature.c
+> @@ -628,6 +628,17 @@ static void __init riscv_parse_isa_string(const char *isa, unsigned long *bitmap
+>  		if (unlikely(ext_err))
+>  			continue;
+>  
+> +		if (*ext == 'x' && acpi_disabled) {
+> +			/*
+> +			 * xandespmu predates this "rule", so special case it for
+> +			 * hysterical raisins
+> +			 */
+> +			if (strncasecmp(ext, "xandespmu", ext_end - ext)) {
+> +				pr_warn_once("Vendor extensions are ignored in riscv,isa. Use riscv,isa-extensions instead.");
+> +				break;
+> +			}
+> +		}
+> +
+>  		match_isa_ext(ext, ext_end, bitmap);
+>  	}
+>  }
+> 
 
-Well, you could also view it differently: If I have a fs that corrupts time
-stamps, the last thing I'd like is that the kernel silently accepts it
-without telling me about it :)
+Thanks for the hands-up!
+We don't use the deprecated riscv,isa to specify xandespmu, so no
+need to address this special case.
 
-But more seriously, my filesystem development experience shows that if the
-kernel silently tries to accept and fixup the breakage, it is nice in the
-short term (no complaining users) but it tends to get ugly in the long term
-(where tend people come up with nasty cases where it was wrong to fix it
-up). So I think Christoph's idea of refusing to load inodes with ctimes out
-of range makes sense. Or at least complain about it if nothing else (which
-has some precedens in the year 2038 problem).
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Regards,
+Peter Lin
