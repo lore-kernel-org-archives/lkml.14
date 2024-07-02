@@ -1,191 +1,226 @@
-Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A64781BA874;
-	Tue,  2 Jul 2024 14:24:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431451BA081;
+	Tue,  2 Jul 2024 14:24:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719930291; cv=none; b=XYvL//LMPPkvG7hKWSKy7/SwnAcFjlxWUYSdPLuaL/U5GZn4SbAxSn7pCWyxM6VKunL3tq7qAIPbEZiJwJsjC79OsRUWed3AL6aiQ0OmDPIdMV3Xx93p/rkaRYV4Tq9ix8j5h99IXjYQvh8QqzPzCdYRyHu/rB2fsQuSlXeclZQ=
+	t=1719930298; cv=none; b=fWHSZCpRezjk8JLAds93eGCnOnr1pO8BHEXTz6gfJpPLmwKsK3fyDDFfGsZ62nHlkcx8mO9O/s6i1Ikaa845eSOTbaYuhMyfXPJDH0wDZI5MQoyj9GosFGjsBPIdBFXelJTtdOvtMxl5i6ww6A+07xnr1KpJSjJ2X73wnsV+Lns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719930291; c=relaxed/simple;
-	bh=pQ0VyLEWPbTzv8ueT/SYA25grM78ReWuMdOeMbNrUDg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gkVD1i9mKxP6NVfkL4qYfNThTOWihj1qNyHc/Kgli7RZMErXJEfuMqmW+lWWcRFy6f7Bcqa4EIMsfEPasvSXkNTPJRKNk+KYIsDLmQhKpbY2sEMgEZPa3JycJWmzAjkWpHV9rYpK35EWutyThp95ORM0Qyc4EYW2Uqqb4YydeW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U0lJZk7j; arc=none smtp.client-ip=209.85.128.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719930298; c=relaxed/simple;
+	bh=KRo+VTADaqii3BC3HatcoVDFPzZKRCbP13qZos3qpj4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CnyyN0i0GAPClAsoliHHZ4PYVX+FVIFRSV/QTnLWJNzV8/aU/9kGOwU3Fs78W8hJOjz91DxElfNqZDOaDFFj3Pz9gwcZNFDqBF1HO/rlXBbAmn9pkLiWk99wAnM9mXbJXxFljpyL0G7pCH3KvS01JzVDvNv0iDQrLooX7R/Hzzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i5nDx4WK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U0lJZk7j"
-Received: by mail-wm1-f68.google.com with SMTP id 5b1f17b1804b1-42574064b16so26759465e9.2;
-        Tue, 02 Jul 2024 07:24:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719930288; x=1720535088; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UeeAUA+M1CrSeGLqCio6FXkyYBfV90EEN3G250oeFOA=;
-        b=U0lJZk7j838j0RN9wVhvEkgwxIIisef+6GnZvYMxQad3c4rA3CGBavY4V78+SFc8wc
-         mXayx2ZTLN+O4Ji2kLGr6tTsDsLM52998xf+1c/xY3mnkji5Wo8EbH38D/jZUjJKstRj
-         uK6UeULrboMTahGdVzPxnrEKW9qjEv6d7hEQvS/pjQQnhZfvY9OxfZTcyGR/frwL43DE
-         ue44YEJ7/B68cktWkenGK7bcFvFGiVHZzFR8yR7AoxgPbbkUcfHHH8bHTIaqAnoyQ+az
-         cziLmLlB73gk1ilOW4qUwNLm/vtug8QD6hvJ9Em0dcEonTfG/1qHwTNEmsu1uEAftP/r
-         cqSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719930288; x=1720535088;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UeeAUA+M1CrSeGLqCio6FXkyYBfV90EEN3G250oeFOA=;
-        b=NITcHt3HIH54ETvg2uEBZTRRr3pwuWEYs1pYUhNbL/wCPZhmzhxsTV4j17NOrcTYH/
-         gOeBHJz14+prYIFkNvQhmhnZCxPMhfXDvB3B3zRaNsbrANe2kBEaiDGYvNptPO/+vkeE
-         BQ4Kv/i7hcTi8+cGdRYKjDiWvMo29JkRfT7cXbXdszSdScphZroVdWuVlU9GMmEnwqo2
-         75L7+QuZ35BIb4KWLH9wsUv/SxEKSvKzOxdhIDzO7Ruu5jdqY3g80H3p9dmwa01GBhT8
-         +/cvhMHAKtHeidTHUb+a9RdG5NIp+88rkkNJjz2wNAloPyIvAqU0fp78OIZHErYIXAoe
-         +RnA==
-X-Forwarded-Encrypted: i=1; AJvYcCVq2E9+3D1cGYuH5VxsnTdInI/YpgiBkUKR0KP91ZaL3TNzl1QH7jCS9Lj0aJgIi8XocUK6i1AdBDHpxuVgxRGOOCuzXBGgzXUIm6KAdJ6yro8pLl0U8YQU9kW0iv2xdZx6gsLu
-X-Gm-Message-State: AOJu0YwzekyNjDvdgERkI2lefDR62QUidG5EHNaHe2vGUbU9V1P/Nk7J
-	eZeUbZiOv0A1Ovr95bqa0QgY4NiVQH9r/MIP8A+7FnneFN7d8ln4
-X-Google-Smtp-Source: AGHT+IFVs8QCxMuEfkGcfHEIMry2KNCFjt+wxd4AxRq+lltb3dEuh8t1F/BUWxxFZ5jbRr9E3aHOiw==
-X-Received: by 2002:a05:600c:705:b0:424:a4f1:8c3e with SMTP id 5b1f17b1804b1-4257a074b50mr68377395e9.34.1719930287765;
-        Tue, 02 Jul 2024 07:24:47 -0700 (PDT)
-Received: from localhost ([45.130.85.5])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256f55c4b5sm186586065e9.43.2024.07.02.07.24.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 07:24:47 -0700 (PDT)
-From: Leone Fernando <leone4fernando@gmail.com>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	dsahern@kernel.org,
-	willemb@google.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Leone Fernando <leone4fernando@gmail.com>
-Subject: [RESEND PATCH net-next v2 0/4] net: route: improve route hinting
-Date: Tue,  2 Jul 2024 16:24:02 +0200
-Message-Id: <20240702142406.465415-1-leone4fernando@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i5nDx4WK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48483C116B1;
+	Tue,  2 Jul 2024 14:24:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719930298;
+	bh=KRo+VTADaqii3BC3HatcoVDFPzZKRCbP13qZos3qpj4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=i5nDx4WKvXiMLVMGSn3hD/tjgepRUKlKl4we5q0ersHxOzNwwpYxmg6wpU4HJraV/
+	 CjoudyhdpE4vT32jXK6meDNil+4pg78joCTUNJgghl4nJ6aBIedg8oCaYMtAbkJVDA
+	 GiwKBeTiw9QgAOjXFRwLDRzdn1FcVVD1cZDCg39Kw3DKFPzsbsLRhaJ8BdyyA400HO
+	 QRYSdZn5vO0Zyb0v08YwVtxp2v68dpAHuN7mDU6u7K/KB5QO2HWRtn5//Hc8eJfIZz
+	 +NsXj8M1yuez9zbkvv+NOe5xFbaZsv3MRYokOQ/AHwll054DzjTn9qbjeEmpHwSvek
+	 wRvyvH1te9lQg==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Pavel Machek <pavel@ucw.cz>,
+	Len Brown <len.brown@intel.com>,
+	Randy Dunlap <rdunlap@infradead.org>
+Cc: suleiman@google.com,
+	briannorris@google.com,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH v8] PM: sleep: Expose last succeeded resumed timestamp in sysfs
+Date: Tue,  2 Jul 2024 23:24:54 +0900
+Message-ID:  <171993029390.95379.9256588060965749271.stgit@mhiramat.roam.corp.google.com>
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
+In-Reply-To:  <171993028355.95379.9391483220285994310.stgit@mhiramat.roam.corp.google.com>
+References:  <171993028355.95379.9391483220285994310.stgit@mhiramat.roam.corp.google.com>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-In 2017, Paolo Abeni introduced the hinting mechanism [1] to the routing
-sub-system. The hinting optimization improves performance by reusing
-previously found dsts instead of looking them up for each skb.
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-This patch series introduces a generalized version of the hinting mechanism that
-can "remember" a larger number of dsts. This reduces the number of dst
-lookups for frequently encountered daddrs.
+Expose last succeeded resumed timestamp as last_success_resume_time
+attribute of suspend_stats in sysfs so that user can use this time
+stamp as a reference point of resuming user space.
 
-Before diving into the code and the benchmarking results, it's important
-to address the deletion of the old route cache [2] and why
-this solution is different. The original cache was complicated,
-vulnerable to DOS attacks and had unstable performance.
+On some system like the ChromeOS, the system suspend and resume are
+controlled by a power management process. The user-space tasks will be
+noticed the suspend and the resume signal from it.
+To improve the suspend/resume performance and/or to find regressions,
+we would like to know how long the resume processes are taken in kernel
+and in user-space.
+For this purpose, expose the accarate time when the kernel is finished
+to resume so that we can distinguish the duration of kernel resume and
+user space resume.
 
-The new input dst_cache is much simpler thanks to its lazy approach,
-improving performance without the overhead of the removed cache
-implementation. Instead of using timers and GC, the deletion of invalid
-entries is performed lazily during their lookups.
-The dsts are stored in a simple, lightweight, static hash table. This
-keeps the lookup times fast yet stable, preventing DOS upon cache misses.
-The new input dst_cache implementation is built over the existing
-dst_cache code which supplies a fast lockless percpu behavior.
+This suspend_stats attribute is easy to access and only expose the
+timestamp in CLOCK_MONOTONIC. User can find the accarate time when the
+kernel finished to resume its drivers/subsystems and start thawing, and
+measure the elapsed time from the time when the kernel finished the
+resume to a user-space action (e.g. displaying the UI).
 
-The measurement setup is comprised of 2 machines with mlx5 100Gbit NIC.
-I sent small UDP packets with 5000 daddrs (10x of cache size) from one
-machine to the other while also varying the saddr and the tos. I set
-an iptables rule to drop the packets after routing. the receiving
-machine's CPU (i9) was saturated. 
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ Changes in v8:
+  - Update against the latest kernel.
+  - Introduce dpm_save_success_time() to update last_succeess_resume_time.
+ Changes in v7:
+  - Update patch description.
+  - Update sysfs documentation to say the exact timing.
+  - Update the comment.
+ Changes in v6:
+  - Fix to record resume time before thawing user processes.
+ Changes in v5:
+  - Just updated for v6.7-rc3.
+ Changes in v4.1:
+  - Fix document typo (again).
+ Changes in v4:
+  - Update description to add why.
+  - Fix document typo.
+ Changes in v3:
+  - Add (unsigned long long) casting for %llu.
+  - Add a line after last_success_resume_time_show().
+ Changes in v2:
+  - Use %llu instead of %lu for printing u64 value.
+  - Remove unneeded indent spaces from the last_success_resume_time
+    line in the debugfs suspend_stat file.
+---
+ Documentation/ABI/testing/sysfs-power |   11 +++++++++++
+ kernel/power/main.c                   |   28 ++++++++++++++++++++++++++++
+ kernel/power/power.h                  |    1 +
+ kernel/power/suspend.c                |    1 +
+ 4 files changed, 41 insertions(+)
 
-Thanks a lot to David Ahern for all the help and guidance!
-
-I measured the rx PPS using ifpps and the per-queue PPS using ethtool -S.
-These are the results:
-
-Total PPS:
-mainline              patched                   delta
-  Kpps                  Kpps                      %
-  6903                  8105                    17.41
-
-Per-Queue PPS:
-Queue          mainline         patched
-  0             345775          411780
-  1             345252          414387
-  2             347724          407501
-  3             346232          413456
-  4             347271          412088
-  5             346808          400910
-  6             346243          406699
-  7             346484          409104
-  8             342731          404612
-  9             344068          407558
-  10            345832          409558
-  11            346296          409935
-  12            346900          399084
-  13            345980          404513
-  14            347244          405136
-  15            346801          408752
-  16            345984          410865
-  17            346632          405752
-  18            346064          407539
-  19            344861          408364
- total          6921182         8157593
-
-I also verified that the number of packets caught by the iptables rule
-matches the measured PPS.
-
-TCP throughput was not affected by the patch, below is iperf3 output:
-       mainline                                     patched 
-15.4 GBytes 13.2 Gbits/sec                  15.5 GBytes 13.2 Gbits/sec
-
-[1] https://lore.kernel.org/netdev/cover.1574252982.git.pabeni@redhat.com/
-[2] https://lore.kernel.org/netdev/20120720.142502.1144557295933737451.davem@davemloft.net/
-
-v1->v2:
-- fix bitwise cast warning
-- improved measurements setup
-
-v1:
-- fix typo while allocating per-cpu cache
-- while using dst from the dst_cache set IPSKB_DOREDIRECT correctly
-- always compile dst_cache
-
-RFC-v2:
-- remove unnecessary macro
-- move inline to .h file
-
-RFC-v1: https://lore.kernel.org/netdev/d951b371-4138-4bda-a1c5-7606a28c81f0@gmail.com/
-RFC-v2: https://lore.kernel.org/netdev/3a17c86d-08a5-46d2-8622-abc13d4a411e@gmail.com/
-
-Leone Fernando (4):
-  net: route: expire rt if the dst it holds is expired
-  net: dst_cache: add input_dst_cache API
-  net: route: always compile dst_cache
-  net: route: replace route hints with input_dst_cache
-
- drivers/net/Kconfig        |   1 -
- include/net/dst_cache.h    |  68 +++++++++++++++++++
- include/net/dst_metadata.h |   2 -
- include/net/ip_tunnels.h   |   2 -
- include/net/route.h        |   6 +-
- net/Kconfig                |   4 --
- net/core/Makefile          |   3 +-
- net/core/dst.c             |   4 --
- net/core/dst_cache.c       | 132 +++++++++++++++++++++++++++++++++++++
- net/ipv4/Kconfig           |   1 -
- net/ipv4/ip_input.c        |  58 ++++++++--------
- net/ipv4/ip_tunnel_core.c  |   4 --
- net/ipv4/route.c           |  75 +++++++++++++++------
- net/ipv4/udp_tunnel_core.c |   4 --
- net/ipv6/Kconfig           |   4 --
- net/ipv6/ip6_udp_tunnel.c  |   4 --
- net/netfilter/nft_tunnel.c |   2 -
- net/openvswitch/Kconfig    |   1 -
- net/sched/act_tunnel_key.c |   2 -
- 19 files changed, 291 insertions(+), 86 deletions(-)
-
--- 
-2.34.1
+diff --git a/Documentation/ABI/testing/sysfs-power b/Documentation/ABI/testing/sysfs-power
+index a3942b1036e2..ee567e7e9d4a 100644
+--- a/Documentation/ABI/testing/sysfs-power
++++ b/Documentation/ABI/testing/sysfs-power
+@@ -442,6 +442,17 @@ Description:
+ 		'total_hw_sleep' and 'last_hw_sleep' may not be accurate.
+ 		This number is measured in microseconds.
+ 
++What:		/sys/power/suspend_stats/last_success_resume_time
++Date:		Dec 2023
++Contact:	Masami Hiramatsu <mhiramat@kernel.org>
++Description:
++		The /sys/power/suspend_stats/last_success_resume_time file
++		contains the timestamp of when the kernel successfully
++		resumed drivers/subsystems from suspend/hibernate. This is
++		just before thawing the user processes.
++		This floating point number is measured in seconds by monotonic
++		clock.
++
+ What:		/sys/power/sync_on_suspend
+ Date:		October 2019
+ Contact:	Jonas Meurer <jonas@freesources.org>
+diff --git a/kernel/power/main.c b/kernel/power/main.c
+index a9e0693aaf69..d9236bdab42a 100644
+--- a/kernel/power/main.c
++++ b/kernel/power/main.c
+@@ -16,6 +16,7 @@
+ #include <linux/seq_file.h>
+ #include <linux/suspend.h>
+ #include <linux/syscalls.h>
++#include <linux/timekeeping.h>
+ #include <linux/pm_runtime.h>
+ 
+ #include "power.h"
+@@ -321,6 +322,7 @@ struct suspend_stats {
+ 	u64 last_hw_sleep;
+ 	u64 total_hw_sleep;
+ 	u64 max_hw_sleep;
++	struct timespec64 last_success_resume_time;
+ 	enum suspend_stat_step failed_steps[REC_FAILED_NUM];
+ };
+ 
+@@ -361,6 +363,17 @@ void dpm_save_errno(int err)
+ 	suspend_stats.last_failed_errno %= REC_FAILED_NUM;
+ }
+ 
++void dpm_save_success_time(int err)
++{
++	/*
++	 * Record last succeeded resume timestamp just before thawing processes.
++	 * This is for helping users to measure user-space resume performance
++	 * for improving their programs or finding regressions.
++	 */
++	if (!err)
++		ktime_get_ts64(&suspend_stats.last_success_resume_time);
++}
++
+ void pm_report_hw_sleep_time(u64 t)
+ {
+ 	suspend_stats.last_hw_sleep = t;
+@@ -460,6 +473,17 @@ static ssize_t last_failed_step_show(struct kobject *kobj,
+ }
+ static struct kobj_attribute last_failed_step = __ATTR_RO(last_failed_step);
+ 
++static ssize_t last_success_resume_time_show(struct kobject *kobj,
++		struct kobj_attribute *attr, char *buf)
++{
++	return sprintf(buf, "%llu.%llu\n",
++		(unsigned long long)suspend_stats.last_success_resume_time.tv_sec,
++		(unsigned long long)suspend_stats.last_success_resume_time.tv_nsec);
++}
++
++static struct kobj_attribute last_success_resume_time =
++			__ATTR_RO(last_success_resume_time);
++
+ static struct attribute *suspend_attrs[] = {
+ 	&success.attr,
+ 	&fail.attr,
+@@ -477,6 +501,7 @@ static struct attribute *suspend_attrs[] = {
+ 	&last_hw_sleep.attr,
+ 	&total_hw_sleep.attr,
+ 	&max_hw_sleep.attr,
++	&last_success_resume_time.attr,
+ 	NULL,
+ };
+ 
+@@ -542,6 +567,9 @@ static int suspend_stats_show(struct seq_file *s, void *unused)
+ 		seq_printf(s, "\t\t\t%-s\n",
+ 			   suspend_step_names[suspend_stats.failed_steps[index]]);
+ 	}
++	seq_printf(s,	"last_success_resume_time:\t%-llu.%llu\n",
++		   (unsigned long long)suspend_stats.last_success_resume_time.tv_sec,
++		   (unsigned long long)suspend_stats.last_success_resume_time.tv_nsec);
+ 
+ 	return 0;
+ }
+diff --git a/kernel/power/power.h b/kernel/power/power.h
+index de0e6b1077f2..70726a55a9d1 100644
+--- a/kernel/power/power.h
++++ b/kernel/power/power.h
+@@ -348,3 +348,4 @@ static inline void pm_sleep_enable_secondary_cpus(void)
+ }
+ 
+ void dpm_save_errno(int err);
++void dpm_save_success_time(int err);
+diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
+index 09f8397bae15..1e561eb6681a 100644
+--- a/kernel/power/suspend.c
++++ b/kernel/power/suspend.c
+@@ -601,6 +601,7 @@ static int enter_state(suspend_state_t state)
+  Finish:
+ 	events_check_enabled = false;
+ 	pm_pr_dbg("Finishing wakeup.\n");
++	dpm_save_success_time(error);
+ 	suspend_finish();
+  Unlock:
+ 	mutex_unlock(&system_transition_mutex);
 
