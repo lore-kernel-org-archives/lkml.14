@@ -1,130 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD45F1BE23F
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 17:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DBB61BD51A
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 17:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719940604; cv=none; b=h2Pf7VMN+G7/MCHQbXDCnGuL7gA3k4vyBPimHXeQWlWCfQ4o8jiDaZgn6okVJYY7w40DSPUhcTF0AOu0pHTnKptDezaAMcPbTqwERfaOPVXsc/HG3t+5vqCkUPtEN6p1Yb8vJ008H8MCK+3LF0bnHrkINw+OfSCmDkLLyDJEnkQ=
+	t=1719940622; cv=none; b=WaDW14OA36Gk7ohqhFYEpsqZGkZNSzoMyqF4jS0oUDopmLuaDM8K5RE0LE2lgItblmV5wKghoJZivvDc+yOLO0rqHFNHnOpg9c6AOk1io4L51PGzxhSkFJMf4V5Ot70jknRjDlW57K8fPYrrCjjshPW/BPyi/jKkKUrM9PbIhSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719940604; c=relaxed/simple;
-	bh=C3j60canvGPUuCR7dSKydtKZSnkNQmPoIPzquCxsWus=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NI6HHRxCGEF8QIwAKeHTPMDmUsc3PCoDH8Yyc4pGtDjoA2fRajInMaWRon1+CB389QCVSlwIlpftAljVN8OV+4C6qHkrbsPWSI43kq2yj3OLiWtWbqbLK4r1Wj5po/NCBMTp9WAvnVPJtCO19myWNl+exdmFFlgUBIvxyH34//M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U3g2nMbV; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719940622; c=relaxed/simple;
+	bh=Qd+9FCBX5hfWZQ5KFpMTQfddQGI9s3Xv+vB2p6WPZBk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=faUMdVIEosvUMNct/ZG5AySeeqS+yHQ7bCVtbCVs4f0VGcK1tFg+HQWckf//7oorixk8u8RCquC1sMhuFW7dYHy2jCySpNIocjmQMnmLWFS6E0Iq2v3ce/o/PWqGr+n0ZIYD3td1Z621to6kWGUZH/rbJUCE4xEpJSCSpikjOt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lmQHjknD; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U3g2nMbV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719940603; x=1751476603;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=C3j60canvGPUuCR7dSKydtKZSnkNQmPoIPzquCxsWus=;
-  b=U3g2nMbV+3QqJ28osWNF2iB/kkQvCXHeRTJZMTmFzVpVq92jjHUz6x2b
-   iU09gcBNM0k8ULHgCh1OgfElC0V7MDjDYpfaxQBFGoKqSzfrShXVAFDgP
-   OEkkVUlDwR6bDbI2Pru9oKgXEfVG06bbde8dSnSWobbbs9NZE28UE7Xnv
-   sO7oUcOdlLWxDcapwz1o9FQacacfKkbKZS+dWDCubgNR07q5acwdCwIR2
-   dEczd9RI3PBIa5YXR0lhnxkXA1NJxp76lG4hrahaZIRU7YkbMXPybDEgq
-   13pS4aGA5jao4ZqY5PpFFexzrWETgQ+8WRjCvAdW0eGgcrJmJkOUlz2XA
-   w==;
-X-CSE-ConnectionGUID: Qcg6N7EYStW2x+5HIQq9gg==
-X-CSE-MsgGUID: cFHdBgQUTDWw9l2psqUg8w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="20032509"
-X-IronPort-AV: E=Sophos;i="6.09,178,1716274800"; 
-   d="scan'208";a="20032509"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 10:16:42 -0700
-X-CSE-ConnectionGUID: /2yoOLtkS7esvdn37AdY4w==
-X-CSE-MsgGUID: sdejj7ZzTiWc2l1X95wlNg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,178,1716274800"; 
-   d="scan'208";a="76709409"
-Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 10:16:41 -0700
-Date: Tue, 2 Jul 2024 10:16:39 -0700
-From: Tony Luck <tony.luck@intel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Fenghua Yu <fenghua.yu@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Subject: Re: [PATCH v23 14/19] x86/resctrl: Handle removing directories in
- Sub-NUMA Cluster (SNC) mode
-Message-ID: <ZoQ1937ntIdMNQwL@agluck-desk3.sc.intel.com>
-References: <20240628215619.76401-1-tony.luck@intel.com>
- <20240628215619.76401-15-tony.luck@intel.com>
- <20240702085337.GAZoPAEaEBtT18iD3V@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lmQHjknD"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3678aa359b7so530113f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 10:16:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719940617; x=1720545417; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eMxjNF73xEehfmLmhKwg3pjkqI+cYmjdSdGZcjJzAQY=;
+        b=lmQHjknDNO5eFESHHD0posluOABZKtvEgYhW8eMsTcRO1gN5niXJ9NdYCJ7fo7YIpL
+         iHl2LGnJCxMdInO6NFko1VCAUDMskmg9mlicJkSg/vv50gtbI3jUF9AzBltt7G7Josw1
+         XJHkY74SGNJQs/fGJvBf2LVXk04di1/+snlEwpf8imunxyuJ2uAtMH1ZU08KoTVq7oWe
+         GNwi8P7akn9IcRa7mOLdJkSe8DsIPnF1bB+cVU/CNmJgp4BTmmCv+qqoTqO0zpmwpBAF
+         PKsOHroS3eWwz9mVL0wIZxGYJjLqLDnGq/4DS9ccmb3edZjz70W+FmiYUV7FMW8BRQKj
+         OaWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719940617; x=1720545417;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eMxjNF73xEehfmLmhKwg3pjkqI+cYmjdSdGZcjJzAQY=;
+        b=p/eFVsiKMF716tylW1xZH1SNd4a6aRLX8KKbOeFBvgbLW+Gh6+nNVnMmsTmG1q5Uaa
+         y76cSfuAnVqqOnVL/bx/iOU3bsKNCKZFq03I3gYIsu1/ee2r+w+QaA5TKBrCCmJQEF3L
+         PeziLQjYJUSAY1CTca75Hmdp7+GjC6V6MP6Y5GpIgpfvdjr6oyyV4SyZktrNwdjN86OV
+         AHPMgW4yYaXBMZPml5ybPlPcMJ/esvyUY0s9lMWoVtjRBc5Q/InzeMRMlLJlmhKWbQTo
+         ob7JjM2Nh3eaV6Ry4K1Nobl3XeW7uS32/BAnmgU0mzKYmRkjv+TwiZgI4hH/gVDB4DaK
+         uE3g==
+X-Forwarded-Encrypted: i=1; AJvYcCWlqUTPn2DyHw9YkY+FAsM4DWwvuKXHKRYCvFLj3ccsOV42Y+XRqe8YvnTJGYWN/MPm2ExPBG2k+jocxu0K/L+4hsY93tzACthQDz0j
+X-Gm-Message-State: AOJu0YxnIWmg30tbDwsFMK2YWSg68fnopN6HUO4YT9X0U9N54FdmQnb1
+	CeIPxmYWm8ZNIA5+TV3Vh3yo++6IFU+NDhhDZA2YkikGoZPuysxApgSsPRIOJCQ=
+X-Google-Smtp-Source: AGHT+IHt/P0ua15wXj9zZu7YMLDV20uxy+PQFqpcA+vAHPimqKTS72Y/7YzGoy4cdhn7YTh0hbVksQ==
+X-Received: by 2002:a5d:5983:0:b0:35f:314a:229c with SMTP id ffacd0b85a97d-36774f899ffmr9542381f8f.28.1719940617271;
+        Tue, 02 Jul 2024 10:16:57 -0700 (PDT)
+Received: from ?IPV6:2a05:6e02:1041:c10:c49e:e1a5:3210:b8c0? ([2a05:6e02:1041:c10:c49e:e1a5:3210:b8c0])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-36789fd7a0esm2004822f8f.104.2024.07.02.10.16.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jul 2024 10:16:56 -0700 (PDT)
+Message-ID: <7a198549-df42-4fb1-97cd-116e1bd96903@linaro.org>
+Date: Tue, 2 Jul 2024 19:16:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240702085337.GAZoPAEaEBtT18iD3V@fat_crate.local>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] thermal/drivers/mediatek/lvts_thermal: Provide default
+ calibration data
+To: Chen-Yu Tsai <wenst@chromium.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Nicolas Pitre <npitre@baylibre.com>,
+ Alexandre Mergnat <amergnat@baylibre.com>,
+ =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
+ Julien Panis <jpanis@baylibre.com>, Balsam CHIHI <bchihi@baylibre.com>,
+ Frank Wunderlich <frank-w@public-files.de>, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+References: <20240620092306.2352606-1-wenst@chromium.org>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <20240620092306.2352606-1-wenst@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 02, 2024 at 10:53:37AM +0200, Borislav Petkov wrote:
-> On Fri, Jun 28, 2024 at 02:56:14PM -0700, Tony Luck wrote:
-...
-> ... and this are almost identical hunks.
+On 20/06/2024 11:23, Chen-Yu Tsai wrote:
+> On some pre-production hardware, the SoCs do not contain calibration
+> data for the thermal sensors. The downstream drivers provide default
+> values that sort of work, instead of having the thermal sensors not
+> work at all.
 > 
-> Why isn't there a helper which gets called here?
+> Port the default values to the upstream driver. These values are from
+> the ChromeOS kernels, which sadly do not cover the MT7988.
+> 
+> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+> ---
 
-A helper will avoid this duplication. Draft below. Is this
-what you want? Is the function name OK. I wasn't sure if the
-"mon" looked better at the beginning. Or as rmdir_one_mon_subdir()
+Applied, thanks
 
-I've also fixed up part 17 to use msr_clear_bit()
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Are you still digging through the patches?
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
--Tony
-
-static void mon_rmdir_one_subdir(struct kernfs_node *pkn, char *name, char *subname)
-{
-	struct kernfs_node *kn;
-
-	kn = kernfs_find_and_get(pkn, name);
-	if (!kn)
-		return;
-	kernfs_put(kn);
-
-	if (kn->dir.subdirs <= 1)
-		kernfs_remove(kn);
-	else
-		kernfs_remove_by_name(kn, subname);
-}
-
-/*
- * Remove all subdirectories of mon_data of ctrl_mon groups
- * and monitor groups for the given domain.
- * Remove files and directories containing "sum" of domain data
- * when last domain being summed is removed.
- */
-static void rmdir_mondata_subdir_allrdtgrp(struct rdt_resource *r,
-					   struct rdt_mon_domain *d)
-{
-	struct rdtgroup *prgrp, *crgrp;
-	char subname[32];
-	bool snc_mode;
-	char name[32];
-
-	snc_mode = r->mon_scope == RESCTRL_L3_NODE;
-	sprintf(name, "mon_%s_%02d", r->name, snc_mode ? d->ci->id : d->hdr.id);
-	if (snc_mode)
-		sprintf(subname, "mon_sub_%s_%02d", r->name, d->hdr.id);
-
-	list_for_each_entry(prgrp, &rdt_all_groups, rdtgroup_list) {
-		mon_rmdir_one_subdir(prgrp->mon.mon_data_kn, name, subname);
-
-		list_for_each_entry(crgrp, &prgrp->mon.crdtgrp_list, mon.crdtgrp_list)
-			mon_rmdir_one_subdir(crgrp->mon.mon_data_kn, name, subname);
-	}
-}
