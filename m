@@ -1,60 +1,60 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83EB115A849
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 10:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71DF615533B
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 10:47:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719917235; cv=none; b=YcHsMFcpv9nXBni/mERj268E+MMyHIKZSuXe2m6CsUzYPngg63lMOKFKnvTINYIweCJqHeUJy1aTulNlGZO3ov+G189O0jIncOGLWyGgn3I64cWJ0+tCw4nmJLQeuVMhGODQDxd6acFnpss4Z4SyCZg+fDgqegkKmvodzimvx90=
+	t=1719917267; cv=none; b=skXmiiOeurK1Ukkis/nlec3auccHvV/e2vI6FQQlAwEOmyiUKxDftLCgvCpj/lGCxWhzVPM1arlC3za2bIiggeZCrHHv6Baz205QgATrXezWc7WtdY/nDjKL36NndoqIMnh6t46T3J/vMRWjYknoILwVGXxrPFZjHE19NnegjOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719917235; c=relaxed/simple;
-	bh=7InumcdbShV1TGz15zBQgZ0+mPGbge1JfKR5C/3XHwQ=;
+	s=arc-20240116; t=1719917267; c=relaxed/simple;
+	bh=LzB24hC2FXy46zdfaJjOdxoT6pyKSG0gHaAqOQ1g8fs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oR4eB5YCsfgVLIM2JwBIk/S/x+y9aHmKVtfNWq8CUqKZhRpzERX6R7yvIc+ed0SlQamIVBwjEO8N4z4iAqucyj4LLmP8ENC0ZYNbKrliB33gVkrB2zkL/7QMSOnEbItBmgiOxTLvvvf1QsbviduAHmAa7nyDLIJh6yci7WcyCGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mFEr1G22; arc=none smtp.client-ip=209.85.208.177
+	 In-Reply-To:Content-Type; b=IldL+4dC/T9MRor1IBP6yyIYkdPspFbaRrdOPz6hd0rPNhQZfQxjDbvmdtadFqBSClhIbpdq10S2JfOowQXBjko7a705cnS3Z56+KwzZI0wG85sBxmsaQAKejyUw4jazoDVK1cjP2aFR27ImtTr1bH05E7Rm7jE0EX5eWY5awGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PFsykqId; arc=none smtp.client-ip=209.85.208.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mFEr1G22"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2ec52fbb50cso39491861fa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 03:47:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PFsykqId"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-58b447c513aso847618a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 03:47:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719917232; x=1720522032; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1719917263; x=1720522063; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=P92+0FeJgLTWh83yvzOS18H2gViBFUz3gdnOBY11d/4=;
-        b=mFEr1G229uKj0uvuWgo5wYcV+OSaPWya0e00YsapS/I5vI5aPniLSuvrGDq/mu8W47
-         Ch6FuhKw3XaovNbYv1FEt+UejWJf5Owl3f9RFSU7/t+NK5Z/HuhrALagZG1SQ6xOqaLW
-         JzUjfEqSV+orwPEjwqwXePFW3/3pM7f2INZA6pInVOFDJlX5t2ROoSVwPJEJIIDcDmTD
-         9CfPxT2bQ7848xRrZK9DddrytoluCO8A/KZaNuGvyYkRik+q7A2jyivO8ayYZjvirmri
-         6N/jF9qjeauWPSJEgLD+gbg7ntShmKqKmA/sVOUSNxVXuo3fzB0FG1RJ9eS5ZUwJmkeJ
-         7Dyg==
+        bh=9QojKpIBfWA+MtbYhtRtr6Qp5mhuFrg9TUIh1oxlQgo=;
+        b=PFsykqIdAV6fGl+hcx8SxyiUGbuZwYQPiPeyr6K1BSuOvFAeSw0V39BdMNQvxHv5xi
+         Mbfc/MBVxra/1T3PA/SKLKAd1enDYnDJH4FpiVr6t2CG8cmvF6aSUAnZInnwpMswPYch
+         as1fEURPkqSNrOAJ9UDVTf7Qwh3ULRICZGcgskM4QF1lmmi5YVhf0TlQlQv2ZNmxYwym
+         5qoJwvC9IehXYM43nU5f0qbbNN8cPeUXyb9Y4FHKmeMi+Xh2he9RtGHZ+KKrApmKRjlm
+         VapfoN/lnH0aamddF4Mu6Nur2XhxDO0njd7eS30BHDcYzYn5RycIYTtDybiyy43uErTk
+         6cSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719917232; x=1720522032;
+        d=1e100.net; s=20230601; t=1719917263; x=1720522063;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=P92+0FeJgLTWh83yvzOS18H2gViBFUz3gdnOBY11d/4=;
-        b=l66Z3cf/9RReAKnT0LIvodxnrv8A7QThjQwgOxheNBI5QOsPgGBqEoNpUaqoaD4WPw
-         3vc+uChTMy+fS7+XgJKFusohx328pHCDaaBIL8DUfKzS2L5RGEruBM/TMaVWBNVKXcFE
-         mxrlQ/yZ67MWCt8OzDsgCwam7zmhcRZXS7zrfkcklQ4rcOR5ycoyYuBYdYe6bt5dRW6T
-         gi90cxFNIl9cy9h93kgN9lcuF6VS1O5YKZ4qbDUF2dW9VpehV6roepKwZ5qRez4qicyI
-         Jn3rDgadknshsgzJHJGMzyHBpkpRYrybJBq88phTj9CTTpHzVoNCEEJVQta21HN2jE53
-         38cw==
-X-Forwarded-Encrypted: i=1; AJvYcCU9oSgKCBQFEfOq4YJ9xM2PFj3JlDVFIJWBVAWqyQ6xaFm7EEJIx8KeFCmh4YOx2wAE5M3vRND6IGf9q7orVmeq6vOCCNqAhg6b+yVk
-X-Gm-Message-State: AOJu0Yx6zFhvszJjBncN3/byvnmEh1Jgj5Z8yWbnhKHC9duesS5faa8g
-	HKTgeuQ8L25U9eAxw8CMhY0U6AJTZZHkmns5UuW8q0jj30EjG6eVMWT0TdiklQA=
-X-Google-Smtp-Source: AGHT+IGsyY8yXpt8X5axUiNk+A3akY1RMqxa/35yt/ICICyWTKIxiqpZt3x3eK+iUQN8LDGEn+W8hA==
-X-Received: by 2002:a05:651c:b0b:b0:2ec:56d1:f28 with SMTP id 38308e7fff4ca-2ee5e3b241fmr62678771fa.26.1719917231561;
-        Tue, 02 Jul 2024 03:47:11 -0700 (PDT)
+        bh=9QojKpIBfWA+MtbYhtRtr6Qp5mhuFrg9TUIh1oxlQgo=;
+        b=lFEa4sX1ktYmdtHqi/RDy3LqRfKTwtnkC45D6/87GTRAu7rQQC/BahkN0gv4Zt24kH
+         ZT0wj/0WEMKcQ3tTn7t2gHXgcpNcKwTfudDmYLKqvrDBcgGOTjuTwGWD/fYZEcct4G3Y
+         wLhyAIc07TJy5HnuuORhYFS0iWmkQyhMFW/8CenYMDgrZTKdysUXNLmsq1nhvBFdKk+2
+         q+zhkH5rvtZcgXFzS3VQuiXGO4fn91ULc3JsHA2k4QkjY2vdfIB9G6X0C9QW17EhYKfn
+         7G7cHTXfoZIfEhCgLB66iCknSYTEZI1HZcIRSug2SracnergpA3NIff1sFKUDMacNKjR
+         7myA==
+X-Forwarded-Encrypted: i=1; AJvYcCWyCHlvhP9Dud3PNpyb1S+7N6QIv0Cu9jy2nsIxm7svydy3zGbugJteLb3oVUxA48/wOEZPkSOrC27ezOAZvrbf5eutXWXMVdQsWXXM
+X-Gm-Message-State: AOJu0Yz97Rj1C74Sz3uhPXuBbVwr/u+u3RrVrPG6DFQrDyNUiQRLg+9f
+	KNagpP6bRp+aBKBKi6WkpWEssffrOZtkLCIlYGR68iixQnykQdxKGejSby5D1cM=
+X-Google-Smtp-Source: AGHT+IH3YqWqVZ69RnfBSZJtMSQuxKr98sUqY1vgvnLnA67Bl4IrWfoqrnYGdL9697LVJils1a9DWw==
+X-Received: by 2002:a05:6402:1941:b0:58b:abc6:9cec with SMTP id 4fb4d7f45d1cf-58babc69debmr495842a12.40.1719917262783;
+        Tue, 02 Jul 2024 03:47:42 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.219.137])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5861324eb41sm5539498a12.30.2024.07.02.03.47.09
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5861381604asm5478504a12.45.2024.07.02.03.47.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jul 2024 03:47:10 -0700 (PDT)
-Message-ID: <d7281992-821b-4eee-b028-7402a58524e3@linaro.org>
-Date: Tue, 2 Jul 2024 12:47:09 +0200
+        Tue, 02 Jul 2024 03:47:41 -0700 (PDT)
+Message-ID: <6bc92fdc-1724-44dd-8c8f-fb64e4c23f90@linaro.org>
+Date: Tue, 2 Jul 2024 12:47:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,15 +62,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/3] ARM: dts: aspeed: Add IEISystems NF5280M7 BMC
- machine
-To: George Liu <liuxiwei1013@gmail.com>, linux-aspeed@lists.ozlabs.org
-Cc: devicetree@vger.kernel.org, openbmc@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, robh+dt@kernel.org,
- linux-arm-kernel@lists.infradead.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au
-References: <20240701105259.972135-1-liuxiwei@ieisystem.com>
- <20240701105259.972135-3-liuxiwei@ieisystem.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: arm: qcom: Document samsung,ms013g
+To: Raymond Hackley <raymondhackley@protonmail.com>,
+ linux-kernel@vger.kernel.org
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, phone-devel@vger.kernel.org,
+ ~postmarketos/upstreaming@lists.sr.ht
+References: <20240630132859.2885-1-raymondhackley@protonmail.com>
+ <20240630132859.2885-2-raymondhackley@protonmail.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Content-Language: en-US
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
@@ -117,239 +119,32 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240701105259.972135-3-liuxiwei@ieisystem.com>
+In-Reply-To: <20240630132859.2885-2-raymondhackley@protonmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 01/07/2024 12:52, George Liu wrote:
-> The IEISystems NF5280M7 is an x86 platform server with an
-> AST2600-based BMC.
-> This dts file provides a basic configuration for its OpenBMC
-> development.
+On 30/06/2024 15:29, Raymond Hackley wrote:
+> Document samsung,ms013g for Galaxy Grand 2.
 > 
+> Signed-off-by: Raymond Hackley <raymondhackley@protonmail.com>
 
-...
+<form letter>
+This is a friendly reminder during the review process.
 
-> +		i2c613 = &i2c6s1ch3;
-> +		i2c614 = &i2c6s1ch4;
-> +		i2c615 = &i2c6s1ch5;
-> +		i2c616 = &i2c6s1ch6;
-> +		i2c617 = &i2c6s1ch7;
-> +		i2c620 = &i2c6s2ch0;
-> +		i2c621 = &i2c6s2ch1;
-> +		i2c622 = &i2c6s2ch2;
-> +		i2c623 = &i2c6s2ch3;
-> +		i2c624 = &i2c6s2ch4;
-> +		i2c625 = &i2c6s2ch5;
-> +		i2c626 = &i2c6s2ch6;
-> +		i2c627 = &i2c6s2ch7;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = &uart5;
-> +		bootargs = "console=ttyS4,115200n8 earlycon";
+It looks like you received a tag and forgot to add it.
 
-earlycon is debugging tool, not production, drop. This leads to totally
-redundant bootargs, so drop it entirely.
+If you do not know the process, here is a short explanation:
+Please add Acked-by/Reviewed-by/Tested-by tags when posting new
+versions, under or above your Signed-off-by tag. Tag is "received", when
+provided in a message replied to you on the mailing list. Tools like b4
+can help here. However, there's no need to repost patches *only* to add
+the tags. The upstream maintainer will do that for tags received on the
+version they apply.
 
-> +	};
-> +
-> +	memory@80000000 {
-> +		device_type = "memory";
-> +		reg = <0x80000000 0x80000000>;
-> +	};
-> +
+https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
 
-...
-
-
-> +&i2c2 {
-> +	status = "okay";
-
-Missing blank line (everywhere)
-
-> +	pca9546@70{
-
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-
-
-> +		compatible = "nxp,pca9546";
-> +		reg = <0x70>;
-> +		bus2_mux70_0: i2c@2{
-> +			reg = <0>;
-> +			tmp112@49{
-
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-
-
-Everywhere: missing space before {
-
-
-> +				compatible = "ti,tmp112";
-> +				reg = <0x49>;
-> +				label = "Inlet_Temp";
-> +			};
-
-Missing blank line
-
-> +			emc1413@4c{
-
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-
-
-> +				compatible = "microchip,emc1413";
-> +				reg = <0x4c>;
-> +				label = "Outlet_Temp";
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&i2c4 {
-> +	multi-master;
-> +	status = "okay";
-> +	ipmb0@10 {
-> +		compatible = "ipmb-dev";
-> +		reg = <(0x10 | I2C_OWN_SLAVE_ADDRESS)>;
-> +		i2c-protocol;
-> +	};
-> +};
-> +
-> +&i2c5 {
-> +	bus-frequency = <1000000>;
-> +	multi-master;
-> +	status = "okay";
-> +	pca9546@70{
-
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-
-Above comment applies to multiple places.
-
-> +		compatible = "nxp,pca9546";
-> +		reg = <0x70>;
-> +		bus5_mux00: i2c@0 {
-> +			reg = <0>;
-> +			status = "okay";
-
-Where is it disabled?
-
-> +			vrmp2888@76 {
-
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-
-
-> +				compatible = "mps,mp2888";
-> +				reg = <0x76>;
-> +			};
-> +			vrmp2888@72 {
-> +				compatible = "mps,mp2888";
-> +				reg = <0x72>;
-> +			};
-> +			vrmp2888@62{
-> +				compatible = "mps,mp2888";
-> +				reg = <0x62>;
-> +			};
-> +		};
-> +		bus5_mux01: i2c@1{
-> +			reg = <1>;
-> +			status = "okay";
-
-Where is it disabled?
-
-> +			vrmp2888@76{
-
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-
-
-> +				compatible = "mps,mp2888";
-> +				reg = <0x76>;
-> +			};
-> +			vrmp2888@72 {
-> +				compatible = "mps,mp2888";
-> +				reg = <0x72>;
-> +			};
-> +			vrmp2888@62{
-> +				compatible = "mps,mp2888";
-> +				reg = <0x62>;
-> +			};
-> +		};
-> +		bus5_mux02: i2c@2{
-> +			reg = <2>;
-> +		};
-> +		bus5_mux03: i2c@3{
-> +			reg = <3>;
-> +		};
-> +	};
-> +};
-> +
-> +&i2c6 {
-> +	multi-master;
-> +	status = "okay";
-> +
-> +	i2c-switch@70 {
-> +		compatible = "nxp,pca9548";
-> +		reg = <0x70>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		i2c6s0ch0: i2c@0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0>;
-> +
-> +			eeprom@50 {
-> +				compatible = "atmel,24c256";
-> +				reg = <0x50>;
-> +			};
-> +			pca9548@71 {
-
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-
-
-> +				compatible = "nxp,pca9548";
-> +				reg = <0x71>;
-> +				i2c-mux-idle-disconnect;
-> +
-> +				i2c6s1ch0: i2c@0 {
-
-
-
-
-> +		};
-> +	};
-> +};
-> +
-> +&i2c7 {
-> +	multi-master;
-> +	#retries = <3>;
-> +	status = "okay";
-> +
-> +	adc128d818@1d {
-
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-
-
-> +		compatible = "ti,adc128d818";
-> +		reg = <0x1d>;
-> +		ti,mode = /bits/ 8 <0x01>;
-> +	};
-
+If a tag was not added on purpose, please state why and what changed.
+</form letter>
 
 
 Best regards,
