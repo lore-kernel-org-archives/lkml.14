@@ -1,90 +1,107 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4730E15B107
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 11:08:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652D115B10F;
+	Tue,  2 Jul 2024 11:08:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719918526; cv=none; b=QcXUecRVrU2vtJF54kNoHz/faQZRvpj/z17MhoIAIb/E1P/zZcpHttk7+L/2n2Tnnspp2L5Gm/mZ+QGlokZRBNQIjYISenFLXOkCnbkQ8YRvXiDLI0iJNHVxItOtaf7wAXjr1t58NLirls5w09cRFYhMGywkXmfs1JG5H5V2Gak=
+	t=1719918534; cv=none; b=Vdni/Z2vYPYjHoP3pF+2RQ/GZ6OJMkIIAXOYxDAl6sNMgGoxHz4afKwZyOyZgV+9/kuplgsMcjeH3ICpF+9SOVC0sGLJdmiV7wV3mmw0C8mhDB7P417FWv+oUmxlCqd3k3W/OhPylIOQob8q+SgJ6qxmcRa91WiQhln2f9C7Yic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719918526; c=relaxed/simple;
-	bh=rkLpdMgiJZFVhnB8hgL0AQQ81N+bITs8qz59JOchlCo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hcTOQmhtrHXiFUDHSif38NLVe68FJsCsXcSAZJW3V9FWDmfgU1yruG4lssU7rmvaA6FcE07Hiejslt2JdJ+IWlViK3/uMy8iXLFWrF+P66a5KAhpWMt+qhtu/10sXOMBu8Jh0gxBNkf9qaRuyonLj8LT2f2WB1JFFVvrvszh9/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=G0fZ5M3a; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719918534; c=relaxed/simple;
+	bh=qqu1f8bbeU/SvJtG0ec6mPjZ4RG7l4GtvYUYiXGx2Z0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Q25lgNbJ9LmHqh356wCMH+YfU6a99YqP+1subeRO9YtGbs2NPFLEWf99yoxNtm7GCou0m5Q7P00FIy/OZXc8sNfLWzpJZ3KaOqX8L9a6xF5Gda+pRkb6Es/P1InDjoh554ZLWX1l6TMnY15HDUCJK5JUenUP7CA9zcbvOV0940I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=absIHYmk; arc=none smtp.client-ip=109.73.34.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G0fZ5M3a"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2ed5ac077f5so48353271fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 04:08:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719918522; x=1720523322; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BetJ1UFbBIbWuWtZ702eQZdFCcSKSw0NShAWxEnl87w=;
-        b=G0fZ5M3akgdl+DVQOA7cf6HpEZILjVZkCIgavcFOZHjFXxmY19RmX1p6fgZWGATN+c
-         4+fmwIZuVhJsak0/LwtafE5W3ocERs1J3IVD0PtVwbzuaFpp2aFdda1UZhOrckMvKPqo
-         2YjQRqc4XDb6dpTU6BAGIMtrfeoy1i3HbUuuUQhJvH/D6f+JPi/yBUM4oGJAOhVuTkoJ
-         ShFXuNpKZSEUX9e6Xbf4abS6ktplNicOKMJxpfZ6yLhJ0z85tkOe+54dXlDCF6wogsFS
-         n0CpGnKanCqB5wlDzxiUMMnJ8q93/OW4yOpP0gX2iyQLDBusrTNo7Zv792aBZHtgchiM
-         7CIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719918522; x=1720523322;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BetJ1UFbBIbWuWtZ702eQZdFCcSKSw0NShAWxEnl87w=;
-        b=mXhtOmBVLycVQY3F0BGkPqOKSuxQhd84Jw91Ij20kPzJelrVBPYlfaJIiqGX3lQFEB
-         7M7mUMGZQPofRzwpoH4lEgyBCS7DTvAEiPibr7drdi1AEejxCKzdJ1/jlDOlUyxzJPnf
-         rzNkXgKhjW4Gev7nCWnpvh+kZS8ww31h0SFAbK3pdjBDMrbw7k9nwhD2T1sEYcJ2kOFV
-         YC0OpzRO3XiwzKk6HfssB46T3QRymyBMOByMgCqTtFh1/8ZZj7Le6fJ+fV4vNSG+gzBO
-         L/hFVZs1yfd0GRUbfMxkJZxz3bTCeYXyGFfnxNwu49kq/EYl30akj2QwizKp4n/EH6Ht
-         y25Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUtT5hrPksjuxBaUeI+V5i693+48kCVf2Ec/unMKGECo42IH1DninmEmFrri4p1n+J4xxK7jk2fmaH+bFURcaQFw6UGkxyPnl9IclsS
-X-Gm-Message-State: AOJu0YzVVkNl9bQE/167JFNms8X0R33LUFAsnirvFTAiV2GKOjRk/qYO
-	/LpEf4G7hGHp7q7nQRA6Or3UgWVXns8yPXikJh5qhi4YNg09KtshcxqZWG/pJrs=
-X-Google-Smtp-Source: AGHT+IG9yoIyOpavgSvp8xHwWJUEv9GqMHuoWpEObJoubi3aQFctTwmkcSut9eRF8p0IN+IsXf9WjA==
-X-Received: by 2002:a05:651c:198b:b0:2ec:5843:2fbd with SMTP id 38308e7fff4ca-2ee5e6cd69cmr61059341fa.41.1719918522391;
-        Tue, 02 Jul 2024 04:08:42 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ee55fa9c47sm14955721fa.15.2024.07.02.04.08.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 04:08:42 -0700 (PDT)
-Date: Tue, 2 Jul 2024 14:08:40 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Zhenhua Huang <quic_zhenhuah@quicinc.com>
-Cc: robdclark@gmail.com, will@kernel.org, robin.murphy@arm.com, 
-	joro@8bytes.org, iommu@lists.linux.dev, linux-arm-msm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iommu/arm-smmu-qcom: record reason for deferring probe
-Message-ID: <ecomdlciigigng36ao6j4sj25dmbkoy6j5qun6nje3ok4rp6ld@n7cwb7v2ynbt>
-References: <1719910870-25079-1-git-send-email-quic_zhenhuah@quicinc.com>
+	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="absIHYmk"
+Received: from mx1.t-argos.ru (localhost [127.0.0.1])
+	by mx1.t-argos.ru (Postfix) with ESMTP id E1C3C100005;
+	Tue,  2 Jul 2024 14:08:30 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
+	t=1719918510; bh=fPpkEigsqYyjY+usdDH0XAppyEwih+KQZdXHBtDT3hE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=absIHYmkNib+lwQ3U/psX8NwxfEO4GxLGeMy7iCga6mucsKDyQNe/Ry191Pf9Ig5Y
+	 DHHf6wf7Jfu1+7pzMZ/zhZSIaSEXiegjgJbbafAG4KrTAwMXWrq5VXWxnl4R2EKZXx
+	 f/dLzeMT84f99djqiOZ8Br10OfTqdTj7EuoGoQHXeQDncXfPJouTWL+M72Do0PNXWO
+	 t3w60RfnpaW5AnboRZLsLmDaHcu80KlrGi5+cLdGphSStBxK6VaN4PuPNw6/7cNB3/
+	 1PYIkrv99wug0GsN/1hZ8KRrZ6bcn6QGCsfdSxocHfZyyN9zguX/hWwi/iZE9sc69V
+	 ZwxTMiQIM04uA==
+Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
+	by mx1.t-argos.ru (Postfix) with ESMTP;
+	Tue,  2 Jul 2024 14:07:24 +0300 (MSK)
+Received: from localhost.localdomain (172.17.215.5) by ta-mail-02
+ (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 2 Jul 2024
+ 14:07:04 +0300
+From: Aleksandr Mishin <amishin@t-argos.ru>
+To: Michael Walle <michael@walle.cc>
+CC: Aleksandr Mishin <amishin@t-argos.ru>, Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>
+Subject: [PATCH net] net: phy: mscc-miim: Validate bus frequency obtained from Device Tree
+Date: Tue, 2 Jul 2024 14:06:50 +0300
+Message-ID: <20240702110650.17563-1-amishin@t-argos.ru>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1719910870-25079-1-git-send-email-quic_zhenhuah@quicinc.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
+ (172.17.13.212)
+X-KSMG-Rule-ID: 1
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 186273 [Jul 02 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 21 0.3.21 ebee5449fc125b2da45f1a6a6bc2c5c0c3ad0e05, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;mx1.t-argos.ru.ru:7.1.1;t-argos.ru:7.1.1;127.0.0.199:7.1.2, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/07/02 10:26:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/07/02 07:20:00 #25796017
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On Tue, Jul 02, 2024 at 05:01:10PM GMT, Zhenhua Huang wrote:
-> To avoid deferring probe smmu driver silently, record reason for it.
-> It can be checked through ../debugfs/devices_deferred as well:
-> /sys/kernel/debug# cat devices_deferred
-> 15000000.iommu  arm-smmu: qcom_scm not ready
-> 
-> Signed-off-by: Zhenhua Huang <quic_zhenhuah@quicinc.com>
-> ---
->  drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
+In mscc_miim_clk_set() miim->bus_freq is taken from Device Tree and can
+contain any value in case of any error or broken DT. A value of 2147483648
+multiplied by 2 will result in an overflow and division by 0.
 
+Add bus frequency value check to avoid overflow.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
+Fixes: bb2a1934ca01 ("net: phy: mscc-miim: add support to set MDIO bus frequency")
+Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+---
+ drivers/net/mdio/mdio-mscc-miim.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/net/mdio/mdio-mscc-miim.c b/drivers/net/mdio/mdio-mscc-miim.c
+index c29377c85307..6380c22567ea 100644
+--- a/drivers/net/mdio/mdio-mscc-miim.c
++++ b/drivers/net/mdio/mdio-mscc-miim.c
+@@ -254,6 +254,11 @@ static int mscc_miim_clk_set(struct mii_bus *bus)
+ 	if (!miim->bus_freq)
+ 		return 0;
+ 
++	if (miim->bus_freq == 2147483648) {
++		dev_err(&bus->dev, "Incorrect bus frequency\n");
++		return -EINVAL;
++	}
++
+ 	rate = clk_get_rate(miim->clk);
+ 
+ 	div = DIV_ROUND_UP(rate, 2 * miim->bus_freq) - 1;
 -- 
-With best wishes
-Dmitry
+2.30.2
+
