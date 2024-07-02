@@ -1,210 +1,84 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E734E51004
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 10:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3278B51004;
+	Tue,  2 Jul 2024 10:52:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719917553; cv=none; b=soA3/ikVpGUJAstD+1IPDReZceRrpY+cED2sYZjVeotgFmxpXlQsWpZ6BKBFd+I/25dmsRIvmslW0LsnKokGcT3yHwZWbPYXVeozGnvLevNOGGEfkf+fgh8yQTIUEQ6vOMcYck5eND3aJYgpgGTtBTNmL5gzxW/7KuLGTmY1Nl4=
+	t=1719917569; cv=none; b=F9BMcWGqQdBTShfiOCe5edDsGvITpvrBFigGVHtmwCMkjljzl1nfDVfJMqTVh2YbgBgaeU4GyDyRsFY+K+MuTU0wLrEai/LKUzPZfd3s7O7SGFElvSvtSzxUylf70RB6yJ7eDpWOHDVYk8IBTdC7AuGWaV8gALkjWUr/AN1HJFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719917553; c=relaxed/simple;
-	bh=7Q8xbz0ss+YODr//H0kU4M//qeFDSYIzUi/DaFmuBCs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zgd0R+2iNPtifAzaMnfOm7Q6Zlh9VJQQzrnamA7TlEBUO/GA+/bkKieS00nCM5bUo6pFHI9LH+RNM2JR7rk4oQDTNWjuuohk7KFr7iZ+f0VDrfkwbFPpjbV2Zh2OcZxaEbiUFXzUAmHb2z6BdtuNBo07Y0oZnB1yE5Fo3VpB0TY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dCH66iKa; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719917569; c=relaxed/simple;
+	bh=bJbqoa2/V77ycGTVTB4yMvL+A2a6H6WoXcij3BEJddw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=EV8RgXdzZprSIg+oebSvGrgd1DXCPYnmTkJsKmq5pSC1Ss9qspePdAvhbB18DqTlGmlFMv9obH/9N+0uEH1QihxqPUnJ66Xh0u4am+QD4v8sTGN3X3cU80Thw6C+9y49i5yXMsJiRfl8phQlhba572vfOUuwD6/Znh/JoBuFjyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=JI23kSYk; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dCH66iKa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719917550;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J7umkcpqXQxwDVTau9fHQ+ZMfOegpHM40k/wLyeqzy0=;
-	b=dCH66iKa1oKasLewhAeHbTGY/KhrjT0OUt9rXHAZ9jFoZHbJvhzZX7XkoNRIWDOjQgzPcg
-	ZkrM5KoCkXk5ZPShMljLdJK+9Hukr3V50cfhxiISEKa9/M8Y2xQuXCWyrPFDLJrTcCCasF
-	JyO2UJWJcx+VJq/bVDEyJAVCKjF84w4=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-680-rpAB2V9eMFySVpaJwBLiWw-1; Tue, 02 Jul 2024 06:52:29 -0400
-X-MC-Unique: rpAB2V9eMFySVpaJwBLiWw-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a74914bc770so217696966b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 03:52:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719917548; x=1720522348;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=J7umkcpqXQxwDVTau9fHQ+ZMfOegpHM40k/wLyeqzy0=;
-        b=VJY9Ko1KZuxjuL9snkpGDbVScmmd2/lgTK9cVUJcFkXIY9w7x/0koAO6lESpp7xdpA
-         cVivQXNTu9AWylmfTIrl91wIGnm/dGLptFk0+k21/86I6uR3iLAkh+z3v1c33OWCkLXT
-         SxqhZFqWVP6SIQaz3XnZ1O3XYOIIDZ/yWa1PKwW4h5r1co0680qCl9giZCkmh9fAsemx
-         lTqCOA3lTsDXlfd0DKwGoCnwA/ZrIoL2Gs555vbvh6jCwDdyjiVab/vFDavRTxo9StiR
-         guSpeLT6/UKUyCQa8AIA7IQ7RuMpp5eO8/79Mv5j4YmlrY9D2fDWHHGbaZX/Zv+vWqG7
-         tpYg==
-X-Forwarded-Encrypted: i=1; AJvYcCVMGP/Bo5FssATphnqrUj7YaPEVAdyY3T9elRHkyQ/3YFPWy1S9vTYRUTxqCCJOqm70Naw/bhYG0+s98ugH/YsBMNqJllcf607gqO7c
-X-Gm-Message-State: AOJu0YxgOoFxn38YOsy7iJO1rxPYrI7TE5SNUoY13/G0wDcgmjaskfho
-	E/gu9Z1mord6ASpz2LTQdlsG1S3Lcn8PV3ZnDasAvJSixTZ7dgrCGyAVGD1WMamFY8hoJ6ufiQq
-	PWoaDo1URiGd9+XQQRtFmL/jWnRbQDLWIfnm9HeUBmtg7Z/Wn9tthV9YUsbqwrQ==
-X-Received: by 2002:a17:906:f2d3:b0:a72:7e82:7a15 with SMTP id a640c23a62f3a-a751440e853mr440989966b.23.1719917547861;
-        Tue, 02 Jul 2024 03:52:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGZtWsHeiQPj+lmpTz5Ow6a0tfLYovX9jqadqN9bEI2PdLe09L12QaY5MfbDIgyA3yWU46vWQ==
-X-Received: by 2002:a17:906:f2d3:b0:a72:7e82:7a15 with SMTP id a640c23a62f3a-a751440e853mr440988366b.23.1719917547461;
-        Tue, 02 Jul 2024 03:52:27 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72ab090590sm407518666b.183.2024.07.02.03.52.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jul 2024 03:52:27 -0700 (PDT)
-Message-ID: <60260bb8-ba94-4bd7-8aed-c3bf5b8f4a14@redhat.com>
-Date: Tue, 2 Jul 2024 12:52:26 +0200
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="JI23kSYk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=FG5H+
+	ft0OjPF2pTiykVUW81Gz4xzczdC/iL7+HTzPjg=; b=JI23kSYktFuqRPIpjp9KR
+	zsxHeNo/zGCPNgEl+ID8I83ZvXvpYh8728b2QhXjhPdVQ885idPEKgnzGDD2ouOC
+	MHFhE48QYwwsl2+LIUKoCkUQfzAH1W+77PffIqug8YwkJTynWGKaBelNwsz3kpJn
+	AhnNQGMwL8l/oik5VEI7AU=
+Received: from localhost (unknown [101.132.132.191])
+	by gzga-smtp-mta-g3-1 (Coremail) with SMTP id _____wC339Zj24NmFCz9AA--.25261S2;
+	Tue, 02 Jul 2024 18:50:11 +0800 (CST)
+From: Xavier <xavier_qy@163.com>
+To: tj@kernel.org
+Cc: longman@redhat.com,
+	mkoutny@suse.com,
+	lizefan.x@bytedance.com,
+	hannes@cmpxchg.org,
+	cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org,
+	akpm@linux-foundation.org,
+	Xavier <xavier_qy@163.com>
+Subject: [PATCH-cpuset v9 0/2] Add Union-Find and use it to optimize cpuset
+Date: Tue,  2 Jul 2024 18:50:08 +0800
+Message-Id: <20240702105010.253933-1-xavier_qy@163.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <ZoMXN3G72xtCLjgp@slm.duckdns.org>
+References: <ZoMXN3G72xtCLjgp@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] platform/x86: toshiba_acpi: Fix quickstart quirk
- handling
-To: Armin Wolf <W_Armin@gmx.de>, coproscefalo@gmail.com
-Cc: lkml@vorpal.se, kmal@cock.li, ilpo.jarvinen@linux.intel.com,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240701194539.348937-1-W_Armin@gmx.de>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240701194539.348937-1-W_Armin@gmx.de>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wC339Zj24NmFCz9AA--.25261S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrZr13CF1UWFW8Xr47Xr1DJrb_yoWfZFcE9w
+	4kZay2kw1UuF1xWFW8CFyrtFZF9rW0gryvk3Z8tFy7XF4UArZrGr1vqa4DXayUXa1DAr45
+	GF98Xr4IqrnrXjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUUcyCJUUUUU==
+X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/1tbiYwQQEGV4JGHXbAAAsE
 
-Hi Armin,
+Hi Tejun,
 
-On 7/1/24 9:45 PM, Armin Wolf wrote:
-> The global hci_hotkey_quickstart quirk flag is tested in
-> toshiba_acpi_enable_hotkeys() before the quirk flag is properly
-> initialized based on SMBIOS data. This causes the quirk to be
-> applied to all models, some of which behave erratically as a
-> result.
-> 
-> Fix this by initializing the global quirk flags during module
-> initialization before registering the ACPI driver. This also
-> allows us to mark toshiba_dmi_quirks[] as __initconst.
-> 
-> Fixes: 23f1d8b47d12 ("platform/x86: toshiba_acpi: Add quirk for buttons on Z830")
-> Reported-by: kemal <kmal@cock.li>
-> Tested-by: kemal <kmal@cock.li>
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
-> Changes since v1:
->  - add Tested-by tag
+Thank you for thoroughly reviewing the code and pointing out the issues.
+I have made the necessary changes to the code, comments, and documentation
+based on your suggestions.
 
-Thank you for fixing this, the patch looks good to me:
+Kindly review.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Xavier (2):
+  Union-Find: add a new module in kernel library
+  cpuset: use Union-Find to optimize the merging of cpumasks
 
-I was hoping my pdx86 fixes pull-request last Saturday would
-be the last one for this cycle, but I'll prep another one
-with this patch sometime this week:
+ Documentation/core-api/union_find.rst         | 102 ++++++++++++++++++
+ .../zh_CN/core-api/union_find.rst             |  87 +++++++++++++++
+ MAINTAINERS                                   |   9 ++
+ include/linux/union_find.h                    |  41 +++++++
+ kernel/cgroup/cpuset.c                        |  95 +++++++---------
+ lib/Makefile                                  |   2 +-
+ lib/union_find.c                              |  48 +++++++++
+ 7 files changed, 324 insertions(+), 60 deletions(-)
+ create mode 100644 Documentation/core-api/union_find.rst
+ create mode 100644 Documentation/translations/zh_CN/core-api/union_find.rst
+ create mode 100644 include/linux/union_find.h
+ create mode 100644 lib/union_find.c
 
-Thank you for your patch/series, I've applied this patch
-(series) to my review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-I have added a:
-
-Closes: https://lore.kernel.org/platform-driver-x86/R4CYFS.TWB8QUU2SHWI1@cock.li/
-
-tag whole applying this.
-
-I will include this patch in my next fixes pull-req to Linus
-for the current kernel development cycle.
-
-Regards,
-
-Hans
-
-
-
-Regards,
-
-Hans
-
-
-
-> ---
->  drivers/platform/x86/toshiba_acpi.c | 31 +++++++++++++++++------------
->  1 file changed, 18 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-> index 3a8d8df89186..10d0ce6c8342 100644
-> --- a/drivers/platform/x86/toshiba_acpi.c
-> +++ b/drivers/platform/x86/toshiba_acpi.c
-> @@ -3271,7 +3271,7 @@ static const char *find_hci_method(acpi_handle handle)
->   */
->  #define QUIRK_HCI_HOTKEY_QUICKSTART		BIT(1)
-> 
-> -static const struct dmi_system_id toshiba_dmi_quirks[] = {
-> +static const struct dmi_system_id toshiba_dmi_quirks[] __initconst = {
->  	{
->  	 /* Toshiba Portégé R700 */
->  	 /* https://bugzilla.kernel.org/show_bug.cgi?id=21012 */
-> @@ -3306,8 +3306,6 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
->  	struct toshiba_acpi_dev *dev;
->  	const char *hci_method;
->  	u32 dummy;
-> -	const struct dmi_system_id *dmi_id;
-> -	long quirks = 0;
->  	int ret = 0;
-> 
->  	if (toshiba_acpi)
-> @@ -3460,16 +3458,6 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
->  	}
->  #endif
-> 
-> -	dmi_id = dmi_first_match(toshiba_dmi_quirks);
-> -	if (dmi_id)
-> -		quirks = (long)dmi_id->driver_data;
-> -
-> -	if (turn_on_panel_on_resume == -1)
-> -		turn_on_panel_on_resume = !!(quirks & QUIRK_TURN_ON_PANEL_ON_RESUME);
-> -
-> -	if (hci_hotkey_quickstart == -1)
-> -		hci_hotkey_quickstart = !!(quirks & QUIRK_HCI_HOTKEY_QUICKSTART);
-> -
->  	toshiba_wwan_available(dev);
->  	if (dev->wwan_supported)
->  		toshiba_acpi_setup_wwan_rfkill(dev);
-> @@ -3618,10 +3606,27 @@ static struct acpi_driver toshiba_acpi_driver = {
->  	.drv.pm	= &toshiba_acpi_pm,
->  };
-> 
-> +static void __init toshiba_dmi_init(void)
-> +{
-> +	const struct dmi_system_id *dmi_id;
-> +	long quirks = 0;
-> +
-> +	dmi_id = dmi_first_match(toshiba_dmi_quirks);
-> +	if (dmi_id)
-> +		quirks = (long)dmi_id->driver_data;
-> +
-> +	if (turn_on_panel_on_resume == -1)
-> +		turn_on_panel_on_resume = !!(quirks & QUIRK_TURN_ON_PANEL_ON_RESUME);
-> +
-> +	if (hci_hotkey_quickstart == -1)
-> +		hci_hotkey_quickstart = !!(quirks & QUIRK_HCI_HOTKEY_QUICKSTART);
-> +}
-> +
->  static int __init toshiba_acpi_init(void)
->  {
->  	int ret;
-> 
-> +	toshiba_dmi_init();
->  	toshiba_proc_dir = proc_mkdir(PROC_TOSHIBA, acpi_root_dir);
->  	if (!toshiba_proc_dir) {
->  		pr_err("Unable to create proc dir " PROC_TOSHIBA "\n");
-> --
-> 2.39.2
-> 
+-- 
+2.45.0
 
