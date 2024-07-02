@@ -1,137 +1,104 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC161B583E;
-	Tue,  2 Jul 2024 14:25:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8B11BA08F;
+	Tue,  2 Jul 2024 14:25:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719930324; cv=none; b=N4lG2xGL5TpbxLRNi4HwFBJRLppGkwooywlHvq6oqeHbTWVZj11dG4cXgbYLGCY9ncxEtHTRJirMOTCu8TJioMWcfmTiQFCGsh9qPkScMH9PEdSDGMgW0/CDeaarNteDyvE3cnXFfbRnkrLsjHtqiwxdxK8xQvnxt6erdfM8NP0=
+	t=1719930358; cv=none; b=M8qz+FO52R3bZJeqvMD8wiIn1BIO9tS87LLiHF5qgn2QLw1attGPCDG9zz1397bmH2Y5nl6KbvfRvGYmqyNkyfzMKX5XXwr8uYhA2owVOonu7lasXaIEUZzFbEbGzPMeSFmI58pwGdOKg5MmbTROcZtDFPe+7E6cBVeRzLpL+Cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719930324; c=relaxed/simple;
-	bh=iVY1vfSsFSEYqt9XQodSWGL/2M6yIcSREvR7X1WLMJk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VuC+MWQ5LUF/dDpZpNZQdG2UELqa2B7M9axktkYG/v+1CR2xco7ReOhmV8QUK5BIbXwstZZKpqhRp6Gr04BJzYYZ7oQx5SHH8JvRMbHdpNxMdx3qIOMTg+w3wGuS3aLKWGXxt9T9I3PZXNXrtU+2h0UUaZIldKIZUO0ovwqwtOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=kNeqxcg/; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=mfCIB0yu; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1719930358; c=relaxed/simple;
+	bh=MLZYFlsiS+kvju+BKYFcbKtNPb5CtXQPEdFDRDJl6zg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=PePTw1txkRiF4rtqitpc7dRICfdi7d37pjutPOUx7aA7WINfokIgjMX3rCsh31lW/frl0UCnV+n2Ki9YM46SyTw6eaVl4eLzJTfESQJNPZS4kq+AFzsCY580UDt1f26QRpmhrACWEwqI8wgF38uCx02tMoUwmiMjGCjWch1/New=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PsAz2sqB; arc=none smtp.client-ip=209.85.128.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="kNeqxcg/";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="mfCIB0yu"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 8D8151FBAB;
-	Tue,  2 Jul 2024 14:25:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1719930320; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iVY1vfSsFSEYqt9XQodSWGL/2M6yIcSREvR7X1WLMJk=;
-	b=kNeqxcg/3M8efqVZyYkPUn3QNc54WivORPj22uyg7GexEq0pPKf9R5O4rC0hEIsABgyoBQ
-	APVSnZIHPp/kIbtWtgoqHYo5j50sNsTvYEvgrM4ASjDMtBZaRoJbryOq7KWy5GtDSQgTjv
-	UdALnOg3s3ZoYtbQxLMY4a/ZFafy33Q=
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1719930318; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iVY1vfSsFSEYqt9XQodSWGL/2M6yIcSREvR7X1WLMJk=;
-	b=mfCIB0yupx8ZNeMCkxp/wOhvrORO7czh9Tub99cpA1ewU0MWIdReZkM2u5gYekPAkofzPP
-	GHCCgeFqdEaX8Erc0yoOOLHP4oCwhBRKKhGCfEXjX2mxTSKgd5JqdAjcfaYEAn4F34fJM/
-	flwZoLAHbIxrAA6aeJIl0HWtSBzh7G0=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7A64213A9A;
-	Tue,  2 Jul 2024 14:25:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id gWOjHc4NhGbDEgAAD6G6ig
-	(envelope-from <mkoutny@suse.com>); Tue, 02 Jul 2024 14:25:18 +0000
-Date: Tue, 2 Jul 2024 16:25:13 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Li Lingfeng <lilingfeng@huaweicloud.com>
-Cc: Tejun Heo <tj@kernel.org>, josef@toxicpanda.com, hch@lst.de, 
-	axboe@kernel.dk, cgroups@vger.kernel.org, linux-block@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, yangerkun@huawei.com, yukuai1@huaweicloud.com, 
-	houtao1@huawei.com, yi.zhang@huawei.com, lilingfeng3@huawei.com
-Subject: Re: [PATCH v2] block: flush all throttled bios when deleting the
- cgroup
-Message-ID: <7kmlqdvltacofugn7tzg6ylu25louwnmvdfa64cgdrecpveow7@rxvvbduuvjlz>
-References: <20240627142606.3709394-1-lilingfeng@huaweicloud.com>
- <Zn3O47DUoLliwbWm@slm.duckdns.org>
- <c9802312-d9c9-f262-e1d3-9d3343255b6b@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PsAz2sqB"
+Received: by mail-wm1-f65.google.com with SMTP id 5b1f17b1804b1-42563a9fa58so30231955e9.0;
+        Tue, 02 Jul 2024 07:25:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719930356; x=1720535156; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N2+SoMSqztWhKLaH4TpbgJXuTayM16wclZV4EEtmxt8=;
+        b=PsAz2sqBbdofxEyBgnJqeUuFK6YIKQ1aggQ6Ay3VMPXx3SKXZUXzDJG6KnMqo6ezxq
+         ZQsVPOHHTFXDX7XgQJgdbzIDY0aB/9+ECZJQ21lvAhmk30pLKk/19OiNAvXqscwjLjGu
+         Le8Pvg74xcpLeFth+SUCtr7KmPk8g2ilzVjiZe6I6/TmwVupXtBpGZ0zscsgR1jDvwRT
+         BTwsHbeBbaH0cd0STfN2ZRX5LW6WkxlI0vi4w6wAs2WWXO5+OJD3SeLs8TqmSDKy5QVK
+         nQcpGltHWc5o2Z4xG/cCyeYRXN9DMbz/j7IywM6FioB4PVSoBTzypXzanXCUp0uL2PcN
+         e35w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719930356; x=1720535156;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=N2+SoMSqztWhKLaH4TpbgJXuTayM16wclZV4EEtmxt8=;
+        b=LLO4421gJPLIdoKzKANOtboujHUoZPrYZ6cExYUSJgfuEItMdb98dRqKttJUgT3qPq
+         VkXcPetErZ5+YFw9hzb1f2yoLY4Z271vfIjGhJRk2zWzqIxti8MTSDfBDGePhKyalgQf
+         VWEuEeGp1axO+f7aDRXBEAnVUK/LekCQGXCKFK8WiW7WDJuP1SU1KFy036JzFBPZq0ks
+         859xqLnQHrDhtYSXkqQkCpoFYsQWnByxFhIa08UEWuF0HwwNKSm27acy9He97FTp3iCi
+         bsx6t2SgjqeSVTRwm53rs5wSRhiyWOXjZ9o5b/jeM1aZLwbyRade1Ntn6VT5p5mvDCUx
+         rJNg==
+X-Forwarded-Encrypted: i=1; AJvYcCWEsiCO7UkpHVCn8Ahi8BUUW5lnzir/S+RB73/7hSAQoiN3WU0NporgCbXS9zl4QZSc8JxaGUhYCpwyQfO5T8VkSf7sbrqWR2pkxNvk2wGIocK1Mq5S7zy3/xz55LGSmq72tFIZ
+X-Gm-Message-State: AOJu0YxSGTXWkGkLr6ZyJWwHOLWek7QdflBjrJxVXQFOH/Ogc0M9VZdR
+	XJX++XhJvhsYTq8L/b6nYchkabf6AKRXhWPJLVB3ZrUEUOAzPEv1
+X-Google-Smtp-Source: AGHT+IH2gOpUBvCZ1EPNqzsj68Kd1RGqjiqeAZ/PKSIFasj9ODV1XpxTM/B3jZe0a8FBtmiOeFm1JA==
+X-Received: by 2002:a05:600c:3515:b0:425:6f85:6013 with SMTP id 5b1f17b1804b1-4257a00aaaemr55217245e9.8.1719930355476;
+        Tue, 02 Jul 2024 07:25:55 -0700 (PDT)
+Received: from localhost ([45.130.85.5])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0fba16sm13465151f8f.79.2024.07.02.07.25.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jul 2024 07:25:55 -0700 (PDT)
+From: Leone Fernando <leone4fernando@gmail.com>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	dsahern@kernel.org,
+	willemb@google.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Leone Fernando <leone4fernando@gmail.com>
+Subject: [PATCH net-next v2 1/4] net: route: expire rt if the dst it holds is expired
+Date: Tue,  2 Jul 2024 16:24:03 +0200
+Message-Id: <20240702142406.465415-2-leone4fernando@gmail.com>
+In-Reply-To: <20240702142406.465415-1-leone4fernando@gmail.com>
+References: <20240702142406.465415-1-leone4fernando@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="iyowxzavzfjl2dg3"
-Content-Disposition: inline
-In-Reply-To: <c9802312-d9c9-f262-e1d3-9d3343255b6b@huaweicloud.com>
-X-Spamd-Result: default: False [-5.90 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SIGNED_PGP(-2.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[huaweicloud.com:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Score: -5.90
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
+The function rt_is_expired is used to verify that a cached dst is valid.
+Currently, this function ignores the rt.dst->expires value.
 
---iyowxzavzfjl2dg3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Add a check to rt_is_expired that validates that the dst is not expired.
 
-On Fri, Jun 28, 2024 at 10:04:20AM GMT, Li Lingfeng <lilingfeng@huaweicloud.com> wrote:
-> I think it may be more appropriate to remove the limit of bios after the
-> cgroup is deleted, rather than let the bios continue to be throttled by a
-> non-existent cgroup.
+Signed-off-by: Leone Fernando <leone4fernando@gmail.com>
+---
+ net/ipv4/route.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-I'm not that familiar with this part -- can this also happen for IOs
-submitted by an exited task? (In contrast to a running task migrated
-elsewhere.)
+diff --git a/net/ipv4/route.c b/net/ipv4/route.c
+index 54512acbead7..fd0883da7834 100644
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -390,7 +390,8 @@ static inline int ip_rt_proc_init(void)
+ 
+ static inline bool rt_is_expired(const struct rtable *rth)
+ {
+-	return rth->rt_genid != rt_genid_ipv4(dev_net(rth->dst.dev));
++	return rth->rt_genid != rt_genid_ipv4(dev_net(rth->dst.dev)) ||
++	       (rth->dst.expires && time_after(jiffies, rth->dst.expires));
+ }
+ 
+ void rt_cache_flush(struct net *net)
+-- 
+2.34.1
 
-> If the limit is set too low, and the original cgourp has been deleted, we
-> now have no way to make the bios complete immediately, but to wait for the
-> bios to slowly complete under the limit.
-
-It makes some sense, it's not unlike reparenting of memcg objects, IIRC
-flushed bios would actually be passed to a parent throtl_grp, right?
-
-Thanks,
-Michal
-
---iyowxzavzfjl2dg3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZoQNxgAKCRAt3Wney77B
-SWUqAP40GfmMEfXmFIR+/auvUwxfLvyefVIhE2VoOxRf/T4L2gEAsJBHXpz3Tv9h
-FBSUq6Z4uXLPnCUQ94faVWq/eJLDpQA=
-=n7yG
------END PGP SIGNATURE-----
-
---iyowxzavzfjl2dg3--
