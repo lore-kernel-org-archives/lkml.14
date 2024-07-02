@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5C8176251;
-	Tue,  2 Jul 2024 09:11:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B51117921D;
+	Tue,  2 Jul 2024 09:11:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719911466; cv=none; b=ZoBaY6UI1AcyWDd0zAbOFYN+pYHu/15iU2a60ePFqiDo+G7orM3qDr4D9w62AjrqCnSEfn9xH2bYiRIRsLJi8rbHFcVBR4vzrnFTVSzpPM+htFefaY1akLmdYLYdPMuQmOJBQLKaC5tKjg3CoQHh3xw6t1P1vq4ID1oxsz9qr7g=
+	t=1719911474; cv=none; b=GpsrGfUc2uRNFAIpuLTPye5+SD4J5FVI3VbR/KDnk2CR8QKLlAj1856nyqPPiVkWuDsO85w83BK8Cr4BXFy3UOm0yjobtqKInN8K/FyriouhA5LYHvyEl2NKLQk1Ydsu5qeE+mt+7NWyLYORc8A5A/pMAHJSbKMKeF2I6IUgRZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719911466; c=relaxed/simple;
-	bh=awqNz5OGdWfjQsJN8aSzpTwPuTxHlPEDhpz1xfEBgC0=;
+	s=arc-20240116; t=1719911474; c=relaxed/simple;
+	bh=PIW7uecyqbo8l+/QQ3xYJoQlnbA8PPRXn3HjOM7nqAY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iIF9GWMGywGFgrSfnW8pYPNq1p2rw5mvoMYa09ZPply7n748W1EJM+2OpbT2GzwW7G2tTeLvNoXTyffOcVRgQvBtYsRm6ZwtPoBylL//qBfHUpiP+KHOgwklax8mGMY2APqOvOnAQO5Zm1h+NHl0luxnnIuc7nR+ILzg9kjT7Tc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tmMV07HW; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=MkcUIjIURRssCtolkeW+KDZIeygp/ExJD0LbhtbIb2IdojJPR1TP04La5+a1WG/kKZ7/AmPyoMbLVoVLCxl6i90YO8JPtODycepuMrJb+zJWp/BOYHbB8psQ02WpyZf/HDpbGmtMqQkIbe/eqtZR3v1IGwRj2pv2vpFDyoJgsS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NhTi/KqE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tmMV07HW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38628C116B1;
-	Tue,  2 Jul 2024 09:11:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NhTi/KqE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CABDC116B1;
+	Tue,  2 Jul 2024 09:11:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719911466;
-	bh=awqNz5OGdWfjQsJN8aSzpTwPuTxHlPEDhpz1xfEBgC0=;
+	s=k20201202; t=1719911474;
+	bh=PIW7uecyqbo8l+/QQ3xYJoQlnbA8PPRXn3HjOM7nqAY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tmMV07HWOakUhLEx0CG5Sw8D1u/vJiFeT/1LOA4/MYdwbWSy8GvydRXDag+XzNQuF
-	 8Mrby6JUZOtPEv8fs7zqbYmgnJ3vQ0E8UKqg2AiGbf2B4rjUPAo8OMiBBUtmXlUtED
-	 I7lOY1LwtkVhj5RlocDgysGvTm0aU3G+jzWGhM9DlHlbRQ+NQwCweNkMi/QFwfNt5f
-	 Zt/8qIdBUHskSlNSHY+lwUUXkwkAM2VZSfuGEizQOnbvlLYGPXRFfuO7ZnqRmHvzP3
-	 sHQW3H4gZFNAN04PzGFcNOHwkG6/bvqhEaQ9QjvKDRliH9gVdc0oevJLqLUVJ+y2YD
-	 4NmY108G1I3Ow==
+	b=NhTi/KqELO0ntEOXqd97jqF285urhVtp0ovXZbMP4lcmZaDwcgPg/5W9aGAWMevzM
+	 GDilwAbddqGsrw6Zr4IKwgEv/nWRXIl2ieuB+HDrivIcEW+HlwLJRNlmEiKZLN2rHp
+	 0muXrcmfjl0zBQ2vUDmhRG8u6kxF++q1H1AnwZx2MUDaHup1Eyt+Cx95IXnEJ7sI4X
+	 am+hv9pcwPTPSt+yJK71cxH2vUFES69TrTtxJVdEaMHZrLleT2dLw+rgqcyKXSgXqu
+	 Hh1xdmh+LLCL2umU4Gf1ef/Cnv3MoUC9ltluYS0I8qeptgpVu09+wfyU+0sTdQu4iU
+	 nF6+LSv5nDujA==
 From: Leon Romanovsky <leon@kernel.org>
 To: Jens Axboe <axboe@kernel.dk>,
 	Jason Gunthorpe <jgg@ziepe.ca>,
@@ -36,7 +36,8 @@ To: Jens Axboe <axboe@kernel.dk>,
 	Christoph Hellwig <hch@lst.de>,
 	"Zeng, Oak" <oak.zeng@intel.com>,
 	Chaitanya Kulkarni <kch@nvidia.com>
-Cc: Sagi Grimberg <sagi@grimberg.me>,
+Cc: Leon Romanovsky <leonro@nvidia.com>,
+	Sagi Grimberg <sagi@grimberg.me>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Logan Gunthorpe <logang@deltatee.com>,
 	Yishai Hadas <yishaih@nvidia.com>,
@@ -54,9 +55,9 @@ Cc: Sagi Grimberg <sagi@grimberg.me>,
 	linux-pci@vger.kernel.org,
 	kvm@vger.kernel.org,
 	linux-mm@kvack.org
-Subject: [RFC PATCH v1 17/18] block: export helper to get segment max size
-Date: Tue,  2 Jul 2024 12:09:47 +0300
-Message-ID: <3649c1dc673ea0a49a90f3e01b76ef91fb90f076.1719909395.git.leon@kernel.org>
+Subject: [RFC PATCH v1 15/18] vfio/mlx5: Explicitly store page list
+Date: Tue,  2 Jul 2024 12:09:45 +0300
+Message-ID: <2691374c551bc276ec135ea58207a440e34f7be4.1719909395.git.leon@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <cover.1719909395.git.leon@kernel.org>
 References: <cover.1719909395.git.leon@kernel.org>
@@ -68,51 +69,101 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Chaitanya Kulkarni <kch@nvidia.com>
+From: Leon Romanovsky <leonro@nvidia.com>
 
-Export the get_max_segment_size() so driver can do use that to create
-DMA mapping when it receives the request.
+As a preparation to removal scatter-gather table and unifying
+receive and send list, explicitly store page list.
 
-Signed-off-by: Chaitanya Kulkarni <kch@nvidia.com>
 Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
 ---
- block/blk-merge.c      | 3 ++-
- include/linux/blk-mq.h | 3 +++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ drivers/vfio/pci/mlx5/cmd.c | 33 ++++++++++++++++-----------------
+ drivers/vfio/pci/mlx5/cmd.h |  1 +
+ 2 files changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index 8534c35e0497..0561e728ef95 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -190,7 +190,7 @@ static inline unsigned get_max_io_size(struct bio *bio,
-  *
-  * Returns the maximum number of bytes that can be added as a single segment.
-  */
--static inline unsigned get_max_segment_size(const struct queue_limits *lim,
-+inline unsigned get_max_segment_size(const struct queue_limits *lim,
- 		struct page *start_page, unsigned long offset)
+diff --git a/drivers/vfio/pci/mlx5/cmd.c b/drivers/vfio/pci/mlx5/cmd.c
+index adf57104555a..cb23f03d58f4 100644
+--- a/drivers/vfio/pci/mlx5/cmd.c
++++ b/drivers/vfio/pci/mlx5/cmd.c
+@@ -421,6 +421,7 @@ void mlx5vf_free_data_buffer(struct mlx5_vhca_data_buffer *buf)
+ 	for_each_sgtable_page(&buf->table.sgt, &sg_iter, 0)
+ 		__free_page(sg_page_iter_page(&sg_iter));
+ 	sg_free_append_table(&buf->table);
++	kvfree(buf->page_list);
+ 	kfree(buf);
+ }
+ 
+@@ -428,44 +429,42 @@ static int mlx5vf_add_migration_pages(struct mlx5_vhca_data_buffer *buf,
+ 				      unsigned int npages)
  {
- 	unsigned long mask = lim->seg_boundary_mask;
-@@ -203,6 +203,7 @@ static inline unsigned get_max_segment_size(const struct queue_limits *lim,
- 	 */
- 	return min(mask - offset, (unsigned long)lim->max_segment_size - 1) + 1;
- }
-+EXPORT_SYMBOL_GPL(get_max_segment_size);
+ 	unsigned int to_alloc = npages;
++	size_t old_size, new_size;
+ 	struct page **page_list;
+ 	unsigned long filled;
+ 	unsigned int to_fill;
+ 	int ret;
  
- /**
-  * bvec_split_segs - verify whether or not a bvec should be split in the middle
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 89ba6b16fe8b..008c77c9b518 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -1150,4 +1150,7 @@ static inline int blk_rq_map_sg(struct request_queue *q, struct request *rq,
- }
- void blk_dump_rq_flags(struct request *, char *);
+-	to_fill = min_t(unsigned int, npages, PAGE_SIZE / sizeof(*page_list));
+-	page_list = kvzalloc(to_fill * sizeof(*page_list), GFP_KERNEL_ACCOUNT);
++	to_fill = min_t(unsigned int, npages, PAGE_SIZE / sizeof(*buf->page_list));
++	old_size = buf->npages * sizeof(*buf->page_list);
++	new_size = old_size + to_alloc * sizeof(*buf->page_list);
++	page_list = kvrealloc(buf->page_list, old_size, new_size,
++			GFP_KERNEL_ACCOUNT | __GFP_ZERO);
+ 	if (!page_list)
+ 		return -ENOMEM;
  
-+unsigned get_max_segment_size(const struct queue_limits *lim,
-+		struct page *start_page, unsigned long offset);
++	buf->page_list = page_list;
 +
- #endif /* BLK_MQ_H */
+ 	do {
+ 		filled = alloc_pages_bulk_array(GFP_KERNEL_ACCOUNT, to_fill,
+-						page_list);
+-		if (!filled) {
+-			ret = -ENOMEM;
+-			goto err;
+-		}
++				buf->page_list + buf->npages);
++		if (!filled)
++			return -ENOMEM;
++
+ 		to_alloc -= filled;
+ 		ret = sg_alloc_append_table_from_pages(
+-			&buf->table, page_list, filled, 0,
++			&buf->table, buf->page_list + buf->npages, filled, 0,
+ 			filled << PAGE_SHIFT, UINT_MAX, SG_MAX_SINGLE_ALLOC,
+ 			GFP_KERNEL_ACCOUNT);
+ 
+ 		if (ret)
+-			goto err;
++			return ret;
+ 		buf->npages += filled;
+-		/* clean input for another bulk allocation */
+-		memset(page_list, 0, filled * sizeof(*page_list));
+ 		to_fill = min_t(unsigned int, to_alloc,
+-				PAGE_SIZE / sizeof(*page_list));
++				PAGE_SIZE / sizeof(*buf->page_list));
+ 	} while (to_alloc > 0);
+ 
+-	kvfree(page_list);
+ 	return 0;
+-
+-err:
+-	kvfree(page_list);
+-	return ret;
+ }
+ 
+ struct mlx5_vhca_data_buffer *
+diff --git a/drivers/vfio/pci/mlx5/cmd.h b/drivers/vfio/pci/mlx5/cmd.h
+index 25dd6ff54591..5b764199db53 100644
+--- a/drivers/vfio/pci/mlx5/cmd.h
++++ b/drivers/vfio/pci/mlx5/cmd.h
+@@ -53,6 +53,7 @@ struct mlx5_vf_migration_header {
+ };
+ 
+ struct mlx5_vhca_data_buffer {
++	struct page **page_list;
+ 	struct sg_append_table table;
+ 	loff_t start_pos;
+ 	u64 length;
 -- 
 2.45.2
 
