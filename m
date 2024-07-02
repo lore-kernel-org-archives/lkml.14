@@ -1,207 +1,223 @@
-Received: from mx07-0061a602.pphosted.com (mx07-0061a602.pphosted.com [143.55.144.161])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2073.outbound.protection.outlook.com [40.107.93.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC161140E50
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 08:10:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=143.55.144.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27AAA14884C;
+	Tue,  2 Jul 2024 08:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.73
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719907853; cv=fail; b=fFsT1sYjmhJuyKsHp5D8slHuU7D6Tle412be8zoFIN4cratbjz2Cn4V/l9sxGpgQUNMbeVjdYX8a+xJKEDzSTEHjXnZRA4es4BK5cNMotuQZdYmLckx8WhW1ZJ5ebdyWDo7QaZChl2v5b27brxOkue5GvvMFcu2sl3GYtl/MRI4=
+	t=1719908108; cv=fail; b=r6KTD0L/24c3tNKRWlFcyrKn1jVpZbt0Hndfa2MYF8NvWnPFB3cik4Y5AsNyq/0h7BjuQDmBYNlvqNiJgsNUuZ0h6MlsBi/FtfRTZbnYPN4aH7QsFS9GApCRKNhUNsiqffVCi+Mw+lXHy7NOoPg1SB/OcCStOrj+Q5oHDZrn9rU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719907853; c=relaxed/simple;
-	bh=FGjhY8RHl4tRRQxvn8fg9AIJdrRljnHz6AjuOjGrmLA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=mfY/UHkuP/07v0TIO403EDOHWx7QyqrK70MnvxgS5EN9arIO45GFTw8CZV5JTdc+HRmykEz7nuDIcuQNextT6LyEuL8TKAIqGjy0eiY6SPfA8HtLsAOMpQyNU8bWVIgX2TjDN3tD+pS3MawvuD1An2Rn13TA2jPWe6WSNtTQFJQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ttcontrol.com; spf=pass smtp.mailfrom=ttcontrol.com; dkim=pass (2048-bit key) header.d=ttcontrol.com header.i=@ttcontrol.com header.b=czg26UdE; arc=fail smtp.client-ip=143.55.144.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ttcontrol.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ttcontrol.com
+	s=arc-20240116; t=1719908108; c=relaxed/simple;
+	bh=eCT6CRhvQ1j5CezI1gDhNK8g6poD9BMr9gM8RQ/xb2A=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bytckp5vhk7oiYms13BbLHfS0qPJIhgghX2PSvfo+vxqoPJ1SaW6RAe6VMD7DJ++1BD7PiODlVP+RlTtOk6edObq88UhbRbqBN2wOdNBaiCv6T8m9NqQFeCWAB0mqR3TdBSzF0sp+WJWtL18vv1Sm2wrVDy9+xwqc3GgAhvOdLI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4SYJzY5g; arc=fail smtp.client-ip=40.107.93.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ttcontrol.com header.i=@ttcontrol.com header.b="czg26UdE"
-Received: from pps.filterd (m0278995.ppops.net [127.0.0.1])
-	by mx07-0061a602.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4627sVp7005022
-	for <linux-kernel@vger.kernel.org>; Tue, 2 Jul 2024 08:10:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ttcontrol.com;
-	 h=cc:content-transfer-encoding:content-type:date:from
-	:in-reply-to:message-id:mime-version:references:subject:to; s=
-	s2021; bh=DMrR1Ihb9NM+99J5KKBdqHVOXtQnwquNecGLejdgBxE=; b=czg26U
-	dE5Rh5DCEZbnO6HsF5bTeJJEK6IYo4IKn/se/95CrjJ93VUkiTTCSFwdcOPcVaCa
-	a7K9KuSrHpUmXJbuB0tv8Dum4sHTNRu1pN50RXsrNdOMUxCnHB6qVQcmFiqsO1HT
-	mNiRIuf+F/vDNiVCD9YSYwIKTa1rkfsyKfhesr7r4hso2vN4PBxkNm/HJcfQI0am
-	+rsm9T/2jTlIMhlmNlKlfN8pdUrxKKg6tQzvqdzGMu8yqh8Wwk0AZCix/8YTciI9
-	CGpwmecL7C1+8P9CsVoR8LaXwOiWDv8x2ugAC3fz9hK1L+Gfgs9CRe4w4RLHDrs1
-	oierUWbJcVYUjd5g==
-Received: from eur05-vi1-obe.outbound.protection.outlook.com (mail-vi1eur05lp2169.outbound.protection.outlook.com [104.47.17.169])
-	by mx07-0061a602.pphosted.com (PPS) with ESMTPS id 4027c8badn-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 08:10:47 +0000 (GMT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4SYJzY5g"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z6PnFnmAs8ABaoLSe8um0GQZ3h3XanOeakQ7x4wepTI9i+watEqloqQ+/dWWrYNA3Xuxsf2e3fc8xdzQjH9FTask0H4TJB4XPvb0MwgabZ5uENaU+qP0zpPXd0ew4p92WdPS9PR04HnMhJpqQ8whGhFzbEbPwTqRweDbonW00ygwwzE87X4YYZKfAk7oa03m97L5qS/WrvFSxILxtKwCjiVBC0WUf9AAb/f4UqaA0ppp6K4b64LblbKEOtUwY/veKIeRPc7QXoaeHlEpb1vJdMDdz5Fk4JnANzYQbVgBuB54sgHpPynoWB1N+iELNMtP5qRlOJs0z7DzP4z6IJnOpg==
+ b=V+bZGz+Wnysxy9FqaY4vXyT0T9uUnOvbimpdjIDKIM6xgQdVkPAQPSYkTiAEe0RotKrhSmxKWgliE4V7te0xTB/1mXUpbaU3fpUeXzrAZhYRPjrlS81KWKSr1/F/adFjxwymGcY1C/l+bE0aVhuF4ZR8pf2O40XNA2m4XS+HiwN5UrYnKzznPDa1c546B0slPeTbYrvvZjtP472ucMiAhdxe3LZHRBt5yJwQaQkoZdzpo+C861VLxRejGvOeelovYOEeYC25TVuSA5VThCLc3n8Cevcsdb0UAhasQrsVZLPsVx5r1oO3v5PzFbAdBRAWNdYR7eJRWTvMWp8shPWpIw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DMrR1Ihb9NM+99J5KKBdqHVOXtQnwquNecGLejdgBxE=;
- b=W8345dKRdWf/5DW8RsvJ1/ZeRYiOQuMl27j37GrEfWRDannilXjVVWwLxG5jDftqXt5PAzY+8HwhJwQpuOTcs44N1xwlQAFI5jj096vj5T+hiJVeym8kXsJ9XluMvZJ4/acnqkx1SWPFOycIZdWPgx52TW6XUzcLORdKW0b3LnZeX0M9PJZ5vAUfqOjnVmQfRLtWRucCgE0sXCKnFQR6yyRQ1L01T3C2Dg52hCZjY+z1vWOaI/KjJffXZtD4GSj1HgRT1A8M2v9cdjeDGBjmeJvFFBFkz7riz8f9pq0HwceW1p+UvOXjTQJ4Hg3y1Hi9MNzGvzrMgOZzpjIhUugPiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=ttcontrol.com; dmarc=pass action=none
- header.from=ttcontrol.com; dkim=pass header.d=ttcontrol.com; arc=none
-Received: from DU0PR01MB9382.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:32d::6) by AM0PR01MB6513.eurprd01.prod.exchangelabs.com
- (2603:10a6:20b:167::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.32; Tue, 2 Jul
- 2024 08:10:44 +0000
-Received: from DU0PR01MB9382.eurprd01.prod.exchangelabs.com
- ([fe80::c41d:dc9b:3f97:1ae1]) by DU0PR01MB9382.eurprd01.prod.exchangelabs.com
- ([fe80::c41d:dc9b:3f97:1ae1%6]) with mapi id 15.20.7719.029; Tue, 2 Jul 2024
- 08:10:44 +0000
-From: Diogo Manuel Pais Silva <diogo.pais@ttcontrol.com>
-To: Peng Fan <peng.fan@nxp.com>
-CC: "abelvesa@kernel.org" <abelvesa@kernel.org>,
-        "linux-clk@vger.kernel.org"
-	<linux-clk@vger.kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "s.hauer@pengutronix.de"
-	<s.hauer@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>,
-        "sboyd@kernel.org"
-	<sboyd@kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "imx@lists.linux.dev"
-	<imx@lists.linux.dev>,
-        "EMC: linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] clk: imx8qxp: Defer instead of failing probe
-Thread-Topic: [PATCH v2] clk: imx8qxp: Defer instead of failing probe
-Thread-Index: AQHazFdWN/m8O/jmP0WAh/I/zksSxQ==
-Date: Tue, 2 Jul 2024 08:10:44 +0000
-Message-ID: 
- <DU0PR01MB9382F1AC496F22A20C074BDE9DDC2@DU0PR01MB9382.eurprd01.prod.exchangelabs.com>
-References: 
- <DU0PR01MB93828B0E6808E33C608BC0E29DD32@DU0PR01MB9382.eurprd01.prod.exchangelabs.com>
- <AM6PR04MB5941651E3920794104B3D24F88D32@AM6PR04MB5941.eurprd04.prod.outlook.com>
-In-Reply-To: 
- <AM6PR04MB5941651E3920794104B3D24F88D32@AM6PR04MB5941.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: 
- MSIP_Label_6d12e765-bdb3-4a42-8d1e-507ff5c9fe67_ActionId=feb09c1b-e3b6-48ef-89cf-48121eb19752;MSIP_Label_6d12e765-bdb3-4a42-8d1e-507ff5c9fe67_ContentBits=0;MSIP_Label_6d12e765-bdb3-4a42-8d1e-507ff5c9fe67_Enabled=true;MSIP_Label_6d12e765-bdb3-4a42-8d1e-507ff5c9fe67_Method=Privileged;MSIP_Label_6d12e765-bdb3-4a42-8d1e-507ff5c9fe67_Name=TTControl-Public;MSIP_Label_6d12e765-bdb3-4a42-8d1e-507ff5c9fe67_SetDate=2024-07-02T08:05:07Z;MSIP_Label_6d12e765-bdb3-4a42-8d1e-507ff5c9fe67_SiteId=5638dc0c-ffa2-418f-8078-70f739ff781f;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DU0PR01MB9382:EE_|AM0PR01MB6513:EE_
-x-ms-office365-filtering-correlation-id: 056a171a-608d-4345-994a-08dc9a6e78e8
-x-ld-processed: 5638dc0c-ffa2-418f-8078-70f739ff781f,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
-x-microsoft-antispam-message-info: 
- =?us-ascii?Q?YWKgahEeyg2QYAcFPxd0p8u0N+QYCf7y7yrSzRMqS6JD11WyaxiGKlegDDTv?=
- =?us-ascii?Q?qnd7UwntzA5v1qN3jbyiYhWvcJwMNxa5M9L9BbJIJmetmSoG3Q1g43cYLrOT?=
- =?us-ascii?Q?TYuVplhuEYs3BCcSW6SNobT+q5J2UDegVT/HmQysPN6m9tJUqCyT3lRI7Voj?=
- =?us-ascii?Q?Ym25sxJ6Y9qD5fu8hoBB2WfR+NQcmSQ9qPmzRqtJ7+YOrkSvPHKWNFUMuQf2?=
- =?us-ascii?Q?7vSoYhPFFvq8FuCSelYga9+vNV2jm48UA4ZJ+mVS1f4ar94rTJ+f8x2GtSrU?=
- =?us-ascii?Q?BKl2aisx4pB7/cF4wJxglXA3odW2ybWUv2NSsMU72Y954UZ0xd0qgH3K65zH?=
- =?us-ascii?Q?r+ckql7ZDyaLPMqM5clSPSS8tyN2nlbOjy5VvFZnknOMnx/OOpkfkjubORcm?=
- =?us-ascii?Q?nLGj0Bp5a8qhrIIsgJHwpB0m1Wa5PaBllr6UiNyFXVgWKFwWrmF4/jBdXB//?=
- =?us-ascii?Q?1Yl2EI7dbsMNI2F9tzjEexwBk/T5bk8bGY0ZR7lqac1l6FalYPF4DireMmSR?=
- =?us-ascii?Q?+WGsX6F1m7EXIvLV/coqXv4pykqwkBaVLRAC6k+1tXQvO6+306RN1I9pfscL?=
- =?us-ascii?Q?bxrYKl/C+nk+b7Ot+/1l9WKRcrPubB4DXtdZljIe99MNKlFsZqrrTAvKwzQf?=
- =?us-ascii?Q?kUyulPU084udqnU95HGwhlhIl+mabUeWlPW0FWi1HyP6tTkTHK8DdEPgt871?=
- =?us-ascii?Q?0SDnM+UZyNiRs8HPLwTmfMbSQu1QP6p+gEsbX6s/OtKxHIPmdGyBm8F8oLxz?=
- =?us-ascii?Q?SzHksRmV3LXDtC6xiDcEcklIrcHvReOUtp7Fm4qJGhffIP1Xjj0zhl1g+4vG?=
- =?us-ascii?Q?Asi3Zevg9oIzakGMjmA08krEkYj3imynCvh/quNVmCLdw2/vNc0EH018TsbB?=
- =?us-ascii?Q?VM8gtRVX3nPqYsEbIMlUxC6AugIGrgtQZeoAegr7Im/0d5vSudz9dryNd0HB?=
- =?us-ascii?Q?WM1wFlGn62//Ok2flnloF/3iwlPqp/eS1qkZFA+lfrOP54VWLcq/8V+PWYTH?=
- =?us-ascii?Q?C0YQfUjycyW8YUJLLHzDWG2EPhV1+mO/WPc5isDQVrnvTdAj+wpVHv0dhiF5?=
- =?us-ascii?Q?jQafM8ZiEZktLPw2jIAOeJE+c5ZAc341npViWhwtrcAied6E2cGGz44qhkL9?=
- =?us-ascii?Q?YRT/eQpszZOUbUYQRvweALoeXix6rx0bHGCqA/j8L1nvwzT9+oA/Tpi8NgJy?=
- =?us-ascii?Q?aU1339mhqkelep6iC1nd/o9idy6f6awCmEchBFWugbijwDOHPhkh9kTAYKW/?=
- =?us-ascii?Q?0wWp0wuW7qwAeX1pqWMwI8QBXsMNylZXvJZgiSq2a2jzziT8rowWaAMN1ZAf?=
- =?us-ascii?Q?H33E3H0xryGHzUXy9jL6bBirmsJTaRBiIPETonudGjlapHtTT9YF4OGNQJV1?=
- =?us-ascii?Q?iAx48zkDRs84yZ8iJg38n5rBivczCjiXNWpoNuDyBnAGaHJOOw=3D=3D?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR01MB9382.eurprd01.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?oibpb3H4aI20RtYJ+k8z1gZA5qv3kffWnpCuw/NbjgxtAjS87Yo3WycR+HwP?=
- =?us-ascii?Q?cd/4Wome0a9P9sR5dt1igmtdyGGv2VP2S6WoRy7nBKs7eupTUAtwv347YhVg?=
- =?us-ascii?Q?E+c7YCKT8P7cTNY5Nz4Mf+EdSH6iclr1Tvyub/0UoQjbKAeXDAbVlAo03Rek?=
- =?us-ascii?Q?GcU9PTa5GW+MMWRQqpAE2UEykTYvimpRSL6USBQAboIQxIAuGCmpFOhyy6dO?=
- =?us-ascii?Q?t41UzbVf4YdI27BemHGz0W/yfSB0hmXTJCTqTTR4/ZQxKZ8l4FHktwFs1CZi?=
- =?us-ascii?Q?03eNSYgm29IvvlQUyvU3D8CYsGxHHgULnqzIr9uJrHO6EhFI4pL3ZbStiqqW?=
- =?us-ascii?Q?3y2CLrr1xypbJzKh2JL4LADYiuensgeem6wCnKLVPDfh0NFxET30EJcJRECR?=
- =?us-ascii?Q?hE3gBs4pPLNO014z2bl6juhtRlEngho5wK2fpOsEHINrvnGlXWOsEWhcAERh?=
- =?us-ascii?Q?4kVO390evyv9VQ8fXnRJ4fVWPIjx3IIlDbpIGeGLkr0X8tIdNZO+AfXJP76C?=
- =?us-ascii?Q?fkMZIspZ1rupThBzwCvuv2TJGRKrrGcPP9U9tYtNsSGSqrtpW5ZlpaJbPoka?=
- =?us-ascii?Q?+yFnSxNNMnceRYzRbQwVYfFES7Iyn/mcD6pj2r99fA66Tc9rpazH1MN062YZ?=
- =?us-ascii?Q?C4dBBKlV2Lzw0HhEZ36md8v0+pQCJpw2z8PWMPXtf7iLFdFl1Vo9JiWyzZJY?=
- =?us-ascii?Q?m0xAsKcTFqtydNgHiZ3ERv39n705RBAdFUIAFZtDPYP507KYSbewD0kv+9/m?=
- =?us-ascii?Q?MZi6gKNChaYsMrhZoCPSNzRFlqaoUNgHk9tMeLCEHr7Q5nXDrxUaUz0a+Tn2?=
- =?us-ascii?Q?bdRaF5K43q8YQ7XuGcHuXiXGqql1v5+L2s+7eXnveZf2bx2wawwltQ7mH5TR?=
- =?us-ascii?Q?tDmZUr78ddlBOr8c3hxL6zgo3IxT/y2LRsCIhOUqHIIz+D/TZ1DBTkc6JikW?=
- =?us-ascii?Q?6FRgExCmuSpax9vV8hRkBBDR9BxSBDrMItqv2IF4B/e6l+HqeC8V01m0MALn?=
- =?us-ascii?Q?hp/EEcghSt4dE65STmNU2xckvx11pYIxv2fxDXRmg+7GJxwkZpMygYhjkFHA?=
- =?us-ascii?Q?yyFsc6YuujcAcgniPWwm03pbJHfRC9nhWsKSr3HMQUZ/xIxhQgTGRdmH2sd2?=
- =?us-ascii?Q?l6WXzgV+07jbX9sIDvEFmc7Qwu0Prsfl1XPfee629/tD1eDl4yeNr9+93C8W?=
- =?us-ascii?Q?J/UGBxj8UWWJKEM2nyl1SU1FDhw/qxzQ9smoV1N7ZD4PDlfU5PA96EmEFzaa?=
- =?us-ascii?Q?f8G3bhO63n2jpUy/ITSjzbFi8vlbcpdxQkxVoEE9PnK50/4Pa0q/TUGKa9RO?=
- =?us-ascii?Q?BS46vvMYOHewFc0QfNk6TO8Rx+RaseDoLpF9OwLsDbS3EWU1rgt0DwWp/Vmb?=
- =?us-ascii?Q?Vx8OT/1ZQlCFk3rHW3IRQaNLFaXUxC3d348JRnQBG/plRQgy80QGA3YoL+iD?=
- =?us-ascii?Q?Rm1PnaqArVjnbOGIR9JI/lUy5FR/GaJejL56Hb5lMCrAmolL/Y0L3yZW7x99?=
- =?us-ascii?Q?hdNV7Y8/6GtW64kKZ8OERD/NNpyKngGYM4axFI/L90MSE+oOJcQP6c1ejZ9u?=
- =?us-ascii?Q?Dcp2T+MgIkDYmcdAaX5CuyZNpXlXoH3BZiM5mFjt?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ bh=gGJ3Tglu+o1p5rxNSYoCdQ25nms8o9xdbZ87+di+JBY=;
+ b=g1s3fWjKOjecExopuMXGQ4SlNOfZQ0DTZ7/d71qIZwBH62X9A3bG7ns8oJifTGD9X9Ohf6FPMhDWKHPuJ6dGrNbzjQGITz9OuBV3hjJrQx2zK2aALCGu507dQgiL3ypEjAwwUb9dc2fX5WMyELelcKjAfET+6COFr8mWja6coPEie1R9cQxp37swV0o3x5iOsXbynilrnnB2KgEL7ky/UAWSMm3ctLYC3oQFkzC0bs5ztysn7IzNK+uN98ZO7HGnlRm/paiQQAgi697/qcs0JG00YUNlVa+XzQuq+h/5CVdGBeeMTPaaMlTnAhNIzsGEsgdxpYqttBqMtpFfeSX84Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gGJ3Tglu+o1p5rxNSYoCdQ25nms8o9xdbZ87+di+JBY=;
+ b=4SYJzY5gvcr5hl4FA+TCaJn9am3SAAhCRfSizZXvTOo+sPfMfv/46IsvGPceNM6wU7Rb4y9LKh8wgQxXWlWWEJN0YMjgJHNDW0MAtpIcu75Dv16kKwijNjBHVb8/85oZosUrFb6hJFjdq5ZN8tjNrYa/WonTEBo9tv29+0oQeNM=
+Received: from DS7PR03CA0312.namprd03.prod.outlook.com (2603:10b6:8:2b::21) by
+ SN7PR12MB8790.namprd12.prod.outlook.com (2603:10b6:806:34b::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7719.32; Tue, 2 Jul 2024 08:15:03 +0000
+Received: from DS3PEPF000099D6.namprd04.prod.outlook.com
+ (2603:10b6:8:2b:cafe::e) by DS7PR03CA0312.outlook.office365.com
+ (2603:10b6:8:2b::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.23 via Frontend
+ Transport; Tue, 2 Jul 2024 08:15:03 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS3PEPF000099D6.mail.protection.outlook.com (10.167.17.7) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7741.18 via Frontend Transport; Tue, 2 Jul 2024 08:15:03 +0000
+Received: from shatadru.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 2 Jul
+ 2024 03:14:57 -0500
+From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+To: <rafael@kernel.org>, <viresh.kumar@linaro.org>, <gautham.shenoy@amd.com>,
+	<mario.limonciello@amd.com>, <perry.yuan@amd.com>,
+	<skhan@linuxfoundation.org>, <li.meng@amd.com>, <ray.huang@amd.com>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Dhananjay
+ Ugwekar" <Dhananjay.Ugwekar@amd.com>
+Subject: [PATCH v2 0/2] AMD Pstate driver fixes 
+Date: Tue, 2 Jul 2024 08:14:12 +0000
+Message-ID: <20240702081413.5688-1-Dhananjay.Ugwekar@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: ttcontrol.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR01MB9382.eurprd01.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 056a171a-608d-4345-994a-08dc9a6e78e8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2024 08:10:44.5329
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099D6:EE_|SN7PR12MB8790:EE_
+X-MS-Office365-Filtering-Correlation-Id: c56c1e0f-906f-4606-1bc3-08dc9a6f1338
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?4+LBOLvhT3BVd1Z9mdN9/p+qiT5KKRfut4MaYGUGqvJ26RpVO2AC16JtmK4H?=
+ =?us-ascii?Q?JxbOIXox7KeHFqlcXanNgD/q5FaW08hX3ksUzPU6F1Iotps2iYueB91D1piW?=
+ =?us-ascii?Q?0ZBrIdZJ0RhhvSR5QjgnfoAbjVTexBSdr8rm1HoxExYXLqAQ0XCs4yLzKx2Q?=
+ =?us-ascii?Q?BhUszRc89KsQuzrttdgXz7WrfPIy7iJv1CfJ0G+2bgavyBfa/Dlx5b30GQtf?=
+ =?us-ascii?Q?HSIMf8ZejRcMqdlP8B1GD5oLQPErKHv4fvTT7qoQHhW1UYrkCBcQ5RY4xhuO?=
+ =?us-ascii?Q?hj84GssMK4Ol2lxYdQ3Ex5fO4njAIDVQvRK/ICJi8WVPZS5GkpfB0rPjQ1ys?=
+ =?us-ascii?Q?aR5x10MIh9LarBQOtCi915MRTNhi3o2JUQLG8LiBaCR9ykq7a968qarfSp1Y?=
+ =?us-ascii?Q?+TilQMzMN3LG+2AiGRmM+c2OoujSkF5oM0I7wYHnLOrF0BouMUe2mN9abigf?=
+ =?us-ascii?Q?svp7UtTJ0KgT6R6M+x+d3wpQdSPwCEOh1/caGzAheLfw2ObGmByKmlnUnLMW?=
+ =?us-ascii?Q?DPzKnmjSZvGQ6r/xDyCEffdn9kmJ6e1Wxj/MHt8QuRQMb7baezviLx6kLyIM?=
+ =?us-ascii?Q?QJIAx/EmwG2XspvaBeldIACV85ki1BIv/K5plFKa6gR7+neql47rDPHqm3bJ?=
+ =?us-ascii?Q?cMO77t89wJZAizGJGyXpHPVcGAhYjrhCNDGlYBVAgzLFJIEp71JhWFHZcbU0?=
+ =?us-ascii?Q?3GFrjRqA7m6dr/hfJXmpjOW3kvW7YiM8y2Y5Wslk2Nn5k1IkOmWsSDDVVeNd?=
+ =?us-ascii?Q?kjiekkGuKa68n1ZOHO1umXLxDopGckXYoLehsauNHOwAs10w9bG1zpmIUkO6?=
+ =?us-ascii?Q?shHDeDoX6DI/w0ou9NurMOQd9NFqGAKClxmuyzdlgJd2YJixRxotvbf2srdB?=
+ =?us-ascii?Q?lfKtZ4EbyImG7q8JcX+VmvQj4Fz51GdwI6pvJuuqdq20n8V43vCEswylztu2?=
+ =?us-ascii?Q?QZ2tnImJ5VnY7CFwcG45XTj6w7b9PPCzf89U+oys6iIEdn5wxyk42ZDMWhtz?=
+ =?us-ascii?Q?UxQoUrQbmnSd0HzRelqDIOssz9BKsdsEkEOtEj5LSnYJcnIBgmNIOdL2MgOu?=
+ =?us-ascii?Q?B7uT62Bp4tjqRCmIikEYExlxd7o1Wk2k7wqZr2tN/YCHT8NMhbHTZMz2+SVN?=
+ =?us-ascii?Q?7M1N+4JNaVTlpRbd93YJjC77QVRleOPqh7U9JaCwkC5YbT6PDOOUTPg0X/My?=
+ =?us-ascii?Q?bNIcOdKq29QjIbbaZh07HnbbUoj5iiuZb4y7a1uH2O+CiJXLGx8CyPDIBHHK?=
+ =?us-ascii?Q?ln+K+x+d3RWCriFHzb6VA/ZQqoxVMzJT4NVZP6S2BvTHYS5gjgI4Tk+ArTpf?=
+ =?us-ascii?Q?mGjQPMN6qpydh9BYGRPptaoomuXl2BdQwGpnewFynmYoUzY9IrDF/C3GB6X+?=
+ =?us-ascii?Q?ZASzE2bcmNxnuzhJw8uj3wv59PueLKZpfRwhoUUuuOPLhNkRwbZ6cTR5gfvc?=
+ =?us-ascii?Q?jHZHsYfe9Sqw6Y+pF9LxXYMp/N7tKrhz?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2024 08:15:03.3165
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5638dc0c-ffa2-418f-8078-70f739ff781f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bOVN6WWGr8fUnp5dLSqV3k0ZtMdL0k0eI++6QiKJZHhFPDo+KSWf0K7zgX05e3gx/dYnOfmLupsY9Ibqgz+8tWOJSPc+guxRry/7nEbDdoU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR01MB6513
-X-Proofpoint-ORIG-GUID: SxgSbBploYmnCsNu7Gfur-QNG009xDrN
-X-Proofpoint-GUID: SxgSbBploYmnCsNu7Gfur-QNG009xDrN
+X-MS-Exchange-CrossTenant-Network-Message-Id: c56c1e0f-906f-4606-1bc3-08dc9a6f1338
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF000099D6.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8790
 
-When of_clk_parent_fill is ran without all the parent clocks having been pr=
-obed then the probe function will return -EINVAL, making it so that the pro=
-be isn't attempted again. As fw_devlink is on by default this does not usua=
-lly happen, but if fw_devlink is disabled then it is very possible that the=
- parent clock will be probed after the lpcg first attempt.
+1. Handle the nominal freq units inconsistency in amd-pstate-ut, which was
+leading to the below error on inserting the amd-pstate-ut module.
 
-Signed-off-by: Diogo Silva <diogo.pais@ttcontrol.com>
----
-v2: change from dev_warn to dev_err_probe
----
- drivers/clk/imx/clk-imx8qxp-lpcg.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+[ 4982.498864] amd_pstate_ut: 1    amd_pstate_ut_acpi_cpc_valid  success!
+[ 4982.498873] amd_pstate_ut: 2    amd_pstate_ut_check_enabled   success!
+[ 4982.509151] amd_pstate_ut: 3    amd_pstate_ut_check_perf      success!
+[ 4982.509155] amd_pstate_ut: amd_pstate_ut_check_freq cpu0 max=3709000  >= nominal=2401 > lowest_nonlinear=1903000 > min=400000 > 0, the formula is incorrect!
+[ 4982.509157] amd_pstate_ut: 4    amd_pstate_ut_check_freq      fail!
 
-diff --git a/drivers/clk/imx/clk-imx8qxp-lpcg.c b/drivers/clk/imx/clk-imx8q=
-xp-lpcg.c
-index d0ccaa040225..7bd9b745edbe 100644
---- a/drivers/clk/imx/clk-imx8qxp-lpcg.c
-+++ b/drivers/clk/imx/clk-imx8qxp-lpcg.c
-@@ -225,8 +225,8 @@ static int imx_lpcg_parse_clks_from_dt(struct platform_=
-device *pdev,
-=20
- 	ret =3D of_clk_parent_fill(np, parent_names, count);
- 	if (ret !=3D count) {
--		dev_err(&pdev->dev, "failed to get clock parent names\n");
--		return count;
-+		return dev_err_probe(&pdev->dev, -EPROBE_DEFER,
-+				"failed to get all clock parent names\n");
- 	}
-=20
- 	ret =3D of_property_read_string_array(np, "clock-output-names",
---=20
+2. Setting the scaling_max_freq on shared memory CPPC systems was
+broken in amd-pstate-epp driver(amd_pstate=active mode). The
+scaling_max_freq value was not being propagated to the shared memory area, 
+so the frequency capping was not being honored.
+
+Tested on a AMD Zen3 Milan machine(shared memory CPPC): 
+
+stress-ng is running on the system to keep the CPU utilization at 100%
+to test the scaling_max_freq capping.
+
+Before the patch:
+We can see below, setting the scaling_max_freq is not taking effect.
+ 
+linux/tools/power/x86/turbostat# ./turbostat --Summary
+turbostat version 2023.11.07 - Len Brown <lenb@kernel.org>
+[Snip]
+cpu0: cpufreq driver: amd-pstate-epp
+cpu0: cpufreq governor: performance
+[Snip]
+Avg_MHz Busy%   Bzy_MHz TSC_MHz IPC     IRQ     POLL    C1      C2      POLL%   C1%     C2%     CorWatt PkgWatt
+2620    100.00  2620    2026    0.80    164935  0       0       0       0.00    0.00    0.00    176.07  249.18
+2580    100.00  2580    1995    0.80    162208  0       0       0       0.00    0.00    0.00    173.27  245.37
+2584    100.00  2584    1998    0.79    162379  0       0       0       0.00    0.00    0.00    173.42  245.68
+2577    100.00  2577    1996    0.79    162146  0       0       0       0.00    0.00    0.00    173.15  245.41
+2578    100.00  2578    1996    0.80    162025  0       0       0       0.00    0.00    0.00    173.07  245.46
+2575    100.00  2575    1996    0.80    162115  0       0       0       0.00    0.00    0.00    172.96  245.41
+2576    100.00  2576    1996    0.79    161998  0       0       0       0.00    0.00    0.00    172.87  245.32
+linux/tools/power/x86/turbostat# echo 2000000 | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_max_freq
+2000000
+linux/tools/power/x86/turbostat# cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_max_freq | uniq
+2000000
+linux/tools/power/x86/turbostat# ./turbostat --Summary
+turbostat version 2023.11.07 - Len Brown <lenb@kernel.org>
+[Snip]
+cpu0: cpufreq driver: amd-pstate-epp
+cpu0: cpufreq governor: performance
+[Snip]
+Avg_MHz Busy%   Bzy_MHz TSC_MHz IPC     IRQ     POLL    C1      C2      POLL%   C1%     C2%     CorWatt PkgWatt
+2620    100.00  2620    2038    0.79    166103  0       0       2       0.00    0.00    0.00    175.44  250.96
+2566    100.00  2566    1996    0.79    162038  0       0       0       0.00    0.00    0.00    171.79  245.23
+2566    100.00  2566    1996    0.79    162289  0       0       0       0.00    0.00    0.00    171.76  245.59
+2571    100.00  2571    1996    0.80    162034  0       0       0       0.00    0.00    0.00    171.69  245.44
+2566    100.00  2566    1996    0.79    162179  0       0       0       0.00    0.00    0.00    171.62  245.41
+2567    100.00  2567    1996    0.79    162028  0       0       0       0.00    0.00    0.00    171.57  245.46
+2567    100.00  2567    1996    0.80    162037  0       0       0       0.00    0.00    0.00    171.53  245.41
+
+After applying the patch:
+On setting scaling_max_freq at 2GHz, the CPU frequency gets capped at 2GHz.
+
+linux/tools/power/x86/turbostat# ./turbostat --Summary
+turbostat version 2023.11.07 - Len Brown <lenb@kernel.org>
+[Snip]
+cpu0: cpufreq driver: amd-pstate-epp
+cpu0: cpufreq governor: performance
+[Snip]
+Avg_MHz Busy%   Bzy_MHz TSC_MHz IPC     IRQ     POLL    C1      C2      POLL%   C1%     C2%     CorWatt PkgWatt
+2551    100.00  2551    1956    0.80    165998  0       0       0       0.00    0.00    0.00    171.34  231.22
+2713    100.00  2713    2078    0.79    175801  0       0       0       0.00    0.00    0.00    181.92  266.13
+2594    100.00  2594    1991    0.79    162183  0       0       1       0.00    0.00    0.00    173.99  244.50
+2606    100.00  2606    2003    0.79    162632  0       0       0       0.00    0.00    0.00    174.81  246.51
+2599    100.00  2599    1996    0.79    162168  0       0       0       0.00    0.00    0.00    174.05  245.46
+linux/tools/power/x86/turbostat# echo 2000000 | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_max_freq
+2000000
+linux/tools/power/x86/turbostat# cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_max_freq | uniq
+2000000
+linux/tools/power/x86/turbostat# ./turbostat --Summary
+turbostat version 2023.11.07 - Len Brown <lenb@kernel.org>
+[Snip]
+cpu0: cpufreq driver: amd-pstate-epp
+cpu0: cpufreq governor: performance
+[Snip]
+Avg_MHz Busy%   Bzy_MHz TSC_MHz IPC     IRQ     POLL    C1      C2      POLL%   C1%     C2%     CorWatt PkgWatt
+2010    100.00  2010    2030    0.80    165565  0       0       0       0.00    0.00    0.00    101.22  173.52
+1975    100.00  1975    1995    0.80    162042  0       0       0       0.00    0.00    0.00    99.03   169.88
+1977    100.00  1977    1998    0.80    162559  0       0       0       0.00    0.00    0.00    99.16   170.20
+1976    100.00  1976    1996    0.80    162243  0       0       0       0.00    0.00    0.00    99.09   170.08
+1976    100.00  1976    1996    0.80    162490  0       0       0       0.00    0.00    0.00    99.17   170.16
+1976    100.00  1976    1996    0.80    162056  0       0       0       0.00    0.00    0.00    99.11   170.17
+
+Dhananjay Ugwekar (2):
+  cpufreq/amd-pstate-ut: Convert nominal_freq to khz during comparisons
+  cpufreq/amd-pstate: Fix the scaling_max_freq setting on shared memory
+    CPPC systems
+
+ drivers/cpufreq/amd-pstate-ut.c | 12 +++++----
+ drivers/cpufreq/amd-pstate.c    | 43 ++++++++++++++++++---------------
+ 2 files changed, 30 insertions(+), 25 deletions(-)
+
+-- 
 2.34.1
+
