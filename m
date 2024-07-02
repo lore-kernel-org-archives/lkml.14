@@ -1,163 +1,140 @@
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83AE179AF
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 03:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47D1E85298
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 03:02:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719889328; cv=none; b=WH3LfZOMCmduYVvb444dmOD3qPuKgQuGzZ8bbWHuv0wV++FCUiqvM5ByY+HWlWioICOkXCOC6pbRU5lDr1pqa+C7z4bEYH3E3I8ismNh67qEDzYgDczWFl+4so2aY9IwaXgChvPChgMmqxRayg9Iy42WuPVL4AkRVP4gFYxGVdo=
+	t=1719889331; cv=none; b=JKPJYoLRzLxyDCS7hnRXKrfkrgkFA80xiGBIDlW1bVGb01WvtQAltGuQ/JhnCIZpLFpR6qdujtxVwmgisCVyCWtTOfu5DLHjTUaAUCLPmZQ25qKCU75XfadeyiDN0JUExftKFXzufdDCiF+e0JVwAN0BUbj52OTMRVlQ8m+RKMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719889328; c=relaxed/simple;
-	bh=UCDnIvlbXHxWl6+e8JWZ0SNO53U4L0Z7h4tlBztH4UQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EO3C02Acxmxl5VxDeZ6gWNLuu5X89O0YkVavaiIuubG2otbbGoPasedXcMA+/sK+Cp8tjkcCJyZCo/63ZWE7lr6qrOg/5sXG89O/ybevWNTiWGP7uzX/A1Ktwtu63g3NUuYqzmBXVobuARcqv0siuMnumI96xfHvef4QRI/AUmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com; spf=pass smtp.mailfrom=smartx.com; dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b=zZGPYgax; arc=none smtp.client-ip=209.85.167.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smartx.com
+	s=arc-20240116; t=1719889331; c=relaxed/simple;
+	bh=juDRxuue6BuNqcCiTQ1oRGV1+UkKo+RHyTXKiyOaT44=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G7oiRxz32JZbf1nvy/XsAS1jY1QoEcqp1cfe/MiF8DQbf3htA/pXIHpQWKQgny2dsPfU2K/zeKiFSI55g9TfD48T4MO2cTjQI3bzHx/5xc3XoIbcWaZo89L4TkOc271OlkrinPaqbHM+SovG8TWOtx8/bvkMNm/po1PfVnZ2B6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=jM/WdWgV; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b="zZGPYgax"
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3d562882f4cso2129734b6e.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 20:02:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="jM/WdWgV"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-72c03d2926eso2040630a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 20:02:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smartx-com.20230601.gappssmtp.com; s=20230601; t=1719889325; x=1720494125; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3Ch/9fGznoGin7U6AIXHdIml+kYt3GcqbmvGBGuHu5s=;
-        b=zZGPYgaxE2Z6VL0Yz1OjdOMuiXYT9UMnziWmUaK9F36QwROACJqmHRgGMcF1Q9nlZ7
-         NLFwkeQgNkladn/lRh6XHHy5VNdT51ATVpJPVhoQvi3tHcKY4XjtGYxv9aOpZATrk8SM
-         342z2AGJCOE5Hr202r1fx2UT/NTJ3f3FRwdMCPShK0xBEfWE+3IJvxTIcY4U+q/fsl4S
-         QbpNsgGP4Qv3apT2qNj5e+q6h8IUBs/w0Drg/YyIipxjKKkZeqLPtcMfiyyNO/9DpeGL
-         z21TJcSK+dipfVlaMQ4x1YXw0J7m/WheCMcKZ6Qxcu/Rhz2y09HfFspmZiHzOXZ3w/iH
-         4MEQ==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1719889329; x=1720494129; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ojm2WDT+jRVGV+bXsvRAENxh4cvFhiHctBiMqtse7vA=;
+        b=jM/WdWgVkZB0UZc7R6fqYmyiJJjCE+b1o5Z6D9SYoKHF+vnGmgupnW2rkXVIOwlrry
+         MJtHnd2X0xj2+NM9fwdXUJr77G5TT+ZTnpYZ2BtZnZQD5OLi/bBpwOwVksfP8USpriaS
+         Ur+tt/0hWuYcpyVJkbvzW5FXAv8lLFbZN8bUHmK2SD4CiZUsiiO2cnEErX4C0Z8pqlcO
+         ISYTzf+xsPhEgKpUrwrD6Dc2lsNrrai7U80S0Z+MdHVhWNxSn6SvM5OHPI+EfzCA3XDW
+         j2HYSnvTucA5OF1H1U3rKRYAQnWtzWasmFdtNI9GUDxQF36o+d+vkRMDn00wX3tFJ2Ly
+         BP1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719889325; x=1720494125;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3Ch/9fGznoGin7U6AIXHdIml+kYt3GcqbmvGBGuHu5s=;
-        b=Tkdcr9b4oZFUNBa5J7uzhGyXG/YeCJNucu4YnIS4pEG87CXF+Pe/K8ZOwlnmkbraxG
-         L+3WJKLivvdYFFknfs0pAdnkGE/yzLx+pnEnyZ5ZWCd+ezWnQEcLFvTL/YpZfPXT+GwC
-         M69VFHfjAg8ryTNuLf+28MS9KfJTQW/CfH0RbHK+PWH3ATeKlujjRqKGSD3uWAm32EV1
-         UOsL2uFKoLlqeB5chfJwxfLbnYZA2yw0XaOTvHcnDnscUtp+IDHEC03KDvkRqBGMNBQc
-         3v9vT6MYs6t1gb1sa4JHD27rPTxiQsjAmBcC8ikcpqjz3TzfFH/zUdYsi2LPwZYYT9DI
-         uNfw==
-X-Forwarded-Encrypted: i=1; AJvYcCUxEzzEYVhuJCe3qMIQGeg62KWjGae1UrpdHDJ5AR5MbKWaw+SY63qfAdEIgBs6rvbYV9RJFNQZzXeH7hLmG1XicY6v75eaXya7Zbt9
-X-Gm-Message-State: AOJu0YymHbSBX9z1xsd242rsacr/OIG/6vt8ov8PauUOPKa1rSAfckcU
-	iHGfYyxUBwfzax9zR9UV9EuHk6VH5/pN5iHwBJsquqdhN0LEtMDml3F67sZM5sk=
-X-Google-Smtp-Source: AGHT+IE8j5Q1KWMxYedKMDkgJWz8EFzYcNYme7sBG3zoeLzjnHa41Q/99KbfcYc4l/efnsIjcK9n7Q==
-X-Received: by 2002:a05:6808:1823:b0:3d6:9c05:1aff with SMTP id 5614622812f47-3d6b2b257e1mr12177786b6e.10.1719889324671;
-        Mon, 01 Jul 2024 20:02:04 -0700 (PDT)
-Received: from fedora.smartx.com ([103.172.41.200])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-72c6a8dbb2fsm4792904a12.31.2024.07.01.20.02.02
+        d=1e100.net; s=20230601; t=1719889329; x=1720494129;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ojm2WDT+jRVGV+bXsvRAENxh4cvFhiHctBiMqtse7vA=;
+        b=XE1MOflJfEo6c6i+56KHDTbEMiEad0uPdgXuW7Xu207HfIsH/FeAdSCz8iTXZIMtV9
+         1UA2rpDoiLuomzbPS9h3OvhPB6Slz6YvIYISTdDkbPtBrVj2KSHEXeIIzq8wbEtzFxFZ
+         UjxPdDCvbVsYuxtBE0n5hHxrzj/gBWZU3lqIrzhaVm6ExsN3iTphE+W03ukXYL3pqaF1
+         6hLNULH+Qeu+2OGMy2/F95MhXtFPNaGET2ZyVAh2vsBbT7jhSleAkFCQuOSMb8wEOGUa
+         y7rERER5rEG2djLCsNGtAsyujZh6IN9XMIf/ZytKK1+Q9OuqrauTzpRfCg86ribAvgIY
+         0QNA==
+X-Forwarded-Encrypted: i=1; AJvYcCUvPL1ydoE7gtr6CwKL4AVqJEz6vUBSqyIDjuVjr6xa3KtsIfRMHJDqjlh6DnjqaWjWXFkegI6INgwe6LgoFy3Ul5G+Ito7c6RVrfn3
+X-Gm-Message-State: AOJu0YxF9dp9eBqDOYkCxCM4reF3AKgo62yVEtCMmTzE/6UsuY0XJYIv
+	CxoH/ElgnhEF+xXNLHi7dRvANLY7ftNgyMCz0ckIwPYc/Jo9YUfaZunh4ptDi0c=
+X-Google-Smtp-Source: AGHT+IFtzRVBgPoIZ5spdIWYcesTZAiiJeslpnCGATGmgq3SV6QGiwVYg4WyG0rOC5lcz8Vf2zmQxA==
+X-Received: by 2002:a05:6a20:cf84:b0:1bd:2699:436c with SMTP id adf61e73a8af0-1bef62066c0mr6579915637.40.1719889329603;
+        Mon, 01 Jul 2024 20:02:09 -0700 (PDT)
+Received: from ghost ([2601:647:5700:6860:a569:328b:99ad:ce17])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1538ee0sm72521095ad.149.2024.07.01.20.02.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 20:02:04 -0700 (PDT)
-From: Haoqian He <haoqian.he@smartx.com>
-To: Christoph Hellwig <hch@infradead.org>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-scsi@vger.kernel.org (open list:SCSI SUBSYSTEM),
-	"Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: fengli@smartx.com
-Subject: [PATCH 1/3] scsi: sd: disable discard when set target full provisioning
-Date: Mon,  1 Jul 2024 23:01:14 -0400
-Message-ID: <20240702030118.2198570-2-haoqian.he@smartx.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240702030118.2198570-1-haoqian.he@smartx.com>
-References: <20240702030118.2198570-1-haoqian.he@smartx.com>
+        Mon, 01 Jul 2024 20:02:09 -0700 (PDT)
+Date: Mon, 1 Jul 2024 20:02:05 -0700
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Jesse Taube <jesse@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, Ard Biesheuvel <ardb@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Wende Tan <twd2.me@gmail.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v3 2/4] RISC-V: lib: Add pi aliases for string functions
+Message-ID: <ZoNtrXawP8nvXUds@ghost>
+References: <20240701185132.319995-1-jesse@rivosinc.com>
+ <20240701185132.319995-3-jesse@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240701185132.319995-3-jesse@rivosinc.com>
 
-When the target lun is set to full provisioning, the kernel
-cannot perceive this change, so the kernel still thinks the
-device supports the discard feature.
+On Mon, Jul 01, 2024 at 02:51:30PM -0400, Jesse Taube wrote:
+> memset, strcmp, and strncmp are all used in the the __pi_ section.
+> add SYM_FUNC_ALIAS for them.
+> 
+> When KASAN is enabled in <asm/string.h> __pi___memset is also needed.
+> 
+> Suggested-by: Charlie Jenkins <charlie@rivosinc.com>
+> Signed-off-by: Jesse Taube <jesse@rivosinc.com>
+> ---
+> V2 -> V3:
+>  - New patch
+> ---
+>  arch/riscv/lib/memset.S  | 2 ++
+>  arch/riscv/lib/strcmp.S  | 1 +
+>  arch/riscv/lib/strncmp.S | 1 +
+>  3 files changed, 4 insertions(+)
+> 
+> diff --git a/arch/riscv/lib/memset.S b/arch/riscv/lib/memset.S
+> index 35f358e70bdb..da23b8347e2d 100644
+> --- a/arch/riscv/lib/memset.S
+> +++ b/arch/riscv/lib/memset.S
+> @@ -111,3 +111,5 @@ SYM_FUNC_START(__memset)
+>  	ret
+>  SYM_FUNC_END(__memset)
+>  SYM_FUNC_ALIAS_WEAK(memset, __memset)
+> +SYM_FUNC_ALIAS(__pi_memset, __memset)
+> +SYM_FUNC_ALIAS(__pi___memset, __memset)
+> diff --git a/arch/riscv/lib/strcmp.S b/arch/riscv/lib/strcmp.S
+> index 687b2bea5c43..bc73325b2fd1 100644
+> --- a/arch/riscv/lib/strcmp.S
+> +++ b/arch/riscv/lib/strcmp.S
+> @@ -120,3 +120,4 @@ strcmp_zbb:
+>  .option pop
+>  #endif
+>  SYM_FUNC_END(strcmp)
+> +SYM_FUNC_ALIAS(__pi_strcmp, strcmp)
+> diff --git a/arch/riscv/lib/strncmp.S b/arch/riscv/lib/strncmp.S
+> index aba5b3148621..b36325a57f6a 100644
+> --- a/arch/riscv/lib/strncmp.S
+> +++ b/arch/riscv/lib/strncmp.S
+> @@ -136,3 +136,4 @@ strncmp_zbb:
+>  .option pop
+>  #endif
+>  SYM_FUNC_END(strncmp)
+> +SYM_FUNC_ALIAS(__pi_strncmp, strncmp)
+> -- 
+> 2.45.2
+> 
 
-Discard will be disabled only after encountering a discard
-IO error (a fully provisioned logical unit does not support
-logical block provisioning management, so subsequent discard
-IO will fail) or reconnection.
-
-To fix this issue, we can disable device discard feature as
-soon as possible during the iSCSI initiator rescanning session.
-
-Specifically, we can reset lbpme bit 0 during the SCSI probe
-if found the target lun does not support lbpm, then adjust the
-discard mode to SD_LBP_DISABLE.
-
-With this patch, the kernel can sync whether the target lun
-supports logical block provisioning management after the iSCSI
-initiator rescanning session, without IO error or reconnection.
-
-Signed-off-by: Haoqian He <haoqian.he@smartx.com>
-Signed-off-by: Li Feng <fengli@smartx.com>
----
- drivers/scsi/sd.c | 25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index 548c74ecc836..44a19945b5b6 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -2709,6 +2709,9 @@ static int read_capacity_16(struct scsi_disk *sdkp, struct scsi_device *sdp,
- 
- 		if (buffer[14] & 0x40) /* LBPRZ */
- 			sdkp->lbprz = 1;
-+	} else {
-+		sdkp->lbpme = 0;
-+		sdkp->lbprz = 0;
- 	}
- 
- 	sdkp->capacity = lba + 1;
-@@ -3303,12 +3306,9 @@ static void sd_read_app_tag_own(struct scsi_disk *sdkp, unsigned char *buffer)
- 
- static unsigned int sd_discard_mode(struct scsi_disk *sdkp)
- {
--	if (!sdkp->lbpvpd) {
--		/* LBP VPD page not provided */
--		if (sdkp->max_unmap_blocks)
--			return SD_LBP_UNMAP;
--		return SD_LBP_WS16;
--	}
-+	if (!sdkp->lbpvpd)
-+		/* Disable discard if LBP VPD page not provided */
-+		return SD_LBP_DISABLE;
- 
- 	/* LBP VPD page tells us what to use */
- 	if (sdkp->lbpu && sdkp->max_unmap_blocks)
-@@ -3343,8 +3343,12 @@ static void sd_read_block_limits(struct scsi_disk *sdkp,
- 
- 		sdkp->max_ws_blocks = (u32)get_unaligned_be64(&vpd->data[36]);
- 
--		if (!sdkp->lbpme)
-+		if (!sdkp->lbpme) {
-+			sdkp->max_unmap_blocks = 0;
-+			sdkp->unmap_granularity = 0;
-+			sdkp->unmap_alignment = 0;
- 			goto config_atomic;
-+		}
- 
- 		lba_count = get_unaligned_be32(&vpd->data[20]);
- 		desc_count = get_unaligned_be32(&vpd->data[24]);
-@@ -3425,8 +3429,13 @@ static void sd_read_block_provisioning(struct scsi_disk *sdkp)
- {
- 	struct scsi_vpd *vpd;
- 
--	if (sdkp->lbpme == 0)
-+	if (!sdkp->lbpme) {
-+		sdkp->lbpvpd    = 0;
-+		sdkp->lbpu      = 0;
-+		sdkp->lbpws     = 0;
-+		sdkp->lbpws10   = 0;
- 		return;
-+	}
- 
- 	rcu_read_lock();
- 	vpd = rcu_dereference(sdkp->device->vpd_pgb2);
--- 
-2.44.0
+Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
 
