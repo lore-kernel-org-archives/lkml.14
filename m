@@ -1,151 +1,180 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C98347C2;
-	Tue,  2 Jul 2024 06:39:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6934D60BBE;
+	Tue,  2 Jul 2024 06:39:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719902362; cv=none; b=gRPPht+G2Bp1PQkIOba7PS3GjYjouthGgfU2SeIkNDAcW7VwL/e0GsDdrPYHLSXPYP8EReHy5rWXrTm39la5PPZLeVL3qCCh0dNzO/pDPFOOBOnQGEreq1dEG1vDFC398h7EwEd5injxriYq+8UV/88xBgj8Oa6idQVQ4E2xIQU=
+	t=1719902383; cv=none; b=VqFfkry2W3pcQz6jcSlEqDFdTTOA5SqiYcohz3ys6hORx1LfHSr/aOxz+j87BqWgfWuqzJ3SJa72AMsYb0mA3ATgfPdbNUqTjQj3Vsch/wflS22twe+YFa/XwHMKgrBohOgqFrrOM/THhoPL4Td1SJWHkxzejbrWRQA/W40GbAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719902362; c=relaxed/simple;
-	bh=vn5YWUS6RydoYKJs+yOfeo/iZTPzfs2PzZAP0GAyLmA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=hZ/RbfLEjeNpa6D9NN87OKH05CZiLkfxTXZf5JADgmLgraEH7z7T6hxXXM2oeq/BbooVN3xXKbUpm/XBNJAZI+ui9MUaRG7sYwPtRudzi7VcyDmqWlWUjsEFoDPFlRa6fDCJh/DSXfkZ3C3r6ISWPEdlmsn8gE9e2BL/q/84j5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=blQHnHqQ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1719902383; c=relaxed/simple;
+	bh=yS6+toy5gDTjIQbeVctj+axI5oUwmnO5GhkB03VeDZ0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fdVU1e1eZhVBTb9ZFxKOkAbLkw6x/sLigIwzAv382EioZy/cudfVWB58dxTZ6FkmGt4ZDwoHlQjrCghpsr4QND9NJoEU8Ajt6dXbi0uw2opQlS1AW2kluon0KUDiQguAfagbIM/FgEdZmJI3toX8rUkZRWWYfcozs0Z7b39LRZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oIjAB7W6; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="blQHnHqQ"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 461LFxEF002531;
-	Tue, 2 Jul 2024 06:39:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Bc0FbBCjop0mDDwTTnWmvB20qL8T+RaItfFuUos6ofs=; b=blQHnHqQxJkXkmfz
-	SUZhqAnvWjONAzDqRI7MAFFTE00irORQkSM5EfyeJAHKywyJzv7IWyHHpz/ivwGm
-	G/cLQ4A1rdeL3EZFjZ2I86gQpBp85lKe5GQdavEnr/BumAhFwJdnsSr02qsa+DF0
-	hVHmDdc6bNU9ZubhrPnKqadBZ3zqTnJCbxXMOn8oupDKywKkws8EUeUaoXEFZIT0
-	TAv2A07kvwjngW8EGI9t2fnPB47lkw5P3aZC4vrhqo2wY1NgTRnv6U6y0LZddXAS
-	Ex2mT+FxtCQOe23M2VxO0epqYPUlD6QWXyW8MBk1XqCpR5DEzDGV4ZTfornPhLMW
-	VevlFQ==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 402bj862rw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jul 2024 06:39:16 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4626dGXp004878
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 2 Jul 2024 06:39:16 GMT
-Received: from [10.217.238.102] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 1 Jul 2024
- 23:39:13 -0700
-Message-ID: <4a5c0b88-d4be-4dd2-9bce-981f093737aa@quicinc.com>
-Date: Tue, 2 Jul 2024 12:09:10 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oIjAB7W6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719902383; x=1751438383;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=yS6+toy5gDTjIQbeVctj+axI5oUwmnO5GhkB03VeDZ0=;
+  b=oIjAB7W6+ydK9iQTvTPRNbjM1o4+LH4XDBp1TKL+g22ssvek4PmaL4yU
+   LB2wpkA/RNr9GDt0HR8wFNEV8CGpMyd5H0uNkcPylNRzzKjid2TOzhkOj
+   nrUQQIX+FpciYxnZoudYUslGlvWLjezcrKuZqHnYKycNs/zBzLNI9wsE3
+   IR1oHj3hKHrsXMsPYhT2m/f+SQ4ZUsRCTm400PrYMPYbUoQw5G/h+ejSK
+   JlxrOZuoRL8hNiqr4AAAOnDz5nABo90hAzcyCDCV5YmonNMmLpaEkEz7w
+   Zs42+IJ/RiP4AxOJqUPuHQ3T79C3k63es0uDY4jWkQqSD2Em1g2sE601Q
+   Q==;
+X-CSE-ConnectionGUID: z4vfzI7wRbKIavAWhwwTfQ==
+X-CSE-MsgGUID: d3YiEFkEQkyfMcYSBVBkcQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="20868273"
+X-IronPort-AV: E=Sophos;i="6.09,178,1716274800"; 
+   d="scan'208";a="20868273"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 23:39:41 -0700
+X-CSE-ConnectionGUID: 8Pwl+vYTTnKPiPDhAHgykA==
+X-CSE-MsgGUID: 7Gd7uE/ESgOeuonmI7jdaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,178,1716274800"; 
+   d="scan'208";a="45926326"
+Received: from unknown (HELO dell-3650.sh.intel.com) ([10.239.159.147])
+  by orviesa009.jf.intel.com with ESMTP; 01 Jul 2024 23:39:37 -0700
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yanfei Xu <yanfei.xu@intel.com>,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [PATCH 0/4] Bug fixes on topdown metrics group leader selection
+Date: Wed,  3 Jul 2024 06:40:33 +0800
+Message-Id: <20240702224037.343958-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 1/2] soc: qcom: smp2p: Use devname for interrupt
- descriptions
-To: <quic_bjorande@quicinc.com>, <andersson@kernel.org>,
-        <quic_clew@quicinc.com>, <mathieu.poirier@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, <quic_deesin@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
-        "Konrad
- Dybcio" <konrad.dybcio@linaro.org>
-References: <20240627104831.4176799-1-quic_sudeepgo@quicinc.com>
- <20240627104831.4176799-2-quic_sudeepgo@quicinc.com>
-Content-Language: en-US
-From: Sudeep Patil <quic_sudeepgo@quicinc.com>
-In-Reply-To: <20240627104831.4176799-2-quic_sudeepgo@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 5q_d6UxEzsm5-MhTxHB8iMtugursaPH9
-X-Proofpoint-GUID: 5q_d6UxEzsm5-MhTxHB8iMtugursaPH9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-02_02,2024-07-02_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 impostorscore=0
- spamscore=0 suspectscore=0 mlxlogscore=999 mlxscore=0 priorityscore=1501
- malwarescore=0 adultscore=0 bulkscore=0 phishscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
- definitions=main-2407020048
+Content-Transfer-Encoding: 8bit
+
+when counting/sampling topdown slots and metrics events, the following
+issues are found.
+
+a. incorrect sampling leader selection if group only contains topdown
+slots event without topdown metrics event, such as
+
+perf record -e '{slots,branches}:S' -c 10000 -vv sleep 1
+
+In this case, the slots event should be sampled as leader but the
+branches event is sampled in fact like the verbose output shows.
+
+perf_event_attr:
+  type                             4 (cpu)
+  size                             168
+  config                           0x400 (slots)
+  sample_type                      IP|TID|TIME|READ|CPU|IDENTIFIER
+  read_format                      ID|GROUP|LOST
+  disabled                         1
+  sample_id_all                    1
+  exclude_guest                    1
+------------------------------------------------------------
+sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
+------------------------------------------------------------
+perf_event_attr:
+  type                             0 (PERF_TYPE_HARDWARE)
+  size                             168
+  config                           0x4 (PERF_COUNT_HW_BRANCH_INSTRUCTIONS)
+  { sample_period, sample_freq }   10000
+  sample_type                      IP|TID|TIME|READ|CPU|IDENTIFIER
+  read_format                      ID|GROUP|LOST
+  sample_id_all                    1
+  exclude_guest                    1
+
+b. Fail to run the perf command
+
+perf record -e "{slots,instructions,topdown-retiring}:S" -vv -C0 sleep 1
+
+------------------------------------------------------------
+perf_event_attr:
+  type                             4 (cpu)
+  size                             168
+  config                           0x400 (slots)
+  sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
+  read_format                      ID|GROUP|LOST
+  disabled                         1
+  sample_id_all                    1
+  exclude_guest                    1
+------------------------------------------------------------
+sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
+------------------------------------------------------------
+perf_event_attr:
+  type                             4 (cpu)
+  size                             168
+  config                           0x8000 (topdown-retiring)
+  { sample_period, sample_freq }   4000
+  sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
+  read_format                      ID|GROUP|LOST
+  freq                             1
+  sample_id_all                    1
+  exclude_guest                    1
+------------------------------------------------------------
+sys_perf_event_open: pid -1  cpu 0  group_fd 5  flags 0x8
+sys_perf_event_open failed, error -22
+
+Error:
+The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (topdown-retiring).
+
+Perf tool tries to regroup the events and move topdown-retiring event
+closely after slots event and leads to topdown-retiring event is select
+to sample. This is incorrect.
+
+c. unnecessary events regroup for the group which only has slots event
+but without topdown metrics events, such as
+
+perf stat -e "{instructions,slots}" -C 0 sleep 1
+WARNING: events were regrouped to match PMUs
+
+ Performance counter stats for 'CPU(s) 0':
+
+        27,581,148      slots
+         8,390,827      instructions
+
+       1.045546595 seconds time elapsed
+
+Obviously, this events regroup is unnecessary.
+
+The patches 1-3 separately fixes the above 3 issues in order and the
+patch 4/4 adds a new perf test to verify the leader sampling.
 
 
+Dapeng Mi (4):
+  perf topdown: Correct leader selection with sample_read enabled
+  perf parse-events: Don't move topdown metrics events when sorting
+    events
+  perf parse-events: Don't move slots event when no topdwon metrics
+    event
+  perf tests: Add leader sampling test in record tests
 
-On 6/27/2024 4:18 PM, Sudeepgoud Patil wrote:
-> From: Chris Lew <quic_clew@quicinc.com>
-> 
-> When using /proc/interrupts to collect statistics on smp2p interrupt
-> counts, it is hard to distinguish the different instances of smp2p from
-> each other. For example to debug a processor boot issue, the ready and
-> handover interrupts are checked for sanity to ensure the firmware
-> reached a specific initialization stage.
-> 
-> Remove "smp2p" string from the irq request so that the irq will default
-> to the device name. Add an .irq_print_chip() callback to print the irq
-> chip name as the device name. These two changes allow for a unique name
-> to be used in /proc/interrupts as shown below.
-> 
-> / # cat /proc/interrupts | grep smp2p
->   18:  ...      ipcc 196610 Edge      smp2p-adsp
->   20:  ...      ipcc 131074 Edge      smp2p-modem
-> 170:  ...  smp2p-modem   1 Edge      q6v5 ready
-> 178:  ...  smp2p-adsp   1 Edge      q6v5 ready
-> 
-> Signed-off-by: Chris Lew <quic_clew@quicinc.com>
-Signed-off-by: Sudeepgoud Patil <quic_sudeepgo@quicinc.com>
-> ---
->   drivers/soc/qcom/smp2p.c | 11 ++++++++++-
->   1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/soc/qcom/smp2p.c b/drivers/soc/qcom/smp2p.c
-> index a21241cbeec7..696c2a8387d0 100644
-> --- a/drivers/soc/qcom/smp2p.c
-> +++ b/drivers/soc/qcom/smp2p.c
-> @@ -16,6 +16,7 @@
->   #include <linux/platform_device.h>
->   #include <linux/pm_wakeirq.h>
->   #include <linux/regmap.h>
-> +#include <linux/seq_file.h>
->   #include <linux/soc/qcom/smem.h>
->   #include <linux/soc/qcom/smem_state.h>
->   #include <linux/spinlock.h>
-> @@ -353,11 +354,19 @@ static int smp2p_set_irq_type(struct irq_data *irqd, unsigned int type)
->   	return 0;
->   }
->   
-> +static void smp2p_irq_print_chip(struct irq_data *irqd, struct seq_file *p)
-> +{
-> +	struct smp2p_entry *entry = irq_data_get_irq_chip_data(irqd);
-> +
-> +	seq_printf(p, " %8s", dev_name(entry->smp2p->dev));
-> +}
-> +
->   static struct irq_chip smp2p_irq_chip = {
->   	.name           = "smp2p",
->   	.irq_mask       = smp2p_mask_irq,
->   	.irq_unmask     = smp2p_unmask_irq,
->   	.irq_set_type	= smp2p_set_irq_type,
-> +	.irq_print_chip = smp2p_irq_print_chip,
->   };
->   
->   static int smp2p_irq_map(struct irq_domain *d,
-> @@ -617,7 +626,7 @@ static int qcom_smp2p_probe(struct platform_device *pdev)
->   	ret = devm_request_threaded_irq(&pdev->dev, irq,
->   					NULL, qcom_smp2p_intr,
->   					IRQF_ONESHOT,
-> -					"smp2p", (void *)smp2p);
-> +					NULL, (void *)smp2p);
->   	if (ret) {
->   		dev_err(&pdev->dev, "failed to request interrupt\n");
->   		goto unwind_interfaces;
+ tools/perf/arch/x86/util/evlist.c  | 11 ++++------
+ tools/perf/arch/x86/util/topdown.c | 16 ++++++++++++--
+ tools/perf/tests/shell/record.sh   | 28 ++++++++++++++++++++++++
+ tools/perf/util/evlist.h           |  7 +++++-
+ tools/perf/util/parse-events.c     | 35 ++++++++++++++++++------------
+ 5 files changed, 73 insertions(+), 24 deletions(-)
+
+
+base-commit: 73e931504f8e0d42978bfcda37b323dbbd1afc08
+-- 
+2.40.1
+
