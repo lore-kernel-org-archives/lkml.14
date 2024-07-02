@@ -1,107 +1,153 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D0263B
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 00:17:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B718A8BFC
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 00:18:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719879475; cv=none; b=NZ05/YTcVJquXvOPFCfdmpvv9xx2LjuurECyua4VMnTa37U3NAxGptqCS8CluXc6m1IvuAGmUGEXXJFFlA2VEJG3CdeOfZN7XDd5wBbeIF6d4hDAfkf5fEjAZdklyMPqCGGQ020MnKNEYed0TizGkrVAt54otSORzCVHEsohHlo=
+	t=1719879489; cv=none; b=Tm8wSpJrVY1+UK3pYv3I5sH1O1I1DF+RFcecv5P8YY+OxZPkarezMZ7BsIoa3pok6qBgO8swdhl1vj4JU/hp2JWCc+XJwpkJX+ZdQ697ygK0TcdJe0u7aJSZxQRrg1QYI2ikU6lHQ5gwIiv1ObjTtEiGQh1Nv1+1PD0EG3UMMdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719879475; c=relaxed/simple;
-	bh=seMgPVF7bivcnLBRRjop74HO7XyFxJa8L7ZsnGeuW8g=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=XcEqgdUBaWfGtmY7NCr8zhG4JveLhtHiXkI/ReDWuf3kmYdTDZhx58nlRRoLUEeLqrT4TOOFDQypF3aFCI3RjadPidBhCPejWOgJ7UZJP/qWS+MqpxNdxFWBS+pcinVnWg6HTEmo/jjZlFvSSYP7jVEq4rvJUktpnZ3cYeDlhxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IzWYD069; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719879489; c=relaxed/simple;
+	bh=zXHRxJfQ76pZA5jJuEeDkgW74LynXLABZeuPfCmaDGI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ArgG0DTDkf65Q3YsU1bYgty9aOX0cxSwoe+9ZttycYQuKIxJFju1jycleXgdQyBWaCVYq/PLiaL9ukLZT6D0aA5KeJZxktyqVl+tvRxN9pZ5J2ujtS6C0V/3+A7yALrgNl209kaQGubd5+AVNkZRiTbtJfvDR+IFCZBI8TNOOjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d+xss2fp; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IzWYD069"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-6c5bcb8e8edso2947242a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jul 2024 17:17:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719879474; x=1720484274; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aCOq0IehP++4h3yKaJ0dKMks8090X5zka1SBb8qbre4=;
-        b=IzWYD069KFt0IszBpY8MOn/26d5CjaAZe1OIKZ6PHEj0olXa1P+fbT+77CmLIk/AOU
-         kn5eOTILV+k3/I0ZnpWkMa8tO8+Gr90Uc/actNQ/l+Wh2UIJd6sZKlXE/4lKtLOktJTN
-         R9P2YnlS4bbi3YBzt4gwEumn48E+vTfkKwykEt4ZsL+SGisFzHf+K+3kBl1ucOoT5Bsk
-         wFmAw8qOaw3Kh10qRBNEMpTW9uMWoZPhk0XaFDvfgeynTrIK5NbzxZPEIkaliqXixpC0
-         hRdyxl45c5DpCFMcoQKVGLBntHQb+U9tIMKGaOHi/a467Qi5w+u06mkHIkYLUzdYUR+A
-         DXVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719879474; x=1720484274;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aCOq0IehP++4h3yKaJ0dKMks8090X5zka1SBb8qbre4=;
-        b=rA1mcKTcGUc870eaGcK+yvF27Q9I98sBVoV5EMpu390rRl52WbNpU3RNVi1RcTCGUQ
-         9ANasE+dX/VmVKq41wnGo2AVURDALBU3A644rVUNptKj0Sd3igrYWtgOcW0nPuICCkAW
-         UTwuzjxRImsierR96RMqAEvvkIiXdvMqBormkyRt/ASjSEMznTwaAkARkeB214V8Op4U
-         sAd9eNzX7jMK8yzzJgv/XPgyPxH92xFBLFKpF0+hhLmiQmmn4Y9XFS9a6z3WboyWzA9I
-         aTLQucMiSSBJoBvgCg745U5Bkv/0hyVSFlkIiCSXjRVnahzUIEStRsVaj1L9mu442uNf
-         xT5w==
-X-Forwarded-Encrypted: i=1; AJvYcCU5QyyLAcLWzRSPWWa08yX7DFWpdL4PiO077yT8+5skB5EWmQ24yxTc+0TAeLggkGpUDm+ZNWuQr8+onGdcTeIqkqKfBm2oKdvNP2OJ
-X-Gm-Message-State: AOJu0Yz5VNSqxjZyvZbz5AAaziDoWagkOnAMlhb3oRkmb37EGFH1yNw8
-	awmNpK/1q++n5b8Q9dRc1ZfKybr+oVfr1nRRWB25YHp01dFdmTlG4+60vA==
-X-Google-Smtp-Source: AGHT+IFHDRZ1ur4V+gII603Usz1F/TVAyeBY5KOtBX9lQy03gQgBRMFi3LPkBb3S5m3BNawgHIickQ==
-X-Received: by 2002:a05:6a20:12c9:b0:1be:d0c8:d562 with SMTP id adf61e73a8af0-1bef6140787mr9222274637.37.1719879473699;
-        Mon, 01 Jul 2024 17:17:53 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:97a3:bdcc:1a3b:f207])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c91d3bc723sm7442256a91.46.2024.07.01.17.17.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 17:17:53 -0700 (PDT)
-Date: Mon, 1 Jul 2024 17:17:50 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Anatolij Gustschin <agust@denx.de>,
-	Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@ozlabs.org, linux-kernel@vger.kernel.org
-Subject: pdm360ng and touchscreen set up
-Message-ID: <ZoNHLjmSvCN12vU5@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d+xss2fp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719879488; x=1751415488;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=zXHRxJfQ76pZA5jJuEeDkgW74LynXLABZeuPfCmaDGI=;
+  b=d+xss2fpeFMjdoP1gR0eiUPYfOJkaQcFGTg6hBbq2jLdf2TQGJpjXss7
+   qY0fNxJv0CIrxFebKlJEgsJRH91g8jvFactcEKfy/OZ71kTqxxtgZggBq
+   f0APiOsqfMSPEbY+mMM8t8W0j8iHn2VFYD5kERBELqryM9Ul96hi4qShj
+   5D3abBFaf5EMqvqKtJAfBNZvO13PohcVC1h3wfHYcUAITVu+rgccMWyYb
+   tYJT3P5YiHA1XzvT6K6Xu2ep9qm3BA2cdJ+KlgS4C8ZasKV7VO4qd9s0B
+   wruy0DW+Ad0eFxTbMUdUZgWxEwbcBdoXRxtxAV9EtoQdGiE26WuLdMGu9
+   g==;
+X-CSE-ConnectionGUID: CmBPiwhuTYe6y0Dz3p6qLA==
+X-CSE-MsgGUID: cGGIdxKVS6WRIwwssdXyzQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="16987086"
+X-IronPort-AV: E=Sophos;i="6.09,177,1716274800"; 
+   d="scan'208";a="16987086"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 17:18:08 -0700
+X-CSE-ConnectionGUID: YY4/KY8YSIqWsHANr3ImDA==
+X-CSE-MsgGUID: TN8Xm8u8Tp6Bt/zNut4/ug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,177,1716274800"; 
+   d="scan'208";a="68912610"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 17:18:07 -0700
+Date: Mon, 1 Jul 2024 17:23:19 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin
+ Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian
+ <kevin.tian@intel.com>, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v2 1/2] iommu/vt-d: Add helper to flush caches for
+ context change
+Message-ID: <20240701172319.264e718c@jacob-builder>
+In-Reply-To: <20240627023121.50166-2-baolu.lu@linux.intel.com>
+References: <20240627023121.50166-1-baolu.lu@linux.intel.com>
+	<20240627023121.50166-2-baolu.lu@linux.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Anatolij, Michael,
-
-I hope you can shed some light for me: why does pdm360ng have very
-elaborate set up for the "pendown" GPIO of the touchscreen? Can we
-simply fix the DTS in arch/powerpc/boot/dts/pdm360ng.dts and specify
-correct pendown GPIO there, as well as correct interrupt trigger,
-and remove most of arch/powerpc/platforms/512x/pdm360ng.c ?
-
-Something like this:
-
-diff --git a/arch/powerpc/boot/dts/pdm360ng.dts b/arch/powerpc/boot/dts/pdm360ng.dts
-index 67c3b9db75d7..5651bd9d9db3 100644
---- a/arch/powerpc/boot/dts/pdm360ng.dts
-+++ b/arch/powerpc/boot/dts/pdm360ng.dts
-@@ -176,11 +176,12 @@ psc@11900 {
- 
- 			/* ADS7845 touch screen controller */
- 			ts@0 {
--				compatible = "ti,ads7846";
-+				compatible = "ti,ads7845";
- 				reg = <0x0>;
- 				spi-max-frequency = <3000000>;
- 				/* pen irq is GPIO25 */
--				interrupts = <78 0x8>;
-+				interrupts = <78 IRQ_TYPE_LEVEL_LOW>;
-+				pendown-gpios = <&gpio 25 GPIO_ACTIVE_LOW>;
- 			};
- 		};
- 
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
 
-The reason I'm asking is that I want to remove support for platform
-data in ads7846 driver and pdm360ng is one of the last 3 users of it in
-the kernel.
+On Thu, 27 Jun 2024 10:31:20 +0800, Lu Baolu <baolu.lu@linux.intel.com>
+wrote:
 
-Thanks.
+> +/*
+> + * Cache invalidations after change in a context table entry that was
+> present
+> + * according to the Spec 6.5.3.3 (Guidance to Software for
+> Invalidations). If
+> + * IOMMU is in scalable mode and all PASID table entries of the device
+> were
+> + * non-present, set affect_domains to true. Otherwise, false.
+> + */
+The spec says:
+"Domain-selective PASID-cache invalidation to affected domains (can be
+skipped if all PASID entries were not-present and CM=0)"
 
--- 
-Dmitry
+So we should skip PASID cache invalidation if affect_domain is true
+according to this comment.
+
+> +void intel_context_flush_present(struct device_domain_info *info,
+> +				 struct context_entry *context,
+> +				 bool affect_domains)
+> +{
+> +	struct intel_iommu *iommu = info->iommu;
+> +	u16 did = context_domain_id(context);
+> +	struct pasid_entry *pte;
+> +	int i;
+> +
+> +	assert_spin_locked(&iommu->lock);
+> +
+> +	/*
+> +	 * Device-selective context-cache invalidation. The Domain-ID
+> field
+> +	 * of the Context-cache Invalidate Descriptor is ignored by
+> hardware
+> +	 * when operating in scalable mode. Therefore the @did value
+> doesn't
+> +	 * matter in scalable mode.
+> +	 */
+> +	iommu->flush.flush_context(iommu, did, PCI_DEVID(info->bus,
+> info->devfn),
+> +				   DMA_CCMD_MASK_NOBIT,
+> DMA_CCMD_DEVICE_INVL); +
+> +	/*
+> +	 * For legacy mode:
+> +	 * - Domain-selective IOTLB invalidation
+> +	 * - Global Device-TLB invalidation to all affected functions
+> +	 */
+> +	if (!sm_supported(iommu)) {
+> +		iommu->flush.flush_iotlb(iommu, did, 0, 0,
+> DMA_TLB_DSI_FLUSH);
+> +		__context_flush_dev_iotlb(info);
+> +
+> +		return;
+> +	}
+> +
+> +	/*
+> +	 * For scalable mode:
+> +	 * - Domain-selective PASID-cache invalidation to affected
+> domains
+> +	 * - Domain-selective IOTLB invalidation to affected domains
+> +	 * - Global Device-TLB invalidation to affected functions
+> +	 */
+> +	if (affect_domains) {
+> +		for (i = 0; i < info->pasid_table->max_pasid; i++) {
+> +			pte = intel_pasid_get_entry(info->dev, i);
+> +			if (!pte || !pasid_pte_is_present(pte))
+> +				continue;
+> +
+> +			did = pasid_get_domain_id(pte);
+> +			qi_flush_pasid_cache(iommu, did,
+> QI_PC_ALL_PASIDS, 0);
+This is conflicting with the comments above where PASID cache flush can be
+skipped if affect_domain==true, no?
+
+> +			iommu->flush.flush_iotlb(iommu, did, 0, 0,
+> DMA_TLB_DSI_FLUSH);
+> +		}
+> +	}
+
+Thanks,
+
+Jacob
