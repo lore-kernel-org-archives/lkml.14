@@ -1,121 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 951B01BD004
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 15:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ACB026AE4;
+	Tue,  2 Jul 2024 15:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719935559; cv=none; b=HxqvEvpz2CYHf5Zb+D2YillRjHR1taiCNQPD2DavZIqXNFVL08r5l+kh5pEp3onYXQt+loShV/enHrpLqggj/KYmDdKzxhtrt+phzXhO5UIvZ6U/aZx3zGrgErTHecautO2tCXgLdiRcRgUZZJVjJHMhFF1CSH1/RzRkRvY/jlg=
+	t=1719935638; cv=none; b=q8Kqdhn8CHeLETk5LfxxurOU3jAGGL5AwTq+EZWzhonkXkTeSOyfqIh7szp+GJqJDDDUkJrplOJb4zxw0eTYqXdPyC/VM9ObEuav6ywFT4FtpgMAQl+JD+CPxqIEhsjtUhFkzthjWlqXlG1tTtGJTHjB7jOEDh9C4i2STF0n+2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719935559; c=relaxed/simple;
-	bh=wZPV+CEpgfvPai1e8+Vih+T/KY60zCsNw6OOzvBD2xA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LYiDn4dNqe8uCurGB/sYZclMWJnsc3n2D7Q8wHTXqWnivBkZbJREJVjA2rz7g7FdzbDgDadAMq30G/399UpzCW5okkodlg5ULu6CgQeMZOvBi/0+v4cAP5VxTqCUJ3xQLQvEvJCaZ0l710guPeTup+EGKzvECzbJwSnW2g45ioA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tg7f1Ocu; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tg7f1Ocu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719935557; x=1751471557;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=wZPV+CEpgfvPai1e8+Vih+T/KY60zCsNw6OOzvBD2xA=;
-  b=Tg7f1Ocu1IwuyGRZcDgZO/55kY74+QmMxo4B22h5uaQX5Kgil6bWyr0e
-   KUFGrmHzgLBG36ovUxq9/u3ipZKjgFiFb146fQ7+NFTC7hRZWEJvbPcW8
-   lobwtv08QMIZ2hZB/JFVayl2nhxl3XWeH+s17+uI+VQlYOOF1wfrpw9ct
-   C0imypvFiE3e52WsUQ5XnJwKnit+COAAD4nQyowT7or+WRs1amy+9Dj4z
-   g+xC7fCVq+Xj6iJtTXldldjWXSWrxwj8qz4sR0rBZDYv1uTmnpwQve/wd
-   RQ/ap0nxTXyZGUDH722qd5wDp6NnY2hkEMX5igmxPUCGyqhddLkL87JTN
-   g==;
-X-CSE-ConnectionGUID: oIlndZ6aSbaegS9GlPQC/w==
-X-CSE-MsgGUID: 8spVxMdLSlidrtV5jgBxTQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="27719996"
-X-IronPort-AV: E=Sophos;i="6.09,178,1716274800"; 
-   d="scan'208";a="27719996"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 08:52:37 -0700
-X-CSE-ConnectionGUID: +iPT0RxbT4+0+gwNWEGrQg==
-X-CSE-MsgGUID: zviT4DVLRVu1wnVIJoHRLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,178,1716274800"; 
-   d="scan'208";a="50396978"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 08:52:36 -0700
-Date: Tue, 2 Jul 2024 08:57:49 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: Baolu Lu <baolu.lu@linux.intel.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin
- Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian
- <kevin.tian@intel.com>, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v3 1/2] iommu/vt-d: Add helper to flush caches for
- context change
-Message-ID: <20240702085749.2e2bbea5@jacob-builder>
-In-Reply-To: <28ade99a-13ad-4b01-aff2-711c006856fd@linux.intel.com>
-References: <20240701112317.94022-1-baolu.lu@linux.intel.com>
-	<20240701112317.94022-2-baolu.lu@linux.intel.com>
-	<20240701214128.5523a1ea@jacob-builder>
-	<28ade99a-13ad-4b01-aff2-711c006856fd@linux.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1719935638; c=relaxed/simple;
+	bh=tbEB5y4YiyR4kUelXRyJ2OIV+l3q1HZubohZF3UN4T4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qyu419p+SBUgg7J4u2vUNyR5WYKAGFr3a7a5+RWbBECiCiGBYXwhI1YqGZMAEbG5YysOZgedRmZlwDa87UxRRQc/73NYf72jxOyOnUQy7XdsdyeFlAsH6z/i0bYqIElizleb8nDilVC1JsBzWUbsOvuvq9sIqvDYNbsnbCQHfDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WD6r42R60z6J6jS;
+	Tue,  2 Jul 2024 23:52:52 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4349C140B55;
+	Tue,  2 Jul 2024 23:53:53 +0800 (CST)
+Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 2 Jul
+ 2024 16:53:52 +0100
+Date: Tue, 2 Jul 2024 16:53:51 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Terry Bowman <Terry.Bowman@amd.com>
+CC: <dan.j.williams@intel.com>, <ira.weiny@intel.com>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>, <ming4.li@intel.com>,
+	<vishal.l.verma@intel.com>, <jim.harris@samsung.com>,
+	<ilpo.jarvinen@linux.intel.com>, <ardb@kernel.org>,
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <Yazen.Ghannam@amd.com>,
+	<Robert.Richter@amd.com>
+Subject: Re: [RFC PATCH 6/9] cxl/pci: Add trace logging for CXL PCIe port
+ RAS errors
+Message-ID: <20240702165351.00004abb@Huawei.com>
+In-Reply-To: <550358f7-66d0-441c-abd9-f8edce9a5eb1@amd.com>
+References: <20240617200411.1426554-1-terry.bowman@amd.com>
+	<20240617200411.1426554-7-terry.bowman@amd.com>
+	<20240620135332.000053f5@Huawei.com>
+	<550358f7-66d0-441c-abd9-f8edce9a5eb1@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
+On Mon, 24 Jun 2024 10:53:51 -0500
+Terry Bowman <Terry.Bowman@amd.com> wrote:
 
-On Tue, 2 Jul 2024 12:43:41 +0800, Baolu Lu <baolu.lu@linux.intel.com>
-wrote:
-
-> On 2024/7/2 12:41, Jacob Pan wrote:
-> > On Mon,  1 Jul 2024 19:23:16 +0800, Lu Baolu<baolu.lu@linux.intel.com>
-> > wrote:
-> >   
-> >> +	if (flush_domains) {
-> >> +		/*
-> >> +		 * If the IOMMU is running in scalable mode and there
-> >> might
-> >> +		 * be potential PASID translations, the caller should
-> >> hold
-> >> +		 * the lock to ensure that context changes and cache
-> >> flushes
-> >> +		 * are atomic.
-> >> +		 */
-> >> +		assert_spin_locked(&iommu->lock);
-> >> +		for (i = 0; i < info->pasid_table->max_pasid; i++) {
-> >> +			pte = intel_pasid_get_entry(info->dev, i);
-> >> +			if (!pte || !pasid_pte_is_present(pte))
-> >> +				continue;  
-> > Is it worth going through 1M PASIDs just to skip the PASID cache
-> > invalidation? Or just do the flush on all used DIDs unconditionally.  
+> Hi Jonathan,
 > 
-> Currently we don't track all domains attached to a device. If such
-> optimization is necessary, perhaps we can add it later.
+> I added responses inline below.
+> 
+> On 6/20/24 07:53, Jonathan Cameron wrote:
+> > On Mon, 17 Jun 2024 15:04:08 -0500
+> > Terry Bowman <terry.bowman@amd.com> wrote:
+> >   
+> >> The cxl_pci driver uses kernel trace functions to log RAS errors for
+> >> endpoints and RCH downstream ports. The same is needed for CXL root ports,
+> >> CXL downstream switch ports, and CXL upstream switch ports.
+> >>
+> >> Add RAS correctable and RAS uncorrectable trace logging functions for
+> >> CXL PCIE ports.
+> >>
+> >> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> >> ---
+> >>  drivers/cxl/core/trace.h | 34 ++++++++++++++++++++++++++++++++++
+> >>  1 file changed, 34 insertions(+)
+> >>
+> >> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+> >> index e5f13260fc52..5cfd9952d88a 100644
+> >> --- a/drivers/cxl/core/trace.h
+> >> +++ b/drivers/cxl/core/trace.h
+> >> @@ -48,6 +48,23 @@
+> >>  	{ CXL_RAS_UC_IDE_RX_ERR, "IDE Rx Error" }			  \
+> >>  )
+> >>  
+> >> +TRACE_EVENT(cxl_port_aer_uncorrectable_error,
+> >> +	TP_PROTO(struct device *dev, u32 status),  
+> > 
+> > By comparison with existing code, why no fe or header
+> > log?  Don't exist for ports for some reason?
+> > Serial number of the port might also be useful.
+> >   
+> 
+> The AER FE and header are the same for ports and the logging 
+> needs to be added here.
+> 
+> There is no serial number for the ports.
+Why not? At least for switch USP there might be (actually
+I believe there can be for pretty much anything but there
+are rules on them matching in switch funcitons).
 
-I think it is necessary, because without tracking domain IDs, the code
-above would have duplicated invalidations.
-For example: a device PASID table has the following entries
-	PASID	DomainID
--------------------------
-	100	1
-	200	1
-	300	2
--------------------------
-When a present context entry changes, we need to do:
-qi_flush_pasid_cache(iommu, 1, QI_PC_ALL_PASIDS, 0);
-qi_flush_pasid_cache(iommu, 2, QI_PC_ALL_PASIDS, 0);
+J
 
-With this code, we do
-qi_flush_pasid_cache(iommu, 1, QI_PC_ALL_PASIDS, 0);
-qi_flush_pasid_cache(iommu, 1, QI_PC_ALL_PASIDS, 0);//duplicated!
-qi_flush_pasid_cache(iommu, 2, QI_PC_ALL_PASIDS, 0);
-
-Thanks,
-
-Jacob
+> 
+> Regards,
+> Terry
