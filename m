@@ -1,89 +1,129 @@
-Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75281DFFC
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 15:02:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6616E167D8C;
+	Tue,  2 Jul 2024 15:04:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719932568; cv=none; b=VaLNSDx15lNovV9bsrqnBN5D+FsZwLxVLt22WvVK7UrlBuTaR7m09IvngDt4iMpkjUNoG2d93Sxf/8CKM6CZKQjmfUC2vfEKC/G1/YaRyz+e15TY0YmJoLxrzcgDuR6b/h+2qgDFZP0iewE+TREFc0cYkXgG9HwAtID7HnVfvNU=
+	t=1719932642; cv=none; b=O6CcTV0Yb/ZnKvy835wGsVBzf01GNKQaVx18/nHdxnHutmqGyVNRyqN6A9Q8kXh1m9MUkX4v054AU/9yZOCcWNwC70HNckjsGlbP7ckLvkGhPqoWm07C8kXc7udyiTvFSA450yefMI+VzoBa92O0U02Kf5NWM7Tyo0DYdKL1BNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719932568; c=relaxed/simple;
-	bh=fr9y7zaKBJWd5Nq+J5D0Htxix9ZN96bhg/tbL+wNefI=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=VP9VBeyjjHoVfE8lSsTmwWBaO5e8KoUr2nDYJAGZCv5WxJLdJAOYLYXpdD8KCWd94VbGevAE8bn4Ft/9YbbtXVUUurJo5JOAjif+LOuY4owpABb2MnUJ6fzrxI+FTYCS+bCZvKwY7OlQRnFUQdaPCAumU54+/80YLcAsDPOiWmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=UeSaeYie; arc=none smtp.client-ip=162.62.57.252
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1719932642; c=relaxed/simple;
+	bh=z/FaIHcgl7sQ1kysGjj+4T7FKuV7Tu//tYWArbL4Qc0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H3sJF9WS4HSWyOfcdNt6VmITi+RJvd6AWNAFBBNaZX/dDh79CYjkFLvI8OtOUMzRCZ93p4rYrRN9yATKdEd5YUCGSesbcxZXrbdGTB2VQR1OThIg/C/biJIbjx0MMpVDn2/vvhrejgHy8J29yBY8yrKxAkINtu1VWnQ1EWakTdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fbBmbaX2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="UeSaeYie"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1719932555; bh=O4ypknQaGzJdIqqc9/A2hiRqkd8JeZFBfl4wuZsE6Iw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=UeSaeYie1uHsW1tzw0PdBLQ/QQU+pdgtSCh31BbgoB4mKfq3A9K4Hcy10b7t1JGiB
-	 KqcarFZroGl/VOuDtTYSZZasrFBGbgKa81v2RTy3d1pm1PkE7ZSBmgG0txds2LEv7S
-	 O6NVQFcGIwZS8jH/CexI1ILA/31LcbF88F9QsFt8=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.103])
-	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
-	id DC89D2F9; Tue, 02 Jul 2024 22:55:08 +0800
-X-QQ-mid: xmsmtpt1719932108t83bauouw
-Message-ID: <tencent_922C096E68955CEA7AED66CC3079766DA40A@qq.com>
-X-QQ-XMAILINFO: OP9Dqbc7TEr/t0FY5px6FxuBcMpGgxXlQF7VfRv7WXFFx5Akdi7cP85s7ZjtU9
-	 Pt2iospx3YBnLiSxhU5S2W8eDBJQKZF87hW4oPWEjUw4ccIFEVm8Bpg9N+EYmNdK4p43lPNJhOtF
-	 U4APEOrX/dy4H/D5FBzkOW/vHQ83y/mcyDK2emTN98VqXA1QcQb5KYinyioGdWPrJ91fqoMcFB8U
-	 JK58FM1045u2FoQ+/VyPzcXIRKl7w10xJ8wHerpCvZvja21cghnhuhRr7QX1/mD+hHrYuJa2oEWT
-	 MC85/JmpZkEPhpVasIn6+h0L+IL+Ffzak2cSiIai7QLiRZz0b1obdk63s5SgGA3xSndALJR6X1Cg
-	 UdnMXetTPmhGRviYjMCjwy0UomaHyYXpdXQFt7XMcYS5gNZPil0yHvpaIMHc0K5WKk1qSSnjn7RL
-	 BQBc33O8XvSdaC18aFwvn2QVPopgy116fPaJ4DCIWd1/3XhO/QSZWTeXN7YbQSoQkBLo+WFVkna8
-	 /kPTtwzVCK3KekjTvqZtXfe6WOokqwP1EqcVBANVZxwmoR57S3m4tyi+mLb9yqEInpvgeha4/IgZ
-	 f+2TdR6xsDNQ9JfpvHqp+H/AlWnM0KLMPpgkZnsfoOeLsLUa0xP8C16SkKyDl3ED7lt8pt1oFBzV
-	 +faQ+0TxzgNetgRjAS3Vc6bLaHZVd4ripQfgelPLtionOHGkKjO2vQrDKY7uQ+GmBwG7tsNUi8NP
-	 fpBvMrgcGCgtIjVvrQom5Ns4Wn+nhnffQG2MlPTmKb1j7dlUGoDJUKVJzquz2X6LuKXEPom4CPRg
-	 mF7HGvubGcza/C8raw5mH0GLvI84GT2icB+hutxdMFhTP8m6cC4U0o8oaKpTMc+NR0sMxfwTFn4Z
-	 R+8U4FyeHamomp8X39rokayttWNxFMtFWcD3jcKW6ORihB8f2bzVtli7UtaXRyOCf1epBy2P2jRk
-	 IcDOkDyMg=
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+4fd66a69358fc15ae2ad@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [netfilter?] KASAN: slab-use-after-free Read in nf_tables_trans_destroy_work
-Date: Tue,  2 Jul 2024 22:55:09 +0800
-X-OQ-MSGID: <20240702145508.3938445-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000aa1dbb061c354fe6@google.com>
-References: <000000000000aa1dbb061c354fe6@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fbBmbaX2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5C27C116B1;
+	Tue,  2 Jul 2024 15:03:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719932642;
+	bh=z/FaIHcgl7sQ1kysGjj+4T7FKuV7Tu//tYWArbL4Qc0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fbBmbaX2MtozQGEBZJguE8WIQG4lcwn6o1TiRS3DrBSkdt5oXYzMXJoUzx9O8uzEJ
+	 PUbu0hqpPon72vzjg5rdZREntvJQmllDmH+1FwmqEkShoYCD8krTPSdiVRUiWQ5YzL
+	 h4rY04ZECVQ7G36X1t1MFDX2RvaN+9CM8q1rRXv+dXKv6WO6669MqaOd/ETlrNbxC/
+	 6LjCCXUPfi++OkIu7u3ay9DOAfUbqpeW72IA9qJEPiWG38M2oPFv3VDBnLUPzzsQVc
+	 6uRnUjKnU2GLEZ0df0gR+/jRXSB1/gheMbgNO9QXhmb7M93Rm0rrHVg8seTtf0BgRt
+	 4/dP+hQWGgglg==
+Date: Tue, 2 Jul 2024 16:03:56 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Manikandan.M@microchip.com
+Cc: megi@xff.cz, javierm@redhat.com, neil.armstrong@linaro.org,
+	quic_jesszhan@quicinc.com, sam@ravnborg.org, airlied@gmail.com,
+	daniel@ffwll.ch, maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org, tzimmermann@suse.de, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org,
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: display: himax-hx8394: Add Microchip
+ AC40T08A MIPI Display panel
+Message-ID: <20240702-manly-theorize-7276ace7943e@spud>
+References: <20240701085837.50855-1-manikandan.m@microchip.com>
+ <20240701085837.50855-2-manikandan.m@microchip.com>
+ <20240701-preset-shredding-409ef0d80ca4@spud>
+ <d83e8a51-953d-43c0-83eb-c1a528f9009f@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Ctz12PfT6BrOfHBD"
+Content-Disposition: inline
+In-Reply-To: <d83e8a51-953d-43c0-83eb-c1a528f9009f@microchip.com>
 
-Unbalanced increase and decrease of use in the table
 
-#syz test: net-next 1c5fc27bc48a
+--Ctz12PfT6BrOfHBD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 70d0bad029fd..33139e1b6d46 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -1498,6 +1498,7 @@ static int nf_tables_newtable(struct sk_buff *skb, const struct nfnl_info *info,
- 	if (err < 0)
- 		goto err_trans;
- 
-+	nft_use_inc_restore(&table->use);
- 	list_add_tail_rcu(&table->list, &nft_net->tables);
- 	return 0;
- err_trans:
-@@ -9529,6 +9530,9 @@ static void nft_commit_release(struct nft_trans *trans)
- 
- 	nft_ctx_update(&ctx, trans);
- 
-+	if (trans->table)
-+		nft_use_dec(&trans->table->use);
-+
- 	switch (trans->msg_type) {
- 	case NFT_MSG_DELTABLE:
- 	case NFT_MSG_DESTROYTABLE:
+On Tue, Jul 02, 2024 at 04:47:39AM +0000, Manikandan.M@microchip.com wrote:
+> Hi Conor,
+>=20
+> On 01/07/24 3:33 pm, Conor Dooley wrote:
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you know =
+the content is safe
+> >=20
+> >=20
+> > ForwardedMessage.eml
+> >=20
+> > Subject:
+> > Re: [PATCH v2 1/3] dt-bindings: display: himax-hx8394: Add Microchip=20
+> > AC40T08A MIPI Display panel
+> > From:
+> > Conor Dooley <conor@kernel.org>
+> > Date:
+> > 01/07/24, 3:33 pm
+> >=20
+> > To:
+> > Manikandan Muralidharan <manikandan.m@microchip.com>
+> > CC:
+> > megi@xff.cz, javierm@redhat.com, neil.armstrong@linaro.org,=20
+> > quic_jesszhan@quicinc.com, sam@ravnborg.org, airlied@gmail.com,=20
+> > daniel@ffwll.ch, maarten.lankhorst@linux.intel.com, mripard@kernel.org,=
+=20
+> > tzimmermann@suse.de, robh@kernel.org, krzk+dt@kernel.org,=20
+> > conor+dt@kernel.org, dri-devel@lists.freedesktop.org,=20
+> > devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+> >=20
+> >=20
 
+btw, please fix your mail client :/
+
+> > On Mon, Jul 01, 2024 at 02:28:35PM +0530, Manikandan Muralidharan wrote:
+> >> Add compatible string for the Microchip's AC40T08A MIPI Display
+> >> panel.This panel uses a Himax HX8394 display controller.
+> >> The reset line is not populated and leads to driver probe issues,
+> >> thus add conditional block to narrow reset-gpio property per variant.
+> > I really should have asked on v1, but I wasn't sure whether or not the
+> > optional nature of the reset-gpios was specific to your new panel so I
+> > held off: Is it ever the case that a reset-gpio can be provided for this
+> > microchip panel, or just not in the configuration you tested? If it is
+> > never possible, then I'd probably do...
+> The reset-gpio line can be provided for the microchip MIPI panel, the=20
+> SoC variant in which I tested did not have the reset line configured,=20
+> hence had to make it optional here and also in the driver to avoid panel=
+=20
+> probe issues.
+
+Okay, then:
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+
+Thanks,
+Conor.
+
+--Ctz12PfT6BrOfHBD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZoQW3AAKCRB4tDGHoIJi
+0qtuAQC/vSPINfc3iyF5pQOr8/w2/T/0L/UB/+uWnSfXRgfoCQEA4Etmhp/L2tnQ
+/Dv50f961xmnezYashzt99vCPRpf+AM=
+=ml2W
+-----END PGP SIGNATURE-----
+
+--Ctz12PfT6BrOfHBD--
