@@ -1,170 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B881BD4F7;
-	Tue,  2 Jul 2024 16:05:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B7214D42C
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jul 2024 16:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719936325; cv=none; b=j3Dt0PJPMUAGLHALlKHR+cD2Cu3pUCnPFARP+V8+M3eHq6xWHimiwqFA9I/OidJPtVVsc1xJMGfRMWqSL6O5utRMGHEEoCLIpmH9MXJM6U2+RxBAkOtDlK3seZF7mjgj10Z9Z8KCbZLnlAnsbgECLTHNhnaq/b/bVAgsDG0M0EM=
+	t=1719936369; cv=none; b=lwwkl4EHVjizgQwlOUuOXK4sg5uA4cTWdiQS0LzZ9jCJAScaYy4weEPaH9BIl+zXrsYE52KLy7ZthsAPOCLI+YzVBxGARC1jpq240jud8rFkVodH74cfIV/WAd6AVlUMhCVNbbQNh/INvrZANQRhBm2yGbRKiV0bp5AzEIbhTec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719936325; c=relaxed/simple;
-	bh=3xrxAwXmOpIV32GmleYZYkrSYEq5t6QQCU4QH90JDn0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t20C/viC4sWLcQ8UFLNm+fi3M22S/w1OSbM1x+iD4OMwT+D7NQxsdcnzKj1SFTXyW3yNwuN0dSyCLoP01EaUtM06KcCZYQTqdETB1YpGzKysYJwfg1/QK4zRLIZdeGuxz28ih2XgOrZ0gOZ7zyNyeDGrKgpabJQ2qhyM0ob83XU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BUIujZyX; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719936369; c=relaxed/simple;
+	bh=4dzETbi9Y/b084FicibKmVea7ZM5e5Sg03XoJbguRug=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fmbNaBpewl1ayTRUySS+1fjze6UwQI8ekI6NlOUFf61GXrTBSoSa4xZL05EaeoXL5bembtEMdn5bxW2pAmWiKUMkJhr3JFjv9CsRqAJtiXrz8HB1RkxetZrmtRJX3c+YMwz4Hw2Yif41qYhneu1lGs0H7TmH4EALvc6Me4v/gYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=axUdbP2p; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BUIujZyX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719936324; x=1751472324;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=3xrxAwXmOpIV32GmleYZYkrSYEq5t6QQCU4QH90JDn0=;
-  b=BUIujZyXIHW+pwyZA/ZMSFDJl983XCBWqFvCDpGaLllyMj62L2/w9F3U
-   aMo3wSH6+oFoX+ppDFl5snxNTWTHqE7wAOihK8MBkglFG4pO4YOT5476P
-   RAnngr8fRgL+g5wA7KQ4gJ7Kdf1itul8s7eT374lGATGKtvFa4hOGm2nc
-   zAdkWdA7A1+NDDcC2wdAASMQzOSZAZvgKXt1DoMQoqBtTDbgY93s4kZNv
-   zwlC335UEcbqhjnDSadZ+gYv9K81gym72v0N1hxqlHSeZT2OBhiOG7RJ1
-   injddSnaWdIjHp9kbtewpER5/0VAav8MPjCYzgvJWlTF+mfPh2QXvgZdg
-   A==;
-X-CSE-ConnectionGUID: LFFvezv2SsWjUnYEB+308Q==
-X-CSE-MsgGUID: OjiY26wYRmqJ3LHmc3euQA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="27721856"
-X-IronPort-AV: E=Sophos;i="6.09,178,1716274800"; 
-   d="scan'208";a="27721856"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 09:05:23 -0700
-X-CSE-ConnectionGUID: f4B0kDMIT9Wiw71KqXYSIA==
-X-CSE-MsgGUID: tnRnGK9VQh2WMryStXXuVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,178,1716274800"; 
-   d="scan'208";a="50400684"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 09:05:22 -0700
-Received: from [10.212.94.246] (kliang2-mobl1.ccr.corp.intel.com [10.212.94.246])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 90C70201A797;
-	Tue,  2 Jul 2024 09:05:20 -0700 (PDT)
-Message-ID: <d9c26690-5147-4a4a-815b-fb5d46d043c6@linux.intel.com>
-Date: Tue, 2 Jul 2024 12:05:18 -0400
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="axUdbP2p"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719936366;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Mjj83sWED4E39rMUhKU3CbXImDWJ5adzZW0P/Iuo6cg=;
+	b=axUdbP2pHPU3kNbNmybr5PMZTvjr68IeEbf7OJZEAlhpVMy0VGgbHFsojjg/b0K6+luhj0
+	LejpYOoC1hni1uJwkJxolwbdYt1q6amPqyoVvKxIR2vQDdtr/qI3xbcDPIWT2bPgvIl4zx
+	E1xwGetvuDJ76IzqN0jBUm+r2F66F/c=
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
+ [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-122-kgMq6MOjMvm1cuP2ajPLCA-1; Tue, 02 Jul 2024 12:06:04 -0400
+X-MC-Unique: kgMq6MOjMvm1cuP2ajPLCA-1
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-70d8b7924e7so2640804a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jul 2024 09:06:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719936363; x=1720541163;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Mjj83sWED4E39rMUhKU3CbXImDWJ5adzZW0P/Iuo6cg=;
+        b=S82D/xR/iJzx5GxtIUb2DCTt4vXX37qB2BNAwLcu+bsBfXvaomrLWcv2CCgSH8etMI
+         dCYJa7Mblb10W/JWPWVD44B4yxsRV+PfrQ/HKbPiN/un+8JZfZmJ2pPpEquv0uqa8RMM
+         Nvor9bwlQZ6Cf16KAl3PPTO1MQvbNxBkhfovWmTdtaGhqCQcG28/Eu54kDFXQoJPGDGX
+         yjqP7UUpdT2h2pVTmwKGuyZMvDB764fjNrYxGbS4mxsPb8uUPo+FNBAW/rvdB+Cotlob
+         4iA+Zp9y+U8GUF1iYPL5ZguLN4VXO0xf/o5vW96wJapjy8jvohXkvZU21/Tm4KD6nJJN
+         PTGA==
+X-Forwarded-Encrypted: i=1; AJvYcCWcM0aBDbRGN4IIVvc+Cw/fs1N4/HeVuRYy9JyPQY3onDeSUU3quMRSfjmTcB1yYHUKzWksvqiRgCxPsbM8ni3FwFfKXbsP23h4Ew0F
+X-Gm-Message-State: AOJu0YyC2GfUkndMBCXllEMXsX1m5F15XhuHsuVwgoY3HPsH4e4xlczg
+	4ZeS+lDSPtAJSarBRoTIbBQhp9EKEsfIeIYvz2cuaLHWMlxX2R1Lch0pfYLkit+5q6FA1SuCZah
+	BVhDox1hhLb9F91gfulANKuEgJxPsTz/LUq8Rbt+2V/6Vz6g6BwdxdIahhkiHkA==
+X-Received: by 2002:a17:902:f545:b0:1f7:11c8:bdd3 with SMTP id d9443c01a7336-1fadbc95462mr61872645ad.29.1719936363108;
+        Tue, 02 Jul 2024 09:06:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFdwWP/5Xu3XpRWOahLnmgTsWWlEmtfBhnw9Oooenlhz1CzdwiplFFIvm2iazLql9A9mmRvUw==
+X-Received: by 2002:a17:902:f545:b0:1f7:11c8:bdd3 with SMTP id d9443c01a7336-1fadbc95462mr61872425ad.29.1719936362728;
+        Tue, 02 Jul 2024 09:06:02 -0700 (PDT)
+Received: from ryzen.. ([240d:1a:c0d:9f00:ca7f:54ff:fe01:979d])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac156903bsm85565195ad.208.2024.07.02.09.06.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jul 2024 09:06:02 -0700 (PDT)
+From: Shigeru Yoshida <syoshida@redhat.com>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: kuniyu@amazon.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Shigeru Yoshida <syoshida@redhat.com>,
+	syzkaller <syzkaller@googlegroups.com>
+Subject: [PATCH net 1/2] af_unix: Fix uninit-value in __unix_walk_scc()
+Date: Wed,  3 Jul 2024 01:04:27 +0900
+Message-ID: <20240702160428.10153-1-syoshida@redhat.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] perf topdown: Correct leader selection with
- sample_read enabled
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Yanfei Xu <yanfei.xu@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>
-References: <20240702224037.343958-1-dapeng1.mi@linux.intel.com>
- <20240702224037.343958-2-dapeng1.mi@linux.intel.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20240702224037.343958-2-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+KMSAN reported uninit-value access in __unix_walk_scc() [1].
 
+In the list_for_each_entry_reverse() loop, when the vertex's index
+equals it's scc_index, the loop uses the variable vertex as a
+temporary variable that points to a vertex in scc. And when the loop
+is finished, the variable vertex points to the list head, in this case
+scc, which is a local variable on the stack (more precisely, it's not
+even scc and might underflow the call stack of __unix_walk_scc():
+container_of(&scc, struct unix_vertex, scc_entry)).
 
-On 2024-07-02 6:40 p.m., Dapeng Mi wrote:
-> Addresses an issue where, in the absence of a topdown metrics event
-> within a sampling group, the slots event was incorrectly bypassed as
-> the sampling leader when sample_read was enabled.
-> 
-> perf record -e '{slots,branches}:S' -c 10000 -vv sleep 1
-> 
-> In this case, the slots event should be sampled as leader but the
-> branches event is sampled in fact like the verbose output shows.
-> 
-> perf_event_attr:
->   type                             4 (cpu)
->   size                             168
->   config                           0x400 (slots)
->   sample_type                      IP|TID|TIME|READ|CPU|IDENTIFIER
->   read_format                      ID|GROUP|LOST
->   disabled                         1
->   sample_id_all                    1
->   exclude_guest                    1
-> ------------------------------------------------------------
-> sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
-> ------------------------------------------------------------
-> perf_event_attr:
->   type                             0 (PERF_TYPE_HARDWARE)
->   size                             168
->   config                           0x4 (PERF_COUNT_HW_BRANCH_INSTRUCTIONS)
->   { sample_period, sample_freq }   10000
->   sample_type                      IP|TID|TIME|READ|CPU|IDENTIFIER
->   read_format                      ID|GROUP|LOST
->   sample_id_all                    1
->   exclude_guest                    1
-> 
-> The sample period of slots event instead of branches event is reset to
-> 0.
-> 
-> This fix ensures the slots event remains the leader under these
-> conditions.
-> 
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> ---
->  tools/perf/arch/x86/util/topdown.c | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/arch/x86/util/topdown.c b/tools/perf/arch/x86/util/topdown.c
-> index 3f9a267d4501..5d7b78eb7516 100644
-> --- a/tools/perf/arch/x86/util/topdown.c
-> +++ b/tools/perf/arch/x86/util/topdown.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include "api/fs/fs.h"
->  #include "util/evsel.h"
-> +#include "util/evlist.h"
->  #include "util/pmu.h"
->  #include "util/pmus.h"
->  #include "util/topdown.h"
-> @@ -41,11 +42,22 @@ bool topdown_sys_has_perf_metrics(void)
->   */
->  bool arch_topdown_sample_read(struct evsel *leader)
->  {
-> +	struct evsel *event;
-> +
->  	if (!evsel__sys_has_perf_metrics(leader))
->  		return false;
->  
-> -	if (leader->core.attr.config == TOPDOWN_SLOTS)
-> -		return true;
-> +	if (leader->core.attr.config != TOPDOWN_SLOTS)
-> +		return false;
-> +
-> +	/*
-> +	 * If slots event as leader event but no topdown metric events in group,
-> +	 * slots event should still sample as leader.
-> +	 */
-> +	evlist__for_each_entry(leader->evlist, event) {
-> +		if (event != leader && strcasestr(event->name, "topdown"))
+However, the variable vertex is used under the label prev_vertex. So
+if the edge_stack is not empty and the function jumps to the
+prev_vertex label, the function will access invalid data on the
+stack. This causes the uninit-value access issue.
 
-User may uses the RAW format. It may not be good enough to just check
-the event name.
+Fix this by introducing a new temporary variable for the loop.
 
-I recall you have a complete support for this in the previous patch. Why
-drop it?
+[1]
+BUG: KMSAN: uninit-value in __unix_walk_scc net/unix/garbage.c:478 [inline]
+BUG: KMSAN: uninit-value in unix_walk_scc net/unix/garbage.c:526 [inline]
+BUG: KMSAN: uninit-value in __unix_gc+0x2589/0x3c20 net/unix/garbage.c:584
+ __unix_walk_scc net/unix/garbage.c:478 [inline]
+ unix_walk_scc net/unix/garbage.c:526 [inline]
+ __unix_gc+0x2589/0x3c20 net/unix/garbage.c:584
+ process_one_work kernel/workqueue.c:3231 [inline]
+ process_scheduled_works+0xade/0x1bf0 kernel/workqueue.c:3312
+ worker_thread+0xeb6/0x15b0 kernel/workqueue.c:3393
+ kthread+0x3c4/0x530 kernel/kthread.c:389
+ ret_from_fork+0x6e/0x90 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
 
-Thanks,
-Kan
+Uninit was stored to memory at:
+ unix_walk_scc net/unix/garbage.c:526 [inline]
+ __unix_gc+0x2adf/0x3c20 net/unix/garbage.c:584
+ process_one_work kernel/workqueue.c:3231 [inline]
+ process_scheduled_works+0xade/0x1bf0 kernel/workqueue.c:3312
+ worker_thread+0xeb6/0x15b0 kernel/workqueue.c:3393
+ kthread+0x3c4/0x530 kernel/kthread.c:389
+ ret_from_fork+0x6e/0x90 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
 
-> +			return true;
-> +	}
->  
->  	return false;
->  }
+Local variable entries created at:
+ ref_tracker_free+0x48/0xf30 lib/ref_tracker.c:222
+ netdev_tracker_free include/linux/netdevice.h:4058 [inline]
+ netdev_put include/linux/netdevice.h:4075 [inline]
+ dev_put include/linux/netdevice.h:4101 [inline]
+ update_gid_event_work_handler+0xaa/0x1b0 drivers/infiniband/core/roce_gid_mgmt.c:813
+
+CPU: 1 PID: 12763 Comm: kworker/u8:31 Not tainted 6.10.0-rc4-00217-g35bb670d65fc #32
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-2.fc40 04/01/2014
+Workqueue: events_unbound __unix_gc
+
+Fixes: 3484f063172d ("af_unix: Detect Strongly Connected Components.")
+Reported-by: syzkaller <syzkaller@googlegroups.com>
+Signed-off-by: Shigeru Yoshida <syoshida@redhat.com>
+---
+v1->v2: https://lore.kernel.org/all/20240625152713.1147650-1-syoshida@redhat.com/
+- A bit of elaboration on the commit message, as suggested by Iwashima-san.
+- Bundle a selftest written by Iwashima-san.
+---
+ net/unix/garbage.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/net/unix/garbage.c b/net/unix/garbage.c
+index dfe94a90ece4..23efb78fe9ef 100644
+--- a/net/unix/garbage.c
++++ b/net/unix/garbage.c
+@@ -476,6 +476,7 @@ static void __unix_walk_scc(struct unix_vertex *vertex, unsigned long *last_inde
+ 	}
+ 
+ 	if (vertex->index == vertex->scc_index) {
++		struct unix_vertex *v;
+ 		struct list_head scc;
+ 		bool scc_dead = true;
+ 
+@@ -486,15 +487,15 @@ static void __unix_walk_scc(struct unix_vertex *vertex, unsigned long *last_inde
+ 		 */
+ 		__list_cut_position(&scc, &vertex_stack, &vertex->scc_entry);
+ 
+-		list_for_each_entry_reverse(vertex, &scc, scc_entry) {
++		list_for_each_entry_reverse(v, &scc, scc_entry) {
+ 			/* Don't restart DFS from this vertex in unix_walk_scc(). */
+-			list_move_tail(&vertex->entry, &unix_visited_vertices);
++			list_move_tail(&v->entry, &unix_visited_vertices);
+ 
+ 			/* Mark vertex as off-stack. */
+-			vertex->index = unix_vertex_grouped_index;
++			v->index = unix_vertex_grouped_index;
+ 
+ 			if (scc_dead)
+-				scc_dead = unix_vertex_dead(vertex);
++				scc_dead = unix_vertex_dead(v);
+ 		}
+ 
+ 		if (scc_dead)
+-- 
+2.45.2
+
